@@ -1,0 +1,107 @@
+@import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=IBM+Plex+Mono:wght@400;500&display=swap");
+
+:root {
+  --forge-iron: #14161a;
+  --forge-steel: #1d2127;
+  --forge-ember: #d9622b;
+  --forge-slate: #8891a0;
+  --forge-mist: #e7e9ec;
+  --radius: 10px;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--forge-iron);
+  color: var(--forge-mist);
+  font-family: "IBM Plex Mono", ui-monospace, monospace;
+}
+
+h1, h2, h3, .brand {
+  font-family: "Space Grotesk", sans-serif;
+  font-weight: 700;
+  margin: 0;
+}
+
+.app-shell {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  min-height: 100vh;
+}
+
+.side-nav {
+  background: var(--forge-steel);
+  border-right: 1px solid #ffffff12;
+  padding: 24px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.brand {
+  color: var(--forge-ember);
+  letter-spacing: 0.08em;
+  margin-bottom: 24px;
+  font-size: 18px;
+}
+
+.side-nav a {
+  color: var(--forge-slate);
+  text-decoration: none;
+  padding: 8px 10px;
+  border-radius: var(--radius);
+  font-size: 14px;
+}
+
+.side-nav a.active,
+.side-nav a:hover {
+  background: #ffffff0c;
+  color: var(--forge-mist);
+}
+
+.content {
+  padding: 40px 48px;
+  max-width: 960px;
+}
+
+.route-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.muted { color: var(--forge-slate); font-size: 14px; }
+.error { color: #e3573f; font-size: 14px; }
+
+.empty-state {
+  border: 1px dashed #ffffff22;
+  border-radius: var(--radius);
+  padding: 24px;
+}
+
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 14px;
+}
+
+.card-tile {
+  background: var(--forge-steel);
+  border: 1px solid #ffffff12;
+  border-radius: var(--radius);
+  padding: 16px;
+}
+
+.card-tile h3 { font-size: 15px; margin-bottom: 6px; }
+
+.stat-row { font-size: 12px; color: var(--forge-ember); margin-top: 8px; }
+
+.mission-list { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+.mission-list li {
+  background: var(--forge-steel);
+  border-radius: var(--radius);
+  padding: 12px 16px;
+  border: 1px solid #ffffff12;
+}
