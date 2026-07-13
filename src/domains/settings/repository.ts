@@ -1,19 +1,40 @@
+import { supabase } from "../../lib/supabase";
 import type { DomainResult } from "../../shared/types/domain";
 
+export interface PlayerSettings {
+  player_id: string;
+  telegram_enabled: boolean;
+  notifications_enabled: boolean;
+  language: string;
+  timezone: string;
+  ui_mode: string;
+}
+
 /**
- * BLOCKED ON AUTH, NOT ON SCHEMA.
- * Verified chat 21 (vexforge_project_documents.verified_read_path_specs_v1):
- * the real Supabase table and RLS policy for 'settings' exist and are correctly
- * configured, but every policy requires auth.uid() to match players.auth_user_id.
- * There is no auth provider wired into this app yet.
- * Do NOT stub this with fake/local data pretending to be real -- once auth is
- * wired, replace this function body with a real supabase.from(...) call using
- * the columns already documented in verified_read_path_specs_v1.
+ * Verified real read path (chat 21, verified_read_path_specs_v1):
+ * player_own_settings policy (ALL, authenticated, player_id matches
+ * players.auth_user_id). Confirmed columns: telegram_enabled,
+ * notifications_enabled, language, timezone, ui_mode.
+ * Wired chat 27 once a real auth provider existed. Write is technically
+ * allowed by the ALL policy scoped to owner, but not implemented in this
+ * pass -- read-only for now, matching the other newly-wired domains.
  */
-export async function getSettings(): Promise<DomainResult<never>> {
-  return {
-    status: "blocked_auth",
-    data: null,
-    reason: "No auth session wired yet. See backend/pending/auth-and-writes.md.",
-  };
+export async function getSettings(): Promise<DomainResult<PlayerSettings>> {
+  const { data: sessionData } = await supabase.auth.getSession();
+  if (!sessionData.session) {
+    return { status: "blocked_auth", data: null, reason: "No auth session. Sign in on the Account page first." };
+  }
+
+  const { data, error } = await supabase
+    .from("player_settings")
+    .select("player_id, telegram_enabled, notifications_enabled, language, timezone, ui_mode")
+    .maybeSingle();
+
+  if (error) {
+    return { status: "ready", data: null, reason: error.message };
+  }
+  if (!data) {
+    return { status: "ready", data: null, reason: "Signed in, but no player_settings row exists yet for this player." };
+  }
+  return { status: "ready", data: data as PlayerSettings };
 }

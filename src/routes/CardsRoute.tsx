@@ -17,13 +17,16 @@ export function CardsRoute() {
       {!loading && !error && cards.length === 0 && (
         <div className="empty-state">
           <p>No active cards yet.</p>
-          <p className="muted">This is the real table, not a placeholder — it's just empty right now.</p>
+          <p className="muted">This is the real table, not a placeholder -- it is just empty right now.</p>
         </div>
       )}
 
       <div className="card-grid">
         {cards.map((c) => (
           <article key={c.id} className="card-tile">
+            {c.image_url && (
+              <img className="card-art" src={c.image_url} alt={c.name} loading="lazy" />
+            )}
             <h3>{c.name}</h3>
             <p className="muted">{c.faction} · {c.rarity}</p>
             <p className="stat-row">PWR {c.power} · AFF {c.affinity} · PRE {c.prestige}</p>
