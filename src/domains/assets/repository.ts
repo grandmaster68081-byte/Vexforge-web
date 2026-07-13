@@ -73,7 +73,9 @@ export async function listImageAssetsByPack(): Promise<
   DomainResult<Record<string, OfficialAsset[]>>
 > {
   const result = await listEnabledAssets();
-  if (!result.data) return result as DomainResult<Record<string, OfficialAsset[]>>;
+  if (!result.data) {
+    return { status: result.status, data: null, reason: result.reason };
+  }
 
   const grouped: Record<string, OfficialAsset[]> = {};
   for (const asset of result.data) {
