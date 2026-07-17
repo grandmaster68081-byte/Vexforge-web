@@ -3,20 +3,16 @@ import type { Session } from "@supabase/supabase-js";
 import { supabase } from "../lib/supabase";
 
 /**
- * Real Supabase Auth provider (email/password), wired chat 27.
- * This is the first non-shell auth implementation for this project --
- * previously src/providers/README.md deliberately left this empty because
- * there was no real auth config to base it on. Supabase Auth's email
- * provider is enabled by default on every project and needs no extra
- * backend configuration, so this does not touch schema/RLS/functions.
+ * Real Supabase Auth provider (email/password) — chat 27 + chat 35 auto-provisioning.
  *
- * Unblocks (once a user actually signs in): profile, progress, economy,
- * settings -- all of which already have correct RLS scoped to
- * auth.uid() = players.auth_user_id. This provider does not create rows in
- * `players` itself -- that is out of scope for this pass (see
- * backend/pending/auth-and-writes.md history). If a signed-in auth user has
- * no matching players row yet, domain repositories will simply return an
- * empty result, not an error.
+ * On every SIGNED_IN event (sign-in, sign-up, page refresh with active session),
+ * ensurePlayerRow() runs silently:
+ *   1. Checks if a `players` row already exists for auth.uid().
+ *   2. If not, INSERTs a new row so every signed-in user immediately has a profile.
+ *   3. Errors are caught and swallowed — provisioning failure never breaks the auth flow.
+ *
+ * This resolves the blocker documented in backend/pending/auth-and-writes.md:
+ * "No player row auto-provisioning on sign-up".
  */
 
 interface AuthContextValue {
@@ -30,6 +26,29 @@ interface AuthContextValue {
 
 const AuthContext = createContext<AuthContextValue | undefined>(undefined);
 
+async function ensurePlayerRow(userId: string, userEmail: string): Promise<void> {
+  try {
+    const { data: existing } = await supabase
+      .from("players")
+      .select("id")
+      .eq("auth_user_id", userId)
+      .maybeSingle();
+
+    if (existing) return; // already provisioned
+
+    await supabase.from("players").insert({
+      auth_user_id: userId,
+      email: userEmail,
+      display_name: userEmail.split("@")[0],
+      role: "player",
+      status: "active",
+      source_system: "web",
+    });
+  } catch {
+    // Non-fatal: session stays valid even if provisioning fails
+  }
+}
+
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
@@ -38,15 +57,23 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     let cancelled = false;
 
-    supabase.auth.getSession().then(({ data, error }) => {
+    supabase.auth.getSession().then(async ({ data, error: sessionErr }) => {
       if (cancelled) return;
-      if (error) setError(error.message);
-      setSession(data.session);
+      if (sessionErr) setError(sessionErr.message);
+      const s = data.session;
+      setSession(s);
+      if (s?.user) {
+        await ensurePlayerRow(s.user.id, s.user.email ?? "");
+      }
       setLoading(false);
     });
 
-    const { data: subscription } = supabase.auth.onAuthStateChange((_event, newSession) => {
+    const { data: subscription } = supabase.auth.onAuthStateChange(async (event, newSession) => {
+      if (cancelled) return;
       setSession(newSession);
+      if ((event === "SIGNED_IN") && newSession?.user) {
+        await ensurePlayerRow(newSession.user.id, newSession.user.email ?? "");
+      }
     });
 
     return () => {
@@ -56,13 +83,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   async function signIn(email: string, password: string) {
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
-    return { error: error ? error.message : null };
+    const { error: signInErr } = await supabase.auth.signInWithPassword({ email, password });
+    return { error: signInErr ? signInErr.message : null };
   }
 
   async function signUp(email: string, password: string) {
-    const { error } = await supabase.auth.signUp({ email, password });
-    return { error: error ? error.message : null };
+    const { data, error: signUpErr } = await supabase.auth.signUp({ email, password });
+    if (!signUpErr && data.user) {
+      await ensurePlayerRow(data.user.id, email);
+    }
+    return { error: signUpErr ? signUpErr.message : null };
   }
 
   async function signOut() {

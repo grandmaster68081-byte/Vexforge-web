@@ -1,6 +1,9 @@
 import { useState } from "react";
 import { usePacks } from "../domains/packs/usePacks";
-import { DomainStatusBadge } from "../shared/components/DomainStatus";
+
+const BG_URL = "https://rscuzqnfccqvltkdcdny.supabase.co/storage/v1/object/public/vexforge-assets/backgrounds/bg_packs.jpg";
+
+import { SkeletonCardGrid } from "../shared/components/Skeleton";
 
 export function PacksRoute() {
   const { catalog, orders, loading, error, actionError, pending, order } = usePacks();
@@ -15,68 +18,96 @@ export function PacksRoute() {
 
   return (
     <section>
-      <header className="route-header">
-        <h1>Packs</h1>
-        <DomainStatusBadge status="ready" />
-      </header>
+      <div className="hero-banner" style={{ backgroundImage: `url(${BG_URL})` }}>
+        <div className="hero-banner-overlay">
+          <h1>Packs</h1>
+        </div>
+      </div>
 
-      {loading && <p className="muted">Loading pack catalog from Supabase…</p>}
+      {loading && <SkeletonCardGrid count={4} minWidth={200} />}
       {error && <p className="error">{error}</p>}
       {actionError && <p className="error">{actionError}</p>}
 
-      <h2>Available packs</h2>
+      <h2 style={{ marginBottom: 12 }}>Available Packs</h2>
       {!loading && catalog.length === 0 && (
         <div className="empty-state">
           <p>No active packs right now.</p>
         </div>
       )}
-      <ul>
-        {catalog.map((p) => (
-          <li key={p.pack_key}>
-            {p.pack_name} — {p.price_usdt} USDT
-            {p.notes && <span className="muted"> ({p.notes})</span>}
-          </li>
-        ))}
-      </ul>
 
-      <h2>Order a pack</h2>
-      <form onSubmit={handleOrder}>
-        <select value={selectedPack} onChange={(e) => setSelectedPack(e.target.value)}>
-          <option value="">Select a pack…</option>
-          {catalog.map((p) => (
-            <option key={p.pack_key} value={p.pack_key}>
-              {p.pack_name} ({p.price_usdt} USDT)
-            </option>
-          ))}
-        </select>
-        <input
-          type="text"
-          placeholder="Your payout wallet address"
-          value={walletAddress}
-          onChange={(e) => setWalletAddress(e.target.value)}
-        />
-        <button type="submit" disabled={pending || !selectedPack || !walletAddress}>
-          Create order
+      <div className="pack-grid">
+        {catalog.map((p) => (
+          <div
+            key={p.pack_key}
+            className={`pack-card ${selectedPack === p.pack_key ? "selected" : ""}`}
+            onClick={() => setSelectedPack(p.pack_key)}
+          >
+            <div className="pack-card-glow" />
+            <div className="pack-card-body">
+              <h3>{p.pack_name}</h3>
+              <p className="stat-row">{p.price_usdt} USDT</p>
+              {p.notes && (
+                <p className="muted">{p.notes}</p>
+              )}
+              {p.active === false && <p className="muted">Inactive</p>}
+            </div>
+            {selectedPack === p.pack_key && (
+              <div className="pack-selected-badge">Selected</div>
+            )}
+          </div>
+        ))}
+      </div>
+
+      <form className="pack-order-form" onSubmit={handleOrder} style={{ marginTop: 24 }}>
+        <h2>Order a Pack</h2>
+        {catalog.length > 0 && (
+          <label style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+            <span className="muted" style={{ fontSize: 12 }}>Pack</span>
+            <select
+              value={selectedPack}
+              onChange={(e) => setSelectedPack(e.target.value)}
+              style={{ background: "#1a1a2e", color: "#e8e8e8", border: "1px solid #333", borderRadius: 4, padding: "6px 8px" }}
+            >
+              <option value="">— Select a pack —</option>
+              {catalog.map((p) => (
+                <option key={p.pack_key} value={p.pack_key}>
+                  {p.pack_name} ({p.price_usdt} USDT)
+                </option>
+              ))}
+            </select>
+          </label>
+        )}
+        <label style={{ display: "flex", flexDirection: "column", gap: 4, marginTop: 12 }}>
+          <span className="muted" style={{ fontSize: 12 }}>Wallet address</span>
+          <input
+            type="text"
+            value={walletAddress}
+            onChange={(e) => setWalletAddress(e.target.value)}
+            placeholder="Your wallet address"
+            style={{ background: "#1a1a2e", color: "#e8e8e8", border: "1px solid #333", borderRadius: 4, padding: "6px 8px" }}
+          />
+        </label>
+        <button type="submit" disabled={pending || !selectedPack || !walletAddress} style={{ marginTop: 12 }}>
+          {pending ? "Ordering…" : "Order pack"}
         </button>
       </form>
-      <p className="muted">
-        This creates a pending order via vexforge_create_pack_order -- it does not move funds
-        by itself. Actual USDT payment/confirmation flow is outside this frontend pass.
-      </p>
 
-      <h2>Your orders</h2>
-      {orders.length === 0 ? (
-        <p className="muted">
-          Sign in to see your pack orders (see the Account page). None found yet either way.
-        </p>
-      ) : (
-        <ul>
-          {orders.map((o) => (
-            <li key={o.id}>
-              {o.pack_key} — {o.price_usdt} USDT — {o.status}
-            </li>
-          ))}
-        </ul>
+      {orders.length > 0 && (
+        <>
+          <h2 style={{ marginTop: 28 }}>Your Orders</h2>
+          <table className="data-table">
+            <thead><tr><th>Pack</th><th>Status</th><th>Date</th></tr></thead>
+            <tbody>
+              {orders.map((o) => (
+                <tr key={o.id}>
+                  <td>{o.pack_key}</td>
+                  <td>{o.status}</td>
+                  <td>{new Date(o.created_at).toLocaleDateString()}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </>
       )}
     </section>
   );

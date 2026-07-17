@@ -17,6 +17,7 @@ export function usePvp() {
   const [error, setError] = useState<string | null>(null);
   const [actionError, setActionError] = useState<string | null>(null);
   const [pending, setPending] = useState(false);
+  const [activeSeasonId, setActiveSeasonId] = useState<string | null>(null);
 
   const refresh = useCallback(async () => {
     setLoading(true);
@@ -25,7 +26,8 @@ export function usePvp() {
     if (seasonsResult.reason) setError(seasonsResult.reason);
 
     if (seasonsResult.data && seasonsResult.data.length > 0) {
-      const rankingsResult = await listSeasonRankings(seasonsResult.data[0].id);
+      const sid = activeSeasonId ?? seasonsResult.data[0].id;
+      const rankingsResult = await listSeasonRankings(sid);
       if (rankingsResult.data) setRankings(rankingsResult.data);
     }
 
@@ -34,7 +36,7 @@ export function usePvp() {
     // not signed in / no matches is a normal state, not an error banner
 
     setLoading(false);
-  }, []);
+  }, [activeSeasonId]);
 
   useEffect(() => {
     refresh();
@@ -50,5 +52,5 @@ export function usePvp() {
     return result;
   }
 
-  return { seasons, rankings, matches, loading, error, actionError, pending, resolve };
+  return { seasons, rankings, matches, loading, error, actionError, pending, resolve, activeSeasonId, setActiveSeasonId };
 }

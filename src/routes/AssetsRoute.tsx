@@ -1,35 +1,42 @@
 import { useAssetGallery } from "../domains/assets/useAssets";
-import { DomainStatusBadge } from "../shared/components/DomainStatus";
 
-/**
- * Packs that are officially named in the project but have zero individual
- * images actually uploaded to Storage yet (verified against storage.objects
- * directly, not just the manifest table -- only the .zip bundle exists).
- * These are NOT invented placeholders; they are an explicit pending list
- * for the next asset-generation pass. See vexforge_project_decisions,
- * chat31_visual_gallery_closed_with_existing_assets.
- */
-const PENDING_PACKS = ["backgrounds", "clans", "events", "founders", "misc", "sessions", "ui_system"];
+const BG_URL = "https://rscuzqnfccqvltkdcdny.supabase.co/storage/v1/object/public/vexforge-assets/heroes/hero_assets.jpg";
+
+// Packs with zero individual images extracted — only .zip bundle exists
+const PENDING_PACKS = ["founders", "misc", "sessions", "ui_system", "clans"];
+
+// Pack display order priority
+const PACK_ORDER = ["cards","factions","regions","backgrounds","events","boosts","frames","icons","logo","progression","chests","cover","lobby","market","wallet","rewards","tutorial"];
+
+import { SkeletonCardGrid } from "../shared/components/Skeleton";
 
 export function AssetsRoute() {
   const { gallery, loading, error } = useAssetGallery();
-  const packsWithImages = Object.keys(gallery).sort();
+  const packsWithImages = Object.keys(gallery).sort((a, b) => {
+    const ai = PACK_ORDER.indexOf(a);
+    const bi = PACK_ORDER.indexOf(b);
+    if (ai === -1 && bi === -1) return a.localeCompare(b);
+    if (ai === -1) return 1;
+    if (bi === -1) return -1;
+    return ai - bi;
+  });
 
   return (
     <section>
-      <header className="route-header">
-        <h1>Visual Assets</h1>
-        <DomainStatusBadge status="ready" />
-      </header>
+      <div className="hero-banner" style={{ backgroundImage: `url(${BG_URL})` }}>
+        <div className="hero-banner-overlay">
+          <h1>Visual Assets</h1>
+        </div>
+      </div>
 
-      {loading && <p className="muted">Loading assets from Supabase Storage…</p>}
+      {loading && <SkeletonCardGrid count={9} minWidth={140} />}
       {error && <p className="error">{error}</p>}
 
       {!loading && !error && (
         <>
           {packsWithImages.map((pack) => (
             <div key={pack} style={{ marginBottom: 32 }}>
-              <h2 style={{ textTransform: "capitalize", marginBottom: 12 }}>{pack}</h2>
+              <h2 style={{ textTransform: "capitalize", marginBottom: 12, fontSize: 16 }}>{pack}</h2>
               <div className="asset-gallery">
                 {gallery[pack].map((asset) => (
                   <figure key={asset.id} className="asset-tile">
@@ -41,19 +48,21 @@ export function AssetsRoute() {
             </div>
           ))}
 
-          <div className="empty-state">
-            <p>Pending visual generation (no individual images uploaded yet, zip bundle only):</p>
-            <ul>
-              {PENDING_PACKS.map((pack) => (
-                <li key={pack} style={{ textTransform: "capitalize" }}>{pack}</li>
-              ))}
-            </ul>
-            <p className="muted">
-              These packs are intentionally left empty here instead of showing invented art.
-              Once real images are uploaded to Storage under their pack folder and registered in
-              vexforge_official_asset_manifest, they will appear automatically above.
-            </p>
-          </div>
+          {PENDING_PACKS.some(p => !packsWithImages.includes(p)) && (
+            <div className="empty-state" style={{ marginTop: 16 }}>
+              <p style={{ fontWeight: 600, marginBottom: 8 }}>Pending — no individual images uploaded yet (zip bundle only):</p>
+              <ul style={{ listStyle: "none", padding: 0, display: "flex", flexWrap: "wrap", gap: 8 }}>
+                {PENDING_PACKS.filter(p => !packsWithImages.includes(p)).map((pack) => (
+                  <li key={pack}>
+                    <span className="mission-tag" style={{ textTransform: "capitalize" }}>{pack}</span>
+                  </li>
+                ))}
+              </ul>
+              <p className="muted" style={{ marginTop: 10, fontSize: 12 }}>
+                Once real images are uploaded and registered in vexforge_official_asset_manifest, they appear automatically above.
+              </p>
+            </div>
+          )}
         </>
       )}
     </section>
