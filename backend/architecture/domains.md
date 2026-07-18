@@ -1,24 +1,26 @@
 # Domain architecture
 
 Each folder under `src/domains/<name>/` owns one domain end to end:
-`repository.ts` (Supabase access) → optional `service.ts` (business logic) →
-optional `use<Name>.ts` hook → consumed by a route in `src/routes/`.
+`repository.ts` (Supabase access) -> optional `use<Name>.ts` hook -> route in `src/routes/`.
 
-## Status as of chat 27 (this session)
+## Status as of session 38 (2026-07-18)
 
 | Domain | Status | Notes |
 |---|---|---|
-| cards | ready | wired to real `cards` table, route live |
-| missions | ready | wired to real `missions` table, route live |
-| market | ready (reads) | `MarketRoute` wired chat 27 via `useMarket()`. `createListing()` still intentionally unimplemented -- INSERT policy qual not re-verified |
-| assets | ready | `AssetsRoute` wired chat 27 via `useAssets()` |
-| profile | ready | wired chat 27: real Supabase Auth (email/password) via `src/providers/AuthProvider.tsx`, reads `players` scoped by `auth.uid()` |
-| progress | ready | wired chat 27, reads `player_progress` (RLS-scoped implicitly) |
-| economy | ready (reads) | wired chat 27, reads `player_wallet` + `economy_ledger`. Read-only by design -- both tables are frontend-write-blocked at the RLS level |
-| settings | ready (reads) | wired chat 27, reads `player_settings`. Write policy exists (ALL, owner-scoped) but not implemented this pass |
-| auth | ready | `src/providers/AuthProvider.tsx` + `src/routes/AccountRoute.tsx`, email/password sign-in/sign-up/sign-out. Does not provision `players` rows automatically |
-| inventory | blocked_no_path | unchanged -- only RLS policy is `service_role`-only; backend decision needed |
-| fusion | blocked_no_path | unchanged -- same as inventory |
+| auth | ready | Supabase Auth email/password. ensure_player_row RPC on sign-up. Trigger on_auth_user_created auto-provisions players row. |
+| home | ready | Dashboard summary: player profile + active missions. |
+| cards | ready | Wired to cards + player_cards. Route live. |
+| missions | ready | Wired to missions table. Route live. |
+| market | ready | Reads market_listings. Writes via create_listing / buy_listing / cancel_listing RPCs. |
+| packs | ready | Reads pack_catalog + vexforge_pack_orders. Orders via vexforge_create_pack_order RPC (USDT payment). |
+| pvp | ready | Reads pvp_seasons (Season 1 live) + pvp_rankings + pvp_matches. Match resolution via RPC. |
+| clans | ready | Reads clans + clan_members + clan_wars. Clan creation via create_clan RPC (SECURITY DEFINER). |
+| profile | ready | Reads players scoped by auth.uid(). Supabase Auth. |
+| progress | ready | Reads player_progress RLS-scoped. |
+| economy | ready (reads only) | Reads player_wallet + economy_ledger. Write-blocked at RLS level by design. |
+| settings | ready | Reads + writes player_settings. Policy player_own_settings verified. |
+| assets | restricted | Shows Acceso Restringido screen. Admin-only, no public RLS path intended. |
+| inventory | blocked_not_exposed | RLS policy added S37 (user_id = auth.uid()), NOT exposed via PostgREST. Owner must GRANT SELECT to authenticated. |
+| fusion | blocked_no_rpc | FusionRoute UX ready (improved S37). fuse() calls supabase.rpc("fuse_cards") but that RPC does not exist yet. |
 
-Do not change a domain's status without re-checking `pg_policies` directly --
-never assume, always verify against live Supabase state.
+Do not change a domain status without re-checking pg_policies directly against live Supabase state.

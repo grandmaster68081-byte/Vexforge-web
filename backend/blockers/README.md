@@ -1,18 +1,16 @@
-# Open blockers
+# Open blockers — session 38 (2026-07-18)
 
-Authoritative copy: Supabase `vexforge_web_registry` + `verified_read_path_specs_v1`
-inside `vexforge_project_documents`. This is a local, human-readable mirror.
+| Blocker | Domains | Status | What unblocks it |
+|---|---|---|---|
+| inventory table not exposed via PostgREST | inventory | OPEN | GRANT SELECT ON public.inventory TO authenticated; then reload schema cache |
+| No fuse_cards RPC | fusion | OPEN | Create fuse_cards(p_card_a_id uuid, p_card_b_id uuid) RPC. See backend/pending/backend-gaps.md. |
+| 18 SECURITY DEFINER views flagged | backend | LOW | Convert to SECURITY INVOKER or document justification per view |
+| vexforge_web_registry not INSERT-accessible with service_role | continuity | LOW | GRANT INSERT, UPDATE ON public.vexforge_web_registry TO service_role; |
 
-| Blocker | Domains affected | What unblocks it |
-|---|---|---|
-| No player row auto-provisioning on sign-up | profile, progress, economy, settings (edge case) | A signed-in user with no matching `players` row gets an explicit empty-with-reason result, not an error. Deciding whether/how to auto-create a `players` row on first sign-up is still open -- needs an owner decision (trigger? RPC? manual admin step?) |
-| `market_write_owner` INSERT qual not fully re-verified | market (writes only; reads already work) | Re-run `pg_policies` check before implementing `createListing()` |
-| No RLS policy at all (public or authenticated) | inventory, fusion | Owner decision + backend RLS/RPC change -- not fixable from the frontend |
-| No Cloudflare Pages deploy tool in any connector used so far | whole project -- not live yet | Manual deploy per `backend/handoff/deployment.md`, or a session with a connector that has a deploy tool |
-| 18 SECURITY DEFINER views still flagged ERROR by the security advisor (chat 26 revoked public grants but did not convert views to security_invoker) | backend, not directly frontend-blocking | Convert each view individually or document why it stays SECURITY DEFINER -- see `vexforge_project_decisions.chat26_security_hardening_definer_views_and_search_path` |
-
-~~No auth provider wired~~ -- RESOLVED chat 27: `src/providers/AuthProvider.tsx`
-(Supabase Auth, email/password) wired, unblocking profile/progress/economy/settings.
-
-Update this table whenever a blocker opens or closes -- and update the same
-facts in Supabase in the same session, since Supabase is authoritative.
+## RESOLVED (prior sessions)
+- No auth provider -> RESOLVED S27
+- No player row auto-provisioning -> RESOLVED S37: on_auth_user_created trigger + ensure_player_row RPC
+- market write path not verified -> RESOLVED S37: create_listing RPC
+- inventory zero RLS policies -> RESOLVED S37: authenticated_read_own_inventory added
+- clans no write path -> RESOLVED S37: create_clan RPC
+- No PvP season data -> RESOLVED S37: Season 1 inserted
