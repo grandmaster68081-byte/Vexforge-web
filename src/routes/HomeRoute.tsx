@@ -135,7 +135,7 @@ export function HomeRoute() {
                     Balance
                   </p>
                   <p style={{ fontSize: 28, fontWeight: 800, color: "#f0b429", margin: 0 }}>
-                    {Number(wallet.balance_usdt ?? 0).toFixed(2)}{" "}
+                    {Number(wallet.vex_ingame ?? 0).toFixed(2)}{" "}
                     <span style={{ fontSize: 12, opacity: 0.6 }}>USDT</span>
                   </p>
                 </div>
@@ -192,13 +192,13 @@ export function HomeRoute() {
                   <div key={m.id} className="mission-row">
                     <div>
                       <p style={{ margin: 0, fontWeight: 600, fontSize: 14 }}>{m.name}</p>
-                      {m.description && (
+                      {m.mission_group && (
                         <p className="muted" style={{ margin: "2px 0 0", fontSize: 12 }}>
-                          {m.description}
+                          {m.mission_group}
                         </p>
                       )}
                     </div>
-                    <span className="mission-tag">{m.type}</span>
+                    <span className="mission-tag">{m.mission_type}</span>
                   </div>
                 ))}
               </div>
