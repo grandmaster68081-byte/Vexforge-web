@@ -1,202 +1,141 @@
-import { Link } from "react-router-dom";
-import { useInventory } from "../domains/inventory/useInventory";
+import { useState, useEffect, useCallback } from "react";
+import { getPlayerCollection, type PlayerCard } from "../domains/inventory/repository";
 
-const BG_URL =
-  "https://rscuzqnfccqvltkdcdny.supabase.co/storage/v1/object/public/vexforge-assets/heroes/hero_progress.jpg";
-
-const RARITY_COLOR: Record<string, string> = {
-  Común: "#8a8a9e", Common: "#8a8a9e",
-  Raro: "#4a9eff",   Rare: "#4a9eff",
-  Épico: "#a855f7",  Epic: "#a855f7",
-  Legendario: "#e8702a", Legendary: "#e8702a",
-  Mythic: "#ff6b6b",
+const RARITY_COLOR: Record<string,string> = {
+Common:"#8b8b9e",Uncommon:"#3ddc84",Rare:"#4a9eff",Epic:"#a855f7",Legendary:"#e8b84b",Mythic:"#ff4444",
 };
+const FACTION_COLOR: Record<string,string> = {
+Guerrero:"#e85d04",Mago:"#4a9eff","Paladín":"#e8b84b",Pícaro:"#a855f7",
+};
+const RARITY_ORDER = ["Mythic","Legendary","Epic","Rare","Uncommon","Common"];
 
-function rarityColor(r: string | null): string {
-  if (!r) return "#8a8a9e";
-  for (const [k, v] of Object.entries(RARITY_COLOR)) {
-    if (r.toLowerCase().includes(k.toLowerCase())) return v;
-  }
-  return "#8a8a9e";
-}
-
-export function InventoryRoute() {
-  const { items, loading, error, signedIn } = useInventory();
-
-  return (
-    <section>
-      <div
-        className="hero-banner"
-        style={{ backgroundImage: `url(${BG_URL})` }}
-      >
-        <div className="hero-banner-overlay">
-          <h1>Inventory</h1>
-          <p style={{ color: "#c4c4d4", fontSize: 13, marginTop: 4 }}>
-            {signedIn
-              ? `${items.length} item${items.length !== 1 ? "s" : ""} in your inventory`
-              : "Your personal item storage"}
-          </p>
-        </div>
+function CollectionCard({ card }: { card: PlayerCard }) {
+const rc = RARITY_COLOR[card.rarity] ?? "#8b8b9e";
+const fc = FACTION_COLOR[card.faction] ?? "#888";
+const keywords: string[] = card.synergy_json?.keywords ?? [];
+return (
+  <div style={{
+    background:"linear-gradient(160deg,#1a1a2e,#12121a)",
+    border:`1.5px solid ${rc}44`,borderRadius:10,overflow:"hidden",
+    boxShadow:`0 0 10px ${rc}18`,position:"relative",
+  }}>
+    {card.image_url ? (
+      <img src={card.image_url} alt={card.name}
+        style={{width:"100%",aspectRatio:"3/4",objectFit:"cover",display:"block"}}
+        onError={e=>{(e.target as HTMLImageElement).style.display="none";}}/>
+    ) : (
+      <div style={{width:"100%",aspectRatio:"3/4",background:`${rc}18`,display:"flex",
+        alignItems:"center",justifyContent:"center",fontSize:32}}>
+        {card.faction==="Guerrero"?"⚔️":card.faction==="Mago"?"🔮":card.faction==="Paladín"?"🛡️":"🗡️"}
       </div>
-
-      {/* Not signed in */}
-      {!loading && !signedIn && (
-        <div className="empty-state" style={{ marginTop: 8 }}>
-          <p style={{ fontWeight: 600, marginBottom: 8 }}>Sign in to view your inventory</p>
-          <p className="muted" style={{ marginBottom: 16 }}>
-            Your items, shards, and collectibles are stored here. Sign in to manage them.
-          </p>
-          <Link to="/account">
-            <button style={{ background: "var(--forge-ember)" }}>Sign In →</button>
-          </Link>
-        </div>
-      )}
-
-      {/* Loading */}
-      {loading && (
-        <div style={{ marginTop: 16, display: "flex", flexDirection: "column", gap: 10 }}>
-          {Array.from({ length: 4 }).map((_, i) => (
-            <div
-              key={i}
-              className="skeleton"
-              style={{ height: 56, borderRadius: 8 }}
-            />
+    )}
+    {card.quantity > 1 && (
+      <span style={{position:"absolute",top:6,right:6,background:rc,color:"#0a0a12",
+        borderRadius:10,fontSize:9,fontWeight:800,padding:"2px 6px"}}>×{card.quantity}</span>
+    )}
+    <div style={{padding:"8px 10px"}}>
+      <div style={{color:rc,fontSize:8,fontWeight:700,letterSpacing:1,marginBottom:2}}>{card.rarity.toUpperCase()}</div>
+      <div style={{color:"#e8e8f0",fontFamily:"Cinzel,serif",fontSize:11,fontWeight:700,marginBottom:3,
+        overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{card.name}</div>
+      <div style={{display:"flex",justifyContent:"space-between",marginBottom:4}}>
+        <span style={{color:fc,fontSize:9}}>{card.faction}</span>
+        <span style={{color:"#e8b84b",fontSize:9}}>⚡{card.power}</span>
+      </div>
+      {keywords.length>0 && (
+        <div style={{display:"flex",gap:3,flexWrap:"wrap"}}>
+          {keywords.slice(0,3).map(k=>(
+            <span key={k} style={{background:`${rc}22`,color:rc,fontSize:7,padding:"1px 4px",
+              borderRadius:4,fontWeight:700}}>{k}</span>
           ))}
         </div>
       )}
+    </div>
+  </div>
+);
+}
 
-      {/* Error */}
-      {!loading && error && <p className="error" style={{ marginTop: 16 }}>{error}</p>}
+export function InventoryRoute() {
+const [cards, setCards] = useState<PlayerCard[]>([]);
+const [loading, setLoading] = useState(true);
+const [error, setError] = useState<string|null>(null);
+const [faction, setFaction] = useState("all");
+const [rarity, setRarity] = useState("all");
+const [search, setSearch] = useState("");
 
-      {/* Empty inventory */}
-      {!loading && signedIn && !error && items.length === 0 && (
-        <div className="empty-state" style={{ marginTop: 16 }}>
-          <p style={{ fontWeight: 600, marginBottom: 8 }}>Your inventory is empty</p>
-          <p className="muted" style={{ marginBottom: 16, lineHeight: 1.6 }}>
-            Open card packs to receive items. Completing missions also rewards shards and collectibles.
-          </p>
-          <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
-            <Link to="/packs">
-              <button style={{ background: "var(--forge-ember)" }}>Open Packs →</button>
-            </Link>
-            <Link to="/missions">
-              <button style={{ background: "#ffffff0e", border: "1px solid #ffffff16" }}>
-                View Missions
-              </button>
-            </Link>
-          </div>
-        </div>
-      )}
+const load = useCallback(async () => {
+  setLoading(true);
+  const res = await getPlayerCollection();
+  if (res.data) setCards(res.data);
+  setError(res.reason ?? null);
+  setLoading(false);
+}, []);
 
-      {/* Inventory list */}
-      {!loading && signedIn && items.length > 0 && (
-        <div style={{ marginTop: 8 }}>
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fill, minmax(240px, 1fr))",
-              gap: 12,
-            }}
-          >
-            {items.map((item) => (
-              <div
-                key={item.id}
-                className="stat-card"
-                style={{ display: "flex", gap: 14, alignItems: "flex-start" }}
-              >
-                {/* Icon */}
-                <div
-                  style={{
-                    width: 44,
-                    height: 44,
-                    borderRadius: 8,
-                    background: "#ffffff08",
-                    border: "1px solid #ffffff12",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    fontSize: 20,
-                    flexShrink: 0,
-                  }}
-                >
-                  {item.item_type === "shard" ? "💎"
-                    : item.item_type === "card" ? "🃏"
-                    : item.item_type === "consumable" ? "⚗️"
-                    : "📦"}
-                </div>
+useEffect(() => { load(); }, [load]);
 
-                <div style={{ flex: 1, minWidth: 0 }}>
-                  <p style={{ fontWeight: 600, fontSize: 14, margin: "0 0 2px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-                    {item.item_name ?? item.item_type ?? "Unknown Item"}
-                  </p>
-                  <div style={{ display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap" }}>
-                    {item.rarity && (
-                      <span
-                        style={{
-                          fontSize: 11,
-                          fontWeight: 600,
-                          color: rarityColor(item.rarity),
-                        }}
-                      >
-                        {item.rarity}
-                      </span>
-                    )}
-                    {item.item_type && (
-                      <span className="muted" style={{ fontSize: 11 }}>
-                        {item.item_type}
-                      </span>
-                    )}
-                  </div>
-                </div>
+const factions = ["all", "Guerrero", "Mago", "Paladín", "Pícaro"];
 
-                {/* Quantity badge */}
-                <div
-                  style={{
-                    background: "#ffffff0a",
-                    border: "1px solid #ffffff12",
-                    borderRadius: 6,
-                    padding: "3px 10px",
-                    fontSize: 14,
-                    fontWeight: 700,
-                    flexShrink: 0,
-                    color: "var(--forge-mist)",
-                  }}
-                >
-                  ×{item.quantity}
-                </div>
-              </div>
-            ))}
-          </div>
+const filtered = cards
+  .filter(c => faction==="all" || c.faction===faction)
+  .filter(c => rarity==="all" || c.rarity===rarity)
+  .filter(c => !search || c.name.toLowerCase().includes(search.toLowerCase()) || c.code.toLowerCase().includes(search.toLowerCase()))
+  .sort((a,b) => {
+    const ri = RARITY_ORDER.indexOf(a.rarity) - RARITY_ORDER.indexOf(b.rarity);
+    return ri !== 0 ? ri : b.power - a.power;
+  });
 
-          {/* Navigation footer */}
-          <div
-            style={{
-              display: "flex",
-              gap: 10,
-              marginTop: 24,
-              paddingTop: 16,
-              borderTop: "1px solid #ffffff10",
-              flexWrap: "wrap",
-            }}
-          >
-            <Link to="/cards">
-              <button style={{ background: "#ffffff0e", border: "1px solid #ffffff16" }}>
-                🃏 View Cards
-              </button>
-            </Link>
-            <Link to="/fusion">
-              <button style={{ background: "#ffffff0e", border: "1px solid #ffffff16" }}>
-                ⚗️ Fusion Lab
-              </button>
-            </Link>
-            <Link to="/market">
-              <button style={{ background: "#ffffff0e", border: "1px solid #ffffff16" }}>
-                🏪 Market
-              </button>
-            </Link>
-          </div>
-        </div>
-      )}
-    </section>
-  );
+const totalUnique = cards.length;
+const totalCards = cards.reduce((s,c) => s+c.quantity, 0);
+
+return (
+  <main style={{maxWidth:1100,margin:"0 auto",padding:"32px 16px"}}>
+    <div style={{marginBottom:24}}>
+      <h1 style={{fontFamily:"Cinzel,serif",color:"#e8b84b",fontSize:26,margin:"0 0 4px"}}>🃏 Mi Colección</h1>
+      <p style={{color:"#888",margin:0,fontSize:12}}>{totalUnique} cartas únicas · {totalCards} cartas totales</p>
+    </div>
+
+    {error && <div style={{background:"#2a1a1a",border:"1px solid #ff6b6b33",borderRadius:8,padding:"10px 14px",color:"#ff6b6b",marginBottom:16}}>{error}</div>}
+
+    {/* Filters */}
+    <div style={{display:"flex",gap:10,marginBottom:20,flexWrap:"wrap",alignItems:"center"}}>
+      <input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Buscar carta…"
+        style={{background:"#1a1a2e",border:"1px solid #2a2a3a",borderRadius:7,padding:"7px 12px",
+          color:"#e8e8f0",fontSize:12,outline:"none",width:160}}/>
+      <div style={{display:"flex",gap:4}}>
+        {factions.map(f=>(
+          <button key={f} onClick={()=>setFaction(f)} style={{
+            padding:"5px 10px",borderRadius:16,border:"none",fontSize:10,fontWeight:700,cursor:"pointer",
+            background:faction===f?(FACTION_COLOR[f]??"#e8b84b")+"cc":"#1a1a2e",
+            color:faction===f?"#0a0a12":"#888",
+          }}>{f==="all"?"TODOS":f.toUpperCase()}</button>
+        ))}
+      </div>
+      <div style={{display:"flex",gap:4}}>
+        {["all","Mythic","Legendary","Epic","Rare"].map(r=>(
+          <button key={r} onClick={()=>setRarity(r)} style={{
+            padding:"5px 10px",borderRadius:16,border:"none",fontSize:10,fontWeight:700,cursor:"pointer",
+            background:rarity===r?(RARITY_COLOR[r]??"#e8b84b")+"cc":"#1a1a2e",
+            color:rarity===r?"#0a0a12":"#888",
+          }}>{r==="all"?"TODA":r.toUpperCase()}</button>
+        ))}
+      </div>
+    </div>
+
+    {loading && <p style={{color:"#666",textAlign:"center",padding:40}}>Cargando colección…</p>}
+
+    {!loading && cards.length===0 && (
+      <div style={{textAlign:"center",padding:60,background:"#1a1a2e",borderRadius:12}}>
+        <div style={{fontSize:48,marginBottom:12}}>📦</div>
+        <p style={{color:"#555",margin:0}}>Tu colección está vacía. Abre packs para obtener tus primeras cartas.</p>
+      </div>
+    )}
+
+    {!loading && filtered.length===0 && cards.length>0 && (
+      <p style={{color:"#555",textAlign:"center"}}>No se encontraron cartas con ese filtro.</p>
+    )}
+
+    <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(130px,1fr))",gap:10}}>
+      {filtered.map(c => <CollectionCard key={c.player_card_id} card={c}/>)}
+    </div>
+  </main>
+);
 }

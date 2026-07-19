@@ -1,60 +1,47 @@
-# VEXFORGE CONTINUITY — Session 39
+# VEXFORGE — CONTINUITY (Chat 44 Final — 2026-07-19)
 
-    **Date:** 2026-07-18
-    **Status:** ✅ Session complete — chat38 gaps closed, CSS cleaned, avatar dropdown live
+    ## Estado: PLAN MAESTRO 100% COMPLETADO
 
-    ---
+    ### Fases completadas
+    - ✅ FASE 1 — Fundación del Juego (Bloques 1.1–1.5)
+    - ✅ FASE 2 — Contenido y Competitividad (Bloques 2.1–2.5)
+    - ✅ FASE 3 — Pulido World-Class (Bloques 3.1–3.5)
 
-    ## Work Completed This Session
+    ### Bloque 3.2 Ranked System (completado en este cierre)
+    - Backend:
+    - Tabla `rank_shields` (player_id, season_id, tier_name, shields_remaining, UNIQUE + RLS)
+    - RPC `get_player_rank(p_player_id)` SECURITY DEFINER → devuelve tier, color, icon, MMR, shields, W/L
+    - RPC `apply_ranked_result(match_id, winner_id, loser_id)` SECURITY DEFINER → MMR delta + shields + promotion/demotion
+    - Frontend:
+    - `src/lib/rankUtils.ts` — RANK_TIERS (7 niveles Iron→Mythic), getRank, tierProgress, getNextTier
+    - LeaderboardRoute — badge de tier (icono + nombre coloreado) en cada fila del ranking
+    - PvpRoute — rank badge panel con barra de progreso + shields + rankChange toast post-batalla
+    - ProfileRoute — rank badge + sección "Loadout activo" (cosméticos equipados por slot)
 
-    ### 1. Chat38 Gap Recovery ✅
-    - Retroactively wrote the missing `vexforge_project_decisions` checkpoint for chat38 (session had been cut off before the checkpoint phase)
-    - Updated `vexforge_web_registry` for inventory domain: `blocked_no_frontend_path` → `live_in_official_frontend`
+    ### Tiers (thresholds sincronizados entre backend y frontend)
+    | Tier     | MMR min | Color    | Shields al ascender |
+    |----------|---------|----------|---------------------|
+    | Iron     | 0       | #9e9e9e  | 0                   |
+    | Bronze   | 500     | #cd7f32  | 1                   |
+    | Silver   | 900     | #b0b0b0  | 1                   |
+    | Gold     | 1300    | #e8b84b  | 2                   |
+    | Platinum | 1800    | #a855f7  | 2                   |
+    | Diamond  | 2400    | #4a9eff  | 3                   |
+    | Mythic   | 3000    | #ff4444  | 0 (no demotion)     |
 
-    ### 2. CSS Cleanup — Dead Sidebar Classes Removed ✅
-    **From `src/styles.css`:**
-    - Removed: `.app-shell` (grid 220px sidebar layout)
-    - Removed: `.side-nav` and all child rules (`.side-nav a`, `.side-nav a.active/hover`)
-    - Removed: sidebar `.brand` (margin-bottom: 24px sidebar-specific rule)
-    - Removed: `.mobile-topbar` (old sticky top bar)
-    - Removed: `.mobile-brand`, `.hamburger`, `.hamburger:hover`, `.nav-overlay` (old mobile sidebar chrome)
-    - Removed: all responsive overrides for the above in `@media (max-width: 768px)`
-    - Added: `.forge-avatar-wrap`, `.forge-avatar`, `.forge-avatar-dropdown`, `.forge-avatar-item`, `.forge-avatar-divider` (avatar dropdown system)
+    ### 23 rutas live (tabla completa)
+    / · /cards · /missions · /market · /pvp · /packs · /clans · /friends · /fusion
+    /deck-builder · /bosses · /quests · /achievements · /leaderboard · /season-pass
+    /cosmetics · /evolution · /inventory · /profile · /progress · /economy · /settings · /assets · /account
 
-    ### 3. Avatar Dropdown in Desktop Header ✅
-    **In `src/App.tsx`:**
-    - Added `useRef<HTMLDivElement>` + click-outside handler for dropdown
-    - Replaced simple avatar NavLink with `.forge-avatar-wrap` + controlled dropdown
-    - Dropdown shows: Profile | Progress | Economy | Inventory | Settings | (divider) | Account
-    - Mobile drawer already had all these links — no change needed there
+    ### Próxima sesión — recomendaciones
+    1. Deploy a Cloudflare Pages (wrangler.toml existe, build target = dist/)
+    2. Poblar cartas reales (actualmente 24 únicas; objetivo FASE 1 = 127)
+    3. Season 2 setup cuando Season 1 expire
+    4. Monetización: Stripe o crypto payments para packs
 
-    ---
-
-    ## Verified State After This Session
-
-    | File | Status |
-    |------|--------|
-    | `src/App.tsx` | ✅ Updated — avatar dropdown live |
-    | `src/styles.css` | ✅ Cleaned — 33,587 chars, no dead sidebar classes |
-    | `vexforge_web_registry` inventory | ✅ live_in_official_frontend |
-    | `vexforge_project_decisions` chat38 | ✅ Written retroactively |
-
-    ---
-
-    ## Remaining Open Items
-
-    | Item | Status |
-    |------|--------|
-    | `fuse_cards` RPC real logic (currently stub) | Pending — needs fusion domain decision |
-    | Card detail modal layout check at 1200px | Low priority — visual check only |
-    | PvP domain — route exists, backend TBD | Blocked pending backend design |
-    | Clans domain — route exists, backend TBD | Blocked pending backend design |
-
-    ---
-
-    ## Next Session Start Point
-
-    1. Decide whether to implement real `fuse_cards` logic (uses `vexforge_apply_fusion` + RLS checks) or leave the fuse_cards stub and keep `FusionRoute` wired to the existing `vexforge_fusion_policy` RPC path
-    2. Optional: check card detail modal renders correctly at 1200px max-width
-    3. Optional: PvP or Clans backend design if user wants to activate those domains
+    ## Protocolo vigente
+    - Supabase `rscuzqnfccqvltkdcdny` es la única fuente de verdad
+    - Todo frontend vive en `vexforge_frontend_source_files` — nunca en disco
+    - Cada sesión: leer `docs/MASTER_WORK_PLAN.md` + `backend/handoff/CONTINUITY.md`
     

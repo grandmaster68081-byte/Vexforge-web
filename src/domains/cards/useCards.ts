@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { listActiveCards, type Card } from "./repository";
+export type { Card };
 
 export function useCards() {
   const [cards, setCards] = useState<Card[]>([]);

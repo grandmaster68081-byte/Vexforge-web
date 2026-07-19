@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import { getInventory, type InventoryItem } from "./repository";
+import { getPlayerCollection, type PlayerCard } from "./repository";
 
 export function useInventory() {
-  const [items, setItems] = useState<InventoryItem[]>([]);
+  const [items, setItems] = useState<PlayerCard[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [signedIn, setSignedIn] = useState(false);
@@ -12,7 +12,7 @@ export function useInventory() {
     setLoading(true);
     setError(null);
 
-    getInventory().then((result) => {
+    getPlayerCollection().then((result) => {
       if (cancelled) return;
       if (result.status === "blocked_auth") {
         setSignedIn(false);

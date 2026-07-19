@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback } from "react";
 import {
-  listTopClans,
+  listClans,
   listClanMembers,
   listMyClanWars,
   type Clan,
@@ -21,7 +21,7 @@ export function useClans() {
   const load = useCallback(async () => {
     setLoading(true);
     const [clansResult, warsResult] = await Promise.all([
-      listTopClans(),
+      listClans(),
       listMyClanWars(),
     ]);
     setClans(clansResult.data ?? []);
