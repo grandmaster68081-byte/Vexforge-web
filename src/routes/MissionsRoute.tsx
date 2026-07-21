@@ -427,7 +427,7 @@ function MissionCard({ mission, onExecute, executing, isExecuting, isCompleted, 
 // ─── Route ────────────────────────────────────────────────────────────────────
 
 export function MissionsRoute() {
-  const { data: progressData } = useProgress();
+  const { progress: progressData } = useProgress();
   const energy    = (progressData as any)?.energy_current ?? 0;
   const maxEnergy = (progressData as any)?.energy_max     ?? 100;
 

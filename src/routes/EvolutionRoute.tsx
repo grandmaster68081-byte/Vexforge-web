@@ -150,7 +150,7 @@ export function EvolutionRoute() {
       ) : (
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(300px,1fr))", gap: 14 }}>
           {filtered.map(p => (
-            <EvoCard key={p.id} path={p} onEvolve={evolve} evolving={evolving} />
+            <EvoCard key={p.id} path={p} onEvolve={(p) => evolve(p.id)} evolving={evolving} />
           ))}
         </div>
       )}

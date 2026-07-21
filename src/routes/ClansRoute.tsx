@@ -191,7 +191,7 @@ function CreateClanModal({ onCreate, onClose }: { onCreate: (name: string, desc:
 // ---- Main Route ----
 export function ClansRoute() {
   const { clanData, authed, reload, startWar, join, leave, create } = useClans();
-  const { showToast } = useToast();
+  const { addToast } = useToast();
   const [warModal, setWarModal]       = useState(false);
   const [createModal, setCreateModal] = useState(false);
   const [joining, setJoining]         = useState<string | null>(null);
@@ -201,26 +201,26 @@ export function ClansRoute() {
     setJoining(clanId);
     const res = await join(clanId);
     setJoining(null);
-    showToast(res.data?.message ?? (res.data?.ok ? "¡Te uniste!" : "Error al unirse."), res.data?.ok ? "success" : "error");
-  }, [join, showToast]);
+    addToast(res.data?.ok ? "success" : "error", res.data?.message ?? (res.data?.ok ? "¡Te uniste!" : "Error al unirse."));
+  }, [join, addToast]);
 
   const handleLeave = useCallback(async () => {
     if (!confirm("¿Seguro que quieres salir del Clan?")) return;
     setLeaving(true);
     const res = await leave();
     setLeaving(false);
-    showToast(res.data?.message ?? "Saliste del Clan.", res.data?.ok ? "info" : "error");
-  }, [leave, showToast]);
+    addToast(res.data?.ok ? "success" : "error", res.data?.message ?? "Saliste del Clan.");
+  }, [leave, addToast]);
 
   const handleStartWar = useCallback(async (opponentClanId: string) => {
     const res = await startWar(opponentClanId);
-    showToast(res.data?.message ?? (res.data?.ok ? "¡Guerra declarada!" : "Error."), res.data?.ok ? "success" : "error");
-  }, [startWar, showToast]);
+    addToast(res.data?.ok ? "success" : "error", res.data?.message ?? (res.data?.ok ? "¡Guerra declarada!" : "Error."));
+  }, [startWar, addToast]);
 
   const handleCreate = useCallback(async (name: string, desc: string) => {
     const res = await create(name, desc);
-    showToast(res.data?.message ?? (res.data?.ok ? "¡Clan creado!" : "Error."), res.data?.ok ? "success" : "error");
-  }, [create, showToast]);
+    addToast(res.data?.ok ? "success" : "error", res.data?.message ?? (res.data?.ok ? "¡Clan creado!" : "Error."));
+  }, [create, addToast]);
 
   if (clanData.status === "loading") return <PageLoader />;
   if (authed === false)              return <BlockedAuthState message="Inicia sesión para ver los Clanes." />;
@@ -407,7 +407,7 @@ export function ClansRoute() {
 
             <SectionCard title="CLANES DISPONIBLES" accent="#4a9eff">
               {allClans.length === 0
-                ? <EmptyState message="No hay Clanes públicos disponibles." />
+                ? <EmptyState title="No hay Clanes públicos disponibles." />
                 : allClans.map(c => (
                   <ClanDiscoveryCard key={c.id} clan={c} onJoin={handleJoin} joining={joining === c.id} />
                 ))

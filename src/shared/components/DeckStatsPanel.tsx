@@ -30,7 +30,7 @@ import { useState, useEffect } from "react";
     const factions  = Object.entries(stats.faction_counts).sort((a,b) => b[1]-a[1]);
     const rarities  = RARITY_ORDER.filter(r => stats.rarity_counts[r] > 0)
                         .map(r => ({ r, count: stats.rarity_counts[r] }));
-    const totalRarity = rarities.reduce((s,[,{count}]) => s + count, 0) || 1;
+    const totalRarity = rarities.reduce((s, item) => s + item.count, 0) || 1;
     const totalFaction = factions.reduce((s,[,n]) => s+n, 0) || 1;
 
     return (

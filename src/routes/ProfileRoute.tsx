@@ -88,7 +88,7 @@ function RankCard({ rank, loading }: { rank: PlayerRank | null; loading: boolean
   return (
     <div style={{ background: "var(--layer-1)", borderRadius: 14,
       border: `1px solid ${color}33`, padding: "20px 22px",
-      background: `linear-gradient(135deg, ${color}08 0%, var(--layer-1) 60%)` }}>
+      backgroundImage: `linear-gradient(135deg, ${color}08 0%, var(--layer-1) 60%)` }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 16 }}>
         <div>
           <div style={{ fontSize: 38, lineHeight: 1 }}>{icon}</div>
@@ -198,7 +198,7 @@ function WalletSnapshotSection({ wallet, loading }: { wallet: WalletSnapshot | n
           <div style={{ background: "var(--layer-1)", borderRadius: 12,
             border: `1px solid ${color}33`, padding: "16px 18px",
             transition: "border-color 0.18s, background 0.18s",
-            background: `linear-gradient(135deg, ${color}08 0%, var(--layer-1) 70%)` }}
+            backgroundImage: `linear-gradient(135deg, ${color}08 0%, var(--layer-1) 70%)` }}
             onMouseEnter={e => { (e.currentTarget as HTMLDivElement).style.borderColor = `${color}66`; }}
             onMouseLeave={e => { (e.currentTarget as HTMLDivElement).style.borderColor = `${color}33`; }}>
             {loading ? <SkeletonBlock h={50} radius={8} /> : (
@@ -340,7 +340,7 @@ export function ProfileRoute() {
       <div style={{ background: "var(--layer-1)", borderRadius: 16,
         border: "1px solid rgba(201,144,31,0.18)", padding: "24px 24px 20px",
         marginBottom: 24,
-        background: "linear-gradient(135deg, rgba(201,144,31,0.06) 0%, var(--layer-1) 50%)" }}>
+        backgroundImage: "linear-gradient(135deg, rgba(201,144,31,0.06) 0%, var(--layer-1) 50%)" }}>
         {loading ? (
           <div style={{ display: "flex", gap: 20, alignItems: "center" }}>
             <div className="skeleton" style={{ width: 72, height: 72, borderRadius: "50%" }} />

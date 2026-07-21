@@ -138,8 +138,8 @@ export function FriendsRoute() {
                   </div>
                   {c.status === "pending" && (
                     <div style={{ display: "flex", gap: 8 }}>
-                      <button onClick={async () => { const r = await respondChallenge(c.id, true); r.ok ? addToast("success", "Desafío aceptado") : addToast("error", "Error al aceptar"); }} style={btn()}>Aceptar</button>
-                      <button onClick={async () => { const r = await respondChallenge(c.id, false); r.ok ? addToast("error", "Desafío rechazado") : addToast("error", "Error al rechazar"); }} style={btn("#e3573f")}>Rechazar</button>
+                      <button onClick={async () => { await respondChallenge(c.id, true); addToast("success", "Desafío aceptado"); }} style={btn()}>Aceptar</button>
+                      <button onClick={async () => { await respondChallenge(c.id, false); addToast("error", "Desafío rechazado"); }} style={btn("#e3573f")}>Rechazar</button>
                     </div>
                   )}
                 </div>

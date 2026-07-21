@@ -173,7 +173,7 @@ function BoardUnit({
           display: 'flex', gap: 2, flexWrap: 'wrap',
         }}>
           {unit.keywords.slice(0, 2).map(kw => (
-            <span key={kw} style={{ fontSize: 9, title: kw }}>{KEYWORD_ICON[kw] ?? '✦'}</span>
+            <span key={kw} style={{ fontSize: 9 }} title={kw}>{KEYWORD_ICON[kw] ?? '✦'}</span>
           ))}
         </div>
       )}

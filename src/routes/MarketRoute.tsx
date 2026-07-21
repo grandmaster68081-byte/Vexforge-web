@@ -449,7 +449,7 @@ export function MarketRoute() {
                     key={r}
                     onClick={() => setRarity(r)}
                     style={{
-                      padding: "4px 12px", borderRadius: 20, border: "none", fontSize: 11,
+                      padding: "4px 12px", borderRadius: 20, fontSize: 11,
                       cursor: "pointer", fontWeight: rarityFilter === r ? 700 : 400,
                       background: rarityFilter === r
                         ? (r === "all" ? "rgba(255,255,255,0.15)" : `${RARITY_COLOR[r] ?? "#fff"}22`)
