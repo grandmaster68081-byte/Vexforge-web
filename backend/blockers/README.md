@@ -1,16 +1,25 @@
-# Open blockers — session 38 (2026-07-18)
+# Open blockers — updated chat59/bloque-B.5 (2026-07-20)
 
-| Blocker | Domains | Status | What unblocks it |
-|---|---|---|---|
-| inventory table not exposed via PostgREST | inventory | OPEN | GRANT SELECT ON public.inventory TO authenticated; then reload schema cache |
-| No fuse_cards RPC | fusion | OPEN | Create fuse_cards(p_card_a_id uuid, p_card_b_id uuid) RPC. See backend/pending/backend-gaps.md. |
-| 18 SECURITY DEFINER views flagged | backend | LOW | Convert to SECURITY INVOKER or document justification per view |
-| vexforge_web_registry not INSERT-accessible with service_role | continuity | LOW | GRANT INSERT, UPDATE ON public.vexforge_web_registry TO service_role; |
+    ## ACTIVE BLOCKERS
 
-## RESOLVED (prior sessions)
-- No auth provider -> RESOLVED S27
-- No player row auto-provisioning -> RESOLVED S37: on_auth_user_created trigger + ensure_player_row RPC
-- market write path not verified -> RESOLVED S37: create_listing RPC
-- inventory zero RLS policies -> RESOLVED S37: authenticated_read_own_inventory added
-- clans no write path -> RESOLVED S37: create_clan RPC
-- No PvP season data -> RESOLVED S37: Season 1 inserted
+    | Blocker | Domains | Status | What unblocks it |
+    |---|---|---|---|
+    | 18+ SECURITY DEFINER functions | backend | DOCUMENTED — intentional | All public RPCs require SECURITY DEFINER to bypass RLS on behalf of authenticated users. This is correct architecture. Resolved chat60. |
+
+    ## RESOLVED (all sessions)
+    - **BUG-4** get_player_stats column player_a_id does not exist → **RESOLVED chat59**: pvp_matches uses player_a/player_b/winner (verified via DB introspection). Function confirmed correct.
+    - PvP listArenaPlayers direct players query (RLS violation) → **RESOLVED chat56**
+    - vexforge_find_opponents RPC missing → **RESOLVED chat56**
+    - vexforge_start_battle RPC missing → **RESOLVED chat56**
+    - inventory table not exposed via PostgREST → RESOLVED S38
+    - No fuse_cards RPC → RESOLVED S42
+    - No auth provider → RESOLVED S27
+    - No player row auto-provisioning → RESOLVED S37
+    - market write path not verified → RESOLVED S37
+    - clans display names (players_self RLS) → RESOLVED S45 via get_public_player_names
+    - BUG-1 get_home_stats → RESOLVED S48
+    - BUG-2 claim_daily_quest → RESOLVED S48
+    - BUG-3 security_invoker views 91/91 → RESOLVED S48
+    - BUG-CRITICO-CHAT54 pl.username→pl.display_name → RESOLVED S54
+    - WorldBossesRoute schema mismatch (max_hp/element/reward_vex/status) → **RESOLVED chat59 B.5**
+    

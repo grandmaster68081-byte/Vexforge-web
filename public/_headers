@@ -1,0 +1,33 @@
+# Cloudflare Pages — HTTP headers
+# Reference: https://developers.cloudflare.com/pages/configuration/headers/
+
+# ── Static assets: long-lived cache (immutable hash in filename) ───────────
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# ── HTML entry point: always revalidate ───────────────────────────────────
+/index.html
+  Cache-Control: public, max-age=0, must-revalidate
+
+# ── Global security headers ───────────────────────────────────────────────
+/*
+  # Prevent embedding in iframes (clickjacking protection)
+  X-Frame-Options: DENY
+  # Prevent MIME-type sniffing
+  X-Content-Type-Options: nosniff
+  # Older XSS filter for legacy browsers
+  X-XSS-Protection: 1; mode=block
+  # Limit referrer information
+  Referrer-Policy: strict-origin-when-cross-origin
+  # Restrict browser APIs not used by the game
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=()
+  # Content Security Policy
+  # - default-src: only self
+  # - script-src: self + inline (Vite dev scripts)
+  # - style-src: self + inline + Google Fonts
+  # - img-src: self + Supabase Storage + data URIs
+  # - connect-src: self + Supabase project (REST + Realtime)
+  # - font-src: self + Google Fonts
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' https://rscuzqnfccqvltkdcdny.supabase.co data: blob:; connect-src 'self' https://rscuzqnfccqvltkdcdny.supabase.co wss://rscuzqnfccqvltkdcdny.supabase.co; font-src 'self' https://fonts.gstatic.com; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none';
+  # HTML pages: no cache, always revalidate
+  Cache-Control: public, max-age=0, must-revalidate

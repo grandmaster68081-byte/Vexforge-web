@@ -26,7 +26,7 @@ return new Map((data ?? []).map((n: any) => [n.id, n]));
 
 export async function listMyFriends(): Promise<DomainResult<Friendship[]>> {
 const myId = await getMyPlayerId();
-if (!myId) return { status: "ready", data: null, reason: "Not signed in" };
+if (!myId) return { status: "ready", data: null, reason: "Inicia sesión para continuar" };
 const { data, error } = await supabase.from("friendships")
   .select("id,player_a_id,player_b_id,initiated_by,created_at").eq("status", "accepted")
   .or("player_a_id.eq." + myId + ",player_b_id.eq." + myId);
@@ -44,7 +44,7 @@ return {
 
 export async function listPendingReceived(): Promise<DomainResult<Friendship[]>> {
 const myId = await getMyPlayerId();
-if (!myId) return { status: "ready", data: null, reason: "Not signed in" };
+if (!myId) return { status: "ready", data: null, reason: "Inicia sesión para continuar" };
 const { data, error } = await supabase.from("friendships")
   .select("id,player_a_id,player_b_id,initiated_by,created_at").eq("status", "pending")
   .or("player_a_id.eq." + myId + ",player_b_id.eq." + myId).neq("initiated_by", myId);
@@ -61,7 +61,7 @@ return {
 
 export async function listPendingChallenges(): Promise<DomainResult<DirectChallenge[]>> {
 const myId = await getMyPlayerId();
-if (!myId) return { status: "ready", data: null, reason: "Not signed in" };
+if (!myId) return { status: "ready", data: null, reason: "Inicia sesión para continuar" };
 const { data, error } = await supabase.from("direct_challenges")
   .select("id,challenger_id,challenged_id,status,created_at")
   .eq("challenged_id", myId).eq("status", "pending").order("created_at", { ascending: false });

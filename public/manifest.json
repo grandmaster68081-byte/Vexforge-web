@@ -1,16 +1,50 @@
 {
-    "name": "VEXFORGE",
-    "short_name": "VEXFORGE",
-    "description": "The Iron TCG — Forge your legend",
-    "start_url": "/",
-    "display": "standalone",
-    "background_color": "#0a0a12",
-    "theme_color": "#e8b84b",
-    "orientation": "portrait-primary",
-    "icons": [
-      { "src": "/icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
-      { "src": "/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
-    ],
-    "categories": ["games", "entertainment"],
-    "lang": "es"
+  "name": "VEXFORGE — Trading Card Game",
+  "short_name": "VEXFORGE",
+  "description": "Trading card game competitivo. Colecciona cartas únicas, fúsionalas y compite en el mercado más dinámico de la galaxia.",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#0a0a12",
+  "theme_color": "#e8b84b",
+  "categories": ["games", "entertainment"],
+  "lang": "es",
+  "icons": [
+    {
+      "src": "https://rscuzqnfccqvltkdcdny.supabase.co/storage/v1/object/public/vexforge-assets/logo/IMG_20260606_040509_906.jpg",
+      "sizes": "512x512",
+      "type": "image/jpeg",
+      "purpose": "any"
+    },
+    {
+      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23e8702a'/%3E%3Ctext x='16' y='23' font-size='19' font-weight='900' text-anchor='middle' fill='white' font-family='Arial,sans-serif'%3EV%3C/text%3E%3C/svg%3E",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
     }
+  ],
+  "screenshots": [],
+  "shortcuts": [
+    {
+      "name": "Mi Inventario",
+      "short_name": "Inventario",
+      "description": "Ver mis cartas",
+      "url": "/inventory",
+      "icons": [{ "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23e8702a'/%3E%3Ctext x='16' y='23' font-size='19' font-weight='900' text-anchor='middle' fill='white' font-family='Arial,sans-serif'%3EI%3C/text%3E%3C/svg%3E", "sizes": "any" }]
+    },
+    {
+      "name": "Mercado",
+      "short_name": "Mercado",
+      "description": "Comprar y vender cartas",
+      "url": "/market",
+      "icons": [{ "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23e8702a'/%3E%3Ctext x='16' y='23' font-size='19' font-weight='900' text-anchor='middle' fill='white' font-family='Arial,sans-serif'%3EM%3C/text%3E%3C/svg%3E", "sizes": "any" }]
+    },
+    {
+      "name": "Leaderboard",
+      "short_name": "Ranking",
+      "description": "Clasificación global",
+      "url": "/leaderboard",
+      "icons": [{ "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23e8702a'/%3E%3Ctext x='16' y='23' font-size='19' font-weight='900' text-anchor='middle' fill='white' font-family='Arial,sans-serif'%3E%23%3C/text%3E%3C/svg%3E", "sizes": "any" }]
+    }
+  ]
+}

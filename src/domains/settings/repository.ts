@@ -22,7 +22,7 @@ export type SettingsUpdate = Partial<Omit<PlayerSettings, "player_id">>;
 export async function getSettings(): Promise<DomainResult<PlayerSettings>> {
   const { data: sessionData } = await supabase.auth.getSession();
   if (!sessionData.session) {
-    return { status: "blocked_auth", data: null, reason: "No auth session. Sign in on the Account page first." };
+    return { status: "blocked_auth", data: null, reason: "Inicia sesión en Mi Cuenta para continuar." };
   }
 
   const { data, error } = await supabase
@@ -34,7 +34,7 @@ export async function getSettings(): Promise<DomainResult<PlayerSettings>> {
     return { status: "ready", data: null, reason: error.message };
   }
   if (!data) {
-    return { status: "ready", data: null, reason: "Signed in, but no player_settings row exists yet for this player." };
+    return { status: "ready", data: null, reason: "Sesión activa, pero no se encontraron ajustes de jugador." };
   }
   return { status: "ready", data: data as PlayerSettings };
 }
@@ -48,7 +48,7 @@ export async function getSettings(): Promise<DomainResult<PlayerSettings>> {
 export async function updateSettings(patch: SettingsUpdate): Promise<DomainResult<PlayerSettings>> {
   const { data: sessionData } = await supabase.auth.getSession();
   if (!sessionData.session) {
-    return { status: "blocked_auth", data: null, reason: "No auth session." };
+    return { status: "blocked_auth", data: null, reason: "Inicia sesión para continuar." };
   }
 
   // Resolve player_id for the WHERE clause
@@ -59,7 +59,7 @@ export async function updateSettings(patch: SettingsUpdate): Promise<DomainResul
     .maybeSingle();
 
   if (!playerRow) {
-    return { status: "ready", data: null, reason: "No players row found for this auth user." };
+    return { status: "ready", data: null, reason: "No se encontró tu perfil de jugador." };
   }
 
   const { data, error } = await supabase

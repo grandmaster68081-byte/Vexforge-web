@@ -23,7 +23,7 @@ export interface PlayerProgress {
 export async function getProgress(): Promise<DomainResult<PlayerProgress>> {
   const { data: sessionData } = await supabase.auth.getSession();
   if (!sessionData.session) {
-    return { status: "blocked_auth", data: null, reason: "No auth session. Sign in on the Account page first." };
+    return { status: "blocked_auth", data: null, reason: "Inicia sesión en Mi Cuenta para continuar." };
   }
 
   const { data, error } = await supabase
@@ -35,7 +35,7 @@ export async function getProgress(): Promise<DomainResult<PlayerProgress>> {
     return { status: "ready", data: null, reason: error.message };
   }
   if (!data) {
-    return { status: "ready", data: null, reason: "Signed in, but no player_progress row exists yet for this player." };
+    return { status: "ready", data: null, reason: "Sesión activa, pero aún no hay datos de progreso para tu jugador." };
   }
   return { status: "ready", data: data as PlayerProgress };
 }

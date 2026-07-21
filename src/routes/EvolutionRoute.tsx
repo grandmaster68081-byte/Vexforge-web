@@ -1,123 +1,159 @@
-import { useState, useEffect } from "react";
-import { supabase } from "../lib/supabase";
+import { useState } from "react";
+import { useEvolution } from "../domains/evolution/useEvolution";
+import type { EvoPath } from "../domains/evolution/repository";
+import { PageLoader } from "../shared/components/PageLoader";
+import { BlockedAuthState } from "../shared/components/BlockedAuthState";
+import { EmptyState } from "../shared/components/EmptyState";
+import { ErrorState } from "../shared/components/ErrorState";
+import { useToast } from "../shared/context/ToastContext";
 
-interface EvoPath {
-id:string; card_id:string; evolves_to_card_id:string;
-cost_json:{vex_ingame:number;copies_required:number};
-requirements_json:{level_required:number;pvp_wins:number;description:string};
-from_name:string; from_rarity:string; from_faction:string;
-to_name:string; to_rarity:string;
-}
-const RARITY_COLOR:Record<string,string>={Common:"#8b8b9e",Uncommon:"#3ddc84",Rare:"#4a9eff",Epic:"#a855f7",Legendary:"#e8b84b",Mythic:"#ff4444"};
-const FACTION_COLOR:Record<string,string>={Guerrero:"#E84040",Mago:"#5B8BF5",Paladín:"#3DC96B",Pícaro:"#7B4FD4"};
-
-export function EvolutionRoute() {
-const [paths,setPaths] = useState<EvoPath[]>([]);
-const [loading,setLoading] = useState(true);
-const [filter,setFilter] = useState("all");
-const [evolving,setEvolving] = useState<string|null>(null);
-const [msg,setMsg] = useState<{ok:boolean;text:string}|null>(null);
-
-useEffect(()=>{
-  (async()=>{
-    const {data} = await supabase.from("card_evolution_paths")
-      .select(`id,card_id,evolves_to_card_id,cost_json,requirements_json,
-        from:card_id(name,rarity,faction),
-        to:evolves_to_card_id(name,rarity)`)
-      .order("card_id");
-    const shaped = (data??[]).map((r:any)=>({
-      id:r.id, card_id:r.card_id, evolves_to_card_id:r.evolves_to_card_id,
-      cost_json:r.cost_json, requirements_json:r.requirements_json,
-      from_name:r.from?.name??"?", from_rarity:r.from?.rarity??"Common", from_faction:r.from?.faction??"?",
-      to_name:r.to?.name??"?", to_rarity:r.to?.rarity??"Uncommon",
-    }));
-    setPaths(shaped as EvoPath[]);
-    setLoading(false);
-  })();
-},[]);
-
-const evolve = async (path:EvoPath) => {
-  setEvolving(path.id); setMsg(null);
-  const {data:{session}} = await supabase.auth.getSession();
-  if(!session){setMsg({ok:false,text:"Inicia sesión para evolucionar cartas"});setEvolving(null);return;}
-  const {data:pd} = await supabase.from("players").select("id").eq("auth_user_id",session.user.id).maybeSingle();
-  if(!pd?.id){setMsg({ok:false,text:"Perfil no encontrado"});setEvolving(null);return;}
-  const {data:res} = await supabase.rpc("vexforge_evolve_card",{p_card_id:path.card_id,p_player_id:pd.id});
-  if((res as any)?.ok) setMsg({ok:true,text:`✓ ¡${path.from_name} evolucionó a ${path.to_name}!`});
-  else setMsg({ok:false,text:(res as any)?.reason??"Error desconocido"});
-  setEvolving(null);
+const RARITY_COLOR: Record<string, string> = {
+  Common: "#8b8b9e", Uncommon: "#3ddc84", Rare: "#4a9eff",
+  Epic: "#a855f7", Legendary: "#e8b84b", Mythic: "#ff4444"
 };
+const FACTION_COLOR: Record<string, string> = {
+  Guerrero: "#E84040", Mago: "#5B8BF5", "Paladín": "#3DC96B", "Pícaro": "#7B4FD4"
+};
+const FACTIONS = ["all", "Guerrero", "Mago", "Paladín", "Pícaro"];
 
-const factions = ["all","Guerrero","Mago","Paladín","Pícaro"];
-const filtered = filter==="all"?paths:paths.filter(p=>p.from_faction===filter);
-const grouped: Record<string, EvoPath[]> = {};
-filtered.forEach(p => { grouped[p.from_faction] = grouped[p.from_faction]||[]; grouped[p.from_faction].push(p); });
+function EvoCard({ path, onEvolve, evolving }: {
+  path: EvoPath; onEvolve: (p: EvoPath) => void; evolving: boolean;
+}) {
+  const fromColor = RARITY_COLOR[path.from_rarity] ?? "#8b8b9e";
+  const toColor   = RARITY_COLOR[path.to_rarity]   ?? "#8b8b9e";
+  const fColor    = FACTION_COLOR[path.from_faction] ?? "#e8b84b";
+  const vexCost   = path.cost_json?.vex_ingame ?? 0;
+  const copies    = path.cost_json?.copies_required ?? 2;
+  const lvlReq    = path.requirements_json?.level_required ?? 1;
 
-return (
-  <main style={{maxWidth:960,margin:"0 auto",padding:"32px 16px"}}>
-    <div style={{marginBottom:24}}>
-      <h1 style={{fontFamily:"Cinzel,serif",color:"#e8b84b",fontSize:26,margin:"0 0 4px"}}>🧬 Evolución de Cartas</h1>
-      <p style={{color:"#888",margin:0,fontSize:12}}>Fusiona copias de una carta para obtener su evolución. Requiere nivel y victorias PvP.</p>
-    </div>
+  return (
+    <div style={{ background: "linear-gradient(145deg,#1a1a2e,#12121a)", border: `1px solid ${fColor}33`, borderRadius: 14, padding: "18px 20px" }}>
+      {/* Faction badge */}
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
+        <span style={{ background: `${fColor}22`, border: `1px solid ${fColor}55`, borderRadius: 8, padding: "2px 10px", fontSize: 10, color: fColor, fontWeight: 800 }}>
+          {path.from_faction}
+        </span>
+        <span style={{ color: "#444", fontSize: 10 }}>Nivel {lvlReq}+</span>
+      </div>
 
-    {msg&&<div style={{background:msg.ok?"#1a2a1a":"#2a1a1a",border:`1px solid ${msg.ok?"#3ddc8444":"#ff6b6b44"}`,borderRadius:8,padding:"10px 14px",marginBottom:16,color:msg.ok?"#3ddc84":"#ff6b6b",fontSize:12}}>{msg.text}<button onClick={()=>setMsg(null)} style={{background:"none",border:"none",color:"inherit",cursor:"pointer",marginLeft:8}}>✕</button></div>}
-
-    {/* Faction filter */}
-    <div style={{display:"flex",gap:6,marginBottom:24}}>
-      {factions.map(f=>(
-        <button key={f} onClick={()=>setFilter(f)} style={{
-          padding:"6px 14px",borderRadius:16,border:"none",fontSize:11,fontWeight:700,cursor:"pointer",
-          background:filter===f?(f==="all"?"#e8b84b":(FACTION_COLOR[f]??"#e8b84b")):"#1a1a2e",
-          color:filter===f?"#0a0a12":"#888",
-        }}>{f==="all"?"TODAS":f.toUpperCase()}</button>
-      ))}
-    </div>
-
-    {loading&&<p style={{color:"#666"}}>Cargando caminos de evolución…</p>}
-
-    {Object.entries(grouped).map(([faction,fps])=>(
-      <div key={faction} style={{marginBottom:32}}>
-        <h2 style={{fontFamily:"Cinzel,serif",color:FACTION_COLOR[faction]??"#e8b84b",fontSize:16,marginBottom:12,borderBottom:`1px solid ${FACTION_COLOR[faction]??"#e8b84b"}33`,paddingBottom:6}}>
-          {faction} ({fps.length} caminos)
-        </h2>
-        <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(280px,1fr))",gap:10}}>
-          {fps.map(path=>{
-            const fc = FACTION_COLOR[path.from_faction]??"#888";
-            const fr = RARITY_COLOR[path.from_rarity]??"#888";
-            const tr = RARITY_COLOR[path.to_rarity]??"#888";
-            return (
-              <div key={path.id} style={{background:"linear-gradient(145deg,#1a1a2e,#12121a)",border:`1px solid ${fc}22`,borderRadius:10,padding:"16px"}}>
-                {/* Card evolution chain */}
-                <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:10}}>
-                  <div style={{flex:1,background:"#0f0f1a",borderRadius:7,padding:"8px 10px",border:`1px solid ${fr}33`}}>
-                    <div style={{color:fr,fontSize:8,fontWeight:700}}>{path.from_rarity.toUpperCase()}</div>
-                    <div style={{color:"#e8e8f0",fontSize:12,fontWeight:700,fontFamily:"Cinzel,serif"}}>{path.from_name}</div>
-                  </div>
-                  <span style={{color:"#e8b84b",fontSize:18}}>→</span>
-                  <div style={{flex:1,background:"#0f0f1a",borderRadius:7,padding:"8px 10px",border:`1px solid ${tr}44`}}>
-                    <div style={{color:tr,fontSize:8,fontWeight:700}}>{path.to_rarity.toUpperCase()}</div>
-                    <div style={{color:"#e8e8f0",fontSize:12,fontWeight:700,fontFamily:"Cinzel,serif"}}>{path.to_name}</div>
-                  </div>
-                </div>
-                {/* Requirements */}
-                <div style={{display:"flex",gap:8,marginBottom:10,flexWrap:"wrap"}}>
-                  <span style={{color:"#555",fontSize:10}}>📋 ×{path.cost_json.copies_required} copias</span>
-                  <span style={{color:"#e8b84b",fontSize:10}}>💎 {path.cost_json.vex_ingame} VEX</span>
-                  <span style={{color:"#4a9eff",fontSize:10}}>Nv.{path.requirements_json.level_required}</span>
-                  <span style={{color:"#a855f7",fontSize:10}}>⚔️ {path.requirements_json.pvp_wins} victorias</span>
-                </div>
-                <button onClick={()=>evolve(path)} disabled={evolving===path.id} style={{
-                  width:"100%",padding:"8px 0",borderRadius:7,border:"none",
-                  background:evolving===path.id?"#2a2a3a":`linear-gradient(135deg,${fc},${fc}88)`,
-                  color:evolving===path.id?"#555":"#0a0a12",
-                  fontWeight:700,fontSize:11,cursor:evolving===path.id?"not-allowed":"pointer",fontFamily:"Cinzel,serif",
-                }}>{evolving===path.id?"Evolucionando…":"⚡ Evolucionar"}</button>
-              </div>
-            );
-          })}
+      {/* From → To */}
+      <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 14 }}>
+        <div style={{ flex: 1, background: `${fromColor}11`, border: `1px solid ${fromColor}33`, borderRadius: 10, padding: "10px 12px", textAlign: "center" }}>
+          <div style={{ color: fromColor, fontSize: 9, fontWeight: 800, letterSpacing: "0.1em", marginBottom: 3 }}>{path.from_rarity.toUpperCase()}</div>
+          <div style={{ color: "#e8e8f0", fontFamily: "Cinzel,serif", fontSize: 12, fontWeight: 700 }}>{path.from_name}</div>
+        </div>
+        <div style={{ color: "#e8b84b", fontSize: 18, flexShrink: 0 }}>→</div>
+        <div style={{ flex: 1, background: `${toColor}11`, border: `1px solid ${toColor}33`, borderRadius: 10, padding: "10px 12px", textAlign: "center" }}>
+          <div style={{ color: toColor, fontSize: 9, fontWeight: 800, letterSpacing: "0.1em", marginBottom: 3 }}>{path.to_rarity.toUpperCase()}</div>
+          <div style={{ color: "#e8e8f0", fontFamily: "Cinzel,serif", fontSize: 12, fontWeight: 700 }}>{path.to_name}</div>
         </div>
       </div>
-    ))}
-  </main>
-);
+
+      {/* Cost */}
+      <div style={{ display: "flex", gap: 8, marginBottom: 14 }}>
+        <div style={{ background: "#12121a", border: "1px solid #2a2a3a", borderRadius: 8, padding: "6px 12px", flex: 1, textAlign: "center" }}>
+          <div style={{ color: "#e8b84b", fontWeight: 800, fontSize: 14 }}>{copies}×</div>
+          <div style={{ color: "#555", fontSize: 9 }}>COPIAS</div>
+        </div>
+        {vexCost > 0 && (
+          <div style={{ background: "#12121a", border: "1px solid #2a2a3a", borderRadius: 8, padding: "6px 12px", flex: 1, textAlign: "center" }}>
+            <div style={{ color: "#e8b84b", fontWeight: 800, fontSize: 14 }}>{vexCost}</div>
+            <div style={{ color: "#555", fontSize: 9 }}>VEX</div>
+          </div>
+        )}
+      </div>
+
+      {path.requirements_json?.description && (
+        <p style={{ color: "#555", fontSize: 10, marginBottom: 12, lineHeight: 1.5 }}>{path.requirements_json.description}</p>
+      )}
+
+      <button
+        disabled={evolving}
+        onClick={() => onEvolve(path)}
+        style={{
+          width: "100%", padding: "10px", borderRadius: 10, border: "none",
+          cursor: evolving ? "not-allowed" : "pointer",
+          background: evolving ? "#1a1a2e" : `linear-gradient(135deg,${fColor},${fColor}88)`,
+          color: evolving ? "#555" : "#0a0a12", fontWeight: 800, fontSize: 13,
+          opacity: evolving ? 0.7 : 1, transition: "opacity .2s",
+        }}
+      >
+        {evolving ? "Evolucionando…" : "🧬 Evolucionar"}
+      </button>
+    </div>
+  );
+}
+
+export function EvolutionRoute() {
+  const { paths, authed, evolving, evoMsg, evolve, reload } = useEvolution();
+  const [filter, setFilter] = useState("all");
+  const { addToast } = useToast();
+
+  // Surface evoMsg as toast when it changes
+  const [lastMsg, setLastMsg] = useState<string | null>(null);
+  if (evoMsg !== lastMsg) {
+    setLastMsg(evoMsg);
+    if (evoMsg) {
+      const isOk = evoMsg.includes("evolucionada") || evoMsg.includes("exitoso") || evoMsg.toLowerCase().includes("ok");
+      addToast(isOk ? "success" : "error", evoMsg);
+    }
+  }
+
+  const allPaths   = paths.data ?? [];
+  const loading    = paths.status === "loading";
+  const error      = paths.status === "ready" && !paths.data ? (paths as any).reason ?? "Error al cargar evoluciones" : null;
+  const filtered   = filter === "all" ? allPaths : allPaths.filter(p => p.from_faction === filter);
+
+  if (loading) return <PageLoader />;
+  if (error)   return <ErrorState message={error} onRetry={reload} />;
+
+  const factionBtn = (f: string): React.CSSProperties => ({
+    padding: "7px 16px", borderRadius: 10, border: "none", cursor: "pointer", fontWeight: 700, fontSize: 12,
+    background: filter === f ? (FACTION_COLOR[f] ?? "#e8b84b") : "#1a1a2e",
+    color: filter === f ? "#0a0a12" : "#666",
+  });
+
+  return (
+    <main style={{ maxWidth: 960, margin: "0 auto", padding: "32px 16px" }}>
+      {/* Header */}
+      <div style={{ marginBottom: 24 }}>
+        <p style={{ fontSize: 11, letterSpacing: "0.14em", color: "#e8b84b", textTransform: "uppercase", fontFamily: "Rajdhani,sans-serif", fontWeight: 700, marginBottom: 8 }}>─── Progresión ───</p>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 8 }}>
+          <h1 style={{ fontFamily: "Cinzel,serif", color: "#e8e8f0", fontSize: 26, margin: "0 0 4px" }}>🧬 Evolución de Cartas</h1>
+          <button onClick={reload} style={{ padding: "7px 18px", borderRadius: 8, border: "1px solid #2a2a3a", background: "transparent", color: "#888", fontSize: 11, cursor: "pointer" }}>↻ Actualizar</button>
+        </div>
+        <p style={{ color: "#666", margin: 0, fontSize: 12 }}>Fusiona copias de una carta para obtener su forma evolucionada. Requiere nivel y victorias PvP.</p>
+      </div>
+
+      {!authed && <BlockedAuthState message="Inicia sesión para evolucionar tus cartas. Puedes explorar los caminos disponibles." />}
+
+      {/* Stats + faction filter */}
+      <div style={{ display: "flex", gap: 8, marginBottom: 24, flexWrap: "wrap", alignItems: "center" }}>
+        <div style={{ background: "#12121a", border: "1px solid #2a2a3e", borderRadius: 10, padding: "8px 16px", marginRight: 8 }}>
+          <span style={{ color: "#e8b84b", fontWeight: 800, fontSize: 16 }}>{allPaths.length}</span>
+          <span style={{ color: "#555", fontSize: 10, marginLeft: 6 }}>caminos</span>
+        </div>
+        {FACTIONS.map(f => (
+          <button key={f} onClick={() => setFilter(f)} style={factionBtn(f)}>
+            {f === "all" ? "Todos" : f}
+          </button>
+        ))}
+      </div>
+
+      {filtered.length === 0 ? (
+        <EmptyState
+          icon="🧬"
+          title="Sin caminos de evolución"
+          description={filter === "all" ? "No hay caminos configurados." : `No hay evoluciones de facción ${filter}.`}
+          action={filter !== "all" ? { label: "Ver todos", onClick: () => setFilter("all") } : undefined}
+        />
+      ) : (
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(300px,1fr))", gap: 14 }}>
+          {filtered.map(p => (
+            <EvoCard key={p.id} path={p} onEvolve={evolve} evolving={evolving} />
+          ))}
+        </div>
+      )}
+    </main>
+  );
 }

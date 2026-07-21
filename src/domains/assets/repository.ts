@@ -32,7 +32,7 @@ const entries = await Promise.all(
       .filter((f) => f.id && f.name)
       .map((f) => ({
         id: `${folder}/${f.name}`,
-        display_name: f.name.replace(/\.[^.]+$/, "").replace(/_/g, " "),
+        display_name: f.name.replace(/\\.[^.]+$/, "").replace(/_/g, " "),
         image_url: `https://rscuzqnfccqvltkdcdny.supabase.co/storage/v1/object/public/vexforge-assets/${folder}/${f.name}`,
         folder,
       }));

@@ -1,48 +1,52 @@
-import { useEffect, useState, useCallback } from "react";
+import { useState, useEffect, useCallback } from "react";
 import {
-  listClans,
-  listClanMembers,
-  listMyClanWars,
-  type Clan,
-  type ClanMember,
-  type ClanWar,
-} from "./repository";
-import type { DomainStatus } from "../../shared/types/domain";
+  getPlayerClanData, startGuildWar, joinClan, leaveClan, createClan,
+} from "./clanRepository";
+import type { PlayerClanData, ClanWar, Clan } from "./clanRepository";
+import type { DomainResult } from "../../shared/types/domain";
+
+export type { PlayerClanData, ClanWar, Clan };
 
 export function useClans() {
-  const [clans, setClans] = useState<Clan[]>([]);
-  const [members, setMembers] = useState<ClanMember[]>([]);
-  const [wars, setWars] = useState<ClanWar[]>([]);
-  const [selectedClanId, setSelectedClanId] = useState<string | null>(null);
-  const [status, setStatus] = useState<DomainStatus>("ready");
-  const [reason, setReason] = useState<string | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [clanData, setClanData] = useState<DomainResult<PlayerClanData>>({ status: "loading", data: null });
+  const [authed, setAuthed]     = useState<boolean | null>(null);
+  const [tick, setTick]         = useState(0);
+  const reload = useCallback(() => setTick(t => t + 1), []);
 
-  const load = useCallback(async () => {
-    setLoading(true);
-    const [clansResult, warsResult] = await Promise.all([
-      listClans(),
-      listMyClanWars(),
-    ]);
-    setClans(clansResult.data ?? []);
-    setWars(warsResult.data ?? []);
-    if (warsResult.status === "blocked_auth") {
-      setStatus("blocked_auth");
-      setReason(warsResult.reason ?? null);
-    } else {
-      setStatus("ready");
-      setReason(null);
-    }
-    setLoading(false);
-  }, []);
+  useEffect(() => {
+    let mounted = true;
+    setClanData({ status: "loading", data: null });
+    getPlayerClanData().then(res => {
+      if (!mounted) return;
+      setClanData(res);
+      setAuthed(res.status !== "blocked_auth");
+    });
+    return () => { mounted = false; };
+  }, [tick]);
 
-  useEffect(() => { load(); }, [load]);
+  const startWar = useCallback(async (opponentClanId: string) => {
+    const res = await startGuildWar(opponentClanId);
+    if (res.data?.ok) reload();
+    return res;
+  }, [reload]);
 
-  const selectClan = useCallback(async (clanId: string) => {
-    setSelectedClanId(clanId);
-    const result = await listClanMembers(clanId);
-    setMembers(result.data ?? []);
-  }, []);
+  const join = useCallback(async (clanId: string) => {
+    const res = await joinClan(clanId);
+    if (res.data?.ok) reload();
+    return res;
+  }, [reload]);
 
-  return { clans, members, wars, selectedClanId, status, reason, loading, selectClan, reload: load };
+  const leave = useCallback(async () => {
+    const res = await leaveClan();
+    if (res.data?.ok) reload();
+    return res;
+  }, [reload]);
+
+  const create = useCallback(async (name: string, description: string) => {
+    const res = await createClan(name, description);
+    if (res.data?.ok) reload();
+    return res;
+  }, [reload]);
+
+  return { clanData, authed, reload, startWar, join, leave, create };
 }

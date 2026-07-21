@@ -25,18 +25,21 @@ export interface Card {
   marketable: boolean;
   fusion_enabled: boolean;
   release_status: string;
+  /** synergy_json includes { keywords: string[], faction_bonus: Record<string,number>, is_commander?: boolean } */
+  synergy_json: Record<string, unknown> | null;
 }
 
 /**
  * Verified real read path (chat 21, vexforge_project_documents.verified_read_path_specs_v1):
  * RLS policy cards_public: SELECT, public, qual = true.
  * Table cards_no_write blocks all writes for public -- reads only, by design.
+ * synergy_json added in A.3 (chat 58) to support keyword display.
  */
 export async function listActiveCards(): Promise<DomainResult<Card[]>> {
   const { data, error } = await supabase
     .from("cards")
     .select(
-      "id, code, name, rarity, faction, specialization, power, affinity, prestige, charge, lore, image_url, region_id, active, supply, minted, is_founder, is_legendary, card_tier, card_domain, marketable, fusion_enabled, release_status"
+      "id, code, name, rarity, faction, specialization, power, affinity, prestige, charge, lore, image_url, region_id, active, supply, minted, is_founder, is_legendary, card_tier, card_domain, marketable, fusion_enabled, release_status, synergy_json"
     )
     .eq("active", true)
     .order("name", { ascending: true });

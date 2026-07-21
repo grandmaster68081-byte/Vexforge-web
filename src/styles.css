@@ -1907,3 +1907,188 @@ input.forge-input:focus {
   .pvp-stats-grid { grid-template-columns: repeat(2, 1fr); }
   .market-listing-grid { grid-template-columns: 1fr 1fr; }
 }
+
+    /* ─── PAGE LOADER SPINNER ────────────────────────────────── */
+    .forge-spinner {
+    width: 44px; height: 44px;
+    border: 3px solid var(--layer-4);
+    border-top-color: var(--ember-gold);
+    border-radius: 50%;
+    animation: forge-spin 0.75s linear infinite;
+    }
+    @keyframes forge-spin { to { transform: rotate(360deg); } }
+    
+
+/* ═══════════════════════════════════════════════════════════════
+   BLOQUE 5.10 — Navegación Global v5.10  (2026-07-19)
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ─── BOTTOM NAV (mobile ≤ 768px) ──────────────────────────── */
+.forge-bottom-nav {
+  display: none;
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  height: 60px;
+  z-index: 200;
+  background: rgba(8, 8, 18, 0.97);
+  border-top: 1px solid rgba(201,144,31,0.18);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  flex-direction: row;
+  align-items: stretch;
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+@media (max-width: 768px) {
+  .forge-bottom-nav { display: flex; }
+  .forge-hamburger  { display: none; }
+}
+.forge-bottom-nav-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  color: rgba(180,160,120,0.45);
+  text-decoration: none;
+  background: none;
+  border: none;
+  border-top: 2px solid transparent;
+  cursor: pointer;
+  padding: 8px 4px 6px;
+  transition: color 0.15s, border-top-color 0.15s;
+  font-family: inherit;
+}
+.forge-bottom-nav-item.active {
+  color: var(--ember-gold-lt, #f0c050);
+  border-top-color: var(--ember-gold, #c9901f);
+}
+.forge-bottom-nav-item:active { opacity: 0.65; }
+.forge-bottom-nav-icon  { font-size: 20px; line-height: 1; }
+.forge-bottom-nav-label {
+  font-family: "Rajdhani", sans-serif;
+  font-size: 9px; font-weight: 700;
+  letter-spacing: 0.06em; text-transform: uppercase;
+}
+
+/* ─── MOBILE BACKDROP ───────────────────────────────────────── */
+.forge-mobile-backdrop {
+  position: fixed; inset: 0; z-index: 290;
+  background: rgba(0,0,0,0.55);
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+  animation: vex-fade-in 0.15s ease;
+}
+@keyframes vex-fade-in { from { opacity: 0; } to { opacity: 1; } }
+
+/* ─── MOBILE BOTTOM SHEET ───────────────────────────────────── */
+.forge-mobile-sheet {
+  position: fixed;
+  bottom: 60px; left: 0; right: 0; z-index: 300;
+  background: rgba(10, 10, 22, 0.98);
+  border-top: 1px solid rgba(201,144,31,0.22);
+  border-radius: 16px 16px 0 0;
+  padding: 8px 10px 16px;
+  display: flex; flex-direction: column; gap: 2px;
+  max-height: 72vh; overflow-y: auto;
+  animation: vex-sheet-up 0.22s ease;
+  backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+}
+@media (min-width: 769px) {
+  .forge-mobile-sheet { bottom: 0; border-radius: 0; max-height: 80vh; }
+}
+@keyframes vex-sheet-up { from { transform: translateY(100%); } to { transform: translateY(0); } }
+.forge-mobile-sheet-label {
+  font-family: "IBM Plex Mono", monospace; font-size: 9px;
+  letter-spacing: 0.2em; color: rgba(201,144,31,0.5);
+  text-transform: uppercase; padding: 10px 8px 4px; user-select: none;
+}
+.forge-sheet-link {
+  display: flex !important; align-items: center !important;
+  gap: 10px !important; padding: 10px 12px !important;
+  border-radius: 8px !important; font-size: 14px !important;
+}
+.forge-sheet-divider { height: 1px; background: rgba(255,255,255,0.06); margin: 6px 0; }
+.forge-sheet-signout {
+  color: rgba(255,100,100,0.7) !important;
+  width: 100%; text-align: left; cursor: pointer;
+}
+.forge-sheet-signout:hover { color: #ff6464 !important; }
+
+/* ─── HAMBURGER ✕ ANIMATION ─────────────────────────────────── */
+.forge-hamburger span { transition: transform 0.2s ease, opacity 0.15s ease; }
+.forge-hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.forge-hamburger.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+.forge-hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+/* ─── BREADCRUMBS ───────────────────────────────────────────── */
+.forge-breadcrumb {
+  display: flex; align-items: center; gap: 2px;
+  padding: 8px 24px;
+  font-family: "IBM Plex Mono", monospace; font-size: 11px;
+  color: var(--fg-dim);
+  background: rgba(0,0,0,0.18);
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  position: sticky; top: 62px; z-index: 10;
+}
+.forge-breadcrumb-home { color: rgba(201,144,31,0.65); text-decoration: none; padding: 1px 3px; border-radius: 4px; transition: color 0.15s; }
+.forge-breadcrumb-home:hover { color: var(--ember-gold-lt); }
+.forge-breadcrumb-seg  { display: flex; align-items: center; gap: 2px; }
+.forge-breadcrumb-sep  { color: rgba(255,255,255,0.18); padding: 0 3px; user-select: none; }
+.forge-breadcrumb-link { color: var(--fg-dim); text-decoration: none; transition: color 0.15s; }
+.forge-breadcrumb-link:hover { color: var(--ember-gold-lt); }
+.forge-breadcrumb-current { color: rgba(255,255,255,0.55); }
+@media (max-width: 768px) {
+  .forge-breadcrumb { padding: 7px 16px; font-size: 10px; }
+}
+/* End Bloque 5.10 */
+
+
+/* ─── SIDEBAR (desktop) ──────────────────────────────────── */
+@media (min-width: 900px) {
+  .forge-sidebar {
+    display: block !important;
+  }
+  .forge-content-with-sidebar {
+    margin-left: 220px;
+  }
+  .forge-bottom-nav {
+    display: none !important;
+  }
+  .forge-hamburger {
+    display: none !important;
+  }
+}
+
+.forge-sidebar::-webkit-scrollbar { width: 3px; }
+.forge-sidebar::-webkit-scrollbar-thumb { background: rgba(201,144,31,0.2); }
+.forge-sidebar::-webkit-scrollbar-thumb:hover { background: rgba(201,144,31,0.4); }
+
+.forge-sidebar a:hover {
+  color: var(--ember-gold-lt) !important;
+  background: linear-gradient(90deg, rgba(201,144,31,0.08) 0%, transparent 100%) !important;
+}
+
+
+
+/* ─── ROUTE WRAPPER — Background Wiring System ───────────────── */
+.route-wrapper {
+  min-height: 100vh;
+  position: relative;
+  background-size: cover;
+  background-position: center top;
+  background-repeat: no-repeat;
+  background-attachment: local;
+}
+.route-wrapper::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(5, 5, 13, 0.87);
+  pointer-events: none;
+  z-index: 0;
+}
+.route-wrapper > * {
+  position: relative;
+  z-index: 1;
+}

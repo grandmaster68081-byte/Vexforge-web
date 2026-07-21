@@ -1,114 +1,240 @@
-import { useState, useEffect } from "react";
-import { supabase } from "../lib/supabase";
+import { useState } from "react";
+import { useSeason } from "../domains/season/useSeason";
+import type { SeasonTier } from "../domains/season/repository";
+import { PageLoader } from "../shared/components/PageLoader";
+import { BlockedAuthState } from "../shared/components/BlockedAuthState";
+import { EmptyState } from "../shared/components/EmptyState";
+import { ErrorState } from "../shared/components/ErrorState";
 
-interface Tier { tier:number; xp_required:number; is_premium:boolean; reward:Record<string,any>; unlocked:boolean; }
-interface SeasonData {
-ok:boolean; season_name?:string; season_number?:number; end_at?:string;
-player_xp?:number; current_tier?:number; is_premium?:boolean; tiers?:Tier[];
+const RARITY_COLOR: Record<string, string> = {
+  Common: "#8b8b9e", Uncommon: "#3ddc84", Rare: "#4a9eff",
+  Epic: "#a855f7", Legendary: "#e8b84b", Mythic: "#ff4444",
+};
+
+function rewardIcon(reward: Record<string, any>): string {
+  if (reward.type === "card")     return "🃏";
+  if (reward.type === "cosmetic") return "✨";
+  if (reward.vex_ingame)          return "💰";
+  if (reward.xp)                  return "⭐";
+  return "🎁";
 }
 
-const RARITY_COLOR:Record<string,string>={Common:"#8b8b9e",Uncommon:"#3ddc84",Rare:"#4a9eff",Epic:"#a855f7",Legendary:"#e8b84b",Mythic:"#ff4444"};
+function rewardLabel(reward: Record<string, any>): string | null {
+  if (reward.vex_ingame)          return `${reward.vex_ingame} VEX`;
+  if (reward.card_rarity)         return reward.card_rarity;
+  if (reward.type === "cosmetic") return "Marco Excl.";
+  if (reward.xp)                  return `+${reward.xp} XP`;
+  return null;
+}
+
+function TierCard({ tier, currentTier, isPremiumPlayer }: {
+  tier: SeasonTier; currentTier: number; isPremiumPlayer: boolean;
+}) {
+  const isCurrent    = tier.tier === currentTier;
+  const unlocked     = tier.unlocked;
+  const isPremLocked = tier.is_premium && !isPremiumPlayer;
+  const rc           = tier.reward.card_rarity ? (RARITY_COLOR[tier.reward.card_rarity] ?? "#888") : "#e8b84b";
+  const label        = rewardLabel(tier.reward);
+
+  return (
+    <div style={{
+      borderRadius: 10, padding: "12px 10px", textAlign: "center", position: "relative",
+      background: unlocked
+        ? "linear-gradient(145deg,#1a2a1a,#12121a)"
+        : isCurrent ? "linear-gradient(145deg,#1a1a2e,#0f0f20)" : "#1a1a2e",
+      border: isCurrent
+        ? "1px solid rgba(232,184,75,0.7)"
+        : unlocked ? "1px solid rgba(61,220,132,0.3)" : "1px solid #2a2a3a",
+      boxShadow: isCurrent ? "0 0 14px rgba(232,184,75,0.2)" : "none",
+      opacity: (!unlocked && !isCurrent && !isPremLocked) ? 0.6 : 1,
+      transition: "opacity .2s",
+    }}>
+      {isPremLocked && (
+        <div style={{ position: "absolute", inset: 0, borderRadius: 10, background: "rgba(10,10,20,0.6)", display: "flex", alignItems: "center", justifyContent: "center", backdropFilter: "blur(2px)" }}>
+          <span style={{ fontSize: 16 }}>🔒</span>
+        </div>
+      )}
+      <div style={{ color: isCurrent ? "#e8b84b" : unlocked ? "#3ddc84" : "#555", fontSize: 9, fontWeight: 700, fontFamily: '"IBM Plex Mono",monospace', letterSpacing: "0.1em", marginBottom: 6 }}>
+        T{tier.tier}
+      </div>
+      <div style={{ fontSize: 22, marginBottom: 4 }}>{rewardIcon(tier.reward)}</div>
+      {label && (
+        <div style={{ color: tier.reward.card_rarity ? rc : "#e8b84b", fontSize: 9, fontWeight: 700, fontFamily: '"Rajdhani",sans-serif' }}>
+          {label}
+        </div>
+      )}
+      {tier.is_premium && !isPremLocked && (
+        <div style={{ marginTop: 4, fontSize: 8, color: "#e8b84b", fontWeight: 800 }}>★ PREM</div>
+      )}
+      {unlocked && !isCurrent && (
+        <div style={{ color: "#3ddc84", fontSize: 8, marginTop: 4 }}>✓</div>
+      )}
+      {isCurrent && (
+        <div style={{ color: "#e8b84b", fontSize: 8, marginTop: 4, fontFamily: '"IBM Plex Mono",monospace', letterSpacing: "0.05em" }}>ACTUAL</div>
+      )}
+    </div>
+  );
+}
+
+function XpSection({ playerXp, currentTier, tiers }: {
+  playerXp: number; currentTier: number; tiers: SeasonTier[];
+}) {
+  const sorted    = [...tiers].sort((a, b) => a.tier - b.tier);
+  const maxXp     = sorted[sorted.length - 1]?.xp_required ?? 50000;
+  const currT     = sorted.find(t => t.tier === currentTier);
+  const nextT     = sorted.find(t => t.tier === currentTier + 1);
+  const tierStart = currT?.xp_required ?? 0;
+  const tierEnd   = nextT?.xp_required ?? maxXp;
+  const xpInTier  = Math.max(0, playerXp - tierStart);
+  const xpNeeded  = tierEnd - tierStart;
+  const tierPct   = xpNeeded > 0 ? Math.min(100, (xpInTier / xpNeeded) * 100) : 100;
+  const totalPct  = maxXp > 0 ? Math.min(100, (playerXp / maxXp) * 100) : 0;
+  const isMaxed   = playerXp >= maxXp;
+
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 12, marginBottom: 0 }}>
+      {!isMaxed && nextT && (
+        <div>
+          <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 5 }}>
+            <span style={{ color: "#888", fontSize: 11 }}>Progreso al Tier {nextT.tier}</span>
+            <span style={{ color: "#e8b84b", fontWeight: 700, fontSize: 11 }}>{xpInTier.toLocaleString()} / {xpNeeded.toLocaleString()} XP</span>
+          </div>
+          <div style={{ background: "#0f0f1a", borderRadius: 6, height: 10, overflow: "hidden", border: "1px solid #1a1a2e" }}>
+            <div style={{ width: `${tierPct}%`, height: "100%", background: "linear-gradient(90deg,#4a9eff,#5B8BF5)", transition: "width .6s ease" }} />
+          </div>
+        </div>
+      )}
+      <div>
+        <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 5 }}>
+          <span style={{ color: "#555", fontSize: 10 }}>XP Total de Temporada</span>
+          <span style={{ color: "#666", fontSize: 10 }}>{playerXp.toLocaleString()} / {maxXp.toLocaleString()}</span>
+        </div>
+        <div style={{ background: "#0f0f1a", borderRadius: 6, height: 6, overflow: "hidden", border: "1px solid #1a1a2e" }}>
+          <div style={{ width: `${totalPct}%`, height: "100%", background: isMaxed ? "linear-gradient(90deg,#3ddc84,#2a9c60)" : "linear-gradient(90deg,#e8b84b,#c9901f)", transition: "width .5s ease" }} />
+        </div>
+        {isMaxed && <div style={{ color: "#3ddc84", fontSize: 10, marginTop: 4, textAlign: "right" }}>✓ Season Pass completado</div>}
+      </div>
+    </div>
+  );
+}
 
 export function SeasonPassRoute() {
-const [data,setData] = useState<SeasonData|null>(null);
-const [loading,setLoading] = useState(true);
-const [tab,setTab] = useState<"free"|"premium">("free");
+  const { status, data, reload } = useSeason();
+  const [showAll, setShowAll]    = useState(false);
 
-useEffect(()=>{
-  (async()=>{
-    const {data:{session}} = await supabase.auth.getSession();
-    if(!session){setLoading(false);return;}
-    const {data:pd} = await supabase.from("players").select("id").eq("auth_user_id",session.user.id).maybeSingle();
-    if(!pd?.id){setLoading(false);return;}
-    const {data:res} = await supabase.rpc("get_season_progress",{p_player_id:pd.id});
-    setData(res as SeasonData);
-    setLoading(false);
-  })();
-},[]);
+  if (status === "loading") return <PageLoader />;
 
-if(loading) return <main style={{maxWidth:800,margin:"0 auto",padding:"40px 16px"}}><p style={{color:"#666"}}>Cargando Season Pass…</p></main>;
-if(!data?.ok) return (
-  <main style={{maxWidth:800,margin:"0 auto",padding:"40px 16px",textAlign:"center"}}>
-    <div style={{fontSize:48,marginBottom:16}}>🔒</div>
-    <h2 style={{fontFamily:"Cinzel,serif",color:"#e8b84b"}}>Season Pass</h2>
-    <p style={{color:"#666"}}>Inicia sesión para ver tu progreso de temporada.</p>
-  </main>
-);
+  if (status === "blocked_auth") {
+    return (
+      <main style={{ maxWidth: 800, margin: "0 auto", padding: "32px 16px" }}>
+        <h1 style={{ fontFamily: "Cinzel,serif", color: "#e8e8f0", fontSize: 26, marginBottom: 16 }}>🎫 Season Pass</h1>
+        <BlockedAuthState message="Inicia sesión para ver tu progreso de temporada." />
+      </main>
+    );
+  }
 
-const tiers = (data.tiers??[]).filter(t=>t.is_premium===( tab==="premium"));
-const xp = data.player_xp??0;
-const maxXp = 50*1000;
-const pct = Math.min(100,(xp/maxXp)*100);
-const daysLeft = data.end_at ? Math.max(0,Math.floor((new Date(data.end_at).getTime()-Date.now())/(1000*3600*24))) : 0;
+  if (!data?.ok) {
+    return (
+      <main style={{ maxWidth: 800, margin: "0 auto", padding: "32px 16px" }}>
+        <h1 style={{ fontFamily: "Cinzel,serif", color: "#e8e8f0", fontSize: 26, marginBottom: 16 }}>🎫 Season Pass</h1>
+        <EmptyState icon="📅" title="Sin temporada activa" description={data?.reason ?? "No hay una temporada activa en este momento."} />
+      </main>
+    );
+  }
 
-return (
-  <main style={{maxWidth:800,margin:"0 auto",padding:"32px 16px"}}>
-    {/* Header */}
-    <div style={{background:"linear-gradient(135deg,#1a1a2e,#0a0a12)",border:"1px solid #e8b84b44",borderRadius:16,padding:28,marginBottom:24}}>
-      <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:16}}>
-        <div>
-          <p style={{color:"#e8b84b",fontSize:10,letterSpacing:2,margin:"0 0 4px",fontFamily:"Rajdhani,sans-serif"}}>TEMPORADA {data.season_number}</p>
-          <h1 style={{fontFamily:"Cinzel,serif",color:"#e8e8f0",fontSize:22,margin:0}}>{data.season_name}</h1>
-        </div>
-        <div style={{textAlign:"right"}}>
-          <div style={{color:"#555",fontSize:11}}>Termina en</div>
-          <div style={{color:"#e8b84b",fontWeight:700,fontSize:16}}>{daysLeft} días</div>
-        </div>
-      </div>
-      {/* XP bar */}
-      <div style={{marginBottom:12}}>
-        <div style={{display:"flex",justifyContent:"space-between",marginBottom:6}}>
-          <span style={{color:"#888",fontSize:11}}>XP de Temporada</span>
-          <span style={{color:"#e8b84b",fontWeight:700,fontSize:11}}>{(xp??0).toLocaleString()} / {maxXp.toLocaleString()}</span>
-        </div>
-        <div style={{background:"#0f0f1a",borderRadius:6,height:12,overflow:"hidden",border:"1px solid #1a1a2e"}}>
-          <div style={{width:`${pct}%`,height:"100%",background:"linear-gradient(90deg,#e8b84b,#c9901f)",transition:"width .5s"}}/>
-        </div>
-      </div>
-      <div style={{display:"flex",gap:12}}>
-        <span style={{color:"#888",fontSize:12}}>Tier actual: <strong style={{color:"#e8b84b"}}>{data.current_tier??0}</strong></span>
-        <span style={{color:data.is_premium?"#a855f7":"#555",fontSize:12}}>
-          {data.is_premium?"💜 Premium":"🆓 Gratis — Activa Premium para más recompensas"}
-        </span>
-      </div>
-    </div>
+  if (status === "ready" && !data) {
+    return <ErrorState message="Error al cargar el Season Pass" onRetry={reload} />;
+  }
 
-    {/* Tabs */}
-    <div style={{display:"flex",gap:8,marginBottom:20}}>
-      {(["free","premium"] as const).map(t=>(
-        <button key={t} onClick={()=>setTab(t)} style={{
-          padding:"8px 20px",borderRadius:8,border:"none",fontWeight:700,fontSize:12,cursor:"pointer",
-          background:tab===t?(t==="premium"?"#a855f7":"#e8b84b"):"#1a1a2e",
-          color:tab===t?"#0a0a12":"#888",
-        }}>{t==="free"?"🆓 Gratis":"💜 Premium"}</button>
-      ))}
-    </div>
+  const tiers       = data.tiers ?? [];
+  const playerXp    = data.player_xp ?? 0;
+  const currentTier = data.current_tier ?? 0;
+  const isPremium   = data.is_premium ?? false;
+  const seasonName  = data.season_name ?? "Temporada Actual";
+  const endAt       = data.end_at ? new Date(data.end_at).toLocaleDateString() : null;
+  const shownTiers  = showAll ? tiers : tiers.slice(0, 20);
 
-    {/* Tier grid */}
-    <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(100px,1fr))",gap:8}}>
-      {tiers.map(tier=>{
-        const unlocked = tier.unlocked;
-        const reward = tier.reward;
-        const rc = reward.card_rarity ? (RARITY_COLOR[reward.card_rarity]??"#888") : "#e8b84b";
-        return (
-          <div key={tier.tier} style={{
-            background:unlocked?"linear-gradient(145deg,#1a2a1a,#12121a)":"#1a1a2e",
-            border:`1px solid ${unlocked?"#3ddc8444":"#2a2a3a"}`,
-            borderRadius:8,padding:"12px 10px",textAlign:"center",
-            opacity:unlocked?1:0.7,
-          }}>
-            <div style={{color:unlocked?"#3ddc84":"#555",fontSize:9,fontWeight:700,marginBottom:4}}>TIER {tier.tier}</div>
-            <div style={{fontSize:20,marginBottom:4}}>
-              {reward.type==="card"?"🃏":reward.type==="cosmetic"?"✨":"💎"}
+  return (
+    <>
+      <style>{`
+        @keyframes sp-pulse {
+          0%,100% { box-shadow: 0 0 0 0 rgba(232,184,75,0); }
+          50%      { box-shadow: 0 0 0 6px rgba(232,184,75,0.15); }
+        }
+      `}</style>
+      <main style={{ maxWidth: 900, margin: "0 auto", padding: "32px 16px" }}>
+        {/* Header */}
+        <div style={{ marginBottom: 24 }}>
+          <p style={{ fontSize: 11, letterSpacing: "0.14em", color: "#e8b84b", textTransform: "uppercase", fontFamily: "Rajdhani,sans-serif", fontWeight: 700, marginBottom: 8 }}>─── Temporada ───</p>
+          <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", flexWrap: "wrap", gap: 8 }}>
+            <div>
+              <h1 style={{ fontFamily: "Cinzel,serif", color: "#e8e8f0", fontSize: 26, margin: "0 0 4px" }}>🎫 {seasonName}</h1>
+              {endAt && <p style={{ color: "#555", margin: 0, fontSize: 11 }}>Finaliza: {endAt}</p>}
             </div>
-            {reward.vex_ingame&&<div style={{color:"#e8b84b",fontSize:10,fontWeight:700}}>{reward.vex_ingame} VEX</div>}
-            {reward.card_rarity&&<div style={{color:rc,fontSize:9}}>{reward.card_rarity}</div>}
-            {reward.type==="cosmetic"&&<div style={{color:"#a855f7",fontSize:9}}>Marco Exc.</div>}
-            {unlocked&&<div style={{color:"#3ddc84",fontSize:8,marginTop:4}}>✓</div>}
+            <button onClick={reload} style={{ padding: "7px 18px", borderRadius: 8, border: "1px solid #2a2a3a", background: "transparent", color: "#888", fontSize: 11, cursor: "pointer" }}>↻ Actualizar</button>
           </div>
-        );
-      })}
-    </div>
-  </main>
-);
+        </div>
+
+        {/* Player stats card */}
+        <div style={{ background: "linear-gradient(135deg,#1a1a2e,#12121a)", border: "1px solid #e8b84b33", borderRadius: 14, padding: "20px 24px", marginBottom: 24 }}>
+          <div style={{ display: "flex", gap: 20, flexWrap: "wrap", alignItems: "center", marginBottom: 16 }}>
+            <div>
+              <div style={{ color: "#555", fontSize: 10, letterSpacing: "0.1em", marginBottom: 4 }}>TIER ACTUAL</div>
+              <div style={{ color: "#e8b84b", fontFamily: "Cinzel,serif", fontSize: 28, fontWeight: 700 }}>T{currentTier}</div>
+            </div>
+            <div>
+              <div style={{ color: "#555", fontSize: 10, letterSpacing: "0.1em", marginBottom: 4 }}>XP DE TEMPORADA</div>
+              <div style={{ color: "#e8e8f0", fontSize: 22, fontWeight: 700 }}>{playerXp.toLocaleString()}</div>
+            </div>
+            {isPremium && (
+              <div style={{ background: "#e8b84b22", border: "1px solid #e8b84b44", borderRadius: 8, padding: "6px 14px" }}>
+                <div style={{ color: "#e8b84b", fontSize: 11, fontWeight: 800 }}>★ PREMIUM</div>
+              </div>
+            )}
+          </div>
+          <XpSection playerXp={playerXp} currentTier={currentTier} tiers={tiers} />
+        </div>
+
+        {/* Tier grid */}
+        {tiers.length > 0 && (
+          <>
+            <h2 style={{ fontFamily: "Cinzel,serif", color: "#e8e8f0", fontSize: 16, marginBottom: 14 }}>Recompensas por Tier</h2>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(72px,1fr))", gap: 6, marginBottom: 16 }}>
+              {shownTiers.map(tier => (
+                <TierCard key={tier.tier} tier={tier} currentTier={currentTier} isPremiumPlayer={isPremium} />
+              ))}
+            </div>
+            {tiers.length > 20 && (
+              <button onClick={() => setShowAll(s => !s)} style={{ display: "block", margin: "0 auto 24px", padding: "8px 24px", borderRadius: 8, border: "1px solid #2a2a3a", background: "transparent", color: "#888", fontSize: 11, cursor: "pointer" }}>
+                {showAll ? "Ver menos" : `Ver todos (${tiers.length})`}
+              </button>
+            )}
+          </>
+        )}
+
+        {/* XP sources */}
+        <div style={{ marginTop: 28 }}>
+          <div style={{ fontFamily: '"IBM Plex Mono",monospace', fontSize: 9, color: "#555", letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: 14 }}>¿Cómo ganar XP de Temporada?</div>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(160px,1fr))", gap: 8 }}>
+            {[
+              { icon: "⚔️", label: "Misiones PvE",    xp: "+30–150 XP" },
+              { icon: "🏆", label: "Victoria PvP",     xp: "+100 XP"   },
+              { icon: "🔮", label: "Fusión de cartas", xp: "+50 XP"    },
+              { icon: "💰", label: "Venta en mercado", xp: "+25 XP"    },
+              { icon: "📦", label: "Abrir packs",      xp: "+20 XP"    },
+              { icon: "🗓️", label: "Quest diaria",     xp: "+75 XP"    },
+            ].map(source => (
+              <div key={source.label} style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)", borderRadius: 8, padding: "10px 12px", display: "flex", alignItems: "center", gap: 10 }}>
+                <span style={{ fontSize: 16 }}>{source.icon}</span>
+                <div>
+                  <div style={{ color: "#e8e8f0", fontSize: 11, fontWeight: 600 }}>{source.label}</div>
+                  <div style={{ color: "#e8b84b", fontSize: 10, fontWeight: 700, fontFamily: '"IBM Plex Mono",monospace' }}>{source.xp}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </main>
+    </>
+  );
 }

@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback } from "react";
 import {
-listOpenListings, listMyUnlockedCards,
+listOpenListings, listMyCards as listMyUnlockedCards,
 createListing, buyListing, cancelListing, getCurrentPlayerId,
 type MarketListing, type OwnedCard,
 } from "./repository";

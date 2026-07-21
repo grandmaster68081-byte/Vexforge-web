@@ -1,4 +1,9 @@
+import { useState, useEffect } from "react";
+import { supabase } from "../lib/supabase";
 import { useDailyQuests } from "../domains/daily/useDailyQuests";
+import { PageLoader } from "../shared/components/PageLoader";
+import { BlockedAuthState } from "../shared/components/BlockedAuthState";
+import { useToast } from "../shared/context/ToastContext";
 
     function QuestCard({ pq, onClaim, claiming }: { pq:any; onClaim:(id:string)=>void; claiming:boolean }) {
     const quest = pq.quest ?? pq;
@@ -50,8 +55,25 @@ import { useDailyQuests } from "../domains/daily/useDailyQuests";
 
     export function QuestsRoute() {
     const { quests, loading, error, claiming, claimMsg, claim } = useDailyQuests();
+    const { addToast } = useToast();
+    const [authed, setAuthed] = useState<boolean | null>(null);
     const today = new Date().toLocaleDateString("es-ES",{weekday:"long",day:"numeric",month:"long"});
     const completed = quests.filter(q=>q.status==="completed"||q.status==="claimed").length;
+
+    useEffect(() => {
+      supabase.auth.getSession().then(({ data: { session } }) => setAuthed(!!session));
+    }, []);
+
+    // Show toast when claim succeeds or fails
+    useEffect(() => {
+      if (!claimMsg) return;
+      const ok = claimMsg.includes("!") || claimMsg.includes("VEX") || claimMsg.includes("XP");
+      addToast(ok ? "success" : "error", ok ? "¡Recompensa reclamada!" : "Error al reclamar", claimMsg);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [claimMsg]);
+
+    if (authed === null || loading) return <PageLoader />;
+    if (!authed) return <BlockedAuthState message="Inicia sesión para ver tus misiones diarias." />;
 
     return (
       <main style={{maxWidth:640,margin:"0 auto",padding:"32px 16px"}}>
@@ -73,9 +95,7 @@ import { useDailyQuests } from "../domains/daily/useDailyQuests";
             </div>
           </div>
         )}
-        {claimMsg&&<p style={{color:claimMsg.includes("!")?"#3ddc84":"#ff6b6b",fontSize:13,marginBottom:12}}>{claimMsg}</p>}
         {error&&<p style={{color:"#ff6b6b",fontSize:13}}>{error}</p>}
-        {loading&&<p style={{color:"#666"}}>Cargando misiones diarias…</p>}
         <div style={{display:"flex",flexDirection:"column",gap:12}}>
           {quests.map(pq=>(
             <QuestCard key={pq.id} pq={pq}
@@ -87,7 +107,7 @@ import { useDailyQuests } from "../domains/daily/useDailyQuests";
         {!loading&&quests.length===0&&(
           <div style={{textAlign:"center",padding:40}}>
             <div style={{fontSize:32,marginBottom:10}}>📜</div>
-            <p style={{color:"#555"}}>Inicia sesión para ver tus misiones diarias.</p>
+            <p style={{color:"#555"}}>No hay misiones diarias disponibles por el momento.</p>
           </div>
         )}
       </main>
