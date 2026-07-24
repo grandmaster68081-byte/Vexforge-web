@@ -158,7 +158,7 @@ export function AdminDepositsRoute() {
                   </span>
                 </div>
                 <div style={{ fontSize: 12, color: textMuted, marginBottom: 2 }}>
-                  Jugador: <strong style={{ color: "#c8c8e0" }}>{dep.player_username ?? dep.player_id.slice(0, 8)}</strong>
+                  Jugador: <strong style={{ color: "#c8c8e0" }}>{dep.display_name ?? dep.player_id.slice(0, 8)}</strong>
                 </div>
                 {dep.tx_hash && (
                   <div style={{ fontSize: 11, color: textDim, wordBreak: "break-all" }}>TxHash: {dep.tx_hash}</div>

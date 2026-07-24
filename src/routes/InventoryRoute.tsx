@@ -1,9 +1,12 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useInventory } from "../domains/inventory/useInventory";
 import type { PlayerCard } from "../domains/inventory/repository";
 import { CollectionScorePanel } from "../shared/components/CollectionScorePanel";
 import { DeckStatsPanel } from "../shared/components/DeckStatsPanel";
+import { ShardsPanel } from "../shared/components/ShardsPanel";
+import { usePlayerItems } from "../domains/cosmetics/usePlayerItems";
+import type { PlayerActiveBoost, PlayerConsumable } from "../domains/cosmetics/repository";
 
 // ─── CONFIG (matches CardsRoute exactly) ────────────────────────────────────
 const RARITY_CFG: Record<string, { color: string; glow: string; label: string }> = {
@@ -22,6 +25,191 @@ const FACTION_CFG: Record<string, { color: string; bg: string; bgImg: string; ic
 };
 const RARITIES = ["Common","Uncommon","Rare","Epic","Legendary","Mythic"];
 const FACTIONS = ["Guerrero","Mago","Paladín","Pícaro"];
+
+// ─── BOOST LABEL MAP ─────────────────────────────────────────────────────────
+const BOOST_META: Record<string, { icon: string; label: string; color: string }> = {
+  xp_boost_24h: { icon: "⚡", label: "Boost XP 24h",  color: "#4A9EFF" },
+  xp_boost_7d:  { icon: "🔵", label: "Boost XP 7d",   color: "#818cf8" },
+  xp:           { icon: "⚡", label: "Boost XP",       color: "#4A9EFF" },
+};
+const CONSUMABLE_META: Record<string, { icon: string; label: string; color: string; action?: string; actionLabel?: string }> = {
+  raid_key:            { icon: "🗝️",  label: "Llave de Raid",        color: "#E8B84B", action: "/raids",   actionLabel: "Ir a Raids" },
+  vex_conversion_token:{ icon: "🪙",  label: "Token de Conversión",  color: "#3DC96B", action: "/economy", actionLabel: "Canjear" },
+};
+
+// ─── COUNTDOWN HOOK ───────────────────────────────────────────────────────────
+function useCountdown(expiresAt: string): string {
+  const calc = () => {
+    const diff = new Date(expiresAt).getTime() - Date.now();
+    if (diff <= 0) return "Expirado";
+    const h = Math.floor(diff / 3600000);
+    const m = Math.floor((diff % 3600000) / 60000);
+    if (h >= 24) { const d = Math.floor(h / 24); return `${d}d ${h % 24}h`; }
+    return `${h}h ${m}m`;
+  };
+  const [timeLeft, setTimeLeft] = useState(calc);
+  useEffect(() => {
+    const id = setInterval(() => setTimeLeft(calc()), 60000);
+    return () => clearInterval(id);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [expiresAt]);
+  return timeLeft;
+}
+
+// ─── AP.1 — ACTIVE BOOSTS PANEL ──────────────────────────────────────────────
+function BoostCard({ boost }: { boost: PlayerActiveBoost }) {
+  const meta    = BOOST_META[boost.boost_type] ?? { icon: "⚡", label: boost.boost_type, color: "#4A9EFF" };
+  const timeLeft = useCountdown(boost.expires_at);
+  const total   = new Date(boost.expires_at).getTime() - new Date(boost.created_at).getTime();
+  const remaining = new Date(boost.expires_at).getTime() - Date.now();
+  const pct     = Math.max(0, Math.min(100, (remaining / total) * 100));
+  const expired = timeLeft === "Expirado";
+
+  return (
+    <div style={{
+      flex: "1 1 200px", minWidth: 180,
+      background: expired ? "rgba(255,255,255,.02)" : meta.color + "0e",
+      border: `1px solid ${expired ? "rgba(255,255,255,.07)" : meta.color + "33"}`,
+      borderRadius: 10, padding: "14px 16px",
+      opacity: expired ? 0.5 : 1,
+      transition: "opacity .3s",
+    }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 10 }}>
+        <span style={{ fontSize: 22, lineHeight: 1 }}>{meta.icon}</span>
+        <div>
+          <div style={{
+            fontFamily: "Cinzel,serif", fontSize: 12, fontWeight: 700,
+            color: expired ? "#555577" : meta.color,
+          }}>{meta.label}</div>
+          <div style={{
+            fontFamily: "Rajdhani,sans-serif", fontSize: 10,
+            color: "#7a7a9a", marginTop: 1,
+          }}>{boost.multiplier}× multiplicador</div>
+        </div>
+      </div>
+      {/* Progress bar */}
+      <div style={{
+        height: 5, background: "rgba(255,255,255,.06)",
+        borderRadius: 3, overflow: "hidden", marginBottom: 6,
+      }}>
+        <div style={{
+          height: "100%", width: pct + "%", borderRadius: 3,
+          background: `linear-gradient(90deg,${meta.color}88,${meta.color})`,
+          transition: "width .6s ease",
+        }} />
+      </div>
+      <div style={{
+        fontFamily: "Rajdhani,sans-serif", fontSize: 10,
+        color: expired ? "#E3573F" : "#7a7a9a",
+        display: "flex", justifyContent: "space-between",
+      }}>
+        <span>{expired ? "⚠ Expirado" : `⏱ ${timeLeft}`}</span>
+        <span>{Math.round(pct)}%</span>
+      </div>
+    </div>
+  );
+}
+
+function ActiveBoostsPanel({ boosts }: { boosts: PlayerActiveBoost[] }) {
+  if (boosts.length === 0) return null;
+  return (
+    <div style={{ maxWidth: 1200, margin: "0 auto", padding: "0 24px 20px" }}>
+      <div style={{
+        background: "linear-gradient(135deg,rgba(74,158,255,.07),rgba(74,158,255,.03))",
+        border: "1px solid rgba(74,158,255,.2)",
+        borderRadius: 12, padding: "16px 20px",
+      }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 14 }}>
+          <span style={{ fontSize: 20 }}>⚡</span>
+          <div>
+            <div style={{ fontFamily: "Cinzel,serif", color: "#4A9EFF", fontSize: 13, fontWeight: 700 }}>
+              Boosts Activos
+            </div>
+            <div style={{ color: "#555577", fontSize: 10, fontFamily: "Rajdhani,sans-serif", marginTop: 1 }}>
+              {boosts.length} boost{boosts.length !== 1 ? "s" : ""} en curso
+            </div>
+          </div>
+          <Link to="/shop" style={{
+            marginLeft: "auto",
+            background: "rgba(74,158,255,.12)", border: "1px solid rgba(74,158,255,.3)",
+            borderRadius: 6, padding: "5px 12px",
+            fontFamily: "Rajdhani,sans-serif", fontWeight: 700, fontSize: 10,
+            color: "#4A9EFF", textDecoration: "none", textTransform: "uppercase", letterSpacing: ".06em",
+          }}>+ Más Boosts</Link>
+        </div>
+        <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
+          {boosts.map(b => <BoostCard key={b.id} boost={b} />)}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ─── AP.1 — CONSUMABLES PANEL ────────────────────────────────────────────────
+function ConsumablesPanel({ consumables }: { consumables: PlayerConsumable[] }) {
+  const navigate = useNavigate();
+  if (consumables.length === 0) return null;
+  return (
+    <div style={{ maxWidth: 1200, margin: "0 auto", padding: "0 24px 20px" }}>
+      <div style={{
+        background: "linear-gradient(135deg,rgba(232,184,75,.07),rgba(232,184,75,.03))",
+        border: "1px solid rgba(232,184,75,.2)",
+        borderRadius: 12, padding: "16px 20px",
+      }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 14 }}>
+          <span style={{ fontSize: 20 }}>🎒</span>
+          <div>
+            <div style={{ fontFamily: "Cinzel,serif", color: "#E8B84B", fontSize: 13, fontWeight: 700 }}>
+              Consumibles
+            </div>
+            <div style={{ color: "#555577", fontSize: 10, fontFamily: "Rajdhani,sans-serif", marginTop: 1 }}>
+              Ítems de un solo uso disponibles
+            </div>
+          </div>
+        </div>
+        <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
+          {consumables.map(c => {
+            const meta = CONSUMABLE_META[c.item_key] ?? { icon: "📦", label: c.item_key, color: "#E8B84B" };
+            return (
+              <div key={c.id} style={{
+                flex: "1 1 160px", minWidth: 150,
+                background: meta.color + "0e",
+                border: `1px solid ${meta.color}33`,
+                borderRadius: 10, padding: "14px 16px",
+                display: "flex", flexDirection: "column", gap: 8,
+              }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                  <span style={{ fontSize: 22, lineHeight: 1 }}>{meta.icon}</span>
+                  <div>
+                    <div style={{
+                      fontFamily: "Cinzel,serif", fontSize: 11, fontWeight: 700, color: meta.color,
+                    }}>{meta.label}</div>
+                    <div style={{
+                      fontFamily: "Rajdhani,sans-serif", fontSize: 10, color: "#7a7a9a", marginTop: 1,
+                    }}>×{c.quantity} disponible{c.quantity !== 1 ? "s" : ""}</div>
+                  </div>
+                </div>
+                {meta.action && (
+                  <button
+                    onClick={() => navigate(meta.action!)}
+                    style={{
+                      background: meta.color + "18",
+                      border: `1px solid ${meta.color}44`,
+                      borderRadius: 6, padding: "6px 0",
+                      color: meta.color, fontSize: 10,
+                      fontFamily: "Rajdhani,sans-serif", fontWeight: 700,
+                      cursor: "pointer", textTransform: "uppercase", letterSpacing: ".06em",
+                    }}
+                  >{meta.actionLabel}</button>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </div>
+  );
+}
 
 // ─── CARD ART ────────────────────────────────────────────────────────────────
 function CardArt({ item }: { item: PlayerCard }) {
@@ -47,8 +235,6 @@ function CardArt({ item }: { item: PlayerCard }) {
     </div>
   );
 }
-
-// ─── MAIN EXPORT ─────────────────────────────────────────────────────────────
 
 // ─── C.4 — Card Detail Modal for InventoryRoute ───────────────────────────────
 function InvCardDetailModal({
@@ -253,6 +439,7 @@ function InvCardDetailModal({
 export function InventoryRoute() {
   const navigate = useNavigate();
   const { items, loading, error, signedIn } = useInventory();
+  const { boosts, consumables } = usePlayerItems();
   const [search,        setSearch]        = useState("");
   const [filterRarity,  setFilterRarity]  = useState("all");
   const [filterFaction, setFilterFaction] = useState("all");
@@ -320,7 +507,7 @@ export function InventoryRoute() {
   return (
     <div style={{ minHeight: "100vh", background: "#0a0a14" }}>
       <CollectionScorePanel />
-      <DeckStatsPanel />
+
       {/* ─── Header ─── */}
       <div style={{ background: "linear-gradient(160deg,#0a0a14,#0e0e22)",
         borderBottom: "1px solid rgba(201,144,31,.15)", padding: "40px 24px 28px" }}>
@@ -390,6 +577,27 @@ export function InventoryRoute() {
           </div>
         </div>
       </div>
+
+      {/* ─── AP.1 — Boosts Activos ─── */}
+      {boosts.length > 0 && (
+        <div style={{ paddingTop: 24 }}>
+          <ActiveBoostsPanel boosts={boosts} />
+        </div>
+      )}
+
+      {/* ─── AP.1 — Consumibles ─── */}
+      {consumables.length > 0 && (
+        <div style={{ paddingTop: boosts.length === 0 ? 24 : 0 }}>
+          <ConsumablesPanel consumables={consumables} />
+        </div>
+      )}
+
+      {/* ─── Y.3 — Shards Panel ─── */}
+      <div style={{ paddingTop: (boosts.length > 0 || consumables.length > 0) ? 0 : 24, paddingBottom: 20 }}>
+        <ShardsPanel />
+      </div>
+
+      <DeckStatsPanel />
 
       {/* ─── Sticky Filters ─── */}
       <div style={{ background: "rgba(10,10,20,.94)", borderBottom: "1px solid rgba(255,255,255,.05)",
@@ -581,14 +789,14 @@ export function InventoryRoute() {
 
                       {/* Action buttons */}
                       <div style={{ display: "flex", gap: 4 }}>
-                        <button onClick={() => navigate("/deck-builder")} style={{
+                        <button onClick={e => { e.stopPropagation(); navigate("/deck-builder"); }} style={{
                           flex: 1, background: "rgba(232,184,75,.1)",
                           border: "1px solid rgba(232,184,75,.3)",
                           borderRadius: 5, padding: "5px 0",
                           color: "#e8b84b", fontSize: 9, fontFamily: "Rajdhani,sans-serif",
                           fontWeight: 700, cursor: "pointer", textTransform: "uppercase" }}>Deck</button>
                         {item.quantity > 1 && !item.locked && item.fusion_enabled && (
-                          <button onClick={() => navigate("/fusion")} style={{
+                          <button onClick={e => { e.stopPropagation(); navigate("/fusion"); }} style={{
                             flex: 1, background: "rgba(139,92,246,.1)",
                             border: "1px solid rgba(139,92,246,.3)",
                             borderRadius: 5, padding: "5px 0",
@@ -596,7 +804,7 @@ export function InventoryRoute() {
                             fontWeight: 700, cursor: "pointer", textTransform: "uppercase" }}>Fusión</button>
                         )}
                         {!item.locked && !item.listed && item.marketable && (
-                          <button onClick={() => navigate("/market")} style={{
+                          <button onClick={e => { e.stopPropagation(); navigate("/market"); }} style={{
                             flex: 1, background: "rgba(96,165,250,.1)",
                             border: "1px solid rgba(96,165,250,.3)",
                             borderRadius: 5, padding: "5px 0",

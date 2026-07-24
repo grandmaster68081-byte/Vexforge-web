@@ -1,123 +1,77 @@
-import { createContext, useCallback, useContext, useRef, useState } from "react";
+import { createContext, useContext, useState, useCallback, type ReactNode } from "react";
 
-// ─── Types ────────────────────────────────────────────────────────────────────
-export type ToastKind = "success" | "error" | "info" | "warning";
+export type ToastType = "success" | "error" | "info" | "warning";
 
-export interface ToastItem {
-  id:      string;
-  kind:    ToastKind;
-  title:   string;
-  message?: string;
+export interface Toast {
+  id: string;
+  type: ToastType;
+  title: string;
+  description?: string;
 }
 
-interface ToastCtx {
-  addToast: (kind: ToastKind, title: string, message?: string) => void;
+interface ToastContextValue {
+  toasts: Toast[];
+  addToast: (type: ToastType, title: string, description?: string) => void;
+  showToast: (message: string, type?: ToastType) => void;
+  removeToast: (id: string) => void;
 }
 
-// ─── Context ──────────────────────────────────────────────────────────────────
-const ToastContext = createContext<ToastCtx>({ addToast: () => {} });
+const ToastContext = createContext<ToastContextValue | null>(null);
 
-export function useToast() {
-  return useContext(ToastContext);
-}
+export function ToastProvider({ children }: { children: ReactNode }) {
+  const [toasts, setToasts] = useState<Toast[]>([]);
 
-// ─── Toast visual ─────────────────────────────────────────────────────────────
-const KIND_COLOR: Record<ToastKind, string> = {
-  success: "#3ddc84",
-  error:   "#e3573f",
-  info:    "#4a9eff",
-  warning: "#e8b84b",
-};
+  const addToast = useCallback((type: ToastType, title: string, description?: string) => {
+    const id = Math.random().toString(36).slice(2);
+    setToasts(prev => [...prev, { id, type, title, description }]);
+    setTimeout(() => setToasts(prev => prev.filter(t => t.id !== id)), 4000);
+  }, []);
 
-const KIND_ICON: Record<ToastKind, string> = {
-  success: "✓",
-  error:   "✕",
-  info:    "ℹ",
-  warning: "⚠",
-};
+  const showToast = useCallback((message: string, type: ToastType = "info") => {
+    addToast(type, message);
+  }, [addToast]);
 
-function ToastCard({ toast, onDismiss }: { toast: ToastItem; onDismiss: (id: string) => void }) {
-  const c = KIND_COLOR[toast.kind];
-  return (
-    <div
-      onClick={() => onDismiss(toast.id)}
-      style={{
-        display: "flex", alignItems: "flex-start", gap: 12,
-        padding: "12px 16px", borderRadius: 10, cursor: "pointer",
-        background: "rgba(18,18,31,0.97)",
-        border: `1px solid ${c}44`,
-        boxShadow: `0 4px 24px rgba(0,0,0,0.5), 0 0 0 1px ${c}22`,
-        backdropFilter: "blur(8px)",
-        minWidth: 260, maxWidth: 380,
-        animation: "toast-slide-in 0.25s ease-out",
-      }}
-    >
-      <div style={{
-        width: 22, height: 22, borderRadius: "50%", flexShrink: 0,
-        background: `${c}22`, border: `1.5px solid ${c}`,
-        display: "flex", alignItems: "center", justifyContent: "center",
-        fontSize: 11, fontWeight: 800, color: c,
-      }}>
-        {KIND_ICON[toast.kind]}
-      </div>
-      <div style={{ flex: 1, minWidth: 0 }}>
-        <div style={{
-          fontSize: 13, fontWeight: 700, color: "#e8e8f0", lineHeight: 1.3,
-          fontFamily: '"Rajdhani", sans-serif',
-        }}>
-          {toast.title}
-        </div>
-        {toast.message && (
-          <div style={{ fontSize: 11, color: "#7a7a9a", marginTop: 3, lineHeight: 1.4 }}>
-            {toast.message}
-          </div>
-        )}
-      </div>
-      <div style={{ fontSize: 10, color: "#4a4a6a", flexShrink: 0, marginTop: 2 }}>✕</div>
-    </div>
-  );
-}
-
-// ─── Provider ─────────────────────────────────────────────────────────────────
-let _nextId = 1;
-
-export function ToastProvider({ children }: { children: React.ReactNode }) {
-  const [toasts, setToasts] = useState<ToastItem[]>([]);
-  const timers = useRef<Record<string, ReturnType<typeof setTimeout>>>({});
-
-  const dismiss = useCallback((id: string) => {
-    clearTimeout(timers.current[id]);
-    delete timers.current[id];
+  const removeToast = useCallback((id: string) => {
     setToasts(prev => prev.filter(t => t.id !== id));
   }, []);
 
-  const addToast = useCallback((kind: ToastKind, title: string, message?: string) => {
-    const id = String(_nextId++);
-    setToasts(prev => [...prev.slice(-4), { id, kind, title, message }]);
-    timers.current[id] = setTimeout(() => dismiss(id), kind === "error" ? 6000 : 4000);
-  }, [dismiss]);
+  const COLOR: Record<ToastType, string> = {
+    success: "#3DC96B",
+    error:   "#E3573F",
+    info:    "#5B8BF5",
+    warning: "#E8B84B",
+  };
 
   return (
-    <ToastContext.Provider value={{ addToast }}>
+    <ToastContext.Provider value={{ toasts, addToast, showToast, removeToast }}>
       {children}
-      <div
-        aria-live="polite"
-        style={{
-          position: "fixed", bottom: 80, right: 16, zIndex: 9999,
-          display: "flex", flexDirection: "column-reverse", gap: 8,
-          pointerEvents: toasts.length === 0 ? "none" : "auto",
-        }}
-      >
-        <style>{`
-          @keyframes toast-slide-in {
-            from { opacity: 0; transform: translateY(10px) scale(0.96); }
-            to   { opacity: 1; transform: translateY(0) scale(1); }
-          }
-        `}</style>
-        {toasts.map(t => (
-          <ToastCard key={t.id} toast={t} onDismiss={dismiss} />
-        ))}
-      </div>
+      {toasts.length > 0 && (
+        <div style={{
+          position: "fixed", bottom: 24, right: 24, zIndex: 99999,
+          display: "flex", flexDirection: "column", gap: 10, maxWidth: 360,
+        }}>
+          {toasts.map(t => (
+            <div key={t.id} onClick={() => removeToast(t.id)} style={{
+              background: "var(--layer-3, #1C1C38)",
+              border: `1px solid ${COLOR[t.type]}55`,
+              borderLeft: `4px solid ${COLOR[t.type]}`,
+              borderRadius: 10, padding: "12px 16px", cursor: "pointer",
+              boxShadow: "0 4px 24px rgba(0,0,0,0.5)",
+              animation: "slideInToast 0.25s ease",
+            }}>
+              <style>{`@keyframes slideInToast{from{opacity:0;transform:translateX(40px)}to{opacity:1;transform:translateX(0)}}`}</style>
+              <div style={{ fontWeight: 700, color: COLOR[t.type], fontSize: 14 }}>{t.title}</div>
+              {t.description && <div style={{ color: "var(--fg-muted, #8891A0)", fontSize: 12, marginTop: 4 }}>{t.description}</div>}
+            </div>
+          ))}
+        </div>
+      )}
     </ToastContext.Provider>
   );
+}
+
+export function useToast(): ToastContextValue {
+  const ctx = useContext(ToastContext);
+  if (!ctx) throw new Error("useToast must be used within ToastProvider");
+  return ctx;
 }

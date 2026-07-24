@@ -1,103 +1,83 @@
-# VEXFORGE — CONTINUITY (Chat 66 — 2026-07-20 — ÉPICAS A-F COMPLETAS)
+# VEXFORGE — CONTINUITY (Chat 81 — 2026-07-22 — Y.1 COMPLETE)
 
-## Estado: Épicas A+B+C+D+E+F completas — Chat 66 — Revision 76
+## Estado: Épicas A+B+C+D+E+F+G+H+I+P+Q+R+T.2-T.7+U.1+U.2+V.1+W.1+W.2+X.1+X.2+X.3+Y.1 completas
 
 ---
 
-## CHAT 66 — BLOQUES COMPLETADOS
+## CHAT 81 — TRABAJO COMPLETADO
 
-| Bloque | Descripcion | Estado |
+| Bloque | Descripción | Estado |
 |--------|-------------|--------|
-| F.1.b-RPC | vexforge_battle_resolve SQL creado y ejecutado en DB | ✅ FIX |
-| Sync | Memoria sincronizada epic_f_status PLANNED→COMPLETE | ✅ |
+| Y.1    | BUG FIX: fn_check_and_grant_achievements — añadidos pvp_50 + pvp_100 | ✅ |
+| Y.1    | Cobertura real ahora: 25/25 logros verificada con evidencia directa | ✅ |
+| Persist | Decisión chat81_y1_fn_check_pvp_fix guardada | ✅ |
+| Audit  | Sincronización completa: CONTINUITY, memory y web_registry actualizados | ✅ |
 
 ---
 
-## DISCREPANCIA RESUELTA CHAT 66
+## CORRECCIONES DE ESTADO CHAT 81
 
-- **Detectado:** vexforge_battle_resolve RPC registrado como COMPLETE en decisiones (chat65 18:56) pero no existía en el schema de Supabase (PGRST202).
-- **Causa:** La decisión de chat65 registró el trabajo pero el SQL nunca se ejecutó contra el DB.
-- **Fix:** SQL ejecutado via Management API. RPC verificado en information_schema.routines.
-- **Frontend:** Ya funcional — startRealBattle() en pvp/repository.ts llama vexforge_battle_resolve correctamente.
+### X.1 y X.2 estaban marcadas como pendientes en CONTINUITY.md anterior — ERROR
+La decisión chat80_x1_x2_complete (adoptada en chat 80) y el last_action de project_memory
+confirman que X.1 (daily_streak) y X.2 (forger via economy_ledger) ESTABAN COMPLETAS en chat 80.
+El CONTINUITY.md del chat 80 tenía una sección de PRÓXIMOS PASOS desactualizada.
 
----
-
-## ARCHIVOS CREADOS/MODIFICADOS CHAT 66
-
-| Archivo | Acción | Descripción |
-|---------|--------|-------------|
-| DB: vexforge_battle_resolve | CREADO | RPC motor turn-based — SQL ejecutado via Management API |
-| vexforge_project_memory | ACTUALIZADO | epic_f_status PLANNED→COMPLETE, chat 65→66, rev 75→76 |
-| backend/handoff/CONTINUITY.md | ACTUALIZADO | Este archivo |
-| docs/MASTER_WORK_PLAN.md | ACTUALIZADO | Estado F COMPLETE, Épica G planificada |
+### Cobertura real de fn_check_and_grant_achievements
+ANTES de Y.1: 23/25 (faltaban pvp_50 y pvp_100 en la función)
+DESPUÉS de Y.1: 25/25 ✅
 
 ---
 
-## ESTADO POST-CHAT 66
+## ESTADO TÉCNICO POST-CHAT 81
 
-- Frontend files canónicos: 168
-- Épicas completas: A ✅, B ✅, C ✅, D ✅, E ✅, F ✅
-- Rutas live: 28 | Chat: 66 | Revision: 76
-- Siguiente: Épica G — Polish + Deploy Prep
+### Frontend canonical files: 189
+### Chat: 81 | Backend triggers de logros: 10 | Cobertura logros: 25/25
 
----
-
-## ÉPICA F — ESTADO FINAL VERIFICADO
-
-### RPC vexforge_battle_resolve (EXISTE en DB):
-- Params: p_challenger_id uuid, p_opponent_id uuid, p_idempotency_key text
-- Returns: jsonb (RealBattleResult)
-- Motor: turn-based 60 turnos max, top-5 cartas por power
-- Stats: HP=(30+pow×2+pres×3)×rarityMult, ATK=pow+aff×0.4, DEF=pres×2+charge, SPD=charge+aff×0.3
-- Keywords via synergy_json: Guard/Drain(lifesteal30%)/Surge(rush)/Veil(shield)
-- ELO ±25, VEX +15 ganador, idempotency_keys, INSERT pvp_matches, UPDATE pvp_rankings
-- SECURITY DEFINER, GRANT authenticated/anon
-- Fallback units si player no tiene cartas
-
-### Archivos Frontend F en Supabase:
-- src/lib/audioEngine.ts ✅
-- src/lib/battleTypes.ts ✅
-- src/components/battle/BattleCard.tsx ✅
-- src/components/battle/BattleCinematicScreen.tsx ✅
-- src/domains/pvp/repository.ts ✅ (startRealBattle → vexforge_battle_resolve)
-- src/domains/pvp/usePvp.ts ✅
-- src/routes/PvpRoute.tsx ✅
+### Épicas completas: A B C D E F G H I P Q R T(2-7) U1 U2 V1 W1 W2 X1 X2 X3 Y1
 
 ---
 
-## SIGUIENTE: ÉPICA G — POLISH + DEPLOY PREP
+## ARQUITECTURA DE LOGROS (CORREGIDA CHAT 81)
 
-Plan a definir. Posibles bloques:
-- G.1 — Revisión integral de todos los archivos F (BattleCinematicScreen QA)
-- G.2 — SEO, meta tags, PWA manifest
-- G.3 — Cloudflare/Wrangler deploy config + env vars producción
-- G.4 — Performance audit y fixes finales
+### fn_check_and_grant_achievements — 25/25 logros:
+| Categoría | Logros | Estado |
+|-----------|--------|--------|
+| missions | missions_10, missions_50 | ✅ |
+| collection | first_rare, first_epic, first_legendary, first_mythic, collector_25/50/127 | ✅ |
+| bosses | boss_slayer_1, boss_slayer_5 | ✅ |
+| economy | merchant_5, merchant_25 | ✅ |
+| pvp | first_win, pvp_10, pvp_50, pvp_100 | ✅ (pvp_50/100 añadidos Y.1) |
+| packs | pack_opener_10 | ✅ |
+| fusion | forger_5, forger_25, forger_100 | ✅ |
+| daily | daily_streak_7, daily_streak_30 | ✅ |
+| social | clan_founder, clan_veteran | ✅ |
+
+### Triggers activos (10):
+trg_achievements_on_mission, trg_achievements_on_cards, trg_achievements_on_boss,
+trg_achievements_on_market, trg_achievements_on_pvp, trg_achievements_on_packs,
+trg_achievements_on_clan, trg_achievements_on_clan_member, trg_achievements_on_daily,
+trg_achievements_on_fusion
 
 ---
 
-## TABLAS CLAVE (estado chat 66)
-
-| Tabla | Estado |
-|-------|--------|
-| pvp_matches | ✅ recibe INSERTs del RPC |
-| pvp_rankings | ✅ ELO actualizado por RPC |
-| player_wallet | ✅ VEX+15 por RPC |
-| idempotency_keys | ✅ existe, cols: id/idempotency_key/player_id/scope/reference_id/created_at/expires_at |
-| pvp_seasons | ✅ Season 1 activa (87f315cd-5a14-4803-8b0f-9532dbfd6447) |
+## STACK CONFIRMADO (Chat 81)
+- React 18 + Vite + TypeScript + react-router-dom v6 + @supabase/supabase-js
+- Deploy: Cloudflare Pages via wrangler (npm run build → dist/)
+- 34 dominios live_in_official_frontend
+- Backend: PostgreSQL (Supabase) con RLS, 10 achievement triggers, RPCs SECURITY DEFINER
 
 ---
 
-## NOTAS ARQUITECTÓNICAS
+## PRÓXIMOS PASOS
 
-- tsconfig.app.json strict:false — deliberado
-- RPCs usan players.id NO auth.uid() — PATRÓN GLOBAL
-- players: NO level, NO xp. Cols: auth_user_id,created_at,display_name,email,id,is_admin,is_super_admin,role,source_system,status,telegram_id,telegram_username,updated_at
-- DomainResult<T>: {status:"ready"|"blocked_auth", data:T|null, reason?:string}
-- Keywords en cards: synergy_json.keywords[] — NO card_tags (card_tags=[] vacío en todas)
-- safe_wallet_transaction: NO EXISTE → usar UPDATE player_wallet directo
-- vexforge_battle_resolve no usa safe_wallet_transaction, usa UPDATE directo
-- RANK_TIERS: Iron(0)/Bronze(500)/Silver(900)/Gold(1300)/Platinum(1800)/Diamond(2400)/Mythic(3000)
-- Cards: NO element column, NO level column
-- get_public_player_names(p_player_ids uuid[]) → [{id,display_name,level,mmr}]
-- PackOpenSequence v2: onOpenAnother?: () => void
-- CollectionScore max 1850pts | weights: C×1,U×3,R×10,E×25,L×60,M×150
+### Épica Y (en curso):
+- Y.1 ✅ — fn_check 25/25 logros
+- Y.2 — Pack opening experience: verificar y mejorar flujo de apertura de sobres
+- Y.3 — Por determinar según hallazgos de Y.2
+
+---
+
+## DEPLOY
+
+Ver docs/DEPLOY_GUIDE.md. Cloudflare Pages:
+npm run build → dist/ → wrangler pages deploy dist --project-name=vexforge-web

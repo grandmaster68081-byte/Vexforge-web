@@ -334,6 +334,105 @@ export class VexForgeAudioEngine {
   isMuted(): boolean { return this._muted; }
   getIntensityLevel(): IntensityLevel { return this._intensityLevel; }
 
+  // ─── T.2: UI SFX Actions (EPICA T.2 — chat76) ─────────────────────────────
+  /** Card hover — subtle tick (T.2) */
+  sfxCardHover(): void {
+    this.tone(1200, 0.04, 'sine', 0.07, 200);
+  }
+  /** Card confirm-select (T.2) */
+  sfxCardSelect(): void {
+    this.tone(880, 0.07, 'square', 0.16);
+    this.tone(1108, 0.09, 'sine', 0.12, 0, undefined, 0.04);
+  }
+  /** Card dropped onto field — impact thud (T.2) */
+  sfxCardDrop(): void {
+    this.noise(0.06, 0.28, 350);
+    this.tone(147, 0.10, 'square', 0.30, 0, undefined, 0.03);
+  }
+  /** Advance turn whoosh (T.2) */
+  sfxTurnAdvance(): void {
+    this.tone(440, 0.07, 'triangle', 0.14);
+    this.tone(660, 0.09, 'sine', 0.10, 0, undefined, 0.04);
+  }
+  /** Dramatic pack-open reveal: rising sweep + shimmer (T.2) */
+  sfxPackOpen(): void {
+    this.noise(0.08, 0.22, 800);
+    [196, 261, 329, 392, 523].forEach((f, i) =>
+      this.tone(f, 0.16, 'sawtooth', 0.20, 0, undefined, i * 0.06),
+    );
+    this.tone(1046, 0.38, 'sine', 0.26, 0, undefined, 0.32);
+    this.noise(0.10, 0.10, 5000, 0.28);
+  }
+  /** Battle action hit — delegates to existing attack() (T.2) */
+  sfxBattleHit(): void { this.attack(); }
+  /** Victory jingle shorthand (T.2) */
+  sfxBattleWin(): void { this.victory(); }
+  /** Defeat jingle shorthand (T.2) */
+  sfxBattleLose(): void { this.defeat(); }
+
+
+  // ─── AN.1: Extended UI SFX (chat94) ─────────────────────────────────────
+  /** Generic action button click — soft confirmation (AN.1) */
+  sfxButtonClick(): void {
+    this.tone(900, 0.03, 'sine', 0.08, 100);
+    this.tone(1100, 0.04, 'sine', 0.05, 0, undefined, 0.02);
+  }
+  /** Route/navigation change — subtle whoosh (AN.1) */
+  sfxNavChange(): void {
+    this.noise(0.07, 0.06, 2500, 0);
+    this.tone(740, 0.05, 'sine', 0.07, 0, undefined, 0.02);
+  }
+  /** Notification/toast appear — ascending chime (AN.1) */
+  sfxNotification(): void {
+    this.tone(880, 0.10, 'sine', 0.16);
+    this.tone(1108, 0.12, 'sine', 0.12, 0, undefined, 0.05);
+    this.tone(1318, 0.15, 'sine', 0.09, 0, undefined, 0.11);
+  }
+  /** Error/fail feedback — descending buzz (AN.1) */
+  sfxError(): void {
+    this.tone(220, 0.10, 'sawtooth', 0.16);
+    this.tone(185, 0.09, 'square',   0.12, 0, undefined, 0.07);
+  }
+
+  // ─── AU.1+AU.2 Audio Extensions (chat99) ────────────────────────────────
+  sfxDoubleStrike(): void {
+    this.tone(280, 0.04, 'square', 0.32); this.noise(0.04, 0.15, 1800);
+    this.tone(280, 0.04, 'square', 0.28, 0, undefined, 0.12); this.noise(0.04, 0.13, 2200, 0.12);
+  }
+  sfxKeywordPoison(): void {
+    this.noise(0.35, 0.12, 800); this.tone(180, 0.18, 'triangle', 0.10, 0, undefined, 0.05);
+    this.tone(220, 0.14, 'triangle', 0.08, 0, undefined, 0.16);
+  }
+  sfxKeywordShield(): void {
+    this.tone(1046, 0.03, 'square', 0.35); this.tone(523, 0.14, 'sine', 0.22, 400, undefined, 0.02);
+    this.noise(0.06, 0.14, 5000, 0.01);
+  }
+  sfxKeywordLifesteal(): void {
+    this.noise(0.10, 0.12, 300); this.tone(660, 0.12, 'sine', 0.18, 700);
+    this.tone(880, 0.14, 'sine', 0.12, 0, undefined, 0.08);
+  }
+  sfxCardByRarity(rarity: string): void {
+    switch (rarity) {
+      case 'Common':   this.tone(440, 0.05, 'sine', 0.08); break;
+      case 'Uncommon': this.tone(523, 0.07, 'sine', 0.11); break;
+      case 'Rare':
+        this.tone(659, 0.10, 'sine', 0.16); this.tone(880, 0.12, 'sine', 0.10, 600, undefined, 0.05); break;
+      case 'Epic':
+        this.tone(330, 0.06, 'square', 0.22); this.noise(0.06, 0.10, 1200, 0.02);
+        this.tone(523, 0.14, 'sine', 0.16, 0, undefined, 0.06); break;
+      case 'Legendary':
+        this.tone(440, 0.04, 'square', 0.28); this.tone(659, 0.12, 'sine', 0.22);
+        this.tone(880, 0.16, 'sine', 0.16, 0, undefined, 0.08);
+        this.tone(1108, 0.18, 'sine', 0.10, 0, undefined, 0.16); break;
+      case 'Mythic':
+        this.tone(220, 0.06, 'sawtooth', 0.32); this.noise(0.08, 0.18, 600, 0.02);
+        this.tone(440, 0.10, 'square', 0.22, 0, undefined, 0.06);
+        this.tone(880, 0.16, 'sine', 0.20, 0, undefined, 0.12);
+        this.tone(1320, 0.22, 'sine', 0.14, 800, undefined, 0.20); break;
+      default: this.tone(440, 0.05, 'sine', 0.08); break;
+    }
+  }
+
   // ─── Keyword trigger (v2.0 API — fully preserved) ────────────────────────
   triggerKeyword(keyword: string): void {
     const map: Record<string, () => void> = {
@@ -348,3 +447,118 @@ export class VexForgeAudioEngine {
 }
 
 export const AudioEngine = new VexForgeAudioEngine();
+
+// ═══════════════════════════════════════════════════════════════════════════
+// T.1 — Section Ambient Music (chat74 · EPICA T.1 · Sistema de Audio Global)
+// Extends v3.0 with section-based ambient palettes, crossfade on section
+// change, localStorage persistence and first-gesture unlock.
+// Backward-compatible: existing setFaction/musicLoop callers keep working.
+// ═══════════════════════════════════════════════════════════════════════════
+
+export type VexforgeSection = 'hub' | 'battle' | 'missions' | 'market' | 'bosses' | 'social';
+
+const SECTION_PALETTES: Record<string, { base: number; mode: OscillatorType[]; tempo: number; color: string }> = {
+  'section:hub':      { base: 165, mode: ['sine', 'triangle'],     tempo: 0.70, color: '#e8b84b' },
+  'section:battle':   { base: 130, mode: ['sawtooth', 'square'],   tempo: 0.55, color: '#c0392b' },
+  'section:missions': { base: 174, mode: ['triangle', 'sine'],     tempo: 0.62, color: '#27ae60' },
+  'section:market':   { base: 196, mode: ['square', 'sawtooth'],   tempo: 0.72, color: '#f39c12' },
+  'section:bosses':   { base:  98, mode: ['sawtooth', 'triangle'], tempo: 0.48, color: '#8e44ad' },
+  'section:social':   { base: 220, mode: ['sine', 'triangle'],     tempo: 0.66, color: '#4a9eff' },
+};
+
+const AUDIO_STORAGE_KEY = 'vexforge_audio_prefs_v1';
+
+// Register section palettes into the module-level FACTION_MUSIC lookup so
+// setFaction('section:hub') + musicLoop() reuse the existing music engine.
+Object.entries(SECTION_PALETTES).forEach(([k, v]) => {
+  (FACTION_MUSIC as any)[k] = v;
+});
+
+function _installSectionApi(engine: any): void {
+  if (engine.__sectionApiInstalled) return;
+  engine.__sectionApiInstalled = true;
+  engine._currentSection = null;
+
+  // localStorage persistence
+  engine.hydrateFromStorage = function (): void {
+    try {
+      const raw = localStorage.getItem(AUDIO_STORAGE_KEY);
+      if (!raw) return;
+      const p = JSON.parse(raw) as { muted?: boolean; musicVol?: number; sfxVol?: number };
+      if (typeof p.muted    === 'boolean') this.setMuted(p.muted);
+      if (typeof p.musicVol === 'number')  this.setMusicVol(p.musicVol);
+      if (typeof p.sfxVol   === 'number')  this.setSfxVol(p.sfxVol);
+    } catch { /* silent */ }
+  };
+  engine._persist = function (): void {
+    try {
+      localStorage.setItem(AUDIO_STORAGE_KEY, JSON.stringify({
+        muted: this._muted, musicVol: this._musicVol, sfxVol: this._sfxVol,
+      }));
+    } catch { /* silent */ }
+  };
+  // Wrap existing setters so every mutation persists.
+  (['setMuted', 'setMusicVol', 'setSfxVol'] as const).forEach((name) => {
+    const orig = engine[name];
+    if (typeof orig !== 'function') return;
+    engine[name] = function (v: any) {
+      const r = orig.call(this, v);
+      this._persist();
+      return r;
+    };
+  });
+
+  engine.getSection = function (): VexforgeSection | null { return this._currentSection ?? null; };
+
+  // First-user-gesture unlock (browsers block AudioContext until interaction)
+  engine.unlock = function (): void {
+    try {
+      const c = this.ctx();
+      if (c && c.state === 'suspended') c.resume().catch(() => {});
+    } catch { /* silent */ }
+  };
+
+  // Section ambient with crossfade
+  engine.startSectionAmbient = function (section: VexforgeSection): void {
+    if (this._currentSection === section && this._factionMusicActive && !this._muted) return;
+    this._currentSection = section;
+    if (this._muted) return;
+
+    const paletteKey = 'section:' + section;
+    const target = (FACTION_MUSIC as any)[paletteKey] ? paletteKey : 'default';
+
+    try {
+      const c = this.ctx();
+      const bus = this._musicBus;
+      if (!bus) { this.setFaction(target); this.musicLoop(); return; }
+
+      const now = c.currentTime;
+      const targetVol = this._musicVol;
+      bus.gain.cancelScheduledValues(now);
+      bus.gain.setValueAtTime(bus.gain.value, now);
+      bus.gain.linearRampToValueAtTime(0.001, now + 0.30);
+
+      setTimeout(() => {
+        this.stopMusic();
+        this.setFaction(target);
+        this._intensity = 1.0;
+        this._intensityLevel = 'calm';
+        this.musicLoop();
+        try {
+          const cc = this.ctx();
+          const now2 = cc.currentTime;
+          bus.gain.cancelScheduledValues(now2);
+          bus.gain.setValueAtTime(0.001, now2);
+          bus.gain.linearRampToValueAtTime(targetVol, now2 + 0.40);
+        } catch { /* silent */ }
+      }, 320);
+    } catch { /* silent fail */ }
+  };
+
+  engine.stopAmbient = function (): void {
+    this._currentSection = null;
+    this.stopMusic();
+  };
+}
+
+_installSectionApi(AudioEngine as any);

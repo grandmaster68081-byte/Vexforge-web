@@ -86,9 +86,8 @@ function RankCard({ rank, loading }: { rank: PlayerRank | null; loading: boolean
   const winRate = total > 0 ? Math.round((wins / total) * 100) : 0;
 
   return (
-    <div style={{ background: "var(--layer-1)", borderRadius: 14,
-      border: `1px solid ${color}33`, padding: "20px 22px",
-      backgroundImage: `linear-gradient(135deg, ${color}08 0%, var(--layer-1) 60%)` }}>
+    <div style={{ background: `linear-gradient(135deg, ${color}08 0%, var(--layer-1) 60%)`, borderRadius: 14,
+      border: `1px solid ${color}33`, padding: "20px 22px" }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 16 }}>
         <div>
           <div style={{ fontSize: 38, lineHeight: 1 }}>{icon}</div>
@@ -195,10 +194,9 @@ function WalletSnapshotSection({ wallet, loading }: { wallet: WalletSnapshot | n
         { label: "VEX Tradeable", value: wallet?.vex_tradeable ?? 0, color: "#E8B84B", icon: "💱" },
       ].map(({ label, value, color, icon }) => (
         <Link key={label} to="/economy" style={{ textDecoration: "none" }}>
-          <div style={{ background: "var(--layer-1)", borderRadius: 12,
+          <div style={{ background: `linear-gradient(135deg, ${color}08 0%, var(--layer-1) 70%)`, borderRadius: 12,
             border: `1px solid ${color}33`, padding: "16px 18px",
-            transition: "border-color 0.18s, background 0.18s",
-            backgroundImage: `linear-gradient(135deg, ${color}08 0%, var(--layer-1) 70%)` }}
+            transition: "border-color 0.18s, background 0.18s" }}
             onMouseEnter={e => { (e.currentTarget as HTMLDivElement).style.borderColor = `${color}66`; }}
             onMouseLeave={e => { (e.currentTarget as HTMLDivElement).style.borderColor = `${color}33`; }}>
             {loading ? <SkeletonBlock h={50} radius={8} /> : (
@@ -337,10 +335,9 @@ export function ProfileRoute() {
       </div>
 
       {/* ── Identity card ────────────────────────────────────────────────── */}
-      <div style={{ background: "var(--layer-1)", borderRadius: 16,
+      <div style={{ background: "linear-gradient(135deg, rgba(201,144,31,0.06) 0%, var(--layer-1) 50%)", borderRadius: 16,
         border: "1px solid rgba(201,144,31,0.18)", padding: "24px 24px 20px",
-        marginBottom: 24,
-        backgroundImage: "linear-gradient(135deg, rgba(201,144,31,0.06) 0%, var(--layer-1) 50%)" }}>
+        marginBottom: 24 }}>
         {loading ? (
           <div style={{ display: "flex", gap: 20, alignItems: "center" }}>
             <div className="skeleton" style={{ width: 72, height: 72, borderRadius: "50%" }} />

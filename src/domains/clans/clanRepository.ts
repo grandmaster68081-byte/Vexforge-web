@@ -41,7 +41,7 @@ export async function getPlayerClanData(): Promise<DomainResult<PlayerClanData>>
 
   const { data: membershipRows } = await supabase
     .from("clan_members")
-    .select("id,player_id,clan_id,role,contribution_accumulated,joined_at")
+    .select("id,clan_id,role,contribution_accumulated,joined_at")
     .eq("player_id", playerId)
     .limit(1);
 

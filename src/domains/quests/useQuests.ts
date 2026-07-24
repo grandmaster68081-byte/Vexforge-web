@@ -1,68 +1,40 @@
-import { useCallback, useEffect, useState } from "react";
-import {
-  loadDailyQuests, claimDailyQuest,
-  type PlayerDailyQuest, type QuestClaimResult,
-} from "./repository";
-
-export interface QuestClaim {
-  playerQuestId: string;
-  result: QuestClaimResult;
-}
+import { useEffect, useState, useCallback } from "react";
+import { useSession } from "../../providers/AuthProvider";
+import { getMyDailyQuests, claimDailyQuestReward, type PlayerDailyQuest } from "./repository";
+import type { DomainStatus } from "../../shared/types/domain";
 
 export function useQuests() {
-  const [quests, setQuests]         = useState<PlayerDailyQuest[]>([]);
-  const [loading, setLoading]       = useState(true);
-  const [error, setError]           = useState<string | null>(null);
-  const [claiming, setClaiming]     = useState<string | null>(null); // playerQuestId being claimed
-  const [lastClaim, setLastClaim]   = useState<QuestClaim | null>(null);
+  const { session, loading: sessionLoading } = useSession();
+  const [quests, setQuests] = useState<PlayerDailyQuest[]>([]);
+  const [status, setStatus] = useState<DomainStatus>("blocked_auth");
+  const [loading, setLoading] = useState(true);
+  const [reason, setReason] = useState<string | null>(null);
 
-  const load = useCallback(async () => {
-    setLoading(true);
-    setError(null);
-    const res = await loadDailyQuests();
-    if (res.data)   setQuests(res.data);
-    if (res.reason) setError(res.reason);
-    setLoading(false);
-  }, []);
-
-  useEffect(() => { load(); }, [load]);
-
-  const claim = useCallback(async (playerQuestId: string) => {
-    setClaiming(playerQuestId);
-    setLastClaim(null);
-    const res = await claimDailyQuest(playerQuestId);
-    if (res.data) {
-      setLastClaim({ playerQuestId, result: res.data });
-      // Optimistically update status locally
-      setQuests(prev =>
-        prev.map(q =>
-          q.id === playerQuestId
-            ? { ...q, status: "claimed", claimed_at: new Date().toISOString() }
-            : q
-        )
-      );
-    } else {
-      setError(res.reason ?? "No se pudo reclamar la recompensa.");
+  const fetchQuests = useCallback(async () => {
+    if (!session) {
+      setStatus("blocked_auth");
+      setReason("No auth session.");
+      setLoading(false);
+      return;
     }
-    setClaiming(null);
-  }, []);
+    setLoading(true);
+    const result = await getMyDailyQuests();
+    setStatus(result.status);
+    setQuests(result.data ?? []);
+    setReason(result.reason ?? null);
+    setLoading(false);
+  }, [session]);
 
-  const dismissClaim = useCallback(() => setLastClaim(null), []);
+  useEffect(() => {
+    if (sessionLoading) return;
+    fetchQuests();
+  }, [session, sessionLoading, fetchQuests]);
 
-  /** Seconds until next daily reset (midnight local) */
-  function secondsUntilReset(): number {
-    const now   = new Date();
-    const reset = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, 0, 0, 0);
-    return Math.max(0, Math.floor((reset.getTime() - now.getTime()) / 1000));
+  async function claim(questAssignmentId: string) {
+    const r = await claimDailyQuestReward(questAssignmentId);
+    if (r.ok) fetchQuests();
+    return r;
   }
 
-  const allClaimed  = quests.length > 0 && quests.every(q => q.status === "claimed");
-  const claimedCount = quests.filter(q => q.status === "claimed").length;
-  const totalQuests  = quests.length;
-
-  return {
-    quests, loading, error, claiming, lastClaim,
-    load, claim, dismissClaim,
-    allClaimed, claimedCount, totalQuests, secondsUntilReset,
-  };
+  return { quests, status, loading, reason, signedIn: !!session, claim, refresh: fetchQuests };
 }

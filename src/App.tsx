@@ -7,6 +7,15 @@ import { ToastProvider }  from "./shared/context/ToastContext";
 import { TutorialOverlay }    from "./shared/components/TutorialOverlay";
 import { NotificationBell }   from "./shared/components/NotificationBell";
 import { LevelUpModal }        from "./shared/components/LevelUpModal";
+import { AchievementToastCard } from "./shared/components/AchievementToastCard";
+import { AudioProvider }        from "./providers/AudioProvider";
+import { AudioControls }        from "./components/battle/AudioControls";
+    import { EnergyBar }             from "./shared/components/EnergyBar";
+    import { QuestBadge }             from "./shared/components/QuestBadge";
+    import { StarterDeckReveal }      from "./shared/components/StarterDeckReveal";
+    import { OnboardingModal }          from "./shared/components/OnboardingModal";
+import { ProtectedAdminRoute }       from "./shared/components/ProtectedAdminRoute";
+import { AudioEngine }               from "./lib/audioEngine";
 
 // ─── Lazy routes ─────────────────────────────────────────────────────────────
 const HomeRoute         = lazy(() => import("./routes/HomeRoute").then(m => ({ default: m.HomeRoute })));
@@ -27,15 +36,24 @@ const InventoryRoute    = lazy(() => import("./routes/InventoryRoute").then(m =>
 const DeckBuilderRoute  = lazy(() => import("./routes/DeckBuilderRoute").then(m => ({ default: m.DeckBuilderRoute })));
 const WorldBossesRoute  = lazy(() => import("./routes/WorldBossesRoute").then(m => ({ default: m.WorldBossesRoute })));
 const QuestsRoute       = lazy(() => import("./routes/QuestsRoute").then(m => ({ default: m.QuestsRoute })));
+const NftRoute          = lazy(() => import("./routes/NftRoute").then(m => ({ default: m.NftRoute })));
 const AchievementsRoute = lazy(() => import("./routes/AchievementsRoute").then(m => ({ default: m.AchievementsRoute })));
 const SeasonPassRoute   = lazy(() => import("./routes/SeasonPassRoute").then(m => ({ default: m.SeasonPassRoute })));
 const CosmeticsRoute    = lazy(() => import("./routes/CosmeticsRoute").then(m => ({ default: m.CosmeticsRoute })));
+const LoreRoute         = lazy(() => import("./routes/LoreRoute").then(m => ({ default: m.LoreRoute })));
+const RelicsRoute       = lazy(() => import("./routes/RelicsRoute").then(m => ({ default: m.RelicsRoute })));
 const LeaderboardRoute  = lazy(() => import("./routes/LeaderboardRoute").then(m => ({ default: m.LeaderboardRoute })));
 const EvolutionRoute    = lazy(() => import("./routes/EvolutionRoute").then(m => ({ default: m.EvolutionRoute })));
 const FriendsRoute      = lazy(() => import("./routes/FriendsRoute").then(m => ({ default: m.FriendsRoute })));
 const DepositRoute      = lazy(() => import("./routes/DepositRoute").then(m => ({ default: m.DepositRoute })));
 const AdminDepositsRoute  = lazy(() => import("./routes/AdminDepositsRoute").then(m => ({ default: m.AdminDepositsRoute })));
+const AdminWithdrawalsRoute = lazy(() => import("./routes/AdminWithdrawalsRoute").then(m => ({ default: m.AdminWithdrawalsRoute })));
+const WithdrawalRoute  = lazy(() => import("./routes/WithdrawalRoute").then(m => ({ default: m.WithdrawalRoute })));
+const ReferralRoute    = lazy(() => import("./routes/ReferralRoute").then(m => ({ default: m.ReferralRoute })));
+const ShopRoute        = lazy(() => import("./routes/ShopRoute").then(m => ({ default: m.ShopRoute })));
+const ForgeAdsRoute    = lazy(() => import("./routes/ForgeAdsRoute").then(m => ({ default: m.ForgeAdsRoute })));
 const AdminDashboardRoute = lazy(() => import("./routes/AdminDashboardRoute").then(m => ({ default: m.AdminDashboardRoute })));
+const AdminShopOrdersRoute = lazy(() => import("./routes/AdminShopOrdersRoute").then(m => ({ default: m.AdminShopOrdersRoute })));
 const NotFoundRoute     = lazy(() => import("./routes/NotFoundRoute").then(m => ({ default: m.NotFoundRoute })));
 const RaidsRoute        = lazy(() => import("./routes/RaidsRoute").then(m => ({ default: m.RaidsRoute })));
 const SeasonRankingsRoute = lazy(() => import("./routes/SeasonRankingsRoute").then(m => ({ default: m.SeasonRankingsRoute })));
@@ -44,7 +62,7 @@ const SeasonRankingsRoute = lazy(() => import("./routes/SeasonRankingsRoute").th
 const LOGO_URL = "https://rscuzqnfccqvltkdcdny.supabase.co/storage/v1/object/public/vexforge-assets/logo/IMG_20260606_040509_906.jpg";
 const SIDEBAR_W = 220;
 
-// ─── Sidebar groups — full navigation for all 28 routes ──────────────────────
+// ─── Sidebar groups — chat92: added /shop, /raids, /withdrawal, /referral, /forge-ads, /season-rankings ──
 const SIDEBAR_GROUPS: Array<{
   label: string;
   icon: string;
@@ -63,39 +81,48 @@ const SIDEBAR_GROUPS: Array<{
   {
     label: "Batalla", icon: "⚔️",
     links: [
-      { to: "/pvp",          icon: "🏆", label: "PvP Arena"        },
-      { to: "/deck-builder", icon: "🗡️", label: "Constructor Mazo" },
-      { to: "/bosses",       icon: "🐉", label: "Jefes Mundiales"  },
-      { to: "/season-pass",  icon: "🌟", label: "Temporada"        },
+      { to: "/pvp",              icon: "🏆", label: "PvP Arena"          },
+      { to: "/deck-builder",     icon: "🗡️", label: "Constructor Mazo"   },
+      { to: "/raids",            icon: "⚔️", label: "Raids"              },
+      { to: "/bosses",           icon: "🐉", label: "Jefes Mundiales"    },
+      { to: "/season-pass",      icon: "🌟", label: "Temporada"          },
+      { to: "/season-rankings",  icon: "🏅", label: "Rankings"           },
+      { to: "/lore",             icon: "📖", label: "Codex de Lore"      },
+      { to: "/relics",           icon: "◇",  label: "Reliquias"          },
     ],
   },
   {
     label: "Economía", icon: "💰",
     links: [
-      { to: "/packs",    icon: "📦", label: "Packs"     },
-      { to: "/market",   icon: "🏪", label: "Mercado"   },
-      { to: "/fusion",   icon: "🔮", label: "Fusión"    },
-      { to: "/evolution",icon: "✨", label: "Evolución"  },
-      { to: "/deposit",  icon: "📥", label: "Depósito"  },
+      { to: "/packs",      icon: "📦", label: "Packs"      },
+      { to: "/shop",       icon: "🛒", label: "Tienda"     },
+      { to: "/market",     icon: "🏪", label: "Mercado"    },
+      { to: "/fusion",     icon: "🔮", label: "Fusión"     },
+      { to: "/evolution",  icon: "✨", label: "Evolución"  },
+      { to: "/deposit",    icon: "📥", label: "Depósito"   },
+      { to: "/withdrawal", icon: "💸", label: "Retiro"     },
     ],
   },
   {
     label: "Social", icon: "🤝",
     links: [
-      { to: "/clans",       icon: "🛡️", label: "Clanes"        },
-      { to: "/friends",     icon: "🤝", label: "Amigos"        },
-      { to: "/leaderboard", icon: "📊", label: "Ranking"       },
-      { to: "/achievements",icon: "🏅", label: "Logros"        },
+      { to: "/clans",        icon: "🛡️", label: "Clanes"   },
+      { to: "/friends",      icon: "🤝", label: "Amigos"   },
+      { to: "/leaderboard",  icon: "📊", label: "Ranking"  },
+      { to: "/achievements", icon: "🏅", label: "Logros"   },
     ],
   },
   {
     label: "Mi Cuenta", icon: "👤",
     links: [
-      { to: "/profile",   icon: "👤", label: "Perfil"     },
-      { to: "/economy",   icon: "💰", label: "Economía"   },
-      { to: "/progress",  icon: "📈", label: "Progreso"   },
-      { to: "/cosmetics", icon: "💎", label: "Cosméticos" },
-      { to: "/settings",  icon: "⚙️", label: "Ajustes"    },
+      { to: "/profile",    icon: "👤", label: "Perfil"      },
+      { to: "/economy",    icon: "💰", label: "Economía"    },
+      { to: "/progress",   icon: "📈", label: "Progreso"    },
+      { to: "/cosmetics",  icon: "💎", label: "Cosméticos"  },
+      { to: "/referral",   icon: "🔗", label: "Referidos"   },
+      { to: "/nft",        icon: "💠", label: "NFT Forge"   },
+      { to: "/forge-ads",  icon: "📺", label: "Forge Ads"   },
+      { to: "/settings",   icon: "⚙️", label: "Ajustes"     },
     ],
   },
 ];
@@ -113,11 +140,20 @@ const ROUTE_LABELS: Record<string, string> = {
   packs: "Packs", clans: "Clanes", friends: "Amigos", fusion: "Fusión",
   "deck-builder": "Constructor de Mazo", bosses: "Jefes Mundiales",
   quests: "Quests Diarias", achievements: "Logros", "season-pass": "Temporada",
-  cosmetics: "Cosméticos", leaderboard: "Ranking", evolution: "Evolución",
+  cosmetics: "Cosméticos", lore: "Codex de Lore", relics: "Reliquias",
+  leaderboard: "Ranking", evolution: "Evolución",
   inventory: "Mi Colección", profile: "Perfil", progress: "Progreso",
   economy: "Economía", settings: "Ajustes", assets: "Recursos",
   deposit: "Depósito", admin: "Admin", deposits: "Depósitos",
   account: "Cuenta",
+  // chat92 additions:
+  shop: "Tienda",
+  withdrawal: "Retiro",
+  referral: "Referidos",
+  "forge-ads": "Forge Ads",
+  nft: "NFT Forge",
+  raids: "Raids",
+  "season-rankings": "Rankings de Temporada",
 };
 
 // ─── Breadcrumb ───────────────────────────────────────────────────────────────
@@ -217,7 +253,8 @@ function DesktopSidebar() {
                 }}
               >
                 <span style={{ fontSize: 14, flexShrink: 0 }}>{item.icon}</span>
-                <span>{item.label}</span>
+                <span style={{ flex: 1 }}>{item.label}</span>
+                {item.to === "/quests" && <QuestBadge />}
               </NavLink>
             );
           })}
@@ -301,6 +338,12 @@ function ForgeHeader({
         {/* Notification Bell */}
         <NotificationBell />
 
+        {/* Energy Bar — EPICA R */}
+          <EnergyBar />
+
+          {/* Audio Controls — T.1 global */}
+        <AudioControls compact={true} showSliders={false} iconSize={14} />
+
         {/* User area */}
         {userEmail ? (
           <div className="forge-user-menu" ref={dropRef}>
@@ -372,6 +415,8 @@ function BottomNav({ onMoreClick }: { onMoreClick: () => void }) {
 
 // ─── MobileSheet ─────────────────────────────────────────────────────────────
 function MobileSheet({ open, onClose }: { open: boolean; onClose: () => void }) {
+  const [isControlAdmin, setIsControlAdmin] = useState(false);
+  useEffect(() => { supabase.rpc("vexforge_is_control_admin").then(({ data }) => setIsControlAdmin(data === true)); }, []);
   if (!open) return null;
   return (
     <>
@@ -413,12 +458,28 @@ function MobileSheet({ open, onClose }: { open: boolean; onClose: () => void }) 
           <span style={{ marginRight: 10 }}>🎨</span>
           Recursos
         </Link>
-        <Link to="/admin" onClick={onClose} className="forge-nav-link forge-sheet-link" style={{ color: "#f59e0b" }}>
+        {isControlAdmin && <Link to="/admin" onClick={onClose} className="forge-nav-link forge-sheet-link" style={{ color: "#f59e0b" }}>
           <span style={{ marginRight: 10 }}>🛠️</span>
           Admin
-        </Link>
+        </Link>}
       </div>
     </>
+  );
+}
+
+
+// ─── PageTransition ───────────────────────────────────────────────────────────
+function PageTransition({ children }: { children: React.ReactNode }) {
+  const location = useLocation();
+  const firstRender = useRef(true);
+  useEffect(() => {
+    if (firstRender.current) { firstRender.current = false; return; }
+    try { AudioEngine.sfxNavChange(); } catch {}
+  }, [location.key]);
+  return (
+    <div key={location.key} className="page-transition-enter">
+      {children}
+    </div>
   );
 }
 
@@ -428,6 +489,7 @@ export default function App() {
 
   return (
     <BrowserRouter>
+      <AudioProvider />
       <ToastProvider>
       <ErrorBoundary>
         <ForgeHeader mobileOpen={mobileOpen} setMobileOpen={setMobileOpen} />
@@ -438,6 +500,7 @@ export default function App() {
           <div className="forge-content forge-content-with-sidebar" style={{ flex: 1, minWidth: 0 }}>
             <Breadcrumb />
             <Suspense fallback={<PageLoader />}>
+              <PageTransition>
               <Routes>
                 <Route path="/"               element={<HomeRoute />} />
                 <Route path="/account"        element={<AccountRoute />} />
@@ -455,6 +518,8 @@ export default function App() {
                 <Route path="/achievements"   element={<AchievementsRoute />} />
                 <Route path="/season-pass"    element={<SeasonPassRoute />} />
                 <Route path="/cosmetics"      element={<CosmeticsRoute />} />
+                <Route path="/lore"           element={<LoreRoute />} />
+                <Route path="/relics"         element={<RelicsRoute />} />
                 <Route path="/leaderboard"    element={<LeaderboardRoute />} />
                 <Route path="/evolution"      element={<EvolutionRoute />} />
                 <Route path="/inventory"      element={<InventoryRoute />} />
@@ -464,21 +529,40 @@ export default function App() {
                 <Route path="/settings"       element={<SettingsRoute />} />
                 <Route path="/assets"         element={<AssetsRoute />} />
                 <Route path="/deposit"        element={<DepositRoute />} />
-                <Route path="/admin"          element={<AdminDashboardRoute />} />
-                <Route path="/admin/deposits" element={<AdminDepositsRoute />} />
+                <Route path="/admin"          element={<ProtectedAdminRoute><AdminDashboardRoute /></ProtectedAdminRoute>} />
+                <Route path="/admin/deposits" element={<ProtectedAdminRoute><AdminDepositsRoute /></ProtectedAdminRoute>} />
+                <Route path="/admin/withdrawals" element={<ProtectedAdminRoute><AdminWithdrawalsRoute /></ProtectedAdminRoute>} />
+                <Route path="/admin/shop-orders" element={<ProtectedAdminRoute><AdminShopOrdersRoute /></ProtectedAdminRoute>} />
                 <Route path="/raids"          element={<RaidsRoute />} />
                 <Route path="/season-rankings" element={<SeasonRankingsRoute />} />
-                <Route path="*"              element={<NotFoundRoute />} />
+                {/* chat72 P.1 alias fix: sidebar links use old URL slugs */}
+                <Route path="/world-bosses"  element={<WorldBossesRoute />} />
+                <Route path="/season"        element={<SeasonPassRoute />} />
+                <Route path="/codex"         element={<LoreRoute />} />
+                <Route path="/reliquias"     element={<RelicsRoute />} />
+                <Route path="/ranking"       element={<LeaderboardRoute />} />
+                <Route path="/daily-quests"  element={<QuestsRoute />} />
+                <Route path="/withdrawal"    element={<WithdrawalRoute />} />
+                <Route path="/referral"      element={<ReferralRoute />} />
+                <Route path="/shop"          element={<ShopRoute />} />
+                <Route path="/forge-ads"     element={<ForgeAdsRoute />} />
+                <Route path="/nft"           element={<NftRoute />} />
+                <Route path="*"             element={<NotFoundRoute />} />
               </Routes>
+              </PageTransition>
             </Suspense>
           </div>
         </div>
         <BottomNav onMoreClick={() => setMobileOpen(o => !o)} />
         <MobileSheet open={mobileOpen} onClose={() => setMobileOpen(false)} />
         <TutorialOverlay />
+        <StarterDeckReveal />
         <LevelUpModal />
+        <AchievementToastCard />
+        <OnboardingModal />
       </ErrorBoundary>
       </ToastProvider>
     </BrowserRouter>
   );
 }
+

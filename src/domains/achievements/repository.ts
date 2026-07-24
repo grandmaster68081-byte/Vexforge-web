@@ -46,3 +46,10 @@ const { data, error } = await supabase.rpc("get_player_stats", { p_player_id: pl
 if (error) return { status: "ready", data: null, reason: error.message };
 return { status: "ready", data: data as Record<string,number> };
 }
+
+/** Fire-and-forget: retroactively grant any achievements the player already earned */
+export async function checkMyAchievements(): Promise<void> {
+const { data: s } = await supabase.auth.getSession();
+if (!s.session) return;
+await supabase.rpc("check_my_achievements").catch(() => {});
+}

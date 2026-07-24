@@ -11,6 +11,7 @@ export interface PlayerProgress {
   max_energy: number;
   tutorial_step: number;
   starter_region: string | null;
+  updated_at?: string;          // T.4: energy refill countdown base
 }
 
 /**
@@ -19,6 +20,7 @@ export interface PlayerProgress {
  * A bare select on player_progress is correctly scoped by RLS itself --
  * no manual join needed here.
  * Wired chat 27 once a real auth provider existed.
+ * T.4 chat 78: added updated_at for energy refill countdown.
  */
 export async function getProgress(): Promise<DomainResult<PlayerProgress>> {
   const { data: sessionData } = await supabase.auth.getSession();
@@ -28,7 +30,7 @@ export async function getProgress(): Promise<DomainResult<PlayerProgress>> {
 
   const { data, error } = await supabase
     .from("player_progress")
-    .select("id, player_id, level, xp, xp_to_next, energy, max_energy, tutorial_step, starter_region")
+    .select("id, player_id, level, xp, xp_to_next, energy, max_energy, tutorial_step, starter_region, updated_at")
     .maybeSingle();
 
   if (error) {

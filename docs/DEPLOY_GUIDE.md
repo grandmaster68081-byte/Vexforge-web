@@ -1,5 +1,5 @@
 # VEXFORGE — Guía de Deploy (Cloudflare Pages)
-> Actualizado: Chat 66 — 2026-07-20
+> Actualizado: Chat 71 — 2026-07-21
 
 ---
 
@@ -76,6 +76,7 @@ wrangler pages deploy dist --project-name=vexforge-web
 - [ ] `public/_redirects` existe con `/* /index.html 200`
 - [ ] Supabase RLS activo (anon key tiene acceso limitado)
 - [ ] RPCs críticos verificados: `vexforge_battle_resolve` ✅
+- [x] 4 archivos reconstruidos en chat71 (FusionRoute, PacksRoute, packs/repository, packs/usePacks) ✅
 
 ---
 

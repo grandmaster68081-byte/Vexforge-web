@@ -2,7 +2,7 @@
 // Real 2D battle board: unit positions, animated HP bars, attack arc canvas, turn indicator.
 // Replaces the flat card list with a proper game board layout.
 
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import type { BattleUnit, BattleTurnData, RealBattleResult } from '../../lib/battleTypes';
 import { RARITY_COLOR, RARITY_GLOW, KEYWORD_ICON } from '../../lib/battleTypes';
 import { AudioEngine } from '../../lib/audioEngine';
@@ -97,9 +97,12 @@ function BoardUnit({
           : `linear-gradient(160deg, ${rarColor}18 0%, rgba(6,6,16,0.97) 100%)`,
         boxShadow: isActive
           ? `0 0 16px ${rarGlow}, 0 0 4px ${rarColor}88`
-          : isCurrentTurn
-            ? `0 0 8px ${rarColor}55`
-            : 'none',
+          : isDying
+            ? '0 0 22px 8px rgba(255,60,30,0.6)'
+            : isCurrentTurn
+              ? `0 0 8px ${rarColor}55`
+              : 'none',
+        animation: isDying ? 'unitDeath 0.72s ease forwards, deathGlow 0.72s ease forwards' : undefined,
         transform: isAttacking
           ? (side === 'a' ? 'translateY(-6px) scale(1.06)' : 'translateY(6px) scale(1.06)')
           : isTakingHit
@@ -173,7 +176,7 @@ function BoardUnit({
           display: 'flex', gap: 2, flexWrap: 'wrap',
         }}>
           {unit.keywords.slice(0, 2).map(kw => (
-            <span key={kw} style={{ fontSize: 9 }} title={kw}>{KEYWORD_ICON[kw] ?? '✦'}</span>
+            <span key={kw} title={kw} style={{ fontSize: 9 }}>{KEYWORD_ICON[kw] ?? '✦'}</span>
           ))}
         </div>
       )}
@@ -233,6 +236,12 @@ export function BattleBoardEngine({ result, playerName, opponentName, onComplete
   const turns      = result.turns ?? [];
   const playerSide: 'a' | 'b' = 'a';
 
+  // v1.1: Derive player faction for AudioEngine + faction ambient particles
+  const playerFaction = useMemo(() => {
+    const pu = finalUnits.find(u => u.side === 'a');
+    return pu?.faction ?? 'default';
+  }, [finalUnits]);
+
   const [states, setStates]       = useState<Record<number, UnitState>>(() => buildUnitStates(finalUnits));
   const [turnIdx, setTurnIdx]     = useState(-1);
   const [log, setLog]             = useState<string[]>(['Battle begins...']);
@@ -246,7 +255,7 @@ export function BattleBoardEngine({ result, playerName, opponentName, onComplete
   const TURN_DUR = Math.max(400, 1200 / speed);
   const HIT_DUR  = Math.max(150, 350 / speed);
 
-  // Mount particle canvas
+  // Mount particle canvas + faction music + ambient particles (v1.1)
   useEffect(() => {
     const canvas = canvasRef.current;
     const board  = boardRef.current;
@@ -254,8 +263,32 @@ export function BattleBoardEngine({ result, playerName, opponentName, onComplete
     canvas.width  = board.clientWidth;
     canvas.height = board.clientHeight;
     particleEngine.mount(canvas);
-    return () => particleEngine.unmount();
-  }, []);
+
+    // v1.1: Start faction music and ambient particles
+    AudioEngine.setFaction(playerFaction);
+    AudioEngine.musicLoop();
+    const W = canvas.width; const H = canvas.height;
+    particleEngine.factionAmbient(playerFaction, W, H);
+    const ambientId = setInterval(() => {
+      if (canvasRef.current) particleEngine.factionAmbient(playerFaction, W, H);
+    }, 2800);
+
+    return () => {
+      particleEngine.unmount();
+      clearInterval(ambientId);
+      AudioEngine.stopMusic();
+    };
+  }, [playerFaction]);
+
+  // v1.1: Wire audio intensity to player HP ratio in real-time
+  useEffect(() => {
+    const playerUnits = Object.values(states).filter(s => s.unit.side === 'a');
+    if (playerUnits.length === 0) return;
+    const totalHp = playerUnits.reduce((sum, s) => sum + Math.max(0, s.currentHp), 0);
+    const maxHp   = playerUnits.reduce((sum, s) => sum + s.unit.max_hp, 0);
+    const ratio   = maxHp > 0 ? totalHp / maxHp : 1;
+    AudioEngine.setIntensity(ratio);
+  }, [states]);
 
   // Helper: get card center in canvas coords
   const getCardCenter = useCallback((idx: number): { x: number; y: number } | null => {
@@ -426,7 +459,46 @@ export function BattleBoardEngine({ result, playerName, opponentName, onComplete
       {/* Particle canvas overlay */}
       <canvas ref={canvasRef} style={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 10 }} />
 
-      {/* Opponent zone (side B — top) */}
+{/* BA.0: Board atmosphere layer — faction-specific ambient glow */}
+        {(() => {
+          const factionColors: Record<string, string> = {
+            Guerrero: '#c0392b', Mago: '#4a9eff', Explorador: '#3ddc84', Comerciante: '#e8b84b', default: '#8b8b9e',
+          };
+          const atmoColor = factionColors[playerFaction] ?? factionColors.default;
+          return (
+            <div aria-hidden style={{
+              position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 0, overflow: 'hidden',
+            }}>
+              {/* Large ambient orb — top center */}
+              <div style={{
+                position: 'absolute', top: -60, left: '50%', transform: 'translateX(-50%)',
+                width: 260, height: 260, borderRadius: '50%',
+                background: `radial-gradient(circle, ${atmoColor}20 0%, transparent 70%)`,
+                animation: 'atmosphereOrb 7s ease-in-out infinite',
+              }} />
+              {/* Bottom glow — player side */}
+              <div style={{
+                position: 'absolute', bottom: -40, left: '50%', transform: 'translateX(-50%)',
+                width: 200, height: 160, borderRadius: '50%',
+                background: `radial-gradient(circle, rgba(74,158,255,0.12) 0%, transparent 70%)`,
+                animation: 'atmospherePulse 4s ease-in-out infinite',
+              }} />
+              {/* Corner accents */}
+              <div style={{
+                position: 'absolute', top: 0, left: 0, width: 80, height: 80, borderRadius: '0 0 80px 0',
+                background: `linear-gradient(135deg, ${atmoColor}10, transparent)`,
+                animation: 'atmosphereDrift 6s ease-in-out infinite',
+              }} />
+              <div style={{
+                position: 'absolute', top: 0, right: 0, width: 80, height: 80, borderRadius: '0 0 0 80px',
+                background: `linear-gradient(225deg, ${atmoColor}10, transparent)`,
+                animation: 'atmosphereDrift 6s ease-in-out infinite 1s',
+              }} />
+            </div>
+          );
+        })()}
+
+        {/* Opponent zone (side B — top) */}
       <div style={{ padding: '10px 8px 6px', background: 'rgba(192,57,43,0.04)', borderBottom: '1px solid rgba(192,57,43,0.15)' }}>
         <div style={{ fontSize: 9, color: '#c0392b', fontFamily: 'Rajdhani, sans-serif', letterSpacing: '0.15em', textTransform: 'uppercase', marginBottom: 6, opacity: 0.7 }}>
           ⚔ {opponentName}
@@ -485,6 +557,17 @@ export function BattleBoardEngine({ result, playerName, opponentName, onComplete
       <style>{`
         @keyframes floatUp { 0%{transform:translate(-50%,0);opacity:1;} 100%{transform:translate(-50%,-28px);opacity:0;} }
         @keyframes hitFlash { 0%,100%{opacity:0;} 50%{opacity:1;} }
+        @keyframes unitDeath {
+          0%   { transform:scale(1) rotate(0deg);   opacity:1;    filter:brightness(1.8) saturate(0); }
+          20%  { transform:scale(0.92) rotate(-8deg); opacity:0.85; filter:brightness(2.5) saturate(0) blur(0px); }
+          55%  { transform:scale(0.62) rotate(14deg); opacity:0.45; filter:brightness(0.5) saturate(0) blur(2px); }
+          100% { transform:scale(0.2) rotate(28deg);  opacity:0;    filter:brightness(0) blur(5px); }
+        }
+        @keyframes deathGlow {
+          0%   { box-shadow:0 0 0 0 rgba(255,60,30,0); }
+          30%  { box-shadow:0 0 24px 10px rgba(255,60,30,0.65); }
+          100% { box-shadow:0 0 0 0 rgba(255,60,30,0); }
+        }
       `}</style>
     </div>
   );

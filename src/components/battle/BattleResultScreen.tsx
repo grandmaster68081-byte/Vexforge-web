@@ -70,6 +70,24 @@ export function BattleResultScreen({ result, playerName, opponentName, onDismiss
   const [showElo, setShowElo] = useState(false);
   const [showStats, setShowStats] = useState(false);
   const [eloDisplayed, setEloDisplayed] = useState(0);
+
+    // GL.0: Win Streak counter (persisted in localStorage)
+    const [winStreak, setWinStreak] = useState<number>(() => {
+      try { return parseInt(localStorage.getItem('vxf_win_streak') ?? '0') || 0; } catch { return 0; }
+    });
+
+    // Update streak on new battle result (runs once on mount per result)
+    useEffect(() => {
+      if (won) {
+        const next = winStreak + 1;
+        setWinStreak(next);
+        try { localStorage.setItem('vxf_win_streak', String(next)); } catch {}
+      } else if (!isDraw) {
+        setWinStreak(0);
+        try { localStorage.setItem('vxf_win_streak', '0'); } catch {}
+      }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
   const containerRef = useRef<HTMLDivElement>(null);
 
   const stats = computeStats(result);
@@ -141,7 +159,27 @@ export function BattleResultScreen({ result, playerName, opponentName, onDismiss
         {theme.emoji}
       </div>
 
-      {/* Result label */}
+      {/* GL.0: Win Streak badge */}
+        {winStreak >= 2 && (
+          <div style={{
+            display: 'flex', alignItems: 'center', gap: 6,
+            background: 'linear-gradient(135deg, rgba(232,184,75,0.15), rgba(255,100,30,0.08))',
+            border: '1px solid rgba(232,184,75,0.4)',
+            borderRadius: 20, padding: '4px 14px',
+            marginBottom: 12,
+            animation: 'streakPop 0.4s cubic-bezier(0.22,1,0.36,1)',
+          }}>
+            <span style={{ fontSize: 16 }}>🔥</span>
+            <span style={{
+              fontFamily: 'Cinzel, serif', fontSize: 13, fontWeight: 700,
+              color: '#e8b84b', letterSpacing: '0.08em',
+            }}>RACHA {winStreak}
+            </span>
+            <span style={{ fontSize: 16 }}>🔥</span>
+          </div>
+        )}
+
+        {/* Result label */}
       <div style={{
         fontFamily: 'Cinzel, serif', fontSize: 28, fontWeight: 900,
         color: theme.primary, letterSpacing: '0.2em',
@@ -229,6 +267,7 @@ export function BattleResultScreen({ result, playerName, opponentName, onDismiss
 
       <style>{`
         @keyframes fadeInResult { from { opacity:0; } to { opacity:1; } }
+          @keyframes streakPop { from { opacity:0; transform:scale(0.5) translateY(10px); } 80% { transform:scale(1.1); } to { opacity:1; transform:scale(1) translateY(0); } }
         @keyframes trophyBounce { 0% { transform:scale(0.3) translateY(-20px); } 70% { transform:scale(1.12); } 100% { transform:scale(1); } }
         @keyframes slideInLabel { from { opacity:0; transform:translateY(-12px); } to { opacity:1; transform:translateY(0); } }
         @keyframes fadeInUp { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:translateY(0); } }

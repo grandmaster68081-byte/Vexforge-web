@@ -1,57 +1,111 @@
-import { useEffect, useState, useCallback } from "react";
-import {
-listActivePacks, listMyOrders, createPackOrder, openPack,
-type PackCatalogEntry, type PackOrder, type OpenedCard,
-} from "./repository";
+import { useCallback, useEffect, useState } from "react";
+    import {
+    getMyVexBalance,
+    getMyPackHistory,
+    getPackCatalog,
+    buyPackWithVex,
+    openPackOrder,
+    type PackOrder,
+    type OpenedCard,
+    type CatalogPack,
+    } from "./repository";
 
-export function usePacks() {
-const [catalog, setCatalog] = useState<PackCatalogEntry[]>([]);
-const [orders, setOrders] = useState<PackOrder[]>([]);
-const [loading, setLoading] = useState(true);
-const [error, setError] = useState<string | null>(null);
-const [actionError, setActionError] = useState<string | null>(null);
-const [pending, setPending] = useState(false);
-const [openedCards, setOpenedCards] = useState<OpenedCard[] | null>(null);
-const [openingOrderId, setOpeningOrderId] = useState<string | null>(null);
+    /**
+    * usePacks — manages pack purchasing + opening flow.
+    * E.1.b: refactored from PacksRoute direct supabase calls.
+    * chat72 P.2: also loads the real pack catalog from vexforge_pack_catalog.
+    */
+    export function usePacks() {
+    const [vexBalance, setVexBalance]     = useState(0);
+    const [history, setHistory]           = useState<PackOrder[]>([]);
+    const [catalog, setCatalog]           = useState<CatalogPack[]>([]);
+    const [catalogError, setCatalogError] = useState<string | null>(null);
+    const [loading, setLoading]           = useState(true);
+    const [error, setError]               = useState<string | null>(null);
+    const [authed, setAuthed]             = useState(true);
 
-const load = useCallback(async () => {
-  setLoading(true);
-  const [catalogRes, ordersRes] = await Promise.all([listActivePacks(), listMyOrders()]);
-  if (catalogRes.data) setCatalog(catalogRes.data);
-  if (ordersRes.data) setOrders(ordersRes.data);
-  setError(catalogRes.reason ?? ordersRes.reason ?? null);
-  setLoading(false);
-}, []);
+    const [buying, setBuying]             = useState(false);
+    const [buyError, setBuyError]         = useState<string | null>(null);
+    const [pendingOrderId, setPendingOrderId] = useState<string | null>(null);
 
-useEffect(() => { load(); }, [load]);
+    const [opening, setOpening]           = useState(false);
+    const [openError, setOpenError]       = useState<string | null>(null);
+    const [openedCards, setOpenedCards]   = useState<OpenedCard[] | null>(null);
 
-const order = useCallback(async (packKey: string, walletAddress: string) => {
-  setPending(true); setActionError(null);
-  const res = await createPackOrder(packKey, walletAddress);
-  if (!res.data) setActionError(res.reason ?? "Order failed");
-  else await load();
-  setPending(false);
-  return res;
-}, [load]);
+    const load = useCallback(async () => {
+      setLoading(true);
+      setError(null);
+      setCatalogError(null);
 
-const openPackById = useCallback(async (orderId: string) => {
-  setOpeningOrderId(orderId); setActionError(null); setOpenedCards(null);
-  const res = await openPack(orderId);
-  if (res.data?.ok && res.data.cards) {
-    setOpenedCards(res.data.cards);
-    await load();
-  } else {
-    setActionError(res.data?.reason ?? res.reason ?? "Failed to open pack");
-  }
-  setOpeningOrderId(null);
-  return res;
-}, [load]);
+      const [balRes, histRes, catRes] = await Promise.all([
+        getMyVexBalance(),
+        getMyPackHistory(),
+        getPackCatalog(),
+      ]);
 
-const dismissReveal = useCallback(() => setOpenedCards(null), []);
+      // Catalog is public — always try to render it, even when logged out.
+      if (catRes.data) setCatalog(catRes.data);
+      else if (catRes.reason) setCatalogError(catRes.reason);
 
-return {
-  catalog, orders, loading, error, actionError, pending,
-  openedCards, openingOrderId,
-  order, openPackById, dismissReveal, reload: load,
-};
-}
+      if (balRes.status === "blocked_auth") {
+        setAuthed(false);
+      } else if (balRes.data) {
+        setAuthed(true);
+        setVexBalance(balRes.data.vex_ingame);
+      } else if (balRes.reason) {
+        setError(balRes.reason);
+      }
+
+      if (histRes.data) setHistory(histRes.data);
+
+      setLoading(false);
+    }, []);
+
+    useEffect(() => { load(); }, [load]);
+
+    /** Buy a pack with in-game VEX. Returns the new order id on success. */
+    const buyWithVex = useCallback(async (packKey: string) => {
+      setBuying(true);
+      setBuyError(null);
+      const res = await buyPackWithVex(packKey);
+      setBuying(false);
+      if (res.ok && res.orderId) {
+        setPendingOrderId(res.orderId);
+        await load();
+      } else {
+        setBuyError(res.reason ?? "No se pudo comprar el pack.");
+      }
+      return res;
+    }, [load]);
+
+    /** Open a pending order — triggers the reveal sequence. */
+    const openOrder = useCallback(async (orderId: string) => {
+      setOpening(true);
+      setOpenError(null);
+      const res = await openPackOrder(orderId);
+      setOpening(false);
+      if (res.ok && res.cards) {
+        setOpenedCards(res.cards);
+        await load();
+      } else {
+        setOpenError(res.reason ?? "No se pudo abrir el pack.");
+      }
+      return res;
+    }, [load]);
+
+    /** Clear opened cards after the reveal dismissal. */
+    const clearOpenedCards = useCallback(() => {
+      setOpenedCards(null);
+      setPendingOrderId(null);
+    }, []);
+
+    return {
+      vexBalance, history, catalog, catalogError,
+      loading, error, authed,
+      buying, buyError, pendingOrderId,
+      opening, openError, openedCards,
+      buyWithVex, openOrder, clearOpenedCards,
+      reload: load,
+    };
+    }
+    

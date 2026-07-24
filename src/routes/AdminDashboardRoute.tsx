@@ -455,6 +455,7 @@ export function AdminDashboardRoute() {
               </p>
             </div>
           </div>
+          <button onClick={() => navigate("/admin/shop-orders")} style={{ padding:"7px 16px", borderRadius:8, border:"1px solid "+C.gold+"55", background:C.gold+"12", color:C.gold, fontSize:12, cursor:"pointer" }}>🛒 Órdenes de tienda</button>
           <button
             onClick={() => { loadOverview(); setPlayers(null); setLedger([]); setLedgerPage(0); }}
             style={{

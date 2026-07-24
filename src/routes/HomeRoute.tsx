@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import { supabase } from "../lib/supabase";
 import { useHome } from "../domains/home/useHome";
 import { useHomeActivity } from "../domains/home/useHomeActivity";
+import { usePlayerItems } from "../domains/cosmetics/usePlayerItems";
+import type { PlayerActiveBoost } from "../domains/cosmetics/repository";
 
 const LOBBY_URL = "https://rscuzqnfccqvltkdcdny.supabase.co/storage/v1/object/public/vexforge-assets/lobby/main.jpg";
 
@@ -76,9 +78,79 @@ function CountdownTimer({endsAt}: {endsAt:string}) {
   return <span>{timeLeft}</span>;
 }
 
+
+// ─── AP.2 — Boost countdown helper ──────────────────────────────────────────
+function useBoostCountdown(expiresAt: string): string {
+  const calc = () => {
+    const diff = new Date(expiresAt).getTime() - Date.now();
+    if (diff <= 0) return "Expirado";
+    const h = Math.floor(diff / 3600000);
+    const m = Math.floor((diff % 3600000) / 60000);
+    if (h >= 24) { const d = Math.floor(h / 24); return `${d}d ${h % 24}h`; }
+    return `${h}h ${m}m`;
+  };
+  const [t, setT] = useState(calc);
+  useEffect(() => {
+    const id = setInterval(() => setT(calc()), 60000);
+    return () => clearInterval(id);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [expiresAt]);
+  return t;
+}
+
+const BOOST_COLORS: Record<string, string> = {
+  xp_boost_24h: "#4A9EFF", xp_boost_7d: "#818cf8", xp: "#4A9EFF",
+};
+function BoostChip({ boost }: { boost: PlayerActiveBoost }) {
+  const t = useBoostCountdown(boost.expires_at);
+  const col = BOOST_COLORS[boost.boost_type] ?? "#4A9EFF";
+  return (
+    <div style={{ display:"flex", alignItems:"center", gap:8,
+      background: col+"12", border:`1px solid ${col}33`, borderRadius:8, padding:"8px 14px" }}>
+      <span style={{ fontSize:18 }}>⚡</span>
+      <div>
+        <div style={{ fontFamily:"Rajdhani,sans-serif", fontWeight:700, fontSize:11,
+          color: col, textTransform:"uppercase", letterSpacing:".06em" }}>
+          {boost.multiplier}× XP Boost
+        </div>
+        <div style={{ fontFamily:"Rajdhani,sans-serif", fontSize:10, color:"#7a7a9a" }}>
+          ⏱ {t}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// AP.2 banner — shown at the top of main content when player has active boosts
+function ActiveBoostBanner({ boosts, signedIn }: { boosts: PlayerActiveBoost[]; signedIn: boolean }) {
+  if (!signedIn || boosts.length === 0) return null;
+  return (
+    <div style={{
+      background:"linear-gradient(90deg,rgba(74,158,255,.08) 0%,rgba(74,158,255,.04) 100%)",
+      borderBottom:"1px solid rgba(74,158,255,.15)", padding:"12px 24px",
+    }}>
+      <div style={{ maxWidth:960, margin:"0 auto", display:"flex", alignItems:"center",
+        gap:12, flexWrap:"wrap" }}>
+        <div style={{ fontFamily:"Cinzel,serif", fontSize:11, color:"#4A9EFF",
+          fontWeight:700, flexShrink:0, letterSpacing:".06em" }}>
+          BOOSTS ACTIVOS
+        </div>
+        {boosts.map(b => <BoostChip key={b.id} boost={b} />)}
+        <a href="/inventory" style={{
+          marginLeft:"auto", flexShrink:0,
+          fontFamily:"Rajdhani,sans-serif", fontWeight:700, fontSize:10,
+          color:"#4A9EFF", textDecoration:"none", textTransform:"uppercase",
+          letterSpacing:".06em", opacity:.8,
+        }}>Ver todo →</a>
+      </div>
+    </div>
+  );
+}
+
 export function HomeRoute() {
   const { profile, progress, wallet, nextMissions, signedIn, loading } = useHome();
   const { dailyCard, activity, loading: activityLoading } = useHomeActivity();
+  const { boosts } = usePlayerItems();
   const [stats, setStats] = useState<HomeStats|null>(null);
   const [statsLoading, setStatsLoading] = useState(true);
 
@@ -94,7 +166,7 @@ export function HomeRoute() {
   return (
     <div style={{minHeight:"100vh", background:"var(--bg-base, #0a0a14)"}}>
       {/* ─── HERO ─── */}
-      <div style={{position:"relative", overflow:"hidden", minHeight:520,
+      <div className="home-hero-banner" style={{position:"relative", overflow:"hidden",
         background:"linear-gradient(160deg, #0a0a14 0%, #0d0d22 40%, #100a1e 100%)",
         borderBottom:"1px solid rgba(201,144,31,0.15)"}}>
         {LOBBY_URL && (
@@ -103,7 +175,7 @@ export function HomeRoute() {
             opacity:0.18, filter:"blur(1px)"}}/>
         )}
         <Particles/>
-        <div style={{position:"relative",zIndex:1,maxWidth:900,margin:"0 auto",padding:"72px 24px 60px",textAlign:"center"}}>
+        <div style={{position:"relative",zIndex:1,maxWidth:900,margin:"0 auto",padding:"clamp(40px,8vw,72px) 20px clamp(36px,6vw,60px)",textAlign:"center"}}>
           <p style={{fontSize:11,letterSpacing:"0.18em",color:"#e8b84b",textTransform:"uppercase",
             fontFamily:"Rajdhani,sans-serif",fontWeight:700,marginBottom:16}}>
             ⚔️ — VEXFORGE — ⚔️
@@ -132,6 +204,46 @@ export function HomeRoute() {
           </div>
         </div>
       </div>
+
+      <ActiveBoostBanner boosts={boosts} signedIn={signedIn} />
+        {/* ─── GL.2: Quick Battle Strip ─── */}
+        {signedIn && (
+          <div style={{
+            background: "linear-gradient(90deg, rgba(74,40,220,0.18) 0%, rgba(168,85,247,0.12) 50%, rgba(74,40,220,0.18) 100%)",
+            borderBottom: "1px solid rgba(168,85,247,0.2)",
+            padding: "14px 20px",
+          }}>
+            <div style={{ maxWidth: 960, margin: "0 auto", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 12 }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                <span style={{ fontSize: 24 }}>⚡</span>
+                <div>
+                  <div style={{ fontFamily: '"Cinzel",serif', fontSize: 13, fontWeight: 700, color: "#a855f7", letterSpacing: "0.06em" }}>
+                    BATALLA RÁPIDA VS IA
+                  </div>
+                  <div style={{ fontFamily: '"Rajdhani",sans-serif', fontSize: 11, color: "#8891a0" }}>
+                    Sin esperas · Elige dificultad · Practica estrategias
+                  </div>
+                </div>
+              </div>
+              <div style={{ display: "flex", gap: 8, flexShrink: 0 }}>
+                <Link to="/pvp" style={{
+                  display: "inline-block",
+                  background: "linear-gradient(135deg, #7b4fd4, #4a2a8a)",
+                  border: "1px solid rgba(168,85,247,0.5)",
+                  borderRadius: 8, padding: "9px 18px",
+                  color: "#fff", fontFamily: '"Cinzel",serif',
+                  fontSize: 11, fontWeight: 700, letterSpacing: "0.08em",
+                  textDecoration: "none", whiteSpace: "nowrap",
+                  boxShadow: "0 4px 16px rgba(168,85,247,0.3)",
+                  transition: "all 0.2s",
+                }}>
+                  ⚡ Jugar Ahora
+                </Link>
+              </div>
+            </div>
+          </div>
+        )}
+      {signedIn && (<div style={{ maxWidth: 960, margin: '0 auto', padding: '12px 20px 0' }}><div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 14, flexWrap: 'wrap', padding: '16px 18px', borderRadius: 12, background: 'linear-gradient(90deg, rgba(232,184,75,0.13), rgba(168,85,247,0.11))', border: '1px solid rgba(232,184,75,0.3)' }}><div><div style={{ color: '#e8b84b', fontWeight: 800, fontSize: 10 }}>DESAFÍO DEL DÍA · IA.2</div><div style={{ color: '#e8e8f0', fontFamily: 'Cinzel,serif', fontSize: 14, marginTop: 4 }}>Un mazo nuevo. Un intento. Una insignia.</div><div style={{ color: '#8888aa', fontSize: 11, marginTop: 3 }}>La recompensa VEX se activa cuando exista el RPC seguro.</div></div><Link to="/pvp" style={{ display: 'inline-block', padding: '9px 15px', borderRadius: 8, color: '#0a0a12', background: 'linear-gradient(135deg,#e8b84b,#a56d18)', fontFamily: 'Cinzel,serif', fontWeight: 800, fontSize: 10, textDecoration: 'none' }}>VER DESAFÍO</Link></div></div>)}
 
       <div style={{maxWidth:960,margin:"0 auto",padding:"40px 20px 80px"}}>
 
@@ -332,7 +444,7 @@ export function HomeRoute() {
               textTransform:"uppercase",fontFamily:"Rajdhani,sans-serif",fontWeight:700,marginBottom:16}}>
               ─── Estadísticas Globales ───
             </p>
-            <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(140px,1fr))",gap:12}}>
+            <div className="home-stats-grid">
               {[
                 {label:"Jugadores", value:stats.active_players, icon:"👥"},
                 {label:"Cartas Únicas", value:stats.total_cards, icon:"🃏"},

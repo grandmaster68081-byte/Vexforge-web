@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useEconomy } from "../domains/economy/useEconomy";
+import { usePublicStats } from "../domains/economy/usePublicStats";
 
 // ── Design tokens ────────────────────────────────────────────────────────
 const C = {
@@ -9,6 +10,7 @@ const C = {
   gold:"#E8B84B", green:"#3DC96B", red:"#FF4B4B",
   blue:"#4A9EFF", purple:"#A855F7",
   muted:"#7a7a9a", dim:"#4a4a6a", main:"#e8e8f0",
+  teal:"#14B8A6",
 };
 
 // ── Entry-type styling ───────────────────────────────────────────────────
@@ -46,6 +48,10 @@ function fmtDate(iso:string) {
     hour:"2-digit",minute:"2-digit",
   });
 }
+function fmtSeasonDate(iso:string|null) {
+  if (!iso) return "—";
+  return new Date(iso).toLocaleDateString("es-MX",{ day:"2-digit",month:"short",year:"numeric" });
+}
 
 // ── Sub-components ───────────────────────────────────────────────────────
 function WalletCard({label,value,sub,color}:{label:string;value:number;sub:string;color:string}) {
@@ -79,7 +85,149 @@ function StatPill({label,value,color}:{label:string;value:string;color:string}) 
   );
 }
 
-// ── Main Component ───────────────────────────────────────────────────────
+// ── U.1: Public metric card ──────────────────────────────────────────────
+function MetricCard({icon,label,value,sub,color}:{icon:string;label:string;value:string|number;sub?:string;color:string}) {
+  return (
+    <div style={{
+      padding:"16px 18px", borderRadius:12,
+      background:C.bg1, border:`1px solid ${color}20`,
+      boxShadow:`0 0 16px ${color}07`,
+      display:"flex", flexDirection:"column", gap:3,
+      minWidth:130, flex:1,
+    }}>
+      <div style={{fontSize:20,lineHeight:1}}>{icon}</div>
+      <div style={{fontSize:9,letterSpacing:1,color:C.dim,textTransform:"uppercase",marginTop:4}}>{label}</div>
+      <div style={{fontSize:22,fontWeight:900,color,lineHeight:1,fontFamily:"Cinzel,serif",marginTop:2}}>
+        {typeof value === "number" ? fmt(value) : value}
+      </div>
+      {sub && <div style={{fontSize:9,color:C.muted}}>{sub}</div>}
+    </div>
+  );
+}
+
+// ── U.1: Top-3 podium ───────────────────────────────────────────────────
+function Top3Row({top3}:{top3:{display_name:string;mmr:number;rank:number;wins:number}[]}) {
+  const MEDAL = ["🥇","🥈","🥉"];
+  const MEDAL_COLOR = [C.gold,"#9ca3af","#cd7f32"];
+  if (!top3.length) return null;
+  return (
+    <div style={{marginTop:16}}>
+      <div style={{fontSize:9,letterSpacing:1,color:C.dim,textTransform:"uppercase",marginBottom:10}}>
+        Top Forjadores — Temporada
+      </div>
+      <div style={{display:"flex",flexDirection:"column",gap:6}}>
+        {top3.map((p,i)=>(
+          <div key={p.rank} style={{
+            display:"flex",alignItems:"center",gap:12,
+            padding:"10px 14px",borderRadius:10,
+            background:i===0?`${C.gold}0a`:C.bg2,
+            border:`1px solid ${i===0?C.gold+"22":C.b1}`,
+          }}>
+            <span style={{fontSize:18}}>{MEDAL[i]}</span>
+            <span style={{flex:1,fontSize:13,fontWeight:700,color:MEDAL_COLOR[i],fontFamily:"Rajdhani,sans-serif"}}>
+              {p.display_name}
+            </span>
+            <div style={{textAlign:"right"}}>
+              <div style={{fontSize:12,fontWeight:800,color:MEDAL_COLOR[i]}}>{fmt(p.mmr)} MMR</div>
+              <div style={{fontSize:10,color:C.muted}}>{p.wins} vic.</div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// ── U.1: Public dashboard ──────────────────────────────────────────────
+function PublicDashboard() {
+  const { stats, loading } = usePublicStats();
+  return (
+    <section style={{
+      marginBottom:32,
+      padding:"24px 24px 20px",
+      borderRadius:16,
+      background:`linear-gradient(135deg, ${C.bg1} 0%, #0f0f1e 100%)`,
+      border:`1px solid ${C.gold}18`,
+      boxShadow:`0 0 40px ${C.gold}06`,
+    }}>
+      {/* Header */}
+      <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:20,paddingBottom:14,borderBottom:`1px solid ${C.b1}`}}>
+        <div style={{
+          width:36,height:36,borderRadius:10,
+          background:`${C.gold}18`,border:`1px solid ${C.gold}28`,
+          display:"flex",alignItems:"center",justifyContent:"center",fontSize:18,
+        }}>⚖️</div>
+        <div>
+          <div style={{fontSize:16,fontWeight:900,color:C.gold,fontFamily:"Cinzel,serif",letterSpacing:"0.06em"}}>
+            Iron Treasury
+          </div>
+          <div style={{fontSize:10,color:C.muted}}>Métricas públicas del universo VEXFORGE</div>
+        </div>
+        {stats && (
+          <div style={{
+            marginLeft:"auto",padding:"4px 12px",borderRadius:20,
+            background:`${C.green}18`,border:`1px solid ${C.green}28`,
+            fontSize:10,fontWeight:700,color:C.green,letterSpacing:1,textTransform:"uppercase",
+          }}>
+            ● En vivo
+          </div>
+        )}
+      </div>
+
+      {/* Season banner */}
+      {stats?.season_name && (
+        <div style={{
+          marginBottom:18,padding:"10px 16px",borderRadius:10,
+          background:`${C.purple}12`,border:`1px solid ${C.purple}28`,
+          display:"flex",alignItems:"center",gap:10,flexWrap:"wrap",
+        }}>
+          <span style={{fontSize:14}}>🏆</span>
+          <div>
+            <div style={{fontSize:12,fontWeight:700,color:C.purple}}>{stats.season_name}</div>
+            {stats.season_ends_at && (
+              <div style={{fontSize:10,color:C.muted}}>Termina el {fmtSeasonDate(stats.season_ends_at)}</div>
+            )}
+          </div>
+          {stats.active_event_name && (
+            <div style={{
+              marginLeft:"auto",padding:"4px 12px",borderRadius:20,
+              background:`${C.gold}18`,border:`1px solid ${C.gold}28`,
+              fontSize:10,fontWeight:700,color:C.gold,
+            }}>
+              ⚡ {stats.active_event_name}
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Metrics */}
+      {loading ? (
+        <div style={{display:"flex",gap:10,flexWrap:"wrap"}}>
+          {[...Array(6)].map((_,i)=>(
+            <div key={i} style={{height:90,flex:1,minWidth:130,borderRadius:12,background:C.b1,opacity:0.5}}/>
+          ))}
+        </div>
+      ) : stats ? (
+        <div style={{display:"flex",flexWrap:"wrap",gap:10}}>
+          <MetricCard icon="🧑‍💻" label="Forjadores" value={stats.active_players} sub="jugadores activos" color={C.blue}/>
+          <MetricCard icon="🃏" label="Cartas" value={stats.total_cards} sub="en el universo" color={C.purple}/>
+          <MetricCard icon="⚔️" label="Batallas" value={stats.total_battles} sub="totales completadas" color={C.red}/>
+          <MetricCard icon="📦" label="Packs" value={stats.packs_opened} sub="abiertos" color={C.green}/>
+          <MetricCard icon="🐉" label="Jefes" value={stats.active_bosses} sub="world bosses activos" color="#f97316"/>
+          <MetricCard icon="🎯" label="Misiones" value={stats.total_missions} sub="disponibles" color={C.teal}/>
+        </div>
+      ) : (
+        <div style={{color:C.muted,fontSize:13,textAlign:"center",padding:"20px 0"}}>
+          No se pudieron cargar las métricas del universo.
+        </div>
+      )}
+
+      {stats && <Top3Row top3={stats.top3}/>}
+    </section>
+  );
+}
+
+// ── Main Component ────────────────────────────────────────────────────────
 export function EconomyRoute() {
   const {
     wallet, stats, ledger, ledgerTotal,
@@ -88,374 +236,238 @@ export function EconomyRoute() {
     reload, loadMore, hasMore,
   } = useEconomy();
 
-  // Ledger filters (client-side over loaded pages)
   const [filterType, setFilterType]         = useState("all");
   const [filterCurrency, setFilterCurrency] = useState("all");
 
-  // Filtered ledger
   const filtered = ledger
-    .filter(e => filterType==="all" || e.entry_type===filterType)
-    .filter(e => filterCurrency==="all" || e.currency===filterCurrency);
+    .filter(e => filterType     === "all" || e.entry_type === filterType)
+    .filter(e => filterCurrency === "all" || e.currency   === filterCurrency);
 
-  // Entry types present in loaded data
-  const typesPresent = Array.from(new Set(ledger.map(e => e.entry_type))).sort();
-  const currenciesPresent = Array.from(new Set(ledger.map(e => e.currency))).sort();
-
-  // ── Not signed in ──────────────────────────────────────────────────────
-  if (!loading && !signedIn) {
-    return (
-      <main style={{minHeight:"100vh",background:C.bg0,color:C.main,
-        display:"flex",alignItems:"center",justifyContent:"center"}}>
-        <div style={{textAlign:"center",padding:48}}>
-          <div style={{fontSize:56,marginBottom:16}}>💰</div>
-          <div style={{fontFamily:"Cinzel,serif",fontSize:20,color:C.gold,marginBottom:8}}>
-            Iron Treasury
-          </div>
-          <p style={{color:C.muted,marginBottom:24,fontSize:13}}>
-            Inicia sesión para ver tu cartera y historial de transacciones.
-          </p>
-          <Link to="/account" style={{
-            display:"inline-block",padding:"10px 28px",borderRadius:9,
-            background:C.gold,color:"#0a0a12",fontWeight:800,textDecoration:"none",fontSize:13,
-          }}>Iniciar Sesión</Link>
-        </div>
-      </main>
-    );
-  }
+  const entryTypes = Array.from(new Set(ledger.map(e => e.entry_type)));
 
   return (
-    <main style={{minHeight:"100vh",background:C.bg0,color:C.main}}>
+    <main style={{ background:C.bg0, minHeight:"100vh", padding:"24px 16px 60px" }}>
+      <div style={{ maxWidth:680, margin:"0 auto" }}>
 
-      {/* ── Hero Banner ─────────────────────────────────────────────── */}
-      <div style={{
-        background:`linear-gradient(135deg, #0d0d1a 0%, #1a1006 50%, #0d0d1a 100%)`,
-        borderBottom:`1px solid ${C.gold}22`,
-        padding:"36px 24px 32px", position:"relative", overflow:"hidden",
-      }}>
-        {/* Grid decoration */}
-        <div style={{
-          position:"absolute", inset:0, opacity:0.04,
-          backgroundImage:"repeating-linear-gradient(45deg,#E8B84B 0,#E8B84B 1px,transparent 0,transparent 50%)",
-          backgroundSize:"20px 20px", pointerEvents:"none",
-        }}/>
-        <div style={{maxWidth:900,margin:"0 auto",position:"relative"}}>
-          <div style={{fontSize:10,letterSpacing:2,color:C.gold,marginBottom:8}}>
-            ─── IRON TREASURY ───
+        <div style={{marginBottom:24}}>
+          <h1 style={{margin:0,fontSize:22,fontWeight:900,color:C.gold,fontFamily:"Cinzel,serif",letterSpacing:"0.08em"}}>
+            Tesorería
+          </h1>
+          <div style={{fontSize:12,color:C.muted,marginTop:4}}>
+            Economía del universo VEXFORGE
           </div>
-          <h1 style={{
-            fontFamily:"Cinzel,serif",fontSize:"clamp(1.8rem,4vw,3rem)",
-            fontWeight:900,margin:"0 0 8px",color:C.main,
-          }}>Economy</h1>
-          <p style={{color:C.muted,fontSize:13,margin:0}}>
-            Tu cartera VEX e historial de transacciones. Solo lectura por diseño.
-          </p>
         </div>
-      </div>
 
-      <div style={{maxWidth:900,margin:"0 auto",padding:"28px 16px 56px"}}>
+        {/* U.1 — Public dashboard (always visible) */}
+        <PublicDashboard />
 
-        {/* ── Loading ─────────────────────────────────────────────────── */}
-        {loading && (
-          <div style={{textAlign:"center",padding:"60px 0",color:C.muted,fontSize:13}}>
-            Cargando datos del tesoro…
-          </div>
-        )}
-
-        {/* ── Error ───────────────────────────────────────────────────── */}
-        {!loading && reason && !wallet && (
-          <div style={{
-            padding:"12px 16px",borderRadius:8,marginBottom:20,
-            background:`${C.red}12`,border:`1px solid ${C.red}33`,color:C.red,fontSize:13,
-          }}>{reason}</div>
-        )}
-
-        {!loading && wallet && (<>
-
-          {/* ── Wallet Cards ─────────────────────────────────────────── */}
-          <section style={{marginBottom:28}}>
-            <div style={{fontSize:9,letterSpacing:2,color:C.dim,marginBottom:12}}>CARTERA</div>
-            <div style={{
-              display:"grid",
-              gridTemplateColumns:"repeat(auto-fill,minmax(190px,1fr))",
-              gap:10,
-            }}>
-              <WalletCard
-                label="VEX In-Game" color={C.gold}
-                value={wallet.vex_ingame}
-                sub="Ganado en gameplay"
-              />
-              <WalletCard
-                label="VEX Tradeable" color={C.green}
-                value={wallet.vex_tradeable}
-                sub="Disponible para intercambiar"
-              />
-              <WalletCard
-                label="Reservado In-Game" color={C.muted}
-                value={wallet.reserved_ingame}
-                sub="En uso / bloqueado"
-              />
-              <WalletCard
-                label="Reservado Tradeable" color={C.muted}
-                value={wallet.reserved_tradeable}
-                sub="En uso / bloqueado"
-              />
+        {/* Auth gate */}
+        {!signedIn ? (
+          <div style={{textAlign:"center",padding:"40px 20px",background:C.bg1,borderRadius:16,border:`1px solid ${C.b2}`}}>
+            <div style={{fontSize:36,marginBottom:14}}>🔒</div>
+            <div style={{fontSize:15,fontWeight:700,color:C.main,marginBottom:8}}>Tu cartera personal</div>
+            <div style={{fontSize:13,color:C.muted,marginBottom:20}}>
+              Inicia sesión para ver tu balance de VEX, movimientos y estadísticas personales.
             </div>
-          </section>
+            <Link to="/account" style={{
+              padding:"10px 28px",borderRadius:10,
+              background:C.gold,color:"#0a0a12",
+              fontWeight:800,textDecoration:"none",fontSize:13,
+            }}>
+              Iniciar sesión →
+            </Link>
+          </div>
+        ) : loading ? (
+          <div style={{color:C.muted,textAlign:"center",padding:"40px 0",fontSize:13}}>Cargando tu cartera…</div>
+        ) : (<>
 
-          {/* ── Economy Stats ────────────────────────────────────────── */}
-          {stats && (
-            <section style={{marginBottom:28}}>
-              <div style={{fontSize:9,letterSpacing:2,color:C.dim,marginBottom:12}}>ESTADÍSTICAS</div>
-              <div style={{display:"flex",gap:8,flexWrap:"wrap",marginBottom:14}}>
-                <StatPill label="Total ganado" color={C.green}
-                  value={"+" + fmt(stats.total_credited) + " VEX"} />
-                <StatPill label="Total gastado" color={C.red}
-                  value={"-" + fmt(stats.total_debited) + " VEX"} />
-                <StatPill label="Net In-Game" color={stats.net_ingame >= 0 ? C.gold : C.red}
-                  value={(stats.net_ingame >= 0 ? "+" : "") + fmt(stats.net_ingame) + " VEX"} />
-                <StatPill label="Net Tradeable" color={stats.net_tradeable >= 0 ? C.green : C.red}
-                  value={(stats.net_tradeable >= 0 ? "+" : "") + fmt(stats.net_tradeable) + " VEX"} />
-                <StatPill label="Mayor ingreso" color={C.blue}
-                  value={fmt(stats.largest_credit) + " VEX"} />
-                <StatPill label="Transacciones" color={C.muted}
-                  value={String(stats.entry_count)} />
+          {reason && !wallet && (
+            <div style={{
+              padding:"14px 18px",borderRadius:10,marginBottom:18,
+              background:`${C.red}10`,border:`1px solid ${C.red}28`,
+              fontSize:12,color:"#fca5a5",
+            }}>
+              {reason}
+            </div>
+          )}
+
+          {wallet && (
+            <section style={{marginBottom:24}}>
+              <div style={{fontSize:10,letterSpacing:1,color:C.dim,textTransform:"uppercase",marginBottom:12}}>
+                Tu Cartera
               </div>
-
-              {/* Entry-type breakdown chips */}
-              {stats.by_type.length > 0 && (
-                <div>
-                  <div style={{fontSize:9,letterSpacing:1.5,color:C.dim,marginBottom:8}}>
-                    DESGLOSE POR TIPO
-                  </div>
-                  <div style={{display:"flex",gap:5,flexWrap:"wrap"}}>
-                    {stats.by_type.map(bt => {
-                      const m = entryMeta(bt.entry_type);
-                      const isPos = Number(bt.total_amount) >= 0;
-                      return (
-                        <button
-                          key={bt.entry_type+bt.currency}
-                          onClick={() => setFilterType(
-                            filterType===bt.entry_type ? "all" : bt.entry_type
-                          )}
-                          style={{
-                            padding:"5px 10px", borderRadius:16, fontSize:10, cursor:"pointer",
-                            border:`1px solid ${m.color}${filterType===bt.entry_type?"":"33"}`,
-                            background: filterType===bt.entry_type ? `${m.color}22` : "transparent",
-                            color:m.color, fontWeight:700, display:"flex", gap:5, alignItems:"center",
-                          }}
-                        >
-                          <span>{m.icon}</span>
-                          <span>{m.label}</span>
-                          <span style={{opacity:0.7,fontSize:9}}>
-                            ×{bt.count} · {isPos?"+":""}{fmt(Number(bt.total_amount))}
-                          </span>
-                        </button>
-                      );
-                    })}
-                  </div>
-                </div>
-              )}
+              <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10}}>
+                <WalletCard label="VEX In-game"          value={wallet.vex_ingame}          sub="moneda de juego"       color={C.gold}/>
+                <WalletCard label="VEX Tradeable"        value={wallet.vex_tradeable}        sub="intercambiable"        color={C.green}/>
+                <WalletCard label="Reservado In-game"    value={wallet.reserved_ingame}      sub="en órdenes activas"    color={C.muted}/>
+                <WalletCard label="Reservado Tradeable"  value={wallet.reserved_tradeable}   sub="en órdenes activas"    color={C.muted}/>
+              </div>
             </section>
           )}
 
-          {/* ── Ledger ───────────────────────────────────────────────── */}
+          {stats?.ok && (
+            <section style={{marginBottom:28}}>
+              <div style={{fontSize:10,letterSpacing:1,color:C.dim,textTransform:"uppercase",marginBottom:12}}>
+                Mis Estadísticas
+              </div>
+              <div style={{display:"flex",flexWrap:"wrap",gap:8}}>
+                <StatPill label="Movimientos"   value={fmt(stats.entry_count)}    color={C.blue}  />
+                <StatPill label="Total acred."  value={fmt(stats.total_credited)} color={C.green} />
+                <StatPill label="Total débito"  value={fmt(stats.total_debited)}  color={C.red}   />
+                <StatPill label="Net in-game"   value={fmt(stats.net_ingame)}     color={C.gold}  />
+                <StatPill label="Net tradeable" value={fmt(stats.net_tradeable)}  color={C.purple}/>
+              </div>
+            </section>
+          )}
+
           <section>
-            <div style={{
-              display:"flex", justifyContent:"space-between", alignItems:"center",
-              marginBottom:12, flexWrap:"wrap", gap:8,
-            }}>
-              <div style={{fontSize:9,letterSpacing:2,color:C.dim}}>HISTORIAL DE TRANSACCIONES</div>
+            <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:14,flexWrap:"wrap",gap:8}}>
+              <div style={{fontSize:10,letterSpacing:1,color:C.dim,textTransform:"uppercase"}}>
+                Movimientos ({ledgerTotal})
+              </div>
               <button onClick={reload} style={{
-                padding:"5px 12px",borderRadius:7,border:`1px solid ${C.b2}`,
-                background:"transparent",color:C.muted,fontSize:10,cursor:"pointer",
-              }}>🔄 Actualizar</button>
+                padding:"5px 14px",borderRadius:8,
+                border:`1px solid ${C.b2}`,background:"transparent",
+                color:C.muted,fontSize:11,cursor:"pointer",
+              }}>
+                ↻ Actualizar
+              </button>
             </div>
 
-            {/* Filter bar */}
-            <div style={{display:"flex",gap:6,flexWrap:"wrap",marginBottom:14}}>
-              {/* Type filter */}
-              <div style={{display:"flex",gap:3,flexWrap:"wrap"}}>
-                <button
-                  onClick={() => setFilterType("all")}
-                  style={{
-                    padding:"4px 10px",borderRadius:14,border:"none",fontSize:9,
-                    fontWeight:700,cursor:"pointer",
-                    background:filterType==="all"?C.muted+"cc":"#1a1a2e",
-                    color:filterType==="all"?"#0a0a12":C.dim,
-                  }}
-                >TODOS</button>
-                {typesPresent.map(t => {
-                  const m = entryMeta(t);
-                  return (
-                    <button key={t} onClick={() => setFilterType(filterType===t?"all":t)} style={{
-                      padding:"4px 10px",borderRadius:14,border:"none",fontSize:9,
-                      fontWeight:700,cursor:"pointer",
-                      background:filterType===t?m.color+"cc":"#1a1a2e",
-                      color:filterType===t?"#0a0a12":m.color,
-                    }}>{m.label}</button>
-                  );
-                })}
-              </div>
-
-              {currenciesPresent.length > 1 && (
-                <div style={{display:"flex",gap:3,marginLeft:6}}>
-                  {["all",...currenciesPresent].map(cur => (
-                    <button key={cur} onClick={() => setFilterCurrency(filterCurrency===cur?"all":cur)} style={{
-                      padding:"4px 10px",borderRadius:14,border:"none",fontSize:9,
-                      fontWeight:700,cursor:"pointer",
-                      background:filterCurrency===cur?"#4A9EFF33":"#1a1a2e",
-                      color:filterCurrency===cur?"#4A9EFF":C.dim,
-                    }}>
-                      {cur==="all" ? "Todas" : (CURRENCY_LABEL[cur]??cur)}
-                    </button>
-                  ))}
-                </div>
-              )}
-            </div>
-
-            {/* Count */}
-            <div style={{fontSize:11,color:C.dim,marginBottom:10}}>
-              {filtered.length} entradas cargadas
-              {(filterType!=="all"||filterCurrency!=="all") && ` (filtradas de ${ledger.length})`}
-              {ledgerTotal > ledger.length && ` · ${ledgerTotal - ledger.length} más en servidor`}
-            </div>
-
-            {/* Table */}
-            <div style={{overflowX:"auto"}}>
-              <table style={{width:"100%",borderCollapse:"collapse",fontSize:12}}>
-                <thead>
-                  <tr style={{borderBottom:`1px solid ${C.b1}`,color:C.dim,fontSize:9,letterSpacing:0.5}}>
-                    {["Tipo","Currency","Monto","Balance","Fuente","Fecha"].map(h => (
-                      <th key={h} style={{padding:"7px 10px",textAlign:"left",fontWeight:600,whiteSpace:"nowrap"}}>
-                        {h}
-                      </th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody>
-                  {filtered.map((e, i) => {
-                    const m   = entryMeta(e.entry_type);
-                    const amt = Number(e.amount);
-                    const isPos = amt >= 0;
-                    return (
-                      <tr key={e.id} style={{
-                        borderBottom:`1px solid ${C.b1}`,
-                        background:i%2===0?"transparent":`${C.bg2}40`,
-                      }}>
-                        {/* Type */}
-                        <td style={{padding:"9px 10px",whiteSpace:"nowrap"}}>
-                          <span style={{
-                            padding:"2px 8px",borderRadius:10,fontSize:9,fontWeight:700,
-                            background:`${m.color}18`,color:m.color,
-                            display:"inline-flex",gap:4,alignItems:"center",
-                          }}>
-                            <span>{m.icon}</span>
-                            <span>{m.label}</span>
-                          </span>
-                        </td>
-                        {/* Currency */}
-                        <td style={{padding:"9px 10px",color:C.muted,fontSize:10}}>
-                          {CURRENCY_LABEL[e.currency] ?? e.currency}
-                        </td>
-                        {/* Amount */}
-                        <td style={{
-                          padding:"9px 10px",fontFamily:"monospace",fontWeight:700,
-                          textAlign:"right",
-                          color: isPos ? C.green : C.red,
-                        }}>
-                          {isPos?"+":""}{fmt(amt)}
-                        </td>
-                        {/* Balance after */}
-                        <td style={{
-                          padding:"9px 10px",fontFamily:"monospace",fontSize:11,
-                          color:C.dim,textAlign:"right",
-                        }}>
-                          {e.balance_after != null ? fmt(Number(e.balance_after)) : "—"}
-                        </td>
-                        {/* Source */}
-                        <td style={{padding:"9px 10px",color:C.dim,fontSize:10,maxWidth:120,
-                          overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>
-                          {e.source_table ?? (e.metadata?.type ?? e.metadata?.reason ?? "—")}
-                        </td>
-                        {/* Date */}
-                        <td style={{padding:"9px 10px",color:C.dim,whiteSpace:"nowrap",fontSize:10}}>
-                          {fmtDate(e.created_at)}
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
-            </div>
-
-            {/* Empty filtered */}
-            {filtered.length === 0 && ledger.length > 0 && (
-              <div style={{textAlign:"center",padding:"32px 0",color:C.dim,fontSize:13}}>
-                Sin entradas para ese filtro.
-                <button onClick={() => { setFilterType("all"); setFilterCurrency("all"); }}
-                  style={{display:"block",margin:"10px auto 0",padding:"6px 16px",
-                    borderRadius:7,border:`1px solid ${C.b2}`,background:"transparent",
-                    color:C.muted,fontSize:11,cursor:"pointer"}}>
-                  Limpiar filtros
+            <div style={{display:"flex",gap:6,flexWrap:"wrap",marginBottom:10}}>
+              {["all",...entryTypes].map(t=>(
+                <button key={t} onClick={()=>setFilterType(t)} style={{
+                  padding:"4px 12px",borderRadius:20,fontSize:11,cursor:"pointer",
+                  background: filterType===t?`${C.blue}22`:"transparent",
+                  border:`1px solid ${filterType===t?C.blue+"44":C.b2}`,
+                  color:filterType===t?C.blue:C.muted,
+                  transition:"all 0.15s",
+                }}>
+                  {t==="all"?"Todo":entryMeta(t).label}
                 </button>
-              </div>
-            )}
+              ))}
+            </div>
 
-            {/* Empty ledger */}
-            {ledger.length === 0 && !loading && (
-              <div style={{textAlign:"center",padding:"40px 0",color:C.dim,fontSize:13}}>
-                <div style={{fontSize:40,marginBottom:10}}>📒</div>
-                Sin transacciones registradas aún.
-              </div>
-            )}
+            <div style={{display:"flex",gap:6,marginBottom:14}}>
+              {["all","vex_ingame","vex_tradeable"].map(c=>(
+                <button key={c} onClick={()=>setFilterCurrency(c)} style={{
+                  padding:"4px 12px",borderRadius:20,fontSize:11,cursor:"pointer",
+                  background: filterCurrency===c?`${C.gold}18`:"transparent",
+                  border:`1px solid ${filterCurrency===c?C.gold+"44":C.b2}`,
+                  color:filterCurrency===c?C.gold:C.muted,
+                  transition:"all 0.15s",
+                }}>
+                  {c==="all"?"Todas":CURRENCY_LABEL[c]??c}
+                </button>
+              ))}
+            </div>
 
-            {/* Load more */}
+            <div style={{display:"flex",flexDirection:"column",gap:6}}>
+              {filtered.length===0 ? (
+                <div style={{color:C.muted,fontSize:13,textAlign:"center",padding:"24px 0"}}>Sin movimientos</div>
+              ) : filtered.map(entry=>{
+                const meta = entryMeta(entry.entry_type);
+                const signed = entry.amount * meta.sign;
+                return (
+                  <div key={entry.id} style={{
+                    padding:"12px 14px",borderRadius:10,
+                    background:C.bg1,border:`1px solid ${C.b1}`,
+                    display:"grid",gridTemplateColumns:"32px 1fr auto",
+                    gap:"0 10px",alignItems:"start",
+                  }}>
+                    <div style={{
+                      width:32,height:32,borderRadius:8,
+                      background:`${meta.color}14`,
+                      display:"flex",alignItems:"center",justifyContent:"center",
+                      fontSize:15,color:meta.color,gridRow:"1/3",
+                    }}>
+                      {meta.icon}
+                    </div>
+                    <div>
+                      <div style={{fontSize:12,fontWeight:700,color:C.main}}>
+                        {meta.label}
+                        {entry.source_table && (
+                          <span style={{fontSize:10,color:C.dim,marginLeft:6}}>· {entry.source_table}</span>
+                        )}
+                      </div>
+                      <div style={{fontSize:10,color:C.dim}}>{fmtDate(entry.created_at)}</div>
+                    </div>
+                    <div style={{textAlign:"right",gridRow:"1/3"}}>
+                      <div style={{fontSize:14,fontWeight:900,color:signed>=0?C.green:C.red}}>
+                        {signed>=0?"+":""}{fmt(signed)}
+                      </div>
+                      <div style={{fontSize:10,color:C.dim}}>{CURRENCY_LABEL[entry.currency]??entry.currency}</div>
+                      {entry.balance_after!=null && (
+                        <div style={{fontSize:9,color:C.dim,marginTop:2}}>Saldo: {fmt(entry.balance_after)}</div>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
             {hasMore && (
               <div style={{textAlign:"center",marginTop:20}}>
-                <button
-                  onClick={loadMore}
-                  disabled={loadingMore}
-                  style={{
-                    padding:"9px 28px",borderRadius:9,
-                    border:`1px solid ${C.b2}`,background:"transparent",
-                    color:loadingMore?C.dim:C.muted,
-                    fontSize:12,cursor:loadingMore?"not-allowed":"pointer",
-                  }}
-                >
-                  {loadingMore
-                    ? "Cargando…"
-                    : `Cargar más (${ledgerTotal - ledger.length} restantes)`}
+                <button onClick={loadMore} disabled={loadingMore} style={{
+                  padding:"9px 28px",borderRadius:9,
+                  border:`1px solid ${C.b2}`,background:"transparent",
+                  color:loadingMore?C.dim:C.muted,
+                  fontSize:12,cursor:loadingMore?"not-allowed":"pointer",
+                }}>
+                  {loadingMore?"Cargando…":`Cargar más (${ledgerTotal-ledger.length} restantes)`}
                 </button>
               </div>
             )}
           </section>
 
-          {/* ── CTA Deposit ──────────────────────────────────────────── */}
-          <div style={{
-            marginTop:36, padding:"18px 22px", borderRadius:12,
-            background:`${C.gold}0a`, border:`1px solid ${C.gold}22`,
-            display:"flex", justifyContent:"space-between", alignItems:"center",
-            flexWrap:"wrap", gap:12,
-          }}>
-            <div>
-              <div style={{fontSize:13,fontWeight:700,color:C.gold,marginBottom:4}}>
-                ¿Quieres más VEX?
-              </div>
-              <div style={{fontSize:12,color:C.muted}}>
-                Deposita USDT y recibe VEX Tradeable al instante.
-              </div>
-            </div>
-            <Link to="/deposit" style={{
-              padding:"9px 22px",borderRadius:9,
-              background:C.gold,color:"#0a0a12",
-              fontWeight:800,textDecoration:"none",fontSize:12,whiteSpace:"nowrap",
-            }}>
-              💰 Depositar →
-            </Link>
-          </div>
+          <div style={{ marginTop:36, display:"flex", flexDirection:"column", gap:12 }}>
 
+            {/* ── CTA Depositar ─────────────────────────────────────── */}
+            <div style={{
+              padding:"18px 22px",borderRadius:12,
+              background:`${C.gold}0a`,border:`1px solid ${C.gold}22`,
+              display:"flex",justifyContent:"space-between",alignItems:"center",
+              flexWrap:"wrap",gap:12,
+            }}>
+              <div>
+                <div style={{fontSize:13,fontWeight:700,color:C.gold,marginBottom:4}}>¿Quieres más VEX?</div>
+                <div style={{fontSize:12,color:C.muted}}>Deposita USDT y recibe VEX Tradeable al instante.</div>
+              </div>
+              <Link to="/deposit" style={{
+                padding:"9px 22px",borderRadius:9,
+                background:C.gold,color:"#0a0a12",
+                fontWeight:800,textDecoration:"none",fontSize:12,whiteSpace:"nowrap",
+              }}>
+                💰 Depositar →
+              </Link>
+            </div>
+
+            {/* ── CTA Retirar — BRECHA-6 resuelto ──────────────────── */}
+            <div style={{
+              padding:"18px 22px",borderRadius:12,
+              background:`${C.green}08`,border:`1px solid ${C.green}22`,
+              display:"flex",justifyContent:"space-between",alignItems:"center",
+              flexWrap:"wrap",gap:12,
+            }}>
+              <div>
+                <div style={{fontSize:13,fontWeight:700,color:C.green,marginBottom:4}}>¿Quieres retirar VEX Tradeable?</div>
+                <div style={{fontSize:12,color:C.muted}}>
+                  Convierte VEX Tradeable a USDT. Mínimo 500 VEX · Fee 8% · Aprobación manual.
+                </div>
+              </div>
+              <Link to="/withdrawal" style={{
+                padding:"9px 22px",borderRadius:9,
+                background:C.green,color:"#0a0a12",
+                fontWeight:800,textDecoration:"none",fontSize:12,whiteSpace:"nowrap",
+              }}>
+                💸 Retirar →
+              </Link>
+            </div>
+
+          </div>
         </>)}
       </div>
     </main>
   );
 }
+

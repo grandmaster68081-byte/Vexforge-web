@@ -3,6 +3,7 @@ import type { ReactNode } from "react";
 import { useNavigate } from "react-router-dom";
 import { useCards, type Card } from "../domains/cards/useCards";
 import { getCardByCode } from "../domains/cards/repository";
+import { AudioEngine } from "../lib/audioEngine";
 
 // ─── CONFIG ─────────────────────────────────────────────────────────────────
 const RARITY_CFG: Record<string, { color: string; glow: string; label: string; order: number }> = {
@@ -94,6 +95,7 @@ function CardTile({ card, owned, quantity, onClick }: {
       border: `1.5px solid ${rarity.color}`, boxShadow: rarity.glow,
       transition: "transform .15s, box-shadow .15s", overflow: "hidden" }}
       onMouseEnter={e => {
+        try { AudioEngine.sfxCardHover(); } catch {}
         (e.currentTarget as HTMLDivElement).style.transform = "translateY(-4px) scale(1.02)";
         (e.currentTarget as HTMLDivElement).style.boxShadow =
           rarity.glow === "none" ? "0 8px 24px rgba(0,0,0,.6)" : rarity.glow + ", 0 12px 32px rgba(0,0,0,.5)";
@@ -197,8 +199,7 @@ function CardModal({ card, ownedQty, onClose, onNav }: {
         </div>
         {/* Body */}
         <div style={{ overflowY: "auto", flex: 1 }}>
-          <div style={{ display: "grid", gridTemplateColumns: "160px 1fr",
-            gap: 20, padding: 20 }}>
+          <div className="card-modal-body-grid">
             {/* Art + owned */}
             <div>
               <CardArt card={card} />
@@ -344,6 +345,7 @@ export function CardsRoute() {
   }, [cards, search, filterRarity, filterFaction, sortBy]);
 
   const openModal = useCallback(async (card: Card) => {
+    try { AudioEngine.sfxCardSelect(); } catch {}
     // Show immediately with catalog data, then enrich with synergy_json from full fetch
     setSelected(card as ExtCard);
     const { data } = await getCardByCode(card.code);

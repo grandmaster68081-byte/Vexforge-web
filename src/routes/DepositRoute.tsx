@@ -1,22 +1,22 @@
 import { useState, useEffect } from "react";
 import { supabase } from "../lib/supabase";
 import { useDeposit } from "../domains/deposit/useDeposit";
+import { getTreasuryWallets, type TreasuryWallet } from "../domains/deposit/repository";
 import { PageLoader } from "../shared/components/PageLoader";
 import { BlockedAuthState } from "../shared/components/BlockedAuthState";
 
-const TREASURY_ADDRESS: Record<string, string> = {
-    ETH:   "0x29b2907d6e10beb2becb9ba82f2b6af04815c403",  // USDT ERC-20
-    BSC:   "0x29b2907d6e10beb2becb9ba82f2b6af04815c403",  // USDT BEP-20
-    SOL:   "6m9unXdipitegac8skEgvy6MHMgLqG7XNSAQnAiacEMb",  // USDT SPL (Solana)
-    TRON:  "TLAujgYmQAtFW6BZg4fVs1pUHx6vyX5SJD",  // USDT TRC-20
-    };
+// ── BRECHA-4 resuelto: metadatos de display por chain ───────────────────
+const CHAIN_META: Record<string, { label: string; token: string; emoji: string; note: string }> = {
+  ETH:  { label: "Ethereum",  token: "USDT", emoji: "⟠",  note: "USDT ERC-20" },
+  BSC:  { label: "BNB Chain", token: "USDT", emoji: "🟡", note: "USDT BEP-20 · fees bajos" },
+  SOL:  { label: "Solana",    token: "USDT", emoji: "◎",  note: "USDT SPL · fees mínimos" },
+  TRON: { label: "TRON",      token: "USDT", emoji: "🔴", note: "USDT TRC-20 · sin fees" },
+};
 
-const CHAINS = [
-    { key: "ETH",  label: "Ethereum",  token: "USDT", emoji: "⟠",  note: "USDT ERC-20" },
-    { key: "BSC",  label: "BNB Chain", token: "USDT", emoji: "🟡", note: "USDT BEP-20 · fees bajos" },
-    { key: "SOL",  label: "Solana",    token: "USDT", emoji: "◎",  note: "USDT SPL · fees mínimos" },
-    { key: "TRON", label: "TRON",      token: "USDT", emoji: "🔴", note: "USDT TRC-20 · sin fees" },
-    ];
+interface ChainOption {
+  key: string; label: string; token: string;
+  emoji: string; note: string; address: string;
+}
 
 const PACK_REF = [
   { name: "Seed Pack",       usdt: "$1.99",  vex: "199"  },
@@ -37,16 +37,36 @@ const STATUS_COLOR: Record<string, string> = {
   rejected: "#E84040",
 };
 
+// AE.2 chat92: tipo de tab extendido con historial
+type DepositTab = "crypto" | "stripe" | "historial";
+
 export function DepositRoute() {
   const { balance, deposits, loading, submitting, submitResult, load, submit, reset } = useDeposit();
-  const [tab, setTab]           = useState<"crypto" | "stripe">("crypto");
-  const [chain, setChain]       = useState("ETH");
+  const [tab, setTab]           = useState<DepositTab>("crypto");
+  const [chains, setChains]     = useState<ChainOption[]>([]);
+  const [chain, setChain]       = useState("");
   const [amount, setAmount]     = useState("");
   const [txHash, setTxHash]     = useState("");
   const [myWallet, setMyWallet] = useState("");
   const [error, setError]       = useState<string | null>(null);
   const [copied, setCopied]     = useState(false);
   const [authed, setAuthed]     = useState<boolean | null>(null);
+
+  // BRECHA-4: cargar wallets activas desde vexforge_treasury
+  useEffect(() => {
+    getTreasuryWallets().then(wallets => {
+      const loaded: ChainOption[] = wallets.map(w => ({
+        key:     w.chain,
+        address: w.wallet_address,
+        ...(CHAIN_META[w.chain] ?? {
+          label: w.chain, token: w.token_symbol,
+          emoji: "◈",    note:  w.token_symbol,
+        }),
+      }));
+      setChains(loaded);
+      if (loaded.length > 0) setChain(loaded[0].key);
+    });
+  }, []);
 
   useEffect(() => { load(); }, [load]);
   useEffect(() => {
@@ -62,24 +82,30 @@ export function DepositRoute() {
     if (numAmount < 1.99) { setError("Monto mínimo: $1.99 USDT"); return; }
     if (!txHash.trim())   { setError("Ingresa el TX Hash de tu transacción"); return; }
     if (!myWallet.trim()) { setError("Ingresa tu dirección de wallet"); return; }
-    const selected = CHAINS.find(c => c.key === chain)!;
+    const selected = chains.find(c => c.key === chain) ?? chains[0];
     const res = await submit({
       amount_usdt: numAmount, chain,
       token_symbol: selected.token,
       tx_hash: txHash.trim(),
       payer_wallet_address: myWallet.trim(),
     });
-    if (!res.ok) setError(res.reason || "Error al enviar el depósito");
+    if (res.ok) {
+      // Switch to historial tab after successful submit
+      setTab("historial");
+    } else {
+      setError(res.reason || "Error al enviar el depósito");
+    }
   }
 
   function copyAddress() {
-    navigator.clipboard.writeText(TREASURY_ADDRESS[chain]).then(() => {
+    const activeAddr = chains.find(c => c.key === chain)?.address ?? "";
+    navigator.clipboard.writeText(activeAddr).then(() => {
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     });
   }
 
-  if (authed === null || loading) return <PageLoader />;
+  if (authed === null || loading || chains.length === 0) return <PageLoader />;
   if (!authed) return <BlockedAuthState message="Inicia sesión para realizar depósitos de VEX." />;
 
   const card: React.CSSProperties = {
@@ -94,6 +120,16 @@ export function DepositRoute() {
     borderRadius: 8, padding: "10px 14px", color: "#e8e8e8",
     fontFamily: '"IBM Plex Mono", monospace', fontSize: 13, outline: "none",
   };
+
+  // AE.2: tab button style helper
+  const tabStyle = (active: boolean): React.CSSProperties => ({
+    padding: "8px 20px", borderRadius: 8, cursor: "pointer",
+    fontFamily: '"Rajdhani",sans-serif', fontWeight: 700, fontSize: 13,
+    border: active ? "1px solid #e8b84b" : "1px solid rgba(255,255,255,0.1)",
+    background: active ? "rgba(232,184,75,0.12)" : "transparent",
+    color: active ? "#e8b84b" : "#666",
+    transition: "all 0.15s ease",
+  });
 
   return (
     <div style={{ color: "#e8e8e8", fontFamily: '"Rajdhani",sans-serif',
@@ -135,23 +171,37 @@ export function DepositRoute() {
         </div>
       )}
 
-      <div style={{ display: "flex", gap: 8, marginBottom: 20 }}>
-        {(["crypto", "stripe"] as const).map(t => (
-          <button key={t} onClick={() => setTab(t)} style={{
-            padding: "8px 20px", borderRadius: 8, cursor: "pointer",
-            fontFamily: '"Rajdhani",sans-serif', fontWeight: 700, fontSize: 13,
-            border: tab === t ? "1px solid #e8b84b" : "1px solid rgba(255,255,255,0.1)",
-            background: tab === t ? "rgba(232,184,75,0.12)" : "transparent",
-            color: tab === t ? "#e8b84b" : "#666",
-          }}>
-            {t === "crypto" ? "⛓ Crypto (USDT)" : "💳 Stripe"}
-            {t === "stripe" && (
-              <span style={{ fontSize: 10, marginLeft: 6, color: "#555" }}>Próximamente</span>
-            )}
-          </button>
-        ))}
+      {/* AE.2: 3 tabs — Crypto, Stripe, Historial */}
+      <div style={{ display: "flex", gap: 8, marginBottom: 20, flexWrap: "wrap" }}>
+        <button onClick={() => setTab("crypto")} style={tabStyle(tab === "crypto")}>
+          ⛓ Crypto (USDT)
+        </button>
+        <button onClick={() => setTab("stripe")} style={tabStyle(tab === "stripe")}>
+          💳 Stripe
+          <span style={{ fontSize: 10, marginLeft: 6, color: "#555" }}>Próximamente</span>
+        </button>
+        <button onClick={() => setTab("historial")} style={{
+          ...tabStyle(tab === "historial"),
+          position: "relative",
+        }}>
+          📋 Historial
+          {deposits.length > 0 && (
+            <span style={{
+              marginLeft: 6,
+              background: deposits.some(d => d.status === "pending") ? "#e8b84b" : "#3DC96B",
+              color: "#000",
+              borderRadius: 10,
+              padding: "1px 6px",
+              fontSize: 10,
+              fontWeight: 700,
+            }}>
+              {deposits.length}
+            </span>
+          )}
+        </button>
       </div>
 
+      {/* ── TAB: CRYPTO ── */}
       {tab === "crypto" && (
         <>
           {submitResult?.ok ? (
@@ -169,13 +219,22 @@ export function DepositRoute() {
               <p style={{ color: "#666", fontSize: 12, marginBottom: 24 }}>
                 Tiempo estimado de acreditación: 24–48 horas
               </p>
-              <button onClick={() => { reset(); setAmount(""); setTxHash(""); setMyWallet(""); }}
-                style={{ padding: "10px 28px", borderRadius: 8, cursor: "pointer",
-                  border: "1px solid rgba(232,184,75,0.4)",
-                  background: "rgba(232,184,75,0.1)", color: "#e8b84b",
-                  fontFamily: '"Rajdhani",sans-serif', fontWeight: 700, fontSize: 14 }}>
-                Nuevo depósito
-              </button>
+              <div style={{ display: "flex", gap: 10, justifyContent: "center", flexWrap: "wrap" }}>
+                <button onClick={() => { reset(); setAmount(""); setTxHash(""); setMyWallet(""); }}
+                  style={{ padding: "10px 28px", borderRadius: 8, cursor: "pointer",
+                    border: "1px solid rgba(232,184,75,0.4)",
+                    background: "rgba(232,184,75,0.1)", color: "#e8b84b",
+                    fontFamily: '"Rajdhani",sans-serif', fontWeight: 700, fontSize: 14 }}>
+                  Nuevo depósito
+                </button>
+                <button onClick={() => setTab("historial")}
+                  style={{ padding: "10px 28px", borderRadius: 8, cursor: "pointer",
+                    border: "1px solid rgba(61,201,107,0.4)",
+                    background: "rgba(61,201,107,0.1)", color: "#3DC96B",
+                    fontFamily: '"Rajdhani",sans-serif', fontWeight: 700, fontSize: 14 }}>
+                  Ver historial
+                </button>
+              </div>
             </div>
           ) : (
             <form onSubmit={handleSubmit}>
@@ -185,7 +244,7 @@ export function DepositRoute() {
                   1. Selecciona la red
                 </p>
                 <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-                  {CHAINS.map(c => (
+                  {chains.map(c => (
                     <button key={c.key} type="button" onClick={() => setChain(c.key)} style={{
                       padding: "8px 16px", borderRadius: 8, cursor: "pointer",
                       border: chain === c.key ? "1px solid #e8b84b" : "1px solid rgba(255,255,255,0.1)",
@@ -209,7 +268,7 @@ export function DepositRoute() {
                 </p>
                 <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
                   <code style={{ ...inp, flex: 1, fontSize: 11, color: "#e8b84b" }}>
-                    {TREASURY_ADDRESS[chain]}
+                    {chains.find(c => c.key === chain)?.address ?? ""}
                   </code>
                   <button type="button" onClick={copyAddress} style={{
                     padding: "10px 14px", borderRadius: 8, cursor: "pointer", flexShrink: 0,
@@ -304,6 +363,7 @@ export function DepositRoute() {
         </>
       )}
 
+      {/* ── TAB: STRIPE ── */}
       {tab === "stripe" && (
         <div style={{ ...card, textAlign: "center", padding: 52 }}>
           <div style={{ fontSize: 52, marginBottom: 16 }}>💳</div>
@@ -318,32 +378,134 @@ export function DepositRoute() {
         </div>
       )}
 
-      {deposits.length > 0 && (
-        <div style={{ marginTop: 28 }}>
-          <p style={{ fontSize: 11, color: "#666", textTransform: "uppercase",
-            letterSpacing: "0.1em", marginBottom: 12, fontWeight: 700 }}>
-            ─── Mis depósitos ───
-          </p>
-          <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-            {deposits.map(d => (
-              <div key={d.id} style={{ ...card, display: "flex",
-                justifyContent: "space-between", alignItems: "center",
-                flexWrap: "wrap", gap: 8 }}>
+      {/* ── TAB: HISTORIAL (AE.2) ── */}
+      {tab === "historial" && (
+        <div>
+          {deposits.length === 0 ? (
+            <div style={{ ...card, textAlign: "center", padding: 52 }}>
+              <div style={{ fontSize: 48, marginBottom: 12 }}>📋</div>
+              <h2 style={{ fontFamily: '"Cinzel",serif', color: "#888", marginBottom: 10 }}>
+                Sin depósitos aún
+              </h2>
+              <p style={{ color: "#555", fontSize: 13, lineHeight: 1.6 }}>
+                Tus depósitos aparecerán aquí tras enviarlos.<br />
+                El tiempo de revisión es de 24–48 horas.
+              </p>
+              <button onClick={() => setTab("crypto")} style={{
+                marginTop: 20, padding: "10px 28px", borderRadius: 8, cursor: "pointer",
+                border: "1px solid rgba(232,184,75,0.4)",
+                background: "rgba(232,184,75,0.1)", color: "#e8b84b",
+                fontFamily: '"Rajdhani",sans-serif', fontWeight: 700, fontSize: 14,
+              }}>
+                Realizar primer depósito
+              </button>
+            </div>
+          ) : (
+            <>
+              {/* Summary stats */}
+              <div style={{ ...card, marginBottom: 16, display: "flex", gap: 24, flexWrap: "wrap" }}>
                 <div>
-                  <div style={{ fontFamily: '"Cinzel",serif', fontSize: 16, color: "#e8b84b" }}>
-                    {d.vex_credited.toLocaleString()} VEX
-                  </div>
-                  <div style={{ fontSize: 11, color: "#666" }}>
-                    {d.amount_usdt} USDT · {d.chain} · {new Date(d.created_at).toLocaleDateString()}
+                  <div style={{ fontSize: 10, color: "#666", textTransform: "uppercase",
+                    letterSpacing: "0.1em", marginBottom: 4 }}>Total depósitos</div>
+                  <div style={{ fontFamily: '"Cinzel",serif', fontSize: 20, color: "#e8b84b" }}>
+                    {deposits.length}
                   </div>
                 </div>
-                <span style={{ fontSize: 12, fontWeight: 700,
-                  color: STATUS_COLOR[d.status] || "#888" }}>
-                  {STATUS_LABEL[d.status] || d.status}
-                </span>
+                <div>
+                  <div style={{ fontSize: 10, color: "#666", textTransform: "uppercase",
+                    letterSpacing: "0.1em", marginBottom: 4 }}>Total USDT</div>
+                  <div style={{ fontFamily: '"Cinzel",serif', fontSize: 20, color: "#e8b84b" }}>
+                    ${deposits.reduce((s, d) => s + d.amount_usdt, 0).toFixed(2)}
+                  </div>
+                </div>
+                <div>
+                  <div style={{ fontSize: 10, color: "#666", textTransform: "uppercase",
+                    letterSpacing: "0.1em", marginBottom: 4 }}>VEX acreditados</div>
+                  <div style={{ fontFamily: '"Cinzel",serif', fontSize: 20, color: "#3DC96B" }}>
+                    {deposits
+                      .filter(d => d.status === "approved")
+                      .reduce((s, d) => s + d.vex_credited, 0)
+                      .toLocaleString()}
+                  </div>
+                </div>
+                <div>
+                  <div style={{ fontSize: 10, color: "#666", textTransform: "uppercase",
+                    letterSpacing: "0.1em", marginBottom: 4 }}>Pendientes</div>
+                  <div style={{ fontFamily: '"Cinzel",serif', fontSize: 20, color: "#e8b84b" }}>
+                    {deposits.filter(d => d.status === "pending").length}
+                  </div>
+                </div>
               </div>
-            ))}
-          </div>
+
+              {/* Deposit list — AE.3: expanded details */}
+              <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+                {deposits.map((d, idx) => (
+                  <div key={d.id} style={{
+                    ...card,
+                    borderLeft: `3px solid ${STATUS_COLOR[d.status] || "#444"}`,
+                  }}>
+                    <div style={{ display: "flex", justifyContent: "space-between",
+                      alignItems: "flex-start", marginBottom: 10, flexWrap: "wrap", gap: 8 }}>
+                      <div>
+                        <div style={{ fontFamily: '"Cinzel",serif', fontSize: 18, color: "#e8b84b" }}>
+                          {d.vex_credited.toLocaleString()} VEX Tradeable
+                        </div>
+                        <div style={{ fontSize: 12, color: "#666", marginTop: 2 }}>
+                          ${d.amount_usdt} USDT · {d.chain} · {d.token_symbol}
+                        </div>
+                      </div>
+                      <div style={{ textAlign: "right" }}>
+                        <span style={{ fontSize: 13, fontWeight: 700,
+                          color: STATUS_COLOR[d.status] || "#888" }}>
+                          {STATUS_LABEL[d.status] || d.status}
+                        </span>
+                        <div style={{ fontSize: 11, color: "#555", marginTop: 2 }}>
+                          {new Date(d.created_at).toLocaleDateString("es-ES", {
+                            day: "2-digit", month: "short", year: "numeric",
+                            hour: "2-digit", minute: "2-digit",
+                          })}
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* TX Hash — expandible */}
+                    {d.tx_hash && (
+                      <div style={{ marginTop: 4 }}>
+                        <div style={{ fontSize: 10, color: "#555", textTransform: "uppercase",
+                          letterSpacing: "0.08em", marginBottom: 4 }}>TX Hash</div>
+                        <code style={{
+                          display: "block",
+                          fontSize: 10,
+                          color: "#4A9EFF",
+                          fontFamily: '"IBM Plex Mono", monospace',
+                          wordBreak: "break-all",
+                          background: "rgba(74,158,255,0.06)",
+                          borderRadius: 6,
+                          padding: "6px 10px",
+                        }}>
+                          {d.tx_hash}
+                        </code>
+                      </div>
+                    )}
+
+                    {/* Deposit index label */}
+                    <div style={{ fontSize: 10, color: "#444", marginTop: 8 }}>
+                      Depósito #{deposits.length - idx}
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <button onClick={() => setTab("crypto")} style={{
+                marginTop: 20, padding: "10px 28px", borderRadius: 8, cursor: "pointer",
+                border: "1px solid rgba(232,184,75,0.4)",
+                background: "rgba(232,184,75,0.1)", color: "#e8b84b",
+                fontFamily: '"Rajdhani",sans-serif', fontWeight: 700, fontSize: 14,
+              }}>
+                + Nuevo depósito
+              </button>
+            </>
+          )}
         </div>
       )}
     </div>

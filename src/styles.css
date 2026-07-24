@@ -2092,3 +2092,524 @@ input.forge-input:focus {
   position: relative;
   z-index: 1;
 }
+
+
+/* ─── PAGE TRANSITION — T.6 fade-in ─────────────────────────────────────── */
+@keyframes vexPageIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.page-transition-enter {
+  animation: vexPageIn 0.18s cubic-bezier(0.22, 0.61, 0.36, 1) both;
+  will-change: opacity, transform;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   AN.2 — Mobile Responsive Audit 390px/412px (chat94)
+   ═══════════════════════════════════════════════════════════════ */
+
+/* Reduce header gap on all mobile widths */
+@media (max-width: 768px) {
+  .forge-header-inner {
+    gap: 8px;
+    padding: 0 12px;
+  }
+  .forge-logo-text {
+    font-size: 13px;
+    letter-spacing: 0.06em;
+  }
+}
+
+/* ─── 412px / 390px (iPhone 14 Pro, Samsung) ──────────────────── */
+@media (max-width: 412px) {
+  /* Hide logo text — icon only saves ~90px */
+  .forge-logo-text { display: none; }
+  .forge-logo-img  { width: 32px; height: 32px; }
+
+  /* Tightest header gap */
+  .forge-header-inner { gap: 5px; padding: 0 10px; }
+
+  /* Breadcrumb tighter */
+  .forge-breadcrumb { padding: 6px 10px; font-size: 9px; }
+
+  /* Content padding reduction */
+  .forge-content { padding: 12px 12px 72px; }
+
+  /* Mobile sheet links — slightly smaller */
+  .forge-sheet-link { padding: 8px 10px !important; font-size: 13px !important; gap: 8px !important; }
+
+  /* Bottom nav safe sizing */
+  .forge-bottom-nav-icon  { font-size: 18px; }
+  .forge-bottom-nav-label { font-size: 8px; }
+
+  /* Pack catalog: always 1 column, full-width cards */
+  .pack-catalog-grid { grid-template-columns: 1fr !important; }
+
+  /* Hero CTA: stack vertically */
+  .hero-cta {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 10px !important;
+  }
+  .hero-cta > * { text-align: center; justify-content: center; }
+
+  /* PvP stats condensed */
+  .pvp-stats-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+
+  /* Battle board controls wrap */
+  .battle-controls-row {
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .battle-controls-row > button { font-size: 11px; padding: 8px 14px; }
+}
+
+
+/* ════════════════════════════════════════════════════════════════
+   AN.2 — Mobile Responsive Fixes (chat94_an2)
+   Targeting 390px (iPhone 15 Pro) and 412px (Android Galaxy)
+   ═══════════════════════════════════════════════════════════════ */
+
+/* Card modal body — stacks to single column on small screens */
+.card-modal-body-grid {
+  display: grid;
+  grid-template-columns: 160px 1fr;
+  gap: 20px;
+  padding: 20px;
+}
+
+/* Hero banner — mobile height adjustment */
+.home-hero-banner {
+  min-height: 520px;
+}
+
+/* Stats grid — 2 columns on very small screens */
+.home-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 12px;
+}
+
+/* ─── 480px breakpoint (small phones) ─────────────────────── */
+@media (max-width: 480px) {
+  /* Card modal — stack art + info vertically */
+  .card-modal-body-grid {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  /* Hero banner — less padding on mobile */
+  .home-hero-banner {
+    min-height: 380px;
+  }
+
+  /* Stats: 2 cols always on mobile */
+  .home-stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+  }
+
+  /* Cards filter row — wrap tightly */
+  .cards-filter-row {
+    gap: 5px !important;
+  }
+
+  /* Features grid — single column below 480px */
+  .features-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* ─── 390px breakpoint (iPhone 15 Pro) ────────────────────── */
+@media (max-width: 390px) {
+  /* Card modal — tighter padding */
+  .card-modal-body-grid {
+    padding: 12px;
+    gap: 10px;
+  }
+
+  /* Stats — even tighter */
+  .home-stats-grid {
+    gap: 6px;
+  }
+
+  /* Hero even more compact */
+  .home-hero-banner {
+    min-height: 320px;
+  }
+}
+
+
+/* ══════════════════════════════════════════════════════════════════════════
+   AN.3 NFT Forge — VEXFORGE NFT Infrastructure Styles
+   chat94_an3 | Added: 2026-07-24
+   ══════════════════════════════════════════════════════════════════════════ */
+
+/* ─── Route wrapper ─────────────────────────────────────────────── */
+.nft-route {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 20px 16px 80px;
+  position: relative;
+}
+
+/* ─── Header ────────────────────────────────────────────────────── */
+.nft-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+.nft-stats-row {
+  display: flex;
+  gap: 16px;
+  flex-shrink: 0;
+}
+.nft-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: var(--layer-1);
+  border: 1px solid var(--layer-3);
+  border-radius: 10px;
+  padding: 10px 18px;
+  min-width: 80px;
+}
+.nft-stat-val {
+  font-family: "Cinzel", serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--ember-gold);
+  line-height: 1;
+}
+.nft-stat-lbl {
+  font-size: 10px;
+  color: var(--fg-muted);
+  margin-top: 4px;
+  text-align: center;
+  white-space: nowrap;
+}
+
+/* ─── Wallet card ───────────────────────────────────────────────── */
+.nft-wallet-card {
+  background: var(--layer-1);
+  border: 1px solid rgba(201,144,31,0.25);
+  border-radius: 14px;
+  padding: 16px 20px;
+  margin-bottom: 18px;
+  position: relative;
+  overflow: hidden;
+}
+.nft-wallet-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(201,144,31,0.04) 0%, transparent 60%);
+  pointer-events: none;
+}
+.nft-wallet-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+.nft-chain-badge {
+  display: inline-flex;
+  align-items: center;
+  background: rgba(123,79,212,0.15);
+  border: 1px solid rgba(123,79,212,0.3);
+  color: #c4b5fd;
+  border-radius: 20px;
+  padding: 3px 12px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+.nft-wallet-connected {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(34,197,94,0.08);
+  border: 1px solid rgba(34,197,94,0.2);
+  border-radius: 8px;
+  padding: 6px 14px;
+}
+.nft-connect-btn {
+  background: linear-gradient(135deg, #f6821f 0%, #e2661a 100%);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  padding: 10px 22px;
+  font-family: "Rajdhani", sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+  transition: opacity var(--t-fast), transform var(--t-fast);
+}
+.nft-connect-btn:hover:not(:disabled) {
+  opacity: 0.88;
+  transform: translateY(-1px);
+}
+.nft-connect-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+/* ─── Pending deploy banner ─────────────────────────────────────── */
+.nft-pending-banner {
+  background: var(--layer-1);
+  border: 1px solid rgba(201,144,31,0.3);
+  border-left: 4px solid var(--ember-gold);
+  border-radius: 12px;
+  padding: 20px 24px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+/* ─── Tabs ──────────────────────────────────────────────────────── */
+.nft-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 20px;
+  background: var(--layer-1);
+  border-radius: 12px;
+  padding: 6px;
+  border: 1px solid var(--layer-3);
+}
+.nft-tab {
+  flex: 1;
+  background: transparent;
+  border: none;
+  color: var(--fg-muted);
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-family: "Rajdhani", sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background var(--t-fast), color var(--t-fast);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+.nft-tab:hover {
+  background: var(--layer-2);
+  color: var(--fg-primary);
+}
+.nft-tab-active {
+  background: rgba(201,144,31,0.15);
+  color: var(--ember-gold);
+  border: 1px solid rgba(201,144,31,0.3);
+}
+.nft-tab-count {
+  background: rgba(201,144,31,0.2);
+  color: var(--ember-gold);
+  border-radius: 10px;
+  padding: 1px 7px;
+  font-size: 11px;
+}
+
+/* ─── NFT owned grid ────────────────────────────────────────────── */
+.nft-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 12px;
+  margin-bottom: 24px;
+}
+.nft-owned-tile {
+  background: var(--layer-1);
+  border: 1px solid var(--layer-3);
+  border-radius: 10px;
+  padding: 14px;
+  transition: border-color var(--t-fast), transform var(--t-fast);
+}
+.nft-owned-tile:hover {
+  border-color: rgba(201,144,31,0.35);
+  transform: translateY(-2px);
+}
+
+/* ─── Mint card grid ────────────────────────────────────────────── */
+.nft-mint-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 14px;
+}
+.nft-card-tile {
+  background: var(--layer-1);
+  border: 1px solid var(--layer-3);
+  border-radius: 12px;
+  overflow: hidden;
+  transition: border-color var(--t-med), transform var(--t-med), box-shadow var(--t-med);
+  display: flex;
+  flex-direction: column;
+}
+.nft-card-tile:hover {
+  border-color: var(--rarity-color, var(--ember-gold));
+  transform: translateY(-3px);
+  box-shadow: 0 6px 24px rgba(0,0,0,0.4);
+}
+.nft-card-image-wrap {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 3/4;
+  overflow: hidden;
+  background: var(--layer-2);
+}
+.nft-card-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.nft-card-img-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 36px;
+  background: var(--layer-2);
+}
+.nft-badge-minted {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: rgba(34,197,94,0.9);
+  color: #fff;
+  border-radius: 6px;
+  padding: 2px 7px;
+  font-size: 10px;
+  font-weight: 700;
+  backdrop-filter: blur(4px);
+}
+.nft-badge-queued {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: rgba(96,165,250,0.9);
+  color: #fff;
+  border-radius: 6px;
+  padding: 2px 7px;
+  font-size: 10px;
+  font-weight: 700;
+  backdrop-filter: blur(4px);
+}
+.nft-card-info {
+  padding: 10px 10px 4px;
+  flex: 1;
+}
+.nft-mint-btn {
+  margin: 8px 10px 10px;
+  padding: 8px 0;
+  border: 1px solid rgba(201,144,31,0.4);
+  background: rgba(201,144,31,0.1);
+  color: var(--ember-gold);
+  border-radius: 8px;
+  font-family: "Rajdhani", sans-serif;
+  font-weight: 700;
+  font-size: 12px;
+  cursor: pointer;
+  transition: background var(--t-fast), transform var(--t-fast), opacity var(--t-fast);
+  width: calc(100% - 20px);
+}
+.nft-mint-btn:hover:not(:disabled) {
+  background: rgba(201,144,31,0.22);
+  transform: translateY(-1px);
+}
+.nft-mint-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+.nft-mint-btn.nft-mint-done {
+  border-color: rgba(34,197,94,0.4);
+  background: rgba(34,197,94,0.08);
+  color: #22c55e;
+}
+
+/* ─── Queue table ───────────────────────────────────────────────── */
+.nft-queue-section {
+  margin-top: 28px;
+}
+.nft-section-title {
+  font-family: "Cinzel", serif;
+  font-size: 14px;
+  color: var(--fg-primary);
+  margin-bottom: 12px;
+  letter-spacing: 0.04em;
+}
+.nft-queue-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+.nft-queue-table th {
+  text-align: left;
+  padding: 8px 10px;
+  background: var(--layer-2);
+  color: var(--fg-muted);
+  font-weight: 700;
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  border-bottom: 1px solid var(--layer-3);
+}
+.nft-queue-table td {
+  padding: 9px 10px;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  color: var(--fg-primary);
+  vertical-align: middle;
+}
+.nft-queue-table tr:last-child td {
+  border-bottom: none;
+}
+.nft-queue-table tr:hover td {
+  background: rgba(255,255,255,0.02);
+}
+
+/* ─── Toast ─────────────────────────────────────────────────────── */
+.nft-toast {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 9999;
+  padding: 12px 24px;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 700;
+  font-family: "Rajdhani", sans-serif;
+  white-space: nowrap;
+  animation: nftToastIn 0.2s ease;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+}
+.nft-toast-ok  { background: #166534; border: 1px solid #22c55e; color: #bbf7d0; }
+.nft-toast-err { background: #7f1d1d; border: 1px solid #ef4444; color: #fecaca; }
+@keyframes nftToastIn {
+  from { opacity: 0; transform: translateX(-50%) translateY(-8px); }
+  to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+
+/* ─── Mobile responsive ─────────────────────────────────────────── */
+@media (max-width: 480px) {
+  .nft-header { flex-direction: column; }
+  .nft-stats-row { width: 100%; }
+  .nft-stat { flex: 1; }
+  .nft-mint-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+  .nft-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+  .nft-queue-table { font-size: 11px; }
+  .nft-queue-table th, .nft-queue-table td { padding: 6px 8px; }
+}
+@media (max-width: 360px) {
+  .nft-mint-grid { grid-template-columns: 1fr; }
+}

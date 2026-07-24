@@ -26,6 +26,25 @@ export interface SubmitDepositResult {
   reason?: string;
 }
 
+// ── BRECHA-4: wallets dinámicas desde vexforge_treasury ─────────────────
+export interface TreasuryWallet {
+  chain: string;
+  token_symbol: string;
+  wallet_address: string;
+  token_standard: string | null;
+}
+
+/** Retorna las wallets de tesorería activas (purpose=project_treasury). */
+export async function getTreasuryWallets(): Promise<TreasuryWallet[]> {
+  const { data, error } = await supabase
+    .from("vexforge_treasury")
+    .select("chain, token_symbol, wallet_address, token_standard")
+    .eq("active", true)
+    .eq("purpose", "project_treasury");
+  if (error || !data) return [];
+  return data as TreasuryWallet[];
+}
+
 export async function submitDeposit(payload: SubmitDepositPayload): Promise<SubmitDepositResult> {
   const { data, error } = await supabase.rpc("vexforge_submit_deposit", {
     p_amount_usdt:          payload.amount_usdt,

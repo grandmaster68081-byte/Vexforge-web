@@ -22,9 +22,15 @@ const claim = useCallback(async (questId: string) => {
   setClaiming(questId); setClaimMsg(null);
   const res = await claimDailyQuest(questId);
   if (res.data?.claimed) {
-    setClaimMsg("¡Recompensa reclamada!");
+    // pendingRewards=true means the RPC fallback fired (direct UPDATE) — rewards may not have applied.
+    // This path should never occur in normal operation (claim_daily_quest RPC is stable).
+    if ((res.data as any).pendingRewards) {
+      setClaimMsg("Misión completada. Las recompensas se aplicarán en breve.");
+    } else {
+      setClaimMsg("¡Recompensa reclamada!");
+    }
     await load();
-  } else { setClaimMsg(res.reason ?? "Claim failed"); }
+  } else { setClaimMsg(res.reason ?? "No se pudo reclamar."); }
   setClaiming(null);
 }, [load]);
 

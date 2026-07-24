@@ -1,7 +1,8 @@
 name = "vexforge-web"
-compatibility_date = "2026-07-01"
-pages_build_output_dir = "dist"
+    compatibility_date = "2026-07-01"
+    pages_build_output_dir = "dist"
 
-# Runtime config is read from Vite env vars at build time (see .env.example).
-# No secrets live in this file. VEXFORGE_SUPABASE_URL / VEXFORGE_SUPABASE_ANON_KEY
-# are public-safe (RLS-protected) and are baked in at build time by Vite.
+    # Runtime config is read from Vite env vars at build time (see .env.example).
+    # No secrets live in this file. VITE_SUPABASE_URL / VITE_SUPABASE_ANON_KEY
+    # are public-safe (RLS-protected) and are baked in at build time by Vite.
+    

@@ -20,6 +20,32 @@ signOut: () => Promise<void>;
 
 const AuthContext = createContext<AuthContextValue | undefined>(undefined);
 
+const REFERRAL_STORAGE_KEY = "vexforge_pending_referral";
+
+function rememberReferralCodeFromUrl() {
+  const code = new URLSearchParams(window.location.search).get("ref")?.trim();
+  if (code) localStorage.setItem(REFERRAL_STORAGE_KEY, code);
+}
+
+async function processPendingReferral(authUserId: string): Promise<void> {
+  const referralCode = localStorage.getItem(REFERRAL_STORAGE_KEY);
+  if (!referralCode) return;
+
+  const { data, error } = await supabase.rpc("process_referral_on_register", {
+    p_referral_code: referralCode,
+    p_referred_auth_id: authUserId,
+  });
+
+  if (!error && data?.ok) {
+    localStorage.removeItem(REFERRAL_STORAGE_KEY);
+    return;
+  }
+
+  if (!error && ["invalid_or_self_code", "referrer_limit_reached"].includes(data?.reason)) {
+    localStorage.removeItem(REFERRAL_STORAGE_KEY);
+  }
+}
+
 async function ensurePlayerRow(userEmail: string): Promise<void> {
 try {
   await supabase.rpc("ensure_player_row", {
@@ -38,13 +64,17 @@ const [error, setError] = useState<string | null>(null);
 
 useEffect(() => {
   let cancelled = false;
+  rememberReferralCodeFromUrl();
 
   supabase.auth.getSession().then(async ({ data, error: sessionErr }) => {
     if (cancelled) return;
     if (sessionErr) setError(sessionErr.message);
     const s = data.session;
     setSession(s);
-    if (s?.user) await ensurePlayerRow(s.user.email ?? "");
+    if (s?.user) {
+      await ensurePlayerRow(s.user.email ?? "");
+      await processPendingReferral(s.user.id);
+    }
     setLoading(false);
   });
 
@@ -53,6 +83,7 @@ useEffect(() => {
     setSession(newSession);
     if (event === "SIGNED_IN" && newSession?.user) {
       await ensurePlayerRow(newSession.user.email ?? "");
+      await processPendingReferral(newSession.user.id);
     }
   });
 
@@ -68,8 +99,12 @@ async function signIn(email: string, password: string) {
 }
 
 async function signUp(email: string, password: string) {
+  rememberReferralCodeFromUrl();
   const { data, error: e } = await supabase.auth.signUp({ email, password });
-  if (!e && data.user) await ensurePlayerRow(email);
+  if (!e && data.user) {
+    await ensurePlayerRow(email);
+    if (data.session) await processPendingReferral(data.user.id);
+  }
   return { error: e ? e.message : null };
 }
 

@@ -1,175 +1,295 @@
-import { useState, useEffect, useCallback } from "react";
-import { getPlayerCollection, type PlayerCard } from "../domains/inventory/repository";
-import { supabase } from "../lib/supabase";
+// FusionRoute v2.0 — Epic E: Crucible of Fusion — Phase 6+7
+    // Crucible state: select source card → see policy → pick target → fuse
+    import { useFusion } from "../domains/fusion/useFusion";
+    import { PageLoader } from "../shared/components/PageLoader";
+    import { BlockedAuthState } from "../shared/components/BlockedAuthState";
+    import { EmptyState } from "../shared/components/EmptyState";
 
-const RARITY_COLOR: Record<string,string> = {
-Common:"#8b8b9e",Uncommon:"#3ddc84",Rare:"#4a9eff",Epic:"#a855f7",Legendary:"#e8b84b",Mythic:"#ff4444",
-};
-const RARITY_ORDER = ["Mythic","Legendary","Epic","Rare","Uncommon","Common"];
+    const BG_URL = "https://rscuzqnfccqvltkdcdny.supabase.co/storage/v1/object/public/vexforge-assets/backgrounds/bg_forge.jpg";
 
-const BG_URL = "https://rscuzqnfccqvltkdcdny.supabase.co/storage/v1/object/public/vexforge-assets/heroes/hero_fusion.jpg";
+    const RARITY_COLOR: Record<string, string> = {
+    Common: "#9a9ab0", Uncommon: "#3ddc84", Rare: "#4a9eff",
+    Epic: "#a855f7", Legendary: "#e8b84b", Mythic: "#ff4444",
+    };
+    const FACTION_COLOR: Record<string, string> = {
+    Guerrero: "#E84040", Mago: "#5B8BF5", "Paladín": "#3DC96B", "Pícaro": "#7B4FD4",
+    };
 
-interface FusionResult { ok: boolean; reason?: string; new_card_id?: string; new_card_name?: string; new_rarity?: string; }
+    // ─── Sub-components ───────────────────────────────────────────────────────────
 
-function CardPicker({ label, selected, onSelect, onClear, cards }:
-{ label:string; selected:PlayerCard|null; onSelect:(c:PlayerCard)=>void; onClear:()=>void; cards:PlayerCard[] }) {
-const [open, setOpen] = useState(false);
-const rc = selected ? (RARITY_COLOR[selected.rarity]??"#888") : "#e8b84b";
-if (!selected) return (
-  <div style={{flex:1,minWidth:140}}>
-    <div style={{color:"#555",fontSize:10,marginBottom:6}}>{label}</div>
-    <button onClick={()=>setOpen(o=>!o)} style={{
-      width:"100%",padding:"30px 0",borderRadius:10,border:"2px dashed #2a2a3a",
-      background:"#1a1a2e",color:"#555",fontSize:12,cursor:"pointer",
-    }}>+ Seleccionar carta</button>
-    {open && (
-      <div style={{position:"absolute",zIndex:100,background:"#1a1a2e",border:"1px solid #2a2a3a",
-        borderRadius:10,maxHeight:320,overflowY:"auto",width:280,marginTop:4,padding:10}}>
-        {cards.filter(c=>c.fusion_enabled&&c.quantity>0).map(c=>(
-          <div key={c.player_card_id} onClick={()=>{onSelect(c);setOpen(false);}} style={{
-            padding:"8px 10px",borderRadius:7,cursor:"pointer",marginBottom:4,
-            border:`1px solid ${RARITY_COLOR[c.rarity]??"#888"}33`,
-            background:"#12121a",
-          }}>
-            <div style={{color:RARITY_COLOR[c.rarity]??"#888",fontSize:9,fontWeight:700}}>{c.rarity}</div>
-            <div style={{color:"#e8e8f0",fontSize:12,fontWeight:700}}>{c.name}</div>
-            <div style={{color:"#555",fontSize:10}}>{c.faction} · ⚡{c.power} · ×{c.quantity}</div>
+    function RarityBadge({ rarity }: { rarity: string }) {
+    const c = RARITY_COLOR[rarity] ?? "#8b8b9e";
+    return (
+      <span style={{
+        display: "inline-block", padding: "2px 8px", borderRadius: 20,
+        fontSize: 9, fontFamily: '"IBM Plex Mono",monospace', letterSpacing: "0.08em", fontWeight: 700,
+        background: c + "22", border: `1px solid ${c}55`, color: c,
+      }}>
+        {rarity}
+      </span>
+    );
+    }
+
+    function ShardCounter({ rarity, count }: { rarity: string; count: number }) {
+    const c = RARITY_COLOR[rarity] ?? "#8b8b9e";
+    return (
+      <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+        <div style={{ width: 8, height: 8, borderRadius: "50%", background: c, boxShadow: `0 0 6px ${c}` }} />
+        <span style={{ fontSize: 12, color: "#888" }}>{count} shards {rarity}</span>
+      </div>
+    );
+    }
+
+    // ─── Source card picker ───────────────────────────────────────────────────────
+
+    function SourceSlot({
+    cards, selectedId, onSelect,
+    }: {
+    cards: Array<{ playerCardId: string; name: string; rarity: string; quantity: number }>;
+    selectedId: string;
+    onSelect: (id: string) => void;
+    }) {
+    if (cards.length === 0) return (
+      <EmptyState
+        icon="🃏"
+        title="Sin cartas fusionables"
+        description="Consigue cartas con fusion_enabled para usar este crucible."
+      />
+    );
+    return (
+      <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+        {cards.map(c => {
+          const col = RARITY_COLOR[c.rarity] ?? "#8b8b9e";
+          const sel = selectedId === c.playerCardId;
+          return (
+            <button
+              key={c.playerCardId}
+              onClick={() => onSelect(c.playerCardId)}
+              style={{
+                display: "flex", alignItems: "center", gap: 10, padding: "10px 14px",
+                borderRadius: 9, border: `1.5px solid ${sel ? col : col + "33"}`,
+                background: sel ? col + "18" : "rgba(12,12,22,0.8)",
+                color: "#e8e8f0", cursor: "pointer", textAlign: "left",
+                boxShadow: sel ? `0 0 12px ${col}44` : "none",
+                transition: "all 0.18s",
+              }}
+            >
+              <div style={{ flex: 1 }}>
+                <div style={{ fontFamily: "Cinzel,serif", fontSize: 13, fontWeight: 600 }}>{c.name}</div>
+                <div style={{ marginTop: 3 }}><RarityBadge rarity={c.rarity} /></div>
+              </div>
+              <div style={{ color: "#555", fontSize: 11 }}>×{c.quantity}</div>
+            </button>
+          );
+        })}
+      </div>
+    );
+    }
+
+    // ─── Policy info panel ────────────────────────────────────────────────────────
+
+    function PolicyPanel({
+    policy, shardsFor, sourceRarity,
+    }: {
+    policy: { neededCards: number; requiredShards: number; ingameCost: number; targetRarity: string } | null;
+    shardsFor: (r: string) => number;
+    sourceRarity: string;
+    }) {
+    if (!policy) return <div style={{ color: "#444", fontSize: 12, textAlign: "center", padding: 16 }}>Selecciona una carta para ver el coste de fusión.</div>;
+
+    const availShards = shardsFor(sourceRarity);
+    const hasShards   = availShards >= policy.requiredShards;
+    const c = RARITY_COLOR[policy.targetRarity] ?? "#e8b84b";
+
+    return (
+      <div style={{ background: "rgba(12,12,22,0.9)", border: `1px solid ${c}33`, borderRadius: 12, padding: "18px 20px" }}>
+        <div style={{ fontFamily: "Cinzel,serif", fontSize: 13, color: c, marginBottom: 12 }}>Coste de Fusión</div>
+        <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+          <div style={{ display: "flex", justifyContent: "space-between" }}>
+            <span style={{ color: "#666", fontSize: 12 }}>Cartas requeridas</span>
+            <span style={{ color: "#e8e8f0", fontSize: 12, fontWeight: 700 }}>{policy.neededCards}</span>
           </div>
-        ))}
-      </div>
-    )}
-  </div>
-);
-return (
-  <div style={{flex:1,minWidth:140,position:"relative"}}>
-    <div style={{color:"#555",fontSize:10,marginBottom:6}}>{label}</div>
-    <div style={{background:`${rc}12`,border:`1.5px solid ${rc}66`,borderRadius:10,padding:16}}>
-      <div style={{color:rc,fontSize:9,fontWeight:700,marginBottom:4}}>{selected.rarity.toUpperCase()}</div>
-      <div style={{color:"#e8e8f0",fontFamily:"Cinzel,serif",fontSize:13,fontWeight:700,marginBottom:4}}>{selected.name}</div>
-      <div style={{color:"#888",fontSize:10,marginBottom:8}}>{selected.faction} · ⚡{selected.power}</div>
-      <button onClick={onClear} style={{background:"none",border:"1px solid #2a2a3a",borderRadius:6,
-        color:"#555",fontSize:10,padding:"4px 10px",cursor:"pointer",width:"100%"}}>✕ Quitar</button>
-    </div>
-  </div>
-);
-}
-
-export function FusionRoute() {
-const [myCards, setMyCards] = useState<PlayerCard[]>([]);
-const [loading, setLoading] = useState(true);
-const [cardA, setCardA] = useState<PlayerCard|null>(null);
-const [cardB, setCardB] = useState<PlayerCard|null>(null);
-const [fusing, setFusing] = useState(false);
-const [result, setResult] = useState<FusionResult|null>(null);
-const [playerId, setPlayerId] = useState<string|null>(null);
-
-const loadCards = useCallback(async () => {
-  setLoading(true);
-  const res = await getPlayerCollection();
-  if (res.data) setMyCards(res.data.filter(c=>c.fusion_enabled));
-  setLoading(false);
-}, []);
-
-useEffect(() => {
-  loadCards();
-  supabase.auth.getSession().then(({data:{session}}) => {
-    if (!session) return;
-    supabase.from("players").select("id").eq("auth_user_id",session.user.id).maybeSingle()
-      .then(({data})=>setPlayerId(data?.id??null));
-  });
-}, [loadCards]);
-
-const canFuse = cardA && cardB && cardA.player_card_id !== cardB.player_card_id && playerId;
-const fusionCost = cardA && cardB
-  ? (RARITY_ORDER.indexOf(cardA.rarity)+1 + RARITY_ORDER.indexOf(cardB.rarity)+1) * 50
-  : 0;
-
-const handleFuse = async () => {
-  if (!canFuse) return;
-  setFusing(true); setResult(null);
-  const { data, error } = await supabase.rpc("vexforge_apply_fusion", {
-    p_player_id: playerId,
-    p_source_card_id: cardA.card_id,
-    p_target_card_id: cardB.card_id,
-  });
-  if (error) { setResult({ok:false,reason:error.message}); }
-  else { setResult(data as FusionResult); if((data as FusionResult).ok){setCardA(null);setCardB(null);loadCards();} }
-  setFusing(false);
-};
-
-const availableForB = myCards.filter(c => !cardA || c.player_card_id!==cardA.player_card_id);
-const availableForA = myCards.filter(c => !cardB || c.player_card_id!==cardB.player_card_id);
-
-return (
-  <main style={{
-    minHeight:"100vh",background:`linear-gradient(rgba(10,10,18,0.88),rgba(10,10,18,0.97)),url('${BG_URL}') center/cover no-repeat fixed`,
-  }}>
-    <div style={{maxWidth:700,margin:"0 auto",padding:"40px 16px"}}>
-      <div style={{marginBottom:28}}>
-        <h1 style={{fontFamily:"Cinzel,serif",color:"#e8b84b",fontSize:26,margin:"0 0 6px"}}>⚗️ Sala de Fusión</h1>
-        <p style={{color:"#888",margin:0,fontSize:12}}>Combina dos cartas para crear una más poderosa. Las cartas fusionables tienen el keyword Forge.</p>
-      </div>
-
-      {loading && <p style={{color:"#666"}}>Cargando cartas fusionables…</p>}
-      {!loading && myCards.length===0 && (
-        <div style={{textAlign:"center",padding:50,background:"#1a1a2e",borderRadius:12}}>
-          <div style={{fontSize:40,marginBottom:12}}>⚗️</div>
-          <p style={{color:"#555"}}>No tienes cartas con Forge activado. Abre packs para obtener cartas fusionables.</p>
+          <div style={{ display: "flex", justifyContent: "space-between" }}>
+            <span style={{ color: "#666", fontSize: 12 }}>Shards requeridos</span>
+            <span style={{ color: hasShards ? "#3ddc84" : "#e3573f", fontSize: 12, fontWeight: 700 }}>
+              {policy.requiredShards} (tienes: {availShards})
+            </span>
+          </div>
+          <div style={{ display: "flex", justifyContent: "space-between" }}>
+            <span style={{ color: "#666", fontSize: 12 }}>Coste VEX</span>
+            <span style={{ color: "#e8b84b", fontSize: 12, fontWeight: 700 }}>{policy.ingameCost.toLocaleString()}</span>
+          </div>
+          <div style={{ borderTop: "1px solid #1a1a2e", paddingTop: 10, display: "flex", justifyContent: "space-between" }}>
+            <span style={{ color: "#666", fontSize: 12 }}>Resultado</span>
+            <RarityBadge rarity={policy.targetRarity} />
+          </div>
         </div>
-      )}
+      </div>
+    );
+    }
 
-      {!loading && myCards.length>0 && (
-        <div>
-          {/* Card selectors */}
-          <div style={{display:"flex",gap:16,marginBottom:24,flexWrap:"wrap",position:"relative"}}>
-            <CardPicker label="Carta A (fuente)" selected={cardA} onSelect={setCardA} onClear={()=>setCardA(null)} cards={availableForA}/>
-            <div style={{display:"flex",alignItems:"center",justifyContent:"center",fontSize:24,color:"#e8b84b",flexShrink:0,paddingTop:24}}>+</div>
-            <CardPicker label="Carta B (material)" selected={cardB} onSelect={setCardB} onClear={()=>setCardB(null)} cards={availableForB}/>
+    // ─── Main Route ───────────────────────────────────────────────────────────────
+
+    export function FusionRoute() {
+    const {
+      myCards, shards, loading, error,
+      selectedSourceId, setSelectedSourceId,
+      selectedSource, policy, policyLoading,
+      targets, selectedTargetId, setSelectedTargetId,
+      shardsFor, actionError, pending, lastResult,
+      fuse,
+    } = useFusion();
+
+    const authed = error !== "Sign in to see your cards." && error !== "Sign in to fuse cards.";
+
+    if (loading) return <PageLoader message="Cargando Crucible de Fusión..." />;
+
+    if (!authed) return (
+      <main style={{ minHeight: "80vh", display: "flex", alignItems: "center", justifyContent: "center" }}>
+        <BlockedAuthState message="Inicia sesión para fusionar tus cartas en el Crucible." />
+      </main>
+    );
+
+    const canFuse = !!selectedSourceId && !!selectedTargetId && !pending && !policyLoading;
+
+    return (
+      <main style={{
+        minHeight: "100vh",
+        background: `linear-gradient(rgba(4,4,12,0.88),rgba(4,4,12,0.94)) center/cover, url('${BG_URL}') center/cover no-repeat`,
+        padding: "28px 20px",
+      }}>
+        <div style={{ maxWidth: 960, margin: "0 auto" }}>
+
+          {/* Header */}
+          <div style={{ marginBottom: 28 }}>
+            <h1 style={{ fontFamily: "Cinzel,serif", color: "#e8e8f0", fontSize: 28, margin: "0 0 4px" }}>🔥 Crucible de Fusión</h1>
+            <p style={{ color: "#666", margin: 0, fontSize: 12 }}>Fusiona copias de una carta para ascender su rareza. Requiere cartas + shards + VEX.</p>
           </div>
 
-          {/* Fusion preview */}
-          {cardA && cardB && (
-            <div style={{background:"#1a1a2e",border:"1px solid #e8b84b33",borderRadius:12,padding:20,marginBottom:20}}>
-              <div style={{color:"#e8b84b",fontSize:12,fontWeight:700,marginBottom:8}}>Fusión prevista</div>
-              <div style={{display:"flex",justifyContent:"space-between",marginBottom:6}}>
-                <span style={{color:"#888",fontSize:11}}>Coste estimado</span>
-                <span style={{color:"#e8b84b",fontWeight:700,fontSize:13}}>{fusionCost} VEX</span>
-              </div>
-              <div style={{color:"#555",fontSize:11}}>
-                {cardA.name} (⚡{cardA.power}) + {cardB.name} (⚡{cardB.power}) →
-                <span style={{color:"#a855f7",fontWeight:700}}> resultado potenciado</span>
-              </div>
+          {/* Result banner */}
+          {lastResult && (
+            <div style={{
+              marginBottom: 20, padding: "14px 20px", borderRadius: 10,
+              background: lastResult.ok ? "rgba(61,220,132,0.1)" : "rgba(227,87,63,0.1)",
+              border: `1px solid ${lastResult.ok ? "#3ddc8444" : "#e3573f44"}`,
+              color: lastResult.ok ? "#3ddc84" : "#e3573f", fontSize: 13,
+            }}>
+              {lastResult.ok ? "✅ Fusión exitosa — la carta ha ascendido de rareza." : (lastResult.reason ?? "Fusión fallida.")}
             </div>
           )}
 
-          {/* Result */}
-          {result && (
+          {/* Action error */}
+          {actionError && (
             <div style={{
-              background:result.ok?"#1a2a1a":"#2a1a1a",
-              border:`1px solid ${result.ok?"#3ddc8433":"#ff6b6b33"}`,
-              borderRadius:10,padding:"14px 18px",marginBottom:16,
+              marginBottom: 20, padding: "12px 18px", borderRadius: 10,
+              background: "rgba(227,87,63,0.1)", border: "1px solid #e3573f44",
+              color: "#e3573f", fontSize: 13,
             }}>
-              {result.ok ? (
-                <div>
-                  <div style={{color:"#3ddc84",fontWeight:700,fontSize:14,marginBottom:4}}>✓ ¡Fusión exitosa!</div>
-                  {result.new_card_name && <p style={{color:"#aaa",fontSize:12,margin:0}}>Obtuviste: <strong style={{color:"#e8b84b"}}>{result.new_card_name}</strong></p>}
+              {actionError}
+            </div>
+          )}
+
+          {/* Main grid */}
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20 }}>
+
+            {/* Left: Source selection */}
+            <div>
+              <div style={{ fontFamily: "Cinzel,serif", fontSize: 14, color: "#e8b84b", marginBottom: 14 }}>
+                1. Elige la carta fuente
+              </div>
+              <SourceSlot
+                cards={myCards}
+                selectedId={selectedSourceId}
+                onSelect={setSelectedSourceId}
+              />
+
+              {/* Shards */}
+              {shards.length > 0 && (
+                <div style={{ marginTop: 16, padding: "12px 14px", background: "rgba(12,12,22,0.7)", borderRadius: 10, border: "1px solid #1a1a2e" }}>
+                  <div style={{ fontSize: 10, color: "#555", marginBottom: 8, letterSpacing: "0.1em", textTransform: "uppercase" }}>Tus Shards</div>
+                  <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+                    {shards.map(s => (
+                      <ShardCounter key={s.rarity} rarity={s.rarity} count={s.quantity} />
+                    ))}
+                  </div>
                 </div>
-              ) : (
-                <div style={{color:"#ff6b6b"}}>✗ {result.reason ?? "Fusión fallida"}</div>
               )}
             </div>
-          )}
 
-          <button onClick={handleFuse} disabled={!canFuse||fusing} style={{
-            width:"100%",padding:"14px 0",borderRadius:10,border:"none",
-            background:canFuse&&!fusing?"linear-gradient(135deg,#e8b84b,#c9901f)":"#2a2a3a",
-            color:canFuse&&!fusing?"#0a0a12":"#555",
-            fontWeight:800,fontSize:14,cursor:canFuse&&!fusing?"pointer":"not-allowed",
-            fontFamily:"Cinzel,serif",letterSpacing:1,
-          }}>{fusing?"Fusionando…":"⚗️ Forjar Fusión"}</button>
+            {/* Right: Policy + Target + Action */}
+            <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+
+              {/* Policy */}
+              {policyLoading ? (
+                <div style={{ color: "#555", fontSize: 12, textAlign: "center", padding: 20 }}>Calculando coste...</div>
+              ) : (
+                <PolicyPanel
+                  policy={policy}
+                  shardsFor={shardsFor}
+                  sourceRarity={selectedSource?.rarity ?? ""}
+                />
+              )}
+
+              {/* Target picker */}
+              {targets.length > 0 && (
+                <div>
+                  <div style={{ fontFamily: "Cinzel,serif", fontSize: 14, color: "#e8b84b", marginBottom: 10 }}>
+                    2. Elige la carta objetivo
+                  </div>
+                  <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+                    {targets.map(t => {
+                      const col = RARITY_COLOR[t.rarity] ?? "#8b8b9e";
+                      const sel = selectedTargetId === t.id;
+                      return (
+                        <button
+                          key={t.id}
+                          onClick={() => setSelectedTargetId(t.id)}
+                          style={{
+                            display: "flex", alignItems: "center", gap: 10,
+                            padding: "10px 14px", borderRadius: 9,
+                            border: `1.5px solid ${sel ? col : col + "33"}`,
+                            background: sel ? col + "18" : "rgba(12,12,22,0.8)",
+                            color: "#e8e8f0", cursor: "pointer", textAlign: "left",
+                            boxShadow: sel ? `0 0 12px ${col}44` : "none",
+                            transition: "all 0.18s",
+                          }}
+                        >
+                          <div style={{ flex: 1 }}>
+                            <div style={{ fontFamily: "Cinzel,serif", fontSize: 13, fontWeight: 600 }}>{t.name}</div>
+                            <div style={{ marginTop: 3 }}><RarityBadge rarity={t.rarity} /></div>
+                          </div>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+
+              {/* Fuse button */}
+              {selectedSource && (
+                <button
+                  onClick={fuse}
+                  disabled={!canFuse}
+                  style={{
+                    padding: "16px 24px", borderRadius: 12, border: "none",
+                    background: canFuse
+                      ? "linear-gradient(135deg,#e8b84b,#c9901f)"
+                      : "#2a2a3a",
+                    color: canFuse ? "#0a0a12" : "#444",
+                    fontFamily: "Cinzel,serif", fontSize: 15, fontWeight: 800,
+                    cursor: canFuse ? "pointer" : "not-allowed",
+                    opacity: pending ? 0.7 : 1,
+                    boxShadow: canFuse ? "0 0 28px rgba(232,184,75,0.35)" : "none",
+                    transition: "all 0.2s",
+                  }}
+                >
+                  {pending ? "Fusionando..." : "🔥 Fusionar"}
+                </button>
+              )}
+            </div>
+          </div>
         </div>
-      )}
-    </div>
-  </main>
-);
-}
+      </main>
+    );
+    }
+    

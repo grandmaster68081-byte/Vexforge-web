@@ -102,8 +102,24 @@ function FestivalBanner() {
   );
 }
 
-function EnergyBar({ energy, max }: { energy: number; max: number }) {
+function EnergyBar({ energy, max, energyUpdatedAt }: { energy: number; max: number; energyUpdatedAt?: string }) {
   const pct = max > 0 ? Math.min(100, Math.round((energy / max) * 100)) : 0;
+  const [secsUntil, setSecsUntil] = useState(0);
+  useEffect(() => {
+    if (!energyUpdatedAt || energy >= max) { setSecsUntil(0); return; }
+    const calc = () => {
+      const since = (Date.now() - new Date(energyUpdatedAt).getTime()) / 1000;
+      setSecsUntil(Math.max(0, Math.round(600 - (since % 600))));
+    };
+    calc();
+    const id = setInterval(calc, 1000);
+    return () => clearInterval(id);
+  }, [energyUpdatedAt, energy, max]);
+
+  const timerLabel = energy < max && secsUntil > 0
+    ? `en ${Math.floor(secsUntil / 60)}m ${String(secsUntil % 60).padStart(2, "0")}s`
+    : "+1/10min";
+
   return (
     <div style={{ display: "flex", alignItems: "center", gap: 10, padding: "8px 14px", borderRadius: 8, background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)", marginBottom: 14 }}>
       <span style={{ fontSize: 14 }}>⚡</span>
@@ -114,7 +130,7 @@ function EnergyBar({ energy, max }: { energy: number; max: number }) {
         </div>
         <div className="energy-fill-bar"><div className="energy-fill" style={{ width: `${pct}%` }} /></div>
       </div>
-      {energy < max  && <span style={{ fontFamily: '"IBM Plex Mono", monospace', fontSize: 10, color: "var(--fg-dim)" }}>+1/10min</span>}
+      {energy < max  && <span style={{ fontFamily: '"IBM Plex Mono", monospace', fontSize: 10, color: "var(--fg-dim)" }}>{timerLabel}</span>}
       {energy >= max && <span style={{ fontFamily: '"IBM Plex Mono", monospace', fontSize: 10, color: "#3DC96B", fontWeight: 700 }}>LLENA</span>}
     </div>
   );
@@ -342,10 +358,10 @@ function DailyQuestsSection() {
 
 // ─── Mission Card (v5.12: adds cooldown display) ──────────────────────────────
 
-function MissionCard({ mission, onExecute, executing, isExecuting, isCompleted, isActive, cooldownSecs }: {
+function MissionCard({ mission, onExecute, executing, isExecuting, isCompleted, isActive, cooldownSecs, currentEnergy }: {
   mission: any; onExecute: (id: string) => void; executing: boolean;
   isExecuting: boolean; isCompleted: boolean; isActive: boolean;
-  cooldownSecs: number;
+  cooldownSecs: number; currentEnergy: number;
 }) {
   const typeConf   = MISSION_TYPE_CONFIG[mission.mission_type] ?? { icon: "📜", color: "#C9901F" };
   const diffConf   = DIFFICULTY_CONFIG[(mission.difficulty ?? "").toLowerCase()] ?? DIFFICULTY_CONFIG["normal"];
@@ -353,6 +369,8 @@ function MissionCard({ mission, onExecute, executing, isExecuting, isCompleted, 
   const isOnCooldown = cooldownSecs > 0;
   const hasVex     = (mission.reward_vex_ingame    ?? 0) > 0;
   const hasTVex    = (mission.reward_vex_tradeable ?? 0) > 0;
+  const energyCost = mission.energy_cost ?? 0;
+  const canAfford  = energyCost === 0 || currentEnergy >= energyCost;
   const borderColor = isActive     ? "rgba(91,139,245,0.7)"
                     : isCompleted  ? "rgba(61,201,107,0.4)"
                     : isOnCooldown ? "rgba(168,85,247,0.35)"
@@ -408,16 +426,23 @@ function MissionCard({ mission, onExecute, executing, isExecuting, isCompleted, 
         {(mission.reward_xp   ?? 0) > 0 && <div className="reward-chip xp">✨ {mission.reward_xp} XP</div>}
       </div>
 
-      {/* Execute button — shows cooldown when blocked */}
+      {/* Execute button — shows cooldown or energy block when blocked */}
+      {!canAfford && !isCompleted && !isOnCooldown && (
+        <div style={{ display: "flex", alignItems: "center", gap: 6, padding: "5px 10px", borderRadius: 6, background: "rgba(232,64,64,0.08)", border: "1px solid rgba(232,64,64,0.25)", fontSize: 10, color: "#E84040", fontFamily: '"IBM Plex Mono", monospace', letterSpacing: "0.05em", marginBottom: 6 }}>
+          <span>⚡</span>
+          <span>Energía insuficiente — necesitas {energyCost}, tienes {currentEnergy}</span>
+        </div>
+      )}
       <button
         className="mission-execute-btn"
         onClick={() => onExecute(mission.id)}
-        disabled={executing || isCompleted || isOnCooldown}
-        style={isCompleted || isOnCooldown ? { opacity: 0.5, cursor: "default" } : {}}
+        disabled={executing || isCompleted || isOnCooldown || !canAfford}
+        style={(isCompleted || isOnCooldown || !canAfford) ? { opacity: 0.5, cursor: "default" } : {}}
       >
-        {isExecuting    ? "Ejecutando..."
-         : isCompleted  ? "✓ Completada"
-         : isOnCooldown ? `⏳ ${formatCooldown(cooldownSecs)}`
+        {isExecuting       ? "Ejecutando..."
+         : isCompleted     ? "✓ Completada"
+         : isOnCooldown    ? `⏳ ${formatCooldown(cooldownSecs)}`
+         : !canAfford      ? `⚡ ${energyCost} energía`
          : "⚔️ Ejecutar"}
       </button>
     </div>
@@ -427,9 +452,10 @@ function MissionCard({ mission, onExecute, executing, isExecuting, isCompleted, 
 // ─── Route ────────────────────────────────────────────────────────────────────
 
 export function MissionsRoute() {
-  const { progress: progressData } = useProgress();
-  const energy    = (progressData as any)?.energy_current ?? 0;
-  const maxEnergy = (progressData as any)?.energy_max     ?? 100;
+  const { progress } = useProgress();
+  const energy    = progress?.energy    ?? 0;
+  const maxEnergy = progress?.max_energy ?? 100;
+  const energyUpdatedAt = progress?.updated_at;
 
   const {
     missions, loading, execute, executing, lastReward, cooldownRemaining,
@@ -473,7 +499,7 @@ export function MissionsRoute() {
       </div>
 
       <div className="content">
-        <EnergyBar energy={energy} max={maxEnergy} />
+        <EnergyBar energy={energy} max={maxEnergy} energyUpdatedAt={energyUpdatedAt} />
         <SessionStatsBanner count={sessionStats.count} xp={sessionStats.xp} vex={sessionStats.vex} tvex={sessionStats.tvex} />
 
         {/* ── Daily Quests (NEW v5.12) ── */}
@@ -491,10 +517,25 @@ export function MissionsRoute() {
             <div style={{ fontSize: 10, color: "rgba(255,255,255,0.35)", marginTop: 6 }}>Tap para cerrar</div>
           </div>
         )}
-        {executeError && (
-          <div className="forge-toast error" onClick={dismissError} style={{ cursor: "pointer", marginBottom: 16 }}>
-            <div style={{ fontFamily: '"Cinzel", serif', fontSize: 13, fontWeight: 700 }}>Error al ejecutar misión</div>
-            <div style={{ fontSize: 12, color: "rgba(255,255,255,0.6)", marginTop: 4 }}>{executeError}</div>
+        {/* R.3: Energía insuficiente — fullscreen modal when energy check fails */}
+        {executeError === "insufficient_energy" && (
+          <div style={{position:"fixed",inset:0,zIndex:9999,background:"rgba(0,0,0,0.78)",backdropFilter:"blur(8px)",display:"flex",alignItems:"center",justifyContent:"center",padding:24}}>
+            <div style={{background:"linear-gradient(135deg,#1a0800,#2d1200)",border:"2px solid rgba(232,64,64,0.5)",borderRadius:16,padding:"32px 28px",maxWidth:360,width:"100%",textAlign:"center",boxShadow:"0 0 60px rgba(232,64,64,0.2)"}}>
+              <div style={{fontSize:44,marginBottom:12}}>{"\u26a1"}</div>
+              <div style={{fontFamily:'"Cinzel",serif',fontSize:20,fontWeight:700,color:"#E84040",marginBottom:8}}>Energía Insuficiente</div>
+              <div style={{color:"#b0a0a0",fontSize:13,lineHeight:1.65,marginBottom:24}}>
+                No tienes suficiente energía para esta misión.<br/>La energía se regenera con el tiempo.
+              </div>
+              <button onClick={dismissError} style={{padding:"10px 32px",borderRadius:8,border:"none",background:"linear-gradient(135deg,#c0392b,#E84040)",color:"#fff",fontWeight:800,fontSize:12,cursor:"pointer",fontFamily:'"Rajdhani",sans-serif',letterSpacing:"0.08em"}}>
+                ENTENDIDO
+              </button>
+            </div>
+          </div>
+        )}
+        {executeError && executeError !== "insufficient_energy" && (
+          <div className="forge-toast error" onClick={dismissError} style={{cursor:"pointer",marginBottom:16}}>
+            <div style={{fontFamily:'"Cinzel", serif',fontSize:13,fontWeight:700}}>Error al ejecutar misión</div>
+            <div style={{fontSize:12,color:"rgba(255,255,255,0.6)",marginTop:4}}>{executeError}</div>
           </div>
         )}
 
@@ -524,6 +565,24 @@ export function MissionsRoute() {
             </div>
           </div>
         ) : (
+          <>
+          {/* R.5: Execution animation — pulsing overlay while mission runs (3-5s) */}
+          {executing && (
+            <div style={{position:"fixed",inset:0,zIndex:9000,background:"rgba(0,0,0,0.65)",backdropFilter:"blur(4px)",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",gap:16}}>
+              <style>{".vxPulse{animation:vxP 1.5s ease-in-out infinite} @keyframes vxP{0%,100%{transform:scale(1);opacity:0.8}50%{transform:scale(1.18);opacity:1}}"}</style>
+              <div style={{position:"relative",width:90,height:90,marginBottom:8}}>
+                <div className="vxPulse" style={{position:"absolute",inset:0,borderRadius:"50%",border:"2px solid rgba(232,184,75,0.25)"}}/>
+                <div className="vxPulse" style={{position:"absolute",inset:8,borderRadius:"50%",border:"2px solid rgba(232,184,75,0.5)",animationDelay:"0.4s"}}/>
+                <div className="vxPulse" style={{position:"absolute",inset:16,borderRadius:"50%",background:"rgba(232,184,75,0.1)",border:"2px solid rgba(232,184,75,0.8)",animationDelay:"0.8s",display:"flex",alignItems:"center",justifyContent:"center"}}>
+                  <span style={{fontSize:26}}>{"\u2694\ufe0f"}</span>
+                </div>
+              </div>
+              <div style={{fontFamily:'"Cinzel",serif',fontSize:16,fontWeight:700,color:"#E8B84B",letterSpacing:"0.05em"}}>Ejecutando misión...</div>
+              <div style={{color:"#888",fontSize:12,fontFamily:'"IBM Plex Mono",monospace'}}>
+                {(missions as any[]).find((m: any) => m.id === executing)?.name ?? ""}
+              </div>
+            </div>
+          )}
           <div className="mission-grid">
             {sortedFiltered.map((m: any) => (
               <MissionCard
@@ -535,9 +594,11 @@ export function MissionsRoute() {
                 isCompleted={completedThisSession.has(m.id)}
                 isActive={m.id === executing}
                 cooldownSecs={cooldownRemaining(m.id)}
+                currentEnergy={progress?.energy ?? 999}
               />
             ))}
           </div>
+          </>
         )}
       </div>
     </div>

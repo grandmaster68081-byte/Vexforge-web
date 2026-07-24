@@ -4,8 +4,6 @@ const COPY: Record<DomainStatus, { label: string; tone: string }> = {
   ready: { label: "Live", tone: "#3ddc84" },
   blocked_auth: { label: "Waiting on sign-in", tone: "#e8b339" },
   blocked_no_path: { label: "Not available yet", tone: "#6b7280" },
-  loading: { label: "Loading", tone: "#4a9eff" },
-  error: { label: "Error", tone: "#ff4444" },
 };
 
 export function DomainStatusBadge({ status }: { status: DomainStatus }) {
