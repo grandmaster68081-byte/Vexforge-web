@@ -67,7 +67,7 @@ export function ForgeAdsRoute() {
   const handleWatchAd = useCallback(async () => {
     if (!userId || !stats) return;
     if (stats.watched_today >= MAX_DAILY) {
-      addToast("Alcanzaste el límite diario de 5 anuncios. Vuelve mañana.", "error");
+      addToast("error", "Alcanzaste el límite diario de 5 anuncios. Vuelve mañana.");
       return;
     }
     setWatching(true);
@@ -101,7 +101,7 @@ export function ForgeAdsRoute() {
       addToast(`+${VEX_PER_AD} VEX ganados por ver el anuncio`, "success");
       loadAdStats(userId).then(setStats);
     } else {
-      addToast("Error al registrar el anuncio. Inténtalo de nuevo.", "error");
+      addToast("error", "Error al registrar el anuncio. Inténtalo de nuevo.");
     }
 
     setWatching(false);

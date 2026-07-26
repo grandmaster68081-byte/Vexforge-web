@@ -96,7 +96,7 @@ export async function getPlayerClanData(): Promise<DomainResult<PlayerClanData>>
   }
 
   const myMembership: ClanMember | null = myMembershipRaw
-    ? { ...myMembershipRaw, display_name: membersData.find(m => m.player_id === playerId)?.display_name ?? "Guerrero" }
+    ? { ...myMembershipRaw, player_id: (myMembershipRaw as any).player_id ?? playerId, display_name: membersData.find(m => m.player_id === playerId)?.display_name ?? "Guerrero" }
     : null;
 
   return {

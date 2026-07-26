@@ -16,10 +16,6 @@ import { simulateAIBattle, loadPlayerBattleUnits, getDailyAIChallenge, hasDailyC
 
 const BG_URL = "https://rscuzqnfccqvltkdcdny.supabase.co/storage/v1/object/public/vexforge-assets/backgrounds/bg_pvp.jpg";
 
-const RARITY_COLOR: Record<string, string> = {
-  Common: "#8b8b9e", Uncommon: "#3ddc84", Rare: "#4a9eff",
-  Epic: "#a855f7", Legendary: "#e8b84b", Mythic: "#ff4444",
-};
 
 // ─── HP Bar (battle replay) ───────────────────────────────────────────────────
 function HpBar({ hp, max = 100, color }: { hp: number; max?: number; color: string }) {
@@ -590,7 +586,7 @@ function DailyChallengeCard({ challenge, attempted, badgeEarned, dailyLoading, o
     
 export function PvpRoute() {
   const {
-    seasons, rankings, matches, opponents, loading, opponentsLoading,
+    seasons, rankings, opponents, loading, opponentsLoading,
     battling, battleResult, error, playerId,
     loadOpponents, battle, dismissBattle,
   } = usePvp();

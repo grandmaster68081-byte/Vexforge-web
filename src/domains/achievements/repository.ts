@@ -51,5 +51,5 @@ return { status: "ready", data: data as Record<string,number> };
 export async function checkMyAchievements(): Promise<void> {
 const { data: s } = await supabase.auth.getSession();
 if (!s.session) return;
-await supabase.rpc("check_my_achievements").catch(() => {});
+await supabase.rpc("check_my_achievements").then(() => {}, () => {});
 }

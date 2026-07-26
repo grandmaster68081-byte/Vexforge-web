@@ -31,7 +31,7 @@ const challenge = useCallback(async (id: string) => {
   const r = await sendChallenge(id); if (r.ok) reload(); return r;
 }, [reload]);
 const respondChallenge = useCallback(async (id: string, acc: boolean) => {
-  await respondToChallenge(id, acc); reload();
+  const r = await respondToChallenge(id, acc); reload(); return r;
 }, [reload]);
 
 return { friends, pending, challenges, loading, addFriend, accept, decline, challenge, respondChallenge, reload };

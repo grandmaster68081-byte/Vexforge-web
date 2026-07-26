@@ -11,9 +11,6 @@ const RARITY_COLOR: Record<string, string> = {
   Common: "#8b8b9e", Uncommon: "#3ddc84", Rare: "#4a9eff",
   Epic: "#a855f7", Legendary: "#e8b84b", Mythic: "#ff4444"
 };
-const FACTION_COLOR: Record<string, string> = {
-  Guerrero: "#E84040", Mago: "#5B8BF5", "Paladín": "#3DC96B", "Pícaro": "#7B4FD4"
-};
 const FACTIONS = ["all", "Guerrero", "Mago", "Paladín", "Pícaro"];
 
 function EvoCard({ path, onEvolve, evolving }: {
@@ -150,7 +147,7 @@ export function EvolutionRoute() {
       ) : (
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(300px,1fr))", gap: 14 }}>
           {filtered.map(p => (
-            <EvoCard key={p.id} path={p} onEvolve={evolve} evolving={evolving} />
+            <EvoCard key={p.id} path={p} onEvolve={(path) => evolve(path.card_id)} evolving={evolving} />
           ))}
         </div>
       )}

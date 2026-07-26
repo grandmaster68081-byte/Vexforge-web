@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useProfile } from "../domains/profile/useProfile";
 import { getRank, tierProgress } from "../lib/rankUtils";

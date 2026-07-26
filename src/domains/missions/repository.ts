@@ -79,7 +79,7 @@ export async function executeMission(
     await claimMissionReward(result.run_id, playerId, referenceId);
   }
   insertMissionNotification(playerId, missionName, result); // U.2: never await
-  return { status: "ready", data: { success: true, ...result } };
+  return { status: "ready", data: { ...result, success: true } };
 }
 
 export async function claimMissionReward(

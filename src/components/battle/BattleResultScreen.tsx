@@ -5,7 +5,6 @@
 import { useState, useEffect, useRef } from 'react';
 import type { RealBattleResult } from '../../lib/battleTypes';
 import { particleEngine } from '../../lib/particleEngine';
-import { AudioEngine } from '../../lib/audioEngine';
 
 interface BattleResultScreenProps {
   result: RealBattleResult;

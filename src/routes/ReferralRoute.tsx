@@ -86,7 +86,7 @@ export function ReferralRoute() {
     const url = `${window.location.origin}?ref=${stats.referral_code}`;
     navigator.clipboard.writeText(url).then(() => {
       setCopied(true);
-      addToast("¡Link de referido copiado!", "success");
+      addToast("success", "¡Link de referido copiado!");
       setTimeout(() => setCopied(false), 2500);
     });
   }, [stats, addToast]);

@@ -15,7 +15,7 @@ function metadataText(relic: Relic, key: string): string | null {
 
 function labelize(value: string | null | undefined): string {
   if (!value) return "Efecto no definido";
-  return value.replaceAll("_", " ").replace(/\b\w/g, (letter) => letter.toUpperCase());
+  return value.split("_").join(" ").replace(/w/g, (letter: string) => letter.toUpperCase());
 }
 
 function RelicCard({ relic }: { relic: Relic }) {

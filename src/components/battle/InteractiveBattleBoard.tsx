@@ -3,7 +3,7 @@
 // zonas de facción, partículas atmosféricas. Inspirado en Yu-Gi-Oh Master Duel.
 
 import { useRef, useCallback, useState, useEffect, type CSSProperties } from 'react';
-import type { RealBattleResult, BattleTurnData, BattleUnit } from '../../lib/battleTypes';
+import type { RealBattleResult, BattleUnit } from '../../lib/battleTypes';
 import { RARITY_COLOR, RARITY_GLOW, KEYWORD_ICON } from '../../lib/battleTypes';
 import { useBattleStateMachine, type TurnPhase, type TurnSnapshot } from '../../lib/battleStateMachine';
 import { KeywordChip } from './KeywordTooltip';

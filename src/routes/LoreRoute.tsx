@@ -10,7 +10,7 @@ const PANEL = "linear-gradient(145deg,#1a1a2e,#11111a)";
 
 function labelize(value: string | null | undefined): string {
   if (!value) return "Sin categoría";
-  return value.replaceAll("_", " ").replace(/\b\w/g, (letter) => letter.toUpperCase());
+  return value.split("_").join(" ").replace(/w/g, (letter: string) => letter.toUpperCase());
 }
 
 function LoreCard({ entry, expanded, onToggle }: { entry: LoreEntry; expanded: boolean; onToggle: () => void }) {

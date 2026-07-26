@@ -1,7 +1,8 @@
 /** Marks a domain's real backend-readiness, verified against Supabase RLS. */
 export type DomainStatus =
-  | "ready" // anon-key readable now, wired to real Supabase table
-  | "blocked_auth" // RLS confirmed, but requires an auth session that isn't wired yet
+  | "loading"        // initial state while fetching
+  | "ready"          // anon-key readable now, wired to real Supabase table
+  | "blocked_auth"   // RLS confirmed, but requires an auth session
   | "blocked_no_path"; // no public/authenticated RLS policy exists at all
 
 export interface DomainResult<T> {
