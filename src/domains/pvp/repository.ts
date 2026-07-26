@@ -162,8 +162,11 @@ export async function startBattle(opponentId: string): Promise<DomainResult<Batt
     .eq("id", matchId as string).maybeSingle();
 
   const youWon = (match?.winner ?? null) === playerId;
+  // BUG FIX: ELO slot is determined by which seat the player occupies, not by win/loss.
+  // player_a always gets elo_change_a; player_b always gets elo_change_b.
+  const isPlayerA = match?.player_a === playerId;
   const names = await resolvePlayerNames([opponentId]);
-  const eloChange = youWon ? (match?.elo_change_a ?? 0) : (match?.elo_change_b ?? 0);
+  const eloChange = isPlayerA ? (match?.elo_change_a ?? 0) : (match?.elo_change_b ?? 0);
 
   return {
     status: "ready",

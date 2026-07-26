@@ -398,16 +398,16 @@ function BottomNav({ onMoreClick }: { onMoreClick: () => void }) {
           to={item.to}
           end={item.end}
           className={({ isActive }) =>
-            "forge-bottom-item" + (isActive ? " forge-bottom-active" : "")
+            "forge-bottom-nav-item" + (isActive ? " active" : "")
           }
         >
-          <span className="forge-bottom-icon">{item.icon}</span>
-          <span className="forge-bottom-label">{item.label}</span>
+          <span className="forge-bottom-nav-icon">{item.icon}</span>
+          <span className="forge-bottom-nav-label">{item.label}</span>
         </NavLink>
       ))}
-      <button className="forge-bottom-item" onClick={onMoreClick}>
-        <span className="forge-bottom-icon">☰</span>
-        <span className="forge-bottom-label">Más</span>
+      <button className="forge-bottom-nav-item" onClick={onMoreClick}>
+        <span className="forge-bottom-nav-icon">☰</span>
+        <span className="forge-bottom-nav-label">Más</span>
       </button>
     </nav>
   );

@@ -62,7 +62,15 @@ export function useCards(): UseCardsResult {
             setCompletionPct(Math.round((uniqueOwned / catalogCards.length) * 100));
           }
           setCollectionLoading(false);
+        }).catch(() => {
+          if (!cancelled) setCollectionLoading(false);
         });
+      }
+    }).catch((err: unknown) => {
+      // Prevents infinite spinner if the network or Supabase client throws
+      if (!cancelled) {
+        setError(err instanceof Error ? err.message : "Error cargando las cartas.");
+        setLoading(false);
       }
     });
 

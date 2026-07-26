@@ -363,9 +363,9 @@ a { text-decoration: none; color: inherit; }
 }
 
 /* ─── LAYOUT ─────────────────────────────────────────────── */
+/* padding-top is handled by the parent flex container (paddingTop: 62) in App.tsx */
 .forge-content {
   min-height: 100vh;
-  padding-top: 62px;
 }
 
 .content {

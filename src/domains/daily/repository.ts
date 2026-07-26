@@ -73,8 +73,13 @@ export async function claimDailyQuest(playerQuestId: string): Promise<DomainResu
   const { data: rpcData, error: rpcError } = await supabase.rpc("claim_daily_quest", {
     p_player_quest_id: playerQuestId,
   });
-  if (!rpcError && rpcData) {
+  // BUG FIX: rpcData can be { claimed: false, reason: "..." } — must check .claimed, not just truthiness
+  const res = rpcData as { claimed: boolean; reason?: string } | null;
+  if (!rpcError && res?.claimed === true) {
     return { status: "ready", data: { claimed: true } };
+  }
+  if (!rpcError && res?.claimed === false) {
+    return { status: "ready", data: null, reason: res?.reason ?? "Misión no completada o ya reclamada." };
   }
 
   // Fallback (defensive): direct UPDATE if RPC fails for any unexpected reason
