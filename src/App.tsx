@@ -547,6 +547,13 @@ export default function App() {
                 <Route path="/shop"          element={<ShopRoute />} />
                 <Route path="/forge-ads"     element={<ForgeAdsRoute />} />
                 <Route path="/nft"           element={<NftRoute />} />
+                {/* Spanish URL aliases — fix direct-URL 404 */}
+                <Route path="/cartas"    element={<CardsRoute />} />
+                <Route path="/mercado"   element={<MarketRoute />} />
+                <Route path="/misiones"  element={<MissionsRoute />} />
+                <Route path="/tienda"    element={<ShopRoute />} />
+                <Route path="/clanes"    element={<ClansRoute />} />
+                <Route path="/login"     element={<AccountRoute />} />
                 <Route path="*"             element={<NotFoundRoute />} />
               </Routes>
               </PageTransition>

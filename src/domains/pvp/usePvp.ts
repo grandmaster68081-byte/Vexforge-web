@@ -1,24 +1,25 @@
 import { useEffect, useState, useCallback } from "react";
-    import {
-    listActiveSeasons, listSeasonRankings, listMyMatches, listOpponents, startRealBattle,
-    type PvpSeason, type PvpRanking, type PvpMatch, type BattleOpponent,
-    } from "./repository";
-    import type { RealBattleResult } from "../../lib/battleTypes";
+import {
+  listActiveSeasons, listSeasonRankings, listMyMatches, listOpponents, startRealBattle,
+  type PvpSeason, type PvpRanking, type PvpMatch, type BattleOpponent,
+} from "./repository";
+import type { RealBattleResult } from "../../lib/battleTypes";
 
-    export function usePvp() {
-    const [seasons, setSeasons]               = useState<PvpSeason[]>([]);
-    const [rankings, setRankings]             = useState<PvpRanking[]>([]);
-    const [matches, setMatches]               = useState<PvpMatch[]>([]);
-    const [opponents, setOpponents]           = useState<BattleOpponent[]>([]);
-    const [loading, setLoading]               = useState(true);
-    const [opponentsLoading, setOpponentsLoading] = useState(false);
-    const [battling, setBattling]             = useState(false);
-    const [battleResult, setBattleResult]     = useState<RealBattleResult | null>(null);
-    const [error, setError]                   = useState<string | null>(null);
-    const [playerId, setPlayerId]             = useState<string | null>(null);
+export function usePvp() {
+  const [seasons, setSeasons]               = useState<PvpSeason[]>([]);
+  const [rankings, setRankings]             = useState<PvpRanking[]>([]);
+  const [matches, setMatches]               = useState<PvpMatch[]>([]);
+  const [opponents, setOpponents]           = useState<BattleOpponent[]>([]);
+  const [loading, setLoading]               = useState(true);
+  const [opponentsLoading, setOpponentsLoading] = useState(false);
+  const [battling, setBattling]             = useState(false);
+  const [battleResult, setBattleResult]     = useState<RealBattleResult | null>(null);
+  const [error, setError]                   = useState<string | null>(null);
+  const [playerId, setPlayerId]             = useState<string | null>(null);
 
-    const load = useCallback(async () => {
-      setLoading(true);
+  const load = useCallback(async () => {
+    setLoading(true);
+    try {
       const { data: s } = await (await import("../../lib/supabase")).supabase.auth.getSession();
       if (s.session) {
         const { data } = await (await import("../../lib/supabase")).supabase
@@ -35,40 +36,46 @@ import { useEffect, useState, useCallback } from "react";
       }
       if (matchRes.data) setMatches(matchRes.data);
       setError(seasonRes.reason ?? matchRes.reason ?? null);
+    } catch (err) {
+      setError("Error cargando datos de PvP. Intenta de nuevo.");
+    } finally {
       setLoading(false);
-    }, []);
+    }
+  }, []);
 
-    useEffect(() => { load(); }, [load]);
+  useEffect(() => { load(); }, [load]);
 
-    const loadOpponents = useCallback(async () => {
-      setOpponentsLoading(true);
+  const loadOpponents = useCallback(async () => {
+    setOpponentsLoading(true);
+    try {
       const res = await listOpponents();
       if (res.data) setOpponents(res.data);
+      return res;
+    } finally {
       setOpponentsLoading(false);
-      return res;
-    }, []);
-
-    // F.2.c — usa motor real vexforge_battle_resolve
-    const battle = useCallback(async (opponentId: string) => {
-      setBattling(true);
-      setBattleResult(null);
-      const res = await startRealBattle(opponentId);
-      if (res.data) {
-        setBattleResult(res.data);
-      } else {
-        setBattleResult({ ok: false, error: res.reason ?? "Battle failed" });
-      }
-      setBattling(false);
-      await load();
-      return res;
-    }, [load]);
-
-    const dismissBattle = useCallback(() => setBattleResult(null), []);
-
-    return {
-      seasons, rankings, matches, opponents, loading, opponentsLoading,
-      battling, battleResult, error, playerId,
-      load, loadOpponents, battle, dismissBattle,
-    };
     }
-    
+  }, []);
+
+  // F.2.c — usa motor real vexforge_battle_resolve
+  const battle = useCallback(async (opponentId: string) => {
+    setBattling(true);
+    setBattleResult(null);
+    const res = await startRealBattle(opponentId);
+    if (res.data) {
+      setBattleResult(res.data);
+    } else {
+      setBattleResult({ ok: false, error: res.reason ?? "Battle failed" });
+    }
+    setBattling(false);
+    await load();
+    return res;
+  }, [load]);
+
+  const dismissBattle = useCallback(() => setBattleResult(null), []);
+
+  return {
+    seasons, rankings, matches, opponents, loading, opponentsLoading,
+    battling, battleResult, error, playerId,
+    load, loadOpponents, battle, dismissBattle,
+  };
+}
