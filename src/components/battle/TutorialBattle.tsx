@@ -103,7 +103,11 @@
           const { data: { session } } = await supabase.auth.getSession();
           if (!session?.user) { setError("Inicia sesión para jugar la batalla tutorial."); setPhase('error'); return; }
           const playerUnits = await loadPlayerBattleUnits(supabase, session.user.id);
-          if (!playerUnits || playerUnits.length === 0) { onComplete(true); return; }
+          if (!playerUnits || playerUnits.length === 0) {
+            setError("Tu mazo está vacío. Obtén cartas primero desde la tienda de Packs.");
+            setPhase('error');
+            return;
+          }
           const battleResult = simulateAIBattle(playerUnits, 'tutorial');
           setResult(battleResult);
           setPhase('hint');

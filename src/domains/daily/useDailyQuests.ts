@@ -24,7 +24,7 @@ const claim = useCallback(async (questId: string) => {
   if (res.data?.claimed) {
     // pendingRewards=true means the RPC fallback fired (direct UPDATE) — rewards may not have applied.
     // This path should never occur in normal operation (claim_daily_quest RPC is stable).
-    if ((res.data as any).pendingRewards) {
+    if ('pendingRewards' in res.data && res.data.pendingRewards) {
       setClaimMsg("Misión completada. Las recompensas se aplicarán en breve.");
     } else {
       setClaimMsg("¡Recompensa reclamada!");

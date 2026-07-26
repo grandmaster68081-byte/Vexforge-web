@@ -492,6 +492,18 @@ export function InteractiveBattleBoard({
       overflow: 'hidden',
     }} onPointerUp={onPointerUp} onPointerCancel={onPointerCancel} onPointerLeave={onPointerCancel}>
 
+      {/* Atmospheric scan lines — cinematic feel */}
+      <div style={{
+        position: 'absolute', inset: 0, zIndex: 0, pointerEvents: 'none',
+        backgroundImage: 'repeating-linear-gradient(0deg, rgba(255,255,255,0.012) 0px, rgba(255,255,255,0.012) 1px, transparent 1px, transparent 3px)',
+        backgroundSize: '100% 3px',
+      }} />
+      {/* Corner vignette */}
+      <div style={{
+        position: 'absolute', inset: 0, zIndex: 0, pointerEvents: 'none',
+        background: 'radial-gradient(ellipse 110% 110% at 50% 50%, transparent 55%, rgba(0,0,0,0.7) 100%)',
+      }} />
+
       {/* Keyframes */}
       <style>{`
         @keyframes card-shimmer {
@@ -585,13 +597,27 @@ export function InteractiveBattleBoard({
         }
       `}</style>
 
-      {/* Screen flash on hit */}
+      {/* Screen flash on hit — enhanced */}
       {screenFlash && (
-        <div style={{
-          position: 'absolute', inset: 0, zIndex: 200, pointerEvents: 'none',
-          background: hitSide === 'opponent' ? 'rgba(255,100,50,0.25)' : 'rgba(50,100,255,0.2)',
-          animation: 'screen-flash 0.28s ease forwards',
-        }} />
+        <>
+          {/* Full-screen color wash */}
+          <div style={{
+            position: 'absolute', inset: 0, zIndex: 200, pointerEvents: 'none',
+            background: hitSide === 'opponent'
+              ? `radial-gradient(ellipse 80% 60% at 50% 25%, rgba(255,80,30,0.45) 0%, rgba(255,80,30,0.15) 50%, transparent 100%)`
+              : `radial-gradient(ellipse 80% 60% at 50% 75%, rgba(80,120,255,0.4) 0%, rgba(80,120,255,0.12) 50%, transparent 100%)`,
+            animation: 'screen-flash 0.35s ease forwards',
+          }} />
+          {/* White edge burst */}
+          <div style={{
+            position: 'absolute', inset: 0, zIndex: 201, pointerEvents: 'none',
+            boxShadow: hitSide === 'opponent'
+              ? 'inset 0 0 60px rgba(255,140,50,0.6)'
+              : 'inset 0 0 60px rgba(100,140,255,0.5)',
+            borderRadius: 0,
+            animation: 'screen-flash 0.3s ease forwards',
+          }} />
+        </>
       )}
 
       {/* ─── Header: HP bars + names ─────────────────────────────────────── */}
@@ -753,21 +779,36 @@ export function InteractiveBattleBoard({
 
           {/* Attack beam — visible during ANIMATING */}
           {beamVisible && (
-            <div style={{
-              position: 'absolute', left: '50%', top: '50%',
-              width: '70%', height: 4,
-              transform: 'translateX(-50%) translateY(-50%)',
-              background: isPlayerAttacking
-                ? `linear-gradient(90deg, ${playerZone.primary}cc, #fff, ${oppZone.primary}aa)`
-                : `linear-gradient(90deg, ${oppZone.primary}aa, #fff, ${playerZone.primary}cc)`,
-              borderRadius: 2,
-              boxShadow: isPlayerAttacking
-                ? `0 0 12px ${playerZone.primary}, 0 0 24px ${playerZone.primary}66`
-                : `0 0 12px ${oppZone.primary}, 0 0 24px ${oppZone.primary}66`,
-              animation: 'attack-beam-shoot 0.26s ease-out forwards',
-              pointerEvents: 'none',
-              zIndex: 10,
-            }} />
+            <>
+              {/* Main attack beam — thick + glowing */}
+              <div style={{
+                position: 'absolute', left: '50%', top: '50%',
+                width: '75%', height: 5,
+                transform: 'translateX(-50%) translateY(-50%)',
+                background: isPlayerAttacking
+                  ? `linear-gradient(90deg, transparent, ${playerZone.primary}, #fff 50%, ${oppZone.primary}bb, transparent)`
+                  : `linear-gradient(90deg, transparent, ${oppZone.primary}, #fff 50%, ${playerZone.primary}bb, transparent)`,
+                borderRadius: 3,
+                boxShadow: isPlayerAttacking
+                  ? `0 0 20px ${playerZone.primary}, 0 0 50px ${playerZone.primary}88, 0 0 80px ${playerZone.primary}44`
+                  : `0 0 20px ${oppZone.primary}, 0 0 50px ${oppZone.primary}88, 0 0 80px ${oppZone.primary}44`,
+                animation: 'attack-beam-shoot 0.28s ease-out forwards',
+                pointerEvents: 'none',
+                zIndex: 10,
+              }} />
+              {/* Soft glow halo behind beam */}
+              <div style={{
+                position: 'absolute', left: '50%', top: '50%',
+                width: '65%', height: 18,
+                transform: 'translateX(-50%) translateY(-50%)',
+                background: isPlayerAttacking
+                  ? `radial-gradient(ellipse at center, ${playerZone.primary}44 0%, transparent 70%)`
+                  : `radial-gradient(ellipse at center, ${oppZone.primary}44 0%, transparent 70%)`,
+                animation: 'attack-beam-shoot 0.28s ease-out forwards',
+                pointerEvents: 'none',
+                zIndex: 9,
+              }} />
+            </>
           )}
         </div>
 
