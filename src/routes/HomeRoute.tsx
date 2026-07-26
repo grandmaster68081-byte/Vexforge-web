@@ -182,42 +182,87 @@ export function HomeRoute() {
         {LOBBY_URL && (
           <div style={{position:"absolute",inset:0,
             backgroundImage:`url(${LOBBY_URL})`, backgroundSize:"cover", backgroundPosition:"center top",
-            opacity:0.20, filter:"blur(1px) saturate(1.1)"}}/>
+            opacity:0.42, filter:"saturate(1.2) brightness(0.85)"}}/>
         )}
-        {/* Radial vignette */}
+        {/* Deep vignette overlay — letterbox style */}
         <div style={{position:"absolute",inset:0,pointerEvents:"none",
-          background:"radial-gradient(ellipse 80% 60% at 50% 50%, transparent 30%, rgba(5,5,13,.85) 100%)"}}/>
+          background:"linear-gradient(180deg, rgba(5,5,13,0.55) 0%, rgba(5,5,13,0.25) 35%, rgba(5,5,13,0.55) 70%, rgba(5,5,13,0.95) 100%)"}}/>
+        {/* Side vignettes */}
+        <div style={{position:"absolute",inset:0,pointerEvents:"none",
+          background:"radial-gradient(ellipse 90% 100% at 50% 50%, transparent 50%, rgba(5,5,13,0.7) 100%)"}}/>
+        {/* Gold ambient glow — bottom */}
+        <div style={{position:"absolute",bottom:-80,left:"50%",transform:"translateX(-50%)",
+          width:800,height:300,borderRadius:"50%",pointerEvents:"none",
+          background:"radial-gradient(ellipse, rgba(201,144,31,0.18) 0%, transparent 70%)"}}/>
         {/* Rotating rune ring decorations */}
         <div className="vex-rune-ring vex-rune-ring-1" />
         <div className="vex-rune-ring vex-rune-ring-2" />
         <div className="vex-rune-ring vex-rune-ring-3" />
         <Particles/>
         <div style={{position:"relative",zIndex:1,maxWidth:900,margin:"0 auto",padding:"clamp(40px,8vw,72px) 20px clamp(36px,6vw,60px)",textAlign:"center"}}>
-          <p style={{fontSize:11,letterSpacing:"0.18em",color:"#e8b84b",textTransform:"uppercase",
-            fontFamily:"Rajdhani,sans-serif",fontWeight:700,marginBottom:16}}>
-            ⚔️ — VEXFORGE — ⚔️
-          </p>
-          <h1 style={{fontFamily:"Cinzel,serif",color:"#e8e8f0",
-            fontSize:"clamp(32px,6vw,64px)",lineHeight:1.1,margin:"0 0 20px",
-            textShadow:"0 0 60px rgba(201,144,31,0.4)"}}>
-            Forja tu <span style={{background:"linear-gradient(135deg,#e8b84b,#c9901f)",
-              WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent"}}>Leyenda</span>
+          {/* Eyebrow tag */}
+          <div style={{display:"inline-flex",alignItems:"center",gap:10,marginBottom:24,
+            padding:"6px 18px",borderRadius:999,
+            background:"rgba(201,144,31,0.12)",border:"1px solid rgba(201,144,31,0.35)",
+            backdropFilter:"blur(8px)"}}>
+            <span style={{fontSize:12}}>⚔️</span>
+            <span style={{fontSize:10,letterSpacing:"0.22em",color:"#e8b84b",
+              textTransform:"uppercase",fontFamily:"Rajdhani,sans-serif",fontWeight:800}}>
+              VEXFORGE — TRADING CARD GAME
+            </span>
+            <span style={{fontSize:12}}>⚔️</span>
+          </div>
+          <h1 style={{fontFamily:"Cinzel,serif",color:"#f0f0ff",
+            fontSize:"clamp(38px,7vw,72px)",lineHeight:1.05,margin:"0 0 8px",
+            textShadow:"0 0 80px rgba(201,144,31,0.5), 0 2px 0 rgba(0,0,0,0.8)",
+            fontWeight:900,letterSpacing:"0.04em"}}>
+            Forja tu
           </h1>
-          <p style={{color:"#8888aa",fontSize:16,maxWidth:520,margin:"0 auto 36px",lineHeight:1.6}}>
-            El juego de cartas coleccionables donde cada carta tiene valor real. Compite, forja y domina la arena.
+          <h1 style={{fontFamily:"Cinzel,serif",
+            fontSize:"clamp(44px,8vw,82px)",lineHeight:1.05,margin:"0 0 28px",
+            fontWeight:900,letterSpacing:"0.04em",
+            background:"linear-gradient(135deg, #fff5c0 0%, #e8b84b 40%, #c9901f 80%)",
+            WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent",
+            filter:"drop-shadow(0 0 30px rgba(232,184,75,0.6))"}}>
+            LEYENDA
+          </h1>
+          <p style={{color:"rgba(200,200,220,0.85)",fontSize:"clamp(14px,2.5vw,17px)",
+            maxWidth:540,margin:"0 auto 40px",lineHeight:1.7,
+            textShadow:"0 1px 4px rgba(0,0,0,0.8)"}}>
+            El juego de cartas coleccionables donde cada carta tiene valor real.<br/>
+            <span style={{color:"rgba(200,200,220,0.6)"}}>Compite, forja y domina la arena.</span>
           </p>
-          <div className="hero-cta">
+          <div className="hero-cta" style={{gap:16}}>
             {hasPlayerData ? (
               <>
-                <Link to="/cards" className="btn-primary">🃏 Mi Colección</Link>
-                <Link to="/pvp" className="btn-secondary">⚔️ Entrar a la Arena</Link>
+                <Link to="/cards" className="btn-primary" style={{padding:"13px 28px",fontSize:14}}>🃏 Mi Colección</Link>
+                <Link to="/pvp" className="btn-secondary" style={{padding:"13px 28px",fontSize:14}}>⚔️ Entrar a la Arena</Link>
               </>
             ) : (
               <>
-                <Link to="/account" className="btn-primary">🔥 Comenzar gratis</Link>
-                <Link to="/cards" className="btn-secondary">🃏 Ver Cartas</Link>
+                <Link to="/account" className="btn-primary" style={{padding:"13px 32px",fontSize:15,letterSpacing:"0.06em"}}>🔥 Comenzar Gratis</Link>
+                <Link to="/cards" className="btn-secondary" style={{padding:"13px 28px",fontSize:14}}>🃏 Ver Cartas</Link>
               </>
             )}
+          </div>
+          {/* Stats pills */}
+          <div style={{display:"flex",justifyContent:"center",gap:20,marginTop:36,flexWrap:"wrap"}}>
+            {[
+              {val:"127",label:"Cartas Únicas"},
+              {val:"4",label:"Facciones"},
+              {val:"6",label:"Rarezas"},
+              {val:"F2P",label:"Gratis"},
+            ].map(s=>(
+              <div key={s.val} style={{textAlign:"center",padding:"8px 16px",
+                background:"rgba(255,255,255,0.04)",border:"1px solid rgba(255,255,255,0.08)",
+                borderRadius:10,backdropFilter:"blur(8px)"}}>
+                <div style={{fontFamily:"Cinzel,serif",fontSize:20,fontWeight:900,
+                  color:"#e8b84b",lineHeight:1}}>{s.val}</div>
+                <div style={{fontSize:9,color:"rgba(255,255,255,0.4)",
+                  fontFamily:"Rajdhani,sans-serif",letterSpacing:"0.1em",
+                  textTransform:"uppercase",marginTop:2}}>{s.label}</div>
+              </div>
+            ))}
           </div>
         </div>
       </div>

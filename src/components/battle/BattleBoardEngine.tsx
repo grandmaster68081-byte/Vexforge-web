@@ -84,51 +84,64 @@ function BoardUnit({
   const rarColor = RARITY_COLOR[unit.rarity] ?? '#8b8b9e';
   const rarGlow  = RARITY_GLOW[unit.rarity]  ?? 'rgba(139,139,158,0.3)';
 
-  if (!alive && !isDying) return <div style={{ width: 86, height: 108, opacity: 0 }} />;
+  if (!alive && !isDying) return <div style={{ width: 108, height: 138, opacity: 0 }} />;
 
   return (
     <div
       ref={cardRef}
       style={{
-        width: 86, height: 108, position: 'relative', borderRadius: 9,
-        border: `1.5px solid ${isActive ? rarColor : isDying ? '#333' : rarColor + '55'}`,
+        width: 108, height: 138, position: 'relative', borderRadius: 10,
+        border: `2px solid ${isActive ? rarColor : isDying ? '#333' : rarColor + '66'}`,
         background: isDying
           ? 'rgba(0,0,0,0.1)'
-          : `linear-gradient(160deg, ${rarColor}18 0%, rgba(6,6,16,0.97) 100%)`,
+          : `linear-gradient(160deg, ${rarColor}22 0%, rgba(6,6,16,0.98) 100%)`,
         boxShadow: isActive
-          ? `0 0 16px ${rarGlow}, 0 0 4px ${rarColor}88`
+          ? `0 0 22px ${rarGlow}, 0 0 8px ${rarColor}aa, inset 0 0 12px ${rarColor}11`
           : isDying
-            ? '0 0 22px 8px rgba(255,60,30,0.6)'
+            ? '0 0 28px 10px rgba(255,60,30,0.65)'
             : isCurrentTurn
-              ? `0 0 8px ${rarColor}55`
-              : 'none',
+              ? `0 0 12px ${rarColor}66, 0 0 2px ${rarColor}44`
+              : `0 2px 8px rgba(0,0,0,0.5)`,
         animation: isDying ? 'unitDeath 0.72s ease forwards, deathGlow 0.72s ease forwards' : undefined,
         transform: isAttacking
-          ? (side === 'a' ? 'translateY(-6px) scale(1.06)' : 'translateY(6px) scale(1.06)')
+          ? (side === 'a' ? 'translateY(-10px) scale(1.08)' : 'translateY(10px) scale(1.08)')
           : isTakingHit
-            ? `translateX(${side === 'a' ? 4 : -4}px)`
+            ? `translateX(${side === 'a' ? 6 : -6}px) rotate(${side === 'a' ? 1 : -1}deg)`
             : isDying
-              ? 'scale(0.7) opacity(0)'
+              ? 'scale(0.7)'
               : 'translateY(0) scale(1)',
         transition: isDying
           ? 'transform 0.4s ease, opacity 0.4s ease'
-          : 'transform 0.15s ease, box-shadow 0.3s',
+          : 'transform 0.18s cubic-bezier(0.22,1,0.36,1), box-shadow 0.3s',
         opacity: isDying ? 0 : 1,
         cursor: 'default',
         overflow: 'hidden',
         flexShrink: 0,
       }}
     >
-      {/* Rarity glow strip */}
+      {/* Rarity glow strip — top */}
       <div style={{
-        position: 'absolute', top: 0, left: 0, right: 0, height: 2,
-        background: rarColor, opacity: 0.7, borderRadius: '7px 7px 0 0',
+        position: 'absolute', top: 0, left: 0, right: 0, height: 3,
+        background: `linear-gradient(90deg, transparent, ${rarColor}, transparent)`,
+        opacity: isActive ? 1 : 0.6,
+        borderRadius: '8px 8px 0 0',
+        transition: 'opacity 0.3s',
       }} />
+
+      {/* Active indicator pulse ring */}
+      {isActive && (
+        <div style={{
+          position: 'absolute', inset: -2, borderRadius: 11,
+          border: `2px solid ${rarColor}`,
+          animation: 'unitActivePulse 0.6s ease-in-out infinite',
+          pointerEvents: 'none', zIndex: 5,
+        }} />
+      )}
 
       {/* Card image */}
       {unit.image_url ? (
         <div style={{
-          width: '100%', height: 56, overflow: 'hidden',
+          width: '100%', height: 72, overflow: 'hidden',
           background: '#08080f',
         }}>
           <img
@@ -138,33 +151,43 @@ function BoardUnit({
         </div>
       ) : (
         <div style={{
-          width: '100%', height: 56, background: `linear-gradient(160deg, ${rarColor}28, rgba(6,6,16,0.9))`,
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-          fontSize: 26,
+          width: '100%', height: 72,
+          background: `linear-gradient(160deg, ${rarColor}30, rgba(6,6,16,0.92))`,
+          display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+          gap: 4, position: 'relative', overflow: 'hidden',
         }}>
-          {KEYWORD_ICON[unit.faction] ?? '🃏'}
+          {/* Faction pattern */}
+          <div style={{
+            position: 'absolute', inset: 0,
+            backgroundImage: `repeating-linear-gradient(45deg, ${rarColor}08 0, ${rarColor}08 1px, transparent 0, transparent 50%)`,
+            backgroundSize: '10px 10px',
+          }} />
+          <div style={{ fontSize: 30, lineHeight: 1, filter: `drop-shadow(0 0 8px ${rarColor})`, position: 'relative' }}>
+            {KEYWORD_ICON[unit.faction] ?? '🃏'}
+          </div>
         </div>
       )}
 
       {/* Name */}
       <div style={{
-        padding: '2px 4px', fontSize: 7.5, color: '#b0b0d0',
-        fontFamily: 'Rajdhani, sans-serif', fontWeight: 600,
+        padding: '3px 5px', fontSize: 8.5, color: '#c0c0e0',
+        fontFamily: 'Rajdhani, sans-serif', fontWeight: 700,
         letterSpacing: '0.04em', lineHeight: 1.2,
         overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis',
+        textShadow: `0 0 6px ${rarColor}44`,
       }}>
         {unit.name}
       </div>
 
-      {/* HP bar + HP text */}
-      <div style={{ padding: '0 4px' }}>
+      {/* HP bar + stats */}
+      <div style={{ padding: '0 5px' }}>
         <HpBar current={currentHp} max={unit.max_hp} rarity={unit.rarity} />
-        <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 1 }}>
-          <span style={{ fontSize: 7, color: '#666', fontFamily: 'Rajdhani, sans-serif' }}>
-            {currentHp}/{unit.max_hp}
+        <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 2 }}>
+          <span style={{ fontSize: 8, color: '#7a7a9a', fontFamily: 'Rajdhani, sans-serif', fontWeight: 600 }}>
+            ❤ {currentHp}
           </span>
-          <span style={{ fontSize: 7, color: '#c0392b', fontFamily: 'Rajdhani, sans-serif' }}>
-            ⚔{unit.atk}
+          <span style={{ fontSize: 8, color: '#e84040', fontFamily: 'Rajdhani, sans-serif', fontWeight: 700 }}>
+            ⚔ {unit.atk}
           </span>
         </div>
       </div>
@@ -172,11 +195,13 @@ function BoardUnit({
       {/* Keywords */}
       {unit.keywords.length > 0 && (
         <div style={{
-          position: 'absolute', bottom: 3, left: 4,
+          position: 'absolute', bottom: 4, left: 4,
           display: 'flex', gap: 2, flexWrap: 'wrap',
         }}>
           {unit.keywords.slice(0, 2).map(kw => (
-            <span key={kw} title={kw} style={{ fontSize: 9 }}>{KEYWORD_ICON[kw] ?? '✦'}</span>
+            <span key={kw} title={kw} style={{
+              fontSize: 10, filter: `drop-shadow(0 0 3px ${rarColor})`,
+            }}>{KEYWORD_ICON[kw] ?? '✦'}</span>
           ))}
         </div>
       )}
@@ -499,11 +524,41 @@ export function BattleBoardEngine({ result, playerName, opponentName, onComplete
         })()}
 
         {/* Opponent zone (side B — top) */}
-      <div style={{ padding: '10px 8px 6px', background: 'rgba(192,57,43,0.06)', borderBottom: '1px solid rgba(192,57,43,0.25)' }}>
-        <div style={{ fontSize: 9, color: '#c0392b', fontFamily: 'Rajdhani, sans-serif', letterSpacing: '0.15em', textTransform: 'uppercase', marginBottom: 6, opacity: 0.7 }}>
-          ⚔ {opponentName}
+      <div style={{
+        padding: '10px 12px 8px',
+        background: 'linear-gradient(180deg, rgba(192,57,43,0.10) 0%, rgba(192,57,43,0.04) 100%)',
+        borderBottom: '1px solid rgba(192,57,43,0.30)',
+        position: 'relative',
+      }}>
+        {/* Zone label bar */}
+        <div style={{
+          display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8,
+        }}>
+          <div style={{
+            height: 1, flex: 1,
+            background: 'linear-gradient(90deg, transparent, rgba(192,57,43,0.5))',
+          }} />
+          <div style={{
+            fontSize: 9, color: '#e74c3c', fontFamily: 'Rajdhani, sans-serif',
+            letterSpacing: '0.2em', textTransform: 'uppercase', fontWeight: 800,
+            display: 'flex', alignItems: 'center', gap: 5,
+          }}>
+            <span style={{ opacity: 0.7 }}>⚔</span>
+            <span>{opponentName}</span>
+            <span style={{
+              fontSize: 8, color: '#e74c3c', background: 'rgba(192,57,43,0.15)',
+              border: '1px solid rgba(192,57,43,0.3)', borderRadius: 4,
+              padding: '0 5px', fontFamily: 'IBM Plex Mono, monospace',
+            }}>
+              {sideB.filter(s => s.alive).length} vivos
+            </span>
+          </div>
+          <div style={{
+            height: 1, flex: 1,
+            background: 'linear-gradient(90deg, rgba(192,57,43,0.5), transparent)',
+          }} />
         </div>
-        <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
+        <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', justifyContent: 'center' }}>
           {sideB.map(s => (
             <BoardUnit
               key={s.unit.idx} state={s} side="b"
@@ -515,7 +570,7 @@ export function BattleBoardEngine({ result, playerName, opponentName, onComplete
       </div>
 
       {/* Turn indicator center strip */}
-      {activeTurn && (
+      {activeTurn ? (
         <TurnHeader
           turn={activeTurn.turn}
           side={activeTurn.atk_side}
@@ -525,14 +580,20 @@ export function BattleBoardEngine({ result, playerName, opponentName, onComplete
           playerName={playerName}
           opponentName={opponentName}
         />
+      ) : (
+        <div style={{
+          height: 6,
+          background: 'linear-gradient(90deg, rgba(74,158,255,0.3), rgba(232,184,75,0.4), rgba(192,57,43,0.3))',
+        }} />
       )}
 
       {/* Player zone (side A — bottom) */}
-      <div style={{ padding: '6px 8px 10px', background: 'rgba(74,158,255,0.06)', borderTop: '1px solid rgba(74,158,255,0.25)' }}>
-        <div style={{ fontSize: 9, color: '#4a9eff', fontFamily: 'Rajdhani, sans-serif', letterSpacing: '0.15em', textTransform: 'uppercase', marginBottom: 6, opacity: 0.7 }}>
-          🛡 {playerName}
-        </div>
-        <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
+      <div style={{
+        padding: '8px 12px 12px',
+        background: 'linear-gradient(0deg, rgba(74,158,255,0.10) 0%, rgba(74,158,255,0.04) 100%)',
+        borderTop: '1px solid rgba(74,158,255,0.30)',
+      }}>
+        <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', justifyContent: 'center', marginBottom: 8 }}>
           {sideA.map(s => (
             <BoardUnit
               key={s.unit.idx} state={s} side="a"
@@ -541,14 +602,44 @@ export function BattleBoardEngine({ result, playerName, opponentName, onComplete
             />
           ))}
         </div>
+        {/* Zone label bar */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          <div style={{
+            height: 1, flex: 1,
+            background: 'linear-gradient(90deg, transparent, rgba(74,158,255,0.5))',
+          }} />
+          <div style={{
+            fontSize: 9, color: '#4a9eff', fontFamily: 'Rajdhani, sans-serif',
+            letterSpacing: '0.2em', textTransform: 'uppercase', fontWeight: 800,
+            display: 'flex', alignItems: 'center', gap: 5,
+          }}>
+            <span style={{ opacity: 0.7 }}>🛡</span>
+            <span>{playerName}</span>
+            <span style={{
+              fontSize: 8, color: '#4a9eff', background: 'rgba(74,158,255,0.15)',
+              border: '1px solid rgba(74,158,255,0.3)', borderRadius: 4,
+              padding: '0 5px', fontFamily: 'IBM Plex Mono, monospace',
+            }}>
+              {sideA.filter(s => s.alive).length} vivos
+            </span>
+          </div>
+          <div style={{
+            height: 1, flex: 1,
+            background: 'linear-gradient(90deg, rgba(74,158,255,0.5), transparent)',
+          }} />
+        </div>
       </div>
 
-      {/* Battle log */}
-      <div style={{ padding: '4px 10px', background: 'rgba(4,4,12,0.95)', minHeight: 36, borderTop: '1px solid #18183a' }}>
+      {/* Battle log — scrolling ticker */}
+      <div style={{
+        padding: '5px 12px', background: 'rgba(3,3,10,0.97)',
+        minHeight: 40, borderTop: '1px solid #141428',
+        display: 'flex', flexDirection: 'column', justifyContent: 'center',
+      }}>
         {log.slice(-2).map((line, i) => (
           <div key={i} style={{
-            fontSize: 9, fontFamily: 'monospace',
-            color: i === log.slice(-2).length - 1 ? '#b0b0d0' : '#444',
+            fontSize: 9, fontFamily: 'IBM Plex Mono, monospace',
+            color: i === log.slice(-2).length - 1 ? '#a0a0c8' : '#333',
             marginBottom: 1, transition: 'color 0.3s',
           }}>{line}</div>
         ))}
@@ -558,8 +649,9 @@ export function BattleBoardEngine({ result, playerName, opponentName, onComplete
         @keyframes atmosphereOrb { 0%,100%{transform:translateX(-50%) scale(1);opacity:0.7;} 50%{transform:translateX(-50%) scale(1.12);opacity:1;} }
         @keyframes atmospherePulse { 0%,100%{opacity:0.6;} 50%{opacity:1;} }
         @keyframes atmosphereDrift { 0%,100%{transform:scale(1);opacity:0.5;} 50%{transform:scale(1.08);opacity:0.8;} }
-        @keyframes floatUp { 0%{transform:translate(-50%,0);opacity:1;} 100%{transform:translate(-50%,-28px);opacity:0;} }
+        @keyframes floatUp { 0%{transform:translate(-50%,0);opacity:1;} 100%{transform:translate(-50%,-32px);opacity:0;} }
         @keyframes hitFlash { 0%,100%{opacity:0;} 50%{opacity:1;} }
+        @keyframes unitActivePulse { 0%,100%{opacity:0.4;transform:scale(1);} 50%{opacity:1;transform:scale(1.04);} }
         @keyframes unitDeath {
           0%   { transform:scale(1) rotate(0deg);   opacity:1;    filter:brightness(1.8) saturate(0); }
           20%  { transform:scale(0.92) rotate(-8deg); opacity:0.85; filter:brightness(2.5) saturate(0) blur(0px); }
@@ -568,7 +660,7 @@ export function BattleBoardEngine({ result, playerName, opponentName, onComplete
         }
         @keyframes deathGlow {
           0%   { box-shadow:0 0 0 0 rgba(255,60,30,0); }
-          30%  { box-shadow:0 0 24px 10px rgba(255,60,30,0.65); }
+          30%  { box-shadow:0 0 32px 12px rgba(255,60,30,0.7); }
           100% { box-shadow:0 0 0 0 rgba(255,60,30,0); }
         }
       `}</style>

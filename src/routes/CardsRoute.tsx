@@ -54,14 +54,61 @@ function CardArt({ card }: { card: Card }) {
     );
   }
   return (
-    <div style={{ width: "100%", aspectRatio: "3/4", borderRadius: "6px 6px 0 0",
-      background: faction.bgImg ? `url(${faction.bgImg})` : faction.bg,
-      backgroundSize: "cover", backgroundPosition: "center", display: "flex", flexDirection: "column",
-      alignItems: "center", justifyContent: "center", gap: 8, padding: 12 }}>
-      <div style={{ fontSize: 36, lineHeight: 1 }}>{faction.icon}</div>
-      <p style={{ fontFamily: "Cinzel,serif", color: rarity.color, fontSize: 10,
-        textAlign: "center", lineHeight: 1.3, margin: 0, textTransform: "uppercase",
-        letterSpacing: "0.05em", wordBreak: "break-word" }}>{card.name}</p>
+    <div style={{
+      width: "100%", aspectRatio: "3/4", borderRadius: "6px 6px 0 0",
+      background: faction.bg,
+      display: "flex", flexDirection: "column",
+      alignItems: "center", justifyContent: "center",
+      position: "relative", overflow: "hidden",
+    }}>
+      {/* Faction bg image (if available) */}
+      {faction.bgImg && (
+        <div style={{
+          position: "absolute", inset: 0,
+          backgroundImage: `url(${faction.bgImg})`,
+          backgroundSize: "cover", backgroundPosition: "center",
+          opacity: 0.25, filter: "blur(2px) saturate(1.4)",
+        }} />
+      )}
+      {/* Diagonal rune grid pattern */}
+      <div style={{
+        position: "absolute", inset: 0,
+        backgroundImage: `repeating-linear-gradient(45deg, ${rarity.color}08 0, ${rarity.color}08 1px, transparent 0, transparent 50%)`,
+        backgroundSize: "14px 14px",
+      }} />
+      {/* Radial glow centered */}
+      <div style={{
+        position: "absolute", inset: 0,
+        background: `radial-gradient(circle at 50% 45%, ${rarity.color}20 0%, transparent 65%)`,
+      }} />
+      {/* Faction icon — large with glow */}
+      <div style={{
+        position: "relative", fontSize: 44, lineHeight: 1, marginBottom: 10,
+        filter: `drop-shadow(0 0 12px ${rarity.color}) drop-shadow(0 0 24px ${rarity.color}66)`,
+        textShadow: `0 0 20px ${rarity.color}`,
+      }}>
+        {faction.icon}
+      </div>
+      {/* Horizontal separator */}
+      <div style={{
+        width: 40, height: 1, marginBottom: 8,
+        background: `linear-gradient(90deg, transparent, ${rarity.color}88, transparent)`,
+      }} />
+      {/* Card name */}
+      <p style={{
+        fontFamily: "Cinzel,serif", color: rarity.color, fontSize: 9,
+        textAlign: "center", lineHeight: 1.4, margin: "0 8px",
+        textTransform: "uppercase", letterSpacing: "0.08em",
+        wordBreak: "break-word", position: "relative",
+        textShadow: `0 0 10px ${rarity.color}66`,
+        fontWeight: 700,
+      }}>{card.name}</p>
+      {/* Bottom glow strip */}
+      <div style={{
+        position: "absolute", bottom: 0, left: 0, right: 0, height: 2,
+        background: `linear-gradient(90deg, transparent, ${rarity.color}, transparent)`,
+        opacity: 0.6,
+      }} />
     </div>
   );
 }

@@ -554,6 +554,9 @@ export default function App() {
                 <Route path="/tienda"    element={<ShopRoute />} />
                 <Route path="/clanes"    element={<ClansRoute />} />
                 <Route path="/login"     element={<AccountRoute />} />
+                {/* Battle alias — /battle → PvP arena */}
+                <Route path="/battle"    element={<PvpRoute />} />
+                <Route path="/arena"     element={<PvpRoute />} />
                 <Route path="*"             element={<NotFoundRoute />} />
               </Routes>
               </PageTransition>

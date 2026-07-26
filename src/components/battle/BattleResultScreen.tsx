@@ -144,92 +144,153 @@ export function BattleResultScreen({ result, playerName, opponentName, onDismiss
       position: 'absolute', inset: 0, zIndex: 40,
       display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
       background: won
-        ? 'linear-gradient(180deg, rgba(232,184,75,0.18) 0%, rgba(6,6,16,0.98) 50%)'
+        ? 'radial-gradient(ellipse 80% 60% at 50% 0%, rgba(232,184,75,0.22) 0%, rgba(6,6,16,0.99) 65%), linear-gradient(180deg, #03030a 0%, #0a080f 100%)'
         : isDraw
-          ? 'linear-gradient(180deg, rgba(74,158,255,0.14) 0%, rgba(6,6,16,0.98) 50%)'
-          : 'linear-gradient(180deg, rgba(192,57,43,0.18) 0%, rgba(6,6,16,0.98) 50%)',
-      animation: 'fadeInResult 0.5s ease',
+          ? 'radial-gradient(ellipse 80% 60% at 50% 0%, rgba(74,158,255,0.18) 0%, rgba(6,6,16,0.99) 65%), linear-gradient(180deg, #03030a 0%, #03080f 100%)'
+          : 'radial-gradient(ellipse 80% 60% at 50% 0%, rgba(192,57,43,0.22) 0%, rgba(6,6,16,0.99) 65%), linear-gradient(180deg, #03030a 0%, #0f0303 100%)',
+      animation: 'fadeInResult 0.6s ease',
+      overflow: 'hidden',
     }}>
-      {/* Trophy / Icon */}
+      {/* Cinematic letterbox bars */}
       <div style={{
-        fontSize: 80, marginBottom: 8,
-        filter: `drop-shadow(0 0 24px ${theme.glow})`,
-        animation: won ? 'trophyBounce 0.6s cubic-bezier(0.22,1,0.36,1)' : 'fadeInUp 0.5s ease',
+        position: 'absolute', top: 0, left: 0, right: 0, height: 48,
+        background: 'rgba(0,0,0,0.7)',
+        borderBottom: `1px solid ${theme.primary}22`,
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
       }}>
-        {theme.emoji}
+        <span style={{
+          fontFamily: 'IBM Plex Mono, monospace', fontSize: 9,
+          color: theme.primary, letterSpacing: '0.3em', opacity: 0.7,
+          textTransform: 'uppercase',
+        }}>
+          VEXFORGE BATTLE ARENA — RESULTADO
+        </span>
       </div>
 
-      {/* GL.0: Win Streak badge */}
-        {winStreak >= 2 && (
-          <div style={{
-            display: 'flex', alignItems: 'center', gap: 6,
-            background: 'linear-gradient(135deg, rgba(232,184,75,0.15), rgba(255,100,30,0.08))',
-            border: '1px solid rgba(232,184,75,0.4)',
-            borderRadius: 20, padding: '4px 14px',
-            marginBottom: 12,
-            animation: 'streakPop 0.4s cubic-bezier(0.22,1,0.36,1)',
-          }}>
-            <span style={{ fontSize: 16 }}>🔥</span>
-            <span style={{
-              fontFamily: 'Cinzel, serif', fontSize: 13, fontWeight: 700,
-              color: '#e8b84b', letterSpacing: '0.08em',
-            }}>RACHA {winStreak}
-            </span>
-            <span style={{ fontSize: 16 }}>🔥</span>
-          </div>
-        )}
-
-        {/* Result label */}
+      {/* Background ambient glow */}
       <div style={{
-        fontFamily: 'Cinzel, serif', fontSize: 36, fontWeight: 900,
-        color: theme.primary, letterSpacing: '0.2em',
-        textShadow: `0 0 30px ${theme.glow}`,
-        marginBottom: 4,
-        animation: 'slideInLabel 0.5s cubic-bezier(0.22,1,0.36,1)',
+        position: 'absolute', top: -100, left: '50%', transform: 'translateX(-50%)',
+        width: 600, height: 400, borderRadius: '50%',
+        background: `radial-gradient(circle, ${theme.primary}14 0%, transparent 70%)`,
+        pointerEvents: 'none',
+        animation: 'resultAmbient 3s ease-in-out infinite',
+      }} />
+
+      {/* Trophy / Icon */}
+      <div style={{
+        fontSize: 96, marginBottom: 6, lineHeight: 1,
+        filter: `drop-shadow(0 0 32px ${theme.glow}) drop-shadow(0 0 64px ${theme.glow})`,
+        animation: won ? 'trophyBounce 0.7s cubic-bezier(0.22,1,0.36,1)' : 'fadeInUp 0.5s ease',
+        position: 'relative',
+      }}>
+        {theme.emoji}
+        {/* Starburst behind trophy */}
+        <div style={{
+          position: 'absolute', inset: -20, zIndex: -1, borderRadius: '50%',
+          background: `radial-gradient(circle, ${theme.primary}18 0%, transparent 70%)`,
+          animation: 'resultAmbient 2s ease-in-out infinite',
+        }} />
+      </div>
+
+      {/* Result label — huge cinematic text */}
+      <div style={{
+        fontFamily: 'Cinzel, serif',
+        fontSize: 'clamp(44px,8vw,64px)',
+        fontWeight: 900,
+        color: theme.primary,
+        letterSpacing: '0.22em',
+        textShadow: `0 0 40px ${theme.glow}, 0 0 80px ${theme.glow}`,
+        marginBottom: 6, lineHeight: 1,
+        animation: 'slideInLabel 0.6s cubic-bezier(0.22,1,0.36,1)',
+        textTransform: 'uppercase',
       }}>
         {theme.label}
       </div>
 
-      {/* Match names */}
+      {/* Decorative divider */}
       <div style={{
-        fontFamily: 'Rajdhani, sans-serif', fontSize: 12, color: '#666',
-        letterSpacing: '0.1em', marginBottom: 20,
+        display: 'flex', alignItems: 'center', gap: 12, marginBottom: 14, width: 280,
       }}>
-        {playerName} <span style={{ color: '#333', margin: '0 6px' }}>vs</span> {opponentName}
+        <div style={{ flex: 1, height: 1, background: `linear-gradient(90deg, transparent, ${theme.primary}55)` }} />
+        <span style={{ color: theme.primary, opacity: 0.6, fontSize: 12 }}>✦</span>
+        <div style={{ flex: 1, height: 1, background: `linear-gradient(90deg, ${theme.primary}55, transparent)` }} />
       </div>
 
-      {/* ELO change */}
+      {/* Match names */}
       <div style={{
-        opacity: showElo ? 1 : 0, transform: showElo ? 'translateY(0)' : 'translateY(8px)',
+        fontFamily: 'Rajdhani, sans-serif', fontSize: 13, color: '#6868a0',
+        letterSpacing: '0.1em', marginBottom: 16, textTransform: 'uppercase',
+      }}>
+        <span style={{ color: '#8888b0' }}>{playerName}</span>
+        <span style={{ color: '#333', margin: '0 10px' }}>⚔</span>
+        <span style={{ color: '#8888b0' }}>{opponentName}</span>
+      </div>
+
+      {/* GL.0: Win Streak badge */}
+      {winStreak >= 2 && (
+        <div style={{
+          display: 'flex', alignItems: 'center', gap: 8,
+          background: 'linear-gradient(135deg, rgba(232,184,75,0.18), rgba(255,100,30,0.10))',
+          border: '1px solid rgba(232,184,75,0.45)',
+          borderRadius: 999, padding: '5px 18px',
+          marginBottom: 14,
+          animation: 'streakPop 0.4s cubic-bezier(0.22,1,0.36,1)',
+          backdropFilter: 'blur(8px)',
+        }}>
+          <span style={{ fontSize: 16 }}>🔥</span>
+          <span style={{
+            fontFamily: 'Cinzel, serif', fontSize: 14, fontWeight: 700,
+            color: '#e8b84b', letterSpacing: '0.1em',
+          }}>
+            RACHA × {winStreak}
+          </span>
+          <span style={{ fontSize: 16 }}>🔥</span>
+        </div>
+      )}
+
+      {/* ELO change — animated counter */}
+      <div style={{
+        opacity: showElo ? 1 : 0, transform: showElo ? 'translateY(0) scale(1)' : 'translateY(12px) scale(0.95)',
         transition: 'all 0.5s cubic-bezier(0.22,1,0.36,1)',
-        marginBottom: 16, textAlign: 'center',
+        marginBottom: 18, textAlign: 'center',
+        background: 'rgba(8,8,22,0.7)', borderRadius: 12,
+        border: `1px solid ${eloDisplayed >= 0 ? 'rgba(61,220,132,0.25)' : 'rgba(231,76,60,0.25)'}`,
+        padding: '10px 28px',
+        backdropFilter: 'blur(8px)',
       }}>
         <div style={{
-          fontFamily: 'Cinzel, serif', fontSize: 22, fontWeight: 700,
+          fontFamily: 'Cinzel, serif', fontSize: 28, fontWeight: 900,
           color: eloDisplayed >= 0 ? '#3ddc84' : '#e74c3c',
+          textShadow: eloDisplayed >= 0 ? '0 0 20px rgba(61,220,132,0.6)' : '0 0 20px rgba(231,76,60,0.6)',
+          lineHeight: 1,
         }}>
           {eloDisplayed >= 0 ? '+' : ''}{eloDisplayed} ELO
         </div>
-        <div style={{ color: '#555', fontSize: 10, fontFamily: 'Rajdhani, sans-serif', letterSpacing: '0.1em', marginTop: 2 }}>
+        <div style={{
+          color: '#444', fontSize: 9, fontFamily: 'IBM Plex Mono, monospace',
+          letterSpacing: '0.25em', marginTop: 4,
+        }}>
           CAMBIO DE RANKING
         </div>
       </div>
 
       {/* Battle stats panel */}
       <div style={{
-        width: 220, opacity: showStats ? 1 : 0,
-        transform: showStats ? 'translateY(0)' : 'translateY(12px)',
+        width: 240, opacity: showStats ? 1 : 0,
+        transform: showStats ? 'translateY(0)' : 'translateY(14px)',
         transition: 'all 0.5s cubic-bezier(0.22,1,0.36,1)',
-        background: 'rgba(8,8,20,0.9)', borderRadius: 10,
-        border: `1px solid ${theme.primary}33`,
-        padding: '12px 16px', marginBottom: 20,
+        background: 'rgba(6,6,18,0.88)', borderRadius: 12,
+        border: `1px solid ${theme.primary}28`,
+        padding: '14px 18px', marginBottom: 22,
+        backdropFilter: 'blur(12px)',
+        boxShadow: `0 8px 32px rgba(0,0,0,0.5), inset 0 1px 0 ${theme.primary}18`,
       }}>
         <div style={{
-          fontFamily: 'Cinzel, serif', fontSize: 10, color: theme.primary,
-          letterSpacing: '0.15em', textTransform: 'uppercase',
-          marginBottom: 10, textAlign: 'center',
+          fontFamily: 'Cinzel, serif', fontSize: 9, color: theme.primary,
+          letterSpacing: '0.25em', textTransform: 'uppercase',
+          marginBottom: 12, textAlign: 'center', opacity: 0.8,
         }}>
-          Estadísticas de Batalla
+          ⚔ Estadísticas de Batalla ⚔
         </div>
         <StatRow label="Turnos" value={stats.totalTurns} />
         <StatRow label="Daño Total" value={stats.totalDamage.toLocaleString()} highlight />
@@ -240,37 +301,50 @@ export function BattleResultScreen({ result, playerName, opponentName, onDismiss
       </div>
 
       {/* Action buttons */}
-      <div style={{ display: 'flex', gap: 10, opacity: showStats ? 1 : 0, transition: 'opacity 0.5s 0.3s' }}>
+      <div style={{
+        display: 'flex', gap: 12,
+        opacity: showStats ? 1 : 0, transition: 'opacity 0.5s 0.3s',
+      }}>
         <button onClick={onDismiss} style={{
-          background: `linear-gradient(135deg, ${theme.primary}22, ${theme.primary}11)`,
-          border: `1px solid ${theme.primary}66`, borderRadius: 8,
-          color: theme.primary, fontFamily: 'Cinzel, serif', fontSize: 11,
-          letterSpacing: '0.15em', padding: '10px 20px', cursor: 'pointer',
-          textTransform: 'uppercase',
+          background: `linear-gradient(135deg, ${theme.primary}30, ${theme.primary}14)`,
+          border: `1px solid ${theme.primary}70`, borderRadius: 10,
+          color: theme.primary, fontFamily: 'Cinzel, serif', fontSize: 12,
+          letterSpacing: '0.12em', padding: '11px 24px', cursor: 'pointer',
+          textTransform: 'uppercase', fontWeight: 700,
           transition: 'all 0.2s',
+          boxShadow: `0 0 20px ${theme.primary}20`,
         }}
-        onMouseEnter={e => { (e.target as HTMLButtonElement).style.background = `${theme.primary}33`; }}
-        onMouseLeave={e => { (e.target as HTMLButtonElement).style.background = `linear-gradient(135deg, ${theme.primary}22, ${theme.primary}11)`; }}
+        onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.boxShadow = `0 0 30px ${theme.primary}40`; }}
+        onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.boxShadow = `0 0 20px ${theme.primary}20`; }}
         >
-          ⚔️ Jugar de Nuevo
+          ⚔ Jugar de Nuevo
         </button>
         <button onClick={onDismiss} style={{
           background: 'rgba(255,255,255,0.04)',
-          border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8,
-          color: '#888', fontFamily: 'Rajdhani, sans-serif', fontSize: 11,
-          letterSpacing: '0.1em', padding: '10px 16px', cursor: 'pointer',
+          border: '1px solid rgba(255,255,255,0.1)', borderRadius: 10,
+          color: '#666', fontFamily: 'Rajdhani, sans-serif', fontSize: 12,
+          letterSpacing: '0.1em', padding: '11px 20px', cursor: 'pointer',
           textTransform: 'uppercase',
+          transition: 'all 0.2s',
         }}>
           Arena
         </button>
       </div>
 
+      {/* Bottom bar */}
+      <div style={{
+        position: 'absolute', bottom: 0, left: 0, right: 0, height: 3,
+        background: `linear-gradient(90deg, transparent, ${theme.primary}, transparent)`,
+        opacity: 0.5,
+      }} />
+
       <style>{`
         @keyframes fadeInResult { from { opacity:0; } to { opacity:1; } }
-          @keyframes streakPop { from { opacity:0; transform:scale(0.5) translateY(10px); } 80% { transform:scale(1.1); } to { opacity:1; transform:scale(1) translateY(0); } }
-        @keyframes trophyBounce { 0% { transform:scale(0.3) translateY(-20px); } 70% { transform:scale(1.12); } 100% { transform:scale(1); } }
-        @keyframes slideInLabel { from { opacity:0; transform:translateY(-12px); } to { opacity:1; transform:translateY(0); } }
-        @keyframes fadeInUp { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:translateY(0); } }
+        @keyframes streakPop { from { opacity:0; transform:scale(0.5) translateY(10px); } 80% { transform:scale(1.08); } to { opacity:1; transform:scale(1) translateY(0); } }
+        @keyframes trophyBounce { 0% { transform:scale(0.2) translateY(-30px); } 60% { transform:scale(1.14); } 80% { transform:scale(0.97); } 100% { transform:scale(1); } }
+        @keyframes slideInLabel { from { opacity:0; transform:scaleX(1.5) translateY(-8px); } to { opacity:1; transform:scaleX(1) translateY(0); } }
+        @keyframes fadeInUp { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
+        @keyframes resultAmbient { 0%,100% { opacity:0.6; transform:translateX(-50%) scale(1); } 50% { opacity:1; transform:translateX(-50%) scale(1.1); } }
       `}</style>
     </div>
   );
