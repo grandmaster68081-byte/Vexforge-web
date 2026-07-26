@@ -385,6 +385,7 @@ export function PvpRoute() {
   const [dailyAttempted, setDailyAttempted] = useState(false);
   const [dailyBadgeEarned, setDailyBadgeEarned] = useState(false);
   const [dailyVexEarned, setDailyVexEarned]     = useState<number | null>(null);
+  const [dailyError, setDailyError]             = useState<string | null>(null);
   const dailyChallenge = getDailyAIChallenge();
   const cancelRef = useRef(false);
 
@@ -412,6 +413,7 @@ export function PvpRoute() {
   const startDailyChallenge = useCallback(async () => {
     if (!playerId || dailyAttempted || dailyLoading) return;
     setDailyLoading(true);
+    setDailyError(null);
     try {
       const playerUnits = await loadPlayerBattleUnits(supabase, playerId);
       const result = simulateAIBattle(playerUnits, dailyChallenge.difficulty, dailyChallenge.deck);
@@ -424,11 +426,12 @@ export function PvpRoute() {
         try {
           const claim = await claimDailyAIChallenge(supabase, dailyChallenge.dateKey, dailyChallenge.difficulty);
           if (claim.claimed) setDailyVexEarned(claim.vex_awarded ?? DAILY_CHALLENGE_VEX_REWARD[dailyChallenge.difficulty]);
-        } catch { /* RPC pending deploy — badge still awarded locally */ }
+        } catch { /* VEX claim RPC — badge ya otorgado localmente, VEX se sincronizará */ }
       }
       setDailyResult({ ...result, opponent_name: dailyChallenge.title, engine: 'client_ai_daily_v1' });
     } catch (err) {
-      console.error("[PvpRoute] Daily challenge failed:", err);
+      const msg = err instanceof Error ? err.message : "Error desconocido";
+      setDailyError(`No se pudo cargar el desafío: ${msg}. Verifica tu conexión e intenta de nuevo.`);
     } finally {
       setDailyLoading(false);
     }
@@ -489,6 +492,18 @@ export function PvpRoute() {
         </div>
 
         <DailyChallengeCard challenge={dailyChallenge} attempted={dailyAttempted} badgeEarned={dailyBadgeEarned} dailyLoading={dailyLoading} onStart={startDailyChallenge} />
+
+        {dailyError && (
+          <div style={{
+            background: "#2a1a1a", border: "1px solid #ff6b6b55",
+            borderRadius: 8, padding: "12px 16px",
+            color: "#ff8888", marginBottom: 20, fontSize: 13,
+            display: "flex", alignItems: "center", gap: 10,
+          }}>
+            <span>⚠️</span>
+            <span>{dailyError}</span>
+          </div>
+        )}
 
         {error && (
           <div style={{

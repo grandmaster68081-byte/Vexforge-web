@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { supabase } from "../lib/supabase";
 import { useFriends } from "../domains/friends/useFriends";
+import type { Friendship, DirectChallenge } from "../domains/friends/repository";
 import { PageLoader } from "../shared/components/PageLoader";
 import { BlockedAuthState } from "../shared/components/BlockedAuthState";
 import { EmptyState } from "../shared/components/EmptyState";
@@ -11,7 +12,7 @@ const btn = (col = "#3ddc84"): React.CSSProperties => ({
   background: "transparent", color: col, fontSize: 11, cursor: "pointer", fontWeight: 700,
 });
 
-function FriendCard({ friend, onChallenge }: { friend: any; onChallenge: (id: string) => void }) {
+function FriendCard({ friend, onChallenge }: { friend: Friendship; onChallenge: (id: string) => void }) {
   const name = friend.display_name ?? `#${(friend.friend_id ?? "").slice(0, 6)}`;
   return (
     <div style={{ background: "#12121a", border: "1px solid #2a2a3e", borderRadius: 10, padding: "14px 18px", display: "flex", alignItems: "center", gap: 14 }}>
@@ -27,7 +28,7 @@ function FriendCard({ friend, onChallenge }: { friend: any; onChallenge: (id: st
   );
 }
 
-function PendingCard({ request, onAccept, onDecline }: { request: any; onAccept: (id: string) => void; onDecline: (id: string) => void }) {
+function PendingCard({ request, onAccept, onDecline }: { request: Friendship; onAccept: (id: string) => void; onDecline: (id: string) => void }) {
   const name = request.display_name ?? `#${(request.friend_id ?? "").slice(0, 6)}`;
   return (
     <div style={{ background: "#12121a", border: "1px solid #2a2a3e", borderRadius: 10, padding: "14px 18px", display: "flex", alignItems: "center", gap: 14 }}>
@@ -103,7 +104,7 @@ export function FriendsRoute() {
         friends.length === 0
           ? <EmptyState icon="🤝" title="Sin amigos aún" description="Añade a otros Forjadores por su ID para conectar y desafiarlos." />
           : <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-              {friends.map((f: any) => (
+              {friends.map((f: Friendship) => (
                 <FriendCard key={f.id ?? f.friend_id} friend={f} onChallenge={async (id) => {
                   const r = await challenge(id);
                   r.ok ? addToast("success", "Desafío enviado 🎯") : addToast("error", "Error al enviar desafío", r.reason ?? "Error desconocido");
@@ -116,7 +117,7 @@ export function FriendsRoute() {
         pending.length === 0
           ? <EmptyState icon="📨" title="Sin solicitudes" description="No tienes solicitudes de amistad pendientes." />
           : <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-              {pending.map((p: any) => (
+              {pending.map((p: Friendship) => (
                 <PendingCard key={p.id} request={p}
                   onAccept={async (id) => { await accept(id); addToast("success", "Solicitud aceptada"); }}
                   onDecline={async (id) => { await decline(id); addToast("error", "Solicitud rechazada"); }}
@@ -129,7 +130,7 @@ export function FriendsRoute() {
         challenges.length === 0
           ? <EmptyState icon="🎯" title="Sin desafíos" description="No tienes desafíos activos. Reta a un amigo desde la pestaña Amigos." />
           : <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-              {challenges.map((c: any) => (
+              {challenges.map((c: DirectChallenge) => (
                 <div key={c.id} style={{ background: "#12121a", border: "1px solid #e3573f33", borderRadius: 10, padding: "14px 18px", display: "flex", alignItems: "center", gap: 14 }}>
                   <span style={{ fontSize: 28 }}>🎯</span>
                   <div style={{ flex: 1 }}>

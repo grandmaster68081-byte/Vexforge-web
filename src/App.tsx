@@ -299,8 +299,8 @@ function ForgeHeader({
   async function handleSignOut() {
     await supabase.auth.signOut();
     setDropOpen(false);
-    // Redirect to home so user isn't left on a protected route while unauthenticated
-    window.location.href = "/";
+    // replace() evita agregar entrada al historial del navegador
+    window.location.replace("/");
   }
 
   return (

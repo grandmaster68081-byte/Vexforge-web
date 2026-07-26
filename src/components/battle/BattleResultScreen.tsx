@@ -3,6 +3,7 @@
 // Extracted and upgraded from BattleCinematicScreen v2.0.
 
 import { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import type { RealBattleResult } from '../../lib/battleTypes';
 import { particleEngine } from '../../lib/particleEngine';
 
@@ -63,6 +64,7 @@ function StatRow({ label, value, highlight = false }: { label: string; value: st
 }
 
 export function BattleResultScreen({ result, playerName, opponentName, onDismiss, canvasRef }: BattleResultScreenProps) {
+  const navigate = useNavigate();
   const won = result.you_won;
   const isDraw = !won && result.status === 'draw';
   const eloChange = result.elo_change ?? 0;
@@ -70,8 +72,8 @@ export function BattleResultScreen({ result, playerName, opponentName, onDismiss
   const [showStats, setShowStats] = useState(false);
   const [eloDisplayed, setEloDisplayed] = useState(0);
 
-    // GL.0: Win Streak counter (persisted in localStorage, scoped to playerName to avoid cross-user bleed)
-    const streakKey = `vxf_win_streak_${playerName}`;
+    // GL.0: Win Streak counter — scoped por match_id o session para evitar mezcla entre usuarios
+    const streakKey = `vxf_win_streak_${result.match_id ?? result.session_id ?? playerName ?? 'guest'}`;
     const [winStreak, setWinStreak] = useState<number>(() => {
       try { return parseInt(localStorage.getItem(streakKey) ?? '0') || 0; } catch { return 0; }
     });
@@ -305,7 +307,7 @@ export function BattleResultScreen({ result, playerName, opponentName, onDismiss
         display: 'flex', gap: 12,
         opacity: showStats ? 1 : 0, transition: 'opacity 0.5s 0.3s',
       }}>
-        <button onClick={onDismiss} style={{
+        <button onClick={() => { onDismiss(); navigate('/pvp'); }} style={{
           background: `linear-gradient(135deg, ${theme.primary}30, ${theme.primary}14)`,
           border: `1px solid ${theme.primary}70`, borderRadius: 10,
           color: theme.primary, fontFamily: 'Cinzel, serif', fontSize: 12,
@@ -327,7 +329,7 @@ export function BattleResultScreen({ result, playerName, opponentName, onDismiss
           textTransform: 'uppercase',
           transition: 'all 0.2s',
         }}>
-          Arena
+          Volver a Arena
         </button>
       </div>
 
