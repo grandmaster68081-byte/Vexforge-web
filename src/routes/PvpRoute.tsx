@@ -394,31 +394,60 @@ function DailyChallengeCard({ challenge, attempted, badgeEarned, dailyLoading, o
     return (
       <div style={{
         position: 'fixed', inset: 0, zIndex: 200,
-        background: 'rgba(5,5,14,0.97)',
+        background: 'radial-gradient(ellipse at 50% 20%, #0d0820 0%, #05050e 60%, #030308 100%)',
         display: 'flex', flexDirection: 'column',
-        alignItems: 'center', justifyContent: 'center', gap: 24,
+        alignItems: 'center', justifyContent: 'center', gap: 28,
         padding: '0 16px',
       }}>
         <style>{`
-          @keyframes ms-fade { from { opacity:0; transform: translateY(20px); } to { opacity:1; transform: none; } }
-          .bms-card { transition: all 0.18s ease; }
-          .bms-card:hover { transform: translateY(-3px) scale(1.02); }
+          @keyframes ms-fade  { from{opacity:0;transform:translateY(24px)} to{opacity:1;transform:none} }
+          @keyframes ms-title { from{opacity:0;transform:scale(0.9)} to{opacity:1;transform:none} }
+          @keyframes ms-glow  { 0%,100%{opacity:0.5} 50%{opacity:1} }
+          .bms-card {
+            transition: transform 0.16s ease, border-color 0.16s ease, box-shadow 0.16s ease;
+          }
+          .bms-card:hover {
+            transform: translateY(-4px) scale(1.015);
+          }
         `}</style>
 
+        {/* Atmospheric top glow */}
+        <div style={{
+          position: 'absolute', top: 0, left: 0, right: 0, height: '45%', pointerEvents: 'none',
+          background: 'radial-gradient(ellipse 80% 60% at 50% 0%, rgba(232,184,75,0.06) 0%, transparent 70%)',
+        }} />
+
         {/* Header */}
-        <div style={{ textAlign: 'center', animation: 'ms-fade 0.4s ease' }}>
-          <div style={{ fontFamily: '"Cinzel",serif', fontSize: 22, fontWeight: 700, color: '#e8b84b', letterSpacing: '0.12em' }}>
+        <div style={{ textAlign: 'center', zIndex: 1, animation: 'ms-title 0.5s cubic-bezier(0.22,1,0.36,1)' }}>
+          {/* Decorative rune line */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16, justifyContent: 'center' }}>
+            <div style={{ height: 1, width: 60, background: 'linear-gradient(90deg, transparent, #e8b84b44)' }} />
+            <span style={{ fontSize: 16, opacity: 0.5 }}>⚔️</span>
+            <div style={{ height: 1, width: 60, background: 'linear-gradient(90deg, #e8b84b44, transparent)' }} />
+          </div>
+          <div style={{
+            fontFamily: '"Cinzel",serif', fontSize: 26, fontWeight: 900,
+            letterSpacing: '0.15em', textTransform: 'uppercase',
+            background: 'linear-gradient(180deg, #f5d585, #e8b84b 60%, #a56d18)',
+            WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
+            textShadow: 'none',
+            marginBottom: 6,
+          }}>
             MODO DE BATALLA
           </div>
-          <div style={{ fontFamily: '"Rajdhani",sans-serif', fontSize: 13, color: '#8891a0', marginTop: 4 }}>
-            Elige cómo quieres combatir hoy
+          <div style={{
+            fontFamily: '"Rajdhani",sans-serif', fontSize: 12, color: '#5a6270',
+            letterSpacing: '0.18em', textTransform: 'uppercase',
+          }}>
+            Elige tu arena
           </div>
         </div>
 
         {/* Mode cards */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 10, width: '100%', maxWidth: 420 }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 8, width: '100%', maxWidth: 440, zIndex: 1 }}>
           {ALL_MODES.map((mode, idx) => {
             const meta = BATTLE_MODE_META[mode];
+            const isPvp = mode === 'pvp';
             return (
               <button
                 key={mode}
@@ -426,31 +455,65 @@ function DailyChallengeCard({ challenge, attempted, badgeEarned, dailyLoading, o
                 onClick={() => onSelect(mode)}
                 style={{
                   display: 'flex', alignItems: 'center', gap: 16,
-                  background: `linear-gradient(135deg, ${meta.color}18 0%, rgba(13,13,26,0.98) 100%)`,
-                  border: `1px solid ${meta.color}33`, borderRadius: 12,
-                  padding: '14px 18px', cursor: 'pointer', textAlign: 'left', width: '100%',
-                  animation: `ms-fade ${0.3 + idx * 0.07}s ease`,
+                  background: isPvp
+                    ? `linear-gradient(135deg, ${meta.color}22 0%, rgba(13,13,28,0.98) 100%)`
+                    : `linear-gradient(135deg, ${meta.color}14 0%, rgba(10,10,20,0.98) 100%)`,
+                  border: `1px solid ${meta.color}${isPvp ? '55' : '2a'}`,
+                  borderRadius: 12, padding: '14px 18px',
+                  cursor: 'pointer', textAlign: 'left', width: '100%',
+                  animation: `ms-fade ${0.25 + idx * 0.06}s cubic-bezier(0.22,1,0.36,1) both`,
+                  boxShadow: isPvp ? `0 0 24px ${meta.color}18, inset 0 1px 0 rgba(255,255,255,0.05)` : 'none',
+                  position: 'relative', overflow: 'hidden',
                 }}
               >
-                <div style={{ fontSize: 26, lineHeight: 1, minWidth: 36, textAlign: 'center' }}>{meta.icon}</div>
+                {/* Shimmer on hover for PvP */}
+                {isPvp && (
+                  <div style={{
+                    position: 'absolute', inset: 0, pointerEvents: 'none',
+                    background: `linear-gradient(135deg, transparent 30%, ${meta.color}0a 50%, transparent 70%)`,
+                  }} />
+                )}
+                {/* Icon */}
+                <div style={{
+                  fontSize: 28, lineHeight: 1, minWidth: 40, textAlign: 'center',
+                  filter: `drop-shadow(0 0 6px ${meta.color}66)`,
+                }}>{meta.icon}</div>
+                {/* Text */}
                 <div style={{ flex: 1 }}>
-                  <div style={{ fontFamily: '"Cinzel",serif', fontSize: 13, fontWeight: 700, color: meta.color, letterSpacing: '0.06em' }}>
+                  <div style={{
+                    fontFamily: '"Cinzel",serif', fontSize: 13, fontWeight: 700,
+                    color: meta.color, letterSpacing: '0.07em', marginBottom: 3,
+                    textShadow: `0 0 12px ${meta.color}44`,
+                  }}>
                     {meta.label}
+                    {isPvp && <span style={{ marginLeft: 8, fontSize: 9, background: `${meta.color}22`,
+                      border: `1px solid ${meta.color}44`, borderRadius: 4, padding: '1px 5px',
+                      color: meta.color, verticalAlign: 'middle', letterSpacing: '0.08em' }}>EN VIVO</span>}
                   </div>
-                  <div style={{ fontFamily: '"Rajdhani",sans-serif', fontSize: 12, color: '#8891a0', marginTop: 2 }}>
+                  <div style={{ fontFamily: '"Rajdhani",sans-serif', fontSize: 11, color: '#4a5060', letterSpacing: '0.04em' }}>
                     {meta.desc}
                   </div>
                 </div>
+                {/* Reward pill */}
                 <div style={{
-                  fontFamily: '"Rajdhani",sans-serif', fontSize: 10, color: meta.color,
-                  background: `${meta.color}22`, border: `1px solid ${meta.color}44`,
-                  borderRadius: 6, padding: '3px 8px', whiteSpace: 'nowrap',
+                  fontFamily: '"IBM Plex Mono",monospace', fontSize: 10, color: meta.color,
+                  background: `${meta.color}15`, border: `1px solid ${meta.color}33`,
+                  borderRadius: 20, padding: '4px 10px', whiteSpace: 'nowrap', flexShrink: 0,
+                  fontWeight: 700,
                 }}>
                   {meta.reward}
                 </div>
               </button>
             );
           })}
+        </div>
+
+        {/* Bottom disclaimer */}
+        <div style={{
+          fontFamily: '"Rajdhani",sans-serif', fontSize: 10, color: '#2a3040',
+          letterSpacing: '0.1em', zIndex: 1, textTransform: 'uppercase',
+        }}>
+          Necesitas cartas en tu colección para batallar
         </div>
       </div>
     );
@@ -461,15 +524,64 @@ function DailyChallengeCard({ challenge, attempted, badgeEarned, dailyLoading, o
     const meta = BATTLE_MODE_META[`ai_${difficulty}` as BattleMode] ?? BATTLE_MODE_META.ai_normal;
     return (
       <div style={{
-        position: 'fixed', inset: 0, zIndex: 300, background: 'rgba(5,5,14,0.97)',
-        display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 20,
+        position: 'fixed', inset: 0, zIndex: 300,
+        background: 'radial-gradient(ellipse at 50% 40%, rgba(10,5,25,0.98) 0%, rgba(3,3,10,0.99) 100%)',
+        display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 28,
       }}>
-        <div style={{ fontSize: 48 }}>{meta.icon}</div>
-        <div style={{ fontFamily: '"Cinzel",serif', fontSize: 18, color: meta.color, letterSpacing: '0.12em' }}>
-          PREPARANDO BATALLA
+        <style>{`
+          @keyframes ai-pulse { 0%,100%{transform:scale(1);filter:drop-shadow(0 0 12px ${meta.color}66);} 50%{transform:scale(1.12);filter:drop-shadow(0 0 28px ${meta.color}cc);} }
+          @keyframes ai-bar { from{width:0%} to{width:100%} }
+          @keyframes ai-scan { 0%{transform:translateY(-100%)} 100%{transform:translateY(100%)} }
+        `}</style>
+
+        {/* Atmospheric glow */}
+        <div style={{
+          position: 'absolute', inset: 0, pointerEvents: 'none',
+          background: `radial-gradient(ellipse 60% 40% at 50% 50%, ${meta.color}0d 0%, transparent 70%)`,
+        }} />
+
+        {/* Icon with pulse */}
+        <div style={{
+          fontSize: 72, lineHeight: 1,
+          animation: 'ai-pulse 1.8s ease-in-out infinite',
+        }}>{meta.icon}</div>
+
+        {/* Title */}
+        <div style={{ textAlign: 'center' }}>
+          <div style={{
+            fontFamily: '"Cinzel",serif', fontSize: 22, fontWeight: 900,
+            color: meta.color, letterSpacing: '0.15em', textTransform: 'uppercase',
+            textShadow: `0 0 24px ${meta.color}88`,
+            marginBottom: 6,
+          }}>
+            {meta.label}
+          </div>
+          <div style={{
+            fontFamily: '"Rajdhani",sans-serif', fontSize: 13, color: '#6a7080',
+            letterSpacing: '0.12em', textTransform: 'uppercase',
+          }}>
+            Preparando batalla…
+          </div>
         </div>
-        <div style={{ fontFamily: '"Rajdhani",sans-serif', fontSize: 13, color: '#8891a0' }}>
-          Cargando unidades vs {meta.label}…
+
+        {/* Animated loading bar */}
+        <div style={{
+          width: 280, height: 3, borderRadius: 2,
+          background: 'rgba(255,255,255,0.06)', overflow: 'hidden', position: 'relative',
+        }}>
+          <div style={{
+            height: '100%', borderRadius: 2,
+            background: `linear-gradient(90deg, transparent, ${meta.color}, transparent)`,
+            animation: 'ai-scan 1.4s ease-in-out infinite',
+            position: 'absolute', width: '50%', top: 0,
+          }} />
+        </div>
+
+        {/* Rune symbols */}
+        <div style={{ display: 'flex', gap: 20, opacity: 0.25, fontSize: 18 }}>
+          {['⚔️','🔮','⚡','🛡','✝️'].map((s,i) => (
+            <span key={i} style={{ animation: `ai-pulse ${1.2 + i * 0.2}s ease-in-out infinite` }}>{s}</span>
+          ))}
         </div>
       </div>
     );

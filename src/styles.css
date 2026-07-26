@@ -1504,7 +1504,7 @@ a { text-decoration: none; color: inherit; }
 /* ─── PVP ─────────────────────────────────────────────────── */
 .pvp-hero {
   position: relative;
-  padding: 48px 24px;
+  padding: 64px 24px 52px;
   margin: -62px -20px 40px;
   text-align: center;
   overflow: hidden;
@@ -1512,18 +1512,32 @@ a { text-decoration: none; color: inherit; }
 .pvp-hero-bg {
   position: absolute;
   inset: 0;
-  background: radial-gradient(ellipse at center, rgba(232,64,64,0.12) 0%, transparent 70%);
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 0%, rgba(232,64,64,0.10) 0%, transparent 70%),
+    radial-gradient(ellipse 50% 40% at 50% 100%, rgba(74,158,255,0.06) 0%, transparent 60%);
 }
 .pvp-hero-bg::after {
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(0deg, rgba(5,5,13,1) 0%, transparent 100%);
+  background: linear-gradient(0deg, rgba(5,5,13,1) 0%, rgba(5,5,13,0.4) 60%, transparent 100%);
 }
 .pvp-arena-label {
   position: relative;
   z-index: 2;
   margin-top: 62px;
+}
+
+/* Battle arena divider line pulse */
+@keyframes arena-line-pulse {
+  0%, 100% { opacity: 0.3; }
+  50%       { opacity: 0.7; }
+}
+
+/* Card shimmer for Legendary/Mythic */
+@keyframes card-shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
 }
 
 .pvp-stats-grid {
