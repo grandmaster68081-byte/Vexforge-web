@@ -15,11 +15,14 @@ interface BattleIntroScreenProps {
   canvasRef?: React.RefObject<HTMLCanvasElement>;
 }
 
-const FACTION_THEME: Record<string, { primary: string; secondary: string; glow: string; icon: string; bgImg?: string }> = {
-  Guerrero:    { primary: '#c0392b', secondary: '#922b21', glow: 'rgba(192,57,43,0.6)',  icon: '⚔️', bgImg: '/factions/bg_guerrero.jpg' },
-  Mago:        { primary: '#8e44ad', secondary: '#6c3483', glow: 'rgba(142,68,173,0.6)', icon: '🔮', bgImg: '/factions/bg_mago.jpg' },
-  Explorador:  { primary: '#27ae60', secondary: '#1e8449', glow: 'rgba(39,174,96,0.6)',  icon: '🏹', bgImg: '/factions/bg_picaro.jpg' },
-  Comerciante: { primary: '#f39c12', secondary: '#d68910', glow: 'rgba(243,156,18,0.6)', icon: '💰', bgImg: '/factions/bg_paladin.jpg' },
+const FACTION_THEME: Record<string, { primary: string; secondary: string; glow: string; icon: string }> = {
+  Guerrero:    { primary: '#c0392b', secondary: '#922b21', glow: 'rgba(192,57,43,0.6)',  icon: '⚔️' },
+  Mago:        { primary: '#8e44ad', secondary: '#6c3483', glow: 'rgba(142,68,173,0.6)', icon: '🔮' },
+  'Pícaro':    { primary: '#27ae60', secondary: '#1e8449', glow: 'rgba(39,174,96,0.6)',  icon: '🏹' },
+  'Paladín':   { primary: '#f39c12', secondary: '#d68910', glow: 'rgba(243,156,18,0.6)', icon: '✝️' },
+  // Legacy aliases
+  Explorador:  { primary: '#27ae60', secondary: '#1e8449', glow: 'rgba(39,174,96,0.6)',  icon: '🏹' },
+  Comerciante: { primary: '#f39c12', secondary: '#d68910', glow: 'rgba(243,156,18,0.6)', icon: '💰' },
   default:     { primary: '#4a9eff', secondary: '#2471a3', glow: 'rgba(74,158,255,0.6)', icon: '🃏' },
 };
 
@@ -83,9 +86,7 @@ export function BattleIntroScreen({
       <div style={{ display: 'flex', width: '100%', height: '100%', position: 'absolute', inset: 0 }}>
         {/* Player side — slides in from left */}
         <div style={{
-          flex: 1, background: pTheme.bgImg
-            ? `linear-gradient(135deg, ${pTheme.primary}55 0%, rgba(0,0,0,0.7) 100%), url(${pTheme.bgImg}) center/cover no-repeat`
-            : `linear-gradient(135deg, ${pTheme.primary}22 0%, transparent 100%)`,
+          flex: 1, background: `linear-gradient(135deg, ${pTheme.primary}30 0%, rgba(0,0,0,0.85) 100%)`,
           borderRight: `1px solid ${pTheme.primary}44`,
           transform: phase === 'enter' ? 'translateX(-100%)' : 'translateX(0)',
           transition: 'transform 0.7s cubic-bezier(0.22,1,0.36,1)',
@@ -119,9 +120,7 @@ export function BattleIntroScreen({
 
         {/* Opponent side — slides in from right */}
         <div style={{
-          flex: 1, background: oTheme.bgImg
-            ? `linear-gradient(225deg, ${oTheme.primary}55 0%, rgba(0,0,0,0.7) 100%), url(${oTheme.bgImg}) center/cover no-repeat`
-            : `linear-gradient(225deg, ${oTheme.primary}22 0%, transparent 100%)`,
+          flex: 1, background: `linear-gradient(225deg, ${oTheme.primary}30 0%, rgba(0,0,0,0.85) 100%)`,
           borderLeft: `1px solid ${oTheme.primary}44`,
           transform: phase === 'enter' ? 'translateX(100%)' : 'translateX(0)',
           transition: 'transform 0.7s cubic-bezier(0.22,1,0.36,1)',

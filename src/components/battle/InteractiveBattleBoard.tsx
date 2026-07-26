@@ -23,6 +23,9 @@ const HP_COLOR = (pct: number) =>
 const FACTION_BORDER: Record<string, string> = {
   Guerrero:    '#c0392b',
   Mago:        '#8e44ad',
+  'Pícaro':    '#27ae60',
+  'Paladín':   '#f39c12',
+  // Legacy aliases
   Explorador:  '#27ae60',
   Comerciante: '#f39c12',
 };
@@ -68,7 +71,7 @@ function FighterCard({
 
   const cardStyle: CSSProperties = {
     position: 'relative',
-    width: 110, minHeight: 130,
+    width: 128, minHeight: 165,
     borderRadius: 10,
     border: `1.5px solid ${isDropTarget ? '#e8b84b' : isActive ? rarColor : rarColor + '44'}`,
     background: `linear-gradient(160deg, ${rarColor}18 0%, rgba(5,5,14,0.97) 100%)`,
@@ -98,14 +101,27 @@ function FighterCard({
     >
       {/* Image zone */}
       <div style={{
-        height: 70, background: unit.image_url
+        height: 90, background: unit.image_url
           ? `url(${unit.image_url}) center/cover no-repeat`
-          : `linear-gradient(135deg, ${rarColor}28, ${fBorder}18)`,
-        borderBottom: `1px solid ${rarColor}22`,
+          : `linear-gradient(155deg, ${rarColor}30, ${fBorder}20, rgba(5,5,14,0.9) 100%)`,
+        borderBottom: `1px solid ${rarColor}33`,
         display: 'flex', alignItems: 'center', justifyContent: 'center',
-        fontSize: 22,
+        fontSize: 28, position: 'relative', overflow: 'hidden',
       }}>
-        {!unit.image_url && <span>{KEYWORD_ICON[unit.faction] ?? '⚔️'}</span>}
+        {!unit.image_url && (
+          <span style={{ filter: `drop-shadow(0 0 8px ${rarColor}88)` }}>
+            {KEYWORD_ICON[unit.faction] ?? '⚔️'}
+          </span>
+        )}
+        {/* Rarity shimmer overlay for Rare+ */}
+        {(unit.rarity === 'Legendary' || unit.rarity === 'Mythic' || unit.rarity === 'Founder') && (
+          <div style={{
+            position: 'absolute', inset: 0, pointerEvents: 'none',
+            background: `linear-gradient(135deg, transparent 30%, ${rarColor}22 50%, transparent 70%)`,
+            backgroundSize: '200% 200%',
+            animation: 'shimmer 2.5s ease infinite',
+          }} />
+        )}
       </div>
 
       {/* Body */}
@@ -119,7 +135,7 @@ function FighterCard({
         </div>
 
         {/* Stats row */}
-        <div style={{ display: 'flex', gap: 4, fontSize: 9, fontFamily: '"Rajdhani",sans-serif' }}>
+        <div style={{ display: 'flex', gap: 5, fontSize: 10, fontFamily: '"Rajdhani",sans-serif', fontWeight: 700 }}>
           <span title="ATK" style={{ color: '#ff6b6b' }}>⚔{unit.atk}</span>
           <span title="DEF" style={{ color: '#4a9eff' }}>🛡{unit.def}</span>
           <span title="SPD" style={{ color: '#e8b84b' }}>⚡{unit.spd}</span>
@@ -363,46 +379,79 @@ export function InteractiveBattleBoard({
   return (
     <div style={{
       position: 'fixed', inset: 0, zIndex: 100,
-      background: '#060610',
+      background: 'radial-gradient(ellipse at 50% 0%, #0f0820 0%, #060610 55%, #030308 100%)',
       display: 'flex', flexDirection: 'column',
-      maxWidth: 720, margin: '0 auto',
       fontFamily: '"Rajdhani",sans-serif',
     }} onPointerUp={onPointerUp}>
 
       {/* ─── Header ──────────────────────────────────────────────────────── */}
       <div style={{
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-        padding: '8px 14px',
-        background: 'rgba(4,4,12,0.98)',
-        borderBottom: '1px solid #181828',
+        padding: '10px 20px',
+        background: 'linear-gradient(180deg, rgba(5,5,18,0.99) 0%, rgba(5,5,18,0.92) 100%)',
+        borderBottom: '1px solid rgba(255,255,255,0.06)',
         flexShrink: 0, zIndex: 10,
+        boxShadow: '0 2px 20px rgba(0,0,0,0.6)',
       }}>
-        <div>
-          <div style={{ fontFamily: '"Cinzel",serif', fontSize: 10, color: '#4a9eff' }}>{playerName}</div>
-          <HpBar hp={state.playerHp} max={state.playerMaxHp} />
-          <div style={{ fontSize: 9, color: '#4a9eff88', marginTop: 1 }}>
-            {state.playerHp}/{state.playerMaxHp} HP
+        {/* Player HP */}
+        <div style={{ minWidth: 160 }}>
+          <div style={{ fontFamily: '"Cinzel",serif', fontSize: 12, color: '#4a9eff',
+            letterSpacing: '0.06em', marginBottom: 4 }}>{playerName}</div>
+          <div style={{ background: 'rgba(0,0,0,0.4)', borderRadius: 6, height: 8,
+            width: 160, overflow: 'hidden', border: '1px solid rgba(74,158,255,0.2)' }}>
+            <div style={{
+              height: '100%', borderRadius: 6,
+              width: `${state.playerMaxHp > 0 ? (state.playerHp / state.playerMaxHp) * 100 : 0}%`,
+              background: 'linear-gradient(90deg, #2980b9, #4a9eff)',
+              boxShadow: '0 0 8px rgba(74,158,255,0.6)',
+              transition: 'width 0.5s ease',
+            }} />
+          </div>
+          <div style={{ fontSize: 10, color: '#4a9effaa', marginTop: 3,
+            fontFamily: '"IBM Plex Mono",monospace' }}>
+            {state.playerHp} / {state.playerMaxHp} HP
           </div>
         </div>
 
-        <div style={{ textAlign: 'center' }}>
-          <div style={{ fontFamily: '"IBM Plex Mono",monospace', fontSize: 10, color: '#444' }}>
-            Turno {state.revealedTurns.length} / {state.totalTurns}
+        {/* Turn indicator */}
+        <div style={{ textAlign: 'center', flex: 1 }}>
+          <div style={{
+            fontFamily: '"IBM Plex Mono",monospace', fontSize: 11,
+            color: '#e8b84b66', letterSpacing: '0.1em',
+          }}>
+            TURNO {state.revealedTurns.length} / {state.totalTurns}
           </div>
-          <div style={{ fontSize: 9, color: state.phase === 'ANIMATING' ? '#e8b84b' : '#333',
-            fontFamily: '"Rajdhani",sans-serif', marginTop: 2, letterSpacing: '0.08em' }}>
-            {state.phase === 'IDLE'      ? 'TU TURNO'        : ''}
-            {state.phase === 'SELECTING' ? 'ARRASTRA CARTA'  : ''}
-            {state.phase === 'ANIMATING' ? 'RESOLVIENDO…'    : ''}
-            {state.phase === 'COMPLETE'  ? 'FIN'             : ''}
+          <div style={{
+            marginTop: 4, fontSize: 10,
+            color: state.phase === 'ANIMATING' ? '#e8b84b' : state.phase === 'COMPLETE' ? '#3ddc84' : '#555',
+            fontFamily: '"Rajdhani",sans-serif', letterSpacing: '0.12em', textTransform: 'uppercase',
+            transition: 'color 0.3s',
+          }}>
+            {state.phase === 'IDLE'      && '▶ LISTO PARA ATACAR'}
+            {state.phase === 'SELECTING' && '🎯 SELECCIONA OBJETIVO'}
+            {state.phase === 'ANIMATING' && '⚔️ RESOLVIENDO…'}
+            {state.phase === 'COMPLETE'  && '🏆 BATALLA TERMINADA'}
           </div>
         </div>
 
-        <div style={{ textAlign: 'right' }}>
-          <div style={{ fontFamily: '"Cinzel",serif', fontSize: 10, color: '#e74c3c' }}>{opponentName}</div>
-          <HpBar hp={state.opponentHp} max={state.opponentMaxHp} />
-          <div style={{ fontSize: 9, color: '#e74c3c88', marginTop: 1 }}>
-            {state.opponentHp}/{state.opponentMaxHp} HP
+        {/* Opponent HP */}
+        <div style={{ textAlign: 'right', minWidth: 160 }}>
+          <div style={{ fontFamily: '"Cinzel",serif', fontSize: 12, color: '#e74c3c',
+            letterSpacing: '0.06em', marginBottom: 4 }}>{opponentName}</div>
+          <div style={{ background: 'rgba(0,0,0,0.4)', borderRadius: 6, height: 8,
+            width: 160, overflow: 'hidden', border: '1px solid rgba(231,76,60,0.2)',
+            marginLeft: 'auto' }}>
+            <div style={{
+              height: '100%', borderRadius: 6,
+              width: `${state.opponentMaxHp > 0 ? (state.opponentHp / state.opponentMaxHp) * 100 : 0}%`,
+              background: 'linear-gradient(90deg, #c0392b, #e74c3c)',
+              boxShadow: '0 0 8px rgba(231,76,60,0.6)',
+              transition: 'width 0.5s ease',
+            }} />
+          </div>
+          <div style={{ fontSize: 10, color: '#e74c3caa', marginTop: 3,
+            fontFamily: '"IBM Plex Mono",monospace' }}>
+            {state.opponentHp} / {state.opponentMaxHp} HP
           </div>
         </div>
       </div>
@@ -411,22 +460,42 @@ export function InteractiveBattleBoard({
       <div style={{
         flex: 1, display: 'flex', flexDirection: 'column',
         alignItems: 'center', justifyContent: 'center',
-        gap: 20, padding: '20px 16px', position: 'relative',
+        gap: 24, padding: '24px 20px', position: 'relative',
         overflow: 'hidden',
       }}>
-        {/* Background glow */}
+        {/* Ambient arena background */}
+        <div style={{
+          position: 'absolute', inset: 0, zIndex: 0, pointerEvents: 'none',
+          background: [
+            'radial-gradient(ellipse 60% 35% at 50% 15%, rgba(231,76,60,0.07) 0%, transparent 100%)',
+            'radial-gradient(ellipse 60% 35% at 50% 85%, rgba(74,158,255,0.07) 0%, transparent 100%)',
+            'linear-gradient(180deg, rgba(5,5,20,0) 0%, rgba(10,5,30,0.4) 50%, rgba(5,5,20,0) 100%)',
+          ].join(','),
+          transition: 'background 0.5s',
+        }} />
+        {/* Attack flash */}
         <div style={{
           position: 'absolute', inset: 0, zIndex: 0, pointerEvents: 'none',
           background: state.phase === 'ANIMATING'
-            ? 'radial-gradient(ellipse at center, rgba(192,57,43,0.08) 0%, transparent 70%)'
-            : 'none',
-          transition: 'background 0.3s',
+            ? 'radial-gradient(ellipse at center, rgba(232,184,75,0.06) 0%, transparent 70%)'
+            : 'transparent',
+          transition: 'background 0.35s',
+        }} />
+        {/* Center divider line */}
+        <div style={{
+          position: 'absolute', left: 0, right: 0, top: '50%', height: 1, zIndex: 0, pointerEvents: 'none',
+          background: 'linear-gradient(90deg, transparent, rgba(232,184,75,0.15) 20%, rgba(232,184,75,0.35) 50%, rgba(232,184,75,0.15) 80%, transparent)',
+          transform: 'translateY(-50%)',
         }} />
 
         {/* Opponent zone (drop target) */}
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8, zIndex: 1 }}>
-          <div style={{ fontSize: 10, color: '#e74c3c88', letterSpacing: '0.15em',
-            fontFamily: '"Rajdhani",sans-serif', textTransform: 'uppercase' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 10, zIndex: 1 }}>
+          <div style={{
+            fontSize: 10, color: '#e74c3ccc', letterSpacing: '0.18em',
+            fontFamily: '"Rajdhani",sans-serif', textTransform: 'uppercase',
+            background: 'rgba(231,76,60,0.08)', border: '1px solid rgba(231,76,60,0.2)',
+            borderRadius: 20, padding: '3px 12px',
+          }}>
             ⚔ {opponentName}
           </div>
           {opponentUnit ? (
@@ -441,19 +510,26 @@ export function InteractiveBattleBoard({
             />
           ) : (
             <div ref={dropZoneRef as React.RefObject<HTMLDivElement>}
-              style={{ width: 110, height: 130, border: '1px dashed #2a2a3a', borderRadius: 10,
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                color: '#333', fontSize: 11 }}>
-              Sin unidad
+              style={{ width: 128, height: 165, border: '1px dashed rgba(231,76,60,0.2)', borderRadius: 10,
+              background: 'rgba(231,76,60,0.03)', display: 'flex', alignItems: 'center', justifyContent: 'center',
+              color: 'rgba(231,76,60,0.2)', fontSize: 28 }}>
+              💀
             </div>
           )}
         </div>
 
-        {/* VS divider */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 12, width: '100%', zIndex: 1 }}>
-          <div style={{ flex: 1, height: 1, background: 'linear-gradient(90deg, transparent, #2a2a4a)' }} />
-          <div style={{ fontSize: 18, color: '#2a2a4a', fontWeight: 900 }}>VS</div>
-          <div style={{ flex: 1, height: 1, background: 'linear-gradient(90deg, #2a2a4a, transparent)' }} />
+        {/* VS divider — epic center beam */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 16, width: '100%', maxWidth: 600, zIndex: 1 }}>
+          <div style={{ flex: 1, height: 1, background: 'linear-gradient(90deg, transparent, rgba(231,76,60,0.5))' }} />
+          <div style={{
+            fontFamily: '"Cinzel Decorative",serif', fontSize: 20, fontWeight: 900,
+            background: 'linear-gradient(135deg, #e74c3c, #e8b84b, #4a9eff)',
+            WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
+            letterSpacing: '0.15em',
+            filter: state.phase === 'ANIMATING' ? 'drop-shadow(0 0 8px rgba(232,184,75,0.8))' : 'none',
+            transition: 'filter 0.3s',
+          }}>VS</div>
+          <div style={{ flex: 1, height: 1, background: 'linear-gradient(90deg, rgba(74,158,255,0.5), transparent)' }} />
         </div>
 
         {/* Player zone (draggable) */}
@@ -470,10 +546,16 @@ export function InteractiveBattleBoard({
               onPointerEnter={() => { if (!state.isDragging) AudioEngine.sfxCardHover?.(); }}
             />
           ) : (
-            <div style={{ width: 110, height: 130, border: '1px dashed #2a2a3a', borderRadius: 10 }} />
+            <div style={{ width: 128, height: 165, border: '1px dashed rgba(74,158,255,0.2)', borderRadius: 10,
+              background: 'rgba(74,158,255,0.03)', display: 'flex', alignItems: 'center', justifyContent: 'center',
+              color: 'rgba(74,158,255,0.2)', fontSize: 28 }}>⚔️</div>
           )}
-          <div style={{ fontSize: 10, color: '#4a9eff88', letterSpacing: '0.15em',
-            fontFamily: '"Rajdhani",sans-serif', textTransform: 'uppercase' }}>
+          <div style={{
+            fontSize: 10, color: '#4a9effcc', letterSpacing: '0.18em',
+            fontFamily: '"Rajdhani",sans-serif', textTransform: 'uppercase',
+            background: 'rgba(74,158,255,0.08)', border: '1px solid rgba(74,158,255,0.2)',
+            borderRadius: 20, padding: '3px 12px',
+          }}>
             🛡 {playerName}
           </div>
         </div>

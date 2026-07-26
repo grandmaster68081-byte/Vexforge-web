@@ -68,9 +68,10 @@ function useEffectTracker(result: RealBattleResult) {
       }
     };
 
+    // Use 380ms — faster than auto-play (850ms) so effects never lag behind turns
     const interval = setInterval(() => {
       if (idx < (result.turns?.length ?? 0)) tryFireNextTurn();
-    }, 1200);
+    }, 380);
 
     return () => clearInterval(interval);
   }, [result]);

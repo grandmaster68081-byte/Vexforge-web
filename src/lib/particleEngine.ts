@@ -19,6 +19,9 @@ interface ShakeState { x: number; y: number; dur: number; startTime: number }
 const FACTION_AMBIENT: Record<string, { color: string; shape: Particle['shape']; size: [number, number]; speed: number }> = {
   Guerrero:    { color: '#c0392b', shape: 'spark',   size: [1, 3],   speed: 1.8 },
   Mago:        { color: '#8e44ad', shape: 'diamond', size: [2, 5],   speed: 0.9 },
+  'Pícaro':    { color: '#27ae60', shape: 'circle',  size: [1.5, 4], speed: 1.2 },
+  'Paladín':   { color: '#f39c12', shape: 'square',  size: [2, 4],   speed: 1.4 },
+  // Legacy aliases
   Explorador:  { color: '#27ae60', shape: 'circle',  size: [1.5, 4], speed: 1.2 },
   Comerciante: { color: '#f39c12', shape: 'square',  size: [2, 4],   speed: 1.4 },
 };

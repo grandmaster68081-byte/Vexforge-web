@@ -81,17 +81,17 @@ const DECKS: Record<AIDifficulty, Partial<BattleUnit>[]> = {
   easy: [
     { idx:0, id:'ai_e0', name:'Centinela Gris',   faction:'Guerrero',    rarity:'Common',   atk:12, def:4,  hp:85,  spd:4,  power:30  },
     { idx:1, id:'ai_e1', name:'Escudero Novato',  faction:'Guerrero',    rarity:'Common',   atk:10, def:8,  hp:95,  spd:3,  power:25  },
-    { idx:2, id:'ai_e2', name:'Lancero Bisoño',   faction:'Explorador',  rarity:'Common',   atk:14, def:2,  hp:70,  spd:6,  power:28  },
+    { idx:2, id:'ai_e2', name:'Lancero Bisoño',   faction:'Pícaro',      rarity:'Common',   atk:14, def:2,  hp:70,  spd:6,  power:28  },
   ],
   normal: [
     { idx:0, id:'ai_n0', name:'Arcanista Sombrío', faction:'Mago',       rarity:'Uncommon', atk:18, def:6,  hp:100, spd:6,  power:50, keywords:['Flux'] },
     { idx:1, id:'ai_n1', name:'Guardián Arcano',   faction:'Mago',       rarity:'Uncommon', atk:12, def:12, hp:120, spd:4,  power:45, keywords:['Guard'], guard:true },
-    { idx:2, id:'ai_n2', name:'Cazadora de Sombras',faction:'Explorador',rarity:'Rare',     atk:22, def:4,  hp:80,  spd:9,  power:55, keywords:['Surge'], rush:true },
+    { idx:2, id:'ai_n2', name:'Cazadora de Sombras',faction:'Pícaro',    rarity:'Rare',     atk:22, def:4,  hp:80,  spd:9,  power:55, keywords:['Surge'], rush:true },
   ],
   expert: [
     { idx:0, id:'ai_x0', name:'Forjador Élite',   faction:'Guerrero',   rarity:'Epic',     atk:28, def:10, hp:130, spd:7,  power:90, keywords:['Drain'],         lifesteal:true },
     { idx:1, id:'ai_x1', name:'Señor de Velos',   faction:'Mago',       rarity:'Rare',     atk:20, def:15, hp:115, spd:5,  power:80, keywords:['Veil','Guard'],  shielded:true, guard:true },
-    { idx:2, id:'ai_x2', name:'Tormenta Surgente', faction:'Explorador', rarity:'Epic',     atk:34, def:5,  hp:90,  spd:11, power:95, keywords:['Surge','Forge'], rush:true },
+    { idx:2, id:'ai_x2', name:'Tormenta Surgente', faction:'Pícaro',     rarity:'Epic',     atk:34, def:5,  hp:90,  spd:11, power:95, keywords:['Surge','Forge'], rush:true },
   ],
   tutorial: [
     { idx:0, id:'ai_t0', name:'Guardián Aprendiz', faction:'Guerrero',  rarity:'Common',   atk:8,  def:4,  hp:70,  spd:3,  power:20  },

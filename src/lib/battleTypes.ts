@@ -53,9 +53,12 @@
     };
 
     export const FACTION_BG: Record<string, string> = {
-    Guerrero: 'linear-gradient(135deg,#3a1010 0%,#1a0a0a 100%)',
-    Mago:     'linear-gradient(135deg,#0d0d3a 0%,#0a0a1a 100%)',
-    Explorador: 'linear-gradient(135deg,#0a2a0a 0%,#0a1a0a 100%)',
+    Guerrero:    'linear-gradient(135deg,#3a1010 0%,#1a0a0a 100%)',
+    Mago:        'linear-gradient(135deg,#0d0d3a 0%,#0a0a1a 100%)',
+    'Pícaro':    'linear-gradient(135deg,#0a2a0a 0%,#0a1a0a 100%)',
+    'Paladín':   'linear-gradient(135deg,#2a2a00 0%,#1a1a00 100%)',
+    // Legacy aliases (keep for backward-compat with AI deck data)
+    Explorador:  'linear-gradient(135deg,#0a2a0a 0%,#0a1a0a 100%)',
     Comerciante: 'linear-gradient(135deg,#2a2a00 0%,#1a1a00 100%)',
     };
 

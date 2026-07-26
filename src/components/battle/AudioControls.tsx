@@ -14,10 +14,11 @@ interface AudioControlsProps {
 }
 
 export function AudioControls({ iconSize = 14, showSliders = false, compact = false }: AudioControlsProps) {
-  const [muted,    setMuted]    = useState(false);
+  // Init from AudioEngine singleton so state persists across mounts
+  const [muted,    setMuted]    = useState(() => AudioEngine.isMuted());
   const [expanded, setExpanded] = useState(false);
-  const [musicVol, setMusicVol] = useState(32);
-  const [sfxVol,   setSfxVol]   = useState(88);
+  const [musicVol, setMusicVol] = useState(() => Math.round(AudioEngine.getMusicVol() * 100));
+  const [sfxVol,   setSfxVol]   = useState(() => Math.round(AudioEngine.getSfxVol() * 100));
 
   const toggleMute = useCallback(() => {
     const next = !muted; setMuted(next); AudioEngine.setMuted(next);

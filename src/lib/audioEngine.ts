@@ -5,13 +5,16 @@
 
 type MusicOscEntry = { stop: () => void };
 
-type FactionId = 'Guerrero' | 'Mago' | 'Explorador' | 'Comerciante' | string;
+type FactionId = 'Guerrero' | 'Mago' | 'Pícaro' | 'Paladín' | 'Explorador' | 'Comerciante' | string;
 type IntensityLevel = 'calm' | 'tense' | 'desperate';
 
 // ─── Faction music config ──────────────────────────────────────────────────────
 const FACTION_MUSIC: Record<string, { base: number; mode: OscillatorType[]; tempo: number; color: string }> = {
   Guerrero:    { base: 110, mode: ['sawtooth', 'square'],   tempo: 0.72, color: '#c0392b' },
   Mago:        { base: 220, mode: ['sine', 'triangle'],     tempo: 0.52, color: '#8e44ad' },
+  'Pícaro':    { base: 174, mode: ['triangle', 'sine'],     tempo: 0.64, color: '#27ae60' },
+  'Paladín':   { base: 196, mode: ['square', 'sawtooth'],   tempo: 0.68, color: '#f39c12' },
+  // Legacy aliases
   Explorador:  { base: 174, mode: ['triangle', 'sine'],     tempo: 0.64, color: '#27ae60' },
   Comerciante: { base: 196, mode: ['square', 'sawtooth'],   tempo: 0.68, color: '#f39c12' },
   default:     { base: 140, mode: ['sine', 'triangle'],     tempo: 0.60, color: '#4a9eff' },

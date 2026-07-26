@@ -462,7 +462,7 @@ export function BattleBoardEngine({ result, playerName, opponentName, onComplete
 {/* BA.0: Board atmosphere layer — faction-specific ambient glow */}
         {(() => {
           const factionColors: Record<string, string> = {
-            Guerrero: '#c0392b', Mago: '#4a9eff', Explorador: '#3ddc84', Comerciante: '#e8b84b', default: '#8b8b9e',
+            Guerrero: '#c0392b', Mago: '#8e44ad', 'Pícaro': '#3ddc84', 'Paladín': '#f39c12', Explorador: '#3ddc84', Comerciante: '#f39c12', default: '#8b8b9e',
           };
           const atmoColor = factionColors[playerFaction] ?? factionColors.default;
           return (
