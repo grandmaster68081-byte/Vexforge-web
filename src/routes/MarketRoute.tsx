@@ -30,7 +30,8 @@ function applySort(list: MarketListing[], sort: SortKey): MarketListing[] {
       const ri = RARITY_ORDER.indexOf(a.card_rarity ?? "") - RARITY_ORDER.indexOf(b.card_rarity ?? "");
       return ri !== 0 ? ri : a.price - b.price;
     }
-    return 0; // newest: server order (price asc by default, swap for newest if created_at added later)
+    // "newest" — fall back to reverse insertion order (id is a UUID v4 so sort by id desc is a rough proxy)
+    return b.id.localeCompare(a.id);
   });
 }
 

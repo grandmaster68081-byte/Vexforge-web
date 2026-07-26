@@ -104,40 +104,43 @@ export function BattleIntroScreen({
     AudioEngine.factionIntro(playerFaction);
 
     const t1 = setTimeout(() => setPhase('vs'), 900);
+    // countInterval must only start AFTER the countdown phase begins (1700ms)
+    // to avoid tick firing before the VS screen is even shown
+    let countInterval: ReturnType<typeof setInterval>;
+
     const t2 = setTimeout(() => {
       setPhase('countdown');
       AudioEngine.factionIntro(opponentFaction);
+
+      let remaining = 3;
+      const tick = () => {
+        remaining--;
+        setShake(true);
+        setTimeout(() => setShake(false), 180);
+
+        if (remaining > 0) {
+          setCount(remaining);
+          AudioEngine.triggerKeyword('Surge');
+        } else {
+          clearInterval(countInterval);
+          setPhase('flash');
+          AudioEngine.battleIntro();
+          if (canvasRef?.current) {
+            const cv = canvasRef.current;
+            const cx = cv.width / 2; const cy = cv.height / 2;
+            particleEngine.cardEntry(cx, cy, playerFaction);
+            setTimeout(() => particleEngine.cardEntry(cx, cy, opponentFaction), 120);
+          }
+          setTimeout(() => { setPhase('done'); setTimeout(onComplete, 300); }, 500);
+        }
+      };
+      countInterval = setInterval(tick, 650);
     }, 1700);
 
-    let remaining = 3;
-    const tick = () => {
-      remaining--;
-      setShake(true);
-      setTimeout(() => setShake(false), 180);
-
-      if (remaining > 0) {
-        setCount(remaining);
-        AudioEngine.triggerKeyword('Surge');
-      } else {
-        setPhase('flash');
-        AudioEngine.battleIntro();
-        if (canvasRef?.current) {
-          const cv = canvasRef.current;
-          const cx = cv.width / 2; const cy = cv.height / 2;
-          particleEngine.cardEntry(cx, cy, playerFaction);
-          setTimeout(() => particleEngine.cardEntry(cx, cy, opponentFaction), 120);
-        }
-        setTimeout(() => { setPhase('done'); setTimeout(onComplete, 300); }, 500);
-      }
-    };
-
-    const countInterval = setInterval(tick, 650);
-    // Delay the first tick so the countdown starts after vs phase
-    const countStart = setTimeout(() => {}, 0);
-
     return () => {
-      clearTimeout(t1); clearTimeout(t2); clearTimeout(countStart);
-      clearInterval(countInterval);
+      clearTimeout(t1); clearTimeout(t2);
+      // countInterval may not be defined if component unmounts before t2 fires
+      clearInterval(countInterval!);
     };
   }, []);
 

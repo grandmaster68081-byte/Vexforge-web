@@ -251,10 +251,15 @@ function PacksRoute() {
       }
       const dupeEntries = Object.entries(dupesByRarity);
       if (dupeEntries.length > 0) {
-        // Fire-and-forget upserts per rarity (client-side, no RPC needed)
-        await Promise.all(
+        // Grant shards for duplicates — catch per-rarity so one failure doesn't block others
+        const results = await Promise.allSettled(
           dupeEntries.map(([rarity, pts]) => grantShardsForDuplicate(rarity, pts))
         );
+        results.forEach((r, i) => {
+          if (r.status === "rejected") {
+            console.warn("[PacksRoute] grantShardsForDuplicate failed for", dupeEntries[i][0], r.reason);
+          }
+        });
         setShardsGained(dupesByRarity);
       } else {
         setShardsGained({});
