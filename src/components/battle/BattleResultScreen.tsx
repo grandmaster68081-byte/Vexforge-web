@@ -144,15 +144,15 @@ export function BattleResultScreen({ result, playerName, opponentName, onDismiss
       position: 'absolute', inset: 0, zIndex: 40,
       display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
       background: won
-        ? 'linear-gradient(180deg, rgba(232,184,75,0.08) 0%, rgba(6,6,16,0.97) 40%)'
+        ? 'linear-gradient(180deg, rgba(232,184,75,0.18) 0%, rgba(6,6,16,0.98) 50%)'
         : isDraw
-          ? 'linear-gradient(180deg, rgba(74,158,255,0.08) 0%, rgba(6,6,16,0.97) 40%)'
-          : 'linear-gradient(180deg, rgba(192,57,43,0.08) 0%, rgba(6,6,16,0.97) 40%)',
+          ? 'linear-gradient(180deg, rgba(74,158,255,0.14) 0%, rgba(6,6,16,0.98) 50%)'
+          : 'linear-gradient(180deg, rgba(192,57,43,0.18) 0%, rgba(6,6,16,0.98) 50%)',
       animation: 'fadeInResult 0.5s ease',
     }}>
       {/* Trophy / Icon */}
       <div style={{
-        fontSize: 64, marginBottom: 8,
+        fontSize: 80, marginBottom: 8,
         filter: `drop-shadow(0 0 24px ${theme.glow})`,
         animation: won ? 'trophyBounce 0.6s cubic-bezier(0.22,1,0.36,1)' : 'fadeInUp 0.5s ease',
       }}>
@@ -181,7 +181,7 @@ export function BattleResultScreen({ result, playerName, opponentName, onDismiss
 
         {/* Result label */}
       <div style={{
-        fontFamily: 'Cinzel, serif', fontSize: 28, fontWeight: 900,
+        fontFamily: 'Cinzel, serif', fontSize: 36, fontWeight: 900,
         color: theme.primary, letterSpacing: '0.2em',
         textShadow: `0 0 30px ${theme.glow}`,
         marginBottom: 4,

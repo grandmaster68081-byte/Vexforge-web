@@ -190,9 +190,9 @@ function TurnLogEntry({ snap, isLatest }: { snap: TurnSnapshot; isLatest: boolea
         <span style={{ color: '#aaa' }}>{defName}</span>
         <span style={{ color: t.is_crit ? '#e8b84b' : '#e74c3c', fontWeight: t.is_crit ? 800 : 400 }}>
           {t.is_crit ? '💥' : '⚔️'} {t.damage}
-          {t.is_crit && <span style={{ fontSize: 9, color: '#e8b84b', marginLeft: 3 }}>CRIT</span>}
+          {t.is_crit && <span style={{ fontSize: 9, color: '#e8b84b', marginLeft: 3 }}>CRIT!</span>}
         </span>
-        {t.is_kill && <span style={{ fontSize: 9, color: '#ff4444', background: 'rgba(255,68,68,0.12)', borderRadius: 3, padding: '1px 4px' }}>☠ KILL</span>}
+        {t.is_kill && <span style={{ fontSize: 9, color: '#ff4444', background: 'rgba(255,68,68,0.12)', borderRadius: 3, padding: '1px 4px' }}>☠ BAJA</span>}
         {t.lifesteal_heal > 0 && <span style={{ fontSize: 9, color: '#a855f7' }}>+{t.lifesteal_heal}♻</span>}
       </div>
       {t.events && t.events.length > 0 && (
