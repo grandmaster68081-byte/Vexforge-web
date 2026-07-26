@@ -27,7 +27,7 @@ function deriveFaction(units: BattleUnit[], side: 'a' | 'b'): string {
 }
 
 export function BattleCinematicScreen({
-  result, playerName = 'You', opponentName = 'Opponent', onDismiss,
+  result, playerName = 'Tú', opponentName = 'Oponente', onDismiss,
 }: BattleCinematicScreenProps) {
   const finalUnits  = result.final_units ?? [];
   const playerFaction   = deriveFaction(finalUnits, 'a');

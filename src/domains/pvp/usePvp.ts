@@ -10,7 +10,7 @@ function withTimeout<T>(promise: Promise<T>, ms: number): Promise<T> {
   return Promise.race([
     promise,
     new Promise<T>((_, reject) =>
-      setTimeout(() => reject(new Error(`PvP load timed out after ${ms}ms`)), ms)
+      setTimeout(() => reject(new Error(`PvP load tiempo de espera agotado después de ${ms}ms`)), ms)
     ),
   ]);
 }
@@ -30,6 +30,10 @@ export function usePvp() {
   const load = useCallback(async () => {
     setLoading(true);
     try {
+      // Quick auth pre-check before loading all data
+      const { supabase: sb } = await import('../../lib/supabase');
+      const { data: { session: preSession } } = await sb.auth.getSession();
+      if (!preSession) { setLoading(false); return; }
       await withTimeout(
         (async () => {
           const { supabase } = await import("../../lib/supabase");

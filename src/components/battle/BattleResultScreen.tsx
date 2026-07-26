@@ -229,14 +229,14 @@ export function BattleResultScreen({ result, playerName, opponentName, onDismiss
           letterSpacing: '0.15em', textTransform: 'uppercase',
           marginBottom: 10, textAlign: 'center',
         }}>
-          Battle Statistics
+          Estadísticas de Batalla
         </div>
-        <StatRow label="Turns" value={stats.totalTurns} />
-        <StatRow label="Total Damage" value={stats.totalDamage.toLocaleString()} highlight />
-        <StatRow label="Max Single Hit" value={stats.maxDamage.toLocaleString()} />
-        <StatRow label="Critical Hits" value={stats.crits} highlight={stats.crits > 0} />
-        {stats.heals > 0 && <StatRow label="Life Drained" value={stats.heals.toLocaleString()} />}
-        {stats.keywordsTriggered > 0 && <StatRow label="Keywords Triggered" value={stats.keywordsTriggered} />}
+        <StatRow label="Turnos" value={stats.totalTurns} />
+        <StatRow label="Daño Total" value={stats.totalDamage.toLocaleString()} highlight />
+        <StatRow label="Golpe Máximo" value={stats.maxDamage.toLocaleString()} />
+        <StatRow label="Golpes Críticos" value={stats.crits} highlight={stats.crits > 0} />
+        {stats.heals > 0 && <StatRow label="Vida Drenada" value={stats.heals.toLocaleString()} />}
+        {stats.keywordsTriggered > 0 && <StatRow label="Keywords Activadas" value={stats.keywordsTriggered} />}
       </div>
 
       {/* Action buttons */}
@@ -252,7 +252,7 @@ export function BattleResultScreen({ result, playerName, opponentName, onDismiss
         onMouseEnter={e => { (e.target as HTMLButtonElement).style.background = `${theme.primary}33`; }}
         onMouseLeave={e => { (e.target as HTMLButtonElement).style.background = `linear-gradient(135deg, ${theme.primary}22, ${theme.primary}11)`; }}
         >
-          ⚔️ Play Again
+          ⚔️ Jugar de Nuevo
         </button>
         <button onClick={onDismiss} style={{
           background: 'rgba(255,255,255,0.04)',

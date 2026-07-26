@@ -530,7 +530,7 @@ export function BattleBoardEngine({ result, playerName, opponentName, onComplete
       {/* Player zone (side A — bottom) */}
       <div style={{ padding: '6px 8px 10px', background: 'rgba(74,158,255,0.04)', borderTop: '1px solid rgba(74,158,255,0.15)' }}>
         <div style={{ fontSize: 9, color: '#4a9eff', fontFamily: 'Rajdhani, sans-serif', letterSpacing: '0.15em', textTransform: 'uppercase', marginBottom: 6, opacity: 0.7 }}>
-          🛡 {playerName} (You)
+          🛡 {playerName}
         </div>
         <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
           {sideA.map(s => (

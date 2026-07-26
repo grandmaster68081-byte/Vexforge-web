@@ -102,7 +102,7 @@
         try {
           const { data: { session } } = await supabase.auth.getSession();
           if (!session?.user) { setError("Inicia sesión para jugar la batalla tutorial."); setPhase('error'); return; }
-          const playerUnits = await loadPlayerBattleUnits(session.user.id);
+          const playerUnits = await loadPlayerBattleUnits(supabase, session.user.id);
           if (!playerUnits || playerUnits.length === 0) { onComplete(true); return; }
           const battleResult = simulateAIBattle(playerUnits, 'tutorial');
           setResult(battleResult);
@@ -120,7 +120,7 @@
     }, [hintIdx]);
 
     const handleBattleEnd = useCallback(() => {
-      onComplete((result as any)?.winner === 'player' || (result?.playerWon ?? false));
+      onComplete(result?.you_won ?? false);
     }, [result, onComplete]);
 
     if (phase === 'loading') return <TBLoading />;
@@ -140,8 +140,8 @@
           color:"rgba(255,255,255,0.35)",fontFamily:'"Rajdhani",sans-serif',fontSize:12,cursor:"pointer" }}>
           Saltar
         </button>
-        <AIBattleWithEffects result={result} difficulty="tutorial" opponentName="Forjador Sombra (Tutorial)"
-          onDismiss={handleBattleEnd} onRevenge={handleBattleEnd} />
+        <AIBattleWithEffects result={result} opponentName="Forjador Sombra (Tutorial)"
+          onDismiss={handleBattleEnd} />
       </div>
     );
     }
