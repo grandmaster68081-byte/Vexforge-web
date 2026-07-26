@@ -48,15 +48,25 @@ function getRankTier(mmr:number) {
   if(mmr>=1600) return "Gold"; if(mmr>=1200) return "Silver"; if(mmr>=800) return "Bronze"; return "Iron";
 }
 
+const RUNE_SYMS = ["✦","◈","⬡","✧","◆","⊕","★","⟐"];
 function Particles() {
   return (
     <div className="hero-particles">
-      {Array.from({length:18}).map((_,i)=>(
-        <div key={i} className="hero-particle" style={{
-          left:`${(i*17+7)%100}%`, bottom:`${(i*13+5)%40}%`,
+      {/* Ember dot particles */}
+      {Array.from({length:14}).map((_,i)=>(
+        <div key={`p${i}`} className="hero-particle" style={{
+          left:`${(i*17+7)%100}%`, bottom:`${(i*11+5)%45}%`,
           width:`${(i%3)+1}px`, height:`${(i%3)+1}px`,
-          animationDuration:`${(i%4)+3}s`, animationDelay:`${(i%5)}s`
+          animationDuration:`${(i%4)+3}s`, animationDelay:`${(i%5)*0.8}s`,
         }}/>
+      ))}
+      {/* Rune glyph particles */}
+      {Array.from({length:8}).map((_,i)=>(
+        <div key={`r${i}`} className="hero-particle-rune" style={{
+          left:`${(i*23+12)%88+6}%`, bottom:`${(i*17+8)%38}%`,
+          fontSize:`${(i%3)+8}px`,
+          animationDuration:`${(i%3)+5}s`, animationDelay:`${i*0.75}s`,
+        }}>{RUNE_SYMS[i % RUNE_SYMS.length]}</div>
       ))}
     </div>
   );
@@ -167,13 +177,20 @@ export function HomeRoute() {
     <div style={{minHeight:"100vh", background:"var(--bg-base, #0a0a14)"}}>
       {/* ─── HERO ─── */}
       <div className="home-hero-banner" style={{position:"relative", overflow:"hidden",
-        background:"linear-gradient(160deg, #0a0a14 0%, #0d0d22 40%, #100a1e 100%)",
-        borderBottom:"1px solid rgba(201,144,31,0.15)"}}>
+        background:"linear-gradient(160deg, #08080f 0%, #0d0d22 40%, #100a1e 100%)",
+        borderBottom:"1px solid rgba(201,144,31,0.18)"}}>
         {LOBBY_URL && (
           <div style={{position:"absolute",inset:0,
             backgroundImage:`url(${LOBBY_URL})`, backgroundSize:"cover", backgroundPosition:"center top",
-            opacity:0.18, filter:"blur(1px)"}}/>
+            opacity:0.20, filter:"blur(1px) saturate(1.1)"}}/>
         )}
+        {/* Radial vignette */}
+        <div style={{position:"absolute",inset:0,pointerEvents:"none",
+          background:"radial-gradient(ellipse 80% 60% at 50% 50%, transparent 30%, rgba(5,5,13,.85) 100%)"}}/>
+        {/* Rotating rune ring decorations */}
+        <div className="vex-rune-ring vex-rune-ring-1" />
+        <div className="vex-rune-ring vex-rune-ring-2" />
+        <div className="vex-rune-ring vex-rune-ring-3" />
         <Particles/>
         <div style={{position:"relative",zIndex:1,maxWidth:900,margin:"0 auto",padding:"clamp(40px,8vw,72px) 20px clamp(36px,6vw,60px)",textAlign:"center"}}>
           <p style={{fontSize:11,letterSpacing:"0.18em",color:"#e8b84b",textTransform:"uppercase",

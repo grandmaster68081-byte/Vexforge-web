@@ -2613,3 +2613,107 @@ input.forge-input:focus {
 @media (max-width: 360px) {
   .nft-mint-grid { grid-template-columns: 1fr; }
 }
+
+/* ════════════════════════════════════════════════════════════════════
+   VFX.1 — Enhanced Visual Effects  ·  Cards & Hero  ·  2026-07
+   ════════════════════════════════════════════════════════════════════ */
+
+/* ─── Card 3D tilt ──────────────────────────────────────────────── */
+.vex-card-3d {
+  transform-style: preserve-3d;
+  will-change: transform;
+  transition: box-shadow 0.25s ease, transform 0.08s linear;
+}
+
+/* ─── Holographic shimmer overlay (mouse-driven) ────────────────── */
+.vex-holo {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0;
+  z-index: 6;
+  transition: opacity 0.2s;
+  mix-blend-mode: screen;
+}
+
+/* ─── Animated rarity glow rings ────────────────────────────────── */
+@keyframes vex-epic-glow {
+  0%, 100% { box-shadow: 0 0 8px rgba(167,139,250,.35);  opacity: 0.55; }
+  50%       { box-shadow: 0 0 22px rgba(167,139,250,.65); opacity: 1; }
+}
+@keyframes vex-legendary-glow {
+  0%, 100% { box-shadow: 0 0 12px rgba(245,158,11,.40), 0 0 28px rgba(245,158,11,.15); opacity: 0.6; }
+  50%       { box-shadow: 0 0 24px rgba(245,158,11,.80), 0 0 52px rgba(245,158,11,.28); opacity: 1; }
+}
+@keyframes vex-mythic-glow {
+  0%   { box-shadow: 0 0 14px rgba(239,68,68,.45), 0 0 30px rgba(239,68,68,.18);   opacity: 0.65; }
+  33%  { box-shadow: 0 0 30px rgba(239,68,68,.80), 0 0 60px rgba(239,68,68,.30);   opacity: 1; }
+  66%  { box-shadow: 0 0 22px rgba(168,85,247,.65), 0 0 44px rgba(168,85,247,.25); opacity: 1; }
+  100% { box-shadow: 0 0 14px rgba(239,68,68,.45), 0 0 30px rgba(239,68,68,.18);   opacity: 0.65; }
+}
+.vex-rarity-ring {
+  position: absolute;
+  inset: -1px;
+  border-radius: 11px;
+  pointer-events: none;
+  z-index: 2;
+}
+.vex-rarity-ring-epic      { animation: vex-epic-glow 2.5s ease-in-out infinite;  border: 1.5px solid rgba(167,139,250,.5); }
+.vex-rarity-ring-legendary { animation: vex-legendary-glow 2s ease-in-out infinite; border: 1.5px solid rgba(245,158,11,.6); }
+.vex-rarity-ring-mythic    { animation: vex-mythic-glow 2.5s ease-in-out infinite; border: 1.5px solid rgba(239,68,68,.6); }
+
+/* ─── Diagonal scanline sweep (Legendary / Mythic) ─────────────── */
+@keyframes vex-scan {
+  0%   { top: -30%; opacity: 0; }
+  8%   { opacity: 0.6; }
+  92%  { opacity: 0.6; }
+  100% { top: 130%; opacity: 0; }
+}
+.vex-scanline {
+  position: absolute;
+  left: -20%; right: -20%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,.25) 40%, rgba(255,255,255,.35) 50%, rgba(255,255,255,.25) 60%, transparent 100%);
+  pointer-events: none;
+  z-index: 7;
+  animation: vex-scan 5s ease-in-out infinite;
+  transform: skewX(-18deg);
+}
+
+/* ─── Bottom nav active icon glow ───────────────────────────────── */
+.forge-bottom-nav-item:hover:not(.active) { color: rgba(240,192,80,.65); }
+.forge-bottom-nav-item.active .forge-bottom-nav-icon {
+  filter: drop-shadow(0 0 5px rgba(240,192,80,.75));
+}
+.forge-bottom-nav-item { transition: color 0.15s, border-top-color 0.15s, filter 0.15s; }
+
+/* ─── Hero rune rings ───────────────────────────────────────────── */
+@keyframes vex-rune-cw  { from { transform: translate(-50%,-50%) rotate(0deg);    } to { transform: translate(-50%,-50%) rotate(360deg);  } }
+@keyframes vex-rune-ccw { from { transform: translate(-50%,-50%) rotate(0deg);    } to { transform: translate(-50%,-50%) rotate(-360deg); } }
+.vex-rune-ring {
+  position: absolute;
+  left: 50%; top: 50%;
+  border-radius: 50%;
+  pointer-events: none;
+  border-style: solid;
+}
+.vex-rune-ring-1 { width: 380px; height: 380px; border-width: 1px; border-color: rgba(201,144,31,.13);  animation: vex-rune-cw  55s linear infinite; }
+.vex-rune-ring-2 { width: 560px; height: 560px; border-width: 1px; border-color: rgba(123,79,212,.09);  animation: vex-rune-ccw 85s linear infinite; }
+.vex-rune-ring-3 { width: 750px; height: 750px; border-width: 1px; border-color: rgba(201,144,31,.05);  animation: vex-rune-cw 120s linear infinite; }
+@media (max-width: 600px) {
+  .vex-rune-ring-1 { width: 240px; height: 240px; }
+  .vex-rune-ring-2 { width: 360px; height: 360px; }
+  .vex-rune-ring-3 { width: 480px; height: 480px; }
+}
+
+/* ─── Rune glyph particles ─────────────────────────────────────── */
+.hero-particle-rune {
+  position: absolute;
+  color: var(--ember-gold-lt);
+  animation: float-particle linear infinite;
+  opacity: 0;
+  line-height: 1;
+  user-select: none;
+  pointer-events: none;
+}

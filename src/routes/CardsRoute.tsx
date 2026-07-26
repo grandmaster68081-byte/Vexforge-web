@@ -87,23 +87,63 @@ function StatBar({ label, value, max, color }: { label: string; value: number; m
 function CardTile({ card, owned, quantity, onClick }: {
   card: Card; owned: boolean; quantity: number; onClick: () => void;
 }) {
-  const rarity  = RARITY_CFG[card.rarity]  ?? RARITY_CFG.Common;
-  const faction = FACTION_CFG[card.faction] ?? FACTION_CFG.Guerrero;
+  const rarity      = RARITY_CFG[card.rarity]  ?? RARITY_CFG.Common;
+  const faction     = FACTION_CFG[card.faction] ?? FACTION_CFG.Guerrero;
+  const isEpicPlus  = ["Epic","Legendary","Mythic"].includes(card.rarity);
+  const isLegPlus   = ["Legendary","Mythic"].includes(card.rarity);
+  const rarityKey   = card.rarity.toLowerCase();
+
   return (
-    <div onClick={onClick} style={{ position: "relative", cursor: "pointer",
-      background: "#111122", borderRadius: 10,
-      border: `1.5px solid ${rarity.color}`, boxShadow: rarity.glow,
-      transition: "transform .15s, box-shadow .15s", overflow: "hidden" }}
+    <div
+      onClick={onClick}
+      className="vex-card-3d"
+      style={{
+        position: "relative", cursor: "pointer",
+        background: "#111122", borderRadius: 10,
+        border: `1.5px solid ${rarity.color}`,
+        boxShadow: isEpicPlus ? rarity.glow : "none",
+        overflow: "hidden",
+      }}
       onMouseEnter={e => {
         try { AudioEngine.sfxCardHover(); } catch {}
-        (e.currentTarget as HTMLDivElement).style.transform = "translateY(-4px) scale(1.02)";
-        (e.currentTarget as HTMLDivElement).style.boxShadow =
-          rarity.glow === "none" ? "0 8px 24px rgba(0,0,0,.6)" : rarity.glow + ", 0 12px 32px rgba(0,0,0,.5)";
+        e.currentTarget.style.boxShadow =
+          rarity.glow === "none"
+            ? "0 16px 40px rgba(0,0,0,.7)"
+            : rarity.glow + ", 0 16px 40px rgba(0,0,0,.6)";
+      }}
+      onMouseMove={e => {
+        const el = e.currentTarget;
+        const r  = el.getBoundingClientRect();
+        const cx = e.clientX - r.left  - r.width  / 2;
+        const cy = e.clientY - r.top   - r.height / 2;
+        const rx = -(cy / r.height) * 16;
+        const ry =  (cx / r.width)  * 16;
+        el.style.transform = `perspective(700px) rotateX(${rx}deg) rotateY(${ry}deg) scale(1.07) translateY(-4px)`;
+        if (isEpicPlus) {
+          const holo = el.querySelector<HTMLElement>("[data-holo]");
+          if (holo) {
+            const px = ((cx / r.width)  * 0.5 + 0.5) * 100;
+            const py = ((cy / r.height) * 0.5 + 0.5) * 100;
+            holo.style.opacity = "1";
+            holo.style.background = `radial-gradient(ellipse 70% 90% at ${px}% ${py}%, rgba(255,255,255,.18) 0%, rgba(255,219,112,.10) 40%, transparent 70%)`;
+          }
+        }
       }}
       onMouseLeave={e => {
-        (e.currentTarget as HTMLDivElement).style.transform = "";
-        (e.currentTarget as HTMLDivElement).style.boxShadow = rarity.glow;
-      }}>
+        const el = e.currentTarget;
+        el.style.transform = "";
+        el.style.boxShadow = isEpicPlus ? rarity.glow : "none";
+        const holo = el.querySelector<HTMLElement>("[data-holo]");
+        if (holo) { holo.style.opacity = "0"; }
+      }}
+    >
+      {/* Holographic shimmer overlay — mouse-tracked, only visible for Epic+ */}
+      <div data-holo="1" className="vex-holo" />
+      {/* Animated rarity glow ring for Epic / Legendary / Mythic */}
+      {isEpicPlus && <div className={`vex-rarity-ring vex-rarity-ring-${rarityKey}`} />}
+      {/* Diagonal scanline sweep for Legendary / Mythic */}
+      {isLegPlus && <div className="vex-scanline" />}
+
       <CardArt card={card} />
       <div style={{ padding: "8px 10px 10px" }}>
         <p style={{ fontFamily: "Cinzel,serif", color: "#e8e8f0", fontSize: 11,
@@ -124,7 +164,8 @@ function CardTile({ card, owned, quantity, onClick }: {
           {([["POW", card.power, "#f87171"],["AFF", card.affinity, "#818cf8"],
              ["PRE", card.prestige, "#fbbf24"],["CHG", card.charge, "#34d399"]] as const).map(([lbl, val, col]) => (
             <div key={lbl} style={{ textAlign: "center", flex: 1 }}>
-              <div style={{ fontSize: 11, fontFamily: "Rajdhani,sans-serif", fontWeight: 700, color: col }}>{val}</div>
+              <div style={{ fontSize: 11, fontFamily: "Rajdhani,sans-serif", fontWeight: 700,
+                color: col, textShadow: `0 0 8px ${col}66` }}>{val}</div>
               <div style={{ fontSize: 8, color: "#555577", fontFamily: "Rajdhani,sans-serif", letterSpacing: ".06em" }}>{lbl}</div>
             </div>
           ))}
