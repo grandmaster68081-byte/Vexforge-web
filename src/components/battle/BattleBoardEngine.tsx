@@ -84,13 +84,13 @@ function BoardUnit({
   const rarColor = RARITY_COLOR[unit.rarity] ?? '#8b8b9e';
   const rarGlow  = RARITY_GLOW[unit.rarity]  ?? 'rgba(139,139,158,0.3)';
 
-  if (!alive && !isDying) return <div style={{ width: 68, height: 88, opacity: 0 }} />;
+  if (!alive && !isDying) return <div style={{ width: 86, height: 108, opacity: 0 }} />;
 
   return (
     <div
       ref={cardRef}
       style={{
-        width: 68, height: 88, position: 'relative', borderRadius: 7,
+        width: 86, height: 108, position: 'relative', borderRadius: 9,
         border: `1.5px solid ${isActive ? rarColor : isDying ? '#333' : rarColor + '55'}`,
         background: isDying
           ? 'rgba(0,0,0,0.1)'
@@ -128,7 +128,7 @@ function BoardUnit({
       {/* Card image */}
       {unit.image_url ? (
         <div style={{
-          width: '100%', height: 44, overflow: 'hidden',
+          width: '100%', height: 56, overflow: 'hidden',
           background: '#08080f',
         }}>
           <img
@@ -138,11 +138,11 @@ function BoardUnit({
         </div>
       ) : (
         <div style={{
-          width: '100%', height: 44, background: `${rarColor}22`,
+          width: '100%', height: 56, background: `linear-gradient(160deg, ${rarColor}28, rgba(6,6,16,0.9))`,
           display: 'flex', alignItems: 'center', justifyContent: 'center',
-          fontSize: 22,
+          fontSize: 26,
         }}>
-          🃏
+          {KEYWORD_ICON[unit.faction] ?? '🃏'}
         </div>
       )}
 
@@ -244,7 +244,7 @@ export function BattleBoardEngine({ result, playerName, opponentName, onComplete
 
   const [states, setStates]       = useState<Record<number, UnitState>>(() => buildUnitStates(finalUnits));
   const [turnIdx, setTurnIdx]     = useState(-1);
-  const [log, setLog]             = useState<string[]>(['Battle begins...']);
+  const [log, setLog]             = useState<string[]>(['La batalla comienza...']);
   const [activeTurn, setActiveTurn] = useState<BattleTurnData | null>(null);
   const [isDone, setIsDone]       = useState(false);
 
@@ -396,7 +396,7 @@ export function BattleBoardEngine({ result, playerName, opponentName, onComplete
       });
 
       // Log line
-      const logLine = `Turn ${t.turn}: ${t.attacker.name} → ${t.defender.name} [${t.damage} dmg${t.is_crit ? ' CRIT' : ''}${t.is_kill ? ' KILL' : ''}]`;
+      const logLine = `Turno ${t.turn}: ${t.attacker.name} → ${t.defender.name} [${t.damage} dmg${t.is_crit ? ' ¡CRIT!' : ''}${t.is_kill ? ' ☠' : ''}]`;
       setLog(prev => [...prev.slice(-8), logLine]);
 
     }, HIT_DUR);
@@ -455,7 +455,7 @@ export function BattleBoardEngine({ result, playerName, opponentName, onComplete
   const sideB = Object.values(states).filter(s => s.unit.side === 'b');
 
   return (
-    <div ref={boardRef} style={{ position: 'relative', width: '100%', flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden', background: 'linear-gradient(180deg, #060614 0%, #08081e 100%)' }}>
+    <div ref={boardRef} style={{ position: 'relative', width: '100%', flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden', background: 'linear-gradient(180deg, #060614 0%, #090920 50%, #06060f 100%)' }}>
       {/* Particle canvas overlay */}
       <canvas ref={canvasRef} style={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 10 }} />
 
@@ -499,7 +499,7 @@ export function BattleBoardEngine({ result, playerName, opponentName, onComplete
         })()}
 
         {/* Opponent zone (side B — top) */}
-      <div style={{ padding: '10px 8px 6px', background: 'rgba(192,57,43,0.04)', borderBottom: '1px solid rgba(192,57,43,0.15)' }}>
+      <div style={{ padding: '10px 8px 6px', background: 'rgba(192,57,43,0.06)', borderBottom: '1px solid rgba(192,57,43,0.25)' }}>
         <div style={{ fontSize: 9, color: '#c0392b', fontFamily: 'Rajdhani, sans-serif', letterSpacing: '0.15em', textTransform: 'uppercase', marginBottom: 6, opacity: 0.7 }}>
           ⚔ {opponentName}
         </div>
@@ -528,7 +528,7 @@ export function BattleBoardEngine({ result, playerName, opponentName, onComplete
       )}
 
       {/* Player zone (side A — bottom) */}
-      <div style={{ padding: '6px 8px 10px', background: 'rgba(74,158,255,0.04)', borderTop: '1px solid rgba(74,158,255,0.15)' }}>
+      <div style={{ padding: '6px 8px 10px', background: 'rgba(74,158,255,0.06)', borderTop: '1px solid rgba(74,158,255,0.25)' }}>
         <div style={{ fontSize: 9, color: '#4a9eff', fontFamily: 'Rajdhani, sans-serif', letterSpacing: '0.15em', textTransform: 'uppercase', marginBottom: 6, opacity: 0.7 }}>
           🛡 {playerName}
         </div>
@@ -555,6 +555,9 @@ export function BattleBoardEngine({ result, playerName, opponentName, onComplete
       </div>
 
       <style>{`
+        @keyframes atmosphereOrb { 0%,100%{transform:translateX(-50%) scale(1);opacity:0.7;} 50%{transform:translateX(-50%) scale(1.12);opacity:1;} }
+        @keyframes atmospherePulse { 0%,100%{opacity:0.6;} 50%{opacity:1;} }
+        @keyframes atmosphereDrift { 0%,100%{transform:scale(1);opacity:0.5;} 50%{transform:scale(1.08);opacity:0.8;} }
         @keyframes floatUp { 0%{transform:translate(-50%,0);opacity:1;} 100%{transform:translate(-50%,-28px);opacity:0;} }
         @keyframes hitFlash { 0%,100%{opacity:0;} 50%{opacity:1;} }
         @keyframes unitDeath {

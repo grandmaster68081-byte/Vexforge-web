@@ -197,7 +197,7 @@ export function BattleIntroScreen({
             fontFamily: 'Rajdhani, sans-serif', fontSize: 12,
             color: '#888', letterSpacing: '0.25em', textTransform: 'uppercase',
           }}>
-            {phase === 'done' ? 'BATTLE!' : 'READY...'}
+            {phase === 'done' ? '⚔ ¡COMBATE!' : '¡LISTO!'}
           </div>
         </div>
       )}

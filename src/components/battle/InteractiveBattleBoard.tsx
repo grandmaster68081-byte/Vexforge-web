@@ -68,7 +68,7 @@ function FighterCard({
 
   const cardStyle: CSSProperties = {
     position: 'relative',
-    width: 90, minHeight: 110,
+    width: 110, minHeight: 130,
     borderRadius: 10,
     border: `1.5px solid ${isDropTarget ? '#e8b84b' : isActive ? rarColor : rarColor + '44'}`,
     background: `linear-gradient(160deg, ${rarColor}18 0%, rgba(5,5,14,0.97) 100%)`,
@@ -98,7 +98,7 @@ function FighterCard({
     >
       {/* Image zone */}
       <div style={{
-        height: 56, background: unit.image_url
+        height: 70, background: unit.image_url
           ? `url(${unit.image_url}) center/cover no-repeat`
           : `linear-gradient(135deg, ${rarColor}28, ${fBorder}18)`,
         borderBottom: `1px solid ${rarColor}22`,
@@ -111,7 +111,7 @@ function FighterCard({
       {/* Body */}
       <div style={{ padding: '5px 6px', flex: 1, display: 'flex', flexDirection: 'column', gap: 3 }}>
         <div style={{
-          fontFamily: '"Cinzel",serif', fontSize: 9, fontWeight: 700,
+          fontFamily: '"Cinzel",serif', fontSize: 10, fontWeight: 700,
           color: rarColor, letterSpacing: '0.04em',
           overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
         }}>
@@ -365,7 +365,7 @@ export function InteractiveBattleBoard({
       position: 'fixed', inset: 0, zIndex: 100,
       background: '#060610',
       display: 'flex', flexDirection: 'column',
-      maxWidth: 520, margin: '0 auto',
+      maxWidth: 720, margin: '0 auto',
       fontFamily: '"Rajdhani",sans-serif',
     }} onPointerUp={onPointerUp}>
 
@@ -441,7 +441,7 @@ export function InteractiveBattleBoard({
             />
           ) : (
             <div ref={dropZoneRef as React.RefObject<HTMLDivElement>}
-              style={{ width: 90, height: 110, border: '1px dashed #2a2a3a', borderRadius: 10,
+              style={{ width: 110, height: 130, border: '1px dashed #2a2a3a', borderRadius: 10,
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                 color: '#333', fontSize: 11 }}>
               Sin unidad
@@ -470,11 +470,11 @@ export function InteractiveBattleBoard({
               onPointerEnter={() => { if (!state.isDragging) AudioEngine.sfxCardHover?.(); }}
             />
           ) : (
-            <div style={{ width: 90, height: 110, border: '1px dashed #2a2a3a', borderRadius: 10 }} />
+            <div style={{ width: 110, height: 130, border: '1px dashed #2a2a3a', borderRadius: 10 }} />
           )}
           <div style={{ fontSize: 10, color: '#4a9eff88', letterSpacing: '0.15em',
             fontFamily: '"Rajdhani",sans-serif', textTransform: 'uppercase' }}>
-            🛡 {playerName} (Tú)
+            🛡 {playerName}
           </div>
         </div>
 

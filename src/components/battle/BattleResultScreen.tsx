@@ -94,10 +94,10 @@ export function BattleResultScreen({ result, playerName, opponentName, onDismiss
 
   // Color theme
   const theme = isDraw
-    ? { primary: '#4a9eff', glow: 'rgba(74,158,255,0.6)', label: 'DRAW', emoji: '⚖️' }
+    ? { primary: '#4a9eff', glow: 'rgba(74,158,255,0.6)', label: 'EMPATE', emoji: '⚖️' }
     : won
-      ? { primary: '#e8b84b', glow: 'rgba(232,184,75,0.7)', label: 'VICTORY', emoji: '🏆' }
-      : { primary: '#c0392b', glow: 'rgba(192,57,43,0.5)', label: 'DEFEAT', emoji: '💀' };
+      ? { primary: '#e8b84b', glow: 'rgba(232,184,75,0.7)', label: 'VICTORIA', emoji: '🏆' }
+      : { primary: '#c0392b', glow: 'rgba(192,57,43,0.5)', label: 'DERROTA', emoji: '💀' };
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -211,7 +211,7 @@ export function BattleResultScreen({ result, playerName, opponentName, onDismiss
           {eloDisplayed >= 0 ? '+' : ''}{eloDisplayed} ELO
         </div>
         <div style={{ color: '#555', fontSize: 10, fontFamily: 'Rajdhani, sans-serif', letterSpacing: '0.1em', marginTop: 2 }}>
-          RANKING CHANGE
+          CAMBIO DE RANKING
         </div>
       </div>
 

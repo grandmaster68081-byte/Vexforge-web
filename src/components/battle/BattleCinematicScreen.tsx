@@ -76,7 +76,7 @@ export function BattleCinematicScreen({
       position: 'fixed', inset: 0, zIndex: 100,
       display: 'flex', flexDirection: 'column',
       background: '#060610',
-      maxWidth: 480, margin: '0 auto',
+      maxWidth: 820, margin: '0 auto',
     }}>
       {/* Shared canvas for intro/result particles */}
       <canvas
