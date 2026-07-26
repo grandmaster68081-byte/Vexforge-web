@@ -164,7 +164,24 @@ export async function getSeasonRankings(seasonKey?: string): Promise<DomainResul
   if (seasonKey) query = query.eq("season_key", seasonKey);
   const { data, error } = await query;
   if (error) return { status: "ready", data: null, reason: error.message };
-  return { status: "ready", data: (data ?? []) as SeasonRanking[] };
+
+  const rows = (data ?? []) as SeasonRanking[];
+  if (!rows.length) return { status: "ready", data: [] };
+
+  // Enrich with display names via SECURITY DEFINER RPC (bypasses players_self RLS)
+  const playerIds = [...new Set(rows.map((r) => r.player_id))];
+  const { data: names } = await supabase.rpc("get_public_player_names", { p_player_ids: playerIds });
+  const nameMap: Record<string, string> = {};
+  if (names) {
+    for (const n of names as Array<{ id: string; display_name: string }>) {
+      nameMap[n.id] = n.display_name;
+    }
+  }
+
+  return {
+    status: "ready",
+    data: rows.map((r) => ({ ...r, display_name: nameMap[r.player_id] ?? undefined })),
+  };
 }
 
 export async function getMySeasonRanking(seasonKey?: string): Promise<DomainResult<SeasonRanking | null>> {
