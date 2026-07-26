@@ -7,6 +7,9 @@ import { EmptyState } from "../shared/components/EmptyState";
 import { ErrorState } from "../shared/components/ErrorState";
 import { useToast } from "../shared/context/ToastContext";
 
+const FACTION_COLOR: Record<string, string> = {
+  Guerrero: "#e85d04", Mago: "#4a9eff", "Paladín": "#e8b84b", "Pícaro": "#a855f7",
+};
 const RARITY_COLOR: Record<string, string> = {
   Common: "#8b8b9e", Uncommon: "#3ddc84", Rare: "#4a9eff",
   Epic: "#a855f7", Legendary: "#e8b84b", Mythic: "#ff4444"

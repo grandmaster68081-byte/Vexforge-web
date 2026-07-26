@@ -72,7 +72,6 @@ function mkUnit(overrides: Partial<BattleUnit> & Pick<BattleUnit, 'idx'|'id'|'na
     poison_atk: false,
     rush: false,
     double_strike: false,
-    def: 0,
     ...overrides,
   };
 }

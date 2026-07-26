@@ -91,7 +91,7 @@ export function AchievementsRoute() {
   const categories = ["all", ...Array.from(new Set(allAchs.map(a => a.category))).sort()];
   const filtered = activeCategory === "all" ? allAchs : allAchs.filter(a => a.category === activeCategory);
 
-  if (loading) return <div style={{ padding: "40px 24px" }}><SkeletonList count={8} /></div>;
+  if (loading) return <div style={{ padding: "40px 24px" }}><SkeletonList rows={8} /></div>;
 
   return (
     <div style={{ minHeight: "100vh", background: "var(--layer-1, #0a0e14)" }}>

@@ -86,7 +86,6 @@ import { useState, useEffect } from "react";
     const hasClans  = (data?.allClans?.length ?? 0) > 0;
     const memberCount = data?.members?.length ?? 0;
     const bg0 = "#12121f"; const bdim = "#2a2a3a";
-    const accentColor = hasClan ? "#a855f7" : "#555";
 
     return (
       <div style={{

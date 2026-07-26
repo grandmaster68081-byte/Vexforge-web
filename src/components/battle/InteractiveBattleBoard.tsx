@@ -454,7 +454,6 @@ export function InteractiveBattleBoard({
   }, [state.phase, state.currentTurn]);
 
   const isPlayerAttacking = state.currentTurn?.atk_side === 'a';
-  const cur = state.currentTurn;
 
   // Drag-to-attack handlers
   const onPointerDown = useCallback((e: React.PointerEvent) => {

@@ -43,7 +43,7 @@ export function ProgressRoute() {
 
   if (loading)              return <PageLoader />;
   if (!signedIn)            return <BlockedAuthState message="Inicia sesión para ver tu progreso de Forjador." />;
-  if (status === "error")   return <ErrorState message="No se pudo cargar el progreso." />;
+  if ((status as string) === "error")   return <ErrorState message="No se pudo cargar el progreso." />;
 
   if (!progress) return (
     <main style={{ maxWidth: 720, margin: "0 auto", padding: "32px 16px" }}>

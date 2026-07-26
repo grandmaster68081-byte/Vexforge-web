@@ -307,14 +307,14 @@ class VexForgeParticleEngine {
   }
 
   // ─── Endgame VFX (v1.0 — fully preserved) ─────────────────────────────────
-  victoryRain(W: number, H: number): void {
+  victoryRain(W: number, _H: number): void {
     for (let i = 0; i < 18; i++) {
       const life = Math.floor(Math.random() * 80 + 60);
       this.add({ x: Math.random() * W, y: -8, vx: (Math.random() - 0.5) * 2.2, vy: Math.random() * 3.2 + 1.2, life, maxLife: life, size: Math.random() * 3.5 + 2, color: Math.random() > 0.5 ? '#e8b84b' : '#f5d585', alpha: 1, gravity: 0.04, shape: Math.random() > 0.5 ? 'diamond' : 'circle', glow: '#ffcc44' });
     }
   }
 
-  defeatAsh(W: number, H: number): void {
+  defeatAsh(W: number, _H: number): void {
     for (let i = 0; i < 10; i++) {
       const life = Math.floor(Math.random() * 100 + 70);
       this.add({ x: Math.random() * W, y: -8, vx: (Math.random() - 0.5) * 1.4, vy: Math.random() * 1.6 + 0.5, life, maxLife: life, size: Math.random() * 4 + 2, color: Math.random() > 0.6 ? '#555' : '#888', alpha: 0.72, gravity: 0.018, shape: 'circle' });

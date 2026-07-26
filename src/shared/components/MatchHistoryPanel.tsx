@@ -48,7 +48,6 @@ import { useState, useEffect } from "react";
     function MatchReplayModal({ match, onClose }: ReplayModalProps) {
     const cfg = OUTCOME_CFG[match.outcome];
     const tier = getRank(match.opponent_mmr);
-    const eloAbs = Math.abs(match.my_elo_change ?? 0);
     return (
       <div style={{
         position: "fixed", inset: 0, zIndex: 9999, background: "rgba(5,5,13,0.96)",

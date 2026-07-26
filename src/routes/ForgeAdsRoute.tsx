@@ -98,7 +98,7 @@ export function ForgeAdsRoute() {
     });
 
     if (!error) {
-      addToast(`+${VEX_PER_AD} VEX ganados por ver el anuncio`, "success");
+      addToast("success", `+${VEX_PER_AD} VEX ganados por ver el anuncio`);
       loadAdStats(userId).then(setStats);
     } else {
       addToast("error", "Error al registrar el anuncio. Inténtalo de nuevo.");

@@ -35,7 +35,6 @@ export class VexForgeAudioEngine {
 
   // v3.0 additions
   private _faction: FactionId = 'default';
-  private _intensity: number = 1.0; // 0=desperate..1=calm
   private _intensityLevel: IntensityLevel = 'calm';
   private _factionMusicActive = false;
 
@@ -188,7 +187,6 @@ export class VexForgeAudioEngine {
   // ─── v3.0: Dynamic intensity (0=desperate/low HP, 1=calm/full HP) ─────────
   setIntensity(hpRatio: number): void {
     const prev = this._intensityLevel;
-    this._intensity = Math.max(0, Math.min(1, hpRatio));
     if (hpRatio < 0.25) this._intensityLevel = 'desperate';
     else if (hpRatio < 0.55) this._intensityLevel = 'tense';
     else this._intensityLevel = 'calm';

@@ -3,7 +3,6 @@ import { supabase } from "../lib/supabase";
 import { useRaids } from "../domains/raids/useRaids";
 import type { RaidRun } from "../domains/raids/repository";
 import { PageLoader } from "../shared/components/PageLoader";
-import { BlockedAuthState } from "../shared/components/BlockedAuthState";
 import { EmptyState } from "../shared/components/EmptyState";
 import { useToast } from "../shared/context/ToastContext";
 

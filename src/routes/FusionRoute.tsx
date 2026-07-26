@@ -11,9 +11,6 @@
     Common: "#9a9ab0", Uncommon: "#3ddc84", Rare: "#4a9eff",
     Epic: "#a855f7", Legendary: "#e8b84b", Mythic: "#ff4444",
     };
-    const FACTION_COLOR: Record<string, string> = {
-    Guerrero: "#E84040", Mago: "#5B8BF5", "Paladín": "#3DC96B", "Pícaro": "#7B4FD4",
-    };
 
     // ─── Sub-components ───────────────────────────────────────────────────────────
 

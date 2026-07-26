@@ -9,6 +9,7 @@ import { supabase } from "../../lib/supabase";
     rarity: string;
     faction?: string;
     image_url?: string;
+    quantity_change?: number;
     }
 
     export interface PackOrder {

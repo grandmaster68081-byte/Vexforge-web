@@ -41,7 +41,7 @@ function buildUnitStates(units: BattleUnit[]): Record<number, UnitState> {
 }
 
 // ─── HP Bar ────────────────────────────────────────────────────────────────────
-function HpBar({ current, max, rarity }: { current: number; max: number; rarity: string }) {
+function HpBar({ current, max }: { current: number; max: number; rarity?: string }) {
   const pct = max > 0 ? Math.max(0, Math.min(100, (current / max) * 100)) : 0;
   const color = pct > 55 ? '#3ddc84' : pct > 25 ? '#f39c12' : '#e74c3c';
   return (
@@ -223,9 +223,9 @@ function BoardUnit({
 }
 
 // ─── Turn header ──────────────────────────────────────────────────────────────
-function TurnHeader({ turn, side, attackerName, damage, isCrit, playerName, opponentName }: {
+function TurnHeader({ turn, side, attackerName, damage, isCrit }: {
   turn: number; side: 'a' | 'b'; attackerName: string; damage: number;
-  isCrit: boolean; playerName: string; opponentName: string;
+  isCrit: boolean; playerName?: string; opponentName?: string;
 }) {
   return (
     <div style={{
@@ -268,7 +268,7 @@ export function BattleBoardEngine({ result, playerName, opponentName, onComplete
   }, [finalUnits]);
 
   const [states, setStates]       = useState<Record<number, UnitState>>(() => buildUnitStates(finalUnits));
-  const [turnIdx, setTurnIdx]     = useState(-1);
+  const [_turnIdx, _setTurnIdx]     = useState(-1);
   const [log, setLog]             = useState<string[]>(['La batalla comienza...']);
   const [activeTurn, setActiveTurn] = useState<BattleTurnData | null>(null);
   const [isDone, setIsDone]       = useState(false);

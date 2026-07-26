@@ -109,10 +109,10 @@ import { useState, useEffect, useRef, useCallback } from "react";
     const allFlipped   = flipped.size >= cards.length;
     const bestCard     = [...cards].sort((a,b) => (RARITY_RANK[b.rarity]??0)-(RARITY_RANK[a.rarity]??0))[0];
     const isBestGood   = (RARITY_RANK[bestCard?.rarity]??0) >= 2;
-    const rarityCounts = cards.reduce((acc,c) => ({ ...acc, [c.rarity]: (acc[c.rarity]||0)+1 }), {} as Record<string,number>);
+    
     const sortedCards  = [...cards].sort((a,b) => (RARITY_RANK[b.rarity]??0)-(RARITY_RANK[a.rarity]??0));
 
-    const bg0 = "#0d0d14"; const bg1 = "#12121f"; const bdim = "#2a2a3a"; const tmuted = "#7a7a9a";
+    const tmuted = "#7a7a9a";
 
     const spawnFloat = useCallback((rarity: string) => {
       floatId.current++;
@@ -125,7 +125,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
 
     const spawnConfetti = useCallback((rarityColor: string) => {
       const count = 28;
-      const newConfetti: Confetto[] = Array.from({ length: count }, (_, i) => {
+      const newConfetti: Confetto[] = Array.from({ length: count }, (_) => {
         confettoId.current++;
         return {
           id: confettoId.current,
@@ -389,7 +389,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
                           )}
                         </div>
                         {/* Quantity badge */}
-                        {card.quantity_change > 1 && (
+                        {(card.quantity_change ?? 0) > 1 && (
                           <div style={{
                             position: "absolute", top: 8, right: 8,
                             background: col, borderRadius: 10, padding: "2px 7px",

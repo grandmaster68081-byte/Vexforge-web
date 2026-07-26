@@ -190,7 +190,7 @@ function CreateClanModal({ onCreate, onClose }: { onCreate: (name: string, desc:
 
 // ---- Main Route ----
 export function ClansRoute() {
-  const { clanData, authed, reload, startWar, join, leave, create } = useClans();
+  const { clanData, authed, startWar, join, leave, create } = useClans();
   const { showToast } = useToast();
   const [warModal, setWarModal]       = useState(false);
   const [createModal, setCreateModal] = useState(false);
@@ -407,7 +407,7 @@ export function ClansRoute() {
 
             <SectionCard title="CLANES DISPONIBLES" accent="#4a9eff">
               {allClans.length === 0
-                ? <EmptyState message="No hay Clanes públicos disponibles." />
+                ? <EmptyState title="Sin Clanes" description="No hay Clanes públicos disponibles." />
                 : allClans.map(c => (
                   <ClanDiscoveryCard key={c.id} clan={c} onJoin={handleJoin} joining={joining === c.id} />
                 ))

@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { supabase } from "../lib/supabase";
 import { useDeposit } from "../domains/deposit/useDeposit";
-import { getTreasuryWallets, type TreasuryWallet } from "../domains/deposit/repository";
+import { getTreasuryWallets } from "../domains/deposit/repository";
 import { PageLoader } from "../shared/components/PageLoader";
 import { BlockedAuthState } from "../shared/components/BlockedAuthState";
 

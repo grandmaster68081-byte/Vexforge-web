@@ -15,14 +15,6 @@ import { supabase } from "../../lib/supabase";
     seeds: TournamentSeed[]; bracket: BracketMatch[]; total_players: number;
     }
 
-    async function getCurrentPlayerId(): Promise<string | null> {
-    const { data: s } = await supabase.auth.getSession();
-    if (!s.session) return null;
-    const { data } = await supabase.from("players")
-      .select("id").eq("auth_user_id", s.session.user.id).maybeSingle();
-    return data?.id ?? null;
-    }
-
     function buildBracket(seeds: TournamentSeed[]): BracketMatch[] {
     const s = seeds.slice(0, 8);
     const n = s.length;

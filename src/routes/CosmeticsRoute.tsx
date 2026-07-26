@@ -116,7 +116,7 @@ function CosmeticPreview({
 
 // ─── LoadoutPanel ─────────────────────────────────────────────────────────────
 function LoadoutPanel({
-  cosmetics, equippedIds, equippedMap, onSlotClick, pendingUnequip, onUnequip,
+  cosmetics: _cosmetics, equippedIds: _equippedIds, equippedMap, onSlotClick, pendingUnequip, onUnequip,
 }: {
   cosmetics: Cosmetic[];
   equippedIds: Set<string>;

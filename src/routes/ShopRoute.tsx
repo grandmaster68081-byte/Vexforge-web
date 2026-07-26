@@ -4,7 +4,6 @@ import { supabase } from "../lib/supabase";
 import { PageLoader } from "../shared/components/PageLoader";
 import { BlockedAuthState } from "../shared/components/BlockedAuthState";
 import { useToast } from "../shared/context/ToastContext";
-import { Link } from "react-router-dom";
 
 const C = { bg0:"#0d0d14", bg1:"#12121f", bg2:"#18182a", b1:"#1e1e30", b2:"#2a2a3a", gold:"#E8B84B", green:"#3DC96B", red:"#E3573F", blue:"#4A9EFF", muted:"#7a7a9a", main:"#e8e8f0", purple:"#a855f7" };
 interface ShopItem { id:string; item_key:string; name:string; description:string; category:string; price_usdt:number; price_vex:number|null; active:boolean; icon:string; }
