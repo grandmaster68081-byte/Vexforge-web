@@ -10,10 +10,10 @@ import { LevelUpModal }        from "./shared/components/LevelUpModal";
 import { AchievementToastCard } from "./shared/components/AchievementToastCard";
 import { AudioProvider }        from "./providers/AudioProvider";
 import { AudioControls }        from "./components/battle/AudioControls";
-    import { EnergyBar }             from "./shared/components/EnergyBar";
-    import { QuestBadge }             from "./shared/components/QuestBadge";
-    import { StarterDeckReveal }      from "./shared/components/StarterDeckReveal";
-    import { OnboardingModal }          from "./shared/components/OnboardingModal";
+import { EnergyBar }             from "./shared/components/EnergyBar";
+import { QuestBadge }             from "./shared/components/QuestBadge";
+import { StarterDeckReveal }      from "./shared/components/StarterDeckReveal";
+import { OnboardingModal }        from "./shared/components/OnboardingModal";
 import { ProtectedAdminRoute }       from "./shared/components/ProtectedAdminRoute";
 import { AudioEngine }               from "./lib/audioEngine";
 

@@ -2731,3 +2731,210 @@ input.forge-input:focus {
   user-select: none;
   pointer-events: none;
 }
+
+/* ─── MEJORAS PREMIUM v2 — DOMINION EDITION ─────────────── */
+
+/* Arena hex grid pattern (usado en InteractiveBattleBoard) */
+.arena-hex-bg {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='48'%3E%3Cpolygon points='14,2 26,9 26,23 14,30 2,23 2,9' fill='none' stroke='rgba(255,255,255,0.025)' stroke-width='0.5'/%3E%3C/svg%3E");
+  background-size: 28px 48px;
+}
+
+/* Holographic card shimmer (Legendary/Mythic cards) */
+@keyframes holo-shimmer {
+  0%   { background-position: -300% center; }
+  100% { background-position: 300% center; }
+}
+.card-holo {
+  background: linear-gradient(125deg,
+    transparent 20%, rgba(255,255,255,0.08) 40%,
+    rgba(255,255,255,0.18) 50%, rgba(255,255,255,0.08) 60%,
+    transparent 80%);
+  background-size: 300% 300%;
+  animation: holo-shimmer 3s ease-in-out infinite;
+}
+
+/* Epic card frame borders for rarities */
+.card-frame-legendary { border-color: #e8b84b; box-shadow: 0 0 16px rgba(232,184,75,0.5), 0 0 32px rgba(232,184,75,0.2); }
+.card-frame-mythic    { border-color: #ff4444; box-shadow: 0 0 16px rgba(255,68,68,0.6), 0 0 32px rgba(255,68,68,0.3); }
+.card-frame-epic      { border-color: #a855f7; box-shadow: 0 0 12px rgba(168,85,247,0.5); }
+
+/* Battle arena energy pulse */
+@keyframes arena-energy-pulse {
+  0%,100% { opacity: 0.4; box-shadow: 0 0 8px rgba(232,184,75,0.3); }
+  50%      { opacity: 0.8; box-shadow: 0 0 20px rgba(232,184,75,0.6), 0 0 40px rgba(232,184,75,0.2); }
+}
+.arena-energy-line {
+  animation: arena-energy-pulse 2s ease-in-out infinite;
+}
+
+/* Victory/defeat screen text explosion */
+@keyframes text-explode {
+  0%  { transform: scaleX(2) scaleY(0.3); opacity: 0; letter-spacing: 1em; }
+  40% { transform: scaleX(1.05) scaleY(1.05); opacity: 1; letter-spacing: 0.15em; }
+  100%{ transform: scale(1); opacity: 1; letter-spacing: 0.15em; }
+}
+.battle-result-text { animation: text-explode 0.6s cubic-bezier(0.22,1,0.36,1) both; }
+
+/* Glowing faction name labels */
+.faction-label-guerrero { color: #e84040; text-shadow: 0 0 12px rgba(232,64,64,0.6); }
+.faction-label-mago     { color: #7b4fd4; text-shadow: 0 0 12px rgba(123,79,212,0.6); }
+.faction-label-picaro   { color: #3dc96b; text-shadow: 0 0 12px rgba(61,201,107,0.6); }
+.faction-label-paladin  { color: #e8b84b; text-shadow: 0 0 12px rgba(232,184,75,0.6); }
+
+/* Tutorial step card enhanced */
+.tutorial-card {
+  background: linear-gradient(160deg, #0d0d1e 0%, #0a0a18 100%);
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 24px 64px rgba(0,0,0,0.6), 0 0 60px rgba(232,184,75,0.06);
+}
+.tutorial-action-btn {
+  position: relative; overflow: hidden;
+  transition: all 0.2s ease;
+}
+.tutorial-action-btn::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, transparent 100%);
+  opacity: 0; transition: opacity 0.2s;
+}
+.tutorial-action-btn:hover::before { opacity: 1; }
+.tutorial-action-btn:hover { transform: translateY(-2px) scale(1.02); }
+.tutorial-action-btn:active { transform: translateY(0) scale(0.99); }
+
+/* Premium pack opening animation */
+@keyframes pack-shake {
+  0%,100% { transform: rotate(0deg); }
+  20%     { transform: rotate(-4deg) scale(1.04); }
+  40%     { transform: rotate(4deg)  scale(1.06); }
+  60%     { transform: rotate(-3deg) scale(1.05); }
+  80%     { transform: rotate(3deg)  scale(1.04); }
+}
+.pack-opening-shake { animation: pack-shake 0.5s cubic-bezier(0.36,0.07,0.19,0.97); }
+
+/* Card gallery — premium hover effects */
+.vex-card-gallery-item {
+  transition: transform 0.22s cubic-bezier(0.22,1,0.36,1), box-shadow 0.22s ease;
+  cursor: pointer;
+}
+.vex-card-gallery-item:hover {
+  transform: translateY(-6px) scale(1.03);
+}
+
+/* Rarity badge glow enhancement */
+@keyframes rarity-badge-glow {
+  0%,100% { opacity: 0.8; }
+  50%      { opacity: 1; filter: brightness(1.2); }
+}
+.rarity-mythic  { animation: rarity-badge-glow 1.8s ease-in-out infinite; }
+.rarity-legendary { animation: rarity-badge-glow 2.5s ease-in-out infinite; }
+
+/* Home hero improvements — animated aurora */
+@keyframes aurora-shift {
+  0%,100% { transform: translateX(-50%) scale(1) rotate(0deg); opacity: 0.15; }
+  50%      { transform: translateX(-50%) scale(1.15) rotate(3deg); opacity: 0.25; }
+}
+.hero-aurora {
+  position: absolute; bottom: -100px; left: 50%;
+  transform: translateX(-50%);
+  width: 900px; height: 350px; border-radius: 50%;
+  background: radial-gradient(ellipse, rgba(201,144,31,0.22) 0%, rgba(123,79,212,0.1) 50%, transparent 70%);
+  animation: aurora-shift 6s ease-in-out infinite;
+  pointer-events: none;
+}
+
+/* Marketplace item card premium */
+.market-card-item {
+  background: linear-gradient(160deg, rgba(20,20,40,0.9), rgba(10,10,20,0.97));
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 12px;
+  transition: all 0.22s cubic-bezier(0.22,1,0.36,1);
+}
+.market-card-item:hover {
+  border-color: rgba(201,144,31,0.3);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.5), 0 0 20px rgba(201,144,31,0.08);
+  transform: translateY(-3px);
+}
+
+/* Skeleton loading premium */
+@keyframes skeleton-wave {
+  0%   { background-position: -400px 0; }
+  100% { background-position: 400px 0; }
+}
+.skeleton-premium {
+  background: linear-gradient(90deg, #0d0d1a 25%, #141428 50%, #0d0d1a 75%);
+  background-size: 800px 100%;
+  animation: skeleton-wave 1.6s ease-in-out infinite;
+}
+
+/* PvP Arena locked state improvements */
+.pvp-locked-container {
+  background: radial-gradient(ellipse 70% 50% at 50% 0%,
+    rgba(201,144,31,0.1) 0%, transparent 70%);
+  border-top: 1px solid rgba(201,144,31,0.15);
+}
+
+/* Level up modal glow ring */
+@keyframes level-up-ring {
+  0%  { transform: scale(0.8); opacity: 0; }
+  50% { opacity: 1; }
+  100%{ transform: scale(2); opacity: 0; }
+}
+.level-up-ring {
+  position: absolute; inset: -12px; border-radius: 50%;
+  border: 2px solid rgba(232,184,75,0.6);
+  animation: level-up-ring 1.5s ease-out infinite;
+}
+
+/* Achievement toast premium */
+.achievement-toast {
+  background: linear-gradient(135deg, rgba(15,15,30,0.98), rgba(10,10,22,0.98));
+  border: 1px solid rgba(232,184,75,0.35);
+  border-radius: 14px;
+  box-shadow: 0 8px 40px rgba(0,0,0,0.7), 0 0 30px rgba(232,184,75,0.1);
+  backdrop-filter: blur(16px);
+}
+
+/* Forge button — primary action button epic state */
+.btn-forge-primary {
+  position: relative; overflow: hidden;
+  background: linear-gradient(135deg, #c9901f, #e8b84b, #c9901f);
+  background-size: 200% auto;
+  animation: gradient-shift 3s ease infinite;
+  border: none; border-radius: 10px;
+  color: #0a0a12; font-weight: 900;
+  cursor: pointer; transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.btn-forge-primary:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 8px 30px rgba(201,144,31,0.5);
+}
+.btn-forge-primary:active { transform: translateY(0) scale(0.99); }
+
+@keyframes gradient-shift {
+  0%,100% { background-position: 0% center; }
+  50%      { background-position: 100% center; }
+}
+
+/* Sidebar item enhanced active state */
+.forge-sidebar .active-item {
+  background: linear-gradient(90deg, rgba(201,144,31,0.18) 0%, transparent 100%);
+  border-left: 2px solid #C9901F;
+  box-shadow: inset 2px 0 8px rgba(201,144,31,0.1);
+}
+
+/* Collection card premium frame */
+.collection-card-frame {
+  position: relative; overflow: hidden;
+  border-radius: 10px;
+  transition: all 0.22s cubic-bezier(0.22,1,0.36,1);
+}
+.collection-card-frame::after {
+  content: '';
+  position: absolute; inset: 0; border-radius: 10px;
+  background: linear-gradient(135deg, rgba(255,255,255,0.04) 0%, transparent 60%);
+  pointer-events: none;
+}
+.collection-card-frame:hover { transform: translateY(-4px) scale(1.02); }
+
