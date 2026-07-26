@@ -13,14 +13,16 @@ import { AudioEngine } from '../../lib/audioEngine';
 const HP_COLOR = (pct: number) =>
   pct > 0.55 ? '#3ddc84' : pct > 0.25 ? '#f59e0b' : '#ff3333';
 
-const FACTION_ZONE: Record<string, { primary: string; glow: string; gradient: string }> = {
-  Guerrero:    { primary: '#e84040', glow: 'rgba(232,64,64,0.35)',   gradient: 'linear-gradient(180deg,rgba(80,10,10,0.7) 0%,rgba(30,5,5,0.4) 100%)' },
-  Mago:        { primary: '#7b4fd4', glow: 'rgba(123,79,212,0.35)',  gradient: 'linear-gradient(180deg,rgba(40,10,80,0.7) 0%,rgba(15,5,30,0.4) 100%)' },
-  'Pícaro':    { primary: '#3dc96b', glow: 'rgba(61,201,107,0.35)', gradient: 'linear-gradient(180deg,rgba(10,50,20,0.7) 0%,rgba(5,20,10,0.4) 100%)' },
-  'Paladín':   { primary: '#e8b84b', glow: 'rgba(232,184,75,0.35)', gradient: 'linear-gradient(180deg,rgba(60,40,5,0.7) 0%,rgba(25,15,5,0.4) 100%)' },
-  Explorador:  { primary: '#3dc96b', glow: 'rgba(61,201,107,0.35)', gradient: 'linear-gradient(180deg,rgba(10,50,20,0.7) 0%,rgba(5,20,10,0.4) 100%)' },
-  Comerciante: { primary: '#e8b84b', glow: 'rgba(232,184,75,0.35)', gradient: 'linear-gradient(180deg,rgba(60,40,5,0.7) 0%,rgba(25,15,5,0.4) 100%)' },
-  default:     { primary: '#4a9eff', glow: 'rgba(74,158,255,0.35)',  gradient: 'linear-gradient(180deg,rgba(5,20,50,0.7) 0%,rgba(5,10,25,0.4) 100%)' },
+const STORAGE = 'https://rscuzqnfccqvltkdcdny.supabase.co/storage/v1/object/public/vexforge-assets';
+
+const FACTION_ZONE: Record<string, { primary: string; glow: string; gradient: string; arenaImg: string }> = {
+  Guerrero:    { primary: '#e84040', glow: 'rgba(232,64,64,0.35)',   gradient: 'linear-gradient(180deg,rgba(80,10,10,0.7) 0%,rgba(30,5,5,0.4) 100%)',   arenaImg: `${STORAGE}/factions/bg_guerrero.jpg` },
+  Mago:        { primary: '#7b4fd4', glow: 'rgba(123,79,212,0.35)',  gradient: 'linear-gradient(180deg,rgba(40,10,80,0.7) 0%,rgba(15,5,30,0.4) 100%)',  arenaImg: `${STORAGE}/factions/bg_mago.jpg` },
+  'Pícaro':    { primary: '#3dc96b', glow: 'rgba(61,201,107,0.35)', gradient: 'linear-gradient(180deg,rgba(10,50,20,0.7) 0%,rgba(5,20,10,0.4) 100%)',  arenaImg: `${STORAGE}/factions/bg_picaro.jpg` },
+  'Paladín':   { primary: '#e8b84b', glow: 'rgba(232,184,75,0.35)', gradient: 'linear-gradient(180deg,rgba(60,40,5,0.7) 0%,rgba(25,15,5,0.4) 100%)',   arenaImg: `${STORAGE}/factions/bg_paladin.jpg` },
+  Explorador:  { primary: '#3dc96b', glow: 'rgba(61,201,107,0.35)', gradient: 'linear-gradient(180deg,rgba(10,50,20,0.7) 0%,rgba(5,20,10,0.4) 100%)',  arenaImg: `${STORAGE}/factions/bg_picaro.jpg` },
+  Comerciante: { primary: '#e8b84b', glow: 'rgba(232,184,75,0.35)', gradient: 'linear-gradient(180deg,rgba(60,40,5,0.7) 0%,rgba(25,15,5,0.4) 100%)',   arenaImg: `${STORAGE}/factions/bg_paladin.jpg` },
+  default:     { primary: '#4a9eff', glow: 'rgba(74,158,255,0.35)',  gradient: 'linear-gradient(180deg,rgba(5,20,50,0.7) 0%,rgba(5,10,25,0.4) 100%)',   arenaImg: `${STORAGE}/backgrounds/bg_missions.jpg` },
 };
 
 // ─── HP Bar épica ───────────────────────────────────────────────────────────────
@@ -492,6 +494,19 @@ export function InteractiveBattleBoard({
       overflow: 'hidden',
     }} onPointerUp={onPointerUp} onPointerCancel={onPointerCancel} onPointerLeave={onPointerCancel}>
 
+      {/* Faction arena background image */}
+      <div style={{
+        position: 'absolute', inset: 0, zIndex: 0, pointerEvents: 'none',
+        backgroundImage: `url(${playerZone.arenaImg})`,
+        backgroundSize: 'cover', backgroundPosition: 'center',
+        opacity: 0.18,
+        filter: 'saturate(1.4) brightness(0.7)',
+      }} />
+      {/* Dark overlay on top of arena image */}
+      <div style={{
+        position: 'absolute', inset: 0, zIndex: 0, pointerEvents: 'none',
+        background: 'radial-gradient(ellipse 130% 130% at 50% 50%, rgba(5,5,18,0.55) 0%, rgba(3,3,10,0.92) 100%)',
+      }} />
       {/* Atmospheric scan lines — cinematic feel */}
       <div style={{
         position: 'absolute', inset: 0, zIndex: 0, pointerEvents: 'none',

@@ -62,8 +62,11 @@ export function useCards(): UseCardsResult {
             setCompletionPct(Math.round((uniqueOwned / catalogCards.length) * 100));
           }
           setCollectionLoading(false);
-        }).catch(() => {
-          if (!cancelled) setCollectionLoading(false);
+        }).catch((colErr: unknown) => {
+          if (!cancelled) {
+            console.warn("[useCards] Error cargando colección:", colErr instanceof Error ? colErr.message : colErr);
+            setCollectionLoading(false);
+          }
         });
       }
     }).catch((err: unknown) => {

@@ -359,14 +359,62 @@ function OpponentCard({
 // ─── IA.2: Daily AI Challenger card ──────────────────────────────────────────
 function DailyChallengeCard({ challenge, attempted, badgeEarned, dailyLoading, onStart }: { challenge: DailyAIChallenge; attempted: boolean; badgeEarned: boolean; dailyLoading: boolean; onStart: () => void; }) {
   const meta = BATTLE_MODE_META['ai_' + challenge.difficulty as BattleMode];
-  return (<section style={{ marginBottom: 24, padding: 18, borderRadius: 14, background: 'linear-gradient(135deg, rgba(232,184,75,0.14), rgba(74,40,220,0.12) 55%, rgba(13,13,26,0.98))', border: '1px solid rgba(232,184,75,0.38)' }}>
-    <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 16, flexWrap: 'wrap' }}><div style={{ flex: '1 1 260px' }}>
-      <div style={{ color: '#e8b84b', fontSize: 10, letterSpacing: '0.18em', fontWeight: 800 }}>DESAFÍO DEL DÍA · IA.2</div>
-      <h2 style={{ margin: '6px 0 4px', color: '#f3e8c0', fontFamily: 'Cinzel,serif', fontSize: 18 }}>{challenge.title}</h2>
-      <p style={{ margin: 0, color: '#a9a4b8', fontSize: 12 }}>{challenge.subtitle}</p>
-      <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginTop: 12 }}><span style={{ color: '#e8b84b', background: '#e8b84b18', border: '1px solid #e8b84b44', borderRadius: 999, padding: '4px 9px', fontSize: 10 }}>{meta.label}</span><span style={{ color: '#a855f7', background: '#a855f718', border: '1px solid #a855f744', borderRadius: 999, padding: '4px 9px', fontSize: 10 }}>{challenge.rewardLabel}</span>{badgeEarned && <span style={{ color: '#3ddc84', background: '#3ddc8418', border: '1px solid #3ddc8444', borderRadius: 999, padding: '4px 9px', fontSize: 10 }}>BADGE GANADO</span>}</div>
-    </div><button onClick={onStart} disabled={attempted || dailyLoading} style={{ minWidth: 156, padding: '11px 16px', borderRadius: 9, border: '1px solid ' + (attempted ? '#2a2a3a' : '#e8b84b88'), background: attempted ? '#141421' : 'linear-gradient(135deg,#e8b84b,#a56d18)', color: attempted ? '#666' : '#0a0a12', cursor: attempted || dailyLoading ? 'not-allowed' : 'pointer', fontFamily: 'Cinzel,serif', fontWeight: 800, fontSize: 11 }}>{dailyLoading ? 'PREPARANDO…' : attempted ? 'INTENTO UTILIZADO' : 'ACEPTAR DESAFÍO'}</button></div>
-  </section>);
+  return (
+    <section style={{
+      marginBottom: 24, position: 'relative', overflow: 'hidden',
+      borderRadius: 16,
+      background: 'linear-gradient(135deg, rgba(20,12,0,0.98) 0%, rgba(40,24,0,0.96) 50%, rgba(15,10,30,0.98) 100%)',
+      border: '1px solid rgba(232,184,75,0.45)',
+      boxShadow: '0 0 40px rgba(232,184,75,0.12), 0 8px 32px rgba(0,0,0,0.6)',
+    }}>
+      {/* Shimmer diagonal stripe */}
+      <div style={{
+        position: 'absolute', top: 0, left: '-40%', right: 0, bottom: 0,
+        background: 'linear-gradient(105deg, transparent 40%, rgba(232,184,75,0.06) 50%, transparent 60%)',
+        animation: 'card-shimmer 3s ease-in-out infinite',
+        pointerEvents: 'none', backgroundSize: '200% 100%',
+      }} />
+      {/* Accent top bar */}
+      <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 3, background: 'linear-gradient(90deg, transparent, #e8b84b, #a56d18, #e8b84b, transparent)' }} />
+      <div style={{ padding: '20px 22px', display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 16, flexWrap: 'wrap', position: 'relative', zIndex: 1 }}>
+        <div style={{ flex: '1 1 260px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
+            <span style={{ fontSize: 18 }}>⚔️</span>
+            <span style={{ color: '#e8b84b', fontSize: 10, letterSpacing: '0.2em', fontWeight: 800, fontFamily: 'Cinzel,serif' }}>DESAFÍO DEL DÍA</span>
+            {attempted && !badgeEarned && <span style={{ background: '#3dc96b22', border: '1px solid #3dc96b44', color: '#3dc96b', borderRadius: 999, padding: '2px 8px', fontSize: 9, letterSpacing: '0.1em' }}>COMPLETADO</span>}
+            {badgeEarned && <span style={{ background: '#e8b84b22', border: '1px solid #e8b84b66', color: '#e8b84b', borderRadius: 999, padding: '2px 8px', fontSize: 9, letterSpacing: '0.1em' }}>🏅 BADGE GANADO</span>}
+          </div>
+          <h2 style={{ margin: '0 0 6px', color: '#f5e8b0', fontFamily: 'Cinzel,serif', fontSize: 20, fontWeight: 700, textShadow: '0 0 20px rgba(232,184,75,0.4)' }}>{challenge.title}</h2>
+          <p style={{ margin: 0, color: '#9488b0', fontSize: 12, lineHeight: 1.5 }}>{challenge.subtitle}</p>
+          <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginTop: 14 }}>
+            <span style={{ color: '#e8b84b', background: 'rgba(232,184,75,0.12)', border: '1px solid rgba(232,184,75,0.3)', borderRadius: 999, padding: '4px 10px', fontSize: 10, fontFamily: 'Cinzel,serif' }}>{meta.label}</span>
+            <span style={{ color: '#c084fc', background: 'rgba(192,132,252,0.1)', border: '1px solid rgba(192,132,252,0.3)', borderRadius: 999, padding: '4px 10px', fontSize: 10 }}>{challenge.rewardLabel}</span>
+          </div>
+        </div>
+        <button
+          onClick={onStart}
+          disabled={attempted || dailyLoading}
+          style={{
+            alignSelf: 'center', minWidth: 160, padding: '13px 20px', borderRadius: 10,
+            border: `1px solid ${attempted ? '#1e1e30' : 'rgba(232,184,75,0.6)'}`,
+            background: attempted
+              ? '#111120'
+              : dailyLoading
+                ? 'linear-gradient(135deg,#5a4010,#3a2a08)'
+                : 'linear-gradient(135deg,#e8b84b 0%,#c9901f 60%,#a56d18 100%)',
+            color: attempted ? '#444' : '#0a0a12',
+            cursor: attempted || dailyLoading ? 'not-allowed' : 'pointer',
+            fontFamily: 'Cinzel,serif', fontWeight: 800, fontSize: 12,
+            letterSpacing: '0.05em',
+            boxShadow: attempted ? 'none' : '0 4px 20px rgba(232,184,75,0.35)',
+            transition: 'all 0.2s ease',
+          }}
+        >
+          {dailyLoading ? '⏳ PREPARANDO…' : attempted ? '✓ INTENTO UTILIZADO' : '⚔ ACEPTAR DESAFÍO'}
+        </button>
+      </div>
+    </section>
+  );
 }
 
     
