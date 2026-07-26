@@ -409,7 +409,30 @@ export function PvpRoute() {
 
   useEffect(() => { if (!playerId) return; setDailyAttempted(hasDailyChallengeAttempted(playerId, dailyChallenge.dateKey)); setDailyBadgeEarned(hasDailyChallengeBadge(playerId, dailyChallenge.dateKey)); }, [playerId, dailyChallenge.dateKey]);
 
-  const startDailyChallenge = useCallback(async () => { if (!playerId || dailyAttempted || dailyLoading) return; markDailyChallengeAttempted(playerId, dailyChallenge.dateKey); setDailyAttempted(true); setDailyLoading(true); try { const playerUnits = await loadPlayerBattleUnits(supabase, playerId); const result = simulateAIBattle(playerUnits, dailyChallenge.difficulty, dailyChallenge.deck); if (result.you_won) { markDailyChallengeBadge(playerId, dailyChallenge.dateKey); setDailyBadgeEarned(true); try { const claim = await claimDailyAIChallenge(supabase, dailyChallenge.dateKey, dailyChallenge.difficulty); if (claim.claimed) setDailyVexEarned(claim.vex_awarded ?? DAILY_CHALLENGE_VEX_REWARD[dailyChallenge.difficulty]); } catch { /* RPC pending deploy — badge still awarded */ } } setDailyResult({ ...result, opponent_name: dailyChallenge.title, engine: 'client_ai_daily_v1' }); } finally { setDailyLoading(false); } }, [playerId, dailyAttempted, dailyLoading, dailyChallenge]);
+  const startDailyChallenge = useCallback(async () => {
+    if (!playerId || dailyAttempted || dailyLoading) return;
+    setDailyLoading(true);
+    try {
+      const playerUnits = await loadPlayerBattleUnits(supabase, playerId);
+      const result = simulateAIBattle(playerUnits, dailyChallenge.difficulty, dailyChallenge.deck);
+      // Mark attempt AFTER simulation succeeds — prevents consuming the attempt on network failure
+      markDailyChallengeAttempted(playerId, dailyChallenge.dateKey);
+      setDailyAttempted(true);
+      if (result.you_won) {
+        markDailyChallengeBadge(playerId, dailyChallenge.dateKey);
+        setDailyBadgeEarned(true);
+        try {
+          const claim = await claimDailyAIChallenge(supabase, dailyChallenge.dateKey, dailyChallenge.difficulty);
+          if (claim.claimed) setDailyVexEarned(claim.vex_awarded ?? DAILY_CHALLENGE_VEX_REWARD[dailyChallenge.difficulty]);
+        } catch { /* RPC pending deploy — badge still awarded locally */ }
+      }
+      setDailyResult({ ...result, opponent_name: dailyChallenge.title, engine: 'client_ai_daily_v1' });
+    } catch (err) {
+      console.error("[PvpRoute] Daily challenge failed:", err);
+    } finally {
+      setDailyLoading(false);
+    }
+  }, [playerId, dailyAttempted, dailyLoading, dailyChallenge]);
 
   if (loading) return <PageLoader />;
   if (!loading && !playerId) return (

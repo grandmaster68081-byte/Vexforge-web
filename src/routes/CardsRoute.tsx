@@ -15,10 +15,13 @@ const RARITY_CFG: Record<string, { color: string; glow: string; label: string; o
   Mythic:    { color: "#ef4444", glow: "0 0 36px rgba(239,68,68,.8)",   label: "Mítica",      order: 6 },
 };
 const FACTION_CFG: Record<string, { color: string; bg: string; bgImg: string; icon: string }> = {
-  Guerrero: { color: "#f87171", bg: "linear-gradient(160deg,#7f1d1d,#1c0a0a)", bgImg: "https://rscuzqnfccqvltkdcdny.supabase.co/storage/v1/object/public/vexforge-assets/factions/bg_guerrero.jpg", icon: "⚔️" },
-  Mago:     { color: "#818cf8", bg: "linear-gradient(160deg,#1e1b4b,#0a0a1e)", bgImg: "https://rscuzqnfccqvltkdcdny.supabase.co/storage/v1/object/public/vexforge-assets/factions/bg_mago.jpg",     icon: "🔮" },
-  Paladín:  { color: "#fbbf24", bg: "linear-gradient(160deg,#451a03,#1c0a00)", bgImg: "https://rscuzqnfccqvltkdcdny.supabase.co/storage/v1/object/public/vexforge-assets/factions/bg_paladin.jpg",   icon: "🛡️" },
-  Pícaro:   { color: "#34d399", bg: "linear-gradient(160deg,#022c22,#0a1c14)", bgImg: "https://rscuzqnfccqvltkdcdny.supabase.co/storage/v1/object/public/vexforge-assets/factions/bg_picaro.jpg",    icon: "🗡️" },
+  Guerrero:    { color: "#f87171", bg: "linear-gradient(160deg,#7f1d1d,#1c0a0a)", bgImg: "https://rscuzqnfccqvltkdcdny.supabase.co/storage/v1/object/public/vexforge-assets/factions/bg_guerrero.jpg", icon: "⚔️" },
+  Mago:        { color: "#818cf8", bg: "linear-gradient(160deg,#1e1b4b,#0a0a1e)", bgImg: "https://rscuzqnfccqvltkdcdny.supabase.co/storage/v1/object/public/vexforge-assets/factions/bg_mago.jpg",     icon: "🔮" },
+  Paladín:     { color: "#fbbf24", bg: "linear-gradient(160deg,#451a03,#1c0a00)", bgImg: "https://rscuzqnfccqvltkdcdny.supabase.co/storage/v1/object/public/vexforge-assets/factions/bg_paladin.jpg",   icon: "🛡️" },
+  Pícaro:      { color: "#34d399", bg: "linear-gradient(160deg,#022c22,#0a1c14)", bgImg: "https://rscuzqnfccqvltkdcdny.supabase.co/storage/v1/object/public/vexforge-assets/factions/bg_picaro.jpg",    icon: "🗡️" },
+  // Additional factions used in battle engine
+  Explorador:  { color: "#34d399", bg: "linear-gradient(160deg,#022c22,#0a1c14)", bgImg: "https://rscuzqnfccqvltkdcdny.supabase.co/storage/v1/object/public/vexforge-assets/factions/bg_picaro.jpg",    icon: "🏹" },
+  Comerciante: { color: "#fbbf24", bg: "linear-gradient(160deg,#451a03,#1c0a00)", bgImg: "https://rscuzqnfccqvltkdcdny.supabase.co/storage/v1/object/public/vexforge-assets/factions/bg_paladin.jpg",   icon: "🪙" },
 };
 const RARITIES = ["Common","Uncommon","Rare","Epic","Legendary","Mythic"];
 const FACTIONS = ["Guerrero","Mago","Paladín","Pícaro"];
@@ -139,6 +142,8 @@ function CardTile({ card, owned, quantity, onClick }: {
   const isEpicPlus  = ["Epic","Legendary","Mythic"].includes(card.rarity);
   const isLegPlus   = ["Legendary","Mythic"].includes(card.rarity);
   const rarityKey   = card.rarity.toLowerCase();
+  // rAF ref for smooth tilt — avoids jitter on high-polling mice
+  const rafRef = { current: 0 };
 
   return (
     <div
@@ -160,24 +165,30 @@ function CardTile({ card, owned, quantity, onClick }: {
       }}
       onMouseMove={e => {
         const el = e.currentTarget;
-        const r  = el.getBoundingClientRect();
-        const cx = e.clientX - r.left  - r.width  / 2;
-        const cy = e.clientY - r.top   - r.height / 2;
-        const rx = -(cy / r.height) * 16;
-        const ry =  (cx / r.width)  * 16;
-        el.style.transform = `perspective(700px) rotateX(${rx}deg) rotateY(${ry}deg) scale(1.07) translateY(-4px)`;
-        if (isEpicPlus) {
-          const holo = el.querySelector<HTMLElement>("[data-holo]");
-          if (holo) {
-            const px = ((cx / r.width)  * 0.5 + 0.5) * 100;
-            const py = ((cy / r.height) * 0.5 + 0.5) * 100;
-            holo.style.opacity = "1";
-            holo.style.background = `radial-gradient(ellipse 70% 90% at ${px}% ${py}%, rgba(255,255,255,.18) 0%, rgba(255,219,112,.10) 40%, transparent 70%)`;
+        const cx = e.clientX;
+        const cy = e.clientY;
+        cancelAnimationFrame(rafRef.current);
+        rafRef.current = requestAnimationFrame(() => {
+          const r  = el.getBoundingClientRect();
+          const dx = cx - r.left  - r.width  / 2;
+          const dy = cy - r.top   - r.height / 2;
+          const rx = -(dy / r.height) * 16;
+          const ry =  (dx / r.width)  * 16;
+          el.style.transform = `perspective(700px) rotateX(${rx}deg) rotateY(${ry}deg) scale(1.07) translateY(-4px)`;
+          if (isEpicPlus) {
+            const holo = el.querySelector<HTMLElement>("[data-holo]");
+            if (holo) {
+              const px = ((dx / r.width)  * 0.5 + 0.5) * 100;
+              const py = ((dy / r.height) * 0.5 + 0.5) * 100;
+              holo.style.opacity = "1";
+              holo.style.background = `radial-gradient(ellipse 70% 90% at ${px}% ${py}%, rgba(255,255,255,.18) 0%, rgba(255,219,112,.10) 40%, transparent 70%)`;
+            }
           }
-        }
+        });
       }}
       onMouseLeave={e => {
         const el = e.currentTarget;
+        cancelAnimationFrame(rafRef.current);
         el.style.transform = "";
         el.style.boxShadow = isEpicPlus ? rarity.glow : "none";
         const holo = el.querySelector<HTMLElement>("[data-holo]");

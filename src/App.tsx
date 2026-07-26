@@ -201,7 +201,6 @@ function DesktopSidebar() {
         borderRight: "1px solid rgba(201,144,31,0.12)",
         zIndex: 100,
         paddingBottom: 32,
-        display: "none",
       }}
     >
       {SIDEBAR_GROUPS.map((group) => (
@@ -300,6 +299,8 @@ function ForgeHeader({
   async function handleSignOut() {
     await supabase.auth.signOut();
     setDropOpen(false);
+    // Redirect to home so user isn't left on a protected route while unauthenticated
+    window.location.href = "/";
   }
 
   return (

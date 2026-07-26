@@ -70,9 +70,10 @@ export function BattleResultScreen({ result, playerName, opponentName, onDismiss
   const [showStats, setShowStats] = useState(false);
   const [eloDisplayed, setEloDisplayed] = useState(0);
 
-    // GL.0: Win Streak counter (persisted in localStorage)
+    // GL.0: Win Streak counter (persisted in localStorage, scoped to playerName to avoid cross-user bleed)
+    const streakKey = `vxf_win_streak_${playerName}`;
     const [winStreak, setWinStreak] = useState<number>(() => {
-      try { return parseInt(localStorage.getItem('vxf_win_streak') ?? '0') || 0; } catch { return 0; }
+      try { return parseInt(localStorage.getItem(streakKey) ?? '0') || 0; } catch { return 0; }
     });
 
     // Update streak on new battle result (runs once on mount per result)
@@ -80,10 +81,10 @@ export function BattleResultScreen({ result, playerName, opponentName, onDismiss
       if (won) {
         const next = winStreak + 1;
         setWinStreak(next);
-        try { localStorage.setItem('vxf_win_streak', String(next)); } catch {}
+        try { localStorage.setItem(streakKey, String(next)); } catch {}
       } else if (!isDraw) {
         setWinStreak(0);
-        try { localStorage.setItem('vxf_win_streak', '0'); } catch {}
+        try { localStorage.setItem(streakKey, '0'); } catch {}
       }
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);

@@ -165,8 +165,12 @@ export function HomeRoute() {
   const [statsLoading, setStatsLoading] = useState(true);
 
   useEffect(()=>{
-    supabase.rpc("get_home_stats").then(({data})=>{
+    supabase.rpc("get_home_stats").then(({data, error})=>{
+      if(error) console.warn("[HomeRoute] get_home_stats error:", error.message);
       if(data) setStats(data as HomeStats);
+      setStatsLoading(false);
+    }).catch(() => {
+      // Network failure — degrade gracefully, don't leave statsLoading=true forever
       setStatsLoading(false);
     });
   },[]);

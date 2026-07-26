@@ -476,6 +476,13 @@ export function InteractiveBattleBoard({
     }
   }, [actions]);
 
+  // Cancel drag if pointer leaves the window (prevents "sticky" card bug)
+  const onPointerCancel = useCallback(() => {
+    if (!dragRef.current.active) return;
+    dragRef.current.active = false;
+    actions.endDrag(false);
+  }, [actions]);
+
   return (
     <div style={{
       position: 'fixed', inset: 0, zIndex: 100,
@@ -483,7 +490,7 @@ export function InteractiveBattleBoard({
       display: 'flex', flexDirection: 'column',
       fontFamily: '"Rajdhani",sans-serif',
       overflow: 'hidden',
-    }} onPointerUp={onPointerUp}>
+    }} onPointerUp={onPointerUp} onPointerCancel={onPointerCancel} onPointerLeave={onPointerCancel}>
 
       {/* Keyframes */}
       <style>{`
