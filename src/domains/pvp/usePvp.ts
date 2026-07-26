@@ -5,6 +5,16 @@ import {
 } from "./repository";
 import type { RealBattleResult } from "../../lib/battleTypes";
 
+/** Reject after `ms` milliseconds — used to prevent infinite spinner. */
+function withTimeout<T>(promise: Promise<T>, ms: number): Promise<T> {
+  return Promise.race([
+    promise,
+    new Promise<T>((_, reject) =>
+      setTimeout(() => reject(new Error(`PvP load timed out after ${ms}ms`)), ms)
+    ),
+  ]);
+}
+
 export function usePvp() {
   const [seasons, setSeasons]               = useState<PvpSeason[]>([]);
   const [rankings, setRankings]             = useState<PvpRanking[]>([]);
@@ -20,24 +30,31 @@ export function usePvp() {
   const load = useCallback(async () => {
     setLoading(true);
     try {
-      const { data: s } = await (await import("../../lib/supabase")).supabase.auth.getSession();
-      if (s.session) {
-        const { data } = await (await import("../../lib/supabase")).supabase
-          .from("players").select("id").eq("auth_user_id", s.session.user.id).maybeSingle();
-        setPlayerId(data?.id ?? null);
-      }
-      const [seasonRes, matchRes] = await Promise.all([listActiveSeasons(), listMyMatches()]);
-      if (seasonRes.data) {
-        setSeasons(seasonRes.data);
-        if (seasonRes.data[0]) {
-          const rankRes = await listSeasonRankings(seasonRes.data[0].id);
-          if (rankRes.data) setRankings(rankRes.data);
-        }
-      }
-      if (matchRes.data) setMatches(matchRes.data);
-      setError(seasonRes.reason ?? matchRes.reason ?? null);
+      await withTimeout(
+        (async () => {
+          const { supabase } = await import("../../lib/supabase");
+          const { data: s } = await supabase.auth.getSession();
+          if (s.session) {
+            const { data } = await supabase
+              .from("players").select("id").eq("auth_user_id", s.session.user.id).maybeSingle();
+            setPlayerId(data?.id ?? null);
+          }
+          const [seasonRes, matchRes] = await Promise.all([listActiveSeasons(), listMyMatches()]);
+          if (seasonRes.data) {
+            setSeasons(seasonRes.data);
+            if (seasonRes.data[0]) {
+              const rankRes = await listSeasonRankings(seasonRes.data[0].id);
+              if (rankRes.data) setRankings(rankRes.data);
+            }
+          }
+          if (matchRes.data) setMatches(matchRes.data);
+          setError(seasonRes.reason ?? matchRes.reason ?? null);
+        })(),
+        8000
+      );
     } catch (err) {
-      setError("Error cargando datos de PvP. Intenta de nuevo.");
+      const isTimeout = err instanceof Error && err.message.includes("timed out");
+      setError(isTimeout ? "Tiempo de espera agotado. Verifica tu conexión." : "Error cargando datos de PvP.");
     } finally {
       setLoading(false);
     }
