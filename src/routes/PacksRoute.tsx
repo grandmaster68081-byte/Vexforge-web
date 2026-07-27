@@ -76,16 +76,48 @@ function PackCard({
 }) {
   const canAfford = vexBalance >= pack.price_vex;
   const c = visual.color;
+  const [hovered, setHovered] = useState(false);
+
   return (
-    <div style={{
-      background: visual.gradient, borderRadius: 16,
-      border: `1.5px solid ${c}44`, padding: "28px 24px",
-      display: "flex", flexDirection: "column", gap: 14, position: "relative",
-      boxShadow: `0 0 32px ${visual.glow}, 0 4px 24px rgba(0,0,0,0.6)`,
-      transition: "transform 0.2s", cursor: "default",
-    }}>
-      <div style={{ fontSize: 48, textAlign: "center" }}>{visual.icon}</div>
-      <div style={{ textAlign: "center" }}>
+    <div
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      style={{
+        background: visual.gradient, borderRadius: 16,
+        border: `1.5px solid ${hovered ? c + "88" : c + "44"}`,
+        padding: "28px 24px",
+        display: "flex", flexDirection: "column", gap: 14, position: "relative",
+        overflow: "hidden",
+        boxShadow: hovered
+          ? `0 0 48px ${visual.glow}, 0 0 80px ${visual.glow.replace("0.45","0.2").replace("0.5","0.2").replace("0.55","0.2").replace("0.6","0.2")}, 0 8px 32px rgba(0,0,0,0.7)`
+          : `0 0 32px ${visual.glow}, 0 4px 24px rgba(0,0,0,0.6)`,
+        transform: hovered ? "translateY(-4px) scale(1.01)" : "none",
+        transition: "all 0.25s cubic-bezier(0.22,1,0.36,1)",
+        cursor: "default",
+      }}>
+      {/* Shimmer highlight on hover */}
+      <div style={{
+        position: "absolute", top: 0, left: "-60%", right: 0, bottom: 0, zIndex: 0,
+        background: `linear-gradient(105deg, transparent 40%, ${c}10 50%, transparent 60%)`,
+        transition: "opacity 0.3s",
+        opacity: hovered ? 1 : 0,
+        pointerEvents: "none",
+        backgroundSize: "200% 100%",
+      }} />
+      {/* Top accent bar */}
+      <div style={{
+        position: "absolute", top: 0, left: 0, right: 0, height: 2,
+        background: `linear-gradient(90deg, transparent, ${c}, transparent)`,
+        opacity: hovered ? 1 : 0.4,
+        transition: "opacity 0.3s",
+      }} />
+
+      <div style={{ fontSize: hovered ? 56 : 48, textAlign: "center", position: "relative", zIndex: 1,
+        transition: "font-size 0.25s ease",
+        filter: hovered ? `drop-shadow(0 0 16px ${c})` : "none",
+      }}>{visual.icon}</div>
+
+      <div style={{ textAlign: "center", position: "relative", zIndex: 1 }}>
         <h3 style={{ fontFamily: "Cinzel,serif", color: "#e8e8f0", margin: "0 0 4px", fontSize: 16 }}>
           {visual.name}
         </h3>
@@ -101,7 +133,7 @@ function PackCard({
 
       {/* Rarity weights */}
       {pack.rarity_weights && (
-        <div style={{ display: "flex", gap: 4, flexWrap: "wrap", justifyContent: "center" }}>
+        <div style={{ display: "flex", gap: 4, flexWrap: "wrap", justifyContent: "center", position: "relative", zIndex: 1 }}>
           {Object.entries(pack.rarity_weights).map(([rarity, pct]) => (
             <span key={rarity} style={{
               fontSize: 9, fontFamily: "Rajdhani,sans-serif", fontWeight: 700,
@@ -112,9 +144,13 @@ function PackCard({
         </div>
       )}
 
-      <div style={{ borderTop: `1px solid ${c}22`, paddingTop: 14 }}>
+      <div style={{ borderTop: `1px solid ${c}22`, paddingTop: 14, position: "relative", zIndex: 1 }}>
         <div style={{ textAlign: "center", marginBottom: 12 }}>
-          <span style={{ fontFamily: "Cinzel,serif", color: c, fontSize: 20, fontWeight: 800 }}>
+          <span style={{
+            fontFamily: "Cinzel,serif", color: c, fontSize: 20, fontWeight: 800,
+            textShadow: hovered ? `0 0 16px ${c}` : "none",
+            transition: "text-shadow 0.25s",
+          }}>
             {pack.price_vex.toLocaleString()}
           </span>
           <span style={{ color: "#666", fontSize: 11 }}> VEX</span>
@@ -123,9 +159,9 @@ function PackCard({
           onClick={() => onBuy(pack.pack_key)}
           disabled={buying || !canAfford}
           style={{
-            width: "100%", padding: "12px 0", borderRadius: 10,
+            width: "100%", padding: "13px 0", borderRadius: 10,
             background: canAfford
-              ? `linear-gradient(135deg,${c}cc,${c}88)`
+              ? `linear-gradient(135deg,${c}dd,${c}99)`
               : "rgba(255,255,255,.06)",
             border: `1px solid ${canAfford ? c : "rgba(255,255,255,.1)"}`,
             color: canAfford ? "#0a0a12" : "#555577",
@@ -133,9 +169,10 @@ function PackCard({
             cursor: buying || !canAfford ? "not-allowed" : "pointer",
             opacity: buying ? 0.7 : 1,
             transition: "all .2s",
+            boxShadow: canAfford && hovered ? `0 0 20px ${c}55` : "none",
           }}
         >
-          {buying ? "Comprando…" : canAfford ? "Comprar Pack" : "VEX insuficiente"}
+          {buying ? "Comprando…" : canAfford ? "⚒ Comprar Pack" : "VEX insuficiente"}
         </button>
         {!canAfford && (
           <p style={{ textAlign: "center", color: "#444466", fontSize: 9,

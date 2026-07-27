@@ -41,20 +41,28 @@ export function AccountRoute() {
   if (session) return (
     <section>
       <div className="hero-banner" style={{ backgroundImage: `url(${COVER_URL})`, height: 220 }}>
-        <div className="hero-banner-overlay" style={{ alignItems: "flex-start", padding: "40px 48px" }}>
+        <div className="hero-banner-overlay" style={{ alignItems: "flex-start", padding: "clamp(24px,5vw,40px) clamp(16px,5vw,48px)" }}>
           <p style={{ fontSize: 11, letterSpacing: "0.14em", color: "var(--ember-gold)", textTransform: "uppercase", fontFamily: '"Rajdhani",sans-serif', fontWeight: 700, marginBottom: 10 }}>─── Forja ───</p>
-          <h1 style={{ fontFamily: '"Cinzel Decorative",serif', fontSize: "clamp(2rem,4vw,3rem)", fontWeight: 900, margin: 0 }}>Mi Cuenta</h1>
+          <h1 style={{ fontFamily: '"Cinzel Decorative",serif', fontSize: "clamp(1.5rem,4vw,3rem)", fontWeight: 900, margin: 0 }}>Mi Cuenta</h1>
         </div>
       </div>
-      <div style={{ padding: "40px 48px 48px", maxWidth: 560 }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 18, padding: "22px 26px", marginBottom: 28, background: "linear-gradient(135deg,rgba(61,220,132,0.08),rgba(61,220,132,0.02))", border: "1px solid rgba(61,220,132,0.25)", borderRadius: "var(--radius-lg)" }}>
-          <div style={{ width: 48, height: 48, borderRadius: "50%", background: "rgba(61,220,132,0.15)", border: "2px solid rgba(61,220,132,0.3)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 20, color: "#3ddc84", flexShrink: 0 }}>✓</div>
-          <div style={{ flex: 1 }}>
-            <p style={{ fontSize: 12, color: "#3ddc84", fontFamily: '"Rajdhani",sans-serif', fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 3 }}>Sesión Activa</p>
-            <p style={{ fontSize: 14, margin: 0, wordBreak: "break-all" }}>{session.user?.email}</p>
+      <div style={{ padding: "clamp(20px,5vw,40px) clamp(16px,5vw,48px) 48px", maxWidth: 560 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 14, padding: "18px 20px", marginBottom: 24,
+          background: "linear-gradient(135deg,rgba(61,220,132,0.08),rgba(61,220,132,0.02))",
+          border: "1px solid rgba(61,220,132,0.25)", borderRadius: "var(--radius-lg)" }}>
+          <div style={{ width: 44, height: 44, borderRadius: "50%",
+            background: "rgba(61,220,132,0.15)", border: "2px solid rgba(61,220,132,0.3)",
+            display: "flex", alignItems: "center", justifyContent: "center",
+            fontSize: 20, color: "#3ddc84", flexShrink: 0 }}>✓</div>
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <p style={{ fontSize: 11, color: "#3ddc84", fontFamily: '"Rajdhani",sans-serif',
+              fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 3 }}>Sesión Activa</p>
+            <p style={{ fontSize: 13, margin: 0, wordBreak: "break-all", color: "var(--fg-base)", overflow: "hidden", textOverflow: "ellipsis" }}>
+              {session.user?.email}
+            </p>
           </div>
         </div>
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10, marginBottom: 28 }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(120px, 1fr))", gap: 10, marginBottom: 24 }}>
           {[
             { to: "/profile",  icon: "👤", label: "Perfil"        },
             { to: "/progress", icon: "📈", label: "Progreso"      },
@@ -62,16 +70,34 @@ export function AccountRoute() {
             { to: "/settings", icon: "⚙️", label: "Configuración" },
           ].map(l => (
             <Link key={l.to} to={l.to} style={{ textDecoration: "none" }}>
-              <div style={{ padding: "18px 20px", background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: "var(--radius-md)", cursor: "pointer", transition: "border-color .15s" }}>
-                <span style={{ fontSize: 20, display: "block", marginBottom: 6 }}>{l.icon}</span>
-                <span style={{ fontSize: 13, fontFamily: '"Rajdhani",sans-serif', fontWeight: 700, color: "var(--fg-base)" }}>{l.label}</span>
+              <div style={{
+                padding: "16px 14px",
+                background: "rgba(255,255,255,0.02)",
+                border: "1px solid rgba(255,255,255,0.06)",
+                borderRadius: "var(--radius-md)", cursor: "pointer",
+                transition: "border-color .15s, background .15s, transform .15s",
+                textAlign: "center",
+              }}
+              onMouseEnter={e => { const d = e.currentTarget as HTMLDivElement; d.style.borderColor = "rgba(201,144,31,0.3)"; d.style.background = "rgba(201,144,31,0.05)"; d.style.transform = "translateY(-2px)"; }}
+              onMouseLeave={e => { const d = e.currentTarget as HTMLDivElement; d.style.borderColor = "rgba(255,255,255,0.06)"; d.style.background = "rgba(255,255,255,0.02)"; d.style.transform = ""; }}
+              >
+                <span style={{ fontSize: 22, display: "block", marginBottom: 8 }}>{l.icon}</span>
+                <span style={{ fontSize: 12, fontFamily: '"Rajdhani",sans-serif', fontWeight: 700, color: "var(--fg-base)", letterSpacing: "0.04em" }}>{l.label}</span>
               </div>
             </Link>
           ))}
         </div>
         <button
           onClick={() => signOut()}
-          style={{ padding: "12px 28px", borderRadius: "var(--radius-md)", border: "1px solid rgba(227,87,63,0.35)", background: "rgba(227,87,63,0.06)", color: "#e3573f", cursor: "pointer", fontSize: 13, fontFamily: '"Rajdhani",sans-serif', fontWeight: 700 }}
+          style={{
+            padding: "12px 28px", borderRadius: "var(--radius-md)",
+            border: "1px solid rgba(227,87,63,0.35)", background: "rgba(227,87,63,0.06)",
+            color: "#e3573f", cursor: "pointer", fontSize: 13,
+            fontFamily: '"Rajdhani",sans-serif', fontWeight: 700,
+            transition: "background 0.2s, border-color 0.2s",
+          }}
+          onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.background = "rgba(227,87,63,0.12)"; }}
+          onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.background = "rgba(227,87,63,0.06)"; }}
         >
           Cerrar Sesión
         </button>
@@ -80,9 +106,9 @@ export function AccountRoute() {
   );
 
   return (
-    <div style={{ minHeight: "calc(100vh - 60px)", display: "flex", alignItems: "center", justifyContent: "center", backgroundImage: `url(${COVER_URL})`, backgroundSize: "cover", backgroundPosition: "center", position: "relative" }}>
-      <div style={{ position: "absolute", inset: 0, background: "rgba(6,6,12,0.78)", backdropFilter: "blur(2px)" }} />
-      <div style={{ position: "relative", zIndex: 1, width: "100%", maxWidth: 400, margin: "0 16px", padding: "36px 32px", background: "rgba(12,12,22,0.96)", border: "1px solid rgba(201,144,31,0.25)", borderRadius: "var(--radius-lg)", boxShadow: "0 24px 60px rgba(0,0,0,0.5)" }}>
+    <div style={{ minHeight: "calc(100vh - 60px)", display: "flex", alignItems: "center", justifyContent: "center", backgroundImage: `url(${COVER_URL})`, backgroundSize: "cover", backgroundPosition: "center", position: "relative", padding: "16px 0" }}>
+      <div style={{ position: "absolute", inset: 0, background: "rgba(6,6,12,0.82)", backdropFilter: "blur(3px)" }} />
+      <div style={{ position: "relative", zIndex: 1, width: "100%", maxWidth: 400, margin: "0 16px", padding: "clamp(24px,5vw,36px) clamp(20px,5vw,32px)", background: "rgba(12,12,22,0.97)", border: "1px solid rgba(201,144,31,0.25)", borderRadius: "var(--radius-lg)", boxShadow: "0 24px 60px rgba(0,0,0,0.6), 0 0 60px rgba(201,144,31,0.06)" }}>
         <div style={{ textAlign: "center", marginBottom: 28 }}>
           <img src={LOGO_URL} alt="VEXFORGE" style={{ width: 56, height: 56, borderRadius: "50%", border: "2px solid rgba(201,144,31,0.4)", objectFit: "cover", marginBottom: 14 }} />
           <h1 style={{ fontFamily: '"Cinzel Decorative",serif', fontSize: 20, fontWeight: 900, margin: "0 0 4px" }}>VEXFORGE</h1>
