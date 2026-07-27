@@ -19,8 +19,7 @@ const SECTION_BY_PREFIX: Array<[string, VexforgeSection]> = [
   ["/world-bosses",  "bosses"],
   // Mission / quest zones
   ["/missions",      "missions"],
-  ["/quests",        "missions"],
-  ["/daily-quests",  "missions"],
+  ["/quests",        "missions"],  // /quests is the real route; /daily-quests does not exist
   // Market / economy zones
   ["/market",        "market"],
   ["/packs",         "market"],

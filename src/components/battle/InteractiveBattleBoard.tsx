@@ -4,7 +4,17 @@
 
 import { useRef, useCallback, useState, useEffect, type CSSProperties } from 'react';
 import type { RealBattleResult, BattleUnit } from '../../lib/battleTypes';
-import { RARITY_COLOR, RARITY_GLOW, KEYWORD_ICON } from '../../lib/battleTypes';
+import { RARITY_COLOR, RARITY_GLOW } from '../../lib/battleTypes';
+
+// Faction-to-icon map — KEYWORD_ICON maps mechanics (Guard, Surge…), not factions
+const FACTION_ICON: Record<string, string> = {
+  Guerrero:    '⚔️',
+  Mago:        '🔮',
+  'Paladín':   '🛡️',
+  'Pícaro':    '🗡️',
+  Explorador:  '🏹',
+  Comerciante: '💰',
+};
 import { useBattleStateMachine, type TurnPhase, type TurnSnapshot } from '../../lib/battleStateMachine';
 import { KeywordChip } from './KeywordTooltip';
 import { AudioEngine } from '../../lib/audioEngine';
@@ -129,7 +139,7 @@ function FighterCard({
             filter: `drop-shadow(0 0 16px ${rarColor}aa)`,
             animation: 'card-icon-breathe 3s ease-in-out infinite',
           }}>
-            {KEYWORD_ICON[unit.faction] ?? '⚔️'}
+            {FACTION_ICON[unit.faction] ?? '⚔️'}
           </div>
         )}
         {/* Rarity shimmer overlay for Rare+ */}
@@ -158,7 +168,7 @@ function FighterCard({
           position: 'absolute', top: 6, left: 6, fontSize: 14,
           filter: `drop-shadow(0 0 6px ${zone.primary}aa)`,
         }}>
-          {KEYWORD_ICON[unit.faction] ?? '⚔️'}
+          {FACTION_ICON[unit.faction] ?? '⚔️'}
         </div>
       </div>
 
