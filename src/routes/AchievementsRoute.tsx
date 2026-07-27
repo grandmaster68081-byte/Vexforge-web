@@ -36,7 +36,9 @@ function AchievementCard({
   const badge = getRarityBadge(ach.points);
   const date = unlockedAt ? new Date(unlockedAt).toLocaleDateString("es-ES", { day: "2-digit", month: "short", year: "numeric" }) : null;
   return (
-    <div style={{
+    <div
+    className={unlocked ? "achievement-unlock-v2" : undefined}
+    style={{
       position: "relative",
       background: unlocked
         ? "linear-gradient(135deg, #1a1200 0%, #251900 60%, #1a1200 100%)"

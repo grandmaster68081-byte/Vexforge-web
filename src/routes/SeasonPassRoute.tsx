@@ -264,7 +264,7 @@ function PremiumUpgradeCard({
       <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 16, flexWrap: "wrap" }}>
         <div style={{ flex: 1 }}>
           <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8 }}>
-            <span style={{ fontSize: 22 }}>⭐</span>
+            <span className="faction-emblem-breathe" style={{ fontSize: 22, display: "inline-block", ["--emblem-glow" as string]: "rgba(168,85,247,0.6)" }}>⭐</span>
             <span style={{ fontFamily: "Cinzel,serif", color: "#e8b84b", fontSize: 18, fontWeight: 800 }}>Season Pass Premium</span>
           </div>
           <p style={{ color: "#888", fontSize: 12, margin: "0 0 12px", lineHeight: 1.6 }}>

@@ -30,7 +30,7 @@ function LoreCard({ entry, expanded, onToggle }: { entry: LoreEntry; expanded: b
         </div>
       </button>
       {expanded && (
-        <div style={{ marginTop: 16, paddingTop: 15, borderTop: "1px solid #2a2a3a", color: "#b6b6c8", fontSize: 13, lineHeight: 1.75 }}>
+        <div className="lore-reveal" style={{ marginTop: 16, paddingTop: 15, borderTop: "1px solid #e8b84b22", color: "#b6b6c8", fontSize: 13, lineHeight: 1.75 }}>
           {entry.content ?? "Esta entrada aún no tiene contenido publicado."}
         </div>
       )}

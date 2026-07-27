@@ -7893,3 +7893,179 @@ button:active { animation: chip-select-pop 0.15s ease; }
   .card-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 8px !important; }
   .battle-board-wrap { padding: 8px !important; }
 }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   FASE 2 — BATCH 4: TIER-1 DCCG ANIMATIONS
+   All-game polish: VS transition, reward claim, map pulse, battle idle,
+   season-pass shimmer, combo-streak, card-summon-from-deck.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ─── VS Battle Screen Transition ─────────────────────────────────────────── */
+@keyframes vs-slash-left {
+  0%   { transform: translateX(-120%) skewX(-20deg); opacity: 0; }
+  60%  { transform: translateX(0) skewX(-20deg); opacity: 1; }
+  100% { transform: translateX(0) skewX(-20deg); opacity: 1; }
+}
+@keyframes vs-slash-right {
+  0%   { transform: translateX(120%) skewX(-20deg); opacity: 0; }
+  60%  { transform: translateX(0) skewX(-20deg); opacity: 1; }
+  100% { transform: translateX(0) skewX(-20deg); opacity: 1; }
+}
+@keyframes vs-center-burst {
+  0%   { transform: scale(0) rotate(-15deg); opacity: 0; }
+  60%  { transform: scale(1.18) rotate(-15deg); opacity: 1; }
+  80%  { transform: scale(0.95) rotate(-15deg); opacity: 1; }
+  100% { transform: scale(1) rotate(-15deg); opacity: 1; }
+}
+.vs-panel-left  { animation: vs-slash-left   0.55s cubic-bezier(0.22,1,0.36,1) both; }
+.vs-panel-right { animation: vs-slash-right  0.55s cubic-bezier(0.22,1,0.36,1) both; }
+.vs-center-text { animation: vs-center-burst 0.45s 0.25s cubic-bezier(0.22,1,0.36,1) both; }
+
+/* ─── Card Summon from Deck ────────────────────────────────────────────────── */
+@keyframes card-summon-from-deck {
+  0%   { transform: translateY(40px) scale(0.7) rotateY(90deg); opacity: 0; filter: brightness(2); }
+  50%  { transform: translateY(-8px) scale(1.06) rotateY(-6deg); opacity: 1; filter: brightness(1.4); }
+  75%  { transform: translateY(3px) scale(0.98) rotateY(2deg); opacity: 1; filter: brightness(1.1); }
+  100% { transform: translateY(0) scale(1) rotateY(0deg); opacity: 1; filter: brightness(1); }
+}
+.card-summon { animation: card-summon-from-deck 0.65s cubic-bezier(0.22,1,0.36,1) both; }
+
+/* ─── Reward Claim Burst ───────────────────────────────────────────────────── */
+@keyframes reward-claim-burst {
+  0%   { transform: scale(0.8); opacity: 0; filter: brightness(3); }
+  40%  { transform: scale(1.12); opacity: 1; filter: brightness(1.6); }
+  70%  { transform: scale(0.97); opacity: 1; filter: brightness(1.1); }
+  100% { transform: scale(1); opacity: 1; filter: brightness(1); }
+}
+@keyframes reward-vex-pop {
+  0%   { transform: translateY(0) scale(1); opacity: 1; }
+  60%  { transform: translateY(-28px) scale(1.3); opacity: 1; }
+  100% { transform: translateY(-48px) scale(0.9); opacity: 0; }
+}
+.reward-claim-burst { animation: reward-claim-burst 0.55s cubic-bezier(0.22,1,0.36,1) both; }
+.reward-vex-float   { animation: reward-vex-pop 0.8s ease-out both; }
+
+/* ─── World Boss / Raid Map Node Pulse ─────────────────────────────────────── */
+@keyframes map-node-pulse {
+  0%,100% { box-shadow: 0 0 0 0 var(--node-color,#e84040)00, 0 0 8px var(--node-color,#e84040)66; }
+  50%     { box-shadow: 0 0 0 10px var(--node-color,#e84040)00, 0 0 20px var(--node-color,#e84040)aa; }
+}
+@keyframes map-node-active {
+  0%,100% { transform: scale(1);    filter: brightness(1); }
+  50%     { transform: scale(1.06); filter: brightness(1.2); }
+}
+.map-node-pulse  { animation: map-node-pulse 2.4s ease-in-out infinite; }
+.map-node-active { animation: map-node-active 1.8s ease-in-out infinite; }
+
+/* ─── Combo Streak Flash ───────────────────────────────────────────────────── */
+@keyframes combo-streak-flash {
+  0%   { opacity: 1; transform: scale(1); filter: brightness(1); }
+  20%  { opacity: 1; transform: scale(1.2); filter: brightness(2) saturate(2); }
+  50%  { opacity: 1; transform: scale(1.05); filter: brightness(1.4); }
+  100% { opacity: 1; transform: scale(1); filter: brightness(1); }
+}
+@keyframes combo-streak-number {
+  0%   { transform: translateY(0) scale(1); }
+  30%  { transform: translateY(-4px) scale(1.25); }
+  60%  { transform: translateY(2px) scale(0.95); }
+  100% { transform: translateY(0) scale(1); }
+}
+.combo-streak-flash  { animation: combo-streak-flash  0.5s cubic-bezier(0.22,1,0.36,1) both; }
+.combo-streak-number { animation: combo-streak-number 0.4s cubic-bezier(0.22,1,0.36,1) both; }
+
+/* ─── Season Pass Tier Shimmer ─────────────────────────────────────────────── */
+@keyframes tier-shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+.tier-shimmer-active {
+  background: linear-gradient(90deg,
+    var(--tier-from, #a855f7) 0%,
+    var(--tier-mid,  #e8b84b) 50%,
+    var(--tier-from, #a855f7) 100%
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: tier-shimmer 2.4s linear infinite;
+}
+
+/* ─── Clan Banner Entrance ──────────────────────────────────────────────────── */
+@keyframes clan-banner-drop {
+  0%   { transform: translateY(-40px) scale(0.9); opacity: 0; }
+  65%  { transform: translateY(4px) scale(1.03); opacity: 1; }
+  85%  { transform: translateY(-2px) scale(0.99); }
+  100% { transform: translateY(0) scale(1); opacity: 1; }
+}
+.clan-banner-drop { animation: clan-banner-drop 0.6s cubic-bezier(0.22,1,0.36,1) both; }
+
+/* ─── Battle turn separator ─────────────────────────────────────────────────── */
+@keyframes turn-divider-slide {
+  0%   { width: 0%; opacity: 0; }
+  50%  { opacity: 1; }
+  100% { width: 100%; opacity: 0.5; }
+}
+.turn-divider { animation: turn-divider-slide 0.55s cubic-bezier(0.22,1,0.36,1) forwards; }
+
+/* ─── Card rarity holographic scan ─────────────────────────────────────────── */
+@keyframes holo-scan-v2 {
+  0%   { background-position: 0% 0%; opacity: 0; }
+  30%  { opacity: 0.7; }
+  100% { background-position: 200% 100%; opacity: 0; }
+}
+.vex-holo-active {
+  background: linear-gradient(105deg,
+    transparent 30%,
+    rgba(255,255,255,0.22) 48%,
+    rgba(255,255,255,0.12) 52%,
+    transparent 70%
+  );
+  background-size: 200% 200%;
+  animation: holo-scan-v2 1.4s ease-in-out infinite;
+}
+
+/* ─── Mission complete badge ─────────────────────────────────────────────────── */
+@keyframes mission-badge-pop {
+  0%   { transform: scale(0) rotate(-20deg); opacity: 0; }
+  55%  { transform: scale(1.15) rotate(5deg); opacity: 1; }
+  75%  { transform: scale(0.95) rotate(-2deg); opacity: 1; }
+  100% { transform: scale(1) rotate(0deg); opacity: 1; }
+}
+.mission-badge-pop { animation: mission-badge-pop 0.5s cubic-bezier(0.22,1,0.36,1) both; }
+
+/* ─── Leaderboard top-3 glow pulse ──────────────────────────────────────────── */
+@keyframes top3-glow-pulse {
+  0%,100% { box-shadow: 0 0 8px rgba(232,184,75,0.25), inset 0 1px 0 rgba(232,184,75,0.1); }
+  50%     { box-shadow: 0 0 22px rgba(232,184,75,0.45), inset 0 1px 0 rgba(232,184,75,0.2); }
+}
+.leaderboard-top3 { animation: top3-glow-pulse 2.2s ease-in-out infinite; }
+
+/* ─── Pack card rarity shimmer on reveal ────────────────────────────────────── */
+@keyframes pack-rarity-shimmer {
+  0%   { transform: translateX(-100%) skewX(-15deg); }
+  100% { transform: translateX(250%) skewX(-15deg); }
+}
+.pack-rarity-shimmer::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent 30%, rgba(255,255,255,0.4) 50%, transparent 70%);
+  animation: pack-rarity-shimmer 1.2s ease-in-out both;
+  pointer-events: none;
+}
+
+/* ─── Interactive board: turn-start flash ───────────────────────────────────── */
+@keyframes board-turn-flash {
+  0%   { background: rgba(232,184,75,0.12); }
+  100% { background: transparent; }
+}
+.board-turn-start { animation: board-turn-flash 0.6s ease both; }
+
+/* ─── Relic slot activation glow ────────────────────────────────────────────── */
+@keyframes relic-slot-activate {
+  0%   { box-shadow: 0 0 0 0 var(--relic-slot-color, #e8b84b)55; }
+  50%  { box-shadow: 0 0 0 8px var(--relic-slot-color, #e8b84b)00; }
+  100% { box-shadow: 0 0 0 0 var(--relic-slot-color, #e8b84b)00; }
+}
+.relic-slot-active { animation: relic-slot-activate 1.6s ease-in-out infinite; }

@@ -134,7 +134,7 @@ function FighterCard({
       ? 'card-hit-shake 0.35s ease forwards'
       : (isAnimating && isActive)
         ? (isPlayer ? 'unit-attack-lunge-up 0.42s cubic-bezier(0.22,1,0.36,1) forwards' : 'unit-attack-lunge-down 0.42s cubic-bezier(0.22,1,0.36,1) forwards')
-        : undefined,
+        : (!isAnimating ? 'card-float-idle 4s ease-in-out infinite' : undefined),
   };
 
   const rarityAuraClass =
