@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from "react";
     import type { OpenedCard } from "../domains/packs/repository";
+    import { AudioEngine } from "../lib/audioEngine";
 
     export interface PackVisualData {
     icon: string; name: string; color: string; glow: string; gradient: string;
@@ -156,9 +157,16 @@ import { useState, useEffect, useRef, useCallback } from "react";
         const next = new Set([...prev, i]);
         const rarity = cards[i].rarity;
         spawnFloat(rarity);
-        if ((RARITY_RANK[rarity] ?? 0) >= 4) {
-          // Legendary or Mythic — spawn confetti
+        const rank = RARITY_RANK[rarity] ?? 0;
+        if (rank >= 4) {
+          // Legendary or Mythic — spawn confetti + audio reveal
           setTimeout(() => spawnConfetti(RARITY_COLOR[rarity] ?? "#E8B84B"), 120);
+          try { (AudioEngine as any).sfxRarityReveal(rarity); } catch {}
+        } else if (rank >= 2) {
+          // Rare/Epic — soft audio reveal
+          try { (AudioEngine as any).sfxRarityReveal(rarity); } catch {}
+        } else {
+          try { AudioEngine.sfxCardSelect(); } catch {}
         }
         if (next.size >= cards.length) {
           setTimeout(() => setPhase("summary"), 800);
@@ -346,13 +354,23 @@ import { useState, useEffect, useRef, useCallback } from "react";
           overflowY: "auto",
           backdropFilter: "blur(8px)",
         }}>
-          {/* Screen flash for Legendary/Mythic */}
+          {/* Screen flash for Legendary/Mythic — cinematic full-screen */}
           {flashColor && (
-            <div style={{
-              position: "fixed", inset: 0, zIndex: 10001, pointerEvents: "none",
-              background: `radial-gradient(circle at center, ${flashColor}44 0%, transparent 70%)`,
-              animation: "vfFlash 0.7s ease-out forwards",
-            }} />
+            <>
+              <div style={{
+                position: "fixed", inset: 0, zIndex: 10001, pointerEvents: "none",
+                background: `radial-gradient(ellipse 90% 70% at 50% 25%, ${flashColor}55 0%, ${flashColor}22 45%, transparent 70%)`,
+                animation: "vfFlash 0.7s ease-out forwards",
+              }} />
+              {/* Extra outer halo for Mythic (red) */}
+              {flashColor === "#FF4444" && (
+                <div className="pack-flash-mythic" />
+              )}
+              {/* Halo for Legendary (gold) */}
+              {flashColor === "#E8B84B" && (
+                <div className="pack-flash-legendary" />
+              )}
+            </>
           )}
 
           {/* Confetti particles */}

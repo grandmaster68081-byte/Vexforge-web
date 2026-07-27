@@ -568,3 +568,192 @@ function _installSectionApi(engine: any): void {
 }
 
 _installSectionApi(AudioEngine as any);
+
+// ═══════════════════════════════════════════════════════════════════════════
+// FASE 2 — Nuevos SFX para reveals, level up, craft y efectos especiales
+// Chat 98 — mejorar experiencia auditiva completa
+// ═══════════════════════════════════════════════════════════════════════════
+
+declare module "./audioEngine" {
+  interface VexForgeAudioEngine {
+    sfxLegendaryReveal(): void;
+    sfxMythicReveal(): void;
+    sfxLevelUp(): void;
+    sfxCraftSuccess(): void;
+    sfxRarityReveal(rarity: string): void;
+    sfxScreenTransition(): void;
+    sfxBossEncounter(): void;
+    sfxQuestComplete(): void;
+    sfxPackLegendaryOpen(): void;
+    sfxComboChain(count: number): void;
+  }
+}
+
+// Patch nuevos métodos sobre la instancia AudioEngine existente
+(function installFase2Sfx(engine: any) {
+  if (engine.__fase2SfxInstalled) return;
+  engine.__fase2SfxInstalled = true;
+
+  // ─── Golden fanfare for Legendary card reveal ────────────────────────────
+  engine.sfxLegendaryReveal = function (): void {
+    try {
+      // Rising arpegio dorado — Do-Mi-Sol-Do'
+      const freqs = [261.63, 329.63, 392.00, 523.25, 659.25, 783.99];
+      freqs.forEach((f, i) => {
+        this.tone(f, 0.3, 'sine', 0.22 - i * 0.02, 0, undefined, i * 0.075);
+      });
+      // Harmony chord
+      [523.25, 659.25, 783.99].forEach((f, i) => {
+        this.tone(f, 0.55, 'triangle', 0.12, i * 200, undefined, 0.45 + i * 0.04);
+      });
+      // Final shimmer
+      this.tone(1046.5, 0.4, 'sine', 0.18, 600, undefined, 0.55);
+      this.noise(0.08, 0.12, 6000, 0.48);
+    } catch { /* silent */ }
+  };
+
+  // ─── Dramatic reveal for Mythic card ────────────────────────────────────
+  engine.sfxMythicReveal = function (): void {
+    try {
+      // Deep bass hit
+      this.tone(55, 0.06, 'sawtooth', 0.5, 0);
+      this.noise(0.07, 0.4, 300, 0);
+      // Thunder rumble
+      this.noise(0.18, 0.25, 150, 0.04);
+      // Rising siren
+      const ctx = this.ctx();
+      const osc = ctx.createOscillator();
+      const g = ctx.createGain();
+      osc.type = 'sawtooth';
+      osc.frequency.setValueAtTime(80, ctx.currentTime + 0.05);
+      osc.frequency.linearRampToValueAtTime(440, ctx.currentTime + 0.55);
+      g.gain.setValueAtTime(0, ctx.currentTime + 0.05);
+      g.gain.linearRampToValueAtTime(0.3, ctx.currentTime + 0.15);
+      g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.65);
+      osc.connect(g); g.connect(this.sfx());
+      osc.start(ctx.currentTime + 0.05);
+      osc.stop(ctx.currentTime + 0.7);
+      // Chaos stabs
+      [220, 330, 440, 660].forEach((f, i) => {
+        this.tone(f, 0.05, 'square', 0.18, 0, undefined, 0.1 + i * 0.07);
+      });
+      // Final high impact
+      this.tone(880, 0.2, 'sine', 0.22, 0, undefined, 0.58);
+      this.tone(1100, 0.15, 'sine', 0.15, 0, undefined, 0.65);
+    } catch { /* silent */ }
+  };
+
+  // ─── Level up jingle ─────────────────────────────────────────────────────
+  engine.sfxLevelUp = function (): void {
+    try {
+      // Ascending arpeggio
+      const scale = [261.63, 329.63, 392.00, 523.25, 659.25, 783.99, 1046.50];
+      scale.forEach((f, i) => {
+        this.tone(f, 0.25, 'sine', 0.25 - i * 0.02, 0, undefined, i * 0.06);
+      });
+      // Fanfare chord
+      [523.25, 659.25, 783.99, 1046.50].forEach((f, i) => {
+        this.tone(f, 0.6, 'triangle', 0.15, i * 100, undefined, 0.42 + i * 0.03);
+      });
+      this.noise(0.06, 0.18, 8000, 0.44);
+      // Shimmer tail
+      this.tone(1568, 0.35, 'sine', 0.12, 0, undefined, 0.7);
+    } catch { /* silent */ }
+  };
+
+  // ─── Craft / fusion success ───────────────────────────────────────────────
+  engine.sfxCraftSuccess = function (): void {
+    try {
+      this.noise(0.04, 0.35, 800, 0);
+      this.tone(147, 0.12, 'sawtooth', 0.35, 0, undefined, 0.03);
+      [293.66, 369.99, 440.00, 587.33].forEach((f, i) => {
+        this.tone(f, 0.2, 'sine', 0.22, 0, undefined, 0.15 + i * 0.08);
+      });
+      this.noise(0.05, 0.12, 5000, 0.5);
+      this.tone(880, 0.25, 'sine', 0.18, 0, undefined, 0.52);
+    } catch { /* silent */ }
+  };
+
+  // ─── Screen / page transition whoosh ─────────────────────────────────────
+  engine.sfxScreenTransition = function (): void {
+    try {
+      const ctx = this.ctx();
+      const osc = ctx.createOscillator();
+      const g = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(600, ctx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(200, ctx.currentTime + 0.18);
+      g.gain.setValueAtTime(0.15, ctx.currentTime);
+      g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.2);
+      osc.connect(g); g.connect(this.sfx());
+      osc.start(ctx.currentTime); osc.stop(ctx.currentTime + 0.22);
+    } catch { /* silent */ }
+  };
+
+  // ─── Boss encounter dramatic sting ───────────────────────────────────────
+  engine.sfxBossEncounter = function (): void {
+    try {
+      this.noise(0.06, 0.45, 200, 0);
+      this.noise(0.12, 0.3, 100, 0.04);
+      this.tone(55, 0.08, 'sawtooth', 0.5, 0, undefined, 0);
+      this.tone(73.4, 0.12, 'square', 0.35, 0, undefined, 0.06);
+      this.tone(146.8, 0.35, 'sawtooth', 0.25, 0, undefined, 0.15);
+      this.tone(110, 0.5, 'sine', 0.18, 0, undefined, 0.5);
+    } catch { /* silent */ }
+  };
+
+  // ─── Quest complete — uplifting ───────────────────────────────────────────
+  engine.sfxQuestComplete = function (): void {
+    try {
+      [329.63, 392.00, 523.25, 659.25].forEach((f, i) => {
+        this.tone(f, 0.28, 'sine', 0.24, 0, undefined, i * 0.07);
+      });
+      this.tone(783.99, 0.4, 'triangle', 0.18, 0, undefined, 0.28);
+      this.noise(0.05, 0.1, 6000, 0.3);
+    } catch { /* silent */ }
+  };
+
+  // ─── Pack opening — Legendary/Mythic entrance fanfare ────────────────────
+  engine.sfxPackLegendaryOpen = function (): void {
+    try {
+      this.noise(0.04, 0.4, 500, 0);
+      const ctx = this.ctx();
+      const osc = ctx.createOscillator();
+      const g = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(110, ctx.currentTime + 0.05);
+      osc.frequency.exponentialRampToValueAtTime(880, ctx.currentTime + 0.4);
+      g.gain.setValueAtTime(0.001, ctx.currentTime + 0.05);
+      g.gain.linearRampToValueAtTime(0.28, ctx.currentTime + 0.18);
+      g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.55);
+      osc.connect(g); g.connect(this.sfx());
+      osc.start(ctx.currentTime + 0.05);
+      osc.stop(ctx.currentTime + 0.6);
+      setTimeout(() => { try { this.sfxLegendaryReveal(); } catch {} }, 420);
+    } catch { /* silent */ }
+  };
+
+  // ─── Combo chain — escalating ─────────────────────────────────────────────
+  engine.sfxComboChain = function (count: number): void {
+    try {
+      const base = 220 * Math.pow(1.15, Math.min(count, 8));
+      this.tone(base, 0.1, 'square', 0.28, 0);
+      this.tone(base * 1.5, 0.08, 'sine', 0.18, 0, undefined, 0.05);
+      if (count >= 3) this.tone(base * 2, 0.06, 'triangle', 0.14, 0, undefined, 0.1);
+    } catch { /* silent */ }
+  };
+
+  // ─── Dispatch by rarity ───────────────────────────────────────────────────
+  engine.sfxRarityReveal = function (rarity: string): void {
+    try {
+      switch (rarity) {
+        case 'Mythic':    this.sfxMythicReveal(); break;
+        case 'Legendary': this.sfxLegendaryReveal(); break;
+        case 'Epic':      [440, 554, 659].forEach((f,i) => this.tone(f, 0.2, 'sine', 0.2, 0, undefined, i * 0.06)); break;
+        case 'Rare':      [329, 440, 523].forEach((f,i) => this.tone(f, 0.15, 'sine', 0.18, 0, undefined, i * 0.05)); break;
+        default:          this.tone(440, 0.1, 'sine', 0.15, 0); break;
+      }
+    } catch { /* silent */ }
+  };
+
+})(AudioEngine as any);

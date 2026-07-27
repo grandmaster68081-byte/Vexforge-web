@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { Link } from "react-router-dom";
 import { supabase } from "../lib/supabase";
 import { useHome } from "../domains/home/useHome";
@@ -6,6 +6,26 @@ import { useHomeActivity } from "../domains/home/useHomeActivity";
 import { usePlayerItems } from "../domains/cosmetics/usePlayerItems";
 import type { PlayerActiveBoost } from "../domains/cosmetics/repository";
 import { getRank } from "../lib/rankUtils";
+
+// ─── Animated counter — counts up from 0 to target when mounted ─────────────
+function useCountUp(target: number, duration = 1200, active = true): number {
+  const [value, setValue] = useState(0);
+  const raf = useRef<number>(0);
+  useEffect(() => {
+    if (!active || target === 0) { setValue(target); return; }
+    const start = performance.now();
+    const tick = (now: number) => {
+      const elapsed = now - start;
+      const progress = Math.min(elapsed / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      setValue(Math.round(target * eased));
+      if (progress < 1) raf.current = requestAnimationFrame(tick);
+    };
+    raf.current = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf.current);
+  }, [target, duration, active]);
+  return value;
+}
 
 const LOBBY_URL = "https://rscuzqnfccqvltkdcdny.supabase.co/storage/v1/object/public/vexforge-assets/lobby/main.jpg";
 
@@ -132,6 +152,49 @@ function BoostChip({ boost }: { boost: PlayerActiveBoost }) {
 }
 
 // AP.2 banner — shown at the top of main content when player has active boosts
+// ─── Animated live stats section with count-up ───────────────────────────────
+function StatCard({ icon, label, value, delay = 0 }: { icon: string; label: string; value: number; delay?: number }) {
+  const counted = useCountUp(value, 1400);
+  return (
+    <div style={{
+      padding:"20px 16px", textAlign:"center",
+      background:"linear-gradient(135deg,rgba(201,144,31,0.07),rgba(91,139,245,0.05))",
+      border:"1px solid rgba(201,144,31,0.12)", borderRadius:12,
+      position:"relative", overflow:"hidden",
+      animation:`counter-reveal 0.5s ${delay}s cubic-bezier(.22,1,.36,1) both`,
+    }}>
+      {/* Subtle corner glow */}
+      <div style={{position:"absolute",top:-20,right:-20,width:60,height:60,borderRadius:"50%",
+        background:"radial-gradient(circle, rgba(201,144,31,0.15) 0%, transparent 70%)",pointerEvents:"none"}}/>
+      <div style={{fontSize:24,marginBottom:8}}>{icon}</div>
+      <div className="live-stat-value" style={{fontFamily:"Cinzel,serif",fontWeight:700,fontSize:26,
+        color:"#e8b84b",marginBottom:4,fontVariantNumeric:"tabular-nums"}}>
+        {counted.toLocaleString("es")}
+      </div>
+      <div style={{fontSize:11,color:"#7a7a9a",letterSpacing:"0.08em",textTransform:"uppercase"}}>
+        {label}
+      </div>
+    </div>
+  );
+}
+
+function LiveStatsSection({ stats }: { stats: { active_players: number; total_cards: number; total_battles: number; packs_opened: number } }) {
+  return (
+    <div style={{marginBottom:48}}>
+      <p style={{fontSize:10,letterSpacing:"0.14em",color:"#e8b84b",
+        textTransform:"uppercase",fontFamily:"Rajdhani,sans-serif",fontWeight:700,marginBottom:16}}>
+        ─── Estadísticas Globales ───
+      </p>
+      <div className="home-stats-grid">
+        <StatCard icon="👥" label="Jugadores" value={stats.active_players} delay={0} />
+        <StatCard icon="🃏" label="Cartas Únicas" value={stats.total_cards} delay={0.07} />
+        <StatCard icon="⚔️" label="Batallas PvP" value={stats.total_battles} delay={0.14} />
+        <StatCard icon="📦" label="Packs Abiertos" value={stats.packs_opened} delay={0.21} />
+      </div>
+    </div>
+  );
+}
+
 function ActiveBoostBanner({ boosts, signedIn }: { boosts: PlayerActiveBoost[]; signedIn: boolean }) {
   if (!signedIn || boosts.length === 0) return null;
   return (
@@ -206,6 +269,19 @@ export function HomeRoute() {
         <div className="vex-rune-ring vex-rune-ring-1" />
         <div className="vex-rune-ring vex-rune-ring-2" />
         <div className="vex-rune-ring vex-rune-ring-3" />
+        {/* Floating faction badges — cinematic depth layer */}
+        {[
+          { icon:"⚔️", glow:"rgba(232,64,64,0.7)",  top:"18%", left:"8%",  dur:"4.2s", delay:"0s" },
+          { icon:"🔮", glow:"rgba(91,139,245,0.7)",  top:"65%", left:"6%",  dur:"5.1s", delay:"-1.5s" },
+          { icon:"🛡️", glow:"rgba(232,184,75,0.7)", top:"25%", right:"7%", dur:"4.7s", delay:"-0.8s" },
+          { icon:"🗡️", glow:"rgba(61,201,107,0.7)", top:"62%", right:"9%", dur:"5.8s", delay:"-2.2s" },
+        ].map((b,i)=>(
+          <div key={i} className="hero-faction-badge" style={{
+            top:b.top, left:(b as any).left, right:(b as any).right,
+            // @ts-expect-error CSS custom props
+            "--dur":b.dur, "--delay":b.delay, "--glow":b.glow,
+          }}>{b.icon}</div>
+        ))}
         <Particles/>
         <div style={{position:"relative",zIndex:1,maxWidth:900,margin:"0 auto",padding:"clamp(40px,8vw,72px) 20px clamp(36px,6vw,60px)",textAlign:"center"}}>
           {/* Eyebrow tag */}
@@ -523,31 +599,7 @@ export function HomeRoute() {
 
         {/* ─── LIVE STATS ─── */}
         {!statsLoading && stats && (
-          <div style={{marginBottom:48}}>
-            <p style={{fontSize:10,letterSpacing:"0.14em",color:"#e8b84b",
-              textTransform:"uppercase",fontFamily:"Rajdhani,sans-serif",fontWeight:700,marginBottom:16}}>
-              ─── Estadísticas Globales ───
-            </p>
-            <div className="home-stats-grid">
-              {[
-                {label:"Jugadores", value:stats.active_players, icon:"👥"},
-                {label:"Cartas Únicas", value:stats.total_cards, icon:"🃏"},
-                {label:"Batallas PvP", value:stats.total_battles, icon:"⚔️"},
-                {label:"Packs Abiertos", value:stats.packs_opened, icon:"📦"},
-              ].map(item=>(
-                <div key={item.label} style={{padding:"20px 16px",textAlign:"center",
-                  background:"linear-gradient(135deg,rgba(201,144,31,0.05),rgba(91,139,245,0.05))",
-                  border:"1px solid rgba(201,144,31,0.1)",borderRadius:12}}>
-                  <div style={{fontSize:24,marginBottom:8}}>{item.icon}</div>
-                  <div style={{fontFamily:"Cinzel,serif",fontWeight:700,fontSize:26,
-                    color:"#e8b84b",marginBottom:4}}>{item.value}</div>
-                  <div style={{fontSize:11,color:"#7a7a9a",letterSpacing:"0.08em",textTransform:"uppercase"}}>
-                    {item.label}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
+          <LiveStatsSection stats={stats} />
         )}
 
         {/* ─── TOP 3 LEADERBOARD ─── */}
