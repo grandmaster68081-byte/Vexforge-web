@@ -102,11 +102,14 @@
         try {
           const { data: { session } } = await supabase.auth.getSession();
           if (!session?.user) { setError("Inicia sesión para jugar la batalla tutorial."); setPhase('error'); return; }
-          const playerUnits = await loadPlayerBattleUnits(supabase, session.user.id);
+          let playerUnits = await loadPlayerBattleUnits(supabase, session.user.id);
+          // If no cards yet, use a built-in demo deck so tutorial never blocks
           if (!playerUnits || playerUnits.length === 0) {
-            setError("Tu mazo está vacío. Obtén cartas primero desde la tienda de Packs.");
-            setPhase('error');
-            return;
+            playerUnits = [
+              { idx: 0, id: "demo-1", name: "Forjador Novato",  faction: "Guerrero", rarity: "Common",   power: 42, atk: 42, def: 28, spd: 35, hp: 110, max_hp: 110, keywords: [], side: "a", alive: true, image_url: "", poisoned: false, shielded: false, guard: false, lifesteal: false, poison_atk: false, rush: false, double_strike: false },
+              { idx: 1, id: "demo-2", name: "Maga Aprendiz",    faction: "Mago",     rarity: "Common",   power: 38, atk: 38, def: 22, spd: 40, hp: 95,  max_hp: 95,  keywords: [], side: "a", alive: true, image_url: "", poisoned: false, shielded: false, guard: false, lifesteal: false, poison_atk: false, rush: false, double_strike: false },
+              { idx: 2, id: "demo-3", name: "Paladín Iniciado", faction: "Paladín",  rarity: "Uncommon", power: 50, atk: 50, def: 40, spd: 30, hp: 130, max_hp: 130, keywords: ["Guard"], side: "a", alive: true, image_url: "", poisoned: false, shielded: false, guard: true, lifesteal: false, poison_atk: false, rush: false, double_strike: false },
+            ];
           }
           const battleResult = simulateAIBattle(playerUnits, 'tutorial');
           setResult(battleResult);

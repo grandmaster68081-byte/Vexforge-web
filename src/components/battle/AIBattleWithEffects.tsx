@@ -70,10 +70,32 @@ function useEffectTracker(result: RealBattleResult) {
 
     // Use 380ms — faster than auto-play (850ms) so effects never lag behind turns
     const interval = setInterval(() => {
+      // Pause effect firing when tab is hidden to prevent desync
+      if (document.hidden) return;
       if (idx < (result.turns?.length ?? 0)) tryFireNextTurn();
     }, 380);
 
-    return () => clearInterval(interval);
+    // Resume from correct position when tab regains focus
+    let tabHiddenAt = 0;
+    const onVisibilityChange = () => {
+      if (!document.hidden) {
+        // Skip ahead to catch up: fire any missed turns instantly
+        const missedMs = tabHiddenAt > 0 ? Date.now() - tabHiddenAt : 0;
+        const missedTurns = Math.floor(missedMs / 380);
+        for (let i = 0; i < Math.min(missedTurns, 5) && idx < (result.turns?.length ?? 0); i++) {
+          tryFireNextTurn();
+        }
+        tabHiddenAt = 0;
+      } else {
+        tabHiddenAt = Date.now();
+      }
+    };
+    document.addEventListener('visibilitychange', onVisibilityChange);
+
+    return () => {
+      clearInterval(interval);
+      document.removeEventListener('visibilitychange', onVisibilityChange);
+    };
   }, [result]);
 
   return { floats, effects };

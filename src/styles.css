@@ -5867,3 +5867,254 @@ img[src=""] {
   50%     { border-color: rgba(232,184,75,0.8); box-shadow: 0 0 16px rgba(232,184,75,0.3); }
 }
 .achievement-unlocked-border { animation: achievement-border-pulse 2s ease-in-out infinite; }
+
+/* ══════════════════════════════════════════════════════════════
+   VEXFORGE — TIER-1 CINEMATIC UPGRADES (Chat 100)
+   Animaciones mejoradas para pack opening, arena y UI global
+   ══════════════════════════════════════════════════════════════ */
+
+/* ─── Pack card — entrada stagger con perspectiva ─────────────────── */
+@keyframes pack-card-enter {
+  from { opacity: 0; transform: perspective(600px) rotateY(-15deg) translateX(-20px) scale(0.9); }
+  to   { opacity: 1; transform: perspective(600px) rotateY(0deg)   translateX(0)     scale(1);   }
+}
+.pack-card-enter { animation: pack-card-enter 0.4s cubic-bezier(0.22,1,0.36,1) both; }
+.pack-card-enter:nth-child(1) { animation-delay: 0.00s; }
+.pack-card-enter:nth-child(2) { animation-delay: 0.06s; }
+.pack-card-enter:nth-child(3) { animation-delay: 0.12s; }
+.pack-card-enter:nth-child(4) { animation-delay: 0.18s; }
+.pack-card-enter:nth-child(5) { animation-delay: 0.24s; }
+
+/* ─── Pack icon — 3D flip teaser ──────────────────────────────────── */
+@keyframes pack-icon-breathe {
+  0%,100% { transform: scale(1)    rotateY(0deg)   drop-shadow(0 0 0px currentColor); filter: drop-shadow(0 0 12px currentColor); }
+  30%     { transform: scale(1.06) rotateY(-8deg); filter: drop-shadow(0 0 24px currentColor) brightness(1.2); }
+  60%     { transform: scale(1.04) rotateY(6deg);  filter: drop-shadow(0 0 18px currentColor); }
+}
+.pack-icon-animate { animation: pack-icon-breathe 4s ease-in-out infinite; }
+
+/* ─── Pack purchase flash ──────────────────────────────────────────── */
+@keyframes pack-purchase-flash {
+  0%   { opacity: 0; }
+  25%  { opacity: 0.55; }
+  100% { opacity: 0; }
+}
+.pack-purchase-flash {
+  position: fixed; inset: 0; pointer-events: none; z-index: 9999;
+  background: radial-gradient(ellipse at center, rgba(232,184,75,0.55) 0%, transparent 70%);
+  animation: pack-purchase-flash 0.6s ease-out forwards;
+}
+
+/* ─── Battle arena — living floor grid ───────────────────────────── */
+@keyframes arena-grid-flow {
+  0%   { background-position: 0 0; }
+  100% { background-position: 48px 48px; }
+}
+.arena-floor-grid {
+  position: absolute; inset: 0; pointer-events: none;
+  background-image:
+    linear-gradient(rgba(74,158,255,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(74,158,255,0.04) 1px, transparent 1px);
+  background-size: 48px 48px;
+  animation: arena-grid-flow 4s linear infinite;
+}
+
+/* ─── Fighter card — entrada por facción ─────────────────────────── */
+@keyframes fighter-enter-player {
+  from { opacity: 0; transform: translateX(-40px) scale(0.85); }
+  to   { opacity: 1; transform: translateX(0)     scale(1);    }
+}
+@keyframes fighter-enter-opponent {
+  from { opacity: 0; transform: translateX(40px)  scale(0.85); }
+  to   { opacity: 1; transform: translateX(0)     scale(1);    }
+}
+.fighter-enter-player   { animation: fighter-enter-player   0.45s cubic-bezier(0.22,1,0.36,1) both; }
+.fighter-enter-opponent { animation: fighter-enter-opponent 0.45s cubic-bezier(0.22,1,0.36,1) both; }
+
+/* ─── Damage flash — borde rojo en la carta golpeada ─────────────── */
+@keyframes damage-border-flash {
+  0%   { box-shadow: 0 0 0 0 rgba(255,50,50,0);   }
+  20%  { box-shadow: 0 0 0 4px rgba(255,50,50,0.8); }
+  100% { box-shadow: 0 0 0 0 rgba(255,50,50,0);   }
+}
+.damage-flash { animation: damage-border-flash 0.5s ease-out; }
+
+/* ─── Heal flash — borde verde ───────────────────────────────────── */
+@keyframes heal-border-flash {
+  0%   { box-shadow: 0 0 0 0 rgba(61,220,132,0);   }
+  20%  { box-shadow: 0 0 0 4px rgba(61,220,132,0.8); }
+  100% { box-shadow: 0 0 0 0 rgba(61,220,132,0);   }
+}
+.heal-flash { animation: heal-border-flash 0.5s ease-out; }
+
+/* ─── Death shake + fade ─────────────────────────────────────────── */
+@keyframes card-death {
+  0%   { opacity: 1; transform: scale(1) rotate(0deg); }
+  20%  { transform: scale(1.08) rotate(-4deg); }
+  40%  { transform: scale(0.94) rotate(3deg); }
+  60%  { transform: scale(1.02) rotate(-2deg); opacity: 0.7; }
+  100% { opacity: 0; transform: scale(0.7) rotate(8deg) translateY(16px); }
+}
+.card-death { animation: card-death 0.7s cubic-bezier(0.4,0,1,1) forwards; }
+
+/* ─── Turn indicator — pulse arco ───────────────────────────────── */
+@keyframes turn-arc-pulse {
+  0%,100% { opacity: 0.5; transform: scaleX(1);   }
+  50%     { opacity: 1;   transform: scaleX(1.04); }
+}
+.turn-active-indicator { animation: turn-arc-pulse 1.2s ease-in-out infinite; }
+
+/* ─── Battle result — victory rays enhanced ──────────────────────── */
+@keyframes victory-rays-enhanced {
+  0%   { transform: rotate(0deg)   scale(1);    opacity: 0.6; }
+  50%  { transform: rotate(180deg) scale(1.05); opacity: 0.8; }
+  100% { transform: rotate(360deg) scale(1);    opacity: 0.6; }
+}
+.victory-bg-rays { animation: victory-rays-enhanced 12s linear infinite !important; }
+
+/* ─── ELO gain counter — slide-up reveal ────────────────────────── */
+@keyframes elo-reveal {
+  from { opacity: 0; transform: translateY(20px) scale(0.8); }
+  70%  { transform: translateY(-4px) scale(1.08); }
+  to   { opacity: 1; transform: translateY(0)     scale(1);   }
+}
+.elo-reveal { animation: elo-reveal 0.5s cubic-bezier(0.22,1,0.36,1) both; }
+
+/* ─── Win streak — fire badge bounce ────────────────────────────── */
+@keyframes streak-fire-dance {
+  0%,100% { transform: scale(1)    rotate(-2deg); filter: hue-rotate(0deg);   }
+  25%     { transform: scale(1.06) rotate(2deg);  filter: hue-rotate(-15deg); }
+  75%     { transform: scale(0.97) rotate(-1deg); filter: hue-rotate(15deg);  }
+}
+.streak-badge-fire { animation: streak-fire-dance 1.4s ease-in-out infinite; }
+
+/* ─── Home hero — depth parallax on scroll ───────────────────────── */
+@keyframes hero-parallax-drift {
+  0%,100% { transform: scale(1.02) translateY(0px);   }
+  50%     { transform: scale(1.04) translateY(-8px);  }
+}
+.hero-bg-parallax { animation: hero-parallax-drift 18s ease-in-out infinite; }
+
+/* ─── Stat pill — pop in on mount ────────────────────────────────── */
+@keyframes stat-pill-pop {
+  from { opacity: 0; transform: scale(0.7) translateY(8px); }
+  70%  { transform: scale(1.06) translateY(-2px); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+.home-stats-pill {
+  animation: stat-pill-pop 0.4s cubic-bezier(0.22,1,0.36,1) both;
+}
+.home-stats-pill:nth-child(1) { animation-delay: 0.05s; }
+.home-stats-pill:nth-child(2) { animation-delay: 0.11s; }
+.home-stats-pill:nth-child(3) { animation-delay: 0.17s; }
+.home-stats-pill:nth-child(4) { animation-delay: 0.23s; }
+
+/* ─── Feature card — border glow trace on hover ──────────────────── */
+@keyframes card-border-trace {
+  0%   { background-position: 0% 50%; }
+  100% { background-position: 200% 50%; }
+}
+.feature-card {
+  --fc-border: rgba(232,184,75,0.15);
+  transition: all 0.28s cubic-bezier(0.4,0,0.2,1);
+}
+.feature-card:hover {
+  --fc-border: rgba(232,184,75,0.45);
+  transform: translateY(-4px) scale(1.01);
+}
+
+/* ─── Section label — traveling light ───────────────────────────── */
+@keyframes section-label-light {
+  0%   { background-position: -200% center; }
+  100% { background-position: 300%  center; }
+}
+.section-label {
+  background: linear-gradient(90deg, transparent 0%, rgba(232,184,75,0.6) 40%, rgba(232,184,75,0.9) 50%, rgba(232,184,75,0.6) 60%, transparent 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: section-label-light 4s linear infinite;
+}
+
+/* ─── DeckBuilder filter chip hover ─────────────────────────────── */
+@keyframes chip-select-pop {
+  0%   { transform: scale(0.9); }
+  60%  { transform: scale(1.06); }
+  100% { transform: scale(1); }
+}
+button:active { animation: chip-select-pop 0.15s ease; }
+
+/* ─── Pity timer progress bar pulse ─────────────────────────────── */
+@keyframes pity-bar-fill-pulse {
+  0%,100% { filter: brightness(1); }
+  50%     { filter: brightness(1.3) saturate(1.2); }
+}
+.pity-bar-active { animation: pity-bar-fill-pulse 2s ease-in-out infinite; }
+
+/* ─── Tutorial battle hint card — entrance ───────────────────────── */
+@keyframes hint-card-enter {
+  from { opacity: 0; transform: scale(0.88) translateY(28px); }
+  70%  { transform: scale(1.02) translateY(-4px); }
+  to   { opacity: 1; transform: scale(1)    translateY(0);    }
+}
+.hint-card-enter { animation: hint-card-enter 0.4s cubic-bezier(0.22,1,0.36,1) both; }
+
+/* ─── Arena background image — slow pan ──────────────────────────── */
+@keyframes arena-bg-pan {
+  0%,100% { background-position: 50% 48%; }
+  50%     { background-position: 50% 52%; }
+}
+
+/* ─── OpponentCard — shimmer on hover ────────────────────────────── */
+@keyframes opp-card-shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position: 300%  center; }
+}
+
+/* ─── Pack opening — card flip 3D ────────────────────────────────── */
+@keyframes pack-card-flip {
+  0%   { transform: perspective(400px) rotateY(0deg);   }
+  50%  { transform: perspective(400px) rotateY(90deg);  }
+  100% { transform: perspective(400px) rotateY(0deg);   }
+}
+.pack-card-flip { animation: pack-card-flip 0.5s ease-in-out forwards; }
+
+/* ─── Screen vignette — cinematic letterbox ──────────────────────── */
+.cinematic-letterbox::before,
+.cinematic-letterbox::after {
+  content: '';
+  position: absolute; left: 0; right: 0; height: 48px;
+  background: rgba(0,0,0,0.85);
+  pointer-events: none; z-index: 200;
+}
+.cinematic-letterbox::before { top: 0; }
+.cinematic-letterbox::after  { bottom: 0; }
+
+/* ─── Mobile — swipe hint ────────────────────────────────────────── */
+@keyframes swipe-hint {
+  0%,100% { opacity: 0.3; transform: translateX(0); }
+  50%     { opacity: 0.7; transform: translateX(6px); }
+}
+.swipe-hint-arrow { animation: swipe-hint 2s ease-in-out infinite; }
+
+/* ─── Notification bell — more dramatic ──────────────────────────── */
+@keyframes bell-ring-v2 {
+  0%,100% { transform: rotate(0deg)   scale(1); }
+  10%     { transform: rotate(18deg)  scale(1.08); }
+  20%     { transform: rotate(-16deg) scale(1.06); }
+  30%     { transform: rotate(12deg)  scale(1.04); }
+  40%     { transform: rotate(-8deg)  scale(1.02); }
+  50%     { transform: rotate(4deg)   scale(1); }
+}
+.bell-ring-v2 { animation: bell-ring-v2 3.5s ease-in-out infinite; }
+
+/* ─── Responsive — battle board on small screens ─────────────────── */
+@media (max-width: 380px) {
+  .battle-intro-panel-content { padding: 0 10px !important; }
+  .battle-intro-name  { font-size: 12px !important; }
+  .pvp-main-grid      { grid-template-columns: 1fr !important; }
+}
+@media (max-width: 640px) {
+  .pvp-main-grid { grid-template-columns: 1fr !important; }
+  .deck-builder-panel { width: 100% !important; position: static !important; }
+}

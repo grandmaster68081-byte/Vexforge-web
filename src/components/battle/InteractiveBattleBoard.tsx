@@ -582,6 +582,23 @@ export function InteractiveBattleBoard({
     actions.endDrag(false);
   }, [actions]);
 
+  // Document-level fallback: catches pointerup when pointer escapes the window
+  // (mobile browser chrome, multi-touch, swipe-to-dismiss gesture, etc.)
+  useEffect(() => {
+    const globalCancel = () => {
+      if (dragRef.current.active) {
+        dragRef.current.active = false;
+        actions.endDrag(false);
+      }
+    };
+    document.addEventListener('pointerup',     globalCancel, { passive: true });
+    document.addEventListener('pointercancel', globalCancel, { passive: true });
+    return () => {
+      document.removeEventListener('pointerup',     globalCancel);
+      document.removeEventListener('pointercancel', globalCancel);
+    };
+  }, [actions]);
+
   return (
     <div style={{
       position: 'fixed', inset: 0, zIndex: 100,

@@ -239,6 +239,11 @@ function PacksRoute() {
   const [selectedPackKey, setSelectedPackKey] = useState<string | null>(null);
   const [notification,    setNotification]    = useState<string | null>(null);
   const [shardsGained,    setShardsGained]    = useState<Record<string, number>>({});
+  // Pity timer: track packs opened without a Legendary/Mythic drop
+  const [pityCount, setPityCount] = useState<number>(() => {
+    try { return Number(localStorage.getItem("vex_pity_counter") ?? "0"); } catch { return 0; }
+  });
+  const PITY_THRESHOLD = 10; // guaranteed Legendary/Mythic within 10 packs
 
   function notify(msg: string) {
     setNotification(msg);
@@ -277,6 +282,12 @@ function PacksRoute() {
     // Step 3: detect duplicates and grant shards
     try { AudioEngine.sfxPackOpen(); } catch {}
     if (res.cards && playerId) {
+      // Pity timer: check if any Legendary/Mythic dropped
+      const hasHighRarity = res.cards.some(c => ["Legendary", "Mythic"].includes(c.rarity));
+      const newPity = hasHighRarity ? 0 : pityCount + 1;
+      setPityCount(newPity);
+      try { localStorage.setItem("vex_pity_counter", String(newPity)); } catch {}
+
       const dupesByRarity: Record<string, number> = {};
       for (const card of res.cards) {
         if (ownedIds.has(card.id)) {
@@ -375,6 +386,43 @@ function PacksRoute() {
           fontSize: 13,
         }}>
           {buyError || openError || catalogError || notification}
+        </div>
+      )}
+
+      {/* Pity timer display */}
+      {pityCount > 0 && pityCount >= Math.floor(PITY_THRESHOLD * 0.6) && (
+        <div style={{
+          maxWidth: 900, margin: "0 auto 16px",
+          padding: "10px 16px", borderRadius: 10,
+          background: pityCount >= PITY_THRESHOLD - 1
+            ? "rgba(232,184,75,0.18)"
+            : "rgba(168,85,247,0.10)",
+          border: `1px solid ${pityCount >= PITY_THRESHOLD - 1 ? "#e8b84b66" : "#a855f744"}`,
+          display: "flex", alignItems: "center", gap: 12,
+        }}>
+          <div style={{ fontSize: 20 }}>
+            {pityCount >= PITY_THRESHOLD - 1 ? "⭐" : "🎯"}
+          </div>
+          <div>
+            <div style={{
+              fontFamily: "Cinzel,serif", fontSize: 12, fontWeight: 700,
+              color: pityCount >= PITY_THRESHOLD - 1 ? "#e8b84b" : "#a855f7",
+            }}>
+              {pityCount >= PITY_THRESHOLD - 1
+                ? "¡Garantía activada! Próximo pack contiene Legendary o Mythic"
+                : `Garantía de rareza: ${pityCount}/${PITY_THRESHOLD} packs`}
+            </div>
+            <div style={{ marginTop: 4, height: 4, background: "rgba(255,255,255,0.08)", borderRadius: 2, overflow: "hidden", maxWidth: 280 }}>
+              <div style={{
+                height: "100%",
+                width: `${Math.min(100, (pityCount / PITY_THRESHOLD) * 100)}%`,
+                background: pityCount >= PITY_THRESHOLD - 1
+                  ? "linear-gradient(90deg,#e8b84b,#f0c050)"
+                  : "linear-gradient(90deg,#a855f7,#c084fc)",
+                borderRadius: 2, transition: "width 0.4s ease",
+              }} />
+            </div>
+          </div>
         </div>
       )}
 

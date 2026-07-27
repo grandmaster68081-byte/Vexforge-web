@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { supabase } from "../lib/supabase";
 import { useDeck } from "../domains/deck/useDeck";
 import type { PlayerCardEntry } from "../domains/deck/repository";
@@ -15,6 +15,7 @@ const FACTION_COLOR: Record<string, string> = {
   Guerrero: "#e85d04", Mago: "#4a9eff", "Paladín": "#e8b84b", "Pícaro": "#a855f7",
 };
 const RARITY_ORDER = ["Mythic", "Legendary", "Epic", "Rare", "Uncommon", "Common"];
+const ALL_FACTIONS = ["Guerrero", "Mago", "Paladín", "Pícaro"];
 
 function MiniCard({ card, count, selected, canAdd, onClick }: {
   card: PlayerCardEntry; count: number; selected: boolean; canAdd: boolean; onClick: () => void;
@@ -70,15 +71,29 @@ function DeckPanel({ selectedIds, myCards, saving, saveMsg, validation, onValida
           <span style={{ color: "#888", fontSize: 12 }}>Cartas</span>
           <span style={{ color: isValid ? "#3ddc84" : "#e3573f", fontWeight: 800, fontSize: 16 }}>{total}/30</span>
         </div>
-        <div style={{ background: "#0e0e1a", borderRadius: 4, height: 6, marginBottom: 12, overflow: "hidden" }}>
-          <div style={{ width: `${Math.min(100, (total / 30) * 100)}%`, height: "100%", background: isValid ? "linear-gradient(90deg,#3ddc84,#4a9eff)" : "#e3573f", transition: "width .3s", borderRadius: 4 }} />
+
+        {/* Progress bar */}
+        <div style={{ height: 4, background: "#1a1a2e", borderRadius: 2, marginBottom: 12, overflow: "hidden" }}>
+          <div style={{
+            height: "100%",
+            width: `${Math.min(100, (total / 30) * 100)}%`,
+            background: isValid ? "#3ddc84" : total < 5 ? "#e3573f" : "#e8b84b",
+            borderRadius: 2, transition: "width 0.3s ease",
+          }} />
         </div>
-        {RARITY_ORDER.filter(r => counts[r]).map(r => (
-          <div key={r} style={{ display: "flex", justifyContent: "space-between", marginBottom: 4 }}>
-            <span style={{ color: RARITY_COLOR[r], fontSize: 11 }}>{r}</span>
-            <span style={{ color: "#888", fontSize: 11 }}>×{counts[r]}</span>
+
+        {/* Rarity breakdown */}
+        {Object.entries(counts).length > 0 && (
+          <div style={{ marginBottom: 10 }}>
+            {RARITY_ORDER.filter(r => counts[r]).map(r => (
+              <div key={r} style={{ display: "flex", justifyContent: "space-between", marginBottom: 2 }}>
+                <span style={{ color: RARITY_COLOR[r], fontSize: 10 }}>{r}</span>
+                <span style={{ color: "#888", fontSize: 10 }}>×{counts[r]}</span>
+              </div>
+            ))}
           </div>
-        ))}
+        )}
+
         {factionList.length > 0 && (
           <div style={{ borderTop: "1px solid #1a1a2e", paddingTop: 10, marginTop: 8 }}>
             <div style={{ color: "#7a7a9a", fontSize: 10, marginBottom: 6 }}>FACCIONES</div>
@@ -114,6 +129,83 @@ function DeckPanel({ selectedIds, myCards, saving, saveMsg, validation, onValida
   );
 }
 
+// ─── Filter bar ───────────────────────────────────────────────────────────────
+function FilterBar({
+  search, setSearch,
+  factionFilter, setFactionFilter,
+  rarityFilter, setRarityFilter,
+  totalShown, totalAll,
+}: {
+  search: string; setSearch: (v: string) => void;
+  factionFilter: string; setFactionFilter: (v: string) => void;
+  rarityFilter: string; setRarityFilter: (v: string) => void;
+  totalShown: number; totalAll: number;
+}) {
+  const chipStyle = (active: boolean, color: string) => ({
+    padding: "4px 10px", borderRadius: 20,
+    border: `1px solid ${active ? color : color + "44"}`,
+    background: active ? color + "22" : "transparent",
+    color: active ? color : "#7a7a9a",
+    fontSize: 10, fontWeight: 700, cursor: "pointer",
+    fontFamily: "Rajdhani,sans-serif", letterSpacing: "0.06em",
+    transition: "all 0.15s ease",
+  });
+
+  return (
+    <div style={{ marginBottom: 16 }}>
+      {/* Search box */}
+      <div style={{ position: "relative", marginBottom: 10 }}>
+        <span style={{ position: "absolute", left: 10, top: "50%", transform: "translateY(-50%)", color: "#5a5a7a", fontSize: 13, pointerEvents: "none" }}>🔍</span>
+        <input
+          type="text"
+          placeholder="Buscar por nombre…"
+          value={search}
+          onChange={e => setSearch(e.target.value)}
+          style={{
+            width: "100%", padding: "8px 10px 8px 32px",
+            background: "#12121a", border: "1px solid #2a2a3e",
+            borderRadius: 8, color: "#e8e8f0", fontSize: 12,
+            fontFamily: "Rajdhani,sans-serif", outline: "none",
+          }}
+        />
+        {search && (
+          <button onClick={() => setSearch("")} style={{
+            position: "absolute", right: 8, top: "50%", transform: "translateY(-50%)",
+            background: "none", border: "none", color: "#7a7a9a", cursor: "pointer", fontSize: 13,
+          }}>✕</button>
+        )}
+      </div>
+
+      {/* Faction chips */}
+      <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginBottom: 8 }}>
+        <button onClick={() => setFactionFilter("")} style={chipStyle(factionFilter === "", "#e8b84b")}>Todas</button>
+        {ALL_FACTIONS.map(f => (
+          <button key={f} onClick={() => setFactionFilter(factionFilter === f ? "" : f)}
+            style={chipStyle(factionFilter === f, FACTION_COLOR[f] ?? "#888")}>{f}</button>
+        ))}
+      </div>
+
+      {/* Rarity chips */}
+      <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
+        {RARITY_ORDER.map(r => (
+          <button key={r} onClick={() => setRarityFilter(rarityFilter === r ? "" : r)}
+            style={chipStyle(rarityFilter === r, RARITY_COLOR[r] ?? "#888")}>{r}</button>
+        ))}
+      </div>
+
+      {(search || factionFilter || rarityFilter) && (
+        <div style={{ marginTop: 8, color: "#7a7a9a", fontSize: 10 }}>
+          Mostrando {totalShown} de {totalAll} cartas ·{" "}
+          <button onClick={() => { setSearch(""); setFactionFilter(""); setRarityFilter(""); }}
+            style={{ background: "none", border: "none", color: "#e8b84b", fontSize: 10, cursor: "pointer", textDecoration: "underline" }}>
+            limpiar filtros
+          </button>
+        </div>
+      )}
+    </div>
+  );
+}
+
 export function DeckBuilderRoute() {
   const { myCards, selectedIds, loading, saving, error, saveMsg, validation, toggleCard, validate, save } = useDeck();
   const { addToast } = useToast();
@@ -123,7 +215,11 @@ export function DeckBuilderRoute() {
     addToast("success", "✓ Mazo guardado", saveMsg);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [saveMsg]);
-  const [authed, setAuthed] = useState<boolean | null>(null);
+
+  const [authed, setAuthed]           = useState<boolean | null>(null);
+  const [search, setSearch]           = useState("");
+  const [factionFilter, setFactionFilter] = useState("");
+  const [rarityFilter, setRarityFilter]   = useState("");
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => setAuthed(!!session));
@@ -138,10 +234,17 @@ export function DeckBuilderRoute() {
     return inDeck < limit && selectedIds.length < 30;
   };
 
-  const sorted = [...myCards].sort((a, b) => {
+  const sorted = useMemo(() => [...myCards].sort((a, b) => {
     const ri = RARITY_ORDER.indexOf(a.rarity) - RARITY_ORDER.indexOf(b.rarity);
     return ri !== 0 ? ri : b.power - a.power;
-  });
+  }), [myCards]);
+
+  const filtered = useMemo(() => sorted.filter(card => {
+    if (factionFilter && card.faction !== factionFilter) return false;
+    if (rarityFilter && card.rarity !== rarityFilter) return false;
+    if (search && !card.name.toLowerCase().includes(search.toLowerCase())) return false;
+    return true;
+  }), [sorted, factionFilter, rarityFilter, search]);
 
   if (authed === null || loading) return <PageLoader />;
   if (authed === false) return <BlockedAuthState message="Inicia sesión para construir y guardar mazos." />;
@@ -156,15 +259,24 @@ export function DeckBuilderRoute() {
       {error && <div style={{ background: "#2a1a1a", border: "1px solid #e3573f33", borderRadius: 10, padding: "10px 16px", marginBottom: 16, color: "#e3573f", fontSize: 13 }}>{error}</div>}
       <div style={{ display: "flex", gap: 20, alignItems: "flex-start" }}>
         <div style={{ flex: 1, minWidth: 0 }}>
+          <FilterBar
+            search={search} setSearch={setSearch}
+            factionFilter={factionFilter} setFactionFilter={setFactionFilter}
+            rarityFilter={rarityFilter} setRarityFilter={setRarityFilter}
+            totalShown={filtered.length} totalAll={myCards.length}
+          />
+
           <div style={{ color: "#888", fontSize: 12, marginBottom: 12, display: "flex", justifyContent: "space-between" }}>
             <span>Tu Colección <span style={{ color: "#7a7a9a" }}>({myCards.length} cartas únicas)</span></span>
             <span style={{ color: "#e8b84b", fontWeight: 700 }}>{selectedIds.length} seleccionadas</span>
           </div>
           {myCards.length === 0 ? (
             <EmptyState icon="🃏" title="Sin cartas" description="Aún no tienes cartas. Abre packs desde la tienda para empezar a construir tu mazo." />
+          ) : filtered.length === 0 ? (
+            <EmptyState icon="🔍" title="Sin resultados" description="Ninguna carta coincide con el filtro. Prueba con otros criterios." />
           ) : (
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(140px,1fr))", gap: 8 }}>
-              {sorted.map(card => (
+              {filtered.map(card => (
                 <MiniCard key={card.card_id} card={card} count={deckCounts[card.card_id] ?? 0} selected={(deckCounts[card.card_id] ?? 0) > 0} canAdd={canAdd(card)} onClick={() => toggleCard(card.card_id)} />
               ))}
             </div>

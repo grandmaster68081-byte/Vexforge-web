@@ -258,41 +258,68 @@ export class VexForgeAudioEngine {
       drone.stop(c.currentTime + beatDur * 32);
       this._musicOscs.push({ stop: () => { try { drone.stop(); } catch {} } });
 
-      // Layer 2: melodic voice — pentatonic arpeggio
+      // Layer 2: melodic voice — pentatonic arpeggio (AudioContext-scheduled for zero jitter)
       let step = 0;
-      const scheduleArp = () => {
-        if (!this._ctx || this._ctx.state === 'closed') return;
-        const interval = beatDur * (this._intensityLevel === 'desperate' ? 0.25 : 0.5);
+      let arpActive = true;
+      const noteDur = beatDur * (this._intensityLevel === 'desperate' ? 0.25 : 0.5);
+
+      const scheduleArpAt = (t0: number) => {
+        if (!this._ctx || this._ctx.state === 'closed' || !arpActive) return;
         const semitone = PENTA[step % PENTA.length];
         const freq = cfg.base * 2 * Math.pow(2, semitone / 12);
         const noteVol = baseVol * (0.5 + Math.random() * 0.25);
         const arpOsc = c.createOscillator(); const ag = c.createGain();
         arpOsc.type = cfg.mode[1] ?? 'sine';
         arpOsc.frequency.value = freq;
-        const t0 = c.currentTime;
         ag.gain.setValueAtTime(0.001, t0);
         ag.gain.linearRampToValueAtTime(noteVol, t0 + 0.015);
-        ag.gain.exponentialRampToValueAtTime(0.001, t0 + interval * 0.85);
+        ag.gain.exponentialRampToValueAtTime(0.001, t0 + noteDur * 0.85);
         arpOsc.connect(ag); ag.connect(out);
-        arpOsc.start(t0); arpOsc.stop(t0 + interval * 0.9);
+        arpOsc.start(t0); arpOsc.stop(t0 + noteDur * 0.9);
         step++;
       };
-      scheduleArp();
-      const arpId = setInterval(() => {
-        if (!this._factionMusicActive) { clearInterval(arpId); return; }
-        scheduleArp();
-      }, beatDur * (this._intensityLevel === 'desperate' ? 250 : 500));
-      this._musicOscs.push({ stop: () => clearInterval(arpId) });
 
-      // Layer 3: percussion hit (desperate/tense only)
+      // Pre-schedule ahead in a look-ahead loop (60ms look-ahead, checked every 25ms)
+      const LOOK_AHEAD = 0.06; // seconds
+      const SCHEDULE_INTERVAL = 25; // ms
+      let nextNoteTime = c.currentTime;
+      // Schedule first batch immediately
+      while (nextNoteTime < c.currentTime + LOOK_AHEAD) {
+        scheduleArpAt(nextNoteTime);
+        nextNoteTime += noteDur;
+      }
+      const arpId = setInterval(() => {
+        if (!this._factionMusicActive || !arpActive) { clearInterval(arpId); return; }
+        if (!this._ctx || this._ctx.state === 'closed') { clearInterval(arpId); return; }
+        while (nextNoteTime < this._ctx.currentTime + LOOK_AHEAD) {
+          scheduleArpAt(nextNoteTime);
+          nextNoteTime += noteDur;
+        }
+      }, SCHEDULE_INTERVAL);
+      this._musicOscs.push({ stop: () => { arpActive = false; clearInterval(arpId); } });
+
+      // Layer 3: percussion hit (desperate/tense only) — also AudioContext-scheduled
       if (this._intensityLevel !== 'calm') {
-        const percInterval = beatDur * (this._intensityLevel === 'desperate' ? 320 : 480);
+        const percNoteDur = beatDur * (this._intensityLevel === 'desperate' ? 0.32 : 0.48);
+        let percActive = true;
+        let nextPercTime = c.currentTime;
+        while (nextPercTime < c.currentTime + LOOK_AHEAD) {
+          const delay = Math.max(0, nextPercTime - c.currentTime);
+          this.noise(0.04, 0.14, 2500, delay);
+          this.tone(cfg.base * 0.5, 0.06, 'square', 0.12, 0, undefined, delay);
+          nextPercTime += percNoteDur;
+        }
         const percId = setInterval(() => {
-          if (!this._factionMusicActive) { clearInterval(percId); return; }
-          this.noise(0.04, 0.14, 2500, 0);
-          this.tone(cfg.base * 0.5, 0.06, 'square', 0.12);
-        }, percInterval);
-        this._musicOscs.push({ stop: () => clearInterval(percId) });
+          if (!this._factionMusicActive || !percActive) { clearInterval(percId); return; }
+          if (!this._ctx || this._ctx.state === 'closed') { clearInterval(percId); return; }
+          while (nextPercTime < this._ctx.currentTime + LOOK_AHEAD) {
+            const delay = Math.max(0, nextPercTime - this._ctx.currentTime);
+            this.noise(0.04, 0.14, 2500, delay);
+            this.tone(cfg.base * 0.5, 0.06, 'square', 0.12, 0, undefined, delay);
+            nextPercTime += percNoteDur;
+          }
+        }, SCHEDULE_INTERVAL);
+        this._musicOscs.push({ stop: () => { percActive = false; clearInterval(percId); } });
       }
     } catch { /* silent fail */ }
   }
