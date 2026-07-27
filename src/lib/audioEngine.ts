@@ -1082,3 +1082,151 @@ declare module "./audioEngine" {
   };
 
 })(AudioEngine as any);
+
+// ═══════════════════════════════════════════════════════════════════════════
+// VEXFORGE AUDIO — Per-Keyword SFX (Chat 101)
+// sfxKeyword(keyword) — SFX único por keyword al activarse en batalla.
+// ═══════════════════════════════════════════════════════════════════════════
+
+(function installKeywordSfx(engine: any) {
+  if (engine.__keywordSfxInstalled) return;
+  engine.__keywordSfxInstalled = true;
+
+  /** sfxKeyword — dispatch by keyword name */
+  engine.sfxKeyword = function(keyword: string): void {
+    try {
+      switch (keyword) {
+        case 'Guard':        this._sfxKwGuard();        break;
+        case 'Drain':
+        case 'Lifesteal':    this._sfxKwDrain();        break;
+        case 'Surge':
+        case 'Rush':         this._sfxKwSurge();        break;
+        case 'Veil':
+        case 'Shield':       this._sfxKwVeil();         break;
+        case 'Forge':        this._sfxKwForge();        break;
+        case 'Consecrate':   this._sfxKwConsecrate();   break;
+        case 'Flux':         this._sfxKwFlux();         break;
+        case 'Resonance':    this._sfxKwResonance();    break;
+        case 'Poison':       this._sfxKwPoison();       break;
+        case 'DoubleStrike': this._sfxKwDoubleStrike(); break;
+      }
+    } catch { /* silent */ }
+  };
+
+  /** Guard — metálico escudo resonante */
+  engine._sfxKwGuard = function(): void {
+    try {
+      this.noise?.(0.07, 0.06, 250, 0.0);
+      this.tone(440, 0.06, 'square', 0.40, -60);
+      this.tone(880, 0.10, 'triangle', 0.28, 40, undefined, 0.02);
+      this.tone(1320, 0.22, 'triangle', 0.14, 0, undefined, 0.04);
+      this.tone(660, 0.20, 'sine', 0.12, 0, undefined, 0.06);
+    } catch { /* silent */ }
+  };
+
+  /** Drain / Lifesteal — slurp húmedo descendente */
+  engine._sfxKwDrain = function(): void {
+    try {
+      this.tone(880, 0.10, 'sine', 0.22, -600, undefined, 0.0);
+      this.tone(660, 0.10, 'sine', 0.22, -500, undefined, 0.07);
+      this.tone(440, 0.12, 'sine', 0.20, -400, undefined, 0.14);
+      this.tone(330, 0.10, 'sine', 0.18, -200, undefined, 0.20);
+      this.noise?.(0.03, 0.20, 1200, 0.02);
+    } catch { /* silent */ }
+  };
+
+  /** Surge / Rush — crepitar eléctrico */
+  engine._sfxKwSurge = function(): void {
+    try {
+      this.noise?.(0.10, 0.04, 9000, 0.0);
+      this.tone(3520, 0.08, 'sawtooth', 0.28, -2500, undefined, 0.01);
+      this.tone(1760, 0.06, 'sawtooth', 0.22, -1500, undefined, 0.02);
+      this.noise?.(0.07, 0.06, 7000, 0.04);
+      this.tone(880, 0.06, 'square', 0.18, -500, undefined, 0.05);
+    } catch { /* silent */ }
+  };
+
+  /** Veil / Shield — chime místico + whoosh */
+  engine._sfxKwVeil = function(): void {
+    try {
+      this.tone(1320, 0.18, 'sine', 0.16, 300, undefined, 0.0);
+      this.tone(1760, 0.18, 'sine', 0.13, 250, undefined, 0.04);
+      this.noise?.(0.03, 0.14, 5000, 0.0);
+      this.tone(2200, 0.14, 'triangle', 0.10, 0, undefined, 0.06);
+      this.tone(880, 0.24, 'triangle', 0.09, 0, undefined, 0.08);
+    } catch { /* silent */ }
+  };
+
+  /** Forge — impacto de yunque + chispas */
+  engine._sfxKwForge = function(): void {
+    try {
+      this.noise?.(0.06, 0.07, 350, 0.0);
+      this.tone(110, 0.09, 'sawtooth', 0.45, 0, undefined, 0.0);
+      this.tone(330, 0.06, 'square', 0.28, -120, undefined, 0.03);
+      this.noise?.(0.04, 0.14, 3500, 0.04);
+      this.tone(660, 0.08, 'triangle', 0.14, 0, undefined, 0.07);
+    } catch { /* silent */ }
+  };
+
+  /** Consecrate — campana sagrada + acorde */
+  engine._sfxKwConsecrate = function(): void {
+    try {
+      this.tone(523, 0.28, 'triangle', 0.20, 0, undefined, 0.0);
+      this.tone(659, 0.28, 'triangle', 0.18, 0, undefined, 0.05);
+      this.tone(784, 0.32, 'triangle', 0.15, 0, undefined, 0.09);
+      this.tone(1047, 0.38, 'sine', 0.12, 0, undefined, 0.13);
+      this.tone(1568, 0.40, 'sine', 0.09, 0, undefined, 0.18);
+      this.noise?.(0.04, 0.10, 8000, 0.15);
+    } catch { /* silent */ }
+  };
+
+  /** Flux — distorsión digital caótica */
+  engine._sfxKwFlux = function(): void {
+    try {
+      this.noise?.(0.05, 0.03, 2500, 0.0);
+      const fq1 = 300 + Math.random() * 500;
+      const fq2 = 600 + Math.random() * 400;
+      this.tone(fq1, 0.06, 'sawtooth', 0.22, 0);
+      this.tone(fq2, 0.05, 'square', 0.18, 0, undefined, 0.03);
+      this.noise?.(0.06, 0.05, 4500, 0.03);
+      this.tone(220, 0.07, 'sawtooth', 0.26, 0, undefined, 0.06);
+      this.noise?.(0.04, 0.04, 1800, 0.07);
+    } catch { /* silent */ }
+  };
+
+  /** Resonance — anillos armónicos */
+  engine._sfxKwResonance = function(): void {
+    try {
+      [261, 329, 392, 523, 659, 784].forEach((f, i) => {
+        this.tone(f, 0.40, 'sine', 0.12 - i * 0.012, 0, undefined, i * 0.065);
+      });
+      this.tone(1047, 0.45, 'triangle', 0.08, 0, undefined, 0.40);
+      this.tone(1568, 0.40, 'sine', 0.05, 0, undefined, 0.50);
+    } catch { /* silent */ }
+  };
+
+  /** Poison — burbujeo oscuro */
+  engine._sfxKwPoison = function(): void {
+    try {
+      this.tone(220, 0.09, 'sawtooth', 0.26, -80, undefined, 0.0);
+      this.noise?.(0.04, 0.09, 700, 0.0);
+      this.tone(110, 0.14, 'sawtooth', 0.22, 0, undefined, 0.04);
+      this.noise?.(0.04, 0.07, 500, 0.06);
+      this.tone(165, 0.09, 'sawtooth', 0.18, 0, undefined, 0.10);
+    } catch { /* silent */ }
+  };
+
+  /** DoubleStrike — dos golpes rápidos */
+  engine._sfxKwDoubleStrike = function(): void {
+    try {
+      this.noise?.(0.05, 0.04, 280, 0.0);
+      this.tone(155, 0.04, 'square', 0.38, 0);
+      this.tone(195, 0.03, 'sawtooth', 0.32, 0, undefined, 0.02);
+      // Second hit at 0.12s
+      this.noise?.(0.05, 0.04, 320, 0.12);
+      this.tone(175, 0.04, 'square', 0.38, 0, undefined, 0.12);
+      this.tone(220, 0.03, 'sawtooth', 0.28, 0, undefined, 0.14);
+    } catch { /* silent */ }
+  };
+
+})(AudioEngine as any);

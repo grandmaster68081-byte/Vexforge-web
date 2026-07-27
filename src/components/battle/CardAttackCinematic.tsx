@@ -394,6 +394,173 @@ function CardArtDisplay({ unit, rarColor, factionColor, isDefender }: {
   );
 }
 
+// ─── Keyword Effect Overlay — unique visual per keyword ──────────────────────
+// Renders on 'impact' phase. Each keyword has a unique effect composited on top.
+const KW_EFFECT_COLORS: Record<string, string> = {
+  Guard: '#4a9eff', Drain: '#3ddc84', Lifesteal: '#3ddc84',
+  Surge: '#e8b84b', Rush: '#e8b84b', Veil: '#a855f7', Shield: '#a855f7',
+  Forge: '#ff6b35', Consecrate: '#ffd700', Flux: '#ff4444',
+  Resonance: '#b08af8', Poison: '#a855f7', DoubleStrike: '#ff6b35',
+};
+
+function KeywordEffectOverlay({ keywords, phase }: { keywords: string[]; phase: 'enter' | 'impact' | 'exit' }) {
+  if (!keywords || keywords.length === 0) return null;
+  const active = phase === 'impact';
+
+  return (
+    <>
+      {keywords.slice(0, 2).map((kw) => {
+        const col = KW_EFFECT_COLORS[kw] ?? '#ffffff';
+        if (kw === 'Guard') return (
+          <div key={kw} style={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 26,
+            display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <div style={{ width: 220, height: 220, borderRadius: '50%',
+              border: `4px solid ${col}`, boxShadow: `0 0 50px ${col}cc, inset 0 0 40px ${col}22`,
+              opacity: active ? 1 : 0,
+              animation: active ? 'kw-guard-shield 0.55s cubic-bezier(0.22,1,0.36,1) both' : 'none' }} />
+            <div style={{ position: 'absolute', width: 130, height: 130, borderRadius: '50%',
+              background: `radial-gradient(circle, ${col}40 0%, transparent 70%)`,
+              animation: active ? 'kw-guard-glow 0.55s ease-out both' : 'none' }} />
+          </div>
+        );
+        if (kw === 'Drain' || kw === 'Lifesteal') return (
+          <div key={kw} style={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 26 }}>
+            {Array.from({ length: 9 }).map((_, i) => (
+              <div key={i} style={{
+                position: 'absolute', left: `${12 + (i * 10) % 72}%`, top: `${15 + (i * 17) % 65}%`,
+                width: 3, height: `${28 + i * 7}px`, borderRadius: 2,
+                background: `linear-gradient(180deg, transparent, ${col}, ${col}88)`,
+                boxShadow: `0 0 7px ${col}cc`,
+                animation: active ? `kw-drain-wisp 0.65s ease-in ${i * 0.045}s both` : 'none',
+              }} />
+            ))}
+            <div style={{ position: 'absolute', inset: 0,
+              background: `radial-gradient(ellipse at center, ${col}18 0%, transparent 65%)`,
+              animation: active ? 'kw-drain-pulse 0.5s ease-out both' : 'none' }} />
+          </div>
+        );
+        if (kw === 'Surge' || kw === 'Rush') return (
+          <div key={kw} style={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 26 }}>
+            {[0, 1, 2, 3].map((i) => (
+              <div key={i} style={{
+                position: 'absolute', top: `${15 + i * 22}%`, left: '-5%', width: '110%', height: 2,
+                background: `linear-gradient(90deg, transparent, ${col}, #ffffff88, ${col}, transparent)`,
+                boxShadow: `0 0 14px ${col}cc`,
+                transform: `rotate(${-4 + i * 3}deg)`,
+                animation: active ? `kw-surge-bolt 0.32s ease-out ${i * 0.04}s both` : 'none',
+              }} />
+            ))}
+            <div style={{ position: 'absolute', inset: 0,
+              background: `radial-gradient(ellipse at center, ${col}28 0%, transparent 72%)`,
+              animation: active ? 'kw-surge-flash 0.22s ease-out both' : 'none' }} />
+          </div>
+        );
+        if (kw === 'Veil' || kw === 'Shield') return (
+          <div key={kw} style={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 26, overflow: 'hidden' }}>
+            <div style={{ position: 'absolute', inset: 0,
+              background: `radial-gradient(ellipse at center, ${col}44 0%, ${col}18 45%, transparent 72%)`,
+              animation: active ? 'kw-veil-mist 0.75s ease-out both' : 'none' }} />
+            {[0, 1, 2, 3, 4, 5].map((i) => (
+              <div key={i} style={{
+                position: 'absolute', left: `${8 + i * 16}%`, top: 0, bottom: 0, width: `${7 + i * 2}px`,
+                background: `linear-gradient(180deg, ${col}00 0%, ${col}${i < 3 ? '28' : '18'} 50%, ${col}00 100%)`,
+                animation: active ? `kw-veil-strand 0.85s ease ${i * 0.06}s both` : 'none',
+              }} />
+            ))}
+          </div>
+        );
+        if (kw === 'Forge') return (
+          <div key={kw} style={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 26 }}>
+            {Array.from({ length: 14 }).map((_, i) => (
+              <div key={i} style={{
+                position: 'absolute', left: `${30 + (i % 5) * 9}%`, bottom: `${25 + (i % 4) * 12}%`,
+                width: 3, height: `${5 + (i % 5) * 4}px`, borderRadius: 2,
+                background: `linear-gradient(180deg, #ff8c42, ${col})`,
+                boxShadow: `0 0 5px ${col}cc`,
+                '--tx': `${(i % 3 - 1) * 14}px`,
+                animation: active ? `kw-forge-spark 0.55s ease-out ${i * 0.028}s both` : 'none',
+              } as React.CSSProperties} />
+            ))}
+            <div style={{ position: 'absolute', bottom: '18%', left: '50%', marginLeft: -28,
+              fontSize: 52, lineHeight: 1,
+              filter: `drop-shadow(0 0 24px ${col}cc)`,
+              animation: active ? 'kw-forge-hammer 0.35s cubic-bezier(0.22,1,0.36,1) both' : 'none' }}>🔨</div>
+          </div>
+        );
+        if (kw === 'Consecrate') return (
+          <div key={kw} style={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 26 }}>
+            <div style={{ position: 'absolute', top: 0, left: '50%', marginLeft: -90,
+              width: 180, height: '100%',
+              background: `linear-gradient(180deg, ${col}00 0%, ${col}55 40%, rgba(255,255,200,0.65) 50%, ${col}55 60%, ${col}00 100%)`,
+              animation: active ? 'kw-consecrate-pillar 0.55s ease-out both' : 'none' }} />
+            {[0, 90, 45, -45].map((angle, i) => (
+              <div key={i} style={{ position: 'absolute', inset: 0,
+                background: `linear-gradient(${angle}deg, transparent 47%, ${col}38 50%, transparent 53%)`,
+                animation: active ? `kw-consecrate-ray 0.44s ease-out ${i * 0.04}s both` : 'none' }} />
+            ))}
+          </div>
+        );
+        if (kw === 'Flux') return (
+          <div key={kw} style={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 26 }}>
+            {Array.from({ length: 11 }).map((_, i) => {
+              const colors = ['#ff4444','#e8b84b','#4a9eff','#3dc96b','#a855f7'];
+              const c = colors[i % 5];
+              return (
+                <div key={i} style={{
+                  position: 'absolute', left: `${(i * 17 + 5) % 86}%`, top: `${(i * 23 + 8) % 78}%`,
+                  width: `${6 + (i % 4) * 4}px`, height: `${6 + (i % 4) * 4}px`,
+                  borderRadius: i % 2 === 0 ? '50%' : '3px',
+                  background: c, boxShadow: `0 0 8px ${c}`,
+                  '--tx': `${(i % 3 - 1) * 45}px`, '--ty': `${-(i % 4) * 25}px`,
+                  '--rot': `${90 + i * 40}deg`,
+                  animation: active ? `kw-flux-chaos 0.65s ease-out ${i * 0.04}s both` : 'none',
+                } as React.CSSProperties} />
+              );
+            })}
+          </div>
+        );
+        if (kw === 'Resonance') return (
+          <div key={kw} style={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 26,
+            display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            {[80, 150, 230].map((sz, i) => (
+              <div key={i} style={{
+                position: 'absolute', width: sz, height: sz, borderRadius: '50%',
+                border: `1px solid ${col}`,
+                boxShadow: `0 0 ${i * 6 + 4}px ${col}66`,
+                animation: active ? `kw-resonance-ring 0.85s ease-out ${i * 0.10}s both` : 'none',
+              }} />
+            ))}
+          </div>
+        );
+        if (kw === 'Poison') return (
+          <div key={kw} style={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 26 }}>
+            {Array.from({ length: 7 }).map((_, i) => (
+              <div key={i} style={{
+                position: 'absolute', left: `${20 + (i * 13) % 58}%`, top: `${30 + (i * 18) % 45}%`,
+                width: 8, height: 8, borderRadius: '50%',
+                background: col, boxShadow: `0 0 8px ${col}`,
+                animation: active ? `kw-poison-drip 0.7s ease ${i * 0.06}s both` : 'none',
+              }} />
+            ))}
+          </div>
+        );
+        if (kw === 'DoubleStrike') return (
+          <div key={kw} style={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 26 }}>
+            {[0, 1].map((hit) => (
+              <div key={hit} style={{
+                position: 'absolute', inset: 0,
+                background: `radial-gradient(ellipse at center, ${col}30 0%, transparent 65%)`,
+                animation: active ? `kw-dstrike-flash 0.5s ease ${hit * 0.14}s both` : 'none',
+              }} />
+            ))}
+          </div>
+        );
+        return null;
+      })}
+    </>
+  );
+}
+
 // ─── Main Component ───────────────────────────────────────────────────────────
 export function CardAttackCinematic({
   unit, defender, visible, onDone, damage, isCrit, isKill,
@@ -430,7 +597,16 @@ export function CardAttackCinematic({
     const impactAt = duration * 0.3;
     const exitAt   = duration * 0.7;
 
-    setTimeout(() => setPhase('impact'), impactAt);
+    setTimeout(() => {
+      setPhase('impact');
+      // Keyword SFX fires on impact
+      try {
+        const ae = AudioEngine as any;
+        if (unit.keywords.length > 0 && typeof ae.sfxKeyword === 'function') {
+          ae.sfxKeyword(unit.keywords[0]);
+        }
+      } catch { /* silent */ }
+    }, impactAt);
     setTimeout(() => setPhase('exit'),   exitAt);
 
     timerRef.current = setTimeout(() => {
@@ -640,6 +816,33 @@ export function CardAttackCinematic({
       <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', overflow: 'hidden', zIndex: 15 }}>
         {particles.map(p => <ParticleEl key={p.id} p={p} />)}
       </div>
+
+      {/* ── Keyword Effects — unique per-keyword cinematic overlay ── */}
+      {unit && unit.keywords.length > 0 && (
+        <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', overflow: 'hidden', zIndex: 26 }}>
+          <KeywordEffectOverlay keywords={unit.keywords} phase={phase} />
+        </div>
+      )}
+
+      {/* ── Kill confirm flash ── */}
+      {isKill && phase === 'impact' && (
+        <div style={{
+          position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 27,
+          background: `radial-gradient(ellipse at center, rgba(255,40,40,0.35) 0%, rgba(255,40,40,0.12) 50%, transparent 80%)`,
+          animation: 'cac-impact-flash 0.18s ease-out both',
+          borderRadius: 'inherit',
+        }} />
+      )}
+
+      {/* ── Crit edge flash ── */}
+      {isCrit && phase === 'impact' && (
+        <div style={{
+          position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 27,
+          boxShadow: `inset 0 0 60px rgba(232,184,75,0.6), inset 0 0 120px rgba(232,184,75,0.2)`,
+          animation: 'cac-impact-flash 0.22s ease-out both',
+          borderRadius: 'inherit',
+        }} />
+      )}
 
       {/* ── Bottom faction bar ── */}
       <div style={{

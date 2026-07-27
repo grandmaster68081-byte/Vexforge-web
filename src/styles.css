@@ -6624,3 +6624,356 @@ button:active { animation: chip-select-pop 0.15s ease; }
 }
 
 /* ─── END CHAT100 CSS UPGRADE ──────────────────────────────────────────────── */
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   VEXFORGE — KEYWORD EFFECT ANIMATIONS (Chat 101)
+   Efectos visuales únicos por keyword durante cinemáticas de batalla.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ─── Guard — escudo azul expansivo ─────────────────────────────────────── */
+@keyframes kw-guard-shield {
+  0%   { transform: scale(0.2); opacity: 0; box-shadow: none; }
+  40%  { transform: scale(1.15); opacity: 1; box-shadow: 0 0 80px rgba(74,158,255,1), inset 0 0 30px rgba(74,158,255,0.3); }
+  80%  { transform: scale(0.95); opacity: 0.9; }
+  100% { transform: scale(1.05); opacity: 0; }
+}
+@keyframes kw-guard-glow {
+  0%   { transform: scale(0.4); opacity: 0; }
+  50%  { transform: scale(1.3); opacity: 1; }
+  100% { transform: scale(1.8); opacity: 0; }
+}
+@keyframes kw-guard-hex {
+  0%   { opacity: 0; transform: scale(0.5) rotate(0deg); }
+  50%  { opacity: 0.6; transform: scale(1) rotate(30deg); }
+  100% { opacity: 0; transform: scale(1.3) rotate(60deg); }
+}
+
+/* ─── Drain — filamentos verdes de robo de vida ─────────────────────────── */
+@keyframes kw-drain-wisp {
+  0%   { transform: translateY(0) scaleY(0); opacity: 0; transform-origin: bottom; }
+  30%  { transform: translateY(-15px) scaleY(1); opacity: 1; }
+  70%  { transform: translateY(-45px) scaleY(0.8); opacity: 0.7; }
+  100% { transform: translateY(-90px) scaleY(0.1); opacity: 0; }
+}
+@keyframes kw-drain-pulse {
+  0%   { opacity: 0; transform: scale(0.7); }
+  40%  { opacity: 1; }
+  100% { opacity: 0; transform: scale(1.5); }
+}
+@keyframes kw-drain-orb {
+  0%   { opacity: 0; transform: translateY(20px) scale(0.5); }
+  50%  { opacity: 1; transform: translateY(-20px) scale(1); }
+  100% { opacity: 0; transform: translateY(-60px) scale(0.3); }
+}
+
+/* ─── Surge — relámpagos eléctricos ─────────────────────────────────────── */
+@keyframes kw-surge-bolt {
+  0%   { opacity: 0; transform: scaleX(0); transform-origin: left; }
+  30%  { opacity: 1; transform: scaleX(1); }
+  60%  { opacity: 0.9; }
+  100% { opacity: 0; }
+}
+@keyframes kw-surge-flash {
+  0%   { opacity: 0; }
+  15%  { opacity: 1; }
+  40%  { opacity: 0.6; }
+  100% { opacity: 0; }
+}
+@keyframes kw-surge-crack {
+  0%   { width: 2px; opacity: 0; }
+  20%  { width: 6px; opacity: 1; }
+  100% { width: 1px; opacity: 0; }
+}
+
+/* ─── Veil — niebla arcana morada ───────────────────────────────────────── */
+@keyframes kw-veil-mist {
+  0%   { opacity: 0; transform: scale(0.8); filter: blur(0px); }
+  40%  { opacity: 0.9; transform: scale(1); filter: blur(3px); }
+  100% { opacity: 0; transform: scale(1.1); filter: blur(6px); }
+}
+@keyframes kw-veil-strand {
+  0%   { opacity: 0; transform: translateY(-30px) scaleX(0.3); }
+  40%  { opacity: 0.7; transform: translateY(0) scaleX(1); }
+  100% { opacity: 0; transform: translateY(20px); }
+}
+@keyframes kw-veil-swirl {
+  0%   { opacity: 0; transform: rotate(0deg) scale(0.5); }
+  50%  { opacity: 0.8; transform: rotate(180deg) scale(1.2); }
+  100% { opacity: 0; transform: rotate(360deg) scale(0.8); }
+}
+
+/* ─── Forge — chispas de fragua ─────────────────────────────────────────── */
+@keyframes kw-forge-spark {
+  0%   { transform: translateY(0) scale(1) rotate(0deg); opacity: 1; }
+  50%  { transform: translateY(-40px) translateX(var(--tx, 15px)) scale(0.8) rotate(180deg); opacity: 0.9; }
+  100% { transform: translateY(-90px) translateX(var(--tx, -10px)) scale(0.05) rotate(360deg); opacity: 0; }
+}
+@keyframes kw-forge-hammer {
+  0%   { transform: rotate(-50deg) translateY(-40px) scale(0.6); opacity: 0; }
+  40%  { transform: rotate(10deg) translateY(5px) scale(1.3); opacity: 1; }
+  65%  { transform: rotate(-5deg) translateY(0) scale(1.05); opacity: 1; }
+  100% { transform: rotate(0deg) translateY(0) scale(0.8); opacity: 0; }
+}
+@keyframes kw-forge-impact-ring {
+  0%   { transform: scale(0.3); opacity: 0; border-width: 6px; }
+  50%  { transform: scale(1.2); opacity: 1; border-width: 3px; }
+  100% { transform: scale(2); opacity: 0; border-width: 1px; }
+}
+
+/* ─── Consecrate — luz sagrada dorada ───────────────────────────────────── */
+@keyframes kw-consecrate-pillar {
+  0%   { opacity: 0; transform: scaleY(0); transform-origin: top; }
+  35%  { opacity: 1; transform: scaleY(1); }
+  70%  { opacity: 0.8; }
+  100% { opacity: 0; }
+}
+@keyframes kw-consecrate-ray {
+  0%   { opacity: 0; transform: scaleX(0.3); }
+  30%  { opacity: 0.9; transform: scaleX(1); }
+  100% { opacity: 0; }
+}
+@keyframes kw-consecrate-halo {
+  0%   { transform: scale(0.5) rotate(0deg); opacity: 0; }
+  40%  { transform: scale(1.1) rotate(20deg); opacity: 0.8; }
+  100% { transform: scale(1.6) rotate(45deg); opacity: 0; }
+}
+
+/* ─── Flux — caos de colores aleatorios ─────────────────────────────────── */
+@keyframes kw-flux-chaos {
+  0%   { transform: scale(0) rotate(0deg); opacity: 0; }
+  25%  { transform: scale(1.6) rotate(120deg); opacity: 1; }
+  60%  { opacity: 0.7; }
+  100% { transform: translate(var(--tx, 35px), var(--ty, -60px)) scale(0.05) rotate(var(--rot, 400deg)); opacity: 0; }
+}
+@keyframes kw-flux-bg-shift {
+  0%   { filter: hue-rotate(0deg); opacity: 0; }
+  25%  { opacity: 0.4; }
+  50%  { filter: hue-rotate(120deg); opacity: 0.3; }
+  75%  { filter: hue-rotate(240deg); opacity: 0.2; }
+  100% { filter: hue-rotate(360deg); opacity: 0; }
+}
+
+/* ─── Resonance — ondas armónicas ───────────────────────────────────────── */
+@keyframes kw-resonance-ring {
+  0%   { transform: scale(0.1); opacity: 0; }
+  40%  { transform: scale(0.9); opacity: 1; }
+  100% { transform: scale(1.6); opacity: 0; }
+}
+@keyframes kw-resonance-pulse {
+  0%   { opacity: 0; transform: scale(0.8); }
+  50%  { opacity: 0.6; transform: scale(1); }
+  100% { opacity: 0; transform: scale(1.2); }
+}
+
+/* ─── Poison/DoubleStrike ────────────────────────────────────────────────── */
+@keyframes kw-poison-drip {
+  0%   { transform: translateY(-10px) scale(0.5); opacity: 0; }
+  30%  { opacity: 1; transform: translateY(0) scale(1); }
+  100% { transform: translateY(30px) scale(0.6); opacity: 0; }
+}
+@keyframes kw-dstrike-flash {
+  0%, 100% { opacity: 0; }
+  10%, 60%  { opacity: 1; }
+  35%, 85%  { opacity: 0.5; }
+}
+
+/* ─── IMPROVED BATTLE BOARD EFFECTS ─────────────────────────────────────── */
+
+/* Turn log event badge */
+.tl-event-guard    { background: rgba(74,158,255,0.2);  border: 1px solid rgba(74,158,255,0.5);  color: #4a9eff; }
+.tl-event-drain    { background: rgba(61,220,132,0.2);  border: 1px solid rgba(61,220,132,0.5);  color: #3ddc84; }
+.tl-event-poison   { background: rgba(168,85,247,0.2);  border: 1px solid rgba(168,85,247,0.5);  color: #a855f7; }
+.tl-event-dstrike  { background: rgba(232,184,75,0.2);  border: 1px solid rgba(232,184,75,0.5);  color: #e8b84b; }
+
+/* Keyword chip active glow in battle */
+@keyframes kw-chip-activate {
+  0%   { box-shadow: none; }
+  50%  { box-shadow: 0 0 12px var(--kw-color, rgba(255,255,255,0.5)); transform: scale(1.1); }
+  100% { box-shadow: none; transform: scale(1); }
+}
+.kw-chip-active { animation: kw-chip-activate 0.6s ease-out; }
+
+/* Fighter card keyword border (Guard=blue, Drain=green) */
+.card-kw-guard    { border-color: #4a9eff !important; box-shadow: 0 0 20px rgba(74,158,255,0.5) !important; }
+.card-kw-drain    { border-color: #3ddc84 !important; box-shadow: 0 0 20px rgba(61,220,132,0.5) !important; }
+.card-kw-surge    { border-color: #e8b84b !important; box-shadow: 0 0 20px rgba(232,184,75,0.5) !important; }
+.card-kw-veil     { border-color: #a855f7 !important; box-shadow: 0 0 20px rgba(168,85,247,0.5) !important; }
+.card-kw-forge    { border-color: #ff6b35 !important; box-shadow: 0 0 20px rgba(255,107,53,0.5) !important; }
+.card-kw-consecrate { border-color: #ffd700 !important; box-shadow: 0 0 20px rgba(255,215,0,0.5) !important; }
+
+/* ─── IMPROVED CARD HOVER EFFECTS FOR ALL ROUTES ─────────────────────── */
+@keyframes card-holo-rainbow {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+.card-holo-legendary:hover::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(125deg, transparent 30%, rgba(255,215,0,0.15) 45%, rgba(255,255,255,0.1) 50%, rgba(255,215,0,0.15) 55%, transparent 70%);
+  background-size: 250% 250%;
+  animation: card-holo-rainbow 2s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 2;
+}
+.card-holo-mythic:hover::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(125deg, transparent 30%, rgba(255,68,68,0.15) 45%, rgba(255,255,255,0.15) 50%, rgba(255,68,68,0.15) 55%, transparent 70%);
+  background-size: 250% 250%;
+  animation: card-holo-rainbow 1.6s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* ─── BATTLE AMBIENT PARTICLES ───────────────────────────────────────────── */
+@keyframes arena-particle-float {
+  0%   { transform: translateY(0) translateX(0) scale(1); opacity: 0; }
+  15%  { opacity: 0.8; }
+  85%  { opacity: 0.6; }
+  100% { transform: translateY(-120px) translateX(var(--px, 20px)) scale(0.3); opacity: 0; }
+}
+.arena-ambient-particle {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  animation: arena-particle-float var(--dur, 4s) ease-in-out var(--delay, 0s) infinite;
+}
+
+/* ─── IMPROVED TURN LOG ──────────────────────────────────────────────────── */
+@keyframes log-entry-in {
+  from { opacity: 0; transform: translateX(-8px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+.tl-entry-new { animation: log-entry-in 0.22s cubic-bezier(0.22,1,0.36,1) both; }
+
+/* ─── IMPROVED BOTTOM NAV ACTIVE STATE ──────────────────────────────────── */
+@keyframes bottom-nav-dot-pulse {
+  0%, 100% { transform: scale(1); opacity: 0.8; }
+  50%       { transform: scale(1.4); opacity: 1; }
+}
+.bottom-nav-active-dot { animation: bottom-nav-dot-pulse 2s ease-in-out infinite; }
+
+/* ─── HOVER GLOW FOR FEATURE CARDS ──────────────────────────────────────── */
+@keyframes feature-card-border-flow {
+  0%   { background-position: 0% 50%; }
+  100% { background-position: 200% 50%; }
+}
+.feature-card:hover {
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: 0 8px 32px rgba(201,144,31,0.25), 0 0 0 1px rgba(201,144,31,0.3) !important;
+}
+
+/* ─── DECK BUILDER IMPROVED DRAG ─────────────────────────────────────────── */
+@keyframes deck-drag-hint {
+  0%, 100% { border-color: rgba(232,184,75,0.3); }
+  50%       { border-color: rgba(232,184,75,0.8); box-shadow: 0 0 20px rgba(232,184,75,0.4); }
+}
+.deck-drop-active { animation: deck-drag-hint 1s ease-in-out infinite; }
+
+/* ─── MOBILE TOUCH IMPROVEMENTS ─────────────────────────────────────────── */
+@media (hover: none) and (pointer: coarse) {
+  .card-grid-item:active {
+    transform: scale(0.96) !important;
+    transition: transform 0.1s ease !important;
+  }
+  .btn-primary:active,
+  .btn-secondary:active {
+    transform: scale(0.97) !important;
+    filter: brightness(1.15) !important;
+  }
+  .feature-card:active {
+    transform: translateY(-2px) scale(1.01) !important;
+  }
+  /* Larger tap targets for bottom nav */
+  .bottom-nav-item {
+    min-height: 52px;
+    padding: 8px 0;
+  }
+}
+
+/* ─── SCROLL-TRIGGERED FADE FOR SECTIONS ─────────────────────────────────── */
+@keyframes section-reveal-up {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.section-reveal {
+  animation: section-reveal-up 0.5s cubic-bezier(0.22,1,0.36,1) both;
+}
+.section-reveal-delay-1 { animation-delay: 0.08s; }
+.section-reveal-delay-2 { animation-delay: 0.16s; }
+.section-reveal-delay-3 { animation-delay: 0.24s; }
+.section-reveal-delay-4 { animation-delay: 0.32s; }
+
+/* ─── IMPROVED HERO SECTION TITLE ANIMATION ──────────────────────────────── */
+@keyframes hero-title-forge-in {
+  0%   { opacity: 0; transform: scale(0.88) translateY(20px); letter-spacing: 0.2em; filter: blur(8px); }
+  50%  { filter: blur(2px); }
+  100% { opacity: 1; transform: scale(1) translateY(0); letter-spacing: inherit; filter: blur(0); }
+}
+.hero-title-forge { animation: hero-title-forge-in 1s cubic-bezier(0.22,1,0.36,1) 0.2s both; }
+
+/* ─── IMPROVED PACK OPENING ───────────────────────────────────────────────── */
+@keyframes pack-card-land {
+  0%   { transform: translateY(-80px) scale(0.6) rotate(-5deg); opacity: 0; }
+  60%  { transform: translateY(4px) scale(1.05) rotate(1deg); opacity: 1; }
+  80%  { transform: translateY(-2px) scale(0.98) rotate(0deg); }
+  100% { transform: translateY(0) scale(1) rotate(0deg); opacity: 1; }
+}
+.pack-card-land { animation: pack-card-land 0.55s cubic-bezier(0.22,1,0.36,1) both; }
+
+/* ─── IMPROVED NOTIFICATIONS BELL ────────────────────────────────────────── */
+@keyframes bell-shake {
+  0%, 100% { transform: rotate(0deg); }
+  15%       { transform: rotate(12deg); }
+  30%       { transform: rotate(-10deg); }
+  45%       { transform: rotate(8deg); }
+  60%       { transform: rotate(-6deg); }
+  75%       { transform: rotate(4deg); }
+}
+.notification-bell-active { animation: bell-shake 0.8s ease-in-out; }
+
+/* ─── CARD COLLECTION OWNED INDICATOR ────────────────────────────────────── */
+@keyframes owned-check-pop {
+  0%   { transform: scale(0); opacity: 0; }
+  60%  { transform: scale(1.3); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+}
+.card-owned-badge { animation: owned-check-pop 0.3s cubic-bezier(0.22,1,0.36,1) both; }
+
+/* ─── ENERGY BAR CHARGE PULSE ─────────────────────────────────────────────── */
+@keyframes energy-charge-in {
+  0%   { transform: scaleX(0); transform-origin: left; }
+  100% { transform: scaleX(1); transform-origin: left; }
+}
+.energy-bar-charging { animation: energy-charge-in 1.2s cubic-bezier(0.22,1,0.36,1) both; }
+
+/* ─── PVP RANK PROGRESSION BAR ───────────────────────────────────────────── */
+@keyframes rank-fill-in {
+  from { width: 0% !important; }
+}
+.rank-bar-animated { animation: rank-fill-in 1s cubic-bezier(0.22,1,0.36,1) 0.5s both; }
+
+/* ─── ACHIEVEMENT UNLOCK ──────────────────────────────────────────────────── */
+@keyframes achievement-burst-v2 {
+  0%   { transform: scale(0) rotate(-20deg); opacity: 0; }
+  40%  { transform: scale(1.3) rotate(10deg); opacity: 1; }
+  65%  { transform: scale(0.95) rotate(-5deg); }
+  100% { transform: scale(1) rotate(0deg); opacity: 1; }
+}
+.achievement-unlock-v2 { animation: achievement-burst-v2 0.7s cubic-bezier(0.22,1,0.36,1) both; }
+
+/* ─── FACTION KEYWORD INDICATOR (on FighterCard keywords) ────────────────── */
+.kw-guard-indicator    { color: #4a9eff; text-shadow: 0 0 8px rgba(74,158,255,0.9); }
+.kw-drain-indicator    { color: #3ddc84; text-shadow: 0 0 8px rgba(61,220,132,0.9); }
+.kw-surge-indicator    { color: #e8b84b; text-shadow: 0 0 8px rgba(232,184,75,0.9); }
+.kw-veil-indicator     { color: #a855f7; text-shadow: 0 0 8px rgba(168,85,247,0.9); }
+.kw-forge-indicator    { color: #ff6b35; text-shadow: 0 0 8px rgba(255,107,53,0.9); }
+.kw-consecrate-indicator { color: #ffd700; text-shadow: 0 0 8px rgba(255,215,0,0.9); }
+.kw-flux-indicator     { color: #a855f7; text-shadow: 0 0 8px rgba(168,85,247,0.7); animation: kw-flux-bg-shift 2s ease-in-out infinite; }
+.kw-resonance-indicator { color: #b08af8; text-shadow: 0 0 8px rgba(176,138,248,0.9); }
+.kw-poison-indicator   { color: #a855f7; text-shadow: 0 0 8px rgba(168,85,247,0.9); }

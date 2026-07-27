@@ -4,7 +4,7 @@
 
 import { useRef, useCallback, useState, useEffect, type CSSProperties } from 'react';
 import type { RealBattleResult, BattleUnit } from '../../lib/battleTypes';
-import { RARITY_COLOR, RARITY_GLOW } from '../../lib/battleTypes';
+import { RARITY_COLOR, RARITY_GLOW, KEYWORD_ICON } from '../../lib/battleTypes';
 import { CardAttackCinematic } from './CardAttackCinematic';
 
 // Faction-to-icon map — KEYWORD_ICON maps mechanics (Guard, Surge…), not factions
@@ -266,56 +266,123 @@ function FighterCard({
   );
 }
 
+// Keyword colour map for turn log event badges
+const KW_LOG_COLOR: Record<string, string> = {
+  Guard: '#4a9eff', Drain: '#3ddc84', Lifesteal: '#3ddc84',
+  Surge: '#e8b84b', Veil: '#a855f7', Forge: '#ff6b35',
+  Consecrate: '#ffd700', Flux: '#a855f7', Resonance: '#b08af8',
+  Poison: '#a855f7', DoubleStrike: '#ff6b35', Rush: '#e8b84b',
+};
+
 // ─── Turn Log Entry ─────────────────────────────────────────────────────────────
 function TurnLogEntry({ snap, isLatest }: { snap: TurnSnapshot; isLatest: boolean }) {
   const t = snap.data;
   const isPlayer = t.atk_side === 'a';
   const col = isPlayer ? '#4a9eff' : '#e84040';
   const dmgCol = t.is_crit ? '#e8b84b' : '#ff6b35';
+
+  // Derive active keyword events from this turn's data
+  const activeKws: string[] = [];
+  if (t.attacker?.keywords) {
+    for (const kw of t.attacker.keywords) {
+      if (kw === 'Drain' || kw === 'Lifesteal') { if (t.lifesteal_heal > 0) activeKws.push(kw); }
+      else if (kw === 'Guard') { /* guard shown on defender logic */ }
+      else if (kw === 'Surge' || kw === 'Rush') activeKws.push(kw);
+      else if (kw === 'DoubleStrike') activeKws.push(kw);
+      else if (kw === 'Forge') activeKws.push(kw);
+      else if (kw === 'Consecrate') activeKws.push(kw);
+    }
+  }
+  // Events from the snap (guard block, poison, etc.)
+  const events = (t as any).events as Array<{ type: string; dmg?: number; heal?: number }> ?? [];
+
   return (
-    <div style={{
-      padding: '6px 10px', borderRadius: 8,
-      background: isLatest
-        ? `linear-gradient(90deg, ${col}0a, rgba(255,255,255,0.03))`
-        : 'transparent',
-      border: `1px solid ${isLatest ? col + '30' : 'transparent'}`,
-      animation: isLatest ? 'log-slide-in 0.25s cubic-bezier(0.22,1,0.36,1)' : 'none',
-      transition: 'background 0.3s',
-    }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 5, flexWrap: 'wrap', fontSize: 10, fontFamily: '"Rajdhani",sans-serif' }}>
+    <div
+      className={isLatest ? 'tl-entry-new' : undefined}
+      style={{
+        padding: '6px 10px', borderRadius: 8,
+        background: isLatest
+          ? `linear-gradient(90deg, ${col}0d, rgba(255,255,255,0.03))`
+          : 'transparent',
+        border: `1px solid ${isLatest ? col + '30' : 'transparent'}`,
+        transition: 'background 0.3s',
+      }}>
+      {/* Main row */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 4, flexWrap: 'wrap', fontSize: 10, fontFamily: '"Rajdhani",sans-serif' }}>
         {/* Turn badge */}
         <span style={{ color: '#4a4a6a', minWidth: 22, fontFamily: '"IBM Plex Mono",monospace', fontSize: 8 }}>T{t.turn}</span>
-        {/* Faction indicator */}
         <span style={{ fontSize: 8 }}>{isPlayer ? '🔵' : '🔴'}</span>
-        {/* Attacker */}
-        <span style={{ color: col, fontWeight: 700, letterSpacing: '0.04em' }}>{t.attacker?.name ?? '?'}</span>
-        {/* Arrow */}
-        <span style={{ color: '#3a3a5a', fontSize: 9 }}>⚡</span>
-        {/* Defender */}
-        <span style={{ color: '#7a7a9a', fontWeight: 600 }}>{t.defender?.name ?? '?'}</span>
-        {/* Damage */}
-        <span style={{
-          color: dmgCol, fontWeight: t.is_crit ? 900 : 600, fontSize: 11,
-          textShadow: t.is_crit ? `0 0 8px ${dmgCol}` : 'none',
-        }}>
-          {t.is_crit ? '💥' : '-'}{t.damage}
+        {/* Attacker — faction icon + name */}
+        <span style={{ color: col, fontWeight: 700, letterSpacing: '0.04em', maxWidth: 68, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }} title={t.attacker?.name}>
+          {FACTION_ICON[t.attacker?.faction ?? ''] ?? '⚔'} {t.attacker?.name ?? '?'}
         </span>
-        {t.is_crit && (
-          <span style={{ fontSize: 8, color: '#e8b84b', background: 'rgba(232,184,75,0.15)', borderRadius: 4, padding: '1px 5px', fontWeight: 700, letterSpacing: '0.08em' }}>
-            CRIT!
-          </span>
-        )}
-        {t.is_kill && (
-          <span style={{ fontSize: 8, color: '#ff4444', background: 'rgba(255,68,68,0.15)', borderRadius: 4, padding: '1px 5px', fontWeight: 700 }}>
-            ☠
-          </span>
-        )}
-        {t.lifesteal_heal > 0 && (
-          <span style={{ fontSize: 8, color: '#3ddc84', background: 'rgba(61,220,132,0.1)', borderRadius: 4, padding: '1px 5px' }}>
-            +{t.lifesteal_heal}♥
-          </span>
-        )}
+        <span style={{ color: '#3a3a5a', fontSize: 9 }}>→</span>
+        {/* Defender */}
+        <span style={{ color: '#7a7a9a', fontWeight: 600, maxWidth: 60, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }} title={t.defender?.name}>
+          {t.defender?.name ?? '?'}
+        </span>
+        {/* Damage */}
+        <span style={{ color: dmgCol, fontWeight: t.is_crit ? 900 : 600, fontSize: 11, textShadow: t.is_crit ? `0 0 8px ${dmgCol}` : 'none' }}>
+          {t.is_crit ? '💥' : '−'}{t.damage}
+        </span>
+        {/* Badge row */}
+        <div style={{ display: 'flex', gap: 3, alignItems: 'center', flexWrap: 'wrap' }}>
+          {t.is_crit && (
+            <span style={{ fontSize: 7, color: '#e8b84b', background: 'rgba(232,184,75,0.18)', borderRadius: 4, padding: '1px 5px', fontWeight: 800, letterSpacing: '0.08em', border: '1px solid rgba(232,184,75,0.35)' }}>
+              CRIT
+            </span>
+          )}
+          {t.is_kill && (
+            <span style={{ fontSize: 7, color: '#ff4444', background: 'rgba(255,68,68,0.18)', borderRadius: 4, padding: '1px 5px', fontWeight: 800, border: '1px solid rgba(255,68,68,0.35)' }}>
+              ☠ KO
+            </span>
+          )}
+          {t.lifesteal_heal > 0 && (
+            <span style={{ fontSize: 7, color: '#3ddc84', background: 'rgba(61,220,132,0.15)', borderRadius: 4, padding: '1px 5px', fontWeight: 700, border: '1px solid rgba(61,220,132,0.35)' }}>
+              +{t.lifesteal_heal}♥ Drain
+            </span>
+          )}
+          {/* Keyword event badges */}
+          {activeKws.filter(kw => kw !== 'Drain' && kw !== 'Lifesteal').map(kw => {
+            const c = KW_LOG_COLOR[kw] ?? '#8888aa';
+            return (
+              <span key={kw} style={{ fontSize: 7, color: c, background: `${c}18`, borderRadius: 4, padding: '1px 5px', fontWeight: 700, border: `1px solid ${c}35` }}>
+                {KEYWORD_ICON[kw] ?? '•'} {kw}
+              </span>
+            );
+          })}
+          {/* Damage-over-time events (poison, etc.) */}
+          {events.filter(e => e.type === 'poison_tick').map((e, i) => (
+            <span key={i} style={{ fontSize: 7, color: '#a855f7', background: 'rgba(168,85,247,0.15)', borderRadius: 4, padding: '1px 5px', fontWeight: 700, border: '1px solid rgba(168,85,247,0.35)' }}>
+              ☠ −{e.dmg} Poison
+            </span>
+          ))}
+          {events.filter(e => e.type === 'shield_block').map((e, i) => (
+            <span key={i} style={{ fontSize: 7, color: '#4a9eff', background: 'rgba(74,158,255,0.15)', borderRadius: 4, padding: '1px 5px', fontWeight: 700, border: '1px solid rgba(74,158,255,0.35)' }}>
+              🛡 Guard
+            </span>
+          ))}
+          {events.filter(e => e.type === 'lifesteal').map((e, i) => (
+            <span key={i} style={{ fontSize: 7, color: '#3ddc84', background: 'rgba(61,220,132,0.15)', borderRadius: 4, padding: '1px 5px', fontWeight: 700, border: '1px solid rgba(61,220,132,0.35)' }}>
+              +{e.heal}♥
+            </span>
+          ))}
+        </div>
       </div>
+      {/* Defender remaining HP bar — only on latest */}
+      {isLatest && t.defender && (t.defender as any).hp != null && (t.defender as any).max_hp != null && (
+        <div style={{ marginTop: 3, height: 2, borderRadius: 1, background: 'rgba(255,255,255,0.1)', overflow: 'hidden' }}>
+          <div style={{
+            height: '100%', borderRadius: 1,
+            width: `${Math.max(0, ((t.defender as any).hp / (t.defender as any).max_hp) * 100)}%`,
+            background: (() => {
+              const pct = (t.defender as any).hp / (t.defender as any).max_hp;
+              return pct > 0.6 ? '#3ddc84' : pct > 0.3 ? '#e8b84b' : '#e84040';
+            })(),
+            transition: 'width 0.4s ease',
+          }} />
+        </div>
+      )}
     </div>
   );
 }
