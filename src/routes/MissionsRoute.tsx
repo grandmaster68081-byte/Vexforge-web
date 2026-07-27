@@ -392,7 +392,7 @@ function MissionCard({ mission, onExecute, executing, isExecuting, isCompleted, 
         <div style={{ position: "absolute", top: -1, right: 8, background: "linear-gradient(135deg, #C9901F, #E8B84B)", borderRadius: "0 0 6px 6px", padding: "2px 8px", fontSize: 9, fontFamily: '"IBM Plex Mono", monospace', letterSpacing: "0.15em", color: "#0a0a14", fontWeight: 700 }}>🔥 FESTIVAL</div>
       )}
       {isCompleted && (
-        <div style={{ position: "absolute", top: -1, right: 8, background: "linear-gradient(135deg, #1a5c30, #3DC96B)", borderRadius: "0 0 6px 6px", padding: "2px 10px", fontSize: 9, fontFamily: '"IBM Plex Mono", monospace', letterSpacing: "0.15em", color: "#0a1a0f", fontWeight: 700 }}>✓ COMPLETADA</div>
+        <div className="mission-complete-badge" style={{ position: "absolute", top: -1, right: 8, background: "linear-gradient(135deg, #1a5c30, #3DC96B)", borderRadius: "0 0 6px 6px", padding: "2px 10px", fontSize: 9, fontFamily: '"IBM Plex Mono", monospace', letterSpacing: "0.15em", color: "#0a1a0f", fontWeight: 700 }}>✓ COMPLETADA</div>
       )}
       {isActive && (
         <div style={{ position: "absolute", top: -1, right: 8, background: "linear-gradient(135deg, #1a2a5c, #5B8BF5)", borderRadius: "0 0 6px 6px", padding: "2px 10px", fontSize: 9, fontFamily: '"IBM Plex Mono", monospace', letterSpacing: "0.15em", color: "#fff", fontWeight: 700 }}>⚡ EJECUTANDO</div>

@@ -80,11 +80,14 @@ export function LeaderboardRoute() {
             const tier = getRank(row.mmr);
             const isMe = row.player_id === myId;
             return (
-              <div key={row.player_id} style={{
+              <div key={row.player_id}
+                className="leaderboard-row-animate"
+                style={{
                 display: "grid", gridTemplateColumns: "48px 1fr 100px 120px 60px", alignItems: "center",
                 padding: "12px 16px", borderBottom: i < rows.length - 1 ? "1px solid #1a1a2e" : "none",
                 background: isMe ? "#1a2a1a22" : i % 2 === 0 ? "transparent" : "#0f0f1a22",
                 boxShadow: isMe ? "inset 0 0 0 1px #3ddc8433" : "none",
+                animationDelay: `${i * 0.04}s`,
               }}>
                 <div style={{ fontFamily: "Cinzel,serif", fontWeight: 800, color: i < 3 ? "#e8b84b" : "#555", fontSize: i < 3 ? 16 : 13 }}>
                   {i < 3 ? MEDAL[i] : `#${row.rank_position}`}

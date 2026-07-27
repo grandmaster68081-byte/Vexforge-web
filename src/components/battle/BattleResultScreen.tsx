@@ -178,6 +178,9 @@ export function BattleResultScreen({ result, playerName, opponentName, onDismiss
         animation: 'resultAmbient 3s ease-in-out infinite',
       }} />
 
+      {/* Victory conic rays — slow rotating behind everything */}
+      {won && <div className="victory-bg-rays" />}
+
       {/* Trophy / Icon */}
       <div style={{
         fontSize: 96, marginBottom: 6, lineHeight: 1,

@@ -476,6 +476,7 @@ function PageTransition({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     if (firstRender.current) { firstRender.current = false; return; }
     try { AudioEngine.sfxNavChange(); } catch {}
+    try { (AudioEngine as any).sfxScreenTransition(); } catch {}
   }, [location.key]);
   return (
     <div key={location.key} className="page-transition-enter">

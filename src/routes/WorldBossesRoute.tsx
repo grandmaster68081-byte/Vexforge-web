@@ -60,7 +60,34 @@ function BossCard({ boss, onAttack, canAttack, attacking }: {
             <span style={{ fontSize: 18 }}>{getBossIcon(boss)}</span>
             <h3 style={{ fontFamily: "Cinzel,serif", color: "#e8e8f0", fontSize: 14, margin: 0 }}>{boss.name}</h3>
           </div>
-          <div style={{ color: "#7a7a9a", fontSize: 11 }}>Poder: <span style={{ color }}>{boss.power_level.toLocaleString()}</span></div>
+          <div style={{ color: "#7a7a9a", fontSize: 11, marginBottom: 8 }}>
+            Poder: <span style={{ color }}>{boss.power_level.toLocaleString()}</span>
+          </div>
+          {/* Boss power bar — visual threat indicator */}
+          {(() => {
+            const TIER_MAX: Record<string, number> = { t1: 1000, t2: 3000, t3: 8000, t4: 18000, t5: 40000, t6: 100000 };
+            const tierKey = boss.tier.toLowerCase();
+            const tierMax  = TIER_MAX[tierKey] ?? 100000;
+            const pct      = Math.min(100, Math.round((boss.power_level / tierMax) * 100));
+            return (
+              <div style={{ marginBottom: 12 }}>
+                <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 4 }}>
+                  <span style={{ fontSize: 9, letterSpacing: "0.1em", color: "#5a5a7a", textTransform: "uppercase" }}>AMENAZA</span>
+                  <span style={{ fontSize: 9, color, fontWeight: 700 }}>{pct}%</span>
+                </div>
+                <div style={{ height: 6, borderRadius: 4, background: "rgba(255,255,255,0.06)", overflow: "hidden" }}>
+                  <div
+                    className={pct >= 80 ? "boss-hp-bar" : undefined}
+                    style={{
+                      height: "100%", width: `${pct}%`, borderRadius: 4,
+                      background: `linear-gradient(90deg, ${color}88, ${color})`,
+                      transition: "width 1s cubic-bezier(.22,1,.36,1)",
+                    }}
+                  />
+                </div>
+              </div>
+            );
+          })()}
           {(boss.metadata as any)?.lore && (
             <p style={{ color: "#7a7a9a", fontSize: 10, marginTop: 6, lineHeight: 1.5, fontStyle: "italic" }}>{(boss.metadata as any).lore}</p>
           )}

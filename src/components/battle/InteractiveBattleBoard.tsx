@@ -136,11 +136,18 @@ function FighterCard({
     animation: isBeingHit ? 'card-hit-shake 0.35s ease' : undefined,
   };
 
+  const rarityAuraClass =
+    unit.rarity === 'Mythic'    ? 'card-mythic-aura' :
+    unit.rarity === 'Legendary' ? 'card-legendary-aura' : undefined;
+
   return (
     <div
       ref={dropRef as React.RefObject<HTMLDivElement>}
       style={cardStyle}
-      className={isPlayer && isActive && !isDraggingFrom ? 'drag-ready' : undefined}
+      className={[
+        isPlayer && isActive && !isDraggingFrom ? 'drag-ready' : undefined,
+        rarityAuraClass,
+      ].filter(Boolean).join(' ') || undefined}
       onPointerDown={isPlayer ? onPointerDown : undefined}
       onPointerEnter={onPointerEnter}
     >
