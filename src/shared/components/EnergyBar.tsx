@@ -73,9 +73,10 @@ export function EnergyBar() {
   return (
     <div
       title={`Energía: ${state.energy}/${state.max_energy}${timerLabel ? ` · ${timerLabel}` : ""}`}
+      className={pct <= 20 ? "energy-bar-low" : undefined}
       style={{ display:"flex", alignItems:"center", gap:5, background:"rgba(0,0,0,0.35)",
-        border:"1px solid rgba(61,201,107,0.2)", borderRadius:8, padding:"3px 8px 3px 7px",
-        cursor:"default", userSelect:"none", flexShrink:0 }}
+        border:`1px solid ${pct <= 20 ? "rgba(239,68,68,0.25)" : "rgba(61,201,107,0.2)"}`, borderRadius:8, padding:"3px 8px 3px 7px",
+        cursor:"default", userSelect:"none", flexShrink:0, transition:"border-color 0.5s ease" }}
     >
       <span style={{ fontSize:13, lineHeight:1, color, filter:`drop-shadow(${glow})` }}>⚡</span>
       <div style={{ display:"flex", flexDirection:"column", alignItems:"flex-start", gap:2 }}>
