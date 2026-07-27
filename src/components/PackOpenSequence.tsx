@@ -473,7 +473,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
                             fontWeight: 700, lineHeight: 1.2,
                           }}>{card.name}</div>
                           {card.faction && (
-                            <div style={{ fontSize: 9, color: "#7a7a9a", marginTop: 4, fontFamily: "Rajdhani,sans-serif" }}>
+                            <div style={{ fontSize: 9, color: tmuted, marginTop: 4, fontFamily: "Rajdhani,sans-serif" }}>
                               {card.faction}
                             </div>
                           )}
