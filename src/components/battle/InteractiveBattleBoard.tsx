@@ -120,6 +120,7 @@ function FighterCard({
           : `0 4px 20px rgba(0,0,0,0.7)`,
     cursor: isPlayer ? (isDraggingFrom ? 'grabbing' : 'grab') : 'default',
     userSelect: 'none',
+    // drag-ready class handled via className below
     transform: isDraggingFrom
       ? 'scale(1.08) translateY(-8px) rotate(-2deg)'
       : isBeingHit
@@ -139,6 +140,7 @@ function FighterCard({
     <div
       ref={dropRef as React.RefObject<HTMLDivElement>}
       style={cardStyle}
+      className={isPlayer && isActive && !isDraggingFrom ? 'drag-ready' : undefined}
       onPointerDown={isPlayer ? onPointerDown : undefined}
       onPointerEnter={onPointerEnter}
     >

@@ -205,7 +205,9 @@ export function BattleResultScreen({ result, playerName, opponentName, onDismiss
         marginBottom: 6, lineHeight: 1,
         animation: 'slideInLabel 0.6s cubic-bezier(0.22,1,0.36,1)',
         textTransform: 'uppercase',
-      }}>
+      }}
+      className={won ? 'victory-text' : (!isDraw ? 'defeat-text' : undefined)}
+      >
         {theme.label}
       </div>
 
@@ -247,6 +249,19 @@ export function BattleResultScreen({ result, playerName, opponentName, onDismiss
             RACHA × {winStreak}
           </span>
           <span style={{ fontSize: 16 }}>🔥</span>
+        </div>
+      )}
+
+      {/* Win streak additional fire effect for high streaks */}
+      {winStreak >= 5 && (
+        <div style={{
+          fontFamily: 'Cinzel, serif', fontSize: 11, letterSpacing: '0.2em',
+          color: '#ff9500', textTransform: 'uppercase', marginBottom: 8,
+          marginTop: -8,
+        }}
+        className="streak-fire-2"
+        >
+          ¡Invicto! Racha de {winStreak}
         </div>
       )}
 

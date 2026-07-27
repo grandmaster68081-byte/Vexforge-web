@@ -1,83 +1,105 @@
-# VEXFORGE — CONTINUITY (Chat 81 — 2026-07-22 — Y.1 COMPLETE)
+# VEXFORGE — CONTINUITY (Chat 97 — 2026-07-27 — FASE 1+2 COMPLETE)
 
-## Estado: Épicas A+B+C+D+E+F+G+H+I+P+Q+R+T.2-T.7+U.1+U.2+V.1+W.1+W.2+X.1+X.2+X.3+Y.1 completas
+## Estado: Épicas A+B+C+D+E+F+G+H+I+P+Q+R+T.2-T.7+U.1+U.2+V.1+W.1+W.2+X.1+X.2+X.3+Y.1+IA.0+IA.2+TU.0+TU.1+VX.0+VX.1+Z1 completas
 
 ---
 
-## CHAT 81 — TRABAJO COMPLETADO
+## CHAT 97 — TRABAJO COMPLETADO
 
 | Bloque | Descripción | Estado |
 |--------|-------------|--------|
-| Y.1    | BUG FIX: fn_check_and_grant_achievements — añadidos pvp_50 + pvp_100 | ✅ |
-| Y.1    | Cobertura real ahora: 25/25 logros verificada con evidencia directa | ✅ |
-| Persist | Decisión chat81_y1_fn_check_pvp_fix guardada | ✅ |
-| Audit  | Sincronización completa: CONTINUITY, memory y web_registry actualizados | ✅ |
+| FASE 1 | Rollup native module fix — npm install reset limpio | ✅ |
+| FASE 1 | TypeScript: 0 errores verificado con tsc --noEmit | ✅ |
+| FASE 1 | Build: 230 módulos, sin warnings — ✓ built in 2.3s | ✅ |
+| FASE 1 | Supabase conectado: get_home_stats OK, packs OK | ✅ |
+| FASE 1 | .gitignore creado — node_modules excluidos del repo | ✅ |
+| FASE 2 | CSS +550 líneas: combat, glassmorphism, mobile, streaks | ✅ |
+| FASE 2 | BattleResultScreen: victory-text / defeat-text classes | ✅ |
+| FASE 2 | BattleResultScreen: win streak ≥5 fire glow effect | ✅ |
+| FASE 2 | InteractiveBattleBoard: drag-ready CSS class en cartas activas | ✅ |
+| FASE 2 | PvpRoute DailyChallengeCard: daily-challenge-card CSS class | ✅ |
+| FASE 2 | dist/ rebuild completo para Cloudflare Pages | ✅ |
+| FASE 2 | Push a origin/main | ✅ |
 
 ---
 
-## CORRECCIONES DE ESTADO CHAT 81
+## CORRECCIONES APLICADAS — CHAT 97
 
-### X.1 y X.2 estaban marcadas como pendientes en CONTINUITY.md anterior — ERROR
-La decisión chat80_x1_x2_complete (adoptada en chat 80) y el last_action de project_memory
-confirman que X.1 (daily_streak) y X.2 (forger via economy_ledger) ESTABAN COMPLETAS en chat 80.
-El CONTINUITY.md del chat 80 tenía una sección de PRÓXIMOS PASOS desactualizada.
+### FASE 1 — REPARACIÓN
+- **Rollup native binary**: node_modules fue eliminado y re-instalado con `npm install`. El build falla con módulos instalados en otro sistema operativo (Linux x64 vs arm). Siempre hacer `npm install` antes de `npm run build` en el entorno actual.
+- **TypeScript**: 0 errores — codebase 100% limpio
+- **Supabase**: RPC get_home_stats respondiendo OK (8 jugadores, 127 cartas, 515 batallas)
+- **.gitignore**: Creado para excluir node_modules/ y package-lock.json del repo
 
-### Cobertura real de fn_check_and_grant_achievements
-ANTES de Y.1: 23/25 (faltaban pvp_50 y pvp_100 en la función)
-DESPUÉS de Y.1: 25/25 ✅
-
----
-
-## ESTADO TÉCNICO POST-CHAT 81
-
-### Frontend canonical files: 189
-### Chat: 81 | Backend triggers de logros: 10 | Cobertura logros: 25/25
-
-### Épicas completas: A B C D E F G H I P Q R T(2-7) U1 U2 V1 W1 W2 X1 X2 X3 Y1
-
----
-
-## ARQUITECTURA DE LOGROS (CORREGIDA CHAT 81)
-
-### fn_check_and_grant_achievements — 25/25 logros:
-| Categoría | Logros | Estado |
-|-----------|--------|--------|
-| missions | missions_10, missions_50 | ✅ |
-| collection | first_rare, first_epic, first_legendary, first_mythic, collector_25/50/127 | ✅ |
-| bosses | boss_slayer_1, boss_slayer_5 | ✅ |
-| economy | merchant_5, merchant_25 | ✅ |
-| pvp | first_win, pvp_10, pvp_50, pvp_100 | ✅ (pvp_50/100 añadidos Y.1) |
-| packs | pack_opener_10 | ✅ |
-| fusion | forger_5, forger_25, forger_100 | ✅ |
-| daily | daily_streak_7, daily_streak_30 | ✅ |
-| social | clan_founder, clan_veteran | ✅ |
-
-### Triggers activos (10):
-trg_achievements_on_mission, trg_achievements_on_cards, trg_achievements_on_boss,
-trg_achievements_on_market, trg_achievements_on_pvp, trg_achievements_on_packs,
-trg_achievements_on_clan, trg_achievements_on_clan_member, trg_achievements_on_daily,
-trg_achievements_on_fusion
+### FASE 2 — MEJORAS VISUALES
+- **styles.css**: +550 líneas de animaciones y utilidades nuevas
+  - `@keyframes combo-pop, power-surge, victory-beam, card-draw, shield-break`
+  - `@keyframes gold-shimmer-text, border-glow-rotate, level-burst, stat-count-up`
+  - `.glass-card`, `.glass-card-gold`, `.glass-card-hover` (glassmorphism)
+  - `.gold-shimmer-text` — degradado dorado animado para textos especiales
+  - `.drag-ready` — pulsación azul en carta activa del jugador (drag hint)
+  - `.daily-challenge-card` — borde animado naranja para desafío diario
+  - `.battle-mode-card` — hover elevado para selector de modo
+  - `.victory-text` / `.defeat-text` — shimmer dorado / neon rojo para resultado
+  - `.streak-fire`, `.streak-fire-2`, `.streak-fire-3` — fuego animado por racha
+  - `.card-rarity-mythic/legendary/epic/rare` — glow de rareza
+  - `.snap-scroll-x` — scroll horizontal con snap para filas de cartas
+  - iOS safe-area support para header y bottom nav
+  - Mobile improvements: 640px y 380px breakpoints
+  - Accessibility: `:focus-visible` ring, `prefers-reduced-motion` respetado
+- **BattleResultScreen.tsx**: 
+  - `className={won ? 'victory-text' : 'defeat-text'}` en label principal
+  - Badge extra para racha ≥5 con `streak-fire-2`
+- **InteractiveBattleBoard.tsx**: `className="drag-ready"` en carta activa del jugador
+- **PvpRoute.tsx**: `className="daily-challenge-card"` en DailyChallengeCard section
 
 ---
 
-## STACK CONFIRMADO (Chat 81)
-- React 18 + Vite + TypeScript + react-router-dom v6 + @supabase/supabase-js
+## ESTADO TÉCNICO POST-CHAT 97
+
+### Frontend canonical files: 171
+### Chat: 97 | Build: limpio | TypeScript: 0 errores | Supabase: OK
+
+### Épicas completas: A B C D E F G H I P Q R T(2-7) U1 U2 V1 W1 W2 X1 X2 X3 Y1 IA.0 IA.2 TU.0 TU.1 VX.0 VX.1
+
+---
+
+## ESTADO DEL SISTEMA (VERIFICADO CHAT 97)
+
+- React 18 + Vite 5.4 + TypeScript 5.5 + react-router-dom v6 + @supabase/supabase-js
 - Deploy: Cloudflare Pages via wrangler (npm run build → dist/)
+- Supabase: https://rscuzqnfccqvltkdcdny.supabase.co
 - 34 dominios live_in_official_frontend
 - Backend: PostgreSQL (Supabase) con RLS, 10 achievement triggers, RPCs SECURITY DEFINER
+- 127 cartas activas, 8 jugadores registrados, 515 batallas totales
 
 ---
 
-## PRÓXIMOS PASOS
+## PRÓXIMOS PASOS SUGERIDOS
 
-### Épica Y (en curso):
-- Y.1 ✅ — fn_check 25/25 logros
-- Y.2 — Pack opening experience: verificar y mejorar flujo de apertura de sobres
-- Y.3 — Por determinar según hallazgos de Y.2
+### Contenido / Gameplay
+- Y.2 — Pack opening experience: revisar animación de apertura para alta rareza
+- IA.3 — AI Deck Builder: sugerir deck óptimo basado en cartas del jugador
+- Tournament mode: brackets PvP con prizes
+
+### Visual / UX
+- VX.2 — Board visual overhaul: skins de arena por facción (usar faction_zone backgrounds)
+- TU.3 — Tutorial localization: traducir hints al inglés para expansión
+- Onboarding A/B test: medir completion rate tutorial con/sin batalla guiada
+
+### SQL Pendiente (bajo impacto)
+- BUG-3: security_invoker en ~18 vistas (no bloquea nada, mejora seguridad)
+- Ver backend/sql-fixes/BUG3-security-invoker-views.sql
 
 ---
 
 ## DEPLOY
 
 Ver docs/DEPLOY_GUIDE.md. Cloudflare Pages:
-npm run build → dist/ → wrangler pages deploy dist --project-name=vexforge-web
+```
+npm install
+npm run build
+wrangler pages deploy dist --project-name=vexforge-web
+```
+
+Live en: https://vexforge-web.pages.dev

@@ -362,7 +362,7 @@ function OpponentCard({
 function DailyChallengeCard({ challenge, attempted, badgeEarned, dailyLoading, onStart }: { challenge: DailyAIChallenge; attempted: boolean; badgeEarned: boolean; dailyLoading: boolean; onStart: () => void; }) {
   const meta = BATTLE_MODE_META['ai_' + challenge.difficulty as BattleMode];
   return (
-    <section style={{
+    <section className="daily-challenge-card" style={{
       marginBottom: 24, position: 'relative', overflow: 'hidden',
       borderRadius: 16,
       background: 'linear-gradient(135deg, rgba(20,12,0,0.98) 0%, rgba(40,24,0,0.96) 50%, rgba(15,10,30,0.98) 100%)',

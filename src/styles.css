@@ -3844,3 +3844,553 @@ body.modal-open { overflow: hidden; }
   .forge-header, .forge-bottom-nav, .vex-rune-ring, .hero-particles { display: none !important; }
   body { background: white; color: black; }
 }
+
+/* ═══════════════════════════════════════════════════════════════════
+   VEXFORGE — FASE 2 VISUAL EXCELLENCE PATCH
+   Chat 97 · Lote 1: Combat, Mobile, Glassmorphism, UX Polish
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* ─── New Combat Keyframes ──────────────────────────────────────── */
+@keyframes combo-pop {
+  0%   { transform: scale(0.3) rotate(-15deg); opacity: 0; }
+  50%  { transform: scale(1.3) rotate(5deg);   opacity: 1; }
+  70%  { transform: scale(0.95) rotate(-2deg); }
+  100% { transform: scale(1) rotate(0deg);     opacity: 1; }
+}
+@keyframes power-surge {
+  0%,100% { text-shadow: 0 0 8px currentColor; }
+  50%     { text-shadow: 0 0 24px currentColor, 0 0 48px currentColor; }
+}
+@keyframes victory-beam {
+  0%   { opacity: 0; transform: scaleY(0); }
+  20%  { opacity: 1; }
+  100% { opacity: 0; transform: scaleY(2.5); }
+}
+@keyframes defeat-drain {
+  0%   { filter: saturate(1) brightness(1); }
+  100% { filter: saturate(0) brightness(0.4); }
+}
+@keyframes card-draw {
+  0%   { transform: translateY(-120px) rotate(-8deg) scale(0.8); opacity: 0; }
+  60%  { transform: translateY(8px) rotate(2deg) scale(1.03); opacity: 1; }
+  100% { transform: translateY(0) rotate(0deg) scale(1); opacity: 1; }
+}
+@keyframes shield-break {
+  0%   { transform: scale(1); opacity: 1; }
+  40%  { transform: scale(1.4); opacity: 0.8; filter: brightness(2); }
+  100% { transform: scale(2); opacity: 0; }
+}
+@keyframes gold-shimmer-text {
+  0%,100% { background-position: -200% center; }
+  50%     { background-position: 200% center; }
+}
+@keyframes orb-pulse {
+  0%,100% { transform: scale(1); opacity: 0.7; }
+  50%     { transform: scale(1.12); opacity: 1; }
+}
+@keyframes border-glow-rotate {
+  0%   { box-shadow: 2px 0 12px rgba(201,144,31,0.5), 0 -2px 12px rgba(123,79,212,0.4); }
+  25%  { box-shadow: 0 2px 12px rgba(201,144,31,0.5), 2px 0 12px rgba(123,79,212,0.4); }
+  50%  { box-shadow: -2px 0 12px rgba(201,144,31,0.5), 0 2px 12px rgba(123,79,212,0.4); }
+  75%  { box-shadow: 0 -2px 12px rgba(201,144,31,0.5), -2px 0 12px rgba(123,79,212,0.4); }
+  100% { box-shadow: 2px 0 12px rgba(201,144,31,0.5), 0 -2px 12px rgba(123,79,212,0.4); }
+}
+@keyframes typing-dots {
+  0%,80%,100% { transform: scale(0); opacity: 0; }
+  40%         { transform: scale(1);  opacity: 1; }
+}
+@keyframes level-burst {
+  0%   { transform: scale(0.5); opacity: 0; }
+  40%  { transform: scale(1.25); opacity: 1; }
+  70%  { transform: scale(0.9); }
+  100% { transform: scale(1); opacity: 1; }
+}
+@keyframes stat-count-up {
+  from { transform: translateY(8px); opacity: 0; }
+  to   { transform: translateY(0); opacity: 1; }
+}
+@keyframes neon-flicker {
+  0%,19%,21%,23%,25%,54%,56%,100% { opacity: 1; }
+  20%,24%,55% { opacity: 0.4; }
+}
+@keyframes pack-shake-intense {
+  0%,100% { transform: rotate(0deg) scale(1); }
+  10%     { transform: rotate(-6deg) scale(1.03); }
+  20%     { transform: rotate(6deg) scale(1.04); }
+  30%     { transform: rotate(-5deg) scale(1.02); }
+  40%     { transform: rotate(5deg) scale(1.03); }
+  50%     { transform: rotate(-4deg) scale(1.05); }
+  60%     { transform: rotate(4deg) scale(1.03); }
+  70%     { transform: rotate(-3deg) scale(1.02); }
+  80%     { transform: rotate(3deg) scale(1.01); }
+  90%     { transform: rotate(-1deg) scale(1); }
+}
+@keyframes wave-in {
+  from { clip-path: inset(0 100% 0 0); }
+  to   { clip-path: inset(0 0% 0 0); }
+}
+@keyframes slide-up-fade {
+  from { transform: translateY(20px); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
+}
+
+/* ─── Combat utility classes ─────────────────────────────────────── */
+.combat-card-draw  { animation: card-draw 0.55s cubic-bezier(.22,1,.36,1) forwards; }
+.combat-power-surge { animation: power-surge 1.2s ease-in-out infinite; }
+.combo-counter     { animation: combo-pop 0.4s cubic-bezier(.22,1,.36,1) forwards; }
+.shield-break      { animation: shield-break 0.6s ease-out forwards; }
+.slide-up-fade     { animation: slide-up-fade 0.35s ease forwards; }
+.wave-in           { animation: wave-in 0.5s cubic-bezier(.22,1,.36,1) forwards; }
+
+/* ─── Gold shimmer text ─────────────────────────────────────────── */
+.gold-shimmer-text {
+  background: linear-gradient(90deg, #c9901f 0%, #f0c050 30%, #fff8dc 50%, #f0c050 70%, #c9901f 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: gold-shimmer-text 3s linear infinite;
+}
+
+/* ─── Glassmorphism cards ───────────────────────────────────────── */
+.glass-card {
+  background: rgba(255,255,255,0.04);
+  backdrop-filter: blur(12px) saturate(1.4);
+  -webkit-backdrop-filter: blur(12px) saturate(1.4);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 16px;
+}
+.glass-card-gold {
+  background: rgba(201,144,31,0.06);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(201,144,31,0.18);
+  border-radius: 16px;
+}
+.glass-card-hover {
+  transition: transform 0.25s cubic-bezier(.22,1,.36,1),
+              box-shadow 0.25s ease,
+              background 0.25s ease,
+              border-color 0.25s ease;
+}
+.glass-card-hover:hover {
+  transform: translateY(-4px) scale(1.01);
+  background: rgba(255,255,255,0.07);
+  border-color: rgba(201,144,31,0.28);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.4), 0 0 16px rgba(201,144,31,0.12);
+}
+.glass-card-hover:active {
+  transform: scale(0.98);
+}
+
+/* ─── Improved button press feedback ────────────────────────────── */
+.forge-btn-primary:active,
+button.forge-cta:active {
+  transform: scale(0.97) !important;
+  transition: transform 0.08s ease !important;
+}
+
+/* ─── Route stat pill enhanced hover ────────────────────────────── */
+.home-stats-pill:hover {
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 6px 20px rgba(201,144,31,0.2);
+}
+
+/* ─── Feature cards on home ─────────────────────────────────────── */
+.feature-card-v2 {
+  transition: transform 0.2s cubic-bezier(.22,1,.36,1),
+              box-shadow 0.2s ease,
+              border-color 0.2s ease;
+  cursor: pointer;
+}
+.feature-card-v2:hover {
+  transform: translateY(-5px);
+}
+.feature-card-v2:active {
+  transform: scale(0.97);
+}
+
+/* ─── Orb / energy glow ─────────────────────────────────────────── */
+.energy-orb {
+  animation: orb-pulse 1.8s ease-in-out infinite;
+  border-radius: 50%;
+}
+
+/* ─── Battle board mobile improvements ──────────────────────────── */
+@media (max-width: 480px) {
+  .battle-fighter-row {
+    gap: 6px !important;
+    padding: 0 4px !important;
+  }
+  .battle-board-arena {
+    border-radius: 12px !important;
+  }
+  .battle-action-btns {
+    gap: 6px !important;
+  }
+  .battle-action-btns button {
+    padding: 8px 12px !important;
+    font-size: 11px !important;
+  }
+  .battle-result-card {
+    padding: 20px 16px !important;
+    width: 95vw !important;
+  }
+}
+
+/* ─── Page transition improvements ─────────────────────────────── */
+.page-transition-enter {
+  animation: slide-up-fade 0.22s ease forwards;
+}
+
+/* ─── Forge header glow on scroll ──────────────────────────────── */
+.forge-header.scrolled {
+  background: rgba(5,5,13,0.98) !important;
+  box-shadow: 0 2px 24px rgba(0,0,0,0.6), 0 1px 0 rgba(201,144,31,0.15) !important;
+}
+
+/* ─── Bottom nav active indicator improvement ───────────────────── */
+.forge-bottom-nav-item.active .forge-bottom-nav-icon {
+  filter: drop-shadow(0 0 8px currentColor);
+}
+.forge-bottom-nav-item.active .forge-bottom-nav-label {
+  letter-spacing: 0.06em;
+}
+
+/* ─── Pack card enhanced ────────────────────────────────────────── */
+.pack-card-container {
+  transition: transform 0.3s cubic-bezier(.22,1,.36,1), box-shadow 0.3s ease;
+}
+.pack-card-container:hover {
+  transform: translateY(-6px) scale(1.02);
+}
+.pack-card-container:active {
+  transform: scale(0.97);
+}
+
+/* ─── Battle ELO counter animation ─────────────────────────────── */
+@keyframes elo-count {
+  from { transform: translateY(-12px); opacity: 0; }
+  to   { transform: translateY(0); opacity: 1; }
+}
+.elo-reveal { animation: elo-count 0.5s cubic-bezier(.22,1,.36,1) forwards; }
+
+/* ─── Win streak fire glow ──────────────────────────────────────── */
+@keyframes streak-fire {
+  0%,100% {
+    text-shadow: 0 0 8px #ff6b35, 0 0 20px #ff4444;
+    transform: scale(1);
+  }
+  50% {
+    text-shadow: 0 0 16px #ff9500, 0 0 40px #ff6b35, 0 0 60px #ff4444;
+    transform: scale(1.05);
+  }
+}
+.streak-fire { animation: streak-fire 1.5s ease-in-out infinite; }
+.streak-fire-2 {
+  animation: streak-fire 1.2s ease-in-out infinite;
+  color: #ff9500;
+}
+.streak-fire-3 {
+  animation: streak-fire 0.9s ease-in-out infinite;
+  color: #ff4444;
+}
+
+/* ─── Achievement toast enhanced ────────────────────────────────── */
+@keyframes toast-slide-in {
+  from { transform: translateX(110%); opacity: 0; }
+  to   { transform: translateX(0);    opacity: 1; }
+}
+@keyframes toast-slide-out {
+  from { transform: translateX(0); opacity: 1; }
+  to   { transform: translateX(110%); opacity: 0; }
+}
+.achievement-toast-enter { animation: toast-slide-in 0.4s cubic-bezier(.22,1,.36,1) forwards; }
+.achievement-toast-exit  { animation: toast-slide-out 0.3s ease-in forwards; }
+
+/* ─── Keyword chip hover effect ─────────────────────────────────── */
+.keyword-chip {
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  cursor: help;
+}
+.keyword-chip:hover {
+  transform: translateY(-2px) scale(1.08);
+}
+
+/* ─── Tooltip fade-in ───────────────────────────────────────────── */
+@keyframes tooltip-pop {
+  from { opacity: 0; transform: translateY(6px) scale(0.95); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+.vex-tooltip { animation: tooltip-pop 0.18s ease forwards; }
+
+/* ─── Mobile sheet backdrop blur ─────────────────────────────────── */
+.forge-mobile-backdrop {
+  backdrop-filter: blur(4px) !important;
+  -webkit-backdrop-filter: blur(4px) !important;
+}
+
+/* ─── Skeleton loading enhancement ──────────────────────────────── */
+@keyframes skeleton-wave {
+  0%   { background-position: -400px 0; }
+  100% { background-position: 400px 0; }
+}
+.skeleton-wave {
+  background: linear-gradient(90deg,
+    rgba(255,255,255,0.04) 0%,
+    rgba(255,255,255,0.08) 50%,
+    rgba(255,255,255,0.04) 100%);
+  background-size: 400px 100%;
+  animation: skeleton-wave 1.4s ease-in-out infinite;
+}
+
+/* ─── Neon text for mythic/legendary labels ─────────────────────── */
+.text-mythic-neon {
+  color: #ff4444;
+  text-shadow: 0 0 8px #ff444488, 0 0 20px #ff444444;
+}
+.text-legendary-neon {
+  color: #e8b84b;
+  text-shadow: 0 0 8px #e8b84b88, 0 0 20px #e8b84b44;
+}
+.text-epic-neon {
+  color: #a855f7;
+  text-shadow: 0 0 8px #a855f788, 0 0 20px #a855f744;
+}
+
+/* ─── Card rarity border glow ─────────────────────────────────────  */
+.card-rarity-mythic    { box-shadow: 0 0 16px rgba(255,68,68,0.5),  0 0 32px rgba(255,68,68,0.2);  }
+.card-rarity-legendary { box-shadow: 0 0 14px rgba(232,184,75,0.5), 0 0 28px rgba(232,184,75,0.2); }
+.card-rarity-epic      { box-shadow: 0 0 12px rgba(168,85,247,0.5), 0 0 24px rgba(168,85,247,0.2); }
+.card-rarity-rare      { box-shadow: 0 0 10px rgba(74,158,255,0.4), 0 0 20px rgba(74,158,255,0.15);}
+
+/* ─── Scrollbar improvement on mobile panels ─────────────────────── */
+.scroll-panel {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(201,144,31,0.3) transparent;
+  overscroll-behavior: contain;
+}
+.scroll-panel::-webkit-scrollbar { width: 3px; height: 3px; }
+.scroll-panel::-webkit-scrollbar-thumb { background: rgba(201,144,31,0.3); border-radius: 2px; }
+
+/* ─── Focus visible ring for accessibility ───────────────────────── */
+:focus-visible {
+  outline: 2px solid rgba(201,144,31,0.6);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* ─── PvP opponent rank glow enhanced ─────────────────────────────── */
+@keyframes opponent-rank-aura {
+  0%,100% { box-shadow: 0 0 8px var(--rank-color,#e8b84b), 0 0 16px var(--rank-color,#e8b84b)44; }
+  50%     { box-shadow: 0 0 16px var(--rank-color,#e8b84b), 0 0 32px var(--rank-color,#e8b84b)66; }
+}
+.opponent-rank-glow { animation: opponent-rank-aura 2s ease-in-out infinite; }
+
+/* ─── Divider with glow ─────────────────────────────────────────── */
+.divider-glow {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(201,144,31,0.35), transparent);
+}
+.divider-glow-violet {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(123,79,212,0.35), transparent);
+}
+
+/* ─── Hero background enhanced parallax blur ────────────────────── */
+.hero-bg-blur {
+  transition: opacity 0.8s ease;
+  will-change: transform;
+}
+
+/* ─── Responsive grid improvements ─────────────────────────────── */
+@media (max-width: 640px) {
+  .forge-content {
+    padding-top: 64px !important;
+    padding-bottom: 80px !important;
+    padding-left: 12px !important;
+    padding-right: 12px !important;
+  }
+  .home-features-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 10px !important;
+  }
+  .home-top3-table {
+    font-size: 11px !important;
+  }
+}
+@media (max-width: 380px) {
+  .home-features-grid {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 8px !important;
+  }
+}
+
+/* ─── Stat counter stagger ──────────────────────────────────────── */
+.stat-counter-0 { animation: stat-count-up 0.35s ease 0.0s both; }
+.stat-counter-1 { animation: stat-count-up 0.35s ease 0.1s both; }
+.stat-counter-2 { animation: stat-count-up 0.35s ease 0.2s both; }
+.stat-counter-3 { animation: stat-count-up 0.35s ease 0.3s both; }
+.stat-counter-4 { animation: stat-count-up 0.35s ease 0.4s both; }
+
+/* ─── Level up modal ─────────────────────────────────────────────── */
+.level-up-burst { animation: level-burst 0.6s cubic-bezier(.22,1,.36,1) forwards; }
+
+/* ─── Mobile tap highlight removal ──────────────────────────────── */
+button, a, [role="button"] {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+/* ─── Better input styling ──────────────────────────────────────── */
+input[type="text"], input[type="email"], input[type="password"], textarea {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 8px;
+  color: var(--fg-primary);
+  font-family: "Rajdhani", sans-serif;
+  font-size: 14px;
+  padding: 10px 14px;
+  width: 100%;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus,
+textarea:focus {
+  border-color: rgba(201,144,31,0.5);
+  box-shadow: 0 0 0 3px rgba(201,144,31,0.1);
+  outline: none;
+}
+
+/* ─── Clan prestige enhanced ─────────────────────────────────────── */
+@keyframes clan-prestige-aura {
+  0%,100% { box-shadow: 0 0 0 0 rgba(201,144,31,0); }
+  50%     { box-shadow: 0 0 0 6px rgba(201,144,31,0.15); }
+}
+.clan-prestige-top { animation: clan-prestige-aura 2.5s ease-in-out infinite; }
+
+/* ─── Interactive battle board drag feedback ────────────────────── */
+@keyframes drag-ready {
+  0%,100% { box-shadow: 0 0 0 2px rgba(74,158,255,0.4); }
+  50%     { box-shadow: 0 0 0 4px rgba(74,158,255,0.7), 0 0 16px rgba(74,158,255,0.3); }
+}
+.drag-ready { animation: drag-ready 0.8s ease-in-out infinite; }
+
+/* ─── Border rotate glow for mythic ─────────────────────────────── */
+.border-glow-rotate { animation: border-glow-rotate 3s linear infinite; }
+
+/* ─── Quest badge pulse ──────────────────────────────────────────── */
+@keyframes quest-badge-breathe {
+  0%,100% { transform: scale(1); }
+  50%     { transform: scale(1.08); box-shadow: 0 0 12px rgba(232,184,75,0.5); }
+}
+.quest-badge-active { animation: quest-badge-breathe 2s ease-in-out infinite; }
+
+/* ─── Smooth image loading ──────────────────────────────────────── */
+img {
+  transition: opacity 0.3s ease;
+}
+img[src=""] {
+  opacity: 0;
+}
+
+/* ─── HoloCard tilt enhancement ─────────────────────────────────── */
+.holo-card-wrap {
+  will-change: transform;
+  transition: transform 0.1s ease;
+}
+
+/* ─── Forge ads marquee ──────────────────────────────────────────── */
+@keyframes marquee-scroll {
+  from { transform: translateX(100%); }
+  to   { transform: translateX(-100%); }
+}
+.forge-ads-marquee { animation: marquee-scroll 18s linear infinite; white-space: nowrap; }
+
+/* ─── Context hints pop ──────────────────────────────────────────── */
+@keyframes hint-pop {
+  from { transform: scale(0.8) translateY(8px); opacity: 0; }
+  to   { transform: scale(1) translateY(0); opacity: 1; }
+}
+.context-hint { animation: hint-pop 0.3s cubic-bezier(.22,1,.36,1) forwards; }
+
+/* ─── Season pass track enhanced ─────────────────────────────────── */
+@keyframes sp-track-progress {
+  from { width: 0%; }
+  to   { width: var(--track-pct, 60%); }
+}
+.sp-track-bar { animation: sp-track-progress 1.2s cubic-bezier(.22,1,.36,1) 0.3s both; }
+
+/* ─── iOS safe area support ──────────────────────────────────────── */
+.forge-bottom-nav {
+  padding-bottom: max(env(safe-area-inset-bottom), 4px);
+}
+.forge-header {
+  padding-top: max(env(safe-area-inset-top), 0px);
+}
+
+/* ─── Snap scroll for horizontal card rows ────────────────────────── */
+.snap-scroll-x {
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+}
+.snap-scroll-x > * {
+  scroll-snap-align: start;
+}
+
+/* ─── Daily challenge banner animation ───────────────────────────── */
+@keyframes daily-challenge-border {
+  0%,100% { border-color: rgba(255,107,53,0.4); box-shadow: 0 0 12px rgba(255,107,53,0.2); }
+  50%     { border-color: rgba(255,107,53,0.7); box-shadow: 0 0 24px rgba(255,107,53,0.4); }
+}
+.daily-challenge-card { animation: daily-challenge-border 2s ease-in-out infinite; }
+
+/* ─── Mode selector card hover ───────────────────────────────────── */
+.battle-mode-card {
+  transition: transform 0.2s cubic-bezier(.22,1,.36,1),
+              box-shadow 0.2s ease, border-color 0.2s ease;
+  cursor: pointer;
+}
+.battle-mode-card:hover {
+  transform: translateY(-6px) scale(1.02);
+}
+.battle-mode-card.selected {
+  animation: border-glow-rotate 3s linear infinite;
+}
+.battle-mode-card:active {
+  transform: scale(0.97);
+}
+
+/* ─── Victory/defeat text effects ────────────────────────────────── */
+.victory-text {
+  background: linear-gradient(135deg, #f0c050 0%, #e8b84b 40%, #ffde88 60%, #c9901f 100%);
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: gold-shimmer-text 2s linear infinite, level-burst 0.6s cubic-bezier(.22,1,.36,1) forwards;
+}
+.defeat-text {
+  color: #ff6b6b;
+  text-shadow: 0 0 20px rgba(255,107,107,0.5);
+  animation: neon-flicker 4s ease-in-out 0.5s infinite;
+}
+
+/* ─── Responsive hero improvements ──────────────────────────────── */
+@media (max-width: 640px) {
+  .home-hero-banner {
+    min-height: 380px !important;
+  }
+  .hero-main-title {
+    font-size: clamp(1.8rem, 6vw, 2.4rem) !important;
+  }
+}
+
+/* ─── Notification panel scrollbar ──────────────────────────────── */
+.notif-panel-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(201,144,31,0.3) transparent;
+  overscroll-behavior: contain;
+}
