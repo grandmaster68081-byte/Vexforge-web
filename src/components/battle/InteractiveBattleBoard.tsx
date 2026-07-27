@@ -165,13 +165,29 @@ function FighterCard({
             {FACTION_ICON[unit.faction] ?? '⚔️'}
           </div>
         )}
-        {/* Rarity shimmer overlay for Rare+ */}
+        {/* Rarity shimmer overlay — Legendary/Mythic/Founder: full shimmer; Epic/Rare: subtle; others: none */}
         {(unit.rarity === 'Legendary' || unit.rarity === 'Mythic' || unit.rarity === 'Founder') && (
           <div style={{
             position: 'absolute', inset: 0, pointerEvents: 'none',
-            background: `linear-gradient(125deg, transparent 25%, ${rarColor}44 45%, rgba(255,255,255,0.15) 50%, ${rarColor}22 55%, transparent 75%)`,
+            background: `linear-gradient(125deg, transparent 25%, ${rarColor}44 45%, rgba(255,255,255,0.18) 50%, ${rarColor}22 55%, transparent 75%)`,
             backgroundSize: '250% 250%',
-            animation: 'card-shimmer 2.2s ease-in-out infinite',
+            animation: 'card-shimmer 2.0s ease-in-out infinite',
+          }} />
+        )}
+        {(unit.rarity === 'Epic') && (
+          <div style={{
+            position: 'absolute', inset: 0, pointerEvents: 'none',
+            background: `linear-gradient(125deg, transparent 30%, ${rarColor}28 48%, rgba(255,255,255,0.09) 50%, transparent 70%)`,
+            backgroundSize: '250% 250%',
+            animation: 'card-shimmer 3.2s ease-in-out infinite',
+          }} />
+        )}
+        {(unit.rarity === 'Rare') && (
+          <div style={{
+            position: 'absolute', inset: 0, pointerEvents: 'none',
+            background: `linear-gradient(125deg, transparent 35%, ${rarColor}18 48%, rgba(255,255,255,0.06) 50%, transparent 65%)`,
+            backgroundSize: '250% 250%',
+            animation: 'card-shimmer 4.5s ease-in-out infinite',
           }} />
         )}
         {/* Epic rarity corner badge */}

@@ -150,21 +150,55 @@ export class VexForgeAudioEngine {
 
   // ─── v3.0: Rarity-specific attack variants ────────────────────────────────
   rarityAttack(rarity: string): void {
-    switch (rarity) {
-      case 'Mythic':
-      case 'Founder':
-        this.tone(60, 0.12, 'sawtooth', 0.45); this.noise(0.08, 0.3, 500);
-        this.tone(1760, 0.06, 'square', 0.2, 0, undefined, 0.04); break;
-      case 'Legendary':
-        this.tone(220, 0.06, 'square', 0.4); this.noise(0.06, 0.25, 1200);
-        this.tone(880, 0.08, 'sine', 0.2, 0, undefined, 0.03); break;
-      case 'Epic':
-        this.tone(175, 0.07, 'sawtooth', 0.38); this.noise(0.05, 0.22, 1400); break;
-      case 'Rare':
-        this.tone(147, 0.07, 'sawtooth', 0.33); this.noise(0.05, 0.18, 1600); break;
-      default:
-        this.attack(); break;
-    }
+    const faction = this._faction as string;
+    // Per-faction + per-rarity hit sounds — Lote 3/4
+    try {
+      switch (rarity) {
+        case 'Mythic':
+        case 'Founder': {
+          // Deep seismic boom + high harmonic shriek
+          this.tone(40, 0.10, 'sawtooth', 0.5); this.noise(0.10, 0.35, 300);
+          this.tone(1760, 0.06, 'square', 0.22, 0, undefined, 0.04);
+          this.tone(880, 0.08, 'sine', 0.18, 0, undefined, 0.07);
+          // Faction tint
+          if (faction === 'Guerrero') { this.tone(110, 0.08, 'sawtooth', 0.4, 0, undefined, 0.02); }
+          else if (faction === 'Mago') { this.tone(1046, 0.06, 'sine', 0.18, 200, undefined, 0.06); }
+          else if (faction === 'Paladín') { this.tone(659, 0.06, 'triangle', 0.16, 0, undefined, 0.05); }
+          break;
+        }
+        case 'Legendary': {
+          this.tone(220, 0.06, 'square', 0.42); this.noise(0.07, 0.28, 1200);
+          this.tone(880, 0.09, 'sine', 0.22, 0, undefined, 0.03);
+          this.tone(440, 0.08, 'triangle', 0.2, 0, undefined, 0.05);
+          if (faction === 'Guerrero') { this.tone(147, 0.07, 'sawtooth', 0.3); }
+          else if (faction === 'Mago') { this.tone(987, 0.06, 'sine', 0.18, 150, undefined, 0.04); }
+          break;
+        }
+        case 'Epic': {
+          this.tone(175, 0.07, 'sawtooth', 0.38); this.noise(0.05, 0.22, 1400);
+          this.tone(523, 0.06, 'sine', 0.16, 0, undefined, 0.04);
+          if (faction === 'Pícaro') { this.tone(659, 0.05, 'square', 0.14, 100, undefined, 0.03); }
+          else if (faction === 'Mago') { this.tone(830, 0.05, 'sine', 0.14, 120, undefined, 0.03); }
+          break;
+        }
+        case 'Rare': {
+          this.tone(147, 0.07, 'sawtooth', 0.33); this.noise(0.05, 0.18, 1600);
+          this.tone(370, 0.05, 'triangle', 0.15, 0, undefined, 0.03);
+          break;
+        }
+        case 'Uncommon': {
+          // Crisp metal clash
+          this.tone(300, 0.05, 'square', 0.25); this.noise(0.04, 0.14, 2200);
+          break;
+        }
+        case 'Common':
+        default: {
+          // Quick thud
+          this.noise(0.04, 0.10, 800); this.tone(200, 0.04, 'square', 0.2);
+          break;
+        }
+      }
+    } catch { this.attack(); }
   }
 
   // ─── v3.0: Combo activation sound (2+ keywords at once) ──────────────────
