@@ -3125,3 +3125,70 @@ input.forge-input:focus {
 @media (max-width: 400px) {
   .pvp-rank-inner { flex-direction: column !important; text-align: center !important; }
 }
+
+/* ════════════════════════════════════════════════════════════════
+   LOTE-3: Visual polish — HomeRoute, InteractiveBattleBoard, TutorialOverlay
+   ════════════════════════════════════════════════════════════════ */
+
+/* ─── Vex rune ring decorations (HomeRoute) ──────────────────────── */
+.vex-rune-ring {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  border: 1px solid rgba(201,144,31,0.1);
+}
+.vex-rune-ring-1 { width: 500px; height: 500px; top: 50%; left: 50%; transform: translate(-50%,-50%) rotate(0deg); animation: rune-ring-spin 30s linear infinite; }
+.vex-rune-ring-2 { width: 340px; height: 340px; top: 50%; left: 50%; transform: translate(-50%,-50%) rotate(0deg); animation: rune-ring-spin 22s linear infinite reverse; border-color: rgba(201,144,31,0.07); }
+.vex-rune-ring-3 { width: 220px; height: 220px; top: 50%; left: 50%; transform: translate(-50%,-50%); animation: rune-ring-spin 15s linear infinite; border-color: rgba(201,144,31,0.05); }
+@keyframes rune-ring-spin { from { transform: translate(-50%,-50%) rotate(0deg); } to { transform: translate(-50%,-50%) rotate(360deg); } }
+
+/* ─── hero-particle sizing (HomeRoute) ──────────────────────────── */
+.hero-particle { border-radius: 50%; }
+
+/* ─── Hero CTA flex — mobile stack ──────────────────────────────── */
+@media (max-width: 480px) {
+  .hero-cta { flex-direction: column !important; align-items: center !important; }
+  .hero-cta > * { width: 240px !important; text-align: center !important; }
+}
+
+/* ─── Battle board — card-icon breathe ──────────────────────────── */
+@keyframes card-icon-breathe {
+  0%,100% { transform: scale(1); opacity: 0.9; }
+  50%      { transform: scale(1.08); opacity: 1; }
+}
+
+/* ─── Placeholder empty slots — match card sizing ───────────────── */
+.battle-empty-slot {
+  transition: border-color 0.2s, background 0.2s;
+}
+.battle-empty-slot:hover {
+  border-color: rgba(255,255,255,0.15) !important;
+}
+
+/* ─── Tutorial overlay card — better visual ─────────────────────── */
+.tu-card {
+  position: relative;
+  overflow: hidden;
+}
+.tu-card::before {
+  content: '';
+  position: absolute; inset: 0; border-radius: inherit;
+  background: linear-gradient(135deg, rgba(255,255,255,0.03) 0%, transparent 60%);
+  pointer-events: none; z-index: 0;
+}
+
+/* ─── InteractiveBattleBoard — HP bar smooth transition ─────────── */
+.battle-hp-fill {
+  transition: width 0.4s cubic-bezier(0.22,1,0.36,1) !important;
+}
+
+/* ─── Battle board: cards row gap responsive ─────────────────────── */
+@media (max-width: 380px) {
+  .battle-cards-row { gap: 6px !important; }
+}
+
+/* ─── Stats pills responsive (HomeRoute) ────────────────────────── */
+@media (max-width: 480px) {
+  .home-stats-pills { gap: 10px !important; }
+  .home-stats-pill { padding: 6px 14px !important; }
+}

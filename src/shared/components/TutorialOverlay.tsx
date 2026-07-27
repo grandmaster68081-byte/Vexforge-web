@@ -42,7 +42,11 @@
     const navigate = useNavigate();
     const [animDir, setAnimDir] = useState<'in' | 'out-left' | 'out-right'>('in');
     const [displayStep, setDisplayStep] = useState(0);
-    const [showBattle, setShowBattle] = useState(false); // TU.0
+    // TU.1: persist battle-step state across refreshes
+    const BATTLE_STEP_KEY = 'vxf_tutorial_battle_active';
+    const [showBattle, setShowBattle] = useState(() => {
+      try { return localStorage.getItem(BATTLE_STEP_KEY) === '1'; } catch { return false; }
+    });
 
     useEffect(() => {
       if (tutorialStep !== displayStep) {
@@ -51,6 +55,12 @@
         return () => clearTimeout(t);
       }
     }, [tutorialStep]);
+
+    // TU.1: sync localStorage
+    useEffect(() => {
+      try { showBattle ? localStorage.setItem(BATTLE_STEP_KEY, '1') : localStorage.removeItem(BATTLE_STEP_KEY); }
+      catch { /* storage unavailable */ }
+    }, [showBattle]);
 
     const handleBattleComplete = useCallback(async (_won: boolean) => {
       setShowBattle(false);
