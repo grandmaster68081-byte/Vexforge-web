@@ -103,17 +103,17 @@ function BoardUnit({
             : isCurrentTurn
               ? `0 0 12px ${rarColor}66, 0 0 2px ${rarColor}44`
               : `0 2px 8px rgba(0,0,0,0.5)`,
-        animation: isDying ? 'unitDeath 0.72s ease forwards, deathGlow 0.72s ease forwards' : undefined,
-        transform: isAttacking
-          ? (side === 'a' ? 'translateY(-10px) scale(1.08)' : 'translateY(10px) scale(1.08)')
+        animation: isAttacking
+          ? (side === 'a' ? 'unit-attack-lunge-right 0.42s cubic-bezier(0.22,1,0.36,1) forwards' : 'unit-attack-lunge-left 0.42s cubic-bezier(0.22,1,0.36,1) forwards')
           : isTakingHit
-            ? `translateX(${side === 'a' ? 6 : -6}px) rotate(${side === 'a' ? 1 : -1}deg)`
+            ? 'card-hit-shake 0.35s ease forwards'
             : isDying
-              ? 'scale(0.7)'
-              : 'translateY(0) scale(1)',
-        transition: isDying
-          ? 'transform 0.4s ease, opacity 0.4s ease'
-          : 'transform 0.18s cubic-bezier(0.22,1,0.36,1), box-shadow 0.3s',
+              ? 'unitDeath 0.72s ease forwards, deathGlow 0.72s ease forwards'
+              : undefined,
+        transform: (!isAttacking && !isTakingHit && !isDying) ? 'translateY(0) scale(1)' : undefined,
+        transition: (!isAttacking && !isTakingHit && !isDying)
+          ? 'transform 0.18s cubic-bezier(0.22,1,0.36,1), box-shadow 0.3s'
+          : undefined,
         opacity: isDying ? 0 : 1,
         cursor: 'default',
         overflow: 'hidden',

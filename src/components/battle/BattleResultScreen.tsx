@@ -199,17 +199,17 @@ export function BattleResultScreen({ result, playerName, opponentName, onDismiss
 
       {/* Result label — huge cinematic text */}
       <div style={{
-        fontFamily: 'Cinzel, serif',
-        fontSize: 'clamp(44px,8vw,64px)',
+        fontFamily: 'Cinzel Decorative, serif',
+        fontSize: 'clamp(38px,7vw,68px)',
         fontWeight: 900,
         color: theme.primary,
-        letterSpacing: '0.22em',
-        textShadow: `0 0 40px ${theme.glow}, 0 0 80px ${theme.glow}`,
-        marginBottom: 6, lineHeight: 1,
-        animation: 'slideInLabel 0.6s cubic-bezier(0.22,1,0.36,1)',
+        letterSpacing: '0.18em',
+        textShadow: `0 0 30px ${theme.glow}, 0 0 60px ${theme.glow}, 0 0 100px ${theme.glow}`,
+        marginBottom: 8, lineHeight: 1,
         textTransform: 'uppercase',
+        willChange: 'transform',
       }}
-      className={won ? 'victory-text' : (!isDraw ? 'defeat-text' : undefined)}
+      className={won ? 'victory-title' : (!isDraw ? 'defeat-title' : undefined)}
       >
         {theme.label}
       </div>
