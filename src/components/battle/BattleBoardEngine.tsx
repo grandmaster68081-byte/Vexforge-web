@@ -502,6 +502,12 @@ export function BattleBoardEngine({ result, playerName, opponentName, onComplete
 
   return (
     <div ref={boardRef} style={{ position: 'relative', width: '100%', flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden', background: 'linear-gradient(180deg, #060614 0%, #090920 50%, #06060f 100%)' }}>
+      {/* Hex grid tactical floor overlay */}
+      <div aria-hidden style={{
+        position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 0,
+        backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='52'%3E%3Cpath d='M30 1 L59 16 L59 36 L30 51 L1 36 L1 16Z' fill='none' stroke='%234a9eff' stroke-width='0.4' stroke-opacity='0.06'/%3E%3C/svg%3E")`,
+        backgroundSize: '60px 52px',
+      }} />
       {/* Particle canvas overlay */}
       <canvas ref={canvasRef} style={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 10 }} />
 
@@ -562,9 +568,21 @@ export function BattleBoardEngine({ result, playerName, opponentName, onComplete
         borderBottom: '1px solid rgba(192,57,43,0.30)',
         position: 'relative',
       }}>
+        {/* Zone fog layer */}
+        <div aria-hidden style={{
+          position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 0, overflow: 'hidden',
+          background: 'linear-gradient(180deg, rgba(192,57,43,0.06) 0%, transparent 100%)',
+        }}>
+          <div style={{ position:'absolute', bottom:0, left:'-10%', width:'60%', height:32,
+            background:'radial-gradient(ellipse at center, rgba(192,57,43,0.12), transparent 70%)',
+            animation:'board-zone-fog 5s ease-in-out infinite', borderRadius:'50%' }} />
+          <div style={{ position:'absolute', bottom:0, right:'-5%', width:'50%', height:28,
+            background:'radial-gradient(ellipse at center, rgba(192,57,43,0.08), transparent 70%)',
+            animation:'board-zone-fog 6.5s ease-in-out infinite 1.5s', borderRadius:'50%' }} />
+        </div>
         {/* Zone label bar */}
         <div style={{
-          display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8,
+          display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8, position:'relative', zIndex:1,
         }}>
           <div style={{
             height: 1, flex: 1,
@@ -616,6 +634,7 @@ export function BattleBoardEngine({ result, playerName, opponentName, onComplete
         <div style={{
           height: 6,
           background: 'linear-gradient(90deg, rgba(74,158,255,0.3), rgba(232,184,75,0.4), rgba(192,57,43,0.3))',
+          animation: 'center-divider-pulse 3s ease-in-out infinite',
         }} />
       )}
 
@@ -624,8 +643,21 @@ export function BattleBoardEngine({ result, playerName, opponentName, onComplete
         padding: '8px 12px 12px',
         background: 'linear-gradient(0deg, rgba(74,158,255,0.10) 0%, rgba(74,158,255,0.04) 100%)',
         borderTop: '1px solid rgba(74,158,255,0.30)',
+        position: 'relative',
       }}>
-        <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', justifyContent: 'center', marginBottom: 8 }}>
+        {/* Zone fog layer */}
+        <div aria-hidden style={{
+          position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 0, overflow: 'hidden',
+          background: 'linear-gradient(0deg, rgba(74,158,255,0.06) 0%, transparent 100%)',
+        }}>
+          <div style={{ position:'absolute', top:0, left:'-10%', width:'60%', height:28,
+            background:'radial-gradient(ellipse at center, rgba(74,158,255,0.1), transparent 70%)',
+            animation:'board-zone-fog 4.5s ease-in-out infinite 0.8s', borderRadius:'50%' }} />
+          <div style={{ position:'absolute', top:0, right:'-5%', width:'50%', height:24,
+            background:'radial-gradient(ellipse at center, rgba(74,158,255,0.07), transparent 70%)',
+            animation:'board-zone-fog 7s ease-in-out infinite 2.2s', borderRadius:'50%' }} />
+        </div>
+        <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', justifyContent: 'center', marginBottom: 8, position: 'relative', zIndex: 1 }}>
           {sideA.map(s => (
             <BoardUnit
               key={s.unit.idx} state={s} side="a"
@@ -694,6 +726,34 @@ export function BattleBoardEngine({ result, playerName, opponentName, onComplete
           0%   { box-shadow:0 0 0 0 rgba(255,60,30,0); }
           30%  { box-shadow:0 0 32px 12px rgba(255,60,30,0.7); }
           100% { box-shadow:0 0 0 0 rgba(255,60,30,0); }
+        }
+        @keyframes unit-attack-lunge-right {
+          0%   { transform:translateX(0) scale(1); filter:brightness(1); }
+          30%  { transform:translateX(30px) scale(1.1); filter:brightness(1.7) saturate(1.4); }
+          60%  { transform:translateX(14px) scale(1.04); filter:brightness(1.2); }
+          100% { transform:translateX(0) scale(1); filter:brightness(1); }
+        }
+        @keyframes unit-attack-lunge-left {
+          0%   { transform:translateX(0) scale(1); filter:brightness(1); }
+          30%  { transform:translateX(-30px) scale(1.1); filter:brightness(1.7) saturate(1.4); }
+          60%  { transform:translateX(-14px) scale(1.04); filter:brightness(1.2); }
+          100% { transform:translateX(0) scale(1); filter:brightness(1); }
+        }
+        @keyframes card-hit-shake {
+          0%,100% { transform:translateX(0) rotate(0deg); filter:brightness(1); }
+          10%     { transform:translateX(-9px) rotate(-2.5deg); filter:brightness(2.5) saturate(2); }
+          25%     { transform:translateX(7px) rotate(1.8deg); filter:brightness(1.5); }
+          42%     { transform:translateX(-5px) rotate(-1.2deg); }
+          60%     { transform:translateX(3px) rotate(0.7deg); }
+          78%     { transform:translateX(-2px) rotate(-0.3deg); }
+        }
+        @keyframes board-zone-fog {
+          0%,100% { opacity:0.3; transform:translateX(-8px) scaleX(1); }
+          50%     { opacity:0.55; transform:translateX(8px) scaleX(1.04); }
+        }
+        @keyframes center-divider-pulse {
+          0%,100% { opacity:0.65; box-shadow:0 0 8px rgba(232,184,75,0.3); }
+          50%     { opacity:1; box-shadow:0 0 20px rgba(232,184,75,0.7),0 0 40px rgba(232,184,75,0.2); }
         }
       `}</style>
     </div>

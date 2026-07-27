@@ -189,11 +189,17 @@ export function BattleIntroScreen({
 
       {/* ── Full-screen flash overlay ── */}
       {phase === 'flash' && (
-        <div style={{
-          position: 'absolute', inset: 0, zIndex: 100,
-          background: 'white',
-          animation: 'intro-flash 0.5s ease forwards',
-        }} />
+        <>
+          <div style={{
+            position: 'absolute', inset: 0, zIndex: 100,
+            background: 'white',
+            animation: 'intro-flash 0.5s ease forwards',
+          }} />
+          <div className="battle-transition-flash" style={{
+            position: 'absolute', inset: 0, zIndex: 99,
+            background: 'radial-gradient(ellipse at center, rgba(232,184,75,0.6) 0%, transparent 70%)',
+          }} />
+        </>
       )}
 
       {/* ── Two faction panels ── */}

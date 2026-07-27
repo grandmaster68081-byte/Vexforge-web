@@ -85,7 +85,7 @@ export function EnergyBar() {
           {state.energy}<span style={{ color:"#555", fontWeight:400 }}>/{state.max_energy}</span>
         </span>
         <div style={{ width:44, height:3, background:"rgba(255,255,255,0.08)", borderRadius:2, overflow:"hidden" }}>
-          <div style={{ width:`${pct}%`, height:"100%", background:color, borderRadius:2,
+          <div className={pct >= 100 ? "energy-bar-full" : undefined} style={{ width:`${pct}%`, height:"100%", background:color, borderRadius:2,
             boxShadow:glow, transition:"width 0.4s ease, background 0.3s ease" }} />
         </div>
         {timerLabel && (

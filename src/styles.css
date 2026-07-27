@@ -5586,3 +5586,284 @@ img[src=""] {
   will-change: transform, opacity;
   backface-visibility: hidden;
 }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   VEXFORGE — BATALLA TIER-1: BATTLEFIELD ENVIRONMENT ANIMATIONS
+   Chat 99+ — Phase 2 upgrade: hex grid, fog, cinematics, board enhancements
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ─── Battle board hex grid background ─────────────────────────────────── */
+@keyframes hex-grid-breathe {
+  0%,100% { opacity: 0.5; }
+  50%     { opacity: 0.8; }
+}
+.battle-hex-overlay {
+  position: absolute; inset: 0; pointer-events: none; z-index: 0;
+  animation: hex-grid-breathe 8s ease-in-out infinite;
+}
+
+/* ─── Battlefield fog drift ──────────────────────────────────────────────── */
+@keyframes battle-fog-drift-slow {
+  0%,100% { transform: translateX(-5%) scaleX(1); opacity: 0.4; }
+  50%     { transform: translateX(5%) scaleX(1.06); opacity: 0.65; }
+}
+@keyframes battle-fog-drift-fast {
+  0%,100% { transform: translateX(3%) scaleX(1); opacity: 0.35; }
+  50%     { transform: translateX(-3%) scaleX(0.96); opacity: 0.5; }
+}
+.battle-fog-slow { animation: battle-fog-drift-slow 6s ease-in-out infinite; }
+.battle-fog-fast { animation: battle-fog-drift-fast 4s ease-in-out infinite; }
+
+/* ─── Battle zone divider — dual-faction glow ────────────────────────────── */
+@keyframes battle-divider-flow {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+.battle-divider-animated {
+  height: 2px;
+  background: linear-gradient(90deg, rgba(74,158,255,0.6), rgba(232,184,75,0.8), rgba(232,64,64,0.6));
+  background-size: 200% 100%;
+  animation: battle-divider-flow 3s ease-in-out infinite;
+  box-shadow: 0 0 12px rgba(232,184,75,0.4);
+}
+
+/* ─── Unit card attack lunge animations ──────────────────────────────────── */
+@keyframes unit-attack-lunge-right {
+  0%   { transform: translateX(0) scale(1); filter: brightness(1); }
+  25%  { transform: translateX(28px) scale(1.1); filter: brightness(1.6) saturate(1.3); }
+  55%  { transform: translateX(14px) scale(1.05); filter: brightness(1.2); }
+  100% { transform: translateX(0) scale(1); filter: brightness(1); }
+}
+@keyframes unit-attack-lunge-left {
+  0%   { transform: translateX(0) scale(1); filter: brightness(1); }
+  25%  { transform: translateX(-28px) scale(1.1); filter: brightness(1.6) saturate(1.3); }
+  55%  { transform: translateX(-14px) scale(1.05); filter: brightness(1.2); }
+  100% { transform: translateX(0) scale(1); filter: brightness(1); }
+}
+@keyframes card-hit-shake {
+  0%,100% { transform: translateX(0) rotate(0deg); filter: brightness(1); }
+  10%     { transform: translateX(-9px) rotate(-2.5deg); filter: brightness(2.5) saturate(1.8); }
+  25%     { transform: translateX(7px) rotate(1.8deg); filter: brightness(1.6); }
+  40%     { transform: translateX(-5px) rotate(-1.2deg); filter: brightness(1.3); }
+  55%     { transform: translateX(3px) rotate(0.7deg); }
+  70%     { transform: translateX(-2px) rotate(-0.3deg); }
+}
+
+/* ─── Battle board card hover ────────────────────────────────────────────── */
+.battle-unit-card:hover {
+  z-index: 2;
+  transform: translateY(-3px) scale(1.04) !important;
+  transition: transform 0.18s cubic-bezier(.22,1,.36,1) !important;
+}
+
+/* ─── Turn header flash ───────────────────────────────────────────────────── */
+@keyframes turn-header-flash {
+  0%   { background-color: rgba(232,184,75,0); }
+  15%  { background-color: rgba(232,184,75,0.15); }
+  100% { background-color: rgba(232,184,75,0); }
+}
+.turn-header-new { animation: turn-header-flash 0.7s ease forwards; }
+
+/* ─── Victory rays v2 — enhanced ─────────────────────────────────────────── */
+@keyframes victory-rays-v2 {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+.victory-bg-rays-v2 {
+  position: absolute; inset: -60%; pointer-events: none; z-index: 0;
+  background: conic-gradient(from 0deg,
+    transparent 0deg, rgba(232,184,75,0.08) 12deg, transparent 24deg,
+    rgba(232,184,75,0.05) 36deg, transparent 48deg, rgba(232,184,75,0.08) 60deg,
+    transparent 72deg, rgba(255,220,100,0.06) 84deg, transparent 96deg,
+    rgba(232,184,75,0.05) 108deg, transparent 120deg, rgba(232,184,75,0.08) 132deg,
+    transparent 144deg, rgba(232,184,75,0.05) 156deg, transparent 168deg,
+    rgba(232,184,75,0.08) 180deg, transparent 192deg, rgba(232,184,75,0.05) 204deg,
+    transparent 216deg, rgba(232,184,75,0.08) 228deg, transparent 240deg,
+    rgba(232,184,75,0.05) 252deg, transparent 264deg, rgba(232,184,75,0.08) 276deg,
+    transparent 288deg, rgba(232,184,75,0.05) 300deg, transparent 312deg,
+    rgba(232,184,75,0.08) 324deg, transparent 336deg, rgba(232,184,75,0.05) 348deg,
+    transparent 360deg);
+  animation: victory-rays-v2 10s linear infinite;
+}
+
+/* ─── Defeat screen dark vignette ────────────────────────────────────────── */
+@keyframes defeat-vignette-pulse {
+  0%,100% { opacity: 0.5; }
+  50%     { opacity: 0.8; }
+}
+.defeat-vignette {
+  position: absolute; inset: 0; pointer-events: none; z-index: 0;
+  background: radial-gradient(ellipse at center, transparent 40%, rgba(192,57,43,0.35) 100%);
+  animation: defeat-vignette-pulse 3s ease-in-out infinite;
+}
+
+/* ─── Card cinematics — enhanced faction backgrounds ─────────────────────── */
+@keyframes cac-faction-bg-breathe {
+  0%,100% { opacity: 0.85; }
+  50%     { opacity: 1; }
+}
+.cac-faction-bg { animation: cac-faction-bg-breathe 4s ease-in-out infinite; }
+
+/* ─── Board intro reveal ─────────────────────────────────────────────────── */
+@keyframes board-intro-reveal {
+  from { opacity: 0; transform: scale(0.96) translateY(12px); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+.board-intro-reveal { animation: board-intro-reveal 0.5s cubic-bezier(.22,1,.36,1) both; }
+
+/* ─── PvP Matchmaking enhanced ───────────────────────────────────────────── */
+@keyframes mmk-rune-orbit {
+  0%   { transform: rotate(0deg) translateX(68px) rotate(0deg); opacity: 0.6; }
+  50%  { opacity: 1; }
+  100% { transform: rotate(360deg) translateX(68px) rotate(-360deg); opacity: 0.6; }
+}
+.mmk-rune-orbit { animation: mmk-rune-orbit 3s linear infinite; }
+
+/* ─── Card draw stagger by index ─────────────────────────────────────────── */
+.card-deal-0 { animation-delay: 0s !important; }
+.card-deal-1 { animation-delay: 0.08s !important; }
+.card-deal-2 { animation-delay: 0.16s !important; }
+.card-deal-3 { animation-delay: 0.24s !important; }
+.card-deal-4 { animation-delay: 0.32s !important; }
+.card-deal-5 { animation-delay: 0.40s !important; }
+
+/* ─── Mobile battle improvements ────────────────────────────────────────── */
+@media (max-width: 480px) {
+  .cac-card-panel { min-width: min(140px, 44vw) !important; }
+  .cac-vs-center  { padding: 0 6px !important; }
+}
+
+/* ─── Season tier pulse — gold shimmer enhanced ──────────────────────────── */
+@keyframes season-tier-shimmer-v2 {
+  0%   { background-position: -200% center; box-shadow: 0 0 8px rgba(232,184,75,0.3); }
+  50%  { box-shadow: 0 0 16px rgba(232,184,75,0.6); }
+  100% { background-position: 200% center; box-shadow: 0 0 8px rgba(232,184,75,0.3); }
+}
+.season-tier-active-v2 {
+  background: linear-gradient(90deg, transparent, rgba(232,184,75,0.25), transparent);
+  background-size: 200% auto;
+  animation: season-tier-shimmer-v2 2.5s linear infinite;
+}
+
+/* ─── Hero section depth improvements ───────────────────────────────────── */
+@keyframes hero-parallax-bg {
+  0%,100% { transform: scale(1.02) translateY(0); }
+  50%     { transform: scale(1.04) translateY(-6px); }
+}
+.hero-bg-parallax { animation: hero-parallax-bg 12s ease-in-out infinite; }
+
+@keyframes hero-title-glow-pulse {
+  0%,100% { text-shadow: 0 0 30px rgba(232,184,75,0.6), 0 0 60px rgba(232,184,75,0.3), 0 0 100px rgba(232,184,75,0.15); }
+  50%     { text-shadow: 0 0 40px rgba(232,184,75,0.8), 0 0 80px rgba(232,184,75,0.5), 0 0 130px rgba(232,184,75,0.25); }
+}
+.hero-title-pulse { animation: hero-title-glow-pulse 3s ease-in-out infinite; }
+
+/* ─── Cards grid — stagger on load ──────────────────────────────────────── */
+@keyframes card-grid-item-enter {
+  from { opacity: 0; transform: translateY(20px) scale(0.94); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+.card-grid-item-anim { animation: card-grid-item-enter 0.38s cubic-bezier(.22,1,.36,1) both; }
+.card-grid-0  { animation-delay: 0ms !important; }
+.card-grid-1  { animation-delay: 40ms !important; }
+.card-grid-2  { animation-delay: 80ms !important; }
+.card-grid-3  { animation-delay: 120ms !important; }
+.card-grid-4  { animation-delay: 160ms !important; }
+.card-grid-5  { animation-delay: 200ms !important; }
+.card-grid-6  { animation-delay: 240ms !important; }
+.card-grid-7  { animation-delay: 280ms !important; }
+
+/* ─── Boss HP bar enhanced ───────────────────────────────────────────────── */
+@keyframes boss-hp-critical {
+  0%,100% { box-shadow: 0 0 6px rgba(232,64,64,0.5); }
+  50%     { box-shadow: 0 0 18px rgba(232,64,64,0.9), 0 0 32px rgba(232,64,64,0.3); }
+}
+.boss-hp-critical { animation: boss-hp-critical 0.8s ease-in-out infinite; }
+
+/* ─── Notification bell pulse ────────────────────────────────────────────── */
+@keyframes bell-has-notif {
+  0%,90%,100% { transform: rotate(0deg); }
+  2%          { transform: rotate(-18deg); }
+  4%          { transform: rotate(18deg); }
+  6%          { transform: rotate(-12deg); }
+  8%          { transform: rotate(12deg); }
+}
+.bell-animate { animation: bell-has-notif 4s ease-in-out infinite; }
+
+/* ─── Forge nav active link — improved glow ──────────────────────────────── */
+@keyframes nav-active-glow {
+  0%,100% { text-shadow: 0 0 8px rgba(232,184,75,0.6); }
+  50%     { text-shadow: 0 0 16px rgba(232,184,75,0.9), 0 0 32px rgba(232,184,75,0.3); }
+}
+.forge-nav-link.forge-nav-active { animation: nav-active-glow 2.5s ease-in-out infinite; }
+.forge-nav-link.active { animation: nav-active-glow 2.5s ease-in-out infinite; }
+
+/* ─── Pack rarity flash — improved triple-pulse ──────────────────────────── */
+@keyframes pack-rarity-flash-legendary-v2 {
+  0%,100%  { opacity: 0; }
+  5%,15%   { opacity: 1; }
+  10%,20%  { opacity: 0; }
+  25%,35%  { opacity: 0.7; }
+  30%,40%  { opacity: 0; }
+}
+@keyframes pack-rarity-flash-mythic-v2 {
+  0%,100%  { opacity: 0; }
+  3%,9%    { opacity: 1; }
+  6%,12%   { opacity: 0; }
+  15%,22%  { opacity: 0.9; }
+  18%,25%  { opacity: 0; }
+  28%,35%  { opacity: 0.7; }
+  31%,38%  { opacity: 0; }
+}
+
+/* ─── Leaderboard rank badge entrance ────────────────────────────────────── */
+@keyframes rank-badge-pop {
+  from { transform: scale(0) rotate(-20deg); opacity: 0; }
+  60%  { transform: scale(1.18) rotate(4deg); opacity: 1; }
+  to   { transform: scale(1) rotate(0deg); opacity: 1; }
+}
+.rank-badge-pop { animation: rank-badge-pop 0.4s cubic-bezier(.22,1,.36,1) both; }
+
+/* ─── Mission progress bar fill ──────────────────────────────────────────── */
+@keyframes mission-progress-fill {
+  from { width: 0%; }
+  to   { width: var(--mission-pct, 100%); }
+}
+.mission-bar-fill { animation: mission-progress-fill 0.8s cubic-bezier(.22,1,.36,1) both; }
+
+/* ─── Market listing entrance ────────────────────────────────────────────── */
+@keyframes market-listing-enter {
+  from { opacity: 0; transform: translateX(-16px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+.market-listing-anim { animation: market-listing-enter 0.3s cubic-bezier(.22,1,.36,1) both; }
+
+/* ─── Deck builder card slot pulse ───────────────────────────────────────── */
+@keyframes deck-slot-pulse {
+  0%,100% { border-color: rgba(74,158,255,0.25); box-shadow: none; }
+  50%     { border-color: rgba(74,158,255,0.6); box-shadow: 0 0 10px rgba(74,158,255,0.25); }
+}
+.deck-slot-empty { animation: deck-slot-pulse 2s ease-in-out infinite; }
+
+/* ─── Global page transition — enhanced blur-slide ───────────────────────── */
+@keyframes page-in-v2 {
+  from { opacity: 0; transform: translateY(16px) scale(0.985); filter: blur(4px); }
+  to   { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+}
+.page-transition-enter { animation: page-in-v2 0.35s cubic-bezier(.22,1,.36,1) both; }
+
+/* ─── Battle intro — screen flash on transition ──────────────────────────── */
+@keyframes battle-transition-flash {
+  0%   { opacity: 0; }
+  30%  { opacity: 1; }
+  100% { opacity: 0; }
+}
+.battle-transition-flash { animation: battle-transition-flash 0.4s ease-out forwards; }
+
+/* ─── Achievement card glow border ───────────────────────────────────────── */
+@keyframes achievement-border-pulse {
+  0%,100% { border-color: rgba(232,184,75,0.3); box-shadow: none; }
+  50%     { border-color: rgba(232,184,75,0.8); box-shadow: 0 0 16px rgba(232,184,75,0.3); }
+}
+.achievement-unlocked-border { animation: achievement-border-pulse 2s ease-in-out infinite; }

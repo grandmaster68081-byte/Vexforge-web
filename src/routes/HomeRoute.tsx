@@ -251,7 +251,7 @@ export function HomeRoute() {
         background:"linear-gradient(160deg, #08080f 0%, #0d0d22 40%, #100a1e 100%)",
         borderBottom:"1px solid rgba(201,144,31,0.18)"}}>
         {LOBBY_URL && (
-          <div className="hero-bg-blur" style={{position:"absolute",inset:0,
+          <div className="hero-bg-blur hero-bg-parallax" style={{position:"absolute",inset:0,
             backgroundImage:`url(${LOBBY_URL})`, backgroundSize:"cover", backgroundPosition:"center top",
             opacity:0.42, filter:"saturate(1.2) brightness(0.85)"}}/>
         )}
@@ -302,7 +302,7 @@ export function HomeRoute() {
             fontWeight:900,letterSpacing:"0.04em"}}>
             Forja tu
           </h1>
-          <h1 style={{fontFamily:"Cinzel,serif",
+          <h1 className="hero-title-pulse" style={{fontFamily:"Cinzel,serif",
             fontSize:"clamp(44px,8vw,82px)",lineHeight:1.05,margin:"0 0 28px",
             fontWeight:900,letterSpacing:"0.04em",
             background:"linear-gradient(135deg, #fff5c0 0%, #e8b84b 40%, #c9901f 80%)",

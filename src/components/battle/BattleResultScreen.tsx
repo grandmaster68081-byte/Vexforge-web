@@ -180,6 +180,8 @@ export function BattleResultScreen({ result, playerName, opponentName, onDismiss
 
       {/* Victory conic rays — slow rotating behind everything */}
       {won && <div className="victory-bg-rays" />}
+      {won && <div className="victory-bg-rays-v2" />}
+      {!won && !isDraw && <div className="defeat-vignette" />}
 
       {/* Trophy / Icon */}
       <div style={{
