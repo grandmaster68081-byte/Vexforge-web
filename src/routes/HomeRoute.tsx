@@ -188,7 +188,7 @@ export function HomeRoute() {
         background:"linear-gradient(160deg, #08080f 0%, #0d0d22 40%, #100a1e 100%)",
         borderBottom:"1px solid rgba(201,144,31,0.18)"}}>
         {LOBBY_URL && (
-          <div style={{position:"absolute",inset:0,
+          <div className="hero-bg-blur" style={{position:"absolute",inset:0,
             backgroundImage:`url(${LOBBY_URL})`, backgroundSize:"cover", backgroundPosition:"center top",
             opacity:0.42, filter:"saturate(1.2) brightness(0.85)"}}/>
         )}

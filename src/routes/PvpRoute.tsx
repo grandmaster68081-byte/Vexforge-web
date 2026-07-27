@@ -306,13 +306,15 @@ function OpponentCard({
       onMouseLeave={e => (e.currentTarget.style.borderColor = "#1e1e2e")}
     >
       {/* Rank icon */}
-      <div style={{
-        width: 44, height: 44, borderRadius: "50%", flexShrink: 0,
-        background: `linear-gradient(135deg,${tier.color}22,#0e0e1a)`,
-        border: `1px solid ${tier.color}44`,
-        display: "flex", alignItems: "center", justifyContent: "center",
-        fontSize: 22,
-      }}>{tier.icon}</div>
+      <div
+        className={`rank-badge-${tier.name.toLowerCase()}`}
+        style={{
+          width: 44, height: 44, borderRadius: "50%", flexShrink: 0,
+          background: `linear-gradient(135deg,${tier.color}22,#0e0e1a)`,
+          border: `1px solid ${tier.color}44`,
+          display: "flex", alignItems: "center", justifyContent: "center",
+          fontSize: 22,
+        }}>{tier.icon}</div>
 
       {/* Info */}
       <div style={{ flex: 1, minWidth: 0 }}>
@@ -577,7 +579,10 @@ export function PvpRoute() {
             }}>
               <div style={{ display: "flex", alignItems: "center", gap: 18 }}>
                 <div style={{ textAlign: "center", minWidth: 52 }}>
-                  <div style={{ fontSize: 38, lineHeight: 1 }}>{tier.icon}</div>
+                  <div
+                    className={`rank-badge-${tier.name.toLowerCase()}`}
+                    style={{ fontSize: 38, lineHeight: 1, borderRadius: "50%", display: "inline-block" }}
+                  >{tier.icon}</div>
                   <div style={{ color: tier.color, fontWeight: 800, fontSize: 10, letterSpacing: "0.08em", marginTop: 3 }}>
                     {tier.name.toUpperCase()}
                   </div>
