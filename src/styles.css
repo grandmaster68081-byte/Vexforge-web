@@ -2938,3 +2938,127 @@ input.forge-input:focus {
 }
 .collection-card-frame:hover { transform: translateY(-4px) scale(1.02); }
 
+
+/* ════════════════════════════════════════════════════════════════
+   LOTE-1: Mobile & Battle Board Responsive — 2026-07-27
+   ════════════════════════════════════════════════════════════════ */
+
+/* ─── Battle Board — Mobile full-screen fix ─────────────────────── */
+/* Ensure battle board fills full screen without overflow on mobile */
+@media (max-width: 480px) {
+  /* Reduce HP-bar header padding */
+  .battle-hp-header { padding: 6px 10px 4px !important; }
+  /* Reduce battle field gap between cards */
+  .battle-field-inner { gap: 10px !important; padding: 8px 10px !important; }
+  /* Turn log shorter on small screens */
+  .battle-turn-log { max-height: 90px !important; }
+  /* Attack button text shorter */
+  .battle-attack-btn-text { font-size: 11px !important; }
+}
+
+/* ─── forge-content bottom safe area (iOS home bar) ─────────────── */
+@supports (padding-bottom: env(safe-area-inset-bottom)) {
+  .forge-content {
+    padding-bottom: max(72px, calc(56px + env(safe-area-inset-bottom)));
+  }
+  .forge-bottom-nav {
+    padding-bottom: env(safe-area-inset-bottom);
+    height: calc(56px + env(safe-area-inset-bottom));
+  }
+}
+
+/* ─── Sidebar full mobile fix — ensure no bleed ─────────────────── */
+@media (max-width: 899px) {
+  .forge-sidebar { display: none !important; }
+  .forge-content-with-sidebar { margin-left: 0 !important; }
+}
+
+/* ─── HomeRoute hero — proper mobile sizing ─────────────────────── */
+@media (max-width: 480px) {
+  .home-hero-banner {
+    min-height: 300px !important;
+    padding: 40px 16px 32px !important;
+  }
+  h1, .hero-title { font-size: clamp(28px, 8vw, 44px) !important; }
+  .hero-subtitle { font-size: clamp(13px, 3.5vw, 18px) !important; }
+}
+
+/* ─── PvP Route — mobile stack ──────────────────────────────────── */
+@media (max-width: 600px) {
+  .pvp-opponents-grid {
+    grid-template-columns: 1fr !important;
+    gap: 10px !important;
+  }
+  .pvp-header-row {
+    flex-direction: column !important;
+    gap: 8px !important;
+    align-items: flex-start !important;
+  }
+}
+
+/* ─── Cards grid — adaptive columns ─────────────────────────────── */
+@media (max-width: 480px) {
+  .cards-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 8px !important; }
+}
+@media (max-width: 340px) {
+  .cards-grid { grid-template-columns: 1fr !important; }
+}
+
+/* ─── Packs grid — mobile ───────────────────────────────────────── */
+@media (max-width: 480px) {
+  .pack-catalog-grid { grid-template-columns: 1fr !important; }
+}
+
+/* ─── Modal / sheet — mobile width fix ─────────────────────────── */
+@media (max-width: 480px) {
+  .forge-modal, [class*="modal"] {
+    margin: 8px !important;
+    border-radius: 14px !important;
+  }
+}
+
+/* ─── Typography scale for mobile ──────────────────────────────── */
+@media (max-width: 480px) {
+  h1 { font-size: clamp(22px, 7vw, 36px); }
+  h2 { font-size: clamp(18px, 5.5vw, 28px); }
+  h3 { font-size: clamp(15px, 4.5vw, 22px); }
+  .route-wrapper { padding: 16px 12px 80px !important; }
+}
+
+/* ─── Battle intro screen — mobile ─────────────────────────────── */
+@media (max-width: 480px) {
+  .battle-intro-name { font-size: clamp(14px, 4vw, 20px) !important; }
+  .battle-intro-icon { font-size: clamp(44px, 12vw, 72px) !important; }
+  .battle-intro-vs   { font-size: clamp(44px, 14vw, 80px) !important; }
+  .battle-intro-count { font-size: clamp(80px, 24vw, 160px) !important; }
+  .battle-intro-panel-content { padding: 0 14px !important; }
+}
+
+/* ─── BattleResult screen — mobile ─────────────────────────────── */
+@media (max-width: 480px) {
+  .battle-result-btns { flex-direction: column !important; gap: 8px !important; width: 100% !important; }
+  .battle-result-btns > button { width: 100% !important; }
+  .battle-result-stats { padding: 14px !important; }
+}
+
+/* ─── Tutorial overlay — mobile ─────────────────────────────────── */
+@media (max-width: 480px) {
+  .tu-card { width: calc(100vw - 32px) !important; max-width: 340px !important; }
+}
+
+/* ─── DeckBuilder mobile ────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .deckbuilder-layout { flex-direction: column !important; }
+  .deckbuilder-sidebar { width: 100% !important; max-width: 100% !important; }
+}
+
+/* ─── Scrollbar hide on mobile ──────────────────────────────────── */
+@media (max-width: 768px) {
+  ::-webkit-scrollbar { width: 2px; }
+}
+
+/* ─── Touch target minimum 44px ────────────────────────────────── */
+@media (max-width: 768px) {
+  button, a, [role="button"] { min-height: 36px; }
+  .forge-bottom-nav-item { min-height: 44px; }
+}

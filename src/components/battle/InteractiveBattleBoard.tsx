@@ -79,6 +79,19 @@ interface FighterCardProps {
   dropRef?: React.RefObject<HTMLDivElement | null>;
 }
 
+// ─── Responsive card sizing ────────────────────────────────────────────────────
+function useCardSize() {
+  const [w, setW] = useState(() => typeof window !== 'undefined' ? window.innerWidth : 1024);
+  useEffect(() => {
+    const handler = () => setW(window.innerWidth);
+    window.addEventListener('resize', handler, { passive: true });
+    return () => window.removeEventListener('resize', handler);
+  }, []);
+  if (w <= 380) return { width: 118, minHeight: 162, imgH: 90,  iconFz: 34, bodyPad: '6px 7px 8px', nameFz: 9,  statFz: 10, hpFz: 8  };
+  if (w <= 480) return { width: 138, minHeight: 188, imgH: 108, iconFz: 40, bodyPad: '7px 8px 9px', nameFz: 10, statFz: 11, hpFz: 9  };
+  return         { width: 170, minHeight: 230, imgH: 145, iconFz: 52, bodyPad: '8px 10px 10px', nameFz: 11, statFz: 11, hpFz: 9 };
+}
+
 function FighterCard({
   unit, side, isActive, isAnimating, isDropTarget, isDraggingFrom, isBeingHit,
   onPointerDown, onPointerEnter, dropRef,
@@ -88,10 +101,11 @@ function FighterCard({
   const zone     = FACTION_ZONE[unit.faction] ?? FACTION_ZONE['default'];
   const isPlayer = side === 'player';
   const hpPct    = unit.max_hp > 0 ? unit.hp / unit.max_hp : 1;
+  const cs       = useCardSize();
 
   const cardStyle: CSSProperties = {
     position: 'relative',
-    width: 170, minHeight: 230,
+    width: cs.width, minHeight: cs.minHeight,
     borderRadius: 12,
     border: `2px solid ${isDropTarget ? '#e8b84b' : isActive ? rarColor : rarColor + '55'}`,
     background: unit.image_url
@@ -129,13 +143,13 @@ function FighterCard({
       onPointerEnter={onPointerEnter}
     >
       {/* Image zone — taller cuando hay imagen */}
-      <div style={{ height: unit.image_url ? 145 : 100, position: 'relative', overflow: 'hidden',
+      <div style={{ height: unit.image_url ? cs.imgH : Math.round(cs.imgH * 0.69), position: 'relative', overflow: 'hidden',
         background: !unit.image_url ? `radial-gradient(ellipse at center, ${rarColor}20, transparent 70%)` : undefined }}>
         {!unit.image_url && (
           <div style={{
             position: 'absolute', inset: 0,
             display: 'flex', alignItems: 'center', justifyContent: 'center',
-            fontSize: 52,
+            fontSize: cs.iconFz,
             filter: `drop-shadow(0 0 16px ${rarColor}aa)`,
             animation: 'card-icon-breathe 3s ease-in-out infinite',
           }}>
@@ -174,13 +188,13 @@ function FighterCard({
 
       {/* Card body */}
       <div style={{
-        padding: '8px 10px 10px', flex: 1,
-        display: 'flex', flexDirection: 'column', gap: 5,
+        padding: cs.bodyPad, flex: 1,
+        display: 'flex', flexDirection: 'column', gap: 4,
         background: 'linear-gradient(0deg, rgba(3,3,12,0.97) 0%, rgba(8,8,22,0.88) 100%)',
         borderTop: `1px solid ${rarColor}33`,
       }}>
         <div style={{
-          fontFamily: '"Cinzel",serif', fontSize: 11, fontWeight: 700,
+          fontFamily: '"Cinzel",serif', fontSize: cs.nameFz, fontWeight: 700,
           color: '#eee', letterSpacing: '0.04em',
           overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
           textShadow: `0 0 8px ${rarColor}55`,
@@ -188,7 +202,7 @@ function FighterCard({
           {unit.name}
         </div>
         {/* Stats row */}
-        <div style={{ display: 'flex', gap: 8, fontSize: 11, fontFamily: '"Rajdhani",sans-serif', fontWeight: 800 }}>
+        <div style={{ display: 'flex', gap: 6, fontSize: cs.statFz, fontFamily: '"Rajdhani",sans-serif', fontWeight: 800 }}>
           <span title="ATK" style={{ color: '#ff6b6b', display: 'flex', alignItems: 'center', gap: 2 }}>⚔ {unit.atk}</span>
           <span title="DEF" style={{ color: '#4a9eff', display: 'flex', alignItems: 'center', gap: 2 }}>🛡 {unit.def}</span>
           <span title="SPD" style={{ color: '#e8b84b', display: 'flex', alignItems: 'center', gap: 2 }}>⚡ {unit.spd}</span>
@@ -779,7 +793,7 @@ export function InteractiveBattleBoard({
             />
           ) : (
             <div ref={dropZoneRef as React.RefObject<HTMLDivElement>}
-              style={{ width: 170, height: 230, border: `2px dashed ${oppZone.primary}30`, borderRadius: 12,
+              style={{ width: 170, height: 188, border: `2px dashed ${oppZone.primary}30`, borderRadius: 12,
               background: `${oppZone.primary}05`, display: 'flex', alignItems: 'center', justifyContent: 'center',
               color: `${oppZone.primary}30`, fontSize: 36 }}>
               💀
@@ -852,7 +866,7 @@ export function InteractiveBattleBoard({
               onPointerEnter={() => { if (!state.isDragging) AudioEngine.sfxCardHover?.(); }}
             />
           ) : (
-            <div style={{ width: 170, height: 230, border: `2px dashed ${playerZone.primary}30`, borderRadius: 12,
+            <div style={{ width: 170, height: 188, border: `2px dashed ${playerZone.primary}30`, borderRadius: 12,
               background: `${playerZone.primary}05`, display: 'flex', alignItems: 'center', justifyContent: 'center',
               color: `${playerZone.primary}30`, fontSize: 36 }}>⚔️</div>
           )}

@@ -183,6 +183,8 @@ export function BattleIntroScreen({
                                         to   { opacity:1; transform: translateX(0); } }
         @keyframes intro-icon-float  { 0%,100% { transform: scale(1) rotate(0deg);   filter: drop-shadow(0 0 12px currentColor); }
                                        50%      { transform: scale(1.08) rotate(-5deg); filter: drop-shadow(0 0 24px currentColor); } }
+        @keyframes intro-ring-spin   { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        @keyframes intro-count-ripple { 0% { transform: scale(0.5); opacity:0.8; } 100% { transform: scale(2.5); opacity:0; } }
       `}</style>
 
       {/* ── Full-screen flash overlay ── */}
@@ -203,71 +205,98 @@ export function BattleIntroScreen({
           borderRight: `1px solid ${pTheme.primary}44`,
           animation: 'intro-slide-left 0.75s cubic-bezier(0.22,1,0.36,1) both',
         }}>
-          {/* Background glow orb */}
+          {/* Large radial glow orb */}
           <div style={{
-            position: 'absolute', top: '30%', left: '20%',
-            width: 200, height: 200, borderRadius: '50%',
-            background: `radial-gradient(circle, ${pTheme.primary}25 0%, transparent 70%)`,
+            position: 'absolute', top: '20%', left: '10%',
+            width: 280, height: 280, borderRadius: '50%',
+            background: `radial-gradient(circle, ${pTheme.primary}30 0%, transparent 70%)`,
             animation: 'rune-float-0 5s ease-in-out infinite',
           }} />
-          {/* Diagonal accent line */}
+          {/* Second smaller orb */}
           <div style={{
-            position: 'absolute', top: 0, right: 0, bottom: 0,
-            width: 3,
-            background: `linear-gradient(180deg, transparent, ${pTheme.primary}88, transparent)`,
+            position: 'absolute', bottom: '15%', left: '30%',
+            width: 160, height: 160, borderRadius: '50%',
+            background: `radial-gradient(circle, ${pTheme.primary}18 0%, transparent 70%)`,
+            animation: 'rune-float-2 7s ease-in-out infinite 1.2s',
+          }} />
+          {/* Diagonal accent lines */}
+          <div style={{
+            position: 'absolute', top: 0, right: 0, bottom: 0, width: 3,
+            background: `linear-gradient(180deg, transparent, ${pTheme.primary}aa, ${pTheme.primary}44, transparent)`,
+          }} />
+          {/* Top accent bar */}
+          <div style={{
+            position: 'absolute', top: 0, left: 0, right: 0, height: 2,
+            background: `linear-gradient(90deg, ${pTheme.primary}88, transparent)`,
           }} />
           <RuneParticles theme={pTheme} side="left" />
           {/* Content */}
-          <div style={{
+          <div className="battle-intro-panel-content" style={{
             position: 'absolute', inset: 0,
             display: 'flex', flexDirection: 'column',
             alignItems: 'flex-start', justifyContent: 'center',
             padding: '0 28px',
           }}>
-            {/* Faction label */}
+            {/* Faction label chip */}
             <div style={{
+              display: 'inline-flex', alignItems: 'center', gap: 6,
+              padding: '4px 12px', borderRadius: 20,
+              background: `${pTheme.primary}18`, border: `1px solid ${pTheme.primary}44`,
               fontSize: 10, letterSpacing: '0.22em', textTransform: 'uppercase',
               color: pTheme.primary, fontFamily: 'Rajdhani, sans-serif',
-              fontWeight: 800, marginBottom: 12, opacity: 0.9,
+              fontWeight: 800, marginBottom: 16, opacity: 0.95,
               animation: phase !== 'enter' ? 'intro-name-reveal 0.4s 0.4s ease both' : undefined,
+              boxShadow: `0 0 12px ${pTheme.primary}22`,
             }}>
-              {pTheme.icon} {playerFaction}
+              <span style={{ fontSize: 14 }}>{pTheme.icon}</span>
+              {playerFaction}
             </div>
-            {/* Big icon */}
-            <div style={{
-              fontSize: 72, lineHeight: 1, marginBottom: 16,
-              filter: `drop-shadow(0 0 20px ${pTheme.glow})`,
-              animation: 'intro-icon-float 3s ease-in-out infinite',
-              color: pTheme.primary,
-            }}>
-              {pTheme.icon}
+            {/* Big icon with glow rings */}
+            <div style={{ position: 'relative', marginBottom: 20 }}>
+              <div className="battle-intro-icon" style={{
+                fontSize: 'clamp(52px,11vw,86px)', lineHeight: 1,
+                filter: `drop-shadow(0 0 24px ${pTheme.glow}) drop-shadow(0 0 48px ${pTheme.glow})`,
+                animation: 'intro-icon-float 3s ease-in-out infinite',
+                color: pTheme.primary,
+                display: 'block',
+              }}>
+                {pTheme.icon}
+              </div>
+              {/* Rotating glow ring */}
+              <div style={{
+                position: 'absolute', inset: -12,
+                borderRadius: '50%',
+                border: `1px solid ${pTheme.primary}40`,
+                animation: 'intro-ring-spin 4s linear infinite',
+              }} />
             </div>
             {/* Player name */}
-            <div style={{
-              fontFamily: 'Cinzel, serif', fontSize: 'clamp(16px,3vw,24px)',
+            <div className="battle-intro-name" style={{
+              fontFamily: 'Cinzel, serif', fontSize: 'clamp(15px,3vw,24px)',
               fontWeight: 900, color: '#f0f0ff',
-              textShadow: `0 0 24px ${pTheme.glow}`,
+              textShadow: `0 0 24px ${pTheme.glow}, 0 0 48px ${pTheme.glow}`,
               letterSpacing: '0.06em', lineHeight: 1.2,
-              maxWidth: 180, wordBreak: 'break-word',
+              maxWidth: '90%', wordBreak: 'break-word',
               animation: phase !== 'enter' ? 'intro-name-reveal 0.4s 0.5s ease both' : undefined,
               opacity: phase === 'enter' ? 0 : 1,
             }}>
               {playerName}
             </div>
             <div style={{
-              marginTop: 10, fontSize: 10,
+              marginTop: 8, fontSize: 10,
               color: pTheme.accent, fontFamily: 'Rajdhani, sans-serif',
               letterSpacing: '0.18em', fontWeight: 700,
               animation: phase !== 'enter' ? 'intro-name-reveal 0.4s 0.6s ease both' : undefined,
               opacity: phase === 'enter' ? 0 : 1,
+              textTransform: 'uppercase',
             }}>
               ← TÚ
             </div>
           </div>
           {/* Bottom gradient fade */}
           <div style={{
-            position: 'absolute', bottom: 0, left: 0, right: 0, height: 60,
-            background: 'linear-gradient(0deg, rgba(3,3,10,0.6), transparent)',
+            position: 'absolute', bottom: 0, left: 0, right: 0, height: 80,
+            background: 'linear-gradient(0deg, rgba(3,3,10,0.85), transparent)',
           }} />
         </div>
 
@@ -279,62 +308,87 @@ export function BattleIntroScreen({
           animation: 'intro-slide-right 0.75s cubic-bezier(0.22,1,0.36,1) both',
         }}>
           <div style={{
-            position: 'absolute', top: '30%', right: '20%',
-            width: 200, height: 200, borderRadius: '50%',
-            background: `radial-gradient(circle, ${oTheme.primary}25 0%, transparent 70%)`,
+            position: 'absolute', top: '20%', right: '10%',
+            width: 280, height: 280, borderRadius: '50%',
+            background: `radial-gradient(circle, ${oTheme.primary}30 0%, transparent 70%)`,
             animation: 'rune-float-1 5.5s ease-in-out infinite 1s',
           }} />
           <div style={{
+            position: 'absolute', bottom: '15%', right: '30%',
+            width: 160, height: 160, borderRadius: '50%',
+            background: `radial-gradient(circle, ${oTheme.primary}18 0%, transparent 70%)`,
+            animation: 'rune-float-0 6.5s ease-in-out infinite 0.5s',
+          }} />
+          <div style={{
             position: 'absolute', top: 0, left: 0, bottom: 0, width: 3,
-            background: `linear-gradient(180deg, transparent, ${oTheme.primary}88, transparent)`,
+            background: `linear-gradient(180deg, transparent, ${oTheme.primary}aa, ${oTheme.primary}44, transparent)`,
+          }} />
+          <div style={{
+            position: 'absolute', top: 0, left: 0, right: 0, height: 2,
+            background: `linear-gradient(90deg, transparent, ${oTheme.primary}88)`,
           }} />
           <RuneParticles theme={oTheme} side="right" />
-          <div style={{
+          <div className="battle-intro-panel-content" style={{
             position: 'absolute', inset: 0,
             display: 'flex', flexDirection: 'column',
             alignItems: 'flex-end', justifyContent: 'center',
             padding: '0 28px',
           }}>
             <div style={{
+              display: 'inline-flex', alignItems: 'center', gap: 6,
+              padding: '4px 12px', borderRadius: 20,
+              background: `${oTheme.primary}18`, border: `1px solid ${oTheme.primary}44`,
               fontSize: 10, letterSpacing: '0.22em', textTransform: 'uppercase',
               color: oTheme.primary, fontFamily: 'Rajdhani, sans-serif',
-              fontWeight: 800, marginBottom: 12, opacity: 0.9, textAlign: 'right',
+              fontWeight: 800, marginBottom: 16, opacity: 0.95, textAlign: 'right',
               animation: phase !== 'enter' ? 'intro-opp-reveal 0.4s 0.4s ease both' : undefined,
+              boxShadow: `0 0 12px ${oTheme.primary}22`,
             }}>
-              {oTheme.icon} {opponentFaction}
+              {opponentFaction}
+              <span style={{ fontSize: 14 }}>{oTheme.icon}</span>
             </div>
-            <div style={{
-              fontSize: 72, lineHeight: 1, marginBottom: 16,
-              filter: `drop-shadow(0 0 20px ${oTheme.glow})`,
-              animation: 'intro-icon-float 3.2s ease-in-out infinite 0.8s',
-              color: oTheme.primary,
-            }}>
-              {oTheme.icon}
+            <div style={{ position: 'relative', marginBottom: 20 }}>
+              <div className="battle-intro-icon" style={{
+                fontSize: 'clamp(52px,11vw,86px)', lineHeight: 1,
+                filter: `drop-shadow(0 0 24px ${oTheme.glow}) drop-shadow(0 0 48px ${oTheme.glow})`,
+                animation: 'intro-icon-float 3.2s ease-in-out infinite 0.8s',
+                color: oTheme.primary,
+                display: 'block',
+              }}>
+                {oTheme.icon}
+              </div>
+              <div style={{
+                position: 'absolute', inset: -12,
+                borderRadius: '50%',
+                border: `1px solid ${oTheme.primary}40`,
+                animation: 'intro-ring-spin 4s linear infinite reverse',
+              }} />
             </div>
-            <div style={{
-              fontFamily: 'Cinzel, serif', fontSize: 'clamp(16px,3vw,24px)',
+            <div className="battle-intro-name" style={{
+              fontFamily: 'Cinzel, serif', fontSize: 'clamp(15px,3vw,24px)',
               fontWeight: 900, color: '#f0f0ff',
-              textShadow: `0 0 24px ${oTheme.glow}`,
+              textShadow: `0 0 24px ${oTheme.glow}, 0 0 48px ${oTheme.glow}`,
               letterSpacing: '0.06em', lineHeight: 1.2,
-              maxWidth: 180, wordBreak: 'break-word', textAlign: 'right',
+              maxWidth: '90%', wordBreak: 'break-word', textAlign: 'right',
               animation: phase !== 'enter' ? 'intro-opp-reveal 0.4s 0.5s ease both' : undefined,
               opacity: phase === 'enter' ? 0 : 1,
             }}>
               {opponentName}
             </div>
             <div style={{
-              marginTop: 10, fontSize: 10,
+              marginTop: 8, fontSize: 10,
               color: oTheme.accent, fontFamily: 'Rajdhani, sans-serif',
               letterSpacing: '0.18em', fontWeight: 700, textAlign: 'right',
               animation: phase !== 'enter' ? 'intro-opp-reveal 0.4s 0.6s ease both' : undefined,
               opacity: phase === 'enter' ? 0 : 1,
+              textTransform: 'uppercase',
             }}>
               RIVAL →
             </div>
           </div>
           <div style={{
-            position: 'absolute', bottom: 0, left: 0, right: 0, height: 60,
-            background: 'linear-gradient(0deg, rgba(3,3,10,0.6), transparent)',
+            position: 'absolute', bottom: 0, left: 0, right: 0, height: 80,
+            background: 'linear-gradient(0deg, rgba(3,3,10,0.85), transparent)',
           }} />
         </div>
       </div>
@@ -346,104 +400,148 @@ export function BattleIntroScreen({
         opacity: phase === 'enter' ? 0 : 1,
         transition: 'opacity 0.3s 0.5s',
       }}>
-        {/* Vertical divider lines */}
+        {/* Vertical divider — energy beam */}
         <div style={{
-          width: 1, height: 60,
-          background: `linear-gradient(180deg, transparent, ${pTheme.primary}88, #e8b84b, ${oTheme.primary}88, transparent)`,
-          marginBottom: 8,
+          width: 2, height: 70,
+          background: `linear-gradient(180deg, transparent, ${pTheme.primary}, #e8b84b, ${oTheme.primary}, transparent)`,
+          marginBottom: 10,
           opacity: phase === 'vs' || phase === 'countdown' || phase === 'flash' ? 1 : 0,
           transition: 'opacity 0.4s',
+          boxShadow: '0 0 10px rgba(232,184,75,0.5)',
         }} />
 
-        {/* VS text — main visual anchor */}
-        <div style={{
-          fontFamily: 'Cinzel, serif',
-          fontSize: 'clamp(52px,8vw,80px)',
-          fontWeight: 900,
-          letterSpacing: '0.08em',
-          background: 'linear-gradient(180deg, #fff5c0 0%, #e8b84b 40%, #c9901f 100%)',
-          WebkitBackgroundClip: 'text',
-          WebkitTextFillColor: 'transparent',
-          animation: phase !== 'enter' ? 'intro-vs-pop 0.6s 0.7s cubic-bezier(0.22,1,0.36,1) both, intro-vs-glow 2s 1.3s ease-in-out infinite' : undefined,
-          opacity: phase === 'enter' ? 0 : 1,
-          filter: 'drop-shadow(0 0 8px rgba(232,184,75,0.6))',
-          lineHeight: 1,
-        }}>
-          VS
+        {/* VS badge */}
+        <div style={{ position: 'relative' }}>
+          {/* Outer glow ring */}
+          <div style={{
+            position: 'absolute', inset: -8,
+            borderRadius: '50%',
+            background: 'radial-gradient(circle, rgba(232,184,75,0.2) 0%, transparent 70%)',
+            animation: 'intro-vs-glow 2s ease-in-out infinite',
+          }} />
+          <div className="battle-intro-vs" style={{
+            fontFamily: 'Cinzel, serif',
+            fontSize: 'clamp(44px,7vw,72px)',
+            fontWeight: 900,
+            letterSpacing: '0.08em',
+            background: 'linear-gradient(180deg, #fff5c0 0%, #e8b84b 45%, #c9901f 100%)',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+            animation: phase !== 'enter' ? 'intro-vs-pop 0.6s 0.7s cubic-bezier(0.22,1,0.36,1) both, intro-vs-glow 2s 1.3s ease-in-out infinite' : undefined,
+            opacity: phase === 'enter' ? 0 : 1,
+            filter: 'drop-shadow(0 0 12px rgba(232,184,75,0.7))',
+            lineHeight: 1,
+          }}>
+            VS
+          </div>
         </div>
 
         <div style={{
-          width: 1, height: 60,
-          background: `linear-gradient(180deg, transparent, ${pTheme.primary}88, #e8b84b, ${oTheme.primary}88, transparent)`,
-          marginTop: 8,
+          width: 2, height: 70,
+          background: `linear-gradient(180deg, transparent, ${oTheme.primary}, #e8b84b, ${pTheme.primary}, transparent)`,
+          marginTop: 10,
           opacity: phase === 'vs' || phase === 'countdown' || phase === 'flash' ? 1 : 0,
           transition: 'opacity 0.4s',
+          boxShadow: '0 0 10px rgba(232,184,75,0.5)',
         }} />
       </div>
 
       {/* ── Countdown / Battle text ── */}
       {(phase === 'countdown' || phase === 'flash' || phase === 'done') && (
         <div style={{
-          position: 'absolute', bottom: '10%', left: 0, right: 0,
+          position: 'absolute', bottom: '8%', left: 0, right: 0,
           display: 'flex', flexDirection: 'column',
-          alignItems: 'center', gap: 12, zIndex: 30,
+          alignItems: 'center', gap: 10, zIndex: 30,
         }}>
           {phase === 'flash' ? (
-            /* ¡COMBATE! text */
-            <div style={{
-              fontFamily: 'Cinzel, serif',
-              fontSize: 'clamp(32px,6vw,56px)',
-              fontWeight: 900,
-              color: '#e8b84b',
-              letterSpacing: '0.18em',
-              textShadow: '0 0 40px rgba(232,184,75,1), 0 0 80px rgba(232,184,75,0.6)',
-              animation: 'intro-battle-text 0.5s cubic-bezier(0.22,1,0.36,1)',
-              textTransform: 'uppercase',
-            }}>
-              ¡COMBATE!
-            </div>
-          ) : (
-            /* Countdown number */
-            <>
+            /* ¡DUEL! text — Yu-Gi-Oh style */
+            <div style={{ textAlign: 'center' }}>
               <div style={{
                 fontFamily: 'Cinzel, serif',
-                fontSize: 'clamp(60px,10vw,90px)',
+                fontSize: 'clamp(36px,8vw,64px)',
                 fontWeight: 900,
-                color: count === 1 ? '#e8b84b' : '#e0e0f8',
-                textShadow: count === 1
-                  ? '0 0 40px rgba(232,184,75,0.9), 0 0 80px rgba(232,184,75,0.5)'
-                  : '0 0 30px rgba(200,200,255,0.6)',
-                animation: 'intro-count 0.35s cubic-bezier(0.22,1,0.36,1)',
-                lineHeight: 1,
+                color: '#e8b84b',
+                letterSpacing: '0.22em',
+                textShadow: '0 0 50px rgba(232,184,75,1), 0 0 100px rgba(232,184,75,0.7), 0 0 150px rgba(232,184,75,0.4)',
+                animation: 'intro-battle-text 0.5s cubic-bezier(0.22,1,0.36,1)',
+                textTransform: 'uppercase',
               }}>
-                {count}
+                ¡QUE COMIENCE!
               </div>
               <div style={{
                 fontFamily: 'Rajdhani, sans-serif',
-                fontSize: 12, color: '#666',
-                letterSpacing: '0.3em', textTransform: 'uppercase',
+                fontSize: 'clamp(11px,2.5vw,15px)', color: 'rgba(232,184,75,0.6)',
+                letterSpacing: '0.4em', textTransform: 'uppercase', marginTop: 8,
+                animation: 'intro-battle-text 0.5s 0.1s cubic-bezier(0.22,1,0.36,1) both',
               }}>
-                ¡PREPARÁTE!
+                LA BATALLA COMIENZA
+              </div>
+            </div>
+          ) : (
+            /* Countdown number — dramatic */
+            <>
+              <div style={{ position: 'relative' }}>
+                {/* Ripple behind number */}
+                <div style={{
+                  position: 'absolute', inset: -20,
+                  borderRadius: '50%',
+                  border: `2px solid rgba(232,184,75,${count === 1 ? '0.6' : '0.2'})`,
+                  animation: 'intro-count-ripple 0.65s ease-out',
+                  opacity: 0,
+                }} />
+                <div className="battle-intro-count" style={{
+                  fontFamily: 'Cinzel, serif',
+                  fontSize: 'clamp(72px,16vw,140px)',
+                  fontWeight: 900,
+                  color: count === 1 ? '#e8b84b' : count === 2 ? '#c0a0ff' : '#e0e0f8',
+                  textShadow: count === 1
+                    ? '0 0 60px rgba(232,184,75,1), 0 0 120px rgba(232,184,75,0.6), 0 0 200px rgba(232,184,75,0.3)'
+                    : count === 2
+                      ? '0 0 40px rgba(160,120,255,0.8), 0 0 80px rgba(160,120,255,0.4)'
+                      : '0 0 30px rgba(200,200,255,0.6)',
+                  animation: 'intro-count 0.35s cubic-bezier(0.22,1,0.36,1)',
+                  lineHeight: 1,
+                }}>
+                  {count}
+                </div>
+              </div>
+              <div style={{
+                fontFamily: 'Rajdhani, sans-serif',
+                fontSize: 'clamp(10px,2vw,13px)', color: '#555',
+                letterSpacing: '0.32em', textTransform: 'uppercase',
+              }}>
+                ¡PREPÁRATE!
               </div>
             </>
           )}
         </div>
       )}
 
-      {/* ── Bottom faction gradient bar ── */}
+      {/* ── Bottom faction gradient bar — dual color ── */}
       <div style={{
-        position: 'absolute', bottom: 0, left: 0, right: 0, height: 3,
-        background: `linear-gradient(90deg, ${pTheme.primary}, #e8b84b 50%, ${oTheme.primary})`,
-        opacity: 0.8,
+        position: 'absolute', bottom: 0, left: 0, right: 0, height: 4,
+        background: `linear-gradient(90deg, ${pTheme.primary} 0%, #e8b84b 50%, ${oTheme.primary} 100%)`,
+        opacity: 0.9,
         zIndex: 40,
+        boxShadow: `0 -2px 20px rgba(232,184,75,0.4)`,
       }} />
 
       {/* ── Top vignette ── */}
       <div style={{
         position: 'absolute', top: 0, left: 0, right: 0, height: 80,
-        background: 'linear-gradient(180deg, rgba(3,3,10,0.7), transparent)',
+        background: 'linear-gradient(180deg, rgba(3,3,10,0.8), transparent)',
         pointerEvents: 'none', zIndex: 5,
       }} />
+
+      {/* ── Corner decoration — top-left ── */}
+      <div style={{
+        position: 'absolute', top: 16, left: 16, zIndex: 6,
+        fontFamily: 'IBM Plex Mono, monospace', fontSize: 9,
+        color: 'rgba(232,184,75,0.4)', letterSpacing: '0.15em',
+        textTransform: 'uppercase',
+      }}>
+        VEXFORGE · ARENA
+      </div>
     </div>
   );
 }
