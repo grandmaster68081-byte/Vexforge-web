@@ -17,9 +17,12 @@ const SECTION_BY_PREFIX: Array<[string, VexforgeSection]> = [
   ["/deck-builder",  "battle"],
   ["/bosses",        "bosses"],
   ["/world-bosses",  "bosses"],
+  ["/relics",        "bosses"],
   // Mission / quest zones
   ["/missions",      "missions"],
   ["/quests",        "missions"],  // /quests is the real route; /daily-quests does not exist
+  ["/progress",      "missions"],
+  ["/season-pass",   "missions"],
   // Market / economy zones
   ["/market",        "market"],
   ["/packs",         "market"],
@@ -27,12 +30,17 @@ const SECTION_BY_PREFIX: Array<[string, VexforgeSection]> = [
   ["/economy",       "market"],
   ["/fusion",        "market"],
   ["/evolution",     "market"],
+  ["/shop",          "market"],
+  ["/inventory",     "market"],
+  ["/withdrawal",    "market"],
   // Social zones
   ["/clans",         "social"],
   ["/friends",       "social"],
   ["/leaderboard",   "social"],
   ["/ranking",       "social"],
   ["/achievements",  "social"],
+  ["/profile",       "social"],
+  ["/referral",      "social"],
 ];
 
 function sectionFor(pathname: string): VexforgeSection {

@@ -528,10 +528,14 @@ export function PvpRoute() {
       <WeeklyTournamentPanel />
       <ClanWarsPanel />
 
-      <main style={{ maxWidth: 920, margin: "0 auto", padding: "32px 16px" }}>
+      <main style={{ maxWidth: 920, margin: "0 auto", padding: "clamp(20px,5vw,32px) 16px" }}>
         {/* Header */}
         <div style={{ marginBottom: 28 }}>
-          <h1 style={{ fontFamily: "Cinzel,serif", color: "#e8b84b", fontSize: 26, margin: "0 0 6px" }}>
+          <h1 style={{
+            fontFamily: "Cinzel,serif", color: "#e8b84b",
+            fontSize: "clamp(20px,4vw,26px)", margin: "0 0 6px",
+            textShadow: "0 0 30px rgba(232,184,75,0.4)",
+          }}>
             ⚔️ Arena PvP
           </h1>
           <p style={{ color: "#888", margin: 0, fontSize: 13 }}>

@@ -254,24 +254,38 @@ export function HomeRoute() {
             )}
           </div>
           {/* Stats pills */}
-          <div style={{display:"flex",justifyContent:"center",gap:20,marginTop:36,flexWrap:"wrap"}}>
+          <div className="home-stats-pills" style={{display:"flex",justifyContent:"center",gap:20,marginTop:36,flexWrap:"wrap"}}>
             {[
-              {val:"127",label:"Cartas Únicas"},
-              {val:"4",label:"Facciones"},
-              {val:"6",label:"Rarezas"},
-              {val:"F2P",label:"Gratis"},
-            ].map(s=>(
-              <div key={s.val} style={{textAlign:"center",padding:"8px 16px",
-                background:"rgba(255,255,255,0.04)",border:"1px solid rgba(255,255,255,0.08)",
-                borderRadius:10,backdropFilter:"blur(8px)"}}>
+              {val:"127",label:"Cartas Únicas", icon:"🃏"},
+              {val:"4",  label:"Facciones",     icon:"⚔️"},
+              {val:"6",  label:"Rarezas",        icon:"💎"},
+              {val:"F2P",label:"Gratis",         icon:"🔥"},
+            ].map((s,i)=>(
+              <div key={s.val} className="home-stats-pill" style={{textAlign:"center",padding:"10px 20px",
+                background:"rgba(255,255,255,0.05)",border:"1px solid rgba(255,255,255,0.09)",
+                borderRadius:12,backdropFilter:"blur(10px)",
+                boxShadow:"0 4px 16px rgba(0,0,0,0.3)",
+                animation:`hero-stat-in 0.5s ${0.1 + i*0.08}s cubic-bezier(0.22,1,0.36,1) both`,
+                transition:"transform 0.2s ease, box-shadow 0.2s ease",
+              }}
+              onMouseEnter={e=>{(e.currentTarget as HTMLDivElement).style.transform="translateY(-3px)";(e.currentTarget as HTMLDivElement).style.boxShadow="0 8px 24px rgba(0,0,0,0.4)";}}
+              onMouseLeave={e=>{(e.currentTarget as HTMLDivElement).style.transform="";(e.currentTarget as HTMLDivElement).style.boxShadow="0 4px 16px rgba(0,0,0,0.3)";}}
+              >
+                <div style={{fontSize:16,marginBottom:4,lineHeight:1}}>{s.icon}</div>
                 <div style={{fontFamily:"Cinzel,serif",fontSize:20,fontWeight:900,
                   color:"#e8b84b",lineHeight:1}}>{s.val}</div>
                 <div style={{fontSize:9,color:"rgba(255,255,255,0.4)",
                   fontFamily:"Rajdhani,sans-serif",letterSpacing:"0.1em",
-                  textTransform:"uppercase",marginTop:2}}>{s.label}</div>
+                  textTransform:"uppercase",marginTop:3}}>{s.label}</div>
               </div>
             ))}
           </div>
+          <style>{`
+            @keyframes hero-stat-in {
+              from { opacity:0; transform:translateY(14px) scale(0.96); }
+              to   { opacity:1; transform:translateY(0) scale(1); }
+            }
+          `}</style>
         </div>
       </div>
 
