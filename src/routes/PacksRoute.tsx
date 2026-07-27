@@ -385,7 +385,7 @@ function PacksRoute() {
       )}
 
       {/* Balance tip */}
-      <p style={{ textAlign: "center", color: "#333", fontSize: 11, marginTop: 32 }}>
+      <p style={{ textAlign: "center", color: "#4a4a6a", fontSize: 11, marginTop: 32 }}>
         Gana VEX ganando batallas PvP, misiones diarias y eventos de temporada.
       </p>
     </main>

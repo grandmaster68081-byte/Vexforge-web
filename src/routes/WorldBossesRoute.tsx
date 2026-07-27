@@ -60,9 +60,9 @@ function BossCard({ boss, onAttack, canAttack, attacking }: {
             <span style={{ fontSize: 18 }}>{getBossIcon(boss)}</span>
             <h3 style={{ fontFamily: "Cinzel,serif", color: "#e8e8f0", fontSize: 14, margin: 0 }}>{boss.name}</h3>
           </div>
-          <div style={{ color: "#555", fontSize: 11 }}>Poder: <span style={{ color }}>{boss.power_level.toLocaleString()}</span></div>
+          <div style={{ color: "#7a7a9a", fontSize: 11 }}>Poder: <span style={{ color }}>{boss.power_level.toLocaleString()}</span></div>
           {(boss.metadata as any)?.lore && (
-            <p style={{ color: "#555", fontSize: 10, marginTop: 6, lineHeight: 1.5, fontStyle: "italic" }}>{(boss.metadata as any).lore}</p>
+            <p style={{ color: "#7a7a9a", fontSize: 10, marginTop: 6, lineHeight: 1.5, fontStyle: "italic" }}>{(boss.metadata as any).lore}</p>
           )}
         </div>
 
@@ -129,13 +129,13 @@ export function WorldBossesRoute() {
             <div style={{ display: "flex", gap: 12, marginBottom: 24, flexWrap: "wrap" }}>
               <div style={{ background: "#12121a", border: "1px solid #2a2a3e", borderRadius: 10, padding: "10px 18px" }}>
                 <div style={{ color: "#e8b84b", fontWeight: 800, fontSize: 18 }}>{encounterData.length}</div>
-                <div style={{ color: "#555", fontSize: 10 }}>ATAQUES TOTALES</div>
+                <div style={{ color: "#7a7a9a", fontSize: 10 }}>ATAQUES TOTALES</div>
               </div>
               <div style={{ background: "#12121a", border: "1px solid #2a2a3e", borderRadius: 10, padding: "10px 18px" }}>
                 <div style={{ color: "#3ddc84", fontWeight: 800, fontSize: 18 }}>
                   {encounterData.filter(e => e.status === "completed").length}
                 </div>
-                <div style={{ color: "#555", fontSize: 10 }}>COMPLETADOS</div>
+                <div style={{ color: "#7a7a9a", fontSize: 10 }}>COMPLETADOS</div>
               </div>
             </div>
           )}
@@ -172,7 +172,7 @@ export function WorldBossesRoute() {
                     }}>
                       <div>
                         <div style={{ color: "#e8e8f0", fontWeight: 700, fontSize: 12 }}>{boss?.name ?? "Jefe desconocido"}</div>
-                        <div style={{ color: "#555", fontSize: 10 }}>{new Date(enc.created_at).toLocaleDateString()}</div>
+                        <div style={{ color: "#7a7a9a", fontSize: 10 }}>{new Date(enc.created_at).toLocaleDateString()}</div>
                       </div>
                       <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
                         {reward?.vex_ingame && <span style={{ color: "#e8b84b", fontSize: 11, fontWeight: 700 }}>+{reward.vex_ingame} VEX</span>}

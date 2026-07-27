@@ -6,7 +6,7 @@ import { useState, useEffect } from "react";
     active:   { label: "ACTIVA",    color: "#3ddc84" },
     ongoing:  { label: "EN CURSO",  color: "#e8b84b" },
     pending:  { label: "PENDIENTE", color: "#4a9eff" },
-    resolved: { label: "FINALIZADA",color: "#555" },
+    resolved: { label: "FINALIZADA",color: "#7a7a9a" },
     default:  { label: "GUERRA",    color: "#a855f7" },
     };
     const ROLE_ICON: Record<string, string> = { leader:"👑", officer:"⭐", member:"⚔️" };

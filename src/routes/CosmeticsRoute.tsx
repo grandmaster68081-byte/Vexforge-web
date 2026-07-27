@@ -144,7 +144,7 @@ function LoadoutPanel({
             fontWeight: 700, margin: "0 0 2px",
           }}>Tu Loadout Actual</p>
           {!hasAny && (
-            <p style={{ color: "#555", fontSize: 12, margin: 0 }}>
+            <p style={{ color: "#7a7a9a", fontSize: 12, margin: 0 }}>
               Ningún cosmético equipado. Selecciona uno del catálogo.
             </p>
           )}
@@ -320,7 +320,7 @@ function CosmeticCard({
           }}>Obsequio inicial</span>
         )}
         {sources.length === 0 && !isDefault && (
-          <span style={{ color: "#555", fontSize: 10, fontStyle: "italic" }}>No disponible actualmente</span>
+          <span style={{ color: "#7a7a9a", fontSize: 10, fontStyle: "italic" }}>No disponible actualmente</span>
         )}
         {sources.map(s => (
           <span key={s} style={{
@@ -374,7 +374,7 @@ function CosmeticCard({
       {!owned && (
         <div style={{
           borderTop: "1px solid #1a1a2a", paddingTop: 10, marginTop: 2,
-          fontSize: 11, color: "#555", textAlign: "center",
+          fontSize: 11, color: "#7a7a9a", textAlign: "center",
         }}>
           {sources.length > 0 ? `Obtén en: ${humanizeSource(sources[0])}` : "No disponible aún"}
         </div>
@@ -462,7 +462,7 @@ function DetailDrawer({
 
           {/* Sources */}
           <div style={{ marginBottom: 16 }}>
-            <p style={{ color: "#555", fontSize: 10, textTransform: "uppercase",
+            <p style={{ color: "#7a7a9a", fontSize: 10, textTransform: "uppercase",
               letterSpacing: "0.1em", marginBottom: 6, fontWeight: 700 }}>
               Cómo obtener
             </p>
@@ -480,7 +480,7 @@ function DetailDrawer({
                 }}>{humanizeSource(s)}</span>
               ))}
               {sources.length === 0 && !isDefault && (
-                <span style={{ color: "#555", fontSize: 10 }}>No disponible actualmente</span>
+                <span style={{ color: "#7a7a9a", fontSize: 10 }}>No disponible actualmente</span>
               )}
             </div>
           </div>
@@ -642,7 +642,7 @@ export function CosmeticsRoute() {
               borderRadius: 10, padding: "10px 18px",
             }}>
               <div style={{ color: s.color, fontWeight: 800, fontSize: 18 }}>{s.value}</div>
-              <div style={{ color: "#555", fontSize: 10 }}>{s.label.toUpperCase()}</div>
+              <div style={{ color: "#7a7a9a", fontSize: 10 }}>{s.label.toUpperCase()}</div>
             </div>
           ))}
         </div>

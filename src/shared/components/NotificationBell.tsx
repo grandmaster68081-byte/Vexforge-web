@@ -156,7 +156,7 @@ export function NotificationBell() {
               <div style={{
                 padding: "32px 16px",
                 textAlign: "center",
-                color: "#555",
+                color: "#7a7a9a",
                 fontFamily: '"IBM Plex Mono", monospace',
                 fontSize: 11,
               }}>
@@ -220,7 +220,7 @@ export function NotificationBell() {
                   {/* Time */}
                   <span style={{
                     fontFamily: '"IBM Plex Mono", monospace',
-                    fontSize: 9, color: "#555",
+                    fontSize: 9, color: "#7a7a9a",
                     flexShrink: 0, alignSelf: "flex-start",
                     marginTop: 2,
                   }}>
@@ -240,7 +240,7 @@ export function NotificationBell() {
             }}>
               <span style={{
                 fontFamily: '"IBM Plex Mono", monospace',
-                fontSize: 9, color: "#555",
+                fontSize: 9, color: "#7a7a9a",
                 letterSpacing: "0.1em",
               }}>
                 VEXFORGE — SISTEMA DE NOTIFICACIONES

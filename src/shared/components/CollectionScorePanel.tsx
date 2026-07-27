@@ -38,7 +38,7 @@ import { useCollectionScore } from "../../domains/collection/useCollectionScore"
         <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", marginBottom: 16, gap: 16 }}>
           {/* score + rank */}
           <div>
-            <div style={{ fontSize: 10, color: "#444", fontFamily: '"IBM Plex Mono",monospace', letterSpacing: "0.12em", marginBottom: 6 }}>
+            <div style={{ fontSize: 10, color: "#5a5a7a", fontFamily: '"IBM Plex Mono",monospace', letterSpacing: "0.12em", marginBottom: 6 }}>
               COLLECTION SCORE
             </div>
             <div style={{ display: "flex", alignItems: "baseline", gap: 8 }}>
@@ -50,7 +50,7 @@ import { useCollectionScore } from "../../domains/collection/useCollectionScore"
               }}>
                 {score.score.toLocaleString()}
               </span>
-              <span style={{ fontSize: 11, color: "#444", fontFamily: '"IBM Plex Mono",monospace' }}>
+              <span style={{ fontSize: 11, color: "#5a5a7a", fontFamily: '"IBM Plex Mono",monospace' }}>
                 / {score.maxScore.toLocaleString()} pts
               </span>
             </div>
@@ -90,7 +90,7 @@ import { useCollectionScore } from "../../domains/collection/useCollectionScore"
                 </span>
               </div>
             </div>
-            <div style={{ fontSize: 10, color: "#555", marginTop: 5, fontFamily: '"IBM Plex Mono",monospace' }}>
+            <div style={{ fontSize: 10, color: "#7a7a9a", marginTop: 5, fontFamily: '"IBM Plex Mono",monospace' }}>
               {score.totalOwned}/{score.totalCards} cartas
             </div>
           </div>
@@ -116,7 +116,7 @@ import { useCollectionScore } from "../../domains/collection/useCollectionScore"
                   <span style={{ fontSize: 9, color: col, fontFamily: "Rajdhani,sans-serif", fontWeight: 700, letterSpacing: "0.06em" }}>
                     {RARITY_LABELS[rarity]}
                   </span>
-                  <span style={{ fontSize: 9, color: "#444", fontFamily: '"IBM Plex Mono",monospace' }}>
+                  <span style={{ fontSize: 9, color: "#5a5a7a", fontFamily: '"IBM Plex Mono",monospace' }}>
                     {r.owned}/{r.total}
                   </span>
                 </div>

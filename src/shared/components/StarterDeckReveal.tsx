@@ -132,7 +132,7 @@ export function StarterDeckReveal() {
                   fontSize: 14, fontWeight: 800,
                   color, letterSpacing: "0.12em", textTransform: "uppercase",
                 }}>{faction}</span>
-                <span style={{ color: "#555", fontSize: 12, marginLeft: 4 }}>×{fCards.length}</span>
+                <span style={{ color: "#7a7a9a", fontSize: 12, marginLeft: 4 }}>×{fCards.length}</span>
               </div>
               <div style={{
                 display: "grid",

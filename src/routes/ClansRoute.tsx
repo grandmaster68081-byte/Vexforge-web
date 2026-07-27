@@ -13,7 +13,7 @@ const WAR_STATUS: Record<string, { label: string; color: string }> = {
   active:   { label: "ACTIVA",     color: "#3ddc84" },
   ongoing:  { label: "EN CURSO",   color: "#e8b84b" },
   pending:  { label: "PENDIENTE",  color: "#4a9eff" },
-  resolved: { label: "FINALIZADA", color: "#555" },
+  resolved: { label: "FINALIZADA", color: "#7a7a9a" },
 };
 
 // ---- Sub-components ----
@@ -52,7 +52,7 @@ function WarCard({ war, myClanId }: { war: ClanWar; myClanId: string }) {
         <div style={{ fontFamily: "Rajdhani, sans-serif", fontWeight: 700, fontSize: 13, color: "#e8e8f0", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
           vs. {opponent}
         </div>
-        <div style={{ fontSize: 9, color: "#444", fontFamily: '"IBM Plex Mono",monospace', marginTop: 2 }}>
+        <div style={{ fontSize: 9, color: "#5a5a7a", fontFamily: '"IBM Plex Mono",monospace', marginTop: 2 }}>
           {new Date(war.created_at).toLocaleDateString("es-ES")}
           {war.resolved_at ? ` · Fin: ${new Date(war.resolved_at).toLocaleDateString("es-ES")}` : ""}
         </div>
@@ -82,7 +82,7 @@ function ClanDiscoveryCard({ clan, onJoin, joining }: { clan: Clan; onJoin: (id:
         <div style={{ fontFamily: "Cinzel, serif", fontWeight: 800, fontSize: 13, color: "#e8e8f0", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
           {clan.name}
         </div>
-        <div style={{ fontSize: 9, color: "#555", fontFamily: '"IBM Plex Mono",monospace', marginTop: 2 }}>
+        <div style={{ fontSize: 9, color: "#7a7a9a", fontFamily: '"IBM Plex Mono",monospace', marginTop: 2 }}>
           Prestigio {clan.prestige} · #{clan.code}
         </div>
       </div>
@@ -117,10 +117,10 @@ function StartWarModal({ allClans, myClanId, onStart, onClose }: {
       }} onClick={e => e.stopPropagation()}>
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 18 }}>
           <span style={{ fontFamily: "Cinzel, serif", fontWeight: 800, fontSize: 15, color: "#a855f7" }}>⚔️ Declarar Guerra</span>
-          <button onClick={onClose} style={{ background: "none", border: "none", color: "#555", fontSize: 18, cursor: "pointer" }}>✕</button>
+          <button onClick={onClose} style={{ background: "none", border: "none", color: "#7a7a9a", fontSize: 18, cursor: "pointer" }}>✕</button>
         </div>
         {eligible.length === 0
-          ? <p style={{ color: "#555", fontSize: 13, textAlign: "center" }}>No hay otros Clanes disponibles.</p>
+          ? <p style={{ color: "#7a7a9a", fontSize: 13, textAlign: "center" }}>No hay otros Clanes disponibles.</p>
           : eligible.map(clan => (
             <div key={clan.id} style={{
               display: "flex", alignItems: "center", gap: 12, padding: "10px 14px", borderRadius: 10,
@@ -129,7 +129,7 @@ function StartWarModal({ allClans, myClanId, onStart, onClose }: {
               <span style={{ fontSize: 20 }}>🛡️</span>
               <div style={{ flex: 1 }}>
                 <div style={{ fontFamily: "Cinzel, serif", fontWeight: 800, fontSize: 13, color: "#e8e8f0" }}>{clan.name}</div>
-                <div style={{ fontSize: 9, color: "#555", fontFamily: '"IBM Plex Mono",monospace' }}>Prestigio {clan.prestige}</div>
+                <div style={{ fontSize: 9, color: "#7a7a9a", fontFamily: '"IBM Plex Mono",monospace' }}>Prestigio {clan.prestige}</div>
               </div>
               <button
                 onClick={async () => { setStarting(clan.id); await onStart(clan.id); setStarting(null); onClose(); }}
@@ -170,7 +170,7 @@ function CreateClanModal({ onCreate, onClose }: { onCreate: (name: string, desc:
       <div style={{ background: "#12121f", border: "1px solid rgba(61,220,132,0.3)", borderRadius: 16, padding: 24, maxWidth: 380, width: "100%" }} onClick={e => e.stopPropagation()}>
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 18 }}>
           <span style={{ fontFamily: "Cinzel, serif", fontWeight: 800, fontSize: 15, color: "#3ddc84" }}>🛡️ Crear Clan</span>
-          <button onClick={onClose} style={{ background: "none", border: "none", color: "#555", fontSize: 18, cursor: "pointer" }}>✕</button>
+          <button onClick={onClose} style={{ background: "none", border: "none", color: "#7a7a9a", fontSize: 18, cursor: "pointer" }}>✕</button>
         </div>
         <input placeholder="Nombre del Clan" value={name} onChange={e => setName(e.target.value)} style={{ ...inp, marginBottom: 10 }} maxLength={40} />
         <textarea placeholder="Descripción (opcional)" value={desc} onChange={e => setDesc(e.target.value)} style={{ ...inp, resize: "vertical", minHeight: 60, marginBottom: 16 }} maxLength={200} />
@@ -253,7 +253,7 @@ export function ClansRoute() {
             ⚔️ Clanes
           </h1>
           {myClan && (
-            <p style={{ color: "#555", fontSize: 11, fontFamily: '"IBM Plex Mono",monospace', marginTop: 6 }}>
+            <p style={{ color: "#7a7a9a", fontSize: 11, fontFamily: '"IBM Plex Mono",monospace', marginTop: 6 }}>
               {myClan.name} · {myMember?.role ? (ROLE_ICON[myMember.role] ?? "") + " " + myMember.role : ""} · Prestigio {myClan.prestige}
             </p>
           )}
@@ -273,11 +273,11 @@ export function ClansRoute() {
                 }}>🛡️</div>
                 <div>
                   <div style={{ fontFamily: "Cinzel, serif", fontWeight: 900, fontSize: 16, color: "#e8e8f0" }}>{myClan.name}</div>
-                  <div style={{ fontSize: 9, color: "#555", fontFamily: '"IBM Plex Mono",monospace', marginTop: 3 }}>#{myClan.code}</div>
+                  <div style={{ fontSize: 9, color: "#7a7a9a", fontFamily: '"IBM Plex Mono",monospace', marginTop: 3 }}>#{myClan.code}</div>
                 </div>
                 <div style={{ marginLeft: "auto", textAlign: "right" }}>
                   <div style={{ color: "#e8b84b", fontWeight: 700, fontSize: 16, fontFamily: "Rajdhani, sans-serif" }}>{myClan.prestige}</div>
-                  <div style={{ color: "#444", fontSize: 9, fontFamily: '"IBM Plex Mono",monospace' }}>PRESTIGIO</div>
+                  <div style={{ color: "#5a5a7a", fontSize: 9, fontFamily: '"IBM Plex Mono",monospace' }}>PRESTIGIO</div>
                 </div>
               </div>
               <div style={{ display: "flex", gap: 8 }}>
@@ -286,14 +286,14 @@ export function ClansRoute() {
                   border: "1px solid #1a1a2a",
                 }}>
                   <div style={{ color: "#4a9eff", fontWeight: 700, fontSize: 14, fontFamily: "Rajdhani, sans-serif" }}>{members.length}</div>
-                  <div style={{ color: "#444", fontSize: 8, fontFamily: '"IBM Plex Mono",monospace', marginTop: 2 }}>MIEMBROS</div>
+                  <div style={{ color: "#5a5a7a", fontSize: 8, fontFamily: '"IBM Plex Mono",monospace', marginTop: 2 }}>MIEMBROS</div>
                 </div>
                 <div style={{
                   flex: 1, background: "#0a0a14", borderRadius: 8, padding: "8px 12px", textAlign: "center",
                   border: "1px solid #1a1a2a",
                 }}>
                   <div style={{ color: "#a855f7", fontWeight: 700, fontSize: 14, fontFamily: "Rajdhani, sans-serif" }}>{activeWars.length}</div>
-                  <div style={{ color: "#444", fontSize: 8, fontFamily: '"IBM Plex Mono",monospace', marginTop: 2 }}>GUERRAS ACTIVAS</div>
+                  <div style={{ color: "#5a5a7a", fontSize: 8, fontFamily: '"IBM Plex Mono",monospace', marginTop: 2 }}>GUERRAS ACTIVAS</div>
                 </div>
                 <div style={{
                   flex: 1, background: "#0a0a14", borderRadius: 8, padding: "8px 12px", textAlign: "center",
@@ -302,7 +302,7 @@ export function ClansRoute() {
                   <div style={{ color: "#3ddc84", fontWeight: 700, fontSize: 14, fontFamily: "Rajdhani, sans-serif" }}>
                     {(myClan.contribution_total ?? 0).toLocaleString()}
                   </div>
-                  <div style={{ color: "#444", fontSize: 8, fontFamily: '"IBM Plex Mono",monospace', marginTop: 2 }}>CONTRIBUCIÓN</div>
+                  <div style={{ color: "#5a5a7a", fontSize: 8, fontFamily: '"IBM Plex Mono",monospace', marginTop: 2 }}>CONTRIBUCIÓN</div>
                 </div>
               </div>
 
@@ -322,7 +322,7 @@ export function ClansRoute() {
             {/* Guild Wars */}
             <SectionCard title="GUERRAS DE CLANES" accent="#a855f7">
               <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
-                <span style={{ color: "#555", fontSize: 11, fontFamily: '"IBM Plex Mono",monospace' }}>
+                <span style={{ color: "#7a7a9a", fontSize: 11, fontFamily: '"IBM Plex Mono",monospace' }}>
                   {activeWars.length === 0 ? "Sin guerras activas" : `${activeWars.length} guerra(s) en curso`}
                 </span>
                 <button
@@ -340,12 +340,12 @@ export function ClansRoute() {
               ))}
               {pastWars.length > 0 && (
                 <div style={{ marginTop: 10 }}>
-                  <div style={{ fontSize: 9, color: "#333", fontFamily: '"IBM Plex Mono",monospace', marginBottom: 6 }}>HISTORIAL</div>
+                  <div style={{ fontSize: 9, color: "#4a4a6a", fontFamily: '"IBM Plex Mono",monospace', marginBottom: 6 }}>HISTORIAL</div>
                   {pastWars.map(w => <WarCard key={w.id} war={w} myClanId={myClan.id} />)}
                 </div>
               )}
               {wars.length === 0 && (
-                <div style={{ textAlign: "center", padding: "20px 0", color: "#333", fontSize: 12 }}>
+                <div style={{ textAlign: "center", padding: "20px 0", color: "#4a4a6a", fontSize: 12 }}>
                   Tu clan no ha librado ninguna guerra aún.
                 </div>
               )}
@@ -354,7 +354,7 @@ export function ClansRoute() {
             {/* Roster */}
             <SectionCard title="ROSTER" accent="#4a9eff">
               {members.length === 0
-                ? <div style={{ color: "#333", fontSize: 12, textAlign: "center", padding: "10px 0" }}>Sin miembros registrados.</div>
+                ? <div style={{ color: "#4a4a6a", fontSize: 12, textAlign: "center", padding: "10px 0" }}>Sin miembros registrados.</div>
                 : members.map((m, i) => (
                   <div key={m.id} style={{
                     display: "flex", alignItems: "center", gap: 12, padding: "9px 0",
@@ -367,13 +367,13 @@ export function ClansRoute() {
                     }}>{ROLE_ICON[m.role] ?? "⚔️"}</div>
                     <div style={{ flex: 1 }}>
                       <div style={{ color: "#e8e8f0", fontWeight: 700, fontSize: 13 }}>{m.display_name}</div>
-                      <div style={{ color: "#444", fontSize: 9, fontFamily: '"IBM Plex Mono",monospace', marginTop: 1 }}>{m.role}</div>
+                      <div style={{ color: "#5a5a7a", fontSize: 9, fontFamily: '"IBM Plex Mono",monospace', marginTop: 1 }}>{m.role}</div>
                     </div>
                     <div style={{ textAlign: "right" }}>
                       <div style={{ color: "#3ddc84", fontWeight: 700, fontSize: 12, fontFamily: "Rajdhani, sans-serif" }}>
                         {(m.contribution_accumulated ?? 0).toLocaleString()}
                       </div>
-                      <div style={{ color: "#333", fontSize: 8, fontFamily: '"IBM Plex Mono",monospace' }}>CONTRIB.</div>
+                      <div style={{ color: "#4a4a6a", fontSize: 8, fontFamily: '"IBM Plex Mono",monospace' }}>CONTRIB.</div>
                     </div>
                   </div>
                 ))
@@ -392,7 +392,7 @@ export function ClansRoute() {
               <div style={{ fontFamily: "Cinzel, serif", fontWeight: 900, fontSize: 15, color: "#e8b84b", marginBottom: 6 }}>
                 Sin Clan
               </div>
-              <div style={{ color: "#555", fontSize: 12, lineHeight: 1.6, marginBottom: 14 }}>
+              <div style={{ color: "#7a7a9a", fontSize: 12, lineHeight: 1.6, marginBottom: 14 }}>
                 Únete a un Clan para participar en Guerras de Clanes, contribuir al prestigio colectivo y conseguir recompensas exclusivas.
               </div>
               <button

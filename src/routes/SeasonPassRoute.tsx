@@ -70,7 +70,7 @@ function XpSection({ playerXp, currentTier, tiers }: {
       )}
       <div>
         <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 5 }}>
-          <span style={{ color: "#555", fontSize: 10 }}>XP Total de Temporada</span>
+          <span style={{ color: "#7a7a9a", fontSize: 10 }}>XP Total de Temporada</span>
           <span style={{ color: "#666", fontSize: 10 }}>{playerXp.toLocaleString()} / {maxXp.toLocaleString()}</span>
         </div>
         <div style={{ background: "#0f0f1a", borderRadius: 6, height: 6, overflow: "hidden", border: "1px solid #1a1a2e" }}>
@@ -469,7 +469,7 @@ export function SeasonPassRoute() {
           <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", flexWrap: "wrap", gap: 8 }}>
             <div>
               <h1 style={{ fontFamily: "Cinzel,serif", color: "#e8e8f0", fontSize: 26, margin: "0 0 4px" }}>🎫 {seasonName}</h1>
-              {endAt && <p style={{ color: "#555", margin: 0, fontSize: 11 }}>Finaliza: {endAt}</p>}
+              {endAt && <p style={{ color: "#7a7a9a", margin: 0, fontSize: 11 }}>Finaliza: {endAt}</p>}
             </div>
             <button onClick={reload} style={{ padding: "7px 18px", borderRadius: 8, border: "1px solid #2a2a3a", background: "transparent", color: "#888", fontSize: 11, cursor: "pointer" }}>↻ Actualizar</button>
           </div>
@@ -487,15 +487,15 @@ export function SeasonPassRoute() {
         <div style={{ background: "linear-gradient(135deg,#1a1a2e,#12121a)", border: "1px solid #e8b84b33", borderRadius: 14, padding: "20px 24px", marginBottom: 24 }}>
           <div style={{ display: "flex", gap: 20, flexWrap: "wrap", alignItems: "center", marginBottom: 16 }}>
             <div>
-              <div style={{ color: "#555", fontSize: 10, letterSpacing: "0.1em", marginBottom: 4 }}>TIER ACTUAL</div>
+              <div style={{ color: "#7a7a9a", fontSize: 10, letterSpacing: "0.1em", marginBottom: 4 }}>TIER ACTUAL</div>
               <div style={{ color: "#e8b84b", fontFamily: "Cinzel,serif", fontSize: 28, fontWeight: 700 }}>T{currentTier}</div>
             </div>
             <div>
-              <div style={{ color: "#555", fontSize: 10, letterSpacing: "0.1em", marginBottom: 4 }}>XP DE TEMPORADA</div>
+              <div style={{ color: "#7a7a9a", fontSize: 10, letterSpacing: "0.1em", marginBottom: 4 }}>XP DE TEMPORADA</div>
               <div style={{ color: "#e8e8f0", fontSize: 22, fontWeight: 700 }}>{playerXp.toLocaleString()}</div>
             </div>
             <div>
-              <div style={{ color: "#555", fontSize: 10, letterSpacing: "0.1em", marginBottom: 4 }}>TIPO DE PASS</div>
+              <div style={{ color: "#7a7a9a", fontSize: 10, letterSpacing: "0.1em", marginBottom: 4 }}>TIPO DE PASS</div>
               <div style={{ color: isPremium ? "#e8b84b" : "#555", fontSize: 14, fontWeight: 700 }}>
                 {isPremium ? "★ PREMIUM" : "F2P"}
               </div>
@@ -544,7 +544,7 @@ export function SeasonPassRoute() {
 
         {/* XP Sources */}
         <div style={{ marginTop: 28 }}>
-          <div style={{ fontFamily: "IBM Plex Mono,monospace", fontSize: 9, color: "#555", letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: 14 }}>¿Cómo ganar XP de Temporada?</div>
+          <div style={{ fontFamily: "IBM Plex Mono,monospace", fontSize: 9, color: "#7a7a9a", letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: 14 }}>¿Cómo ganar XP de Temporada?</div>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(160px,1fr))", gap: 8 }}>
             {[
               { icon: "⚔️", label: "Misiones PvE",    xp: "+30–150 XP" },

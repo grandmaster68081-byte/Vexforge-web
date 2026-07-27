@@ -156,7 +156,7 @@ export function DepositRoute() {
             <div style={{ fontFamily: '"Cinzel",serif', fontSize: 22, color: "#e8b84b" }}>
               {(balance.vex_ingame || 0).toLocaleString()}
             </div>
-            <div style={{ fontSize: 10, color: "#555", marginTop: 2 }}>Solo en juego · no retirable</div>
+            <div style={{ fontSize: 10, color: "#7a7a9a", marginTop: 2 }}>Solo en juego · no retirable</div>
           </div>
           <div>
             <div style={{ fontSize: 10, color: "#666", textTransform: "uppercase",
@@ -164,7 +164,7 @@ export function DepositRoute() {
             <div style={{ fontFamily: '"Cinzel",serif', fontSize: 22, color: "#3DC96B" }}>
               {(balance.vex_tradeable || 0).toLocaleString()}
             </div>
-            <div style={{ fontSize: 10, color: "#555", marginTop: 2 }}>
+            <div style={{ fontSize: 10, color: "#7a7a9a", marginTop: 2 }}>
               aprox. {((balance.vex_tradeable || 0) * 0.01).toFixed(2)} USDT · retirable
             </div>
           </div>
@@ -178,7 +178,7 @@ export function DepositRoute() {
         </button>
         <button onClick={() => setTab("stripe")} style={tabStyle(tab === "stripe")}>
           💳 Stripe
-          <span style={{ fontSize: 10, marginLeft: 6, color: "#555" }}>Próximamente</span>
+          <span style={{ fontSize: 10, marginLeft: 6, color: "#7a7a9a" }}>Próximamente</span>
         </button>
         <button onClick={() => setTab("historial")} style={{
           ...tabStyle(tab === "historial"),
@@ -346,9 +346,9 @@ export function DepositRoute() {
             </p>
             <div style={{ display: "grid", gridTemplateColumns: "1fr auto auto",
               gap: "6px 20px", alignItems: "center" }}>
-              <span style={{ fontSize: 10, color: "#555", textTransform: "uppercase" }}>Pack</span>
-              <span style={{ fontSize: 10, color: "#555", textTransform: "uppercase" }}>USDT</span>
-              <span style={{ fontSize: 10, color: "#555", textTransform: "uppercase" }}>VEX</span>
+              <span style={{ fontSize: 10, color: "#7a7a9a", textTransform: "uppercase" }}>Pack</span>
+              <span style={{ fontSize: 10, color: "#7a7a9a", textTransform: "uppercase" }}>USDT</span>
+              <span style={{ fontSize: 10, color: "#7a7a9a", textTransform: "uppercase" }}>VEX</span>
               {PACK_REF.map(p => (
                 <>
                   <span key={p.name} style={{ fontSize: 12, color: "#aaa" }}>{p.name}</span>
@@ -387,7 +387,7 @@ export function DepositRoute() {
               <h2 style={{ fontFamily: '"Cinzel",serif', color: "#888", marginBottom: 10 }}>
                 Sin depósitos aún
               </h2>
-              <p style={{ color: "#555", fontSize: 13, lineHeight: 1.6 }}>
+              <p style={{ color: "#7a7a9a", fontSize: 13, lineHeight: 1.6 }}>
                 Tus depósitos aparecerán aquí tras enviarlos.<br />
                 El tiempo de revisión es de 24–48 horas.
               </p>
@@ -459,7 +459,7 @@ export function DepositRoute() {
                           color: STATUS_COLOR[d.status] || "#888" }}>
                           {STATUS_LABEL[d.status] || d.status}
                         </span>
-                        <div style={{ fontSize: 11, color: "#555", marginTop: 2 }}>
+                        <div style={{ fontSize: 11, color: "#7a7a9a", marginTop: 2 }}>
                           {new Date(d.created_at).toLocaleDateString("es-ES", {
                             day: "2-digit", month: "short", year: "numeric",
                             hour: "2-digit", minute: "2-digit",
@@ -471,7 +471,7 @@ export function DepositRoute() {
                     {/* TX Hash — expandible */}
                     {d.tx_hash && (
                       <div style={{ marginTop: 4 }}>
-                        <div style={{ fontSize: 10, color: "#555", textTransform: "uppercase",
+                        <div style={{ fontSize: 10, color: "#7a7a9a", textTransform: "uppercase",
                           letterSpacing: "0.08em", marginBottom: 4 }}>TX Hash</div>
                         <code style={{
                           display: "block",
@@ -489,7 +489,7 @@ export function DepositRoute() {
                     )}
 
                     {/* Deposit index label */}
-                    <div style={{ fontSize: 10, color: "#444", marginTop: 8 }}>
+                    <div style={{ fontSize: 10, color: "#5a5a7a", marginTop: 8 }}>
                       Depósito #{deposits.length - idx}
                     </div>
                   </div>

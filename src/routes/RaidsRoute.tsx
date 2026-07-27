@@ -58,7 +58,7 @@ function RaidCard({
                 {raid.metadata?.name ?? raid.raid_code}
               </h3>
             </div>
-            <div style={{ color: "#555", fontSize: 11, letterSpacing: "0.08em" }}>{raid.region_id.replace(/_/g, " ").toUpperCase()}</div>
+            <div style={{ color: "#7a7a9a", fontSize: 11, letterSpacing: "0.08em" }}>{raid.region_id.replace(/_/g, " ").toUpperCase()}</div>
           </div>
           <div style={{ textAlign: "right" }}>
             <div style={{
@@ -180,7 +180,7 @@ export function RaidsRoute() {
             <h1 style={{ fontFamily: "Cinzel,serif", color: "#e8b84b", fontSize: 26, margin: "0 0 6px" }}>
               ⚔️ Raids Cooperativos
             </h1>
-            <p style={{ color: "#555", fontSize: 13, margin: 0 }}>
+            <p style={{ color: "#7a7a9a", fontSize: 13, margin: 0 }}>
               Únete a otros guerreros para derrotar mazmorras de alto riesgo. Recompensas escaladas por dificultad.
             </p>
           </div>
@@ -195,7 +195,7 @@ export function RaidsRoute() {
             </button>
             <button
               onClick={reload}
-              style={{ marginLeft: "auto", padding: "8px 16px", borderRadius: 8, border: "1px solid #2a2a3a", background: "transparent", color: "#555", fontSize: 12, cursor: "pointer" }}>
+              style={{ marginLeft: "auto", padding: "8px 16px", borderRadius: 8, border: "1px solid #2a2a3a", background: "transparent", color: "#7a7a9a", fontSize: 12, cursor: "pointer" }}>
               ↺ Actualizar
             </button>
           </div>
@@ -228,7 +228,7 @@ export function RaidsRoute() {
 
           {/* Legend */}
           <div style={{ marginTop: 40, padding: "16px 20px", background: "#13131f", borderRadius: 12, border: "1px solid #1a1a2a" }}>
-            <div style={{ color: "#555", fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 10 }}>
+            <div style={{ color: "#7a7a9a", fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 10 }}>
               Guía de Dificultad
             </div>
             <div style={{ display: "flex", gap: 20, flexWrap: "wrap" }}>

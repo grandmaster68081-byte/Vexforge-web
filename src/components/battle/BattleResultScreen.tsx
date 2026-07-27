@@ -224,7 +224,7 @@ export function BattleResultScreen({ result, playerName, opponentName, onDismiss
         letterSpacing: '0.1em', marginBottom: 16, textTransform: 'uppercase',
       }}>
         <span style={{ color: '#8888b0' }}>{playerName}</span>
-        <span style={{ color: '#333', margin: '0 10px' }}>⚔</span>
+        <span style={{ color: '#4a4a6a', margin: '0 10px' }}>⚔</span>
         <span style={{ color: '#8888b0' }}>{opponentName}</span>
       </div>
 
@@ -269,7 +269,7 @@ export function BattleResultScreen({ result, playerName, opponentName, onDismiss
           {eloDisplayed >= 0 ? '+' : ''}{eloDisplayed} ELO
         </div>
         <div style={{
-          color: '#444', fontSize: 9, fontFamily: 'IBM Plex Mono, monospace',
+          color: '#5a5a7a', fontSize: 9, fontFamily: 'IBM Plex Mono, monospace',
           letterSpacing: '0.25em', marginTop: 4,
         }}>
           CAMBIO DE RANKING

@@ -25,7 +25,7 @@ function StatPill({ label, value, icon, color = "#e8e8f0" }: { label: string; va
     <div style={{ background: "#12121a", border: "1px solid #2a2a3e", borderRadius: 10, padding: "12px 16px", textAlign: "center" }}>
       <div style={{ fontSize: 22, marginBottom: 4 }}>{icon}</div>
       <div style={{ color, fontWeight: 800, fontSize: 18, fontFamily: "Cinzel,serif" }}>{typeof value === "number" ? value.toLocaleString() : value}</div>
-      <div style={{ color: "#444", fontSize: 10, marginTop: 2 }}>{label}</div>
+      <div style={{ color: "#5a5a7a", fontSize: 10, marginTop: 2 }}>{label}</div>
     </div>
   );
 }
@@ -49,7 +49,7 @@ export function ProgressRoute() {
     <main style={{ maxWidth: 720, margin: "0 auto", padding: "32px 16px" }}>
       <div style={{ textAlign: "center", padding: "60px 0" }}>
         <div style={{ fontSize: 48, marginBottom: 16 }}>⚒️</div>
-        <p style={{ color: "#555", fontSize: 14, marginBottom: 20 }}>Tu perfil de progreso aún no está configurado.</p>
+        <p style={{ color: "#7a7a9a", fontSize: 14, marginBottom: 20 }}>Tu perfil de progreso aún no está configurado.</p>
         <Link to="/account" style={{ color: "#e8b84b", textDecoration: "none", fontWeight: 700 }}>Ir a Mi Cuenta →</Link>
       </div>
     </main>
@@ -77,9 +77,9 @@ export function ProgressRoute() {
             <div style={{ color: "#e8b84b", fontSize: 13, fontWeight: 700, marginTop: 4 }}>{title}</div>
           </div>
           <div style={{ textAlign: "right" }}>
-            <div style={{ color: "#555", fontSize: 10 }}>ENERGÍA</div>
+            <div style={{ color: "#7a7a9a", fontSize: 10 }}>ENERGÍA</div>
             <div style={{ color: energyColor, fontSize: 18, fontWeight: 800 }}>{progress.energy}/{progress.max_energy}</div>
-            <div style={{ color: "#555", fontSize: 10 }}>{energyPct}% disponible</div>
+            <div style={{ color: "#7a7a9a", fontSize: 10 }}>{energyPct}% disponible</div>
           </div>
         </div>
         <ForgeBar label="Experiencia" value={progress.xp} max={progress.xp + progress.xp_to_next} color="#e8b84b" icon="⭐" />
@@ -98,7 +98,7 @@ export function ProgressRoute() {
         <div style={{ background: "#12121a", border: "1px solid #2a2a3e", borderRadius: 12, padding: "18px 20px" }}>
           <p style={{ color: "#888", fontSize: 10, fontWeight: 700, letterSpacing: "0.12em", margin: "0 0 12px" }}>TUTORIAL</p>
           <ForgeBar label="Pasos completados" value={progress.tutorial_step} max={10} color="#3ddc84" icon="📖" />
-          <p style={{ color: "#555", fontSize: 11, margin: "8px 0 0" }}>Completa el tutorial para desbloquear todas las funciones del juego.</p>
+          <p style={{ color: "#7a7a9a", fontSize: 11, margin: "8px 0 0" }}>Completa el tutorial para desbloquear todas las funciones del juego.</p>
         </div>
       )}
     </main>

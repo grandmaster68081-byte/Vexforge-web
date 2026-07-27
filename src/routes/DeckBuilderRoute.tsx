@@ -80,7 +80,7 @@ function DeckPanel({ selectedIds, myCards, saving, saveMsg, validation, onValida
         ))}
         {factionList.length > 0 && (
           <div style={{ borderTop: "1px solid #1a1a2e", paddingTop: 10, marginTop: 8 }}>
-            <div style={{ color: "#555", fontSize: 10, marginBottom: 6 }}>FACCIONES</div>
+            <div style={{ color: "#7a7a9a", fontSize: 10, marginBottom: 6 }}>FACCIONES</div>
             {factionList.map(([f, n]) => (
               <div key={f} style={{ display: "flex", justifyContent: "space-between", marginBottom: 3 }}>
                 <span style={{ color: FACTION_COLOR[f] ?? "#888", fontSize: 11 }}>{f}</span>
@@ -156,7 +156,7 @@ export function DeckBuilderRoute() {
       <div style={{ display: "flex", gap: 20, alignItems: "flex-start" }}>
         <div style={{ flex: 1, minWidth: 0 }}>
           <div style={{ color: "#888", fontSize: 12, marginBottom: 12, display: "flex", justifyContent: "space-between" }}>
-            <span>Tu Colección <span style={{ color: "#555" }}>({myCards.length} cartas únicas)</span></span>
+            <span>Tu Colección <span style={{ color: "#7a7a9a" }}>({myCards.length} cartas únicas)</span></span>
             <span style={{ color: "#e8b84b", fontWeight: 700 }}>{selectedIds.length} seleccionadas</span>
           </div>
           {myCards.length === 0 ? (

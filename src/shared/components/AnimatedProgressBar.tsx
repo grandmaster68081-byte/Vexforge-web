@@ -53,7 +53,7 @@ export function AnimatedProgressBar({
               fontFamily: '"IBM Plex Mono", monospace',
             }}>
               {current.toLocaleString()}{" "}
-              <span style={{ color: "#444", fontWeight: 400, fontSize: 10 }}>
+              <span style={{ color: "#5a5a7a", fontWeight: 400, fontSize: 10 }}>
                 / {max.toLocaleString()}
               </span>
             </span>
@@ -106,14 +106,14 @@ export function AnimatedProgressBar({
         display: "flex", justifyContent: "space-between", marginTop: 4,
       }}>
         <span style={{
-          color: "#333", fontSize: 10,
+          color: "#4a4a6a", fontSize: 10,
           fontFamily: '"IBM Plex Mono", monospace',
         }}>
           {pctDisplay}% completado
         </span>
         {max > 0 && (
           <span style={{
-            color: "#333", fontSize: 10,
+            color: "#4a4a6a", fontSize: 10,
             fontFamily: '"IBM Plex Mono", monospace',
           }}>
             Faltan {(max - current).toLocaleString()}

@@ -58,7 +58,7 @@ import { useState, useEffect } from "react";
         border: entry.is_self ? "1px solid rgba(232,184,75,0.2)" : "1px solid transparent",
       }}>
         {/* Position */}
-        <div style={{ minWidth: 28, textAlign: "center", fontSize: isTop3 ? 16 : 11, color: "#555" }}>
+        <div style={{ minWidth: 28, textAlign: "center", fontSize: isTop3 ? 16 : 11, color: "#7a7a9a" }}>
           {isTop3 ? MEDAL_ICONS[index] : `${index + 1}`}
         </div>
         {/* Tier icon */}
@@ -72,12 +72,12 @@ import { useState, useEffect } from "react";
           }}>
             {entry.display_name}{entry.is_self ? " (tú)" : ""}
           </div>
-          <div style={{ fontSize: 9, color: "#444", fontFamily: '"IBM Plex Mono",monospace' }}>{wl}</div>
+          <div style={{ fontSize: 9, color: "#5a5a7a", fontFamily: '"IBM Plex Mono",monospace' }}>{wl}</div>
         </div>
         {/* MMR */}
         <div style={{ textAlign: "right" }}>
           <div style={{ fontSize: 13, fontFamily: "Cinzel,serif", fontWeight: 800, color: tier.color }}>{entry.mmr}</div>
-          <div style={{ fontSize: 8, color: "#333", fontFamily: '"IBM Plex Mono",monospace' }}>MMR</div>
+          <div style={{ fontSize: 8, color: "#4a4a6a", fontFamily: '"IBM Plex Mono",monospace' }}>MMR</div>
         </div>
       </div>
     );
@@ -178,12 +178,12 @@ import { useState, useEffect } from "react";
             borderRadius: 8, padding: "5px 10px", flexShrink: 0, textAlign: "center",
           }}>
             <div style={{ fontSize: 11, fontFamily: "Cinzel,serif", fontWeight: 800, color: "#a855f7" }}>×{xpBonus}</div>
-            <div style={{ fontSize: 8, color: "#555", fontFamily: '"IBM Plex Mono",monospace' }}>XP BONUS</div>
+            <div style={{ fontSize: 8, color: "#7a7a9a", fontFamily: '"IBM Plex Mono",monospace' }}>XP BONUS</div>
           </div>
 
           {/* Chevron */}
           <div style={{
-            color: "#444", fontSize: 12, flexShrink: 0, transform: open ? "rotate(180deg)" : "rotate(0deg)",
+            color: "#5a5a7a", fontSize: 12, flexShrink: 0, transform: open ? "rotate(180deg)" : "rotate(0deg)",
             transition: "transform 0.25s ease",
           }}>▼</div>
         </button>
@@ -212,11 +212,11 @@ import { useState, useEffect } from "react";
                       <span style={{ fontFamily: "Cinzel,serif", fontWeight: 800, fontSize: 16, color: myTier.color }}>
                         {myTier.name}
                       </span>
-                      <span style={{ fontFamily: '"IBM Plex Mono",monospace', fontSize: 11, color: "#555" }}>
+                      <span style={{ fontFamily: '"IBM Plex Mono",monospace', fontSize: 11, color: "#7a7a9a" }}>
                         {myRanking.mmr} MMR
                       </span>
                     </div>
-                    <div style={{ fontSize: 10, color: "#444", fontFamily: "Rajdhani,sans-serif", marginTop: 2 }}>
+                    <div style={{ fontSize: 10, color: "#5a5a7a", fontFamily: "Rajdhani,sans-serif", marginTop: 2 }}>
                       Pos. #{myRanking.rank_position ?? "—"} · {myRanking.wins}W {myRanking.losses}L {myRanking.draws}D
                     </div>
                   </div>
@@ -236,7 +236,7 @@ import { useState, useEffect } from "react";
                 {myNextTier && (
                   <div>
                     <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 5 }}>
-                      <span style={{ fontSize: 9, color: "#444", fontFamily: '"IBM Plex Mono",monospace' }}>
+                      <span style={{ fontSize: 9, color: "#5a5a7a", fontFamily: '"IBM Plex Mono",monospace' }}>
                         Progreso hacia {myNextTier.name}
                       </span>
                       <span style={{ fontSize: 9, color: myTier.color, fontFamily: '"IBM Plex Mono",monospace' }}>
@@ -254,7 +254,7 @@ import { useState, useEffect } from "react";
 
               {/* Reward tiers */}
               <div>
-                <div style={{ fontSize: 9, color: "#444", fontFamily: '"IBM Plex Mono",monospace', letterSpacing: "0.12em", marginBottom: 10 }}>
+                <div style={{ fontSize: 9, color: "#5a5a7a", fontFamily: '"IBM Plex Mono",monospace', letterSpacing: "0.12em", marginBottom: 10 }}>
                   RECOMPENSAS FINALES
                 </div>
                 {top3Rewards.map((reward, i) => (
@@ -272,7 +272,7 @@ import { useState, useEffect } from "react";
                     background: "rgba(168,85,247,0.06)", border: "1px solid rgba(168,85,247,0.12)",
                     marginTop: 8,
                   }}>
-                    <span style={{ fontSize: 11, fontFamily: '"IBM Plex Mono",monospace', color: "#555", minWidth: 28 }}>Top</span>
+                    <span style={{ fontSize: 11, fontFamily: '"IBM Plex Mono",monospace', color: "#7a7a9a", minWidth: 28 }}>Top</span>
                     <span style={{ fontSize: 18 }}>⚡</span>
                     <span style={{ fontSize: 12, fontFamily: "Rajdhani,sans-serif", fontWeight: 700, color: "#a855f7", letterSpacing: "0.04em" }}>
                       XP Bonus ×{xpBonus} — todos
@@ -283,14 +283,14 @@ import { useState, useEffect } from "react";
 
               {/* Mini leaderboard */}
               <div>
-                <div style={{ fontSize: 9, color: "#444", fontFamily: '"IBM Plex Mono",monospace', letterSpacing: "0.12em", marginBottom: 10 }}>
+                <div style={{ fontSize: 9, color: "#5a5a7a", fontFamily: '"IBM Plex Mono",monospace', letterSpacing: "0.12em", marginBottom: 10 }}>
                   CLASIFICACIÓN ACTUAL
                 </div>
                 {leaderboard.slice(0, 5).map((entry, i) => (
                   <LeaderboardRow key={entry.player_id} entry={entry} index={i} />
                 ))}
                 {leaderboard.length === 0 && (
-                  <div style={{ color: "#333", fontSize: 11, fontFamily: "Rajdhani,sans-serif", padding: "12px 0" }}>
+                  <div style={{ color: "#4a4a6a", fontSize: 11, fontFamily: "Rajdhani,sans-serif", padding: "12px 0" }}>
                     Sin clasificación todavía
                   </div>
                 )}

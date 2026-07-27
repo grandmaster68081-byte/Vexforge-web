@@ -29,7 +29,7 @@ function StatChip({ label, value, color }: { label: string; value: number | stri
   return (
     <div style={{ textAlign: "center" }}>
       <div style={{ color: color ?? "#e8e8f0", fontWeight: 700, fontSize: 14 }}>{value}</div>
-      <div style={{ color: "#555", fontSize: 10, marginTop: 2 }}>{label}</div>
+      <div style={{ color: "#7a7a9a", fontSize: 10, marginTop: 2 }}>{label}</div>
     </div>
   );
 }
@@ -54,7 +54,7 @@ function RankRow({ entry, isMe }: { entry: SeasonRanking; isMe: boolean }) {
       <div style={{ width: 36, flexShrink: 0, textAlign: "center" }}>
         {medal
           ? <span style={{ fontSize: 20 }}>{medal}</span>
-          : <span style={{ color: "#444", fontWeight: 700, fontSize: 15 }}>#{entry.rank_position}</span>
+          : <span style={{ color: "#5a5a7a", fontWeight: 700, fontSize: 15 }}>#{entry.rank_position}</span>
         }
       </div>
 
@@ -135,12 +135,12 @@ export function SeasonRankingsRoute() {
               🏆 Rankings de Temporada
             </h1>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-              <p style={{ color: "#555", fontSize: 13, margin: 0 }}>
+              <p style={{ color: "#7a7a9a", fontSize: 13, margin: 0 }}>
                 Temporada <strong style={{ color: "#e8b84b" }}>{SEASON}</strong> · Top clasificados por MMR
               </p>
               <button
                 onClick={load}
-                style={{ padding: "7px 16px", borderRadius: 8, border: "1px solid #2a2a3a", background: "transparent", color: "#555", fontSize: 12, cursor: "pointer" }}>
+                style={{ padding: "7px 16px", borderRadius: 8, border: "1px solid #2a2a3a", background: "transparent", color: "#7a7a9a", fontSize: 12, cursor: "pointer" }}>
                 ↺ Actualizar
               </button>
             </div>
@@ -183,7 +183,7 @@ export function SeasonRankingsRoute() {
 
           {/* Tier legend */}
           <div style={{ marginTop: 40, padding: "16px 20px", background: "#13131f", borderRadius: 12, border: "1px solid #1a1a2a" }}>
-            <div style={{ color: "#555", fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 12 }}>
+            <div style={{ color: "#7a7a9a", fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 12 }}>
               Rangos por MMR
             </div>
             <div style={{ display: "flex", gap: 16, flexWrap: "wrap" }}>
@@ -191,7 +191,7 @@ export function SeasonRankingsRoute() {
                 <div key={t.label} style={{ display: "flex", alignItems: "center", gap: 6 }}>
                   <span>{t.icon}</span>
                   <span style={{ color: t.color, fontSize: 12, fontWeight: 600 }}>{t.label}</span>
-                  <span style={{ color: "#444", fontSize: 11 }}>{t.min === 0 ? "< 1100" : `≥ ${t.min}`}</span>
+                  <span style={{ color: "#5a5a7a", fontSize: 11 }}>{t.min === 0 ? "< 1100" : `≥ ${t.min}`}</span>
                 </div>
               ))}
             </div>

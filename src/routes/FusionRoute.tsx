@@ -75,7 +75,7 @@
                 <div style={{ fontFamily: "Cinzel,serif", fontSize: 13, fontWeight: 600 }}>{c.name}</div>
                 <div style={{ marginTop: 3 }}><RarityBadge rarity={c.rarity} /></div>
               </div>
-              <div style={{ color: "#555", fontSize: 11 }}>×{c.quantity}</div>
+              <div style={{ color: "#7a7a9a", fontSize: 11 }}>×{c.quantity}</div>
             </button>
           );
         })}
@@ -92,7 +92,7 @@
     shardsFor: (r: string) => number;
     sourceRarity: string;
     }) {
-    if (!policy) return <div style={{ color: "#444", fontSize: 12, textAlign: "center", padding: 16 }}>Selecciona una carta para ver el coste de fusión.</div>;
+    if (!policy) return <div style={{ color: "#5a5a7a", fontSize: 12, textAlign: "center", padding: 16 }}>Selecciona una carta para ver el coste de fusión.</div>;
 
     const availShards = shardsFor(sourceRarity);
     const hasShards   = availShards >= policy.requiredShards;
@@ -203,7 +203,7 @@
               {/* Shards */}
               {shards.length > 0 && (
                 <div style={{ marginTop: 16, padding: "12px 14px", background: "rgba(12,12,22,0.7)", borderRadius: 10, border: "1px solid #1a1a2e" }}>
-                  <div style={{ fontSize: 10, color: "#555", marginBottom: 8, letterSpacing: "0.1em", textTransform: "uppercase" }}>Tus Shards</div>
+                  <div style={{ fontSize: 10, color: "#7a7a9a", marginBottom: 8, letterSpacing: "0.1em", textTransform: "uppercase" }}>Tus Shards</div>
                   <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
                     {shards.map(s => (
                       <ShardCounter key={s.rarity} rarity={s.rarity} count={s.quantity} />
@@ -218,7 +218,7 @@
 
               {/* Policy */}
               {policyLoading ? (
-                <div style={{ color: "#555", fontSize: 12, textAlign: "center", padding: 20 }}>Calculando coste...</div>
+                <div style={{ color: "#7a7a9a", fontSize: 12, textAlign: "center", padding: 20 }}>Calculando coste...</div>
               ) : (
                 <PolicyPanel
                   policy={policy}

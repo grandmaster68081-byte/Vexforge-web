@@ -21,7 +21,7 @@ function FriendCard({ friend, onChallenge }: { friend: Friendship; onChallenge: 
       </div>
       <div style={{ flex: 1 }}>
         <div style={{ color: "#e8e8f0", fontWeight: 700, fontSize: 13 }}>{name}</div>
-        <div style={{ color: "#444", fontSize: 10, marginTop: 2 }}>Forjador</div>
+        <div style={{ color: "#5a5a7a", fontSize: 10, marginTop: 2 }}>Forjador</div>
       </div>
       <button onClick={() => onChallenge(friend.friend_id)} style={btn("#e8b84b")}>⚔️ Desafiar</button>
     </div>
@@ -37,7 +37,7 @@ function PendingCard({ request, onAccept, onDecline }: { request: Friendship; on
       </div>
       <div style={{ flex: 1 }}>
         <div style={{ color: "#e8e8f0", fontWeight: 700, fontSize: 13 }}>{name}</div>
-        <div style={{ color: "#555", fontSize: 10 }}>Quiere ser tu amigo</div>
+        <div style={{ color: "#7a7a9a", fontSize: 10 }}>Quiere ser tu amigo</div>
       </div>
       <div style={{ display: "flex", gap: 8 }}>
         <button onClick={() => onAccept(request.id)} style={btn()}>✓</button>
@@ -135,7 +135,7 @@ export function FriendsRoute() {
                   <span style={{ fontSize: 28 }}>🎯</span>
                   <div style={{ flex: 1 }}>
                     <div style={{ color: "#e8e8f0", fontWeight: 700, fontSize: 13 }}>Desafío directo</div>
-                    <div style={{ color: "#555", fontSize: 11 }}>Estado: {c.status}</div>
+                    <div style={{ color: "#7a7a9a", fontSize: 11 }}>Estado: {c.status}</div>
                   </div>
                   {c.status === "pending" && (
                     <div style={{ display: "flex", gap: 8 }}>

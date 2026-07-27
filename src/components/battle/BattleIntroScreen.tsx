@@ -507,7 +507,7 @@ export function BattleIntroScreen({
               </div>
               <div style={{
                 fontFamily: 'Rajdhani, sans-serif',
-                fontSize: 'clamp(10px,2vw,13px)', color: '#555',
+                fontSize: 'clamp(10px,2vw,13px)', color: '#7a7a9a',
                 letterSpacing: '0.32em', textTransform: 'uppercase',
               }}>
                 ¡PREPÁRATE!

@@ -201,7 +201,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
             #vf-pack-egg:hover{filter:brightness(1.15);}`}</style>
 
           <div style={{ marginBottom: 28, textAlign: "center" }}>
-            <div style={{ fontSize: 11, color: "#444", fontFamily: '"IBM Plex Mono",monospace', letterSpacing: "0.14em", marginBottom: 8 }}>ABRIENDO</div>
+            <div style={{ fontSize: 11, color: "#5a5a7a", fontFamily: '"IBM Plex Mono",monospace', letterSpacing: "0.14em", marginBottom: 8 }}>ABRIENDO</div>
             <div style={{ fontSize: 22, fontFamily: "Cinzel,serif", color: packVisual.color, fontWeight: 800 }}>{packVisual.name}</div>
           </div>
 
@@ -298,16 +298,16 @@ import { useState, useEffect, useRef, useCallback } from "react";
             {/* Header */}
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 24 }}>
               <div>
-                <div style={{ fontSize: 10, color: "#444", fontFamily: '"IBM Plex Mono",monospace', letterSpacing: "0.12em" }}>REVELANDO</div>
+                <div style={{ fontSize: 10, color: "#5a5a7a", fontFamily: '"IBM Plex Mono",monospace', letterSpacing: "0.12em" }}>REVELANDO</div>
                 <div style={{ fontSize: 20, fontFamily: "Cinzel,serif", color: packVisual.color, fontWeight: 800 }}>{packVisual.name}</div>
               </div>
               {/* Progress counter */}
               <div style={{ textAlign: "right" }}>
                 <div style={{ fontSize: 28, fontFamily: "Cinzel,serif", color: "#fff", fontWeight: 900, lineHeight: 1 }}>
                   <span style={{ color: packVisual.color }}>{flipped.size}</span>
-                  <span style={{ color: "#333", fontSize: 16 }}> / {cards.length}</span>
+                  <span style={{ color: "#4a4a6a", fontSize: 16 }}> / {cards.length}</span>
                 </div>
-                <div style={{ fontSize: 9, color: "#444", fontFamily: '"IBM Plex Mono",monospace', marginTop: 3 }}>CARTAS REVELADAS</div>
+                <div style={{ fontSize: 9, color: "#5a5a7a", fontFamily: '"IBM Plex Mono",monospace', marginTop: 3 }}>CARTAS REVELADAS</div>
               </div>
             </div>
 
@@ -383,7 +383,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
                             fontWeight: 700, lineHeight: 1.2,
                           }}>{card.name}</div>
                           {card.faction && (
-                            <div style={{ fontSize: 9, color: "#555", marginTop: 4, fontFamily: "Rajdhani,sans-serif" }}>
+                            <div style={{ fontSize: 9, color: "#7a7a9a", marginTop: 4, fontFamily: "Rajdhani,sans-serif" }}>
                               {card.faction}
                             </div>
                           )}
@@ -410,7 +410,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
                           width: 40, height: 2,
                           background: `linear-gradient(90deg, transparent, ${packVisual.color}66, transparent)`,
                         }} />
-                        <div style={{ fontSize: 9, color: "#333", marginTop: 8, fontFamily: '"IBM Plex Mono",monospace' }}>
+                        <div style={{ fontSize: 9, color: "#4a4a6a", marginTop: 8, fontFamily: '"IBM Plex Mono",monospace' }}>
                           TAP
                         </div>
                       </div>
@@ -427,7 +427,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
                   background: autoRunning ? "#1e1e30" : `linear-gradient(135deg,${packVisual.color}cc,${packVisual.color})`,
                   border: "none", borderRadius: 10, padding: "14px 32px",
                   fontFamily: "Rajdhani,sans-serif", fontWeight: 800, fontSize: 15,
-                  color: autoRunning ? "#555" : "#0a0a14",
+                  color: autoRunning ? "#7a7a9a" : "#0a0a14",
                   cursor: autoRunning ? "not-allowed" : "pointer",
                   letterSpacing: "0.1em",
                 }}>
@@ -464,7 +464,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
         }}>
           {/* Header */}
           <div style={{ textAlign: "center", marginBottom: 32 }}>
-            <div style={{ fontSize: 10, color: "#444", fontFamily: '"IBM Plex Mono",monospace', letterSpacing: "0.14em", marginBottom: 8 }}>RESUMEN</div>
+            <div style={{ fontSize: 10, color: "#5a5a7a", fontFamily: '"IBM Plex Mono",monospace', letterSpacing: "0.14em", marginBottom: 8 }}>RESUMEN</div>
             <div style={{ fontSize: 24, fontFamily: "Cinzel,serif", color: packVisual.color, fontWeight: 900, marginBottom: 4 }}>
               {packVisual.name}
             </div>
@@ -483,7 +483,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
             background: "#12121f", border: "1px solid #2a2a3a", borderRadius: 12,
             padding: "20px 24px", marginBottom: 24,
           }}>
-            <div style={{ fontSize: 10, color: "#444", fontFamily: '"IBM Plex Mono",monospace', marginBottom: 16, letterSpacing: "0.1em" }}>
+            <div style={{ fontSize: 10, color: "#5a5a7a", fontFamily: '"IBM Plex Mono",monospace', marginBottom: 16, letterSpacing: "0.1em" }}>
               CARTAS OBTENIDAS ({cards.length})
             </div>
             <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
@@ -544,7 +544,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
                 flex: 1, background: "#0d0d18", border: "1px solid #1a1a28",
                 borderRadius: 10, padding: "13px 16px",
                 fontFamily: "Rajdhani,sans-serif", fontWeight: 700, fontSize: 14,
-                color: "#555", cursor: "pointer", letterSpacing: "0.06em",
+                color: "#7a7a9a", cursor: "pointer", letterSpacing: "0.06em",
               }}>
                 Cerrar
               </button>

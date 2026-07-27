@@ -33,7 +33,7 @@ function EvoCard({ path, onEvolve, evolving }: {
         <span style={{ background: `${fColor}22`, border: `1px solid ${fColor}55`, borderRadius: 8, padding: "2px 10px", fontSize: 10, color: fColor, fontWeight: 800 }}>
           {path.from_faction}
         </span>
-        <span style={{ color: "#444", fontSize: 10 }}>Nivel {lvlReq}+</span>
+        <span style={{ color: "#5a5a7a", fontSize: 10 }}>Nivel {lvlReq}+</span>
       </div>
 
       {/* From → To */}
@@ -53,18 +53,18 @@ function EvoCard({ path, onEvolve, evolving }: {
       <div style={{ display: "flex", gap: 8, marginBottom: 14 }}>
         <div style={{ background: "#12121a", border: "1px solid #2a2a3a", borderRadius: 8, padding: "6px 12px", flex: 1, textAlign: "center" }}>
           <div style={{ color: "#e8b84b", fontWeight: 800, fontSize: 14 }}>{copies}×</div>
-          <div style={{ color: "#555", fontSize: 9 }}>COPIAS</div>
+          <div style={{ color: "#7a7a9a", fontSize: 9 }}>COPIAS</div>
         </div>
         {vexCost > 0 && (
           <div style={{ background: "#12121a", border: "1px solid #2a2a3a", borderRadius: 8, padding: "6px 12px", flex: 1, textAlign: "center" }}>
             <div style={{ color: "#e8b84b", fontWeight: 800, fontSize: 14 }}>{vexCost}</div>
-            <div style={{ color: "#555", fontSize: 9 }}>VEX</div>
+            <div style={{ color: "#7a7a9a", fontSize: 9 }}>VEX</div>
           </div>
         )}
       </div>
 
       {path.requirements_json?.description && (
-        <p style={{ color: "#555", fontSize: 10, marginBottom: 12, lineHeight: 1.5 }}>{path.requirements_json.description}</p>
+        <p style={{ color: "#7a7a9a", fontSize: 10, marginBottom: 12, lineHeight: 1.5 }}>{path.requirements_json.description}</p>
       )}
 
       <button
@@ -129,7 +129,7 @@ export function EvolutionRoute() {
       <div style={{ display: "flex", gap: 8, marginBottom: 24, flexWrap: "wrap", alignItems: "center" }}>
         <div style={{ background: "#12121a", border: "1px solid #2a2a3e", borderRadius: 10, padding: "8px 16px", marginRight: 8 }}>
           <span style={{ color: "#e8b84b", fontWeight: 800, fontSize: 16 }}>{allPaths.length}</span>
-          <span style={{ color: "#555", fontSize: 10, marginLeft: 6 }}>caminos</span>
+          <span style={{ color: "#7a7a9a", fontSize: 10, marginLeft: 6 }}>caminos</span>
         </div>
         {FACTIONS.map(f => (
           <button key={f} onClick={() => setFilter(f)} style={factionBtn(f)}>

@@ -50,7 +50,7 @@ export function LeaderboardRoute() {
           <div key={t.name} style={{ display: "flex", alignItems: "center", gap: 4, background: "#12121a", border: `1px solid ${t.color}33`, borderRadius: 8, padding: "4px 10px" }}>
             <span style={{ fontSize: 12 }}>{t.icon}</span>
             <span style={{ color: t.color, fontSize: 10, fontWeight: 700 }}>{t.name}</span>
-            <span style={{ color: "#444", fontSize: 9 }}>{t.min}+</span>
+            <span style={{ color: "#5a5a7a", fontSize: 9 }}>{t.min}+</span>
           </div>
         ))}
       </div>
@@ -70,11 +70,11 @@ export function LeaderboardRoute() {
         <div style={{ background: "#12121a", border: "1px solid #2a2a3a", borderRadius: 12, overflow: "hidden" }}>
           {/* Column headers */}
           <div style={{ display: "grid", gridTemplateColumns: "48px 1fr 100px 120px 60px", padding: "8px 16px", borderBottom: "1px solid #1a1a2e" }}>
-            <div style={{ color: "#444", fontSize: 9, fontWeight: 700 }}>#</div>
-            <div style={{ color: "#444", fontSize: 9, fontWeight: 700 }}>JUGADOR</div>
-            <div style={{ color: "#444", fontSize: 9, fontWeight: 700, textAlign: "right" }}>MMR</div>
-            <div style={{ color: "#444", fontSize: 9, fontWeight: 700, textAlign: "center" }}>W / L</div>
-            <div style={{ color: "#444", fontSize: 9, fontWeight: 700, textAlign: "right" }}>WIN%</div>
+            <div style={{ color: "#5a5a7a", fontSize: 9, fontWeight: 700 }}>#</div>
+            <div style={{ color: "#5a5a7a", fontSize: 9, fontWeight: 700 }}>JUGADOR</div>
+            <div style={{ color: "#5a5a7a", fontSize: 9, fontWeight: 700, textAlign: "right" }}>MMR</div>
+            <div style={{ color: "#5a5a7a", fontSize: 9, fontWeight: 700, textAlign: "center" }}>W / L</div>
+            <div style={{ color: "#5a5a7a", fontSize: 9, fontWeight: 700, textAlign: "right" }}>WIN%</div>
           </div>
           {rows.map((row, i) => {
             const tier = getRank(row.mmr);
@@ -95,7 +95,7 @@ export function LeaderboardRoute() {
                   <div style={{ color: tier.color, fontSize: 10 }}>{tier.icon} {tier.name}</div>
                 </div>
                 <div style={{ color: "#e8b84b", fontWeight: 700, fontSize: 14, textAlign: "right" }}>{row.mmr}</div>
-                <div style={{ color: "#555", fontSize: 11, textAlign: "center" }}>
+                <div style={{ color: "#7a7a9a", fontSize: 11, textAlign: "center" }}>
                   <span style={{ color: "#3ddc84" }}>{row.wins}W</span> · <span style={{ color: "#ff6b6b" }}>{row.losses}L</span>
                 </div>
                 <div style={{ color: "#888", fontSize: 11, textAlign: "right" }}>{row.win_rate}%</div>

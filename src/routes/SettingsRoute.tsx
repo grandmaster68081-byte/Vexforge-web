@@ -13,7 +13,7 @@ function Toggle({ label, description, checked, onChange, disabled }: {
     <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", padding: "14px 18px", background: "#1a1a2e", borderRadius: 10, gap: 16 }}>
       <div style={{ flex: 1 }}>
         <div style={{ color: "#e8e8f0", fontWeight: 700, fontSize: 13, marginBottom: description ? 3 : 0 }}>{label}</div>
-        {description && <div style={{ color: "#555", fontSize: 11, lineHeight: 1.4 }}>{description}</div>}
+        {description && <div style={{ color: "#7a7a9a", fontSize: 11, lineHeight: 1.4 }}>{description}</div>}
       </div>
       <button onClick={() => !disabled && onChange(!checked)} disabled={disabled} role="switch" aria-checked={checked}
         style={{ width: 44, height: 24, borderRadius: 12, border: "none", cursor: disabled ? "not-allowed" : "pointer", background: checked ? "#e8b84b" : "#2a2a3a", position: "relative", flexShrink: 0, transition: "background .2s" }}>
@@ -102,7 +102,7 @@ export function SettingsRoute() {
           <div key={item.to} style={{ background: "#1a1a2e", borderRadius: 10, padding: "14px 18px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
             <div>
               <div style={{ color: "#e8e8f0", fontWeight: 700, fontSize: 13 }}>{item.label}</div>
-              <div style={{ color: "#555", fontSize: 11 }}>{item.desc}</div>
+              <div style={{ color: "#7a7a9a", fontSize: 11 }}>{item.desc}</div>
             </div>
             <Link to={item.to} style={{ color: "#e8b84b", fontSize: 12, fontWeight: 700, textDecoration: "none" }}>Ver →</Link>
           </div>

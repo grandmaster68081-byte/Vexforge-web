@@ -94,7 +94,7 @@ export function BattleCinematicScreen({
           display: 'flex', alignItems: 'center', justifyContent: 'space-between',
           padding: '6px 10px',
           background: 'rgba(4,4,12,0.97)',
-          borderBottom: '1px solid #18183a',
+          borderBottom: '1px solid rgba(232,184,75,0.08)',
           zIndex: 20, flexShrink: 0,
         }}>
           {/* Player info */}
@@ -102,7 +102,7 @@ export function BattleCinematicScreen({
             <span style={{ fontFamily: 'Cinzel, serif', fontSize: 10, color: '#4a9eff', letterSpacing: '0.06em' }}>
               {playerName}
             </span>
-            <span style={{ fontFamily: 'Rajdhani, sans-serif', fontSize: 9, color: '#444', letterSpacing: '0.08em' }}>
+            <span style={{ fontFamily: 'Rajdhani, sans-serif', fontSize: 9, color: '#5a5a7a', letterSpacing: '0.08em' }}>
               {playerFaction}
             </span>
           </div>
@@ -116,7 +116,7 @@ export function BattleCinematicScreen({
                 style={{
                   background: speed === s ? '#e8b84b22' : 'transparent',
                   border: `1px solid ${speed === s ? '#e8b84b88' : '#2a2a4a'}`,
-                  borderRadius: 4, color: speed === s ? '#e8b84b' : '#555',
+                  borderRadius: 4, color: speed === s ? '#e8b84b' : '#6a6a8a',
                   fontSize: 9, padding: '2px 6px', cursor: 'pointer',
                   fontFamily: 'Rajdhani, sans-serif', letterSpacing: '0.05em',
                 }}
@@ -132,7 +132,7 @@ export function BattleCinematicScreen({
             <span style={{ fontFamily: 'Cinzel, serif', fontSize: 10, color: '#e74c3c', letterSpacing: '0.06em' }}>
               {opponentName}
             </span>
-            <span style={{ fontFamily: 'Rajdhani, sans-serif', fontSize: 9, color: '#444', letterSpacing: '0.08em' }}>
+            <span style={{ fontFamily: 'Rajdhani, sans-serif', fontSize: 9, color: '#5a5a7a', letterSpacing: '0.08em' }}>
               {opponentFaction}
             </span>
           </div>
@@ -180,7 +180,7 @@ export function BattleCinematicScreen({
           style={{
             position: 'absolute', top: phase === 'board' ? 44 : 8, right: 8,
             background: 'rgba(8,8,20,0.9)', border: '1px solid #2a2a4a',
-            borderRadius: 5, color: '#555', fontSize: 12,
+            borderRadius: 5, color: '#6a6a8a', fontSize: 12,
             padding: '3px 8px', cursor: 'pointer', zIndex: 50,
             lineHeight: 1,
           }}
