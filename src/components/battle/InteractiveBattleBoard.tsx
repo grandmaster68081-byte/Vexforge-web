@@ -253,26 +253,52 @@ function FighterCard({
 // ─── Turn Log Entry ─────────────────────────────────────────────────────────────
 function TurnLogEntry({ snap, isLatest }: { snap: TurnSnapshot; isLatest: boolean }) {
   const t = snap.data;
-  const col = t.atk_side === 'a' ? '#4a9eff' : '#e74c3c';
+  const isPlayer = t.atk_side === 'a';
+  const col = isPlayer ? '#4a9eff' : '#e84040';
+  const dmgCol = t.is_crit ? '#e8b84b' : '#ff6b35';
   return (
     <div style={{
-      padding: '5px 10px', borderRadius: 6,
-      background: isLatest ? 'rgba(255,255,255,0.04)' : 'transparent',
-      border: `1px solid ${isLatest ? col + '33' : 'transparent'}`,
-      fontSize: 11, fontFamily: '"Rajdhani",sans-serif',
-      animation: isLatest ? 'log-slide-in 0.3s ease' : 'none',
+      padding: '6px 10px', borderRadius: 8,
+      background: isLatest
+        ? `linear-gradient(90deg, ${col}0a, rgba(255,255,255,0.03))`
+        : 'transparent',
+      border: `1px solid ${isLatest ? col + '30' : 'transparent'}`,
+      animation: isLatest ? 'log-slide-in 0.25s cubic-bezier(0.22,1,0.36,1)' : 'none',
+      transition: 'background 0.3s',
     }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap' }}>
-        <span style={{ color: '#4a4a6a', minWidth: 28, fontFamily: '"IBM Plex Mono",monospace', fontSize: 9 }}>T{t.turn}</span>
-        <span style={{ color: col, fontWeight: 700 }}>{t.attacker?.name ?? '?'}</span>
-        <span style={{ color: '#3a3a5a' }}>→</span>
-        <span style={{ color: '#8891a0' }}>{t.defender?.name ?? '?'}</span>
-        <span style={{ color: t.is_crit ? '#e8b84b' : '#e74c3c', fontWeight: t.is_crit ? 800 : 400 }}>
-          {t.is_crit ? '💥' : '⚔️'} {t.damage}
-          {t.is_crit && <span style={{ fontSize: 9, color: '#e8b84b', marginLeft: 3 }}>CRIT!</span>}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 5, flexWrap: 'wrap', fontSize: 10, fontFamily: '"Rajdhani",sans-serif' }}>
+        {/* Turn badge */}
+        <span style={{ color: '#4a4a6a', minWidth: 22, fontFamily: '"IBM Plex Mono",monospace', fontSize: 8 }}>T{t.turn}</span>
+        {/* Faction indicator */}
+        <span style={{ fontSize: 8 }}>{isPlayer ? '🔵' : '🔴'}</span>
+        {/* Attacker */}
+        <span style={{ color: col, fontWeight: 700, letterSpacing: '0.04em' }}>{t.attacker?.name ?? '?'}</span>
+        {/* Arrow */}
+        <span style={{ color: '#3a3a5a', fontSize: 9 }}>⚡</span>
+        {/* Defender */}
+        <span style={{ color: '#7a7a9a', fontWeight: 600 }}>{t.defender?.name ?? '?'}</span>
+        {/* Damage */}
+        <span style={{
+          color: dmgCol, fontWeight: t.is_crit ? 900 : 600, fontSize: 11,
+          textShadow: t.is_crit ? `0 0 8px ${dmgCol}` : 'none',
+        }}>
+          {t.is_crit ? '💥' : '-'}{t.damage}
         </span>
-        {t.is_kill && <span style={{ fontSize: 9, color: '#ff4444', background: 'rgba(255,68,68,0.12)', borderRadius: 3, padding: '1px 4px' }}>☠ BAJA</span>}
-        {t.lifesteal_heal > 0 && <span style={{ fontSize: 9, color: '#a855f7' }}>+{t.lifesteal_heal}♻</span>}
+        {t.is_crit && (
+          <span style={{ fontSize: 8, color: '#e8b84b', background: 'rgba(232,184,75,0.15)', borderRadius: 4, padding: '1px 5px', fontWeight: 700, letterSpacing: '0.08em' }}>
+            CRIT!
+          </span>
+        )}
+        {t.is_kill && (
+          <span style={{ fontSize: 8, color: '#ff4444', background: 'rgba(255,68,68,0.15)', borderRadius: 4, padding: '1px 5px', fontWeight: 700 }}>
+            ☠
+          </span>
+        )}
+        {t.lifesteal_heal > 0 && (
+          <span style={{ fontSize: 8, color: '#3ddc84', background: 'rgba(61,220,132,0.1)', borderRadius: 4, padding: '1px 5px' }}>
+            +{t.lifesteal_heal}♥
+          </span>
+        )}
       </div>
     </div>
   );
