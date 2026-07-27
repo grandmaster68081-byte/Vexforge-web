@@ -148,7 +148,7 @@ function CardTile({ card, owned, quantity, onClick }: {
   return (
     <div
       onClick={onClick}
-      className="vex-card-3d"
+      className={`vex-card-3d${card.rarity === 'Mythic' ? ' card-mythic-aura' : card.rarity === 'Legendary' ? ' card-legendary-aura' : ''}`}
       style={{
         position: "relative", cursor: "pointer",
         background: "#111122", borderRadius: 10,

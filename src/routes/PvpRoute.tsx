@@ -37,6 +37,10 @@ function MatchmakingOverlay({ onCancel }: { onCancel: () => void }) {
       <style>{`
         @keyframes mmk-spin { to { transform: rotate(360deg); } }
         @keyframes mmk-ping { 0%,100% { transform: scale(1); opacity: 0.7; } 50% { transform: scale(1.15); opacity: 1; } }
+        @keyframes mmk-rune-orbit-0 { 0%{transform:rotate(0deg) translateX(54px) rotate(0deg);}100%{transform:rotate(360deg) translateX(54px) rotate(-360deg);} }
+        @keyframes mmk-rune-orbit-1 { 0%{transform:rotate(120deg) translateX(54px) rotate(-120deg);}100%{transform:rotate(480deg) translateX(54px) rotate(-480deg);} }
+        @keyframes mmk-rune-orbit-2 { 0%{transform:rotate(240deg) translateX(54px) rotate(-240deg);}100%{transform:rotate(600deg) translateX(54px) rotate(-600deg);} }
+        @keyframes mmk-bg-pulse { 0%,100%{opacity:0.3;} 50%{opacity:0.5;} }
         @keyframes mmk-orbit {
           0%   { transform: rotate(0deg) translateX(54px) rotate(0deg); }
           100% { transform: rotate(360deg) translateX(54px) rotate(-360deg); }
@@ -100,6 +104,19 @@ function MatchmakingOverlay({ onCancel }: { onCancel: () => void }) {
             opacity: pulse ? h : h * 0.4,
             transition: `opacity ${0.2 + i * 0.05}s ease`,
           }} />
+        ))}
+      </div>
+
+      {/* Orbiting faction runes */}
+      <div style={{ position: 'relative', width: 64, height: 64 }}>
+        {['⚔️','🔮','🗡️'].map((r, i) => (
+          <div key={i} style={{
+            position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center',
+            animation: `mmk-rune-orbit-${i} ${2.4 + i * 0.4}s linear infinite`,
+            pointerEvents: 'none',
+          }}>
+            <span style={{ fontSize: 13, filter: 'drop-shadow(0 0 6px rgba(232,184,75,0.8))' }}>{r}</span>
+          </div>
         ))}
       </div>
 

@@ -20,8 +20,9 @@ function MiniCard({ card, count, selected, canAdd, onClick }: {
   card: PlayerCardEntry; count: number; selected: boolean; canAdd: boolean; onClick: () => void;
 }) {
   const rc = RARITY_COLOR[card.rarity] ?? "#8b8b9e";
+  const auraClass = card.rarity === "Mythic" ? "card-mythic-aura" : card.rarity === "Legendary" ? "card-legendary-aura" : undefined;
   return (
-    <div onClick={onClick} style={{
+    <div onClick={onClick} className={auraClass} style={{
       background: selected ? `${rc}18` : "#1a1a2e",
       border: `1.5px solid ${selected ? rc : rc + "33"}`,
       borderRadius: 8, padding: "9px 11px",

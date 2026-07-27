@@ -95,7 +95,7 @@ function TierCard({ tier, currentTier, isPremiumPlayer, claimed, pendingClaim, o
   const label        = rewardLabel(tier.reward);
 
   return (
-    <div style={{
+    <div className={isCurrent ? "season-tier-active-v2" : undefined} style={{
       borderRadius: 10, padding: "10px 8px", textAlign: "center", position: "relative", overflow: "hidden",
       background: claimed ? "linear-gradient(145deg,#0a1a0a,#0a120a)" : unlocked ? "linear-gradient(145deg,#1a2a1a,#12121a)" : isCurrent ? "linear-gradient(145deg,#1a1a2e,#0f0f20)" : "#121220",
       border: claimable ? "1px solid rgba(232,184,75,0.7)" : claimed ? "1px solid rgba(61,220,132,0.25)" : isCurrent ? "1px solid rgba(232,184,75,0.5)" : unlocked ? "1px solid rgba(61,220,132,0.2)" : "1px solid #1e1e2e",

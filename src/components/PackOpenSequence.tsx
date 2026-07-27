@@ -433,6 +433,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
                 return (
                   <div
                     key={i}
+                    className={`card-deal-${i}`}
                     onClick={() => !isFlipped && flipCard(i)}
                     style={{
                       borderRadius: 12,
