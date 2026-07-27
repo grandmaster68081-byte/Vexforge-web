@@ -809,3 +809,137 @@ declare module "./audioEngine" {
   };
 
 })(AudioEngine as any);
+
+// ═══════════════════════════════════════════════════════════════════════════
+// FASE 2 v5 — Per-faction cinematic attack SFX
+// sfxFactionAttack(faction, rarity) — SFX único por facción + rareza
+// ═══════════════════════════════════════════════════════════════════════════
+
+(function installFactionAttackSfx(engine: any) {
+  if (engine.__factionAttackSfxInstalled) return;
+  engine.__factionAttackSfxInstalled = true;
+
+  // ─── Guerrero — Sword clashes, heavy metal ────────────────────────────────
+  engine._sfxGuerreroAttack = function (rarity: string): void {
+    try {
+      // Heavy sword clash — low thud + metallic ring
+      this.noise(0.04, 0.45, 200, 0);
+      this.tone(80, 0.06, 'sawtooth', 0.5, 0);
+      this.tone(160, 0.12, 'square', 0.3, 0, undefined, 0.025);
+      if (rarity === 'Rare' || rarity === 'Epic' || rarity === 'Legendary' || rarity === 'Mythic') {
+        // Metallic ring after impact
+        this.tone(880, 0.18, 'triangle', 0.15, -50, undefined, 0.06);
+        this.tone(1108, 0.14, 'triangle', 0.10, 80, undefined, 0.08);
+      }
+      if (rarity === 'Legendary' || rarity === 'Mythic') {
+        // War cry bass
+        this.tone(55, 0.08, 'sawtooth', 0.4, 0, undefined, 0.02);
+        this.noise(0.06, 0.35, 150, 0.04);
+        this.tone(220, 0.10, 'square', 0.22, 0, undefined, 0.07);
+      }
+      if (rarity === 'Mythic') {
+        // Screen-shake slam
+        this.tone(40, 0.10, 'sawtooth', 0.6, 0);
+        this.noise(0.08, 0.55, 80, 0.01);
+        [110, 165, 220].forEach((f, i) => this.tone(f, 0.06, 'sawtooth', 0.2, 0, undefined, 0.03 + i * 0.02));
+      }
+    } catch { /* silent */ }
+  };
+
+  // ─── Mago — Arcane spell burst ────────────────────────────────────────────
+  engine._sfxMagoAttack = function (rarity: string): void {
+    try {
+      // Magic burst — high frequency + shimmer
+      this.tone(880, 0.08, 'sine', 0.22, 0);
+      this.tone(1100, 0.12, 'sine', 0.18, 200, undefined, 0.04);
+      this.noise(0.05, 0.12, 4000, 0.06);
+      if (rarity === 'Rare' || rarity === 'Epic' || rarity === 'Legendary' || rarity === 'Mythic') {
+        // Rising arcane energy
+        [440, 554, 659, 880].forEach((f, i) => this.tone(f, 0.12, 'sine', 0.18 - i * 0.02, 0, undefined, i * 0.05));
+        this.tone(1320, 0.15, 'sine', 0.20, 300, undefined, 0.18);
+      }
+      if (rarity === 'Legendary' || rarity === 'Mythic') {
+        // Thunderclap spell
+        this.noise(0.07, 0.35, 300, 0);
+        [220, 440, 880, 1760].forEach((f, i) => this.tone(f, 0.10, 'triangle', 0.15, 0, undefined, i * 0.04));
+        this.tone(2200, 0.20, 'sine', 0.18, 0, undefined, 0.16);
+      }
+      if (rarity === 'Mythic') {
+        // Ultimate arcane implosion
+        this.noise(0.12, 0.50, 200, 0.02);
+        [110, 220, 440, 880, 1760].forEach((f, i) => this.tone(f, 0.08, 'sawtooth', 0.12, 0, undefined, i * 0.03));
+        this.tone(3520, 0.25, 'sine', 0.15, 0, undefined, 0.15);
+      }
+    } catch { /* silent */ }
+  };
+
+  // ─── Pícaro — Quick dagger / stealth strikes ──────────────────────────────
+  engine._sfxPicaroAttack = function (rarity: string): void {
+    try {
+      // Sharp quick hit — mid-high freq cut
+      this.tone(440, 0.04, 'square', 0.25, 0);
+      this.noise(0.03, 0.22, 2000, 0.01);
+      this.tone(660, 0.06, 'square', 0.15, 100, undefined, 0.02);
+      if (rarity === 'Rare' || rarity === 'Epic' || rarity === 'Legendary' || rarity === 'Mythic') {
+        // Double hit flutter
+        this.tone(550, 0.05, 'square', 0.20, 0, undefined, 0.08);
+        this.tone(660, 0.05, 'square', 0.18, 0, undefined, 0.13);
+        this.noise(0.03, 0.18, 3000, 0.09);
+      }
+      if (rarity === 'Legendary' || rarity === 'Mythic') {
+        // Shadow burst
+        this.noise(0.06, 0.30, 1500, 0);
+        [880, 1100, 1320, 1760].forEach((f, i) => this.tone(f, 0.06, 'square', 0.14 - i * 0.02, 0, undefined, i * 0.03));
+      }
+      if (rarity === 'Mythic') {
+        // Legendary combo finish
+        [330, 440, 550, 660, 880].forEach((f, i) => this.tone(f, 0.06, 'square', 0.16, 0, undefined, i * 0.04));
+        this.tone(1320, 0.12, 'sine', 0.18, 0, undefined, 0.20);
+        this.noise(0.05, 0.28, 2500, 0.20);
+      }
+    } catch { /* silent */ }
+  };
+
+  // ─── Paladín — Holy light strikes ────────────────────────────────────────
+  engine._sfxPaladinAttack = function (rarity: string): void {
+    try {
+      // Holy chime + pure tone
+      this.tone(659, 0.08, 'triangle', 0.22, 0);
+      this.tone(880, 0.12, 'triangle', 0.16, 50, undefined, 0.04);
+      this.noise(0.04, 0.10, 6000, 0.06);
+      if (rarity === 'Rare' || rarity === 'Epic' || rarity === 'Legendary' || rarity === 'Mythic') {
+        // Bell resonance
+        [523, 659, 784, 1047].forEach((f, i) => this.tone(f, 0.20, 'triangle', 0.15 - i * 0.02, 0, undefined, i * 0.06));
+        this.tone(2093, 0.25, 'sine', 0.12, 0, undefined, 0.24);
+      }
+      if (rarity === 'Legendary' || rarity === 'Mythic') {
+        // Divine judgement
+        [261, 329, 392, 523, 659, 784].forEach((f, i) => this.tone(f, 0.25, 'sine', 0.18 - i * 0.02, 0, undefined, i * 0.05));
+        this.noise(0.06, 0.15, 8000, 0.30);
+        this.tone(1047, 0.35, 'triangle', 0.18, 0, undefined, 0.30);
+      }
+      if (rarity === 'Mythic') {
+        // Holy nova
+        [130, 261, 523, 1047, 2093].forEach((f, i) => this.tone(f, 0.30, 'sine', 0.15, 0, undefined, i * 0.04));
+        this.noise(0.08, 0.20, 10000, 0.02);
+        this.tone(4186, 0.40, 'sine', 0.12, 0, undefined, 0.20);
+      }
+    } catch { /* silent */ }
+  };
+
+  // ─── Main dispatcher — faction + rarity ───────────────────────────────────
+  engine.sfxFactionAttack = function (faction: string, rarity: string): void {
+    try {
+      switch (faction) {
+        case 'Guerrero':    this._sfxGuerreroAttack(rarity); break;
+        case 'Mago':        this._sfxMagoAttack(rarity); break;
+        case 'Pícaro':      this._sfxPicaroAttack(rarity); break;
+        case 'Explorador':  this._sfxPicaroAttack(rarity); break;
+        case 'Paladín':     this._sfxPaladinAttack(rarity); break;
+        case 'Comerciante': this._sfxPaladinAttack(rarity); break;
+        default:            this.sfxAttackHit?.('light'); break;
+      }
+    } catch { /* silent */ }
+  };
+
+})(AudioEngine as any);

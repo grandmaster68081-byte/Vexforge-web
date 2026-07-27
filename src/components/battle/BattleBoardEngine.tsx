@@ -274,8 +274,12 @@ export function BattleBoardEngine({ result, playerName, opponentName, onComplete
   const [activeTurn, setActiveTurn] = useState<BattleTurnData | null>(null);
   const [isDone, setIsDone]       = useState(false);
   
-  // FASE 2: Card Attack Cinematic state
-  const [attackingUnit, setAttackingUnit] = useState<BattleUnit | null>(null);
+  // FASE 2 v5: Card Attack Cinematic state — con defender + stats
+  const [attackingUnit, setAttackingUnit]   = useState<BattleUnit | null>(null);
+  const [defenderUnit,  setDefenderUnit]    = useState<BattleUnit | null>(null);
+  const [cinematicDmg,  setCinematicDmg]    = useState<number | undefined>(undefined);
+  const [cinematicCrit, setCinematicCrit]   = useState(false);
+  const [cinematicKill, setCinematicKill]   = useState(false);
   const [cinematicVisible, setCinematicVisible] = useState(false);
 
   const canvasRef  = useRef<HTMLCanvasElement>(null);
@@ -345,11 +349,15 @@ export function BattleBoardEngine({ result, playerName, opponentName, onComplete
       if (attackerIdx >= 0 && next[attackerIdx]) {
         next[attackerIdx] = { ...next[attackerIdx], isActive: true, isAttacking: false };
         
-        // FASE 2: Show cinematic for Rare+ rarities
+        // FASE 2 v5: Cinematic con attacker + defender + damage stats
         const atkUnit = finalUnits.find(u => u.idx === attackerIdx);
-        // FASE 2 v4: Cinematic para TODAS las rarezas
+        const defUnit = finalUnits.find(u => u.idx === defenderIdx);
         if (atkUnit) {
           setAttackingUnit(atkUnit);
+          setDefenderUnit(defUnit ?? null);
+          setCinematicDmg(t.damage);
+          setCinematicCrit(t.is_crit);
+          setCinematicKill(t.is_kill);
           setCinematicVisible(true);
         }
       }
@@ -497,11 +505,15 @@ export function BattleBoardEngine({ result, playerName, opponentName, onComplete
       {/* Particle canvas overlay */}
       <canvas ref={canvasRef} style={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 10 }} />
 
-      {/* FASE 2: Card Attack Cinematic Overlay */}
-      <CardAttackCinematic 
-        unit={attackingUnit} 
-        visible={cinematicVisible} 
-        onDone={() => setCinematicVisible(false)} 
+      {/* FASE 2 v5: Card Attack Cinematic — attacker + defender + damage */}
+      <CardAttackCinematic
+        unit={attackingUnit}
+        defender={defenderUnit}
+        visible={cinematicVisible}
+        onDone={() => setCinematicVisible(false)}
+        damage={cinematicDmg}
+        isCrit={cinematicCrit}
+        isKill={cinematicKill}
       />
 
 {/* BA.0: Board atmosphere layer — faction-specific ambient glow */}

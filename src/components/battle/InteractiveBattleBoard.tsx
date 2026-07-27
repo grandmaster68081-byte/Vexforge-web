@@ -509,6 +509,10 @@ export function InteractiveBattleBoard({
   
   // FASE 2: Card Attack Cinematic state
   const [attackingUnit, setAttackingUnit] = useState<BattleUnit | null>(null);
+  const [defenderUnit, setDefenderUnit] = useState<BattleUnit | null>(null);
+  const [cinematicDamage, setCinematicDamage] = useState<number | undefined>(undefined);
+  const [cinematicIsCrit, setCinematicIsCrit] = useState(false);
+  const [cinematicIsKill, setCinematicIsKill] = useState(false);
   const [cinematicVisible, setCinematicVisible] = useState(false);
 
   const finalUnits = result.final_units ?? [];
@@ -524,11 +528,15 @@ export function InteractiveBattleBoard({
     if (state.phase === 'ANIMATING' && state.currentTurn) {
       const isPlayerAtk = state.currentTurn.atk_side === 'a';
       
-      // FASE 2: Trigger cinematic for Rare+ attacker
-      const attackerUnit = isPlayerAtk ? playerUnit : opponentUnit;
-      // FASE 2 v4: Cinematic para TODAS las rarezas — Common/Uncommon = flash rápido
+      // FASE 2 v5: Cinematic para TODAS las rarezas con attacker + defender
+      const attackerUnit  = isPlayerAtk ? playerUnit : opponentUnit;
+      const defUnit       = isPlayerAtk ? opponentUnit : playerUnit;
       if (attackerUnit) {
         setAttackingUnit(attackerUnit);
+        setDefenderUnit(defUnit ?? null);
+        setCinematicDamage(state.currentTurn.damage);
+        setCinematicIsCrit(state.currentTurn.is_crit);
+        setCinematicIsKill(state.currentTurn.is_kill);
         setCinematicVisible(true);
       }
       
@@ -609,10 +617,14 @@ export function InteractiveBattleBoard({
       }} />
 
       {/* FASE 2: Card Attack Cinematic Overlay */}
-      <CardAttackCinematic 
-        unit={attackingUnit} 
-        visible={cinematicVisible} 
-        onDone={() => setCinematicVisible(false)} 
+      <CardAttackCinematic
+        unit={attackingUnit}
+        defender={defenderUnit}
+        visible={cinematicVisible}
+        onDone={() => setCinematicVisible(false)}
+        damage={cinematicDamage}
+        isCrit={cinematicIsCrit}
+        isKill={cinematicIsKill}
       />
 
       {/* Keyframes */}
