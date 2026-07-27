@@ -77,11 +77,15 @@ function BossCard({ boss, onAttack, canAttack, attacking }: {
                 </div>
                 <div style={{ height: 6, borderRadius: 4, background: "rgba(255,255,255,0.06)", overflow: "hidden" }}>
                   <div
-                    className={pct >= 80 ? "boss-hp-bar" : undefined}
+                    className={pct >= 80 ? "boss-hp-bar boss-hp-drain" : "boss-hp-bar"}
                     style={{
                       height: "100%", width: `${pct}%`, borderRadius: 4,
-                      background: `linear-gradient(90deg, ${color}88, ${color})`,
+                      background: pct >= 80
+                        ? `linear-gradient(90deg, ${color}88, ${color}, #fff4, ${color})`
+                        : `linear-gradient(90deg, ${color}88, ${color})`,
                       transition: "width 1s cubic-bezier(.22,1,.36,1)",
+                      ["--hp-from" as string]: `${Math.min(100, pct + 10)}%`,
+                      ["--hp-to" as string]: `${pct}%`,
                     }}
                   />
                 </div>

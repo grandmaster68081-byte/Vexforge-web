@@ -101,7 +101,7 @@ function ListingCard({
           display: "flex", alignItems: "baseline", gap: 6,
           background: "rgba(255,255,255,0.03)", borderRadius: 8, padding: "8px 12px",
         }}>
-          <span style={{ fontSize: 22, fontWeight: 800, color: "#E8B84B", fontFamily: '"Rajdhani",sans-serif' }}>
+          <span className="price-up" style={{ fontSize: 22, fontWeight: 800, color: "#E8B84B", fontFamily: '"Rajdhani",sans-serif' }}>
             {listing.price.toLocaleString("es-ES")}
           </span>
           <span style={{ color: "var(--fg-dim)", fontSize: 11, fontFamily: '"IBM Plex Mono",monospace' }}>VEX</span>

@@ -6,6 +6,7 @@ import { useRef, useCallback, useState, useEffect, type CSSProperties } from 're
 import type { RealBattleResult, BattleUnit } from '../../lib/battleTypes';
 import { RARITY_COLOR, RARITY_GLOW, KEYWORD_ICON } from '../../lib/battleTypes';
 import { CardAttackCinematic } from './CardAttackCinematic';
+import { DamageFloatLayer, useDamageFloats } from './BattleEffects';
 
 // Faction-to-icon map — KEYWORD_ICON maps mechanics (Guard, Surge…), not factions
 const FACTION_ICON: Record<string, string> = {
@@ -147,6 +148,7 @@ function FighterCard({
       className={[
         isPlayer && isActive && !isDraggingFrom ? 'drag-ready' : undefined,
         rarityAuraClass,
+        !unit.alive ? 'card-dissolve' : undefined,
       ].filter(Boolean).join(' ') || undefined}
       onPointerDown={isPlayer ? onPointerDown : undefined}
       onPointerEnter={onPointerEnter}
@@ -400,7 +402,7 @@ function AttackButton({ phase, onAdvance, onAutoPlay, onStop, isAutoOn, totalTur
   return (
     <div style={{ display: 'flex', gap: 8, alignItems: 'center', flexWrap: 'wrap' }}>
       <button
-        onClick={() => { AudioEngine.sfxCardSelect?.(); onAdvance(); }}
+        onClick={() => { AudioEngine.sfxCardSelect?.(); try { (AudioEngine as any).sfxTurnStart?.(); } catch{} onAdvance(); }}
         disabled={!isReady}
         style={{
           padding: '11px 26px', borderRadius: 10,
@@ -581,6 +583,7 @@ export function InteractiveBattleBoard({
   const [cinematicIsCrit, setCinematicIsCrit] = useState(false);
   const [cinematicIsKill, setCinematicIsKill] = useState(false);
   const [cinematicVisible, setCinematicVisible] = useState(false);
+  const { floats } = useDamageFloats(state.currentTurn ?? null);
 
   const finalUnits = result.final_units ?? [];
   const playerUnit   = finalUnits.find(u => u.side === 'a' && u.alive) ?? finalUnits.find(u => u.side === 'a');
@@ -976,6 +979,47 @@ export function InteractiveBattleBoard({
         {/* Atmospheric particles */}
         <ArenaParticles faction={playerFaction} />
 
+        {/* FASE 2: Floating damage numbers — rendered over the whole arena */}
+        <DamageFloatLayer floats={floats} playerSide="right" />
+
+        {/* FASE 2: Impact ring — flashes at hit zone */}
+        {hitSide && (
+          <div style={{
+            position: 'absolute',
+            top: hitSide === 'opponent' ? '18%' : '72%',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            width: 100, height: 100,
+            borderRadius: '50%',
+            border: `3px solid ${hitSide === 'opponent' ? oppZone.primary : playerZone.primary}cc`,
+            boxShadow: `0 0 20px ${hitSide === 'opponent' ? oppZone.primary : playerZone.primary}88`,
+            pointerEvents: 'none',
+            zIndex: 20,
+          }} className="impact-ring" />
+        )}
+
+        {/* FASE 2: Arena atmospheric elements — smoke + lightning */}
+        <div className="arena-smoke" style={{
+          position: 'absolute', bottom: 0, left: '10%', width: 80, height: 60,
+          borderRadius: '50%', background: `radial-gradient(ellipse, ${playerZone.primary}18 0%, transparent 70%)`,
+          pointerEvents: 'none', zIndex: 0,
+        }} />
+        <div className="arena-smoke" style={{
+          position: 'absolute', bottom: 0, right: '12%', width: 100, height: 70,
+          borderRadius: '50%', background: `radial-gradient(ellipse, ${playerZone.primary}12 0%, transparent 70%)`,
+          pointerEvents: 'none', zIndex: 0, animationDelay: '-1.5s',
+        }} />
+        <div className="arena-lightning" style={{
+          position: 'absolute', top: '8%', left: '5%', width: 2, height: 40,
+          background: `linear-gradient(180deg, transparent, ${oppZone.primary}cc, transparent)`,
+          pointerEvents: 'none', zIndex: 0,
+        }} />
+        <div className="arena-lightning" style={{
+          position: 'absolute', top: '12%', right: '7%', width: 2, height: 28,
+          background: `linear-gradient(180deg, transparent, ${oppZone.primary}aa, transparent)`,
+          pointerEvents: 'none', zIndex: 0, animationDelay: '-2s',
+        }} />
+
         {/* Attack flash overlay on the whole arena */}
         <div style={{
           position: 'absolute', inset: 0, zIndex: 0, pointerEvents: 'none',
@@ -1071,6 +1115,7 @@ export function InteractiveBattleBoard({
         {/* Player zone */}
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 10, zIndex: 1 }}>
           {playerUnit ? (
+            <div style={{ position: 'relative' }} className="avatar-ring-v2">
             <FighterCard
               unit={playerUnit}
               side="player"
@@ -1082,6 +1127,7 @@ export function InteractiveBattleBoard({
               onPointerDown={onPointerDown}
               onPointerEnter={() => { if (!state.isDragging) AudioEngine.sfxCardHover?.(); }}
             />
+            </div>
           ) : (
             <div style={{ width: 170, height: 188, border: `2px dashed ${playerZone.primary}30`, borderRadius: 12,
               background: `${playerZone.primary}05`, display: 'flex', alignItems: 'center', justifyContent: 'center',

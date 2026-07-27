@@ -299,7 +299,7 @@ export function HomeRoute() {
           { icon:"🛡️", glow:"rgba(232,184,75,0.7)", top:"25%", right:"7%", dur:"4.7s", delay:"-0.8s" },
           { icon:"🗡️", glow:"rgba(61,201,107,0.7)", top:"62%", right:"9%", dur:"5.8s", delay:"-2.2s" },
         ].map((b,i)=>(
-          <div key={i} className="hero-faction-badge" style={{
+          <div key={i} className="hero-faction-badge faction-emblem-breathe" style={{
             top:b.top, left:(b as any).left, right:(b as any).right,
             // @ts-expect-error CSS custom props
             "--dur":b.dur, "--delay":b.delay, "--glow":b.glow,

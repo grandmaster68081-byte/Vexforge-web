@@ -23,8 +23,11 @@ function RelicCard({ relic }: { relic: Relic }) {
   const color = RARITY_COLORS[rarity] ?? RARITY_COLORS.Common;
   const slot = metadataText(relic, "slot");
   const description = metadataText(relic, "description");
+  const isHighRarity = rarity === "Legendary" || rarity === "Mythic" || rarity === "Epic";
   return (
-    <article style={{ background: PANEL, border: `1px solid ${color}38`, borderRadius: 14, padding: "18px 20px", boxShadow: `inset 0 1px 0 ${color}14`, transition: "transform .2s, border-color .2s" }}>
+    <article
+      className={isHighRarity ? "relic-glow-v2" : undefined}
+      style={{ background: PANEL, border: `1px solid ${color}38`, borderRadius: 14, padding: "18px 20px", boxShadow: `inset 0 1px 0 ${color}14`, transition: "transform .2s, border-color .2s", ["--relic-glow" as string]: color + "66" }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 12 }}>
         <div>
           <div style={{ color: "#777", fontFamily: '"IBM Plex Mono",monospace', fontSize: 9, letterSpacing: "0.12em", marginBottom: 7 }}>{relic.code}</div>

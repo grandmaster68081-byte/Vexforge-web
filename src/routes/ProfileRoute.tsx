@@ -89,7 +89,7 @@ function RankCard({ rank, loading }: { rank: PlayerRank | null; loading: boolean
       border: `1px solid ${color}33`, padding: "20px 22px" }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 16 }}>
         <div>
-          <div style={{ fontSize: 38, lineHeight: 1 }}>{icon}</div>
+          <div className="faction-emblem-breathe" style={{ fontSize: 38, lineHeight: 1, display: "inline-block", ["--emblem-glow" as string]: color + "88" }}>{icon}</div>
           <div style={{ fontSize: 18, fontWeight: 700, fontFamily: '"Rajdhani",sans-serif',
             color, letterSpacing: "0.06em", marginTop: 6 }}>{tierName.toUpperCase()}</div>
           <div style={{ fontSize: 12, color: "var(--fg-muted)", marginTop: 2 }}>
