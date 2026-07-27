@@ -489,17 +489,16 @@ export function BattleIntroScreen({
                   animation: 'intro-count-ripple 0.65s ease-out',
                   opacity: 0,
                 }} />
-                <div className="battle-intro-count" style={{
-                  fontFamily: 'Cinzel, serif',
-                  fontSize: 'clamp(72px,16vw,140px)',
+                <div className="battle-intro-count countdown-num" style={{
+                  fontFamily: 'Cinzel Decorative, serif',
+                  fontSize: 'clamp(80px,18vw,160px)',
                   fontWeight: 900,
                   color: count === 1 ? '#e8b84b' : count === 2 ? '#c0a0ff' : '#e0e0f8',
                   textShadow: count === 1
-                    ? '0 0 60px rgba(232,184,75,1), 0 0 120px rgba(232,184,75,0.6), 0 0 200px rgba(232,184,75,0.3)'
+                    ? '0 0 60px rgba(232,184,75,1), 0 0 120px rgba(232,184,75,0.8), 0 0 200px rgba(232,184,75,0.5)'
                     : count === 2
-                      ? '0 0 40px rgba(160,120,255,0.8), 0 0 80px rgba(160,120,255,0.4)'
-                      : '0 0 30px rgba(200,200,255,0.6)',
-                  animation: 'intro-count 0.35s cubic-bezier(0.22,1,0.36,1)',
+                      ? '0 0 50px rgba(160,120,255,0.9), 0 0 100px rgba(160,120,255,0.5)'
+                      : '0 0 40px rgba(200,200,255,0.7), 0 0 80px rgba(200,200,255,0.3)',
                   lineHeight: 1,
                 }}>
                   {count}
