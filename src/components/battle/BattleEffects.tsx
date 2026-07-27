@@ -193,31 +193,59 @@ export function KeywordEffectBanner({ effects }: KeywordEffectBannerProps) {
     }}>
       <style>{`
         @keyframes vx-kw-pop {
+          0%   { opacity: 0; transform: translateY(16px) scale(0.6); }
+          35%  { opacity: 1; transform: translateY(-4px) scale(1.12); }
+          65%  { transform: translateY(0) scale(1); }
+          100% { opacity: 0; transform: translateY(-12px) scale(0.9); }
+        }
+        @keyframes vx-kw-crit {
+          0%   { opacity: 0; transform: scale(0.3) rotate(-10deg); }
+          30%  { opacity: 1; transform: scale(1.2) rotate(3deg); }
+          65%  { transform: scale(1) rotate(0deg); }
+          100% { opacity: 0; transform: scale(0.8) translateY(-20px); }
+        }
+        @keyframes vx-kw-shield {
           0%   { opacity: 0; transform: scale(0.5); }
-          30%  { opacity: 1; transform: scale(1.15); }
-          100% { opacity: 0; transform: scale(1);    }
+          40%  { opacity: 1; transform: scale(1.15); }
+          100% { opacity: 0; transform: scale(1.4) translateY(-10px); }
+        }
+        @keyframes vx-kw-heal {
+          0%   { opacity: 0; transform: translateY(8px); }
+          30%  { opacity: 1; transform: translateY(-6px) scale(1.08); }
+          100% { opacity: 0; transform: translateY(-24px) scale(0.9); }
         }
       `}</style>
-      {effects.map(e => (
-        <div key={e.id} style={{
-          animation: 'vx-kw-pop 0.8s ease-out forwards',
-          background: `${EFFECT_COLOR[e.type]}22`,
-          border: `1px solid ${EFFECT_COLOR[e.type]}66`,
-          borderRadius: 8, padding: '4px 10px',
-          fontFamily: '"Rajdhani",sans-serif', fontSize: 12, fontWeight: 700,
-          color: EFFECT_COLOR[e.type],
-          display: 'flex', alignItems: 'center', gap: 5,
-          backdropFilter: 'blur(4px)',
-          boxShadow: `0 0 12px ${EFFECT_COLOR[e.type]}44`,
-        }}>
-          <span>{EFFECT_ICON[e.type]}</span>
-          <span style={{ textTransform: 'uppercase', letterSpacing: '0.08em', fontSize: 10 }}>
-            {e.type === 'lifesteal' ? 'Drenaje' : e.type === 'shield' ? 'Bloqueado'
-              : e.type === 'poison' ? 'Veneno' : e.type === 'double' ? 'Doble Golpe'
-              : e.type === 'crit' ? '¡CRÍTICO!' : 'Rush'}
-          </span>
-        </div>
-      ))}
+      {effects.map(e => {
+        const anim = e.type === 'crit' ? 'vx-kw-crit 0.9s ease-out forwards'
+          : e.type === 'shield' ? 'vx-kw-shield 0.9s ease-out forwards'
+          : e.type === 'lifesteal' ? 'vx-kw-heal 0.9s ease-out forwards'
+          : 'vx-kw-pop 0.9s ease-out forwards';
+        const label = e.type === 'lifesteal' ? 'Drenaje'
+          : e.type === 'shield' ? 'Bloqueado'
+          : e.type === 'poison' ? 'Veneno'
+          : e.type === 'double' ? 'Doble Golpe'
+          : e.type === 'crit' ? '¡CRÍTICO!'
+          : 'Rush';
+        return (
+          <div key={e.id} style={{
+            animation: anim,
+            background: `${EFFECT_COLOR[e.type]}28`,
+            border: `1px solid ${EFFECT_COLOR[e.type]}88`,
+            borderRadius: 10, padding: '5px 14px',
+            fontFamily: '"Rajdhani",sans-serif',
+            fontSize: e.type === 'crit' ? 15 : 12,
+            fontWeight: 800,
+            color: EFFECT_COLOR[e.type],
+            display: 'flex', alignItems: 'center', gap: 6,
+            backdropFilter: 'blur(6px)',
+            boxShadow: `0 0 16px ${EFFECT_COLOR[e.type]}55, 0 2px 8px rgba(0,0,0,0.5)`,
+            letterSpacing: '0.06em',
+          }}>
+            <span style={{ fontSize: e.type === 'crit' ? 16 : 14 }}>{EFFECT_ICON[e.type]}</span>
+            <span style={{ textTransform: 'uppercase', letterSpacing: '0.1em' }}>{label}</span>
+          </div>
+        );
+      })}
     </div>
   );
 }

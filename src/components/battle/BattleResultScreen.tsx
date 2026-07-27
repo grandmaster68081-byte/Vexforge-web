@@ -183,12 +183,22 @@ export function BattleResultScreen({ result, playerName, opponentName, onDismiss
 
       {/* Trophy / Icon */}
       <div style={{
-        fontSize: 96, marginBottom: 6, lineHeight: 1,
+        fontSize: 'clamp(64px, 12vw, 96px)', marginBottom: 6, lineHeight: 1,
         filter: `drop-shadow(0 0 32px ${theme.glow}) drop-shadow(0 0 64px ${theme.glow})`,
         animation: won ? 'trophyBounce 0.7s cubic-bezier(0.22,1,0.36,1)' : 'fadeInUp 0.5s ease',
         position: 'relative',
       }}>
         {theme.emoji}
+        {/* Expanding ring on victory */}
+        {won && Array.from({ length: 3 }).map((_, i) => (
+          <div key={i} style={{
+            position: 'absolute', inset: -10 - i * 14, borderRadius: '50%',
+            border: `2px solid ${theme.primary}`,
+            opacity: 0,
+            animation: `result-glow-expand 1.8s ease-out ${i * 0.4}s infinite`,
+            pointerEvents: 'none',
+          }} />
+        ))}
         {/* Starburst behind trophy */}
         <div style={{
           position: 'absolute', inset: -20, zIndex: -1, borderRadius: '50%',
@@ -209,7 +219,7 @@ export function BattleResultScreen({ result, playerName, opponentName, onDismiss
         textTransform: 'uppercase',
         willChange: 'transform',
       }}
-      className={won ? 'victory-title' : (!isDraw ? 'defeat-title' : undefined)}
+      className={won ? 'victory-title victory-title-anim' : (!isDraw ? 'defeat-title defeat-title-anim' : undefined)}
       >
         {theme.label}
       </div>
@@ -371,6 +381,7 @@ export function BattleResultScreen({ result, playerName, opponentName, onDismiss
         @keyframes slideInLabel { from { opacity:0; transform:scaleX(1.5) translateY(-8px); } to { opacity:1; transform:scaleX(1) translateY(0); } }
         @keyframes fadeInUp { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
         @keyframes resultAmbient { 0%,100% { opacity:0.6; transform:translateX(-50%) scale(1); } 50% { opacity:1; transform:translateX(-50%) scale(1.1); } }
+        @keyframes result-glow-expand { 0%{transform:scale(0.8);opacity:0.8;} 100%{transform:scale(2.5);opacity:0;} }
       `}</style>
     </div>
   );
