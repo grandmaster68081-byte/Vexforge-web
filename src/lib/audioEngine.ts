@@ -756,4 +756,22 @@ declare module "./audioEngine" {
     } catch { /* silent */ }
   };
 
+  // ─── Attack hit SFX — per faction type ────────────────────────────────────
+  engine.sfxAttackHit = function (type: string): void {
+    try {
+      if (type === 'heavy') {
+        this.tone(80, 0.05, 'sawtooth', 0.5, 0);
+        this.noise(0.07, 0.3, 400, 0.02);
+        this.tone(160, 0.12, 'square', 0.25, 0, undefined, 0.04);
+      } else if (type === 'magic') {
+        this.tone(880, 0.08, 'sine', 0.22, 0);
+        this.tone(1100, 0.12, 'sine', 0.18, 200, undefined, 0.04);
+        this.noise(0.05, 0.12, 4000, 0.06);
+      } else {
+        this.tone(220, 0.06, 'square', 0.28, 0);
+        this.noise(0.05, 0.18, 1200, 0.02);
+      }
+    } catch { /* silent */ }
+  };
+
 })(AudioEngine as any);
