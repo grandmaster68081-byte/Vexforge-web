@@ -1,6 +1,21 @@
-# VEXFORGE — CONTINUITY (Chat 98 — 2026-07-27 — FASE 1+2 COMPLETE)
+# VEXFORGE — CONTINUITY (Chat 99 — 2026-07-27 — FASE 2 BATCH 2 COMPLETE)
 
-## Estado: Épicas A+B+C+D+E+F+G+H+I+P+Q+R+T.2-T.7+U.1+U.2+V.1+W.1+W.2+X.1+X.2+X.3+Y.1+IA.0+IA.2+TU.0+TU.1+VX.0+VX.1+Z1+CHAT98 completas
+## Estado: Épicas A+B+C+D+E+F+G+H+I+P+Q+R+T.2-T.7+U.1+U.2+V.1+W.1+W.2+X.1+X.2+X.3+Y.1+IA.0+IA.2+TU.0+TU.1+VX.0+VX.1+Z1+CHAT98+CHAT99 completas
+
+---
+
+## CHAT 99 — TRABAJO COMPLETADO
+
+| Bloque | Descripción | Estado |
+|--------|-------------|--------|
+| FASE 2 | PvpRoute: rune-orbit divs moved outside scanning-bars map (JSX syntax fix) | ✅ |
+| FASE 2 | PvpRoute: mmk-rune-orbit-0/1/2 CSS keyframes + 3 orbiting faction rune divs | ✅ |
+| FASE 2 | SeasonPassRoute: `season-tier-active-v2` className on active TierCard | ✅ |
+| FASE 2 | DeckBuilderRoute: `card-mythic-aura` / `card-legendary-aura` on MiniCard | ✅ |
+| FASE 2 | PackOpenSequence: `card-deal-N` stagger className on reveal grid cards | ✅ |
+| BUILD | tsc --noEmit: 0 errores | ✅ |
+| BUILD | npm run build: 65 files, ✓ built in 2.42s | ✅ |
+| GIT | commit 97a9a3b pushed to origin/main | ✅ |
 
 ---
 
