@@ -199,6 +199,7 @@ export class VexForgeAudioEngine {
 
   // ─── Music system (v2.0 base + v3.0 faction/intensity) ────────────────────
   musicLoop(): void {
+    // Guard: prevent orphan intervals if stopMusic called concurrently
     if (this._muted) return;
     this.stopMusic();
     this._factionMusicActive = true;
@@ -243,13 +244,17 @@ export class VexForgeAudioEngine {
         step++;
       };
       scheduleArp();
-      const arpId = setInterval(scheduleArp, beatDur * (this._intensityLevel === 'desperate' ? 250 : 500));
+      const arpId = setInterval(() => {
+        if (!this._factionMusicActive) { clearInterval(arpId); return; }
+        scheduleArp();
+      }, beatDur * (this._intensityLevel === 'desperate' ? 250 : 500));
       this._musicOscs.push({ stop: () => clearInterval(arpId) });
 
       // Layer 3: percussion hit (desperate/tense only)
       if (this._intensityLevel !== 'calm') {
         const percInterval = beatDur * (this._intensityLevel === 'desperate' ? 320 : 480);
         const percId = setInterval(() => {
+          if (!this._factionMusicActive) { clearInterval(percId); return; }
           this.noise(0.04, 0.14, 2500, 0);
           this.tone(cfg.base * 0.5, 0.06, 'square', 0.12);
         }, percInterval);

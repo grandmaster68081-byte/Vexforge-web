@@ -152,7 +152,8 @@ export async function loadPlayerBattleUnits(
 
 // ─── Battle Simulator ─────────────────────────────────────────────────────────
 function cloneUnits(units: BattleUnit[]): BattleUnit[] {
-  return units.map(u => ({ ...u }));
+  // Deep-copy keywords so mutations in one battle don't affect the original array
+  return units.map(u => ({ ...u, keywords: u.keywords ? [...u.keywords] : [] }));
 }
 
 function toActor(u: BattleUnit) {

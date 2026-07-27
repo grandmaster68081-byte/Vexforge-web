@@ -303,32 +303,38 @@ export function BattleResultScreen({ result, playerName, opponentName, onDismiss
       </div>
 
       {/* Action buttons */}
-      <div style={{
-        display: 'flex', gap: 12,
+      <div className="battle-result-btns" style={{
+        display: 'flex', gap: 12, flexWrap: 'wrap', justifyContent: 'center',
         opacity: showStats ? 1 : 0, transition: 'opacity 0.5s 0.3s',
+        padding: '0 8px',
       }}>
         <button onClick={() => { onDismiss(); navigate('/pvp'); }} style={{
-          background: `linear-gradient(135deg, ${theme.primary}30, ${theme.primary}14)`,
-          border: `1px solid ${theme.primary}70`, borderRadius: 10,
-          color: theme.primary, fontFamily: 'Cinzel, serif', fontSize: 12,
-          letterSpacing: '0.12em', padding: '11px 24px', cursor: 'pointer',
+          background: `linear-gradient(135deg, ${theme.primary}dd, ${theme.primary}88)`,
+          border: `1px solid ${theme.primary}`, borderRadius: 10,
+          color: won ? '#0a0a12' : theme.primary, fontFamily: 'Cinzel, serif', fontSize: 12,
+          letterSpacing: '0.12em', padding: '12px 28px', cursor: 'pointer',
           textTransform: 'uppercase', fontWeight: 700,
           transition: 'all 0.2s',
-          boxShadow: `0 0 20px ${theme.primary}20`,
+          boxShadow: `0 0 24px ${theme.primary}40, 0 4px 12px rgba(0,0,0,0.5)`,
+          minWidth: 140,
         }}
-        onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.boxShadow = `0 0 30px ${theme.primary}40`; }}
-        onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.boxShadow = `0 0 20px ${theme.primary}20`; }}
+        onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.transform = 'translateY(-2px) scale(1.02)'; }}
+        onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.transform = 'none'; }}
         >
           ⚔ Jugar de Nuevo
         </button>
         <button onClick={onDismiss} style={{
           background: 'rgba(255,255,255,0.04)',
-          border: '1px solid rgba(255,255,255,0.1)', borderRadius: 10,
-          color: '#666', fontFamily: 'Rajdhani, sans-serif', fontSize: 12,
-          letterSpacing: '0.1em', padding: '11px 20px', cursor: 'pointer',
+          border: '1px solid rgba(255,255,255,0.12)', borderRadius: 10,
+          color: '#888', fontFamily: 'Rajdhani, sans-serif', fontSize: 12,
+          letterSpacing: '0.1em', padding: '12px 22px', cursor: 'pointer',
           textTransform: 'uppercase',
           transition: 'all 0.2s',
-        }}>
+          minWidth: 120,
+        }}
+        onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.color = '#aaa'; }}
+        onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.color = '#888'; }}
+        >
           Volver a Arena
         </button>
       </div>

@@ -606,9 +606,9 @@ export function PvpRoute() {
           );
         })()}
 
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 28 }}>
+        <div className="pvp-main-grid" style={{ display: "grid", gridTemplateColumns: "minmax(0,1fr) minmax(0,1fr)", gap: 28 }}>
           {/* LEFT: Arena */}
-          <div>
+          <div style={{ minWidth: 0 }}>
             {/* AI.1: Search panel */}
             <div style={{
               background: "linear-gradient(135deg,#12121e,#0e0e1a)",

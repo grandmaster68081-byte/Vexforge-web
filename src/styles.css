@@ -3062,3 +3062,66 @@ input.forge-input:focus {
   button, a, [role="button"] { min-height: 36px; }
   .forge-bottom-nav-item { min-height: 44px; }
 }
+
+/* ════════════════════════════════════════════════════════════════
+   LOTE-2: PvP Arena responsive · BattleResult mobile · 2026-07-27
+   ════════════════════════════════════════════════════════════════ */
+
+/* ─── PvP arena two-column → single on mobile ───────────────────── */
+@media (max-width: 860px) {
+  .pvp-main-grid {
+    grid-template-columns: 1fr !important;
+    gap: 16px !important;
+  }
+}
+
+/* ─── BattleResult stats box — wider on small screens ──────────── */
+@media (max-width: 480px) {
+  .battle-result-btns {
+    flex-direction: column !important;
+    width: calc(100vw - 48px) !important;
+    max-width: 320px !important;
+  }
+  .battle-result-btns > button {
+    width: 100% !important;
+    min-width: unset !important;
+  }
+}
+
+/* ─── DailyChallengeCard — flex wrap on mobile ──────────────────── */
+@media (max-width: 500px) {
+  .daily-challenge-inner {
+    flex-direction: column !important;
+    align-items: stretch !important;
+  }
+  .daily-challenge-btn {
+    width: 100% !important;
+    min-width: unset !important;
+  }
+}
+
+/* ─── BattleIntroScreen ring animation (Lote-1 addition) ────────── */
+@keyframes intro-ring-spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+@keyframes rune-float-2 {
+  0%,100% { transform: translateY(0) scale(1); }
+  50%      { transform: translateY(-18px) scale(1.05); }
+}
+
+/* ─── Opponent card — mobile optimizations ──────────────────────── */
+@media (max-width: 500px) {
+  .opponent-card { padding: 12px !important; }
+  .opponent-card-btns { flex-direction: column !important; gap: 6px !important; }
+}
+
+/* ─── Match history panel mobile ────────────────────────────────── */
+@media (max-width: 500px) {
+  .match-history-row { font-size: 10px !important; }
+}
+
+/* ─── Rank banner — mobile stack ────────────────────────────────── */
+@media (max-width: 400px) {
+  .pvp-rank-inner { flex-direction: column !important; text-align: center !important; }
+}
