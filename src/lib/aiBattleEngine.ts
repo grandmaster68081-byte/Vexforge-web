@@ -284,18 +284,18 @@ export function simulateAIBattle(
     opponent_name: AI_DIFFICULTY_LABEL[difficulty],
   };
 }
-    // ─── IA.2: Server-side claim (SECURITY DEFINER RPC) ──────────────────────────
-    // Requires RPC claim_daily_ai_challenge to be deployed (supabase/migrations/0002_ia2_daily_claim_rpc.sql)
-    export async function claimDailyAIChallenge(
-    supabase: any,
-    dateKey: string,
-    difficulty: AIDifficulty,
-    ): Promise<{ claimed: boolean; vex_awarded?: number; reason?: string }> {
-    const { data, error } = await supabase.rpc('claim_daily_ai_challenge', {
-      p_date_key: dateKey,
-      p_difficulty: difficulty,
-    });
-    if (error) return { claimed: false, reason: error.message };
-    return data as { claimed: boolean; vex_awarded?: number; reason?: string };
-    }
-    
+
+// ─── IA.2: Server-side claim (SECURITY DEFINER RPC) ──────────────────────────
+// Requires RPC claim_daily_ai_challenge to be deployed (supabase/migrations/0002_ia2_daily_claim_rpc.sql)
+export async function claimDailyAIChallenge(
+  supabase: any,
+  dateKey: string,
+  difficulty: AIDifficulty,
+): Promise<{ claimed: boolean; vex_awarded?: number; reason?: string }> {
+  const { data, error } = await supabase.rpc('claim_daily_ai_challenge', {
+    p_date_key: dateKey,
+    p_difficulty: difficulty,
+  });
+  if (error) return { claimed: false, reason: error.message };
+  return data as { claimed: boolean; vex_awarded?: number; reason?: string };
+}

@@ -1,5 +1,7 @@
 import { supabase } from "../../lib/supabase";
 import type { DomainResult } from "../../shared/types/domain";
+import type { RealBattleResult } from '../../lib/battleTypes';
+export type { RealBattleResult };
 
 export interface PvpSeason { id: string; season_key: string; name: string; starts_at: string; ends_at: string; active: boolean; }
 export interface PvpRanking { id: string; season_id: string; player_id: string; display_name: string; level: number | null; mmr: number; rank_position: number | null; wins: number; losses: number; draws: number; win_rate: number; }
@@ -183,95 +185,92 @@ export async function startBattle(opponentId: string): Promise<DomainResult<Batt
 }
 
 
-    // ── D.2 — Enriched Match History ────────────────────────────────────────
 
-    export interface EnrichedMatch {
-    id:               string;
-    created_at:       string;
-    status:           string;
-    outcome:          "win" | "loss" | "draw" | "pending";
-    opponent_id:      string;
-    opponent_name:    string;
-    opponent_mmr:     number;
-    my_elo_change:    number | null;
-    my_power:         number | null;
-    opponent_power:   number | null;
-    rewards_json:     Record<string, unknown>;
-    is_player_a:      boolean;
-    }
+// ── D.2 — Enriched Match History ──────────────────────────────────────────────
 
-    export async function getEnrichedMatchHistory(): Promise<DomainResult<EnrichedMatch[]>> {
-    const playerId = await getCurrentPlayerId();
-    if (!playerId) return { status: "blocked_auth", data: null, reason: "Inicia sesión para ver tu historial." };
+export interface EnrichedMatch {
+  id:               string;
+  created_at:       string;
+  status:           string;
+  outcome:          "win" | "loss" | "draw" | "pending";
+  opponent_id:      string;
+  opponent_name:    string;
+  opponent_mmr:     number;
+  my_elo_change:    number | null;
+  my_power:         number | null;
+  opponent_power:   number | null;
+  rewards_json:     Record<string, unknown>;
+  is_player_a:      boolean;
+}
 
-    const { data: rawMatches, error } = await supabase
-      .from("pvp_matches")
-      .select("id,created_at,status,winner,player_a,player_b,elo_change_a,elo_change_b,power_snapshot_a,power_snapshot_b,rewards_json")
-      .or(`player_a.eq.${playerId},player_b.eq.${playerId}`)
-      .order("created_at", { ascending: false })
-      .limit(20);
+export async function getEnrichedMatchHistory(): Promise<DomainResult<EnrichedMatch[]>> {
+  const playerId = await getCurrentPlayerId();
+  if (!playerId) return { status: "blocked_auth", data: null, reason: "Inicia sesión para ver tu historial." };
 
-    if (error) return { status: "ready", data: null, reason: error.message };
+  const { data: rawMatches, error } = await supabase
+    .from("pvp_matches")
+    .select("id,created_at,status,winner,player_a,player_b,elo_change_a,elo_change_b,power_snapshot_a,power_snapshot_b,rewards_json")
+    .or(`player_a.eq.${playerId},player_b.eq.${playerId}`)
+    .order("created_at", { ascending: false })
+    .limit(20);
 
-    const opponentIds = (rawMatches ?? []).map((m: any) =>
-      m.player_a === playerId ? m.player_b : m.player_a
-    );
-    const nameMap = await resolvePlayerNames(opponentIds);
+  if (error) return { status: "ready", data: null, reason: error.message };
 
-    const matches: EnrichedMatch[] = (rawMatches ?? []).map((m: any) => {
-      const isA     = m.player_a === playerId;
-      const oppId   = isA ? m.player_b : m.player_a;
-      const eloMe   = isA ? m.elo_change_a : m.elo_change_b;
-      const myPower = isA ? (m.power_snapshot_a?.total_power ?? null) : (m.power_snapshot_b?.total_power ?? null);
-      const oppPower = isA ? (m.power_snapshot_b?.total_power ?? null) : (m.power_snapshot_a?.total_power ?? null);
+  const opponentIds = (rawMatches ?? []).map((m: any) =>
+    m.player_a === playerId ? m.player_b : m.player_a
+  );
+  const nameMap = await resolvePlayerNames(opponentIds);
 
-      let outcome: EnrichedMatch["outcome"] = "pending";
-      if (m.status === "draw") outcome = "draw";
-      else if (m.winner === playerId) outcome = "win";
-      else if (m.winner && m.winner !== playerId) outcome = "loss";
+  const matches: EnrichedMatch[] = (rawMatches ?? []).map((m: any) => {
+    const isA      = m.player_a === playerId;
+    const oppId    = isA ? m.player_b : m.player_a;
+    const eloMe    = isA ? m.elo_change_a : m.elo_change_b;
+    const myPower  = isA ? (m.power_snapshot_a?.total_power ?? null) : (m.power_snapshot_b?.total_power ?? null);
+    const oppPower = isA ? (m.power_snapshot_b?.total_power ?? null) : (m.power_snapshot_a?.total_power ?? null);
 
-      return {
-        id:             m.id,
-        created_at:     m.created_at,
-        status:         m.status,
-        outcome,
-        opponent_id:    oppId,
-        opponent_name:  nameMap[oppId]?.display_name ?? "Guerrero",
-        opponent_mmr:   nameMap[oppId]?.mmr ?? 1000,
-        my_elo_change:  eloMe ?? null,
-        my_power:       myPower,
-        opponent_power: oppPower,
-        rewards_json:   m.rewards_json ?? {},
-        is_player_a:    isA,
-      };
-    });
+    let outcome: EnrichedMatch["outcome"] = "pending";
+    if (m.status === "draw") outcome = "draw";
+    else if (m.winner === playerId) outcome = "win";
+    else if (m.winner && m.winner !== playerId) outcome = "loss";
 
-    return { status: "ready", data: matches };
-    }
-    
+    return {
+      id:             m.id,
+      created_at:     m.created_at,
+      status:         m.status,
+      outcome,
+      opponent_id:    oppId,
+      opponent_name:  nameMap[oppId]?.display_name ?? "Guerrero",
+      opponent_mmr:   nameMap[oppId]?.mmr ?? 1000,
+      my_elo_change:  eloMe ?? null,
+      my_power:       myPower,
+      opponent_power: oppPower,
+      rewards_json:   m.rewards_json ?? {},
+      is_player_a:    isA,
+    };
+  });
 
-    // ─── F.2.b — REAL BATTLE ENGINE INTEGRATION ───────────────────────────────────
-    import type { RealBattleResult } from '../../lib/battleTypes';
-    export type { RealBattleResult };
+  return { status: "ready", data: matches };
+}
 
-    /**
-    * startRealBattle — calls vexforge_battle_resolve RPC (Épica F motor real).
-    * Returns full turn log, derived stats, keyword combat, ELO update.
-    */
-    export async function startRealBattle(opponentId: string): Promise<DomainResult<RealBattleResult>> {
-    const playerId = await getCurrentPlayerId();
-    if (!playerId) return { status: 'blocked_auth', data: null, reason: 'Inicia sesión para batallar.' };
+// ─── F.2.b — REAL BATTLE ENGINE INTEGRATION ───────────────────────────────────
 
-    const key = `pvp_real_${playerId}_${opponentId}_${Date.now()}`;
-    const { data, error } = await supabase.rpc('vexforge_battle_resolve', {
-      p_challenger_id: playerId,
-      p_opponent_id:   opponentId,
-      p_idempotency_key: key,
-    });
+/**
+ * startRealBattle — calls vexforge_battle_resolve RPC (Épica F motor real).
+ * Returns full turn log, derived stats, keyword combat, ELO update.
+ */
+export async function startRealBattle(opponentId: string): Promise<DomainResult<RealBattleResult>> {
+  const playerId = await getCurrentPlayerId();
+  if (!playerId) return { status: 'blocked_auth', data: null, reason: 'Inicia sesión para batallar.' };
 
-    if (error) return { status: 'ready', data: null, reason: error.message };
-    const result = data as RealBattleResult;
-    if (!result?.ok) return { status: 'ready', data: null, reason: result?.error ?? 'battle_failed' };
-    return { status: 'ready', data: result };
-    }
-    
+  const key = `pvp_real_${playerId}_${opponentId}_${Date.now()}`;
+  const { data, error } = await supabase.rpc('vexforge_battle_resolve', {
+    p_challenger_id: playerId,
+    p_opponent_id:   opponentId,
+    p_idempotency_key: key,
+  });
+
+  if (error) return { status: 'ready', data: null, reason: error.message };
+  const result = data as RealBattleResult;
+  if (!result?.ok) return { status: 'ready', data: null, reason: result?.error ?? 'battle_failed' };
+  return { status: 'ready', data: result };
+}

@@ -254,10 +254,10 @@ function TurnLogEntry({ snap, isLatest }: { snap: TurnSnapshot; isLatest: boolea
       animation: isLatest ? 'log-slide-in 0.3s ease' : 'none',
     }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap' }}>
-        <span style={{ color: '#333', minWidth: 28, fontFamily: '"IBM Plex Mono",monospace', fontSize: 9 }}>T{t.turn}</span>
+        <span style={{ color: '#4a4a6a', minWidth: 28, fontFamily: '"IBM Plex Mono",monospace', fontSize: 9 }}>T{t.turn}</span>
         <span style={{ color: col, fontWeight: 700 }}>{t.attacker?.name ?? '?'}</span>
-        <span style={{ color: '#444' }}>→</span>
-        <span style={{ color: '#888' }}>{t.defender?.name ?? '?'}</span>
+        <span style={{ color: '#3a3a5a' }}>→</span>
+        <span style={{ color: '#8891a0' }}>{t.defender?.name ?? '?'}</span>
         <span style={{ color: t.is_crit ? '#e8b84b' : '#e74c3c', fontWeight: t.is_crit ? 800 : 400 }}>
           {t.is_crit ? '💥' : '⚔️'} {t.damage}
           {t.is_crit && <span style={{ fontSize: 9, color: '#e8b84b', marginLeft: 3 }}>CRIT!</span>}
@@ -289,8 +289,8 @@ function AttackButton({ phase, onAdvance, onAutoPlay, onStop, isAutoOn, totalTur
           background: isReady
             ? `linear-gradient(135deg, ${zone.primary}, ${zone.primary}88)`
             : 'rgba(255,255,255,0.04)',
-          border: `1px solid ${isReady ? zone.primary + '88' : '#1a1a2a'}`,
-          color: isReady ? '#fff' : '#333',
+          border: `1px solid ${isReady ? zone.primary + '88' : 'rgba(255,255,255,0.08)'}`,
+          color: isReady ? '#fff' : '#4a4a6a',
           fontFamily: '"Cinzel",serif', fontWeight: 700, fontSize: 13,
           cursor: isReady ? 'pointer' : 'not-allowed',
           letterSpacing: '0.06em',
@@ -314,8 +314,8 @@ function AttackButton({ phase, onAdvance, onAutoPlay, onStop, isAutoOn, totalTur
           disabled={phase === 'ANIMATING'}
           style={{
             padding: '9px 14px', borderRadius: 8,
-            background: 'rgba(255,255,255,0.04)', border: '1px solid #2a2a3a',
-            color: '#555', fontFamily: '"Rajdhani",sans-serif', fontWeight: 700, fontSize: 11,
+            background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)',
+            color: '#6a6a8a', fontFamily: '"Rajdhani",sans-serif', fontWeight: 700, fontSize: 11,
             cursor: phase === 'ANIMATING' ? 'not-allowed' : 'pointer',
           }}>▶ Auto</button>
       )}
@@ -694,7 +694,7 @@ export function InteractiveBattleBoard({
             T {state.revealedTurns.length} / {state.totalTurns}
           </div>
           <div style={{
-            fontSize: 8, color: state.phase === 'ANIMATING' ? '#e8b84b' : state.phase === 'COMPLETE' ? '#3ddc84' : '#333',
+            fontSize: 8, color: state.phase === 'ANIMATING' ? '#e8b84b' : state.phase === 'COMPLETE' ? '#3ddc84' : '#5a5a7a',
             fontFamily: '"Rajdhani",sans-serif', letterSpacing: '0.12em',
             textTransform: 'uppercase', transition: 'color 0.3s',
             marginTop: 2,
@@ -732,8 +732,16 @@ export function InteractiveBattleBoard({
         {/* Hex grid background */}
         <div style={{
           position: 'absolute', inset: 0, zIndex: 0, pointerEvents: 'none',
-          backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='48'%3E%3Cpolygon points='14,2 26,9 26,23 14,30 2,23 2,9' fill='none' stroke='rgba(255,255,255,0.025)' stroke-width='0.5'/%3E%3C/svg%3E")`,
+          backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='48'%3E%3Cpolygon points='14,2 26,9 26,23 14,30 2,23 2,9' fill='none' stroke='rgba(255,255,255,0.035)' stroke-width='0.6'/%3E%3C/svg%3E")`,
           backgroundSize: '28px 48px',
+          opacity: 0.7,
+        }} />
+        {/* Center dividing line — lane separator */}
+        <div style={{
+          position: 'absolute', left: 0, right: 0, top: '50%',
+          height: 1, zIndex: 0, pointerEvents: 'none',
+          background: 'linear-gradient(90deg, transparent 0%, rgba(232,184,75,0.15) 20%, rgba(232,184,75,0.3) 50%, rgba(232,184,75,0.15) 80%, transparent 100%)',
+          transform: 'translateY(-50%)',
         }} />
 
         {/* Opponent zone glow */}
@@ -886,7 +894,7 @@ export function InteractiveBattleBoard({
         {state.phase === 'IDLE' && !state.isAutoPlaying && (
           <div style={{
             position: 'absolute', bottom: 8, left: '50%', transform: 'translateX(-50%)',
-            fontSize: 9, color: '#2a2a4a',
+            fontSize: 9, color: '#4a4a6a',
             fontFamily: '"Rajdhani",sans-serif',
             letterSpacing: '0.12em', whiteSpace: 'nowrap',
             animation: 'turn-counter-flash 2.5s ease-in-out infinite',
@@ -924,14 +932,14 @@ export function InteractiveBattleBoard({
           faction={playerFaction}
         />
         <button onClick={onDismiss} style={{
-          background: 'transparent', border: '1px solid #1a1a2a',
-          borderRadius: 6, color: '#333', fontSize: 10,
+          background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)',
+          borderRadius: 6, color: '#6a6a8a', fontSize: 10,
           padding: '6px 12px', cursor: 'pointer',
           fontFamily: '"Rajdhani",sans-serif', letterSpacing: '0.06em',
           transition: 'all 0.15s',
         }}
-        onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.color = '#666'; }}
-        onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.color = '#333'; }}
+        onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.color = '#a0a0c0'; (e.currentTarget as HTMLButtonElement).style.borderColor = 'rgba(255,255,255,0.2)'; }}
+        onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.color = '#6a6a8a'; (e.currentTarget as HTMLButtonElement).style.borderColor = 'rgba(255,255,255,0.1)'; }}
         >✕ Salir</button>
       </div>
 
@@ -939,18 +947,18 @@ export function InteractiveBattleBoard({
       <div style={{
         maxHeight: 140, overflowY: 'auto',
         background: 'rgba(3,3,10,0.99)',
-        borderTop: '1px solid #0d0d1a',
+        borderTop: '1px solid rgba(232,184,75,0.12)',
         padding: '5px 8px',
         display: 'flex', flexDirection: 'column', gap: 2,
         flexShrink: 0,
       }}>
-        <div style={{ fontSize: 8, color: '#1a1a2a', letterSpacing: '0.18em',
+        <div style={{ fontSize: 8, color: '#e8b84b88', letterSpacing: '0.18em',
           fontFamily: '"Rajdhani",sans-serif', textTransform: 'uppercase',
           padding: '2px 4px', marginBottom: 1 }}>
           ▶ LOG DE BATALLA
         </div>
         {state.revealedTurns.length === 0 ? (
-          <div style={{ fontSize: 10, color: '#1a1a2a', padding: '3px 6px',
+          <div style={{ fontSize: 10, color: '#4a4a6a', padding: '3px 6px',
             fontFamily: '"Rajdhani",sans-serif' }}>
             La batalla aún no ha comenzado. ¡Ataca!
           </div>
