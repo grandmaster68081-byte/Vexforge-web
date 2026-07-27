@@ -540,6 +540,15 @@ export function InteractiveBattleBoard({
         setCinematicVisible(true);
       }
       
+      // Chat100: SFX crítico / kill
+      try {
+        if (state.currentTurn.is_kill) {
+          (AudioEngine as any).sfxKillConfirm?.();
+        } else if (state.currentTurn.is_crit) {
+          (AudioEngine as any).sfxCriticalHit?.();
+        }
+      } catch { /* silent */ }
+
       setBeamVisible(true);
       const t1 = setTimeout(() => {
         setBeamVisible(false);
@@ -613,25 +622,46 @@ export function InteractiveBattleBoard({
         position: 'absolute', inset: 0, zIndex: 0, pointerEvents: 'none',
         backgroundImage: `url(${playerZone.arenaImg})`,
         backgroundSize: 'cover', backgroundPosition: 'center',
-        opacity: 0.18,
-        filter: 'saturate(1.4) brightness(0.7)',
+        opacity: 0.22,
+        filter: 'saturate(1.6) brightness(0.65)',
+        transition: 'opacity 1s ease',
+      }} />
+      {/* Faction color aura — radial glow from center */}
+      <div style={{
+        position: 'absolute', inset: 0, zIndex: 0, pointerEvents: 'none',
+        background: `radial-gradient(ellipse 80% 60% at 50% 50%, ${playerZone.primary}0a 0%, transparent 70%)`,
+        animation: 'faction-aura-breathe 4s ease-in-out infinite',
       }} />
       {/* Dark overlay on top of arena image */}
       <div style={{
         position: 'absolute', inset: 0, zIndex: 0, pointerEvents: 'none',
-        background: 'radial-gradient(ellipse 130% 130% at 50% 50%, rgba(5,5,18,0.55) 0%, rgba(3,3,10,0.92) 100%)',
+        background: 'radial-gradient(ellipse 130% 130% at 50% 50%, rgba(5,5,18,0.5) 0%, rgba(3,3,10,0.9) 100%)',
       }} />
       {/* Atmospheric scan lines — cinematic feel */}
       <div style={{
         position: 'absolute', inset: 0, zIndex: 0, pointerEvents: 'none',
-        backgroundImage: 'repeating-linear-gradient(0deg, rgba(255,255,255,0.012) 0px, rgba(255,255,255,0.012) 1px, transparent 1px, transparent 3px)',
+        backgroundImage: 'repeating-linear-gradient(0deg, rgba(255,255,255,0.014) 0px, rgba(255,255,255,0.014) 1px, transparent 1px, transparent 3px)',
         backgroundSize: '100% 3px',
       }} />
       {/* Corner vignette */}
       <div style={{
         position: 'absolute', inset: 0, zIndex: 0, pointerEvents: 'none',
-        background: 'radial-gradient(ellipse 110% 110% at 50% 50%, transparent 55%, rgba(0,0,0,0.7) 100%)',
+        background: 'radial-gradient(ellipse 110% 110% at 50% 50%, transparent 55%, rgba(0,0,0,0.75) 100%)',
       }} />
+      {/* Faction ambient particles — 6 floating rune orbs */}
+      {[0,1,2,3,4,5].map(i => (
+        <div key={`fap-${i}`} style={{
+          position: 'absolute', zIndex: 1, pointerEvents: 'none',
+          width: 4 + (i % 3), height: 4 + (i % 3),
+          borderRadius: '50%',
+          background: playerZone.primary,
+          opacity: 0,
+          left: `${10 + i * 15}%`,
+          bottom: `${15 + (i % 3) * 12}%`,
+          boxShadow: `0 0 8px ${playerZone.primary}, 0 0 16px ${playerZone.primary}55`,
+          animation: `hero-particle-rise ${3 + i * 0.7}s ease-out ${i * 0.9}s infinite`,
+        }} />
+      ))}
 
       {/* FASE 2: Card Attack Cinematic Overlay */}
       <CardAttackCinematic

@@ -838,6 +838,118 @@ declare module "./audioEngine" {
 })(AudioEngine as any);
 
 // ═══════════════════════════════════════════════════════════════════════════
+// CHAT100 — SFX Expansion Pack: Victory, Defeat, Crit, Kill, RankUp, Streak
+// ═══════════════════════════════════════════════════════════════════════════
+(function addChat100SFX(engine: any) {
+
+  /** sfxVictory — orchestral fanfare: 3 rising stabs + bell shimmer */
+  engine.sfxVictory = function (): void {
+    try {
+      // Brass stabs ascending
+      [[0, 220, 0.45], [0.18, 330, 0.42], [0.34, 440, 0.48]].forEach(([delay, freq, vol]) => {
+        this.tone(freq, 0.28, 'sawtooth', vol, 0, undefined, delay);
+        this.tone(freq * 1.5, 0.22, 'sine', vol * 0.6, 0, undefined, delay + 0.05);
+      });
+      // Bell shimmer at the top
+      [0.52, 0.6, 0.68, 0.76].forEach((d, i) => {
+        this.tone(880 + i * 220, 0.4, 'sine', 0.18 - i * 0.02, 0, undefined, d);
+      });
+      // Low triumphant bass
+      this.tone(55, 0.5, 'sawtooth', 0.4, 0, undefined, 0.35);
+      this.tone(110, 0.4, 'square', 0.25, 0, undefined, 0.4);
+      // Noise burst for impact
+      this.noise?.(0.08, 0.15, 600, 0.0, undefined, 0.52);
+    } catch { /* silent */ }
+  };
+
+  /** sfxDefeat — descending minor arpeggio + low drone */
+  engine.sfxDefeat = function (): void {
+    try {
+      [[0, 330, 0.38], [0.2, 261, 0.35], [0.38, 196, 0.32], [0.55, 130, 0.28]].forEach(([delay, freq, vol]) => {
+        this.tone(freq, 0.5, 'sine', vol, 0, undefined, delay);
+        this.tone(freq * 0.5, 0.6, 'triangle', vol * 0.5, 0, undefined, delay);
+      });
+      // Rumble
+      this.tone(55, 0.9, 'sawtooth', 0.25, 0, undefined, 0.6);
+      this.noise?.(0.12, 0.4, 200, 0.0, undefined, 0.6);
+    } catch { /* silent */ }
+  };
+
+  /** sfxCriticalHit — sharp crack + electric sizzle */
+  engine.sfxCriticalHit = function (): void {
+    try {
+      this.tone(60, 0.04, 'sawtooth', 0.6, 0);
+      this.tone(180, 0.06, 'square', 0.5, 0, undefined, 0.02);
+      this.noise?.(0.1, 0.18, 3000, 0.0);
+      this.tone(1200, 0.12, 'sine', 0.22, 0, undefined, 0.06);
+      this.tone(2400, 0.08, 'sine', 0.14, 0, undefined, 0.1);
+    } catch { /* silent */ }
+  };
+
+  /** sfxKillConfirm — enemy eliminated satisfying pop */
+  engine.sfxKillConfirm = function (): void {
+    try {
+      this.tone(440, 0.08, 'square', 0.35, 0);
+      this.tone(880, 0.12, 'sine', 0.28, 0, undefined, 0.06);
+      this.tone(1760, 0.18, 'sine', 0.18, 0, undefined, 0.12);
+      this.noise?.(0.06, 0.12, 2000, 0.0, undefined, 0.18);
+    } catch { /* silent */ }
+  };
+
+  /** sfxRankUp — dramatic multi-layer rank promotion */
+  engine.sfxRankUp = function (): void {
+    try {
+      // Rising scale sweep
+      [196, 247, 294, 370, 440, 587, 740, 880].forEach((f, i) => {
+        this.tone(f, 0.25, 'sine', 0.28 - i * 0.02, 0, undefined, i * 0.07);
+      });
+      // Final chord
+      [440, 550, 660, 880].forEach((f, i) => {
+        this.tone(f, 0.5, 'sine', 0.3, 0, undefined, 0.62 + i * 0.03);
+      });
+      // Bass boom
+      this.tone(110, 0.4, 'sawtooth', 0.35, 0, undefined, 0.65);
+      // Shimmer tail
+      this.tone(1760, 0.6, 'sine', 0.1, 0, undefined, 0.72);
+      this.tone(2200, 0.5, 'sine', 0.07, 0, undefined, 0.78);
+    } catch { /* silent */ }
+  };
+
+  /** sfxStreakFire — escalating fire crackle for win streaks */
+  engine.sfxStreakFire = function (count: number): void {
+    try {
+      const intensity = Math.min(count / 5, 1);
+      const baseFreq = 120 + count * 30;
+      this.tone(baseFreq, 0.12, 'sawtooth', 0.3 + intensity * 0.2, 0);
+      this.noise?.(0.08 + intensity * 0.06, 0.2, 800 + count * 200, 0.0);
+      if (count >= 3) {
+        this.tone(baseFreq * 2, 0.08, 'square', 0.2, 0, undefined, 0.04);
+        this.noise?.(0.06, 0.15, 2000, 0.0, undefined, 0.06);
+      }
+      if (count >= 5) {
+        this.tone(baseFreq * 3, 0.06, 'sawtooth', 0.15, 0, undefined, 0.08);
+        this.tone(1200, 0.1, 'sine', 0.12, 0, undefined, 0.12);
+      }
+    } catch { /* silent */ }
+  };
+
+  /** sfxHolographicReveal — for legendary card display in UI */
+  engine.sfxHolographicReveal = function (): void {
+    try {
+      // Ascending shimmer
+      [440, 554, 659, 880, 1109].forEach((f, i) => {
+        this.tone(f, 0.3, 'sine', 0.2, 200, undefined, i * 0.06);
+      });
+      // Resonant bell
+      this.tone(1760, 0.5, 'sine', 0.15, 0, undefined, 0.32);
+      // Subtle noise burst
+      this.noise?.(0.04, 0.12, 4000, 0.0, undefined, 0.35);
+    } catch { /* silent */ }
+  };
+
+})(AudioEngine as any);
+
+// ═══════════════════════════════════════════════════════════════════════════
 // FASE 2 v5 — Per-faction cinematic attack SFX
 // sfxFactionAttack(faction, rarity) — SFX único por facción + rareza
 // ═══════════════════════════════════════════════════════════════════════════

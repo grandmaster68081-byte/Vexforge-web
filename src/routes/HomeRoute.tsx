@@ -69,24 +69,47 @@ function getRankTier(mmr:number) {
 }
 
 const RUNE_SYMS = ["✦","◈","⬡","✧","◆","⊕","★","⟐"];
+const FACTION_COLORS = ["#e84040","#7b4fd4","#3dc96b","#e8b84b"];
+const FACTION_ICONS_HERO = ["⚔️","🔮","🗡️","🛡️"];
+
 function Particles() {
   return (
     <div className="hero-particles">
-      {/* Ember dot particles */}
-      {Array.from({length:14}).map((_,i)=>(
+      {/* Ember dot particles — more quantity, varied sizes */}
+      {Array.from({length:20}).map((_,i)=>(
         <div key={`p${i}`} className="hero-particle" style={{
-          left:`${(i*17+7)%100}%`, bottom:`${(i*11+5)%45}%`,
-          width:`${(i%3)+1}px`, height:`${(i%3)+1}px`,
-          animationDuration:`${(i%4)+3}s`, animationDelay:`${(i%5)*0.8}s`,
+          left:`${(i*13+7)%100}%`, bottom:`${(i*7+3)%50}%`,
+          width:`${(i%4)+1}px`, height:`${(i%4)+1}px`,
+          background: FACTION_COLORS[i % 4],
+          boxShadow: `0 0 ${(i%3)*4+4}px ${FACTION_COLORS[i % 4]}`,
+          animationDuration:`${(i%5)+3}s`, animationDelay:`${(i%7)*0.6}s`,
+          borderRadius: '50%',
         }}/>
       ))}
-      {/* Rune glyph particles */}
-      {Array.from({length:8}).map((_,i)=>(
+      {/* Rune glyph particles — floating with glow */}
+      {Array.from({length:10}).map((_,i)=>(
         <div key={`r${i}`} className="hero-particle-rune" style={{
-          left:`${(i*23+12)%88+6}%`, bottom:`${(i*17+8)%38}%`,
-          fontSize:`${(i%3)+8}px`,
-          animationDuration:`${(i%3)+5}s`, animationDelay:`${i*0.75}s`,
+          left:`${(i*19+12)%88+6}%`, bottom:`${(i*13+8)%45}%`,
+          fontSize:`${(i%4)+8}px`,
+          color: FACTION_COLORS[i % 4],
+          textShadow: `0 0 12px ${FACTION_COLORS[i % 4]}, 0 0 24px ${FACTION_COLORS[i % 4]}55`,
+          animationDuration:`${(i%4)+5}s`, animationDelay:`${i*0.6}s`,
         }}>{RUNE_SYMS[i % RUNE_SYMS.length]}</div>
+      ))}
+      {/* Faction icon particles — orbit slowly */}
+      {Array.from({length:4}).map((_,i)=>(
+        <div key={`fi${i}`} style={{
+          position:'absolute',
+          left:`${15 + i * 22}%`, bottom:`${20 + (i%2)*15}%`,
+          fontSize:'18px',
+          opacity: 0.15,
+          filter: `drop-shadow(0 0 8px ${FACTION_COLORS[i]})`,
+          animation: `hero-rune-orbit-${i%2===0?'cw':'ccw'} ${16+i*4}s linear infinite`,
+          '--dur': `${16+i*4}s`,
+          '--r': `${30+i*10}px`,
+        } as React.CSSProperties}>
+          {FACTION_ICONS_HERO[i]}
+        </div>
       ))}
     </div>
   );

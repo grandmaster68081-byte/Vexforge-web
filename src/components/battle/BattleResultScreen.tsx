@@ -6,6 +6,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import type { RealBattleResult } from '../../lib/battleTypes';
 import { particleEngine } from '../../lib/particleEngine';
+import { AudioEngine } from '../../lib/audioEngine';
 
 interface BattleResultScreenProps {
   result: RealBattleResult;
@@ -44,11 +45,26 @@ function computeStats(result: RealBattleResult) {
   };
 }
 
-function StatRow({ label, value, highlight = false }: { label: string; value: string | number; highlight?: boolean }) {
+// ─── Performance grade based on battle stats ─────────────────────────────────
+function computeGrade(stats: ReturnType<typeof computeStats>, won: boolean): { grade: string; color: string } {
+  if (!won) return { grade: 'C', color: '#8b8b9e' };
+  const score =
+    (stats.crits >= 3 ? 30 : stats.crits * 10) +
+    (stats.keywordsTriggered >= 5 ? 25 : stats.keywordsTriggered * 5) +
+    (stats.totalTurns <= 5 ? 25 : stats.totalTurns <= 10 ? 15 : 5) +
+    (stats.maxDamage >= 150 ? 20 : stats.maxDamage >= 80 ? 12 : 4);
+  if (score >= 90) return { grade: 'S', color: '#ff4444' };
+  if (score >= 70) return { grade: 'A', color: '#e8b84b' };
+  if (score >= 45) return { grade: 'B', color: '#4a9eff' };
+  return { grade: 'C', color: '#8b8b9e' };
+}
+
+function StatRow({ label, value, highlight = false, delay = 0 }: { label: string; value: string | number; highlight?: boolean; delay?: number }) {
   return (
-    <div style={{
+    <div className="stat-row-animated" style={{
       display: 'flex', justifyContent: 'space-between', alignItems: 'center',
       padding: '6px 0', borderBottom: '1px solid rgba(255,255,255,0.04)',
+      animationDelay: `${delay}s`,
     }}>
       <span style={{ color: '#888', fontSize: 11, fontFamily: 'Rajdhani, sans-serif', letterSpacing: '0.08em' }}>
         {label}
@@ -114,12 +130,24 @@ export function BattleResultScreen({ result, playerName, opponentName, onDismiss
       interval = setInterval(() => particleEngine.defeatAsh(W, H), 400);
     }
 
+    // Play victory/defeat SFX
+    const sfxDelay = setTimeout(() => {
+      try {
+        if (won) {
+          (AudioEngine as any).sfxVictory?.();
+        } else if (!isDraw) {
+          (AudioEngine as any).sfxDefeat?.();
+        }
+      } catch { /* silent */ }
+    }, 400);
+
     // Reveal ELO after short delay
     const t1 = setTimeout(() => setShowElo(true), 600);
     const t2 = setTimeout(() => setShowStats(true), 1000);
 
     return () => {
       clearInterval(interval);
+      clearTimeout(sfxDelay);
       clearTimeout(t1);
       clearTimeout(t2);
     };
@@ -324,12 +352,29 @@ export function BattleResultScreen({ result, playerName, opponentName, onDismiss
         }}>
           ⚔ Estadísticas de Batalla ⚔
         </div>
-        <StatRow label="Turnos" value={stats.totalTurns} />
-        <StatRow label="Daño Total" value={stats.totalDamage.toLocaleString()} highlight />
-        <StatRow label="Golpe Máximo" value={stats.maxDamage.toLocaleString()} />
-        <StatRow label="Golpes Críticos" value={stats.crits} highlight={stats.crits > 0} />
-        {stats.heals > 0 && <StatRow label="Vida Drenada" value={stats.heals.toLocaleString()} />}
-        {stats.keywordsTriggered > 0 && <StatRow label="Keywords Activadas" value={stats.keywordsTriggered} />}
+        <StatRow label="Turnos" value={stats.totalTurns} delay={0.0} />
+        <StatRow label="Daño Total" value={stats.totalDamage.toLocaleString()} highlight delay={0.05} />
+        <StatRow label="Golpe Máximo" value={stats.maxDamage.toLocaleString()} delay={0.10} />
+        <StatRow label="Golpes Críticos" value={stats.crits} highlight={stats.crits > 0} delay={0.15} />
+        {stats.heals > 0 && <StatRow label="Vida Drenada" value={stats.heals.toLocaleString()} delay={0.20} />}
+        {stats.keywordsTriggered > 0 && <StatRow label="Keywords Activadas" value={stats.keywordsTriggered} delay={0.25} />}
+        {/* Performance grade badge */}
+        {(() => {
+          const g = computeGrade(stats, !!won);
+          return (
+            <div className="battle-grade-badge" style={{
+              display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
+              marginTop: 14, paddingTop: 10, borderTop: `1px solid ${theme.primary}22`,
+            }}>
+              <span style={{ color: '#666', fontSize: 9, fontFamily: 'Rajdhani,sans-serif', letterSpacing: '0.2em', textTransform: 'uppercase' }}>
+                Rendimiento
+              </span>
+              <span className={`grade-${g.grade}`} style={{ fontSize: 28, fontWeight: 900, lineHeight: 1 }}>
+                {g.grade}
+              </span>
+            </div>
+          );
+        })()}
       </div>
 
       {/* Action buttons */}

@@ -571,12 +571,14 @@ export function CardsRoute() {
         )}
         {!loading && filtered.length > 0 && (
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(160px,1fr))", gap: 16 }}>
-            {filtered.map(card => {
+            {filtered.map((card, idx) => {
               const pc = collectionById.get(card.id);
               return (
-                <CardTile key={card.id} card={card}
-                  owned={!!pc} quantity={pc?.quantity ?? 0}
-                  onClick={() => openModal(card)} />
+                <div key={card.id} className="card-grid-item" style={{ animationDelay: `${Math.min(idx * 0.03, 0.27)}s` }}>
+                  <CardTile card={card}
+                    owned={!!pc} quantity={pc?.quantity ?? 0}
+                    onClick={() => openModal(card)} />
+                </div>
               );
             })}
           </div>
