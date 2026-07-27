@@ -72,7 +72,8 @@ import { supabase } from "../../lib/supabase";
     }
 
     const totalOwned    = ownedIds.size;
-    const totalCards    = allCards?.length ?? TOTAL_CARDS;
+    // Use TOTAL_CARDS as fallback if allCards is null OR empty (empty array gives 0, causing division by zero)
+    const totalCards    = (allCards && allCards.length > 0) ? allCards.length : TOTAL_CARDS;
     const completionPct = totalCards > 0 ? Math.round((totalOwned / totalCards) * 100) : 0;
 
     let score = 0;

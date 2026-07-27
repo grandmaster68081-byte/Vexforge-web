@@ -163,6 +163,7 @@ function toActor(u: BattleUnit) {
 }
 
 function pickTarget(enemies: BattleUnit[], difficulty: AIDifficulty): BattleUnit {
+  if (!enemies.length) throw new Error('pickTarget called with empty enemies array');
   const guards = enemies.filter(e => e.guard);
   const pool   = guards.length ? guards : enemies;
   if (difficulty === 'easy') {

@@ -91,7 +91,8 @@
             .tu-skip-btn:hover { color:#aaa; }
             .tu-dot { transition:all 0.3s ease; }
           `}</style>
-          <div style={{ position:"absolute",inset:0 }} onClick={() => { if(!isLast) skip(); }} />
+          {/* Backdrop — no action on click (avoids accidental tutorial skip) */}
+          <div style={{ position:"absolute",inset:0 }} />
           <div style={{ position:"relative",zIndex:1,width:"100%",maxWidth:440,
             background:"linear-gradient(160deg,#0d0d1e 0%,#0a0a18 100%)",
             border:`1px solid ${accent}44`,borderRadius:20,
