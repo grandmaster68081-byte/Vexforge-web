@@ -5,6 +5,7 @@ import { useHome } from "../domains/home/useHome";
 import { useHomeActivity } from "../domains/home/useHomeActivity";
 import { usePlayerItems } from "../domains/cosmetics/usePlayerItems";
 import type { PlayerActiveBoost } from "../domains/cosmetics/repository";
+import { getRank } from "../lib/rankUtils";
 
 const LOBBY_URL = "https://rscuzqnfccqvltkdcdny.supabase.co/storage/v1/object/public/vexforge-assets/lobby/main.jpg";
 
@@ -44,8 +45,7 @@ function timeAgo(iso: string): string {
   return `hace ${Math.floor(h / 24)}d`;
 }
 function getRankTier(mmr:number) {
-  if(mmr>=3000) return "Mythic"; if(mmr>=2400) return "Diamond"; if(mmr>=2000) return "Platinum";
-  if(mmr>=1600) return "Gold"; if(mmr>=1200) return "Silver"; if(mmr>=800) return "Bronze"; return "Iron";
+  return getRank(mmr).name;
 }
 
 const RUNE_SYMS = ["✦","◈","⬡","✧","◆","⊕","★","⟐"];
@@ -165,14 +165,18 @@ export function HomeRoute() {
   const [statsLoading, setStatsLoading] = useState(true);
 
   useEffect(()=>{
-    supabase.rpc("get_home_stats").then(({data, error})=>{
-      if(error) console.warn("[HomeRoute] get_home_stats error:", error.message);
-      if(data) setStats(data as HomeStats);
-      setStatsLoading(false);
-    }).catch(() => {
-      // Network failure — degrade gracefully, don't leave statsLoading=true forever
-      setStatsLoading(false);
-    });
+    async function loadStats() {
+      try {
+        const { data, error } = await supabase.rpc("get_home_stats");
+        if(error) console.warn("[HomeRoute] get_home_stats error:", error.message);
+        if(data) setStats(data as HomeStats);
+      } catch {
+        // Network failure — degrade gracefully
+      } finally {
+        setStatsLoading(false);
+      }
+    }
+    void loadStats();
   },[]);
 
   const hasPlayerData = signedIn && profile;

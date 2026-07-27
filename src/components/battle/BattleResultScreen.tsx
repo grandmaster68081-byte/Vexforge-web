@@ -72,8 +72,8 @@ export function BattleResultScreen({ result, playerName, opponentName, onDismiss
   const [showStats, setShowStats] = useState(false);
   const [eloDisplayed, setEloDisplayed] = useState(0);
 
-    // GL.0: Win Streak counter — scoped por match_id o session para evitar mezcla entre usuarios
-    const streakKey = `vxf_win_streak_${result.match_id ?? result.session_id ?? playerName ?? 'guest'}`;
+    // GL.0: Win Streak counter — scoped por playerName (match_id es único por batalla y no sirve como clave acumulativa)
+    const streakKey = `vxf_win_streak_${playerName ?? 'guest'}`;
     const [winStreak, setWinStreak] = useState<number>(() => {
       try { return parseInt(localStorage.getItem(streakKey) ?? '0') || 0; } catch { return 0; }
     });

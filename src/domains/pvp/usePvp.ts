@@ -31,12 +31,11 @@ export function usePvp() {
     setLoading(true);
     try {
       // Quick auth pre-check before loading all data
-      const { supabase: sb } = await import('../../lib/supabase');
-      const { data: { session: preSession } } = await sb.auth.getSession();
+      const { supabase } = await import('../../lib/supabase');
+      const { data: { session: preSession } } = await supabase.auth.getSession();
       if (!preSession) { setLoading(false); return; }
       await withTimeout(
         (async () => {
-          const { supabase } = await import("../../lib/supabase");
           const { data: s } = await supabase.auth.getSession();
           if (s.session) {
             const { data } = await supabase
