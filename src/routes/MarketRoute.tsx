@@ -31,7 +31,7 @@ function applySort(list: MarketListing[], sort: SortKey): MarketListing[] {
       return ri !== 0 ? ri : a.price - b.price;
     }
     // "newest" — fall back to reverse insertion order (id is a UUID v4 so sort by id desc is a rough proxy)
-    return b.id.localeCompare(a.id);
+    return (b.id ?? '').localeCompare(a.id ?? '');
   });
 }
 

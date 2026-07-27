@@ -34,6 +34,9 @@ export function useNotifications() {
         setLoading(false);
       }
 
+      // Guard: component may have unmounted while awaiting — skip channel creation
+      if (cancelled) return;
+
       // Real-time: new notifications pushed by server
       channelRef.current = supabase
         .channel(`pn:${player.id}`)

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useEvolution } from "../domains/evolution/useEvolution";
 import type { EvoPath } from "../domains/evolution/repository";
 import { PageLoader } from "../shared/components/PageLoader";
@@ -89,15 +89,13 @@ export function EvolutionRoute() {
   const [filter, setFilter] = useState("all");
   const { addToast } = useToast();
 
-  // Surface evoMsg as toast when it changes
-  const [lastMsg, setLastMsg] = useState<string | null>(null);
-  if (evoMsg !== lastMsg) {
-    setLastMsg(evoMsg);
-    if (evoMsg) {
-      const isOk = evoMsg.includes("evolucionada") || evoMsg.includes("exitoso") || evoMsg.toLowerCase().includes("ok");
-      addToast(isOk ? "success" : "error", evoMsg);
-    }
-  }
+  // Surface evoMsg as toast when it changes (useEffect avoids state-during-render anti-pattern)
+  useEffect(() => {
+    if (!evoMsg) return;
+    const isOk = evoMsg.includes("evolucionada") || evoMsg.includes("exitoso") || evoMsg.toLowerCase().includes("ok");
+    addToast(isOk ? "success" : "error", evoMsg);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [evoMsg]);
 
   const allPaths   = paths.data ?? [];
   const loading    = paths.status === "loading";
