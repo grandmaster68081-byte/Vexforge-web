@@ -3192,3 +3192,144 @@ input.forge-input:focus {
   .home-stats-pills { gap: 10px !important; }
   .home-stats-pill { padding: 6px 14px !important; }
 }
+
+/* ════════════════════════════════════════════════════════════════
+   LOTE MEJORAS — Pack Opening, NotFoundRoute, UI polish
+   ════════════════════════════════════════════════════════════════ */
+
+/* ─── Pack opening — tarjeta legendaria/mítica: borde animado ────── */
+@keyframes vf-legendary-border {
+  0%,100% { box-shadow: 0 0 12px #E8B84B55, inset 0 0 8px #E8B84B22; }
+  50%      { box-shadow: 0 0 28px #E8B84B99, inset 0 0 16px #E8B84B44; }
+}
+@keyframes vf-mythic-border {
+  0%   { box-shadow: 0 0 12px #FF444455; border-color: #FF444466; }
+  33%  { box-shadow: 0 0 28px #A855F799; border-color: #A855F766; }
+  66%  { box-shadow: 0 0 28px #4A9EFF99; border-color: #4A9EFF66; }
+  100% { box-shadow: 0 0 12px #FF444455; border-color: #FF444466; }
+}
+.vf-card-legendary { animation: vf-legendary-border 1.8s ease-in-out infinite !important; }
+.vf-card-mythic    { animation: vf-mythic-border    2.4s ease-in-out infinite !important; }
+
+/* ─── Pack card flip — mejor rendimiento ─────────────────────────── */
+.vf-card-flip-inner {
+  transform-style: preserve-3d;
+  transition: transform 0.55s cubic-bezier(0.22,1,0.36,1);
+  will-change: transform;
+}
+
+/* ─── NotFoundRoute hover links ───────────────────────────────────── */
+.nf-quick-link:hover {
+  color: #e8e8f0 !important;
+  background: rgba(255,255,255,0.08) !important;
+}
+
+/* ─── HomeRoute feature cards — hover lift ───────────────────────── */
+.home-feature-card {
+  transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease;
+}
+.home-feature-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+}
+
+/* ─── Sidebar nav items — active indicator pulse ──────────────────── */
+@keyframes sidebar-active-dot {
+  0%,100% { opacity: 0.7; transform: scaleX(1); }
+  50%      { opacity: 1;   transform: scaleX(1.15); }
+}
+.sidebar-active-indicator {
+  animation: sidebar-active-dot 2s ease-in-out infinite;
+}
+
+/* ─── Season pass progress bar animated fill ─────────────────────── */
+@keyframes season-fill-in {
+  from { width: 0%; }
+  to   { width: var(--target-width, 100%); }
+}
+.season-progress-fill {
+  animation: season-fill-in 1.2s cubic-bezier(0.22,1,0.36,1) forwards;
+}
+
+/* ─── Achievement unlock glow ─────────────────────────────────────── */
+@keyframes achievement-unlock-glow {
+  0%   { box-shadow: 0 0 0px rgba(232,184,75,0); }
+  40%  { box-shadow: 0 0 24px rgba(232,184,75,0.6), 0 0 48px rgba(232,184,75,0.3); }
+  100% { box-shadow: 0 0 8px rgba(232,184,75,0.2); }
+}
+.achievement-unlocked {
+  animation: achievement-unlock-glow 1.8s ease-out forwards;
+}
+
+/* ─── Battle board: attack beam flicker ──────────────────────────── */
+@keyframes beam-flicker {
+  0%,100% { opacity: 1; }
+  25%      { opacity: 0.85; }
+  75%      { opacity: 0.92; }
+}
+
+/* ─── HP critical pulse (already referenced by InteractiveBattleBoard) */
+@keyframes hp-critical-pulse {
+  0%,100% { opacity: 0; }
+  50%      { opacity: 0.12; }
+}
+
+/* ─── Mobile: bottom nav safe area ───────────────────────────────── */
+.forge-bottom-nav {
+  padding-bottom: env(safe-area-inset-bottom, 8px);
+}
+
+/* ─── Button active state — tactile press ────────────────────────── */
+.btn:active,
+button.btn-primary:active {
+  transform: scale(0.97) !important;
+}
+
+/* ─── Modal backdrops — prevent scroll bleed ─────────────────────── */
+body.modal-open { overflow: hidden; }
+
+/* ─── Toast animation override — smoother ────────────────────────── */
+@keyframes toast-slide-in {
+  from { opacity: 0; transform: translateX(110%); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+@keyframes toast-slide-out {
+  from { opacity: 1; transform: translateX(0); }
+  to   { opacity: 0; transform: translateX(110%); }
+}
+
+/* ─── Scrollbar thin variant for modals ──────────────────────────── */
+.thin-scroll::-webkit-scrollbar { width: 3px; }
+.thin-scroll::-webkit-scrollbar-thumb { background: rgba(201,144,31,0.3); border-radius: 2px; }
+
+/* ─── Card collection grid — responsive columns ──────────────────── */
+@media (max-width: 400px) {
+  .cards-grid { grid-template-columns: repeat(2, 1fr) !important; }
+}
+@media (min-width: 401px) and (max-width: 640px) {
+  .cards-grid { grid-template-columns: repeat(3, 1fr) !important; }
+}
+
+/* ─── PvP arena — faction zone image fade-in ─────────────────────── */
+@keyframes arena-bg-fade {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+.arena-bg-image {
+  animation: arena-bg-fade 0.8s ease-out forwards;
+}
+
+/* ─── DeckBuilder — card slot hover ─────────────────────────────── */
+.deck-card-slot:hover {
+  transform: scale(1.04);
+  z-index: 2;
+}
+
+/* ─── Quests route — quest card enter ───────────────────────────── */
+@keyframes quest-card-in {
+  from { opacity: 0; transform: translateX(-12px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+.quest-card-enter {
+  animation: quest-card-in 0.3s ease-out forwards;
+}

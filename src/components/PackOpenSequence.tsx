@@ -172,73 +172,163 @@ import { useState, useEffect, useRef, useCallback } from "react";
       setAutoRunning(true);
       autoRef.current = true;
       let i = 0;
-      const unflipped = [...Array(cards.length).keys()].filter(idx => !flipped.has(idx));
+      // Ordenar de menor a mayor rareza para guardar las mejores para el final
+      const unflipped = [...Array(cards.length).keys()]
+        .filter(idx => !flipped.has(idx))
+        .sort((a, b) => (RARITY_RANK[cards[a].rarity] ?? 0) - (RARITY_RANK[cards[b].rarity] ?? 0));
       const tick = () => {
         if (!autoRef.current || i >= unflipped.length) {
           autoRef.current = false;
           setAutoRunning(false);
           return;
         }
-        flipCard(unflipped[i]);
+        const cardIdx = unflipped[i];
+        const rarity = cards[cardIdx].rarity;
+        flipCard(cardIdx);
         i++;
-        setTimeout(tick, 320);
+        // Pausa más larga para cartas épicas/legendarias/míticas — genera anticipación
+        const rank = RARITY_RANK[rarity] ?? 0;
+        const delay = rank >= 4 ? 900 : rank >= 3 ? 600 : rank >= 2 ? 420 : 320;
+        setTimeout(tick, delay);
       };
       tick();
-    }, [autoRunning, flipped, flipCard, cards.length]);
+    }, [autoRunning, flipped, flipCard, cards]);
 
     useEffect(() => () => { autoRef.current = false; }, []);
 
     // ── SHAKING PHASE ───────────────────────────────────────────────────────
     if (phase === "shaking") {
+      const c = packVisual.color;
       return (
         <div style={{
           position: "fixed", inset: 0, zIndex: 9999,
           display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
-          background: "rgba(5,5,13,0.96)",
+          background: "radial-gradient(ellipse 80% 60% at 50% 60%, rgba(10,10,24,0.98) 0%, rgba(3,3,10,0.99) 100%)",
           backdropFilter: "blur(12px)",
         }}>
-          <style>{`#vf-pack-egg{animation:vfShake 0.55s ease-in-out infinite;cursor:pointer;}
-            #vf-pack-egg:hover{filter:brightness(1.15);}`}</style>
+          <style>{`
+            #vf-pack-egg {
+              animation: vfShake 0.5s ease-in-out infinite;
+              cursor: pointer;
+              transition: filter 0.15s;
+            }
+            #vf-pack-egg:hover { filter: brightness(1.22) drop-shadow(0 0 32px ${c}); }
+            #vf-pack-egg:active { transform: scale(0.95); }
+            @keyframes vf-ring-spin-cw  { to { transform: rotate(360deg); } }
+            @keyframes vf-ring-spin-ccw { to { transform: rotate(-360deg); } }
+            @keyframes vf-pack-pulse-shadow {
+              0%,100% { box-shadow: 0 0 60px ${packVisual.glow}, 0 0 120px ${packVisual.glow}55; }
+              50%      { box-shadow: 0 0 90px ${packVisual.glow}, 0 0 180px ${packVisual.glow}88; }
+            }
+            @keyframes vf-hint-blink {
+              0%,90%,100% { opacity: 0.45; }
+              45%          { opacity: 0.85; }
+            }
+          `}</style>
 
-          <div style={{ marginBottom: 28, textAlign: "center" }}>
-            <div style={{ fontSize: 11, color: "#5a5a7a", fontFamily: '"IBM Plex Mono",monospace', letterSpacing: "0.14em", marginBottom: 8 }}>ABRIENDO</div>
-            <div style={{ fontSize: 22, fontFamily: "Cinzel,serif", color: packVisual.color, fontWeight: 800 }}>{packVisual.name}</div>
+          {/* Nombre del pack */}
+          <div style={{ marginBottom: 32, textAlign: "center" }}>
+            <div style={{
+              fontSize: 10, color: "#4a4a6a",
+              fontFamily: '"IBM Plex Mono",monospace', letterSpacing: "0.2em",
+              textTransform: "uppercase", marginBottom: 10,
+            }}>ABRIENDO PACK</div>
+            <div style={{ fontSize: 24, fontFamily: "Cinzel,serif", color: c, fontWeight: 800, letterSpacing: "0.06em" }}>
+              {packVisual.name}
+            </div>
           </div>
 
-          <div id="vf-pack-egg" onClick={() => setPhase("burst")} style={{
-            width: 160, height: 160, borderRadius: "50%",
-            background: packVisual.gradient,
-            border: `3px solid ${packVisual.color}88`,
-            display: "flex", alignItems: "center", justifyContent: "center",
-            fontSize: 64,
-            boxShadow: `0 0 60px ${packVisual.glow}, 0 0 120px ${packVisual.glow}55`,
+          {/* Anillos orbitales + esfera central */}
+          <div style={{ position: "relative", width: 220, height: 220 }}>
+            {/* Anillo exterior */}
+            <div style={{
+              position: "absolute", inset: 0, borderRadius: "50%",
+              border: `1.5px solid ${c}44`,
+              animation: "vf-ring-spin-cw 4s linear infinite",
+            }} />
+            {/* Anillo medio */}
+            <div style={{
+              position: "absolute", inset: 20, borderRadius: "50%",
+              border: `1px solid ${c}28`,
+              animation: "vf-ring-spin-ccw 3s linear infinite",
+            }} />
+            {/* Anillo interior */}
+            <div style={{
+              position: "absolute", inset: 40, borderRadius: "50%",
+              border: `1px dashed ${c}18`,
+              animation: "vf-ring-spin-cw 2s linear infinite",
+            }} />
+            {/* Esfera del pack */}
+            <div id="vf-pack-egg" onClick={() => setPhase("burst")} style={{
+              position: "absolute", inset: 30, borderRadius: "50%",
+              background: packVisual.gradient,
+              border: `3px solid ${c}88`,
+              display: "flex", alignItems: "center", justifyContent: "center",
+              fontSize: 64,
+              animation: "vf-pack-pulse-shadow 2s ease-in-out infinite",
+            }}>
+              {packVisual.icon}
+            </div>
+          </div>
+
+          {/* Instrucción con parpadeo */}
+          <p style={{
+            marginTop: 36, color: "#4a4a6a", fontSize: 12,
+            fontFamily: '"IBM Plex Mono",monospace', letterSpacing: "0.15em",
+            textTransform: "uppercase",
+            animation: "vf-hint-blink 2.2s ease-in-out infinite",
           }}>
-            {packVisual.icon}
-          </div>
-
-          <p style={{ marginTop: 32, color: tmuted, fontSize: 13, fontFamily: "Rajdhani,sans-serif", letterSpacing: "0.1em" }}>
-            Haz clic para abrir
+            ✦ Toca para abrir ✦
           </p>
+
+          {/* Cantidad de cartas */}
+          <div style={{
+            marginTop: 12, fontSize: 11, color: c + "88",
+            fontFamily: "Rajdhani,sans-serif", fontWeight: 700,
+            letterSpacing: "0.08em",
+          }}>
+            {cards.length} cartas dentro
+          </div>
         </div>
       );
     }
 
     // ── BURST PHASE ─────────────────────────────────────────────────────────
     if (phase === "burst") {
-      setTimeout(() => setPhase("reveal"), 900);
+      setTimeout(() => setPhase("reveal"), 1000);
       return (
         <div style={{
           position: "fixed", inset: 0, zIndex: 9999,
           display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
           background: "rgba(5,5,13,0.97)",
+          overflow: "hidden",
         }}>
+          <style>{`
+            @keyframes vf-burst-rings {
+              0%   { opacity: 0.7; transform: scale(0.4); }
+              100% { opacity: 0;   transform: scale(3.5); }
+            }
+            @keyframes vf-burst-icon {
+              0%   { transform: scale(0.6); opacity: 0; }
+              30%  { transform: scale(1.2); opacity: 1; }
+              100% { transform: scale(1.6); opacity: 0; }
+            }
+          `}</style>
+          {/* Ondas de expansión */}
+          {[0, 0.12, 0.25].map((delay, i) => (
+            <div key={i} style={{
+              position: "absolute",
+              width: 280, height: 280, borderRadius: "50%",
+              border: `2px solid ${packVisual.color}`,
+              animationDelay: `${delay}s`,
+              animation: `vf-burst-rings 1s ${delay}s ease-out forwards`,
+            }} />
+          ))}
+          {/* Icono central expandiéndose */}
           <div style={{
-            width: 240, height: 240, borderRadius: "50%",
-            background: packVisual.gradient,
-            animation: "vfBurst 0.9s ease-out forwards",
-            boxShadow: `0 0 120px ${packVisual.glow}, 0 0 220px ${packVisual.glow}88`,
-            display: "flex", alignItems: "center", justifyContent: "center",
-            fontSize: 80,
+            fontSize: 100,
+            animation: "vf-burst-icon 1s ease-out forwards",
+            filter: `drop-shadow(0 0 40px ${packVisual.color})`,
           }}>
             {packVisual.icon}
           </div>
