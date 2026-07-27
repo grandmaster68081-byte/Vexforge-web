@@ -12,7 +12,7 @@ interface BattleIntroScreenProps {
   opponentName: string;
   opponentFaction: string;
   onComplete: () => void;
-  canvasRef?: React.RefObject<HTMLCanvasElement>;
+  canvasRef?: React.RefObject<HTMLCanvasElement | null>;
 }
 
 const FACTION_THEME: Record<string, {

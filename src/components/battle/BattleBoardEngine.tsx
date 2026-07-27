@@ -7,6 +7,7 @@ import type { BattleUnit, BattleTurnData, RealBattleResult } from '../../lib/bat
 import { RARITY_COLOR, RARITY_GLOW, KEYWORD_ICON } from '../../lib/battleTypes';
 import { AudioEngine } from '../../lib/audioEngine';
 import { particleEngine } from '../../lib/particleEngine';
+import { CardAttackCinematic } from './CardAttackCinematic';
 
 interface BattleBoardEngineProps {
   result: RealBattleResult;
@@ -272,6 +273,10 @@ export function BattleBoardEngine({ result, playerName, opponentName, onComplete
   const [log, setLog]             = useState<string[]>(['La batalla comienza...']);
   const [activeTurn, setActiveTurn] = useState<BattleTurnData | null>(null);
   const [isDone, setIsDone]       = useState(false);
+  
+  // FASE 2: Card Attack Cinematic state
+  const [attackingUnit, setAttackingUnit] = useState<BattleUnit | null>(null);
+  const [cinematicVisible, setCinematicVisible] = useState(false);
 
   const canvasRef  = useRef<HTMLCanvasElement>(null);
   const boardRef   = useRef<HTMLDivElement>(null);
@@ -334,11 +339,18 @@ export function BattleBoardEngine({ result, playerName, opponentName, onComplete
     const attackerIdx = finalUnits.find(u => u.side === atkSide && u.name === t.attacker.name)?.idx ?? -1;
     const defenderIdx = finalUnits.find(u => u.side !== atkSide && u.name === t.defender.name)?.idx ?? -1;
 
-    // 1. Highlight attacker
+    // 1. Highlight attacker + trigger cinematic (FASE 2)
     setStates(prev => {
       const next = { ...prev };
       if (attackerIdx >= 0 && next[attackerIdx]) {
         next[attackerIdx] = { ...next[attackerIdx], isActive: true, isAttacking: false };
+        
+        // FASE 2: Show cinematic for Rare+ rarities
+        const atkUnit = finalUnits.find(u => u.idx === attackerIdx);
+        if (atkUnit && ['Rare', 'Epic', 'Legendary', 'Mythic', 'Founder'].includes(atkUnit.rarity)) {
+          setAttackingUnit(atkUnit);
+          setCinematicVisible(true);
+        }
       }
       return next;
     });
@@ -483,6 +495,13 @@ export function BattleBoardEngine({ result, playerName, opponentName, onComplete
     <div ref={boardRef} style={{ position: 'relative', width: '100%', flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden', background: 'linear-gradient(180deg, #060614 0%, #090920 50%, #06060f 100%)' }}>
       {/* Particle canvas overlay */}
       <canvas ref={canvasRef} style={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 10 }} />
+
+      {/* FASE 2: Card Attack Cinematic Overlay */}
+      <CardAttackCinematic 
+        unit={attackingUnit} 
+        visible={cinematicVisible} 
+        onDone={() => setCinematicVisible(false)} 
+      />
 
 {/* BA.0: Board atmosphere layer — faction-specific ambient glow */}
         {(() => {

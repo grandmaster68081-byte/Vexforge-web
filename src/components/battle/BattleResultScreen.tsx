@@ -12,7 +12,7 @@ interface BattleResultScreenProps {
   playerName: string;
   opponentName: string;
   onDismiss: () => void;
-  canvasRef: React.RefObject<HTMLCanvasElement>;
+  canvasRef: React.RefObject<HTMLCanvasElement | null>;
 }
 
 // Compute stats from turns

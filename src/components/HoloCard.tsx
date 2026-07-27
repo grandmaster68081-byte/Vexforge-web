@@ -31,7 +31,7 @@ const SPARKLE_COLORS_MYTHIC    = ["#fca5a5", "#f87171", "#ef4444", "#fde68a", "#
 let sparkleIdCounter = 0;
 function makeSparkles(rarity: string): Sparkle[] {
   const colors = rarity === "Mythic" ? SPARKLE_COLORS_MYTHIC : SPARKLE_COLORS_LEGENDARY;
-  const count = rarity === "Mythic" ? 9 : 6;
+  const count = rarity === "Mythic" ? 14 : 8;  // FASE 2: incrementado (14 Mythic, 8 Legendary)
   return Array.from({ length: count }, () => ({
     id: ++sparkleIdCounter,
     x: Math.random() * 90 + 5,
@@ -121,6 +121,10 @@ export function HoloCard({ rarity, children, style, className, disabled }: HoloC
       90%  { opacity: 0.4; }
       100% { top: 110%; opacity: 0; }
     }
+    @keyframes mythic-vortex-spin {
+      from { transform: rotate(0deg) scale(1); }
+      to   { transform: rotate(-360deg) scale(1.08); }
+    }
   `;
 
   return (
@@ -164,8 +168,8 @@ export function HoloCard({ rarity, children, style, className, disabled }: HoloC
         />
       )}
 
-      {/* Scanline sweep — Legendary / Mythic */}
-      {hasSparks && (
+      {/* Scanline sweep — Legendary */}
+      {rarity === "Legendary" && (
         <div
           aria-hidden
           style={{
@@ -177,6 +181,23 @@ export function HoloCard({ rarity, children, style, className, disabled }: HoloC
             zIndex: 12,
             animation: "holo-scanline 4s ease-in-out infinite",
             transform: "skewX(-18deg)",
+          }}
+        />
+      )}
+
+      {/* Mythic: rotating vortex overlay */}
+      {rarity === "Mythic" && (
+        <div
+          aria-hidden
+          style={{
+            position: "absolute",
+            inset: -40,
+            background: `conic-gradient(from 0deg at 50% 50%, ${holoColors.c1} 0deg, transparent 60deg, ${holoColors.c2} 120deg, transparent 180deg, ${holoColors.c3} 240deg, transparent 300deg)`,
+            borderRadius: "inherit",
+            pointerEvents: "none",
+            zIndex: 11,
+            animation: "mythic-vortex-spin 3s linear infinite",
+            mixBlendMode: "screen",
           }}
         />
       )}

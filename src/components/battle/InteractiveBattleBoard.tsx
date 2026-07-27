@@ -5,6 +5,7 @@
 import { useRef, useCallback, useState, useEffect, type CSSProperties } from 'react';
 import type { RealBattleResult, BattleUnit } from '../../lib/battleTypes';
 import { RARITY_COLOR, RARITY_GLOW } from '../../lib/battleTypes';
+import { CardAttackCinematic } from './CardAttackCinematic';
 
 // Faction-to-icon map — KEYWORD_ICON maps mechanics (Guard, Surge…), not factions
 const FACTION_ICON: Record<string, string> = {
@@ -464,6 +465,10 @@ export function InteractiveBattleBoard({
   const [screenFlash, setScreenFlash] = useState(false);
   const dropZoneRef = useRef<HTMLDivElement | null>(null);
   const dragRef     = useRef({ active: false, startX: 0, startY: 0 });
+  
+  // FASE 2: Card Attack Cinematic state
+  const [attackingUnit, setAttackingUnit] = useState<BattleUnit | null>(null);
+  const [cinematicVisible, setCinematicVisible] = useState(false);
 
   const finalUnits = result.final_units ?? [];
   const playerUnit   = finalUnits.find(u => u.side === 'a' && u.alive) ?? finalUnits.find(u => u.side === 'a');
@@ -473,10 +478,18 @@ export function InteractiveBattleBoard({
   const playerZone    = FACTION_ZONE[playerFaction] ?? FACTION_ZONE['default'];
   const oppZone       = FACTION_ZONE[oppFaction] ?? FACTION_ZONE['default'];
 
-  // Beam + flash + hit effects when animating
+  // Beam + flash + hit effects when animating + FASE 2: cinematic trigger
   useEffect(() => {
-    if (state.phase === 'ANIMATING') {
-      const isPlayerAtk = state.currentTurn?.atk_side === 'a';
+    if (state.phase === 'ANIMATING' && state.currentTurn) {
+      const isPlayerAtk = state.currentTurn.atk_side === 'a';
+      
+      // FASE 2: Trigger cinematic for Rare+ attacker
+      const attackerUnit = isPlayerAtk ? playerUnit : opponentUnit;
+      if (attackerUnit && ['Rare', 'Epic', 'Legendary', 'Mythic', 'Founder'].includes(attackerUnit.rarity)) {
+        setAttackingUnit(attackerUnit);
+        setCinematicVisible(true);
+      }
+      
       setBeamVisible(true);
       const t1 = setTimeout(() => {
         setBeamVisible(false);
@@ -486,7 +499,8 @@ export function InteractiveBattleBoard({
       }, 260);
       return () => clearTimeout(t1);
     }
-  }, [state.phase, state.currentTurn]);
+    return undefined;
+  }, [state.phase, state.currentTurn, playerUnit, opponentUnit]);
 
   const isPlayerAttacking = state.currentTurn?.atk_side === 'a';
 
@@ -551,6 +565,13 @@ export function InteractiveBattleBoard({
         position: 'absolute', inset: 0, zIndex: 0, pointerEvents: 'none',
         background: 'radial-gradient(ellipse 110% 110% at 50% 50%, transparent 55%, rgba(0,0,0,0.7) 100%)',
       }} />
+
+      {/* FASE 2: Card Attack Cinematic Overlay */}
+      <CardAttackCinematic 
+        unit={attackingUnit} 
+        visible={cinematicVisible} 
+        onDone={() => setCinematicVisible(false)} 
+      />
 
       {/* Keyframes */}
       <style>{`

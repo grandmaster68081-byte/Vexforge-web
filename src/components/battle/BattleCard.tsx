@@ -166,10 +166,13 @@ export function BattleCard({ unit, anim, side, isActive, cardRef }: BattleCardPr
 
       {/* Card body */}
       <div style={{ padding: '4px 6px 6px' }}>
-        {/* Name */}
+        {/* Name — FASE 2: Epic chromatic aberration */}
         <div style={{
           fontSize: 8.5, fontWeight: 700, color: '#e8e8f0', marginBottom: 4,
           whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
+          textShadow: unit.rarity === 'Epic' 
+            ? '1px 0 0 rgba(255,0,255,0.4), -1px 0 0 rgba(0,255,255,0.4), 0 0 4px rgba(168,85,247,0.5)'
+            : undefined,
         }}>{unit.name}</div>
 
         {/* HP bar */}

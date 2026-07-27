@@ -54,6 +54,7 @@
         const t = setTimeout(() => { setDisplayStep(tutorialStep); setAnimDir('in'); }, 220);
         return () => clearTimeout(t);
       }
+      return undefined;
     }, [tutorialStep]);
 
     // TU.1: sync localStorage

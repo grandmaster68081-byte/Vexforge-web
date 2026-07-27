@@ -71,6 +71,7 @@ export function useContextualHint(page: string): {
       const t = setTimeout(() => setHint(match), 1800);
       return () => clearTimeout(t);
     }
+    return undefined;
   }, [page]);
 
   const dismiss = useCallback(() => {
