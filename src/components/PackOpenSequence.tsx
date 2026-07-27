@@ -489,18 +489,40 @@ import { useState, useEffect, useRef, useCallback } from "react";
                         )}
                       </>
                     ) : (
-                      /* Card back */
+                      /* Card back — con pulso y animación de hover */
                       <div style={{
                         position: "absolute", inset: 0, display: "flex", flexDirection: "column",
                         alignItems: "center", justifyContent: "center",
-                        background: "linear-gradient(160deg,#1a1a2e,#0e0e1e)",
+                        background: "linear-gradient(160deg,#16162a,#0c0c1c)",
+                        cursor: "pointer",
                       }}>
-                        <div style={{ fontSize: 32, opacity: 0.4, marginBottom: 8 }}>⚔</div>
+                        {/* Patrón de fondo sutil */}
                         <div style={{
-                          width: 40, height: 2,
-                          background: `linear-gradient(90deg, transparent, ${packVisual.color}66, transparent)`,
+                          position: "absolute", inset: 0,
+                          backgroundImage: `repeating-linear-gradient(45deg, ${packVisual.color}06 0, ${packVisual.color}06 1px, transparent 0, transparent 50%)`,
+                          backgroundSize: "10px 10px",
                         }} />
-                        <div style={{ fontSize: 9, color: "#4a4a6a", marginTop: 8, fontFamily: '"IBM Plex Mono",monospace' }}>
+                        {/* Símbolo del pack pulsando */}
+                        <div style={{
+                          fontSize: 28, marginBottom: 10, position: "relative", zIndex: 1,
+                          opacity: 0.5,
+                          animation: "vfShake 2s ease-in-out infinite",
+                          animationDelay: `${Math.random() * 1}s`,
+                        }}>
+                          {packVisual.icon}
+                        </div>
+                        {/* Separador decorativo */}
+                        <div style={{
+                          width: 36, height: 1, position: "relative", zIndex: 1,
+                          background: `linear-gradient(90deg, transparent, ${packVisual.color}66, transparent)`,
+                          marginBottom: 8,
+                        }} />
+                        {/* Texto */}
+                        <div style={{
+                          fontSize: 8, color: packVisual.color + "66", position: "relative", zIndex: 1,
+                          fontFamily: '"IBM Plex Mono",monospace', letterSpacing: "0.18em",
+                          textTransform: "uppercase",
+                        }}>
                           TAP
                         </div>
                       </div>
@@ -541,66 +563,154 @@ import { useState, useEffect, useRef, useCallback } from "react";
     }
 
     // ── SUMMARY PHASE ───────────────────────────────────────────────────────
+    // Agrupar cartas por rareza para el desglose rápido
+    const rarityCounts: Record<string, number> = {};
+    for (const c of cards) rarityCounts[c.rarity] = (rarityCounts[c.rarity] ?? 0) + 1;
+    const bestRarity  = bestCard ? RARITY_RANK[bestCard.rarity] ?? 0 : 0;
+    const headerEmoji = bestRarity >= 5 ? "🔥" : bestRarity >= 4 ? "✨" : bestRarity >= 3 ? "💎" : "📦";
+
     return (
       <div style={{
         position: "fixed", inset: 0, zIndex: 9999,
-        background: "rgba(5,5,13,0.97)",
-        display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
-        backdropFilter: "blur(12px)",
+        background: `radial-gradient(ellipse 70% 50% at 50% 0%, ${packVisual.glow.replace("0.45","0.12").replace("0.55","0.12").replace("0.6","0.12")} 0%, rgba(3,3,10,0.99) 70%)`,
+        display: "flex", flexDirection: "column", alignItems: "center",
+        overflowY: "auto",
+        backdropFilter: "blur(14px)",
       }}>
+        <style>{`
+          @keyframes vf-summary-appear {
+            from { opacity: 0; transform: translateY(24px) scale(0.97); }
+            to   { opacity: 1; transform: translateY(0)    scale(1);    }
+          }
+          @keyframes vf-row-in {
+            from { opacity: 0; transform: translateX(-10px); }
+            to   { opacity: 1; transform: translateX(0); }
+          }
+          @keyframes vf-best-shine {
+            0%   { background-position: -200% center; }
+            100% { background-position: 200% center; }
+          }
+        `}</style>
+
         <div style={{
-          maxWidth: 560, width: "100%", margin: "0 auto", padding: "40px 24px",
-          animation: "vfSummaryIn 0.6s cubic-bezier(0.34,1.56,0.64,1) forwards",
+          maxWidth: 580, width: "100%", padding: "44px 20px 48px",
+          animation: "vf-summary-appear 0.55s cubic-bezier(0.22,1,0.36,1) forwards",
         }}>
-          {/* Header */}
-          <div style={{ textAlign: "center", marginBottom: 32 }}>
-            <div style={{ fontSize: 10, color: "#5a5a7a", fontFamily: '"IBM Plex Mono",monospace', letterSpacing: "0.14em", marginBottom: 8 }}>RESUMEN</div>
-            <div style={{ fontSize: 24, fontFamily: "Cinzel,serif", color: packVisual.color, fontWeight: 900, marginBottom: 4 }}>
-              {packVisual.name}
+          {/* ── Header ── */}
+          <div style={{ textAlign: "center", marginBottom: 28 }}>
+            <div style={{ fontSize: 38, marginBottom: 10, lineHeight: 1 }}>{headerEmoji}</div>
+            <div style={{
+              fontSize: 9, color: "#4a4a6a", fontFamily: '"IBM Plex Mono",monospace',
+              letterSpacing: "0.22em", textTransform: "uppercase", marginBottom: 10,
+            }}>Pack Abierto — Resumen</div>
+            <div style={{
+              fontSize: 22, fontFamily: "Cinzel,serif", fontWeight: 900,
+              color: packVisual.color, marginBottom: 8, letterSpacing: "0.04em",
+            }}>{packVisual.name}</div>
+
+            {/* Desglose rápido de rarezas */}
+            <div style={{ display: "flex", gap: 8, justifyContent: "center", flexWrap: "wrap", marginBottom: 12 }}>
+              {Object.entries(rarityCounts)
+                .sort((a, b) => (RARITY_RANK[b[0]] ?? 0) - (RARITY_RANK[a[0]] ?? 0))
+                .map(([rarity, count]) => (
+                  <span key={rarity} style={{
+                    padding: "3px 10px", borderRadius: 20,
+                    background: `${RARITY_COLOR[rarity] ?? "#9a9ab0"}18`,
+                    border: `1px solid ${RARITY_COLOR[rarity] ?? "#9a9ab0"}44`,
+                    color: RARITY_COLOR[rarity] ?? "#9a9ab0",
+                    fontFamily: "Rajdhani,sans-serif", fontWeight: 800, fontSize: 11,
+                    letterSpacing: "0.06em",
+                  }}>
+                    {RARITY_LABEL[rarity] ?? rarity} ×{count}
+                  </span>
+                ))}
             </div>
+
+            {/* Mejor carta destacada */}
             {isBestGood && bestCard && (
               <div style={{
-                fontSize: 12, fontFamily: "Rajdhani,sans-serif", fontWeight: 700, letterSpacing: "0.08em",
-                color: RARITY_COLOR[bestCard.rarity] ?? "#fff",
+                display: "inline-flex", alignItems: "center", gap: 8,
+                padding: "6px 16px", borderRadius: 24,
+                background: `linear-gradient(135deg, ${RARITY_COLOR[bestCard.rarity] ?? "#e8b84b"}18, ${RARITY_COLOR[bestCard.rarity] ?? "#e8b84b"}08)`,
+                border: `1px solid ${RARITY_COLOR[bestCard.rarity] ?? "#e8b84b"}55`,
               }}>
-                ✦ Mejor carta: {bestCard.name} ({RARITY_LABEL[bestCard.rarity] ?? bestCard.rarity})
+                <span style={{
+                  fontFamily: "Cinzel,serif", fontWeight: 800, fontSize: 13,
+                  background: `linear-gradient(90deg, ${RARITY_COLOR[bestCard.rarity] ?? "#e8b84b"}, #fff, ${RARITY_COLOR[bestCard.rarity] ?? "#e8b84b"})`,
+                  backgroundSize: "200% auto",
+                  animation: "vf-best-shine 3s linear infinite",
+                  WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
+                }}>
+                  ✦ {bestCard.name}
+                </span>
+                <span style={{ fontSize: 10, color: RARITY_COLOR[bestCard.rarity] ?? "#e8b84b", fontFamily: "Rajdhani,sans-serif", fontWeight: 700 }}>
+                  ({RARITY_LABEL[bestCard.rarity] ?? bestCard.rarity})
+                </span>
               </div>
             )}
           </div>
 
-          {/* Rarity breakdown */}
+          {/* ── Lista de cartas ── */}
           <div style={{
-            background: "#12121f", border: "1px solid #2a2a3a", borderRadius: 12,
-            padding: "20px 24px", marginBottom: 24,
+            background: "rgba(10,10,22,0.85)", border: "1px solid rgba(255,255,255,0.07)",
+            borderRadius: 14, padding: "18px 20px", marginBottom: 22,
+            boxShadow: "0 8px 32px rgba(0,0,0,0.5)",
           }}>
-            <div style={{ fontSize: 10, color: "#5a5a7a", fontFamily: '"IBM Plex Mono",monospace', marginBottom: 16, letterSpacing: "0.1em" }}>
-              CARTAS OBTENIDAS ({cards.length})
+            <div style={{
+              fontSize: 9, color: "#4a4a6a", fontFamily: '"IBM Plex Mono",monospace',
+              letterSpacing: "0.16em", textTransform: "uppercase", marginBottom: 14,
+            }}>
+              {cards.length} Cartas Obtenidas
             </div>
-            <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+            <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
               {sortedCards.map((card, i) => {
-                const col = RARITY_COLOR[card.rarity] ?? "#9A9AB0";
+                const col  = RARITY_COLOR[card.rarity] ?? "#9A9AB0";
+                const rank = RARITY_RANK[card.rarity] ?? 0;
                 return (
                   <div key={i} style={{
                     display: "flex", alignItems: "center", gap: 12,
-                    padding: "8px 12px", borderRadius: 8,
-                    background: `linear-gradient(90deg, ${col}0a, transparent)`,
-                    border: `1px solid ${col}22`,
+                    padding: "10px 14px", borderRadius: 10,
+                    background: `linear-gradient(90deg, ${col}12 0%, ${col}06 60%, transparent 100%)`,
+                    border: `1px solid ${col}${rank >= 4 ? "44" : "1a"}`,
+                    animation: `vf-row-in 0.3s ${i * 0.04}s ease-out both`,
                   }}>
-                    <div style={{ width: 3, height: 32, borderRadius: 2, background: col, flexShrink: 0 }} />
-                    <div style={{ flex: 1 }}>
-                      <div style={{ fontFamily: "Cinzel,serif", fontSize: 12, color: "#e8e8f0", fontWeight: 700 }}>
-                        {card.name}
-                      </div>
-                      <div style={{ fontSize: 9, color: col, fontFamily: "Rajdhani,sans-serif", fontWeight: 700, letterSpacing: "0.06em" }}>
-                        {RARITY_LABEL[card.rarity] ?? card.rarity}
-                        {card.faction ? ` · ${card.faction}` : ""}
+                    {/* Rarity bar */}
+                    <div style={{ width: 3, height: 36, borderRadius: 2, background: col, flexShrink: 0,
+                      boxShadow: rank >= 4 ? `0 0 8px ${col}` : undefined }} />
+                    {/* Card thumbnail */}
+                    {card.image_url ? (
+                      <img src={card.image_url} alt={card.name} style={{
+                        width: 32, height: 44, objectFit: "cover", borderRadius: 4, flexShrink: 0,
+                        border: `1px solid ${col}44`,
+                      }} />
+                    ) : (
+                      <div style={{ width: 32, height: 44, borderRadius: 4, background: `${col}18`, flexShrink: 0,
+                        display: "flex", alignItems: "center", justifyContent: "center", fontSize: 14 }}>✦</div>
+                    )}
+                    {/* Info */}
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <div style={{
+                        fontFamily: "Cinzel,serif", fontSize: 13, color: "#e8e8f0",
+                        fontWeight: 700, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis",
+                      }}>{card.name}</div>
+                      <div style={{ fontSize: 10, color: col, fontFamily: "Rajdhani,sans-serif", fontWeight: 700, letterSpacing: "0.06em", marginTop: 2 }}>
+                        {RARITY_LABEL[card.rarity] ?? card.rarity}{card.faction ? ` · ${card.faction}` : ""}
                       </div>
                     </div>
+                    {/* Quantity / dupe badge */}
                     {(card.quantity_change ?? 1) > 1 && (
                       <div style={{
-                        background: `${col}22`, border: `1px solid ${col}44`, borderRadius: 8,
-                        padding: "2px 8px", fontSize: 11, color: col, fontFamily: '"IBM Plex Mono",monospace', fontWeight: 700,
+                        background: `${col}22`, border: `1px solid ${col}55`, borderRadius: 8,
+                        padding: "3px 9px", fontSize: 11, color: col,
+                        fontFamily: '"IBM Plex Mono",monospace', fontWeight: 700, flexShrink: 0,
                       }}>×{card.quantity_change}</div>
+                    )}
+                    {/* NEW badge for non-dupes */}
+                    {(card.quantity_change ?? 1) <= 1 && (
+                      <div style={{
+                        fontSize: 9, color: "#3ddc84", fontFamily: '"IBM Plex Mono",monospace',
+                        fontWeight: 700, letterSpacing: "0.08em", flexShrink: 0,
+                      }}>NUEVA</div>
                     )}
                   </div>
                 );
@@ -608,33 +718,42 @@ import { useState, useEffect, useRef, useCallback } from "react";
             </div>
           </div>
 
-          {/* Action buttons */}
+          {/* ── Botones de acción ── */}
           <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
             {onOpenAnother && (
               <button onClick={onOpenAnother} style={{
-                background: `linear-gradient(135deg,${packVisual.color}cc,${packVisual.color})`,
-                border: "none", borderRadius: 10, padding: "15px 24px",
-                fontFamily: "Rajdhani,sans-serif", fontWeight: 800, fontSize: 16,
+                background: `linear-gradient(135deg, ${packVisual.color}dd, ${packVisual.color}aa)`,
+                border: `1px solid ${packVisual.color}`, borderRadius: 12, padding: "15px 24px",
+                fontFamily: "Cinzel,serif", fontWeight: 800, fontSize: 15,
                 color: "#0a0a14", cursor: "pointer", letterSpacing: "0.1em",
                 width: "100%",
-              }}>
+                boxShadow: `0 0 24px ${packVisual.glow}, 0 4px 16px rgba(0,0,0,0.5)`,
+                transition: "all 0.2s",
+              }}
+              onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.transform = "translateY(-2px)"; }}
+              onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.transform = "none"; }}
+              >
                 ✦ Abrir Otro Pack
               </button>
             )}
             <div style={{ display: "flex", gap: 10 }}>
               <button onClick={onInventory} style={{
-                flex: 1, background: "#12121f", border: "1px solid #2a2a3a",
-                borderRadius: 10, padding: "13px 16px",
+                flex: 1, background: "rgba(255,255,255,0.05)",
+                border: "1px solid rgba(255,255,255,0.12)", borderRadius: 12, padding: "13px 16px",
                 fontFamily: "Rajdhani,sans-serif", fontWeight: 700, fontSize: 14,
-                color: "#e8e8f0", cursor: "pointer", letterSpacing: "0.06em",
-              }}>
-                Ver Inventario
+                color: "#c8c8e0", cursor: "pointer", letterSpacing: "0.06em",
+                transition: "background 0.2s",
+              }}
+              onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.background = "rgba(255,255,255,0.08)"; }}
+              onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.background = "rgba(255,255,255,0.05)"; }}
+              >
+                🃏 Ver Inventario
               </button>
               <button onClick={onDismiss} style={{
-                flex: 1, background: "#0d0d18", border: "1px solid #1a1a28",
-                borderRadius: 10, padding: "13px 16px",
+                flex: 1, background: "rgba(255,255,255,0.02)",
+                border: "1px solid rgba(255,255,255,0.07)", borderRadius: 12, padding: "13px 16px",
                 fontFamily: "Rajdhani,sans-serif", fontWeight: 700, fontSize: 14,
-                color: "#7a7a9a", cursor: "pointer", letterSpacing: "0.06em",
+                color: "#6a6a8a", cursor: "pointer", letterSpacing: "0.06em",
               }}>
                 Cerrar
               </button>
