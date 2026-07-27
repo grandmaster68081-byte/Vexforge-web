@@ -561,6 +561,76 @@ function KeywordEffectOverlay({ keywords, phase }: { keywords: string[]; phase: 
   );
 }
 
+// ─── Card Name Profile — unique accent color & label per card name ────────────
+// Uses a fast string hash to derive a deterministic hue offset and label
+// so every card gets its own visual flavor without requiring a lookup table.
+function cardNameHash(name: string): number {
+  let h = 0;
+  for (let i = 0; i < name.length; i++) h = (h * 31 + name.charCodeAt(i)) >>> 0;
+  return h;
+}
+
+// Name-keyword patterns for special visual profiles
+const NAME_PROFILES: Array<{ pattern: RegExp; label: string; extraColor: string; icon: string }> = [
+  { pattern: /dragón|dragon|wyrm/i,    label: 'ALIENTO DE DRAGÓN',  extraColor: '#ff6600', icon: '🐉' },
+  { pattern: /fuego|fire|llama|flame/i,label: 'INFIERNO',           extraColor: '#ff4400', icon: '🔥' },
+  { pattern: /sombra|shadow|oscur/i,   label: 'GOLPE OSCURO',       extraColor: '#6600aa', icon: '🌑' },
+  { pattern: /hielo|ice|frost|gélido/i,label: 'TORMENTA GLACIAL',   extraColor: '#44ccff', icon: '❄️' },
+  { pattern: /trueno|thunder|rayo|bolt/i,label:'DESCARGA',          extraColor: '#ffe000', icon: '⚡' },
+  { pattern: /arcano|arcane|místico/i, label: 'CANALIZACIÓN',       extraColor: '#aa44ff', icon: '🌀' },
+  { pattern: /veneno|poison|serpiente/i,label:'TOXINA',             extraColor: '#88ff44', icon: '☠️' },
+  { pattern: /sangre|blood|crimson/i,  label: 'HERIDA FATAL',       extraColor: '#cc0022', icon: '🩸' },
+  { pattern: /sagrado|holy|light|luz/i,label: 'JUICIO DIVINO',      extraColor: '#ffee88', icon: '✝️' },
+  { pattern: /forjador|forger|smith/i, label: 'GOLPE DE FRAGUA',    extraColor: '#ff8833', icon: '🔨' },
+  { pattern: /espectro|specter|ghost/i,label: 'TOQUE ESPECTRAL',    extraColor: '#aaccff', icon: '👻' },
+  { pattern: /titan|titán|coloso/i,    label: 'APLASTAMIENTO',      extraColor: '#bb8855', icon: '⛰️' },
+  { pattern: /viento|wind|aire|storm/i,label: 'RÁFAGA',             extraColor: '#99ddff', icon: '🌪️' },
+];
+
+function getNameProfile(cardName: string, fallbackLabel: string, _fallbackColor: string) {
+  const match = NAME_PROFILES.find(p => p.pattern.test(cardName));
+  if (match) return { label: match.label, accentColor: match.extraColor, nameIcon: match.icon };
+  // Deterministic hue from name hash
+  const h = cardNameHash(cardName);
+  const hue = (h % 360);
+  const sat = 70 + (h % 25);
+  const accentColor = `hsl(${hue},${sat}%,62%)`;
+  return { label: fallbackLabel, accentColor, nameIcon: '' };
+}
+
+// ─── Name-specific background particle overlay ────────────────────────────────
+function NameParticleOverlay({ cardName, rarColor, phase }: {
+  cardName: string; rarColor: string; phase: 'enter' | 'impact' | 'exit';
+}) {
+  const h = cardNameHash(cardName);
+  const hue = h % 360;
+  const color = `hsl(${hue},75%,60%)`;
+  const count = 6 + (h % 6);
+  if (phase !== 'impact') return null;
+  return (
+    <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', overflow: 'hidden', zIndex: 22 }}>
+      {Array.from({ length: count }).map((_, i) => {
+        const x = 20 + ((h * (i + 1) * 37) % 60);
+        const y = 10 + ((h * (i + 1) * 53) % 75);
+        const sz = 6 + (i % 5) * 3;
+        return (
+          <div key={i} style={{
+            position: 'absolute', left: `${x}%`, top: `${y}%`,
+            width: sz, height: sz, borderRadius: i % 2 === 0 ? '50%' : '3px',
+            background: i % 3 === 0 ? rarColor : color,
+            boxShadow: `0 0 ${sz * 1.5}px ${color}`,
+            '--tx': `${(i % 3 - 1) * 50}px`,
+            '--ty': `${-(20 + i * 15)}px`,
+            '--rot': `${90 + i * 55}deg`,
+            animation: 'cac-ptcl-swirl 0.55s ease-out both',
+            animationDelay: `${i * 0.03}s`,
+          } as React.CSSProperties} />
+        );
+      })}
+    </div>
+  );
+}
+
 // ─── Main Component ───────────────────────────────────────────────────────────
 export function CardAttackCinematic({
   unit, defender, visible, onDone, damage, isCrit, isKill,
@@ -575,6 +645,7 @@ export function CardAttackCinematic({
   const factionColor = FACTION_COLOR[faction] ?? FACTION_COLOR.default;
   const factionSecondary = FACTION_SECONDARY[faction] ?? FACTION_SECONDARY.default;
   const duration = RARITY_DURATION[rarity] ?? 500;
+  const nameProfile = unit ? getNameProfile(unit.name, FACTION_ATTACK_LABEL[faction] ?? 'ATAQUE', factionColor) : null;
 
   const fire = useCallback(() => {
     if (!unit) return;
@@ -582,14 +653,15 @@ export function CardAttackCinematic({
     setPhase('enter');
     setParticles(makeParticles(rarity, rarColor, factionColor));
 
-    // Fire faction-specific audio
+    // Fire rarity-gated attack audio + crit/kill SFX
     try {
       const ae = AudioEngine as any;
-      if (typeof ae.sfxFactionAttack === 'function') {
+      if (typeof ae.sfxAttackByRarity === 'function') {
+        ae.sfxAttackByRarity(rarity);
+      } else if (typeof ae.sfxFactionAttack === 'function') {
         ae.sfxFactionAttack(faction, rarity);
-      } else if (typeof ae.sfxAttackHit === 'function') {
-        const hitType = faction === 'Guerrero' ? 'heavy' : faction === 'Mago' ? 'magic' : 'light';
-        ae.sfxAttackHit(hitType);
+      } else {
+        ae.attack?.();
       }
     } catch { /* silent */ }
 
@@ -599,11 +671,14 @@ export function CardAttackCinematic({
 
     setTimeout(() => {
       setPhase('impact');
-      // Keyword SFX fires on impact
+      // Crit / kill SFX on impact
       try {
         const ae = AudioEngine as any;
-        if (unit.keywords.length > 0 && typeof ae.sfxKeyword === 'function') {
-          ae.sfxKeyword(unit.keywords[0]);
+        if (isCrit && typeof ae.sfxCritV2 === 'function') ae.sfxCritV2();
+        else if (isKill && typeof ae.sfxKillV2 === 'function') ae.sfxKillV2();
+        // Keyword SFX
+        if (unit.keywords.length > 0 && typeof ae.triggerKeyword === 'function') {
+          ae.triggerKeyword(unit.keywords[0]);
         }
       } catch { /* silent */ }
     }, impactAt);
@@ -628,7 +703,9 @@ export function CardAttackCinematic({
   if (!visible || !unit) return null;
 
   const isShortRarity = rarity === 'Common' || rarity === 'Uncommon';
-  const attackLabel = FACTION_ATTACK_LABEL[faction] ?? 'ATAQUE';
+  const attackLabel = nameProfile?.label ?? FACTION_ATTACK_LABEL[faction] ?? 'ATAQUE';
+  const nameAccent  = nameProfile?.accentColor ?? factionColor;
+  const nameIcon    = nameProfile?.nameIcon ?? '';
   const bg = FACTION_BG[faction] ?? FACTION_BG.default;
   const rarityOverlay = RARITY_BG_OVERLAY[rarity] ?? 'rgba(74,158,255,0.10)';
 
@@ -728,19 +805,20 @@ export function CardAttackCinematic({
             {FACTION_ICON[faction] ?? '⚡'}
           </div>
 
-          {/* Attack label */}
+          {/* Attack label — uses card-name-derived label and accent color */}
           <div style={{
             fontFamily: '"Cinzel Decorative",serif',
             fontSize: 'clamp(7px, 1.8vw, 11px)',
             fontWeight: 900,
             letterSpacing: '0.15em',
-            color: factionColor,
-            textShadow: `0 0 16px ${factionColor}, 0 0 32px ${factionColor}88`,
+            color: nameAccent,
+            textShadow: `0 0 16px ${nameAccent}, 0 0 32px ${nameAccent}88`,
             textAlign: 'center',
             textTransform: 'uppercase',
             animation: 'cac-label-reveal 0.3s ease-out 0.1s both',
             whiteSpace: 'nowrap',
           }}>
+            {nameIcon && <span style={{ marginRight: 4 }}>{nameIcon}</span>}
             {isShortRarity ? 'ATACA' : attackLabel}
           </div>
 
@@ -816,6 +894,11 @@ export function CardAttackCinematic({
       <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', overflow: 'hidden', zIndex: 15 }}>
         {particles.map(p => <ParticleEl key={p.id} p={p} />)}
       </div>
+
+      {/* ── Card-name-specific particle overlay (unique per carta) ── */}
+      {unit && (
+        <NameParticleOverlay cardName={unit.name} rarColor={rarColor} phase={phase} />
+      )}
 
       {/* ── Keyword Effects — unique per-keyword cinematic overlay ── */}
       {unit && unit.keywords.length > 0 && (

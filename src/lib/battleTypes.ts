@@ -16,6 +16,7 @@
     export interface BattleTurnActor {
     name: string; faction: string; rarity: BattleRarity; image_url: string;
     atk?: number; def?: number; hp: number; max_hp: number; spd?: number;
+    keywords?: string[];
     }
 
     export interface BattleEvent {

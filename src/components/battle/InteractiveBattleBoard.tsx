@@ -357,7 +357,7 @@ function TurnLogEntry({ snap, isLatest }: { snap: TurnSnapshot; isLatest: boolea
               ☠ −{e.dmg} Poison
             </span>
           ))}
-          {events.filter(e => e.type === 'shield_block').map((e, i) => (
+          {events.filter(e => e.type === 'shield_block').map((_e, i) => (
             <span key={i} style={{ fontSize: 7, color: '#4a9eff', background: 'rgba(74,158,255,0.15)', borderRadius: 4, padding: '1px 5px', fontWeight: 700, border: '1px solid rgba(74,158,255,0.35)' }}>
               🛡 Guard
             </span>

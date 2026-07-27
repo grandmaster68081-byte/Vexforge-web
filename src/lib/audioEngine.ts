@@ -500,6 +500,93 @@ export class VexForgeAudioEngine {
     }
   }
 
+  // ─── AU.3: Fase 2 Batch 3 SFX additions ─────────────────────────────────
+  /** Mythic card attack — earth-shattering roar */
+  sfxMythicAttack(): void {
+    this.noise(0.12, 0.30, 300, 0);
+    this.tone(80,  0.08, 'sawtooth', 0.38, 0, undefined, 0.00);
+    this.tone(120, 0.06, 'square',   0.28, 0, undefined, 0.06);
+    this.tone(55,  0.10, 'sawtooth', 0.35, 0, undefined, 0.12);
+    this.noise(0.08, 0.18, 5000, 0.10);
+    this.tone(440, 0.06, 'sine', 0.15, 0, undefined, 0.22);
+  }
+  /** Legendary card attack — orchestral stab */
+  sfxLegendaryAttack(): void {
+    this.tone(220, 0.05, 'sawtooth', 0.30);
+    this.tone(330, 0.08, 'square',   0.22, 0, undefined, 0.04);
+    this.tone(550, 0.10, 'sine',     0.18, 0, undefined, 0.08);
+    this.noise(0.06, 0.14, 1800, 0.02);
+    this.tone(880, 0.14, 'sine', 0.12, 0, undefined, 0.16);
+  }
+  /** Epic card attack — arcane surge */
+  sfxEpicAttack(): void {
+    this.tone(370, 0.06, 'square', 0.22); this.noise(0.05, 0.12, 1500, 0.02);
+    this.tone(740, 0.10, 'sine', 0.16, 0, undefined, 0.08);
+  }
+  /** Kill confirmed — dramatic elimination SFX */
+  sfxKillV2(): void {
+    this.noise(0.10, 0.08, 400, 0);
+    this.tone(180, 0.07, 'square', 0.28, 0, undefined, 0.04);
+    this.tone(150, 0.08, 'sawtooth', 0.22, 0, undefined, 0.12);
+    setTimeout(() => {
+      this.tone(110, 0.06, 'square', 0.18, 0, undefined, 0.04);
+      this.noise(0.06, 0.14, 200, 0.05);
+    }, 200);
+  }
+  /** Critical hit — electric crack + impact */
+  sfxCritV2(): void {
+    this.noise(0.06, 0.04, 8000, 0);
+    this.tone(660, 0.03, 'square', 0.32);
+    this.noise(0.10, 0.12, 1600, 0.02);
+    this.tone(330, 0.08, 'sawtooth', 0.22, 0, undefined, 0.04);
+  }
+  /** Pack Mythic reveal — ultra dramatic */
+  sfxPackMythicReveal(): void {
+    this.noise(0.14, 0.06, 200, 0);
+    [110, 165, 220, 330, 440, 659, 880, 1320].forEach((f, i) =>
+      this.tone(f, 0.18, i < 4 ? 'sawtooth' : 'sine', 0.28, 0, undefined, i * 0.045)
+    );
+    setTimeout(() => {
+      this.noise(0.08, 0.25, 5000, 0);
+      this.tone(2637, 0.30, 'sine', 0.12, 1000, undefined, 0.1);
+    }, 380);
+  }
+  /** Achievement unlock — triumphant fanfare */
+  sfxAchievementUnlock(): void {
+    [523, 659, 784, 1047].forEach((f, i) =>
+      this.tone(f, 0.20, 'sine', 0.20, 0, undefined, i * 0.07)
+    );
+    this.noise(0.04, 0.08, 5000, 0.08);
+    this.tone(1568, 0.30, 'sine', 0.16, 0, undefined, 0.28);
+  }
+  /** Level up — ascending scale fanfare */
+  sfxLevelUp(): void {
+    [261, 329, 392, 523, 659].forEach((f, i) =>
+      this.tone(f, 0.14, 'sine', 0.20, 200, undefined, i * 0.08)
+    );
+    this.noise(0.04, 0.10, 4000, 0.40);
+    this.tone(1047, 0.24, 'sine', 0.18, 0, undefined, 0.42);
+  }
+  /** Shop purchase — satisfying buy SFX */
+  sfxPurchase(): void {
+    this.tone(523, 0.08, 'sine', 0.18); this.tone(784, 0.10, 'sine', 0.14, 0, undefined, 0.06);
+    this.noise(0.03, 0.06, 4000, 0.04);
+  }
+  /** Clan join — epic horn */
+  sfxClanJoin(): void {
+    this.tone(220, 0.10, 'sawtooth', 0.25); this.tone(330, 0.12, 'square', 0.20, 0, undefined, 0.06);
+    this.tone(440, 0.16, 'sine', 0.18, 0, undefined, 0.14);
+  }
+  /** Rarity-gated attack SFX dispatcher */
+  sfxAttackByRarity(rarity: string): void {
+    switch (rarity) {
+      case 'Mythic':    this.sfxMythicAttack();    break;
+      case 'Legendary': this.sfxLegendaryAttack(); break;
+      case 'Epic':      this.sfxEpicAttack();      break;
+      default:          this.attack();              break;
+    }
+  }
+
   // ─── Keyword trigger (v2.0 API — fully preserved) ────────────────────────
   triggerKeyword(keyword: string): void {
     const map: Record<string, () => void> = {
