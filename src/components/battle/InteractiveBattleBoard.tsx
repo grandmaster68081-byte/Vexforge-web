@@ -121,20 +121,19 @@ function FighterCard({
           : `0 4px 20px rgba(0,0,0,0.7)`,
     cursor: isPlayer ? (isDraggingFrom ? 'grabbing' : 'grab') : 'default',
     userSelect: 'none',
-    // drag-ready class handled via className below
-    transform: isDraggingFrom
-      ? 'scale(1.08) translateY(-8px) rotate(-2deg)'
-      : isBeingHit
-        ? 'scale(0.97) rotate(1deg)'
-        : isAnimating && isActive
-          ? `translateY(${isPlayer ? -12 : 12}px) scale(1.06) rotate(${isPlayer ? -1 : 1}deg)`
-          : 'scale(1)',
-    transition: isDraggingFrom ? 'none' : isBeingHit
-      ? 'transform 0.08s ease, box-shadow 0.08s ease'
-      : 'transform 0.25s cubic-bezier(0.22,1,0.36,1), box-shadow 0.25s ease, border-color 0.2s',
+    // animation-driven states; fallback transform for drag only
+    transform: isDraggingFrom ? 'scale(1.08) translateY(-8px) rotate(-2deg)' : undefined,
+    transition: isDraggingFrom ? 'none'
+      : (!isBeingHit && !(isAnimating && isActive))
+        ? 'box-shadow 0.25s ease, border-color 0.2s'
+        : 'box-shadow 0.08s ease',
     display: 'flex', flexDirection: 'column', overflow: 'hidden',
     touchAction: 'none',
-    animation: isBeingHit ? 'card-hit-shake 0.35s ease' : undefined,
+    animation: isBeingHit
+      ? 'card-hit-shake 0.35s ease forwards'
+      : (isAnimating && isActive)
+        ? (isPlayer ? 'unit-attack-lunge-up 0.42s cubic-bezier(0.22,1,0.36,1) forwards' : 'unit-attack-lunge-down 0.42s cubic-bezier(0.22,1,0.36,1) forwards')
+        : undefined,
   };
 
   const rarityAuraClass =
