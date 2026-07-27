@@ -7,7 +7,7 @@ import { useState, useEffect } from "react";
     win:     { label: "VICTORIA", bg: "#0f2a1a", border: "#3ddc8444", color: "#3ddc84" },
     loss:    { label: "DERROTA",  bg: "#2a0f0f", border: "#ff6b6b44", color: "#ff6b6b" },
     draw:    { label: "EMPATE",   bg: "#1a1a1a", border: "#88888844", color: "#888" },
-    pending: { label: "PENDIENTE",bg: "#1a1a2e", border: "#2a2a3a",   color: "#555" },
+    pending: { label: "PENDIENTE",bg: "#1a1a2e", border: "#2a2a3a",   color: "#7a7a9a" },
     };
 
     function timeAgo(dateStr: string): string {
@@ -29,10 +29,10 @@ import { useState, useEffect } from "react";
     const myPct = total > 0 ? Math.round(((my ?? 0) / total) * 100) : 50;
     return (
       <div style={{ marginTop: 8 }}>
-        <div style={{ display: "flex", justifyContent: "space-between", fontSize: 8, color: "#444",
+        <div style={{ display: "flex", justifyContent: "space-between", fontSize: 8, color: "#5a5a7a",
           fontFamily: '"IBM Plex Mono",monospace', marginBottom: 3 }}>
           <span style={{ color: "#3ddc84" }}>⚡{my ?? "?"}</span>
-          <span style={{ color: "#555", fontSize: 7 }}>PODER</span>
+          <span style={{ color: "#6a6a8a", fontSize: 7 }}>PODER</span>
           <span style={{ color: "#ff6b6b" }}>⚡{opp ?? "?"}</span>
         </div>
         <div style={{ height: 3, borderRadius: 3, background: "#ff6b6b66", overflow: "hidden" }}>
@@ -71,7 +71,7 @@ import { useState, useEffect } from "react";
           }}>
             {cfg.label}
           </div>
-          <div style={{ fontSize: 12, color: "#555", fontFamily: '"IBM Plex Mono",monospace', marginBottom: 24 }}>
+          <div style={{ fontSize: 12, color: "#7a7a9a", fontFamily: '"IBM Plex Mono",monospace', marginBottom: 24 }}>
             {timeAgo(match.created_at)} · {new Date(match.created_at).toLocaleDateString("es-ES")}
           </div>
 
@@ -99,7 +99,7 @@ import { useState, useEffect } from "react";
               border: `1px solid ${match.my_elo_change > 0 ? "#3ddc8444" : "#ff6b6b44"}`,
               borderRadius: 10, padding: "8px 20px", marginBottom: 20,
             }}>
-              <span style={{ color: "#666", fontSize: 11 }}>MMR</span>
+              <span style={{ color: "#7a7a9a", fontSize: 11 }}>MMR</span>
               <span style={{ color: match.my_elo_change > 0 ? "#3ddc84" : "#ff6b6b", fontSize: 22, fontWeight: 800 }}>
                 {match.my_elo_change > 0 ? "+" : ""}{match.my_elo_change}
               </span>
@@ -159,7 +159,7 @@ import { useState, useEffect } from "react";
           display: "flex", alignItems: "center", gap: 10 }}>
           📜 Historial de Batallas
           {!loading && matches.length > 0 && (
-            <span style={{ fontSize: 10, color: "#444", fontFamily: '"IBM Plex Mono",monospace',
+            <span style={{ fontSize: 10, color: "#5a5a7a", fontFamily: '"IBM Plex Mono",monospace',
               fontWeight: 400, letterSpacing: "0.08em" }}>
               {matches.length} partida{matches.length !== 1 ? "s" : ""}
             </span>
@@ -167,7 +167,7 @@ import { useState, useEffect } from "react";
         </h2>
 
         {loading && (
-          <div style={{ color: "#333", fontSize: 12, fontFamily: '"IBM Plex Mono",monospace', padding: "12px 0" }}>
+          <div style={{ color: "#5a5a7a", fontSize: 12, fontFamily: '"IBM Plex Mono",monospace', padding: "12px 0" }}>
             Cargando historial…
           </div>
         )}
@@ -178,7 +178,7 @@ import { useState, useEffect } from "react";
             padding: "28px 20px", textAlign: "center",
           }}>
             <div style={{ fontSize: 28, marginBottom: 10 }}>⚔️</div>
-            <div style={{ color: "#555", fontSize: 13, fontFamily: "Rajdhani,sans-serif" }}>
+            <div style={{ color: "#7a7a9a", fontSize: 13, fontFamily: "Rajdhani,sans-serif" }}>
               Sin partidas aún. ¡Busca un oponente y entra en batalla!
             </div>
           </div>
@@ -223,7 +223,7 @@ import { useState, useEffect } from "react";
                       }}>
                         vs {match.opponent_name}
                       </div>
-                      <div style={{ fontSize: 8, color: "#444", fontFamily: '"IBM Plex Mono",monospace' }}>
+                      <div style={{ fontSize: 8, color: "#5a5a7a", fontFamily: '"IBM Plex Mono",monospace' }}>
                         {timeAgo(match.created_at)}
                       </div>
                     </div>
@@ -231,7 +231,7 @@ import { useState, useEffect } from "react";
 
                   {/* Power diff (if available) */}
                   {match.my_power != null && (
-                    <div style={{ fontSize: 9, color: "#555", fontFamily: '"IBM Plex Mono",monospace', flexShrink: 0 }}>
+                    <div style={{ fontSize: 9, color: "#7a7a9a", fontFamily: '"IBM Plex Mono",monospace', flexShrink: 0 }}>
                       ⚡{match.my_power}
                     </div>
                   )}
@@ -246,15 +246,15 @@ import { useState, useEffect } from "react";
                         {match.my_elo_change > 0 ? "+" : ""}{match.my_elo_change}
                       </span>
                     ) : (
-                      <span style={{ color: "#333", fontSize: 10 }}>—</span>
+                      <span style={{ color: "#5a5a7a", fontSize: 10 }}>—</span>
                     )}
-                    <div style={{ fontSize: 7, color: "#333", fontFamily: '"IBM Plex Mono",monospace', marginTop: 1 }}>
+                    <div style={{ fontSize: 7, color: "#5a5a7a", fontFamily: '"IBM Plex Mono",monospace', marginTop: 1 }}>
                       ELO
                     </div>
                   </div>
 
                   {/* Detail arrow */}
-                  <div style={{ color: "#333", fontSize: 10, flexShrink: 0 }}>›</div>
+                  <div style={{ color: "#6a6a8a", fontSize: 10, flexShrink: 0 }}>›</div>
                 </div>
               );
             })}

@@ -639,7 +639,7 @@ export function BattleBoardEngine({ result, playerName, opponentName, onComplete
         {log.slice(-2).map((line, i) => (
           <div key={i} style={{
             fontSize: 9, fontFamily: 'IBM Plex Mono, monospace',
-            color: i === log.slice(-2).length - 1 ? '#a0a0c8' : '#333',
+            color: i === log.slice(-2).length - 1 ? '#a0a0c8' : '#4a4a6a',
             marginBottom: 1, transition: 'color 0.3s',
           }}>{line}</div>
         ))}

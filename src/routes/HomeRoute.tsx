@@ -478,7 +478,7 @@ export function HomeRoute() {
                   background:"rgba(255,255,255,0.03)",border:"1px solid rgba(255,255,255,0.06)",
                   borderRadius:10}}>
                   <div style={{fontSize:20,marginBottom:6}}>{item.icon}</div>
-                  <div style={{fontSize:11,color:"#555",letterSpacing:"0.1em",textTransform:"uppercase",marginBottom:4}}>
+                  <div style={{fontSize:11,color:"#7a7a9a",letterSpacing:"0.1em",textTransform:"uppercase",marginBottom:4}}>
                     {item.label}
                   </div>
                   <div style={{fontFamily:"Rajdhani,sans-serif",fontWeight:700,fontSize:20,color:"#e8e8f0"}}>
@@ -490,7 +490,7 @@ export function HomeRoute() {
             {nextMissions.length > 0 && (
               <div style={{padding:"16px 20px",background:"rgba(255,255,255,0.02)",
                 border:"1px solid rgba(255,255,255,0.05)",borderRadius:10}}>
-                <p style={{fontSize:11,color:"#555",letterSpacing:"0.1em",
+                <p style={{fontSize:11,color:"#7a7a9a",letterSpacing:"0.1em",
                   textTransform:"uppercase",margin:"0 0 10px"}}>Próximas misiones</p>
                 <div style={{display:"flex",gap:8,flexWrap:"wrap"}}>
                   {nextMissions.slice(0,3).map(m=>(
@@ -527,7 +527,7 @@ export function HomeRoute() {
                   <div style={{fontSize:24,marginBottom:8}}>{item.icon}</div>
                   <div style={{fontFamily:"Cinzel,serif",fontWeight:700,fontSize:26,
                     color:"#e8b84b",marginBottom:4}}>{item.value}</div>
-                  <div style={{fontSize:11,color:"#555",letterSpacing:"0.08em",textTransform:"uppercase"}}>
+                  <div style={{fontSize:11,color:"#7a7a9a",letterSpacing:"0.08em",textTransform:"uppercase"}}>
                     {item.label}
                   </div>
                 </div>
@@ -544,7 +544,7 @@ export function HomeRoute() {
                 textTransform:"uppercase",fontFamily:"Rajdhani,sans-serif",fontWeight:700,margin:0}}>
                 ─── Top Arena ───
               </p>
-              <Link to="/leaderboard" style={{fontSize:12,color:"#555",textDecoration:"none"}}>
+              <Link to="/leaderboard" style={{fontSize:12,color:"#7a7a9a",textDecoration:"none"}}>
                 Ver ranking completo →
               </Link>
             </div>
@@ -562,7 +562,7 @@ export function HomeRoute() {
                         fontSize:15,color:"#e8e8f0",marginBottom:2}}>{p.display_name}</div>
                       <div style={{display:"flex",gap:8,alignItems:"center"}}>
                         <span style={{fontSize:11,color:TIER_COLOR[tier],fontWeight:600}}>{tier}</span>
-                        <span style={{fontSize:11,color:"#555"}}>{p.mmr} MMR</span>
+                        <span style={{fontSize:11,color:"#7a7a9a"}}>{p.mmr} MMR</span>
                       </div>
                     </div>
                   </div>

@@ -85,7 +85,7 @@ function MatchmakingOverlay({ onCancel }: { onCancel: () => void }) {
         }}>
           Buscando Oponentes{".".repeat(dots)}
         </h2>
-        <p style={{ color: "#555", fontSize: 13, margin: 0 }}>
+        <p style={{ color: "#7a7a9a", fontSize: 13, margin: 0 }}>
           Analizando el servidor · Igualando MMR
         </p>
       </div>
@@ -107,15 +107,15 @@ function MatchmakingOverlay({ onCancel }: { onCancel: () => void }) {
         onClick={onCancel}
         style={{
           padding: "10px 28px", borderRadius: 8,
-          border: "1px solid #2a2a3a",
+          border: "1px solid rgba(255,255,255,0.1)",
           background: "rgba(255,255,255,0.04)",
-          color: "#666", fontSize: 13, cursor: "pointer",
+          color: "#8a8aaa", fontSize: 13, cursor: "pointer",
           fontFamily: "Rajdhani,sans-serif", fontWeight: 700,
           letterSpacing: "0.04em",
           transition: "color 0.2s, border-color 0.2s",
         }}
         onMouseEnter={e => { (e.target as HTMLButtonElement).style.color = "#e3573f"; (e.target as HTMLButtonElement).style.borderColor = "#e3573f44"; }}
-        onMouseLeave={e => { (e.target as HTMLButtonElement).style.color = "#666"; (e.target as HTMLButtonElement).style.borderColor = "#2a2a3a"; }}
+        onMouseLeave={e => { (e.target as HTMLButtonElement).style.color = "#8a8aaa"; (e.target as HTMLButtonElement).style.borderColor = "rgba(255,255,255,0.1)"; }}
       >
         Cancelar búsqueda
       </button>
@@ -182,7 +182,7 @@ function PreBattleModal({
               }}>{myTier.icon}</div>
               <div style={{ fontFamily: "Cinzel,serif", color: "#4a9eff", fontSize: 13, fontWeight: 700 }}>Tú</div>
               <div style={{ color: myTier.color, fontSize: 11, fontWeight: 700 }}>{myTier.name}</div>
-              <div style={{ color: "#555", fontSize: 10, fontFamily: "IBM Plex Mono,monospace" }}>{myMmr} MMR</div>
+              <div style={{ color: "#7a7a9a", fontSize: 10, fontFamily: "IBM Plex Mono,monospace" }}>{myMmr} MMR</div>
             </div>
 
             {/* VS */}
@@ -215,7 +215,7 @@ function PreBattleModal({
                 overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",
               }}>{opponent.display_name}</div>
               <div style={{ color: oppTier.color, fontSize: 11, fontWeight: 700 }}>{oppTier.name}</div>
-              <div style={{ color: "#555", fontSize: 10, fontFamily: "IBM Plex Mono,monospace" }}>{opponent.total_power} MMR</div>
+              <div style={{ color: "#6a6a8a", fontSize: 10, fontFamily: "IBM Plex Mono,monospace" }}>{opponent.total_power} MMR</div>
             </div>
           </div>
 
@@ -229,7 +229,7 @@ function PreBattleModal({
             <span style={{ color: advColor, fontSize: 13, fontWeight: 700 }}>
               {mmrDiff > 0 ? `+${mmrDiff}` : mmrDiff} MMR diferencia
             </span>
-            <span style={{ color: "#555", fontSize: 11, marginLeft: 8 }}>
+            <span style={{ color: "#7a7a9a", fontSize: 11, marginLeft: 8 }}>
               {advantage === "favorable"
                 ? "· Ganarás menos MMR si vences"
                 : advantage === "desventaja"
@@ -245,8 +245,8 @@ function PreBattleModal({
               disabled={battling}
               style={{
                 flex: 1, padding: "12px", borderRadius: 10,
-                border: "1px solid #2a2a3a", background: "transparent",
-                color: "#666", cursor: "pointer",
+                border: "1px solid rgba(255,255,255,0.1)", background: "transparent",
+                color: "#8a8aaa", cursor: "pointer",
                 fontFamily: "Rajdhani,sans-serif", fontWeight: 700, fontSize: 14,
               }}
             >Cancelar</button>
@@ -323,7 +323,7 @@ function OpponentCard({
         }}>{opp.display_name}</div>
         <div style={{ display: "flex", gap: 10, marginTop: 2, alignItems: "center" }}>
           <span style={{ color: tier.color, fontSize: 10, fontWeight: 700 }}>{tier.name}</span>
-          <span style={{ color: "#444", fontSize: 10, fontFamily: "IBM Plex Mono,monospace" }}>{opp.total_power} MMR</span>
+          <span style={{ color: "#7a7a9a", fontSize: 10, fontFamily: "IBM Plex Mono,monospace" }}>{opp.total_power} MMR</span>
           <span style={{
             fontSize: 10, fontWeight: 700, color: diffColor,
             fontFamily: "IBM Plex Mono,monospace",
@@ -596,7 +596,7 @@ export function PvpRoute() {
                     }} />
                   </div>
                   {playerRank.rank_position && (
-                    <div style={{ color: "#555", fontSize: 10, marginTop: 4 }}>
+                    <div style={{ color: "#7a7a9a", fontSize: 10, marginTop: 4 }}>
                       Posición global: #{playerRank.rank_position}
                     </div>
                   )}
@@ -631,7 +631,7 @@ export function PvpRoute() {
                     background: (opponentsLoading || matchmaking)
                       ? "transparent"
                       : "rgba(232,184,75,0.1)",
-                    color: (opponentsLoading || matchmaking) ? "#555" : "#e8b84b",
+                    color: (opponentsLoading || matchmaking) ? "#7a7a9a" : "#e8b84b",
                     fontSize: 12, cursor: "pointer",
                     fontFamily: "Rajdhani,sans-serif", fontWeight: 700,
                     letterSpacing: "0.04em",
@@ -644,7 +644,7 @@ export function PvpRoute() {
               </div>
 
               {/* AI.1: quick tip */}
-              <p style={{ color: "#444", fontSize: 11, margin: 0, fontFamily: "Rajdhani,sans-serif" }}>
+              <p style={{ color: "#6a6a8a", fontSize: 11, margin: 0, fontFamily: "Rajdhani,sans-serif" }}>
                 El sistema empareja jugadores por MMR cercano.
                 Desafía a alguien para empezar la batalla.
               </p>
@@ -657,7 +657,7 @@ export function PvpRoute() {
                 borderRadius: 10, padding: 28, textAlign: "center",
               }}>
                 <div style={{ fontSize: 36, marginBottom: 10, opacity: 0.5 }}>⚔️</div>
-                <p style={{ color: "#555", margin: 0, fontSize: 13 }}>
+                <p style={{ color: "#7a7a9a", margin: 0, fontSize: 13 }}>
                   Pulsa <strong style={{ color: "#e8b84b" }}>Buscar oponentes</strong> para
                   encontrar rivales en el servidor.
                 </p>
@@ -717,7 +717,7 @@ export function PvpRoute() {
                         borderRadius: 6,
                       }}>
                         <span style={{
-                          color: ["#e8702a", "#8a8a9e", "#e8b339"][i] ?? "#555",
+                          color: ["#e8702a", "#c0c0c0", "#cd7f32"][i] ?? "#6a6a8a",
                           fontSize: 12, minWidth: 20, fontWeight: 700,
                         }}>{i + 1}</span>
                         <span style={{ fontSize: 14 }}>{tier.icon}</span>
