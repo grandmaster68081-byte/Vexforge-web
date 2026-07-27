@@ -419,7 +419,7 @@ function MissionCard({ mission, onExecute, executing, isExecuting, isCompleted, 
           <span style={{ fontFamily: '"IBM Plex Mono", monospace', fontSize: 9, color: "var(--fg-dim)", letterSpacing: "0.1em" }}>DIFICULTAD</span>
           <span style={{ fontFamily: '"Rajdhani", sans-serif', fontSize: 11, fontWeight: 700, color: diffConf.color }}>{diffConf.label}</span>
         </div>
-        <div className="difficulty-bar"><div className="difficulty-bar-fill" style={{ width: `${diffConf.pct}%`, background: diffConf.color } as React.CSSProperties} /></div>
+        <div className="difficulty-bar"><div className="difficulty-bar-fill quest-progress-fill" style={{ width: `${diffConf.pct}%`, background: diffConf.color, '--quest-pct': `${diffConf.pct}%` } as React.CSSProperties} /></div>
       </div>
       <div className="mission-rewards">
         {(mission.energy_cost ?? 0) > 0 && <div className="reward-chip energy">⚡ {mission.energy_cost}</div>}

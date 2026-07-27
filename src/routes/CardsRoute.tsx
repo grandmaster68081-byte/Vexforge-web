@@ -574,7 +574,7 @@ export function CardsRoute() {
             {filtered.map((card, idx) => {
               const pc = collectionById.get(card.id);
               return (
-                <div key={card.id} className="card-grid-item" style={{ animationDelay: `${Math.min(idx * 0.03, 0.27)}s` }}>
+                <div key={card.id} className="card-grid-item card-grid-enter-v2" style={{ animationDelay: `${Math.min(idx * 0.03, 0.27)}s` }}>
                   <CardTile card={card}
                     owned={!!pc} quantity={pc?.quantity ?? 0}
                     onClick={() => openModal(card)} />
