@@ -105,15 +105,7 @@ export function useBattleStateMachine(
   const endDrag = useCallback((dropped: boolean) => {
     setDragging(false);
     if (!dropped) { setPhase('IDLE'); return; }
-    // advance() handles the phase transition
-    setPhase('IDLE');
-    // Use timeout to let state settle before advance
-    setTimeout(() => {
-      setPhase(p => {
-        if (p !== 'IDLE') return p;
-        return 'ANIMATING';
-      });
-    }, 0);
+    // advance() handles the ANIMATING phase transition — no redundant setTimeout needed
     advance();
   }, [advance]);
 

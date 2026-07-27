@@ -194,6 +194,26 @@ export function simulateAIBattle(
     const aliveB = all.filter(u => u.side === 'b' && u.alive);
     if (!aliveA.length || !aliveB.length) break;
 
+    // Poison damage at start of round — poisoned units take 8% max HP per round
+    for (const unit of [...aliveA, ...aliveB]) {
+      if (unit.poisoned && unit.alive) {
+        const poisonDmg = Math.max(1, Math.floor(unit.max_hp * 0.08));
+        unit.hp = Math.max(0, unit.hp - poisonDmg);
+        if (unit.hp === 0) unit.alive = false;
+        turns.push({
+          turn: turns.length + 1, atk_side: unit.side,
+          attacker: toActor(unit), defender: toActor(unit),
+          damage: poisonDmg, is_crit: false, is_kill: unit.hp === 0, lifesteal_heal: 0,
+          events: [{ type: 'poison_tick', heal: -poisonDmg, side: unit.side }],
+          alive_a: all.filter(u => u.side === 'a' && u.alive).length,
+          alive_b: all.filter(u => u.side === 'b' && u.alive).length,
+        });
+      }
+    }
+    // Re-check after poison ticks
+    if (!all.filter(u => u.side === 'a' && u.alive).length ||
+        !all.filter(u => u.side === 'b' && u.alive).length) break;
+
     // Sort by SPD desc for attack order
     const order = [...aliveA, ...aliveB].sort((a, b) => b.spd - a.spd);
 
@@ -205,8 +225,10 @@ export function simulateAIBattle(
       const target = pickTarget(enemies, difficulty);
       const events: BattleEvent[] = [];
 
-      // Shield block (Veil)
-      if (target.shielded) {
+      // Shield block (Veil) — absorbs the first hit only
+      // FIX: double_strike second attack still lands after shield absorbs first hit
+      const shieldAbsorbed = target.shielded;
+      if (shieldAbsorbed) {
         target.shielded = false;
         events.push({ type: 'shield_block', unit: target.name, side: target.side });
         turns.push({
@@ -216,6 +238,23 @@ export function simulateAIBattle(
           events, alive_a: all.filter(u => u.side === 'a' && u.alive).length,
           alive_b: all.filter(u => u.side === 'b' && u.alive).length,
         });
+        // Double strike second hit still lands after shield absorbs first
+        if (attacker.double_strike && target.alive) {
+          const dmg2 = Math.max(1, Math.floor(attacker.atk * 0.6) - target.def);
+          target.hp  = Math.max(0, target.hp - dmg2);
+          if (target.hp === 0) target.alive = false;
+          turns.push({
+            turn: turns.length + 1, atk_side: attacker.side,
+            attacker: toActor(attacker), defender: toActor(target),
+            damage: dmg2, is_crit: false, is_kill: target.hp === 0, lifesteal_heal: 0,
+            events: [{ type: 'double_strike', unit: attacker.name }],
+            type: 'double_strike',
+            alive_a: all.filter(u => u.side === 'a' && u.alive).length,
+            alive_b: all.filter(u => u.side === 'b' && u.alive).length,
+          });
+        }
+        if (!all.filter(u => u.side === 'a' && u.alive).length ||
+            !all.filter(u => u.side === 'b' && u.alive).length) break;
         continue;
       }
 
@@ -235,6 +274,12 @@ export function simulateAIBattle(
         lifestealHeal = Math.floor(dmg * 0.3);
         attacker.hp = Math.min(attacker.max_hp, attacker.hp + lifestealHeal);
         events.push({ type: 'lifesteal', heal: lifestealHeal, side: attacker.side });
+      }
+
+      // Poison application — attacker with poison_atk infects the target
+      if (attacker.poison_atk && !target.poisoned && dmg > 0) {
+        target.poisoned = true;
+        events.push({ type: 'poisoned', side: target.side });
       }
 
       turns.push({

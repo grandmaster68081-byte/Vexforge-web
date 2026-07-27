@@ -1317,3 +1317,72 @@ declare module "./audioEngine" {
   };
 
 })(AudioEngine as any);
+
+// ═══════════════════════════════════════════════════════════════════════════
+// VEXFORGE AUDIO — Poison SFX + Battle utility sounds (Chat FASE1+2)
+// sfxPoisonTick()  — daño veneno per round
+// sfxPoisonApply() — infección al aplicar veneno
+// sfxHealSelf()    — curación propia
+// sfxShieldBreak() — escudo roto
+// sfxDrawCard()    — robar carta
+// sfxTurnStart()   — inicio de turno
+// ═══════════════════════════════════════════════════════════════════════════
+;(function installBattleUtilitySfx(engine: any) {
+  if (engine.__battleUtilityInstalled) return;
+  engine.__battleUtilityInstalled = true;
+
+  /** Poison tick — green bubbling tick every round */
+  engine.sfxPoisonTick = function(): void {
+    try {
+      this.tone(180, 0.08, 'sawtooth', 0.20, -60, undefined, 0.0);
+      this.noise?.(0.04, 0.06, 600, 0.02);
+      this.tone(220, 0.05, 'sawtooth', 0.14, 0, undefined, 0.05);
+    } catch { /* silent */ }
+  };
+
+  /** Poison apply — venomous hiss */
+  engine.sfxPoisonApply = function(): void {
+    try {
+      this.noise?.(0.08, 0.12, 800, 0.0);
+      this.tone(165, 0.12, 'sawtooth', 0.26, -80, undefined, 0.0);
+      this.tone(110, 0.10, 'sawtooth', 0.20, 0, undefined, 0.04);
+      this.noise?.(0.06, 0.08, 500, 0.08);
+    } catch { /* silent */ }
+  };
+
+  /** Heal self — warm rising tones */
+  engine.sfxHealSelf = function(): void {
+    try {
+      [261, 329, 392].forEach((f, i) => this.tone(f, 0.20, 'sine', 0.18, 0, undefined, i * 0.06));
+      this.tone(523, 0.25, 'sine', 0.12, 0, undefined, 0.18);
+    } catch { /* silent */ }
+  };
+
+  /** Shield break — crack + dispersion */
+  engine.sfxShieldBreak = function(): void {
+    try {
+      this.noise?.(0.05, 0.22, 4000, 0.0);
+      this.tone(600, 0.04, 'square', 0.30, 0);
+      this.tone(400, 0.06, 'square', 0.24, 0, undefined, 0.02);
+      this.tone(200, 0.08, 'triangle', 0.18, 0, undefined, 0.04);
+    } catch { /* silent */ }
+  };
+
+  /** Draw card — soft whoosh + chime */
+  engine.sfxDrawCard = function(): void {
+    try {
+      this.tone(880, 0.06, 'sine', 0.14, 0, undefined, 0.0);
+      this.tone(1100, 0.05, 'sine', 0.10, 0, undefined, 0.04);
+      this.noise?.(0.03, 0.04, 3000, 0.0);
+    } catch { /* silent */ }
+  };
+
+  /** Turn start — short drum hit */
+  engine.sfxTurnStart = function(): void {
+    try {
+      this.noise?.(0.05, 0.18, 200, 0.0);
+      this.tone(80, 0.06, 'triangle', 0.28, 0);
+    } catch { /* silent */ }
+  };
+
+})(AudioEngine as any);

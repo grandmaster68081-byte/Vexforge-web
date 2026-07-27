@@ -325,7 +325,7 @@ export function HomeRoute() {
             fontWeight:900,letterSpacing:"0.04em"}}>
             Forja tu
           </h1>
-          <h1 className="hero-title-pulse" style={{fontFamily:"Cinzel,serif",
+          <h1 className="hero-title-pulse hero-title-entrance" style={{fontFamily:"Cinzel,serif",
             fontSize:"clamp(44px,8vw,82px)",lineHeight:1.05,margin:"0 0 28px",
             fontWeight:900,letterSpacing:"0.04em",
             background:"linear-gradient(135deg, #fff5c0 0%, #e8b84b 40%, #c9901f 80%)",
@@ -333,7 +333,7 @@ export function HomeRoute() {
             filter:"drop-shadow(0 0 30px rgba(232,184,75,0.6))"}}>
             LEYENDA
           </h1>
-          <p style={{color:"rgba(200,200,220,0.85)",fontSize:"clamp(14px,2.5vw,17px)",
+          <p className="hero-subtitle-entrance" style={{color:"rgba(200,200,220,0.85)",fontSize:"clamp(14px,2.5vw,17px)",
             maxWidth:540,margin:"0 auto 40px",lineHeight:1.7,
             textShadow:"0 1px 4px rgba(0,0,0,0.8)"}}>
             El juego de cartas coleccionables donde cada carta tiene valor real.<br/>

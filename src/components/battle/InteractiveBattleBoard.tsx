@@ -607,12 +607,23 @@ export function InteractiveBattleBoard({
         setCinematicVisible(true);
       }
       
-      // Chat100: SFX crítico / kill
+      // SFX por tipo de evento — kill, crit, poison, shield break
       try {
+        const events = state.currentTurn.events ?? [];
+        const hasPoisonTick  = events.some(e => e.type === 'poison_tick');
+        const hasShieldBlock = events.some(e => e.type === 'shield_block');
+        const hasPoisoned    = events.some(e => e.type === 'poisoned');
+
         if (state.currentTurn.is_kill) {
-          (AudioEngine as any).sfxKillConfirm?.();
+          (AudioEngine as any).sfxKillV2?.();
+        } else if (hasPoisonTick) {
+          (AudioEngine as any).sfxPoisonTick?.();
+        } else if (hasShieldBlock) {
+          (AudioEngine as any).sfxShieldBreak?.();
+        } else if (hasPoisoned) {
+          (AudioEngine as any).sfxPoisonApply?.();
         } else if (state.currentTurn.is_crit) {
-          (AudioEngine as any).sfxCriticalHit?.();
+          (AudioEngine as any).sfxCritV2?.();
         }
       } catch { /* silent */ }
 
