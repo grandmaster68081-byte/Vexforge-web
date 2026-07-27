@@ -11,8 +11,12 @@ const [claimMsg, setClaimMsg] = useState<string | null>(null);
 const load = useCallback(async () => {
   setLoading(true);
   const res = await getMyDailyQuests();
-  if (res.data) setQuests(res.data);
-  setError(res.reason ?? null);
+  if (res.data) {
+    setQuests(res.data);
+    setError(null);
+  } else {
+    setError(res.reason ?? null);
+  }
   setLoading(false);
 }, []);
 

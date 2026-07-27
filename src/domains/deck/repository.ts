@@ -47,22 +47,24 @@ const { data, error } = await supabase
   .gt("quantity", 0)
   .order("quantity", { ascending: false });
 if (error) return { status: "ready", data: null, reason: error.message };
-const mapped = (data ?? []).map((row: any) => ({
-  player_card_id: row.id,
-  card_id: row.card_id,
-  quantity: row.quantity,
-  locked: row.locked,
-  listed: row.listed,
-  code: row.cards.code,
-  name: row.cards.name,
-  rarity: row.cards.rarity,
-  faction: row.cards.faction,
-  power: row.cards.power,
-  affinity: row.cards.affinity,
-  prestige: row.cards.prestige,
-  charge: row.cards.charge,
-  lore: row.cards.lore,
-}));
+const mapped = (data ?? [])
+  .filter((row: any) => row.cards != null) // guard against RLS join returning null
+  .map((row: any) => ({
+    player_card_id: row.id,
+    card_id: row.card_id,
+    quantity: row.quantity,
+    locked: row.locked,
+    listed: row.listed,
+    code: row.cards.code,
+    name: row.cards.name,
+    rarity: row.cards.rarity,
+    faction: row.cards.faction,
+    power: row.cards.power,
+    affinity: row.cards.affinity,
+    prestige: row.cards.prestige,
+    charge: row.cards.charge,
+    lore: row.cards.lore,
+  }));
 return { status: "ready", data: mapped };
 }
 
@@ -76,15 +78,17 @@ const { data, error } = await supabase
   .eq("player_id", playerId)
   .order("slot_number", { ascending: true });
 if (error) return { status: "ready", data: null, reason: error.message };
-const mapped = (data ?? []).map((row: any) => ({
-  slot_number: row.slot_number,
-  card_id: row.card_id,
-  code: row.cards.code,
-  name: row.cards.name,
-  rarity: row.cards.rarity,
-  faction: row.cards.faction,
-  power: row.cards.power,
-}));
+const mapped = (data ?? [])
+  .filter((row: any) => row.cards != null) // guard against RLS join returning null
+  .map((row: any) => ({
+    slot_number: row.slot_number,
+    card_id: row.card_id,
+    code: row.cards.code,
+    name: row.cards.name,
+    rarity: row.cards.rarity,
+    faction: row.cards.faction,
+    power: row.cards.power,
+  }));
 return { status: "ready", data: mapped };
 }
 

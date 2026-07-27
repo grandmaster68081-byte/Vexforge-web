@@ -7,7 +7,8 @@ import { useToast } from "../shared/context/ToastContext";
 
     function QuestCard({ pq, onClaim, claiming }: { pq:any; onClaim:(id:string)=>void; claiming:boolean }) {
     const quest = pq.quest ?? pq;
-    const pct = quest.target_count>0?Math.min(100,(pq.progress/quest.target_count)*100):0;
+    const targetCount = quest?.target_count ?? 0;
+    const pct = targetCount>0?Math.min(100,(pq.progress/targetCount)*100):0;
     const isComplete = pq.status==="completed";
     const isClaimed = pq.status==="claimed";
     return (
@@ -33,7 +34,7 @@ import { useToast } from "../shared/context/ToastContext";
         <div style={{marginBottom:isComplete&&!isClaimed?12:0}}>
           <div style={{display:"flex",justifyContent:"space-between",marginBottom:4}}>
             <span style={{color:"#555",fontSize:10}}>Progreso</span>
-            <span style={{color:"#888",fontSize:10}}>{pq.progress}/{quest.target_count}</span>
+            <span style={{color:"#888",fontSize:10}}>{pq.progress}/{targetCount}</span>
           </div>
           <div style={{background:"#0f0f1a",borderRadius:4,height:6,overflow:"hidden"}}>
             <div style={{
