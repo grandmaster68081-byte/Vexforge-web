@@ -4922,3 +4922,263 @@ img[src=""] {
   50%     { box-shadow: 0 0 0 4px rgba(232,184,75,0.8), 0 0 20px rgba(232,184,75,0.3); }
 }
 .tutorial-highlight { animation: tutorial-highlight-pulse 1.5s ease-in-out infinite; }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   VEXFORGE — CINEMATIC BATTLE SYSTEM v4.0 — TIER-1 ANIMATIONS
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ─── Arena atmosphere rune floats ───────────────────────────────────────── */
+@keyframes arena-rune-float-0 {
+  0%,100% { transform: translateY(0) rotate(0deg);   opacity: 0.08; }
+  50%     { transform: translateY(-14px) rotate(8deg); opacity: 0.18; }
+}
+@keyframes arena-rune-float-1 {
+  0%,100% { transform: translateY(0) rotate(0deg);   opacity: 0.10; }
+  50%     { transform: translateY(-20px) rotate(-6deg); opacity: 0.22; }
+}
+@keyframes arena-rune-float-2 {
+  0%,100% { transform: translateY(0) rotate(0deg);   opacity: 0.07; }
+  50%     { transform: translateY(-10px) rotate(12deg); opacity: 0.15; }
+}
+
+/* ─── Attack button pulse ─────────────────────────────────────────────────── */
+@keyframes attack-btn-pulse {
+  0%,100% { box-shadow: 0 4px 20px rgba(232,184,75,0.35), 0 0 0 0 rgba(232,184,75,0.4); }
+  50%     { box-shadow: 0 4px 30px rgba(232,184,75,0.55), 0 0 0 6px rgba(232,184,75,0); }
+}
+
+/* ─── Turn counter flash ──────────────────────────────────────────────────── */
+@keyframes turn-counter-flash {
+  0%,100% { color: #6a6a8a; }
+  50%     { color: #a0a0c8; }
+}
+
+/* ─── HP critical pulse ─────────────────────────────────────────────────────
+   Deduplicated — existing at line 3272 kept; new alias for InteractiveBB     */
+@keyframes hp-critical-pulse-v4 {
+  0%,100% { opacity: 0; }
+  50%     { opacity: 1; }
+}
+
+/* ─── Result screen animations ───────────────────────────────────────────── */
+@keyframes fadeInResult {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes trophyBounce {
+  0%   { transform: scale(0) translateY(30px); opacity: 0; }
+  60%  { transform: scale(1.22) translateY(-8px); opacity: 1; }
+  80%  { transform: scale(0.9) translateY(4px); }
+  100% { transform: scale(1) translateY(0); opacity: 1; }
+}
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes resultAmbient {
+  0%,100% { transform: translateX(-50%) scale(1); opacity: 0.8; }
+  50%     { transform: translateX(-50%) scale(1.1); opacity: 1; }
+}
+@keyframes result-btn-appear {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes result-label-slide {
+  from { opacity: 0; transform: translateY(-14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes result-icon-bounce {
+  0%   { transform: scale(0.3); opacity: 0; }
+  60%  { transform: scale(1.18); opacity: 1; }
+  80%  { transform: scale(0.93); }
+  100% { transform: scale(1); }
+}
+@keyframes result-fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes elo-counter-tick {
+  from { opacity: 0; transform: scale(0.8); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+/* ─── InteractiveBattleBoard: attack beam ────────────────────────────────── */
+@keyframes attack-beam-travel {
+  0%   { opacity: 0; scaleY: 0; }
+  20%  { opacity: 1; }
+  80%  { opacity: 1; }
+  100% { opacity: 0; }
+}
+@keyframes screen-flash-hit {
+  0%,100% { opacity: 0; }
+  30%     { opacity: 0.35; }
+  60%     { opacity: 0.12; }
+}
+
+/* ─── Card mythic/legendary aura ─────────────────────────────────────────── */
+@keyframes card-mythic-aura-pulse {
+  0%,100% { box-shadow: 0 0 24px rgba(255,68,68,0.5), 0 0 48px rgba(255,68,68,0.25); }
+  50%     { box-shadow: 0 0 40px rgba(255,68,68,0.8), 0 0 80px rgba(255,68,68,0.4); }
+}
+@keyframes card-legendary-aura-pulse {
+  0%,100% { box-shadow: 0 0 24px rgba(232,184,75,0.55), 0 0 48px rgba(232,184,75,0.28); }
+  50%     { box-shadow: 0 0 40px rgba(232,184,75,0.85), 0 0 80px rgba(232,184,75,0.45); }
+}
+.card-mythic-aura    { animation: card-mythic-aura-pulse    2.2s ease-in-out infinite !important; }
+.card-legendary-aura { animation: card-legendary-aura-pulse 2.5s ease-in-out infinite !important; }
+
+/* ─── Battle intro animations ────────────────────────────────────────────── */
+@keyframes intro-vs-pop {
+  0%   { transform: scale(0) rotate(-15deg); opacity: 0; }
+  60%  { transform: scale(1.25) rotate(3deg); opacity: 1; }
+  80%  { transform: scale(0.94) rotate(-1deg); }
+  100% { transform: scale(1) rotate(0deg); opacity: 1; }
+}
+@keyframes intro-vs-glow {
+  0%,100% { filter: drop-shadow(0 0 12px rgba(232,184,75,0.7)); }
+  50%     { filter: drop-shadow(0 0 24px rgba(232,184,75,1)); }
+}
+@keyframes intro-count-ripple {
+  0%   { transform: scale(0.5); opacity: 0.8; }
+  100% { transform: scale(2.5); opacity: 0; }
+}
+@keyframes intro-battle-text {
+  from { opacity: 0; transform: scale(1.4) skewX(-6deg); letter-spacing: 0.5em; }
+  to   { opacity: 1; transform: scale(1) skewX(0deg); }
+}
+@keyframes rune-float-0 {
+  0%,100% { transform: translateY(0) rotate(0deg); opacity: 0.2; }
+  50%     { transform: translateY(-18px) rotate(8deg); opacity: 0.5; }
+}
+@keyframes rune-float-1 {
+  0%,100% { transform: translateY(0) rotate(0deg); opacity: 0.25; }
+  50%     { transform: translateY(-24px) rotate(-6deg); opacity: 0.55; }
+}
+@keyframes rune-float-2 {
+  0%,100% { transform: translateY(0) rotate(0deg); opacity: 0.18; }
+  50%     { transform: translateY(-12px) rotate(12deg); opacity: 0.42; }
+}
+
+/* ─── BattleBoardEngine floating damage ──────────────────────────────────── */
+@keyframes floatUp {
+  0%   { transform: translate(-50%, 0); opacity: 1; }
+  100% { transform: translate(-50%, -42px); opacity: 0; }
+}
+@keyframes hitFlash {
+  0%,100% { opacity: 0; }
+  35%,65% { opacity: 1; }
+}
+@keyframes unitActivePulse {
+  0%,100% { opacity: 0.45; transform: scale(1); }
+  50%     { opacity: 1;    transform: scale(1.06); }
+}
+@keyframes unitDeath {
+  0%   { transform: scale(1) rotate(0deg);    opacity: 1; filter: brightness(2) saturate(0); }
+  20%  { transform: scale(0.9) rotate(-8deg); opacity: 0.8; }
+  55%  { transform: scale(0.6) rotate(14deg); opacity: 0.4; filter: brightness(0.5) blur(2px); }
+  100% { transform: scale(0.15) rotate(28deg); opacity: 0; filter: brightness(0) blur(6px); }
+}
+@keyframes deathGlow {
+  0%   { box-shadow: 0 0 0 0 rgba(255,60,30,0); }
+  25%  { box-shadow: 0 0 36px 14px rgba(255,60,30,0.75); }
+  100% { box-shadow: 0 0 0 0 rgba(255,60,30,0); }
+}
+
+/* ─── Drag-to-attack ready state ─────────────────────────────────────────── */
+@keyframes drag-ready-pulse {
+  0%,100% { box-shadow: 0 0 0 0 rgba(232,184,75,0.6), 0 4px 20px rgba(0,0,0,0.6); }
+  50%     { box-shadow: 0 0 0 8px rgba(232,184,75,0), 0 4px 30px rgba(232,184,75,0.3); }
+}
+.drag-ready { animation: drag-ready-pulse 1.5s ease-in-out infinite !important; }
+
+/* ─── Card icon breathe (BattleBoardEngine) ──────────────────────────────── */
+@keyframes card-icon-breathe {
+  0%,100% { transform: scale(1); opacity: 0.9; }
+  50%     { transform: scale(1.07); opacity: 1; }
+}
+@keyframes card-shimmer {
+  0%,100% { background-position: 200% 200%; }
+  50%     { background-position: -50% -50%; }
+}
+
+/* ─── BattleBoard atmosphere ─────────────────────────────────────────────── */
+@keyframes atmosphereOrb {
+  0%,100% { transform: translateX(-50%) scale(1); opacity: 0.7; }
+  50%     { transform: translateX(-50%) scale(1.14); opacity: 1; }
+}
+@keyframes atmospherePulse {
+  0%,100% { opacity: 0.55; }
+  50%     { opacity: 1; }
+}
+@keyframes atmosphereDrift {
+  0%,100% { transform: scale(1); opacity: 0.5; }
+  50%     { transform: scale(1.1); opacity: 0.8; }
+}
+
+/* ─── PackOpenSequence card shimmer ──────────────────────────────────────── */
+@keyframes pack-card-shimmer {
+  from { background-position: 200% 50%; }
+  to   { background-position: -200% 50%; }
+}
+
+/* ─── HomeRoute stat counter ─────────────────────────────────────────────── */
+@keyframes stat-count-up {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ─── Beam attack arc (InteractiveBattleBoard) ───────────────────────────── */
+@keyframes beam-appear {
+  0%   { opacity: 0; transform: scaleY(0); }
+  25%  { opacity: 1; transform: scaleY(1); }
+  75%  { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+/* ─── Card entry animation (stagger) ─────────────────────────────────────── */
+@keyframes card-enter-stagger {
+  from { opacity: 0; transform: translateY(30px) scale(0.88); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* ─── Board impact overlay ───────────────────────────────────────────────── */
+@keyframes board-impact-flash {
+  0%   { opacity: 0; }
+  15%  { opacity: 0.6; }
+  30%  { opacity: 0.08; }
+  50%  { opacity: 0.32; }
+  100% { opacity: 0; }
+}
+@keyframes board-kill-explosion {
+  0%   { transform: scale(1); opacity: 1; filter: brightness(1); }
+  20%  { transform: scale(1.45); opacity: 0.9; filter: brightness(2.8) saturate(0); }
+  55%  { transform: scale(0.7); opacity: 0.4; filter: brightness(0.6) blur(3px); }
+  100% { transform: scale(0.2); opacity: 0; filter: brightness(0) blur(8px); }
+}
+
+/* ─── BattleResultScreen — winner rays ───────────────────────────────────── */
+.victory-bg-rays {
+  position: absolute;
+  inset: -200px;
+  background: conic-gradient(
+    from 0deg,
+    transparent 0deg, rgba(232,184,75,0.04) 10deg,
+    transparent 20deg, transparent 35deg,
+    rgba(232,184,75,0.06) 45deg, transparent 55deg,
+    transparent 70deg, rgba(232,184,75,0.03) 80deg,
+    transparent 90deg
+  );
+  animation: victory-rays-spin 12s linear infinite;
+  pointer-events: none;
+  z-index: 0;
+}
+@keyframes victory-rays-spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+/* ─── Season badge & rank animations ─────────────────────────────────────── */
+@keyframes rank-badge-glow {
+  0%,100% { filter: drop-shadow(0 0 6px currentColor); }
+  50%     { filter: drop-shadow(0 0 18px currentColor); }
+}

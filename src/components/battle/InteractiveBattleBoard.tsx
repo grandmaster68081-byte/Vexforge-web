@@ -484,7 +484,8 @@ export function InteractiveBattleBoard({
       
       // FASE 2: Trigger cinematic for Rare+ attacker
       const attackerUnit = isPlayerAtk ? playerUnit : opponentUnit;
-      if (attackerUnit && ['Rare', 'Epic', 'Legendary', 'Mythic', 'Founder'].includes(attackerUnit.rarity)) {
+      // FASE 2 v4: Cinematic para TODAS las rarezas — Common/Uncommon = flash rápido
+      if (attackerUnit) {
         setAttackingUnit(attackerUnit);
         setCinematicVisible(true);
       }

@@ -347,7 +347,8 @@ export function BattleBoardEngine({ result, playerName, opponentName, onComplete
         
         // FASE 2: Show cinematic for Rare+ rarities
         const atkUnit = finalUnits.find(u => u.idx === attackerIdx);
-        if (atkUnit && ['Rare', 'Epic', 'Legendary', 'Mythic', 'Founder'].includes(atkUnit.rarity)) {
+        // FASE 2 v4: Cinematic para TODAS las rarezas
+        if (atkUnit) {
           setAttackingUnit(atkUnit);
           setCinematicVisible(true);
         }
