@@ -123,8 +123,8 @@ function FormationUnitCard({
 
   if (!unit) {
     return (
-      <div style={{
-        width: 110, minHeight: 160, borderRadius: 12,
+      <div className="forge-formation-card" style={{
+        minHeight: 160, borderRadius: 12,
         border: `2px dashed ${primary}22`,
         display: 'flex', alignItems: 'center', justifyContent: 'center',
         flexDirection: 'column', gap: 6,
@@ -144,13 +144,14 @@ function FormationUnitCard({
   return (
     <div
       className={[
+        'forge-formation-card',
         isDead || showDeathAnim ? 'card-dissolve' : '',
         isBeingHit ? 'impact-shake' : '',
         isChampion && !isDead ? (ascensionActive ? 'forge-ascension-pulse' : 'champion-crown-pulse') : '',
         isActive && !isDead ? 'vanguard-guard-pulse' : '',
       ].filter(Boolean).join(' ')}
       style={{
-        width: 110, minHeight: 160, borderRadius: 12,
+        minHeight: 160, borderRadius: 12,
         border: `2px solid ${isDead ? '#333' : isChampion ? rar : primary}`,
         background: unit.image_url
           ? `linear-gradient(180deg,transparent 0%,rgba(5,5,14,0.92) 55%),url(${unit.image_url}) center/cover no-repeat`
@@ -1694,8 +1695,17 @@ export function ForgeFormationBoard({
         }
         @keyframes shield-arc-break {
           0%   { opacity: 0.7; filter: none; }
-          40%  { opacity: 1; filter: hue-rotate(80deg) brightness(2); }
-          100% { opacity: 0; transform: translate(-50%,-50%) scaleX(1.3) scaleY(0.4); }
+          25%  { opacity: 1;   filter: hue-rotate(80deg) brightness(3); box-shadow: 0 0 60px rgba(232,64,64,0.9); }
+          60%  { opacity: 0.5; filter: hue-rotate(120deg) brightness(1.5); transform: translate(-50%,-50%) scaleX(1.15) scaleY(0.7); }
+          100% { opacity: 0;   transform: translate(-50%,-50%) scaleX(1.4) scaleY(0.2); }
+        }
+        @keyframes shield-arc-pulse {
+          0%,100% { box-shadow: 0 -4px 24px rgba(74,158,255,0.25), inset 0 0 20px rgba(74,158,255,0.07); opacity: 0.85; }
+          50%     { box-shadow: 0 -8px 40px rgba(74,158,255,0.55), inset 0 0 32px rgba(74,158,255,0.18); opacity: 1; }
+        }
+        @keyframes shield-label-in {
+          0%   { opacity: 0; transform: translate(-50%,-50%) scale(0.8); }
+          100% { opacity: 1; transform: translate(-50%,-50%) scale(1); }
         }
         @keyframes pure-bonus-pulse {
           0%,100% { box-shadow: 0 0 6px rgba(255,215,0,0.3); }
@@ -1813,24 +1823,79 @@ export function ForgeFormationBoard({
           pointerEvents: 'none', zIndex: 0,
         }} />
 
-        {/* ── Champion Shield Arc (Plan §3) — se rompe al morir el Guard ────── */}
+        {/* ── Champion Shield Arc (H1: enhanced visual) ─────────────────── */}
         {champAlive && (phase === 'battle' || phase === 'reserve') && (
+          <>
+          {/* Arc semi-circle */}
           <div style={{
             position: 'absolute', top: '50%', left: '50%',
             transform: 'translate(-50%, -50%)',
-            width: 220, height: 110,
+            width: 240, height: 120,
             border: champProtected
-              ? '2px solid rgba(74,158,255,0.45)'
-              : '2px solid rgba(232,64,64,0.2)',
+              ? '2px solid rgba(74,158,255,0.55)'
+              : '2px solid rgba(232,64,64,0.3)',
             borderBottom: 'none',
-            borderRadius: '110px 110px 0 0',
-            boxShadow: champProtected
-              ? '0 -4px 24px rgba(74,158,255,0.25), inset 0 0 20px rgba(74,158,255,0.07)'
-              : '0 -4px 12px rgba(232,64,64,0.15)',
-            pointerEvents: 'none', zIndex: 0,
-            transition: 'border-color 0.6s ease, box-shadow 0.6s ease',
-            animation: !champProtected ? 'shield-arc-break 0.7s ease-out both' : 'none',
+            borderRadius: '120px 120px 0 0',
+            pointerEvents: 'none', zIndex: 1,
+            transition: 'border-color 0.6s ease',
+            animation: champProtected
+              ? 'shield-arc-pulse 2.8s ease-in-out infinite'
+              : 'shield-arc-break 0.8s ease-out both',
           }} />
+          {/* Inner arc glow line */}
+          {champProtected && (
+            <div style={{
+              position: 'absolute', top: '50%', left: '50%',
+              transform: 'translate(-50%, -50%)',
+              width: 224, height: 112,
+              border: '1px solid rgba(74,158,255,0.25)',
+              borderBottom: 'none',
+              borderRadius: '112px 112px 0 0',
+              pointerEvents: 'none', zIndex: 1,
+              animation: 'shield-arc-pulse 2.8s ease-in-out 0.4s infinite',
+            }} />
+          )}
+          {/* Guard Active badge — H1: explicit label */}
+          {champProtected && (
+            <div style={{
+              position: 'absolute', top: 'calc(50% - 130px)', left: '50%',
+              transform: 'translate(-50%, 0)',
+              zIndex: 2, pointerEvents: 'none',
+              animation: 'shield-label-in 0.4s ease-out both',
+              display: 'flex', alignItems: 'center', gap: 4,
+              padding: '3px 10px', borderRadius: 20,
+              background: 'rgba(74,158,255,0.12)',
+              border: '1px solid rgba(74,158,255,0.35)',
+              backdropFilter: 'blur(4px)',
+            }}>
+              <span style={{ fontSize: 9 }}>🛡</span>
+              <span style={{
+                fontSize: 8, fontFamily: '"Rajdhani",sans-serif', fontWeight: 800,
+                color: '#4a9eff', letterSpacing: '0.15em',
+                textShadow: '0 0 8px rgba(74,158,255,0.7)',
+              }}>GUARD ACTIVO</span>
+            </div>
+          )}
+          {/* Champion exposed warning flash */}
+          {!champProtected && (
+            <div style={{
+              position: 'absolute', top: 'calc(50% - 130px)', left: '50%',
+              transform: 'translate(-50%, 0)',
+              zIndex: 2, pointerEvents: 'none',
+              animation: 'shield-label-in 0.3s ease-out both',
+              display: 'flex', alignItems: 'center', gap: 4,
+              padding: '3px 10px', borderRadius: 20,
+              background: 'rgba(232,64,64,0.12)',
+              border: '1px solid rgba(232,64,64,0.4)',
+            }}>
+              <span style={{ fontSize: 9 }}>⚠️</span>
+              <span style={{
+                fontSize: 8, fontFamily: '"Rajdhani",sans-serif', fontWeight: 800,
+                color: '#e84040', letterSpacing: '0.15em',
+              }}>CAMPEÓN EXPUESTO</span>
+            </div>
+          )}
+          </>
         )}
 
         {/* === OPPONENT FORMATION (top) === */}

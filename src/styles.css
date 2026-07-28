@@ -8462,3 +8462,22 @@ button:active { animation: chip-select-pop 0.15s ease; }
     text-shadow: 0 0 12px currentColor;
     }
     
+/* ── H1/I1: ForgeFormationBoard — responsive card sizing ─────────────────── */
+.forge-formation-card {
+  width: 110px;
+  flex-shrink: 0;
+}
+@media (max-width: 380px) {
+  .forge-formation-card {
+    width: 90px !important;
+    min-height: 130px !important;
+    border-radius: 9px !important;
+  }
+}
+@media (max-width: 330px) {
+  .forge-formation-card {
+    width: 78px !important;
+    min-height: 112px !important;
+    border-radius: 8px !important;
+  }
+}
