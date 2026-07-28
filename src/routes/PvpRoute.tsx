@@ -13,6 +13,7 @@ import { ClanWarsPanel } from "../shared/components/ClanWarsPanel";
 import { simulateAIBattle, loadPlayerBattleUnits, getDailyAIChallenge, hasDailyChallengeAttempted, markDailyChallengeAttempted, hasDailyChallengeBadge, markDailyChallengeBadge, claimDailyAIChallenge, DAILY_CHALLENGE_VEX_REWARD, BATTLE_MODE_META, type BattleMode, type DailyAIChallenge } from "../lib/aiBattleEngine";
 import { supabase } from "../lib/supabase";
 import { AudioEngine } from "../lib/audioEngine";
+import { useWinStreak, WinStreakBadge, StreakPanel } from "../components/battle/WinStreakDisplay";
 
 const BG_URL = "https://rscuzqnfccqvltkdcdny.supabase.co/storage/v1/object/public/vexforge-assets/backgrounds/bg_pvp.jpg";
 
@@ -453,6 +454,11 @@ export function PvpRoute() {
   const [dailyAttempted, setDailyAttempted] = useState(false);
   const [dailyBadgeEarned, setDailyBadgeEarned] = useState(false);
   const [dailyVexEarned, setDailyVexEarned]     = useState<number | null>(null);
+  // GL.0 Win Streak
+  const { streak, best, justBroke, onWin, onLoss } = useWinStreak();
+  // Store last battle mode/opponent for GL.1 Revenge
+  const lastBattleModeRef = useRef<BattleMode>('casual');
+  const lastBattleOppRef  = useRef<string | null>(null);
   const [dailyError, setDailyError]             = useState<string | null>(null);
   const dailyChallenge = getDailyAIChallenge();
   const cancelRef = useRef(false);
@@ -515,17 +521,42 @@ export function PvpRoute() {
   const myMmr      = playerRank?.mmr ?? 1000;
 
   // IA.2: Daily challenge reuses the interactive board and never touches pvp_matches.
-  if (dailyResult) return (<div style={{ minHeight: '100vh', background: '#080811', paddingTop: 12 }}><div style={{ maxWidth: 920, margin: '0 auto 10px', padding: '10px 16px', color: '#e8b84b', textAlign: 'center' }}>DESAFÍO DEL DÍA · {dailyChallenge.title} · {dailyResult.you_won ? (dailyBadgeEarned ? ('BADGE GANADO' + (dailyVexEarned ? ' · +' + dailyVexEarned + ' VEX' : '')) : 'VICTORIA') : 'INTENTO CONSUMIDO'}</div><InteractiveBattleBoard result={dailyResult} playerName="Tú" opponentName={dailyChallenge.title} onDismiss={() => setDailyResult(null)} /></div>);
+  if (dailyResult) {
+    const handleDailyDismiss = () => {
+      if (dailyResult.you_won) onWin(); else onLoss();
+      setDailyResult(null);
+    };
+    return (
+      <div style={{ minHeight: '100vh', background: '#080811', paddingTop: 12 }}>
+        <div style={{ maxWidth: 920, margin: '0 auto 10px', padding: '10px 16px', color: '#e8b84b', textAlign: 'center', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 12, flexWrap: 'wrap' }}>
+          <span>DESAFÍO DEL DÍA · {dailyChallenge.title} · {dailyResult.you_won ? (dailyBadgeEarned ? ('BADGE GANADO' + (dailyVexEarned ? ' · +' + dailyVexEarned + ' VEX' : '')) : 'VICTORIA') : 'INTENTO CONSUMIDO'}</span>
+          <WinStreakBadge streak={streak} justBroke={justBroke} />
+        </div>
+        <InteractiveBattleBoard result={dailyResult} playerName="Tú" opponentName={dailyChallenge.title} onDismiss={handleDailyDismiss} />
+      </div>
+    );
+  }
 
   // Battle is active — hand off to battle board
   if (battleResult) {
     try { (AudioEngine as any).sfxTurnStart?.(); } catch { /* silent */ }
+    const handleBattleDismiss = () => {
+      if ((battleResult as any).you_won) onWin(); else onLoss();
+      dismissBattle();
+    };
+    const handlePlayAgain = async () => {
+      dismissBattle();
+      if (lastBattleOppRef.current) {
+        await battle(lastBattleOppRef.current);
+      }
+    };
     return (
     <InteractiveBattleBoard
       result={battleResult as unknown as RealBattleResult}
       playerName="Tú"
       opponentName="Oponente"
-      onDismiss={dismissBattle}
+      onDismiss={handleBattleDismiss}
+      onPlayAgain={handlePlayAgain}
     />
     );
   }
@@ -565,6 +596,9 @@ export function PvpRoute() {
             Desafía a otros Forjadores. El poder de tu mazo determina la victoria.
           </p>
         </div>
+
+        {/* GL.0 — Win Streak Panel */}
+        <StreakPanel streak={streak} best={best} />
 
         <DailyChallengeCard challenge={dailyChallenge} attempted={dailyAttempted} badgeEarned={dailyBadgeEarned} dailyLoading={dailyLoading} onStart={startDailyChallenge} />
 

@@ -8069,3 +8069,278 @@ button:active { animation: chip-select-pop 0.15s ease; }
   100% { box-shadow: 0 0 0 0 var(--relic-slot-color, #e8b84b)00; }
 }
 .relic-slot-active { animation: relic-slot-activate 1.6s ease-in-out infinite; }
+
+/* ════════════════════════════════════════════════════════════════════════════
+   VEXFORGE — TIER-1 VISUAL UPGRADES (Chat 103 — 2026-07-28)
+   VX.1 Keyword FX · VX.2 Card Death · CX.0 Holographic Shimmer v2
+   BA.0 Animated Board · GL.0 Win Streak · GL.1 Revenge Button · 
+   Formation Engine UI · Floating keyword banners
+   ════════════════════════════════════════════════════════════════════════════ */
+
+/* ─── CX.0: Holographic Shimmer v2 (per-rarity intensity) ─────────────────── */
+@keyframes holo-v2-common {
+  0%   { background-position: 200% 0%; opacity: 0; }
+  40%  { opacity: 0.25; }
+  100% { background-position: -100% 100%; opacity: 0; }
+}
+@keyframes holo-v2-rare {
+  0%   { background-position: 200% 0%; opacity: 0; }
+  30%  { opacity: 0.5; }
+  70%  { opacity: 0.5; }
+  100% { background-position: -100% 100%; opacity: 0; }
+}
+@keyframes holo-v2-epic {
+  0%   { background-position: 200% 0%; opacity: 0; }
+  25%  { opacity: 0.7; }
+  75%  { opacity: 0.65; }
+  100% { background-position: -100% 100%; opacity: 0; }
+}
+@keyframes holo-v2-legendary {
+  0%   { background-position: 200% 0%; opacity: 0; }
+  20%  { opacity: 0.85; }
+  80%  { opacity: 0.8; }
+  100% { background-position: -100% 100%; opacity: 0; }
+}
+@keyframes holo-v2-mythic {
+  0%   { background-position: 300% 0%;  opacity: 0; }
+  15%  { opacity: 1; }
+  85%  { opacity: 0.9; }
+  100% { background-position: -200% 100%; opacity: 0; }
+}
+.holo-common {
+  background: linear-gradient(105deg,transparent 30%,rgba(168,168,188,0.3) 48%,rgba(255,255,255,0.15) 50%,transparent 70%);
+  background-size: 250% 250%;
+  animation: holo-v2-common 2.8s ease-in-out infinite;
+}
+.holo-rare {
+  background: linear-gradient(105deg,transparent 25%,rgba(74,158,255,0.45) 46%,rgba(255,255,255,0.28) 50%,rgba(74,158,255,0.35) 54%,transparent 75%);
+  background-size: 250% 250%;
+  animation: holo-v2-rare 2.2s ease-in-out infinite;
+}
+.holo-epic {
+  background: linear-gradient(105deg,transparent 20%,rgba(168,85,247,0.55) 44%,rgba(255,255,255,0.35) 50%,rgba(168,85,247,0.45) 56%,transparent 80%);
+  background-size: 250% 250%;
+  animation: holo-v2-epic 1.8s ease-in-out infinite;
+}
+.holo-legendary {
+  background: linear-gradient(105deg,transparent 15%,rgba(232,184,75,0.7) 42%,rgba(255,255,255,0.55) 50%,rgba(232,184,75,0.6) 58%,transparent 85%);
+  background-size: 300% 300%;
+  animation: holo-v2-legendary 1.4s ease-in-out infinite;
+}
+.holo-mythic {
+  background: linear-gradient(105deg,
+    transparent 5%,
+    rgba(255,70,70,0.55) 25%,
+    rgba(232,184,75,0.8) 38%,
+    rgba(255,255,255,0.85) 50%,
+    rgba(168,85,247,0.75) 62%,
+    rgba(74,158,255,0.55) 78%,
+    transparent 95%
+  );
+  background-size: 350% 350%;
+  animation: holo-v2-mythic 1.1s ease-in-out infinite;
+}
+
+/* ─── VX.2: Card Death Animation v2 (improved dissolve) ──────────────────── */
+@keyframes card-death-v2 {
+  0%   { opacity: 1;   transform: scale(1) rotate(0deg);      filter: brightness(1);   }
+  15%  { opacity: 1;   transform: scale(1.08) rotate(-2deg);  filter: brightness(2.5) saturate(3); }
+  35%  { opacity: 0.8; transform: scale(0.95) rotate(4deg);   filter: brightness(0.8) saturate(0.5); }
+  60%  { opacity: 0.4; transform: scale(0.8) rotate(-6deg);   filter: brightness(0.4) grayscale(1); }
+  80%  { opacity: 0.1; transform: scale(0.6) translateY(20px) rotate(8deg); filter: grayscale(1) blur(3px); }
+  100% { opacity: 0;   transform: scale(0.3) translateY(40px) rotate(15deg); filter: grayscale(1) blur(8px); }
+}
+@keyframes card-death-particles {
+  0%   { opacity: 1; transform: translate(0,0) scale(1); }
+  100% { opacity: 0; transform: translate(var(--px,0px),var(--py,-40px)) scale(0); }
+}
+.card-death-v2 { animation: card-death-v2 0.85s cubic-bezier(0.4,0,1,1) forwards; }
+.card-death-particle {
+  position: absolute; width: 4px; height: 4px; border-radius: 50%;
+  animation: card-death-particles 0.7s ease-out forwards;
+  pointer-events: none;
+}
+
+/* ─── CX.1: Rarity aura in-battle (enhanced) ─────────────────────────────── */
+@keyframes rare-aura-pulse {
+  0%,100% { box-shadow: 0 0 12px rgba(74,158,255,0.4),  inset 0 0 8px rgba(74,158,255,0.1); }
+  50%     { box-shadow: 0 0 24px rgba(74,158,255,0.7),  inset 0 0 16px rgba(74,158,255,0.2); }
+}
+@keyframes epic-aura-pulse {
+  0%,100% { box-shadow: 0 0 16px rgba(168,85,247,0.5),  inset 0 0 10px rgba(168,85,247,0.15); }
+  50%     { box-shadow: 0 0 32px rgba(168,85,247,0.8),  inset 0 0 20px rgba(168,85,247,0.25); }
+}
+@keyframes legendary-aura-pulse {
+  0%,100% { box-shadow: 0 0 20px rgba(232,184,75,0.6),  0 0 40px rgba(232,184,75,0.3),  inset 0 0 14px rgba(232,184,75,0.2); }
+  50%     { box-shadow: 0 0 40px rgba(232,184,75,0.9),  0 0 80px rgba(232,184,75,0.5),  inset 0 0 28px rgba(232,184,75,0.35); }
+}
+@keyframes mythic-aura-pulse {
+  0%   { box-shadow: 0 0 24px rgba(255,70,70,0.6),  0 0 60px rgba(168,85,247,0.4); }
+  33%  { box-shadow: 0 0 32px rgba(232,184,75,0.7), 0 0 72px rgba(255,70,70,0.5); }
+  66%  { box-shadow: 0 0 28px rgba(74,158,255,0.6), 0 0 64px rgba(232,184,75,0.4); }
+  100% { box-shadow: 0 0 24px rgba(255,70,70,0.6),  0 0 60px rgba(168,85,247,0.4); }
+}
+.card-aura-rare      { animation: rare-aura-pulse      2.5s ease-in-out infinite; }
+.card-aura-epic      { animation: epic-aura-pulse      2s ease-in-out infinite; }
+.card-aura-legendary { animation: legendary-aura-pulse 1.8s ease-in-out infinite; }
+.card-aura-mythic    { animation: mythic-aura-pulse    2.2s ease-in-out infinite; }
+
+/* ─── CX.2: Card Flip Reveal on battle entry ──────────────────────────────── */
+@keyframes card-flip-reveal {
+  0%   { transform: perspective(600px) rotateY(90deg) scale(0.8); opacity: 0; }
+  40%  { transform: perspective(600px) rotateY(-12deg) scale(1.05); opacity: 1; }
+  65%  { transform: perspective(600px) rotateY(5deg) scale(0.99); }
+  85%  { transform: perspective(600px) rotateY(-3deg) scale(1.01); }
+  100% { transform: perspective(600px) rotateY(0deg) scale(1); opacity: 1; }
+}
+.card-flip-reveal { animation: card-flip-reveal 0.6s cubic-bezier(0.22,1,0.36,1) both; }
+
+/* ─── BA.0: Dynamic animated board elements ───────────────────────────────── */
+@keyframes hex-tile-pulse {
+  0%,100% { opacity: 0.06; transform: scale(1); }
+  50%     { opacity: 0.14; transform: scale(1.04); }
+}
+@keyframes zone-separator-slide {
+  0%   { background-position: 0% 50%; }
+  100% { background-position: 200% 50%; }
+}
+@keyframes arena-fog-drift {
+  0%   { transform: translateX(0%) scaleY(1); opacity: 0.12; }
+  50%  { transform: translateX(-12%) scaleY(1.08); opacity: 0.2; }
+  100% { transform: translateX(0%) scaleY(1); opacity: 0.12; }
+}
+@keyframes arena-lightning-strike {
+  0%,90%,100% { opacity: 0; }
+  92%          { opacity: 0.7; }
+  94%          { opacity: 0; }
+  96%          { opacity: 0.4; }
+  98%          { opacity: 0; }
+}
+@keyframes board-grid-breathe {
+  0%,100% { opacity: 0.04; }
+  50%     { opacity: 0.09; }
+}
+.arena-hex-tile      { animation: hex-tile-pulse 3s ease-in-out infinite; }
+.arena-fog-layer     { animation: arena-fog-drift 8s ease-in-out infinite; }
+.arena-lightning     { animation: arena-lightning-strike 6s ease-in-out infinite; }
+.board-grid          { animation: board-grid-breathe 4s ease-in-out infinite; }
+.zone-separator-animated {
+  background: linear-gradient(90deg,transparent,currentColor,transparent);
+  background-size: 200% 100%;
+  animation: zone-separator-slide 2s linear infinite;
+}
+
+/* ─── BA.1: Dynamic particles tied to keywords ────────────────────────────── */
+@keyframes kw-particle-float {
+  0%   { opacity: 0.8; transform: translateY(0) scale(1) rotate(0deg); }
+  100% { opacity: 0;   transform: translateY(-60px) scale(0.2) rotate(180deg); }
+}
+@keyframes poison-drip-fall {
+  0%   { opacity: 0.9; transform: translateY(0) scale(1); }
+  100% { opacity: 0;   transform: translateY(48px) scale(0.4); }
+}
+@keyframes fire-ember-rise {
+  0%   { opacity: 0.85; transform: translateY(0) scale(1) rotate(0deg); }
+  60%  { opacity: 0.5; }
+  100% { opacity: 0;   transform: translateY(-80px) scale(0.15) rotate(270deg); }
+}
+.kw-particle   { animation: kw-particle-float  var(--dur,1.2s) ease-out forwards; }
+.poison-drip   { animation: poison-drip-fall   var(--dur,0.9s) ease-in  forwards; }
+.fire-ember    { animation: fire-ember-rise    var(--dur,1.4s) ease-out forwards; }
+
+/* ─── GL.0: Win Streak animations ────────────────────────────────────────────── */
+@keyframes streak-fire-glow {
+  0%,100% { filter: drop-shadow(0 0 8px #ff6b35) drop-shadow(0 0 16px #e8b84b); }
+  50%     { filter: drop-shadow(0 0 16px #ff3300) drop-shadow(0 0 32px #ff6b35); }
+}
+@keyframes streak-counter-pop {
+  0%   { transform: scale(1); }
+  30%  { transform: scale(1.4); }
+  60%  { transform: scale(0.92); }
+  100% { transform: scale(1); }
+}
+@keyframes streak-record-burst {
+  0%   { opacity: 0; transform: scale(0.4); }
+  40%  { opacity: 1; transform: scale(1.2); }
+  100% { opacity: 1; transform: scale(1); }
+}
+.streak-fire      { animation: streak-fire-glow    1.2s ease-in-out infinite; }
+.streak-counter   { animation: streak-counter-pop  0.5s cubic-bezier(0.22,1,0.36,1); }
+.streak-record    { animation: streak-record-burst 0.6s cubic-bezier(0.22,1,0.36,1) both; }
+
+/* ─── Formation Engine UI animations ─────────────────────────────────────────── */
+@keyframes formation-slot-activate {
+  0%   { transform: scale(0.95); opacity: 0.7; }
+  50%  { transform: scale(1.04); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+}
+@keyframes champion-crown-pulse {
+  0%,100% { filter: drop-shadow(0 0 8px #e8b84b) drop-shadow(0 0 20px #e8b84b88); }
+  50%     { filter: drop-shadow(0 0 20px #e8b84b) drop-shadow(0 0 48px #e8b84baa); }
+}
+@keyframes champion-death-impact {
+  0%   { transform: scale(1); filter: brightness(1); }
+  10%  { transform: scale(1.3); filter: brightness(3) saturate(0); }
+  30%  { transform: scale(0.9); filter: brightness(0.5) sepia(1); }
+  60%  { transform: scale(0.7) rotate(-5deg); filter: brightness(0.3) grayscale(1); }
+  100% { transform: scale(0) rotate(-15deg); opacity: 0; filter: grayscale(1) blur(8px); }
+}
+@keyframes vanguard-guard-shield {
+  0%   { box-shadow: 0 0 0 0 rgba(74,158,255,0.7); }
+  70%  { box-shadow: 0 0 0 16px rgba(74,158,255,0); }
+  100% { box-shadow: 0 0 0 0 rgba(74,158,255,0); }
+}
+.formation-slot-active  { animation: formation-slot-activate 0.3s cubic-bezier(0.22,1,0.36,1) both; }
+.champion-crown-pulse   { animation: champion-crown-pulse    2s ease-in-out infinite; }
+.champion-death-impact  { animation: champion-death-impact   1.2s cubic-bezier(0.4,0,1,1) forwards; }
+.vanguard-guard-pulse   { animation: vanguard-guard-shield   1.4s ease-out infinite; }
+
+/* ─── Result Banner additions (GL.1 Revenge) ─────────────────────────────────── */
+@keyframes result-revenge-glow {
+  0%,100% { box-shadow: 0 4px 16px rgba(168,85,247,0.3); }
+  50%     { box-shadow: 0 4px 32px rgba(168,85,247,0.6), 0 0 48px rgba(168,85,247,0.3); }
+}
+.result-revenge-btn { animation: result-revenge-glow 1.8s ease-in-out infinite; }
+
+/* ─── TU.1: Tutorial visual enhancements ─────────────────────────────────────── */
+@keyframes tutorial-hint-bounce {
+  0%,100% { transform: translateY(0); }
+  50%     { transform: translateY(-6px); }
+}
+@keyframes tutorial-arrow-pulse {
+  0%,100% { opacity: 0.6; transform: scale(1); }
+  50%     { opacity: 1;   transform: scale(1.15); }
+}
+@keyframes tutorial-highlight-ring {
+  0%   { box-shadow: 0 0 0 0 rgba(232,184,75,0.8); }
+  70%  { box-shadow: 0 0 0 12px rgba(232,184,75,0); }
+  100% { box-shadow: 0 0 0 0 rgba(232,184,75,0); }
+}
+.tutorial-hint-bounce   { animation: tutorial-hint-bounce    1.4s ease-in-out infinite; }
+.tutorial-arrow-pulse   { animation: tutorial-arrow-pulse    1s ease-in-out infinite; }
+.tutorial-highlight-ring { animation: tutorial-highlight-ring 1.5s ease-out infinite; }
+
+/* ─── ForgeFormationBoard-specific ───────────────────────────────────────────── */
+@keyframes formation-enter-board {
+  from { opacity: 0; transform: perspective(800px) rotateX(12deg) translateY(32px); }
+  to   { opacity: 1; transform: perspective(800px) rotateX(0deg) translateY(0); }
+}
+@keyframes champion-protect-flash {
+  0%   { background: rgba(232,184,75,0); }
+  30%  { background: rgba(232,184,75,0.18); }
+  100% { background: rgba(232,184,75,0); }
+}
+@keyframes reserve-card-draw {
+  from { opacity: 0; transform: translateY(24px) scale(0.85) rotate(-4deg); }
+  to   { opacity: 1; transform: translateY(0) scale(1) rotate(0deg); }
+}
+.formation-board-enter  { animation: formation-enter-board   0.5s cubic-bezier(0.22,1,0.36,1) both; }
+.champion-protect-flash { animation: champion-protect-flash  0.6s ease both; }
+.reserve-card-draw      { animation: reserve-card-draw       0.35s cubic-bezier(0.22,1,0.36,1) both; }
+
+/* ─── Responsive adjustments (480px) ─────────────────────────────────────────── */
+@media (max-width: 480px) {
+  .holo-legendary, .holo-mythic { animation-duration: 1.8s, 1.5s; }
+  .card-aura-mythic { animation-duration: 3s; }
+  .formation-slot-active { animation-duration: 0.2s; }
+}

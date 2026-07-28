@@ -443,9 +443,9 @@ function AttackButton({ phase, onAdvance, onAutoPlay, onStop, isAutoOn, totalTur
   );
 }
 
-// ─── Result Banner épico ────────────────────────────────────────────────────────
-function ResultBanner({ won, eloChange, onDismiss }: {
-  won: boolean; eloChange: number; onDismiss: () => void;
+// ─── Result Banner épico — GL.1: Revenge/Rematch button ─────────────────────────
+function ResultBanner({ won, eloChange, onDismiss, onPlayAgain }: {
+  won: boolean; eloChange: number; onDismiss: () => void; onPlayAgain?: () => void;
 }) {
   const [showElo, setShowElo] = useState(false);
   const [eloVal, setEloVal] = useState(0);
@@ -513,24 +513,49 @@ function ResultBanner({ won, eloChange, onDismiss }: {
           {eloChange > 0 ? '+' : ''}{eloVal} MMR
         </div>
       )}
-      <button onClick={onDismiss} style={{
-        marginTop: 8, padding: '13px 36px', borderRadius: 12,
-        background: won
-          ? 'linear-gradient(135deg,#e8b84b,#c9901f)'
-          : 'linear-gradient(135deg,#c0392b,#8e1a0e)',
-        border: 'none',
-        color: won ? '#0a0a12' : '#fff',
-        fontFamily: '"Cinzel",serif', fontWeight: 800, fontSize: 14,
-        cursor: 'pointer', letterSpacing: '0.1em',
-        boxShadow: `0 6px 24px ${glow}, 0 2px 8px rgba(0,0,0,0.6)`,
-        transition: 'all 0.2s ease',
-        animation: 'result-btn-appear 0.4s 0.4s ease both',
-        opacity: 0,
-      }}
-      onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.transform = 'translateY(-2px) scale(1.03)'; }}
-      onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.transform = 'none'; }}>
-        {won ? '⚔ Continuar' : '↩ Reintentar'}
-      </button>
+      {/* GL.1 — Revenge / Rematch button */}
+      <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', justifyContent: 'center', marginTop: 8 }}>
+        {onPlayAgain && (
+          <button onClick={onPlayAgain} style={{
+            padding: '13px 28px', borderRadius: 12,
+            background: won
+              ? 'linear-gradient(135deg,#2a7a4a,#1a5a32)'
+              : 'linear-gradient(135deg,#8b1a8b,#5a0e5a)',
+            border: `1px solid ${won ? 'rgba(61,220,132,0.4)' : 'rgba(168,85,247,0.4)'}`,
+            color: '#fff',
+            fontFamily: '"Cinzel",serif', fontWeight: 800, fontSize: 13,
+            cursor: 'pointer', letterSpacing: '0.08em',
+            boxShadow: won
+              ? '0 4px 18px rgba(61,220,132,0.3)'
+              : '0 4px 18px rgba(168,85,247,0.3)',
+            transition: 'all 0.2s ease',
+            animation: 'result-btn-appear 0.4s 0.35s ease both',
+            opacity: 0,
+          }}
+          onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.transform = 'translateY(-2px) scale(1.03)'; }}
+          onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.transform = 'none'; }}>
+            {won ? '🔥 Revancha' : '⚔ Revancha'}
+          </button>
+        )}
+        <button onClick={onDismiss} style={{
+          padding: '13px 36px', borderRadius: 12,
+          background: won
+            ? 'linear-gradient(135deg,#e8b84b,#c9901f)'
+            : 'linear-gradient(135deg,#c0392b,#8e1a0e)',
+          border: 'none',
+          color: won ? '#0a0a12' : '#fff',
+          fontFamily: '"Cinzel",serif', fontWeight: 800, fontSize: 14,
+          cursor: 'pointer', letterSpacing: '0.1em',
+          boxShadow: `0 6px 24px ${glow}, 0 2px 8px rgba(0,0,0,0.6)`,
+          transition: 'all 0.2s ease',
+          animation: 'result-btn-appear 0.4s 0.4s ease both',
+          opacity: 0,
+        }}
+        onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.transform = 'translateY(-2px) scale(1.03)'; }}
+        onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.transform = 'none'; }}>
+          {won ? '⚔ Continuar' : '↩ Salir'}
+        </button>
+      </div>
     </div>
   );
 }
@@ -564,10 +589,11 @@ export interface InteractiveBattleBoardProps {
   playerName?: string;
   opponentName?: string;
   onDismiss: () => void;
+  onPlayAgain?: () => void;   // GL.1 — Revenge/Rematch callback
 }
 
 export function InteractiveBattleBoard({
-  result, playerName = 'Tú', opponentName = 'Rival', onDismiss,
+  result, playerName = 'Tú', opponentName = 'Rival', onDismiss, onPlayAgain,
 }: InteractiveBattleBoardProps) {
   const [state, actions] = useBattleStateMachine(result);
   const [beamVisible, setBeamVisible] = useState(false);
@@ -1164,6 +1190,7 @@ export function InteractiveBattleBoard({
             won={state.won}
             eloChange={state.eloChange}
             onDismiss={onDismiss}
+            onPlayAgain={onPlayAgain}
           />
         )}
       </div>

@@ -1,222 +1,93 @@
-# VEXFORGE — CONTINUITY (Chat 99 — 2026-07-27 — FASE 2 BATCH 2 COMPLETE)
+# VEXFORGE — CONTINUITY LOG
+## Chat 103 — 2026-07-28 — Phase 2 Tier-1 Visual + Forge Formation Engine
 
-## Estado: Épicas A+B+C+D+E+F+G+H+I+P+Q+R+T.2-T.7+U.1+U.2+V.1+W.1+W.2+X.1+X.2+X.3+Y.1+IA.0+IA.2+TU.0+TU.1+VX.0+VX.1+Z1+CHAT98+CHAT99 completas
-
----
-
-## CHAT 99 — TRABAJO COMPLETADO
-
-| Bloque | Descripción | Estado |
-|--------|-------------|--------|
-| FASE 2 | PvpRoute: rune-orbit divs moved outside scanning-bars map (JSX syntax fix) | ✅ |
-| FASE 2 | PvpRoute: mmk-rune-orbit-0/1/2 CSS keyframes + 3 orbiting faction rune divs | ✅ |
-| FASE 2 | SeasonPassRoute: `season-tier-active-v2` className on active TierCard | ✅ |
-| FASE 2 | DeckBuilderRoute: `card-mythic-aura` / `card-legendary-aura` on MiniCard | ✅ |
-| FASE 2 | PackOpenSequence: `card-deal-N` stagger className on reveal grid cards | ✅ |
-| BUILD | tsc --noEmit: 0 errores | ✅ |
-| BUILD | npm run build: 65 files, ✓ built in 2.42s | ✅ |
-| GIT | commit 97a9a3b pushed to origin/main | ✅ |
+### Build State
+- ✅ 0 TypeScript errors  
+- ✅ 65 chunks, 2.85s build  
+- ✅ Pushed to `github.com/grandmaster68081-byte/Vexforge-web.git` main  
 
 ---
 
-## CHAT 98 — TRABAJO COMPLETADO
+## Features Implemented This Session
 
-| Bloque | Descripción | Estado |
-|--------|-------------|--------|
-| FASE 1 | TypeScript: 0 errores verificado con tsc --noEmit | ✅ |
-| FASE 1 | Build: 230 módulos, sin warnings — ✓ built in 2.46s | ✅ |
-| FASE 1 | Supabase conectado: .env verificado, keys RLS-protected | ✅ |
-| FASE 1 | SPA routing: _redirects /* /index.html 200 correcto | ✅ |
-| FASE 1 | Secrets configurados: SUPABASE_PAT + GITHUB_PAT | ✅ |
-| FASE 2 | styles.css +~300 líneas: animaciones cinematicas completas | ✅ |
-| FASE 2 | audioEngine.ts: 10 nuevos métodos SFX especiales | ✅ |
-| FASE 2 | PackOpenSequence: audio por rareza + flash Legendary/Mythic | ✅ |
-| FASE 2 | HomeRoute: useCountUp hook + LiveStatsSection animada | ✅ |
-| FASE 2 | HomeRoute: faction badges flotantes en hero (4 facciones) | ✅ |
-| FASE 2 | dist/ rebuild completo para Cloudflare Pages | ✅ |
-| FASE 2 | Push a origin/main — commit 26e5a37 | ✅ |
+### NEW: Forge Formation Engine (`src/lib/forgeFormation.ts`)
+- `FormationState`: Vanguard + Champion + Sentinel + Reserve structure
+- `buildFormation(units, selection)` — assembles formation + Champion deck bonus
+- `computeChampionBonus(reserve)` — scales Champion power with reserve size
+- `isChampionProtected(formation)` — Champion protection rule
+- `getNextReserveUnit(reserve, slot)` — smart reserve activation
+- `simulateFormationBattle(formation, difficulty)` — wraps existing AI engine
+- `AI_FORMATIONS` — preset formations per difficulty
 
----
+### NEW: FormationSelector.tsx (`src/components/battle/FormationSelector.tsx`)
+- Full pre-battle formation selection UI
+- 3-slot tab UI: Vanguard / Champion / Sentinel
+- Champion deck bonus display (ATK/DEF/HP boost preview)
+- Auto-advance slot on card selection
+- 740+ lines, fully styled tier-1 cinematic
 
-## CORRECCIONES APLICADAS — CHAT 98
+### NEW: KeywordActivationFX.tsx (`src/components/battle/KeywordActivationFX.tsx`)
+- VX.1 keyword activation animations
+- 15+ keyword types: Guard, Drain, Surge, Rush, Veil, Forge, Poison, DoubleStrike, etc.
+- `useKeywordFX()` hook — driven by BattleEvent array
+- `KeywordActivationFX` overlay component with per-keyword animations
 
-### FASE 1 — VERIFICACIÓN DE ESTABILIDAD
-- **TypeScript**: 0 errores — codebase 100% limpio (verificado con tsc --noEmit)
-- **Build**: Limpio, 230 módulos, 2.46s, 0 warnings
-- **Supabase**: URL y anon key en .env verificados, RLS-protected (seguro en bundle público)
-- **SPA routing**: `_redirects` con `/* /index.html 200` correcto para Cloudflare Pages
-- **PWA**: manifest.json, robots.txt, _headers correctos y en sync
-- **Secretos**: SUPABASE_PAT y GITHUB_PAT configurados en Replit para futuros agentes
+### NEW: WinStreakDisplay.tsx (`src/components/battle/WinStreakDisplay.tsx`)  
+- GL.0 win streak tracking with localStorage persistence
+- `useWinStreak()` hook — onWin / onLoss callbacks + best streak
+- `WinStreakBadge` — spark/blaze/inferno tier visual with fire flicker
+- `StreakPanel` — lobby display of current + best streak
 
-### FASE 2 — MEJORAS VISUALES Y AUDIO
+### UPDATED: InteractiveBattleBoard.tsx
+- GL.1 — Added `onPlayAgain?: () => void` prop to `InteractiveBattleBoardProps`
+- ResultBanner now shows Revenge/Rematch button alongside Continue/Exit
+- Both buttons styled per win/loss state with appropriate colors + animations
 
-#### styles.css (+~300 líneas)
-Nuevas animaciones y clases:
-- `@keyframes screen-shake-xs` → `.screen-shake` — para reveals Míticos
-- `@keyframes lightning-flash` + `.lightning-overlay` / `.lightning-overlay-mythic`
-- `@keyframes mythic-pulse-aura` → `.card-mythic-aura` (breathing red glow)
-- `@keyframes legendary-pulse-aura` → `.card-legendary-aura` (breathing gold glow)
-- `@keyframes counter-reveal` → `.live-stat-value` — números animados
-- `@keyframes hero-depth-float` + `.vex-rune-ring-1/2/3` mejorados con glow
-- `.hero-faction-badge` — badges flotantes para hero section
-- `@keyframes page-enter-slide` → `.page-transition-enter` mejorado (blur+slide)
-- `@keyframes pack-legendary-screen-flash` → `.pack-flash-legendary`
-- `@keyframes pack-mythic-screen-flash` → `.pack-flash-mythic`
-- `.victory-bg-rays` — rayos cónicos animados para victory screen
-- `@keyframes card-stagger-in` → `.card-draw-stagger`
-- `.energy-bar-full` — pulsación dorada para barra de energía llena
-- `.achievement-unlock-icon` — burst animation para logros
-- `.leaderboard-row-animate` — entrada slide-in para filas ranking
-- `.mission-complete-badge` — pop animation para completar misiones
-- `.clan-war-active` — ping animation para guerras de clanes
-- `.forge-nav-link.active` — glow + underline para nav activa
-- `.boss-hp-bar` — pulsación violeta para HP de bosses
-- `.season-tier-active` — shimmer dorado para tier activo
-- `.combo-chain-badge` — pop animation para combos
-- `.deck-drop-zone-active` — pulsación azul para drag & drop
-- `.divider-animated` — línea divisora con luz viajera
-- Touch feedback para móvil (`.btn-primary:active`, `.feature-card:active`)
-- Breakpoints extra: 380px y 640px polish móvil
+### UPDATED: PvpRoute.tsx  
+- GL.0 — `useWinStreak()` wired, `onWin()/onLoss()` called on all battle outcomes
+- GL.1 — `onPlayAgain` callback wired to repeat last battle vs same opponent
+- `StreakPanel` shown in PvP lobby above DailyChallengeCard
+- `WinStreakBadge` shown in daily challenge result header
+- Import: `useWinStreak`, `WinStreakBadge`, `StreakPanel`
 
-#### audioEngine.ts (10 nuevos métodos SFX)
-- `sfxLegendaryReveal()` — arpeggio dorado ascendente (Do-Mi-Sol-Do') + acorde final
-- `sfxMythicReveal()` — bajo profundo + trueno + siren sweep + stabs caóticos
-- `sfxLevelUp()` — escala completa ascendente + fanfare 4 voces
-- `sfxCraftSuccess()` — martillo + arpeggio + shimmer
-- `sfxScreenTransition()` — whoosh descendente rápido (600→200Hz)
-- `sfxBossEncounter()` — sting dramático bass + growl
-- `sfxQuestComplete()` — acorde ascendente jubiloso
-- `sfxPackLegendaryOpen()` — sweep + sfxLegendaryReveal() delayed
-- `sfxComboChain(count)` — escalating tones por nivel de combo
-- `sfxRarityReveal(rarity)` — dispatcher: Mythic→sfxMythicReveal, Legendary→sfxLegendaryReveal, Epic/Rare→arpegio suave, Common→tone básico
-
-#### PackOpenSequence.tsx
-- Import `AudioEngine` (faltaba, era un gap silencioso)
-- `flipCard()`: llama `sfxRarityReveal(rarity)` al voltear cada carta
-  - Mythic/Legendary: reveal dramático + confetti (sin cambios en lógica)
-  - Rare/Epic: reveal suave
-  - Common/Uncommon: `sfxCardSelect()` ligero
-- Flash screen Legendary: doble overlay (radial + `.pack-flash-legendary` CSS class)
-- Flash screen Mythic: doble overlay (radial + `.pack-flash-mythic` CSS class)
-
-#### HomeRoute.tsx
-- Hook `useCountUp(target, duration, active)` — anima número 0→target con easing cubic
-- Componente `StatCard` — card con contador animado, delay escalonado, glow
-- Componente `LiveStatsSection` — usa 4 StatCard con delays 0/0.07/0.14/0.21s
-- Faction badges flotantes en hero: ⚔️🔮🛡️🗡️ con glow por facción, animación float
-  - Guerrero (rojo), Mago (azul), Paladín (dorado), Pícaro (verde)
-  - Posición absoluta en hero, CSS custom props `--dur`, `--delay`, `--glow`
+### UPDATED: styles.css (+275 lines, now 8346 total)
+- CX.0 Holographic shimmer v2: per-rarity intensity (Common → Mythic)
+  - `.holo-common`, `.holo-rare`, `.holo-epic`, `.holo-legendary`, `.holo-mythic`
+- VX.2 Card death v2: `card-death-v2` + `card-death-particles`
+- CX.1 Rarity aura in-battle (enhanced): `.card-aura-rare/epic/legendary/mythic`
+- CX.2 Card flip reveal: `.card-flip-reveal`
+- BA.0 Animated board elements: hex tiles, fog, lightning, grid breathe
+- BA.1 Dynamic keyword particles: kw-particle, poison-drip, fire-ember
+- GL.0 Win streak CSS: streak-fire, streak-counter, streak-record
+- Formation Engine UI: slot-activate, champion-crown-pulse, champion-death-impact, vanguard-guard-pulse, formation-enter-board, reserve-card-draw
+- GL.1 Result Banner: result-revenge-glow
+- TU.1 Tutorial: hint-bounce, arrow-pulse, highlight-ring
 
 ---
 
-## ESTADO TÉCNICO POST-CHAT 98
+## Outstanding TODOs (carry to Chat 104)
 
-### Frontend canonical files: 175 (+4 nuevos: stat hooks en HomeRoute)
-### Chat: 98 | Build: limpio | TypeScript: 0 errores | Supabase: OK
-### Git commit: 26e5a37 en origin/main
+| ID   | Priority | Status   | Description |
+|------|----------|----------|-------------|
+| VX.3 | ALTA     | Pending  | HP Segmentation bar + turn indicator segments |
+| TU.1 | ALTA     | Partial  | Tutorial Visual Overhaul (CSS done; component wiring pending) |
+| TU.2 | MEDIA    | Pending  | Contextual hint system (localStorage first-visit per route) |
+| CX.2 | MEDIA    | CSS only | Card flip reveal — needs wiring in battle entry |
+| BA.0 | MEDIA    | CSS only | Animated board elements — need wiring in InteractiveBattleBoard |
+| BA.1 | MEDIA    | CSS only | Dynamic keyword particles — need wiring via useKeywordFX |
+| FFE  | ALTA     | Partial  | ForgeFormationBoard.tsx — visual 3-slot battle board (component exists as lib + FormationSelector only; actual battle board with formation layout pending) |
 
-### Épicas completas: A B C D E F G H I P Q R T(2-7) U1 U2 V1 W1 W2 X1 X2 X3 Y1 IA.0 IA.2 TU.0 TU.1 VX.0 VX.1 CHAT98
-
----
-
-## ESTADO DEL SISTEMA (VERIFICADO CHAT 98)
-
-- React 18 + Vite 5.4 + TypeScript 5.5 + react-router-dom v6 + @supabase/supabase-js
-- Deploy: Cloudflare Pages via wrangler (npm run build → dist/)
-- Supabase: https://rscuzqnfccqvltkdcdny.supabase.co
-- 34 dominios live en frontend oficial
-- Backend: PostgreSQL (Supabase) con RLS, 10 achievement triggers, RPCs SECURITY DEFINER
-- 127 cartas activas, 8+ jugadores registrados, 515+ batallas totales
-- CSS: ~4700 líneas (Design System v3 World-Class Edition)
-- AudioEngine: v3.0 + Sección API + 10 nuevos SFX de Fase 2
+### Formation Engine Status
+- ✅ `forgeFormation.ts` — complete  
+- ✅ `FormationSelector.tsx` — complete  
+- ⏳ `ForgeFormationBoard.tsx` — not yet created (the actual 3-position battle board with Champion death instant-loss UI)
+- ⏳ `PvpRoute.tsx` formation integration — FormationSelector not yet wired into PvP flow (just created the components)
 
 ---
 
-## PRÓXIMOS PASOS SUGERIDOS
-
-### Contenido / Gameplay
-- Y.2 — Pack opening: revisar animación de apertura para alta rareza con los nuevos SFX
-- IA.3 — AI Deck Builder: sugerir deck óptimo basado en cartas del jugador
-- Tournament mode: brackets PvP con prizes
-
-### Visual / UX (siguientes mejoras)
-- VX.2 — Board visual overhaul: usar `.victory-bg-rays` en BattleResultScreen
-- Aplicar `.card-mythic-aura` / `.card-legendary-aura` en CardsRoute y DeckBuilder
-- Aplicar `.energy-bar-full` en EnergyBar cuando está al 100%
-- Aplicar `.leaderboard-row-animate` en LeaderboardRoute con index delay
-- Aplicar `.mission-complete-badge` en MissionsRoute al completar
-- TU.3 — Tutorial localization: traducir hints al inglés
-
-### SQL Pendiente (bajo impacto)
-- BUG-3: security_invoker en ~18 vistas (no bloquea nada)
-- Ver backend/sql-fixes/BUG3-security-invoker-views.sql
-
----
-
-## DEPLOY
-
-Cloudflare Pages (ya configurado):
-```
-npm install
-npm run build
-wrangler pages deploy dist --project-name=vexforge-web
-```
-
-Live en: https://vexforge-web.pages.dev
-
----
-
-## CHAT 100 — TRABAJO COMPLETADO (FASE 1 + FASE 2 BATCH 3)
-
-| Bloque | Descripción | Estado |
-|--------|-------------|--------|
-| FASE 1 | TypeScript: 0 errores — codebase 100% limpio | ✅ |
-| FASE 1 | Build: limpio, 2.40s, 0 warnings | ✅ |
-| FASE 1 | GitHub PAT + Supabase PAT configurados y verificados | ✅ |
-| FASE 2 | CSS: +506 líneas (6626 total) — tier-1 visual upgrade | ✅ |
-| FASE 2 | AudioEngine: +115 líneas — 7 nuevos SFX (Victory, Defeat, CritHit, Kill, RankUp, StreakFire, HolographicReveal) | ✅ |
-| FASE 2 | BattleResultScreen: computeGrade() A/B/C/S + SFX victoria/derrota | ✅ |
-| FASE 2 | BattleResultScreen: stat-row-animated con delays escalonados | ✅ |
-| FASE 2 | InteractiveBattleBoard: sfxCriticalHit + sfxKillConfirm integrados | ✅ |
-| FASE 2 | InteractiveBattleBoard: faction ambient particles (6 orbs flotantes) | ✅ |
-| FASE 2 | InteractiveBattleBoard: faction color aura sobre arena bg | ✅ |
-| FASE 2 | CardsRoute: card-grid-item stagger animación (27+ clases) | ✅ |
-| FASE 2 | LeaderboardRoute: leaderboard-my-row glow pulse en fila propia | ✅ |
-| FASE 2 | HomeRoute: Particles component mejorado (20 embers + 10 runas + 4 faction icons) | ✅ |
-| GIT | Push a origin/main | ✅ |
-
-### NUEVOS SFX AÑADIDOS (AudioEngine v4.0)
-- `sfxVictory()` — fanfare orquestal: 3 stabs de brass ascendentes + bells + bass boom
-- `sfxDefeat()` — arpeggio descendente menor + drone bajo + ruido profundo
-- `sfxCriticalHit()` — crack agudo + electric sizzle
-- `sfxKillConfirm()` — pop satisfactorio de eliminación enemiga
-- `sfxRankUp()` — scale sweep completa + acorde final épico
-- `sfxStreakFire(count)` — crépito de fuego escalante por nivel de streak
-- `sfxHolographicReveal()` — shimmer ascendente + bell resonante
-
-### NUEVAS CLASES CSS (styles.css 6626 líneas)
-- `.faction-field-aura` — aura respirante por facción en arena
-- `.card-faction-enter-{Guerrero,Mago,Picaro,Paladin}` — entradas por facción
-- `.dmg-float-crit/heal/mythic` — números de daño ultra dramáticos
-- `.screen-edge-flash-red/gold` — flash de borde de pantalla en golpes pesados
-- `.stat-row-animated` — stats animadas con entrada escalonada
-- `.battle-grade-badge` — badge de grado pop animado
-- `.grade-S/A/B/C` — grados con glow por color
-- `.card-grid-item` — entrada escalonada para grid de cartas (nth-child delays)
-- `.card-holo-shine` — efecto holográfico al hover
-- `.card-mythic-border / .card-legendary-border` — bordes animados
-- `.hero-rune-cw / .hero-rune-ccw / .hero-particle` — partículas hero mejoradas
-- `.rank-row-animated` — slide-in para filas de ranking
-- `.pack-flip-3d` — flip 3D mejorado para packs
-- `.achievement-unlock-burst / .achievement-ring` — burst de logro mejorado
-- `.battle-grade-badge` — pop animation para grado de batalla
-- `.leaderboard-my-row` — pulse glow dorado en fila propia
-- `.modal-backdrop / .modal-content` — backdrop blur + scale-in modal
-- `.page-enter-v2 / .page-exit-v2` — transiciones blur+slide mejoradas
-- `.streak-inferno` — animación de fuego para rachas
-- `.clan-war-active-v2 / .clan-war-badge` — guerra clan más dramática
-- `.profile-avatar-ring` — ring rotante en avatar
-- `.evolution-active / .fusion-merge-anim` — efectos de evolución/fusión
-- Scrollbar pro (thin, gradient gold/purple)
-- Variables CSS `--faction-color` para auras dinámicas
-
+## Repo / Env
+- Repo: `github.com/grandmaster68081-byte/Vexforge-web.git` (main)  
+- Build: `npm run build` (vite, ~3s)  
+- Push pattern: build → git add -A → git commit → git push origin main  
+- dist/ committed to repo (Cloudflare reads it)  
+- Service role key: obtain via `$SUPABASE_PAT` → Management API if needed
