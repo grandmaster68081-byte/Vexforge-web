@@ -1,3 +1,4 @@
+import React, { useState } from "react";
 import { useLeaderboard } from "../domains/leaderboard/useLeaderboard";
 import { SkeletonTable } from "../shared/components/Skeleton";
 import { EmptyState } from "../shared/components/EmptyState";
@@ -15,6 +16,19 @@ function getRank(mmr: number): RankTier {
   return           { name: "Bronze",          color: "#cd7f32", icon: "🥉" };
 }
 
+
+const DPS_TIERS = [
+  { label: 'LEYENDA',  min: 2000, color: '#ffd700', icon: '💎' },
+  { label: 'MAESTRO',  min: 1200, color: '#e8b84b', icon: '🔥' },
+  { label: 'FORJADOR', min: 600,  color: '#a855f7', icon: '⚡' },
+  { label: 'APRENDIZ', min: 200,  color: '#4a9eff', icon: '🛡' },
+  { label: 'RECLUTA',  min: 0,    color: '#8b8b9e', icon: '⚔' },
+];
+function getDPSTier(dps: number | null | undefined) {
+  if (!dps) return DPS_TIERS[4];
+  return DPS_TIERS.find(t => dps >= t.min) ?? DPS_TIERS[4];
+}
+const FACTIONS = ['Todas', 'Guerrero', 'Mago', 'Paladín', 'Pícaro'];
 const MEDAL = ["🥇", "🥈", "🥉"];
 const TIER_THRESHOLDS = [
   { name: "Mythic",   min: 3000, color: "#ff4444", icon: "💎" },
@@ -28,6 +42,7 @@ const TIER_THRESHOLDS = [
 
 export function LeaderboardRoute() {
   const { status, data, myPlayerId: myId, reload } = useLeaderboard(100);
+  const [factionFilter, setFactionFilter] = React.useState("Todas");
   const rows   = data ?? [];
   const loading = status === "loading";
   const error   = status === "ready" && !data ? "Error al cargar el clasificatorio" : null;
@@ -55,6 +70,20 @@ export function LeaderboardRoute() {
         ))}
       </div>
 
+
+      {/* Faction filter */}
+      <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginBottom: 16 }}>
+        {FACTIONS.map(f => (
+          <button key={f} onClick={() => setFactionFilter(f)} style={{
+            padding: "5px 14px", borderRadius: 20, cursor: "pointer",
+            border: factionFilter === f ? "1px solid #e8b84b" : "1px solid #2a2a3a",
+            background: factionFilter === f ? "rgba(232,184,75,0.12)" : "transparent",
+            color: factionFilter === f ? "#e8b84b" : "#5a5a7a",
+            fontSize: 10, fontFamily: "Rajdhani,sans-serif", fontWeight: 700,
+            transition: "all 0.15s ease",
+          }}>{f === "Todas" ? "🌐 " : ""}{f}</button>
+        ))}
+      </div>
       {error && <ErrorState message={error} onRetry={reload} />}
       {loading && <SkeletonTable cols={5} rows={7} />}
       {!loading && !error && rows.length === 0 && (
@@ -69,12 +98,13 @@ export function LeaderboardRoute() {
       {!loading && !error && rows.length > 0 && (
         <div style={{ background: "#12121a", border: "1px solid #2a2a3a", borderRadius: 12, overflow: "hidden" }}>
           {/* Column headers */}
-          <div style={{ display: "grid", gridTemplateColumns: "48px 1fr 100px 120px 60px", padding: "8px 16px", borderBottom: "1px solid #1a1a2e" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "48px 1fr 100px 120px 60px 100px", padding: "8px 16px", borderBottom: "1px solid #1a1a2e" }}>
             <div style={{ color: "#5a5a7a", fontSize: 9, fontWeight: 700 }}>#</div>
             <div style={{ color: "#5a5a7a", fontSize: 9, fontWeight: 700 }}>JUGADOR</div>
             <div style={{ color: "#5a5a7a", fontSize: 9, fontWeight: 700, textAlign: "right" }}>MMR</div>
             <div style={{ color: "#5a5a7a", fontSize: 9, fontWeight: 700, textAlign: "center" }}>W / L</div>
             <div style={{ color: "#5a5a7a", fontSize: 9, fontWeight: 700, textAlign: "right" }}>WIN%</div>
+            <div style={{ color: "#5a5a7a", fontSize: 9, fontWeight: 700, textAlign: "center" }}>DPS TIER</div>
           </div>
           {rows.map((row, i) => {
             const tier = getRank(row.mmr);
@@ -83,7 +113,7 @@ export function LeaderboardRoute() {
               <div key={row.player_id}
                 className={`leaderboard-row-animate${isMe ? ' leaderboard-my-row' : ''}`}
                 style={{
-                display: "grid", gridTemplateColumns: "48px 1fr 100px 120px 60px", alignItems: "center",
+                display: "grid", gridTemplateColumns: "48px 1fr 100px 120px 60px 100px", alignItems: "center",
                 padding: "12px 16px", borderBottom: i < rows.length - 1 ? "1px solid #1a1a2e" : "none",
                 background: isMe ? "rgba(61,220,132,0.04)" : i % 2 === 0 ? "transparent" : "#0f0f1a22",
                 animationDelay: `${i * 0.04}s`,
@@ -101,6 +131,22 @@ export function LeaderboardRoute() {
                   <span style={{ color: "#3ddc84" }}>{row.wins}W</span> · <span style={{ color: "#ff6b6b" }}>{row.losses}L</span>
                 </div>
                 <div style={{ color: "#888", fontSize: 11, textAlign: "right" }}>{row.win_rate}%</div>
+                {(() => {
+                  const t = getDPSTier((row as any).avg_dps_score);
+                  return (
+                    <div style={{ textAlign: "center" }}>
+                      <span style={{
+                        fontFamily: "Rajdhani,sans-serif", fontSize: 9, fontWeight: 800,
+                        color: t.color, background: `${t.color}18`, border: `1px solid ${t.color}33`,
+                        borderRadius: 12, padding: "2px 7px", display: "inline-block",
+                        letterSpacing: "0.06em",
+                      }}>{t.icon} {t.label}</span>
+                      {(row as any).champion_card_id && (
+                        <div style={{ fontSize: 8, color: "#5a5a7a", marginTop: 2 }}>👑 Campeón</div>
+                      )}
+                    </div>
+                  );
+                })()}
               </div>
             );
           })}
