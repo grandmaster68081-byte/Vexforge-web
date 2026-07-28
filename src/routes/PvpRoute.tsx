@@ -10,7 +10,7 @@ import { SeasonRewardsPanel } from "../shared/components/SeasonRewardsPanel";
 import { MatchHistoryPanel } from "../shared/components/MatchHistoryPanel";
 import { WeeklyTournamentPanel } from "../shared/components/WeeklyTournamentPanel";
 import { ClanWarsPanel } from "../shared/components/ClanWarsPanel";
-import { loadPlayerBattleUnits, getDailyAIChallenge, hasDailyChallengeAttempted, markDailyChallengeAttempted, hasDailyChallengeBadge, markDailyChallengeBadge, claimDailyAIChallenge, DAILY_CHALLENGE_VEX_REWARD, BATTLE_MODE_META, type BattleMode, type DailyAIChallenge, type AIDifficulty } from "../lib/aiBattleEngine";
+import { loadPlayerBattleUnits, getDailyAIChallenge, hasDailyChallengeAttempted, markDailyChallengeAttempted, hasDailyChallengeBadge, markDailyChallengeBadge, claimDailyAIChallenge, DAILY_CHALLENGE_VEX_REWARD, claimAIBattleReward, AI_BATTLE_VEX_REWARD, AI_BATTLE_DAILY_CAP, BATTLE_MODE_META, type BattleMode, type DailyAIChallenge, type AIDifficulty } from "../lib/aiBattleEngine";
 import { recordSessionBattle } from "../shared/components/SessionSummaryToast";
 import { supabase } from "../lib/supabase";
 import { AudioEngine } from "../lib/audioEngine";
@@ -477,6 +477,9 @@ export function PvpRoute() {
   const pvpOpponentRef                            = useRef<BattleOpponent | null>(null);
   const pvpOpponentNameRef                        = useRef<string>('Oponente');
   const suppressBattleResultRef                   = useRef(false);
+  const aiRewardDifficultyRef                     = useRef<AIDifficulty | null>(null);
+  const [aiVexEarned, setAiVexEarned]             = useState<number | null>(null);
+  const [aiCapReached, setAiCapReached]           = useState(false);
   const myMmrRef                                  = useRef(1000);
 
   // Trigger animated search
@@ -554,6 +557,28 @@ export function PvpRoute() {
       return;
     }
 
+    // ── AI battle mode: recompensas con cap diario anti-farm ──
+    if (aiRewardDifficultyRef.current) {
+      const diff = aiRewardDifficultyRef.current;
+      aiRewardDifficultyRef.current = null;
+      if (won) onWin(); else onLoss();
+      try { recordSessionBattle(won, 0, streak); } catch { /* silent */ }
+      if (won && playerId) {
+        const dateKey = new Date().toISOString().slice(0, 10);
+        try {
+          const reward = await claimAIBattleReward(supabase, playerId, diff, dateKey);
+          if (reward.claimed) {
+            setAiVexEarned(reward.vex_awarded ?? 0);
+            setAiCapReached(false);
+          } else if (reward.reason === 'daily_cap_reached') {
+            setAiCapReached(true);
+            setAiVexEarned(null);
+          }
+        } catch { /* silent */ }
+      }
+      return;
+    }
+
     // ── PvP mode: call battle() for MMR, suppress its result display ──
     if (pvpOpponentRef.current) {
       const oppId = pvpOpponentRef.current.player_id;
@@ -588,8 +613,8 @@ export function PvpRoute() {
     if (!playerId) return;
     try {
       const units = await loadPlayerBattleUnits(supabase, playerId);
-      formationDifficultyRef.current = difficulty;
-      setPracticeMode(true);
+      formationDifficultyRef.current  = difficulty;
+      aiRewardDifficultyRef.current   = difficulty;   // track for anti-farm reward
       setFormationUnits(units);
     } catch { /* silent */ }
   }, [playerId]);
@@ -611,6 +636,34 @@ export function PvpRoute() {
   if (!loading && !playerId) return (
     <BlockedAuthState message="Inicia sesión para competir en el Arena PvP y ganar MMR." />
   );
+
+  // AI reward banner (auto-dismiss handled by key reset on next battle)
+  const AIRewardBanner = aiVexEarned !== null ? (
+    <div style={{
+      position: 'fixed', top: 64, left: '50%', transform: 'translateX(-50%)',
+      zIndex: 999, background: 'linear-gradient(135deg, #14532d 0%, #166534 100%)',
+      border: '1px solid #22c55e', borderRadius: 12, padding: '10px 24px',
+      display: 'flex', alignItems: 'center', gap: 10, boxShadow: '0 4px 24px rgba(34,197,94,0.3)',
+      animation: 'summon-title-in 0.4s cubic-bezier(0.22,1,0.36,1) both',
+    }}>
+      <span style={{ fontSize: 18 }}>⚔️</span>
+      <span style={{ color: '#86efac', fontFamily: 'IBM Plex Mono,monospace', fontWeight: 700, fontSize: 13 }}>
+        VICTORIA · <span style={{ color: '#4ade80' }}>+{aiVexEarned} VEX</span> ganados
+      </span>
+      <button onClick={() => setAiVexEarned(null)} style={{ background: 'none', border: 'none', color: '#86efac', cursor: 'pointer', fontSize: 14, marginLeft: 8 }}>✕</button>
+    </div>
+  ) : aiCapReached ? (
+    <div style={{
+      position: 'fixed', top: 64, left: '50%', transform: 'translateX(-50%)',
+      zIndex: 999, background: 'linear-gradient(135deg, #1c1f2e 0%, #0f1117 100%)',
+      border: '1px solid #f59e0b', borderRadius: 12, padding: '10px 24px',
+      display: 'flex', alignItems: 'center', gap: 10,
+    }}>
+      <span style={{ fontSize: 14 }}>🔒</span>
+      <span style={{ color: '#fbbf24', fontFamily: 'IBM Plex Mono,monospace', fontSize: 12 }}>Cap diario alcanzado · Vuelve mañana</span>
+      <button onClick={() => setAiCapReached(false)} style={{ background: 'none', border: 'none', color: '#fbbf24', cursor: 'pointer', fontSize: 14, marginLeft: 8 }}>✕</button>
+    </div>
+  ) : null;
 
   const season     = seasons[0] ?? null;
   const playerRank = playerId ? (rankings.find(r => r.player_id === playerId) ?? null) : null;
@@ -719,6 +772,7 @@ export function PvpRoute() {
       <WeeklyTournamentPanel />
       <ClanWarsPanel />
 
+      {AIRewardBanner}
       <main style={{ maxWidth: 920, margin: "0 auto", padding: "clamp(20px,5vw,32px) 16px" }}>
         {/* Header */}
         <div style={{ marginBottom: 28 }}>
@@ -762,10 +816,10 @@ export function PvpRoute() {
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(140px,1fr))', gap: 10 }}>
             {([
-              { diff: 'easy'   as AIDifficulty, icon: '🤖',  label: 'Aprendiz',  desc: 'Sin keywords · Ideal para empezar',       color: '#3dc96b', reward: 'Sin límite' },
-              { diff: 'normal' as AIDifficulty, icon: '🛡️', label: 'Forjador',  desc: 'Guard y Lifesteal · Requiere estrategia', color: '#e8b84b', reward: 'Sin límite' },
-              { diff: 'expert' as AIDifficulty, icon: '💀',  label: 'Maestro',   desc: 'Deck completo · IA optimizada',           color: '#a855f7', reward: 'Sin límite' },
-              { diff: 'legend' as AIDifficulty, icon: '💎',  label: 'Leyenda',   desc: 'IA máxima · Sin misericordia',            color: '#ffd700', reward: 'Sin límite' },
+              { diff: 'easy'   as AIDifficulty, icon: '🤖',  label: 'Aprendiz',  desc: 'Sin keywords · Ideal para empezar',       color: '#3dc96b', reward: `+${AI_BATTLE_VEX_REWARD.easy} VEX · ${AI_BATTLE_DAILY_CAP.easy}/día` },
+              { diff: 'normal' as AIDifficulty, icon: '🛡️', label: 'Forjador',  desc: 'Guard y Lifesteal · Requiere estrategia', color: '#e8b84b', reward: `+${AI_BATTLE_VEX_REWARD.normal} VEX · ${AI_BATTLE_DAILY_CAP.normal}/día` },
+              { diff: 'expert' as AIDifficulty, icon: '💀',  label: 'Maestro',   desc: 'Deck completo · IA optimizada',           color: '#a855f7', reward: `+${AI_BATTLE_VEX_REWARD.expert} VEX · ${AI_BATTLE_DAILY_CAP.expert}/día` },
+              { diff: 'legend' as AIDifficulty, icon: '💎',  label: 'Leyenda',   desc: 'IA máxima · Sin misericordia',            color: '#ffd700', reward: `+${AI_BATTLE_VEX_REWARD.legend} VEX · ${AI_BATTLE_DAILY_CAP.legend}/día` },
             ]).map(({ diff, icon, label, desc, color, reward }) => (
               <button
                 key={diff}
