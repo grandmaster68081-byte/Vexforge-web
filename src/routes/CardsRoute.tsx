@@ -471,7 +471,7 @@ export function CardsRoute() {
             <p style={{ color: "#8888aa", fontSize: 13, margin: 0, fontFamily: "Rajdhani,sans-serif" }}>
               {isAuth
                 ? `Colección: ${ownedCount}/${totalCatalog} · ${completionPct}% completado`
-                : `${totalCatalog} cartas disponibles · Inicia sesión para ver tu colección`}
+                : `${filtered.length} cartas disponibles · Inicia sesión para ver tu colección`}
             </p>
             {isAuth && totalCatalog > 0 && (
               <div style={{ display: "flex", alignItems: "center", gap: 8, flex: "1 1 200px", maxWidth: 280 }}>

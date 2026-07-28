@@ -139,7 +139,7 @@ function FormationUnitCard({
 
   const rar   = ascensionActive && isChampion ? '#ffd700' : (RARITY_COLOR[unit.rarity] ?? '#8b8b9e');
   const rglow = ascensionActive && isChampion ? 'rgba(255,215,0,0.6)' : (RARITY_GLOW[unit.rarity] ?? 'rgba(139,139,158,0.3)');
-  const pct   = unit.max_hp > 0 ? unit.hp / unit.max_hp : 0;
+  const _pct  = unit.max_hp > 0 ? unit.hp / unit.max_hp : 0; void _pct;
 
   return (
     <div

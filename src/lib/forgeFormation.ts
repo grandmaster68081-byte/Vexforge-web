@@ -192,5 +192,6 @@ export const AI_FORMATIONS: Record<AIDifficulty, FormationSelection> = {
   easy:     { championIdx: 0, vanguardIdx: 1, sentinelIdx: 2 },
   normal:   { championIdx: 1, vanguardIdx: 0, sentinelIdx: 2 },
   expert:   { championIdx: 2, vanguardIdx: 0, sentinelIdx: 1 },
+  legend:   { championIdx: 2, vanguardIdx: 1, sentinelIdx: 0 },
   tutorial: { championIdx: 0, vanguardIdx: 1, sentinelIdx: null },
 };

@@ -371,7 +371,7 @@ export function FormationSelector({ playerUnits, onConfirm, onCancel }: Formatio
             selection.champion === idx ? 'champion' :
             selection.vanguard  === idx ? 'vanguard' :
             selection.sentinel  === idx ? 'sentinel' : null;
-          const isUsed = usedIdxs.has(idx) && slot !== activeSlot && selection[activeSlot] !== idx;
+          const _isUsed = usedIdxs.has(idx) && slot !== activeSlot && selection[activeSlot] !== idx; void _isUsed;
 
           return (
             <UnitMiniCard

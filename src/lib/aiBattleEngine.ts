@@ -42,7 +42,7 @@ export interface DailyAIChallenge { dateKey: string; seed: number; title: string
 
 // IA.2: VEX rewards (must match RPC values in claim_daily_ai_challenge)
 export const DAILY_CHALLENGE_VEX_REWARD: Record<AIDifficulty, number> = {
-  easy: 50, normal: 100, expert: 200, tutorial: 0,
+  easy: 50, normal: 100, expert: 200, legend: 500, tutorial: 0,
 };
 function dailyHash(value: string): number { let hash = 2166136261; for (let i = 0; i < value.length; i++) { hash ^= value.charCodeAt(i); hash = Math.imul(hash, 16777619); } return hash >>> 0; }
 export function getDailyAIChallenge(date = new Date()): DailyAIChallenge {

@@ -71,7 +71,7 @@ function getRankTier(mmr:number) {
 
 const RUNE_SYMS = ["✦","◈","⬡","✧","◆","⊕","★","⟐"];
 const FACTION_COLORS = ["#e84040","#7b4fd4","#3dc96b","#e8b84b"];
-const FACTION_ICONS_HERO = ["⚔️","🔮","🗡️","🛡️"];
+// const FACTION_ICONS_HERO = ["⚔️","🔮","🗡️","🛡️"]; // reserved for future use
 
 // AI-generated faction emblems (transparent PNG, public/factions/)
 const FACTION_EMBLEMS: Record<string, string> = {

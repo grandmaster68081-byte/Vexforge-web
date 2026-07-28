@@ -10,7 +10,7 @@ import { SeasonRewardsPanel } from "../shared/components/SeasonRewardsPanel";
 import { MatchHistoryPanel } from "../shared/components/MatchHistoryPanel";
 import { WeeklyTournamentPanel } from "../shared/components/WeeklyTournamentPanel";
 import { ClanWarsPanel } from "../shared/components/ClanWarsPanel";
-import { simulateAIBattle, loadPlayerBattleUnits, getDailyAIChallenge, hasDailyChallengeAttempted, markDailyChallengeAttempted, hasDailyChallengeBadge, markDailyChallengeBadge, claimDailyAIChallenge, DAILY_CHALLENGE_VEX_REWARD, BATTLE_MODE_META, type BattleMode, type DailyAIChallenge, type AIDifficulty } from "../lib/aiBattleEngine";
+import { loadPlayerBattleUnits, getDailyAIChallenge, hasDailyChallengeAttempted, markDailyChallengeAttempted, hasDailyChallengeBadge, markDailyChallengeBadge, claimDailyAIChallenge, DAILY_CHALLENGE_VEX_REWARD, BATTLE_MODE_META, type BattleMode, type DailyAIChallenge, type AIDifficulty } from "../lib/aiBattleEngine";
 import { recordSessionBattle } from "../shared/components/SessionSummaryToast";
 import { supabase } from "../lib/supabase";
 import { AudioEngine } from "../lib/audioEngine";
@@ -463,7 +463,6 @@ export function PvpRoute() {
   // GL.0 Win Streak
   const { streak, best, justBroke, onWin, onLoss } = useWinStreak();
   // Store last battle mode/opponent for GL.1 Revenge
-  const lastBattleModeRef = useRef<BattleMode>('casual');
   const lastBattleOppRef  = useRef<string | null>(null);
   const [dailyError, setDailyError]             = useState<string | null>(null);
   // FFE: Forge Formation Engine state

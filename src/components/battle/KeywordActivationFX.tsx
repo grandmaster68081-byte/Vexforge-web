@@ -2,7 +2,7 @@
 // Muestra una animación visual cuando se activa un keyword durante el combate.
 // Se coloca sobre la carta que activa el keyword.
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useCallback } from 'react';
 import type { BattleEvent } from '../../lib/battleTypes';
 
 // ─── Keyword visual config ─────────────────────────────────────────────────────

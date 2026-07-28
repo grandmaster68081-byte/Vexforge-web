@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { useLeaderboard } from "../domains/leaderboard/useLeaderboard";
 import { SkeletonTable } from "../shared/components/Skeleton";
 import { EmptyState } from "../shared/components/EmptyState";
@@ -43,8 +43,8 @@ const TIER_THRESHOLDS = [
 export function LeaderboardRoute() {
   const { status, data, myPlayerId: myId, reload } = useLeaderboard(100);
   const [factionFilter, setFactionFilter] = React.useState("Todas");
-  const filteredRows = factionFilter === "Todas" ? rows : rows.filter(r => (r as any).champion_faction === factionFilter);
   const rows   = data ?? [];
+  const filteredRows = factionFilter === "Todas" ? rows : rows.filter(r => (r as any).champion_faction === factionFilter);
   const loading = status === "loading";
   const error   = status === "ready" && !data ? "Error al cargar el clasificatorio" : null;
 
