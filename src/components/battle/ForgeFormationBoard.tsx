@@ -388,191 +388,225 @@ function ForgeGauge({ progress }: { progress: number }) {
   );
 }
 
-// ─── Champion Summon Cinematic (3.5s) ──────────────────────────────────────────
-function ChampionSummonCinematic({ champion, onDone }: { champion: BattleUnit; onDone: () => void }) {
-  const rar  = RARITY_COLOR[champion.rarity] ?? '#e8b84b';
-  const fac  = getFactionStyle(champion.faction ?? '');
-  const [stage, setStage] = useState(0);
+// ─── Rarity & Faction config for summon cinematic ─────────────────────────────
+    const RARITY_SUMMON: Record<string, { duration: number; rings: number; ptcl: number; tag: string }> = {
+    'Común':       { duration: 2200, rings: 2, ptcl: 3,  tag: '' },
+    'Infrecuente': { duration: 2600, rings: 2, ptcl: 4,  tag: '' },
+    'Rara':        { duration: 3000, rings: 3, ptcl: 5,  tag: '★ RARA' },
+    'Épica':       { duration: 3500, rings: 3, ptcl: 6,  tag: '★★ ÉPICA' },
+    'Legendaria':  { duration: 4000, rings: 4, ptcl: 8,  tag: '👑 LEGENDARIA' },
+    'Mítica':      { duration: 4500, rings: 5, ptcl: 10, tag: '🔥 MÍTICA' },
+    };
+    const FACTION_MOTTO: Record<string, string> = {
+    'Guerrero': 'EL ACERO NUNCA MIENTE',
+    'Mago':     'EL CONOCIMIENTO ES PODER',
+    'Paladín':  'LA LUZ PREVALECERÁ',
+    'Pícaro':   'LAS SOMBRAS SON MI ARMADURA',
+    };
+    const FACTION_CINEMATIC_BG: Record<string, string> = {
+    'Guerrero': 'radial-gradient(ellipse at 50% 35%, #3a0a0a 0%, #0a0208 100%)',
+    'Mago':     'radial-gradient(ellipse at 50% 35%, #0c0820 0%, #020206 100%)',
+    'Paladín':  'radial-gradient(ellipse at 50% 20%, #1a1408 0%, #050400 100%)',
+    'Pícaro':   'radial-gradient(ellipse at 50% 80%, #0d061a 0%, #010104 100%)',
+    };
 
-  useEffect(() => {
-    // Stage 0→1: flash at 600ms
-    const t1 = setTimeout(() => setStage(1), 600);
-    // Stage 1→2: champion appears at 1200ms
-    const t2 = setTimeout(() => setStage(2), 1200);
-    // Stage 2→3: stats appear at 2200ms
-    const t3 = setTimeout(() => setStage(3), 2200);
-    // Done at 3500ms
-    const t4 = setTimeout(() => onDone(), 3500);
-    try { (AudioEngine as any).sfxDrawCard?.(); } catch { /* ok */ }
-    return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); clearTimeout(t4); };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    // ─── Champion Summon Cinematic (per-faction · per-rarity) ──────────────────────
+    function ChampionSummonCinematic({ champion, onDone }: { champion: BattleUnit; onDone: () => void }) {
+    const rar  = RARITY_COLOR[champion.rarity] ?? '#e8b84b';
+    const fac  = getFactionStyle(champion.faction ?? '');
+    const ter  = getTerrain(champion.faction ?? '');
+    const cfg  = RARITY_SUMMON[champion.rarity] ?? { duration: 3000, rings: 3, ptcl: 5, tag: '' };
+    const bg   = FACTION_CINEMATIC_BG[champion.faction ?? ''] ?? 'radial-gradient(ellipse at 50% 50%, #0e0e22 0%, #020208 100%)';
+    const motto = FACTION_MOTTO[champion.faction ?? ''] ?? 'VEXFORGE';
+    const [stage, setStage] = useState(0);
 
-  return (
-    <div style={{
-      position: 'absolute', inset: 0, zIndex: 60,
-      background: 'rgba(2,2,8,0.97)',
-      display: 'flex', flexDirection: 'column',
-      alignItems: 'center', justifyContent: 'center',
-      overflow: 'hidden',
-    }}>
-      <style>{`
-        @keyframes summon-flash {
-          0%   { opacity: 0; }
-          30%  { opacity: 1; }
-          100% { opacity: 0; }
-        }
-        @keyframes summon-champion-in {
-          0%   { transform: scale(0.3) translateY(60px); opacity: 0; filter: blur(20px); }
-          60%  { transform: scale(1.08) translateY(-8px); opacity: 1; filter: blur(0); }
-          100% { transform: scale(1) translateY(0); opacity: 1; filter: blur(0); }
-        }
-        @keyframes summon-ring-expand {
-          0%   { transform: scale(0); opacity: 0.9; }
-          100% { transform: scale(3); opacity: 0; }
-        }
-        @keyframes summon-particles-orbit {
-          0%   { transform: rotate(0deg) translateX(90px) rotate(0deg); opacity: 1; }
-          100% { transform: rotate(360deg) translateX(90px) rotate(-360deg); opacity: 0.4; }
-        }
-        @keyframes summon-title-in {
-          0%   { transform: translateY(20px) scale(0.9); opacity: 0; letter-spacing: 0.3em; }
-          100% { transform: translateY(0) scale(1); opacity: 1; letter-spacing: 0.12em; }
-        }
-        @keyframes summon-stats-in {
-          0%   { transform: translateY(12px); opacity: 0; }
-          100% { transform: translateY(0); opacity: 1; }
-        }
-        @keyframes forge-ascension-crown {
-          0%,100% { transform: translateX(-50%) scale(1) rotate(-5deg); }
-          50%     { transform: translateX(-50%) scale(1.2) rotate(5deg); }
-        }
-      `}</style>
+    useEffect(() => {
+      const t1 = setTimeout(() => setStage(1), 500);
+      const t2 = setTimeout(() => setStage(2), 1100);
+      const t3 = setTimeout(() => setStage(3), 2000);
+      const t4 = setTimeout(() => onDone(), cfg.duration);
+      try { (AudioEngine as any).sfxDrawCard?.(); } catch { /* ok */ }
+      return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); clearTimeout(t4); };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
-      {/* Faction flash */}
-      {stage >= 0 && (
-        <div style={{
-          position: 'absolute', inset: 0, zIndex: 1,
-          background: `radial-gradient(ellipse at 50% 50%, ${fac.primary}33 0%, transparent 70%)`,
-          animation: 'summon-flash 0.6s ease-out both',
-          pointerEvents: 'none',
-        }} />
-      )}
-
-      {/* Expanding rings */}
-      {stage >= 1 && [0, 1, 2].map(i => (
-        <div key={i} style={{
-          position: 'absolute', zIndex: 1,
-          width: 180, height: 180, borderRadius: '50%',
-          border: `2px solid ${fac.primary}`,
-          animation: `summon-ring-expand ${0.8 + i * 0.3}s cubic-bezier(0,0.5,0.5,1) ${i * 0.15}s both`,
-          pointerEvents: 'none',
-        }} />
-      ))}
-
-      {/* Orbiting faction particles */}
-      {stage >= 1 && [0, 1, 2, 3].map(i => (
-        <div key={i} style={{
-          position: 'absolute', zIndex: 2,
-          animation: `summon-particles-orbit ${1.2 + i * 0.2}s linear infinite`,
-          animationDelay: `${i * 0.3}s`,
-          fontSize: 14,
-          filter: `drop-shadow(0 0 6px ${fac.primary})`,
-        }}>{fac.particle}</div>
-      ))}
-
-      {/* Champion image / icon */}
-      {stage >= 1 && (
-        <div style={{
-          position: 'relative', zIndex: 3,
-          animation: 'summon-champion-in 0.9s cubic-bezier(0.22,1,0.36,1) both',
-          marginBottom: 20,
-        }}>
-          <div style={{
-            width: 140, height: 180, borderRadius: 16,
-            border: `3px solid ${rar}`,
-            boxShadow: `0 0 40px ${rar}88, 0 0 80px ${fac.primary}44, inset 0 0 20px ${rar}22`,
-            background: champion.image_url
-              ? `url(${champion.image_url}) center/cover no-repeat`
-              : `linear-gradient(160deg,${fac.primary}33,#0a0a14)`,
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            fontSize: 48, overflow: 'hidden',
-          }}>
-            {!champion.image_url && '👑'}
-          </div>
-          {/* Crown above */}
-          <div style={{
-            position: 'absolute', top: -18, left: '50%', transform: 'translateX(-50%)',
-            fontSize: 28, filter: `drop-shadow(0 0 16px ${rar})`,
-            animation: 'champion-crown-pulse 2s ease-in-out infinite',
-          }}>👑</div>
-          {/* Rarity bar */}
-          <div style={{
-            position: 'absolute', bottom: 6, left: 6, right: 6,
-            background: 'rgba(0,0,0,0.85)', borderRadius: 6,
-            padding: '2px 8px', textAlign: 'center',
-            fontFamily: '"Rajdhani",sans-serif', fontSize: 8,
-            fontWeight: 800, color: rar, letterSpacing: '0.1em',
-          }}>{champion.rarity.toUpperCase()}</div>
-        </div>
-      )}
-
-      {/* Champion name */}
-      {stage >= 2 && (
-        <div style={{
-          zIndex: 3, textAlign: 'center',
-          animation: 'summon-title-in 0.6s cubic-bezier(0.22,1,0.36,1) both',
-        }}>
-          <div style={{
-            fontFamily: '"Cinzel Decorative",serif',
-            fontSize: 'clamp(16px,4vw,26px)',
-            fontWeight: 900, color: rar,
-            textShadow: `0 0 30px ${rar}, 0 0 60px ${fac.primary}88`,
-            letterSpacing: '0.12em', marginBottom: 4,
-          }}>{champion.name}</div>
-          <div style={{
-            fontFamily: '"Cinzel",serif', fontSize: 11,
-            color: fac.primary, letterSpacing: '0.2em',
-            textTransform: 'uppercase',
-          }}>Campeón · {champion.faction}</div>
-        </div>
-      )}
-
-      {/* Stats */}
-      {stage >= 3 && (
-        <div style={{
-          zIndex: 3, display: 'flex', gap: 16, marginTop: 16,
-          animation: 'summon-stats-in 0.5s ease-out both',
-        }}>
-          {[
-            { label: '⚔ ATK', val: champion.atk, col: '#ff6b6b' },
-            { label: '🛡 DEF', val: champion.def, col: '#4a9eff' },
-            { label: '❤ HP', val: champion.max_hp, col: '#3ddc84' },
-            { label: '⚡ POW', val: champion.power, col: '#e8b84b' },
-          ].map(s => (
-            <div key={s.label} style={{
-              textAlign: 'center',
-              background: 'rgba(255,255,255,0.04)',
-              border: `1px solid ${s.col}33`,
-              borderRadius: 8, padding: '6px 12px',
-            }}>
-              <div style={{ fontSize: 16, fontWeight: 900, color: s.col, fontFamily: '"Rajdhani",sans-serif' }}>{s.val}</div>
-              <div style={{ fontSize: 8, color: '#6a6a8a', fontFamily: '"Rajdhani",sans-serif', letterSpacing: '0.08em' }}>{s.label}</div>
-            </div>
-          ))}
-        </div>
-      )}
-
-      {/* "INVOCANDO" label */}
+    return (
       <div style={{
-        position: 'absolute', bottom: 24, left: 0, right: 0,
-        textAlign: 'center', zIndex: 3,
-        fontFamily: '"Rajdhani",sans-serif', fontSize: 11,
-        color: '#4a4a6a', letterSpacing: '0.25em',
-      }}>▶ INVOCANDO CAMPEÓN</div>
-    </div>
-  );
-}
+        position: 'absolute', inset: 0, zIndex: 60,
+        background: bg,
+        display: 'flex', flexDirection: 'column',
+        alignItems: 'center', justifyContent: 'center',
+        overflow: 'hidden',
+      }}>
+        <style>{`
+          @keyframes summon-flash {
+            0%   { opacity: 0; }
+            30%  { opacity: 1; }
+            100% { opacity: 0; }
+          }
+          @keyframes summon-champion-in {
+            0%   { transform: scale(0.3) translateY(60px); opacity: 0; filter: blur(20px) brightness(3); }
+            60%  { transform: scale(1.08) translateY(-8px); opacity: 1; filter: blur(0) brightness(1.2); }
+            100% { transform: scale(1) translateY(0); opacity: 1; filter: blur(0) brightness(1); }
+          }
+          @keyframes summon-ring-expand {
+            0%   { transform: scale(0); opacity: 0.9; }
+            100% { transform: scale(3.5); opacity: 0; }
+          }
+          @keyframes summon-particles-orbit {
+            0%   { transform: rotate(0deg) translateX(90px) rotate(0deg); opacity: 1; }
+            100% { transform: rotate(360deg) translateX(90px) rotate(-360deg); opacity: 0.4; }
+          }
+          @keyframes summon-title-in {
+            0%   { transform: translateY(20px) scale(0.9); opacity: 0; letter-spacing: 0.3em; }
+            100% { transform: translateY(0) scale(1); opacity: 1; letter-spacing: 0.12em; }
+          }
+          @keyframes summon-stats-in {
+            0%   { transform: translateY(12px); opacity: 0; }
+            100% { transform: translateY(0); opacity: 1; }
+          }
+          @keyframes summon-motto-in {
+            0%   { opacity: 0; letter-spacing: 0.5em; }
+            100% { opacity: 1; letter-spacing: 0.18em; }
+          }
+          @keyframes summon-rarity-tag {
+            0%   { transform: scale(1.4); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+          }
+          @keyframes summon-scanline {
+            0%   { transform: translateY(-100%); opacity: 0; }
+            20%  { opacity: 1; }
+            100% { transform: translateY(500%); opacity: 0; }
+          }
+          @keyframes forge-ascension-crown {
+            0%,100% { transform: translateX(-50%) scale(1) rotate(-5deg); }
+            50%     { transform: translateX(-50%) scale(1.2) rotate(5deg); }
+          }
+        `}</style>
+
+        {/* Faction terrain ambient layer */}
+        <div style={{
+          position: 'absolute', inset: 0, zIndex: 0,
+          background: ter.gradient, opacity: 0.9,
+          pointerEvents: 'none',
+        }} />
+
+        {/* Scanline sweep */}
+        <div style={{
+          position: 'absolute', left: 0, right: 0, height: '30%', zIndex: 1,
+          background: `linear-gradient(180deg, transparent, ${fac.primary}22, transparent)`,
+          animation: 'summon-scanline 1.6s ease-in-out both',
+          pointerEvents: 'none',
+        }} />
+
+        {/* Faction flash */}
+        {stage >= 0 && (
+          <div style={{
+            position: 'absolute', inset: 0, zIndex: 1,
+            background: `radial-gradient(ellipse at 50% 50%, ${fac.primary}44 0%, transparent 70%)`,
+            animation: 'summon-flash 0.5s ease-out both',
+            pointerEvents: 'none',
+          }} />
+        )}
+
+        {/* Expanding rings (rarity-scaled count) */}
+        {stage >= 1 && Array.from({ length: cfg.rings }).map((_, i) => (
+          <div key={i} style={{
+            position: 'absolute', zIndex: 1,
+            width: 180, height: 180, borderRadius: '50%',
+            border: `${i === 0 ? 2 : 1}px solid ${i % 2 === 0 ? fac.primary : rar}`,
+            animation: `summon-ring-expand ${0.8 + i * 0.25}s cubic-bezier(0,0.5,0.5,1) ${i * 0.12}s both`,
+            pointerEvents: 'none',
+          }} />
+        ))}
+
+        {/* Orbiting faction particles (rarity-scaled count) */}
+        {stage >= 1 && Array.from({ length: cfg.ptcl }).map((_, i) => (
+          <div key={i} style={{
+            position: 'absolute', zIndex: 2, fontSize: i % 3 === 0 ? 18 : 12,
+            animation: `summon-particles-orbit ${1.0 + i * 0.18}s linear infinite`,
+            transform: `rotate(${i * (360 / cfg.ptcl)}deg) translateX(90px)`,
+            pointerEvents: 'none',
+          }}>{ter.particleEmoji[i % ter.particleEmoji.length]}</div>
+        ))}
+
+        {/* Champion card */}
+        {stage >= 2 && (
+          <div style={{
+            zIndex: 3, textAlign: 'center',
+            animation: 'summon-champion-in 0.9s cubic-bezier(0.22,1,0.36,1) both',
+          }}>
+            {cfg.tag && (
+              <div style={{
+                fontFamily: '"Rajdhani",sans-serif', fontWeight: 900, fontSize: 11,
+                color: rar, letterSpacing: '0.15em', marginBottom: 8,
+                animation: 'summon-rarity-tag 0.4s ease-out both',
+                textShadow: `0 0 12px ${rar}`,
+              }}>{cfg.tag}</div>
+            )}
+            <div style={{
+              width: 100, height: 140, borderRadius: 12, margin: '0 auto',
+              background: `linear-gradient(160deg, ${fac.primary}22, rgba(0,0,0,0.6))`,
+              border: `2px solid ${rar}`,
+              boxShadow: `0 0 30px ${fac.primary}88, 0 0 60px ${rar}44, inset 0 0 20px ${fac.primary}11`,
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              fontSize: 40,
+            }}>
+              {ter.particleEmoji[0]}
+            </div>
+            <div style={{
+              fontFamily: '"Cinzel",serif', fontWeight: 900,
+              fontSize: 'clamp(18px,4vw,28px)', color: '#f0ead6',
+              marginTop: 14,
+              textShadow: `0 0 30px ${fac.primary}cc, 0 2px 0 rgba(0,0,0,0.8)`,
+              animation: 'summon-title-in 0.6s cubic-bezier(0.22,1,0.36,1) both',
+              letterSpacing: '0.12em',
+            }}>{champion.name}</div>
+            <div style={{
+              color: fac.primary, fontSize: 10, marginTop: 4,
+              fontFamily: '"Rajdhani",sans-serif', fontWeight: 700,
+              letterSpacing: '0.18em',
+              animation: 'summon-motto-in 0.8s ease-out 0.2s both',
+              textShadow: `0 0 8px ${fac.primary}`,
+            }}>{champion.faction} · {motto}</div>
+          </div>
+        )}
+
+        {/* Stats */}
+        {stage >= 3 && (
+          <div style={{
+            zIndex: 3, display: 'flex', gap: 16, marginTop: 16,
+            animation: 'summon-stats-in 0.5s ease-out both',
+          }}>
+            {[
+              { label: '⚔ ATK', val: champion.atk,    col: '#ff6b6b' },
+              { label: '🛡 DEF', val: champion.def,    col: '#4a9eff' },
+              { label: '❤ HP',  val: champion.max_hp,  col: '#3ddc84' },
+              { label: '⚡ POW', val: champion.power,  col: '#e8b84b' },
+            ].map(s => (
+              <div key={s.label} style={{
+                textAlign: 'center',
+                background: 'rgba(255,255,255,0.04)',
+                border: `1px solid ${s.col}33`,
+                borderRadius: 8, padding: '6px 12px',
+              }}>
+                <div style={{ fontSize: 16, fontWeight: 900, color: s.col, fontFamily: '"Rajdhani",sans-serif' }}>{s.val}</div>
+                <div style={{ fontSize: 8, color: '#6a6a8a', fontFamily: '"Rajdhani",sans-serif', letterSpacing: '0.08em' }}>{s.label}</div>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* INVOCANDO label */}
+        <div style={{
+          position: 'absolute', bottom: 24, left: 0, right: 0,
+          textAlign: 'center', zIndex: 3,
+          fontFamily: '"Rajdhani",sans-serif', fontSize: 11,
+          color: '#4a4a6a', letterSpacing: '0.25em',
+        }}>▶ INVOCANDO CAMPEÓN</div>
+      </div>
+    );
+    }
 
 // ─── Forge Ascension Overlay (2s cinematic) ────────────────────────────────────
 function ForgeAscensionOverlay({ champion, onDone }: { champion: BattleUnit; onDone: () => void }) {
