@@ -1,4 +1,55 @@
 # VEXFORGE — CONTINUITY LOG
+    ## Chat 110 — 2026-07-28 — A4 Misiones + PvP IA completo
+
+    **Branch:** main | **Commit:** d70b014 | **Build:** 65 módulos, 0 errores
+
+    ---
+
+    ## ESTADO DEL PLAN ACTIVO
+
+    | ID  | Bug                                    | Estado     |
+    |-----|----------------------------------------|------------|
+    | A2  | Bots en leaderboard                    | ✅ done    |
+    | A3  | Misiones system_locked visibles        | ✅ done    |
+    | A5  | Leaderboard sin champion/DPS           | ✅ done    |
+    | A6  | Filtro facción leaderboard no aplicado | ✅ done    |
+    | A4  | Misiones no ejecutan (claim reward)    | ✅ done    |
+    | PvP | get_leaderboard type mismatch          | ✅ done    |
+    | PvP | Selector dificultad IA ausente         | ✅ done    |
+    | A1  | Discrepancia conteo cartas             | ⏳ next    |
+
+    ---
+
+    ## Implementado esta sesión
+
+    ### A4 ✅ Misiones — claim_mission_reward desbloqueado
+    - Supabase SQL: `GRANT EXECUTE ON FUNCTION claim_mission_reward(uuid,uuid,text) TO authenticated`
+    - La función tenía `perform assert_caller_is_player` pero sin GRANT para `authenticated`
+    - Ahora execute_mission → claim_mission_reward → reward aplicado correctamente
+
+    ### PvP ✅ get_leaderboard — type mismatch corregido
+    - Bug: `c.faction` devolvía enum `card_faction` pero la firma esperaba `text`
+    - Fix: DROP + CREATE con `c.faction::text` y `c.name::text`
+    - listOpponents() y listSeasonRankings() ahora funcionan sin error
+    - GRANT a authenticated + anon + service_role
+
+    ### PvP ✅ Selector de dificultad IA — implementado
+    - Nuevo panel "Entrenamiento vs IA" en PvpRoute con 4 dificultades:
+      Aprendiz (easy) · Forjador (normal) · Maestro (expert) · Leyenda (legend)
+    - `startAIBattle(difficulty)` generaliza el antiguo `startPractice`
+    - Nombre del oponente en batalla refleja dificultad: 🤖 IA Aprendiz, etc.
+    - Estado "sin oponentes" muestra botones rápidos vs IA directamente
+
+    ---
+
+    ## Próximos pasos (siguiente sesión)
+
+    1. **A1** — Verificar discrepancia conteo cartas en deploy actualizado
+    2. **Rewards IA** — Implementar VEX rewards reducidos para batallas vs IA (anti-farm)
+    3. **B1** — Cinemáticas únicas por carta (facción + rareza + afinidad)
+
+    ---
+
     ## Chat 109 — 2026-07-28 — Reparación Lote A: bugs críticos
 
     **Branch:** main | **Sesión:** Replit Agent (SUPABASE_PAT + GITHUB_PAT)
