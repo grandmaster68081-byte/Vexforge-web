@@ -14,6 +14,11 @@ import { simulateAIBattle, loadPlayerBattleUnits, getDailyAIChallenge, hasDailyC
 import { supabase } from "../lib/supabase";
 import { AudioEngine } from "../lib/audioEngine";
 import { useWinStreak, WinStreakBadge, StreakPanel } from "../components/battle/WinStreakDisplay";
+import { FormationSelector } from "../components/battle/FormationSelector";
+import { ForgeFormationBoard } from "../components/battle/ForgeFormationBoard";
+import type { FormationState } from "../lib/forgeFormation";
+import type { BattleUnit } from "../lib/battleTypes";
+import { ContextualHint, ROUTE_HINTS } from "../components/battle/ContextualHint";
 
 const BG_URL = "https://rscuzqnfccqvltkdcdny.supabase.co/storage/v1/object/public/vexforge-assets/backgrounds/bg_pvp.jpg";
 
@@ -460,6 +465,10 @@ export function PvpRoute() {
   const lastBattleModeRef = useRef<BattleMode>('casual');
   const lastBattleOppRef  = useRef<string | null>(null);
   const [dailyError, setDailyError]             = useState<string | null>(null);
+  // FFE: Forge Formation Engine state
+  const [formationUnits, setFormationUnits]     = useState<BattleUnit[] | null>(null);
+  const [pendingFormation, setPendingFormation] = useState<FormationState | null>(null);
+  const formationDifficultyRef = useRef(getDailyAIChallenge().difficulty);
   const dailyChallenge = getDailyAIChallenge();
   const cancelRef = useRef(false);
 
@@ -490,19 +499,9 @@ export function PvpRoute() {
     setDailyError(null);
     try {
       const playerUnits = await loadPlayerBattleUnits(supabase, playerId);
-      const result = simulateAIBattle(playerUnits, dailyChallenge.difficulty, dailyChallenge.deck);
-      // Mark attempt AFTER simulation succeeds — prevents consuming the attempt on network failure
-      markDailyChallengeAttempted(playerId, dailyChallenge.dateKey);
-      setDailyAttempted(true);
-      if (result.you_won) {
-        markDailyChallengeBadge(playerId, dailyChallenge.dateKey);
-        setDailyBadgeEarned(true);
-        try {
-          const claim = await claimDailyAIChallenge(supabase, dailyChallenge.dateKey, dailyChallenge.difficulty);
-          if (claim.claimed) setDailyVexEarned(claim.vex_awarded ?? DAILY_CHALLENGE_VEX_REWARD[dailyChallenge.difficulty]);
-        } catch { /* VEX claim RPC — badge ya otorgado localmente, VEX se sincronizará */ }
-      }
-      setDailyResult({ ...result, opponent_name: dailyChallenge.title, engine: 'client_ai_daily_v1' });
+      // FFE: Show FormationSelector before battle begins
+      formationDifficultyRef.current = dailyChallenge.difficulty;
+      setFormationUnits(playerUnits);
     } catch (err) {
       const msg = err instanceof Error ? err.message : "Error desconocido";
       setDailyError(`No se pudo cargar el desafío: ${msg}. Verifica tu conexión e intenta de nuevo.`);
@@ -510,6 +509,34 @@ export function PvpRoute() {
       setDailyLoading(false);
     }
   }, [playerId, dailyAttempted, dailyLoading, dailyChallenge]);
+
+  // FFE: Called when FormationSelector confirms the formation
+  const handleFormationConfirm = useCallback((formation: FormationState) => {
+    setFormationUnits(null);
+    setPendingFormation(formation);
+    try { (AudioEngine as any).sfxTurnStart?.(); } catch { /* ok */ }
+  }, []);
+
+  // FFE: Called when ForgeFormationBoard finishes
+  const handleForgeFormationComplete = useCallback(async (won: boolean, _championDied: boolean) => {
+    setPendingFormation(null);
+    // Mark attempt + handle rewards
+    if (playerId) {
+      markDailyChallengeAttempted(playerId, dailyChallenge.dateKey);
+      setDailyAttempted(true);
+      if (won) {
+        onWin();
+        markDailyChallengeBadge(playerId, dailyChallenge.dateKey);
+        setDailyBadgeEarned(true);
+        try {
+          const claim = await claimDailyAIChallenge(supabase, dailyChallenge.dateKey, dailyChallenge.difficulty);
+          if (claim.claimed) setDailyVexEarned(claim.vex_awarded ?? DAILY_CHALLENGE_VEX_REWARD[dailyChallenge.difficulty]);
+        } catch { /* silent */ }
+      } else {
+        onLoss();
+      }
+    }
+  }, [playerId, dailyChallenge, onWin, onLoss]);
 
   if (loading) return <PageLoader />;
   if (!loading && !playerId) return (
@@ -519,6 +546,32 @@ export function PvpRoute() {
   const season     = seasons[0] ?? null;
   const playerRank = playerId ? (rankings.find(r => r.player_id === playerId) ?? null) : null;
   const myMmr      = playerRank?.mmr ?? 1000;
+
+  // FFE: FormationSelector overlay — player picks formation before daily battle
+  if (formationUnits && !pendingFormation) {
+    return (
+      <FormationSelector
+        playerUnits={formationUnits}
+        onConfirm={handleFormationConfirm}
+        onCancel={() => { setFormationUnits(null); }}
+        difficulty={formationDifficultyRef.current}
+      />
+    );
+  }
+
+  // FFE: ForgeFormationBoard — actual formation battle
+  if (pendingFormation) {
+    return (
+      <ForgeFormationBoard
+        initialFormation={pendingFormation}
+        playerName="Tú"
+        opponentName={dailyChallenge.title}
+        difficulty={formationDifficultyRef.current}
+        onComplete={handleForgeFormationComplete}
+        onDismiss={() => { setPendingFormation(null); }}
+      />
+    );
+  }
 
   // IA.2: Daily challenge reuses the interactive board and never touches pvp_matches.
   if (dailyResult) {
@@ -596,6 +649,9 @@ export function PvpRoute() {
             Desafía a otros Forjadores. El poder de tu mazo determina la victoria.
           </p>
         </div>
+
+        {/* TU.2 — Contextual hints (first visit only) */}
+        <ContextualHint hintKey="pvp_lobby" hints={ROUTE_HINTS.pvp_lobby} />
 
         {/* GL.0 — Win Streak Panel */}
         <StreakPanel streak={streak} best={best} />

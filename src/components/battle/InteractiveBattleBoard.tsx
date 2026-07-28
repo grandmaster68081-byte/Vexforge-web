@@ -20,6 +20,7 @@ const FACTION_ICON: Record<string, string> = {
 import { useBattleStateMachine, type TurnPhase, type TurnSnapshot } from '../../lib/battleStateMachine';
 import { KeywordChip } from './KeywordTooltip';
 import { AudioEngine } from '../../lib/audioEngine';
+import { KeywordActivationFX, useKeywordFX } from './KeywordActivationFX';
 
 // ─── Constantes ────────────────────────────────────────────────────────────────
 const HP_COLOR = (pct: number) =>
@@ -38,31 +39,50 @@ const FACTION_ZONE: Record<string, { primary: string; glow: string; gradient: st
 };
 
 // ─── HP Bar épica ───────────────────────────────────────────────────────────────
+// ─── VX.3: Segmented HP Bar ────────────────────────────────────────────────────
 function EpicHpBar({ hp, max, color }: { hp: number; max: number; color: string }) {
   const pct = max > 0 ? Math.max(0, Math.min(1, hp / max)) : 0;
   const col = HP_COLOR(pct);
   const critical = pct < 0.25;
+  const segments = 10;
+  const filled = Math.round(pct * segments);
   return (
-    <div style={{ height: 10, background: 'rgba(0,0,0,0.7)', borderRadius: 5, overflow: 'hidden',
-      border: `1px solid ${color}33`, position: 'relative' }}>
-      <div style={{
-        height: '100%', width: `${pct * 100}%`,
-        background: critical
-          ? `linear-gradient(90deg, ${col}, #ff6644)`
-          : `linear-gradient(90deg, ${col}, ${col}bb)`,
-        boxShadow: `0 0 8px ${col}99, inset 0 1px 0 rgba(255,255,255,0.2)`,
-        transition: 'width 0.5s cubic-bezier(0.4,0,0.2,1)',
-        borderRadius: 5,
-      }} />
-      {/* Damage flash ghost bar */}
-      {critical && (
-        <div style={{
-          position: 'absolute', inset: 0, borderRadius: 5,
-          animation: 'hp-critical-pulse 0.8s ease-in-out infinite',
-          background: 'rgba(255,50,50,0.08)',
-          pointerEvents: 'none',
+    <div style={{ position: 'relative' }}>
+      {/* VX.3: Segmented bar */}
+      <div style={{ display: 'flex', gap: 2, width: '100%' }}>
+        {Array.from({ length: segments }).map((_, i) => (
+          <div key={i} style={{
+            flex: 1, height: 7, borderRadius: 2,
+            background: i < filled
+              ? `linear-gradient(90deg,${col},${col}bb)`
+              : 'rgba(255,255,255,0.06)',
+            boxShadow: i < filled && i === filled - 1 ? `0 0 6px ${col}99` : 'none',
+            border: `1px solid ${i < filled ? color + '44' : 'rgba(255,255,255,0.04)'}`,
+            transition: 'background 0.4s ease, box-shadow 0.4s ease',
+            animation: critical && i < filled ? 'hp-critical-pulse 0.8s ease-in-out infinite' : 'none',
+          }} />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// ─── VX.3: Turn Indicator Segments ────────────────────────────────────────────
+function TurnIndicatorSegments({ current, total }: { current: number; total: number }) {
+  const segs = Math.min(total, 18);
+  const done = Math.min(current, segs);
+  return (
+    <div style={{ display: 'flex', gap: 2, alignItems: 'center', justifyContent: 'center', flexWrap: 'wrap' }}>
+      {Array.from({ length: segs }).map((_, i) => (
+        <div key={i} style={{
+          width: 14, height: 4, borderRadius: 2,
+          background: i < done
+            ? (i < segs * 0.4 ? '#3ddc84' : i < segs * 0.7 ? '#e8b84b' : '#e84040')
+            : 'rgba(255,255,255,0.06)',
+          boxShadow: i === done - 1 ? '0 0 8px rgba(232,184,75,0.9)' : 'none',
+          transition: 'all 0.3s ease',
         }} />
-      )}
+      ))}
     </div>
   );
 }
@@ -610,6 +630,8 @@ export function InteractiveBattleBoard({
   const [cinematicIsKill, setCinematicIsKill] = useState(false);
   const [cinematicVisible, setCinematicVisible] = useState(false);
   const { floats } = useDamageFloats(state.currentTurn ?? null);
+  // BA.1 / VX.1: Keyword activation FX
+  const { effects: kwEffects, triggerKeywordFX } = useKeywordFX();
 
   const finalUnits = result.final_units ?? [];
   const playerUnit   = finalUnits.find(u => u.side === 'a' && u.alive) ?? finalUnits.find(u => u.side === 'a');
@@ -654,6 +676,10 @@ export function InteractiveBattleBoard({
         } else if (state.currentTurn.is_crit) {
           (AudioEngine as any).sfxCritV2?.();
         }
+
+        // BA.1 / VX.1: Trigger keyword activation FX for this turn
+        const attackerKws = (isPlayerAtk ? playerUnit : opponentUnit)?.keywords ?? [];
+        triggerKeywordFX(events, state.currentTurn.atk_side, attackerKws);
       } catch { /* silent */ }
 
       setBeamVisible(true);
@@ -769,6 +795,17 @@ export function InteractiveBattleBoard({
           animation: `hero-particle-rise ${3 + i * 0.7}s ease-out ${i * 0.9}s infinite`,
         }} />
       ))}
+
+      {/* BA.1 / VX.1: Keyword Activation FX Overlay — shown over player card */}
+      {kwEffects.length > 0 && (
+        <div style={{
+          position: 'absolute', bottom: '28%', left: '50%',
+          transform: 'translateX(-50%)',
+          zIndex: 25, pointerEvents: 'none',
+        }}>
+          <KeywordActivationFX effects={kwEffects} />
+        </div>
+      )}
 
       {/* FASE 2: Card Attack Cinematic Overlay */}
       <CardAttackCinematic
@@ -922,15 +959,17 @@ export function InteractiveBattleBoard({
           </div>
         </div>
 
-        {/* Turn counter */}
+        {/* VX.3 — Turn counter + segment indicator */}
         <div style={{ textAlign: 'center', flexShrink: 0 }}>
           <div style={{
             fontFamily: '"IBM Plex Mono",monospace', fontSize: 10,
             animation: 'turn-counter-flash 2s ease-in-out infinite',
-            letterSpacing: '0.08em',
+            letterSpacing: '0.08em', marginBottom: 4,
           }}>
             T {state.revealedTurns.length} / {state.totalTurns}
           </div>
+          {/* VX.3: Turn progress segments */}
+          <TurnIndicatorSegments current={state.revealedTurns.length} total={state.totalTurns} />
           <div style={{
             fontSize: 8, color: state.phase === 'ANIMATING' ? '#e8b84b' : state.phase === 'COMPLETE' ? '#3ddc84' : '#5a5a7a',
             fontFamily: '"Rajdhani",sans-serif', letterSpacing: '0.12em',
