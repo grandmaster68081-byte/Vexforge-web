@@ -27,9 +27,9 @@ export const BATTLE_MODE_META: Record<BattleMode, {
   reward: string; ai?: AIDifficulty;
 }> = {
   pvp:        { label: 'Versus Jugador',    desc: 'Enfrenta a Forjadores reales. Afecta tu MMR y ELO.',          icon: '⚔️',  color: '#4a9eff', reward: '+ELO · +VEX' },
-  ai_easy:    { label: 'vs IA — Aprendiz',  desc: 'IA sin keywords. Ideal para aprender el motor de combate.', icon: '🤖',  color: '#3dc96b', reward: '+VEX reducido',  ai: 'easy'   },
-  ai_normal:  { label: 'vs IA — Forjador',  desc: 'IA con Guard y Lifesteal. Requiere estrategia real.',       icon: '🛡️', color: '#e8b84b', reward: '+VEX medio',     ai: 'normal' },
-  ai_expert:  { label: 'vs IA — Maestro',   desc: 'IA con deck completo y toma de decisiones óptima.',         icon: '💀',  color: '#a855f7', reward: '+VEX completo',  ai: 'expert' },
+  ai_easy:    { label: 'vs IA — Aprendiz',  desc: 'IA sin keywords. Ideal para aprender el motor de combate.', icon: '🤖',  color: '#3dc96b', reward: '+3 VEX (5/día)',    ai: 'easy'   },
+  ai_normal:  { label: 'vs IA — Forjador',  desc: 'IA con Guard y Lifesteal. Requiere estrategia real.',       icon: '🛡️', color: '#e8b84b', reward: '+6 VEX (4/día)',    ai: 'normal' },
+  ai_expert:  { label: 'vs IA — Maestro',   desc: 'IA con deck completo y toma de decisiones óptima.',         icon: '💀',  color: '#a855f7', reward: '+12 VEX (3/día)',   ai: 'expert' },
   ai_legend:  { label: 'vs IA — Leyenda',  desc: 'IA óptima con Campeón Mítico. Sin misericordia.',          icon: '💎',  color: '#ffd700', reward: '+VEX máximo',     ai: 'legend'  },
   practice:   { label: 'Práctica',          desc: 'Sin recompensas ni registro. Experimenta libremente.',       icon: '🎯',  color: '#8b8b9e', reward: 'Sin recompensas' },
   tutorial:   { label: 'Tutorial',          desc: 'Batalla guiada paso a paso.',                               icon: '📖',  color: '#ff6b35', reward: 'Completar tutorial' },
@@ -350,4 +350,37 @@ export async function claimDailyAIChallenge(
   });
   if (error) return { claimed: false, reason: error.message };
   return data as { claimed: boolean; vex_awarded?: number; reason?: string };
+}
+
+// ─── Rewards IA: VEX por dificultad con cap diario anti-farm ─────────────────
+// Ejecutado chat111. RPC: claim_ai_battle_reward (SQL: backend/sql-fixes/AI-rewards-antifarm.sql)
+export const AI_BATTLE_VEX_REWARD: Record<AIDifficulty, number> = {
+  easy:     3,
+  normal:   6,
+  expert:   12,
+  legend:   20,
+  tutorial: 0,
+};
+
+export const AI_BATTLE_DAILY_CAP: Record<AIDifficulty, number> = {
+  easy:     5,
+  normal:   4,
+  expert:   3,
+  legend:   2,
+  tutorial: 0,
+};
+
+export async function claimAIBattleReward(
+  supabase: any,
+  playerId: string,
+  difficulty: AIDifficulty,
+  dateKey: string,
+): Promise<{ claimed: boolean; vex_awarded?: number; wins_today?: number; cap?: number; remaining_today?: number; reason?: string }> {
+  const { data, error } = await supabase.rpc('claim_ai_battle_reward', {
+    p_player_id: playerId,
+    p_difficulty: difficulty,
+    p_date_key:   dateKey,
+  });
+  if (error) return { claimed: false, reason: error.message };
+  return data as { claimed: boolean; vex_awarded?: number; wins_today?: number; cap?: number; remaining_today?: number; reason?: string };
 }
