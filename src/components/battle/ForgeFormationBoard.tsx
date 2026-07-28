@@ -416,7 +416,8 @@ export function ForgeFormationBoard({
   const [log, setLog]             = useState<string[]>([]);
   const [isAutoPlay, setIsAutoPlay] = useState(false);
   const [hitFlash, setHitFlash]   = useState<FormationSlot | null>(null);
-  const autoRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const autoRef      = useRef<ReturnType<typeof setInterval> | null>(null);
+  const musicPhaseRef = useRef<'none' | 'intro' | 'mid' | 'last_stand'>('none');
 
   // Simulate formation battle result once
   const battleResult = useRef(simulateFormationBattle(initialFormation, difficulty));
@@ -428,6 +429,37 @@ export function ForgeFormationBoard({
     const t = setTimeout(() => setPhase('battle'), 1400);
     return () => clearTimeout(t);
   }, []);
+
+  // ─── Cleanup music on unmount (covers "✕ Salir" dismiss path) ───────────────
+  useEffect(() => {
+    return () => {
+      try { (AudioEngine as any).stopCombatMusic?.(); } catch { /* silent */ }
+    };
+  }, []);
+
+  // ─── Combat phase music ───────────────────────────────────────────────────────
+  useEffect(() => {
+    if (phase === 'battle' && musicPhaseRef.current === 'none') {
+      musicPhaseRef.current = 'intro';
+      try { (AudioEngine as any).startCombatMusic?.('intro'); } catch { /* silent */ }
+    }
+    if ((phase === 'done' || phase === 'champion_dead') && musicPhaseRef.current !== 'none') {
+      musicPhaseRef.current = 'none';
+      try { (AudioEngine as any).stopCombatMusic?.(); } catch { /* silent */ }
+    }
+  }, [phase]);
+
+  useEffect(() => {
+    if (phase !== 'battle' || totalBattleTurns <= 0) return;
+    const pct = turnIdx / totalBattleTurns;
+    if (pct >= 0.75 && musicPhaseRef.current === 'mid') {
+      musicPhaseRef.current = 'last_stand';
+      try { (AudioEngine as any).startCombatMusic?.('last_stand'); } catch { /* silent */ }
+    } else if (pct >= 0.40 && musicPhaseRef.current === 'intro') {
+      musicPhaseRef.current = 'mid';
+      try { (AudioEngine as any).startCombatMusic?.('mid'); } catch { /* silent */ }
+    }
+  }, [turnIdx, phase, totalBattleTurns]);
 
   // ─── Auto-play interval ───────────────────────────────────────────────────────
   useEffect(() => {

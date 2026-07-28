@@ -619,8 +619,9 @@ export function InteractiveBattleBoard({
   const [beamVisible, setBeamVisible] = useState(false);
   const [hitSide, setHitSide] = useState<'player' | 'opponent' | null>(null);
   const [screenFlash, setScreenFlash] = useState(false);
-  const dropZoneRef = useRef<HTMLDivElement | null>(null);
-  const dragRef     = useRef({ active: false, startX: 0, startY: 0 });
+  const dropZoneRef   = useRef<HTMLDivElement | null>(null);
+  const dragRef       = useRef({ active: false, startX: 0, startY: 0 });
+  const musicPhaseRef = useRef<'none' | 'intro' | 'mid' | 'last_stand'>('none');
   
   // FASE 2: Card Attack Cinematic state
   const [attackingUnit, setAttackingUnit] = useState<BattleUnit | null>(null);
@@ -743,6 +744,38 @@ export function InteractiveBattleBoard({
       document.removeEventListener('pointercancel', globalCancel);
     };
   }, [actions]);
+
+  // ─── Combat phase music ───────────────────────────────────────────────────────
+  useEffect(() => {
+    musicPhaseRef.current = 'intro';
+    try { (AudioEngine as any).startCombatMusic?.('intro'); } catch { /* silent */ }
+    return () => {
+      musicPhaseRef.current = 'none';
+      try { (AudioEngine as any).stopCombatMusic?.(); } catch { /* silent */ }
+    };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    if (state.phase === 'COMPLETE' && musicPhaseRef.current !== 'none') {
+      musicPhaseRef.current = 'none';
+      try { (AudioEngine as any).stopCombatMusic?.(); } catch { /* silent */ }
+    }
+  }, [state.phase]);
+
+  useEffect(() => {
+    if (musicPhaseRef.current === 'none') return;
+    const playerPct   = state.playerMaxHp  > 0 ? state.playerHp  / state.playerMaxHp  : 1;
+    const opponentPct = state.opponentMaxHp > 0 ? state.opponentHp / state.opponentMaxHp : 1;
+    const avgPct = (playerPct + opponentPct) / 2;
+    if ((playerPct < 0.30 || opponentPct < 0.30) && musicPhaseRef.current !== 'last_stand') {
+      musicPhaseRef.current = 'last_stand';
+      try { (AudioEngine as any).startCombatMusic?.('last_stand'); } catch { /* silent */ }
+    } else if (avgPct < 0.60 && musicPhaseRef.current === 'intro') {
+      musicPhaseRef.current = 'mid';
+      try { (AudioEngine as any).startCombatMusic?.('mid'); } catch { /* silent */ }
+    }
+  }, [state.playerHp, state.opponentHp, state.playerMaxHp, state.opponentMaxHp]);
 
   return (
     <div style={{
