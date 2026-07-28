@@ -8371,3 +8371,94 @@ button:active { animation: chip-select-pop 0.15s ease; }
   50%     { transform: translateX(-50%) scale(1.25) rotate(5deg); filter: drop-shadow(0 0 28px #ffd700); }
 }
 .forge-ascension-pulse { animation: forge-ascension-pulse 1.2s ease-in-out infinite; }
+
+
+    /* ═══════════════════════════════════════════════════════════════════
+     B3 — HOLOGRAPHIC SHIMMER PER RARITY
+     ═══════════════════════════════════════════════════════════════════ */
+    @keyframes shimmer-sweep {
+    0%   { transform: translateX(-130%) skewX(-15deg); }
+    100% { transform: translateX(230%) skewX(-15deg); }
+    }
+    @keyframes shimmer-void {
+    0%,100% { opacity: 0.5; transform: translateX(-130%) skewX(-10deg); }
+    50%     { opacity: 1;   transform: translateX(230%) skewX(-10deg); }
+    }
+    @keyframes card-hover-lift {
+    to { transform: translateY(-4px) scale(1.025); }
+    }
+    @keyframes rarity-pulse-epic {
+    0%,100% { box-shadow: 0 0 12px #a855f744, 0 0 24px #a855f722; }
+    50%     { box-shadow: 0 0 22px #a855f788, 0 0 44px #a855f744; }
+    }
+    @keyframes rarity-pulse-legendary {
+    0%,100% { box-shadow: 0 0 16px #e8b84b66, 0 0 32px #e8b84b33; }
+    50%     { box-shadow: 0 0 32px #e8b84baa, 0 0 64px #e8b84b55; }
+    }
+    @keyframes rarity-pulse-mythic {
+    0%,100% { box-shadow: 0 0 20px #ff444466, 0 0 40px #ff000022; }
+    50%     { box-shadow: 0 0 40px #ff4444cc, 0 0 80px #ff000055; }
+    }
+
+    /* Shimmer overlay — applied via ::after on .card-rarity-* wrappers */
+    .card-rarity-rare { position: relative; overflow: hidden; }
+    .card-rarity-rare::after {
+    content: ''; position: absolute; inset: 0; pointer-events: none; border-radius: inherit;
+    background: linear-gradient(105deg, transparent 35%, rgba(74,158,255,0.22) 50%, transparent 65%);
+    animation: shimmer-sweep 3.5s ease-in-out infinite;
+    }
+
+    .card-rarity-epic { position: relative; overflow: hidden; animation: rarity-pulse-epic 2.8s ease-in-out infinite; }
+    .card-rarity-epic::after {
+    content: ''; position: absolute; inset: 0; pointer-events: none; border-radius: inherit;
+    background: linear-gradient(105deg, transparent 30%, rgba(168,85,247,0.28) 50%, rgba(74,158,255,0.12) 60%, transparent 70%);
+    animation: shimmer-sweep 2.8s ease-in-out infinite;
+    }
+
+    .card-rarity-legendary { position: relative; overflow: hidden; animation: rarity-pulse-legendary 2.2s ease-in-out infinite; }
+    .card-rarity-legendary::after {
+    content: ''; position: absolute; inset: 0; pointer-events: none; border-radius: inherit;
+    background: linear-gradient(105deg, transparent 25%, rgba(255,215,0,0.12) 40%, rgba(232,184,75,0.35) 50%, rgba(255,215,0,0.12) 60%, transparent 75%);
+    animation: shimmer-sweep 2s ease-in-out infinite;
+    }
+    .card-rarity-legendary::before {
+    content: ''; position: absolute; inset: 0; pointer-events: none; border-radius: inherit;
+    background: radial-gradient(ellipse at 30% 40%, rgba(255,215,0,0.08) 0%, transparent 60%);
+    }
+
+    .card-rarity-mythic { position: relative; overflow: hidden; animation: rarity-pulse-mythic 1.8s ease-in-out infinite; }
+    .card-rarity-mythic::after {
+    content: ''; position: absolute; inset: 0; pointer-events: none; border-radius: inherit;
+    background: linear-gradient(105deg, transparent 20%, rgba(255,68,68,0.15) 38%, rgba(0,0,0,0.4) 50%, rgba(255,68,68,0.15) 62%, transparent 80%);
+    animation: shimmer-void 2s ease-in-out infinite;
+    }
+
+    /* ── B4 — MICRO-INTERACTIONS ────────────────────────────────────── */
+    /* Card hover lift in catalog */
+    .vex-card-hover {
+    transition: transform 0.2s cubic-bezier(0.22,1,0.36,1), box-shadow 0.2s ease;
+    cursor: pointer;
+    }
+    .vex-card-hover:hover {
+    transform: translateY(-5px) scale(1.03);
+    }
+    /* Primary button glow feedback */
+    .vex-btn-primary {
+    transition: transform 0.15s ease, box-shadow 0.15s ease, filter 0.15s ease;
+    }
+    .vex-btn-primary:hover {
+    transform: translateY(-2px) scale(1.03);
+    filter: brightness(1.12);
+    }
+    .vex-btn-primary:active {
+    transform: scale(0.97);
+    filter: brightness(0.95);
+    }
+    /* Nav item hover */
+    .vex-nav-item {
+    transition: color 0.18s ease, text-shadow 0.18s ease;
+    }
+    .vex-nav-item:hover {
+    text-shadow: 0 0 12px currentColor;
+    }
+    
