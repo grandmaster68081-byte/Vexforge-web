@@ -43,6 +43,7 @@ const TIER_THRESHOLDS = [
 export function LeaderboardRoute() {
   const { status, data, myPlayerId: myId, reload } = useLeaderboard(100);
   const [factionFilter, setFactionFilter] = React.useState("Todas");
+  const filteredRows = factionFilter === "Todas" ? rows : rows.filter(r => (r as any).champion_faction === factionFilter);
   const rows   = data ?? [];
   const loading = status === "loading";
   const error   = status === "ready" && !data ? "Error al cargar el clasificatorio" : null;
@@ -106,7 +107,7 @@ export function LeaderboardRoute() {
             <div style={{ color: "#5a5a7a", fontSize: 9, fontWeight: 700, textAlign: "right" }}>WIN%</div>
             <div style={{ color: "#5a5a7a", fontSize: 9, fontWeight: 700, textAlign: "center" }}>DPS TIER</div>
           </div>
-          {rows.map((row, i) => {
+          {filteredRows.map((row, i) => {
             const tier = getRank(row.mmr);
             const isMe = row.player_id === myId;
             return (
@@ -125,6 +126,7 @@ export function LeaderboardRoute() {
                   <span style={{ color: isMe ? "#3ddc84" : "#e8e8f0", fontWeight: 700, fontSize: 13 }}>{row.display_name}</span>
                   {isMe && <span style={{ color: "#3ddc84", fontSize: 9, marginLeft: 6 }}>TÚ</span>}
                   <div style={{ color: tier.color, fontSize: 10 }}>{tier.icon} {tier.name}</div>
+                  {(row as any).champion_name && <div style={{ color: "#7a5a2a", fontSize: 9, marginTop: 1 }}>👑 {(row as any).champion_name}</div>}
                 </div>
                 <div style={{ color: "#e8b84b", fontWeight: 700, fontSize: 14, textAlign: "right" }}>{row.mmr}</div>
                 <div style={{ color: "#7a7a9a", fontSize: 11, textAlign: "center" }}>
