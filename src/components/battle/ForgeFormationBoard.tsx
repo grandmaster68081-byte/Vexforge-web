@@ -1392,6 +1392,79 @@ function PureFormationBadge({ faction }: { faction: string }) {
   );
 }
 
+// ─── H3: Rich Terrain Particles ───────────────────────────────────────────────
+const RICH_PARTICLES: Record<string, {
+  colors: string[]; sizes: number[]; speeds: number[]; shapes: ('orb'|'spark'|'wisp')[];
+}> = {
+  Guerrero: {
+    colors: ['#ff6b2b','#e84040','#ff9a3c','#ffd700'],
+    sizes:  [4,3,6,2,5,3,4,2,5],
+    speeds: [1.8,2.4,1.5,3.0,2.0,2.6,1.9,3.2,2.2],
+    shapes: ['spark','orb','spark','spark','orb','spark','spark','orb','spark'],
+  },
+  Mago: {
+    colors: ['#4a9eff','#a855f7','#00cec9','#6c5ce7','#74b9ff'],
+    sizes:  [5,3,4,6,2,4,3,5,4],
+    speeds: [2.5,3.5,2.0,4.0,3.0,2.8,3.3,2.1,3.7],
+    shapes: ['orb','orb','wisp','orb','orb','wisp','orb','orb','wisp'],
+  },
+  'Paladín': {
+    colors: ['#ffd700','#fffbe6','#e8b84b','#fff5b4','#f8c52d'],
+    sizes:  [3,5,2,4,3,6,2,4,3],
+    speeds: [2.0,2.8,1.6,3.2,2.4,1.8,3.0,2.2,2.6],
+    shapes: ['spark','orb','spark','spark','orb','spark','spark','spark','orb'],
+  },
+  'Pícaro': {
+    colors: ['#a855f7','#6c5ce7','#2d3436','#9b59b6','#7f8c8d'],
+    sizes:  [4,3,5,2,4,3,6,2,5],
+    speeds: [3.5,4.5,3.0,5.0,3.8,4.2,2.8,5.5,4.0],
+    shapes: ['wisp','wisp','orb','wisp','wisp','orb','wisp','wisp','orb'],
+  },
+};
+const DEFAULT_RICH_PARTICLES = RICH_PARTICLES['Mago'];
+
+const PARTICLE_POSITIONS = [
+  { x: 8, y: 90 }, { x: 22, y: 85 }, { x: 38, y: 92 }, { x: 55, y: 88 },
+  { x: 70, y: 93 }, { x: 82, y: 87 }, { x: 92, y: 91 }, { x: 15, y: 78 },
+  { x: 48, y: 82 },
+];
+
+function RichTerrainParticles({ faction }: { faction: string }) {
+  const cfg = RICH_PARTICLES[faction] ?? DEFAULT_RICH_PARTICLES;
+  return (
+    <div style={{ position: 'absolute', inset: 0, zIndex: 1, pointerEvents: 'none', overflow: 'hidden' }}>
+      {cfg.sizes.map((sz, i) => {
+        const color  = cfg.colors[i % cfg.colors.length];
+        const speed  = cfg.speeds[i] ?? 2.5;
+        const shape  = cfg.shapes[i] ?? 'orb';
+        const pos    = PARTICLE_POSITIONS[i] ?? { x: 50, y: 90 };
+        const delay  = (i * 0.37) % 3.2;
+        const isOrb  = shape === 'orb';
+        const isWisp = shape === 'wisp';
+        const br     = isOrb ? '50%' : isWisp ? '40% 60% 50% 40%' : '2px';
+        const blur   = isOrb ? `blur(${sz * 0.8}px)` : isWisp ? 'blur(3px)' : 'blur(1px)';
+        const driftX = isWisp ? `${(i % 3 - 1) * 18}px` : isOrb ? `${(i % 3 - 1) * 8}px` : '0px';
+        return (
+          <div key={i} style={{
+            position: 'absolute',
+            left: `${pos.x}%`,
+            top: `${pos.y}%`,
+            width: sz, height: sz,
+            borderRadius: br,
+            background: color,
+            boxShadow: `0 0 ${sz * 2}px ${color}cc, 0 0 ${sz * 4}px ${color}55`,
+            filter: blur,
+            opacity: 0,
+            animation: `rich-ptcl-${faction.replace(/[^a-z]/gi,'').toLowerCase()} ${speed}s ease-out ${delay}s infinite`,
+            // Inline keyframe via style; use CSS var trick
+            ['--dx' as string]: driftX,
+          }} />
+        );
+      })}
+    </div>
+  );
+}
+
 // ─── Main ForgeFormationBoard component ───────────────────────────────────────
 export interface ForgeFormationBoardProps {
   initialFormation: FormationState;
@@ -1628,6 +1701,16 @@ export function ForgeFormationBoard({
   // ─── Derived for Forge Barrier & terrain ─────────────────────────────────────
   const champFaction    = formation.champion.faction ?? 'default';
   const terrain         = getTerrain(champFaction);
+
+  // ─── H2: Target Lock — derive which opponent slot the player is targeting ────
+  const currentTurn = battleTurns[turnIdx];
+  const playerIsAttacking = phase === 'battle' && currentTurn?.atk_side === 'a';
+  const defenderName = playerIsAttacking ? currentTurn?.defender?.name : null;
+  const targetedOpponentSlot = defenderName
+    ? (['vanguard', 'champion', 'sentinel'] as FormationSlot[]).find(
+        s => (finalFormation[s] as BattleUnit | null)?.name === defenderName
+      ) ?? null
+    : null;
   // Player is "winning" if they won OR fewer rage stacks (lost fewer allies)
   const playerWinning   = battleResult.current.you_won || rageStacks < 3;
   const criticalHp      = progressPct > 0.75;
@@ -1692,6 +1775,48 @@ export function ForgeFormationBoard({
         @keyframes terrain-particle-float {
           0%   { transform: translateY(0px) scale(1); opacity: 0.55; }
           100% { transform: translateY(-55px) scale(0.3); opacity: 0; }
+        }
+        @keyframes rich-ptcl-guerrero {
+          0%   { transform: translateY(0px) translateX(0px) scale(0.6) rotate(0deg); opacity: 0; }
+          15%  { opacity: 0.9; }
+          85%  { opacity: 0.6; }
+          100% { transform: translateY(-90px) translateX(var(--dx,6px)) scale(0.15) rotate(180deg); opacity: 0; }
+        }
+        @keyframes rich-ptcl-mago {
+          0%   { transform: translateY(0px) translateX(0px) scale(0.5); opacity: 0; }
+          20%  { opacity: 0.85; }
+          80%  { opacity: 0.5; }
+          100% { transform: translateY(-70px) translateX(var(--dx,0px)) scale(0.8); opacity: 0; }
+        }
+        @keyframes rich-ptcl-paladin {
+          0%   { transform: translateY(0px) scale(0.4) rotate(0deg); opacity: 0; }
+          18%  { opacity: 1; }
+          82%  { opacity: 0.7; }
+          100% { transform: translateY(-85px) scale(0.1) rotate(90deg); opacity: 0; }
+        }
+        @keyframes rich-ptcl-picaro {
+          0%   { transform: translateY(0px) translateX(0px) scale(1) skewX(0deg); opacity: 0; }
+          15%  { opacity: 0.7; }
+          85%  { opacity: 0.3; }
+          100% { transform: translateY(-50px) translateX(var(--dx,12px)) scale(0.4) skewX(15deg); opacity: 0; }
+        }
+        @keyframes target-lock-spin {
+          0%   { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
+        }
+        @keyframes target-lock-pulse {
+          0%,100% { opacity: 0.8; box-shadow: 0 0 12px rgba(232,64,64,0.7); }
+          50%     { opacity: 1;   box-shadow: 0 0 24px rgba(232,64,64,1.0), 0 0 40px rgba(232,64,64,0.4); }
+        }
+        @keyframes target-lock-scan {
+          0%   { transform: translateY(-100%); opacity: 0; }
+          20%  { opacity: 0.6; }
+          80%  { opacity: 0.4; }
+          100% { transform: translateY(100%); opacity: 0; }
+        }
+        @keyframes target-lock-corner {
+          0%   { opacity: 0; transform: scale(0.6); }
+          100% { opacity: 1; transform: scale(1); }
         }
         @keyframes shield-arc-break {
           0%   { opacity: 0.7; filter: none; }
@@ -1807,6 +1932,9 @@ export function ForgeFormationBoard({
           background: `radial-gradient(ellipse at 50% 50%, ${terrain.ambientColor} 0%, transparent 70%)`,
         }} />
 
+        {/* H3: Rich Terrain Particles */}
+        <RichTerrainParticles faction={champFaction} />
+
         {/* Atmospheric grid */}
         <div className="board-grid" style={{
           position: 'absolute', inset: 0, zIndex: 0, pointerEvents: 'none',
@@ -1914,18 +2042,68 @@ export function ForgeFormationBoard({
             <div style={{ display: 'flex', gap: 12 }}>
               {(['vanguard', 'champion', 'sentinel'] as FormationSlot[]).map(s => {
                 const u = finalFormation[s] as BattleUnit | null;
+                const isTarget = targetedOpponentSlot === s;
+                const slotPrimary = SLOT_COLORS[s].primary;
                 return (
                   <div key={s} style={{
                     width: 90, minHeight: 130, borderRadius: 10,
-                    border: `1px solid ${SLOT_COLORS[s].primary}33`,
-                    background: `linear-gradient(160deg,${SLOT_COLORS[s].primary}11,#0a0a14)`,
+                    border: isTarget
+                      ? '2px solid rgba(232,64,64,0.9)'
+                      : `1px solid ${slotPrimary}33`,
+                    background: isTarget
+                      ? `linear-gradient(160deg,rgba(232,64,64,0.18),#0a0a14)`
+                      : `linear-gradient(160deg,${slotPrimary}11,#0a0a14)`,
                     display: 'flex', flexDirection: 'column', alignItems: 'center',
-                    justifyContent: 'center', padding: 8, gap: 4, opacity: 0.75,
+                    justifyContent: 'center', padding: 8, gap: 4,
+                    opacity: isTarget ? 1 : 0.75,
                     transform: 'scaleY(-1)',
+                    position: 'relative', overflow: 'hidden',
+                    boxShadow: isTarget ? '0 0 20px rgba(232,64,64,0.5), 0 0 40px rgba(232,64,64,0.2)' : 'none',
+                    animation: isTarget ? 'target-lock-pulse 0.9s ease-in-out infinite' : 'none',
+                    transition: 'all 0.3s ease',
                   }}>
+                    {/* H2: Target Lock scan-line effect */}
+                    {isTarget && (
+                      <>
+                        {/* Scan line */}
+                        <div style={{
+                          position: 'absolute', left: 0, right: 0, height: 2,
+                          background: 'linear-gradient(90deg,transparent,rgba(232,64,64,0.8),transparent)',
+                          animation: 'target-lock-scan 1.4s linear infinite',
+                          pointerEvents: 'none', zIndex: 5,
+                        }} />
+                        {/* Corner brackets TL */}
+                        <div style={{
+                          position: 'absolute', top: 4, left: 4, width: 14, height: 14,
+                          borderTop: '2px solid #e84040', borderLeft: '2px solid #e84040',
+                          borderRadius: '3px 0 0 0',
+                          animation: 'target-lock-corner 0.3s ease-out both',
+                          zIndex: 5, transform: 'scaleY(-1)',
+                        }} />
+                        {/* Corner brackets BR */}
+                        <div style={{
+                          position: 'absolute', bottom: 4, right: 4, width: 14, height: 14,
+                          borderBottom: '2px solid #e84040', borderRight: '2px solid #e84040',
+                          borderRadius: '0 0 3px 0',
+                          animation: 'target-lock-corner 0.3s ease-out 0.1s both',
+                          zIndex: 5, transform: 'scaleY(-1)',
+                        }} />
+                        {/* TARGET label */}
+                        <div style={{
+                          position: 'absolute', top: 4, left: '50%',
+                          transform: 'translateX(-50%) scaleY(-1)',
+                          fontSize: 7, fontFamily: '"Rajdhani",sans-serif',
+                          fontWeight: 900, color: '#e84040',
+                          letterSpacing: '0.18em',
+                          textShadow: '0 0 8px rgba(232,64,64,0.9)',
+                          animation: 'target-lock-corner 0.3s ease-out 0.15s both',
+                          zIndex: 6, whiteSpace: 'nowrap',
+                        }}>◉ OBJETIVO</div>
+                      </>
+                    )}
                     <div style={{ fontSize: 20 }}>{SLOT_META[s].icon}</div>
                     {u && <div style={{
-                      fontSize: 7, color: '#aaa', fontFamily: '"Cinzel",serif',
+                      fontSize: 7, color: isTarget ? '#ff9a9a' : '#aaa', fontFamily: '"Cinzel",serif',
                       textAlign: 'center', transform: 'scaleY(-1)',
                       overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
                       maxWidth: 70,

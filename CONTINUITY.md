@@ -1,7 +1,7 @@
 # VEXFORGE — CONTINUITY LOG
-## Chat 111 — 2026-07-28 — Rewards IA + Plan actualizado
+## Chat 113 — 2026-07-28 — H2 Target Lock + H3 Terrain Particles
 
-**Branch:** main | **Build:** 65 módulos, 0 errores TypeScript esperados
+**Branch:** main | **Build:** ✅ clean, 0 errores TS | **Deploy:** auto-push a Cloudflare Pages
 
 ---
 
@@ -23,39 +23,59 @@
 | C2  | SFX invocación por facción             | ✅ done    |
 | D1  | Tutorial mejorado Forge Formation      | ✅ done    |
 | D2  | Onboarding nuevos jugadores            | ✅ done    |
-| **RewardsIA** | **VEX anti-farm para batallas IA** | ✅ done |
+| RewardsIA | VEX anti-farm para batallas IA   | ✅ done    |
+| H1  | Shield Arc visual mejorado             | ✅ done    |
+| I1  | Battle cards responsive < 480px        | ✅ done    |
+| **H2**  | **Target Lock UI**                 | **✅ done (chat113)** |
+| **H3**  | **Terrain particles ricos**        | **✅ done (chat113)** |
 
 ---
 
-## Implementado esta sesión
+## Implementado en Chat 113
 
-### RewardsIA ✅ Recompensas anti-farm para batallas vs IA
+### H2 ✅ Target Lock UI
 
-**RPC desplegado en Supabase:** `claim_ai_battle_reward(p_player_id, p_difficulty, p_date_key)`
+Objetivo de la carta que el jugador atacará en el próximo turno, visible sobre la formación del oponente.
 
-| Dificultad | VEX por victoria | Cap diario |
-|------------|-----------------|------------|
-| Aprendiz   | +3 VEX          | 5 victorias/día |
-| Forjador   | +6 VEX          | 4 victorias/día |
-| Maestro    | +12 VEX         | 3 victorias/día |
-| Leyenda    | +20 VEX         | 2 victorias/día |
+**Lógica:**
+- `targetedOpponentSlot` derivado de `battleTurns[turnIdx].defender.name` comparado contra `finalFormation[s].name`
+- Activo solo cuando `phase === 'battle'` y `atk_side === 'a'` (turno del jugador)
 
-**Anti-farm:** conteo por `economy_ledger` (source_table='ai_battle_reward', metadata->date_key) — sin nuevas tablas.
+**Visual:**
+- Border rojo pulsante en el slot objetivo (`target-lock-pulse`)
+- Scan-line animada de arriba a abajo (`target-lock-scan`)
+- Corner brackets en esquinas TL y BR (`target-lock-corner`)
+- Badge `◉ OBJETIVO` en rojo sobre la carta
+- Glow rojo `box-shadow` + transición suave a/desde estado normal
+
+### H3 ✅ Rich Terrain Particles
+
+Sistema de partículas CSS animadas por facción, reemplazando los emojis planos.
+
+**Componente:** `RichTerrainParticles({ faction })`
+- 9 partículas por facción, tipos: `orb` / `spark` / `wisp`
+- Posiciones distribuidas, delays escalonados, velocidades diferenciadas
+- Guerrero: brasas naranja/rojo ascendentes rápidas
+- Mago: orbes azul/morado flotantes lentos
+- Paladín: chispas doradas/blancas con glow
+- Pícaro: neblinas sombra drifting laterales
+
+**Keyframes añadidos:** `rich-ptcl-guerrero`, `rich-ptcl-mago`, `rich-ptcl-paladin`, `rich-ptcl-picaro`, `target-lock-pulse`, `target-lock-scan`, `target-lock-corner`
 
 **Archivos modificados:**
-- `src/lib/aiBattleEngine.ts` — añadidos `AI_BATTLE_VEX_REWARD`, `AI_BATTLE_DAILY_CAP`, `claimAIBattleReward()`; labels actualizados en `BATTLE_MODE_META`
-- `src/routes/PvpRoute.tsx` — nuevo flujo `aiRewardDifficultyRef`, handler anti-farm en `handleForgeFormationComplete`, banner VEX ganado, botones muestran reward real
-- `backend/sql-fixes/AI-rewards-antifarm.sql` — SQL del RPC
+- `src/components/battle/ForgeFormationBoard.tsx` — +212 líneas netas
 
-**Verificación A1:** línea 474 de CardsRoute.tsx ya usa `filtered.length` ✅ (corregido en sesión anterior, confirmado en código)
+### Plan en Supabase ✅
+- `vexforge_forge_formation_engine_v1` actualizado (PATCH 204) con estado Chat 113
 
 ---
 
 ## Próximos pasos (siguiente sesión)
 
-1. **Build dist** — Hacer build y push del dist actualizado a Cloudflare
-2. **Verificar en deploy** — Confirmar Rewards IA funcional en vexforge-web.pages.dev
-3. **Imágenes de cartas** — El gap visual pendiente más importante (ver backend/pending/visual-assets-gap.md)
+1. **Visual assets zip bundles** — Owner debe desempaquetar en Supabase Storage: backgrounds, clans, events, founders, misc, sessions, ui_system
+2. **I2** — Navigation overflow: hamburger menu para < 768px
+3. **H4** — Post-battle scoreboard mejorado (stats por carta, daño total, kills)
+4. **Verificar vexforge-web.pages.dev** — Confirmar Cloudflare auto-deploy activo
 
 ---
 
