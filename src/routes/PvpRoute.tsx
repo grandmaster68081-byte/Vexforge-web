@@ -583,16 +583,21 @@ export function PvpRoute() {
     }
   }, [playerId, dailyChallenge, onWin, onLoss, practiceMode, battle, streak]);
 
-  // FFE: Practice mode entry point — no daily limit
-  const startPractice = useCallback(async () => {
+  // FFE: AI battle entry point — selectable difficulty, no daily limit
+  const startAIBattle = useCallback(async (difficulty: AIDifficulty) => {
     if (!playerId) return;
     try {
       const units = await loadPlayerBattleUnits(supabase, playerId);
-      formationDifficultyRef.current = 'normal';
+      formationDifficultyRef.current = difficulty;
       setPracticeMode(true);
       setFormationUnits(units);
     } catch { /* silent */ }
   }, [playerId]);
+
+  // FFE: Practice mode entry point — no daily limit (keeps 'normal' for backwards compat)
+  const startPractice = useCallback(async () => {
+    await startAIBattle('normal');
+  }, [startAIBattle]);
 
   // FFE: Auto-dismiss server battleResult when in PvP FFE mode
   useEffect(() => {
@@ -626,8 +631,11 @@ export function PvpRoute() {
 
   // FFE: ForgeFormationBoard — actual formation battle (daily / pvp / practice)
   if (pendingFormation) {
+    const AI_LABEL: Record<string, string> = {
+      easy: '🤖 IA Aprendiz', normal: '🛡️ IA Forjador', expert: '💀 IA Maestro', legend: '💎 IA Leyenda', tutorial: '📖 Tutorial',
+    };
     const ffeOpponentName = practiceMode
-      ? '🎮 Modo Práctica'
+      ? (AI_LABEL[formationDifficultyRef.current] ?? '🎮 Modo Práctica')
       : pvpOpponentRef.current
         ? `⚔️ ${pvpOpponentNameRef.current}`
         : dailyChallenge.title;
@@ -734,27 +742,55 @@ export function PvpRoute() {
 
         <DailyChallengeCard challenge={dailyChallenge} attempted={dailyAttempted} badgeEarned={dailyBadgeEarned} dailyLoading={dailyLoading} onStart={startDailyChallenge} />
 
-        {/* FFE: Practice Mode — acceso sin límite diario */}
-        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 20 }}>
-          <button
-            onClick={startPractice}
-            disabled={!playerId || pvpLoading}
-            style={{
-              padding: '11px 28px', borderRadius: 10,
-              border: '1px solid rgba(74,158,255,0.35)',
-              background: 'rgba(74,158,255,0.07)',
-              color: '#4a9eff', cursor: (!playerId || pvpLoading) ? 'not-allowed' : 'pointer',
-              fontFamily: 'Cinzel,serif', fontWeight: 700, fontSize: 12,
-              letterSpacing: '0.07em', opacity: pvpLoading ? 0.6 : 1,
-              display: 'flex', alignItems: 'center', gap: 8,
-              transition: 'all 0.2s',
-              boxShadow: '0 2px 12px rgba(74,158,255,0.1)',
-            }}
-            onMouseEnter={e => { if (playerId && !pvpLoading) (e.currentTarget as HTMLButtonElement).style.background = 'rgba(74,158,255,0.14)'; }}
-            onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.background = 'rgba(74,158,255,0.07)'; }}
-          >
-            🎮 MODO PRÁCTICA — Forge Formation 3v3 (sin límite)
-          </button>
+        {/* ── ENTRENAMIENTO VS IA ──────────────────────────────────────────────── */}
+        <div style={{
+          marginBottom: 28,
+          background: 'linear-gradient(135deg,#0d0d1a,#111122)',
+          border: '1px solid rgba(74,158,255,0.2)',
+          borderRadius: 16, padding: '18px 20px',
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 14 }}>
+            <span style={{ fontSize: 18 }}>🤖</span>
+            <div>
+              <h2 style={{ fontFamily: 'Cinzel,serif', color: '#e8e8f0', fontSize: 15, margin: 0, fontWeight: 700 }}>
+                Entrenamiento vs IA
+              </h2>
+              <p style={{ color: '#5a5a7a', fontSize: 11, margin: 0, fontFamily: 'Rajdhani,sans-serif' }}>
+                Sin límite diario · Practica estrategias y configura tu mazo
+              </p>
+            </div>
+          </div>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(140px,1fr))', gap: 10 }}>
+            {([
+              { diff: 'easy'   as AIDifficulty, icon: '🤖',  label: 'Aprendiz',  desc: 'Sin keywords · Ideal para empezar',       color: '#3dc96b', reward: 'Sin límite' },
+              { diff: 'normal' as AIDifficulty, icon: '🛡️', label: 'Forjador',  desc: 'Guard y Lifesteal · Requiere estrategia', color: '#e8b84b', reward: 'Sin límite' },
+              { diff: 'expert' as AIDifficulty, icon: '💀',  label: 'Maestro',   desc: 'Deck completo · IA optimizada',           color: '#a855f7', reward: 'Sin límite' },
+              { diff: 'legend' as AIDifficulty, icon: '💎',  label: 'Leyenda',   desc: 'IA máxima · Sin misericordia',            color: '#ffd700', reward: 'Sin límite' },
+            ]).map(({ diff, icon, label, desc, color, reward }) => (
+              <button
+                key={diff}
+                onClick={() => startAIBattle(diff)}
+                disabled={!playerId || pvpLoading}
+                style={{
+                  padding: '12px 10px', borderRadius: 10, textAlign: 'left',
+                  border: `1px solid ${color}33`,
+                  background: `linear-gradient(135deg,${color}0a,rgba(10,10,20,0.9))`,
+                  cursor: (!playerId || pvpLoading) ? 'not-allowed' : 'pointer',
+                  opacity: (!playerId || pvpLoading) ? 0.5 : 1,
+                  transition: 'all 0.2s', display: 'flex', flexDirection: 'column', gap: 4,
+                }}
+                onMouseEnter={e => { if (playerId && !pvpLoading) (e.currentTarget as HTMLButtonElement).style.background = `linear-gradient(135deg,${color}18,rgba(15,15,28,0.95))`; }}
+                onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.background = `linear-gradient(135deg,${color}0a,rgba(10,10,20,0.9))`; }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 2 }}>
+                  <span style={{ fontSize: 16 }}>{icon}</span>
+                  <span style={{ fontFamily: 'Cinzel,serif', fontWeight: 700, fontSize: 11, color }}>{label}</span>
+                </div>
+                <span style={{ fontSize: 10, color: '#7a7a9a', fontFamily: 'Rajdhani,sans-serif', lineHeight: 1.3 }}>{desc}</span>
+                <span style={{ fontSize: 9, color: `${color}cc`, fontFamily: 'IBM Plex Mono,monospace', marginTop: 4, fontWeight: 700 }}>{reward} al ganar</span>
+              </button>
+            ))}
+          </div>
         </div>
 
         {pvpLoading && (
@@ -889,13 +925,37 @@ export function PvpRoute() {
             {opponents.length === 0 && !opponentsLoading && !matchmaking && (
               <div style={{
                 background: "#12121e", border: "1px dashed #2a2a3a",
-                borderRadius: 10, padding: 28, textAlign: "center",
+                borderRadius: 10, padding: 24, textAlign: "center",
               }}>
-                <div style={{ fontSize: 36, marginBottom: 10, opacity: 0.5 }}>⚔️</div>
-                <p style={{ color: "#7a7a9a", margin: 0, fontSize: 13 }}>
-                  Pulsa <strong style={{ color: "#e8b84b" }}>Buscar oponentes</strong> para
-                  encontrar rivales en el servidor.
+                <div style={{ fontSize: 32, marginBottom: 8, opacity: 0.5 }}>⚔️</div>
+                <p style={{ color: "#7a7a9a", margin: "0 0 14px", fontSize: 13 }}>
+                  Pulsa <strong style={{ color: "#e8b84b" }}>Buscar oponentes</strong> para encontrar rivales.
+                  Si no hay jugadores disponibles, entrena contra la IA.
                 </p>
+                <div style={{ display: 'flex', gap: 8, justifyContent: 'center', flexWrap: 'wrap' }}>
+                  {([
+                    { diff: 'easy'   as AIDifficulty, icon: '🤖', label: 'vs Aprendiz', color: '#3dc96b' },
+                    { diff: 'normal' as AIDifficulty, icon: '🛡️', label: 'vs Forjador', color: '#e8b84b' },
+                    { diff: 'expert' as AIDifficulty, icon: '💀', label: 'vs Maestro',  color: '#a855f7' },
+                  ]).map(({ diff, icon, label, color }) => (
+                    <button
+                      key={diff}
+                      onClick={() => startAIBattle(diff)}
+                      disabled={!playerId}
+                      style={{
+                        padding: '7px 14px', borderRadius: 8,
+                        border: `1px solid ${color}44`,
+                        background: `${color}0d`,
+                        color, fontSize: 11, cursor: playerId ? 'pointer' : 'not-allowed',
+                        fontFamily: 'Cinzel,serif', fontWeight: 700,
+                        display: 'flex', alignItems: 'center', gap: 5,
+                        transition: 'all 0.2s',
+                      }}
+                    >
+                      <span>{icon}</span><span>{label}</span>
+                    </button>
+                  ))}
+                </div>
               </div>
             )}
 
