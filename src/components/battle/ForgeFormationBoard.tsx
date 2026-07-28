@@ -608,6 +608,167 @@ function ForgeGauge({ progress }: { progress: number }) {
     );
     }
 
+// ─── Unit Summon Cinematic — B1: per-faction · per-rarity for reserve cards ────
+const UNIT_SUMMON_DURATION: Record<string, number> = {
+  Common: 1400, Uncommon: 1600, Rare: 1900, Epic: 2200, Legendary: 2600, Mythic: 3000,
+};
+const UNIT_RARITY_TAG: Record<string, string> = {
+  Rare: '★', Epic: '★★', Legendary: '👑', Mythic: '🔥',
+};
+const SLOT_LABEL_MAP: Record<FormationSlot, string> = {
+  vanguard: 'VANGUARDIA', champion: 'CAMPEÓN', sentinel: 'CENTINELA',
+};
+
+function UnitSummonCinematic({
+  unit, slot, onDone,
+}: { unit: BattleUnit; slot: FormationSlot; onDone: () => void }) {
+  const fac    = getFactionStyle(unit.faction ?? '');
+  const ter    = getTerrain(unit.faction ?? '');
+  const rar    = RARITY_COLOR[unit.rarity] ?? '#8b8b9e';
+  const dur    = UNIT_SUMMON_DURATION[unit.rarity] ?? 1800;
+  const tag    = UNIT_RARITY_TAG[unit.rarity] ?? '';
+  const slotLabel = SLOT_LABEL_MAP[slot] ?? slot.toUpperCase();
+  const bg     = {
+    Guerrero: 'radial-gradient(ellipse at 50% 60%, #2a0800 0%, #06020a 100%)',
+    Mago:     'radial-gradient(ellipse at 50% 40%, #08051a 0%, #020208 100%)',
+    'Paladín': 'radial-gradient(ellipse at 50% 30%, #130d00 0%, #040300 100%)',
+    'Pícaro':  'radial-gradient(ellipse at 50% 80%, #0a0314 0%, #020106 100%)',
+  }[unit.faction ?? ''] ?? 'radial-gradient(ellipse at 50% 50%, #0e0e22 0%, #020208 100%)';
+
+  const [show, setShow] = useState(false);
+  useEffect(() => {
+    const t0 = setTimeout(() => setShow(true), 80);
+    const t1 = setTimeout(() => onDone(), dur);
+    try { (AudioEngine as any).sfxDrawCard?.(); } catch { /* ok */ }
+    return () => { clearTimeout(t0); clearTimeout(t1); };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  return (
+    <div style={{
+      position: 'absolute', inset: 0, zIndex: 58,
+      background: bg, overflow: 'hidden',
+      display: 'flex', flexDirection: 'column',
+      alignItems: 'center', justifyContent: 'center',
+    }}>
+      <style>{`
+        @keyframes unit-summon-rise {
+          0%   { transform: translateY(30px) scale(0.75); opacity: 0; filter: blur(10px) brightness(2.5); }
+          55%  { transform: translateY(-4px) scale(1.04); opacity: 1; filter: blur(0) brightness(1.15); }
+          100% { transform: translateY(0) scale(1);       opacity: 1; filter: blur(0) brightness(1); }
+        }
+        @keyframes unit-summon-ring {
+          0%   { transform: scale(0.1); opacity: 0.8; }
+          100% { transform: scale(2.8); opacity: 0; }
+        }
+        @keyframes unit-summon-label {
+          0%   { transform: translateY(8px); opacity: 0; letter-spacing: 0.4em; }
+          100% { transform: translateY(0);   opacity: 1; letter-spacing: 0.18em; }
+        }
+        @keyframes unit-summon-slot {
+          0%   { opacity: 0; }
+          100% { opacity: 1; }
+        }
+      `}</style>
+
+      {/* Terrain particles */}
+      {ter.particleEmoji.map((p, i) => (
+        <div key={i} style={{
+          position: 'absolute',
+          left: `${20 + i * 30}%`, bottom: '15%',
+          fontSize: 18 + i * 4, opacity: 0,
+          animation: show ? `terrain-particle-float ${1.2 + i * 0.3}s ease-out ${i * 0.2}s both` : 'none',
+        }}>{p}</div>
+      ))}
+
+      {/* Energy rings */}
+      {[0, 1].map(i => (
+        <div key={i} style={{
+          position: 'absolute',
+          width: 120, height: 120, borderRadius: '50%',
+          border: `2px solid ${fac.primary}`,
+          opacity: 0,
+          animation: show ? `unit-summon-ring 0.9s ease-out ${i * 0.18}s both` : 'none',
+        }} />
+      ))}
+
+      {/* Card image + name */}
+      <div style={{
+        display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12,
+        opacity: 0,
+        animation: show ? 'unit-summon-rise 0.6s cubic-bezier(0.22,1,0.36,1) 0.1s both' : 'none',
+        zIndex: 2,
+      }}>
+        {/* Card art */}
+        <div style={{
+          width: 90, height: 120, borderRadius: 10,
+          border: `2px solid ${rar}bb`,
+          boxShadow: `0 0 24px ${fac.glow}, 0 0 8px ${rar}55`,
+          overflow: 'hidden',
+          background: unit.image_url
+            ? `url(${unit.image_url}) center/cover no-repeat`
+            : `linear-gradient(160deg, ${rar}33, #0a0a14)`,
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          position: 'relative',
+        }}>
+          {!unit.image_url && (
+            <span style={{ fontSize: 32, opacity: 0.5 }}>{fac.particle}</span>
+          )}
+          {/* Rarity tag */}
+          {tag && (
+            <div style={{
+              position: 'absolute', top: 4, right: 4,
+              fontSize: 9, color: rar, fontWeight: 800,
+              textShadow: `0 0 6px ${rar}`,
+              fontFamily: '"Cinzel",serif',
+            }}>{tag}</div>
+          )}
+        </div>
+
+        {/* Unit name */}
+        <div style={{
+          fontFamily: '"Cinzel",serif', fontWeight: 700,
+          fontSize: 15, color: '#e8e8f0',
+          textShadow: `0 0 16px ${fac.glow}`,
+          textAlign: 'center',
+        }}>{unit.name}</div>
+
+        {/* Faction + rarity */}
+        <div style={{
+          display: 'flex', gap: 8, alignItems: 'center',
+          fontFamily: '"Rajdhani",sans-serif', fontSize: 10,
+          opacity: 0,
+          animation: show ? 'unit-summon-label 0.4s ease-out 0.4s both' : 'none',
+        }}>
+          <span style={{ color: fac.primary, letterSpacing: '0.12em', fontWeight: 700 }}>
+            {unit.faction}
+          </span>
+          <span style={{ color: '#3a3a5a' }}>·</span>
+          <span style={{ color: rar, letterSpacing: '0.06em' }}>{unit.rarity}</span>
+        </div>
+      </div>
+
+      {/* Slot label */}
+      <div style={{
+        position: 'absolute', bottom: 28, left: 0, right: 0, textAlign: 'center',
+        fontFamily: '"Rajdhani",sans-serif', fontSize: 10,
+        letterSpacing: '0.3em', color: '#3a3a5a',
+        opacity: 0,
+        animation: show ? 'unit-summon-slot 0.3s ease-out 0.6s both' : 'none',
+      }}>
+        ▶ INVOCANDO {slotLabel}
+      </div>
+
+      {/* Bottom glow bar */}
+      <div style={{
+        position: 'absolute', bottom: 0, left: 0, right: 0, height: 3,
+        background: `linear-gradient(90deg, transparent, ${fac.primary}, transparent)`,
+        opacity: 0.6,
+      }} />
+    </div>
+  );
+}
+
 // ─── Forge Ascension Overlay (2s cinematic) ────────────────────────────────────
 function ForgeAscensionOverlay({ champion, onDone }: { champion: BattleUnit; onDone: () => void }) {
   useEffect(() => {
@@ -1131,6 +1292,11 @@ export function ForgeFormationBoard({
   const [ascensionActive, setAscensionActive] = useState(false);
   const [showAscensionOverlay, setShowAscensionOverlay] = useState(false);
 
+  // ─── B1: Unit summon cinematic for reserve replacements ──────────────────────
+  const [summoningUnit, setSummoningUnit] = useState<BattleUnit | null>(null);
+  const [summoningSlot, setSummoningSlot] = useState<FormationSlot | null>(null);
+  const pendingReserveRef = useRef<{ unit: BattleUnit; slot: FormationSlot } | null>(null);
+
   const autoRef      = useRef<ReturnType<typeof setInterval> | null>(null);
   const musicPhaseRef = useRef<'none' | 'intro' | 'mid' | 'last_stand'>('none');
   const prevKillsRef  = useRef(0);
@@ -1283,18 +1449,30 @@ export function ForgeFormationBoard({
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [phase, turnIdx, formation, addLog, onComplete, ascensionActive]);
 
-  const handleSelectReserve = useCallback((unit: BattleUnit, _idx: number) => {
-    if (!awaitingSlot) return;
+  // B1: called after UnitSummonCinematic completes
+  const handleUnitSummonDone = useCallback(() => {
+    const pending = pendingReserveRef.current;
+    if (!pending) return;
+    pendingReserveRef.current = null;
+    setSummoningUnit(null);
+    setSummoningSlot(null);
     setFormation(prev => ({
       ...prev,
-      [awaitingSlot]: unit,
-      reserve: prev.reserve.filter(u => u.id !== unit.id),
+      [pending.slot]: pending.unit,
+      reserve: prev.reserve.filter(u => u.id !== pending.unit.id),
     }));
-    try { (AudioEngine as any).sfxDrawCard?.(); } catch { /* ok */ }
-    addLog(`🔄 ${SLOT_META[awaitingSlot].label} → ${unit.name} entra al campo`);
+    addLog(`🔄 ${SLOT_META[pending.slot].label} → ${pending.unit.name} entra al campo`);
     setAwaitingSlot(null);
     setPhase('battle');
-  }, [awaitingSlot, addLog]);
+  }, [addLog]);
+
+  const handleSelectReserve = useCallback((unit: BattleUnit, _idx: number) => {
+    if (!awaitingSlot) return;
+    // B1: trigger unit summon cinematic before deploying
+    pendingReserveRef.current = { unit, slot: awaitingSlot };
+    setSummoningUnit(unit);
+    setSummoningSlot(awaitingSlot);
+  }, [awaitingSlot]);
 
   const handleAscensionDone = useCallback(() => {
     setShowAscensionOverlay(false);
@@ -1646,11 +1824,20 @@ export function ForgeFormationBoard({
         )}
 
         {/* Reserve selection overlay (top 3) */}
-        {phase === 'reserve' && (
+        {phase === 'reserve' && !summoningUnit && (
           <ReservePanel
             reserve={formation.reserve}
             onSelectReserve={handleSelectReserve}
             awaitingSlot={awaitingSlot}
+          />
+        )}
+
+        {/* B1: Unit Summon Cinematic for reserve replacements */}
+        {summoningUnit && summoningSlot && (
+          <UnitSummonCinematic
+            unit={summoningUnit}
+            slot={summoningSlot}
+            onDone={handleUnitSummonDone}
           />
         )}
 
