@@ -619,10 +619,7 @@ export function PvpRoute() {
     } catch { /* silent */ }
   }, [playerId]);
 
-  // FFE: Practice mode entry point — no daily limit (keeps 'normal' for backwards compat)
-  const startPractice = useCallback(async () => {
-    await startAIBattle('normal');
-  }, [startAIBattle]);
+  // FFE: Practice mode — call startAIBattle('normal') directly
 
   // FFE: Auto-dismiss server battleResult when in PvP FFE mode
   useEffect(() => {

@@ -397,18 +397,69 @@ function ForgeGauge({ progress }: { progress: number }) {
     'Legendaria':  { duration: 4000, rings: 4, ptcl: 8,  tag: '👑 LEGENDARIA' },
     'Mítica':      { duration: 4500, rings: 5, ptcl: 10, tag: '🔥 MÍTICA' },
     };
-    const FACTION_MOTTO: Record<string, string> = {
-    'Guerrero': 'EL ACERO NUNCA MIENTE',
-    'Mago':     'EL CONOCIMIENTO ES PODER',
-    'Paladín':  'LA LUZ PREVALECERÁ',
-    'Pícaro':   'LAS SOMBRAS SON MI ARMADURA',
-    };
     const FACTION_CINEMATIC_BG: Record<string, string> = {
     'Guerrero': 'radial-gradient(ellipse at 50% 35%, #3a0a0a 0%, #0a0208 100%)',
     'Mago':     'radial-gradient(ellipse at 50% 35%, #0c0820 0%, #020206 100%)',
     'Paladín':  'radial-gradient(ellipse at 50% 20%, #1a1408 0%, #050400 100%)',
     'Pícaro':   'radial-gradient(ellipse at 50% 80%, #0d061a 0%, #010104 100%)',
     };
+
+// ─── Per-card motto generator (G1) ───────────────────────────────────────────
+const KEYWORD_SUMMON_FX: Record<string, { color: string; emoji: string[]; bgOverlay: string }> = {
+  'Guard':        { color: '#4a9eff', emoji: ['🛡️','⚔️'], bgOverlay: 'rgba(74,158,255,0.12)' },
+  'Drain':        { color: '#9b59b6', emoji: ['💜','🌑'], bgOverlay: 'rgba(155,89,182,0.12)' },
+  'Lifesteal':    { color: '#c0392b', emoji: ['❤️','🩸'], bgOverlay: 'rgba(192,57,43,0.12)' },
+  'Surge':        { color: '#f1c40f', emoji: ['⚡','💥'], bgOverlay: 'rgba(241,196,15,0.12)' },
+  'Veil':         { color: '#7f8c8d', emoji: ['🌫️','👁️'], bgOverlay: 'rgba(127,140,141,0.18)' },
+  'Forge':        { color: '#e74c3c', emoji: ['🔥','⚒️'], bgOverlay: 'rgba(231,76,60,0.12)' },
+  'Poison':       { color: '#27ae60', emoji: ['☠️','💚'], bgOverlay: 'rgba(39,174,96,0.12)' },
+  'DoubleStrike': { color: '#e84040', emoji: ['⚔️','⚔️'], bgOverlay: 'rgba(232,64,64,0.14)' },
+  'Rush':         { color: '#e67e22', emoji: ['💨','⚡'], bgOverlay: 'rgba(230,126,34,0.12)' },
+  'Consecrate':   { color: '#f39c12', emoji: ['✨','☀️'], bgOverlay: 'rgba(243,156,18,0.12)' },
+  'Resonance':    { color: '#8e44ad', emoji: ['🔮','✨'], bgOverlay: 'rgba(142,68,173,0.12)' },
+  'Flux':         { color: '#3498db', emoji: ['🌀','⚡'], bgOverlay: 'rgba(52,152,219,0.12)' },
+  'Taunt':        { color: '#e84040', emoji: ['💢','🔴'], bgOverlay: 'rgba(232,64,64,0.14)' },
+  'Stealth':      { color: '#6c5ce7', emoji: ['🌑','👁️'], bgOverlay: 'rgba(108,92,231,0.14)' },
+  'Spellpower':   { color: '#00cec9', emoji: ['📿','✨'], bgOverlay: 'rgba(0,206,201,0.12)' },
+};
+
+const KW_MOTTO: Record<string, string> = {
+  'Guard':        'ESCUDO DE LA FORJA',
+  'Drain':        'DRENA LA ESENCIA',
+  'Lifesteal':    'VIDA ROBADA, PODER GANADO',
+  'Surge':        'VELOCIDAD IMPARABLE',
+  'Veil':         'INVISIBLE AL DESTINO',
+  'Forge':        'NACIDO DEL FUEGO ETERNO',
+  'Poison':       'EL VENENO NUNCA MIENTE',
+  'DoubleStrike': 'DOS GOLPES — UN FINAL',
+  'Rush':         'SIN LÍMITE NI FRENO',
+  'Consecrate':   'BENDITO POR LA LUZ',
+  'Resonance':    'RESUENA EN EL VACÍO',
+  'Flux':         'FLUJO DE ENERGÍA PURA',
+  'Taunt':        'ATRÉVETE A ATACARME',
+  'Stealth':      'LAS SOMBRAS ME PROTEGEN',
+  'Spellpower':   'LA MAGIA ES MI ARMA',
+};
+
+const FACTION_MOTTO: Record<string, string> = {
+  'Guerrero': 'EL ACERO NUNCA MIENTE',
+  'Mago':     'EL CONOCIMIENTO ES PODER',
+  'Paladín':  'LA LUZ PREVALECERÁ',
+  'Pícaro':   'LAS SOMBRAS SON MI ARMADURA',
+};
+
+const RARITY_PREFIX: Record<string, string> = {
+  'Common': '', 'Uncommon': '', 'Rare': '★ ',
+  'Epic': '★★ ', 'Legendary': '👑 ', 'Mythic': '🔥 ', 'Founder': '⚜️ ',
+};
+
+function getCardMotto(unit: BattleUnit): string {
+  const kws   = unit.keywords ?? [];
+  const primary = kws.find(k => KW_MOTTO[k]);
+  const prefix  = RARITY_PREFIX[unit.rarity] ?? '';
+  if (primary) return prefix + KW_MOTTO[primary];
+  return prefix + (FACTION_MOTTO[unit.faction ?? ''] ?? 'FORJADO PARA LUCHAR');
+}
 
     // ─── Champion Summon Cinematic (per-faction · per-rarity) ──────────────────────
     function ChampionSummonCinematic({ champion, onDone }: { champion: BattleUnit; onDone: () => void }) {
@@ -417,7 +468,8 @@ function ForgeGauge({ progress }: { progress: number }) {
     const ter  = getTerrain(champion.faction ?? '');
     const cfg  = RARITY_SUMMON[champion.rarity] ?? { duration: 3000, rings: 3, ptcl: 5, tag: '' };
     const bg   = FACTION_CINEMATIC_BG[champion.faction ?? ''] ?? 'radial-gradient(ellipse at 50% 50%, #0e0e22 0%, #020208 100%)';
-    const motto = FACTION_MOTTO[champion.faction ?? ''] ?? 'VEXFORGE';
+    const motto   = getCardMotto(champion);
+    const kwFxChamp = KEYWORD_SUMMON_FX[(champion.keywords ?? [])[0] ?? ''] ?? null;
     const [stage, setStage] = useState(0);
 
     useEffect(() => {
@@ -544,36 +596,48 @@ function ForgeGauge({ progress }: { progress: number }) {
                 textShadow: `0 0 12px ${rar}`,
               }}>{cfg.tag}</div>
             )}
+            {/* Champion card art — uses image_url when available */}
             <div style={{
-              width: 100, height: 140, borderRadius: 12, margin: '0 auto',
-              background: `linear-gradient(160deg, ${fac.primary}22, rgba(0,0,0,0.6))`,
-              border: `2px solid ${rar}`,
-              boxShadow: `0 0 30px ${fac.primary}88, 0 0 60px ${rar}44, inset 0 0 20px ${fac.primary}11`,
+              width: 110, height: 150, borderRadius: 12, margin: '0 auto',
+              background: champion.image_url
+                ? `linear-gradient(180deg,transparent 0%,rgba(0,0,0,0.75) 65%),url(${champion.image_url}) center/cover no-repeat`
+                : `linear-gradient(160deg, ${fac.primary}22, rgba(0,0,0,0.6))`,
+              border: `2px solid ${kwFxChamp ? kwFxChamp.color : rar}`,
+              boxShadow: `0 0 30px ${kwFxChamp ? kwFxChamp.color : fac.primary}88, 0 0 60px ${rar}44, inset 0 0 20px ${fac.primary}11`,
               display: 'flex', alignItems: 'center', justifyContent: 'center',
-              fontSize: 40,
+              fontSize: 40, position: 'relative', overflow: 'hidden',
             }}>
-              {ter.particleEmoji[0]}
+              {!champion.image_url && ter.particleEmoji[0]}
+              {/* Keyword color overlay */}
+              {kwFxChamp && (
+                <div style={{
+                  position: 'absolute', inset: 0,
+                  background: kwFxChamp.bgOverlay,
+                  pointerEvents: 'none',
+                }} />
+              )}
             </div>
             <div style={{
               fontFamily: '"Cinzel",serif', fontWeight: 900,
               fontSize: 'clamp(18px,4vw,28px)', color: '#f0ead6',
               marginTop: 14,
-              textShadow: `0 0 30px ${fac.primary}cc, 0 2px 0 rgba(0,0,0,0.8)`,
+              textShadow: `0 0 30px ${kwFxChamp ? kwFxChamp.color : fac.primary}cc, 0 2px 0 rgba(0,0,0,0.8)`,
               animation: 'summon-title-in 0.6s cubic-bezier(0.22,1,0.36,1) both',
               letterSpacing: '0.12em',
             }}>{champion.name}</div>
             <div style={{
-              color: fac.primary, fontSize: 10, marginTop: 4,
+              color: kwFxChamp ? kwFxChamp.color : fac.primary, fontSize: 10, marginTop: 4,
               fontFamily: '"Rajdhani",sans-serif', fontWeight: 700,
               letterSpacing: '0.18em',
               animation: 'summon-motto-in 0.8s ease-out 0.2s both',
-              textShadow: `0 0 8px ${fac.primary}`,
-            }}>{champion.faction} · {motto}</div>
+              textShadow: `0 0 8px ${kwFxChamp ? kwFxChamp.color : fac.primary}`,
+            }}>{motto}</div>
           </div>
         )}
 
         {/* Stats */}
         {stage >= 3 && (
+          <>
           <div style={{
             zIndex: 3, display: 'flex', gap: 16, marginTop: 16,
             animation: 'summon-stats-in 0.5s ease-out both',
@@ -595,6 +659,29 @@ function ForgeGauge({ progress }: { progress: number }) {
               </div>
             ))}
           </div>
+          {/* Champion keyword badges (G2) */}
+          {(champion.keywords ?? []).length > 0 && (
+            <div style={{
+              zIndex: 3, display: 'flex', gap: 5, marginTop: 10, flexWrap: 'wrap', justifyContent: 'center',
+              animation: 'summon-stats-in 0.4s ease-out 0.15s both',
+            }}>
+              {(champion.keywords ?? []).slice(0, 4).map(kw => {
+                const fx = KEYWORD_SUMMON_FX[kw];
+                if (!fx) return null;
+                return (
+                  <div key={kw} style={{
+                    padding: '3px 9px', borderRadius: 20,
+                    border: `1px solid ${fx.color}66`,
+                    background: `${fx.color}22`,
+                    fontSize: 9, fontFamily: '"Rajdhani",sans-serif',
+                    fontWeight: 800, color: fx.color, letterSpacing: '0.08em',
+                    textShadow: `0 0 8px ${fx.color}88`,
+                  }}>{fx.emoji[0]} {kw.toUpperCase()}</div>
+                );
+              })}
+            </div>
+          )}
+          </>
         )}
 
         {/* INVOCANDO label */}
@@ -628,6 +715,8 @@ function UnitSummonCinematic({
   const dur    = UNIT_SUMMON_DURATION[unit.rarity] ?? 1800;
   const tag    = UNIT_RARITY_TAG[unit.rarity] ?? '';
   const slotLabel = SLOT_LABEL_MAP[slot] ?? slot.toUpperCase();
+  const motto  = getCardMotto(unit);
+  const kwFx   = KEYWORD_SUMMON_FX[(unit.keywords ?? [])[0] ?? ''] ?? null;
   const bg     = {
     Guerrero: 'radial-gradient(ellipse at 50% 60%, #2a0800 0%, #06020a 100%)',
     Mago:     'radial-gradient(ellipse at 50% 40%, #08051a 0%, #020208 100%)',
@@ -681,12 +770,12 @@ function UnitSummonCinematic({
         }}>{p}</div>
       ))}
 
-      {/* Energy rings */}
+      {/* Energy rings — keyword-tinted (G1) */}
       {[0, 1].map(i => (
         <div key={i} style={{
           position: 'absolute',
           width: 120, height: 120, borderRadius: '50%',
-          border: `2px solid ${fac.primary}`,
+          border: `2px solid ${kwFx ? kwFx.color : fac.primary}`,
           opacity: 0,
           animation: show ? `unit-summon-ring 0.9s ease-out ${i * 0.18}s both` : 'none',
         }} />
@@ -723,13 +812,21 @@ function UnitSummonCinematic({
               fontFamily: '"Cinzel",serif',
             }}>{tag}</div>
           )}
+          {/* Keyword color overlay on card */}
+          {kwFx && (
+            <div style={{
+              position: 'absolute', inset: 0,
+              background: kwFx.bgOverlay,
+              pointerEvents: 'none',
+            }} />
+          )}
         </div>
 
         {/* Unit name */}
         <div style={{
           fontFamily: '"Cinzel",serif', fontWeight: 700,
           fontSize: 15, color: '#e8e8f0',
-          textShadow: `0 0 16px ${fac.glow}`,
+          textShadow: `0 0 16px ${kwFx ? kwFx.color : fac.glow}`,
           textAlign: 'center',
         }}>{unit.name}</div>
 
@@ -746,6 +843,39 @@ function UnitSummonCinematic({
           <span style={{ color: '#3a3a5a' }}>·</span>
           <span style={{ color: rar, letterSpacing: '0.06em' }}>{unit.rarity}</span>
         </div>
+
+        {/* Per-card motto (G1) */}
+        <div style={{
+          fontFamily: '"Rajdhani",sans-serif', fontWeight: 700, fontSize: 9,
+          color: kwFx?.color ?? fac.primary, letterSpacing: '0.22em',
+          textShadow: `0 0 10px ${kwFx?.color ?? fac.primary}88`,
+          opacity: 0,
+          animation: show ? 'unit-summon-label 0.4s ease-out 0.52s both' : 'none',
+          maxWidth: 200, textAlign: 'center',
+        }}>{motto}</div>
+
+        {/* Keyword badges (G2) */}
+        {(unit.keywords ?? []).length > 0 && (
+          <div style={{
+            display: 'flex', gap: 4, alignItems: 'center', flexWrap: 'wrap', justifyContent: 'center',
+            opacity: 0,
+            animation: show ? 'unit-summon-label 0.3s ease-out 0.62s both' : 'none',
+          }}>
+            {(unit.keywords ?? []).slice(0, 3).map(kw => {
+              const fx = KEYWORD_SUMMON_FX[kw];
+              if (!fx) return null;
+              return (
+                <div key={kw} style={{
+                  padding: '2px 7px', borderRadius: 20,
+                  border: `1px solid ${fx.color}55`,
+                  background: `${fx.color}18`,
+                  fontSize: 8, fontFamily: '"Rajdhani",sans-serif',
+                  fontWeight: 700, color: fx.color, letterSpacing: '0.06em',
+                }}>{fx.emoji[0]} {kw.toUpperCase()}</div>
+              );
+            })}
+          </div>
+        )}
       </div>
 
       {/* Slot label */}
