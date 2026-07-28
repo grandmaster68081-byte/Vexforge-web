@@ -138,3 +138,45 @@ RageMeter, ReservePanel top-3, ChampionDeathScreen, Ascension, AI 5 niveles, Lea
 - Push pattern: `npm run build && git add -A && git commit -m "..." && git push origin main`
 - dist/ committed al repo (Cloudflare Pages lo lee directamente)
 - Credenciales necesarias próxima sesión: SUPABASE_PAT + GITHUB_PAT
+
+---
+
+## Chat 109 — 2026-07-28 — Diagnóstico + Acceso completo al sistema 3v3
+
+### Diagnóstico confirmado
+El sistema ForgeFormationBoard 3v3 existía en el código pero era inaccesible en la práctica:
+1. Solo se podía acceder via el Desafío del Día (1 intento/día via localStorage)
+2. Los PvP normales contra oponentes seguían usando InteractiveBattleBoard (sistema viejo)
+3. `loadPlayerBattleUnits` pasaba solo 3 cartas al FormationSelector (count=3), dejando el reserve deck vacío
+
+### Implementado esta sesión
+
+#### `src/lib/aiBattleEngine.ts`
+- `count = 3` → `count = 40` en `loadPlayerBattleUnits` — FormationSelector ahora muestra hasta 40 cartas del jugador, reserve deck funcional
+
+#### `src/routes/PvpRoute.tsx`
+- **Import**: `AIDifficulty` type importado de aiBattleEngine
+- **Nuevo estado**: `practiceMode` (bool), `pvpLoading` (bool), `pvpOpponentRef`, `pvpOpponentNameRef`, `suppressBattleResultRef`, `myMmrRef`
+- **Modo Práctica**: botón "🎮 MODO PRÁCTICA — Forge Formation 3v3 (sin límite)" visible en el lobby PvP, sin lock diario, sin recompensas
+- **PvP usa FFE**: `handleConfirmBattle` ahora carga units del jugador y abre FormationSelector → ForgeFormationBoard en lugar de la antigua InteractiveBattleBoard; dificultad mapeada desde diff MMR (easy/normal/expert/legend)
+- **Auto-dismiss**: `suppressBattleResultRef` + `useEffect` que auto-descarta el `battleResult` del servidor en modo PvP FFE (sin mostrar tablero viejo)
+- **handleForgeFormationComplete**: refactorizado para manejar 3 modos: práctica (sin rewards), pvp (battle() en background para MMR), desafío diario (comportamiento original)
+- **ForgeFormationBoard**: opponentName dinámico según modo ("🎮 Modo Práctica" / "⚔️ NombreOponente" / dailyChallenge.title)
+
+### Build
+- 238 módulos, 0 errores TS, 2.90s
+- Commit: `c5ddee3` en main
+- Push exitoso a `github.com/grandmaster68081-byte/Vexforge-web.git`
+
+---
+
+## TODO SIGUIENTE SESIÓN (Fase 2 — Mejoras visuales y cinemáticas)
+
+| Prioridad | Tarea |
+|-----------|-------|
+| ALTA | Cinemáticas individuales de invocación por carta en ForgeFormationBoard — efectos únicos según facción/rareza al colocar una carta de Reserva |
+| ALTA | Animaciones de cartas adicionales en InteractiveBattleBoard (PvP clásico) |
+| MEDIA | Partículas de terreno animadas — `TerrainParticles` component usando `terrain-particle-float` keyframe |
+| MEDIA | `sfxSummonByFaction(faction)` en AudioEngine — sonido de invocación por facción |
+| MEDIA | Mejoras visuales generales — iconos de función específica en toda la UI |
+| BAJA | Deploy a Cloudflare Pages (requiere auth wrangler por el owner) |
