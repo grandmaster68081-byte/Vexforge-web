@@ -73,6 +73,21 @@ const RUNE_SYMS = ["✦","◈","⬡","✧","◆","⊕","★","⟐"];
 const FACTION_COLORS = ["#e84040","#7b4fd4","#3dc96b","#e8b84b"];
 const FACTION_ICONS_HERO = ["⚔️","🔮","🗡️","🛡️"];
 
+// AI-generated faction emblems (transparent PNG, public/factions/)
+const FACTION_EMBLEMS: Record<string, string> = {
+  Guerrero: "/factions/guerrero.png",
+  Mago:     "/factions/mago.png",
+  Pícaro:   "/factions/picaro.png",
+  Paladín:  "/factions/paladin.png",
+};
+// Ordered array for positional use
+const FACTION_EMBLEM_LIST = [
+  FACTION_EMBLEMS.Guerrero,
+  FACTION_EMBLEMS.Mago,
+  FACTION_EMBLEMS.Pícaro,
+  FACTION_EMBLEMS.Paladín,
+];
+
 function Particles() {
   return (
     <div className="hero-particles">
@@ -97,19 +112,23 @@ function Particles() {
           animationDuration:`${(i%4)+5}s`, animationDelay:`${i*0.6}s`,
         }}>{RUNE_SYMS[i % RUNE_SYMS.length]}</div>
       ))}
-      {/* Faction icon particles — orbit slowly */}
+      {/* Faction icon particles — orbit slowly (AI-generated emblems) */}
       {Array.from({length:4}).map((_,i)=>(
         <div key={`fi${i}`} style={{
           position:'absolute',
           left:`${15 + i * 22}%`, bottom:`${20 + (i%2)*15}%`,
-          fontSize:'18px',
-          opacity: 0.15,
-          filter: `drop-shadow(0 0 8px ${FACTION_COLORS[i]})`,
+          width:'28px', height:'28px',
+          opacity: 0.22,
+          filter: `drop-shadow(0 0 10px ${FACTION_COLORS[i]}) brightness(1.1)`,
           animation: `hero-rune-orbit-${i%2===0?'cw':'ccw'} ${16+i*4}s linear infinite`,
           '--dur': `${16+i*4}s`,
           '--r': `${30+i*10}px`,
         } as React.CSSProperties}>
-          {FACTION_ICONS_HERO[i]}
+          <img src={FACTION_EMBLEM_LIST[i]} alt=""
+            style={{ width:'100%', height:'100%', objectFit:'contain',
+              filter: `drop-shadow(0 0 6px ${FACTION_COLORS[i]}cc)` }}
+            onError={e => { (e.currentTarget as HTMLImageElement).style.display='none'; }}
+          />
         </div>
       ))}
     </div>
@@ -294,18 +313,24 @@ export function HomeRoute() {
         <div className="vex-rune-ring vex-rune-ring-1" />
         <div className="vex-rune-ring vex-rune-ring-2" />
         <div className="vex-rune-ring vex-rune-ring-3" />
-        {/* Floating faction badges — cinematic depth layer */}
+        {/* Floating faction badges — cinematic depth layer (AI-generated emblems) */}
         {[
-          { icon:"⚔️", glow:"rgba(232,64,64,0.7)",  top:"18%", left:"8%",  dur:"4.2s", delay:"0s" },
-          { icon:"🔮", glow:"rgba(91,139,245,0.7)",  top:"65%", left:"6%",  dur:"5.1s", delay:"-1.5s" },
-          { icon:"🛡️", glow:"rgba(232,184,75,0.7)", top:"25%", right:"7%", dur:"4.7s", delay:"-0.8s" },
-          { icon:"🗡️", glow:"rgba(61,201,107,0.7)", top:"62%", right:"9%", dur:"5.8s", delay:"-2.2s" },
+          { src:FACTION_EMBLEMS.Guerrero, glow:"rgba(232,64,64,0.7)",  top:"18%", left:"8%",  dur:"4.2s", delay:"0s" },
+          { src:FACTION_EMBLEMS.Mago,     glow:"rgba(91,139,245,0.7)",  top:"65%", left:"6%",  dur:"5.1s", delay:"-1.5s" },
+          { src:FACTION_EMBLEMS.Paladín,  glow:"rgba(232,184,75,0.7)", top:"25%", right:"7%", dur:"4.7s", delay:"-0.8s" },
+          { src:FACTION_EMBLEMS.Pícaro,   glow:"rgba(61,201,107,0.7)", top:"62%", right:"9%", dur:"5.8s", delay:"-2.2s" },
         ].map((b,i)=>(
           <div key={i} className="hero-faction-badge faction-emblem-breathe" style={{
             top:b.top, left:(b as any).left, right:(b as any).right,
             // @ts-expect-error CSS custom props
             "--dur":b.dur, "--delay":b.delay, "--glow":b.glow,
-          }}>{b.icon}</div>
+          }}>
+            <img src={b.src} alt=""
+              style={{ width:"100%", height:"100%", objectFit:"contain",
+                filter:`drop-shadow(0 0 10px ${b.glow})` }}
+              onError={e => { (e.currentTarget as HTMLImageElement).style.display='none'; }}
+            />
+          </div>
         ))}
         <Particles/>
         <div style={{position:"relative",zIndex:1,maxWidth:900,margin:"0 auto",padding:"clamp(40px,8vw,72px) 20px clamp(36px,6vw,60px)",textAlign:"center"}}>
