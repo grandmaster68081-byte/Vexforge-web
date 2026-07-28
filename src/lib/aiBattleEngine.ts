@@ -111,7 +111,7 @@ export function getAIDeck(difficulty: AIDifficulty, side: BattleSide = 'b'): Bat
 
 // ─── Player units loader ──────────────────────────────────────────────────────
 export async function loadPlayerBattleUnits(
-  supabase: any, playerId: string, count = 3
+  supabase: any, playerId: string, count = 40
 ): Promise<BattleUnit[]> {
   try {
     const { data } = await supabase

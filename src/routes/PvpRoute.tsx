@@ -10,7 +10,7 @@ import { SeasonRewardsPanel } from "../shared/components/SeasonRewardsPanel";
 import { MatchHistoryPanel } from "../shared/components/MatchHistoryPanel";
 import { WeeklyTournamentPanel } from "../shared/components/WeeklyTournamentPanel";
 import { ClanWarsPanel } from "../shared/components/ClanWarsPanel";
-import { simulateAIBattle, loadPlayerBattleUnits, getDailyAIChallenge, hasDailyChallengeAttempted, markDailyChallengeAttempted, hasDailyChallengeBadge, markDailyChallengeBadge, claimDailyAIChallenge, DAILY_CHALLENGE_VEX_REWARD, BATTLE_MODE_META, type BattleMode, type DailyAIChallenge } from "../lib/aiBattleEngine";
+import { simulateAIBattle, loadPlayerBattleUnits, getDailyAIChallenge, hasDailyChallengeAttempted, markDailyChallengeAttempted, hasDailyChallengeBadge, markDailyChallengeBadge, claimDailyAIChallenge, DAILY_CHALLENGE_VEX_REWARD, BATTLE_MODE_META, type BattleMode, type DailyAIChallenge, type AIDifficulty } from "../lib/aiBattleEngine";
 import { recordSessionBattle } from "../shared/components/SessionSummaryToast";
 import { supabase } from "../lib/supabase";
 import { AudioEngine } from "../lib/audioEngine";
@@ -469,9 +469,16 @@ export function PvpRoute() {
   // FFE: Forge Formation Engine state
   const [formationUnits, setFormationUnits]     = useState<BattleUnit[] | null>(null);
   const [pendingFormation, setPendingFormation] = useState<FormationState | null>(null);
-  const formationDifficultyRef = useRef(getDailyAIChallenge().difficulty);
+  const formationDifficultyRef = useRef<AIDifficulty>(getDailyAIChallenge().difficulty);
   const dailyChallenge = getDailyAIChallenge();
   const cancelRef = useRef(false);
+  // FFE: Practice mode + PvP FFE mode
+  const [practiceMode, setPracticeMode]           = useState(false);
+  const [pvpLoading, setPvpLoading]               = useState(false);
+  const pvpOpponentRef                            = useRef<BattleOpponent | null>(null);
+  const pvpOpponentNameRef                        = useRef<string>('Oponente');
+  const suppressBattleResultRef                   = useRef(false);
+  const myMmrRef                                  = useRef(1000);
 
   // Trigger animated search
   const startMatchmaking = useCallback(async () => {
@@ -487,10 +494,29 @@ export function PvpRoute() {
   }, []);
 
   const handleConfirmBattle = useCallback(async () => {
-    if (!selectedOpp) return;
+    if (!selectedOpp || !playerId) return;
+    pvpOpponentRef.current     = selectedOpp;
+    pvpOpponentNameRef.current = selectedOpp.display_name ?? 'Oponente';
+    const oppSnapshot = selectedOpp;
     setSelectedOpp(null);
-    await battle(selectedOpp.player_id);
-  }, [selectedOpp, battle]);
+    setPvpLoading(true);
+    try {
+      const units = await loadPlayerBattleUnits(supabase, playerId);
+      const mmrDiff  = oppSnapshot.total_power - myMmrRef.current;
+      const d: AIDifficulty =
+        mmrDiff > 300 ? 'legend' :
+        mmrDiff > 100 ? 'expert' :
+        mmrDiff < -200 ? 'easy' : 'normal';
+      formationDifficultyRef.current = d;
+      setFormationUnits(units);
+    } catch {
+      // Fallback: old system
+      pvpOpponentRef.current = null;
+      await battle(oppSnapshot.player_id);
+    } finally {
+      setPvpLoading(false);
+    }
+  }, [selectedOpp, playerId, battle]);
 
   useEffect(() => { if (!playerId) return; setDailyAttempted(hasDailyChallengeAttempted(playerId, dailyChallenge.dateKey)); setDailyBadgeEarned(hasDailyChallengeBadge(playerId, dailyChallenge.dateKey)); }, [playerId, dailyChallenge.dateKey]);
 
@@ -518,10 +544,29 @@ export function PvpRoute() {
     try { (AudioEngine as any).sfxTurnStart?.(); } catch { /* ok */ }
   }, []);
 
-  // FFE: Called when ForgeFormationBoard finishes
+  // FFE: Called when ForgeFormationBoard finishes (daily / pvp / practice)
   const handleForgeFormationComplete = useCallback(async (won: boolean, _championDied: boolean) => {
     setPendingFormation(null);
-    // Mark attempt + handle rewards
+
+    // ── Practice mode: no rewards, no daily lock ──
+    if (practiceMode) {
+      setPracticeMode(false);
+      try { recordSessionBattle(won, 0, streak); } catch { /* silent */ }
+      return;
+    }
+
+    // ── PvP mode: call battle() for MMR, suppress its result display ──
+    if (pvpOpponentRef.current) {
+      const oppId = pvpOpponentRef.current.player_id;
+      pvpOpponentRef.current = null;
+      suppressBattleResultRef.current = true;
+      if (won) onWin(); else onLoss();
+      try { recordSessionBattle(won, 0, streak); } catch { /* silent */ }
+      try { await battle(oppId); } catch { /* silent */ }
+      return;
+    }
+
+    // ── Daily challenge mode ──
     if (playerId) {
       markDailyChallengeAttempted(playerId, dailyChallenge.dateKey);
       setDailyAttempted(true);
@@ -537,7 +582,26 @@ export function PvpRoute() {
         onLoss();
       }
     }
-  }, [playerId, dailyChallenge, onWin, onLoss]);
+  }, [playerId, dailyChallenge, onWin, onLoss, practiceMode, battle, streak]);
+
+  // FFE: Practice mode entry point — no daily limit
+  const startPractice = useCallback(async () => {
+    if (!playerId) return;
+    try {
+      const units = await loadPlayerBattleUnits(supabase, playerId);
+      formationDifficultyRef.current = 'normal';
+      setPracticeMode(true);
+      setFormationUnits(units);
+    } catch { /* silent */ }
+  }, [playerId]);
+
+  // FFE: Auto-dismiss server battleResult when in PvP FFE mode
+  useEffect(() => {
+    if (battleResult && suppressBattleResultRef.current) {
+      suppressBattleResultRef.current = false;
+      dismissBattle();
+    }
+  }, [battleResult, dismissBattle]);
 
   if (loading) return <PageLoader />;
   if (!loading && !playerId) return (
@@ -547,6 +611,7 @@ export function PvpRoute() {
   const season     = seasons[0] ?? null;
   const playerRank = playerId ? (rankings.find(r => r.player_id === playerId) ?? null) : null;
   const myMmr      = playerRank?.mmr ?? 1000;
+  myMmrRef.current = myMmr;
 
   // FFE: FormationSelector overlay — player picks formation before daily battle
   if (formationUnits && !pendingFormation) {
@@ -560,16 +625,25 @@ export function PvpRoute() {
     );
   }
 
-  // FFE: ForgeFormationBoard — actual formation battle
+  // FFE: ForgeFormationBoard — actual formation battle (daily / pvp / practice)
   if (pendingFormation) {
+    const ffeOpponentName = practiceMode
+      ? '🎮 Modo Práctica'
+      : pvpOpponentRef.current
+        ? `⚔️ ${pvpOpponentNameRef.current}`
+        : dailyChallenge.title;
     return (
       <ForgeFormationBoard
         initialFormation={pendingFormation}
         playerName="Tú"
-        opponentName={dailyChallenge.title}
+        opponentName={ffeOpponentName}
         difficulty={formationDifficultyRef.current}
         onComplete={handleForgeFormationComplete}
-        onDismiss={() => { setPendingFormation(null); }}
+        onDismiss={() => {
+          setPendingFormation(null);
+          setPracticeMode(false);
+          pvpOpponentRef.current = null;
+        }}
       />
     );
   }
@@ -660,6 +734,45 @@ export function PvpRoute() {
         <StreakPanel streak={streak} best={best} />
 
         <DailyChallengeCard challenge={dailyChallenge} attempted={dailyAttempted} badgeEarned={dailyBadgeEarned} dailyLoading={dailyLoading} onStart={startDailyChallenge} />
+
+        {/* FFE: Practice Mode — acceso sin límite diario */}
+        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 20 }}>
+          <button
+            onClick={startPractice}
+            disabled={!playerId || pvpLoading}
+            style={{
+              padding: '11px 28px', borderRadius: 10,
+              border: '1px solid rgba(74,158,255,0.35)',
+              background: 'rgba(74,158,255,0.07)',
+              color: '#4a9eff', cursor: (!playerId || pvpLoading) ? 'not-allowed' : 'pointer',
+              fontFamily: 'Cinzel,serif', fontWeight: 700, fontSize: 12,
+              letterSpacing: '0.07em', opacity: pvpLoading ? 0.6 : 1,
+              display: 'flex', alignItems: 'center', gap: 8,
+              transition: 'all 0.2s',
+              boxShadow: '0 2px 12px rgba(74,158,255,0.1)',
+            }}
+            onMouseEnter={e => { if (playerId && !pvpLoading) (e.currentTarget as HTMLButtonElement).style.background = 'rgba(74,158,255,0.14)'; }}
+            onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.background = 'rgba(74,158,255,0.07)'; }}
+          >
+            🎮 MODO PRÁCTICA — Forge Formation 3v3 (sin límite)
+          </button>
+        </div>
+
+        {pvpLoading && (
+          <div style={{
+            background: 'rgba(232,184,75,0.06)', border: '1px solid rgba(232,184,75,0.2)',
+            borderRadius: 8, padding: '10px 16px', marginBottom: 16,
+            color: '#e8b84b', fontSize: 13, textAlign: 'center', fontFamily: 'Cinzel,serif',
+            display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10,
+          }}>
+            <span style={{
+              display: 'inline-block', width: 14, height: 14, borderRadius: '50%',
+              border: '2px solid #e8b84b44', borderTopColor: '#e8b84b',
+              animation: 'mmk-spin 0.8s linear infinite',
+            }} />
+            Cargando tu formación…
+          </div>
+        )}
 
         {dailyError && (
           <div style={{
