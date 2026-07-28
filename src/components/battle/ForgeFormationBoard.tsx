@@ -479,9 +479,13 @@ export function ForgeFormationBoard({
     const atkName = atkSide === 'player'
       ? (formation.vanguard?.name ?? formation.champion.name)
       : 'Enemigo';
+    // Derive defending slot: when player attacks → opponent's sentinel; when opponent attacks → player's vanguard or champion
+    const defSlot: FormationSlot = atkSide === 'player'
+      ? 'sentinel'
+      : (formation.vanguard?.alive ? 'vanguard' : 'champion');
     const defName = defSlot === 'champion'
       ? formation.champion.name
-      : (formation.sentinel?.name ?? formation.champion.name);
+      : (formation[defSlot]?.name ?? formation.champion.name);
 
     addLog(`${isCrit ? '💥' : '⚔️'} ${atkName} → ${defName} [${dmg}${isCrit ? ' CRIT' : ''}${isKill ? ' 💀' : ''}]`);
 
@@ -535,7 +539,9 @@ export function ForgeFormationBoard({
   const champAlive = formation.champion.hp > 0 && formation.champion.alive !== false;
   const champProtected = isChampionProtected(formation);
   const finalFormation = battleResult.current.finalFormation;
-  const progressPct = Math.min(turnIdx / Math.max(1, battleResult.current.timeline?.length ?? 20), 1);
+  // RealBattleResult uses 'turns', not 'timeline'
+  const totalBattleTurns = battleResult.current.turns?.length ?? totalTurns;
+  const progressPct = Math.min(turnIdx / Math.max(1, totalBattleTurns), 1);
 
   return (
     <div style={{
@@ -570,7 +576,7 @@ export function ForgeFormationBoard({
         <div style={{ fontFamily: '"Cinzel",serif', fontSize: 13, color: '#e8b84b', letterSpacing: '0.08em' }}>
           ⚔ FORGE FORMATION · {opponentName}
         </div>
-        <TurnIndicator current={turnIdx} total={battleResult.current.timeline?.length ?? totalTurns} />
+        <TurnIndicator current={turnIdx} total={totalBattleTurns} />
         <button onClick={onDismiss} style={{
           background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)',
           borderRadius: 6, color: '#6a6a8a', fontSize: 10, padding: '5px 10px', cursor: 'pointer',
@@ -808,7 +814,7 @@ export function ForgeFormationBoard({
                 boxShadow: isAutoPlay ? 'none' : '0 4px 20px rgba(232,184,75,0.4)',
                 animation: isAutoPlay ? 'none' : 'attack-btn-pulse 2s ease-in-out infinite',
               }}
-            >⚔ ATACAR ({(battleResult.current.timeline?.length ?? 0) - turnIdx})</button>
+            >⚔ ATACAR ({totalBattleTurns - turnIdx})</button>
 
             <button onClick={toggleAutoPlay} style={{
               padding: '10px 18px', borderRadius: 10,

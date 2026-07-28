@@ -127,7 +127,8 @@ export function simulateFormationBattle(
 
   // Detectar si el Campeón cayó (índice 1 o el de más alto poder)
   const finalChampion = result.final_units?.find(u => u.side === 'a' && u.id === formation.champion.id);
-  const championDied = !finalChampion?.alive ?? true;
+  // Explicit ternary to avoid the ?? short-circuit bug: !X ?? Y always returns !X (boolean).
+  const championDied = finalChampion ? !finalChampion.alive : true;
 
   // Reconstruir estado final de formación
   const finalFormation: FormationState = {

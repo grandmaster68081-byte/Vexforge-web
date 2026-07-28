@@ -40,11 +40,13 @@ function BossCard({ boss, onAttack, canAttack, attacking }: {
   boss: WorldBoss; onAttack: (id: string) => void; canAttack: boolean; attacking: boolean;
 }) {
   const { color, label } = getTierConfig(boss.tier);
+  // Flash animation when this boss is being actively attacked
+  const cardClass = attacking ? 'boss-hurt-flash' : undefined;
   const vex      = (boss.reward_pool as any)?.vex_ingame ?? 0;
   const shards   = (boss.reward_pool as any)?.shards ?? 0;
   const cardRarity = (boss.reward_pool as any)?.card_rarity;
   return (
-    <div style={{ background: "linear-gradient(180deg,#1a1a2e,#12121a)", border: `1px solid ${color}44`, borderRadius: 14, overflow: "hidden", position: "relative" }}>
+    <div className={cardClass} style={{ background: "linear-gradient(180deg,#1a1a2e,#12121a)", border: `1px solid ${color}44`, borderRadius: 14, overflow: "hidden", position: "relative" }}>
       {boss.image_url
         ? <div style={{ width: "100%", height: 160, overflow: "hidden" }}>
             <img src={boss.image_url} alt={boss.name} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
