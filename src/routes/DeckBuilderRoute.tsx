@@ -15,6 +15,23 @@ const FACTION_COLOR: Record<string, string> = {
   Guerrero: "#e85d04", Mago: "#4a9eff", "Paladín": "#e8b84b", "Pícaro": "#a855f7",
 };
 const RARITY_ORDER = ["Mythic", "Legendary", "Epic", "Rare", "Uncommon", "Common"];
+const RARITY_MULT: Record<string, number> = {
+  Common: 1.0, Uncommon: 1.3, Rare: 1.6,
+  Epic: 2.1, Legendary: 3.0, Mythic: 4.0, Founder: 3.5,
+};
+function calcDPS(cards: { card_id: string; power: number; rarity: string }[], championId: string | null): number {
+  return Math.round(cards
+    .filter(c => c.card_id !== championId)
+    .reduce((sum, c) => sum + (c.power ?? 1) * (RARITY_MULT[c.rarity] ?? 1.0), 0));
+}
+function getDPSTier(dps: number): { label: string; color: string; icon: string } {
+  if (dps >= 2000) return { label: 'LEYENDA',  color: '#ffd700', icon: '💎' };
+  if (dps >= 1200) return { label: 'MAESTRO',  color: '#e8b84b', icon: '🔥' };
+  if (dps >= 600)  return { label: 'FORJADOR', color: '#a855f7', icon: '⚡' };
+  if (dps >= 200)  return { label: 'APRENDIZ', color: '#4a9eff', icon: '🛡' };
+  return { label: 'RECLUTA', color: '#8b8b9e', icon: '⚔' };
+}
+
 const ALL_FACTIONS = ["Guerrero", "Mago", "Paladín", "Pícaro"];
 
 function MiniCard({ card, count, selected, canAdd, onClick }: {
@@ -217,6 +234,7 @@ export function DeckBuilderRoute() {
   }, [saveMsg]);
 
   const [authed, setAuthed]           = useState<boolean | null>(null);
+  const [championId, setChampionId]    = useState<string | null>(null);
   const [search, setSearch]           = useState("");
   const [factionFilter, setFactionFilter] = useState("");
   const [rarityFilter, setRarityFilter]   = useState("");
@@ -259,6 +277,83 @@ export function DeckBuilderRoute() {
       {error && <div style={{ background: "#2a1a1a", border: "1px solid #e3573f33", borderRadius: 10, padding: "10px 16px", marginBottom: 16, color: "#e3573f", fontSize: 13 }}>{error}</div>}
       <div style={{ display: "flex", gap: 20, alignItems: "flex-start" }}>
         <div style={{ flex: 1, minWidth: 0 }}>
+
+          {/* ── Champion DPS Panel (Plan: DeckPowerScore visual) ─── */}
+          {selectedIds.length > 0 && (() => {
+            const deckCards = selectedIds
+              .map(id => myCards.find(c => c.card_id === id))
+              .filter((c): c is PlayerCardEntry => !!c);
+            const dps = calcDPS(deckCards, championId);
+            const tier = getDPSTier(dps);
+            const eligibleChampions = deckCards.filter(c => ["Legendary","Mythic"].includes(c.rarity));
+            const champion = championId ? myCards.find(c => c.card_id === championId) : null;
+            return (
+              <div style={{
+                background: "linear-gradient(135deg,rgba(232,184,75,0.06),rgba(168,85,247,0.04))",
+                border: "1px solid rgba(232,184,75,0.2)", borderRadius: 12,
+                padding: "14px 16px", marginBottom: 16,
+              }}>
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 8 }}>
+                  <div style={{ fontFamily: "Cinzel,serif", fontSize: 12, color: "#e8b84b", letterSpacing: "0.08em" }}>
+                    ⚡ DECK POWER SCORE
+                  </div>
+                  <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                    <span style={{ fontSize: 18 }}>{tier.icon}</span>
+                    <span style={{ fontFamily: "Rajdhani,sans-serif", fontWeight: 900, fontSize: 22, color: tier.color,
+                      textShadow: `0 0 16px ${tier.color}88` }}>{dps.toLocaleString()}</span>
+                    <span style={{ fontFamily: "Rajdhani,sans-serif", fontSize: 10, color: tier.color,
+                      background: `${tier.color}22`, border: `1px solid ${tier.color}44`,
+                      borderRadius: 20, padding: "2px 8px", letterSpacing: "0.06em" }}>{tier.label}</span>
+                  </div>
+                </div>
+                <div style={{ height: 4, background: "rgba(255,255,255,0.06)", borderRadius: 2, marginBottom: 10, overflow: "hidden" }}>
+                  <div style={{ height: "100%", width: `${Math.min(100, (dps / 2000) * 100)}%`,
+                    background: `linear-gradient(90deg,#4a9eff,${tier.color})`,
+                    borderRadius: 2, transition: "width 0.4s ease",
+                    boxShadow: `0 0 8px ${tier.color}88` }} />
+                </div>
+                <div style={{ fontSize: 10, color: "#7a7a9a", marginBottom: 6, fontFamily: "Rajdhani,sans-serif", letterSpacing: "0.08em" }}>
+                  👑 DESIGNAR CAMPEÓN (Legendary · Mythic)
+                </div>
+                {eligibleChampions.length === 0 ? (
+                  <div style={{ fontSize: 10, color: "#4a4a6a", fontFamily: "Rajdhani,sans-serif" }}>
+                    Añade una carta Legendary o Mythic para designar tu Campeón
+                  </div>
+                ) : (
+                  <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
+                    {eligibleChampions
+                      .filter((c, i, a) => a.findIndex(x => x.card_id === c.card_id) === i)
+                      .map(c => {
+                        const rc = RARITY_COLOR[c.rarity] ?? "#888";
+                        const isChamp = championId === c.card_id;
+                        return (
+                          <button key={c.card_id} onClick={() => setChampionId(isChamp ? null : c.card_id)} style={{
+                            padding: "5px 12px", borderRadius: 20,
+                            border: `1px solid ${isChamp ? rc : rc + "44"}`,
+                            background: isChamp ? `${rc}22` : "transparent",
+                            color: isChamp ? rc : "#7a7a9a",
+                            fontSize: 10, cursor: "pointer",
+                            fontFamily: "Rajdhani,sans-serif", fontWeight: 700,
+                            boxShadow: isChamp ? `0 0 10px ${rc}44` : "none",
+                            transition: "all 0.15s ease",
+                            display: "flex", alignItems: "center", gap: 4,
+                          }}>
+                            {isChamp ? "👑 " : ""}{c.name}
+                            <span style={{ color: rc, opacity: 0.7 }}>· {c.rarity.slice(0,3).toUpperCase()}</span>
+                          </button>
+                        );
+                      })}
+                  </div>
+                )}
+                {champion && (
+                  <div style={{ marginTop: 8, fontSize: 10, color: "#6a6a8a", fontFamily: "Rajdhani,sans-serif" }}>
+                    👑 <span style={{ color: RARITY_COLOR[champion.rarity] }}>{champion.name}</span> —
+                    Su ATK se amplifica con el DPS total del mazo en cada batalla
+                  </div>
+                )}
+              </div>
+            );
+          })()}
           <FilterBar
             search={search} setSearch={setSearch}
             factionFilter={factionFilter} setFactionFilter={setFactionFilter}

@@ -1,13 +1,15 @@
-// ForgeFormationBoard.tsx — FFE (Forge Formation Engine)
+// ForgeFormationBoard.tsx — FFE (Forge Formation Engine) v2.0
 // Tablero de batalla visual con 3 posiciones: Vanguardia · Campeón · Centinela
-// Si el Campeón cae → derrota instantánea con cinemática épica.
+// Si el Campeón cae → derrota instantánea con cinemática épica (4.0s).
+// Champion Rage: +5% ATK por cada muerte de carta aliada (máx 5 stacks).
+// Forge Ascension: al 3er kill del Campeón → visual dorado + buff.
 
 import { useState, useEffect, useCallback, useRef } from 'react';
 import type { BattleUnit } from '../../lib/battleTypes';
 import { RARITY_COLOR, RARITY_GLOW } from '../../lib/battleTypes';
 import {
   type FormationState, type FormationSlot,
-  isChampionProtected, getNextReserveUnit, SLOT_META,
+  isChampionProtected, SLOT_META,
   simulateFormationBattle,
 } from '../../lib/forgeFormation';
 import type { AIDifficulty } from '../../lib/aiBattleEngine';
@@ -19,6 +21,16 @@ const SLOT_COLORS: Record<FormationSlot, { primary: string; glow: string }> = {
   champion:  { primary: '#e8b84b', glow: 'rgba(232,184,75,0.7)' },
   sentinel:  { primary: '#4a9eff', glow: 'rgba(74,158,255,0.6)' },
 };
+
+const FACTION_COLORS: Record<string, { primary: string; glow: string; particle: string }> = {
+  Guerrero: { primary: '#e85d04', glow: 'rgba(232,93,4,0.8)',  particle: '🔥' },
+  Mago:     { primary: '#4a9eff', glow: 'rgba(74,158,255,0.8)',particle: '✨' },
+  Paladín:  { primary: '#e8b84b', glow: 'rgba(232,184,75,0.8)',particle: '⚡' },
+  Pícaro:   { primary: '#a855f7', glow: 'rgba(168,85,247,0.8)',particle: '💜' },
+};
+
+const getFactionStyle = (faction: string) =>
+  FACTION_COLORS[faction] ?? { primary: '#e8b84b', glow: 'rgba(232,184,75,0.8)', particle: '⚔️' };
 
 // ─── HP colour helper ──────────────────────────────────────────────────────────
 const hpCol = (pct: number) =>
@@ -58,7 +70,7 @@ function SegmentedHpBar({
 // ─── Formation Unit Card ───────────────────────────────────────────────────────
 function FormationUnitCard({
   unit, slot, isChampion, isActive, isDead, isBeingHit,
-  showDeathAnim,
+  showDeathAnim, ascensionActive,
 }: {
   unit: BattleUnit | null;
   slot: FormationSlot;
@@ -67,6 +79,7 @@ function FormationUnitCard({
   isDead?: boolean;
   isBeingHit?: boolean;
   showDeathAnim?: boolean;
+  ascensionActive?: boolean;
 }) {
   const { primary, glow } = SLOT_COLORS[slot];
   const meta = SLOT_META[slot];
@@ -87,16 +100,16 @@ function FormationUnitCard({
     );
   }
 
-  const rar  = RARITY_COLOR[unit.rarity] ?? '#8b8b9e';
-  const rglow = RARITY_GLOW[unit.rarity] ?? 'rgba(139,139,158,0.3)';
-  const pct  = unit.max_hp > 0 ? unit.hp / unit.max_hp : 0;
+  const rar   = ascensionActive && isChampion ? '#ffd700' : (RARITY_COLOR[unit.rarity] ?? '#8b8b9e');
+  const rglow = ascensionActive && isChampion ? 'rgba(255,215,0,0.6)' : (RARITY_GLOW[unit.rarity] ?? 'rgba(139,139,158,0.3)');
+  const pct   = unit.max_hp > 0 ? unit.hp / unit.max_hp : 0;
 
   return (
     <div
       className={[
         isDead || showDeathAnim ? 'card-dissolve' : '',
         isBeingHit ? 'impact-shake' : '',
-        isChampion && !isDead ? 'champion-crown-pulse' : '',
+        isChampion && !isDead ? (ascensionActive ? 'forge-ascension-pulse' : 'champion-crown-pulse') : '',
         isActive && !isDead ? 'vanguard-guard-pulse' : '',
       ].filter(Boolean).join(' ')}
       style={{
@@ -107,9 +120,11 @@ function FormationUnitCard({
           : `linear-gradient(160deg,${primary}18,#0a0a14)`,
         boxShadow: isDead
           ? 'none'
-          : isChampion
-            ? `0 0 24px ${rglow}, 0 0 48px ${rar}44, 0 0 0 2px ${rar}33`
-            : `0 0 14px ${glow}55, inset 0 0 8px ${primary}11`,
+          : isChampion && ascensionActive
+            ? `0 0 32px rgba(255,215,0,0.9), 0 0 64px rgba(255,215,0,0.4), 0 0 0 2px #ffd70055`
+            : isChampion
+              ? `0 0 24px ${rglow}, 0 0 48px ${rar}44, 0 0 0 2px ${rar}33`
+              : `0 0 14px ${glow}55, inset 0 0 8px ${primary}11`,
         opacity: isDead ? 0.35 : 1,
         transition: 'all 0.35s ease',
         position: 'relative', display: 'flex', flexDirection: 'column',
@@ -126,13 +141,18 @@ function FormationUnitCard({
         backdropFilter: 'blur(4px)',
       }}>{meta.icon} {meta.label}</div>
 
-      {/* Champion crown */}
+      {/* Champion crown / ascension crown */}
       {isChampion && !isDead && (
         <div style={{
           position: 'absolute', top: -10, left: '50%', transform: 'translateX(-50%)',
-          fontSize: 20, zIndex: 3, filter: `drop-shadow(0 0 8px ${rar}aa)`,
-          animation: 'champion-crown-pulse 2s ease-in-out infinite',
-        }}>👑</div>
+          fontSize: 20, zIndex: 3,
+          filter: ascensionActive
+            ? 'drop-shadow(0 0 12px #ffd700) drop-shadow(0 0 20px #ffd700aa)'
+            : `drop-shadow(0 0 8px ${rar}aa)`,
+          animation: ascensionActive
+            ? 'forge-ascension-crown 1.5s ease-in-out infinite'
+            : 'champion-crown-pulse 2s ease-in-out infinite',
+        }}>{ascensionActive ? '🌟' : '👑'}</div>
       )}
 
       {/* Rarity badge */}
@@ -144,99 +164,463 @@ function FormationUnitCard({
         fontFamily: '"Rajdhani",sans-serif',
       }}>{unit.rarity.toUpperCase()}</div>
 
+      {/* Ascension glow overlay */}
+      {isChampion && ascensionActive && !isDead && (
+        <div style={{
+          position: 'absolute', inset: 0, zIndex: 1, borderRadius: 10,
+          background: 'linear-gradient(180deg, rgba(255,215,0,0.15) 0%, transparent 60%)',
+          animation: 'ascension-shimmer 2s ease-in-out infinite',
+          pointerEvents: 'none',
+        }} />
+      )}
+
       {/* Image area */}
       <div style={{
         flex: 1, minHeight: 80,
         display: 'flex', alignItems: 'center', justifyContent: 'center',
-        position: 'relative', overflow: 'hidden',
       }}>
         {!unit.image_url && (
-          <div style={{ fontSize: 32, filter: `drop-shadow(0 0 8px ${primary}99)` }}>
+          <span style={{ fontSize: 28, opacity: 0.5 }}>
             {meta.icon}
-          </div>
-        )}
-        {/* Legendary/Mythic shimmer */}
-        {(unit.rarity === 'Legendary' || unit.rarity === 'Mythic') && !isDead && (
-          <div style={{
-            position: 'absolute', inset: 0, pointerEvents: 'none',
-            background: `linear-gradient(125deg,transparent 25%,${rar}44 45%,rgba(255,255,255,0.18) 50%,${rar}22 55%,transparent 75%)`,
-            backgroundSize: '250% 250%', animation: 'card-shimmer 2s ease-in-out infinite',
-          }} />
+          </span>
         )}
       </div>
 
-      {/* Body */}
+      {/* Stats footer */}
       <div style={{
-        padding: '6px 8px 8px',
-        background: 'linear-gradient(0deg,rgba(3,3,12,0.97),rgba(8,8,22,0.88))',
-        borderTop: `1px solid ${primary}33`,
+        padding: '5px 7px',
+        background: 'rgba(3,3,12,0.92)',
+        borderTop: `1px solid ${primary}22`,
+        zIndex: 2,
       }}>
         <div style={{
-          fontFamily: '"Cinzel",serif', fontSize: 9, fontWeight: 700,
-          color: '#eee', letterSpacing: '0.04em',
+          fontSize: 9, color: '#eee', fontFamily: '"Cinzel",serif',
           overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
-          marginBottom: 4,
+          marginBottom: 3,
         }}>{unit.name}</div>
-        <div style={{
-          display: 'flex', gap: 4, fontSize: 9, fontFamily: '"Rajdhani",sans-serif',
-          fontWeight: 800, marginBottom: 4,
-        }}>
+        <div style={{ display: 'flex', gap: 4, fontSize: 9, fontFamily: '"Rajdhani",sans-serif', fontWeight: 800, marginBottom: 3 }}>
           <span style={{ color: '#ff6b6b' }}>⚔{unit.atk}</span>
           <span style={{ color: '#4a9eff' }}>🛡{unit.def}</span>
-          <span style={{ color: '#e8b84b' }}>⚡{unit.spd}</span>
+          <span style={{ color: '#3ddc84' }}>❤{unit.hp}</span>
         </div>
         <SegmentedHpBar hp={unit.hp} max={unit.max_hp} slot={slot} />
-        <div style={{
-          fontSize: 8, color: hpCol(pct), marginTop: 3,
-          fontFamily: '"IBM Plex Mono",monospace',
-          textAlign: 'right',
-        }}>{unit.hp}/{unit.max_hp} HP</div>
+        {/* Keywords strip */}
+        {unit.keywords && unit.keywords.length > 0 && (
+          <div style={{
+            marginTop: 3, fontSize: 6, color: '#8888aa',
+            fontFamily: '"Rajdhani",sans-serif',
+            overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
+          }}>
+            {unit.keywords.slice(0, 2).join(' · ')}
+          </div>
+        )}
       </div>
 
       {/* Dead overlay */}
       {isDead && (
         <div style={{
-          position: 'absolute', inset: 0, background: 'rgba(3,3,10,0.7)',
+          position: 'absolute', inset: 0, zIndex: 5,
+          background: 'rgba(0,0,0,0.6)',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
-          fontSize: 28, zIndex: 5, borderRadius: 12,
+          fontSize: 28,
         }}>💀</div>
       )}
     </div>
   );
 }
 
-// ─── Turn indicator segments (VX.3) ───────────────────────────────────────────
-function TurnIndicator({
-  current, total,
-}: { current: number; total: number }) {
-  const segments = Math.min(total, 20);
-  const done     = Math.min(current, segments);
+// ─── Turn indicator ────────────────────────────────────────────────────────────
+function TurnIndicator({ current, total }: { current: number; total: number }) {
   return (
     <div style={{
-      display: 'flex', gap: 3, alignItems: 'center',
-      flexWrap: 'wrap', justifyContent: 'center',
+      display: 'flex', alignItems: 'center', gap: 6,
+      fontFamily: '"Rajdhani",sans-serif',
     }}>
-      {Array.from({ length: segments }).map((_, i) => (
-        <div key={i} style={{
-          width: 18, height: 5, borderRadius: 2,
-          background: i < done
-            ? (i < segments * 0.33 ? '#3ddc84' : i < segments * 0.66 ? '#e8b84b' : '#e84040')
-            : 'rgba(255,255,255,0.06)',
-          boxShadow: i === done - 1 ? '0 0 8px rgba(232,184,75,0.9)' : 'none',
-          transition: 'all 0.3s ease',
-        }} />
-      ))}
-      <span style={{
-        fontSize: 9, color: '#6a6a8a', fontFamily: '"IBM Plex Mono",monospace',
-        marginLeft: 4,
-      }}>T{current}/{total}</span>
+      <span style={{ fontSize: 9, color: '#6a6a8a', letterSpacing: '0.1em' }}>TURNO</span>
+      <span style={{ fontSize: 15, fontWeight: 800, color: '#e8e8f0' }}>{current}</span>
+      <span style={{ fontSize: 9, color: '#4a4a6a' }}>/ {total}</span>
     </div>
   );
 }
 
-// ─── Champion Death overlay ────────────────────────────────────────────────────
+// ─── Rage Meter ────────────────────────────────────────────────────────────────
+function RageMeter({ stacks, maxStacks = 5 }: { stacks: number; maxStacks?: number }) {
+  if (stacks === 0) return null;
+  const isFrenzy = stacks >= maxStacks;
+  return (
+    <div style={{
+      display: 'flex', alignItems: 'center', gap: 6,
+      padding: '4px 10px', borderRadius: 20,
+      background: isFrenzy
+        ? 'rgba(232,64,64,0.25)'
+        : 'rgba(232,184,75,0.12)',
+      border: `1px solid ${isFrenzy ? '#e84040' : '#e8b84b'}44`,
+      animation: isFrenzy ? 'rage-frenzy-pulse 0.8s ease-in-out infinite' : 'none',
+    }}>
+      <span style={{ fontSize: 10 }}>🔥</span>
+      <div style={{ display: 'flex', gap: 2 }}>
+        {Array.from({ length: maxStacks }).map((_, i) => (
+          <div key={i} style={{
+            width: 8, height: 8, borderRadius: '50%',
+            background: i < stacks
+              ? (isFrenzy ? '#e84040' : '#e8b84b')
+              : 'rgba(255,255,255,0.08)',
+            boxShadow: i < stacks ? `0 0 6px ${isFrenzy ? '#e84040' : '#e8b84b'}` : 'none',
+            transition: 'all 0.3s ease',
+          }} />
+        ))}
+      </div>
+      <span style={{
+        fontSize: 8, fontFamily: '"Rajdhani",sans-serif', fontWeight: 800,
+        color: isFrenzy ? '#e84040' : '#e8b84b',
+        letterSpacing: '0.06em',
+      }}>
+        {isFrenzy ? 'FORGE FRENZY' : `+${stacks * 5}% ATK`}
+      </span>
+    </div>
+  );
+}
+
+// ─── Charge Orbs (Kills counter) ───────────────────────────────────────────────
+function ChargeOrbs({ kills, ascensionAt = 3 }: { kills: number; ascensionAt?: number }) {
+  return (
+    <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+      <span style={{ fontSize: 8, color: '#6a6a8a', fontFamily: '"Rajdhani",sans-serif', letterSpacing: '0.1em' }}>KILLS</span>
+      {Array.from({ length: ascensionAt }).map((_, i) => (
+        <div key={i} style={{
+          width: 10, height: 10, borderRadius: '50%',
+          background: i < kills
+            ? 'radial-gradient(circle,#ffd700,#e8b84b)'
+            : 'rgba(255,255,255,0.06)',
+          border: `1px solid ${i < kills ? '#ffd70088' : 'rgba(255,255,255,0.1)'}`,
+          boxShadow: i < kills ? '0 0 8px rgba(255,215,0,0.8)' : 'none',
+          transition: 'all 0.4s cubic-bezier(0.22,1,0.36,1)',
+          animation: i < kills ? 'charge-orb-glow 1.5s ease-in-out infinite' : 'none',
+        }} />
+      ))}
+      {kills >= ascensionAt && (
+        <span style={{
+          fontSize: 8, fontFamily: '"Cinzel",serif', fontWeight: 800,
+          color: '#ffd700', letterSpacing: '0.08em',
+          textShadow: '0 0 10px rgba(255,215,0,0.8)',
+        }}>ASCENDIDO</span>
+      )}
+    </div>
+  );
+}
+
+// ─── Forge Gauge ───────────────────────────────────────────────────────────────
+function ForgeGauge({ progress }: { progress: number }) {
+  const phase = progress < 0.4 ? 'intro' : progress < 0.75 ? 'mid' : 'last_stand';
+  const col = phase === 'intro' ? '#3ddc84' : phase === 'mid' ? '#e8b84b' : '#e84040';
+  return (
+    <div style={{ position: 'relative', height: 6, background: 'rgba(255,255,255,0.04)', overflow: 'visible' }}>
+      {/* Base track */}
+      <div style={{
+        position: 'absolute', inset: 0,
+        background: 'rgba(255,255,255,0.04)',
+      }} />
+      {/* Fill */}
+      <div style={{
+        position: 'absolute', top: 0, left: 0, bottom: 0,
+        width: `${progress * 100}%`,
+        background: `linear-gradient(90deg, #e84040, ${col})`,
+        transition: 'width 0.4s ease',
+        boxShadow: `0 0 10px ${col}88`,
+      }} />
+      {/* Phase markers */}
+      {[0.4, 0.75].map((marker, i) => (
+        <div key={i} style={{
+          position: 'absolute', top: -2, bottom: -2,
+          left: `${marker * 100}%`,
+          width: 1,
+          background: 'rgba(255,255,255,0.2)',
+        }} />
+      ))}
+      {/* Pulse dot at front */}
+      <div style={{
+        position: 'absolute', top: '50%',
+        left: `${progress * 100}%`,
+        transform: 'translate(-50%, -50%)',
+        width: 8, height: 8, borderRadius: '50%',
+        background: col,
+        boxShadow: `0 0 12px ${col}`,
+        animation: 'forge-gauge-pulse 1s ease-in-out infinite',
+      }} />
+    </div>
+  );
+}
+
+// ─── Champion Summon Cinematic (3.5s) ──────────────────────────────────────────
+function ChampionSummonCinematic({ champion, onDone }: { champion: BattleUnit; onDone: () => void }) {
+  const rar  = RARITY_COLOR[champion.rarity] ?? '#e8b84b';
+  const fac  = getFactionStyle(champion.faction ?? '');
+  const [stage, setStage] = useState(0);
+
+  useEffect(() => {
+    // Stage 0→1: flash at 600ms
+    const t1 = setTimeout(() => setStage(1), 600);
+    // Stage 1→2: champion appears at 1200ms
+    const t2 = setTimeout(() => setStage(2), 1200);
+    // Stage 2→3: stats appear at 2200ms
+    const t3 = setTimeout(() => setStage(3), 2200);
+    // Done at 3500ms
+    const t4 = setTimeout(() => onDone(), 3500);
+    try { (AudioEngine as any).sfxDrawCard?.(); } catch { /* ok */ }
+    return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); clearTimeout(t4); };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  return (
+    <div style={{
+      position: 'absolute', inset: 0, zIndex: 60,
+      background: 'rgba(2,2,8,0.97)',
+      display: 'flex', flexDirection: 'column',
+      alignItems: 'center', justifyContent: 'center',
+      overflow: 'hidden',
+    }}>
+      <style>{`
+        @keyframes summon-flash {
+          0%   { opacity: 0; }
+          30%  { opacity: 1; }
+          100% { opacity: 0; }
+        }
+        @keyframes summon-champion-in {
+          0%   { transform: scale(0.3) translateY(60px); opacity: 0; filter: blur(20px); }
+          60%  { transform: scale(1.08) translateY(-8px); opacity: 1; filter: blur(0); }
+          100% { transform: scale(1) translateY(0); opacity: 1; filter: blur(0); }
+        }
+        @keyframes summon-ring-expand {
+          0%   { transform: scale(0); opacity: 0.9; }
+          100% { transform: scale(3); opacity: 0; }
+        }
+        @keyframes summon-particles-orbit {
+          0%   { transform: rotate(0deg) translateX(90px) rotate(0deg); opacity: 1; }
+          100% { transform: rotate(360deg) translateX(90px) rotate(-360deg); opacity: 0.4; }
+        }
+        @keyframes summon-title-in {
+          0%   { transform: translateY(20px) scale(0.9); opacity: 0; letter-spacing: 0.3em; }
+          100% { transform: translateY(0) scale(1); opacity: 1; letter-spacing: 0.12em; }
+        }
+        @keyframes summon-stats-in {
+          0%   { transform: translateY(12px); opacity: 0; }
+          100% { transform: translateY(0); opacity: 1; }
+        }
+        @keyframes forge-ascension-crown {
+          0%,100% { transform: translateX(-50%) scale(1) rotate(-5deg); }
+          50%     { transform: translateX(-50%) scale(1.2) rotate(5deg); }
+        }
+      `}</style>
+
+      {/* Faction flash */}
+      {stage >= 0 && (
+        <div style={{
+          position: 'absolute', inset: 0, zIndex: 1,
+          background: `radial-gradient(ellipse at 50% 50%, ${fac.primary}33 0%, transparent 70%)`,
+          animation: 'summon-flash 0.6s ease-out both',
+          pointerEvents: 'none',
+        }} />
+      )}
+
+      {/* Expanding rings */}
+      {stage >= 1 && [0, 1, 2].map(i => (
+        <div key={i} style={{
+          position: 'absolute', zIndex: 1,
+          width: 180, height: 180, borderRadius: '50%',
+          border: `2px solid ${fac.primary}`,
+          animation: `summon-ring-expand ${0.8 + i * 0.3}s cubic-bezier(0,0.5,0.5,1) ${i * 0.15}s both`,
+          pointerEvents: 'none',
+        }} />
+      ))}
+
+      {/* Orbiting faction particles */}
+      {stage >= 1 && [0, 1, 2, 3].map(i => (
+        <div key={i} style={{
+          position: 'absolute', zIndex: 2,
+          animation: `summon-particles-orbit ${1.2 + i * 0.2}s linear infinite`,
+          animationDelay: `${i * 0.3}s`,
+          fontSize: 14,
+          filter: `drop-shadow(0 0 6px ${fac.primary})`,
+        }}>{fac.particle}</div>
+      ))}
+
+      {/* Champion image / icon */}
+      {stage >= 1 && (
+        <div style={{
+          position: 'relative', zIndex: 3,
+          animation: 'summon-champion-in 0.9s cubic-bezier(0.22,1,0.36,1) both',
+          marginBottom: 20,
+        }}>
+          <div style={{
+            width: 140, height: 180, borderRadius: 16,
+            border: `3px solid ${rar}`,
+            boxShadow: `0 0 40px ${rar}88, 0 0 80px ${fac.primary}44, inset 0 0 20px ${rar}22`,
+            background: champion.image_url
+              ? `url(${champion.image_url}) center/cover no-repeat`
+              : `linear-gradient(160deg,${fac.primary}33,#0a0a14)`,
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            fontSize: 48, overflow: 'hidden',
+          }}>
+            {!champion.image_url && '👑'}
+          </div>
+          {/* Crown above */}
+          <div style={{
+            position: 'absolute', top: -18, left: '50%', transform: 'translateX(-50%)',
+            fontSize: 28, filter: `drop-shadow(0 0 16px ${rar})`,
+            animation: 'champion-crown-pulse 2s ease-in-out infinite',
+          }}>👑</div>
+          {/* Rarity bar */}
+          <div style={{
+            position: 'absolute', bottom: 6, left: 6, right: 6,
+            background: 'rgba(0,0,0,0.85)', borderRadius: 6,
+            padding: '2px 8px', textAlign: 'center',
+            fontFamily: '"Rajdhani",sans-serif', fontSize: 8,
+            fontWeight: 800, color: rar, letterSpacing: '0.1em',
+          }}>{champion.rarity.toUpperCase()}</div>
+        </div>
+      )}
+
+      {/* Champion name */}
+      {stage >= 2 && (
+        <div style={{
+          zIndex: 3, textAlign: 'center',
+          animation: 'summon-title-in 0.6s cubic-bezier(0.22,1,0.36,1) both',
+        }}>
+          <div style={{
+            fontFamily: '"Cinzel Decorative",serif',
+            fontSize: 'clamp(16px,4vw,26px)',
+            fontWeight: 900, color: rar,
+            textShadow: `0 0 30px ${rar}, 0 0 60px ${fac.primary}88`,
+            letterSpacing: '0.12em', marginBottom: 4,
+          }}>{champion.name}</div>
+          <div style={{
+            fontFamily: '"Cinzel",serif', fontSize: 11,
+            color: fac.primary, letterSpacing: '0.2em',
+            textTransform: 'uppercase',
+          }}>Campeón · {champion.faction}</div>
+        </div>
+      )}
+
+      {/* Stats */}
+      {stage >= 3 && (
+        <div style={{
+          zIndex: 3, display: 'flex', gap: 16, marginTop: 16,
+          animation: 'summon-stats-in 0.5s ease-out both',
+        }}>
+          {[
+            { label: '⚔ ATK', val: champion.atk, col: '#ff6b6b' },
+            { label: '🛡 DEF', val: champion.def, col: '#4a9eff' },
+            { label: '❤ HP', val: champion.max_hp, col: '#3ddc84' },
+            { label: '⚡ POW', val: champion.power, col: '#e8b84b' },
+          ].map(s => (
+            <div key={s.label} style={{
+              textAlign: 'center',
+              background: 'rgba(255,255,255,0.04)',
+              border: `1px solid ${s.col}33`,
+              borderRadius: 8, padding: '6px 12px',
+            }}>
+              <div style={{ fontSize: 16, fontWeight: 900, color: s.col, fontFamily: '"Rajdhani",sans-serif' }}>{s.val}</div>
+              <div style={{ fontSize: 8, color: '#6a6a8a', fontFamily: '"Rajdhani",sans-serif', letterSpacing: '0.08em' }}>{s.label}</div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* "INVOCANDO" label */}
+      <div style={{
+        position: 'absolute', bottom: 24, left: 0, right: 0,
+        textAlign: 'center', zIndex: 3,
+        fontFamily: '"Rajdhani",sans-serif', fontSize: 11,
+        color: '#4a4a6a', letterSpacing: '0.25em',
+      }}>▶ INVOCANDO CAMPEÓN</div>
+    </div>
+  );
+}
+
+// ─── Forge Ascension Overlay (2s cinematic) ────────────────────────────────────
+function ForgeAscensionOverlay({ champion, onDone }: { champion: BattleUnit; onDone: () => void }) {
+  useEffect(() => {
+    try { (AudioEngine as any).sfxLevelUp?.(); } catch { /* ok */ }
+    const t = setTimeout(onDone, 2200);
+    return () => clearTimeout(t);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  return (
+    <div style={{
+      position: 'absolute', inset: 0, zIndex: 55,
+      background: 'rgba(2,2,8,0.88)',
+      display: 'flex', flexDirection: 'column',
+      alignItems: 'center', justifyContent: 'center',
+      animation: 'modal-overlay-in 0.3s ease-out both',
+      pointerEvents: 'none',
+    }}>
+      <style>{`
+        @keyframes ascension-shimmer {
+          0%,100% { opacity: 0.6; }
+          50% { opacity: 1; }
+        }
+        @keyframes ascension-title {
+          0%   { transform: scale(0.7); opacity: 0; letter-spacing: 0.4em; }
+          60%  { transform: scale(1.05); opacity: 1; letter-spacing: 0.2em; }
+          100% { transform: scale(1); opacity: 1; letter-spacing: 0.2em; }
+        }
+        @keyframes ascension-burst {
+          0%   { transform: scale(0); opacity: 1; }
+          100% { transform: scale(4); opacity: 0; }
+        }
+      `}</style>
+
+      {/* Gold burst rings */}
+      {[0, 1, 2].map(i => (
+        <div key={i} style={{
+          position: 'absolute',
+          width: 100, height: 100, borderRadius: '50%',
+          border: '3px solid #ffd700',
+          animation: `ascension-burst 1.2s ease-out ${i * 0.25}s both`,
+          pointerEvents: 'none',
+        }} />
+      ))}
+
+      <div style={{ fontSize: 64, filter: 'drop-shadow(0 0 24px #ffd700)', marginBottom: 16 }}>🌟</div>
+
+      <div style={{
+        fontFamily: '"Cinzel Decorative",serif',
+        fontSize: 'clamp(18px,4vw,30px)',
+        fontWeight: 900, color: '#ffd700',
+        textShadow: '0 0 40px #ffd700, 0 0 80px rgba(255,215,0,0.5)',
+        animation: 'ascension-title 0.6s cubic-bezier(0.22,1,0.36,1) 0.2s both',
+        textAlign: 'center', letterSpacing: '0.2em',
+      }}>FORGE ASCENSION</div>
+
+      <div style={{
+        fontFamily: '"Cinzel",serif', fontSize: 13,
+        color: '#e8b84b', marginTop: 8,
+        textShadow: '0 0 16px #e8b84b88',
+        textAlign: 'center',
+      }}>{champion.name} ha trascendido</div>
+
+      <div style={{
+        fontFamily: '"Rajdhani",sans-serif', fontSize: 11,
+        color: '#ffd70088', marginTop: 6,
+        letterSpacing: '0.1em',
+      }}>+20% ATK · Aura Dorada Activa</div>
+    </div>
+  );
+}
+
+// ─── Champion Death Screen (4.0s, multi-stage) ────────────────────────────────
 function ChampionDeathScreen({ champion }: { champion: BattleUnit }) {
   const rar = RARITY_COLOR[champion.rarity] ?? '#8b8b9e';
+  const [stage, setStage] = useState(0);
+
+  useEffect(() => {
+    const t1 = setTimeout(() => setStage(1), 400);
+    const t2 = setTimeout(() => setStage(2), 1200);
+    const t3 = setTimeout(() => setStage(3), 2400);
+    return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); };
+  }, []);
+
   return (
     <div style={{
       position: 'absolute', inset: 0, zIndex: 50,
@@ -244,70 +628,127 @@ function ChampionDeathScreen({ champion }: { champion: BattleUnit }) {
       display: 'flex', flexDirection: 'column',
       alignItems: 'center', justifyContent: 'center',
       backdropFilter: 'blur(8px)',
-      animation: 'modal-overlay-in 0.5s ease-out both',
     }}>
       <style>{`
         @keyframes champ-death-shake {
           0%,100%{transform:translateX(0)}
-          15%{transform:translateX(-8px)}
-          30%{transform:translateX(8px)}
-          45%{transform:translateX(-6px)}
-          60%{transform:translateX(6px)}
-          75%{transform:translateX(-4px)}
-          90%{transform:translateX(4px)}
+          10%{transform:translateX(-12px) rotate(-2deg)}
+          25%{transform:translateX(10px) rotate(1deg)}
+          40%{transform:translateX(-8px) rotate(-1deg)}
+          55%{transform:translateX(8px) rotate(2deg)}
+          70%{transform:translateX(-5px)}
+          85%{transform:translateX(5px)}
         }
-        @keyframes champ-death-glow {
-          0%{opacity:0;transform:scale(0.5)}
-          50%{opacity:1;transform:scale(1.2)}
-          100%{opacity:0;transform:scale(2)}
+        @keyframes champ-death-ring {
+          0%   { transform:scale(0); opacity:1; border-width:4px; }
+          50%  { opacity:0.6; }
+          100% { transform:scale(4); opacity:0; border-width:1px; }
+        }
+        @keyframes champ-death-fall {
+          0%   { transform:translateY(0) scale(1); opacity:1; filter:grayscale(0); }
+          40%  { transform:translateY(-10px) scale(1.05); opacity:1; filter:grayscale(0.3); }
+          100% { transform:translateY(20px) scale(0.9); opacity:0.2; filter:grayscale(1); }
+        }
+        @keyframes champ-death-text-in {
+          0%   { transform:translateY(24px) scale(0.9); opacity:0; }
+          100% { transform:translateY(0) scale(1); opacity:1; }
+        }
+        @keyframes champ-death-crack {
+          0%   { clip-path:inset(0 100% 0 0); opacity:0; }
+          100% { clip-path:inset(0 0% 0 0); opacity:1; }
+        }
+        @keyframes champ-death-screen-flash {
+          0%   { opacity:0; }
+          20%  { opacity:0.6; }
+          100% { opacity:0; }
         }
       `}</style>
 
-      {/* Shockwave ring */}
-      <div style={{
-        position: 'absolute',
-        width: 200, height: 200,
-        borderRadius: '50%',
-        border: `3px solid ${rar}`,
-        animation: 'champ-death-glow 1.2s ease-out forwards',
-        pointerEvents: 'none',
-      }} />
+      {/* Screen flash on stage 1 */}
+      {stage >= 1 && (
+        <div style={{
+          position: 'absolute', inset: 0,
+          background: `radial-gradient(ellipse at 50% 50%, ${rar}44, transparent 70%)`,
+          animation: 'champ-death-screen-flash 0.8s ease-out both',
+          pointerEvents: 'none', zIndex: 1,
+        }} />
+      )}
 
+      {/* Expanding rings */}
+      {stage >= 1 && [0, 1, 2].map(i => (
+        <div key={i} style={{
+          position: 'absolute', zIndex: 2,
+          width: 120, height: 120, borderRadius: '50%',
+          border: `3px solid ${rar}`,
+          animation: `champ-death-ring 1.5s ease-out ${i * 0.2}s both`,
+          pointerEvents: 'none',
+        }} />
+      ))}
+
+      {/* Skull icon */}
       <div style={{
-        fontSize: 64,
-        animation: 'champ-death-shake 0.6s ease-in-out both',
-        filter: `drop-shadow(0 0 24px ${rar}aa)`,
-        marginBottom: 20,
+        fontSize: 72, zIndex: 3, position: 'relative',
+        animation: stage >= 1 ? 'champ-death-fall 1.6s ease-in-out 0.4s both' : 'none',
+        filter: `drop-shadow(0 0 30px ${rar}aa)`,
+        marginBottom: 24,
       }}>💀</div>
 
-      <div style={{
-        fontFamily: '"Cinzel Decorative",serif',
-        fontSize: 'clamp(18px,4vw,28px)',
-        fontWeight: 900,
-        color: '#e84040',
-        textShadow: '0 0 30px rgba(232,64,64,0.8)',
-        marginBottom: 8,
-        letterSpacing: '0.1em',
-        textAlign: 'center',
-      }}>CAMPEÓN CAÍDO</div>
+      {/* CAMPEÓN CAÍDO title */}
+      {stage >= 2 && (
+        <div style={{
+          textAlign: 'center', zIndex: 3,
+          animation: 'champ-death-text-in 0.6s cubic-bezier(0.22,1,0.36,1) both',
+        }}>
+          <div style={{
+            fontFamily: '"Cinzel Decorative",serif',
+            fontSize: 'clamp(20px,5vw,32px)',
+            fontWeight: 900, color: '#e84040',
+            textShadow: '0 0 40px rgba(232,64,64,0.9), 0 0 80px rgba(232,64,64,0.4)',
+            marginBottom: 8, letterSpacing: '0.1em',
+            animation: 'champ-death-shake 0.8s ease-in-out 0.2s both',
+          }}>CAMPEÓN CAÍDO</div>
 
-      <div style={{
-        fontFamily: '"Cinzel",serif',
-        fontSize: 14, color: rar,
-        textShadow: `0 0 16px ${rar}88`,
-        marginBottom: 4, textAlign: 'center',
-      }}>{champion.name} ha sido derrotado</div>
+          <div style={{
+            fontFamily: '"Cinzel",serif',
+            fontSize: 16, color: rar,
+            textShadow: `0 0 20px ${rar}88`,
+            marginBottom: 4,
+          }}>{champion.name}</div>
+        </div>
+      )}
 
-      <div style={{
-        fontFamily: '"Rajdhani",sans-serif',
-        fontSize: 12, color: '#6a6a8a',
-        textAlign: 'center', marginTop: 4,
-      }}>La partida termina cuando el Campeón cae</div>
+      {/* Final message */}
+      {stage >= 3 && (
+        <div style={{
+          textAlign: 'center', zIndex: 3,
+          animation: 'champ-death-text-in 0.5s ease-out both',
+        }}>
+          <div style={{
+            fontFamily: '"Rajdhani",sans-serif',
+            fontSize: 12, color: '#6a6a8a',
+            textAlign: 'center', marginTop: 8, letterSpacing: '0.1em',
+          }}>La Forja apaga su fuego cuando el Campeón cae.</div>
+
+          {/* Faction orbs */}
+          <div style={{
+            display: 'flex', gap: 8, justifyContent: 'center', marginTop: 20,
+          }}>
+            {[...Array(5)].map((_, i) => (
+              <div key={i} style={{
+                width: 6, height: 6, borderRadius: '50%',
+                background: rar, opacity: 1 - i * 0.18,
+                animation: `charge-orb-glow ${1.2 + i * 0.2}s ease-in-out infinite`,
+                boxShadow: `0 0 8px ${rar}`,
+              }} />
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
 
-// ─── Reserve panel ─────────────────────────────────────────────────────────────
+// ─── Reserve panel (top 3 only) ────────────────────────────────────────────────
 function ReservePanel({
   reserve, onSelectReserve, awaitingSlot,
 }: {
@@ -317,6 +758,9 @@ function ReservePanel({
 }) {
   if (!awaitingSlot || reserve.length === 0) return null;
   const { primary, glow } = SLOT_COLORS[awaitingSlot];
+  // Show only top 3 as per plan spec
+  const top3 = reserve.slice(0, 3);
+
   return (
     <div style={{
       position: 'absolute', inset: 0, zIndex: 40,
@@ -326,68 +770,114 @@ function ReservePanel({
       gap: 16, padding: 20, backdropFilter: 'blur(6px)',
       animation: 'modal-overlay-in 0.3s ease-out both',
     }}>
+      <style>{`
+        @keyframes reserve-card-enter {
+          0%   { transform: translateY(20px) scale(0.9); opacity: 0; }
+          100% { transform: translateY(0) scale(1); opacity: 1; }
+        }
+      `}</style>
+
       <div style={{
         fontFamily: '"Cinzel",serif', fontSize: 16, color: primary,
         textShadow: `0 0 20px ${glow}`, letterSpacing: '0.1em', textAlign: 'center',
       }}>
         {SLOT_META[awaitingSlot].icon} Selecciona reemplazo para {SLOT_META[awaitingSlot].label}
       </div>
+
       <div style={{
-        display: 'flex', gap: 12, flexWrap: 'wrap', justifyContent: 'center',
-        maxWidth: 480,
+        fontSize: 10, color: '#6a6a8a', fontFamily: '"Rajdhani",sans-serif',
+        letterSpacing: '0.1em', textAlign: 'center', marginTop: -8,
       }}>
-        {reserve.map((u, i) => {
+        Top 3 de tu Reserva · {reserve.length} carta{reserve.length !== 1 ? 's' : ''} restante{reserve.length !== 1 ? 's' : ''}
+      </div>
+
+      <div style={{
+        display: 'flex', gap: 16, justifyContent: 'center',
+      }}>
+        {top3.map((u, i) => {
           const rar = RARITY_COLOR[u.rarity] ?? '#8b8b9e';
           return (
-            <div key={u.id} onClick={() => onSelectReserve(u, i)} style={{
-              width: 90, borderRadius: 10,
-              border: `2px solid ${rar}55`,
-              background: `linear-gradient(160deg,${rar}18,#0a0a14)`,
-              cursor: 'pointer', overflow: 'hidden',
-              transition: 'all 0.18s ease',
-              boxShadow: `0 4px 16px rgba(0,0,0,0.5)`,
-            }}
+            <div
+              key={u.id}
+              onClick={() => onSelectReserve(u, i)}
+              style={{
+                width: 110, borderRadius: 12,
+                border: `2px solid ${rar}66`,
+                background: `linear-gradient(160deg,${rar}18,#0a0a14)`,
+                cursor: 'pointer', overflow: 'hidden',
+                transition: 'all 0.18s ease',
+                boxShadow: `0 4px 20px rgba(0,0,0,0.6), 0 0 0 0 ${rar}`,
+                animation: `reserve-card-enter 0.4s cubic-bezier(0.22,1,0.36,1) ${i * 0.1}s both`,
+              }}
               onMouseEnter={e => {
-                (e.currentTarget as HTMLDivElement).style.transform = 'translateY(-4px) scale(1.05)';
-                (e.currentTarget as HTMLDivElement).style.boxShadow = `0 0 20px ${rar}66`;
+                const el = e.currentTarget as HTMLDivElement;
+                el.style.transform = 'translateY(-6px) scale(1.06)';
+                el.style.boxShadow = `0 8px 30px rgba(0,0,0,0.7), 0 0 20px ${rar}66`;
               }}
               onMouseLeave={e => {
-                (e.currentTarget as HTMLDivElement).style.transform = 'none';
-                (e.currentTarget as HTMLDivElement).style.boxShadow = '0 4px 16px rgba(0,0,0,0.5)';
+                const el = e.currentTarget as HTMLDivElement;
+                el.style.transform = 'none';
+                el.style.boxShadow = '0 4px 20px rgba(0,0,0,0.6)';
               }}
             >
+              {/* Image */}
               <div style={{
-                height: 60, display: 'flex', alignItems: 'center', justifyContent: 'center',
-                fontSize: 24, background: u.image_url
+                height: 80,
+                background: u.image_url
                   ? `url(${u.image_url}) center/cover no-repeat`
                   : `linear-gradient(160deg,${rar}22,#0a0a14)`,
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                fontSize: 28, position: 'relative',
               }}>
-                {!u.image_url && SLOT_META.vanguard.icon}
-              </div>
-              <div style={{ padding: '5px 7px', background: 'rgba(3,3,12,0.95)' }}>
+                {!u.image_url && '⚔️'}
+                {/* Rarity badge */}
                 <div style={{
-                  fontSize: 8, color: '#eee', fontFamily: '"Cinzel",serif',
-                  overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', marginBottom: 3,
+                  position: 'absolute', top: 4, right: 4,
+                  background: 'rgba(0,0,0,0.85)', border: `1px solid ${rar}55`,
+                  borderRadius: 4, padding: '1px 5px',
+                  fontSize: 6, fontWeight: 800, color: rar,
+                  fontFamily: '"Rajdhani",sans-serif',
+                }}>{u.rarity.slice(0,3).toUpperCase()}</div>
+              </div>
+
+              {/* Info */}
+              <div style={{ padding: '7px 9px', background: 'rgba(3,3,12,0.95)' }}>
+                <div style={{
+                  fontSize: 9, color: '#eee', fontFamily: '"Cinzel",serif',
+                  overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', marginBottom: 4,
                 }}>{u.name}</div>
-                <div style={{ display: 'flex', gap: 3, fontSize: 8, fontFamily: '"Rajdhani",sans-serif', fontWeight: 800 }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 9, fontFamily: '"Rajdhani",sans-serif', fontWeight: 800, marginBottom: 4 }}>
                   <span style={{ color: '#ff6b6b' }}>⚔{u.atk}</span>
                   <span style={{ color: '#4a9eff' }}>🛡{u.def}</span>
+                  <span style={{ color: '#3ddc84' }}>❤{u.hp}</span>
                 </div>
-                <div style={{ marginTop: 3, height: 3, borderRadius: 2, background: 'rgba(255,255,255,0.1)', overflow: 'hidden' }}>
+                {/* Mini HP bar */}
+                <div style={{ height: 3, background: 'rgba(255,255,255,0.08)', borderRadius: 2 }}>
                   <div style={{
-                    height: '100%', width: `${(u.hp / u.max_hp) * 100}%`,
-                    background: `linear-gradient(90deg,#3ddc84,#3ddc84bb)`, borderRadius: 2,
+                    height: '100%',
+                    width: `${(u.hp / u.max_hp) * 100}%`,
+                    background: `linear-gradient(90deg,#3ddc84,#3ddc84bb)`,
+                    borderRadius: 2,
                   }} />
                 </div>
+                {/* Keywords */}
+                {u.keywords && u.keywords.length > 0 && (
+                  <div style={{ marginTop: 3, fontSize: 7, color: '#8888aa', fontFamily: '"Rajdhani",sans-serif' }}>
+                    {u.keywords.slice(0, 2).join(' · ')}
+                  </div>
+                )}
               </div>
             </div>
           );
         })}
       </div>
+
       <div style={{
         fontSize: 10, color: '#4a4a6a', fontFamily: '"Rajdhani",sans-serif',
-        letterSpacing: '0.1em', textAlign: 'center',
-      }}>Elige sabiamente — cada carta de la reserva aumentó el poder del Campeón</div>
+        letterSpacing: '0.1em', textAlign: 'center', maxWidth: 340,
+      }}>
+        Elige sabiamente — las otras {reserve.length - Math.min(3, reserve.length)} cartas vuelven al fondo de la reserva
+      </div>
     </div>
   );
 }
@@ -402,35 +892,44 @@ export interface ForgeFormationBoardProps {
   onDismiss: () => void;
 }
 
-type BoardPhase = 'intro' | 'battle' | 'reserve' | 'champion_dead' | 'done';
+type BoardPhase = 'champion_summon' | 'intro' | 'battle' | 'reserve' | 'ascension' | 'champion_dead' | 'done';
 
 export function ForgeFormationBoard({
   initialFormation, playerName = 'Tú', opponentName = 'Rival',
   difficulty, onComplete, onDismiss,
 }: ForgeFormationBoardProps) {
-  const [formation, setFormation] = useState<FormationState>(initialFormation);
-  const [phase, setPhase]         = useState<BoardPhase>('intro');
+  const [formation, setFormation]     = useState<FormationState>(initialFormation);
+  const [phase, setPhase]             = useState<BoardPhase>('champion_summon');
   const [awaitingSlot, setAwaitingSlot] = useState<FormationSlot | null>(null);
-  const [turnIdx, setTurnIdx]     = useState(0);
-  const [totalTurns]              = useState(20);
-  const [log, setLog]             = useState<string[]>([]);
-  const [isAutoPlay, setIsAutoPlay] = useState(false);
-  const [hitFlash, setHitFlash]   = useState<FormationSlot | null>(null);
+  const [turnIdx, setTurnIdx]         = useState(0);
+  const [totalTurns]                  = useState(20);
+  const [log, setLog]                 = useState<string[]>([]);
+  const [isAutoPlay, setIsAutoPlay]   = useState(false);
+  const [hitFlash, setHitFlash]       = useState<FormationSlot | null>(null);
+
+  // ─── Rage / Ascension state ──────────────────────────────────────────────────
+  const [rageStacks, setRageStacks]     = useState(0);       // +5% ATK each, max 5
+  const [champKills, setChampKills]     = useState(0);       // kills by champion
+  const [ascensionActive, setAscensionActive] = useState(false);
+  const [showAscensionOverlay, setShowAscensionOverlay] = useState(false);
+
   const autoRef      = useRef<ReturnType<typeof setInterval> | null>(null);
   const musicPhaseRef = useRef<'none' | 'intro' | 'mid' | 'last_stand'>('none');
+  const prevKillsRef  = useRef(0);
+  const prevDeathsRef = useRef(0);
 
-  // Simulate formation battle result once
+  // Pre-compute battle result once
   const battleResult = useRef(simulateFormationBattle(initialFormation, difficulty));
-  // Use turns array (RealBattleResult uses 'turns' not 'timeline')
-  const battleTurns = battleResult.current.turns ?? [];
+  const battleTurns  = battleResult.current.turns ?? [];
 
-  // ─── Start ───────────────────────────────────────────────────────────────────
-  useEffect(() => {
-    const t = setTimeout(() => setPhase('battle'), 1400);
+  // ─── Summon cinematic done → show intro ──────────────────────────────────────
+  const handleSummonDone = useCallback(() => {
+    setPhase('intro');
+    const t = setTimeout(() => setPhase('battle'), 1200);
     return () => clearTimeout(t);
   }, []);
 
-  // ─── Cleanup music on unmount (covers "✕ Salir" dismiss path) ───────────────
+  // ─── Cleanup music on unmount ────────────────────────────────────────────────
   useEffect(() => {
     return () => {
       try { (AudioEngine as any).stopCombatMusic?.(); } catch { /* silent */ }
@@ -449,6 +948,8 @@ export function ForgeFormationBoard({
     }
   }, [phase]);
 
+  const totalBattleTurns = battleResult.current.turns?.length ?? totalTurns;
+
   useEffect(() => {
     if (phase !== 'battle' || totalBattleTurns <= 0) return;
     const pct = turnIdx / totalBattleTurns;
@@ -466,6 +967,7 @@ export function ForgeFormationBoard({
     if (!isAutoPlay || phase !== 'battle') return;
     autoRef.current = setInterval(() => advanceTurn(), 900);
     return () => { if (autoRef.current) clearInterval(autoRef.current); };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isAutoPlay, phase, turnIdx]);
 
   const addLog = useCallback((msg: string) => {
@@ -475,7 +977,6 @@ export function ForgeFormationBoard({
   const advanceTurn = useCallback(() => {
     if (phase !== 'battle') return;
 
-    // Use the pre-computed battle turns
     const turnData = battleTurns[turnIdx] ?? null;
 
     if (!turnData) {
@@ -486,32 +987,30 @@ export function ForgeFormationBoard({
       if (championDied) {
         setPhase('champion_dead');
         try { (AudioEngine as any).sfxKillV2?.(); } catch { /* ok */ }
-        setTimeout(() => { setPhase('done'); onComplete(false, true); }, 2800);
+        setTimeout(() => { setPhase('done'); onComplete(false, true); }, 4200);
       } else {
         setPhase('done');
         try {
           if (won) (AudioEngine as any).sfxLevelUp?.();
-          else (AudioEngine as any).sfxKillV2?.();
+          else     (AudioEngine as any).sfxKillV2?.();
         } catch { /* ok */ }
         setTimeout(() => onComplete(won, false), 600);
       }
       return;
     }
 
-    // Animate turn
+    // Animate hit
     const atkSide: 'player' | 'opponent' = turnData.atk_side === 'a' ? 'player' : 'opponent';
-
     setHitFlash(atkSide === 'player' ? 'sentinel' : 'vanguard');
     setTimeout(() => setHitFlash(null), 280);
 
-    const dmg = turnData.damage ?? 0;
+    const dmg    = turnData.damage ?? 0;
     const isCrit = turnData.is_crit;
     const isKill = turnData.is_kill;
 
     const atkName = atkSide === 'player'
       ? (formation.vanguard?.name ?? formation.champion.name)
       : 'Enemigo';
-    // Derive defending slot: when player attacks → opponent's sentinel; when opponent attacks → player's vanguard or champion
     const defSlot: FormationSlot = atkSide === 'player'
       ? 'sentinel'
       : (formation.vanguard?.alive ? 'vanguard' : 'champion');
@@ -527,9 +1026,32 @@ export function ForgeFormationBoard({
       else             AudioEngine.sfxCardSelect?.();
     } catch { /* ok */ }
 
+    // ─── Champion Rage: +5% ATK per allied formation card death ─────────────────
+    if (isKill && atkSide === 'opponent' && defSlot !== 'champion') {
+      const newDeaths = prevDeathsRef.current + 1;
+      prevDeathsRef.current = newDeaths;
+      const newStacks = Math.min(newDeaths, 5);
+      setRageStacks(newStacks);
+      addLog(`🔥 RAGE +1 → Campeón gana +${newStacks * 5}% ATK`);
+      try { (AudioEngine as any).sfxCritV2?.(); } catch { /* ok */ }
+    }
+
+    // ─── Champion kills → Forge Ascension at 3 kills ─────────────────────────────
+    if (isKill && atkSide === 'player') {
+      const newKills = prevKillsRef.current + 1;
+      prevKillsRef.current = newKills;
+      setChampKills(newKills);
+      if (newKills >= 3 && !ascensionActive) {
+        setAscensionActive(true);
+        setShowAscensionOverlay(true);
+        if (autoRef.current) { clearInterval(autoRef.current); setIsAutoPlay(false); }
+        setPhase('ascension');
+      }
+    }
+
     setTurnIdx(prev => prev + 1);
 
-    // Check if reserve replacement needed (simplified)
+    // ─── Reserve replacement check ───────────────────────────────────────────────
     const finalFormation = battleResult.current.finalFormation;
     if (!finalFormation.vanguard?.alive && formation.vanguard?.alive && formation.reserve.length > 0) {
       if (autoRef.current) { clearInterval(autoRef.current); setIsAutoPlay(false); }
@@ -540,24 +1062,27 @@ export function ForgeFormationBoard({
       setAwaitingSlot('sentinel');
       setPhase('reserve');
     }
-  }, [phase, turnIdx, formation, addLog, onComplete]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [phase, turnIdx, formation, addLog, onComplete, ascensionActive]);
 
   const handleSelectReserve = useCallback((unit: BattleUnit, _idx: number) => {
     if (!awaitingSlot) return;
-    const result = getNextReserveUnit(formation.reserve, awaitingSlot);
-    if (!result) return;
-
     setFormation(prev => ({
       ...prev,
       [awaitingSlot]: unit,
       reserve: prev.reserve.filter(u => u.id !== unit.id),
     }));
-
     try { (AudioEngine as any).sfxDrawCard?.(); } catch { /* ok */ }
     addLog(`🔄 ${SLOT_META[awaitingSlot].label} → ${unit.name} entra al campo`);
     setAwaitingSlot(null);
     setPhase('battle');
-  }, [awaitingSlot, formation.reserve, addLog]);
+  }, [awaitingSlot, addLog]);
+
+  const handleAscensionDone = useCallback(() => {
+    setShowAscensionOverlay(false);
+    setPhase('battle');
+    addLog(`🌟 FORGE ASCENSION — ${formation.champion.name} +20% ATK`);
+  }, [addLog, formation.champion.name]);
 
   const toggleAutoPlay = useCallback(() => {
     if (isAutoPlay) {
@@ -568,12 +1093,10 @@ export function ForgeFormationBoard({
     }
   }, [isAutoPlay]);
 
-  const champAlive = formation.champion.hp > 0 && formation.champion.alive !== false;
-  const champProtected = isChampionProtected(formation);
-  const finalFormation = battleResult.current.finalFormation;
-  // RealBattleResult uses 'turns', not 'timeline'
-  const totalBattleTurns = battleResult.current.turns?.length ?? totalTurns;
-  const progressPct = Math.min(turnIdx / Math.max(1, totalBattleTurns), 1);
+  const champAlive      = formation.champion.hp > 0 && formation.champion.alive !== false;
+  const champProtected  = isChampionProtected(formation);
+  const finalFormation  = battleResult.current.finalFormation;
+  const progressPct     = Math.min(turnIdx / Math.max(1, totalBattleTurns), 1);
 
   return (
     <div style={{
@@ -591,11 +1114,39 @@ export function ForgeFormationBoard({
           0% { transform: translateY(30px) scale(0.9); opacity: 0; }
           100% { transform: translateY(0) scale(1); opacity: 1; }
         }
-        @keyframes reserve-draw {
-          0% { transform: translateX(-20px); opacity: 0; }
-          100% { transform: translateX(0); opacity: 1; }
+        @keyframes modal-overlay-in {
+          0% { opacity: 0; }
+          100% { opacity: 1; }
+        }
+        @keyframes attack-btn-pulse {
+          0%,100% { box-shadow: 0 4px 20px rgba(232,184,75,0.4); }
+          50%     { box-shadow: 0 4px 30px rgba(232,184,75,0.7); }
+        }
+        @keyframes forge-gauge-pulse {
+          0%,100% { opacity: 1; transform: translate(-50%,-50%) scale(1); }
+          50%     { opacity: 0.6; transform: translate(-50%,-50%) scale(1.4); }
+        }
+        @keyframes rage-frenzy-pulse {
+          0%,100% { box-shadow: 0 0 10px rgba(232,64,64,0.4); }
+          50%     { box-shadow: 0 0 20px rgba(232,64,64,0.8); }
+        }
+        @keyframes charge-orb-glow {
+          0%,100% { opacity: 1; }
+          50%     { opacity: 0.5; }
+        }
+        @keyframes forge-ascension-pulse {
+          0%,100% { box-shadow: 0 0 32px rgba(255,215,0,0.9), 0 0 64px rgba(255,215,0,0.4); }
+          50%     { box-shadow: 0 0 48px rgba(255,215,0,1.0), 0 0 96px rgba(255,215,0,0.6); }
         }
       `}</style>
+
+      {/* ── Champion Summon Cinematic (3.5s) ────────────────────────────────── */}
+      {phase === 'champion_summon' && (
+        <ChampionSummonCinematic
+          champion={initialFormation.champion}
+          onDone={handleSummonDone}
+        />
+      )}
 
       {/* ── Header ─────────────────────────────────────────────────────────── */}
       <div style={{
@@ -608,7 +1159,10 @@ export function ForgeFormationBoard({
         <div style={{ fontFamily: '"Cinzel",serif', fontSize: 13, color: '#e8b84b', letterSpacing: '0.08em' }}>
           ⚔ FORGE FORMATION · {opponentName}
         </div>
-        <TurnIndicator current={turnIdx} total={totalBattleTurns} />
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+          <TurnIndicator current={turnIdx} total={totalBattleTurns} />
+          <ChargeOrbs kills={champKills} ascensionAt={3} />
+        </div>
         <button onClick={onDismiss} style={{
           background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)',
           borderRadius: 6, color: '#6a6a8a', fontSize: 10, padding: '5px 10px', cursor: 'pointer',
@@ -616,14 +1170,21 @@ export function ForgeFormationBoard({
         }}>✕ Salir</button>
       </div>
 
-      {/* ── Battle progress bar ─────────────────────────────────────────────── */}
-      <div style={{ height: 3, background: 'rgba(255,255,255,0.04)', flexShrink: 0 }}>
+      {/* ── Forge Gauge (enhanced battle progress) ─────────────────────────── */}
+      <ForgeGauge progress={progressPct} />
+
+      {/* ── Rage meter row ───────────────────────────────────────────────────── */}
+      {rageStacks > 0 && (
         <div style={{
-          height: '100%', background: 'linear-gradient(90deg,#e84040,#e8b84b,#3ddc84)',
-          width: `${progressPct * 100}%`, transition: 'width 0.4s ease',
-          boxShadow: '0 0 8px rgba(232,184,75,0.6)',
-        }} />
-      </div>
+          padding: '4px 16px',
+          background: 'rgba(4,4,12,0.95)',
+          borderBottom: '1px solid rgba(232,64,64,0.1)',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          flexShrink: 0,
+        }}>
+          <RageMeter stacks={rageStacks} maxStacks={5} />
+        </div>
+      )}
 
       {/* ── Intro overlay ───────────────────────────────────────────────────── */}
       {phase === 'intro' && (
@@ -672,6 +1233,20 @@ export function ForgeFormationBoard({
           pointerEvents: 'none', zIndex: 0,
         }} />
 
+        {/* Shield Arc — visual protección del campeón */}
+        {champProtected && champAlive && (phase === 'battle' || phase === 'reserve') && (
+          <div style={{
+            position: 'absolute', top: '50%', left: '50%',
+            transform: 'translate(-50%, -50%)',
+            width: 200, height: 100,
+            border: '2px solid rgba(74,158,255,0.3)',
+            borderBottom: 'none',
+            borderRadius: '100px 100px 0 0',
+            boxShadow: '0 -4px 20px rgba(74,158,255,0.2), inset 0 0 20px rgba(74,158,255,0.05)',
+            pointerEvents: 'none', zIndex: 0,
+          }} />
+        )}
+
         {/* === OPPONENT FORMATION (top) === */}
         <div style={{
           display: 'flex', justifyContent: 'center', gap: 16,
@@ -686,7 +1261,6 @@ export function ForgeFormationBoard({
               border: '1px solid rgba(232,64,64,0.2)',
             }}>⚔ {opponentName}</div>
             <div style={{ display: 'flex', gap: 12 }}>
-              {/* Opponent cards — simplified enemy display */}
               {(['vanguard', 'champion', 'sentinel'] as FormationSlot[]).map(s => {
                 const u = finalFormation[s] as BattleUnit | null;
                 return (
@@ -754,38 +1328,49 @@ export function ForgeFormationBoard({
                       isActive={s === 'vanguard' && phase === 'battle'}
                       isDead={isDead}
                       isBeingHit={hitFlash === s}
+                      ascensionActive={s === 'champion' && ascensionActive}
                     />
                   </div>
                 );
               })}
             </div>
-            <div style={{
-              fontSize: 9, color: '#4a9effcc', letterSpacing: '0.15em',
-              fontFamily: '"Rajdhani",sans-serif', textTransform: 'uppercase',
-              padding: '2px 10px',
-              background: 'rgba(0,0,0,0.5)', borderRadius: 20,
-              border: '1px solid rgba(74,158,255,0.2)',
-              display: 'inline-block',
-            }}>🛡 {playerName} · Reserva: {formation.reserve.length}</div>
 
-            {/* Champion protection indicator */}
+            {/* Player info bar */}
             <div style={{
-              marginTop: 6, fontSize: 9, fontFamily: '"Rajdhani",sans-serif',
-              color: champProtected ? '#3ddc84' : '#e84040',
-              letterSpacing: '0.1em',
-              transition: 'color 0.3s',
+              display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10,
             }}>
-              {champProtected ? '🛡 Campeón protegido' : '⚠️ ¡Campeón expuesto!'}
+              <div style={{
+                fontSize: 9, color: '#4a9effcc', letterSpacing: '0.15em',
+                fontFamily: '"Rajdhani",sans-serif', textTransform: 'uppercase',
+                padding: '2px 10px',
+                background: 'rgba(0,0,0,0.5)', borderRadius: 20,
+                border: '1px solid rgba(74,158,255,0.2)',
+                display: 'inline-block',
+              }}>🛡 {playerName} · Reserva: {formation.reserve.length}</div>
+            </div>
+
+            {/* Champion protection + rage status */}
+            <div style={{
+              marginTop: 6, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10,
+            }}>
+              <div style={{
+                fontSize: 9, fontFamily: '"Rajdhani",sans-serif',
+                color: champProtected ? '#3ddc84' : '#e84040',
+                letterSpacing: '0.1em',
+                transition: 'color 0.3s',
+              }}>
+                {champProtected ? '🛡 Campeón protegido' : '⚠️ ¡Campeón expuesto!'}
+              </div>
             </div>
           </div>
         </div>
 
-        {/* Champion death overlay */}
+        {/* Champion death overlay (4.0s) */}
         {phase === 'champion_dead' && (
           <ChampionDeathScreen champion={formation.champion} />
         )}
 
-        {/* Reserve selection overlay */}
+        {/* Reserve selection overlay (top 3) */}
         {phase === 'reserve' && (
           <ReservePanel
             reserve={formation.reserve}
@@ -793,11 +1378,19 @@ export function ForgeFormationBoard({
             awaitingSlot={awaitingSlot}
           />
         )}
+
+        {/* Forge Ascension overlay */}
+        {showAscensionOverlay && phase === 'ascension' && (
+          <ForgeAscensionOverlay
+            champion={formation.champion}
+            onDone={handleAscensionDone}
+          />
+        )}
       </div>
 
       {/* ── Log ────────────────────────────────────────────────────────────── */}
       <div style={{
-        maxHeight: 100, overflowY: 'auto',
+        maxHeight: 90, overflowY: 'auto',
         background: 'rgba(3,3,10,0.99)',
         borderTop: '1px solid rgba(232,184,75,0.1)',
         padding: '4px 8px',
@@ -855,6 +1448,11 @@ export function ForgeFormationBoard({
               color: isAutoPlay ? '#e8b84b' : '#6a6a8a', fontFamily: '"Cinzel",serif',
               fontSize: 12, cursor: 'pointer', letterSpacing: '0.06em',
             }}>{isAutoPlay ? '⏸ Pausar' : '▶ Auto'}</button>
+
+            {/* Rage badge in controls */}
+            {rageStacks > 0 && (
+              <RageMeter stacks={rageStacks} maxStacks={5} />
+            )}
           </>
         )}
         {phase === 'done' && (

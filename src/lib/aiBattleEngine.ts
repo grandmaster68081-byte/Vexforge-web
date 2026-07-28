@@ -11,13 +11,14 @@
 import type { BattleUnit, BattleTurnData, BattleEvent, RealBattleResult, BattleRarity, BattleSide } from './battleTypes';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
-export type AIDifficulty = 'easy' | 'normal' | 'expert' | 'tutorial';
-export type BattleMode   = 'pvp' | 'ai_easy' | 'ai_normal' | 'ai_expert' | 'practice' | 'tutorial';
+export type AIDifficulty = 'easy' | 'normal' | 'expert' | 'legend' | 'tutorial';
+export type BattleMode   = 'pvp' | 'ai_easy' | 'ai_normal' | 'ai_expert' | 'ai_legend' | 'practice' | 'tutorial';
 
 export const AI_DIFFICULTY_LABEL: Record<AIDifficulty, string> = {
   easy:     'Aprendiz',
   normal:   'Forjador',
   expert:   'Maestro',
+  legend:   'Leyenda',
   tutorial: 'Tutorial',
 };
 
@@ -29,6 +30,7 @@ export const BATTLE_MODE_META: Record<BattleMode, {
   ai_easy:    { label: 'vs IA — Aprendiz',  desc: 'IA sin keywords. Ideal para aprender el motor de combate.', icon: '🤖',  color: '#3dc96b', reward: '+VEX reducido',  ai: 'easy'   },
   ai_normal:  { label: 'vs IA — Forjador',  desc: 'IA con Guard y Lifesteal. Requiere estrategia real.',       icon: '🛡️', color: '#e8b84b', reward: '+VEX medio',     ai: 'normal' },
   ai_expert:  { label: 'vs IA — Maestro',   desc: 'IA con deck completo y toma de decisiones óptima.',         icon: '💀',  color: '#a855f7', reward: '+VEX completo',  ai: 'expert' },
+  ai_legend:  { label: 'vs IA — Leyenda',  desc: 'IA óptima con Campeón Mítico. Sin misericordia.',          icon: '💎',  color: '#ffd700', reward: '+VEX máximo',     ai: 'legend'  },
   practice:   { label: 'Práctica',          desc: 'Sin recompensas ni registro. Experimenta libremente.',       icon: '🎯',  color: '#8b8b9e', reward: 'Sin recompensas' },
   tutorial:   { label: 'Tutorial',          desc: 'Batalla guiada paso a paso.',                               icon: '📖',  color: '#ff6b35', reward: 'Completar tutorial' },
 };
@@ -91,6 +93,11 @@ const DECKS: Record<AIDifficulty, Partial<BattleUnit>[]> = {
     { idx:0, id:'ai_x0', name:'Forjador Élite',   faction:'Guerrero',   rarity:'Epic',     atk:28, def:10, hp:130, spd:7,  power:90, keywords:['Drain'],         lifesteal:true },
     { idx:1, id:'ai_x1', name:'Señor de Velos',   faction:'Mago',       rarity:'Rare',     atk:20, def:15, hp:115, spd:5,  power:80, keywords:['Veil','Guard'],  shielded:true, guard:true },
     { idx:2, id:'ai_x2', name:'Tormenta Surgente', faction:'Pícaro',     rarity:'Epic',     atk:34, def:5,  hp:90,  spd:11, power:95, keywords:['Surge','Forge'], rush:true },
+  ],
+  legend: [
+    { idx:0, id:'ai_l0', name:'Campeón Primordial', faction:'Guerrero', rarity:'Mythic',    atk:42, def:18, hp:200, spd:10, power:180, keywords:['Forge','Drain','DoubleStrike'], lifesteal:true, double_strike:true },
+    { idx:1, id:'ai_l1', name:'Velo Eterno',        faction:'Mago',     rarity:'Legendary', atk:30, def:22, hp:160, spd:7,  power:150, keywords:['Veil','Guard','Resonance'],    shielded:true, guard:true },
+    { idx:2, id:'ai_l2', name:'Asesino del Abismo', faction:'Pícaro',   rarity:'Legendary', atk:48, def:6,  hp:120, spd:14, power:160, keywords:['Surge','Poison'],              rush:true, poison_atk:true },
   ],
   tutorial: [
     { idx:0, id:'ai_t0', name:'Guardián Aprendiz', faction:'Guerrero',  rarity:'Common',   atk:8,  def:4,  hp:70,  spd:3,  power:20  },

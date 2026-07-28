@@ -8344,3 +8344,30 @@ button:active { animation: chip-select-pop 0.15s ease; }
   .card-aura-mythic { animation-duration: 3s; }
   .formation-slot-active { animation-duration: 0.2s; }
 }
+
+/* ─── FFE v2: Forge Ascension, Rage, Charge Orbs ────────────────────────────── */
+@keyframes forge-ascension-pulse {
+  0%,100% { box-shadow: 0 0 32px rgba(255,215,0,0.9), 0 0 64px rgba(255,215,0,0.4); }
+  50%     { box-shadow: 0 0 48px rgba(255,215,0,1.0), 0 0 96px rgba(255,215,0,0.6); }
+}
+@keyframes ascension-shimmer {
+  0%,100% { opacity: 0.6; }
+  50%     { opacity: 1; }
+}
+@keyframes charge-orb-glow {
+  0%,100% { opacity: 1; box-shadow: 0 0 8px rgba(255,215,0,0.8); }
+  50%     { opacity: 0.5; box-shadow: 0 0 4px rgba(255,215,0,0.4); }
+}
+@keyframes rage-frenzy-pulse {
+  0%,100% { box-shadow: 0 0 10px rgba(232,64,64,0.4); }
+  50%     { box-shadow: 0 0 22px rgba(232,64,64,0.85); }
+}
+@keyframes forge-gauge-pulse {
+  0%,100% { opacity:1; transform: translate(-50%,-50%) scale(1); }
+  50%     { opacity:0.6; transform: translate(-50%,-50%) scale(1.5); }
+}
+@keyframes forge-ascension-crown {
+  0%,100% { transform: translateX(-50%) scale(1) rotate(-5deg); filter: drop-shadow(0 0 16px #ffd700); }
+  50%     { transform: translateX(-50%) scale(1.25) rotate(5deg); filter: drop-shadow(0 0 28px #ffd700); }
+}
+.forge-ascension-pulse { animation: forge-ascension-pulse 1.2s ease-in-out infinite; }
