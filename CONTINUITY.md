@@ -172,3 +172,86 @@
 
     Para el historial completo de chat108, ver backend/reports/chat38-report.md
     
+    ---
+
+    ## Chat 110 — 2026-07-28 — Lote A-E: reparación visual completa
+
+    *(Incluido en historial comprimido de chat 111 — ver backend/handoff/ para detalles)*
+
+    ---
+
+    ## Chat 111 — 2026-07-28 — RewardsIA, VX.3 segments, BA.1 particles
+
+    **Branch:** main | **Sesión:** Replit Agent
+
+    ### Completado
+    - E1 ✅ RewardsIA anti-farm (`claimAIBattleReward` + daily cap `AI_BATTLE_DAILY_CAP`)
+    - VX.3 ✅ `SegmentedHpBar` (color-coded HP segments: verde > naranja > rojo)
+    - BA.1 ✅ `KeywordActivationFX` (keyword particles en `InteractiveBattleBoard.tsx`)
+    - `UnitSummonCinematic` (B1) integrado en `ForgeFormationBoard.tsx`
+    - Plan `vexforge_phase2_repair_visual_v1` marcado ✅ done
+    - dist desactualizado (no se hizo build en chat 111)
+
+    ### Pendiente al cierre
+    - Build dist + push (stale)
+    - Per-card cinematic individualization (chat 112)
+
+    ---
+
+    ## Chat 112 — 2026-07-28 — F1/G1/G2/G3: per-carta cinematics + dist push
+
+    **Branch:** main | **Commit:** b4ce394 | **Sesión:** Replit Agent
+
+    ### ESTADO DEL PLAN ACTIVO
+    Plan: `vexforge_fase3_polish_battle_v1` (creado esta sesión en Supabase · status: in_progress)
+
+    ### Implementado esta sesión
+
+    #### F1 ✅ Fix TS6133 — unused startPractice
+    - `src/routes/PvpRoute.tsx`: eliminada función `startPractice` no utilizada
+    - 0 errores TypeScript confirmados post-fix
+
+    #### F2 ✅ dist actualizado + push a GitHub
+    - `npm run build` limpio (65 chunks, 3.19s)
+    - Chat 111 RewardsIA incluido por primera vez en dist
+    - commit b4ce394 — 61 files changed
+
+    #### G1 ✅ Sistema de motto per-carta (KEYWORD_SUMMON_FX + getCardMotto)
+    - `KEYWORD_SUMMON_FX`: 15 keywords → { color, emoji[], bgOverlay }
+      Guard/#4a9eff, Drain/#9b59b6, Lifesteal/#c0392b, Surge/#f1c40f, Veil/#7f8c8d,
+      Forge/#e74c3c, Poison/#27ae60, DoubleStrike/#e84040, Rush/#e67e22,
+      Consecrate/#f39c12, Resonance/#8e44ad, Flux/#3498db, Taunt/#e84040,
+      Stealth/#6c5ce7, Spellpower/#00cec9
+    - `KW_MOTTO`: 15 frases únicas per-keyword (español)
+    - `getCardMotto(unit)`: keyword primario > facción, + prefijo de rareza (★/👑/🔥)
+    - `FACTION_MOTTO` movido a module-level; eliminado duplicado interno en ChampionSummonCinematic
+
+    #### G2 ✅ UnitSummonCinematic — keyword FX
+    - Motto per-carta visible (color del keyword primario o fac.primary)
+    - Keyword badges coloreados (hasta 3): emoji + nombre en mayúsculas
+    - Energy rings tintados con color del keyword primario
+    - Keyword color overlay sobre la imagen de la carta
+    - Unit name glow tintado con color del keyword
+
+    #### G3 ✅ ChampionSummonCinematic — keyword FX + image_url
+    - Usa `image_url` cuando está disponible (fallback: terrain emoji)
+    - Keyword color overlay sobre el arte del campeón
+    - Keyword badges (hasta 4) en stage >= 3
+    - Motto, textShadow, glow y border tintados con color del keyword primario
+    - `kwFxChamp` derivado del primer keyword del campeón
+
+    ### Archivos modificados
+    - `src/routes/PvpRoute.tsx` (+1/-4 líneas)
+    - `src/components/battle/ForgeFormationBoard.tsx` (+188/-83 líneas aprox)
+    - `dist/` — completamente actualizado
+
+    ---
+
+    ## Próximos pasos (siguiente sesión)
+
+    1. **F3** — Verificar vexforge-web.pages.dev post-deploy (Cloudflare Pages auto-deploy)
+    2. **H1** — Shield Arc: indicador visual explícito de Guard activo en ForgeFormationBoard
+    3. **H2** — Target Lock UI: highlight del objetivo actual en batalla
+    4. **I1** — Battle board responsive: cartas más compactas en pantallas < 480px
+    5. **I2** — Navigation overflow: hamburger menu para < 768px
+    6. **Visual assets** — zip bundles pendientes (founders_badge, misc, sessions, ui_system)
