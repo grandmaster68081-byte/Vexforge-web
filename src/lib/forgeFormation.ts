@@ -77,7 +77,41 @@ export function buildFormation(
     max_hp: champion.hp + bonus.hp,
   };
 
-  return { vanguard, champion: boostedChampion, sentinel, reserve };
+  // Apply Formation Pure Bonus (+15% if all 3 active cards share the same faction)
+  return applyFormationPureBonus({ vanguard, champion: boostedChampion, sentinel, reserve });
+}
+
+// ─── Formation Pure Bonus ─────────────────────────────────────────────────────
+// +15% ATK/DEF/HP/SPD a las 3 cartas activas si todas son de la misma facción.
+// Incentiva construcción mono-facción — ningún otro DCCG tiene esto.
+export function hasFormationPureBonus(
+  formation: Pick<FormationState, 'champion' | 'vanguard' | 'sentinel'>,
+): boolean {
+  const cards = [formation.champion, formation.vanguard, formation.sentinel]
+    .filter((c): c is BattleUnit => !!c);
+  if (cards.length < 2) return false;
+  return cards.every(c => c.faction === formation.champion.faction);
+}
+
+function applyBuff15(u: BattleUnit): BattleUnit {
+  return {
+    ...u,
+    atk:    Math.round(u.atk * 1.15),
+    def:    Math.round(u.def * 1.15),
+    hp:     Math.round(u.hp * 1.15),
+    max_hp: Math.round(u.max_hp * 1.15),
+    spd:    Math.round((u.spd ?? 10) * 1.15),
+  };
+}
+
+function applyFormationPureBonus(formation: FormationState): FormationState {
+  if (!hasFormationPureBonus(formation)) return formation;
+  return {
+    ...formation,
+    champion: applyBuff15(formation.champion),
+    vanguard: formation.vanguard ? applyBuff15(formation.vanguard) : null,
+    sentinel: formation.sentinel ? applyBuff15(formation.sentinel) : null,
+  };
 }
 
 // ─── Champion protection rule ─────────────────────────────────────────────────

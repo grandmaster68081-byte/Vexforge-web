@@ -10,7 +10,7 @@ import { RARITY_COLOR, RARITY_GLOW } from '../../lib/battleTypes';
 import {
   type FormationState, type FormationSlot,
   isChampionProtected, SLOT_META,
-  simulateFormationBattle,
+  simulateFormationBattle, hasFormationPureBonus,
 } from '../../lib/forgeFormation';
 import type { AIDifficulty } from '../../lib/aiBattleEngine';
 import { AudioEngine } from '../../lib/audioEngine';
@@ -31,6 +31,43 @@ const FACTION_COLORS: Record<string, { primary: string; glow: string; particle: 
 
 const getFactionStyle = (faction: string) =>
   FACTION_COLORS[faction] ?? { primary: '#e8b84b', glow: 'rgba(232,184,75,0.8)', particle: '⚔️' };
+
+// ─── Terrain per facción (Plan §3 — Terrain Faction) ──────────────────────────
+const TERRAIN_FACTION: Record<string, {
+  gradient: string; ambientColor: string; particleEmoji: string[]; scanlineColor: string;
+}> = {
+  Guerrero: {
+    gradient: 'radial-gradient(ellipse at 50% 100%, rgba(120,20,0,0.55) 0%, rgba(50,8,2,0.25) 55%, transparent 85%)',
+    ambientColor: 'rgba(232,93,4,0.07)',
+    particleEmoji: ['🔥','🌋','💥'],
+    scanlineColor: 'rgba(232,64,64,0.03)',
+  },
+  Mago: {
+    gradient: 'radial-gradient(ellipse at 50% 50%, rgba(30,10,80,0.55) 0%, rgba(10,5,40,0.25) 60%, transparent 90%)',
+    ambientColor: 'rgba(74,158,255,0.06)',
+    particleEmoji: ['✨','🔮','⭐'],
+    scanlineColor: 'rgba(74,158,255,0.03)',
+  },
+  'Paladín': {
+    gradient: 'radial-gradient(ellipse at 50% 0%, rgba(90,65,5,0.5) 0%, rgba(40,25,5,0.22) 55%, transparent 85%)',
+    ambientColor: 'rgba(232,184,75,0.07)',
+    particleEmoji: ['⚡','✝️','☀️'],
+    scanlineColor: 'rgba(232,184,75,0.03)',
+  },
+  'Pícaro': {
+    gradient: 'radial-gradient(ellipse at 30% 80%, rgba(70,5,90,0.5) 0%, rgba(25,2,40,0.25) 55%, transparent 85%)',
+    ambientColor: 'rgba(168,85,247,0.07)',
+    particleEmoji: ['💜','🗡️','🌑'],
+    scanlineColor: 'rgba(168,85,247,0.03)',
+  },
+};
+const getTerrain = (faction: string) =>
+  TERRAIN_FACTION[faction] ?? {
+    gradient: 'radial-gradient(ellipse at 50% 50%, rgba(10,10,40,0.4) 0%, transparent 80%)',
+    ambientColor: 'rgba(74,158,255,0.04)',
+    particleEmoji: ['⚔️'],
+    scanlineColor: 'rgba(74,158,255,0.02)',
+  };
 
 // ─── HP colour helper ──────────────────────────────────────────────────────────
 const hpCol = (pct: number) =>
@@ -882,6 +919,153 @@ function ReservePanel({
   );
 }
 
+// ─── Forge Barrier (Plan §3 — THE FORGE BARRIER) ─────────────────────────────
+// Línea de energía dinámica que divide las formaciones. Cambia de color según
+// quién va ganando y pulsa más rápido cuando el Campeón está en HP crítico.
+function ForgeBarrier({
+  playerWinning, criticalHp, faction,
+}: { playerWinning: boolean; criticalHp: boolean; faction: string }) {
+  const winCol  = playerWinning ? '#3ddc84' : '#e84040';
+  const fStyle  = getFactionStyle(faction);
+  const pulseDur = criticalHp ? '0.45s' : '1.4s';
+
+  return (
+    <div style={{
+      position: 'relative', zIndex: 2,
+      display: 'flex', alignItems: 'center', justifyContent: 'center',
+      gap: 10, padding: '5px 12px',
+    }}>
+      {/* Left energy line */}
+      <div style={{
+        flex: 1, height: 2,
+        background: `linear-gradient(90deg, transparent 0%, ${winCol}55 40%, ${winCol} 100%)`,
+        boxShadow: `0 0 8px ${winCol}44`,
+        animation: `forge-barrier-glow ${pulseDur} ease-in-out infinite`,
+        borderRadius: 2,
+      }} />
+
+      {/* Central rune node */}
+      <div style={{
+        position: 'relative', width: 38, height: 38, borderRadius: '50%',
+        border: `2px solid ${winCol}88`,
+        background: `radial-gradient(circle, ${fStyle.glow.replace('0.8', '0.15')} 0%, rgba(4,4,12,0.95) 70%)`,
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        boxShadow: `0 0 18px ${winCol}55, inset 0 0 10px ${fStyle.primary}22`,
+        flexShrink: 0,
+        animation: `forge-barrier-rune ${pulseDur} ease-in-out infinite`,
+      }}>
+        <span style={{ fontSize: 16, filter: `drop-shadow(0 0 5px ${winCol})` }}>⚔</span>
+        {/* Orbiting ring */}
+        <div style={{
+          position: 'absolute', inset: -5,
+          border: `1px solid ${winCol}33`,
+          borderRadius: '50%',
+          animation: 'forge-barrier-orbit 3.5s linear infinite',
+          pointerEvents: 'none',
+        }} />
+      </div>
+
+      {/* Right energy line */}
+      <div style={{
+        flex: 1, height: 2,
+        background: `linear-gradient(90deg, ${winCol} 0%, ${winCol}55 60%, transparent 100%)`,
+        boxShadow: `0 0 8px ${winCol}44`,
+        animation: `forge-barrier-glow ${pulseDur} ease-in-out infinite`,
+        borderRadius: 2,
+      }} />
+
+      {/* Critical flash overlay */}
+      {criticalHp && (
+        <div style={{
+          position: 'absolute', inset: 0,
+          background: `linear-gradient(90deg, transparent 20%, ${winCol}11 50%, transparent 80%)`,
+          animation: 'forge-barrier-critical 0.45s ease-in-out infinite',
+          pointerEvents: 'none',
+        }} />
+      )}
+    </div>
+  );
+}
+
+// ─── Reserve Stack (Plan §3 — RESERVE STACK) ──────────────────────────────────
+// Mazo face-down visible con contador. Cambia a rojo al quedar < 5 cartas.
+function ReserveStack({ count }: { count: number }) {
+  const critical = count < 5;
+  const empty    = count === 0;
+  const col      = empty ? '#4a4a6a' : critical ? '#e84040' : '#4a9eff';
+  const layers   = empty ? 0 : Math.min(count, 4);
+
+  return (
+    <div style={{
+      display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4,
+    }}>
+      {/* Stacked cards face-down */}
+      <div style={{ position: 'relative', width: 30, height: 42 }}>
+        {layers === 0 ? (
+          <div style={{
+            width: 26, height: 36, borderRadius: 4,
+            border: '1px dashed rgba(255,255,255,0.1)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            fontSize: 12, color: 'rgba(255,255,255,0.15)',
+          }}>∅</div>
+        ) : Array.from({ length: layers }).map((_, i) => (
+          <div key={i} style={{
+            position: 'absolute',
+            width: 24, height: 34, borderRadius: 4,
+            border: `1px solid ${col}44`,
+            background: critical
+              ? `linear-gradient(155deg, rgba(232,64,64,0.18), rgba(15,3,3,0.92))`
+              : `linear-gradient(155deg, rgba(74,158,255,0.12), rgba(3,3,12,0.92))`,
+            top: (layers - 1 - i) * 2,
+            left: (layers - 1 - i) * 2,
+            boxShadow: i === 0 ? '0 2px 8px rgba(0,0,0,0.7)' : 'none',
+          }}>
+            {/* Back pattern */}
+            <div style={{
+              position: 'absolute', inset: 2, borderRadius: 2,
+              background: `repeating-linear-gradient(45deg, ${col}0a 0px, ${col}0a 2px, transparent 2px, transparent 6px)`,
+            }} />
+          </div>
+        ))}
+      </div>
+
+      {/* Count badge */}
+      <div style={{
+        fontSize: 9, fontFamily: '"IBM Plex Mono",monospace',
+        fontWeight: 700, color: col, letterSpacing: '0.04em',
+        textShadow: critical && !empty ? `0 0 8px ${col}` : 'none',
+        animation: critical && !empty ? 'forge-barrier-glow 0.8s ease-in-out infinite' : 'none',
+      }}>
+        {count}{critical && !empty ? '⚠' : '▼'}
+      </div>
+
+      <div style={{
+        fontSize: 7, color: '#3a3a5a', fontFamily: '"Rajdhani",sans-serif',
+        letterSpacing: '0.08em', textTransform: 'uppercase',
+      }}>RESERVA</div>
+    </div>
+  );
+}
+
+// ─── Pure Formation Badge ──────────────────────────────────────────────────────
+function PureFormationBadge({ faction }: { faction: string }) {
+  const fStyle = getFactionStyle(faction);
+  return (
+    <div style={{
+      fontSize: 8, fontFamily: '"Cinzel",serif',
+      color: fStyle.primary, letterSpacing: '0.12em',
+      padding: '2px 8px', borderRadius: 20,
+      border: `1px solid ${fStyle.primary}55`,
+      background: `${fStyle.glow.replace('0.8)', '0.08)')}`,
+      boxShadow: `0 0 10px ${fStyle.primary}33`,
+      animation: 'pure-bonus-pulse 2s ease-in-out infinite',
+      whiteSpace: 'nowrap',
+    }}>
+      ✦ FORMACIÓN PURA +15%
+    </div>
+  );
+}
+
 // ─── Main ForgeFormationBoard component ───────────────────────────────────────
 export interface ForgeFormationBoardProps {
   initialFormation: FormationState;
@@ -1098,6 +1282,14 @@ export function ForgeFormationBoard({
   const finalFormation  = battleResult.current.finalFormation;
   const progressPct     = Math.min(turnIdx / Math.max(1, totalBattleTurns), 1);
 
+  // ─── Derived for Forge Barrier & terrain ─────────────────────────────────────
+  const champFaction    = formation.champion.faction ?? 'default';
+  const terrain         = getTerrain(champFaction);
+  // Player is "winning" if they won OR fewer rage stacks (lost fewer allies)
+  const playerWinning   = battleResult.current.you_won || rageStacks < 3;
+  const criticalHp      = progressPct > 0.75;
+  const isPureFormation = hasFormationPureBonus(formation);
+
   return (
     <div style={{
       position: 'fixed', inset: 0, zIndex: 100,
@@ -1137,6 +1329,35 @@ export function ForgeFormationBoard({
         @keyframes forge-ascension-pulse {
           0%,100% { box-shadow: 0 0 32px rgba(255,215,0,0.9), 0 0 64px rgba(255,215,0,0.4); }
           50%     { box-shadow: 0 0 48px rgba(255,215,0,1.0), 0 0 96px rgba(255,215,0,0.6); }
+        }
+        @keyframes forge-barrier-glow {
+          0%,100% { opacity: 0.75; }
+          50%     { opacity: 1; }
+        }
+        @keyframes forge-barrier-rune {
+          0%,100% { transform: scale(1); }
+          50%     { transform: scale(1.12); }
+        }
+        @keyframes forge-barrier-orbit {
+          from { transform: rotate(0deg); }
+          to   { transform: rotate(360deg); }
+        }
+        @keyframes forge-barrier-critical {
+          0%,100% { opacity: 0; }
+          50%     { opacity: 1; }
+        }
+        @keyframes terrain-particle-float {
+          0%   { transform: translateY(0px) scale(1); opacity: 0.55; }
+          100% { transform: translateY(-55px) scale(0.3); opacity: 0; }
+        }
+        @keyframes shield-arc-break {
+          0%   { opacity: 0.7; filter: none; }
+          40%  { opacity: 1; filter: hue-rotate(80deg) brightness(2); }
+          100% { opacity: 0; transform: translate(-50%,-50%) scaleX(1.3) scaleY(0.4); }
+        }
+        @keyframes pure-bonus-pulse {
+          0%,100% { box-shadow: 0 0 6px rgba(255,215,0,0.3); }
+          50%     { box-shadow: 0 0 14px rgba(255,215,0,0.7); }
         }
       `}</style>
 
@@ -1217,6 +1438,23 @@ export function ForgeFormationBoard({
 
       {/* ── Main arena ─────────────────────────────────────────────────────── */}
       <div style={{ flex: 1, position: 'relative', overflow: 'hidden' }}>
+        {/* ── TERRAIN FACTION background (Plan §3 — "Terrain Faction") ─────── */}
+        <div style={{
+          position: 'absolute', inset: 0, zIndex: 0, pointerEvents: 'none',
+          background: terrain.gradient,
+          transition: 'background 1s ease',
+        }} />
+        {/* Terrain scanlines */}
+        <div style={{
+          position: 'absolute', inset: 0, zIndex: 0, pointerEvents: 'none',
+          backgroundImage: `repeating-linear-gradient(0deg, ${terrain.scanlineColor} 0px, ${terrain.scanlineColor} 1px, transparent 1px, transparent 4px)`,
+        }} />
+        {/* Ambient glow */}
+        <div style={{
+          position: 'absolute', inset: 0, zIndex: 0, pointerEvents: 'none',
+          background: `radial-gradient(ellipse at 50% 50%, ${terrain.ambientColor} 0%, transparent 70%)`,
+        }} />
+
         {/* Atmospheric grid */}
         <div className="board-grid" style={{
           position: 'absolute', inset: 0, zIndex: 0, pointerEvents: 'none',
@@ -1233,17 +1471,23 @@ export function ForgeFormationBoard({
           pointerEvents: 'none', zIndex: 0,
         }} />
 
-        {/* Shield Arc — visual protección del campeón */}
-        {champProtected && champAlive && (phase === 'battle' || phase === 'reserve') && (
+        {/* ── Champion Shield Arc (Plan §3) — se rompe al morir el Guard ────── */}
+        {champAlive && (phase === 'battle' || phase === 'reserve') && (
           <div style={{
             position: 'absolute', top: '50%', left: '50%',
             transform: 'translate(-50%, -50%)',
-            width: 200, height: 100,
-            border: '2px solid rgba(74,158,255,0.3)',
+            width: 220, height: 110,
+            border: champProtected
+              ? '2px solid rgba(74,158,255,0.45)'
+              : '2px solid rgba(232,64,64,0.2)',
             borderBottom: 'none',
-            borderRadius: '100px 100px 0 0',
-            boxShadow: '0 -4px 20px rgba(74,158,255,0.2), inset 0 0 20px rgba(74,158,255,0.05)',
+            borderRadius: '110px 110px 0 0',
+            boxShadow: champProtected
+              ? '0 -4px 24px rgba(74,158,255,0.25), inset 0 0 20px rgba(74,158,255,0.07)'
+              : '0 -4px 12px rgba(232,64,64,0.15)',
             pointerEvents: 'none', zIndex: 0,
+            transition: 'border-color 0.6s ease, box-shadow 0.6s ease',
+            animation: !champProtected ? 'shield-arc-break 0.7s ease-out both' : 'none',
           }} />
         )}
 
@@ -1289,20 +1533,12 @@ export function ForgeFormationBoard({
           </div>
         </div>
 
-        {/* VS divider */}
-        <div style={{
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-          gap: 16, position: 'relative', zIndex: 1, padding: '4px 0',
-        }}>
-          <div style={{ flex: 1, height: 1, background: 'linear-gradient(90deg,transparent,rgba(232,64,64,0.4))' }} />
-          <div style={{
-            fontFamily: '"Cinzel Decorative",serif', fontSize: 18, fontWeight: 900,
-            background: 'linear-gradient(135deg,#e74c3c,#e8b84b,#4a9eff)',
-            WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
-            letterSpacing: '0.12em',
-          }}>VS</div>
-          <div style={{ flex: 1, height: 1, background: 'linear-gradient(90deg,rgba(74,158,255,0.4),transparent)' }} />
-        </div>
+        {/* ── THE FORGE BARRIER (Plan §3) — dinámica, cambia por ganador / HP crítico ── */}
+        <ForgeBarrier
+          playerWinning={playerWinning}
+          criticalHp={criticalHp}
+          faction={champFaction}
+        />
 
         {/* === PLAYER FORMATION (bottom) === */}
         <div style={{
@@ -1335,9 +1571,9 @@ export function ForgeFormationBoard({
               })}
             </div>
 
-            {/* Player info bar */}
+            {/* Player info row: badge + reserve stack */}
             <div style={{
-              display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10,
+              display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 12, marginTop: 4,
             }}>
               <div style={{
                 fontSize: 9, color: '#4a9effcc', letterSpacing: '0.15em',
@@ -1345,13 +1581,16 @@ export function ForgeFormationBoard({
                 padding: '2px 10px',
                 background: 'rgba(0,0,0,0.5)', borderRadius: 20,
                 border: '1px solid rgba(74,158,255,0.2)',
-                display: 'inline-block',
-              }}>🛡 {playerName} · Reserva: {formation.reserve.length}</div>
+              }}>🛡 {playerName}</div>
+
+              {/* ── RESERVE STACK visual (Plan §3) ── */}
+              <ReserveStack count={formation.reserve.length} />
             </div>
 
-            {/* Champion protection + rage status */}
+            {/* Champion protection + rage status + Pure Bonus */}
             <div style={{
-              marginTop: 6, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10,
+              marginTop: 6, display: 'flex', alignItems: 'center', justifyContent: 'center',
+              gap: 8, flexWrap: 'wrap',
             }}>
               <div style={{
                 fontSize: 9, fontFamily: '"Rajdhani",sans-serif',
@@ -1361,6 +1600,8 @@ export function ForgeFormationBoard({
               }}>
                 {champProtected ? '🛡 Campeón protegido' : '⚠️ ¡Campeón expuesto!'}
               </div>
+              {/* ── FORMATION PURE BONUS badge ── */}
+              {isPureFormation && <PureFormationBadge faction={champFaction} />}
             </div>
           </div>
         </div>
