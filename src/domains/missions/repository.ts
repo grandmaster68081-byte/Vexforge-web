@@ -50,8 +50,10 @@ async function insertMissionNotification(
 export async function listActiveMissions(): Promise<DomainResult<Mission[]>> {
   const { data, error } = await supabase
     .from("missions")
-    .select("id,code,name,region_id,mission_type,energy_cost,reward_xp,reward_vex_ingame,reward_vex_tradeable,cooldown_seconds,active,mission_order,difficulty,mission_group,production_ready")
-    .eq("active", true).order("mission_order", { ascending: true });
+    .select("id,code,name,region_id,mission_type,energy_cost,reward_xp,reward_vex_ingame,reward_vex_tradeable,cooldown_seconds,active,mission_order,difficulty,mission_group,production_ready,system_locked")
+    .eq("active", true)
+    .eq("system_locked", false)
+    .eq("production_ready", true).order("mission_order", { ascending: true });
   if (error) return { status: "ready", data: null, reason: error.message };
   return { status: "ready", data: data as Mission[] };
 }
