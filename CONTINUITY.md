@@ -255,3 +255,27 @@
     4. **I1** — Battle board responsive: cartas más compactas en pantallas < 480px
     5. **I2** — Navigation overflow: hamburger menu para < 768px
     6. **Visual assets** — zip bundles pendientes (founders_badge, misc, sessions, ui_system)
+
+    ### Chat 112 — Lote H1/I1 (segunda parte de sesión)
+
+    #### H1 ✅ Shield Arc — visual mejorado
+    - Animación `shield-arc-pulse` (2.8s infinite) cuando campeón está protegido
+    - Doble arco (línea exterior + interior) para mayor profundidad visual
+    - Badge "🛡 GUARD ACTIVO" visible dentro del área del arco cuando protegido
+    - Badge "⚠️ CAMPEÓN EXPUESTO" con color rojo cuando protección perdida
+    - `shield-arc-break` más dramático: flash de brillo + hue-rotate
+    - Keyframes `shield-label-in` para entrada animada de los badges
+    - Texto de estado "Campeón protegido/expuesto" ya cubierto por los badges del arco
+
+    #### I1 ✅ Battle cards responsive
+    - Clase CSS `forge-formation-card` añadida a FormationUnitCard (ambos ramos: vacío y lleno)
+    - Width base: 110px (incrustado en CSS, no en inline style)
+    - @media (max-width: 380px): 90px width
+    - @media (max-width: 330px): 78px width
+    - Cloudflare Pages auto-deploy del commit ab8ec5e en curso
+
+    #### Pendiente para próxima sesión
+    - F3: Verificar vexforge-web.pages.dev post-deploy
+    - H2: Target Lock UI
+    - H3: Terrain particles más ricos
+    - Visual assets zip bundles (owner debe desempaquetar)
