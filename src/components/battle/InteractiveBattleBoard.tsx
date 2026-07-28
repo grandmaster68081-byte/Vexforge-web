@@ -665,6 +665,9 @@ export function InteractiveBattleBoard({
         const hasShieldBlock = events.some(e => e.type === 'shield_block');
         const hasPoisoned    = events.some(e => e.type === 'poisoned');
 
+        // AU.0 sfxDrawCard — fires at start of player's attacking turn
+        if (isPlayerAtk) { try { (AudioEngine as any).sfxDrawCard?.(); } catch { /* silent */ } }
+
         if (state.currentTurn.is_kill) {
           (AudioEngine as any).sfxKillV2?.();
         } else if (hasPoisonTick) {

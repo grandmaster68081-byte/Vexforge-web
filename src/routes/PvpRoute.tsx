@@ -11,6 +11,7 @@ import { MatchHistoryPanel } from "../shared/components/MatchHistoryPanel";
 import { WeeklyTournamentPanel } from "../shared/components/WeeklyTournamentPanel";
 import { ClanWarsPanel } from "../shared/components/ClanWarsPanel";
 import { simulateAIBattle, loadPlayerBattleUnits, getDailyAIChallenge, hasDailyChallengeAttempted, markDailyChallengeAttempted, hasDailyChallengeBadge, markDailyChallengeBadge, claimDailyAIChallenge, DAILY_CHALLENGE_VEX_REWARD, BATTLE_MODE_META, type BattleMode, type DailyAIChallenge } from "../lib/aiBattleEngine";
+import { recordSessionBattle } from "../shared/components/SessionSummaryToast";
 import { supabase } from "../lib/supabase";
 import { AudioEngine } from "../lib/audioEngine";
 import { useWinStreak, WinStreakBadge, StreakPanel } from "../components/battle/WinStreakDisplay";
@@ -577,6 +578,7 @@ export function PvpRoute() {
   if (dailyResult) {
     const handleDailyDismiss = () => {
       if (dailyResult.you_won) onWin(); else onLoss();
+      try { recordSessionBattle(!!dailyResult.you_won, dailyVexEarned ?? 0, streak); } catch { /* silent */ }
       setDailyResult(null);
     };
     return (
@@ -595,6 +597,7 @@ export function PvpRoute() {
     try { (AudioEngine as any).sfxTurnStart?.(); } catch { /* silent */ }
     const handleBattleDismiss = () => {
       if ((battleResult as any).you_won) onWin(); else onLoss();
+      try { recordSessionBattle(!!(battleResult as any).you_won, 0, streak); } catch { /* silent */ }
       dismissBattle();
     };
     const handlePlayAgain = async () => {

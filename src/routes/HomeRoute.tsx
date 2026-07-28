@@ -6,6 +6,7 @@ import { useHomeActivity } from "../domains/home/useHomeActivity";
 import { usePlayerItems } from "../domains/cosmetics/usePlayerItems";
 import type { PlayerActiveBoost } from "../domains/cosmetics/repository";
 import { getRank } from "../lib/rankUtils";
+import { SessionSummaryToast } from "../shared/components/SessionSummaryToast";
 
 // ─── Animated counter — counts up from 0 to target when mounted ─────────────
 function useCountUp(target: number, duration = 1200, active = true): number {
@@ -170,6 +171,7 @@ function BoostChip({ boost }: { boost: PlayerActiveBoost }) {
           ⏱ {t}
         </div>
       </div>
+      <SessionSummaryToast />
     </div>
   );
 }

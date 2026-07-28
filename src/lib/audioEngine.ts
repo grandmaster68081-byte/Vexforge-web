@@ -1386,3 +1386,96 @@ declare module "./audioEngine" {
   };
 
 })(AudioEngine as any);
+
+// ═══════════════════════════════════════════════════════════════════════════
+// AU.0 — Combat Phase Music (3 phases with crossfade)
+// startCombatMusic('intro')      — 8-bar tense loop
+// startCombatMusic('mid')        — 12-bar active loop (higher HP-avg)
+// startCombatMusic('last_stand') — dramatic loop, higher tempo, BPM ramps
+// ═══════════════════════════════════════════════════════════════════════════
+;(function installCombatPhaseMusic(engine: any) {
+  if (engine.__combatPhaseMusicInstalled) return;
+  engine.__combatPhaseMusicInstalled = true;
+
+  engine._combatPhase = null as string | null;
+  engine._combatLoopTimeout = null as ReturnType<typeof setTimeout> | null;
+
+  // Crossfade helper: fade out music bus, then restart with new settings
+  function _crossfadeTo(eng: any, setupFn: () => void, fadeMs = 600): void {
+    try {
+      const c = eng.ctx?.();
+      const bus = eng._musicBus;
+      if (!c || !bus) { eng.stopMusic?.(); setupFn(); eng.musicLoop?.(); return; }
+      const now = c.currentTime;
+      bus.gain.cancelScheduledValues(now);
+      bus.gain.setValueAtTime(bus.gain.value ?? 0.3, now);
+      bus.gain.linearRampToValueAtTime(0.001, now + fadeMs / 1000);
+      setTimeout(() => {
+        eng.stopMusic?.();
+        setupFn();
+        eng.musicLoop?.();
+        try {
+          const c2 = eng.ctx?.();
+          const bus2 = eng._musicBus;
+          if (!c2 || !bus2) return;
+          const n2 = c2.currentTime;
+          const targetVol = eng._musicVol ?? 0.3;
+          bus2.gain.cancelScheduledValues(n2);
+          bus2.gain.setValueAtTime(0.001, n2);
+          bus2.gain.linearRampToValueAtTime(targetVol, n2 + 0.5);
+        } catch { /* silent */ }
+      }, fadeMs + 50);
+    } catch { /* silent */ }
+  }
+
+  engine.startCombatMusic = function(phase: 'intro' | 'mid' | 'last_stand'): void {
+    if (this._muted) return;
+    if (this._combatPhase === phase) return; // already in this phase
+    this._combatPhase = phase;
+
+    if (phase === 'intro') {
+      // Tense 8-bar build — minor key, slower tempo
+      _crossfadeTo(this, () => {
+        this.setFaction?.('section:battle');
+        if (this._factionConfig) {
+          this._factionConfig.tempo = 0.48;
+          this._factionConfig.base  = 110;
+        }
+        this._intensity      = 0.75;
+        this._intensityLevel = 'calm';
+      }, 800);
+
+    } else if (phase === 'mid') {
+      // Active 12-bar — higher energy, more motion
+      _crossfadeTo(this, () => {
+        this.setFaction?.('section:battle');
+        if (this._factionConfig) {
+          this._factionConfig.tempo = 0.58;
+          this._factionConfig.base  = 123;
+        }
+        this._intensity      = 1.0;
+        this._intensityLevel = 'active';
+      }, 600);
+
+    } else if (phase === 'last_stand') {
+      // Dramatic — faster BPM, higher base frequency, maximum intensity
+      _crossfadeTo(this, () => {
+        this.setFaction?.('section:battle');
+        if (this._factionConfig) {
+          this._factionConfig.tempo = 0.70;
+          this._factionConfig.base  = 138;
+        }
+        this._intensity      = 1.3;
+        this._intensityLevel = 'intense';
+      }, 400);
+    }
+  };
+
+  /** Stop combat music and reset phase tracking */
+  engine.stopCombatMusic = function(): void {
+    this._combatPhase = null;
+    if (this._combatLoopTimeout) { clearTimeout(this._combatLoopTimeout); this._combatLoopTimeout = null; }
+    try { this.stopMusic?.(); } catch { /* silent */ }
+  };
+
+})(AudioEngine as any);
