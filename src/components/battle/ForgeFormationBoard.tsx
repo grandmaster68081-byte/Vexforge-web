@@ -1392,6 +1392,202 @@ function PureFormationBadge({ faction }: { faction: string }) {
   );
 }
 
+// ─── H4: ForgeFormation Post-Battle Scoreboard ────────────────────────────────
+function ForgeFormationScoreboard({
+  result, formation, playerName, opponentName, onDismiss,
+}: {
+  result: ReturnType<typeof simulateFormationBattle>;
+  formation: FormationState;
+  playerName: string;
+  opponentName: string;
+  onDismiss: () => void;
+}) {
+  const won = result.you_won;
+  const turns = result.turns ?? [];
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const t = setTimeout(() => setVisible(true), 80);
+    return () => clearTimeout(t);
+  }, []);
+
+  // Stats
+  let playerDmg = 0; let oppDmg = 0; let playerCrits = 0; let playerKills = 0;
+  for (const t of turns) {
+    if (t.atk_side === 'a') { playerDmg += t.damage; if (t.is_crit) playerCrits++; if (t.is_kill) playerKills++; }
+    else { oppDmg += t.damage; }
+  }
+  const champHpPct  = formation.champion.max_hp > 0 ? formation.champion.hp / formation.champion.max_hp : 0;
+  const aliveAllies = (['vanguard', 'sentinel'] as FormationSlot[]).filter(
+    s => { const u = formation[s] as BattleUnit | null; return u && u.alive !== false && u.hp > 0; }
+  ).length;
+  const totalUnits = 3;
+  const surviveCount = (formation.champion.hp > 0 ? 1 : 0) + aliveAllies;
+
+  const theme = won
+    ? { primary: '#e8b84b', glow: 'rgba(232,184,75,0.7)', label: '¡VICTORIA!', emoji: '🏆', bg: 'radial-gradient(ellipse at 50% 0%,rgba(232,184,75,0.22) 0%,rgba(3,3,10,0.98) 60%)' }
+    : { primary: '#e84040', glow: 'rgba(232,64,64,0.6)', label: 'DERROTA',     emoji: '💀', bg: 'radial-gradient(ellipse at 50% 0%,rgba(232,64,64,0.18) 0%,rgba(3,3,10,0.98) 60%)' };
+
+  return (
+    <div style={{
+      position: 'absolute', inset: 0, zIndex: 45,
+      background: theme.bg,
+      display: 'flex', flexDirection: 'column',
+      alignItems: 'center', justifyContent: 'center',
+      padding: '20px 16px',
+      opacity: visible ? 1 : 0,
+      transition: 'opacity 0.4s ease',
+      overflow: 'hidden',
+    }}>
+      <style>{`
+        @keyframes score-row-in {
+          0%   { transform: translateX(-16px); opacity: 0; }
+          100% { transform: translateX(0); opacity: 1; }
+        }
+        @keyframes score-hero-in {
+          0%   { transform: scale(0.7) translateY(16px); opacity: 0; filter: blur(8px); }
+          100% { transform: scale(1) translateY(0); opacity: 1; filter: blur(0); }
+        }
+        @keyframes score-bar-fill {
+          0%   { width: 0%; }
+          100% { width: var(--bar-w, 50%); }
+        }
+      `}</style>
+
+      {/* Trophy/skull */}
+      <div style={{
+        fontSize: 56, lineHeight: 1, marginBottom: 8,
+        filter: `drop-shadow(0 0 24px ${theme.glow})`,
+        animation: 'score-hero-in 0.5s cubic-bezier(0.22,1,0.36,1) 0.1s both',
+      }}>{theme.emoji}</div>
+
+      {/* Result headline */}
+      <div style={{
+        fontFamily: '"Cinzel Decorative",serif', fontSize: 'clamp(20px,5vw,30px)',
+        fontWeight: 900, color: theme.primary, letterSpacing: '0.14em',
+        textShadow: `0 0 24px ${theme.glow}, 0 0 48px ${theme.glow}`,
+        marginBottom: 4,
+        animation: 'score-hero-in 0.5s cubic-bezier(0.22,1,0.36,1) 0.2s both',
+      }}>{theme.label}</div>
+
+      {/* Champion name */}
+      <div style={{
+        fontFamily: '"Cinzel",serif', fontSize: 11, color: '#8888aa',
+        letterSpacing: '0.12em', marginBottom: 16,
+        animation: 'score-hero-in 0.5s ease 0.3s both',
+      }}>
+        {formation.champion.name} · {won ? '¡CAMPEÓN INVICTO!' : 'El campeón ha caído'}
+      </div>
+
+      {/* Stats box */}
+      <div style={{
+        width: '100%', maxWidth: 320,
+        background: 'rgba(5,5,16,0.8)',
+        border: `1px solid ${theme.primary}22`,
+        borderRadius: 12, overflow: 'hidden',
+        backdropFilter: 'blur(8px)',
+        marginBottom: 14,
+      }}>
+        {/* Stats header */}
+        <div style={{
+          padding: '6px 14px',
+          background: `linear-gradient(90deg,${theme.primary}18,transparent)`,
+          borderBottom: `1px solid ${theme.primary}22`,
+          fontFamily: '"Cinzel",serif', fontSize: 8,
+          color: theme.primary, letterSpacing: '0.2em',
+        }}>📊 ESTADÍSTICAS DE BATALLA</div>
+
+        {[
+          { label: 'Turnos jugados',     val: turns.length, delay: 0.35 },
+          { label: 'Daño infligido',     val: Math.round(playerDmg), delay: 0.42, hi: true },
+          { label: 'Daño recibido',      val: Math.round(oppDmg), delay: 0.48 },
+          { label: 'Golpes críticos',    val: playerCrits, delay: 0.54 },
+          { label: 'Bajas enemigas',     val: playerKills, delay: 0.60 },
+          { label: 'Unidades supervivientes', val: `${surviveCount} / ${totalUnits}`, delay: 0.66, hi: won },
+        ].map((row, i) => (
+          <div key={i} style={{
+            display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+            padding: '7px 14px',
+            borderBottom: i < 5 ? '1px solid rgba(255,255,255,0.04)' : 'none',
+            animation: `score-row-in 0.35s ease-out ${row.delay}s both`,
+          }}>
+            <span style={{ fontSize: 10, color: '#6a6a8a', fontFamily: '"Rajdhani",sans-serif', letterSpacing: '0.06em' }}>
+              {row.label}
+            </span>
+            <span style={{
+              fontSize: 12, fontFamily: '"IBM Plex Mono",monospace',
+              fontWeight: 700,
+              color: row.hi ? theme.primary : '#c0c0e0',
+              textShadow: row.hi ? `0 0 10px ${theme.glow}` : 'none',
+            }}>{row.val}</span>
+          </div>
+        ))}
+      </div>
+
+      {/* Champion HP bar */}
+      <div style={{
+        width: '100%', maxWidth: 320, marginBottom: 16,
+        animation: 'score-row-in 0.35s ease-out 0.72s both',
+      }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4 }}>
+          <span style={{ fontSize: 9, color: '#6a6a8a', fontFamily: '"Rajdhani",sans-serif', letterSpacing: '0.08em' }}>
+            HP FINAL — {formation.champion.name}
+          </span>
+          <span style={{ fontSize: 9, color: hpCol(champHpPct), fontFamily: '"IBM Plex Mono",monospace' }}>
+            {formation.champion.hp} / {formation.champion.max_hp}
+          </span>
+        </div>
+        <div style={{ height: 6, borderRadius: 3, background: 'rgba(255,255,255,0.06)', overflow: 'hidden' }}>
+          <div style={{
+            height: '100%', borderRadius: 3,
+            background: `linear-gradient(90deg,${hpCol(champHpPct)},${hpCol(champHpPct)}bb)`,
+            width: `${champHpPct * 100}%`,
+            boxShadow: `0 0 8px ${hpCol(champHpPct)}88`,
+            transition: 'width 0.8s cubic-bezier(0.22,1,0.36,1)',
+          }} />
+        </div>
+      </div>
+
+      {/* VS row */}
+      <div style={{
+        display: 'flex', gap: 8, alignItems: 'center', marginBottom: 16,
+        animation: 'score-row-in 0.35s ease-out 0.78s both',
+      }}>
+        <div style={{
+          padding: '4px 12px', borderRadius: 20,
+          background: 'rgba(74,158,255,0.1)', border: '1px solid rgba(74,158,255,0.2)',
+          fontSize: 9, fontFamily: '"Rajdhani",sans-serif',
+          color: '#4a9eff', letterSpacing: '0.1em',
+        }}>🛡 {playerName}</div>
+        <span style={{ color: '#3a3a5a', fontSize: 10 }}>vs</span>
+        <div style={{
+          padding: '4px 12px', borderRadius: 20,
+          background: 'rgba(232,64,64,0.1)', border: '1px solid rgba(232,64,64,0.2)',
+          fontSize: 9, fontFamily: '"Rajdhani",sans-serif',
+          color: '#e84040', letterSpacing: '0.1em',
+        }}>⚔ {opponentName}</div>
+      </div>
+
+      {/* Action button */}
+      <button
+        onClick={onDismiss}
+        style={{
+          padding: '12px 32px', borderRadius: 12,
+          background: `linear-gradient(135deg,${theme.primary},${theme.primary}88)`,
+          border: `1px solid ${theme.primary}66`,
+          color: '#0a0a12', fontFamily: '"Cinzel",serif',
+          fontWeight: 700, fontSize: 13, cursor: 'pointer',
+          letterSpacing: '0.06em',
+          boxShadow: `0 4px 20px ${theme.glow}`,
+          animation: 'score-hero-in 0.4s ease-out 0.85s both',
+        }}
+      >
+        {won ? '🏆 Continuar' : '↩ Volver al lobby'}
+      </button>
+    </div>
+  );
+}
+
 // ─── H3: Rich Terrain Particles ───────────────────────────────────────────────
 const RICH_PARTICLES: Record<string, {
   colors: string[]; sizes: number[]; speeds: number[]; shapes: ('orb'|'spark'|'wisp')[];
@@ -2219,6 +2415,17 @@ export function ForgeFormationBoard({
           <ForgeAscensionOverlay
             champion={formation.champion}
             onDone={handleAscensionDone}
+          />
+        )}
+
+        {/* H4: Post-battle scoreboard overlay */}
+        {phase === 'done' && (
+          <ForgeFormationScoreboard
+            result={battleResult.current}
+            formation={formation}
+            playerName={playerName}
+            opponentName={opponentName}
+            onDismiss={onDismiss}
           />
         )}
       </div>
