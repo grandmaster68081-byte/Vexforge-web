@@ -1,9 +1,64 @@
 # VEXFORGE — CONTINUITY LOG
-    ## Chat 110 — 2026-07-28 — A4 Misiones + PvP IA completo
+## Chat 111 — 2026-07-28 — Rewards IA + Plan actualizado
 
-    **Branch:** main | **Commit:** d70b014 | **Build:** 65 módulos, 0 errores
+**Branch:** main | **Build:** 65 módulos, 0 errores TypeScript esperados
 
-    ---
+---
+
+## ESTADO DEL PLAN ACTIVO
+
+| ID  | Item                                   | Estado     |
+|-----|----------------------------------------|------------|
+| A1  | Discrepancia conteo cartas             | ✅ done    |
+| A2  | Bots en leaderboard                    | ✅ done    |
+| A3  | Misiones system_locked visibles        | ✅ done    |
+| A4  | Misiones no ejecutan (claim reward)    | ✅ done    |
+| A5  | Leaderboard sin champion/DPS           | ✅ done    |
+| A6  | Filtro facción leaderboard no aplicado | ✅ done    |
+| B1  | Cinemáticas únicas por carta           | ✅ done    |
+| B2  | Efectos tablero mejorados              | ✅ done    |
+| B3  | Holographic shimmer v3                 | ✅ done    |
+| B4  | Micro-interacciones globales           | ✅ done    |
+| C1  | Audio contextual por sección           | ✅ done    |
+| C2  | SFX invocación por facción             | ✅ done    |
+| D1  | Tutorial mejorado Forge Formation      | ✅ done    |
+| D2  | Onboarding nuevos jugadores            | ✅ done    |
+| **RewardsIA** | **VEX anti-farm para batallas IA** | ✅ done |
+
+---
+
+## Implementado esta sesión
+
+### RewardsIA ✅ Recompensas anti-farm para batallas vs IA
+
+**RPC desplegado en Supabase:** `claim_ai_battle_reward(p_player_id, p_difficulty, p_date_key)`
+
+| Dificultad | VEX por victoria | Cap diario |
+|------------|-----------------|------------|
+| Aprendiz   | +3 VEX          | 5 victorias/día |
+| Forjador   | +6 VEX          | 4 victorias/día |
+| Maestro    | +12 VEX         | 3 victorias/día |
+| Leyenda    | +20 VEX         | 2 victorias/día |
+
+**Anti-farm:** conteo por `economy_ledger` (source_table='ai_battle_reward', metadata->date_key) — sin nuevas tablas.
+
+**Archivos modificados:**
+- `src/lib/aiBattleEngine.ts` — añadidos `AI_BATTLE_VEX_REWARD`, `AI_BATTLE_DAILY_CAP`, `claimAIBattleReward()`; labels actualizados en `BATTLE_MODE_META`
+- `src/routes/PvpRoute.tsx` — nuevo flujo `aiRewardDifficultyRef`, handler anti-farm en `handleForgeFormationComplete`, banner VEX ganado, botones muestran reward real
+- `backend/sql-fixes/AI-rewards-antifarm.sql` — SQL del RPC
+
+**Verificación A1:** línea 474 de CardsRoute.tsx ya usa `filtered.length` ✅ (corregido en sesión anterior, confirmado en código)
+
+---
+
+## Próximos pasos (siguiente sesión)
+
+1. **Build dist** — Hacer build y push del dist actualizado a Cloudflare
+2. **Verificar en deploy** — Confirmar Rewards IA funcional en vexforge-web.pages.dev
+3. **Imágenes de cartas** — El gap visual pendiente más importante (ver backend/pending/visual-assets-gap.md)
+
+---
+
 
     ## ESTADO DEL PLAN ACTIVO
 
