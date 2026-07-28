@@ -5,6 +5,8 @@ export interface RankEntry {
   rank_position: number; player_id: string; display_name: string;
   mmr: number; wins: number; losses: number; draws: number;
   win_rate: number; updated_at: string;
+  avg_dps_score?: number; champion_card_id?: string;
+  champion_name?: string; champion_faction?: string;
 }
 
 export async function getCurrentPlayerId(): Promise<string | null> {
