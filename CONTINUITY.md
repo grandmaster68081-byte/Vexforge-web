@@ -1,4 +1,30 @@
 # VEXFORGE — CONTINUITY LOG
+## Chat 115 — 2026-08-01 — Auditoría oficial de inicio de sesión y bloqueo de P1
+
+**Branch:** main | **Build inicial:** ✅ limpio, `npm run build` sin errores TypeScript | **Deploy:** Cloudflare Pages desde `main`
+
+### ✅ Verificado
+
+- Se siguió el acceso oficial: repositorio GitHub, Protocolo Maestro y plan activo en Supabase.
+- `src/routes/AccountRoute.tsx` ya implementa el flujo de inicio de sesión, registro, recuperación de contraseña, sesión activa y cierre de sesión mediante Supabase Auth.
+- `src/providers/AuthProvider.tsx` ya gestiona la sesión, el aprovisionamiento de `players` y el procesamiento de referidos.
+- No se modificó la pantalla de autenticación ni se repitió trabajo existente.
+
+### ⛔ P1 bloqueado por fuente oficial
+
+- La consulta real a `cards` confirma que la tabla no contiene `element`, `creature_type` ni `personality`.
+- La consulta de estructuras existentes confirma que `synergy_json` solo expone `keywords` y `faction_bonus`; `card_tags` y `evolution_json` no aportan esos atributos.
+- El intento de seleccionar `cards.element` devuelve PostgreSQL `42703: column cards.element does not exist`.
+- El Protocolo Maestro prohíbe inventar columnas, tablas o lógica; por tanto P1 no se implementó y no se alteró el esquema.
+
+### Estado para la próxima sesión
+
+1. Owner/autoridad del esquema debe proporcionar o aprobar una fuente oficial para `element`, `creature_type` y `personality`.
+2. Una vez que esos datos existan oficialmente, implementar P1 antes de P2–P6.
+3. El flujo de login queda sin cambios porque ya está implementado.
+
+---
+
 ## Chat 113 — 2026-07-28 — H2 Target Lock + H3 Terrain Particles
 
 **Branch:** main | **Build:** ✅ clean, 0 errores TS | **Deploy:** auto-push a Cloudflare Pages
