@@ -343,7 +343,9 @@ a { text-decoration: none; color: inherit; }
   animation: reveal-scale 0.15s ease;
 }
 .forge-dropdown a, .forge-dropdown button {
-  display: block;
+  display: flex;
+  align-items: center;
+  gap: 9px;
   width: 100%;
   padding: 8px 12px;
   font-family: "Rajdhani", sans-serif;
@@ -356,6 +358,22 @@ a { text-decoration: none; color: inherit; }
   cursor: pointer;
   text-align: left;
   transition: background var(--t-fast), color var(--t-fast);
+}
+.forge-dropdown a svg, .forge-dropdown button svg {
+  flex: 0 0 auto;
+  opacity: 0.82;
+}
+.forge-user-chevron {
+  width: 7px;
+  height: 7px;
+  border-right: 1px solid currentColor;
+  border-bottom: 1px solid currentColor;
+  transform: rotate(45deg) translateY(-2px);
+  opacity: 0.55;
+  transition: transform var(--t-fast);
+}
+.forge-user-chevron.is-open {
+  transform: rotate(225deg) translate(-1px, -1px);
 }
 .forge-dropdown a:hover, .forge-dropdown button:hover {
   background: rgba(201,144,31,0.1);
@@ -1978,7 +1996,7 @@ input.forge-input:focus {
   border-top-color: var(--ember-gold, #c9901f);
 }
 .forge-bottom-nav-item:active { opacity: 0.65; }
-.forge-bottom-nav-icon  { font-size: 20px; line-height: 1; }
+.forge-bottom-nav-icon  { display: block; line-height: 1; }
 .forge-bottom-nav-label {
   font-family: "Rajdhani", sans-serif;
   font-size: 9px; font-weight: 700;
@@ -2021,6 +2039,10 @@ input.forge-input:focus {
   display: flex !important; align-items: center !important;
   gap: 10px !important; padding: 10px 12px !important;
   border-radius: 8px !important; font-size: 14px !important;
+}
+.forge-sheet-link svg {
+  flex: 0 0 auto;
+  color: currentColor;
 }
 .forge-sheet-divider { height: 1px; background: rgba(255,255,255,0.06); margin: 6px 0; }
 .forge-sheet-signout {

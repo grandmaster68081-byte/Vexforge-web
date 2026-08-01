@@ -1,6 +1,31 @@
 # VEXFORGE — CONTINUITY LOG
 
 
+## Chat 128 — 2026-08-01 — M1: Iconografía SVG VEXFORGE — COMPLETADO
+
+**Branch:** main | **Build:** ✅ 0 errores TypeScript | **Scope:** navegación global y sidebar
+
+### ✅ M1 implementado: iconos propios sin emojis del sistema
+
+**Implementación:**
+- Se creó `ForgeIcon`, un sistema de iconos SVG inline propio con glifos diferenciados para las áreas de VEXFORGE.
+- Se sustituyeron los iconos genéricos del sidebar en los cinco grupos: Principal, Batalla, Economía, Social y Mi Cuenta.
+- Se sustituyeron también los iconos de navegación inferior móvil, hoja móvil, breadcrumb, menú de cuenta, accesos de cuenta, recursos, admin y cierre de sesión.
+- Se mantuvieron intactos los destinos, labels, estados activos, badges y comportamiento responsive.
+- Se añadieron estados de alineación, glow activo y chevron SVG para conservar la jerarquía visual dark-fantasy.
+
+**Verificaciones:**
+- `npm run build` limpio: 240 módulos, 0 errores TypeScript ✅
+- `git diff --check` correcto ✅
+- Auditoría de `src/App.tsx`: 0 emojis genéricos en la navegación ✅
+- `dist/` regenerado para mantener el bundle publicado sincronizado ✅
+
+### Estado para la próxima sesión
+- **M1** ✅ COMPLETADO — iconografía SVG propia en la navegación global
+- Próximo bloque sugerido por el plan: **J1** — selección de campeón más visual y preview de formación en PvP
+- Pendiente de verificación externa: confirmar que Cloudflare Pages sirve el bundle correspondiente al commit actual
+
+
 ## Chat 127 — 2026-08-01 — P6: Rutas públicas sin login — COMPLETADO
 
 **Branch:** main | **Commit:** `02873b5` | **Build:** ✅ 0 errores TS, 238 módulos

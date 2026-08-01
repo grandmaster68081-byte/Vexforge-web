@@ -16,6 +16,7 @@ import { StarterDeckReveal }      from "./shared/components/StarterDeckReveal";
 import { OnboardingModal }        from "./shared/components/OnboardingModal";
 import { ProtectedAdminRoute }       from "./shared/components/ProtectedAdminRoute";
 import { AudioEngine }               from "./lib/audioEngine";
+import { ForgeIcon, type ForgeIconName } from "./shared/components/ForgeIcon";
 
 // ─── Lazy routes ─────────────────────────────────────────────────────────────
 const HomeRoute         = lazy(() => import("./routes/HomeRoute").then(m => ({ default: m.HomeRoute })));
@@ -65,74 +66,74 @@ const SIDEBAR_W = 220;
 // ─── Sidebar groups — chat92: added /shop, /raids, /withdrawal, /referral, /forge-ads, /season-rankings ──
 const SIDEBAR_GROUPS: Array<{
   label: string;
-  icon: string;
-  links: Array<{ to: string; icon: string; label: string; end?: boolean }>;
+  icon: ForgeIconName;
+  links: Array<{ to: string; icon: ForgeIconName; label: string; end?: boolean }>;
 }> = [
   {
-    label: "Principal", icon: "🏠",
+    label: "Principal", icon: "home",
     links: [
-      { to: "/",          icon: "🏠", label: "Inicio",         end: true  },
-      { to: "/cards",     icon: "🃏", label: "Cartas"                     },
-      { to: "/inventory", icon: "📦", label: "Mi Colección"               },
-      { to: "/missions",  icon: "📋", label: "Misiones"                   },
-      { to: "/quests",    icon: "📜", label: "Quests Diarias"             },
+      { to: "/",          icon: "home",       label: "Inicio",         end: true  },
+      { to: "/cards",     icon: "cards",      label: "Cartas"                     },
+      { to: "/inventory", icon: "collection", label: "Mi Colección"               },
+      { to: "/missions",  icon: "missions",   label: "Misiones"                   },
+      { to: "/quests",    icon: "quests",     label: "Quests Diarias"             },
     ],
   },
   {
-    label: "Batalla", icon: "⚔️",
+    label: "Batalla", icon: "arena",
     links: [
-      { to: "/pvp",              icon: "🏆", label: "PvP Arena"          },
-      { to: "/deck-builder",     icon: "🗡️", label: "Constructor Mazo"   },
-      { to: "/raids",            icon: "⚔️", label: "Raids"              },
-      { to: "/bosses",           icon: "🐉", label: "Jefes Mundiales"    },
-      { to: "/season-pass",      icon: "🌟", label: "Temporada"          },
-      { to: "/season-rankings",  icon: "🏅", label: "Rankings"           },
-      { to: "/lore",             icon: "📖", label: "Codex de Lore"      },
-      { to: "/relics",           icon: "◇",  label: "Reliquias"          },
+      { to: "/pvp",              icon: "arena",    label: "PvP Arena"          },
+      { to: "/deck-builder",     icon: "deck",     label: "Constructor Mazo"   },
+      { to: "/raids",            icon: "raid",     label: "Raids"              },
+      { to: "/bosses",           icon: "boss",     label: "Jefes Mundiales"    },
+      { to: "/season-pass",      icon: "season",   label: "Temporada"          },
+      { to: "/season-rankings",  icon: "rankings", label: "Rankings"           },
+      { to: "/lore",             icon: "lore",     label: "Codex de Lore"      },
+      { to: "/relics",           icon: "relics",   label: "Reliquias"          },
     ],
   },
   {
-    label: "Economía", icon: "💰",
+    label: "Economía", icon: "economy",
     links: [
-      { to: "/packs",      icon: "📦", label: "Packs"      },
-      { to: "/shop",       icon: "🛒", label: "Tienda"     },
-      { to: "/market",     icon: "🏪", label: "Mercado"    },
-      { to: "/fusion",     icon: "🔮", label: "Fusión"     },
-      { to: "/evolution",  icon: "✨", label: "Evolución"  },
-      { to: "/deposit",    icon: "📥", label: "Depósito"   },
-      { to: "/withdrawal", icon: "💸", label: "Retiro"     },
+      { to: "/packs",      icon: "packs",      label: "Packs"      },
+      { to: "/shop",       icon: "shop",       label: "Tienda"     },
+      { to: "/market",     icon: "market",     label: "Mercado"    },
+      { to: "/fusion",     icon: "fusion",     label: "Fusión"     },
+      { to: "/evolution",  icon: "evolution",  label: "Evolución"  },
+      { to: "/deposit",    icon: "deposit",    label: "Depósito"   },
+      { to: "/withdrawal", icon: "withdrawal", label: "Retiro"     },
     ],
   },
   {
-    label: "Social", icon: "🤝",
+    label: "Social", icon: "friends",
     links: [
-      { to: "/clans",        icon: "🛡️", label: "Clanes"   },
-      { to: "/friends",      icon: "🤝", label: "Amigos"   },
-      { to: "/leaderboard",  icon: "📊", label: "Ranking"  },
-      { to: "/achievements", icon: "🏅", label: "Logros"   },
+      { to: "/clans",        icon: "clans",        label: "Clanes"   },
+      { to: "/friends",      icon: "friends",      label: "Amigos"   },
+      { to: "/leaderboard",  icon: "leaderboard",  label: "Ranking"  },
+      { to: "/achievements", icon: "achievements", label: "Logros"   },
     ],
   },
   {
-    label: "Mi Cuenta", icon: "👤",
+    label: "Mi Cuenta", icon: "profile",
     links: [
-      { to: "/profile",    icon: "👤", label: "Perfil"      },
-      { to: "/economy",    icon: "💰", label: "Economía"    },
-      { to: "/progress",   icon: "📈", label: "Progreso"    },
-      { to: "/cosmetics",  icon: "💎", label: "Cosméticos"  },
-      { to: "/referral",   icon: "🔗", label: "Referidos"   },
-      { to: "/nft",        icon: "💠", label: "NFT Forge"   },
-      { to: "/forge-ads",  icon: "📺", label: "Forge Ads"   },
-      { to: "/settings",   icon: "⚙️", label: "Ajustes"     },
+      { to: "/profile",    icon: "profile",   label: "Perfil"      },
+      { to: "/economy",    icon: "economy",   label: "Economía"    },
+      { to: "/progress",   icon: "progress",  label: "Progreso"    },
+      { to: "/cosmetics",  icon: "cosmetics", label: "Cosméticos"  },
+      { to: "/referral",   icon: "referral",  label: "Referidos"   },
+      { to: "/nft",        icon: "nft",       label: "NFT Forge"   },
+      { to: "/forge-ads",  icon: "ads",       label: "Forge Ads"   },
+      { to: "/settings",   icon: "settings",  label: "Ajustes"     },
     ],
   },
 ];
 
 // Mobile bottom nav (4 primary + "Más")
 const BOTTOM_ITEMS = [
-  { to: "/",         icon: "🏠", label: "Inicio",    end: true  },
-  { to: "/inventory",icon: "🃏", label: "Colección", end: false },
-  { to: "/missions", icon: "📋", label: "Misiones",  end: false },
-  { to: "/profile",  icon: "👤", label: "Perfil",    end: false },
+  { to: "/",         icon: "home" as const,       label: "Inicio",    end: true  },
+  { to: "/inventory",icon: "collection" as const, label: "Colección", end: false },
+  { to: "/missions", icon: "missions" as const,  label: "Misiones",  end: false },
+  { to: "/profile",  icon: "profile" as const,   label: "Perfil",    end: false },
 ];
 
 const ROUTE_LABELS: Record<string, string> = {
@@ -163,7 +164,9 @@ function Breadcrumb() {
   if (segments.length < 1) return null;
   return (
     <div className="forge-breadcrumb">
-      <Link to="/" className="forge-breadcrumb-home">🏠</Link>
+      <Link to="/" className="forge-breadcrumb-home" aria-label="Inicio">
+        <ForgeIcon name="home" size={14} />
+      </Link>
       {segments.map((seg, i) => {
         const path = "/" + segments.slice(0, i + 1).join("/");
         const label = ROUTE_LABELS[seg] ?? seg;
@@ -217,7 +220,8 @@ function DesktopSidebar() {
               textTransform: "uppercase",
             }}
           >
-            {group.icon} {group.label}
+            <ForgeIcon name={group.icon} size={13} />
+            {group.label}
           </div>
           {/* Links */}
           {group.links.map((item) => {
@@ -251,7 +255,7 @@ function DesktopSidebar() {
                   letterSpacing: "0.03em",
                 }}
               >
-                <span style={{ fontSize: 14, flexShrink: 0 }}>{item.icon}</span>
+                <ForgeIcon name={item.icon} size={15} style={{ flexShrink: 0 }} />
                 <span style={{ flex: 1 }}>{item.label}</span>
                 {item.to === "/quests" && <QuestBadge />}
               </NavLink>
@@ -352,21 +356,21 @@ function ForgeHeader({
               className="forge-user-btn"
               onClick={() => setDropOpen(o => !o)}
             >
-              <span>👤</span>
+              <ForgeIcon name="profile" size={16} />
               <span style={{ maxWidth: 100, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
                 {userEmail.split("@")[0]}
               </span>
-              <span style={{ opacity: 0.5 }}>{dropOpen ? "▲" : "▼"}</span>
+              <span className={"forge-user-chevron" + (dropOpen ? " is-open" : "")} aria-hidden="true" />
             </button>
             {dropOpen && (
               <div className="forge-dropdown">
-                <Link to="/profile"  onClick={() => setDropOpen(false)}>👤 Perfil</Link>
-                <Link to="/economy"  onClick={() => setDropOpen(false)}>💰 Economía</Link>
-                <Link to="/progress" onClick={() => setDropOpen(false)}>📈 Progreso</Link>
-                <Link to="/deposit"  onClick={() => setDropOpen(false)}>📥 Depósito</Link>
-                <Link to="/settings" onClick={() => setDropOpen(false)}>⚙️ Ajustes</Link>
+                <Link to="/profile"  onClick={() => setDropOpen(false)}><ForgeIcon name="profile" size={15} /> Perfil</Link>
+                <Link to="/economy"  onClick={() => setDropOpen(false)}><ForgeIcon name="economy" size={15} /> Economía</Link>
+                <Link to="/progress" onClick={() => setDropOpen(false)}><ForgeIcon name="progress" size={15} /> Progreso</Link>
+                <Link to="/deposit"  onClick={() => setDropOpen(false)}><ForgeIcon name="deposit" size={15} /> Depósito</Link>
+                <Link to="/settings" onClick={() => setDropOpen(false)}><ForgeIcon name="settings" size={15} /> Ajustes</Link>
                 <div style={{ height: 1, background: "rgba(255,255,255,0.07)", margin: "4px 0" }} />
-                <button onClick={handleSignOut} style={{ color: "#e3573f" }}>🚪 Cerrar sesión</button>
+                <button onClick={handleSignOut} style={{ color: "#e3573f" }}><ForgeIcon name="signout" size={15} /> Cerrar sesión</button>
               </div>
             )}
           </div>
@@ -402,12 +406,12 @@ function BottomNav({ onMoreClick }: { onMoreClick: () => void }) {
             "forge-bottom-nav-item" + (isActive ? " active" : "")
           }
         >
-          <span className="forge-bottom-nav-icon">{item.icon}</span>
+          <ForgeIcon name={item.icon} size={18} className="forge-bottom-nav-icon" />
           <span className="forge-bottom-nav-label">{item.label}</span>
         </NavLink>
       ))}
       <button className="forge-bottom-nav-item" onClick={onMoreClick}>
-        <span className="forge-bottom-nav-icon">☰</span>
+        <ForgeIcon name="more" size={18} className="forge-bottom-nav-icon" />
         <span className="forge-bottom-nav-label">Más</span>
       </button>
     </nav>
@@ -438,7 +442,8 @@ function MobileSheet({ open, onClose }: { open: boolean; onClose: () => void }) 
               color: "rgba(201,144,31,0.55)",
               textTransform: "uppercase",
             }}>
-              {group.icon} {group.label}
+              <ForgeIcon name={group.icon} size={13} />
+              {group.label}
             </div>
             {group.links.map(item => (
               <NavLink
@@ -447,7 +452,7 @@ function MobileSheet({ open, onClose }: { open: boolean; onClose: () => void }) 
                 onClick={onClose}
                 className="forge-nav-link forge-sheet-link"
               >
-                <span style={{ marginRight: 10 }}>{item.icon}</span>
+                <ForgeIcon name={item.icon} size={17} style={{ marginRight: 10 }} />
                 {item.label}
               </NavLink>
             ))}
@@ -455,15 +460,15 @@ function MobileSheet({ open, onClose }: { open: boolean; onClose: () => void }) 
         ))}
         <div className="forge-sheet-divider" style={{ marginTop: 8 }} />
         <Link to="/account" onClick={onClose} className="forge-nav-link forge-sheet-link">
-          <span style={{ marginRight: 10 }}>🔑</span>
+          <ForgeIcon name="account" size={17} style={{ marginRight: 10 }} />
           Cuenta
         </Link>
         <Link to="/assets" onClick={onClose} className="forge-nav-link forge-sheet-link">
-          <span style={{ marginRight: 10 }}>🎨</span>
+          <ForgeIcon name="assets" size={17} style={{ marginRight: 10 }} />
           Recursos
         </Link>
         {isControlAdmin && <Link to="/admin" onClick={onClose} className="forge-nav-link forge-sheet-link" style={{ color: "#f59e0b" }}>
-          <span style={{ marginRight: 10 }}>🛠️</span>
+           <ForgeIcon name="admin" size={17} style={{ marginRight: 10 }} />
           Admin
         </Link>}
       </div>
