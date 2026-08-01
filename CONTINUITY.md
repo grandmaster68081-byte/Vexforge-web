@@ -24,6 +24,8 @@
 - `git diff --check` ✅
 - Lockfile sin URLs internas de Replit ✅
 - `.nvmrc` raíz con Node `22` ✅
+- GitHub `main` publicado en commit `880513c` ✅
+- El repositorio no contiene workflow de Cloudflare Pages y `https://vexforge-web.pages.dev` aún sirve el bundle anterior; queda pendiente de propagación externa ✅ documentado
 
 ### Estado para la próxima sesión
 

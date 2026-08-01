@@ -7,9 +7,9 @@
 ALTER TABLE public.player_progress
   ADD COLUMN IF NOT EXISTS energy_last_regen timestamptz NOT NULL DEFAULT now();
 
-UPDATE public.player_progress
-SET energy_last_regen = COALESCE(energy_last_regen, updated_at, now())
-WHERE energy_last_regen IS NULL;
+-- Existing rows intentionally start their regeneration clock at migration
+-- time. Backfilling from updated_at could retroactively grant energy based on
+-- unrelated XP/profile writes.
 
 ALTER TABLE public.player_progress
   DROP CONSTRAINT IF EXISTS player_progress_energy_cap_check;
