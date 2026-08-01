@@ -27,7 +27,14 @@
 
 - **T1-E** ✅ COMPLETADO — contrato de reliquias autoritativo e idempotente
 - **Siguiente:** prueba autenticada controlada de compra/apertura de packs y reliquias, sin usar una cuenta de jugador real sin autorización
-- Deploy live: pendiente de propagación externa de Cloudflare Pages
+- Deploy live: Cloudflare ya propagó T1-D (`index-aWvvdZ39.js`); T1-E sigue pendiente de propagación (`index-0hgTlvxj.js`)
+
+### Verificación posterior al push
+
+- GitHub `main` contiene `c031170` y coincide con el checkout local ✅
+- `https://vexforge-web.pages.dev/` responde HTTP 200 ✅
+- Cloudflare Pages ya entrega el bundle de T1-D (`index-aWvvdZ39.js`) ✅
+- Cloudflare Pages todavía no entrega el bundle de T1-E (`index-0hgTlvxj.js`) ⚠️
 
 ## Chat 134 — 2026-08-01 — T1-D: Packs autoritativos e idempotentes — COMPLETADO
 
