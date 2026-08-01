@@ -1,11 +1,12 @@
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { supabase } from "../lib/supabase";
 import { useBosses } from "../domains/bosses/useBosses";
 import { attackWorldBoss, getCurrentPlayerId } from "../domains/bosses/repository";
 import type { WorldBoss, WorldBossAttackResult } from "../domains/bosses/repository";
 import { loadPlayerBattleUnits, type AIDifficulty } from "../lib/aiBattleEngine";
 import type { BattleUnit } from "../lib/battleTypes";
-import type { FormationState } from "../lib/forgeFormation";
+import { applyRelicEffects, type EquippedRelic, type FormationState } from "../lib/forgeFormation";
+import { getEquippedRelics } from "../domains/relics/repository";
 import { FormationSelector } from "../components/battle/FormationSelector";
 import { ForgeFormationBoard } from "../components/battle/ForgeFormationBoard";
 import { PageLoader } from "../shared/components/PageLoader";
@@ -149,6 +150,7 @@ export function WorldBossesRoute() {
   const { addToast } = useToast();
   const [bossUnits, setBossUnits] = useState<BattleUnit[] | null>(null);
   const [bossFormation, setBossFormation] = useState<FormationState | null>(null);
+  const [equippedRelics, setEquippedRelics] = useState<EquippedRelic[]>([]);
   const [selectedBoss, setSelectedBoss] = useState<WorldBoss | null>(null);
   const [battleDifficulty, setBattleDifficulty] = useState<AIDifficulty>("normal");
   const [battleLoading, setBattleLoading] = useState(false);
@@ -190,10 +192,16 @@ export function WorldBossesRoute() {
     }
   }, [addToast, authed, bossData]);
 
+  // P4: Load equipped relics when authed
+  useEffect(() => {
+    if (!authed) { setEquippedRelics([]); return; }
+    getEquippedRelics().then(setEquippedRelics).catch(() => {});
+  }, [authed]);
+
   const handleFormationConfirm = useCallback((formation: FormationState) => {
     setBossUnits(null);
-    setBossFormation(formation);
-  }, []);
+    setBossFormation(applyRelicEffects(formation, equippedRelics));
+  }, [equippedRelics]);
 
   const dismissBattle = useCallback(() => {
     setBossUnits(null);
@@ -258,6 +266,7 @@ export function WorldBossesRoute() {
         playerName="Tú"
         opponentName={selectedBoss.name}
         difficulty={battleDifficulty}
+        equippedRelics={equippedRelics}
         onComplete={handleBattleComplete}
         onDismiss={dismissBattle}
       />

@@ -17,7 +17,8 @@ import { AudioEngine } from "../lib/audioEngine";
 import { useWinStreak, WinStreakBadge, StreakPanel } from "../components/battle/WinStreakDisplay";
 import { FormationSelector } from "../components/battle/FormationSelector";
 import { ForgeFormationBoard } from "../components/battle/ForgeFormationBoard";
-import type { FormationState } from "../lib/forgeFormation";
+import { applyRelicEffects, type EquippedRelic, type FormationState } from "../lib/forgeFormation";
+import { getEquippedRelics } from "../domains/relics/repository";
 import type { BattleUnit } from "../lib/battleTypes";
 import { ContextualHint, ROUTE_HINTS } from "../components/battle/ContextualHint";
 
@@ -468,6 +469,8 @@ export function PvpRoute() {
   // FFE: Forge Formation Engine state
   const [formationUnits, setFormationUnits]     = useState<BattleUnit[] | null>(null);
   const [pendingFormation, setPendingFormation] = useState<FormationState | null>(null);
+  // P4: Equipped relics for combat
+  const [equippedRelics, setEquippedRelics]     = useState<EquippedRelic[]>([]);
   const formationDifficultyRef = useRef<AIDifficulty>(getDailyAIChallenge().difficulty);
   const dailyChallenge = getDailyAIChallenge();
   const cancelRef = useRef(false);
@@ -540,11 +543,17 @@ export function PvpRoute() {
   }, [playerId, dailyAttempted, dailyLoading, dailyChallenge]);
 
   // FFE: Called when FormationSelector confirms the formation
+  // P4: Load equipped relics when player is available
+  useEffect(() => {
+    if (!playerId) return;
+    getEquippedRelics().then(setEquippedRelics).catch(() => {});
+  }, [playerId]);
+
   const handleFormationConfirm = useCallback((formation: FormationState) => {
     setFormationUnits(null);
-    setPendingFormation(formation);
+    setPendingFormation(applyRelicEffects(formation, equippedRelics));
     try { (AudioEngine as any).sfxTurnStart?.(); } catch { /* ok */ }
-  }, []);
+  }, [equippedRelics]);
 
   // FFE: Called when ForgeFormationBoard finishes (daily / pvp / practice)
   const handleForgeFormationComplete = useCallback(async (won: boolean, _championDied: boolean) => {
@@ -695,6 +704,7 @@ export function PvpRoute() {
         playerName="Tú"
         opponentName={ffeOpponentName}
         difficulty={formationDifficultyRef.current}
+        equippedRelics={equippedRelics}
         onComplete={handleForgeFormationComplete}
         onDismiss={() => {
           setPendingFormation(null);

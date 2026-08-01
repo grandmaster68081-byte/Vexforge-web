@@ -9,6 +9,7 @@ import type { BattleUnit } from '../../lib/battleTypes';
 import { RARITY_COLOR, RARITY_GLOW } from '../../lib/battleTypes';
 import {
   type FormationState, type FormationSlot,
+  type EquippedRelic,
   isChampionProtected, SLOT_META,
   simulateFormationBattle, hasFormationPureBonus,
 } from '../../lib/forgeFormation';
@@ -1667,6 +1668,7 @@ export interface ForgeFormationBoardProps {
   playerName?: string;
   opponentName?: string;
   difficulty: AIDifficulty;
+  equippedRelics?: EquippedRelic[];
   onComplete: (
     won: boolean,
     championDied: boolean,
@@ -1679,7 +1681,7 @@ type BoardPhase = 'champion_summon' | 'intro' | 'battle' | 'reserve' | 'ascensio
 
 export function ForgeFormationBoard({
   initialFormation, playerName = 'Tú', opponentName = 'Rival',
-  difficulty, onComplete, onDismiss,
+  difficulty, equippedRelics = [], onComplete, onDismiss,
 }: ForgeFormationBoardProps) {
   const [formation, setFormation]     = useState<FormationState>(initialFormation);
   const [phase, setPhase]             = useState<BoardPhase>('champion_summon');
@@ -2498,6 +2500,22 @@ export function ForgeFormationBoard({
             {/* Rage badge in controls */}
             {rageStacks > 0 && (
               <RageMeter stacks={rageStacks} maxStacks={5} />
+            )}
+            {/* P4: Equipped relics HUD */}
+            {equippedRelics.length > 0 && (
+              <div style={{ display: 'flex', gap: 4, alignItems: 'center', flexWrap: 'wrap' }}>
+                {equippedRelics.map(r => (
+                  <div
+                    key={r.id}
+                    title={String((r.metadata as Record<string,unknown>)?.description ?? r.name)}
+                    style={{
+                      background: '#a855f712', border: '1px solid #a855f730',
+                      borderRadius: 6, color: '#c084fc', fontSize: 9, fontWeight: 700,
+                      padding: '3px 7px', fontFamily: '"IBM Plex Mono",monospace',
+                      letterSpacing: '0.08em', cursor: 'default',
+                    }}>◈ {r.code}</div>
+                ))}
+              </div>
             )}
           </>
         )}

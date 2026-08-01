@@ -195,3 +195,90 @@ export const AI_FORMATIONS: Record<AIDifficulty, FormationSelection> = {
   legend:   { championIdx: 2, vanguardIdx: 1, sentinelIdx: 0 },
   tutorial: { championIdx: 0, vanguardIdx: 1, sentinelIdx: null },
 };
+
+// ─── P4: Relic effects ───────────────────────────────────────────────────────
+export interface EquippedRelic {
+  id: string;
+  code: string;
+  name: string;
+  effect_type: string | null;
+  effect_value: number | null;
+  metadata: Record<string, unknown>;
+}
+
+function applyRelicToUnit(unit: BattleUnit, relics: EquippedRelic[]): BattleUnit {
+  let u = { ...unit };
+  for (const relic of relics) {
+    const val = relic.effect_value ?? 0;
+    switch (relic.effect_type) {
+      case 'power_bonus_common':
+        if (u.rarity === 'Common') {
+          const m = 1 + val / 100;
+          u = { ...u, atk: Math.round(u.atk * m), power: Math.round(u.power * m) };
+        }
+        break;
+      case 'legendary_mythic_bonus':
+        if (u.rarity === 'Legendary' || u.rarity === 'Mythic') {
+          const m = 1 + val / 100;
+          u = { ...u, atk: Math.round(u.atk * m), power: Math.round(u.power * m) };
+        }
+        break;
+      case 'paladin_bonus':
+        if (u.faction === 'Paladín') {
+          const m = 1 + val / 100;
+          u = { ...u, atk: Math.round(u.atk * m), power: Math.round(u.power * m) };
+        }
+        break;
+      case 'first_attack_bonus':
+        u = { ...u, atk: Math.round(u.atk * (1 + val / 100)) };
+        break;
+      case 'guard_start':
+        u = { ...u, guard: true };
+        break;
+      case 'veil_permanent':
+        u = { ...u, shielded: true };
+        break;
+      case 'keyword_grant': {
+        const kw = (relic.metadata?.keyword as string | undefined) ?? 'Resonance';
+        if (!u.keywords.includes(kw)) u = { ...u, keywords: [...u.keywords, kw] };
+        break;
+      }
+      case 'drain_enhanced':
+        if (u.lifesteal || u.keywords.includes('Drain')) {
+          u = { ...u, atk: Math.round(u.atk * 1.12) };
+        }
+        break;
+      case 'surge_amplify':
+        if (u.rush || u.keywords.includes('Surge')) {
+          u = { ...u, atk: Math.round(u.atk * 1.15) };
+        }
+        break;
+      case 'all_keywords':
+        u = { ...u, guard: true, shielded: true, lifesteal: true, rush: true, double_strike: true };
+        break;
+      case 'rage_bonus':
+        // Pre-apply partial buff since runtime HP tracking isn't available here
+        u = { ...u, atk: Math.round(u.atk * 1.06) };
+        break;
+    }
+  }
+  return u;
+}
+
+/**
+ * Aplica efectos de reliquias equipadas a la formación antes del combate.
+ * Llamar antes de pasar la formación a ForgeFormationBoard.
+ */
+export function applyRelicEffects(
+  formation: FormationState,
+  equippedRelics: EquippedRelic[],
+): FormationState {
+  if (!equippedRelics.length) return formation;
+  return {
+    ...formation,
+    champion: applyRelicToUnit(formation.champion, equippedRelics),
+    vanguard: formation.vanguard ? applyRelicToUnit(formation.vanguard, equippedRelics) : null,
+    sentinel: formation.sentinel ? applyRelicToUnit(formation.sentinel, equippedRelics) : null,
+    reserve:  formation.reserve.map(u => applyRelicToUnit(u, equippedRelics)),
+  };
+}

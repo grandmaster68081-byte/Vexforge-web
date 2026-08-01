@@ -6,7 +6,8 @@ import { loadPlayerBattleUnits, type AIDifficulty } from "../lib/aiBattleEngine"
 import { FormationSelector } from "../components/battle/FormationSelector";
 import { ForgeFormationBoard } from "../components/battle/ForgeFormationBoard";
 import type { BattleUnit } from "../lib/battleTypes";
-import type { FormationState } from "../lib/forgeFormation";
+import { applyRelicEffects, type EquippedRelic, type FormationState } from "../lib/forgeFormation";
+import { getEquippedRelics } from "../domains/relics/repository";
 import { PageLoader } from "../shared/components/PageLoader";
 import { EmptyState } from "../shared/components/EmptyState";
 import { useToast } from "../shared/context/ToastContext";
@@ -140,6 +141,7 @@ export function RaidsRoute() {
   const [tab, setTab]       = useState<"available" | "my_raids">("available");
   const [raidUnits, setRaidUnits] = useState<BattleUnit[] | null>(null);
   const [raidFormation, setRaidFormation] = useState<FormationState | null>(null);
+  const [equippedRelics, setEquippedRelics] = useState<EquippedRelic[]>([]);
   const [selectedRaid, setSelectedRaid] = useState<RaidRun | null>(null);
   const [raidBattleLoading, setRaidBattleLoading] = useState(false);
   const [raidBattleError, setRaidBattleError] = useState<string | null>(null);
@@ -207,10 +209,16 @@ export function RaidsRoute() {
     }
   }, [addToast, authed]);
 
+  // P4: Load equipped relics when authed
+  useEffect(() => {
+    if (!authed) { setEquippedRelics([]); return; }
+    getEquippedRelics().then(setEquippedRelics).catch(() => {});
+  }, [authed]);
+
   const handleRaidFormationConfirm = useCallback((formation: FormationState) => {
     setRaidUnits(null);
-    setRaidFormation(formation);
-  }, []);
+    setRaidFormation(applyRelicEffects(formation, equippedRelics));
+  }, [equippedRelics]);
 
   const handleRaidBattleComplete = useCallback(async (won: boolean) => {
     const raid = selectedRaid;
@@ -267,6 +275,7 @@ export function RaidsRoute() {
         playerName="Tú"
         opponentName={selectedRaid.metadata?.name ?? selectedRaid.raid_code}
         difficulty={raidDifficulty}
+        equippedRelics={equippedRelics}
         onComplete={handleRaidBattleComplete}
         onDismiss={dismissRaidBattle}
       />

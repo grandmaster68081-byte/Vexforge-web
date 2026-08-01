@@ -1,4 +1,47 @@
 # VEXFORGE — CONTINUITY LOG
+
+## Chat 124 — 2026-08-01 — P4: Reliquias con efectos reales sobre el Campeón — COMPLETADO
+
+**Branch:** main | **Base:** `8646bbf` | **Build:** ✅ `npm run build` limpio, 238 módulos, 0 errores TS
+
+### ✅ Infraestructura Supabase (sesión anterior, ya confirmada)
+
+| Objeto | Estado |
+|--------|--------|
+| Tabla `player_relics` | ✅ Creada con RLS |
+| Políticas RLS (SELECT, INSERT, UPDATE) | ✅ Activas |
+| RPC `grant_starter_relics()` | ✅ Creada + GRANT authenticated |
+| RPC `equip_relic(UUID)` | ✅ Creada + GRANT (máx. 3 equipadas) |
+| RPC `unequip_relic(UUID)` | ✅ Creada + GRANT |
+
+### ✅ Implementación frontend P4
+
+| Archivo | Cambios |
+|---------|---------|
+| `src/lib/forgeFormation.ts` | `EquippedRelic` interface + `applyRelicEffects(formation, relics)` — aplica 12 effect_types en combate (power_bonus_common, keyword_grant, guard_start, veil_permanent, drain_enhanced, surge_amplify, all_keywords, rage_bonus, paladin_bonus, legendary_mythic_bonus, first_attack_bonus, drain_enhanced) |
+| `src/domains/relics/repository.ts` | `PlayerRelic` type + `getPlayerRelics()`, `getEquippedRelics()`, `equipRelic()`, `unequipRelic()`, `claimStarterRelics()` |
+| `src/routes/RelicsRoute.tsx` | UI completa: catálogo ordenado (equipadas→poseídas→no poseídas), equipar/desequipar con feedback, contador X/3, kit inicial, filtros por rareza y búsqueda, toast, HUD de activas |
+| `src/components/battle/ForgeFormationBoard.tsx` | Prop `equippedRelics?: EquippedRelic[]` + HUD de reliquias activas en barra de controles durante el combate |
+| `src/routes/PvpRoute.tsx` | Carga reliquias equipadas por `playerId`, aplica `applyRelicEffects` al confirmar formación, pasa `equippedRelics` a `ForgeFormationBoard` |
+| `src/routes/RaidsRoute.tsx` | Mismo patrón por `authed` |
+| `src/routes/WorldBossesRoute.tsx` | Mismo patrón por `authed` |
+
+### 🔴 Bloqueo externo: Cloudflare Pages
+
+- Cloudflare sigue sirviendo `index-snbuVJh3.js` (muy antiguo) en `vexforge-web.pages.dev`
+- El nuevo bundle local es `index-DDDFKIvL.js` (generado limpiamente)
+- El código está en GitHub `main` y `dist/` tiene el bundle correcto
+- **Causa probable:** el pipeline de Cloudflare está fallando silenciosamente y sirve el último build exitoso
+- **Diagnóstico:** sin `CLOUDFLARE_API_TOKEN` no es posible verificar los logs de build de Cloudflare
+- **Resolución requerida:** el owner debe ir a Cloudflare Pages → proyecto → Deployments → "Retry deployment" o "Create new deployment", o proveer un token de API de Cloudflare para automatizar
+
+### Estado para la próxima sesión
+
+- **P4** ✅ COMPLETADO — Reliquias con efectos reales, UI y backend integrados
+- **Cloudflare** 🔴 Requiere acción manual del owner o token de API
+- **P5** pendiente — definir según backlog
+
+
 ## Chat 123 — 2026-08-01 — Corrección normativa: autonomía técnica y calidad Tier 1
 
 **Branch:** main | **Base:** `a271f38` | **Alcance:** actualización del Protocolo Maestro y continuidad
