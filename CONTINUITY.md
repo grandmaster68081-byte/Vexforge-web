@@ -1,5 +1,46 @@
 # VEXFORGE — CONTINUITY LOG
 
+## Chat 126 — 2026-08-01 — FIX CRÍTICO: .nvmrc raíz → Cloudflare deploy restaurado
+
+**Branch:** main | **Commit:** `74d29cc` | **Urgencia:** Deploy bloqueado
+
+### ✅ Diagnóstico del fallo de deploy
+
+**Error en Cloudflare Pages (último deploy, hace 7 minutos):**
+```
+npm error Exit handler never called!
+npm error This is an error with npm itself.
+Error: Exit with error code: 1 — build command exited with code: 1
+```
+
+**Causa raíz encontrada:**
+- El chat anterior (Chat 125) colocó `.nvmrc` en `vexforge/.nvmrc` (subdirectorio)
+- Cloudflare Pages **solo lee `.nvmrc` de la raíz del repositorio**
+- Al no encontrar `.nvmrc` en la raíz, Cloudflare usó Node.js 22.16.0 (su default)
+- Con Node 22 + npm 10.9.2 + `package-lock.json` lockfileVersion 3, `npm clean-install` falla con el error "Exit handler never called!" — bug conocido de npm
+- El `.github/workflows/deploy.yml` que Chat 125 describió en CONTINUITY **nunca se creó ni pusheó** (no existe en el repo)
+
+**Fix aplicado (1 archivo, 1 commit):**
+- Creado `.nvmrc` en la **raíz del repo** con contenido `18`
+- Pusheado como commit `74d29cc`
+- Cloudflare Pages lo detectará automáticamente en el próximo trigger y usará Node 18
+
+### 🔄 Próximo deploy esperado
+Cloudflare Pages disparará un nuevo build automáticamente al detectar el push.
+- Usará Node 18 → npm ci funcionará → build de `dist/` → deploy a vexforge-web.pages.dev
+- Si el proyecto de Cloudflare Pages tiene "Auto-deploy on push" activado: ~2-3 minutos
+- Si no tiene auto-deploy: el owner debe dispararlo manualmente desde el dashboard
+
+### Estado de contenido
+- **dist/** en raíz del repo: ✅ actualizado (incluye P5 ReserveActivatedCinematic, P4 Relics, P3, P2, P1)
+- Todos los cambios de sesiones anteriores ya están en `dist/` — solo faltaba que el deploy funcionara
+
+### Para la próxima sesión
+- **P6** pendiente — /cards, /lore y /leaderboard públicos sin login
+- **M1** pendiente — SVG icons propios eliminando emojis del sistema
+- Verificar que vexforge-web.pages.dev muestre la versión con P5 (ReserveActivatedCinematic visible en combate)
+- Si se quiere pipeline GitHub Actions robusto: owner debe proporcionar CLOUDFLARE_API_TOKEN + CLOUDFLARE_ACCOUNT_ID
+
 ## Chat 125 — 2026-08-01 — P5: ReserveActivatedCinematic + Fix permanente de deploy Cloudflare
 
 **Branch:** main | **Build:** ✅ `npm run build` limpio, 238 módulos, 0 errores TS
