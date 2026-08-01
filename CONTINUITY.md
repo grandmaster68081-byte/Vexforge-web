@@ -1,4 +1,29 @@
 # VEXFORGE — CONTINUITY LOG
+## Chat 121 — 2026-08-01 — Cierre de verificación P3
+
+**Branch:** main | **Commit de P3:** `5bdb52fbae71fdb7fc95a9cdc199fbe288ab4041` | **Build:** ✅ `npm run build` limpio
+
+### ✅ Verificado
+
+- Se siguió el acceso oficial con el repositorio GitHub, el Protocolo Maestro y el plan activo en Supabase.
+- El commit de P3 está en `origin/main` y contiene la lógica de `FormationSelector`, `ForgeFormationBoard` y `vexforge_attack_world_boss`.
+- `npm install` y `npm run build` se ejecutaron sobre el repositorio oficial; el build terminó sin errores TypeScript.
+- El deploy oficial `https://vexforge-web.pages.dev/world-bosses` responde HTTP 200 y muestra la pantalla de Jefes Mundiales.
+
+### ⛔ Bloqueo de publicación
+
+- Cloudflare Pages continúa sirviendo un bundle anterior al commit P3: el HTML live referencia `index-snbuVJh3.js` y su chunk de Jefes Mundiales no contiene `vexforge_attack_world_boss`.
+- No hay una credencial Cloudflare configurada en el entorno para ejecutar un despliegue manual desde esta sesión.
+- Por tanto, P3 queda **implementado y publicado en GitHub, pendiente de propagación al deploy live**. No se declara verificado en producción ni se inicia P4.
+
+### Estado para la próxima sesión
+
+1. Resolver el desfase de Cloudflare Pages y comprobar que `/world-bosses` sirve el bundle de P3.
+2. Actualizar este estado con la verificación live.
+3. Continuar con P4 — Reliquias con efectos reales sobre el Campeón.
+
+---
+
 ## Chat 120 — 2026-08-01 — P3: Jefes del Mundo con combate ForgeFormation real
 
 **Branch:** main | **Build:** ✅ `npm run build` limpio | **TypeScript:** ✅ `npx tsc --noEmit` limpio
