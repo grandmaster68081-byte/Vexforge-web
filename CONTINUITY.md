@@ -1,5 +1,34 @@
 # VEXFORGE — CONTINUITY LOG
 
+## Chat 135 — 2026-08-02 — T1-E: Contrato autoritativo de reliquias — COMPLETADO
+
+**Branch:** main | **Scope:** kit inicial + equipar/desequipar + efectos de combate
+
+### ✅ Estado real verificado
+
+- La auditoría viva confirmó que `player_relics` usa `is_equipped` y exige `equipped_slot` cuando una reliquia está equipada; el cliente ahora consulta `is_equipped` y normaliza la respuesta al modelo visual `equipped`.
+- `grant_starter_relics()` ahora escribe en `is_equipped`, marca el origen `starter_kit` y conserva la concesión única e idempotente; el bloqueo advisory por jugador evita carreras entre dos reclamaciones simultáneas.
+- `equip_relic(uuid)` ahora valida propiedad, devuelve éxito idempotente si ya está equipada, serializa cambios por jugador, respeta el máximo de 3 y asigna la ranura desde `relics.metadata`.
+- `unequip_relic(uuid)` ahora valida propiedad, devuelve éxito idempotente si ya estaba desequipada y limpia `equipped_slot`; una reliquia no poseída devuelve error en lugar de éxito falso.
+- No se modificaron el catálogo de 20 reliquias, sus efectos, cantidades, datos de jugadores ni la economía. La migración reproducible es `backend/sql-migrations/T1-E-relic-contract.sql`.
+- Los combates ya consumen `getEquippedRelics()` y aplican `applyRelicEffects()` antes de `ForgeFormationBoard` en PvP, Raids y World Bosses; este lote corrige el contrato que impedía que esa ruta leyera el estado real.
+
+### Verificaciones
+
+- `npm run build` ✅ 240 módulos, 0 errores TypeScript
+- `git diff --check` ✅
+- RPCs vivas como `SECURITY DEFINER`, `SET search_path` y `EXECUTE` para `authenticated` ✅
+- Las tres RPCs ya no contienen referencias a la columna inexistente `equipped` ✅
+- Probes sin autenticación para equipar/desequipar devuelven `Player not found` ✅
+- Catálogo de reliquias vivo: 20 reliquias; datos de `player_relics` sin cambios por la verificación ✅
+- Constraint `player_relics_equipment_state_ck` respetado al asignar y limpiar `equipped_slot` ✅
+
+### Estado para la próxima sesión
+
+- **T1-E** ✅ COMPLETADO — contrato de reliquias autoritativo e idempotente
+- **Siguiente:** prueba autenticada controlada de compra/apertura de packs y reliquias, sin usar una cuenta de jugador real sin autorización
+- Deploy live: pendiente de propagación externa de Cloudflare Pages
+
 ## Chat 134 — 2026-08-01 — T1-D: Packs autoritativos e idempotentes — COMPLETADO
 
 **Branch:** main | **Scope:** compra VEX + apertura + persistencia de cartas

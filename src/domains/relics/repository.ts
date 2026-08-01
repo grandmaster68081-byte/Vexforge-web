@@ -36,7 +36,7 @@ export async function getPlayerRelics(): Promise<DomainResult<PlayerRelic[]>> {
   const { data, error } = await supabase
     .from("player_relics")
     .select(`
-      id, relic_id, equipped, acquired_at,
+      id, relic_id, is_equipped, acquired_at,
       relic:relics(id, code, name, effect_type, effect_value, metadata, created_at)
     `)
     .order("acquired_at", { ascending: true });
@@ -46,7 +46,7 @@ export async function getPlayerRelics(): Promise<DomainResult<PlayerRelic[]>> {
   const rows: PlayerRelic[] = (data ?? []).map((row: any) => ({
     id: row.id,
     relic_id: row.relic_id,
-    equipped: row.equipped,
+    equipped: row.is_equipped,
     acquired_at: row.acquired_at,
     relic: row.relic as Relic,
   }));
@@ -61,10 +61,10 @@ export async function getEquippedRelics(): Promise<import("../../lib/forgeFormat
   const { data, error } = await supabase
     .from("player_relics")
     .select(`
-      relic_id, equipped,
+      relic_id, is_equipped,
       relic:relics(id, code, name, effect_type, effect_value, metadata)
     `)
-    .eq("equipped", true);
+    .eq("is_equipped", true);
 
   if (error || !data) return [];
 

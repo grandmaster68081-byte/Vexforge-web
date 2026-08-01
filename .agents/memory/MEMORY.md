@@ -1,0 +1,1 @@
+- [Supabase contract audits](supabase-contract-audits.md) — audit live columns, constraints, RPC bodies, and grants before changing client contracts or migrations.
