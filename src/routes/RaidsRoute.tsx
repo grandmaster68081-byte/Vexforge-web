@@ -1,7 +1,12 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { supabase } from "../lib/supabase";
 import { useRaids } from "../domains/raids/useRaids";
 import type { RaidRun } from "../domains/raids/repository";
+import { loadPlayerBattleUnits, type AIDifficulty } from "../lib/aiBattleEngine";
+import { FormationSelector } from "../components/battle/FormationSelector";
+import { ForgeFormationBoard } from "../components/battle/ForgeFormationBoard";
+import type { BattleUnit } from "../lib/battleTypes";
+import type { FormationState } from "../lib/forgeFormation";
 import { PageLoader } from "../shared/components/PageLoader";
 import { EmptyState } from "../shared/components/EmptyState";
 import { useToast } from "../shared/context/ToastContext";
@@ -26,6 +31,12 @@ function getDifficultyConfig(difficulty?: string) {
   return DIFFICULTY_CFG[difficulty ?? "normal"] ?? DIFFICULTY_CFG.normal;
 }
 
+function getForgeDifficulty(difficulty?: string): AIDifficulty {
+  if (difficulty === "easy") return "easy";
+  if (difficulty === "hard") return "expert";
+  return "normal";
+}
+
 function RaidCard({
   raid, onJoin, joining, inMyRaids, onContribute, contributing
 }: {
@@ -33,7 +44,7 @@ function RaidCard({
   onJoin: (id: string) => void;
   joining: boolean;
   inMyRaids: boolean;
-  onContribute: (id: string) => void;
+  onContribute: (raid: RaidRun) => void;
   contributing: boolean;
 }) {
   const diff = getDifficultyConfig(raid.metadata?.difficulty);
@@ -100,7 +111,7 @@ function RaidCard({
           )}
           {inMyRaids && raid.status !== "completed" && (
             <button
-              onClick={() => onContribute(raid.id)}
+              onClick={() => onContribute(raid)}
               disabled={contributing}
               style={{
                 padding: "9px 22px", borderRadius: 9, border: "none",
@@ -127,6 +138,12 @@ function RaidCard({
 export function RaidsRoute() {
   const [authed, setAuthed] = useState<boolean | null>(null);
   const [tab, setTab]       = useState<"available" | "my_raids">("available");
+  const [raidUnits, setRaidUnits] = useState<BattleUnit[] | null>(null);
+  const [raidFormation, setRaidFormation] = useState<FormationState | null>(null);
+  const [selectedRaid, setSelectedRaid] = useState<RaidRun | null>(null);
+  const [raidBattleLoading, setRaidBattleLoading] = useState(false);
+  const [raidBattleError, setRaidBattleError] = useState<string | null>(null);
+  const [raidDifficulty, setRaidDifficulty] = useState<AIDifficulty>("normal");
   const { addToast } = useToast();
 
   const { activeRaids, myRaids, loading, joining, contributing, join, contribute, reload } = useRaids();
@@ -149,11 +166,77 @@ export function RaidsRoute() {
     else addToast("error", "Error", res.reason ?? "No se pudo unir al raid.");
   }
 
-  async function handleContribute(raidId: string) {
-    const res = await contribute(raidId);
-    if (res.ok) addToast("success", "¡Ataque exitoso!", "Contribución registrada en el raid.");
-    else addToast("error", "Error", res.reason ?? "No se pudo contribuir.");
-  }
+  const handleContribute = useCallback(async (raid: RaidRun) => {
+    if (!authed) {
+      addToast("error", "Inicia sesión", "Debes estar autenticado para atacar un raid.");
+      return;
+    }
+
+    setRaidBattleLoading(true);
+    setRaidBattleError(null);
+    try {
+      const { data: sessionData } = await supabase.auth.getSession();
+      const authUserId = sessionData.session?.user.id;
+      if (!authUserId) {
+        addToast("error", "Inicia sesión", "Tu sesión ya no está activa.");
+        return;
+      }
+
+      const { data: player, error: playerError } = await supabase
+        .from("players")
+        .select("id")
+        .eq("auth_user_id", authUserId)
+        .maybeSingle();
+      if (playerError || !player?.id) {
+        const reason = playerError?.message ?? "No se encontró el jugador activo.";
+        setRaidBattleError(reason);
+        addToast("error", "No se pudo preparar el combate", reason);
+        return;
+      }
+
+      const units = await loadPlayerBattleUnits(supabase, player.id);
+      setSelectedRaid(raid);
+      setRaidDifficulty(getForgeDifficulty(raid.metadata?.difficulty));
+      setRaidUnits(units);
+    } catch (error) {
+      const reason = error instanceof Error ? error.message : "No se pudo cargar tu formación.";
+      setRaidBattleError(reason);
+      addToast("error", "No se pudo preparar el combate", reason);
+    } finally {
+      setRaidBattleLoading(false);
+    }
+  }, [addToast, authed]);
+
+  const handleRaidFormationConfirm = useCallback((formation: FormationState) => {
+    setRaidUnits(null);
+    setRaidFormation(formation);
+  }, []);
+
+  const handleRaidBattleComplete = useCallback(async (won: boolean) => {
+    const raid = selectedRaid;
+    setRaidFormation(null);
+    setSelectedRaid(null);
+    if (!raid) return;
+
+    if (!won) {
+      addToast("error", "Raid no superado", "La contribución solo se registra después de ganar el combate.");
+      return;
+    }
+
+    const res = await contribute(raid.id);
+    if (res.ok) {
+      addToast("success", "¡Ataque exitoso!", "Contribución registrada en el raid.");
+    } else {
+      addToast("error", "Contribución no registrada", res.reason ?? "No se pudo actualizar el progreso del raid.");
+    }
+  }, [addToast, contribute, selectedRaid]);
+
+  const dismissRaidBattle = useCallback(() => {
+    setRaidUnits(null);
+    setRaidFormation(null);
+    setSelectedRaid(null);
+    setRaidBattleError(null);
+  }, []);
 
   const tabStyle = (t: string) => ({
     padding: "8px 22px", borderRadius: 8, border: "none", fontWeight: 700, fontSize: 13,
@@ -163,6 +246,32 @@ export function RaidsRoute() {
   });
 
   const displayList = tab === "available" ? activeRaids : myRaids;
+
+  if (raidBattleLoading) return <PageLoader />;
+
+  if (raidUnits && !raidFormation && selectedRaid) {
+    return (
+      <FormationSelector
+        playerUnits={raidUnits}
+        onConfirm={handleRaidFormationConfirm}
+        onCancel={dismissRaidBattle}
+        difficulty={raidDifficulty}
+      />
+    );
+  }
+
+  if (raidFormation && selectedRaid) {
+    return (
+      <ForgeFormationBoard
+        initialFormation={raidFormation}
+        playerName="Tú"
+        opponentName={selectedRaid.metadata?.name ?? selectedRaid.raid_code}
+        difficulty={raidDifficulty}
+        onComplete={handleRaidBattleComplete}
+        onDismiss={dismissRaidBattle}
+      />
+    );
+  }
 
   return (
     <div style={{
@@ -199,6 +308,16 @@ export function RaidsRoute() {
               ↺ Actualizar
             </button>
           </div>
+
+          {raidBattleError && (
+            <div style={{
+              marginBottom: 16, padding: "12px 16px", borderRadius: 10,
+              background: "#3a151522", border: "1px solid #e8404066",
+              color: "#ff8d8d", fontSize: 12,
+            }}>
+              {raidBattleError}
+            </div>
+          )}
 
           {/* List */}
           {displayList.length === 0 ? (

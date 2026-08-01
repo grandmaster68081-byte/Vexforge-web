@@ -1,4 +1,26 @@
 # VEXFORGE — CONTINUITY LOG
+## Chat 119 — 2026-08-01 — P2: Raids con combate ForgeFormation real
+
+**Branch:** main | **Build:** ✅ `npm run build` limpio | **TypeScript:** ✅ `npx tsc --noEmit` limpio | **Deploy:** Cloudflare Pages desde `main`
+
+### ✅ Implementado
+
+- `RaidsRoute.tsx` ya no registra una contribución directamente desde el botón de ataque.
+- El ataque de una raid carga las unidades reales del jugador y abre `FormationSelector`.
+- La formación confirmada entra en `ForgeFormationBoard` con la dificultad derivada de la raid: fácil → easy, normal → normal, difícil → expert.
+- Solo una victoria del combate llama al flujo oficial `vexforge_contribute_raid`; una derrota o un cierre no registra contribución.
+- El progreso del raid se recarga mediante el hook existente después de una contribución aceptada.
+- No se añadieron tablas, columnas, RPCs ni fórmulas nuevas.
+
+### Verificación
+
+- `npm run build`: ✅ limpio.
+- `npx tsc --noEmit`: ✅ limpio.
+- `git diff --check`: ✅ limpio.
+- `dist/` regenerado y preparado para Cloudflare Pages.
+
+---
+
 ## Chat 116 — 2026-08-01 — Directiva de análisis integral y ejecución autónoma
 
 **Build:** ✅ limpio, `npm run build` sin errores | **Protocolo Maestro:** ✅ actualizado en Supabase
