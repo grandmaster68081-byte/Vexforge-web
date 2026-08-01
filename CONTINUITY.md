@@ -1,6 +1,37 @@
 # VEXFORGE — CONTINUITY LOG
 
 
+## Chat 127 — 2026-08-01 — P6: Rutas públicas sin login — COMPLETADO
+
+**Branch:** main | **Commit:** `02873b5` | **Build:** ✅ 0 errores TS, 238 módulos
+
+### ✅ P6 implementado: /cards, /lore y /leaderboard públicos sin login
+
+**Diagnóstico previo (análisis integral):**
+- Las tres rutas no tenían `BlockedAuthState` en el código
+- Los datos Supabase (cards, lore_codex, get_leaderboard RPC) son accesibles con anon key
+- El problema era lenguaje que "pedía login" en CardsRoute ("Inicia sesión para ver tu colección") y ausencia de experiencia optimizada para visitantes
+
+**Implementación:**
+
+| Archivo | Cambio |
+|---------|--------|
+| `src/shared/components/GuestDiscoveryBanner.tsx` | Nuevo componente no bloqueante, dismissible (sessionStorage), con CTA "Crear cuenta" y diseño dark-fantasy coherente |
+| `src/routes/CardsRoute.tsx` | Banner para visitantes + subtítulo neutral "X cartas disponibles · Explora el compendio completo" (eliminado "Inicia sesión para ver tu colección") |
+| `src/routes/LoreRoute.tsx` | Banner GuestDiscovery + auth state tracking (supabase.auth.getSession) |
+| `src/routes/LeaderboardRoute.tsx` | Banner GuestDiscovery + auth state tracking |
+
+**Verificaciones:**
+- `npm run build` limpio, 0 errores TS ✅
+- `git push origin main` exitoso: commit `02873b5` ✅
+- Supabase anon key: cards ✅, lore_codex ✅, get_leaderboard RPC (SECURITY DEFINER) ✅
+
+### Estado para la próxima sesión
+- **P6** ✅ COMPLETADO — /cards, /lore y /leaderboard accesibles y optimizados para visitantes sin login
+- **M1** pendiente — SVG icons propios eliminando emojis del sistema (🏠🃏📦⚔️🏆📋...) → requires diseño SVG dark-fantasy para cada ítem del sidebar
+- Verificar en vexforge-web.pages.dev que el GuestDiscoveryBanner aparece correctamente en las tres rutas
+
+
 ## Chat 126 — 2026-08-01 — FIX DEFINITIVO: npm registry interno de Replit bloqueaba Cloudflare
 
 **Branch:** main | **Commits:** `74d29cc` → `1afe8d4` → `ee5a496` | **Prioridad:** CRÍTICA
