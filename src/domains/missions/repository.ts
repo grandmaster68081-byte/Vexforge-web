@@ -20,6 +20,8 @@ export interface MissionRunResult {
 export interface ClaimResult {
   success: boolean; xp_applied?: number;
   ingame_applied?: number; tradeable_applied?: number; reason?: string;
+  claimed?: boolean; idempotent?: boolean; mission_run_id?: string;
+  reference_id?: string;
 }
 
 async function getCurrentPlayerId(): Promise<string | null> {
@@ -29,22 +31,6 @@ async function getCurrentPlayerId(): Promise<string | null> {
     .from("players").select("id")
     .eq("auth_user_id", sessionData.session.user.id).maybeSingle();
   return data?.id ?? null;
-}
-
-/** U.2 chat79 — fire-and-forget notification on mission success. */
-async function insertMissionNotification(
-  playerId: string, missionName: string, result: MissionRunResult,
-): Promise<void> {
-  const parts: string[] = [];
-  if ((result.xp_reward       ?? 0) > 0) parts.push(`+${result.xp_reward} XP`);
-  if ((result.ingame_reward   ?? 0) > 0) parts.push(`+${result.ingame_reward} VEX`);
-  if ((result.tradeable_reward ?? 0) > 0) parts.push(`+${result.tradeable_reward} VEX-T`);
-  await supabase.from("player_notifications").insert({
-    player_id: playerId, type: "mission_reward",
-    title: "Misión completada",
-    message: `${missionName}: ${parts.join(" · ") || "recompensa recibida"}`,
-    icon: "🎯", link: "/missions", read: false,
-  });
 }
 
 export async function listActiveMissions(): Promise<DomainResult<Mission[]>> {
@@ -60,7 +46,7 @@ export async function listActiveMissions(): Promise<DomainResult<Mission[]>> {
 
 /**
  * R.3 chat78: real energy guard.
- * U.2 chat79: notification on success (fire-and-forget, never awaited).
+ * Mission completion notification is emitted by the authoritative DB trigger.
  */
 export async function executeMission(
   missionId: string, missionName = "Misión",
@@ -77,10 +63,16 @@ export async function executeMission(
   if (!result?.success) return { status: "ready", data: null, reason: result?.reason ?? "execution_failed" };
 
   if (result.run_id) {
-    const referenceId = `web-claim-${Date.now()}-${Math.random().toString(36).slice(2,7)}`;
-    await claimMissionReward(result.run_id, playerId, referenceId);
+    const referenceId = `mission:${result.run_id}`;
+    const claim = await claimMissionReward(result.run_id, playerId, referenceId);
+    if (!claim.data?.success) {
+      return {
+        status: "ready",
+        data: null,
+        reason: claim.reason ?? "mission_settlement_failed",
+      };
+    }
   }
-  insertMissionNotification(playerId, missionName, result); // U.2: never await
   return { status: "ready", data: { ...result, success: true } };
 }
 
@@ -91,5 +83,9 @@ export async function claimMissionReward(
     p_mission_run_id: runId, p_player_id: playerId, p_reference_id: referenceId,
   });
   if (error) return { status: "ready", data: null, reason: error.message };
-  return { status: "ready", data: { success: true, ...(data as object ?? {}) } as ClaimResult };
+  const result = data as (ClaimResult & { ok?: boolean }) | null;
+  if (!result || (result.success !== true && result.ok !== true)) {
+    return { status: "ready", data: null, reason: result?.reason ?? "mission_settlement_failed" };
+  }
+  return { status: "ready", data: { ...result, success: true } as ClaimResult };
 }

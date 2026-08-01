@@ -1,5 +1,36 @@
 # VEXFORGE — CONTINUITY LOG
 
+## Chat 133 — 2026-08-01 — T1-C: Settlement autoritativo e idempotente de misiones — COMPLETADO
+
+**Branch:** main | **Scope:** `pending → completed → claimed` sobre `mission_runs`
+
+### ✅ Estado real verificado
+
+- La auditoría viva confirmó que `execute_mission` descuenta energía y crea `mission_runs` en `pending`.
+- El enum `run_status` no contenía `completed`, aunque los triggers oficiales de finalización ya dependían de ese estado; se añadió únicamente ese valor, conservando el orden canónico `pending → active → completed → claimed`.
+- `claim_mission_reward` ahora bloquea la ejecución, transiciona atómicamente a `completed`, liquida VEX mediante `safe_wallet_transaction`, guarda `reward_reference_id` y finaliza en `claimed`.
+- Los reintentos sobre una ejecución `claimed` devuelven éxito idempotente sin volver a acreditar VEX, XP, logs ni recompensas.
+- XP y eventos de misión se activan únicamente al entrar en `completed`; la notificación queda en el trigger oficial de Supabase y se eliminó el insert duplicado del cliente.
+- El cliente usa la referencia determinista `mission:<run_id>` y ahora propaga cualquier fallo de settlement en lugar de mostrar una misión como completada.
+
+### Verificaciones
+
+- `npm run build` ✅ 240 módulos, 0 errores TypeScript
+- `git diff --check` ✅
+- Lockfile sin URLs internas de Replit ✅
+- `.nvmrc` raíz con Node `22` ✅
+- Enum `run_status`, función `claim_mission_reward` como `SECURITY DEFINER`, permisos y triggers de finalización verificados en Supabase ✅
+- Validaciones no destructivas con run nulo/inexistente devuelven `mission_run_not_found` ✅
+- Migraciones reproducibles:
+  - `backend/sql-migrations/T1-C-mission-run-completed-status.sql`
+  - `backend/sql-migrations/T1-C-mission-settlement.sql`
+
+### Estado para la próxima sesión
+
+- **T1-C** ✅ COMPLETADO — settlement autoritativo e idempotente de misiones
+- **Siguiente:** T1-D — auditar e implementar apertura y compra de packs con contratos vivos
+- Deploy live: pendiente de propagación externa de Cloudflare Pages según el bloqueo ya documentado
+
 
 ## Chat 132 — 2026-08-01 — T1-B: Regeneración autoritativa de energía — COMPLETADO
 
