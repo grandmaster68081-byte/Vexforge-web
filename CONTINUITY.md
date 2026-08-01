@@ -1,6 +1,41 @@
 # VEXFORGE — CONTINUITY LOG
 
 
+## Chat 129 — 2026-08-01 — J1: Selección de Campeón y preview de Formación — COMPLETADO
+
+**Branch:** main | **Base:** `9b11935` | **Build:** ✅ 0 errores TypeScript | **Scope:** `FormationSelector` + responsive de selección
+
+### ✅ J1 implementado
+
+- Se convirtió el selector previo al combate en una preparación táctica más clara: Vanguardia, Campeón y Centinela tienen lectura visual diferenciada y el Campeón ocupa el foco de la previsualización.
+- Se añadió una ficha del Campeón seleccionado con rareza, facción y estadísticas finales (`ATK`, `DEF`, `HP`) calculadas por la formación real.
+- Se añadió lectura de escuadra en tiempo real: cartas activas, cartas en reserva y estado de Formación Pura cuando corresponde.
+- Se muestra la dificultad del encuentro recibida desde `PvpRoute`.
+- Se sustituyeron los iconos emoji internos del selector por `ForgeIcon`, incluyendo badges de ranura, placeholders, tabs, instrucciones y acciones.
+- En pantallas de menos de 480px las ranuras y el panel de lectura pasan a una sola columna, con el Campeón priorizado visualmente.
+
+### Contratos preservados
+
+- `buildFormation` sigue siendo la única fuente para construir la previsualización y la formación confirmada.
+- `computeChampionBonus` mantiene sus fórmulas y se visualiza con la reserva resultante.
+- `hasFormationPureBonus` mantiene la regla oficial de pureza de facción.
+- `applyRelicEffects` y el flujo posterior de `PvpRoute` no fueron modificados.
+- `forgeFormation.ts` y `ForgeFormationBoard.tsx` no fueron modificados en J1.
+
+### Verificaciones
+
+- `npm run build` limpio: 240 módulos, 0 errores TypeScript ✅
+- `git diff --check` correcto ✅
+- Auditoría de `FormationSelector.tsx`: sin `meta.icon` ni emojis genéricos ✅
+- `dist/` regenerado para mantener el bundle publicado sincronizado ✅
+- Pendiente al cerrar: confirmar que Cloudflare Pages sirve el bundle del commit J1.
+
+### Estado para la próxima sesión
+
+- **J1** ✅ COMPLETADO — selección de Campeón, stats finales y preview de Formación
+- **Siguiente:** continuar con el siguiente bloque oficial tras verificar el deploy live.
+
+
 ## Chat 128 — 2026-08-01 — M1: Iconografía SVG VEXFORGE — COMPLETADO
 
 **Branch:** main | **Build:** ✅ 0 errores TypeScript | **Scope:** navegación global y sidebar

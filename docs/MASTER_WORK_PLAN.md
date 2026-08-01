@@ -1,5 +1,5 @@
 # VEXFORGE — MASTER WORK PLAN
-**Revisión 122 — Chat 95 — 2026-07-24**
+**Revisión 124 — Chat 129 — 2026-08-01**
 
 ---
 
@@ -11,7 +11,7 @@
 | Revisión | 122 |
 | Dominios live | 34 de 34 |
 | Archivos en Supabase | 207 |
-| Estado | **OPEN BETA READY** |
+| Estado | **OPEN BETA READY · J1 COMPLETADO** |
 | AN.4 Card Expansion | **DIFERIDO** (post-launch, cuando el owner decida nuevo set) |
 | Diferidos | Telegram, AM.* (ads), AN.4, AN.5 |
 
@@ -265,6 +265,17 @@ Los jugadores deben engancharse en los primeros 5 minutos y querer seguir jugand
 | AN.3: Insert row en vexforge_nft_contracts | Pendiente |
 | AL.3: Export Supabase → GitHub (Temus) | Pendiente |
 | AL.3: Deploy Cloudflare Pages | Pendiente |
+
+---
+
+## Revisión 124 — 2026-08-01 — J1: selección de Campeón y preview de Formación
+
+✅ **J1 completado.** Se reforzó la pantalla previa al combate PvP con una lectura táctica clara de Vanguardia, Campeón y Centinela, un Campeón destacado con estadísticas finales calculadas por `buildFormation`, bonus de reserva, estado de pureza de facción y contador de reserva. La dificultad del encuentro se muestra en la preparación y el layout colapsa a una sola columna por debajo de 480px.
+
+- Se conservaron sin cambios las reglas de `buildFormation`, `computeChampionBonus`, `hasFormationPureBonus`, la aplicación posterior de reliquias y el flujo de `PvpRoute`.
+- La selección usa iconografía SVG `ForgeIcon` también en las badges internas, sin emojis genéricos del sistema.
+- Verificación: `npm run build` limpio, `git diff --check` correcto y bundle `dist/` regenerado.
+- Próximo paso: continuar con el siguiente bloque oficial del plan después de verificar el deploy de Cloudflare Pages.
 
 ---
 

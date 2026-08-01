@@ -8365,6 +8365,15 @@ button:active { animation: chip-select-pop 0.15s ease; }
   .holo-legendary, .holo-mythic { animation-duration: 1.8s, 1.5s; }
   .card-aura-mythic { animation-duration: 3s; }
   .formation-slot-active { animation-duration: 0.2s; }
+  .forge-formation-selector .formation-tactical-grid {
+    grid-template-columns: 1fr !important;
+  }
+  .forge-formation-selector .formation-tactical-grid > div:nth-child(2) {
+    order: -1;
+  }
+  .forge-formation-selector .formation-readout-grid {
+    grid-template-columns: 1fr !important;
+  }
 }
 
 /* ─── FFE v2: Forge Ascension, Rage, Charge Orbs ────────────────────────────── */
