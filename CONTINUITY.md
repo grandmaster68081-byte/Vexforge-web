@@ -1,6 +1,34 @@
 # VEXFORGE — CONTINUITY LOG
 
 
+## Chat 131 — 2026-08-01 — T1-A: Contrato de Deck Builder — COMPLETADO
+
+**Branch:** main | **Base:** `0dcc673` | **Scope:** validación y persistencia autoritativa de mazos
+
+### ✅ Estado real verificado
+
+- La auditoría viva confirmó que la persistencia canónica usa `player_deck`; no se creó una tabla paralela `decks`.
+- `save_deck(uuid[])` y `validate_deck(uuid[])` ya existían en Supabase, pero tenían reglas divergentes: validación limitada a 20 cartas y guardado limitado a 30.
+- Se añadió `backend/sql-migrations/T1-A-deck-contract.sql` como fuente reproducible del contrato.
+- Ambas funciones quedaron alineadas con las reglas oficiales: mínimo 5, máximo 30, máximo 2 copias por carta, máximo 1 copia Legendary/Mythic, máximo 1 Mythic, máximo 3 Legendary y máximo 2 facciones.
+- Las funciones siguen siendo `SECURITY DEFINER`, validan propiedad mediante `player_cards`, y guardan slots en `player_deck` sin tocar economía, cartas, RLS de datos existentes ni combate.
+- La migración fue aplicada mediante la API oficial de Supabase y verificada por definición, firma y `security_definer=true`.
+
+### Verificaciones
+
+- `npm install` ✅
+- `npm run build` ✅ 240 módulos, 0 errores TypeScript
+- `git diff --check` ✅
+- Lockfile sin URLs internas de Replit ✅
+- `.nvmrc` raíz con Node `22` ✅
+- Commit y push a `main` ⏳ se ejecutan al cerrar este checkpoint
+
+### Estado para la próxima sesión
+
+- **T1-A** ✅ COMPLETADO — contrato de Deck Builder alineado y persistido
+- **Siguiente:** T1-B — auditar e implementar energía únicamente sobre columnas/contratos vivos
+
+
 ## ⚡ PRIORIDAD INMEDIATA DE LA PRÓXIMA SESIÓN — T1: Backend RPCs
 
 > **Leer esto primero.** El T0 confirmó que el frontend está completo pero el backend está roto.
