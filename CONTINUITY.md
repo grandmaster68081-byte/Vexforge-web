@@ -1,6 +1,25 @@
 # VEXFORGE — CONTINUITY LOG
 
 
+## ⚡ PRIORIDAD INMEDIATA DE LA PRÓXIMA SESIÓN — T1: Backend RPCs
+
+> **Leer esto primero.** El T0 confirmó que el frontend está completo pero el backend está roto.
+> La próxima IA debe atacar T1 sin más auditorías. El plan detallado está en
+> `vexforge_forge_formation_engine_v1` sección «PRIORIDAD MÁXIMA ACTUAL — T1».
+
+**RPCs que faltan (404 confirmado):** save_deck, validate_deck, vexforge_open_pack,
+vexforge_buy_pack_with_vex, execute_mission, claim_mission_reward,
+vexforge_attack_world_boss, vexforge_contribute_raid, vexforge_join_raid,
+vexforge_complete_raid, equip_relic, unequip_relic, start_pvp_match, get_player_rank.
+
+**Tablas que faltan:** decks, energy, battle_runs, raids, quests, shop_orders.
+
+**Orden de ataque T1:** T1-A decks → T1-B energy → T1-C missions → T1-D packs →
+T1-E relics RPCs → T1-F world boss RPC → T1-G raids → T1-H pvp.
+
+---
+
+
 
 ## Chat 130 — 2026-08-01 — T0: Reconciliación y Baseline Pre-Lanzamiento — COMPLETADO
 
