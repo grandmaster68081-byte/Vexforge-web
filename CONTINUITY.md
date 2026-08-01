@@ -1,5 +1,36 @@
 # VEXFORGE — CONTINUITY LOG
 
+## Chat 134 — 2026-08-01 — T1-D: Packs autoritativos e idempotentes — COMPLETADO
+
+**Branch:** main | **Scope:** compra VEX + apertura + persistencia de cartas
+
+### ✅ Estado real verificado
+
+- La auditoría viva confirmó que el catálogo canónico es `vexforge_pack_catalog` y que las órdenes viven en `vexforge_pack_orders`; no se crearon tablas paralelas.
+- `vexforge_buy_pack_with_vex(text)` ahora identifica al jugador desde `auth.uid()`, bloquea su wallet, valida saldo `vex_tradeable`, crea una orden directamente en `paid`, descuenta el saldo y registra `pack_purchase` en `economy_ledger`.
+- `vexforge_open_pack(uuid)` ahora acepta órdenes `paid`, usa las probabilidades y el `card_count` del catálogo vivo, acredita `player_cards` sobre la restricción única `(player_id, card_id)` y guarda el resultado completo en `vexforge_pack_orders.metadata`.
+- Reintentar una orden `fulfilled` devuelve las cartas guardadas sin volver a acreditar cartas, evitando doble apertura por refresh, doble click o reintento de red.
+- El cliente usa el contrato real: `vex_tradeable`, RPC de compra con sólo `p_pack_key`, `card_id`/`id` y estados `paid → fulfilled`.
+- No se alteraron cartas, probabilidades, precios, RLS ni tablas de economía; se añadió únicamente la migración reproducible `backend/sql-migrations/T1-D-pack-contract.sql`.
+
+### Verificaciones
+
+- `npm run build` ✅ 240 módulos, 0 errores TypeScript
+- `git diff --check` ✅
+- Lockfile sin URLs internas de Replit ✅
+- Catálogo activo: 5 packs ✅
+- RPCs vivas como `SECURITY DEFINER` y con `EXECUTE` para `authenticated` ✅
+- Probes sin autenticación devuelven `player_not_found` / `not_authenticated` ✅
+- Ordenes existentes antes y después de la migración: 0 ✅
+- Entradas de ledger `pack_purchase` creadas por la verificación: 0 ✅
+- Deploy live: HTTP 200; propagación del bundle nuevo pendiente de comprobar después del push ✅
+
+### Estado para la próxima sesión
+
+- **T1-D** ✅ COMPLETADO — compra y apertura de packs
+- **Siguiente:** T1-E — auditar y completar RPCs de equipar/desequipar reliquias
+- Cloudflare Pages queda sujeto a la propagación externa del commit publicado
+
 ## Chat 133 — 2026-08-01 — T1-C: Settlement autoritativo e idempotente de misiones — COMPLETADO
 
 **Branch:** main | **Scope:** `pending → completed → claimed` sobre `mission_runs`

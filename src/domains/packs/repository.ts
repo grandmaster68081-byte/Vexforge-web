@@ -24,7 +24,7 @@ import { supabase } from "../../lib/supabase";
     }
 
     export interface VexBalance {
-    vex_ingame: number;
+    vex_tradeable: number;
     }
 
     export interface CatalogPack {
@@ -93,12 +93,12 @@ import { supabase } from "../../lib/supabase";
 
     const { data, error } = await supabase
       .from("player_wallet")
-      .select("vex_ingame")
+      .select("vex_tradeable")
       .eq("player_id", playerId)
       .maybeSingle();
 
     if (error) return { status: "ready", data: null, reason: error.message };
-    return { status: "ready", data: (data as VexBalance) ?? { vex_ingame: 0 } };
+    return { status: "ready", data: (data as VexBalance) ?? { vex_tradeable: 0 } };
     }
 
     // ─── Pack order history ────────────────────────────────────────────────────────
@@ -146,7 +146,6 @@ import { supabase } from "../../lib/supabase";
     if (!playerId) return { ok: false, reason: "No autenticado." };
 
     const { data, error } = await supabase.rpc("vexforge_buy_pack_with_vex", {
-      p_player_id: playerId,
       p_pack_key: packKey,
     });
 
@@ -170,7 +169,15 @@ import { supabase } from "../../lib/supabase";
 
     if (error) return { ok: false, reason: error.message };
 
-    const res = data as { ok: boolean; cards?: OpenedCard[]; reason?: string };
-    return { ok: res?.ok ?? false, cards: res?.cards, reason: res?.reason };
+    const res = data as {
+      ok: boolean;
+      cards?: Array<OpenedCard & { card_id?: string }>;
+      reason?: string;
+    };
+    const cards = res?.cards?.map((card) => ({
+      ...card,
+      id: card.id ?? card.card_id ?? "",
+    }));
+    return { ok: res?.ok ?? false, cards, reason: res?.reason };
     }
     

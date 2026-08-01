@@ -51,7 +51,7 @@ import { useCallback, useEffect, useState } from "react";
         setAuthed(false);
       } else if (balRes.data) {
         setAuthed(true);
-        setVexBalance(balRes.data.vex_ingame);
+        setVexBalance(balRes.data.vex_tradeable);
       } else if (balRes.reason) {
         setError(balRes.reason);
       }
