@@ -1,6 +1,13 @@
-import { useEffect } from "react";
+import { useCallback, useState } from "react";
+import { supabase } from "../lib/supabase";
 import { useBosses } from "../domains/bosses/useBosses";
-import type { WorldBoss } from "../domains/bosses/repository";
+import { attackWorldBoss, getCurrentPlayerId } from "../domains/bosses/repository";
+import type { WorldBoss, WorldBossAttackResult } from "../domains/bosses/repository";
+import { loadPlayerBattleUnits, type AIDifficulty } from "../lib/aiBattleEngine";
+import type { BattleUnit } from "../lib/battleTypes";
+import type { FormationState } from "../lib/forgeFormation";
+import { FormationSelector } from "../components/battle/FormationSelector";
+import { ForgeFormationBoard } from "../components/battle/ForgeFormationBoard";
 import { PageLoader } from "../shared/components/PageLoader";
 import { BlockedAuthState } from "../shared/components/BlockedAuthState";
 import { EmptyState } from "../shared/components/EmptyState";
@@ -34,6 +41,20 @@ function getBossIcon(boss: WorldBoss): string {
   if (t === "t4") return "🔮"; if (t === "t3") return "💀";
   if (t === "t2") return "🌫️";
   return "🐉";
+}
+
+function getBossDifficulty(tier: string): AIDifficulty {
+  const tierNumber = Number(tier.replace(/^t/i, ""));
+  if (tierNumber >= 6) return "legend";
+  if (tierNumber >= 5) return "expert";
+  if (tierNumber >= 3) return "normal";
+  return "easy";
+}
+
+function getBattleDamage(result: ReturnType<typeof import("../lib/forgeFormation").simulateFormationBattle>): number {
+  return (result.turns ?? [])
+    .filter(turn => turn.atk_side === "a")
+    .reduce((total, turn) => total + Math.max(0, turn.damage ?? 0), 0);
 }
 
 function BossCard({ boss, onAttack, canAttack, attacking }: {
@@ -124,22 +145,124 @@ function BossCard({ boss, onAttack, canAttack, attacking }: {
 }
 
 export function WorldBossesRoute() {
-  const { bosses, encounters, authed, attacking, attackMsg, attack, reload } = useBosses();
+  const { bosses, encounters, authed, reload } = useBosses();
   const { addToast } = useToast();
+  const [bossUnits, setBossUnits] = useState<BattleUnit[] | null>(null);
+  const [bossFormation, setBossFormation] = useState<FormationState | null>(null);
+  const [selectedBoss, setSelectedBoss] = useState<WorldBoss | null>(null);
+  const [battleDifficulty, setBattleDifficulty] = useState<AIDifficulty>("normal");
+  const [battleLoading, setBattleLoading] = useState(false);
+  const [attackingBossId, setAttackingBossId] = useState<string | null>(null);
+  const [battleError, setBattleError] = useState<string | null>(null);
 
   const bossData      = bosses.data ?? [];
   const encounterData = encounters.data ?? [];
   const loading       = bosses.status === "loading";
   const error         = bosses.status === "ready" && !bosses.data ? "Error al cargar jefes mundiales" : null;
 
-  useEffect(() => {
-    if (!attackMsg) return;
-    if (attackMsg.includes("exitoso") || attackMsg.includes("Ataque")) addToast("success", attackMsg);
-    else addToast("error", "Error en el ataque", attackMsg);
-  }, [attackMsg]); // eslint-disable-line react-hooks/exhaustive-deps
+  const handleAttack = useCallback(async (bossId: string) => {
+    if (!authed) {
+      addToast("error", "Inicia sesión", "Debes estar autenticado para atacar jefes.");
+      return;
+    }
+    const boss = bossData.find(item => item.id === bossId);
+    if (!boss) return;
+
+    setBattleLoading(true);
+    setBattleError(null);
+    try {
+      const playerId = await getCurrentPlayerId();
+      if (!playerId) {
+        addToast("error", "Sesión expirada", "Vuelve a iniciar sesión para preparar el combate.");
+        return;
+      }
+      const units = await loadPlayerBattleUnits(supabase, playerId);
+      setSelectedBoss(boss);
+      setBattleDifficulty(getBossDifficulty(boss.tier));
+      setBossUnits(units);
+      setAttackingBossId(boss.id);
+    } catch (error) {
+      const reason = error instanceof Error ? error.message : "No se pudo preparar el combate.";
+      setBattleError(reason);
+      addToast("error", "No se pudo preparar el combate", reason);
+    } finally {
+      setBattleLoading(false);
+    }
+  }, [addToast, authed, bossData]);
+
+  const handleFormationConfirm = useCallback((formation: FormationState) => {
+    setBossUnits(null);
+    setBossFormation(formation);
+  }, []);
+
+  const dismissBattle = useCallback(() => {
+    setBossUnits(null);
+    setBossFormation(null);
+    setSelectedBoss(null);
+    setAttackingBossId(null);
+    setBattleError(null);
+  }, []);
+
+  const handleBattleComplete = useCallback(async (
+    won: boolean,
+    _championDied: boolean,
+    result: ReturnType<typeof import("../lib/forgeFormation").simulateFormationBattle>,
+  ) => {
+    const boss = selectedBoss;
+    const damage = getBattleDamage(result);
+    setBossFormation(null);
+    setSelectedBoss(null);
+    setAttackingBossId(null);
+    if (!boss) return;
+
+    if (!won) {
+      addToast("error", "Combate perdido", "El daño del combate no se registra hasta derrotar al rival.");
+      return;
+    }
+    const response = await attackWorldBoss(boss.id, damage);
+    const attackResult = response.data as WorldBossAttackResult | null;
+    if (response.status === "blocked_auth") {
+      addToast("error", "Inicia sesión", response.reason ?? "Tu sesión ya no está activa.");
+    } else if (attackResult?.ok) {
+      addToast(
+        "success",
+        `¡Daño aplicado a ${attackResult.boss_name ?? boss.name}!`,
+        `${attackResult.damage_dealt?.toLocaleString() ?? damage.toLocaleString()} de daño · ${attackResult.remaining_hp?.toLocaleString() ?? "?"} HP restantes`,
+      );
+      reload();
+    } else {
+      addToast("error", "Daño no registrado", response.reason ?? attackResult?.reason ?? "No se pudo actualizar el jefe.");
+    }
+  }, [addToast, reload, selectedBoss]);
 
   if (loading) return <PageLoader />;
   if (error)   return <ErrorState message={error} onRetry={reload} />;
+  if (battleLoading) return <PageLoader />;
+  if (battleError) {
+    return <ErrorState message={battleError} onRetry={() => { setBattleError(null); }} />;
+  }
+  if (bossUnits && !bossFormation && selectedBoss) {
+    return (
+      <FormationSelector
+        playerUnits={bossUnits}
+        onConfirm={handleFormationConfirm}
+        onCancel={dismissBattle}
+        difficulty={battleDifficulty}
+      />
+    );
+  }
+  if (bossFormation && selectedBoss) {
+    return (
+      <ForgeFormationBoard
+        initialFormation={bossFormation}
+        playerName="Tú"
+        opponentName={selectedBoss.name}
+        difficulty={battleDifficulty}
+        onComplete={handleBattleComplete}
+        onDismiss={dismissBattle}
+      />
+    );
+  }
 
   return (
     <div className="route-wrapper" style={{ backgroundImage: `url(${BG_URL})` }}>
@@ -182,9 +305,9 @@ export function WorldBossesRoute() {
                 <BossCard
                   key={boss.id}
                   boss={boss}
-                  onAttack={attack}
+                  onAttack={handleAttack}
                   canAttack={authed}
-                  attacking={attacking}
+                  attacking={attackingBossId === boss.id}
                 />
               ))}
             </div>

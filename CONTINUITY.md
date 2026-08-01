@@ -1,4 +1,38 @@
 # VEXFORGE — CONTINUITY LOG
+## Chat 120 — 2026-08-01 — P3: Jefes del Mundo con combate ForgeFormation real
+
+**Branch:** main | **Build:** ✅ `npm run build` limpio | **TypeScript:** ✅ `npx tsc --noEmit` limpio
+
+### ✅ Implementado
+
+- `WorldBossesRoute.tsx` ya no ejecuta un ataque automático desde el botón.
+- El ataque carga las unidades reales del jugador y abre `FormationSelector`.
+- La formación confirmada entra en `ForgeFormationBoard` con dificultad derivada del tier del jefe: T1–T2 → easy, T3–T4 → normal, T5 → expert, T6 → legend.
+- Solo una victoria del combate envía el daño producido por los turnos del jugador al RPC oficial `vexforge_attack_world_boss`.
+- Una derrota o el cierre del combate no registra daño ni recompensa.
+- El resultado muestra el daño aplicado y el HP global restante; la pantalla se recarga para reflejar el estado compartido.
+- `ForgeFormationBoard` conserva sus consumidores existentes y ahora entrega el resultado completo al callback de finalización.
+
+### ✅ Supabase
+
+- Se actualizó `vexforge_attack_world_boss` sin crear tablas ni alterar fórmulas de recompensas.
+- El RPC obtiene el jugador desde `auth.uid()`, bloquea el jefe con `FOR UPDATE`, suma solo encuentros `completed`, limita el daño al HP restante y registra cada victoria como `completed`.
+- Se verificó la función viva, sus permisos para `authenticated` y el progreso global de los 15 jefes activos.
+
+### Verificación
+
+- `npm run build`: ✅ limpio, 238 módulos.
+- `npx tsc --noEmit`: ✅ limpio.
+- `git diff --check`: ✅ limpio.
+- Deploy pendiente de reflejar el nuevo commit tras el push a `main`.
+
+### Estado para la próxima sesión
+
+1. Verificar que `https://vexforge-web.pages.dev/world-bosses` sirve el commit de P3 tras el auto-deploy.
+2. Continuar con P4 — Reliquias con efectos reales sobre el Campeón.
+
+---
+
 ## Chat 119 — 2026-08-01 — P2: Raids con combate ForgeFormation real
 
 **Branch:** main | **Build:** ✅ `npm run build` limpio | **TypeScript:** ✅ `npx tsc --noEmit` limpio | **Deploy:** Cloudflare Pages desde `main`

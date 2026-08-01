@@ -15,6 +15,19 @@ export interface BossEncounter {
   status: string; created_at: string;
 }
 
+export interface WorldBossAttackResult {
+  ok: boolean;
+  boss_name?: string;
+  boss_tier?: string;
+  damage_dealt?: number;
+  damage_dealt_total?: number;
+  remaining_hp?: number;
+  max_hp?: number;
+  reward?: Record<string, any>;
+  encounter_id?: string;
+  reason?: string;
+}
+
 export async function getCurrentPlayerId(): Promise<string | null> {
   const { data: s } = await supabase.auth.getSession();
   if (!s.session) return null;
@@ -41,13 +54,19 @@ export async function getMyEncounters(): Promise<DomainResult<BossEncounter[]>> 
   return { status: "ready", data: (data ?? []) as BossEncounter[] };
 }
 
-export async function attackWorldBoss(bossId: string): Promise<DomainResult<{ ok: boolean; message?: string; reward?: Record<string, any> }>> {
-  const playerId = await getCurrentPlayerId();
-  if (!playerId) return { status: "blocked_auth", data: null, reason: "Inicia sesion para atacar." };
-  const { data, error } = await supabase.rpc("attack_world_boss", { p_boss_id: bossId, p_player_id: playerId });
-  if (error) return { status: "ready", data: { ok: false, message: error.message }, reason: error.message };
-  const res = data as any;
-  const ok = res?.status === "completed" || res?.ok !== false;
-  const reward = res?.reward_json ?? res?.reward ?? null;
-  return { status: "ready", data: { ok, reward, message: ok ? "Ataque exitoso!" : (res?.reason ?? "Error en el ataque.") } };
+export async function attackWorldBoss(
+  bossId: string,
+  damage: number,
+): Promise<DomainResult<WorldBossAttackResult>> {
+  const { data, error } = await supabase.rpc("vexforge_attack_world_boss", {
+    p_world_boss_id: bossId,
+    p_damage: Math.max(1, Math.floor(damage)),
+  });
+  if (error) return { status: "ready", data: { ok: false, reason: error.message }, reason: error.message };
+  const result = data as WorldBossAttackResult;
+  return {
+    status: result?.reason === "Not authenticated" ? "blocked_auth" : "ready",
+    data: result,
+    reason: result?.ok ? undefined : (result?.reason ?? "Error en el ataque."),
+  };
 }

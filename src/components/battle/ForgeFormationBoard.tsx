@@ -1667,7 +1667,11 @@ export interface ForgeFormationBoardProps {
   playerName?: string;
   opponentName?: string;
   difficulty: AIDifficulty;
-  onComplete: (won: boolean, championDied: boolean) => void;
+  onComplete: (
+    won: boolean,
+    championDied: boolean,
+    result: ReturnType<typeof simulateFormationBattle>,
+  ) => void;
   onDismiss: () => void;
 }
 
@@ -1771,14 +1775,14 @@ export function ForgeFormationBoard({
       if (championDied) {
         setPhase('champion_dead');
         try { (AudioEngine as any).sfxKillV2?.(); } catch { /* ok */ }
-        setTimeout(() => { setPhase('done'); onComplete(false, true); }, 4200);
+        setTimeout(() => { setPhase('done'); onComplete(false, true, battleResult.current); }, 4200);
       } else {
         setPhase('done');
         try {
           if (won) (AudioEngine as any).sfxLevelUp?.();
           else     (AudioEngine as any).sfxKillV2?.();
         } catch { /* ok */ }
-        setTimeout(() => onComplete(won, false), 600);
+        setTimeout(() => onComplete(won, false, battleResult.current), 600);
       }
       return;
     }
