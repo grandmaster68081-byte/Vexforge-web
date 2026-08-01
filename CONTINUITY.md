@@ -30,6 +30,7 @@
 - **T1-C** ✅ COMPLETADO — settlement autoritativo e idempotente de misiones
 - **Siguiente:** T1-D — auditar e implementar apertura y compra de packs con contratos vivos
 - Deploy live: pendiente de propagación externa de Cloudflare Pages según el bloqueo ya documentado
+- Verificación posterior al push: `https://vexforge-web.pages.dev/` responde HTTP 200, pero aún sirve `index-DvEOnxzY.js` del bundle anterior; el commit `09a021c` y el bundle local actual ya están en GitHub `main`.
 
 
 ## Chat 132 — 2026-08-01 — T1-B: Regeneración autoritativa de energía — COMPLETADO
