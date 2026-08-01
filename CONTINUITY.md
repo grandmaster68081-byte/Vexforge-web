@@ -28,12 +28,12 @@
 - `git diff --check` correcto ✅
 - Auditoría de `FormationSelector.tsx`: sin `meta.icon` ni emojis genéricos ✅
 - `dist/` regenerado para mantener el bundle publicado sincronizado ✅
-- Pendiente al cerrar: confirmar que Cloudflare Pages sirve el bundle del commit J1.
+- Cloudflare Pages verificado: HTTP 200 y bundle J1 servido (`index-BxiYsAHy.js` / `index-D7i0qsEk.css`) ✅
 
 ### Estado para la próxima sesión
 
 - **J1** ✅ COMPLETADO — selección de Campeón, stats finales y preview de Formación
-- **Siguiente:** continuar con el siguiente bloque oficial tras verificar el deploy live.
+- **Siguiente:** continuar con el siguiente bloque oficial; el deploy live de J1 ya está verificado.
 
 
 ## Chat 128 — 2026-08-01 — M1: Iconografía SVG VEXFORGE — COMPLETADO

@@ -275,7 +275,8 @@ Los jugadores deben engancharse en los primeros 5 minutos y querer seguir jugand
 - Se conservaron sin cambios las reglas de `buildFormation`, `computeChampionBonus`, `hasFormationPureBonus`, la aplicación posterior de reliquias y el flujo de `PvpRoute`.
 - La selección usa iconografía SVG `ForgeIcon` también en las badges internas, sin emojis genéricos del sistema.
 - Verificación: `npm run build` limpio, `git diff --check` correcto y bundle `dist/` regenerado.
-- Próximo paso: continuar con el siguiente bloque oficial del plan después de verificar el deploy de Cloudflare Pages.
+- Cloudflare Pages verificado: HTTP 200 y bundle J1 servido correctamente (`index-BxiYsAHy.js` / `index-D7i0qsEk.css`) ✅
+- Próximo paso: continuar con el siguiente bloque oficial del plan.
 
 ---
 
