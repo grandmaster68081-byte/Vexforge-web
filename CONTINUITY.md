@@ -1,4 +1,38 @@
 # VEXFORGE — CONTINUITY LOG
+## Chat 122 — 2026-08-01 — Auditoría P4: Reliquias bloqueadas por contrato oficial ausente
+
+**Branch:** main | **Base auditada:** `7282b68` | **Build previo:** ✅ `npm install` + `npm run build` limpios
+
+### ✅ Verificado antes de modificar
+
+- Se clonó el repositorio oficial `grandmaster68081-byte/Vexforge-web` y se leyó este log, el Protocolo Maestro y el plan activo.
+- El código real confirma que `RelicsRoute.tsx` sólo lista el catálogo público de `relics`; no existe flujo de propiedad, equipamiento o aplicación de reliquias al Campeón.
+- El esquema vivo contiene `relics` con 20 registros canónicos y los campos `id`, `code`, `name`, `effect_type`, `effect_value` y `metadata`.
+- El esquema vivo no contiene `player_relics`; la consulta devuelve `PGRST205` porque la tabla no existe.
+- `inventory` sólo contiene `consumable`, `cosmetic`, `boost`, `key`, `pass` y `fragment`; no contiene reliquias equipables.
+- No existe en el frontend ni en las migraciones/RPCs publicadas un contrato oficial para poseer, equipar, desequipar o aplicar reliquias durante `ForgeFormationBoard`.
+- Los documentos oficiales de combate, cartas y economía no definen una relación de reliquias con el jugador o el Campeón.
+
+### ⛔ Bloqueo oficial de P4
+
+- P4 exige reliquias con efectos reales sobre el Campeón, equipar/desequipar y reflejo en combate.
+- Implementarlo ahora requeriría inventar al menos una tabla o relación de propiedad, un flujo de equipamiento y un contrato de aplicación de efectos; eso contradice las reglas de preservación del Protocolo Maestro.
+- No se crearon tablas, columnas, RPCs, políticas RLS, fórmulas, datos ni UI simulada.
+- P4 queda **bloqueado por falta de contrato oficial de propiedad/equipamiento**. No se inicia P5 ni se declara P4 implementado.
+
+### Verificación de sesión
+
+- `npm install --no-audit --no-fund`: ✅
+- `npm run build`: ✅ Vite limpio, 238 módulos, 0 errores TypeScript
+- La auditoría fue sólo de lectura sobre Supabase; no se alteraron datos de juego.
+
+### Estado para la próxima sesión
+
+1. El owner/protocolo debe proporcionar o aprobar el contrato oficial de propiedad y equipamiento de reliquias, incluyendo RLS, RPCs, límites y aplicación al Campeón.
+2. Con ese contrato disponible, implementar P4 encajando en el esquema existente y verificarlo antes de continuar con P5.
+
+---
+
 ## Chat 121 — 2026-08-01 — Cierre de verificación P3
 
 **Branch:** main | **Commit de P3:** `5bdb52fbae71fdb7fc95a9cdc199fbe288ab4041` | **Build:** ✅ `npm run build` limpio
