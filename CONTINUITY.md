@@ -31,6 +31,13 @@
 - **Siguiente:** T1-E — auditar y completar RPCs de equipar/desequipar reliquias
 - Cloudflare Pages queda sujeto a la propagación externa del commit publicado
 
+### Verificación posterior al push
+
+- GitHub `main` contiene `d7de852` y coincide con el checkout local ✅
+- `https://vexforge-web.pages.dev/` responde HTTP 200 ✅
+- Cloudflare Pages todavía entrega `index-C8Pz_i6C.js` y no el bundle generado por T1-D (`index-aWvvdZ39.js`) ❌
+- El lote queda implementado y publicado en GitHub/Supabase; la propagación live sigue bloqueada por el pipeline externo de Cloudflare Pages, no por el build ni por el contrato de packs.
+
 ## Chat 133 — 2026-08-01 — T1-C: Settlement autoritativo e idempotente de misiones — COMPLETADO
 
 **Branch:** main | **Scope:** `pending → completed → claimed` sobre `mission_runs`
