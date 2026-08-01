@@ -4,7 +4,7 @@ import { supabase } from "../../lib/supabase";
 interface EnergyState {
   energy: number;
   max_energy: number;
-  updated_at: string | null;
+  energy_last_regen: string | null;
 }
 
 const REFILL_PERIOD = 600; // seconds — +1 energy every 10 min
@@ -20,7 +20,7 @@ function calcSecsUntil(updatedAt: string | null, energy: number, max: number): n
  *   1. Montaje inicial.
  *   2. Evento global 'vexforge:energy-updated' (dispatched por useMissions.execute post-misión).
  *   3. Cambio de estado de autenticación.
- * T.4: Countdown timer — muestra "en Xm Ys" hasta la próxima recarga.
+ * T1-B: the countdown uses the server-authoritative regeneration timestamp.
  */
 export function EnergyBar() {
   const [state, setState] = useState<EnergyState | null>(null);
@@ -29,14 +29,16 @@ export function EnergyBar() {
   const load = useCallback(async () => {
     const { data: { session } } = await supabase.auth.getSession();
     if (!session) { setState(null); return; }
+    const { error: syncError } = await supabase.rpc("sync_player_energy");
+    if (syncError) return;
     const { data } = await supabase
       .from("player_progress")
-      .select("energy, max_energy, updated_at")
+      .select("energy, max_energy, energy_last_regen")
       .maybeSingle();
     if (data) setState({
       energy:     data.energy     ?? 0,
       max_energy: data.max_energy ?? 100,
-      updated_at: data.updated_at ?? null,
+      energy_last_regen: data.energy_last_regen ?? null,
     });
   }, []);
 
@@ -53,7 +55,7 @@ export function EnergyBar() {
   // T.4: countdown ticker
   useEffect(() => {
     if (!state) return;
-    const tick = () => setSecsUntil(calcSecsUntil(state.updated_at, state.energy, state.max_energy));
+    const tick = () => setSecsUntil(calcSecsUntil(state.energy_last_regen, state.energy, state.max_energy));
     tick();
     if (state.energy >= state.max_energy) return;
     const id = setInterval(tick, 1000);

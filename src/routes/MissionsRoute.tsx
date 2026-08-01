@@ -455,7 +455,7 @@ export function MissionsRoute() {
   const { progress } = useProgress();
   const energy    = progress?.energy    ?? 0;
   const maxEnergy = progress?.max_energy ?? 100;
-  const energyUpdatedAt = progress?.updated_at;
+  const energyUpdatedAt = progress?.energy_last_regen ?? undefined;
 
   const {
     missions, loading, execute, executing, lastReward, cooldownRemaining,

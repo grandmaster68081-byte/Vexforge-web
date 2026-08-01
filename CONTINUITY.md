@@ -1,6 +1,36 @@
 # VEXFORGE — CONTINUITY LOG
 
 
+## Chat 132 — 2026-08-01 — T1-B: Regeneración autoritativa de energía — COMPLETADO
+
+**Branch:** main | **Base:** `4583d93` | **Scope:** contrato vivo de energía sobre `player_progress`
+
+### ✅ Estado real verificado
+
+- La auditoría confirmó que la energía canónica ya vive en `player_progress`; no se creó una tabla paralela `energy`.
+- Se añadió `energy_last_regen` como marcador persistente para calcular +1 energía cada 10 minutos sin depender de escrituras periódicas del cliente.
+- Se añadió `refresh_player_energy(uuid)` con `SECURITY DEFINER`, bloqueo de fila y tope transaccional en `max_energy`.
+- Se añadió `sync_player_energy()` para que el cliente sincronice la regeneración antes de leer progreso; sólo está expuesto a `authenticated`.
+- `execute_mission(p_player, p_mission)` conserva su firma real y ahora sincroniza la regeneración antes de validar cooldown, energía y descontar el coste.
+- El trigger de inicialización de nuevos jugadores queda alineado para establecer `energy_last_regen` al crear `player_progress`.
+- El cliente usa el timestamp autoritativo en `getProgress`, `EnergyBar` y `MissionsRoute`; el contador visual ya no usa `updated_at` compartido con XP u otras progresiones.
+
+### Verificaciones
+
+- Auditoría de columnas, constraints, RLS, triggers y datos vivos ✅
+- Migración `backend/sql-migrations/T1-B-energy-contract.sql` aplicada mediante la API oficial de Supabase ✅
+- `player_progress` sin filas con energía fuera de rango ✅
+- `npm run build` ✅ 240 módulos, 0 errores TypeScript
+- `git diff --check` ✅
+- Lockfile sin URLs internas de Replit ✅
+- `.nvmrc` raíz con Node `22` ✅
+
+### Estado para la próxima sesión
+
+- **T1-B** ✅ COMPLETADO — regeneración y consumo de energía sobre el contrato canónico
+- **Siguiente:** T1-C — auditar e implementar `execute_mission` y `claim_mission_reward` como settlement autoritativo/idempotente, reutilizando las tablas y triggers vivos
+
+
 ## Chat 131 — 2026-08-01 — T1-A: Contrato de Deck Builder — COMPLETADO
 
 **Branch:** main | **Base:** `0dcc673` | **Scope:** validación y persistencia autoritativa de mazos
