@@ -901,6 +901,201 @@ function UnitSummonCinematic({
   );
 }
 
+// ─── P5: Reserve Activated Cinematic — compact, urgent, distinct from invoke ───
+// 2000ms flat for all rarities — slam-down from top, emergency color palette
+function ReserveActivatedCinematic({
+  unit, slot, onDone,
+}: { unit: BattleUnit; slot: FormationSlot; onDone: () => void }) {
+  const fac  = getFactionStyle(unit.faction ?? '');
+  const rar  = RARITY_COLOR[unit.rarity] ?? '#8b8b9e';
+  const slotLabel = SLOT_LABEL_MAP[slot] ?? slot.toUpperCase();
+  const urgentColor = '#e85d04'; // warm orange — distinct from any invoke palette
+  const kwFx = KEYWORD_SUMMON_FX[(unit.keywords ?? [])[0] ?? ''] ?? null;
+
+  const [stage, setStage] = useState(0);
+  useEffect(() => {
+    const t1 = setTimeout(() => setStage(1), 80);
+    const t2 = setTimeout(() => setStage(2), 480);
+    const t3 = setTimeout(() => onDone(), 2000);
+    try { (AudioEngine as any).sfxDrawCard?.(); } catch { /* ok */ }
+    return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  return (
+    <div style={{
+      position: 'absolute', inset: 0, zIndex: 58,
+      background: 'radial-gradient(ellipse at 50% 0%, rgba(120,30,0,0.85) 0%, rgba(8,4,2,0.98) 55%)',
+      overflow: 'hidden', display: 'flex', flexDirection: 'column',
+      alignItems: 'center', justifyContent: 'center',
+    }}>
+      <style>{`
+        @keyframes rsv-slam {
+          0%   { transform: translateY(-60px) scale(0.7) rotateX(25deg); opacity: 0; filter: brightness(2.5) blur(6px); }
+          55%  { transform: translateY(6px) scale(1.06) rotateX(-3deg);  opacity: 1; filter: brightness(1.3) blur(0); }
+          75%  { transform: translateY(-2px) scale(1.02) rotateX(0deg);  opacity: 1; filter: brightness(1); }
+          100% { transform: translateY(0) scale(1) rotateX(0deg);        opacity: 1; filter: brightness(1); }
+        }
+        @keyframes rsv-banner {
+          0%   { transform: scaleX(0); opacity: 0; }
+          60%  { transform: scaleX(1.06); opacity: 1; }
+          100% { transform: scaleX(1); opacity: 1; }
+        }
+        @keyframes rsv-text-in {
+          0%   { opacity: 0; letter-spacing: 0.7em; transform: translateX(8px); }
+          100% { opacity: 1; letter-spacing: 0.22em; transform: translateX(0); }
+        }
+        @keyframes rsv-scan {
+          0%   { transform: translateY(-100%); opacity: 0.5; }
+          100% { transform: translateY(200%);  opacity: 0; }
+        }
+        @keyframes rsv-corner {
+          0%   { opacity: 0; transform: scale(0.3); }
+          100% { opacity: 1; transform: scale(1); }
+        }
+        @keyframes rsv-pulse {
+          0%,100% { box-shadow: 0 0 20px ${urgentColor}66; }
+          50%      { box-shadow: 0 0 40px ${urgentColor}cc, 0 0 80px ${urgentColor}44; }
+        }
+      `}</style>
+
+      {/* Scan line — emergency feel */}
+      <div style={{
+        position: 'absolute', inset: 0, pointerEvents: 'none',
+        overflow: 'hidden',
+      }}>
+        <div style={{
+          position: 'absolute', left: 0, right: 0, height: 3,
+          background: `linear-gradient(90deg, transparent, ${urgentColor}88, transparent)`,
+          animation: stage >= 1 ? 'rsv-scan 0.7s ease-in-out 0.1s both' : 'none',
+        }} />
+      </div>
+
+      {/* Top banner: RESERVA ACTIVADA */}
+      <div style={{
+        position: 'absolute', top: 24, left: 0, right: 0,
+        display: 'flex', justifyContent: 'center',
+      }}>
+        <div style={{
+          background: `linear-gradient(90deg, transparent, ${urgentColor}30, ${urgentColor}55, ${urgentColor}30, transparent)`,
+          borderTop: `1px solid ${urgentColor}66`,
+          borderBottom: `1px solid ${urgentColor}66`,
+          padding: '5px 0', width: '100%', textAlign: 'center',
+          transformOrigin: 'center',
+          animation: stage >= 1 ? 'rsv-banner 0.35s cubic-bezier(0.22,1,0.36,1) 0.08s both' : 'none',
+        }}>
+          <span style={{
+            fontFamily: '"Cinzel",serif', fontWeight: 900, fontSize: 11,
+            color: urgentColor, letterSpacing: '0.22em',
+            textShadow: `0 0 18px ${urgentColor}cc`,
+            animation: stage >= 1 ? 'rsv-text-in 0.4s ease-out 0.18s both' : 'none',
+            display: 'inline-block',
+          }}>⚡ RESERVA ACTIVADA</span>
+        </div>
+      </div>
+
+      {/* Corner accent — urgency markers */}
+      {[{ top:4,left:4 }, { top:4,right:4 }, { bottom:4,left:4 }, { bottom:4,right:4 }].map((pos, i) => (
+        <div key={i} style={{
+          position: 'absolute', ...pos,
+          width: 14, height: 14,
+          borderTop: i < 2 ? `2px solid ${urgentColor}aa` : 'none',
+          borderBottom: i >= 2 ? `2px solid ${urgentColor}aa` : 'none',
+          borderLeft: (i === 0 || i === 2) ? `2px solid ${urgentColor}aa` : 'none',
+          borderRight: (i === 1 || i === 3) ? `2px solid ${urgentColor}aa` : 'none',
+          animation: stage >= 1 ? `rsv-corner 0.3s ease-out ${i * 0.05}s both` : 'none',
+        }} />
+      ))}
+
+      {/* Card slam block */}
+      <div style={{
+        display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 10,
+        animation: stage >= 1 ? 'rsv-slam 0.5s cubic-bezier(0.22,1,0.36,1) 0.05s both' : 'none',
+      }}>
+        {/* Card art frame */}
+        <div style={{
+          width: 76, height: 100,
+          border: `2px solid ${rar}`,
+          borderRadius: 8,
+          background: `radial-gradient(ellipse at 50% 30%, ${fac.glow.replace('0.8','0.25')} 0%, rgba(4,4,12,0.95) 100%)`,
+          display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+          gap: 4, position: 'relative', overflow: 'hidden',
+          animation: stage >= 2 ? 'rsv-pulse 1.2s ease-in-out infinite' : 'none',
+        }}>
+          {/* Faction emoji / image */}
+          {unit.image_url ? (
+            <img src={unit.image_url} alt={unit.name}
+              style={{ width: 64, height: 72, objectFit: 'cover', borderRadius: 5, opacity: 0.92 }} />
+          ) : (
+            <div style={{ fontSize: 32, lineHeight: 1 }}>{fac.particle}</div>
+          )}
+          {/* Rarity tint overlay */}
+          <div style={{
+            position: 'absolute', inset: 0, borderRadius: 7,
+            background: `linear-gradient(180deg, transparent 50%, ${rar}22 100%)`,
+            pointerEvents: 'none',
+          }} />
+          {/* Slot badge */}
+          <div style={{
+            position: 'absolute', top: 3, right: 3,
+            background: `${urgentColor}33`, border: `1px solid ${urgentColor}66`,
+            borderRadius: 4, padding: '1px 4px',
+            fontSize: 7, fontFamily: '"Rajdhani",sans-serif',
+            fontWeight: 700, color: urgentColor, letterSpacing: '0.06em',
+          }}>{slotLabel.slice(0, 3)}</div>
+        </div>
+
+        {/* Card name */}
+        <div style={{
+          fontFamily: '"Cinzel",serif', fontWeight: 900,
+          fontSize: 'clamp(13px,2.8vw,18px)',
+          color: '#eaeaf8',
+          textShadow: `0 0 24px ${fac.glow}`,
+          textAlign: 'center', maxWidth: 200,
+          animation: stage >= 1 ? 'rsv-text-in 0.4s ease-out 0.25s both' : 'none',
+        }}>{unit.name}</div>
+
+        {/* Keyword badges */}
+        {(unit.keywords ?? []).length > 0 && (
+          <div style={{
+            display: 'flex', gap: 4, flexWrap: 'wrap', justifyContent: 'center',
+            animation: stage >= 1 ? 'rsv-text-in 0.3s ease-out 0.36s both' : 'none',
+          }}>
+            {(unit.keywords ?? []).slice(0, 2).map(kw => {
+              const fx = KEYWORD_SUMMON_FX[kw];
+              if (!fx) return null;
+              return (
+                <div key={kw} style={{
+                  padding: '2px 6px', borderRadius: 20,
+                  border: `1px solid ${fx.color}55`, background: `${fx.color}18`,
+                  fontSize: 8, fontFamily: '"Rajdhani",sans-serif',
+                  fontWeight: 700, color: fx.color, letterSpacing: '0.06em',
+                }}>{fx.emoji[0]} {kw.toUpperCase()}</div>
+              );
+            })}
+          </div>
+        )}
+
+        {/* Slot label bottom */}
+        <div style={{
+          fontFamily: '"Rajdhani",sans-serif', fontWeight: 700, fontSize: 9,
+          color: kwFx?.color ?? urgentColor, letterSpacing: '0.3em',
+          textShadow: `0 0 10px ${urgentColor}88`,
+          animation: stage >= 1 ? 'rsv-text-in 0.3s ease-out 0.42s both' : 'none',
+        }}>▶ ENTRA A {slotLabel}</div>
+      </div>
+
+      {/* Bottom glow bar */}
+      <div style={{
+        position: 'absolute', bottom: 0, left: 0, right: 0, height: 3,
+        background: `linear-gradient(90deg, transparent, ${urgentColor}, transparent)`,
+        opacity: stage >= 1 ? 0.7 : 0,
+        transition: 'opacity 0.3s',
+      }} />
+    </div>
+  );
+}
+
 // ─── Forge Ascension Overlay (2s cinematic) ────────────────────────────────────
 function ForgeAscensionOverlay({ champion, onDone }: { champion: BattleUnit; onDone: () => void }) {
   useEffect(() => {
@@ -2407,9 +2602,9 @@ export function ForgeFormationBoard({
           />
         )}
 
-        {/* B1: Unit Summon Cinematic for reserve replacements */}
+        {/* P5: Reserve Activated Cinematic — compact slam-down, urgent palette */}
         {summoningUnit && summoningSlot && (
-          <UnitSummonCinematic
+          <ReserveActivatedCinematic
             unit={summoningUnit}
             slot={summoningSlot}
             onDone={handleUnitSummonDone}
