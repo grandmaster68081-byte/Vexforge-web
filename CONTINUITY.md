@@ -1,6 +1,52 @@
 # VEXFORGE — CONTINUITY LOG
 
-## Chat 126 — 2026-08-01 — FIX CRÍTICO: .nvmrc raíz → Cloudflare deploy restaurado
+
+## Chat 126 — 2026-08-01 — FIX DEFINITIVO: npm registry interno de Replit bloqueaba Cloudflare
+
+**Branch:** main | **Commits:** `74d29cc` → `1afe8d4` → `ee5a496` | **Prioridad:** CRÍTICA
+
+### ✅ Diagnóstico definitivo (3 iteraciones de error analizadas)
+
+**Síntoma:** `npm error Exit handler never called!` — npm cuelga ~70s y muere en el step de `npm clean-install` de Cloudflare Pages.
+
+**Causa raíz real (identificada en 3ª iteración):**
+Todo el `package-lock.json` tenía URLs `http://package-firewall.replit.local/npm/...` — el proxy de paquetes **interno de Replit**. Cloudflare no puede alcanzar esa URL privada → npm espera 70s el timeout de conexión → crash.
+
+**Cadena de errores:**
+- Error 1: Node 22.16.0 → `.nvmrc` en subdirectorio `vexforge/` (no en raíz del repo)
+- Error 2: Node 18 → `@supabase/supabase-js@2.111.0` requiere `node >=22` (engines mismatch)
+- Error 3 (causa real): lockfile con URLs de Replit → `package-firewall.replit.local` inaccesible desde Cloudflare
+
+### ✅ Tres fixes acumulativos aplicados
+
+| Commit | Fix |
+|--------|-----|
+| `74d29cc` | `.nvmrc` movido a raíz del repo (antes en `vexforge/` — subdir ignorado) |
+| `1afe8d4` | `.nvmrc` actualizado a `22` (supabase requiere >=22) |
+| `ee5a496` | **Fix definitivo**: lockfile regenarado con URLs `https://registry.npmjs.org/` + `.npmrc` con registry público + `wrangler` removido de devDeps (no se necesita en build de Cloudflare) |
+
+**Verificaciones antes del push final:**
+- `iceberg-js@0.8.1` confirmado en npm público con hash idéntico ✅
+- `npm run build` local limpio: 0 errores TS, dist/ generado ✅
+- `grep "package-firewall.replit.local" package-lock.json` → 0 coincidencias ✅
+- `grep "registry.npmjs.org" package-lock.json` → 127 URLs limpias ✅
+
+**Blindaje permanente:** `.npmrc` en raíz del repo con `registry=https://registry.npmjs.org/` previene que future regeneraciones del lockfile vuelvan a usar el proxy de Replit.
+
+### ⚠️ Requisito: Variables de entorno en Cloudflare Pages
+Si el build de Cloudflare falla con app sin datos (Supabase no conecta), verificar que en el dashboard de Cloudflare Pages → Settings → Environment variables estén configuradas:
+- `VITE_SUPABASE_URL=https://rscuzqnfccqvltkdcdny.supabase.co`
+- `VITE_SUPABASE_ANON_KEY=eyJhbG...` (la clave anon pública del proyecto)
+
+### Estado para la próxima sesión
+- **Deploy** ✅ Desbloqueado — próximo build de Cloudflare debe pasar `npm ci` sin errores
+- **P6** pendiente — /cards, /lore y /leaderboard públicos sin login
+- **M1** pendiente — SVG icons propios eliminando emojis del sistema
+- Verificar en vexforge-web.pages.dev que se vean P1-P5 (ReserveActivatedCinematic, Relics, etc.)
+
+
+---
+
 
 **Branch:** main | **Commit:** `74d29cc` | **Urgencia:** Deploy bloqueado
 
