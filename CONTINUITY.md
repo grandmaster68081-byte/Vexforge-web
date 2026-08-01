@@ -1,4 +1,24 @@
 # VEXFORGE — CONTINUITY LOG
+## Chat 116 — 2026-08-01 — Directiva de análisis integral y ejecución autónoma
+
+**Build:** ✅ limpio, `npm run build` sin errores | **Protocolo Maestro:** ✅ actualizado en Supabase
+
+### ✅ Orden incorporada al protocolo
+
+- Antes de cada trabajo se analizará el proyecto completo: producto, rutas, componentes, dominios, autenticación, contratos, esquema vivo, RPCs, RLS, triggers, Storage, assets, despliegue y dependencias.
+- Se entenderán las reglas, estadísticas, números, fórmulas, límites, recompensas, cooldowns, estados y efectos secundarios antes de elegir la implementación.
+- Las decisiones técnicas se tomarán y ejecutarán de forma autónoma, sin solicitar autorización intermedia para crear, ajustar, refactorizar o completar lo necesario.
+- No se dejará deliberadamente una tarea a medias: se integrará, verificará y documentará el alcance completo.
+- La autonomía no permite inventar datos oficiales, balances, recompensas, permisos o hechos del producto, ni romper economía, RLS, triggers, seguridad o datos irreversibles.
+- Si existe un bloqueo externo real, se intentará resolver con las fuentes oficiales disponibles; si no existe una solución válida, se documentará la causa exacta sin simular que está terminado.
+
+### Verificación
+
+- El documento oficial `vexforge_master_protocol_v2` fue actualizado mediante PATCH y releído con la directiva presente.
+- El plan activo y esta continuidad se actualizarán con el estado de la sesión.
+
+---
+
 ## Chat 115 — 2026-08-01 — Auditoría oficial de inicio de sesión y bloqueo de P1
 
 **Branch:** main | **Build inicial:** ✅ limpio, `npm run build` sin errores TypeScript | **Deploy:** Cloudflare Pages desde `main`
