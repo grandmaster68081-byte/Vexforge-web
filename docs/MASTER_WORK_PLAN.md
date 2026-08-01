@@ -268,4 +268,10 @@ Los jugadores deben engancharse en los primeros 5 minutos y querer seguir jugand
 
 ---
 
+## Revisión 123 — 2026-08-01 — Seguridad multi-admin
+
+✅ Auditoría de cuenta administrativa completada. La autorización ya no depende de un correo fijo: las rutas y RPCs usan la identidad administrativa activa de `players`. Se creó `roguerofanciel@gmail.com` como segundo `owner` confirmado, con wallet independiente de `5.000.000 VEX ingame`, `500.000 VEX tradeable` y las 127 colecciones de cartas clonadas. Se mantuvo el historial de depósitos nuevo en cero, se endurecieron las vistas económicas heredadas y se corrigió el trigger de provisionamiento de cuentas para iniciar el tutorial en el primer paso válido. Build TypeScript/Vite ✅.
+
+**Próximo paso:** completar los bloques de producto pendientes del plan y verificar el despliegue de Cloudflare Pages.
+
 *Revisión 122 — Chat 95 — 2026-07-24 — GAME ENGINE PLAN ACTIVATED*

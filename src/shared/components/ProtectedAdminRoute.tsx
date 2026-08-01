@@ -3,11 +3,10 @@ import { useNavigate } from "react-router-dom";
 import { supabase } from "../../lib/supabase";
 import { PageLoader } from "./PageLoader";
 
-const CONTROL_ADMIN_EMAIL = "cristiangalvez815@gmail.com";
 const C = { bg0: "#0d0d14", b2: "#2a2a3a", gold: "#E8B84B", red: "#FF4B4B", muted: "#7a7a9a" };
 interface Props { children: ReactNode; }
 
-/** Navigation guard. The same exact email check is repeated by every admin RPC. */
+/** Navigation guard. The authoritative check is the database-backed admin RPC. */
 export function ProtectedAdminRoute({ children }: Props) {
   const navigate = useNavigate();
   const [status, setStatus] = useState<"loading" | "allowed" | "denied" | "unauthenticated">("loading");
@@ -17,7 +16,6 @@ export function ProtectedAdminRoute({ children }: Props) {
       const { data: { session } } = await supabase.auth.getSession();
       if (cancelled) return;
       if (!session) { setStatus("unauthenticated"); return; }
-      if (session.user.email?.trim().toLowerCase() !== CONTROL_ADMIN_EMAIL) { setStatus("denied"); return; }
       const { data, error } = await supabase.rpc("vexforge_is_control_admin");
       if (!cancelled) setStatus(!error && data === true ? "allowed" : "denied");
     })();

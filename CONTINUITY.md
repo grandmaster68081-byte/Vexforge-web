@@ -5,6 +5,29 @@
 
 ---
 
+## Chat 114 — 2026-08-01 — Seguridad multi-admin y cuenta secundaria
+
+### ✅ Completado
+
+- Se sustituyó la autorización administrativa basada en un único correo por `vexforge_is_control_admin()`, validando `players.status='active'`, `role IN ('admin','owner')` y las flags administrativas.
+- `ProtectedAdminRoute` y el menú móvil ya no contienen correos administrativos hardcodeados.
+- Se endurecieron las vistas heredadas con `security_invoker=true` y se bloquearon escrituras directas a `tg_wallet` y `tg_inventory`.
+- Se corrigió `handle_new_auth_user()` para crear `player_progress.tutorial_step=1`, compatible con la restricción vigente.
+- Se creó y confirmó `roguerofanciel@gmail.com` como segundo `owner`, `is_admin=true`, `is_super_admin=true`.
+- Se clonó a su wallet independiente el saldo de Cristian: `5.000.000 VEX ingame` y `500.000 VEX tradeable`.
+- Se clonaron las 127 colecciones de cartas, con 635 unidades totales.
+- `total_usdt_deposited` quedó en `0` para no falsificar historial financiero.
+- Se solicitó el restablecimiento oficial de contraseña por correo; no se almacenó una contraseña en el repositorio ni en esta continuidad.
+
+### Verificación
+
+- Cristian y Roguero tienen permisos administrativos activos y wallets separados.
+- Las tablas base mantienen RLS por propietario para usuarios normales.
+- Las vistas administrativas y las vistas heredadas de wallet/inventario no tienen lectura para `anon`/`authenticated`.
+- `npx tsc --noEmit` y `npm run build`: ✅ limpios.
+
+---
+
 ## ESTADO DEL PLAN ACTIVO
 
 | ID  | Item                                   | Estado     |

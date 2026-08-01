@@ -417,7 +417,10 @@ function BottomNav({ onMoreClick }: { onMoreClick: () => void }) {
 // ─── MobileSheet ─────────────────────────────────────────────────────────────
 function MobileSheet({ open, onClose }: { open: boolean; onClose: () => void }) {
   const [isControlAdmin, setIsControlAdmin] = useState(false);
-  useEffect(() => { supabase.rpc("vexforge_is_control_admin").then(({ data }) => setIsControlAdmin(data === true)); }, []);
+  useEffect(() => {
+    if (!open) return;
+    supabase.rpc("vexforge_is_control_admin").then(({ data }) => setIsControlAdmin(data === true));
+  }, [open]);
   if (!open) return null;
   return (
     <>
