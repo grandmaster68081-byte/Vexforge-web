@@ -157,17 +157,13 @@ export function RaidsRoute() {
     return () => sub.subscription.unsubscribe();
   }, []);
 
-  if (authed === null || loading) return <PageLoader />;
+  // P4: Load equipped relics when authed — must be before early return
+  useEffect(() => {
+    if (!authed) { setEquippedRelics([]); return; }
+    getEquippedRelics().then(setEquippedRelics).catch(() => {});
+  }, [authed]);
 
-  const myRaidIds = new Set(myRaids.map(r => r.id));
-
-  async function handleJoin(raidId: string) {
-    if (!authed) { addToast("error", "Inicia sesión", "Debes estar autenticado para unirte a un raid."); return; }
-    const res = await join(raidId);
-    if (res.ok) addToast("success", "¡Raid unido!", "Ahora formas parte de este raid.");
-    else addToast("error", "Error", res.reason ?? "No se pudo unir al raid.");
-  }
-
+  // All useCallbacks must be declared before any conditional return (React rules of hooks)
   const handleContribute = useCallback(async (raid: RaidRun) => {
     if (!authed) {
       addToast("error", "Inicia sesión", "Debes estar autenticado para atacar un raid.");
@@ -209,12 +205,6 @@ export function RaidsRoute() {
     }
   }, [addToast, authed]);
 
-  // P4: Load equipped relics when authed
-  useEffect(() => {
-    if (!authed) { setEquippedRelics([]); return; }
-    getEquippedRelics().then(setEquippedRelics).catch(() => {});
-  }, [authed]);
-
   const handleRaidFormationConfirm = useCallback((formation: FormationState) => {
     setRaidUnits(null);
     setRaidFormation(applyRelicEffects(formation, equippedRelics));
@@ -245,6 +235,18 @@ export function RaidsRoute() {
     setSelectedRaid(null);
     setRaidBattleError(null);
   }, []);
+
+  // Early return AFTER all hooks — fixes React error #310
+  if (authed === null || loading) return <PageLoader />;
+
+  const myRaidIds = new Set(myRaids.map(r => r.id));
+
+  async function handleJoin(raidId: string) {
+    if (!authed) { addToast("error", "Inicia sesión", "Debes estar autenticado para unirte a un raid."); return; }
+    const res = await join(raidId);
+    if (res.ok) addToast("success", "¡Raid unido!", "Ahora formas parte de este raid.");
+    else addToast("error", "Error", res.reason ?? "No se pudo unir al raid.");
+  }
 
   const tabStyle = (t: string) => ({
     padding: "8px 22px", borderRadius: 8, border: "none", fontWeight: 700, fontSize: 13,
