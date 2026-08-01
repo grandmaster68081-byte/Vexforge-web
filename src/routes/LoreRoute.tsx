@@ -4,6 +4,8 @@ import { ErrorState } from "../shared/components/ErrorState";
 import { PageLoader } from "../shared/components/PageLoader";
 import { listLoreEntries } from "../domains/lore/repository";
 import type { LoreEntry } from "../domains/lore/repository";
+import { supabase } from "../lib/supabase";
+import { GuestDiscoveryBanner } from "../shared/components/GuestDiscoveryBanner";
 
 const GOLD = "#e8b84b";
 const PANEL = "linear-gradient(145deg,#1a1a2e,#11111a)";
@@ -44,14 +46,23 @@ export function LoreRoute() {
   const [category, setCategory] = useState("all");
   const [expanded, setExpanded] = useState<string | null>(null);
   const [reloadKey, setReloadKey] = useState(0);
+  const [isAuth, setIsAuth] = useState(false);
 
   useEffect(() => {
     let mounted = true;
     setState({ status: "loading", data: null });
-    listLoreEntries().then((result) => {
-      if (mounted) setState({ status: "ready", data: result.data, reason: result.reason });
+    Promise.all([
+      listLoreEntries(),
+      supabase.auth.getSession(),
+    ]).then(([result, sessionResult]) => {
+      if (!mounted) return;
+      setState({ status: "ready", data: result.data, reason: result.reason });
+      setIsAuth(!!sessionResult.data?.session);
     });
-    return () => { mounted = false; };
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_e, s) => {
+      setIsAuth(!!s);
+    });
+    return () => { mounted = false; subscription.unsubscribe(); };
   }, [reloadKey]);
 
   const entries = state.data ?? [];
@@ -70,6 +81,7 @@ export function LoreRoute() {
 
   return (
     <main style={{ maxWidth: 940, margin: "0 auto", padding: "32px 16px" }}>
+      {!isAuth && <GuestDiscoveryBanner />}
       <header style={{ marginBottom: 24 }}>
         <p style={{ color: GOLD, fontFamily: '"IBM Plex Mono",monospace', fontSize: 10, letterSpacing: "0.16em", margin: "0 0 9px", textTransform: "uppercase" }}>Archivo de VEXFORGE</p>
         <h1 style={{ color: "#e8e8f0", fontFamily: '"Cinzel",serif', fontSize: 28, margin: "0 0 7px" }}>Codex de Lore</h1>

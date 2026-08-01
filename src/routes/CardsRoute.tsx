@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useCards, type Card } from "../domains/cards/useCards";
 import { getCardByCode } from "../domains/cards/repository";
 import { AudioEngine } from "../lib/audioEngine";
+import { GuestDiscoveryBanner } from "../shared/components/GuestDiscoveryBanner";
 
 // ─── CONFIG ─────────────────────────────────────────────────────────────────
 const RARITY_CFG: Record<string, { color: string; glow: string; label: string; order: number }> = {
@@ -471,7 +472,7 @@ export function CardsRoute() {
             <p style={{ color: "#8888aa", fontSize: 13, margin: 0, fontFamily: "Rajdhani,sans-serif" }}>
               {isAuth
                 ? `Colección: ${ownedCount}/${totalCatalog} · ${completionPct}% completado`
-                : `${filtered.length} cartas disponibles · Inicia sesión para ver tu colección`}
+                : `${totalCatalog} cartas disponibles · Explora el compendio completo`}
             </p>
             {isAuth && totalCatalog > 0 && (
               <div style={{ display: "flex", alignItems: "center", gap: 8, flex: "1 1 200px", maxWidth: 280 }}>
@@ -539,6 +540,7 @@ export function CardsRoute() {
 
       {/* Content */}
       <div style={{ maxWidth: 1200, margin: "0 auto", padding: "24px" }}>
+        {!isAuth && <GuestDiscoveryBanner />}
         <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 16, flexWrap: "wrap", gap: 8 }}>
           <span style={{ color: "#555577", fontSize: 12, fontFamily: "Rajdhani,sans-serif" }}>
             {loading ? "Cargando…" : `${filtered.length} carta${filtered.length !== 1 ? "s" : ""}`}

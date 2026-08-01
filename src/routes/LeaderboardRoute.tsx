@@ -3,6 +3,8 @@ import { useLeaderboard } from "../domains/leaderboard/useLeaderboard";
 import { SkeletonTable } from "../shared/components/Skeleton";
 import { EmptyState } from "../shared/components/EmptyState";
 import { ErrorState } from "../shared/components/ErrorState";
+import { supabase } from "../lib/supabase";
+import { GuestDiscoveryBanner } from "../shared/components/GuestDiscoveryBanner";
 
 interface RankTier { name: string; color: string; icon: string; }
 
@@ -43,13 +45,21 @@ const TIER_THRESHOLDS = [
 export function LeaderboardRoute() {
   const { status, data, myPlayerId: myId, reload } = useLeaderboard(100);
   const [factionFilter, setFactionFilter] = React.useState("Todas");
+  const [isAuth, setIsAuth] = React.useState(false);
   const rows   = data ?? [];
   const filteredRows = factionFilter === "Todas" ? rows : rows.filter(r => (r as any).champion_faction === factionFilter);
   const loading = status === "loading";
   const error   = status === "ready" && !data ? "Error al cargar el clasificatorio" : null;
 
+  React.useEffect(() => {
+    supabase.auth.getSession().then(({ data: s }) => setIsAuth(!!s.session));
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_e, s) => setIsAuth(!!s));
+    return () => subscription.unsubscribe();
+  }, []);
+
   return (
     <main style={{ maxWidth: 900, margin: "0 auto", padding: "32px 16px" }}>
+      {!isAuth && <GuestDiscoveryBanner />}
       {/* Header */}
       <div style={{ marginBottom: 24 }}>
         <p style={{ fontSize: 11, letterSpacing: "0.14em", color: "#e8b84b", textTransform: "uppercase", fontFamily: "Rajdhani,sans-serif", fontWeight: 700, marginBottom: 8 }}>─── Clasificatorio ───</p>
