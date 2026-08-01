@@ -1,4 +1,27 @@
 # VEXFORGE — CONTINUITY LOG
+## Chat 123 — 2026-08-01 — Corrección normativa: autonomía técnica y calidad Tier 1
+
+**Branch:** main | **Base:** `a271f38` | **Alcance:** actualización del Protocolo Maestro y continuidad
+
+### ✅ Directiva corregida y publicada
+
+- Se corrigió la interpretación anterior que detenía una tarea aprobada cuando faltaba una tabla, RPC, relación o pieza técnica previa.
+- El Protocolo Maestro ahora autoriza explícitamente a la IA a diseñar y crear autónomamente la infraestructura técnica necesaria —tablas, columnas, relaciones, migraciones, RPCs, políticas RLS, triggers, rutas, componentes, efectos, assets y documentación— cuando el análisis integral demuestre que es necesaria, coherente y compatible con el producto.
+- La prohibición vigente se limita a falsificar hechos canónicos, datos oficiales, balances, recompensas, permisos, resultados o reglas de negocio sin fundamento. Crear una pieza técnica nueva no equivale a inventar un hecho del juego.
+- La ausencia de infraestructura ya no es un bloqueo automático: es una señal para diseñar e implementar la pieza faltante dentro del código fuente oficial, trazando dependencias, seguridad, economía, rendimiento y reversibilidad.
+- Se reforzó el estándar de producto Tier 1: identidad audiovisual propia, cinematics, motion, audio, iconografía, assets y micro-interacciones no genéricas para cartas, rutas, sistemas y contenidos.
+- Se reforzó la mesa de trabajo oficial: GitHub `main` contiene el código fuente; Supabase contiene esquema, datos, RPCs, RLS y documentos; `dist/` se regenera y publica cuando corresponde; Cloudflare Pages debe servir el commit verificado. Un cambio local, una copia temporal o un HTTP 200 sin el comportamiento nuevo no es una entrega.
+- La directiva es universal para cualquier IA que retome el proyecto: comprender primero, decidir autónomamente, implementar de extremo a extremo y no pedir confirmaciones intermedias al owner por decisiones técnicas que estén dentro del plan.
+- Cada bloque pendiente debe quedar resuelto o documentado como bloqueo externo real después de agotar alternativas compatibles; no se permite trasladar al owner una decisión técnica que el análisis permita resolver.
+
+### Estado para la próxima sesión
+
+1. Retomar P4 — Reliquias con efectos reales sobre el Campeón.
+2. Diseñar e implementar autónomamente el contrato técnico faltante de propiedad/equipamiento, respetando el análisis integral y las reglas de economía, RLS y combate.
+3. Completar el bloque en GitHub `main`, Supabase, `dist/` y el deploy live antes de reportarlo.
+
+---
+
 ## Chat 122 — 2026-08-01 — Auditoría P4: Reliquias bloqueadas por contrato oficial ausente
 
 **Branch:** main | **Base auditada:** `7282b68` | **Build previo:** ✅ `npm install` + `npm run build` limpios
