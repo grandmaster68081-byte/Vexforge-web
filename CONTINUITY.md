@@ -1,6 +1,102 @@
 # VEXFORGE — CONTINUITY LOG
 
 
+
+## Chat 130 — 2026-08-01 — T0: Reconciliación y Baseline Pre-Lanzamiento — COMPLETADO
+
+**Branch:** main | **Build:** ✅ 240 módulos, 0 errores TypeScript | **Scope:** Auditoría integral de estado real
+
+### ✅ T0 completado: Baseline oficial de pre-lanzamiento
+
+**Acción anterior verificada:** La IA precedente (Chat 129) dejó pendiente añadir la nota de subordinación a `vexforge_forge_formation_engine_v1`. Se ejecutó el PATCH en esta sesión — ✅ HECHO.
+
+#### Estado del código (GitHub main)
+
+| ID | Tarea | Estado en código |
+|----|-------|-----------------|
+| P1-P6 | Todas las prioridades altas | ✅ Implementadas en código |
+| M1 | ForgeIcon SVG system en App.tsx | ✅ Implementado |
+| J1 | FormationSelector con preview Campeón | ✅ Implementado |
+| Build | npm run build | ✅ Limpio, 240 módulos, 0 errores TS |
+
+#### Tablas Supabase vivas (verificadas con service_role)
+
+| Tabla | Estado | Registros |
+|-------|--------|-----------|
+| cards | ✅ 200 | 127 |
+| players | ✅ 200 | 12 (todas owner/admin/QA) |
+| missions | ✅ 200 | 68 |
+| world_bosses | ✅ 200 | activas |
+| world_boss_encounters | ✅ 200 | — |
+| player_relics | ✅ 200 | — |
+| relics | ✅ 200 | 20 |
+| inventory | ✅ 200 | — |
+| player_cards | ✅ 200 | — |
+| lore_codex | ✅ 200 | — |
+| clans | ✅ 200 | — |
+| cosmetics | ✅ 200 | — |
+| decks | ❌ 404 | NO EXISTE |
+| raids | ❌ 404 | NO EXISTE |
+| energy | ❌ 404 | NO EXISTE |
+| battle_runs | ❌ 404 | NO EXISTE |
+| quests | ❌ 404 | NO EXISTE |
+| shop_orders | ❌ 404 | NO EXISTE |
+
+#### RPCs Supabase vivos (verificados con service_role)
+
+| RPC | Estado |
+|-----|--------|
+| get_leaderboard | ✅ 200 |
+| ensure_player_row | ✅ 200 |
+| get_home_stats | ✅ 200 |
+| grant_starter_relics | ✅ existe (400 = requiere auth) |
+| check_my_achievements | ✅ 204 |
+| vexforge_get_my_economy_stats | ✅ 200 |
+| vexforge_is_control_admin | ✅ 200 |
+| vexforge_admin_get_overview | ✅ 200 |
+| execute_mission | ❌ 404 NO EXISTE |
+| claim_mission_reward | ❌ 404 NO EXISTE |
+| vexforge_contribute_raid | ❌ 404 NO EXISTE |
+| vexforge_attack_world_boss | ❌ 404 NO EXISTE |
+| equip_relic | ❌ 404 NO EXISTE |
+| unequip_relic | ❌ 404 NO EXISTE |
+| vexforge_join_raid | ❌ 404 NO EXISTE |
+| vexforge_complete_raid | ❌ 404 NO EXISTE |
+| start_pvp_match | ❌ 404 NO EXISTE |
+| save_deck | ❌ 404 NO EXISTE |
+| validate_deck | ❌ 404 NO EXISTE |
+| vexforge_open_pack | ❌ 404 NO EXISTE |
+| vexforge_buy_pack_with_vex | ❌ 404 NO EXISTE |
+| get_player_rank | ❌ 404 NO EXISTE |
+
+#### Clasificación de cuentas
+
+- 12 registros en `players` — todos son owner, admin o cuentas de QA
+- Estado real: **PRE-LAUNCH INTERNAL QA** (no hay jugadores reales)
+- Las métricas del leaderboard son telemetría de prueba, no producción
+
+#### Hallazgo principal de T0
+
+**El frontend está feature-complete; el backend (Supabase RPCs) está incompleto.**
+La mayoría de acciones de juego (misiones, raids, jefes, packs, mazos, reliquias equipar) tienen UI construida pero los RPCs no existen en Supabase. Las acciones fallan silenciosamente en producción.
+
+Esta es la deuda técnica crítica que T1 debe resolver.
+
+### Documentación actualizada
+
+- `vexforge_forge_formation_engine_v1` PATCH aplicado: nota de subordinación al Plan T0-T10 ✅
+- `vexforge_forge_formation_engine_v1` PATCH T0-baseline aplicado ✅
+- CONTINUITY.md: esta entrada ✅
+
+### Estado para la próxima sesión
+
+- **T0** ✅ COMPLETADO — Baseline oficial documentado, discrepancias registradas
+- **Siguiente:** T1 — Contrato Battle Run y RPCs de backend faltantes
+- T1 prioridad inmediata: crear RPCs `execute_mission`, `save_deck`, `validate_deck`, `vexforge_open_pack`, `vexforge_buy_pack_with_vex`, `equip_relic`, `unequip_relic`, tablas `decks`, `energy`, `battle_runs`
+
+
+
+
 ## Chat 129 — 2026-08-01 — J1: Selección de Campeón y preview de Formación — COMPLETADO
 
 **Branch:** main | **Base:** `9b11935` | **Build:** ✅ 0 errores TypeScript | **Scope:** `FormationSelector` + responsive de selección
