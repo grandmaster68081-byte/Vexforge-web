@@ -1,3 +1,34 @@
+## Chat 145 — 2026-08-02 — T9: Observabilidad y hardening pre-lanzamiento — COMPLETADO
+
+**Branch:** main | **Scope:** protección del navegador, diagnóstico local acotado y mensajes seguros de infraestructura
+
+### ✅ Implementación
+
+| Área | Detalle |
+|------|---------|
+| Headers de Pages | Se añadieron CSP restrictiva compatible con Supabase/WebAssembly, `frame-ancestors 'none'`, HSTS, `X-Frame-Options`, `X-Content-Type-Options`, `Referrer-Policy` y `Permissions-Policy`. |
+| Diagnóstico local | El arranque captura `error` y `unhandledrejection` del navegador. Los eventos quedan en un buffer local acotado de 20 entradas; no se envía telemetría, sesiones ni datos a terceros. |
+| ErrorBoundary | Los fallos de render se registran mediante el mismo canal local y muestran una explicación segura para el jugador, sin exponer mensajes internos. |
+| Errores de infraestructura | El repositorio de economía traduce fallos de red, sesión, permisos y rate limit a mensajes de usuario seguros antes de mostrarlos. |
+| Límites de alcance | Se respetan los contratos existentes de RLS, RPCs e idempotencia. No se modificaron economía, combate, esquema, secretos ni se añadió analítica ficticia. |
+
+### Verificaciones
+
+- `npm run build` ✅ 244 módulos, 0 errores TypeScript
+- `npx tsc --noEmit -p tsconfig.app.json` ✅
+- `git diff --check` ✅
+- `_headers` generado en `dist/` con la política activa ✅
+- `package-lock.json` sin URLs `package-firewall.replit.local` ✅
+- `.nvmrc` raíz: Node 22 ✅
+
+### Estado para la próxima sesión
+
+- **T9** ✅ COMPLETADO — observabilidad local y hardening de navegador aplicados sin telemetría externa.
+- **Siguiente:** T10 — Gate final de lanzamiento: reconciliación integral de contratos, chequeos de producción y matriz explícita de go/no-go.
+- **Deploy live:** pendiente de la propagación automática de Cloudflare Pages tras el push a `main`.
+
+---
+
 ## Chat 144 — 2026-08-02 — T8: Capa audiovisual Tier 1 — COMPLETADO
 
 **Branch:** main | **Scope:** orquestación audiovisual de ForgeFormation, clímax de Boss/Raid y fallback móvil/accesible

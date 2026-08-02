@@ -1,4 +1,5 @@
 import { Component, type ErrorInfo, type ReactNode } from "react";
+import { getSafeErrorMessage, recordRuntimeIssue } from "../../lib/runtimeDiagnostics";
 
 /**
  * ErrorBoundary — catches React render errors and shows a recovery screen.
@@ -14,11 +15,11 @@ export class ErrorBoundary extends Component<Props, State> {
   }
 
   static getDerivedStateFromError(error: Error): State {
-    return { hasError: true, message: error.message };
+    return { hasError: true, message: getSafeErrorMessage(error) };
   }
 
   componentDidCatch(error: Error, info: ErrorInfo) {
-    console.error("[VEXFORGE] Render error in", this.props.label ?? "component:", error, info.componentStack);
+    recordRuntimeIssue("render", `${this.props.label ?? "component"}: ${error.message}\n${info.componentStack ?? ""}`);
   }
 
   render() {

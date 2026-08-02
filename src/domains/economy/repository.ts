@@ -1,4 +1,5 @@
 import { supabase } from "../../lib/supabase";
+import { getSafeErrorMessage } from "../../lib/runtimeDiagnostics";
 import type { DomainResult } from "../../shared/types/domain";
 
 // ── Types ───────────────────────────────────────────────────────────────
@@ -47,7 +48,7 @@ export async function getWallet(): Promise<DomainResult<PlayerWallet>> {
     .from("player_wallet")
     .select("id, player_id, vex_ingame, vex_tradeable, reserved_ingame, reserved_tradeable")
     .maybeSingle();
-  if (error) return { status:"ready", data:null, reason:error.message };
+  if (error) return { status:"ready", data:null, reason:getSafeErrorMessage(error) };
   if (!data)  return { status:"ready", data:null, reason:"Sin monedero. Reinicia sesión." };
   return { status:"ready", data: data as PlayerWallet };
 }
@@ -62,13 +63,13 @@ export async function getLedgerEntries(
     .select("id, entry_type, currency, amount, balance_before, balance_after, source_table, metadata, created_at")
     .order("created_at", { ascending:false })
     .range(offset, offset + limit - 1);
-  if (error) return { status:"ready", data:null, reason:error.message };
+  if (error) return { status:"ready", data:null, reason:getSafeErrorMessage(error) };
   return { status:"ready", data: (data ?? []) as LedgerEntry[] };
 }
 
 export async function getEconomyStats(): Promise<DomainResult<EconomyStats>> {
   const { data, error } = await supabase.rpc("vexforge_get_my_economy_stats");
-  if (error) return { status:"ready", data:null, reason:error.message };
-  if (!data?.ok) return { status:"ready", data:null, reason:data?.reason ?? "No autorizado" };
+  if (error) return { status:"ready", data:null, reason:getSafeErrorMessage(error) };
+  if (!data?.ok) return { status:"ready", data:null, reason:getSafeErrorMessage(data?.reason, "No autorizado") };
   return { status:"ready", data: data as EconomyStats };
 }
