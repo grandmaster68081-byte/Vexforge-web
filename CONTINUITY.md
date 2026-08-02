@@ -1,3 +1,64 @@
+## Chat 142 — 2026-08-02 — T6: PvP competitivo y paridad de reglas — COMPLETADO
+
+**Branch:** main | **Commit:** 54f7d24 | **Build:** 0 errores TypeScript | **Scope:** formation snapshots, forfeit autoritativo, QA-filter leaderboard, banner ELO
+
+### ✅ Implementado
+
+#### Supabase — migración 0006_t6_pvp_formation.sql (aplicada en vivo)
+
+| Objeto | Detalle |
+|--------|---------|
+| `pvp_matches.formation_snapshot_a/b` JSONB | Snapshot de formación del challenger/oponente por batalla |
+| `pvp_matches.forfeit_by` UUID | Registra quién abandonó la batalla |
+| `players.is_qa` BOOLEAN | Filtra cuentas admin/QA del leaderboard público; UPDATE admin → is_qa=TRUE |
+| `vexforge_pvp_store_formation(match_id, formation)` | SECURITY DEFINER — almacena snapshot post-batalla, valida propiedad del match |
+| `vexforge_pvp_forfeit(opponent_id, key)` | SECURITY DEFINER — registra abandono, ELO dinámico por diferencia de MMR, idempotente |
+| `get_public_pvp_rankings(season_id, limit)` | SECURITY DEFINER — leaderboard QA-filtrado (excluye is_admin/is_qa) |
+
+#### Frontend — src/domains/pvp/repository.ts
+
+| Función | Detalle |
+|---------|---------|
+| `storeFormationSnapshot(matchId, formation)` | Telemetría silenciosa post-batalla |
+| `pvpForfeit(opponentId, key)` | Llama vexforge_pvp_forfeit, retorna elo_change |
+| `listPublicRankings(seasonId, limit)` | Llama get_public_pvp_rankings |
+
+#### Frontend — src/routes/PvpRoute.tsx
+
+| Cambio | Detalle |
+|--------|---------|
+| `pvpFormationRef` | Captura snapshot (champion/vanguard/sentinel/reserve_size) antes de batallar |
+| `pvpForfeitKeyRef` | Clave idempotencia generada en handleFormationConfirm para PvP |
+| `handleFormationConfirm` | Captura snapshot + key; aplica relics y pasa a ForgeFormationBoard |
+| `handleForgeFormationComplete (PvP)` | Almacena snapshot post-match, banner ELO flotante, recarga publicRankings |
+| `ForgeFormationBoard onDismiss (PvP)` | Llama pvpForfeit, onLoss(), banner ELO con MMR perdido, recarga rankings |
+| `useEffect [seasons]` | Carga publicRankings QA-filtrado al recibir la temporada activa |
+| Leaderboard | Usa publicRankings (get_public_pvp_rankings), sin cuentas QA/admin |
+| Banner PRE-LANZAMIENTO | Contexto interno QA visible en la sección de rankings |
+| Banner ELO flotante | Victoria/Derrota/Forfeit con +/- MMR, auto-dismiss 5s |
+
+### Verificaciones
+
+- `npm run build` ✅ 0 errores TypeScript
+- `npx tsc --noEmit -p tsconfig.app.json` ✅
+- `git diff --check` ✅
+- Columnas pvp_matches confirmadas en Supabase: `formation_snapshot_a`, `formation_snapshot_b`, `forfeit_by` ✅
+- RPCs confirmados en Supabase: `vexforge_pvp_store_formation`, `vexforge_pvp_forfeit`, `get_public_pvp_rankings` ✅
+- players.is_qa=TRUE para todas las cuentas is_admin ✅
+- git push origin main ✅ commit 54f7d24
+- `package-lock.json` sin URLs package-firewall.replit.local ✅
+- `.nvmrc` raíz: Node 22 ✅
+
+### Estado para la próxima sesión
+
+- **T6** ✅ COMPLETADO — PvP competitivo con formation snapshots, forfeit autoritativo, leaderboard QA-filtrado y banner pre-lanzamiento
+- **Siguiente:** T7 — Cartas, colección y profundidad estratégica (reconciliar catálogo vivo, sinergias de formación, Deck Builder con contratos compatibles)
+- **Deploy live:** Cloudflare Pages se actualiza automáticamente desde main; sin cambios de infraestructura Supabase adicionales en este lote
+
+---
+
+---
+
 ## Chat 140 — 2026-08-02 — T4: Sistema PvE Completo — COMPLETADO
 
 **Branch:** main | **Scope:** Arquetipos de enemigos por tipo, modificadores regionales, sistema de 2 fases para Clan/Event épico+
