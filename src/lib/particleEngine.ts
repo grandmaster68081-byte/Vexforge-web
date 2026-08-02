@@ -32,6 +32,15 @@ class VexForgeParticleEngine {
   private particles: Particle[] = [];
   private raf: number | null = null;
   private shake: ShakeState | null = null;
+  private reducedEffects = false;
+
+  setReducedEffects(enabled: boolean): void {
+    this.reducedEffects = enabled;
+    if (enabled) {
+      this.particles = [];
+      this.shake = null;
+    }
+  }
 
   // ─── Lifecycle ─────────────────────────────────────────────────────────────
   mount(canvas: HTMLCanvasElement): void {
@@ -136,11 +145,19 @@ class VexForgeParticleEngine {
 
   // ─── v2.0: Screen shake ────────────────────────────────────────────────────
   screenShake(intensity = 6, duration = 0.3): void {
+    if (this.reducedEffects) return;
     this.shake = { x: intensity, y: intensity * 0.6, dur: duration, startTime: performance.now() };
   }
 
   // ─── v2.0: Attack arc (bezier curve particle trail) ────────────────────────
   attackArc(fromX: number, fromY: number, toX: number, toY: number, color: string, isCrit = false): void {
+    if (this.reducedEffects) {
+      this.add({
+        x: toX, y: toY, vx: 0, vy: 0, life: 16, maxLife: 16, size: isCrit ? 8 : 5,
+        color, alpha: 1, gravity: 0, glow: color, shape: 'circle',
+      });
+      return;
+    }
     const steps = isCrit ? 18 : 12;
     const cpX = (fromX + toX) / 2;
     const cpY = Math.min(fromY, toY) - (Math.abs(toX - fromX) * 0.4 + 50);
@@ -198,7 +215,7 @@ class VexForgeParticleEngine {
   factionAmbient(faction: string, W: number, H: number): void {
     const cfg = FACTION_AMBIENT[faction];
     if (!cfg) return;
-    const count = 6;
+    const count = this.reducedEffects ? 2 : 6;
     for (let i = 0; i < count; i++) {
       const size = cfg.size[0] + Math.random() * (cfg.size[1] - cfg.size[0]);
       const speed = cfg.speed;
@@ -217,7 +234,7 @@ class VexForgeParticleEngine {
   // ─── v2.0: Card entry flash ────────────────────────────────────────────────
   cardEntry(x: number, y: number, faction?: string): void {
     const color = (faction && FACTION_AMBIENT[faction]?.color) ?? '#e8b84b';
-    const count = 20;
+    const count = this.reducedEffects ? 4 : 20;
     for (let i = 0; i < count; i++) {
       const angle = (Math.PI * 2 * i) / count + Math.random() * 0.3;
       const speed = Math.random() * 4 + 2;
@@ -296,6 +313,10 @@ class VexForgeParticleEngine {
   private vfxRes(x: number, y: number): void { for (let i = 0; i < 28; i++) { const angle = (Math.PI * 2 * i) / 28; const r = 15 + Math.sin(i * 1.8) * 18; this.add({ x: x + Math.cos(angle) * r, y: y + Math.sin(angle) * r, vx: Math.cos(angle) * 0.6, vy: Math.sin(angle) * 0.6, life: 55, maxLife: 55, size: Math.random() * 3 + 1.5, color: i % 3 === 0 ? '#4a9eff' : '#a855f7', alpha: 0.8, gravity: 0, glow: '#8888ff', shape: 'circle' }); } }
 
   triggerKeyword(keyword: string, x: number, y: number): void {
+    if (this.reducedEffects) {
+      this.add({ x, y, vx: 0, vy: 0, life: 16, maxLife: 16, size: 6, color: '#a9cfff', alpha: 1, gravity: 0, shape: 'circle' });
+      return;
+    }
     const fx: Record<string, () => void> = {
       Guard: () => this.vfxGuard(x, y), Surge: () => this.vfxSurge(x, y), Flux: () => this.vfxFlux(x, y),
       Consecrate: () => this.vfxConse(x, y), Drain: () => this.vfxDrain(x, y), Veil: () => this.vfxVeil(x, y),

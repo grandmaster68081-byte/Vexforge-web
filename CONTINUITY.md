@@ -1,3 +1,33 @@
+## Chat 144 — 2026-08-02 — T8: Capa audiovisual Tier 1 — COMPLETADO
+
+**Branch:** main | **Scope:** orquestación audiovisual de ForgeFormation, clímax de Boss/Raid y fallback móvil/accesible
+
+### ✅ Implementación
+
+| Área | Detalle |
+|------|---------|
+| Entrada de Boss/Raid | Cuando el nombre del oponente identifica explícitamente un Boss, Jefe o Raid, ForgeFormation muestra la cortinilla `BOSS ENTRANTE` y sincroniza el sting `sfxBossEncounter` existente. No se altera la simulación ni se infiere contenido de catálogo. |
+| Intensidad de combate | El motor procedural recibe la facción del Campeón y ajusta intensidad por el HP de Campeón resultante, conservando las transiciones existentes de intro/mid/last stand. |
+| Muerte de Campeón | La cinemática existente queda sincronizada con el SFX `death()` específico, en vez de reutilizar el efecto de eliminación genérico. |
+| Efectos reducidos | ForgeFormation respeta `prefers-reduced-motion` al abrirse y ofrece un control `FX COMPLETOS / FX REDUCIDOS`. El Particle Engine reduce arcos, partículas ambientales, entradas, keywords y elimina vibración de pantalla. |
+| Compatibilidad | Las cinemáticas ya implementadas de invocación, reserva, ascensión, derrota y scoreboard permanecen intactas. No se crean assets externos ni se modifican contratos, economía o combate. |
+
+### Verificaciones
+
+- `npm run build` ✅ 243 módulos, 0 errores TypeScript
+- `npx tsc --noEmit -p tsconfig.app.json` ✅
+- `git diff --check` ✅
+- `package-lock.json` sin URLs `package-firewall.replit.local` ✅
+- `.nvmrc` raíz: Node 22 ✅
+
+### Estado para la próxima sesión
+
+- **T8** ✅ COMPLETADO — clímax audiovisual conectado y fallback de efectos reducidos disponible para móvil/accesibilidad.
+- **Siguiente:** T9 — Capa de observabilidad y hardening pre-lanzamiento, empezando por auditoría de telemetría, errores visibles y límites de seguridad sin introducir telemetría ficticia.
+- **Deploy live:** pendiente de la propagación automática de Cloudflare Pages tras el push a `main`.
+
+---
+
 ## Chat 143 — 2026-08-02 — T7: Cartas, colección y profundidad estratégica — COMPLETADO
 
 **Branch:** main | **Scope:** reconciliación del catálogo vivo, adaptación canónica de combate y lectura estratégica de mazos

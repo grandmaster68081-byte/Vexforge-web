@@ -15,6 +15,7 @@ import {
 } from '../../lib/forgeFormation';
 import type { AIDifficulty } from '../../lib/aiBattleEngine';
 import { AudioEngine } from '../../lib/audioEngine';
+import { particleEngine } from '../../lib/particleEngine';
 
 // ─── Palette ───────────────────────────────────────────────────────────────────
 const SLOT_COLORS: Record<FormationSlot, { primary: string; glow: string }> = {
@@ -1874,6 +1875,10 @@ export interface ForgeFormationBoardProps {
 
 type BoardPhase = 'champion_summon' | 'intro' | 'battle' | 'reserve' | 'ascension' | 'champion_dead' | 'done';
 
+function isBossEncounter(opponentName: string): boolean {
+  return /\b(boss|jefe|raid|world boss)\b/i.test(opponentName);
+}
+
 export function ForgeFormationBoard({
   initialFormation, playerName = 'Tú', opponentName = 'Rival',
   difficulty, equippedRelics = [], onComplete, onDismiss,
@@ -1886,6 +1891,10 @@ export function ForgeFormationBoard({
   const [log, setLog]                 = useState<string[]>([]);
   const [isAutoPlay, setIsAutoPlay]   = useState(false);
   const [hitFlash, setHitFlash]       = useState<FormationSlot | null>(null);
+  const [reducedEffects, setReducedEffects] = useState(() =>
+    typeof window !== 'undefined' && window.matchMedia?.('(prefers-reduced-motion: reduce)').matches,
+  );
+  const [showBossEntry, setShowBossEntry] = useState(() => isBossEncounter(opponentName));
 
   // ─── Rage / Ascension state ──────────────────────────────────────────────────
   const [rageStacks, setRageStacks]     = useState(0);       // +5% ATK each, max 5
@@ -1902,6 +1911,7 @@ export function ForgeFormationBoard({
   const musicPhaseRef = useRef<'none' | 'intro' | 'mid' | 'last_stand'>('none');
   const prevKillsRef  = useRef(0);
   const prevDeathsRef = useRef(0);
+  const bossEncounter = isBossEncounter(opponentName);
 
   // Pre-compute battle result once
   const battleResult = useRef(simulateFormationBattle(initialFormation, difficulty));
@@ -1916,6 +1926,11 @@ export function ForgeFormationBoard({
 
   // ─── Cleanup music on unmount ────────────────────────────────────────────────
   useEffect(() => {
+    particleEngine.setReducedEffects(reducedEffects);
+    return () => particleEngine.setReducedEffects(false);
+  }, [reducedEffects]);
+
+  useEffect(() => {
     return () => {
       try { (AudioEngine as any).stopCombatMusic?.(); } catch { /* silent */ }
     };
@@ -1925,7 +1940,11 @@ export function ForgeFormationBoard({
   useEffect(() => {
     if (phase === 'battle' && musicPhaseRef.current === 'none') {
       musicPhaseRef.current = 'intro';
-      try { (AudioEngine as any).startCombatMusic?.('intro'); } catch { /* silent */ }
+      try {
+        AudioEngine.setFaction?.(initialFormation.champion.faction);
+        AudioEngine.setIntensity?.(1);
+        (AudioEngine as any).startCombatMusic?.('intro');
+      } catch { /* silent */ }
     }
     if ((phase === 'done' || phase === 'champion_dead') && musicPhaseRef.current !== 'none') {
       musicPhaseRef.current = 'none';
@@ -1946,6 +1965,11 @@ export function ForgeFormationBoard({
       try { (AudioEngine as any).startCombatMusic?.('mid'); } catch { /* silent */ }
     }
   }, [turnIdx, phase, totalBattleTurns]);
+
+  useEffect(() => {
+    if (!bossEncounter || phase !== 'intro') return;
+    try { AudioEngine.sfxBossEncounter?.(); } catch { /* silent */ }
+  }, [bossEncounter, phase]);
 
   // ─── Auto-play interval ───────────────────────────────────────────────────────
   useEffect(() => {
@@ -1971,7 +1995,7 @@ export function ForgeFormationBoard({
 
       if (championDied) {
         setPhase('champion_dead');
-        try { (AudioEngine as any).sfxKillV2?.(); } catch { /* ok */ }
+        try { AudioEngine.death?.(); } catch { /* ok */ }
         setTimeout(() => { setPhase('done'); onComplete(false, true, battleResult.current); }, 4200);
       } else {
         setPhase('done');
@@ -2010,6 +2034,11 @@ export function ForgeFormationBoard({
       else if (isCrit) (AudioEngine as any).sfxCritV2?.();
       else             AudioEngine.sfxCardSelect?.();
     } catch { /* ok */ }
+    const projectedChampion = battleResult.current.finalFormation.champion;
+    const hpRatio = Math.max(0, Math.min(1,
+      (projectedChampion?.hp ?? formation.champion.hp) / Math.max(1, formation.champion.max_hp),
+    ));
+    try { AudioEngine.setIntensity?.(hpRatio); } catch { /* ok */ }
 
     // ─── Champion Rage: +5% ATK per allied formation card death ─────────────────
     if (isKill && atkSide === 'opponent' && defSlot !== 'champion') {
@@ -2233,6 +2262,12 @@ export function ForgeFormationBoard({
           0%,100% { box-shadow: 0 0 6px rgba(255,215,0,0.3); }
           50%     { box-shadow: 0 0 14px rgba(255,215,0,0.7); }
         }
+        @keyframes boss-entry-climax {
+          0% { opacity: 0; transform: scale(1.08); filter: brightness(2.2); }
+          18% { opacity: 1; transform: scale(1); filter: brightness(1.4); }
+          72% { opacity: 1; transform: scale(1); filter: brightness(1); }
+          100% { opacity: 0; transform: scale(0.98); filter: brightness(0.9); }
+        }
       `}</style>
 
       {/* ── Champion Summon Cinematic (3.5s) ────────────────────────────────── */}
@@ -2257,6 +2292,18 @@ export function ForgeFormationBoard({
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
           <TurnIndicator current={turnIdx} total={totalBattleTurns} />
           <ChargeOrbs kills={champKills} ascensionAt={3} />
+          <button
+            type="button"
+            onClick={() => setReducedEffects(value => !value)}
+            aria-pressed={reducedEffects}
+            title="Reduce partículas y vibración visual"
+            style={{
+              background: reducedEffects ? 'rgba(74,158,255,0.18)' : 'rgba(255,255,255,0.04)',
+              border: `1px solid ${reducedEffects ? 'rgba(74,158,255,0.55)' : 'rgba(255,255,255,0.1)'}`,
+              borderRadius: 6, color: reducedEffects ? '#a9cfff' : '#6a6a8a', fontSize: 9, padding: '5px 7px',
+              cursor: 'pointer', fontFamily: '"Rajdhani",sans-serif',
+            }}
+          >FX {reducedEffects ? 'REDUCIDOS' : 'COMPLETOS'}</button>
         </div>
         <button onClick={onDismiss} style={{
           background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)',
@@ -2307,6 +2354,23 @@ export function ForgeFormationBoard({
             letterSpacing: '0.2em', textAlign: 'center',
             animation: 'intro-forge-in 0.9s cubic-bezier(0.22,1,0.36,1) 0.3s both',
           }}>vs {opponentName.toUpperCase()}</div>
+        </div>
+      )}
+
+      {showBossEntry && phase === 'intro' && (
+        <div
+          role="status"
+          onAnimationEnd={() => setShowBossEntry(false)}
+          style={{
+            position: 'absolute', inset: 0, zIndex: 35, pointerEvents: 'none',
+            display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column',
+            background: 'radial-gradient(ellipse, rgba(145,20,20,0.6), rgba(3,3,10,0.96) 68%)',
+            animation: reducedEffects ? 'modal-overlay-in 0.2s ease-out both' : 'boss-entry-climax 1.2s ease-out both',
+          }}
+        >
+          <div style={{ fontSize: 44, filter: 'drop-shadow(0 0 18px #e84040)' }}>☠</div>
+          <div style={{ marginTop: 9, color: '#ff7777', fontFamily: '"Cinzel",serif', fontSize: 'clamp(16px,4vw,25px)', fontWeight: 900, letterSpacing: '0.16em' }}>BOSS ENTRANTE</div>
+          <div style={{ marginTop: 6, color: '#c98f8f', fontSize: 11, letterSpacing: '0.12em' }}>{opponentName.toUpperCase()}</div>
         </div>
       )}
 
