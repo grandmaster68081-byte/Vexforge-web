@@ -16,6 +16,8 @@ prestige: number;
 charge: number;
 lore: string | null;
 code: string;
+  specialization: string | null;
+  synergy_json: Record<string, unknown> | null;
 }
 
 export interface DeckSlot {
@@ -42,7 +44,7 @@ if (!playerId) return { status: "blocked_auth", data: null, reason: "Sign in to 
 const { data, error } = await supabase
   .from("player_cards")
   .select(`id, card_id, quantity, locked, listed,
-    cards!inner(code, name, rarity, faction, power, affinity, prestige, charge, lore)`)
+    cards!inner(code, name, rarity, faction, power, affinity, prestige, charge, lore, specialization, synergy_json)`)
   .eq("player_id", playerId)
   .gt("quantity", 0)
   .order("quantity", { ascending: false });
@@ -64,6 +66,8 @@ const mapped = (data ?? [])
     prestige: row.cards.prestige,
     charge: row.cards.charge,
     lore: row.cards.lore,
+    specialization: row.cards.specialization,
+    synergy_json: row.cards.synergy_json,
   }));
 return { status: "ready", data: mapped };
 }

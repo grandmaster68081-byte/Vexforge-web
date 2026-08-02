@@ -1,3 +1,40 @@
+## Chat 143 — 2026-08-02 — T7: Cartas, colección y profundidad estratégica — COMPLETADO
+
+**Branch:** main | **Scope:** reconciliación del catálogo vivo, adaptación canónica de combate y lectura estratégica de mazos
+
+### ✅ Verificación de autoridad y catálogo
+
+- El catálogo vivo confirma 127 cartas activas, 4 facciones y 6 rarezas. Los atributos canónicos disponibles son `power`, `affinity`, `prestige`, `charge`, `specialization` y `synergy_json`.
+- `card_tags` está vacío en el catálogo actual; no se inventaron arquetipos, cartas, atributos, recompensas ni datos canónicos.
+- La fuente autoritativa de PvP define la derivación de estadísticas desde esos cuatro atributos canónicos; el cliente quedó alineado con la misma fórmula.
+
+### ✅ Implementación
+
+| Área | Detalle |
+|------|---------|
+| Adaptador de combate | `loadPlayerBattleUnits()` ya no intenta leer columnas inexistentes de combate. Deriva HP/ATK/DEF/SPD desde `power`, `affinity`, `prestige` y `charge`, igual que `vexforge_battle_resolve`. |
+| Keywords | `Guard`, `Surge`, `Drain` y `Veil` siguen derivándose únicamente de `synergy_json.keywords`; las unidades conservan sus flags de combate existentes. |
+| Metadatos de carta | La carga de unidades preserva `specialization` y el `faction_bonus` declarado por la carta para lectura estratégica, sin convertirlo en un multiplicador nuevo no documentado. |
+| Deck Builder | Cada carta muestra especialización y keywords oficiales. El panel del mazo presenta afinidad declarada de la facción dominante y patrones de keywords compartidas. |
+| ForgeFormation | La previsualización de formación muestra afinidad oficial del Campeón y sinergias de keyword activas, junto al bonus de reserva y la Formación Pura ya existentes. |
+| Invariantes | Se añadieron comprobaciones puras para la derivación canónica de estadísticas y la preservación de metadatos estratégicos en una `BattleUnit`. |
+
+### Verificaciones
+
+- `npm run build` ✅ 242 módulos, 0 errores TypeScript
+- `npx tsc --noEmit -p tsconfig.app.json` ✅
+- `git diff --check` ✅
+- `package-lock.json` sin URLs `package-firewall.replit.local` ✅
+- `.nvmrc` raíz: Node 22 ✅
+
+### Estado para la próxima sesión
+
+- **T7** ✅ COMPLETADO — catálogo y contratos de colección reconciliados; Deck Builder y ForgeFormation revelan profundidad estratégica basada exclusivamente en datos oficiales existentes.
+- **Siguiente:** T8 — Capa audiovisual Tier 1, comenzando por cinemáticas de reserva, bosses, muerte de Campeón y fallback de efectos reducidos sin degradar rendimiento móvil.
+- **Deploy live:** pendiente de la propagación automática de Cloudflare Pages tras el push a `main`.
+
+---
+
 ## Chat 142 — 2026-08-02 — T6: PvP competitivo y paridad de reglas — COMPLETADO
 
 **Branch:** main | **Commit:** 54f7d24 | **Build:** 0 errores TypeScript | **Scope:** formation snapshots, forfeit autoritativo, QA-filter leaderboard, banner ELO

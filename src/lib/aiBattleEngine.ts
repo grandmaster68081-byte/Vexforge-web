@@ -134,6 +134,76 @@ export function getAIDeck(difficulty: AIDifficulty, side: BattleSide = 'b'): Bat
   return DECKS[difficulty].map(p => ({ ...mkUnit(p as any), side, max_hp: (p as any).hp }));
 }
 
+interface CanonicalCombatCard {
+  id: string;
+  name: string;
+  faction: string | null;
+  rarity: string | null;
+  image_url: string | null;
+  power: number | null;
+  affinity: number | null;
+  prestige: number | null;
+  charge: number | null;
+  specialization: string | null;
+  synergy_json: Record<string, unknown> | null;
+}
+
+/**
+ * Mirrors the stat derivation used by the authoritative PvP resolver.
+ * Cards store canonical attributes rather than precomputed combat fields.
+ */
+export function createBattleUnitFromCanonicalCard(
+  card: CanonicalCombatCard,
+  idx: number,
+  side: BattleSide = 'a',
+): BattleUnit {
+  const power = Math.max(1, card.power ?? 10);
+  const affinity = Math.max(0, card.affinity ?? 2);
+  const prestige = Math.max(0, card.prestige ?? 1);
+  const charge = Math.max(0, card.charge ?? 1);
+  const keywords = Array.isArray(card.synergy_json?.keywords)
+    ? card.synergy_json.keywords.filter((keyword): keyword is string => typeof keyword === 'string')
+    : [];
+  const faction = card.faction ?? 'Guerrero';
+  const declaredFactionBonus = card.synergy_json?.faction_bonus;
+  const factionBonus = typeof declaredFactionBonus === 'object' && declaredFactionBonus !== null
+    ? declaredFactionBonus[faction]
+    : undefined;
+  const guard = keywords.includes('Guard');
+  const surge = keywords.includes('Surge');
+  const hp = power * 4 + affinity;
+  const atk = power + Math.floor(affinity / 4);
+  const def = prestige * 2 + Math.floor(affinity / 8) + (guard ? 5 : 0);
+  const spd = charge * 4 + Math.floor(affinity / 10) + (surge ? 20 : 0);
+
+  return {
+    idx,
+    side,
+    id: card.id,
+    name: card.name,
+    faction,
+    rarity: (card.rarity ?? 'Common') as BattleRarity,
+    image_url: card.image_url ?? '',
+    specialization: card.specialization,
+    faction_bonus: typeof factionBonus === 'number' ? factionBonus : undefined,
+    keywords,
+    hp,
+    max_hp: hp,
+    atk,
+    def,
+    spd,
+    power,
+    alive: true,
+    poisoned: false,
+    shielded: keywords.includes('Veil'),
+    guard,
+    lifesteal: keywords.includes('Drain'),
+    poison_atk: keywords.includes('Poison'),
+    rush: surge,
+    double_strike: keywords.includes('DoubleStrike'),
+  };
+}
+
 // ─── Player units loader ──────────────────────────────────────────────────────
 export async function loadPlayerBattleUnits(
   supabase: any, playerId: string, count = 40
@@ -141,7 +211,7 @@ export async function loadPlayerBattleUnits(
   try {
     const { data } = await supabase
       .from('player_cards')
-      .select('cards!inner(id,name,faction,rarity,atk,def,spd,hp,power,synergy_json,image_url)')
+      .select('cards!inner(id,name,faction,rarity,power,affinity,prestige,charge,specialization,synergy_json,image_url)')
       .eq('player_id', playerId)
       .eq('listed', false)
       .order('created_at', { ascending: false })
@@ -151,25 +221,7 @@ export async function loadPlayerBattleUnits(
 
     const units: BattleUnit[] = data
       .map((pc: any, i: number) => {
-        const c = pc.cards;
-        if (!c) return null;
-        const kw: string[] = c.synergy_json?.keywords ?? [];
-        return {
-          idx: i,
-          side: 'a' as BattleSide,
-          id: c.id,
-          name: c.name,
-          faction: c.faction ?? 'Guerrero',
-          rarity: (c.rarity ?? 'Common') as BattleRarity,
-          image_url: c.image_url ?? '',
-          keywords: kw,
-          hp: c.hp ?? 80, max_hp: c.hp ?? 80,
-          atk: c.atk ?? 10, def: c.def ?? 5, spd: c.spd ?? 5, power: c.power ?? 30,
-          alive: true, poisoned: false, shielded: kw.includes('Veil'),
-          guard: kw.includes('Guard'), lifesteal: kw.includes('Drain'),
-          poison_atk: kw.includes('Poison'), rush: kw.includes('Surge'),
-          double_strike: kw.includes('DoubleStrike'),
-        } as BattleUnit;
+        return pc.cards ? createBattleUnitFromCanonicalCard(pc.cards as CanonicalCombatCard, i) : null;
       })
       .filter(Boolean)
       .sort((a: BattleUnit, b: BattleUnit) => b.power - a.power)

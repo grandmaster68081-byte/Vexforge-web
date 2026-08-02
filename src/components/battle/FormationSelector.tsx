@@ -260,6 +260,19 @@ export function FormationSelector({ playerUnits, onConfirm, onCancel, difficulty
   const pureFormation = formationPreview ? hasFormationPureBonus(formationPreview) : false;
   const selectedCount = usedIdxs.size;
   const reserveCount = playerUnits.length - selectedCount;
+  const activeUnits = formationPreview
+    ? [formationPreview.champion, formationPreview.vanguard, formationPreview.sentinel].filter((unit): unit is BattleUnit => !!unit)
+    : [];
+  const activeKeywords = activeUnits
+    .flatMap(unit => unit.keywords)
+    .reduce<Record<string, number>>((counts, keyword) => {
+      counts[keyword] = (counts[keyword] ?? 0) + 1;
+      return counts;
+    }, {});
+  const sharedKeywords = Object.entries(activeKeywords)
+    .filter(([, count]) => count >= 2)
+    .map(([keyword, count]) => `${keyword} ×${count}`);
+  const championFactionBonus = formationPreview?.champion.faction_bonus;
 
   const handleConfirm = useCallback(() => {
     if (!canConfirm || selection.champion == null) return;
@@ -457,6 +470,18 @@ export function FormationSelector({ playerUnits, onConfirm, onCancel, difficulty
            ) : (
              <div style={{ color: '#666681', fontSize: 10 }}>Completa una facción para activar la pureza</div>
            )}
+            {formationPreview && (
+              <div style={{ marginTop: 9, paddingTop: 8, borderTop: '1px solid rgba(255,255,255,0.07)', fontSize: 9, lineHeight: 1.45 }}>
+                {championFactionBonus != null && (
+                  <div style={{ color: '#a9cfff' }}>
+                    Afinidad oficial de {formationPreview.champion.faction} · {Math.round(championFactionBonus * 100)}%
+                  </div>
+                )}
+                {sharedKeywords.length > 0
+                  ? <div style={{ color: '#c9a8ff', marginTop: 3 }}>Sinergia activa · {sharedKeywords.join(' · ')}</div>
+                  : <div style={{ color: '#62627c', marginTop: 3 }}>Selecciona roles complementarios para revelar sinergias.</div>}
+              </div>
+            )}
          </div>
        </div>
 

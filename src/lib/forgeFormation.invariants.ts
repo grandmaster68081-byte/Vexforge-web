@@ -6,6 +6,7 @@ import {
   isChampionProtected,
   type FormationSelection,
 } from './forgeFormation';
+import { createBattleUnitFromCanonicalCard } from './aiBattleEngine';
 
 function unit(id: string, overrides: Partial<BattleUnit> = {}): BattleUnit {
   return {
@@ -79,5 +80,27 @@ export function runForgeFormationInvariantChecks(): { passed: number; failures: 
   assert(nextSentinel?.unit.id === 'striker', 'sentinel replacement prioritizes attack');
   assert(nextSentinel?.remaining.length === 1, 'replacement removes exactly one reserve card');
 
-  return { passed: 8 - failures.length, failures };
+  const canonicalUnit = createBattleUnitFromCanonicalCard({
+    id: 'canonical',
+    name: 'Carta Canónica',
+    faction: 'Guerrero',
+    rarity: 'Rare',
+    image_url: null,
+    power: 40,
+    affinity: 8,
+    prestige: 3,
+    charge: 2,
+    specialization: 'Tank',
+    synergy_json: { keywords: ['Guard', 'Surge'], faction_bonus: { Guerrero: 0.12 } },
+  }, 0);
+  assert(
+    canonicalUnit.hp === 168 && canonicalUnit.atk === 42 && canonicalUnit.def === 12 && canonicalUnit.spd === 28,
+    'canonical card attributes derive the same combat stats as the authoritative PvP resolver',
+  );
+  assert(
+    canonicalUnit.specialization === 'Tank' && canonicalUnit.faction_bonus === 0.12,
+    'canonical card strategic metadata survives into the battle unit',
+  );
+
+  return { passed: 10 - failures.length, failures };
 }

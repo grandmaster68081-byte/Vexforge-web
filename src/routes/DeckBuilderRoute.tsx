@@ -6,6 +6,7 @@ import { PageLoader } from "../shared/components/PageLoader";
 import { BlockedAuthState } from "../shared/components/BlockedAuthState";
 import { useToast } from "../shared/context/ToastContext";
 import { EmptyState } from "../shared/components/EmptyState";
+import { getKeywordsForCard } from "../lib/keywords";
 
 const RARITY_COLOR: Record<string, string> = {
   Common: "#8b8b9e", Uncommon: "#3ddc84", Rare: "#4a9eff",
@@ -39,6 +40,7 @@ function MiniCard({ card, count, selected, canAdd, onClick }: {
 }) {
   const rc = RARITY_COLOR[card.rarity] ?? "#8b8b9e";
   const auraClass = card.rarity === "Mythic" ? "card-mythic-aura" : card.rarity === "Legendary" ? "card-legendary-aura" : undefined;
+  const keywords = getKeywordsForCard(card.synergy_json);
   return (
     <div onClick={onClick} className={auraClass} style={{
       background: selected ? `${rc}18` : "#1a1a2e",
@@ -58,6 +60,10 @@ function MiniCard({ card, count, selected, canAdd, onClick }: {
         <span style={{ color: FACTION_COLOR[card.faction] ?? "#888", fontSize: 9 }}>{card.faction}</span>
         <span style={{ color: "#e8b84b", fontSize: 9 }}>⚡{card.power}</span>
       </div>
+       <div style={{ minHeight: 14, marginTop: 5, color: "#74748e", fontSize: 8, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+         {card.specialization ?? "Sin especialización"}
+         {keywords.length > 0 && <span style={{ color: "#a9cfff" }}> · {keywords.map(keyword => keyword.name).join(" · ")}</span>}
+       </div>
     </div>
   );
 }
@@ -79,6 +85,30 @@ function DeckPanel({ selectedIds, myCards, saving, saveMsg, validation, onValida
   const total = selectedIds.length;
   const isValid = total >= 5 && total <= 30 && Object.keys(factions).length <= 2;
   const factionList = Object.entries(factions).sort((a, b) => b[1] - a[1]);
+  const selectedCards = selectedIds
+    .map(id => myCards.find(card => card.card_id === id))
+    .filter((card): card is PlayerCardEntry => !!card);
+  const primaryFaction = factionList[0]?.[0] ?? null;
+  const factionBonusValues = selectedCards
+    .map(card => {
+      const bonus = card.synergy_json?.faction_bonus;
+      return primaryFaction && typeof bonus === "object" && bonus !== null && typeof bonus[primaryFaction] === "number"
+        ? bonus[primaryFaction] as number
+        : 0;
+    })
+    .filter(value => value > 0);
+  const averageFactionBonus = factionBonusValues.length
+    ? Math.round((factionBonusValues.reduce((sum, value) => sum + value, 0) / factionBonusValues.length) * 100)
+    : 0;
+  const sharedKeywords = selectedCards
+    .flatMap(card => getKeywordsForCard(card.synergy_json).map(keyword => keyword.name))
+    .reduce<Record<string, number>>((counts, keyword) => {
+      counts[keyword] = (counts[keyword] ?? 0) + 1;
+      return counts;
+    }, {});
+  const synergies = Object.entries(sharedKeywords)
+    .filter(([, count]) => count >= 2)
+    .sort(([, a], [, b]) => b - a);
 
   return (
     <div style={{ width: 220, flexShrink: 0, position: "sticky", top: 16 }}>
@@ -123,6 +153,23 @@ function DeckPanel({ selectedIds, myCards, saving, saveMsg, validation, onValida
             {Object.keys(factions).length > 2 && (
               <div style={{ color: "#e3573f", fontSize: 10, marginTop: 4 }}>⚠️ Máx. 2 facciones</div>
             )}
+         {selectedCards.length > 0 && (
+           <div style={{ borderTop: "1px solid #1a1a2e", paddingTop: 10, marginTop: 10 }}>
+             <div style={{ color: "#a9cfff", fontSize: 10, marginBottom: 6, letterSpacing: "0.06em" }}>LECTURA ESTRATÉGICA</div>
+             <div style={{ color: "#8e8eaa", fontSize: 10, lineHeight: 1.45 }}>
+               {primaryFaction
+                 ? <>Afinidad declarada · <span style={{ color: FACTION_COLOR[primaryFaction] ?? "#e8b84b" }}>{primaryFaction}</span>{averageFactionBonus > 0 ? ` · ${averageFactionBonus}% promedio` : ""}</>
+                 : "Añade cartas para evaluar afinidades."}
+             </div>
+             {synergies.length > 0 ? (
+               <div style={{ marginTop: 6, color: "#63e69b", fontSize: 10 }}>
+                 Sinergias compartidas · {synergies.map(([keyword, count]) => `${keyword} ×${count}`).join(" · ")}
+               </div>
+             ) : (
+               <div style={{ marginTop: 6, color: "#62627c", fontSize: 10 }}>Combina dos o más keywords para revelar patrones del mazo.</div>
+             )}
+           </div>
+         )}
           </div>
         )}
       </div>

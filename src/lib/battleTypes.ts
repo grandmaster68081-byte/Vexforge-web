@@ -8,6 +8,8 @@
     idx: number; side: BattleSide; id: string; name: string;
     faction: string; rarity: BattleRarity; image_url: string;
     keywords: string[];
+    specialization?: string | null;
+    faction_bonus?: number;
     hp: number; max_hp: number; atk: number; def: number; spd: number; power: number;
     alive: boolean; poisoned: boolean; shielded: boolean;
     guard: boolean; lifesteal: boolean; poison_atk: boolean; rush: boolean; double_strike: boolean;
