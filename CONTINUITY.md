@@ -187,3 +187,46 @@
 - **Chat 116** — ChampionSummonCinematic keyword FX + image_url, per-card motto system
 - **Chat 115** — Rewards IA anti-farm, daily cap, claim RPC
 - **Chats 100-114** — Base del juego: auth, cards, deck builder, pvp, raids, shop, economy, etc.
+## Chat 140 — 2026-08-02 — T3: Vertical slice PvE — ForgeFormation battle flow — COMPLETADO
+
+**Branch:** main | **Scope:** flujo completo de misión con ForgeFormationBoard y settlement autoritativo
+
+### ✅ Implementación
+
+- **MissionsRoute.tsx**: botón "Iniciar Batalla" lanza flujo T3 completo (ya no auto-ejecuta sin combate)
+- **MissionBriefing**: pantalla narrativa cinematográfica — misión, región, enemigo IA, energía requerida, recompensas, recordatorio ForgeFormation
+- **FormationSelector**: selección de Campeón/Vanguardia/Centinela con reliquias equipadas aplicadas
+- **execute_mission RPC**: llamado ANTES del combate para descontar energía y crear mission_run en `pending`
+- **ForgeFormationBoard**: combate ForgeFormation real — dificultad derivada del campo `difficulty` de la misión
+- **VictoryScreen**: `claim_mission_reward` autoritativo + desglose animado de XP/VEX ganados
+- **DefeatScreen**: mensaje diferenciado según causa (campeón caído vs derrota) + opción reintento
+- **repository.ts**: `startMissionRun()` separado de claim; `getCurrentPlayerId` exportado
+- **useMissions.ts**: `recordBattleComplete()` para actualizar session stats desde la ruta
+- **Mapeo de dificultad**: easy→easy, normal→easy, hard→normal, epic→expert, legendary→legend (PvE más accesible)
+
+### Cobertura T3 (según protocolo)
+
+| Caso | Cubierto |
+|------|----------|
+| Victoria | ✅ claim_mission_reward + VictoryScreen + session stats |
+| Derrota | ✅ DefeatScreen (energía ya gastada) |
+| Campeón caído | ✅ championDied=true → mensaje específico |
+| Abandono/dismiss | ✅ handleBattleDismiss → DefeatScreen |
+| Energía insuficiente | ✅ MissionBriefing bloquea el botón + error en startMissionRun |
+| Cooldown activo | ✅ MissionCard bloquea el botón (existente) |
+| Doble reclamación | ✅ claim_mission_reward idempotente (T1-C) |
+| Error de red | ✅ errores propagados a setBattleError → mostrados en briefing |
+
+### Verificaciones
+
+- `npm run build` ✅ 241 módulos, 0 errores TypeScript
+- `git diff --check` ✅
+- `grep -c "package-firewall.replit.local" package-lock.json` → 0 ✅
+- `.nvmrc` raíz: Node 22 ✅
+- Commit: `da3feab`
+
+### Estado para la próxima sesión
+
+- **T3** ✅ COMPLETADO — vertical slice PvE con ForgeFormation real, settlement autoritativo y screens de resultado
+- **Siguiente:** T4 — extender el vertical slice a todo el contenido PvE (misiones elite, expediciones, dungeons, eventos, patrones de enemigos, fases, modificadores regionales)
+- **Deploy live:** queda sujeto a propagación externa de Cloudflare Pages (no se modificó infraestructura Supabase en este lote)
