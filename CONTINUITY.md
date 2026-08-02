@@ -1,5 +1,35 @@
 # VEXFORGE — CONTINUITY LOG
 
+## Chat 136 — 2026-08-02 — T1-F: Ataque autoritativo de World Bosses — COMPLETADO
+
+**Branch:** main | **Scope:** daño compartido + encuentros + recompensas + identidad autenticada
+
+### ✅ Estado real verificado
+
+- La auditoría confirmó que `vexforge_attack_world_boss(uuid, bigint)` ya era la RPC canónica: deriva el jugador desde `auth.uid()`, bloquea la fila del boss con `FOR UPDATE`, calcula el HP restante desde encuentros completados y liquida VEX/shards mediante `wallet_tx`/`economy_ledger`.
+- Se añadió validación explícita para daño nulo o no positivo, preservando el límite por `power_level` y el HP restante.
+- La función legacy `attack_world_boss(uuid, uuid)` aceptaba `p_player_id` desde el caller; quedó revocada para `PUBLIC`, `anon` y `authenticated`, conservándose sólo para `service_role` por compatibilidad operativa.
+- El cliente ya usa exclusivamente `vexforge_attack_world_boss` después de una victoria real de `ForgeFormationBoard`; no se creó un flujo paralelo ni se modificaron fórmulas de recompensa, bosses, cartas o economía.
+- Migración reproducible publicada: `backend/sql-migrations/T1-F-world-boss-contract.sql`.
+
+### Verificaciones
+
+- `npm run build` ✅ 240 módulos, 0 errores TypeScript
+- `git diff --check` ✅
+- RPC canónica: `anon` ❌, `authenticated` ✅, `service_role` ✅
+- RPC legacy: `anon` ❌, `authenticated` ❌, `service_role` ✅
+- Probes de daño `0` y `NULL` devuelven `Invalid damage` ✅
+- Probe sin sesión devuelve `Not authenticated` ✅
+- Encuentros antes/después de las pruebas: `0` ✅
+- Entradas de ledger de World Boss antes/después: `0` ✅
+- Bosses activos preservados: `15` ✅
+
+### Estado para la próxima sesión
+
+- **T1-F** ✅ COMPLETADO — ataque autoritativo de World Bosses
+- **Siguiente:** T1-G — auditar y completar join/contribute/complete de Raids
+- Deploy live: T1-E confirmado; T1-F pendiente de propagación externa de Cloudflare Pages
+
 ## Chat 135 — 2026-08-02 — T1-E: Contrato autoritativo de reliquias — COMPLETADO
 
 **Branch:** main | **Scope:** kit inicial + equipar/desequipar + efectos de combate
