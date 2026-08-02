@@ -1,3 +1,31 @@
+## Chat 146 — 2026-08-02 — T10: Gate final de lanzamiento — AUDITORÍA Y HARDENING COMPLETADOS
+
+**Branch:** main | **Scope:** reconciliación de contratos vivos, verificación de deploy y cierre del grant anónimo de reliquias
+
+### ✅ Evidencia reconciliada
+
+- El repositorio oficial `main` estaba limpio en `74030dc` y `npm install && npm run build` terminó con 244 módulos y 0 errores TypeScript.
+- GitHub `main`, `dist/` local y `https://vexforge-web.pages.dev/` sirven el mismo bundle `index-CbH_Tx8g.js`; el desfase histórico de Cloudflare ya no se reproduce.
+- El deploy oficial responde HTTP 200 en `/`, `/cards`, `/lore`, `/leaderboard`, `/missions`, `/raids`, `/world-bosses` y `/pvp`.
+- Cloudflare sirve CSP, HSTS, `X-Frame-Options`, `X-Content-Type-Options`, `Referrer-Policy` y `Permissions-Policy` conforme a `public/_headers`.
+- El esquema vivo conserva RLS en las tablas críticas; los contratos Battle Run (`start_battle_run`, `resolve_battle_run`) y los settlements de misión, packs, reliquias, World Bosses, Raids y PvP existen como funciones `SECURITY DEFINER` con `search_path` explícito.
+- Los datos vivos verificados son 12 jugadores (3 marcados `is_admin`/`is_qa`), 127 cartas, 68 misiones, 3 raids, 15 World Bosses, 20 reliquias, 5 packs activos, 2 mission runs y 2 matches PvP. `battle_runs` todavía no tiene ejecuciones persistidas.
+- Las invariantes puras de ForgeFormation cubren formación, protección del Campeón, bonus de Reserva, reemplazos y derivación canónica de estadísticas; el build y `git diff --check` pasan.
+
+### 🔒 Corrección aplicada
+
+- La auditoría ACL detectó que `equip_relic(uuid)` y `unequip_relic(uuid)` conservaban `EXECUTE` para `anon`, aunque el contrato exige sesión autenticada.
+- Se añadió `backend/sql-migrations/T10-launch-gate-relic-permissions.sql`, que revoca `PUBLIC`/`anon` y deja explícitos `authenticated` y `service_role`.
+- No se modificaron cartas, economía, combate, RLS de tablas, triggers, fórmulas ni datos.
+
+### Estado T10
+
+- **T10 seguridad y reconciliación:** ✅ COMPLETADO.
+- **Go/no-go de lanzamiento público:** **NO-GO todavía**. La base de contratos está reconciliada, pero el estado oficial sigue siendo `PRE-LAUNCH INTERNAL QA`; `battle_runs` no tiene ejecuciones persistidas y faltan las pruebas autenticadas controladas del flujo completo, la matriz de doble click/refresh/abandono/reconexión y la separación formal de fixtures QA frente al universo de lanzamiento.
+- **Próximo trabajo oficial:** ejecutar la validación autenticada controlada y completar la matriz de launch gate sin interpretar las métricas actuales de owner/admin/QA como producción.
+
+---
+
 ## Chat 145 — 2026-08-02 — T9: Observabilidad y hardening pre-lanzamiento — COMPLETADO
 
 **Branch:** main | **Scope:** protección del navegador, diagnóstico local acotado y mensajes seguros de infraestructura
