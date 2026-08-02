@@ -1,3 +1,37 @@
+## Chat 147 — 2026-08-02 — Inicio de sesión — BASELINE RECONCILIADO
+
+**Branch:** main | **Scope:** acceso seguro, continuidad y verificación de baseline
+
+### ✅ Acceso y estado confirmado
+
+- Se solicitaron mediante el mecanismo seguro únicamente `GITHUB_PAT` y `SUPABASE_PAT`; sus valores no se imprimieron ni se incorporaron al repositorio.
+- El repositorio oficial `main` fue clonado y coincide con `origin/main` en `9d98e1a`.
+- El flujo de inicio de sesión ya existía y no se repitió: `src/routes/AccountRoute.tsx` y `src/providers/AuthProvider.tsx` cubren inicio de sesión, registro, recuperación de contraseña, sesión activa y cierre de sesión mediante Supabase Auth.
+- Las rutas públicas `/cards`, `/lore` y `/leaderboard` ya muestran discovery para visitantes sin bloquear la exploración.
+
+### ✅ Verificaciones de esta sesión
+
+- `npm install && npm run build` ✅ 244 módulos, 0 errores TypeScript.
+- `git status --short` ✅ limpio antes de este registro.
+- `package-lock.json` sin URLs `package-firewall.replit.local` ✅.
+- `.nvmrc` raíz = Node 22 ✅.
+- Cloudflare Pages sirve el mismo bundle que `dist/` local: `index-CbH_Tx8g.js` y `index-D7i0qsEk.css` ✅.
+- Deploy oficial HTTP 200 en `/`, `/cards`, `/lore`, `/leaderboard`, `/missions`, `/raids`, `/world-bosses` y `/pvp` ✅.
+- Esquema vivo confirmado: `battle_runs` existe con `start_battle_run` y `resolve_battle_run` como funciones `SECURITY DEFINER`; `battle_runs` contiene 2 registros.
+
+### ⚠️ Reconciliación de datos vivos
+
+- La consulta actual devuelve 14 jugadores, 5 marcados como owner/admin/QA, 127 cartas, 68 misiones, 2 mission runs, 2 matches PvP y 2 battle runs.
+- Estas cantidades sustituyen los conteos históricos anteriores de continuidad para futuras auditorías; siguen siendo datos internos y no representan producción pública.
+- Estado canónico: **PRE-LAUNCH INTERNAL QA**. No se declara go-live.
+
+### Estado para la próxima sesión
+
+- El inicio de sesión queda **VERIFICADO Y YA IMPLEMENTADO**; no se modificó código de autenticación.
+- T10 continúa en **NO-GO** hasta completar validación autenticada controlada, matriz de doble clic/refresh/abandono/reconexión y separación formal de fixtures QA frente al universo de lanzamiento.
+
+---
+
 ## Chat 146 — 2026-08-02 — T10: Gate final de lanzamiento — AUDITORÍA Y HARDENING COMPLETADOS
 
 **Branch:** main | **Scope:** reconciliación de contratos vivos, verificación de deploy y cierre del grant anónimo de reliquias
