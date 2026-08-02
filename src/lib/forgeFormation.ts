@@ -150,30 +150,104 @@ export function simulateFormationBattle(
   formation: FormationState,
   difficulty: AIDifficulty,
 ): RealBattleResult & { championDied: boolean; finalFormation: FormationState } {
-  // Aplanar formación en array de unidades (con Champion marcado como especial)
+  // The formation engine is not a cosmetic wrapper around the flat AI engine.
+  // Support units are defensive anchors, the champion is protected while one
+  // of them is alive, and a dead support is replaced from the reserve.
+  const activeBySlot: Record<FormationSlot, BattleUnit | null> = {
+    vanguard: formation.vanguard ? { ...formation.vanguard, guard: true } : null,
+    champion: { ...formation.champion, guard: false },
+    sentinel: formation.sentinel ? { ...formation.sentinel, guard: true } : null,
+  };
+  let reserve = formation.reserve.map(unit => ({ ...unit, side: 'a' as BattleSide, alive: true }));
+
+  const championId = formation.champion.id;
+  const slotForUnit = (unit: BattleUnit): FormationSlot | null => {
+    if (unit.id === activeBySlot.vanguard?.id) return 'vanguard';
+    if (unit.id === activeBySlot.champion?.id) return 'champion';
+    if (unit.id === activeBySlot.sentinel?.id) return 'sentinel';
+    return null;
+  };
+
+  // Aplanar formación en array de unidades y make both support slots valid
+  // defensive targets. The target resolver below is deliberately explicit so
+  // a future change to the generic Guard keyword cannot bypass this rule.
   const playerUnits: BattleUnit[] = [
-    ...(formation.vanguard ? [{ ...formation.vanguard, idx: 0 }] : []),
-    { ...formation.champion, idx: 1 },
-    ...(formation.sentinel  ? [{ ...formation.sentinel,  idx: 2 }] : []),
+    ...(activeBySlot.vanguard ? [{ ...activeBySlot.vanguard, idx: 0 }] : []),
+    { ...activeBySlot.champion, idx: 1 },
+    ...(activeBySlot.sentinel ? [{ ...activeBySlot.sentinel, idx: 2 }] : []),
   ].map((u, i) => ({ ...u, side: 'a' as BattleSide, idx: i }));
 
-  const result = simulateAIBattle(playerUnits, difficulty);
+  const result = simulateAIBattle(playerUnits, difficulty, undefined, {
+    pickTarget: (enemies, attacker, allUnits) => {
+      if (attacker.side === 'b') {
+        const activeSupportIds = new Set(
+          [activeBySlot.vanguard, activeBySlot.sentinel]
+            .filter((unit): unit is BattleUnit => !!unit?.alive)
+            .map(unit => unit.id),
+        );
+        const protectedTargets = enemies.filter(unit => activeSupportIds.has(unit.id));
+        if (protectedTargets.length) {
+          return protectedTargets.reduce((best, unit) => unit.hp < best.hp ? unit : best);
+        }
+      }
+      // Preserve the generic AI targeting policy for all non-formation sides.
+      const guards = enemies.filter(unit => unit.guard);
+      const pool = guards.length ? guards : enemies;
+      return pool.reduce((best, unit) => {
+        if (difficulty === 'easy') return best;
+        return unit.hp < best.hp ? unit : best;
+      }, pool[0]);
+    },
+    onUnitDeath: (deadUnit, allUnits) => {
+      if (deadUnit.side !== 'a' || deadUnit.id === championId) return null;
+      const slot = slotForUnit(deadUnit);
+      if (!slot || slot === 'champion') return null;
 
-  // Detectar si el Campeón cayó (índice 1 o el de más alto poder)
-  const finalChampion = result.final_units?.find(u => u.side === 'a' && u.id === formation.champion.id);
-  // Explicit ternary to avoid the ?? short-circuit bug: !X ?? Y always returns !X (boolean).
+      const next = getNextReserveUnit(reserve, slot);
+      if (!next) {
+        activeBySlot[slot] = { ...deadUnit, alive: false, hp: 0 };
+        return null;
+      }
+
+      reserve = next.remaining.map(unit => ({ ...unit, side: 'a' as BattleSide, alive: true }));
+      const replacement: BattleUnit = {
+        ...next.unit,
+        side: 'a',
+        idx: allUnits.length,
+        alive: true,
+        hp: next.unit.max_hp,
+        max_hp: next.unit.max_hp,
+        guard: true,
+      };
+      activeBySlot[slot] = replacement;
+      return replacement;
+    },
+    shouldStop: allUnits => {
+      const champion = allUnits.find(unit => unit.side === 'a' && unit.id === championId);
+      return !champion?.alive;
+    },
+  });
+
+  // Explicit ternary avoids the historic `!X ?? Y` precedence bug.
+  const finalChampion = result.final_units?.find(u => u.side === 'a' && u.id === championId);
   const championDied = finalChampion ? !finalChampion.alive : true;
 
-  // Reconstruir estado final de formación
+  // Reconstruct the actual slot state, including reserve replacements and
+  // the live HP/alive values produced by the simulator.
+  const liveUnit = (slot: FormationSlot): BattleUnit | null => {
+    const slotUnit = activeBySlot[slot];
+    if (!slotUnit) return null;
+    return result.final_units?.find(unit => unit.side === 'a' && unit.id === slotUnit.id) ?? {
+      ...slotUnit,
+      alive: false,
+      hp: 0,
+    };
+  };
   const finalFormation: FormationState = {
     champion: finalChampion ?? { ...formation.champion, alive: false, hp: 0 },
-    vanguard: formation.vanguard
-      ? result.final_units?.find(u => u.side === 'a' && u.id === formation.vanguard!.id) ?? null
-      : null,
-    sentinel: formation.sentinel
-      ? result.final_units?.find(u => u.side === 'a' && u.id === formation.sentinel!.id) ?? null
-      : null,
-    reserve: formation.reserve,
+    vanguard: formation.vanguard ? liveUnit('vanguard') : null,
+    sentinel: formation.sentinel ? liveUnit('sentinel') : null,
+    reserve,
   };
 
   // Si el Campeón murió → forzar derrota (independientemente del resultado del motor)

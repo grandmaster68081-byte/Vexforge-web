@@ -1,3 +1,31 @@
+## Chat 139 — 2026-08-02 — T2: ForgeFormation motor de reglas — COMPLETADO
+
+**Branch:** main | **Scope:** protección del Campeón, reserva efectiva, reemplazos e invariantes
+
+### ✅ Implementación
+
+- El simulador compartido acepta reglas de modo para resolver targeting, muertes, reemplazos y terminación anticipada sin alterar el comportamiento por defecto de la IA.
+- ForgeFormation protege al Campeón mientras exista Vanguardia o Centinela vivos; si ambos apoyos caen, el Campeón queda expuesto.
+- Una unidad de apoyo destruida activa un reemplazo de la Reserva dentro de la simulación; Vanguardia prioriza DEF y Centinela prioriza ATK, conservando el resto de la Reserva.
+- La muerte del Campeón detiene inmediatamente la batalla aunque aún queden unidades de apoyo vivas.
+- El estado final conserva HP, alive, ranuras activas, reemplazos consumidos y Reserva restante.
+- Se añadió un módulo de invariantes puras para validar selección de Campeón, bonus de Reserva, protección y prioridad de reemplazos sin red, timers ni escrituras de producción.
+
+### Verificaciones
+
+- `npm run build` ✅ 240 módulos, 0 errores TypeScript
+- `npx tsc --noEmit -p tsconfig.app.json` ✅
+- `git diff --check` ✅
+- Invariantes ForgeFormation: 8/8 ✅
+- `package-lock.json` sin URLs `package-firewall.replit.local` ✅
+- `.nvmrc` raíz: Node 22 ✅
+
+### Estado para la próxima sesión
+
+- **T2** ✅ COMPLETADO — motor de reglas ForgeFormation con invariantes verificables
+- **Siguiente:** T3 — vertical slice PvE de una misión completa con Battle Run y settlement autoritativo
+- **Deploy live:** queda sujeto a la propagación externa de Cloudflare Pages; este lote no modifica RPCs ni contratos de Supabase.
+
 ## Chat 138 — 2026-08-02 — T1-H: Contrato autoritativo PvP battle resolve — COMPLETADO
 
 **Branch:** main | **Scope:** vexforge_battle_resolve — batalla PvP idempotente, ELO, recompensas

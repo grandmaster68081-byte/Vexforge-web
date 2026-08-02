@@ -14,6 +14,31 @@ import type { BattleUnit, BattleTurnData, BattleEvent, RealBattleResult, BattleR
 export type AIDifficulty = 'easy' | 'normal' | 'expert' | 'legend' | 'tutorial';
 export type BattleMode   = 'pvp' | 'ai_easy' | 'ai_normal' | 'ai_expert' | 'ai_legend' | 'practice' | 'tutorial';
 
+export interface BattleSimulationOptions {
+  /**
+   * Optional mode-specific target resolver. It receives the live enemy list
+   * after the default alive/side filtering has been applied.
+   */
+  pickTarget?: (
+    enemies: BattleUnit[],
+    attacker: BattleUnit,
+    allUnits: BattleUnit[],
+  ) => BattleUnit;
+  /**
+   * Return a replacement when a unit dies. The replacement is appended to the
+   * live battle and can participate from the next round.
+   */
+  onUnitDeath?: (
+    unit: BattleUnit,
+    allUnits: BattleUnit[],
+  ) => BattleUnit | null;
+  /**
+   * Formation modes can end immediately when a protected champion falls,
+   * even if support units are still alive.
+   */
+  shouldStop?: (allUnits: BattleUnit[]) => boolean;
+}
+
 export const AI_DIFFICULTY_LABEL: Record<AIDifficulty, string> = {
   easy:     'Aprendiz',
   normal:   'Forjador',
@@ -188,6 +213,7 @@ export function simulateAIBattle(
   rawPlayerUnits: BattleUnit[],
   difficulty: AIDifficulty,
   opponentUnits?: BattleUnit[],
+  options: BattleSimulationOptions = {},
 ): RealBattleResult {
   const playerUnits = cloneUnits(rawPlayerUnits).map((u, i) => ({ ...u, side: 'a' as BattleSide, idx: i, alive: true }));
   const aiUnits     = cloneUnits(opponentUnits ?? getAIDeck(difficulty, 'b')).map((u, i) => ({ ...u, side: 'b' as BattleSide, idx: i, alive: true }));
@@ -206,7 +232,11 @@ export function simulateAIBattle(
       if (unit.poisoned && unit.alive) {
         const poisonDmg = Math.max(1, Math.floor(unit.max_hp * 0.08));
         unit.hp = Math.max(0, unit.hp - poisonDmg);
-        if (unit.hp === 0) unit.alive = false;
+        if (unit.hp === 0) {
+          unit.alive = false;
+          const replacement = options.onUnitDeath?.(unit, all);
+          if (replacement) all.push(replacement);
+        }
         turns.push({
           turn: turns.length + 1, atk_side: unit.side,
           attacker: toActor(unit), defender: toActor(unit),
@@ -218,7 +248,8 @@ export function simulateAIBattle(
       }
     }
     // Re-check after poison ticks
-    if (!all.filter(u => u.side === 'a' && u.alive).length ||
+    if (options.shouldStop?.(all) ||
+        !all.filter(u => u.side === 'a' && u.alive).length ||
         !all.filter(u => u.side === 'b' && u.alive).length) break;
 
     // Sort by SPD desc for attack order
@@ -229,7 +260,7 @@ export function simulateAIBattle(
       const enemies = all.filter(u => u.side !== attacker.side && u.alive);
       if (!enemies.length) break;
 
-      const target = pickTarget(enemies, difficulty);
+      const target = options.pickTarget?.(enemies, attacker, all) ?? pickTarget(enemies, difficulty);
       const events: BattleEvent[] = [];
 
       // Shield block (Veil) — absorbs the first hit only
@@ -249,7 +280,11 @@ export function simulateAIBattle(
         if (attacker.double_strike && target.alive) {
           const dmg2 = Math.max(1, Math.floor(attacker.atk * 0.6) - target.def);
           target.hp  = Math.max(0, target.hp - dmg2);
-          if (target.hp === 0) target.alive = false;
+          if (target.hp === 0) {
+            target.alive = false;
+            const replacement = options.onUnitDeath?.(target, all);
+            if (replacement) all.push(replacement);
+          }
           turns.push({
             turn: turns.length + 1, atk_side: attacker.side,
             attacker: toActor(attacker), defender: toActor(target),
@@ -260,7 +295,8 @@ export function simulateAIBattle(
             alive_b: all.filter(u => u.side === 'b' && u.alive).length,
           });
         }
-        if (!all.filter(u => u.side === 'a' && u.alive).length ||
+        if (options.shouldStop?.(all) ||
+            !all.filter(u => u.side === 'a' && u.alive).length ||
             !all.filter(u => u.side === 'b' && u.alive).length) break;
         continue;
       }
@@ -273,7 +309,11 @@ export function simulateAIBattle(
       // Apply damage
       target.hp = Math.max(0, target.hp - dmg);
       const isKill = target.hp === 0;
-      if (isKill) target.alive = false;
+      if (isKill) {
+        target.alive = false;
+        const replacement = options.onUnitDeath?.(target, all);
+        if (replacement) all.push(replacement);
+      }
 
       // Lifesteal / Drain
       let lifestealHeal = 0;
@@ -302,7 +342,11 @@ export function simulateAIBattle(
       if (attacker.double_strike && target.alive) {
         const dmg2 = Math.max(1, Math.floor(attacker.atk * 0.6) - target.def);
         target.hp  = Math.max(0, target.hp - dmg2);
-        if (target.hp === 0) target.alive = false;
+        if (target.hp === 0) {
+          target.alive = false;
+          const replacement = options.onUnitDeath?.(target, all);
+          if (replacement) all.push(replacement);
+        }
         turns.push({
           turn: turns.length + 1, atk_side: attacker.side,
           attacker: toActor(attacker), defender: toActor(target),
@@ -314,7 +358,8 @@ export function simulateAIBattle(
         });
       }
 
-      if (!all.filter(u => u.side === 'a' && u.alive).length ||
+      if (options.shouldStop?.(all) ||
+          !all.filter(u => u.side === 'a' && u.alive).length ||
           !all.filter(u => u.side === 'b' && u.alive).length) break;
     }
   }
