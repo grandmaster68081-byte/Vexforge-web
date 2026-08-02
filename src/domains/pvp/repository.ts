@@ -274,3 +274,76 @@ export async function startRealBattle(opponentId: string): Promise<DomainResult<
   if (!result?.ok) return { status: 'ready', data: null, reason: result?.error ?? 'battle_failed' };
   return { status: 'ready', data: result };
 }
+
+// ─── T6: Formation snapshot storage ──────────────────────────────────────────
+
+/**
+ * storeFormationSnapshot — almacena el snapshot de formación del challenger
+ * en pvp_matches después de que battle_resolve devuelve el match_id.
+ * Silencia errores — es telemetría, no bloquea el flujo.
+ */
+export async function storeFormationSnapshot(
+  matchId: string,
+  formation: object,
+): Promise<void> {
+  try {
+    await supabase.rpc('vexforge_pvp_store_formation', {
+      p_match_id:  matchId,
+      p_formation: formation,
+    });
+  } catch { /* silent — telemetría no crítica */ }
+}
+
+// ─── T6: Forfeit (abandono mid-batalla) ───────────────────────────────────────
+
+/**
+ * pvpForfeit — registra abandono del challenger.
+ * Challenger pierde ELO, oponente gana ELO por walkover.
+ * Idempotente — misma key devuelve el resultado cacheado.
+ */
+export async function pvpForfeit(
+  opponentId: string,
+  idempotencyKey: string,
+): Promise<DomainResult<{ elo_change: number; match_id: string }>> {
+  const { data, error } = await supabase.rpc('vexforge_pvp_forfeit', {
+    p_opponent_id:     opponentId,
+    p_idempotency_key: idempotencyKey,
+  });
+
+  if (error) return { status: 'ready', data: null, reason: error.message };
+  const result = data as { ok: boolean; elo_change?: number; match_id?: string; error?: string };
+  if (!result?.ok) return { status: 'ready', data: null, reason: result?.error ?? 'forfeit_failed' };
+  return {
+    status: 'ready',
+    data: { elo_change: result.elo_change ?? -15, match_id: result.match_id ?? '' },
+  };
+}
+
+// ─── T6: Leaderboard QA-filtrado (oculta cuentas admin/QA) ──────────────────
+
+export interface PublicRankEntry {
+  player_id: string;
+  display_name: string;
+  mmr: number;
+  wins: number;
+  losses: number;
+  draws: number;
+  rank_position: number | null;
+}
+
+/**
+ * listPublicRankings — usa get_public_pvp_rankings (SECURITY DEFINER).
+ * Excluye automáticamente cuentas is_admin / is_qa del leaderboard.
+ */
+export async function listPublicRankings(
+  seasonId: string,
+  limit = 50,
+): Promise<DomainResult<PublicRankEntry[]>> {
+  const { data, error } = await supabase.rpc('get_public_pvp_rankings', {
+    p_season_id: seasonId,
+    p_limit:     limit,
+  });
+
+  if (error) return { status: 'ready', data: null, reason: error.message };
+  return { status: 'ready', data: (data ?? []) as PublicRankEntry[] };
+}

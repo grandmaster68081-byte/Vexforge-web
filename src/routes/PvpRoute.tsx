@@ -3,6 +3,7 @@ import { BlockedAuthState } from "../shared/components/BlockedAuthState";
 import { useState, useEffect, useRef, useCallback } from "react";
 import { usePvp } from "../domains/pvp/usePvp";
 import type { BattleOpponent } from "../domains/pvp/repository";
+import { storeFormationSnapshot, pvpForfeit, listPublicRankings, type PublicRankEntry } from "../domains/pvp/repository";
 import type { RealBattleResult } from "../lib/battleTypes";
 import { InteractiveBattleBoard } from "../components/battle/InteractiveBattleBoard";
 import { getRank, tierProgress } from "../lib/rankUtils";
@@ -484,6 +485,13 @@ export function PvpRoute() {
   const [aiVexEarned, setAiVexEarned]             = useState<number | null>(null);
   const [aiCapReached, setAiCapReached]           = useState(false);
   const myMmrRef                                  = useRef(1000);
+  // T6: formation snapshot + forfeit tracking
+  const pvpFormationRef                           = useRef<object | null>(null);
+  const pvpForfeitKeyRef                          = useRef<string | null>(null);
+  // T6: public rankings (QA-filtered)
+  const [publicRankings, setPublicRankings]       = useState<PublicRankEntry[] | null>(null);
+  const [rankingsLoading, setRankingsLoading]     = useState(false);
+  const [eloChangeBanner, setEloChangeBanner]     = useState<{ won: boolean; change: number } | null>(null);
 
   // Trigger animated search
   const startMatchmaking = useCallback(async () => {
@@ -551,7 +559,18 @@ export function PvpRoute() {
 
   const handleFormationConfirm = useCallback((formation: FormationState) => {
     setFormationUnits(null);
-    setPendingFormation(applyRelicEffects(formation, equippedRelics));
+    const withRelics = applyRelicEffects(formation, equippedRelics);
+    // T6: store formation for snapshot; generate forfeit idempotency key
+    if (pvpOpponentRef.current) {
+      pvpFormationRef.current = {
+        champion: { id: withRelics.champion.id, name: withRelics.champion.name, faction: withRelics.champion.faction },
+        vanguard: withRelics.vanguard ? { id: withRelics.vanguard.id, name: withRelics.vanguard.name } : null,
+        sentinel: withRelics.sentinel ? { id: withRelics.sentinel.id, name: withRelics.sentinel.name } : null,
+        reserve_size: withRelics.reserve.length,
+      };
+      pvpForfeitKeyRef.current = `pvp_forfeit_${Date.now()}`;
+    }
+    setPendingFormation(withRelics);
     try { (AudioEngine as any).sfxTurnStart?.(); } catch { /* ok */ }
   }, [equippedRelics]);
 
@@ -588,14 +607,38 @@ export function PvpRoute() {
       return;
     }
 
-    // ── PvP mode: call battle() for MMR, suppress its result display ──
+    // ── PvP mode: call battle() for MMR, store formation snapshot ──
     if (pvpOpponentRef.current) {
-      const oppId = pvpOpponentRef.current.player_id;
-      pvpOpponentRef.current = null;
+      const oppId       = pvpOpponentRef.current.player_id;
+      const snapshot    = pvpFormationRef.current;
+      pvpOpponentRef.current  = null;
+      pvpFormationRef.current = null;
+      pvpForfeitKeyRef.current = null;
       suppressBattleResultRef.current = true;
       if (won) onWin(); else onLoss();
       try { recordSessionBattle(won, 0, streak); } catch { /* silent */ }
-      try { await battle(oppId); } catch { /* silent */ }
+      try {
+        const res = await battle(oppId);
+        // T6: store formation snapshot if match_id returned
+        const matchId = (res?.data as RealBattleResult | null)?.match_id;
+        if (matchId && snapshot) {
+          storeFormationSnapshot(matchId, snapshot).catch(() => { /* silent */ });
+        }
+        // T6: show ELO change banner
+        const eloChange = (res?.data as RealBattleResult | null)?.elo_change;
+        if (typeof eloChange === 'number') {
+          setEloChangeBanner({ won, change: eloChange });
+          setTimeout(() => setEloChangeBanner(null), 5000);
+        }
+      } catch { /* silent */ }
+      // T6: reload public rankings after PvP
+      const season = seasons[0];
+      if (season) {
+        setRankingsLoading(true);
+        listPublicRankings(season.id).then(r => {
+          if (r.data) setPublicRankings(r.data);
+        }).finally(() => setRankingsLoading(false));
+      }
       return;
     }
 
@@ -637,6 +680,16 @@ export function PvpRoute() {
       dismissBattle();
     }
   }, [battleResult, dismissBattle]);
+
+  // T6: Cargar rankings públicos (QA-filtrados) cuando la temporada esté disponible
+  useEffect(() => {
+    const season = seasons[0];
+    if (!season) return;
+    setRankingsLoading(true);
+    listPublicRankings(season.id, 25).then(r => {
+      if (r.data) setPublicRankings(r.data);
+    }).finally(() => setRankingsLoading(false));
+  }, [seasons]);
 
   if (loading) return <PageLoader />;
   if (!loading && !playerId) return (
@@ -706,10 +759,33 @@ export function PvpRoute() {
         difficulty={formationDifficultyRef.current}
         equippedRelics={equippedRelics}
         onComplete={handleForgeFormationComplete}
-        onDismiss={() => {
+        onDismiss={async () => {
+          const wasPvp     = !!pvpOpponentRef.current;
+          const oppId      = pvpOpponentRef.current?.player_id ?? null;
+          const forfeitKey = pvpForfeitKeyRef.current;
           setPendingFormation(null);
           setPracticeMode(false);
-          pvpOpponentRef.current = null;
+          pvpOpponentRef.current   = null;
+          pvpFormationRef.current  = null;
+          pvpForfeitKeyRef.current = null;
+          // T6: si era una batalla PvP real, registrar abandono
+          if (wasPvp && oppId && forfeitKey) {
+            try {
+              const res = await pvpForfeit(oppId, forfeitKey);
+              if (res.data) {
+                onLoss();
+                setEloChangeBanner({ won: false, change: res.data.elo_change });
+                setTimeout(() => setEloChangeBanner(null), 5000);
+                // Recargar rankings tras forfeit
+                const season = seasons[0];
+                if (season) {
+                  listPublicRankings(season.id).then(r => {
+                    if (r.data) setPublicRankings(r.data);
+                  });
+                }
+              }
+            } catch { /* silent */ }
+          }
         }}
       />
     );
@@ -780,6 +856,38 @@ export function PvpRoute() {
       <ClanWarsPanel />
 
       {AIRewardBanner}
+      {/* T6: Banner de cambio de ELO después de batalla/forfeit PvP */}
+      {eloChangeBanner && (
+        <div style={{
+          position: "fixed", top: 64, left: "50%", transform: "translateX(-50%)",
+          zIndex: 1000,
+          background: eloChangeBanner.won
+            ? "linear-gradient(135deg,#14532d,#166534)"
+            : "linear-gradient(135deg,#450a0a,#7f1d1d)",
+          border: `1px solid ${eloChangeBanner.won ? "#22c55e" : "#ef4444"}`,
+          borderRadius: 12, padding: "10px 24px",
+          display: "flex", alignItems: "center", gap: 10,
+          boxShadow: `0 4px 24px ${eloChangeBanner.won ? "rgba(34,197,94,0.25)" : "rgba(239,68,68,0.25)"}`,
+          animation: "mmk-ping 0.3s ease-out",
+        }}>
+          <span style={{ fontSize: 16 }}>{eloChangeBanner.won ? "⚔️" : "💀"}</span>
+          <span style={{
+            color: eloChangeBanner.won ? "#86efac" : "#fca5a5",
+            fontFamily: "IBM Plex Mono,monospace", fontWeight: 700, fontSize: 13,
+          }}>
+            {eloChangeBanner.won ? "VICTORIA" : "DERROTA"}
+            {" · "}
+            <span style={{ color: eloChangeBanner.won ? "#4ade80" : "#f87171" }}>
+              {eloChangeBanner.change > 0 ? "+" : ""}{eloChangeBanner.change} MMR
+            </span>
+          </span>
+          <button
+            onClick={() => setEloChangeBanner(null)}
+            style={{ background: "none", border: "none", cursor: "pointer", fontSize: 14,
+              color: eloChangeBanner.won ? "#86efac" : "#fca5a5", marginLeft: 4 }}
+          >✕</button>
+        </div>
+      )}
       <main style={{ maxWidth: 920, margin: "0 auto", padding: "clamp(20px,5vw,32px) 16px" }}>
         {/* Header */}
         <div style={{ marginBottom: 28 }}>
@@ -1057,20 +1165,46 @@ export function PvpRoute() {
 
             {season && (
               <div>
-                <h2 style={{ fontFamily: "Cinzel,serif", color: "#e8e8f0", fontSize: 16, margin: "0 0 12px" }}>
-                  🏆 {season.name}
-                </h2>
+                <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 10 }}>
+                  <h2 style={{ fontFamily: "Cinzel,serif", color: "#e8e8f0", fontSize: 16, margin: 0, flex: 1 }}>
+                    🏆 {season.name}
+                  </h2>
+                  {rankingsLoading && (
+                    <div style={{
+                      width: 12, height: 12, borderRadius: "50%",
+                      border: "2px solid #e8b84b44", borderTopColor: "#e8b84b",
+                      animation: "mmk-spin 0.7s linear infinite",
+                    }} />
+                  )}
+                </div>
+
+                {/* T6: Banner pre-lanzamiento — contexto QA */}
+                <div style={{
+                  background: "rgba(232,184,75,0.07)",
+                  border: "1px solid rgba(232,184,75,0.2)",
+                  borderRadius: 6, padding: "7px 10px",
+                  marginBottom: 10,
+                  display: "flex", alignItems: "center", gap: 6,
+                }}>
+                  <span style={{ fontSize: 11 }}>🔒</span>
+                  <span style={{ color: "#a8a050", fontSize: 10, lineHeight: 1.4 }}>
+                    <strong style={{ color: "#e8b84b" }}>PRE-LANZAMIENTO</strong>
+                    {" "}· Datos de QA interno. Las cuentas de prueba no aparecen en el ranking.
+                  </span>
+                </div>
+
                 <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
-                  {rankings.slice(0, 10).map((r, i) => {
+                  {(publicRankings ?? []).slice(0, 10).map((r, i) => {
                     const tier = getRank(r.mmr);
                     const isMe = r.player_id === playerId;
                     return (
-                      <div key={r.id} style={{
+                      <div key={r.player_id} style={{
                         display: "flex", alignItems: "center", gap: 10,
                         padding: "8px 12px",
                         background: isMe ? `${tier.color}11` : "#1a1a2e",
                         border: `1px solid ${isMe ? tier.color + "44" : "#2a2a3a"}`,
                         borderRadius: 6,
+                        transition: "border-color 0.15s",
                       }}>
                         <span style={{
                           color: ["#e8702a", "#c0c0c0", "#cd7f32"][i] ?? "#6a6a8a",
@@ -1091,6 +1225,14 @@ export function PvpRoute() {
                       </div>
                     );
                   })}
+                  {(publicRankings ?? []).length === 0 && !rankingsLoading && (
+                    <div style={{
+                      color: "#4a4a6a", fontSize: 12, textAlign: "center",
+                      padding: "20px 0", fontFamily: "IBM Plex Mono,monospace",
+                    }}>
+                      Sin jugadores en el ranking aún — ¡sé el primero!
+                    </div>
+                  )}
                 </div>
               </div>
             )}
