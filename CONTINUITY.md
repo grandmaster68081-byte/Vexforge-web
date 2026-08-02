@@ -1,5 +1,37 @@
 # VEXFORGE — CONTINUITY LOG
 
+## Chat 137 — 2026-08-02 — T1-G: Contrato autoritativo de Raids — COMPLETADO
+
+**Branch:** main | **Scope:** listar + unirse + contribuir + completar + recompensas
+
+### ✅ Estado real verificado
+
+- La auditoría viva corrigió el plan histórico: no existe `raids`; el contrato canónico usa `raid_runs`, `raid_participants` y `raid_rewards`, con 3 raids y 3 participantes existentes.
+- `vexforge_join_raid(uuid)` ahora bloquea la fila de `raid_runs` antes de contar plazas, conserva la unicidad `(raid_run_id, player_id)`, es idempotente y reactiva correctamente una participación marcada `left`.
+- `vexforge_contribute_raid(uuid, bigint)` rechaza contribuciones nulas o no positivas, bloquea raid y participante, limita cada aporte a `10000` y evita intercalarse con una finalización.
+- `vexforge_complete_raid(uuid)` queda restringida a `service_role` para automatización confiable; bloquea el raid, devuelve éxito idempotente para un raid ya completado, reparte VEX proporcionalmente y marca las participaciones como `rewarded`.
+- La finalización también acredita XP proporcional, actualiza `player_progress` bajo bloqueo del jugador y registra la recompensa XP en `raid_rewards`. No se reutilizó el helper global `add_player_xp` porque su llamada live a `emit_game_event` no coincide con la firma vigente.
+- Las tres RPCs tienen `SECURITY DEFINER`, `SET search_path = public, pg_temp` y sólo `join/contribute` están disponibles para `authenticated`; `complete` queda sólo para `service_role`.
+- Migración reproducible publicada: `backend/sql-migrations/T1-G-raid-contract.sql`.
+
+### Verificaciones
+
+- `npm run build` ✅ 240 módulos, 0 errores TypeScript
+- `git diff --check` ✅
+- Join: `anon` ❌, `authenticated` ✅, `service_role` ✅
+- Contribute: `anon` ❌, `authenticated` ✅, `service_role` ✅
+- Complete: `anon` ❌, `authenticated` ❌, `service_role` ✅
+- Join sin sesión devuelve `Not authenticated` ✅
+- Contribuciones `0` y `NULL` devuelven `Invalid contribution` ✅
+- Datos preservados durante probes: 3 raids, 3 participantes, 0 recompensas nuevas, 0 entradas de ledger de raids ✅
+- Definición live confirma locks, idempotencia de finalización y actualización de `player_progress` ✅
+
+### Estado para la próxima sesión
+
+- **T1-G** ✅ COMPLETADO — contrato autoritativo e idempotente de Raids
+- **Siguiente:** T1-H — auditar el flujo PvP autoritativo, resultados y recompensas
+- Deploy live: T1-F pendiente de propagación externa de Cloudflare Pages
+
 ## Chat 136 — 2026-08-02 — T1-F: Ataque autoritativo de World Bosses — COMPLETADO
 
 **Branch:** main | **Scope:** daño compartido + encuentros + recompensas + identidad autenticada
