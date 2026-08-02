@@ -1,3 +1,66 @@
+## Chat 140 — 2026-08-02 — T4: Sistema PvE Completo — COMPLETADO
+
+**Branch:** main | **Scope:** Arquetipos de enemigos por tipo, modificadores regionales, sistema de 2 fases para Clan/Event épico+
+
+### ✅ Implementación
+
+#### Nuevo módulo: `src/lib/missionEncounterEngine.ts` (sin cambios DB)
+
+| Feature | Detalle |
+|---------|---------|
+| `getMissionEncounter(mission)` | API principal — devuelve enemigos, nombre, descripción, modificador regional, config de fases y narrativa |
+| Arquetipos por tipo de misión | 12 arquetipos: `pve_patrol`, `pve_elite`, `expedition_scout/ranger/commander`, `event_champion/elite`, `clan_vanguard/warlord`, `dungeon_guardian/boss`, `tutorial_drone` |
+| Modificadores regionales | Torres Rúnicas (+12 DEF), Catedral del Alba (+15 ATK/+20 HP), Fortaleza Abisal (-5 SPD), Sombras del Eclipse (+8 ATK/-8 DEF), Reino del Acero (+10 ATK/+8 DEF), Telegram (neutral) |
+| `applyRegionalModifier(formation, mod)` | Aplica buff/debuff regional a la FormationState del jugador antes de la batalla |
+| `getPhaseConfig(type, difficulty)` | Determina totalPhases, label, curación entre fases y archetype de fase 2 |
+| Sistema de 2 fases | Clan epic/legendary + Event epic/legendary + Expedition legendary → 2 fases; fase 2 tiene archetype más fuerte, dificultad legend |
+| `applyInterphaseHeal(formation, pct)` | Cura % del HP perdido del Campeón entre fases (20-30% según tipo) |
+| `getPhase2Encounter(phaseConfig, id)` | Genera la formación enemiga de fase 2 |
+
+#### Cambios en `src/routes/MissionsRoute.tsx`
+
+| Cambio | Detalle |
+|--------|---------|
+| Nuevo tipo `BattlePhase` | Añadidos `"phase_transition"` y `"battle_phase2"` |
+| Estado T4 | `encounterConfig`, `currentPhase`, `phase2Formation` |
+| `handleStartBattle` | Pre-computa `getMissionEncounter()` síncrono para disponibilidad en briefing |
+| `handleFormationConfirm` | Aplica `applyRegionalModifier()` a la formación antes de la batalla |
+| `handleBattleComplete` | Detecta misiones de 2 fases — en fase 1 va a `phase_transition`, en fase 2/simple reclama recompensas |
+| `handlePhase2Complete` | Completa la fase 2 y reclama recompensas |
+| `handlePhaseTransitionConfirm` | Avanza de pantalla de transición a `battle_phase2` |
+| `MissionBriefing` | Nuevo prop `encounterConfig?` — muestra opponentName archetype, enemyDescription, keywords de enemigo, modificador regional, indicador de 2 fases y narrativa específica por tipo/región |
+| Pantalla `phase_transition` | Interstitial animado con: FASE 1 ✓, nombre FASE 2, narrativa, curación del Campeón, modificador regional activo y botón INICIAR FASE 2 |
+| Render `battle_phase2` | Segundo `ForgeFormationBoard` con formación curada, archetype de fase 2 y prefijo "FASE 2 ·" en nombre del oponente |
+
+### Tipos de misión → Arquetipos (resumen)
+
+| Tipo | easy/normal | hard | epic | legendary |
+|------|-------------|------|------|-----------|
+| PvE | pve_patrol | pve_elite | pve_elite | pve_elite |
+| Expedition | expedition_scout | expedition_ranger | expedition_ranger | expedition_commander (2 fases) |
+| Event | event_champion | event_champion | event_elite (2 fases) | event_elite (2 fases) |
+| Clan | clan_vanguard | clan_vanguard | clan_warlord (2 fases) | clan_warlord (2 fases) |
+
+### Verificaciones
+
+- `npm run build` ✅ 241 módulos, 0 errores TypeScript
+- `grep -c "package-firewall.replit.local" package-lock.json` = 0 ✅
+- `.nvmrc` = 22 ✅
+- Misiones PvE (region Telegram) → `pve_patrol`, sin modificador regional ✅
+- Misiones Clan (Catedral del Alba) → `clan_vanguard`, +15 ATK/+20 HP al Campeón ✅
+- Event epic → `event_elite` + 2 fases + pantalla de transición ✅
+- Briefing muestra: opponentName archetype, descripción, keywords, modificador regional, indicador de fases ✅
+- Sin cambios en RPCs, ForgeFormationBoard, economía ni ForgeFormation rules ✅
+
+### Estado para la próxima sesión
+
+- **T4** ✅ COMPLETADO — Sistema PvE completo con arquetipos, regiones y fases
+- **Siguiente: T5** — PvP autoritativo completo y arena de rangos
+- **Deuda técnica:** `enemy_deck_id` de `getMissionEncounter` todavía usa AI decks genéricos del `aiBattleEngine` porque `ForgeFormationBoard` no acepta `opponentUnits` como prop — para un T4.5 optativo se puede añadir este prop y pasar los BattleUnit[] concretos del archetype
+- **Deploy:** `dist/` comprometido, Cloudflare Pages se actualiza solo al pushear a main
+
+---
+
 ## Chat 139 — 2026-08-02 — T2: ForgeFormation motor de reglas — COMPLETADO
 
 **Branch:** main | **Scope:** protección del Campeón, reserva efectiva, reemplazos e invariantes

@@ -13,6 +13,13 @@ import type { BattleUnit } from "../lib/battleTypes";
 import { applyRelicEffects, type EquippedRelic, type FormationState } from "../lib/forgeFormation";
 import { getEquippedRelics } from "../domains/relics/repository";
 import { PageLoader } from "../shared/components/PageLoader";
+import {
+  getMissionEncounter,
+  getPhase2Encounter,
+  applyRegionalModifier,
+  applyInterphaseHeal,
+  type MissionEncounterConfig,
+} from "../lib/missionEncounterEngine";
 
 const BG_URL = "https://rscuzqnfccqvltkdcdny.supabase.co/storage/v1/object/public/vexforge-assets/backgrounds/bg_missions.jpg";
 const FESTIVAL_END = "2026-10-16T01:53:23";
@@ -51,13 +58,15 @@ const REGIONS = ["all", "Event", "Dungeon", "Tutorial", "Expedition", "PvE", "Cl
 // ─── T3: Battle flow types ────────────────────────────────────────────────────
 
 type BattlePhase =
-  | "briefing"    // mission selected, showing narrative + confirm
-  | "loading"     // loading player units + relics
-  | "formation"   // FormationSelector active (full page)
-  | "committing"  // calling execute_mission RPC (deducting energy)
-  | "battle"      // ForgeFormationBoard active (full page)
-  | "win"         // victory screen
-  | "defeat";     // defeat / abandon screen
+  | "briefing"          // mission selected, showing narrative + confirm
+  | "loading"           // loading player units + relics
+  | "formation"         // FormationSelector active (full page)
+  | "committing"        // calling execute_mission RPC (deducting energy)
+  | "battle"            // ForgeFormationBoard active (full page) — phase 1
+  | "phase_transition"  // T4: interstitial between phase 1 and phase 2
+  | "battle_phase2"     // T4: ForgeFormationBoard phase 2
+  | "win"               // victory screen
+  | "defeat";           // defeat / abandon screen
 
 function getMissionAIDifficulty(difficulty: string | null): AIDifficulty {
   switch ((difficulty ?? "").toLowerCase()) {
@@ -495,19 +504,24 @@ function MissionBriefing({
   onConfirm,
   onCancel,
   error,
+  encounterConfig,
 }: {
   mission: Mission;
   currentEnergy: number;
   onConfirm: () => void;
   onCancel: () => void;
   error: string | null;
+  encounterConfig?: import("../lib/missionEncounterEngine").MissionEncounterConfig;
 }) {
   const diffConf   = DIFFICULTY_CONFIG[(mission.difficulty ?? "").toLowerCase()] ?? DIFFICULTY_CONFIG["normal"];
   const typeConf   = MISSION_TYPE_CONFIG[mission.mission_type ?? ""] ?? { icon: "⚔️", color: "#E84040" };
   const energyCost = mission.energy_cost ?? 0;
   const canAfford  = energyCost === 0 || currentEnergy >= energyCost;
-  const enemyName  = getMissionEnemyName(mission.difficulty);
-  const narrative  = getMissionNarrative(mission);
+  // T4: use encounter data when available, fall back to legacy helpers
+  const enemyName  = encounterConfig?.opponentName ?? getMissionEnemyName(mission.difficulty);
+  const narrative  = encounterConfig?.briefingNarrative ?? getMissionNarrative(mission);
+  const regionMod  = encounterConfig?.regionModifier;
+  const totalPhases = encounterConfig?.phaseConfig?.totalPhases ?? 1;
 
   return (
     <div style={{
@@ -576,16 +590,78 @@ function MissionBriefing({
           <div style={{ color: "rgba(255,255,255,0.75)", fontSize: 13, lineHeight: 1.7, fontStyle: "italic" }}>
             "{narrative}"
           </div>
+          {/* T4: phase indicator */}
+          {totalPhases > 1 && (
+            <div style={{ marginTop: 10, display: "flex", alignItems: "center", gap: 8 }}>
+              {[1, 2].map(p => (
+                <div key={p} style={{
+                  padding: "2px 10px", borderRadius: 6,
+                  background: p === 1 ? `${diffConf.color}25` : "rgba(255,255,255,0.04)",
+                  border: `1px solid ${p === 1 ? diffConf.color + "60" : "rgba(255,255,255,0.1)"}`,
+                  fontSize: 10, fontWeight: 700, fontFamily: '"IBM Plex Mono", monospace',
+                  color: p === 1 ? diffConf.color : "rgba(255,255,255,0.3)",
+                }}>
+                  FASE {p}
+                </div>
+              ))}
+              <span style={{ fontSize: 10, color: "rgba(255,255,255,0.35)" }}>— misión de 2 fases</span>
+            </div>
+          )}
         </div>
 
         {/* Stats grid */}
         <div style={{ padding: "18px 24px", display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, borderBottom: "1px solid rgba(255,255,255,0.07)" }}>
-          {/* Enemy */}
-          <div style={{ background: "rgba(232,64,64,0.07)", border: "1px solid rgba(232,64,64,0.2)", borderRadius: 10, padding: "12px 14px" }}>
+          {/* Enemy — T4: shows encounter archetype name + description */}
+          <div style={{ background: "rgba(232,64,64,0.07)", border: "1px solid rgba(232,64,64,0.2)", borderRadius: 10, padding: "12px 14px", gridColumn: encounterConfig?.enemyDescription ? "span 2" : undefined }}>
             <div style={{ fontFamily: '"IBM Plex Mono", monospace', fontSize: 8, letterSpacing: "0.15em", color: "rgba(232,64,64,0.7)", textTransform: "uppercase", marginBottom: 6 }}>ENEMIGO</div>
             <div style={{ color: "var(--fg-primary)", fontWeight: 700, fontSize: 13 }}>⚔️ {enemyName}</div>
-            <div style={{ color: "var(--fg-dim)", fontSize: 10, marginTop: 4 }}>ForgeFormation IA · {diffConf.label}</div>
+            {encounterConfig?.enemyDescription
+              ? <div style={{ color: "var(--fg-dim)", fontSize: 10, marginTop: 4, lineHeight: 1.5 }}>{encounterConfig.enemyDescription}</div>
+              : <div style={{ color: "var(--fg-dim)", fontSize: 10, marginTop: 4 }}>ForgeFormation IA · {diffConf.label}</div>
+            }
+            {/* Keywords */}
+            {encounterConfig && encounterConfig.enemyKeywords.length > 0 && (
+              <div style={{ marginTop: 8, display: "flex", flexWrap: "wrap", gap: 4 }}>
+                {encounterConfig.enemyKeywords.map(kw => (
+                  <span key={kw} style={{
+                    padding: "2px 8px", borderRadius: 4,
+                    background: "rgba(232,64,64,0.12)", border: "1px solid rgba(232,64,64,0.3)",
+                    fontSize: 9, fontFamily: '"IBM Plex Mono", monospace',
+                    color: "#E84040", fontWeight: 700, letterSpacing: "0.08em",
+                  }}>{kw}</span>
+                ))}
+              </div>
+            )}
           </div>
+
+          {/* Energy cost */}
+          <div style={{
+            background: canAfford ? "rgba(61,201,107,0.07)" : "rgba(232,64,64,0.07)",
+            border: `1px solid ${canAfford ? "rgba(61,201,107,0.2)" : "rgba(232,64,64,0.3)"}`,
+            borderRadius: 10, padding: "12px 14px",
+          }}>
+            <div style={{ fontFamily: '"IBM Plex Mono", monospace', fontSize: 8, letterSpacing: "0.15em", color: canAfford ? "rgba(61,201,107,0.7)" : "rgba(232,64,64,0.7)", textTransform: "uppercase", marginBottom: 6 }}>ENERGÍA</div>
+            <div style={{ color: canAfford ? "#3DC96B" : "#E84040", fontWeight: 700, fontSize: 13 }}>
+              ⚡ {energyCost > 0 ? `−${energyCost}` : "Gratis"}
+            </div>
+            <div style={{ color: "var(--fg-dim)", fontSize: 10, marginTop: 4 }}>
+              {energyCost > 0 ? `${currentEnergy} disponible` : "Sin coste"}
+            </div>
+          </div>
+
+          {/* T4: Regional modifier */}
+          {regionMod && regionMod.type !== "neutral" && (
+            <div style={{
+              background: `${regionMod.color}10`, border: `1px solid ${regionMod.color}35`,
+              borderRadius: 10, padding: "12px 14px",
+            }}>
+              <div style={{ fontFamily: '"IBM Plex Mono", monospace', fontSize: 8, letterSpacing: "0.15em", color: `${regionMod.color}90`, textTransform: "uppercase", marginBottom: 6 }}>
+                {regionMod.type === "buff" ? "🟢 VENTAJA REGIONAL" : "🔴 PENALIZACIÓN REGIONAL"}
+              </div>
+              <div style={{ color: regionMod.color, fontWeight: 700, fontSize: 12 }}>{regionMod.icon} {regionMod.name}</div>
+              <div style={{ color: "var(--fg-dim)", fontSize: 10, marginTop: 3 }}>{regionMod.description}</div>
+            </div>
+          )}
 
           {/* Energy cost */}
           <div style={{
@@ -907,6 +983,11 @@ export function MissionsRoute() {
   const [winRewards,     setWinRewards]     = useState<ClaimResult | null>(null);
   const [battleError,    setBattleError]    = useState<string | null>(null);
 
+  // ── T4: Encounter engine state ─────────────────────────────────────────────
+  const [encounterConfig,  setEncounterConfig]  = useState<MissionEncounterConfig | null>(null);
+  const [currentPhase,     setCurrentPhase]     = useState<1 | 2>(1);
+  const [phase2Formation,  setPhase2Formation]  = useState<FormationState | null>(null);
+
   // ── Load equipped relics once ──────────────────────────────────────────────
   useEffect(() => {
     getEquippedRelics().then(setEquippedRelics).catch(() => {});
@@ -917,6 +998,11 @@ export function MissionsRoute() {
   const handleStartBattle = useCallback((mission: Mission) => {
     setBattleMission(mission);
     setBattleError(null);
+    // T4: pre-compute encounter config synchronously so briefing can display it
+    const encounter = getMissionEncounter(mission);
+    setEncounterConfig(encounter);
+    setCurrentPhase(1);
+    setPhase2Formation(null);
     setBattlePhase("briefing");
   }, []);
 
@@ -947,7 +1033,11 @@ export function MissionsRoute() {
 
   const handleFormationConfirm = useCallback(async (formation: FormationState) => {
     if (!battleMission) return;
-    const formationWithRelics = applyRelicEffects(formation, equippedRelics);
+    let formationWithRelics = applyRelicEffects(formation, equippedRelics);
+    // T4: apply regional modifier to player formation
+    if (encounterConfig) {
+      formationWithRelics = applyRegionalModifier(formationWithRelics, encounterConfig.regionModifier);
+    }
     setBattleFormation(formationWithRelics);
     setPlayerUnits(null);
     setBattlePhase("committing");
@@ -961,14 +1051,31 @@ export function MissionsRoute() {
     setRunId(result.data.run_id ?? null);
     setRunPlayerId(result.data.player_id ?? null);
     setBattlePhase("battle");
-  }, [battleMission, equippedRelics]);
+  }, [battleMission, equippedRelics, encounterConfig]);
 
   const handleBattleComplete = useCallback(async (won: boolean, didChampionDie: boolean) => {
     setChampionDied(didChampionDie);
     // Energy was already spent (execute_mission deducted it)
     window.dispatchEvent(new CustomEvent("vexforge:energy-updated"));
 
-    if (won && runId && runPlayerId) {
+    if (!won) {
+      setBattlePhase("defeat");
+      return;
+    }
+
+    // T4: check if mission has a phase 2
+    const totalPhases = encounterConfig?.phaseConfig?.totalPhases ?? 1;
+    if (currentPhase === 1 && totalPhases > 1 && battleFormation) {
+      // Heal champion partially between phases
+      const champHealPct = encounterConfig?.phaseConfig?.champHealPct ?? 0;
+      const healed = applyInterphaseHeal(battleFormation, champHealPct);
+      setPhase2Formation(healed);
+      setBattlePhase("phase_transition");
+      return;
+    }
+
+    // Final win — claim rewards
+    if (runId && runPlayerId) {
       const referenceId = `mission:${runId}`;
       const claim = await claimMissionReward(runId, runPlayerId, referenceId);
       if (claim.data?.success) {
@@ -983,15 +1090,53 @@ export function MissionsRoute() {
         }
         setBattlePhase("win");
       } else {
-        // Battle was won but claim failed — still show victory, show error info
+        // Battle was won but claim failed — still show victory
         addToast("error", "Recompensa no aplicada", claim.reason ?? "Error al reclamar recompensas.");
         setWinRewards(null);
         setBattlePhase("win");
       }
     } else {
+      setBattlePhase("win");
+    }
+  }, [runId, runPlayerId, battleMission, recordBattleComplete, addToast, encounterConfig, currentPhase, battleFormation]);
+
+  // T4: phase 2 battle complete
+  const handlePhase2Complete = useCallback(async (won: boolean, didChampionDie: boolean) => {
+    setChampionDied(didChampionDie);
+    if (!won) {
       setBattlePhase("defeat");
+      return;
+    }
+    // Claim rewards after winning both phases
+    if (runId && runPlayerId) {
+      const referenceId = `mission:${runId}`;
+      const claim = await claimMissionReward(runId, runPlayerId, referenceId);
+      if (claim.data?.success) {
+        setWinRewards(claim.data);
+        if (battleMission) {
+          recordBattleComplete(
+            battleMission,
+            claim.data.xp_applied       ?? 0,
+            claim.data.ingame_applied    ?? 0,
+            claim.data.tradeable_applied ?? 0,
+          );
+        }
+        setBattlePhase("win");
+      } else {
+        addToast("error", "Recompensa no aplicada", claim.reason ?? "Error al reclamar recompensas.");
+        setWinRewards(null);
+        setBattlePhase("win");
+      }
+    } else {
+      setBattlePhase("win");
     }
   }, [runId, runPlayerId, battleMission, recordBattleComplete, addToast]);
+
+  // T4: proceed to phase 2 from transition screen
+  const handlePhaseTransitionConfirm = useCallback(() => {
+    setCurrentPhase(2);
+    setBattlePhase("battle_phase2");
+  }, []);
 
   const handleBattleDismiss = useCallback(() => {
     // Treat dismiss as defeat/abandon — energy already spent
@@ -1010,6 +1155,10 @@ export function MissionsRoute() {
     setChampionDied(false);
     setWinRewards(null);
     setBattleError(null);
+    // T4 state reset
+    setEncounterConfig(null);
+    setCurrentPhase(1);
+    setPhase2Formation(null);
   }, []);
 
   const retryBattle = useCallback(() => {
@@ -1040,6 +1189,7 @@ export function MissionsRoute() {
           onConfirm={handleBriefingConfirm}
           onCancel={exitBattle}
           error={battleError}
+          encounterConfig={encounterConfig ?? undefined}
         />
       </>
     );
@@ -1057,14 +1207,141 @@ export function MissionsRoute() {
   }
 
   if (battlePhase === "battle" && battleFormation && battleMission) {
+    const p1OpponentName = encounterConfig?.opponentName ?? getMissionEnemyName(battleMission.difficulty);
+    const p1Difficulty   = encounterConfig?.difficulty   ?? getMissionAIDifficulty(battleMission.difficulty);
+    const phaseTotal     = encounterConfig?.phaseConfig?.totalPhases ?? 1;
     return (
       <ForgeFormationBoard
         initialFormation={battleFormation}
         playerName="Tú"
-        opponentName={getMissionEnemyName(battleMission.difficulty)}
-        difficulty={getMissionAIDifficulty(battleMission.difficulty)}
+        opponentName={phaseTotal > 1 ? `FASE 1 · ${p1OpponentName}` : p1OpponentName}
+        difficulty={p1Difficulty}
         equippedRelics={equippedRelics}
         onComplete={handleBattleComplete}
+        onDismiss={handleBattleDismiss}
+      />
+    );
+  }
+
+  // ── T4: Phase transition screen ─────────────────────────────────────────────
+  if (battlePhase === "phase_transition" && battleMission && encounterConfig) {
+    const { phaseConfig, regionModifier } = encounterConfig;
+    return (
+      <div style={{
+        position: "fixed", inset: 0, zIndex: 9200,
+        background: "radial-gradient(ellipse at center, rgba(168,85,247,0.15) 0%, rgba(5,5,15,0.98) 70%)",
+        display: "flex", alignItems: "center", justifyContent: "center",
+        padding: "24px 16px",
+      }}>
+        <style>{`
+          @keyframes phaseGlow {
+            0%,100% { box-shadow: 0 0 40px rgba(168,85,247,0.3), 0 0 80px rgba(168,85,247,0.1); }
+            50% { box-shadow: 0 0 60px rgba(168,85,247,0.5), 0 0 120px rgba(168,85,247,0.2); }
+          }
+          @keyframes phaseEntry {
+            from { opacity: 0; transform: scale(0.9) translateY(20px); }
+            to   { opacity: 1; transform: scale(1) translateY(0); }
+          }
+        `}</style>
+        <div style={{
+          maxWidth: 460, width: "100%",
+          background: "linear-gradient(160deg, #150a28 0%, #0d0d20 100%)",
+          border: "1px solid rgba(168,85,247,0.5)",
+          borderRadius: 24, overflow: "hidden",
+          animation: "phaseEntry 0.45s ease forwards",
+          animationIterationCount: "1",
+        }}>
+          {/* Phase header */}
+          <div style={{
+            padding: "28px 24px 22px",
+            background: "linear-gradient(135deg, rgba(168,85,247,0.15), rgba(168,85,247,0.05))",
+            textAlign: "center", borderBottom: "1px solid rgba(168,85,247,0.25)",
+            animation: "phaseGlow 2.5s ease-in-out infinite",
+          }}>
+            <div style={{ fontSize: 48, marginBottom: 10, lineHeight: 1 }}>⚔️</div>
+            <div style={{ fontFamily: '"IBM Plex Mono", monospace', fontSize: 9, letterSpacing: "0.25em", color: "rgba(168,85,247,0.8)", textTransform: "uppercase", marginBottom: 8 }}>
+              ✓ FASE 1 SUPERADA
+            </div>
+            <div style={{ fontFamily: '"Cinzel", serif', fontSize: 24, fontWeight: 700, color: "#c084fc", letterSpacing: "0.05em", marginBottom: 6 }}>
+              {phaseConfig.phaseLabel(2)}
+            </div>
+            <div style={{ color: "rgba(192,132,252,0.6)", fontSize: 12 }}>{battleMission.name}</div>
+          </div>
+
+          {/* Phase 2 narrative */}
+          <div style={{ padding: "20px 24px", borderBottom: "1px solid rgba(255,255,255,0.07)" }}>
+            <div style={{ fontFamily: '"IBM Plex Mono", monospace', fontSize: 9, letterSpacing: "0.2em", color: "rgba(168,85,247,0.6)", textTransform: "uppercase", marginBottom: 10 }}>
+              BRIEFING FASE 2
+            </div>
+            <div style={{ color: "rgba(255,255,255,0.72)", fontSize: 13, lineHeight: 1.7, fontStyle: "italic" }}>
+              "{phaseConfig.phase2Narrative}"
+            </div>
+          </div>
+
+          {/* Status */}
+          <div style={{ padding: "16px 24px", display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10, borderBottom: "1px solid rgba(255,255,255,0.07)" }}>
+            <div style={{ background: "rgba(168,85,247,0.08)", border: "1px solid rgba(168,85,247,0.25)", borderRadius: 10, padding: "10px 12px" }}>
+              <div style={{ fontFamily: '"IBM Plex Mono", monospace', fontSize: 8, letterSpacing: "0.15em", color: "rgba(168,85,247,0.7)", textTransform: "uppercase", marginBottom: 5 }}>ENEMIGO FASE 2</div>
+              <div style={{ color: "#c084fc", fontWeight: 700, fontSize: 12 }}>⚔️ {phaseConfig.phase2OpponentName}</div>
+            </div>
+            <div style={{ background: "rgba(61,201,107,0.08)", border: "1px solid rgba(61,201,107,0.25)", borderRadius: 10, padding: "10px 12px" }}>
+              <div style={{ fontFamily: '"IBM Plex Mono", monospace', fontSize: 8, letterSpacing: "0.15em", color: "rgba(61,201,107,0.7)", textTransform: "uppercase", marginBottom: 5 }}>CURACIÓN CAMPEÓN</div>
+              <div style={{ color: "#3DC96B", fontWeight: 700, fontSize: 12 }}>❤️ +{phaseConfig.champHealPct}% HP perdido</div>
+            </div>
+            <div style={{ background: `${regionModifier.color}12`, border: `1px solid ${regionModifier.color}35`, borderRadius: 10, padding: "10px 12px", gridColumn: "span 2" }}>
+              <div style={{ fontFamily: '"IBM Plex Mono", monospace', fontSize: 8, letterSpacing: "0.15em", color: `${regionModifier.color}90`, textTransform: "uppercase", marginBottom: 5 }}>MODIFICADOR REGIONAL</div>
+              <div style={{ color: regionModifier.color, fontWeight: 700, fontSize: 12 }}>{regionModifier.icon} {regionModifier.name} · {regionModifier.description}</div>
+            </div>
+          </div>
+
+          {/* Warning */}
+          <div style={{ padding: "12px 24px", background: "rgba(232,184,75,0.04)", borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
+            <div style={{ fontSize: 11, color: "rgba(255,255,255,0.5)", lineHeight: 1.6 }}>
+              🛡️ Tu formación actual continúa en la Fase 2. Las unidades caídas no se recuperan — solo el Campeón recibe curación parcial. Si el Campeón cae en cualquier fase, la misión termina.
+            </div>
+          </div>
+
+          {/* Actions */}
+          <div style={{ padding: "18px 24px", display: "flex", gap: 12 }}>
+            <button
+              onClick={exitBattle}
+              style={{
+                flex: 1, padding: "12px", borderRadius: 10, border: "1px solid rgba(255,255,255,0.12)",
+                background: "transparent", color: "rgba(255,255,255,0.45)", fontWeight: 700, fontSize: 13,
+                cursor: "pointer", fontFamily: '"Rajdhani", sans-serif',
+              }}
+            >
+              Abandonar
+            </button>
+            <button
+              onClick={handlePhaseTransitionConfirm}
+              style={{
+                flex: 2, padding: "12px", borderRadius: 10, border: "none",
+                background: "linear-gradient(135deg, #7c3aed, #a855f7)",
+                color: "#fff", fontWeight: 800, fontSize: 14, letterSpacing: "0.06em",
+                cursor: "pointer", fontFamily: '"Rajdhani", sans-serif',
+                boxShadow: "0 4px 20px rgba(168,85,247,0.4)",
+              }}
+            >
+              ⚔️ INICIAR FASE 2
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // ── T4: Phase 2 battle ──────────────────────────────────────────────────────
+  if (battlePhase === "battle_phase2" && phase2Formation && battleMission && encounterConfig) {
+    const p2Data = getPhase2Encounter(encounterConfig.phaseConfig, battleMission.id);
+    return (
+      <ForgeFormationBoard
+        initialFormation={phase2Formation}
+        playerName="Tú"
+        opponentName={`FASE 2 · ${p2Data.opponentName}`}
+        difficulty={p2Data.difficulty}
+        equippedRelics={equippedRelics}
+        onComplete={handlePhase2Complete}
         onDismiss={handleBattleDismiss}
       />
     );
