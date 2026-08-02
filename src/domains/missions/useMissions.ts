@@ -2,6 +2,9 @@ import { useEffect, useRef, useState } from "react";
 import { listActiveMissions, executeMission, type Mission, type MissionRunResult } from "./repository";
 import type { DomainStatus } from "../../shared/types/domain";
 
+// T3: exported so MissionsRoute can record ForgeFormation battle completions
+export type { Mission, MissionRunResult };
+
 export interface LastReward   { mission: Mission; data: MissionRunResult; }
 export interface SessionStats { count: number; xp: number; vex: number; tvex: number; }
 
@@ -39,6 +42,19 @@ export function useMissions() {
     });
     return () => { cancelled = true; };
   }, []);
+
+  // T3: called by MissionsRoute after a ForgeFormation battle victory + claim
+  function recordBattleComplete(mission: Mission, xp: number, vex: number, tvex: number): void {
+    setCompletedThisSession(prev => new Set([...prev, mission.id]));
+    setSessionStats(prev => ({
+      count: prev.count + 1,
+      xp:    prev.xp   + xp,
+      vex:   prev.vex  + vex,
+      tvex:  prev.tvex + tvex,
+    }));
+    if ((mission.cooldown_seconds ?? 0) > 0)
+      setCooldowns(prev => ({ ...prev, [mission.id]: Date.now() + (mission.cooldown_seconds ?? 0) * 1000 }));
+  }
 
   function cooldownRemaining(missionId: string): number {
     const expiry = cooldowns[missionId];
@@ -79,5 +95,6 @@ export function useMissions() {
     dismissReward: () => setLastReward(null),
     dismissError:  () => setExecuteError(null),
     tick, completedThisSession, sessionStats,
+    recordBattleComplete, // T3: for ForgeFormation mission battles
   };
 }

@@ -15,6 +15,7 @@ export interface MissionRunResult {
   success: boolean; run_id?: string;
   xp_reward?: number; ingame_reward?: number; tradeable_reward?: number;
   reason?: string; energy?: number; required?: number;
+  player_id?: string; // T3: returned by startMissionRun for later claim
 }
 
 export interface ClaimResult {
@@ -24,7 +25,7 @@ export interface ClaimResult {
   reference_id?: string;
 }
 
-async function getCurrentPlayerId(): Promise<string | null> {
+export async function getCurrentPlayerId(): Promise<string | null> {
   const { data: sessionData } = await supabase.auth.getSession();
   if (!sessionData.session) return null;
   const { data } = await supabase
@@ -42,6 +43,28 @@ export async function listActiveMissions(): Promise<DomainResult<Mission[]>> {
     .eq("production_ready", true).order("mission_order", { ascending: true });
   if (error) return { status: "ready", data: null, reason: error.message };
   return { status: "ready", data: data as Mission[] };
+}
+
+/**
+ * T3: Start a mission run (deducts energy, creates mission_run in pending state).
+ * Returns run_id + player_id so the caller can claim rewards after a battle victory.
+ * Does NOT auto-claim — use claimMissionReward after a ForgeFormation win.
+ */
+export async function startMissionRun(
+  missionId: string,
+): Promise<DomainResult<MissionRunResult>> {
+  const playerId = await getCurrentPlayerId();
+  if (!playerId) return { status: "blocked_auth", data: null, reason: "Sign in to run missions." };
+
+  const { data, error } = await supabase.rpc("execute_mission", {
+    p_player: playerId, p_mission: missionId,
+  });
+  if (error) return { status: "ready", data: null, reason: error.message };
+
+  const result = data as MissionRunResult | null;
+  if (!result?.success) return { status: "ready", data: null, reason: result?.reason ?? "execution_failed" };
+
+  return { status: "ready", data: { ...result, success: true, player_id: playerId } };
 }
 
 /**
