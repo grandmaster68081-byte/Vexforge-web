@@ -1,3 +1,32 @@
+## Chat 150 — 2026-08-05 — T10: auditoría de cuenta QA y bloqueo de sesión autenticada — BLOQUEADO
+
+**Branch:** main | **Scope:** verificación de la cuenta QA designada y preparación de la matriz autenticada de Battle Run
+
+### ✅ Evidencia verificada
+
+- Se volvió a leer el Protocolo Maestro completo y el plan activo; la autoridad vigente mantiene T10 en **PRE-LAUNCH INTERNAL QA / NO-GO**.
+- El repositorio oficial `main` se mantuvo limpio y el build baseline ya verificado continúa con 0 errores TypeScript.
+- Supabase confirma 2 jugadores `is_qa=true` no administrativos, ambos enlazados a Auth, activos, confirmados y marcados en `raw_user_meta_data` y `raw_app_meta_data` como `qa_fixture`.
+- Supabase confirma 2 sesiones Auth activas para esos fixtures QA.
+- No se imprimieron correos, UUIDs, tokens, sesiones ni otros datos personales.
+- El protocolo y los documentos oficiales consultados no identifican cuál de los dos fixtures es la cuenta QA designada para T10 ni entregan una sesión reutilizable para el agente.
+- `start_battle_run` y `resolve_battle_run` siguen siendo funciones `SECURITY DEFINER` con `search_path=public, pg_temp`; no se modificaron RPCs, ACLs, RLS, economía, combate, cuentas ni fixtures.
+- Estado actual de `battle_runs`: 1 `completed` y 3 `defeated`; esta auditoría no creó ejecuciones nuevas.
+- El documento histórico `vexforge_fase3_polish_battle_v1` no resuelve la designación QA ni contiene un procedimiento autorizado de autenticación para T10.
+
+### ⚠️ Estado T10
+
+- **Auditoría documental y de cuentas QA:** ✅ COMPLETADA.
+- **Validación autenticada controlada:** **BLOQUEADA**. Existen dos fixtures QA válidos, pero ninguna fuente oficial designa uno inequívocamente ni proporciona una sesión utilizable. No se suplantó ninguna cuenta con `service_role`.
+- **Matriz doble click/refresh/abandono/timeout/reconexión:** **PENDIENTE** de una sesión QA autorizada y claramente identificada.
+- **Go/no-go público:** **NO-GO**. El producto continúa en **PRE-LAUNCH INTERNAL QA**.
+
+### Próximo paso oficial
+
+- Reanudar la matriz de T10 únicamente cuando una fuente oficial identifique inequívocamente el fixture QA y el entorno proporcione una sesión autenticada autorizada; conservar los datos internos y registrar cada resultado.
+
+---
+
 ## Chat 149 — 2026-08-05 — Acceso GitHub y reconciliación documental — COMPLETADO
 
 **Branch:** main | **Scope:** acceso seguro al repositorio oficial y alineación con la autoridad T10
