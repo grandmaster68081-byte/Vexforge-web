@@ -1,3 +1,34 @@
+## Chat 148 — 2026-08-05 — T10: Auditoría de launch gate — VALIDACIÓN ANÓNIMA COMPLETADA
+
+**Branch:** main | **Scope:** auditoría de continuidad, Battle Runs, permisos y preparación de validación autenticada
+
+### ✅ Evidencia verificada
+
+- El repositorio oficial `main` fue clonado y coincide con `origin/main` en `fbd53eac35985ab6968851eb090763fb141df3d8`.
+- `npm install && npm run build` terminó con 244 módulos y 0 errores TypeScript.
+- `git status --short` estaba limpio antes de este registro; no se modificó código de producto.
+- `package-lock.json` no contiene URLs `package-firewall.replit.local`; `.nvmrc` raíz mantiene Node 22; `git diff --check` pasa; `public/_headers` existe y `wrangler` no está en `devDependencies`.
+- El deploy oficial responde HTTP 200 en `/`, `/cards`, `/lore`, `/leaderboard`, `/missions`, `/raids`, `/world-bosses` y `/pvp`.
+- El esquema vivo conserva `battle_runs` con RLS y 2 ejecuciones persistidas: una `completed` y una `defeated`; ambas tienen `mode=boss` y no se crearon registros nuevos durante esta auditoría.
+- El estado vivo auditado es: 14 jugadores, 5 marcados como owner/admin/QA, 127 cartas, 68 misiones, 2 mission runs, 2 matches PvP, 3 raid runs, 15 World Bosses, 20 reliquias y 2 battle runs.
+- Las 11 cuentas de Auth están confirmadas y enlazan mediante `players.auth_user_id`; no se imprimieron correos, UUIDs, tokens ni otros datos personales.
+- Las llamadas anónimas de prueba a `start_battle_run`, `resolve_battle_run`, `vexforge_attack_world_boss`, `vexforge_contribute_raid` y `claim_mission_reward` devuelven HTTP 401.
+- Las firmas vigentes de Battle Run y settlement autenticado conservan `SECURITY DEFINER`, `search_path` explícito y `EXECUTE` para `authenticated`/`service_role`; las sobrecargas históricas no se interpretaron como contratos activos sin una prueba de consumidor.
+
+### ⚠️ Estado T10
+
+- **Auditoría anónima, baseline y reconciliación documental:** ✅ COMPLETADAS.
+- **Validación autenticada controlada:** **BLOQUEADA**. En esta sesión no se proporcionó una sesión/cuenta de QA autorizada para iniciar una ejecución real sin inventar credenciales ni alterar datos internos.
+- **Matriz doble click/refresh/abandono/timeout/reconexión:** **PENDIENTE** de esa sesión autenticada.
+- **Go/no-go público:** **NO-GO**. El producto continúa en **PRE-LAUNCH INTERNAL QA**; no se interpretan métricas de owner/admin/QA como producción.
+- No se modificaron RPCs, ACLs, RLS, fórmulas, economía, combate, cuentas ni fixtures.
+
+### Próximo paso oficial
+
+- Ejecutar con una cuenta de QA autenticada y enlazada a `players.auth_user_id` la matriz controlada de Battle Run, settlements e idempotencia; conservar los datos internos y registrar evidencia antes de reconsiderar el launch gate.
+
+---
+
 ## Chat 147 — 2026-08-02 — Inicio de sesión — BASELINE RECONCILIADO
 
 **Branch:** main | **Scope:** acceso seguro, continuidad y verificación de baseline
