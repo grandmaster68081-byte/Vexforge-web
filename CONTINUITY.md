@@ -6,6 +6,7 @@
 
 - El acceso directo al repositorio oficial de GitHub funciona con el secreto seguro `GITHUB_PAT`; no se solicitó ni imprimió ningún token nuevo.
 - `https://github.com/grandmaster68081-byte/Vexforge-web.git` expone `main` en `8671d875c2806b72e17b48ab6e2cddd496d38526`.
+- La reconciliación documental de este checkpoint quedó publicada posteriormente en `main` como `3d8e95dc85ab52a650dd4682745a8089b7c669f2`.
 - La referencia antigua a `fbd53ea` en el checkpoint anterior era histórica y quedó corregida en esta continuidad.
 - `npm run build` vuelve a pasar con 244 módulos y 0 errores TypeScript.
 - El Protocolo Maestro de Supabase continúa siendo la autoridad: T10 permanece en **PRE-LAUNCH INTERNAL QA / NO-GO**.
