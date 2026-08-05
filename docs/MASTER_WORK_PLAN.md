@@ -1,6 +1,19 @@
 # VEXFORGE — MASTER WORK PLAN
 **Revisión 124 — Chat 129 — 2026-08-01**
 
+> **AVISO DE AUTORIDAD — 2026-08-05**
+>
+> Este documento conserva el plan histórico de producto y no es la autoridad vigente
+> para el launch gate. Queda subordinado al Protocolo Maestro
+> `vexforge_master_protocol_v2` y al plan activo T0-T10 almacenado en Supabase.
+> La etiqueta histórica `OPEN BETA READY` no autoriza un lanzamiento.
+>
+> **Estado canónico actual:** `PRE-LAUNCH INTERNAL QA` — `NO-GO`.
+> T10 sólo puede cerrarse después de una validación autenticada controlada de
+> Battle Runs, settlements e idempotencia, incluyendo doble click, refresh,
+> abandono, timeout y reconexión. No interpretar métricas de owner/admin/QA como
+> producción ni reabrir bloques históricos ya completados.
+
 ---
 
 ## ESTADO GLOBAL
@@ -11,7 +24,7 @@
 | Revisión | 122 |
 | Dominios live | 34 de 34 |
 | Archivos en Supabase | 207 |
-| Estado | **OPEN BETA READY · J1 COMPLETADO** |
+| Estado | **HISTÓRICO: OPEN BETA READY · J1 COMPLETADO — SUBORDINADO A T10** |
 | AN.4 Card Expansion | **DIFERIDO** (post-launch, cuando el owner decida nuevo set) |
 | Diferidos | Telegram, AM.* (ads), AN.4, AN.5 |
 

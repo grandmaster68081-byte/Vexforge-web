@@ -1,10 +1,34 @@
+## Chat 149 — 2026-08-05 — Acceso GitHub y reconciliación documental — COMPLETADO
+
+**Branch:** main | **Scope:** acceso seguro al repositorio oficial y alineación con la autoridad T10
+
+### ✅ Evidencia verificada
+
+- El acceso directo al repositorio oficial de GitHub funciona con el secreto seguro `GITHUB_PAT`; no se solicitó ni imprimió ningún token nuevo.
+- `https://github.com/grandmaster68081-byte/Vexforge-web.git` expone `main` en `8671d875c2806b72e17b48ab6e2cddd496d38526`.
+- La referencia antigua a `fbd53ea` en el checkpoint anterior era histórica y quedó corregida en esta continuidad.
+- `npm run build` vuelve a pasar con 244 módulos y 0 errores TypeScript.
+- El Protocolo Maestro de Supabase continúa siendo la autoridad: T10 permanece en **PRE-LAUNCH INTERNAL QA / NO-GO**.
+
+### 📚 Reconciliación documental
+
+- `docs/MASTER_WORK_PLAN.md` se marcó explícitamente como registro histórico subordinado al Protocolo Maestro T0-T10; su etiqueta histórica `OPEN BETA READY` no autoriza un lanzamiento.
+- No se reabrieron bloques antiguos del plan ni se modificaron código de producto, RPCs, ACLs, RLS, economía, combate, cuentas o fixtures.
+
+### Estado para la próxima sesión
+
+- GitHub queda accesible mediante el secreto seguro existente.
+- El siguiente trabajo válido sigue siendo la validación autenticada controlada de T10 con una cuenta QA enlazada por `players.auth_user_id`.
+
+---
+
 ## Chat 148 — 2026-08-05 — T10: Auditoría de launch gate — VALIDACIÓN ANÓNIMA COMPLETADA
 
 **Branch:** main | **Scope:** auditoría de continuidad, Battle Runs, permisos y preparación de validación autenticada
 
 ### ✅ Evidencia verificada
 
-- El repositorio oficial `main` fue clonado y coincide con `origin/main` en `fbd53eac35985ab6968851eb090763fb141df3d8`.
+- El repositorio oficial `main` fue clonado y coincide con `origin/main` en `8671d875c2806b72e17b48ab6e2cddd496d38526`.
 - `npm install && npm run build` terminó con 244 módulos y 0 errores TypeScript.
 - `git status --short` estaba limpio antes de este registro; no se modificó código de producto.
 - `package-lock.json` no contiene URLs `package-firewall.replit.local`; `.nvmrc` raíz mantiene Node 22; `git diff --check` pasa; `public/_headers` existe y `wrangler` no está en `devDependencies`.
