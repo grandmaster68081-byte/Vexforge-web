@@ -11,6 +11,7 @@ import { getEquippedRelics } from "../domains/relics/repository";
 import { PageLoader } from "../shared/components/PageLoader";
 import { EmptyState } from "../shared/components/EmptyState";
 import { useToast } from "../shared/context/ToastContext";
+import { abandonBattleRun, createBattleRunKey, resolveBattleRun, startBattleRun } from "../domains/battleRuns/repository";
 
 const BG_URL = "https://rscuzqnfccqvltkdcdny.supabase.co/storage/v1/object/public/vexforge-assets/backgrounds/bg_bosses.jpg";
 
@@ -145,6 +146,7 @@ export function RaidsRoute() {
   const [selectedRaid, setSelectedRaid] = useState<RaidRun | null>(null);
   const [raidBattleLoading, setRaidBattleLoading] = useState(false);
   const [raidBattleError, setRaidBattleError] = useState<string | null>(null);
+  const [battleRunId, setBattleRunId] = useState<string | null>(null);
   const [raidDifficulty, setRaidDifficulty] = useState<AIDifficulty>("normal");
   const { addToast } = useToast();
 
@@ -205,16 +207,53 @@ export function RaidsRoute() {
     }
   }, [addToast, authed]);
 
-  const handleRaidFormationConfirm = useCallback((formation: FormationState) => {
-    setRaidUnits(null);
-    setRaidFormation(applyRelicEffects(formation, equippedRelics));
-  }, [equippedRelics]);
-
-  const handleRaidBattleComplete = useCallback(async (won: boolean) => {
+  const handleRaidFormationConfirm = useCallback(async (formation: FormationState) => {
     const raid = selectedRaid;
+    if (!raid) return;
+    setRaidBattleLoading(true);
+    setRaidBattleError(null);
+    const run = await startBattleRun(
+      "raid",
+      raid.id,
+      applyRelicEffects(formation, equippedRelics),
+      createBattleRunKey("raid", raid.id),
+    );
+    if (!run.data) {
+      setRaidBattleLoading(false);
+      setRaidBattleError(run.reason ?? "No se pudo registrar el Battle Run.");
+      return;
+    }
+    setRaidUnits(null);
+    setBattleRunId(run.data.battle_run_id ?? null);
+    setRaidFormation(applyRelicEffects(formation, equippedRelics));
+    setRaidBattleLoading(false);
+  }, [equippedRelics, selectedRaid]);
+
+  const handleRaidBattleComplete = useCallback(async (
+    won: boolean,
+    championDied: boolean,
+    result: ReturnType<typeof import("../lib/forgeFormation").simulateFormationBattle>,
+  ) => {
+    const raid = selectedRaid;
+    const activeBattleRunId = battleRunId;
     setRaidFormation(null);
     setSelectedRaid(null);
-    if (!raid) return;
+    setBattleRunId(null);
+    if (!raid || !activeBattleRunId) {
+      addToast("error", "Battle Run incompleto", "No se encontró la ejecución autoritativa del combate.");
+      return;
+    }
+
+    const resolved = await resolveBattleRun(activeBattleRunId, won, {
+      outcome: won ? "completed" : "defeated",
+      champion_died: championDied,
+      total_turns: result.total_turns,
+      engine: result.engine,
+    });
+    if (!resolved.data) {
+      addToast("error", "Resultado no registrado", resolved.reason ?? "No se pudo cerrar el Battle Run.");
+      return;
+    }
 
     if (!won) {
       addToast("error", "Raid no superado", "La contribución solo se registra después de ganar el combate.");
@@ -227,14 +266,22 @@ export function RaidsRoute() {
     } else {
       addToast("error", "Contribución no registrada", res.reason ?? "No se pudo actualizar el progreso del raid.");
     }
-  }, [addToast, contribute, selectedRaid]);
+  }, [addToast, battleRunId, contribute, selectedRaid]);
 
-  const dismissRaidBattle = useCallback(() => {
+  const dismissRaidBattle = useCallback(async () => {
+    const activeBattleRunId = battleRunId;
+    if (activeBattleRunId) {
+      const abandoned = await abandonBattleRun(activeBattleRunId, { engine: "forge_formation_t5" });
+      if (!abandoned.data) {
+        addToast("error", "Combate no cerrado", abandoned.reason ?? "No se pudo registrar el abandono.");
+      }
+    }
     setRaidUnits(null);
     setRaidFormation(null);
     setSelectedRaid(null);
+    setBattleRunId(null);
     setRaidBattleError(null);
-  }, []);
+  }, [addToast, battleRunId]);
 
   // Early return AFTER all hooks — fixes React error #310
   if (authed === null || loading) return <PageLoader />;

@@ -1,3 +1,32 @@
+## Chat 153 — 2026-08-06 — T10: Battle Run conectado a Raids y World Bosses — CHECKPOINT
+
+**Branch:** main | **Scope:** consumidor oficial de Battle Run para PvE cooperativo
+
+### ✅ Implementación
+
+- El build del repositorio oficial pasa con 245 módulos y 0 errores TypeScript.
+- Se añadió el adaptador cliente `battleRuns` para usar las RPC oficiales `start_battle_run` y `resolve_battle_run` sin crear un motor paralelo.
+- Raids y World Bosses ahora registran el Battle Run al confirmar la formación y lo resuelven antes de llamar a sus settlements específicos. Un fallo de resolución bloquea la contribución o el daño.
+- Se añadió `abandon_battle_run`, SECURITY DEFINER con `search_path` explícito, propiedad autenticada e idempotencia; cerrar el tablero ya no deja ejecuciones en estado `started`.
+- La migración reproducible quedó en `backend/sql-migrations/T10-battle-run-abandon.sql`.
+- No se modificaron economía, fórmulas de combate, cartas, RLS de tablas, fixtures ni recompensas.
+
+### Verificaciones
+
+- `npm run build` ✅ 245 módulos, 0 errores TypeScript
+- `git diff --check` ✅
+- `package-lock.json` sin URLs internas ✅
+- `.nvmrc` raíz = 22 ✅
+- `abandon_battle_run` aplicada y verificada en Supabase como `SECURITY DEFINER`, con `EXECUTE` para `authenticated` y `service_role`.
+
+### Estado T10
+
+- El consumidor oficial de Battle Run ya está conectado para Raids y World Bosses.
+- T10 sigue en **NO-GO**: falta ejecutar la matriz autenticada controlada de doble clic, refresh, abandono, timeout y reconexión con la cuenta QA pavilo20.
+- Próximo paso: validar esa matriz sobre los flujos conectados y revisar el comportamiento live tras la propagación de Cloudflare Pages.
+
+---
+
 ## Chat 152 — 2026-08-06 — T10: sesión QA activa pero cliente sin Battle Run — BLOQUEADO
 
 **Branch:** main | **Scope:** validación autenticada de T10 desde el cliente oficial

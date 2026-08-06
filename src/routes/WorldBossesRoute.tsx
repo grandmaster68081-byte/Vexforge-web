@@ -14,6 +14,7 @@ import { BlockedAuthState } from "../shared/components/BlockedAuthState";
 import { EmptyState } from "../shared/components/EmptyState";
 import { ErrorState } from "../shared/components/ErrorState";
 import { useToast } from "../shared/context/ToastContext";
+import { abandonBattleRun, createBattleRunKey, resolveBattleRun, startBattleRun } from "../domains/battleRuns/repository";
 
 const BG_URL = "https://rscuzqnfccqvltkdcdny.supabase.co/storage/v1/object/public/vexforge-assets/backgrounds/bg_bosses.jpg";
 
@@ -154,6 +155,7 @@ export function WorldBossesRoute() {
   const [selectedBoss, setSelectedBoss] = useState<WorldBoss | null>(null);
   const [battleDifficulty, setBattleDifficulty] = useState<AIDifficulty>("normal");
   const [battleLoading, setBattleLoading] = useState(false);
+  const [battleRunId, setBattleRunId] = useState<string | null>(null);
   const [attackingBossId, setAttackingBossId] = useState<string | null>(null);
   const [battleError, setBattleError] = useState<string | null>(null);
 
@@ -198,18 +200,39 @@ export function WorldBossesRoute() {
     getEquippedRelics().then(setEquippedRelics).catch(() => {});
   }, [authed]);
 
-  const handleFormationConfirm = useCallback((formation: FormationState) => {
+  const handleFormationConfirm = useCallback(async (formation: FormationState) => {
+    const boss = selectedBoss;
+    if (!boss) return;
+    setBattleLoading(true);
+    setBattleError(null);
+    const runKey = createBattleRunKey("boss", boss.id);
+    const run = await startBattleRun("boss", boss.id, applyRelicEffects(formation, equippedRelics), runKey);
+    if (!run.data) {
+      setBattleLoading(false);
+      setBattleError(run.reason ?? "No se pudo registrar el Battle Run.");
+      return;
+    }
     setBossUnits(null);
+    setBattleRunId(run.data.battle_run_id ?? null);
     setBossFormation(applyRelicEffects(formation, equippedRelics));
-  }, [equippedRelics]);
+    setBattleLoading(false);
+  }, [equippedRelics, selectedBoss]);
 
-  const dismissBattle = useCallback(() => {
+  const dismissBattle = useCallback(async () => {
+    const activeBattleRunId = battleRunId;
+    if (activeBattleRunId) {
+      const abandoned = await abandonBattleRun(activeBattleRunId, { engine: "forge_formation_t5" });
+      if (!abandoned.data) {
+        addToast("error", "Combate no cerrado", abandoned.reason ?? "No se pudo registrar el abandono.");
+      }
+    }
     setBossUnits(null);
     setBossFormation(null);
+    setBattleRunId(null);
     setSelectedBoss(null);
     setAttackingBossId(null);
     setBattleError(null);
-  }, []);
+  }, [addToast, battleRunId]);
 
   const handleBattleComplete = useCallback(async (
     won: boolean,
@@ -218,10 +241,27 @@ export function WorldBossesRoute() {
   ) => {
     const boss = selectedBoss;
     const damage = getBattleDamage(result);
+    const activeBattleRunId = battleRunId;
     setBossFormation(null);
     setSelectedBoss(null);
     setAttackingBossId(null);
-    if (!boss) return;
+    setBattleRunId(null);
+    if (!boss || !activeBattleRunId) {
+      addToast("error", "Battle Run incompleto", "No se encontró la ejecución autoritativa del combate.");
+      return;
+    }
+
+    const resolved = await resolveBattleRun(activeBattleRunId, won, {
+      outcome: won ? "completed" : "defeated",
+      champion_died: _championDied,
+      damage_dealt: damage,
+      total_turns: result.total_turns,
+      engine: result.engine,
+    });
+    if (!resolved.data) {
+      addToast("error", "Resultado no registrado", resolved.reason ?? "No se pudo cerrar el Battle Run.");
+      return;
+    }
 
     if (!won) {
       addToast("error", "Combate perdido", "El daño del combate no se registra hasta derrotar al rival.");
@@ -241,7 +281,7 @@ export function WorldBossesRoute() {
     } else {
       addToast("error", "Daño no registrado", response.reason ?? attackResult?.reason ?? "No se pudo actualizar el jefe.");
     }
-  }, [addToast, reload, selectedBoss]);
+  }, [addToast, battleRunId, reload, selectedBoss]);
 
   if (loading) return <PageLoader />;
   if (error)   return <ErrorState message={error} onRetry={reload} />;
