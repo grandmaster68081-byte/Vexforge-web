@@ -2,16 +2,16 @@
 
 Juego de cartas coleccionables (TCG) web: 127 cartas únicas, 4 facciones, economía real con VEX, combate PvP turn-based, mercado P2P, misiones y clanes.
 
-**Producción:** https://57bb190d.vexforge-web.pages.dev  
-**Plan maestro:** `vexforge/docs/MASTER_WORK_PLAN.md` — leer al inicio de cada sesión.
+**Producción pública:** https://vexforge-web.pages.dev
+**Plan maestro:** `docs/MASTER_WORK_PLAN.md` — leer al inicio de cada sesión.
 
 ---
 
 ## Run & Operate
 
-- **Frontend local:** `/home/runner/workspace/vexforge/`
-- **Build:** `cd /home/runner/workspace/vexforge && npm run build` (= `tsc -b && vite build`)
-- **Typecheck:** `cd /home/runner/workspace/vexforge && npx tsc --noEmit`
+- **Frontend local:** `/home/runner/workspace/Vexforge-web/`
+- **Build:** `cd /home/runner/workspace/Vexforge-web && npm run build` (= `vite build`)
+- **Typecheck:** `cd /home/runner/workspace/Vexforge-web && npx tsc --noEmit -p tsconfig.app.json`
 - **ZIP descargable:** `/home/runner/workspace/vexforge-web.zip` → `GET /api/download/vexforge`
 - **API Server (este Replit):** `pnpm --filter @workspace/api-server run dev`
 
@@ -28,7 +28,7 @@ Juego de cartas coleccionables (TCG) web: 127 cartas únicas, 4 facciones, econo
 
 ## Where things live
 
-- **Fuente de verdad del frontend:** Supabase tabla `vexforge_frontend_source_files` (125 archivos)
+- **Fuente de verdad del frontend:** Supabase tabla `vexforge_frontend_source_files` (226 registros)
 - **28 rutas frontend:** Ver listado completo en `MASTER_WORK_PLAN.md`
 - **Supabase project:** `rscuzqnfccqvltkdcdny` — `https://rscuzqnfccqvltkdcdny.supabase.co`
 - **Assets de cartas:** Supabase Storage bucket `vexforge-assets/`
@@ -40,7 +40,7 @@ Juego de cartas coleccionables (TCG) web: 127 cartas únicas, 4 facciones, econo
 - **Supabase como única fuente canónica:** Todo edit de frontend = UPDATE en `vexforge_frontend_source_files`. Nunca persistir solo en disco.
 - **RPCs para toda escritura de negocio:** `execute_mission`, `fuse_cards`, `start_pvp_match`, etc. No INSERT/UPDATE directo desde el cliente.
 - **Domain-driven frontend:** Cada dominio tiene su `repository.ts` (queries Supabase) + `use<Domain>.ts` (estado React) + ruta asociada.
-- **TypeScript strict mode:** El build usa `tsc -b && vite build`. Cualquier error TS rompe el deploy.
+- **TypeScript:** El build de Vite no ejecuta TypeScript; siempre validar con `npx tsc --noEmit -p tsconfig.app.json` antes de empaquetar o desplegar.
 - **ZIP como artefacto de deploy:** Al cerrar sesión con cambios, regenerar ZIP en `/home/runner/workspace/vexforge-web.zip`.
 
 ---
@@ -59,7 +59,7 @@ TCG (Trading Card Game) web con:
 
 ## User preferences
 
-- El agente debe leer `vexforge/docs/MASTER_WORK_PLAN.md` al inicio de cada sesión
+- El agente debe leer `docs/MASTER_WORK_PLAN.md` al inicio de cada sesión
 - Todo trabajo ejecutado debe marcarse con ✅ en el plan maestro
 - Al cerrar sesión: añadir entrada en el plan maestro con fecha, qué se hizo, próximo paso
 - Sincronizar `docs/MASTER_WORK_PLAN.md` de vuelta a Supabase al actualizar
@@ -71,7 +71,7 @@ TCG (Trading Card Game) web con:
 ## Gotchas
 
 - El proxy de Replit usa path-based routing: API server en `/api/*`
-- TypeScript strict: errores de tipo rompen el build. Siempre hacer `npx tsc --noEmit` antes de hacer ZIP
+- TypeScript: siempre hacer `npx tsc --noEmit -p tsconfig.app.json` antes de hacer ZIP
 - `friends/repository.ts` retorna `display_name` y `friend_id` — NO `friend_name` ni `sender_name` (BUG corregido chat57 Bloque 5.21)
 - `players_self` RLS: solo retorna propia fila. Para display names de otros jugadores usar RPCs SECURITY DEFINER (`get_leaderboard`, `get_public_player_names`)
 - Shared components: PageLoader, BlockedAuthState (prop: message), EmptyState, ErrorState, ErrorBoundary, Skeleton — todos en `src/shared/components/`

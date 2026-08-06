@@ -11,15 +11,40 @@ export function useTutorial() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      if (!session?.user) { setLoading(false); return; }
-      const uid = session.user.id;
-      setPlayerId(uid);
-      getTutorialStep(uid).then(step => {
+    let cancelled = false;
+
+    async function loadTutorial() {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session?.user) {
+        if (!cancelled) setLoading(false);
+        return;
+      }
+
+      const { data: player, error } = await supabase
+        .from("players")
+        .select("id")
+        .eq("auth_user_id", session.user.id)
+        .maybeSingle();
+
+      if (cancelled) return;
+      if (error || !player?.id) {
+        setTutorialStep(null);
+        setLoading(false);
+        return;
+      }
+
+      setPlayerId(player.id);
+      const step = await getTutorialStep(player.id);
+      if (!cancelled) {
         setTutorialStep(step);
         setLoading(false);
-      });
-    });
+      }
+    }
+
+    void loadTutorial();
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   const advance = useCallback(async (toStep: number) => {

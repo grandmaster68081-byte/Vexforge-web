@@ -6,6 +6,7 @@
 import type { BattleUnit, BattleSide } from './battleTypes';
 import { simulateAIBattle, type AIDifficulty } from './aiBattleEngine';
 import type { RealBattleResult } from './battleTypes';
+import type { ForgeIconName } from '../shared/components/ForgeIcon';
 
 // ─── Position types ────────────────────────────────────────────────────────────
 export type FormationSlot = 'vanguard' | 'champion' | 'sentinel';
@@ -23,13 +24,58 @@ export interface FormationSelection {
   sentinelIdx: number | null;    // índice de soporte 2
 }
 
+function isFiniteNumber(value: unknown): value is number {
+  return typeof value === 'number' && Number.isFinite(value);
+}
+
+/**
+ * Validate the client-side combat contract before invoking the simulator.
+ * Battle units come from Supabase and malformed rows must become a visible
+ * recoverable error, not a render-time exception or an infinite board.
+ */
+export function validateFormation(formation: FormationState): string | null {
+  if (!formation || !formation.champion) return 'No se encontró el Campeón de la formación.';
+
+  const units = [
+    formation.champion,
+    formation.vanguard,
+    formation.sentinel,
+    ...formation.reserve,
+  ].filter((unit): unit is BattleUnit => unit !== null);
+
+  if (!units.length) return 'La formación no contiene cartas de combate.';
+  const ids = new Set<string>();
+  for (const unit of units) {
+    if (typeof unit.id !== 'string' || !unit.id.trim()) return 'Una carta de la formación no tiene un identificador válido.';
+    if (ids.has(unit.id)) return `La carta ${unit.name || unit.id} aparece más de una vez en la formación.`;
+    ids.add(unit.id);
+    if (typeof unit.name !== 'string' || !unit.name.trim()) return `La carta ${unit.id} no tiene nombre válido.`;
+    for (const [field, value] of Object.entries({
+      hp: unit.hp,
+      max_hp: unit.max_hp,
+      atk: unit.atk,
+      def: unit.def,
+      spd: unit.spd,
+      power: unit.power,
+    })) {
+      if (!isFiniteNumber(value) || value < 0) {
+        return `Los atributos de ${unit.name} no son válidos (${field}).`;
+      }
+    }
+    if (unit.max_hp <= 0 || unit.hp <= 0) {
+      return `${unit.name} no tiene puntos de vida utilizables.`;
+    }
+  }
+  return null;
+}
+
 // ─── Slot metadata para UI ────────────────────────────────────────────────────
 export const SLOT_META: Record<FormationSlot, {
-  label: string; icon: string; desc: string; color: string;
+  label: string; icon: ForgeIconName; desc: string; color: string;
 }> = {
-  vanguard:  { label: 'Vanguardia', icon: '⚔️',  desc: 'Protege al Campeón y ataca primero', color: '#e84040' },
-  champion:  { label: 'Campeón',    icon: '👑',  desc: 'Centro de la formación. Si cae, la partida termina', color: '#e8b84b' },
-  sentinel:  { label: 'Centinela',  icon: '🛡️', desc: 'Defensa de flanco y soporte táctico', color: '#4a9eff' },
+  vanguard:  { label: 'Vanguardia', icon: 'attack', desc: 'Protege al Campeón y ataca primero', color: '#e84040' },
+  champion:  { label: 'Campeón',    icon: 'crown',  desc: 'Centro de la formación. Si cae, la partida termina', color: '#e8b84b' },
+  sentinel:  { label: 'Centinela',  icon: 'shield', desc: 'Defensa de flanco y soporte táctico', color: '#4a9eff' },
 };
 
 // ─── Formation power bonus ────────────────────────────────────────────────────
@@ -150,6 +196,9 @@ export function simulateFormationBattle(
   formation: FormationState,
   difficulty: AIDifficulty,
 ): RealBattleResult & { championDied: boolean; finalFormation: FormationState } {
+  const validationError = validateFormation(formation);
+  if (validationError) throw new Error(validationError);
+
   // The formation engine is not a cosmetic wrapper around the flat AI engine.
   // Support units are defensive anchors, the champion is protected while one
   // of them is alive, and a dead support is replaced from the reserve.

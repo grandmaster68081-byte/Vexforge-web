@@ -1,3 +1,46 @@
+## Chat 159 — 2026-08-06 — T10: hardening de batallas, iconografía y empaquetado — READY FOR MANUAL SIGN-OFF
+
+**Branch:** main | **Scope:** regresiones de batallas, tutorial guiado, estados de error, iconografía SVG y entrega de fuentes
+
+### ✅ Implementación verificada
+
+- Se corrigieron las referencias fuera de alcance de `meta` en Inventario.
+- Misiones, Raids, World Bosses, PvP y tutorial mantienen errores, timeout,
+  abandono, refresh y reconexión visibles; no se añadieron fallbacks silenciosos.
+- El tutorial usa cartas oficiales del jugador, `FormationSelector` y
+  `ForgeFormationBoard`; las batallas IA exigen datos canónicos válidos.
+- Los controles funcionales y estados de alta visibilidad usan `ForgeIcon`;
+  los emojis restantes quedan limitados a partículas/efectos ambientales o
+  marcas tipográficas no interactivas.
+- `dist/` fue regenerado completamente desde el build actual. Los chunks
+  obsoletos se eliminan y los hashes nuevos quedan listos para Cloudflare.
+- La tabla `vexforge_frontend_source_files` fue auditada: 226 registros
+  actuales; el lote sincroniza archivos existentes y crea sólo los tres
+  archivos fuente faltantes.
+
+### ✅ Verificaciones
+
+- `npx tsc --noEmit -p tsconfig.app.json` ✅
+- `npm run build` ✅ 244 módulos transformados, 0 errores
+- `git diff --check` ✅
+- Workflow `VEXFORGE Frontend` reiniciado y Vite listo en `0.0.0.0:5173` ✅
+- `https://vexforge-web.pages.dev` responde HTTP 200 ✅
+- El alias `57bb190d.vexforge-web.pages.dev` está protegido por Cloudflare
+  Access; no se usa como evidencia pública.
+
+### ⚠️ Estado T10
+
+- Código, build, empaquetado y sincronización de fuentes: ✅ listos.
+- Cloudflare Pages después de este push: pendiente de verificación
+  independiente contra los hashes del `dist/` final.
+- QA autenticada del owner para Misiones, Raids, World Boss, PvP,
+  dificultades IA, tutorial, refresh, timeout, abandono y reconexión:
+  **PENDIENTE**.
+- Estado operativo: **READY FOR MANUAL SIGN-OFF**.
+- No se marca `COMPLETED / GO` ni se usa suplantación QA/service role.
+
+---
+
 ## Chat 158 — 2026-08-06 — T10: listo para sign-off manual autenticado
 
 **Branch:** main | **Scope:** endurecimiento final de timeout, refresh y reconexión

@@ -22,6 +22,7 @@ import { applyRelicEffects, type EquippedRelic, type FormationState } from "../l
 import { getEquippedRelics } from "../domains/relics/repository";
 import type { BattleUnit } from "../lib/battleTypes";
 import { ContextualHint, ROUTE_HINTS } from "../components/battle/ContextualHint";
+import { ForgeIcon, type ForgeIconName } from "../shared/components/ForgeIcon";
 
 const BG_URL = "https://rscuzqnfccqvltkdcdny.supabase.co/storage/v1/object/public/vexforge-assets/backgrounds/bg_pvp.jpg";
 
@@ -88,7 +89,7 @@ function MatchmakingOverlay({ onCancel }: { onCancel: () => void }) {
           display: "flex", alignItems: "center", justifyContent: "center",
           fontSize: 40,
           animation: "mmk-ping 1.6s ease-in-out infinite",
-        }}>⚔️</div>
+        }}><ForgeIcon name="attack" size={40} /></div>
       </div>
 
       <div style={{ textAlign: "center" }}>
@@ -119,13 +120,13 @@ function MatchmakingOverlay({ onCancel }: { onCancel: () => void }) {
 
       {/* Orbiting faction runes */}
       <div style={{ position: 'relative', width: 64, height: 64 }}>
-        {['⚔️','🔮','🗡️'].map((r, i) => (
+        {(['attack', 'spark', 'target'] as ForgeIconName[]).map((r, i) => (
           <div key={i} style={{
             position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center',
             animation: `mmk-rune-orbit-${i} ${2.4 + i * 0.4}s linear infinite`,
             pointerEvents: 'none',
           }}>
-            <span style={{ fontSize: 13, filter: 'drop-shadow(0 0 6px rgba(232,184,75,0.8))' }}>{r}</span>
+            <ForgeIcon name={r} size={13} style={{ filter: 'drop-shadow(0 0 6px rgba(232,184,75,0.8))' }} />
           </div>
         ))}
       </div>
@@ -303,7 +304,7 @@ function PreBattleModal({
                   }} />
                   Calculando…
                 </>
-              ) : "⚔️ ¡Batallar!"}
+              ) : <><ForgeIcon name="attack" size={15} />¡Batallar!</>}
             </button>
           </div>
         </div>
@@ -408,10 +409,10 @@ function DailyChallengeCard({ challenge, attempted, badgeEarned, dailyLoading, o
       <div style={{ padding: '20px 22px', display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 16, flexWrap: 'wrap', position: 'relative', zIndex: 1 }}>
         <div style={{ flex: '1 1 260px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
-            <span style={{ fontSize: 18 }}>⚔️</span>
+            <ForgeIcon name="attack" size={18} />
             <span style={{ color: '#e8b84b', fontSize: 10, letterSpacing: '0.2em', fontWeight: 800, fontFamily: 'Cinzel,serif' }}>DESAFÍO DEL DÍA</span>
             {attempted && !badgeEarned && <span style={{ background: '#3dc96b22', border: '1px solid #3dc96b44', color: '#3dc96b', borderRadius: 999, padding: '2px 8px', fontSize: 9, letterSpacing: '0.1em' }}>COMPLETADO</span>}
-            {badgeEarned && <span style={{ background: '#e8b84b22', border: '1px solid #e8b84b66', color: '#e8b84b', borderRadius: 999, padding: '2px 8px', fontSize: 9, letterSpacing: '0.1em' }}>🏅 BADGE GANADO</span>}
+            {badgeEarned && <span style={{ background: '#e8b84b22', border: '1px solid #e8b84b66', color: '#e8b84b', borderRadius: 999, padding: '2px 8px', fontSize: 9, letterSpacing: '0.1em' }}><ForgeIcon name="achievements" size={11} style={{ verticalAlign: 'middle', marginRight: 4 }} />BADGE GANADO</span>}
           </div>
           <h2 style={{ margin: '0 0 6px', color: '#f5e8b0', fontFamily: 'Cinzel,serif', fontSize: 20, fontWeight: 700, textShadow: '0 0 20px rgba(232,184,75,0.4)' }}>{challenge.title}</h2>
           <p style={{ margin: 0, color: '#9488b0', fontSize: 12, lineHeight: 1.5 }}>{challenge.subtitle}</p>
@@ -439,7 +440,7 @@ function DailyChallengeCard({ challenge, attempted, badgeEarned, dailyLoading, o
             transition: 'all 0.2s ease',
           }}
         >
-          {dailyLoading ? '⏳ PREPARANDO…' : attempted ? '✓ INTENTO UTILIZADO' : '⚔ ACEPTAR DESAFÍO'}
+          {dailyLoading ? 'PREPARANDO…' : attempted ? <><ForgeIcon name="check" size={13} /> INTENTO UTILIZADO</> : <><ForgeIcon name="attack" size={13} /> ACEPTAR DESAFÍO</>}
         </button>
       </div>
     </section>
@@ -467,6 +468,7 @@ export function PvpRoute() {
   // Store last battle mode/opponent for GL.1 Revenge
   const lastBattleOppRef  = useRef<string | null>(null);
   const [dailyError, setDailyError]             = useState<string | null>(null);
+  const [battleActionError, setBattleActionError] = useState<string | null>(null);
   // FFE: Forge Formation Engine state
   const [formationUnits, setFormationUnits]     = useState<BattleUnit[] | null>(null);
   const [pendingFormation, setPendingFormation] = useState<FormationState | null>(null);
@@ -496,9 +498,16 @@ export function PvpRoute() {
   // Trigger animated search
   const startMatchmaking = useCallback(async () => {
     cancelRef.current = false;
+    setBattleActionError(null);
     setMatchmaking(true);
-    await loadOpponents();
-    if (!cancelRef.current) setMatchmaking(false);
+    try {
+      const result = await loadOpponents();
+      if (!result.data && !cancelRef.current) {
+        setBattleActionError(result.reason ?? "No se pudieron cargar los oponentes.");
+      }
+    } finally {
+      if (!cancelRef.current) setMatchmaking(false);
+    }
   }, [loadOpponents]);
 
   const cancelMatchmaking = useCallback(() => {
@@ -513,6 +522,7 @@ export function PvpRoute() {
     const oppSnapshot = selectedOpp;
     setSelectedOpp(null);
     setPvpLoading(true);
+    setBattleActionError(null);
     try {
       const units = await loadPlayerBattleUnits(supabase, playerId);
       const mmrDiff  = oppSnapshot.total_power - myMmrRef.current;
@@ -522,10 +532,9 @@ export function PvpRoute() {
         mmrDiff < -200 ? 'easy' : 'normal';
       formationDifficultyRef.current = d;
       setFormationUnits(units);
-    } catch {
-      // Fallback: old system
+    } catch (err) {
       pvpOpponentRef.current = null;
-      await battle(oppSnapshot.player_id);
+      setBattleActionError(err instanceof Error ? err.message : "No se pudo cargar tu formación.");
     } finally {
       setPvpLoading(false);
     }
@@ -601,8 +610,16 @@ export function PvpRoute() {
           } else if (reward.reason === 'daily_cap_reached') {
             setAiCapReached(true);
             setAiVexEarned(null);
+          } else if (reward.reason) {
+            setBattleActionError(`Victoria registrada, pero la recompensa no se aplicó: ${reward.reason}`);
           }
-        } catch { /* silent */ }
+        } catch (err) {
+          setBattleActionError(
+            `Victoria registrada, pero la recompensa no se aplicó: ${
+              err instanceof Error ? err.message : "error desconocido"
+            }`,
+          );
+        }
       }
       return;
     }
@@ -619,6 +636,9 @@ export function PvpRoute() {
       try { recordSessionBattle(won, 0, streak); } catch { /* silent */ }
       try {
         const res = await battle(oppId);
+        if (!res.data) {
+          setBattleActionError(res.reason ?? "La batalla PvP no pudo resolverse. Inténtalo de nuevo.");
+        }
         // T6: store formation snapshot if match_id returned
         const matchId = (res?.data as RealBattleResult | null)?.match_id;
         if (matchId && snapshot) {
@@ -630,7 +650,11 @@ export function PvpRoute() {
           setEloChangeBanner({ won, change: eloChange });
           setTimeout(() => setEloChangeBanner(null), 5000);
         }
-      } catch { /* silent */ }
+      } catch (err) {
+        setBattleActionError(
+          err instanceof Error ? err.message : "La batalla PvP no pudo resolverse. Inténtalo de nuevo.",
+        );
+      }
       // T6: reload public rankings after PvP
       const season = seasons[0];
       if (season) {
@@ -653,7 +677,16 @@ export function PvpRoute() {
         try {
           const claim = await claimDailyAIChallenge(supabase, dailyChallenge.dateKey, dailyChallenge.difficulty);
           if (claim.claimed) setDailyVexEarned(claim.vex_awarded ?? DAILY_CHALLENGE_VEX_REWARD[dailyChallenge.difficulty]);
-        } catch { /* silent */ }
+          else if (claim.reason) {
+            setDailyError(`Victoria registrada, pero la recompensa no se aplicó: ${claim.reason}`);
+          }
+        } catch (err) {
+          setDailyError(
+            `Victoria registrada, pero la recompensa no se aplicó: ${
+              err instanceof Error ? err.message : "error desconocido"
+            }`,
+          );
+        }
       } else {
         onLoss();
       }
@@ -663,12 +696,16 @@ export function PvpRoute() {
   // FFE: AI battle entry point — selectable difficulty, no daily limit
   const startAIBattle = useCallback(async (difficulty: AIDifficulty) => {
     if (!playerId) return;
+    setBattleActionError(null);
     try {
       const units = await loadPlayerBattleUnits(supabase, playerId);
       formationDifficultyRef.current  = difficulty;
       aiRewardDifficultyRef.current   = difficulty;   // track for anti-farm reward
       setFormationUnits(units);
-    } catch { /* silent */ }
+    } catch (err) {
+      aiRewardDifficultyRef.current = null;
+      setBattleActionError(err instanceof Error ? err.message : "No se pudo cargar tu formación.");
+    }
   }, [playerId]);
 
   // FFE: Practice mode — call startAIBattle('normal') directly
@@ -705,7 +742,7 @@ export function PvpRoute() {
       display: 'flex', alignItems: 'center', gap: 10, boxShadow: '0 4px 24px rgba(34,197,94,0.3)',
       animation: 'summon-title-in 0.4s cubic-bezier(0.22,1,0.36,1) both',
     }}>
-      <span style={{ fontSize: 18 }}>⚔️</span>
+      <ForgeIcon name="attack" size={18} />
       <span style={{ color: '#86efac', fontFamily: 'IBM Plex Mono,monospace', fontWeight: 700, fontSize: 13 }}>
         VICTORIA · <span style={{ color: '#4ade80' }}>+{aiVexEarned} VEX</span> ganados
       </span>
@@ -718,7 +755,7 @@ export function PvpRoute() {
       border: '1px solid #f59e0b', borderRadius: 12, padding: '10px 24px',
       display: 'flex', alignItems: 'center', gap: 10,
     }}>
-      <span style={{ fontSize: 14 }}>🔒</span>
+      <ForgeIcon name="lock" size={14} />
       <span style={{ color: '#fbbf24', fontFamily: 'IBM Plex Mono,monospace', fontSize: 12 }}>Cap diario alcanzado · Vuelve mañana</span>
       <button onClick={() => setAiCapReached(false)} style={{ background: 'none', border: 'none', color: '#fbbf24', cursor: 'pointer', fontSize: 14, marginLeft: 8 }}>✕</button>
     </div>
@@ -744,12 +781,12 @@ export function PvpRoute() {
   // FFE: ForgeFormationBoard — actual formation battle (daily / pvp / practice)
   if (pendingFormation) {
     const AI_LABEL: Record<string, string> = {
-      easy: '🤖 IA Aprendiz', normal: '🛡️ IA Forjador', expert: '💀 IA Maestro', legend: '💎 IA Leyenda', tutorial: '📖 Tutorial',
+      easy: 'IA Aprendiz', normal: 'IA Forjador', expert: 'IA Maestro', legend: 'IA Leyenda', tutorial: 'Tutorial',
     };
     const ffeOpponentName = practiceMode
-      ? (AI_LABEL[formationDifficultyRef.current] ?? '🎮 Modo Práctica')
+      ? (AI_LABEL[formationDifficultyRef.current] ?? 'Modo Práctica')
       : pvpOpponentRef.current
-        ? `⚔️ ${pvpOpponentNameRef.current}`
+        ? pvpOpponentNameRef.current
         : dailyChallenge.title;
     return (
       <ForgeFormationBoard
@@ -783,8 +820,18 @@ export function PvpRoute() {
                     if (r.data) setPublicRankings(r.data);
                   });
                 }
+              } else {
+                setBattleActionError(
+                  `No se pudo registrar el abandono PvP: ${res.reason ?? "inténtalo de nuevo."}`,
+                );
               }
-            } catch { /* silent */ }
+            } catch (err) {
+              setBattleActionError(
+                `No se pudo registrar el abandono PvP: ${
+                  err instanceof Error ? err.message : "error desconocido"
+                }`,
+              );
+            }
           }
         }}
       />
@@ -870,7 +917,7 @@ export function PvpRoute() {
           boxShadow: `0 4px 24px ${eloChangeBanner.won ? "rgba(34,197,94,0.25)" : "rgba(239,68,68,0.25)"}`,
           animation: "mmk-ping 0.3s ease-out",
         }}>
-          <span style={{ fontSize: 16 }}>{eloChangeBanner.won ? "⚔️" : "💀"}</span>
+          <ForgeIcon name={eloChangeBanner.won ? "attack" : "skull"} size={16} />
           <span style={{
             color: eloChangeBanner.won ? "#86efac" : "#fca5a5",
             fontFamily: "IBM Plex Mono,monospace", fontWeight: 700, fontSize: 13,
@@ -896,7 +943,7 @@ export function PvpRoute() {
             fontSize: "clamp(20px,4vw,26px)", margin: "0 0 6px",
             textShadow: "0 0 30px rgba(232,184,75,0.4)",
           }}>
-            ⚔️ Arena PvP
+            <ForgeIcon name="arena" size={18} style={{ verticalAlign: "middle", marginRight: 6 }} />Arena PvP
           </h1>
           <p style={{ color: "#888", margin: 0, fontSize: 13 }}>
             Desafía a otros Forjadores. El poder de tu mazo determina la victoria.
@@ -919,7 +966,7 @@ export function PvpRoute() {
           borderRadius: 16, padding: '18px 20px',
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 14 }}>
-            <span style={{ fontSize: 18 }}>🤖</span>
+            <ForgeIcon name="target" size={18} />
             <div>
               <h2 style={{ fontFamily: 'Cinzel,serif', color: '#e8e8f0', fontSize: 15, margin: 0, fontWeight: 700 }}>
                 Entrenamiento vs IA
@@ -931,10 +978,10 @@ export function PvpRoute() {
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(140px,1fr))', gap: 10 }}>
             {([
-              { diff: 'easy'   as AIDifficulty, icon: '🤖',  label: 'Aprendiz',  desc: 'Sin keywords · Ideal para empezar',       color: '#3dc96b', reward: `+${AI_BATTLE_VEX_REWARD.easy} VEX · ${AI_BATTLE_DAILY_CAP.easy}/día` },
-              { diff: 'normal' as AIDifficulty, icon: '🛡️', label: 'Forjador',  desc: 'Guard y Lifesteal · Requiere estrategia', color: '#e8b84b', reward: `+${AI_BATTLE_VEX_REWARD.normal} VEX · ${AI_BATTLE_DAILY_CAP.normal}/día` },
-              { diff: 'expert' as AIDifficulty, icon: '💀',  label: 'Maestro',   desc: 'Deck completo · IA optimizada',           color: '#a855f7', reward: `+${AI_BATTLE_VEX_REWARD.expert} VEX · ${AI_BATTLE_DAILY_CAP.expert}/día` },
-              { diff: 'legend' as AIDifficulty, icon: '💎',  label: 'Leyenda',   desc: 'IA máxima · Sin misericordia',            color: '#ffd700', reward: `+${AI_BATTLE_VEX_REWARD.legend} VEX · ${AI_BATTLE_DAILY_CAP.legend}/día` },
+              { diff: 'easy'   as AIDifficulty, icon: 'target' as ForgeIconName, label: 'Aprendiz', desc: 'Sin keywords · Ideal para empezar',       color: '#3dc96b', reward: `+${AI_BATTLE_VEX_REWARD.easy} VEX · ${AI_BATTLE_DAILY_CAP.easy}/día` },
+              { diff: 'normal' as AIDifficulty, icon: 'shield' as ForgeIconName, label: 'Forjador', desc: 'Guard y Lifesteal · Requiere estrategia', color: '#e8b84b', reward: `+${AI_BATTLE_VEX_REWARD.normal} VEX · ${AI_BATTLE_DAILY_CAP.normal}/día` },
+              { diff: 'expert' as AIDifficulty, icon: 'skull' as ForgeIconName, label: 'Maestro', desc: 'Deck completo · IA optimizada',           color: '#a855f7', reward: `+${AI_BATTLE_VEX_REWARD.expert} VEX · ${AI_BATTLE_DAILY_CAP.expert}/día` },
+              { diff: 'legend' as AIDifficulty, icon: 'crown' as ForgeIconName, label: 'Leyenda', desc: 'IA máxima · Sin misericordia',            color: '#ffd700', reward: `+${AI_BATTLE_VEX_REWARD.legend} VEX · ${AI_BATTLE_DAILY_CAP.legend}/día` },
             ]).map(({ diff, icon, label, desc, color, reward }) => (
               <button
                 key={diff}
@@ -952,7 +999,7 @@ export function PvpRoute() {
                 onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.background = `linear-gradient(135deg,${color}0a,rgba(10,10,20,0.9))`; }}
               >
                 <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 2 }}>
-                  <span style={{ fontSize: 16 }}>{icon}</span>
+                  <ForgeIcon name={icon} size={16} />
                   <span style={{ fontFamily: 'Cinzel,serif', fontWeight: 700, fontSize: 11, color }}>{label}</span>
                 </div>
                 <span style={{ fontSize: 10, color: '#7a7a9a', fontFamily: 'Rajdhani,sans-serif', lineHeight: 1.3 }}>{desc}</span>
@@ -985,8 +1032,24 @@ export function PvpRoute() {
             color: "#ff8888", marginBottom: 20, fontSize: 13,
             display: "flex", alignItems: "center", gap: 10,
           }}>
-            <span>⚠️</span>
+            <ForgeIcon name="warning" size={15} />
             <span>{dailyError}</span>
+          </div>
+        )}
+
+        {battleActionError && (
+          <div style={{
+            background: "#2a1a1a", border: "1px solid #ff6b6b55",
+            borderRadius: 8, padding: "12px 16px",
+            color: "#ff8888", marginBottom: 20, fontSize: 13,
+            display: "flex", alignItems: "center", gap: 10,
+          }}>
+            <ForgeIcon name="warning" size={15} />
+            <span>{battleActionError}</span>
+            <button
+              onClick={() => setBattleActionError(null)}
+              style={{ marginLeft: "auto", background: "transparent", border: 0, color: "#ff8888", cursor: "pointer" }}
+            >×</button>
           </div>
         )}
 
@@ -1079,7 +1142,7 @@ export function PvpRoute() {
                     transition: "all 0.2s",
                   }}
                 >
-                  {opponentsLoading ? "Buscando…" : "🔍 Buscar oponentes"}
+                  {opponentsLoading ? "Buscando…" : <><ForgeIcon name="target" size={13} style={{ verticalAlign: "middle", marginRight: 5 }} />Buscar oponentes</>}
                 </button>
               </div>
 
@@ -1096,16 +1159,16 @@ export function PvpRoute() {
                 background: "#12121e", border: "1px dashed #2a2a3a",
                 borderRadius: 10, padding: 24, textAlign: "center",
               }}>
-                <div style={{ fontSize: 32, marginBottom: 8, opacity: 0.5 }}>⚔️</div>
+                <div style={{ marginBottom: 8, opacity: 0.5 }}><ForgeIcon name="attack" size={32} /></div>
                 <p style={{ color: "#7a7a9a", margin: "0 0 14px", fontSize: 13 }}>
                   Pulsa <strong style={{ color: "#e8b84b" }}>Buscar oponentes</strong> para encontrar rivales.
                   Si no hay jugadores disponibles, entrena contra la IA.
                 </p>
                 <div style={{ display: 'flex', gap: 8, justifyContent: 'center', flexWrap: 'wrap' }}>
                   {([
-                    { diff: 'easy'   as AIDifficulty, icon: '🤖', label: 'vs Aprendiz', color: '#3dc96b' },
-                    { diff: 'normal' as AIDifficulty, icon: '🛡️', label: 'vs Forjador', color: '#e8b84b' },
-                    { diff: 'expert' as AIDifficulty, icon: '💀', label: 'vs Maestro',  color: '#a855f7' },
+                    { diff: 'easy'   as AIDifficulty, icon: 'target' as ForgeIconName, label: 'vs Aprendiz', color: '#3dc96b' },
+                    { diff: 'normal' as AIDifficulty, icon: 'shield' as ForgeIconName, label: 'vs Forjador', color: '#e8b84b' },
+                    { diff: 'expert' as AIDifficulty, icon: 'skull' as ForgeIconName, label: 'vs Maestro',  color: '#a855f7' },
                   ]).map(({ diff, icon, label, color }) => (
                     <button
                       key={diff}
@@ -1121,7 +1184,7 @@ export function PvpRoute() {
                         transition: 'all 0.2s',
                       }}
                     >
-                      <span>{icon}</span><span>{label}</span>
+                      <ForgeIcon name={icon} size={13} /><span>{label}</span>
                     </button>
                   ))}
                 </div>
@@ -1167,7 +1230,7 @@ export function PvpRoute() {
               <div>
                 <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 10 }}>
                   <h2 style={{ fontFamily: "Cinzel,serif", color: "#e8e8f0", fontSize: 16, margin: 0, flex: 1 }}>
-                    🏆 {season.name}
+                    <ForgeIcon name="trophy" size={16} style={{ verticalAlign: "middle", marginRight: 6 }} />{season.name}
                   </h2>
                   {rankingsLoading && (
                     <div style={{
@@ -1186,7 +1249,7 @@ export function PvpRoute() {
                   marginBottom: 10,
                   display: "flex", alignItems: "center", gap: 6,
                 }}>
-                  <span style={{ fontSize: 11 }}>🔒</span>
+                  <ForgeIcon name="lock" size={11} />
                   <span style={{ color: "#a8a050", fontSize: 10, lineHeight: 1.4 }}>
                     <strong style={{ color: "#e8b84b" }}>PRE-LANZAMIENTO</strong>
                     {" "}· Datos de QA interno. Las cuentas de prueba no aparecen en el ranking.

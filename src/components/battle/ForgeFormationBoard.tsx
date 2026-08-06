@@ -16,6 +16,7 @@ import {
 import type { AIDifficulty } from '../../lib/aiBattleEngine';
 import { AudioEngine } from '../../lib/audioEngine';
 import { particleEngine } from '../../lib/particleEngine';
+import { ForgeIcon, type ForgeIconName } from '../../shared/components/ForgeIcon';
 
 // ─── Palette ───────────────────────────────────────────────────────────────────
 const SLOT_COLORS: Record<FormationSlot, { primary: string; glow: string }> = {
@@ -133,7 +134,7 @@ function FormationUnitCard({
         color: `${primary}33`, fontSize: 11,
         fontFamily: '"Rajdhani",sans-serif', letterSpacing: '0.1em',
       }}>
-        <span style={{ fontSize: 28, opacity: 0.3 }}>{meta.icon}</span>
+        <ForgeIcon name={meta.icon} size={28} style={{ opacity: 0.3 }} />
         <span>VACÍO</span>
       </div>
     );
@@ -179,7 +180,7 @@ function FormationUnitCard({
         fontSize: 8, fontWeight: 800, color: '#fff',
         fontFamily: '"Cinzel",serif', letterSpacing: '0.08em',
         backdropFilter: 'blur(4px)',
-      }}>{meta.icon} {meta.label}</div>
+      }}><ForgeIcon name={meta.icon} size={11} style={{ verticalAlign: 'middle', marginRight: 4 }} />{meta.label}</div>
 
       {/* Champion crown / ascension crown */}
       {isChampion && !isDead && (
@@ -192,7 +193,7 @@ function FormationUnitCard({
           animation: ascensionActive
             ? 'forge-ascension-crown 1.5s ease-in-out infinite'
             : 'champion-crown-pulse 2s ease-in-out infinite',
-        }}>{ascensionActive ? '🌟' : '👑'}</div>
+        }}><ForgeIcon name={ascensionActive ? 'spark' : 'crown'} size={20} /></div>
       )}
 
       {/* Rarity badge */}
@@ -220,9 +221,7 @@ function FormationUnitCard({
         display: 'flex', alignItems: 'center', justifyContent: 'center',
       }}>
         {!unit.image_url && (
-          <span style={{ fontSize: 28, opacity: 0.5 }}>
-            {meta.icon}
-          </span>
+          <ForgeIcon name={meta.icon} size={28} style={{ opacity: 0.5 }} />
         )}
       </div>
 
@@ -238,10 +237,10 @@ function FormationUnitCard({
           overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
           marginBottom: 3,
         }}>{unit.name}</div>
-        <div style={{ display: 'flex', gap: 4, fontSize: 9, fontFamily: '"Rajdhani",sans-serif', fontWeight: 800, marginBottom: 3 }}>
-          <span style={{ color: '#ff6b6b' }}>⚔{unit.atk}</span>
-          <span style={{ color: '#4a9eff' }}>🛡{unit.def}</span>
-          <span style={{ color: '#3ddc84' }}>❤{unit.hp}</span>
+        <div style={{ display: 'flex', gap: 7, alignItems: 'center', fontSize: 9, fontFamily: '"Rajdhani",sans-serif', fontWeight: 800, marginBottom: 3 }}>
+          <span style={{ color: '#ff6b6b', display: 'inline-flex', alignItems: 'center', gap: 2 }}><ForgeIcon name="attack" size={10} />{unit.atk}</span>
+          <span style={{ color: '#4a9eff', display: 'inline-flex', alignItems: 'center', gap: 2 }}><ForgeIcon name="shield" size={10} />{unit.def}</span>
+          <span style={{ color: '#3ddc84', display: 'inline-flex', alignItems: 'center', gap: 2 }}><ForgeIcon name="heart" size={10} />{unit.hp}</span>
         </div>
         <SegmentedHpBar hp={unit.hp} max={unit.max_hp} slot={slot} />
         {/* Keywords strip */}
@@ -263,7 +262,7 @@ function FormationUnitCard({
           background: 'rgba(0,0,0,0.6)',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
           fontSize: 28,
-        }}>💀</div>
+        }}><ForgeIcon name="skull" size={30} /></div>
       )}
     </div>
   );
@@ -408,22 +407,22 @@ function ForgeGauge({ progress }: { progress: number }) {
     };
 
 // ─── Per-card motto generator (G1) ───────────────────────────────────────────
-const KEYWORD_SUMMON_FX: Record<string, { color: string; emoji: string[]; bgOverlay: string }> = {
-  'Guard':        { color: '#4a9eff', emoji: ['🛡️','⚔️'], bgOverlay: 'rgba(74,158,255,0.12)' },
-  'Drain':        { color: '#9b59b6', emoji: ['💜','🌑'], bgOverlay: 'rgba(155,89,182,0.12)' },
-  'Lifesteal':    { color: '#c0392b', emoji: ['❤️','🩸'], bgOverlay: 'rgba(192,57,43,0.12)' },
-  'Surge':        { color: '#f1c40f', emoji: ['⚡','💥'], bgOverlay: 'rgba(241,196,15,0.12)' },
-  'Veil':         { color: '#7f8c8d', emoji: ['🌫️','👁️'], bgOverlay: 'rgba(127,140,141,0.18)' },
-  'Forge':        { color: '#e74c3c', emoji: ['🔥','⚒️'], bgOverlay: 'rgba(231,76,60,0.12)' },
-  'Poison':       { color: '#27ae60', emoji: ['☠️','💚'], bgOverlay: 'rgba(39,174,96,0.12)' },
-  'DoubleStrike': { color: '#e84040', emoji: ['⚔️','⚔️'], bgOverlay: 'rgba(232,64,64,0.14)' },
-  'Rush':         { color: '#e67e22', emoji: ['💨','⚡'], bgOverlay: 'rgba(230,126,34,0.12)' },
-  'Consecrate':   { color: '#f39c12', emoji: ['✨','☀️'], bgOverlay: 'rgba(243,156,18,0.12)' },
-  'Resonance':    { color: '#8e44ad', emoji: ['🔮','✨'], bgOverlay: 'rgba(142,68,173,0.12)' },
-  'Flux':         { color: '#3498db', emoji: ['🌀','⚡'], bgOverlay: 'rgba(52,152,219,0.12)' },
-  'Taunt':        { color: '#e84040', emoji: ['💢','🔴'], bgOverlay: 'rgba(232,64,64,0.14)' },
-  'Stealth':      { color: '#6c5ce7', emoji: ['🌑','👁️'], bgOverlay: 'rgba(108,92,231,0.14)' },
-  'Spellpower':   { color: '#00cec9', emoji: ['📿','✨'], bgOverlay: 'rgba(0,206,201,0.12)' },
+const KEYWORD_SUMMON_FX: Record<string, { color: string; icon: ForgeIconName; bgOverlay: string }> = {
+  'Guard':        { color: '#4a9eff', icon: 'shield', bgOverlay: 'rgba(74,158,255,0.12)' },
+  'Drain':        { color: '#9b59b6', icon: 'target', bgOverlay: 'rgba(155,89,182,0.12)' },
+  'Lifesteal':    { color: '#c0392b', icon: 'heart', bgOverlay: 'rgba(192,57,43,0.12)' },
+  'Surge':        { color: '#f1c40f', icon: 'energy', bgOverlay: 'rgba(241,196,15,0.12)' },
+  'Veil':         { color: '#7f8c8d', icon: 'lock', bgOverlay: 'rgba(127,140,141,0.18)' },
+  'Forge':        { color: '#e74c3c', icon: 'spark', bgOverlay: 'rgba(231,76,60,0.12)' },
+  'Poison':       { color: '#27ae60', icon: 'warning', bgOverlay: 'rgba(39,174,96,0.12)' },
+  'DoubleStrike': { color: '#e84040', icon: 'attack', bgOverlay: 'rgba(232,64,64,0.14)' },
+  'Rush':         { color: '#e67e22', icon: 'energy', bgOverlay: 'rgba(230,126,34,0.12)' },
+  'Consecrate':   { color: '#f39c12', icon: 'spark', bgOverlay: 'rgba(243,156,15,0.12)' },
+  'Resonance':    { color: '#8e44ad', icon: 'spark', bgOverlay: 'rgba(142,68,173,0.12)' },
+  'Flux':         { color: '#3498db', icon: 'energy', bgOverlay: 'rgba(52,152,219,0.12)' },
+  'Taunt':        { color: '#e84040', icon: 'target', bgOverlay: 'rgba(232,64,64,0.14)' },
+  'Stealth':      { color: '#6c5ce7', icon: 'lock', bgOverlay: 'rgba(108,92,231,0.14)' },
+  'Spellpower':   { color: '#00cec9', icon: 'spark', bgOverlay: 'rgba(0,206,201,0.12)' },
 };
 
 const KW_MOTTO: Record<string, string> = {
@@ -646,10 +645,10 @@ function getCardMotto(unit: BattleUnit): string {
             animation: 'summon-stats-in 0.5s ease-out both',
           }}>
             {[
-              { label: '⚔ ATK', val: champion.atk,    col: '#ff6b6b' },
-              { label: '🛡 DEF', val: champion.def,    col: '#4a9eff' },
-              { label: '❤ HP',  val: champion.max_hp,  col: '#3ddc84' },
-              { label: '⚡ POW', val: champion.power,  col: '#e8b84b' },
+              { label: 'ATK', icon: 'attack' as ForgeIconName, val: champion.atk,    col: '#ff6b6b' },
+              { label: 'DEF', icon: 'shield' as ForgeIconName, val: champion.def,    col: '#4a9eff' },
+              { label: 'HP',  icon: 'heart' as ForgeIconName,  val: champion.max_hp,  col: '#3ddc84' },
+              { label: 'POW', icon: 'energy' as ForgeIconName, val: champion.power,  col: '#e8b84b' },
             ].map(s => (
               <div key={s.label} style={{
                 textAlign: 'center',
@@ -658,7 +657,7 @@ function getCardMotto(unit: BattleUnit): string {
                 borderRadius: 8, padding: '6px 12px',
               }}>
                 <div style={{ fontSize: 16, fontWeight: 900, color: s.col, fontFamily: '"Rajdhani",sans-serif' }}>{s.val}</div>
-                <div style={{ fontSize: 8, color: '#6a6a8a', fontFamily: '"Rajdhani",sans-serif', letterSpacing: '0.08em' }}>{s.label}</div>
+                <div style={{ fontSize: 8, color: '#6a6a8a', fontFamily: '"Rajdhani",sans-serif', letterSpacing: '0.08em', display: 'inline-flex', alignItems: 'center', gap: 3 }}><ForgeIcon name={s.icon} size={9} />{s.label}</div>
               </div>
             ))}
           </div>
@@ -679,7 +678,7 @@ function getCardMotto(unit: BattleUnit): string {
                     fontSize: 9, fontFamily: '"Rajdhani",sans-serif',
                     fontWeight: 800, color: fx.color, letterSpacing: '0.08em',
                     textShadow: `0 0 8px ${fx.color}88`,
-                  }}>{fx.emoji[0]} {kw.toUpperCase()}</div>
+                  }}><ForgeIcon name={fx.icon} size={11} style={{ verticalAlign: 'middle', marginRight: 3 }} />{kw.toUpperCase()}</div>
                 );
               })}
             </div>
@@ -874,7 +873,7 @@ function UnitSummonCinematic({
                   background: `${fx.color}18`,
                   fontSize: 8, fontFamily: '"Rajdhani",sans-serif',
                   fontWeight: 700, color: fx.color, letterSpacing: '0.06em',
-                }}>{fx.emoji[0]} {kw.toUpperCase()}</div>
+                }}><ForgeIcon name={fx.icon} size={10} style={{ verticalAlign: 'middle', marginRight: 3 }} />{kw.toUpperCase()}</div>
               );
             })}
           </div>
@@ -1071,7 +1070,7 @@ function ReserveActivatedCinematic({
                   border: `1px solid ${fx.color}55`, background: `${fx.color}18`,
                   fontSize: 8, fontFamily: '"Rajdhani",sans-serif',
                   fontWeight: 700, color: fx.color, letterSpacing: '0.06em',
-                }}>{fx.emoji[0]} {kw.toUpperCase()}</div>
+                }}><ForgeIcon name={fx.icon} size={10} style={{ verticalAlign: 'middle', marginRight: 3 }} />{kw.toUpperCase()}</div>
               );
             })}
           </div>
@@ -1142,7 +1141,9 @@ function ForgeAscensionOverlay({ champion, onDone }: { champion: BattleUnit; onD
         }} />
       ))}
 
-      <div style={{ fontSize: 64, filter: 'drop-shadow(0 0 24px #ffd700)', marginBottom: 16 }}>🌟</div>
+      <div style={{ filter: 'drop-shadow(0 0 24px #ffd700)', marginBottom: 16 }}>
+        <ForgeIcon name="spark" size={64} />
+      </div>
 
       <div style={{
         fontFamily: '"Cinzel Decorative",serif',
@@ -1251,7 +1252,7 @@ function ChampionDeathScreen({ champion }: { champion: BattleUnit }) {
         animation: stage >= 1 ? 'champ-death-fall 1.6s ease-in-out 0.4s both' : 'none',
         filter: `drop-shadow(0 0 30px ${rar}aa)`,
         marginBottom: 24,
-      }}>💀</div>
+      }}><ForgeIcon name="skull" size={72} /></div>
 
       {/* CAMPEÓN CAÍDO title */}
       {stage >= 2 && (
@@ -1341,7 +1342,8 @@ function ReservePanel({
         fontFamily: '"Cinzel",serif', fontSize: 16, color: primary,
         textShadow: `0 0 20px ${glow}`, letterSpacing: '0.1em', textAlign: 'center',
       }}>
-        {SLOT_META[awaitingSlot].icon} Selecciona reemplazo para {SLOT_META[awaitingSlot].label}
+        <ForgeIcon name={SLOT_META[awaitingSlot].icon} size={16} style={{ verticalAlign: 'middle', marginRight: 6 }} />
+        Selecciona reemplazo para {SLOT_META[awaitingSlot].label}
       </div>
 
       <div style={{
@@ -1389,7 +1391,7 @@ function ReservePanel({
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                 fontSize: 28, position: 'relative',
               }}>
-                {!u.image_url && '⚔️'}
+                {!u.image_url && <ForgeIcon name="attack" size={28} />}
                 {/* Rarity badge */}
                 <div style={{
                   position: 'absolute', top: 4, right: 4,
@@ -1407,9 +1409,9 @@ function ReservePanel({
                   overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', marginBottom: 4,
                 }}>{u.name}</div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 9, fontFamily: '"Rajdhani",sans-serif', fontWeight: 800, marginBottom: 4 }}>
-                  <span style={{ color: '#ff6b6b' }}>⚔{u.atk}</span>
-                  <span style={{ color: '#4a9eff' }}>🛡{u.def}</span>
-                  <span style={{ color: '#3ddc84' }}>❤{u.hp}</span>
+                  <span style={{ color: '#ff6b6b', display: 'inline-flex', alignItems: 'center', gap: 2 }}><ForgeIcon name="attack" size={10} />{u.atk}</span>
+                  <span style={{ color: '#4a9eff', display: 'inline-flex', alignItems: 'center', gap: 2 }}><ForgeIcon name="shield" size={10} />{u.def}</span>
+                  <span style={{ color: '#3ddc84', display: 'inline-flex', alignItems: 'center', gap: 2 }}><ForgeIcon name="heart" size={10} />{u.hp}</span>
                 </div>
                 {/* Mini HP bar */}
                 <div style={{ height: 3, background: 'rgba(255,255,255,0.08)', borderRadius: 2 }}>
@@ -1477,7 +1479,7 @@ function ForgeBarrier({
         flexShrink: 0,
         animation: `forge-barrier-rune ${pulseDur} ease-in-out infinite`,
       }}>
-        <span style={{ fontSize: 16, filter: `drop-shadow(0 0 5px ${winCol})` }}>⚔</span>
+        <ForgeIcon name="attack" size={16} style={{ filter: `drop-shadow(0 0 5px ${winCol})` }} />
         {/* Orbiting ring */}
         <div style={{
           position: 'absolute', inset: -5,
@@ -1559,7 +1561,9 @@ function ReserveStack({ count }: { count: number }) {
         textShadow: critical && !empty ? `0 0 8px ${col}` : 'none',
         animation: critical && !empty ? 'forge-barrier-glow 0.8s ease-in-out infinite' : 'none',
       }}>
-        {count}{critical && !empty ? '⚠' : '▼'}
+        <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}>
+          {count}<ForgeIcon name={critical && !empty ? 'warning' : 'target'} size={10} />
+        </span>
       </div>
 
       <div style={{
@@ -1622,8 +1626,8 @@ function ForgeFormationScoreboard({
   const surviveCount = (formation.champion.hp > 0 ? 1 : 0) + aliveAllies;
 
   const theme = won
-    ? { primary: '#e8b84b', glow: 'rgba(232,184,75,0.7)', label: '¡VICTORIA!', emoji: '🏆', bg: 'radial-gradient(ellipse at 50% 0%,rgba(232,184,75,0.22) 0%,rgba(3,3,10,0.98) 60%)' }
-    : { primary: '#e84040', glow: 'rgba(232,64,64,0.6)', label: 'DERROTA',     emoji: '💀', bg: 'radial-gradient(ellipse at 50% 0%,rgba(232,64,64,0.18) 0%,rgba(3,3,10,0.98) 60%)' };
+    ? { primary: '#e8b84b', glow: 'rgba(232,184,75,0.7)', label: '¡VICTORIA!', icon: 'trophy' as ForgeIconName, bg: 'radial-gradient(ellipse at 50% 0%,rgba(232,184,75,0.22) 0%,rgba(3,3,10,0.98) 60%)' }
+    : { primary: '#e84040', glow: 'rgba(232,64,64,0.6)', label: 'DERROTA',     icon: 'skull' as ForgeIconName, bg: 'radial-gradient(ellipse at 50% 0%,rgba(232,64,64,0.18) 0%,rgba(3,3,10,0.98) 60%)' };
 
   return (
     <div style={{
@@ -1653,10 +1657,10 @@ function ForgeFormationScoreboard({
 
       {/* Trophy/skull */}
       <div style={{
-        fontSize: 56, lineHeight: 1, marginBottom: 8,
+        lineHeight: 1, marginBottom: 8,
         filter: `drop-shadow(0 0 24px ${theme.glow})`,
         animation: 'score-hero-in 0.5s cubic-bezier(0.22,1,0.36,1) 0.1s both',
-      }}>{theme.emoji}</div>
+        }}><ForgeIcon name={theme.icon} size={56} /></div>
 
       {/* Result headline */}
       <div style={{
@@ -1692,7 +1696,7 @@ function ForgeFormationScoreboard({
           borderBottom: `1px solid ${theme.primary}22`,
           fontFamily: '"Cinzel",serif', fontSize: 8,
           color: theme.primary, letterSpacing: '0.2em',
-        }}>📊 ESTADÍSTICAS DE BATALLA</div>
+        }}><ForgeIcon name="target" size={11} style={{ verticalAlign: 'middle', marginRight: 5 }} />ESTADÍSTICAS DE BATALLA</div>
 
         {[
           { label: 'Turnos jugados',     val: turns.length, delay: 0.35 },
@@ -1755,14 +1759,14 @@ function ForgeFormationScoreboard({
           background: 'rgba(74,158,255,0.1)', border: '1px solid rgba(74,158,255,0.2)',
           fontSize: 9, fontFamily: '"Rajdhani",sans-serif',
           color: '#4a9eff', letterSpacing: '0.1em',
-        }}>🛡 {playerName}</div>
+        }}><ForgeIcon name="shield" size={11} style={{ verticalAlign: 'middle', marginRight: 3 }} />{playerName}</div>
         <span style={{ color: '#3a3a5a', fontSize: 10 }}>vs</span>
         <div style={{
           padding: '4px 12px', borderRadius: 20,
           background: 'rgba(232,64,64,0.1)', border: '1px solid rgba(232,64,64,0.2)',
           fontSize: 9, fontFamily: '"Rajdhani",sans-serif',
           color: '#e84040', letterSpacing: '0.1em',
-        }}>⚔ {opponentName}</div>
+        }}><ForgeIcon name="attack" size={11} style={{ verticalAlign: 'middle', marginRight: 3 }} />{opponentName}</div>
       </div>
 
       {/* Action button */}
@@ -1779,7 +1783,8 @@ function ForgeFormationScoreboard({
           animation: 'score-hero-in 0.4s ease-out 0.85s both',
         }}
       >
-        {won ? '🏆 Continuar' : '↩ Volver al lobby'}
+        <ForgeIcon name={won ? 'trophy' : 'refresh'} size={13} style={{ verticalAlign: 'middle', marginRight: 5 }} />
+        {won ? 'Continuar' : 'Volver al lobby'}
       </button>
     </div>
   );
@@ -1873,7 +1878,11 @@ export interface ForgeFormationBoardProps {
   onDismiss: () => void;
 }
 
-type BoardPhase = 'champion_summon' | 'intro' | 'battle' | 'reserve' | 'ascension' | 'champion_dead' | 'done';
+type BoardPhase = 'champion_summon' | 'intro' | 'battle' | 'reserve' | 'ascension' | 'champion_dead' | 'done' | 'error';
+
+type FormationSimulationState =
+  | { result: ReturnType<typeof simulateFormationBattle>; error: null }
+  | { result: null; error: string };
 
 function isBossEncounter(opponentName: string): boolean {
   return /\b(boss|jefe|raid|world boss)\b/i.test(opponentName);
@@ -1884,7 +1893,34 @@ export function ForgeFormationBoard({
   difficulty, equippedRelics = [], onComplete, onDismiss,
 }: ForgeFormationBoardProps) {
   const [formation, setFormation]     = useState<FormationState>(initialFormation);
-  const [phase, setPhase]             = useState<BoardPhase>('champion_summon');
+  const [simulation] = useState<FormationSimulationState>(() => {
+    try {
+      const result = simulateFormationBattle(initialFormation, difficulty);
+      if (!Array.isArray(result.turns) || !result.finalFormation?.champion) {
+        return { result: null, error: 'La simulación no devolvió una formación de combate válida.' };
+      }
+      return { result, error: null };
+    } catch (error) {
+      return {
+        result: null,
+        error: error instanceof Error
+          ? error.message
+          : 'No se pudo preparar la simulación de combate.',
+      };
+    }
+  });
+  const fallbackResult = {
+    ok: false,
+    you_won: false,
+    total_turns: 0,
+    turns: [],
+    final_units: [],
+    engine: 'client_error',
+    championDied: false,
+    finalFormation: initialFormation,
+  } as ReturnType<typeof simulateFormationBattle>;
+  const battleResult = simulation.result ?? fallbackResult;
+  const [phase, setPhase]             = useState<BoardPhase>(simulation.error ? 'error' : 'champion_summon');
   const [awaitingSlot, setAwaitingSlot] = useState<FormationSlot | null>(null);
   const [turnIdx, setTurnIdx]         = useState(0);
   const [totalTurns]                  = useState(20);
@@ -1908,21 +1944,32 @@ export function ForgeFormationBoard({
   const pendingReserveRef = useRef<{ unit: BattleUnit; slot: FormationSlot } | null>(null);
 
   const autoRef      = useRef<ReturnType<typeof setInterval> | null>(null);
+  const completionTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const completionScheduledRef = useRef(false);
   const musicPhaseRef = useRef<'none' | 'intro' | 'mid' | 'last_stand'>('none');
   const prevKillsRef  = useRef(0);
   const prevDeathsRef = useRef(0);
   const bossEncounter = isBossEncounter(opponentName);
 
-  // Pre-compute battle result once
-  const battleResult = useRef(simulateFormationBattle(initialFormation, difficulty));
-  const battleTurns  = battleResult.current.turns ?? [];
+  const battleTurns  = battleResult.turns ?? [];
 
   // ─── Summon cinematic done → show intro ──────────────────────────────────────
   const handleSummonDone = useCallback(() => {
     setPhase('intro');
-    const t = setTimeout(() => setPhase('battle'), 1200);
-    return () => clearTimeout(t);
   }, []);
+
+  // A cinematic must never be able to strand the battle in a dark overlay.
+  useEffect(() => {
+    if (phase !== 'champion_summon') return;
+    const watchdog = setTimeout(() => setPhase('intro'), 7000);
+    return () => clearTimeout(watchdog);
+  }, [phase]);
+
+  useEffect(() => {
+    if (phase !== 'intro') return;
+    const introTimer = setTimeout(() => setPhase('battle'), 1200);
+    return () => clearTimeout(introTimer);
+  }, [phase]);
 
   // ─── Cleanup music on unmount ────────────────────────────────────────────────
   useEffect(() => {
@@ -1932,6 +1979,7 @@ export function ForgeFormationBoard({
 
   useEffect(() => {
     return () => {
+      if (completionTimerRef.current) clearTimeout(completionTimerRef.current);
       try { (AudioEngine as any).stopCombatMusic?.(); } catch { /* silent */ }
     };
   }, []);
@@ -1952,7 +2000,7 @@ export function ForgeFormationBoard({
     }
   }, [phase]);
 
-  const totalBattleTurns = battleResult.current.turns?.length ?? totalTurns;
+  const totalBattleTurns = battleResult.turns?.length ?? totalTurns;
 
   useEffect(() => {
     if (phase !== 'battle' || totalBattleTurns <= 0) return;
@@ -1990,20 +2038,29 @@ export function ForgeFormationBoard({
 
     if (!turnData) {
       // Battle over
-      const won = battleResult.current.you_won ?? false;
-      const championDied = battleResult.current.championDied;
+      const won = battleResult.you_won ?? false;
+      const championDied = battleResult.championDied;
 
       if (championDied) {
         setPhase('champion_dead');
         try { AudioEngine.death?.(); } catch { /* ok */ }
-        setTimeout(() => { setPhase('done'); onComplete(false, true, battleResult.current); }, 4200);
+        if (!completionScheduledRef.current) {
+          completionScheduledRef.current = true;
+          completionTimerRef.current = setTimeout(() => {
+            setPhase('done');
+            onComplete(false, true, battleResult);
+          }, 4200);
+        }
       } else {
         setPhase('done');
         try {
           if (won) (AudioEngine as any).sfxLevelUp?.();
           else     (AudioEngine as any).sfxKillV2?.();
         } catch { /* ok */ }
-        setTimeout(() => onComplete(won, false, battleResult.current), 600);
+        if (!completionScheduledRef.current) {
+          completionScheduledRef.current = true;
+          completionTimerRef.current = setTimeout(() => onComplete(won, false, battleResult), 600);
+        }
       }
       return;
     }
@@ -2027,14 +2084,14 @@ export function ForgeFormationBoard({
       ? formation.champion.name
       : (formation[defSlot]?.name ?? formation.champion.name);
 
-    addLog(`${isCrit ? '💥' : '⚔️'} ${atkName} → ${defName} [${dmg}${isCrit ? ' CRIT' : ''}${isKill ? ' 💀' : ''}]`);
+    addLog(`${isCrit ? '[CRIT]' : '[ATK]'} ${atkName} → ${defName} [${dmg}${isKill ? ' [KO]' : ''}]`);
 
     try {
       if (isKill)      (AudioEngine as any).sfxKillV2?.();
       else if (isCrit) (AudioEngine as any).sfxCritV2?.();
       else             AudioEngine.sfxCardSelect?.();
     } catch { /* ok */ }
-    const projectedChampion = battleResult.current.finalFormation.champion;
+    const projectedChampion = battleResult.finalFormation.champion;
     const hpRatio = Math.max(0, Math.min(1,
       (projectedChampion?.hp ?? formation.champion.hp) / Math.max(1, formation.champion.max_hp),
     ));
@@ -2066,7 +2123,7 @@ export function ForgeFormationBoard({
     setTurnIdx(prev => prev + 1);
 
     // ─── Reserve replacement check ───────────────────────────────────────────────
-    const finalFormation = battleResult.current.finalFormation;
+    const finalFormation = battleResult.finalFormation;
     if (!finalFormation.vanguard?.alive && formation.vanguard?.alive && formation.reserve.length > 0) {
       if (autoRef.current) { clearInterval(autoRef.current); setIsAutoPlay(false); }
       setAwaitingSlot('vanguard');
@@ -2077,7 +2134,7 @@ export function ForgeFormationBoard({
       setPhase('reserve');
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [phase, turnIdx, formation, addLog, onComplete, ascensionActive]);
+  }, [phase, turnIdx, formation, addLog, onComplete, ascensionActive, battleResult]);
 
   // B1: called after UnitSummonCinematic completes
   const handleUnitSummonDone = useCallback(() => {
@@ -2107,7 +2164,7 @@ export function ForgeFormationBoard({
   const handleAscensionDone = useCallback(() => {
     setShowAscensionOverlay(false);
     setPhase('battle');
-    addLog(`🌟 FORGE ASCENSION — ${formation.champion.name} +20% ATK`);
+    addLog(`[ASCENSION] FORGE ASCENSION — ${formation.champion.name} +20% ATK`);
   }, [addLog, formation.champion.name]);
 
   const toggleAutoPlay = useCallback(() => {
@@ -2119,9 +2176,46 @@ export function ForgeFormationBoard({
     }
   }, [isAutoPlay]);
 
+  if (simulation.error) {
+    return (
+      <div style={{
+        position: 'fixed', inset: 0, zIndex: 100,
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        padding: 24, background: 'radial-gradient(ellipse at center, #1b0d16 0%, #030308 75%)',
+        fontFamily: '"Rajdhani",sans-serif',
+      }}>
+        <div style={{
+          width: 'min(460px, 100%)', padding: 28, borderRadius: 16,
+          background: 'rgba(14,14,32,0.96)', border: '1px solid rgba(232,64,64,0.35)',
+          boxShadow: '0 20px 70px rgba(0,0,0,0.55)', textAlign: 'center',
+        }}>
+          <div style={{ marginBottom: 12 }}><ForgeIcon name="warning" size={34} /></div>
+          <h2 style={{
+            margin: '0 0 10px', color: '#f87171', fontFamily: '"Cinzel",serif',
+            fontSize: 18,
+          }}>No se pudo preparar la batalla</h2>
+          <p style={{ margin: '0 0 22px', color: 'rgba(255,255,255,0.65)', lineHeight: 1.5, fontSize: 13 }}>
+            {simulation.error}
+          </p>
+          <button
+            type="button"
+            onClick={onDismiss}
+            style={{
+              padding: '11px 24px', borderRadius: 9, border: '1px solid #e8b84b66',
+              background: 'rgba(232,184,75,0.12)', color: '#e8b84b',
+              fontFamily: '"Cinzel",serif', fontWeight: 700, cursor: 'pointer',
+            }}
+          >
+            Volver a la formación
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   const champAlive      = formation.champion.hp > 0 && formation.champion.alive !== false;
   const champProtected  = isChampionProtected(formation);
-  const finalFormation  = battleResult.current.finalFormation;
+  const finalFormation  = battleResult.finalFormation;
   const progressPct     = Math.min(turnIdx / Math.max(1, totalBattleTurns), 1);
 
   // ─── Derived for Forge Barrier & terrain ─────────────────────────────────────
@@ -2138,7 +2232,7 @@ export function ForgeFormationBoard({
       ) ?? null
     : null;
   // Player is "winning" if they won OR fewer rage stacks (lost fewer allies)
-  const playerWinning   = battleResult.current.you_won || rageStacks < 3;
+  const playerWinning   = battleResult.you_won || rageStacks < 3;
   const criticalHp      = progressPct > 0.75;
   const isPureFormation = hasFormationPureBonus(formation);
 
@@ -2287,7 +2381,8 @@ export function ForgeFormationBoard({
         flexShrink: 0, gap: 8,
       }}>
         <div style={{ fontFamily: '"Cinzel",serif', fontSize: 13, color: '#e8b84b', letterSpacing: '0.08em' }}>
-          ⚔ FORGE FORMATION · {opponentName}
+          <ForgeIcon name="attack" size={13} style={{ verticalAlign: 'middle', marginRight: 5 }} />
+          FORGE FORMATION · {opponentName}
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
           <TurnIndicator current={turnIdx} total={totalBattleTurns} />
@@ -2341,7 +2436,7 @@ export function ForgeFormationBoard({
             fontSize: 72, marginBottom: 20,
             animation: 'intro-forge-in 0.9s cubic-bezier(0.22,1,0.36,1) both',
             filter: 'drop-shadow(0 0 30px rgba(232,184,75,0.8))',
-          }}>⚔️</div>
+          }}><ForgeIcon name="attack" size={28} /></div>
           <div style={{
             fontFamily: '"Cinzel Decorative",serif', fontSize: 'clamp(20px,5vw,32px)',
             fontWeight: 900, color: '#e8b84b',
@@ -2457,7 +2552,7 @@ export function ForgeFormationBoard({
               border: '1px solid rgba(74,158,255,0.35)',
               backdropFilter: 'blur(4px)',
             }}>
-              <span style={{ fontSize: 9 }}>🛡</span>
+              <ForgeIcon name="shield" size={11} />
               <span style={{
                 fontSize: 8, fontFamily: '"Rajdhani",sans-serif', fontWeight: 800,
                 color: '#4a9eff', letterSpacing: '0.15em',
@@ -2477,7 +2572,7 @@ export function ForgeFormationBoard({
               background: 'rgba(232,64,64,0.12)',
               border: '1px solid rgba(232,64,64,0.4)',
             }}>
-              <span style={{ fontSize: 9 }}>⚠️</span>
+              <ForgeIcon name="warning" size={11} />
               <span style={{
                 fontSize: 8, fontFamily: '"Rajdhani",sans-serif', fontWeight: 800,
                 color: '#e84040', letterSpacing: '0.15em',
@@ -2499,7 +2594,7 @@ export function ForgeFormationBoard({
               marginBottom: 6, padding: '2px 10px',
               background: 'rgba(0,0,0,0.5)', borderRadius: 20,
               border: '1px solid rgba(232,64,64,0.2)',
-            }}>⚔ {opponentName}</div>
+            }}><ForgeIcon name="attack" size={11} style={{ verticalAlign: 'middle', marginRight: 3 }} />{opponentName}</div>
             <div style={{ display: 'flex', gap: 12 }}>
               {(['vanguard', 'champion', 'sentinel'] as FormationSlot[]).map(s => {
                 const u = finalFormation[s] as BattleUnit | null;
@@ -2562,7 +2657,7 @@ export function ForgeFormationBoard({
                         }}>◉ OBJETIVO</div>
                       </>
                     )}
-                    <div style={{ fontSize: 20 }}>{SLOT_META[s].icon}</div>
+                    <ForgeIcon name={SLOT_META[s].icon} size={20} />
                     {u && <div style={{
                       fontSize: 7, color: isTarget ? '#ff9a9a' : '#aaa', fontFamily: '"Cinzel",serif',
                       textAlign: 'center', transform: 'scaleY(-1)',
@@ -2570,7 +2665,7 @@ export function ForgeFormationBoard({
                       maxWidth: 70,
                     }}>{u.name}</div>}
                     {s === 'champion' && (
-                      <div style={{ fontSize: 12, transform: 'scaleY(-1)' }}>👑</div>
+                      <div style={{ transform: 'scaleY(-1)' }}><ForgeIcon name="crown" size={12} /></div>
                     )}
                   </div>
                 );
@@ -2627,7 +2722,7 @@ export function ForgeFormationBoard({
                 padding: '2px 10px',
                 background: 'rgba(0,0,0,0.5)', borderRadius: 20,
                 border: '1px solid rgba(74,158,255,0.2)',
-              }}>🛡 {playerName}</div>
+              }}><ForgeIcon name="shield" size={11} style={{ verticalAlign: 'middle', marginRight: 3 }} />{playerName}</div>
 
               {/* ── RESERVE STACK visual (Plan §3) ── */}
               <ReserveStack count={formation.reserve.length} />
@@ -2644,7 +2739,8 @@ export function ForgeFormationBoard({
                 letterSpacing: '0.1em',
                 transition: 'color 0.3s',
               }}>
-                {champProtected ? '🛡 Campeón protegido' : '⚠️ ¡Campeón expuesto!'}
+                <ForgeIcon name={champProtected ? 'shield' : 'warning'} size={11} style={{ verticalAlign: 'middle', marginRight: 4 }} />
+                {champProtected ? 'Campeón protegido' : '¡Campeón expuesto!'}
               </div>
               {/* ── FORMATION PURE BONUS badge ── */}
               {isPureFormation && <PureFormationBadge faction={champFaction} />}
@@ -2686,7 +2782,7 @@ export function ForgeFormationBoard({
         {/* H4: Post-battle scoreboard overlay */}
         {phase === 'done' && (
           <ForgeFormationScoreboard
-            result={battleResult.current}
+            result={battleResult}
             formation={formation}
             playerName={playerName}
             opponentName={opponentName}
@@ -2746,7 +2842,7 @@ export function ForgeFormationBoard({
                 boxShadow: isAutoPlay ? 'none' : '0 4px 20px rgba(232,184,75,0.4)',
                 animation: isAutoPlay ? 'none' : 'attack-btn-pulse 2s ease-in-out infinite',
               }}
-            >⚔ ATACAR ({totalBattleTurns - turnIdx})</button>
+            ><ForgeIcon name="attack" size={13} style={{ verticalAlign: 'middle', marginRight: 5 }} />ATACAR ({totalBattleTurns - turnIdx})</button>
 
             <button onClick={toggleAutoPlay} style={{
               padding: '10px 18px', borderRadius: 10,
@@ -2754,7 +2850,7 @@ export function ForgeFormationBoard({
               border: `1px solid ${isAutoPlay ? '#e8b84b44' : 'rgba(255,255,255,0.1)'}`,
               color: isAutoPlay ? '#e8b84b' : '#6a6a8a', fontFamily: '"Cinzel",serif',
               fontSize: 12, cursor: 'pointer', letterSpacing: '0.06em',
-            }}>{isAutoPlay ? '⏸ Pausar' : '▶ Auto'}</button>
+            }}><ForgeIcon name={isAutoPlay ? 'pause' : 'play'} size={12} style={{ verticalAlign: 'middle', marginRight: 5 }} />{isAutoPlay ? 'Pausar' : 'Auto'}</button>
 
             {/* Rage badge in controls */}
             {rageStacks > 0 && (
@@ -2781,12 +2877,13 @@ export function ForgeFormationBoard({
         {phase === 'done' && (
           <div style={{
             fontFamily: '"Cinzel",serif', fontSize: 13,
-            color: battleResult.current.you_won ? '#3ddc84' : '#e84040',
-            textShadow: battleResult.current.you_won
+            color: battleResult.you_won ? '#3ddc84' : '#e84040',
+            textShadow: battleResult.you_won
               ? '0 0 20px rgba(61,220,132,0.6)'
               : '0 0 20px rgba(232,64,64,0.6)',
           }}>
-            {battleResult.current.you_won ? '🏆 ¡VICTORIA!' : '💀 DERROTA'}
+            <ForgeIcon name={battleResult.you_won ? 'trophy' : 'skull'} size={14} style={{ verticalAlign: 'middle', marginRight: 5 }} />
+            {battleResult.you_won ? '¡VICTORIA!' : 'DERROTA'}
           </div>
         )}
       </div>

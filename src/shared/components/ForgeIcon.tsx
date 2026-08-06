@@ -37,7 +37,23 @@ export type ForgeIconName =
   | "assets"
   | "admin"
   | "signout"
-  | "more";
+  | "more"
+  | "attack"
+  | "shield"
+  | "crown"
+  | "warning"
+  | "energy"
+  | "coin"
+  | "spark"
+  | "skull"
+  | "refresh"
+  | "lock"
+  | "trophy"
+  | "check"
+  | "heart"
+  | "target"
+  | "play"
+  | "pause";
 
 type ForgeIconProps = {
   name: ForgeIconName;
@@ -74,6 +90,38 @@ export function ForgeIcon({
   };
 
   switch (name) {
+    case "attack":
+      return <svg {...props}><path d="m4 20 7.4-7.4M13.6 10.4 20 4l-1.8 5.4L13 11.2z" /><path d="m5.5 5.5 4 4M4 9l1.5-3.5L9 4" /></svg>;
+    case "shield":
+      return <svg {...props}><path d="M12 3 20 6v5.8c0 4.4-3.2 7.4-8 9.2-4.8-1.8-8-4.8-8-9.2V6z" /><path d="m8.5 12 2.2 2.2 4.8-5" /></svg>;
+    case "crown":
+      return <svg {...props}><path d="m4 7 4 3 4-6 4 6 4-3-1.5 11H5.5z" /><path d="M6 21h12M7 17.5h10" /></svg>;
+    case "warning":
+      return <svg {...props}><path d="m12 3 9 17H3z" /><path d="M12 9v4M12 17h.1" /></svg>;
+    case "energy":
+      return <svg {...props}><path d="m13 2-8 12h6l-1 8 8-12h-6z" /></svg>;
+    case "coin":
+      return <svg {...props}><circle cx="12" cy="12" r="8.5" /><path d="M14.6 8.2c-.7-.8-1.5-1.2-2.7-1.2-1.5 0-2.5.8-2.5 1.9 0 3.1 5.8 1.3 5.8 4.4 0 1.3-1.1 2.2-2.8 2.2-1.2 0-2.3-.4-3.1-1.4M12 5.5v13" /></svg>;
+    case "spark":
+      return <svg {...props}><path d="m12 3 2.1 5.8L20 11l-5.9 2.2L12 19l-2.1-5.8L4 11l5.9-2.2z" /><path d="m19 3 .6 2.1L22 6l-2.4.9L19 9l-.6-2.1L16 6l2.4-.9z" /></svg>;
+    case "skull":
+      return <svg {...props}><path d="M5 10.5a7 7 0 1 1 14 0c0 2.7-1.4 4.6-3.4 5.8V20H8.4v-3.7C6.4 15.1 5 13.2 5 10.5Z" /><path d="M8.5 10h.1M15.5 10h.1M9 14c1.8 1.1 4.2 1.1 6 0M9 20v-2M12 20v-2M15 20v-2" /></svg>;
+    case "refresh":
+      return <svg {...props}><path d="M20 11a8 8 0 0 0-14.8-3L3 11M4 5v6h6M4 13a8 8 0 0 0 14.8 3L21 13M20 19v-6h-6" /></svg>;
+    case "lock":
+      return <svg {...props}><rect x="5" y="10" width="14" height="11" rx="2" /><path d="M8 10V7a4 4 0 0 1 8 0v3M12 14v3" /></svg>;
+    case "trophy":
+      return <svg {...props}><path d="M7 4h10v5.5c0 3.2-2.1 5.5-5 6.4-2.9-.9-5-3.2-5-6.4z" /><path d="M7 6H4v2c0 2.2 1.2 3.8 3.3 4.4M17 6h3v2c0 2.2-1.2 3.8-3.3 4.4M12 16v4M8.5 21h7" /></svg>;
+    case "check":
+      return <svg {...props}><path d="m5 12 4.2 4.2L19 6.5" /></svg>;
+    case "heart":
+      return <svg {...props}><path d="M20.5 8.8c0 5.2-8.5 10.2-8.5 10.2S3.5 14 3.5 8.8A4.3 4.3 0 0 1 12 6.6a4.3 4.3 0 0 1 8.5 2.2Z" /></svg>;
+    case "target":
+      return <svg {...props}><circle cx="12" cy="12" r="8.5" /><circle cx="12" cy="12" r="4.2" /><circle cx="12" cy="12" r="1" /></svg>;
+    case "play":
+      return <svg {...props}><path d="m8 5 10 7-10 7z" /></svg>;
+    case "pause":
+      return <svg {...props}><path d="M8 5v14M16 5v14" /></svg>;
     case "home":
       return <svg {...props}><path d="m3.5 10.7 8.5-7 8.5 7" /><path d="M5.5 9.3v10.4h13V9.3M9.2 19.7v-5.2h5.6v5.2" /><path d="M12 6.2v1.9" /></svg>;
     case "cards":

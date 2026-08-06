@@ -22,10 +22,10 @@
 
 | Campo | Valor |
 |-------|-------|
-| Chat actual | 95 |
+| Última verificación operativa | 2026-08-06 |
 | Revisión | 122 |
 | Dominios live | 34 de 34 |
-| Archivos en Supabase | 207 |
+| Archivos en Supabase | 226 registros |
 | Estado | **T10 READY FOR MANUAL SIGN-OFF · histórico OPEN BETA READY subordinado a T10** |
 | AN.4 Card Expansion | **DIFERIDO** (post-launch, cuando el owner decida nuevo set) |
 | Diferidos | Telegram, AM.* (ads), AN.4, AN.5 |
@@ -278,8 +278,8 @@ Los jugadores deben engancharse en los primeros 5 minutos y querer seguir jugand
 | AN.3: Deploy VexforgeCards.sol a Polygon | Pendiente |
 | AN.3: Actualizar CONTRACT_ADDRESS | Pendiente |
 | AN.3: Insert row en vexforge_nft_contracts | Pendiente |
-| AL.3: Export Supabase → GitHub (Temus) | Pendiente |
-| AL.3: Deploy Cloudflare Pages | Verificado en T10 (`index-D0UyJzA-.js`) |
+| AL.3: Sincronización de fuentes local → Supabase | Verificada: 226 registros |
+| AL.3: Deploy Cloudflare Pages | Verificación independiente pendiente tras el push de este lote |
 
 ---
 

@@ -52,13 +52,16 @@ export async function listActiveMissions(): Promise<DomainResult<Mission[]>> {
  */
 export async function startMissionRun(
   missionId: string,
+  signal?: AbortSignal,
 ): Promise<DomainResult<MissionRunResult>> {
   const playerId = await getCurrentPlayerId();
   if (!playerId) return { status: "blocked_auth", data: null, reason: "Sign in to run missions." };
 
-  const { data, error } = await supabase.rpc("execute_mission", {
+  const request = supabase.rpc("execute_mission", {
     p_player: playerId, p_mission: missionId,
   });
+  if (signal) request.abortSignal(signal);
+  const { data, error } = await request;
   if (error) return { status: "ready", data: null, reason: error.message };
 
   const result = data as MissionRunResult | null;
@@ -101,10 +104,13 @@ export async function executeMission(
 
 export async function claimMissionReward(
   runId: string, playerId: string, referenceId: string,
+  signal?: AbortSignal,
 ): Promise<DomainResult<ClaimResult>> {
-  const { data, error } = await supabase.rpc("claim_mission_reward", {
+  const request = supabase.rpc("claim_mission_reward", {
     p_mission_run_id: runId, p_player_id: playerId, p_reference_id: referenceId,
   });
+  if (signal) request.abortSignal(signal);
+  const { data, error } = await request;
   if (error) return { status: "ready", data: null, reason: error.message };
   const result = data as (ClaimResult & { ok?: boolean }) | null;
   if (!result || (result.success !== true && result.ok !== true)) {

@@ -208,30 +208,38 @@ export function createBattleUnitFromCanonicalCard(
 export async function loadPlayerBattleUnits(
   supabase: any, playerId: string, count = 40
 ): Promise<BattleUnit[]> {
-  try {
-    const { data } = await supabase
-      .from('player_cards')
-      .select('cards!inner(id,name,faction,rarity,power,affinity,prestige,charge,specialization,synergy_json,image_url)')
-      .eq('player_id', playerId)
-      .eq('listed', false)
-      .order('created_at', { ascending: false })
-      .limit(40);
+  if (!playerId) throw new Error('No se pudo identificar al jugador.');
 
-    if (!data || !data.length) return getAIDeck('easy', 'a');
+  const { data, error } = await supabase
+    .from('player_cards')
+    .select('cards!inner(id,name,faction,rarity,power,affinity,prestige,charge,specialization,synergy_json,image_url)')
+    .eq('player_id', playerId)
+    .eq('listed', false)
+    .gt('quantity', 0)
+    .order('created_at', { ascending: false })
+    .limit(count);
 
-    const units: BattleUnit[] = data
-      .map((pc: any, i: number) => {
-        return pc.cards ? createBattleUnitFromCanonicalCard(pc.cards as CanonicalCombatCard, i) : null;
-      })
-      .filter(Boolean)
-      .sort((a: BattleUnit, b: BattleUnit) => b.power - a.power)
-      .slice(0, count)
-      .map((u: BattleUnit, i: number) => ({ ...u, idx: i }));
-
-    return units.length ? units : getAIDeck('easy', 'a');
-  } catch {
-    return getAIDeck('easy', 'a');
+  if (error) {
+    throw new Error(`No se pudo cargar tu colección: ${error.message}`);
   }
+  if (!data?.length) {
+    throw new Error('No tienes cartas disponibles para combatir. Abre tu colección o construye tu mazo primero.');
+  }
+
+  const units: BattleUnit[] = data
+    .map((pc: any, i: number) => {
+      const card = Array.isArray(pc.cards) ? pc.cards[0] : pc.cards;
+      return card ? createBattleUnitFromCanonicalCard(card as CanonicalCombatCard, i) : null;
+    })
+    .filter(Boolean)
+    .sort((a: BattleUnit, b: BattleUnit) => b.power - a.power)
+    .slice(0, count)
+    .map((u: BattleUnit, i: number) => ({ ...u, idx: i }));
+
+  if (!units.length) {
+    throw new Error('Tus cartas no tienen datos de combate válidos. Actualiza la colección e inténtalo de nuevo.');
+  }
+  return units;
 }
 
 // ─── Battle Simulator ─────────────────────────────────────────────────────────

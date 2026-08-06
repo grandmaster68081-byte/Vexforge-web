@@ -56,7 +56,9 @@ export function usePvp() {
         8000
       );
     } catch (err) {
-      const isTimeout = err instanceof Error && err.message.includes("timed out");
+      const isTimeout = err instanceof Error && (
+        err.message.includes("timed out") || err.message.includes("tiempo de espera")
+      );
       setError(isTimeout ? "Tiempo de espera agotado. Verifica tu conexión." : "Error cargando datos de PvP.");
     } finally {
       setLoading(false);
@@ -68,9 +70,15 @@ export function usePvp() {
   const loadOpponents = useCallback(async () => {
     setOpponentsLoading(true);
     try {
-      const res = await listOpponents();
+      const res = await withTimeout(listOpponents(), 10000);
       if (res.data) setOpponents(res.data);
       return res;
+    } catch (err) {
+      return {
+        status: "ready" as const,
+        data: null,
+        reason: err instanceof Error ? err.message : "No se pudieron cargar los oponentes.",
+      };
     } finally {
       setOpponentsLoading(false);
     }
@@ -80,15 +88,26 @@ export function usePvp() {
   const battle = useCallback(async (opponentId: string) => {
     setBattling(true);
     setBattleResult(null);
-    const res = await startRealBattle(opponentId);
-    if (res.data) {
-      setBattleResult(res.data);
-    } else {
-      setBattleResult({ ok: false, error: res.reason ?? "Battle failed" });
+    try {
+      const res = await withTimeout(startRealBattle(opponentId), 15000);
+      if (res.data) {
+        setBattleResult(res.data);
+      } else {
+        setBattleResult({ ok: false, error: res.reason ?? "La batalla no pudo resolverse." });
+      }
+      return res;
+    } catch (err) {
+      const reason = err instanceof Error
+        ? err.message
+        : "La resolución de PvP tardó demasiado.";
+      const failure = { status: "ready" as const, data: null, reason };
+      setBattleResult({ ok: false, error: reason });
+      return failure;
+    } finally {
+      setBattling(false);
+      // Refresh MMR/history even after a failed RPC so the lobby can recover.
+      await load();
     }
-    setBattling(false);
-    await load();
-    return res;
   }, [load]);
 
   const dismissBattle = useCallback(() => setBattleResult(null), []);

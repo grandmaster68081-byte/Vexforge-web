@@ -7,6 +7,7 @@ import { DeckStatsPanel } from "../shared/components/DeckStatsPanel";
 import { ShardsPanel } from "../shared/components/ShardsPanel";
 import { usePlayerItems } from "../domains/cosmetics/usePlayerItems";
 import type { PlayerActiveBoost, PlayerConsumable } from "../domains/cosmetics/repository";
+import { ForgeIcon, type ForgeIconName } from "../shared/components/ForgeIcon";
 
 // ─── CONFIG (matches CardsRoute exactly) ────────────────────────────────────
 const RARITY_CFG: Record<string, { color: string; glow: string; label: string }> = {
@@ -17,24 +18,24 @@ const RARITY_CFG: Record<string, { color: string; glow: string; label: string }>
   Legendary: { color: "#f59e0b", glow: "0 0 28px rgba(245,158,11,.7)",  label: "Legendaria"  },
   Mythic:    { color: "#ef4444", glow: "0 0 36px rgba(239,68,68,.8)",   label: "Mítica"      },
 };
-const FACTION_CFG: Record<string, { color: string; bg: string; bgImg: string; icon: string }> = {
-  Guerrero: { color: "#f87171", bg: "linear-gradient(160deg,#7f1d1d,#1c0a0a)", bgImg: "https://rscuzqnfccqvltkdcdny.supabase.co/storage/v1/object/public/vexforge-assets/factions/bg_guerrero.jpg", icon: "⚔️" },
-  Mago:     { color: "#818cf8", bg: "linear-gradient(160deg,#1e1b4b,#0a0a1e)", bgImg: "https://rscuzqnfccqvltkdcdny.supabase.co/storage/v1/object/public/vexforge-assets/factions/bg_mago.jpg",     icon: "🔮" },
-  Paladín:  { color: "#fbbf24", bg: "linear-gradient(160deg,#451a03,#1c0a00)", bgImg: "https://rscuzqnfccqvltkdcdny.supabase.co/storage/v1/object/public/vexforge-assets/factions/bg_paladin.jpg",   icon: "🛡️" },
-  Pícaro:   { color: "#34d399", bg: "linear-gradient(160deg,#022c22,#0a1c14)", bgImg: "https://rscuzqnfccqvltkdcdny.supabase.co/storage/v1/object/public/vexforge-assets/factions/bg_picaro.jpg",    icon: "🗡️" },
+const FACTION_CFG: Record<string, { color: string; bg: string; bgImg: string; icon: ForgeIconName }> = {
+  Guerrero: { color: "#f87171", bg: "linear-gradient(160deg,#7f1d1d,#1c0a0a)", bgImg: "https://rscuzqnfccqvltkdcdny.supabase.co/storage/v1/object/public/vexforge-assets/factions/bg_guerrero.jpg", icon: "attack" },
+  Mago:     { color: "#818cf8", bg: "linear-gradient(160deg,#1e1b4b,#0a0a1e)", bgImg: "https://rscuzqnfccqvltkdcdny.supabase.co/storage/v1/object/public/vexforge-assets/factions/bg_mago.jpg",     icon: "spark" },
+  Paladín:  { color: "#fbbf24", bg: "linear-gradient(160deg,#451a03,#1c0a00)", bgImg: "https://rscuzqnfccqvltkdcdny.supabase.co/storage/v1/object/public/vexforge-assets/factions/bg_paladin.jpg",   icon: "shield" },
+  Pícaro:   { color: "#34d399", bg: "linear-gradient(160deg,#022c22,#0a1c14)", bgImg: "https://rscuzqnfccqvltkdcdny.supabase.co/storage/v1/object/public/vexforge-assets/factions/bg_picaro.jpg",    icon: "target" },
 };
 const RARITIES = ["Common","Uncommon","Rare","Epic","Legendary","Mythic"];
 const FACTIONS = ["Guerrero","Mago","Paladín","Pícaro"];
 
 // ─── BOOST LABEL MAP ─────────────────────────────────────────────────────────
-const BOOST_META: Record<string, { icon: string; label: string; color: string }> = {
-  xp_boost_24h: { icon: "⚡", label: "Boost XP 24h",  color: "#4A9EFF" },
-  xp_boost_7d:  { icon: "🔵", label: "Boost XP 7d",   color: "#818cf8" },
-  xp:           { icon: "⚡", label: "Boost XP",       color: "#4A9EFF" },
+const BOOST_META: Record<string, { icon: ForgeIconName; label: string; color: string }> = {
+  xp_boost_24h: { icon: "energy", label: "Boost XP 24h",  color: "#4A9EFF" },
+  xp_boost_7d:  { icon: "spark", label: "Boost XP 7d",   color: "#818cf8" },
+  xp:           { icon: "energy", label: "Boost XP",       color: "#4A9EFF" },
 };
-const CONSUMABLE_META: Record<string, { icon: string; label: string; color: string; action?: string; actionLabel?: string }> = {
-  raid_key:            { icon: "🗝️",  label: "Llave de Raid",        color: "#E8B84B", action: "/raids",   actionLabel: "Ir a Raids" },
-  vex_conversion_token:{ icon: "🪙",  label: "Token de Conversión",  color: "#3DC96B", action: "/economy", actionLabel: "Canjear" },
+const CONSUMABLE_META: Record<string, { icon: ForgeIconName; label: string; color: string; action?: string; actionLabel?: string }> = {
+  raid_key:            { icon: "raid",  label: "Llave de Raid",        color: "#E8B84B", action: "/raids",   actionLabel: "Ir a Raids" },
+  vex_conversion_token:{ icon: "coin",  label: "Token de Conversión",  color: "#3DC96B", action: "/economy", actionLabel: "Canjear" },
 };
 
 // ─── COUNTDOWN HOOK ───────────────────────────────────────────────────────────
@@ -58,7 +59,7 @@ function useCountdown(expiresAt: string): string {
 
 // ─── AP.1 — ACTIVE BOOSTS PANEL ──────────────────────────────────────────────
 function BoostCard({ boost }: { boost: PlayerActiveBoost }) {
-  const meta    = BOOST_META[boost.boost_type] ?? { icon: "⚡", label: boost.boost_type, color: "#4A9EFF" };
+  const meta    = BOOST_META[boost.boost_type] ?? { icon: "energy" as ForgeIconName, label: boost.boost_type, color: "#4A9EFF" };
   const timeLeft = useCountdown(boost.expires_at);
   const total   = new Date(boost.expires_at).getTime() - new Date(boost.created_at).getTime();
   const remaining = new Date(boost.expires_at).getTime() - Date.now();
@@ -75,7 +76,7 @@ function BoostCard({ boost }: { boost: PlayerActiveBoost }) {
       transition: "opacity .3s",
     }}>
       <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 10 }}>
-        <span style={{ fontSize: 22, lineHeight: 1 }}>{meta.icon}</span>
+        <ForgeIcon name={meta.icon} size={22} style={{ color: meta.color }} />
         <div>
           <div style={{
             fontFamily: "Cinzel,serif", fontSize: 12, fontWeight: 700,
@@ -103,7 +104,10 @@ function BoostCard({ boost }: { boost: PlayerActiveBoost }) {
         color: expired ? "#E3573F" : "#7a7a9a",
         display: "flex", justifyContent: "space-between",
       }}>
-        <span>{expired ? "⚠ Expirado" : `⏱ ${timeLeft}`}</span>
+        <span style={{ display: "inline-flex", alignItems: "center", gap: 4 }}>
+          {expired && <ForgeIcon name="warning" size={11} />}
+          {expired ? "Expirado" : timeLeft}
+        </span>
         <span>{Math.round(pct)}%</span>
       </div>
     </div>
@@ -120,7 +124,7 @@ function ActiveBoostsPanel({ boosts }: { boosts: PlayerActiveBoost[] }) {
         borderRadius: 12, padding: "16px 20px",
       }}>
         <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 14 }}>
-          <span style={{ fontSize: 20 }}>⚡</span>
+          <ForgeIcon name="energy" size={20} style={{ color: "#4A9EFF" }} />
           <div>
             <div style={{ fontFamily: "Cinzel,serif", color: "#4A9EFF", fontSize: 13, fontWeight: 700 }}>
               Boosts Activos
@@ -157,7 +161,7 @@ function ConsumablesPanel({ consumables }: { consumables: PlayerConsumable[] }) 
         borderRadius: 12, padding: "16px 20px",
       }}>
         <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 14 }}>
-          <span style={{ fontSize: 20 }}>🎒</span>
+          <ForgeIcon name="assets" size={20} style={{ color: "#E8B84B" }} />
           <div>
             <div style={{ fontFamily: "Cinzel,serif", color: "#E8B84B", fontSize: 13, fontWeight: 700 }}>
               Consumibles
@@ -169,7 +173,7 @@ function ConsumablesPanel({ consumables }: { consumables: PlayerConsumable[] }) 
         </div>
         <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
           {consumables.map(c => {
-            const meta = CONSUMABLE_META[c.item_key] ?? { icon: "📦", label: c.item_key, color: "#E8B84B" };
+            const meta = CONSUMABLE_META[c.item_key] ?? { icon: "assets" as ForgeIconName, label: c.item_key, color: "#E8B84B" };
             return (
               <div key={c.id} style={{
                 flex: "1 1 160px", minWidth: 150,
@@ -179,7 +183,7 @@ function ConsumablesPanel({ consumables }: { consumables: PlayerConsumable[] }) 
                 display: "flex", flexDirection: "column", gap: 8,
               }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                  <span style={{ fontSize: 22, lineHeight: 1 }}>{meta.icon}</span>
+                  <ForgeIcon name={meta.icon} size={22} style={{ color: meta.color }} />
                   <div>
                     <div style={{
                       fontFamily: "Cinzel,serif", fontSize: 11, fontWeight: 700, color: meta.color,
@@ -228,7 +232,7 @@ function CardArt({ item }: { item: PlayerCard }) {
     <div style={{ width: "100%", aspectRatio: "3/4", borderRadius: "6px 6px 0 0",
       background: faction.bgImg ? `url(${faction.bgImg})` : faction.bg, backgroundSize: "cover", backgroundPosition: "center", display: "flex", flexDirection: "column",
       alignItems: "center", justifyContent: "center", gap: 8, padding: 12 }}>
-      <div style={{ fontSize: 36, lineHeight: 1 }}>{faction.icon}</div>
+      <ForgeIcon name={faction.icon} size={36} style={{ color: faction.color }} />
       <p style={{ fontFamily: "Cinzel,serif", color: rarity.color, fontSize: 10,
         textAlign: "center", lineHeight: 1.3, margin: 0, textTransform: "uppercase",
         letterSpacing: "0.05em", wordBreak: "break-word" }}>{item.name}</p>
@@ -283,7 +287,7 @@ function InvCardDetailModal({
         display: "flex", alignItems: "center", justifyContent: "center", padding: 16,
       }}
     >
-      <div style={{
+      <div className="inventory-card-modal" style={{
         background: "linear-gradient(160deg,#0e0e20,#13131f)",
         border: `1.5px solid ${rarity.color}`,
         boxShadow: rarity.glow + ", 0 32px 80px rgba(0,0,0,.8)",
@@ -300,7 +304,7 @@ function InvCardDetailModal({
           <div>
             <div style={{ fontSize: 10, fontFamily: "Rajdhani,sans-serif", fontWeight: 700,
               color: rarity.color, textTransform: "uppercase", letterSpacing: ".12em", marginBottom: 4 }}>
-              {rarity.label} · {faction.icon} {card.faction}
+              {rarity.label} · <ForgeIcon name={faction.icon} size={11} style={{ verticalAlign: "middle", margin: "0 3px" }} />{card.faction}
             </div>
             <h2 style={{
               fontFamily: "Cinzel,serif", color: "#e8e8f0",
@@ -321,7 +325,7 @@ function InvCardDetailModal({
 
         {/* Body */}
         <div style={{ overflowY: "auto", flex: 1, padding: 20 }}>
-          <div style={{ display: "grid", gridTemplateColumns: "140px 1fr", gap: 18 }}>
+          <div className="inventory-card-modal-body-grid" style={{ display: "grid", gridTemplateColumns: "140px 1fr", gap: 18 }}>
             {/* Art + ownership */}
             <div>
               <div style={{ width: "100%", aspectRatio: "3/4", borderRadius: 8, overflow: "hidden",
@@ -350,17 +354,17 @@ function InvCardDetailModal({
                 {card.fusion_enabled && (
                   <span style={{ background: "rgba(74,222,128,.1)", border: "1px solid rgba(74,222,128,.3)",
                     borderRadius: 4, padding: "3px 8px", fontSize: 9, color: "#4ade80",
-                    fontFamily: "Rajdhani,sans-serif", fontWeight: 700, textAlign: "center" }}>🔥 Fusión</span>
+                    fontFamily: "Rajdhani,sans-serif", fontWeight: 700, textAlign: "center" }}><ForgeIcon name="fusion" size={10} style={{ verticalAlign: "middle", marginRight: 4 }} />Fusión</span>
                 )}
                 {card.marketable && (
                   <span style={{ background: "rgba(96,165,250,.1)", border: "1px solid rgba(96,165,250,.3)",
                     borderRadius: 4, padding: "3px 8px", fontSize: 9, color: "#60a5fa",
-                    fontFamily: "Rajdhani,sans-serif", fontWeight: 700, textAlign: "center" }}>📋 Mercado</span>
+                    fontFamily: "Rajdhani,sans-serif", fontWeight: 700, textAlign: "center" }}><ForgeIcon name="market" size={10} style={{ verticalAlign: "middle", marginRight: 4 }} />Mercado</span>
                 )}
                 {card.locked && (
                   <span style={{ background: "rgba(239,68,68,.1)", border: "1px solid rgba(239,68,68,.3)",
                     borderRadius: 4, padding: "3px 8px", fontSize: 9, color: "#ef4444",
-                    fontFamily: "Rajdhani,sans-serif", fontWeight: 700, textAlign: "center" }}>🔒 Bloqueada</span>
+                    fontFamily: "Rajdhani,sans-serif", fontWeight: 700, textAlign: "center" }}><ForgeIcon name="lock" size={10} style={{ verticalAlign: "middle", marginRight: 4 }} />Bloqueada</span>
                 )}
               </div>
             </div>
@@ -413,14 +417,14 @@ function InvCardDetailModal({
             background: "rgba(232,184,75,.1)", border: "1px solid rgba(232,184,75,.4)",
             borderRadius: 8, color: "#e8b84b", cursor: "pointer",
             fontFamily: "Rajdhani,sans-serif", fontWeight: 700, fontSize: 12,
-            textTransform: "uppercase", letterSpacing: ".06em" }}>⚔ Deck</button>
+            textTransform: "uppercase", letterSpacing: ".06em" }}><ForgeIcon name="deck" size={13} style={{ verticalAlign: "middle", marginRight: 5 }} />Deck</button>
           {card.fusion_enabled && (
             <button onClick={() => onNav("/fusion")} style={{
               flex: 1, minWidth: 80, padding: "10px 0",
               background: "rgba(74,222,128,.08)", border: "1px solid rgba(74,222,128,.35)",
               borderRadius: 8, color: "#4ade80", cursor: "pointer",
               fontFamily: "Rajdhani,sans-serif", fontWeight: 700, fontSize: 12,
-              textTransform: "uppercase", letterSpacing: ".06em" }}>🔥 Fusión</button>
+            textTransform: "uppercase", letterSpacing: ".06em" }}><ForgeIcon name="fusion" size={13} style={{ verticalAlign: "middle", marginRight: 5 }} />Fusión</button>
           )}
           {card.marketable && !card.locked && (
             <button onClick={() => onNav("/market")} style={{
@@ -428,7 +432,7 @@ function InvCardDetailModal({
               background: "rgba(96,165,250,.08)", border: "1px solid rgba(96,165,250,.35)",
               borderRadius: 8, color: "#60a5fa", cursor: "pointer",
               fontFamily: "Rajdhani,sans-serif", fontWeight: 700, fontSize: 12,
-              textTransform: "uppercase", letterSpacing: ".06em" }}>📋 Mercado</button>
+            textTransform: "uppercase", letterSpacing: ".06em" }}><ForgeIcon name="market" size={13} style={{ verticalAlign: "middle", marginRight: 5 }} />Mercado</button>
           )}
         </div>
       </div>
@@ -483,7 +487,7 @@ export function InventoryRoute() {
       <div style={{ minHeight: "100vh", background: "#0a0a14",
         display: "flex", alignItems: "center", justifyContent: "center" }}>
         <div style={{ textAlign: "center", padding: 40, maxWidth: 400 }}>
-          <div style={{ fontSize: 64, marginBottom: 20 }}>🗃️</div>
+          <div style={{ marginBottom: 20 }}><ForgeIcon name="collection" size={64} /></div>
           <h2 style={{ fontFamily: "Cinzel,serif", color: "#e8e8f0", margin: "0 0 12px" }}>
             Tu Inventario
           </h2>
@@ -514,7 +518,7 @@ export function InventoryRoute() {
         <div style={{ maxWidth: 1200, margin: "0 auto" }}>
           <p style={{ fontSize: 10, letterSpacing: ".18em", color: "#e8b84b", margin: "0 0 8px",
             fontFamily: "Rajdhani,sans-serif", fontWeight: 700, textTransform: "uppercase" }}>
-            ⚔️ COLECCIÓN PERSONAL
+            <ForgeIcon name="collection" size={18} style={{ verticalAlign: "middle", marginRight: 6 }} />COLECCIÓN PERSONAL
           </p>
           <h1 style={{ fontFamily: "Cinzel,serif", color: "#e8e8f0", margin: "0 0 20px",
             fontSize: "clamp(24px,4vw,42px)", textShadow: "0 0 40px rgba(201,144,31,.3)" }}>
@@ -559,11 +563,11 @@ export function InventoryRoute() {
           {/* Quick actions */}
           <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
             {[
-              { to: "/cards",        label: "📖 Compendio",      color: "#e8b84b", bg: "rgba(232,184,75,.12)" },
-              { to: "/deck-builder", label: "⚔ Construir Deck",  color: "#60a5fa", bg: "rgba(96,165,250,.12)" },
-              { to: "/market",       label: "📋 Mercado",         color: "#4ade80", bg: "rgba(74,222,128,.12)" },
-              { to: "/fusion",       label: "🔥 Fusión",          color: "#a78bfa", bg: "rgba(139,92,246,.12)" },
-              { to: "/packs",        label: "📦 Más Packs",       color: "#f59e0b", bg: "rgba(245,158,11,.12)" },
+              { to: "/cards",        label: "Compendio",      icon: "cards" as ForgeIconName, color: "#e8b84b", bg: "rgba(232,184,75,.12)" },
+              { to: "/deck-builder", label: "Construir Deck",  icon: "deck" as ForgeIconName, color: "#60a5fa", bg: "rgba(96,165,250,.12)" },
+              { to: "/market",       label: "Mercado",         icon: "market" as ForgeIconName, color: "#4ade80", bg: "rgba(74,222,128,.12)" },
+              { to: "/fusion",       label: "Fusión",          icon: "fusion" as ForgeIconName, color: "#a78bfa", bg: "rgba(139,92,246,.12)" },
+              { to: "/packs",        label: "Más Packs",       icon: "packs" as ForgeIconName, color: "#f59e0b", bg: "rgba(245,158,11,.12)" },
             ].map(a => (
               <Link key={a.to} to={a.to} style={{
                 background: a.bg, border: `1px solid ${a.color}44`,
@@ -571,7 +575,7 @@ export function InventoryRoute() {
                 color: a.color, fontSize: 11,
                 fontFamily: "Rajdhani,sans-serif", fontWeight: 700,
                 textDecoration: "none", textTransform: "uppercase", letterSpacing: ".06em" }}>
-                {a.label}
+                <ForgeIcon name={a.icon} size={13} style={{ verticalAlign: "middle", marginRight: 5 }} />{a.label}
               </Link>
             ))}
           </div>
@@ -665,7 +669,7 @@ export function InventoryRoute() {
                     border: `1px solid ${active ? color : "rgba(255,255,255,.08)"}`,
                     borderRadius: 6, padding: "4px 10px", color: active ? color : "#555577",
                     fontSize: 11, fontFamily: "Rajdhani,sans-serif", fontWeight: 700, cursor: "pointer" }}>
-                  {f === "all" ? "Todas" : `${FACTION_CFG[f].icon} ${f}`}
+                  {f === "all" ? "Todas" : <><ForgeIcon name={FACTION_CFG[f].icon} size={12} style={{ verticalAlign: "middle", marginRight: 4 }} />{f}</>}
                 </button>
               );
             })}
@@ -678,7 +682,7 @@ export function InventoryRoute() {
         {/* Loading */}
         {loading && (
           <div style={{ textAlign: "center", padding: "80px 0" }}>
-            <div style={{ color: "#e8b84b", fontSize: 40, marginBottom: 12 }}>⚔</div>
+            <div style={{ color: "#e8b84b", marginBottom: 12 }}><ForgeIcon name="cards" size={40} /></div>
             <p style={{ color: "#555577", fontFamily: "Rajdhani,sans-serif" }}>Cargando inventario…</p>
           </div>
         )}
@@ -691,7 +695,7 @@ export function InventoryRoute() {
         {/* Empty collection */}
         {!loading && !error && items.length === 0 && (
           <div style={{ textAlign: "center", padding: "80px 0" }}>
-            <div style={{ fontSize: 64, marginBottom: 20 }}>📭</div>
+            <div style={{ marginBottom: 20 }}><ForgeIcon name="collection" size={64} /></div>
             <h3 style={{ fontFamily: "Cinzel,serif", color: "#e8e8f0", margin: "0 0 12px" }}>
               Colección vacía
             </h3>
@@ -705,14 +709,14 @@ export function InventoryRoute() {
               color: "#0a0a14", fontFamily: "Rajdhani,sans-serif",
               fontWeight: 700, fontSize: 14, textDecoration: "none",
               letterSpacing: ".08em", textTransform: "uppercase" }}>
-              📦 Ir a Packs
+              <ForgeIcon name="packs" size={14} style={{ verticalAlign: "middle", marginRight: 5 }} />Ir a Packs
             </Link>
           </div>
         )}
         {/* No filter results */}
         {!loading && !error && items.length > 0 && filtered.length === 0 && (
           <div style={{ textAlign: "center", padding: "60px 0" }}>
-            <div style={{ fontSize: 40, marginBottom: 12 }}>🔍</div>
+            <div style={{ marginBottom: 12 }}><ForgeIcon name="target" size={40} /></div>
             <p style={{ color: "#555577", fontFamily: "Rajdhani,sans-serif" }}>
               Ninguna carta coincide con los filtros
             </p>
@@ -725,7 +729,7 @@ export function InventoryRoute() {
               Mostrando {filtered.length} carta{filtered.length !== 1 ? "s" : ""}
               {items.length !== filtered.length ? ` de ${items.length}` : ""}
             </p>
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(160px,1fr))", gap: 16 }}>
+            <div className="inventory-card-grid" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(160px,1fr))", gap: 16 }}>
               {filtered.map(item => {
                 const rarity  = RARITY_CFG[item.rarity]  ?? RARITY_CFG.Common;
                 const faction = FACTION_CFG[item.faction] ?? FACTION_CFG.Guerrero;
@@ -759,7 +763,7 @@ export function InventoryRoute() {
                         <span style={{ color: "#444466", fontSize: 9 }}>·</span>
                         <span style={{ fontSize: 9, fontFamily: "Rajdhani,sans-serif",
                           color: faction.color, textTransform: "uppercase" }}>
-                          {faction.icon} {item.faction}
+                          <ForgeIcon name={faction.icon} size={11} style={{ verticalAlign: "middle", marginRight: 3 }} />{item.faction}
                         </span>
                       </div>
 
@@ -824,12 +828,12 @@ export function InventoryRoute() {
                     {item.locked && (
                       <div style={{ position: "absolute", top: 6, left: 6,
                         background: "rgba(239,68,68,.85)", borderRadius: 3, padding: "2px 5px",
-                        fontSize: 8, fontFamily: "Rajdhani,sans-serif", fontWeight: 700, color: "#fff" }}>🔒</div>
+                        fontSize: 8, fontFamily: "Rajdhani,sans-serif", fontWeight: 700, color: "#fff" }}><ForgeIcon name="lock" size={10} /></div>
                     )}
                     {item.listed && (
                       <div style={{ position: "absolute", top: item.locked ? 26 : 6, left: 6,
                         background: "rgba(74,222,128,.85)", borderRadius: 3, padding: "2px 5px",
-                        fontSize: 8, fontFamily: "Rajdhani,sans-serif", fontWeight: 700, color: "#0a0a14" }}>📋</div>
+                        fontSize: 8, fontFamily: "Rajdhani,sans-serif", fontWeight: 700, color: "#0a0a14" }}><ForgeIcon name="market" size={10} /></div>
                     )}
                   </div>
                 );

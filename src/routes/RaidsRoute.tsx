@@ -11,6 +11,7 @@ import { getEquippedRelics } from "../domains/relics/repository";
 import { PageLoader } from "../shared/components/PageLoader";
 import { EmptyState } from "../shared/components/EmptyState";
 import { useToast } from "../shared/context/ToastContext";
+import { ForgeIcon, type ForgeIconName } from "../shared/components/ForgeIcon";
 import {
   abandonBattleRun,
   clearActiveBattleRunMarker,
@@ -23,18 +24,18 @@ import {
 
 const BG_URL = "https://rscuzqnfccqvltkdcdny.supabase.co/storage/v1/object/public/vexforge-assets/backgrounds/bg_bosses.jpg";
 
-const DIFFICULTY_CFG: Record<string, { color: string; label: string; icon: string }> = {
-  easy:   { color: "#3ddc84", label: "Fácil",    icon: "🟢" },
-  normal: { color: "#4a9eff", label: "Normal",   icon: "🔵" },
-  hard:   { color: "#a855f7", label: "Difícil",  icon: "🟣" },
+const DIFFICULTY_CFG: Record<string, { color: string; label: string; icon: ForgeIconName }> = {
+  easy:   { color: "#3ddc84", label: "Fácil",    icon: "check" },
+  normal: { color: "#4a9eff", label: "Normal",   icon: "shield" },
+  hard:   { color: "#a855f7", label: "Difícil",  icon: "skull" },
 };
 
-const REGION_ICON: Record<string, string> = {
-  forge_core:    "🔥",
-  iron_veins:    "⚙️",
-  warbound_zone: "⚔️",
-  shadow_deep:   "🌑",
-  crystal_spire: "💎",
+const REGION_ICON: Record<string, ForgeIconName> = {
+  forge_core:    "spark",
+  iron_veins:    "assets",
+  warbound_zone: "attack",
+  shadow_deep:   "lock",
+  crystal_spire: "spark",
 };
 
 function getDifficultyConfig(difficulty?: string) {
@@ -58,7 +59,7 @@ function RaidCard({
   contributing: boolean;
 }) {
   const diff = getDifficultyConfig(raid.metadata?.difficulty);
-  const regionIcon = REGION_ICON[raid.region_id] ?? "🗺️";
+  const regionIcon = REGION_ICON[raid.region_id] ?? "raid";
   const maxParts = raid.metadata?.max_participants ?? "∞";
   const multiplier = raid.metadata?.reward_multiplier ?? 1;
 
@@ -74,7 +75,7 @@ function RaidCard({
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 12 }}>
           <div>
             <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4 }}>
-              <span style={{ fontSize: 20 }}>{regionIcon}</span>
+              <ForgeIcon name={regionIcon} size={20} />
               <h3 style={{ color: "#e8e8f0", fontFamily: "Cinzel,serif", fontSize: 15, fontWeight: 700, margin: 0 }}>
                 {raid.metadata?.name ?? raid.raid_code}
               </h3>
@@ -86,20 +87,20 @@ function RaidCard({
               padding: "3px 10px", borderRadius: 20,
               background: diff.color + "18", border: "1px solid " + diff.color + "44",
               color: diff.color, fontSize: 11, fontWeight: 700,
-            }}>{diff.icon} {diff.label}</div>
+            }}><ForgeIcon name={diff.icon} size={12} style={{ verticalAlign: "middle", marginRight: 4 }} />{diff.label}</div>
           </div>
         </div>
 
         {/* Stats row */}
         <div style={{ display: "flex", gap: 20, marginBottom: 16, flexWrap: "wrap" }}>
           <div style={{ color: "#888", fontSize: 12 }}>
-            👥 <span style={{ color: "#e8e8f0" }}>Máx. {maxParts}</span>
+            <ForgeIcon name="friends" size={12} style={{ verticalAlign: "middle", marginRight: 4 }} /><span style={{ color: "#e8e8f0" }}>Máx. {maxParts}</span>
           </div>
           <div style={{ color: "#888", fontSize: 12 }}>
-            ✨ <span style={{ color: "#e8b84b" }}>×{multiplier} recompensas</span>
+            <ForgeIcon name="spark" size={12} style={{ verticalAlign: "middle", marginRight: 4 }} /><span style={{ color: "#e8b84b" }}>×{multiplier} recompensas</span>
           </div>
           <div style={{ color: "#888", fontSize: 12 }}>
-            📋 <span style={{ color: "#8b8b9e", textTransform: "capitalize" }}>{raid.status}</span>
+            <ForgeIcon name="missions" size={12} style={{ verticalAlign: "middle", marginRight: 4 }} /><span style={{ color: "#8b8b9e", textTransform: "capitalize" }}>{raid.status}</span>
           </div>
         </div>
 
@@ -116,7 +117,7 @@ function RaidCard({
                 fontWeight: 700, fontSize: 13, cursor: joining ? "not-allowed" : "pointer",
                 fontFamily: "Cinzel,serif",
               }}>
-              {joining ? "Uniéndose…" : "⚔️ Unirse al Raid"}
+              {joining ? "Uniéndose…" : <><ForgeIcon name="raid" size={13} style={{ verticalAlign: "middle", marginRight: 5 }} />Unirse al Raid</>}
             </button>
           )}
           {inMyRaids && raid.status !== "completed" && (
@@ -129,7 +130,7 @@ function RaidCard({
                 color: contributing ? "#555" : "#fff",
                 fontWeight: 700, fontSize: 13, cursor: contributing ? "not-allowed" : "pointer",
               }}>
-              {contributing ? "Atacando…" : "⚔️ Atacar"}
+              {contributing ? "Atacando…" : <><ForgeIcon name="attack" size={13} style={{ verticalAlign: "middle", marginRight: 5 }} />Atacar</>}
             </button>
           )}
           {inMyRaids && (
@@ -137,7 +138,7 @@ function RaidCard({
               padding: "9px 16px", borderRadius: 9,
               background: "#3ddc8418", border: "1px solid #3ddc8444",
               color: "#3ddc84", fontSize: 12, fontWeight: 700,
-            }}>✓ Participando</div>
+            }}><ForgeIcon name="check" size={12} style={{ verticalAlign: "middle", marginRight: 5 }} />Participando</div>
           )}
         </div>
       </div>
@@ -472,7 +473,7 @@ export function RaidsRoute() {
           {/* Header */}
           <div style={{ marginBottom: 28 }}>
             <h1 style={{ fontFamily: "Cinzel,serif", color: "#e8b84b", fontSize: 26, margin: "0 0 6px" }}>
-              ⚔️ Raids Cooperativos
+              <ForgeIcon name="raid" size={18} style={{ verticalAlign: "middle", marginRight: 6 }} />Raids Cooperativos
             </h1>
             <p style={{ color: "#7a7a9a", fontSize: 13, margin: 0 }}>
               Únete a otros guerreros para derrotar mazmorras de alto riesgo. Recompensas escaladas por dificultad.
@@ -507,7 +508,7 @@ export function RaidsRoute() {
           {/* List */}
           {displayList.length === 0 ? (
             <EmptyState
-              icon="⚔️"
+              icon={<ForgeIcon name="raid" size={36} />}
               title={tab === "available" ? "Sin raids disponibles" : "No estás en ningún raid"}
               description={tab === "available"
                 ? "No hay raids activos en este momento. Vuelve más tarde."

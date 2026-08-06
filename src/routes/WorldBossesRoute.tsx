@@ -14,6 +14,7 @@ import { BlockedAuthState } from "../shared/components/BlockedAuthState";
 import { EmptyState } from "../shared/components/EmptyState";
 import { ErrorState } from "../shared/components/ErrorState";
 import { useToast } from "../shared/context/ToastContext";
+import { ForgeIcon, type ForgeIconName } from "../shared/components/ForgeIcon";
 import {
   abandonBattleRun,
   clearActiveBattleRunMarker,
@@ -40,17 +41,17 @@ function getTierConfig(tier: string): { label: string; color: string } {
   return { label: tier, color: "#8b8b9e" };
 }
 
-const BOSS_ICONS: Record<string, string> = {
-  BOSS_SHADOWREAVER: "🌑", BOSS_IRONLORD: "⚔️", BOSS_FORGEMASTER: "🔥",
-  BOSS_WARBOUND_TITAN: "🗿", BOSS_CINDERDRAKE: "🐉",
+const BOSS_ICONS: Record<string, ForgeIconName> = {
+  BOSS_SHADOWREAVER: "lock", BOSS_IRONLORD: "attack", BOSS_FORGEMASTER: "spark",
+  BOSS_WARBOUND_TITAN: "shield", BOSS_CINDERDRAKE: "boss",
 };
-function getBossIcon(boss: WorldBoss): string {
+function getBossIcon(boss: WorldBoss): ForgeIconName {
   if (BOSS_ICONS[boss.boss_code]) return BOSS_ICONS[boss.boss_code];
   const t = boss.tier.toLowerCase();
-  if (t === "t6") return "👑"; if (t === "t5") return "⚡";
-  if (t === "t4") return "🔮"; if (t === "t3") return "💀";
-  if (t === "t2") return "🌫️";
-  return "🐉";
+  if (t === "t6") return "crown"; if (t === "t5") return "energy";
+  if (t === "t4") return "spark"; if (t === "t3") return "skull";
+  if (t === "t2") return "lock";
+  return "boss";
 }
 
 function getBossDifficulty(tier: string): AIDifficulty {
@@ -82,15 +83,15 @@ function BossCard({ boss, onAttack, canAttack, attacking }: {
         ? <div style={{ width: "100%", height: 160, overflow: "hidden" }}>
             <img src={boss.image_url} alt={boss.name} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
           </div>
-        : <div style={{ width: "100%", height: 110, background: `linear-gradient(135deg,${color}22,#0a0a12)`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 52 }}>
-            {getBossIcon(boss)}
+        : <div style={{ width: "100%", height: 110, background: `linear-gradient(135deg,${color}22,#0a0a12)`, display: "flex", alignItems: "center", justifyContent: "center" }}>
+            <ForgeIcon name={getBossIcon(boss)} size={52} />
           </div>
       }
       <div style={{ padding: "16px 18px 18px" }}>
         <div style={{ position: "absolute", top: 10, right: 12, background: color + "22", border: `1px solid ${color}66`, borderRadius: 8, padding: "2px 9px", fontSize: 11, color, fontWeight: 800 }}>{label}</div>
         <div style={{ marginBottom: 10 }}>
           <div style={{ display: "flex", gap: 8, alignItems: "center", marginBottom: 3 }}>
-            <span style={{ fontSize: 18 }}>{getBossIcon(boss)}</span>
+            <ForgeIcon name={getBossIcon(boss)} size={18} />
             <h3 style={{ fontFamily: "Cinzel,serif", color: "#e8e8f0", fontSize: 14, margin: 0 }}>{boss.name}</h3>
           </div>
           <div style={{ color: "#7a7a9a", fontSize: 11, marginBottom: 8 }}>
@@ -132,9 +133,9 @@ function BossCard({ boss, onAttack, canAttack, attacking }: {
 
         {/* Rewards */}
         <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginBottom: 14 }}>
-          {vex > 0 && <span style={{ background: "#e8b84b22", border: "1px solid #e8b84b44", borderRadius: 6, padding: "2px 8px", fontSize: 10, color: "#e8b84b", fontWeight: 700 }}>💰 {vex} VEX</span>}
-          {shards > 0 && <span style={{ background: "#4a9eff22", border: "1px solid #4a9eff44", borderRadius: 6, padding: "2px 8px", fontSize: 10, color: "#4a9eff", fontWeight: 700 }}>💎 {shards} frags</span>}
-          {cardRarity && <span style={{ background: "#a855f722", border: "1px solid #a855f744", borderRadius: 6, padding: "2px 8px", fontSize: 10, color: "#a855f7", fontWeight: 700 }}>🃏 Carta {cardRarity}</span>}
+          {vex > 0 && <span style={{ background: "#e8b84b22", border: "1px solid #e8b84b44", borderRadius: 6, padding: "2px 8px", fontSize: 10, color: "#e8b84b", fontWeight: 700 }}><ForgeIcon name="coin" size={11} style={{ verticalAlign: "middle", marginRight: 3 }} />{vex} VEX</span>}
+          {shards > 0 && <span style={{ background: "#4a9eff22", border: "1px solid #4a9eff44", borderRadius: 6, padding: "2px 8px", fontSize: 10, color: "#4a9eff", fontWeight: 700 }}><ForgeIcon name="assets" size={11} style={{ verticalAlign: "middle", marginRight: 3 }} />{shards} frags</span>}
+          {cardRarity && <span style={{ background: "#a855f722", border: "1px solid #a855f744", borderRadius: 6, padding: "2px 8px", fontSize: 10, color: "#a855f7", fontWeight: 700 }}><ForgeIcon name="cards" size={11} style={{ verticalAlign: "middle", marginRight: 3 }} />Carta {cardRarity}</span>}
         </div>
 
         <button
@@ -147,7 +148,7 @@ function BossCard({ boss, onAttack, canAttack, attacking }: {
             opacity: attacking ? 0.6 : 1, transition: "opacity .2s",
           }}
         >
-          {attacking ? "Atacando…" : canAttack ? "⚔️ Atacar" : "🔒 Inicia sesión"}
+          {attacking ? "Atacando…" : canAttack ? <><ForgeIcon name="attack" size={13} style={{ verticalAlign: "middle", marginRight: 5 }} />Atacar</> : <><ForgeIcon name="lock" size={13} style={{ verticalAlign: "middle", marginRight: 5 }} />Inicia sesión</>}
         </button>
       </div>
     </div>
@@ -452,8 +453,8 @@ export function WorldBossesRoute() {
           <div style={{ marginBottom: 24 }}>
             <p style={{ fontSize: 11, letterSpacing: "0.14em", color: "#e8b84b", textTransform: "uppercase", fontFamily: "Rajdhani,sans-serif", fontWeight: 700, marginBottom: 8 }}>─── PvE ───</p>
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 8 }}>
-              <h1 style={{ fontFamily: "Cinzel,serif", color: "#e8e8f0", fontSize: 26, margin: 0 }}>🐉 Jefes Mundiales</h1>
-              <button onClick={reload} style={{ padding: "7px 18px", borderRadius: 8, border: "1px solid #2a2a3a", background: "transparent", color: "#888", fontSize: 11, cursor: "pointer" }}>↻ Actualizar</button>
+              <h1 style={{ fontFamily: "Cinzel,serif", color: "#e8e8f0", fontSize: 26, margin: 0 }}><ForgeIcon name="boss" size={24} style={{ verticalAlign: "middle", marginRight: 8 }} />Jefes Mundiales</h1>
+              <button onClick={reload} style={{ padding: "7px 18px", borderRadius: 8, border: "1px solid #2a2a3a", background: "transparent", color: "#888", fontSize: 11, cursor: "pointer" }}><ForgeIcon name="refresh" size={12} style={{ verticalAlign: "middle", marginRight: 5 }} />Actualizar</button>
             </div>
             <p style={{ color: "#666", margin: "4px 0 0", fontSize: 12 }}>Ataca jefes poderosos para ganar VEX, fragmentos y cartas raras.</p>
           </div>
@@ -478,7 +479,7 @@ export function WorldBossesRoute() {
 
           {/* Boss grid */}
           {bossData.length === 0 ? (
-            <EmptyState icon="🐉" title="Sin jefes activos" description="No hay jefes activos en este momento. Vuelve más tarde." />
+            <EmptyState icon={<ForgeIcon name="boss" size={36} />} title="Sin jefes activos" description="No hay jefes activos en este momento. Vuelve más tarde." />
           ) : (
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(280px,1fr))", gap: 16, marginBottom: 32 }}>
               {bossData.map(boss => (
@@ -496,7 +497,7 @@ export function WorldBossesRoute() {
           {/* Recent encounters */}
           {encounterData.length > 0 && (
             <div>
-              <h2 style={{ fontFamily: "Cinzel,serif", color: "#e8e8f0", fontSize: 16, marginBottom: 14 }}>📜 Mis Ataques Recientes</h2>
+              <h2 style={{ fontFamily: "Cinzel,serif", color: "#e8e8f0", fontSize: 16, marginBottom: 14 }}><ForgeIcon name="missions" size={16} style={{ verticalAlign: "middle", marginRight: 6 }} />Mis Ataques Recientes</h2>
               <div style={{ background: "#12121a", border: "1px solid #2a2a3a", borderRadius: 12, overflow: "hidden" }}>
                 {encounterData.slice(0, 10).map((enc, i) => {
                   const boss = bossData.find(b => b.id === enc.world_boss_id);

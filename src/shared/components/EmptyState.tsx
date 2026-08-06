@@ -8,7 +8,7 @@ import type { CSSProperties, ReactNode } from "react";
  *   <EmptyState icon="🏰" title="Sin clan" action={{ label: "Ver directorio", onClick: () => setTab("directorio") }} />
  */
 export interface EmptyStateProps {
-  icon?:        string;
+  icon?:        ReactNode;
   title:        string;
   description?: string;
   action?:      { label: string; onClick: () => void };

@@ -2282,6 +2282,39 @@ input.forge-input:focus {
   }
 }
 
+/* Inventory route uses inline layout values, so keep its mobile behavior
+   explicit instead of relying on the generic collection grid selectors. */
+.inventory-card-grid {
+  min-width: 0;
+}
+
+@media (max-width: 480px) {
+  .inventory-card-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 8px !important;
+  }
+
+  .inventory-card-modal {
+    max-height: 94vh !important;
+    padding: 0 !important;
+  }
+
+  .inventory-card-modal-body-grid {
+    grid-template-columns: 1fr !important;
+    gap: 14px !important;
+    padding: 14px !important;
+  }
+
+  .inventory-card-modal-body-grid > :first-child {
+    width: min(170px, 58vw);
+    margin: 0 auto;
+  }
+
+  .inventory-card-modal > div:last-child {
+    padding: 0 14px 14px !important;
+  }
+}
+
 
 /* ══════════════════════════════════════════════════════════════════════════
    AN.3 NFT Forge — VEXFORGE NFT Infrastructure Styles

@@ -242,7 +242,13 @@ export function FormationSelector({ playerUnits, onConfirm, onCancel, difficulty
     }, 200);
   }, [activeSlot]);
 
-  const canConfirm = selection.champion !== null;
+  // A full collection must explicitly fill all three tactical positions.
+  // Smaller collections remain playable, but never expose a hidden fallback
+  // formation: they require as many support cards as they actually have.
+  const requiredSupports = Math.min(2, Math.max(0, playerUnits.length - 1));
+  const selectedSupports = [selection.vanguard, selection.sentinel]
+    .filter((idx): idx is number => idx != null).length;
+  const canConfirm = selection.champion !== null && selectedSupports >= requiredSupports;
 
   const previewSelection: FormationSelection | null = selection.champion == null
     ? null
@@ -334,7 +340,7 @@ export function FormationSelector({ playerUnits, onConfirm, onCancel, difficulty
           textShadow: '0 0 30px rgba(232,184,75,0.5)',
         }}>Construye tu Formación</h1>
         <p style={{ color: '#6a6a8a', fontSize: 12, margin: '8px 0 0' }}>
-           Elige tu Campeón y define quién protege el núcleo de tu escuadra
+           Elige Campeón, Vanguardia y Centinela usando tus cartas oficiales
         </p>
         <div style={{
            display: 'inline-flex', alignItems: 'center', gap: 8, marginTop: 14,
@@ -484,6 +490,22 @@ export function FormationSelector({ playerUnits, onConfirm, onCancel, difficulty
             )}
          </div>
        </div>
+
+       {!canConfirm && selection.champion !== null && (
+         <div style={{
+           width: 'min(920px, calc(100% - 32px))', marginBottom: 12,
+           padding: '9px 12px', borderRadius: 8,
+           color: '#e8b84b', background: 'rgba(232,184,75,0.08)',
+           border: '1px solid rgba(232,184,75,0.2)', fontSize: 11,
+           textAlign: 'center',
+         }}>
+           {requiredSupports === 2
+             ? 'Asigna también Vanguardia y Centinela para iniciar.'
+             : requiredSupports === 1
+               ? 'Asigna una carta de apoyo para iniciar.'
+               : 'Tu Campeón está listo para iniciar.'}
+         </div>
+       )}
 
        {/* Champion power bonus */}
        {bonus && (
