@@ -1,7 +1,7 @@
 ## Chat 156 — 2026-08-06 — T10: hardening de carreras Battle Run — CHECKPOINT
 
 **Branch:** main | **Scope:** confirmación, abandono y resolución autoritativa en Raids y World Bosses
-**Commit publicado:** `c698a5c` | **origin/main:** coincide con el checkout oficial
+**Código publicado:** `c698a5c` | **Continuidad publicada:** `6bf5c13` | **origin/main:** coincide con el checkout oficial
 
 ### ✅ Implementación
 
