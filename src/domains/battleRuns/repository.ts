@@ -98,7 +98,7 @@ export function clearActiveBattleRunMarker(battleRunId?: string): void {
   if (typeof sessionStorage === "undefined") return;
   try {
     const current = readActiveBattleRunMarker();
-    if (!battleRunId || !current?.battleRunId || current.battleRunId === battleRunId) {
+    if (!battleRunId || current?.battleRunId === battleRunId) {
       sessionStorage.removeItem(ACTIVE_BATTLE_RUN_STORAGE_KEY);
     }
   } catch {

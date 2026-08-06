@@ -25,7 +25,7 @@
 ### ⚠️ Estado T10
 
 - Código y comportamiento de recuperación: ✅ listos.
-- Implementación `3251759` y documentación `e43100e` publicadas en GitHub
+- Implementación `3251759` y documentación final `6735b37` publicadas en GitHub
   `main`.
 - Cloudflare Pages: ✅ ahora sirve el bundle nuevo
   `assets/index-BuX0TF6S.js`, coincidente byte a byte con `dist/`.
