@@ -2,7 +2,7 @@
 
 **Branch:** main | **Scope:** endurecimiento final de timeout, refresh y reconexión
 
-### ✅ Implementación lista en el checkout oficial
+### ✅ Implementación live verificada en el checkout oficial
 
 - Se mantienen los guards síncronos de Raids y World Bosses contra doble
   confirmación, resolución concurrente y abandono concurrente.
@@ -25,13 +25,16 @@
 ### ⚠️ Estado T10
 
 - Código y comportamiento de recuperación: ✅ listos.
-- Commit oficial `3251759` publicado en GitHub `main`.
-- Cloudflare Pages: ⚠️ todavía sirve el bundle anterior
-  `assets/index-D2EN_Qe-.js`; el checkpoint local/oficial nuevo es
-  `assets/index-BuX0TF6S.js`.
-- La publicación directa no pudo ejecutarse desde este entorno porque Wrangler
-  requiere `CLOUDFLARE_API_TOKEN`, que no está configurado. No se usaron ni se
-  solicitaron credenciales fuera del flujo seguro.
+- Implementación `3251759` y documentación `e43100e` publicadas en GitHub
+  `main`.
+- Cloudflare Pages: ✅ ahora sirve el bundle nuevo
+  `assets/index-BuX0TF6S.js`, coincidente byte a byte con `dist/`.
+- Los assets base y los chunks dinámicos de T10 (Raids, World Bosses,
+  ForgeFormationBoard y repositorios) coinciden byte a byte entre `dist/` y
+  `https://vexforge-web.pages.dev`.
+- La publicación directa con Wrangler no estaba disponible por falta de
+  `CLOUDFLARE_API_TOKEN`, pero la propagación automática desde `main` terminó
+  correctamente. No se usaron credenciales fuera del flujo seguro.
 - Sesión normal autenticada de `pavilo20`: no disponible para el agente.
 - Estado operativo: **READY FOR MANUAL SIGN-OFF**.
 - Go/no-go público: **pendiente de tu sign-off**, no se inventa evidencia.
