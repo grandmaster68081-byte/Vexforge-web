@@ -1,6 +1,7 @@
 ## Chat 156 — 2026-08-06 — T10: hardening de carreras Battle Run — CHECKPOINT
 
 **Branch:** main | **Scope:** confirmación, abandono y resolución autoritativa en Raids y World Bosses
+**Commit publicado:** `c698a5c` | **origin/main:** coincide con el checkout oficial
 
 ### ✅ Implementación
 
@@ -19,11 +20,13 @@
 - `package-lock.json` sin URLs `package-firewall.replit.local` ✅
 - `.nvmrc` raíz = Node 22 ✅
 - El bundle generado contiene los nuevos chunks de `RaidsRoute`, `WorldBossesRoute` y el adaptador oficial Battle Run ✅
+- GitHub `main` ya contiene este hardening en `c698a5c` ✅
 - No se creó ninguna ejecución de Battle Run durante esta auditoría; el baseline de Supabase se conserva.
 
 ### ⚠️ Estado T10
 
 - Hardening de doble confirmación, abandono concurrente y resolución: ✅ implementado y compilado.
+- Propagación del commit `c698a5c` en Cloudflare Pages: **PENDIENTE**; el alias público todavía entrega `index-C219QFmQ.js`, mientras el bundle local de este checkpoint es `index-D2EN_Qe-.js`. No se declara verificación live del hardening.
 - Matriz autenticada de doble clic, refresh, abandono, timeout y reconexión con `pavilo20`: **PENDIENTE**.
 - Go/no-go público: **NO-GO**; estado **PRE-LAUNCH INTERNAL QA**.
 
