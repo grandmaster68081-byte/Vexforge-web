@@ -1,3 +1,47 @@
+## Chat 158 — 2026-08-06 — T10: listo para sign-off manual autenticado
+
+**Branch:** main | **Scope:** endurecimiento final de timeout, refresh y reconexión
+
+### ✅ Implementación lista en el checkout oficial
+
+- Se mantienen los guards síncronos de Raids y World Bosses contra doble
+  confirmación, resolución concurrente y abandono concurrente.
+- Las RPC de `start_battle_run`, `resolve_battle_run` y
+  `abandon_battle_run` tienen timeout cliente de 15 segundos.
+- Si `start_battle_run` responde tarde después de un timeout, el cliente
+  captura el `battle_run_id` tardío y llama a `abandon_battle_run` para no
+  dejar una ejecución huérfana en `started`.
+- Al cargar Raids o World Bosses con una sesión autenticada, se leen sólo los
+  Battle Runs propios en `started` mediante RLS y se cierran como `abandoned`.
+  La reconciliación también se ejecuta al recuperar la conexión.
+- El run activo de la pestaña se excluye de esa recuperación; su ID se
+  conserva hasta que la resolución terminal confirma éxito.
+- No se modificaron economía, fórmulas, cartas, recompensas, RLS, fixtures ni
+  settlements.
+- `npm install`, `npm run build` y `git diff --check` pasan con 245 módulos y
+  0 errores de build.
+- La matriz manual quedó versionada en `docs/T10-MANUAL-SIGNOFF.md`.
+
+### ⚠️ Estado T10
+
+- Código y comportamiento de recuperación: ✅ listos.
+- Deploy live de este nuevo checkpoint: pendiente de confirmación después del
+  push a `main` y la publicación de Cloudflare Pages.
+- Sesión normal autenticada de `pavilo20`: no disponible para el agente.
+- Estado operativo: **READY FOR MANUAL SIGN-OFF**.
+- Go/no-go público: **pendiente de tu sign-off**, no se inventa evidencia.
+
+### Pasos de cierre
+
+1. Ejecutar la matriz de `docs/T10-MANUAL-SIGNOFF.md`.
+2. Confirmar que no quedan Battle Runs propios en `started` y que no existe
+   doble settlement.
+3. Registrar fecha, caso, ruta y resultado.
+4. Con todos los casos en verde, marcar T10 como `COMPLETED / GO` en el
+   protocolo activo de Supabase.
+
+---
+
 ## Chat 157 — 2026-08-06 — T10: propagación live del hardening verificada — QA AUTENTICADA PENDIENTE
 
 **Branch:** main | **Scope:** reconciliación live posterior al hardening de Battle Run

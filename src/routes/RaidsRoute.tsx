@@ -11,7 +11,15 @@ import { getEquippedRelics } from "../domains/relics/repository";
 import { PageLoader } from "../shared/components/PageLoader";
 import { EmptyState } from "../shared/components/EmptyState";
 import { useToast } from "../shared/context/ToastContext";
-import { abandonBattleRun, createBattleRunKey, resolveBattleRun, startBattleRun } from "../domains/battleRuns/repository";
+import {
+  abandonBattleRun,
+  clearActiveBattleRunMarker,
+  createBattleRunKey,
+  recoverStartedBattleRuns,
+  resolveBattleRun,
+  setActiveBattleRunMarker,
+  startBattleRun,
+} from "../domains/battleRuns/repository";
 
 const BG_URL = "https://rscuzqnfccqvltkdcdny.supabase.co/storage/v1/object/public/vexforge-assets/backgrounds/bg_bosses.jpg";
 
@@ -152,6 +160,7 @@ export function RaidsRoute() {
   const battleAttemptRef = useRef(0);
   const battleStartInFlightRef = useRef(false);
   const terminalActionRef = useRef<"idle" | "resolving" | "abandoning">("idle");
+  const battleRecoveryInFlightRef = useRef(false);
   const [raidDifficulty, setRaidDifficulty] = useState<AIDifficulty>("normal");
   const { addToast } = useToast();
 
@@ -169,6 +178,48 @@ export function RaidsRoute() {
     if (!authed) { setEquippedRelics([]); return; }
     getEquippedRelics().then(setEquippedRelics).catch(() => {});
   }, [authed]);
+
+  // Refresh/reconnect recovery: close only stale owner-scoped runs. The
+  // current tab's run remains untouched while it is still authoritative.
+  useEffect(() => {
+    if (!authed) return;
+    let cancelled = false;
+
+    const recover = async () => {
+      if (typeof navigator !== "undefined" && !navigator.onLine) return;
+      if (battleRunIdRef.current) return;
+      if (battleRecoveryInFlightRef.current) return;
+      battleRecoveryInFlightRef.current = true;
+      try {
+        const recovered = await recoverStartedBattleRuns(battleRunIdRef.current ?? undefined);
+        if (!cancelled && recovered > 0) {
+          addToast(
+            "info",
+            "Combate recuperado",
+            `${recovered} Battle Run pendiente se cerró como abandono.`,
+          );
+        }
+      } catch (error) {
+        if (!cancelled) {
+          addToast(
+            "warning",
+            "Revisión de combate pendiente",
+            error instanceof Error ? error.message : "No se pudo reconciliar el Battle Run.",
+          );
+        }
+      } finally {
+        battleRecoveryInFlightRef.current = false;
+      }
+    };
+
+    const onOnline = () => { void recover(); };
+    void recover();
+    window.addEventListener("online", onOnline);
+    return () => {
+      cancelled = true;
+      window.removeEventListener("online", onOnline);
+    };
+  }, [addToast, authed]);
 
   // All useCallbacks must be declared before any conditional return (React rules of hooks)
   const handleContribute = useCallback(async (raid: RaidRun) => {
@@ -218,6 +269,7 @@ export function RaidsRoute() {
     if (
       battleStartInFlightRef.current ||
       battleRunIdRef.current ||
+      battleRecoveryInFlightRef.current ||
       terminalActionRef.current !== "idle"
     ) return;
 
@@ -228,6 +280,7 @@ export function RaidsRoute() {
     const preparedFormation = applyRelicEffects(formation, equippedRelics);
     const runKey = battleStartKeyRef.current ?? createBattleRunKey("raid", raid.id);
     battleStartKeyRef.current = runKey;
+    setActiveBattleRunMarker({ mode: "raid", targetId: raid.id, idempotencyKey: runKey });
 
     try {
       const run = await startBattleRun("raid", raid.id, preparedFormation, runKey);
@@ -236,17 +289,27 @@ export function RaidsRoute() {
       // If the selection was cancelled while the request was in flight, close
       // the late-created run instead of allowing an orphaned started run.
       if (attempt !== battleAttemptRef.current) {
-        if (runId) await abandonBattleRun(runId, { engine: "forge_formation_t5" });
+        if (runId) {
+          const abandoned = await abandonBattleRun(runId, { engine: "forge_formation_t5" });
+          if (abandoned.data) clearActiveBattleRunMarker(runId);
+        }
         return;
       }
 
       if (!run.data || !runId) {
+        clearActiveBattleRunMarker();
         battleStartKeyRef.current = null;
         setRaidBattleError(run.reason ?? "No se pudo registrar el Battle Run.");
         return;
       }
 
       battleRunIdRef.current = runId;
+      setActiveBattleRunMarker({
+        mode: "raid",
+        targetId: raid.id,
+        idempotencyKey: runKey,
+        battleRunId: runId,
+      });
       setRaidUnits(null);
       setBattleRunId(runId);
       setRaidFormation(preparedFormation);
@@ -291,6 +354,7 @@ export function RaidsRoute() {
       // Keep the authoritative id until the RPC confirms the terminal state.
       battleRunIdRef.current = null;
       battleStartKeyRef.current = null;
+      clearActiveBattleRunMarker(activeBattleRunId);
       setRaidFormation(null);
       setSelectedRaid(null);
       setBattleRunId(null);
@@ -323,14 +387,18 @@ export function RaidsRoute() {
     battleStartKeyRef.current = null;
     terminalActionRef.current = "abandoning";
     const activeBattleRunId = battleRunIdRef.current ?? battleRunId;
+    let abandonedSuccessfully = !activeBattleRunId;
     try {
       if (activeBattleRunId) {
         const abandoned = await abandonBattleRun(activeBattleRunId, { engine: "forge_formation_t5" });
         if (!abandoned.data) {
           addToast("error", "Combate no cerrado", abandoned.reason ?? "No se pudo registrar el abandono.");
+        } else {
+          abandonedSuccessfully = true;
         }
       }
     } finally {
+      if (abandonedSuccessfully) clearActiveBattleRunMarker(activeBattleRunId ?? undefined);
       battleRunIdRef.current = null;
       setRaidUnits(null);
       setRaidFormation(null);
