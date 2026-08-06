@@ -279,7 +279,7 @@ Los jugadores deben engancharse en los primeros 5 minutos y querer seguir jugand
 | AN.3: Actualizar CONTRACT_ADDRESS | Pendiente |
 | AN.3: Insert row en vexforge_nft_contracts | Pendiente |
 | AL.3: Export Supabase → GitHub (Temus) | Pendiente |
-| AL.3: Deploy Cloudflare Pages | Verificado en T10 (`index-BuX0TF6S.js`) |
+| AL.3: Deploy Cloudflare Pages | Verificado en T10 (`index-D0UyJzA-.js`) |
 
 ---
 

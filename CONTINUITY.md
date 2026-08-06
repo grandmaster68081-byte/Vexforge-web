@@ -25,10 +25,10 @@
 ### ⚠️ Estado T10
 
 - Código y comportamiento de recuperación: ✅ listos.
-- Implementación `3251759` y documentación final `6735b37` publicadas en GitHub
+- Implementación y documentación final `fdf77a5` publicadas en GitHub
   `main`.
 - Cloudflare Pages: ✅ ahora sirve el bundle nuevo
-  `assets/index-BuX0TF6S.js`, coincidente byte a byte con `dist/`.
+  `assets/index-D0UyJzA-.js`, coincidente byte a byte con `dist/`.
 - Los assets base y los chunks dinámicos de T10 (Raids, World Bosses,
   ForgeFormationBoard y repositorios) coinciden byte a byte entre `dist/` y
   `https://vexforge-web.pages.dev`.
