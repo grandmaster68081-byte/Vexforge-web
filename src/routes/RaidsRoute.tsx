@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { supabase } from "../lib/supabase";
 import { useRaids } from "../domains/raids/useRaids";
 import type { RaidRun } from "../domains/raids/repository";
@@ -147,6 +147,11 @@ export function RaidsRoute() {
   const [raidBattleLoading, setRaidBattleLoading] = useState(false);
   const [raidBattleError, setRaidBattleError] = useState<string | null>(null);
   const [battleRunId, setBattleRunId] = useState<string | null>(null);
+  const battleRunIdRef = useRef<string | null>(null);
+  const battleStartKeyRef = useRef<string | null>(null);
+  const battleAttemptRef = useRef(0);
+  const battleStartInFlightRef = useRef(false);
+  const terminalActionRef = useRef<"idle" | "resolving" | "abandoning">("idle");
   const [raidDifficulty, setRaidDifficulty] = useState<AIDifficulty>("normal");
   const { addToast } = useToast();
 
@@ -210,23 +215,50 @@ export function RaidsRoute() {
   const handleRaidFormationConfirm = useCallback(async (formation: FormationState) => {
     const raid = selectedRaid;
     if (!raid) return;
+    if (
+      battleStartInFlightRef.current ||
+      battleRunIdRef.current ||
+      terminalActionRef.current !== "idle"
+    ) return;
+
+    const attempt = battleAttemptRef.current;
+    battleStartInFlightRef.current = true;
     setRaidBattleLoading(true);
     setRaidBattleError(null);
-    const run = await startBattleRun(
-      "raid",
-      raid.id,
-      applyRelicEffects(formation, equippedRelics),
-      createBattleRunKey("raid", raid.id),
-    );
-    if (!run.data) {
-      setRaidBattleLoading(false);
-      setRaidBattleError(run.reason ?? "No se pudo registrar el Battle Run.");
-      return;
+    const preparedFormation = applyRelicEffects(formation, equippedRelics);
+    const runKey = battleStartKeyRef.current ?? createBattleRunKey("raid", raid.id);
+    battleStartKeyRef.current = runKey;
+
+    try {
+      const run = await startBattleRun("raid", raid.id, preparedFormation, runKey);
+      const runId = run.data?.battle_run_id;
+
+      // If the selection was cancelled while the request was in flight, close
+      // the late-created run instead of allowing an orphaned started run.
+      if (attempt !== battleAttemptRef.current) {
+        if (runId) await abandonBattleRun(runId, { engine: "forge_formation_t5" });
+        return;
+      }
+
+      if (!run.data || !runId) {
+        battleStartKeyRef.current = null;
+        setRaidBattleError(run.reason ?? "No se pudo registrar el Battle Run.");
+        return;
+      }
+
+      battleRunIdRef.current = runId;
+      setRaidUnits(null);
+      setBattleRunId(runId);
+      setRaidFormation(preparedFormation);
+    } catch (error) {
+      if (attempt === battleAttemptRef.current) {
+        battleStartKeyRef.current = null;
+        setRaidBattleError(error instanceof Error ? error.message : "No se pudo registrar el Battle Run.");
+      }
+    } finally {
+      battleStartInFlightRef.current = false;
+      if (attempt === battleAttemptRef.current) setRaidBattleLoading(false);
     }
-    setRaidUnits(null);
-    setBattleRunId(run.data.battle_run_id ?? null);
-    setRaidFormation(applyRelicEffects(formation, equippedRelics));
-    setRaidBattleLoading(false);
   }, [equippedRelics, selectedRaid]);
 
   const handleRaidBattleComplete = useCallback(async (
@@ -235,52 +267,79 @@ export function RaidsRoute() {
     result: ReturnType<typeof import("../lib/forgeFormation").simulateFormationBattle>,
   ) => {
     const raid = selectedRaid;
-    const activeBattleRunId = battleRunId;
-    setRaidFormation(null);
-    setSelectedRaid(null);
-    setBattleRunId(null);
+    const activeBattleRunId = battleRunIdRef.current ?? battleRunId;
+    if (terminalActionRef.current !== "idle") return;
     if (!raid || !activeBattleRunId) {
       addToast("error", "Battle Run incompleto", "No se encontró la ejecución autoritativa del combate.");
       return;
     }
 
-    const resolved = await resolveBattleRun(activeBattleRunId, won, {
-      outcome: won ? "completed" : "defeated",
-      champion_died: championDied,
-      total_turns: result.total_turns,
-      engine: result.engine,
-    });
-    if (!resolved.data) {
-      addToast("error", "Resultado no registrado", resolved.reason ?? "No se pudo cerrar el Battle Run.");
-      return;
-    }
+    terminalActionRef.current = "resolving";
+    try {
+      const resolved = await resolveBattleRun(activeBattleRunId, won, {
+        outcome: won ? "completed" : "defeated",
+        champion_died: championDied,
+        total_turns: result.total_turns,
+        engine: result.engine,
+      });
+      if (!resolved.data) {
+        terminalActionRef.current = "idle";
+        addToast("error", "Resultado no registrado", resolved.reason ?? "No se pudo cerrar el Battle Run.");
+        return;
+      }
 
-    if (!won) {
-      addToast("error", "Raid no superado", "La contribución solo se registra después de ganar el combate.");
-      return;
-    }
+      // Keep the authoritative id until the RPC confirms the terminal state.
+      battleRunIdRef.current = null;
+      battleStartKeyRef.current = null;
+      setRaidFormation(null);
+      setSelectedRaid(null);
+      setBattleRunId(null);
+      terminalActionRef.current = "idle";
 
-    const res = await contribute(raid.id);
-    if (res.ok) {
-      addToast("success", "¡Ataque exitoso!", "Contribución registrada en el raid.");
-    } else {
-      addToast("error", "Contribución no registrada", res.reason ?? "No se pudo actualizar el progreso del raid.");
+      if (!won) {
+        addToast("error", "Raid no superado", "La contribución solo se registra después de ganar el combate.");
+        return;
+      }
+
+      const res = await contribute(raid.id);
+      if (res.ok) {
+        addToast("success", "¡Ataque exitoso!", "Contribución registrada en el raid.");
+      } else {
+        addToast("error", "Contribución no registrada", res.reason ?? "No se pudo actualizar el progreso del raid.");
+      }
+    } catch (error) {
+      terminalActionRef.current = "idle";
+      addToast(
+        "error",
+        "Resultado no registrado",
+        error instanceof Error ? error.message : "No se pudo cerrar el Battle Run.",
+      );
     }
   }, [addToast, battleRunId, contribute, selectedRaid]);
 
   const dismissRaidBattle = useCallback(async () => {
-    const activeBattleRunId = battleRunId;
-    if (activeBattleRunId) {
-      const abandoned = await abandonBattleRun(activeBattleRunId, { engine: "forge_formation_t5" });
-      if (!abandoned.data) {
-        addToast("error", "Combate no cerrado", abandoned.reason ?? "No se pudo registrar el abandono.");
+    if (terminalActionRef.current !== "idle") return;
+    battleAttemptRef.current += 1;
+    battleStartKeyRef.current = null;
+    terminalActionRef.current = "abandoning";
+    const activeBattleRunId = battleRunIdRef.current ?? battleRunId;
+    try {
+      if (activeBattleRunId) {
+        const abandoned = await abandonBattleRun(activeBattleRunId, { engine: "forge_formation_t5" });
+        if (!abandoned.data) {
+          addToast("error", "Combate no cerrado", abandoned.reason ?? "No se pudo registrar el abandono.");
+        }
       }
+    } finally {
+      battleRunIdRef.current = null;
+      setRaidUnits(null);
+      setRaidFormation(null);
+      setSelectedRaid(null);
+      setBattleRunId(null);
+      setRaidBattleError(null);
+      setRaidBattleLoading(false);
+      terminalActionRef.current = "idle";
     }
-    setRaidUnits(null);
-    setRaidFormation(null);
-    setSelectedRaid(null);
-    setBattleRunId(null);
-    setRaidBattleError(null);
   }, [addToast, battleRunId]);
 
   // Early return AFTER all hooks — fixes React error #310

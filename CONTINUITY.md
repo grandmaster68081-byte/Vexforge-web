@@ -1,3 +1,38 @@
+## Chat 156 — 2026-08-06 — T10: hardening de carreras Battle Run — CHECKPOINT
+
+**Branch:** main | **Scope:** confirmación, abandono y resolución autoritativa en Raids y World Bosses
+
+### ✅ Implementación
+
+- Se protegió el flujo compartido de Raids y World Bosses contra confirmaciones concurrentes mediante refs síncronas (`battleStartInFlightRef`, `terminalActionRef`), sin depender de que React termine un render.
+- La clave de idempotencia se conserva durante cada intento; un segundo clic no crea una segunda RPC `start_battle_run` ni un segundo Battle Run.
+- Se añadió un contador de intento para invalidar una selección cancelada mientras `start_battle_run` está en vuelo. Si la RPC devuelve tarde un `battle_run_id`, el cliente llama a `abandon_battle_run` para no dejar una ejecución huérfana en `started`.
+- Finalizar y abandonar están serializados: dobles callbacks no pueden ejecutar dos terminal actions simultáneas.
+- El identificador autoritativo y la formación se conservan hasta que `resolve_battle_run` confirma el estado terminal. Si la resolución falla, el usuario puede reintentar sin perder el vínculo con el Battle Run.
+- Los settlements de raid y World Boss siguen ejecutándose únicamente después de una resolución exitosa. No se modificaron RPCs, economía, fórmulas de combate, cartas, RLS, fixtures ni recompensas.
+
+### ✅ Verificaciones
+
+- `npm install` ✅
+- `npm run build` ✅ 245 módulos, 0 errores TypeScript
+- `git diff --check` ✅
+- `package-lock.json` sin URLs `package-firewall.replit.local` ✅
+- `.nvmrc` raíz = Node 22 ✅
+- El bundle generado contiene los nuevos chunks de `RaidsRoute`, `WorldBossesRoute` y el adaptador oficial Battle Run ✅
+- No se creó ninguna ejecución de Battle Run durante esta auditoría; el baseline de Supabase se conserva.
+
+### ⚠️ Estado T10
+
+- Hardening de doble confirmación, abandono concurrente y resolución: ✅ implementado y compilado.
+- Matriz autenticada de doble clic, refresh, abandono, timeout y reconexión con `pavilo20`: **PENDIENTE**.
+- Go/no-go público: **NO-GO**; estado **PRE-LAUNCH INTERNAL QA**.
+
+### Próximo paso oficial
+
+- Ejecutar con la sesión normal autenticada de `pavilo20` la matriz controlada sobre Raids y World Bosses, verificando idempotencia, refresh, abandono, timeout, reconexión y ausencia de doble settlement. No usar `service_role` para suplantar al jugador.
+
+---
+
 ## Chat 155 — 2026-08-06 — T10: propagación live verificada — QA AUTENTICADA PENDIENTE
 
 **Branch:** main | **Scope:** verificación de Cloudflare Pages después de conectar Battle Run

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { supabase } from "../lib/supabase";
 import { useBosses } from "../domains/bosses/useBosses";
 import { attackWorldBoss, getCurrentPlayerId } from "../domains/bosses/repository";
@@ -156,6 +156,11 @@ export function WorldBossesRoute() {
   const [battleDifficulty, setBattleDifficulty] = useState<AIDifficulty>("normal");
   const [battleLoading, setBattleLoading] = useState(false);
   const [battleRunId, setBattleRunId] = useState<string | null>(null);
+  const battleRunIdRef = useRef<string | null>(null);
+  const battleStartKeyRef = useRef<string | null>(null);
+  const battleAttemptRef = useRef(0);
+  const battleStartInFlightRef = useRef(false);
+  const terminalActionRef = useRef<"idle" | "resolving" | "abandoning">("idle");
   const [attackingBossId, setAttackingBossId] = useState<string | null>(null);
   const [battleError, setBattleError] = useState<string | null>(null);
 
@@ -203,35 +208,76 @@ export function WorldBossesRoute() {
   const handleFormationConfirm = useCallback(async (formation: FormationState) => {
     const boss = selectedBoss;
     if (!boss) return;
+    if (
+      battleStartInFlightRef.current ||
+      battleRunIdRef.current ||
+      terminalActionRef.current !== "idle"
+    ) return;
+
+    const attempt = battleAttemptRef.current;
+    battleStartInFlightRef.current = true;
     setBattleLoading(true);
     setBattleError(null);
-    const runKey = createBattleRunKey("boss", boss.id);
-    const run = await startBattleRun("boss", boss.id, applyRelicEffects(formation, equippedRelics), runKey);
-    if (!run.data) {
-      setBattleLoading(false);
-      setBattleError(run.reason ?? "No se pudo registrar el Battle Run.");
-      return;
+    const preparedFormation = applyRelicEffects(formation, equippedRelics);
+    const runKey = battleStartKeyRef.current ?? createBattleRunKey("boss", boss.id);
+    battleStartKeyRef.current = runKey;
+
+    try {
+      const run = await startBattleRun("boss", boss.id, preparedFormation, runKey);
+      const runId = run.data?.battle_run_id;
+
+      // If the selection was cancelled while the request was in flight, close
+      // the late-created run instead of allowing an orphaned started run.
+      if (attempt !== battleAttemptRef.current) {
+        if (runId) await abandonBattleRun(runId, { engine: "forge_formation_t5" });
+        return;
+      }
+
+      if (!run.data || !runId) {
+        battleStartKeyRef.current = null;
+        setBattleError(run.reason ?? "No se pudo registrar el Battle Run.");
+        return;
+      }
+
+      battleRunIdRef.current = runId;
+      setBossUnits(null);
+      setBattleRunId(runId);
+      setBossFormation(preparedFormation);
+    } catch (error) {
+      if (attempt === battleAttemptRef.current) {
+        battleStartKeyRef.current = null;
+        setBattleError(error instanceof Error ? error.message : "No se pudo registrar el Battle Run.");
+      }
+    } finally {
+      battleStartInFlightRef.current = false;
+      if (attempt === battleAttemptRef.current) setBattleLoading(false);
     }
-    setBossUnits(null);
-    setBattleRunId(run.data.battle_run_id ?? null);
-    setBossFormation(applyRelicEffects(formation, equippedRelics));
-    setBattleLoading(false);
   }, [equippedRelics, selectedBoss]);
 
   const dismissBattle = useCallback(async () => {
-    const activeBattleRunId = battleRunId;
-    if (activeBattleRunId) {
-      const abandoned = await abandonBattleRun(activeBattleRunId, { engine: "forge_formation_t5" });
-      if (!abandoned.data) {
-        addToast("error", "Combate no cerrado", abandoned.reason ?? "No se pudo registrar el abandono.");
+    if (terminalActionRef.current !== "idle") return;
+    battleAttemptRef.current += 1;
+    battleStartKeyRef.current = null;
+    terminalActionRef.current = "abandoning";
+    const activeBattleRunId = battleRunIdRef.current ?? battleRunId;
+    try {
+      if (activeBattleRunId) {
+        const abandoned = await abandonBattleRun(activeBattleRunId, { engine: "forge_formation_t5" });
+        if (!abandoned.data) {
+          addToast("error", "Combate no cerrado", abandoned.reason ?? "No se pudo registrar el abandono.");
+        }
       }
+    } finally {
+      battleRunIdRef.current = null;
+      setBossUnits(null);
+      setBossFormation(null);
+      setBattleRunId(null);
+      setSelectedBoss(null);
+      setAttackingBossId(null);
+      setBattleError(null);
+      setBattleLoading(false);
+      terminalActionRef.current = "idle";
     }
-    setBossUnits(null);
-    setBossFormation(null);
-    setBattleRunId(null);
-    setSelectedBoss(null);
-    setAttackingBossId(null);
-    setBattleError(null);
   }, [addToast, battleRunId]);
 
   const handleBattleComplete = useCallback(async (
@@ -241,45 +287,62 @@ export function WorldBossesRoute() {
   ) => {
     const boss = selectedBoss;
     const damage = getBattleDamage(result);
-    const activeBattleRunId = battleRunId;
-    setBossFormation(null);
-    setSelectedBoss(null);
-    setAttackingBossId(null);
-    setBattleRunId(null);
+    const activeBattleRunId = battleRunIdRef.current ?? battleRunId;
+    if (terminalActionRef.current !== "idle") return;
     if (!boss || !activeBattleRunId) {
       addToast("error", "Battle Run incompleto", "No se encontró la ejecución autoritativa del combate.");
       return;
     }
 
-    const resolved = await resolveBattleRun(activeBattleRunId, won, {
-      outcome: won ? "completed" : "defeated",
-      champion_died: _championDied,
-      damage_dealt: damage,
-      total_turns: result.total_turns,
-      engine: result.engine,
-    });
-    if (!resolved.data) {
-      addToast("error", "Resultado no registrado", resolved.reason ?? "No se pudo cerrar el Battle Run.");
-      return;
-    }
+    terminalActionRef.current = "resolving";
+    try {
+      const resolved = await resolveBattleRun(activeBattleRunId, won, {
+        outcome: won ? "completed" : "defeated",
+        champion_died: _championDied,
+        damage_dealt: damage,
+        total_turns: result.total_turns,
+        engine: result.engine,
+      });
+      if (!resolved.data) {
+        terminalActionRef.current = "idle";
+        addToast("error", "Resultado no registrado", resolved.reason ?? "No se pudo cerrar el Battle Run.");
+        return;
+      }
 
-    if (!won) {
-      addToast("error", "Combate perdido", "El daño del combate no se registra hasta derrotar al rival.");
-      return;
-    }
-    const response = await attackWorldBoss(boss.id, damage);
-    const attackResult = response.data as WorldBossAttackResult | null;
-    if (response.status === "blocked_auth") {
-      addToast("error", "Inicia sesión", response.reason ?? "Tu sesión ya no está activa.");
-    } else if (attackResult?.ok) {
+      // Keep the authoritative id until the RPC confirms the terminal state.
+      battleRunIdRef.current = null;
+      battleStartKeyRef.current = null;
+      setBossFormation(null);
+      setSelectedBoss(null);
+      setAttackingBossId(null);
+      setBattleRunId(null);
+      terminalActionRef.current = "idle";
+
+      if (!won) {
+        addToast("error", "Combate perdido", "El daño del combate no se registra hasta derrotar al rival.");
+        return;
+      }
+      const response = await attackWorldBoss(boss.id, damage);
+      const attackResult = response.data as WorldBossAttackResult | null;
+      if (response.status === "blocked_auth") {
+        addToast("error", "Inicia sesión", response.reason ?? "Tu sesión ya no está activa.");
+      } else if (attackResult?.ok) {
+        addToast(
+          "success",
+          `¡Daño aplicado a ${attackResult.boss_name ?? boss.name}!`,
+          `${attackResult.damage_dealt?.toLocaleString() ?? damage.toLocaleString()} de daño · ${attackResult.remaining_hp?.toLocaleString() ?? "?"} HP restantes`,
+        );
+        reload();
+      } else {
+        addToast("error", "Daño no registrado", response.reason ?? attackResult?.reason ?? "No se pudo actualizar el jefe.");
+      }
+    } catch (error) {
+      terminalActionRef.current = "idle";
       addToast(
-        "success",
-        `¡Daño aplicado a ${attackResult.boss_name ?? boss.name}!`,
-        `${attackResult.damage_dealt?.toLocaleString() ?? damage.toLocaleString()} de daño · ${attackResult.remaining_hp?.toLocaleString() ?? "?"} HP restantes`,
+        "error",
+        "Resultado no registrado",
+        error instanceof Error ? error.message : "No se pudo cerrar el Battle Run.",
       );
-      reload();
-    } else {
-      addToast("error", "Daño no registrado", response.reason ?? attackResult?.reason ?? "No se pudo actualizar el jefe.");
     }
   }, [addToast, battleRunId, reload, selectedBoss]);
 
