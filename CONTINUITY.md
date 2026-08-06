@@ -1,3 +1,31 @@
+## Chat 152 — 2026-08-06 — T10: sesión QA activa pero cliente sin Battle Run — BLOQUEADO
+
+**Branch:** main | **Scope:** validación autenticada de T10 desde el cliente oficial
+
+### ✅ Evidencia verificada
+
+- El propietario designó `pavilo20`; Supabase confirma una única coincidencia QA no administrativa, enlazada, activa y confirmada.
+- La sesión QA fue iniciada mediante el flujo normal del deploy; no se extrajeron ni imprimieron credenciales, tokens, cookies, correos ni UUIDs.
+- El checkout oficial de GitHub fue reconstruido desde `main` en el commit `2ef700e`; `npm install` y `npm run build` pasan con 244 módulos y 0 errores TypeScript.
+- Auditoría exhaustiva del checkout oficial: no existe ningún consumidor frontend de `start_battle_run` ni `resolve_battle_run`, ni llamadas equivalentes por nombre dinámico.
+- World Bosses usa `vexforge_attack_world_boss` directamente y Raids usa `vexforge_contribute_raid` directamente; ejecutar esos flujos no probaría T10 y podría mutar datos fuera de `battle_runs`.
+- Las funciones vivas `start_battle_run` y `resolve_battle_run` sí existen como `SECURITY DEFINER` con `search_path=public, pg_temp`; el contrato de base está presente.
+- Baseline no mutado durante esta revisión: 4 `battle_runs` resueltos, 1 `completed` y 3 `defeated`.
+- No se modificaron código de combate, RPCs, ACLs, RLS, economía, cuentas ni fixtures.
+
+### ⚠️ Estado T10
+
+- **Identidad y sesión QA:** ✅ CONFIRMADAS.
+- **Validación autenticada controlada:** **BLOQUEADA** por ausencia de un consumidor oficial de Battle Run en el cliente publicado.
+- **Matriz doble click/refresh/abandono/timeout/reconexión:** **PENDIENTE** de un flujo oficial que invoque `start_battle_run` y `resolve_battle_run`.
+- **Go/no-go público:** **NO-GO**. El producto continúa en **PRE-LAUNCH INTERNAL QA**.
+
+### Próximo paso oficial
+
+- Conectar o proporcionar el flujo oficial de Battle Run antes de ejecutar pruebas autenticadas. No invocar estos RPC con `service_role` ni sustituirlos por ataques directos de World Boss/Raid, porque produciría evidencia inválida y podría alterar datos fuera del launch gate.
+
+---
+
 ## Chat 150 — 2026-08-05 — T10: auditoría de cuenta QA y bloqueo de sesión autenticada — BLOQUEADO
 
 **Branch:** main | **Scope:** verificación de la cuenta QA designada y preparación de la matriz autenticada de Battle Run
