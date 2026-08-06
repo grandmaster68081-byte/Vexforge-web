@@ -8,3 +8,5 @@ The VEXFORGE repository can be pushed successfully while its Cloudflare Pages si
 **Why:** The workspace reported no Replit deployment, while the external Cloudflare alias remained reachable with stale assets after `main` advanced.
 
 **How to apply:** After a GitHub push, verify the external production URL's HTML and referenced bundle separately. If it is stale, document the external propagation/deployment block and do not claim QA or launch readiness.
+
+Cloudflare Access may protect a generated Pages alias while the public project domain remains reachable; use the public domain for external bundle verification and record the protected alias separately.
