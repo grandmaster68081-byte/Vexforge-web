@@ -1,3 +1,32 @@
+## Chat 154 — 2026-08-06 — T10: verificación post-push — DEPLOY EXTERNO PENDIENTE
+
+**Branch:** main | **Commit publicado:** `779d48b` | **Scope:** verificación del deploy oficial después de conectar Battle Run
+
+### ✅ Estado verificado
+
+- `main` local y `origin/main` coinciden en `779d48b2b074b82d1926f3bd899387041a12cd71`.
+- `npm run build` pasa con 245 módulos y 0 errores TypeScript.
+- `git diff --check` pasa; `package-lock.json` no contiene URLs internas; `.nvmrc` raíz = 22.
+- `abandon_battle_run` está aplicada en Supabase con `SECURITY DEFINER` y permisos autenticados.
+- La URL de Cloudflare responde, pero sirve un bundle anterior (`assets/index-CbH_Tx8g.js`) sin `start_battle_run` ni `abandon_battle_run`.
+- La verificación oficial de Replit devuelve `isDeployed=false`, `hasSuccessfulBuild=false` y `primaryUrl=""`; este workspace no tiene un deployment gestionado por Replit.
+
+### ⚠️ Bloqueo externo
+
+- El repositorio oficial sí contiene el cambio y `dist/` actualizado, pero el deploy externo de Cloudflare aún no refleja `main`.
+- La propagación/publicación de Cloudflare debe revisarse en el proyecto externo; no se puede verificar ni ejecutar desde este workspace.
+- No se declara la matriz QA ni T10 terminado con evidencia live mientras el deploy externo no sirva el commit `779d48b`.
+
+### Estado T10
+
+- Consumidor oficial Battle Run en código: ✅ conectado para Raids y World Bosses.
+- Contrato de abandono en Supabase: ✅ aplicado y verificado.
+- Deploy live del lote: ⚠️ pendiente en Cloudflare externo; Replit no tiene deployment configurado.
+- Matriz autenticada de doble clic, refresh, abandono, timeout y reconexión: pendiente hasta que el bundle nuevo esté servido.
+- Go/no-go público: **NO-GO**; estado **PRE-LAUNCH INTERNAL QA**.
+
+---
+
 ## Chat 153 — 2026-08-06 — T10: Battle Run conectado a Raids y World Bosses — CHECKPOINT
 
 **Branch:** main | **Scope:** consumidor oficial de Battle Run para PvE cooperativo

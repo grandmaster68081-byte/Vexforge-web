@@ -1,1 +1,2 @@
 - [Supabase contract audits](supabase-contract-audits.md) — audit live columns, constraints, RPC bodies, and grants before changing client contracts or migrations.
+- [External deployment boundary](external-deployment-boundary.md) — Replit deployment status does not verify the separate Cloudflare Pages deployment; check both explicitly.
