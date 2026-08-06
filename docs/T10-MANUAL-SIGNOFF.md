@@ -2,9 +2,10 @@
 
 ## Estado
 
-**READY FOR MANUAL SIGN-OFF** — el código de Battle Run está preparado para
-publicarse en el frontend oficial y cerrar T10. La única evidencia que el agente
-no puede producir es una sesión normal autenticada de `pavilo20`; no se deben
+**READY FOR MANUAL SIGN-OFF** — el checkpoint de Battle Run está en GitHub
+`main` y preparado para propagarse al frontend oficial y cerrar T10. La única
+evidencia que el agente no puede producir es una sesión normal autenticada de
+`pavilo20`; no se deben
 inventar credenciales ni usar `service_role` para simularla.
 
 El sign-off público sólo se puede marcar después de que todos los casos de la
