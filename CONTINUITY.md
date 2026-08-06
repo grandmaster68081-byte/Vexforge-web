@@ -25,8 +25,7 @@
 ### ⚠️ Estado T10
 
 - Código y comportamiento de recuperación: ✅ listos.
-- Implementación y documentación final `fdf77a5` publicadas en GitHub
-  `main`.
+- Implementación T10 y documentación final publicadas en GitHub `main`.
 - Cloudflare Pages: ✅ ahora sirve el bundle nuevo
   `assets/index-D0UyJzA-.js`, coincidente byte a byte con `dist/`.
 - Los assets base y los chunks dinámicos de T10 (Raids, World Bosses,
