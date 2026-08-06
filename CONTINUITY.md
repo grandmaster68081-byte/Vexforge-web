@@ -1,3 +1,31 @@
+## Chat 155 — 2026-08-06 — T10: propagación live verificada — QA AUTENTICADA PENDIENTE
+
+**Branch:** main | **Scope:** verificación de Cloudflare Pages después de conectar Battle Run
+
+### ✅ Evidencia verificada
+
+- El repositorio oficial `main` parte limpio en `ac94587`; `origin/main` coincide con el checkout.
+- `npm install && npm run build` pasa con 245 módulos y 0 errores TypeScript.
+- `git diff --check` pasa; `package-lock.json` no contiene URLs `package-firewall.replit.local`; `.nvmrc` raíz = 22.
+- Cloudflare Pages sirve `index-C219QFmQ.js`, `index-D7i0qsEk.css` y los chunks de Battle Run.
+- Se compararon 64 assets JavaScript locales contra Cloudflare: 0 discrepancias. Coinciden específicamente `RaidsRoute-DZVHMSRa.js`, `WorldBossesRoute-ect_fTVu.js` y `repository-1ezvFD5v.js`.
+- El chunk del repositorio live contiene `start_battle_run`, `resolve_battle_run` y `abandon_battle_run`; los chunks de Raids y World Bosses contienen la referencia `forge_formation_t5`.
+- Cloudflare responde HTTP 200 en `/`, `/cards`, `/lore`, `/leaderboard`, `/missions`, `/raids`, `/world-bosses` y `/pvp`.
+- Supabase conserva el baseline de `battle_runs` sin mutaciones nuevas: 1 `completed` y 3 `defeated`.
+
+### ⚠️ Estado T10
+
+- Propagación de Cloudflare del lote Battle Run: ✅ verificada; el deploy live coincide con `dist/`.
+- Consumidor oficial Battle Run para Raids y World Bosses: ✅ publicado y servido.
+- Matriz autenticada de doble clic, refresh, abandono, timeout y reconexión con `pavilo20`: **PENDIENTE**. Esta sesión no operó una sesión QA de navegador ni creó ejecuciones artificiales.
+- Go/no-go público: **NO-GO**; estado **PRE-LAUNCH INTERNAL QA**.
+
+### Próximo paso oficial
+
+- Ejecutar con la sesión normal autenticada de `pavilo20` la matriz controlada sobre Raids y World Bosses, verificando idempotencia, refresh, abandono, timeout, reconexión y ausencia de doble settlement. Registrar los resultados sin usar `service_role` para suplantar al jugador.
+
+---
+
 ## Chat 154 — 2026-08-06 — T10: verificación post-push — DEPLOY EXTERNO PENDIENTE
 
 **Branch:** main | **Commit publicado:** `779d48b` | **Scope:** verificación del deploy oficial después de conectar Battle Run
