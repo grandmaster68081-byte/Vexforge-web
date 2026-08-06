@@ -1,3 +1,36 @@
+## Chat 157 — 2026-08-06 — T10: propagación live del hardening verificada — QA AUTENTICADA PENDIENTE
+
+**Branch:** main | **Scope:** reconciliación live posterior al hardening de Battle Run
+
+### ✅ Evidencia verificada
+
+- El checkout oficial reconstruido desde GitHub está limpio en `main` y coincide con `origin/main` en el estado publicado del repositorio.
+- Cloudflare Pages responde HTTP 200 y ahora entrega `assets/index-D2EN_Qe-.js`, el mismo índice generado por el bundle local del checkpoint.
+- Se compararon byte a byte los assets relevantes live/local:
+  - `index-D2EN_Qe-.js`
+  - `RaidsRoute-p4cWvM9E.js`
+  - `WorldBossesRoute-BlyFSmio.js`
+  - `repository-B0nGhpsb.js`
+  - `vendor-router-DWDfcQVL.js`
+  - `vendor-supabase-DkS1Rjbo.js`
+  Resultado: **6/6 MATCH**.
+- Los chunks live de Raids y World Bosses contienen el consumidor Battle Run y el chunk del repositorio contiene `start_battle_run`, `resolve_battle_run` y `abandon_battle_run`.
+- Supabase conserva el baseline sin mutaciones de esta auditoría: 4 Battle Runs, 0 `started`, 1 `completed`, 3 `defeated`, 0 `abandoned`.
+- No se usó `service_role` para suplantar a la cuenta QA ni se crearon ejecuciones artificiales.
+
+### ⚠️ Estado T10
+
+- Propagación live del hardening: ✅ verificada.
+- Battle Run autoritativo e idempotencia en Raids y World Bosses: ✅ publicado y servido.
+- Matriz autenticada con la sesión normal de `pavilo20` — doble clic, refresh, abandono, timeout y reconexión: **PENDIENTE**.
+- Go/no-go público: **NO-GO**; estado **PRE-LAUNCH INTERNAL QA**.
+
+### Próximo paso oficial
+
+- Ejecutar la matriz autenticada controlada con la sesión normal autorizada de `pavilo20`, registrar cada resultado y comprobar ausencia de doble settlement. No usar `service_role` para sustituir la sesión del jugador.
+
+---
+
 ## Chat 156 — 2026-08-06 — T10: hardening de carreras Battle Run — CHECKPOINT
 
 **Branch:** main | **Scope:** confirmación, abandono y resolución autoritativa en Raids y World Bosses
