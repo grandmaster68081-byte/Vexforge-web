@@ -1,4 +1,31 @@
-## Chat 159 — 2026-08-06 — T10: hardening de batallas, iconografía y empaquetado — READY FOR MANUAL SIGN-OFF
+## Chat 160 — 2026-08-08 — T10: auditoría de inicio de sesión y matriz QA — BLOQUEADO
+
+**Branch:** main | **Scope:** reconciliación documental, baseline oficial y preparación de QA autenticada
+
+### ✅ Evidencia verificada
+
+- Se solicitaron y utilizaron únicamente los secretos seguros `GITHUB_PAT` y `SUPABASE_PAT`; ningún valor fue impreso, almacenado en el repositorio ni enviado al chat.
+- El Protocolo Maestro y el plan activo se leyeron desde la columna canónica `content_markdown` de `vexforge_official_documents`.
+- El repositorio oficial fue clonado desde GitHub en `main`; el checkout estaba limpio y `origin/main` coincidió con el commit `743c650`.
+- `npm install && npm run build` terminó correctamente con 244 módulos transformados y 0 errores TypeScript.
+- `git diff --check` pasó; `package-lock.json` no contiene URLs internas de Replit y `.nvmrc` mantiene Node 22.
+- El deploy oficial respondió HTTP 200 en `/`, `/cards`, `/lore`, `/leaderboard`, `/missions`, `/raids`, `/world-bosses` y `/pvp`.
+- El cliente oficial contiene los consumidores `start_battle_run`, `resolve_battle_run` y `abandon_battle_run` para Raids y World Bosses, con guards contra doble confirmación, resolución concurrente, abandono concurrente y respuestas tardías.
+- No se ejecutaron RPC de combate, no se crearon Battle Runs, no se alteraron recompensas, energía, daño, cuentas, fixtures, RLS ni economía.
+
+### ⚠️ Estado T10
+
+- Código, build, bundle live y contratos Battle Run: ✅ verificados.
+- Matriz autenticada de doble clic, abandono, refresh, timeout y reconexión: **BLOCKED** en este entorno porque requiere una sesión normal de `pavilo20` abierta mediante el navegador/preview; no existe una sesión interactiva reutilizable para el agente.
+- No se usó `service_role` para suplantar a la cuenta QA y no se inventaron resultados `PASS`.
+- Go/no-go público: **NO-GO**; estado **PRE-LAUNCH INTERNAL QA**.
+
+### Próximo paso oficial
+
+- Abrir `https://vexforge-web.pages.dev` en una ventana normal, iniciar sesión con la cuenta QA autorizada `pavilo20` sin compartir credenciales en el chat y ejecutar `docs/T10-MANUAL-SIGNOFF.md`.
+- Registrar por caso la ruta, timestamp, llamadas de Network, `battle_run_id`, settlement y estado terminal. Marcar cualquier caso no ejecutado como `BLOCKED`, no como `PASS`.
+
+---## Chat 159 — 2026-08-06 — T10: hardening de batallas, iconografía y empaquetado — READY FOR MANUAL SIGN-OFF
 
 **Branch:** main | **Scope:** regresiones de batallas, tutorial guiado, estados de error, iconografía SVG y entrega de fuentes
 
