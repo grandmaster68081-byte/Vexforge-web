@@ -1,3 +1,33 @@
+## Chat 163 — 2026-08-09 — VE-0-R2: baseline visual y matriz de cobertura — CANDIDATE_FOR_REVIEW
+
+**Branch:** main | **Scope:** auditoría estática del baseline visual, estados, iconografía, assets, reduced motion y fugas de identidad
+
+### ✅ Evidencia verificada
+
+- Se leyeron el Protocolo Maestro v2.3, el plan activo v1.2 y la continuidad vigente desde las fuentes oficiales.
+- El checkout oficial de `main` fue auditado sin modificar código de producto ni datos.
+- Se inventariaron 39 rutas reales en `src/routes/`.
+- La auditoría estática registró referencias de carga, error, vacío y autenticación por ruta, además de 99 referencias de imagen/fondo/Storage.
+- Se localizaron 397 ocurrencias de emoji o pictograma Unicode en 66 archivos fuente.
+- Se localizaron 47 ocurrencias de placeholder/demo/TODO/mock y soporte explícito de reduced motion en un único archivo.
+- El informe reproducible quedó registrado en `docs/VE-0-R2-BASELINE.md`.
+
+### ⚠️ Estado de la unidad
+
+- `VE-0-R2`: **CANDIDATE_FOR_REVIEW**, nivel actual **Q0**, objetivo **Q3**.
+- El gate de cero genéricos está **BLOCKED**: tutorial, onboarding, estados compartidos y varias superficies de combate todavía usan pictogramas Unicode.
+- La cobertura de reduced motion está **BLOCKED** como política global: la evidencia estática sólo aparece localizada.
+- La auditoría visual ejecutada en navegador queda **PENDING_SOURCE**; no se inventó evidencia de preview o deploy.
+- T10 continúa **BLOCKED / PRE-LAUNCH INTERNAL QA** por la matriz autenticada del owner. Este baseline no cambia el go/no-go.
+
+### Deuda y siguiente paso
+
+- Prioridad inmediata: `VE-1-ICON-LANGUAGE-PILOT`, empezando por estados compartidos, tutorial y resultado de batalla.
+- Después: piloto `VE-CARD` de tres cartas canónicas contrastantes, sólo con fuentes oficiales disponibles.
+- Reabrir este baseline después del primer lote de iconografía propia y evidencia de navegador en rutas representativas.
+
+---
+
 ## Chat 160 — 2026-08-08 — T10: auditoría de inicio de sesión y matriz QA — BLOQUEADO
 
 **Branch:** main | **Scope:** reconciliación documental, baseline oficial y preparación de QA autenticada
