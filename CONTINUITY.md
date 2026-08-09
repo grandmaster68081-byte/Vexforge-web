@@ -905,3 +905,27 @@
 - **T3** ✅ COMPLETADO — vertical slice PvE con ForgeFormation real, settlement autoritativo y screens de resultado
 - **Siguiente:** T4 — extender el vertical slice a todo el contenido PvE (misiones elite, expediciones, dungeons, eventos, patrones de enemigos, fases, modificadores regionales)
 - **Deploy live:** queda sujeto a propagación externa de Cloudflare Pages (no se modificó infraestructura Supabase en este lote)
+
+---
+
+## Chat 161 — 2026-08-09 — Visual Excellence Program — PLAN UNIVERSAL PUBLICADO
+
+**Branch:** main | **Scope:** protocolo maestro y roadmap activo de evolución visual, audio, cinemática, tutorial y experiencia
+
+### ✅ Documentación oficial actualizada
+
+- `vexforge_master_protocol_v2` actualizado a versión `v2.2-tier1-visual-excellence`.
+- `vexforge_forge_formation_engine_v1` actualizado a versión `v1.1-universal-visual-roadmap`.
+- Se conservaron los documentos anteriores y se añadió un addendum autoritativo; no se reescribió la historia ni se reabrieron T0-T9.
+- El programa ahora usa unidades estables por carta, ruta, tutorial, escena, audio y asset; estados reabribles; niveles Q0-Q5; criterios de aceptación y condiciones de reentrada.
+- Se añadió el dossier obligatorio carta por carta: identidad derivada de datos canónicos, superficies visuales, animación, VFX, audio, voz, prompts, procedencia, accesibilidad y rendimiento.
+- Se añadió el roadmap VE-0 a VE-11 para baseline visual, biblia, pipeline de assets, P1 por carta, ForgeFormation, tutorial contextual, rutas, audio/voces, lore/cinemáticas, rendimiento, revisión continua y validación cerrada.
+- Se dejó como primera cola `VE-0`, `VE-1`, piloto de tres cartas contrastantes, piloto de tutorial contextual, Home/Cards y un flujo cinematográfico completo de combate.
+
+### ⚠️ Estado y límites
+
+- T10 continúa `BLOCKED / PRE-LAUNCH INTERNAL QA` por la matriz autenticada del owner; este trabajo documental no lo convierte en `GO`.
+- P1 continúa pendiente como identidad audiovisual completa por carta; los efectos actuales no se consideran equivalentes a esa cobertura.
+- La base visual histórica se conserva como operativa en su nivel documentado, pero puede pasar a `CANDIDATE_FOR_REVIEW` para subir de Q2/Q3 a Q4/Q5.
+- No se modificaron código, economía, contratos de combate, RPCs, RLS, datos canónicos ni despliegue. No se ejecutó build porque esta sesión sólo estableció el plan documental solicitado.
+- Próxima sesión: leer este registro y ambos documentos oficiales; comenzar por `VE-0` y no declarar terminado el programa por completar un lote.
