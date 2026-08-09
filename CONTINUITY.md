@@ -929,3 +929,28 @@
 - La base visual histórica se conserva como operativa en su nivel documentado, pero puede pasar a `CANDIDATE_FOR_REVIEW` para subir de Q2/Q3 a Q4/Q5.
 - No se modificaron código, economía, contratos de combate, RPCs, RLS, datos canónicos ni despliegue. No se ejecutó build porque esta sesión sólo estableció el plan documental solicitado.
 - Próxima sesión: leer este registro y ambos documentos oficiales; comenzar por `VE-0` y no declarar terminado el programa por completar un lote.
+
+---
+
+## Chat 162 — 2026-08-09 — Revisión de solidez del plan visual — ACTUALIZADO
+
+**Branch:** main | **Scope:** revisión de autoridad creativa, cero genéricos, cartas, audio/voz, cinemáticas y mejora continua
+
+### ✅ Ajustes documentales publicados en Supabase
+
+- `vexforge_master_protocol_v2` actualizado a `v2.3-tier1-continuous-identity`.
+- `vexforge_forge_formation_engine_v1` actualizado a `v1.2-universal-re-evaluable-roadmap`.
+- La política de cero genéricos pasa a ser un gate bloqueante: no se aceptan emojis, iconos genéricos, símbolos de sistema, placeholders, arte de stock sin identidad, audio o voces genéricas ni fondos intercambiables como resultado operativo.
+- Se reconoce autoridad creativa a la IA para generar prompts, variantes y recursos, pero no autoridad para inventar canon, metadata, estadísticas, habilidades, diálogos, resultados, recompensas, estados ni desenlaces.
+- Se exige la cadena de trazabilidad `fuente oficial -> dato -> decisión artística -> asset -> implementación -> evidencia`.
+- Cada carta debe tener un pasaporte `VE-CARD` individual, incluyendo diagnóstico/mejora de imagen, animación, cinemática, audio, voz, superficies y deuda de calidad.
+- Se formalizó la identidad vocal y sonora propia por carta, personaje, región, evento o sistema cuando corresponda.
+- `OPERATIONAL`, `REFINED` y `Q5` no son estados terminales: cada IA nueva debe comparar de nuevo contra Q0-Q5 y referentes Tier 1, registrar brechas demostrables y reabrir unidades con `CANDIDATE_FOR_REVIEW` cuando proceda.
+- Se añadió una auditoría obligatoria de fugas de identidad entre imagen, animación, audio, voz, lore, tutorial, UI, responsive y estados reales.
+- La próxima entrada universal es `VE-0-R2`, seguida por unidades carta/tutor sólo cuando existan fuentes suficientes.
+
+### ⚠️ Límites preservados
+
+- No se modificaron código, economía, contratos de combate, RPCs, RLS, datos canónicos ni despliegue.
+- T10 continúa `BLOCKED / PRE-LAUNCH INTERNAL QA` hasta el sign-off autenticado del owner.
+- No se ejecutó build porque esta sesión fue exclusivamente de revisión y actualización documental.
