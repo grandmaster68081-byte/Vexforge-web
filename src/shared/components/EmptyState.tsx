@@ -1,11 +1,12 @@
 import type { CSSProperties, ReactNode } from "react";
+import { ForgeIcon } from "./ForgeIcon";
 
 /**
  * EmptyState — canonical empty-content card for VEXFORGE routes.
  *
  * Usage:
- *   <EmptyState icon="🃏" title="Sin cartas" description="Abre packs para conseguir tu primera carta." />
- *   <EmptyState icon="🏰" title="Sin clan" action={{ label: "Ver directorio", onClick: () => setTab("directorio") }} />
+ *   <EmptyState icon={<ForgeIcon name="cards" size={36} />} title="Sin cartas" description="Abre packs para conseguir tu primera carta." />
+ *   <EmptyState icon={<ForgeIcon name="clans" size={36} />} title="Sin clan" action={{ label: "Ver directorio", onClick: () => setTab("directorio") }} />
  */
 export interface EmptyStateProps {
   icon?:        ReactNode;
@@ -18,7 +19,7 @@ export interface EmptyStateProps {
   children?:    ReactNode;
 }
 
-export function EmptyState({ icon = "📭", title, description, action, compact, style, children }: EmptyStateProps) {
+export function EmptyState({ icon = <ForgeIcon name="collection" size={36} />, title, description, action, compact, style, children }: EmptyStateProps) {
   const pad = compact ? "20px 16px" : "40px 24px";
   return (
     <div
@@ -35,7 +36,9 @@ export function EmptyState({ icon = "📭", title, description, action, compact,
         ...style,
       }}
     >
-      <div style={{ fontSize: compact ? 28 : 36 }}>{icon}</div>
+      <div style={{ color: "var(--ember-gold-lt, #f0c050)", display: "grid", placeItems: "center", minHeight: compact ? 28 : 36 }}>
+        {icon}
+      </div>
       <div
         style={{
           color: "var(--fg-primary, #e8e8f0)",

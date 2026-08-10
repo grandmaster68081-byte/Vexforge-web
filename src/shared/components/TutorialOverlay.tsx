@@ -6,35 +6,36 @@
     import { useNavigate } from "react-router-dom";
     import { useTutorial, TUTORIAL_TOTAL_STEPS } from "../../domains/tutorial/useTutorial";
     import { TutorialBattle } from "../../components/battle/TutorialBattle";
+import { ForgeIcon, type ForgeIconName } from "./ForgeIcon";
 
     type TutorialStep = {
     step: number; title: string; subtitle: string; desc: string;
-    icon: string; action: string | null; actionLabel: string; accentColor: string;
+    icon: ForgeIconName; action: string | null; actionLabel: string; accentColor: string;
     bgPattern?: string; factionHint?: string;
     };
 
     const STEPS: TutorialStep[] = [
     { step:0, title:"Bienvenido a VEXFORGE", subtitle:"El mundo de las cartas te espera, Forjador",
       desc:"VEXFORGE es un juego de cartas coleccionables de primera línea. Batallas épicas, facciones, misiones y recompensas legendarias te esperan.",
-      icon:"⚔️", action:null, actionLabel:"Comenzar tutorial", accentColor:"#e8b84b", factionHint:"La Forja despierta…" },
+      icon:"arena", action:null, actionLabel:"Comenzar tutorial", accentColor:"#e8b84b", factionHint:"La Forja despierta" },
     { step:1, title:"Tu Colección de Cartas", subtitle:"4 Facciones · Cientos de cartas únicas",
       desc:"Cada carta tiene Ataque, Defensa, Coste de Energía y habilidades especiales. Explora Guerrero, Mago, Paladín y Pícaro.",
-      icon:"🃏", action:"/cards", actionLabel:"Ver mi Colección →", accentColor:"#f87171", factionHint:"Descubre tu facción" },
+      icon:"cards", action:"/cards", actionLabel:"Ver mi Colección", accentColor:"#f87171", factionHint:"Descubre tu facción" },
     { step:2, title:"Abre tu Primer Pack", subtitle:"Nuevas cartas, nuevas posibilidades",
       desc:"Los packs contienen cartas de distintas raridades. Los packs premium garantizan mínimo una carta Épica.",
-      icon:"📦", action:"/packs", actionLabel:"Ir a Packs →", accentColor:"#818cf8", factionHint:"¿Qué depara el destino?" },
+      icon:"packs", action:"/packs", actionLabel:"Ir a Packs", accentColor:"#818cf8", factionHint:"Qué depara el destino" },
     { step:3, title:"Ejecuta Misiones", subtitle:"Gana XP, VEX y cartas raras",
       desc:"Las misiones son tu fuente principal de progresión. Completa misiones diarias para ganar XP, moneda VEX y recompensas especiales.",
-      icon:"🗺️", action:"/missions", actionLabel:"Ver Misiones →", accentColor:"#34d399", factionHint:"El camino del forjador" },
+      icon:"missions", action:"/missions", actionLabel:"Ver Misiones", accentColor:"#34d399", factionHint:"El camino del forjador" },
     { step:4, title:"Primera Batalla", subtitle:"Aprende combatiendo — modo Tutorial activado",
       desc:"Vas a jugar tu primera batalla guiada. El oponente está en modo Tutorial. ¡Es hora de forjar tu leyenda!",
-      icon:"⚡", action:null, actionLabel:"⚔️ Jugar Batalla Tutorial →", accentColor:"#fbbf24", factionHint:"Que comience la batalla" },
+      icon:"energy", action:null, actionLabel:"Jugar Batalla Tutorial", accentColor:"#fbbf24", factionHint:"Que comience la batalla" },
     { step:5, title:"Construye tu Mazo", subtitle:"Diseña la estrategia perfecta",
       desc:"El Deck Builder te permite construir mazos optimizados por facción, rareza y sinergia entre habilidades especiales.",
-      icon:"🔧", action:"/deck-builder", actionLabel:"Ir al Deck Builder →", accentColor:"#a78bfa", factionHint:"La estrategia lo es todo" },
+      icon:"deck", action:"/deck-builder", actionLabel:"Ir al Deck Builder", accentColor:"#a78bfa", factionHint:"La estrategia lo es todo" },
     { step:6, title:"¡Forjador Iniciado!", subtitle:"VEXFORGE es tuyo ahora",
       desc:"Has completado el tutorial. Explora libremente: World Bosses, Clanes, Season Pass, Evolución de cartas y mucho más.",
-      icon:"🏆", action:null, actionLabel:"Comenzar Aventura ⚡", accentColor:"#e8b84b", factionHint:"El legado comienza hoy" },
+      icon:"trophy", action:null, actionLabel:"Comenzar Aventura", accentColor:"#e8b84b", factionHint:"El legado comienza hoy" },
     ];
 
     export function TutorialOverlay() {
@@ -125,7 +126,7 @@
               <div style={{ display:"inline-flex",alignItems:"center",justifyContent:"center",width:96,height:96,borderRadius:"50%",
                 background:`radial-gradient(circle,${accent}22 0%,${accent}08 70%)`,border:`1px solid ${accent}33`,
                 fontSize:48,lineHeight:1,animation:"tu-icon-bounce 2.4s ease-in-out infinite",boxShadow:`0 0 32px ${accent}33` }}>
-                {step.icon}
+                 <ForgeIcon name={step.icon} size={48} />
               </div>
               <div style={{ marginTop:12,display:"inline-block",background:`${accent}18`,border:`1px solid ${accent}33`,
                 borderRadius:20,padding:"3px 12px",fontFamily:'"Rajdhani",sans-serif',fontSize:10,

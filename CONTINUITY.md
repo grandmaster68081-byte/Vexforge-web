@@ -1,3 +1,34 @@
+## Chat 164 — 2026-08-10 — VE-1-ICON-LANGUAGE-PILOT: IMPLEMENTED_UNVERIFIED
+
+**Branch:** main | **Scope:** primer lote de iconografía propia para estados compartidos, tutorial, hints contextuales y resultado de batalla
+
+### ✅ Evidencia verificada
+
+- Se solicitaron y utilizaron únicamente los secretos seguros `GITHUB_PAT` y `SUPABASE_PAT`; ningún valor fue impreso, almacenado en el repositorio ni enviado al chat.
+- Se leyó desde `vexforge_official_documents.content_markdown` el Protocolo Maestro v2.3, el plan `vexforge_forge_formation_engine_v1`, el plan activo de Fase 3, los principios de UI y la política de assets.
+- El checkout oficial de `main` fue obtenido desde GitHub en la revisión `9ed1762`, sin modificar Supabase, RPCs, RLS, economía, cartas, lore ni resultados autoritativos.
+- Se eliminaron pictogramas Unicode de `EmptyState`, `ErrorState`, `BlockedAuthState`, `TutorialOverlay`, `ContextualHint` y `BattleResultScreen`.
+- Las superficies del lote reutilizan `ForgeIcon`, el sistema SVG propio existente, con iconos de estado, navegación, combate, resultado y acceso.
+- `npm ci --ignore-scripts && npm run build` terminó correctamente con 244 módulos transformados.
+- `git diff --check` pasó y el escaneo Unicode del lote no encontró emojis.
+- Los artefactos regenerados de `dist/` fueron restaurados para no mezclar hashes de build con el lote fuente.
+
+### ⚠️ Estado de la unidad
+
+- `VE-1-ICON-LANGUAGE-PILOT`: **IMPLEMENTED_UNVERIFIED**, nivel actual **Q2**, objetivo **Q3**.
+- La coherencia del lenguaje SVG está verificada por código y build; la revisión visual en navegador de tutorial, estados y resultado queda **PENDING_SOURCE**.
+- `VE-0-R2` continúa **CANDIDATE_FOR_REVIEW** y el gate global de cero genéricos continúa **BLOCKED** porque aún hay pictogramas en otras superficies de combate, tienda, temporada, audio, onboarding y componentes compartidos.
+- T10 continúa **BLOCKED / PRE-LAUNCH INTERNAL QA** por la matriz autenticada del owner. Este lote no cambia el go/no-go.
+
+### Deuda y siguiente paso
+
+- Obtener evidencia visual en navegador en una ruta representativa de estado, tutorial y resultado de batalla; registrar responsive y reduced motion.
+- Continuar el lenguaje propio en `InteractiveBattleBoard`, `BattleCard`, `BattleEffects`, `BattleIntroScreen`, `AudioControls`, `StarterDeckReveal`, `ShopRoute` y `SeasonPassRoute`.
+- Después de validar el lenguaje piloto, iniciar `VE-CARD` con tres cartas canónicas contrastantes y fuentes oficiales disponibles.
+- Reabrir la unidad si aparecen desalineaciones, pérdida de legibilidad o una fuga de identidad en móvil, focus o reduced motion.
+
+---
+
 ## Chat 163 — 2026-08-09 — VE-0-R2: baseline visual y matriz de cobertura — CANDIDATE_FOR_REVIEW
 
 **Branch:** main | **Scope:** auditoría estática del baseline visual, estados, iconografía, assets, reduced motion y fugas de identidad

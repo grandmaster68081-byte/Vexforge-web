@@ -1,4 +1,5 @@
-import type { CSSProperties } from "react";
+import type { CSSProperties, ReactNode } from "react";
+import { ForgeIcon } from "./ForgeIcon";
 
 /**
  * ErrorState — canonical error display for VEXFORGE domain failures.
@@ -6,12 +7,12 @@ import type { CSSProperties } from "react";
  * Usage:
  *   <ErrorState message={error} onRetry={load} />
  *   <ErrorState message="Sin conexión al servidor." />
- *   <ErrorState message={error} icon="🔐" title="Acceso requerido" />
+ *   <ErrorState message={error} icon={<ForgeIcon name="lock" />} title="Acceso requerido" />
  */
 export interface ErrorStateProps {
   message:    string;
   title?:     string;
-  icon?:      string;
+  icon?:      ReactNode;
   onRetry?:   () => void;
   retryLabel?: string;
   /** Compact mode: smaller padding, used inside panels */
@@ -20,7 +21,7 @@ export interface ErrorStateProps {
 }
 
 export function ErrorState({
-  message, title = "Algo salió mal", icon = "⚠️",
+  message, title = "Algo salió mal", icon = <ForgeIcon name="warning" size={32} />,
   onRetry, retryLabel = "Reintentar", compact, style,
 }: ErrorStateProps) {
   const pad = compact ? "16px" : "32px 24px";
@@ -39,7 +40,7 @@ export function ErrorState({
         ...style,
       }}
     >
-      <div style={{ fontSize: compact ? 24 : 32 }}>{icon}</div>
+      <div style={{ color: "#E84040", display: "grid", placeItems: "center", minHeight: compact ? 24 : 32 }}>{icon}</div>
       <div
         style={{
           color: "#E84040",
@@ -80,7 +81,8 @@ export function ErrorState({
             letterSpacing: "0.05em",
           }}
         >
-          ↺ {retryLabel}
+          <ForgeIcon name="refresh" size={14} style={{ marginRight: 6, verticalAlign: "middle" }} />
+          {retryLabel}
         </button>
       )}
     </div>
@@ -103,7 +105,9 @@ export function BlockedAuthState({ description = "Inicia sesión para acceder a 
         gap: 14,
       }}
     >
-      <div style={{ fontSize: 44 }}>🔐</div>
+      <div style={{ color: "var(--ember-gold-lt, #f0c050)", display: "grid", placeItems: "center" }}>
+        <ForgeIcon name="lock" size={44} />
+      </div>
       <div
         style={{
           color: "var(--fg-primary, #e8e8f0)",

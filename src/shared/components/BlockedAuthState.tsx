@@ -1,5 +1,6 @@
 import type { CSSProperties } from "react";
 import { Link } from "react-router-dom";
+import { ForgeIcon, type ForgeIconName } from "./ForgeIcon";
 
 /**
  * BlockedAuthState — pantalla épica "acceso requerido" de VEXFORGE.
@@ -10,7 +11,7 @@ export interface BlockedAuthStateProps {
   style?: CSSProperties;
 }
 
-const RUNES = ["✦", "◈", "⬡", "✧", "◆", "⊕", "★", "⟐"];
+const AMBIENT_SIGILS: ForgeIconName[] = ["spark", "cards", "arena", "shield", "target", "relics", "crown", "energy"];
 
 export function BlockedAuthState({
   message = "Inicia sesión para acceder a esta sección.",
@@ -51,7 +52,7 @@ export function BlockedAuthState({
 
       {/* Floating rune background */}
       <div style={{ position: "absolute", inset: 0, pointerEvents: "none", overflow: "hidden" }}>
-        {RUNES.map((r, i) => (
+        {AMBIENT_SIGILS.map((name, i) => (
           <div key={i} style={{
             position: "absolute",
             left: `${(i * 13 + 7) % 88 + 6}%`,
@@ -60,8 +61,9 @@ export function BlockedAuthState({
             fontSize: `${(i % 3) * 6 + 10}px`,
             animation: `ba-rune-float ${(i % 3) * 1.5 + 4}s ease-in-out infinite`,
             animationDelay: `${i * 0.55}s`,
-            fontFamily: "serif",
-          }}>{r}</div>
+           }}>
+            <ForgeIcon name={name} size={(i % 3) * 6 + 10} />
+          </div>
         ))}
       </div>
 
@@ -72,13 +74,13 @@ export function BlockedAuthState({
         opacity: 0.6,
       }} />
 
-      {/* Lock icon */}
+      {/* Lock sigil */}
       <div style={{
-        fontSize: 56, marginBottom: 20, lineHeight: 1,
+        color: "#f0c050", marginBottom: 20, lineHeight: 1,
         animation: "ba-lock-breathe 3s ease-in-out infinite",
         zIndex: 1,
       }}>
-        🔐
+        <ForgeIcon name="lock" size={56} />
       </div>
 
       {/* Title */}
@@ -100,7 +102,7 @@ export function BlockedAuthState({
         animation: "ba-fade-up 0.5s 0.2s ease both",
       }}>
         <div style={{ height: 1, width: 60, background: "linear-gradient(90deg, transparent, rgba(201,144,31,0.6))" }} />
-        <span style={{ color: "#C9901F", opacity: 0.7, fontSize: 12 }}>✦</span>
+        <ForgeIcon name="spark" size={12} style={{ color: "#C9901F", opacity: 0.7 }} />
         <div style={{ height: 1, width: 60, background: "linear-gradient(90deg, rgba(201,144,31,0.6), transparent)" }} />
       </div>
 
@@ -132,7 +134,8 @@ export function BlockedAuthState({
         onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.transform = "translateY(-2px) scale(1.03)"; }}
         onMouseLeave={e => { (e.currentTarget as HTMLAnchorElement).style.transform = "none"; }}
       >
-        ⚔ Iniciar Sesión
+         <ForgeIcon name="account" size={16} style={{ marginRight: 8, verticalAlign: "middle" }} />
+         Iniciar Sesión
       </Link>
 
       {/* Bottom decorative text */}

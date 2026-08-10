@@ -3,9 +3,10 @@
 // Uso: <ContextualHint hintKey="pvp_lobby" hints={[...]} />
 
 import { useState, useEffect } from 'react';
+import { ForgeIcon, type ForgeIconName } from '../../shared/components/ForgeIcon';
 
 export interface HintStep {
-  icon: string;
+  icon: ForgeIconName;
   title: string;
   desc: string;
   accentColor?: string;
@@ -101,7 +102,9 @@ export function ContextualHint({ hintKey, hints, force = false, onDone }: Contex
           fontSize: 56, marginBottom: 16,
           filter: `drop-shadow(0 0 16px ${ac}88)`,
           animation: 'hint-bounce 0.8s cubic-bezier(0.22,1,0.36,1) both',
-        }}>{hint.icon}</div>
+        }}>
+          <ForgeIcon name={hint.icon} size={56} />
+        </div>
 
         {/* Title */}
         <h2 style={{
@@ -154,29 +157,29 @@ export function ContextualHint({ hintKey, hints, force = false, onDone }: Contex
 // ─── Pre-built hints per major route ──────────────────────────────────────────
 export const ROUTE_HINTS: Record<string, HintStep[]> = {
   pvp_lobby: [
-    { icon: '⚔️', title: 'Arena PvP', accentColor: '#4a9eff',
+    { icon: 'arena', title: 'Arena PvP', accentColor: '#4a9eff',
       desc: 'Aquí desafías a otros Forjadores y compites por MMR. Tu rango sube con cada victoria.' },
-    { icon: '🃏', title: 'Forge Formation', accentColor: '#e8b84b',
+    { icon: 'cards', title: 'Forge Formation', accentColor: '#e8b84b',
       desc: 'Antes de cada batalla, selecciona tu Campeón y dos cartas de apoyo. Si el Campeón cae, la partida termina.' },
-    { icon: '🏆', title: 'Desafío del Día', accentColor: '#a855f7',
+    { icon: 'trophy', title: 'Desafío del Día', accentColor: '#a855f7',
       desc: 'Cada día aparece un nuevo oponente especial. Derrótalo para ganar VEX y badges exclusivos.' },
   ],
   deck_builder: [
-    { icon: '🃏', title: 'Constructor de Mazos', accentColor: '#4a9eff',
+    { icon: 'deck', title: 'Constructor de Mazos', accentColor: '#4a9eff',
       desc: 'Combina hasta 30 cartas de tu colección. Un mazo más grande aumenta el poder de tu Campeón.' },
-    { icon: '👑', title: 'Elige tu Campeón', accentColor: '#e8b84b',
+    { icon: 'crown', title: 'Elige tu Campeón', accentColor: '#e8b84b',
       desc: 'La carta que marques como Campeón será el núcleo de tu formación. Elige con cuidado — si cae, pierdes.' },
   ],
   cards: [
-    { icon: '✨', title: 'Tu Colección', accentColor: '#a855f7',
+    { icon: 'collection', title: 'Tu Colección', accentColor: '#a855f7',
       desc: 'Aquí están todas las cartas que has conseguido. Filtra por facción, rareza o keyword para encontrar las mejores.' },
-    { icon: '🔥', title: 'Rarezas', accentColor: '#e8b84b',
+    { icon: 'spark', title: 'Rarezas', accentColor: '#e8b84b',
       desc: 'Common → Uncommon → Rare → Epic → Legendary → Mythic. Las cartas de mayor rareza tienen keywords más poderosos y estadísticas superiores.' },
   ],
   raids: [
-    { icon: '💀', title: 'Raids de Jefe', accentColor: '#e84040',
+    { icon: 'boss', title: 'Raids de Jefe', accentColor: '#e84040',
       desc: 'Únete con otros jugadores para derrotar a jefes épicos. Cada raid tiene timer y recompensas de grupo.' },
-    { icon: '🛡️', title: 'Estrategia de Raid', accentColor: '#4a9eff',
+    { icon: 'shield', title: 'Estrategia de Raid', accentColor: '#4a9eff',
       desc: 'Coordina con tu clan para maximizar el daño. Las cartas con keywords Guard y Lifesteal son clave en raids.' },
   ],
 };

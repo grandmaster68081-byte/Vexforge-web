@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import type { RealBattleResult } from '../../lib/battleTypes';
 import { particleEngine } from '../../lib/particleEngine';
 import { AudioEngine } from '../../lib/audioEngine';
+import { ForgeIcon, type ForgeIconName } from '../../shared/components/ForgeIcon';
 
 interface BattleResultScreenProps {
   result: RealBattleResult;
@@ -112,10 +113,10 @@ export function BattleResultScreen({ result, playerName, opponentName, onDismiss
 
   // Color theme
   const theme = isDraw
-    ? { primary: '#4a9eff', glow: 'rgba(74,158,255,0.6)', label: 'EMPATE', emoji: '⚖️' }
+    ? { primary: '#4a9eff', glow: 'rgba(74,158,255,0.6)', label: 'EMPATE', icon: 'target' as ForgeIconName }
     : won
-      ? { primary: '#e8b84b', glow: 'rgba(232,184,75,0.7)', label: 'VICTORIA', emoji: '🏆' }
-      : { primary: '#c0392b', glow: 'rgba(192,57,43,0.5)', label: 'DERROTA', emoji: '💀' };
+      ? { primary: '#e8b84b', glow: 'rgba(232,184,75,0.7)', label: 'VICTORIA', icon: 'trophy' as ForgeIconName }
+      : { primary: '#c0392b', glow: 'rgba(192,57,43,0.5)', label: 'DERROTA', icon: 'skull' as ForgeIconName };
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -211,14 +212,14 @@ export function BattleResultScreen({ result, playerName, opponentName, onDismiss
       {won && <div className="victory-bg-rays-v2" />}
       {!won && !isDraw && <div className="defeat-vignette" />}
 
-      {/* Trophy / Icon */}
+      {/* Result sigil */}
       <div style={{
-        fontSize: 'clamp(64px, 12vw, 96px)', marginBottom: 6, lineHeight: 1,
+        color: theme.primary, marginBottom: 6, lineHeight: 1,
         filter: `drop-shadow(0 0 32px ${theme.glow}) drop-shadow(0 0 64px ${theme.glow})`,
         animation: won ? 'trophyBounce 0.7s cubic-bezier(0.22,1,0.36,1)' : 'fadeInUp 0.5s ease',
         position: 'relative',
       }}>
-        {theme.emoji}
+        <ForgeIcon name={theme.icon} size={88} />
         {/* Expanding ring on victory */}
         {won && Array.from({ length: 3 }).map((_, i) => (
           <div key={i} style={{
@@ -259,7 +260,7 @@ export function BattleResultScreen({ result, playerName, opponentName, onDismiss
         display: 'flex', alignItems: 'center', gap: 12, marginBottom: 14, width: 280,
       }}>
         <div style={{ flex: 1, height: 1, background: `linear-gradient(90deg, transparent, ${theme.primary}55)` }} />
-        <span style={{ color: theme.primary, opacity: 0.6, fontSize: 12 }}>✦</span>
+        <ForgeIcon name="spark" size={12} style={{ color: theme.primary, opacity: 0.6 }} />
         <div style={{ flex: 1, height: 1, background: `linear-gradient(90deg, ${theme.primary}55, transparent)` }} />
       </div>
 
@@ -269,7 +270,7 @@ export function BattleResultScreen({ result, playerName, opponentName, onDismiss
         letterSpacing: '0.1em', marginBottom: 16, textTransform: 'uppercase',
       }}>
         <span style={{ color: '#8888b0' }}>{playerName}</span>
-        <span style={{ color: '#4a4a6a', margin: '0 10px' }}>⚔</span>
+        <ForgeIcon name="arena" size={14} style={{ color: '#4a4a6a', margin: '0 10px', verticalAlign: 'middle' }} />
         <span style={{ color: '#8888b0' }}>{opponentName}</span>
       </div>
 
@@ -284,14 +285,14 @@ export function BattleResultScreen({ result, playerName, opponentName, onDismiss
           animation: 'streakPop 0.4s cubic-bezier(0.22,1,0.36,1)',
           backdropFilter: 'blur(8px)',
         }}>
-          <span style={{ fontSize: 16 }}>🔥</span>
+           <ForgeIcon name="spark" size={16} style={{ color: '#e8b84b' }} />
           <span style={{
             fontFamily: 'Cinzel, serif', fontSize: 14, fontWeight: 700,
             color: '#e8b84b', letterSpacing: '0.1em',
           }}>
             RACHA × {winStreak}
           </span>
-          <span style={{ fontSize: 16 }}>🔥</span>
+           <ForgeIcon name="spark" size={16} style={{ color: '#e8b84b' }} />
         </div>
       )}
 
@@ -350,7 +351,8 @@ export function BattleResultScreen({ result, playerName, opponentName, onDismiss
           letterSpacing: '0.25em', textTransform: 'uppercase',
           marginBottom: 12, textAlign: 'center', opacity: 0.8,
         }}>
-          ⚔ Estadísticas de Batalla ⚔
+           <ForgeIcon name="arena" size={12} style={{ marginRight: 6, verticalAlign: 'middle' }} />
+           Estadísticas de Batalla
         </div>
         <StatRow label="Turnos" value={stats.totalTurns} delay={0.0} />
         <StatRow label="Daño Total" value={stats.totalDamage.toLocaleString()} highlight delay={0.05} />
@@ -396,7 +398,8 @@ export function BattleResultScreen({ result, playerName, opponentName, onDismiss
         onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.transform = 'translateY(-2px) scale(1.02)'; }}
         onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.transform = 'none'; }}
         >
-          ⚔ Jugar de Nuevo
+           <ForgeIcon name="arena" size={15} style={{ marginRight: 7, verticalAlign: 'middle' }} />
+           Jugar de Nuevo
         </button>
         <button onClick={onDismiss} style={{
           background: 'rgba(255,255,255,0.04)',
