@@ -1,22 +1,26 @@
-# Deployment (Cloudflare Pages)
+# VEXFORGE — Cadena oficial de código y despliegue
 
-This project was scaffolded in a chat session that had a Cloudflare MCP
-connector with only **read/inspection tools** (list/get Workers, D1/KV/R2
-management, docs search) — no Pages deploy tool was available, so the AI that
-built this could not push it live itself. Deploying is a manual step:
+## Fuentes de verdad
 
-```bash
-npm install
-npm run build
-npx wrangler login          # one-time, opens a browser for your Cloudflare account
-npx wrangler pages deploy dist --project-name=vexforge-web
-```
+- GitHub es el único código fuente oficial: repositorio grandmaster68081-byte/Vexforge-web, rama main.
+- Cloudflare Pages es el frontend publicado: https://vexforge-web.pages.dev, vinculado al repositorio oficial y con despliegue automático desde main.
+- Supabase es backend, base de datos y Storage: proyecto rscuzqnfccqvltkdcdny, incluyendo PostgreSQL, RLS, RPCs, Auth, Storage y contratos autoritativos.
 
-This creates the Pages project on first run and gives you a permanent
-`*.pages.dev` URL (or attach a custom domain afterward in the Cloudflare
-dashboard).
+## Flujo obligatorio
 
-`.env` already contains the real, RLS-protected Supabase URL and publishable
-anon key for this project (`rscuzqnfccqvltkdcdny`) — these are safe to ship
-in a public client bundle because every table they can touch is protected by
-Row Level Security, verified per-table in chat 21/22.
+1. Inspeccionar GitHub main, las fuentes vivas de Supabase y la URL pública.
+2. Modificar el código fuente oficial directamente en GitHub.
+3. Crear un commit descriptivo y hacer push a main.
+4. Esperar el despliegue automático de Cloudflare Pages.
+5. Revisar la URL pública y comprobar que refleja el commit de main.
+6. Registrar evidencia, estado y deuda en CONTINUITY.md y en el documento activo de Supabase.
+
+## Prohibiciones permanentes
+
+- No editar código en Cloudflare.
+- No ejecutar wrangler pages deploy, npm run deploy ni ninguna publicación manual.
+- No usar el entorno local, Replit, mockups, previews, checkouts paralelos o réplicas como fuente de verdad del producto.
+- No declarar una revisión local equivalente a la revisión de GitHub + Cloudflare + Supabase.
+- Si Cloudflare todavía no refleja main, registrar PENDING_SOURCE o BLOCKED por propagación automática; no crear un canal alternativo.
+
+Las instrucciones históricas de publicación manual quedan SUPERSEDED por el Protocolo Maestro v2.5 y por esta guía.

@@ -1,2 +1,2 @@
 - [Supabase contract audits](supabase-contract-audits.md) — audit live columns, constraints, RPC bodies, and grants before changing client contracts or migrations.
-- [External deployment boundary](external-deployment-boundary.md) — Replit deployment status does not verify the separate Cloudflare Pages deployment; check both explicitly.
+- [Canonical source and deployment flow](canonical-source-deployment-flow.md) — GitHub main is the only source; Cloudflare deploys automatically and Supabase owns backend, data and Storage.

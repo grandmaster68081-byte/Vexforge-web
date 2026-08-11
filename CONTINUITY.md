@@ -1,3 +1,29 @@
+## Chat 165 — 2026-08-11 — VE-SYSTEM-CANONICAL-SOURCE-FLOW: REFINED
+
+**Branch:** main | **Scope:** corrección de autoridad documental y cadena GitHub → Cloudflare → Supabase
+
+### Evidencia verificada
+
+- El Protocolo Maestro activo de Supabase fue actualizado a v2.5-canonical-source-flow.
+- Supabase confirma su papel como backend, base de datos y Storage.
+- GitHub grandmaster68081-byte/Vexforge-web, rama main, queda declarado como único código fuente oficial.
+- Cloudflare Pages queda declarado como frontend vinculado a GitHub con despliegue automático desde main; no se debe editar Cloudflare ni ejecutar deploy manual.
+- Se corrigieron las guías y memorias auxiliares en el repositorio oficial mediante un commit directo a main.
+- No se usó el entorno local, Replit, una réplica, mockup o preview como fuente de verdad del producto.
+
+### Estado de la unidad
+
+- VE-SYSTEM-CANONICAL-SOURCE-FLOW: REFINED, nivel documental actual Q3.
+- VE-1-ICON-LANGUAGE-PILOT permanece IMPLEMENTED_UNVERIFIED; esta sesión corrigió la cadena de autoridad y no altera el código funcional del piloto.
+- No se declara OPERATIONAL ningún cambio de frontend hasta comprobar la propagación automática de GitHub main a Cloudflare.
+
+### Siguiente acción verificable
+
+- Continuar el trabajo únicamente en GitHub main y Supabase. Después de cada cambio, revisar la propagación automática en https://vexforge-web.pages.dev y registrar la evidencia.
+- Reabrir VE-1-ICON-LANGUAGE-PILOT sólo cuando el bundle público corresponda al commit de main y exista una sesión autenticada normal para el QA de jugador/owner.
+
+---
+
 ## Chat 164 — 2026-08-10 — VE-1-ICON-LANGUAGE-PILOT: IMPLEMENTED_UNVERIFIED
 
 **Branch:** main | **Scope:** primer lote de iconografía propia para estados compartidos, tutorial, hints contextuales y resultado de batalla
