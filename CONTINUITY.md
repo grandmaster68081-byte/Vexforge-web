@@ -1,3 +1,32 @@
+## Chat 166 — 2026-08-11 — VE-1-ICON-LANGUAGE-PILOT: BLOCKED
+
+**Branch:** main | **Scope:** auditoría visual y funcional del piloto de iconografía propia, sin cambios de código ni de lógica autoritativa
+
+### Evidencia verificada
+
+- GitHub main auditado en ef583007fe621c1fcb0492388abb81d72a0d183c; el código del piloto permanece presente en ForgeIcon, EmptyState, ErrorState, BlockedAuthState, TutorialOverlay, ContextualHint y BattleResultScreen.
+- Cloudflare Pages respondió HTTP 200 en la portada, tutorial, cartas y batalla; el manifiesto público coincide con el manifiesto de main en nombre, start_url y theme_color.
+- La revisión visual externa confirmó que cartas y estados visibles usan iconografía SVG propia; las rutas tutorial y batalla presentan el acceso requerido cuando no existe sesión.
+- La auditoría Unicode sobre 187 archivos de src encontró 650 coincidencias en 69 archivos, incluyendo emojis y símbolos visuales en pack opening, controles de audio, tablero de batalla, torneos y estilos.
+- Supabase Management API respondió correctamente en modo lectura; el proyecto está ACTIVE_HEALTHY y el esquema vivo de documentos usa doc_key, doc_title, content_markdown y updated_at.
+- No se usó privilegio administrativo para simular jugador/owner, no se fabricaron resultados y no se modificaron RPCs, RLS, economía, cartas, lore, Storage ni frontend.
+
+### Estado de la unidad
+
+- VE-1-ICON-LANGUAGE-PILOT: BLOCKED, nivel actual Q2, objetivo Q3. Estado inicial de esta sesión: IMPLEMENTED_UNVERIFIED.
+- El piloto no puede declararse OPERATIONAL porque la regla de cero genéricos sigue incumplida fuera de sus superficies iniciales y no existe una sesión autenticada normal para validar el flujo de jugador/owner.
+
+### Deuda y bloqueo
+
+- Sustituir los símbolos Unicode visuales restantes por recursos propios registrados, empezando por PackOpenSequence, AudioControls, BattleBoardEngine, WeeklyTournamentPanel y los usos equivalentes detectados en src/styles.css. No hacer sustituciones automáticas sin diagnóstico de consumidor y procedencia.
+- La revisión autenticada de tutorial, selección, formación, invocación, ataque, resultado y recompensa queda bloqueada hasta disponer de una sesión normal autorizada del jugador/owner.
+
+### Condición de reapertura y siguiente acción verificable
+
+- Reabrir cuando el bundle público corresponda al commit auditado, exista una sesión autenticada normal y cada superficie del piloto tenga evidencia responsive, focus y reduced motion.
+- Siguiente acción: registrar o conseguir la fuente canónica de cada icono faltante y preparar un lote pequeño, reversible y verificable; no implementar recursos genéricos.
+
+---
 ## Chat 165 — 2026-08-11 — VE-SYSTEM-CANONICAL-SOURCE-FLOW: REFINED
 
 **Branch:** main | **Scope:** corrección de autoridad documental y cadena GitHub → Cloudflare → Supabase
