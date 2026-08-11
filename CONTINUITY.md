@@ -1,3 +1,31 @@
+## Chat 167 — 2026-08-11 — VE-1-ICON-LANGUAGE-PILOT: PENDING_SOURCE
+
+**Branch:** main | **Scope:** auditoría de procedencia y semántica del paquete oficial de iconos, sin cambios de frontend ni de lógica autoritativa
+
+### Evidencia verificada
+
+- Supabase confirma el bucket público vexforge-assets y la tabla vexforge_official_asset_manifest como fuentes oficiales de assets.
+- El manifiesto contiene un paquete icons oficial con icons.zip y siete imágenes JPEG registradas como icon_01 a icon_07; también existen cuatro iconos de facción con roles explícitos: guerrero, mago, paladín y pícaro.
+- Los siete iconos genéricos no tienen en el manifiesto una semántica que los vincule a mute, audio, daño, rareza, pack, premio, navegación o estados del juego; sus nombres y roles no autorizan una correspondencia inferida.
+- ForgeIcon ya contiene un lenguaje SVG propio y nombres funcionales, pero no existe un contrato vivo que relacione esos nombres con los siete JPEG del paquete icons.
+- La continuidad previa permanece vigente: el piloto tiene Unicode residual y el QA autenticado normal de jugador/owner sigue bloqueado.
+- No se descargaron, sustituyeron ni reinterpretaron assets; no se modificaron Storage, manifiestos, RPCs, RLS, economía ni frontend.
+
+### Estado de la unidad
+
+- VE-1-ICON-LANGUAGE-PILOT: PENDING_SOURCE con bloqueo adicional de QA autenticada; nivel actual Q2, objetivo Q3.
+- La existencia de assets oficiales no equivale a autorización semántica para usarlos en una superficie concreta.
+
+### Deuda y condición de reapertura
+
+- Obtener desde la fuente canónica un mapping explícito de icon_01–icon_07 a consumidores y roles, o registrar un nuevo asset oficial con nombre y semantic_role inequívocos.
+- Reabrir la implementación sólo cuando exista ese mapping, se pueda conservar procedencia/hash/consumidores y haya sesión normal autorizada para el QA que requiere jugador/owner.
+
+### Siguiente acción verificable
+
+- Auditar el documento oficial o registro de Storage que pueda contener la leyenda visual de icon_01–icon_07; si no existe, dejar la unidad en PENDING_SOURCE y no reemplazar símbolos por conjetura.
+
+---
 ## Chat 166 — 2026-08-11 — VE-1-ICON-LANGUAGE-PILOT: BLOCKED
 
 **Branch:** main | **Scope:** auditoría visual y funcional del piloto de iconografía propia, sin cambios de código ni de lógica autoritativa
