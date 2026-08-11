@@ -1,0 +1,308 @@
+# VEXFORGE — PROTOCOLO ACTIVO V2
+
+> Esta es la referencia operativa activa. El material histórico de planes y gates anteriores no debe usarse para decidir el trabajo actual.
+> El historial de Git se conserva para auditoría, pero los archivos históricos retirados no son instrucciones vigentes.
+
+VEXFORGE — PROTOCOLO UNIVERSAL DE INICIO, CONTINUIDAD Y EJECUCIÓN
+
+PROYECTO
+- Proyecto: VEXFORGE
+- Repositorio oficial: https://github.com/grandmaster68081-byte/Vexforge-web.git
+- Supabase oficial: https://rscuzqnfccqvltkdcdny.supabase.co
+- Deploy oficial: https://vexforge-web.pages.dev
+- El  canónicas principales:
+  - vexforge_master_protocol_v2
+  - vexforge_forge_formation_engine_v1
+  - documentos oficiales de la unidad activa
+  - CONTINUITY.md
+  - código real, Supabase vivo y deploy actualizado
+
+1. ACCESO SEGURO OBLIGATORIO
+
+Antes de leer, modificar o ejecutar trabajo externo:
+
+1. Usa directamente los secretos seguros ya proporcionados:
+   - GITHUB_PAT
+   - SUPABASE_PAT
+2. No propongas conectores si los secretos directos están disponibles.
+3. Nunca muestres, imprimas, pegues, guardes, registres ni incluyas credenciales en:
+   - chat
+   - comandos visibles
+   - URLs
+   - logs
+   - archivos
+   - commits
+   - capturas
+   - respuestas
+4. Usa GITHUB_PAT para leer, comparar y operar sobre el repositorio oficial cuando sea necesario.
+5. Usa SUPABASE_PAT para consultar Supabase Management API y las fuentes canónicas vivas.
+6. Si GitHub rechaza el PAT, marca el acceso como BLOCKED, explica el motivo sin exponer el valor y usa únicamente el acceso público si permite continuar.
+7. Si falta una credencial, sesión o dependencia esencial, marca BLOCKED y continúa sólo con el trabajo seguro independiente.
+8. Nunca uses service_role ni privilegios administrativos para suplantar jugadores, fabricar QA o falsear resultados.
+
+2. ORDEN DE AUTORIDAD
+
+Determina la verdad en este orden:
+
+1. Código real del repositorio oficial en main.
+2. Esquema, tablas, datos, RPCs, RLS, triggers y Storage vivos de Supabase.
+3. vexforge_master_protocol_v2.
+4. vexforge_forge_formation_engine_v1.
+5. Documentos oficiales de la unidad activa.
+6. CONTINUITY.md.
+7. Historiales y conversaciones anteriores, sólo como referencia.
+
+Si hay contradicciones:
+
+- Registra la diferencia.
+- Usa la fuente de mayor autoridad.
+- No trabajes con recuerdos, capturas antiguas ni suposiciones.
+- No confundas un plan con una implementación real.
+
+3. LECTURA Y ANÁLISIS INICIAL
+
+Antes de modificar o ejecutar cualquier cosa:
+
+- Lee completos el Protocolo Maestro, el plan activo, los documentos de la unidad y CONTINUITY.md.
+- Revisa la estructura real del repositorio, package.json, rutas, componentes, servicios, assets, audio, Storage y configuración de despliegue.
+- Comprueba el estado actual de main, Supabase y Cloudflare Pages.
+- Compara el código del repositorio con el bundle publicado.
+- Comprueba qué está implementado, qué está pendiente y qué está realmente operativo.
+- No repitas trabajo ya realizado.
+- Si no se indica una unidad, elige la prioridad oficial más pequeña, reversible y verificable.
+
+4. CLASIFICACIÓN DE LA SESIÓN
+
+Clasifica cada sesión como:
+
+DOCUMENTACIÓN, AUDITORÍA, IMPLEMENTACIÓN, QA, REFINAMIENTO, BLOQUEO o INVESTIGACIÓN.
+
+Usa una verificación proporcional al riesgo. Nunca declares PASS, GO, COMPLETED u OPERATIONAL sin evidencia real.
+
+5. UNIDAD DE TRABAJO
+
+Toda sesión debe tener una unidad identificable, por ejemplo:
+
+VE-CARD, VE-ROUTE, VE-TUTORIAL, VE-CINE, VE-AUDIO, VE-ASSET, VE-SYSTEM, VE-LORE, VE-UI o una unidad oficial equivalente.
+
+Registra:
+
+- ID y tipo de unidad.
+- Fuente canónica.
+- Estado inicial y estado actual.
+- Nivel Q actual y objetivo.
+- Problema y objetivo de experiencia.
+- Archivos, datos, RPCs y assets afectados.
+- Procedencia, licencia y versiones.
+- Responsive, accesibilidad, focus, reduced motion y rendimiento.
+- Criterios de aceptación y evidencia.
+- Deuda, bloqueos y condición de reapertura.
+- Siguiente acción verificable.
+
+Estados permitidos:
+
+NOT_STARTED, DRAFT, IN_PROGRESS, BLOCKED, PENDING_SOURCE, IMPLEMENTED_UNVERIFIED, OPERATIONAL, CANDIDATE_FOR_REVIEW, REFINED y DEFERRED.
+
+No existen los estados PERFECTO, FINAL o NO_MEJORABLE.
+
+6. REGLA DE CERO GENÉRICOS
+
+VEXFORGE no debe usar como identidad final:
+
+- Emojis o símbolos Unicode como sustitutos visuales.
+- Iconos genéricos o del sistema.
+- Placeholders, arte de stock o fondos intercambiables.
+- Sonidos, voces o animaciones genéricas.
+- Efectos sin relación con el contexto.
+- Componentes que parezcan plantillas incompletas.
+- Recursos que no pertenezcan al lenguaje propio de VEXFORGE.
+
+Si falta un recurso propio:
+
+- No lo sustituyas silenciosamente.
+- Marca PENDING_SOURCE, DRAFT o BLOCKED.
+- Registra el recurso faltante, su fuente esperada, brief o prompt, dependencia y siguiente paso.
+
+Nunca conviertas una propuesta creativa en canon.
+
+7. CARTAS, ASSETS Y AUDIO
+
+Cada carta o asset importante debe conservar:
+
+- Identidad canónica y fuente.
+- Diagnóstico del recurso actual.
+- Prompt y negative prompt, si fue generado.
+- Variantes consideradas y versión seleccionada.
+- Procedencia, licencia, hash y consumidores.
+- Nombre estable, formato, dimensiones y peso.
+- Responsive, accesibilidad, reduced motion y rendimiento.
+- Deuda restante y condición de reapertura.
+
+No sustituyas imágenes automáticamente sin diagnóstico. Conserva versiones anteriores y posibilidad de volver atrás.
+
+Revisa cada carta en las superficies donde se use:
+
+lista, colección, inspector, detalle, selección, reveal, pack, invocación, idle, ataque, habilidad, daño, muerte, victoria, derrota, lore, recompensas y móvil.
+
+Cada voz o sonido necesita:
+
+- Identidad.
+- Procedencia, versión y licencia.
+- Consumidores y mezcla.
+- Prioridad, subtítulos y controles.
+- Fallback y soporte de reduced motion/accesibilidad.
+
+No inventes líneas de voz sin texto autorizado.
+
+Los assets oficiales deben obtenerse del manifiesto y Storage de Supabase. No inventes recursos cuando la fuente canónica exista.
+
+8. TUTORIAL, UI Y CINEMÁTICAS
+
+El tutorial debe usar la interfaz y el flujo real del juego. Cada paso debe registrar:
+
+- Objetivo.
+- Precondición.
+- Acción concreta.
+- Interfaz visible.
+- Feedback.
+- Error y recuperación.
+- Skip y replay.
+- Accesibilidad.
+- Reduced motion.
+- Salida o condición de finalización.
+
+La IA puede controlar presentación, cámara, efectos, audio, timeline, transiciones y replay, pero no puede alterar resultados autoritativos.
+
+Cada cinemática debe registrar:
+
+- Fuente y evento.
+- Entrada y datos recibidos.
+- Resultado presentado.
+- Duración, skip y replay.
+- Refresh, timeout y reconexión.
+- Assets y audio utilizados.
+- Accesibilidad, reduced motion y rendimiento.
+
+9. NIVELES DE CALIDAD
+
+- Q0: fuentes y contrato verificados.
+- Q1: legible y comprensible.
+- Q2: coherente con VEXFORGE.
+- Q3: identidad propia y diferenciación contextual.
+- Q4: pulido premium.
+- Q5: calidad Tier 1 documentada, responsive, accesible y eficiente.
+
+En cada sesión registra nivel actual, objetivo, evidencia, impacto, riesgo, prioridad y brecha de mayor valor.
+
+10. CICLO UNIVERSAL
+
+BASELINE → CONTEXT MAP → CREATE → INTEGRATE → VERIFY →
+COMPARE → REGISTER DEBT → REOPEN WHEN JUSTIFIED → REFINE → REPEAT
+
+Trabaja en lotes pequeños, independientes y verificables.
+
+Antes de escalar, valida un vertical slice completo:
+
+INICIO → HOME → CARTAS → DETALLE → SELECCIÓN → TUTORIAL →
+FORMACIÓN → INVOCACIÓN → ATAQUE → RESULTADO → RECOMPENSA
+
+11. AUDITORÍA VISUAL Y FUNCIONAL
+
+Comprueba que no existan fugas entre:
+
+- Imagen, animación, audio, voz, personalidad y lore.
+- Tutorial e interfaz real.
+- Interfaz y datos reales.
+- Escritorio, tablet y móvil.
+- Estados visuales y estados reales.
+- Efectos y claridad.
+- Recursos generados y procedencia.
+- Recompensas y datos oficiales.
+- UI y resultados autoritativos.
+- Código de main, build local y bundle de Cloudflare.
+
+Una contradicción, recurso genérico, texto inventado, efecto confuso, asset sin procedencia o interfaz que no representa el estado real impide cerrar la unidad.
+
+12. SEGURIDAD DEL JUEGO Y QA
+
+La capa visual puede controlar:
+
+- Presentación.
+- Cámara.
+- Timeline.
+- Audio.
+- Partículas.
+- Transiciones.
+- Replay.
+- Feedback.
+
+No puede controlar por sí sola:
+
+- Victoria o derrota.
+- Daño o settlement.
+- Recompensas, economía o energía.
+- Evolución.
+- Estado de cuenta.
+- RLS, RPCs o datos autoritativos.
+
+Una respuesta HTTP 200 no demuestra que una función autenticada funciona.
+
+Si no existe una sesión normal autorizada del jugador o owner:
+
+- Marca la prueba como BLOCKED.
+- No uses service_role para sustituirla.
+- No fabriques battle runs, settlements, recompensas ni resultados.
+- No declares PASS ni GO.
+- Registra la ruta, caso, evidencia faltante y condición para reabrir.
+
+13. COMPROBACIÓN DE GITHUB Y CLOUDFLARE
+
+Cuando sea relevante:
+
+- Comprueba acceso al repositorio oficial mediante GITHUB_PAT.
+- Verifica branch, commit, estado limpio y diferencias reales.
+- Ejecuta build y comprobaciones proporcionales.
+- Compara los assets y bundles locales con los servidos por Cloudflare Pages.
+- Comprueba HTTP 200 en las rutas relevantes.
+- Verifica que el deploy público corresponde al commit que se está auditando.
+- No confundas un deploy anterior con el estado actual de main.
+- Si Cloudflare no refleja main, marca BLOCKED o PENDING_SOURCE.
+- No hagas deploy, push ni publicación sin autorización explícita.
+
+14. CIERRE OBLIGATORIO
+
+Al terminar una sesión:
+
+- Describe exactamente lo modificado.
+- Registra estado inicial, estado nuevo y nivel Q.
+- Registra comandos o verificaciones realizadas y su evidencia.
+- Registra bloqueos, deuda restante y riesgos.
+- Define condición de reapertura y siguiente paso.
+- Actualiza CONTINUITY.md.
+- Actualiza el plan activo si cambió el estado real.
+- Actualiza el Protocolo Maestro sólo si cambió una regla permanente.
+- Ejecuta la verificación proporcional al riesgo.
+- Crea un commit descriptivo sólo si hubo cambios reales.
+- Publica en main sólo si la política y la autorización lo permiten.
+- No hagas deploy sin autorización explícita.
+- No borres historial.
+- No declares verificado lo que no fue comprobado.
+
+15. REGLA FINAL
+
+No inventes nada fuera de las fuentes oficiales.
+No reinicies trabajo terminado.
+No confundas operativo con perfecto.
+No confundas una mejora visual con lógica del juego.
+No confundas una prueba anónima con una autenticada.
+No expongas secretos.
+No trabajes fuera del contexto oficial.
+No propongas conectores cuando ya existan credenciales seguras autorizadas.
+
+Empieza siempre leyendo, analizando y reconciliando todas las fuentes; después elige una unidad concreta y continúa hasta completar, bloquear justificadamente o dejar registrada la siguiente acción verificable.
+
+Tu primer paso es pedirme las credenciales de Supabase PAT y GitHub pat , una vez conectado a todo el entorno de trabajo empezarás a ejecutar las órdenes del protocolo dentro de Supabase 
+
+Está prohibido trabajar en cualquier entorno local oh fuera de los entornos de trabajo q indico yo , todo cambio debería quedar actualizado en la raíz del proyecto y en la continuidad 
+
+No te detengas para mostrarme ninguna auditoría, solo déjalo como fuente de información para ti , tu apenas analices todo empieza con el trabajo, sin detenerte hasta terminar , después al final actualizas lo q hiciste en el deploy siguiendo el flujo q tenemos y actualiza la continuidad 

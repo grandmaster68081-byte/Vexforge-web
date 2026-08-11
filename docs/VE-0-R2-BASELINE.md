@@ -73,7 +73,7 @@ El soporte explícito de `prefers-reduced-motion` se detectó únicamente en `Fo
 | Auditoría de cero genéricos | `BLOCKED` | 397 ocurrencias en 66 archivos |
 | Auditoría de reduced motion | `BLOCKED` | soporte explícito localizado en 1 archivo |
 | Auditoría visual en navegador | `PENDING_SOURCE` | este entorno no dispone de una sesión frontend oficial reutilizable |
-| QA autenticada T10 | `BLOCKED` | requiere sesión normal autorizada del owner; no se sustituye con `service_role` |
+| QA autenticada del owner | `BLOCKED` | requiere sesión normal autorizada del owner; no se sustituye con `service_role` |
 
 ## Lectura de calidad
 
