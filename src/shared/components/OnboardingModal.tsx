@@ -1,16 +1,25 @@
 import { useState } from "react";
 import { useOnboarding } from "../../domains/onboarding/useOnboarding";
+import { ForgeIcon, type ForgeIconName } from "./ForgeIcon";
 
 const C = { bg1:"#12121f", b2:"#2a2a3a", gold:"#E8B84B", green:"#3DC96B", blue:"#4A9EFF", muted:"#7a7a9a", dim:"#4a4a6a", main:"#e8e8f0" };
 
-const STEPS = [
-  { icon:"⚒️", title:"Bienvenido a VEXFORGE",
+type OnboardingStep = {
+  icon: ForgeIconName;
+  title: string;
+  body: string;
+  accent: string;
+  chips: Array<[ForgeIconName, string, string]>;
+};
+
+const STEPS: OnboardingStep[] = [
+  { icon:"arena", title:"Bienvenido a VEXFORGE",
     body:"El universo de la forja te espera. Colecciona cartas únicas, domina misiones, desafía jefes mundiales y asciende en el clasificatorio.",
     accent:C.gold, chips:[] },
-  { icon:"🃏", title:"Tu arsenal está listo",
+  { icon:"cards", title:"Tu arsenal está listo",
     body:"Recibirás 16 cartas iniciales — Guerreros, Magos, Paladines y Pícaros — y energía renovable para ejecutar misiones cada día.",
-    accent:C.blue, chips:[["⚡","Energía","se regenera"],["🃏","16 cartas","iniciales"],["🌍","Misiones","ilimitadas"]] },
-  { icon:"🎯", title:"Empieza a forjar tu leyenda",
+    accent:C.blue, chips:[["energy","Energía","se regenera"],["cards","16 cartas","iniciales"],["missions","Misiones","ilimitadas"]] },
+  { icon:"target", title:"Empieza a forjar tu leyenda",
     body:"El tutorial te guiará paso a paso. Explora misiones, gestiona tu energía y usa el mercado para intercambiar VEX con otros forjadores.",
     accent:C.green, chips:[] },
 ];
@@ -49,10 +58,10 @@ export function OnboardingModal() {
           </div>
 
           {/* Icon */}
-          <div style={{width:72,height:72,borderRadius:20,margin:"0 auto 20px",fontSize:34,
+          <div style={{width:72,height:72,borderRadius:20,margin:"0 auto 20px",
             background:`${cur.accent}12`,border:`1px solid ${cur.accent}30`,
             display:"flex",alignItems:"center",justifyContent:"center"}}>
-            {cur.icon}
+            <ForgeIcon name={cur.icon} size={34} />
           </div>
 
           {step===0 && (
@@ -75,7 +84,7 @@ export function OnboardingModal() {
               {cur.chips.map(([icon,label,sub])=>(
                 <div key={label} style={{padding:"8px 14px",borderRadius:10,textAlign:"center",
                   background:`${C.blue}10`,border:`1px solid ${C.blue}22`}}>
-                  <div style={{fontSize:16}}>{icon}</div>
+                  <div><ForgeIcon name={icon} size={16} /></div>
                   <div style={{fontSize:11,fontWeight:700,color:C.blue,marginTop:2}}>{label}</div>
                   <div style={{fontSize:10,color:C.dim}}>{sub}</div>
                 </div>
@@ -88,14 +97,14 @@ export function OnboardingModal() {
               <button onClick={()=>setStep(s=>s-1)} style={{flex:1,padding:"11px 0",borderRadius:10,
                 border:`1px solid ${C.b2}`,background:"transparent",color:C.muted,
                 fontSize:13,cursor:"pointer",fontFamily:"Rajdhani,sans-serif",fontWeight:600}}>
-                ← Atrás
+                <ForgeIcon name="chevron-left" size={14} /> Atrás
               </button>
             )}
             <button onClick={isLast?dismiss:()=>setStep(s=>s+1)} style={{flex:2,padding:"12px 0",
               borderRadius:10,background:cur.accent,color:"#0a0a12",
               border:"none",fontSize:13,fontWeight:800,cursor:"pointer",
               fontFamily:"Cinzel,serif",letterSpacing:"0.05em"}}>
-              {isLast ? "⚒️ Comenzar a forjar" : "Siguiente →"}
+              {isLast ? <><ForgeIcon name="arena" size={15} /> Comenzar a forjar</> : <>Siguiente <ForgeIcon name="chevron-right" size={14} /></>}
             </button>
           </div>
 

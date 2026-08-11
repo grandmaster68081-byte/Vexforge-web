@@ -53,7 +53,11 @@ export type ForgeIconName =
   | "heart"
   | "target"
   | "play"
-  | "pause";
+  | "pause"
+  | "notification"
+  | "close"
+  | "chevron-left"
+  | "chevron-right";
 
 type ForgeIconProps = {
   name: ForgeIconName;
@@ -122,6 +126,14 @@ export function ForgeIcon({
       return <svg {...props}><path d="m8 5 10 7-10 7z" /></svg>;
     case "pause":
       return <svg {...props}><path d="M8 5v14M16 5v14" /></svg>;
+    case "notification":
+      return <svg {...props}><path d="M6.5 10.5a5.5 5.5 0 0 1 11 0c0 4 1.5 5.2 2.3 6.2H4.2c.8-1 2.3-2.2 2.3-6.2Z" /><path d="M10 20h4M9.5 17a2.5 2.5 0 0 0 5 0" /></svg>;
+    case "close":
+      return <svg {...props}><path d="m6 6 12 12M18 6 6 18" /></svg>;
+    case "chevron-left":
+      return <svg {...props}><path d="m15 5-7 7 7 7" /></svg>;
+    case "chevron-right":
+      return <svg {...props}><path d="m9 5 7 7-7 7" /></svg>;
     case "home":
       return <svg {...props}><path d="m3.5 10.7 8.5-7 8.5 7" /><path d="M5.5 9.3v10.4h13V9.3M9.2 19.7v-5.2h5.6v5.2" /><path d="M12 6.2v1.9" /></svg>;
     case "cards":

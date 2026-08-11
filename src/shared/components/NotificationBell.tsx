@@ -1,6 +1,7 @@
 import { useRef, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useNotifications } from "../../domains/notifications/useNotifications";
+import { ForgeIcon } from "./ForgeIcon";
 
 function relativeTime(iso: string): string {
   const diff = Date.now() - new Date(iso).getTime();
@@ -66,7 +67,7 @@ export function NotificationBell() {
           transition: "background 0.15s, border-color 0.15s",
         }}
       >
-        🔔
+        <ForgeIcon name="notification" size={17} />
         {hasBadge && (
           <span style={{
             position: "absolute",
@@ -191,7 +192,7 @@ export function NotificationBell() {
 
                   {/* Icon */}
                   <span style={{ fontSize: 18, flexShrink: 0, lineHeight: 1.4 }}>
-                    {notif.icon}
+                    <ForgeIcon name="spark" size={18} />
                   </span>
 
                   {/* Content */}

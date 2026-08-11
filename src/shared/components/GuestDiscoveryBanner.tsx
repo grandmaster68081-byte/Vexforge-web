@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { ForgeIcon } from "./ForgeIcon";
 
 /**
  * GuestDiscoveryBanner — P6
@@ -48,7 +49,9 @@ export function GuestDiscoveryBanner() {
       <span style={{
         fontSize: 22, flexShrink: 0,
         animation: "vxf-guest-glow 2.5s ease-in-out infinite",
-      }}>⚔</span>
+      }}>
+        <ForgeIcon name="arena" size={18} />
+      </span>
 
       {/* Text */}
       <div style={{ flex: 1, minWidth: 180 }}>
@@ -113,7 +116,9 @@ export function GuestDiscoveryBanner() {
           lineHeight: 1,
           padding: 4,
         }}
-      >×</button>
+      >
+        <ForgeIcon name="close" size={14} />
+      </button>
     </div>
   );
 }

@@ -31,6 +31,7 @@ const EconomyRoute      = lazy(() => import("./routes/EconomyRoute").then(m => (
 const SettingsRoute     = lazy(() => import("./routes/SettingsRoute").then(m => ({ default: m.SettingsRoute })));
 const FusionRoute       = lazy(() => import("./routes/FusionRoute").then(m => ({ default: m.FusionRoute })));
 const PvpRoute          = lazy(() => import("./routes/PvpRoute").then(m => ({ default: m.PvpRoute })));
+const TutorialRoute     = lazy(() => import("./routes/TutorialRoute").then(m => ({ default: m.TutorialRoute })));
 const PacksRoute        = lazy(() => import("./routes/PacksRoute").then(m => ({ default: m.PacksRoute })));
 const ClansRoute        = lazy(() => import("./routes/ClansRoute").then(m => ({ default: m.ClansRoute })));
 const InventoryRoute    = lazy(() => import("./routes/InventoryRoute").then(m => ({ default: m.InventoryRoute })));
@@ -518,6 +519,7 @@ export default function App() {
                 <Route path="/missions"       element={<MissionsRoute />} />
                 <Route path="/market"         element={<MarketRoute />} />
                 <Route path="/pvp"            element={<PvpRoute />} />
+                <Route path="/tutorial"       element={<TutorialRoute />} />
                 <Route path="/packs"          element={<PacksRoute />} />
                 <Route path="/clans"          element={<ClansRoute />} />
                 <Route path="/friends"        element={<FriendsRoute />} />
