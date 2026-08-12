@@ -1,12 +1,24 @@
 # VEXFORGE — CONTINUITY ACTIVA
 
-## 2026-08-12 — VE-1-BATTLE-EFFECTS-ICON-BATCH — IN_PROGRESS
+## 2026-08-12 — VE-1-BATTLE-EFFECTS-ICON-BATCH — CANDIDATE_FOR_REVIEW
 
 - **Fuente canónica:** código oficial `main` y `ForgeIcon`; no se asignaron los assets `icon_01`–`icon_07` porque el manifiesto vivo no autoriza esa semántica.
 - **Objetivo:** retirar pictogramas Unicode de la capa visual de efectos flotantes sin alterar eventos, números, textos, duración ni reglas autoritativas.
 - **Lote:** `src/components/battle/BattleEffects.tsx` usa `ForgeIcon` para shield, poison, lifesteal, double strike, rush y critical.
 - **Estado inicial:** `CANDIDATE_FOR_REVIEW` de VE-1 con deuda Unicode en combate.
-- **Estado provisional:** `IMPLEMENTED_UNVERIFIED`, Q2; pendiente de sincronización de fuente, check de build y propagación pública.
+- **Estado actual:** `CANDIDATE_FOR_REVIEW`, Q2; objetivo Q3.
+
+### Evidencia
+
+- Supabase confirmó `project_version = ve1-2026-08-12-effects` para `BattleEffects.tsx` y `CONTINUITY.md`; el marcador `ForgeIcon` está presente y el pictograma de poison ya no aparece en la fuente de `BattleEffects`.
+- El check de Cloudflare Pages del commit de implementación terminó en `success`.
+- La portada pública, `/manifest.json`, `/tutorial`, `/cards` y `/battle` respondieron HTTP 200; el bundle principal se sirvió como JavaScript real con 242 KB.
+- No se alteraron eventos, cálculos, textos, duración de animaciones, settlement, economía ni reglas autoritativas.
+
+### Deuda y reapertura
+
+- Persisten pictogramas Unicode en `BattleBoardEngine`, `BattleCard`, `BattleIntroScreen`, `CardAttackCinematic`, `ForgeFormationBoard`, `InteractiveBattleBoard`, `AudioControls` y `WinStreakDisplay`.
+- Reabrir la unidad por lote separado cuando exista tiempo para revisar cada superficie con responsive, focus y `prefers-reduced-motion`.
 
 ---
 
