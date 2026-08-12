@@ -1,12 +1,14 @@
 # VEXFORGE — CONTINUITY ACTIVA
 
-## 2026-08-12 — VE-SYSTEM-BUILD-SYNC — IN_PROGRESS
+## 2026-08-12 — VE-SYSTEM-BUILD-SYNC — OPERATIONAL
 
-- **Fuente canónica:** código oficial `main`, commit `91bb84b879aea2cdbab8826d5fe63d0de8a761e4`.
+- **Fuente canónica:** código oficial `main`, commit `b47f8c4962f89bf66459beadad53f9b18ae941e2`.
 - **Objetivo:** reconstruir y versionar el bundle de producción para que el build generado por `main` quede reflejado antes del cierre.
 - **Verificación:** `npm ci` y `npm run build` finalizaron correctamente; el bundle local `dist/assets/index-CpbXz6oq.js` coincide byte a byte con el bundle público servido por Cloudflare.
-- **Estado provisional:** `IMPLEMENTED_UNVERIFIED`, Q2; pendiente de commit/push y comprobación de propagación automática de Cloudflare.
+- **Estado actual:** `OPERATIONAL`, Q2; commit publicado en `main`, check automático de Cloudflare `completed/success` y bundle público verificado.
+- **Evidencia:** SHA-256 público y local `fc5226ee529e22a0d2d299b28d8ff9b11ac53d60c8baedfd94c4cc4b47d34a7e`.
 - **Alcance:** sólo artefactos de build y continuidad; no se modificaron lógica de juego, economía, contratos, RPCs, RLS, datos canónicos ni Storage.
+- **Siguiente acción:** continuar con la revisión visual pendiente de VE-1 en responsive, focus y `prefers-reduced-motion`; no declarar Q3 hasta contar con esa evidencia.
 
 ---
 
