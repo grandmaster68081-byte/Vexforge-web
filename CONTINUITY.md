@@ -1,5 +1,15 @@
 # VEXFORGE — CONTINUITY ACTIVA
 
+## 2026-08-12 — VE-1-BATTLE-CARD-ICON-BATCH — IN_PROGRESS
+
+- **Fuente canónica:** código oficial `main` y `ForgeIcon`; no se usaron los assets genéricos sin mapping semántico.
+- **Objetivo:** retirar los pictogramas Unicode de la tarjeta de combate sin cambiar valores, animaciones, estados ni reglas.
+- **Lote:** `src/components/battle/BattleCard.tsx` usa `ForgeIcon` para placeholder de facción, poison, HP, ATK, DEF, SPD, derrota y badges de keywords mediante un mapping local explícito.
+- **Estado provisional:** `IMPLEMENTED_UNVERIFIED`, Q2; pendiente de sincronización y propagación pública.
+
+---
+
+
 ## 2026-08-12 — VE-1-BATTLE-EFFECTS-ICON-BATCH — CANDIDATE_FOR_REVIEW
 
 - **Fuente canónica:** código oficial `main` y `ForgeIcon`; no se asignaron los assets `icon_01`–`icon_07` porque el manifiesto vivo no autoriza esa semántica.

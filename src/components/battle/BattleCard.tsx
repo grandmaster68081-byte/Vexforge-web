@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react';
 import type { BattleUnit } from '../../lib/battleTypes';
-import { RARITY_COLOR, RARITY_GLOW, FACTION_BG, KEYWORD_ICON } from '../../lib/battleTypes';
+import { RARITY_COLOR, RARITY_GLOW, FACTION_BG } from '../../lib/battleTypes';
+import { ForgeIcon, type ForgeIconName } from '../../shared/components/ForgeIcon';
 
 export interface BattleCardAnimState {
   isAttacking:   boolean;
@@ -45,6 +46,13 @@ function HpBar({ hp, max, color }: { hp: number; max: number; color: string }) {
 }
 
 // ─── Keyword badge with glow ──────────────────────────────────────────────────
+const KEYWORD_FORGE_ICON: Record<string, ForgeIconName> = {
+  Guard: 'shield', Surge: 'energy', Flux: 'spark', Consecrate: 'crown',
+  Drain: 'heart', Veil: 'lock', Forge: 'attack', Resonance: 'spark',
+  Lifesteal: 'heart', Poison: 'skull', Shield: 'shield', Rush: 'energy',
+  DoubleStrike: 'attack',
+};
+
 function KeywordBadge({ kw, active }: { kw: string; active?: boolean }) {
   return (
     <span
@@ -56,7 +64,7 @@ function KeywordBadge({ kw, active }: { kw: string; active?: boolean }) {
         filter: active ? 'drop-shadow(0 0 3px rgba(255,220,50,0.8))' : undefined,
       }}
     >
-      {KEYWORD_ICON[kw] ?? '•'}
+      <ForgeIcon name={KEYWORD_FORGE_ICON[kw] ?? 'spark'} size={10} strokeWidth={1.8} />
     </span>
   );
 }
@@ -136,8 +144,8 @@ export function BattleCard({ unit, anim, side, isActive, cardRef }: BattleCardPr
           />
         ) : (
           <div style={{ width: '100%', height: '100%', display: 'flex',
-            alignItems: 'center', justifyContent: 'center', fontSize: 28 }}>
-            ⚔️
+            alignItems: 'center', justifyContent: 'center' }}>
+            <ForgeIcon name="attack" size={28} strokeWidth={1.6} />
           </div>
         )}
 
@@ -151,7 +159,7 @@ export function BattleCard({ unit, anim, side, isActive, cardRef }: BattleCardPr
 
         {/* Poison indicator */}
         {unit.poisoned && (
-          <div style={{ position: 'absolute', top: 4, right: 4, fontSize: 10 }}>☠️</div>
+          <div style={{ position: 'absolute', top: 4, right: 4 }}><ForgeIcon name="skull" size={12} strokeWidth={1.8} /></div>
         )}
 
         {/* Active glow overlay on image */}
@@ -178,14 +186,14 @@ export function BattleCard({ unit, anim, side, isActive, cardRef }: BattleCardPr
         {/* HP bar */}
         <HpBar hp={anim.currentHp} max={unit.max_hp} color={color} />
         <div style={{ fontSize: 7.5, color: '#9a9ab8', marginTop: 2, textAlign: 'center' }}>
-          ❤ {anim.currentHp}/{unit.max_hp}
+          <ForgeIcon name="heart" size={9} strokeWidth={1.8} style={{ verticalAlign: '-0.1em' }} /> {anim.currentHp}/{unit.max_hp}
         </div>
 
         {/* Stats row */}
         <div style={{ display: 'flex', gap: 3, marginTop: 4, justifyContent: 'center' }}>
-          <span style={{ fontSize: 8, color: '#ff7b7b', fontWeight: 700 }}>⚔{unit.atk}</span>
-          <span style={{ fontSize: 8, color: '#5aafff', fontWeight: 700 }}>🛡{unit.def}</span>
-          <span style={{ fontSize: 8, color: '#e8b84b', fontWeight: 700 }}>⚡{unit.spd}</span>
+          <span style={{ fontSize: 8, color: '#ff7b7b', fontWeight: 700, display: 'inline-flex', alignItems: 'center', gap: 1 }}><ForgeIcon name="attack" size={9} strokeWidth={1.8} />{unit.atk}</span>
+          <span style={{ fontSize: 8, color: '#5aafff', fontWeight: 700, display: 'inline-flex', alignItems: 'center', gap: 1 }}><ForgeIcon name="shield" size={9} strokeWidth={1.8} />{unit.def}</span>
+          <span style={{ fontSize: 8, color: '#e8b84b', fontWeight: 700, display: 'inline-flex', alignItems: 'center', gap: 1 }}><ForgeIcon name="energy" size={9} strokeWidth={1.8} />{unit.spd}</span>
         </div>
 
         {/* Keywords */}
@@ -233,7 +241,7 @@ export function BattleCard({ unit, anim, side, isActive, cardRef }: BattleCardPr
           alignItems: 'center', justifyContent: 'center',
           fontSize: 32, pointerEvents: 'none', zIndex: 8,
           opacity: 0.55,
-        }}>💀</div>
+        }}><ForgeIcon name="skull" size={32} strokeWidth={1.6} /></div>
       )}
     </div>
   );
