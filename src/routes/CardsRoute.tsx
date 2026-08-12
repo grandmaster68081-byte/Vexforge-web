@@ -5,6 +5,7 @@ import { useCards, type Card } from "../domains/cards/useCards";
 import { getCardByCode } from "../domains/cards/repository";
 import { AudioEngine } from "../lib/audioEngine";
 import { GuestDiscoveryBanner } from "../shared/components/GuestDiscoveryBanner";
+import { ForgeIcon, type ForgeIconName } from "../shared/components/ForgeIcon";
 
 // ─── CONFIG ─────────────────────────────────────────────────────────────────
 const RARITY_CFG: Record<string, { color: string; glow: string; label: string; order: number }> = {
@@ -15,14 +16,14 @@ const RARITY_CFG: Record<string, { color: string; glow: string; label: string; o
   Legendary: { color: "#f59e0b", glow: "0 0 28px rgba(245,158,11,.7)",  label: "Legendaria",  order: 5 },
   Mythic:    { color: "#ef4444", glow: "0 0 36px rgba(239,68,68,.8)",   label: "Mítica",      order: 6 },
 };
-const FACTION_CFG: Record<string, { color: string; bg: string; bgImg: string; icon: string }> = {
-  Guerrero:    { color: "#f87171", bg: "linear-gradient(160deg,#7f1d1d,#1c0a0a)", bgImg: "https://rscuzqnfccqvltkdcdny.supabase.co/storage/v1/object/public/vexforge-assets/factions/bg_guerrero.jpg", icon: "⚔️" },
-  Mago:        { color: "#818cf8", bg: "linear-gradient(160deg,#1e1b4b,#0a0a1e)", bgImg: "https://rscuzqnfccqvltkdcdny.supabase.co/storage/v1/object/public/vexforge-assets/factions/bg_mago.jpg",     icon: "🔮" },
-  Paladín:     { color: "#fbbf24", bg: "linear-gradient(160deg,#451a03,#1c0a00)", bgImg: "https://rscuzqnfccqvltkdcdny.supabase.co/storage/v1/object/public/vexforge-assets/factions/bg_paladin.jpg",   icon: "🛡️" },
-  Pícaro:      { color: "#34d399", bg: "linear-gradient(160deg,#022c22,#0a1c14)", bgImg: "https://rscuzqnfccqvltkdcdny.supabase.co/storage/v1/object/public/vexforge-assets/factions/bg_picaro.jpg",    icon: "🗡️" },
+const FACTION_CFG: Record<string, { color: string; bg: string; bgImg: string; icon: ForgeIconName }> = {
+  Guerrero:    { color: "#f87171", bg: "linear-gradient(160deg,#7f1d1d,#1c0a0a)", bgImg: "https://rscuzqnfccqvltkdcdny.supabase.co/storage/v1/object/public/vexforge-assets/factions/bg_guerrero.jpg", icon: "attack" },
+  Mago:        { color: "#818cf8", bg: "linear-gradient(160deg,#1e1b4b,#0a0a1e)", bgImg: "https://rscuzqnfccqvltkdcdny.supabase.co/storage/v1/object/public/vexforge-assets/factions/bg_mago.jpg",     icon: "spark" },
+  Paladín:     { color: "#fbbf24", bg: "linear-gradient(160deg,#451a03,#1c0a00)", bgImg: "https://rscuzqnfccqvltkdcdny.supabase.co/storage/v1/object/public/vexforge-assets/factions/bg_paladin.jpg",   icon: "shield" },
+  Pícaro:      { color: "#34d399", bg: "linear-gradient(160deg,#022c22,#0a1c14)", bgImg: "https://rscuzqnfccqvltkdcdny.supabase.co/storage/v1/object/public/vexforge-assets/factions/bg_picaro.jpg",    icon: "target" },
   // Additional factions used in battle engine
-  Explorador:  { color: "#34d399", bg: "linear-gradient(160deg,#022c22,#0a1c14)", bgImg: "https://rscuzqnfccqvltkdcdny.supabase.co/storage/v1/object/public/vexforge-assets/factions/bg_picaro.jpg",    icon: "🏹" },
-  Comerciante: { color: "#fbbf24", bg: "linear-gradient(160deg,#451a03,#1c0a00)", bgImg: "https://rscuzqnfccqvltkdcdny.supabase.co/storage/v1/object/public/vexforge-assets/factions/bg_paladin.jpg",   icon: "🪙" },
+  Explorador:  { color: "#34d399", bg: "linear-gradient(160deg,#022c22,#0a1c14)", bgImg: "https://rscuzqnfccqvltkdcdny.supabase.co/storage/v1/object/public/vexforge-assets/factions/bg_picaro.jpg",    icon: "target" },
+  Comerciante: { color: "#fbbf24", bg: "linear-gradient(160deg,#451a03,#1c0a00)", bgImg: "https://rscuzqnfccqvltkdcdny.supabase.co/storage/v1/object/public/vexforge-assets/factions/bg_paladin.jpg",   icon: "coin" },
 };
 const RARITIES = ["Common","Uncommon","Rare","Epic","Legendary","Mythic"];
 const FACTIONS = ["Guerrero","Mago","Paladín","Pícaro"];
@@ -91,7 +92,7 @@ function CardArt({ card }: { card: Card }) {
         filter: `drop-shadow(0 0 12px ${rarity.color}) drop-shadow(0 0 24px ${rarity.color}66)`,
         textShadow: `0 0 20px ${rarity.color}`,
       }}>
-        {faction.icon}
+        <ForgeIcon name={faction.icon} size={44} strokeWidth={1.5} />
       </div>
       {/* Horizontal separator */}
       <div style={{
@@ -216,7 +217,7 @@ function CardTile({ card, owned, quantity, onClick }: {
           <span style={{ color: "#444466", fontSize: 9 }}>·</span>
           <span style={{ fontSize: 9, fontFamily: "Rajdhani,sans-serif", fontWeight: 600,
             color: faction.color, textTransform: "uppercase" }}>
-            {faction.icon} {card.faction}
+            <ForgeIcon name={faction.icon} size={10} strokeWidth={1.8} style={{ verticalAlign: "-0.15em" }} /> {card.faction}
           </span>
         </div>
         <div style={{ display: "flex", gap: 4, justifyContent: "space-between" }}>
@@ -234,7 +235,7 @@ function CardTile({ card, owned, quantity, onClick }: {
         <div style={{ position: "absolute", top: 6, right: 6,
           background: "rgba(232,184,75,.92)", borderRadius: 20, padding: "2px 7px",
           fontSize: 9, fontFamily: "Rajdhani,sans-serif", fontWeight: 700,
-          color: "#0a0a14", letterSpacing: ".05em" }}>✓ ×{quantity}</div>
+          color: "#0a0a14", letterSpacing: ".05em" }}><ForgeIcon name="check" size={10} strokeWidth={1.8} style={{ verticalAlign: "-0.15em", marginRight: 3 }} />x{quantity}</div>
       )}
       {card.is_founder && (
         <div style={{ position: "absolute", top: owned ? 26 : 6, right: 6,
@@ -279,7 +280,7 @@ function CardModal({ card, ownedQty, onClose, onNav }: {
           <div>
             <div style={{ fontSize: 10, fontFamily: "Rajdhani,sans-serif", fontWeight: 700,
               color: rarity.color, textTransform: "uppercase", letterSpacing: ".12em", marginBottom: 4 }}>
-              {rarity.label} · {faction.icon} {card.faction}
+              {rarity.label} · <ForgeIcon name={faction.icon} size={10} strokeWidth={1.8} style={{ verticalAlign: "-0.15em" }} /> {card.faction}
             </div>
             <h2 style={{ fontFamily: "Cinzel,serif", color: "#e8e8f0", margin: "0 0 4px",
               fontSize: "clamp(16px,3vw,22px)", lineHeight: 1.2,
@@ -287,15 +288,15 @@ function CardModal({ card, ownedQty, onClose, onNav }: {
             <div style={{ fontSize: 10, color: "#555577", fontFamily: "Rajdhani,sans-serif", letterSpacing: ".08em" }}>
               {card.code}
               {card.card_tier && ` · T${card.card_tier}`}
-              {card.is_founder  && <span style={{ color: "#a78bfa", marginLeft: 8 }}>⬡ FOUNDER</span>}
-              {card.is_legendary && <span style={{ color: "#f59e0b", marginLeft: 8 }}>★ LEGENDARIA</span>}
+              {card.is_founder  && <span style={{ color: "#a78bfa", marginLeft: 8 }}><ForgeIcon name="crown" size={10} strokeWidth={1.8} style={{ verticalAlign: "-0.15em", marginRight: 3 }} />FOUNDER</span>}
+              {card.is_legendary && <span style={{ color: "#f59e0b", marginLeft: 8 }}><ForgeIcon name="crown" size={10} strokeWidth={1.8} style={{ verticalAlign: "-0.15em", marginRight: 3 }} />LEGENDARIA</span>}
             </div>
           </div>
           <button onClick={onClose} style={{
             background: "rgba(255,255,255,.06)", border: "1px solid rgba(255,255,255,.1)",
             borderRadius: 6, color: "#8888aa", cursor: "pointer",
             width: 32, height: 32, fontSize: 16, display: "flex",
-            alignItems: "center", justifyContent: "center", flexShrink: 0 }}>✕</button>
+            alignItems: "center", justifyContent: "center", flexShrink: 0 }}><ForgeIcon name="close" size={15} strokeWidth={1.8} /></button>
         </div>
         {/* Body */}
         <div style={{ overflowY: "auto", flex: 1 }}>
@@ -309,7 +310,7 @@ function CardModal({ card, ownedQty, onClose, onNav }: {
                 borderRadius: 8, textAlign: "center" }}>
                 {ownedQty != null ? (
                   <div style={{ color: "#e8b84b", fontFamily: "Rajdhani,sans-serif", fontWeight: 700, fontSize: 13 }}>
-                    TIENES ×{ownedQty}
+                    TIENES x{ownedQty}
                   </div>
                 ) : (
                   <div style={{ color: "#555577", fontFamily: "Rajdhani,sans-serif", fontSize: 11 }}>No la tienes</div>
@@ -356,12 +357,12 @@ function CardModal({ card, ownedQty, onClose, onNav }: {
                 {card.fusion_enabled && (
                   <span style={{ background: "rgba(74,222,128,.1)", border: "1px solid rgba(74,222,128,.3)",
                     borderRadius: 4, padding: "3px 8px", fontSize: 10, color: "#4ade80",
-                    fontFamily: "Rajdhani,sans-serif", fontWeight: 700 }}>🔥 Fusión</span>
+                    fontFamily: "Rajdhani,sans-serif", fontWeight: 700 }}><ForgeIcon name="fusion" size={11} strokeWidth={1.8} style={{ verticalAlign: "-0.15em", marginRight: 3 }} />Fusión</span>
                 )}
                 {card.marketable && (
                   <span style={{ background: "rgba(96,165,250,.1)", border: "1px solid rgba(96,165,250,.3)",
                     borderRadius: 4, padding: "3px 8px", fontSize: 10, color: "#60a5fa",
-                    fontFamily: "Rajdhani,sans-serif", fontWeight: 700 }}>📋 Mercado</span>
+                    fontFamily: "Rajdhani,sans-serif", fontWeight: 700 }}><ForgeIcon name="market" size={11} strokeWidth={1.8} style={{ verticalAlign: "-0.15em", marginRight: 3 }} />Mercado</span>
                 )}
               </div>
               {/* Lore */}
@@ -385,14 +386,14 @@ function CardModal({ card, ownedQty, onClose, onNav }: {
                 background: "rgba(232,184,75,.12)", border: "1px solid rgba(232,184,75,.4)",
                 borderRadius: 8, color: "#e8b84b", padding: "10px 0",
                 fontFamily: "Rajdhani,sans-serif", fontWeight: 700, fontSize: 12,
-                cursor: "pointer", letterSpacing: ".06em", textTransform: "uppercase" }}>⚔ Deck</button>
+                cursor: "pointer", letterSpacing: ".06em", textTransform: "uppercase" }}><ForgeIcon name="deck" size={13} strokeWidth={1.8} style={{ verticalAlign: "-0.15em", marginRight: 4 }} />Deck</button>
               {card.fusion_enabled && (
                 <button onClick={() => { onClose(); onNav("/fusion"); }} style={{
                   flex: 1, minWidth: 100,
                   background: "rgba(139,92,246,.12)", border: "1px solid rgba(139,92,246,.4)",
                   borderRadius: 8, color: "#a78bfa", padding: "10px 0",
                   fontFamily: "Rajdhani,sans-serif", fontWeight: 700, fontSize: 12,
-                  cursor: "pointer", letterSpacing: ".06em", textTransform: "uppercase" }}>🔥 Fusionar</button>
+                  cursor: "pointer", letterSpacing: ".06em", textTransform: "uppercase" }}><ForgeIcon name="fusion" size={13} strokeWidth={1.8} style={{ verticalAlign: "-0.15em", marginRight: 4 }} />Fusionar</button>
               )}
               {card.marketable && (
                 <button onClick={() => { onClose(); onNav("/market"); }} style={{
@@ -400,7 +401,7 @@ function CardModal({ card, ownedQty, onClose, onNav }: {
                   background: "rgba(96,165,250,.12)", border: "1px solid rgba(96,165,250,.4)",
                   borderRadius: 8, color: "#60a5fa", padding: "10px 0",
                   fontFamily: "Rajdhani,sans-serif", fontWeight: 700, fontSize: 12,
-                  cursor: "pointer", letterSpacing: ".06em", textTransform: "uppercase" }}>📋 Mercado</button>
+                  cursor: "pointer", letterSpacing: ".06em", textTransform: "uppercase" }}><ForgeIcon name="market" size={13} strokeWidth={1.8} style={{ verticalAlign: "-0.15em", marginRight: 4 }} />Mercado</button>
               )}
             </div>
           )}
@@ -462,7 +463,7 @@ export function CardsRoute() {
         <div style={{ maxWidth: 1200, margin: "0 auto" }}>
           <p style={{ fontSize: 10, letterSpacing: ".18em", color: "#e8b84b", margin: "0 0 8px",
             fontFamily: "Rajdhani,sans-serif", fontWeight: 700, textTransform: "uppercase" }}>
-            ⚔️ COMPENDIO DE VEXFORGE
+            <ForgeIcon name="cards" size={12} strokeWidth={1.8} style={{ verticalAlign: "-0.15em", marginRight: 4 }} />COMPENDIO DE VEXFORGE
           </p>
           <h1 style={{ fontFamily: "Cinzel,serif", color: "#e8e8f0", margin: "0 0 12px",
             fontSize: "clamp(24px,4vw,42px)", textShadow: "0 0 40px rgba(201,144,31,.3)" }}>
@@ -513,7 +514,7 @@ export function CardsRoute() {
                 style={{ background: "rgba(239,68,68,.12)", border: "1px solid rgba(239,68,68,.3)",
                   borderRadius: 8, padding: "8px 14px", color: "#f87171", fontSize: 11,
                   fontFamily: "Rajdhani,sans-serif", fontWeight: 700, cursor: "pointer" }}>
-                ✕ Limpiar
+                <ForgeIcon name="close" size={13} strokeWidth={1.8} style={{ verticalAlign: "-0.15em", marginRight: 4 }} />Limpiar
               </button>
             )}
           </div>
@@ -531,7 +532,7 @@ export function CardsRoute() {
             {FACTIONS.map(f => (
               <FilterBtn key={f} active={filterFaction === f} color={FACTION_CFG[f].color}
                 onClick={() => setFilterFaction(filterFaction === f ? "all" : f)}>
-                {FACTION_CFG[f].icon} {f}
+                <ForgeIcon name={FACTION_CFG[f].icon} size={12} strokeWidth={1.8} style={{ verticalAlign: "-0.15em", marginRight: 3 }} />{f}
               </FilterBtn>
             ))}
           </div>
@@ -554,7 +555,7 @@ export function CardsRoute() {
 
         {loading && (
           <div style={{ textAlign: "center", padding: "80px 0" }}>
-            <div style={{ color: "#e8b84b", fontSize: 40, marginBottom: 12 }}>⚔</div>
+            <div style={{ color: "#e8b84b", marginBottom: 12 }}><ForgeIcon name="cards" size={40} strokeWidth={1.5} /></div>
             <p style={{ color: "#555577", fontFamily: "Rajdhani,sans-serif" }}>Cargando compendio…</p>
           </div>
         )}
@@ -565,7 +566,7 @@ export function CardsRoute() {
         )}
         {!loading && !error && filtered.length === 0 && (
           <div style={{ textAlign: "center", padding: "80px 0" }}>
-            <div style={{ fontSize: 48, marginBottom: 16 }}>🔍</div>
+            <div style={{ color: "#e8b84b", marginBottom: 16 }}><ForgeIcon name="target" size={48} strokeWidth={1.5} /></div>
             <p style={{ color: "#555577", fontFamily: "Rajdhani,sans-serif", fontSize: 16 }}>
               Ninguna carta coincide con los filtros
             </p>

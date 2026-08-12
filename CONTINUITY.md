@@ -1,3 +1,13 @@
+## 2026-08-12 — VE-1-CARDS-ICON-BATCH — IMPLEMENTED_UNVERIFIED
+
+- **Fuente canónica:** código oficial `main` y `ForgeIcon`.
+- **Objetivo:** retirar pictogramas Unicode visibles del compendio de cartas sin cambiar valores, filtros, navegación, audio, estados ni reglas autoritativas.
+- **Lote:** `src/routes/CardsRoute.tsx` usa `ForgeIcon` para facciones, cabecera, filtros, estados de carga/vacío, badges, acciones, cierre y estados de colección.
+- **Estado provisional:** `IMPLEMENTED_UNVERIFIED`, Q2; pendiente de build, deploy y revisión pública responsive.
+- **Siguiente acción verificable:** esperar el check de Cloudflare, comprobar rutas públicas y comparar el bundle servido con el commit de `main`.
+
+---
+
 ## 2026-08-12 — VE-PROTOCOL-PUBLICATION-FLOW-AMENDMENT — IN_PROGRESS
 
 - **Fuente canónica:** VEXFORGE_PROTOCOL_V2.md y política operativa del repositorio oficial.
