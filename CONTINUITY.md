@@ -29,7 +29,7 @@
 
 - **Fuente canónica:** VEXFORGE_PROTOCOL_V2.md y política operativa del repositorio oficial.
 - **Cambio permanente:** el push a `main`, la publicación automática vinculada de Cloudflare Pages y la comprobación pública forman parte obligatoria del cierre; no requieren autorización adicional. Se mantiene prohibida únicamente la publicación manual o paralela.
-- **Estado:** IN_PROGRESS, Q1; la regla quedó reforzada en el código documental y espera la verificación del bundle público tras la propagación automática.
+- **Estado:** PENDING_SOURCE, Q1; la regla quedó reforzada en el código documental, pero Cloudflare aún sirve el bundle anterior pese al check automático `success`.
 - **Evidencia previa:** Supabase está activo y `cards` devuelve 127 registros activos; el CSS público coincide con `main`, pero el JavaScript público aún corresponde a una versión anterior.
 - **Siguiente acción verificable:** comprobar que Cloudflare refleja el commit de esta enmienda, comparar hashes del bundle y actualizar esta entrada a `OPERATIONAL` con evidencia real.
 
