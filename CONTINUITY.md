@@ -1,5 +1,15 @@
 # VEXFORGE — CONTINUITY ACTIVA
 
+## 2026-08-12 — VE-SYSTEM-BUILD-SYNC — IN_PROGRESS
+
+- **Fuente canónica:** código oficial `main`, commit `91bb84b879aea2cdbab8826d5fe63d0de8a761e4`.
+- **Objetivo:** reconstruir y versionar el bundle de producción para que el build generado por `main` quede reflejado antes del cierre.
+- **Verificación:** `npm ci` y `npm run build` finalizaron correctamente; el bundle local `dist/assets/index-CpbXz6oq.js` coincide byte a byte con el bundle público servido por Cloudflare.
+- **Estado provisional:** `IMPLEMENTED_UNVERIFIED`, Q2; pendiente de commit/push y comprobación de propagación automática de Cloudflare.
+- **Alcance:** sólo artefactos de build y continuidad; no se modificaron lógica de juego, economía, contratos, RPCs, RLS, datos canónicos ni Storage.
+
+---
+
 ## 2026-08-12 — VE-1-BATTLE-CARD-ICON-BATCH — IN_PROGRESS
 
 - **Fuente canónica:** código oficial `main` y `ForgeIcon`; no se usaron los assets genéricos sin mapping semántico.
