@@ -1,10 +1,27 @@
-## 2026-08-12 — VE-1-CARDS-ICON-BATCH — IMPLEMENTED_UNVERIFIED
+## 2026-08-12 — VE-1-CARDS-ICON-BATCH — CANDIDATE_FOR_REVIEW
 
 - **Fuente canónica:** código oficial `main` y `ForgeIcon`.
 - **Objetivo:** retirar pictogramas Unicode visibles del compendio de cartas sin cambiar valores, filtros, navegación, audio, estados ni reglas autoritativas.
 - **Lote:** `src/routes/CardsRoute.tsx` usa `ForgeIcon` para facciones, cabecera, filtros, estados de carga/vacío, badges, acciones, cierre y estados de colección.
-- **Estado provisional:** `IMPLEMENTED_UNVERIFIED`, Q2; pendiente de build, deploy y revisión pública responsive.
-- **Siguiente acción verificable:** esperar el check de Cloudflare, comprobar rutas públicas y comparar el bundle servido con el commit de `main`.
+- **Estado actual:** `CANDIDATE_FOR_REVIEW`, Q2; objetivo Q3.
+
+### Evidencia
+
+- `main` en commit `2295c2b5837311616259d9dc5aa6e79fc7cebc28`; check de Cloudflare Pages `completed/success`.
+- `npm ci` y `npm run build` finalizaron correctamente; el build produjo `index-Ce_aGBEF.js` y `CardsRoute-CE5dWwEr.js`.
+- SHA-256 del entrypoint local y público: `89a05f2b308c1f5ebca305175e808fd6c6257e20f6e966698ee051384396eb36`.
+- SHA-256 del chunk `CardsRoute` local y público: `a24c2143389de9a72bb39ee8f94b9e6a52597063badafef5da44e71af99650ef`.
+- `/`, `/manifest.json`, `/tutorial`, `/cards` y `/battle` respondieron HTTP 200; el catálogo vivo contiene 127 cartas activas y el acceso anónimo al recurso `cards` respondió correctamente.
+- No se alteraron eventos, cálculos, textos, duración de animaciones, settlement, economía, RPCs, RLS, datos canónicos ni Storage.
+
+### Deuda y condición de reapertura
+
+- Falta evidencia de revisión visual responsive, navegación por teclado/focus y `prefers-reduced-motion` para cerrar el lote en Q3.
+- Persisten pictogramas Unicode en otras superficies de combate; deben abordarse como lotes separados y revisables.
+
+### Siguiente acción verificable
+
+- Reabrir con una revisión de navegador en escritorio, tablet y móvil, incluyendo focus y movimiento reducido; después elegir el siguiente consumidor Unicode independiente.
 
 ---
 
