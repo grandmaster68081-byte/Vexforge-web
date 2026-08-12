@@ -13,14 +13,21 @@
 
 ### Estado actual
 
-- `VE-1-ICON-LANGUAGE-PILOT`: `IMPLEMENTED_UNVERIFIED`.
+- `VE-1-ICON-LANGUAGE-PILOT`: `CANDIDATE_FOR_REVIEW`.
 - **Nivel:** Q2 actual, objetivo Q3.
 - **Deuda:** permanecen otros consumidores Unicode en superficies de combate; deben abordarse en lotes separados y revisables.
 - **QA pendiente:** responsive, focus, reduced motion y bundle público requieren verificación posterior a la propagación de `main`; no se declara `OPERATIONAL` todavía.
 
+### Evidencia de verificación
+
+- GitHub `main` contiene el commit de implementación de este lote y el check de Cloudflare Pages terminó en `success`.
+- La portada pública, `/manifest.json`, `/tutorial`, `/cards` y `/battle` respondieron HTTP 200 después de la propagación.
+- Supabase confirmó `project_version = ve1-2026-08-12` para `KeywordTooltip.tsx`, `KeywordActivationFX.tsx`, `CONTINUITY.md` y `replit.md`; los marcadores de implementación están presentes y no queda referencia al plan retirado.
+- La inspección del bundle público todavía encuentra Unicode en otras superficies de combate no incluidas en este lote; esto queda como deuda y no como fallo de esta unidad.
+
 ### Siguiente acción verificable
 
-- Confirmar sincronización de las dos fuentes modificadas en `vexforge_frontend_source_files`, ejecutar typecheck/build desde el checkout oficial y comprobar que Cloudflare sirve el commit nuevo.
+- Revisar visualmente este lote en navegador con evidencia responsive, focus y `prefers-reduced-motion`; después abordar el siguiente consumidor Unicode como una unidad separada.
 
 ---
 
