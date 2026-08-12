@@ -4,29 +4,30 @@
 
 import { useState, useCallback } from 'react';
 import type { BattleEvent } from '../../lib/battleTypes';
+import { ForgeIcon, type ForgeIconName } from '../../shared/components/ForgeIcon';
 
 // ─── Keyword visual config ─────────────────────────────────────────────────────
 const KW_FX: Record<string, {
-  icon: string; label: string; color: string; glow: string;
+  icon: ForgeIconName; label: string; color: string; glow: string;
   animation: string; textColor: string;
 }> = {
-  Guard:       { icon: '🛡️', label: 'GUARD',        color: '#4a9eff',  glow: 'rgba(74,158,255,0.7)',  animation: 'kw-shield-burst',    textColor: '#fff' },
-  Drain:       { icon: '💚',  label: 'DRAIN',        color: '#3ddc84',  glow: 'rgba(61,220,132,0.7)',  animation: 'kw-heal-pulse',      textColor: '#fff' },
-  Lifesteal:   { icon: '💚',  label: 'LIFESTEAL',    color: '#3ddc84',  glow: 'rgba(61,220,132,0.7)',  animation: 'kw-heal-pulse',      textColor: '#fff' },
-  Surge:       { icon: '⚡',  label: 'SURGE',        color: '#e8b84b',  glow: 'rgba(232,184,75,0.7)',  animation: 'kw-surge-flash',     textColor: '#0a0a12' },
-  Rush:        { icon: '⚡',  label: 'RUSH',         color: '#e8b84b',  glow: 'rgba(232,184,75,0.7)',  animation: 'kw-surge-flash',     textColor: '#0a0a12' },
-  Veil:        { icon: '🔮',  label: 'VEIL',         color: '#a855f7',  glow: 'rgba(168,85,247,0.7)',  animation: 'kw-veil-shimmer',    textColor: '#fff' },
-  Forge:       { icon: '🔨',  label: 'FORGE',        color: '#ff6b35',  glow: 'rgba(255,107,53,0.7)',  animation: 'kw-forge-hammer',    textColor: '#fff' },
-  Consecrate:  { icon: '✝️', label: 'CONSECRATE',   color: '#ffd700',  glow: 'rgba(255,215,0,0.7)',   animation: 'kw-holy-burst',      textColor: '#0a0a12' },
-  Flux:        { icon: '🌀',  label: 'FLUX',         color: '#a855f7',  glow: 'rgba(168,85,247,0.6)',  animation: 'kw-flux-spin',       textColor: '#fff' },
-  Resonance:   { icon: '🎵',  label: 'RESONANCE',    color: '#b08af8',  glow: 'rgba(176,138,248,0.7)', animation: 'kw-resonance-wave',  textColor: '#fff' },
-  Poison:      { icon: '☠️', label: 'VENENO',        color: '#a855f7',  glow: 'rgba(168,85,247,0.7)',  animation: 'kw-poison-drip',     textColor: '#fff' },
-  DoubleStrike:{ icon: '⚔️', label: 'DOBLE GOLPE',  color: '#ff6b35',  glow: 'rgba(255,107,53,0.8)',  animation: 'kw-double-strike',   textColor: '#fff' },
-  shield_block:{ icon: '🛡️', label: 'BLOQUEADO',    color: '#4a9eff',  glow: 'rgba(74,158,255,0.8)',  animation: 'kw-shield-burst',    textColor: '#fff' },
-  poison_tick: { icon: '☠️', label: '−HP',           color: '#a855f7',  glow: 'rgba(168,85,247,0.7)',  animation: 'kw-poison-drip',     textColor: '#fff' },
-  poisoned:    { icon: '☠️', label: 'ENVENENADO',    color: '#a855f7',  glow: 'rgba(168,85,247,0.7)',  animation: 'kw-poison-drip',     textColor: '#fff' },
-  lifesteal:   { icon: '💚',  label: 'DRENAR',       color: '#3ddc84',  glow: 'rgba(61,220,132,0.7)',  animation: 'kw-heal-pulse',      textColor: '#fff' },
-  double_strike:{icon: '⚔️', label: '2° GOLPE',     color: '#ff6b35',  glow: 'rgba(255,107,53,0.8)',  animation: 'kw-double-strike',   textColor: '#fff' },
+  Guard:       { icon: 'shield', label: 'GUARD',        color: '#4a9eff',  glow: 'rgba(74,158,255,0.7)',  animation: 'kw-shield-burst',    textColor: '#fff' },
+  Drain:       { icon: 'heart',  label: 'DRAIN',        color: '#3ddc84',  glow: 'rgba(61,220,132,0.7)',  animation: 'kw-heal-pulse',      textColor: '#fff' },
+  Lifesteal:   { icon: 'heart',  label: 'LIFESTEAL',    color: '#3ddc84',  glow: 'rgba(61,220,132,0.7)',  animation: 'kw-heal-pulse',      textColor: '#fff' },
+  Surge:       { icon: 'energy',  label: 'SURGE',        color: '#e8b84b',  glow: 'rgba(232,184,75,0.7)',  animation: 'kw-surge-flash',     textColor: '#0a0a12' },
+  Rush:        { icon: 'energy',  label: 'RUSH',         color: '#e8b84b',  glow: 'rgba(232,184,75,0.7)',  animation: 'kw-surge-flash',     textColor: '#0a0a12' },
+  Veil:        { icon: 'lock',  label: 'VEIL',         color: '#a855f7',  glow: 'rgba(168,85,247,0.7)',  animation: 'kw-veil-shimmer',    textColor: '#fff' },
+  Forge:       { icon: 'attack',  label: 'FORGE',        color: '#ff6b35',  glow: 'rgba(255,107,53,0.7)',  animation: 'kw-forge-hammer',    textColor: '#fff' },
+  Consecrate:  { icon: 'crown', label: 'CONSECRATE',   color: '#ffd700',  glow: 'rgba(255,215,0,0.7)',   animation: 'kw-holy-burst',      textColor: '#0a0a12' },
+  Flux:        { icon: 'spark',  label: 'FLUX',         color: '#a855f7',  glow: 'rgba(168,85,247,0.6)',  animation: 'kw-flux-spin',       textColor: '#fff' },
+  Resonance:   { icon: 'spark',  label: 'RESONANCE',    color: '#b08af8',  glow: 'rgba(176,138,248,0.7)', animation: 'kw-resonance-wave',  textColor: '#fff' },
+  Poison:      { icon: 'skull', label: 'VENENO',        color: '#a855f7',  glow: 'rgba(168,85,247,0.7)',  animation: 'kw-poison-drip',     textColor: '#fff' },
+  DoubleStrike:{ icon: 'attack', label: 'DOBLE GOLPE',  color: '#ff6b35',  glow: 'rgba(255,107,53,0.8)',  animation: 'kw-double-strike',   textColor: '#fff' },
+  shield_block:{ icon: 'shield', label: 'BLOQUEADO',    color: '#4a9eff',  glow: 'rgba(74,158,255,0.8)',  animation: 'kw-shield-burst',    textColor: '#fff' },
+  poison_tick: { icon: 'skull', label: '−HP',           color: '#a855f7',  glow: 'rgba(168,85,247,0.7)',  animation: 'kw-poison-drip',     textColor: '#fff' },
+  poisoned:    { icon: 'skull', label: 'ENVENENADO',    color: '#a855f7',  glow: 'rgba(168,85,247,0.7)',  animation: 'kw-poison-drip',     textColor: '#fff' },
+  lifesteal:   { icon: 'heart',  label: 'DRENAR',       color: '#3ddc84',  glow: 'rgba(61,220,132,0.7)',  animation: 'kw-heal-pulse',      textColor: '#fff' },
+  double_strike:{icon: 'attack', label: '2° GOLPE',     color: '#ff6b35',  glow: 'rgba(255,107,53,0.8)',  animation: 'kw-double-strike',   textColor: '#fff' },
 };
 
 interface KeywordFXEntry {
@@ -177,7 +178,9 @@ export function KeywordActivationFX({ effects }: KeywordActivationFXProps) {
               filter: `drop-shadow(0 0 12px ${cfg.glow}) drop-shadow(0 0 24px ${cfg.glow})`,
             }}
           >
-            <div style={{ fontSize: 32 }}>{cfg.icon}</div>
+            <div style={{ color: cfg.color, display: 'grid', placeItems: 'center' }}>
+              <ForgeIcon name={cfg.icon} size={34} strokeWidth={1.6} />
+            </div>
             <div style={{
               background: cfg.color,
               color: cfg.textColor,

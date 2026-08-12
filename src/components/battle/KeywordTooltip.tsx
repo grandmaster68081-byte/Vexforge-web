@@ -2,21 +2,22 @@
 // Keyword definitions + tooltip overlay + chip for interactive battle board.
 
 import { useState, useCallback, type ReactNode } from 'react';
+import { ForgeIcon, type ForgeIconName } from '../../shared/components/ForgeIcon';
 
-export const KEYWORD_DEFS: Record<string, { icon: string; title: string; desc: string; color: string }> = {
-  guard:        { icon: '🛡️', title: 'Guard',          desc: 'Este aliado debe ser atacado primero. Protege a los demás.',              color: '#3ddc84' },
-  surge:        { icon: '⚡',  title: 'Surge',          desc: 'Alta iniciativa — actúa antes que la mayoría de unidades.',              color: '#e8b84b' },
-  flux:         { icon: '🌀',  title: 'Flux',           desc: 'Efecto caótico: puede ganar un bonus aleatorio en combate.',             color: '#4a9eff' },
-  consecrate:   { icon: '✝️', title: 'Consecrate',     desc: 'Sagrado — inflige daño adicional a unidades de facción oscura.',         color: '#ffe066' },
-  drain:        { icon: '💚',  title: 'Drain',          desc: 'Roba vida al atacar: recupera 30% del daño causado como HP.',           color: '#a855f7' },
-  veil:         { icon: '🔮',  title: 'Veil',           desc: 'Barrera mágica — absorbe el primer ataque recibido sin daño.',          color: '#60a5fa' },
-  forge:        { icon: '🔨',  title: 'Forge',          desc: 'Potencia de forja: aumenta ATK en cada combate consecutivo.',           color: '#fb923c' },
-  resonance:    { icon: '🎵',  title: 'Resonance',      desc: 'Resonancia — otorga +ATK a todos los aliados de la misma facción.',     color: '#f472b6' },
-  lifesteal:    { icon: '💚',  title: 'Lifesteal',      desc: 'Roba vida al atacar — recupera HP igual al daño causado.',             color: '#a855f7' },
-  poison:       { icon: '☠️',  title: 'Poison',         desc: 'El veneno causa 5 de daño por turno hasta que la unidad muere.',       color: '#22c55e' },
-  shield:       { icon: '✨',  title: 'Shield',         desc: 'Absorbe el primer golpe recibido. Se rompe tras el primer ataque.',    color: '#60a5fa' },
-  rush:         { icon: '⚡',  title: 'Rush',           desc: 'Puede atacar en el mismo turno en que entra al campo de batalla.',     color: '#e8b84b' },
-  doublestrike: { icon: '⚔️',  title: 'Double Strike', desc: 'Ataca dos veces por turno. El segundo golpe hace 50% de daño.',        color: '#ff6b35' },
+export const KEYWORD_DEFS: Record<string, { icon: ForgeIconName; title: string; desc: string; color: string }> = {
+  guard:        { icon: 'shield', title: 'Guard',          desc: 'Este aliado debe ser atacado primero. Protege a los demás.',              color: '#3ddc84' },
+  surge:        { icon: 'energy',  title: 'Surge',          desc: 'Alta iniciativa — actúa antes que la mayoría de unidades.',              color: '#e8b84b' },
+  flux:         { icon: 'spark',  title: 'Flux',           desc: 'Efecto caótico: puede ganar un bonus aleatorio en combate.',             color: '#4a9eff' },
+  consecrate:   { icon: 'crown', title: 'Consecrate',     desc: 'Sagrado — inflige daño adicional a unidades de facción oscura.',         color: '#ffe066' },
+  drain:        { icon: 'heart',  title: 'Drain',          desc: 'Roba vida al atacar: recupera 30% del daño causado como HP.',           color: '#a855f7' },
+  veil:         { icon: 'lock',  title: 'Veil',           desc: 'Barrera mágica — absorbe el primer ataque recibido sin daño.',          color: '#60a5fa' },
+  forge:        { icon: 'attack',  title: 'Forge',          desc: 'Potencia de forja: aumenta ATK en cada combate consecutivo.',           color: '#fb923c' },
+  resonance:    { icon: 'spark',  title: 'Resonance',      desc: 'Resonancia — otorga +ATK a todos los aliados de la misma facción.',     color: '#f472b6' },
+  lifesteal:    { icon: 'heart',  title: 'Lifesteal',      desc: 'Roba vida al atacar — recupera HP igual al daño causado.',             color: '#a855f7' },
+  poison:       { icon: 'skull',  title: 'Poison',         desc: 'El veneno causa 5 de daño por turno hasta que la unidad muere.',       color: '#22c55e' },
+  shield:       { icon: 'spark',  title: 'Shield',         desc: 'Absorbe el primer golpe recibido. Se rompe tras el primer ataque.',    color: '#60a5fa' },
+  rush:         { icon: 'energy',  title: 'Rush',           desc: 'Puede atacar en el mismo turno en que entra al campo de batalla.',     color: '#e8b84b' },
+  doublestrike: { icon: 'attack',  title: 'Double Strike', desc: 'Ataca dos veces por turno. El segundo golpe hace 50% de daño.',        color: '#ff6b35' },
 };
 
 function normKey(k: string) { return k.toLowerCase().replace(/[^a-z]/g, ''); }
@@ -52,7 +53,7 @@ export function KeywordTooltip({ keyword, children }: TooltipProps) {
           boxShadow: `0 6px 28px rgba(0,0,0,0.85), 0 0 18px ${def.color}18`,
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 7, marginBottom: 6 }}>
-            <span style={{ fontSize: 16 }}>{def.icon}</span>
+            <ForgeIcon name={def.icon} size={16} strokeWidth={1.8} />
             <span style={{ color: def.color, fontWeight: 800, fontSize: 12,
               fontFamily: '"Cinzel",serif', letterSpacing: '0.05em' }}>
               {def.title}
@@ -86,7 +87,7 @@ export function KeywordChip({ keyword }: { keyword: string }) {
         display: 'inline-flex', alignItems: 'center', gap: 3,
         cursor: 'help', userSelect: 'none',
       }}>
-        <span style={{ fontSize: 10 }}>{def.icon}</span>{def.title}
+        <ForgeIcon name={def.icon} size={11} strokeWidth={1.8} />{def.title}
       </span>
     </KeywordTooltip>
   );

@@ -1,5 +1,29 @@
 # VEXFORGE — CONTINUITY ACTIVA
 
+## 2026-08-12 — VE-1-ICON-LANGUAGE-PILOT — IN_PROGRESS
+
+### Primera operación verificable
+
+- **Fuente canónica:** manifiesto vivo `vexforge_official_asset_manifest` y `ForgeIcon` del código oficial en `main`.
+- **Estado inicial:** `PENDING_SOURCE` para `icon_01`–`icon_07`; el manifiesto no asigna consumidores ni semántica funcional.
+- **Lote ejecutado:** se sustituyeron los pictogramas Unicode de `KeywordTooltip` y `KeywordActivationFX` por iconos SVG propios de `ForgeIcon`.
+- **Alcance autoritativo:** no se tocaron resultados de combate, settlement, economía, RPCs, RLS, cartas, lore, Storage ni reglas del juego.
+- **Procedencia:** no se copiaron ni reinterpretaron los JPEG genéricos del paquete oficial.
+- **Accesibilidad y movimiento:** se conserva el texto visible de cada keyword; el icono se mantiene decorativo y las animaciones existentes no cambian su duración ni su lógica.
+
+### Estado actual
+
+- `VE-1-ICON-LANGUAGE-PILOT`: `IMPLEMENTED_UNVERIFIED`.
+- **Nivel:** Q2 actual, objetivo Q3.
+- **Deuda:** permanecen otros consumidores Unicode en superficies de combate; deben abordarse en lotes separados y revisables.
+- **QA pendiente:** responsive, focus, reduced motion y bundle público requieren verificación posterior a la propagación de `main`; no se declara `OPERATIONAL` todavía.
+
+### Siguiente acción verificable
+
+- Confirmar sincronización de las dos fuentes modificadas en `vexforge_frontend_source_files`, ejecutar typecheck/build desde el checkout oficial y comprobar que Cloudflare sirve el commit nuevo.
+
+---
+
 ## Autoridad vigente
 
 - **Protocolo activo:** `VEXFORGE_PROTOCOL_V2.md` en la raíz de este repositorio.
