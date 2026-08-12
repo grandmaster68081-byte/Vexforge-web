@@ -266,8 +266,10 @@ Cuando sea relevante:
 - Comprueba HTTP 200 en las rutas relevantes.
 - Verifica que el deploy público corresponde al commit que se está auditando.
 - No confundas un deploy anterior con el estado actual de main.
-- Si Cloudflare no refleja main, marca BLOCKED o PENDING_SOURCE.
-- El push a main y el deploy público son pasos obligatorios al cierre de cada unidad de trabajo completada, salvo que la unidad esté BLOCKED, PENDING_SOURCE o el despliegue sea técnicamente imposible; en esos casos se registra la causa y no se simula la verificación.
+- Si Cloudflare no refleja main, marca BLOCKED o PENDING_SOURCE y continúa esperando la propagación automática; no crees un canal alternativo.
+- El push a main, la propagación automática de Cloudflare y la verificación pública son pasos obligatorios al cierre de cada unidad de trabajo completada, salvo que la unidad esté BLOCKED, PENDING_SOURCE o el despliegue sea técnicamente imposible; en esos casos se registra la causa y no se simula la verificación.
+- Esta obligación de publicación automática no requiere autorización adicional del usuario: forma parte del cierre normal de toda unidad completada.
+- La única publicación prohibida es la manual o paralela (por ejemplo, wrangler, una réplica o un canal distinto del vínculo oficial entre main y Cloudflare Pages).
 
 14. CIERRE OBLIGATORIO
 
