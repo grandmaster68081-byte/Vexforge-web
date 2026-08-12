@@ -267,7 +267,7 @@ Cuando sea relevante:
 - Verifica que el deploy público corresponde al commit que se está auditando.
 - No confundas un deploy anterior con el estado actual de main.
 - Si Cloudflare no refleja main, marca BLOCKED o PENDING_SOURCE.
-- No hagas deploy, push ni publicación sin autorización explícita.
+- El push a main y el deploy público son pasos obligatorios al cierre de cada unidad de trabajo completada, salvo que la unidad esté BLOCKED, PENDING_SOURCE o el despliegue sea técnicamente imposible; en esos casos se registra la causa y no se simula la verificación.
 
 14. CIERRE OBLIGATORIO
 
@@ -283,8 +283,8 @@ Al terminar una sesión:
 - Actualiza el Protocolo Maestro sólo si cambió una regla permanente.
 - Ejecuta la verificación proporcional al riesgo.
 - Crea un commit descriptivo sólo si hubo cambios reales.
-- Publica en main sólo si la política y la autorización lo permiten.
-- No hagas deploy sin autorización explícita.
+- Publica en main al cerrar cada unidad completada, siguiendo el flujo de verificación descrito aquí.
+- Ejecuta el deploy al cerrar cada unidad completada y comprueba que el público refleja el commit auditado.
 - No borres historial.
 - No declares verificado lo que no fue comprobado.
 

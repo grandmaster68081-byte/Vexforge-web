@@ -1,3 +1,12 @@
+## 2026-08-12 — VE-PROTOCOL-PUBLICATION-FLOW-AMENDMENT — IN_PROGRESS
+
+- **Fuente canónica:** VEXFORGE_PROTOCOL_V2.md y política operativa del repositorio oficial.
+- **Cambio permanente:** el push a main, el deploy público y la comprobación del deploy forman parte obligatoria del cierre de cada unidad completada; las excepciones BLOCKED, PENDING_SOURCE o imposibilidad técnica deben quedar documentadas.
+- **Estado:** IN_PROGRESS, Q0; pendiente de verificar que Cloudflare sirve el commit de esta enmienda.
+- **Siguiente acción verificable:** comprobar el commit público y actualizar esta entrada a OPERATIONAL con evidencia real.
+
+---
+
 # VEXFORGE — CONTINUITY ACTIVA
 
 ## 2026-08-12 — VE-SYSTEM-BUILD-SYNC — OPERATIONAL

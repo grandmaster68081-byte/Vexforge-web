@@ -58,7 +58,7 @@ TCG con 127 cartas únicas en 4 facciones, economía dual VEX, packs con pity sy
 - Leer el protocolo V2 y la continuidad activa al inicio de cada sesión.
 - Trabajar sólo sobre las fuentes oficiales indicadas por el protocolo.
 - Al cerrar una sesión, registrar estado, evidencia, bloqueos, deuda y siguiente acción verificable en `CONTINUITY.md`.
-- No hacer push ni deploy sin autorización explícita.
+- Al cerrar cada unidad completada, hacer push a main, desplegar y verificar el deploy público; si hay bloqueo, documentarlo sin simular evidencia.
 
 ---
 
