@@ -1,5 +1,16 @@
 # VEXFORGE — CONTINUITY ACTIVA
 
+## 2026-08-12 — VE-1-BATTLE-EFFECTS-ICON-BATCH — IN_PROGRESS
+
+- **Fuente canónica:** código oficial `main` y `ForgeIcon`; no se asignaron los assets `icon_01`–`icon_07` porque el manifiesto vivo no autoriza esa semántica.
+- **Objetivo:** retirar pictogramas Unicode de la capa visual de efectos flotantes sin alterar eventos, números, textos, duración ni reglas autoritativas.
+- **Lote:** `src/components/battle/BattleEffects.tsx` usa `ForgeIcon` para shield, poison, lifesteal, double strike, rush y critical.
+- **Estado inicial:** `CANDIDATE_FOR_REVIEW` de VE-1 con deuda Unicode en combate.
+- **Estado provisional:** `IMPLEMENTED_UNVERIFIED`, Q2; pendiente de sincronización de fuente, check de build y propagación pública.
+
+---
+
+
 ## 2026-08-12 — VE-1-ICON-LANGUAGE-PILOT — IN_PROGRESS
 
 ### Primera operación verificable

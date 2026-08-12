@@ -4,6 +4,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import type { BattleTurnData } from '../../lib/battleTypes';
+import { ForgeIcon, type ForgeIconName } from '../../shared/components/ForgeIcon';
 
 // ─── VX.0: Floating Damage Numbers ────────────────────────────────────────────
 export interface DamageFloat {
@@ -111,7 +112,9 @@ export function DamageFloatLayer({ floats, playerSide = 'right' }: DamageFloatLa
               textShadow: `0 0 20px ${cfg.color}, 0 2px 6px rgba(0,0,0,0.9)`,
               lineHeight: 1,
             }}>
-              {f.type === 'heal' ? '+' : f.type === 'shield' ? '🛡' : '-'}{f.value || ''}
+              {f.type === 'heal' ? '+' : f.type === 'shield' ? (
+                <ForgeIcon name="shield" size={cfg.fontSize} strokeWidth={1.7} style={{ verticalAlign: '-0.15em' }} />
+              ) : '-'}{f.value || ''}
             </div>
           </div>
         );
@@ -161,13 +164,13 @@ export function useKeywordEffects(currentTurn: BattleTurnData | null) {
   return { effects };
 }
 
-const EFFECT_ICON: Record<ActiveEffect['type'], string> = {
-  poison:    '☠️',
-  shield:    '🛡️',
-  lifesteal: '💚',
-  double:    '⚔️⚔️',
-  rush:      '⚡',
-  crit:      '💥',
+const EFFECT_ICON: Record<ActiveEffect['type'], ForgeIconName> = {
+  poison:    'skull',
+  shield:    'shield',
+  lifesteal: 'heart',
+  double:    'attack',
+  rush:      'energy',
+  crit:      'spark',
 };
 
 const EFFECT_COLOR: Record<ActiveEffect['type'], string> = {
@@ -241,7 +244,7 @@ export function KeywordEffectBanner({ effects }: KeywordEffectBannerProps) {
             boxShadow: `0 0 16px ${EFFECT_COLOR[e.type]}55, 0 2px 8px rgba(0,0,0,0.5)`,
             letterSpacing: '0.06em',
           }}>
-            <span style={{ fontSize: e.type === 'crit' ? 16 : 14 }}>{EFFECT_ICON[e.type]}</span>
+            <ForgeIcon name={EFFECT_ICON[e.type]} size={e.type === 'crit' ? 16 : 14} strokeWidth={1.8} />
             <span style={{ textTransform: 'uppercase', letterSpacing: '0.1em' }}>{label}</span>
           </div>
         );
