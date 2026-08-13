@@ -1,3 +1,15 @@
+## 2026-08-13 — VE-1-HOME-ICON-LANGUAGE — IMPLEMENTED_UNVERIFIED
+
+- **Fuente canónica:** `src/routes/HomeRoute.tsx`, `ForgeIcon`, Supabase activo y Cloudflare Pages.
+- **Estado inicial:** `NOT_STARTED`; **estado actual:** `IMPLEMENTED_UNVERIFIED`, objetivo Q3.
+- **Cambio:** la portada ya no usa emojis ni glyphs Unicode como sustitutos visuales en estadísticas, funciones, CTA, evento, carta del día, panel del jugador, actividad, ranking, partículas o navegación; usa el lenguaje SVG propio de `ForgeIcon` y conserva textos, enlaces, valores y datos reales.
+- **Alcance autoritativo:** no se cambiaron RPCs, economía, combate, recompensas, RLS, Storage ni datos de jugadores. La actividad sigue leyendo su dato canónico y sólo cambia su representación visual.
+- **Evidencia:** formato Prettier correcto; todos los nombres usados existen en `ForgeIcon`; la API de GitHub confirma cero coincidencias de los emojis objetivo en `HomeRoute.tsx`; `main` quedó en `a7947871931c10b10d428248f99878f1eec4712c`; `/build-manifest.json` publica ese commit; `/`, `/manifest.json`, `/tutorial`, `/cards` y `/battle` responden HTTP 200; la captura pública de portada muestra los iconos propios renderizados.
+- **Deuda:** no se ejecutó una revisión interactiva de responsive, foco y `prefers-reduced-motion` de todas las variantes de portada; tampoco se verificó el estado autenticado del panel del jugador con una sesión normal.
+- **Siguiente acción verificable:** revisar la portada en escritorio, tablet y móvil, incluyendo el panel autenticado y movimiento reducido; después elegir el siguiente consumidor Unicode independiente.
+
+---
+
 ## 2026-08-13 — VE-1-CARDS-INTERACTIVE-QA — BLOCKED
 
 - **Fuente canónica:** código oficial `main`, Supabase activo y `https://vexforge-web.pages.dev/cards`.
