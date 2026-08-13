@@ -66,25 +66,24 @@
     };
 
     /**
-     * KEYWORD_ICON — mapea synergy_json.keywords reales del DB a iconos de UI.
-     * Keywords reales en DB: Guard, Surge, Flux, Consecrate, Drain, Veil, Forge, Resonance
-     * Mapeo mecánico: Guard→🛡️ Drain→💚 Surge→⚡ Veil→🔮
-     * Alias planned (por si aparecen): Lifesteal→💚 Poison→☠️ Shield→✨ Rush→⚡ DoubleStrike→⚔️
+     * KEYWORD_ICON — nombres semánticos de ForgeIcon para las keywords reales
+     * de synergy_json.keywords del DB. Los consumidores renderizan el lenguaje
+     * visual propio de VEXFORGE, no glifos dependientes de plataforma.
      */
     export const KEYWORD_ICON: Record<string, string> = {
     // ── Keywords reales en synergy_json.keywords del DB ──────────────────────
-    Guard:      '🛡️',   // tanque — fuerza a ser el objetivo
-    Surge:      '⚡',   // iniciativa alta, actúa primero (→ rush)
-    Flux:       '🌀',   // caótico, bonus aleatorio
-    Consecrate: '✝️',   // sagrado, daño extra a oscuridad
-    Drain:      '💚',   // roba vida del oponente (→ lifesteal 30%)
-    Veil:       '🔮',   // barrera mágica que absorbe un golpe (→ shield)
-    Forge:      '🔨',   // forja — potencia ATK en combate
-    Resonance:  '🎵',   // resonancia — buff a aliados del mismo facción
+    Guard:      'shield',   // tanque — fuerza a ser el objetivo
+    Surge:      'energy',   // iniciativa alta, actúa primero (rush)
+    Flux:       'spark',    // caótico, bonus aleatorio
+    Consecrate: 'crown',    // sagrado, daño extra a oscuridad
+    Drain:      'heart',    // roba vida del oponente (lifesteal 30%)
+    Veil:       'lock',     // barrera mágica que absorbe un golpe (shield)
+    Forge:      'attack',   // forja — potencia ATK en combate
+    Resonance:  'spark',    // resonancia — buff a aliados del mismo facción
     // ── Alias planeados (compatibilidad) ─────────────────────────────────────
-    Lifesteal:   '💚',
-    Poison:      '☠️',
-    Shield:      '✨',
-    Rush:        '⚡',
-    DoubleStrike:'⚔️',
+    Lifesteal:   'heart',
+    Poison:      'skull',
+    Shield:      'shield',
+    Rush:        'energy',
+    DoubleStrike:'attack',
     };
