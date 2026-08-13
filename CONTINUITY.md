@@ -7,14 +7,24 @@
 - **Cambio:** las tarjetas ahora son operables con Enter/Espacio y exponen foco visible;
   el detalle usa diálogo semántico, foco inicial/restaurado y cierre con Escape; filtros
   tienen etiquetas y `aria-pressed`; el tilt y holograma respetan `prefers-reduced-motion`.
-- **Evidencia local:** `npm run build` y `npx tsc --noEmit -p tsconfig.app.json`
-  finalizaron correctamente. La verificación pública previa al cambio correspondía al
-  commit `45e345ca270b05ab2caef7564782a39a8b453663`.
-- **Deuda y bloqueo:** falta publicar este lote en `main`, esperar la publicación
-  automática y comprobar el manifiesto/hash público. No se realizaron pruebas
-  autenticadas ni se simularon resultados de juego.
-- **Siguiente acción verificable:** commit descriptivo, push a `main`, comprobación de
-  `/build-manifest.json`, `/cards` y assets públicos; reabrir si el bundle no coincide.
+- **Evidencia:** commit `c586e288a26f648bea95904145473ca4b34ebc58` en `main`;
+  `npm run verify:build` y `npx tsc --noEmit -p tsconfig.app.json` finalizaron
+  correctamente; Cloudflare publica el mismo commit en `/build-manifest.json`.
+  `/`, `/manifest.json`, `/tutorial`, `/cards`, `/battle` y `/build-manifest.json`
+  respondieron HTTP 200. El bundle público contiene los marcadores de teclado,
+  diálogo y `prefers-reduced-motion`; la captura post-publicación muestra las
+  127 cartas cargadas.
+- **Bundle público:** `assets/index-CHk8jG-Q.js` SHA-256
+  `1da5221f60566beb7f77cecc78468b8e154572a8ca83d0664247cea1c1e10713`;
+  `assets/CardsRoute-Sr7CBDiK.js` SHA-256
+  `6c71c1143c2af14c2a872cc0953a4c72264151be704fb55fbbbb46080c30a171`;
+  `assets/index-CgrJ7iqE.css` SHA-256
+  `91fba4fd93a42a38d1e109043e3c15b715105c0e6bfd4f11eec05329e7f74ff9`.
+- **Deuda:** no se realizaron pruebas autenticadas ni se simularon resultados de
+  juego; queda una revisión interactiva de teclado/foco y reduced motion para elevar
+  la unidad a Q3, además del siguiente lote de Unicode de combate.
+- **Siguiente acción verificable:** reabrir la unidad sólo con evidencia de navegador
+  para foco/reduced motion; después continuar con `VE-1-BATTLE-UNICODE-DEBT`.
 
 ## 2026-08-13 — VE-SYSTEM-CANONICAL-BUILD-SYNC — OPERATIONAL
 
