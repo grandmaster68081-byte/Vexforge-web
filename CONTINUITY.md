@@ -8,7 +8,7 @@
 - **Deuda:** no se realizó QA interactivo en navegador para responsive, focus y `prefers-reduced-motion`; permanecen consumidores Unicode separados en otras superficies de combate, que no se mezclan en esta unidad.
 - **Siguiente acción verificable:** revisar esta cinemática en escritorio, tablet y móvil, incluyendo focus y movimiento reducido; después elegir el siguiente consumidor Unicode independiente.
 
----## 2026-08-13 — VE-1-HOME-ICON-LANGUAGE — IMPLEMENTED_UNVERIFIED
+---\n\n## 2026-08-13 — VE-1-HOME-ICON-LANGUAGE — IMPLEMENTED_UNVERIFIED
 
 - **Fuente canónica:** `src/routes/HomeRoute.tsx`, `ForgeIcon`, Supabase activo y Cloudflare Pages.
 - **Estado inicial:** `NOT_STARTED`; **estado actual:** `IMPLEMENTED_UNVERIFIED`, objetivo Q3.
