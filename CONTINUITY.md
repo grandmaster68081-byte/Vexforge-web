@@ -1,3 +1,13 @@
+## 2026-08-13 — VE-1-BATTLE-UNICODE-DEBT — IMPLEMENTED_UNVERIFIED
+
+- **Fuente canónica:** código oficial `main`, especialmente `src/lib/battleTypes.ts`, `src/components/battle/BattleBoardEngine.tsx` y `src/components/battle/InteractiveBattleBoard.tsx`.
+- **Estado inicial:** `NOT_STARTED`. **Estado actual:** `IMPLEMENTED_UNVERIFIED`, objetivo Q3.
+- **Cambio:** se retiraron los sustitutos Unicode del lenguaje visible de combate: facciones, estadísticas, keywords, turnos, daño, KO, drenaje, veneno, guardia, curación, estados, controles, resultados, partículas y placeholders ahora usan `ForgeIcon` o texto semántico.
+- **Restricción preservada:** no se cambiaron daño, settlement, resultados autoritativos, recompensas, economía, energía, RPCs, RLS ni datos de jugadores.
+- **Evidencia:** `main` en `133170cca8bf1d40b8da0fff2a903ee8cf11abd1`; escaneo de los tres archivos afectados sin coincidencias de los glifos objetivo; `https://vexforge-web.pages.dev/build-manifest.json` publica el mismo commit; `/`, `/manifest.json`, `/tutorial`, `/cards`, `/battle` y `/build-manifest.json` respondieron HTTP 200.
+- **Deuda:** falta revisión interactiva en navegador de legibilidad, foco, `prefers-reduced-motion` y responsive para el flujo de batalla. No se realizaron pruebas autenticadas ni se simularon resultados.
+- **Siguiente acción verificable:** reabrir esta unidad sólo con evidencia de navegador; después continuar con la siguiente unidad oficial elegible sin reabrir trabajo histórico.
+
 ## 2026-08-13 — VE-1-CARDS-ACCESSIBILITY-REDUCED-MOTION — IMPLEMENTED_UNVERIFIED
 
 - **Fuente canónica:** código oficial `main`, `src/routes/CardsRoute.tsx` y
