@@ -1,3 +1,15 @@
+## 2026-08-13 — VE-1-CARDS-PUBLIC-REVIEW — IMPLEMENTED_UNVERIFIED
+
+- **Fuente canónica:** `main`, Supabase activo y `https://vexforge-web.pages.dev/cards`.
+- **Estado inicial:** `IMPLEMENTED_UNVERIFIED`, Q2; **estado actual:** `IMPLEMENTED_UNVERIFIED`, objetivo Q3.
+- **Cambio en esta sesión:** no se modificó código, Supabase, Storage, RPCs, RLS, economía ni resultados autoritativos. Se verificó la publicación existente y la lectura pública del catálogo.
+- **Evidencia pública:** `main` y `/build-manifest.json` exponen el mismo commit `7beb3d4b6ec3fa63fe1f78537dab49e418c607c9`; `/`, `/manifest.json`, `/tutorial`, `/cards` y `/battle` responden HTTP 200; el endpoint público de `cards` devuelve registros activos.
+- **Accesibilidad y responsive:** la captura pública no interactiva confirma la superficie visual, pero no sustituye la revisión de teclado/foco, `prefers-reduced-motion` ni la sesión normal autenticada requerida por el protocolo.
+- **Bloqueo:** no se declara `Q3`, `OPERATIONAL` ni QA autenticada sin esa evidencia; no se fabricaron sesiones, colecciones ni resultados.
+- **Siguiente acción verificable:** reabrir con una sesión normal autorizada del jugador y revisar escritorio, tablet y móvil, foco visible, diálogo, Escape y movimiento reducido; mantener esta unidad sin cambios hasta entonces.
+
+---
+
 ## 2026-08-13 — VE-1-BATTLE-AUDIO-CONTROLS-ICON-LANGUAGE — IMPLEMENTED_UNVERIFIED
 
 - **Fuente canónica:** `src/components/battle/AudioControls.tsx` y `src/shared/components/ForgeIcon.tsx` del código oficial en `main`.
