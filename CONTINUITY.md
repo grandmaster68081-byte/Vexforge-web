@@ -1,3 +1,21 @@
+## 2026-08-13 — VE-1-CARDS-ACCESSIBILITY-REDUCED-MOTION — IMPLEMENTED_UNVERIFIED
+
+- **Fuente canónica:** código oficial `main`, `src/routes/CardsRoute.tsx` y
+  `src/styles.css`, reconciliados con Supabase activo y el deploy público.
+- **Estado inicial:** `CANDIDATE_FOR_REVIEW`, Q2. **Estado actual:** `IMPLEMENTED_UNVERIFIED`,
+  objetivo Q3.
+- **Cambio:** las tarjetas ahora son operables con Enter/Espacio y exponen foco visible;
+  el detalle usa diálogo semántico, foco inicial/restaurado y cierre con Escape; filtros
+  tienen etiquetas y `aria-pressed`; el tilt y holograma respetan `prefers-reduced-motion`.
+- **Evidencia local:** `npm run build` y `npx tsc --noEmit -p tsconfig.app.json`
+  finalizaron correctamente. La verificación pública previa al cambio correspondía al
+  commit `45e345ca270b05ab2caef7564782a39a8b453663`.
+- **Deuda y bloqueo:** falta publicar este lote en `main`, esperar la publicación
+  automática y comprobar el manifiesto/hash público. No se realizaron pruebas
+  autenticadas ni se simularon resultados de juego.
+- **Siguiente acción verificable:** commit descriptivo, push a `main`, comprobación de
+  `/build-manifest.json`, `/cards` y assets públicos; reabrir si el bundle no coincide.
+
 ## 2026-08-13 — VE-SYSTEM-CANONICAL-BUILD-SYNC — OPERATIONAL
 
 - **Fuente canónica:** código oficial `main`, raíz del repositorio, `package.json`,

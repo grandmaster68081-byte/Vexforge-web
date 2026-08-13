@@ -3892,6 +3892,12 @@ body.modal-open { overflow: hidden; }
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
+  .vex-card-3d {
+    transform: none !important;
+  }
+  .vex-card-3d .vex-holo {
+    opacity: 0 !important;
+  }
 }
 
 /* ─── Print — hide decorative elements ──────────────────────────── */

@@ -1,4 +1,4 @@
-import { useState, useMemo, useCallback } from "react";
+import { useState, useMemo, useCallback, useEffect, useRef } from "react";
 import type { ReactNode } from "react";
 import { useNavigate } from "react-router-dom";
 import { useCards, type Card } from "../domains/cards/useCards";
@@ -34,7 +34,7 @@ function FilterBtn({ active, color, onClick, children }: {
   active: boolean; color: string; onClick: () => void; children: ReactNode;
 }) {
   return (
-    <button onClick={onClick} style={{
+    <button type="button" onClick={onClick} aria-pressed={active} style={{
       background: active ? color + "22" : "rgba(255,255,255,.03)",
       border: `1px solid ${active ? color : "rgba(255,255,255,.08)"}`,
       borderRadius: 6, padding: "4px 10px",
@@ -136,8 +136,9 @@ function StatBar({ label, value, max, color }: { label: string; value: number; m
 }
 
 // ─── CARD TILE ───────────────────────────────────────────────────────────────
-function CardTile({ card, owned, quantity, onClick }: {
+function CardTile({ card, owned, quantity, onClick, reducedMotion }: {
   card: Card; owned: boolean; quantity: number; onClick: () => void;
+  reducedMotion: boolean;
 }) {
   const rarity      = RARITY_CFG[card.rarity]  ?? RARITY_CFG.Common;
   const faction     = FACTION_CFG[card.faction] ?? FACTION_CFG.Guerrero;
@@ -150,6 +151,15 @@ function CardTile({ card, owned, quantity, onClick }: {
   return (
     <div
       onClick={onClick}
+      onKeyDown={event => {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          onClick();
+        }
+      }}
+      role="button"
+      tabIndex={0}
+      aria-label={`Ver detalles de ${card.name}`}
       className={`vex-card-3d${card.rarity === 'Mythic' ? ' card-mythic-aura' : card.rarity === 'Legendary' ? ' card-legendary-aura' : ''}`}
       style={{
         position: "relative", cursor: "pointer",
@@ -159,6 +169,7 @@ function CardTile({ card, owned, quantity, onClick }: {
         overflow: "hidden",
       }}
       onMouseEnter={e => {
+        if (reducedMotion) return;
         try { AudioEngine.sfxCardHover(); } catch {}
         e.currentTarget.style.boxShadow =
           rarity.glow === "none"
@@ -166,6 +177,7 @@ function CardTile({ card, owned, quantity, onClick }: {
             : rarity.glow + ", 0 16px 40px rgba(0,0,0,.6)";
       }}
       onMouseMove={e => {
+        if (reducedMotion) return;
         const el = e.currentTarget;
         const cx = e.clientX;
         const cy = e.clientY;
@@ -255,6 +267,7 @@ function CardModal({ card, ownedQty, onClose, onNav }: {
   onClose: () => void;
   onNav: (path: string) => void;
 }) {
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
   const rarity  = RARITY_CFG[card.rarity]  ?? RARITY_CFG.Common;
   const faction = FACTION_CFG[card.faction] ?? FACTION_CFG.Guerrero;
   const keywords: string[] = card.synergy_json?.keywords ?? [];
@@ -263,8 +276,25 @@ function CardModal({ card, ownedQty, onClose, onNav }: {
   const maxPre  = Math.max(card.prestige, 15);
   const maxChg  = Math.max(card.charge, 10);
 
+  useEffect(() => {
+    const previouslyFocused = document.activeElement as HTMLElement | null;
+    closeButtonRef.current?.focus();
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") onClose();
+    };
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+      previouslyFocused?.focus?.();
+    };
+  }, [onClose]);
+
   return (
-    <div onClick={e => { if (e.target === e.currentTarget) onClose(); }}
+    <div
+      onClick={e => { if (e.target === e.currentTarget) onClose(); }}
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="card-modal-title"
       style={{ position: "fixed", inset: 0, zIndex: 1000,
         background: "rgba(0,0,0,.85)", backdropFilter: "blur(6px)",
         display: "flex", alignItems: "center", justifyContent: "center", padding: 16 }}>
@@ -282,7 +312,7 @@ function CardModal({ card, ownedQty, onClose, onNav }: {
               color: rarity.color, textTransform: "uppercase", letterSpacing: ".12em", marginBottom: 4 }}>
               {rarity.label} · <ForgeIcon name={faction.icon} size={10} strokeWidth={1.8} style={{ verticalAlign: "-0.15em" }} /> {card.faction}
             </div>
-            <h2 style={{ fontFamily: "Cinzel,serif", color: "#e8e8f0", margin: "0 0 4px",
+            <h2 id="card-modal-title" style={{ fontFamily: "Cinzel,serif", color: "#e8e8f0", margin: "0 0 4px",
               fontSize: "clamp(16px,3vw,22px)", lineHeight: 1.2,
               textShadow: `0 0 20px ${rarity.color}44` }}>{card.name}</h2>
             <div style={{ fontSize: 10, color: "#555577", fontFamily: "Rajdhani,sans-serif", letterSpacing: ".08em" }}>
@@ -292,7 +322,7 @@ function CardModal({ card, ownedQty, onClose, onNav }: {
               {card.is_legendary && <span style={{ color: "#f59e0b", marginLeft: 8 }}><ForgeIcon name="crown" size={10} strokeWidth={1.8} style={{ verticalAlign: "-0.15em", marginRight: 3 }} />LEGENDARIA</span>}
             </div>
           </div>
-          <button onClick={onClose} style={{
+          <button type="button" ref={closeButtonRef} onClick={onClose} aria-label="Cerrar detalles de la carta" style={{
             background: "rgba(255,255,255,.06)", border: "1px solid rgba(255,255,255,.1)",
             borderRadius: 6, color: "#8888aa", cursor: "pointer",
             width: 32, height: 32, fontSize: 16, display: "flex",
@@ -424,6 +454,15 @@ export function CardsRoute() {
   const [filterFaction, setFilterFaction] = useState("all");
   const [sortBy,        setSortBy]        = useState<"rarity"|"name"|"power">("rarity");
   const [selected,      setSelected]      = useState<ExtCard | null>(null);
+  const [reducedMotion, setReducedMotion] = useState(false);
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const updateMotionPreference = () => setReducedMotion(mediaQuery.matches);
+    updateMotionPreference();
+    mediaQuery.addEventListener("change", updateMotionPreference);
+    return () => mediaQuery.removeEventListener("change", updateMotionPreference);
+  }, []);
 
   const filtered = useMemo(() => {
     const rarityOrder = Object.fromEntries(RARITIES.map((r, i) => [r, i]));
@@ -454,6 +493,7 @@ export function CardsRoute() {
   }, []);
 
   const modalOwnedQty = selected ? (collectionById.get(selected.id)?.quantity ?? null) : null;
+  const closeModal = useCallback(() => setSelected(null), []);
 
   return (
     <div style={{ minHeight: "100vh", background: "#0a0a14" }}>
@@ -495,13 +535,19 @@ export function CardsRoute() {
         padding: "14px 24px", position: "sticky", top: 0, zIndex: 10, backdropFilter: "blur(8px)" }}>
         <div style={{ maxWidth: 1200, margin: "0 auto" }}>
           <div style={{ display: "flex", gap: 10, marginBottom: 10, flexWrap: "wrap" }}>
-            <input value={search} onChange={e => setSearch(e.target.value)}
+            <label htmlFor="cards-search" style={{
+              position: "absolute", width: 1, height: 1, padding: 0, margin: -1,
+              overflow: "hidden", clip: "rect(0, 0, 0, 0)", whiteSpace: "nowrap", border: 0,
+            }}>Buscar cartas por nombre o código</label>
+            <input id="cards-search" value={search} onChange={e => setSearch(e.target.value)}
+              aria-label="Buscar cartas por nombre o código"
               placeholder="Buscar carta…"
               style={{ flex: "1 1 180px", minWidth: 140,
                 background: "rgba(255,255,255,.05)", border: "1px solid rgba(255,255,255,.1)",
                 borderRadius: 8, padding: "8px 14px", color: "#e8e8f0", fontSize: 13,
                 fontFamily: "Rajdhani,sans-serif", outline: "none" }} />
             <select value={sortBy} onChange={e => setSortBy(e.target.value as typeof sortBy)}
+              aria-label="Ordenar cartas"
               style={{ background: "rgba(255,255,255,.05)", border: "1px solid rgba(255,255,255,.1)",
                 borderRadius: 8, padding: "8px 12px", color: "#8888aa", fontSize: 12,
                 fontFamily: "Rajdhani,sans-serif", cursor: "pointer" }}>
@@ -580,7 +626,8 @@ export function CardsRoute() {
                 <div key={card.id} className="card-grid-item card-grid-enter-v2" style={{ animationDelay: `${Math.min(idx * 0.03, 0.27)}s` }}>
                   <CardTile card={card}
                     owned={!!pc} quantity={pc?.quantity ?? 0}
-                    onClick={() => openModal(card)} />
+                    onClick={() => openModal(card)}
+                    reducedMotion={reducedMotion} />
                 </div>
               );
             })}
@@ -591,7 +638,7 @@ export function CardsRoute() {
       {/* Modal */}
       {selected && (
         <CardModal card={selected} ownedQty={modalOwnedQty}
-          onClose={() => setSelected(null)} onNav={navigate} />
+          onClose={closeModal} onNav={navigate} />
       )}
     </div>
   );
