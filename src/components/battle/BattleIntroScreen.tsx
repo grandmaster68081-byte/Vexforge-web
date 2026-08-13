@@ -5,6 +5,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { AudioEngine } from '../../lib/audioEngine';
 import { particleEngine } from '../../lib/particleEngine';
+import { ForgeIcon, type ForgeIconName } from '../../shared/components/ForgeIcon';
 
 interface BattleIntroScreenProps {
   playerName: string;
@@ -16,50 +17,50 @@ interface BattleIntroScreenProps {
 }
 
 const FACTION_THEME: Record<string, {
-  primary: string; secondary: string; glow: string; icon: string;
-  gradient: string; accent: string; runes: string[];
+  primary: string; secondary: string; glow: string; icon: ForgeIconName;
+  gradient: string; accent: string; runes: ForgeIconName[];
 }> = {
   Guerrero: {
     primary: '#e84040', secondary: '#7a1010', glow: 'rgba(232,64,64,0.8)',
-    icon: '⚔️', accent: '#ff6060',
+    icon: 'attack', accent: '#ff6060',
     gradient: 'linear-gradient(160deg, #1a0000 0%, #3d0a0a 40%, #1a0505 100%)',
-    runes: ['⚔','✦','⬡','✧','◆'],
+    runes: ['attack', 'spark', 'cards', 'target', 'crown'],
   },
   Mago: {
     primary: '#7b4fd4', secondary: '#3a1a7a', glow: 'rgba(123,79,212,0.8)',
-    icon: '🔮', accent: '#a855f7',
+    icon: 'spark', accent: '#a855f7',
     gradient: 'linear-gradient(160deg, #050018 0%, #180a3d 40%, #0a0522 100%)',
-    runes: ['✦','⊕','◈','⟐','★'],
+    runes: ['spark', 'energy', 'target', 'cards', 'crown'],
   },
   'Pícaro': {
     primary: '#3dc96b', secondary: '#0e5c2a', glow: 'rgba(61,201,107,0.8)',
-    icon: '🗡️', accent: '#5de88a',
+    icon: 'target', accent: '#5de88a',
     gradient: 'linear-gradient(160deg, #001a0a 0%, #0a3d1a 40%, #001505 100%)',
-    runes: ['◆','✧','⬡','✦','⊕'],
+    runes: ['target', 'spark', 'attack', 'cards', 'energy'],
   },
   'Paladín': {
     primary: '#e8b84b', secondary: '#7a5210', glow: 'rgba(232,184,75,0.8)',
-    icon: '🛡️', accent: '#f5d585',
+    icon: 'shield', accent: '#f5d585',
     gradient: 'linear-gradient(160deg, #1a1000 0%, #3d2a00 40%, #1a1200 100%)',
-    runes: ['★','✦','◈','⬡','✧'],
+    runes: ['crown', 'spark', 'shield', 'cards', 'target'],
   },
   Explorador: {
     primary: '#3dc96b', secondary: '#0e5c2a', glow: 'rgba(61,201,107,0.8)',
-    icon: '🏹', accent: '#5de88a',
+    icon: 'target', accent: '#5de88a',
     gradient: 'linear-gradient(160deg, #001a0a 0%, #0a3d1a 40%, #001505 100%)',
-    runes: ['◆','✧','⬡','✦','⊕'],
+    runes: ['target', 'spark', 'attack', 'cards', 'energy'],
   },
   Comerciante: {
     primary: '#e8b84b', secondary: '#7a5210', glow: 'rgba(232,184,75,0.8)',
-    icon: '💰', accent: '#f5d585',
+    icon: 'coin', accent: '#f5d585',
     gradient: 'linear-gradient(160deg, #1a1000 0%, #3d2a00 40%, #1a1200 100%)',
-    runes: ['★','✦','◈','⬡','✧'],
+    runes: ['coin', 'spark', 'cards', 'crown', 'target'],
   },
   default: {
     primary: '#4a9eff', secondary: '#1a4a8a', glow: 'rgba(74,158,255,0.8)',
-    icon: '🃏', accent: '#7abcff',
+    icon: 'cards', accent: '#7abcff',
     gradient: 'linear-gradient(160deg, #000a1a 0%, #0a1e3d 40%, #000a1a 100%)',
-    runes: ['◆','✦','⬡','◈','★'],
+    runes: ['cards', 'spark', 'target', 'crown', 'energy'],
   },
 };
 
@@ -74,14 +75,12 @@ function RuneParticles({ theme, side }: { theme: typeof FACTION_THEME['default']
           [side === 'left' ? 'left' : 'right']: `${10 + (i * 18) % 70}%`,
           bottom: `${(i * 23 + 10) % 60}%`,
           color: theme.primary,
-          fontSize: `${12 + (i % 3) * 6}px`,
           opacity: 0.2 + (i % 3) * 0.15,
           animation: `rune-float-${i % 3} ${3 + i * 0.5}s ease-in-out infinite`,
           animationDelay: `${i * 0.4}s`,
           filter: `drop-shadow(0 0 4px ${theme.glow})`,
-          fontFamily: 'serif',
         }}>
-          {r}
+          <ForgeIcon name={r} size={12 + (i % 3) * 6} />
         </div>
       ))}
     </div>
@@ -254,19 +253,19 @@ export function BattleIntroScreen({
               animation: phase !== 'enter' ? 'intro-name-reveal 0.4s 0.4s ease both' : undefined,
               boxShadow: `0 0 12px ${pTheme.primary}22`,
             }}>
-              <span style={{ fontSize: 14 }}>{pTheme.icon}</span>
+              <ForgeIcon name={pTheme.icon} size={14} />
               {playerFaction}
             </div>
             {/* Big icon with glow rings */}
             <div style={{ position: 'relative', marginBottom: 20 }}>
               <div className="battle-intro-icon" style={{
-                fontSize: 'clamp(52px,11vw,86px)', lineHeight: 1,
+                 width: 'clamp(52px,11vw,86px)', height: 'clamp(52px,11vw,86px)',
                 filter: `drop-shadow(0 0 24px ${pTheme.glow}) drop-shadow(0 0 48px ${pTheme.glow})`,
                 animation: 'intro-icon-float 3s ease-in-out infinite',
                 color: pTheme.primary,
-                display: 'block',
+                 display: 'block',
               }}>
-                {pTheme.icon}
+                 <ForgeIcon name={pTheme.icon} size={86} style={{ width: '100%', height: '100%' }} />
               </div>
               {/* Rotating glow ring */}
               <div style={{
@@ -296,7 +295,7 @@ export function BattleIntroScreen({
               opacity: phase === 'enter' ? 0 : 1,
               textTransform: 'uppercase',
             }}>
-              ← TÚ
+               <ForgeIcon name="chevron-left" size={12} /> TÚ
             </div>
           </div>
           {/* Bottom gradient fade */}
@@ -351,17 +350,17 @@ export function BattleIntroScreen({
               boxShadow: `0 0 12px ${oTheme.primary}22`,
             }}>
               {opponentFaction}
-              <span style={{ fontSize: 14 }}>{oTheme.icon}</span>
+               <ForgeIcon name={oTheme.icon} size={14} />
             </div>
             <div style={{ position: 'relative', marginBottom: 20 }}>
               <div className="battle-intro-icon" style={{
-                fontSize: 'clamp(52px,11vw,86px)', lineHeight: 1,
+                 width: 'clamp(52px,11vw,86px)', height: 'clamp(52px,11vw,86px)',
                 filter: `drop-shadow(0 0 24px ${oTheme.glow}) drop-shadow(0 0 48px ${oTheme.glow})`,
                 animation: 'intro-icon-float 3.2s ease-in-out infinite 0.8s',
                 color: oTheme.primary,
-                display: 'block',
+                 display: 'block',
               }}>
-                {oTheme.icon}
+                 <ForgeIcon name={oTheme.icon} size={86} style={{ width: '100%', height: '100%' }} />
               </div>
               <div style={{
                 position: 'absolute', inset: -12,
@@ -389,7 +388,7 @@ export function BattleIntroScreen({
               opacity: phase === 'enter' ? 0 : 1,
               textTransform: 'uppercase',
             }}>
-              RIVAL →
+               RIVAL <ForgeIcon name="chevron-right" size={12} />
             </div>
           </div>
           <div style={{
@@ -545,7 +544,7 @@ export function BattleIntroScreen({
         color: 'rgba(232,184,75,0.4)', letterSpacing: '0.15em',
         textTransform: 'uppercase',
       }}>
-        VEXFORGE · ARENA
+         VEXFORGE / ARENA
       </div>
     </div>
   );

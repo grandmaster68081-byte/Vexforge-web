@@ -1,3 +1,15 @@
+## 2026-08-13 — VE-1-BATTLE-INTRO-ICON-LANGUAGE — IMPLEMENTED_UNVERIFIED
+
+- **Fuente canónica:** `src/components/battle/BattleIntroScreen.tsx` y `src/shared/components/ForgeIcon.tsx` del código oficial en `main`.
+- **Estado inicial:** `NOT_STARTED`. **Estado actual:** `IMPLEMENTED_UNVERIFIED`, objetivo Q3.
+- **Cambio:** la introducción de batalla ya no usa pictogramas Unicode para facciones, runas, navegación ni decoración; conserva el flujo cinematográfico, nombres, colores, cuenta atrás y feedback existentes usando iconos SVG propios.
+- **Alcance autoritativo:** no se tocaron daño, settlement, resultados, recompensas, economía, energía, RPCs, RLS, datos de jugadores ni reglas de batalla.
+- **Accesibilidad y movimiento:** los SVG decorativos mantienen `aria-hidden`, el texto semántico permanece visible y no se alteraron las duraciones ni las animaciones del flujo.
+- **Evidencia local:** `npm run verify:build`, `npx tsc --noEmit -p tsconfig.app.json`, `git diff --check` y el escaneo de `BattleIntroScreen.tsx` terminaron correctamente; no quedan pictogramas/símbolos visuales Unicode en la unidad.
+- **Evidencia remota:** la consulta de Supabase confirmó el proyecto `ACTIVE_HEALTHY` y la existencia de las tablas canónicas; no se modificó Supabase.
+- **Deuda y bloqueo:** la revisión visual interactiva de combate sigue bloqueada sin una sesión normal autorizada del jugador; no se fabricaron resultados ni se declaró QA autenticada.
+- **Siguiente acción verificable:** publicar el commit en `main`, comprobar propagación y comparar `/build-manifest.json`, rutas públicas y bundle; después revisar responsive, foco y `prefers-reduced-motion` con sesión normal.
+
 ## 2026-08-13 — VE-1-STARTER-DECK-ICON-LANGUAGE — IMPLEMENTED_UNVERIFIED
 
 - **Fuente canónica:** `src/shared/components/StarterDeckReveal.tsx` y `ForgeIcon` del código oficial en `main`.
