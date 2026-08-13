@@ -1,3 +1,15 @@
+## 2026-08-13 — VE-1-CARDS-INTERACTIVE-QA — BLOCKED
+
+- **Fuente canónica:** código oficial `main`, Supabase activo y `https://vexforge-web.pages.dev/cards`.
+- **Estado inicial:** `IMPLEMENTED_UNVERIFIED`, Q2; **estado actual:** `BLOCKED`, objetivo Q3.
+- **Verificación realizada:** la implementación contiene selección por Enter/Espacio, foco visible, diálogo semántico, foco inicial/restaurado, cierre con Escape y lectura de `prefers-reduced-motion`; la hoja de estilos desactiva tilt/holograma y reduce animaciones cuando corresponde.
+- **Evidencia pública:** el endpoint anónimo de `cards` devuelve registros activos; `/build-manifest.json` coincide con `main`; `/`, `/manifest.json`, `/tutorial`, `/cards` y `/battle` responden HTTP 200.
+- **Bloqueo real:** este entorno no dispone de un navegador automatizable ni de una sesión normal autenticada del jugador, por lo que no se puede comprobar honestamente la interacción, responsive, foco real ni movimiento reducido. No se fabricó QA ni se simularon datos.
+- **Alcance:** no se modificaron código, Supabase, Storage, RPCs, RLS, economía, combate ni resultados autoritativos.
+- **Condición de reapertura:** contar con navegador interactivo y sesión normal autorizada; revisar escritorio, tablet y móvil, Enter/Espacio, Escape, foco visible/restaurado y `prefers-reduced-motion`; sólo entonces elevar a `CANDIDATE_FOR_REVIEW` o `OPERATIONAL` con evidencia.
+
+---
+
 ## 2026-08-13 — VE-1-CARDS-PUBLIC-REVIEW — IMPLEMENTED_UNVERIFIED
 
 - **Fuente canónica:** `main`, Supabase activo y `https://vexforge-web.pages.dev/cards`.
