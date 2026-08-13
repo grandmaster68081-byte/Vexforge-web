@@ -1,3 +1,13 @@
+## 2026-08-13 — VE-1-BATTLE-UNICODE-MICRO-FIX — IMPLEMENTED_UNVERIFIED
+
+- **Fuente canónica:** `src/components/battle/BattleBoardEngine.tsx` y `src/styles.css` en `main`.
+- **Estado inicial:** `IMPLEMENTED_UNVERIFIED`. **Estado actual:** `IMPLEMENTED_UNVERIFIED`, objetivo Q3.
+- **Cambio:** el indicador de crítico y el daño flotante conservan su feedback pero usan `ForgeIcon`; el divisor visual del tablero usa una forma CSS propia en lugar de un glifo Unicode.
+- **Restricción preservada:** no se cambiaron daño, settlement, resultados autoritativos, recompensas, economía, energía, RPCs, RLS ni datos de jugadores.
+- **Evidencia local:** `npm run verify:build` finalizó correctamente; los dos archivos editados no contienen los glifos Unicode objetivo.
+- **Deuda y bloqueo:** la superficie de batalla requiere sesión autenticada para revisar el flujo interactivo; no se fabricaron resultados ni se declaró QA autenticada. Persisten consumidores Unicode en otros lotes de combate.
+- **Siguiente acción verificable:** publicar este lote sólo mediante el flujo autorizado; después revisar en navegador con sesión normal o mantener `BLOCKED` y abordar el siguiente consumidor como unidad separada.
+
 ## 2026-08-13 — VE-1-BATTLE-UNICODE-DEBT — IMPLEMENTED_UNVERIFIED
 
 - **Fuente canónica:** código oficial `main`, especialmente `src/lib/battleTypes.ts`, `src/components/battle/BattleBoardEngine.tsx` y `src/components/battle/InteractiveBattleBoard.tsx`.

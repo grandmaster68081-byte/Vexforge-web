@@ -5261,12 +5261,16 @@ img[src=""] {
   position: relative;
 }
 .battle-zone-divider::after {
-  content: '⚔';
+  content: '';
   position: absolute;
   left: 50%; top: 50%;
   transform: translate(-50%, -50%);
+  width: 10px;
+  height: 10px;
+  border: 1px solid var(--zone-color, #e8b84b);
+  background: #080812;
+  clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
   color: var(--zone-color, #e8b84b);
-  font-size: 14px;
   filter: drop-shadow(0 0 8px var(--zone-color, #e8b84b));
   animation: zone-glow-pulse 2.5s ease-in-out infinite;
 }

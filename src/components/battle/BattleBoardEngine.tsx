@@ -35,6 +35,7 @@ interface UnitState {
   isDying: boolean;
   isActive: boolean;
   floatDamage: string | null;
+  floatDamageIsCrit: boolean;
   floatHeal: number | null;
   alive: boolean;
 }
@@ -45,7 +46,8 @@ function buildUnitStates(units: BattleUnit[]): Record<number, UnitState> {
     s[u.idx] = {
       unit: u, currentHp: u.hp,
       isAttacking: false, isTakingHit: false, isDying: false,
-      isActive: false, floatDamage: null, floatHeal: null, alive: u.alive,
+      isActive: false, floatDamage: null, floatDamageIsCrit: false,
+      floatHeal: null, alive: u.alive,
     };
   });
   return s;
@@ -68,7 +70,14 @@ function HpBar({ current, max }: { current: number; max: number; rarity?: string
 }
 
 // ─── Floating damage text ─────────────────────────────────────────────────────
-function FloatText({ text, color, isHeal }: { text: string; color: string; isHeal?: boolean }) {
+function FloatText({
+  text, color, isHeal, isCrit,
+}: {
+  text: string;
+  color: string;
+  isHeal?: boolean;
+  isCrit?: boolean;
+}) {
   return (
     <div style={{
       position: 'absolute', top: -22, left: '50%', transform: 'translateX(-50%)',
@@ -77,6 +86,7 @@ function FloatText({ text, color, isHeal }: { text: string; color: string; isHea
       textShadow: `0 0 8px ${color}`,
       animation: 'floatUp 0.9s ease forwards',
     }}>
+      {isCrit && <ForgeIcon name="energy" size={12} strokeWidth={2} />}
       {isHeal ? '+' : ''}{text}
     </div>
   );
@@ -91,7 +101,10 @@ function BoardUnit({
   cardRef: (el: HTMLDivElement | null) => void;
   isCurrentTurn: boolean;
 }) {
-  const { unit, currentHp, isAttacking, isTakingHit, isDying, isActive, floatDamage, floatHeal, alive } = state;
+  const {
+    unit, currentHp, isAttacking, isTakingHit, isDying, isActive,
+    floatDamage, floatDamageIsCrit, floatHeal, alive,
+  } = state;
   const rarColor = RARITY_COLOR[unit.rarity] ?? '#8b8b9e';
   const rarGlow  = RARITY_GLOW[unit.rarity]  ?? 'rgba(139,139,158,0.3)';
 
@@ -218,7 +231,13 @@ function BoardUnit({
       )}
 
       {/* Floating damage */}
-      {floatDamage && <FloatText text={floatDamage} color="#ff6b35" />}
+      {floatDamage && (
+        <FloatText
+          text={floatDamage}
+          color={floatDamageIsCrit ? '#e8b84b' : '#ff6b35'}
+          isCrit={floatDamageIsCrit}
+        />
+      )}
       {floatHeal !== null && floatHeal > 0 && <FloatText text={String(floatHeal)} color="#3ddc84" isHeal />}
 
       {/* Hit flash overlay */}
@@ -259,7 +278,7 @@ function TurnHeader({ turn, side, attackerName, damage, isCrit }: {
           color: isCrit ? '#e8b84b' : '#e0e0f8',
           textShadow: isCrit ? '0 0 8px #e8b84b88' : 'none',
         }}>
-          {isCrit ? '⚡ CRIT ' : ''}{damage} DMG
+          {isCrit && <><ForgeIcon name="energy" size={13} strokeWidth={2} /> CRIT </>}{damage} DMG
         </span>
       )}
     </div>
@@ -415,7 +434,8 @@ export function BattleBoardEngine({ result, playerName, opponentName, onComplete
             ...next[defenderIdx],
             currentHp: newHp,
             isTakingHit: true,
-            floatDamage: t.damage > 0 ? (t.is_crit ? `⚡${t.damage}` : String(t.damage)) : null,
+            floatDamage: t.damage > 0 ? String(t.damage) : null,
+            floatDamageIsCrit: t.damage > 0 && t.is_crit,
           };
         }
         // Lifesteal heal
@@ -465,7 +485,7 @@ export function BattleBoardEngine({ result, playerName, opponentName, onComplete
           const isDead = t.is_kill || next[defenderIdx].currentHp <= 0;
           next[defenderIdx] = {
             ...next[defenderIdx],
-            isTakingHit: false, floatDamage: null,
+            isTakingHit: false, floatDamage: null, floatDamageIsCrit: false,
             isDying: isDead, alive: !isDead,
           };
           if (isDead) {
