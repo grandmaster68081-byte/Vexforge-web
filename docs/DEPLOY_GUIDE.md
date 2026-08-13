@@ -16,7 +16,9 @@
 2. Actualizar directamente el código fuente oficial en GitHub.
 3. Crear un commit descriptivo y hacer push a main.
 4. Dejar que Cloudflare Pages despliegue automáticamente.
-5. Revisar https://vexforge-web.pages.dev y comprobar la propagación del commit.
+5. Ejecutar `npm run verify:build` antes del push y, tras la propagación,
+   comprobar `/build-manifest.json`, `index.html` y los hashes públicos contra el
+   commit de main.
 6. Registrar estado, evidencia, deuda y siguiente acción en CONTINUITY.md y Supabase.
 
 ## Lo que no se hace
@@ -26,4 +28,7 @@
 - No se edita Cloudflare ni se usa Wrangler para publicar.
 - No se hace deploy manual desde una máquina o entorno alternativo.
 
-Si la URL pública aún sirve un bundle anterior, el estado correcto es PENDING_SOURCE o BLOCKED por propagación automática. La solución es verificar GitHub, esperar o investigar el vínculo automático; nunca publicar por un canal distinto.
+Si la URL pública aún sirve un bundle anterior, se corrige la discrepancia en la
+fuente/build de GitHub durante la misma sesión: se verifica la raíz del repositorio,
+se regenera `dist/` y se vuelve a comprobar el manifiesto público. No se cierra con
+`PENDING_SOURCE` ni se publica por un canal distinto.

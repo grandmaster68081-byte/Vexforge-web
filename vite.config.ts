@@ -1,9 +1,61 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
+import { execFileSync } from "node:child_process";
+import { writeFileSync } from "node:fs";
+import { resolve } from "node:path";
+
+function sourceCommit(): string {
+  const configuredCommit =
+    process.env.CF_PAGES_COMMIT_SHA ||
+    process.env.GITHUB_SHA ||
+    process.env.COMMIT_SHA;
+
+  if (configuredCommit) return configuredCommit;
+
+  try {
+    return execFileSync("git", ["rev-parse", "HEAD"], {
+      encoding: "utf8",
+      stdio: ["ignore", "pipe", "ignore"],
+    }).trim();
+  } catch {
+    return "unknown";
+  }
+}
+
+function buildProvenancePlugin() {
+  let outputPath = "";
+
+  return {
+    name: "vexforge-build-provenance",
+    apply: "build" as const,
+    configResolved(config: { root: string; build: { outDir: string } }) {
+      outputPath = resolve(config.root, config.build.outDir);
+    },
+    writeBundle() {
+      writeFileSync(
+        resolve(outputPath, "build-manifest.json"),
+        `${JSON.stringify(
+          {
+            schemaVersion: 1,
+            project: "VEXFORGE",
+            sourceCommit: sourceCommit(),
+            sourceBranch:
+              process.env.CF_PAGES_BRANCH ||
+              process.env.GITHUB_REF_NAME ||
+              "main",
+            outputDirectory: "dist",
+          },
+          null,
+          2,
+        )}\n`,
+      );
+    },
+  };
+}
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [react()],
+  plugins: [react(), buildProvenancePlugin()],
   build: {
     outDir: "dist",
     // Disable sourcemaps in production — reduces bundle size

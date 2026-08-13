@@ -10,7 +10,7 @@ PROYECTO
 - Repositorio oficial: https://github.com/grandmaster68081-byte/Vexforge-web.git
 - Supabase oficial: https://rscuzqnfccqvltkdcdny.supabase.co
 - Deploy oficial: https://vexforge-web.pages.dev
-- El  canónicas principales:
+- Fuentes canónicas principales:
   - vexforge_master_protocol_v2
   - vexforge_forge_formation_engine_v1
   - documentos oficiales de la unidad activa
@@ -67,6 +67,10 @@ Antes de modificar o ejecutar cualquier cosa:
 - Revisa la estructura real del repositorio, package.json, rutas, componentes, servicios, assets, audio, Storage y configuración de despliegue.
 - Comprueba el estado actual de main, Supabase y Cloudflare Pages.
 - Compara el código del repositorio con el bundle publicado.
+- Ejecuta el build automático desde la raíz del repositorio (`npm run verify:build`).
+- La única salida de producción válida es `dist/` generado desde el `package.json` y
+  `vite.config.ts` de la raíz; no se aceptan copias anidadas, bundles históricos ni
+  artefactos precompilados como sustitutos del build actual.
 - Comprueba qué está implementado, qué está pendiente y qué está realmente operativo.
 - No repitas trabajo ya realizado.
 - Si no se indica una unidad, elige la prioridad oficial más pequeña, reversible y verificable.
@@ -104,6 +108,11 @@ Estados permitidos:
 NOT_STARTED, DRAFT, IN_PROGRESS, BLOCKED, PENDING_SOURCE, IMPLEMENTED_UNVERIFIED, OPERATIONAL, CANDIDATE_FOR_REVIEW, REFINED y DEFERRED.
 
 No existen los estados PERFECTO, FINAL o NO_MEJORABLE.
+
+`PENDING_SOURCE` sólo puede aparecer durante una investigación intermedia. No es un
+estado de cierre: antes de terminar la sesión debe resolverse, convertirse en
+`OPERATIONAL`, `CANDIDATE_FOR_REVIEW`, `REFINED`, `DEFERRED` o `BLOCKED` con una
+causa real y verificable.
 
 6. REGLA DE CERO GENÉRICOS
 
@@ -266,10 +275,17 @@ Cuando sea relevante:
 - Comprueba HTTP 200 en las rutas relevantes.
 - Verifica que el deploy público corresponde al commit que se está auditando.
 - No confundas un deploy anterior con el estado actual de main.
-- Si Cloudflare no refleja main, marca BLOCKED o PENDING_SOURCE y continúa esperando la propagación automática; no crees un canal alternativo.
-- El push a main, la propagación automática de Cloudflare y la verificación pública son pasos obligatorios al cierre de cada unidad de trabajo completada, salvo que la unidad esté BLOCKED, PENDING_SOURCE o el despliegue sea técnicamente imposible; en esos casos se registra la causa y no se simula la verificación.
+- El build automático de Pages debe generar desde la raíz el `dist/` del commit de
+  `main`; la aplicación expone `dist/build-manifest.json` con el commit fuente.
+- Compara `build-manifest.json`, el `index.html` y los hashes de los assets públicos
+  con el commit auditado. Un bundle público anterior demuestra una discrepancia en la
+  cadena fuente/build y debe corregirse en GitHub en la misma sesión; no se atribuye
+  automáticamente a Cloudflare ni se deja como `PENDING_SOURCE`.
+- El push a main, la propagación automática de Cloudflare y la verificación pública son
+  pasos obligatorios al cierre de cada unidad de trabajo completada. Si la evidencia
+  pública no coincide, la unidad no está cerrada y se corrige la causa fuente/build.
 - Esta obligación de publicación automática no requiere autorización adicional del usuario: forma parte del cierre normal de toda unidad completada.
-- La única publicación prohibida es la manual o paralela (por ejemplo, wrangler, una réplica o un canal distinto del vínculo oficial entre main y Cloudflare Pages).
+- La única publicación prohibida es la manual o paralela (por ejemplo, Wrangler, una réplica o un canal distinto del vínculo oficial entre main y Cloudflare Pages).
 
 14. CIERRE OBLIGATORIO
 
@@ -286,7 +302,8 @@ Al terminar una sesión:
 - Ejecuta la verificación proporcional al riesgo.
 - Crea un commit descriptivo sólo si hubo cambios reales.
 - Publica en main al cerrar cada unidad completada, siguiendo el flujo de verificación descrito aquí.
-- Ejecuta el deploy al cerrar cada unidad completada y comprueba que el público refleja el commit auditado.
+- Deja que el deploy automático se ejecute y comprueba que el manifiesto público y los
+  assets reflejan el commit auditado; no existe un paso de deploy manual.
 - No borres historial.
 - No declares verificado lo que no fue comprobado.
 

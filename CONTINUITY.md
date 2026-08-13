@@ -1,3 +1,24 @@
+## 2026-08-13 — VE-SYSTEM-CANONICAL-BUILD-SYNC — OPERATIONAL
+
+- **Fuente canónica:** código oficial `main`, raíz del repositorio, `package.json`,
+  `vite.config.ts` y el build automático de Cloudflare Pages.
+- **Problema corregido:** `main` contenía un `dist/` precompilado anterior al código
+  fuente y además una segunda copia histórica en `vexforge/dist/`. El build real de
+  la raíz generaba otro bundle; por eso la comparación contra el `dist/` versionado
+  señalaba erróneamente que el público estaba desactualizado.
+- **Corrección:** se eliminó la salida anidada y la publicación manual del package;
+  `dist/` pasó a ser salida generada, se añadió `build-manifest.json` con el commit
+  fuente y `npm run verify:build` valida commit, index y assets antes del push.
+- **Evidencia:** `npm ci --ignore-scripts`, `npm run build` y la verificación del
+  bundle produjeron `index-Ce_aGBEF.js` y `CardsRoute-CE5dWwEr.js`; sus SHA-256 son
+  `89a05f2b308c1f5ebca305175e808fd6c6257e20f6e966698ee051384396eb36` y
+  `a24c2143389de9a72bb39ee8f94b9e6a52597063badafef5da44e71af99650ef`, coincidiendo
+  con los assets públicos observados.
+- **Estado actual:** `OPERATIONAL`, Q2; la fuente y el build quedan unificados y el
+  cierre de cada sesión exige verificar el manifiesto público del commit.
+- **Siguiente acción:** continuar con la revisión visual responsive, focus y
+  `prefers-reduced-motion` de la unidad de cartas; no reabrir esta sincronización.
+
 ## 2026-08-12 — VE-1-CARDS-ICON-BATCH — CANDIDATE_FOR_REVIEW
 
 - **Fuente canónica:** código oficial `main` y `ForgeIcon`.
@@ -25,13 +46,16 @@
 
 ---
 
-## 2026-08-12 — VE-PROTOCOL-PUBLICATION-FLOW-AMENDMENT — IN_PROGRESS
+## 2026-08-12 — VE-PROTOCOL-PUBLICATION-FLOW-AMENDMENT — SUPERSEDED
 
 - **Fuente canónica:** VEXFORGE_PROTOCOL_V2.md y política operativa del repositorio oficial.
 - **Cambio permanente:** el push a `main`, la publicación automática vinculada de Cloudflare Pages y la comprobación pública forman parte obligatoria del cierre; no requieren autorización adicional. Se mantiene prohibida únicamente la publicación manual o paralela.
-- **Estado:** PENDING_SOURCE, Q1; la regla quedó reforzada en el código documental, pero Cloudflare aún sirve el bundle anterior pese al check automático `success`.
-- **Evidencia previa:** Supabase está activo y `cards` devuelve 127 registros activos; el CSS público coincide con `main`, pero el JavaScript público aún corresponde a una versión anterior.
-- **Siguiente acción verificable:** comprobar que Cloudflare refleja el commit de esta enmienda, comparar hashes del bundle y actualizar esta entrada a `OPERATIONAL` con evidencia real.
+- **Estado:** SUPERSEDED; la discrepancia se resolvió reconciliando el código fuente
+  con el artefacto generado desde la raíz. Esta entrada ya no es una instrucción
+  activa ni un estado pendiente de la continuidad.
+- **Evidencia final:** el build de la raíz genera el mismo entrypoint y chunk de cartas
+  que sirve el deploy público; la evidencia vigente está en la entrada
+  `VE-SYSTEM-CANONICAL-BUILD-SYNC`.
 
 ---
 
