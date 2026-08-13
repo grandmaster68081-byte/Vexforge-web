@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { supabase } from "../../lib/supabase";
+import { ForgeIcon, type ForgeIconName } from "./ForgeIcon";
 
 interface StarterCard {
   id: string;
@@ -19,11 +20,11 @@ const FACTION_COLORS: Record<string, string> = {
   Pícaro:   "#3DC96B",
 };
 
-const FACTION_ICONS: Record<string, string> = {
-  Guerrero: "⚔️",
-  Mago:     "🔮",
-  Paladín:  "🛡️",
-  Pícaro:   "🗡️",
+const FACTION_ICONS: Record<string, ForgeIconName> = {
+  Guerrero: "attack",
+  Mago:     "spark",
+  Paladín:  "shield",
+  Pícaro:   "target",
 };
 
 const LS_KEY = "vex_starter_deck_seen";
@@ -104,7 +105,9 @@ export function StarterDeckReveal() {
 
       <div style={{ maxWidth: 780, width: "100%" }}>
         <div style={{ textAlign: "center", marginBottom: 32 }}>
-          <div style={{ fontSize: 44, marginBottom: 10 }}>⚔️</div>
+          <div style={{ color: "#E8B84B", marginBottom: 10, display: "grid", placeItems: "center" }}>
+            <ForgeIcon name="attack" size={44} />
+          </div>
           <h2 style={{
             fontFamily: "'Rajdhani', sans-serif",
             fontSize: 30, fontWeight: 900, letterSpacing: "0.02em",
@@ -126,7 +129,9 @@ export function StarterDeckReveal() {
             <div key={faction} style={{ marginBottom: 28 }}>
               <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
                 <div style={{ width: 3, height: 20, background: color, borderRadius: 2 }} />
-                <span style={{ fontSize: 16 }}>{FACTION_ICONS[faction]}</span>
+                <span style={{ color, display: "inline-flex" }}>
+                  <ForgeIcon name={FACTION_ICONS[faction]} size={18} />
+                </span>
                 <span style={{
                   fontFamily: "'Rajdhani', sans-serif",
                   fontSize: 14, fontWeight: 800,
@@ -152,8 +157,8 @@ export function StarterDeckReveal() {
                           style={{ width: "100%", height: "100%", objectFit: "cover" }}
                           onError={(e) => { (e.target as HTMLImageElement).style.opacity = "0"; }} />
                       ) : (
-                        <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 32, opacity: 0.3 }}>
-                          {FACTION_ICONS[faction]}
+                        <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center", opacity: 0.3 }}>
+                          <ForgeIcon name={FACTION_ICONS[faction]} size={32} />
                         </div>
                       )}
                       <div style={{
@@ -170,9 +175,15 @@ export function StarterDeckReveal() {
                         color: "#e0e0e0", marginBottom: 5, lineHeight: 1.2,
                       }}>{card.name}</div>
                       <div style={{ display: "flex", gap: 8, fontSize: 11 }}>
-                        <span style={{ color: "#E84040" }} title="Poder">⚡ {card.power}</span>
-                        <span style={{ color: "#8B5CF6" }} title="Afinidad">✨ {card.affinity}</span>
-                        <span style={{ color: "#E8B84B" }} title="Prestigio">👑 {card.prestige}</span>
+                        <span style={{ color: "#E84040", display: "inline-flex", alignItems: "center", gap: 3 }} title="Poder">
+                          <ForgeIcon name="energy" size={13} /> {card.power}
+                        </span>
+                        <span style={{ color: "#8B5CF6", display: "inline-flex", alignItems: "center", gap: 3 }} title="Afinidad">
+                          <ForgeIcon name="spark" size={13} /> {card.affinity}
+                        </span>
+                        <span style={{ color: "#E8B84B", display: "inline-flex", alignItems: "center", gap: 3 }} title="Prestigio">
+                          <ForgeIcon name="crown" size={13} /> {card.prestige}
+                        </span>
                       </div>
                     </div>
                   </div>
@@ -192,7 +203,12 @@ export function StarterDeckReveal() {
             fontSize: 17, fontWeight: 900, border: "none", borderRadius: 10,
             padding: "14px 52px", cursor: "pointer", letterSpacing: "0.06em",
             boxShadow: "0 4px 28px rgba(232,184,75,0.4)",
-          }}>¡A jugar! ⚔️</button>
+          }}>
+            <span style={{ display: "inline-flex", alignItems: "center", gap: 8 }}>
+              <ForgeIcon name="attack" size={18} />
+              ¡A jugar!
+            </span>
+          </button>
         </div>
       </div>
     </div>

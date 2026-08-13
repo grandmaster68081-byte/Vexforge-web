@@ -1,3 +1,14 @@
+## 2026-08-13 — VE-1-STARTER-DECK-ICON-LANGUAGE — IMPLEMENTED_UNVERIFIED
+
+- **Fuente canónica:** `src/shared/components/StarterDeckReveal.tsx` y `ForgeIcon` del código oficial en `main`.
+- **Estado inicial:** `NOT_STARTED`. **Estado actual:** `IMPLEMENTED_UNVERIFIED`, objetivo Q3.
+- **Cambio:** la revelación del mazo inicial ya no usa pictogramas Unicode para facciones, portada vacía, estadísticas ni CTA; todos los indicadores usan iconos SVG propios de `ForgeIcon`, conservando el texto y los valores reales.
+- **Alcance autoritativo:** no se tocaron asignación del mazo, RPC `vexforge_assign_starter_deck`, cartas, economía, recompensas, energía, RLS ni reglas del juego.
+- **Accesibilidad y movimiento:** se mantiene el texto semántico y los títulos de estadísticas; no se añadieron animaciones nuevas ni se alteró la duración del flujo existente.
+- **Evidencia local:** `npm run build`, `npx tsc --noEmit -p tsconfig.app.json` y `git diff --check` finalizaron correctamente. El escaneo del archivo no conserva pictogramas visuales Unicode; las tildes y el texto español no son sustitutos visuales.
+- **Deuda y bloqueo:** la fuente modificada ya está sincronizada con `vexforge_frontend_source_files`; falta registrar el commit en `main` y comprobar propagación pública. La verificación autenticada del onboarding sigue bloqueada sin sesión normal autorizada del jugador.
+- **Siguiente acción verificable:** hacer commit/push del lote y comprobar el check de Cloudflare y las rutas públicas sin declarar QA autenticada.
+
 ## 2026-08-13 — VE-1-BATTLE-UNICODE-MICRO-FIX — IMPLEMENTED_UNVERIFIED
 
 - **Fuente canónica:** `src/components/battle/BattleBoardEngine.tsx` y `src/styles.css` en `main`.
