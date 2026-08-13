@@ -7,15 +7,16 @@ import type { RealBattleResult, BattleUnit } from '../../lib/battleTypes';
 import { RARITY_COLOR, RARITY_GLOW, KEYWORD_ICON } from '../../lib/battleTypes';
 import { CardAttackCinematic } from './CardAttackCinematic';
 import { DamageFloatLayer, useDamageFloats } from './BattleEffects';
+import { ForgeIcon, type ForgeIconName } from '../../shared/components/ForgeIcon';
 
 // Faction-to-icon map — KEYWORD_ICON maps mechanics (Guard, Surge…), not factions
-const FACTION_ICON: Record<string, string> = {
-  Guerrero:    '⚔️',
-  Mago:        '🔮',
-  'Paladín':   '🛡️',
-  'Pícaro':    '🗡️',
-  Explorador:  '🏹',
-  Comerciante: '💰',
+const FACTION_ICON: Record<string, ForgeIconName> = {
+  Guerrero:    'attack',
+  Mago:        'spark',
+  'Paladín':   'shield',
+  'Pícaro':    'target',
+  Explorador:  'target',
+  Comerciante: 'coin',
 };
 import { useBattleStateMachine, type TurnPhase, type TurnSnapshot } from '../../lib/battleStateMachine';
 import { KeywordChip } from './KeywordTooltip';
@@ -184,7 +185,7 @@ function FighterCard({
             filter: `drop-shadow(0 0 16px ${rarColor}aa)`,
             animation: 'card-icon-breathe 3s ease-in-out infinite',
           }}>
-            {FACTION_ICON[unit.faction] ?? '⚔️'}
+            <ForgeIcon name={FACTION_ICON[unit.faction] ?? 'attack'} size={cs.iconFz} strokeWidth={1.6} />
           </div>
         )}
         {/* Rarity shimmer overlay — Legendary/Mythic/Founder: full shimmer; Epic/Rare: subtle; others: none */}
@@ -229,7 +230,7 @@ function FighterCard({
           position: 'absolute', top: 6, left: 6, fontSize: 14,
           filter: `drop-shadow(0 0 6px ${zone.primary}aa)`,
         }}>
-          {FACTION_ICON[unit.faction] ?? '⚔️'}
+          <ForgeIcon name={FACTION_ICON[unit.faction] ?? 'attack'} size={14} strokeWidth={1.6} />
         </div>
       </div>
 
@@ -250,9 +251,9 @@ function FighterCard({
         </div>
         {/* Stats row */}
         <div style={{ display: 'flex', gap: 6, fontSize: cs.statFz, fontFamily: '"Rajdhani",sans-serif', fontWeight: 800 }}>
-          <span title="ATK" style={{ color: '#ff6b6b', display: 'flex', alignItems: 'center', gap: 2 }}>⚔ {unit.atk}</span>
-          <span title="DEF" style={{ color: '#4a9eff', display: 'flex', alignItems: 'center', gap: 2 }}>🛡 {unit.def}</span>
-          <span title="SPD" style={{ color: '#e8b84b', display: 'flex', alignItems: 'center', gap: 2 }}>⚡ {unit.spd}</span>
+          <span title="ATK" style={{ color: '#ff6b6b', display: 'flex', alignItems: 'center', gap: 2 }}><ForgeIcon name="attack" size={10} strokeWidth={1.7} /> {unit.atk}</span>
+          <span title="DEF" style={{ color: '#4a9eff', display: 'flex', alignItems: 'center', gap: 2 }}><ForgeIcon name="shield" size={10} strokeWidth={1.7} /> {unit.def}</span>
+          <span title="SPD" style={{ color: '#e8b84b', display: 'flex', alignItems: 'center', gap: 2 }}><ForgeIcon name="energy" size={10} strokeWidth={1.7} /> {unit.spd}</span>
         </div>
         {/* HP bar */}
         <EpicHpBar hp={unit.hp} max={unit.max_hp} color={rarColor} />
@@ -281,7 +282,7 @@ function FighterCard({
           fontSize: 32, pointerEvents: 'none',
           animation: 'target-pulse 0.6s ease-in-out infinite',
         }}>
-          🎯
+          <ForgeIcon name="target" size={30} strokeWidth={1.6} />
         </div>
       )}
     </div>
@@ -333,19 +334,19 @@ function TurnLogEntry({ snap, isLatest }: { snap: TurnSnapshot; isLatest: boolea
       <div style={{ display: 'flex', alignItems: 'center', gap: 4, flexWrap: 'wrap', fontSize: 10, fontFamily: '"Rajdhani",sans-serif' }}>
         {/* Turn badge */}
         <span style={{ color: '#4a4a6a', minWidth: 22, fontFamily: '"IBM Plex Mono",monospace', fontSize: 8 }}>T{t.turn}</span>
-        <span style={{ fontSize: 8 }}>{isPlayer ? '🔵' : '🔴'}</span>
+        <ForgeIcon name={isPlayer ? "shield" : "skull"} size={10} strokeWidth={1.6} />
         {/* Attacker — faction icon + name */}
         <span style={{ color: col, fontWeight: 700, letterSpacing: '0.04em', maxWidth: 68, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }} title={t.attacker?.name}>
-          {FACTION_ICON[t.attacker?.faction ?? ''] ?? '⚔'} {t.attacker?.name ?? '?'}
+          <ForgeIcon name={FACTION_ICON[t.attacker?.faction ?? ''] ?? 'attack'} size={11} strokeWidth={1.6} /> {t.attacker?.name ?? '?'}
         </span>
-        <span style={{ color: '#3a3a5a', fontSize: 9 }}>→</span>
+        <span style={{ color: '#3a3a5a', fontSize: 9 }}>vs</span>
         {/* Defender */}
         <span style={{ color: '#7a7a9a', fontWeight: 600, maxWidth: 60, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }} title={t.defender?.name}>
           {t.defender?.name ?? '?'}
         </span>
         {/* Damage */}
         <span style={{ color: dmgCol, fontWeight: t.is_crit ? 900 : 600, fontSize: 11, textShadow: t.is_crit ? `0 0 8px ${dmgCol}` : 'none' }}>
-          {t.is_crit ? '💥' : '−'}{t.damage}
+          <ForgeIcon name={t.is_crit ? "attack" : "target"} size={10} strokeWidth={1.8} /> {t.damage}
         </span>
         {/* Badge row */}
         <div style={{ display: 'flex', gap: 3, alignItems: 'center', flexWrap: 'wrap' }}>
@@ -356,12 +357,12 @@ function TurnLogEntry({ snap, isLatest }: { snap: TurnSnapshot; isLatest: boolea
           )}
           {t.is_kill && (
             <span style={{ fontSize: 7, color: '#ff4444', background: 'rgba(255,68,68,0.18)', borderRadius: 4, padding: '1px 5px', fontWeight: 800, border: '1px solid rgba(255,68,68,0.35)' }}>
-              ☠ KO
+              <ForgeIcon name="skull" size={10} strokeWidth={1.7} /> KO
             </span>
           )}
           {t.lifesteal_heal > 0 && (
             <span style={{ fontSize: 7, color: '#3ddc84', background: 'rgba(61,220,132,0.15)', borderRadius: 4, padding: '1px 5px', fontWeight: 700, border: '1px solid rgba(61,220,132,0.35)' }}>
-              +{t.lifesteal_heal}♥ Drain
+              <ForgeIcon name="heart" size={10} strokeWidth={1.7} /> +{t.lifesteal_heal} Drain
             </span>
           )}
           {/* Keyword event badges */}
@@ -369,24 +370,24 @@ function TurnLogEntry({ snap, isLatest }: { snap: TurnSnapshot; isLatest: boolea
             const c = KW_LOG_COLOR[kw] ?? '#8888aa';
             return (
               <span key={kw} style={{ fontSize: 7, color: c, background: `${c}18`, borderRadius: 4, padding: '1px 5px', fontWeight: 700, border: `1px solid ${c}35` }}>
-                {KEYWORD_ICON[kw] ?? '•'} {kw}
+                <ForgeIcon name={(KEYWORD_ICON[kw] as ForgeIconName) ?? 'spark'} size={10} strokeWidth={1.7} /> {kw}
               </span>
             );
           })}
           {/* Damage-over-time events (poison, etc.) */}
           {events.filter(e => e.type === 'poison_tick').map((e, i) => (
             <span key={i} style={{ fontSize: 7, color: '#a855f7', background: 'rgba(168,85,247,0.15)', borderRadius: 4, padding: '1px 5px', fontWeight: 700, border: '1px solid rgba(168,85,247,0.35)' }}>
-              ☠ −{e.dmg} Poison
+              <ForgeIcon name="skull" size={10} strokeWidth={1.7} /> -{e.dmg} Poison
             </span>
           ))}
           {events.filter(e => e.type === 'shield_block').map((_e, i) => (
             <span key={i} style={{ fontSize: 7, color: '#4a9eff', background: 'rgba(74,158,255,0.15)', borderRadius: 4, padding: '1px 5px', fontWeight: 700, border: '1px solid rgba(74,158,255,0.35)' }}>
-              🛡 Guard
+              <ForgeIcon name="shield" size={10} strokeWidth={1.7} /> Guard
             </span>
           ))}
           {events.filter(e => e.type === 'lifesteal').map((e, i) => (
             <span key={i} style={{ fontSize: 7, color: '#3ddc84', background: 'rgba(61,220,132,0.15)', borderRadius: 4, padding: '1px 5px', fontWeight: 700, border: '1px solid rgba(61,220,132,0.35)' }}>
-              +{e.heal}♥
+              <ForgeIcon name="heart" size={10} strokeWidth={1.7} /> +{e.heal}
             </span>
           ))}
         </div>
@@ -440,7 +441,7 @@ function AttackButton({ phase, onAdvance, onAutoPlay, onStop, isAutoOn, totalTur
           minWidth: 'min(120px, 45vw)',
         }}
       >
-        {phase === 'ANIMATING' ? '⚔ Resolviendo…' : `⚔ ATACAR (${remaining})`}
+        {phase === 'ANIMATING' ? 'Resolviendo…' : `⚔ ATACAR (${remaining})`}
       </button>
       {isAutoOn ? (
         <button onClick={onStop} style={{
@@ -505,7 +506,7 @@ function ResultBanner({ won, eloChange, onDismiss, onPlayAgain }: {
         filter: `drop-shadow(0 0 40px ${glow}) drop-shadow(0 0 80px ${glow})`,
         animation: 'result-icon-bounce 0.6s cubic-bezier(0.22,1,0.36,1)',
       }}>
-        {won ? '🏆' : '💀'}
+        <ForgeIcon name={won ? "trophy" : "skull"} size={72} strokeWidth={1.4} />
       </div>
       <div style={{
         fontFamily: '"Cinzel",serif', fontSize: 'clamp(32px,6vw,48px)', fontWeight: 900,
@@ -520,7 +521,7 @@ function ResultBanner({ won, eloChange, onDismiss, onPlayAgain }: {
         margin: '0 0 4px',
       }}>
         <div style={{ flex: 1, height: 1, background: `linear-gradient(90deg, transparent, ${col}55)` }} />
-        <span style={{ color: col, opacity: 0.5, fontSize: 10 }}>✦</span>
+        <ForgeIcon name="spark" size={12} strokeWidth={1.4} style={{ color: col, opacity: 0.5 }} />
         <div style={{ flex: 1, height: 1, background: `linear-gradient(90deg, ${col}55, transparent)` }} />
       </div>
       {showElo && eloChange !== 0 && (
@@ -554,7 +555,7 @@ function ResultBanner({ won, eloChange, onDismiss, onPlayAgain }: {
           }}
           onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.transform = 'translateY(-2px) scale(1.03)'; }}
           onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.transform = 'none'; }}>
-            {won ? '🔥 Revancha' : '⚔ Revancha'}
+            {won ? <><ForgeIcon name="refresh" size={15} strokeWidth={1.7} /> Revancha</> : <><ForgeIcon name="attack" size={15} strokeWidth={1.7} /> Revancha</>}
           </button>
         )}
         <button onClick={onDismiss} style={{
@@ -573,7 +574,7 @@ function ResultBanner({ won, eloChange, onDismiss, onPlayAgain }: {
         }}
         onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.transform = 'translateY(-2px) scale(1.03)'; }}
         onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.transform = 'none'; }}>
-          {won ? '⚔ Continuar' : '↩ Salir'}
+          {won ? <><ForgeIcon name="attack" size={15} strokeWidth={1.7} /> Continuar</> : 'Salir'}
         </button>
       </div>
     </div>
@@ -583,7 +584,7 @@ function ResultBanner({ won, eloChange, onDismiss, onPlayAgain }: {
 // ─── Partículas atmosféricas de la arena ────────────────────────────────────────
 function ArenaParticles({ faction }: { faction: string }) {
   const zone = FACTION_ZONE[faction] ?? FACTION_ZONE['default'];
-  const runes = ['✦', '◈', '⬡', '✧', '◆', '⊕'];
+  const runes: ForgeIconName[] = ['spark', 'fusion', 'shield', 'spark', 'crown', 'target'];
   return (
     <div style={{ position: 'absolute', inset: 0, overflow: 'hidden', pointerEvents: 'none' }}>
       {runes.map((r, i) => (
@@ -597,7 +598,7 @@ function ArenaParticles({ faction }: { faction: string }) {
           animation: `arena-rune-float-${i % 3} ${(i % 3) * 1.5 + 4}s ease-in-out infinite`,
           animationDelay: `${i * 0.6}s`,
           filter: `drop-shadow(0 0 4px ${zone.primary}55)`,
-        }}>{r}</div>
+        }}><ForgeIcon name={r} size={(i % 3) * 4 + 8} strokeWidth={1.1} /></div>
       ))}
     </div>
   );
@@ -1012,10 +1013,10 @@ export function InteractiveBattleBoard({
             textTransform: 'uppercase', transition: 'color 0.3s',
             marginTop: 2,
           }}>
-            {state.phase === 'IDLE'      && '▶ LISTO'}
-            {state.phase === 'SELECTING' && '🎯 APUNTAR'}
-            {state.phase === 'ANIMATING' && '⚔️ RESOLVIENDO'}
-            {state.phase === 'COMPLETE'  && '✓ FIN'}
+            {state.phase === 'IDLE'      && 'LISTO'}
+            {state.phase === 'SELECTING' && 'APUNTAR'}
+            {state.phase === 'ANIMATING' && 'RESOLVIENDO'}
+            {state.phase === 'COMPLETE'  && 'FIN'}
           </div>
         </div>
 
@@ -1140,7 +1141,7 @@ export function InteractiveBattleBoard({
             boxShadow: `0 0 8px ${oppZone.primary}22`,
             backdropFilter: 'blur(4px)',
           }}>
-            ⚔ {opponentName} · {oppFaction}
+            <ForgeIcon name="attack" size={12} strokeWidth={1.7} /> {opponentName} · {oppFaction}
           </div>
           {opponentUnit ? (
             <FighterCard
@@ -1232,7 +1233,7 @@ export function InteractiveBattleBoard({
           ) : (
             <div style={{ width: 170, height: 188, border: `2px dashed ${playerZone.primary}30`, borderRadius: 12,
               background: `${playerZone.primary}05`, display: 'flex', alignItems: 'center', justifyContent: 'center',
-              color: `${playerZone.primary}30`, fontSize: 36 }}>⚔️</div>
+              color: `${playerZone.primary}30`, fontSize: 36 }}><ForgeIcon name="attack" size={36} strokeWidth={1.4} /></div>
           )}
           <div style={{
             fontSize: 9, color: playerZone.primary + 'cc', letterSpacing: '0.2em',
@@ -1242,7 +1243,7 @@ export function InteractiveBattleBoard({
             boxShadow: `0 0 8px ${playerZone.primary}22`,
             backdropFilter: 'blur(4px)',
           }}>
-            🛡 {playerName} · {playerFaction}
+            <ForgeIcon name="shield" size={12} strokeWidth={1.7} /> {playerName} · {playerFaction}
           </div>
         </div>
 
