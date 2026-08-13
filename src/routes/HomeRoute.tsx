@@ -7,6 +7,7 @@ import { usePlayerItems } from "../domains/cosmetics/usePlayerItems";
 import type { PlayerActiveBoost } from "../domains/cosmetics/repository";
 import { getRank } from "../lib/rankUtils";
 import { SessionSummaryToast } from "../shared/components/SessionSummaryToast";
+import { ForgeIcon, type ForgeIconName } from "../shared/components/ForgeIcon";
 
 // ─── Animated counter — counts up from 0 to target when mounted ─────────────
 function useCountUp(target: number, duration = 1200, active = true): number {
@@ -40,20 +41,20 @@ interface HomeStats {
   top3: Array<{ rank: number; display_name: string; mmr: number; wins: number }>;
 }
 
-const FEATURES = [
-  { icon:"🃏", title:"127 Cartas Únicas",    desc:"4 facciones · 6 rarezas · Common a Mythic.", href:"/cards",        color:"#E84040" },
-  { icon:"⚔️", title:"Combat PvP",           desc:"Motor turn-by-turn con sistema ELO. 7 tiers.", href:"/pvp",          color:"#5B8BF5" },
-  { icon:"📦", title:"Pack Opening",         desc:"5 tipos de packs con probabilidades reales.", href:"/packs",        color:"#3DC96B" },
-  { icon:"⚗️", title:"Fusión de Cartas",     desc:"Combina cartas con el keyword Forge.", href:"/fusion",       color:"#E8B84B" },
-  { icon:"🏪", title:"Mercado P2P",          desc:"Compra y vende cartas. Fee del 5% por venta.", href:"/market",       color:"#E84040" },
-  { icon:"🐉", title:"World Bosses",         desc:"10 bosses de T1 a T6. Recompensas épicas.", href:"/bosses",       color:"#5B8BF5" },
-  { icon:"📜", title:"Misiones Diarias",     desc:"Completa misiones por tipo y región.", href:"/missions",     color:"#3DC96B" },
-  { icon:"🏆", title:"25+ Logros",           desc:"Desbloquea logros permanentes.", href:"/achievements", color:"#E8B84B" },
-  { icon:"🏰", title:"Clanes",               desc:"Únete o crea un clan. Sube el prestige.", href:"/clans",        color:"#E84040" },
-  { icon:"💜", title:"Season Pass",          desc:"Temporada 1: El Despertar del Forjador.", href:"/season-pass",  color:"#A855F7" },
+const FEATURES: Array<{ icon: ForgeIconName; title: string; desc: string; href: string; color: string }> = [
+  { icon:"cards",       title:"127 Cartas Únicas", desc:"4 facciones · 6 rarezas · Common a Mythic.", href:"/cards",        color:"#E84040" },
+  { icon:"arena",       title:"Combat PvP",        desc:"Motor turn-by-turn con sistema ELO. 7 tiers.", href:"/pvp",          color:"#5B8BF5" },
+  { icon:"packs",       title:"Pack Opening",      desc:"5 tipos de packs con probabilidades reales.", href:"/packs",        color:"#3DC96B" },
+  { icon:"fusion",      title:"Fusión de Cartas",  desc:"Combina cartas con el keyword Forge.", href:"/fusion",       color:"#E8B84B" },
+  { icon:"market",      title:"Mercado P2P",       desc:"Compra y vende cartas. Fee del 5% por venta.", href:"/market",       color:"#E84040" },
+  { icon:"boss",        title:"World Bosses",      desc:"10 bosses de T1 a T6. Recompensas épicas.", href:"/bosses",       color:"#5B8BF5" },
+  { icon:"missions",    title:"Misiones Diarias",  desc:"Completa misiones por tipo y región.", href:"/missions",     color:"#3DC96B" },
+  { icon:"achievements",title:"25+ Logros",        desc:"Desbloquea logros permanentes.", href:"/achievements", color:"#E8B84B" },
+  { icon:"clans",       title:"Clanes",            desc:"Únete o crea un clan. Sube el prestige.", href:"/clans",        color:"#E84040" },
+  { icon:"season",      title:"Season Pass",       desc:"Temporada 1: El Despertar del Forjador.", href:"/season-pass",  color:"#A855F7" },
 ];
 
-const MEDAL = ["🥇","🥈","🥉"];
+const MEDAL: ForgeIconName[] = ["crown", "trophy", "trophy"];
 const TIER_COLOR: Record<string,string> = { Iron:"#8b8b9e", Bronze:"#cd7f32", Silver:"#9e9e9e", Gold:"#f59e0b", Platinum:"#a855f7", Diamond:"#4a9eff", Mythic:"#ff4444" };
 const DAILY_RARITY_COLORS: Record<string,string> = { Common:"#9A9AB0", Uncommon:"#3DC96B", Rare:"#4A9EFF", Epic:"#A855F7", Legendary:"#E8B84B", Mythic:"#FF4444" };
 function timeAgo(iso: string): string {
@@ -69,9 +70,7 @@ function getRankTier(mmr:number) {
   return getRank(mmr).name;
 }
 
-const RUNE_SYMS = ["✦","◈","⬡","✧","◆","⊕","★","⟐"];
 const FACTION_COLORS = ["#e84040","#7b4fd4","#3dc96b","#e8b84b"];
-// const FACTION_ICONS_HERO = ["⚔️","🔮","🗡️","🛡️"]; // reserved for future use
 
 // AI-generated faction emblems (transparent PNG, public/factions/)
 const FACTION_EMBLEMS: Record<string, string> = {
@@ -106,11 +105,9 @@ function Particles() {
       {Array.from({length:10}).map((_,i)=>(
         <div key={`r${i}`} className="hero-particle-rune" style={{
           left:`${(i*19+12)%88+6}%`, bottom:`${(i*13+8)%45}%`,
-          fontSize:`${(i%4)+8}px`,
           color: FACTION_COLORS[i % 4],
-          textShadow: `0 0 12px ${FACTION_COLORS[i % 4]}, 0 0 24px ${FACTION_COLORS[i % 4]}55`,
           animationDuration:`${(i%4)+5}s`, animationDelay:`${i*0.6}s`,
-        }}>{RUNE_SYMS[i % RUNE_SYMS.length]}</div>
+        }}><ForgeIcon name="spark" size={(i % 4) + 8} strokeWidth={1.3} style={{ color: FACTION_COLORS[i % 4], filter: `drop-shadow(0 0 8px ${FACTION_COLORS[i % 4]})` }} /></div>
       ))}
       {/* Faction icon particles — orbit slowly (AI-generated emblems) */}
       {Array.from({length:4}).map((_,i)=>(
@@ -180,14 +177,14 @@ function BoostChip({ boost }: { boost: PlayerActiveBoost }) {
   return (
     <div style={{ display:"flex", alignItems:"center", gap:8,
       background: col+"12", border:`1px solid ${col}33`, borderRadius:8, padding:"8px 14px" }}>
-      <span style={{ fontSize:18 }}>⚡</span>
+      <ForgeIcon name="energy" size={18} strokeWidth={1.8} style={{ color: col }} />
       <div>
         <div style={{ fontFamily:"Rajdhani,sans-serif", fontWeight:700, fontSize:11,
           color: col, textTransform:"uppercase", letterSpacing:".06em" }}>
           {boost.multiplier}× XP Boost
         </div>
         <div style={{ fontFamily:"Rajdhani,sans-serif", fontSize:10, color:"#7a7a9a" }}>
-          ⏱ {t}
+          Duración: {t}
         </div>
       </div>
       <SessionSummaryToast />
@@ -197,7 +194,7 @@ function BoostChip({ boost }: { boost: PlayerActiveBoost }) {
 
 // AP.2 banner — shown at the top of main content when player has active boosts
 // ─── Animated live stats section with count-up ───────────────────────────────
-function StatCard({ icon, label, value, delay = 0 }: { icon: string; label: string; value: number; delay?: number }) {
+function StatCard({ icon, label, value, delay = 0 }: { icon: ForgeIconName; label: string; value: number; delay?: number }) {
   const counted = useCountUp(value, 1400);
   return (
     <div style={{
@@ -210,7 +207,7 @@ function StatCard({ icon, label, value, delay = 0 }: { icon: string; label: stri
       {/* Subtle corner glow */}
       <div style={{position:"absolute",top:-20,right:-20,width:60,height:60,borderRadius:"50%",
         background:"radial-gradient(circle, rgba(201,144,31,0.15) 0%, transparent 70%)",pointerEvents:"none"}}/>
-      <div style={{fontSize:24,marginBottom:8}}>{icon}</div>
+      <div style={{fontSize:24,marginBottom:8}}><ForgeIcon name={icon} size={24} strokeWidth={1.8} style={{ color: "#e8b84b" }} /></div>
       <div className="live-stat-value" style={{fontFamily:"Cinzel,serif",fontWeight:700,fontSize:26,
         color:"#e8b84b",marginBottom:4,fontVariantNumeric:"tabular-nums"}}>
         {counted.toLocaleString("es")}
@@ -230,10 +227,10 @@ function LiveStatsSection({ stats }: { stats: { active_players: number; total_ca
         ─── Estadísticas Globales ───
       </p>
       <div className="home-stats-grid">
-        <StatCard icon="👥" label="Jugadores" value={stats.active_players} delay={0} />
-        <StatCard icon="🃏" label="Cartas Únicas" value={stats.total_cards} delay={0.07} />
-        <StatCard icon="⚔️" label="Batallas PvP" value={stats.total_battles} delay={0.14} />
-        <StatCard icon="📦" label="Packs Abiertos" value={stats.packs_opened} delay={0.21} />
+        <StatCard icon="friends" label="Jugadores" value={stats.active_players} delay={0} />
+        <StatCard icon="cards" label="Cartas Únicas" value={stats.total_cards} delay={0.07} />
+        <StatCard icon="arena" label="Batallas PvP" value={stats.total_battles} delay={0.14} />
+        <StatCard icon="packs" label="Packs Abiertos" value={stats.packs_opened} delay={0.21} />
       </div>
     </div>
   );
@@ -258,7 +255,7 @@ function ActiveBoostBanner({ boosts, signedIn }: { boosts: PlayerActiveBoost[]; 
           fontFamily:"Rajdhani,sans-serif", fontWeight:700, fontSize:10,
           color:"#4A9EFF", textDecoration:"none", textTransform:"uppercase",
           letterSpacing:".06em", opacity:.8,
-        }}>Ver todo →</a>
+        }}>Ver todo</a>
       </div>
     </div>
   );
@@ -339,12 +336,12 @@ export function HomeRoute() {
             padding:"6px 18px",borderRadius:999,
             background:"rgba(201,144,31,0.12)",border:"1px solid rgba(201,144,31,0.35)",
             backdropFilter:"blur(8px)"}}>
-            <span style={{fontSize:12}}>⚔️</span>
+            <ForgeIcon name="attack" size={12} strokeWidth={1.8} style={{ color: "#e8b84b" }} />
             <span style={{fontSize:10,letterSpacing:"0.22em",color:"#e8b84b",
               textTransform:"uppercase",fontFamily:"Rajdhani,sans-serif",fontWeight:800}}>
               VEXFORGE — TRADING CARD GAME
             </span>
-            <span style={{fontSize:12}}>⚔️</span>
+            <ForgeIcon name="attack" size={12} strokeWidth={1.8} style={{ color: "#e8b84b" }} />
           </div>
           <h1 style={{fontFamily:"Cinzel,serif",color:"#f0f0ff",
             fontSize:"clamp(38px,7vw,72px)",lineHeight:1.05,margin:"0 0 8px",
@@ -369,23 +366,23 @@ export function HomeRoute() {
           <div className="hero-cta" style={{gap:16}}>
             {hasPlayerData ? (
               <>
-                <Link to="/cards" className="btn-primary" style={{padding:"13px 28px",fontSize:14}}>🃏 Mi Colección</Link>
-                <Link to="/pvp" className="btn-secondary" style={{padding:"13px 28px",fontSize:14}}>⚔️ Entrar a la Arena</Link>
+                <Link to="/cards" className="btn-primary" style={{padding:"13px 28px",fontSize:14}}><ForgeIcon name="cards" size={15} style={{ verticalAlign: "-0.15em", marginRight: 6 }} />Mi Colección</Link>
+                <Link to="/pvp" className="btn-secondary" style={{padding:"13px 28px",fontSize:14}}><ForgeIcon name="arena" size={15} style={{ verticalAlign: "-0.15em", marginRight: 6 }} />Entrar a la Arena</Link>
               </>
             ) : (
               <>
-                <Link to="/account" className="btn-primary" style={{padding:"13px 32px",fontSize:15,letterSpacing:"0.06em"}}>🔥 Comenzar Gratis</Link>
-                <Link to="/cards" className="btn-secondary" style={{padding:"13px 28px",fontSize:14}}>🃏 Ver Cartas</Link>
+                <Link to="/account" className="btn-primary" style={{padding:"13px 32px",fontSize:15,letterSpacing:"0.06em"}}><ForgeIcon name="spark" size={15} style={{ verticalAlign: "-0.15em", marginRight: 6 }} />Comenzar Gratis</Link>
+                <Link to="/cards" className="btn-secondary" style={{padding:"13px 28px",fontSize:14}}><ForgeIcon name="cards" size={15} style={{ verticalAlign: "-0.15em", marginRight: 6 }} />Ver Cartas</Link>
               </>
             )}
           </div>
           {/* Stats pills */}
           <div className="home-stats-pills" style={{display:"flex",justifyContent:"center",gap:20,marginTop:36,flexWrap:"wrap"}}>
             {[
-              {val:"127",label:"Cartas Únicas", icon:"🃏"},
-              {val:"4",  label:"Facciones",     icon:"⚔️"},
-              {val:"6",  label:"Rarezas",        icon:"💎"},
-              {val:"F2P",label:"Gratis",         icon:"🔥"},
+              {val:"127",label:"Cartas Únicas", icon:"cards" as ForgeIconName},
+              {val:"4",  label:"Facciones",     icon:"attack" as ForgeIconName},
+              {val:"6",  label:"Rarezas",        icon:"spark" as ForgeIconName},
+              {val:"F2P",label:"Gratis",         icon:"check" as ForgeIconName},
             ].map((s,i)=>(
               <div key={s.val} className="home-stats-pill" style={{textAlign:"center",padding:"10px 20px",
                 background:"rgba(255,255,255,0.05)",border:"1px solid rgba(255,255,255,0.09)",
@@ -397,7 +394,7 @@ export function HomeRoute() {
               onMouseEnter={e=>{(e.currentTarget as HTMLDivElement).style.transform="translateY(-3px)";(e.currentTarget as HTMLDivElement).style.boxShadow="0 8px 24px rgba(0,0,0,0.4)";}}
               onMouseLeave={e=>{(e.currentTarget as HTMLDivElement).style.transform="";(e.currentTarget as HTMLDivElement).style.boxShadow="0 4px 16px rgba(0,0,0,0.3)";}}
               >
-                <div style={{fontSize:16,marginBottom:4,lineHeight:1}}>{s.icon}</div>
+                <div style={{fontSize:16,marginBottom:4,lineHeight:1}}><ForgeIcon name={s.icon} size={16} strokeWidth={1.8} style={{ color: "#e8b84b" }} /></div>
                 <div style={{fontFamily:"Cinzel,serif",fontSize:20,fontWeight:900,
                   color:"#e8b84b",lineHeight:1}}>{s.val}</div>
                 <div style={{fontSize:9,color:"rgba(255,255,255,0.4)",
@@ -425,7 +422,7 @@ export function HomeRoute() {
           }}>
             <div style={{ maxWidth: 960, margin: "0 auto", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 12 }}>
               <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-                <span style={{ fontSize: 24 }}>⚡</span>
+                <ForgeIcon name="energy" size={24} strokeWidth={1.8} style={{ color: "#a855f7" }} />
                 <div>
                   <div style={{ fontFamily: '"Cinzel",serif', fontSize: 13, fontWeight: 700, color: "#a855f7", letterSpacing: "0.06em" }}>
                     BATALLA RÁPIDA VS IA
@@ -447,7 +444,7 @@ export function HomeRoute() {
                   boxShadow: "0 4px 16px rgba(168,85,247,0.3)",
                   transition: "all 0.2s",
                 }}>
-                  ⚡ Jugar Ahora
+                  <ForgeIcon name="play" size={13} style={{ verticalAlign: "-0.15em", marginRight: 5 }} />Jugar Ahora
                 </Link>
               </div>
             </div>
@@ -471,7 +468,7 @@ export function HomeRoute() {
                 <div style={{flex:"1 1 240px"}}>
                   <p style={{fontSize:9,letterSpacing:"0.2em",color:"#E8B84B",
                     textTransform:"uppercase",fontFamily:"IBM Plex Mono,monospace",fontWeight:700,margin:"0 0 6px"}}>
-                    🔥 EVENTO ACTIVO · TEMPORADA 1
+                    <ForgeIcon name="spark" size={12} style={{ verticalAlign: "-0.15em", marginRight: 5 }} />EVENTO ACTIVO · TEMPORADA 1
                   </p>
                   <h3 style={{fontFamily:"Cinzel,serif",color:"#F5C842",fontSize:20,margin:"0 0 6px",fontWeight:700}}>
                     {stats.active_event.name}
@@ -508,7 +505,7 @@ export function HomeRoute() {
                   </div>
                   <Link to="/missions" className="btn-primary"
                     style={{fontSize:12,padding:"7px 16px",background:"linear-gradient(135deg,#C9901F,#E8B84B)",color:"#0a0a14",fontWeight:700,border:"none"}}>
-                    ⭐ Misiones del Festival →
+                    <ForgeIcon name="missions" size={13} style={{ verticalAlign: "-0.15em", marginRight: 5 }} />Misiones del Festival
                   </Link>
                 </div>
               </div>
@@ -542,7 +539,7 @@ export function HomeRoute() {
                   <img src={dailyCard.image_url} alt={dailyCard.name}
                     style={{width:"100%",height:"100%",objectFit:"cover"}}/>
                 ) : (
-                  <span style={{fontSize:36}}>🃏</span>
+                  <ForgeIcon name="cards" size={36} strokeWidth={1.5} style={{ color: "#e8b84b" }} />
                 )}
                 <div style={{position:"absolute",bottom:5,left:0,right:0,textAlign:"center",
                   fontSize:9,fontWeight:700,letterSpacing:"0.1em",
@@ -565,7 +562,7 @@ export function HomeRoute() {
                   <div style={{display:"flex",gap:8,alignItems:"center",marginBottom:10}}>
                     <span style={{fontSize:12,fontFamily:"IBM Plex Mono,monospace",
                       color:DAILY_RARITY_COLORS[dailyCard.rarity as keyof typeof DAILY_RARITY_COLORS] ?? "#e8b84b",
-                      fontWeight:700}}>⚡ {dailyCard.power}</span>
+                      fontWeight:700}}><ForgeIcon name="energy" size={13} style={{ verticalAlign: "-0.15em", marginRight: 3 }} />{dailyCard.power}</span>
                     <span style={{fontSize:11,color:"rgba(255,255,255,0.3)"}}>·</span>
                     <span style={{fontSize:11,color:"rgba(255,255,255,0.4)"}}>Poder</span>
                   </div>
@@ -584,14 +581,14 @@ export function HomeRoute() {
                       background:"linear-gradient(135deg,#C9901F,#E8B84B)",border:"none",
                       color:"#0a0a14",fontSize:12,fontFamily:"Rajdhani,sans-serif",
                       fontWeight:700,letterSpacing:"0.06em"}}>
-                      🃏 Ver Colección
+                      <ForgeIcon name="cards" size={13} style={{ verticalAlign: "-0.15em", marginRight: 5 }} />Ver Colección
                     </button>
                   </Link>
                   <Link to="/packs" style={{textDecoration:"none"}}>
                     <button style={{padding:"7px 14px",borderRadius:8,cursor:"pointer",
                       background:"rgba(255,255,255,0.05)",border:"1px solid rgba(255,255,255,0.1)",
                       color:"rgba(255,255,255,0.6)",fontSize:12,fontFamily:"Rajdhani,sans-serif",fontWeight:700}}>
-                      📦 Abrir Pack
+                      <ForgeIcon name="packs" size={13} style={{ verticalAlign: "-0.15em", marginRight: 5 }} />Abrir Pack
                     </button>
                   </Link>
                 </div>
@@ -609,15 +606,15 @@ export function HomeRoute() {
             </p>
             <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(180px,1fr))",gap:12,marginBottom:20}}>
               {[
-                {label:"Jugador", value:profile.display_name ?? "Forjador", icon:"🎮"},
-                {label:"Nivel", value:progress?.level ?? 1, icon:"⭐"},
-                {label:"VEX Ingame", value:wallet?.vex_ingame?.toFixed(2) ?? "0.00", icon:"💰"},
-                {label:"Energía", value:`${progress?.energy ?? 0}/${progress?.max_energy ?? 100}`, icon:"⚡"},
+                {label:"Jugador", value:profile.display_name ?? "Forjador", icon:"profile" as ForgeIconName},
+                {label:"Nivel", value:progress?.level ?? 1, icon:"progress" as ForgeIconName},
+                {label:"VEX Ingame", value:wallet?.vex_ingame?.toFixed(2) ?? "0.00", icon:"coin" as ForgeIconName},
+                {label:"Energía", value:`${progress?.energy ?? 0}/${progress?.max_energy ?? 100}`, icon:"energy" as ForgeIconName},
               ].map(item=>(
                 <div key={item.label} style={{padding:"16px 20px",
                   background:"rgba(255,255,255,0.03)",border:"1px solid rgba(255,255,255,0.06)",
                   borderRadius:10}}>
-                  <div style={{fontSize:20,marginBottom:6}}>{item.icon}</div>
+                  <div style={{fontSize:20,marginBottom:6}}><ForgeIcon name={item.icon} size={20} strokeWidth={1.8} style={{ color: "#e8b84b" }} /></div>
                   <div style={{fontSize:11,color:"#7a7a9a",letterSpacing:"0.1em",textTransform:"uppercase",marginBottom:4}}>
                     {item.label}
                   </div>
@@ -661,7 +658,7 @@ export function HomeRoute() {
                 ─── Top Arena ───
               </p>
               <Link to="/leaderboard" style={{fontSize:12,color:"#7a7a9a",textDecoration:"none"}}>
-                Ver ranking completo →
+                Ver ranking completo
               </Link>
             </div>
             <div style={{display:"flex",gap:12,flexWrap:"wrap"}}>
@@ -672,7 +669,7 @@ export function HomeRoute() {
                     background:"rgba(255,255,255,0.03)",
                     border:`1px solid ${i===0?"rgba(232,184,75,0.3)":"rgba(255,255,255,0.06)"}`,
                     borderRadius:10,display:"flex",alignItems:"center",gap:14}}>
-                    <div style={{fontSize:24,lineHeight:1}}>{MEDAL[i]}</div>
+                    <div style={{fontSize:24,lineHeight:1}}><ForgeIcon name={MEDAL[i]} size={24} strokeWidth={1.7} style={{ color: i === 0 ? "#e8b84b" : i === 1 ? "#c0c0cc" : "#b87333" }} /></div>
                     <div>
                       <div style={{fontFamily:"Rajdhani,sans-serif",fontWeight:700,
                         fontSize:15,color:"#e8e8f0",marginBottom:2}}>{p.display_name}</div>
@@ -706,7 +703,7 @@ export function HomeRoute() {
                   transition:"background 0.15s"}}
                   onMouseEnter={e=>(e.currentTarget.style.background="rgba(255,255,255,0.03)")}
                   onMouseLeave={e=>(e.currentTarget.style.background="transparent")}>
-                  <span style={{fontSize:16,flexShrink:0}}>{item.icon}</span>
+                  <ForgeIcon name={item.type === "mission" ? "missions" : "spark"} size={16} strokeWidth={1.8} style={{ color: "#e8b84b", flexShrink: 0 }} />
                   <span style={{fontSize:12,color:"rgba(255,255,255,0.6)",flex:1,
                     whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>
                     {item.text}
@@ -733,10 +730,10 @@ export function HomeRoute() {
                 style={{"--feature-color":f.color} as React.CSSProperties}>
                 <div style={{position:"absolute",top:0,left:0,right:0,height:"2px",
                   background:`linear-gradient(90deg,transparent,${f.color}80,transparent)`}}/>
-                <div className="feature-card-icon">{f.icon}</div>
+                <div className="feature-card-icon"><ForgeIcon name={f.icon} size={22} strokeWidth={1.7} /></div>
                 <div className="feature-card-title">{f.title}</div>
                 <div className="feature-card-desc">{f.desc}</div>
-                <div className="feature-card-arrow">→</div>
+                <div className="feature-card-arrow"><ForgeIcon name="chevron-right" size={14} strokeWidth={1.8} /></div>
               </Link>
             ))}
           </div>
@@ -755,8 +752,8 @@ export function HomeRoute() {
               Regístrate gratis. Sin compras obligatorias. Comienza con cartas básicas y asciende hasta Mythic.
             </p>
             <div className="hero-cta">
-              <Link to="/account" className="btn-primary">🔥 Comenzar gratis</Link>
-              <Link to="/missions" className="btn-secondary">📜 Ver misiones</Link>
+              <Link to="/account" className="btn-primary"><ForgeIcon name="spark" size={15} style={{ verticalAlign: "-0.15em", marginRight: 6 }} />Comenzar gratis</Link>
+              <Link to="/missions" className="btn-secondary"><ForgeIcon name="missions" size={15} style={{ verticalAlign: "-0.15em", marginRight: 6 }} />Ver misiones</Link>
             </div>
           </div>
         )}
