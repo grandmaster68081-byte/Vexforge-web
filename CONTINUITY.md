@@ -4,9 +4,9 @@
 - **Estado inicial:** `IMPLEMENTED_UNVERIFIED`. **Estado actual:** `IMPLEMENTED_UNVERIFIED`, objetivo Q3.
 - **Cambio:** el indicador de crítico y el daño flotante conservan su feedback pero usan `ForgeIcon`; el divisor visual del tablero usa una forma CSS propia en lugar de un glifo Unicode.
 - **Restricción preservada:** no se cambiaron daño, settlement, resultados autoritativos, recompensas, economía, energía, RPCs, RLS ni datos de jugadores.
-- **Evidencia local:** `npm run verify:build` finalizó correctamente; los dos archivos editados no contienen los glifos Unicode objetivo.
+- **Evidencia local y pública:** `npm run verify:build` finalizó correctamente; los dos archivos editados no contienen los glifos Unicode objetivo; `main` quedó en `de52d49f49262b847b9b855460b2405536b2ceea`, `/build-manifest.json` publica ese commit y `/`, `/manifest.json`, `/tutorial`, `/cards` y `/battle` responden HTTP 200.
 - **Deuda y bloqueo:** la superficie de batalla requiere sesión autenticada para revisar el flujo interactivo; no se fabricaron resultados ni se declaró QA autenticada. Persisten consumidores Unicode en otros lotes de combate.
-- **Siguiente acción verificable:** publicar este lote sólo mediante el flujo autorizado; después revisar en navegador con sesión normal o mantener `BLOCKED` y abordar el siguiente consumidor como unidad separada.
+- **Siguiente acción verificable:** revisar el flujo interactivo en navegador con sesión normal; sin esa sesión, mantener la unidad `BLOCKED` para QA autenticada y abordar el siguiente consumidor como unidad separada.
 
 ## 2026-08-13 — VE-1-BATTLE-UNICODE-DEBT — IMPLEMENTED_UNVERIFIED
 
