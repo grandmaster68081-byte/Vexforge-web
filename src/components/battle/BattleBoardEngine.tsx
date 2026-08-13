@@ -8,6 +8,16 @@ import { RARITY_COLOR, RARITY_GLOW, KEYWORD_ICON } from '../../lib/battleTypes';
 import { AudioEngine } from '../../lib/audioEngine';
 import { particleEngine } from '../../lib/particleEngine';
 import { CardAttackCinematic } from './CardAttackCinematic';
+import { ForgeIcon, type ForgeIconName } from '../../shared/components/ForgeIcon';
+
+const FACTION_FORGE_ICON: Record<string, ForgeIconName> = {
+  Guerrero: 'attack',
+  Mago: 'spark',
+  'Paladín': 'shield',
+  'Pícaro': 'target',
+  Explorador: 'target',
+  Comerciante: 'coin',
+};
 
 interface BattleBoardEngineProps {
   result: RealBattleResult;
@@ -164,7 +174,7 @@ function BoardUnit({
             backgroundSize: '10px 10px',
           }} />
           <div style={{ fontSize: 30, lineHeight: 1, filter: `drop-shadow(0 0 8px ${rarColor})`, position: 'relative' }}>
-            {KEYWORD_ICON[unit.faction] ?? '🃏'}
+            <ForgeIcon name={FACTION_FORGE_ICON[unit.faction] ?? 'target'} size={30} strokeWidth={1.6} />
           </div>
         </div>
       )}
@@ -185,10 +195,10 @@ function BoardUnit({
         <HpBar current={currentHp} max={unit.max_hp} rarity={unit.rarity} />
         <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 2 }}>
           <span style={{ fontSize: 8, color: '#7a7a9a', fontFamily: 'Rajdhani, sans-serif', fontWeight: 600 }}>
-            ❤ {currentHp}
+            <ForgeIcon name="heart" size={10} strokeWidth={1.7} /> {currentHp}
           </span>
           <span style={{ fontSize: 8, color: '#e84040', fontFamily: 'Rajdhani, sans-serif', fontWeight: 700 }}>
-            ⚔ {unit.atk}
+            <ForgeIcon name="attack" size={10} strokeWidth={1.7} /> {unit.atk}
           </span>
         </div>
       </div>
@@ -202,7 +212,7 @@ function BoardUnit({
           {unit.keywords.slice(0, 2).map(kw => (
             <span key={kw} title={kw} style={{
               fontSize: 10, filter: `drop-shadow(0 0 3px ${rarColor})`,
-            }}>{KEYWORD_ICON[kw] ?? '✦'}</span>
+            }}><ForgeIcon name={(KEYWORD_ICON[kw] as ForgeIconName) ?? 'spark'} size={11} strokeWidth={1.6} /></span>
           ))}
         </div>
       )}
@@ -442,7 +452,7 @@ export function BattleBoardEngine({ result, playerName, opponentName, onComplete
       });
 
       // Log line
-      const logLine = `Turno ${t.turn}: ${t.attacker.name} → ${t.defender.name} [${t.damage} dmg${t.is_crit ? ' ¡CRIT!' : ''}${t.is_kill ? ' ☠' : ''}]`;
+      const logLine = `Turno ${t.turn}: ${t.attacker.name} vs ${t.defender.name} [${t.damage} dmg${t.is_crit ? ' CRIT' : ''}${t.is_kill ? ' KO' : ''}]`;
       setLog(prev => [...prev.slice(-8), logLine]);
 
     }, HIT_DUR);
@@ -593,7 +603,7 @@ export function BattleBoardEngine({ result, playerName, opponentName, onComplete
             letterSpacing: '0.2em', textTransform: 'uppercase', fontWeight: 800,
             display: 'flex', alignItems: 'center', gap: 5,
           }}>
-            <span style={{ opacity: 0.7 }}>⚔</span>
+            <ForgeIcon name="attack" size={12} strokeWidth={1.7} style={{ opacity: 0.7 }} />
             <span>{opponentName}</span>
             <span style={{
               fontSize: 8, color: '#e74c3c', background: 'rgba(192,57,43,0.15)',
@@ -677,7 +687,7 @@ export function BattleBoardEngine({ result, playerName, opponentName, onComplete
             letterSpacing: '0.2em', textTransform: 'uppercase', fontWeight: 800,
             display: 'flex', alignItems: 'center', gap: 5,
           }}>
-            <span style={{ opacity: 0.7 }}>🛡</span>
+            <ForgeIcon name="shield" size={12} strokeWidth={1.7} style={{ opacity: 0.7 }} />
             <span>{playerName}</span>
             <span style={{
               fontSize: 8, color: '#4a9eff', background: 'rgba(74,158,255,0.15)',
