@@ -44,6 +44,8 @@ export type ForgeIconName =
   | "warning"
   | "energy"
   | "coin"
+   | "volume-on"
+   | "volume-off"
   | "spark"
   | "skull"
   | "refresh"
@@ -106,6 +108,10 @@ export function ForgeIcon({
       return <svg {...props}><path d="m13 2-8 12h6l-1 8 8-12h-6z" /></svg>;
     case "coin":
       return <svg {...props}><circle cx="12" cy="12" r="8.5" /><path d="M14.6 8.2c-.7-.8-1.5-1.2-2.7-1.2-1.5 0-2.5.8-2.5 1.9 0 3.1 5.8 1.3 5.8 4.4 0 1.3-1.1 2.2-2.8 2.2-1.2 0-2.3-.4-3.1-1.4M12 5.5v13" /></svg>;
+    case "volume-on":
+      return <svg {...props}><path d="M4 10v4h3l4 3V7l-4 3z" /><path d="M15 9.5a4 4 0 0 1 0 5M17.5 7a7 7 0 0 1 0 10" /></svg>;
+    case "volume-off":
+      return <svg {...props}><path d="M4 10v4h3l4 3V7l-4 3z" /><path d="m16 10 5 5M21 10l-5 5" /></svg>;
     case "spark":
       return <svg {...props}><path d="m12 3 2.1 5.8L20 11l-5.9 2.2L12 19l-2.1-5.8L4 11l5.9-2.2z" /><path d="m19 3 .6 2.1L22 6l-2.4.9L19 9l-.6-2.1L16 6l2.4-.9z" /></svg>;
     case "skull":

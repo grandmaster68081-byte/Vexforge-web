@@ -1,3 +1,15 @@
+## 2026-08-13 — VE-1-BATTLE-AUDIO-CONTROLS-ICON-LANGUAGE — IMPLEMENTED_UNVERIFIED
+
+- **Fuente canónica:** `src/components/battle/AudioControls.tsx` y `src/shared/components/ForgeIcon.tsx` del código oficial en `main`.
+- **Estado inicial:** `NOT_STARTED`. **Estado actual:** `IMPLEMENTED_UNVERIFIED`, objetivo Q3.
+- **Cambio:** los controles de audio ya no usan pictogramas Unicode para mute, configuración, música ni efectos; usan iconos SVG propios, conservando mute, sliders y valores reales.
+- **Alcance autoritativo:** no se tocaron mezclas, volúmenes persistidos, lógica de `AudioEngine`, combate, economía, recompensas, RPCs, RLS ni datos de jugadores.
+- **Accesibilidad y movimiento:** los botones exponen `aria-pressed`, el panel de volumen expone `aria-expanded` y `aria-label`, y los iconos decorativos mantienen `aria-hidden`; no se alteraron animaciones.
+- **Evidencia local:** `npx tsc --noEmit -p tsconfig.app.json`, `npm run verify:build`, `git diff --check` y el escaneo de los archivos de la unidad terminaron correctamente; no quedan pictogramas/símbolos visuales Unicode en ellos.
+- **Evidencia Supabase:** se mantiene el proyecto `ACTIVE_HEALTHY`; no se modificó Supabase.
+- **Deuda y bloqueo:** la revisión visual interactiva de controles dentro de una batalla sigue bloqueada sin una sesión normal autorizada del jugador; no se fabricó QA autenticada.
+- **Siguiente acción verificable:** publicar el commit en `main`, comprobar que Cloudflare sirve el SHA fuente y revisar las variantes compacta/expandida en responsive, foco y `prefers-reduced-motion` con sesión normal.
+
 ## 2026-08-13 — VE-1-BATTLE-INTRO-ICON-LANGUAGE — IMPLEMENTED_UNVERIFIED
 
 - **Fuente canónica:** `src/components/battle/BattleIntroScreen.tsx` y `src/shared/components/ForgeIcon.tsx` del código oficial en `main`.

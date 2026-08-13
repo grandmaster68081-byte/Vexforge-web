@@ -4,6 +4,7 @@
 
 import { useState, useCallback } from 'react';
 import { AudioEngine } from '../../lib/audioEngine';
+import { ForgeIcon } from '../../shared/components/ForgeIcon';
 
 interface AudioControlsProps {
   iconSize?: number;
@@ -37,14 +38,16 @@ export function AudioControls({ iconSize = 14, showSliders = false, compact = fa
       <button
         onClick={toggleMute}
         title={muted ? 'Activar audio' : 'Silenciar'}
+        aria-pressed={muted}
         style={{
           background: 'transparent', border: '1px solid #2a2a4a',
           borderRadius: 5, color: muted ? '#3a3a5a' : '#e8b84b',
-          fontSize: iconSize, cursor: 'pointer', padding: '3px 7px',
-          lineHeight: 1, transition: 'color 0.2s',
+          cursor: 'pointer', padding: '3px 7px',
+          display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+          transition: 'color 0.2s',
         }}
       >
-        {muted ? '🔇' : '🔊'}
+        <ForgeIcon name={muted ? 'volume-off' : 'volume-on'} size={iconSize} />
       </button>
     );
   }
@@ -54,19 +57,23 @@ export function AudioControls({ iconSize = 14, showSliders = false, compact = fa
       <button
         onClick={toggleMute}
         title={muted ? 'Activar audio' : 'Silenciar'}
+        aria-pressed={muted}
         style={{
           background: 'transparent', border: '1px solid #2a2a4a',
           borderRadius: 5, color: muted ? '#3a3a5a' : '#e8b84b',
-          fontSize: iconSize, cursor: 'pointer', padding: '3px 7px',
-          lineHeight: 1, transition: 'color 0.2s',
+          cursor: 'pointer', padding: '3px 7px',
+          display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+          transition: 'color 0.2s',
         }}
-      >{muted ? '🔇' : '🔊'}</button>
+      ><ForgeIcon name={muted ? 'volume-off' : 'volume-on'} size={iconSize} /></button>
 
       {showSliders && (
         <button
           onClick={() => setExpanded(e => !e)}
-          style={{ background: 'transparent', border: '1px solid #2a2a4a', borderRadius: 5, color: expanded ? '#e8b84b' : '#666', fontSize: 10, cursor: 'pointer', padding: '3px 6px', lineHeight: 1 }}
-        >⚙</button>
+          aria-expanded={expanded}
+          aria-label={expanded ? 'Ocultar controles de volumen' : 'Mostrar controles de volumen'}
+          style={{ background: 'transparent', border: '1px solid #2a2a4a', borderRadius: 5, color: expanded ? '#e8b84b' : '#666', cursor: 'pointer', padding: '3px 6px', display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}
+        ><ForgeIcon name="settings" size={12} /></button>
       )}
 
       {showSliders && expanded && (
@@ -78,13 +85,13 @@ export function AudioControls({ iconSize = 14, showSliders = false, compact = fa
         }}>
           <div style={{ marginBottom: 8 }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 8.5, color: '#777', marginBottom: 4 }}>
-              <span>🎵 Música</span><span style={{ color: '#e8b84b' }}>{musicVol}%</span>
+                <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}><ForgeIcon name="spark" size={12} /> Música</span><span style={{ color: '#e8b84b' }}>{musicVol}%</span>
             </div>
             <input type="range" min={0} max={100} value={musicVol} onChange={e => onMusicVol(Number(e.target.value))} disabled={muted} style={{ width: '100%', accentColor: '#e8b84b', opacity: muted ? 0.35 : 1 }} />
           </div>
           <div>
             <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 8.5, color: '#777', marginBottom: 4 }}>
-              <span>⚔️ Efectos</span><span style={{ color: '#e8b84b' }}>{sfxVol}%</span>
+                <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}><ForgeIcon name="attack" size={12} /> Efectos</span><span style={{ color: '#e8b84b' }}>{sfxVol}%</span>
             </div>
             <input type="range" min={0} max={100} value={sfxVol} onChange={e => onSfxVol(Number(e.target.value))} disabled={muted} style={{ width: '100%', accentColor: '#e8b84b', opacity: muted ? 0.35 : 1 }} />
           </div>
