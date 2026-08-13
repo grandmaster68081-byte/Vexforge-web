@@ -441,7 +441,7 @@ function AttackButton({ phase, onAdvance, onAutoPlay, onStop, isAutoOn, totalTur
           minWidth: 'min(120px, 45vw)',
         }}
       >
-        {phase === 'ANIMATING' ? 'Resolviendo…' : `⚔ ATACAR (${remaining})`}
+        {phase === 'ANIMATING' ? 'Resolviendo…' : `ATACAR (${remaining})`}
       </button>
       {isAutoOn ? (
         <button onClick={onStop} style={{
@@ -1159,7 +1159,7 @@ export function InteractiveBattleBoard({
               style={{ width: 170, height: 188, border: `2px dashed ${oppZone.primary}30`, borderRadius: 12,
               background: `${oppZone.primary}05`, display: 'flex', alignItems: 'center', justifyContent: 'center',
               color: `${oppZone.primary}30`, fontSize: 36 }}>
-              💀
+              <ForgeIcon name="skull" size={36} strokeWidth={1.4} />
             </div>
           )}
         </div>
