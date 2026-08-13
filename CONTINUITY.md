@@ -6,9 +6,9 @@
 - **Alcance autoritativo:** no se tocaron daño, settlement, resultados, recompensas, economía, energía, RPCs, RLS, datos de jugadores ni reglas de batalla.
 - **Accesibilidad y movimiento:** los SVG decorativos mantienen `aria-hidden`, el texto semántico permanece visible y no se alteraron las duraciones ni las animaciones del flujo.
 - **Evidencia local:** `npm run verify:build`, `npx tsc --noEmit -p tsconfig.app.json`, `git diff --check` y el escaneo de `BattleIntroScreen.tsx` terminaron correctamente; no quedan pictogramas/símbolos visuales Unicode en la unidad.
-- **Evidencia remota:** la consulta de Supabase confirmó el proyecto `ACTIVE_HEALTHY` y la existencia de las tablas canónicas; no se modificó Supabase.
+- **Evidencia remota:** la consulta de Supabase confirmó el proyecto `ACTIVE_HEALTHY` y la existencia de las tablas canónicas; no se modificó Supabase. Tras el push, `main` quedó en `a1954193090cb26d0f8b8e629ce9a200f33483e3`; `/build-manifest.json` publicó el mismo commit y `/`, `/manifest.json`, `/tutorial`, `/cards` y `/battle` respondieron `200`.
 - **Deuda y bloqueo:** la revisión visual interactiva de combate sigue bloqueada sin una sesión normal autorizada del jugador; no se fabricaron resultados ni se declaró QA autenticada.
-- **Siguiente acción verificable:** publicar el commit en `main`, comprobar propagación y comparar `/build-manifest.json`, rutas públicas y bundle; después revisar responsive, foco y `prefers-reduced-motion` con sesión normal.
+- **Siguiente acción verificable:** revisar la pantalla en navegador con una sesión normal autorizada, incluyendo responsive, foco y `prefers-reduced-motion`; mantener esta unidad `IMPLEMENTED_UNVERIFIED` hasta contar con esa evidencia.
 
 ## 2026-08-13 — VE-1-STARTER-DECK-ICON-LANGUAGE — IMPLEMENTED_UNVERIFIED
 
