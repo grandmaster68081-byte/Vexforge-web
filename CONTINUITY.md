@@ -6,8 +6,9 @@
 - **Alcance autoritativo:** no se tocaron asignación del mazo, RPC `vexforge_assign_starter_deck`, cartas, economía, recompensas, energía, RLS ni reglas del juego.
 - **Accesibilidad y movimiento:** se mantiene el texto semántico y los títulos de estadísticas; no se añadieron animaciones nuevas ni se alteró la duración del flujo existente.
 - **Evidencia local:** `npm run build`, `npx tsc --noEmit -p tsconfig.app.json` y `git diff --check` finalizaron correctamente. El escaneo del archivo no conserva pictogramas visuales Unicode; las tildes y el texto español no son sustitutos visuales.
-- **Deuda y bloqueo:** la fuente modificada ya está sincronizada con `vexforge_frontend_source_files`; falta registrar el commit en `main` y comprobar propagación pública. La verificación autenticada del onboarding sigue bloqueada sin sesión normal autorizada del jugador.
-- **Siguiente acción verificable:** hacer commit/push del lote y comprobar el check de Cloudflare y las rutas públicas sin declarar QA autenticada.
+- **Evidencia pública:** commit `0c080a40dc828990f75e80ea9580afab0b1f5b3b` en `main`; el check de Cloudflare terminó en `success`; `/build-manifest.json` publica el mismo commit y `/`, `/manifest.json`, `/tutorial`, `/cards` y `/battle` responden HTTP 200.
+- **Deuda y bloqueo:** la verificación autenticada del onboarding sigue bloqueada sin sesión normal autorizada del jugador; no se fabricaron resultados ni se declaró QA autenticada.
+- **Siguiente acción verificable:** revisar la revelación del mazo inicial en navegador con una sesión normal autorizada, incluyendo responsive, foco y `prefers-reduced-motion`; mantener esta unidad `IMPLEMENTED_UNVERIFIED` hasta contar con esa evidencia.
 
 ## 2026-08-13 — VE-1-BATTLE-UNICODE-MICRO-FIX — IMPLEMENTED_UNVERIFIED
 
