@@ -7,6 +7,7 @@ import { useEffect, useRef, useState, useCallback } from 'react';
 import type { BattleUnit } from '../../lib/battleTypes';
 import { RARITY_COLOR, KEYWORD_ICON } from '../../lib/battleTypes';
 import { AudioEngine } from '../../lib/audioEngine';
+import { ForgeIcon, type ForgeIconName } from '../../shared/components/ForgeIcon';
 
 interface CardAttackCinematicProps {
   unit: BattleUnit | null;
@@ -50,14 +51,14 @@ const FACTION_SECONDARY: Record<string, string> = {
   default:     '#7abcff',
 };
 
-const FACTION_ICON: Record<string, string> = {
-  Guerrero:    '⚔️',
-  Mago:        '🔮',
-  'Pícaro':    '🗡️',
-  'Paladín':   '🛡️',
-  Explorador:  '🏹',
-  Comerciante: '💰',
-  default:     '⚡',
+const FACTION_ICON: Record<string, ForgeIconName> = {
+  Guerrero:    'attack',
+  Mago:        'spark',
+  'Pícaro':    'target',
+  'Paladín':   'shield',
+  Explorador:  'target',
+  Comerciante: 'coin',
+  default:     'energy',
 };
 
 // Attack label por facción
@@ -185,7 +186,11 @@ function ParticleEl({ p }: { p: Particle }) {
   };
 
   if (p.shape === 'star') {
-    return <div style={{ ...baseStyle, ...shapeStyles.star }}>✦</div>;
+    return (
+      <div style={{ ...baseStyle, ...shapeStyles.star }}>
+        <ForgeIcon name="spark" size={Math.max(10, p.size * 2)} style={{ color: p.color }} />
+      </div>
+    );
   }
 
   return <div style={{ ...baseStyle, ...(shapeStyles[p.shape] ?? shapeStyles.circle) }} />;
@@ -312,7 +317,7 @@ function CardArtDisplay({ unit, rarColor, factionColor, isDefender }: {
             background: `radial-gradient(ellipse at center, ${factionColor}30, rgba(6,6,16,0.9))`,
             filter: `drop-shadow(0 0 20px ${factionColor}aa)`,
           }}>
-            {FACTION_ICON[faction] ?? '⚔️'}
+            <ForgeIcon name={FACTION_ICON[faction] ?? 'energy'} size={56} strokeWidth={1.4} />
           </div>
         )}
         {/* Rarity shimmer overlay */}
@@ -330,7 +335,7 @@ function CardArtDisplay({ unit, rarColor, factionColor, isDefender }: {
           fontSize: 'clamp(10px, 2vw, 14px)',
           filter: `drop-shadow(0 0 6px ${factionColor}aa)`,
         }}>
-          {FACTION_ICON[faction] ?? '⚔️'}
+          <ForgeIcon name={FACTION_ICON[faction] ?? 'energy'} size={56} strokeWidth={1.4} />
         </div>
         {/* Rarity badge */}
         <div style={{
@@ -355,9 +360,9 @@ function CardArtDisplay({ unit, rarColor, factionColor, isDefender }: {
           display: 'flex',
           justifyContent: 'space-between',
         }}>
-          <span style={{ fontFamily: '"Rajdhani",sans-serif', fontWeight: 700, fontSize: 11, color: '#e84040' }}>⚔{unit.atk}</span>
-          <span style={{ fontFamily: '"Rajdhani",sans-serif', fontWeight: 700, fontSize: 11, color: '#4a9eff' }}>🛡{unit.def}</span>
-          <span style={{ fontFamily: '"Rajdhani",sans-serif', fontWeight: 700, fontSize: 11, color: '#e8b84b' }}>❤{unit.hp}</span>
+          <span style={{ fontFamily: '"Rajdhani",sans-serif', fontWeight: 700, fontSize: 11, color: '#e84040', display: 'inline-flex', alignItems: 'center', gap: 2 }}><ForgeIcon name="attack" size={11} strokeWidth={1.8} />{unit.atk}</span>
+          <span style={{ fontFamily: '"Rajdhani",sans-serif', fontWeight: 700, fontSize: 11, color: '#4a9eff', display: 'inline-flex', alignItems: 'center', gap: 2 }}><ForgeIcon name="shield" size={11} strokeWidth={1.8} />{unit.def}</span>
+          <span style={{ fontFamily: '"Rajdhani",sans-serif', fontWeight: 700, fontSize: 11, color: '#e8b84b', display: 'inline-flex', alignItems: 'center', gap: 2 }}><ForgeIcon name="heart" size={11} strokeWidth={1.8} />{unit.hp}</span>
         </div>
       </div>
       {/* Card name */}
@@ -385,7 +390,7 @@ function CardArtDisplay({ unit, rarColor, factionColor, isDefender }: {
               borderRadius: 4, padding: '1px 5px', fontFamily: '"Rajdhani",sans-serif',
               color: rarColor, letterSpacing: '0.06em',
             }}>
-              {KEYWORD_ICON[kw] ?? '•'} {kw}
+              {KEYWORD_ICON[kw] && <ForgeIcon name={KEYWORD_ICON[kw] as ForgeIconName} size={11} strokeWidth={1.8} />} {kw}
             </span>
           ))}
         </div>
@@ -484,7 +489,9 @@ function KeywordEffectOverlay({ keywords, phase }: { keywords: string[]; phase: 
             <div style={{ position: 'absolute', bottom: '18%', left: '50%', marginLeft: -28,
               fontSize: 52, lineHeight: 1,
               filter: `drop-shadow(0 0 24px ${col}cc)`,
-              animation: active ? 'kw-forge-hammer 0.35s cubic-bezier(0.22,1,0.36,1) both' : 'none' }}>🔨</div>
+              animation: active ? 'kw-forge-hammer 0.35s cubic-bezier(0.22,1,0.36,1) both' : 'none' }}>
+              <ForgeIcon name="attack" size={52} strokeWidth={1.4} style={{ color: col }} />
+            </div>
           </div>
         );
         if (kw === 'Consecrate') return (
@@ -571,20 +578,20 @@ function cardNameHash(name: string): number {
 }
 
 // Name-keyword patterns for special visual profiles
-const NAME_PROFILES: Array<{ pattern: RegExp; label: string; extraColor: string; icon: string }> = [
-  { pattern: /dragón|dragon|wyrm/i,    label: 'ALIENTO DE DRAGÓN',  extraColor: '#ff6600', icon: '🐉' },
-  { pattern: /fuego|fire|llama|flame/i,label: 'INFIERNO',           extraColor: '#ff4400', icon: '🔥' },
-  { pattern: /sombra|shadow|oscur/i,   label: 'GOLPE OSCURO',       extraColor: '#6600aa', icon: '🌑' },
-  { pattern: /hielo|ice|frost|gélido/i,label: 'TORMENTA GLACIAL',   extraColor: '#44ccff', icon: '❄️' },
-  { pattern: /trueno|thunder|rayo|bolt/i,label:'DESCARGA',          extraColor: '#ffe000', icon: '⚡' },
-  { pattern: /arcano|arcane|místico/i, label: 'CANALIZACIÓN',       extraColor: '#aa44ff', icon: '🌀' },
-  { pattern: /veneno|poison|serpiente/i,label:'TOXINA',             extraColor: '#88ff44', icon: '☠️' },
-  { pattern: /sangre|blood|crimson/i,  label: 'HERIDA FATAL',       extraColor: '#cc0022', icon: '🩸' },
-  { pattern: /sagrado|holy|light|luz/i,label: 'JUICIO DIVINO',      extraColor: '#ffee88', icon: '✝️' },
-  { pattern: /forjador|forger|smith/i, label: 'GOLPE DE FRAGUA',    extraColor: '#ff8833', icon: '🔨' },
-  { pattern: /espectro|specter|ghost/i,label: 'TOQUE ESPECTRAL',    extraColor: '#aaccff', icon: '👻' },
-  { pattern: /titan|titán|coloso/i,    label: 'APLASTAMIENTO',      extraColor: '#bb8855', icon: '⛰️' },
-  { pattern: /viento|wind|aire|storm/i,label: 'RÁFAGA',             extraColor: '#99ddff', icon: '🌪️' },
+const NAME_PROFILES: Array<{ pattern: RegExp; label: string; extraColor: string; icon: ForgeIconName }> = [
+  { pattern: /dragón|dragon|wyrm/i,    label: 'ALIENTO DE DRAGÓN',  extraColor: '#ff6600', icon: 'boss' },
+  { pattern: /fuego|fire|llama|flame/i,label: 'INFIERNO',           extraColor: '#ff4400', icon: 'energy' },
+  { pattern: /sombra|shadow|oscur/i,   label: 'GOLPE OSCURO',       extraColor: '#6600aa', icon: 'more' },
+  { pattern: /hielo|ice|frost|gélido/i,label: 'TORMENTA GLACIAL',   extraColor: '#44ccff', icon: 'energy' },
+  { pattern: /trueno|thunder|rayo|bolt/i,label:'DESCARGA',          extraColor: '#ffe000', icon: 'energy' },
+  { pattern: /arcano|arcane|místico/i, label: 'CANALIZACIÓN',       extraColor: '#aa44ff', icon: 'spark' },
+  { pattern: /veneno|poison|serpiente/i,label:'TOXINA',             extraColor: '#88ff44', icon: 'skull' },
+  { pattern: /sangre|blood|crimson/i,  label: 'HERIDA FATAL',       extraColor: '#cc0022', icon: 'heart' },
+  { pattern: /sagrado|holy|light|luz/i,label: 'JUICIO DIVINO',      extraColor: '#ffee88', icon: 'crown' },
+  { pattern: /forjador|forger|smith/i, label: 'GOLPE DE FRAGUA',    extraColor: '#ff8833', icon: 'attack' },
+  { pattern: /espectro|specter|ghost/i,label: 'TOQUE ESPECTRAL',    extraColor: '#aaccff', icon: 'more' },
+  { pattern: /titan|titán|coloso/i,    label: 'APLASTAMIENTO',      extraColor: '#bb8855', icon: 'boss' },
+  { pattern: /viento|wind|aire|storm/i,label: 'RÁFAGA',             extraColor: '#99ddff', icon: 'spark' },
 ];
 
 function getNameProfile(cardName: string, fallbackLabel: string, _fallbackColor: string) {
@@ -595,7 +602,7 @@ function getNameProfile(cardName: string, fallbackLabel: string, _fallbackColor:
   const hue = (h % 360);
   const sat = 70 + (h % 25);
   const accentColor = `hsl(${hue},${sat}%,62%)`;
-  return { label: fallbackLabel, accentColor, nameIcon: '' };
+  return { label: fallbackLabel, accentColor, nameIcon: null };
 }
 
 // ─── Name-specific background particle overlay ────────────────────────────────
@@ -802,7 +809,7 @@ export function CardAttackCinematic({
               : 'cac-icon-float 0.6s ease-in-out infinite alternate',
             filter: `drop-shadow(0 0 20px ${factionColor}) drop-shadow(0 0 40px ${factionColor}88)`,
           }}>
-            {FACTION_ICON[faction] ?? '⚡'}
+            <ForgeIcon name={FACTION_ICON[faction] ?? 'energy'} size={56} strokeWidth={1.4} />
           </div>
 
           {/* Attack label — uses card-name-derived label and accent color */}
@@ -818,7 +825,7 @@ export function CardAttackCinematic({
             animation: 'cac-label-reveal 0.3s ease-out 0.1s both',
             whiteSpace: 'nowrap',
           }}>
-            {nameIcon && <span style={{ marginRight: 4 }}>{nameIcon}</span>}
+            {nameIcon && <ForgeIcon name={nameIcon} size={12} strokeWidth={1.8} style={{ marginRight: 4, verticalAlign: '-0.15em' }} />}
             {isShortRarity ? 'ATACA' : attackLabel}
           </div>
 
@@ -835,9 +842,17 @@ export function CardAttackCinematic({
               animation: 'cac-damage-pop 0.3s ease-out 0.2s both',
               lineHeight: 1,
             }}>
-              {isCrit && <span style={{ fontSize: '0.55em', display: 'block', marginBottom: 2, letterSpacing: '0.15em' }}>✦ CRÍTICO ✦</span>}
+              {isCrit && (
+                <span style={{ fontSize: '0.55em', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 4, marginBottom: 2, letterSpacing: '0.15em' }}>
+                  <ForgeIcon name="spark" size={11} strokeWidth={1.8} /> CRÍTICO <ForgeIcon name="spark" size={11} strokeWidth={1.8} />
+                </span>
+              )}
               -{damage}
-              {isKill && <span style={{ fontSize: '0.45em', display: 'block', marginTop: 2, color: '#ff4444', letterSpacing: '0.12em' }}>💀 ELIMINADO</span>}
+              {isKill && (
+                <span style={{ fontSize: '0.45em', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 4, marginTop: 2, color: '#ff4444', letterSpacing: '0.12em' }}>
+                  <ForgeIcon name="skull" size={12} strokeWidth={1.8} /> ELIMINADO
+                </span>
+              )}
             </div>
           )}
 
