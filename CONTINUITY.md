@@ -1,4 +1,14 @@
-## 2026-08-13 — VE-1-HOME-ICON-LANGUAGE — IMPLEMENTED_UNVERIFIED
+## 2026-08-13 — VE-1-BATTLE-ATTACK-CINEMATIC-ICON-LANGUAGE — IMPLEMENTED_UNVERIFIED
+
+- **Fuente canónica:** código oficial `main`, `CardAttackCinematic.tsx`, `ForgeIcon`, Supabase activo y Cloudflare Pages.
+- **Estado inicial:** `NOT_STARTED`; **estado actual:** `IMPLEMENTED_UNVERIFIED`, objetivo Q3.
+- **Cambio:** la cinemática de ataque ya no representa facciones, estadísticas, keywords, partículas, perfiles de carta, crítico ni eliminación con emojis o pictogramas Unicode; usa el lenguaje SVG propio de `ForgeIcon` y conserva textos, tiempos, daños, audio, animaciones y flujo existentes.
+- **Alcance autoritativo:** no se modificaron RPCs, settlement, economía, recompensas, RLS, cartas, Storage, datos de jugadores ni resultados de combate.
+- **Evidencia:** `npm run verify:build` y `npx tsc --noEmit -p tsconfig.app.json` finalizaron correctamente sobre la implementación; el archivo objetivo quedó sin coincidencias de pictogramas; `main` contiene el commit `dd9a8f109c08e27fd2b761a0791df3cd1f8e3ee2`; `/build-manifest.json` publica ese commit; `/`, `/manifest.json`, `/tutorial`, `/cards` y `/battle` respondieron HTTP 200.
+- **Deuda:** no se realizó QA interactivo en navegador para responsive, focus y `prefers-reduced-motion`; permanecen consumidores Unicode separados en otras superficies de combate, que no se mezclan en esta unidad.
+- **Siguiente acción verificable:** revisar esta cinemática en escritorio, tablet y móvil, incluyendo focus y movimiento reducido; después elegir el siguiente consumidor Unicode independiente.
+
+---## 2026-08-13 — VE-1-HOME-ICON-LANGUAGE — IMPLEMENTED_UNVERIFIED
 
 - **Fuente canónica:** `src/routes/HomeRoute.tsx`, `ForgeIcon`, Supabase activo y Cloudflare Pages.
 - **Estado inicial:** `NOT_STARTED`; **estado actual:** `IMPLEMENTED_UNVERIFIED`, objetivo Q3.
