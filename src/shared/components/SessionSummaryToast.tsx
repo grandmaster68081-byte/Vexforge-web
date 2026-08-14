@@ -3,6 +3,7 @@
 // Tracks battle results in sessionStorage.
 
 import { useEffect, useState } from "react";
+import { ForgeIcon } from "./ForgeIcon";
 
 const SESSION_KEY = "vexforge_session_battles_v1";
 const SHOW_AFTER_BATTLES = 3;
@@ -91,7 +92,7 @@ export function SessionSummaryToast() {
           to   { opacity:1; transform:translateX(-50%) translateY(0); }
         }
       `}</style>
-      <div style={{ fontSize: 28 }}>⚔️</div>
+      <div style={{ color: "#e8b84b", display: "grid", placeItems: "center" }}><ForgeIcon name="attack" size={28} /></div>
       <div style={{ flex: 1 }}>
         <div style={{ fontSize: 12, color: "#e8b84b", fontWeight: 700, letterSpacing: 1, textTransform: "uppercase", marginBottom: 2 }}>
           Sesión de hoy
@@ -101,10 +102,10 @@ export function SessionSummaryToast() {
         </div>
         <div style={{ fontSize: 12, color: "#64748b" }}>
           +{record.vexEarned.toLocaleString()} VEX ganados
-          {record.streak >= 3 && <span style={{ color: "#f59e0b", marginLeft: 8 }}>🔥 Racha {record.streak}</span>}
+          {record.streak >= 3 && <span style={{ color: "#f59e0b", marginLeft: 8, display: "inline-flex", alignItems: "center", gap: 4 }}><ForgeIcon name="spark" size={14} />Racha {record.streak}</span>}
         </div>
       </div>
-      <div style={{ fontSize: 18, color: "#475569" }}>✕</div>
+      <div style={{ fontSize: 18, color: "#475569", display: "grid", placeItems: "center" }}><ForgeIcon name="close" size={18} /></div>
     </div>
   );
 }
