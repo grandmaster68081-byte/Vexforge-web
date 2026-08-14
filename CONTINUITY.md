@@ -1,3 +1,16 @@
+## 2026-08-14 — VE-1-LEADERBOARD-ICON-LANGUAGE — IMPLEMENTED_UNVERIFIED
+
+- **Tipo de sesión:** REFINAMIENTO. **Fuente canónica:** código real de `main`, `LeaderboardRoute.tsx`, `ForgeIcon`, Supabase vivo y deploy automático de Cloudflare Pages.
+- **Estado inicial:** `NOT_STARTED`; **estado actual:** `IMPLEMENTED_UNVERIFIED`; **nivel actual:** Q2; **objetivo:** Q3.
+- **Objetivo:** retirar los sustitutos Unicode del clasificatorio sin cambiar la consulta, filtros, MMR, victorias, derrotas, tiers, posiciones, nombres de campeón ni resultados autoritativos.
+- **Cambio:** `LeaderboardRoute.tsx` conserva la lógica y sustituye los pictogramas de rangos, medallas, tiers DPS, encabezado, actualización, estado vacío y campeón por nombres existentes de `ForgeIcon`; se tiparon los mappings para impedir iconos no registrados.
+- **Alcance autoritativo:** no se modificaron Supabase, cartas, inventario, economía, recompensas, RPCs, RLS, datos de jugadores, audio ni navegación.
+- **Evidencia de código y build:** `npx tsc --noEmit -p tsconfig.app.json`, `npm run build`, el escaneo del archivo objetivo y `git diff --check` finalizaron correctamente. El commit de implementación en `main` es `36898b396f1b8df7c389d8297bed270898a89dc4`.
+- **Evidencia pendiente:** ejecutar `npm run verify:build` sobre el commit documental final, esperar la propagación automática y comparar `/build-manifest.json`, `index.html`, hashes de assets y rutas públicas contra `main`.
+- **Responsive y accesibilidad:** `ForgeIcon` conserva `aria-hidden` y `focusable=false`; la revisión interactiva del ranking en escritorio, tablet y móvil, incluyendo focus, `prefers-reduced-motion` y una sesión normal autorizada, queda pendiente/bloqueada sin esa sesión.
+- **Deuda y condición de reapertura:** permanecen consumidores Unicode independientes en otras superficies; no se mezclan con esta unidad. Reabrir ante regresión visual o evidencia autenticada del ranking.
+- **Siguiente acción verificable:** finalizar la verificación del build y del deploy público; después abordar otro consumidor Unicode independiente como unidad separada.
+
 ## 2026-08-14 — VE-1-SHARDS-ICON — IMPLEMENTED_UNVERIFIED
 
 - **Tipo de sesión:** REFINAMIENTO. **Fuente canónica:** código real de `main`, `ShardsPanel.tsx`, `ForgeIcon`, Supabase vivo y deploy automático de Cloudflare Pages.
