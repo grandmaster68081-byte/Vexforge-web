@@ -187,7 +187,7 @@ function SlotDropzone({
               background: 'rgba(255,68,68,0.12)', border: '1px solid rgba(255,68,68,0.3)',
               borderRadius: 6, color: '#ff6b6b', fontSize: 10, padding: '3px 7px',
               cursor: 'pointer', fontWeight: 700, flexShrink: 0,
-            }}>✕</button>
+            }}><ForgeIcon name="close" size={12} /></button>
           </div>
         </div>
       ) : (

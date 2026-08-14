@@ -1,3 +1,14 @@
+## 2026-08-13 — VE-1-FORMATION-SELECTOR-CLOSE-ICON — IMPLEMENTED_UNVERIFIED
+
+- **Fuente canónica:** código oficial `main`, `FormationSelector.tsx`, `ForgeIcon`, Supabase activo y Cloudflare Pages.
+- **Estado inicial:** `NOT_STARTED`; **estado actual:** `IMPLEMENTED_UNVERIFIED`, objetivo Q3.
+- **Cambio:** el control para limpiar una unidad de la formación ya no usa el pictograma Unicode `✕`; conserva la acción, feedback, estilos y flujo usando `ForgeIcon` con el icono canónico `close`.
+- **Alcance autoritativo:** no se modificaron selección, formación, combate, RPCs, settlement, economía, recompensas, RLS, cartas, Storage ni datos de jugadores.
+- **Evidencia de fuente:** el consumidor objetivo quedó sin `✕`; la revisión interactiva de responsive, foco y `prefers-reduced-motion` queda pendiente.
+- **Deuda y siguiente acción:** comprobar el control dentro de la selección de formación en escritorio, tablet y móvil; después elegir otro consumidor Unicode independiente.
+
+---
+
 ## 2026-08-13 — VE-1-WIN-STREAK-ICON-LANGUAGE — IMPLEMENTED_UNVERIFIED
 
 - **Fuente canónica:** código oficial `main`, `WinStreakDisplay.tsx`, `ForgeIcon`, Supabase activo y Cloudflare Pages.
