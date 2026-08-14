@@ -1,3 +1,14 @@
+## 2026-08-13 — VE-1-INTERACTIVE-BATTLE-EXIT-ICON — IMPLEMENTED_UNVERIFIED
+
+- **Fuente canónica:** código oficial `main`, `InteractiveBattleBoard.tsx`, `ForgeIcon`, Supabase activo y Cloudflare Pages.
+- **Estado inicial:** `NOT_STARTED`; **estado actual:** `IMPLEMENTED_UNVERIFIED`, objetivo Q3.
+- **Cambio:** el botón de salida conserva el texto `Salir` y su acción, pero ya no usa el pictograma Unicode `✕`; utiliza el icono SVG canónico `close`.
+- **Alcance autoritativo:** no se modificaron settlement, resultados, recompensas, economía, energía, RPCs, RLS, datos de jugadores ni reglas de batalla.
+- **Evidencia de fuente:** el consumidor objetivo quedó sin `✕`; la revisión interactiva de responsive, foco y `prefers-reduced-motion` queda pendiente.
+- **Deuda y siguiente acción:** comprobar el botón en los estados de batalla relevantes y después elegir otro consumidor Unicode independiente.
+
+---
+
 ## 2026-08-13 — VE-1-FORMATION-SELECTOR-CLOSE-ICON — IMPLEMENTED_UNVERIFIED
 
 - **Fuente canónica:** código oficial `main`, `FormationSelector.tsx`, `ForgeIcon`, Supabase activo y Cloudflare Pages.

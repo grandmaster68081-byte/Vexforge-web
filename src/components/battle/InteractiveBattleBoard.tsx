@@ -1298,7 +1298,7 @@ export function InteractiveBattleBoard({
         }}
         onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.color = '#a0a0c0'; (e.currentTarget as HTMLButtonElement).style.borderColor = 'rgba(255,255,255,0.2)'; }}
         onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.color = '#6a6a8a'; (e.currentTarget as HTMLButtonElement).style.borderColor = 'rgba(255,255,255,0.1)'; }}
-        >✕ Salir</button>
+        ><ForgeIcon name="close" size={14} /> Salir</button>
       </div>
 
       {/* ─── Turn Log ────────────────────────────────────────────────────── */}
