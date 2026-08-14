@@ -1,3 +1,15 @@
+## 2026-08-14 — VE-1-FUSION-ICON-LANGUAGE — IMPLEMENTED_UNVERIFIED
+
+- **Tipo de sesión:** REFINAMIENTO. **Fuente canónica:** código real de main, FusionRoute.tsx, ForgeIcon, Supabase vivo y deploy automático de Cloudflare Pages.
+- **Estado inicial:** NOT_STARTED; **estado actual:** IMPLEMENTED_UNVERIFIED; **nivel actual:** Q2; **objetivo:** Q3.
+- **Objetivo:** retirar los sustitutos Unicode de la superficie Crucible de Fusión sin cambiar selección de cartas, políticas, costes, shards, mutación de fusión ni estados autoritativos.
+- **Cambio:** se conservaron la lógica, textos, condiciones y flujo, sustituyendo la carta vacía, el encabezado, el resultado exitoso y la acción principal por iconos SVG canónicos de ForgeIcon.
+- **Alcance autoritativo:** no se modificaron Supabase, RPCs, RLS, cartas, economía, recompensas, inventario ni reglas de fusión.
+- **Responsive y accesibilidad:** se mantiene el botón nativo, el texto semántico y los estados existentes; queda pendiente la revisión visual interactiva en escritorio, tablet y móvil, foco y prefers-reduced-motion.
+- **Evidencia pendiente:** ejecutar build desde la raíz, comprobar el consumidor objetivo y verificar que el bundle público y build-manifest corresponden al commit auditado.
+- **Deuda y condición de reapertura:** revisar otros consumidores Unicode independientes como unidades separadas; reabrir por regresión del Crucible o evidencia canónica contradictoria.
+- **Siguiente acción verificable:** terminar la verificación local y pública de esta unidad antes de elegir el siguiente consumidor.
+
 ## 2026-08-14 — VE-1-ENERGY-BAR-ICON-LANGUAGE — IMPLEMENTED_UNVERIFIED
 
 - **Tipo de sesión:** REFINAMIENTO. **Fuente canónica:** código real de `main`, `EnergyBar.tsx`, `ForgeIcon`, Supabase vivo y deploy automático de Cloudflare Pages.

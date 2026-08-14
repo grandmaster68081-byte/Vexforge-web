@@ -4,6 +4,7 @@
     import { PageLoader } from "../shared/components/PageLoader";
     import { BlockedAuthState } from "../shared/components/BlockedAuthState";
     import { EmptyState } from "../shared/components/EmptyState";
+    import { ForgeIcon } from "../shared/components/ForgeIcon";
 
     const BG_URL = "https://rscuzqnfccqvltkdcdny.supabase.co/storage/v1/object/public/vexforge-assets/backgrounds/bg_forge.jpg";
 
@@ -48,7 +49,7 @@
     }) {
     if (cards.length === 0) return (
       <EmptyState
-        icon="🃏"
+        icon={<ForgeIcon name="cards" size={36} /> }
         title="Sin cartas fusionables"
         description="Consigue cartas con fusion_enabled para usar este crucible."
       />
@@ -159,7 +160,7 @@
 
           {/* Header */}
           <div style={{ marginBottom: 28 }}>
-            <h1 style={{ fontFamily: "Cinzel,serif", color: "#e8e8f0", fontSize: 28, margin: "0 0 4px" }}>🔥 Crucible de Fusión</h1>
+            <h1 style={{ fontFamily: "Cinzel,serif", color: "#e8e8f0", fontSize: 28, margin: "0 0 4px" }}><ForgeIcon name="fusion" size={24} style={{ verticalAlign: "-0.15em", marginRight: 8 }} />Crucible de Fusión</h1>
             <p style={{ color: "#666", margin: 0, fontSize: 12 }}>Fusiona copias de una carta para ascender su rareza. Requiere cartas + shards + VEX.</p>
           </div>
 
@@ -171,7 +172,7 @@
               border: `1px solid ${lastResult.ok ? "#3ddc8444" : "#e3573f44"}`,
               color: lastResult.ok ? "#3ddc84" : "#e3573f", fontSize: 13,
             }}>
-              {lastResult.ok ? "✅ Fusión exitosa — la carta ha ascendido de rareza." : (lastResult.reason ?? "Fusión fallida.")}
+              {lastResult.ok ? <><ForgeIcon name="check" size={14} style={{ verticalAlign: "-0.15em", marginRight: 6 }} />Fusión exitosa — la carta ha ascendido de rareza.</> : (lastResult.reason ?? "Fusión fallida.")}
             </div>
           )}
 
@@ -280,7 +281,7 @@
                     transition: "all 0.2s",
                   }}
                 >
-                  {pending ? "Fusionando..." : "🔥 Fusionar"}
+                  {pending ? "Fusionando..." : <><ForgeIcon name="fusion" size={16} style={{ verticalAlign: "-0.15em", marginRight: 6 }} />Fusionar</>}
                 </button>
               )}
             </div>
