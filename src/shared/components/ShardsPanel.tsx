@@ -1,5 +1,6 @@
 // ShardsPanel — Y.3 canonical reconstruction
 // Shows player shard balance by rarity + forge guide
+import { ForgeIcon } from "./ForgeIcon";
 import { useShards } from "../../domains/packs/useShards";
 import { SHARD_VALUES } from "../../domains/packs/shardsRepository";
 
@@ -52,7 +53,7 @@ export function ShardsPanel() {
         {/* Header */}
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 14, flexWrap: "wrap", gap: 8 }}>
           <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-            <span style={{ fontSize: 20 }}>💎</span>
+            <ForgeIcon name="spark" size={20} />
             <div>
               <div style={{
                 fontFamily: "Cinzel,serif", color: "#a78bfa", fontSize: 13, fontWeight: 700,
