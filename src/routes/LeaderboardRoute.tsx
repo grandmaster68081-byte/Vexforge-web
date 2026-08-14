@@ -5,41 +5,42 @@ import { EmptyState } from "../shared/components/EmptyState";
 import { ErrorState } from "../shared/components/ErrorState";
 import { supabase } from "../lib/supabase";
 import { GuestDiscoveryBanner } from "../shared/components/GuestDiscoveryBanner";
+import { ForgeIcon, type ForgeIconName } from "../shared/components/ForgeIcon";
 
-interface RankTier { name: string; color: string; icon: string; }
+interface RankTier { name: string; color: string; icon: ForgeIconName; }
 
 function getRank(mmr: number): RankTier {
-  if (mmr >= 3000) return { name: "Mythic",   color: "#ff4444", icon: "💎" };
-  if (mmr >= 2400) return { name: "Legend",   color: "#e8b84b", icon: "👑" };
-  if (mmr >= 1800) return { name: "Diamond",  color: "#4a9eff", icon: "💠" };
-  if (mmr >= 1200) return { name: "Platinum", color: "#3ddc84", icon: "🏅" };
-  if (mmr >= 600)  return { name: "Gold",     color: "#f59e0b", icon: "🥇" };
-  if (mmr >= 200)  return { name: "Silver",   color: "#8b8b9e", icon: "🥈" };
-  return           { name: "Bronze",          color: "#cd7f32", icon: "🥉" };
+  if (mmr >= 3000) return { name: "Mythic",   color: "#ff4444", icon: "spark" };
+  if (mmr >= 2400) return { name: "Legend",   color: "#e8b84b", icon: "crown" };
+  if (mmr >= 1800) return { name: "Diamond",  color: "#4a9eff", icon: "spark" };
+  if (mmr >= 1200) return { name: "Platinum", color: "#3ddc84", icon: "trophy" };
+  if (mmr >= 600)  return { name: "Gold",     color: "#f59e0b", icon: "trophy" };
+  if (mmr >= 200)  return { name: "Silver",   color: "#8b8b9e", icon: "shield" };
+  return           { name: "Bronze",          color: "#cd7f32", icon: "shield" };
 }
 
 
-const DPS_TIERS = [
-  { label: 'LEYENDA',  min: 2000, color: '#ffd700', icon: '💎' },
-  { label: 'MAESTRO',  min: 1200, color: '#e8b84b', icon: '🔥' },
-  { label: 'FORJADOR', min: 600,  color: '#a855f7', icon: '⚡' },
-  { label: 'APRENDIZ', min: 200,  color: '#4a9eff', icon: '🛡' },
-  { label: 'RECLUTA',  min: 0,    color: '#8b8b9e', icon: '⚔' },
+const DPS_TIERS: Array<{ label: string; min: number; color: string; icon: ForgeIconName }> = [
+  { label: 'LEYENDA',  min: 2000, color: '#ffd700', icon: 'spark' },
+  { label: 'MAESTRO',  min: 1200, color: '#e8b84b', icon: 'spark' },
+  { label: 'FORJADOR', min: 600,  color: '#a855f7', icon: 'energy' },
+  { label: 'APRENDIZ', min: 200,  color: '#4a9eff', icon: 'shield' },
+  { label: 'RECLUTA',  min: 0,    color: '#8b8b9e', icon: 'attack' },
 ];
 function getDPSTier(dps: number | null | undefined) {
   if (!dps) return DPS_TIERS[4];
   return DPS_TIERS.find(t => dps >= t.min) ?? DPS_TIERS[4];
 }
 const FACTIONS = ['Todas', 'Guerrero', 'Mago', 'Paladín', 'Pícaro'];
-const MEDAL = ["🥇", "🥈", "🥉"];
-const TIER_THRESHOLDS = [
-  { name: "Mythic",   min: 3000, color: "#ff4444", icon: "💎" },
-  { name: "Legend",   min: 2400, color: "#e8b84b", icon: "👑" },
-  { name: "Diamond",  min: 1800, color: "#4a9eff", icon: "💠" },
-  { name: "Platinum", min: 1200, color: "#3ddc84", icon: "🏅" },
-  { name: "Gold",     min: 600,  color: "#f59e0b", icon: "🥇" },
-  { name: "Silver",   min: 200,  color: "#8b8b9e", icon: "🥈" },
-  { name: "Bronze",   min: 0,    color: "#cd7f32", icon: "🥉" },
+const MEDAL: ForgeIconName[] = ["trophy", "crown", "spark"];
+const TIER_THRESHOLDS: Array<{ name: string; min: number; color: string; icon: ForgeIconName }> = [
+  { name: "Mythic",   min: 3000, color: "#ff4444", icon: "spark" },
+  { name: "Legend",   min: 2400, color: "#e8b84b", icon: "crown" },
+  { name: "Diamond",  min: 1800, color: "#4a9eff", icon: "spark" },
+  { name: "Platinum", min: 1200, color: "#3ddc84", icon: "trophy" },
+  { name: "Gold",     min: 600,  color: "#f59e0b", icon: "trophy" },
+  { name: "Silver",   min: 200,  color: "#8b8b9e", icon: "shield" },
+  { name: "Bronze",   min: 0,    color: "#cd7f32", icon: "shield" },
 ];
 
 export function LeaderboardRoute() {
@@ -64,8 +65,8 @@ export function LeaderboardRoute() {
       <div style={{ marginBottom: 24 }}>
         <p style={{ fontSize: 11, letterSpacing: "0.14em", color: "#e8b84b", textTransform: "uppercase", fontFamily: "Rajdhani,sans-serif", fontWeight: 700, marginBottom: 8 }}>─── Clasificatorio ───</p>
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 8 }}>
-          <h1 style={{ fontFamily: "Cinzel,serif", color: "#e8e8f0", fontSize: 26, margin: 0 }}>🏆 Leaderboard</h1>
-          <button onClick={reload} style={{ padding: "7px 18px", borderRadius: 8, border: "1px solid #2a2a3a", background: "transparent", color: "#888", fontSize: 11, cursor: "pointer" }}>↻ Actualizar</button>
+          <h1 style={{ display: "flex", alignItems: "center", gap: 8, fontFamily: "Cinzel,serif", color: "#e8e8f0", fontSize: 26, margin: 0 }}><ForgeIcon name="trophy" size={24} />Leaderboard</h1>
+          <button onClick={reload} style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "7px 18px", borderRadius: 8, border: "1px solid #2a2a3a", background: "transparent", color: "#888", fontSize: 11, cursor: "pointer" }}><ForgeIcon name="refresh" size={13} />Actualizar</button>
         </div>
         <p style={{ color: "#666", margin: "4px 0 0", fontSize: 12 }}>Clasificación global por MMR. Los mejores 100 jugadores.</p>
       </div>
@@ -74,7 +75,7 @@ export function LeaderboardRoute() {
       <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginBottom: 20 }}>
         {TIER_THRESHOLDS.map(t => (
           <div key={t.name} style={{ display: "flex", alignItems: "center", gap: 4, background: "#12121a", border: `1px solid ${t.color}33`, borderRadius: 8, padding: "4px 10px" }}>
-            <span style={{ fontSize: 12 }}>{t.icon}</span>
+            <ForgeIcon name={t.icon} size={12} />
             <span style={{ color: t.color, fontSize: 10, fontWeight: 700 }}>{t.name}</span>
             <span style={{ color: "#5a5a7a", fontSize: 9 }}>{t.min}+</span>
           </div>
@@ -92,14 +93,14 @@ export function LeaderboardRoute() {
             color: factionFilter === f ? "#e8b84b" : "#5a5a7a",
             fontSize: 10, fontFamily: "Rajdhani,sans-serif", fontWeight: 700,
             transition: "all 0.15s ease",
-          }}>{f === "Todas" ? "🌐 " : ""}{f}</button>
+          }}>{f}</button>
         ))}
       </div>
       {error && <ErrorState message={error} onRetry={reload} />}
       {loading && <SkeletonTable cols={5} rows={7} />}
       {!loading && !error && rows.length === 0 && (
         <EmptyState
-          icon="⚔️"
+          icon={<ForgeIcon name="attack" size={36} />}
           title="Sin clasificados aún"
           description="Todavía no hay jugadores clasificados. ¡Sé el primero en jugar PvP para aparecer aquí!"
         />
@@ -130,13 +131,13 @@ export function LeaderboardRoute() {
                 animationDelay: `${i * 0.04}s`,
               }}>
                 <div style={{ fontFamily: "Cinzel,serif", fontWeight: 800, color: i < 3 ? "#e8b84b" : "#555", fontSize: i < 3 ? 16 : 13 }}>
-                  {i < 3 ? MEDAL[i] : `#${row.rank_position}`}
+                  {i < 3 ? <ForgeIcon name={MEDAL[i]} size={18} /> : `#${row.rank_position}`}
                 </div>
                 <div>
                   <span style={{ color: isMe ? "#3ddc84" : "#e8e8f0", fontWeight: 700, fontSize: 13 }}>{row.display_name}</span>
                   {isMe && <span style={{ color: "#3ddc84", fontSize: 9, marginLeft: 6 }}>TÚ</span>}
-                  <div style={{ color: tier.color, fontSize: 10 }}>{tier.icon} {tier.name}</div>
-                  {(row as any).champion_name && <div style={{ color: "#7a5a2a", fontSize: 9, marginTop: 1 }}>👑 {(row as any).champion_name}</div>}
+                  <div style={{ display: "inline-flex", alignItems: "center", gap: 4, color: tier.color, fontSize: 10 }}><ForgeIcon name={tier.icon} size={11} />{tier.name}</div>
+                  {(row as any).champion_name && <div style={{ display: "inline-flex", alignItems: "center", gap: 3, color: "#7a5a2a", fontSize: 9, marginTop: 1 }}><ForgeIcon name="crown" size={10} />{(row as any).champion_name}</div>}
                 </div>
                 <div style={{ color: "#e8b84b", fontWeight: 700, fontSize: 14, textAlign: "right" }}>{row.mmr}</div>
                 <div style={{ color: "#7a7a9a", fontSize: 11, textAlign: "center" }}>
@@ -150,11 +151,11 @@ export function LeaderboardRoute() {
                       <span style={{
                         fontFamily: "Rajdhani,sans-serif", fontSize: 9, fontWeight: 800,
                         color: t.color, background: `${t.color}18`, border: `1px solid ${t.color}33`,
-                        borderRadius: 12, padding: "2px 7px", display: "inline-block",
+                        borderRadius: 12, padding: "2px 7px", display: "inline-flex", alignItems: "center", gap: 4,
                         letterSpacing: "0.06em",
-                      }}>{t.icon} {t.label}</span>
+                      }}><ForgeIcon name={t.icon} size={10} />{t.label}</span>
                       {(row as any).champion_card_id && (
-                        <div style={{ fontSize: 8, color: "#5a5a7a", marginTop: 2 }}>👑 Campeón</div>
+                        <div style={{ display: "inline-flex", alignItems: "center", gap: 3, fontSize: 8, color: "#5a5a7a", marginTop: 2 }}><ForgeIcon name="crown" size={9} />Campeón</div>
                       )}
                     </div>
                   );
