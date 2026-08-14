@@ -1,3 +1,15 @@
+## 2026-08-14 — VE-1-CONTEXTUAL-HINTS-ICON-LANGUAGE — IMPLEMENTED_UNVERIFIED
+
+- **Tipo de sesión:** REFINAMIENTO. **Fuente canónica:** código real de `main`, `ContextualHints.tsx`, `ForgeIcon`, Supabase vivo y deploy automático de Cloudflare Pages.
+- **Estado inicial:** `NOT_STARTED`; **estado actual:** `IMPLEMENTED_UNVERIFIED`; **nivel actual:** Q2; **objetivo:** Q3.
+- **Objetivo:** retirar pictogramas Unicode de los hints contextuales sin cambiar sus rutas, títulos, textos, persistencia en `localStorage`, temporización ni callbacks.
+- **Cambio:** los nueve hints de rutas usan nombres `ForgeIconName` existentes (`cards`, `collection`, `deck`, `arena`, `market`, `fusion`, `packs`, `boss`, `quests`) y el cierre usa `ForgeIcon name="close"`.
+- **Alcance autoritativo:** no se modificaron Supabase, RPCs, RLS, economía, recompensas, cartas, Storage ni reglas del juego.
+- **Evidencia local:** `npx tsc --noEmit -p tsconfig.app.json`, `npm run verify:build`, `git diff --check` y el escaneo del consumidor finalizaron correctamente antes de publicar el commit.
+- **Responsive y accesibilidad:** se conserva el botón nativo y el contenido textual; queda pendiente revisar el hint visible en escritorio, tablet y móvil, foco, teclado y `prefers-reduced-motion`.
+- **Deuda y condición de reapertura:** permanecen consumidores Unicode independientes en otras superficies y no se mezclan con esta unidad. Reabrir ante regresión de hints o evidencia canónica contradictoria.
+- **Siguiente acción verificable:** comprobar el manifiesto público y revisar el hint en navegador después de la propagación automática.
+
 ## 2026-08-14 — VE-1-PROGRESS-ICON-LANGUAGE — IMPLEMENTED_UNVERIFIED
 
 - **Tipo de sesión:** REFINAMIENTO. **Fuente canónica:** código real de `main`, `ProgressRoute.tsx`, `AnimatedProgressBar.tsx`, `ForgeIcon`, Supabase vivo y deploy automático de Cloudflare Pages.

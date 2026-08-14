@@ -3,6 +3,7 @@
 // Uses localStorage to track which hints have been shown.
 
 import { useState, useEffect, useCallback } from "react";
+import { ForgeIcon, type ForgeIconName } from "./ForgeIcon";
 
 const HINTS_STORAGE_KEY = "vexforge_seen_hints_v2";
 
@@ -15,29 +16,29 @@ interface HintDefinition {
   id: HintId;
   title: string;
   body: string;
-  icon: string;
+  icon: ForgeIconName;
   page: string;
   accentColor: string;
 }
 
 const HINTS: HintDefinition[] = [
-  { id:"cards_filter",         page:"/cards",     icon:"🃏", accentColor:"#4a9eff",
+  { id:"cards_filter",         page:"/cards",     icon:"cards", accentColor:"#4a9eff",
     title:"Filtra por facción", body:"Usa los botones de facción para ver solo las cartas de tu estrategia preferida." },
-  { id:"inventory_collection", page:"/inventory", icon:"📦", accentColor:"#a855f7",
+  { id:"inventory_collection", page:"/inventory", icon:"collection", accentColor:"#a855f7",
     title:"Tu puntuación", body:"El panel de colección calcula hasta 1850 puntos según tus cartas de mayor rareza." },
-  { id:"deck_builder_limit",   page:"/deck",      icon:"⚔️", accentColor:"#f59e0b",
+  { id:"deck_builder_limit",   page:"/deck",      icon:"deck", accentColor:"#f59e0b",
     title:"Límite de mazo", body:"Un mazo tiene entre 10 y 20 cartas. Las cartas con sinergias de facción dan bonificaciones en batalla." },
-  { id:"pvp_modes",            page:"/pvp",       icon:"🔥", accentColor:"#ef4444",
+  { id:"pvp_modes",            page:"/pvp",       icon:"arena", accentColor:"#ef4444",
     title:"Modos de batalla", body:"vs IA es instantáneo. vs Jugador entra en la cola de matchmaking. Práctica no otorga recompensas." },
-  { id:"market_fee",           page:"/market",    icon:"🏪", accentColor:"#3dc96b",
+  { id:"market_fee",           page:"/market",    icon:"market", accentColor:"#3dc96b",
     title:"Comisión del mercado", body:"Cada venta cobra un 5% de comisión. El comprador paga el precio marcado completo." },
-  { id:"fusion_shard",         page:"/fusion",    icon:"⚗️", accentColor:"#e8b84b",
+  { id:"fusion_shard",         page:"/fusion",    icon:"fusion", accentColor:"#e8b84b",
     title:"Shard de fusión", body:"Necesitas 3 cartas + Shards para fusionar. Las cartas de mayor rareza requieren más Shards." },
-  { id:"packs_pity",           page:"/packs",     icon:"📦", accentColor:"#818cf8",
+  { id:"packs_pity",           page:"/packs",     icon:"packs", accentColor:"#818cf8",
     title:"Sistema de pity", body:"Cada 10 packs sin Épica o superior estás garantizado a recibir una carta Épica o mejor." },
-  { id:"bosses_energy",        page:"/bosses",    icon:"🐉", accentColor:"#5b8bf5",
+  { id:"bosses_energy",        page:"/bosses",    icon:"boss", accentColor:"#5b8bf5",
     title:"Energía de ataque", body:"Cada ataque a un boss consume 1 punto de energía. Se regenera con el tiempo o usando items." },
-  { id:"quests_daily_reset",   page:"/quests",    icon:"📜", accentColor:"#34d399",
+  { id:"quests_daily_reset",   page:"/quests",    icon:"quests", accentColor:"#34d399",
     title:"Reinicio diario", body:"Las quests diarias se reinician a las 00:00 UTC. Completa las 3 para el bonus de VEX diario." },
 ];
 
@@ -102,7 +103,7 @@ export function ContextualHint({ page }: { page: string }) {
         }
       `}</style>
       <div style={{ display:"flex", alignItems:"flex-start", gap:10 }}>
-        <span style={{ fontSize:22, lineHeight:1 }}>{hint.icon}</span>
+        <span style={{ display:"inline-flex", lineHeight:1 }}><ForgeIcon name={hint.icon} size={22} /></span>
         <div style={{ flex:1 }}>
           <div style={{ fontSize:13, fontWeight:700, color: hint.accentColor, marginBottom:4 }}>
             {hint.title}
@@ -114,7 +115,7 @@ export function ContextualHint({ page }: { page: string }) {
         <button onClick={dismiss} style={{
           background:"none", border:"none", color:"#475569", cursor:"pointer",
           fontSize:16, lineHeight:1, padding:0, marginLeft:4,
-        }}>✕</button>
+        }}><ForgeIcon name="close" size={16} /></button>
       </div>
       <div style={{ marginTop:10, textAlign:"right" }}>
         <button onClick={dismiss} style={{
