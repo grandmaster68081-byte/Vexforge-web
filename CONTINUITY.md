@@ -10,6 +10,7 @@
 - **Responsive y accesibilidad:** `ForgeIcon` mantiene `aria-hidden` y `focusable=false`; queda pendiente la revisión visual interactiva del toast en escritorio, tablet y móvil, foco y `prefers-reduced-motion`. No se declara `OPERATIONAL` sin esa evidencia.
 - **Deuda y condición de reapertura:** el entorno no dispone de navegador interactivo para comprobar la presentación real; reabrir sólo con esa evidencia y no mezclar otros consumidores Unicode.
 - **Siguiente acción verificable:** revisar el toast en navegador y después elegir otro consumidor Unicode independiente, sin reabrir unidades ya cerradas.
+- **Bloqueo de sincronización canónica:** la Management API de Supabase acepta consultas de lectura y una escritura vacía de control, pero rechaza las actualizaciones con contenido documental mediante HTTP 403 / error 1010. No se usó `service_role` ni un privilegio alternativo; el registro vivo `vexforge_frontend_source_files` y el documento activo quedan pendientes de sincronización. **Condición de reapertura:** disponer de una vía autorizada que acepte esa escritura sin exponer ni elevar credenciales.
 
 ---
 
