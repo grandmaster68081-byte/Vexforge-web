@@ -119,7 +119,9 @@ import { ForgeIcon, type ForgeIconName } from "./ForgeIcon";
               </span>
               <button onClick={() => skip()} className="tu-skip-btn" style={{ background:"none",border:"none",color:"#555",
                 fontFamily:'"Rajdhani",sans-serif',fontSize:11,cursor:"pointer",letterSpacing:"0.1em",textTransform:"uppercase",transition:"color 0.2s" }}>
-                Saltar tutorial ×
+                <span style={{ display:"inline-flex",alignItems:"center",gap:6 }}>
+                  Saltar tutorial <ForgeIcon name="close" size={12} />
+                </span>
               </button>
             </div>
             <div style={{ textAlign:"center",padding:"28px 24px 16px" }}>
