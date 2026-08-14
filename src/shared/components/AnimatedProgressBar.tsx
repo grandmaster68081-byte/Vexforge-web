@@ -1,3 +1,5 @@
+import type { ReactNode } from "react";
+
 type AnimatedProgressBarProps = {
   current: number;
   max: number;
@@ -5,7 +7,7 @@ type AnimatedProgressBarProps = {
   height?: number;
   showText?: boolean;
   label?: string;
-  icon?: string;
+  icon?: ReactNode;
   animate?: boolean;
   className?: string;
 };

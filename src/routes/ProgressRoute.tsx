@@ -1,13 +1,15 @@
+import type { ReactNode } from "react";
 import { useProgress } from "../domains/progress/useProgress";
 import { PageLoader } from "../shared/components/PageLoader";
 import { BlockedAuthState } from "../shared/components/BlockedAuthState";
 import { ErrorState } from "../shared/components/ErrorState";
 import { Link } from "react-router-dom";
 import { AnimatedProgressBar } from "../shared/components/AnimatedProgressBar";
+import { ForgeIcon } from "../shared/components/ForgeIcon";
 
 // Shim: ForgeBar ahora usa AnimatedProgressBar (C.3)
-function ForgeBar({ label, value, max, color = "#e8b84b", icon = "⚡" }: {
-  label: string; value: number; max: number; color?: string; icon?: string;
+function ForgeBar({ label, value, max, color = "#e8b84b", icon = <ForgeIcon name="spark" size={14} /> }: {
+  label: string; value: number; max: number; color?: string; icon?: ReactNode;
 }) {
   return (
     <div style={{ marginBottom: 16 }}>
@@ -20,7 +22,7 @@ function ForgeBar({ label, value, max, color = "#e8b84b", icon = "⚡" }: {
   );
 }
 
-function StatPill({ label, value, icon, color = "#e8e8f0" }: { label: string; value: string | number; icon: string; color?: string }) {
+function StatPill({ label, value, icon, color = "#e8e8f0" }: { label: string; value: string | number; icon: ReactNode; color?: string }) {
   return (
     <div style={{ background: "#12121a", border: "1px solid #2a2a3e", borderRadius: 10, padding: "12px 16px", textAlign: "center" }}>
       <div style={{ fontSize: 22, marginBottom: 4 }}>{icon}</div>
@@ -48,9 +50,9 @@ export function ProgressRoute() {
   if (!progress) return (
     <main style={{ maxWidth: 720, margin: "0 auto", padding: "32px 16px" }}>
       <div style={{ textAlign: "center", padding: "60px 0" }}>
-        <div style={{ fontSize: 48, marginBottom: 16 }}>⚒️</div>
+        <div style={{ marginBottom: 16 }}><ForgeIcon name="progress" size={48} /></div>
         <p style={{ color: "#7a7a9a", fontSize: 14, marginBottom: 20 }}>Tu perfil de progreso aún no está configurado.</p>
-        <Link to="/account" style={{ color: "#e8b84b", textDecoration: "none", fontWeight: 700 }}>Ir a Mi Cuenta →</Link>
+        <Link to="/account" style={{ color: "#e8b84b", textDecoration: "none", fontWeight: 700, display: "inline-flex", alignItems: "center", gap: 6 }}>Ir a Mi Cuenta <ForgeIcon name="chevron-right" size={14} /></Link>
       </div>
     </main>
   );
@@ -62,8 +64,8 @@ export function ProgressRoute() {
   return (
     <main style={{ maxWidth: 720, margin: "0 auto", padding: "32px 16px" }}>
       <div style={{ marginBottom: 28 }}>
-        <p style={{ fontSize: 11, letterSpacing: "0.14em", color: "#e8b84b", textTransform: "uppercase", fontFamily: "Rajdhani,sans-serif", fontWeight: 700, marginBottom: 8 }}>─── Forjador ───</p>
-        <h1 style={{ fontFamily: "Cinzel,serif", color: "#e8e8f0", fontSize: 26, margin: "0 0 4px" }}>⚒️ Mi Progreso</h1>
+        <p style={{ fontSize: 11, letterSpacing: "0.14em", color: "#e8b84b", textTransform: "uppercase", fontFamily: "Rajdhani,sans-serif", fontWeight: 700, marginBottom: 8 }}>Forjador</p>
+        <h1 style={{ fontFamily: "Cinzel,serif", color: "#e8e8f0", fontSize: 26, margin: "0 0 4px" }}><ForgeIcon name="progress" size={22} /> Mi Progreso</h1>
         <p style={{ color: "#666", margin: 0, fontSize: 12 }}>Tu evolución como Forjador. Nivel, XP, energía y pasos completados.</p>
       </div>
 
@@ -82,22 +84,22 @@ export function ProgressRoute() {
             <div style={{ color: "#7a7a9a", fontSize: 10 }}>{energyPct}% disponible</div>
           </div>
         </div>
-        <ForgeBar label="Experiencia" value={progress.xp} max={progress.xp + progress.xp_to_next} color="#e8b84b" icon="⭐" />
-        <ForgeBar label="Energía" value={progress.energy} max={progress.max_energy} color={energyColor} icon="⚡" />
+        <ForgeBar label="Experiencia" value={progress.xp} max={progress.xp + progress.xp_to_next} color="#e8b84b" icon={<ForgeIcon name="spark" size={14} />} />
+        <ForgeBar label="Energía" value={progress.energy} max={progress.max_energy} color={energyColor} icon={<ForgeIcon name="energy" size={14} />} />
       </div>
 
       {/* Stats grid */}
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(140px,1fr))", gap: 10, marginBottom: 24 }}>
-        <StatPill icon="⭐" label="XP Total" value={progress.xp} color="#e8b84b" />
-        <StatPill icon="⚡" label="Energía" value={`${progress.energy}/${progress.max_energy}`} color="#4a9eff" />
-        <StatPill icon="📖" label="XP p/siguiente" value={progress.xp_to_next} color="#a855f7" />
-        <StatPill icon="🎓" label="Tutorial" value={`Paso ${progress.tutorial_step}`} color="#3ddc84" />
+        <StatPill icon={<ForgeIcon name="spark" size={22} />} label="XP Total" value={progress.xp} color="#e8b84b" />
+        <StatPill icon={<ForgeIcon name="energy" size={22} />} label="Energía" value={`${progress.energy}/${progress.max_energy}`} color="#4a9eff" />
+        <StatPill icon={<ForgeIcon name="lore" size={22} />} label="XP p/siguiente" value={progress.xp_to_next} color="#a855f7" />
+        <StatPill icon={<ForgeIcon name="achievements" size={22} />} label="Tutorial" value={`Paso ${progress.tutorial_step}`} color="#3ddc84" />
       </div>
 
       {progress.tutorial_step < 10 && (
         <div style={{ background: "#12121a", border: "1px solid #2a2a3e", borderRadius: 12, padding: "18px 20px" }}>
           <p style={{ color: "#888", fontSize: 10, fontWeight: 700, letterSpacing: "0.12em", margin: "0 0 12px" }}>TUTORIAL</p>
-          <ForgeBar label="Pasos completados" value={progress.tutorial_step} max={10} color="#3ddc84" icon="📖" />
+          <ForgeBar label="Pasos completados" value={progress.tutorial_step} max={10} color="#3ddc84" icon={<ForgeIcon name="lore" size={22} />} />
           <p style={{ color: "#7a7a9a", fontSize: 11, margin: "8px 0 0" }}>Completa el tutorial para desbloquear todas las funciones del juego.</p>
         </div>
       )}

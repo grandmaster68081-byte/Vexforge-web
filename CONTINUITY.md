@@ -1,3 +1,15 @@
+## 2026-08-14 — VE-1-PROGRESS-ICON-LANGUAGE — IMPLEMENTED_UNVERIFIED
+
+- **Tipo de sesión:** REFINAMIENTO. **Fuente canónica:** código real de `main`, `ProgressRoute.tsx`, `AnimatedProgressBar.tsx`, `ForgeIcon`, Supabase vivo y deploy automático de Cloudflare Pages.
+- **Estado inicial:** `NOT_STARTED`; **estado actual:** `IMPLEMENTED_UNVERIFIED`; **nivel actual:** Q2; **objetivo:** Q3.
+- **Objetivo:** retirar pictogramas Unicode de la superficie de progreso sin cambiar lecturas de progreso, cálculos de nivel/XP/energía, navegación, autenticación ni estados autoritativos.
+- **Cambio:** `ProgressRoute.tsx` conserva el flujo y sustituye los pictogramas de progreso, XP, energía, tutorial y navegación por `ForgeIcon`; `AnimatedProgressBar` acepta `ReactNode` para renderizar el icono canónico sin convertirlo en texto.
+- **Alcance autoritativo:** no se modificaron Supabase, RPCs, RLS, economía, energía, recompensas, cartas, Storage ni reglas del juego.
+- **Evidencia local:** sobre el árbol de `main` previo al cambio, `npx tsc --noEmit -p tsconfig.app.json` y `npm run verify:build` finalizaron correctamente; el build verificó el SHA base `10396c76301b69ba3a459ab4bd605308af8f5fed`. El cambio se publica en un commit atómico separado sobre ese mismo `main`.
+- **Responsive y accesibilidad:** se mantiene el texto semántico y la navegación nativa; queda pendiente la revisión visual interactiva en escritorio, tablet y móvil, foco y `prefers-reduced-motion`, además de una sesión normal autorizada si se prueban datos autenticados.
+- **Deuda y condición de reapertura:** permanecen consumidores Unicode independientes en otras superficies y no se mezclan con esta unidad. Reabrir ante regresión de progreso o evidencia canónica contradictoria.
+- **Siguiente acción verificable:** comprobar que el manifiesto público refleja el commit de esta unidad y revisar la superficie de progreso en navegador antes de cerrar el estado.
+
 ## 2026-08-14 — VE-1-FUSION-ICON-LANGUAGE — IMPLEMENTED_UNVERIFIED
 
 - **Tipo de sesión:** REFINAMIENTO. **Fuente canónica:** código real de main, FusionRoute.tsx, ForgeIcon, Supabase vivo y deploy automático de Cloudflare Pages.
