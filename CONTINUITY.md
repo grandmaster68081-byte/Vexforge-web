@@ -1,3 +1,16 @@
+## 2026-08-14 — VE-1-ENERGY-BAR-ICON-LANGUAGE — IMPLEMENTED_UNVERIFIED
+
+- **Tipo de sesión:** REFINAMIENTO. **Fuente canónica:** código real de `main`, `EnergyBar.tsx`, `ForgeIcon`, Supabase vivo y deploy automático de Cloudflare Pages.
+- **Estado inicial:** `NOT_STARTED`; **estado actual:** `IMPLEMENTED_UNVERIFIED`; **nivel actual:** Q2; **objetivo:** Q3.
+- **Objetivo:** retirar el rayo Unicode del indicador global de energía sin cambiar la sincronización `sync_player_energy`, el cálculo de porcentaje, el contador de regeneración, los estados de autenticación ni los datos autoritativos.
+- **Cambio:** `EnergyBar.tsx` conserva toda la lógica y sustituye el pictograma por `ForgeIcon name="energy"`, manteniendo el color y glow dependientes del porcentaje.
+- **Alcance autoritativo:** no se modificaron Supabase, RPCs, RLS, economía, energía autoritativa, recompensas, cartas, audio ni navegación.
+- **Evidencia local:** `npx tsc --noEmit -p tsconfig.app.json`, `npm run build`, el escaneo del archivo objetivo y `git diff --check` finalizaron correctamente. El commit de implementación en `main` es `5553bcee0d0bcb89de62d379255e067b975a87a5`.
+- **Evidencia pendiente:** ejecutar `npm run verify:build` sobre el commit documental final, esperar la propagación automática y comparar `/build-manifest.json`, `index.html`, hashes del bundle y rutas públicas contra `main`.
+- **Responsive y accesibilidad:** `ForgeIcon` conserva `aria-hidden` y `focusable=false`; la revisión interactiva del indicador en escritorio, tablet y móvil, focus, movimiento reducido y una sesión normal autorizada queda pendiente/bloqueada sin esa sesión.
+- **Deuda y condición de reapertura:** permanecen consumidores Unicode independientes en otras superficies; no se mezclan con esta unidad. Reabrir ante regresión del indicador global o evidencia autenticada contradictoria.
+- **Siguiente acción verificable:** finalizar la verificación del build y del deploy público; después abordar otro consumidor Unicode independiente como unidad separada.
+
 ## 2026-08-14 — VE-1-LEADERBOARD-ICON-LANGUAGE — IMPLEMENTED_UNVERIFIED
 
 - **Tipo de sesión:** REFINAMIENTO. **Fuente canónica:** código real de `main`, `LeaderboardRoute.tsx`, `ForgeIcon`, Supabase vivo y deploy automático de Cloudflare Pages.
