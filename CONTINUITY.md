@@ -1,3 +1,16 @@
+## 2026-08-14 — VE-1-SHARDS-ICON — IMPLEMENTED_UNVERIFIED
+
+- **Tipo de sesión:** REFINAMIENTO. **Fuente canónica:** código real de `main`, `ShardsPanel.tsx`, `ForgeIcon`, Supabase vivo y deploy automático de Cloudflare Pages.
+- **Estado inicial:** `NOT_STARTED`; **estado actual:** `IMPLEMENTED_UNVERIFIED`; **nivel actual:** Q2; **objetivo:** Q3.
+- **Objetivo:** retirar el diamante Unicode del encabezado de Fragmentos de Forja sin cambiar la consulta, el balance, las rarezas, las cantidades, la progresión de forja ni ninguna regla autoritativa.
+- **Cambio:** `ShardsPanel.tsx` conserva la estructura, textos, colores, tamaños y lógica existentes, importa `ForgeIcon` y reemplaza sólo `💎` por `ForgeIcon name="spark"`.
+- **Alcance autoritativo:** no se modificaron Supabase, cartas, inventario, economía, fusión, recompensas, RPCs, RLS, datos de jugadores, audio ni navegación.
+- **Evidencia de código y build:** `main` quedó en `e5216778327f82ec03bab42a8b27ef7cb2ff3a57`; `npm ci --ignore-scripts`, `npm run verify:build`, el escaneo de `ShardsPanel.tsx` y `git diff --check` finalizaron correctamente. El bundle local de `InventoryRoute` y el asset público correspondiente tienen el mismo SHA-256 `35054f92a6f15e21460c9ee0a9945f433f053465516892a6a0f4741d9e5f32c6`.
+- **Evidencia pública:** `/build-manifest.json` publica el mismo `sourceCommit`; `/`, `/manifest.json`, `/tutorial`, `/cards`, `/battle`, `/packs` e `/inventory` respondieron HTTP 200. La captura pública de `/inventory` muestra la puerta de acceso canónica.
+- **Responsive y accesibilidad:** `ForgeIcon` conserva `aria-hidden` y `focusable=false`; la revisión interactiva del panel con sesión normal, responsive, foco y `prefers-reduced-motion` queda bloqueada sin una sesión autorizada del jugador. No se declara `OPERATIONAL` ni se fabrican datos.
+- **Deuda y condición de reapertura:** permanecen otros consumidores Unicode independientes en otras superficies; no se mezclan con esta unidad. Reabrir sólo con evidencia autenticada del panel o al detectar una regresión del consumidor.
+- **Siguiente acción verificable:** revisar `ShardsPanel` en `/inventory` con una sesión normal autorizada, o continuar con otro consumidor Unicode independiente como unidad separada.
+
 ## 2026-08-14 — VE-1-SESSION-SUMMARY-ICON-LANGUAGE — IMPLEMENTED_UNVERIFIED
 
 - **Tipo de sesión:** REFINAMIENTO. **Fuente canónica:** código real de `main`, `SessionSummaryToast.tsx`, `ForgeIcon`, Supabase vivo y el deploy automático de Cloudflare Pages.
