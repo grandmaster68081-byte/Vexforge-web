@@ -1,9 +1,10 @@
 import { useState, useEffect, useRef, useCallback } from "react";
     import type { OpenedCard } from "../domains/packs/repository";
     import { AudioEngine } from "../lib/audioEngine";
+import { ForgeIcon, type ForgeIconName } from "../shared/components/ForgeIcon";
 
     export interface PackVisualData {
-    icon: string; name: string; color: string; glow: string; gradient: string;
+    icon: ForgeIconName; name: string; color: string; glow: string; gradient: string;
     }
 
     const RARITY_COLOR: Record<string, string> = {
@@ -275,7 +276,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
               fontSize: 64,
               animation: "vf-pack-pulse-shadow 2s ease-in-out infinite",
             }}>
-              {packVisual.icon}
+              <ForgeIcon name={packVisual.icon} size={64} strokeWidth={1.25} style={{ color: c }} />
             </div>
           </div>
 
@@ -286,7 +287,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
             textTransform: "uppercase",
             animation: "vf-hint-blink 2.2s ease-in-out infinite",
           }}>
-            ✦ Toca para abrir ✦
+            <ForgeIcon name="spark" size={12} style={{ verticalAlign: "middle", margin: "0 8px" }} />Toca para abrir<ForgeIcon name="spark" size={12} style={{ verticalAlign: "middle", margin: "0 8px" }} />
           </p>
 
           {/* Cantidad de cartas */}
@@ -338,7 +339,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
             animation: "vf-burst-icon 1s ease-out forwards",
             filter: `drop-shadow(0 0 40px ${packVisual.color})`,
           }}>
-            {packVisual.icon}
+            <ForgeIcon name={packVisual.icon} size={100} strokeWidth={1.25} style={{ color: packVisual.color }} />
           </div>
         </div>
       );
@@ -475,7 +476,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
                             height: "60%", display: "flex", alignItems: "center", justifyContent: "center",
                             background: `linear-gradient(160deg, ${col}22, #0a0a14)`,
                             fontSize: 40,
-                          }}>✦</div>
+                          }}><ForgeIcon name="cards" size={18} /></div>
                         )}
                         {/* Card info */}
                         <div style={{ padding: "10px 12px" }}>
@@ -528,7 +529,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
                           animation: "vfShake 2s ease-in-out infinite",
                           animationDelay: `${Math.random() * 1}s`,
                         }}>
-                          {packVisual.icon}
+                          <ForgeIcon name={packVisual.icon} size={28} strokeWidth={1.25} style={{ color: packVisual.color }} />
                         </div>
                         {/* Separador decorativo */}
                         <div style={{
@@ -572,7 +573,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
                   fontFamily: "Rajdhani,sans-serif", fontWeight: 800, fontSize: 15,
                   color: "#0a0a14", cursor: "pointer", letterSpacing: "0.1em",
                 }}>
-                  Ver Resumen →
+                  Ver Resumen<ForgeIcon name="chevron-right" size={15} style={{ verticalAlign: "middle", marginLeft: 6 }} />
                 </button>
               )}
             </div>
@@ -586,7 +587,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
     const rarityCounts: Record<string, number> = {};
     for (const c of cards) rarityCounts[c.rarity] = (rarityCounts[c.rarity] ?? 0) + 1;
     const bestRarity  = bestCard ? RARITY_RANK[bestCard.rarity] ?? 0 : 0;
-    const headerEmoji = bestRarity >= 5 ? "🔥" : bestRarity >= 4 ? "✨" : bestRarity >= 3 ? "💎" : "📦";
+    const headerIcon: ForgeIconName = bestRarity >= 5 ? "spark" : bestRarity >= 4 ? "crown" : bestRarity >= 3 ? "fusion" : "packs";
 
     return (
       <div style={{
@@ -617,7 +618,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
         }}>
           {/* ── Header ── */}
           <div style={{ textAlign: "center", marginBottom: 28 }}>
-            <div style={{ fontSize: 38, marginBottom: 10, lineHeight: 1 }}>{headerEmoji}</div>
+            <div style={{ marginBottom: 10, lineHeight: 1 }}><ForgeIcon name={headerIcon} size={38} strokeWidth={1.35} /></div>
             <div style={{
               fontSize: 9, color: "#4a4a6a", fontFamily: '"IBM Plex Mono",monospace',
               letterSpacing: "0.22em", textTransform: "uppercase", marginBottom: 10,
@@ -660,7 +661,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
                   animation: "vf-best-shine 3s linear infinite",
                   WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
                 }}>
-                  ✦ {bestCard.name}
+                  <ForgeIcon name="spark" size={14} style={{ verticalAlign: "middle", marginRight: 5 }} />{bestCard.name}
                 </span>
                 <span style={{ fontSize: 10, color: RARITY_COLOR[bestCard.rarity] ?? "#e8b84b", fontFamily: "Rajdhani,sans-serif", fontWeight: 700 }}>
                   ({RARITY_LABEL[bestCard.rarity] ?? bestCard.rarity})
@@ -704,7 +705,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
                       }} />
                     ) : (
                       <div style={{ width: 32, height: 44, borderRadius: 4, background: `${col}18`, flexShrink: 0,
-                        display: "flex", alignItems: "center", justifyContent: "center", fontSize: 14 }}>✦</div>
+                        display: "flex", alignItems: "center", justifyContent: "center", fontSize: 14 }}><ForgeIcon name="cards" size={18} /></div>
                     )}
                     {/* Info */}
                     <div style={{ flex: 1, minWidth: 0 }}>
@@ -752,7 +753,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
               onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.transform = "translateY(-2px)"; }}
               onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.transform = "none"; }}
               >
-                ✦ Abrir Otro Pack
+                <ForgeIcon name="packs" size={15} style={{ verticalAlign: "middle", marginRight: 6 }} />Abrir Otro Pack
               </button>
             )}
             <div style={{ display: "flex", gap: 10 }}>
@@ -766,7 +767,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
               onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.background = "rgba(255,255,255,0.08)"; }}
               onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.background = "rgba(255,255,255,0.05)"; }}
               >
-                🃏 Ver Inventario
+                <ForgeIcon name="cards" size={15} style={{ verticalAlign: "middle", marginRight: 6 }} />Ver Inventario
               </button>
               <button onClick={onDismiss} style={{
                 flex: 1, background: "rgba(255,255,255,0.02)",

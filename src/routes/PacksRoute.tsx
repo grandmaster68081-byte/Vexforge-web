@@ -6,6 +6,7 @@ import { usePacks } from "../domains/packs/usePacks";
 import type { CatalogPack } from "../domains/packs/repository";
 import { PackOpenSequence, type PackVisualData } from "../components/PackOpenSequence";
 import { PageLoader } from "../shared/components/PageLoader";
+import { ForgeIcon, type ForgeIconName } from "../shared/components/ForgeIcon";
 import { BlockedAuthState } from "../shared/components/BlockedAuthState";
 import {
   grantShardsForDuplicate,
@@ -20,31 +21,31 @@ const BG_URL = "https://rscuzqnfccqvltkdcdny.supabase.co/storage/v1/object/publi
 // ─── Visual mapping ───────────────────────────────────────────────────────────
 const VISUAL_BY_KEY: Record<string, PackVisualData> = {
   seed_pack: {
-    icon: "🌱", name: "Seed Pack",
+    icon: "progress" as ForgeIconName, name: "Seed Pack",
     color: "#3ddc84",
     glow: "rgba(61,220,132,0.45)",
     gradient: "linear-gradient(135deg,#1a3d28,#0f1f16)",
   },
   scout_pack: {
-    icon: "🧭", name: "Scout Pack",
+    icon: "target" as ForgeIconName, name: "Scout Pack",
     color: "#4dabf7",
     glow: "rgba(77,171,247,0.45)",
     gradient: "linear-gradient(135deg,#132a3d,#0c1720)",
   },
   expedition_pack: {
-    icon: "🗺️", name: "Expedition Pack",
+    icon: "missions" as ForgeIconName, name: "Expedition Pack",
     color: "#a855f7",
     glow: "rgba(168,85,247,0.5)",
     gradient: "linear-gradient(135deg,#2a1640,#160c28)",
   },
   forge_pack: {
-    icon: "⚒️", name: "Forge Pack",
+    icon: "fusion" as ForgeIconName, name: "Forge Pack",
     color: "#e8b84b",
     glow: "rgba(232,184,75,0.55)",
     gradient: "linear-gradient(135deg,#3a2a08,#1e1504)",
   },
   founder_pack: {
-    icon: "👑", name: "Founder Pack",
+    icon: "crown" as ForgeIconName, name: "Founder Pack",
     color: "#f43f5e",
     glow: "rgba(244,63,94,0.6)",
     gradient: "linear-gradient(135deg,#3a0f1a,#1e070d)",
@@ -52,11 +53,11 @@ const VISUAL_BY_KEY: Record<string, PackVisualData> = {
 };
 
 const FALLBACK_TIERS: PackVisualData[] = [
-  { icon: "📦", name: "Pack", color: "#3ddc84", glow: "rgba(61,220,132,0.45)", gradient: "linear-gradient(135deg,#1a3d28,#0f1f16)" },
-  { icon: "💎", name: "Pack", color: "#4dabf7", glow: "rgba(77,171,247,0.45)", gradient: "linear-gradient(135deg,#132a3d,#0c1720)" },
-  { icon: "🔮", name: "Pack", color: "#a855f7", glow: "rgba(168,85,247,0.5)",  gradient: "linear-gradient(135deg,#2a1640,#160c28)" },
-  { icon: "⚡", name: "Pack", color: "#e8b84b", glow: "rgba(232,184,75,0.55)", gradient: "linear-gradient(135deg,#3a2a08,#1e1504)" },
-  { icon: "👑", name: "Pack", color: "#f43f5e", glow: "rgba(244,63,94,0.6)",   gradient: "linear-gradient(135deg,#3a0f1a,#1e070d)" },
+  { icon: "packs" as ForgeIconName, name: "Pack", color: "#3ddc84", glow: "rgba(61,220,132,0.45)", gradient: "linear-gradient(135deg,#1a3d28,#0f1f16)" },
+  { icon: "cards" as ForgeIconName, name: "Pack", color: "#4dabf7", glow: "rgba(77,171,247,0.45)", gradient: "linear-gradient(135deg,#132a3d,#0c1720)" },
+  { icon: "relics" as ForgeIconName, name: "Pack", color: "#a855f7", glow: "rgba(168,85,247,0.5)",  gradient: "linear-gradient(135deg,#2a1640,#160c28)" },
+  { icon: "energy" as ForgeIconName, name: "Pack", color: "#e8b84b", glow: "rgba(232,184,75,0.55)", gradient: "linear-gradient(135deg,#3a2a08,#1e1504)" },
+  { icon: "crown" as ForgeIconName, name: "Pack", color: "#f43f5e", glow: "rgba(244,63,94,0.6)",   gradient: "linear-gradient(135deg,#3a0f1a,#1e070d)" },
 ];
 
 function visualFor(pack: CatalogPack): PackVisualData {
@@ -172,7 +173,7 @@ function PackCard({
             boxShadow: canAfford && hovered ? `0 0 20px ${c}55` : "none",
           }}
         >
-          {buying ? "Comprando…" : canAfford ? "⚒ Comprar Pack" : "VEX insuficiente"}
+          {buying ? "Comprando…" : canAfford ? <><ForgeIcon name="fusion" size={14} style={{ verticalAlign: "middle", marginRight: 6 }} />Comprar Pack</> : "VEX insuficiente"}
         </button>
         {!canAfford && (
           <p style={{ textAlign: "center", color: "#444466", fontSize: 9,
@@ -205,7 +206,7 @@ function ShardsGainedToast({ gained }: { gained: Record<string, number> }) {
     }}>
       <div>
         <div style={{ fontFamily: "Cinzel,serif", fontSize: 12, color: "#a78bfa", fontWeight: 700 }}>
-          💎 +{total.toLocaleString()} Fragmentos
+          <ForgeIcon name="spark" size={14} style={{ verticalAlign: "middle", marginRight: 6 }} />+{total.toLocaleString()} Fragmentos
         </div>
         <div style={{ fontFamily: "Rajdhani,sans-serif", fontSize: 10, color: "#7a7a9a", marginTop: 2 }}>
           Ganados por cartas duplicadas
@@ -354,7 +355,7 @@ function PacksRoute() {
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 12 }}>
           <div>
             <h1 style={{ fontFamily: "Cinzel,serif", color: "#e8e8f0", fontSize: 28, margin: "0 0 4px" }}>
-              📦 Tienda de Packs
+              <ForgeIcon name="packs" size={21} style={{ verticalAlign: "middle", marginRight: 8 }} />Tienda de Packs
             </h1>
             <p style={{ color: "#666", margin: 0, fontSize: 12 }}>
               Compra packs con VEX y obtén nuevas cartas para tu colección.
@@ -401,7 +402,7 @@ function PacksRoute() {
           display: "flex", alignItems: "center", gap: 12,
         }}>
           <div style={{ fontSize: 20 }}>
-            {pityCount >= PITY_THRESHOLD - 1 ? "⭐" : "🎯"}
+            {pityCount >= PITY_THRESHOLD - 1 ? <ForgeIcon name="trophy" size={20} /> : <ForgeIcon name="target" size={20} />}
           </div>
           <div>
             <div style={{
@@ -441,7 +442,7 @@ function PacksRoute() {
               boxShadow: "0 0 32px rgba(232,184,75,0.4)", opacity: opening ? 0.7 : 1,
             }}
           >
-            {opening ? "Abriendo…" : "🎴 ¡Abrir Pack!"}
+            {opening ? "Abriendo…" : <><ForgeIcon name="packs" size={15} style={{ verticalAlign: "middle", marginRight: 6 }} />¡Abrir Pack!</>}
           </button>
         </div>
       )}
