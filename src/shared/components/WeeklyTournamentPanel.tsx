@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+    import { ForgeIcon } from "./ForgeIcon";
     import { getWeeklyTournamentData } from "../../domains/pvp/tournamentRepository";
     import type { WeeklyTournamentData, TournamentSeed, BracketMatch } from "../../domains/pvp/tournamentRepository";
     import { getRank } from "../../lib/rankUtils";
@@ -41,7 +42,7 @@ import { useState, useEffect } from "react";
         boxShadow: match.round===3 ? `0 0 20px ${col}20` : "none",
       }}>
         <div style={{ fontSize:8, color:col, fontFamily:'"IBM Plex Mono",monospace', letterSpacing:"0.14em", marginBottom:10 }}>
-          {match.round===3?"🏆 ":""}{ROUND_LABELS[match.round]??(`R${match.round}`)}
+          {match.round===3 && <ForgeIcon name="trophy" size={11} style={{ verticalAlign:"middle", marginRight:4 }} />}{ROUND_LABELS[match.round]??(`R${match.round}`)}
         </div>
         <div style={{ display:"flex", flexDirection:"column", gap:5 }}>
           <SeedChip seed={match.seedA} isFavorite={match.favoriteId===match.seedA?.player_id} />
@@ -86,7 +87,7 @@ import { useState, useEffect } from "react";
             background:"linear-gradient(135deg,#1a1205,#2a1f08)",
             border:"1px solid rgba(232,184,75,0.3)",
             display:"flex", alignItems:"center", justifyContent:"center", fontSize:20,
-          }}>🏆</div>
+          }}><ForgeIcon name="trophy" size={24} /></div>
           <div style={{ flex:1 }}>
             <div style={{ fontSize:14, fontFamily:"Cinzel,serif", fontWeight:800, color:"#e8e8f0", letterSpacing:"0.05em" }}>
               Torneo Semanal
@@ -104,7 +105,7 @@ import { useState, useEffect } from "react";
             </div>
             <div style={{ fontSize:7, color:"#555", fontFamily:'"IBM Plex Mono",monospace' }}>SEEDS</div>
           </div>
-          <div style={{ color:"#444", fontSize:12, flexShrink:0, transform:open?"rotate(180deg)":"rotate(0deg)", transition:"transform 0.25s" }}>▼</div>
+          <ForgeIcon name="chevron-right" size={14} style={{ color:"#444", flexShrink:0, transform:open?"rotate(90deg)":"rotate(0deg)", transition:"transform 0.25s" }} />
         </button>
 
         {open && (
@@ -156,7 +157,7 @@ import { useState, useEffect } from "react";
                   border:"1px solid rgba(232,184,75,0.15)",
                   display:"flex", alignItems:"center", gap:12,
                 }}>
-                  <span style={{ fontSize:20 }}>🏆</span>
+                  <ForgeIcon name="trophy" size={20} />
                   <div>
                     <div style={{ fontSize:9, color:"#555", fontFamily:'"IBM Plex Mono",monospace', letterSpacing:"0.1em" }}>FAVORITO PREDICTIVO</div>
                     <div style={{ fontFamily:"Cinzel,serif", fontWeight:800, fontSize:14, color:"#e8b84b",
