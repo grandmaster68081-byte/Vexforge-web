@@ -287,7 +287,42 @@ Cuando sea relevante:
 - Esta obligación de publicación automática no requiere autorización adicional del usuario: forma parte del cierre normal de toda unidad completada.
 - La única publicación prohibida es la manual o paralela (por ejemplo, Wrangler, una réplica o un canal distinto del vínculo oficial entre main y Cloudflare Pages).
 
-14. CIERRE OBLIGATORIO
+14. LEY DE EJECUCIÓN AUTÓNOMA CONTEXTUAL
+
+Cuando el acceso seguro, el contexto canónico y el objetivo general de la sesión
+están establecidos, la IA entra en ejecución autónoma de trabajo. No debe detenerse
+para pedir la selección de la siguiente unidad, autorización de rutina, recomendaciones
+intermedias ni confirmaciones que no cambien el riesgo o el alcance. Al cerrar una
+unidad, elige y comienza automáticamente la siguiente unidad elegible, reversible y
+verificable, manteniendo el ciclo del protocolo hasta agotar el trabajo seguro disponible.
+
+La autonomía se aplica también cuando falta un recurso no autoritativo. La ausencia de
+un icono, imagen, sonido, animación u otro elemento visual no es motivo para detener
+la sesión. En ese caso, la IA debe:
+
+1. Comprender primero el producto, el deploy visible, la superficie donde se usará, el
+   lenguaje visual existente, el contexto de la unidad y las fuentes canónicas.
+2. Determinar si el recurso ya existe en el código, el manifiesto, Storage, los documentos
+   oficiales o el bundle público, sin suponer ni reutilizar un recurso genérico.
+3. Si no existe, redactar el brief creativo, prompt y negative prompt adecuados al contexto,
+   generar un candidato propio compatible y conservar su procedencia, versión, hash,
+   dimensiones, consumidores y condiciones de uso.
+4. Integrarlo en la superficie correcta sin alterar metadata canónica, nombres, lore,
+   estadísticas, fórmulas, balances, resultados autoritativos, economía, seguridad o
+   historial. Si la fuente oficial aún no lo canoniza, marcarlo como DRAFT o
+   PENDING_SOURCE y continuar con el trabajo seguro de presentación, documentación y
+   verificación; nunca convertir la propuesta en canon silenciosamente.
+5. Verificar el encaje en escritorio, tablet y móvil, accesibilidad, foco, reduced motion,
+   rendimiento y coherencia con las demás superficies antes de cerrar la unidad.
+
+Un bloqueo de una unidad no detiene el trabajo completo: se registra con evidencia real,
+se preserva la posibilidad de reapertura y se encadena la siguiente unidad segura. Esta
+ley no autoriza exponer secretos, fabricar sesiones o resultados autenticados, suplantar
+jugadores, falsear QA, destruir historial, saltarse RLS/RPCs, modificar datos
+autoritativos sin fuente, ni realizar una publicación o acción irreversible fuera del
+flujo autorizado por este protocolo.
+
+15. CIERRE OBLIGATORIO
 
 Al terminar una sesión:
 
@@ -307,7 +342,7 @@ Al terminar una sesión:
 - No borres historial.
 - No declares verificado lo que no fue comprobado.
 
-15. REGLA FINAL
+16. REGLA FINAL
 
 No inventes nada fuera de las fuentes oficiales.
 No reinicies trabajo terminado.

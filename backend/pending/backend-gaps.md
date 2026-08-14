@@ -1,4 +1,4 @@
-# Backend Gaps — Estado Actualizado (Chat 45 · 2026-07-19)
+# Backend Gaps — Estado Actualizado (reconciliación live · 2026-08-14)
 
     ## TODOS LOS GAPS RESUELTOS
 
@@ -17,8 +17,15 @@
     Acción recomendada: Revisar y cambiar a SECURITY INVOKER o documentar justificación.
     No es urgente para la operación del juego.
 
-    ## Estado del sistema (verificado Chat 45)
+    ## Estado histórico del sistema (verificado Chat 45)
     - 199 tablas · 560 funciones · 166 vistas OK · RLS 100%
     - Frontend: 106 archivos · 25 route files · 23 rutas live
     - Deploy: wrangler.toml + public/_redirects + todos los tsconfigs presentes
     
+## Estado live reconciliado (2026-08-14)
+
+- Consulta read-only realizada contra Supabase Management API y `information_schema`/`pg_catalog`.
+- Supabase vivo: 215 tablas base públicas, 93 vistas públicas, 335 funciones públicas y RLS activo en 215/215 tablas públicas.
+- Supabase vivo: 0 vistas públicas con opción `security_definer` detectada y 73 filas en `vexforge_official_asset_manifest`.
+- La cifra histórica de 199 tablas, 166 vistas, 560 funciones y 18 vistas `SECURITY DEFINER` ya no describe el estado vivo y no debe usarse como baseline actual.
+- Esta reconciliación es documental: no modifica tablas, funciones, políticas, datos, Storage ni el estado autoritativo del juego.

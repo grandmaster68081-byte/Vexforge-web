@@ -1,3 +1,16 @@
+## 2026-08-14 — VE-SYSTEM-AUTONOMOUS-CONTEXTUAL-EXECUTION-LAW — REFINED
+
+- **Tipo de sesión:** DOCUMENTACIÓN / RECONCILIACIÓN. **Fuente canónica:** `main`, `VEXFORGE_PROTOCOL_V2.md`, Supabase vivo y deploy público.
+- **Estado inicial:** `IN_PROGRESS`; **estado actual:** `REFINED`; **nivel:** Q3 documental; **objetivo:** Q4 para el flujo autónomo documentado.
+- **Cambio:** se incorporó la Ley de Ejecución Autónoma Contextual. La IA debe encadenar unidades sin detenerse por decisiones rutinarias, y cuando falte un recurso visual debe comprender el contexto, comprobar todas las fuentes, crear un candidato propio con prompt, negative prompt y procedencia, integrarlo sin alterar datos autoritativos y continuar con trabajo seguro.
+- **Guardas preservadas:** no se exponen secretos, no se fabrican sesiones o resultados, no se suplantan jugadores, no se falsea QA, no se alteran RLS/RPCs/economía/historial y no se salta el flujo autorizado para acciones irreversibles.
+- **Reconciliación adicional:** `backend/pending/backend-gaps.md` ahora distingue sus cifras históricas de las métricas live verificadas: 215 tablas públicas, 93 vistas, 335 funciones, RLS 215/215 y 0 vistas `SECURITY DEFINER` detectadas.
+- **Evidencia:** `main` auditado en `b8460d00c5f2284e70e9a82d020738ef11a76ad7`; Supabase `ACTIVE_HEALTHY`; consulta read-only HTTP 201; `/`, `/manifest.json`, `/tutorial`, `/cards`, `/battle` y `/build-manifest.json` respondieron HTTP 200.
+- **Deuda y condición de reapertura:** la ley queda sujeta a verificación de build y bundle público después de la propagación automática; las pruebas que requieran una sesión normal siguen requiriendo evidencia autenticada real y no se fabrican.
+- **Siguiente acción verificable:** continuar automáticamente con la siguiente unidad viva de presentación o sistema, sin reabrir trabajo histórico ni esperar una selección intermedia.
+
+---
+
 ## 2026-08-14 — VE-1-WORLD-BOSS-STATUS-ICON — IMPLEMENTED_UNVERIFIED
 
 - **Tipo de sesión:** REFINAMIENTO. **Fuente canónica:** código real de `main`, `WorldBossesRoute.tsx`, `ForgeIcon`, Supabase vivo y deploy automático de Cloudflare Pages.
