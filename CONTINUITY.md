@@ -1,3 +1,15 @@
+## 2026-08-14 — VE-1-WORLD-BOSS-STATUS-ICON — IMPLEMENTED_UNVERIFIED
+
+- **Tipo de sesión:** REFINAMIENTO. **Fuente canónica:** código real de `main`, `WorldBossesRoute.tsx`, `ForgeIcon`, Supabase vivo y deploy automático de Cloudflare Pages.
+- **Estado inicial:** `NOT_STARTED`; **estado actual:** `IMPLEMENTED_UNVERIFIED`; **nivel actual:** Q2; **objetivo:** Q3.
+- **Objetivo:** retirar el check Unicode del estado de ataques recientes sin cambiar el estado autoritativo del ataque, settlement, recompensas, energía ni autenticación.
+- **Cambio:** el estado `completed` conserva su color y condición, reemplaza `✓` por `ForgeIcon name="check"` y añade el texto visible `Completado` para mantener claridad y accesibilidad; los demás estados siguen mostrando su valor real.
+- **Alcance autoritativo:** no se modificaron Supabase, RPCs, RLS, combate, economía, recompensas, cartas, Storage ni reglas de World Boss.
+- **Evidencia local:** `npx tsc --noEmit -p tsconfig.app.json`, `npm run verify:build`, `git diff --check` y el escaneo del consumidor finalizaron correctamente antes de publicar el commit.
+- **Responsive y accesibilidad:** el estado conserva texto semántico y el icono `ForgeIcon` es decorativo; queda pendiente revisar la lista autenticada en escritorio, tablet y móvil, foco y `prefers-reduced-motion`.
+- **Deuda y condición de reapertura:** permanecen consumidores Unicode independientes en otras superficies y no se mezclan con esta unidad. Reabrir ante regresión del estado de ataque o evidencia canónica contradictoria.
+- **Siguiente acción verificable:** comprobar el manifiesto público y revisar la lista de ataques recientes con una sesión normal autorizada; no fabricar una sesión ni resultados.
+
 ## 2026-08-14 — VE-1-CONTEXTUAL-HINTS-ICON-LANGUAGE — DEFERRED
 
 - **Tipo de sesión:** AUDITORÍA / CORRECCIÓN. **Fuente canónica:** código real de `main`, `App.tsx`, `CardsRoute.tsx`, `ContextualHints.tsx`, Supabase vivo y deploy automático de Cloudflare Pages.

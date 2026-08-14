@@ -513,8 +513,8 @@ export function WorldBossesRoute() {
                       </div>
                       <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
                         {reward?.vex_ingame && <span style={{ color: "#e8b84b", fontSize: 11, fontWeight: 700 }}>+{reward.vex_ingame} VEX</span>}
-                        <span style={{ color: enc.status === "completed" ? "#3ddc84" : "#888", fontSize: 10, fontWeight: 700 }}>
-                          {enc.status === "completed" ? "✓" : enc.status}
+                        <span style={{ color: enc.status === "completed" ? "#3ddc84" : "#888", fontSize: 10, fontWeight: 700, display: "inline-flex", alignItems: "center", gap: 4 }}>
+                          {enc.status === "completed" ? <><ForgeIcon name="check" size={12} />Completado</> : enc.status}
                         </span>
                       </div>
                     </div>
