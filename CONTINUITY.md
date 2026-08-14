@@ -1,3 +1,13 @@
+## 2026-08-13 — VE-1-ACHIEVEMENT-ICON-MAPPING — BLOCKED
+
+- **Fuente canónica:** tabla viva `public.achievements` de Supabase y `AchievementToastCard.tsx`.
+- **Estado inicial:** `PENDING_SOURCE`; **estado actual:** `BLOCKED`, objetivo Q3.
+- **Hallazgo:** los valores reales de `achievements.icon` son datos canónicos Unicode por logro; no existe un mapping autorizado visible en el manifiesto o Storage para traducirlos a `ForgeIcon`.
+- **Decisión:** no se sustituyeron el icono dinámico ni el fallback, porque hacerlo inventaría semántica y rompería la regla de procedencia.
+- **Condición de reapertura:** registrar una fuente oficial o mapping aprobado por logro; entonces revisar el toast en responsive, foco y `prefers-reduced-motion`.
+
+---
+
 ## 2026-08-13 — VE-1-INTERACTIVE-BATTLE-EXIT-ICON — IMPLEMENTED_UNVERIFIED
 
 - **Fuente canónica:** código oficial `main`, `InteractiveBattleBoard.tsx`, `ForgeIcon`, Supabase activo y Cloudflare Pages.
