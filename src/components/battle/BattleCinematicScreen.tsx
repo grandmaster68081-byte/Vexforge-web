@@ -10,6 +10,7 @@ import { BattleIntroScreen } from './BattleIntroScreen';
 import { BattleBoardEngine } from './BattleBoardEngine';
 import { BattleResultScreen } from './BattleResultScreen';
 import { AudioControls } from './AudioControls';
+import { ForgeIcon } from '../shared/components/ForgeIcon';
 
 export interface BattleCinematicScreenProps {
   result: RealBattleResult;
@@ -185,8 +186,9 @@ export function BattleCinematicScreen({
             lineHeight: 1,
           }}
           title="Close"
+          aria-label="Cerrar cinemática"
         >
-          ✕
+          <ForgeIcon name="close" size={14} />
         </button>
       )}
     </div>
