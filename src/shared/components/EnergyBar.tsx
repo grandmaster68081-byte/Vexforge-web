@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { supabase } from "../../lib/supabase";
+import { ForgeIcon } from "./ForgeIcon";
 
 interface EnergyState {
   energy: number;
@@ -80,7 +81,7 @@ export function EnergyBar() {
         border:`1px solid ${pct <= 20 ? "rgba(239,68,68,0.25)" : "rgba(61,201,107,0.2)"}`, borderRadius:8, padding:"3px 8px 3px 7px",
         cursor:"default", userSelect:"none", flexShrink:0, transition:"border-color 0.5s ease" }}
     >
-      <span style={{ fontSize:13, lineHeight:1, color, filter:`drop-shadow(${glow})` }}>⚡</span>
+      <ForgeIcon name="energy" size={14} style={{ color, filter:`drop-shadow(${glow})` }} />
       <div style={{ display:"flex", flexDirection:"column", alignItems:"flex-start", gap:2 }}>
         <span style={{ fontFamily:"'Rajdhani',sans-serif", fontSize:11, fontWeight:700,
           lineHeight:1, color:"#e0e0e0", letterSpacing:"0.02em" }}>
