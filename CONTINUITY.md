@@ -1,3 +1,14 @@
+## 2026-08-13 — VE-1-WIN-STREAK-ICON-LANGUAGE — IMPLEMENTED_UNVERIFIED
+
+- **Fuente canónica:** código oficial `main`, `WinStreakDisplay.tsx`, `ForgeIcon`, Supabase activo y Cloudflare Pages.
+- **Estado inicial:** `NOT_STARTED`; **estado actual:** `IMPLEMENTED_UNVERIFIED`, objetivo Q3.
+- **Cambio:** la racha ya no usa fuego, trofeo ni espada como pictogramas Unicode; conserva tiers, colores, valores, audio, persistencia, animaciones y textos usando iconos SVG propios.
+- **Alcance autoritativo:** no se modificaron RPCs, settlement, economía, recompensas, RLS, cartas, Storage, datos de jugadores ni reglas de combate.
+- **Evidencia de fuente:** el archivo objetivo no contiene los pictogramas Unicode retirados y sólo usa nombres existentes de `ForgeIcon`; la revisión interactiva de responsive, foco y `prefers-reduced-motion` queda pendiente.
+- **Deuda y siguiente acción:** verificar la variante del badge y el panel en escritorio, tablet y móvil; después abordar otro consumidor Unicode independiente como una unidad separada.
+
+---
+
 ## 2026-08-13 — VE-1-BATTLE-ATTACK-CINEMATIC-ICON-LANGUAGE — IMPLEMENTED_UNVERIFIED
 
 - **Fuente canónica:** código oficial `main`, `CardAttackCinematic.tsx`, `ForgeIcon`, Supabase activo y Cloudflare Pages.

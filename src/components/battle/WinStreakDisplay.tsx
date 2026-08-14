@@ -4,6 +4,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { AudioEngine } from '../../lib/audioEngine';
+import { ForgeIcon } from '../../shared/components/ForgeIcon';
 
 const STREAK_KEY = 'vxf_win_streak_v1';
 const STREAK_BEST_KEY = 'vxf_win_streak_best_v1';
@@ -58,10 +59,10 @@ export function WinStreakBadge({ streak, justBroke }: { streak: number; justBrok
   if (streak < 2) return null;
 
   const tier = streak >= 10 ? 'inferno' : streak >= 5 ? 'blaze' : 'spark';
-  const colors: Record<string, { bg: string; border: string; glow: string; label: string }> = {
-    spark:   { bg: '#e8b84b22', border: '#e8b84b55', glow: '#e8b84b',    label: '🔥' },
-    blaze:   { bg: '#ff6b3522', border: '#ff6b3566', glow: '#ff6b35',    label: '🔥🔥' },
-    inferno: { bg: '#ff003322', border: '#ff004466', glow: '#ff0044',    label: '🔥🔥🔥' },
+  const colors: Record<string, { bg: string; border: string; glow: string; icon: string }> = {
+    spark:   { bg: '#e8b84b22', border: '#e8b84b55', glow: '#e8b84b',    icon: 'spark' },
+    blaze:   { bg: '#ff6b3522', border: '#ff6b3566', glow: '#ff6b35',    icon: 'spark' },
+    inferno: { bg: '#ff003322', border: '#ff004466', glow: '#ff0044',    icon: 'spark' },
   };
   const c = colors[tier];
 
@@ -92,12 +93,15 @@ export function WinStreakBadge({ streak, justBroke }: { streak: number; justBrok
         animation: animate ? 'streak-pop 0.5s cubic-bezier(0.22,1,0.36,1)' : 'none',
         position: 'relative', overflow: 'hidden',
       }}>
-        {/* Fire flicker icon */}
-        <span style={{
-          fontSize: 18,
-          animation: 'streak-fire-flicker 0.4s ease-in-out infinite',
-          filter: `drop-shadow(0 0 8px ${c.glow})`,
-        }}>{c.label}</span>
+        {/* Canonical forge mark for the streak tier */}
+        <ForgeIcon
+          name="spark"
+          size={18}
+          style={{
+            animation: 'streak-fire-flicker 0.4s ease-in-out infinite',
+            filter: `drop-shadow(0 0 8px ${c.glow})`,
+          }}
+        />
         <div>
           <div style={{
             fontFamily: '"Cinzel",serif', fontWeight: 900,
@@ -110,7 +114,7 @@ export function WinStreakBadge({ streak, justBroke }: { streak: number; justBrok
               fontSize: 8, color: '#ffd700', fontFamily: '"Rajdhani",sans-serif',
               letterSpacing: '0.12em', fontWeight: 800,
               animation: 'streak-record-flash 0.4s ease-in-out 4',
-            }}>⭐ NUEVO RÉCORD</div>
+            }}><ForgeIcon name="trophy" size={10} style={{ color: '#ffd700' }} /> NUEVO RÉCORD</div>
           )}
         </div>
       </div>
@@ -138,7 +142,7 @@ export function StreakPanel({ streak, best }: { streak: number; best: number }) 
           color: streak >= 5 ? '#ff6b35' : '#e8b84b',
           textShadow: streak >= 5 ? '0 0 16px rgba(255,107,53,0.6)' : 'none',
         }}>
-          {streak >= 2 ? `🔥 ${streak}×` : streak === 1 ? '⚔ 1×' : '—'}
+          {streak >= 2 ? (<> <ForgeIcon name="spark" size={16} style={{ verticalAlign: 'middle', marginRight: 5 }} />{streak}×</>) : streak === 1 ? (<> <ForgeIcon name="attack" size={16} style={{ verticalAlign: 'middle', marginRight: 5 }} />1×</>) : '—'}
         </div>
       </div>
       <div>
@@ -149,7 +153,7 @@ export function StreakPanel({ streak, best }: { streak: number; best: number }) 
         <div style={{ fontFamily: '"Cinzel",serif', fontWeight: 700, fontSize: 18,
           color: '#a855f7',
         }}>
-          {best > 0 ? `⭐ ${best}×` : '—'}
+          {best > 0 ? (<> <ForgeIcon name="trophy" size={16} style={{ verticalAlign: 'middle', marginRight: 5 }} />{best}×</>) : '—'}
         </div>
       </div>
     </div>
