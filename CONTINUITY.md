@@ -1,3 +1,18 @@
+## 2026-08-14 — VE-1-SESSION-SUMMARY-ICON-LANGUAGE — IMPLEMENTED_UNVERIFIED
+
+- **Tipo de sesión:** REFINAMIENTO. **Fuente canónica:** código real de `main`, `SessionSummaryToast.tsx`, `ForgeIcon`, Supabase vivo y el deploy automático de Cloudflare Pages.
+- **Estado inicial:** `NOT_STARTED`; **estado actual:** `IMPLEMENTED_UNVERIFIED`; **nivel actual:** Q2; **objetivo:** Q3.
+- **Objetivo:** retirar los sustitutos Unicode del resumen de sesión sin cambiar el registro de batallas, `sessionStorage`, umbral de aparición, duración, dismiss, textos, recompensas ni resultados autoritativos.
+- **Cambio:** `SessionSummaryToast.tsx` conserva la lógica y sustituye la espada, la racha de fuego y el cierre por `ForgeIcon` (`attack`, `spark`, `close`), con iconos decorativos y composición visual equivalente.
+- **Alcance autoritativo:** no se modificaron combate, settlement, economía, energía, recompensas, RPCs, RLS, cartas, Storage, datos de jugadores ni audio.
+- **Evidencia local reconstruida desde `main`:** `npm ci --ignore-scripts`, `npx tsc --noEmit -p tsconfig.app.json`, `npm run verify:build` y `git diff --check` finalizaron correctamente; el escaneo de la unidad no conserva `⚔️`, `🔥` ni `✕`. El commit de implementación en `main` es `3a11708b39cb16aa00446be95b237903cce4e798`.
+- **Evidencia pública:** el índice público y los cuatro assets raíz coinciden con el build generado desde el código auditado; las rutas `/`, `/manifest.json`, `/tutorial`, `/cards`, `/battle` y `/build-manifest.json` respondieron HTTP 200. La revisión se completó después de la propagación automática.
+- **Responsive y accesibilidad:** `ForgeIcon` mantiene `aria-hidden` y `focusable=false`; queda pendiente la revisión visual interactiva del toast en escritorio, tablet y móvil, foco y `prefers-reduced-motion`. No se declara `OPERATIONAL` sin esa evidencia.
+- **Deuda y condición de reapertura:** el entorno no dispone de navegador interactivo para comprobar la presentación real; reabrir sólo con esa evidencia y no mezclar otros consumidores Unicode.
+- **Siguiente acción verificable:** revisar el toast en navegador y después elegir otro consumidor Unicode independiente, sin reabrir unidades ya cerradas.
+
+---
+
 ## 2026-08-14 — VE-1-TUTORIAL-EXIT-ICON — IMPLEMENTED_UNVERIFIED
 
 - **Tipo de sesión:** IMPLEMENTACIÓN. **Fuente canónica:** código real de `main`, `ForgeIcon`, Supabase vivo y build raíz del repositorio.
