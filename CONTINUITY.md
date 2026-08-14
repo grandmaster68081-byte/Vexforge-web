@@ -1,3 +1,17 @@
+## 2026-08-14 — VE-1-PACK-ICON-LANGUAGE — IMPLEMENTED_UNVERIFIED
+
+- **Tipo de sesión:** REFINAMIENTO. **Fuente canónica:** código de `main`, `ForgeIcon`, `PackOpenSequence.tsx`, `PacksRoute.tsx`, manifiesto/Storage y deploy público.
+- **Estado inicial:** `IN_PROGRESS`; **estado actual:** `IMPLEMENTED_UNVERIFIED`; **nivel:** Q2; **objetivo:** Q3.
+- **Objetivo:** retirar emojis y símbolos genéricos de la superficie real de packs sin alterar compra, apertura, pity timer, cartas obtenidas, duplicados, fragmentos, inventario ni recompensas.
+- **Cambio:** el mapping de packs ahora usa nombres `ForgeIcon` semánticos; la apertura, explosión, reverso de carta, resumen, rareza, navegación, inventario, título, pity timer, compra y apertura pendiente usan `ForgeIcon` y texto visible.
+- **Restricción preservada:** no se modificaron RPCs, settlement, economía, RLS, autenticación, datos de cartas, metadatos autoritativos ni Storage.
+- **Evidencia:** commit `8e7b3d87b1b37d74ed7bb519ec32b880b31a4487`; build-manifest público con `sourceCommit` coincidente; `/`, `/packs`, `/manifest.json` y `/build-manifest.json` respondieron HTTP 200; lectura autenticada de los blobs de `main` sin coincidencias de los sustitutos Unicode objetivo en ambos archivos.
+- **Responsive y accesibilidad:** los iconos siguen siendo decorativos (`aria-hidden`/`focusable=false` en `ForgeIcon`) y el texto de las acciones permanece visible; queda pendiente revisión interactiva autenticada y responsive.
+- **Deuda y condición de reapertura:** el escaneo global aún encuentra consumidores genéricos en otras superficies; no se mezclan con esta unidad. Reabrir si el bundle público deja de coincidir o si una revisión visual revela pérdida de jerarquía o foco.
+- **Siguiente acción verificable:** encadenar el siguiente consumidor vivo de iconografía sin esperar selección intermedia.
+
+---
+
 ## 2026-08-14 — VE-SYSTEM-AUTONOMOUS-CONTEXTUAL-EXECUTION-LAW — REFINED
 
 - **Tipo de sesión:** DOCUMENTACIÓN / RECONCILIACIÓN. **Fuente canónica:** `main`, `VEXFORGE_PROTOCOL_V2.md`, Supabase vivo y deploy público.
