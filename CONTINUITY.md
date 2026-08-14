@@ -1,3 +1,16 @@
+## 2026-08-14 — VE-1-FORMATION-ICON-LANGUAGE — IMPLEMENTED_UNVERIFIED
+
+- **Tipo de sesión:** REFINAMIENTO. **Unidad:** `VE-1-FORMATION-ICON-LANGUAGE`. **Fuente canónica:** `main`, `ForgeIcon`, `ForgeFormationBoard.tsx`, Supabase vivo y deploy público.
+- **Estado inicial:** `NOT_STARTED`; **estado actual:** `IMPLEMENTED_UNVERIFIED`; **nivel:** Q2; **objetivo:** Q3.
+- **Objetivo:** retirar pictogramas genéricos de la formación y sus cinemáticas sin alterar simulación, daño, settlement, resultados, recompensas, economía, energía, RPCs, RLS ni datos autoritativos.
+- **Cambio:** el terreno de facción, partículas de invocación, medidores de rage, rarezas, reserva, jefe entrante, objetivo, salida, logs, reliquias, formación pura y estados vacíos usan `ForgeIcon` propio o texto semántico; se conservaron colores, timing, etiquetas y flujo visual.
+- **Evidencia:** commit de código `b7ab96e01f74`; escaneo autenticado del blob de `main` sin los pictogramas objetivo ni `particleEmoji`; tras la propagación, `build-manifest.json` publicó `sourceCommit` coincidente y `/`, `/manifest.json`, `/tutorial`, `/cards`, `/battle`, `/packs` y `/build-manifest.json` respondieron HTTP 200.
+- **Responsive y accesibilidad:** los iconos se mantienen decorativos (`aria-hidden`/`focusable=false` en `ForgeIcon`) y las etiquetas visibles permanecen; queda pendiente revisión interactiva en escritorio, tablet y móvil, foco y `prefers-reduced-motion`.
+- **Deuda y bloqueo:** el escaneo global conserva consumidores Unicode en otras superficies; no se mezclan con esta unidad. La revisión autenticada normal del jugador sigue bloqueada sin sesión interactiva autorizada; no se fabricaron resultados.
+- **Siguiente acción verificable:** encadenar el siguiente consumidor vivo independiente de iconografía, manteniendo esta unidad `IMPLEMENTED_UNVERIFIED` hasta contar con evidencia visual interactiva.
+
+---
+
 ## 2026-08-14 — VE-1-PACK-ICON-LANGUAGE — IMPLEMENTED_UNVERIFIED
 
 - **Tipo de sesión:** REFINAMIENTO. **Fuente canónica:** código de `main`, `ForgeIcon`, `PackOpenSequence.tsx`, `PacksRoute.tsx`, manifiesto/Storage y deploy público.
