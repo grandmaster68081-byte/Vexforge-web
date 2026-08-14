@@ -25,42 +25,42 @@ const SLOT_COLORS: Record<FormationSlot, { primary: string; glow: string }> = {
   sentinel:  { primary: '#4a9eff', glow: 'rgba(74,158,255,0.6)' },
 };
 
-const FACTION_COLORS: Record<string, { primary: string; glow: string; particle: string }> = {
-  Guerrero: { primary: '#e85d04', glow: 'rgba(232,93,4,0.8)',  particle: '🔥' },
-  Mago:     { primary: '#4a9eff', glow: 'rgba(74,158,255,0.8)',particle: '✨' },
-  Paladín:  { primary: '#e8b84b', glow: 'rgba(232,184,75,0.8)',particle: '⚡' },
-  Pícaro:   { primary: '#a855f7', glow: 'rgba(168,85,247,0.8)',particle: '💜' },
+const FACTION_COLORS: Record<string, { primary: string; glow: string }> = {
+  Guerrero: { primary: '#e85d04', glow: 'rgba(232,93,4,0.8)' },
+  Mago:     { primary: '#4a9eff', glow: 'rgba(74,158,255,0.8)' },
+  Paladín:  { primary: '#e8b84b', glow: 'rgba(232,184,75,0.8)' },
+  Pícaro:   { primary: '#a855f7', glow: 'rgba(168,85,247,0.8)' },
 };
 
 const getFactionStyle = (faction: string) =>
-  FACTION_COLORS[faction] ?? { primary: '#e8b84b', glow: 'rgba(232,184,75,0.8)', particle: '⚔️' };
+  FACTION_COLORS[faction] ?? { primary: '#e8b84b', glow: 'rgba(232,184,75,0.8)' };
 
 // ─── Terrain per facción (Plan §3 — Terrain Faction) ──────────────────────────
 const TERRAIN_FACTION: Record<string, {
-  gradient: string; ambientColor: string; particleEmoji: string[]; scanlineColor: string;
+  gradient: string; ambientColor: string; particleIcons: ForgeIconName[]; scanlineColor: string;
 }> = {
   Guerrero: {
     gradient: 'radial-gradient(ellipse at 50% 100%, rgba(120,20,0,0.55) 0%, rgba(50,8,2,0.25) 55%, transparent 85%)',
     ambientColor: 'rgba(232,93,4,0.07)',
-    particleEmoji: ['🔥','🌋','💥'],
+    particleIcons: ['attack', 'spark', 'energy'],
     scanlineColor: 'rgba(232,64,64,0.03)',
   },
   Mago: {
     gradient: 'radial-gradient(ellipse at 50% 50%, rgba(30,10,80,0.55) 0%, rgba(10,5,40,0.25) 60%, transparent 90%)',
     ambientColor: 'rgba(74,158,255,0.06)',
-    particleEmoji: ['✨','🔮','⭐'],
+    particleIcons: ['spark', 'target', 'crown'],
     scanlineColor: 'rgba(74,158,255,0.03)',
   },
   'Paladín': {
     gradient: 'radial-gradient(ellipse at 50% 0%, rgba(90,65,5,0.5) 0%, rgba(40,25,5,0.22) 55%, transparent 85%)',
     ambientColor: 'rgba(232,184,75,0.07)',
-    particleEmoji: ['⚡','✝️','☀️'],
+    particleIcons: ['energy', 'shield', 'spark'],
     scanlineColor: 'rgba(232,184,75,0.03)',
   },
   'Pícaro': {
     gradient: 'radial-gradient(ellipse at 30% 80%, rgba(70,5,90,0.5) 0%, rgba(25,2,40,0.25) 55%, transparent 85%)',
     ambientColor: 'rgba(168,85,247,0.07)',
-    particleEmoji: ['💜','🗡️','🌑'],
+    particleIcons: ['target', 'attack', 'lock'],
     scanlineColor: 'rgba(168,85,247,0.03)',
   },
 };
@@ -68,7 +68,7 @@ const getTerrain = (faction: string) =>
   TERRAIN_FACTION[faction] ?? {
     gradient: 'radial-gradient(ellipse at 50% 50%, rgba(10,10,40,0.4) 0%, transparent 80%)',
     ambientColor: 'rgba(74,158,255,0.04)',
-    particleEmoji: ['⚔️'],
+    particleIcons: ['attack'],
     scanlineColor: 'rgba(74,158,255,0.02)',
   };
 
@@ -296,7 +296,7 @@ function RageMeter({ stacks, maxStacks = 5 }: { stacks: number; maxStacks?: numb
       border: `1px solid ${isFrenzy ? '#e84040' : '#e8b84b'}44`,
       animation: isFrenzy ? 'rage-frenzy-pulse 0.8s ease-in-out infinite' : 'none',
     }}>
-      <span style={{ fontSize: 10 }}>🔥</span>
+      <ForgeIcon name="spark" size={11} />
       <div style={{ display: 'flex', gap: 2 }}>
         {Array.from({ length: maxStacks }).map((_, i) => (
           <div key={i} style={{
@@ -394,10 +394,10 @@ function ForgeGauge({ progress }: { progress: number }) {
     const RARITY_SUMMON: Record<string, { duration: number; rings: number; ptcl: number; tag: string }> = {
     'Común':       { duration: 2200, rings: 2, ptcl: 3,  tag: '' },
     'Infrecuente': { duration: 2600, rings: 2, ptcl: 4,  tag: '' },
-    'Rara':        { duration: 3000, rings: 3, ptcl: 5,  tag: '★ RARA' },
-    'Épica':       { duration: 3500, rings: 3, ptcl: 6,  tag: '★★ ÉPICA' },
-    'Legendaria':  { duration: 4000, rings: 4, ptcl: 8,  tag: '👑 LEGENDARIA' },
-    'Mítica':      { duration: 4500, rings: 5, ptcl: 10, tag: '🔥 MÍTICA' },
+    'Rara':        { duration: 3000, rings: 3, ptcl: 5,  tag: 'RARA' },
+    'Épica':       { duration: 3500, rings: 3, ptcl: 6,  tag: 'ÉPICA' },
+    'Legendaria':  { duration: 4000, rings: 4, ptcl: 8,  tag: 'LEGENDARIA' },
+    'Mítica':      { duration: 4500, rings: 5, ptcl: 10, tag: 'MÍTICA' },
     };
     const FACTION_CINEMATIC_BG: Record<string, string> = {
     'Guerrero': 'radial-gradient(ellipse at 50% 35%, #3a0a0a 0%, #0a0208 100%)',
@@ -451,8 +451,8 @@ const FACTION_MOTTO: Record<string, string> = {
 };
 
 const RARITY_PREFIX: Record<string, string> = {
-  'Common': '', 'Uncommon': '', 'Rare': '★ ',
-  'Epic': '★★ ', 'Legendary': '👑 ', 'Mythic': '🔥 ', 'Founder': '⚜️ ',
+  'Common': '', 'Uncommon': '', 'Rare': 'RARA · ',
+  'Epic': 'ÉPICA · ', 'Legendary': 'LEGENDARIA · ', 'Mythic': 'MÍTICA · ', 'Founder': 'FUNDADOR · ',
 };
 
 function getCardMotto(unit: BattleUnit): string {
@@ -581,7 +581,7 @@ function getCardMotto(unit: BattleUnit): string {
             animation: `summon-particles-orbit ${1.0 + i * 0.18}s linear infinite`,
             transform: `rotate(${i * (360 / cfg.ptcl)}deg) translateX(90px)`,
             pointerEvents: 'none',
-          }}>{ter.particleEmoji[i % ter.particleEmoji.length]}</div>
+          }}><ForgeIcon name={ter.particleIcons[i % ter.particleIcons.length]} size={i % 3 === 0 ? 18 : 12} style={{ color: fac.primary, filter: `drop-shadow(0 0 8px ${fac.primary})` }} /></div>
         ))}
 
         {/* Champion card */}
@@ -609,7 +609,9 @@ function getCardMotto(unit: BattleUnit): string {
               display: 'flex', alignItems: 'center', justifyContent: 'center',
               fontSize: 40, position: 'relative', overflow: 'hidden',
             }}>
-              {!champion.image_url && ter.particleEmoji[0]}
+              {!champion.image_url && (
+                <ForgeIcon name={ter.particleIcons[0]} size={46} style={{ color: fac.primary, filter: `drop-shadow(0 0 18px ${fac.primary})` }} />
+              )}
               {/* Keyword color overlay */}
               {kwFxChamp && (
                 <div style={{
@@ -692,7 +694,7 @@ function getCardMotto(unit: BattleUnit): string {
           textAlign: 'center', zIndex: 3,
           fontFamily: '"Rajdhani",sans-serif', fontSize: 11,
           color: '#4a4a6a', letterSpacing: '0.25em',
-        }}>▶ INVOCANDO CAMPEÓN</div>
+        }}><ForgeIcon name="spark" size={10} style={{ verticalAlign: 'middle', marginRight: 4 }} /> INVOCANDO CAMPEÓN</div>
       </div>
     );
     }
@@ -702,7 +704,7 @@ const UNIT_SUMMON_DURATION: Record<string, number> = {
   Common: 1400, Uncommon: 1600, Rare: 1900, Epic: 2200, Legendary: 2600, Mythic: 3000,
 };
 const UNIT_RARITY_TAG: Record<string, string> = {
-  Rare: '★', Epic: '★★', Legendary: '👑', Mythic: '🔥',
+  Rare: 'RARA', Epic: 'ÉPICA', Legendary: 'LEGENDARIA', Mythic: 'MÍTICA',
 };
 const SLOT_LABEL_MAP: Record<FormationSlot, string> = {
   vanguard: 'VANGUARDIA', champion: 'CAMPEÓN', sentinel: 'CENTINELA',
@@ -763,13 +765,13 @@ function UnitSummonCinematic({
       `}</style>
 
       {/* Terrain particles */}
-      {ter.particleEmoji.map((p, i) => (
+      {ter.particleIcons.map((icon, i) => (
         <div key={i} style={{
           position: 'absolute',
           left: `${20 + i * 30}%`, bottom: '15%',
-          fontSize: 18 + i * 4, opacity: 0,
+          opacity: 0,
           animation: show ? `terrain-particle-float ${1.2 + i * 0.3}s ease-out ${i * 0.2}s both` : 'none',
-        }}>{p}</div>
+        }}><ForgeIcon name={icon} size={18 + i * 4} style={{ color: fac.primary, filter: `drop-shadow(0 0 8px ${fac.primary})` }} /></div>
       ))}
 
       {/* Energy rings — keyword-tinted (G1) */}
@@ -888,7 +890,7 @@ function UnitSummonCinematic({
         opacity: 0,
         animation: show ? 'unit-summon-slot 0.3s ease-out 0.6s both' : 'none',
       }}>
-        ▶ INVOCANDO {slotLabel}
+        <ForgeIcon name="spark" size={10} style={{ verticalAlign: 'middle', marginRight: 4 }} /> INVOCANDO {slotLabel}
       </div>
 
       {/* Bottom glow bar */}
@@ -990,7 +992,7 @@ function ReserveActivatedCinematic({
             textShadow: `0 0 18px ${urgentColor}cc`,
             animation: stage >= 1 ? 'rsv-text-in 0.4s ease-out 0.18s both' : 'none',
             display: 'inline-block',
-          }}>⚡ RESERVA ACTIVADA</span>
+          }}><ForgeIcon name="energy" size={11} style={{ verticalAlign: 'middle', marginRight: 4 }} /> RESERVA ACTIVADA</span>
         </div>
       </div>
 
@@ -1082,7 +1084,7 @@ function ReserveActivatedCinematic({
           color: kwFx?.color ?? urgentColor, letterSpacing: '0.3em',
           textShadow: `0 0 10px ${urgentColor}88`,
           animation: stage >= 1 ? 'rsv-text-in 0.3s ease-out 0.42s both' : 'none',
-        }}>▶ ENTRA A {slotLabel}</div>
+        }}><ForgeIcon name="attack" size={10} style={{ verticalAlign: 'middle', marginRight: 4 }} /> ENTRA A {slotLabel}</div>
       </div>
 
       {/* Bottom glow bar */}
@@ -1532,7 +1534,7 @@ function ReserveStack({ count }: { count: number }) {
             border: '1px dashed rgba(255,255,255,0.1)',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
             fontSize: 12, color: 'rgba(255,255,255,0.15)',
-          }}>∅</div>
+          }}><ForgeIcon name="cards" size={16} style={{ opacity: 0.55 }} /></div>
         ) : Array.from({ length: layers }).map((_, i) => (
           <div key={i} style={{
             position: 'absolute',
@@ -1588,7 +1590,7 @@ function PureFormationBadge({ faction }: { faction: string }) {
       animation: 'pure-bonus-pulse 2s ease-in-out infinite',
       whiteSpace: 'nowrap',
     }}>
-      ✦ FORMACIÓN PURA +15%
+      <ForgeIcon name="spark" size={10} style={{ verticalAlign: 'middle', marginRight: 4 }} /> FORMACIÓN PURA +15%
     </div>
   );
 }
@@ -2103,7 +2105,7 @@ export function ForgeFormationBoard({
       prevDeathsRef.current = newDeaths;
       const newStacks = Math.min(newDeaths, 5);
       setRageStacks(newStacks);
-      addLog(`🔥 RAGE +1 → Campeón gana +${newStacks * 5}% ATK`);
+      addLog(`RAGE +1 → Campeón gana +${newStacks * 5}% ATK`);
       try { (AudioEngine as any).sfxCritV2?.(); } catch { /* ok */ }
     }
 
@@ -2148,7 +2150,7 @@ export function ForgeFormationBoard({
       [pending.slot]: pending.unit,
       reserve: prev.reserve.filter(u => u.id !== pending.unit.id),
     }));
-    addLog(`🔄 ${SLOT_META[pending.slot].label} → ${pending.unit.name} entra al campo`);
+    addLog(`REEMPLAZO · ${SLOT_META[pending.slot].label} → ${pending.unit.name} entra al campo`);
     setAwaitingSlot(null);
     setPhase('battle');
   }, [addLog]);
@@ -2404,7 +2406,7 @@ export function ForgeFormationBoard({
           background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)',
           borderRadius: 6, color: '#6a6a8a', fontSize: 10, padding: '5px 10px', cursor: 'pointer',
           fontFamily: '"Rajdhani",sans-serif',
-        }}>✕ Salir</button>
+        }}><ForgeIcon name="close" size={11} style={{ verticalAlign: 'middle', marginRight: 4 }} /> Salir</button>
       </div>
 
       {/* ── Forge Gauge (enhanced battle progress) ─────────────────────────── */}
@@ -2463,7 +2465,7 @@ export function ForgeFormationBoard({
             animation: reducedEffects ? 'modal-overlay-in 0.2s ease-out both' : 'boss-entry-climax 1.2s ease-out both',
           }}
         >
-          <div style={{ fontSize: 44, filter: 'drop-shadow(0 0 18px #e84040)' }}>☠</div>
+          <ForgeIcon name="skull" size={44} style={{ color: '#e84040', filter: 'drop-shadow(0 0 18px #e84040)' }} />
           <div style={{ marginTop: 9, color: '#ff7777', fontFamily: '"Cinzel",serif', fontSize: 'clamp(16px,4vw,25px)', fontWeight: 900, letterSpacing: '0.16em' }}>BOSS ENTRANTE</div>
           <div style={{ marginTop: 6, color: '#c98f8f', fontSize: 11, letterSpacing: '0.12em' }}>{opponentName.toUpperCase()}</div>
         </div>
@@ -2654,7 +2656,7 @@ export function ForgeFormationBoard({
                           textShadow: '0 0 8px rgba(232,64,64,0.9)',
                           animation: 'target-lock-corner 0.3s ease-out 0.15s both',
                           zIndex: 6, whiteSpace: 'nowrap',
-                        }}>◉ OBJETIVO</div>
+                        }}><ForgeIcon name="target" size={9} style={{ verticalAlign: 'middle', marginRight: 3 }} /> OBJETIVO</div>
                       </>
                     )}
                     <ForgeIcon name={SLOT_META[s].icon} size={20} />
@@ -2804,7 +2806,7 @@ export function ForgeFormationBoard({
           fontSize: 7, color: '#e8b84b66', letterSpacing: '0.18em',
           fontFamily: '"Rajdhani",sans-serif', textTransform: 'uppercase',
           padding: '1px 4px',
-        }}>▶ LOG DE FORMACIÓN</div>
+        }}><ForgeIcon name="attack" size={9} style={{ verticalAlign: 'middle', marginRight: 3 }} /> LOG DE FORMACIÓN</div>
         {log.length === 0 ? (
           <div style={{ fontSize: 10, color: '#4a4a6a', padding: '2px 6px', fontFamily: '"Rajdhani",sans-serif' }}>
             Preparando la Forge Formation…
@@ -2868,7 +2870,7 @@ export function ForgeFormationBoard({
                       borderRadius: 6, color: '#c084fc', fontSize: 9, fontWeight: 700,
                       padding: '3px 7px', fontFamily: '"IBM Plex Mono",monospace',
                       letterSpacing: '0.08em', cursor: 'default',
-                    }}>◈ {r.code}</div>
+                    }}><ForgeIcon name="relics" size={10} style={{ verticalAlign: 'middle', marginRight: 3 }} /> {r.code}</div>
                 ))}
               </div>
             )}
