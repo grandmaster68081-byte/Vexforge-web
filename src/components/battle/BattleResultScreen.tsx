@@ -290,7 +290,7 @@ export function BattleResultScreen({ result, playerName, opponentName, onDismiss
             fontFamily: 'Cinzel, serif', fontSize: 14, fontWeight: 700,
             color: '#e8b84b', letterSpacing: '0.1em',
           }}>
-            RACHA × {winStreak}
+            RACHA <ForgeIcon name="spark" size={12} style={{ color: '#e8b84b', margin: '0 6px', verticalAlign: 'middle' }} /> {winStreak}
           </span>
            <ForgeIcon name="spark" size={16} style={{ color: '#e8b84b' }} />
         </div>
