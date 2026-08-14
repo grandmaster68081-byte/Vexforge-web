@@ -1,3 +1,17 @@
+## 2026-08-14 — VE-1-TUTORIAL-EXIT-ICON — IMPLEMENTED_UNVERIFIED
+
+- **Tipo de sesión:** IMPLEMENTACIÓN. **Fuente canónica:** código real de `main`, `ForgeIcon`, Supabase vivo y build raíz del repositorio.
+- **Estado inicial:** `NOT_STARTED`; **estado actual:** `IMPLEMENTED_UNVERIFIED`; **nivel actual:** Q2; **objetivo:** Q3.
+- **Objetivo:** retirar el pictograma Unicode de cierre del control `Saltar tutorial` sin cambiar navegación, persistencia, avance, skip/replay, datos ni resultados autoritativos.
+- **Cambio:** `src/shared/components/TutorialOverlay.tsx` conserva el texto y la acción `skip()`, y reemplaza `×` por `ForgeIcon name="close"` dentro de una agrupación visual accesible; no se tocaron reglas del juego, RPCs, RLS, economía, recompensas, cartas, Storage ni audio.
+- **Evidencia local:** commit de implementación `961deb283ba17bc32662d0186af1f150b59cf66d`; `npm ci --ignore-scripts` y `npm run verify:build` finalizaron correctamente; el build reportó `Build verificado: 961deb283ba17bc32662d0186af1f150b59cf66d`; el escaneo del consumidor confirmó ausencia de `Saltar tutorial ×` y presencia del icono canónico.
+- **Responsive y accesibilidad:** el control mantiene su etiqueta textual, acción y botón nativo; queda pendiente revisión visual interactiva en escritorio, tablet y móvil, foco y `prefers-reduced-motion`.
+- **Publicación:** pendiente de propagación automática de Cloudflare Pages; la unidad no se cierra como `OPERATIONAL` hasta que `/build-manifest.json` publique el commit auditado.
+- **Condición de reapertura:** disponer de navegador interactivo y sesión normal si se necesita revisar el tutorial autenticado; mantener `IMPLEMENTED_UNVERIFIED` hasta obtener esa evidencia.
+- **Siguiente acción verificable:** comprobar el manifiesto público y las rutas `/`, `/manifest.json`, `/tutorial`, `/cards` y `/battle`; después elegir otro consumidor Unicode independiente sin reabrir esta unidad por deuda ajena.
+
+---
+
 ## 2026-08-13 — VE-1-ACHIEVEMENT-ICON-MAPPING — BLOCKED
 
 - **Fuente canónica:** tabla viva `public.achievements` de Supabase y `AchievementToastCard.tsx`.
