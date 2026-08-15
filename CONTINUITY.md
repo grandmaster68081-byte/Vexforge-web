@@ -1,3 +1,16 @@
+## 2026-08-14 — VE-1-EMPTY-STATE-ICON-LANGUAGE — IMPLEMENTED_UNVERIFIED
+
+- **Tipo de sesión:** REFINAMIENTO / IMPLEMENTACIÓN. **Fuente canónica:** código real de `main`, `EmptyState`, `ForgeIcon`, Supabase vivo y deploy público.
+- **Estado inicial:** `NOT_STARTED`; **estado actual:** `IMPLEMENTED_UNVERIFIED`; **nivel actual:** Q2; **objetivo:** Q3.
+- **Objetivo:** retirar iconos Unicode usados como propiedades de presentación en estados vacíos vivos sin cambiar textos, filtros, acciones, datos, autenticación ni resultados autoritativos.
+- **Cambio:** `SeasonPassRoute.tsx`, `RelicsRoute.tsx`, `LoreRoute.tsx` y `FriendsRoute.tsx` conservan sus flujos y sustituyen los iconos de texto de `EmptyState` por mappings semánticos existentes de `ForgeIcon`: temporada, reliquias, lore, amigos, notificaciones y desafíos.
+- **Alcance autoritativo:** no se modificaron Supabase, Storage, RPCs, RLS, economía, recompensas, cartas, inventario, autenticación ni navegación.
+- **Evidencia local:** `npm run verify:build` y `git diff --check` finalizaron correctamente; el build verificado corresponde al commit `9b5056aa01831614ddeefe41697a39c7d0a0976f`; no quedan props `icon="..."` en los consumidores `EmptyState`.
+- **Evidencia pública:** `/build-manifest.json` publica `sourceCommit=9b5056aa01831614ddeefe41697a39c7d0a0976f`; `/`, `/tutorial`, `/cards`, `/battle`, `/packs`, `/friends`, `/lore`, `/relics` y `/season-pass` respondieron HTTP 200.
+- **Responsive y accesibilidad:** los SVG de `ForgeIcon` permanecen decorativos (`aria-hidden`/`focusable=false`) y los textos visibles se conservan; queda pendiente revisión interactiva en escritorio, tablet y móvil, foco y `prefers-reduced-motion`.
+- **Deuda y condición de reapertura:** permanecen consumidores Unicode independientes en otras superficies, incluidos otros elementos de las mismas rutas; no se mezclan con esta unidad. Reabrir ante regresión de un estado vacío, discrepancia del bundle público o mapping canónico contradictorio.
+- **Siguiente acción verificable:** encadenar otro consumidor vivo de iconografía sin reabrir unidades anteriores; mantener esta unidad `IMPLEMENTED_UNVERIFIED` hasta contar con evidencia visual interactiva.
+
 ## 2026-08-14 — VE-1-ACCOUNT-ICON-LANGUAGE — IMPLEMENTED_UNVERIFIED
 
 - **Tipo de sesión:** REFINAMIENTO / IMPLEMENTACIÓN. **Fuente canónica:** código real de `main`, `AccountRoute.tsx`, `ForgeIcon`, Supabase vivo y deploy público.
