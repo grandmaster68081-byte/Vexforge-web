@@ -4,6 +4,7 @@ import type { Cosmetic } from "../domains/cosmetics/repository";
 import { PageLoader } from "../shared/components/PageLoader";
 import { BlockedAuthState } from "../shared/components/BlockedAuthState";
 import { EmptyState } from "../shared/components/EmptyState";
+import { ForgeIcon, type ForgeIconName } from "../shared/components/ForgeIcon";
 import { ErrorState } from "../shared/components/ErrorState";
 import { useToast } from "../shared/context/ToastContext";
 
@@ -16,10 +17,14 @@ const RARITY_LABEL: Record<string, string> = {
   Common: "Común", Uncommon: "Poco común", Rare: "Raro",
   Epic: "Épico", Legendary: "Legendario", Mythic: "Mítico",
 };
-const TYPE_ICON: Record<string, string> = {
-  card_frame: "🖼️", board_skin: "🎮", avatar: "👤", title: "📛",
-  card_back: "🔄", emote: "😄", clan_banner: "🏳️", charm: "✨", battle_skin: "🎨",
+const TYPE_ICON: Record<string, ForgeIconName> = {
+  card_frame: "cards", board_skin: "arena", avatar: "profile", title: "crown",
+  card_back: "cards", emote: "spark", clan_banner: "clans", charm: "spark", battle_skin: "attack",
 };
+
+function getTypeIcon(type: string): ForgeIconName {
+  return TYPE_ICON[type] ?? "cosmetics";
+}
 const TYPE_LABEL: Record<string, string> = {
   card_frame: "Marco", board_skin: "Tablero", avatar: "Avatar", title: "Título",
   card_back: "Reverso", emote: "Emote", clan_banner: "Banner",
@@ -62,7 +67,7 @@ function CosmeticPreview({
   const baseColor: string = md.preview_color ?? rarityColor;
   const animated = md.animated === true;
   const glow = md.glow === true;
-  const icon = TYPE_ICON[cosmetic.cosmetic_type] ?? "✨";
+  const icon = getTypeIcon(cosmetic.cosmetic_type);
 
   const iconSize = size === "detail" ? 64 : size === "slot" ? 22 : 44;
   const borderR = size === "slot" ? 8 : 10;
@@ -106,9 +111,9 @@ function CosmeticPreview({
         pointerEvents: "none",
       }} />
       <span style={{
-        fontSize: iconSize, filter: "drop-shadow(0 2px 6px rgba(0,0,0,0.6))",
-        position: "relative", zIndex: 1,
-      }}>{icon}</span>
+        filter: "drop-shadow(0 2px 6px rgba(0,0,0,0.6))",
+        position: "relative", zIndex: 1, display: "grid", placeItems: "center",
+      }}><ForgeIcon name={icon} size={iconSize} /></span>
       <style>{`@keyframes vex-spin { to { transform: rotate(360deg); } }`}</style>
     </div>
   );
@@ -196,7 +201,7 @@ function LoadoutPanel({
                         style={{ width: "100%", height: "100%", objectFit: "cover", borderRadius: 8 }}
                       />
                     ) : (
-                      <span style={{ fontSize: 22 }}>{TYPE_ICON[slot] ?? "✨"}</span>
+                      <ForgeIcon name={getTypeIcon(slot)} size={22} />
                     )}
                     {/* Unequip button on hover via title */}
                     <button
@@ -211,10 +216,10 @@ function LoadoutPanel({
                         fontSize: 9, color: "#fff", fontWeight: 900, lineHeight: 1,
                         zIndex: 2,
                       }}
-                    >✕</button>
+                    ><ForgeIcon name="close" size={10} /></button>
                   </>
                 ) : (
-                  <span style={{ fontSize: 18, opacity: 0.3 }}>{TYPE_ICON[slot] ?? "✨"}</span>
+                  <span style={{ opacity: 0.3 }}><ForgeIcon name={getTypeIcon(slot)} size={18} /></span>
                 )}
               </div>
               {/* Slot label */}
@@ -363,9 +368,9 @@ function CosmeticCard({
               Aplicando…
             </>
           ) : isEquipped ? (
-            "✕ Desequipar"
+            "Desequipar"
           ) : (
-            "✓ Equipar"
+            "Equipar"
           )}
         </button>
       )}
@@ -422,7 +427,7 @@ function DetailDrawer({
           border: "1px solid #2a2a3a", background: "#12121f",
           color: "#666", fontSize: 16, cursor: "pointer",
           display: "flex", alignItems: "center", justifyContent: "center",
-        }}>✕</button>
+        }}><ForgeIcon name="close" size={12} /></button>
       </div>
 
       <div style={{ display: "flex", gap: 20, alignItems: "flex-start", maxWidth: 600, margin: "0 auto" }}>
@@ -453,7 +458,7 @@ function DetailDrawer({
             <span style={{
               color: "#888", fontSize: 10, fontWeight: 700,
               background: "#1a1a2a", borderRadius: 8, padding: "2px 8px",
-            }}>{TYPE_ICON[c.cosmetic_type]} {TYPE_LABEL[c.cosmetic_type] ?? c.cosmetic_type}</span>
+            }}><ForgeIcon name={getTypeIcon(c.cosmetic_type)} size={12} style={{ verticalAlign: "middle", marginRight: 4 }} />{TYPE_LABEL[c.cosmetic_type] ?? c.cosmetic_type}</span>
           </div>
 
           <p style={{ color: "#aaa", fontSize: 13, lineHeight: 1.6, marginBottom: 12 }}>
@@ -515,7 +520,7 @@ function DetailDrawer({
                   }} />
                   Aplicando…
                 </>
-              ) : isEquipped ? "✕ Desequipar" : "✓ Equipar"}
+              ) : isEquipped ? "Desequipar" : "Equipar"}
             </button>
           ) : (
             <div style={{
@@ -612,16 +617,16 @@ export function CosmeticsRoute() {
             fontSize: 10, letterSpacing: "0.14em", color: "#e8b84b",
             textTransform: "uppercase", fontFamily: "Rajdhani,sans-serif",
             fontWeight: 700, marginBottom: 8,
-          }}>─── Personalización ───</p>
+          }}>Personalización</p>
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 8 }}>
             <h1 style={{ fontFamily: "Cinzel,serif", color: "#e8e8f0", fontSize: 26, margin: "0 0 4px" }}>
-              ✨ Cosméticos
+              <ForgeIcon name="cosmetics" size={20} style={{ verticalAlign: "middle", marginRight: 8 }} />Cosméticos
             </h1>
             <button onClick={reload} style={{
               padding: "7px 18px", borderRadius: 8,
               border: "1px solid #2a2a3a", background: "transparent",
               color: "#888", fontSize: 11, cursor: "pointer",
-            }}>↻ Actualizar</button>
+            }}><ForgeIcon name="refresh" size={13} style={{ verticalAlign: "middle", marginRight: 5 }} />Actualizar</button>
           </div>
           <p style={{ color: "#666", margin: 0, fontSize: 12 }}>
             Marcos, tableros, avatares y más. Personaliza tu experiencia sin afectar el gameplay.
@@ -689,7 +694,7 @@ export function CosmeticsRoute() {
               color: typeFilter === t ? "#0a0a12" : "#666",
               transition: "all 0.15s",
             }}>
-              {t === "all" ? "Todos" : `${TYPE_ICON[t] ?? "✨"} ${TYPE_LABEL[t] ?? t}`}
+              {t === "all" ? "Todos" : <><ForgeIcon name={getTypeIcon(t)} size={12} style={{ verticalAlign: "middle", marginRight: 4 }} />{TYPE_LABEL[t] ?? t}</>}
             </button>
           ))}
         </div>
@@ -697,7 +702,7 @@ export function CosmeticsRoute() {
         {/* ── Grid ── */}
         {filtered.length === 0 ? (
           <EmptyState
-            icon={tabFilter === "mine" ? "🎒" : "✨"}
+            icon={<ForgeIcon name={tabFilter === "mine" ? "collection" : "cosmetics"} size={36} />}
             title={tabFilter === "mine" ? "Sin cosméticos en tu colección" : "Sin cosméticos"}
             description={
               tabFilter === "mine"
