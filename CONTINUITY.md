@@ -6,9 +6,10 @@
 - **Cambio:** `SettingsRoute.tsx` conserva sus consultas, callbacks y estados, sustituye la iconografía del encabezado y secciones por `ForgeIcon`, elimina glyphs de los modos de interfaz y usa un chevron semántico para los enlaces; el toast conserva su mensaje y tipo de éxito sin prefijo genérico.
 - **Alcance autoritativo:** no se modificaron Supabase, Storage, RPCs, RLS, autenticación, economía, recompensas ni preferencias persistidas.
 - **Evidencia local:** `npm ci --ignore-scripts`, `npx tsc --noEmit -p tsconfig.app.json` y `npm run verify:build` finalizaron correctamente; la unidad no conserva los sustitutos Unicode objetivo. El commit de implementación en `main` es `923337bfe2193c5c99391462b83e99bf4ace8ced`.
+- **Evidencia pública:** `/build-manifest.json` publica `sourceCommit=923337bfe2193c5c99391462b83e99bf4ace8ced`; `/`, `/manifest.json`, `/settings` y las rutas principales auditadas respondieron HTTP 200. El bundle público de Configuración no conserva los glyphs objetivo.
 - **Responsive y accesibilidad:** `ForgeIcon` mantiene `aria-hidden` y `focusable=false`; queda pendiente revisar la ruta autenticada en escritorio, tablet y móvil, foco y `prefers-reduced-motion`. No se declara `OPERATIONAL` ni se fabrican datos.
 - **Deuda y condición de reapertura:** permanecen consumidores Unicode independientes en otras superficies; no se mezclan con esta unidad. Reabrir sólo ante regresión de Configuración, discrepancia del bundle público o mapping canónico contradictorio.
-- **Siguiente acción verificable:** esperar la propagación automática y comprobar `/build-manifest.json`, `/`, `/settings`, `/manifest.json` y el bundle servido; después continuar con otro consumidor Unicode independiente.
+- **Siguiente acción verificable:** revisar visualmente la ruta autenticada en navegador con evidencia responsive, foco y `prefers-reduced-motion`; después continuar con otro consumidor Unicode independiente sin reabrir esta unidad por deuda ajena.
 
 ## 2026-08-14 — VE-1-DECK-BUILDER-ICON-LANGUAGE — IMPLEMENTED_UNVERIFIED
 
