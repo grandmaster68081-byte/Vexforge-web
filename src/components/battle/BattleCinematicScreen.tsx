@@ -10,7 +10,7 @@ import { BattleIntroScreen } from './BattleIntroScreen';
 import { BattleBoardEngine } from './BattleBoardEngine';
 import { BattleResultScreen } from './BattleResultScreen';
 import { AudioControls } from './AudioControls';
-import { ForgeIcon } from '../shared/components/ForgeIcon';
+import { ForgeIcon } from '../../shared/components/ForgeIcon';
 
 export interface BattleCinematicScreenProps {
   result: RealBattleResult;

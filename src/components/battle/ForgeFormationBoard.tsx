@@ -805,7 +805,7 @@ function UnitSummonCinematic({
           position: 'relative',
         }}>
           {!unit.image_url && (
-            <span style={{ fontSize: 32, opacity: 0.5 }}>{fac.particle}</span>
+            <ForgeIcon name={ter.particleIcons[0]} size={32} style={{ opacity: 0.5, color: fac.primary }} />
           )}
           {/* Rarity tag */}
           {tag && (
@@ -909,6 +909,7 @@ function ReserveActivatedCinematic({
   unit, slot, onDone,
 }: { unit: BattleUnit; slot: FormationSlot; onDone: () => void }) {
   const fac  = getFactionStyle(unit.faction ?? '');
+  const ter  = getTerrain(unit.faction ?? '');
   const rar  = RARITY_COLOR[unit.rarity] ?? '#8b8b9e';
   const slotLabel = SLOT_LABEL_MAP[slot] ?? slot.toUpperCase();
   const urgentColor = '#e85d04'; // warm orange — distinct from any invoke palette
@@ -1029,7 +1030,7 @@ function ReserveActivatedCinematic({
             <img src={unit.image_url} alt={unit.name}
               style={{ width: 64, height: 72, objectFit: 'cover', borderRadius: 5, opacity: 0.92 }} />
           ) : (
-            <div style={{ fontSize: 32, lineHeight: 1 }}>{fac.particle}</div>
+            <ForgeIcon name={ter.particleIcons[0]} size={32} style={{ color: fac.primary }} />
           )}
           {/* Rarity tint overlay */}
           <div style={{
