@@ -1,3 +1,17 @@
+## 2026-08-14 — VE-1-CLAN-WARS-ICON-LANGUAGE — IMPLEMENTED_UNVERIFIED
+
+- **Tipo de sesión:** REFINAMIENTO / IMPLEMENTACIÓN. **Fuente canónica:** código real de `main`, `ClanWarsPanel.tsx`, `ForgeIcon`, Supabase vivo y deploy público.
+- **Estado inicial:** `NOT_STARTED`; **estado actual:** `IMPLEMENTED_UNVERIFIED`; **nivel actual:** Q2; **objetivo:** Q3.
+- **Objetivo:** retirar los pictogramas Unicode de la superficie Clan Wars sin cambiar datos de clanes, guerras, roles, estados, acciones, autenticación ni reglas autoritativas.
+- **Cambio:** `ClanWarsPanel.tsx` conserva el flujo y sustituye guerra, identidad de clan, roles, estado vacío y CTAs por iconos SVG existentes de `ForgeIcon`; el mapping de roles queda tipado y los textos visibles se mantienen.
+- **Correcciones de compilación asociadas:** se corrigieron una ruta de importación de `ForgeIcon` y dos fallbacks de presentación que aún referían una propiedad eliminada; ahora usan el icono canónico del terreno. No se modificaron settlement, economía, RPCs, RLS, datos ni Storage.
+- **Evidencia local:** el candidato `60c5830b38fbacdf93b30b08c0521d7e36e86355` pasó `npx tsc --noEmit -p tsconfig.app.json`, `npm run verify:build`, `git diff --check` y el escaneo del consumidor; no quedan pictogramas visuales Unicode en `ClanWarsPanel.tsx`.
+- **Responsive y accesibilidad:** se conservan botones nativos, textos semánticos y acciones existentes; `ForgeIcon` permanece decorativo. Queda pendiente la revisión visual interactiva en escritorio, tablet y móvil, foco y `prefers-reduced-motion`, además de cualquier prueba autenticada normal del jugador.
+- **Deuda y condición de reapertura:** la unidad no se eleva a `OPERATIONAL` sin evidencia de navegador; reabrir ante regresión del panel, discrepancia del bundle público o mapping canónico contradictorio.
+- **Siguiente acción verificable:** promover el candidato, esperar la propagación automática y comprobar `/build-manifest.json`, `/`, `/pvp`, `/manifest.json` y el bundle servido; después continuar con otro consumidor independiente sin reabrir esta unidad por deuda ajena.
+
+---
+
 ## 2026-08-14 — VE-1-FORMATION-ICON-LANGUAGE — IMPLEMENTED_UNVERIFIED
 
 - **Tipo de sesión:** REFINAMIENTO. **Unidad:** `VE-1-FORMATION-ICON-LANGUAGE`. **Fuente canónica:** `main`, `ForgeIcon`, `ForgeFormationBoard.tsx`, Supabase vivo y deploy público.
