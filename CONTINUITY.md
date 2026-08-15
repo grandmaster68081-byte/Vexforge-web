@@ -1,3 +1,17 @@
+## 2026-08-14 — VE-1-DECK-BUILDER-ICON-LANGUAGE — IMPLEMENTED_UNVERIFIED
+
+- **Tipo de sesión:** REFINAMIENTO / IMPLEMENTACIÓN. **Fuente canónica:** código real de `main`, `DeckBuilderRoute.tsx`, `ForgeIcon`, Supabase vivo y deploy público.
+- **Estado inicial:** `NOT_STARTED`; **estado actual:** `IMPLEMENTED_UNVERIFIED`; **nivel actual:** Q2; **objetivo:** Q3.
+- **Objetivo:** retirar los pictogramas genéricos del Constructor de Mazos sin cambiar selección de cartas, filtros, validación, guardado, cálculo DPS, campeón ni datos autoritativos.
+- **Cambio:** `DeckBuilderRoute.tsx` conserva el flujo y sustituye la iconografía Unicode de cartas, energía, advertencias, búsqueda, validación, guardado, DPS, campeón, encabezado, cierre y estados vacíos por `ForgeIcon` semántico. Los textos, límites y callbacks permanecen sin cambios.
+- **Alcance autoritativo:** no se modificaron Supabase, Storage, RPCs, RLS, autenticación, economía, recompensas ni reglas de construcción de mazos.
+- **Evidencia local:** el candidato pasó `npm ci --ignore-scripts`, `npm run verify:build`, `git diff --check` y el escaneo del consumidor; no conserva pictogramas Unicode en `DeckBuilderRoute.tsx`. El commit de código publicado en `main` es `8a97b77d7c627d0f86fe5b37ac046b7cf4a8fa70`.
+- **Responsive y accesibilidad:** `ForgeIcon` mantiene `aria-hidden` y `focusable=false`; queda pendiente la revisión visual interactiva en escritorio, tablet y móvil, foco, `prefers-reduced-motion` y una sesión normal autorizada del jugador. No se declara `OPERATIONAL` ni se fabrican datos.
+- **Deuda y condición de reapertura:** permanecen otros consumidores Unicode independientes en otras superficies; no se mezclan con esta unidad. Reabrir sólo ante regresión del Constructor, discrepancia del bundle público o mapping canónico contradictorio.
+- **Siguiente acción verificable:** esperar la propagación automática, comprobar `/build-manifest.json`, `/`, `/deck-builder`, `/manifest.json` y el bundle servido; después continuar con otro consumidor Unicode independiente.
+
+---
+
 ## 2026-08-14 — VE-1-COSMETICS-ICON-LANGUAGE — IMPLEMENTED_UNVERIFIED
 
 - **Tipo de sesión:** REFINAMIENTO / IMPLEMENTACIÓN. **Fuente canónica:** código real de `main`, `CosmeticsRoute.tsx`, `ForgeIcon`, Supabase vivo y deploy público.
