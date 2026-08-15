@@ -4,6 +4,7 @@ import { PageLoader } from "../shared/components/PageLoader";
 import { BlockedAuthState } from "../shared/components/BlockedAuthState";
 import { Link } from "react-router-dom";
 import { useToast } from "../shared/context/ToastContext";
+import { ForgeIcon, type ForgeIconName } from "../shared/components/ForgeIcon";
 
 function Toggle({ label, description, checked, onChange, disabled }: {
   label: string; description?: string; checked: boolean;
@@ -23,11 +24,11 @@ function Toggle({ label, description, checked, onChange, disabled }: {
   );
 }
 
-function Section({ title, icon, children }: { title: string; icon: string; children: React.ReactNode }) {
+function Section({ title, icon, children }: { title: string; icon: ForgeIconName; children: React.ReactNode }) {
   return (
     <div style={{ marginBottom: 32 }}>
       <div style={{ display: "flex", gap: 8, alignItems: "center", marginBottom: 14 }}>
-        <span style={{ fontSize: 18 }}>{icon}</span>
+        <ForgeIcon name={icon} size={18} style={{ color: "#e8b84b", flexShrink: 0 }} />
         <h2 style={{ fontFamily: "Cinzel,serif", color: "#e8e8f0", fontSize: 16, margin: 0 }}>{title}</h2>
       </div>
       <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>{children}</div>
@@ -54,7 +55,7 @@ export function SettingsRoute() {
 
   const handleSave = async () => {
     const ok = await save({ notifications_enabled: notifyVal, telegram_enabled: telegramVal, ui_mode: uiModeVal, language: langVal });
-    if (ok) addToast("success", "✓ Configuración guardada");
+    if (ok) addToast("success", "Configuración guardada");
     else addToast("error", "Error al guardar", saveError ?? "Error desconocido");
   };
 
@@ -70,21 +71,24 @@ export function SettingsRoute() {
   return (
     <main style={{ maxWidth: 640, margin: "0 auto", padding: "32px 16px" }}>
       <div style={{ marginBottom: 32 }}>
-        <p style={{ fontSize: 11, letterSpacing: "0.14em", color: "#e8b84b", textTransform: "uppercase", fontFamily: "Rajdhani,sans-serif", fontWeight: 700, marginBottom: 8 }}>─── Forge Control ───</p>
-        <h1 style={{ fontFamily: "Cinzel,serif", color: "#e8e8f0", fontSize: 26, margin: "0 0 4px" }}>⚙️ Configuración</h1>
+        <p style={{ fontSize: 11, letterSpacing: "0.14em", color: "#e8b84b", textTransform: "uppercase", fontFamily: "Rajdhani,sans-serif", fontWeight: 700, marginBottom: 8 }}>Forge Control</p>
+        <h1 style={{ display: "flex", alignItems: "center", gap: 10, fontFamily: "Cinzel,serif", color: "#e8e8f0", fontSize: 26, margin: "0 0 4px" }}>
+          <ForgeIcon name="settings" size={24} style={{ color: "#e8b84b" }} />
+          Configuración
+        </h1>
         <p style={{ color: "#666", margin: 0, fontSize: 12 }}>Gestiona tus preferencias de Forjador.</p>
       </div>
 
-      <Section title="Notificaciones" icon="🔔">
+      <Section title="Notificaciones" icon="notification">
         <Toggle label="Notificaciones globales" description="Recibe avisos sobre misiones, eventos y recompensas pendientes." checked={notifyVal} onChange={v => { setNotify(v); }} disabled={saving} />
         <Toggle label="Integración Telegram" description="Recibe alertas en tu Telegram vinculado a la cuenta." checked={telegramVal} onChange={v => { setTelegram(v); }} disabled={saving} />
       </Section>
 
-      <Section title="Apariencia" icon="🎨">
+      <Section title="Apariencia" icon="cosmetics">
         <div style={{ background: "#1a1a2e", borderRadius: 10, padding: "14px 18px" }}>
           <div style={{ color: "#888", fontSize: 10, fontWeight: 700, marginBottom: 10 }}>MODO DE INTERFAZ</div>
           <div style={{ display: "flex", gap: 8 }}>
-            {UI_MODES.map(m => <button key={m} onClick={() => { setUiMode(m); }} style={selectSt(uiModeVal === m)}>{m === "dark" ? "🌙 Dark" : "⬛ AMOLED"}</button>)}
+            {UI_MODES.map(m => <button key={m} onClick={() => { setUiMode(m); }} style={selectSt(uiModeVal === m)}>{m === "dark" ? "Dark" : "AMOLED"}</button>)}
           </div>
         </div>
         <div style={{ background: "#1a1a2e", borderRadius: 10, padding: "14px 18px" }}>
@@ -95,7 +99,7 @@ export function SettingsRoute() {
         </div>
       </Section>
 
-      <Section title="Cuenta" icon="👤">
+      <Section title="Cuenta" icon="account">
         {[{ label: "Perfil de Forjador", desc: "Ver y editar tu identidad pública", to: "/profile" },
           { label: "Depósitos y Economía", desc: "Historial de transacciones y balance", to: "/economy" },
           { label: "Cosméticos Equipados", desc: "Cambiar marcos, avatares y tableros", to: "/cosmetics" }].map(item => (
@@ -104,7 +108,10 @@ export function SettingsRoute() {
               <div style={{ color: "#e8e8f0", fontWeight: 700, fontSize: 13 }}>{item.label}</div>
               <div style={{ color: "#7a7a9a", fontSize: 11 }}>{item.desc}</div>
             </div>
-            <Link to={item.to} style={{ color: "#e8b84b", fontSize: 12, fontWeight: 700, textDecoration: "none" }}>Ver →</Link>
+            <Link to={item.to} style={{ display: "inline-flex", alignItems: "center", gap: 5, color: "#e8b84b", fontSize: 12, fontWeight: 700, textDecoration: "none" }}>
+              Ver
+              <ForgeIcon name="chevron-right" size={14} />
+            </Link>
           </div>
         ))}
       </Section>
