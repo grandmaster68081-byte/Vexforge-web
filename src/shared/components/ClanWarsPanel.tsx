@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
     import { getPlayerClanData } from "../../domains/clans/clanRepository";
     import type { PlayerClanData, ClanWar, Clan } from "../../domains/clans/clanRepository";
+    import { ForgeIcon, type ForgeIconName } from "./ForgeIcon";
 
     const STATUS_CFG: Record<string, { label: string; color: string }> = {
     active:   { label: "ACTIVA",    color: "#3ddc84" },
@@ -9,7 +10,7 @@ import { useState, useEffect } from "react";
     resolved: { label: "FINALIZADA",color: "#7a7a9a" },
     default:  { label: "GUERRA",    color: "#a855f7" },
     };
-    const ROLE_ICON: Record<string, string> = { leader:"👑", officer:"⭐", member:"⚔️" };
+    const ROLE_ICON: Record<string, ForgeIconName> = { leader:"crown", officer:"spark", member:"attack" };
 
     function WarCard({ war }: { war: ClanWar }) {
     const cfg = STATUS_CFG[war.status] ?? STATUS_CFG.default;
@@ -19,7 +20,7 @@ import { useState, useEffect } from "react";
         background:"linear-gradient(90deg,rgba(168,85,247,0.06),transparent)",
         border:"1px solid rgba(168,85,247,0.15)",
       }}>
-        <div style={{ fontSize:18 }}>⚔️</div>
+        <div style={{ display:"flex", color:"#a855f7" }}><ForgeIcon name="attack" size={18} /></div>
         <div style={{ flex:1, minWidth:0 }}>
           <div style={{
             fontFamily:"Rajdhani,sans-serif", fontWeight:700, fontSize:13, color:"#e8e8f0",
@@ -52,7 +53,7 @@ import { useState, useEffect } from "react";
           background:"linear-gradient(135deg,rgba(232,184,75,0.15),rgba(232,184,75,0.05))",
           border:"1px solid rgba(232,184,75,0.2)",
           display:"flex", alignItems:"center", justifyContent:"center", fontSize:16,
-        }}>🛡️</div>
+        }}><ForgeIcon name="clans" size={18} /></div>
         <div style={{ flex:1, minWidth:0 }}>
           <div style={{ fontFamily:"Cinzel,serif", fontWeight:800, fontSize:13, color:"#e8e8f0",
             overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap" }}>
@@ -102,7 +103,7 @@ import { useState, useEffect } from "react";
             background:"linear-gradient(135deg,#1a0a2a,#0f0718)",
             border:"1px solid rgba(168,85,247,0.3)",
             display:"flex", alignItems:"center", justifyContent:"center", fontSize:20,
-          }}>🛡️</div>
+          }}><ForgeIcon name="clans" size={20} /></div>
           <div style={{ flex:1 }}>
             <div style={{ fontSize:14, fontFamily:"Cinzel,serif", fontWeight:800, color:"#e8e8f0", letterSpacing:"0.05em" }}>
               Clan Wars
@@ -139,7 +140,7 @@ import { useState, useEffect } from "react";
                       background:"linear-gradient(135deg,rgba(168,85,247,0.2),rgba(168,85,247,0.05))",
                       border:"1px solid rgba(168,85,247,0.3)",
                       display:"flex", alignItems:"center", justifyContent:"center", fontSize:22,
-                    }}>🛡️</div>
+                    }}><ForgeIcon name="clans" size={20} /></div>
                     <div>
                       <div style={{ fontFamily:"Cinzel,serif", fontWeight:800, fontSize:16, color:"#e8e8f0" }}>{data.myClan.name}</div>
                       <div style={{ fontSize:9, color:"#a855f7", fontFamily:'"IBM Plex Mono",monospace', marginTop:3 }}>#{data.myClan.code} · {data.myMembership?.role ? `Rol: ${data.myMembership.role}` : ""}</div>
@@ -172,7 +173,7 @@ import { useState, useEffect } from "react";
                         display:"flex", alignItems:"center", gap:8, padding:"7px 10px",
                         borderRadius:7, background:"rgba(255,255,255,0.02)", marginBottom:4,
                       }}>
-                        <span style={{ fontSize:12 }}>{ROLE_ICON[m.role] ?? "⚔️"}</span>
+                        <span style={{ display:"flex", color:"#a855f7" }}><ForgeIcon name={ROLE_ICON[m.role] ?? "attack"} size={12} /></span>
                         <span style={{ fontFamily:"Rajdhani,sans-serif", fontSize:12, fontWeight:600, color:"#c8c8d8", flex:1,
                           overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap" }}>
                           {m.display_name}
@@ -193,7 +194,7 @@ import { useState, useEffect } from "react";
                         background:"rgba(168,85,247,0.04)", border:"1px dashed rgba(168,85,247,0.2)",
                         borderRadius:10, padding:"16px 12px", textAlign:"center",
                       }}>
-                        <div style={{ fontSize:22, marginBottom:6 }}>⚔️</div>
+                        <div style={{ display:"flex", justifyContent:"center", color:"#a855f7", marginBottom:6 }}><ForgeIcon name="attack" size={22} /></div>
                         <div style={{ color:"#444", fontSize:11, fontFamily:"Rajdhani,sans-serif" }}>Sin guerras activas</div>
                       </div>
                     ) : data.activeWars.map(w => <WarCard key={w.id} war={w} />)}
@@ -219,7 +220,7 @@ import { useState, useEffect } from "react";
                     background:bg0, border:`1px dashed ${bdim}`, borderRadius:12,
                     padding:"32px 24px", textAlign:"center", marginBottom:16,
                   }}>
-                    <div style={{ fontSize:36, marginBottom:12 }}>🛡️</div>
+                    <div style={{ display:"flex", justifyContent:"center", color:"#a855f7", marginBottom:12 }}><ForgeIcon name="clans" size={36} /></div>
                     <div style={{ fontFamily:"Cinzel,serif", fontWeight:700, fontSize:14, color:"#e8e8f0", marginBottom:6 }}>
                       No hay Clanes todavía
                     </div>
@@ -235,7 +236,7 @@ import { useState, useEffect } from "react";
                     borderRadius:10, padding:"14px 16px", textAlign:"center", cursor:"default",
                     opacity:0.7,
                   }}>
-                    <div style={{ fontSize:20, marginBottom:6 }}>⚡</div>
+                    <div style={{ display:"flex", justifyContent:"center", color:"#a855f7", marginBottom:6 }}><ForgeIcon name="clans" size={20} /></div>
                     <div style={{ fontFamily:"Rajdhani,sans-serif", fontWeight:800, fontSize:12, color:"#a855f7", letterSpacing:"0.08em" }}>
                       Crear Clan
                     </div>
@@ -246,7 +247,7 @@ import { useState, useEffect } from "react";
                     borderRadius:10, padding:"14px 16px", textAlign:"center", cursor:"default",
                     opacity:0.7,
                   }}>
-                    <div style={{ fontSize:20, marginBottom:6 }}>🔍</div>
+                    <div style={{ display:"flex", justifyContent:"center", color:"#4a9eff", marginBottom:6 }}><ForgeIcon name="target" size={20} /></div>
                     <div style={{ fontFamily:"Rajdhani,sans-serif", fontWeight:800, fontSize:12, color:"#4a9eff", letterSpacing:"0.08em" }}>
                       Explorar Clanes
                     </div>
