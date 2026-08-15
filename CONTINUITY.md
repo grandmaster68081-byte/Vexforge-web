@@ -1,3 +1,15 @@
+## 2026-08-14 — VE-1-SETTINGS-ICON-LANGUAGE — IMPLEMENTED_UNVERIFIED
+
+- **Tipo de sesión:** REFINAMIENTO / IMPLEMENTACIÓN. **Fuente canónica:** código real de `main`, `SettingsRoute.tsx`, `ForgeIcon`, Supabase vivo y deploy público.
+- **Estado inicial:** `NOT_STARTED`; **estado actual:** `IMPLEMENTED_UNVERIFIED`; **nivel actual:** Q2; **objetivo:** Q3.
+- **Objetivo:** retirar sustitutos Unicode genéricos de Configuración sin cambiar preferencias, autenticación, guardado, navegación ni datos autoritativos.
+- **Cambio:** `SettingsRoute.tsx` conserva sus consultas, callbacks y estados, sustituye la iconografía del encabezado y secciones por `ForgeIcon`, elimina glyphs de los modos de interfaz y usa un chevron semántico para los enlaces; el toast conserva su mensaje y tipo de éxito sin prefijo genérico.
+- **Alcance autoritativo:** no se modificaron Supabase, Storage, RPCs, RLS, autenticación, economía, recompensas ni preferencias persistidas.
+- **Evidencia local:** `npm ci --ignore-scripts`, `npx tsc --noEmit -p tsconfig.app.json` y `npm run verify:build` finalizaron correctamente; la unidad no conserva los sustitutos Unicode objetivo. El commit de implementación en `main` es `923337bfe2193c5c99391462b83e99bf4ace8ced`.
+- **Responsive y accesibilidad:** `ForgeIcon` mantiene `aria-hidden` y `focusable=false`; queda pendiente revisar la ruta autenticada en escritorio, tablet y móvil, foco y `prefers-reduced-motion`. No se declara `OPERATIONAL` ni se fabrican datos.
+- **Deuda y condición de reapertura:** permanecen consumidores Unicode independientes en otras superficies; no se mezclan con esta unidad. Reabrir sólo ante regresión de Configuración, discrepancia del bundle público o mapping canónico contradictorio.
+- **Siguiente acción verificable:** esperar la propagación automática y comprobar `/build-manifest.json`, `/`, `/settings`, `/manifest.json` y el bundle servido; después continuar con otro consumidor Unicode independiente.
+
 ## 2026-08-14 — VE-1-DECK-BUILDER-ICON-LANGUAGE — IMPLEMENTED_UNVERIFIED
 
 - **Tipo de sesión:** REFINAMIENTO / IMPLEMENTACIÓN. **Fuente canónica:** código real de `main`, `DeckBuilderRoute.tsx`, `ForgeIcon`, Supabase vivo y deploy público.
