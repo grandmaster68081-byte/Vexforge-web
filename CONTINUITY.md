@@ -1,3 +1,17 @@
+## 2026-08-14 — VE-1-COSMETICS-ICON-LANGUAGE — IMPLEMENTED_UNVERIFIED
+
+- **Tipo de sesión:** REFINAMIENTO / IMPLEMENTACIÓN. **Fuente canónica:** código real de `main`, `CosmeticsRoute.tsx`, `ForgeIcon`, Supabase vivo y deploy público.
+- **Estado inicial:** `NOT_STARTED`; **estado actual:** `IMPLEMENTED_UNVERIFIED`; **nivel actual:** Q2; **objetivo:** Q3.
+- **Objetivo:** retirar los pictogramas genéricos de la superficie de Cosméticos sin cambiar consultas, propiedad, equipamiento, desequipamiento, filtros, autenticación ni datos autoritativos.
+- **Cambio:** `CosmeticsRoute.tsx` conserva su flujo y sustituye la iconografía Unicode del preview, loadout, filtros de tipo, estado vacío, encabezado y acciones de cierre/actualización por `ForgeIcon` con un mapping semántico por tipo de cosmético. Los textos y la lógica de `useCosmetics` permanecen sin cambios.
+- **Alcance autoritativo:** no se modificaron Supabase, Storage, RPCs, RLS, cartas, economía, recompensas, autenticación ni reglas de equipamiento.
+- **Evidencia local:** el candidato pasó `npm ci --ignore-scripts`, `npm run verify:build`, `git diff --check` y el escaneo del consumidor; no conserva pictogramas Unicode en `CosmeticsRoute.tsx`. El commit de código publicado en `main` es `a0ba7716aed0a848feaf0446f728af8fc0c44407`.
+- **Responsive y accesibilidad:** `ForgeIcon` mantiene `aria-hidden` y `focusable=false`; queda pendiente la revisión visual interactiva en escritorio, tablet y móvil, foco, `prefers-reduced-motion` y una sesión normal autorizada del jugador. No se declara `OPERATIONAL` ni se fabrican datos.
+- **Deuda y condición de reapertura:** permanecen otros consumidores Unicode independientes en otras superficies; no se mezclan con esta unidad. Reabrir sólo ante regresión de Cosméticos, discrepancia del bundle público o mapping canónico contradictorio.
+- **Siguiente acción verificable:** esperar la propagación automática, comprobar `/build-manifest.json`, `/`, `/cosmetics`, `/manifest.json` y el bundle servido; después continuar con otro consumidor Unicode independiente.
+
+---
+
 ## 2026-08-14 — VE-1-CLAN-WARS-ICON-LANGUAGE — IMPLEMENTED_UNVERIFIED
 
 - **Tipo de sesión:** REFINAMIENTO / IMPLEMENTACIÓN. **Fuente canónica:** código real de `main`, `ClanWarsPanel.tsx`, `ForgeIcon`, Supabase vivo y deploy público.
