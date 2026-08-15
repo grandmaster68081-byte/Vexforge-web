@@ -1,3 +1,15 @@
+## 2026-08-14 — VE-1-ACCOUNT-ICON-LANGUAGE — IMPLEMENTED_UNVERIFIED
+
+- **Tipo de sesión:** REFINAMIENTO / IMPLEMENTACIÓN. **Fuente canónica:** código real de `main`, `AccountRoute.tsx`, `ForgeIcon`, Supabase vivo y deploy público.
+- **Estado inicial:** `NOT_STARTED`; **estado actual:** `IMPLEMENTED_UNVERIFIED`; **nivel actual:** Q2; **objetivo:** Q3.
+- **Objetivo:** retirar sustitutos Unicode genéricos de Cuenta sin cambiar inicio de sesión, registro, recuperación, cierre de sesión, navegación ni sesión autoritativa.
+- **Cambio:** `AccountRoute.tsx` conserva todos sus estados, callbacks y llamadas de autenticación; el estado de sesión activa, las cuatro tarjetas de navegación y el regreso al inicio usan `ForgeIcon`, y el separador visual genérico del encabezado se reemplaza por texto de marca.
+- **Alcance autoritativo:** no se modificaron Supabase, Storage, RPCs, RLS, autenticación, economía, recompensas ni datos de jugadores.
+- **Evidencia local:** `npm ci --ignore-scripts`, `npx tsc --noEmit -p tsconfig.app.json`, `npm run verify:build` y el escaneo del consumidor finalizaron correctamente; `AccountRoute.tsx` no conserva los glyphs objetivo. El commit de implementación en `main` es `7983c311e7b54a16c5bc5b6b854963cb3e7dabf2`.
+- **Responsive y accesibilidad:** `ForgeIcon` mantiene `aria-hidden` y `focusable=false`; queda pendiente revisar la cuenta autenticada y las pantallas de acceso en escritorio, tablet y móvil, foco y `prefers-reduced-motion`. No se declara `OPERATIONAL` ni se fabrican sesiones.
+- **Deuda y condición de reapertura:** permanecen consumidores Unicode independientes en otras superficies; no se mezclan con esta unidad. Reabrir sólo ante regresión de Cuenta, discrepancia del bundle público o mapping canónico contradictorio.
+- **Siguiente acción verificable:** esperar la propagación automática y comprobar `/build-manifest.json`, `/`, `/account`, `/manifest.json` y el bundle servido; después continuar con otro consumidor Unicode independiente.
+
 ## 2026-08-14 — VE-1-SETTINGS-ICON-LANGUAGE — IMPLEMENTED_UNVERIFIED
 
 - **Tipo de sesión:** REFINAMIENTO / IMPLEMENTACIÓN. **Fuente canónica:** código real de `main`, `SettingsRoute.tsx`, `ForgeIcon`, Supabase vivo y deploy público.
