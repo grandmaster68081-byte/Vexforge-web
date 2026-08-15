@@ -5,6 +5,7 @@ import type { Friendship, DirectChallenge } from "../domains/friends/repository"
 import { PageLoader } from "../shared/components/PageLoader";
 import { BlockedAuthState } from "../shared/components/BlockedAuthState";
 import { EmptyState } from "../shared/components/EmptyState";
+import { ForgeIcon } from "../shared/components/ForgeIcon";
 import { useToast } from "../shared/context/ToastContext";
 
 const btn = (col = "#3ddc84"): React.CSSProperties => ({
@@ -102,7 +103,7 @@ export function FriendsRoute() {
 
       {tab === "friends" && (
         friends.length === 0
-          ? <EmptyState icon="🤝" title="Sin amigos aún" description="Añade a otros Forjadores por su ID para conectar y desafiarlos." />
+          ? <EmptyState icon={<ForgeIcon name="friends" size={36} />} title="Sin amigos aún" description="Añade a otros Forjadores por su ID para conectar y desafiarlos." />
           : <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
               {friends.map((f: Friendship) => (
                 <FriendCard key={f.id ?? f.friend_id} friend={f} onChallenge={async (id) => {
@@ -115,7 +116,7 @@ export function FriendsRoute() {
 
       {tab === "pending" && (
         pending.length === 0
-          ? <EmptyState icon="📨" title="Sin solicitudes" description="No tienes solicitudes de amistad pendientes." />
+          ? <EmptyState icon={<ForgeIcon name="notification" size={36} />} title="Sin solicitudes" description="No tienes solicitudes de amistad pendientes." />
           : <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
               {pending.map((p: Friendship) => (
                 <PendingCard key={p.id} request={p}
@@ -128,7 +129,7 @@ export function FriendsRoute() {
 
       {tab === "challenges" && (
         challenges.length === 0
-          ? <EmptyState icon="🎯" title="Sin desafíos" description="No tienes desafíos activos. Reta a un amigo desde la pestaña Amigos." />
+          ? <EmptyState icon={<ForgeIcon name="target" size={36} />} title="Sin desafíos" description="No tienes desafíos activos. Reta a un amigo desde la pestaña Amigos." />
           : <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
               {challenges.map((c: DirectChallenge) => (
                 <div key={c.id} style={{ background: "#12121a", border: "1px solid #e3573f33", borderRadius: 10, padding: "14px 18px", display: "flex", alignItems: "center", gap: 14 }}>

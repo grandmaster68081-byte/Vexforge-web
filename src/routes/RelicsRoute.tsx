@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState, useCallback } from "react";
 import { EmptyState } from "../shared/components/EmptyState";
 import { ErrorState } from "../shared/components/ErrorState";
+import { ForgeIcon } from "../shared/components/ForgeIcon";
 import { PageLoader } from "../shared/components/PageLoader";
 import {
   listRelics, getPlayerRelics, equipRelic, unequipRelic, claimStarterRelics,
@@ -333,7 +334,7 @@ export function RelicsRoute() {
 
       {/* Grid */}
       {sortedFiltered.length === 0 ? (
-        <EmptyState icon="◇" title="No hay reliquias que coincidan" description="Prueba con otra búsqueda o cambia la rareza." />
+        <EmptyState icon={<ForgeIcon name="relics" size={36} />} title="No hay reliquias que coincidan" description="Prueba con otra búsqueda o cambia la rareza." />
       ) : (
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(280px,1fr))", gap: 12 }}>
           {sortedFiltered.map(relic => (

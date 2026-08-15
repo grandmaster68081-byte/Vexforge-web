@@ -12,6 +12,7 @@ import { PageLoader } from "../shared/components/PageLoader";
 import { BlockedAuthState } from "../shared/components/BlockedAuthState";
 import { EmptyState } from "../shared/components/EmptyState";
 import { ErrorState } from "../shared/components/ErrorState";
+import { ForgeIcon } from "../shared/components/ForgeIcon";
 import { useToast } from "../shared/context/ToastContext";
 
 // ─── Constants ────────────────────────────────────────────────────────────────
@@ -423,7 +424,7 @@ export function SeasonPassRoute() {
   if (!data?.ok) return (
     <main style={{ maxWidth: 800, margin: "0 auto", padding: "32px 16px" }}>
       <h1 style={{ fontFamily: "Cinzel,serif", color: "#e8e8f0", fontSize: 26, marginBottom: 16 }}>🎫 Season Pass</h1>
-      <EmptyState icon="📅" title="Sin temporada activa" description={data?.reason ?? "No hay una temporada activa en este momento."} />
+      <EmptyState icon={<ForgeIcon name="season" size={36} />} title="Sin temporada activa" description={data?.reason ?? "No hay una temporada activa en este momento."} />
     </main>
   );
 
@@ -517,7 +518,7 @@ export function SeasonPassRoute() {
 
         {/* Tiers grid */}
         {tiers.length === 0 ? (
-          <EmptyState icon="🎫" title="Sin tiers disponibles" description="Esta temporada aún no tiene tiers configurados." />
+          <EmptyState icon={<ForgeIcon name="season" size={36} />} title="Sin tiers disponibles" description="Esta temporada aún no tiene tiers configurados." />
         ) : (
           <>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(80px,1fr))", gap: 8, marginBottom: 16 }}>

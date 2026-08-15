@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { EmptyState } from "../shared/components/EmptyState";
 import { ErrorState } from "../shared/components/ErrorState";
+import { ForgeIcon } from "../shared/components/ForgeIcon";
 import { PageLoader } from "../shared/components/PageLoader";
 import { listLoreEntries } from "../domains/lore/repository";
 import type { LoreEntry } from "../domains/lore/repository";
@@ -100,7 +101,7 @@ export function LoreRoute() {
       </section>
 
       {filtered.length === 0 ? (
-        <EmptyState icon="⌕" title="No hay entradas que coincidan" description="Prueba con otra búsqueda o cambia la categoría seleccionada." />
+        <EmptyState icon={<ForgeIcon name="lore" size={36} />} title="No hay entradas que coincidan" description="Prueba con otra búsqueda o cambia la categoría seleccionada." />
       ) : (
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(280px,1fr))", gap: 12 }}>
           {filtered.map((entry) => <LoreCard key={entry.id} entry={entry} expanded={expanded === entry.id} onToggle={() => setExpanded((current) => current === entry.id ? null : entry.id)} />)}
