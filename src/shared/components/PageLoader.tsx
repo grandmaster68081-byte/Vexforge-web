@@ -1,9 +1,10 @@
 import type { CSSProperties } from "react";
+import { ForgeIcon, type ForgeIconName } from "./ForgeIcon";
 
 // VEXFORGE PageLoader v2 — Cinematic edition (FASE 2)
 // Multi-ring spinner with faction runes and VEXFORGE branding.
 
-const RUNE_SYMS = ["✦", "◈", "⬡", "✧", "◆", "⊕", "★", "⟐"];
+const ORBIT_ICONS: ForgeIconName[] = ["spark", "star", "fusion", "energy", "relics"];
 
 const KEYFRAMES = `
   @keyframes forge-spin-cw  { to { transform: rotate(360deg);  } }
@@ -27,6 +28,13 @@ const KEYFRAMES = `
     0%,80%,100% { opacity: 0; }
     40%         { opacity: 1; }
   }
+  @media (prefers-reduced-motion: reduce) {
+    [data-forge-loader] *,
+    [data-forge-loader] {
+      animation: none !important;
+      opacity: 1 !important;
+    }
+  }
 `;
 
 const WRAP_STYLE: CSSProperties = {
@@ -43,7 +51,7 @@ const WRAP_STYLE: CSSProperties = {
 export function PageLoader({ message }: { message?: string }) {
   const label = message ?? "Cargando…";
   return (
-    <div style={WRAP_STYLE}>
+    <div style={WRAP_STYLE} data-forge-loader role="status" aria-live="polite" aria-label={label}>
       <style>{KEYFRAMES}</style>
 
       {/* Multi-ring spinner */}
@@ -73,8 +81,8 @@ export function PageLoader({ message }: { message?: string }) {
         }} />
 
         {/* Orbiting rune particles */}
-        {RUNE_SYMS.slice(0, 5).map((r, i) => (
-          <div key={r} style={{
+        {ORBIT_ICONS.map((iconName, i) => (
+          <div key={iconName} style={{
             position: "absolute",
             top: "50%", left: "50%",
             marginTop: -6, marginLeft: -6,
@@ -86,7 +94,9 @@ export function PageLoader({ message }: { message?: string }) {
             "--base-rot": `${i * 72}deg`,
             "--orbit-r": `44px`,
             animation: `rune-orbit ${2.5 + i * 0.3}s linear ${i * 0.5}s infinite`,
-          }}>{r}</div>
+          }}>
+            <ForgeIcon name={iconName} size={8 + (i % 2) * 3} strokeWidth={1.4} />
+          </div>
         ))}
 
         {/* Center — V logo */}

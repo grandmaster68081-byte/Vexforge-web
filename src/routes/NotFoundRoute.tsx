@@ -3,8 +3,11 @@ import { useEffect, useState } from "react";
 import { ForgeIcon, type ForgeIconName } from "../shared/components/ForgeIcon";
 
 // Fragmentos de código falso para el efecto visual
-const GLITCH_CHARS = "▓░▒█▄▀■□▪▫◆◇●○";
-const RUNE_SYMS = ["✦","◈","⬡","✧","◆","⊕","★","⟐","⊗","⬢"];
+const GLITCH_CHARS = "VEXFORGE0123456789ABCDEF/\\|_-";
+const FLOAT_ICONS: ForgeIconName[] = [
+  "spark", "star", "fusion", "relics", "energy",
+  "shield", "attack", "veil", "resonance", "flux",
+];
 const LORE_MSGS = [
   "Este sector del multiverso fue sellado por la Forja.",
   "Las coordenadas no existen en ningún plano conocido.",
@@ -63,7 +66,7 @@ export function NotFoundRoute() {
       position: "relative", overflow: "hidden",
       background: "linear-gradient(160deg, #05050d 0%, #0a0a18 50%, #06060f 100%)",
       padding: "40px 24px",
-    }}>
+    }} data-forge-notfound>
       <style>{`
         @keyframes nf-float-rune {
           0%   { opacity: 0; transform: translateY(0) scale(0.7) rotate(0deg); }
@@ -104,6 +107,13 @@ export function NotFoundRoute() {
           filter: brightness(1.15);
           transform: translateY(-2px);
         }
+        @media (prefers-reduced-motion: reduce) {
+          .nf-glitching { animation: none !important; }
+          [data-forge-notfound] *,
+          [data-forge-notfound] {
+            animation: none !important;
+          }
+        }
       `}</style>
 
       {/* Partículas de runas flotantes */}
@@ -118,7 +128,9 @@ export function NotFoundRoute() {
           animation: `nf-float-rune ${(i % 4) + 5}s ease-in-out ${i * 0.6}s infinite`,
           pointerEvents: "none",
           userSelect: "none",
-        }}>{RUNE_SYMS[i % RUNE_SYMS.length]}</div>
+        }}>
+          <ForgeIcon name={FLOAT_ICONS[i % FLOAT_ICONS.length]!} size={(i % 3) + 9} strokeWidth={1.4} />
+        </div>
       ))}
 
       {/* Línea de scan CRT */}
@@ -175,7 +187,9 @@ export function NotFoundRoute() {
           animation: "nf-reveal-up 0.6s ease 0.4s both",
         }}>
           <div style={{ flex: 1, height: 1, background: "linear-gradient(90deg, transparent, rgba(232,64,64,0.3))" }} />
-          <span style={{ color: "rgba(232,64,64,0.5)", fontSize: 14 }}>◆</span>
+          <span style={{ color: "rgba(232,64,64,0.5)", display: "inline-flex" }}>
+            <ForgeIcon name="spark" size={14} />
+          </span>
           <div style={{ flex: 1, height: 1, background: "linear-gradient(90deg, rgba(232,64,64,0.3), transparent)" }} />
         </div>
 
@@ -218,7 +232,8 @@ export function NotFoundRoute() {
             transition: "all 0.2s ease",
             boxShadow: "0 4px 20px rgba(232,64,64,0.3)",
           }}>
-            ← Volver a la Forja
+            <ForgeIcon name="chevron-left" size={14} />
+            Volver a la Forja
           </Link>
           <Link to="/cards" className="nf-btn-back" style={{
             display: "inline-flex", alignItems: "center", gap: 8,
@@ -233,7 +248,8 @@ export function NotFoundRoute() {
             textDecoration: "none",
             transition: "all 0.2s ease",
           }}>
-            Ver Cartas →
+            Ver Cartas
+            <ForgeIcon name="chevron-right" size={14} />
           </Link>
         </div>
 

@@ -1,3 +1,18 @@
+## 2026-08-16 — VE-1-LOADER-404-ICON-LANGUAGE — IMPLEMENTED_UNVERIFIED
+
+- **Tipo de sesión:** REFINAMIENTO / IMPLEMENTACIÓN. **Fuente canónica:** código real de `main`, `ForgeIcon`, Supabase vivo y deploy público.
+- **Unidad:** VE-1-LOADER-404-ICON-LANGUAGE (runas tipográficas decorativas de `PageLoader.tsx` y `NotFoundRoute.tsx`).
+- **Estado inicial:** `NOT_STARTED`; **estado actual:** `IMPLEMENTED_UNVERIFIED`; **nivel actual:** Q2; **objetivo:** Q3.
+- **Objetivo:** retirar los últimos glyphs Unicode decorativos de carga y 404 (`✦ ◈ ⬡ ✧ ◆ ⊕ ★ ⟐ ⊗ ⬢`, bloques de glitch `▓░▒█…`, flechas `←`/`→`) sin cambiar rutas, datos, autenticación ni resultados autoritativos.
+- **Cambio:** `PageLoader.tsx` orbita ahora `ForgeIcon` (`spark`, `star`, `fusion`, `energy`, `relics`) en lugar de caracteres tipográficos y expone `role="status"`/`aria-live="polite"` con el mensaje como nombre accesible; `NotFoundRoute.tsx` usa `ForgeIcon` en partículas flotantes (`spark`, `star`, `fusion`, `relics`, `energy`, `shield`, `attack`, `veil`, `resonance`, `flux`), separador (`spark`) y CTAs (`chevron-left`, `chevron-right`), y su alfabeto de glitch pasa a caracteres propios de marca (`VEXFORGE0123456789ABCDEF/\|_-`).
+- **Accesibilidad y movimiento:** ambas superficies añaden bloque `@media (prefers-reduced-motion: reduce)` que anula animaciones (orbitas, scan CRT, glitch, pulsos) conservando contenido y contraste; los SVG siguen decorativos (`aria-hidden`, `focusable=false`).
+- **Alcance autoritativo:** no se modificaron Supabase, Storage, RPCs, RLS, economía, recompensas, cartas, MMR, autenticación ni navegación.
+- **Evidencia local:** `npm ci --ignore-scripts`, `npx tsc --noEmit -p tsconfig.app.json`, `npm run verify:build` y `git diff --check` finalizaron correctamente; el escaneo Unicode de ambos consumidores no conserva los glyphs objetivo.
+- **Deuda y condición de reapertura:** permanecen glyphs en datos de motores (`aiBattleEngine.ts`, `missionEncounterEngine.ts`, `dailyChallenge.ts`, repositorios de home/perfil/deck), fuera de esta unidad. Reabrir ante regresión de carga/404, discrepancia del bundle público o mapping canónico contradictorio.
+- **Siguiente acción verificable:** cadena siguiente sobre los glyphs de datos de motores, y revisión visual interactiva responsive (escritorio, tablet, móvil) con foco y `prefers-reduced-motion` real; no se declara `OPERATIONAL` sin evidencia de navegador real ni sesión autenticada normal.
+
+---
+
 ## 2026-08-16 — VE-1-SHARED-STATES-ICON-LANGUAGE — IMPLEMENTED_UNVERIFIED
 
 - **Tipo de sesión:** REFINAMIENTO / IMPLEMENTACIÓN. **Fuente canónica:** código real de `main`, `ForgeIcon`, Supabase vivo y deploy público.
