@@ -1095,3 +1095,15 @@ Los commits anteriores siguen disponibles en Git para auditoría y reversión. L
 - Bloqueos: las vistas autenticadas de perfil, mazo, raids y economía real (logros desbloqueados, slots guardados, raids del jugador) siguen BLOCKED por falta de sesión normal autorizada; no se usó service_role ni se fabricaron resultados.
 - Condición de reapertura: regresión visual, discrepancia entre `main` y el bundle público, o decisión canónica sobre `achievements.icon` en el dato.
 - Siguiente acción verificable: confirmar `build-manifest.json` público con el commit de esta sesión y HTTP 200 en `/profile`, `/raids`, `/economy` y rutas críticas.
+
+### Cierre operativo — VE-1-RESIDUAL-ICON-LANGUAGE
+
+- Estado actual: OPERATIONAL para la capa de presentación de la unidad; nivel Q3.
+- Commit publicado: `e44a68a8daa436990f24806589039555c0c25eee` en main.
+- Evidencia de publicación: `/build-manifest.json` público informa `sourceCommit=e44a68a8daa436990f24806589039555c0c25eee`, `sourceBranch=main`.
+- Rutas verificadas HTTP 200: `/`, `/profile`, `/raids`, `/economy`, `/cards`, `/pvp`, `/battle`, `/packs`, `/missions`, `/inventory`, `/market`, `/leaderboard`, `/achievements`, `/nft`, `/quests`, `/relics`, `/season-pass`, `/friends`, `/progress` y `/settings`.
+- Verificación de runtime: navegación headless a `/`, `/profile`, `/economy`, `/raids` y `/achievements` sin errores de consola ni `pageerror`.
+- Compilación: `tsc -p tsconfig.app.json --noEmit` y `vite build` sin errores sobre el código publicado.
+- Alcance no modificado: datos, autenticación, roles, RPCs, RLS, wallet, economía, logros y resultados de combate.
+- Estado BLOCKED conservado: vistas autenticadas (logros reales, mazo guardado, raids del jugador) sin sesión normal autorizada; no se usó service_role.
+- Siguiente unidad sugerida: decisión canónica sobre el dato `achievements.icon` en Supabase (unidad de datos, no de UI).
