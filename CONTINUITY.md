@@ -678,7 +678,7 @@ Los commits anteriores siguen disponibles en Git para auditoría y reversión. L
 - Alcance no modificado: quests, claim, recompensas, datos, autenticación, RPCs, RLS, economía, cartas, inventario y combate.
 - Accesibilidad: ForgeIcon mantiene aria-hidden=true y focusable=false; textos y controles permanecen disponibles.
 
-## 2026-08-15 — VE-1-ADMIN-GUARD-ICON-LANGUAGE — IMPLEMENTED_UNVERIFIED
+## 2026-08-15 — VE-1-ADMIN-GUARD-ICON-LANGUAGE — BLOCKED
 
 - Tipo de sesión: REFINAMIENTO / IMPLEMENTACIÓN.
 - Unidad: estados no autenticado y denegado de ProtectedAdminRoute.
@@ -690,3 +690,12 @@ Los commits anteriores siguen disponibles en Git para auditoría y reversión. L
 - Responsive y accesibilidad: ForgeIcon mantiene aria-hidden y focusable=false; los controles y sus textos permanecen disponibles.
 - Deuda y condición de reapertura: comprobar publicación y estados protegidos antes de elevar la unidad a OPERATIONAL.
 - Siguiente acción verificable: confirmar que la ruta administrativa sirve sin errores y que los mappings llegan al bundle público.
+
+### Cierre verificable — VE-1-ADMIN-GUARD-ICON-LANGUAGE
+
+- Código y publicación: verificados; main y build-manifest.json coinciden en el commit actual.
+- Rutas públicas verificadas: /, /admin, /account, /battle y /cards respondieron HTTP 200.
+- Mappings verificados en ProtectedAdminRoute: lock, warning y chevron-left; no quedan 🔒, ⛔ ni ← Volver al Inicio.
+- Estado BLOCKED: no existe una sesión normal autorizada del owner para probar el estado denied del guardia.
+- Regla aplicada: no se usó service_role, no se suplantó un jugador/admin y no se declaró PASS para la rama autenticada.
+- Condición de reapertura: disponer de una sesión autorizada normal del owner y repetir únicamente la comprobación del estado denied y su recuperación.
