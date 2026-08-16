@@ -37,13 +37,13 @@ function EvoCard({ path, onEvolve, evolving }: {
         <span style={{ color: "#5a5a7a", fontSize: 10 }}>Nivel {lvlReq}+</span>
       </div>
 
-      {/* From → To */}
+      {/* From -> To */}
       <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 14 }}>
         <div style={{ flex: 1, background: `${fromColor}11`, border: `1px solid ${fromColor}33`, borderRadius: 10, padding: "10px 12px", textAlign: "center" }}>
           <div style={{ color: fromColor, fontSize: 9, fontWeight: 800, letterSpacing: "0.1em", marginBottom: 3 }}>{path.from_rarity.toUpperCase()}</div>
           <div style={{ color: "#e8e8f0", fontFamily: "Cinzel,serif", fontSize: 12, fontWeight: 700 }}>{path.from_name}</div>
         </div>
-        <div style={{ color: "#e8b84b", fontSize: 18, flexShrink: 0 }}>→</div>
+        <div style={{ color: "#e8b84b", display: "flex", alignItems: "center", flexShrink: 0 }}><ForgeIcon name="chevron-right" size={18} /></div>
         <div style={{ flex: 1, background: `${toColor}11`, border: `1px solid ${toColor}33`, borderRadius: 10, padding: "10px 12px", textAlign: "center" }}>
           <div style={{ color: toColor, fontSize: 9, fontWeight: 800, letterSpacing: "0.1em", marginBottom: 3 }}>{path.to_rarity.toUpperCase()}</div>
           <div style={{ color: "#e8e8f0", fontFamily: "Cinzel,serif", fontSize: 12, fontWeight: 700 }}>{path.to_name}</div>

@@ -274,8 +274,9 @@ export function EconomyRoute() {
               padding:"10px 28px",borderRadius:10,
               background:C.gold,color:"#0a0a12",
               fontWeight:800,textDecoration:"none",fontSize:13,
+              display:"inline-flex",alignItems:"center",gap:6,
             }}>
-              Iniciar sesión →
+              Iniciar sesión<ForgeIcon name="chevron-right" size={14} />
             </Link>
           </div>
         ) : loading ? (
@@ -439,7 +440,7 @@ export function EconomyRoute() {
                 background:C.gold,color:"#0a0a12",
                 fontWeight:800,textDecoration:"none",fontSize:12,whiteSpace:"nowrap",
               }}>
-                <ForgeIcon name="coin" size={14} /> Depositar →
+                <ForgeIcon name="coin" size={14} /> Depositar <ForgeIcon name="chevron-right" size={14} />
               </Link>
             </div>
 
@@ -461,7 +462,7 @@ export function EconomyRoute() {
                 background:C.green,color:"#0a0a12",
                 fontWeight:800,textDecoration:"none",fontSize:12,whiteSpace:"nowrap",
               }}>
-                <ForgeIcon name="withdrawal" size={14} /> Retirar →
+                <ForgeIcon name="withdrawal" size={14} /> Retirar <ForgeIcon name="chevron-right" size={14} />
               </Link>
             </div>
 

@@ -1,3 +1,19 @@
+## 2026-08-16 — VE-1-ECONOMY-INVENTORY-ARROW-LANGUAGE — IMPLEMENTED_UNVERIFIED
+
+- **Tipo de sesión:** REFINAMIENTO / IMPLEMENTACIÓN. **Fuente canónica:** código real de `main`, `ForgeIcon`, Supabase vivo y deploy público.
+- **Unidad:** VE-1-ECONOMY-INVENTORY-ARROW-LANGUAGE (flechas tipográficas visibles en Economía, Evolución y Sistema/Assets).
+- **Estado inicial:** `NOT_STARTED`; **estado actual:** `IMPLEMENTED_UNVERIFIED`; **nivel actual:** Q2; **objetivo:** Q3.
+- **Objetivo:** retirar los últimos `←`/`→` de superficie visible fuera de batalla sin tocar economía, balances, evolución, depósitos, retiros, autenticación ni navegación.
+- **Cambio:** `EconomyRoute.tsx` (CTA "Iniciar sesión", "Depositar", "Retirar") y `EvolutionRoute.tsx` (indicador de transición rareza origen -> destino) usan `ForgeIcon name="chevron-right"`; `AssetsRoute.tsx` usa `ForgeIcon name="chevron-left"` en el enlace "Volver al inicio" e importa `ForgeIcon`. Layouts pasan a `inline-flex` con `gap` para alineación óptica correcta.
+- **Alcance autoritativo:** no se modificaron Supabase, Storage, RPCs, RLS, wallet, VEX, fees, mínimos de retiro, rutas ni sesiones; sólo presentación e iconografía.
+- **Responsive y accesibilidad:** los SVG siguen decorativos (`aria-hidden`, `focusable=false`) y cada enlace conserva su texto visible como nombre accesible; sin cambios de tamaño táctil ni animaciones.
+- **Evidencia local:** `npm ci --ignore-scripts`, `npx tsc --noEmit -p tsconfig.app.json`, `npm run verify:build` y `git diff --check` finalizaron correctamente; el escaneo de `src/routes/*.tsx` ya no conserva `←`/`→` en JSX (solo comentarios de código).
+- **Deuda y condición de reapertura:** permanecen glyphs en datos de motores (`aiBattleEngine.ts`, `missionEncounterEngine.ts`, `dailyChallenge.ts`, `forgeFormation.ts`) y separadores en `TutorialOverlay`/repositorios, fuera de esta unidad. Reabrir ante regresión de economía o mapping canónico contradictorio.
+- **Evidencia pública:** pendiente de confirmar en este bloque (`sourceCommit`, HTTP 200 y hashes SHA-256 de `EconomyRoute`, `EvolutionRoute`, `AssetsRoute`).
+- **Siguiente acción verificable:** cadena siguiente sobre los glyphs de datos de motores y revisión visual interactiva responsive con foco y `prefers-reduced-motion` real; no se declara `OPERATIONAL` sin evidencia de navegador real ni sesión autenticada normal.
+
+---
+
 ## 2026-08-16 — VE-1-BATTLE-UI-ARROW-LANGUAGE — IMPLEMENTED_UNVERIFIED
 
 - **Tipo de sesión:** REFINAMIENTO / IMPLEMENTACIÓN. **Fuente canónica:** código real de `main`, `ForgeIcon`, Supabase vivo y deploy público.

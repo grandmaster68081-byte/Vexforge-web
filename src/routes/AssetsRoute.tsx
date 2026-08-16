@@ -1,4 +1,6 @@
-const BG_URL = "https://rscuzqnfccqvltkdcdny.supabase.co/storage/v1/object/public/vexforge-assets/heroes/hero_assets.jpg";
+import { ForgeIcon } from "../shared/components/ForgeIcon";
+
+    const BG_URL = "https://rscuzqnfccqvltkdcdny.supabase.co/storage/v1/object/public/vexforge-assets/heroes/hero_assets.jpg";
 
     export function AssetsRoute() {
     return (
@@ -15,8 +17,8 @@ const BG_URL = "https://rscuzqnfccqvltkdcdny.supabase.co/storage/v1/object/publi
             Esta sección es exclusiva para administradores de VEXFORGE.
             Si eres parte del equipo, accede a través del panel de Supabase.
           </p>
-          <a href="/" style={{ display: "inline-block", marginTop: 16, color: "#e8702a", fontWeight: 600 }}>
-            ← Volver al inicio
+          <a href="/" style={{ display: "inline-flex", alignItems: "center", gap: 6, marginTop: 16, color: "#e8702a", fontWeight: 600 }}>
+            <ForgeIcon name="chevron-left" size={14} />Volver al inicio
           </a>
         </div>
       </section>
