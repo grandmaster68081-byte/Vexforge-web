@@ -10,9 +10,14 @@ const C = { bg0:"#0d0d14", bg1:"#12121f", bg2:"#18182a", b1:"#1e1e30", b2:"#2a2a
 interface ShopItem { id:string; item_key:string; name:string; description:string; category:string; price_usdt:number; price_vex:number|null; active:boolean; icon:string; }
 interface ShopOrder { id?:string; order_id?:string; item_key:string; item_name?:string; price_usdt:number; status:string; fulfillment_status:string; tx_hash?:string|null; payer_wallet_address?:string|null; treasury_wallet_address:string; chain?:string; token_symbol?:string; token_standard?:string; created_at?:string; payment_submitted?:boolean; }
 const CATEGORY_META: Record<string,{label:string;color:string;icon:ForgeIconName}> = { pass:{label:"Season Pass",color:C.gold,icon:"crown"}, boost:{label:"Boosts XP",color:C.green,icon:"energy"}, charm:{label:"Charms",color:C.purple,icon:"spark"}, skin:{label:"Skins",color:C.blue,icon:"cosmetics"}, consumable:{label:"Consumibles",color:"#f97316",icon:"key"}, token:{label:"Tokens",color:C.gold,icon:"coin"} };
-/** Icono canónico por producto. La columna `icon` del catálogo puede traer glifos genéricos: no se usa como identidad final. */
-const ITEM_ICON: Record<string,ForgeIconName> = { season_pass_premium:"crown", xp_boost_7d:"energy", xp_boost_24h:"energy", charm_epic:"spark", charm_rare:"rank-diamond", charm_common:"heart", battle_skin:"cosmetics", raid_key:"key", vex_conversion_token:"coin" };
-function shopItemIcon(item:{item_key:string;category:string}):ForgeIconName { return ITEM_ICON[item.item_key] ?? CATEGORY_META[item.category]?.icon ?? "shop"; }
+/** Icono canónico por producto. Desde VE-2-RANK-NOTIF-SHOP-ICON-DATA la columna `icon` del catálogo guarda un glifo canónico; un valor fuera del conjunto blanco nunca se renderiza tal cual. */
+const ITEM_ICON: Record<string,ForgeIconName> = { season_pass_premium:"crown", xp_boost_7d:"energy", xp_boost_24h:"energy", charm_epic:"spark", charm_rare:"gem", charm_common:"star", battle_skin:"cosmetics", raid_key:"key", vex_conversion_token:"coin" };
+const ALLOWED_SHOP_DATA_ICONS = new Set<string>([...Object.values(ITEM_ICON), ...Object.values(CATEGORY_META).map(m=>m.icon), "shop"]);
+function shopItemIcon(item:{item_key:string;category:string;icon?:string|null}):ForgeIconName {
+  const fromData = item.icon ?? "";
+  if (ALLOWED_SHOP_DATA_ICONS.has(fromData)) return fromData as ForgeIconName;
+  return ITEM_ICON[item.item_key] ?? CATEGORY_META[item.category]?.icon ?? "shop";
+}
 const FALLBACK_CATALOG: ShopItem[] = [
   {id:"1",item_key:"season_pass_premium",name:"Season Pass Premium",description:"Acceso al track de recompensas premium de la temporada actual",category:"pass",price_usdt:9.99,price_vex:null,active:true,icon:""},
   {id:"2",item_key:"xp_boost_7d",name:"Boost XP 7 Días",description:"+50% XP durante 7 días completos",category:"boost",price_usdt:9.99,price_vex:null,active:true,icon:""},
