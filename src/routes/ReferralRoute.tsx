@@ -1,5 +1,6 @@
 // ReferralRoute — AN — chat86 — Sistema de Referidos VEXFORGE
 import { useState, useEffect, useCallback } from "react";
+import { ForgeIcon } from "../shared/components/ForgeIcon";
 import { supabase } from "../lib/supabase";
 import { PageLoader }       from "../shared/components/PageLoader";
 import { BlockedAuthState } from "../shared/components/BlockedAuthState";
@@ -183,7 +184,7 @@ export function ReferralRoute() {
         </div>
         {referrals.length === 0 ? (
           <div style={{ background:C.bg1, border:"1px solid "+C.b1, borderRadius:10, padding:"24px", textAlign:"center" }}>
-            <div style={{ fontSize:28, marginBottom:8 }}>👥</div>
+            <ForgeIcon name="friends" size={28} style={{ color: C.blue, marginBottom: 8 }} />
             <div style={{ color:C.muted, fontSize:12 }}>Aún no has referido a nadie.</div>
             <div style={{ color:C.muted, fontSize:11, marginTop:4 }}>Comparte tu link para empezar.</div>
           </div>
