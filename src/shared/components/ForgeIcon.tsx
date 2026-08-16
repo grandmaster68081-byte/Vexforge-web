@@ -69,7 +69,14 @@ export type ForgeIconName =
   | "amulet"
   | "map"
   | "copy"
-  | "hourglass";
+  | "hourglass"
+  | "rank-mythic"
+  | "rank-diamond"
+  | "rank-platinum"
+  | "rank-gold"
+  | "rank-silver"
+  | "rank-bronze"
+  | "rank-iron";
 
 type ForgeIconProps = {
   name: ForgeIconName;
@@ -106,6 +113,21 @@ export function ForgeIcon({
   };
 
   switch (name) {
+    case "rank-mythic":
+      return <svg {...props}><path d="m12 2.5 6.5 5.2-2.4 12.3H7.9L5.5 7.7z" /><path d="M5.5 7.7h13M12 2.5 9.4 20M12 2.5l2.6 17.5" /></svg>;
+    case "rank-diamond":
+      return <svg {...props}><path d="m12 3 8 9-8 9-8-9z" /><path d="m8 12 4-4.5 4 4.5-4 4.5z" /></svg>;
+    case "rank-platinum":
+      return <svg {...props}><circle cx="12" cy="11" r="6.5" /><path d="M9.4 11 12 8.2l2.6 2.8-2.6 2.8z" /><path d="M6 17.5 4.5 21l3.4-1.2M18 17.5 19.5 21l-3.4-1.2" /></svg>;
+    case "rank-gold":
+      return <svg {...props}><circle cx="12" cy="14" r="6" /><path d="m8 8.5-2-5.5h4.5M16 8.5l2-5.5h-4.5" /><path d="M12 11.2v5.6M10.6 12.2l1.4-1v5.6" /></svg>;
+    case "rank-silver":
+      return <svg {...props}><circle cx="12" cy="14" r="6" /><path d="m8 8.5-2-5.5h4.5M16 8.5l2-5.5h-4.5" /><path d="M10.2 12.4c.3-.9 1-1.3 1.9-1.3.9 0 1.7.6 1.7 1.5 0 1.7-3.6 2.4-3.6 4.3h3.7" /></svg>;
+    case "rank-bronze":
+      return <svg {...props}><circle cx="12" cy="14" r="6" /><path d="m8 8.5-2-5.5h4.5M16 8.5l2-5.5h-4.5" /><path d="M10.4 12c.4-.7 1.1-1 1.9-1 1 0 1.7.6 1.7 1.4 0 .8-.7 1.4-1.6 1.4.9 0 1.8.5 1.8 1.5s-.9 1.6-2 1.6c-.9 0-1.6-.3-2-1" /></svg>;
+    case "rank-iron":
+      return <svg {...props}><path d="M3 20h9M4.5 17.5 12 10" /><path d="m13.5 8.5 2.2-2.2c.9-.9 2.3-1 3.3-.2l1.4 1.1c1 .8 1 2.3.1 3.2l-2.3 2.3z" /><path d="m11 8 4.6 4.6" /></svg>;
+
     case "attack":
       return <svg {...props}><path d="m4 20 7.4-7.4M13.6 10.4 20 4l-1.8 5.4L13 11.2z" /><path d="m5.5 5.5 4 4M4 9l1.5-3.5L9 4" /></svg>;
     case "shield":
