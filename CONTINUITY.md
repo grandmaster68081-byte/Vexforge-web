@@ -1251,3 +1251,14 @@ Los commits anteriores siguen disponibles en Git para auditoría y reversión. L
 - Bloqueos: verificación autenticada de superficies del jugador sigue BLOCKED por falta de sesión normal autorizada.
 - Condición de reapertura: cambio del inventario del bucket, decisión canónica sobre los artes duplicados, o fallo de `npm run verify:manifest`.
 - Siguiente acción verificable: confirmar `build-manifest.json` público con el commit de esta sesión y HTTP 200 en las rutas críticas del deploy.
+
+### Cierre operativo — VE-5-ASSET-MANIFEST-DATA
+
+- Estado actual: OPERATIONAL para el manifiesto oficial de assets en base de datos; nivel Q3.
+- Commit publicado: `5e57c98070e146d6cf5f6aa3c3bb34b000ef29c0` en main.
+- Evidencia de publicación: `/build-manifest.json` público informa `sourceCommit=5e57c98070e146d6cf5f6aa3c3bb34b000ef29c0`, `sourceBranch=main`.
+- Rutas verificadas HTTP 200 (27): `/`, `/achievements`, `/season-rankings`, `/raids`, `/world-bosses`, `/fusion`, `/cards`, `/pvp`, `/battle`, `/packs`, `/missions`, `/inventory`, `/market`, `/leaderboard`, `/nft`, `/quests`, `/relics`, `/season-pass`, `/economy`, `/profile`, `/shop`, `/clans`, `/settings`, `/deck-builder`, `/assets`, `/account` y `/forge-ads`.
+- Verificación de runtime sobre el sitio publicado: navegación headless a `/`, `/cards`, `/achievements`, `/world-bosses`, `/raids`, `/leaderboard`, `/assets`, `/packs` y `/missions` sin errores de consola, sin `pageerror` y sin ninguna respuesta HTTP >= 400.
+- Verificación de datos contra el deploy: `npm run verify:manifest` (rol `anon`) → 203 archivos inscritos, 17 rutas del código presentes, 0 referencias rotas; `npm run verify:assets` → 17/17.
+- Estado BLOCKED conservado: superficies autenticadas del jugador sin sesión normal autorizada; no se usó `service_role` para suplantar jugadores ni para fabricar QA.
+- Siguiente unidad sugerida: decisión canónica sobre los artes duplicados del bucket (`bosses/BOSS_*.jpg`, `bosses/boss_*.jpg`, `cards/IMG_2026*.jpg`) — inscribir con rol semántico o retirar — o higiene documental de las tablas internas `vexforge_*`.
