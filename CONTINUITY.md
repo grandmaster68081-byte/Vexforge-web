@@ -9,7 +9,7 @@
 - **Responsive y accesibilidad:** los SVG siguen decorativos (`aria-hidden`, `focusable=false`) y cada enlace conserva su texto visible como nombre accesible; sin cambios de tamaño táctil ni animaciones.
 - **Evidencia local:** `npm ci --ignore-scripts`, `npx tsc --noEmit -p tsconfig.app.json`, `npm run verify:build` y `git diff --check` finalizaron correctamente; el escaneo de `src/routes/*.tsx` ya no conserva `←`/`→` en JSX (solo comentarios de código).
 - **Deuda y condición de reapertura:** permanecen glyphs en datos de motores (`aiBattleEngine.ts`, `missionEncounterEngine.ts`, `dailyChallenge.ts`, `forgeFormation.ts`) y separadores en `TutorialOverlay`/repositorios, fuera de esta unidad. Reabrir ante regresión de economía o mapping canónico contradictorio.
-- **Evidencia pública:** pendiente de confirmar en este bloque (`sourceCommit`, HTTP 200 y hashes SHA-256 de `EconomyRoute`, `EvolutionRoute`, `AssetsRoute`).
+- **Evidencia pública:** con consultas cache-busting, `build-manifest.json` publicó `sourceCommit=381a6726b0638123e6307ce66ae08f35d0e3b452`; `/`, `/economy`, `/cards`, `/battle` y `/packs` respondieron HTTP 200. Hashes SHA-256 coincidentes local/público y sin `←`/`→`: `EconomyRoute-CH5erpXa.js` (`5514239dd0a182c826339aa45cc8e988fc41f80111f1e31017da259096597e78`); `EvolutionRoute-COpFAu9C.js` (`f1eb8e2813d67ca2387594e8c38187f125557c18b448c11e4cf58408d55173cd`); `AssetsRoute-CcmXxFTU.js` (`50ab587ef500c1d14ad6be740df6550ee2a990382ee69a0ab6fc9438059b273c`).
 - **Siguiente acción verificable:** cadena siguiente sobre los glyphs de datos de motores y revisión visual interactiva responsive con foco y `prefers-reduced-motion` real; no se declara `OPERATIONAL` sin evidencia de navegador real ni sesión autenticada normal.
 
 ---
