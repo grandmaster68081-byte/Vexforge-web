@@ -71,7 +71,7 @@ import { useState, useEffect } from "react";
             : `${index + 1}`}
         </div>
         {/* Tier icon */}
-        <div style={{ fontSize: 14 }}>{tier.icon}</div>
+        <div style={{ fontSize: 14, color: tier.color, display: "flex" }}><ForgeIcon name={tier.icon} size={14} /></div>
         {/* Name */}
         <div style={{ flex: 1, minWidth: 0 }}>
           <div style={{
@@ -173,8 +173,8 @@ import { useState, useEffect } from "react";
             }}>
               {timeLeft}
               {myTier && (
-                <span style={{ marginLeft: 12, color: myTier.color }}>
-                  {myTier.icon} {myTier.name}
+                <span style={{ marginLeft: 12, color: myTier.color, display: "inline-flex", alignItems: "center", gap: 4 }}>
+                  <ForgeIcon name={myTier.icon} size={11} /> {myTier.name}
                   {myRanking?.rank_position ? ` · Pos. ${myRanking.rank_position}` : ""}
                 </span>
               )}
@@ -213,8 +213,9 @@ import { useState, useEffect } from "react";
                     background: `linear-gradient(135deg,${myTier.color}22,${myTier.color}08)`,
                     border: `1px solid ${myTier.color}44`,
                     display: "flex", alignItems: "center", justifyContent: "center", fontSize: 22,
+                    color: myTier.color,
                   }}>
-                    {myTier.icon}
+                    <ForgeIcon name={myTier.icon} size={22} />
                   </div>
                   <div style={{ flex: 1 }}>
                     <div style={{ display: "flex", alignItems: "baseline", gap: 8 }}>
