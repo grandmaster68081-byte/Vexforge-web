@@ -9,6 +9,7 @@
 - **Evidencia local:** `npx tsc --noEmit -p tsconfig.app.json`, `npm run verify:build` y `git diff --check` finalizaron correctamente; el escaneo de `src/components/battle` sólo conserva flechas en comentarios de código, no en UI.
 - **Responsive y accesibilidad:** los SVG siguen decorativos (`aria-hidden`, `focusable=false`) y los botones mantienen su texto visible como nombre accesible; no se alteraron tamaños táctiles ni animaciones.
 - **Deuda y condición de reapertura:** permanecen glyphs en datos de motores (`aiBattleEngine.ts`, `missionEncounterEngine.ts`, `dailyChallenge.ts`, `forgeFormation.ts`) y flechas en otras rutas (`PacksRoute`, `FusionRoute`, `EvolutionRoute`, `CosmeticsRoute`, `AssetsRoute`, `WithdrawalRoute`, `EconomyRoute`, repositorios de home/pvp/daily, `TutorialOverlay`), fuera de esta unidad. Reabrir ante regresión de batalla o mapping canónico contradictorio.
+- **Evidencia pública:** con consultas cache-busting, `build-manifest.json` publicó `sourceCommit=cc3b2bbe241606ca54e198613b6594426bdb58d7`; `/`, `/battle`, `/pvp`, `/cards`, `/packs` y `/economy` respondieron HTTP 200. Los hashes SHA-256 de `index-BxXiRXo-.js` y `PvpRoute-C-0gU_t7.js` coinciden local/público y ninguno de los dos chunks conserva `←`/`→`.
 - **Siguiente acción verificable:** cadena siguiente sobre las flechas de rutas de economía/inventario y los glyphs de datos de motores, más revisión visual interactiva responsive con foco y `prefers-reduced-motion`; no se declara `OPERATIONAL` sin evidencia de navegador real ni sesión autenticada normal.
 
 ---
