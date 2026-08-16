@@ -1,3 +1,18 @@
+## 2026-08-15 — VE-1-ECONOMY-ICON-LANGUAGE — IMPLEMENTED_UNVERIFIED
+
+- **Tipo de sesión:** REFINAMIENTO / IMPLEMENTACIÓN.
+- **Unidad:** VE-1-ECONOMY-ICON-LANGUAGE. **Fuente canónica:** código real de main, ForgeIcon, Supabase vivo y protocolo VEXFORGE.
+- **Estado inicial:** NOT_STARTED; **estado actual:** IMPLEMENTED_UNVERIFIED; **nivel actual:** Q2; **objetivo:** Q3.
+- **Objetivo:** retirar sustitutos Unicode de la ruta de Economía sin cambiar balances, ledger, filtros, navegación, autenticación, RPCs, RLS ni resultados autoritativos.
+- **Cambio:** EconomyRoute.tsx conserva consultas, cálculos, filtros, cantidades, etiquetas y callbacks; las métricas públicas, el podio, el estado de acceso, los movimientos, la actualización y los CTAs usan mappings semánticos de ForgeIcon.
+- **Alcance autoritativo:** no se modificaron Supabase, Storage, RPCs, RLS, economía, recompensas, datos de jugadores, autenticación ni reglas del juego.
+- **Evidencia inicial:** la fuente fue transformada mediante una edición atómica del árbol de main; quedan pendientes npm run verify:build, la propagación automática y la comparación del bundle público.
+- **Responsive y accesibilidad:** los iconos son decorativos (aria-hidden/focusable=false) y los textos/controles visibles se conservan; queda pendiente revisión visual interactiva responsive, foco y prefers-reduced-motion.
+- **Deuda y condición de reapertura:** otros consumidores Unicode independientes no se mezclan con esta unidad. Reabrir ante regresión de Economía, discrepancia del bundle o mapping canónico contradictorio.
+- **Siguiente acción verificable:** ejecutar build canónico, verificar el deploy público y elevar sólo con evidencia real.
+
+---
+
 ## 2026-08-15 — VE-1-CLANS-ICON-LANGUAGE — IMPLEMENTED_UNVERIFIED
 
 - **Tipo de sesión:** REFINAMIENTO / IMPLEMENTACIÓN. **Fuente canónica:** código real de `main`, `ClansRoute.tsx`, `ClanWarsPanel.tsx`, `ForgeIcon`, Supabase vivo y deploy público.

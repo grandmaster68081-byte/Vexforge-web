@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useEconomy } from "../domains/economy/useEconomy";
 import { usePublicStats } from "../domains/economy/usePublicStats";
+import { ForgeIcon, type ForgeIconName } from "../shared/components/ForgeIcon";
 
 // ── Design tokens ────────────────────────────────────────────────────────
 const C = {
@@ -14,23 +15,23 @@ const C = {
 };
 
 // ── Entry-type styling ───────────────────────────────────────────────────
-const ENTRY_META: Record<string,{color:string; icon:string; label:string; sign:1|-1}> = {
-  credit:          { color:C.green,  icon:"↑", label:"Crédito",         sign: 1 },
-  debit:           { color:C.red,    icon:"↓", label:"Débito",          sign:-1 },
-  reward:          { color:C.blue,   icon:"★", label:"Recompensa",      sign: 1 },
-  deposit_credit:  { color:"#22c55e",icon:"⬆", label:"Depósito",        sign: 1 },
-  pack_purchase:   { color:C.purple, icon:"📦",label:"Pack",            sign:-1 },
-  pack_purchase_vex:{color:C.purple, icon:"📦",label:"Pack (VEX)",      sign:-1 },
-  fee:             { color:"#f97316",icon:"◈", label:"Comisión",        sign:-1 },
-  burn:            { color:"#ef4444",icon:"🔥",label:"Quemado",         sign:-1 },
-  mission_reward:  { color:C.blue,   icon:"🎯",label:"Misión",          sign: 1 },
-  quest_reward:    { color:C.blue,   icon:"📜",label:"Quest",           sign: 1 },
-  daily_reward:    { color:C.gold,   icon:"🌅",label:"Diario",          sign: 1 },
-  battle_reward:   { color:C.gold,   icon:"⚔️",label:"Batalla",         sign: 1 },
-  adjustment:      { color:C.muted,  icon:"⚙", label:"Ajuste",          sign: 1 },
+const ENTRY_META: Record<string,{color:string; icon:ForgeIconName; label:string; sign:1|-1}> = {
+  credit:           { color:C.green,    icon:"coin",       label:"Crédito",    sign: 1 },
+  debit:            { color:C.red,      icon:"withdrawal", label:"Débito",     sign:-1 },
+  reward:           { color:C.blue,     icon:"trophy",     label:"Recompensa", sign: 1 },
+  deposit_credit:   { color:"#22c55e", icon:"deposit",    label:"Depósito",   sign: 1 },
+  pack_purchase:    { color:C.purple,  icon:"packs",      label:"Pack",       sign:-1 },
+  pack_purchase_vex:{ color:C.purple,  icon:"packs",      label:"Pack (VEX)", sign:-1 },
+  fee:              { color:"#f97316", icon:"coin",       label:"Comisión",   sign:-1 },
+  burn:             { color:"#ef4444", icon:"skull",      label:"Quemado",    sign:-1 },
+  mission_reward:   { color:C.blue,    icon:"target",     label:"Misión",     sign: 1 },
+  quest_reward:     { color:C.blue,    icon:"quests",     label:"Quest",      sign: 1 },
+  daily_reward:     { color:C.gold,    icon:"season",     label:"Diario",     sign: 1 },
+  battle_reward:    { color:C.gold,    icon:"attack",     label:"Batalla",    sign: 1 },
+  adjustment:       { color:C.muted,   icon:"settings",   label:"Ajuste",     sign: 1 },
 };
 function entryMeta(type:string) {
-  return ENTRY_META[type] ?? { color:C.muted, icon:"·", label:type, sign:1 as 1|-1 };
+  return ENTRY_META[type] ?? { color:C.muted, icon:"more" as ForgeIconName, label:type, sign:1 as 1|-1 };
 }
 
 const CURRENCY_LABEL: Record<string,string> = {
@@ -86,7 +87,7 @@ function StatPill({label,value,color}:{label:string;value:string;color:string}) 
 }
 
 // ── U.1: Public metric card ──────────────────────────────────────────────
-function MetricCard({icon,label,value,sub,color}:{icon:string;label:string;value:string|number;sub?:string;color:string}) {
+function MetricCard({icon,label,value,sub,color}:{icon:ForgeIconName;label:string;value:string|number;sub?:string;color:string}) {
   return (
     <div style={{
       padding:"16px 18px", borderRadius:12,
@@ -95,7 +96,7 @@ function MetricCard({icon,label,value,sub,color}:{icon:string;label:string;value
       display:"flex", flexDirection:"column", gap:3,
       minWidth:130, flex:1,
     }}>
-      <div style={{fontSize:20,lineHeight:1}}>{icon}</div>
+      <div style={{fontSize:20,lineHeight:1}}><ForgeIcon name={icon} size={20} /></div>
       <div style={{fontSize:9,letterSpacing:1,color:C.dim,textTransform:"uppercase",marginTop:4}}>{label}</div>
       <div style={{fontSize:22,fontWeight:900,color,lineHeight:1,fontFamily:"Cinzel,serif",marginTop:2}}>
         {typeof value === "number" ? fmt(value) : value}
@@ -107,7 +108,7 @@ function MetricCard({icon,label,value,sub,color}:{icon:string;label:string;value
 
 // ── U.1: Top-3 podium ───────────────────────────────────────────────────
 function Top3Row({top3}:{top3:{display_name:string;mmr:number;rank:number;wins:number}[]}) {
-  const MEDAL = ["🥇","🥈","🥉"];
+  const MEDAL: ForgeIconName[] = ["crown", "trophy", "leaderboard"];
   const MEDAL_COLOR = [C.gold,"#9ca3af","#cd7f32"];
   if (!top3.length) return null;
   return (
@@ -123,7 +124,7 @@ function Top3Row({top3}:{top3:{display_name:string;mmr:number;rank:number;wins:n
             background:i===0?`${C.gold}0a`:C.bg2,
             border:`1px solid ${i===0?C.gold+"22":C.b1}`,
           }}>
-            <span style={{fontSize:18}}>{MEDAL[i]}</span>
+            <span style={{fontSize:18,color:MEDAL_COLOR[i]}}><ForgeIcon name={MEDAL[i]} size={18} /></span>
             <span style={{flex:1,fontSize:13,fontWeight:700,color:MEDAL_COLOR[i],fontFamily:"Rajdhani,sans-serif"}}>
               {p.display_name}
             </span>
@@ -156,7 +157,7 @@ function PublicDashboard() {
           width:36,height:36,borderRadius:10,
           background:`${C.gold}18`,border:`1px solid ${C.gold}28`,
           display:"flex",alignItems:"center",justifyContent:"center",fontSize:18,
-        }}>⚖️</div>
+        }}><ForgeIcon name="economy" size={18} /></div>
         <div>
           <div style={{fontSize:16,fontWeight:900,color:C.gold,fontFamily:"Cinzel,serif",letterSpacing:"0.06em"}}>
             Iron Treasury
@@ -181,7 +182,7 @@ function PublicDashboard() {
           background:`${C.purple}12`,border:`1px solid ${C.purple}28`,
           display:"flex",alignItems:"center",gap:10,flexWrap:"wrap",
         }}>
-          <span style={{fontSize:14}}>🏆</span>
+          <span style={{fontSize:14}}><ForgeIcon name="season" size={14} /></span>
           <div>
             <div style={{fontSize:12,fontWeight:700,color:C.purple}}>{stats.season_name}</div>
             {stats.season_ends_at && (
@@ -194,7 +195,7 @@ function PublicDashboard() {
               background:`${C.gold}18`,border:`1px solid ${C.gold}28`,
               fontSize:10,fontWeight:700,color:C.gold,
             }}>
-              ⚡ {stats.active_event_name}
+              <ForgeIcon name="energy" size={14} /> {stats.active_event_name}
             </div>
           )}
         </div>
@@ -209,12 +210,12 @@ function PublicDashboard() {
         </div>
       ) : stats ? (
         <div style={{display:"flex",flexWrap:"wrap",gap:10}}>
-          <MetricCard icon="🧑‍💻" label="Forjadores" value={stats.active_players} sub="jugadores activos" color={C.blue}/>
-          <MetricCard icon="🃏" label="Cartas" value={stats.total_cards} sub="en el universo" color={C.purple}/>
-          <MetricCard icon="⚔️" label="Batallas" value={stats.total_battles} sub="totales completadas" color={C.red}/>
-          <MetricCard icon="📦" label="Packs" value={stats.packs_opened} sub="abiertos" color={C.green}/>
-          <MetricCard icon="🐉" label="Jefes" value={stats.active_bosses} sub="world bosses activos" color="#f97316"/>
-          <MetricCard icon="🎯" label="Misiones" value={stats.total_missions} sub="disponibles" color={C.teal}/>
+          <MetricCard icon="friends" label="Forjadores" value={stats.active_players} sub="jugadores activos" color={C.blue}/>
+          <MetricCard icon="cards" label="Cartas" value={stats.total_cards} sub="en el universo" color={C.purple}/>
+          <MetricCard icon="attack" label="Batallas" value={stats.total_battles} sub="totales completadas" color={C.red}/>
+          <MetricCard icon="packs" label="Packs" value={stats.packs_opened} sub="abiertos" color={C.green}/>
+          <MetricCard icon="boss" label="Jefes" value={stats.active_bosses} sub="world bosses activos" color="#f97316"/>
+          <MetricCard icon="missions" label="Misiones" value={stats.total_missions} sub="disponibles" color={C.teal}/>
         </div>
       ) : (
         <div style={{color:C.muted,fontSize:13,textAlign:"center",padding:"20px 0"}}>
@@ -264,7 +265,7 @@ export function EconomyRoute() {
         {/* Auth gate */}
         {!signedIn ? (
           <div style={{textAlign:"center",padding:"40px 20px",background:C.bg1,borderRadius:16,border:`1px solid ${C.b2}`}}>
-            <div style={{fontSize:36,marginBottom:14}}>🔒</div>
+            <div style={{fontSize:36,marginBottom:14}}><ForgeIcon name="lock" size={36} /></div>
             <div style={{fontSize:15,fontWeight:700,color:C.main,marginBottom:8}}>Tu cartera personal</div>
             <div style={{fontSize:13,color:C.muted,marginBottom:20}}>
               Inicia sesión para ver tu balance de VEX, movimientos y estadísticas personales.
@@ -330,7 +331,7 @@ export function EconomyRoute() {
                 border:`1px solid ${C.b2}`,background:"transparent",
                 color:C.muted,fontSize:11,cursor:"pointer",
               }}>
-                ↻ Actualizar
+                <ForgeIcon name="refresh" size={14} /> Actualizar
               </button>
             </div>
 
@@ -438,7 +439,7 @@ export function EconomyRoute() {
                 background:C.gold,color:"#0a0a12",
                 fontWeight:800,textDecoration:"none",fontSize:12,whiteSpace:"nowrap",
               }}>
-                💰 Depositar →
+                <ForgeIcon name="coin" size={14} /> Depositar →
               </Link>
             </div>
 
@@ -460,7 +461,7 @@ export function EconomyRoute() {
                 background:C.green,color:"#0a0a12",
                 fontWeight:800,textDecoration:"none",fontSize:12,whiteSpace:"nowrap",
               }}>
-                💸 Retirar →
+                <ForgeIcon name="withdrawal" size={14} /> Retirar →
               </Link>
             </div>
 
