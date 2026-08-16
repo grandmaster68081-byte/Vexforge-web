@@ -866,3 +866,15 @@ Los commits anteriores siguen disponibles en Git para auditoría y reversión. L
 - Bloqueos: la vista autenticada del perfil real sigue BLOCKED por falta de sesión normal autorizada; no se usó service_role.
 - Condición de reapertura: regresión visual, discrepancia entre main y el bundle público, o mapping canónico contradictorio.
 - Siguiente acción verificable: confirmar `build-manifest.json` público con el commit de esta sesión y HTTP 200 en `/profile` y rutas críticas.
+
+### Cierre operativo — VE-1-PROFILE-ICON-LANGUAGE
+
+- Estado actual: OPERATIONAL para la capa de presentación de la unidad; nivel Q3.
+- Commit publicado: `af29f252dcb0ba9a091ea92655ec07df2544fcfc` en main.
+- Evidencia de publicación: `/build-manifest.json` público informa `sourceCommit=af29f252dcb0ba9a091ea92655ec07df2544fcfc`, `sourceBranch=main`.
+- Rutas verificadas HTTP 200: `/`, `/profile`, `/pvp`, `/cards`, `/battle`, `/packs`, `/friends`, `/relics`, `/season-pass`, `/quests`, `/missions`, `/leaderboard`, `/inventory`, `/market`, `/economy`, `/progress` y `/settings`.
+- Verificación de runtime: navegación headless a `/`, `/profile`, `/progress` y `/economy` sin errores de consola ni `pageerror`.
+- Compilación: `tsc -p tsconfig.app.json --noEmit` y `vite build` sin errores sobre el código publicado.
+- Alcance no modificado: datos, autenticación, roles, RPCs, RLS, wallet, economía, estadísticas y logros.
+- Estado BLOCKED conservado: la vista autenticada del perfil (identidad real, wallet, logros desbloqueados) no se probó por falta de sesión normal autorizada; no se fabricaron resultados con service_role.
+- Siguiente unidad: `VE-1-ACHIEVEMENTS-ICON-LANGUAGE` sobre `AchievementsRoute` y el contrato de `achievement.icon`.
