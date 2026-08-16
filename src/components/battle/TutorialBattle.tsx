@@ -146,7 +146,7 @@ function HintCard({
             boxShadow: `0 4px 20px ${accent}44`,
           }}
         >
-          {isLast ? <><ForgeIcon name="attack" size={14} style={{ verticalAlign: "middle", marginRight: 6 }} />¡Elegir Formación!</> : "Siguiente →"}
+          {isLast ? <><ForgeIcon name="attack" size={14} style={{ verticalAlign: "middle", marginRight: 6 }} />¡Elegir Formación!</> : <><span>Siguiente</span><ForgeIcon name="chevron-right" size={14} style={{ verticalAlign: "middle", marginLeft: 6 }} /></>}
         </button>
         <button
           onClick={onSkip}

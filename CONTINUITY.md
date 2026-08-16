@@ -1,3 +1,18 @@
+## 2026-08-16 — VE-1-BATTLE-UI-ARROW-LANGUAGE — IMPLEMENTED_UNVERIFIED
+
+- **Tipo de sesión:** REFINAMIENTO / IMPLEMENTACIÓN. **Fuente canónica:** código real de `main`, `ForgeIcon`, Supabase vivo y deploy público.
+- **Unidad:** VE-1-BATTLE-UI-ARROW-LANGUAGE (flechas tipográficas visibles en preparación de batalla, tutorial de batalla, hints contextuales y log de combate).
+- **Estado inicial:** `NOT_STARTED`; **estado actual:** `IMPLEMENTED_UNVERIFIED`; **nivel actual:** Q2; **objetivo:** Q3.
+- **Objetivo:** retirar los sustitutos Unicode `←`/`→` de la superficie visible de batalla sin cambiar formaciones, daño, RAGE, Forge Ascension, resultados, autenticación ni datos autoritativos.
+- **Cambio:** `FormationSelector.tsx` (botón Cancelar) y `TutorialBattle.tsx` + `ContextualHint.tsx` (botones Siguiente) usan `ForgeIcon` (`chevron-left`, `chevron-right`) junto al texto; la descripción de rarezas de `ContextualHint.tsx` y las tres entradas del log de `ForgeFormationBoard.tsx` (`[ATK]`/`[CRIT]`, `RAGE +1`, `REEMPLAZO`) pasan a separador ASCII conservando orden, nombres y cifras.
+- **Alcance autoritativo:** no se modificaron Supabase, Storage, RPCs, RLS, economía, recompensas, cartas, MMR, motor de combate ni navegación; sólo texto de presentación e iconografía.
+- **Evidencia local:** `npx tsc --noEmit -p tsconfig.app.json`, `npm run verify:build` y `git diff --check` finalizaron correctamente; el escaneo de `src/components/battle` sólo conserva flechas en comentarios de código, no en UI.
+- **Responsive y accesibilidad:** los SVG siguen decorativos (`aria-hidden`, `focusable=false`) y los botones mantienen su texto visible como nombre accesible; no se alteraron tamaños táctiles ni animaciones.
+- **Deuda y condición de reapertura:** permanecen glyphs en datos de motores (`aiBattleEngine.ts`, `missionEncounterEngine.ts`, `dailyChallenge.ts`, `forgeFormation.ts`) y flechas en otras rutas (`PacksRoute`, `FusionRoute`, `EvolutionRoute`, `CosmeticsRoute`, `AssetsRoute`, `WithdrawalRoute`, `EconomyRoute`, repositorios de home/pvp/daily, `TutorialOverlay`), fuera de esta unidad. Reabrir ante regresión de batalla o mapping canónico contradictorio.
+- **Siguiente acción verificable:** cadena siguiente sobre las flechas de rutas de economía/inventario y los glyphs de datos de motores, más revisión visual interactiva responsive con foco y `prefers-reduced-motion`; no se declara `OPERATIONAL` sin evidencia de navegador real ni sesión autenticada normal.
+
+---
+
 ## 2026-08-16 — VE-1-LOADER-404-ICON-LANGUAGE — IMPLEMENTED_UNVERIFIED
 
 - **Tipo de sesión:** REFINAMIENTO / IMPLEMENTACIÓN. **Fuente canónica:** código real de `main`, `ForgeIcon`, Supabase vivo y deploy público.

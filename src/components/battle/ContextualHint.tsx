@@ -141,7 +141,7 @@ export function ContextualHint({ hintKey, hints, force = false, onDone }: Contex
           color: '#0a0a12', fontFamily: '"Cinzel",serif', fontSize: 13, fontWeight: 700,
           letterSpacing: '0.08em', cursor: 'pointer',
           boxShadow: `0 4px 20px ${ac}44`,
-        }}>{isLast ? '¡Entendido!' : 'Siguiente →'}</button>
+        }}>{isLast ? '¡Entendido!' : <><span>Siguiente</span><ForgeIcon name="chevron-right" size={13} style={{ verticalAlign: 'middle', marginLeft: 6 }} /></>}</button>
 
         {/* Skip */}
         <button onClick={dismiss} style={{
@@ -174,7 +174,7 @@ export const ROUTE_HINTS: Record<string, HintStep[]> = {
     { icon: 'collection', title: 'Tu Colección', accentColor: '#a855f7',
       desc: 'Aquí están todas las cartas que has conseguido. Filtra por facción, rareza o keyword para encontrar las mejores.' },
     { icon: 'spark', title: 'Rarezas', accentColor: '#e8b84b',
-      desc: 'Common → Uncommon → Rare → Epic → Legendary → Mythic. Las cartas de mayor rareza tienen keywords más poderosos y estadísticas superiores.' },
+      desc: 'Common > Uncommon > Rare > Epic > Legendary > Mythic. Las cartas de mayor rareza tienen keywords más poderosos y estadísticas superiores.' },
   ],
   raids: [
     { icon: 'boss', title: 'Raids de Jefe', accentColor: '#e84040',

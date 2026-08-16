@@ -581,7 +581,7 @@ export function FormationSelector({ playerUnits, onConfirm, onCancel, difficulty
           border: '1px solid rgba(255,255,255,0.1)', background: 'transparent',
           color: '#6a6a8a', fontFamily: '"Rajdhani",sans-serif', fontWeight: 700,
           fontSize: 13, cursor: 'pointer', letterSpacing: '0.04em',
-        }}>← Cancelar</button>
+        }}><ForgeIcon name="chevron-left" size={13} style={{ verticalAlign: 'middle', marginRight: 6 }} />Cancelar</button>
         <button
           onClick={handleConfirm}
           disabled={!canConfirm}

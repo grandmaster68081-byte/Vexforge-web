@@ -2087,7 +2087,7 @@ export function ForgeFormationBoard({
       ? formation.champion.name
       : (formation[defSlot]?.name ?? formation.champion.name);
 
-    addLog(`${isCrit ? '[CRIT]' : '[ATK]'} ${atkName} → ${defName} [${dmg}${isKill ? ' [KO]' : ''}]`);
+    addLog(`${isCrit ? '[CRIT]' : '[ATK]'} ${atkName} -> ${defName} [${dmg}${isKill ? ' [KO]' : ''}]`);
 
     try {
       if (isKill)      (AudioEngine as any).sfxKillV2?.();
@@ -2106,7 +2106,7 @@ export function ForgeFormationBoard({
       prevDeathsRef.current = newDeaths;
       const newStacks = Math.min(newDeaths, 5);
       setRageStacks(newStacks);
-      addLog(`RAGE +1 → Campeón gana +${newStacks * 5}% ATK`);
+      addLog(`RAGE +1 -> Campeón gana +${newStacks * 5}% ATK`);
       try { (AudioEngine as any).sfxCritV2?.(); } catch { /* ok */ }
     }
 
@@ -2151,7 +2151,7 @@ export function ForgeFormationBoard({
       [pending.slot]: pending.unit,
       reserve: prev.reserve.filter(u => u.id !== pending.unit.id),
     }));
-    addLog(`REEMPLAZO · ${SLOT_META[pending.slot].label} → ${pending.unit.name} entra al campo`);
+    addLog(`REEMPLAZO · ${SLOT_META[pending.slot].label} -> ${pending.unit.name} entra al campo`);
     setAwaitingSlot(null);
     setPhase('battle');
   }, [addLog]);
