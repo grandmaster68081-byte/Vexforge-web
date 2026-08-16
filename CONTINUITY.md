@@ -779,3 +779,15 @@ Los commits anteriores siguen disponibles en Git para auditoría y reversión. L
 - Bloqueos: la validación autenticada del jugador (compra premium, claim de tiers) requiere sesión normal autorizada; no se fabricó QA ni se usó service_role. Marcada `BLOCKED` hasta que exista sesión interactiva del owner.
 - Condición de reapertura: regresión visual, discrepancia entre main y el bundle público, o mapping canónico contradictorio.
 - Siguiente acción verificable: confirmar `build-manifest.json` público con el commit de esta sesión y HTTP 200 en `/season-pass` y rutas críticas; después abrir `VE-1-RANK-ICON-LANGUAGE`.
+
+### Cierre operativo — VE-1-SEASONPASS-ICON-LANGUAGE
+
+- Estado actual: `OPERATIONAL` para la capa de presentación de la unidad; nivel Q3.
+- Commit publicado: `60f98666edf72a612c8d3f4890b91a146fbe50da` en main.
+- Evidencia de publicación: `/build-manifest.json` público informa `sourceCommit=60f98666edf72a612c8d3f4890b91a146fbe50da`, `sourceBranch=main`.
+- Evidencia de bundle: el chunk público `assets/SeasonPassRoute-CYCwZNCV.js` coincide byte a byte con el build local (SHA-256 `55ae9b2404bae743b51b67d34c86221da8cca1e21539d16c9e24586a3dfc3be9`) y no conserva ningún sustituto Unicode.
+- Rutas verificadas HTTP 200: `/`, `/tutorial`, `/cards`, `/battle`, `/packs`, `/friends`, `/lore`, `/relics`, `/season-pass`, `/referrals`, `/evolution`, `/quests`, `/economy`, `/profile`, `/missions` y `/build-manifest.json`.
+- Compilación: `tsc --noEmit` y `vite build` sin errores sobre el commit publicado.
+- Alcance no modificado: datos, autenticación, RPCs, RLS, economía, órdenes de pago, tiers, XP y recompensas.
+- QA autenticada del claim y de la compra premium permanece `BLOCKED` por falta de sesión normal autorizada; no se fabricaron resultados.
+- Siguiente unidad: `VE-1-RANK-ICON-LANGUAGE` sobre `src/lib/rankUtils.ts` y sus consumidores.
