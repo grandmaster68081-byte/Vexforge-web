@@ -1233,3 +1233,21 @@ Los commits anteriores siguen disponibles en Git para auditoría y reversión. L
 - Verificación de assets: `npm run verify:assets` → 17/17 rutas del manifiesto disponibles en Storage; lectura pública de los 3 objetos nuevos con HTTP 200 y el peso registrado en `docs/VE-4-CANONICAL-BACKGROUNDS.md`.
 - Estado BLOCKED conservado: superficies autenticadas del jugador sin sesión normal autorizada; no se usó service_role para suplantar jugadores ni para fabricar QA.
 - Siguiente unidad sugerida: inscripción de los archivos individuales de assets en `vexforge_official_asset_manifest` (unidad de datos), o higiene documental de las tablas internas `vexforge_*`.
+
+## 2026-08-16 — VE-5-ASSET-MANIFEST-DATA — IMPLEMENTED_UNVERIFIED
+
+- Tipo de sesión: IMPLEMENTACIÓN (unidad de datos VE-ASSET: manifiesto oficial de assets en base de datos).
+- Unidad: `public.vexforge_official_asset_manifest`, migración `supabase/migrations/0009_ve5_official_asset_manifest_files.sql`, `scripts/verify-manifest.mjs` (nuevo), `package.json` (script `verify:manifest`), `docs/VE-5-ASSET-MANIFEST-DATA.md` (nuevo).
+- Fuente canónica: código real de `main` (baseline `69de81c`), datos vivos de Supabase `rscuzqnfccqvltkdcdny` (`storage.objects`, `cards`, `world_bosses`, `vexforge_official_asset_manifest`), `src/lib/assetManifest.ts`, `VEXFORGE_PROTOCOL_V2.md` y esta continuidad.
+- Estado inicial: deuda declarada en el cierre de VE-4-CANONICAL-BACKGROUNDS ("`vexforge_official_asset_manifest` sigue registrando sólo ZIPs y no archivos individuales"). Estado actual: IMPLEMENTED_UNVERIFIED.
+- Nivel Q: Q2 → Q3 en el dato del manifiesto oficial (de inventario parcial con 3 rutas rotas a inventario coherente y verificable de los assets realmente consumidos).
+- Baseline verificado: 73 filas (19 bundles + 54 archivos); 3 filas apuntando a `progresión/…` inexistente en Storage; 127 artes de carta y 15 de jefe mundial consumidos por el dato vivo sin inscribir; 7 fondos consumidos por el cliente sin inscribir; 0 URLs de carta/jefe rotas.
+- Cambio realizado: migración `0009` idempotente y transaccional — respaldo de las 3 rutas heredadas en `public.vexforge_icon_legacy` y corrección a `progression/`; inscripción de 127 filas `card_art` con `display_name` tomado de `cards.name`; 15 filas `world_boss_art` con `display_name` de `world_bosses.name`; 7 fondos de superficie/facción sólo cuando el objeto existe en Storage. Herramienta nueva `npm run verify:manifest` que valida con rol `anon` la coherencia entre código, manifiesto de datos y Storage.
+- Contrato de datos: sólo se añaden filas al manifiesto y se corrigen 3 `internal_path`/`source_zip_url`. No se creó, sustituyó ni eliminó ningún asset; ningún nombre visible es inventado.
+- Alcance no modificado: esquema de juego, RLS, RPCs, triggers, autenticación, roles, economía, energía, wallet, MMR, recompensas, evolución y resultados autoritativos. No se usó `service_role` para suplantar jugadores ni fabricar QA.
+- Accesibilidad y rendimiento: sin cambios de UI; ningún componente, texto, control ni animación fue modificado (reduced motion no afectado); no se añaden peticiones nuevas en runtime.
+- Verificaciones ejecutadas: migración aplicada vía Management API sin error; post-estado 222 filas (19 bundles + 203 archivos), `broken=0`, `cards_unregistered=0`, `bosses_unregistered=0`; `npm run verify:manifest` → 203 archivos inscritos, 17 rutas del código presentes, 0 referencias rotas; `npm run verify:assets` → 17/17; `tsc -p tsconfig.app.json --noEmit` sin errores; `npm run build` correcto.
+- Deuda registrada: artes duplicados del bucket sin rol semántico canónico (`bosses/BOSS_*.jpg`, `bosses/boss_*.jpg`, `cards/IMG_2026*.jpg`) siguen sin inscribir a la espera de decisión canónica; higiene documental de las tablas internas `vexforge_*`; sin variantes responsive dedicadas para móvil.
+- Bloqueos: verificación autenticada de superficies del jugador sigue BLOCKED por falta de sesión normal autorizada.
+- Condición de reapertura: cambio del inventario del bucket, decisión canónica sobre los artes duplicados, o fallo de `npm run verify:manifest`.
+- Siguiente acción verificable: confirmar `build-manifest.json` público con el commit de esta sesión y HTTP 200 en las rutas críticas del deploy.
