@@ -3,7 +3,9 @@
  *
  * Fuente canónica: bucket público `vexforge-assets` del proyecto Supabase
  * oficial. Cada ruta declarada en `VERIFIED_ASSETS` fue comprobada contra
- * `storage.objects` vivo (auditoría VE-3-ASSET-REF-INTEGRITY, 2026-08-16).
+ * `storage.objects` vivo (auditoría VE-3-ASSET-REF-INTEGRITY, 2026-08-16;
+ * ampliado en VE-4-CANONICAL-BACKGROUNDS con los 3 fondos propios pendientes,
+ * cuya procedencia está registrada en `docs/VE-4-CANONICAL-BACKGROUNDS.md`).
  *
  * Regla de cero genéricos: si una superficie no tiene asset propio en Storage,
  * su entrada es `null` y queda registrada en `PENDING_SOURCE_BACKGROUNDS`.
@@ -15,7 +17,10 @@ export const STORAGE_BASE =
 
 /** Rutas verificadas como existentes en el bucket oficial. */
 export const VERIFIED_ASSETS = [
+  "backgrounds/bg_achievements.jpg",
+  "backgrounds/bg_bosses.jpg",
   "backgrounds/bg_clans.jpg",
+  "backgrounds/bg_leaderboard.jpg",
   "backgrounds/bg_missions.jpg",
   "backgrounds/bg_packs.jpg",
   "backgrounds/bg_pvp.jpg",
@@ -44,15 +49,15 @@ export function storageAsset(path: VerifiedAssetPath): string {
  * inexistente y sin sustituto genérico.
  */
 export const SURFACE_BACKGROUND: Record<string, string | null> = {
-  achievements: null,
+  achievements: storageAsset("backgrounds/bg_achievements.jpg"),
   clans: storageAsset("backgrounds/bg_clans.jpg"),
   forge: storageAsset("heroes/hero_fusion.jpg"),
-  leaderboard: null,
+  leaderboard: storageAsset("backgrounds/bg_leaderboard.jpg"),
   missions: storageAsset("backgrounds/bg_missions.jpg"),
   packs: storageAsset("backgrounds/bg_packs.jpg"),
   pvp: storageAsset("backgrounds/bg_pvp.jpg"),
-  raids: null,
-  "world-bosses": null,
+  raids: storageAsset("backgrounds/bg_bosses.jpg"),
+  "world-bosses": storageAsset("backgrounds/bg_bosses.jpg"),
 };
 
 /** Fondo de una superficie, o `null` si su asset propio aún no existe. */
@@ -68,25 +73,4 @@ export const PENDING_SOURCE_BACKGROUNDS: ReadonlyArray<{
   surface: string;
   expectedPath: string;
   brief: string;
-}> = [
-  {
-    surface: "achievements",
-    expectedPath: "backgrounds/bg_achievements.jpg",
-    brief: "Salón de logros de la Forja: muros de placas grabadas, luz cenital fría.",
-  },
-  {
-    surface: "leaderboard",
-    expectedPath: "backgrounds/bg_leaderboard.jpg",
-    brief: "Gradas de la arena de temporada con estandartes de rango.",
-  },
-  {
-    surface: "raids",
-    expectedPath: "backgrounds/bg_bosses.jpg",
-    brief: "Umbral de incursión: fractura colosal sobre la Zona de Guerra.",
-  },
-  {
-    surface: "world-bosses",
-    expectedPath: "backgrounds/bg_bosses.jpg",
-    brief: "Mismo fondo canónico de incursión, compartido con la superficie de raids.",
-  },
-];
+}> = [];

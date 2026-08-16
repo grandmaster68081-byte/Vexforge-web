@@ -1200,3 +1200,25 @@ Los commits anteriores siguen disponibles en Git para auditoría y reversión. L
 - Verificación de assets: `npm run verify:assets` → 14/14 rutas del manifiesto disponibles en el Storage oficial.
 - Estado BLOCKED conservado: superficies autenticadas del jugador sin sesión normal autorizada; no se usó service_role.
 - Siguiente unidad sugerida: creación canónica de los 3 fondos propios pendientes (`bg_achievements`, `bg_leaderboard`, `bg_bosses`) y su publicación en Storage, o higiene documental de las tablas internas `vexforge_*`.
+
+## 2026-08-16 — VE-4-CANONICAL-BACKGROUNDS — IMPLEMENTED_UNVERIFIED
+
+- Tipo de sesión: IMPLEMENTACIÓN (unidad VE-ASSET: creación y publicación de los fondos propios pendientes).
+- Unidad: objetos de Storage `backgrounds/bg_achievements.jpg`, `backgrounds/bg_leaderboard.jpg`, `backgrounds/bg_bosses.jpg` en el bucket público `vexforge-assets`; `src/lib/assetManifest.ts`; `docs/VE-4-CANONICAL-BACKGROUNDS.md` (nuevo).
+- Fuente canónica: código real de `main` (baseline `a190840`), inventario vivo del bucket `vexforge-assets`, briefs registrados en `PENDING_SOURCE_BACKGROUNDS` (VE-3), `VEXFORGE_PROTOCOL_V2.md` y esta continuidad.
+- Estado inicial: deuda del cierre de VE-3-ASSET-REF-INTEGRITY — 4 superficies (`achievements`, `leaderboard`, `raids`, `world-bosses`) sin fondo propio y renderizadas con tratamiento base. Estado actual: IMPLEMENTED_UNVERIFIED.
+- Nivel Q: Q3 → Q4 en la capa de fondos de superficie (identidad propia por superficie en lugar de ausencia declarada).
+- Baseline verificado: las 3 rutas esperadas no existían en Storage (HTTP 400 previo, confirmado en VE-3); diagnóstico del lenguaje visual sobre `bg_pvp.jpg`, `bg_missions.jpg` y `bg_clans.jpg` antes de crear nada.
+- Cambio realizado:
+  - Creación dirigida de 3 fondos propios siguiendo el brief canónico de VE-3 y el lenguaje visual existente (pintura digital, forja gótica, azul noche + naranja fundido, sin texto ni personajes protagonistas). No se sustituye ningún asset previo: las tres rutas estaban vacías.
+  - Publicación en el Storage oficial (`backgrounds/`), JPEG progresivo 1024x1024, q86, 124–187 KB por archivo, coherente con el peso de los fondos existentes.
+  - `assetManifest.ts`: las 3 rutas entran en `VERIFIED_ASSETS` (14 → 17), las 4 superficies pasan de `null` a su asset propio y `PENDING_SOURCE_BACKGROUNDS` queda vacío. `raids` y `world-bosses` comparten `bg_bosses.jpg` según la decisión canónica ya registrada en VE-3.
+  - `docs/VE-4-CANONICAL-BACKGROUNDS.md`: procedencia, licencia, versión, prompts, negative brief, dimensiones, peso, SHA-256, consumidores, reversión y deuda restante.
+- Contrato de datos: ninguno. No se tocó esquema, tablas, RPCs, RLS, triggers, roles ni datos; sólo se añadieron 3 objetos nuevos al bucket público de assets.
+- Alcance no modificado: autenticación, economía, energía, wallet, recompensas, MMR, evolución y cualquier resultado autoritativo. No se usó service_role para suplantar a ningún jugador; su único uso fue la subida de assets propios al Storage oficial.
+- Accesibilidad y rendimiento: los fondos son decorativos (`backgroundImage` CSS, sin texto alternativo requerido); no se añadió animación (reduced motion no afectado); se mantienen los mismos consumidores y capas de contraste; 3 peticiones de imagen nuevas, cacheables, en lugar de superficies sin fondo.
+- Verificaciones ejecutadas: subida HTTP 200 de los 3 objetos y lectura pública HTTP 200 con el tamaño esperado; `tsc -p tsconfig.app.json --noEmit` sin errores; `npm run build` correcto; `npm run verify:assets` → 17/17 rutas del manifiesto disponibles en Storage.
+- Deuda registrada: `vexforge_official_asset_manifest` sigue registrando sólo ZIPs y no archivos individuales (unidad de datos futura); sin variantes responsive dedicadas para móvil; sigue pendiente la higiene documental de las tablas internas `vexforge_*`.
+- Bloqueos: la verificación autenticada de `/raids`, `/world-bosses` y `/season-rankings` con datos reales del jugador sigue BLOCKED por falta de sesión normal autorizada; no se fabricaron runs, settlements ni recompensas.
+- Condición de reapertura: decisión canónica distinta sobre alguno de los 3 fondos, cambio del inventario del bucket, o regresión detectada por `verify:assets`.
+- Siguiente acción verificable: confirmar `build-manifest.json` público con el commit de esta sesión y HTTP 200 en `/achievements`, `/season-rankings`, `/raids`, `/world-bosses` y rutas críticas, sin peticiones de imagen >= 400.
