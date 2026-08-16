@@ -1,15 +1,16 @@
-## 2026-08-15 — VE-1-ECONOMY-ICON-LANGUAGE — IMPLEMENTED_UNVERIFIED
+## 2026-08-15 — VE-1-ECONOMY-ICON-LANGUAGE — CANDIDATE_FOR_REVIEW
 
 - **Tipo de sesión:** REFINAMIENTO / IMPLEMENTACIÓN.
 - **Unidad:** VE-1-ECONOMY-ICON-LANGUAGE. **Fuente canónica:** código real de main, ForgeIcon, Supabase vivo y protocolo VEXFORGE.
-- **Estado inicial:** NOT_STARTED; **estado actual:** IMPLEMENTED_UNVERIFIED; **nivel actual:** Q2; **objetivo:** Q3.
+- **Estado inicial:** NOT_STARTED; **estado actual:** CANDIDATE_FOR_REVIEW; **nivel actual:** Q2; **objetivo:** Q3.
 - **Objetivo:** retirar sustitutos Unicode de la ruta de Economía sin cambiar balances, ledger, filtros, navegación, autenticación, RPCs, RLS ni resultados autoritativos.
 - **Cambio:** EconomyRoute.tsx conserva consultas, cálculos, filtros, cantidades, etiquetas y callbacks; las métricas públicas, el podio, el estado de acceso, los movimientos, la actualización y los CTAs usan mappings semánticos de ForgeIcon.
 - **Alcance autoritativo:** no se modificaron Supabase, Storage, RPCs, RLS, economía, recompensas, datos de jugadores, autenticación ni reglas del juego.
-- **Evidencia inicial:** la fuente fue transformada mediante una edición atómica del árbol de main; quedan pendientes npm run verify:build, la propagación automática y la comparación del bundle público.
+- **Evidencia local:** el checkout b0fbc17cfa706f8082dfb747145152dcdd8cf4c8 pasó npm run verify:build y git diff --check; el chunk EconomyRoute-DxD2zvzV.js y dist/index.html fueron reconstruidos correctamente.
 - **Responsive y accesibilidad:** los iconos son decorativos (aria-hidden/focusable=false) y los textos/controles visibles se conservan; queda pendiente revisión visual interactiva responsive, foco y prefers-reduced-motion.
 - **Deuda y condición de reapertura:** otros consumidores Unicode independientes no se mezclan con esta unidad. Reabrir ante regresión de Economía, discrepancia del bundle o mapping canónico contradictorio.
-- **Siguiente acción verificable:** ejecutar build canónico, verificar el deploy público y elevar sólo con evidencia real.
+- **Evidencia pública:** build-manifest.json publicó sourceCommit=b0fbc17cfa706f8082dfb747145152dcdd8cf4c8; /, /economy, /tutorial, /cards, /battle, /packs, /manifest.json y /build-manifest.json respondieron HTTP 200. El hash SHA-256 del chunk EconomyRoute-DxD2zvzV.js (7d3782a84fa36e578821048a42234a053e348a2e7d311672d7249b47b4f227cd) y de index.html (5a1d4a2d238338e0ac0568f9499b56b8422192d1e465b7d039166b525d3784fd) coincide local/public; el chunk público no conserva sustitutos Unicode objetivo.
+- **Siguiente acción verificable:** revisión visual interactiva en escritorio, tablet y móvil, incluyendo foco y prefers-reduced-motion; elevar sólo con evidencia de navegador real.
 
 ---
 
