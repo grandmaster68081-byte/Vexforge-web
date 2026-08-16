@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { supabase } from "../lib/supabase";
 import { useDailyQuests } from "../domains/daily/useDailyQuests";
+import { ForgeIcon } from "../shared/components/ForgeIcon";
 import { PageLoader } from "../shared/components/PageLoader";
 import { BlockedAuthState } from "../shared/components/BlockedAuthState";
 import { useToast } from "../shared/context/ToastContext";
@@ -28,8 +29,8 @@ import { useToast } from "../shared/context/ToastContext";
           }}>{isClaimed?"RECLAMADO":isComplete?"COMPLETO":"ACTIVO"}</span>
         </div>
         <div style={{display:"flex",gap:8,marginBottom:10}}>
-          <span style={{color:"#e8b84b",fontSize:11}}>💎 {quest.reward_vex_ingame} VEX</span>
-          <span style={{color:"#4a9eff",fontSize:11}}>⭐ {quest.reward_xp} XP</span>
+          <span style={{color:"#e8b84b",fontSize:11}}><ForgeIcon name="coin" size={12} style={{ marginRight: 4, verticalAlign: "middle" }} />{quest.reward_vex_ingame} VEX</span>
+          <span style={{color:"#4a9eff",fontSize:11}}><ForgeIcon name="spark" size={12} style={{ marginRight: 4, verticalAlign: "middle" }} />{quest.reward_xp} XP</span>
         </div>
         <div style={{marginBottom:isComplete&&!isClaimed?12:0}}>
           <div style={{display:"flex",justifyContent:"space-between",marginBottom:4}}>
@@ -79,7 +80,7 @@ import { useToast } from "../shared/context/ToastContext";
     return (
       <main style={{maxWidth:640,margin:"0 auto",padding:"32px 16px"}}>
         <div style={{marginBottom:24}}>
-          <h1 style={{fontFamily:"Cinzel,serif",color:"#e8b84b",fontSize:24,margin:"0 0 4px"}}>📜 Misiones Diarias</h1>
+          <h1 style={{fontFamily:"Cinzel,serif",color:"#e8b84b",fontSize:24,margin:"0 0 4px"}}><ForgeIcon name="quests" size={24} style={{ marginRight: 8, verticalAlign: "middle" }} />Misiones Diarias</h1>
           <p style={{color:"#888",margin:0,fontSize:12}}>{today.charAt(0).toUpperCase()+today.slice(1)}</p>
         </div>
         {quests.length>0&&(
@@ -107,7 +108,7 @@ import { useToast } from "../shared/context/ToastContext";
         </div>
         {!loading&&quests.length===0&&(
           <div style={{textAlign:"center",padding:40}}>
-            <div style={{fontSize:32,marginBottom:10}}>📜</div>
+            <ForgeIcon name="quests" size={32} style={{ marginBottom: 10, color: "#e8b84b" }} />
             <p style={{color:"#555"}}>No hay misiones diarias disponibles por el momento.</p>
           </div>
         )}
