@@ -603,3 +603,16 @@ Los commits anteriores siguen disponibles en Git para auditoría y reversión. L
 - Estado conservado: IMPLEMENTED_UNVERIFIED; no se declara OPERATIONAL porque el deploy público no refleja todavía main.
 - No se forzó publicación: requiere autorización explícita y verificación de build conforme al protocolo.
 - Siguiente acción: publicar por el flujo autorizado y repetir la comprobación de main, manifest y rutas críticas.
+
+## 2026-08-15 — VE-1-REFERRAL-EMPTY-STATE-ICON-LANGUAGE — IMPLEMENTED_UNVERIFIED
+
+- Tipo de sesión: REFINAMIENTO / IMPLEMENTACIÓN.
+- Unidad: estado vacío del historial de referidos en ReferralRoute.
+- Fuente canónica: código real de main, ForgeIcon y protocolo VEXFORGE.
+- Objetivo: retirar el símbolo Unicode de personas sin cambiar el flujo de referidos, textos, datos, autenticación ni recompensas.
+- Cambio: se incorporó ForgeIcon con el mapping canónico friends y se conservó la jerarquía visual del estado vacío.
+- Alcance autoritativo: no se modificaron Supabase, Storage, RPCs, RLS, economía, cartas, inventario ni navegación.
+- Evidencia: actualización confirmada por GitHub Contents API en main; build y bundle público siguen pendientes de verificación.
+- Responsive y accesibilidad: ForgeIcon conserva aria-hidden y focusable=false; los mensajes visibles permanecen sin cambios.
+- Deuda y condición de reapertura: comprobar el bundle público y el estado vacío en escritorio, tablet y móvil antes de elevar la unidad a OPERATIONAL.
+- Siguiente acción verificable: confirmar que ReferralRoute sirve sin error y que main conserva ambos mappings canónicos.
