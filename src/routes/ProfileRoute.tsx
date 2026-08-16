@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { useProfile } from "../domains/profile/useProfile";
 import { getRank, tierProgress } from "../lib/rankUtils";
-import { ForgeIcon } from "../shared/components/ForgeIcon";
+import { ForgeIcon, type ForgeIconName } from "../shared/components/ForgeIcon";
 import type { PlayerStats, PlayerRank, PlayerAchievement, WalletSnapshot } from "../domains/profile/repository";
 
 // ─── Constants ────────────────────────────────────────────────────────────────
@@ -23,13 +23,13 @@ const ACH_CATEGORY_COLOR: Record<string, string> = {
   social:     "#FF6B6B",
   bosses:     "#FF4444",
 };
-const QUICK_LINKS = [
-  { to: "/progress",  icon: "📈", label: "Progreso",   desc: "XP y nivel" },
-  { to: "/economy",   icon: "💰", label: "Economía",   desc: "Wallet y ledger" },
-  { to: "/inventory", icon: "🎒", label: "Inventario", desc: "Tus items" },
-  { to: "/cards",     icon: "🃏", label: "Cartas",     desc: "Tu colección" },
-  { to: "/missions",  icon: "📜", label: "Misiones",   desc: "Festival de la Forja" },
-  { to: "/settings",  icon: "⚙️", label: "Ajustes",   desc: "Preferencias" },
+const QUICK_LINKS: { to: string; icon: ForgeIconName; label: string; desc: string }[] = [
+  { to: "/progress",  icon: "progress",   label: "Progreso",   desc: "XP y nivel" },
+  { to: "/economy",   icon: "economy",    label: "Economía",   desc: "Wallet y ledger" },
+  { to: "/inventory", icon: "assets",     label: "Inventario", desc: "Tus items" },
+  { to: "/cards",     icon: "cards",      label: "Cartas",     desc: "Tu colección" },
+  { to: "/missions",  icon: "missions",   label: "Misiones",   desc: "Festival de la Forja" },
+  { to: "/settings",  icon: "settings",   label: "Ajustes",    desc: "Preferencias" },
 ];
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
@@ -149,13 +149,13 @@ function RankCard({ rank, loading }: { rank: PlayerRank | null; loading: boolean
 
 // ─── Stats Grid ───────────────────────────────────────────────────────────────
 function StatsGrid({ stats, loading }: { stats: PlayerStats | null; loading: boolean }) {
-  const items = [
-    { icon: "⚔️", label: "Victorias PVP",     value: stats?.pvp_wins           ?? 0, color: "#4A9EFF" },
-    { icon: "📜", label: "Misiones",           value: stats?.missions_completed  ?? 0, color: "#3DC96B" },
-    { icon: "🃏", label: "Cartas Únicas",      value: stats?.cards_owned         ?? 0, color: "#E8B84B" },
-    { icon: "🏷️", label: "Ventas Mercado",     value: stats?.market_sales        ?? 0, color: "#A855F7" },
-    { icon: "💀", label: "Jefes Eliminados",   value: stats?.boss_kills          ?? 0, color: "#FF4444" },
-    { icon: "📦", label: "Packs Abiertos",     value: stats?.packs_opened        ?? 0, color: "#FF9F40" },
+  const items: { icon: ForgeIconName; label: string; value: number; color: string }[] = [
+    { icon: "attack",  label: "Victorias PVP",   value: stats?.pvp_wins           ?? 0, color: "#4A9EFF" },
+    { icon: "missions",label: "Misiones",        value: stats?.missions_completed  ?? 0, color: "#3DC96B" },
+    { icon: "cards",   label: "Cartas Únicas",   value: stats?.cards_owned         ?? 0, color: "#E8B84B" },
+    { icon: "market",  label: "Ventas Mercado",  value: stats?.market_sales        ?? 0, color: "#A855F7" },
+    { icon: "skull",   label: "Jefes Eliminados",value: stats?.boss_kills          ?? 0, color: "#FF4444" },
+    { icon: "packs",   label: "Packs Abiertos",  value: stats?.packs_opened        ?? 0, color: "#FF9F40" },
   ];
 
   return (
@@ -168,7 +168,7 @@ function StatsGrid({ stats, loading }: { stats: PlayerStats | null; loading: boo
             <SkeletonBlock h={50} radius={8} />
           ) : (
             <>
-              <div style={{ fontSize: 20, marginBottom: 6 }}>{icon}</div>
+              <div style={{ fontSize: 20, marginBottom: 6, color }}><ForgeIcon name={icon} size={20} /></div>
               <div style={{ fontSize: 22, fontWeight: 700, fontFamily: '"IBM Plex Mono",monospace', color }}>
                 {fmtNum(value)}
               </div>
@@ -190,8 +190,8 @@ function WalletSnapshotSection({ wallet, loading }: { wallet: WalletSnapshot | n
   return (
     <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
       {[
-        { label: "VEX Ingame",    value: wallet?.vex_ingame    ?? 0, color: "#3DC96B", icon: "⚡" },
-        { label: "VEX Tradeable", value: wallet?.vex_tradeable ?? 0, color: "#E8B84B", icon: "💱" },
+        { label: "VEX Ingame",    value: wallet?.vex_ingame    ?? 0, color: "#3DC96B", icon: "energy" as ForgeIconName },
+        { label: "VEX Tradeable", value: wallet?.vex_tradeable ?? 0, color: "#E8B84B", icon: "coin" as ForgeIconName },
       ].map(({ label, value, color, icon }) => (
         <Link key={label} to="/economy" style={{ textDecoration: "none" }}>
           <div style={{ background: `linear-gradient(135deg, ${color}08 0%, var(--layer-1) 70%)`, borderRadius: 12,
@@ -201,7 +201,7 @@ function WalletSnapshotSection({ wallet, loading }: { wallet: WalletSnapshot | n
             onMouseLeave={e => { (e.currentTarget as HTMLDivElement).style.borderColor = `${color}33`; }}>
             {loading ? <SkeletonBlock h={50} radius={8} /> : (
               <>
-                <div style={{ fontSize: 12, marginBottom: 4 }}>{icon}</div>
+                <div style={{ fontSize: 12, marginBottom: 4, color }}><ForgeIcon name={icon} size={14} /></div>
                 <div style={{ fontSize: 20, fontWeight: 700, fontFamily: '"IBM Plex Mono",monospace', color }}>
                   {fmtVex(value)}
                 </div>
@@ -282,7 +282,7 @@ export function ProfileRoute() {
     return (
       <div className="route-container" style={{ paddingBottom: 40 }}>
         <div style={{ textAlign: "center", padding: "80px 24px" }}>
-          <div style={{ fontSize: 52, marginBottom: 20 }}>🔐</div>
+          <div style={{ fontSize: 52, marginBottom: 20, color: "var(--ember-gold)" }}><ForgeIcon name="lock" size={52} /></div>
           <h2 style={{ fontFamily: '"Rajdhani",sans-serif', fontSize: 22,
             color: "var(--ember-gold)", margin: "0 0 10px", fontWeight: 700 }}>
             Inicia Sesión
@@ -308,7 +308,7 @@ export function ProfileRoute() {
     return (
       <div className="route-container" style={{ paddingBottom: 40 }}>
         <div className="empty-state">
-          <div className="empty-state-icon">⚠️</div>
+          <div className="empty-state-icon"><ForgeIcon name="warning" size={32} /></div>
           <div className="empty-state-title">Perfil no encontrado</div>
           <div className="empty-state-desc">{reason ?? "No se pudo cargar tu perfil."}</div>
         </div>
@@ -391,7 +391,8 @@ export function ProfileRoute() {
                   <span style={{ fontSize: 11, padding: "3px 9px", borderRadius: 5,
                     background: "rgba(168,85,247,0.14)", color: "#A855F7",
                     fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase" }}>
-                    {profile.is_super_admin ? "⚡ Super Admin" : "🔑 Admin"}
+                    <ForgeIcon name={profile.is_super_admin ? "spark" : "key"} size={11} style={{ verticalAlign: "middle", marginRight: 4 }} />
+                    {profile.is_super_admin ? "Super Admin" : "Admin"}
                   </span>
                 )}
                 {/* Telegram */}
@@ -399,7 +400,7 @@ export function ProfileRoute() {
                   <span style={{ fontSize: 11, padding: "3px 9px", borderRadius: 5,
                     background: "rgba(74,158,255,0.12)", color: "#4A9EFF",
                     fontWeight: 700, letterSpacing: "0.06em" }}>
-                    ✈️ @{profile.telegram_username}
+                    <ForgeIcon name="telegram" size={11} style={{ verticalAlign: "middle", marginRight: 4 }} />@{profile.telegram_username}
                   </span>
                 )}
               </div>
@@ -423,7 +424,7 @@ export function ProfileRoute() {
                 <div style={{ marginTop: 10,
                   fontSize: 12, fontFamily: '"IBM Plex Mono",monospace',
                   color: "#E8B84B", fontWeight: 700 }}>
-                  🏆 {totalPoints} pts
+                  <ForgeIcon name="trophy" size={12} style={{ verticalAlign: "middle", marginRight: 4 }} />{totalPoints} pts
                 </div>
               )}
             </div>
@@ -469,7 +470,7 @@ export function ProfileRoute() {
           <div style={{ background: "var(--layer-1)", borderRadius: 12,
             border: "1px solid rgba(255,255,255,0.06)", padding: "28px 20px",
             textAlign: "center" }}>
-            <div style={{ fontSize: 32, marginBottom: 10 }}>🏅</div>
+            <div style={{ fontSize: 32, marginBottom: 10, color: "var(--fg-muted)" }}><ForgeIcon name="achievements" size={32} /></div>
             <div style={{ fontSize: 13, color: "var(--fg-muted)" }}>
               Completa misiones, gana batallas y abre packs para desbloquear logros.
             </div>
