@@ -1166,3 +1166,26 @@ Los commits anteriores siguen disponibles en Git para auditoría y reversión. L
 - Condición de reapertura: regresión visual, discrepancia entre `main` y el bundle público, o decisión canónica distinta sobre el mapping `type → glifo` / `item_key → glifo`.
 - Siguiente unidad sugerida: higiene documental de las tablas internas `vexforge_*` y auditoría de `Storage`/manifiesto de assets frente a los consumidores reales.
 - Siguiente acción verificable: confirmar `build-manifest.json` público con el commit de esta sesión y HTTP 200 en `/shop`, `/pvp`, `/profile` y rutas críticas.
+
+## 2026-08-16 — VE-3-ASSET-REF-INTEGRITY — IMPLEMENTED_UNVERIFIED
+
+- Tipo de sesión: AUDITORÍA + IMPLEMENTACIÓN (integridad de referencias a assets de Storage).
+- Unidad: `src/lib/assetManifest.ts` (nuevo), `scripts/verify-assets.mjs` (nuevo), `package.json`, `src/App.tsx`, `src/domains/assets/repository.ts`, `src/components/battle/InteractiveBattleBoard.tsx`, `src/routes/AchievementsRoute.tsx`, `RaidsRoute.tsx`, `WorldBossesRoute.tsx`, `FusionRoute.tsx`, `SeasonRankingsRoute.tsx`, `PvpRoute.tsx`, `PacksRoute.tsx`, `MissionsRoute.tsx`, `ClansRoute.tsx`, `AccountRoute.tsx`, `AssetsRoute.tsx`, `CardsRoute.tsx`, `InventoryRoute.tsx`, `MarketRoute.tsx`, `HomeRoute.tsx`.
+- Fuente canónica: código real de `main` (baseline `e58e4bf`), `storage.objects` vivo del bucket público `vexforge-assets`, `VEXFORGE_PROTOCOL_V2.md` y esta continuidad.
+- Estado inicial: deuda declarada en el cierre de VE-2-RANK-NOTIF-SHOP-ICON-DATA ("auditoría de Storage/manifiesto de assets frente a los consumidores reales"). Estado actual: IMPLEMENTED_UNVERIFIED.
+- Nivel Q: Q2 → Q3 en la capa de assets de superficie (referencias reales y deuda explícita en lugar de imágenes rotas silenciosas).
+- Baseline verificado: 17 URLs de Storage codificadas a mano en `src`, comprobadas una a una contra el bucket público. Resultado: 13 responden HTTP 200 y 4 referencias responden HTTP 400 por objeto inexistente — `backgrounds/bg_achievements.jpg`, `backgrounds/bg_bosses.jpg` (usada por `/raids` y `/world-bosses`), `backgrounds/bg_forge.jpg` y `backgrounds/bg_leaderboard.jpg`. Inventario completo del bucket obtenido desde `storage.objects`: la carpeta `backgrounds/` sólo contiene `bg_clans`, `bg_missions`, `bg_packs` y `bg_pvp`.
+- Cambio realizado:
+  - `src/lib/assetManifest.ts`: `STORAGE_BASE` único, `VERIFIED_ASSETS` (14 rutas comprobadas contra Storage vivo), `storageAsset()` tipado sobre esas rutas, `SURFACE_BACKGROUND` por superficie y `PENDING_SOURCE_BACKGROUNDS` con superficie, ruta esperada y brief del recurso propio que falta.
+  - Superficies sin asset propio (`achievements`, `leaderboard`, `raids`, `world-bosses`): su fondo pasa a `null` y las rutas lo renderizan con su tratamiento base de VEXFORGE. No se sustituye por arte de otra superficie ni por stock; el navegador deja de solicitar 4 imágenes inexistentes.
+  - `/fusion`: pasa de la inexistente `backgrounds/bg_forge.jpg` al asset propio y existente `heroes/hero_fusion.jpg`, que es el recurso canónico de esa superficie (mismo patrón que `heroes/hero_market.jpg` en `/market` y `heroes/hero_assets.jpg` en `/assets`).
+  - Todas las URLs de Storage codificadas a mano en `src` pasan a `storageAsset()`/`STORAGE_BASE`; ya no existe ninguna URL literal del bucket fuera del manifiesto.
+  - `scripts/verify-assets.mjs` + `npm run verify:assets`: comprueba por HEAD que cada ruta de `VERIFIED_ASSETS` existe en el Storage público y falla si alguna deja de estarlo.
+- Contrato de datos: ninguno. No se modificó Supabase (ni esquema, ni datos, ni RPCs, ni RLS, ni Storage): la sesión es de referencias en el frontend.
+- Alcance no modificado: autenticación, roles, economía, energía, wallet, recompensas, MMR, resultados de combate y cualquier resultado autoritativo.
+- Accesibilidad y rendimiento: sin cambios de texto ni de controles; sin animación nueva (reduced motion no afectado); se eliminan 4 peticiones de imagen fallidas por carga en las rutas afectadas.
+- Verificaciones ejecutadas: inventario de `storage.objects` vía Management API; comprobación HTTP de las 17 referencias previas y de las 14 del manifiesto (`verify:assets` → 14/14 disponibles); `tsc -p tsconfig.app.json --noEmit` sin errores; `npm run build` correcto.
+- Deuda registrada: 3 fondos propios pendientes de creación canónica (`bg_achievements`, `bg_leaderboard`, `bg_bosses`) con brief en `PENDING_SOURCE_BACKGROUNDS`; sigue pendiente la higiene documental de las tablas internas `vexforge_*`; el manifiesto oficial `vexforge_official_asset_manifest` sigue registrando sólo ZIPs y no archivos individuales.
+- Bloqueos: verificación autenticada de las superficies de jugador (raids reales, ranking de temporada del jugador, fusión real) sigue BLOCKED por falta de sesión normal autorizada; no se usó service_role ni se fabricaron resultados.
+- Condición de reapertura: publicación de los fondos propios pendientes en Storage, cambio del inventario del bucket, o regresión detectada por `verify:assets`.
+- Siguiente acción verificable: confirmar `build-manifest.json` público con el commit de esta sesión y HTTP 200 en `/achievements`, `/raids`, `/world-bosses`, `/fusion`, `/season-rankings` y rutas críticas.

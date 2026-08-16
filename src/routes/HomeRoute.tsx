@@ -8,6 +8,7 @@ import type { PlayerActiveBoost } from "../domains/cosmetics/repository";
 import { getRank } from "../lib/rankUtils";
 import { SessionSummaryToast } from "../shared/components/SessionSummaryToast";
 import { ForgeIcon, type ForgeIconName } from "../shared/components/ForgeIcon";
+import { storageAsset } from "../lib/assetManifest";
 
 // ─── Animated counter — counts up from 0 to target when mounted ─────────────
 function useCountUp(target: number, duration = 1200, active = true): number {
@@ -29,7 +30,7 @@ function useCountUp(target: number, duration = 1200, active = true): number {
   return value;
 }
 
-const LOBBY_URL = "https://rscuzqnfccqvltkdcdny.supabase.co/storage/v1/object/public/vexforge-assets/lobby/main.jpg";
+const LOBBY_URL = storageAsset("lobby/main.jpg");
 
 interface HomeStats {
   active_players: number;

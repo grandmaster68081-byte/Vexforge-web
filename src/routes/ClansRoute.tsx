@@ -6,9 +6,8 @@ import { BlockedAuthState } from "../shared/components/BlockedAuthState";
 import { EmptyState }      from "../shared/components/EmptyState";
 import { useToast }        from "../shared/context/ToastContext";
 import { ForgeIcon, type ForgeIconName } from "../shared/components/ForgeIcon";
-
-const BG_URL = "https://rscuzqnfccqvltkdcdny.supabase.co/storage/v1/object/public/vexforge-assets/backgrounds/bg_clans.jpg";
-
+import { surfaceBackground } from "../lib/assetManifest";
+const BG_URL = surfaceBackground("clans");
 const ROLE_ICON: Record<string, ForgeIconName> = { leader: "crown", officer: "spark", member: "attack" };
 const WAR_STATUS: Record<string, { label: string; color: string }> = {
   active:   { label: "ACTIVA",     color: "#3ddc84" },

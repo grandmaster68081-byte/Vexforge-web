@@ -22,12 +22,13 @@ import { useBattleStateMachine, type TurnPhase, type TurnSnapshot } from '../../
 import { KeywordChip } from './KeywordTooltip';
 import { AudioEngine } from '../../lib/audioEngine';
 import { KeywordActivationFX, useKeywordFX } from './KeywordActivationFX';
+import { STORAGE_BASE } from "../../lib/assetManifest";
 
 // ─── Constantes ────────────────────────────────────────────────────────────────
 const HP_COLOR = (pct: number) =>
   pct > 0.55 ? '#3ddc84' : pct > 0.25 ? '#f59e0b' : '#ff3333';
 
-const STORAGE = 'https://rscuzqnfccqvltkdcdny.supabase.co/storage/v1/object/public/vexforge-assets';
+const STORAGE = STORAGE_BASE;
 
 const FACTION_ZONE: Record<string, { primary: string; glow: string; gradient: string; arenaImg: string }> = {
   Guerrero:    { primary: '#e84040', glow: 'rgba(232,64,64,0.35)',   gradient: 'linear-gradient(180deg,rgba(80,10,10,0.7) 0%,rgba(30,5,5,0.4) 100%)',   arenaImg: `${STORAGE}/factions/bg_guerrero.jpg` },

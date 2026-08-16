@@ -15,9 +15,8 @@ import {
 } from "../domains/packs/shardsRepository";
 import { getCurrentPlayerId } from "../domains/cosmetics/repository";
 import { AudioEngine } from "../lib/audioEngine";
-
-const BG_URL = "https://rscuzqnfccqvltkdcdny.supabase.co/storage/v1/object/public/vexforge-assets/backgrounds/bg_packs.jpg";
-
+import { surfaceBackground } from "../lib/assetManifest";
+const BG_URL = surfaceBackground("packs");
 // ─── Visual mapping ───────────────────────────────────────────────────────────
 const VISUAL_BY_KEY: Record<string, PackVisualData> = {
   seed_pack: {

@@ -8,6 +8,7 @@ import { ShardsPanel } from "../shared/components/ShardsPanel";
 import { usePlayerItems } from "../domains/cosmetics/usePlayerItems";
 import type { PlayerActiveBoost, PlayerConsumable } from "../domains/cosmetics/repository";
 import { ForgeIcon, type ForgeIconName } from "../shared/components/ForgeIcon";
+import { storageAsset } from "../lib/assetManifest";
 
 // ─── CONFIG (matches CardsRoute exactly) ────────────────────────────────────
 const RARITY_CFG: Record<string, { color: string; glow: string; label: string }> = {
@@ -19,10 +20,10 @@ const RARITY_CFG: Record<string, { color: string; glow: string; label: string }>
   Mythic:    { color: "#ef4444", glow: "0 0 36px rgba(239,68,68,.8)",   label: "Mítica"      },
 };
 const FACTION_CFG: Record<string, { color: string; bg: string; bgImg: string; icon: ForgeIconName }> = {
-  Guerrero: { color: "#f87171", bg: "linear-gradient(160deg,#7f1d1d,#1c0a0a)", bgImg: "https://rscuzqnfccqvltkdcdny.supabase.co/storage/v1/object/public/vexforge-assets/factions/bg_guerrero.jpg", icon: "attack" },
-  Mago:     { color: "#818cf8", bg: "linear-gradient(160deg,#1e1b4b,#0a0a1e)", bgImg: "https://rscuzqnfccqvltkdcdny.supabase.co/storage/v1/object/public/vexforge-assets/factions/bg_mago.jpg",     icon: "spark" },
-  Paladín:  { color: "#fbbf24", bg: "linear-gradient(160deg,#451a03,#1c0a00)", bgImg: "https://rscuzqnfccqvltkdcdny.supabase.co/storage/v1/object/public/vexforge-assets/factions/bg_paladin.jpg",   icon: "shield" },
-  Pícaro:   { color: "#34d399", bg: "linear-gradient(160deg,#022c22,#0a1c14)", bgImg: "https://rscuzqnfccqvltkdcdny.supabase.co/storage/v1/object/public/vexforge-assets/factions/bg_picaro.jpg",    icon: "target" },
+  Guerrero: { color: "#f87171", bg: "linear-gradient(160deg,#7f1d1d,#1c0a0a)", bgImg: storageAsset("factions/bg_guerrero.jpg"), icon: "attack" },
+  Mago:     { color: "#818cf8", bg: "linear-gradient(160deg,#1e1b4b,#0a0a1e)", bgImg: storageAsset("factions/bg_mago.jpg"),     icon: "spark" },
+  Paladín:  { color: "#fbbf24", bg: "linear-gradient(160deg,#451a03,#1c0a00)", bgImg: storageAsset("factions/bg_paladin.jpg"),   icon: "shield" },
+  Pícaro:   { color: "#34d399", bg: "linear-gradient(160deg,#022c22,#0a1c14)", bgImg: storageAsset("factions/bg_picaro.jpg"),    icon: "target" },
 };
 const RARITIES = ["Common","Uncommon","Rare","Epic","Legendary","Mythic"];
 const FACTIONS = ["Guerrero","Mago","Paladín","Pícaro"];

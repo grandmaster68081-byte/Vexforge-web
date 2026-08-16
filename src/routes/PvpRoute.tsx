@@ -23,10 +23,8 @@ import { getEquippedRelics } from "../domains/relics/repository";
 import type { BattleUnit } from "../lib/battleTypes";
 import { ContextualHint, ROUTE_HINTS } from "../components/battle/ContextualHint";
 import { ForgeIcon, type ForgeIconName } from "../shared/components/ForgeIcon";
-
-const BG_URL = "https://rscuzqnfccqvltkdcdny.supabase.co/storage/v1/object/public/vexforge-assets/backgrounds/bg_pvp.jpg";
-
-
+import { surfaceBackground } from "../lib/assetManifest";
+const BG_URL = surfaceBackground("pvp");
 // ─── AI.1: Matchmaking Overlay ────────────────────────────────────────────────
 function MatchmakingOverlay({ onCancel }: { onCancel: () => void }) {
   const [dots, setDots] = useState(1);

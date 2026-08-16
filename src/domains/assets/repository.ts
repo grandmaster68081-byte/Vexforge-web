@@ -1,5 +1,6 @@
 import { supabase } from "../../lib/supabase";
 import type { DomainResult } from "../../shared/types/domain";
+import { STORAGE_BASE } from "../../lib/assetManifest";
 
 export interface GameAsset {
 id: string;
@@ -33,7 +34,7 @@ const entries = await Promise.all(
       .map((f) => ({
         id: `${folder}/${f.name}`,
         display_name: f.name.replace(/\\.[^.]+$/, "").replace(/_/g, " "),
-        image_url: `https://rscuzqnfccqvltkdcdny.supabase.co/storage/v1/object/public/vexforge-assets/${folder}/${f.name}`,
+        image_url: `${STORAGE_BASE}/${folder}/${f.name}`,
         folder,
       }));
     return [folder, assets] as [string, GameAsset[]];

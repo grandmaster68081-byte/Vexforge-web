@@ -17,6 +17,7 @@ import { OnboardingModal }        from "./shared/components/OnboardingModal";
 import { ProtectedAdminRoute }       from "./shared/components/ProtectedAdminRoute";
 import { AudioEngine }               from "./lib/audioEngine";
 import { ForgeIcon, type ForgeIconName } from "./shared/components/ForgeIcon";
+import { storageAsset } from "./lib/assetManifest";
 
 // ─── Lazy routes ─────────────────────────────────────────────────────────────
 const HomeRoute         = lazy(() => import("./routes/HomeRoute").then(m => ({ default: m.HomeRoute })));
@@ -61,7 +62,7 @@ const RaidsRoute        = lazy(() => import("./routes/RaidsRoute").then(m => ({ 
 const SeasonRankingsRoute = lazy(() => import("./routes/SeasonRankingsRoute").then(m => ({ default: m.SeasonRankingsRoute })));
 
 // ─── Constants ───────────────────────────────────────────────────────────────
-const LOGO_URL = "https://rscuzqnfccqvltkdcdny.supabase.co/storage/v1/object/public/vexforge-assets/logo/IMG_20260606_040509_906.jpg";
+const LOGO_URL = storageAsset("logo/IMG_20260606_040509_906.jpg");
 const SIDEBAR_W = 220;
 
 // ─── Sidebar groups — chat92: added /shop, /raids, /withdrawal, /referral, /forge-ads, /season-rankings ──

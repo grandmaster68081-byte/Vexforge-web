@@ -1,6 +1,7 @@
 import { ForgeIcon } from "../shared/components/ForgeIcon";
+import { storageAsset } from "../lib/assetManifest";
 
-    const BG_URL = "https://rscuzqnfccqvltkdcdny.supabase.co/storage/v1/object/public/vexforge-assets/heroes/hero_assets.jpg";
+    const BG_URL = storageAsset("heroes/hero_assets.jpg");
 
     export function AssetsRoute() {
     return (

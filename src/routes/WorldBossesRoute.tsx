@@ -24,9 +24,8 @@ import {
   setActiveBattleRunMarker,
   startBattleRun,
 } from "../domains/battleRuns/repository";
-
-const BG_URL = "https://rscuzqnfccqvltkdcdny.supabase.co/storage/v1/object/public/vexforge-assets/backgrounds/bg_bosses.jpg";
-
+import { surfaceBackground } from "../lib/assetManifest";
+const BG_URL = surfaceBackground("world-bosses");
 function getTierConfig(tier: string): { label: string; color: string } {
   const t = tier.toLowerCase();
   if (t === "t1")        return { label: "T1",         color: "#8b8b9e" };
@@ -446,7 +445,7 @@ export function WorldBossesRoute() {
   }
 
   return (
-    <div className="route-wrapper" style={{ backgroundImage: `url(${BG_URL})` }}>
+    <div className="route-wrapper" style={{ backgroundImage: BG_URL ? `url(${BG_URL})` : undefined }}>
       <div style={{ background: "rgba(5,5,13,0.88)", minHeight: "100vh" }}>
         <main style={{ maxWidth: 1100, margin: "0 auto", padding: "32px 16px" }}>
           {/* Header */}

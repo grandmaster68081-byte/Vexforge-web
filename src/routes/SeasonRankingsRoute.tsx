@@ -4,9 +4,8 @@ import { getSeasonRankings, getMySeasonRanking, type SeasonRanking } from "../do
 import { PageLoader } from "../shared/components/PageLoader";
 import { EmptyState } from "../shared/components/EmptyState";
 import { ForgeIcon, type ForgeIconName } from "../shared/components/ForgeIcon";
-
-const BG_URL = "https://rscuzqnfccqvltkdcdny.supabase.co/storage/v1/object/public/vexforge-assets/backgrounds/bg_leaderboard.jpg";
-
+import { surfaceBackground } from "../lib/assetManifest";
+const BG_URL = surfaceBackground("leaderboard");
 const MMR_TIER: Array<{ min: number; label: string; color: string; icon: ForgeIconName }> = [
   { min: 2000, label: "Mítico",     color: "#FF4444", icon: "rank-mythic" },
   { min: 1600, label: "Legendario", color: "#E8B84B", icon: "crown" },
@@ -123,7 +122,7 @@ export function SeasonRankingsRoute() {
     <div style={{
       minHeight: "100vh",
       background: "#0a0a12",
-      backgroundImage: `url(${BG_URL})`,
+      backgroundImage: BG_URL ? `url(${BG_URL})` : undefined,
       backgroundSize: "cover",
       backgroundPosition: "center",
       backgroundAttachment: "fixed",

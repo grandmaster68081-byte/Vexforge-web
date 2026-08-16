@@ -4,9 +4,8 @@ import { checkMyAchievements } from "../domains/achievements/repository";
 import { SkeletonList } from "../shared/components/Skeleton";
 import { ForgeIcon, type ForgeIconName } from "../shared/components/ForgeIcon";
 import { achievementIcon, resolveAchievementIcon } from "../lib/achievementIcons";
-
-const BG_URL = "https://rscuzqnfccqvltkdcdny.supabase.co/storage/v1/object/public/vexforge-assets/backgrounds/bg_achievements.jpg";
-
+import { surfaceBackground } from "../lib/assetManifest";
+const BG_URL = surfaceBackground("achievements");
 const CATEGORY_LABELS: Record<string, { label: string; icon: ForgeIconName; color: string }> = {
   all:        { label: "Todos",        icon: "achievements", color: "#C9901F" },
   missions:   { label: "Misiones",     icon: "missions",     color: "#E84040" },

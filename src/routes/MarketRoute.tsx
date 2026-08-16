@@ -4,13 +4,14 @@ import { useMarket } from "../domains/market/useMarket";
 import { useState } from "react";
 import type { MarketListing, OwnedCard } from "../domains/market/repository";
 import { ForgeIcon, type ForgeIconName } from "../shared/components/ForgeIcon";
+import { storageAsset } from "../lib/assetManifest";
 
 const RARITY_COLOR: Record<string, string> = {
   Common: "#9A9AB0", Uncommon: "#3DC96B", Rare: "#4A9EFF",
   Epic: "#A855F7", Legendary: "#E8B84B", Mythic: "#FF4444",
 };
 const RARITY_ORDER = ["Mythic", "Legendary", "Epic", "Rare", "Uncommon", "Common"];
-const BG_URL = "https://rscuzqnfccqvltkdcdny.supabase.co/storage/v1/object/public/vexforge-assets/heroes/hero_market.jpg";
+const BG_URL = storageAsset("heroes/hero_market.jpg");
 
 // ─── Sort / Filter types ──────────────────────────────────────────────────────
 

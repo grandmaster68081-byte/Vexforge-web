@@ -1,3 +1,4 @@
+import { surfaceBackground } from "../lib/assetManifest";
 // FusionRoute v2.0 — Epic E: Crucible of Fusion — Phase 6+7
     // Crucible state: select source card → see policy → pick target → fuse
     import { useFusion } from "../domains/fusion/useFusion";
@@ -5,9 +6,7 @@
     import { BlockedAuthState } from "../shared/components/BlockedAuthState";
     import { EmptyState } from "../shared/components/EmptyState";
     import { ForgeIcon } from "../shared/components/ForgeIcon";
-
-    const BG_URL = "https://rscuzqnfccqvltkdcdny.supabase.co/storage/v1/object/public/vexforge-assets/backgrounds/bg_forge.jpg";
-
+const BG_URL = surfaceBackground("forge");
     const RARITY_COLOR: Record<string, string> = {
     Common: "#9a9ab0", Uncommon: "#3ddc84", Rare: "#4a9eff",
     Epic: "#a855f7", Legendary: "#e8b84b", Mythic: "#ff4444",
@@ -153,7 +152,9 @@
     return (
       <main style={{
         minHeight: "100vh",
-        background: `linear-gradient(rgba(4,4,12,0.88),rgba(4,4,12,0.94)) center/cover, url('${BG_URL}') center/cover no-repeat`,
+        background: BG_URL
+          ? `linear-gradient(rgba(4,4,12,0.88),rgba(4,4,12,0.94)) center/cover, url('${BG_URL}') center/cover no-repeat`
+          : 'linear-gradient(rgba(4,4,12,0.94),rgba(4,4,12,0.98))',
         padding: "28px 20px",
       }}>
         <div style={{ maxWidth: 960, margin: "0 auto" }}>

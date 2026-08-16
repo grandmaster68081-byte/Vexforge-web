@@ -3,9 +3,10 @@ import { Link } from "react-router-dom";
 import { useSession } from "../providers/AuthProvider";
 import { supabase } from "../lib/supabase";
 import { ForgeIcon, type ForgeIconName } from "../shared/components/ForgeIcon";
+import { storageAsset } from "../lib/assetManifest";
 
-const COVER_URL = "https://rscuzqnfccqvltkdcdny.supabase.co/storage/v1/object/public/vexforge-assets/cover/main.jpg";
-const LOGO_URL  = "https://rscuzqnfccqvltkdcdny.supabase.co/storage/v1/object/public/vexforge-assets/logo/IMG_20260606_040509_906.jpg";
+const COVER_URL = storageAsset("cover/main.jpg");
+const LOGO_URL  = storageAsset("logo/IMG_20260606_040509_906.jpg");
 type Mode = "signIn" | "signUp" | "resetPassword";
 const ACCOUNT_LINKS: Array<{ to: string; icon: ForgeIconName; label: string }> = [
   { to: "/profile", icon: "profile", label: "Perfil" },

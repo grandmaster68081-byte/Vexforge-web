@@ -21,8 +21,8 @@ import {
   applyInterphaseHeal,
   type MissionEncounterConfig,
 } from "../lib/missionEncounterEngine";
-
-const BG_URL = "https://rscuzqnfccqvltkdcdny.supabase.co/storage/v1/object/public/vexforge-assets/backgrounds/bg_missions.jpg";
+import { surfaceBackground } from "../lib/assetManifest";
+const BG_URL = surfaceBackground("missions");
 const FESTIVAL_END = "2026-10-16T01:53:23";
 
 const MISSION_TYPE_CONFIG: Record<string, { icon: ForgeIconName; color: string }> = {

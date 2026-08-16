@@ -21,9 +21,8 @@ import {
   setActiveBattleRunMarker,
   startBattleRun,
 } from "../domains/battleRuns/repository";
-
-const BG_URL = "https://rscuzqnfccqvltkdcdny.supabase.co/storage/v1/object/public/vexforge-assets/backgrounds/bg_bosses.jpg";
-
+import { surfaceBackground } from "../lib/assetManifest";
+const BG_URL = surfaceBackground("raids");
 const DIFFICULTY_CFG: Record<string, { color: string; label: string; icon: ForgeIconName }> = {
   easy:   { color: "#3ddc84", label: "Fácil",    icon: "check" },
   normal: { color: "#4a9eff", label: "Normal",   icon: "shield" },
@@ -463,7 +462,7 @@ export function RaidsRoute() {
     <div style={{
       minHeight: "100vh",
       background: "#0a0a12",
-      backgroundImage: `url(${BG_URL})`,
+      backgroundImage: BG_URL ? `url(${BG_URL})` : undefined,
       backgroundSize: "cover",
       backgroundPosition: "center",
       backgroundAttachment: "fixed",
