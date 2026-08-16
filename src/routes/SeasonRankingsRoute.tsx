@@ -69,7 +69,7 @@ function RankRow({ entry, isMe }: { entry: SeasonRanking; isMe: boolean }) {
             overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",
           }}>
             {entry.display_name ?? `Guerrero #${entry.rank_position}`}
-            {isMe && <span style={{ color: "#4a9eff", fontSize: 11, marginLeft: 6 }}>• Tú</span>}
+            {isMe && <span style={{ color: "#4a9eff", fontSize: 11, marginLeft: 6, display: "inline-flex", alignItems: "center", gap: 4 }}><span aria-hidden="true" style={{ width: 4, height: 4, background: "#4a9eff", transform: "rotate(45deg)", display: "inline-block" }} />Tú</span>}
           </span>
         </div>
         <div style={{ color: tier.color, fontSize: 11, marginTop: 2 }}>{tier.label}</div>

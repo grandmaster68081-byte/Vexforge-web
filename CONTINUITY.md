@@ -1107,3 +1107,26 @@ Los commits anteriores siguen disponibles en Git para auditoría y reversión. L
 - Alcance no modificado: datos, autenticación, roles, RPCs, RLS, wallet, economía, logros y resultados de combate.
 - Estado BLOCKED conservado: vistas autenticadas (logros reales, mazo guardado, raids del jugador) sin sesión normal autorizada; no se usó service_role.
 - Siguiente unidad sugerida: decisión canónica sobre el dato `achievements.icon` en Supabase (unidad de datos, no de UI).
+
+## 2026-08-16 — VE-2-ACHIEVEMENTS-ICON-DATA — IMPLEMENTED_UNVERIFIED
+
+- Tipo de sesión: IMPLEMENTACIÓN (unidad de datos + presentación, continuación y cierre de la línea VE-1-ICON-LANGUAGE).
+- Unidad: `public.achievements.icon` en Supabase `rscuzqnfccqvltkdcdny`, `supabase/migrations/0007_ve2_achievements_icon_canonical.sql`, `src/lib/achievementIcons.ts`, `src/routes/AchievementsRoute.tsx`, `src/routes/ProfileRoute.tsx`, `src/shared/components/AchievementToastCard.tsx`, `src/routes/DeckBuilderRoute.tsx`, `src/routes/ForgeAdsRoute.tsx`, `src/routes/SeasonRankingsRoute.tsx`.
+- Fuente canónica: código real de `main` (baseline `3295eb8`), datos vivos de Supabase, `ForgeIcon`, `VEXFORGE_PROTOCOL_V2.md` y esta continuidad.
+- Estado inicial: deuda declarada en VE-1-RESIDUAL-ICON-LANGUAGE ("decisión canónica sobre `achievements.icon` en el dato"); 25 filas con emoji en el dato oficial y 3 sustitutos Unicode residuales en UI. Estado actual: IMPLEMENTED_UNVERIFIED.
+- Nivel Q: Q2 → Q3 en el dato de logros y en su identidad visual por logro (antes sólo por categoría).
+- Baseline verificado: consulta de las 25 filas de `public.achievements` vía Management API; barrido Unicode sobre todo `src/` (sólo 5 coincidencias visibles, 2 en comentarios).
+- Cambio realizado:
+  - Migración `0007`: respaldo de cada emoji heredado en `metadata.legacy_icon` (idempotente, no sobrescribe respaldo previo), asignación canónica `code → glifo ForgeIcon` para los 25 logros y degradación a `achievements` para cualquier valor no canónico. No toca puntos, recompensas, categorías, RLS, RPCs ni desbloqueos.
+  - `src/lib/achievementIcons.ts`: nuevo `ACHIEVEMENT_CODE_ICON` (identidad propia por logro), conjunto blanco `ALLOWED_DATA_ICONS` derivado de los mapas canónicos y `resolveAchievementIcon({code, category, icon})` con orden dato-canónico → code → categoría → fallback. Un icono desconocido nunca se renderiza tal cual.
+  - `AchievementsRoute`, `ProfileRoute` y `AchievementToastCard` pasan de `achievementIcon(category)` a `resolveAchievementIcon(ach)`; ahora cada logro tiene glifo diferenciado.
+  - `DeckBuilderRoute`: viñeta `•` de errores de validación → `ForgeIcon name="warning"`.
+  - `ForgeAdsRoute` y `SeasonRankingsRoute`: viñetas `•` → rombo CSS decorativo con `aria-hidden`, precedente de `EconomyRoute`.
+- Contrato de datos: `achievements.icon` cambia de emoji a nombre de glifo canónico; el valor heredado queda en `metadata.legacy_icon` (reversible con un UPDATE inverso). Ninguna otra columna, RPC o política fue modificada.
+- Alcance no modificado: Storage, autenticación, roles, economía, energía, wallet, recompensas y resultados autoritativos.
+- Accesibilidad: `ForgeIcon` conserva `aria-hidden=true` y `focusable=false`; los rombos son decorativos con `aria-hidden`; ningún texto ni control se eliminó; sin animación nueva (reduced motion no afectado).
+- Verificaciones ejecutadas: migración aplicada vía Management API con SELECT posterior de las 25 filas (icono canónico + `legacy_icon` presente); `tsc -p tsconfig.app.json --noEmit` sin errores; `npm run build` correcto; barrido Unicode posterior sobre `src/` sin sustitutos visibles.
+- Deuda registrada: quedan flechas y separadores tipográficos únicamente en comentarios de código y CSS (sin impacto de identidad). Otras tablas de catálogo no fueron auditadas en busca de emojis en el dato (unidad futura).
+- Bloqueos: la vista autenticada de logros reales (desbloqueos, toast en vivo, perfil del jugador) sigue BLOCKED por falta de sesión normal autorizada; no se usó service_role ni se fabricaron resultados.
+- Condición de reapertura: regresión visual, discrepancia entre `main` y el bundle público, o decisión canónica distinta sobre el mapping `code → glifo`.
+- Siguiente acción verificable: confirmar `build-manifest.json` público con el commit de esta sesión y HTTP 200 en `/achievements`, `/profile`, `/deck-builder`, `/season-rankings` y `/forge-ads`.

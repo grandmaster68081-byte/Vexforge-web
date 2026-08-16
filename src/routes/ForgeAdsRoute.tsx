@@ -203,7 +203,7 @@ export function ForgeAdsRoute() {
           "Sin trampas — cada anuncio verificado server-side",
         ].map((rule, i) => (
           <div key={i} style={{ display:"flex", gap:8, marginBottom:6 }}>
-            <span style={{ color:C.gold, fontSize:11, flexShrink:0 }}>•</span>
+            <span aria-hidden="true" style={{ width:5, height:5, marginTop:5, flexShrink:0, background:C.gold, transform:"rotate(45deg)" }} />
             <span style={{ color:C.muted, fontSize:11, lineHeight:1.5 }}>{rule}</span>
           </div>
         ))}

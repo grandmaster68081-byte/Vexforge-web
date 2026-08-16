@@ -5,7 +5,7 @@
     import { supabase } from "../../lib/supabase";
     import { AudioEngine } from "../../lib/audioEngine";
 import { ForgeIcon } from "./ForgeIcon";
-import { achievementIcon } from "../../lib/achievementIcons";
+import { resolveAchievementIcon } from "../../lib/achievementIcons";
 
     interface AchievementData {
     id: string;
@@ -176,7 +176,7 @@ import { achievementIcon } from "../../lib/achievementIcons";
                 animation: "ach-icon 0.75s ease-in-out 0.2s both",
                 display: "inline-block",
               }}>
-                <ForgeIcon name={achievementIcon(current.category)} size={34} style={{ color: r.color }} />
+                <ForgeIcon name={resolveAchievementIcon(current)} size={34} style={{ color: r.color }} />
               </div>
 
               <div style={{ flex:1, minWidth:0 }}>

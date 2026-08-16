@@ -177,7 +177,7 @@ function DeckPanel({ selectedIds, myCards, saving, saveMsg, validation, onValida
 
       {validation && !validation.valid && validation.errors.length > 0 && (
         <div style={{ background: "#2a1a1a", border: "1px solid #e3573f44", borderRadius: 10, padding: "12px 14px", marginBottom: 10 }}>
-          {validation.errors.map((v, i) => <div key={i} style={{ color: "#e3573f", fontSize: 11, marginBottom: 4 }}>• {v}</div>)}
+          {validation.errors.map((v, i) => <div key={i} style={{ color: "#e3573f", fontSize: 11, marginBottom: 4 }}><ForgeIcon name="warning" size={11} style={{ verticalAlign: "middle", marginRight: 5 }} />{v}</div>)}
         </div>
       )}
       {saveMsg && (

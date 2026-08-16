@@ -3,7 +3,7 @@ import { useAchievements } from "../domains/achievements/useAchievements";
 import { checkMyAchievements } from "../domains/achievements/repository";
 import { SkeletonList } from "../shared/components/Skeleton";
 import { ForgeIcon, type ForgeIconName } from "../shared/components/ForgeIcon";
-import { achievementIcon } from "../lib/achievementIcons";
+import { achievementIcon, resolveAchievementIcon } from "../lib/achievementIcons";
 
 const BG_URL = "https://rscuzqnfccqvltkdcdny.supabase.co/storage/v1/object/public/vexforge-assets/backgrounds/bg_achievements.jpg";
 
@@ -62,7 +62,7 @@ function AchievementCard({
         display: "flex", alignItems: "center", justifyContent: "center",
         color: unlocked ? "#C9901F" : "rgba(255,255,255,0.45)",
       }}>
-        <ForgeIcon name={unlocked ? achievementIcon(ach.category) : "lock"} size={26} />
+        <ForgeIcon name={unlocked ? resolveAchievementIcon(ach) : "lock"} size={26} />
       </div>
       <div style={{ flex: 1, minWidth: 0 }}>
         <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap", marginBottom: 4 }}>
