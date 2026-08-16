@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { supabase } from "../../lib/supabase";
+import { ForgeIcon } from "./ForgeIcon";
 
 const LEVEL_TITLES: [number, string][] = [
   [1,"Aprendiz"],[10,"Iniciado"],[20,"Forjador"],[30,"Artesano"],[40,"Maestro"],
@@ -100,9 +101,10 @@ export function LevelUpModal() {
         <div style={{
           fontSize: 80, marginBottom: 12,
           animation: "lvl-glow-pulse 2s ease-in-out infinite, lvl-star-spin 4s linear infinite",
-          display: "inline-block",
+          display: "inline-flex",
+          color: "#e8b84b",
         }}>
-          ⭐
+          <ForgeIcon name="star" size={80} strokeWidth={1.2} />
         </div>
 
         {/* Label */}

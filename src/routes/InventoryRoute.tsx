@@ -320,7 +320,7 @@ function InvCardDetailModal({
             borderRadius: 6, color: "#8888aa", cursor: "pointer",
             width: 32, height: 32, fontSize: 16, display: "flex",
             alignItems: "center", justifyContent: "center", flexShrink: 0,
-          }}>✕</button>
+          }} aria-label="Cerrar"><ForgeIcon name="close" size={14} /></button>
         </div>
 
         {/* Body */}
@@ -634,8 +634,9 @@ export function InventoryRoute() {
               <button onClick={() => { setSearch(""); setFilterRarity("all"); setFilterFaction("all"); }}
                 style={{ background: "rgba(239,68,68,.12)", border: "1px solid rgba(239,68,68,.3)",
                   borderRadius: 8, padding: "8px 14px", color: "#f87171", fontSize: 11,
-                  fontFamily: "Rajdhani,sans-serif", fontWeight: 700, cursor: "pointer" }}>
-                ✕ Limpiar
+                  fontFamily: "Rajdhani,sans-serif", fontWeight: 700, cursor: "pointer",
+                  display: "inline-flex", alignItems: "center", gap: 6 }}>
+                <ForgeIcon name="close" size={12} />Limpiar
               </button>
             )}
           </div>

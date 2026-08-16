@@ -74,7 +74,8 @@ function RelicCard({
           border: `1px solid ${color}88`, borderRadius: 999,
           color, fontSize: 9, fontWeight: 900, padding: "3px 9px",
           fontFamily: '"IBM Plex Mono",monospace', letterSpacing: "0.12em",
-        }}>⚡ EQUIPADA</div>
+          display: "inline-flex", alignItems: "center", gap: 5,
+        }}><ForgeIcon name="energy" size={10} />EQUIPADA</div>
       )}
 
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 12, marginBottom: 10 }}>
@@ -297,7 +298,7 @@ export function RelicsRoute() {
       {/* Equipped strip */}
       {authed && equippedRelics.length > 0 && (
         <section style={{ marginBottom: 20 }}>
-          <div style={{ color: "#a855f7", fontFamily: '"IBM Plex Mono",monospace', fontSize: 10, letterSpacing: "0.12em", marginBottom: 10, textTransform: "uppercase" }}>⚡ Reliquias activas en combate</div>
+          <div style={{ color: "#a855f7", fontFamily: '"IBM Plex Mono",monospace', fontSize: 10, letterSpacing: "0.12em", marginBottom: 10, textTransform: "uppercase", display: "flex", alignItems: "center", gap: 6 }}><ForgeIcon name="energy" size={11} />Reliquias activas en combate</div>
           <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
             {equippedRelics.map(r => {
               const col = RARITY_COLORS[getRarity(r)] ?? RARITY_COLORS.Common;

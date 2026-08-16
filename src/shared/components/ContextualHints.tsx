@@ -114,8 +114,8 @@ export function ContextualHint({ page }: { page: string }) {
         </div>
         <button onClick={dismiss} style={{
           background:"none", border:"none", color:"#475569", cursor:"pointer",
-          fontSize:16, lineHeight:1, padding:0, marginLeft:4,
-        }}>✕</button>
+          fontSize:16, lineHeight:1, padding:0, marginLeft:4, display:"inline-flex",
+        }} aria-label="Cerrar"><ForgeIcon name="close" size={14} /></button>
       </div>
       <div style={{ marginTop:10, textAlign:"right" }}>
         <button onClick={dismiss} style={{

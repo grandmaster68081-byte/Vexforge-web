@@ -746,7 +746,7 @@ export function PvpRoute() {
       <span style={{ color: '#86efac', fontFamily: 'IBM Plex Mono,monospace', fontWeight: 700, fontSize: 13 }}>
         VICTORIA · <span style={{ color: '#4ade80' }}>+{aiVexEarned} VEX</span> ganados
       </span>
-      <button onClick={() => setAiVexEarned(null)} style={{ background: 'none', border: 'none', color: '#86efac', cursor: 'pointer', fontSize: 14, marginLeft: 8 }}>✕</button>
+      <button onClick={() => setAiVexEarned(null)} style={{ background: 'none', border: 'none', color: '#86efac', cursor: 'pointer', fontSize: 14, marginLeft: 8, display: 'inline-flex' }} aria-label="Cerrar"><ForgeIcon name="close" size={13} /></button>
     </div>
   ) : aiCapReached ? (
     <div style={{
@@ -757,7 +757,7 @@ export function PvpRoute() {
     }}>
       <ForgeIcon name="lock" size={14} />
       <span style={{ color: '#fbbf24', fontFamily: 'IBM Plex Mono,monospace', fontSize: 12 }}>Cap diario alcanzado · Vuelve mañana</span>
-      <button onClick={() => setAiCapReached(false)} style={{ background: 'none', border: 'none', color: '#fbbf24', cursor: 'pointer', fontSize: 14, marginLeft: 8 }}>✕</button>
+      <button onClick={() => setAiCapReached(false)} style={{ background: 'none', border: 'none', color: '#fbbf24', cursor: 'pointer', fontSize: 14, marginLeft: 8, display: 'inline-flex' }} aria-label="Cerrar"><ForgeIcon name="close" size={13} /></button>
     </div>
   ) : null;
 
@@ -931,8 +931,10 @@ export function PvpRoute() {
           <button
             onClick={() => setEloChangeBanner(null)}
             style={{ background: "none", border: "none", cursor: "pointer", fontSize: 14,
-              color: eloChangeBanner.won ? "#86efac" : "#fca5a5", marginLeft: 4 }}
-          >✕</button>
+              color: eloChangeBanner.won ? "#86efac" : "#fca5a5", marginLeft: 4,
+              display: "inline-flex" }}
+            aria-label="Cerrar"
+          ><ForgeIcon name="close" size={13} /></button>
         </div>
       )}
       <main style={{ maxWidth: 920, margin: "0 auto", padding: "clamp(20px,5vw,32px) 16px" }}>

@@ -1,3 +1,18 @@
+## 2026-08-16 — VE-1-SHARED-STATES-ICON-LANGUAGE — IMPLEMENTED_UNVERIFIED
+
+- **Tipo de sesión:** REFINAMIENTO / IMPLEMENTACIÓN. **Fuente canónica:** código real de `main`, `ForgeIcon`, Supabase vivo y deploy público.
+- **Unidad:** VE-1-SHARED-STATES-ICON-LANGUAGE (cierres y marcadores Unicode en Inventario, PvP, Reliquias, ContextualHints y LevelUpModal).
+- **Estado inicial:** `NOT_STARTED`; **estado actual:** `IMPLEMENTED_UNVERIFIED`; **nivel actual:** Q2; **objetivo:** Q3.
+- **Objetivo:** retirar los últimos sustitutos Unicode visibles de cierre (`✕`), energía (`⚡`) y celebración (`⭐`) sin cambiar datos, filtros, MMR, recompensas, autenticación ni resultados autoritativos.
+- **Cambio:** `InventoryRoute.tsx` (cierre de modal de carta y botón Limpiar), `PvpRoute.tsx` (cierres de banners de VEX, cap diario y cambio de MMR), `RelicsRoute.tsx` (insignia EQUIPADA y cabecera de reliquias activas), `ContextualHints.tsx` (cierre) y `LevelUpModal.tsx` (marca de subida de nivel) usan mappings canónicos de `ForgeIcon` (`close`, `energy`, `star`). Los botones sin texto visible reciben `aria-label="Cerrar"`.
+- **Alcance autoritativo:** no se modificaron Supabase, Storage, RPCs, RLS, economía, recompensas, cartas, inventario, MMR, autenticación ni navegación.
+- **Evidencia local:** `npm ci --ignore-scripts`, `npx tsc --noEmit -p tsconfig.app.json`, `npm run verify:build` y `git diff --check` finalizaron correctamente; el escaneo Unicode de los cinco consumidores no conserva los glyphs objetivo.
+- **Responsive y accesibilidad:** los SVG de `ForgeIcon` permanecen decorativos (`aria-hidden`/`focusable=false`), los cierres ganan nombre accesible y se conservan textos, colores y callbacks. Queda pendiente revisión visual interactiva en escritorio, tablet y móvil, foco y `prefers-reduced-motion`.
+- **Deuda y condición de reapertura:** permanecen runas tipográficas decorativas en `PageLoader.tsx` y `NotFoundRoute.tsx`, y glyphs en datos de motores (`aiBattleEngine.ts`, `missionEncounterEngine.ts`, `dailyChallenge.ts`, repositorios de home/perfil/deck); no se mezclan con esta unidad. Reabrir ante regresión de estas superficies, discrepancia del bundle público o mapping canónico contradictorio.
+- **Siguiente acción verificable:** cadena siguiente sobre las runas decorativas de carga y 404, y revisión visual interactiva responsive con foco y `prefers-reduced-motion`; no se declara `OPERATIONAL` sin evidencia de navegador real ni sesión autenticada normal.
+
+---
+
 ## 2026-08-15 — VE-1-ECONOMY-ICON-LANGUAGE — CANDIDATE_FOR_REVIEW
 
 - **Tipo de sesión:** REFINAMIENTO / IMPLEMENTACIÓN.
