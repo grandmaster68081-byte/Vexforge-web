@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { useProfile } from "../domains/profile/useProfile";
 import { getRank, tierProgress } from "../lib/rankUtils";
+import { ForgeIcon } from "../shared/components/ForgeIcon";
 import type { PlayerStats, PlayerRank, PlayerAchievement, WalletSnapshot } from "../domains/profile/repository";
 
 // ─── Constants ────────────────────────────────────────────────────────────────
@@ -76,7 +77,7 @@ function RankCard({ rank, loading }: { rank: PlayerRank | null; loading: boolean
   const tier    = getRank(mmr);
   const pct     = tierProgress(mmr);
   const color   = rank?.tier_color ?? tier.color;
-  const icon    = rank?.tier_icon  ?? tier.icon;
+  const icon    = tier.icon;
   const tierName= rank?.tier       ?? tier.name;
   const wins    = rank?.wins    ?? 0;
   const losses  = rank?.losses  ?? 0;
@@ -89,7 +90,7 @@ function RankCard({ rank, loading }: { rank: PlayerRank | null; loading: boolean
       border: `1px solid ${color}33`, padding: "20px 22px" }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 16 }}>
         <div>
-          <div className="faction-emblem-breathe" style={{ fontSize: 38, lineHeight: 1, display: "inline-block", ["--emblem-glow" as string]: color + "88" }}>{icon}</div>
+          <div className="faction-emblem-breathe" style={{ fontSize: 38, lineHeight: 1, display: "inline-block", ["--emblem-glow" as string]: color + "88" }}><ForgeIcon name={icon} size={38} /></div>
           <div style={{ fontSize: 18, fontWeight: 700, fontFamily: '"Rajdhani",sans-serif',
             color, letterSpacing: "0.06em", marginTop: 6 }}>{tierName.toUpperCase()}</div>
           <div style={{ fontSize: 12, color: "var(--fg-muted)", marginTop: 2 }}>
@@ -104,7 +105,7 @@ function RankCard({ rank, loading }: { rank: PlayerRank | null; loading: boolean
           {shields > 0 && (
             <div style={{ marginTop: 6, fontSize: 12, color: "#4A9EFF",
               fontFamily: '"IBM Plex Mono",monospace' }}>
-              🛡️ ×{shields} escudos
+              <ForgeIcon name="shield" size={12} style={{ verticalAlign: "middle", marginRight: 4 }} />×{shields} escudos
             </div>
           )}
         </div>
