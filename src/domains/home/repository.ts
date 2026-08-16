@@ -1,4 +1,5 @@
 import { supabase } from "../../lib/supabase";
+import type { ForgeIconName } from "../../shared/components/ForgeIcon";
 
 export interface DailyCard {
   id:        string;
@@ -14,7 +15,7 @@ export interface DailyCard {
 export interface ActivityItem {
   id:   string;
   type: "mission";
-  icon: string;
+  icon: ForgeIconName;
   text: string;
   time: string;
 }
@@ -74,7 +75,7 @@ export async function getRecentActivity(limit = 8): Promise<ActivityItem[]> {
   return (data as any[]).map((m: any) => ({
     id:   m.id,
     type: "mission" as const,
-    icon: "📜",
+    icon: "missions",
     text: `${nameMap[m.player_id] ?? "Un forjador"} completó "${(m as any).missions?.name ?? "una misión"}"`,
     time: m.updated_at,
   }));

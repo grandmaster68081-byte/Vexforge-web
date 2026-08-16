@@ -125,7 +125,7 @@ export async function getPlayerAchievements(playerId: string): Promise<DomainRes
     code:           row.achievements?.code     ?? "",
     category:       row.achievements?.category ?? "",
     points:         row.achievements?.points   ?? 0,
-    icon:           row.achievements?.icon     ?? "🏆",
+    icon:           row.achievements?.icon     ?? "",
     unlocked_at:    row.unlocked_at            ?? "",
   }));
   return { status: "ready", data: mapped };

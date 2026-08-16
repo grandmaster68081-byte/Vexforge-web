@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { useProfile } from "../domains/profile/useProfile";
 import { getRank, tierProgress } from "../lib/rankUtils";
+import { achievementIcon } from "../lib/achievementIcons";
 import { ForgeIcon, type ForgeIconName } from "../shared/components/ForgeIcon";
 import type { PlayerStats, PlayerRank, PlayerAchievement, WalletSnapshot } from "../domains/profile/repository";
 
@@ -223,7 +224,9 @@ function AchievementBadge({ ach }: { ach: PlayerAchievement }) {
     <div style={{ display: "flex", alignItems: "center", gap: 10,
       background: "var(--layer-1)", borderRadius: 10, padding: "10px 14px",
       border: `1px solid ${color}22` }}>
-      <div style={{ fontSize: 22, flexShrink: 0 }}>{ach.icon}</div>
+      <div style={{ display: "flex", alignItems: "center", flexShrink: 0, color }}>
+        <ForgeIcon name={achievementIcon(ach.category)} size={22} strokeWidth={1.7} />
+      </div>
       <div style={{ flex: 1, minWidth: 0 }}>
         <div style={{ fontSize: 12, fontWeight: 700, color: "var(--fg-primary)",
           fontFamily: '"Rajdhani",sans-serif', letterSpacing: "0.04em",

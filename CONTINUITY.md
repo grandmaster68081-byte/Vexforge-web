@@ -1071,3 +1071,27 @@ Los commits anteriores siguen disponibles en Git para auditoría y reversión. L
 - Condición de reapertura: regresión visual, discrepancia entre `main` y el bundle público, o mapping canónico contradictorio de modos/regiones.
 - Siguiente unidad: `VE-1-BATTLE-COMPONENTS-ICON-LANGUAGE` sobre `ForgeFormationBoard`, `InteractiveBattleBoard`, `BattleCinematicScreen`, `TutorialBattle` y `ContextualHint`.
 - Siguiente acción verificable: confirmar `build-manifest.json` público con el commit de esta sesión y HTTP 200 en `/pvp`, `/missions` y rutas críticas.
+
+## 2026-08-16 — VE-1-RESIDUAL-ICON-LANGUAGE — IMPLEMENTED_UNVERIFIED
+
+- Tipo de sesión: IMPLEMENTACIÓN / REFINAMIENTO (continuación y cierre del barrido de la línea VE-1-ICON-LANGUAGE).
+- Unidad: `src/routes/ProfileRoute.tsx`, `src/domains/profile/repository.ts`, `src/domains/home/repository.ts`, `src/domains/deck/useDeck.ts`, `src/routes/RaidsRoute.tsx`, `src/routes/EconomyRoute.tsx`.
+- Fuente canónica: código real de `main` (baseline `c64c183e`), Supabase vivo `rscuzqnfccqvltkdcdny`, `ForgeIcon`, `src/lib/achievementIcons.ts`, `VEXFORGE_PROTOCOL_V2.md` y esta continuidad.
+- Estado inicial: deuda declarada en VE-1-ACHIEVEMENTS/PROFILE (`AchievementBadge` renderizaba `ach.icon` del dato) y sustitutos Unicode residuales en `src/domains` y dos rutas. Estado actual: IMPLEMENTED_UNVERIFIED.
+- Nivel Q: Q2 → Q3 en perfil, actividad reciente del home, mensaje de guardado de mazo, raids y cabecera de economía.
+- Baseline verificado: barrido Unicode sobre todo `src/`; tras el cambio sólo quedan flechas tipográficas en comentarios de código y separadores en `styles.css`, ninguna en identidad visible.
+- Cambio realizado:
+  - `ProfileRoute`: `AchievementBadge` deja de renderizar el emoji del dato y usa `<ForgeIcon name={achievementIcon(ach.category)} />` con el color de categoría existente.
+  - `src/domains/profile/repository.ts`: el fallback del contrato pasa de `"🏆"` a `""`; el dato oficial `achievements.icon` no se modifica y ya no se usa como identidad visual.
+  - `src/domains/home/repository.ts`: `ActivityItem.icon` pasa de `string` con emoji a `ForgeIconName` tipado con valor `missions`, alineado con el `ForgeIcon` que ya renderiza `HomeRoute`.
+  - `src/domains/deck/useDeck.ts`: el mensaje de guardado pierde el check Unicode y conserva el texto real y el número autoritativo de slots.
+  - `RaidsRoute`: el botón de recarga usa el glifo `refresh` más la etiqueta "Actualizar" (antes `↺` como icono).
+  - `EconomyRoute`: el distintivo "En vivo" usa un punto CSS con `aria-hidden` en vez del carácter `●`.
+- Contrato de datos: sin cambios. Ninguna columna, RPC, política, recompensa, energía, wallet ni resultado autoritativo fue tocado; sólo presentación.
+- Alcance no modificado: Supabase, Storage, migraciones, RPCs, RLS, roles, economía, logros, raids y autenticación.
+- Accesibilidad: `ForgeIcon` conserva `aria-hidden=true` y `focusable=false`; el punto de estado es decorativo con `aria-hidden`; todos los textos y controles nativos se mantienen; sin animación nueva (reduced motion no afectado).
+- Verificaciones ejecutadas: `tsc -p tsconfig.app.json --noEmit` sin errores; `npm run build` correcto; barrido Unicode sobre los seis archivos de la unidad sin sustitutos visibles.
+- Deuda registrada: la columna `achievements.icon` sigue conteniendo emojis en el dato oficial (unidad de datos futura, requiere decisión canónica). Quedan flechas y separadores tipográficos únicamente en comentarios y CSS, sin impacto de identidad.
+- Bloqueos: las vistas autenticadas de perfil, mazo, raids y economía real (logros desbloqueados, slots guardados, raids del jugador) siguen BLOCKED por falta de sesión normal autorizada; no se usó service_role ni se fabricaron resultados.
+- Condición de reapertura: regresión visual, discrepancia entre `main` y el bundle público, o decisión canónica sobre `achievements.icon` en el dato.
+- Siguiente acción verificable: confirmar `build-manifest.json` público con el commit de esta sesión y HTTP 200 en `/profile`, `/raids`, `/economy` y rutas críticas.

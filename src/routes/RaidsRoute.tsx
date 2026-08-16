@@ -490,8 +490,9 @@ export function RaidsRoute() {
             </button>
             <button
               onClick={reload}
-              style={{ marginLeft: "auto", padding: "8px 16px", borderRadius: 8, border: "1px solid #2a2a3a", background: "transparent", color: "#7a7a9a", fontSize: 12, cursor: "pointer" }}>
-              ↺ Actualizar
+              style={{ marginLeft: "auto", padding: "8px 16px", borderRadius: 8, border: "1px solid #2a2a3a", background: "transparent", color: "#7a7a9a", fontSize: 12, cursor: "pointer", display: "inline-flex", alignItems: "center", gap: 6 }}>
+              <ForgeIcon name="refresh" size={14} strokeWidth={1.8} />
+              Actualizar
             </button>
           </div>
 

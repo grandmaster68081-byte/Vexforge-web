@@ -169,8 +169,13 @@ function PublicDashboard() {
             marginLeft:"auto",padding:"4px 12px",borderRadius:20,
             background:`${C.green}18`,border:`1px solid ${C.green}28`,
             fontSize:10,fontWeight:700,color:C.green,letterSpacing:1,textTransform:"uppercase",
+            display:"inline-flex",alignItems:"center",gap:6,
           }}>
-            ● En vivo
+            <span aria-hidden="true" style={{
+              width:6,height:6,borderRadius:"50%",background:C.green,
+              boxShadow:`0 0 6px ${C.green}`,flexShrink:0,
+            }} />
+            En vivo
           </div>
         )}
       </div>

@@ -72,7 +72,7 @@ const save = useCallback(async () => {
   setSaving(true); setSaveMsg(null);
   const res = await saveDeck(selectedIds);
   if (res.data) {
-    setSaveMsg(`✓ Mazo guardado — ${res.data.slots_saved} cartas`);
+    setSaveMsg(`Mazo guardado — ${res.data.slots_saved} cartas`);
     await load();
   } else {
     setSaveMsg(res.reason ?? "Error al guardar el mazo");
