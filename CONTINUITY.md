@@ -750,3 +750,12 @@ Los commits anteriores siguen disponibles en Git para auditoría y reversión. L
 - Bloqueos: la verificación autenticada de jugador/owner sigue BLOCKED; no se fabrican sesiones ni resultados con service_role.
 - Condición de reapertura: regresión visual, discrepancia entre main y el bundle público, o mapping canónico contradictorio.
 - Siguiente acción verificable: confirmar que el deploy de Cloudflare Pages informa el commit de esta sesión y que /friends, /relics y las rutas críticas responden HTTP 200; después continuar el lote siguiente de la línea de iconos.
+
+### Cierre verificable — VE-1-ICON-LANGUAGE-BATCH-SOCIAL-RELICS-HINTS-404
+
+- Estado actual: OPERATIONAL para las cuatro superficies en su capa de presentación.
+- Publicación: main = 563a46decd1418e628f9954dbbb10f2802d350f1 y build-manifest.json público informa el mismo sourceCommit.
+- Rutas verificadas HTTP 200: /, /friends, /relics, /cards, /battle, /packs, /tutorial, /lore, /season-pass, /referrals, /evolution, /quests, /admin, /account, /pvp, /missions, /leaderboard, /inventory, /market y /fusion.
+- Verificación de runtime: navegación headless a /, /friends, /relics y una ruta inexistente sin errores de consola ni pageerror.
+- Build: tsc sin errores y vite build correcto antes de publicar.
+- Estado BLOCKED conservado: la vista autenticada de /friends (lista, solicitudes y desafíos reales) no se probó porque no existe sesión normal autorizada del jugador; no se usó service_role para sustituirla. Condición de reapertura: sesión autorizada del owner o jugador de prueba.
