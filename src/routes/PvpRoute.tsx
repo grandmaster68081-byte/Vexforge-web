@@ -206,8 +206,8 @@ function PreBattleModal({
                 background: `linear-gradient(135deg,${myTier.color}22,#0e0e1a)`,
                 border: `2px solid ${myTier.color}55`,
                 display: "flex", alignItems: "center", justifyContent: "center",
-                fontSize: 28,
-              }}>{myTier.icon}</div>
+                fontSize: 28, color: myTier.color,
+              }}><ForgeIcon name={myTier.icon} size={28} /></div>
               <div style={{ fontFamily: "Cinzel,serif", color: "#4a9eff", fontSize: 13, fontWeight: 700 }}>Tú</div>
               <div style={{ color: myTier.color, fontSize: 11, fontWeight: 700 }}>{myTier.name}</div>
               <div style={{ color: "#7a7a9a", fontSize: 10, fontFamily: "IBM Plex Mono,monospace" }}>{myMmr} MMR</div>
@@ -236,8 +236,8 @@ function PreBattleModal({
                 background: `linear-gradient(135deg,${oppTier.color}22,#0e0e1a)`,
                 border: `2px solid ${oppTier.color}55`,
                 display: "flex", alignItems: "center", justifyContent: "center",
-                fontSize: 28,
-              }}>{oppTier.icon}</div>
+                fontSize: 28, color: oppTier.color,
+              }}><ForgeIcon name={oppTier.icon} size={28} /></div>
               <div style={{
                 fontFamily: "Cinzel,serif", color: "#e8e8f0", fontSize: 13, fontWeight: 700,
                 overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",
@@ -341,8 +341,8 @@ function OpponentCard({
           background: `linear-gradient(135deg,${tier.color}22,#0e0e1a)`,
           border: `1px solid ${tier.color}44`,
           display: "flex", alignItems: "center", justifyContent: "center",
-          fontSize: 22,
-        }}>{tier.icon}</div>
+          fontSize: 22, color: tier.color,
+        }}><ForgeIcon name={tier.icon} size={22} /></div>
 
       {/* Info */}
       <div style={{ flex: 1, minWidth: 0 }}>
@@ -1075,8 +1075,8 @@ export function PvpRoute() {
                 <div style={{ textAlign: "center", minWidth: 52 }}>
                   <div
                     className={`rank-badge-${tier.name.toLowerCase()}`}
-                    style={{ fontSize: 38, lineHeight: 1, borderRadius: "50%", display: "inline-block" }}
-                  >{tier.icon}</div>
+                    style={{ fontSize: 38, lineHeight: 1, borderRadius: "50%", display: "inline-block", color: tier.color }}
+                  ><ForgeIcon name={tier.icon} size={38} /></div>
                   <div style={{ color: tier.color, fontWeight: 800, fontSize: 10, letterSpacing: "0.08em", marginTop: 3 }}>
                     {tier.name.toUpperCase()}
                   </div>
@@ -1273,7 +1273,7 @@ export function PvpRoute() {
                           color: ["#e8702a", "#c0c0c0", "#cd7f32"][i] ?? "#6a6a8a",
                           fontSize: 12, minWidth: 20, fontWeight: 700,
                         }}>{i + 1}</span>
-                        <span style={{ fontSize: 14 }}>{tier.icon}</span>
+                        <span style={{ fontSize: 14, color: tier.color, display: "inline-flex" }}><ForgeIcon name={tier.icon} size={14} /></span>
                         <span style={{
                           color: isMe ? "#e8e8f0" : "#ccc",
                           fontSize: 12, flex: 1, fontWeight: isMe ? 700 : 400,
