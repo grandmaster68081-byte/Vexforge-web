@@ -1,4 +1,5 @@
 import { Component, type ErrorInfo, type ReactNode } from "react";
+import { ForgeIcon } from "./ForgeIcon";
 import { getSafeErrorMessage, recordRuntimeIssue } from "../../lib/runtimeDiagnostics";
 
 /**
@@ -35,7 +36,7 @@ export class ErrorBoundary extends Component<Props, State> {
             gap: 14,
           }}
         >
-          <div style={{ fontSize: 40 }}>⚠️</div>
+          <ForgeIcon name="warning" size={40} style={{ color: "#E84040" }} />
           <h2
             style={{
               fontFamily: '"Cinzel", serif',
@@ -88,7 +89,7 @@ export class ErrorBoundary extends Component<Props, State> {
               letterSpacing: "0.06em",
             }}
           >
-            ↺ Reintentar
+            <ForgeIcon name="refresh" size={14} style={{ marginRight: 6, verticalAlign: "middle" }} />Reintentar
           </button>
         </div>
       );
