@@ -1,4 +1,4 @@
-## 2026-08-15 — VE-1-ERROR-BOUNDARY-ICON-LANGUAGE — IMPLEMENTED_UNVERIFIED
+## 2026-08-15 — VE-1-ERROR-BOUNDARY-ICON-LANGUAGE — OPERATIONAL
 
 - Tipo de sesión: REFINAMIENTO / IMPLEMENTACIÓN.
 - Unidad: estado de recuperación global en ErrorBoundary.
@@ -604,7 +604,7 @@ Los commits anteriores siguen disponibles en Git para auditoría y reversión. L
 - No se forzó publicación: requiere autorización explícita y verificación de build conforme al protocolo.
 - Siguiente acción: publicar por el flujo autorizado y repetir la comprobación de main, manifest y rutas críticas.
 
-## 2026-08-15 — VE-1-REFERRAL-EMPTY-STATE-ICON-LANGUAGE — IMPLEMENTED_UNVERIFIED
+## 2026-08-15 — VE-1-REFERRAL-EMPTY-STATE-ICON-LANGUAGE — OPERATIONAL
 
 - Tipo de sesión: REFINAMIENTO / IMPLEMENTACIÓN.
 - Unidad: estado vacío del historial de referidos en ReferralRoute.
@@ -616,3 +616,13 @@ Los commits anteriores siguen disponibles en Git para auditoría y reversión. L
 - Responsive y accesibilidad: ForgeIcon conserva aria-hidden y focusable=false; los mensajes visibles permanecen sin cambios.
 - Deuda y condición de reapertura: comprobar el bundle público y el estado vacío en escritorio, tablet y móvil antes de elevar la unidad a OPERATIONAL.
 - Siguiente acción verificable: confirmar que ReferralRoute sirve sin error y que main conserva ambos mappings canónicos.
+
+## 2026-08-15 — VE-1-ICON-LANGUAGE — OPERATIONAL CLOSURE
+
+- **Estado actual:** OPERATIONAL para ErrorBoundary y el estado vacío de ReferralRoute.
+- **Evidencia de código:** main contiene los mappings ForgeIcon warning, refresh y friends; no quedan los sustitutos Unicode de esas dos unidades.
+- **Evidencia de publicación:** main y build-manifest.json coinciden en sourceCommit=bf78c537981b1e38c3b860be10def30678ab4ad9.
+- **Evidencia de rutas:** /, /tutorial, /cards, /battle, /packs, /friends, /lore, /relics, /season-pass y /referrals respondieron HTTP 200.
+- **Alcance autoritativo:** no se modificaron datos, autenticación, RPCs, RLS, economía, recompensas ni reglas de combate.
+- **Accesibilidad:** ForgeIcon mantiene aria-hidden=true y focusable=false; los textos y acciones visibles permanecen disponibles.
+- **Deuda restante:** la auditoría visual interactiva completa de todas las superficies no pertenece a estas dos unidades; reabrir solo ante regresión, discrepancia del bundle o mapping canónico contradictorio.
