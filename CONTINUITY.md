@@ -791,3 +791,22 @@ Los commits anteriores siguen disponibles en Git para auditoría y reversión. L
 - Alcance no modificado: datos, autenticación, RPCs, RLS, economía, órdenes de pago, tiers, XP y recompensas.
 - QA autenticada del claim y de la compra premium permanece `BLOCKED` por falta de sesión normal autorizada; no se fabricaron resultados.
 - Siguiente unidad: `VE-1-RANK-ICON-LANGUAGE` sobre `src/lib/rankUtils.ts` y sus consumidores.
+
+## 2026-08-16 — VE-1-PANELS-ICON-LANGUAGE — IMPLEMENTED_UNVERIFIED
+
+- Tipo de sesión: REFINAMIENTO / IMPLEMENTACIÓN.
+- Unidad: lenguaje de iconos propio en DeckStatsPanel, MatchHistoryPanel y AchievementToastCard.
+- Fuente canónica: código real de main, `ForgeIcon` y VEXFORGE_PROTOCOL_V2.
+- Estado inicial: OPERATIONAL con sustitutos Unicode residuales. Estado actual: IMPLEMENTED_UNVERIFIED.
+- Nivel Q: actual Q3, objetivo Q4.
+- Objetivo: retirar sustitutos Unicode genéricos sin alterar datos, textos visibles, historial PvP, recompensas, logros ni resultados autoritativos.
+- Cambio real:
+  - DeckStatsPanel: cabecera con `ForgeIcon progress` en lugar del glifo de gráfico.
+  - MatchHistoryPanel: `ForgeIcon energy` en las barras y filas de poder, `ForgeIcon gift` en recompensas, `ForgeIcon arena` en el título y `ForgeIcon attack` en el estado vacío.
+  - AchievementToastCard: `ForgeIcon trophy` en la cabecera y `ForgeIcon achievements` como fallback cuando el logro no trae icono canónico desde datos.
+- Alcance autoritativo no modificado: Supabase, Storage, RPCs, RLS, ELO, economía, recompensas, cartas, inventario ni reglas de combate.
+- Accesibilidad: ForgeIcon conserva `aria-hidden=true` y `focusable=false`; todos los textos y controles visibles permanecen intactos.
+- Evidencia local de esta sesión: `tsc -p tsconfig.app.json --noEmit` sin errores y `npm run build` completado; el escaneo de sustitutos Unicode en los tres archivos devuelve cero coincidencias.
+- Deuda: el icono de logro sigue proviniendo del dato oficial (`achievement.icon`); si la fuente canónica entrega glifos genéricos, corresponde a una unidad de datos, no de UI.
+- Condición de reapertura: regresión visual, discrepancia entre main y el bundle público, o mapping canónico contradictorio.
+- Siguiente acción verificable: confirmar en el deploy público que `build-manifest.json` refleja el commit de esta sesión y que las rutas críticas responden HTTP 200.
