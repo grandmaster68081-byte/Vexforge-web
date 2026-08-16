@@ -1,16 +1,18 @@
+import type { ForgeIconName } from "../shared/components/ForgeIcon";
+
 // VEXFORGE Rank Utilities — mirrors backend get_player_rank RPC thresholds exactly.
 export const RANK_TIERS = [
-  { name: "Mythic",   min: 3000, color: "#ff4444", icon: "💎", shields: 0 },
-  { name: "Diamond",  min: 2400, color: "#4a9eff", icon: "💠", shields: 3 },
-  { name: "Platinum", min: 1800, color: "#a855f7", icon: "🔮", shields: 2 },
-  { name: "Gold",     min: 1300, color: "#e8b84b", icon: "🥇", shields: 2 },
-  { name: "Silver",   min: 900,  color: "#b0b0b0", icon: "🥈", shields: 1 },
-  { name: "Bronze",   min: 500,  color: "#cd7f32", icon: "🥉", shields: 1 },
-  { name: "Iron",     min: 0,    color: "#9e9e9e", icon: "⚒️",  shields: 0 },
+  { name: "Mythic",   min: 3000, color: "#ff4444", icon: "rank-mythic", shields: 0 },
+  { name: "Diamond",  min: 2400, color: "#4a9eff", icon: "rank-diamond", shields: 3 },
+  { name: "Platinum", min: 1800, color: "#a855f7", icon: "rank-platinum", shields: 2 },
+  { name: "Gold",     min: 1300, color: "#e8b84b", icon: "rank-gold", shields: 2 },
+  { name: "Silver",   min: 900,  color: "#b0b0b0", icon: "rank-silver", shields: 1 },
+  { name: "Bronze",   min: 500,  color: "#cd7f32", icon: "rank-bronze", shields: 1 },
+  { name: "Iron",     min: 0,    color: "#9e9e9e", icon: "rank-iron",  shields: 0 },
 ] as const;
 
 export type TierName = typeof RANK_TIERS[number]["name"];
-export interface RankTier { name: TierName; min: number; color: string; icon: string; shields: number; }
+export interface RankTier { name: TierName; min: number; color: string; icon: ForgeIconName; shields: number; }
 
 export function getRank(mmr: number): RankTier {
   return (RANK_TIERS.find(t => mmr >= t.min) ?? RANK_TIERS[RANK_TIERS.length - 1]) as RankTier;
