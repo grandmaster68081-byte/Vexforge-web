@@ -9,6 +9,7 @@
 //   AI_DIFFICULTY_LABEL, BATTLE_MODE_META — UI metadata
 
 import type { BattleUnit, BattleTurnData, BattleEvent, RealBattleResult, BattleRarity, BattleSide } from './battleTypes';
+import type { ForgeIconName } from "../shared/components/ForgeIcon";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 export type AIDifficulty = 'easy' | 'normal' | 'expert' | 'legend' | 'tutorial';
@@ -48,16 +49,16 @@ export const AI_DIFFICULTY_LABEL: Record<AIDifficulty, string> = {
 };
 
 export const BATTLE_MODE_META: Record<BattleMode, {
-  label: string; desc: string; icon: string; color: string;
+  label: string; desc: string; icon: ForgeIconName; color: string;
   reward: string; ai?: AIDifficulty;
 }> = {
-  pvp:        { label: 'Versus Jugador',    desc: 'Enfrenta a Forjadores reales. Afecta tu MMR y ELO.',          icon: '⚔️',  color: '#4a9eff', reward: '+ELO · +VEX' },
-  ai_easy:    { label: 'vs IA — Aprendiz',  desc: 'IA sin keywords. Ideal para aprender el motor de combate.', icon: '🤖',  color: '#3dc96b', reward: '+3 VEX (5/día)',    ai: 'easy'   },
-  ai_normal:  { label: 'vs IA — Forjador',  desc: 'IA con Guard y Lifesteal. Requiere estrategia real.',       icon: '🛡️', color: '#e8b84b', reward: '+6 VEX (4/día)',    ai: 'normal' },
-  ai_expert:  { label: 'vs IA — Maestro',   desc: 'IA con deck completo y toma de decisiones óptima.',         icon: '💀',  color: '#a855f7', reward: '+12 VEX (3/día)',   ai: 'expert' },
-  ai_legend:  { label: 'vs IA — Leyenda',  desc: 'IA óptima con Campeón Mítico. Sin misericordia.',          icon: '💎',  color: '#ffd700', reward: '+VEX máximo',     ai: 'legend'  },
-  practice:   { label: 'Práctica',          desc: 'Sin recompensas ni registro. Experimenta libremente.',       icon: '🎯',  color: '#8b8b9e', reward: 'Sin recompensas' },
-  tutorial:   { label: 'Tutorial',          desc: 'Batalla guiada paso a paso.',                               icon: '📖',  color: '#ff6b35', reward: 'Completar tutorial' },
+  pvp:        { label: 'Versus Jugador',    desc: 'Enfrenta a Forjadores reales. Afecta tu MMR y ELO.',          icon: 'attack', color: '#4a9eff', reward: '+ELO · +VEX' },
+  ai_easy:    { label: 'vs IA — Aprendiz',  desc: 'IA sin keywords. Ideal para aprender el motor de combate.', icon: 'automaton',  color: '#3dc96b', reward: '+3 VEX (5/día)',    ai: 'easy'   },
+  ai_normal:  { label: 'vs IA — Forjador',  desc: 'IA con Guard y Lifesteal. Requiere estrategia real.',       icon: 'shield', color: '#e8b84b', reward: '+6 VEX (4/día)',    ai: 'normal' },
+  ai_expert:  { label: 'vs IA — Maestro',   desc: 'IA con deck completo y toma de decisiones óptima.',         icon: 'skull',  color: '#a855f7', reward: '+12 VEX (3/día)',   ai: 'expert' },
+  ai_legend:  { label: 'vs IA — Leyenda',  desc: 'IA óptima con Campeón Mítico. Sin misericordia.',          icon: 'gem',  color: '#ffd700', reward: '+VEX máximo',     ai: 'legend'  },
+  practice:   { label: 'Práctica',          desc: 'Sin recompensas ni registro. Experimenta libremente.',       icon: 'target',  color: '#8b8b9e', reward: 'Sin recompensas' },
+  tutorial:   { label: 'Tutorial',          desc: 'Batalla guiada paso a paso.',                               icon: 'lore',  color: '#ff6b35', reward: 'Completar tutorial' },
 };
 
 

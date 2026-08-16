@@ -409,7 +409,7 @@ function DailyChallengeCard({ challenge, attempted, badgeEarned, dailyLoading, o
       <div style={{ padding: '20px 22px', display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 16, flexWrap: 'wrap', position: 'relative', zIndex: 1 }}>
         <div style={{ flex: '1 1 260px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
-            <ForgeIcon name="attack" size={18} />
+            <ForgeIcon name={meta.icon} size={18} />
             <span style={{ color: '#e8b84b', fontSize: 10, letterSpacing: '0.2em', fontWeight: 800, fontFamily: 'Cinzel,serif' }}>DESAFÍO DEL DÍA</span>
             {attempted && !badgeEarned && <span style={{ background: '#3dc96b22', border: '1px solid #3dc96b44', color: '#3dc96b', borderRadius: 999, padding: '2px 8px', fontSize: 9, letterSpacing: '0.1em' }}>COMPLETADO</span>}
             {badgeEarned && <span style={{ background: '#e8b84b22', border: '1px solid #e8b84b66', color: '#e8b84b', borderRadius: 999, padding: '2px 8px', fontSize: 9, letterSpacing: '0.1em' }}><ForgeIcon name="achievements" size={11} style={{ verticalAlign: 'middle', marginRight: 4 }} />BADGE GANADO</span>}

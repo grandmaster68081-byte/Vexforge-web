@@ -1011,3 +1011,28 @@ Los commits anteriores siguen disponibles en Git para auditoría y reversión. L
 - Condición de reapertura: regresión visual, discrepancia entre `main` y el bundle público, o mapping canónico contradictorio de keywords.
 - Siguiente unidad: `VE-1-LIB-ENGINES-ICON-LANGUAGE` sobre `src/lib/aiBattleEngine.ts`, `src/lib/missionEncounterEngine.ts` y `src/lib/dailyChallenge.ts` (glifos de enemigos, biomas y retos diarios).
 - Siguiente acción verificable: confirmar `build-manifest.json` público con el commit de esta sesión y HTTP 200 en `/missions` y `/nft`.
+
+## 2026-08-16 — VE-1-LIB-ENGINES-ICON-LANGUAGE — IMPLEMENTED_UNVERIFIED
+
+- Tipo de sesión: IMPLEMENTACIÓN / REFINAMIENTO (continuación de la línea VE-1-ICON-LANGUAGE).
+- Unidad: `src/lib/aiBattleEngine.ts`, `src/lib/missionEncounterEngine.ts`, `src/lib/dailyChallenge.ts`, consumidores `src/routes/MissionsRoute.tsx` y `src/routes/PvpRoute.tsx`, y ampliación canónica de `src/shared/components/ForgeIcon.tsx`.
+- Fuente canónica: código real de `main` (baseline `fb3548d`), Supabase vivo `rscuzqnfccqvltkdcdny`, `ForgeIcon`, `VEXFORGE_PROTOCOL_V2.md` y esta continuidad.
+- Estado inicial: deuda declarada como "Siguiente unidad" en el cierre de VE-1-MISSIONS-NFT-KEYWORDS-ICON-LANGUAGE. Estado actual: IMPLEMENTED_UNVERIFIED.
+- Nivel Q: Q2 → Q3 (identidad propia, sin sustitutos Unicode) en modos de batalla, modificadores regionales y desafío diario.
+- Baseline verificado: barrido Unicode sobre los tres módulos; 7 símbolos en `BATTLE_MODE_META`, 7 en `REGIONAL_MODIFIERS`, 2 en `getDailyChallengeLabel`.
+- Cambio realizado:
+  - `ForgeIcon`: 8 glifos canónicos nuevos (`automaton`, `sun`, `eclipse`, `crescent`, `gear`, `leaf`, `gem`, `flame`) con el mismo contrato (`viewBox 0 0 24 24`, `currentColor`, `aria-hidden`, `focusable=false`).
+  - `aiBattleEngine`: `BATTLE_MODE_META.icon` pasa de `string` con emoji a `ForgeIconName` tipado — pvp→`attack`, ai_easy→`automaton`, ai_normal→`shield`, ai_expert→`skull`, ai_legend→`gem`, practice→`target`, tutorial→`lore`.
+  - `missionEncounterEngine`: `RegionalModifier.icon` pasa a `ForgeIconName` — Torres Rúnicas→`resonance`, Catedral del Alba→`sun`, Fortaleza Abisal→`eclipse`, Sombras del Eclipse→`crescent`, Reino del Acero→`gear`, Telegram→`leaf`, `_default`→`map`.
+  - `dailyChallenge`: `getDailyChallengeLabel()` devuelve texto limpio ("Desafío Élite" / "Desafío Diario") y se añade `getDailyChallengeIcon()` tipado (`flame` / `attack`).
+  - `MissionsRoute`: los dos puntos que renderizaban `regionMod.icon`/`regionModifier.icon` como texto ahora usan `<ForgeIcon />`.
+  - `PvpRoute`: la cabecera "DESAFÍO DEL DÍA" usa el glifo del modo real (`meta.icon`) en lugar de un icono fijo.
+- Contrato de datos: sin cambios. Ninguna columna, RPC, política, recompensa, MMR/ELO, energía ni buff regional fue modificado; la traducción símbolo → glifo ocurre sólo en presentación.
+- Alcance no modificado: Supabase, Storage, migraciones, RPCs, RLS, roles, wallet, economía, recompensas y autenticación.
+- Accesibilidad: `ForgeIcon` conserva `aria-hidden=true` y `focusable=false`; todos los textos y controles nativos se mantienen; sin animación añadida (reduced motion no afectado).
+- Verificaciones ejecutadas: `tsc -p tsconfig.app.json --noEmit` sin errores; `npm run build` correcto; barrido Unicode sobre los seis archivos de la unidad sin coincidencias.
+- Deuda registrada: siguen con sustitutos Unicode `NotFoundRoute`, `PageLoader`, `EconomyRoute`, `CosmeticsRoute`, `InventoryRoute`, `FusionRoute`, `EvolutionRoute`, `PacksRoute`, `RelicsRoute`, `RaidsRoute`, `WithdrawalRoute`, `AssetsRoute`, componentes de batalla, paneles compartidos, `src/lib/forgeFormation` y `src/domains`. La columna `achievements.icon` sigue conteniendo emojis en el dato oficial.
+- Bloqueos: la verificación autenticada de PvP, desafío diario y misiones (energía real, runs, recompensas) sigue BLOCKED por falta de sesión normal autorizada; no se usó service_role ni se fabricaron resultados.
+- Condición de reapertura: regresión visual, discrepancia entre `main` y el bundle público, o mapping canónico contradictorio de modos/regiones.
+- Siguiente unidad: `VE-1-BATTLE-COMPONENTS-ICON-LANGUAGE` sobre `ForgeFormationBoard`, `InteractiveBattleBoard`, `BattleCinematicScreen`, `TutorialBattle` y `ContextualHint`.
+- Siguiente acción verificable: confirmar `build-manifest.json` público con el commit de esta sesión y HTTP 200 en `/pvp`, `/missions` y rutas críticas.

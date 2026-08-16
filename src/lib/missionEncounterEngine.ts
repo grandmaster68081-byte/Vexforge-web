@@ -5,6 +5,7 @@
 import type { BattleUnit, BattleSide, BattleRarity } from './battleTypes';
 import type { FormationState } from './forgeFormation';
 import type { AIDifficulty } from './aiBattleEngine';
+import type { ForgeIconName } from "../shared/components/ForgeIcon";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -12,7 +13,7 @@ export interface RegionalModifier {
   regionId: string;
   name: string;
   description: string;
-  icon: string;
+  icon: ForgeIconName;
   color: string;
   type: 'buff' | 'debuff' | 'neutral';
   // Flat bonus to player units
@@ -66,7 +67,7 @@ const REGIONAL_MODIFIERS: Record<string, RegionalModifier> = {
     regionId: 'Torres Rúnicas',
     name: 'Runas Antiguas',
     description: '+12 DEF para todas tus unidades',
-    icon: '🔵',
+    icon: 'resonance',
     color: '#4a9eff',
     type: 'buff',
     playerBuff: { atk: 0, def: 12, hp: 0, spd: 0 },
@@ -75,7 +76,7 @@ const REGIONAL_MODIFIERS: Record<string, RegionalModifier> = {
     regionId: 'Catedral del Alba',
     name: 'Luz Sagrada',
     description: '+15 ATK y +20 HP al Campeón',
-    icon: '☀️',
+    icon: 'sun',
     color: '#E8B84B',
     type: 'buff',
     playerBuff: { atk: 15, def: 0, hp: 20, spd: 0 },
@@ -84,7 +85,7 @@ const REGIONAL_MODIFIERS: Record<string, RegionalModifier> = {
     regionId: 'Fortaleza Abisal',
     name: 'Oscuridad Profunda',
     description: '-5 SPD · Terreno hostil para el defensor',
-    icon: '🌑',
+    icon: 'eclipse',
     color: '#A855F7',
     type: 'debuff',
     playerBuff: { atk: 0, def: 0, hp: 0, spd: -5 },
@@ -93,7 +94,7 @@ const REGIONAL_MODIFIERS: Record<string, RegionalModifier> = {
     regionId: 'Sombras del Eclipse',
     name: 'Eclipse Táctico',
     description: '+8 ATK pero -8 DEF — ataca o muere',
-    icon: '🌒',
+    icon: 'crescent',
     color: '#8B5CF6',
     type: 'debuff',
     playerBuff: { atk: 8, def: -8, hp: 0, spd: 0 },
@@ -102,7 +103,7 @@ const REGIONAL_MODIFIERS: Record<string, RegionalModifier> = {
     regionId: 'Reino del Acero',
     name: 'Terreno Forjado',
     description: '+10 ATK y +8 DEF para todas tus unidades',
-    icon: '⚙️',
+    icon: 'gear',
     color: '#9CA3AF',
     type: 'buff',
     playerBuff: { atk: 10, def: 8, hp: 0, spd: 0 },
@@ -111,7 +112,7 @@ const REGIONAL_MODIFIERS: Record<string, RegionalModifier> = {
     regionId: 'Telegram',
     name: 'Campo Abierto',
     description: 'Sin ventajas ni penalizaciones regionales',
-    icon: '🌿',
+    icon: 'leaf',
     color: '#3DC96B',
     type: 'neutral',
     playerBuff: NEUTRAL_BUFF,
@@ -120,7 +121,7 @@ const REGIONAL_MODIFIERS: Record<string, RegionalModifier> = {
     regionId: '_default',
     name: 'Terreno Desconocido',
     description: 'Exploración sin modificadores',
-    icon: '🗺️',
+    icon: 'map',
     color: '#6B7280',
     type: 'neutral',
     playerBuff: NEUTRAL_BUFF,

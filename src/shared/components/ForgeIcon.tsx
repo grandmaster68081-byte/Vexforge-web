@@ -96,7 +96,15 @@ export type ForgeIconName =
   | "flux"
   | "drain"
   | "veil"
-  | "resonance";
+  | "resonance"
+  | "automaton"
+  | "sun"
+  | "eclipse"
+  | "crescent"
+  | "gear"
+  | "leaf"
+  | "gem"
+  | "flame";
 
 type ForgeIconProps = {
   name: ForgeIconName;
@@ -141,6 +149,22 @@ export function ForgeIcon({
       return <svg {...props}><path d="M12 3.2c3.2 4 5 6.5 5 9a5 5 0 0 1-10 0c0-2.5 1.8-5 5-9z" /><path d="M9.6 13.4a2.6 2.6 0 0 0 2.6 2.6" /></svg>;
     case "veil":
       return <svg {...props}><path d="M4 9.5c2.7-4 5.4-6 8-6s5.3 2 8 6" /><path d="M4 13.5h16M5.5 17.5h13M8 21h8" /></svg>;
+    case "automaton":
+      return <svg {...props}><rect x="4.6" y="8.2" width="14.8" height="10.4" rx="2.4" /><path d="M12 4.2v4M9.2 12.2h.01M14.8 12.2h.01" /><path d="M9.4 15.6h5.2" /><path d="M2.6 11.6v3.6M21.4 11.6v3.6" /></svg>;
+    case "sun":
+      return <svg {...props}><circle cx="12" cy="12" r="4.1" /><path d="M12 2.6v2.6M12 18.8v2.6M2.6 12h2.6M18.8 12h2.6M5.4 5.4l1.9 1.9M16.7 16.7l1.9 1.9M18.6 5.4l-1.9 1.9M7.3 16.7l-1.9 1.9" /></svg>;
+    case "eclipse":
+      return <svg {...props}><circle cx="12" cy="12" r="8.4" /><path d="M12 3.6a8.4 8.4 0 0 0 0 16.8z" fill="currentColor" stroke="none" /><path d="M12 3.6a8.4 8.4 0 0 1 0 16.8" /></svg>;
+    case "crescent":
+      return <svg {...props}><path d="M19 15.4A8.4 8.4 0 0 1 8.6 5a8.4 8.4 0 1 0 10.4 10.4z" /></svg>;
+    case "gear":
+      return <svg {...props}><circle cx="12" cy="12" r="3.1" /><path d="M12 2.8v2.6M12 18.6v2.6M2.8 12h2.6M18.6 12h2.6M5.5 5.5l1.9 1.9M16.6 16.6l1.9 1.9M18.5 5.5l-1.9 1.9M7.4 16.6l-1.9 1.9" /></svg>;
+    case "leaf":
+      return <svg {...props}><path d="M5 19c0-7.2 4.6-12 14-12 0 8.6-4.8 13-11.2 13H5z" /><path d="M8.6 15.4c2.4-2.6 5-4.2 8.4-5.2" /></svg>;
+    case "gem":
+      return <svg {...props}><path d="m12 3.2 6.6 5.1-6.6 12.5L5.4 8.3z" /><path d="M5.4 8.3h13.2M12 3.2 8.9 8.3 12 20.8 15.1 8.3z" /></svg>;
+    case "flame":
+      return <svg {...props}><path d="M12 3.2c3.6 3.4 5.6 6.3 5.6 9.4a5.6 5.6 0 1 1-11.2 0c0-1.7.7-3.3 2-4.9.5 1.3 1.2 2.1 2.1 2.4-.3-2.4.2-4.7 1.5-6.9z" /></svg>;
     case "resonance":
       return <svg {...props}><path d="M12 6v12" /><path d="M8.4 8.6v6.8M16 8.6v6.8M4.8 10.7v2.6M19.6 10.7v2.6" /></svg>;
     case "chain":

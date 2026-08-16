@@ -2,6 +2,7 @@
 // Deterministic daily deck seeded by date. Tracks one attempt per day in localStorage.
 
 import type { AIDifficulty } from "./aiBattleEngine";
+import type { ForgeIconName } from "../shared/components/ForgeIcon";
 
 const DAILY_STORAGE_KEY = "vexforge_daily_challenge_v1";
 
@@ -51,10 +52,15 @@ export function getDailyVexReward(): number {
 /** Returns a display label for today's challenge */
 export function getDailyChallengeLabel(): string {
   const diff = getDailyDifficulty();
-  return diff === "expert" ? "🔥 Desafío Élite" : "⚔️ Desafío Diario";
+  return diff === "expert" ? "Desafío Élite" : "Desafío Diario";
 }
 
 /** Returns the color accent for today's difficulty */
 export function getDailyChallengeColor(): string {
   return getDailyDifficulty() === "expert" ? "#ef4444" : "#f59e0b";
+}
+
+/** Canonical ForgeIcon glyph for today's challenge label */
+export function getDailyChallengeIcon(): ForgeIconName {
+  return getDailyDifficulty() === "expert" ? "flame" : "attack";
 }

@@ -672,7 +672,7 @@ function MissionBriefing({
               <div style={{ fontFamily: '"IBM Plex Mono", monospace', fontSize: 8, letterSpacing: "0.15em", color: `${regionMod.color}90`, textTransform: "uppercase", marginBottom: 6 }}>
                 <ForgeIcon name={regionMod.type === "buff" ? "check" : "warning"} size={12} style={{ verticalAlign: "middle", marginRight: 4 }} />{regionMod.type === "buff" ? "VENTAJA REGIONAL" : "PENALIZACIÓN REGIONAL"}
               </div>
-              <div style={{ color: regionMod.color, fontWeight: 700, fontSize: 12 }}>{regionMod.icon} {regionMod.name}</div>
+              <div style={{ color: regionMod.color, fontWeight: 700, fontSize: 12 }}><ForgeIcon name={regionMod.icon} size={13} style={{ verticalAlign: "middle", marginRight: 5 }} />{regionMod.name}</div>
               <div style={{ color: "var(--fg-dim)", fontSize: 10, marginTop: 3 }}>{regionMod.description}</div>
             </div>
           )}
@@ -1364,7 +1364,7 @@ export function MissionsRoute() {
             </div>
             <div style={{ background: `${regionModifier.color}12`, border: `1px solid ${regionModifier.color}35`, borderRadius: 10, padding: "10px 12px", gridColumn: "span 2" }}>
               <div style={{ fontFamily: '"IBM Plex Mono", monospace', fontSize: 8, letterSpacing: "0.15em", color: `${regionModifier.color}90`, textTransform: "uppercase", marginBottom: 5 }}>MODIFICADOR REGIONAL</div>
-              <div style={{ color: regionModifier.color, fontWeight: 700, fontSize: 12 }}>{regionModifier.icon} {regionModifier.name} · {regionModifier.description}</div>
+              <div style={{ color: regionModifier.color, fontWeight: 700, fontSize: 12 }}><ForgeIcon name={regionModifier.icon} size={13} style={{ verticalAlign: "middle", marginRight: 5 }} />{regionModifier.name} · {regionModifier.description}</div>
             </div>
           </div>
 
