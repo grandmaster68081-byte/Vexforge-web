@@ -656,7 +656,7 @@ Los commits anteriores siguen disponibles en Git para auditoría y reversión. L
 - Accesibilidad: ForgeIcon conserva aria-hidden=true y focusable=false; acción y textos visibles intactos.
 - Alcance no modificado: datos, autenticación, RPCs, RLS, economía, recompensas, inventario y reglas de combate.
 
-## 2026-08-15 — VE-1-QUESTS-ICON-LANGUAGE — IMPLEMENTED_UNVERIFIED
+## 2026-08-15 — VE-1-QUESTS-ICON-LANGUAGE — OPERATIONAL
 
 - Tipo de sesión: REFINAMIENTO / IMPLEMENTACIÓN.
 - Unidad: recompensas, título y estado vacío de QuestsRoute.
@@ -668,3 +668,12 @@ Los commits anteriores siguen disponibles en Git para auditoría y reversión. L
 - Responsive y accesibilidad: ForgeIcon mantiene aria-hidden y focusable=false; el texto de recompensas y los controles permanecen visibles.
 - Deuda y condición de reapertura: comprobar build-manifest y /quests antes de elevar la unidad a OPERATIONAL.
 - Siguiente acción verificable: confirmar que main y el deploy contienen coin, spark y quests sin sustitutos Unicode.
+
+### Cierre operativo — VE-1-QUESTS-ICON-LANGUAGE
+
+- Estado actual: OPERATIONAL.
+- Evidencia de código: QuestsRoute contiene mappings ForgeIcon coin, spark y quests; no quedan 💎, ⭐ ni 📜 en esta unidad.
+- Evidencia de publicación: main y build-manifest.json coinciden en sourceCommit=e015b96dd3aad634c44becb0bfd6af2878a79179.
+- Rutas verificadas: /, /tutorial, /cards, /battle, /packs, /friends, /lore, /relics, /season-pass, /referrals, /evolution y /quests respondieron HTTP 200.
+- Alcance no modificado: quests, claim, recompensas, datos, autenticación, RPCs, RLS, economía, cartas, inventario y combate.
+- Accesibilidad: ForgeIcon mantiene aria-hidden=true y focusable=false; textos y controles permanecen disponibles.
