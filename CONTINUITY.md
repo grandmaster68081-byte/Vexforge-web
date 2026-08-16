@@ -11,7 +11,7 @@
 - **Decisión de alcance:** `•` (viñeta de lista en `DeckBuilderRoute`, `SeasonRankingsRoute`, `ForgeAdsRoute`) y `×` (multiplicador) se conservan por ser tipografía legítima, no sustitutos de icono.
 - **Evidencia local:** `npx tsc --noEmit -p tsconfig.app.json`, `npm run verify:build` y `git diff --check` finalizaron correctamente; `rg` sobre `dist/assets/*.js` no encuentra `▼`/`▲`/`◆`.
 - **Deuda y condición de reapertura:** quedan glyphs sólo en comentarios de código (no visibles). Reabrir ante regresión de paneles/PvP o mapping canónico contradictorio.
-- **Evidencia pública:** pendiente en esta entrada; se verifica tras el deploy.
+- **Evidencia pública:** `build-manifest.json` público informa `sourceCommit=d164fc8b4f7cf6b3afd828de4395ef904aabafaa` y `sourceBranch=main`; `/`, `/pvp`, `/cards`, `/battle` y `/tutorial` respondieron HTTP 200 con cache-busting. La revisión estática pública de `/pvp` muestra el estado de acceso requerido y no permite validar controles autenticados sin una sesión normal autorizada.
 - **Siguiente acción verificable:** revisión visual interactiva responsive con foco y `prefers-reduced-motion` real sobre paneles colapsables; QA autenticado sigue `BLOCKED` sin sesión de jugador real.
 
 ---
