@@ -81,7 +81,7 @@ import { useState, useEffect } from "react";
             display: "flex", alignItems: "center", justifyContent: "center", gap: 10,
             background: "rgba(255,255,255,0.03)", borderRadius: 12, padding: "14px 20px", marginBottom: 20,
           }}>
-            <span style={{ fontSize: 22 }}>{tier.icon}</span>
+            <span style={{ fontSize: 22, color: tier.color, display: "inline-flex" }}><ForgeIcon name={tier.icon} size={22} /></span>
             <div style={{ textAlign: "left" }}>
               <div style={{ fontFamily: "Rajdhani,sans-serif", fontWeight: 700, fontSize: 14, color: "#e8e8f0" }}>
                 vs {match.opponent_name}
@@ -216,7 +216,7 @@ import { useState, useEffect } from "react";
 
                   {/* Opponent info */}
                   <div style={{ display: "flex", alignItems: "center", gap: 7, flex: 1, minWidth: 0 }}>
-                    <span style={{ fontSize: 13, flexShrink: 0 }}>{tier.icon}</span>
+                    <span style={{ fontSize: 13, flexShrink: 0, color: tier.color, display: "inline-flex" }}><ForgeIcon name={tier.icon} size={13} /></span>
                     <div style={{ minWidth: 0 }}>
                       <div style={{
                         fontFamily: "Rajdhani,sans-serif", fontWeight: 700, fontSize: 13,
