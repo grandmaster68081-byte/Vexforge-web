@@ -626,3 +626,16 @@ Los commits anteriores siguen disponibles en Git para auditoría y reversión. L
 - **Alcance autoritativo:** no se modificaron datos, autenticación, RPCs, RLS, economía, recompensas ni reglas de combate.
 - **Accesibilidad:** ForgeIcon mantiene aria-hidden=true y focusable=false; los textos y acciones visibles permanecen disponibles.
 - **Deuda restante:** la auditoría visual interactiva completa de todas las superficies no pertenece a estas dos unidades; reabrir solo ante regresión, discrepancia del bundle o mapping canónico contradictorio.
+
+## 2026-08-15 — VE-1-EVOLUTION-ICON-LANGUAGE — IMPLEMENTED_UNVERIFIED
+
+- Tipo de sesión: REFINAMIENTO / IMPLEMENTACIÓN.
+- Unidad: título, acción de refresco y estado vacío de EvolutionRoute.
+- Fuente canónica: código real de main, ForgeIcon, EmptyState y protocolo VEXFORGE.
+- Objetivo: retirar los sustitutos Unicode de evolución y refresco sin cambiar evolución de cartas, filtros, mensajes, autenticación, datos ni resultados autoritativos.
+- Cambio: se incorporaron los mappings canónicos evolution y refresh; se conservaron los textos visibles, la acción Actualizar y el icon prop semántico del estado vacío.
+- Alcance autoritativo: no se modificaron Supabase, Storage, RPCs, RLS, economía, recompensas, cartas ni inventario.
+- Evidencia inicial: actualización confirmada por GitHub Contents API en main; queda pendiente verificar el bundle público y las rutas críticas.
+- Responsive y accesibilidad: ForgeIcon mantiene aria-hidden y focusable=false; los controles siguen siendo botones y los mensajes visibles permanecen.
+- Deuda y condición de reapertura: verificar build-manifest, /evolution y rutas críticas antes de elevar la unidad a OPERATIONAL.
+- Siguiente acción verificable: confirmar que main y el deploy contienen los mappings evolution y refresh.
