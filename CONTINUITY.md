@@ -759,3 +759,23 @@ Los commits anteriores siguen disponibles en Git para auditoría y reversión. L
 - Verificación de runtime: navegación headless a /, /friends, /relics y una ruta inexistente sin errores de consola ni pageerror.
 - Build: tsc sin errores y vite build correcto antes de publicar.
 - Estado BLOCKED conservado: la vista autenticada de /friends (lista, solicitudes y desafíos reales) no se probó porque no existe sesión normal autorizada del jugador; no se usó service_role para sustituirla. Condición de reapertura: sesión autorizada del owner o jugador de prueba.
+
+## 2026-08-16 — VE-1-SEASONPASS-ICON-LANGUAGE — IMPLEMENTED_UNVERIFIED
+
+- Tipo de sesión: REFINAMIENTO / IMPLEMENTACIÓN.
+- Unidad: lenguaje de iconos de las superficies de Temporada (`src/routes/SeasonPassRoute.tsx`, `src/shared/components/SeasonRewardsPanel.tsx`) y ampliación canónica de `src/shared/components/ForgeIcon.tsx`.
+- Fuente canónica: código real de main, `VEXFORGE_PROTOCOL_V2.md`, `ForgeIcon` y esta continuidad.
+- Estado inicial: `IN_PROGRESS` (lote previo cerró social/reliquias/pistas/404). Estado actual: `IMPLEMENTED_UNVERIFIED`.
+- Nivel Q: actual `Q2` → objetivo `Q3` (identidad propia, sin sustitutos Unicode).
+- Problema: las superficies de Season Pass y del panel de recompensas de temporada seguían usando emojis y símbolos Unicode como identidad visual, prohibido por la regla de cero genéricos.
+- Cambio realizado:
+  - `ForgeIcon`: se añadieron dos glifos canónicos nuevos, `copy` y `hourglass`, con el mismo contrato (`aria-hidden`, `focusable=false`, `currentColor`, `viewBox 0 0 24 24`).
+  - `SeasonPassRoute`: `rewardIcon` pasa de devolver emoji a devolver `ForgeIconName` (`cards`, `cosmetics`, `coin`, `spark`, `gift`); se sustituyeron candado, estrellas premium, checks, portapapeles, aviso de wallet, reloj de verificación, emblema premium, chips de beneficios, encabezados de temporada, acción Actualizar, distintivo PREMIUM y las seis fuentes de XP por mappings canónicos.
+  - `SeasonRewardsPanel`: `REWARD_ICONS` pasa a `ForgeIconName` con `REWARD_COLORS` por rareza; medallas top 3 usan `trophy` con color de posición; el emblema de temporada usa `arena` y el bonus de XP usa `energy`.
+- Alcance autoritativo: no se modificaron Supabase, Storage, migraciones, RPCs, RLS, economía, precios, tiers, XP, reclamaciones, órdenes de pago, autenticación ni resultados autoritativos. Sólo capa de presentación.
+- Textos visibles: sin cambios de copy; el botón de copiar dirección ganó `aria-label` y `title` explícitos, mejorando accesibilidad sin alterar el flujo.
+- Verificaciones ejecutadas: `tsc -p tsconfig.app.json --noEmit` sin errores; `npm run build` completado; barrido Unicode sobre los tres archivos de la unidad sin coincidencias.
+- Deuda registrada: `src/lib/rankUtils.ts` conserva los iconos Unicode de rango (Mythic, Diamond, Platinum, Gold, Silver, Bronze, Iron) consumidos por `SeasonRewardsPanel` y `SeasonRankingsRoute`; requiere unidad propia `VE-1-RANK-ICON-LANGUAGE` porque cambia un contrato compartido. Otras rutas (`AdminDashboardRoute`, `ProfileRoute`, `AchievementsRoute`, `ShopRoute`, `MarketRoute`, `DepositRoute`, `SeasonRankingsRoute`, motores de `src/lib`) siguen pendientes.
+- Bloqueos: la validación autenticada del jugador (compra premium, claim de tiers) requiere sesión normal autorizada; no se fabricó QA ni se usó service_role. Marcada `BLOCKED` hasta que exista sesión interactiva del owner.
+- Condición de reapertura: regresión visual, discrepancia entre main y el bundle público, o mapping canónico contradictorio.
+- Siguiente acción verificable: confirmar `build-manifest.json` público con el commit de esta sesión y HTTP 200 en `/season-pass` y rutas críticas; después abrir `VE-1-RANK-ICON-LANGUAGE`.

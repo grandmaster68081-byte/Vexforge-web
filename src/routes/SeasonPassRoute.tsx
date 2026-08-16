@@ -13,6 +13,7 @@ import { BlockedAuthState } from "../shared/components/BlockedAuthState";
 import { EmptyState } from "../shared/components/EmptyState";
 import { ErrorState } from "../shared/components/ErrorState";
 import { ForgeIcon } from "../shared/components/ForgeIcon";
+import type { ForgeIconName } from "../shared/components/ForgeIcon";
 import { useToast } from "../shared/context/ToastContext";
 
 // ─── Constants ────────────────────────────────────────────────────────────────
@@ -22,12 +23,12 @@ const RARITY_COLOR: Record<string, string> = {
 };
 const PREMIUM_PRICE_USDT = 9.99;
 
-function rewardIcon(reward: Record<string, any>): string {
-  if (reward.type === "card")     return "🃏";
-  if (reward.type === "cosmetic") return "✨";
-  if (reward.vex_ingame)          return "💰";
-  if (reward.xp)                  return "⭐";
-  return "🎁";
+function rewardIcon(reward: Record<string, any>): ForgeIconName {
+  if (reward.type === "card")     return "cards";
+  if (reward.type === "cosmetic") return "cosmetics";
+  if (reward.vex_ingame)          return "coin";
+  if (reward.xp)                  return "spark";
+  return "gift";
 }
 
 function rewardLabel(reward: Record<string, any>): string | null {
@@ -77,7 +78,7 @@ function XpSection({ playerXp, currentTier, tiers }: {
         <div style={{ background: "#0f0f1a", borderRadius: 6, height: 6, overflow: "hidden", border: "1px solid #1a1a2e" }}>
           <div style={{ width: `${totalPct}%`, height: "100%", background: isMaxed ? "linear-gradient(90deg,#3ddc84,#2a9c60)" : "linear-gradient(90deg,#e8b84b,#c9901f)", transition: "width .5s ease" }} />
         </div>
-        {isMaxed && <div style={{ color: "#3ddc84", fontSize: 10, marginTop: 4, textAlign: "right" }}>✓ Season Pass completado</div>}
+        {isMaxed && <div style={{ color: "#3ddc84", fontSize: 10, marginTop: 4, textAlign: "right" }}><ForgeIcon name="check" size={11} style={{ marginRight: 4, verticalAlign: "middle" }} />Season Pass completado</div>}
       </div>
     </div>
   );
@@ -112,15 +113,15 @@ function TierCard({ tier, currentTier, isPremiumPlayer, claimed, pendingClaim, o
 
       {isPremLocked && (
         <div style={{ position: "absolute", inset: 0, borderRadius: 10, background: "rgba(10,10,20,0.65)", display: "flex", alignItems: "center", justifyContent: "center", backdropFilter: "blur(2px)" }}>
-          <span style={{ fontSize: 16 }}>🔒</span>
+          <ForgeIcon name="lock" size={16} style={{ color: "#e8b84b" }} />
         </div>
       )}
 
       <div style={{ color: isCurrent ? "#e8b84b" : claimed ? "#3ddc84" : unlocked ? "#3ddc84" : "#444", fontSize: 8, fontWeight: 700, fontFamily: "IBM Plex Mono,monospace", letterSpacing: "0.1em", marginBottom: 4 }}>T{tier.tier}</div>
-      <div style={{ fontSize: 20, marginBottom: 2 }}>{rewardIcon(tier.reward)}</div>
+      <div style={{ marginBottom: 2, color: tier.reward.card_rarity ? rc : "#e8b84b" }}><ForgeIcon name={rewardIcon(tier.reward)} size={20} /></div>
       {label && <div style={{ color: tier.reward.card_rarity ? rc : "#e8b84b", fontSize: 8, fontWeight: 700, fontFamily: "Rajdhani,sans-serif", lineHeight: 1.2 }}>{label}</div>}
-      {tier.is_premium && !isPremLocked && <div style={{ marginTop: 2, fontSize: 7, color: "#e8b84b", fontWeight: 800 }}>★</div>}
-      {claimed && <div style={{ color: "#3ddc84", fontSize: 9, marginTop: 3, fontWeight: 700 }}>✓</div>}
+      {tier.is_premium && !isPremLocked && <div style={{ marginTop: 2, color: "#e8b84b", lineHeight: 0 }}><ForgeIcon name="crown" size={9} /></div>}
+      {claimed && <div style={{ color: "#3ddc84", marginTop: 3, lineHeight: 0 }}><ForgeIcon name="check" size={10} /></div>}
       {!claimed && isCurrent && <div style={{ color: "#e8b84b", fontSize: 7, marginTop: 3, fontFamily: "IBM Plex Mono,monospace" }}>ACTUAL</div>}
       {claimable && (
         <button disabled={pendingClaim} onClick={e => { e.stopPropagation(); onClaim(tier.tier); }} style={{ marginTop: 5, width: "100%", padding: "4px 2px", borderRadius: 5, border: "none", background: pendingClaim ? "rgba(232,184,75,0.1)" : "#e8b84b", color: pendingClaim ? "#e8b84b" : "#0a0a12", fontSize: 8, fontWeight: 800, cursor: pendingClaim ? "not-allowed" : "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 3 }}>
@@ -159,7 +160,7 @@ function UpgradePaymentModal({
   return (
     <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.82)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 1000, padding: 16 }} onClick={onClose}>
       <div style={{ background: "#12121f", border: "1px solid #2a2a3a", borderRadius: 16, padding: 28, maxWidth: 480, width: "100%", position: "relative" }} onClick={e => e.stopPropagation()}>
-        <div style={{ color: "#e8b84b", fontFamily: "Cinzel,serif", fontSize: 18, fontWeight: 800, marginBottom: 6 }}>⭐ Activar Season Pass Premium</div>
+        <div style={{ color: "#e8b84b", fontFamily: "Cinzel,serif", fontSize: 18, fontWeight: 800, marginBottom: 6 }}><ForgeIcon name="crown" size={18} style={{ marginRight: 8, verticalAlign: "middle" }} />Activar Season Pass Premium</div>
         <div style={{ color: "#7a7a9a", fontSize: 12, marginBottom: 20 }}>Pago manual verificado por el equipo · Activación en 24–48h hábiles</div>
 
         {/* Step 1 */}
@@ -179,11 +180,11 @@ function UpgradePaymentModal({
               {order.treasury_wallet_address ?? "—"}
             </div>
             {order.treasury_wallet_address && (
-              <button onClick={copyWallet} style={{ padding: "8px 12px", borderRadius: 7, border: "1px solid #2a2a3a", background: "#1a1a2e", color: "#e8b84b", fontSize: 11, cursor: "pointer", flexShrink: 0 }}>📋</button>
+              <button onClick={copyWallet} style={{ padding: "8px 12px", borderRadius: 7, border: "1px solid #2a2a3a", background: "#1a1a2e", color: "#e8b84b", fontSize: 11, cursor: "pointer", flexShrink: 0, display: "inline-flex", alignItems: "center" }} aria-label="Copiar dirección del tesoro" title="Copiar dirección"><ForgeIcon name="copy" size={13} /></button>
             )}
           </div>
           {!order.treasury_wallet_address && (
-            <div style={{ color: "#E3573F", fontSize: 11, marginTop: 8 }}>⚠ No hay wallet de tesoro activa. Contacta al administrador.</div>
+            <div style={{ color: "#E3573F", fontSize: 11, marginTop: 8 }}><ForgeIcon name="warning" size={12} style={{ marginRight: 5, verticalAlign: "middle" }} />No hay wallet de tesoro activa. Contacta al administrador.</div>
           )}
         </div>
 
@@ -227,7 +228,7 @@ function PremiumUpgradeCard({
   if (isPremium) {
     return (
       <div style={{ background: "linear-gradient(135deg,rgba(232,184,75,0.08),rgba(232,184,75,0.04))", border: "1px solid rgba(232,184,75,0.3)", borderRadius: 14, padding: "16px 22px", display: "flex", alignItems: "center", gap: 16, marginBottom: 24 }}>
-        <div style={{ fontSize: 32 }}>★</div>
+        <div style={{ color: "#e8b84b", lineHeight: 0 }}><ForgeIcon name="crown" size={32} /></div>
         <div>
           <div style={{ color: "#e8b84b", fontFamily: "Cinzel,serif", fontWeight: 800, fontSize: 16 }}>Pase Premium Activo</div>
           <div style={{ color: "#888", fontSize: 12, marginTop: 2 }}>Tienes acceso a todas las recompensas premium de esta temporada.</div>
@@ -239,7 +240,7 @@ function PremiumUpgradeCard({
   if (pendingOrder.hasPending && pendingOrder.txSubmitted) {
     return (
       <div style={{ background: "linear-gradient(135deg,#0e1a0e,#0d1210)", border: "1px solid rgba(61,201,107,0.35)", borderRadius: 14, padding: "16px 22px", display: "flex", alignItems: "center", gap: 16, marginBottom: 24 }}>
-        <div style={{ fontSize: 28 }}>⏳</div>
+        <div style={{ color: "#3DC96B", lineHeight: 0 }}><ForgeIcon name="hourglass" size={28} /></div>
         <div>
           <div style={{ color: "#3DC96B", fontFamily: "Cinzel,serif", fontWeight: 800, fontSize: 15 }}>Pago en verificación</div>
           <div style={{ color: "#888", fontSize: 12, marginTop: 2 }}>Tu pago ha sido registrado y está siendo revisado. La activación ocurre en 24–48h hábiles una vez confirmado.</div>
@@ -265,15 +266,19 @@ function PremiumUpgradeCard({
       <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 16, flexWrap: "wrap" }}>
         <div style={{ flex: 1 }}>
           <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8 }}>
-            <span className="faction-emblem-breathe" style={{ fontSize: 22, display: "inline-block", ["--emblem-glow" as string]: "rgba(168,85,247,0.6)" }}>⭐</span>
+            <span className="faction-emblem-breathe" style={{ display: "inline-flex", color: "#a855f7", ["--emblem-glow" as string]: "rgba(168,85,247,0.6)" }}><ForgeIcon name="crown" size={22} /></span>
             <span style={{ fontFamily: "Cinzel,serif", color: "#e8b84b", fontSize: 18, fontWeight: 800 }}>Season Pass Premium</span>
           </div>
           <p style={{ color: "#888", fontSize: 12, margin: "0 0 12px", lineHeight: 1.6 }}>
             Desbloquea recompensas exclusivas en cada tier — cartas legendarias, cosméticos únicos y VEX extra.
           </p>
           <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-            {["🃏 Recompensas dobles", "✨ Cosméticos exclusivos", "💰 VEX extra por tier"].map(b => (
-              <span key={b} style={{ background: "rgba(168,85,247,0.1)", border: "1px solid rgba(168,85,247,0.25)", borderRadius: 8, padding: "3px 10px", fontSize: 10, color: "#a855f7", fontWeight: 700 }}>{b}</span>
+            {([
+              { icon: "cards" as ForgeIconName, label: "Recompensas dobles" },
+              { icon: "cosmetics" as ForgeIconName, label: "Cosméticos exclusivos" },
+              { icon: "coin" as ForgeIconName, label: "VEX extra por tier" },
+            ]).map(b => (
+              <span key={b.label} style={{ background: "rgba(168,85,247,0.1)", border: "1px solid rgba(168,85,247,0.25)", borderRadius: 8, padding: "3px 10px", fontSize: 10, color: "#a855f7", fontWeight: 700, display: "inline-flex", alignItems: "center", gap: 5 }}><ForgeIcon name={b.icon} size={11} />{b.label}</span>
             ))}
           </div>
         </div>
@@ -416,14 +421,14 @@ export function SeasonPassRoute() {
 
   if (status === "blocked_auth") return (
     <main style={{ maxWidth: 800, margin: "0 auto", padding: "32px 16px" }}>
-      <h1 style={{ fontFamily: "Cinzel,serif", color: "#e8e8f0", fontSize: 26, marginBottom: 16 }}>🎫 Season Pass</h1>
+      <h1 style={{ fontFamily: "Cinzel,serif", color: "#e8e8f0", fontSize: 26, marginBottom: 16 }}><ForgeIcon name="season" size={24} style={{ marginRight: 8, verticalAlign: "middle", color: "#e8b84b" }} />Season Pass</h1>
       <BlockedAuthState message="Inicia sesión para ver tu progreso de temporada." />
     </main>
   );
 
   if (!data?.ok) return (
     <main style={{ maxWidth: 800, margin: "0 auto", padding: "32px 16px" }}>
-      <h1 style={{ fontFamily: "Cinzel,serif", color: "#e8e8f0", fontSize: 26, marginBottom: 16 }}>🎫 Season Pass</h1>
+      <h1 style={{ fontFamily: "Cinzel,serif", color: "#e8e8f0", fontSize: 26, marginBottom: 16 }}><ForgeIcon name="season" size={24} style={{ marginRight: 8, verticalAlign: "middle", color: "#e8b84b" }} />Season Pass</h1>
       <EmptyState icon={<ForgeIcon name="season" size={36} />} title="Sin temporada activa" description={data?.reason ?? "No hay una temporada activa en este momento."} />
     </main>
   );
@@ -469,10 +474,10 @@ export function SeasonPassRoute() {
           <p style={{ fontSize: 10, letterSpacing: "0.14em", color: "#e8b84b", textTransform: "uppercase", fontFamily: "Rajdhani,sans-serif", fontWeight: 700, marginBottom: 8 }}>─── Temporada ───</p>
           <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", flexWrap: "wrap", gap: 8 }}>
             <div>
-              <h1 style={{ fontFamily: "Cinzel,serif", color: "#e8e8f0", fontSize: 26, margin: "0 0 4px" }}>🎫 {seasonName}</h1>
+              <h1 style={{ fontFamily: "Cinzel,serif", color: "#e8e8f0", fontSize: 26, margin: "0 0 4px" }}><ForgeIcon name="season" size={24} style={{ marginRight: 8, verticalAlign: "middle", color: "#e8b84b" }} />{seasonName}</h1>
               {endAt && <p style={{ color: "#7a7a9a", margin: 0, fontSize: 11 }}>Finaliza: {endAt}</p>}
             </div>
-            <button onClick={reload} style={{ padding: "7px 18px", borderRadius: 8, border: "1px solid #2a2a3a", background: "transparent", color: "#888", fontSize: 11, cursor: "pointer" }}>↻ Actualizar</button>
+            <button onClick={reload} style={{ padding: "7px 18px", borderRadius: 8, border: "1px solid #2a2a3a", background: "transparent", color: "#888", fontSize: 11, cursor: "pointer", display: "inline-flex", alignItems: "center", gap: 6 }}><ForgeIcon name="refresh" size={12} />Actualizar</button>
           </div>
         </div>
 
@@ -498,7 +503,7 @@ export function SeasonPassRoute() {
             <div>
               <div style={{ color: "#7a7a9a", fontSize: 10, letterSpacing: "0.1em", marginBottom: 4 }}>TIPO DE PASS</div>
               <div style={{ color: isPremium ? "#e8b84b" : "#555", fontSize: 14, fontWeight: 700 }}>
-                {isPremium ? "★ PREMIUM" : "F2P"}
+                {isPremium ? <span style={{ display: "inline-flex", alignItems: "center", gap: 5 }}><ForgeIcon name="crown" size={14} />PREMIUM</span> : "F2P"}
               </div>
             </div>
           </div>
@@ -548,15 +553,15 @@ export function SeasonPassRoute() {
           <div style={{ fontFamily: "IBM Plex Mono,monospace", fontSize: 9, color: "#7a7a9a", letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: 14 }}>¿Cómo ganar XP de Temporada?</div>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(160px,1fr))", gap: 8 }}>
             {[
-              { icon: "⚔️", label: "Misiones PvE",    xp: "+30–150 XP" },
-              { icon: "🏆", label: "Victoria PvP",     xp: "+100 XP"   },
-              { icon: "🔮", label: "Fusión de cartas", xp: "+50 XP"    },
-              { icon: "💰", label: "Venta en mercado", xp: "+25 XP"    },
-              { icon: "📦", label: "Abrir packs",      xp: "+20 XP"    },
-              { icon: "🗓️", label: "Quest diaria",     xp: "+75 XP"    },
+              { icon: "missions" as ForgeIconName,  label: "Misiones PvE",     xp: "+30–150 XP" },
+              { icon: "trophy" as ForgeIconName,    label: "Victoria PvP",     xp: "+100 XP"   },
+              { icon: "fusion" as ForgeIconName,    label: "Fusión de cartas", xp: "+50 XP"    },
+              { icon: "coin" as ForgeIconName,      label: "Venta en mercado", xp: "+25 XP"    },
+              { icon: "packs" as ForgeIconName,     label: "Abrir packs",      xp: "+20 XP"    },
+              { icon: "quests" as ForgeIconName,    label: "Quest diaria",     xp: "+75 XP"    },
             ].map(src => (
               <div key={src.label} style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)", borderRadius: 8, padding: "10px 12px", display: "flex", alignItems: "center", gap: 10 }}>
-                <span style={{ fontSize: 16 }}>{src.icon}</span>
+                <span style={{ color: "#e8b84b", lineHeight: 0 }}><ForgeIcon name={src.icon} size={16} /></span>
                 <div>
                   <div style={{ color: "#e8e8f0", fontSize: 11, fontWeight: 600 }}>{src.label}</div>
                   <div style={{ color: "#e8b84b", fontSize: 10, fontWeight: 700, fontFamily: "IBM Plex Mono,monospace" }}>{src.xp}</div>

@@ -67,7 +67,9 @@ export type ForgeIconName =
   | "ring"
   | "banner"
   | "amulet"
-  | "map";
+  | "map"
+  | "copy"
+  | "hourglass";
 
 type ForgeIconProps = {
   name: ForgeIconName;
@@ -142,6 +144,10 @@ export function ForgeIcon({
       return <svg {...props}><path d="M8 5v14M16 5v14" /></svg>;
     case "notification":
       return <svg {...props}><path d="M6.5 10.5a5.5 5.5 0 0 1 11 0c0 4 1.5 5.2 2.3 6.2H4.2c.8-1 2.3-2.2 2.3-6.2Z" /><path d="M10 20h4M9.5 17a2.5 2.5 0 0 0 5 0" /></svg>;
+    case "copy":
+      return <svg {...props}><rect x="8.5" y="8.5" width="11" height="11" rx="1.8" /><path d="M15.5 8.5v-2a2 2 0 0 0-2-2H6.5a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h2" /></svg>;
+    case "hourglass":
+      return <svg {...props}><path d="M7 3h10M7 21h10" /><path d="M7.5 3v3.2c0 2 1.6 3.3 3 4.4l1.5 1.4 1.5-1.4c1.4-1.1 3-2.4 3-4.4V3" /><path d="M7.5 21v-3.2c0-2 1.6-3.3 3-4.4L12 12l1.5 1.4c1.4 1.1 3 2.4 3 4.4V21" /></svg>;
     case "close":
       return <svg {...props}><path d="m6 6 12 12M18 6 6 18" /></svg>;
     case "chevron-left":

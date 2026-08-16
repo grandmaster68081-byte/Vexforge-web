@@ -3,6 +3,8 @@ import { useState, useEffect } from "react";
     import type { PlayerSeasonData, SeasonRankEntry } from "../../domains/pvp/seasonRepository";
     import { getRank, tierProgress, getNextTier } from "../../lib/rankUtils";
     import { AnimatedProgressBar } from "./AnimatedProgressBar";
+    import { ForgeIcon } from "./ForgeIcon";
+    import type { ForgeIconName } from "./ForgeIcon";
 
     /** Format ms remaining to a readable string */
     function formatTimeLeft(endsAt: string): string {
@@ -15,15 +17,20 @@ import { useState, useEffect } from "react";
     return `${hours}h restantes`;
     }
 
-    const REWARD_ICONS: Record<string, string> = {
-    "Legendary Pack": "👑", "Epic Pack": "💜", "Rare Pack": "💎",
-    "Uncommon Pack": "🌿", "Common Pack": "📦",
+    const REWARD_ICONS: Record<string, ForgeIconName> = {
+    "Legendary Pack": "crown", "Epic Pack": "relics", "Rare Pack": "spark",
+    "Uncommon Pack": "packs", "Common Pack": "packs",
+    };
+    const REWARD_COLORS: Record<string, string> = {
+    "Legendary Pack": "#e8b84b", "Epic Pack": "#a855f7", "Rare Pack": "#4a9eff",
+    "Uncommon Pack": "#3ddc84", "Common Pack": "#8b8b9e",
     };
     const POSITION_LABELS = ["1°", "2°", "3°"];
-    const MEDAL_ICONS = ["🥇", "🥈", "🥉"];
+    const MEDAL_COLORS = ["#e8b84b", "#b0b0b0", "#cd7f32"];
 
     function RewardTierRow({ position, reward, highlight }: { position: string; reward: string; highlight?: boolean }) {
-    const icon = REWARD_ICONS[reward] ?? "🎁";
+    const icon: ForgeIconName = REWARD_ICONS[reward] ?? "gift";
+    const iconColor = REWARD_COLORS[reward] ?? "#e8b84b";
     return (
       <div style={{
         display: "flex", alignItems: "center", gap: 12,
@@ -35,7 +42,7 @@ import { useState, useEffect } from "react";
         <span style={{ fontSize: 11, fontFamily: '"IBM Plex Mono",monospace', color: highlight ? "#e8b84b" : "#666", minWidth: 28 }}>
           {position}
         </span>
-        <span style={{ fontSize: 18 }}>{icon}</span>
+        <span style={{ color: iconColor, lineHeight: 0 }}><ForgeIcon name={icon} size={18} /></span>
         <span style={{ fontSize: 13, fontFamily: "Rajdhani,sans-serif", fontWeight: 700, color: highlight ? "#e8e8f0" : "#aaa", letterSpacing: "0.04em" }}>
           {reward}
         </span>
@@ -59,7 +66,9 @@ import { useState, useEffect } from "react";
       }}>
         {/* Position */}
         <div style={{ minWidth: 28, textAlign: "center", fontSize: isTop3 ? 16 : 11, color: "#7a7a9a" }}>
-          {isTop3 ? MEDAL_ICONS[index] : `${index + 1}`}
+          {isTop3
+            ? <ForgeIcon name="trophy" size={16} style={{ color: MEDAL_COLORS[index] }} />
+            : `${index + 1}`}
         </div>
         {/* Tier icon */}
         <div style={{ fontSize: 14 }}>{tier.icon}</div>
@@ -136,8 +145,8 @@ import { useState, useEffect } from "react";
             background: "linear-gradient(135deg,#1a1a2e,#0e0e1e)",
             border: "1px solid rgba(232,184,75,0.3)",
             display: "flex", alignItems: "center", justifyContent: "center",
-            fontSize: 20,
-          }}>⚔️</div>
+            color: "#e8b84b",
+          }}><ForgeIcon name="arena" size={20} /></div>
 
           {/* Season info */}
           <div style={{ flex: 1, minWidth: 0 }}>
@@ -225,7 +234,7 @@ import { useState, useEffect } from "react";
                       background: "rgba(232,184,75,0.1)", border: "1px solid rgba(232,184,75,0.25)",
                       borderRadius: 8, padding: "6px 10px", textAlign: "center",
                     }}>
-                      <div style={{ fontSize: 16 }}>{REWARD_ICONS[myReward] ?? "🎁"}</div>
+                      <div style={{ color: REWARD_COLORS[myReward] ?? "#e8b84b", lineHeight: 0 }}><ForgeIcon name={REWARD_ICONS[myReward] ?? "gift"} size={16} /></div>
                       <div style={{ fontSize: 8, color: "#e8b84b", fontFamily: '"IBM Plex Mono",monospace', marginTop: 2 }}>
                         RECOMPENSA
                       </div>
@@ -273,7 +282,7 @@ import { useState, useEffect } from "react";
                     marginTop: 8,
                   }}>
                     <span style={{ fontSize: 11, fontFamily: '"IBM Plex Mono",monospace', color: "#7a7a9a", minWidth: 28 }}>Top</span>
-                    <span style={{ fontSize: 18 }}>⚡</span>
+                    <span style={{ color: "#a855f7", lineHeight: 0 }}><ForgeIcon name="energy" size={18} /></span>
                     <span style={{ fontSize: 12, fontFamily: "Rajdhani,sans-serif", fontWeight: 700, color: "#a855f7", letterSpacing: "0.04em" }}>
                       XP Bonus ×{xpBonus} — todos
                     </span>
