@@ -4,18 +4,19 @@ import { useDeposit } from "../domains/deposit/useDeposit";
 import { getTreasuryWallets } from "../domains/deposit/repository";
 import { PageLoader } from "../shared/components/PageLoader";
 import { BlockedAuthState } from "../shared/components/BlockedAuthState";
+import { ForgeIcon, type ForgeIconName } from "../shared/components/ForgeIcon";
 
 // ── BRECHA-4 resuelto: metadatos de display por chain ───────────────────
-const CHAIN_META: Record<string, { label: string; token: string; emoji: string; note: string }> = {
-  ETH:  { label: "Ethereum",  token: "USDT", emoji: "⟠",  note: "USDT ERC-20" },
-  BSC:  { label: "BNB Chain", token: "USDT", emoji: "🟡", note: "USDT BEP-20 · fees bajos" },
-  SOL:  { label: "Solana",    token: "USDT", emoji: "◎",  note: "USDT SPL · fees mínimos" },
-  TRON: { label: "TRON",      token: "USDT", emoji: "🔴", note: "USDT TRC-20 · sin fees" },
+const CHAIN_META: Record<string, { label: string; token: string; icon: ForgeIconName; note: string }> = {
+  ETH:  { label: "Ethereum",  token: "USDT", icon: "chain-eth",  note: "USDT ERC-20" },
+  BSC:  { label: "BNB Chain", token: "USDT", icon: "chain-bsc",  note: "USDT BEP-20 · fees bajos" },
+  SOL:  { label: "Solana",    token: "USDT", icon: "chain-sol",  note: "USDT SPL · fees mínimos" },
+  TRON: { label: "TRON",      token: "USDT", icon: "chain-tron", note: "USDT TRC-20 · sin fees" },
 };
 
 interface ChainOption {
   key: string; label: string; token: string;
-  emoji: string; note: string; address: string;
+  icon: ForgeIconName; note: string; address: string;
 }
 
 const PACK_REF = [
@@ -27,9 +28,14 @@ const PACK_REF = [
 ];
 
 const STATUS_LABEL: Record<string, string> = {
-  pending:  "⏳ Pendiente",
-  approved: "✅ Acreditado",
-  rejected: "❌ Rechazado",
+  pending:  "Pendiente",
+  approved: "Acreditado",
+  rejected: "Rechazado",
+};
+const STATUS_ICON: Record<string, ForgeIconName> = {
+  pending:  "hourglass",
+  approved: "check",
+  rejected: "close",
 };
 const STATUS_COLOR: Record<string, string> = {
   pending:  "#e8b84b",
@@ -60,7 +66,7 @@ export function DepositRoute() {
         address: w.wallet_address,
         ...(CHAIN_META[w.chain] ?? {
           label: w.chain, token: w.token_symbol,
-          emoji: "◈",    note:  w.token_symbol,
+          icon: "chain" as ForgeIconName, note: w.token_symbol,
         }),
       }));
       setChains(loaded);
@@ -174,17 +180,17 @@ export function DepositRoute() {
       {/* AE.2: 3 tabs — Crypto, Stripe, Historial */}
       <div style={{ display: "flex", gap: 8, marginBottom: 20, flexWrap: "wrap" }}>
         <button onClick={() => setTab("crypto")} style={tabStyle(tab === "crypto")}>
-          ⛓ Crypto (USDT)
+          <span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}><ForgeIcon name="chain" size={13} />Crypto (USDT)</span>
         </button>
         <button onClick={() => setTab("stripe")} style={tabStyle(tab === "stripe")}>
-          💳 Stripe
+          <span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}><ForgeIcon name="card" size={13} />Stripe</span>
           <span style={{ fontSize: 10, marginLeft: 6, color: "#7a7a9a" }}>Próximamente</span>
         </button>
         <button onClick={() => setTab("historial")} style={{
           ...tabStyle(tab === "historial"),
           position: "relative",
         }}>
-          📋 Historial
+          <span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}><ForgeIcon name="clipboard" size={13} />Historial</span>
           {deposits.length > 0 && (
             <span style={{
               marginLeft: 6,
@@ -206,7 +212,7 @@ export function DepositRoute() {
         <>
           {submitResult?.ok ? (
             <div style={{ ...card, textAlign: "center", padding: 40 }}>
-              <div style={{ fontSize: 48, marginBottom: 12 }}>✅</div>
+              <div style={{ color: "#3DC96B", marginBottom: 12, display: "grid", placeItems: "center" }}><ForgeIcon name="check" size={44} /></div>
               <h2 style={{ fontFamily: '"Cinzel",serif', color: "#3DC96B", marginBottom: 8 }}>
                 Depósito recibido
               </h2>
@@ -252,7 +258,7 @@ export function DepositRoute() {
                       color: chain === c.key ? "#e8b84b" : "#888",
                       fontFamily: '"Rajdhani",sans-serif', fontWeight: 700, fontSize: 13,
                     }}>
-                      {c.emoji} {c.label}
+                      <span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}><ForgeIcon name={c.icon} size={13} />{c.label}</span>
                       {c.note && (
                         <span style={{ fontSize: 9, marginLeft: 4, color: "#3DC96B" }}> {c.note}</span>
                       )}
@@ -277,11 +283,13 @@ export function DepositRoute() {
                     color: copied ? "#3DC96B" : "#e8b84b",
                     fontFamily: '"Rajdhani",sans-serif', fontWeight: 700, fontSize: 12,
                   }}>
-                    {copied ? "✓ Copiado" : "Copiar"}
+                    {copied
+                      ? <span style={{ display: "inline-flex", alignItems: "center", gap: 5 }}><ForgeIcon name="check" size={12} />Copiado</span>
+                      : "Copiar"}
                   </button>
                 </div>
                 <p style={{ fontSize: 11, color: "#E84040", margin: "8px 0 0" }}>
-                  ⚠ Incluye tu Player ID como memo en la transacción
+                  <span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}><ForgeIcon name="warning" size={12} />Incluye tu Player ID como memo en la transacción</span>
                 </p>
               </div>
 
@@ -334,7 +342,9 @@ export function DepositRoute() {
                 fontFamily: '"Cinzel",serif', fontWeight: 700, fontSize: 15,
                 letterSpacing: "0.05em",
               }}>
-                {submitting ? "Enviando..." : "⚡ Enviar depósito"}
+                {submitting
+                  ? "Enviando..."
+                  : <span style={{ display: "inline-flex", alignItems: "center", gap: 8, justifyContent: "center" }}><ForgeIcon name="energy" size={15} />Enviar depósito</span>}
               </button>
             </form>
           )}
@@ -366,7 +376,7 @@ export function DepositRoute() {
       {/* ── TAB: STRIPE ── */}
       {tab === "stripe" && (
         <div style={{ ...card, textAlign: "center", padding: 52 }}>
-          <div style={{ fontSize: 52, marginBottom: 16 }}>💳</div>
+          <div style={{ color: "#e8b84b", marginBottom: 16, display: "grid", placeItems: "center" }}><ForgeIcon name="card" size={46} /></div>
           <h2 style={{ fontFamily: '"Cinzel",serif', color: "#e8b84b", marginBottom: 10 }}>
             Próximamente
           </h2>
@@ -383,7 +393,7 @@ export function DepositRoute() {
         <div>
           {deposits.length === 0 ? (
             <div style={{ ...card, textAlign: "center", padding: 52 }}>
-              <div style={{ fontSize: 48, marginBottom: 12 }}>📋</div>
+              <div style={{ color: "#888", marginBottom: 12, display: "grid", placeItems: "center" }}><ForgeIcon name="clipboard" size={42} /></div>
               <h2 style={{ fontFamily: '"Cinzel",serif', color: "#888", marginBottom: 10 }}>
                 Sin depósitos aún
               </h2>
@@ -456,7 +466,9 @@ export function DepositRoute() {
                       </div>
                       <div style={{ textAlign: "right" }}>
                         <span style={{ fontSize: 13, fontWeight: 700,
-                          color: STATUS_COLOR[d.status] || "#888" }}>
+                          color: STATUS_COLOR[d.status] || "#888",
+                          display: "inline-flex", alignItems: "center", gap: 6 }}>
+                          <ForgeIcon name={STATUS_ICON[d.status] ?? "hourglass"} size={13} />
                           {STATUS_LABEL[d.status] || d.status}
                         </span>
                         <div style={{ fontSize: 11, color: "#7a7a9a", marginTop: 2 }}>

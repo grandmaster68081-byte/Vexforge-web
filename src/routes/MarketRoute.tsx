@@ -3,6 +3,7 @@ import { BlockedAuthState } from "../shared/components/BlockedAuthState";
 import { useMarket } from "../domains/market/useMarket";
 import { useState } from "react";
 import type { MarketListing, OwnedCard } from "../domains/market/repository";
+import { ForgeIcon, type ForgeIconName } from "../shared/components/ForgeIcon";
 
 const RARITY_COLOR: Record<string, string> = {
   Common: "#9A9AB0", Uncommon: "#3DC96B", Rare: "#4A9EFF",
@@ -15,11 +16,11 @@ const BG_URL = "https://rscuzqnfccqvltkdcdny.supabase.co/storage/v1/object/publi
 
 type SortKey = "price_asc" | "price_desc" | "newest" | "rarity";
 
-const SORT_OPTIONS: { key: SortKey; label: string }[] = [
-  { key: "price_asc",  label: "💰 Precio ↑" },
-  { key: "price_desc", label: "💰 Precio ↓" },
-  { key: "newest",     label: "🆕 Reciente" },
-  { key: "rarity",     label: "⭐ Rareza"   },
+const SORT_OPTIONS: { key: SortKey; label: string; icon: ForgeIconName }[] = [
+  { key: "price_asc",  label: "Precio asc.",  icon: "arrow-up" },
+  { key: "price_desc", label: "Precio desc.", icon: "arrow-down" },
+  { key: "newest",     label: "Reciente",     icon: "spark" },
+  { key: "rarity",     label: "Rareza",       icon: "star" },
 ];
 
 function applySort(list: MarketListing[], sort: SortKey): MarketListing[] {
@@ -120,7 +121,9 @@ function ListingCard({
               opacity: pending ? 0.5 : 1, width: "100%",
             }}
           >
-            {pending ? "Cancelando…" : "✕ Cancelar listado"}
+            {pending
+              ? "Cancelando…"
+              : <span style={{ display: "inline-flex", alignItems: "center", gap: 6, justifyContent: "center" }}><ForgeIcon name="close" size={12} />Cancelar listado</span>}
           </button>
         ) : (
           <button
@@ -134,7 +137,9 @@ function ListingCard({
               opacity: pending ? 0.5 : 1, width: "100%",
             }}
           >
-            {pending ? "Comprando…" : "🛒 Comprar"}
+            {pending
+              ? "Comprando…"
+              : <span style={{ display: "inline-flex", alignItems: "center", gap: 6, justifyContent: "center" }}><ForgeIcon name="market" size={12} />Comprar</span>}
           </button>
         )}
       </div>
@@ -154,7 +159,7 @@ function ActionToast({ msg, isError, onDismiss }: { msg: string; isError: boolea
         display: "flex", alignItems: "center", gap: 10,
       }}
     >
-      <span style={{ fontSize: 18 }}>{isError ? "⚠️" : "✓"}</span>
+      <ForgeIcon name={isError ? "warning" : "check"} size={17} />
       <span style={{ flex: 1, fontSize: 13, fontWeight: 600 }}>{msg}</span>
       <span style={{ fontSize: 10, opacity: 0.5, fontFamily: '"IBM Plex Mono",monospace' }}>tap</span>
     </div>
@@ -182,7 +187,7 @@ function SellForm({
     if (!selectedCardId || !newPrice || priceNum <= 0) return;
     try {
       await onCreate(selectedCardId, priceNum);
-      setMsg({ text: "✓ Carta listada correctamente en el mercado", ok: true });
+      setMsg({ text: "Carta listada correctamente en el mercado", ok: true });
       setSelectedCardId(""); setNewPrice("");
     } catch (e: any) {
       setMsg({ text: e?.message ?? "Error al crear el listado", ok: false });
@@ -221,7 +226,7 @@ function SellForm({
             border: `1px solid ${RARITY_COLOR[selectedCard.card_rarity ?? ""] ?? "#9A9AB0"}40`,
             display: "flex", alignItems: "center", gap: 12,
           }}>
-            <div style={{ fontSize: 24 }}>🃏</div>
+            <div style={{ color: RARITY_COLOR[selectedCard.card_rarity ?? ""] ?? "#9A9AB0", display: "grid", placeItems: "center" }}><ForgeIcon name="cards" size={24} /></div>
             <div>
               <div style={{ color: "var(--fg-primary)", fontWeight: 700, fontSize: 13 }}>{selectedCard.card_name}</div>
               <RarityBadge rarity={selectedCard.card_rarity} />
@@ -268,7 +273,9 @@ function SellForm({
         disabled={pending || !selectedCardId || priceNum <= 0}
         style={{ width: "100%", justifyContent: "center" }}
       >
-        {pending ? "Listando…" : "💰 Listar carta en el mercado"}
+        {pending
+          ? "Listando…"
+          : <span style={{ display: "inline-flex", alignItems: "center", gap: 8 }}><ForgeIcon name="coin" size={14} />Listar carta en el mercado</span>}
       </button>
     </div>
   );
@@ -295,7 +302,7 @@ function MyListingsTab({
   if (!currentPlayerId) {
     return (
       <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 10, padding: "24px 16px", textAlign: "center" }}>
-        <div style={{ fontSize: 32, marginBottom: 8 }}>🔐</div>
+        <div style={{ color: "#E8B84B", marginBottom: 8, display: "grid", placeItems: "center" }}><ForgeIcon name="lock" size={30} /></div>
         <p style={{ color: "var(--fg-dim)", margin: 0, fontSize: 13 }}>Inicia sesión para ver tus listados activos.</p>
       </div>
     );
@@ -321,7 +328,7 @@ function MyListingsTab({
 
       {myListings.length === 0 ? (
         <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 10, padding: "24px 16px", textAlign: "center" }}>
-          <div style={{ fontSize: 32, marginBottom: 10 }}>📭</div>
+          <div style={{ color: "#E8B84B", marginBottom: 10, display: "grid", placeItems: "center" }}><ForgeIcon name="collection" size={30} /></div>
           <div style={{ color: "var(--fg-primary)", fontWeight: 600, fontSize: 14, marginBottom: 6 }}>Sin listados activos</div>
           <p style={{ color: "var(--fg-dim)", margin: 0, fontSize: 13 }}>
             Ve a la pestaña "Vender" para listar cartas de tu colección.
@@ -412,16 +419,16 @@ export function MarketRoute() {
         {/* ── Tabs ── */}
         <div className="market-tabs" style={{ marginBottom: 28 }}>
           {([
-            { id: "buy",  label: "🛒 Comprar",       count: sorted.length },
-            { id: "mine", label: "📋 Mis Listados",   count: myListingsCount },
-            { id: "sell", label: "💰 Vender",          count: null },
-          ] as const).map(({ id, label, count }) => (
+            { id: "buy",  label: "Comprar",      icon: "market",    count: sorted.length },
+            { id: "mine", label: "Mis Listados",  icon: "clipboard", count: myListingsCount },
+            { id: "sell", label: "Vender",        icon: "coin",      count: null },
+          ] as const).map(({ id, label, icon, count }) => (
             <button
               key={id}
               className={`market-tab ${tab === id ? "active" : ""}`}
               onClick={() => setTab(id)}
             >
-              {label}
+              <span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}><ForgeIcon name={icon} size={12} />{label}</span>
               {count !== null && count > 0 && (
                 <span style={{ background: tab === id ? "rgba(255,255,255,0.15)" : "rgba(255,255,255,0.06)", borderRadius: 20, padding: "1px 7px", fontSize: 10, marginLeft: 6 }}>{count}</span>
               )}
@@ -439,7 +446,7 @@ export function MarketRoute() {
             <div className="market-filters" style={{ marginBottom: 16 }}>
               <input
                 className="forge-input"
-                placeholder="🔍 Buscar carta…"
+                placeholder="Buscar carta…"
                 value={search}
                 onChange={e => setSearch(e.target.value)}
                 style={{ minWidth: 180 }}
@@ -484,7 +491,7 @@ export function MarketRoute() {
                     fontWeight: sort === o.key ? 700 : 400,
                   }}
                 >
-                  {o.label}
+                  <span style={{ display: "inline-flex", alignItems: "center", gap: 5 }}><ForgeIcon name={o.icon} size={11} />{o.label}</span>
                 </button>
               ))}
             </div>
@@ -493,7 +500,7 @@ export function MarketRoute() {
               <div style={{ textAlign: "center", padding: 40, color: "var(--fg-dim)" }}>Cargando mercado…</div>
             ) : sorted.length === 0 ? (
               <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 10, padding: 40, textAlign: "center" }}>
-                <div style={{ fontSize: 40, marginBottom: 10 }}>🏪</div>
+                <div style={{ color: "#E8B84B", marginBottom: 10, display: "grid", placeItems: "center" }}><ForgeIcon name="market" size={38} /></div>
                 <div style={{ color: "var(--fg-primary)", fontWeight: 600, fontSize: 15, marginBottom: 6 }}>Sin listados disponibles</div>
                 <p style={{ color: "var(--fg-dim)", margin: 0, fontSize: 13 }}>
                   {search || rarityFilter !== "all" ? "Prueba con otros filtros." : "El mercado está vacío. ¡Sé el primero en listar!"}

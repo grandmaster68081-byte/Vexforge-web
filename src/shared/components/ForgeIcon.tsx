@@ -79,7 +79,19 @@ export type ForgeIconName =
   | "rank-iron"
   | "key"
   | "telegram"
-  | "calendar";
+  | "calendar"
+  | "chain"
+  | "chain-eth"
+  | "chain-bsc"
+  | "chain-sol"
+  | "chain-tron"
+  | "card"
+  | "ledger"
+  | "search"
+  | "arrow-up"
+  | "arrow-down"
+  | "star"
+  | "clipboard";
 
 type ForgeIconProps = {
   name: ForgeIconName;
@@ -116,6 +128,30 @@ export function ForgeIcon({
   };
 
   switch (name) {
+    case "chain":
+      return <svg {...props}><path d="M9.5 14.5 14.5 9.5" /><path d="M11.2 7.8l1.6-1.6a3.6 3.6 0 0 1 5.1 5.1l-1.6 1.6M12.8 16.2l-1.6 1.6a3.6 3.6 0 0 1-5.1-5.1l1.6-1.6" /></svg>;
+    case "chain-eth":
+      return <svg {...props}><path d="m12 2.5 6 9.2-6 3.6-6-3.6z" /><path d="m6 13.4 6 8.1 6-8.1-6 3.6z" /></svg>;
+    case "chain-bsc":
+      return <svg {...props}><path d="m12 3 3.2 3.2L12 9.4 8.8 6.2z" /><path d="m5.6 9.4 3.2 3.2-3.2 3.2L2.4 12.6z" /><path d="m18.4 9.4 3.2 3.2-3.2 3.2-3.2-3.2z" /><path d="m12 14.6 3.2 3.2L12 21l-3.2-3.2z" /></svg>;
+    case "chain-sol":
+      return <svg {...props}><path d="M6 7.5h10.5L19 5H8.5z" /><path d="M5 12h10.5L18 9.5H7.5z" /><path d="M6 16.5h10.5L19 14H8.5z" /></svg>;
+    case "chain-tron":
+      return <svg {...props}><path d="M3.8 5.5 20.2 8 12 20.5z" /><path d="M3.8 5.5 12 10.4 20.2 8M12 10.4v10.1" /></svg>;
+    case "card":
+      return <svg {...props}><rect x="2.8" y="5.5" width="18.4" height="13" rx="2.2" /><path d="M2.8 10h18.4M6.5 14.5h4" /></svg>;
+    case "ledger":
+      return <svg {...props}><path d="M6 3.5h11.5a1.5 1.5 0 0 1 1.5 1.5v14a1.5 1.5 0 0 1-1.5 1.5H6z" /><path d="M6 3.5A1.8 1.8 0 0 0 4.2 5.3v13.4A1.8 1.8 0 0 0 6 20.5" /><path d="M9 8h7M9 11.5h7M9 15h4" /></svg>;
+    case "search":
+      return <svg {...props}><circle cx="10.8" cy="10.8" r="6.3" /><path d="m15.4 15.4 4.4 4.4" /></svg>;
+    case "arrow-up":
+      return <svg {...props}><path d="M12 20V4M6 10l6-6 6 6" /></svg>;
+    case "arrow-down":
+      return <svg {...props}><path d="M12 4v16M6 14l6 6 6-6" /></svg>;
+    case "star":
+      return <svg {...props}><path d="m12 3.2 2.7 5.8 6.3.7-4.7 4.3 1.3 6.2L12 17.1l-5.6 3.1 1.3-6.2L3 9.7l6.3-.7z" /></svg>;
+    case "clipboard":
+      return <svg {...props}><rect x="5" y="4.5" width="14" height="16" rx="1.8" /><path d="M9 4.5V3h6v1.5M8.5 9.5h7M8.5 13h7M8.5 16.5h4" /></svg>;
     case "calendar":
       return <svg {...props}><rect x="3.5" y="5" width="17" height="15" rx="2" /><path d="M3.5 10h17M8 3v4M16 3v4" /><path d="M7.5 13.5h3v3h-3z" /></svg>;
     case "key":

@@ -3,25 +3,26 @@ import { supabase } from "../lib/supabase";
 import { getSeasonRankings, getMySeasonRanking, type SeasonRanking } from "../domains/season/repository";
 import { PageLoader } from "../shared/components/PageLoader";
 import { EmptyState } from "../shared/components/EmptyState";
+import { ForgeIcon, type ForgeIconName } from "../shared/components/ForgeIcon";
 
 const BG_URL = "https://rscuzqnfccqvltkdcdny.supabase.co/storage/v1/object/public/vexforge-assets/backgrounds/bg_leaderboard.jpg";
 
-const MMR_TIER: Array<{ min: number; label: string; color: string; icon: string }> = [
-  { min: 2000, label: "Mítico",     color: "#FF4444", icon: "🔴" },
-  { min: 1600, label: "Legendario", color: "#E8B84B", icon: "👑" },
-  { min: 1300, label: "Épico",      color: "#A855F7", icon: "💜" },
-  { min: 1100, label: "Raro",       color: "#4A9EFF", icon: "💙" },
-  { min:    0, label: "Común",      color: "#8B8B9E", icon: "⚪" },
+const MMR_TIER: Array<{ min: number; label: string; color: string; icon: ForgeIconName }> = [
+  { min: 2000, label: "Mítico",     color: "#FF4444", icon: "rank-mythic" },
+  { min: 1600, label: "Legendario", color: "#E8B84B", icon: "crown" },
+  { min: 1300, label: "Épico",      color: "#A855F7", icon: "rank-diamond" },
+  { min: 1100, label: "Raro",       color: "#4A9EFF", icon: "rank-platinum" },
+  { min:    0, label: "Común",      color: "#8B8B9E", icon: "shield" },
 ];
 
 function getTier(mmr: number) {
   return MMR_TIER.find(t => mmr >= t.min) ?? MMR_TIER[MMR_TIER.length - 1];
 }
 
-function getRankMedal(pos: number) {
-  if (pos === 1) return "🥇";
-  if (pos === 2) return "🥈";
-  if (pos === 3) return "🥉";
+function getRankMedal(pos: number): { icon: ForgeIconName; color: string } | null {
+  if (pos === 1) return { icon: "rank-gold",   color: "#E8B84B" };
+  if (pos === 2) return { icon: "rank-silver", color: "#C6CBD6" };
+  if (pos === 3) return { icon: "rank-bronze", color: "#C58B5A" };
   return null;
 }
 
@@ -53,7 +54,7 @@ function RankRow({ entry, isMe }: { entry: SeasonRanking; isMe: boolean }) {
       {/* Rank */}
       <div style={{ width: 36, flexShrink: 0, textAlign: "center" }}>
         {medal
-          ? <span style={{ fontSize: 20 }}>{medal}</span>
+          ? <ForgeIcon name={medal.icon} size={20} style={{ color: medal.color }} />
           : <span style={{ color: "#5a5a7a", fontWeight: 700, fontSize: 15 }}>#{entry.rank_position}</span>
         }
       </div>
@@ -61,7 +62,7 @@ function RankRow({ entry, isMe }: { entry: SeasonRanking; isMe: boolean }) {
       {/* Player name / tier */}
       <div style={{ flex: 1, minWidth: 0 }}>
         <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-          <span style={{ color: tier.icon ? tier.color : "#8b8b9e", fontSize: 14 }}>{tier.icon}</span>
+          <ForgeIcon name={tier.icon} size={15} style={{ color: tier.color }} />
           <span style={{
             color: isMe ? "#4a9eff" : "#e8e8f0",
             fontWeight: 700, fontSize: 14,
@@ -132,7 +133,9 @@ export function SeasonRankingsRoute() {
           {/* Header */}
           <div style={{ marginBottom: 28 }}>
             <h1 style={{ fontFamily: "Cinzel,serif", color: "#e8b84b", fontSize: 26, margin: "0 0 4px" }}>
-              🏆 Rankings de Temporada
+              <span style={{ display: "inline-flex", alignItems: "center", gap: 10 }}>
+                <ForgeIcon name="rankings" size={24} />Rankings de Temporada
+              </span>
             </h1>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
               <p style={{ color: "#7a7a9a", fontSize: 13, margin: 0 }}>
@@ -141,7 +144,7 @@ export function SeasonRankingsRoute() {
               <button
                 onClick={load}
                 style={{ padding: "7px 16px", borderRadius: 8, border: "1px solid #2a2a3a", background: "transparent", color: "#7a7a9a", fontSize: 12, cursor: "pointer" }}>
-                ↺ Actualizar
+                <span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}><ForgeIcon name="refresh" size={12} />Actualizar</span>
               </button>
             </div>
           </div>
@@ -165,7 +168,7 @@ export function SeasonRankingsRoute() {
           {/* Rankings list */}
           {rankings.length === 0 ? (
             <EmptyState
-              icon="🏆"
+              icon={<ForgeIcon name="rankings" size={36} />}
               title="Rankings en construcción"
               description="Los rankings se actualizan después de las batallas PvP. ¡Juega y sube tu MMR!"
             />
@@ -189,7 +192,7 @@ export function SeasonRankingsRoute() {
             <div style={{ display: "flex", gap: 16, flexWrap: "wrap" }}>
               {MMR_TIER.map(t => (
                 <div key={t.label} style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                  <span>{t.icon}</span>
+                  <ForgeIcon name={t.icon} size={14} style={{ color: t.color }} />
                   <span style={{ color: t.color, fontSize: 12, fontWeight: 600 }}>{t.label}</span>
                   <span style={{ color: "#5a5a7a", fontSize: 11 }}>{t.min === 0 ? "< 1100" : `≥ ${t.min}`}</span>
                 </div>

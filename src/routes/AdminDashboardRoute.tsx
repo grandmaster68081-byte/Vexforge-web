@@ -5,14 +5,15 @@ import {
   adminGetOverview, adminGetPlayers, adminGetLedger,
 } from "../domains/admin/adminMetrics";
 import type { AdminOverview, AdminPlayer, LedgerEntry } from "../domains/admin/adminMetrics";
+import { ForgeIcon, type ForgeIconName } from "../shared/components/ForgeIcon";
 
 type Tab = "overview" | "players" | "ledger" | "deposits";
 
-const TABS: { id: Tab; label: string; icon: string }[] = [
-  { id: "overview",  label: "Overview",   icon: "📊" },
-  { id: "players",   label: "Jugadores",  icon: "👥" },
-  { id: "ledger",    label: "Economía",   icon: "📒" },
-  { id: "deposits",  label: "Depósitos",  icon: "💰" },
+const TABS: { id: Tab; label: string; icon: ForgeIconName }[] = [
+  { id: "overview",  label: "Overview",   icon: "progress" },
+  { id: "players",   label: "Jugadores",  icon: "friends" },
+  { id: "ledger",    label: "Economía",   icon: "ledger" },
+  { id: "deposits",  label: "Depósitos",  icon: "deposit" },
 ];
 
 const C = {
@@ -41,7 +42,7 @@ function KpiCard({
   label, value, sub, color, icon, onClick, alert,
 }: {
   label: string; value: string; sub?: string; color?: string;
-  icon: string; onClick?: () => void; alert?: boolean;
+  icon: ForgeIconName; onClick?: () => void; alert?: boolean;
 }) {
   const c = color ?? C.muted;
   return (
@@ -64,7 +65,7 @@ function KpiCard({
           boxShadow:"0 0 8px " + C.red,
         }} />
       )}
-      <div style={{ fontSize:22, marginBottom:8 }}>{icon}</div>
+      <div style={{ marginBottom:8, color:c, display:"flex" }}><ForgeIcon name={icon} size={22} /></div>
       <div style={{ fontSize:22, fontWeight:800, color:c, lineHeight:1 }}>{value}</div>
       <div style={{ fontSize:11, color:C.muted, marginTop:5, letterSpacing:0.5 }}>{label}</div>
       {sub && <div style={{ fontSize:10, color:C.dim, marginTop:3 }}>{sub}</div>}
@@ -82,23 +83,23 @@ function OverviewTab({ data, onTabChange }: { data: AdminOverview; onTabChange: 
 
       {/* Row 1: Jugadores + VEX */}
       <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(160px,1fr))", gap:10, marginBottom:10 }}>
-        <KpiCard icon="👥" label="Jugadores registrados"
+        <KpiCard icon="friends" label="Jugadores registrados"
           value={fmt(data.total_players)}
           sub={data.active_players + " activos"}
           color={C.blue}
           onClick={() => onTabChange("players")}
         />
-        <KpiCard icon="⚡" label="VEX Tradeable en circulación"
+        <KpiCard icon="energy" label="VEX Tradeable en circulación"
           value={fmt(data.total_vex_tradeable)}
           sub={fmt(data.total_vex_ingame) + " in-game"}
           color={C.gold}
         />
-        <KpiCard icon="🃏" label="Cartas distribuidas"
+        <KpiCard icon="cards" label="Cartas distribuidas"
           value={fmt(data.total_cards_distributed)}
           sub={fmt(data.unique_player_card_slots) + " slots únicos"}
           color={C.purple}
         />
-        <KpiCard icon="📦" label="Packs abiertos"
+        <KpiCard icon="packs" label="Packs abiertos"
           value={fmt(data.total_packs_opened)}
           sub={fmt(data.total_packs_pending) + " pendientes de abrir"}
           color={C.green}
@@ -107,19 +108,19 @@ function OverviewTab({ data, onTabChange }: { data: AdminOverview; onTabChange: 
 
       {/* Row 2: Monetización + Ledger */}
       <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(160px,1fr))", gap:10, marginBottom:24 }}>
-        <KpiCard icon="💵" label="Revenue USDT acumulado"
+        <KpiCard icon="coin" label="Revenue USDT acumulado"
           value={"$" + Number(data.total_usdt_received).toFixed(2)}
           sub={fmt(data.total_vex_from_deposits) + " VEX emitidos"}
           color={C.green}
         />
-        <KpiCard icon="⏳" label="Depósitos PENDIENTES"
+        <KpiCard icon="hourglass" label="Depósitos PENDIENTES"
           value={String(data.deposits_pending)}
           sub={data.deposits_approved + " aprobados · " + data.deposits_rejected + " rechazados"}
           color={data.deposits_pending > 0 ? C.red : C.muted}
           alert={data.deposits_pending > 0}
           onClick={() => onTabChange("deposits")}
         />
-        <KpiCard icon="📒" label="Entradas en ledger"
+        <KpiCard icon="ledger" label="Entradas en ledger"
           value={fmt(data.ledger_entries)}
           color={C.muted}
           onClick={() => onTabChange("ledger")}
@@ -136,19 +137,19 @@ function OverviewTab({ data, onTabChange }: { data: AdminOverview; onTabChange: 
         </div>
         <div style={{ display:"flex", gap:24, flexWrap:"wrap" }}>
           <div>
-            <div style={{ fontSize:12, color:C.muted }}>Depósitos → VEX emitidos</div>
+            <div style={{ fontSize:12, color:C.muted }}>Depósitos a VEX emitidos</div>
             <div style={{ fontSize:18, fontWeight:700, color:C.gold }}>
               {fmt(data.total_vex_from_deposits)} VEX
             </div>
           </div>
-          <div style={{ color:C.dim, fontSize:20, alignSelf:"center" }}>→</div>
+          <div style={{ color:C.dim, alignSelf:"center", display:"flex" }}><ForgeIcon name="chevron-right" size={18} /></div>
           <div>
             <div style={{ fontSize:12, color:C.muted }}>VEX en wallets ahora</div>
             <div style={{ fontSize:18, fontWeight:700, color:C.blue }}>
               {fmt(data.total_vex_tradeable + data.total_vex_ingame)} VEX
             </div>
           </div>
-          <div style={{ color:C.dim, fontSize:20, alignSelf:"center" }}>→</div>
+          <div style={{ color:C.dim, alignSelf:"center", display:"flex" }}><ForgeIcon name="chevron-right" size={18} /></div>
           <div>
             <div style={{ fontSize:12, color:C.muted }}>Cartas en colecciones</div>
             <div style={{ fontSize:18, fontWeight:700, color:C.purple }}>
@@ -214,8 +215,8 @@ function PlayersTab({ players }: { players: AdminPlayer[] }) {
                 <td style={{ padding:"10px 10px", color:C.main, whiteSpace:"nowrap" }}>
                   <div style={{ display:"flex", alignItems:"center", gap:6 }}>
                     {(p.is_super_admin || p.is_admin) && (
-                      <span title={p.is_super_admin?"Super Admin":"Admin"} style={{ fontSize:10 }}>
-                        {p.is_super_admin?"👑":"🛡️"}
+                      <span title={p.is_super_admin?"Super Admin":"Admin"} style={{ display:"flex", color:p.is_super_admin?C.gold:C.blue }}>
+                        <ForgeIcon name={p.is_super_admin?"crown":"shield"} size={12} />
                       </span>
                     )}
                     <span style={{ fontWeight:600 }}>{p.display_name ?? "(sin nombre)"}</span>
@@ -351,12 +352,12 @@ function LedgerTab({ entries, total, onLoadMore, loading }: {
 function DepositsTab({ navigate, pendingCount }: { navigate: (p: string) => void; pendingCount: number }) {
   return (
     <div style={{ display:"flex", flexDirection:"column", alignItems:"center", padding:"48px 0" }}>
-      <div style={{ fontSize:56, marginBottom:20 }}>💰</div>
+      <div style={{ marginBottom:20, color:C.gold, display:"flex" }}><ForgeIcon name="deposit" size={52} /></div>
       <div style={{ fontSize:20, fontWeight:800, color:C.gold, marginBottom:8 }}>
         Panel de Depósitos
       </div>
       <div style={{ fontSize:14, color:C.muted, marginBottom:28, textAlign:"center", maxWidth:380 }}>
-        Los depósitos USDT → VEX se gestionan en su propia página con panel completo de aprobación.
+        Los depósitos USDT a VEX se gestionan en su propia página con panel completo de aprobación.
       </div>
       {pendingCount > 0 && (
         <div style={{
@@ -364,7 +365,7 @@ function DepositsTab({ navigate, pendingCount }: { navigate: (p: string) => void
           background:C.red+"15", border:"1px solid "+C.red+"44", color:C.red,
           fontSize:14, fontWeight:700,
         }}>
-          ⚠️ {pendingCount} depósito{pendingCount !== 1 ? "s" : ""} esperando aprobación
+          <span style={{ display:"inline-flex", alignItems:"center", gap:8 }}><ForgeIcon name="warning" size={14} />{pendingCount} depósito{pendingCount !== 1 ? "s" : ""} esperando aprobación</span>
         </div>
       )}
       <button
@@ -375,7 +376,7 @@ function DepositsTab({ navigate, pendingCount }: { navigate: (p: string) => void
           fontWeight:800, fontSize:15, cursor:"pointer", letterSpacing:1,
         }}
       >
-        Ir a Depósitos →
+        <span style={{ display:"inline-flex", alignItems:"center", gap:8 }}>Ir a Depósitos<ForgeIcon name="chevron-right" size={14} /></span>
       </button>
     </div>
   );
@@ -445,7 +446,7 @@ export function AdminDashboardRoute() {
         {/* Header */}
         <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", marginBottom:28, flexWrap:"wrap", gap:12 }}>
           <div style={{ display:"flex", alignItems:"center", gap:12 }}>
-            <span style={{ fontSize:32 }}>🛡️</span>
+            <span style={{ display:"flex", color:C.gold }}><ForgeIcon name="admin" size={30} /></span>
             <div>
               <h1 style={{ margin:0, fontSize:24, fontWeight:800, color:C.gold, letterSpacing:2 }}>
                 ADMIN DASHBOARD
@@ -455,7 +456,7 @@ export function AdminDashboardRoute() {
               </p>
             </div>
           </div>
-          <button onClick={() => navigate("/admin/shop-orders")} style={{ padding:"7px 16px", borderRadius:8, border:"1px solid "+C.gold+"55", background:C.gold+"12", color:C.gold, fontSize:12, cursor:"pointer" }}>🛒 Órdenes de tienda</button>
+          <button onClick={() => navigate("/admin/shop-orders")} style={{ padding:"7px 16px", borderRadius:8, border:"1px solid "+C.gold+"55", background:C.gold+"12", color:C.gold, fontSize:12, cursor:"pointer" }}><span style={{ display:"inline-flex", alignItems:"center", gap:6 }}><ForgeIcon name="market" size={12} />Órdenes de tienda</span></button>
           <button
             onClick={() => { loadOverview(); setPlayers(null); setLedger([]); setLedgerPage(0); }}
             style={{
@@ -464,7 +465,7 @@ export function AdminDashboardRoute() {
               color:C.muted, fontSize:12, cursor:"pointer",
             }}
           >
-            🔄 Actualizar
+            <span style={{ display:"inline-flex", alignItems:"center", gap:6 }}><ForgeIcon name="refresh" size={12} />Actualizar</span>
           </button>
         </div>
 
@@ -496,7 +497,7 @@ export function AdminDashboardRoute() {
                 display:"flex", alignItems:"center", gap:6,
               }}
             >
-              <span>{t.icon}</span>
+              <span style={{ display:"flex" }}><ForgeIcon name={t.icon} size={13} /></span>
               {t.label}
               {t.id === "deposits" && overview && overview.deposits_pending > 0 && (
                 <span style={{
@@ -518,7 +519,7 @@ export function AdminDashboardRoute() {
         )}
         {tab === "overview" && !overview && !isLoading && (
           <div style={{ textAlign:"center", padding:"60px 0", color:C.muted }}>
-            <div style={{ fontSize:40, marginBottom:12 }}>🔒</div>
+            <div style={{ marginBottom:12, color:C.muted, display:"flex", justifyContent:"center" }}><ForgeIcon name="lock" size={38} /></div>
             <div>Acceso solo para administradores de VEXFORGE</div>
           </div>
         )}

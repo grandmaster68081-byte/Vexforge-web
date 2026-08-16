@@ -901,3 +901,27 @@ Los commits anteriores siguen disponibles en Git para auditoría y reversión. L
 - Bloqueos: la vista autenticada de logros reales (desbloqueos, fechas, puntos ganados) sigue BLOCKED por falta de sesión normal autorizada del jugador u owner; no se usó service_role ni se fabricaron resultados.
 - Condición de reapertura: regresión visual, discrepancia entre main y el bundle público, o mapping canónico contradictorio.
 - Siguiente acción verificable: confirmar `build-manifest.json` público con el commit de esta sesión y HTTP 200 en `/achievements` y rutas críticas.
+
+## 2026-08-16 — VE-1-STORE-ADMIN-ICON-LANGUAGE — IMPLEMENTED_UNVERIFIED
+
+- Tipo de sesión: IMPLEMENTACIÓN / REFINAMIENTO (continuación de la línea VE-1-ICON-LANGUAGE).
+- Unidad: `src/routes/SeasonRankingsRoute.tsx`, `src/routes/ShopRoute.tsx`, `src/routes/DepositRoute.tsx`, `src/routes/MarketRoute.tsx`, `src/routes/AdminDashboardRoute.tsx` y ampliación canónica de `src/shared/components/ForgeIcon.tsx`.
+- Fuente canónica: código real de `main` del repositorio oficial, Supabase vivo `rscuzqnfccqvltkdcdny`, `ForgeIcon`, `VEXFORGE_PROTOCOL_V2.md` y esta continuidad.
+- Estado inicial: deuda declarada en VE-1-ACHIEVEMENTS-ICON-LANGUAGE (MarketRoute, ShopRoute, DepositRoute, AdminDashboardRoute con sustitutos Unicode). Estado actual: IMPLEMENTED_UNVERIFIED.
+- Nivel Q: Q2 → Q3 (identidad visual propia, sin sustitutos Unicode) en rankings, tienda, depósitos, mercado y panel administrativo.
+- Cambio realizado:
+  - `ForgeIcon`: 12 glifos canónicos nuevos (`chain`, `chain-eth`, `chain-bsc`, `chain-sol`, `chain-tron`, `card`, `ledger`, `search`, `arrow-up`, `arrow-down`, `star`, `clipboard`) con el mismo contrato (`viewBox 0 0 24 24`, `currentColor`, `aria-hidden`, `focusable=false`).
+  - `SeasonRankingsRoute`: medallas y tiers de MMR pasan a `rank-*`, `crown` y `shield`.
+  - `ShopRoute`: categorías e items derivan su glifo del contrato (`item_key`/categoría) mediante `shopItemIcon`, sin depender de emojis del catálogo.
+  - `DepositRoute`: `CHAIN_META.emoji` → `icon: ForgeIconName` (`chain-eth|bsc|sol|tron`); tabs Crypto/Stripe/Historial, estados de depósito, copiado, aviso de memo y CTA con glifos propios; `STATUS_LABEL` queda como texto limpio + `STATUS_ICON`.
+  - `MarketRoute`: pastillas de orden con `arrow-up`/`arrow-down`/`spark`/`star`, tabs con `market`/`clipboard`/`coin`, toasts con `warning`/`check`, vacíos con `market`/`collection`, bloqueo con `lock`, botones de compra/cancelar/listar con glifos propios; placeholder de búsqueda sin emoji.
+  - `AdminDashboardRoute`: `TABS.icon` y `KpiCard.icon` pasan a `ForgeIconName`; KPIs, cabecera, insignias de admin/super-admin, refresco, órdenes de tienda, flujo de VEX y estados vacíos con glifos propios.
+- Contrato de datos: sin cambios. Ninguna columna, RPC, política ni dato fue modificado; la traducción símbolo → glifo ocurre solo en presentación.
+- Alcance no modificado: Supabase, Storage, migraciones, RPCs, RLS, roles, wallet, economía, precios, fees del mercado, aprobación de depósitos y autenticación.
+- Accesibilidad: `ForgeIcon` conserva `aria-hidden=true` y `focusable=false`; todas las etiquetas textuales y controles nativos se mantienen.
+- Verificaciones ejecutadas: `tsc --noEmit` sin errores en la unidad; `npm run build` correcto; barrido Unicode sobre los cinco archivos sin coincidencias.
+- Deuda registrada: siguen con sustitutos Unicode HomeRoute, MissionsRoute, InventoryRoute, CosmeticsRoute, PvpRoute, componentes de batalla y módulos de `src/lib`. La columna `achievements.icon` sigue conteniendo emojis en el dato oficial (unidad de datos futura).
+- Bloqueos: las vistas autenticadas de depósitos, mercado y panel admin (datos reales, saldo, listados propios, KPIs) siguen BLOCKED por falta de sesión normal autorizada; no se usó service_role ni se fabricaron resultados.
+- Condición de reapertura: regresión visual, discrepancia entre `main` y el bundle público, o mapping canónico contradictorio.
+- Siguiente unidad: `VE-1-HOME-MISSIONS-ICON-LANGUAGE` sobre `HomeRoute` y `MissionsRoute`.
+- Siguiente acción verificable: confirmar `build-manifest.json` público con el commit de esta sesión y HTTP 200 en `/market`, `/shop`, `/deposit`, `/season-rankings` y `/admin`.
