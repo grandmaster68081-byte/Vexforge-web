@@ -4,6 +4,7 @@
     import { useState, useEffect, useRef, useCallback } from "react";
     import { supabase } from "../../lib/supabase";
     import { AudioEngine } from "../../lib/audioEngine";
+import { ForgeIcon } from "./ForgeIcon";
 
     interface AchievementData {
     id: string;
@@ -159,7 +160,7 @@
             }}>
               <span style={{ fontSize: 10, fontFamily:'"IBM Plex Mono",monospace',
                 color: r.color, letterSpacing: ".15em", textTransform: "uppercase" }}>
-                🏆 Logro Desbloqueado
+                <ForgeIcon name="trophy" size={11} style={{ marginRight: 5, verticalAlign: "middle" }} />Logro Desbloqueado
               </span>
               <span style={{ marginLeft:"auto", fontSize:9, fontFamily:'"IBM Plex Mono",monospace',
                 color: r.color, opacity:.8 }}>
@@ -174,7 +175,7 @@
                 animation: "ach-icon 0.75s ease-in-out 0.2s both",
                 display: "inline-block",
               }}>
-                {current.icon || "🏅"}
+                {current.icon ? current.icon : <ForgeIcon name="achievements" size={34} style={{ color: r.color }} />}
               </div>
 
               <div style={{ flex:1, minWidth:0 }}>
