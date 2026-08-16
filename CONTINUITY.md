@@ -1,3 +1,16 @@
+## 2026-08-15 — VE-1-ERROR-BOUNDARY-ICON-LANGUAGE — IMPLEMENTED_UNVERIFIED
+
+- Tipo de sesión: REFINAMIENTO / IMPLEMENTACIÓN.
+- Unidad: estado de recuperación global en ErrorBoundary.
+- Fuente canónica: código real de main, ForgeIcon y protocolo VEXFORGE.
+- Objetivo: retirar sustitutos Unicode de advertencia y reintento sin cambiar diagnóstico, recuperación, textos, autenticación, datos ni resultados autoritativos.
+- Cambio: se incorporó ForgeIcon con los mappings canónicos warning y refresh; se conservaron el color de advertencia y la acción Reintentar.
+- Alcance autoritativo: no se modificaron Supabase, Storage, RPCs, RLS, economía, recompensas, cartas, inventario ni navegación.
+- Evidencia: actualización confirmada por GitHub Contents API en main; build y revisión visual interactiva quedan pendientes de verificación proporcional.
+- Responsive y accesibilidad: ForgeIcon conserva aria-hidden y focusable=false; la acción y su texto visible permanecen sin cambios.
+- Deuda y condición de reapertura: verificar bundle público, build y estados responsive antes de elevar la unidad a OPERATIONAL; reabrir ante discrepancia del mapping o regresión del recovery flow.
+- Siguiente acción verificable: comprobar que main y el deploy sirven la unidad actualizada sin errores.
+
 ## 2026-08-14 — VE-1-EMPTY-STATE-ICON-LANGUAGE — IMPLEMENTED_UNVERIFIED
 
 - **Tipo de sesión:** REFINAMIENTO / IMPLEMENTACIÓN. **Fuente canónica:** código real de `main`, `EmptyState`, `ForgeIcon`, Supabase vivo y deploy público.
