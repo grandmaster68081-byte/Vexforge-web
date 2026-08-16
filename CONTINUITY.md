@@ -596,3 +596,10 @@
 ## Historial
 
 Los commits anteriores siguen disponibles en Git para auditoría y reversión. Los documentos históricos retirados no deben copiarse ni tratarse como plan activo.
+## 2026-08-15 — VE-1-ERROR-BOUNDARY-ICON-LANGUAGE — VERIFICATION UPDATE
+
+- main confirma el cambio de ErrorBoundary y ForgeIcon; la rama responde correctamente.
+- El bundle público responde HTTP 200 pero build-manifest.json todavía informa sourceCommit=96feae3f409bbccfa2f8cb6256863e069500b7ec.
+- Estado conservado: IMPLEMENTED_UNVERIFIED; no se declara OPERATIONAL porque el deploy público no refleja todavía main.
+- No se forzó publicación: requiere autorización explícita y verificación de build conforme al protocolo.
+- Siguiente acción: publicar por el flujo autorizado y repetir la comprobación de main, manifest y rutas críticas.
