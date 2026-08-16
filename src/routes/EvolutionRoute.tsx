@@ -79,7 +79,7 @@ function EvoCard({ path, onEvolve, evolving }: {
           opacity: evolving ? 0.7 : 1, transition: "opacity .2s",
         }}
       >
-        {evolving ? "Evolucionando…" : "🧬 Evolucionar"}
+        {evolving ? "Evolucionando…" : <><ForgeIcon name="evolution" size={13} style={{ marginRight: 6, verticalAlign: "middle" }} />Evolucionar</>}
       </button>
     </div>
   );
