@@ -833,3 +833,16 @@ Los commits anteriores siguen disponibles en Git para auditoría y reversión. L
 - Bloqueos: la verificación autenticada de PvP y perfil sigue BLOCKED por falta de sesión normal autorizada; no se fabrican sesiones ni resultados con service_role.
 - Condición de reapertura: regresión visual, discrepancia entre main y el bundle público, o mapping canónico contradictorio.
 - Siguiente acción verificable: confirmar `build-manifest.json` público con el commit de esta sesión y HTTP 200 en `/pvp`, `/profile` y rutas críticas; después abrir la unidad de iconos de `ProfileRoute`.
+
+### Cierre operativo — VE-1-RANK-ICON-LANGUAGE
+
+- Estado actual: OPERATIONAL para la capa de presentación de la unidad; nivel Q3.
+- Commit publicado: `4a213396a27a5c5213a9a17dcbb87cbb27f737c7` en main.
+- Evidencia de publicación: `/build-manifest.json` público informa `sourceCommit=4a213396a27a5c5213a9a17dcbb87cbb27f737c7`, `sourceBranch=main`.
+- Evidencia de bundle: el chunk público `assets/index-DEtNzJai.js` contiene los mappings `rank-*` y no conserva los emojis de rango.
+- Rutas verificadas HTTP 200: `/`, `/pvp`, `/profile`, `/cards`, `/battle`, `/packs`, `/friends`, `/relics`, `/season-pass`, `/quests`, `/missions`, `/leaderboard`, `/inventory`, `/market` y `/economy`.
+- Verificación de runtime: navegación headless a `/`, `/pvp`, `/profile` y `/leaderboard` sin errores de consola ni `pageerror` una vez propagado el deploy (la primera pasada, en pleno despliegue, mostró chunks antiguos ya purgados; repetida tras la propagación devolvió cero errores).
+- Compilación: `tsc -p tsconfig.app.json --noEmit` y `vite build` sin errores sobre el código publicado.
+- Alcance no modificado: datos, autenticación, RPCs, RLS, MMR/ELO, escudos, economía, recompensas, cartas, inventario y combate.
+- Estado BLOCKED conservado: la vista autenticada de PvP y perfil (rango real del jugador, escudos, historial) no se probó por falta de sesión normal autorizada; no se usó service_role ni se fabricaron resultados. Condición de reapertura: sesión autorizada del owner o jugador de prueba.
+- Siguiente unidad: iconos de `ProfileRoute` (accesos rápidos, estadísticas, wallet y estados vacíos).
