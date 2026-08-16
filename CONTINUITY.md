@@ -1130,3 +1130,14 @@ Los commits anteriores siguen disponibles en Git para auditoría y reversión. L
 - Bloqueos: la vista autenticada de logros reales (desbloqueos, toast en vivo, perfil del jugador) sigue BLOCKED por falta de sesión normal autorizada; no se usó service_role ni se fabricaron resultados.
 - Condición de reapertura: regresión visual, discrepancia entre `main` y el bundle público, o decisión canónica distinta sobre el mapping `code → glifo`.
 - Siguiente acción verificable: confirmar `build-manifest.json` público con el commit de esta sesión y HTTP 200 en `/achievements`, `/profile`, `/deck-builder`, `/season-rankings` y `/forge-ads`.
+
+### Cierre operativo — VE-2-ACHIEVEMENTS-ICON-DATA
+
+- Estado actual: OPERATIONAL para el dato de logros y su capa de presentación; nivel Q3.
+- Commit publicado: `cedb061dbdd300fac15c82fd779c5f7158484d59` en main.
+- Evidencia de publicación: `/build-manifest.json` público informa `sourceCommit=cedb061dbdd300fac15c82fd779c5f7158484d59`, `sourceBranch=main`.
+- Rutas verificadas HTTP 200: `/`, `/achievements`, `/profile`, `/deck-builder`, `/season-rankings`, `/forge-ads`, `/cards`, `/pvp`, `/battle`, `/packs`, `/missions`, `/inventory`, `/market`, `/leaderboard`, `/nft`, `/quests`, `/relics`, `/season-pass`, `/economy`, `/raids` y `/settings`.
+- Verificación de runtime: navegación headless a `/`, `/achievements`, `/profile`, `/deck-builder`, `/season-rankings` y `/forge-ads` sin errores de consola ni `pageerror`.
+- Verificación de datos: las 25 filas de `public.achievements` devuelven glifo canónico en `icon` y su emoji heredado en `metadata.legacy_icon`.
+- Estado BLOCKED conservado: vistas autenticadas de logros (desbloqueos reales, toast en vivo) sin sesión normal autorizada; no se usó service_role.
+- Siguiente unidad sugerida: auditoría de emojis en el dato de otras tablas de catálogo (cartas, misiones, tienda) y decisión canónica equivalente.
