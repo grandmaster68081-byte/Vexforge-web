@@ -627,7 +627,7 @@ Los commits anteriores siguen disponibles en Git para auditoría y reversión. L
 - **Accesibilidad:** ForgeIcon mantiene aria-hidden=true y focusable=false; los textos y acciones visibles permanecen disponibles.
 - **Deuda restante:** la auditoría visual interactiva completa de todas las superficies no pertenece a estas dos unidades; reabrir solo ante regresión, discrepancia del bundle o mapping canónico contradictorio.
 
-## 2026-08-15 — VE-1-EVOLUTION-ICON-LANGUAGE — IMPLEMENTED_UNVERIFIED
+## 2026-08-15 — VE-1-EVOLUTION-ICON-LANGUAGE — OPERATIONAL
 
 - Tipo de sesión: REFINAMIENTO / IMPLEMENTACIÓN.
 - Unidad: título, acción de refresco y estado vacío de EvolutionRoute.
@@ -645,3 +645,13 @@ Los commits anteriores siguen disponibles en Git para auditoría y reversión. L
 - La primera comprobación encontró un cuarto sustituto Unicode en la acción Evolucionar.
 - Se reemplazó por el mapping canónico ForgeIcon evolution sin cambiar la acción, el estado evolving ni el resultado autoritativo.
 - La unidad permanece IMPLEMENTED_UNVERIFIED hasta que el bundle público refleje esta corrección y se repitan las rutas críticas.
+
+### Cierre operativo — VE-1-EVOLUTION-ICON-LANGUAGE
+
+- Estado actual: OPERATIONAL.
+- main actual: c482edfbde8a02c39054cf16e7c9939a4cf63327. El último cambio de EvolutionRoute es ancestro del commit publicado; la comparación mostró solo un commit posterior de CONTINUITY.md.
+- build-manifest.json público: HTTP 200, sourceCommit=c482edfbde8a02c39054cf16e7c9939a4cf63327.
+- Rutas verificadas: /, /tutorial, /cards, /battle, /packs, /friends, /lore, /relics, /season-pass, /referrals y /evolution respondieron HTTP 200.
+- Código verificado: mappings ForgeIcon evolution y refresh presentes; no quedan los sustitutos Unicode de la unidad.
+- Accesibilidad: ForgeIcon conserva aria-hidden=true y focusable=false; acción y textos visibles intactos.
+- Alcance no modificado: datos, autenticación, RPCs, RLS, economía, recompensas, inventario y reglas de combate.
