@@ -677,3 +677,16 @@ Los commits anteriores siguen disponibles en Git para auditoría y reversión. L
 - Rutas verificadas: /, /tutorial, /cards, /battle, /packs, /friends, /lore, /relics, /season-pass, /referrals, /evolution y /quests respondieron HTTP 200.
 - Alcance no modificado: quests, claim, recompensas, datos, autenticación, RPCs, RLS, economía, cartas, inventario y combate.
 - Accesibilidad: ForgeIcon mantiene aria-hidden=true y focusable=false; textos y controles permanecen disponibles.
+
+## 2026-08-15 — VE-1-ADMIN-GUARD-ICON-LANGUAGE — IMPLEMENTED_UNVERIFIED
+
+- Tipo de sesión: REFINAMIENTO / IMPLEMENTACIÓN.
+- Unidad: estados no autenticado y denegado de ProtectedAdminRoute.
+- Fuente canónica: código real de main, ForgeIcon y protocolo VEXFORGE.
+- Objetivo: retirar candado, bloqueo y flecha Unicode sin cambiar sesión, RPC vexforge_is_control_admin, redirecciones ni autorización.
+- Cambio: se incorporaron los mappings lock, warning y chevron-left; se conservaron mensajes y botones.
+- Alcance autoritativo: no se modificaron Supabase, Storage, RPCs, RLS, roles ni datos administrativos.
+- Evidencia inicial: actualización confirmada por GitHub Contents API en main; queda pendiente verificar bundle, /admin y rutas críticas.
+- Responsive y accesibilidad: ForgeIcon mantiene aria-hidden y focusable=false; los controles y sus textos permanecen disponibles.
+- Deuda y condición de reapertura: comprobar publicación y estados protegidos antes de elevar la unidad a OPERATIONAL.
+- Siguiente acción verificable: confirmar que la ruta administrativa sirve sin errores y que los mappings llegan al bundle público.
