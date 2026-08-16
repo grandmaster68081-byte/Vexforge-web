@@ -24,7 +24,7 @@ function FriendCard({ friend, onChallenge }: { friend: Friendship; onChallenge: 
         <div style={{ color: "#e8e8f0", fontWeight: 700, fontSize: 13 }}>{name}</div>
         <div style={{ color: "#5a5a7a", fontSize: 10, marginTop: 2 }}>Forjador</div>
       </div>
-      <button onClick={() => onChallenge(friend.friend_id)} style={btn("#e8b84b")}>⚔️ Desafiar</button>
+      <button onClick={() => onChallenge(friend.friend_id)} style={{ ...btn("#e8b84b"), display: "inline-flex", alignItems: "center", gap: 6 }}><ForgeIcon name="attack" size={13} /> Desafiar</button>
     </div>
   );
 }
@@ -41,8 +41,8 @@ function PendingCard({ request, onAccept, onDecline }: { request: Friendship; on
         <div style={{ color: "#7a7a9a", fontSize: 10 }}>Quiere ser tu amigo</div>
       </div>
       <div style={{ display: "flex", gap: 8 }}>
-        <button onClick={() => onAccept(request.id)} style={btn()}>✓</button>
-        <button onClick={() => onDecline(request.id)} style={btn("#e3573f")}>✕</button>
+        <button onClick={() => onAccept(request.id)} aria-label="Aceptar solicitud" style={{ ...btn(), display: "inline-flex", alignItems: "center" }}><ForgeIcon name="check" size={14} /></button>
+        <button onClick={() => onDecline(request.id)} aria-label="Rechazar solicitud" style={{ ...btn("#e3573f"), display: "inline-flex", alignItems: "center" }}><ForgeIcon name="close" size={14} /></button>
       </div>
     </div>
   );
@@ -83,7 +83,7 @@ export function FriendsRoute() {
     <main style={{ maxWidth: 720, margin: "0 auto", padding: "32px 16px" }}>
       <div style={{ marginBottom: 24 }}>
         <p style={{ fontSize: 11, letterSpacing: "0.14em", color: "#e8b84b", textTransform: "uppercase", fontFamily: "Rajdhani,sans-serif", fontWeight: 700, marginBottom: 8 }}>─── Social ───</p>
-        <h1 style={{ fontFamily: "Cinzel,serif", color: "#e8e8f0", fontSize: 26, margin: "0 0 4px" }}>🤝 Amigos</h1>
+        <h1 style={{ fontFamily: "Cinzel,serif", color: "#e8e8f0", fontSize: 26, margin: "0 0 4px", display: "flex", alignItems: "center", gap: 10 }}><ForgeIcon name="friends" size={24} /> Amigos</h1>
         <p style={{ color: "#666", margin: 0, fontSize: 12 }}>Conecta con otros Forjadores. Desafíalos. Crece junto a ellos.</p>
       </div>
 
@@ -96,9 +96,9 @@ export function FriendsRoute() {
       </div>
 
       <div style={{ display: "flex", gap: 4, background: "#0e0e1a", borderRadius: 10, padding: 4, marginBottom: 20 }}>
-        <button onClick={() => setTab("friends")} style={tabSt(tab === "friends")}>⚔️ Amigos {badge(friends.length, "#3ddc84")}</button>
-        <button onClick={() => setTab("pending")} style={tabSt(tab === "pending")}>📨 Solicitudes {badge(pending.length)}</button>
-        <button onClick={() => setTab("challenges")} style={tabSt(tab === "challenges")}>🎯 Desafíos {badge(challenges.length, "#e3573f")}</button>
+        <button onClick={() => setTab("friends")} style={{ ...tabSt(tab === "friends"), display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 6 }}><ForgeIcon name="friends" size={14} /> Amigos {badge(friends.length, "#3ddc84")}</button>
+        <button onClick={() => setTab("pending")} style={{ ...tabSt(tab === "pending"), display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 6 }}><ForgeIcon name="mail" size={14} /> Solicitudes {badge(pending.length)}</button>
+        <button onClick={() => setTab("challenges")} style={{ ...tabSt(tab === "challenges"), display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 6 }}><ForgeIcon name="target" size={14} /> Desafíos {badge(challenges.length, "#e3573f")}</button>
       </div>
 
       {tab === "friends" && (
@@ -108,7 +108,7 @@ export function FriendsRoute() {
               {friends.map((f: Friendship) => (
                 <FriendCard key={f.id ?? f.friend_id} friend={f} onChallenge={async (id) => {
                   const r = await challenge(id);
-                  r.ok ? addToast("success", "Desafío enviado 🎯") : addToast("error", "Error al enviar desafío", r.reason ?? "Error desconocido");
+                  r.ok ? addToast("success", "Desafío enviado") : addToast("error", "Error al enviar desafío", r.reason ?? "Error desconocido");
                 }} />
               ))}
             </div>
@@ -133,7 +133,7 @@ export function FriendsRoute() {
           : <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
               {challenges.map((c: DirectChallenge) => (
                 <div key={c.id} style={{ background: "#12121a", border: "1px solid #e3573f33", borderRadius: 10, padding: "14px 18px", display: "flex", alignItems: "center", gap: 14 }}>
-                  <span style={{ fontSize: 28 }}>🎯</span>
+                  <span style={{ color: "#e3573f", display: "inline-flex" }}><ForgeIcon name="target" size={26} /></span>
                   <div style={{ flex: 1 }}>
                     <div style={{ color: "#e8e8f0", fontWeight: 700, fontSize: 13 }}>Desafío directo</div>
                     <div style={{ color: "#7a7a9a", fontSize: 11 }}>Estado: {c.status}</div>

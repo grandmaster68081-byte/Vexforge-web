@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState, useCallback } from "react";
 import { EmptyState } from "../shared/components/EmptyState";
 import { ErrorState } from "../shared/components/ErrorState";
-import { ForgeIcon } from "../shared/components/ForgeIcon";
+import { ForgeIcon, type ForgeIconName } from "../shared/components/ForgeIcon";
 import { PageLoader } from "../shared/components/PageLoader";
 import {
   listRelics, getPlayerRelics, equipRelic, unequipRelic, claimStarterRelics,
@@ -17,9 +17,9 @@ const RARITY_ORDER: Record<string, number> = {
   Common: 0, Uncommon: 1, Rare: 2, Epic: 3, Legendary: 4, Mythic: 5,
 };
 const PANEL = "linear-gradient(145deg,#19152b,#11111a)";
-const SLOT_ICON: Record<string, string> = {
-  neck: "📿", off_hand: "🛡", main_hand: "⚔️", head: "🪖", chest: "🥋",
-  ring: "💍", banner: "🚩", relic: "🔮",
+const SLOT_ICON: Record<string, ForgeIconName> = {
+  neck: "amulet", off_hand: "shield", main_hand: "attack", head: "helmet", chest: "chestplate",
+  ring: "ring", banner: "banner", relic: "relics",
 };
 
 function metaStr(r: Relic, key: string): string | null {
@@ -42,7 +42,7 @@ function RelicCard({
   const rarity = getRarity(relic);
   const color = RARITY_COLORS[rarity] ?? RARITY_COLORS.Common;
   const slot = metaStr(relic, "slot");
-  const slotIcon = slot ? (SLOT_ICON[slot] ?? "◈") : "◈";
+  const slotIcon: ForgeIconName = (slot ? SLOT_ICON[slot] : undefined) ?? "relics";
   const description = metaStr(relic, "description");
   const isHighRarity = rarity === "Legendary" || rarity === "Mythic" || rarity === "Epic";
   const canEquip = owned && !equipped && equippedCount < 3;
@@ -87,7 +87,7 @@ function RelicCard({
 
       <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginBottom: 12 }}>
         <span style={{ background: "#ffffff08", border: "1px solid #ffffff10", borderRadius: 999, color: "#c7c7d4", fontSize: 10, padding: "3px 8px" }}>{labelize(relic.effect_type)}</span>
-        {slot && <span style={{ background: "#ffffff06", border: "1px solid #ffffff0e", borderRadius: 999, color: "#888", fontSize: 10, padding: "3px 8px" }}>{slotIcon} {labelize(slot)}</span>}
+        {slot && <span style={{ background: "#ffffff06", border: "1px solid #ffffff0e", borderRadius: 999, color: "#888", fontSize: 10, padding: "3px 8px", display: "inline-flex", alignItems: "center", gap: 5 }}><ForgeIcon name={slotIcon} size={11} /> {labelize(slot)}</span>}
       </div>
 
       <p style={{ color: "#aaaabd", fontSize: 12, lineHeight: 1.65, minHeight: 36, margin: 0 }}>
@@ -282,7 +282,7 @@ export function RelicsRoute() {
       {authed && hasNoOwned && (
         <section style={{ background: "linear-gradient(135deg,#1a112b,#110d20)", border: "1px solid #a855f733", borderRadius: 14, padding: "20px 24px", marginBottom: 20, display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 12 }}>
           <div>
-            <div style={{ color: "#a855f7", fontFamily: '"Cinzel",serif', fontSize: 15, fontWeight: 700, marginBottom: 4 }}>🎁 Kit inicial de Reliquias</div>
+            <div style={{ color: "#a855f7", fontFamily: '"Cinzel",serif', fontSize: 15, fontWeight: 700, marginBottom: 4, display: "flex", alignItems: "center", gap: 8 }}><ForgeIcon name="gift" size={16} /> Kit inicial de Reliquias</div>
             <div style={{ color: "#888", fontSize: 12 }}>Recibe las 3 reliquias básicas del Forjador para comenzar tu aventura.</div>
           </div>
           <button

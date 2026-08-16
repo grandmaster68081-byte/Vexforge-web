@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { ForgeIcon, type ForgeIconName } from "../shared/components/ForgeIcon";
 
 // Fragmentos de código falso para el efecto visual
 const GLITCH_CHARS = "▓░▒█▄▀■□▪▫◆◇●○";
@@ -247,11 +248,11 @@ export function NotFoundRoute() {
         animation: "nf-reveal-up 0.6s ease 0.9s both",
       }}>
         {[
-          { to: "/pvp",       label: "⚔️ Arena PvP"   },
-          { to: "/packs",     label: "📦 Packs"       },
-          { to: "/missions",  label: "🗺️ Misiones"   },
-          { to: "/leaderboard", label: "🏆 Ranking"  },
-        ].map(({ to, label }) => (
+          { to: "/pvp",         label: "Arena PvP", icon: "arena"       as ForgeIconName },
+          { to: "/packs",       label: "Packs",     icon: "packs"       as ForgeIconName },
+          { to: "/missions",    label: "Misiones",  icon: "map"         as ForgeIconName },
+          { to: "/leaderboard", label: "Ranking",   icon: "leaderboard" as ForgeIconName },
+        ].map(({ to, label, icon }) => (
           <Link key={to} to={to} style={{
             padding: "7px 14px", borderRadius: 8,
             background: "rgba(255,255,255,0.04)",
@@ -260,6 +261,7 @@ export function NotFoundRoute() {
             fontFamily: "'Rajdhani', sans-serif", fontWeight: 600,
             fontSize: 12, textDecoration: "none",
             transition: "color 0.15s, background 0.15s",
+            display: "inline-flex", alignItems: "center", gap: 6,
           }}
           onMouseEnter={e => {
             (e.currentTarget as HTMLElement).style.color = "#e8e8f0";
@@ -270,6 +272,7 @@ export function NotFoundRoute() {
             (e.currentTarget as HTMLElement).style.background = "rgba(255,255,255,0.04)";
           }}
           >
+            <ForgeIcon name={icon} size={13} />
             {label}
           </Link>
         ))}

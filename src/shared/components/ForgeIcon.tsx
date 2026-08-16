@@ -59,7 +59,15 @@ export type ForgeIconName =
   | "notification"
   | "close"
   | "chevron-left"
-  | "chevron-right";
+  | "chevron-right"
+  | "mail"
+  | "gift"
+  | "helmet"
+  | "chestplate"
+  | "ring"
+  | "banner"
+  | "amulet"
+  | "map";
 
 type ForgeIconProps = {
   name: ForgeIconName;
@@ -212,6 +220,22 @@ export function ForgeIcon({
       return <svg {...props}><path d="m12 3 2 4.5 4.8.5-3.6 3.1 1 4.7-4.2-2.4-4.2 2.4 1-4.7-3.6-3.1 4.8-.5z" /><path d="M12 15v6M9 21h6" /></svg>;
     case "signout":
       return <svg {...props}><path d="M14 4H5v16h9M11 12h10M17 8l4 4-4 4" /></svg>;
+    case "mail":
+      return <svg {...props}><rect x="3" y="5.5" width="18" height="13" rx="2" /><path d="m3.6 7 8.4 6 8.4-6" /></svg>;
+    case "gift":
+      return <svg {...props}><rect x="3.5" y="9" width="17" height="11" rx="1.5" /><path d="M2.5 9h19v3.2h-19zM12 9v11" /><path d="M12 9C10.6 6.4 9.4 5 8 5a2 2 0 0 0 0 4M12 9c1.4-2.6 2.6-4 4-4a2 2 0 0 1 0 4" /></svg>;
+    case "helmet":
+      return <svg {...props}><path d="M5 13a7 7 0 0 1 14 0v5H5z" /><path d="M5 18h14v2.5H5zM9 13v5M15 13v5M12 6.2V3.5" /></svg>;
+    case "chestplate":
+      return <svg {...props}><path d="M6 4.5 12 7l6-2.5 1.5 5-2 1.5v6.5L12 21l-5.5-3.5V11l-2-1.5z" /><path d="M12 7v14M9 11h6" /></svg>;
+    case "ring":
+      return <svg {...props}><circle cx="12" cy="15" r="5.5" /><path d="m9.6 9.8 2.4-4 2.4 4" /><path d="m12 2.5 1.6 2.4L12 7.3 10.4 4.9z" /></svg>;
+    case "banner":
+      return <svg {...props}><path d="M6 3.5v17M6 4.5h12l-2.5 4 2.5 4H6" /><path d="M6 21.5h4" /></svg>;
+    case "amulet":
+      return <svg {...props}><path d="M7 3.5c-1.6 3.2-2.5 5.6-2.5 7.5M17 3.5c1.6 3.2 2.5 5.6 2.5 7.5" /><path d="M12 21a5.5 5.5 0 0 0 5.5-5.5c0-2-1-3.6-2.5-4.5h-6c-1.5.9-2.5 2.5-2.5 4.5A5.5 5.5 0 0 0 12 21Z" /><path d="M12 13.5v4M10 15.5h4" /></svg>;
+    case "map":
+      return <svg {...props}><path d="m3.5 6.5 5.5-2.5 6 2.5 5.5-2.5v13.5L15 20l-6-2.5L3.5 20z" /><path d="M9 4v13.5M15 6.5V20" /></svg>;
     case "more":
       return <svg {...props}><path d="M5 7h14M5 12h14M5 17h14" /></svg>;
   }

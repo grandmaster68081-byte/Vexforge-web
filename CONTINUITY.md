@@ -728,3 +728,25 @@ Los commits anteriores siguen disponibles en Git para auditoría y reversión. L
 - Estado BLOCKED: no existe una sesión normal autorizada del owner para probar el estado denied del guardia.
 - Regla aplicada: no se usó service_role, no se suplantó un jugador/admin y no se declaró PASS para la rama autenticada.
 - Condición de reapertura: disponer de una sesión autorizada normal del owner y repetir únicamente la comprobación del estado denied y su recuperación.
+
+## 2026-08-16 — VE-1-ICON-LANGUAGE-BATCH-SOCIAL-RELICS-HINTS-404 — IMPLEMENTED_UNVERIFIED
+
+- Tipo de sesión: IMPLEMENTACIÓN / REFINAMIENTO (continuación de la línea VE-1-ICON-LANGUAGE).
+- Unidades: FriendsRoute, RelicsRoute, ContextualHints y NotFoundRoute.
+- Fuente canónica: código real de main (b4d7453), ForgeIcon y protocolo VEXFORGE V2 (regla de cero genéricos).
+- Baseline verificado: main = b4d7453eddf7e4273ac870d20c3368477a36dc33 y build-manifest.json público informaban el mismo sourceCommit; Supabase rscuzqnfccqvltkdcdny ACTIVE_HEALTHY con 308 objetos en public.
+- Problema: las cuatro superficies seguían usando emojis Unicode como identidad visual final.
+- Cambio realizado:
+  - ForgeIcon: se amplió el lenguaje canónico con mail, gift, helmet, chestplate, ring, banner, amulet y map (SVG propios, misma rejilla 24 y mismas props de accesibilidad).
+  - FriendsRoute: título, pestañas Amigos/Solicitudes/Desafíos, acción Desafiar, aceptar/rechazar y tarjeta de desafío usan ForgeIcon; se retiró el emoji del texto del toast.
+  - RelicsRoute: SLOT_ICON pasó de emojis a ForgeIconName tipado (amulet, shield, attack, helmet, chestplate, ring, banner, relics) con fallback canónico relics; el kit inicial usa gift.
+  - ContextualHints: HintDefinition.icon pasa de string a ForgeIconName y las nueve pistas usan iconos propios coloreados con su accentColor.
+  - NotFoundRoute: las rutas de rescate usan icono propio + etiqueta de texto.
+- Alcance autoritativo: no se modificaron Supabase, Storage, RPCs, RLS, roles, economía, recompensas, cartas, inventario, combate ni autenticación. Sólo capa de presentación.
+- Accesibilidad: ForgeIcon conserva aria-hidden=true y focusable=false; los botones de aceptar/rechazar solicitudes ganaron aria-label porque quedaron sin texto visible.
+- Verificación ejecutada: tsc -p tsconfig.app.json --noEmit sin errores y vite build correcto.
+- Nivel Q: de Q2 a Q3 en las cuatro superficies (identidad propia, sin sustitutos genéricos).
+- Deuda registrada: siguen con emojis u otros sustitutos Unicode, entre otros, HomeRoute, ProfileRoute, SeasonPassRoute, MissionsRoute, MarketRoute, ShopRoute, InventoryRoute, CosmeticsRoute, PvpRoute, AchievementsRoute, DepositRoute, AdminDashboardRoute, componentes de batalla y algunos módulos de lib. Los RUNE_SYMS y GLITCH_CHARS decorativos de NotFoundRoute quedan pendientes de decisión canónica (efecto tipográfico, no icono).
+- Bloqueos: la verificación autenticada de jugador/owner sigue BLOCKED; no se fabrican sesiones ni resultados con service_role.
+- Condición de reapertura: regresión visual, discrepancia entre main y el bundle público, o mapping canónico contradictorio.
+- Siguiente acción verificable: confirmar que el deploy de Cloudflare Pages informa el commit de esta sesión y que /friends, /relics y las rutas críticas responden HTTP 200; después continuar el lote siguiente de la línea de iconos.
