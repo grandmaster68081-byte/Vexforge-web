@@ -449,7 +449,7 @@ function AttackButton({ phase, onAdvance, onAutoPlay, onStop, isAutoOn, totalTur
           background: 'rgba(232,184,75,0.12)', border: '1px solid rgba(232,184,75,0.4)',
           color: '#e8b84b', fontFamily: '"Rajdhani",sans-serif', fontWeight: 700, fontSize: 11,
           cursor: 'pointer',
-        }}>⏸ Pausar</button>
+        }}><span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}><ForgeIcon name="pause" size={12} strokeWidth={1.8} /> Pausar</span></button>
       ) : (
         <button onClick={() => { AudioEngine.sfxCardSelect?.(); onAutoPlay(); }}
           disabled={phase === 'ANIMATING'}
@@ -458,7 +458,7 @@ function AttackButton({ phase, onAdvance, onAutoPlay, onStop, isAutoOn, totalTur
             background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)',
             color: '#6a6a8a', fontFamily: '"Rajdhani",sans-serif', fontWeight: 700, fontSize: 11,
             cursor: phase === 'ANIMATING' ? 'not-allowed' : 'pointer',
-          }}>▶ Auto</button>
+          }}><span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}><ForgeIcon name="play" size={12} strokeWidth={1.8} /> Auto</span></button>
       )}
     </div>
   );
@@ -1313,7 +1313,9 @@ export function InteractiveBattleBoard({
         <div style={{ fontSize: 8, color: '#e8b84b88', letterSpacing: '0.18em',
           fontFamily: '"Rajdhani",sans-serif', textTransform: 'uppercase',
           padding: '2px 4px', marginBottom: 1 }}>
-          ▶ LOG DE BATALLA
+          <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5 }}>
+            <ForgeIcon name="chevron-right" size={9} strokeWidth={2} /> LOG DE BATALLA
+          </span>
         </div>
         {state.revealedTurns.length === 0 ? (
           <div style={{ fontSize: 10, color: '#4a4a6a', padding: '3px 6px',

@@ -1,3 +1,20 @@
+## 2026-08-16 — VE-1-BATTLE-COMPONENTS-ICON-LANGUAGE — IMPLEMENTED_UNVERIFIED
+
+- **Tipo de sesión:** REFINAMIENTO / IMPLEMENTACIÓN. **Fuente canónica:** código real de `main`, `ForgeIcon`, Supabase vivo y deploy público.
+- **Unidad:** VE-1-BATTLE-COMPONENTS-ICON-LANGUAGE (símbolos de control y encabezado de log en el tablero interactivo de batalla).
+- **Estado inicial:** `NOT_STARTED`; **estado actual:** `IMPLEMENTED_UNVERIFIED`; **nivel actual:** Q2; **objetivo:** Q3.
+- **Baseline:** commit `be4cf5f9f3088e5294a150f840a407e82bc373ec`.
+- **Auditoría:** barrido Unicode sobre `src/components/battle/*` y `src/lib/forgeFormation.ts`. `ForgeFormationBoard`, `BattleCinematicScreen`, `TutorialBattle`, `ContextualHint`, `FormationSelector`, `BattleBoardEngine`, `BattleResultScreen` y `CardAttackCinematic` ya sólo conservan glyphs en comentarios de código, no en superficie visible. Únicos sustitutos visibles: `⏸`, `▶` (x2) en `InteractiveBattleBoard.tsx`.
+- **Cambio:** `InteractiveBattleBoard.tsx` usa `ForgeIcon` (`pause`, `play`, `chevron-right`) en los controles "Pausar" y "Auto" y en el encabezado "LOG DE BATALLA", envueltos en `inline-flex` con `gap` para alineación óptica. Sin cambios de texto, orden ni tamaño táctil.
+- **Alcance autoritativo:** no se modificaron Supabase, Storage, RPCs, RLS, economía, recompensas, cartas, MMR, motor de combate, formaciones, RAGE ni navegación; sólo presentación e iconografía.
+- **Accesibilidad:** los SVG siguen decorativos (`aria-hidden`, `focusable=false`) y cada botón conserva su texto visible como nombre accesible.
+- **Evidencia local:** `npm ci --ignore-scripts`, `npx tsc --noEmit -p tsconfig.app.json`, `npm run verify:build` y `git diff --check` finalizaron correctamente; `rg` sobre `dist/assets/*.js` no encuentra `▶`/`⏸`.
+- **Deuda y condición de reapertura:** `×` como multiplicador tipográfico legítimo se conserva (`WinStreakDisplay`, `BattleEffects`, `FormationSelector`). Permanecen glyphs en comentarios de código (no visibles) y superficies aún no auditadas fuera de batalla. Reabrir ante regresión de batalla o mapping canónico contradictorio.
+- **Evidencia pública:** pendiente en esta entrada; se verifica tras el deploy (`build-manifest.json`, HTTP 200 y navegación real sin errores de consola).
+- **Siguiente acción verificable:** unidad `VE-1-HOOKS-REPOSITORIES-ICON-LANGUAGE` sobre glyphs en repositorios de home/perfil/deck y `TutorialOverlay`; QA autenticado sigue `BLOCKED` sin sesión de jugador real.
+
+---
+
 ## 2026-08-16 — VE-1-ECONOMY-INVENTORY-ARROW-LANGUAGE — IMPLEMENTED_UNVERIFIED
 
 - **Tipo de sesión:** REFINAMIENTO / IMPLEMENTACIÓN. **Fuente canónica:** código real de `main`, `ForgeIcon`, Supabase vivo y deploy público.
