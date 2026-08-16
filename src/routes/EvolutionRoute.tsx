@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { ForgeIcon } from "../shared/components/ForgeIcon";
 import { useEvolution } from "../domains/evolution/useEvolution";
 import type { EvoPath } from "../domains/evolution/repository";
 import { PageLoader } from "../shared/components/PageLoader";
@@ -117,8 +118,8 @@ export function EvolutionRoute() {
       <div style={{ marginBottom: 24 }}>
         <p style={{ fontSize: 11, letterSpacing: "0.14em", color: "#e8b84b", textTransform: "uppercase", fontFamily: "Rajdhani,sans-serif", fontWeight: 700, marginBottom: 8 }}>─── Progresión ───</p>
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 8 }}>
-          <h1 style={{ fontFamily: "Cinzel,serif", color: "#e8e8f0", fontSize: 26, margin: "0 0 4px" }}>🧬 Evolución de Cartas</h1>
-          <button onClick={reload} style={{ padding: "7px 18px", borderRadius: 8, border: "1px solid #2a2a3a", background: "transparent", color: "#888", fontSize: 11, cursor: "pointer" }}>↻ Actualizar</button>
+          <h1 style={{ fontFamily: "Cinzel,serif", color: "#e8e8f0", fontSize: 26, margin: "0 0 4px" }}><ForgeIcon name="evolution" size={24} style={{ color: "#e8b84b", marginRight: 8, verticalAlign: "middle" }} />Evolución de Cartas</h1>
+          <button onClick={reload} style={{ padding: "7px 18px", borderRadius: 8, border: "1px solid #2a2a3a", background: "transparent", color: "#888", fontSize: 11, cursor: "pointer" }}><ForgeIcon name="refresh" size={13} style={{ marginRight: 6, verticalAlign: "middle" }} />Actualizar</button>
         </div>
         <p style={{ color: "#666", margin: 0, fontSize: 12 }}>Fusiona copias de una carta para obtener su forma evolucionada. Requiere nivel y victorias PvP.</p>
       </div>
@@ -140,7 +141,7 @@ export function EvolutionRoute() {
 
       {filtered.length === 0 ? (
         <EmptyState
-          icon="🧬"
+          icon="evolution"
           title="Sin caminos de evolución"
           description={filter === "all" ? "No hay caminos configurados." : `No hay evoluciones de facción ${filter}.`}
           action={filter !== "all" ? { label: "Ver todos", onClick: () => setFilter("all") } : undefined}
