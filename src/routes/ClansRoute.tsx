@@ -5,10 +5,11 @@ import { PageLoader }      from "../shared/components/PageLoader";
 import { BlockedAuthState } from "../shared/components/BlockedAuthState";
 import { EmptyState }      from "../shared/components/EmptyState";
 import { useToast }        from "../shared/context/ToastContext";
+import { ForgeIcon, type ForgeIconName } from "../shared/components/ForgeIcon";
 
 const BG_URL = "https://rscuzqnfccqvltkdcdny.supabase.co/storage/v1/object/public/vexforge-assets/backgrounds/bg_clans.jpg";
 
-const ROLE_ICON: Record<string, string> = { leader: "👑", officer: "⭐", member: "⚔️" };
+const ROLE_ICON: Record<string, ForgeIconName> = { leader: "crown", officer: "spark", member: "attack" };
 const WAR_STATUS: Record<string, { label: string; color: string }> = {
   active:   { label: "ACTIVA",     color: "#3ddc84" },
   ongoing:  { label: "EN CURSO",   color: "#e8b84b" },
@@ -31,7 +32,9 @@ function SectionCard({ title, children, accent = "#a855f7" }: { title: string; c
         }}
       >
         <span style={{ fontFamily: "Cinzel, serif", fontWeight: 800, fontSize: 13, color: "#e8e8f0", letterSpacing: "0.06em" }}>{title}</span>
-        <span style={{ color: accent, fontSize: 14 }}>{open ? "▾" : "▸"}</span>
+        <span style={{ color: accent, display: "flex" }}>
+          <ForgeIcon name={open ? "chevron-left" : "chevron-right"} size={15} style={{ transform: open ? "rotate(-90deg)" : "rotate(90deg)" }} />
+        </span>
       </button>
       {open && <div style={{ padding: "14px 18px" }}>{children}</div>}
     </div>
@@ -47,7 +50,7 @@ function WarCard({ war, myClanId }: { war: ClanWar; myClanId: string }) {
       background: "linear-gradient(90deg,rgba(168,85,247,0.06),transparent)",
       border: "1px solid rgba(168,85,247,0.15)", marginBottom: 8,
     }}>
-      <span style={{ fontSize: 18 }}>⚔️</span>
+      <span style={{ color: "#a855f7", display: "flex" }}><ForgeIcon name="attack" size={18} /></span>
       <div style={{ flex: 1, minWidth: 0 }}>
         <div style={{ fontFamily: "Rajdhani, sans-serif", fontWeight: 700, fontSize: 13, color: "#e8e8f0", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
           vs. {opponent}
@@ -77,7 +80,7 @@ function ClanDiscoveryCard({ clan, onJoin, joining }: { clan: Clan; onJoin: (id:
         background: "linear-gradient(135deg,rgba(232,184,75,0.15),rgba(232,184,75,0.05))",
         border: "1px solid rgba(232,184,75,0.2)",
         display: "flex", alignItems: "center", justifyContent: "center", fontSize: 16,
-      }}>🛡️</div>
+      }}><ForgeIcon name="clans" size={18} /></div>
       <div style={{ flex: 1, minWidth: 0 }}>
         <div style={{ fontFamily: "Cinzel, serif", fontWeight: 800, fontSize: 13, color: "#e8e8f0", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
           {clan.name}
@@ -116,8 +119,12 @@ function StartWarModal({ allClans, myClanId, onStart, onClose }: {
         padding: 24, maxWidth: 420, width: "100%", maxHeight: "80vh", overflow: "auto",
       }} onClick={e => e.stopPropagation()}>
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 18 }}>
-          <span style={{ fontFamily: "Cinzel, serif", fontWeight: 800, fontSize: 15, color: "#a855f7" }}>⚔️ Declarar Guerra</span>
-          <button onClick={onClose} style={{ background: "none", border: "none", color: "#7a7a9a", fontSize: 18, cursor: "pointer" }}>✕</button>
+          <span style={{ display: "flex", alignItems: "center", gap: 7, fontFamily: "Cinzel, serif", fontWeight: 800, fontSize: 15, color: "#a855f7" }}>
+            <ForgeIcon name="attack" size={17} /> Declarar Guerra
+          </span>
+          <button onClick={onClose} aria-label="Cerrar" style={{ background: "none", border: "none", color: "#7a7a9a", display: "flex", cursor: "pointer" }}>
+            <ForgeIcon name="close" size={18} />
+          </button>
         </div>
         {eligible.length === 0
           ? <p style={{ color: "#7a7a9a", fontSize: 13, textAlign: "center" }}>No hay otros Clanes disponibles.</p>
@@ -126,7 +133,7 @@ function StartWarModal({ allClans, myClanId, onStart, onClose }: {
               display: "flex", alignItems: "center", gap: 12, padding: "10px 14px", borderRadius: 10,
               background: "#0d0d18", border: "1px solid #1a1a2a", marginBottom: 8,
             }}>
-              <span style={{ fontSize: 20 }}>🛡️</span>
+              <span style={{ color: "#e8b84b", display: "flex" }}><ForgeIcon name="clans" size={20} /></span>
               <div style={{ flex: 1 }}>
                 <div style={{ fontFamily: "Cinzel, serif", fontWeight: 800, fontSize: 13, color: "#e8e8f0" }}>{clan.name}</div>
                 <div style={{ fontSize: 9, color: "#7a7a9a", fontFamily: '"IBM Plex Mono",monospace' }}>Prestigio {clan.prestige}</div>
@@ -169,8 +176,12 @@ function CreateClanModal({ onCreate, onClose }: { onCreate: (name: string, desc:
     <div style={{ position: "fixed", inset: 0, zIndex: 1000, background: "rgba(0,0,0,0.85)", display: "flex", alignItems: "center", justifyContent: "center", padding: 20 }} onClick={onClose}>
       <div style={{ background: "#12121f", border: "1px solid rgba(61,220,132,0.3)", borderRadius: 16, padding: 24, maxWidth: 380, width: "100%" }} onClick={e => e.stopPropagation()}>
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 18 }}>
-          <span style={{ fontFamily: "Cinzel, serif", fontWeight: 800, fontSize: 15, color: "#3ddc84" }}>🛡️ Crear Clan</span>
-          <button onClick={onClose} style={{ background: "none", border: "none", color: "#7a7a9a", fontSize: 18, cursor: "pointer" }}>✕</button>
+          <span style={{ display: "flex", alignItems: "center", gap: 7, fontFamily: "Cinzel, serif", fontWeight: 800, fontSize: 15, color: "#3ddc84" }}>
+            <ForgeIcon name="clans" size={17} /> Crear Clan
+          </span>
+          <button onClick={onClose} aria-label="Cerrar" style={{ background: "none", border: "none", color: "#7a7a9a", display: "flex", cursor: "pointer" }}>
+            <ForgeIcon name="close" size={18} />
+          </button>
         </div>
         <input placeholder="Nombre del Clan" value={name} onChange={e => setName(e.target.value)} style={{ ...inp, marginBottom: 10 }} maxLength={40} />
         <textarea placeholder="Descripción (opcional)" value={desc} onChange={e => setDesc(e.target.value)} style={{ ...inp, resize: "vertical", minHeight: 60, marginBottom: 16 }} maxLength={200} />
@@ -249,12 +260,12 @@ export function ClansRoute() {
 
         {/* Header */}
         <div style={{ marginBottom: 24 }}>
-          <h1 style={{ fontFamily: "Cinzel, serif", fontWeight: 900, fontSize: 22, color: "#e8e8f0", margin: 0, letterSpacing: "0.06em" }}>
-            ⚔️ Clanes
+          <h1 style={{ display: "flex", alignItems: "center", gap: 8, fontFamily: "Cinzel, serif", fontWeight: 900, fontSize: 22, color: "#e8e8f0", margin: 0, letterSpacing: "0.06em" }}>
+            <ForgeIcon name="clans" size={22} /> Clanes
           </h1>
           {myClan && (
             <p style={{ color: "#7a7a9a", fontSize: 11, fontFamily: '"IBM Plex Mono",monospace', marginTop: 6 }}>
-              {myClan.name} · {myMember?.role ? (ROLE_ICON[myMember.role] ?? "") + " " + myMember.role : ""} · Prestigio {myClan.prestige}
+              {myClan.name} · {myMember?.role ? <><ForgeIcon name={ROLE_ICON[myMember.role] ?? "attack"} size={12} style={{ verticalAlign: "middle", marginRight: 4 }} />{myMember.role}</> : ""} · Prestigio {myClan.prestige}
             </p>
           )}
         </div>
@@ -270,7 +281,7 @@ export function ClansRoute() {
                   background: "linear-gradient(135deg,rgba(232,184,75,0.2),rgba(232,184,75,0.05))",
                   border: "1px solid rgba(232,184,75,0.3)",
                   display: "flex", alignItems: "center", justifyContent: "center", fontSize: 24,
-                }}>🛡️</div>
+                }}><ForgeIcon name="clans" size={24} /></div>
                 <div>
                   <div style={{ fontFamily: "Cinzel, serif", fontWeight: 900, fontSize: 16, color: "#e8e8f0" }}>{myClan.name}</div>
                   <div style={{ fontSize: 9, color: "#7a7a9a", fontFamily: '"IBM Plex Mono",monospace', marginTop: 3 }}>#{myClan.code}</div>
@@ -333,7 +344,7 @@ export function ClansRoute() {
                     padding: "7px 14px", cursor: "pointer", fontFamily: '"IBM Plex Mono",monospace',
                     letterSpacing: "0.06em",
                   }}
-                >⚔️ DECLARAR</button>
+                ><ForgeIcon name="attack" size={13} style={{ verticalAlign: "middle", marginRight: 5 }} />DECLARAR</button>
               </div>
               {activeWars.length > 0 && activeWars.map(w => (
                 <WarCard key={w.id} war={w} myClanId={myClan.id} />
@@ -364,7 +375,7 @@ export function ClansRoute() {
                       width: 32, height: 32, borderRadius: 8, background: "#0d0d18",
                       border: "1px solid #2a2a3a", display: "flex", alignItems: "center",
                       justifyContent: "center", fontSize: 14, flexShrink: 0,
-                    }}>{ROLE_ICON[m.role] ?? "⚔️"}</div>
+                    }}><ForgeIcon name={ROLE_ICON[m.role] ?? "attack"} size={14} /></div>
                     <div style={{ flex: 1 }}>
                       <div style={{ color: "#e8e8f0", fontWeight: 700, fontSize: 13 }}>{m.display_name}</div>
                       <div style={{ color: "#5a5a7a", fontSize: 9, fontFamily: '"IBM Plex Mono",monospace', marginTop: 1 }}>{m.role}</div>
@@ -402,7 +413,7 @@ export function ClansRoute() {
                   color: "#3ddc84", fontWeight: 700, fontSize: 11, padding: "10px 18px",
                   cursor: "pointer", fontFamily: '"IBM Plex Mono",monospace', letterSpacing: "0.06em",
                 }}
-              >🛡️ CREAR CLAN</button>
+              ><ForgeIcon name="clans" size={14} style={{ verticalAlign: "middle", marginRight: 5 }} />CREAR CLAN</button>
             </div>
 
             <SectionCard title="CLANES DISPONIBLES" accent="#4a9eff">

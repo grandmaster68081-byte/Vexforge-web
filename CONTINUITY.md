@@ -1,3 +1,15 @@
+## 2026-08-15 — VE-1-CLANS-ICON-LANGUAGE — IMPLEMENTED_UNVERIFIED
+
+- **Tipo de sesión:** REFINAMIENTO / IMPLEMENTACIÓN. **Fuente canónica:** código real de `main`, `ClansRoute.tsx`, `ClanWarsPanel.tsx`, `ForgeIcon`, Supabase vivo y deploy público.
+- **Estado inicial:** `NOT_STARTED`; **estado actual:** `IMPLEMENTED_UNVERIFIED`; **nivel actual:** Q2; **objetivo:** Q3.
+- **Objetivo:** retirar sustitutos Unicode de la superficie de Clanes sin cambiar datos, roles, guerras, acciones, autenticación ni resultados autoritativos.
+- **Cambio:** `ClansRoute.tsx` conserva sus callbacks, estados, permisos y textos; guerra, identidad de clan, roles, encabezado, cierres, desplegables y CTAs usan mappings canónicos de `ForgeIcon` (`attack`, `clans`, `crown`, `spark`, `close`, `chevron-*`).
+- **Alcance autoritativo:** no se modificaron Supabase, Storage, RPCs, RLS, economía, recompensas, autenticación, navegación ni reglas de clanes.
+- **Evidencia local:** el escaneo del consumidor no conserva los glyphs objetivo; `git diff --check` y `npm run verify:build` finalizaron correctamente sobre el candidato antes de publicar. La evidencia pública queda pendiente de propagación.
+- **Responsive y accesibilidad:** se conservaron botones nativos, textos visibles y acciones existentes; `ForgeIcon` permanece decorativo. Queda pendiente revisión visual interactiva en escritorio, tablet y móvil, foco y `prefers-reduced-motion`, además de cualquier flujo autenticado normal.
+- **Deuda y condición de reapertura:** permanecen consumidores Unicode independientes en otras superficies; no se mezclan con esta unidad. Reabrir ante regresión de Clanes, discrepancia del bundle público o mapping canónico contradictorio.
+- **Siguiente acción verificable:** publicar el candidato, comprobar `build-manifest.json`, `/`, `/clans` y el bundle servido; mantener la unidad `IMPLEMENTED_UNVERIFIED` hasta contar con evidencia pública y visual.
+
 ## 2026-08-15 — VE-1-ERROR-BOUNDARY-ICON-LANGUAGE — OPERATIONAL
 
 - Tipo de sesión: REFINAMIENTO / IMPLEMENTACIÓN.
