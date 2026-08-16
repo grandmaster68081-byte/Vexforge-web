@@ -655,3 +655,16 @@ Los commits anteriores siguen disponibles en Git para auditoría y reversión. L
 - Código verificado: mappings ForgeIcon evolution y refresh presentes; no quedan los sustitutos Unicode de la unidad.
 - Accesibilidad: ForgeIcon conserva aria-hidden=true y focusable=false; acción y textos visibles intactos.
 - Alcance no modificado: datos, autenticación, RPCs, RLS, economía, recompensas, inventario y reglas de combate.
+
+## 2026-08-15 — VE-1-QUESTS-ICON-LANGUAGE — IMPLEMENTED_UNVERIFIED
+
+- Tipo de sesión: REFINAMIENTO / IMPLEMENTACIÓN.
+- Unidad: recompensas, título y estado vacío de QuestsRoute.
+- Fuente canónica: código real de main, ForgeIcon y protocolo VEXFORGE.
+- Objetivo: retirar sustitutos Unicode de VEX, XP y misiones sin cambiar quests, reclamaciones, recompensas, autenticación ni datos autoritativos.
+- Cambio: se incorporaron los mappings coin, spark y quests; se conservaron textos, cantidades y flujo de claim.
+- Alcance autoritativo: no se modificaron Supabase, Storage, RPCs, RLS, economía, cartas, inventario ni combate.
+- Evidencia inicial: actualización confirmada por GitHub Contents API en main; queda pendiente verificar el bundle público y las rutas críticas.
+- Responsive y accesibilidad: ForgeIcon mantiene aria-hidden y focusable=false; el texto de recompensas y los controles permanecen visibles.
+- Deuda y condición de reapertura: comprobar build-manifest y /quests antes de elevar la unidad a OPERATIONAL.
+- Siguiente acción verificable: confirmar que main y el deploy contienen coin, spark y quests sin sustitutos Unicode.
