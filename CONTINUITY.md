@@ -846,3 +846,23 @@ Los commits anteriores siguen disponibles en Git para auditoría y reversión. L
 - Alcance no modificado: datos, autenticación, RPCs, RLS, MMR/ELO, escudos, economía, recompensas, cartas, inventario y combate.
 - Estado BLOCKED conservado: la vista autenticada de PvP y perfil (rango real del jugador, escudos, historial) no se probó por falta de sesión normal autorizada; no se usó service_role ni se fabricaron resultados. Condición de reapertura: sesión autorizada del owner o jugador de prueba.
 - Siguiente unidad: iconos de `ProfileRoute` (accesos rápidos, estadísticas, wallet y estados vacíos).
+
+## 2026-08-16 — VE-1-PROFILE-ICON-LANGUAGE — IMPLEMENTED_UNVERIFIED
+
+- Tipo de sesión: REFINAMIENTO / IMPLEMENTACIÓN (continuación de la línea VE-1-ICON-LANGUAGE).
+- Unidad: superficies de `src/routes/ProfileRoute.tsx` (accesos rápidos, estadísticas, wallet, distintivos, estados vacíos) y ampliación canónica de `src/shared/components/ForgeIcon.tsx`.
+- Fuente canónica: código real de main (`1e6c69ee`), `ForgeIcon`, `VEXFORGE_PROTOCOL_V2.md` y esta continuidad.
+- Estado inicial: deuda registrada por VE-1-RANK-ICON-LANGUAGE. Estado actual: IMPLEMENTED_UNVERIFIED.
+- Nivel Q: Q2 → Q3 (identidad propia, sin sustitutos Unicode) en la ruta de perfil.
+- Cambio realizado:
+  - `ForgeIcon`: dos glifos canónicos nuevos, `key` y `telegram`, con el mismo contrato (`viewBox 0 0 24 24`, `currentColor`, `aria-hidden`, `focusable=false`).
+  - `QUICK_LINKS` y `StatsGrid` pasan de emoji a `ForgeIconName` tipado (`progress`, `economy`, `assets`, `cards`, `missions`, `settings`, `attack`, `market`, `skull`, `packs`).
+  - `WalletSnapshotSection`: VEX Ingame usa `energy` y VEX Tradeable usa `coin`, coloreados con el color existente de cada tarjeta.
+  - Distintivos de identidad: Super Admin usa `spark`, Admin usa `key`, Telegram usa `telegram` y los puntos totales de logros usan `trophy`; los textos visibles se conservan sin el emoji.
+  - Estados: no autenticado usa `lock`, perfil no encontrado usa `warning` y logros vacíos usa `achievements`.
+- Alcance autoritativo: no se modificaron Supabase, Storage, migraciones, RPCs, RLS, roles, wallet, economía, estadísticas, logros ni autenticación. Sólo capa de presentación.
+- Deuda mantenida: `AchievementBadge` sigue renderizando `ach.icon` tal como lo entrega el dato oficial; corresponde a una unidad de datos, no de UI.
+- Verificaciones ejecutadas: `tsc -p tsconfig.app.json --noEmit` sin errores; `npm run build` correcto; barrido Unicode sobre `ProfileRoute` sin coincidencias (sólo los separadores tipográficos de comentarios).
+- Bloqueos: la vista autenticada del perfil real sigue BLOCKED por falta de sesión normal autorizada; no se usó service_role.
+- Condición de reapertura: regresión visual, discrepancia entre main y el bundle público, o mapping canónico contradictorio.
+- Siguiente acción verificable: confirmar `build-manifest.json` público con el commit de esta sesión y HTTP 200 en `/profile` y rutas críticas.
