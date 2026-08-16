@@ -64,7 +64,7 @@ import { useState, useEffect } from "react";
             <div style={{ fontSize:13, fontFamily:"Cinzel,serif", fontWeight:800, color:"#4a9eff" }}>{stats.completion_pct}%</div>
             <div style={{ fontSize:7, color:"#555", fontFamily:'"IBM Plex Mono",monospace' }}>COMPLETO</div>
           </div>
-          <div style={{ color:"#444", fontSize:12, flexShrink:0, transform:open?"rotate(180deg)":"rotate(0deg)", transition:"transform 0.25s" }}>▼</div>
+          <div style={{ color:"#444", display:"flex", alignItems:"center", flexShrink:0, transform:open?"rotate(-90deg)":"rotate(90deg)", transition:"transform 0.25s" }}><ForgeIcon name="chevron-right" size={12} strokeWidth={2} /></div>
         </button>
 
         {open && (

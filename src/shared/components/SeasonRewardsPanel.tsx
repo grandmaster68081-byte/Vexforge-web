@@ -192,9 +192,10 @@ import { useState, useEffect } from "react";
 
           {/* Chevron */}
           <div style={{
-            color: "#5a5a7a", fontSize: 12, flexShrink: 0, transform: open ? "rotate(180deg)" : "rotate(0deg)",
+            color: "#5a5a7a", display: "flex", alignItems: "center", flexShrink: 0,
+            transform: open ? "rotate(-90deg)" : "rotate(90deg)",
             transition: "transform 0.25s ease",
-          }}>▼</div>
+          }}><ForgeIcon name="chevron-right" size={12} strokeWidth={2} /></div>
         </button>
 
         {/* ─── Expanded content ────────────────────────────────────── */}

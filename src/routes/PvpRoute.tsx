@@ -223,9 +223,14 @@ function PreBattleModal({
                 fontSize: 10, fontWeight: 700, marginTop: 4,
                 color: advColor,
               }}>
-                {advantage === "favorable" && "▲ Favorito"}
-                {advantage === "desventaja" && "▼ Difícil"}
-                {advantage === "equilibrado" && "◆ Equilibrado"}
+                <span style={{ display: "inline-flex", alignItems: "center", gap: 4 }}>
+                  <ForgeIcon
+                    name={advantage === "favorable" ? "attack" : advantage === "desventaja" ? "warning" : "shield"}
+                    size={11}
+                    strokeWidth={1.9}
+                  />
+                  {advantage === "favorable" ? "Favorito" : advantage === "desventaja" ? "Difícil" : "Equilibrado"}
+                </span>
               </div>
             </div>
 

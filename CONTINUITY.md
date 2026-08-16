@@ -1,3 +1,21 @@
+## 2026-08-16 — VE-1-PANELS-SIGNALS-ICON-LANGUAGE — IMPLEMENTED_UNVERIFIED
+
+- **Tipo de sesión:** REFINAMIENTO / IMPLEMENTACIÓN. **Fuente canónica:** código real de `main`, `ForgeIcon`, Supabase vivo y deploy público.
+- **Unidad:** VE-1-PANELS-SIGNALS-ICON-LANGUAGE (chevrones de colapso en paneles compartidos y señales de ventaja en PvP).
+- **Estado inicial:** `NOT_STARTED`; **estado actual:** `IMPLEMENTED_UNVERIFIED`; **nivel actual:** Q2; **objetivo:** Q3.
+- **Baseline:** commit `90d2b7c10f65c6556e8a52adc5fdc60963a3d406`.
+- **Auditoría:** barrido Unicode sobre todo `src/`. Los repositorios y hooks no contienen glyphs visibles; los restos se concentraban en `DeckStatsPanel`, `ClanWarsPanel`, `SeasonRewardsPanel` (`▼`) y `PvpRoute` (`▲`, `▼`, `◆`).
+- **Cambio:** los tres paneles usan `ForgeIcon name="chevron-right"` con rotación `90deg`/`-90deg` para el estado cerrado/abierto (misma transición de 0.25s); `PvpRoute` sustituye los marcadores de ventaja por `ForgeIcon` (`attack` favorable, `warning` desventaja, `shield` equilibrado) junto al texto, en `inline-flex` con `gap`.
+- **Alcance autoritativo:** no se modificaron Supabase, Storage, RPCs, RLS, economía, recompensas, MMR, emparejamiento, temporadas ni clanes; sólo presentación e iconografía.
+- **Accesibilidad:** SVG decorativos (`aria-hidden`, `focusable=false`); los botones de panel conservan su texto visible como nombre accesible y no cambian tamaño táctil.
+- **Decisión de alcance:** `•` (viñeta de lista en `DeckBuilderRoute`, `SeasonRankingsRoute`, `ForgeAdsRoute`) y `×` (multiplicador) se conservan por ser tipografía legítima, no sustitutos de icono.
+- **Evidencia local:** `npx tsc --noEmit -p tsconfig.app.json`, `npm run verify:build` y `git diff --check` finalizaron correctamente; `rg` sobre `dist/assets/*.js` no encuentra `▼`/`▲`/`◆`.
+- **Deuda y condición de reapertura:** quedan glyphs sólo en comentarios de código (no visibles). Reabrir ante regresión de paneles/PvP o mapping canónico contradictorio.
+- **Evidencia pública:** pendiente en esta entrada; se verifica tras el deploy.
+- **Siguiente acción verificable:** revisión visual interactiva responsive con foco y `prefers-reduced-motion` real sobre paneles colapsables; QA autenticado sigue `BLOCKED` sin sesión de jugador real.
+
+---
+
 ## 2026-08-16 — VE-1-BATTLE-COMPONENTS-ICON-LANGUAGE — IMPLEMENTED_UNVERIFIED
 
 - **Tipo de sesión:** REFINAMIENTO / IMPLEMENTACIÓN. **Fuente canónica:** código real de `main`, `ForgeIcon`, Supabase vivo y deploy público.
