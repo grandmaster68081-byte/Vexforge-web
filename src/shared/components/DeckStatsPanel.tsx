@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
     import { getDeckStats } from "../../domains/collection/deckStatsRepository";
     import type { DeckStats } from "../../domains/collection/deckStatsRepository";
     import { AnimatedProgressBar } from "./AnimatedProgressBar";
+    import { ForgeIcon } from "./ForgeIcon";
 
     const RARITY_COLOR: Record<string, string> = {
     Common:"#9ca3af", Uncommon:"#22c55e", Rare:"#60a5fa",
@@ -46,8 +47,8 @@ import { useState, useEffect } from "react";
             width:40, height:40, borderRadius:10, flexShrink:0,
             background:"linear-gradient(135deg,#0a1a2a,#071220)",
             border:"1px solid rgba(74,158,255,0.3)",
-            display:"flex", alignItems:"center", justifyContent:"center", fontSize:20,
-          }}>📊</div>
+            display:"flex", alignItems:"center", justifyContent:"center", color:"#4a9eff",
+          }}><ForgeIcon name="progress" size={20} /></div>
           <div style={{ flex:1 }}>
             <div style={{ fontSize:14, fontFamily:"Cinzel,serif", fontWeight:800, color:"#e8e8f0", letterSpacing:"0.05em" }}>
               Estadísticas de Colección
