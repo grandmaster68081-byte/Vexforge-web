@@ -639,3 +639,9 @@ Los commits anteriores siguen disponibles en Git para auditoría y reversión. L
 - Responsive y accesibilidad: ForgeIcon mantiene aria-hidden y focusable=false; los controles siguen siendo botones y los mensajes visibles permanecen.
 - Deuda y condición de reapertura: verificar build-manifest, /evolution y rutas críticas antes de elevar la unidad a OPERATIONAL.
 - Siguiente acción verificable: confirmar que main y el deploy contienen los mappings evolution y refresh.
+
+### Corrección de alcance — VE-1-EVOLUTION-ICON-LANGUAGE
+
+- La primera comprobación encontró un cuarto sustituto Unicode en la acción Evolucionar.
+- Se reemplazó por el mapping canónico ForgeIcon evolution sin cambiar la acción, el estado evolving ni el resultado autoritativo.
+- La unidad permanece IMPLEMENTED_UNVERIFIED hasta que el bundle público refleje esta corrección y se repitan las rutas críticas.
