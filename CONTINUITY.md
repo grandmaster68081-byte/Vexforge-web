@@ -1222,3 +1222,14 @@ Los commits anteriores siguen disponibles en Git para auditoría y reversión. L
 - Bloqueos: la verificación autenticada de `/raids`, `/world-bosses` y `/season-rankings` con datos reales del jugador sigue BLOCKED por falta de sesión normal autorizada; no se fabricaron runs, settlements ni recompensas.
 - Condición de reapertura: decisión canónica distinta sobre alguno de los 3 fondos, cambio del inventario del bucket, o regresión detectada por `verify:assets`.
 - Siguiente acción verificable: confirmar `build-manifest.json` público con el commit de esta sesión y HTTP 200 en `/achievements`, `/season-rankings`, `/raids`, `/world-bosses` y rutas críticas, sin peticiones de imagen >= 400.
+
+### Cierre operativo — VE-4-CANONICAL-BACKGROUNDS
+
+- Estado actual: OPERATIONAL para la capa de fondos de superficie; nivel Q4.
+- Commit publicado: `d1caa78fb1e6e8930c6afe0cf337015ecc9fca97` en main.
+- Evidencia de publicación: `/build-manifest.json` público informa `sourceCommit=d1caa78fb1e6e8930c6afe0cf337015ecc9fca97`, `sourceBranch=main`.
+- Rutas verificadas HTTP 200 (28): `/`, `/achievements`, `/season-rankings`, `/raids`, `/world-bosses`, `/fusion`, `/cards`, `/pvp`, `/battle`, `/packs`, `/missions`, `/inventory`, `/market`, `/leaderboard`, `/nft`, `/quests`, `/relics`, `/season-pass`, `/economy`, `/profile`, `/shop`, `/clans`, `/settings`, `/deck-builder`, `/assets`, `/account`, `/forge-ads` y `/` raíz del bundle.
+- Verificación de runtime sobre el sitio publicado: navegación headless a `/`, `/achievements`, `/season-rankings`, `/raids`, `/world-bosses`, `/fusion`, `/missions` y `/packs` sin errores de consola, sin `pageerror` y sin ninguna respuesta HTTP >= 400 (los 3 fondos nuevos cargan desde el Storage oficial).
+- Verificación de assets: `npm run verify:assets` → 17/17 rutas del manifiesto disponibles en Storage; lectura pública de los 3 objetos nuevos con HTTP 200 y el peso registrado en `docs/VE-4-CANONICAL-BACKGROUNDS.md`.
+- Estado BLOCKED conservado: superficies autenticadas del jugador sin sesión normal autorizada; no se usó service_role para suplantar jugadores ni para fabricar QA.
+- Siguiente unidad sugerida: inscripción de los archivos individuales de assets en `vexforge_official_asset_manifest` (unidad de datos), o higiene documental de las tablas internas `vexforge_*`.
