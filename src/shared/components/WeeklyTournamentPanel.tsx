@@ -21,7 +21,7 @@ import { useState, useEffect } from "react";
         display:"flex", alignItems:"center", gap:8,
       }}>
         <span style={{ fontSize:10, color:"#444", minWidth:16, fontFamily:'"IBM Plex Mono",monospace' }}>#{seed.seed}</span>
-        <span style={{ fontSize:13 }}>{tier.icon}</span>
+        <span style={{ fontSize:13, color:tier.color, display:"inline-flex" }}><ForgeIcon name={tier.icon} size={13} /></span>
         <span style={{ fontFamily:"Rajdhani,sans-serif", fontWeight:isFavorite?800:600, fontSize:12,
           color:isFavorite?"#e8e8f0":"#aaa", overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap", maxWidth:100 }}>
           {seed.display_name}
@@ -122,7 +122,7 @@ import { useState, useEffect } from "react";
                       background:"#0d0d18", border:"1px solid #1a1a2a", borderRadius:8, padding:"5px 10px",
                     }}>
                       <span style={{ fontSize:9, color:"#444", fontFamily:'"IBM Plex Mono",monospace' }}>#{s.seed}</span>
-                      <span style={{ fontSize:12 }}>{tier.icon}</span>
+                      <span style={{ fontSize:12, color:tier.color, display:"inline-flex" }}><ForgeIcon name={tier.icon} size={12} /></span>
                       <span style={{ fontSize:11, fontFamily:"Rajdhani,sans-serif", fontWeight:700, color:"#c8c8d8" }}>{s.display_name}</span>
                       <span style={{ fontSize:9, color:tier.color, fontFamily:'"IBM Plex Mono",monospace' }}>{s.mmr}</span>
                     </div>
@@ -162,7 +162,7 @@ import { useState, useEffect } from "react";
                     <div style={{ fontSize:9, color:"#555", fontFamily:'"IBM Plex Mono",monospace', letterSpacing:"0.1em" }}>FAVORITO PREDICTIVO</div>
                     <div style={{ fontFamily:"Cinzel,serif", fontWeight:800, fontSize:14, color:"#e8b84b",
                       display:"flex", alignItems:"center", gap:8, marginTop:3 }}>
-                      {tier.icon} {favSeed.display_name}
+                      <ForgeIcon name={tier.icon} size={16} style={{ color: tier.color }} /> {favSeed.display_name}
                       <span style={{ fontSize:9, color:tier.color, fontFamily:'"IBM Plex Mono",monospace', fontWeight:400 }}>
                         {tier.name} · {favSeed.mmr} MMR
                       </span>
