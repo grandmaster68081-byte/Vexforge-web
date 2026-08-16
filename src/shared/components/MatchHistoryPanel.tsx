@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
     import { getEnrichedMatchHistory } from "../../domains/pvp/repository";
     import type { EnrichedMatch } from "../../domains/pvp/repository";
     import { getRank } from "../../lib/rankUtils";
+    import { ForgeIcon } from "./ForgeIcon";
 
     const OUTCOME_CFG = {
     win:     { label: "VICTORIA", bg: "#0f2a1a", border: "#3ddc8444", color: "#3ddc84" },
@@ -31,9 +32,9 @@ import { useState, useEffect } from "react";
       <div style={{ marginTop: 8 }}>
         <div style={{ display: "flex", justifyContent: "space-between", fontSize: 8, color: "#5a5a7a",
           fontFamily: '"IBM Plex Mono",monospace', marginBottom: 3 }}>
-          <span style={{ color: "#3ddc84" }}>⚡{my ?? "?"}</span>
+          <span style={{ color: "#3ddc84" }}><ForgeIcon name="energy" size={9} style={{ marginRight: 2, verticalAlign: "middle" }} />{my ?? "?"}</span>
           <span style={{ color: "#6a6a8a", fontSize: 7 }}>PODER</span>
-          <span style={{ color: "#ff6b6b" }}>⚡{opp ?? "?"}</span>
+          <span style={{ color: "#ff6b6b" }}><ForgeIcon name="energy" size={9} style={{ marginRight: 2, verticalAlign: "middle" }} />{opp ?? "?"}</span>
         </div>
         <div style={{ height: 3, borderRadius: 3, background: "#ff6b6b66", overflow: "hidden" }}>
           <div style={{ height: "100%", width: `${myPct}%`, background: "#3ddc84",
@@ -121,7 +122,7 @@ import { useState, useEffect } from "react";
               fontSize: 10, color: "#e8b84b", fontFamily: "Rajdhani,sans-serif",
               marginBottom: 16, letterSpacing: "0.06em",
             }}>
-              🎁 {Object.entries(match.rewards_json).map(([k, v]) => `${k}: ${v}`).join(" · ")}
+              <ForgeIcon name="gift" size={12} style={{ marginRight: 5, verticalAlign: "middle" }} />{Object.entries(match.rewards_json).map(([k, v]) => `${k}: ${v}`).join(" · ")}
             </div>
           )}
 
@@ -157,7 +158,7 @@ import { useState, useEffect } from "react";
       <div>
         <h2 style={{ fontFamily: "Cinzel,serif", color: "#e8e8f0", fontSize: 17, margin: "0 0 12px",
           display: "flex", alignItems: "center", gap: 10 }}>
-          📜 Historial de Batallas
+          <ForgeIcon name="arena" size={18} style={{ color: "#e8b84b" }} />Historial de Batallas
           {!loading && matches.length > 0 && (
             <span style={{ fontSize: 10, color: "#5a5a7a", fontFamily: '"IBM Plex Mono",monospace',
               fontWeight: 400, letterSpacing: "0.08em" }}>
@@ -177,7 +178,7 @@ import { useState, useEffect } from "react";
             background: bg0, border: `1px solid ${bdim}`, borderRadius: 12,
             padding: "28px 20px", textAlign: "center",
           }}>
-            <div style={{ fontSize: 28, marginBottom: 10 }}>⚔️</div>
+            <div style={{ marginBottom: 10, color: "#e8b84b" }}><ForgeIcon name="attack" size={28} /></div>
             <div style={{ color: "#7a7a9a", fontSize: 13, fontFamily: "Rajdhani,sans-serif" }}>
               Sin partidas aún. ¡Busca un oponente y entra en batalla!
             </div>
@@ -232,7 +233,7 @@ import { useState, useEffect } from "react";
                   {/* Power diff (if available) */}
                   {match.my_power != null && (
                     <div style={{ fontSize: 9, color: "#7a7a9a", fontFamily: '"IBM Plex Mono",monospace', flexShrink: 0 }}>
-                      ⚡{match.my_power}
+                      <ForgeIcon name="energy" size={10} style={{ marginRight: 2, verticalAlign: "middle" }} />{match.my_power}
                     </div>
                   )}
 
