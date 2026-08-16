@@ -1189,3 +1189,14 @@ Los commits anteriores siguen disponibles en Git para auditoría y reversión. L
 - Bloqueos: verificación autenticada de las superficies de jugador (raids reales, ranking de temporada del jugador, fusión real) sigue BLOCKED por falta de sesión normal autorizada; no se usó service_role ni se fabricaron resultados.
 - Condición de reapertura: publicación de los fondos propios pendientes en Storage, cambio del inventario del bucket, o regresión detectada por `verify:assets`.
 - Siguiente acción verificable: confirmar `build-manifest.json` público con el commit de esta sesión y HTTP 200 en `/achievements`, `/raids`, `/world-bosses`, `/fusion`, `/season-rankings` y rutas críticas.
+
+### Cierre operativo — VE-3-ASSET-REF-INTEGRITY
+
+- Estado actual: OPERATIONAL para la capa de referencias de assets; nivel Q3.
+- Commit publicado: `2dde949b77c0d7a6e2a888be73a22ca2c0945ff1` en main.
+- Evidencia de publicación: `/build-manifest.json` público informa `sourceCommit=2dde949b77c0d7a6e2a888be73a22ca2c0945ff1`, `sourceBranch=main`.
+- Rutas verificadas HTTP 200 (27): `/`, `/achievements`, `/raids`, `/world-bosses`, `/fusion`, `/season-rankings`, `/cards`, `/pvp`, `/battle`, `/packs`, `/missions`, `/inventory`, `/market`, `/leaderboard`, `/nft`, `/quests`, `/relics`, `/season-pass`, `/economy`, `/profile`, `/shop`, `/clans`, `/settings`, `/deck-builder`, `/assets`, `/account` y `/forge-ads`.
+- Verificación de runtime sobre el sitio publicado: navegación headless a `/`, `/achievements`, `/raids`, `/world-bosses`, `/fusion`, `/season-rankings`, `/missions` y `/packs` sin errores de consola, sin `pageerror` y sin ninguna respuesta HTTP >= 400 (antes había 4 imágenes de fondo respondiendo 400).
+- Verificación de assets: `npm run verify:assets` → 14/14 rutas del manifiesto disponibles en el Storage oficial.
+- Estado BLOCKED conservado: superficies autenticadas del jugador sin sesión normal autorizada; no se usó service_role.
+- Siguiente unidad sugerida: creación canónica de los 3 fondos propios pendientes (`bg_achievements`, `bg_leaderboard`, `bg_bosses`) y su publicación en Storage, o higiene documental de las tablas internas `vexforge_*`.
