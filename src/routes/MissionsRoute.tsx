@@ -222,7 +222,7 @@ function SessionStatsBanner({ count, xp, vex, tvex }: { count: number; xp: numbe
   if (count === 0) return null;
   return (
     <div style={{ display: "flex", alignItems: "center", gap: 16, flexWrap: "wrap", borderRadius: 10, padding: "12px 16px", marginBottom: 16, background: "rgba(61,201,107,0.07)", border: "1px solid rgba(61,201,107,0.25)" }}>
-      <div style={{ fontFamily: '"IBM Plex Mono", monospace', fontSize: 9, color: "#3DC96B", letterSpacing: "0.15em", textTransform: "uppercase", flexShrink: 0 }}>✓ SESIÓN ACTUAL</div>
+      <div style={{ fontFamily: '"IBM Plex Mono", monospace', fontSize: 9, color: "#3DC96B", letterSpacing: "0.15em", textTransform: "uppercase", flexShrink: 0 }}><ForgeIcon name="check" size={10} style={{ verticalAlign: "middle", marginRight: 4 }} />SESIÓN ACTUAL</div>
       <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
         <span style={{ fontFamily: '"Rajdhani", sans-serif', fontSize: 13, fontWeight: 700, color: "#3DC96B" }}>{count} misión{count !== 1 ? "es" : ""} completada{count !== 1 ? "s" : ""}</span>
         {xp   > 0 && <span style={{ fontSize: 12, color: "rgba(255,255,255,0.55)" }}>· <ForgeIcon name="spark" size={12} style={{ verticalAlign: "middle" }} /> +{xp} XP</span>}
@@ -270,7 +270,7 @@ function DailyQuestCard({
         </div>
         {isClaimed && (
           <span style={{ padding: "2px 10px", borderRadius: 20, background: "rgba(61,201,107,0.12)", border: "1px solid rgba(61,201,107,0.35)", color: "#3DC96B", fontSize: 9, fontFamily: '"IBM Plex Mono",monospace', letterSpacing: "0.1em", fontWeight: 700 }}>
-            ✓ RECLAMADA
+            <ForgeIcon name="check" size={9} style={{ verticalAlign: "middle", marginRight: 4 }} />RECLAMADA
           </span>
         )}
       </div>
@@ -378,7 +378,7 @@ function DailyQuestsSection() {
           )}
         </div>
         <div style={{ fontSize: 10, color: "var(--fg-dim)", fontFamily: '"IBM Plex Mono",monospace', letterSpacing: "0.06em" }}>
-          ↺ Reinicia en {formatResetTime(resetSecs)}
+          <ForgeIcon name="refresh" size={10} style={{ verticalAlign: "middle", marginRight: 4 }} />Reinicia en {formatResetTime(resetSecs)}
         </div>
       </div>
 
@@ -458,14 +458,14 @@ function MissionCard({ mission, onExecute, executing, isExecuting, isCompleted, 
         <div style={{ position: "absolute", top: -1, right: 8, background: "linear-gradient(135deg, #C9901F, #E8B84B)", borderRadius: "0 0 6px 6px", padding: "2px 8px", fontSize: 9, fontFamily: '"IBM Plex Mono", monospace', letterSpacing: "0.15em", color: "#0a0a14", fontWeight: 700 }}><ForgeIcon name="spark" size={10} style={{ verticalAlign: "middle", marginRight: 4 }} />FESTIVAL</div>
       )}
       {isCompleted && (
-        <div className="mission-complete-badge" style={{ position: "absolute", top: -1, right: 8, background: "linear-gradient(135deg, #1a5c30, #3DC96B)", borderRadius: "0 0 6px 6px", padding: "2px 10px", fontSize: 9, fontFamily: '"IBM Plex Mono", monospace', letterSpacing: "0.15em", color: "#0a1a0f", fontWeight: 700 }}>✓ COMPLETADA</div>
+        <div className="mission-complete-badge" style={{ position: "absolute", top: -1, right: 8, background: "linear-gradient(135deg, #1a5c30, #3DC96B)", borderRadius: "0 0 6px 6px", padding: "2px 10px", fontSize: 9, fontFamily: '"IBM Plex Mono", monospace', letterSpacing: "0.15em", color: "#0a1a0f", fontWeight: 700 }}><ForgeIcon name="check" size={9} style={{ verticalAlign: "middle", marginRight: 4 }} />COMPLETADA</div>
       )}
             {isActive && (
               <div style={{ position: "absolute", top: -1, right: 8, background: "linear-gradient(135deg, #1a2a5c, #5B8BF5)", borderRadius: "0 0 6px 6px", padding: "2px 10px", fontSize: 9, fontFamily: '"IBM Plex Mono", monospace', letterSpacing: "0.15em", color: "#fff", fontWeight: 700 }}><ForgeIcon name="energy" size={10} style={{ verticalAlign: "middle", marginRight: 4 }} />EJECUTANDO</div>
       )}
       {isOnCooldown && !isActive && !isCompleted && (
         <div style={{ position: "absolute", top: -1, right: 8, background: "linear-gradient(135deg, #3b1a6e, #A855F7)", borderRadius: "0 0 6px 6px", padding: "2px 10px", fontSize: 9, fontFamily: '"IBM Plex Mono", monospace', letterSpacing: "0.12em", color: "#f0e0ff", fontWeight: 700 }}>
-          ⏳ {formatCooldown(cooldownSecs)}
+          <ForgeIcon name="hourglass" size={9} style={{ verticalAlign: "middle", marginRight: 4 }} />{formatCooldown(cooldownSecs)}
         </div>
       )}
       {(hasVex || hasTVex) && (
@@ -501,9 +501,9 @@ function MissionCard({ mission, onExecute, executing, isExecuting, isCompleted, 
         style={(isCompleted || isOnCooldown || !canAfford) ? { opacity: 0.5, cursor: "default" } : {}}
       >
         {isExecuting       ? "Preparando..."
-         : isCompleted     ? "✓ Completada"
-         : isOnCooldown    ? `⏳ ${formatCooldown(cooldownSecs)}`
-         : !canAfford      ? `⚡ ${energyCost} energía`
+         : isCompleted     ? <><ForgeIcon name="check" size={13} style={{ verticalAlign: "middle", marginRight: 5 }} />Completada</>
+         : isOnCooldown    ? <><ForgeIcon name="hourglass" size={13} style={{ verticalAlign: "middle", marginRight: 5 }} />{formatCooldown(cooldownSecs)}</>
+         : !canAfford      ? <><ForgeIcon name="energy" size={13} style={{ verticalAlign: "middle", marginRight: 5 }} />{energyCost} energía</>
          : <><ForgeIcon name="attack" size={13} style={{ verticalAlign: "middle", marginRight: 5 }} />Iniciar Batalla</>}
       </button>
     </div>
@@ -1334,7 +1334,7 @@ export function MissionsRoute() {
           }}>
             <div style={{ marginBottom: 10, lineHeight: 1 }}><ForgeIcon name="attack" size={48} /></div>
             <div style={{ fontFamily: '"IBM Plex Mono", monospace', fontSize: 9, letterSpacing: "0.25em", color: "rgba(168,85,247,0.8)", textTransform: "uppercase", marginBottom: 8 }}>
-              ✓ FASE 1 SUPERADA
+              <ForgeIcon name="check" size={10} style={{ verticalAlign: "middle", marginRight: 4 }} />FASE 1 SUPERADA
             </div>
             <div style={{ fontFamily: '"Cinzel", serif', fontSize: 24, fontWeight: 700, color: "#c084fc", letterSpacing: "0.05em", marginBottom: 6 }}>
               {phaseConfig.phaseLabel(2)}

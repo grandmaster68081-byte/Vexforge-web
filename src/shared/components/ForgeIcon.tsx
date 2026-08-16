@@ -91,7 +91,12 @@ export type ForgeIconName =
   | "arrow-up"
   | "arrow-down"
   | "star"
-  | "clipboard";
+  | "clipboard"
+  | "wallet"
+  | "flux"
+  | "drain"
+  | "veil"
+  | "resonance";
 
 type ForgeIconProps = {
   name: ForgeIconName;
@@ -128,6 +133,16 @@ export function ForgeIcon({
   };
 
   switch (name) {
+    case "wallet":
+      return <svg {...props}><path d="M3.5 7.5A2 2 0 0 1 5.5 5.5h11.8a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5.5a2 2 0 0 1-2-2z" /><path d="M19.3 10.5h1.9v3h-1.9a1.5 1.5 0 0 1 0-3z" /><path d="M6.5 5.5 15 2.8l1.2 2.7" /></svg>;
+    case "flux":
+      return <svg {...props}><circle cx="12" cy="12" r="3.1" /><path d="M12 3.2c3.4 3.6 3.4 13.9 0 17.6M12 3.2c-3.4 3.6-3.4 13.9 0 17.6" /><path d="M3.4 12h17.2" /></svg>;
+    case "drain":
+      return <svg {...props}><path d="M12 3.2c3.2 4 5 6.5 5 9a5 5 0 0 1-10 0c0-2.5 1.8-5 5-9z" /><path d="M9.6 13.4a2.6 2.6 0 0 0 2.6 2.6" /></svg>;
+    case "veil":
+      return <svg {...props}><path d="M4 9.5c2.7-4 5.4-6 8-6s5.3 2 8 6" /><path d="M4 13.5h16M5.5 17.5h13M8 21h8" /></svg>;
+    case "resonance":
+      return <svg {...props}><path d="M12 6v12" /><path d="M8.4 8.6v6.8M16 8.6v6.8M4.8 10.7v2.6M19.6 10.7v2.6" /></svg>;
     case "chain":
       return <svg {...props}><path d="M9.5 14.5 14.5 9.5" /><path d="M11.2 7.8l1.6-1.6a3.6 3.6 0 0 1 5.1 5.1l-1.6 1.6M12.8 16.2l-1.6 1.6a3.6 3.6 0 0 1-5.1-5.1l1.6-1.6" /></svg>;
     case "chain-eth":

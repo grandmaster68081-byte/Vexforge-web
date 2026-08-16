@@ -2,6 +2,7 @@ import { useNft } from "../domains/nft/useNft";
 import { PageLoader } from "../shared/components/PageLoader";
 import { BlockedAuthState } from "../shared/components/BlockedAuthState";
 import type { NftMintQueueEntry } from "../domains/nft/repository";
+import { ForgeIcon } from "../shared/components/ForgeIcon";
 
 const RARITY_COLOR: Record<string, string> = {
   Rare:      "#4a9eff",
@@ -71,7 +72,7 @@ export function NftRoute() {
     <div style={{ maxWidth: 760, margin: "0 auto", padding: "24px 16px 80px" }}>
       <div style={{ marginBottom: 28 }}>
         <h1 style={{ fontSize: 26, fontWeight: 800, color: "#e2e8f0", fontFamily: "'Cinzel', serif", letterSpacing: 1, marginBottom: 6 }}>
-          💠 NFT Forge
+          <span style={{ display: "inline-flex", alignItems: "center", gap: 10 }}><ForgeIcon name="nft" size={24} />NFT Forge</span>
         </h1>
         <p style={{ color: "#64748b", fontSize: 14 }}>
           Convierte tus cartas Rare, Epic, Legendary y Mythic en NFTs ERC-721 en Polygon.
@@ -85,7 +86,9 @@ export function NftRoute() {
         padding: "18px 20px", marginBottom: 24,
       }}>
         <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 8 }}>
-          <span style={{ fontSize: 20 }}>{contractDeployed ? "✅" : "⏳"}</span>
+          <span style={{ display: "flex", color: contractDeployed ? "#4ade80" : "#eab308" }}>
+            <ForgeIcon name={contractDeployed ? "check" : "hourglass"} size={19} />
+          </span>
           <span style={{ fontWeight: 700, color: "#e2e8f0", fontSize: 15 }}>
             Contrato VexforgeCards (VFC)
           </span>
@@ -114,7 +117,7 @@ export function NftRoute() {
         background: "rgba(255,255,255,0.03)", padding: "18px 20px", marginBottom: 24,
       }}>
         <h2 style={{ fontWeight: 700, color: "#e2e8f0", fontSize: 15, marginBottom: 12 }}>
-          🦊 Tu Wallet
+          <span style={{ display: "inline-flex", alignItems: "center", gap: 8 }}><ForgeIcon name="wallet" size={15} />Tu Wallet</span>
         </h2>
         {linkedWallet ? (
           <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
@@ -137,7 +140,9 @@ export function NftRoute() {
               background: connecting ? "rgba(255,255,255,0.08)" : "rgba(234,179,8,0.2)",
               color: "#eab308", fontWeight: 700, fontSize: 14, transition: "all 0.2s",
             }}>
-              {connecting ? "Conectando…" : "🦊 Conectar MetaMask"}
+              {connecting
+                ? "Conectando…"
+                : <span style={{ display: "inline-flex", alignItems: "center", gap: 8 }}><ForgeIcon name="wallet" size={15} />Conectar MetaMask</span>}
             </button>
             {connectError && <p style={{ fontSize: 12, color: "#f87171", margin: 0 }}>{connectError}</p>}
           </div>
@@ -150,7 +155,7 @@ export function NftRoute() {
         background: "rgba(255,255,255,0.02)", padding: "18px 20px", marginBottom: 24,
       }}>
         <h2 style={{ fontWeight: 700, color: "#e2e8f0", fontSize: 15, marginBottom: 10 }}>
-          🃏 Raridades Minteables
+          <span style={{ display: "inline-flex", alignItems: "center", gap: 8 }}><ForgeIcon name="cards" size={15} />Rarezas Minteables</span>
         </h2>
         <p style={{ fontSize: 13, color: "#64748b", marginBottom: 14 }}>
           Solo cartas de rareza superior pueden convertirse en NFTs. Common y Uncommon quedan excluidas por diseño del protocolo.
@@ -173,7 +178,9 @@ export function NftRoute() {
         background: "rgba(255,255,255,0.02)", padding: "18px 20px",
       }}>
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 14 }}>
-          <h2 style={{ fontWeight: 700, color: "#e2e8f0", fontSize: 15 }}>📋 Cola de Minteo</h2>
+          <h2 style={{ fontWeight: 700, color: "#e2e8f0", fontSize: 15 }}>
+            <span style={{ display: "inline-flex", alignItems: "center", gap: 8 }}><ForgeIcon name="clipboard" size={15} />Cola de Minteo</span>
+          </h2>
           <button onClick={refresh} style={{
             padding: "6px 14px", borderRadius: 8, border: "1px solid rgba(255,255,255,0.1)",
             background: "rgba(255,255,255,0.05)", color: "#94a3b8", fontSize: 12, cursor: "pointer",
@@ -181,7 +188,7 @@ export function NftRoute() {
         </div>
         {mintQueue.length === 0 ? (
           <div style={{ textAlign: "center", padding: "32px 0", color: "#475569" }}>
-            <div style={{ fontSize: 36, marginBottom: 10 }}>🌑</div>
+            <div style={{ marginBottom: 10, display: "flex", justifyContent: "center" }}><ForgeIcon name="nft" size={34} /></div>
             <p style={{ margin: 0, fontSize: 14 }}>Sin solicitudes de minteo todavía.</p>
             <p style={{ margin: "4px 0 0", fontSize: 12, color: "#334155" }}>
               El minteo se activa cuando el contrato sea desplegado en Polygon.

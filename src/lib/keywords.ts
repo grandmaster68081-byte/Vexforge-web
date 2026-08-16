@@ -1,9 +1,11 @@
 // src/lib/keywords.ts
 // VEXFORGE Keyword Glossary — Descripciones mecánicas de todas las keywords de synergy_json
 
+import type { ForgeIconName } from "../shared/components/ForgeIcon";
+
 export interface KeywordDef {
   name: string;
-  icon: string;
+  icon: ForgeIconName;
   color: string;
   glow: string;
   description: string;
@@ -13,7 +15,7 @@ export interface KeywordDef {
 export const KEYWORD_GLOSSARY: Record<string, KeywordDef> = {
   Guard: {
     name: "Guard",
-    icon: "🛡️",
+    icon: "shield",
     color: "#f59e0b",
     glow: "0 0 8px rgba(245,158,11,0.5)",
     description: "Protección frontal",
@@ -22,7 +24,7 @@ export const KEYWORD_GLOSSARY: Record<string, KeywordDef> = {
   },
   Surge: {
     name: "Surge",
-    icon: "⚡",
+    icon: "energy",
     color: "#ef4444",
     glow: "0 0 8px rgba(239,68,68,0.5)",
     description: "Golpe inicial potenciado",
@@ -31,7 +33,7 @@ export const KEYWORD_GLOSSARY: Record<string, KeywordDef> = {
   },
   Flux: {
     name: "Flux",
-    icon: "🔮",
+    icon: "flux",
     color: "#818cf8",
     glow: "0 0 8px rgba(129,140,248,0.5)",
     description: "Generación de energía arcana",
@@ -40,7 +42,7 @@ export const KEYWORD_GLOSSARY: Record<string, KeywordDef> = {
   },
   Consecrate: {
     name: "Consecrate",
-    icon: "✨",
+    icon: "spark",
     color: "#fbbf24",
     glow: "0 0 8px rgba(251,191,36,0.5)",
     description: "Aura curativa",
@@ -49,7 +51,7 @@ export const KEYWORD_GLOSSARY: Record<string, KeywordDef> = {
   },
   Drain: {
     name: "Drain",
-    icon: "🩸",
+    icon: "drain",
     color: "#a78bfa",
     glow: "0 0 8px rgba(167,139,250,0.5)",
     description: "Robo de vida",
@@ -58,7 +60,7 @@ export const KEYWORD_GLOSSARY: Record<string, KeywordDef> = {
   },
   Veil: {
     name: "Veil",
-    icon: "🌫️",
+    icon: "veil",
     color: "#9ca3af",
     glow: "0 0 8px rgba(156,163,175,0.4)",
     description: "Inmunidad táctica",
@@ -67,7 +69,7 @@ export const KEYWORD_GLOSSARY: Record<string, KeywordDef> = {
   },
   Forge: {
     name: "Forge",
-    icon: "🔥",
+    icon: "fusion",
     color: "#f97316",
     glow: "0 0 8px rgba(249,115,22,0.5)",
     description: "Forjable",
@@ -76,7 +78,7 @@ export const KEYWORD_GLOSSARY: Record<string, KeywordDef> = {
   },
   Resonance: {
     name: "Resonance",
-    icon: "🎵",
+    icon: "resonance",
     color: "#60a5fa",
     glow: "0 0 8px rgba(96,165,250,0.5)",
     description: "Amplificación de aliados",

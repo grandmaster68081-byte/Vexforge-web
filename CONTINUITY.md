@@ -925,3 +925,26 @@ Los commits anteriores siguen disponibles en Git para auditoría y reversión. L
 - Condición de reapertura: regresión visual, discrepancia entre `main` y el bundle público, o mapping canónico contradictorio.
 - Siguiente unidad: `VE-1-HOME-MISSIONS-ICON-LANGUAGE` sobre `HomeRoute` y `MissionsRoute`.
 - Siguiente acción verificable: confirmar `build-manifest.json` público con el commit de esta sesión y HTTP 200 en `/market`, `/shop`, `/deposit`, `/season-rankings` y `/admin`.
+
+## 2026-08-16 — VE-1-MISSIONS-NFT-KEYWORDS-ICON-LANGUAGE — IMPLEMENTED_UNVERIFIED
+
+- Tipo de sesión: IMPLEMENTACIÓN / REFINAMIENTO (continuación de la línea VE-1-ICON-LANGUAGE).
+- Unidad: `src/routes/MissionsRoute.tsx`, `src/routes/NftRoute.tsx`, `src/lib/keywords.ts` y ampliación canónica de `src/shared/components/ForgeIcon.tsx`.
+- Fuente canónica: código real de `main` del repositorio oficial (baseline `caa6b76dac8c30e54cc8387a1cba101c4b2ff542`), Supabase vivo `rscuzqnfccqvltkdcdny`, `ForgeIcon`, `VEXFORGE_PROTOCOL_V2.md` y esta continuidad.
+- Estado inicial: deuda declarada en VE-1-STORE-ADMIN-ICON-LANGUAGE (MissionsRoute y módulos de `src/lib` con sustitutos Unicode). `HomeRoute` fue auditado y ya está libre de sustitutos, por lo que la unidad se reorientó a MisionesNFT+keywords. Estado actual: IMPLEMENTED_UNVERIFIED.
+- Nivel Q: Q2 → Q3 (identidad visual propia, sin sustitutos Unicode) en misiones, NFT Forge y el glosario de keywords.
+- Baseline verificado: auditoría por regex Unicode sobre todo `src/`; 7 símbolos en `MissionsRoute`, 7 en `NftRoute`, 10 en `keywords.ts`.
+- Cambio realizado:
+  - `ForgeIcon`: 5 glifos canónicos nuevos (`wallet`, `flux`, `drain`, `veil`, `resonance`) con el mismo contrato (`viewBox 0 0 24 24`, `currentColor`, `aria-hidden`, `focusable=false`).
+  - `MissionsRoute`: banner de sesión, chip de quest reclamada, contador de reinicio, insignias COMPLETADA/cooldown, botón de ejecución (completada / cooldown / energía insuficiente) y cabecera de FASE 2 pasan a `check`, `refresh`, `hourglass` y `energy`.
+  - `NftRoute`: cabecera con `nft`, estado del contrato con `check`/`hourglass`, wallet y CTA de MetaMask con el nuevo glifo `wallet`, rarezas minteables con `cards`, cola de minteo con `clipboard` y vacío con `nft`. Corregido además el rótulo "Raridades" → "Rarezas".
+  - `src/lib/keywords.ts`: `KeywordDef.icon` pasa de `string` con emoji a `ForgeIconName` tipado; mapping canónico Guard→`shield`, Surge→`energy`, Flux→`flux`, Consecrate→`spark`, Drain→`drain`, Veil→`veil`, Forge→`fusion`, Resonance→`resonance`. Alineado con `KeywordTooltip`/`KeywordActivationFX`, que ya renderizan `ForgeIcon`.
+- Contrato de datos: sin cambios. Ninguna columna, RPC, política, recompensa ni coste de energía fue modificado; la traducción símbolo → glifo ocurre solo en presentación.
+- Alcance no modificado: Supabase, Storage, migraciones, RPCs, RLS, roles, wallet real, economía, XP/VEX/T-VEX, cooldowns, minteo NFT y autenticación.
+- Accesibilidad: `ForgeIcon` conserva `aria-hidden=true` y `focusable=false`; todos los textos y controles nativos se mantienen.
+- Verificaciones ejecutadas: `tsc -p tsconfig.app.json --noEmit` sin errores; `npm run build` correcto; barrido Unicode sobre los cuatro archivos de la unidad sin coincidencias.
+- Deuda registrada: siguen con sustitutos Unicode `NotFoundRoute`, `PageLoader`, `PvpRoute`, `EconomyRoute`, `CosmeticsRoute`, `InventoryRoute`, `FusionRoute`, `EvolutionRoute`, `PacksRoute`, `RelicsRoute`, `RaidsRoute`, `WithdrawalRoute`, `AssetsRoute`, componentes de batalla (`ForgeFormationBoard`, `ContextualHint`, `InteractiveBattleBoard`, `BattleCinematicScreen`, `TutorialBattle`, `FormationSelector`), paneles compartidos (`SeasonRewardsPanel`, `DeckStatsPanel`, `ClanWarsPanel`, `ContextualHints`, `TutorialOverlay`, `LevelUpModal`) y módulos de `src/lib` (`aiBattleEngine`, `missionEncounterEngine`, `dailyChallenge`, `forgeFormation`) y `src/domains` (`home`, `profile`, `pvp`, `deck`, `daily`). La columna `achievements.icon` sigue conteniendo emojis en el dato oficial (unidad de datos futura).
+- Bloqueos: las vistas autenticadas de misiones y NFT (energía real, runs, wallet vinculada, cola de minteo) siguen BLOCKED por falta de sesión normal autorizada; no se usó service_role ni se fabricaron resultados.
+- Condición de reapertura: regresión visual, discrepancia entre `main` y el bundle público, o mapping canónico contradictorio de keywords.
+- Siguiente unidad: `VE-1-LIB-ENGINES-ICON-LANGUAGE` sobre `src/lib/aiBattleEngine.ts`, `src/lib/missionEncounterEngine.ts` y `src/lib/dailyChallenge.ts` (glifos de enemigos, biomas y retos diarios).
+- Siguiente acción verificable: confirmar `build-manifest.json` público con el commit de esta sesión y HTTP 200 en `/missions` y `/nft`.
