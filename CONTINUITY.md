@@ -810,3 +810,26 @@ Los commits anteriores siguen disponibles en Git para auditoría y reversión. L
 - Deuda: el icono de logro sigue proviniendo del dato oficial (`achievement.icon`); si la fuente canónica entrega glifos genéricos, corresponde a una unidad de datos, no de UI.
 - Condición de reapertura: regresión visual, discrepancia entre main y el bundle público, o mapping canónico contradictorio.
 - Siguiente acción verificable: confirmar en el deploy público que `build-manifest.json` refleja el commit de esta sesión y que las rutas críticas responden HTTP 200.
+
+## 2026-08-16 — VE-1-RANK-ICON-LANGUAGE — IMPLEMENTED_UNVERIFIED
+
+- Tipo de sesión: REFINAMIENTO / IMPLEMENTACIÓN (continuación de la línea VE-1-ICON-LANGUAGE).
+- Unidad: contrato compartido de iconos de rango (`src/lib/rankUtils.ts`) y sus consumidores de presentación.
+- Fuente canónica: código real de main (`3b56fb1`), `ForgeIcon`, `VEXFORGE_PROTOCOL_V2.md` y esta continuidad.
+- Estado inicial: deuda registrada por la unidad VE-1-SEASONPASS-ICON-LANGUAGE. Estado actual: IMPLEMENTED_UNVERIFIED.
+- Nivel Q: Q2 → Q3 (identidad propia, sin sustitutos Unicode) en todas las superficies de rango.
+- Problema: `RANK_TIERS` entregaba emojis (💎, 💠, 🔮, 🥇, 🥈, 🥉, ⚒️) como identidad visual final del rango, propagados a seis superficies.
+- Cambio realizado:
+  - `ForgeIcon`: siete glifos canónicos nuevos `rank-mythic`, `rank-diamond`, `rank-platinum`, `rank-gold`, `rank-silver`, `rank-bronze` y `rank-iron`, con el mismo contrato (`viewBox 0 0 24 24`, `currentColor`, `aria-hidden`, `focusable=false`).
+  - `rankUtils`: el campo `icon` pasa de `string` con emoji a `ForgeIconName` tipado; umbrales, colores, escudos y orden de tiers permanecen idénticos al RPC `get_player_rank`.
+  - `PvpRoute`: emblemas del duelo (yo/oponente), tarjeta de oponente, banner de rango propio y filas del ranking público usan `ForgeIcon` coloreado con `tier.color`.
+  - `ProfileRoute`: emblema del RankCard usa el glifo canónico del tier y el contador de escudos usa `ForgeIcon shield`.
+  - `MatchHistoryPanel`, `WeeklyTournamentPanel` y `SeasonRewardsPanel`: cabeceras, filas de seeds, favorito predictivo, ranking de temporada y tarjeta de rango propio usan `ForgeIcon`.
+- Decisión canónica registrada: en `ProfileRoute` el emblema deja de leer `rank.tier_icon` (dato que entrega glifos genéricos) y se deriva del tier calculado; el nombre y el color del tier siguen respetando el dato autoritativo. No se modificó ninguna columna ni RPC.
+- Alcance autoritativo: no se modificaron Supabase, Storage, migraciones, RPCs, RLS, MMR, ELO, escudos, economía, recompensas, cartas, inventario, combate ni autenticación. Sólo capa de presentación.
+- Accesibilidad: `ForgeIcon` conserva `aria-hidden=true` y `focusable=false`; el nombre textual del tier acompaña siempre al glifo, por lo que no se pierde información.
+- Verificaciones ejecutadas: `tsc -p tsconfig.app.json --noEmit` sin errores; `npm run build` correcto; barrido Unicode sobre `rankUtils` y las superficies de rango sin coincidencias en la unidad.
+- Deuda registrada: `ProfileRoute` (accesos rápidos, estadísticas, wallet, estados vacíos), `PvpRoute` (avisos y cierres), `AdminDashboardRoute`, `AchievementsRoute`, `ShopRoute`, `MarketRoute`, `DepositRoute`, `SeasonRankingsRoute` y módulos de `src/lib` siguen con sustitutos Unicode.
+- Bloqueos: la verificación autenticada de PvP y perfil sigue BLOCKED por falta de sesión normal autorizada; no se fabrican sesiones ni resultados con service_role.
+- Condición de reapertura: regresión visual, discrepancia entre main y el bundle público, o mapping canónico contradictorio.
+- Siguiente acción verificable: confirmar `build-manifest.json` público con el commit de esta sesión y HTTP 200 en `/pvp`, `/profile` y rutas críticas; después abrir la unidad de iconos de `ProfileRoute`.
