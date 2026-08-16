@@ -2,21 +2,23 @@ import { useState, useEffect } from "react";
 import { useAchievements } from "../domains/achievements/useAchievements";
 import { checkMyAchievements } from "../domains/achievements/repository";
 import { SkeletonList } from "../shared/components/Skeleton";
+import { ForgeIcon, type ForgeIconName } from "../shared/components/ForgeIcon";
+import { achievementIcon } from "../lib/achievementIcons";
 
 const BG_URL = "https://rscuzqnfccqvltkdcdny.supabase.co/storage/v1/object/public/vexforge-assets/backgrounds/bg_achievements.jpg";
 
-const CATEGORY_LABELS: Record<string, { label: string; icon: string; color: string }> = {
-  all:        { label: "Todos",        icon: "🏅", color: "#C9901F" },
-  missions:   { label: "Misiones",     icon: "⚔️", color: "#E84040" },
-  collection: { label: "Colección",    icon: "📦", color: "#5B8BF5" },
-  bosses:     { label: "World Bosses", icon: "🐉", color: "#A855F7" },
-  pvp:        { label: "PvP",          icon: "🏆", color: "#C9901F" },
-  economy:    { label: "Economía",     icon: "💰", color: "#3DC96B" },
-  fusion:     { label: "Forja",        icon: "🔮", color: "#E8B84B" },
-  daily:      { label: "Diarios",      icon: "📅", color: "#5B8BF5" },
-  packs:      { label: "Packs",        icon: "📦", color: "#E84040" },
-  progression:{ label: "Progresión",   icon: "⭐", color: "#E8B84B" },
-  social:     { label: "Social",       icon: "👥", color: "#3DC96B" },
+const CATEGORY_LABELS: Record<string, { label: string; icon: ForgeIconName; color: string }> = {
+  all:        { label: "Todos",        icon: "achievements", color: "#C9901F" },
+  missions:   { label: "Misiones",     icon: "missions",     color: "#E84040" },
+  collection: { label: "Colección",    icon: "collection",   color: "#5B8BF5" },
+  bosses:     { label: "World Bosses", icon: "boss",         color: "#A855F7" },
+  pvp:        { label: "PvP",          icon: "arena",        color: "#C9901F" },
+  economy:    { label: "Economía",     icon: "economy",      color: "#3DC96B" },
+  fusion:     { label: "Forja",        icon: "fusion",       color: "#E8B84B" },
+  daily:      { label: "Diarios",      icon: "calendar",     color: "#5B8BF5" },
+  packs:      { label: "Packs",        icon: "packs",        color: "#E84040" },
+  progression:{ label: "Progresión",   icon: "progress",     color: "#E8B84B" },
+  social:     { label: "Social",       icon: "friends",      color: "#3DC96B" },
 };
 
 function getRarityBadge(points: number): { label: string; color: string } {
@@ -57,14 +59,16 @@ function AchievementCard({
         flexShrink: 0, width: 52, height: 52, borderRadius: 10,
         background: unlocked ? "rgba(201,144,31,0.18)" : "rgba(255,255,255,0.05)",
         border: unlocked ? "1px solid rgba(201,144,31,0.35)" : "1px solid rgba(255,255,255,0.08)",
-        display: "flex", alignItems: "center", justifyContent: "center", fontSize: 26,
-        filter: unlocked ? "none" : "grayscale(0.8) opacity(0.5)",
-      }}>{unlocked ? ach.icon : "🔒"}</div>
+        display: "flex", alignItems: "center", justifyContent: "center",
+        color: unlocked ? "#C9901F" : "rgba(255,255,255,0.45)",
+      }}>
+        <ForgeIcon name={unlocked ? achievementIcon(ach.category) : "lock"} size={26} />
+      </div>
       <div style={{ flex: 1, minWidth: 0 }}>
         <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap", marginBottom: 4 }}>
           <span style={{ fontFamily: '"Cinzel Decorative", serif', fontSize: 13, fontWeight: 700, color: unlocked ? "#C9901F" : "#8a9ba8", letterSpacing: "0.03em" }}>{ach.title}</span>
           <span style={{ fontFamily: '"IBM Plex Mono", monospace', fontSize: 8, letterSpacing: "0.18em", color: badge.color, background: badge.color + "18", border: "1px solid " + badge.color + "33", borderRadius: 4, padding: "1px 5px", textTransform: "uppercase" as const }}>{badge.label}</span>
-          {unlocked && <span style={{ marginLeft: "auto", color: "#C9901F", fontSize: 16 }}>✓</span>}
+          {unlocked && <ForgeIcon name="check" size={16} style={{ marginLeft: "auto", color: "#C9901F" }} />}
         </div>
         <p style={{ fontFamily: '"Rajdhani", sans-serif', fontSize: 13, color: unlocked ? "rgba(255,255,255,0.72)" : "rgba(255,255,255,0.38)", margin: "0 0 10px", lineHeight: 1.4 }}>{ach.description}</p>
         <div style={{ display: "flex", alignItems: "center", gap: 14, flexWrap: "wrap" }}>
@@ -100,7 +104,7 @@ export function AchievementsRoute() {
       <div style={{ position: "relative", overflow: "hidden", minHeight: 220, display: "flex", alignItems: "flex-end", backgroundImage: BG_URL ? "url(" + BG_URL + ")" : undefined, backgroundSize: "cover", backgroundPosition: "center top" }}>
         <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to bottom, rgba(10,14,20,0.2) 0%, rgba(10,14,20,0.92) 100%)" }} />
         <div style={{ position: "relative", zIndex: 1, padding: "0 32px 28px", width: "100%" }}>
-          <div style={{ fontFamily: '"IBM Plex Mono", monospace', fontSize: 9, letterSpacing: "0.25em", color: "#C9901F", textTransform: "uppercase" as const, marginBottom: 8 }}>🏅 LOGROS — VEXFORGE</div>
+          <div style={{ fontFamily: '"IBM Plex Mono", monospace', fontSize: 9, letterSpacing: "0.25em", color: "#C9901F", textTransform: "uppercase" as const, marginBottom: 8, display: "flex", alignItems: "center", gap: 6 }}><ForgeIcon name="achievements" size={11} />LOGROS — VEXFORGE</div>
           <h1 style={{ fontFamily: '"Cinzel Decorative", serif', fontSize: "clamp(22px,4vw,36px)", color: "#fff", margin: "0 0 6px", letterSpacing: "0.04em" }}>Sala de la Gloria</h1>
           <p style={{ fontFamily: '"Rajdhani", sans-serif', fontSize: 15, color: "rgba(255,255,255,0.6)", margin: 0 }}>Cada hazaña forjada queda grabada para siempre</p>
         </div>
@@ -109,12 +113,12 @@ export function AchievementsRoute() {
       <div style={{ padding: "0 24px 60px", maxWidth: 900, margin: "0 auto" }}>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))", gap: 12, marginTop: 24, marginBottom: 16 }}>
           {[
-            { label: "Desbloqueados", value: myAchs.length + " / " + allAchs.length, icon: "🏆", color: "#C9901F" },
-            { label: "Puntos",        value: earnedPoints + " / " + totalPoints,    icon: "⭐", color: "#E8B84B" },
-            { label: "Progreso",      value: pct + "%",                              icon: "📊", color: "#3DC96B" },
+            { label: "Desbloqueados", value: myAchs.length + " / " + allAchs.length, icon: "trophy" as ForgeIconName, color: "#C9901F" },
+            { label: "Puntos",        value: earnedPoints + " / " + totalPoints,    icon: "spark" as ForgeIconName,  color: "#E8B84B" },
+            { label: "Progreso",      value: pct + "%",                              icon: "progress" as ForgeIconName, color: "#3DC96B" },
           ].map(stat => (
             <div key={stat.label} style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 10, padding: "14px 16px" }}>
-              <div style={{ fontFamily: '"IBM Plex Mono", monospace', fontSize: 9, color: "rgba(255,255,255,0.4)", letterSpacing: "0.15em", textTransform: "uppercase" as const, marginBottom: 6 }}>{stat.icon} {stat.label}</div>
+              <div style={{ fontFamily: '"IBM Plex Mono", monospace', fontSize: 9, color: "rgba(255,255,255,0.4)", letterSpacing: "0.15em", textTransform: "uppercase" as const, marginBottom: 6, display: "flex", alignItems: "center", gap: 5 }}><ForgeIcon name={stat.icon} size={11} style={{ color: stat.color }} />{stat.label}</div>
               <div style={{ fontFamily: '"Cinzel Decorative", serif', fontSize: 18, color: stat.color }}>{stat.value}</div>
             </div>
           ))}
@@ -128,7 +132,7 @@ export function AchievementsRoute() {
 
         {blockedAuth && (
           <div style={{ background: "linear-gradient(135deg,#0e1218,#121820)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 12, padding: "28px 24px", textAlign: "center" as const, marginBottom: 28 }}>
-            <div style={{ fontSize: 36, marginBottom: 12 }}>🔒</div>
+            <div style={{ marginBottom: 12, color: "#C9901F" }}><ForgeIcon name="lock" size={36} /></div>
             <div style={{ fontFamily: '"Cinzel Decorative", serif', fontSize: 16, color: "#C9901F", marginBottom: 8 }}>Inicia sesión para ver tus logros</div>
             <p style={{ fontFamily: '"Rajdhani", sans-serif', fontSize: 14, color: "rgba(255,255,255,0.5)", margin: 0 }}>Inicia sesión para rastrear tu progreso real.</p>
           </div>
@@ -136,13 +140,13 @@ export function AchievementsRoute() {
 
         <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 24, paddingBottom: 12, borderBottom: "1px solid rgba(255,255,255,0.07)" }}>
           {categories.map(cat => {
-            const cfg = CATEGORY_LABELS[cat] ?? { label: cat, icon: "📌", color: "#8a9ba8" };
+            const cfg = CATEGORY_LABELS[cat] ?? { label: cat, icon: achievementIcon(cat), color: "#8a9ba8" };
             const isActive = activeCategory === cat;
             const catAchs = cat === "all" ? allAchs : allAchs.filter(a => a.category === cat);
             const catUnlocked = catAchs.filter(a => unlockedMap.has(a.id)).length;
             return (
               <button key={cat} onClick={() => setActiveCategory(cat)} style={{ display: "flex", alignItems: "center", gap: 6, padding: "6px 14px", borderRadius: 20, border: isActive ? "1px solid " + cfg.color + "88" : "1px solid rgba(255,255,255,0.1)", background: isActive ? cfg.color + "18" : "transparent", color: isActive ? cfg.color : "rgba(255,255,255,0.5)", fontFamily: '"IBM Plex Mono", monospace', fontSize: 10, letterSpacing: "0.08em", cursor: "pointer", transition: "all 0.15s", textTransform: "uppercase" as const }}>
-                <span>{cfg.icon}</span><span>{cfg.label}</span>
+                <ForgeIcon name={cfg.icon} size={12} /><span>{cfg.label}</span>
                 <span style={{ background: isActive ? cfg.color + "30" : "rgba(255,255,255,0.08)", borderRadius: 10, padding: "0 6px", fontSize: 9 }}>{catUnlocked}/{catAchs.length}</span>
               </button>
             );

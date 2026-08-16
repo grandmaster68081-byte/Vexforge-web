@@ -78,7 +78,8 @@ export type ForgeIconName =
   | "rank-bronze"
   | "rank-iron"
   | "key"
-  | "telegram";
+  | "telegram"
+  | "calendar";
 
 type ForgeIconProps = {
   name: ForgeIconName;
@@ -115,6 +116,8 @@ export function ForgeIcon({
   };
 
   switch (name) {
+    case "calendar":
+      return <svg {...props}><rect x="3.5" y="5" width="17" height="15" rx="2" /><path d="M3.5 10h17M8 3v4M16 3v4" /><path d="M7.5 13.5h3v3h-3z" /></svg>;
     case "key":
       return <svg {...props}><circle cx="8" cy="9" r="4.5" /><path d="m11.2 12.2 7.3 7.3M16.5 17l1.6-1.6M18.9 19.4l1.6-1.6" /></svg>;
     case "telegram":

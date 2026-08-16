@@ -878,3 +878,26 @@ Los commits anteriores siguen disponibles en Git para auditoría y reversión. L
 - Alcance no modificado: datos, autenticación, roles, RPCs, RLS, wallet, economía, estadísticas y logros.
 - Estado BLOCKED conservado: la vista autenticada del perfil (identidad real, wallet, logros desbloqueados) no se probó por falta de sesión normal autorizada; no se fabricaron resultados con service_role.
 - Siguiente unidad: `VE-1-ACHIEVEMENTS-ICON-LANGUAGE` sobre `AchievementsRoute` y el contrato de `achievement.icon`.
+
+## 2026-08-16 — VE-1-ACHIEVEMENTS-ICON-LANGUAGE — IMPLEMENTED_UNVERIFIED
+
+- Tipo de sesión: REFINAMIENTO / IMPLEMENTACIÓN (continuación de la línea VE-1-ICON-LANGUAGE).
+- Unidad: `src/routes/AchievementsRoute.tsx`, `src/shared/components/AchievementToastCard.tsx`, nuevo módulo `src/lib/achievementIcons.ts` y ampliación canónica de `src/shared/components/ForgeIcon.tsx`.
+- Fuente canónica: código real de main (`a17ef441c94df4cfa18cd3781bf8fafdfa9272aa`), Supabase vivo `rscuzqnfccqvltkdcdny`, `ForgeIcon`, `VEXFORGE_PROTOCOL_V2.md` y esta continuidad.
+- Estado inicial: deuda declarada en el cierre de VE-1-PROFILE-ICON-LANGUAGE ("siguiente unidad: VE-1-ACHIEVEMENTS-ICON-LANGUAGE sobre AchievementsRoute y el contrato de achievement.icon"). Estado actual: IMPLEMENTED_UNVERIFIED.
+- Nivel Q: Q2 → Q3 (identidad propia, sin sustitutos Unicode) en la Sala de la Gloria y en el toast de logro.
+- Baseline verificado: main = `a17ef441c94df4cfa18cd3781bf8fafdfa9272aa`; consulta a la Management API de Supabase confirma que `public.achievements` sirve 9 categorías (`bosses`, `collection`, `daily`, `economy`, `fusion`, `missions`, `packs`, `pvp`, `social`) y que la columna `icon` sigue conteniendo sustitutos Unicode heredados.
+- Problema: la ruta de logros usaba emojis como identidad final (categorías, tarjeta, estadísticas, candado, check, encabezado) y el toast renderizaba directamente `achievement.icon` del dato oficial, que es un emoji.
+- Cambio realizado:
+  - `ForgeIcon`: nuevo glifo canónico `calendar` (mismo contrato: `viewBox 0 0 24 24`, `currentColor`, `aria-hidden`, `focusable=false`).
+  - `src/lib/achievementIcons.ts`: mapa canónico categoría → `ForgeIconName` con fallback `achievements`. Traduce la categoría autoritativa a glifo propio SIN modificar el dato.
+  - `AchievementsRoute`: `CATEGORY_LABELS.icon` pasa de emoji a `ForgeIconName` tipado; la tarjeta usa `achievementIcon(ach.category)` cuando está desbloqueado y `lock` cuando no; el check usa `check`; el encabezado usa `achievements`; las tres métricas usan `trophy`, `spark` y `progress`; el estado no autenticado usa `lock`; el fallback de categoría desconocida usa el mapa canónico.
+  - `AchievementToastCard`: deja de renderizar `current.icon` (emoji del dato) y usa `achievementIcon(current.category)` con el color de rareza existente.
+- Contrato de datos: `achievements.icon` permanece intacto en Supabase; la UI ya no depende de él. Deuda de datos registrada, no de UI.
+- Alcance autoritativo: no se modificaron Supabase, Storage, migraciones, RPCs, RLS, roles, puntos, recompensas VEX/XP, desbloqueos ni autenticación. Sólo capa de presentación.
+- Accesibilidad: `ForgeIcon` conserva `aria-hidden=true` y `focusable=false`; todos los textos y controles visibles se mantienen; los chips de categoría siguen siendo `button` nativo con su etiqueta de texto.
+- Verificaciones ejecutadas: `tsc -p tsconfig.app.json --noEmit` sin errores; `npm run build` correcto; barrido Unicode sobre los tres archivos de la unidad sin coincidencias.
+- Deuda registrada: siguen con sustitutos Unicode, entre otros, HomeRoute, MissionsRoute, MarketRoute, ShopRoute, InventoryRoute, CosmeticsRoute, PvpRoute, DepositRoute, AdminDashboardRoute, componentes de batalla y módulos de `src/lib`. La columna `achievements.icon` sigue conteniendo emojis en el dato oficial (unidad de datos futura, requiere decisión canónica).
+- Bloqueos: la vista autenticada de logros reales (desbloqueos, fechas, puntos ganados) sigue BLOCKED por falta de sesión normal autorizada del jugador u owner; no se usó service_role ni se fabricaron resultados.
+- Condición de reapertura: regresión visual, discrepancia entre main y el bundle público, o mapping canónico contradictorio.
+- Siguiente acción verificable: confirmar `build-manifest.json` público con el commit de esta sesión y HTTP 200 en `/achievements` y rutas críticas.

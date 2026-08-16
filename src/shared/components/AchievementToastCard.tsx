@@ -5,6 +5,7 @@
     import { supabase } from "../../lib/supabase";
     import { AudioEngine } from "../../lib/audioEngine";
 import { ForgeIcon } from "./ForgeIcon";
+import { achievementIcon } from "../../lib/achievementIcons";
 
     interface AchievementData {
     id: string;
@@ -171,11 +172,11 @@ import { ForgeIcon } from "./ForgeIcon";
             {/* Body */}
             <div style={{ padding:"13px 15px", display:"flex", gap:13, alignItems:"flex-start" }}>
               <div style={{
-                fontSize: 36, flexShrink: 0, lineHeight: 1,
+                flexShrink: 0, lineHeight: 1,
                 animation: "ach-icon 0.75s ease-in-out 0.2s both",
                 display: "inline-block",
               }}>
-                {current.icon ? current.icon : <ForgeIcon name="achievements" size={34} style={{ color: r.color }} />}
+                <ForgeIcon name={achievementIcon(current.category)} size={34} style={{ color: r.color }} />
               </div>
 
               <div style={{ flex:1, minWidth:0 }}>
