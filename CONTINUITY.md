@@ -1,3 +1,12 @@
+## 2026-08-17 — VE-8-IDENTITY-DATA-GUARD — IMPLEMENTED_UNVERIFIED
+
+- Tipo de sesión: IMPLEMENTACIÓN / QA de dato público. Fuente canónica: código real de main, decisión VE-8 en Supabase y payload REST público con rol anon.
+- Estado inicial: discrepancia entre la decisión oficial —que exige verify:identity-data— y el package.json de main, que aún no exponía el guard. Estado actual: IMPLEMENTED_UNVERIFIED. Nivel: Q2 → Q3.
+- Cambio: se añade scripts/verify-identity-data.mjs y el comando npm run verify:identity-data. El guard lee las nueve tablas canónicas de identidad con el rol público, pagina las filas, recorre valores anidados y rechaza emoji, símbolos Unicode genéricos, flechas y caracteres de dibujo. Excluye únicamente legacy_icon y vexforge_icon_legacy, que son respaldos reversibles documentados por VE-8.
+- Evidencia preliminar: 9 tablas, 274 filas y 3.096 valores de texto revisados contra Supabase vivo; 0 violaciones. No se usó Management API, service_role, sesión fabricada ni escritura.
+- Alcance no modificado: cartas, nombres, lore, economía, recompensas, RPCs, RLS, autenticación, Storage y cualquier resultado autoritativo.
+- Siguiente acción verificable: ejecutar el build oficial, comprobar que el commit servido en /build-manifest.json coincide con main, ejecutar el nuevo guard y cerrar la unidad sólo después de confirmar las rutas públicas sin regresiones.
+
 ## 2026-08-17 — VE-OBS-01 — OBSERVACION_REGISTRADA (sin cambio de codigo)
 
 - **Chequeo rapido del deploy publico (`vexforge-web.pages.dev`):** HTTP 200 en `/`, `/leaderboard`, `/season-rankings`, `/raids`, `/world-bosses`, `/achievements` y `/build-manifest.json`. Sin regresiones detectadas en la capa de fondos.
