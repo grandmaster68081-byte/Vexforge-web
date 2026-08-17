@@ -1516,3 +1516,15 @@ Los commits anteriores siguen disponibles en Git para auditoría y reversión. L
 - **Condición de reapertura:** aparición de una superficie legítima de perfil público de terceros (ver estadísticas o rango de otro jugador) — se resolvería con una RPC pública de sólo lectura con campos recortados, nunca reabriendo `p_player_id` libre en las funciones privadas.
 - **Siguiente unidad sugerida:** auditoría de las definer restantes sin parámetro de jugador bajo `authenticated`, o higiene documental de las tablas internas `vexforge_*`.
 - **Siguiente acción verificable:** confirmar `build-manifest.json` público con el commit de esta sesión y HTTP 200 en las rutas críticas.
+
+## 2026-08-17 — VE-SEC-7-AUTHENTICATED-DEFINER-REPLAY-REFERRAL — IMPLEMENTED_UNVERIFIED
+
+- **Tipo de sesión:** AUDITORÍA / IMPLEMENTACIÓN de seguridad. **Fuente canónica:** Supabase vivo, código real de `main` y contrato de autenticación de `AuthProvider`.
+- **Unidad:** `VE-SEC-7-AUTHENTICATED-DEFINER-REPLAY-REFERRAL`. **Estado inicial:** `NOT_STARTED`; **estado actual:** `IMPLEMENTED_UNVERIFIED`; **nivel:** Q0 → Q2, objetivo Q3 tras QA autenticado.
+- **Hallazgo:** `get_match_replay(uuid)` podía leer cualquier sesión y sus turnos; `process_referral_on_register(text, uuid)` aceptaba un `p_referred_auth_id` distinto del usuario autenticado y ejecutaba recompensas mediante `SECURITY DEFINER`.
+- **Cambio aplicado en Supabase:** `get_match_replay` exige creador, participante del replay o control admin; `process_referral_on_register` exige `p_referred_auth_id = auth.uid()`. El replay también ordena por la columna viva `combat_turns.turn_index`. No hubo cambios de esquema, datos, economía, RLS ni contratos de retorno.
+- **Verificación live:** migración idempotente validada primero con `BEGIN/ROLLBACK`, aplicada después con `BEGIN/COMMIT`; catálogo confirma `authenticated=true`, `anon=false` en ambas funciones; la definición confirma el vínculo de identidad y la autorización del replay. No se fabricaron sesiones, recompensas ni pruebas de jugador.
+- **Alcance no modificado:** autenticación, wallet, economía, settlement, resultados de combate, Storage y frontend. El referido conserva su consumidor legítimo en `src/providers/AuthProvider.tsx`.
+- **Bloqueo:** QA autenticado sigue `BLOCKED` sin una sesión normal autorizada de jugador; no se declara `OPERATIONAL`.
+- **Deuda:** validar la ruta de historial/replay con una sesión normal del propietario y revisar el resto de funciones `SECURITY DEFINER` sin parámetro de jugador, diferenciando lecturas públicas legítimas de operaciones administrativas.
+- **Siguiente acción verificable:** ejecutar build oficial, publicar mediante el disparador automático de `main`, comprobar `build-manifest.json` y rutas públicas, y registrar el commit servido sin hacer deploy manual.
