@@ -1340,3 +1340,15 @@ Los commits anteriores siguen disponibles en Git para auditoría y reversión. L
 - **Bloqueos:** QA autenticado de superficies del jugador sigue `BLOCKED` sin sesión normal autorizada; no se usó `service_role` para suplantar jugadores ni fabricar QA.
 - **Condición de reapertura:** decisión de promover alguna variante a arte consumido, o cambio del inventario del bucket.
 - **Siguiente unidad sugerida:** higiene documental de las tablas internas `vexforge_*`.
+
+### Cierre operativo — VE-7-BOSS-ART-VARIANT-MANIFEST
+
+- Estado actual: OPERATIONAL para el manifiesto oficial de variantes de arte de jefe mundial; nivel Q3. Estado de la unidad: IMPLEMENTED_UNVERIFIED → VERIFIED.
+- Commit publicado: `29e6432ee15e719404495febc908bfbb8012f43c` en main.
+- Evidencia de publicación: `/build-manifest.json` público informa `sourceCommit=29e6432ee15e719404495febc908bfbb8012f43c`, `sourceBranch=main` — el desfase documental de VE-OBS-01 queda cerrado (deploy y `main` coinciden).
+- Rutas verificadas HTTP 200 (27): `/`, `/achievements`, `/season-rankings`, `/raids`, `/world-bosses`, `/fusion`, `/cards`, `/pvp`, `/battle`, `/packs`, `/missions`, `/inventory`, `/market`, `/leaderboard`, `/nft`, `/quests`, `/relics`, `/season-pass`, `/economy`, `/profile`, `/shop`, `/clans`, `/settings`, `/deck-builder`, `/assets`, `/account` y `/forge-ads`. Cero respuestas distintas de 200.
+- Verificación de runtime sobre el sitio publicado: navegación headless a `/`, `/world-bosses`, `/raids`, `/cards`, `/assets`, `/achievements`, `/leaderboard`, `/packs` y `/missions` con espera a `networkidle` — 0 errores de consola, 0 `pageerror` y 0 respuestas HTTP >= 400.
+- Verificación de datos contra el deploy (rol `anon`, sin privilegios administrativos): `npm run verify:manifest` → 218 archivos inscritos, 17 rutas del código presentes, 0 referencias rotas; `npm run verify:assets` → 17/17 rutas disponibles en el Storage oficial.
+- Invariante confirmada: el arte servido al jugador no cambió — las 15 variantes siguen `enabled=false` y fuera de runtime; `world_bosses.image_url` intacto.
+- Estado BLOCKED conservado: QA autenticado de superficies del jugador sin sesión normal autorizada; no se usó `service_role` para suplantar jugadores ni para fabricar QA.
+- Siguiente unidad sugerida: higiene documental de las tablas internas `vexforge_*` (símbolos residuales en texto documental), sin impacto en identidad de jugador ni en resultados autoritativos.
