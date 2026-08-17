@@ -1372,3 +1372,13 @@ Los commits anteriores siguen disponibles en Git para auditoría y reversión. L
 - **Bloqueos:** QA autenticado del mazo sigue `BLOCKED` sin sesión de jugador autorizada; no se usó `service_role` para suplantar jugadores ni para fabricar QA.
 - **Condición de reapertura:** aparición de una superficie legítima que deba leer mazos ajenos (espectador de PvP, formación pública) — se resolvería con RPC `SECURITY DEFINER` de proyección mínima, nunca reabriendo `USING true`.
 - **Siguiente unidad sugerida:** triaje priorizado de las funciones definer expuestas a `anon`.
+
+### Cierre operativo — VE-SEC-1-PLAYER-DECK-EXPOSURE
+
+- Estado de la unidad: IMPLEMENTED_UNVERIFIED → VERIFIED. Estado del entorno: OPERATIONAL.
+- Commit publicado: `b25cad1233c8ccd55ffac56e72543608e6502e99` en main.
+- Evidencia de publicación: `/build-manifest.json` público informa `sourceCommit=b25cad1233c8ccd55ffac56e72543608e6502e99`.
+- Rutas verificadas HTTP 200 (14): `/`, `/deck-builder`, `/cards`, `/pvp`, `/battle`, `/profile`, `/economy`, `/inventory`, `/market`, `/packs`, `/missions`, `/leaderboard`, `/relics`, `/friends`.
+- Verificación de runtime sobre el sitio publicado: navegación headless con espera a `networkidle` en `/`, `/deck-builder`, `/pvp` y `/cards` — 0 errores de consola, 0 `pageerror`, 0 respuestas HTTP >= 400.
+- Verificación de la corrección con la clave `anon` real: `player_deck` y `v_player_forge_formation` responden HTTP 401 `permission denied`. Asesor de seguridad: 0 ERROR (antes 1).
+- Invariante confirmada: sin cambios de esquema, RPCs, economía ni UI; el jugador autenticado conserva la lectura de su propio mazo por RLS de propietario y la escritura por `save_deck`.
