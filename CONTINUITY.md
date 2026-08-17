@@ -1528,3 +1528,13 @@ Los commits anteriores siguen disponibles en Git para auditoría y reversión. L
 - **Bloqueo:** QA autenticado sigue `BLOCKED` sin una sesión normal autorizada de jugador; no se declara `OPERATIONAL`.
 - **Deuda:** validar la ruta de historial/replay con una sesión normal del propietario y revisar el resto de funciones `SECURITY DEFINER` sin parámetro de jugador, diferenciando lecturas públicas legítimas de operaciones administrativas.
 - **Siguiente acción verificable:** ejecutar build oficial, publicar mediante el disparador automático de `main`, comprobar `build-manifest.json` y rutas públicas, y registrar el commit servido sin hacer deploy manual.
+
+### Cierre de verificación pública — VE-SEC-7
+
+- **Commit de código verificado:** `8cd8a99a86e28fb29d8c629754e6d9bc7fbfbc76`.
+- **Build:** `npx tsc --noEmit -p tsconfig.app.json`, `npm run build` y `verify:build` correctos; `git diff --check` correcto.
+- **Cloudflare Pages:** `build-manifest.json` público confirmó `project=VEXFORGE`, `sourceBranch=main`, `sourceCommit=8cd8a99a86e28fb29d8c629754e6d9bc7fbfbc76`, `outputDirectory=dist`; `main` y público coincidieron.
+- **Rutas públicas:** `/`, `/index.html`, `/leaderboard`, `/season-rankings`, `/raids`, `/world-bosses`, `/achievements` y `/build-manifest.json` respondieron HTTP 200.
+- **Storage:** una muestra canónica (`cards/rare_guardian_del_bastion.jpg`) respondió HTTP 200. La verificación masiva `verify:manifest` quedó `BLOCKED` por respuestas temporales HTTP 429 del Storage; no se interpretaron como assets ausentes.
+- **Estado:** `IMPLEMENTED_UNVERIFIED`; el QA autenticado de replay/referido requiere una sesión normal autorizada y no se suplanta con privilegios administrativos.
+
