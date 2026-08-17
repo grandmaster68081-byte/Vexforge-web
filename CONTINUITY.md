@@ -1,11 +1,13 @@
-## 2026-08-17 — VE-8-IDENTITY-DATA-GUARD — IMPLEMENTED_UNVERIFIED
+## 2026-08-17 — VE-8-IDENTITY-DATA-GUARD — OPERATIONAL
 
 - Tipo de sesión: IMPLEMENTACIÓN / QA de dato público. Fuente canónica: código real de main, decisión VE-8 en Supabase y payload REST público con rol anon.
-- Estado inicial: discrepancia entre la decisión oficial —que exige verify:identity-data— y el package.json de main, que aún no exponía el guard. Estado actual: IMPLEMENTED_UNVERIFIED. Nivel: Q2 → Q3.
+- Estado inicial: discrepancia entre la decisión oficial —que exige verify:identity-data— y el package.json de main, que aún no exponía el guard. Estado actual: OPERATIONAL. Nivel: Q3.
 - Cambio: se añade scripts/verify-identity-data.mjs y el comando npm run verify:identity-data. El guard lee las nueve tablas canónicas de identidad con el rol público, pagina las filas, recorre valores anidados y rechaza emoji, símbolos Unicode genéricos, flechas y caracteres de dibujo. Excluye únicamente legacy_icon y vexforge_icon_legacy, que son respaldos reversibles documentados por VE-8.
-- Evidencia preliminar: 9 tablas, 274 filas y 3.096 valores de texto revisados contra Supabase vivo; 0 violaciones. No se usó Management API, service_role, sesión fabricada ni escritura.
+- Evidencia: 9 tablas, 274 filas y 6.359 valores hoja revisados contra Supabase vivo; 0 violaciones. npm run verify:build, npm run verify:identity-data y npm run verify:assets finalizaron correctamente; Storage confirmó 17/17 assets.
+- Evidencia pública: /build-manifest.json sirve sourceCommit=acbe303944416c6936c1685e899245170dbaabee y sourceBranch=main; /, /index.html, /cards, /achievements y /build-manifest.json respondieron HTTP 200. No se usó Management API, service_role, sesión fabricada ni escritura.
 - Alcance no modificado: cartas, nombres, lore, economía, recompensas, RPCs, RLS, autenticación, Storage y cualquier resultado autoritativo.
-- Siguiente acción verificable: ejecutar el build oficial, comprobar que el commit servido en /build-manifest.json coincide con main, ejecutar el nuevo guard y cerrar la unidad sólo después de confirmar las rutas públicas sin regresiones.
+- Deuda restante: el QA de superficies autenticadas sigue BLOCKED sin una sesión normal autorizada de jugador; no se suplanta con privilegios administrativos.
+- Condición de reapertura: cualquier violación nueva en el payload público, cambio de alcance canónico VE-8 o discrepancia entre main y build-manifest.json.
 
 ## 2026-08-17 — VE-OBS-01 — OBSERVACION_REGISTRADA (sin cambio de codigo)
 
