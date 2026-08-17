@@ -10,7 +10,8 @@
     "verify:build": "npm run build && node scripts/verify-build.mjs",
     "verify:assets": "node scripts/verify-assets.mjs",
     "verify:manifest": "node scripts/verify-manifest.mjs",
-    "verify:identity-data": "node scripts/verify-identity-data.mjs"
+    "verify:identity-data": "node scripts/verify-identity-data.mjs",
+    "verify:ui-identity": "node scripts/verify-ui-identity.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.45.0",

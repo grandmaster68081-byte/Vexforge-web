@@ -1,3 +1,11 @@
+## 2026-08-17 — VE-1-UI-IDENTITY-GUARD — IMPLEMENTED_UNVERIFIED
+
+- Tipo de sesión: IMPLEMENTACIÓN / QA estática. Fuente canónica: código real de main, Regla de Cero Genéricos y superficies publicadas.
+- Estado inicial: los símbolos Unicode encontrados en el barrido actual estaban en comentarios, pero no existía un guard que impidiera regresiones visibles. Estado actual: IMPLEMENTED_UNVERIFIED. Nivel: Q2 → Q3.
+- Cambio: se añade scripts/verify-ui-identity.mjs y el comando npm run verify:ui-identity. El guard recorre todos los archivos TypeScript/TSX, elimina comentarios y rechaza emojis, flechas, bloques de dibujo y símbolos Unicode genéricos que puedan llegar a la interfaz.
+- Evidencia preliminar: 188 archivos de src revisados; 0 violaciones. No se modificaron rutas, componentes, datos, RPCs, RLS, autenticación, Storage ni resultados autoritativos.
+- Siguiente acción verificable: ejecutar build y guard oficiales, confirmar que main y /build-manifest.json coinciden y cerrar la unidad solo después de comprobar las rutas públicas sin regresiones.
+
 ## 2026-08-17 — VE-8-IDENTITY-DATA-GUARD — OPERATIONAL
 
 - Tipo de sesión: IMPLEMENTACIÓN / QA de dato público. Fuente canónica: código real de main, decisión VE-8 en Supabase y payload REST público con rol anon.
