@@ -1,3 +1,11 @@
+## 2026-08-17 — VE-OBS-01 — OBSERVACION_REGISTRADA (sin cambio de codigo)
+
+- **Chequeo rapido del deploy publico (`vexforge-web.pages.dev`):** HTTP 200 en `/`, `/leaderboard`, `/season-rankings`, `/raids`, `/world-bosses`, `/achievements` y `/build-manifest.json`. Sin regresiones detectadas en la capa de fondos.
+- **Anomalia menor detectada (no bloqueante):** `build-manifest.json` publica `sourceCommit=9869fe67eb8c38b525459ee033b9490a639b9433`, mientras que `main` esta en `0de31931e0dae667c163e69b31b1562d550d14ff`. La diferencia es exclusivamente documental (`CONTINUITY.md`), por lo que el artefacto servido sigue siendo correcto; el desfase se resolvera solo en el proximo build. **Accion pendiente:** al inicio de la proxima sesion, revalidar que `sourceCommit` haya avanzado; si no avanza tras un commit de codigo, investigar el disparador de build de Cloudflare Pages.
+- **Deuda viva heredada:** duplicados de arte en el bucket (`bosses/BOSS_*.jpg` vs `bosses/boss_*.jpg`, `cards/IMG_2026*.jpg`) sin decision canonica de inscripcion; higiene documental de tablas `vexforge_*`; QA autenticado sigue BLOCKED por ausencia de sesion de jugador autorizada.
+
+---
+
 ## 2026-08-17 — VE-6-LEADERBOARD-SURFACE-BACKGROUND — OPERATIONAL
 
 - **Tipo de sesión:** IMPLEMENTACIÓN (cierre de deuda declarada en VE-4). **Fuente canónica:** código real de `main`, `src/lib/assetManifest.ts`, Storage oficial `vexforge-assets` y deploy público.
