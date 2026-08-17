@@ -1538,3 +1538,13 @@ Los commits anteriores siguen disponibles en Git para auditoría y reversión. L
 - **Storage:** una muestra canónica (`cards/rare_guardian_del_bastion.jpg`) respondió HTTP 200. La verificación masiva `verify:manifest` quedó `BLOCKED` por respuestas temporales HTTP 429 del Storage; no se interpretaron como assets ausentes.
 - **Estado:** `IMPLEMENTED_UNVERIFIED`; el QA autenticado de replay/referido requiere una sesión normal autorizada y no se suplanta con privilegios administrativos.
 
+## 2026-08-17 — VE-SEC-8-REMAINING-DEFINER-CLASSIFICATION — REFINED
+
+- **Tipo de sesión:** AUDITORÍA de seguridad / REFINAMIENTO documental. **Unidad:** `VE-SEC-8-REMAINING-DEFINER-CLASSIFICATION`.
+- **Fuente canónica:** catálogo vivo de Supabase, definiciones `pg_proc`, privilegios efectivos y consumidores del código oficial de `main`.
+- **Resultado:** se revisaron 84 funciones `SECURITY DEFINER` ejecutables por `authenticated`: 68 enlazan `auth.uid()` o `assert_caller_is_player`, 13 comprueban `vexforge_is_control_admin`, y 4 son lecturas públicas explícitas con `anon` habilitado.
+- **Excepciones clasificadas:** `get_world_boss_progress()` sólo devuelve progreso agregado de bosses activos y no realiza escrituras; `vexforge_fusion_policy(text)` sólo devuelve una política activa de fusión y es consumida por el repositorio de fusión. Ninguna acepta un selector de jugador ni expone un dato privado identificado. Se mantienen `authenticated`-only porque no existe un contrato público anónimo documentado para la primera y el consumidor oficial de la segunda requiere sesión.
+- **Verificación negativa:** no quedaron funciones sin clasificación dentro de la consulta; no se aplicaron cambios de esquema, datos, RLS, privilegios ni recompensas durante esta auditoría.
+- **Estado:** `REFINED`; no se declara `OPERATIONAL` para los flujos autenticados porque sigue faltando una sesión normal autorizada de jugador para QA.
+- **Siguiente acción:** si se crea una superficie anónima para World Boss, definir primero el contrato público y cambiar el permiso de forma explícita; mantener bloqueado el QA de replay/referidos hasta contar con una sesión legítima.
+
