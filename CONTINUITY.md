@@ -1461,3 +1461,14 @@ Los commits anteriores siguen disponibles en Git para auditoría y reversión. L
 - **Condición de reapertura:** aparición de una superficie legítima que deba acreditar recompensas a un tercero (herramienta administrativa) — se resolvería con un RPC propietario con verificación de rol admin, nunca reabriendo `p_player_id` libre a `authenticated`.
 - **Siguiente unidad sugerida:** cierre por defecto de RLS sin políticas en `public.vexforge_system_config`, `econ_sim.events` y `econ_sim.players` con recorte de grants.
 - **Siguiente acción verificable:** confirmar `build-manifest.json` público con el commit de esta sesión y HTTP 200 en las rutas críticas.
+
+### Cierre operativo — VE-SEC-4-GAME-RPC-SURFACE-TRIAGE
+
+- Estado actual: OPERATIONAL; nivel Q3 en la superficie de RPC de juego. Estado de la unidad: IMPLEMENTED_UNVERIFIED → VERIFIED.
+- Commit publicado: `973aa11c3a321bbaee6260717e4e08cac17a6d15` en main.
+- Evidencia de publicación: `/build-manifest.json` público informa `sourceCommit=973aa11c3a321bbaee6260717e4e08cac17a6d15`, `sourceBranch=main`.
+- Rutas verificadas HTTP 200: `/`, `/leaderboard`, `/season-rankings`, `/pvp`, `/battle`, `/missions`, `/shop`.
+- Verificación de runtime sobre el sitio publicado: navegación headless con espera a `networkidle` en `/`, `/leaderboard`, `/season-rankings` y `/pvp` — 0 errores de consola, 0 `pageerror`, 0 respuestas HTTP >= 400 (las lecturas públicas conservadas siguen sirviendo datos al rol anónimo).
+- Invariante confirmada: el jugador legítimo no perdió capacidades — todas las RPC de juego siguen disponibles para `authenticated`; sólo desapareció la vía anónima y la suplantación por `p_player_id`.
+- Estado BLOCKED conservado: QA autenticado sin sesión de jugador autorizada; no se usó `service_role` para suplantar jugadores ni para fabricar QA.
+- Siguiente unidad sugerida: cierre por defecto de RLS sin políticas en `public.vexforge_system_config`, `econ_sim.events` y `econ_sim.players` con recorte de grants.
