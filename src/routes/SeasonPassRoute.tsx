@@ -471,7 +471,7 @@ export function SeasonPassRoute() {
 
         {/* Header */}
         <div style={{ marginBottom: 24 }}>
-          <p style={{ fontSize: 10, letterSpacing: "0.14em", color: "#e8b84b", textTransform: "uppercase", fontFamily: "Rajdhani,sans-serif", fontWeight: 700, marginBottom: 8 }}>─── Temporada ───</p>
+          <p style={{ fontSize: 10, letterSpacing: "0.14em", color: "#e8b84b", textTransform: "uppercase", fontFamily: "Rajdhani,sans-serif", fontWeight: 700, marginBottom: 8 }}><span className="forge-eyebrow">Temporada</span></p>
           <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", flexWrap: "wrap", gap: 8 }}>
             <div>
               <h1 style={{ fontFamily: "Cinzel,serif", color: "#e8e8f0", fontSize: 26, margin: "0 0 4px" }}><ForgeIcon name="season" size={24} style={{ marginRight: 8, verticalAlign: "middle", color: "#e8b84b" }} />{seasonName}</h1>

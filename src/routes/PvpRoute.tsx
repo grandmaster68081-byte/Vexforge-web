@@ -193,7 +193,7 @@ function PreBattleModal({
             fontSize: 10, letterSpacing: "0.14em", color: "#e8b84b",
             textTransform: "uppercase", fontFamily: "Rajdhani,sans-serif",
             fontWeight: 700, margin: "0 0 16px", textAlign: "center",
-          }}>─── Confirmar Batalla ───</p>
+          }}><span className="forge-eyebrow">Confirmar Batalla</span></p>
 
           {/* VS panel */}
           <div style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 24 }}>

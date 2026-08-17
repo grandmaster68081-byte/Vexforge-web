@@ -450,7 +450,7 @@ export function WorldBossesRoute() {
         <main style={{ maxWidth: 1100, margin: "0 auto", padding: "32px 16px" }}>
           {/* Header */}
           <div style={{ marginBottom: 24 }}>
-            <p style={{ fontSize: 11, letterSpacing: "0.14em", color: "#e8b84b", textTransform: "uppercase", fontFamily: "Rajdhani,sans-serif", fontWeight: 700, marginBottom: 8 }}>─── PvE ───</p>
+            <p style={{ fontSize: 11, letterSpacing: "0.14em", color: "#e8b84b", textTransform: "uppercase", fontFamily: "Rajdhani,sans-serif", fontWeight: 700, marginBottom: 8 }}><span className="forge-eyebrow">PvE</span></p>
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 8 }}>
               <h1 style={{ fontFamily: "Cinzel,serif", color: "#e8e8f0", fontSize: 26, margin: 0 }}><ForgeIcon name="boss" size={24} style={{ verticalAlign: "middle", marginRight: 8 }} />Jefes Mundiales</h1>
               <button onClick={reload} style={{ padding: "7px 18px", borderRadius: 8, border: "1px solid #2a2a3a", background: "transparent", color: "#888", fontSize: 11, cursor: "pointer" }}><ForgeIcon name="refresh" size={12} style={{ verticalAlign: "middle", marginRight: 5 }} />Actualizar</button>

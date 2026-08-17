@@ -2070,7 +2070,27 @@ input.forge-input:focus {
 .forge-breadcrumb-home { color: rgba(201,144,31,0.65); text-decoration: none; padding: 1px 3px; border-radius: 4px; transition: color 0.15s; }
 .forge-breadcrumb-home:hover { color: var(--ember-gold-lt); }
 .forge-breadcrumb-seg  { display: flex; align-items: center; gap: 2px; }
-.forge-breadcrumb-sep  { color: rgba(255,255,255,0.18); padding: 0 3px; user-select: none; }
+.forge-breadcrumb-sep  { color: rgba(255,255,255,0.18); margin: 0 3px; vertical-align: middle; }
+
+/* Eyebrow canonico VEXFORGE: reglas dibujadas, no caracteres Unicode */
+.forge-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+.forge-eyebrow::before,
+.forge-eyebrow::after {
+  content: "";
+  display: block;
+  width: 26px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, currentColor);
+  opacity: 0.55;
+}
+.forge-eyebrow::after { background: linear-gradient(270deg, transparent, currentColor); }
+@media (max-width: 480px) {
+  .forge-eyebrow::before, .forge-eyebrow::after { width: 16px; }
+}
 .forge-breadcrumb-link { color: var(--fg-dim); text-decoration: none; transition: color 0.15s; }
 .forge-breadcrumb-link:hover { color: var(--ember-gold-lt); }
 .forge-breadcrumb-current { color: rgba(255,255,255,0.55); }

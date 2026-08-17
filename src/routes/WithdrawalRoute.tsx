@@ -5,6 +5,7 @@ import { PageLoader }       from "../shared/components/PageLoader";
 import { BlockedAuthState } from "../shared/components/BlockedAuthState";
 import { useToast }         from "../shared/context/ToastContext";
 import type { WithdrawalRequest } from "../domains/withdrawal/repository";
+import { ForgeIcon } from "../shared/components/ForgeIcon";
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 const RATE    = 100;    // 100 VEX tradeable = 1 USDT
@@ -200,7 +201,7 @@ export function WithdrawalRoute() {
           background:"#1a1a08", border:"1px solid #e8b84b55", borderRadius:10,
           padding:"16px 20px", marginBottom:24, display:"flex", gap:12, alignItems:"flex-start",
         }}>
-          <span style={{ fontSize:20 }}>{"⏳"}</span>
+          <ForgeIcon name="hourglass" size={20} style={{ color: C.gold, flexShrink: 0 }} />
           <div>
             <div style={{ color:C.gold, fontWeight:700, fontSize:13 }}>Retiro en proceso</div>
             <div style={{ color:C.muted, fontSize:11, marginTop:3 }}>

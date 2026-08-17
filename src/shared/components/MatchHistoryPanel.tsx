@@ -255,7 +255,7 @@ import { useState, useEffect } from "react";
                   </div>
 
                   {/* Detail arrow */}
-                  <div style={{ color: "#6a6a8a", fontSize: 10, flexShrink: 0 }}>›</div>
+                  <div style={{ color: "#6a6a8a", flexShrink: 0, display: "inline-flex", alignItems: "center" }}><ForgeIcon name="chevron-right" size={12} /></div>
                 </div>
               );
             })}

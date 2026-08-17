@@ -175,7 +175,7 @@ function Breadcrumb() {
         const isLast = i === segments.length - 1;
         return (
           <span key={path} className="forge-breadcrumb-seg">
-            <span className="forge-breadcrumb-sep">›</span>
+            <ForgeIcon name="chevron-right" size={10} className="forge-breadcrumb-sep" />
             {isLast ? (
               <span className="forge-breadcrumb-current">{label}</span>
             ) : (

@@ -1,3 +1,24 @@
+## 2026-08-17 — VE-1-EYEBROW-SEPARATOR-ICON-LANGUAGE — IMPLEMENTED_UNVERIFIED
+
+- **Tipo de sesión:** REFINAMIENTO / IMPLEMENTACIÓN. **Fuente canónica:** código real de `main`, `ForgeIcon`, `src/styles.css`, Supabase vivo y deploy público.
+- **Unidad:** VE-1-EYEBROW-SEPARATOR-ICON-LANGUAGE (reglas decorativas `───` en encabezados de sección, separador `›` de breadcrumb e historial de partidas, y emoji `⏳` en el aviso de retiro).
+- **Estado inicial:** `NOT_STARTED`; **estado actual:** `IMPLEMENTED_UNVERIFIED`; **nivel actual:** Q2; **objetivo:** Q3.
+- **Baseline:** commit `e35ee07c4bf1d3b186a45ae1363d24090d09f072`.
+- **Auditoría:** barrido Unicode sobre todo `src/` excluyendo comentarios. Superficie visible restante: 13 encabezados con caracteres de dibujo de caja (`DepositRoute`, `EvolutionRoute`, `FriendsRoute`, `HomeRoute` x6, `LeaderboardRoute`, `PvpRoute`, `SeasonPassRoute`, `WorldBossesRoute`), `›` en el breadcrumb de `App.tsx` y en la fila de `MatchHistoryPanel`, y un emoji `⏳` en `WithdrawalRoute`. El resto de glyphs vive sólo en comentarios de código y CSS (no visibles).
+- **Cambio:**
+  - Nuevo estilo canónico `.forge-eyebrow` en `src/styles.css`: reglas dibujadas con `::before`/`::after` (degradado a `currentColor`, 26px, 16px en <=480px) en lugar de caracteres de dibujo de caja. Los 13 encabezados pasan a `<span className="forge-eyebrow">Texto</span>` conservando texto, color, tipografía y jerarquía.
+  - `App.tsx`: el separador de breadcrumb pasa de `›` a `ForgeIcon name="chevron-right"` (size 10) manteniendo la clase `forge-breadcrumb-sep` (ahora con `margin`/`vertical-align` en vez de `padding`).
+  - `MatchHistoryPanel.tsx`: la flecha de detalle pasa a `ForgeIcon name="chevron-right"` (size 12) en `inline-flex`.
+  - `WithdrawalRoute.tsx`: el emoji `⏳` del aviso "Retiro en proceso" pasa a `ForgeIcon name="hourglass"` con el dorado canónico; se añade el import correspondiente.
+- **Alcance autoritativo:** no se modificaron Supabase (esquema, datos, RPCs, RLS, triggers, Storage), economía, wallet, retiros, MMR, temporadas, recompensas, navegación ni resultados autoritativos. Sesión exclusivamente de presentación.
+- **Responsive y accesibilidad:** los SVG siguen decorativos (`aria-hidden`, `focusable=false`); ningún texto ni control cambia, por lo que los nombres accesibles se conservan; las reglas del eyebrow son puramente CSS (sin animación, reduced motion no afectado) y se reducen en móvil.
+- **Evidencia local:** `npm ci --ignore-scripts`, `npx tsc --noEmit -p tsconfig.app.json` sin errores, `npm run verify:build` correcto (build-manifest generado) y `npm run verify:assets` 17/17 disponibles en Storage. Barrido sobre `dist/assets/*.js`: 0 apariciones de `─`, `›` y `⏳`.
+- **Deuda y condición de reapertura:** permanecen glyphs en comentarios de código, CSS y datos internos de motores (`aiBattleEngine.ts`, `missionEncounterEngine.ts`, `dailyChallenge.ts`), además de la higiene documental pendiente de las tablas internas `vexforge_*`. `×` (multiplicador) y `•` (viñeta) se conservan por ser tipografía legítima. Reabrir ante regresión visual de encabezados/breadcrumb o mapping canónico distinto.
+- **Bloqueos:** QA autenticado (retiro real, historial de partidas del jugador) sigue `BLOCKED` sin sesión normal autorizada; no se usó `service_role` ni se fabricaron retiros, partidas ni resultados.
+- **Siguiente acción verificable:** confirmar `build-manifest.json` público con el commit de esta sesión y HTTP 200 en `/`, `/withdrawal`, `/pvp`, `/season-pass` y `/leaderboard`; después, revisión visual responsive con foco y `prefers-reduced-motion` real.
+
+---
+
 ## 2026-08-16 — VE-1-PANELS-SIGNALS-ICON-LANGUAGE — IMPLEMENTED_UNVERIFIED
 
 - **Tipo de sesión:** REFINAMIENTO / IMPLEMENTACIÓN. **Fuente canónica:** código real de `main`, `ForgeIcon`, Supabase vivo y deploy público.

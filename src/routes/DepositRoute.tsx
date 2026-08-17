@@ -144,7 +144,7 @@ export function DepositRoute() {
       <div style={{ marginBottom: 28 }}>
         <p style={{ fontSize: 10, letterSpacing: "0.14em", color: "#e8b84b",
           textTransform: "uppercase", fontWeight: 700, marginBottom: 6 }}>
-          ─── Economía · Depósito ───
+          <span className="forge-eyebrow">Economía · Depósito</span>
         </p>
         <h1 style={{ fontFamily: '"Cinzel",serif', fontSize: 26, color: "#e8b84b",
           margin: 0, marginBottom: 8 }}>Obtener VEX</h1>

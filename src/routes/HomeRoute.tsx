@@ -225,7 +225,7 @@ function LiveStatsSection({ stats }: { stats: { active_players: number; total_ca
     <div style={{marginBottom:48}}>
       <p style={{fontSize:10,letterSpacing:"0.14em",color:"#e8b84b",
         textTransform:"uppercase",fontFamily:"Rajdhani,sans-serif",fontWeight:700,marginBottom:16}}>
-        ─── Estadísticas Globales ───
+        <span className="forge-eyebrow">Estadísticas Globales</span>
       </p>
       <div className="home-stats-grid">
         <StatCard icon="friends" label="Jugadores" value={stats.active_players} delay={0} />
@@ -520,7 +520,7 @@ export function HomeRoute() {
           <div style={{marginBottom:32}}>
             <p style={{fontSize:10,letterSpacing:"0.14em",color:"#e8b84b",
               textTransform:"uppercase",fontFamily:"Rajdhani,sans-serif",fontWeight:700,marginBottom:16}}>
-              ─── Carta del Día ───
+              <span className="forge-eyebrow">Carta del Día</span>
             </p>
             <div style={{display:"grid",gridTemplateColumns:"120px 1fr",gap:20,
               background:"var(--layer-1,rgba(255,255,255,0.03))",borderRadius:14,
@@ -603,7 +603,7 @@ export function HomeRoute() {
           <div style={{marginBottom:40}}>
             <p style={{fontSize:10,letterSpacing:"0.14em",color:"#e8b84b",
               textTransform:"uppercase",fontFamily:"Rajdhani,sans-serif",fontWeight:700,marginBottom:16}}>
-              ─── Tu Estado ───
+              <span className="forge-eyebrow">Tu Estado</span>
             </p>
             <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(180px,1fr))",gap:12,marginBottom:20}}>
               {[
@@ -656,7 +656,7 @@ export function HomeRoute() {
             <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:16}}>
               <p style={{fontSize:10,letterSpacing:"0.14em",color:"#e8b84b",
                 textTransform:"uppercase",fontFamily:"Rajdhani,sans-serif",fontWeight:700,margin:0}}>
-                ─── Top Arena ───
+                <span className="forge-eyebrow">Top Arena</span>
               </p>
               <Link to="/leaderboard" style={{fontSize:12,color:"#7a7a9a",textDecoration:"none"}}>
                 Ver ranking completo
@@ -692,7 +692,7 @@ export function HomeRoute() {
           <div style={{marginBottom:40}}>
             <p style={{fontSize:10,letterSpacing:"0.14em",color:"#e8b84b",
               textTransform:"uppercase",fontFamily:"Rajdhani,sans-serif",fontWeight:700,marginBottom:16}}>
-              ─── Actividad Reciente ───
+              <span className="forge-eyebrow">Actividad Reciente</span>
             </p>
             <div style={{borderRadius:12,overflow:"hidden",
               border:"1px solid rgba(255,255,255,0.06)",
@@ -723,7 +723,7 @@ export function HomeRoute() {
         <div>
           <p style={{fontSize:10,letterSpacing:"0.14em",color:"#e8b84b",
             textTransform:"uppercase",fontFamily:"Rajdhani,sans-serif",fontWeight:700,marginBottom:16}}>
-            ─── Lo que ofrece VEXFORGE ───
+            <span className="forge-eyebrow">Lo que ofrece VEXFORGE</span>
           </p>
           <div className="features-grid">
             {FEATURES.map(f=>(

@@ -82,7 +82,7 @@ export function FriendsRoute() {
   return (
     <main style={{ maxWidth: 720, margin: "0 auto", padding: "32px 16px" }}>
       <div style={{ marginBottom: 24 }}>
-        <p style={{ fontSize: 11, letterSpacing: "0.14em", color: "#e8b84b", textTransform: "uppercase", fontFamily: "Rajdhani,sans-serif", fontWeight: 700, marginBottom: 8 }}>─── Social ───</p>
+        <p style={{ fontSize: 11, letterSpacing: "0.14em", color: "#e8b84b", textTransform: "uppercase", fontFamily: "Rajdhani,sans-serif", fontWeight: 700, marginBottom: 8 }}><span className="forge-eyebrow">Social</span></p>
         <h1 style={{ fontFamily: "Cinzel,serif", color: "#e8e8f0", fontSize: 26, margin: "0 0 4px", display: "flex", alignItems: "center", gap: 10 }}><ForgeIcon name="friends" size={24} /> Amigos</h1>
         <p style={{ color: "#666", margin: 0, fontSize: 12 }}>Conecta con otros Forjadores. Desafíalos. Crece junto a ellos.</p>
       </div>
