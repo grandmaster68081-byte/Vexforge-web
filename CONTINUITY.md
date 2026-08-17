@@ -1352,3 +1352,23 @@ Los commits anteriores siguen disponibles en Git para auditoría y reversión. L
 - Invariante confirmada: el arte servido al jugador no cambió — las 15 variantes siguen `enabled=false` y fuera de runtime; `world_bosses.image_url` intacto.
 - Estado BLOCKED conservado: QA autenticado de superficies del jugador sin sesión normal autorizada; no se usó `service_role` para suplantar jugadores ni para fabricar QA.
 - Siguiente unidad sugerida: higiene documental de las tablas internas `vexforge_*` (símbolos residuales en texto documental), sin impacto en identidad de jugador ni en resultados autoritativos.
+
+---
+
+## 2026-08-17 — VE-SEC-1-PLAYER-DECK-EXPOSURE — IMPLEMENTED_UNVERIFIED
+
+- **Tipo de sesión:** AUDITORÍA COMPLETA DE SUPABASE + IMPLEMENTACIÓN (unidad de seguridad autoritativa).
+- **Fuente canónica:** catálogo vivo del proyecto `rscuzqnfccqvltkdcdny` (`pg_policies`, `information_schema.role_table_grants`, `pg_class.reloptions`, `pg_proc`), asesor de seguridad de Supabase, código real de `main` y `VEXFORGE_PROTOCOL_V2.md`.
+- **Auditoría (estado previo):** 215 tablas en `public`, 266 políticas, 335 funciones; ninguna tabla de `public` con RLS deshabilitada. Asesor de seguridad: 209 hallazgos → 1 ERROR, 205 WARN, 3 INFO.
+- **Hallazgo ERROR:** `public.v_player_forge_formation` era una vista `SECURITY DEFINER` (`player_deck JOIN cards`) concedida a `anon` y `authenticated`. Verificación adicional: `public.player_deck` tenía la política `read_all` (`SELECT`, rol `public`, `USING true`), es decir cualquier portador de la clave publicable podía leer los mazos de todos los jugadores, tanto por la vista como por la tabla.
+- **Verificación previa a implementar:** ninguna función de `public`/`econ_sim` referencia la vista (`pg_get_functiondef` = 0 coincidencias); el único consumidor de `player_deck` en el código es `src/domains/deck/repository.ts`, siempre con filtro `.eq("player_id", <propio>)`; la escritura del mazo pasa por el RPC `save_deck` (SECURITY DEFINER, no afectado por RLS). No hay superficie que lea mazos ajenos desde el cliente.
+- **Unidad:** migración idempotente `supabase/migrations/0011_ve_sec_player_deck_view_hardening.sql`:
+  1. `ALTER VIEW public.v_player_forge_formation SET (security_invoker = on)`.
+  2. `REVOKE ALL` de la vista para `anon`; sólo `SELECT` para `authenticated`.
+  3. Sustitución de `read_all` por `player_deck_select_own` (`SELECT`, `TO authenticated`, propietario vía `players.auth_user_id = auth.uid()`), y `REVOKE ALL` de `player_deck` para `anon`.
+- **Contrato de datos:** sin cambios de esquema, ni de RPCs, triggers, economía, Storage o UI. Sólo visibilidad de lectura.
+- **Verificaciones ejecutadas:** migración aplicada vía Management API sin error; `reloptions=[security_invoker=on]`; políticas de `player_deck` = sólo `player_deck_select_own`; grants a `anon` = ninguno en tabla y vista; prueba REST real con la clave `anon` → HTTP 401 `permission denied` tanto en `player_deck` como en `v_player_forge_formation`; asesor de seguridad re-ejecutado → **0 ERROR** (205 WARN, 4 INFO).
+- **Deuda registrada:** 92 funciones `SECURITY DEFINER` ejecutables por `anon` y 112 por `authenticated` (triaje función por función, prohibido el revoke masivo); RLS activa sin políticas en `public.vexforge_system_config`, `econ_sim.events` y `econ_sim.players` (cierre por defecto, recorte de grants pendiente); protección de contraseñas filtradas desactivada en Auth (ajuste de consola del propietario).
+- **Bloqueos:** QA autenticado del mazo sigue `BLOCKED` sin sesión de jugador autorizada; no se usó `service_role` para suplantar jugadores ni para fabricar QA.
+- **Condición de reapertura:** aparición de una superficie legítima que deba leer mazos ajenos (espectador de PvP, formación pública) — se resolvería con RPC `SECURITY DEFINER` de proyección mínima, nunca reabriendo `USING true`.
+- **Siguiente unidad sugerida:** triaje priorizado de las funciones definer expuestas a `anon`.
