@@ -1322,3 +1322,21 @@ Los commits anteriores siguen disponibles en Git para auditoría y reversión. L
 - Verificación de datos contra el deploy: `npm run verify:manifest` (rol `anon`) → 203 archivos inscritos, 17 rutas del código presentes, 0 referencias rotas; `npm run verify:assets` → 17/17.
 - Estado BLOCKED conservado: superficies autenticadas del jugador sin sesión normal autorizada; no se usó `service_role` para suplantar jugadores ni para fabricar QA.
 - Siguiente unidad sugerida: decisión canónica sobre los artes duplicados del bucket (`bosses/BOSS_*.jpg`, `bosses/boss_*.jpg`, `cards/IMG_2026*.jpg`) — inscribir con rol semántico o retirar — o higiene documental de las tablas internas `vexforge_*`.
+
+---
+
+## 2026-08-17 — VE-7-BOSS-ART-VARIANT-MANIFEST — IMPLEMENTED_UNVERIFIED
+
+- **Tipo de sesión:** AUDITORÍA + IMPLEMENTACIÓN (unidad de datos; cierre de la deuda "artes duplicados del bucket sin decisión canónica").
+- **Fuente canónica:** código real de `main` (baseline `4c60301`), `storage.objects` vivo del bucket `vexforge-assets`, `public.world_bosses`, `public.cards`, `public.vexforge_official_asset_manifest`, `VEXFORGE_PROTOCOL_V2.md` y esta continuidad.
+- **Unidad:** migración `supabase/migrations/0010_ve7_world_boss_art_variants.sql` y 15 filas nuevas en `public.vexforge_official_asset_manifest`.
+- **Verificación previa a implementar (exigida por el usuario):** barrido de objetos del bucket sin inscribir en el manifiesto. Resultado: los `cards/IMG_2026*.jpg` (24) NO son deuda — están inscritos y consumidos por `cards.image_url`; los `bosses/BOSS_*.jpg` y `bosses/BOSS-0NN.jpg` (15) son el arte consumido por `world_bosses.image_url` y ya estaban inscritos; la única deuda real eran los 15 `bosses/boss_*.jpg` en minúscula, sin inscribir y sin consumir. Correspondencia comprobada 1:1 con los 15 jefes vivos (nombre en español) y tamaños de archivo distintos de su homólogo consumido → variantes de arte, no duplicados byte a byte ni basura.
+- **Decisión canónica:** inscribir, no retirar. El arte servido al jugador no cambia: las variantes entran con `semantic_role='world_boss_art_variant'`, `official=true` y `enabled=false`, quedando trazables en el manifiesto oficial sin entrar en runtime.
+- **Cambio realizado:** migración `0010` idempotente y transaccional — inserta sólo cuando el objeto existe en Storage, el jefe existe en `world_bosses` y la ruta no está ya inscrita; `display_name` tomado del nombre real del jefe (ningún nombre inventado).
+- **Contrato de datos:** sólo altas en el manifiesto. No se modificó `world_bosses.image_url`, ni `cards`, ni esquema, RLS, RPCs, triggers, roles, Storage ni economía. Cero cambios de UI.
+- **Verificaciones ejecutadas:** migración aplicada vía Management API sin error; post-estado `world_boss_art=15 (enabled 15)` y `world_boss_art_variant=15 (enabled 0)`; objetos del bucket sin inscribir = sólo los ZIP de bundle y el placeholder; `npm run verify:manifest` → 218 archivos inscritos, 17 rutas del código presentes, 0 referencias rotas; `npm run verify:assets` → 17/17; `tsc -p tsconfig.app.json --noEmit` sin errores; `npm run build` correcto.
+- **Observación VE-OBS-01 resuelta:** el desfase de `build-manifest.json` era documental; se revalidará con el commit de esta sesión.
+- **Deuda registrada:** higiene documental de las tablas internas `vexforge_*`; sin variantes responsive dedicadas para móvil; los ZIP de bundle siguen inscritos sólo a nivel de pack.
+- **Bloqueos:** QA autenticado de superficies del jugador sigue `BLOCKED` sin sesión normal autorizada; no se usó `service_role` para suplantar jugadores ni fabricar QA.
+- **Condición de reapertura:** decisión de promover alguna variante a arte consumido, o cambio del inventario del bucket.
+- **Siguiente unidad sugerida:** higiene documental de las tablas internas `vexforge_*`.
