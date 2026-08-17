@@ -1435,3 +1435,29 @@ Los commits anteriores siguen disponibles en Git para auditoría y reversión. L
 - **Bloqueos:** QA autenticado (misiones, energía, mazo inicial) sigue `BLOCKED` sin sesión de jugador autorizada; no se usó `service_role` para suplantar jugadores ni para fabricar QA.
 - **Condición de reapertura:** aparición de una superficie legítima que deba aplicar resultados de ranking o consumir energía desde el cliente — se resolvería con un RPC propietario que resuelva `auth.uid()`, nunca reabriendo estas firmas a `anon`.
 - **Siguiente acción verificable:** confirmar `build-manifest.json` público con el commit de esta sesión, HTTP 200 en las rutas críticas y navegación real sin errores de consola.
+
+---
+
+## 2026-08-17 — VE-SEC-4-GAME-RPC-SURFACE-TRIAGE — IMPLEMENTED_UNVERIFIED
+
+- **Tipo de sesión:** AUDITORÍA DE SUPABASE + IMPLEMENTACIÓN (unidad de seguridad autoritativa). **Unidad siguiente declarada por VE-SEC-3** (resto de RPC de juego expuestas al rol público).
+- **Fuente canónica:** catálogo vivo del proyecto `rscuzqnfccqvltkdcdny` (`pg_proc`, `pg_get_functiondef`, `has_function_privilege`), código real de `main` y `VEXFORGE_PROTOCOL_V2.md`. **Baseline:** commit `e1de753`.
+- **Verificación de cierre de VE-SEC-3:** `/build-manifest.json` público informa `sourceCommit=e1de7533a21935c13c9a659ffb7257d297c85ff1`, `sourceBranch=main` (coincide con `main`); rutas críticas `/`, `/pvp`, `/missions`, `/market`, `/shop`, `/account`, `/season-rankings` en HTTP 200. VE-SEC-3 pasa a **VERIFIED**.
+- **Auditoría (función por función, sin revoke masivo):** 49 funciones `SECURITY DEFINER` de `public` ejecutables por `anon`. Clasificación por consumidor real en el código:
+  - **Hallazgo autoritativo:** `claim_ai_battle_reward(uuid,text,text)` exigía sesión (`auth.uid() IS NOT NULL`) pero **no comprobaba que `p_player_id` fuera del llamador** → cualquier jugador autenticado podía acreditar VEX y escribir en `economy_ledger` a nombre de otro jugador, respetando sólo el tope diario de la víctima.
+  - `vexforge_start_guild_war` ya valida admin por `auth.uid()`; la exposición a `anon` era superficie inútil.
+  - 15 funciones de trigger (`trg_fn_*`, `fn_init_player_progress`, `fn_notify_mission_complete`, `handle_new_auth_user`, `process_referral_first_pack_reward_trigger`) se ejecutan como propietario de la tabla: no requieren `EXECUTE` para ningún rol de API.
+  - Lecturas públicas legítimas consumidas por rutas anónimas: `get_home_stats` (`/`), `get_leaderboard` (`/leaderboard`, `/pvp`), `get_public_player_names` y `get_public_pvp_rankings` (`/season-rankings`) → se conservan para `anon`.
+  - `get_world_boss_progress` no tiene ningún llamador cliente → sólo `authenticated`.
+- **Cambio:** migración idempotente y transaccional `supabase/migrations/0014_ve_sec4_game_rpc_surface_triage.sql`:
+  1. `claim_ai_battle_reward` redefinida con vínculo de identidad: resuelve el jugador por `players.auth_user_id = auth.uid()` y devuelve `identity_mismatch` si no coincide con `p_player_id`. Recompensas, topes, referencia idempotente y contrato de retorno **sin cambios**.
+  2. Grupo A (funciones de trigger): `REVOKE ALL ... FROM PUBLIC, anon, authenticated` + `GRANT EXECUTE` sólo a `service_role`.
+  3. Grupo B (31 RPC de jugador): `REVOKE ALL ... FROM PUBLIC, anon` + `GRANT EXECUTE` a `authenticated` y `service_role`.
+  4. Grupo C (4 lecturas públicas): `GRANT EXECUTE` explícito a `anon`, `authenticated` y `service_role`.
+- **Contrato de datos:** sin cambios de esquema, tablas, RLS, triggers, Storage, economía ni UI. Ningún cambio en la firma ni en la respuesta de las RPC; el cliente ya envía su propio `playerId`.
+- **Verificaciones ejecutadas:** migración aplicada vía Management API sin error; definer ejecutables por `anon` **49 → 4** (sólo las lecturas públicas); matriz confirmada (`claim_ai_battle_reward`, `save_deck`, `sync_player_energy`, `vexforge_start_guild_war`: anon=false / authenticated=true; `trg_fn_*`: anon=false / authenticated=false); prueba REST real con la clave publicable → `claim_ai_battle_reward`, `save_deck`, `sync_player_energy`, `check_my_achievements` y `vexforge_get_my_deposits` responden **401 `permission denied`**, mientras `get_home_stats`, `get_leaderboard` y `get_public_player_names` siguen en **200**; `npm ci --ignore-scripts`, `npx tsc --noEmit -p tsconfig.app.json` y `npm run build` sin errores.
+- **Deuda registrada:** quedan definer de progresión resueltas por `auth.uid()` bajo el rol `authenticated` (triaje de menor riesgo); RLS activa sin políticas en `public.vexforge_system_config`, `econ_sim.events` y `econ_sim.players`; protección de contraseñas filtradas desactivada en Auth (consola del propietario); higiene documental de tablas `vexforge_*`; símbolos Unicode residuales en `NotFoundRoute`, `PvpRoute`, `InventoryRoute` y motores de `src/lib`.
+- **Bloqueos:** QA autenticado (reclamo de recompensa IA, mazo, energía) sigue `BLOCKED` sin sesión de jugador autorizada; no se usó `service_role` para suplantar jugadores ni para fabricar QA.
+- **Condición de reapertura:** aparición de una superficie legítima que deba acreditar recompensas a un tercero (herramienta administrativa) — se resolvería con un RPC propietario con verificación de rol admin, nunca reabriendo `p_player_id` libre a `authenticated`.
+- **Siguiente unidad sugerida:** cierre por defecto de RLS sin políticas en `public.vexforge_system_config`, `econ_sim.events` y `econ_sim.players` con recorte de grants.
+- **Siguiente acción verificable:** confirmar `build-manifest.json` público con el commit de esta sesión y HTTP 200 en las rutas críticas.
