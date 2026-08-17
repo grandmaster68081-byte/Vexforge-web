@@ -1,4 +1,4 @@
-## 2026-08-17 — VE-6-LEADERBOARD-SURFACE-BACKGROUND — IMPLEMENTED_UNVERIFIED
+## 2026-08-17 — VE-6-LEADERBOARD-SURFACE-BACKGROUND — OPERATIONAL
 
 - **Tipo de sesión:** IMPLEMENTACIÓN (cierre de deuda declarada en VE-4). **Fuente canónica:** código real de `main`, `src/lib/assetManifest.ts`, Storage oficial `vexforge-assets` y deploy público.
 - **Unidad:** `src/routes/LeaderboardRoute.tsx` — la superficie `leaderboard` consume su fondo canónico `backgrounds/bg_leaderboard.jpg`.
@@ -13,6 +13,18 @@
 - **Bloqueos:** QA autenticado de superficies del jugador sigue `BLOCKED` sin sesión normal autorizada.
 - **Condición de reapertura:** decisión canónica distinta de fondo para `leaderboard`, cambio del inventario del bucket o fallo de `verify:assets`.
 - **Siguiente acción verificable:** confirmar `build-manifest.json` público con el commit de esta sesión y navegación real en `/leaderboard` con el fondo visible, sin errores de consola ni respuestas >= 400.
+
+---
+
+### Cierre operativo — VE-6-LEADERBOARD-SURFACE-BACKGROUND
+
+- **Estado actual:** `OPERATIONAL` para la capa de fondos de superficie; nivel Q4. Todas las superficies declaradas en `SURFACE_BACKGROUND` consumen ya su fondo canónico.
+- **Commit publicado:** `9869fe67eb8c38b525459ee033b9490a639b9433` en `main`.
+- **Evidencia pública:** `/build-manifest.json` informa `sourceCommit=9869fe67eb8c38b525459ee033b9490a639b9433`, `sourceBranch=main`.
+- **Navegación real en Chromium (1280x1800) sobre el deploy público:** `/leaderboard`, `/season-rankings`, `/raids`, `/world-bosses`, `/achievements` y `/` — 0 errores de consola, 0 `pageerror`, 0 respuestas HTTP >= 400. Fondo efectivamente computado: `bg_leaderboard.jpg` en `/leaderboard` y `/season-rankings`, `bg_bosses.jpg` en `/raids` y `/world-bosses`, `bg_achievements.jpg` en `/achievements`.
+- **Cierre heredado:** VE-1-EYEBROW-SEPARATOR-ICON-LANGUAGE queda `OPERATIONAL` con la evidencia pública ya registrada en su entrada (commit `5bf3e67`); no quedaba cambio de código pendiente, sólo faltaba el registro de cierre.
+- **Estado BLOCKED conservado:** QA autenticado de superficies del jugador sin sesión normal autorizada; no se usó `service_role` para suplantar jugadores ni fabricar QA.
+- **Siguiente unidad sugerida:** decisión canónica sobre los artes duplicados del bucket (`bosses/BOSS_*.jpg`, `bosses/boss_*.jpg`, `cards/IMG_2026*.jpg`) para su inscripción en el manifiesto, o higiene documental de las tablas internas `vexforge_*`.
 
 ---
 
