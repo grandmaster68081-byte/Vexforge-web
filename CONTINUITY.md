@@ -1404,3 +1404,34 @@ Los commits anteriores siguen disponibles en Git para auditoría y reversión. L
 - **Bloqueos:** QA autenticado (panel de admin real, logros del jugador) sigue `BLOCKED` sin sesión de jugador/admin autorizada; no se usó `service_role` para suplantar jugadores ni para fabricar QA.
 - **Condición de reapertura:** aparición de una superficie legítima que deba conceder logros desde el cliente (se resolvería con un RPC propietario que resuelva `auth.uid()`, nunca reabriendo `grant_achievement` a `anon`), o cambio del modelo de roles administrativos.
 - **Siguiente acción verificable:** confirmar `build-manifest.json` público con el commit de esta sesión, HTTP 200 en las rutas críticas y navegación real sin errores de consola; después abrir el siguiente lote de triaje definer.
+
+### Cierre operativo — VE-SEC-2-DEFINER-EXPOSURE-TRIAGE
+
+- Estado de la unidad: IMPLEMENTED_UNVERIFIED → VERIFIED. Estado del entorno: OPERATIONAL.
+- Evidencia de publicación: `/build-manifest.json` público informa `sourceCommit=a1ae75f13fdcdf63b0256a606ff5b2e881d55220`, `sourceBranch=main` — deploy y `main` coinciden.
+- Rutas verificadas HTTP 200 (17): `/`, `/achievements`, `/profile`, `/economy`, `/market`, `/shop`, `/packs`, `/missions`, `/cards`, `/pvp`, `/battle`, `/inventory`, `/leaderboard`, `/deck-builder`, `/relics`, `/quests`, `/settings`.
+- Runtime sobre el sitio publicado: navegación headless con espera a `networkidle` en 10 rutas — 0 errores de consola, 0 `pageerror`, 0 respuestas HTTP >= 400.
+- Verificación con la clave publicable real: `grant_achievement` → 401 `permission denied`, `fn_check_and_grant_achievements` → 401, `vexforge_admin_get_overview` → 401, `player_deck` y `v_player_forge_formation` → 401; la ruta legítima `check_my_achievements` sigue en 204.
+
+---
+
+## 2026-08-17 — VE-SEC-3-DEFINER-PLAYER-ID-TRIAGE — IMPLEMENTED_UNVERIFIED
+
+- **Tipo de sesión:** AUDITORÍA DE SUPABASE + IMPLEMENTACIÓN (unidad de seguridad autoritativa). **Unidad siguiente declarada por VE-SEC-2** (segundo lote de triaje definer: funciones que aceptan `player_id` explícito).
+- **Fuente canónica:** catálogo vivo del proyecto `rscuzqnfccqvltkdcdny` (`pg_proc`, `pg_get_functiondef`, `has_function_privilege`), asesor de seguridad de Supabase y código real de `main`.
+- **Estado inicial:** 77 funciones `SECURITY DEFINER` de `public` ejecutables por `anon`. **Estado actual:** `IMPLEMENTED_UNVERIFIED`. **Baseline:** commit `a1ae75f`.
+- **Auditoría (función por función, sin revoke masivo):**
+  - `apply_ranked_result(uuid,uuid,uuid,text)` — definer **sin ninguna comprobación de identidad**: recibe ganador y perdedor arbitrarios y escribe MMR, tier, promoción/descenso en `pvp_rankings`. Era ejecutable con la clave publicable → fabricación de resultados de ranking. Ningún llamador en la base (`prosrc`) ni en el código cliente.
+  - `vexf_consume_energy(uuid,integer)` — definer sin comprobación de identidad: descuenta energía de cualquier jugador. Su único llamador interno es `execute_mission` (definer, owner `postgres`), que no depende de estos grants.
+  - `initialize_player_full` (sobrecargas `uuid,text,text` y `text,text,text`) — aprovisiona jugador, progreso, wallet, 8 slots de mazo y 16 cartas iniciales para un `auth_id` arbitrario. No la invoca ni el cliente (usa `ensure_player_row`) ni ninguna función de la base.
+  - `refresh_player_energy(uuid)` — definer con `assert_caller_is_player(p_player_id)`; correcta, pero la superficie `anon` es innecesaria (su llamador real es `sync_player_energy`, definer owner `postgres`).
+  - `ensure_player_row(text,text)`, `grant_starter_relics()`, `vexforge_assign_starter_deck()` — resuelven identidad por `auth.uid()` y sólo se invocan desde sesión iniciada (`AuthProvider`, `relics/repository`, `StarterDeckReveal`): la exposición a `anon` no aporta nada.
+- **Cambio:** migración idempotente `supabase/migrations/0013_ve_sec3_definer_player_id_triage.sql`:
+  1. Grupo A (`apply_ranked_result`, `vexf_consume_energy`, ambas sobrecargas de `initialize_player_full`): `REVOKE ALL ... FROM PUBLIC, anon, authenticated` + `GRANT EXECUTE` sólo a `service_role`.
+  2. Grupo B (`refresh_player_energy`, `ensure_player_row`, `grant_starter_relics`, `vexforge_assign_starter_deck`): `REVOKE ALL ... FROM PUBLIC, anon` + `GRANT EXECUTE` a `authenticated` y `service_role`.
+- **Contrato de datos:** sin cambios de esquema, tablas, cuerpos de RPC, triggers, RLS, Storage, economía ni UI. Sólo privilegios de ejecución.
+- **Verificaciones ejecutadas:** migración aplicada vía Management API sin error; matriz de privilegios confirmada (Grupo A: anon=false, authenticated=false; Grupo B: anon=false, authenticated=true); definer ejecutables por `anon` **77 → 70**; prueba REST real con la clave publicable → `apply_ranked_result`, `vexf_consume_energy`, `refresh_player_energy`, `ensure_player_row`, `grant_starter_relics` y `vexforge_assign_starter_deck` responden **401 `permission denied`** (`initialize_player_full` responde 300 por ambigüedad de sobrecarga en PostgREST, resuelta antes del chequeo de privilegios; el catálogo confirma anon=false en ambas firmas); asesor de seguridad: **0 ERROR**, WARN 188 → 178, INFO 4; `npm ci --ignore-scripts`, `npx tsc --noEmit -p tsconfig.app.json` y `npm run build` sin errores.
+- **Deuda registrada:** quedan **70** funciones `SECURITY DEFINER` ejecutables por `anon` (mayoría `trg_fn_*` de trigger y progresión resuelta por `auth.uid()`); siguiente lote sugerido: `execute_mission` y `sync_player_energy` y el resto de RPCs de juego expuestas al rol público. Siguen pendientes: RLS activa sin políticas en `public.vexforge_system_config`, `econ_sim.events` y `econ_sim.players`; protección de contraseñas filtradas desactivada en Auth (consola del propietario); higiene documental de tablas `vexforge_*`.
+- **Bloqueos:** QA autenticado (misiones, energía, mazo inicial) sigue `BLOCKED` sin sesión de jugador autorizada; no se usó `service_role` para suplantar jugadores ni para fabricar QA.
+- **Condición de reapertura:** aparición de una superficie legítima que deba aplicar resultados de ranking o consumir energía desde el cliente — se resolvería con un RPC propietario que resuelva `auth.uid()`, nunca reabriendo estas firmas a `anon`.
+- **Siguiente acción verificable:** confirmar `build-manifest.json` público con el commit de esta sesión, HTTP 200 en las rutas críticas y navegación real sin errores de consola.
