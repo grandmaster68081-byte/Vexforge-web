@@ -1,3 +1,21 @@
+## 2026-08-17 — VE-6-LEADERBOARD-SURFACE-BACKGROUND — IMPLEMENTED_UNVERIFIED
+
+- **Tipo de sesión:** IMPLEMENTACIÓN (cierre de deuda declarada en VE-4). **Fuente canónica:** código real de `main`, `src/lib/assetManifest.ts`, Storage oficial `vexforge-assets` y deploy público.
+- **Unidad:** `src/routes/LeaderboardRoute.tsx` — la superficie `leaderboard` consume su fondo canónico `backgrounds/bg_leaderboard.jpg`.
+- **Estado inicial:** deuda de VE-4: el asset `bg_leaderboard.jpg` sólo estaba cableado en `SeasonRankingsRoute`; `/leaderboard` renderizaba sin fondo de superficie. **Estado actual:** `IMPLEMENTED_UNVERIFIED`. **Nivel Q:** Q3 → Q4 en la capa de fondos de superficie.
+- **Baseline:** commit `3607854b` (`main`).
+- **Cambio:** `LeaderboardRoute` importa `surfaceBackground("leaderboard")` y envuelve su `<main>` en el mismo tratamiento canónico ya usado por `SeasonRankingsRoute` (capa de fondo `cover`/`center`/`fixed` sobre `#0a0a12` + velo `rgba(10,10,18,0.87)`). No se creó ni sustituyó ningún asset: se reutiliza el fondo propio publicado en VE-4.
+- **Contrato de datos:** ninguno. No se tocó esquema, tablas, RPCs, RLS, triggers, roles, Storage ni datos.
+- **Alcance no modificado:** autenticación, economía, energía, wallet, MMR, temporadas, recompensas, evolución, navegación y cualquier resultado autoritativo. Sesión exclusivamente de presentación; no se usó `service_role`.
+- **Accesibilidad y rendimiento:** fondo decorativo por CSS (sin texto alternativo requerido); ningún texto, control ni orden de foco cambia; sin animación (reduced motion no afectado); 0 peticiones nuevas de imagen en el conjunto del sitio (el asset ya se sirve en `/season-rankings` y queda cacheado); el velo conserva el contraste previo del contenido.
+- **Verificaciones ejecutadas:** `npm ci --ignore-scripts`, `npx tsc --noEmit -p tsconfig.app.json` sin errores, `npm run build` correcto, `npm run verify:assets` → 17/17 disponibles en Storage.
+- **Deuda registrada:** artes duplicados del bucket sin rol semántico canónico; higiene documental de las tablas internas `vexforge_*`; sin variantes responsive dedicadas para móvil; glyphs residuales en comentarios y datos internos de motores.
+- **Bloqueos:** QA autenticado de superficies del jugador sigue `BLOCKED` sin sesión normal autorizada.
+- **Condición de reapertura:** decisión canónica distinta de fondo para `leaderboard`, cambio del inventario del bucket o fallo de `verify:assets`.
+- **Siguiente acción verificable:** confirmar `build-manifest.json` público con el commit de esta sesión y navegación real en `/leaderboard` con el fondo visible, sin errores de consola ni respuestas >= 400.
+
+---
+
 ## 2026-08-17 — VE-1-EYEBROW-SEPARATOR-ICON-LANGUAGE — IMPLEMENTED_UNVERIFIED
 
 - **Tipo de sesión:** REFINAMIENTO / IMPLEMENTACIÓN. **Fuente canónica:** código real de `main`, `ForgeIcon`, `src/styles.css`, Supabase vivo y deploy público.

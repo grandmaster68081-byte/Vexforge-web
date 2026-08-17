@@ -6,6 +6,9 @@ import { ErrorState } from "../shared/components/ErrorState";
 import { supabase } from "../lib/supabase";
 import { GuestDiscoveryBanner } from "../shared/components/GuestDiscoveryBanner";
 import { ForgeIcon, type ForgeIconName } from "../shared/components/ForgeIcon";
+import { surfaceBackground } from "../lib/assetManifest";
+
+const BG_URL = surfaceBackground("leaderboard");
 
 interface RankTier { name: string; color: string; icon: ForgeIconName; }
 
@@ -59,6 +62,15 @@ export function LeaderboardRoute() {
   }, []);
 
   return (
+    <div style={{
+      minHeight: "100vh",
+      background: "#0a0a12",
+      backgroundImage: BG_URL ? `url(${BG_URL})` : undefined,
+      backgroundSize: "cover",
+      backgroundPosition: "center",
+      backgroundAttachment: "fixed",
+    }}>
+    <div style={{ minHeight: "100vh", background: "rgba(10,10,18,0.87)" }}>
     <main style={{ maxWidth: 900, margin: "0 auto", padding: "32px 16px" }}>
       {!isAuth && <GuestDiscoveryBanner />}
       {/* Header */}
@@ -166,5 +178,7 @@ export function LeaderboardRoute() {
         </div>
       )}
     </main>
+    </div>
+    </div>
   );
 }
