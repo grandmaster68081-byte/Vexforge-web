@@ -1490,3 +1490,29 @@ Los commits anteriores siguen disponibles en Git para auditoría y reversión. L
 - **Condición de reapertura:** aparición de una superficie legítima que deba leer configuración del sistema o el legado de iconos desde el cliente — se resolvería con una RPC definer propietaria o una política explícita mínima, nunca reabriendo `ALL` a `anon`.
 - **Siguiente unidad sugerida:** triaje de las definer de progresión aún ejecutables por `authenticated` sin vínculo de identidad, o higiene documental de las tablas `vexforge_*`.
 - **Siguiente acción verificable:** confirmar `build-manifest.json` público con el commit de esta sesión y HTTP 200 en las rutas críticas.
+
+---
+
+## 2026-08-17 — VE-SEC-6-AUTHENTICATED-DEFINER-IDENTITY-BINDING — IMPLEMENTED_UNVERIFIED
+
+- **Tipo de sesión:** AUDITORÍA DE SUPABASE + IMPLEMENTACIÓN (unidad de seguridad autoritativa). **Unidad siguiente declarada por VE-SEC-5** (triaje de las definer de progresión ejecutables por `authenticated` sin vínculo de identidad).
+- **Fuente canónica:** catálogo vivo del proyecto `rscuzqnfccqvltkdcdny` (`pg_proc`, `pg_get_functiondef`, `has_function_privilege`), REST real con la clave publicable y código real de `main`. **Baseline:** commit `3525872`.
+- **Verificación de cierre de VE-SEC-5:** `/build-manifest.json` público informa `sourceCommit=3525872904efd43eb6d2bafb4e5059fc498192f2`, `sourceBranch=main` (coincide con `main`). VE-SEC-5 pasa a **VERIFIED**.
+- **Auditoría:** 124 funciones `SECURITY DEFINER` en `public`. De las ejecutables por `authenticated` con parámetro de jugador, 20 candidatas; 13 ya vinculaban identidad mediante el helper canónico `public.assert_caller_is_player` (hallazgo que corrige el heurístico previo basado sólo en `auth.uid()` literal). **Sin vínculo real: 7.**
+  - **Hallazgo autoritativo:** `vexforge_evolve_card(p_card_id, p_player_id)` — destruye copias de `player_cards` y debita `player_wallet` del `p_player_id` recibido sin comprobar propiedad → cualquier jugador autenticado podía evolucionar/consumir cartas y VEX de otro jugador.
+  - `get_season_progress` no sólo lee: **inserta** la fila de `player_season_pass` del jugador indicado.
+  - `get_player_stats` y `get_player_rank` exponían estadísticas privadas de perfil de terceros (mercado, packs, misiones, MMR, escudos) a cualquier autenticado.
+  - `vexforge_grant_relic` ya exige admin de control (`vexforge_is_control_admin`), y `get_player_display_names` tiene equivalente público (`get_public_player_names`): **ningún consumidor** en cliente ni en base de datos.
+- **Cambio:** migración idempotente y transaccional `supabase/migrations/0016_ve_sec6_authenticated_definer_identity_binding.sql`:
+  1. `vexforge_evolve_card`: comprobación de identidad al inicio; como el bloque tiene `EXCEPTION WHEN OTHERS`, el rechazo se devuelve **dentro del contrato jsonb existente** (`ok=false`, `reason='identity_mismatch'`) en vez de lanzar excepción. Costes, requisitos, borrados y retorno **sin cambios**.
+  2. `get_season_progress`, `get_player_stats`, `get_player_rank`: `PERFORM public.assert_caller_is_player(p_player_id)` como primera sentencia; cuerpos y contratos idénticos.
+  3. `vexforge_grant_relic` y `get_player_display_names`: `REVOKE ALL ... FROM PUBLIC, anon, authenticated` + `GRANT EXECUTE` sólo a `service_role`.
+  4. Reafirmación explícita de privilegios (`anon` fuera, `authenticated`+`service_role` dentro) en las 4 funciones redefinidas.
+- **Contrato de datos:** sin cambios de esquema, tablas, columnas, datos, políticas, triggers, Storage, economía ni UI. Ninguna firma ni forma de respuesta cambia; el cliente ya envía su propio `playerId` en las 4 superficies afectadas (`profile`, `season`, `evolution`).
+- **Alcance no modificado:** autenticación, energía, wallet, MMR, temporadas, recompensas, misiones, navegación y resultados autoritativos. No se usó `service_role` para suplantar jugadores ni fabricar QA.
+- **Verificaciones ejecutadas:** migración aplicada vía Management API sin error; catálogo posterior → `vexforge_evolve_card`, `get_player_stats`, `get_player_rank`, `get_season_progress` con vínculo de identidad y `anon=false`; `vexforge_grant_relic` y `get_player_display_names` con `anon=false`/`authenticated=false`; definer con parámetro de jugador **sin vínculo** bajo `authenticated`: **7 → 1**, y la restante es `get_public_player_names` (lectura pública declarada de `/season-rankings`). REST real con clave publicable → las 6 funciones responden **401 `42501 permission denied`**, mientras `get_home_stats` y `get_leaderboard` siguen **200**. `npm ci --ignore-scripts`, `npx tsc --noEmit -p tsconfig.app.json` y `npm run verify:build` sin errores.
+- **Deuda registrada:** protección de contraseñas filtradas desactivada en Auth (consola del propietario, fuera de alcance del agente); higiene documental de tablas internas `vexforge_*`; glyphs Unicode en datos internos de motores; artes duplicados del bucket sin decisión canónica; revisión de las definer sin parámetro de jugador que resuelven estado por `auth.uid()` (riesgo bajo, aún sin auditar una a una).
+- **Bloqueos:** QA autenticado (evolución real, pase de temporada, perfil) sigue `BLOCKED` sin sesión de jugador autorizada.
+- **Condición de reapertura:** aparición de una superficie legítima de perfil público de terceros (ver estadísticas o rango de otro jugador) — se resolvería con una RPC pública de sólo lectura con campos recortados, nunca reabriendo `p_player_id` libre en las funciones privadas.
+- **Siguiente unidad sugerida:** auditoría de las definer restantes sin parámetro de jugador bajo `authenticated`, o higiene documental de las tablas internas `vexforge_*`.
+- **Siguiente acción verificable:** confirmar `build-manifest.json` público con el commit de esta sesión y HTTP 200 en las rutas críticas.
