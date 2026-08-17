@@ -1,10 +1,13 @@
-## 2026-08-17 — VE-1-UI-IDENTITY-GUARD — IMPLEMENTED_UNVERIFIED
+## 2026-08-17 — VE-1-UI-IDENTITY-GUARD — OPERATIONAL
 
 - Tipo de sesión: IMPLEMENTACIÓN / QA estática. Fuente canónica: código real de main, Regla de Cero Genéricos y superficies publicadas.
-- Estado inicial: los símbolos Unicode encontrados en el barrido actual estaban en comentarios, pero no existía un guard que impidiera regresiones visibles. Estado actual: IMPLEMENTED_UNVERIFIED. Nivel: Q2 → Q3.
+- Estado inicial: los símbolos Unicode encontrados en el barrido actual estaban en comentarios, pero no existía un guard que impidiera regresiones visibles. Estado actual: OPERATIONAL. Nivel: Q3.
 - Cambio: se añade scripts/verify-ui-identity.mjs y el comando npm run verify:ui-identity. El guard recorre todos los archivos TypeScript/TSX, elimina comentarios y rechaza emojis, flechas, bloques de dibujo y símbolos Unicode genéricos que puedan llegar a la interfaz.
-- Evidencia preliminar: 188 archivos de src revisados; 0 violaciones. No se modificaron rutas, componentes, datos, RPCs, RLS, autenticación, Storage ni resultados autoritativos.
-- Siguiente acción verificable: ejecutar build y guard oficiales, confirmar que main y /build-manifest.json coinciden y cerrar la unidad solo después de comprobar las rutas públicas sin regresiones.
+- Evidencia: 188 archivos de src revisados; 0 violaciones. npm run verify:build, npm run verify:ui-identity, npm run verify:identity-data y npm run verify:assets finalizaron correctamente; Storage confirmó 17/17 assets.
+- Evidencia pública: /build-manifest.json sirve sourceCommit=add620f21f17653ba467f8874e28a372d1852f9e y sourceBranch=main; /, /index.html, /cards, /achievements y /build-manifest.json respondieron HTTP 200.
+- Alcance no modificado: rutas, componentes visuales, datos, RPCs, RLS, autenticación, Storage y resultados autoritativos no fueron alterados; el cambio añade únicamente una verificación preventiva.
+- Deuda restante: el QA interactivo responsive y autenticado continúa BLOCKED sin una sesión normal autorizada de jugador; no se suplanta con privilegios administrativos.
+- Condición de reapertura: cualquier violación nueva fuera de comentarios, cambio de alcance de la Regla de Cero Genéricos o discrepancia entre main y build-manifest.json.
 
 ## 2026-08-17 — VE-8-IDENTITY-DATA-GUARD — OPERATIONAL
 
