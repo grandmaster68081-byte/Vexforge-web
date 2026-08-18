@@ -8,7 +8,7 @@ import type { PlayerActiveBoost } from "../domains/cosmetics/repository";
 import { getRank } from "../lib/rankUtils";
 import { SessionSummaryToast } from "../shared/components/SessionSummaryToast";
 import { ForgeIcon, type ForgeIconName } from "../shared/components/ForgeIcon";
-import { storageAsset } from "../lib/assetManifest";
+import { FACTION_ICON, storageAsset } from "../lib/assetManifest";
 
 // ─── Animated counter — counts up from 0 to target when mounted ─────────────
 function useCountUp(target: number, duration = 1200, active = true): number {
@@ -73,13 +73,8 @@ function getRankTier(mmr:number) {
 
 const FACTION_COLORS = ["#e84040","#7b4fd4","#3dc96b","#e8b84b"];
 
-// AI-generated faction emblems (transparent PNG, public/factions/)
-const FACTION_EMBLEMS: Record<string, string> = {
-  Guerrero: "/factions/guerrero.png",
-  Mago:     "/factions/mago.png",
-  Pícaro:   "/factions/picaro.png",
-  Paladín:  "/factions/paladin.png",
-};
+// Emblemas oficiales de facción inscritos en el manifiesto (faction_icon).
+const FACTION_EMBLEMS: Record<string, string> = FACTION_ICON;
 // Ordered array for positional use
 const FACTION_EMBLEM_LIST = [
   FACTION_EMBLEMS.Guerrero,
@@ -110,7 +105,7 @@ function Particles() {
           animationDuration:`${(i%4)+5}s`, animationDelay:`${i*0.6}s`,
         }}><ForgeIcon name="spark" size={(i % 4) + 8} strokeWidth={1.3} style={{ color: FACTION_COLORS[i % 4], filter: `drop-shadow(0 0 8px ${FACTION_COLORS[i % 4]})` }} /></div>
       ))}
-      {/* Faction icon particles — orbit slowly (AI-generated emblems) */}
+      {/* Faction icon particles — orbit slowly (emblemas oficiales del manifiesto) */}
       {Array.from({length:4}).map((_,i)=>(
         <div key={`fi${i}`} style={{
           position:'absolute',
@@ -311,7 +306,7 @@ export function HomeRoute() {
         <div className="vex-rune-ring vex-rune-ring-1" />
         <div className="vex-rune-ring vex-rune-ring-2" />
         <div className="vex-rune-ring vex-rune-ring-3" />
-        {/* Floating faction badges — cinematic depth layer (AI-generated emblems) */}
+        {/* Floating faction badges — cinematic depth layer (emblemas oficiales del manifiesto) */}
         {[
           { src:FACTION_EMBLEMS.Guerrero, glow:"rgba(232,64,64,0.7)",  top:"18%", left:"8%",  dur:"4.2s", delay:"0s" },
           { src:FACTION_EMBLEMS.Mago,     glow:"rgba(91,139,245,0.7)",  top:"65%", left:"6%",  dur:"5.1s", delay:"-1.5s" },
