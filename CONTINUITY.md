@@ -1,3 +1,19 @@
+## 2026-08-18 — VE-13-MANIFEST-GUARD-COST-CLOSURE — OPERATIONAL
+
+- Tipo de sesión: Implementación de guarda + registro de decisión (sin cambio de superficie ni de dato autoritativo). Fuentes canónicas: `scripts/verify-manifest.mjs`, `vexforge_official_asset_manifest`, Storage oficial `vexforge-assets`, código de `main`.
+- Motivo: cerrar la deuda arrastrada desde `VE-9` y repetida en `VE-10`, `VE-11` y `VE-12` — la guarda global del manifiesto quedaba fuera de `npm run verify:all` únicamente por coste de ejecución.
+- Auditoría: la guarda comprobaba las 218 filas de archivo del manifiesto contra el Storage público con peticiones HEAD estrictamente en serie; medición previa 2 min 11 s (132 s). Un primer intento con concurrencia 12 provocó 53 respuestas HTTP 429 del Storage público, falsos positivos de "objeto ausente": el límite de peticiones es la restricción real, no el ancho de banda.
+- Decisión canónica registrada: la verificación global del manifiesto es obligatoria en `verify:all` y su coste se reduce sin recortar cobertura. Las 218 comprobaciones HEAD se ejecutan con concurrencia acotada de 4 y reintento con espera creciente ante 429 o 5xx; sólo la última respuesta fallida cuenta como fallo. Cobertura y criterio de fallo idénticos: toda ruta declarada en `src/lib/assetManifest.ts` inscrita, toda fila de archivo presente en Storage, todo arte de carta y de jefe consumido inscrito.
+- Cambios: `scripts/verify-manifest.mjs` (concurrencia acotada, `headWithRetry`, tiempo reportado en la salida), `package.json` (`verify:manifest` encadenado en `verify:all` antes de `verify:assets`), `supabase/migrations/0023_ve13_manifest_guard_cost_closure.sql` aplicado a Supabase vivo (`vexforge_project_decisions.VE-13-MANIFEST-GUARD-COST-CLOSURE`, status `official`, verificado en catálogo).
+- Alcance no modificado: no se tocó arte servido, Storage, esquema de juego, RLS, RPCs, economía ni resultados autoritativos. No se usó `service_role` para dato de juego.
+- Evidencia: `npm run verify:manifest` → 218 archivos inscritos, 21 rutas del código presentes, 0 referencias rotas, 218 HEAD en 53–59 s (antes 132 s). `npm run verify:all` verde de extremo a extremo (typecheck, build + verify-build, ui-identity, identity-data 9 tablas/274 filas/0 violaciones, boss-art 15+15, card-art 127, surface-art 29, residual-art 51/32, manifest 218, assets 21/21).
+- Estado: NOT_STARTED → OPERATIONAL. Nivel Q: Q3 (manifiesto oficial bajo guarda obligatoria en la verificación completa).
+- Deuda restante: publicación de `.github/workflows/verify.yml` pendiente de un `GITHUB_PAT` con scope `workflow`; sin cron autoritativo ni Edge Functions; QA autenticado `BLOCKED` por ausencia de sesión de jugador autorizada. La deuda "verify:manifest fuera de verify:all por coste" queda CERRADA.
+- Condición de reapertura: crecimiento del manifiesto que vuelva a hacer inviable la guarda en `verify:all`, o cambio de los límites de petición del Storage público.
+- Siguiente acción verificable: auditar el arte en reserva (29 residuales + 11 de superficie) frente a las superficies sin arte propio (marcos de carta, iconos de recompensa, progresión y tutorial) y decidir promociones con guarda.
+
+---
+
 ## 2026-08-18 — VE-12-RESIDUAL-ART-PROVENANCE — OPERATIONAL
 
 - Tipo de sesión: Auditoría + Implementación (dato público, código de superficie y guarda automatizada). Fuentes canónicas: `vexforge_official_asset_manifest`, Storage oficial `vexforge-assets`, código de `main`.

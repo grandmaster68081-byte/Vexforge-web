@@ -49,10 +49,44 @@ for (const path of codePaths) {
   if (!registered.has(path)) failures.push(`asset del código sin inscribir en el manifiesto: ${path}`);
 }
 
-for (const row of files) {
-  const res = await fetch(`${STORAGE_BASE}/${row.internal_path}`, { method: "HEAD" });
-  if (!res.ok) failures.push(`fila del manifiesto sin objeto en Storage: ${row.internal_path} -> HTTP ${res.status}`);
+// VE-13: las 218 comprobaciones HEAD se ejecutaban en serie (~130 s), coste que
+// mantuvo esta guarda fuera de `verify:all`. Se ejecutan ahora con concurrencia
+// acotada, misma cobertura y mismo criterio de fallo.
+const HEAD_CONCURRENCY = 4;
+const HEAD_RETRIES = 4;
+
+const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+// El Storage publico responde 429 cuando se le pide demasiado a la vez: un 429
+// no es un objeto ausente, asi que se reintenta con espera creciente y solo se
+// declara fallo si la ultima respuesta sigue sin ser correcta.
+async function headWithRetry(url) {
+  let res;
+  for (let attempt = 0; attempt < HEAD_RETRIES; attempt++) {
+    res = await fetch(url, { method: "HEAD" });
+    if (res.ok || (res.status !== 429 && res.status < 500)) return res;
+    await sleep(500 * 2 ** attempt);
+  }
+  return res;
 }
+
+async function mapWithConcurrency(items, limit, worker) {
+  let cursor = 0;
+  const runners = Array.from({ length: Math.min(limit, items.length) }, async () => {
+    while (cursor < items.length) {
+      const index = cursor++;
+      await worker(items[index]);
+    }
+  });
+  await Promise.all(runners);
+}
+
+const headStartedAt = Date.now();
+await mapWithConcurrency(files, HEAD_CONCURRENCY, async (row) => {
+  const res = await headWithRetry(`${STORAGE_BASE}/${row.internal_path}`);
+  if (!res.ok) failures.push(`fila del manifiesto sin objeto en Storage: ${row.internal_path} -> HTTP ${res.status}`);
+});
+const headSeconds = ((Date.now() - headStartedAt) / 1000).toFixed(1);
 
 const pathOf = (url) => (typeof url === "string" ? url.split("/vexforge-assets/")[1] : undefined);
 
@@ -74,5 +108,5 @@ if (failures.length > 0) {
 }
 
 console.log(
-  `Manifiesto oficial verificado: ${files.length} archivos inscritos, ${codePaths.length} rutas del código presentes, 0 referencias rotas.`,
+  `Manifiesto oficial verificado: ${files.length} archivos inscritos, ${codePaths.length} rutas del código presentes, 0 referencias rotas (${files.length} HEAD en ${headSeconds}s, concurrencia ${HEAD_CONCURRENCY}).`,
 );
