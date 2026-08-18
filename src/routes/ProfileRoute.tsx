@@ -262,7 +262,9 @@ function QuickLinksGrid() {
               d.style.borderColor = "rgba(255,255,255,0.06)";
               d.style.background  = "var(--layer-1)";
             }}>
-            <span style={{ fontSize: 22, display: "block", marginBottom: 8 }}>{icon}</span>
+            <span style={{ fontSize: 22, display: "block", marginBottom: 8 }}>
+              <ForgeIcon name={icon} size={22} />
+            </span>
             <p style={{ fontFamily: '"Rajdhani",sans-serif', fontWeight: 700, fontSize: 13,
               margin: "0 0 3px", color: "var(--fg-primary)" }}>{label}</p>
             <p style={{ fontSize: 11, margin: 0, color: "var(--fg-muted)" }}>{desc}</p>

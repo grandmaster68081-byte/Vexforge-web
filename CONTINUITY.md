@@ -1,3 +1,19 @@
+## 2026-08-18 — VE-15-ICON-LANGUAGE-CONSUMER-CLOSURE — OPERATIONAL LOCAL / PUSH BLOCKED
+
+- Tipo de sesión: Implementación + QA estática, sin cambios de datos autoritativos.
+- Fuente canónica: `main`, `VEXFORGE_PROTOCOL_V2.md`, `ForgeIcon.tsx`, `verify:ui-identity`, `verify:surface-art` y `verify:residual-art`.
+- Motivo: cerrar dos consumidores visibles que renderizaban nombres internos de `ForgeIconName` como texto en lugar del SVG oficial.
+- Cambios: `ProfileRoute` ahora pinta el icono de cada acceso rápido con `ForgeIcon`; `EconomyRoute` pinta el icono de cada movimiento con `ForgeIcon`. No se promovió arte reservado.
+- Alcance no modificado: combate, economía autoritativa, recompensas, RPCs, RLS, autenticación, Storage, manifiesto y resultados del juego.
+- Estado: `IMPLEMENTED_UNVERIFIED` → `OPERATIONAL` en el checkout local. Nivel Q: `Q3` para este lote de identidad de interfaz.
+- Evidencia: `npm run typecheck`, `npm run verify:build`, `npm run verify:ui-identity` (188 archivos / 0 violaciones), `npm run verify:identity-data` (9 tablas / 274 filas / 0 violaciones), `npm run verify:boss-art`, `npm run verify:card-art`, `npm run verify:surface-art` (29 inscritos / 18 consumidos / 11 reserva), `npm run verify:residual-art` (51 filas / 32 objetos / 29 reserva), `npm run verify:manifest` (218 HEAD / 0 referencias rotas) y `npm run verify:assets` (21/21) correctos. El primer `verify:assets` recibió dos HTTP 429 temporales después del barrido global y pasó al repetirlo tras la ventana de límite.
+- Bloqueo: el PAT de GitHub fue rechazado por el proveedor. El repositorio se leyó por acceso público, pero no se pudo hacer push ni actualizar el deploy oficial. No se simula publicación.
+- Deuda: publicar el commit con credencial GitHub de escritura y comparar el manifiesto público, `index.html` y hashes de assets contra el commit publicado. QA autenticada continúa `BLOCKED` sin sesión normal autorizada.
+- Condición de reapertura: nuevo consumidor que renderice un nombre de icono como texto, cambio del contrato de `ForgeIcon` o contrato canónico nuevo para arte reservado.
+- Siguiente acción verificable: reintentar push con acceso de escritura y, si se publica, comprobar `https://vexforge-web.pages.dev`.
+
+---
+
 ## 2026-08-18 — VE-14-RESERVED-ART-RECONCILIATION — OPERATIONAL
 
 - Tipo de sesión: Auditoría de procedencia y reserva de assets, sin cambios de código ni de dato autoritativo. Fuentes canónicas: código de main, vexforge_official_asset_manifest, Storage oficial vexforge-assets y decisiones VE-11/VE-12/VE-13.

@@ -388,7 +388,7 @@ export function EconomyRoute() {
                       display:"flex",alignItems:"center",justifyContent:"center",
                       fontSize:15,color:meta.color,gridRow:"1/3",
                     }}>
-                      {meta.icon}
+                      <ForgeIcon name={meta.icon} size={16} />
                     </div>
                     <div>
                       <div style={{fontSize:12,fontWeight:700,color:C.main}}>
