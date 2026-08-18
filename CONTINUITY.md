@@ -1609,3 +1609,18 @@ Los commits anteriores siguen disponibles en Git para auditoría y reversión. L
 - Resultado: FALSO POSITIVO, cerrado sin cambio de código. src/styles.css:2322 ya define, dentro de la media query móvil, `.inventory-card-modal-body-grid { grid-template-columns: 1fr !important; }` y `> :first-child { width: min(170px, 58vw); margin: 0 auto; }`, de modo que el modal colapsa a una sola columna en pantallas estrechas y no recorta contenido.
 - Conclusión de categoría: tras VE-1-LEADERBOARD-MOBILE-TABLE no queda ninguna rejilla de ancho fijo sin tratamiento responsive en superficies públicas. La capa responsive pública queda OPERATIONAL sin observaciones abiertas.
 - Deuda viva sin cambios: artes duplicados del bucket (requiere autorización explícita de listado), higiene documental de tablas vexforge_*, y QA autenticado BLOCKED sin sesión normal autorizada de jugador.
+
+## 2026-08-18 — VE-DOC-1-VEXFORGE-TABLE-HYGIENE — IMPLEMENTED_UNVERIFIED
+
+- Tipo de sesión: AUDITORÍA DE SUPABASE + IMPLEMENTACIÓN (higiene documental). Unidad siguiente declarada por el cierre anterior.
+- Fuente canónica: catálogo vivo del proyecto rscuzqnfccqvltkdcdny (pg_class, pg_policy, pg_proc, pg_depend, obj_description) y código real de main. Baseline: commit cff617c.
+- Verificación de cierre previo: /build-manifest.json público informa sourceCommit=cff617c3dab8705037e231d42594b18c78c81969 y sourceBranch=main; coincide con main. La unidad anterior pasa a VERIFIED.
+- Verificación antes de implementar: de 91 relaciones public.vexforge_* sólo 10 tenían descripción; 81 estaban sin documentar. Se contrastó cada relación contra tres evidencias reales: consumidores en src/, referencias en backend/scripts/contracts, y dependencias internas de base (funciones y vistas). Resultado: 17 con consumidor en el repositorio, 28 con dependencia interna de base, el resto de gobernanza o documental interna.
+- Cambio: migración idempotente y transaccional supabase/migrations/0018_ve_doc1_vexforge_table_hygiene.sql con 81 sentencias COMMENT ON TABLE/VIEW. Cada comentario declara clasificación (runtime de cliente, soporte interno de base o gobernanza/documental interna), consumidor real en cliente, dependencias en base y advertencia de no eliminar sin auditoría de referencias.
+- Contrato de datos: ninguno. Sólo metadatos de catálogo. No se tocó esquema, columnas, datos, políticas, privilegios, funciones, triggers, Storage, economía ni UI. No se creó ni eliminó ninguna relación.
+- Alcance no modificado: autenticación, energía, wallet, MMR, temporadas, recompensas, misiones, navegación y resultados autoritativos. No se usó service_role para suplantar jugadores ni fabricar QA.
+- Verificaciones ejecutadas: migración aplicada vía Management API sin error; catálogo posterior → relaciones public.vexforge_* sin documentar 81 → 0 (91/91 documentadas). npx tsc --noEmit -p tsconfig.app.json sin errores; npm run verify:build correcto; npm run verify:ui-identity 0 violaciones; npm run verify:assets 17/17.
+- Deuda restante: artes duplicados del bucket sin decisión canónica (listado anon no autorizado); protección de contraseñas filtradas desactivada en Auth (consola del propietario); glyphs Unicode en datos internos de motores; QA autenticado de superficies del jugador sigue BLOCKED sin sesión normal autorizada.
+- Condición de reapertura: creación de nuevas relaciones vexforge_* sin comentario, o cambio de consumidor que invalide la clasificación inscrita.
+- Siguiente unidad sugerida: extender la higiene documental a las relaciones public no vexforge_* sin descripción, o triaje de glyphs Unicode en datos internos de motores.
+- Siguiente acción verificable: build-manifest.json público con el commit de esta sesión y HTTP 200 en rutas críticas.
