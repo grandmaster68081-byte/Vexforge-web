@@ -1603,3 +1603,9 @@ Los commits anteriores siguen disponibles en Git para auditoría y reversión. L
 - Deuda viva heredada: decisión canónica sobre artes duplicados del bucket (bosses/BOSS_*.jpg vs bosses/boss_*.jpg, cards/IMG_2026*.jpg) — el listado anon del bucket no está autorizado, requiere decisión explícita; higiene documental de las tablas internas vexforge_*; observación de seguimiento sobre InventoryRoute.tsx:329.
 - Bloqueo conservado: QA autenticado de superficies del jugador sigue BLOCKED sin sesión normal autorizada de jugador. No se suplanta con service_role ni Management API.
 - Siguiente unidad sugerida: higiene documental de las tablas vexforge_* (no requiere permisos nuevos) o, con autorización explícita, la decisión canónica sobre los artes duplicados del bucket.
+
+### Cierre de observación — InventoryRoute.tsx:329 (grid "140px 1fr")
+
+- Resultado: FALSO POSITIVO, cerrado sin cambio de código. src/styles.css:2322 ya define, dentro de la media query móvil, `.inventory-card-modal-body-grid { grid-template-columns: 1fr !important; }` y `> :first-child { width: min(170px, 58vw); margin: 0 auto; }`, de modo que el modal colapsa a una sola columna en pantallas estrechas y no recorta contenido.
+- Conclusión de categoría: tras VE-1-LEADERBOARD-MOBILE-TABLE no queda ninguna rejilla de ancho fijo sin tratamiento responsive en superficies públicas. La capa responsive pública queda OPERATIONAL sin observaciones abiertas.
+- Deuda viva sin cambios: artes duplicados del bucket (requiere autorización explícita de listado), higiene documental de tablas vexforge_*, y QA autenticado BLOCKED sin sesión normal autorizada de jugador.
