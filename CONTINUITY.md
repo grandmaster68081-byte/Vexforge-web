@@ -1,3 +1,20 @@
+## 2026-08-18 — VE-11-SURFACE-ART-PROVENANCE — OPERATIONAL
+
+- Tipo de sesión: Auditoría + Implementación (dato público, código de superficie y guarda automatizada). Fuentes canónicas: `vexforge_official_asset_manifest`, Storage oficial `vexforge-assets`, código de `main`.
+- Motivo: ejecutar la siguiente acción verificable declarada en el cierre de `VE-10-CARD-ART-PROVENANCE` — auditar los roles de manifiesto aún sin guarda propia (`route_hero`, `route_background`, `region_art`, `faction_icon`, `faction_background`, `season_banner`) y decidir si se unifican en una guarda única de procedencia de superficie.
+- Auditoría (rol anon, sin `service_role`): 29 filas de arte de superficie inscritas — 8 `route_hero`, 7 `route_background`, 5 `region_art`, 4 `faction_icon`, 4 `faction_background`, 1 `season_banner` — todas `official = true`, `enabled = true`, bajo prefijo canónico y con HEAD 200 en Storage.
+- Hallazgos reales corregidos: (1) la portada consumía emblemas locales `public/factions/*.png` no inscritos en el manifiesto mientras las 4 filas oficiales `faction_icon` quedaban sin consumo; (2) `InteractiveBattleBoard.tsx` fijaba las arenas de facción en literales crudos interpolando la base de Storage, saltándose el manifiesto.
+- Decisión canónica registrada: todo arte de superficie se resuelve desde el manifiesto oficial vía `storageAsset()` o los mapas `FACTION_ICON`, `FACTION_BACKGROUND` y `SURFACE_BACKGROUND` de `src/lib/assetManifest.ts`; ningún otro archivo puede fijar rutas de superficie ni servir arte local no inscrito. El arte inscrito sin superficie que lo consuma (5 héroes de ruta, 5 `region_art` y el `season_banner`) queda como reserva declarada y reversible en `RESERVED_SURFACE_ART`, sin borrarse ni sustituirse, promovible sólo con decisión nueva.
+- Cambios: `scripts/verify-surface-art.mjs` (guarda nueva, unificada para los seis roles), `src/lib/assetManifest.ts` (emblemas oficiales inscritos, `FACTION_ICON`, `FACTION_BACKGROUND`, `RESERVED_SURFACE_ART`), `src/routes/HomeRoute.tsx` (emblemas oficiales en lugar de PNG locales), `src/components/battle/InteractiveBattleBoard.tsx` (arenas resueltas desde el manifiesto), `package.json` (`verify:surface-art` encadenado en `verify:all`), `supabase/migrations/0021_ve11_surface_art_provenance.sql` aplicado a Supabase vivo (`vexforge_project_decisions.VE-11-SURFACE-ART-PROVENANCE`, status `official`, verificado en catálogo).
+- Alcance no modificado: no se tocó Storage, esquema de juego, RLS, RPCs, economía ni resultados autoritativos. No se usó `service_role` para dato de juego.
+- Evidencia: `npm run verify:surface-art` → 29 inscritos, 18 consumidos, 11 en reserva, OK. `npm run verify:all` verde (typecheck, build + verify-build, ui-identity, identity-data 9 tablas/274 filas/0 violaciones, boss-art 15+15, card-art 127, surface-art OK, assets 21/21).
+- Estado: NOT_STARTED → OPERATIONAL. Nivel Q: Q3 (identidad de arte de superficie con procedencia y guarda automatizada).
+- Deuda restante: los PNG de `public/factions/` quedan en el repositorio sin consumo, pendientes de baja o de inscripción con decisión propia; publicación de `.github/workflows/verify.yml` pendiente de un `GITHUB_PAT` con scope `workflow`; sin cron autoritativo ni Edge Functions; `verify:manifest` sigue fuera de `verify:all` por coste; QA autenticado `BLOCKED`.
+- Condición de reapertura: alta o baja de arte de superficie, o decisión de promover una pieza en reserva a superficie consumida.
+- Siguiente acción verificable: decidir la baja o inscripción canónica de los emblemas locales `public/factions/*.png` y auditar el resto de roles del manifiesto sin guarda (`*_collection`, `frame_*`, `icon_*`, `logo_*`, `boost_*`, `progression_*`, `reward_*`).
+
+---
+
 ## 2026-08-18 — VE-10-CARD-ART-PROVENANCE — OPERATIONAL
 
 - Tipo de sesión: Auditoría + Implementación (dato público y guarda automatizada). Fuentes canónicas: `cards`, `vexforge_official_asset_manifest`, Storage oficial `vexforge-assets`, código de `main`.
