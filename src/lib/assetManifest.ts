@@ -120,3 +120,78 @@ export const RESERVED_SURFACE_ART: ReadonlyArray<string> = [
   "regions/region_warbound_zone.jpg",
   "events/events_season_hero.jpg",
 ];
+
+
+/**
+ * VE-12-RESIDUAL-ART-PROVENANCE — arte residual del manifiesto oficial.
+ *
+ * Roles residuales (los que no cubren las guardas de jefes, cartas ni
+ * superficie): boost_*, frame_*, icon_*, logo_variant_*, progression_*,
+ * reward_*, chest_hero, cover_hero, lobby_hero, market_hero, tutorial_hero,
+ * wallet_hero y las filas `*_collection`.
+ *
+ * Consumo canónico actual: `cover/main.jpg` (portada de cuenta),
+ * `lobby/main.jpg` (portada de inicio) y `logo/IMG_20260606_040509_906.jpg`
+ * (logotipo oficial), todos resueltos con `storageAsset()`.
+ *
+ * El resto queda como reserva declarada y reversible: arte oficial inscrito y
+ * disponible en Storage que ninguna superficie consume todavía. No se elimina,
+ * no se sustituye y sólo se promueve con una decisión nueva registrada.
+ */
+export const RESERVED_RESIDUAL_ART: ReadonlyArray<string> = [
+  "boosts/IMG_20260606_040525_480.jpg",
+  "boosts/IMG_20260606_040527_020.jpg",
+  "boosts/IMG_20260606_040529_139.jpg",
+  "boosts/IMG_20260606_040529_674.jpg",
+  "chests/main.jpg",
+  "frames/IMG_20260606_040532_520.jpg",
+  "frames/IMG_20260606_040534_461.jpg",
+  "frames/IMG_20260606_040535_955.jpg",
+  "frames/IMG_20260606_040537_201.jpg",
+  "frames/IMG_20260606_040538_151.jpg",
+  "frames/IMG_20260606_040539_689.jpg",
+  "icons/IMG_20260606_040505_192.jpg",
+  "icons/IMG_20260606_040506_475.jpg",
+  "icons/IMG_20260606_040508_371.jpg",
+  "icons/IMG_20260619_114322.jpg",
+  "icons/IMG_20260619_114717.jpg",
+  "icons/IMG_20260619_114852.jpg",
+  "icons/IMG_20260619_115309.jpg",
+  "logo/IMG_20260606_040542_755.jpg",
+  "logo/IMG_20260606_040543_962.jpg",
+  "logo/IMG_20260606_040544_619.jpg",
+  "logo/IMG_20260606_040546_258.jpg",
+  "market/main.jpg",
+  "progression/IMG_20260619_120425.jpg",
+  "progression/IMG_20260619_120838.jpg",
+  "progression/IMG_20260619_121047.jpg",
+  "rewards/IMG_20260619_111433.jpg",
+  "tutorial/main.png",
+  "wallet/main.jpg",
+];
+
+/**
+ * Filas `*_collection` del manifiesto: marcadores de prefijo del bucket, no
+ * objetos servibles. Nunca se referencian como imagen desde el código.
+ */
+export const MANIFEST_BUNDLE_PREFIXES: ReadonlyArray<string> = [
+  "backgrounds/",
+  "boosts/",
+  "chests/",
+  "clans/",
+  "cover/",
+  "events/",
+  "founders/",
+  "frames/",
+  "icons/",
+  "lobby/",
+  "logo/",
+  "market/",
+  "misc/",
+  "progression/",
+  "rewards/",
+  "sessions/",
+  "tutorial/",
+  "ui sistema/",
+  "wallet/",
+];

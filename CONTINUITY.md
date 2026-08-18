@@ -1,3 +1,20 @@
+## 2026-08-18 — VE-12-RESIDUAL-ART-PROVENANCE — OPERATIONAL
+
+- Tipo de sesión: Auditoría + Implementación (dato público, código de superficie y guarda automatizada). Fuentes canónicas: `vexforge_official_asset_manifest`, Storage oficial `vexforge-assets`, código de `main`.
+- Motivo: ejecutar la siguiente acción verificable declarada en el cierre de `VE-11-SURFACE-ART-PROVENANCE` — decidir la baja o inscripción de los emblemas locales `public/factions/*.png` y auditar el resto de roles del manifiesto aún sin guarda (`*_collection`, `frame_*`, `icon_*`, `logo_*`, `boost_*`, `progression_*`, `reward_*`).
+- Auditoría (rol anon, sin `service_role`): de las 237 filas del manifiesto, 186 ya cubiertas por las guardas de jefes, cartas y superficie y 51 sin guarda; esas 51 son 32 objetos reales (todos `official = true`, `enabled = true`, HEAD 200 en Storage) y 19 filas `*_collection` que son marcadores de prefijo del bucket, no objetos servibles (HEAD 400). Consumo real: sólo `cover/main.jpg`, `lobby/main.jpg` y `logo/IMG_20260606_040509_906.jpg`, siempre resueltos con `storageAsset()`; 0 rutas residuales fijadas en literales crudos.
+- Decisión canónica registrada: el arte residual se resuelve únicamente desde el manifiesto vía `VERIFIED_ASSETS`/`storageAsset()`; las 19 filas de prefijo quedan declaradas en `MANIFEST_BUNDLE_PREFIXES` y nunca se referencian como imagen; los 29 objetos inscritos sin consumo quedan como reserva declarada y reversible en `RESERVED_RESIDUAL_ART`, sin borrarse ni sustituirse, promovibles sólo con decisión nueva.
+- Baja canónica ejecutada: los cuatro PNG locales de `public/factions/` (`guerrero`, `mago`, `paladin`, `picaro`), sin consumo desde VE-11 y no inscritos en el manifiesto, se eliminan del repositorio; el arte oficial de facción son las filas `faction_icon`. La guarda falla si resucitan.
+- Cambios: `scripts/verify-residual-art.mjs` (guarda nueva, cubre todo rol sin guarda propia y falla ante cualquier fila huérfana), `src/lib/assetManifest.ts` (`RESERVED_RESIDUAL_ART`, `MANIFEST_BUNDLE_PREFIXES`), `package.json` (`verify:residual-art` encadenado en `verify:all`), baja de `public/factions/*.png`, `supabase/migrations/0022_ve12_residual_art_provenance.sql` aplicado a Supabase vivo (`vexforge_project_decisions.VE-12-RESIDUAL-ART-PROVENANCE`, status `official`, verificado en catálogo con `residual_reserved = 29` y `orphan_roles_after_unit = 0`).
+- Alcance no modificado: no se tocó Storage, esquema de juego, RLS, RPCs, economía ni resultados autoritativos. No se usó `service_role` para dato de juego.
+- Evidencia: `npm run verify:residual-art` → 51 filas, 32 objetos, 3 consumidos, 29 en reserva, 19 prefijos, 237 filas de manifiesto, OK. `npm run verify:all` verde (typecheck, build + verify-build, ui-identity, identity-data 9 tablas/274 filas/0 violaciones, boss-art 15+15, card-art 127, surface-art 29, residual-art OK, assets 21/21).
+- Estado: NOT_STARTED → OPERATIONAL. Nivel Q: Q3 (todo el manifiesto oficial bajo guarda de procedencia, sin roles huérfanos).
+- Deuda restante: publicación de `.github/workflows/verify.yml` pendiente de un `GITHUB_PAT` con scope `workflow`; sin cron autoritativo ni Edge Functions; `verify:manifest` sigue fuera de `verify:all` por coste; QA autenticado `BLOCKED`.
+- Condición de reapertura: alta o baja de arte residual en Storage/manifiesto, o decisión de promover una pieza en reserva a superficie consumida.
+- Siguiente acción verificable: auditar el arte en reserva frente a las superficies sin arte propio (marcos de carta, iconos de recompensa, progresión y tutorial) y decidir promociones con guarda, o cerrar la deuda de `verify:manifest` fuera de `verify:all`.
+
+---
+
 ## 2026-08-18 — VE-11-SURFACE-ART-PROVENANCE — OPERATIONAL
 
 - Tipo de sesión: Auditoría + Implementación (dato público, código de superficie y guarda automatizada). Fuentes canónicas: `vexforge_official_asset_manifest`, Storage oficial `vexforge-assets`, código de `main`.
