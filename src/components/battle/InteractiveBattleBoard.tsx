@@ -22,22 +22,21 @@ import { useBattleStateMachine, type TurnPhase, type TurnSnapshot } from '../../
 import { KeywordChip } from './KeywordTooltip';
 import { AudioEngine } from '../../lib/audioEngine';
 import { KeywordActivationFX, useKeywordFX } from './KeywordActivationFX';
-import { STORAGE_BASE } from "../../lib/assetManifest";
+import { FACTION_BACKGROUND, storageAsset } from "../../lib/assetManifest";
 
 // ─── Constantes ────────────────────────────────────────────────────────────────
 const HP_COLOR = (pct: number) =>
   pct > 0.55 ? '#3ddc84' : pct > 0.25 ? '#f59e0b' : '#ff3333';
 
-const STORAGE = STORAGE_BASE;
 
 const FACTION_ZONE: Record<string, { primary: string; glow: string; gradient: string; arenaImg: string }> = {
-  Guerrero:    { primary: '#e84040', glow: 'rgba(232,64,64,0.35)',   gradient: 'linear-gradient(180deg,rgba(80,10,10,0.7) 0%,rgba(30,5,5,0.4) 100%)',   arenaImg: `${STORAGE}/factions/bg_guerrero.jpg` },
-  Mago:        { primary: '#7b4fd4', glow: 'rgba(123,79,212,0.35)',  gradient: 'linear-gradient(180deg,rgba(40,10,80,0.7) 0%,rgba(15,5,30,0.4) 100%)',  arenaImg: `${STORAGE}/factions/bg_mago.jpg` },
-  'Pícaro':    { primary: '#3dc96b', glow: 'rgba(61,201,107,0.35)', gradient: 'linear-gradient(180deg,rgba(10,50,20,0.7) 0%,rgba(5,20,10,0.4) 100%)',  arenaImg: `${STORAGE}/factions/bg_picaro.jpg` },
-  'Paladín':   { primary: '#e8b84b', glow: 'rgba(232,184,75,0.35)', gradient: 'linear-gradient(180deg,rgba(60,40,5,0.7) 0%,rgba(25,15,5,0.4) 100%)',   arenaImg: `${STORAGE}/factions/bg_paladin.jpg` },
-  Explorador:  { primary: '#3dc96b', glow: 'rgba(61,201,107,0.35)', gradient: 'linear-gradient(180deg,rgba(10,50,20,0.7) 0%,rgba(5,20,10,0.4) 100%)',  arenaImg: `${STORAGE}/factions/bg_picaro.jpg` },
-  Comerciante: { primary: '#e8b84b', glow: 'rgba(232,184,75,0.35)', gradient: 'linear-gradient(180deg,rgba(60,40,5,0.7) 0%,rgba(25,15,5,0.4) 100%)',   arenaImg: `${STORAGE}/factions/bg_paladin.jpg` },
-  default:     { primary: '#4a9eff', glow: 'rgba(74,158,255,0.35)',  gradient: 'linear-gradient(180deg,rgba(5,20,50,0.7) 0%,rgba(5,10,25,0.4) 100%)',   arenaImg: `${STORAGE}/backgrounds/bg_missions.jpg` },
+  Guerrero:    { primary: '#e84040', glow: 'rgba(232,64,64,0.35)',   gradient: 'linear-gradient(180deg,rgba(80,10,10,0.7) 0%,rgba(30,5,5,0.4) 100%)',   arenaImg: FACTION_BACKGROUND["Guerrero"] },
+  Mago:        { primary: '#7b4fd4', glow: 'rgba(123,79,212,0.35)',  gradient: 'linear-gradient(180deg,rgba(40,10,80,0.7) 0%,rgba(15,5,30,0.4) 100%)',  arenaImg: FACTION_BACKGROUND["Mago"] },
+  'Pícaro':    { primary: '#3dc96b', glow: 'rgba(61,201,107,0.35)', gradient: 'linear-gradient(180deg,rgba(10,50,20,0.7) 0%,rgba(5,20,10,0.4) 100%)',  arenaImg: FACTION_BACKGROUND["Pícaro"] },
+  'Paladín':   { primary: '#e8b84b', glow: 'rgba(232,184,75,0.35)', gradient: 'linear-gradient(180deg,rgba(60,40,5,0.7) 0%,rgba(25,15,5,0.4) 100%)',   arenaImg: FACTION_BACKGROUND["Paladín"] },
+  Explorador:  { primary: '#3dc96b', glow: 'rgba(61,201,107,0.35)', gradient: 'linear-gradient(180deg,rgba(10,50,20,0.7) 0%,rgba(5,20,10,0.4) 100%)',  arenaImg: FACTION_BACKGROUND["Pícaro"] },
+  Comerciante: { primary: '#e8b84b', glow: 'rgba(232,184,75,0.35)', gradient: 'linear-gradient(180deg,rgba(60,40,5,0.7) 0%,rgba(25,15,5,0.4) 100%)',   arenaImg: FACTION_BACKGROUND["Paladín"] },
+  default:     { primary: '#4a9eff', glow: 'rgba(74,158,255,0.35)',  gradient: 'linear-gradient(180deg,rgba(5,20,50,0.7) 0%,rgba(5,10,25,0.4) 100%)',   arenaImg: storageAsset("backgrounds/bg_missions.jpg") },
 };
 
 // ─── HP Bar épica ───────────────────────────────────────────────────────────────
