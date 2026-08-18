@@ -1,3 +1,17 @@
+## 2026-08-18 — VE-14-RESERVED-ART-RECONCILIATION — OPERATIONAL
+
+- Tipo de sesión: Auditoría de procedencia y reserva de assets, sin cambios de código ni de dato autoritativo. Fuentes canónicas: código de main, vexforge_official_asset_manifest, Storage oficial vexforge-assets y decisiones VE-11/VE-12/VE-13.
+- Motivo: ejecutar la siguiente acción verificable declarada por VE-13 y reconciliar el arte inscrito que todavía no tiene consumidor de superficie.
+- Resultado: 11 piezas de superficie y 29 piezas residuales fueron comprobadas desde RESERVED_SURFACE_ART y RESERVED_RESIDUAL_ART; 40/40 objetos devolvieron HTTP HEAD 200 en Storage. Todos permanecen official = true y enabled = true.
+- Decisión: no se promueve ningún asset. No existe una superficie, consumidor ni contrato canónico nuevo que lo justifique; el arte se conserva intacto y reversible. La discrepancia del pendiente histórico de chat34 queda resuelta a favor de main, Supabase vivo y las decisiones oficiales posteriores.
+- Alcance no modificado: no se tocaron cartas, combate, economía, recompensas, RPCs, RLS, Storage, assets ni resultados autoritativos.
+- Estado: NOT_STARTED → OPERATIONAL. Nivel Q: Q3 (procedencia y reserva verificadas).
+- Evidencia: manifiesto vivo con 40 archivos reservados; 40 comprobaciones HEAD, 40 disponibles, 0 fallos; decisión oficial registrada en Supabase con la misma unidad.
+- Deuda y bloqueo: la promoción futura requiere seleccionar una superficie real y registrar una decisión nueva. QA autenticado continúa BLOCKED sin una sesión normal autorizada de jugador.
+- Condición de reapertura: alta o baja en Storage/manifiesto, o definición canónica de un consumidor para una pieza reservada.
+- Siguiente acción verificable: ninguna hasta que exista esa superficie y contrato; entonces auditar el vertical slice afectado antes de promover.
+
+---
 ## 2026-08-18 — VE-13-MANIFEST-GUARD-COST-CLOSURE — OPERATIONAL
 
 - Tipo de sesión: Implementación de guarda + registro de decisión (sin cambio de superficie ni de dato autoritativo). Fuentes canónicas: `scripts/verify-manifest.mjs`, `vexforge_official_asset_manifest`, Storage oficial `vexforge-assets`, código de `main`.
