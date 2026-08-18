@@ -8575,3 +8575,26 @@ button:active { animation: chip-select-pop 0.15s ease; }
     border-radius: 8px !important;
   }
 }
+
+/* ---------------------------------------------------------------
+   VE-1-LEADERBOARD-MOBILE-TABLE — regla canónica de tablas anchas.
+   Una tabla con columnas de ancho fijo no puede recortar datos en
+   pantallas estrechas: se desplaza horizontalmente dentro de su
+   tarjeta, conservando el orden de lectura y el foco por teclado.
+   --------------------------------------------------------------- */
+.forge-table-scroll {
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  scrollbar-color: #2a2a3a transparent;
+}
+.forge-table-scroll::-webkit-scrollbar { height: 6px; }
+.forge-table-scroll::-webkit-scrollbar-track { background: transparent; }
+.forge-table-scroll::-webkit-scrollbar-thumb {
+  background: #2a2a3a;
+  border-radius: 3px;
+}
+.forge-table-min {
+  min-width: 560px;
+}

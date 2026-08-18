@@ -1570,3 +1570,17 @@ Los commits anteriores siguen disponibles en Git para auditoría y reversión. L
 - **Estado:** `REFINED`; no se declara `OPERATIONAL` para los flujos autenticados porque sigue faltando una sesión normal autorizada de jugador para QA.
 - **Siguiente acción:** si se crea una superficie anónima para World Boss, definir primero el contrato público y cambiar el permiso de forma explícita; mantener bloqueado el QA de replay/referidos hasta contar con una sesión legítima.
 
+
+## 2026-08-18 — VE-1-LEADERBOARD-MOBILE-TABLE — IMPLEMENTED_UNVERIFIED
+
+- Tipo de sesión: IMPLEMENTACIÓN / QA responsive público. Fuente canónica: código real de main, deploy público y medición real en Chromium móvil (390x844).
+- Estado inicial: auditoría responsive sobre 10 rutas públicas detectó una única regresión funcional real: en /leaderboard las columnas de ancho fijo (48px 1fr 100px 120px 60px 100px = 560px mínimos) se recortaban dentro de una tarjeta con overflow:hidden, dejando MMR, W/L, WIN% y DPS TIER inalcanzables en móvil sin ninguna vía de desplazamiento. El resto de desbordes medidos son capas decorativas contenidas (vex-rune-ring, vex-scanline) y no afectan a datos ni a controles. Estado actual: IMPLEMENTED_UNVERIFIED. Nivel: Q2 → Q3.
+- Baseline: commit 7043238.
+- Cambio: nueva regla canónica en src/styles.css (.forge-table-scroll + .forge-table-min) para tablas de ancho mínimo; LeaderboardRoute envuelve cabecera y filas en un contenedor desplazable horizontalmente, con role="group", aria-label descriptivo y tabIndex=0 para desplazamiento por teclado. No cambia ningún dato, orden, cálculo ni columna.
+- Contrato de datos: ninguno. No se tocó esquema, tablas, RPCs, RLS, triggers, roles, Storage ni datos.
+- Alcance no modificado: autenticación, economía, wallet, MMR, temporadas, recompensas, evolución, navegación y cualquier resultado autoritativo. No se usó service_role ni Management API.
+- Accesibilidad: la región desplazable es enfocable y anunciada; sin animación añadida; contraste y orden de lectura intactos.
+- Verificaciones: npx tsc --noEmit -p tsconfig.app.json sin errores; npm run verify:build correcto; npm run verify:ui-identity 188 archivos / 0 violaciones; npm run verify:assets 17/17. Medición local en Chromium 390x844: contenedor clientWidth=332 / scrollWidth=560 (desplazable), documentElement.scrollWidth=390 (sin desborde de página), 0 errores de consola.
+- Deuda restante: inventario de artes duplicados del bucket sin decisión canónica (listado anon del bucket no autorizado); higiene documental de tablas vexforge_*; QA autenticado de superficies del jugador sigue BLOCKED sin sesión normal autorizada.
+- Condición de reapertura: cambio de columnas del clasificatorio, nueva tabla con anchos fijos sin la regla canónica, o desborde de página en cualquier ruta pública.
+- Siguiente acción verificable: build-manifest.json público con el commit de esta sesión y medición móvil real en /leaderboard sobre el deploy publicado.

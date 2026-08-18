@@ -121,6 +121,8 @@ export function LeaderboardRoute() {
       {/* Rankings table */}
       {!loading && !error && rows.length > 0 && (
         <div style={{ background: "#12121a", border: "1px solid #2a2a3a", borderRadius: 12, overflow: "hidden" }}>
+        <div className="forge-table-scroll" tabIndex={0} role="group" aria-label="Tabla de clasificación (desplazable en horizontal)">
+        <div className="forge-table-min">
           {/* Column headers */}
           <div style={{ display: "grid", gridTemplateColumns: "48px 1fr 100px 120px 60px 100px", padding: "8px 16px", borderBottom: "1px solid #1a1a2e" }}>
             <div style={{ color: "#5a5a7a", fontSize: 9, fontWeight: 700 }}>#</div>
@@ -175,6 +177,8 @@ export function LeaderboardRoute() {
               </div>
             );
           })}
+        </div>
+        </div>
         </div>
       )}
     </main>
