@@ -1,3 +1,20 @@
+## 2026-08-18 — VE-CI-01-VERIFY-GATE — IMPLEMENTED_UNVERIFIED
+
+- Tipo de sesión: IMPLEMENTACIÓN (cierre de la brecha declarada en el barrido VE_AUDIT_01: 0 workflows de CI). Fuente canónica: código real de `main`, scripts de verificación existentes y auditoría registrada en `public.vexforge_project_audit`.
+- Unidad: `.github/workflows/verify.yml` + `package.json` (`typecheck`, `verify:all`).
+- Estado inicial: todas las verificaciones (`verify:build`, `verify:ui-identity`, `verify:identity-data`, `verify:assets`) eran manuales; ninguna regresión quedaba bloqueada automáticamente. Estado actual: `IMPLEMENTED_UNVERIFIED` hasta que GitHub Actions ejecute el primer run verde sobre `main`.
+- Baseline: commit `ce7fbca`.
+- Cambio: se añade el workflow `verify` (push a `main`, pull_request y `workflow_dispatch`) que instala con `npm ci --ignore-scripts` sobre la versión de Node de `.nvmrc` y ejecuta, en orden: `typecheck`, `verify:build`, `verify:ui-identity`, `verify:identity-data`, `verify:assets`. Se añade `npm run typecheck` (`tsc --noEmit -p tsconfig.app.json`) y `npm run verify:all` para reproducir la puerta completa en local. Las variables `VITE_SUPABASE_URL` y `VITE_SUPABASE_ANON_KEY` se leen de `vars` del repositorio; si no están definidas, los scripts usan los valores públicos ya presentes en el código. No se introduce ningún secreto y nunca se usa `service_role` en CI.
+- Contrato de datos: ninguno. No se tocó esquema, tablas, RPCs, RLS, triggers, roles, Storage ni datos.
+- Alcance no modificado: rutas, componentes, identidad visual, economía, energía, MMR, temporadas, recompensas y cualquier resultado autoritativo.
+- Verificaciones ejecutadas en local con el contenido exacto del commit: `npm ci --ignore-scripts`, `npm run verify:all` completo — typecheck sin errores, build correcta (`ce7fbca`, 4 assets raíz), 188 archivos revisados con 0 violaciones de identidad visual, 9 tablas / 274 filas / 6.359 valores hoja con 0 violaciones de identidad de dato, 17/17 assets disponibles en Storage.
+- Deuda registrada: sigue sin existir cron autoritativo del lado servidor ni Edge Functions; artes duplicados del bucket sin decisión canónica; QA autenticado continúa `BLOCKED` sin sesión normal autorizada de jugador.
+- Condición de reapertura: fallo del workflow, cambio de los scripts de verificación o incorporación de nuevas puertas canónicas.
+- BLOQUEO DE PUBLICACIÓN: el token `GITHUB_PAT` disponible en la sesión NO tiene el scope `workflow`, por lo que la API rechaza (404) cualquier árbol que contenga `.github/workflows/*`. En este commit se publican únicamente `package.json` (scripts `typecheck` y `verify:all`) y este registro. El archivo `.github/workflows/verify.yml` queda pendiente de publicación y su contenido exacto está descrito arriba; se subirá en cuanto el token incluya `workflow`.
+- Siguiente acción verificable: confirmar el primer run verde de `verify` en GitHub Actions sobre `main` y, tras el build de Cloudflare Pages, que `/build-manifest.json` avance al commit de esta sesión.
+
+---
+
 ## 2026-08-17 — VE-1-UI-IDENTITY-GUARD — OPERATIONAL
 
 - Tipo de sesión: IMPLEMENTACIÓN / QA estática. Fuente canónica: código real de main, Regla de Cero Genéricos y superficies publicadas.
