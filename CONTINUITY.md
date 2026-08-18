@@ -1584,3 +1584,22 @@ Los commits anteriores siguen disponibles en Git para auditoría y reversión. L
 - Deuda restante: inventario de artes duplicados del bucket sin decisión canónica (listado anon del bucket no autorizado); higiene documental de tablas vexforge_*; QA autenticado de superficies del jugador sigue BLOCKED sin sesión normal autorizada.
 - Condición de reapertura: cambio de columnas del clasificatorio, nueva tabla con anchos fijos sin la regla canónica, o desborde de página en cualquier ruta pública.
 - Siguiente acción verificable: build-manifest.json público con el commit de esta sesión y medición móvil real en /leaderboard sobre el deploy publicado.
+
+### Cierre operativo — VE-1-LEADERBOARD-MOBILE-TABLE
+
+- Estado actual: OPERATIONAL. Nivel Q3 en la capa responsive pública. Verificación ejecutada sobre el deploy publicado, no sobre entorno local.
+- Commit publicado: 35c6378c7dbfa24ba6d76f37bff62e5425b66aff en main.
+- Evidencia pública: /build-manifest.json informa sourceCommit=35c6378c7dbfa24ba6d76f37bff62e5425b66aff y sourceBranch=main.
+- Medición real en Chromium móvil (390x844) sobre vexforge-web.pages.dev: /leaderboard expone .forge-table-scroll con clientWidth=332 y scrollWidth=560, es decir la región es desplazable y MMR, W/L, WIN% y DPS TIER quedan alcanzables; documentElement.scrollWidth=390 sin desborde de página.
+- Barrido de no regresión en el mismo viewport: /leaderboard, /season-rankings, /raids, /world-bosses, /achievements y / con 0 errores de consola, 0 pageerror y 0 respuestas HTTP >= 400; ninguna de esas rutas introduce desborde horizontal de documento.
+- Verificación de categoría, no sólo de instancia: barrido de gridTemplateColumns en rutas, dominios y componentes compartidos. Todas las rejillas restantes usan auto-fill/auto-fit con minmax, por lo que no reproducen el patrón de recorte. Única excepción anotada: InventoryRoute.tsx:329 usa "140px 1fr" dentro de un modal con clase propia inventory-card-modal-body-grid; no es tabla de datos ni oculta valores autoritativos, queda como observación de seguimiento y no como deuda funcional.
+
+### Cierre de VE-OBS-01
+
+- La anomalía queda RESUELTA: el disparador de build de Cloudflare Pages sí avanzó. /build-manifest.json sirve ahora el commit vigente de main (35c6378), por lo que el desfase documental anterior era transitorio como se preveía. No procede investigar el disparador.
+
+### Estado al cierre de sesión
+
+- Deuda viva heredada: decisión canónica sobre artes duplicados del bucket (bosses/BOSS_*.jpg vs bosses/boss_*.jpg, cards/IMG_2026*.jpg) — el listado anon del bucket no está autorizado, requiere decisión explícita; higiene documental de las tablas internas vexforge_*; observación de seguimiento sobre InventoryRoute.tsx:329.
+- Bloqueo conservado: QA autenticado de superficies del jugador sigue BLOCKED sin sesión normal autorizada de jugador. No se suplanta con service_role ni Management API.
+- Siguiente unidad sugerida: higiene documental de las tablas vexforge_* (no requiere permisos nuevos) o, con autorización explícita, la decisión canónica sobre los artes duplicados del bucket.
