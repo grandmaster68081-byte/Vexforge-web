@@ -1,3 +1,18 @@
+## 2026-08-18 — VE-16-CANONICAL-PUBLISH-RECONCILIATION — OPERATIONAL
+
+- Tipo de sesión: Publicación canónica + verificación pública, sin cambios de datos autoritativos.
+- Motivo: cerrar VE-15 después de corregir el método de autenticación Git y reconciliar GitHub `main` con Cloudflare Pages.
+- Hallazgo: el PAT era válido; el intento anterior usó `Authorization: Bearer` para Git sobre HTTPS. GitHub aceptó el mismo token con autenticación `Basic`, usando `x-access-token` como usuario.
+- Publicación: `main` oficial avanzó de `62c5221c8939e51d4668611e720add143855cd86` a `2ab87ad9b598f296f0a835de5cb09781926d502d`.
+- Evidencia pública: `git ls-remote` confirma `main = 2ab87ad9b598f296f0a835de5cb09781926d502d`; `https://vexforge-web.pages.dev/` responde HTTP 200; `/build-manifest.json` declara el mismo `sourceCommit`.
+- Estado: `OPERATIONAL`. El deploy automático de Cloudflare Pages propagó el commit canónico tras una espera de 60 segundos.
+- Alcance no modificado: combate, economía autoritativa, recompensas, RPCs, RLS, autenticación, Storage y resultados del juego.
+- Deuda restante: QA autenticada continúa `BLOCKED` sin una sesión normal autorizada de jugador. No se reutilizará `Bearer` para operaciones Git; se conservará el flujo `Basic` compatible sin exponer tokens.
+- Condición de reapertura: divergencia entre GitHub `main` y `build-manifest.json` público, HTTP distinto de 200, o nuevo consumidor de iconos que omita `ForgeIcon`.
+- Siguiente acción verificable: mantener la guarda de identidad y repetir la comparación pública después de cualquier publicación posterior.
+
+---
+
 ## 2026-08-18 — VE-15-ICON-LANGUAGE-CONSUMER-CLOSURE — OPERATIONAL LOCAL / PUSH BLOCKED
 
 - Tipo de sesión: Implementación + QA estática, sin cambios de datos autoritativos.

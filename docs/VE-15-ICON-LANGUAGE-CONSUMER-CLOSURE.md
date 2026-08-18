@@ -72,3 +72,15 @@ canónico para arte actualmente reservado.
 Reintentar la publicación del commit con una credencial GitHub con permiso de
 escritura; después comparar `dist/build-manifest.json`, `index.html` y los
 hashes públicos con el commit publicado.
+
+## Cierre posterior
+
+La publicación fue completada en la unidad `VE-16-CANONICAL-PUBLISH-RECONCILIATION`.
+El repositorio oficial `main` y `https://vexforge-web.pages.dev/build-manifest.json`
+ahora declaran el commit `2ab87ad9b598f296f0a835de5cb09781926d502d`, y la página
+pública responde HTTP 200.
+
+El bloqueo original no era el token: el primer intento configuró autenticación
+`Bearer` para el protocolo Git sobre HTTPS. El mismo token funcionó con el
+formato Git compatible `Basic`, usando `x-access-token` como usuario. El token
+no se imprime ni se registra.
