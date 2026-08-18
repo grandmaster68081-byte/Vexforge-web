@@ -1,3 +1,20 @@
+## 2026-08-18 — VE-10-CARD-ART-PROVENANCE — OPERATIONAL
+
+- Tipo de sesión: Auditoría + Implementación (dato público y guarda automatizada). Fuentes canónicas: `cards`, `vexforge_official_asset_manifest`, Storage oficial `vexforge-assets`, código de `main`.
+- Motivo: ejecutar la siguiente acción verificable declarada en el cierre de `VE-9-BOSS-ART-VARIANT-DECISION` — auditar el arte de carta con el mismo criterio de procedencia y consumo y decidir si merece una guarda equivalente a `verify:boss-art`.
+- Auditoría (rol anon, sin `service_role`): 127 filas en `cards`, todas con `image_url`; 127 filas `card_art` en el manifiesto, todas `official = true`, `enabled = true` y bajo el prefijo `cards/`; correspondencia biyectiva carta ↔ arte (127 consumos únicos, 0 arte compartido); 0 referencias fuera del manifiesto; 0 arte inscrito sin consumir; 0 `asset_code` duplicado; 127/127 objetos disponibles en Storage (HEAD 200).
+- Hallazgo: el arte de carta no tiene conjunto alternativo — no existe `semantic_role = 'card_art_variant'` —, por lo que no hay decisión de reserva análoga a la de jefes. La superficie es sana y lo único ausente era la guarda que impidiera degradarla en silencio.
+- Decisión canónica registrada: el arte de cada carta es la fila `card_art` inscrita, oficial y habilitada referenciada por `cards.image_url`; el código no fija rutas `cards/` literales y resuelve el arte siempre desde el dato.
+- Cambios: `scripts/verify-card-art.mjs` (guarda nueva), `package.json` (`verify:card-art` añadido y encadenado en `verify:all`), `supabase/migrations/0020_ve10_card_art_provenance.sql` aplicado a Supabase vivo (`vexforge_project_decisions.VE-10-CARD-ART-PROVENANCE`, status `official`).
+- Alcance no modificado: no se tocó arte servido, Storage, esquema de juego, RLS, RPCs, economía ni resultados autoritativos. No se usó `service_role`.
+- Evidencia: `npm run verify:card-art` → 127 inscritos, 127 cartas verificadas, 127 consumos únicos, OK. `npm run verify:all` verde (typecheck, build + verify-build, ui-identity 0 violaciones, identity-data 9 tablas/274 filas/0 violaciones, boss-art 15+15 OK, card-art OK, assets 17/17).
+- Estado: NOT_STARTED → OPERATIONAL. Nivel Q: Q3 (identidad de arte de cartas con procedencia y guarda automatizada).
+- Deuda restante: publicación de `.github/workflows/verify.yml` pendiente de un `GITHUB_PAT` con scope `workflow`; sin cron autoritativo ni Edge Functions; `verify:manifest` sigue fuera de `verify:all` por coste; QA autenticado `BLOCKED` por ausencia de sesión de jugador autorizada.
+- Condición de reapertura: alta o baja de cartas o de arte de carta, o aparición de un conjunto alternativo `card_art_variant`.
+- Siguiente acción verificable: auditar con el mismo criterio el resto de roles del manifiesto aún sin guarda propia (`route_hero`, `route_background`, `region_art`, `faction_*`, `season_banner`) y decidir si se unifican en una guarda de procedencia de superficie única.
+
+---
+
 ## 2026-08-18 — VE-9-BOSS-ART-VARIANT-DECISION — OPERATIONAL
 
 - Tipo de sesión: Auditoría + Implementación (dato público y guarda automatizada). Fuentes canónicas: `vexforge_official_asset_manifest`, `world_bosses`, Storage oficial `vexforge-assets`, código de `main`.

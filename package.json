@@ -13,8 +13,9 @@
     "verify:manifest": "node scripts/verify-manifest.mjs",
     "verify:identity-data": "node scripts/verify-identity-data.mjs",
     "verify:ui-identity": "node scripts/verify-ui-identity.mjs",
-    "verify:all": "npm run typecheck && npm run verify:build && npm run verify:ui-identity && npm run verify:identity-data && npm run verify:boss-art && npm run verify:assets",
-    "verify:boss-art": "node scripts/verify-boss-art.mjs"
+    "verify:all": "npm run typecheck && npm run verify:build && npm run verify:ui-identity && npm run verify:identity-data && npm run verify:boss-art && npm run verify:card-art && npm run verify:assets",
+    "verify:boss-art": "node scripts/verify-boss-art.mjs",
+    "verify:card-art": "node scripts/verify-card-art.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.45.0",
