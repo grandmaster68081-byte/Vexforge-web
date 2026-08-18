@@ -29,6 +29,10 @@ export const VERIFIED_ASSETS = [
   "factions/bg_mago.jpg",
   "factions/bg_paladin.jpg",
   "factions/bg_picaro.jpg",
+  "factions/icon_guerrero.png",
+  "factions/icon_mago.png",
+  "factions/icon_paladin.png",
+  "factions/icon_picaro.png",
   "heroes/hero_assets.jpg",
   "heroes/hero_fusion.jpg",
   "heroes/hero_market.jpg",
@@ -74,3 +78,45 @@ export const PENDING_SOURCE_BACKGROUNDS: ReadonlyArray<{
   expectedPath: string;
   brief: string;
 }> = [];
+
+/**
+ * VE-11-SURFACE-ART-PROVENANCE — emblema oficial de facción.
+ *
+ * Fuente canónica: filas `faction_icon` del manifiesto oficial
+ * (`factions/icon_*.png`, official = true, enabled = true). Sustituyen a los
+ * emblemas locales de `public/factions/`, que no estaban inscritos y por tanto
+ * no eran arte oficial verificable.
+ */
+export const FACTION_ICON: Record<string, string> = {
+  Guerrero: storageAsset("factions/icon_guerrero.png"),
+  Mago: storageAsset("factions/icon_mago.png"),
+  "Paladín": storageAsset("factions/icon_paladin.png"),
+  "Pícaro": storageAsset("factions/icon_picaro.png"),
+};
+
+/** Fondo de arena por facción, resuelto siempre desde el manifiesto. */
+export const FACTION_BACKGROUND: Record<string, string> = {
+  Guerrero: storageAsset("factions/bg_guerrero.jpg"),
+  Mago: storageAsset("factions/bg_mago.jpg"),
+  "Paladín": storageAsset("factions/bg_paladin.jpg"),
+  "Pícaro": storageAsset("factions/bg_picaro.jpg"),
+};
+
+/**
+ * Arte de superficie inscrito y oficial que aún no consume ninguna superficie.
+ * Queda como reserva declarada y reversible: no se elimina del bucket ni se
+ * sustituye por otro arte, y sólo se promueve con una decisión registrada.
+ */
+export const RESERVED_SURFACE_ART: ReadonlyArray<string> = [
+  "heroes/hero_profile.jpg",
+  "heroes/hero_progress.jpg",
+  "heroes/hero_economy.jpg",
+  "heroes/hero_settings.jpg",
+  "heroes/hero_inventory_locked.jpg",
+  "regions/region_forge_core.jpg",
+  "regions/region_iron_veins.jpg",
+  "regions/region_shadow_fracture.jpg",
+  "regions/region_cinders_realm.jpg",
+  "regions/region_warbound_zone.jpg",
+  "events/events_season_hero.jpg",
+];
