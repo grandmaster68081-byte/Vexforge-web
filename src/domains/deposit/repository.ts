@@ -58,6 +58,8 @@ export async function submitDeposit(payload: SubmitDepositPayload): Promise<Subm
 }
 
 export async function getMyDeposits(): Promise<DepositRecord[]> {
+  const { data: s } = await supabase.auth.getSession();
+  if (!s.session) return [];
   const { data, error } = await supabase.rpc("vexforge_get_my_deposits");
   if (error || !data) return [];
   return data as DepositRecord[];

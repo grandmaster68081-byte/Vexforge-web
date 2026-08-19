@@ -68,6 +68,8 @@ export async function getLedgerEntries(
 }
 
 export async function getEconomyStats(): Promise<DomainResult<EconomyStats>> {
+  const { data: s } = await supabase.auth.getSession();
+  if (!s.session) return { status:"blocked_auth", data:null, reason:"Inicia sesión para ver tu economía." };
   const { data, error } = await supabase.rpc("vexforge_get_my_economy_stats");
   if (error) return { status:"ready", data:null, reason:getSafeErrorMessage(error) };
   if (!data?.ok) return { status:"ready", data:null, reason:getSafeErrorMessage(data?.reason, "No autorizado") };
