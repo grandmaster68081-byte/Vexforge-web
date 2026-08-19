@@ -1,3 +1,19 @@
+## 2026-08-19 — VE-DOC-2-CATALOG-COMMENTS — OPERATIONAL
+
+- Tipo de sesion: higiene documental de catalogo. Solo metadatos: sin cambios de esquema, datos, RLS, grants, RPCs, economia autoritativa, Storage ni arte.
+- Motivo: cerrar la deuda declarada en VE-18/VE-19 (higiene documental) ya que el CI sigue BLOCKED por `GITHUB_PAT` sin scope `workflow` (verificado hoy: scopes = `repo`).
+- Estado previo medido en vivo: 216 tablas publicas, 149 sin `obj_description` (las `vexforge_*` ya documentadas por VE-DOC-1).
+- Cambio: `supabase/migrations/0024_ve_doc_2_catalog_comments.sql` con 149 `comment on table`, generados desde evidencia real: consumidores de cliente detectados por `from("<tabla>")` en `src/`, dependencias en funciones/vistas del catalogo vivo y estado de RLS + numero de politicas.
+- Clasificacion aplicada: `runtime de cliente` (36 tablas), `soporte interno de base` (dependencia en funciones o vistas) y `soporte interno sin consumidor detectado`.
+- Aplicacion: ejecutada contra `rscuzqnfccqvltkdcdny` via Management API.
+- Evidencia: `select count(*) filter (where obj_description is null)` => 0 sobre 216 tablas publicas. Cobertura documental 100%.
+- Estado: NOT_STARTED -> OPERATIONAL. Nivel Q: Q3.
+- Deuda restante: QA autenticada `BLOCKED` sin sesion normal autorizada; `.github/workflows/verify.yml` pendiente de `GITHUB_PAT` con scope `workflow`; cron/logica temporal autoritativa en servidor; artes duplicados del bucket pendientes de autorizacion de listado.
+- Condicion de reapertura: creacion de tablas publicas nuevas sin `comment on table`.
+- Siguiente accion verificable: script `verify:table-docs` (ejecucion periodica, fuera de `verify:all` como `verify:manifest`) que falle si aparece una tabla publica sin descripcion.
+
+---
+
 ## 2026-08-19 — VE-19-AUTH-GUARD-STATIC-VERIFIER — OPERATIONAL
 
 - Tipo de sesión: endurecimiento de verificación. Sin cambios de esquema, RLS, RPCs, economía autoritativa, Storage ni arte.
