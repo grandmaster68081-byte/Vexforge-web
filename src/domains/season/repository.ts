@@ -127,6 +127,10 @@ export async function getMyPendingSeasonPassOrder(): Promise<{
   txSubmitted?: boolean;
   treasuryWallet?: string;
 }> {
+  // Sesion requerida: sin sesion viva el RPC autenticado responde 401 y el visitante
+  // anonimo no tiene ordenes que consultar.
+  const { data: { session } } = await supabase.auth.getSession();
+  if (!session) return { hasPending: false };
   const { data, error } = await supabase.rpc("vexforge_get_my_shop_orders", { p_limit: 30 });
   if (error || !Array.isArray(data)) return { hasPending: false };
   const orders = data as Array<Record<string, any>>;
