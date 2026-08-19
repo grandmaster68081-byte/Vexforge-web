@@ -1,3 +1,18 @@
+## 2026-08-19 — VE-19-AUTH-GUARD-STATIC-VERIFIER — OPERATIONAL
+
+- Tipo de sesión: endurecimiento de verificación. Sin cambios de esquema, RLS, RPCs, economía autoritativa, Storage ni arte.
+- Motivo: ejecutar la siguiente acción verificable declarada en VE-18 (verificador estático `verify:auth-guard`).
+- Cambios: `scripts/verify-auth-guard.mjs` (nuevo) y `package.json` (`verify:auth-guard` añadido y encadenado en `verify:all`).
+- Regla aplicada: falla el build si un módulo invoca `supabase.rpc("vexforge_get_my_*")` sin `supabase.auth.getSession()`/`getUser()` en ese mismo módulo.
+- Evidencia: `npm run verify:auth-guard` verde — 4 llamadas autenticadas en 4 módulos (`season`, `economy`, `deposit`, `ShopRoute`), todas con comprobación de sesión.
+- Alcance declarado: detecta ausencia de comprobación, no su colocación lógica exacta; no sustituye revisión humana.
+- Estado: NOT_STARTED → OPERATIONAL. Nivel Q: Q3.
+- Deuda restante: QA autenticada `BLOCKED` sin sesión normal autorizada; `.github/workflows/verify.yml` pendiente de `GITHUB_PAT` con scope `workflow`; higiene documental de tablas `vexforge_*`; artes duplicados del bucket pendientes de autorización de listado.
+- Condición de reapertura: aparición de un consumidor autenticado que evada la heurística (RPC construido dinámicamente o guarda en módulo distinto).
+- Siguiente acción verificable: cablear `verify:all` en CI cuando exista `GITHUB_PAT` con scope `workflow`.
+
+---
+
 ## 2026-08-19 — VE-18-AUTHED-RPC-SESSION-GUARD-EXTENSION — OPERATIONAL
 
 - Tipo de sesión: Auditoría estática de llamadas autenticadas + corrección mínima. Sin cambios de esquema, RLS, RPCs, economía autoritativa, Storage ni arte.
