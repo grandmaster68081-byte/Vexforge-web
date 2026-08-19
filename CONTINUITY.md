@@ -1,3 +1,19 @@
+## 2026-08-19 — VE-17-ANON-AUTHED-CALL-GUARD — OPERATIONAL
+
+- Tipo de sesión: Auditoría pública móvil + corrección de superficie. Sin cambios de datos autoritativos, RLS, RPCs ni economía.
+- Motivo: ejecutar la siguiente acción verificable de VE-16 (repetir la comparación pública) y cerrar la deuda de QA móvil abierta tras `VE-1-LEADERBOARD-MOBILE-TABLE`.
+- Auditoría pública (Chromium 390x844, rol anónimo, `https://vexforge-web.pages.dev`): 35 rutas públicas con HTTP 200, `scrollWidth == clientWidth` en las 35 (0 desbordamientos de documento; el arreglo de la tabla de ranking se mantiene). GitHub `main = 3c7fcdb3fe63cdfaf324d0d3c6f76ab1012655cd` idéntico al `sourceCommit` de `/build-manifest.json`.
+- Hallazgo real: `/deposit` disparaba el RPC autenticado `vexforge_get_my_deposits` antes de conocer la sesión, produciendo HTTP 401 y error de consola para todo visitante anónimo; además la ruta quedaba en `PageLoader` indefinido para anónimos porque el estado bloqueado se evaluaba después de exigir wallets de tesorería.
+- Decisión canónica: ninguna lectura autenticada se dispara sin sesión viva; el estado `BlockedAuthState` se resuelve antes que cualquier condición de carga de dato.
+- Cambios: `src/routes/DepositRoute.tsx` (carga condicionada a `authed`, orden de estados corregido). Sin cambios de esquema, Storage, manifiesto ni arte.
+- Evidencia: `npm run verify:all` verde (typecheck, build + verify-build, ui-identity 188 archivos/0 violaciones, identity-data 9 tablas/274 filas/0 violaciones, boss-art 15+15, card-art 127, surface-art 29/18/11, residual-art 51/32/29, manifest 218 HEAD/0 rotas, assets 21/21). Comprobación local con `vite preview` y Playwright en `/deposit` anónimo: 0 respuestas >= 400, 0 errores de consola y aviso "ACCESO REQUERIDO" visible.
+- Estado: NOT_STARTED → OPERATIONAL. Nivel Q: Q3.
+- Deuda restante: QA autenticada continúa `BLOCKED` sin sesión normal autorizada; `.github/workflows/verify.yml` pendiente de un `GITHUB_PAT` con scope `workflow`; sin cron autoritativo ni Edge Functions.
+- Condición de reapertura: nueva ruta que llame a un RPC autenticado sin comprobar sesión, o divergencia entre `main` y `build-manifest.json` público.
+- Siguiente acción verificable: auditar el resto de rutas con dato autenticado (`/withdrawal`, `/profile`, `/account`, `/inventory`) bajo sesión real cuando se autorice una cuenta de QA, y valorar una guarda estática que impida llamadas autenticadas sin comprobación de sesión.
+
+---
+
 ## 2026-08-18 — VE-16-CANONICAL-PUBLISH-RECONCILIATION — OPERATIONAL
 
 - Tipo de sesión: Publicación canónica + verificación pública, sin cambios de datos autoritativos.

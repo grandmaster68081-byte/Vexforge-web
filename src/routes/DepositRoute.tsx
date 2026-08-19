@@ -74,10 +74,12 @@ export function DepositRoute() {
     });
   }, []);
 
-  useEffect(() => { load(); }, [load]);
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => setAuthed(!!session));
   }, []);
+  // Sesion requerida: las lecturas autenticadas solo se disparan con sesion viva.
+  // Sin esta guarda el visitante anonimo provocaba un 401 evitable en el RPC de depositos.
+  useEffect(() => { if (authed) void load(); }, [authed, load]);
 
   const numAmount  = parseFloat(amount) || 0;
   const vexPreview = numAmount > 0 ? Math.floor(numAmount * 100) : 0;
@@ -111,8 +113,9 @@ export function DepositRoute() {
     });
   }
 
-  if (authed === null || loading || chains.length === 0) return <PageLoader />;
+  if (authed === null) return <PageLoader />;
   if (!authed) return <BlockedAuthState message="Inicia sesión para realizar depósitos de VEX." />;
+  if (loading || chains.length === 0) return <PageLoader />;
 
   const card: React.CSSProperties = {
     background: "rgba(255,255,255,0.03)",
