@@ -1,3 +1,17 @@
+## 2026-08-20 — VE-DOC-3-DOC-COVERAGE-PROBE — OPERATIONAL
+
+- Tipo de sesion: endurecimiento de verificacion documental. Sin cambios de esquema de negocio, RLS de datos de jugador, economia autoritativa, Storage ni arte.
+- Motivo: ejecutar la siguiente accion verificable de VE-DOC-2 (verificador que falle si aparece una tabla publica sin descripcion).
+- Cambios: `supabase/migrations/0025_ve_doc_3_doc_coverage_probe.sql` (sonda `public.vexforge_doc_coverage()`, `security definer`, `search_path` fijado, solo metadatos de catalogo), `scripts/verify-table-docs.mjs` (nuevo) y `package.json` (`verify:table-docs` encadenado en `verify:all`).
+- Aplicacion: migracion ya aplicada en vivo contra `rscuzqnfccqvltkdcdny`; hoy verificado en catalogo vivo que la funcion existe con la definicion de la migracion (paridad repo/base).
+- Evidencia: `node scripts/verify-table-docs.mjs` => `OK: 216/216 tablas publicas documentadas`.
+- Estado: IMPLEMENTED_UNVERIFIED -> OPERATIONAL. Nivel Q: Q3.
+- Deuda restante: QA autenticada `BLOCKED` sin sesion normal autorizada; `.github/workflows/verify.yml` pendiente de `GITHUB_PAT` con scope `workflow`; cron/logica temporal autoritativa en servidor; artes duplicados del bucket pendientes de autorizacion de listado.
+- Condicion de reapertura: cambio de la sonda o revocacion del `execute` a `anon`.
+- Siguiente accion verificable: publicar `.github/workflows/verify.yml` con un PAT con scope `workflow` y confirmar `verify:all` verde en CI.
+
+---
+
 ## 2026-08-19 — VE-DOC-2-CATALOG-COMMENTS — OPERATIONAL
 
 - Tipo de sesion: higiene documental de catalogo. Solo metadatos: sin cambios de esquema, datos, RLS, grants, RPCs, economia autoritativa, Storage ni arte.
