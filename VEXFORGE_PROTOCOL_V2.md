@@ -360,3 +360,24 @@ Tu primer paso es pedirme las credenciales de Supabase PAT y GitHub pat , una ve
 Está prohibido trabajar en cualquier entorno local oh fuera de los entornos de trabajo q indico yo , todo cambio debería quedar actualizado en la raíz del proyecto y en la continuidad 
 
 No te detengas para mostrarme ninguna auditoría, solo déjalo como fuente de información para ti , tu apenas analices todo empieza con el trabajo, sin detenerte hasta terminar , después al final actualizas lo q hiciste en el deploy siguiendo el flujo q tenemos y actualiza la continuidad 
+## 25. OBJETIVO FINAL: JUEGO TIER 1 DEL GENERO (VE-VIS-2)
+
+La fuente autoritativa del objetivo final NO es este documento: son dos tablas del
+proyecto Supabase, de lectura publica, que toda IA debe consultar antes de elegir trabajo.
+
+- `public.vexforge_tier1_phases` — hoja de ruta en 6 fases (arte y manifiesto, identidad y
+  layout, vida de la interfaz, bucle medido y primera sesion, profundidad competitiva y
+  live-ops, acabado Tier 1). Se ejecutan en orden ascendente.
+- `public.vexforge_visual_tier1_objective` — criterios medibles. Cada fila declara
+  `criterion_key`, `area`, `objective`, `measure_source`, `target_value`, `current_value`,
+  `status`, `blocking`, `phase` y `owning_unit`.
+
+Leyes:
+
+1. La siguiente unidad de trabajo se elige por la fase abierta mas baja y, dentro de ella,
+   por el criterio con `blocking = true` que no este en `MET`.
+2. Ningun criterio pasa a `MET` sin evidencia reproducible: guarda encadenada en
+   `verify:all` o recorrido de navegador sobre el deploy vivo.
+3. Los cambios de estado del plan se hacen por migracion SQL, nunca a mano.
+4. Tier 1 solo puede declararse cuando ningun criterio con `blocking = true` esta fuera de
+   `MET`; la decision se registra en `public.vexforge_project_decisions`.
