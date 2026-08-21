@@ -130,7 +130,10 @@ function makeParticles(rarity: string, rarColor: string, factionColor: string): 
   }));
 }
 
-const RUNE_CHARS = ['ᚠ','ᚢ','ᚦ','ᚨ','ᚱ','ᚲ','ᚷ','ᚹ','ᚺ','ᚾ','ᛁ','ᛃ','ᛇ','ᛈ','ᛉ'];
+const RUNE_ICONS: ForgeIconName[] = [
+  'flux', 'resonance', 'veil', 'spark', 'target',
+  'energy', 'shield', 'attack', 'star', 'fusion',
+];
 
 function ParticleEl({ p }: { p: Particle }) {
   const isRune = p.shape === 'rune';
@@ -156,8 +159,13 @@ function ParticleEl({ p }: { p: Particle }) {
 
   if (isRune) {
     return (
-      <div style={{ ...baseStyle, fontSize: p.size * 1.2, fontFamily: 'serif', opacity: 0.8 }}>
-        {RUNE_CHARS[p.id % RUNE_CHARS.length]}
+      <div style={{ ...baseStyle, width: p.size * 1.4, height: p.size * 1.4, opacity: 0.8 }}>
+        <ForgeIcon
+          name={RUNE_ICONS[p.id % RUNE_ICONS.length]!}
+          size={Math.max(10, p.size * 1.2)}
+          strokeWidth={1.25}
+          style={{ color: p.color }}
+        />
       </div>
     );
   }

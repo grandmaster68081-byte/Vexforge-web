@@ -1,3 +1,17 @@
+## 2026-08-21 — VE-VIS-3-ICON-LANGUAGE-RESIDUAL — IMPLEMENTED_UNVERIFIED
+
+- Tipo de sesion: IMPLEMENTACION + verificacion estatica para cerrar el criterio bloqueante `icon_language` de la fase 2 del plan Tier 1.
+- Fuente canonica: `main`, `VEXFORGE_PROTOCOL_V2.md`, `public.vexforge_visual_tier1_objective`, `ForgeIcon.tsx` y `verify-ui-identity.mjs`.
+- Problema: la guarda excluia el rango runico U+1600-U+16FF y `CardAttackCinematic` lo usaba como texto visual en particulas de ataque.
+- Cambios: `src/components/battle/CardAttackCinematic.tsx` usa `ForgeIcon` SVG para las particulas; `scripts/verify-ui-identity.mjs` bloquea el rango runico; nueva migracion `0035_ve_vis_3_icon_language_residual_closure.sql`; documento de unidad.
+- Sin cambios en combate autoritativo, economia, RPCs, RLS, autenticacion, Storage, lore, estadisticas ni assets.
+- Evidencia local: `npm run typecheck`, `npm run verify:ui-identity` (188/188, 0 violaciones) y `npm run verify:build` correctos.
+- Estado: `IN_PROGRESS` -> `IMPLEMENTED_UNVERIFIED`. Nivel Q: Q3 actual / Q3 objetivo.
+- Responsive, accesibilidad y reduced motion: se conserva la superficie existente; los iconos son decorativos `aria-hidden`, sin foco ni nuevas peticiones.
+- Bloqueo/deuda: falta aplicar la migracion en Supabase, publicar `main` y comparar `build-manifest.json` y assets en Cloudflare Pages.
+- Condicion de reapertura: nuevo icono visible como texto, cambio de contrato de `ForgeIcon` o regresion de la guarda Unicode.
+- Siguiente accion verificable: aplicar migracion, publicar y comprobar el deploy publico; solo entonces actualizar el estado a `OPERATIONAL`.
+
 ## 2026-08-21 — VE-VIS-1-TIER1-VISUAL-OBJECTIVE — OPERATIONAL
 
 - Tipo de sesion: gobierno del objetivo final del protocolo (calidad visual Tier 1 del genero) trazado como dato medible en la fuente autoritativa. Sin cambios de esquema de juego, economia autoritativa, RLS de datos de jugador, Storage ni arte.

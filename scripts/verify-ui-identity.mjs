@@ -10,7 +10,7 @@ import { extname, join, relative } from "node:path";
 const SOURCE_ROOT = "src";
 const SOURCE_EXTENSIONS = new Set([".ts", ".tsx"]);
 const TEMPLATE_QUOTE = String.fromCharCode(96);
-const FORBIDDEN = /[\u{1F300}-\u{1FAFF}\u{2300}-\u{23FF}\u{2190}-\u{21FF}\u{2500}-\u{257F}\u{2600}-\u{27BF}\u{2B00}-\u{2BFF}]/gu;
+const FORBIDDEN = /[\u{1F300}-\u{1FAFF}\u{1600}-\u{16FF}\u{2300}-\u{23FF}\u{2190}-\u{21FF}\u{2500}-\u{257F}\u{2600}-\u{27BF}\u{2B00}-\u{2BFF}]/gu;
 
 function sourceFiles(directory) {
   const files = [];
