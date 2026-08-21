@@ -1,3 +1,18 @@
+## 2026-08-21 — VE-DOC-4-COLUMN-COMMENTS — OPERATIONAL
+
+- Tipo de sesion: higiene documental de columnas. Solo metadatos: sin cambios de esquema, datos, RLS, grants, RPCs, economia autoritativa, Storage ni arte.
+- Motivo: CI sigue BLOCKED (verificado hoy: scopes del `GITHUB_PAT` = `repo`, sin `workflow`), por lo que se ejecuta la siguiente deuda documental desbloqueada tras VE-DOC-3.
+- Estado previo medido en vivo: 1900 columnas en el catalogo publico, 0 con `col_description`; alcance acotado a las 50 tablas que el cliente consume (`from("<tabla>")` en `src/`) = 536 columnas, 0 documentadas.
+- Cambios: `supabase/migrations/0026_ve_doc_4_column_comments.sql` (536 `comment on column` generados desde evidencia real del catalogo: tipo, clave primaria, referencia foranea, obligatoriedad y valor por defecto + sonda `public.vexforge_column_doc_coverage(text[])`, `security definer`, `search_path` fijado, solo metadatos), `scripts/verify-column-docs.mjs` (nuevo, alcance declarado por el repositorio) y `package.json` (`verify:column-docs` encadenado en `verify:all`).
+- Aplicacion: migracion aplicada contra `rscuzqnfccqvltkdcdny` via Management API; `notify pgrst, 'reload schema'` para exponer la sonda.
+- Evidencia: `npm run verify:all` verde de extremo a extremo, incluido `verify:column-docs — OK: 536/536 columnas documentadas en 50 tabla(s) de runtime de cliente` y `verify:table-docs — OK: 216/216`.
+- Estado: NOT_STARTED -> OPERATIONAL. Nivel Q: Q3.
+- Deuda restante: QA autenticada `BLOCKED` sin sesion normal autorizada; `.github/workflows/verify.yml` pendiente de `GITHUB_PAT` con scope `workflow`; cron/logica temporal autoritativa en servidor; artes duplicados del bucket pendientes de autorizacion de listado; 1364 columnas de tablas de soporte interno sin describir (fuera de alcance de esta unidad).
+- Condicion de reapertura: nueva tabla consumida por el cliente o nueva columna en las 50 tablas de alcance sin `comment on column`.
+- Siguiente accion verificable: extender la cobertura documental de columnas a las tablas de soporte interno `vexforge_*` con dependencia en funciones o vistas del catalogo vivo.
+
+---
+
 ## 2026-08-20 — VE-DOC-3-DOC-COVERAGE-PROBE — OPERATIONAL
 
 - Tipo de sesion: endurecimiento de verificacion documental. Sin cambios de esquema de negocio, RLS de datos de jugador, economia autoritativa, Storage ni arte.
