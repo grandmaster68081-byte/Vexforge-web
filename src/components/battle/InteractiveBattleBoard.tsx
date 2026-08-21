@@ -410,6 +410,44 @@ function TurnLogEntry({ snap, isLatest }: { snap: TurnSnapshot; isLatest: boolea
   );
 }
 
+// ─── VE-VIS-4: dedicated scene cue for every resolved combat action ───────────
+function CombatActionCue({ turn, visible }: { turn: TurnSnapshot['data'] | null; visible: boolean }) {
+  if (!turn || !visible) return null;
+
+  const eventTypes = new Set((turn.events ?? []).map(event => event.type));
+  const cue = turn.is_kill
+    ? { label: 'KO', detail: `${turn.attacker.name} derriba a ${turn.defender.name}`, icon: 'skull' as ForgeIconName, color: '#ff4444' }
+    : eventTypes.has('shield_block')
+      ? { label: 'BLOQUEO', detail: `${turn.defender.name} absorbe el impacto`, icon: 'shield' as ForgeIconName, color: '#4a9eff' }
+      : eventTypes.has('poison_death')
+        ? { label: 'VENENO', detail: `${turn.defender.name} cae por el efecto`, icon: 'skull' as ForgeIconName, color: '#a855f7' }
+        : eventTypes.has('poison_tick')
+          ? { label: 'VENENO', detail: `El efecto afecta a ${turn.defender.name}`, icon: 'skull' as ForgeIconName, color: '#a855f7' }
+          : eventTypes.has('double_strike') || turn.type === 'double_strike'
+            ? { label: 'DOBLE GOLPE', detail: `${turn.attacker.name} encadena el segundo impacto`, icon: 'attack' as ForgeIconName, color: '#ff6b35' }
+            : turn.lifesteal_heal > 0 || eventTypes.has('lifesteal')
+              ? { label: 'DRENAJE', detail: `${turn.attacker.name} recupera ${turn.lifesteal_heal} HP`, icon: 'heart' as ForgeIconName, color: '#3ddc84' }
+              : turn.is_crit
+                ? { label: 'CRÍTICO', detail: `${turn.attacker.name} atraviesa la defensa`, icon: 'spark' as ForgeIconName, color: '#e8b84b' }
+                : { label: 'IMPACTO', detail: `${turn.attacker.name} golpea a ${turn.defender.name}`, icon: 'target' as ForgeIconName, color: '#e8b84b' };
+
+  return (
+    <div
+      key={`${turn.turn}-${turn.type ?? 'attack'}-${cue.label}`}
+      className="combat-action-cue"
+      style={{ '--cue-color': cue.color } as CSSProperties}
+      role="status"
+      aria-live="polite"
+    >
+      <ForgeIcon name={cue.icon} size={18} strokeWidth={1.8} />
+      <span>
+        <strong>{cue.label}</strong>
+        <small>{cue.detail}</small>
+      </span>
+    </div>
+  );
+}
+
 // ─── Phase-based Attack Button ──────────────────────────────────────────────────
 function AttackButton({ phase, onAdvance, onAutoPlay, onStop, isAutoOn, totalTurns, turnIdx, faction }: {
   phase: TurnPhase; onAdvance: () => void; onAutoPlay: () => void; onStop: () => void;
@@ -1121,6 +1159,12 @@ export function InteractiveBattleBoard({
           background: `linear-gradient(180deg, transparent, ${oppZone.primary}aa, transparent)`,
           pointerEvents: 'none', zIndex: 0, animationDelay: '-2s',
         }} />
+
+        {/* VE-VIS-4: every resolved turn gets a semantic scene cue. */}
+        <CombatActionCue
+          turn={state.currentTurn}
+          visible={state.phase === 'ANIMATING'}
+        />
 
         {/* Attack flash overlay on the whole arena */}
         <div style={{

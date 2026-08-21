@@ -3163,6 +3163,49 @@ input.forge-input:focus {
   }
 }
 
+/* ─── VE-VIS-4: semantic combat scene cue ─────────────────────────────── */
+.combat-action-cue {
+  position: absolute;
+  top: 42%;
+  left: 50%;
+  z-index: 35;
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  min-width: min(250px, calc(100vw - 32px));
+  padding: 9px 15px;
+  border: 1px solid color-mix(in srgb, var(--cue-color) 58%, transparent);
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--cue-color) 13%, rgba(4, 4, 12, 0.92));
+  color: var(--cue-color);
+  box-shadow: 0 0 24px color-mix(in srgb, var(--cue-color) 28%, transparent), 0 8px 28px rgba(0, 0, 0, 0.42);
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  animation: combat-cue-enter var(--motion-dur-fast, 180ms) var(--motion-ease-emphasis, cubic-bezier(0.22, 1, 0.36, 1)) both;
+  backdrop-filter: blur(8px);
+}
+.combat-action-cue > svg { flex: 0 0 auto; filter: drop-shadow(0 0 7px var(--cue-color)); }
+.combat-action-cue > span { display: grid; gap: 1px; text-align: left; }
+.combat-action-cue strong {
+  font-family: "Cinzel", serif;
+  font-size: 12px;
+  letter-spacing: 0.12em;
+}
+.combat-action-cue small {
+  color: rgba(240, 240, 255, 0.72);
+  font-family: "Rajdhani", sans-serif;
+  font-size: 11px;
+  letter-spacing: 0.03em;
+}
+@keyframes combat-cue-enter {
+  from { opacity: 0; transform: translate(-50%, -42%) scale(0.88); filter: blur(4px); }
+  60% { opacity: 1; transform: translate(-50%, -50%) scale(1.03); filter: blur(0); }
+  to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .combat-action-cue { animation: none; }
+}
+
 /* ─── DailyChallengeCard — flex wrap on mobile ──────────────────── */
 @media (max-width: 500px) {
   .daily-challenge-inner {
