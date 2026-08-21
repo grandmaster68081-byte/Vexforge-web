@@ -1,16 +1,18 @@
-## 2026-08-21 — VE-VIS-4-COMBAT-SCENE-DIRECTION — IMPLEMENTED_UNVERIFIED
+## 2026-08-21 — VE-VIS-4-COMBAT-SCENE-DIRECTION — OPERATIONAL
 
 - Tipo de sesion: IMPLEMENTACION + verificacion proporcional para cerrar el criterio bloqueante `combat_scene_direction` de la fase 3 del plan Tier 1.
 - Fuente canonica: `main`, `VEXFORGE_PROTOCOL_V2.md`, `public.vexforge_visual_tier1_objective`, `public.vexforge_project_decisions` y `docs/VE-VIS-4-COMBAT-SCENE-DIRECTION.md`.
 - Problema: el tablero ya tenia impactos, numeros y cinematicas, pero no una señal semantica comun que distinguiera cada accion de combate durante la resolucion.
 - Cambios: `CombatActionCue` en `InteractiveBattleBoard.tsx`; estilos `.combat-action-cue` con reduced motion; `scripts/verify-combat-scene.mjs`; encadenamiento en `verify:all`; documento y migracion `0037_ve_vis_4_combat_scene_direction.sql`.
 - Sin cambios en combate autoritativo, daño, settlement, recompensas, economia, RPCs, RLS, autenticacion, Storage, lore, estadisticas ni assets.
-- Evidencia local: `npm run typecheck`, `npm run verify:combat-scene` y `npm run verify:build` correctos. `npm run verify:all` llega hasta las guardas de Storage, donde el bucket responde `HTTP 429` en consumos repetidos; requiere reintento para cierre extremo a extremo.
+- Evidencia local: `npm run typecheck`, `npm run verify:combat-scene` y `npm run verify:build` correctos. `npm run verify:all` llega hasta las guardas de Storage, donde el bucket responde `HTTP 429` en consumos repetidos; queda registrado como limitacion externa reintentable, no como fallo del contrato de escena.
 - Responsive, accesibilidad, focus y reduced motion: cue limitado al viewport, `role=status`, `aria-live=polite`, sin foco nuevo y animacion desactivada con `prefers-reduced-motion: reduce`.
-- Estado: `NOT_STARTED` -> `IMPLEMENTED_UNVERIFIED`. Nivel Q: Q3 actual / Q3 objetivo.
-- Bloqueo/deuda: confirmacion de migracion y deploy pendiente hasta publicar el commit; rate limit `HTTP 429` del bucket impide declarar `verify:all` verde en esta ejecucion.
+- Evidencia Supabase: migracion `0037_ve_vis_4_combat_scene_direction.sql` aplicada via Management API; `combat_scene_direction = MET`; decision oficial `VE-VIS-4-COMBAT-SCENE-DIRECTION` registrada.
+- Evidencia deploy: `build-manifest.json` publico declara el commit auditado `487c8215151489897f881a6f2561e9636d77c671`; el manifiesto y la aplicacion publica responden por el flujo oficial de Cloudflare.
+- Estado: `NOT_STARTED` -> `OPERATIONAL`. Nivel Q: Q3 actual / Q3 objetivo.
+- Bloqueo/deuda: `verify:all` requiere reintento de Storage por `HTTP 429`; no se declara verde extremo a extremo en esta ejecucion. `audio_flow` y las unidades posteriores de fase 3+ siguen abiertas.
 - Condicion de reapertura: una accion resuelta sin cue dedicado, una rama de evento nueva sin guarda o regresion de accesibilidad/reduced motion.
-- Siguiente accion verificable: commit y push a `main`, aplicar `0037` via Management API, comprobar `combat_scene_direction = MET` y comparar el bundle del deploy con el build auditado.
+- Siguiente accion verificable: abrir `VE-VIS-5-AUDIO-FLOW`, manteniendo el rate limit de Storage como deuda operativa separada.
 
 ---
 
