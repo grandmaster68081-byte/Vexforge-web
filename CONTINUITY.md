@@ -1,3 +1,18 @@
+## 2026-08-21 — VE-VIS-3-MOTION-SYSTEM — OPERATIONAL
+
+- Tipo de sesion: IMPLEMENTACION + verificacion proporcional para cerrar el criterio bloqueante `motion_and_feedback` de la fase 3 del plan Tier 1.
+- Fuente canonica: `main` commit `c5d1a6b9326348bdfcdb54213815f2c7d03385ff`, `VEXFORGE_PROTOCOL_V2.md`, `public.vexforge_visual_tier1_objective`, `public.vexforge_project_decisions` y `docs/VE-VIS-3-MOTION-SYSTEM.md`.
+- Problema: no existia un sistema de motion unificado en el repositorio; las superficies usaban duraciones, easing y keyframes locales sin un contrato comun ni guarda especifica.
+- Cambios: `src/styles.css` declara 17 tokens y 8 clases publicas; `App.tsx`, `HomeRoute.tsx` y `BattleResultScreen.tsx` consumen el contrato; `scripts/verify-motion.mjs` se encadena en `verify:all`; `supabase/migrations/0036_ve_vis_3_motion_system.sql` registra la evidencia y el criterio.
+- Sin cambios en combate autoritativo, daño, settlement, recompensas, economia, RPCs, RLS, autenticacion, Storage, lore, estadisticas ni assets.
+- Evidencia local: `npm run typecheck`, `npm run verify:motion`, `npm run verify:build` y `npm run verify:all` correctos. `verify:all` confirma identidad 188/188, datos 274 filas sin violaciones, arte canonico 15/15, cartas 127/127, manifiesto 218, assets 21/21, auth guard 4/4 y documentacion 218/218 tablas, 536/536 columnas runtime, 549/549 columnas de soporte.
+- Evidencia Supabase: migracion aplicada via Management API; `motion_and_feedback = MET`, `blocking = true`, `owning_unit = null`; decision oficial `VE-VIS-3-MOTION-SYSTEM` registrada.
+- Responsive, accesibilidad, focus y reduced motion: no se añaden superficies ni focos; el fallback global `prefers-reduced-motion: reduce` desactiva animaciones, transformaciones y transiciones no esenciales; los breakpoints existentes se conservan.
+- Estado: `NOT_STARTED` -> `OPERATIONAL`. Nivel Q: Q3 actual / Q3 objetivo.
+- Bloqueo/deuda: `combat_scene_direction`, `audio_flow` y el resto de criterios posteriores de fase 3+ siguen abiertos; `loading_and_empty_states` permanece `PARTIAL`; el bucket conserva higiene de assets bloqueada por autorizacion de listado.
+- Condicion de reapertura: una superficie critica introduce motion fuera del contrato, la guarda pierde cobertura o falla el comportamiento reduced-motion.
+- Siguiente accion verificable: abrir `VE-VIS-4-COMBAT-SCENE-DIRECTION`, dependiente del sistema base, y medir feedback dedicado por accion de combate sin alterar resultados autoritativos.
+
 ## 2026-08-21 — VE-VIS-3-ICON-LANGUAGE-RESIDUAL — OPERATIONAL
 
 - Tipo de sesion: IMPLEMENTACION + verificacion estatica para cerrar el criterio bloqueante `icon_language` de la fase 2 del plan Tier 1.
