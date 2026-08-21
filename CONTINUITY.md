@@ -1,76 +1,15 @@
-## 2026-08-21 — VE-DOC-4-COLUMN-COMMENTS — OPERATIONAL
+## 2026-08-21 — VE-DOC-5-SUPPORT-COLUMN-COMMENTS — OPERATIONAL
 
-- Tipo de sesion: higiene documental de columnas. Solo metadatos: sin cambios de esquema, datos, RLS, grants, RPCs, economia autoritativa, Storage ni arte.
-- Motivo: CI sigue BLOCKED (verificado hoy: scopes del `GITHUB_PAT` = `repo`, sin `workflow`), por lo que se ejecuta la siguiente deuda documental desbloqueada tras VE-DOC-3.
-- Estado previo medido en vivo: 1900 columnas en el catalogo publico, 0 con `col_description`; alcance acotado a las 50 tablas que el cliente consume (`from("<tabla>")` en `src/`) = 536 columnas, 0 documentadas.
-- Cambios: `supabase/migrations/0026_ve_doc_4_column_comments.sql` (536 `comment on column` generados desde evidencia real del catalogo: tipo, clave primaria, referencia foranea, obligatoriedad y valor por defecto + sonda `public.vexforge_column_doc_coverage(text[])`, `security definer`, `search_path` fijado, solo metadatos), `scripts/verify-column-docs.mjs` (nuevo, alcance declarado por el repositorio) y `package.json` (`verify:column-docs` encadenado en `verify:all`).
-- Aplicacion: migracion aplicada contra `rscuzqnfccqvltkdcdny` via Management API; `notify pgrst, 'reload schema'` para exponer la sonda.
-- Evidencia: `npm run verify:all` verde de extremo a extremo, incluido `verify:column-docs — OK: 536/536 columnas documentadas en 50 tabla(s) de runtime de cliente` y `verify:table-docs — OK: 216/216`.
+- Tipo de sesion: higiene documental de columnas de soporte interno. Solo metadatos: sin cambios de esquema, datos, RLS, grants, RPCs, economia autoritativa, Storage ni arte.
+- Motivo: ejecutar la siguiente accion verificable declarada en VE-DOC-4 (extender la cobertura documental de columnas a las tablas de soporte interno `vexforge_*` con dependencia en funciones o vistas del catalogo vivo). CI sigue BLOCKED por `GITHUB_PAT` sin scope `workflow`.
+- Estado previo medido en vivo: 24 tablas `vexforge_*` con dependencia en funciones o vistas; 17 de ellas con 181 columnas sin `col_description`.
+- Cambios: `supabase/migrations/0027_ve_doc_5_support_column_comments.sql` (181 `comment on column` generados desde evidencia real del catalogo: tipo, clave primaria, referencia foranea, obligatoriedad y valor por defecto), `scripts/verify-support-column-docs.mjs` (nuevo, alcance declarado por el repositorio: toda tabla `vexforge_*` con `comment on column` en `supabase/migrations/`, leido contra la sonda `vexforge_column_doc_coverage` con el rol anon) y `package.json` (`verify:support-column-docs` encadenado en `verify:all`).
+- Aplicacion: migracion aplicada contra `rscuzqnfccqvltkdcdny` via Management API. Reutiliza la sonda existente; no se creo ninguna funcion nueva.
+- Evidencia: recuento en vivo => 24/24 tablas de soporte con 0 columnas sin describir. `npm run verify:all` verde de extremo a extremo, incluido `verify:support-column-docs — OK: 287/287 columnas documentadas en 28 tabla(s) de soporte interno`, `verify:column-docs — OK: 536/536` y `verify:table-docs — OK: 216/216`.
 - Estado: NOT_STARTED -> OPERATIONAL. Nivel Q: Q3.
-- Deuda restante: QA autenticada `BLOCKED` sin sesion normal autorizada; `.github/workflows/verify.yml` pendiente de `GITHUB_PAT` con scope `workflow`; cron/logica temporal autoritativa en servidor; artes duplicados del bucket pendientes de autorizacion de listado; 1364 columnas de tablas de soporte interno sin describir (fuera de alcance de esta unidad).
-- Condicion de reapertura: nueva tabla consumida por el cliente o nueva columna en las 50 tablas de alcance sin `comment on column`.
-- Siguiente accion verificable: extender la cobertura documental de columnas a las tablas de soporte interno `vexforge_*` con dependencia en funciones o vistas del catalogo vivo.
-
----
-
-## 2026-08-20 — VE-DOC-3-DOC-COVERAGE-PROBE — OPERATIONAL
-
-- Tipo de sesion: endurecimiento de verificacion documental. Sin cambios de esquema de negocio, RLS de datos de jugador, economia autoritativa, Storage ni arte.
-- Motivo: ejecutar la siguiente accion verificable de VE-DOC-2 (verificador que falle si aparece una tabla publica sin descripcion).
-- Cambios: `supabase/migrations/0025_ve_doc_3_doc_coverage_probe.sql` (sonda `public.vexforge_doc_coverage()`, `security definer`, `search_path` fijado, solo metadatos de catalogo), `scripts/verify-table-docs.mjs` (nuevo) y `package.json` (`verify:table-docs` encadenado en `verify:all`).
-- Aplicacion: migracion ya aplicada en vivo contra `rscuzqnfccqvltkdcdny`; hoy verificado en catalogo vivo que la funcion existe con la definicion de la migracion (paridad repo/base).
-- Evidencia: `node scripts/verify-table-docs.mjs` => `OK: 216/216 tablas publicas documentadas`.
-- Estado: IMPLEMENTED_UNVERIFIED -> OPERATIONAL. Nivel Q: Q3.
-- Deuda restante: QA autenticada `BLOCKED` sin sesion normal autorizada; `.github/workflows/verify.yml` pendiente de `GITHUB_PAT` con scope `workflow`; cron/logica temporal autoritativa en servidor; artes duplicados del bucket pendientes de autorizacion de listado.
-- Condicion de reapertura: cambio de la sonda o revocacion del `execute` a `anon`.
-- Siguiente accion verificable: publicar `.github/workflows/verify.yml` con un PAT con scope `workflow` y confirmar `verify:all` verde en CI.
-
----
-
-## 2026-08-19 — VE-DOC-2-CATALOG-COMMENTS — OPERATIONAL
-
-- Tipo de sesion: higiene documental de catalogo. Solo metadatos: sin cambios de esquema, datos, RLS, grants, RPCs, economia autoritativa, Storage ni arte.
-- Motivo: cerrar la deuda declarada en VE-18/VE-19 (higiene documental) ya que el CI sigue BLOCKED por `GITHUB_PAT` sin scope `workflow` (verificado hoy: scopes = `repo`).
-- Estado previo medido en vivo: 216 tablas publicas, 149 sin `obj_description` (las `vexforge_*` ya documentadas por VE-DOC-1).
-- Cambio: `supabase/migrations/0024_ve_doc_2_catalog_comments.sql` con 149 `comment on table`, generados desde evidencia real: consumidores de cliente detectados por `from("<tabla>")` en `src/`, dependencias en funciones/vistas del catalogo vivo y estado de RLS + numero de politicas.
-- Clasificacion aplicada: `runtime de cliente` (36 tablas), `soporte interno de base` (dependencia en funciones o vistas) y `soporte interno sin consumidor detectado`.
-- Aplicacion: ejecutada contra `rscuzqnfccqvltkdcdny` via Management API.
-- Evidencia: `select count(*) filter (where obj_description is null)` => 0 sobre 216 tablas publicas. Cobertura documental 100%.
-- Estado: NOT_STARTED -> OPERATIONAL. Nivel Q: Q3.
-- Deuda restante: QA autenticada `BLOCKED` sin sesion normal autorizada; `.github/workflows/verify.yml` pendiente de `GITHUB_PAT` con scope `workflow`; cron/logica temporal autoritativa en servidor; artes duplicados del bucket pendientes de autorizacion de listado.
-- Condicion de reapertura: creacion de tablas publicas nuevas sin `comment on table`.
-- Siguiente accion verificable: script `verify:table-docs` (ejecucion periodica, fuera de `verify:all` como `verify:manifest`) que falle si aparece una tabla publica sin descripcion.
-
----
-
-## 2026-08-19 — VE-19-AUTH-GUARD-STATIC-VERIFIER — OPERATIONAL
-
-- Tipo de sesión: endurecimiento de verificación. Sin cambios de esquema, RLS, RPCs, economía autoritativa, Storage ni arte.
-- Motivo: ejecutar la siguiente acción verificable declarada en VE-18 (verificador estático `verify:auth-guard`).
-- Cambios: `scripts/verify-auth-guard.mjs` (nuevo) y `package.json` (`verify:auth-guard` añadido y encadenado en `verify:all`).
-- Regla aplicada: falla el build si un módulo invoca `supabase.rpc("vexforge_get_my_*")` sin `supabase.auth.getSession()`/`getUser()` en ese mismo módulo.
-- Evidencia: `npm run verify:auth-guard` verde — 4 llamadas autenticadas en 4 módulos (`season`, `economy`, `deposit`, `ShopRoute`), todas con comprobación de sesión.
-- Alcance declarado: detecta ausencia de comprobación, no su colocación lógica exacta; no sustituye revisión humana.
-- Estado: NOT_STARTED → OPERATIONAL. Nivel Q: Q3.
-- Deuda restante: QA autenticada `BLOCKED` sin sesión normal autorizada; `.github/workflows/verify.yml` pendiente de `GITHUB_PAT` con scope `workflow`; higiene documental de tablas `vexforge_*`; artes duplicados del bucket pendientes de autorización de listado.
-- Condición de reapertura: aparición de un consumidor autenticado que evada la heurística (RPC construido dinámicamente o guarda en módulo distinto).
-- Siguiente acción verificable: cablear `verify:all` en CI cuando exista `GITHUB_PAT` con scope `workflow`.
-
----
-
-## 2026-08-19 — VE-18-AUTHED-RPC-SESSION-GUARD-EXTENSION — OPERATIONAL
-
-- Tipo de sesión: Auditoría estática de llamadas autenticadas + corrección mínima. Sin cambios de esquema, RLS, RPCs, economía autoritativa, Storage ni arte.
-- Motivo: ejecutar la siguiente acción verificable de VE-17 (extender la guarda de sesión al resto de consumidores de RPC autenticado).
-- Verificación previa: GitHub `main = 69c5849c588431aa74744dda3d97f547021d20fe` idéntico al `sourceCommit` de `/build-manifest.json`; HTTP 200 en `/`, `/leaderboard`, `/season-rankings`, `/raids`, `/world-bosses` y `/achievements`.
-- Auditoría: cuatro consumidores de RPC `vexforge_get_my_*`. `ShopRoute.tsx:101` sólo se dispara dentro de la rama con sesión viva (correcto) y `season/repository.ts:134` ya quedó guardado en VE-17. Dos quedaban sin comprobación previa de sesión: `economy/repository.ts:71` (`vexforge_get_my_economy_stats`) y `deposit/repository.ts:61` (`vexforge_get_my_deposits`), ambos capaces de producir 401 anónimo si un consumidor futuro los invoca sin sesión.
-- Decisión canónica reafirmada: ninguna lectura autenticada se dispara sin sesión viva; la comprobación vive en el repositorio de dominio, no sólo en la ruta.
-- Cambios: `src/domains/economy/repository.ts` (devuelve `blocked_auth` sin sesión, alineado con `getLedgerEntries`) y `src/domains/deposit/repository.ts` (devuelve lista vacía sin sesión, coherente con su contrato actual).
-- Evidencia: `npm run typecheck` verde y `npm run build` verde en el checkout limpio.
-- Estado: NOT_STARTED → OPERATIONAL. Nivel Q: Q3.
-- Deuda restante: QA autenticada continúa `BLOCKED` sin sesión normal autorizada; `.github/workflows/verify.yml` pendiente de `GITHUB_PAT` con scope `workflow`; higiene documental de tablas `vexforge_*`; artes duplicados del bucket pendientes de autorización de listado.
-- Condición de reapertura: nuevo repositorio de dominio que llame a un RPC autenticado sin comprobar sesión, o divergencia entre `main` y `build-manifest.json` público.
-- Siguiente acción verificable: valorar un verificador estático (`verify:auth-guard`) que falle el build si un `supabase.rpc("vexforge_get_my_*")` aparece sin `getSession` previo en su mismo módulo.
+- Deuda restante: QA autenticada `BLOCKED` sin sesion normal autorizada; `.github/workflows/verify.yml` pendiente de `GITHUB_PAT` con scope `workflow`; cron/logica temporal autoritativa en servidor; artes duplicados del bucket pendientes de autorizacion de listado; columnas de tablas de soporte sin dependencia detectada en funciones o vistas todavia sin describir.
+- Condicion de reapertura: nueva columna en las tablas `vexforge_*` de alcance sin `comment on column`, o revocacion del `execute` de la sonda a `anon`.
+- Siguiente accion verificable: completar la cobertura documental de las columnas publicas restantes fuera de alcance (tablas de soporte sin consumidor ni dependencia detectada) y volver a medir `1900` columnas del catalogo publico.
 
 ---
 
