@@ -92,3 +92,16 @@
 - Siguiente accion verificable: ejecutar `VE-VIS-3-MOTION-SYSTEM` — implementar en el repositorio los tokens y clases de motion en `src/styles.css`, su consumo en `App.tsx`, `HomeRoute.tsx` y `BattleResultScreen.tsx`, y la guarda `scripts/verify-motion.mjs` encadenada en `verify:all`; despues actualizar el criterio `motion_and_feedback` a `MET` por migracion, con la evidencia real.
 
 ---
+
+
+---
+
+## 2026-08-21 — VE-TIER1-3-BENCHMARK-AND-RELEASE-GATE — OPERATIONAL
+
+- Tipo de sesion: auditoria y refuerzo del plan Tier 1 vigente contra Supabase, main y referencias actuales del genero.
+- Veredicto: el plan original era necesario pero insuficiente; no podia garantizar Tier 1 porque permitia criterios no bloqueantes fuera de MET, no tenia benchmark vivo y carecia de gates de integridad, red, monetizacion, retencion, operacion y confianza.
+- Cambios canonicos: fase 7 de benchmark y release readiness; ocho criterios bloqueantes: benchmark_definition, competitive_integrity, network_resilience, monetization_fairness, retention_validation, release_readiness, player_trust y evidence_reproducibility.
+- Regla nueva: Tier 1 solo puede declararse cuando todos los criterios del plan estan en MET y cada uno tiene evidencia reproducible vinculada a commit, deploy, fecha y fuente.
+- Estado: el objetivo Tier 1 sigue NOT_REACHED_UNTIL_ALL_CRITERIA_MET. No se declara Tier 1 por completar fases nominales.
+- Contradiccion registrada: project_memory conserva active_plan GAME_ENGINE_COMBAT_TUTORIAL, mientras la decision visual Tier 1 define VE-VIS-3-MOTION-SYSTEM como siguiente unidad; ambas capas deben reconciliarse antes de declarar el plan operativo como ruta unica.
+- Siguiente accion verificable: ejecutar VE-VIS-3-MOTION-SYSTEM y actualizar los valores current_value solo con verify:all y evidencia del deploy vivo.
