@@ -1,3 +1,19 @@
+## 2026-08-21 — VE-CI-1-WORKFLOW-HANDOFF — OPERATIONAL
+
+- Tipo de sesion: cierre de verificacion visual autenticada de VE-QA-1 sobre el deploy vivo + entrega ejecutable del CI bloqueado. Sin cambios de esquema, RLS, economia autoritativa, Storage ni arte.
+- Verificacion pendiente de VE-QA-1 resuelta: el deploy de Cloudflare ya propago `sourceCommit=4617f44` (`build-manifest.json`) y los chunks publicos coinciden bit a bit con el build local por SHA-256 (`DepositRoute-CIBCojdg.js`, `AdminDepositsRoute-COl6Hq54.js`, `index-FI4daHK-.js`, los tres `match=YES`).
+- Evidencia visual autenticada (Chromium, sesion real de `pavilo20.qa@vexforge.test` inyectada en el sitio publicado): `/deposit` ya renderiza la pantalla completa "Obtener VEX" — saldos (VEX ingame 210 / tradeable 0), selector de red `BNB Chain (USDT BEP-20)`, direccion de tesoro `0x29B2907d6E10BeB2becb9bA82f2b6af04815c403` con boton Copiar, formulario de registro (monto/TX hash/wallet origen) y tabla de referencia de precios. Sin loader eterno. Barrido de `/deposit`, `/withdraw`, `/economy`, `/profile`, `/missions`, `/pvp`: 0 errores de consola y 0 respuestas HTTP >= 400.
+- Estado de VE-QA-1: `IMPLEMENTED_UNVERIFIED` -> `VERIFIED/OPERATIONAL` con evidencia de navegador real sobre el deploy publico.
+- CI: bloqueo diagnosticado con evidencia, no supuesto. `PUT /repos/grandmaster68081-byte/Vexforge-web/contents/.github/workflows/verify.yml` devuelve `404 Not Found` con el `GITHUB_PAT` actual, comportamiento documentado de GitHub cuando el token carece del scope `workflow`.
+- Cambios: `ci/verify.workflow.yml` (workflow `verify` completo y listo para copiar: checkout, Node 20 con cache npm, `npm ci --ignore-scripts`, `tsc --noEmit -p tsconfig.app.json`, `npm run verify:all`, con `VITE_SUPABASE_URL`/`VITE_SUPABASE_ANON_KEY` publicos como respaldo y sobreescribibles por *Repository variables*) y `docs/CI_ACTIVATION.md` (dos vias de desbloqueo: commit del archivo desde la web de GitHub, que ignora el limite de scope, o reemisar `GITHUB_PAT` con scope `workflow`).
+- Verify: `npm run verify:all` verde de extremo a extremo (typecheck, build, ui-identity, identity-data, artes, manifest 218, assets 21/21, auth-guard, table-docs 216/216, column-docs 536/536, support-column-docs 528/528). El workflow no se encadena en `verify:all` porque vive fuera de `.github/workflows/` y no es ejecutable hasta activarse.
+- Estado: NOT_STARTED -> OPERATIONAL. Nivel Q: Q3.
+- Deuda restante: CI sigue `BLOCKED` en ejecucion real hasta que se cree `.github/workflows/verify.yml` (accion humana de un paso, ya documentada); cron/logica temporal autoritativa en servidor; artes duplicados del bucket pendientes de autorizacion de listado; limpieza Unicode en motores de batalla; 942 columnas de tablas publicas legado sin describir.
+- Condicion de reapertura: cambio en los scripts de `verify:all` que invalide el workflow entregado, o activacion del CI con fallo en la primera ejecucion.
+- Siguiente accion verificable: tras activar `.github/workflows/verify.yml`, leer la primera ejecucion de `Actions` y ajustar el workflow con la evidencia del log; en paralelo, mutaciones economicas reales con jugador QA (deposito pendiente -> aprobacion admin -> acreditacion VEX).
+
+---
+
 ## 2026-08-21 — VE-QA-1-AUTHENTICATED-SURFACE-SWEEP — OPERATIONAL
 
 - Tipo de sesion: QA autenticada de superficie sobre el deploy vivo + correccion del hallazgo real medido. Sin cambios de economia autoritativa, Storage ni arte.
