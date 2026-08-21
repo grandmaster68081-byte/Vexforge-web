@@ -1,3 +1,20 @@
+## 2026-08-21 — VE-VIS-1-TIER1-VISUAL-OBJECTIVE — OPERATIONAL
+
+- Tipo de sesion: gobierno del objetivo final del protocolo (calidad visual Tier 1 del genero) trazado como dato medible en la fuente autoritativa. Sin cambios de esquema de juego, economia autoritativa, RLS de datos de jugador, Storage ni arte.
+- Motivo: la vision final ("juego visualmente Tier 1 para su genero") no tenia criterios medibles ni estado por criterio; no era posible declarar si la meta esta alcanzada ni cual es la ruta critica restante.
+- Cambios: `supabase/migrations/0030_ve_vis_1_tier1_visual_objective.sql` (tabla `public.vexforge_visual_tier1_objective` con GRANTs explicitos, RLS y politica de lectura publica, `comment on` de tabla y de las 12 columnas, y 10 criterios sembrados con `on conflict do update`) y `docs/VE-VIS-1-TIER1-VISUAL-OBJECTIVE.md` (lectura del estado y ruta critica).
+- Aplicacion: migracion aplicada en produccion contra `rscuzqnfccqvltkdcdny` via Management API y confirmada por consulta (10/10 criterios presentes y ordenados).
+- Medicion registrada: MET en `surface_backgrounds`, `boss_art` (15/15), `card_art` (127/127), `asset_manifest_integrity` (218 filas / 21 assets), `ui_identity_tokens` (0 violaciones) y `mobile_layout`; PARTIAL en `icon_language` y `loading_and_empty_states`; NOT_STARTED en `motion_and_feedback`; BLOCKED en `asset_hygiene`.
+- Veredicto: **Tier 1 NO alcanzado todavia**. La capa de arte e identidad estatica esta cerrada; la brecha real es de vida en pantalla (motion y feedback) mas los restos de lenguaje de iconos.
+- Verify: `npm run verify:all` verde en typecheck, build, ui-identity, identity-data (274 filas, 0 violaciones), boss-art 15/15, card-art 127/127, surface-art 29 inscritos / 18 consumidos, y assets 21/21.
+- Anomalia observada VE-OBS-02: `verify:manifest` fallo en esta ejecucion por `HTTP 429` de Storage al comprobar `cards/IMG_20260606_012301_077.jpg`, no por incoherencia del manifiesto. Es limitacion de tasa del bucket bajo verificacion secuencial de 218 filas inmediatamente despues de `verify:card-art`/`verify:surface-art`, que ya recorren Storage. Mitigacion propuesta y no aplicada por cuota: reintento con backoff y tratamiento de 429 como reintentable en `scripts/verify-manifest.mjs`.
+- Estado: NOT_STARTED -> OPERATIONAL. Nivel Q: Q3.
+- Deuda restante: `motion_and_feedback` NOT_STARTED (bloqueante de Tier 1); limpieza Unicode en `NotFoundRoute`/`PvpRoute` y motores de batalla; estados vacios sin arte de marca; artes duplicados del bucket pendientes de autorizacion de listado; CI `BLOCKED` (`GITHUB_PAT` sin scope `workflow`); cron/logica temporal autoritativa en servidor; VE-OBS-02 sin mitigar.
+- Condicion de reapertura: cambio de estado real de cualquier criterio sin actualizar la tabla por migracion, o incorporacion de un criterio visual nuevo no trazado.
+- Siguiente accion verificable: abrir `VE-VIS-2-MOTION-SYSTEM` — definir tokens de motion (duracion, easing, distancia) en el sistema de diseno, aplicarlos a transicion de entrada de superficie y a estados hover/press, y actualizar `motion_and_feedback` a MET por migracion con evidencia de navegador sobre el deploy publico.
+
+---
+
 ## 2026-08-21 — VE-CI-1-WORKFLOW-HANDOFF — OPERATIONAL
 
 - Tipo de sesion: cierre de verificacion visual autenticada de VE-QA-1 sobre el deploy vivo + entrega ejecutable del CI bloqueado. Sin cambios de esquema, RLS, economia autoritativa, Storage ni arte.
