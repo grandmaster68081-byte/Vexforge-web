@@ -117,3 +117,16 @@
 - Nueva regla: PRELAUNCH_TIER1_CANDIDATE se alcanza con todos los criterios prelaunch en MET y puntuacion ponderada >=85/100 contra cinco competidores directos y dos alternativas indirectas versionados. No requiere jugadores publicos ni historial de retencion.
 - LIVE_TIER1_VALIDATED queda separado y se revisara solo despues del lanzamiento.
 - Siguiente accion verificable: construir la matriz benchmark y ejecutar la primera sesion controlada; no declarar Tier 1 hasta que la evidencia exista.
+
+
+---
+
+## 2026-08-21 — VE-TIER1-5-STRONG-PRELAUNCH-BAND — OPERATIONAL
+
+- El objetivo se eleva de Tier 1 prelaunch nominal a Tier 1 Strong prelaunch.
+- Nuevos gates: benchmark_positioning, first_impression, gameplay_balance, content_quality, device_compatibility y finish_quality.
+- Umbral: >=90/100 ponderado, ninguna dimension critica <85/100, ninguna brecha critica >10 puntos frente al mejor benchmark y victoria en al menos 3/5 comparaciones directas.
+- Hard fails: gate critico fuera de MET, estrategia dominante, ruta muerta, fallo critico de auth/settlement, bloqueo movil o placeholder/generico sin resolver.
+- Alcance: sigue siendo prelaunch y no exige poblacion publica, retencion historica ni escala postlaunch.
+- Estado: TIER1_STRONG_PRELAUNCH aun no alcanzado; la matriz y las pruebas de calidad siguen pendientes.
+- Siguiente accion verificable: construir benchmark_positioning y ejecutar first_impression/gameplay_balance antes de declarar cualquier estado Tier 1.
