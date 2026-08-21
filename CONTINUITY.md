@@ -13,3 +13,17 @@
 
 ---
 
+## 2026-08-21 — VE-DOC-6-RESIDUAL-SUPPORT-COLUMN-COMMENTS — OPERATIONAL
+
+- Tipo de sesion: higiene documental de columnas. Solo metadatos: sin cambios de esquema, datos, RLS, grants, RPCs, economia autoritativa, Storage ni arte.
+- Motivo: ejecutar la siguiente accion verificable declarada en VE-DOC-5 (cerrar la cobertura de las tablas de soporte `vexforge_*` sin consumidor ni dependencia detectada y volver a medir el catalogo publico de 1900 columnas).
+- Estado previo medido en vivo: 27 tablas `vexforge_*` con 241 columnas sin `col_description`.
+- Cambios: `supabase/migrations/0028_ve_doc_6_residual_support_column_comments.sql` (241 `comment on column` generados desde evidencia real del catalogo: tipo, clave primaria, referencia foranea, obligatoriedad y valor por defecto). Sin scripts nuevos: la guarda existente `verify:support-column-docs` amplia su alcance sola porque lo declara el repositorio.
+- Aplicacion: migracion aplicada contra `rscuzqnfccqvltkdcdny` via Management API.
+- Evidencia: recuento en vivo => 0 columnas `vexforge_*` sin describir. `npm run verify:all` verde de extremo a extremo, incluido `verify:support-column-docs — OK: 528/528 columnas documentadas en 55 tabla(s) de soporte interno`, `verify:column-docs — OK: 536/536` y `verify:table-docs — OK: 216/216`. Catalogo publico: 1900 columnas totales, 942 sin describir (todas en tablas legado no `vexforge_*`).
+- Estado: NOT_STARTED -> OPERATIONAL. Nivel Q: Q3.
+- Deuda restante: QA autenticada `BLOCKED` sin sesion normal autorizada; `.github/workflows/verify.yml` pendiente de `GITHUB_PAT` con scope `workflow`; cron/logica temporal autoritativa en servidor; artes duplicados del bucket pendientes de autorizacion de listado; 942 columnas de tablas publicas legado (`tg_*`, `player_state`, `wallet_transactions`, `daily_quests`, ...) sin describir.
+- Condicion de reapertura: nueva columna en cualquier tabla `vexforge_*` sin `comment on column`.
+- Siguiente accion verificable: documentar las columnas de las tablas publicas legado consumidas por el cliente y por RPCs autoritativas (empezando por `player_state`, `wallet_transactions` y `daily_quests`) y extender la guarda a ese alcance.
+
+---
