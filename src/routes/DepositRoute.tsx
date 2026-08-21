@@ -50,6 +50,8 @@ export function DepositRoute() {
   const { balance, deposits, loading, submitting, submitResult, load, submit, reset } = useDeposit();
   const [tab, setTab]           = useState<DepositTab>("crypto");
   const [chains, setChains]     = useState<ChainOption[]>([]);
+  // VE-QA-1: separar "cargando" de "sin wallets activas" evita el loader eterno.
+  const [chainsLoaded, setChainsLoaded] = useState(false);
   const [chain, setChain]       = useState("");
   const [amount, setAmount]     = useState("");
   const [txHash, setTxHash]     = useState("");
@@ -71,7 +73,8 @@ export function DepositRoute() {
       }));
       setChains(loaded);
       if (loaded.length > 0) setChain(loaded[0].key);
-    });
+      setChainsLoaded(true);
+    }).catch(() => setChainsLoaded(true));
   }, []);
 
   useEffect(() => {
@@ -115,7 +118,12 @@ export function DepositRoute() {
 
   if (authed === null) return <PageLoader />;
   if (!authed) return <BlockedAuthState message="Inicia sesión para realizar depósitos de VEX." />;
-  if (loading || chains.length === 0) return <PageLoader />;
+  if (loading || !chainsLoaded) return <PageLoader />;
+  if (chains.length === 0) {
+    return (
+      <BlockedAuthState message="No hay wallets de depósito activas en este momento. Vuelve a intentarlo más tarde." />
+    );
+  }
 
   const card: React.CSSProperties = {
     background: "rgba(255,255,255,0.03)",

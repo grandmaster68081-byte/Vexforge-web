@@ -1,3 +1,20 @@
+## 2026-08-21 — VE-QA-1-AUTHENTICATED-SURFACE-SWEEP — OPERATIONAL
+
+- Tipo de sesion: QA autenticada de superficie sobre el deploy vivo + correccion del hallazgo real medido. Sin cambios de economia autoritativa, Storage ni arte.
+- Motivo: levantar la deuda historica "QA autenticada BLOCKED" emitiendo una sesion de jugador real y barriendo la superficie completa contra el sitio publicado.
+- Sesion QA: `pavilo20.qa@vexforge.test` emitida via Admin API (magic link -> OTP -> tokens) e inyectada en Playwright contra `vexforge-web.pages.dev`. Credenciales solo en el entorno de ejecucion: nunca en el repositorio ni en el chat.
+- Evidencia del barrido: 32 rutas autenticadas con 0 errores de consola y 0 respuestas HTTP >= 400, contenido real renderizado por pantalla, y `/admin` en "Acceso Denegado" para jugador sin privilegios (gate confirmado). Flujos interactivos verificados: tutorial descartable, PvP -> Forge Formation (Campeon/Vanguardia/Centinela), quests diarias con progreso real y packs en "VEX insuficiente" con saldo 0 (comportamiento correcto).
+- Hallazgo real corregido: `/deposit` colgado en "CARGANDO..." indefinidamente. Causa raiz medida en el catalogo vivo: `public.vexforge_treasury` tenia RLS con una unica politica `TO service_role`; `authenticated` tenia GRANT de columnas pero ninguna politica, por lo que el `select` devolvia 0 filas sin error y `chains.length === 0` bloqueaba el loader.
+- Cambios: `supabase/migrations/0029_ve_qa_1_treasury_deposit_read.sql` (politica de minimo privilegio `authenticated_read_active_project_treasury`, solo `active = true and purpose = 'project_treasury'`; `anon` sigue sin lectura) y `src/routes/DepositRoute.tsx` (estado `chainsLoaded` que separa "cargando" de "sin wallets" y muestra estado vacio en vez de loader eterno).
+- Aplicacion: migracion ya aplicada en produccion contra `rscuzqnfccqvltkdcdny` via Management API y confirmada en `pg_policy`. Verificado por REST: `authenticated` -> 1 wallet (BSC/USDT/BEP20), `anon` -> `[]`.
+- Verify: `npx tsc` limpio y `npm run verify:all` verde de extremo a extremo (manifest 218, assets 21/21, auth-guard, table-docs 216/216, column-docs 536/536, support-column-docs 528/528).
+- Estado: NOT_STARTED -> OPERATIONAL. Nivel Q: Q3. Deuda "QA autenticada: BLOCKED" -> RESUELTA.
+- Deuda restante: CI sigue `BLOCKED` (`GITHUB_PAT` sin scope `workflow`, `.github/workflows/verify.yml` no activable); cron/logica temporal autoritativa en servidor; artes duplicados del bucket pendientes de autorizacion de listado; limpieza Unicode en `NotFoundRoute`/`PvpRoute`/motores de batalla.
+- Condicion de reapertura: nueva ruta autenticada sin barrido, revocacion de la politica de lectura del tesoro, o perdida de la sesion QA.
+- Siguiente accion verificable: extender el barrido autenticado a mutaciones economicas reales (deposito pendiente -> aprobacion admin -> acreditacion VEX) con un jugador QA y saldo controlado.
+
+---
+
 ## 2026-08-21 — VE-DOC-5-SUPPORT-COLUMN-COMMENTS — OPERATIONAL
 
 - Tipo de sesion: higiene documental de columnas de soporte interno. Solo metadatos: sin cambios de esquema, datos, RLS, grants, RPCs, economia autoritativa, Storage ni arte.
