@@ -42,6 +42,31 @@ export const VERIFIED_ASSETS = [
 
 export type VerifiedAssetPath = (typeof VERIFIED_ASSETS)[number];
 
+/**
+ * VE-VIS-5-AUDIO-FLOW — catálogo canónico de audio procedural.
+ *
+ * El proyecto adoptó Web Audio API como fuente oficial para audio: no hay
+ * archivos externos que sustituir ni rutas de Storage que inventar. Estas
+ * entradas son los identificadores estables de los generadores que consume
+ * `audioEngine.ts`, con sus contextos y consumidores declarados.
+ */
+export const AUDIO_MANIFEST = [
+  { id: "ambient:hub", source: "web-audio-procedural", contexts: ["hub"] },
+  { id: "ambient:battle", source: "web-audio-procedural", contexts: ["battle"] },
+  { id: "ambient:missions", source: "web-audio-procedural", contexts: ["missions"] },
+  { id: "ambient:market", source: "web-audio-procedural", contexts: ["market"] },
+  { id: "ambient:bosses", source: "web-audio-procedural", contexts: ["bosses"] },
+  { id: "ambient:social", source: "web-audio-procedural", contexts: ["social"] },
+  { id: "combat:intro", source: "web-audio-procedural", contexts: ["battle"] },
+  { id: "combat:mid", source: "web-audio-procedural", contexts: ["battle"] },
+  { id: "combat:last-stand", source: "web-audio-procedural", contexts: ["battle"] },
+  { id: "sfx:ui", source: "web-audio-procedural", contexts: ["hub", "market", "social"] },
+  { id: "sfx:combat", source: "web-audio-procedural", contexts: ["battle"] },
+  { id: "sfx:rewards", source: "web-audio-procedural", contexts: ["missions", "market"] },
+] as const;
+
+export type AudioManifestEntry = (typeof AUDIO_MANIFEST)[number];
+
 /** URL pública de un asset canónico verificado. */
 export function storageAsset(path: VerifiedAssetPath): string {
   return `${STORAGE_BASE}/${path}`;

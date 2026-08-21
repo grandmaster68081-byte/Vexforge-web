@@ -1,3 +1,20 @@
+## 2026-08-21 — VE-VIS-5-AUDIO-FLOW — OPERATIONAL
+
+- Tipo de sesion: IMPLEMENTACION + verificacion proporcional para cerrar el criterio bloqueante `audio_flow` de la fase 3 del plan Tier 1.
+- Fuente canonica: `main`, `VEXFORGE_PROTOCOL_V2.md`, `public.vexforge_visual_tier1_objective`, decisiones oficiales de audio y `docs/VE-VIS-5-AUDIO-FLOW.md`.
+- Problema: el motor procedural ya emitia audio, pero no existia un catalogo verificable de procedencia/consumidores ni una guarda que demostrara cuatro contextos musicales.
+- Cambios preparados: `AUDIO_MANIFEST` con 12 entradas procedurales; guarda `verify:audio-flow` encadenada en `verify:all`; documento de unidad y migracion `0038_ve_vis_5_audio_flow.sql`.
+- Sin cambios en combate autoritativo, dano, settlement, recompensas, economia, RPCs, RLS, autenticacion, Storage, lore ni estadisticas.
+- Evidencia local: `npm run typecheck`, `npm run verify:audio-flow` y `npm run verify:build` correctos. `npm run verify:all` llega hasta `verify:card-art`, donde Storage devuelve HTTP 429 reintentable para seis objetos; las guardas anteriores, incluida audio, son correctas.
+- Responsive, accesibilidad, focus y reduced motion: se conserva el desbloqueo por gesto, mute/volumen existentes y la guarda visual global.
+- Evidencia Supabase: migracion `0038_ve_vis_5_audio_flow.sql` aplicada via Management API; `audio_flow = MET` y decision oficial `VE-VIS-5-AUDIO-FLOW` registrada.
+- Estado: `NOT_STARTED` -> `OPERATIONAL`. Nivel Q: Q3 actual / Q3 objetivo.
+- Bloqueo/deuda: `verify:all` conserva deuda operativa separada por HTTP 429 de Storage; no afecta el contrato de audio procedural.
+- Condicion de reapertura: contexto sin musica, accion critica sin SFX, procedencia ausente o regresion del desbloqueo/accesibilidad.
+- Siguiente accion verificable: hacer commit/push a `main` y verificar que el deploy publico refleja el commit auditado.
+
+---
+
 ## 2026-08-21 — VE-VIS-4-COMBAT-SCENE-DIRECTION — OPERATIONAL
 
 - Tipo de sesion: IMPLEMENTACION + verificacion proporcional para cerrar el criterio bloqueante `combat_scene_direction` de la fase 3 del plan Tier 1.
