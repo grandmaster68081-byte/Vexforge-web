@@ -17,7 +17,7 @@
     "verify:support-column-docs": "node scripts/verify-support-column-docs.mjs",
     "verify:identity-data": "node scripts/verify-identity-data.mjs",
     "verify:ui-identity": "node scripts/verify-ui-identity.mjs",
-    "verify:all": "npm run typecheck && npm run verify:build && npm run verify:ui-identity && npm run verify:identity-data && npm run verify:boss-art && npm run verify:card-art && npm run verify:surface-art && npm run verify:residual-art && npm run verify:manifest && npm run verify:assets && npm run verify:auth-guard && npm run verify:table-docs && npm run verify:column-docs && npm run verify:support-column-docs",
+    "verify:all": "npm run typecheck && npm run verify:build && npm run verify:motion && npm run verify:ui-identity && npm run verify:identity-data && npm run verify:boss-art && npm run verify:card-art && npm run verify:surface-art && npm run verify:residual-art && npm run verify:manifest && npm run verify:assets && npm run verify:auth-guard && npm run verify:table-docs && npm run verify:column-docs && npm run verify:support-column-docs",
     "verify:boss-art": "node scripts/verify-boss-art.mjs",
     "verify:card-art": "node scripts/verify-card-art.mjs",
     "verify:surface-art": "node scripts/verify-surface-art.mjs",
