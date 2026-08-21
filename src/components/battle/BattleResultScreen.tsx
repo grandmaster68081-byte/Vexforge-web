@@ -62,7 +62,7 @@ function computeGrade(stats: ReturnType<typeof computeStats>, won: boolean): { g
 
 function StatRow({ label, value, highlight = false, delay = 0 }: { label: string; value: string | number; highlight?: boolean; delay?: number }) {
   return (
-    <div className="stat-row-animated" style={{
+    <div className="stat-row-animated motion-reveal" style={{
       display: 'flex', justifyContent: 'space-between', alignItems: 'center',
       padding: '6px 0', borderBottom: '1px solid rgba(255,255,255,0.04)',
       animationDelay: `${delay}s`,
@@ -171,7 +171,7 @@ export function BattleResultScreen({ result, playerName, opponentName, onDismiss
   }, [showElo, eloChange]);
 
   return (
-    <div ref={containerRef} style={{
+    <div ref={containerRef} className="motion-scene" style={{
       position: 'absolute', inset: 0, zIndex: 40,
       display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
       background: won
@@ -179,7 +179,6 @@ export function BattleResultScreen({ result, playerName, opponentName, onDismiss
         : isDraw
           ? 'radial-gradient(ellipse 80% 60% at 50% 0%, rgba(74,158,255,0.18) 0%, rgba(6,6,16,0.99) 65%), linear-gradient(180deg, #03030a 0%, #03080f 100%)'
           : 'radial-gradient(ellipse 80% 60% at 50% 0%, rgba(192,57,43,0.22) 0%, rgba(6,6,16,0.99) 65%), linear-gradient(180deg, #03030a 0%, #0f0303 100%)',
-      animation: 'fadeInResult 0.6s ease',
       overflow: 'hidden',
     }}>
       {/* Cinematic letterbox bars */}
@@ -199,12 +198,11 @@ export function BattleResultScreen({ result, playerName, opponentName, onDismiss
       </div>
 
       {/* Background ambient glow */}
-      <div style={{
+      <div className="motion-nudge" style={{
         position: 'absolute', top: -100, left: '50%', transform: 'translateX(-50%)',
         width: 600, height: 400, borderRadius: '50%',
         background: `radial-gradient(circle, ${theme.primary}14 0%, transparent 70%)`,
         pointerEvents: 'none',
-        animation: 'resultAmbient 3s ease-in-out infinite',
       }} />
 
       {/* Victory conic rays — slow rotating behind everything */}
@@ -213,28 +211,26 @@ export function BattleResultScreen({ result, playerName, opponentName, onDismiss
       {!won && !isDraw && <div className="defeat-vignette" />}
 
       {/* Result sigil */}
-      <div style={{
+      <div className="motion-impact" style={{
         color: theme.primary, marginBottom: 6, lineHeight: 1,
         filter: `drop-shadow(0 0 32px ${theme.glow}) drop-shadow(0 0 64px ${theme.glow})`,
-        animation: won ? 'trophyBounce 0.7s cubic-bezier(0.22,1,0.36,1)' : 'fadeInUp 0.5s ease',
         position: 'relative',
       }}>
         <ForgeIcon name={theme.icon} size={88} />
         {/* Expanding ring on victory */}
         {won && Array.from({ length: 3 }).map((_, i) => (
-          <div key={i} style={{
+          <div key={i} className="motion-reveal" style={{
             position: 'absolute', inset: -10 - i * 14, borderRadius: '50%',
             border: `2px solid ${theme.primary}`,
             opacity: 0,
-            animation: `result-glow-expand 1.8s ease-out ${i * 0.4}s infinite`,
+            animationDelay: `${i * 0.4}s`,
             pointerEvents: 'none',
           }} />
         ))}
         {/* Starburst behind trophy */}
-        <div style={{
+        <div className="motion-nudge" style={{
           position: 'absolute', inset: -20, zIndex: -1, borderRadius: '50%',
           background: `radial-gradient(circle, ${theme.primary}18 0%, transparent 70%)`,
-          animation: 'resultAmbient 2s ease-in-out infinite',
         }} />
       </div>
 
@@ -250,7 +246,7 @@ export function BattleResultScreen({ result, playerName, opponentName, onDismiss
         textTransform: 'uppercase',
         willChange: 'transform',
       }}
-      className={won ? 'victory-title victory-title-anim' : (!isDraw ? 'defeat-title defeat-title-anim' : undefined)}
+      className={`motion-reveal ${won ? 'victory-title victory-title-anim' : (!isDraw ? 'defeat-title defeat-title-anim' : '')}`}
       >
         {theme.label}
       </div>
@@ -303,7 +299,7 @@ export function BattleResultScreen({ result, playerName, opponentName, onDismiss
           color: '#ff9500', textTransform: 'uppercase', marginBottom: 8,
           marginTop: -8,
         }}
-        className="streak-fire-2"
+        className="streak-fire-2 motion-nudge"
         >
           ¡Invicto! Racha de {winStreak}
         </div>
@@ -364,7 +360,7 @@ export function BattleResultScreen({ result, playerName, opponentName, onDismiss
         {(() => {
           const g = computeGrade(stats, !!won);
           return (
-            <div className="battle-grade-badge" style={{
+            <div className="battle-grade-badge motion-reveal" style={{
               display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
               marginTop: 14, paddingTop: 10, borderTop: `1px solid ${theme.primary}22`,
             }}>
@@ -380,7 +376,7 @@ export function BattleResultScreen({ result, playerName, opponentName, onDismiss
       </div>
 
       {/* Action buttons */}
-      <div className="battle-result-btns" style={{
+      <div className="battle-result-btns motion-reveal" style={{
         display: 'flex', gap: 12, flexWrap: 'wrap', justifyContent: 'center',
         opacity: showStats ? 1 : 0, transition: 'opacity 0.5s 0.3s',
         padding: '0 8px',
@@ -424,15 +420,7 @@ export function BattleResultScreen({ result, playerName, opponentName, onDismiss
         opacity: 0.5,
       }} />
 
-      <style>{`
-        @keyframes fadeInResult { from { opacity:0; } to { opacity:1; } }
-        @keyframes streakPop { from { opacity:0; transform:scale(0.5) translateY(10px); } 80% { transform:scale(1.08); } to { opacity:1; transform:scale(1) translateY(0); } }
-        @keyframes trophyBounce { 0% { transform:scale(0.2) translateY(-30px); } 60% { transform:scale(1.14); } 80% { transform:scale(0.97); } 100% { transform:scale(1); } }
-        @keyframes slideInLabel { from { opacity:0; transform:scaleX(1.5) translateY(-8px); } to { opacity:1; transform:scaleX(1) translateY(0); } }
-        @keyframes fadeInUp { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
-        @keyframes resultAmbient { 0%,100% { opacity:0.6; transform:translateX(-50%) scale(1); } 50% { opacity:1; transform:translateX(-50%) scale(1.1); } }
-        @keyframes result-glow-expand { 0%{transform:scale(0.8);opacity:0.8;} 100%{transform:scale(2.5);opacity:0;} }
-      `}</style>
+
     </div>
   );
 }

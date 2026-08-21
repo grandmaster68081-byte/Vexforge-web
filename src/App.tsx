@@ -489,7 +489,7 @@ function PageTransition({ children }: { children: React.ReactNode }) {
     try { (AudioEngine as any).sfxScreenTransition(); } catch {}
   }, [location.key]);
   return (
-    <div key={location.key} className="page-transition-enter">
+    <div key={location.key} className="page-transition-enter motion-scene">
       {children}
     </div>
   );

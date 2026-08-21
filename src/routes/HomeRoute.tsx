@@ -193,13 +193,14 @@ function BoostChip({ boost }: { boost: PlayerActiveBoost }) {
 function StatCard({ icon, label, value, delay = 0 }: { icon: ForgeIconName; label: string; value: number; delay?: number }) {
   const counted = useCountUp(value, 1400);
   return (
-    <div style={{
+    <div className="motion-reveal" style={{
       padding:"20px 16px", textAlign:"center",
       background:"linear-gradient(135deg,rgba(201,144,31,0.07),rgba(91,139,245,0.05))",
       border:"1px solid rgba(201,144,31,0.12)", borderRadius:12,
       position:"relative", overflow:"hidden",
-      animation:`counter-reveal 0.5s ${delay}s cubic-bezier(.22,1,.36,1) both`,
-    }}>
+      "--motion-index": delay === 0 ? 0 : Math.round(delay / 0.07),
+      "--motion-delay": `${delay}s`,
+    } as React.CSSProperties}>
       {/* Subtle corner glow */}
       <div style={{position:"absolute",top:-20,right:-20,width:60,height:60,borderRadius:"50%",
         background:"radial-gradient(circle, rgba(201,144,31,0.15) 0%, transparent 70%)",pointerEvents:"none"}}/>
@@ -222,7 +223,7 @@ function LiveStatsSection({ stats }: { stats: { active_players: number; total_ca
         textTransform:"uppercase",fontFamily:"Rajdhani,sans-serif",fontWeight:700,marginBottom:16}}>
         <span className="forge-eyebrow">Estadísticas Globales</span>
       </p>
-      <div className="home-stats-grid">
+      <div className="home-stats-grid motion-stagger">
         <StatCard icon="friends" label="Jugadores" value={stats.active_players} delay={0} />
         <StatCard icon="cards" label="Cartas Únicas" value={stats.total_cards} delay={0.07} />
         <StatCard icon="arena" label="Batallas PvP" value={stats.total_battles} delay={0.14} />
@@ -282,7 +283,7 @@ export function HomeRoute() {
   const hasPlayerData = signedIn && profile;
 
   return (
-    <div style={{minHeight:"100vh", background:"var(--bg-base, #0a0a14)"}}>
+    <div className="motion-surface" style={{minHeight:"100vh", background:"var(--bg-base, #0a0a14)"}}>
       {/* ─── HERO ─── */}
       <div className="home-hero-banner" style={{position:"relative", overflow:"hidden",
         background:"linear-gradient(160deg, #08080f 0%, #0d0d22 40%, #100a1e 100%)",
@@ -362,13 +363,13 @@ export function HomeRoute() {
           <div className="hero-cta" style={{gap:16}}>
             {hasPlayerData ? (
               <>
-                <Link to="/cards" className="btn-primary" style={{padding:"13px 28px",fontSize:14}}><ForgeIcon name="cards" size={15} style={{ verticalAlign: "-0.15em", marginRight: 6 }} />Mi Colección</Link>
-                <Link to="/pvp" className="btn-secondary" style={{padding:"13px 28px",fontSize:14}}><ForgeIcon name="arena" size={15} style={{ verticalAlign: "-0.15em", marginRight: 6 }} />Entrar a la Arena</Link>
+                <Link to="/cards" className="btn-primary motion-press" style={{padding:"13px 28px",fontSize:14}}><ForgeIcon name="cards" size={15} style={{ verticalAlign: "-0.15em", marginRight: 6 }} />Mi Colección</Link>
+                <Link to="/pvp" className="btn-secondary motion-press" style={{padding:"13px 28px",fontSize:14}}><ForgeIcon name="arena" size={15} style={{ verticalAlign: "-0.15em", marginRight: 6 }} />Entrar a la Arena</Link>
               </>
             ) : (
               <>
                 <Link to="/account" className="btn-primary" style={{padding:"13px 32px",fontSize:15,letterSpacing:"0.06em"}}><ForgeIcon name="spark" size={15} style={{ verticalAlign: "-0.15em", marginRight: 6 }} />Comenzar Gratis</Link>
-                <Link to="/cards" className="btn-secondary" style={{padding:"13px 28px",fontSize:14}}><ForgeIcon name="cards" size={15} style={{ verticalAlign: "-0.15em", marginRight: 6 }} />Ver Cartas</Link>
+                <Link to="/cards" className="btn-secondary motion-press" style={{padding:"13px 28px",fontSize:14}}><ForgeIcon name="cards" size={15} style={{ verticalAlign: "-0.15em", marginRight: 6 }} />Ver Cartas</Link>
               </>
             )}
           </div>
@@ -722,7 +723,7 @@ export function HomeRoute() {
           </p>
           <div className="features-grid">
             {FEATURES.map(f=>(
-              <Link key={f.href} to={f.href} className="feature-card"
+              <Link key={f.href} to={f.href} className="feature-card motion-lift"
                 style={{"--feature-color":f.color} as React.CSSProperties}>
                 <div style={{position:"absolute",top:0,left:0,right:0,height:"2px",
                   background:`linear-gradient(90deg,transparent,${f.color}80,transparent)`}}/>

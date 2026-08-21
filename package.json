@@ -21,7 +21,8 @@
     "verify:boss-art": "node scripts/verify-boss-art.mjs",
     "verify:card-art": "node scripts/verify-card-art.mjs",
     "verify:surface-art": "node scripts/verify-surface-art.mjs",
-    "verify:residual-art": "node scripts/verify-residual-art.mjs"
+    "verify:residual-art": "node scripts/verify-residual-art.mjs",
+    "verify:motion": "node scripts/verify-motion.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.45.0",
