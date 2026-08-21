@@ -105,3 +105,15 @@
 - Estado: el objetivo Tier 1 sigue NOT_REACHED_UNTIL_ALL_CRITERIA_MET. No se declara Tier 1 por completar fases nominales.
 - Contradiccion registrada: project_memory conserva active_plan GAME_ENGINE_COMBAT_TUTORIAL, mientras la decision visual Tier 1 define VE-VIS-3-MOTION-SYSTEM como siguiente unidad; ambas capas deben reconciliarse antes de declarar el plan operativo como ruta unica.
 - Siguiente accion verificable: ejecutar VE-VIS-3-MOTION-SYSTEM y actualizar los valores current_value solo con verify:all y evidencia del deploy vivo.
+
+
+---
+
+## 2026-08-21 — VE-TIER1-4-PRELAUNCH-CANDIDATE — OPERATIONAL
+
+- Correccion de alcance: VEXFORGE aun no esta lanzado; el objetivo inmediato es una candidatura Tier 1 prelaunch, no una validacion de anos de mercado.
+- Se retiraron del gate actual las dependencias imposibles antes del lanzamiento: D1/D7/D30 historicos, poblacion real de matchmaking, estabilidad a escala y resultados de economia observados. Quedan como validacion postlaunch.
+- El gate actual exige experiencia de entrada comparable al benchmark, 12 evaluadores en dos rondas para la primera sesion, pruebas autenticadas controladas con cuentas QA normales, una temporada simulada completa, integridad autoritativa, red, economia, accesibilidad, rendimiento, estabilidad, confianza y evidencia reproducible.
+- Nueva regla: PRELAUNCH_TIER1_CANDIDATE se alcanza con todos los criterios prelaunch en MET y puntuacion ponderada >=85/100 contra cinco competidores directos y dos alternativas indirectas versionados. No requiere jugadores publicos ni historial de retencion.
+- LIVE_TIER1_VALIDATED queda separado y se revisara solo despues del lanzamiento.
+- Siguiente accion verificable: construir la matriz benchmark y ejecutar la primera sesion controlada; no declarar Tier 1 hasta que la evidencia exista.
