@@ -77,3 +77,18 @@
 - Siguiente accion verificable: documentar las columnas de las tablas publicas legado consumidas por el cliente y por RPCs autoritativas (empezando por `player_state`, `wallet_transactions` y `daily_quests`) y extender la guarda a ese alcance.
 
 ---
+
+## 2026-08-21 — VE-VIS-2-TIER1-PLAN-EXTENSION — OPERATIONAL
+
+- Tipo de sesion: gobierno del plan. Solo metadatos: sin cambios de esquema de juego, datos de jugador, economia autoritativa, RLS de datos, Storage, arte ni codigo de aplicacion.
+- Motivo: el plan VE-VIS-1 solo cubria arte e identidad estatica; cumplirlo no producia un juego Tier 1 del genero (RPG de forja / gacha competitivo). Ademas, el sistema de motion disenado en la sesion anterior nunca llego al repositorio (vivia en un clon temporal sin commit).
+- Cambios: `supabase/migrations/0031_ve_vis_2_tier1_plan_extension.sql`. Anade `owning_unit` y `phase` (documentadas) a `public.vexforge_visual_tier1_objective`; crea `public.vexforge_tier1_phases` (6 fases, lectura publica, RLS y grants explicitos); asigna fase y unidad responsable a los 10 criterios existentes; reescribe `motion_and_feedback` como contrato de la unidad `VE-VIS-3-MOTION-SYSTEM` (sigue `NOT_STARTED`: el codigo no existe en el repo); anade 12 criterios nuevos: `combat_scene_direction`, `audio_flow`, `game_loop_telemetry`, `first_session_flow`, `economy_readability`, `content_depth`, `live_ops_seasons`, `social_competitive`, `performance_budget`, `accessibility_baseline`, `stability_error_budget`, `design_uniqueness`; registra la decision oficial `VE-VIS-2-TIER1-PLAN-EXTENSION` en `public.vexforge_project_decisions`.
+- Aplicacion: migracion aplicada en produccion contra `rscuzqnfccqvltkdcdny` via Management API.
+- Evidencia en vivo: 22 criterios inscritos — fase 1: 4/4 MET; fase 2: 2 MET + 2 PARTIAL; fase 3: 3 NOT_STARTED; fase 4: 2 NOT_STARTED + 1 PARTIAL; fase 5: 3 PARTIAL; fase 6: 2 NOT_STARTED + 2 PARTIAL + 1 BLOCKED. `vexforge_tier1_phases`: 1 DONE, 2 IN_PROGRESS, 3-6 NOT_STARTED.
+- Reglas canonicas inscritas: ningun criterio pasa a `MET` sin evidencia reproducible (guarda encadenada en `verify:all` o recorrido de navegador sobre el deploy vivo); las fases se ejecutan en orden ascendente; Tier 1 solo puede declararse cuando ningun criterio con `blocking = true` esta fuera de `MET`.
+- Estado: NOT_STARTED -> OPERATIONAL. Nivel Q: Q3.
+- Deuda restante: sistema de motion sin implementar (`VE-VIS-3-MOTION-SYSTEM`); CI `BLOCKED` (`GITHUB_PAT` sin scope `workflow`); artes duplicados del bucket pendientes de autorizacion; limpieza Unicode residual; 942 columnas legado sin describir.
+- Condicion de reapertura: cambio de genero o alcance del producto, o incorporacion de un criterio nuevo de Tier 1.
+- Siguiente accion verificable: ejecutar `VE-VIS-3-MOTION-SYSTEM` — implementar en el repositorio los tokens y clases de motion en `src/styles.css`, su consumo en `App.tsx`, `HomeRoute.tsx` y `BattleResultScreen.tsx`, y la guarda `scripts/verify-motion.mjs` encadenada en `verify:all`; despues actualizar el criterio `motion_and_feedback` a `MET` por migracion, con la evidencia real.
+
+---
