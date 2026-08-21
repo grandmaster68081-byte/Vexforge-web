@@ -36,8 +36,16 @@ partículas rúnicas, pero usa únicamente iconos SVG propios de VEXFORGE.
 
 ## Estado y reapertura
 
-- Estado: `IMPLEMENTED_UNVERIFIED` hasta verificar el commit en el deploy
-  público; después puede pasar a `OPERATIONAL`.
+- Estado: `OPERATIONAL`.
 - Nivel Q: Q3 actual; objetivo Q3 para este lote.
 - Reabrir si aparece un nuevo icono visible renderizado como texto, si cambia
   el contrato de `ForgeIcon`, o si la guarda deja de cubrir el rango rúnico.
+
+## Cierre público
+
+- Migración aplicada en Supabase y criterio `icon_language` confirmado como
+  `MET`.
+- `main` publicado en el commit `a0239e9c1ac79aba05f6bb06c3ad6ed8fa8a986b`.
+- `build-manifest.json` público declara el mismo commit.
+- Las rutas `/` y `/pvp` responden HTTP 200.
+- Los bundles raíz y PvP publicados coinciden bit a bit con `dist`.

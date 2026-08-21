@@ -1,4 +1,4 @@
-## 2026-08-21 — VE-VIS-3-ICON-LANGUAGE-RESIDUAL — IMPLEMENTED_UNVERIFIED
+## 2026-08-21 — VE-VIS-3-ICON-LANGUAGE-RESIDUAL — OPERATIONAL
 
 - Tipo de sesion: IMPLEMENTACION + verificacion estatica para cerrar el criterio bloqueante `icon_language` de la fase 2 del plan Tier 1.
 - Fuente canonica: `main`, `VEXFORGE_PROTOCOL_V2.md`, `public.vexforge_visual_tier1_objective`, `ForgeIcon.tsx` y `verify-ui-identity.mjs`.
@@ -6,11 +6,13 @@
 - Cambios: `src/components/battle/CardAttackCinematic.tsx` usa `ForgeIcon` SVG para las particulas; `scripts/verify-ui-identity.mjs` bloquea el rango runico; nueva migracion `0035_ve_vis_3_icon_language_residual_closure.sql`; documento de unidad.
 - Sin cambios en combate autoritativo, economia, RPCs, RLS, autenticacion, Storage, lore, estadisticas ni assets.
 - Evidencia local: `npm run typecheck`, `npm run verify:ui-identity` (188/188, 0 violaciones) y `npm run verify:build` correctos.
-- Estado: `IN_PROGRESS` -> `IMPLEMENTED_UNVERIFIED`. Nivel Q: Q3 actual / Q3 objetivo.
+- Estado: `IN_PROGRESS` -> `OPERATIONAL`. Nivel Q: Q3 actual / Q3 objetivo.
 - Responsive, accesibilidad y reduced motion: se conserva la superficie existente; los iconos son decorativos `aria-hidden`, sin foco ni nuevas peticiones.
-- Bloqueo/deuda: falta aplicar la migracion en Supabase, publicar `main` y comparar `build-manifest.json` y assets en Cloudflare Pages.
+- Evidencia de cierre: migracion aplicada y confirmada en Supabase (`icon_language = MET`, decision oficial registrada); `build-manifest.json` publico declara `a0239e9c1ac79aba05f6bb06c3ad6ed8fa8a986b`; `/` y `/pvp` responden HTTP 200; `index-B-yvjgw2.js` y `PvpRoute-e5Nrkyo6.js` coinciden bit a bit con `dist`.
+- Bloqueo/deuda: `loading_and_empty_states` sigue `PARTIAL` y mantiene abierta la fase 2; la siguiente unidad elegible es `VE-VIS-3-EMPTY-STATE-ART`.
 - Condicion de reapertura: nuevo icono visible como texto, cambio de contrato de `ForgeIcon` o regresion de la guarda Unicode.
-- Siguiente accion verificable: aplicar migracion, publicar y comprobar el deploy publico; solo entonces actualizar el estado a `OPERATIONAL`.
+- Condicion de reapertura: nuevo icono visible como texto, cambio de contrato de `ForgeIcon` o regresion de la guarda Unicode.
+- Siguiente accion verificable: abrir `VE-VIS-3-EMPTY-STATE-ART` y cerrar los estados vacios sin arte de marca con evidencia de navegador autenticada.
 
 ## 2026-08-21 — VE-VIS-1-TIER1-VISUAL-OBJECTIVE — OPERATIONAL
 
