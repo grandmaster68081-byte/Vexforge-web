@@ -196,3 +196,18 @@
 - Alcance: sigue siendo prelaunch y no exige poblacion publica, retencion historica ni escala postlaunch.
 - Estado: TIER1_STRONG_PRELAUNCH aun no alcanzado; la matriz y las pruebas de calidad siguen pendientes.
 - Siguiente accion verificable: construir benchmark_positioning y ejecutar first_impression/gameplay_balance antes de declarar cualquier estado Tier 1.
+
+---
+
+## 2026-08-22 — VE-VIS-6-GAME-LOOP-TELEMETRY — PLANNED (plan trazado, sin implementacion)
+
+- Tipo de sesion: gobierno del plan. Solo documentacion: sin cambios de esquema, datos, RLS, grants, RPCs, economia autoritativa, Storage, arte ni codigo de aplicacion.
+- Motivo: la sesion anterior escribio la implementacion de la unidad en un clon temporal (`/tmp/vx`) y agoto creditos antes de commitear; el clon fue destruido. Habia riesgo de que la proxima sesion asumiera codigo existente.
+- Hecho verificado contra `main` (baseline `7fb7db0`): NO existen `supabase/migrations/0039_ve_vis_6_game_loop_telemetry.sql` (la ultima migracion es `0038`), `src/lib/telemetry.ts`, `scripts/verify-telemetry.mjs`, la instrumentacion de `App.tsx` / `FusionRoute.tsx` / `BattleResultScreen.tsx` / `QuestsRoute.tsx`, ni `verify:telemetry` en `package.json`. La migracion `0039` NO fue aplicada en `rscuzqnfccqvltkdcdny` y el criterio `game_loop_telemetry` NO esta `MET`.
+- Correccion de estado canonica: la unidad NO esta `IMPLEMENTED_UNVERIFIED`. Su estado real es `PLANNED / NOT_STARTED` y debe reconstruirse desde cero.
+- Cambios de esta sesion: `docs/VE-VIS-6-GAME-LOOP-TELEMETRY.md` — plan de ejecucion canonico e inequivoco: contrato de datos de la migracion `0039` (catalogo publico de 5 eventos, `vexforge_telemetry_events` con RLS estricta por `auth.uid()`, grants explicitos sin `anon`, indices, `vexforge_telemetry_coverage()` `security definer` con `search_path` fijo, `comment on` de tablas, 11 columnas y funcion, decision oficial), emisor best-effort `src/lib/telemetry.ts`, los 4 consumidores instrumentados, la guarda doble `scripts/verify-telemetry.mjs`, los limites preservados, la secuencia obligatoria de 10 pasos, los 5 criterios de aceptacion y la condicion de reapertura.
+- Ley de la unidad inscrita: la migracion `0039` NO pone `game_loop_telemetry` en `MET`; el paso a `MET` va en una migracion posterior (`0040`) y solo con cobertura en vivo >= 1 evento real por cada una de las 5 claves, medida con rol `anon`.
+- Estado: NOT_STARTED -> PLANNED (plan trazado). Nivel Q: sin asignar, no hay implementacion ni evidencia.
+- Deuda restante: la implementacion completa de la unidad (pasos 1-10 del plan); QA autenticada `BLOCKED` sin sesion normal autorizada; CI `.github/workflows/verify.yml` pendiente de `GITHUB_PAT` con scope `workflow`; HTTP 429 de Storage en `verify:all`; artes duplicados pendientes de autorizacion; 942 columnas legado sin describir.
+- Condicion de reapertura: cambio del bucle de juego o de los eventos canonicos declarados en el plan.
+- Siguiente accion verificable: ejecutar el paso 1 del plan (`supabase/migrations/0039_ve_vis_6_game_loop_telemetry.sql` sin `update` a `MET`) y continuar la secuencia en orden estricto hasta el paso 10.
