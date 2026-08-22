@@ -6,6 +6,7 @@ import { surfaceBackground } from "../lib/assetManifest";
     import { BlockedAuthState } from "../shared/components/BlockedAuthState";
     import { EmptyState } from "../shared/components/EmptyState";
     import { ForgeIcon } from "../shared/components/ForgeIcon";
+import { emitTelemetry } from "../lib/telemetry";
 const BG_URL = surfaceBackground("forge");
     const RARITY_COLOR: Record<string, string> = {
     Common: "#9a9ab0", Uncommon: "#3ddc84", Rare: "#4a9eff",
@@ -267,7 +268,10 @@ const BG_URL = surfaceBackground("forge");
               {/* Fuse button */}
               {selectedSource && (
                 <button
-                  onClick={fuse}
+                  onClick={() => {
+                    void emitTelemetry("forge_action", { action: "fusion" });
+                    void fuse();
+                  }}
                   disabled={!canFuse}
                   style={{
                     padding: "16px 24px", borderRadius: 12, border: "none",

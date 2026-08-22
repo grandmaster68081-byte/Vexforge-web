@@ -4,8 +4,9 @@
 **Unidad:** `VE-VIS-6-GAME-LOOP-TELEMETRY`
 **Criterio bloqueante:** `game_loop_telemetry` (fase 4 de
 `public.vexforge_visual_tier1_objective`)
-**Estado declarado:** `PLANNED` — **no hay ninguna línea de esta unidad en `main`**
-**Nivel Q:** sin asignar (no existe implementación ni evidencia)
+**Estado declarado:** `IMPLEMENTED_UNVERIFIED` — implementación en `main`, sin cobertura viva
+completa
+**Nivel Q:** Q2 actual / Q3 objetivo
 **Fuente canónica:** `main`, `VEXFORGE_PROTOCOL_V2.md`, `CONTINUITY.md`,
 `public.vexforge_visual_tier1_objective`, `public.vexforge_project_decisions`.
 
@@ -13,25 +14,30 @@
 > que retome `VE-VIS-6-GAME-LOOP-TELEMETRY` ejecuta exactamente los pasos de la
 > sección «Secuencia de ejecución», en ese orden, sin reinterpretarlos.
 
-## 0. Hecho verificado del baseline (2026-08-22)
+## 0. Hecho verificado del baseline y estado actual (2026-08-22)
 
-La sesión anterior escribió la implementación en un clon temporal y agotó
-créditos antes de commitear. El clon fue destruido. Verificado contra `main`
-(baseline `7fb7db0`):
+La sesión anterior dejó el plan, pero no el código en `main`. La sesión actual
+recuperó `main` en `4540e4e`, ejecutó el baseline y reconstruyó la unidad en la
+raíz oficial. El repositorio ya contiene migración, emisor, instrumentación y
+guarda. La auditoría viva además encontró que las tablas y la función habían
+aparecido en Supabase sin una migración equivalente en `main`; 0039 las
+reconcilia y corrige sus grants.
 
 | Artefacto esperado | Estado real en `main` |
 | --- | --- |
-| `supabase/migrations/0039_ve_vis_6_game_loop_telemetry.sql` | **AUSENTE** (la última migración es `0038`) |
-| `src/lib/telemetry.ts` | **AUSENTE** |
-| `scripts/verify-telemetry.mjs` | **AUSENTE** |
-| Instrumentación en `App.tsx`, `FusionRoute.tsx`, `BattleResultScreen.tsx`, `QuestsRoute.tsx` | **AUSENTE** |
-| `verify:telemetry` en `package.json` | **AUSENTE** |
-| Migración `0039` aplicada en `rscuzqnfccqvltkdcdny` | **NO APLICADA** |
+| `supabase/migrations/0039_ve_vis_6_game_loop_telemetry.sql` | **PRESENTE** y aplicada/reconciliada |
+| `src/lib/telemetry.ts` | **PRESENTE** |
+| `scripts/verify-telemetry.mjs` | **PRESENTE** |
+| Instrumentación en `App.tsx`, `FusionRoute.tsx`, `BattleResultScreen.tsx`, `QuestsRoute.tsx` | **PRESENTE** |
+| `verify:telemetry` en `package.json` | **PRESENTE**, encadenada en `verify:all` |
+| Migración `0039` aplicada en `rscuzqnfccqvltkdcdny` | **SÍ**, con grants/policies auditados |
+| Cobertura viva de las cinco claves | **0/5**, sin emisiones QA |
 | Criterio `game_loop_telemetry` | **NO está `MET`** |
 
-Conclusión canónica: la unidad **no está `IMPLEMENTED_UNVERIFIED`**. Su estado
-real es `PLANNED / NOT_STARTED` y debe reconstruirse desde cero según este
-plan. Ninguna sesión futura debe asumir código previo existente.
+Conclusión canónica: la unidad dejó `PLANNED / NOT_STARTED` y ahora está
+`IMPLEMENTED_UNVERIFIED`. La guarda falla de forma correcta porque no se ha
+emitido ningún evento real con una sesión normal de jugador. No se declara
+`MET` ni `OPERATIONAL`.
 
 ## 1. Objetivo
 
@@ -143,3 +149,22 @@ declararse en `CONTINUITY.md`.
 Se añade o retira un evento del bucle; una superficie del bucle deja de emitir;
 la cobertura en vivo de una clave cae a 0; o la RLS de
 `vexforge_telemetry_events` deja de aislar por `auth.uid()`.
+
+## 10. Evidencia de la sesión de implementación (2026-08-22)
+
+- `npm run typecheck`: correcto.
+- `npm run verify:build`: correcto; el build local contiene el emisor y la
+  instrumentación.
+- `npm run verify:telemetry`: falla intencionalmente con `Live telemetry
+  coverage has no real event for: session_start`; la sonda confirma que las
+  cinco claves existen, pero todas tienen recuento `0`.
+- Supabase vivo: `vexforge_telemetry_event_catalog` tiene las cinco claves;
+  `vexforge_telemetry_events` conserva RLS por `auth.uid()`, `anon` no tiene
+  grants de tabla y la cobertura es agregada sin `user_id`.
+- Bloqueo real: no existe en el entorno una sesión normal autenticada de la
+  cuenta QA canónica. No se usa `service_role`, no se fabrican resultados y no
+  se aplica 0040.
+- Siguiente acción verificable: recorrer el bucle real en el deploy con una
+  sesión QA autorizada, comprobar al menos una emisión de cada clave mediante
+  la función de cobertura como `anon`, aplicar 0040 y volver a verificar el
+  deploy.

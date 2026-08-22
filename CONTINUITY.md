@@ -1,3 +1,20 @@
+## 2026-08-22 — VE-VIS-6-GAME-LOOP-TELEMETRY — IMPLEMENTED_UNVERIFIED
+
+- Tipo de sesion: IMPLEMENTACION + verificacion proporcional de contrato, sin suplantar una sesion QA.
+- Fuente canonica: `main`, `VEXFORGE_PROTOCOL_V2.md`, `docs/VE-VIS-6-GAME-LOOP-TELEMETRY.md` y Supabase vivo `rscuzqnfccqvltkdcdny`.
+- Estado inicial: `PLANNED / NOT_STARTED`. Estado actual: `IMPLEMENTED_UNVERIFIED`. Nivel Q: Q2 actual / Q3 objetivo.
+- Cambios: migracion `0039_ve_vis_6_game_loop_telemetry.sql`; emisor best-effort `src/lib/telemetry.ts`; instrumentacion de `App.tsx`, `FusionRoute.tsx`, `BattleResultScreen.tsx` y `QuestsRoute.tsx`; guarda `scripts/verify-telemetry.mjs`; `verify:telemetry` encadenada en `verify:all`; migracion condicionada `0040_ve_vis_6_game_loop_telemetry_met.sql`.
+- Alcance preservado: sin cambios en combate autoritativo, dano, settlement, recompensas, economia, RPCs autoritativas, autenticacion, Storage, arte ni lore. El emisor nunca elige `user_id`; Supabase lo deriva de `auth.uid()`.
+- Reconciliacion viva: las tablas y la funcion ya existian en Supabase sin migracion equivalente en `main`; 0039 conserva la firma viva de cinco columnas, elimina policies duplicadas, fija RLS y deja `anon` sin grants sobre eventos.
+- Evidencia local: `npm run typecheck` y `npm run verify:build` correctos. `npm run verify:telemetry` falla correctamente porque la cobertura viva devuelve 0 emisiones para las cinco claves.
+- Evidencia Supabase: catalogo de 5/5 claves; funcion `vexforge_telemetry_coverage()` responde con rol `anon`; cobertura actual `0/5`; grants de tabla auditados (catalogo solo lectura publica, eventos solo `authenticated select/insert`).
+- Bloqueo: falta una sesion normal autenticada de la cuenta QA canonica para recorrer el bucle real. No se usa `service_role`, no se fabrican eventos ni resultados y 0040 no se aplica sin cobertura.
+- Responsive, accesibilidad, focus y reduced motion: la telemetria no crea UI ni focos; el flujo visual existente y sus guardas se conservan.
+- Condicion de reapertura: se anade/retira una clave, una superficie deja de emitir, una clave cae a 0 o RLS deja de aislar por `auth.uid()`.
+- Siguiente accion verificable: ejecutar el flujo real con sesion QA autorizada, comprobar `>=1` por clave mediante la cobertura anon, aplicar 0040 y verificar el `build-manifest.json` publico del commit de cierre.
+
+---
+
 ## 2026-08-21 — VE-VIS-5-AUDIO-FLOW — OPERATIONAL
 
 - Tipo de sesion: IMPLEMENTACION + verificacion proporcional para cerrar el criterio bloqueante `audio_flow` de la fase 3 del plan Tier 1.

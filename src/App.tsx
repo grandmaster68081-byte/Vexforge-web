@@ -18,6 +18,7 @@ import { ProtectedAdminRoute }       from "./shared/components/ProtectedAdminRou
 import { AudioEngine }               from "./lib/audioEngine";
 import { ForgeIcon, type ForgeIconName } from "./shared/components/ForgeIcon";
 import { storageAsset } from "./lib/assetManifest";
+import { trackSessionEntry } from "./lib/telemetry";
 
 // ─── Lazy routes ─────────────────────────────────────────────────────────────
 const HomeRoute         = lazy(() => import("./routes/HomeRoute").then(m => ({ default: m.HomeRoute })));
@@ -498,6 +499,10 @@ function PageTransition({ children }: { children: React.ReactNode }) {
 // ─── App ─────────────────────────────────────────────────────────────────────
 export default function App() {
   const [mobileOpen, setMobileOpen] = useState(false);
+
+  useEffect(() => {
+    void trackSessionEntry();
+  }, []);
 
   return (
     <BrowserRouter>

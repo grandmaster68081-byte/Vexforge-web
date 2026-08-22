@@ -8,6 +8,7 @@ import type { RealBattleResult } from '../../lib/battleTypes';
 import { particleEngine } from '../../lib/particleEngine';
 import { AudioEngine } from '../../lib/audioEngine';
 import { ForgeIcon, type ForgeIconName } from '../../shared/components/ForgeIcon';
+import { emitTelemetry } from '../../lib/telemetry';
 
 interface BattleResultScreenProps {
   result: RealBattleResult;
@@ -110,6 +111,15 @@ export function BattleResultScreen({ result, playerName, opponentName, onDismiss
   const containerRef = useRef<HTMLDivElement>(null);
 
   const stats = computeStats(result);
+
+  useEffect(() => {
+    void emitTelemetry("combat_resolved", {
+      outcome: isDraw ? "draw" : won ? "victory" : "defeat",
+      turns: stats.totalTurns,
+    });
+    // A result screen mounts once per resolved battle.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // Color theme
   const theme = isDraw

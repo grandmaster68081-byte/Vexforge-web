@@ -5,6 +5,7 @@ import { ForgeIcon } from "../shared/components/ForgeIcon";
 import { PageLoader } from "../shared/components/PageLoader";
 import { BlockedAuthState } from "../shared/components/BlockedAuthState";
 import { useToast } from "../shared/context/ToastContext";
+import { emitTelemetry } from "../lib/telemetry";
 
     function QuestCard({ pq, onClaim, claiming }: { pq:any; onClaim:(id:string)=>void; claiming:boolean }) {
     const quest = pq.quest ?? pq;
@@ -70,6 +71,7 @@ import { useToast } from "../shared/context/ToastContext";
     useEffect(() => {
       if (!claimMsg) return;
       const ok = claimMsg.includes("!") || claimMsg.includes("VEX") || claimMsg.includes("XP");
+       if (ok) void emitTelemetry("reward_claimed", { source: "daily_quest" });
       addToast(ok ? "success" : "error", ok ? "¡Recompensa reclamada!" : "Error al reclamar", claimMsg);
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [claimMsg]);
