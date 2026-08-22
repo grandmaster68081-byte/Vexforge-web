@@ -274,6 +274,19 @@ Si no existe una sesión normal autorizada del jugador o owner:
 - No declares PASS ni GO.
 - Registra la ruta, caso, evidencia faltante y condición para reabrir.
 
+### Cierre QA obligatorio después de cada unidad completada
+
+Después de publicar una unidad completada en `main` y esperar la propagación del deploy oficial:
+
+1. Localiza la cuenta QA canónica en `auth.users` y crea o recupera una sesión normal autorizada mediante el flujo de autenticación del producto. La cuenta canónica actualmente registrada es `pavilo20.qa@vexforge.test`; su contraseña, tokens y enlaces nunca se guardan en código, continuidad, commits, URLs, logs o capturas.
+2. Abre el deploy público que corresponde al commit publicado; comprueba `build-manifest.json` y no aceptes un bundle anterior como evidencia del commit nuevo.
+3. Recorre con esa sesión las rutas y criterios de aceptación afectados por la unidad. Comprueba el resultado visible, estados de carga/vacío/error, navegación, focus, responsive, reduced motion y las respuestas reales relevantes.
+4. Cuando la unidad toque un flujo autenticado, ejecuta la mutación o recorrido real con la cuenta QA y verifica el estado resultante desde la interfaz y las sondas autorizadas. No basta con HTTP 200, una fila esperada o una confirmación textual.
+5. Registra rutas, acciones, resultado observado, commit, deploy, fecha, evidencia y cualquier discrepancia en `CONTINUITY.md` y en la decisión/migración oficial correspondiente.
+6. Si no se puede obtener una sesión normal QA, la unidad queda `IMPLEMENTED_UNVERIFIED` o `BLOCKED` según la causa; no se declara `OPERATIONAL`, `PASS`, `GO` ni `COMPLETED`. Continúa sólo con trabajo seguro que no dependa de esa prueba.
+
+La cuenta QA es un gate de verificación posterior al despliegue, no una autorización para fabricar sesiones, resultados de combate, settlements, recompensas, economía o estados de cuenta.
+
 13. COMPROBACIÓN DE GITHUB Y CLOUDFLARE
 
 Cuando sea relevante:
@@ -349,6 +362,9 @@ Al terminar una sesión:
 - Publica en main al cerrar cada unidad completada, siguiendo el flujo de verificación descrito aquí.
 - Deja que el deploy automático se ejecute y comprueba que el manifiesto público y los
   assets reflejan el commit auditado; no existe un paso de deploy manual.
+- Después de esa propagación, ejecuta el cierre QA obligatorio sobre el deploy público
+  con la cuenta QA canónica y registra la evidencia real. Si no hay sesión normal utilizable,
+  conserva la unidad como `IMPLEMENTED_UNVERIFIED` o `BLOCKED`; nunca cierres por inferencia.
 - No borres historial.
 - No declares verificado lo que no fue comprobado.
 

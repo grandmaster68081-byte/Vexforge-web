@@ -1,3 +1,18 @@
+## 2026-08-22 — SUPREME-LAW-QA-DEPLOY-CLOSURE-GATE — OPERATIONAL
+
+- Tipo de sesión: DOCUMENTACIÓN + endurecimiento del cierre QA posterior al deploy.
+- Fuente canónica: `main`, `VEXFORGE_PROTOCOL_V2.md`, continuidad oficial, decisión suprema de preflight y Supabase vivo `rscuzqnfccqvltkdcdny`.
+- Corrección permanente: toda unidad completada debe verificarse después del deploy público con una sesión normal de `pavilo20.qa@vexforge.test`, recorriendo las rutas y criterios afectados y observando el resultado real.
+- La comprobación exige que `build-manifest.json` corresponda al commit publicado, flujo autenticado visible, estados reales, respuestas relevantes, responsive, focus y reduced motion cuando apliquen.
+- Una confirmación de archivos, HTTP 200 o texto declarativo no es evidencia suficiente. Sin sesión QA utilizable, el estado queda `IMPLEMENTED_UNVERIFIED` o `BLOCKED`; no se declara `OPERATIONAL`, `PASS`, `GO` ni `COMPLETED`.
+- Alcance preservado: nunca se guardan contraseña, tokens, enlaces ni credenciales; no se usa `service_role` para suplantar jugadores o fabricar resultados.
+- Evidencia de configuración: la cuenta QA existe en `auth.users` y tiene acceso reciente registrado el 2026-08-22; la ley fue aplicada mediante `0042_qa_deploy_verification_gate.sql`.
+- Estado inicial: `IN_PROGRESS / gate QA posterior al deploy incompleto`. Estado actual: `OPERATIONAL`. Nivel Q: Q0 actual / Q1 objetivo para esta regla.
+- Condición de reapertura: una unidad se cierra sin recorrido QA real, el manifiesto público no coincide con el commit, la sesión QA deja de ser utilizable o se intenta sustituir QA por privilegios administrativos.
+- Siguiente acción verificable: aplicar este gate al cerrar la próxima unidad de implementación; para `VE-VIS-6`, recorrer el bucle real con la cuenta QA antes de aplicar `0040`.
+
+---
+
 ## 2026-08-22 — SUPREME-LAW-TRANSPORT-FAIL-CLOSED — OPERATIONAL
 
 - Tipo de sesión: DOCUMENTACIÓN + reconciliación de preflight; no se ejecutó ninguna unidad del juego ni se fabricó QA.
