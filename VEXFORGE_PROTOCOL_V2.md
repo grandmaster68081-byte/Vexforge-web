@@ -36,9 +36,19 @@ Antes de leer, modificar o ejecutar trabajo externo:
    - respuestas
 4. Usa GITHUB_PAT para leer, comparar y operar sobre el repositorio oficial cuando sea necesario.
 5. Usa SUPABASE_PAT para consultar Supabase Management API y las fuentes canónicas vivas.
-6. Si GitHub rechaza el PAT, marca el acceso como BLOCKED, explica el motivo sin exponer el valor y usa únicamente el acceso público si permite continuar.
-7. Si falta una credencial, sesión o dependencia esencial, marca BLOCKED y continúa sólo con el trabajo seguro independiente.
-8. Nunca uses service_role ni privilegios administrativos para suplantar jugadores, fabricar QA o falsear resultados.
+6. La disponibilidad de un secreto no demuestra que el acceso esté validado. Comprueba cada transporte con su autenticación nativa:
+   - GitHub API: HTTPS con el esquema de autorización documentado por la API.
+   - Git smart HTTP (`clone`, `fetch`, `push`, `ls-remote`): HTTPS con Basic y usuario `x-access-token`; nunca incrustes el PAT en una URL.
+   - Supabase Management API: HTTPS con el esquema de autorización documentado por Supabase.
+7. Si un acceso falla, no clasifiques primero la credencial como inválida. Antes diagnostica, sin exponer secretos:
+   - confirma que el secreto existe en el entorno seguro;
+   - confirma endpoint, HTTPS, host, repositorio, branch y esquema de autorización;
+   - reintenta una vez con el transporte nativo correcto;
+   - separa error de transporte, formato, alcance, expiración, revocación y permisos.
+8. GitHub es una dependencia de autoridad, no una tarea opcional. No elijas unidad, audites el código ni implementes cambios basados en otra copia mientras el acceso a `main` no esté validado. Si el segundo intento nativo falla, marca `BLOCKED`, registra la causa técnica general y detén el trabajo dependiente del código.
+9. Si falta una credencial, sesión o dependencia esencial, marca `BLOCKED` y no continúes con trabajo dependiente de ella. Sólo puedes hacer trabajo independiente expresamente permitido por la fuente canónica.
+10. Una prueba autenticada debe buscar primero la sesión normal de la cuenta QA canónica designada en las fuentes vivas. Si esa cuenta existe, no declares `BLOCKED` por ausencia de QA sin comprobarla; si no hay sesión utilizable, bloquea sólo la prueba autenticada, no el trabajo seguro restante.
+11. Nunca uses service_role ni privilegios administrativos para suplantar jugadores, fabricar QA o falsear resultados.
 
 2. ORDEN DE AUTORIDAD
 

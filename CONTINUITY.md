@@ -1,3 +1,18 @@
+## 2026-08-22 — SUPREME-LAW-TRANSPORT-FAIL-CLOSED — OPERATIONAL
+
+- Tipo de sesión: DOCUMENTACIÓN + reconciliación de preflight; no se ejecutó ninguna unidad del juego ni se fabricó QA.
+- Fuente canónica: `main`, `VEXFORGE_PROTOCOL_V2.md`, memoria/decisiones oficiales y Supabase vivo `rscuzqnfccqvltkdcdny`.
+- Hallazgo: el PAT estaba disponible y Supabase estaba accesible, pero el primer intento Git usó `Bearer` en Git smart HTTP y fue rechazado. Eso no demostraba una credencial inválida.
+- Corrección permanente: el protocolo ahora exige autenticación nativa por transporte, diagnóstico antes de clasificar el secreto, cierre fail-closed si `main` no se valida y uso de la cuenta QA canónica antes de declarar una prueba autenticada bloqueada.
+- Evidencia: `git clone` HTTPS con Basic `x-access-token` validó `main`; Supabase Management API respondió `200`; `auth.users` contiene la cuenta QA canónica `pavilo20.qa@vexforge.test`, con último acceso registrado el 2026-08-22.
+- Alcance preservado: sin cambios en combate, economía, recompensas, autenticación, RLS, RPCs autoritativas, Storage, assets, deploy ni resultados de QA.
+- Estado inicial: `IN_PROGRESS / regla de preflight incompleta`. Estado actual: `OPERATIONAL`. Nivel Q: Q0 actual / Q1 objetivo para esta regla.
+- Bloqueos: ninguno para el acceso oficial en esta sesión. La verificación autenticada de una unidad sólo puede ejecutarse con una sesión normal QA utilizable; no se suplanta con privilegios administrativos.
+- Condición de reapertura: cambio de proveedor/transporte, rechazo de `main`, cambio de la cuenta QA canónica o cualquier sesión que vuelva a clasificar un fallo de transporte como credencial inválida sin diagnóstico.
+- Siguiente acción verificable: continuar desde la prioridad oficial viva sólo después de reconciliar el plan y los documentos de la unidad activa; para `VE-VIS-6`, reconstruir la implementación desde `NOT_STARTED` y no aplicar `0040` sin cobertura real.
+
+---
+
 ## 2026-08-22 — VE-VIS-6-GAME-LOOP-TELEMETRY — IMPLEMENTED_UNVERIFIED
 
 - Tipo de sesion: IMPLEMENTACION + verificacion proporcional de contrato, sin suplantar una sesion QA.
