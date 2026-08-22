@@ -9,7 +9,7 @@
 - Evidencia local: `npm run typecheck` y `npm run verify:build` correctos. `npm run verify:all` llega a `verify:telemetry` y falla correctamente porque la cobertura viva devuelve 0 emisiones para las cinco claves.
 - Evidencia Supabase: migracion 0039 aplicada por Management API; catalogo de 5/5 claves; funcion `vexforge_telemetry_coverage()` responde con rol `anon`; cobertura actual `0/5`; objetivo sigue `NOT_STARTED`; grants de tabla auditados (catalogo solo lectura publica, eventos solo `authenticated select/insert`).
 - Evidencia local: `npm ci --ignore-scripts`, `npm run typecheck` y `npm run verify:build` correctos; `npm run verify:telemetry` falla correctamente al detectar que no existe una emision real para `session_start`.
-- Evidencia deploy: `https://vexforge-web.pages.dev/build-manifest.json` declara el commit vivo `acec3e6c10fb4f846cf1c1bdd186975889010a1d` de `main`; la raiz publica responde HTTP 200. No se publico un bundle nuevo porque no hubo cambio de código en esta unidad.
+- Evidencia deploy: `https://vexforge-web.pages.dev/build-manifest.json` declara el commit actualmente publicado de `main`; la raiz publica responde HTTP 200. No se publico un bundle nuevo porque no hubo cambio de código en esta unidad.
 - Bloqueo: falta una sesion normal autenticada de la cuenta QA canonica para recorrer el bucle real. No se usa `service_role`, no se fabrican eventos ni resultados y 0040 no se aplica sin cobertura.
 - Responsive, accesibilidad, focus y reduced motion: la telemetria no crea UI ni focos; el flujo visual existente y sus guardas se conservan.
 - Condicion de reapertura: se anade/retira una clave, una superficie deja de emitir, una clave cae a 0 o RLS deja de aislar por `auth.uid()`.
