@@ -17,7 +17,7 @@ completa
 ## 0. Hecho verificado del baseline y estado actual (2026-08-22)
 
 La sesión anterior dejó el plan, pero no el código en `main`. La sesión actual
-recuperó `main` en `4540e4e`, ejecutó el baseline y reconstruyó la unidad en la
+recuperó `main` en `acec3e6c10fb4f846cf1c1bdd186975889010a1d`, ejecutó el baseline y reconstruyó la unidad en la
 raíz oficial. El repositorio ya contiene migración, emisor, instrumentación y
 guarda. La auditoría viva además encontró que las tablas y la función habían
 aparecido en Supabase sin una migración equivalente en `main`; 0039 las
