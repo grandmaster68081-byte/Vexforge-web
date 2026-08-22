@@ -6,8 +6,9 @@
 - Cambios: migracion `0039_ve_vis_6_game_loop_telemetry.sql`; emisor best-effort `src/lib/telemetry.ts`; instrumentacion de `App.tsx`, `FusionRoute.tsx`, `BattleResultScreen.tsx` y `QuestsRoute.tsx`; guarda `scripts/verify-telemetry.mjs`; `verify:telemetry` encadenada en `verify:all`; migracion condicionada `0040_ve_vis_6_game_loop_telemetry_met.sql`.
 - Alcance preservado: sin cambios en combate autoritativo, dano, settlement, recompensas, economia, RPCs autoritativas, autenticacion, Storage, arte ni lore. El emisor nunca elige `user_id`; Supabase lo deriva de `auth.uid()`.
 - Reconciliacion viva: las tablas y la funcion ya existian en Supabase sin migracion equivalente en `main`; 0039 conserva la firma viva de cinco columnas, elimina policies duplicadas, fija RLS y deja `anon` sin grants sobre eventos.
-- Evidencia local: `npm run typecheck` y `npm run verify:build` correctos. `npm run verify:telemetry` falla correctamente porque la cobertura viva devuelve 0 emisiones para las cinco claves.
+- Evidencia local: `npm run typecheck` y `npm run verify:build` correctos. `npm run verify:all` llega a `verify:telemetry` y falla correctamente porque la cobertura viva devuelve 0 emisiones para las cinco claves.
 - Evidencia Supabase: catalogo de 5/5 claves; funcion `vexforge_telemetry_coverage()` responde con rol `anon`; cobertura actual `0/5`; grants de tabla auditados (catalogo solo lectura publica, eventos solo `authenticated select/insert`).
+- Evidencia deploy: Cloudflare Pages propago el commit `7a90648b87be201054321d8e6ca68ac3f2f1dbe5`; `https://vexforge-web.pages.dev/build-manifest.json` declara ese mismo `sourceCommit` y la raiz publica responde HTTP 200.
 - Bloqueo: falta una sesion normal autenticada de la cuenta QA canonica para recorrer el bucle real. No se usa `service_role`, no se fabrican eventos ni resultados y 0040 no se aplica sin cobertura.
 - Responsive, accesibilidad, focus y reduced motion: la telemetria no crea UI ni focos; el flujo visual existente y sus guardas se conservan.
 - Condicion de reapertura: se anade/retira una clave, una superficie deja de emitir, una clave cae a 0 o RLS deja de aislar por `auth.uid()`.

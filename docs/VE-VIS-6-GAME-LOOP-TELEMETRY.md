@@ -161,6 +161,8 @@ la cobertura en vivo de una clave cae a 0; o la RLS de
 - Supabase vivo: `vexforge_telemetry_event_catalog` tiene las cinco claves;
   `vexforge_telemetry_events` conserva RLS por `auth.uid()`, `anon` no tiene
   grants de tabla y la cobertura es agregada sin `user_id`.
+- Deploy público: `build-manifest.json` declara el commit
+  `7a90648b87be201054321d8e6ca68ac3f2f1dbe5` y la raíz responde HTTP 200.
 - Bloqueo real: no existe en el entorno una sesión normal autenticada de la
   cuenta QA canónica. No se usa `service_role`, no se fabrican resultados y no
   se aplica 0040.
