@@ -10,7 +10,7 @@ import { ProgressBar } from '@/components/ProgressBar';
 export default function ForgeScreen() {
   const colors = useColors();
   const insets = useSafeAreaInsets();
-  const { vex, shards, wins, claimMission } = useGame();
+  const { vex, shards, wins, cardsTotal, syncState, claimMission } = useGame();
   const [claimed, setClaimed] = useState(false);
 
   const handleClaim = () => {
@@ -42,6 +42,15 @@ export default function ForgeScreen() {
       <View style={styles.greeting}>
         <Text style={[styles.eyebrow, { color: colors.mutedForeground }]}>BUENAS, FORJADOR</Text>
         <Text style={[styles.title, { color: colors.foreground }]}>Tu siguiente victoria{'\n'}empieza aquí.</Text>
+      </View>
+
+      <View style={[styles.connectionCard, { backgroundColor: colors.panel, borderColor: colors.border }]}>
+        <View style={[styles.connectionDot, { backgroundColor: syncState === 'connected' ? colors.success : syncState === 'loading' ? colors.accent : colors.danger }]} />
+        <View style={styles.connectionCopy}>
+          <Text style={[styles.connectionTitle, { color: colors.foreground }]}>NEXUS {syncState === 'connected' ? 'CONECTADO' : syncState === 'loading' ? 'SINCRONIZANDO' : 'SIN CONEXIÓN'}</Text>
+          <Text style={[styles.connectionBody, { color: colors.mutedForeground }]}>{cardsTotal > 0 ? `${cardsTotal} cartas oficiales disponibles` : 'Comprobando el catálogo oficial'}</Text>
+        </View>
+        <Ionicons name={syncState === 'connected' ? 'checkmark-circle-outline' : 'cloud-outline'} size={21} color={syncState === 'connected' ? colors.success : colors.mutedForeground} />
       </View>
 
       <View style={[styles.resourceCard, { backgroundColor: colors.panelStrong, borderColor: colors.border }]}>
@@ -113,7 +122,12 @@ const styles = StyleSheet.create({
   subtitle: { fontSize: 9, fontWeight: '600', letterSpacing: 2, marginTop: 3 },
   iconButton: { width: 42, height: 42, borderWidth: 1, borderRadius: 14, alignItems: 'center', justifyContent: 'center' },
   notificationDot: { width: 6, height: 6, borderRadius: 3, position: 'absolute', top: 9, right: 10 },
-  greeting: { marginTop: 37, marginBottom: 25 },
+  greeting: { marginTop: 37, marginBottom: 18 },
+  connectionCard: { flexDirection: 'row', alignItems: 'center', borderWidth: 1, borderRadius: 16, padding: 13, marginBottom: 25 },
+  connectionDot: { width: 8, height: 8, borderRadius: 4, marginRight: 11 },
+  connectionCopy: { flex: 1 },
+  connectionTitle: { fontSize: 10, fontWeight: '800', letterSpacing: 1.1 },
+  connectionBody: { fontSize: 11, marginTop: 4 },
   eyebrow: { fontSize: 10, letterSpacing: 1.6, fontWeight: '700' },
   title: { fontSize: 28, lineHeight: 34, fontWeight: '700', marginTop: 8 },
   resourceCard: { borderWidth: 1, borderRadius: 22, padding: 19, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
