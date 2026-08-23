@@ -10,12 +10,12 @@ import { ProgressBar } from '@/components/ProgressBar';
 export default function ForgeScreen() {
   const colors = useColors();
   const insets = useSafeAreaInsets();
-  const { vex, shards, wins, cardsTotal, syncState, claimMission } = useGame();
+  const { wallet, stats, player, cardsTotal, featuredCards, syncState, refresh } = useGame();
   const [claimed, setClaimed] = useState(false);
 
   const handleClaim = () => {
     if (claimed) return;
-    claimMission();
+    refresh();
     setClaimed(true);
   };
 
@@ -56,13 +56,13 @@ export default function ForgeScreen() {
       <View style={[styles.resourceCard, { backgroundColor: colors.panelStrong, borderColor: colors.border }]}>
         <View>
           <Text style={[styles.eyebrow, { color: colors.mutedForeground }]}>BALANCE DE FORJA</Text>
-          <Text style={[styles.balance, { color: colors.foreground }]}>{vex.toLocaleString()}</Text>
+          <Text style={[styles.balance, { color: colors.foreground }]}>{(wallet?.vex_ingame ?? 0).toLocaleString()}</Text>
           <Text style={[styles.resourceLabel, { color: colors.primary }]}>VEX DISPONIBLE</Text>
         </View>
         <View style={styles.resourceSide}>
           <View style={[styles.resourcePill, { backgroundColor: colors.panel }]}>
             <Ionicons name="diamond" size={14} color={colors.accent} />
-            <Text style={[styles.pillText, { color: colors.foreground }]}>{shards}</Text>
+            <Text style={[styles.pillText, { color: colors.foreground }]}>{(wallet?.reserved_ingame ?? 0)}</Text>
           </View>
           <Text style={[styles.resourceLabel, { color: colors.mutedForeground }]}>FRAGMENTOS</Text>
         </View>
@@ -95,7 +95,7 @@ export default function ForgeScreen() {
 
       <View style={styles.sectionHeader}>
         <Text style={[styles.sectionTitle, { color: colors.foreground }]}>Nexus activo</Text>
-        <Text style={[styles.counter, { color: colors.mutedForeground }]}>{wins} VICTORIAS</Text>
+        <Text style={[styles.counter, { color: colors.mutedForeground }]}>{(stats?.pvp_wins ?? 0)} VICTORIAS</Text>
       </View>
       <View style={[styles.nexusCard, { backgroundColor: colors.ink, borderColor: colors.border }]}>
         <View style={[styles.nexusGlow, { backgroundColor: colors.primary }]} />
