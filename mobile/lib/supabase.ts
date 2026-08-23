@@ -78,13 +78,13 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
     return rows[0] ?? null;
     }
 
-    export async function loadWallet(session: Session): Promise<Wallet | null> {
+    export async function loadWallet(session: Session, playerId: string): Promise<Wallet | null> {
     const rows = await rest('player_wallet?select=vex_ingame%2Cvex_tradeable%2Creserved_ingame%2Creserved_tradeable&player_id=eq.' + encodeURIComponent(session.user.id) + '&limit=1', session) as Wallet[];
     return rows[0] ?? null;
     }
 
-    export async function loadStats(session: Session) {
-    return restRpc('get_player_stats', { p_player_id: session.user.id }, session) as Promise<{ pvp_wins?: number; missions_completed?: number; cards_owned?: number }>;
+    export async function loadStats(session: Session, playerId: string) {
+    return restRpc('get_player_stats', { p_player_id: playerId }, session) as Promise<{ pvp_wins?: number; missions_completed?: number; cards_owned?: number }>;
     }
 
     async function restRpc(name: string, body: Json, session?: Session) {
@@ -92,13 +92,13 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
     return parse(response);
     }
 
-    export async function findOpponents(session: Session): Promise<Opponent[]> {
+    export async function findOpponents(session: Session, playerId: string): Promise<Opponent[]> {
     const rows = await restRpc('get_leaderboard', { p_limit: 20 }, session) as any[];
-    return (rows ?? []).filter((row) => row.player_id !== session.user.id).slice(0, 10).map((row) => ({ player_id: row.player_id, display_name: row.display_name ?? 'Forjador', mmr: Number(row.mmr ?? 1000), wins: Number(row.wins ?? 0), losses: Number(row.losses ?? 0) }));
+    return (rows ?? []).filter((row) => row.player_id !== playerId).slice(0, 10).map((row) => ({ player_id: row.player_id, display_name: row.display_name ?? 'Forjador', mmr: Number(row.mmr ?? 1000), wins: Number(row.wins ?? 0), losses: Number(row.losses ?? 0) }));
     }
 
-    export async function startBattle(session: Session, opponentId: string): Promise<BattleResult> {
-    const result = await restRpc('vexforge_battle_resolve', { p_challenger_id: session.user.id, p_opponent_id: opponentId, p_idempotency_key: 'mobile_' + session.user.id + '_' + opponentId + '_' + Date.now() }, session) as BattleResult;
+    export async function startBattle(session: Session, playerId: string, opponentId: string): Promise<BattleResult> {
+    const result = await restRpc('vexforge_battle_resolve', { p_challenger_id: playerId, p_opponent_id: opponentId, p_idempotency_key: 'mobile_' + playerId + '_' + opponentId + '_' + Date.now() }, session) as BattleResult;
     if (!result?.ok) throw new Error(result?.error ?? 'El combate fue rechazado por el servidor');
     return result;
     }

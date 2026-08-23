@@ -47,8 +47,12 @@ import React, { createContext, useContext, useEffect, useMemo, useState } from '
         setCardsTotal(catalog.cardsTotal);
         setFeaturedCards(catalog.featuredCards);
         if (session) {
-          const [profile, nextWallet, nextStats] = await Promise.all([loadPlayerProfile(session), loadWallet(session), loadStats(session)]);
-          setPlayer(profile); setWallet(nextWallet); setStats(nextStats);
+          const nextPlayer = await loadPlayerProfile(session);
+          setPlayer(nextPlayer);
+          if (nextPlayer) {
+            const [nextWallet, nextStats] = await Promise.all([loadWallet(session, nextPlayer.id), loadStats(session, nextPlayer.id)]);
+            setWallet(nextWallet); setStats(nextStats);
+          } else { setWallet(null); setStats(null); }
         } else { setPlayer(null); setWallet(null); setStats(null); }
         setSyncState('connected');
       } catch (error) { setSyncState('offline'); if (!session) setAuthError(error instanceof Error ? error.message : 'No se pudo conectar con Supabase'); }
@@ -60,8 +64,8 @@ import React, { createContext, useContext, useEffect, useMemo, useState } from '
     const signIn = async (email: string, password: string) => { setAuthError(null); setAuthLoading(true); try { const next = await signInRemote(email, password); setSession(next); } catch (error) { setAuthError(error instanceof Error ? error.message : 'No se pudo iniciar sesión'); } finally { setAuthLoading(false); } };
     const signUp = async (email: string, password: string) => { setAuthError(null); setAuthLoading(true); try { const next = await signUpRemote(email, password); if (next) setSession(next); return Boolean(next); } catch (error) { setAuthError(error instanceof Error ? error.message : 'No se pudo crear la cuenta'); return false; } finally { setAuthLoading(false); } };
     const signOut = async () => { await signOutRemote(); setSession(null); setPlayer(null); setWallet(null); setStats(null); setOpponents([]); };
-    const find = async () => { if (!session) return; try { setOpponents(await findOpponents(session)); } catch (error) { setAuthError(error instanceof Error ? error.message : 'No se pudieron cargar oponentes'); } };
-    const battle = async (opponentId: string) => { if (!session) return; setBattleLoading(true); setBattleResult(null); try { setBattleResult(await startBattleRemote(session, opponentId)); await refresh(); } catch (error) { setAuthError(error instanceof Error ? error.message : 'No se pudo iniciar el combate'); } finally { setBattleLoading(false); } };
+    const find = async () => { if (!session || !player) return; try { setOpponents(await findOpponents(session, player.id)); } catch (error) { setAuthError(error instanceof Error ? error.message : 'No se pudieron cargar oponentes'); } };
+    const battle = async (opponentId: string) => { if (!session || !player) return; setBattleLoading(true); setBattleResult(null); try { setBattleResult(await startBattleRemote(session, player.id, opponentId)); await refresh(); } catch (error) { setAuthError(error instanceof Error ? error.message : 'No se pudo iniciar el combate'); } finally { setBattleLoading(false); } };
 
     const value = useMemo(() => ({ session, player, wallet, stats, cardsTotal, featuredCards, syncState, authLoading, authError, signIn, signUp, signOut, refresh, opponents, battleLoading, battleResult, findOpponents: find, startBattle: battle, clearBattleResult: () => setBattleResult(null) }), [session, player, wallet, stats, cardsTotal, featuredCards, syncState, authLoading, authError, opponents, battleLoading, battleResult]);
     return <GameContext.Provider value={value}>{children}</GameContext.Provider>;
