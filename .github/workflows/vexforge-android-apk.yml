@@ -1,0 +1,27 @@
+name: Build VEXFORGE Android APK
+on:
+  workflow_dispatch:
+  push:
+    paths: [ 'mobile/**', '.github/workflows/vexforge-android-apk.yml' ]
+jobs:
+  build-apk:
+    runs-on: ubuntu-latest
+    permissions: { contents: write }
+    defaults: { run: { working-directory: mobile } }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: npm, cache-dependency-path: mobile/package.json }
+      - run: npm install --no-audit --no-fund
+      - run: npx expo prebuild --platform android --no-install --non-interactive
+      - name: Build installable APK
+        working-directory: mobile/android
+        run: ./gradlew assembleDebug --no-daemon --stacktrace
+      - name: Publish APK release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: vexforge-android-build-${{ github.run_number }}
+          name: VEXFORGE Android build ${{ github.run_number }}
+          body: Installable Android APK generated from the official VEXFORGE mobile skeleton.
+          files: mobile/android/app/build/outputs/apk/debug/app-debug.apk
+          prerelease: true
