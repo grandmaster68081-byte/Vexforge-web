@@ -1,46 +1,18 @@
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Ionicons } from '@expo/vector-icons';
-import { useColors } from '@/hooks/useColors';
-import { useGame } from '@/context/GameContext';
+import { useState } from 'react';
+    import { ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
+    import { useColors } from '@/hooks/useColors';
+    import { useGame } from '@/context/GameContext';
 
-export default function ProfileScreen() {
-  const colors = useColors();
-  const insets = useSafeAreaInsets();
-  const { wins, vex, shards } = useGame();
-  return (
-    <ScrollView style={[styles.screen, { backgroundColor: colors.background }]} contentContainerStyle={{ paddingTop: insets.top + 20, paddingBottom: insets.bottom + 100 }} showsVerticalScrollIndicator={false}>
-      <Text style={[styles.eyebrow, { color: colors.primary }]}>IDENTIDAD // FORJADOR</Text>
-      <View style={styles.profileHeader}><View style={[styles.profileIcon, { backgroundColor: colors.panelStrong, borderColor: colors.accent }]}><Ionicons name="person" size={34} color={colors.accent} /></View><View><Text style={[styles.title, { color: colors.foreground }]}>FORJADOR 001</Text><Text style={[styles.sub, { color: colors.mutedForeground }]}>NIVEL 07 · NEXUS ONLINE</Text></View></View>
-      <View style={[styles.levelCard, { backgroundColor: colors.card, borderColor: colors.border }]}><View style={styles.levelRow}><Text style={[styles.label, { color: colors.mutedForeground }]}>RANGO DE FORJA</Text><Text style={[styles.level, { color: colors.accent }]}>07</Text></View><View style={[styles.track, { backgroundColor: colors.muted }]}><View style={[styles.fill, { backgroundColor: colors.accent, width: '68%' }]} /></View><Text style={[styles.xp, { color: colors.mutedForeground }]}>680 / 1.000 XP PARA NIVEL 08</Text></View>
-      <Text style={[styles.sectionTitle, { color: colors.foreground }]}>Registro de actividad</Text>
-      <View style={styles.stats}>{[['VICTORIAS', wins.toString(), 'trophy-outline'], ['VEX', vex.toLocaleString(), 'flash-outline'], ['FRAGMENTOS', shards.toString(), 'diamond-outline']].map(([label, value, icon]) => <View key={label} style={[styles.stat, { backgroundColor: colors.card, borderColor: colors.border }]}><Ionicons name={icon as keyof typeof Ionicons.glyphMap} size={18} color={colors.primary} /><Text style={[styles.statValue, { color: colors.foreground }]}>{value}</Text><Text style={[styles.statLabel, { color: colors.mutedForeground }]}>{label}</Text></View>)}</View>
-      <View style={[styles.notice, { backgroundColor: colors.panelStrong, borderColor: colors.border }]}><Ionicons name="shield-checkmark-outline" size={21} color={colors.success} /><View style={styles.noticeCopy}><Text style={[styles.noticeTitle, { color: colors.foreground }]}>Cuenta protegida</Text><Text style={[styles.noticeBody, { color: colors.mutedForeground }]}>Tu progreso local se guarda en este dispositivo.</Text></View></View>
-    </ScrollView>
-  );
-}
-
-const styles = StyleSheet.create({
-  screen: { flex: 1, paddingHorizontal: 20 },
-  eyebrow: { fontSize: 10, fontWeight: '800', letterSpacing: 1.6 },
-  profileHeader: { flexDirection: 'row', alignItems: 'center', gap: 15, marginTop: 23 },
-  profileIcon: { width: 70, height: 70, borderWidth: 1, borderRadius: 23, alignItems: 'center', justifyContent: 'center' },
-  title: { fontSize: 22, fontWeight: '700' },
-  sub: { fontSize: 9, fontWeight: '700', letterSpacing: 1, marginTop: 5 },
-  levelCard: { borderWidth: 1, borderRadius: 18, padding: 16, marginTop: 26 },
-  levelRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
-  label: { fontSize: 9, fontWeight: '800', letterSpacing: 1.4 },
-  level: { fontSize: 19, fontWeight: '800' },
-  track: { height: 6, borderRadius: 4, overflow: 'hidden', marginTop: 14 },
-  fill: { height: '100%', borderRadius: 4 },
-  xp: { fontSize: 9, fontWeight: '700', letterSpacing: 0.8, marginTop: 10 },
-  sectionTitle: { fontSize: 17, fontWeight: '700', marginTop: 30, marginBottom: 13 },
-  stats: { flexDirection: 'row', gap: 9 },
-  stat: { flex: 1, borderWidth: 1, borderRadius: 16, padding: 12 },
-  statValue: { fontSize: 19, fontWeight: '800', marginTop: 17 },
-  statLabel: { fontSize: 8, fontWeight: '800', letterSpacing: 0.7, marginTop: 4 },
-  notice: { flexDirection: 'row', alignItems: 'center', borderWidth: 1, borderRadius: 16, padding: 14, marginTop: 25 },
-  noticeCopy: { flex: 1, marginLeft: 11 },
-  noticeTitle: { fontSize: 13, fontWeight: '700' },
-  noticeBody: { fontSize: 11, lineHeight: 16, marginTop: 3 },
-});
+    export default function ProfileScreen() {
+    const colors = useColors();
+    const { session, player, wallet, stats, syncState, authLoading, authError, signIn, signUp, signOut } = useGame();
+    const [register, setRegister] = useState(false);
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [message, setMessage] = useState<string | null>(null);
+    const submit = async () => { setMessage(null); if (register) { const created = await signUp(email, password); setMessage(created ? 'Cuenta creada y sesión iniciada.' : 'Revisa tu correo para confirmar la cuenta.'); } else await signIn(email, password); };
+    if (!session) return <ScrollView contentContainerStyle={[styles.auth, { backgroundColor: colors.background }]}><Text style={[styles.eyebrow, { color: colors.primary }]}>VEXFORGE / CUENTA</Text><Text style={[styles.title, { color: colors.foreground }]}>{register ? 'Crear cuenta' : 'Iniciar sesión'}</Text><Text style={[styles.copy, { color: colors.mutedForeground }]}>La cuenta se valida con Supabase. No se guarda una contraseña local.</Text><TextInput autoCapitalize="none" keyboardType="email-address" value={email} onChangeText={setEmail} placeholder="Correo electrónico" placeholderTextColor={colors.mutedForeground} style={[styles.input, { color: colors.foreground, borderColor: colors.border, backgroundColor: colors.panel }]} /><TextInput secureTextEntry value={password} onChangeText={setPassword} placeholder="Contraseña" placeholderTextColor={colors.mutedForeground} style={[styles.input, { color: colors.foreground, borderColor: colors.border, backgroundColor: colors.panel }]} /><Pressable onPress={submit} disabled={authLoading} style={[styles.button, { backgroundColor: colors.primary }]}>{authLoading ? <ActivityIndicator color={colors.background} /> : <Text style={[styles.buttonText, { color: colors.background }]}>{register ? 'CREAR CUENTA' : 'ENTRAR'}</Text>}</Pressable>{authError ? <Text style={[styles.error, { color: colors.destructive }]}>{authError}</Text> : null}{message ? <Text style={[styles.message, { color: colors.success }]}>{message}</Text> : null}<Pressable onPress={() => { setRegister(!register); setMessage(null); }}><Text style={[styles.link, { color: colors.primary }]}>{register ? 'Ya tengo una cuenta' : 'Crear una cuenta nueva'}</Text></Pressable></ScrollView>;
+    return <ScrollView contentContainerStyle={[styles.screen, { backgroundColor: colors.background }]}><Text style={[styles.eyebrow, { color: colors.primary }]}>VEXFORGE / PERFIL</Text><Text style={[styles.title, { color: colors.foreground }]}>{player?.display_name ?? session.user.email ?? 'Forjador'}</Text><Text style={[styles.status, { color: colors.success }]}>● {syncState === 'connected' ? 'SINCRONIZADO CON SUPABASE' : 'ACTUALIZANDO'}</Text><View style={[styles.panel, { backgroundColor: colors.panel, borderColor: colors.border }]}><Text style={[styles.panelTitle, { color: colors.foreground }]}>Cartera real</Text><Text style={[styles.balance, { color: colors.primary }]}>{wallet?.vex_ingame ?? 0} VEX</Text><Text style={[styles.copy, { color: colors.mutedForeground }]}>Tradeable: {wallet?.vex_tradeable ?? 0} · Victorias PvP: {stats?.pvp_wins ?? 0}</Text></View><View style={[styles.panel, { backgroundColor: colors.panel, borderColor: colors.border }]}><Text style={[styles.panelTitle, { color: colors.foreground }]}>Cuenta Supabase</Text><Text style={[styles.copy, { color: colors.mutedForeground }]}>{session.user.email}</Text><Text style={[styles.copy, { color: colors.mutedForeground }]}>ID: {session.user.id.slice(0, 8)}…</Text></View><Pressable onPress={signOut} style={[styles.button, { backgroundColor: colors.panelStrong, borderColor: colors.border }]}><Text style={[styles.buttonText, { color: colors.foreground }]}>CERRAR SESIÓN</Text></Pressable></ScrollView>;
+    }
+    const styles = StyleSheet.create({ auth: { flexGrow: 1, padding: 24, justifyContent: 'center' }, screen: { flexGrow: 1, padding: 24, paddingTop: 54 }, eyebrow: { fontSize: 11, fontWeight: '800', letterSpacing: 2 }, title: { fontSize: 29, fontWeight: '800', marginTop: 14, marginBottom: 10 }, copy: { fontSize: 13, lineHeight: 20, marginBottom: 18 }, input: { borderWidth: 1, borderRadius: 12, padding: 14, fontSize: 15, marginTop: 12 }, button: { minHeight: 50, borderRadius: 12, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 18, marginTop: 18, borderWidth: 1 }, buttonText: { fontSize: 12, fontWeight: '800', letterSpacing: 1 }, link: { textAlign: 'center', marginTop: 20, fontWeight: '700' }, error: { marginTop: 16, lineHeight: 20 }, message: { marginTop: 16, lineHeight: 20 }, status: { fontSize: 11, fontWeight: '800', letterSpacing: 1.2, marginBottom: 24 }, panel: { borderWidth: 1, borderRadius: 18, padding: 18, marginBottom: 14 }, panelTitle: { fontSize: 15, fontWeight: '800', marginBottom: 14 }, balance: { fontSize: 32, fontWeight: '900', marginBottom: 8 } });
+    
