@@ -1,3 +1,20 @@
+## 2026-08-24 — VE-MOB-1-ANDROID-APK-STANDALONE + VE-CI-1-VERIFY-ACTIVATION — OPERATIONAL
+
+- Tipo de sesion: IMPLEMENTACION + verificacion de artefacto publicado (APK) y activacion de CI.
+- Fuente canonica: `main`, workflow `.github/workflows/vexforge-android-apk.yml`, releases publicos del repo.
+- Credencial: `GITHUB_PAT` rotado por el operador; verificado `GET /user` 200 con `x-oauth-scopes: repo, workflow`. Desbloquea escritura bajo `.github/workflows/`.
+- Hallazgo (causa raiz del APK roto): las builds 1-8 publicaban `app-debug.apk` (187 MB) SIN `assets/index.android.bundle`. El plugin `withEmbeddedJsBundle` no logro forzar el bundling en la variante debug, por lo que la app instalada buscaba un servidor Metro y fallaba al arrancar ("Unable to load script").
+- Correccion: el workflow ahora compila `assembleRelease` (la variante release siempre embebe el bundle y Expo la firma con el keystore debug, manteniendola sideload-installable), anade `setup-java 17` y una guarda que aborta la publicacion si el APK no contiene `assets/index.android.bundle`.
+- Evidencia verificada: run #9 (`cee0ab6`) success; release `vexforge-android-build-9` con `app-release.apk` de 86.6 MB; inspeccion del APK descargado: `assets/index.android.bundle` presente (2.99 MB), 3 dex, ABIs arm64-v8a/armeabi-v7a/x86/x86_64, bloque de firma `APK Sig Block 42` (v2) presente.
+- Ruta oficial de instalacion: https://github.com/grandmaster68081-byte/Vexforge-web/releases/download/vexforge-android-build-9/app-release.apk
+- VE-CI-1: `ci/verify.workflow.yml` copiado a `.github/workflows/verify.yml`; la deuda "CI bloqueado por scope `workflow`" queda cerrada.
+- Alcance preservado: sin cambios en combate, economia, RLS, RPCs, Storage, arte ni codigo de la web.
+- Deuda restante: QA del APK en dispositivo fisico (solo el operador puede instalarlo); `VE-VIS-6` sigue `PLANNED`; HTTP 429 de Storage en `verify:all`.
+- Condicion de reapertura: cambio de la variante de build, del keystore o de la version de Expo/RN.
+- Siguiente accion verificable: instalar `app-release.apk` en dispositivo y confirmar arranque sin error; luego retomar `VE-VIS-6` paso 1.
+
+---
+
 ## 2026-08-22 — SUPREME-LAW-QA-DEPLOY-CLOSURE-GATE — OPERATIONAL
 
 - Tipo de sesión: DOCUMENTACIÓN + endurecimiento del cierre QA posterior al deploy.
