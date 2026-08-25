@@ -1,3 +1,14 @@
+## 2026-08-25 — SUPREME-LAW-OPERATOR-QA-HANDOFF — OPERATIONAL
+
+- Tipo de sesión: DOCUMENTACIÓN + cambio de flujo de entrega solicitado por el operador.
+- Fuente canónica: decisión explícita del operador, `VEXFORGE_PROTOCOL_V2.md` y Supabase vivo.
+- Cambio: la IA ya no crea ni recupera sesiones QA ni recorre el APK después de cada unidad. Debe completar la implementación, publicar en `main`, esperar el workflow oficial, confirmar el release correlativo y devolver el enlace de descarga.
+- Estado de entrega: la ausencia de QA no bloquea el cierre de implementación; la unidad queda `IMPLEMENTED_UNVERIFIED` hasta la verificación funcional del operador. `OPERATIONAL`, `PASS` y `GO` siguen reservados para evidencia aportada por el operador.
+- Seguridad preservada: no se fabrican sesiones, resultados de combate, settlements, recompensas, economía ni estados de cuenta; no se usa `service_role`.
+- Evidencia Supabase: decisión `SUPREME-LAW-OPERATOR-QA-HANDOFF` registrada mediante migración `0043_supreme_law_operator_qa_handoff.sql`.
+- Condición de reapertura: hallazgo QA del operador, discrepancia entre commit y release, workflow fallido o APK sin bundle JS embebido.
+- Siguiente acción verificable: aplicar este flujo en la siguiente unidad Android y entregar su APK oficial.
+
 ## 2026-08-25 — VE-MOB-2-AUTH — IMPLEMENTED_UNVERIFIED
 
 - Tipo de sesión: AUDITORÍA + BLOQUEO de cierre QA; sin cambios de código, datos, esquema, RLS, Storage, economía ni resultados de jugadores.

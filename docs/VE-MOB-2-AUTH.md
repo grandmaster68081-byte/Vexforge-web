@@ -46,11 +46,14 @@ oficial y la RPC `ensure_player_row`.
 Estado inicial: `NOT_STARTED`.
 
 Estado de implementación antes del recorrido APK: `IMPLEMENTED_UNVERIFIED`.
-La unidad solo puede pasar a `OPERATIONAL` tras instalar el release que
-corresponda al commit en un dispositivo o emulador y recorrer los criterios.
+La unidad se entrega como `IMPLEMENTED_UNVERIFIED` cuando el release
+correspondiente al commit está publicado; la verificación funcional posterior
+queda a cargo del operador. Solo pasa a `OPERATIONAL` cuando el operador aporta
+su evidencia de instalación y recorrido.
 
 ## Deuda y reapertura
 
-La verificación autenticada requiere una sesión QA normal y un dispositivo o
-emulador disponible. Reabrir si cambia el contrato de Supabase Auth, la RPC de
-provisión, el mecanismo de almacenamiento de sesión o la barrera de rutas.
+La QA funcional requiere que el operador disponga de una sesión QA normal y un
+dispositivo o emulador. Reabrir si el operador reporta un hallazgo, o si cambia
+el contrato de Supabase Auth, la RPC de provisión, el mecanismo de
+almacenamiento de sesión o la barrera de rutas.

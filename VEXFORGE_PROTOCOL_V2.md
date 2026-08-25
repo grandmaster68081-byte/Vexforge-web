@@ -58,10 +58,12 @@ aplicación Android. Esta ley gobierna todo el trabajo desde su registro.
    evidencia de publicación de la app): run del workflow en success, release
    publicado con tag correlativo, APK con bundle JS embebido y firma v2. El
    commit del run debe corresponder al commit auditado de `main`.
-8. QA de unidades móviles: el recorrido se realiza sobre el APK del release
-   que corresponde al commit, en dispositivo físico (operador) o emulador
-   cuando esté disponible. Sin esa evidencia, la unidad queda
-   `IMPLEMENTED_UNVERIFIED`; nunca se declara `OPERATIONAL` por compilar.
+8. QA de unidades móviles: el recorrido sobre el APK del release que
+   corresponde al commit queda a cargo del operador, en dispositivo físico o
+   emulador. La IA no bloquea la entrega por falta de esa sesión: tras el
+   workflow exitoso entrega el enlace del APK y registra la unidad como
+   `IMPLEMENTED_UNVERIFIED` hasta que el operador aporte su resultado. Nunca
+   se declara `OPERATIONAL` sólo por compilar.
 9. Regla de no regresión web: la transición no debe romper el build web
    (`npm run verify:build`) ni las guardas (`npm run verify:all`); ambos
    siguen siendo gates de todo push a `main`.
@@ -141,7 +143,10 @@ Clasifica cada sesión como:
 
 DOCUMENTACIÓN, AUDITORÍA, IMPLEMENTACIÓN, QA, REFINAMIENTO, BLOQUEO o INVESTIGACIÓN.
 
-Usa una verificación proporcional al riesgo. Nunca declares PASS, GO, COMPLETED u OPERATIONAL sin evidencia real.
+Usa una verificación proporcional al riesgo. Nunca declares PASS, GO u
+OPERATIONAL sin evidencia real. `IMPLEMENTED_UNVERIFIED` es el cierre válido
+de implementación y entrega cuando la QA funcional queda pendiente del
+operador.
 
 5. UNIDAD DE TRABAJO
 
@@ -324,18 +329,31 @@ Si no existe una sesión normal autorizada del jugador o owner:
 - No declares PASS ni GO.
 - Registra la ruta, caso, evidencia faltante y condición para reabrir.
 
-### Cierre QA obligatorio después de cada unidad completada
+### Entrega posterior al deploy y QA a cargo del operador
 
-Después de publicar una unidad completada en `main` y esperar la propagación del deploy oficial:
+Después de publicar una unidad en `main`, la IA debe esperar el workflow
+oficial correspondiente, comprobar que el artefacto público coincide con el
+commit y entregar al operador la ruta de descarga. La IA no crea ni recupera
+sesiones QA, no recorre el APK y no bloquea la entrega por falta de esa
+verificación.
 
-1. Localiza la cuenta QA canónica en `auth.users` y crea o recupera una sesión normal autorizada mediante el flujo de autenticación del producto. La cuenta canónica actualmente registrada es `pavilo20.qa@vexforge.test`; su contraseña, tokens y enlaces nunca se guardan en código, continuidad, commits, URLs, logs o capturas.
-2. Abre el artefacto público que corresponde al commit publicado: para unidades de app, el release `vexforge-android-build-N` cuyo run de workflow corresponde a ese commit (APK con bundle embebido); para unidades web, `build-manifest.json`. No aceptes un artefacto anterior como evidencia del commit nuevo.
-3. Recorre con esa sesión las rutas y criterios de aceptación afectados por la unidad. Comprueba el resultado visible, estados de carga/vacío/error, navegación, focus, responsive, reduced motion y las respuestas reales relevantes.
-4. Cuando la unidad toque un flujo autenticado, ejecuta la mutación o recorrido real con la cuenta QA y verifica el estado resultante desde la interfaz y las sondas autorizadas. No basta con HTTP 200, una fila esperada o una confirmación textual.
-5. Registra rutas, acciones, resultado observado, commit, deploy, fecha, evidencia y cualquier discrepancia en `CONTINUITY.md` y en la decisión/migración oficial correspondiente.
-6. Si no se puede obtener una sesión normal QA, la unidad queda `IMPLEMENTED_UNVERIFIED` o `BLOCKED` según la causa; no se declara `OPERATIONAL`, `PASS`, `GO` ni `COMPLETED`. Continúa sólo con trabajo seguro que no dependa de esa prueba.
+1. Para unidades Android, confirma `success` en
+   `vexforge-android-apk.yml`, el release correlativo
+   `vexforge-android-build-N`, `app-release.apk`, el bundle JS embebido y la
+   firma v2.
+2. Registra en `CONTINUITY.md` el commit, run, release, enlace de descarga,
+   verificaciones ejecutadas, estado `IMPLEMENTED_UNVERIFIED`, deuda y
+   condición de reapertura.
+3. El operador realiza la QA funcional sobre el APK entregado. Puede informar
+   una aprobación o un hallazgo; sus hallazgos reabren la unidad y se registran
+   en continuidad.
+4. `OPERATIONAL`, `PASS` y `GO` siguen reservados para evidencia funcional
+   real aportada por el operador. La ausencia de esa evidencia ya no bloquea
+   el cierre de implementación ni la entrega del APK.
 
-La cuenta QA es un gate de verificación posterior al despliegue, no una autorización para fabricar sesiones, resultados de combate, settlements, recompensas, economía o estados de cuenta.
+La QA del operador no autoriza fabricar sesiones, resultados de combate,
+settlements, recompensas, economía o estados de cuenta. Nunca se usa
+`service_role` para sustituirla.
 
 13. COMPROBACIÓN DE GITHUB, RELEASES APK Y CLOUDFLARE
 
@@ -414,9 +432,11 @@ Al terminar una sesión:
 - Publica en main al cerrar cada unidad completada, siguiendo el flujo de verificación descrito aquí.
 - Deja que el deploy automático se ejecute y comprueba que el manifiesto público y los
   assets reflejan el commit auditado; no existe un paso de deploy manual.
-- Después de esa propagación, ejecuta el cierre QA obligatorio sobre el deploy público
-  con la cuenta QA canónica y registra la evidencia real. Si no hay sesión normal utilizable,
-  conserva la unidad como `IMPLEMENTED_UNVERIFIED` o `BLOCKED`; nunca cierres por inferencia.
+- Después de esa propagación, entrega al operador el enlace del artefacto
+  público correspondiente al commit auditado y registra la unidad como
+  `IMPLEMENTED_UNVERIFIED` hasta recibir su QA funcional. La ausencia de esa
+  sesión no bloquea la entrega ni exige que la IA fabrique o recupere una
+  sesión; los hallazgos del operador reabren la unidad.
 - No borres historial.
 - No declares verificado lo que no fue comprobado.
 
