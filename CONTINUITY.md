@@ -9,6 +9,20 @@
 - Condición de reapertura: hallazgo QA del operador, discrepancia entre commit y release, workflow fallido o APK sin bundle JS embebido.
 - Siguiente acción verificable: aplicar este flujo en la siguiente unidad Android y entregar su APK oficial.
 
+## 2026-08-25 — VE-MOB-3-HOME — IMPLEMENTED_UNVERIFIED
+
+- Tipo de sesión: IMPLEMENTACIÓN + verificación proporcional de la superficie Home Android.
+- Fuente canónica: código de `main`, `src/routes/HomeRoute.tsx`, `src/domains/home/`, Supabase vivo y `docs/VE-MOB-0-PORT-INVENTORY.md`.
+- Estado inicial: `NOT_STARTED / VE-MOB-3-HOME` después de AUTH. Estado actual: `IMPLEMENTED_UNVERIFIED`. Nivel Q: Q2 actual / Q3 objetivo.
+- Cambios: `mobile/app/(tabs)/index.tsx` completa el port del Home con estadísticas globales, temporada/evento, batalla rápida, carta del día, estado del jugador, misiones, top de arena, actividad, estados vacío/error y destacados de sistemas.
+- Alcance preservado: consumo del Supabase oficial y sus RPCs existentes; sin mocks, sin duplicación de lógica autoritativa, sin cambios de combate, economía, RLS, Storage, datos de jugador o plan Tier 1.
+- Evidencia local: `npm run typecheck` en `mobile/` correcto; `npm run verify:mobile-auth` correcto (8/8); `npm run verify:build` web correcto. `npm run verify:all` conserva el bloqueo preexistente de telemetría viva por ausencia de `forge_action`, sin fabricar eventos.
+- Evidencia de entrega: pendiente del push a `main`, workflow `vexforge-android-apk.yml`, release correlativo y comprobación del APK standalone.
+- QA pendiente: recorrido funcional de Home en el APK por el operador con sesión normal. No se declara `OPERATIONAL`.
+- Deuda: completar las unidades siguientes del port P1 (`VE-MOB-4` a `VE-MOB-8`); resolver la cobertura real de telemetría web/app cuando corresponda.
+- Condición de reapertura: workflow o release fallido, cambio del contrato Home en Supabase, ruta muerta, regresión de estados reales o hallazgo QA del operador.
+- Siguiente acción verificable: commit/push a `main`, esperar el workflow oficial y entregar `app-release.apk`; después abrir `VE-MOB-4-COLLECTION`.
+
 ## 2026-08-25 — VE-MOB-2-AUTH — IMPLEMENTED_UNVERIFIED
 
 - Tipo de sesión: AUDITORÍA + BLOQUEO de cierre QA; sin cambios de código, datos, esquema, RLS, Storage, economía ni resultados de jugadores.

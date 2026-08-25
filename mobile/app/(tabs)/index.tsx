@@ -17,6 +17,18 @@ type HomeSnapshot = {
   activity: ActivityItem[];
 };
 
+const FEATURE_HIGHLIGHTS: Array<{
+  title: string;
+  description: string;
+  icon: keyof typeof Ionicons.glyphMap;
+  color: 'primary' | 'success' | 'accent' | 'danger';
+}> = [
+  { title: 'Cartas únicas', description: 'Colecciona cartas de cuatro facciones.', icon: 'layers-outline', color: 'danger' },
+  { title: 'Combate PvP', description: 'Sube tu rango en la arena competitiva.', icon: 'flash-outline', color: 'primary' },
+  { title: 'Packs y forja', description: 'Descubre nuevas cartas y combinaciones.', icon: 'cube-outline', color: 'success' },
+  { title: 'Misiones diarias', description: 'Completa objetivos y gana recompensas.', icon: 'shield-checkmark-outline', color: 'accent' },
+];
+
 function timeAgo(iso: string) {
   const minutes = Math.max(0, Math.floor((Date.now() - new Date(iso).getTime()) / 60000));
   if (minutes < 1) return 'ahora';
@@ -124,10 +136,10 @@ export default function ForgeScreen() {
                 <Text style={[styles.subtitle, { color: colors.mutedForeground }]}>NEXUS // 01</Text>
               </View>
             </View>
-            <Pressable accessibilityLabel="Notificaciones" testID="home-notifications" style={[styles.iconButton, { borderColor: colors.border }]}>
+            <View accessibilityLabel="Notificaciones" style={[styles.iconButton, { borderColor: colors.border }]}>
               <Ionicons name="notifications-outline" size={20} color={colors.foreground} />
               <View style={[styles.notificationDot, { backgroundColor: colors.accent }]} />
-            </Pressable>
+            </View>
           </View>
 
           <View style={styles.greeting}>
@@ -141,10 +153,11 @@ export default function ForgeScreen() {
             <ActionButton label="Entrar a la arena" icon="flash-outline" onPress={() => router.push('/battle')} colors={colors} secondary testID="home-battle" />
           </View>
 
-          <View style={styles.heroStats}>
+           <View style={styles.heroStats}>
             <View style={styles.heroStat}><Text style={[styles.heroStatValue, { color: colors.accent }]}>{home.stats?.total_cards ?? '—'}</Text><Text style={[styles.heroStatLabel, { color: colors.mutedForeground }]}>CARTAS</Text></View>
             <View style={styles.heroStat}><Text style={[styles.heroStatValue, { color: colors.accent }]}>{home.stats?.active_players ?? '—'}</Text><Text style={[styles.heroStatLabel, { color: colors.mutedForeground }]}>FORJADORES</Text></View>
             <View style={styles.heroStat}><Text style={[styles.heroStatValue, { color: colors.accent }]}>{home.stats?.total_battles ?? '—'}</Text><Text style={[styles.heroStatLabel, { color: colors.mutedForeground }]}>BATALLAS</Text></View>
+             <View style={styles.heroStat}><Text style={[styles.heroStatValue, { color: colors.accent }]}>{home.stats?.packs_opened ?? '—'}</Text><Text style={[styles.heroStatLabel, { color: colors.mutedForeground }]}>PACKS ABIERTOS</Text></View>
           </View>
         </View>
       </Animated.View>
@@ -167,6 +180,25 @@ export default function ForgeScreen() {
           </View>
         ) : null}
 
+        <Animated.View entering={FadeInDown.delay(40).duration(450)} style={[styles.quickBattle, { backgroundColor: colors.secondary, borderColor: colors.primary }]}>
+          <View style={styles.quickBattleCopy}>
+            <Ionicons name="flash-outline" size={22} color={colors.primary} />
+            <View style={styles.quickBattleText}>
+              <Text style={[styles.quickBattleTitle, { color: colors.primary }]}>BATALLA RÁPIDA VS IA</Text>
+              <Text style={[styles.quickBattleBody, { color: colors.mutedForeground }]}>Sin esperas · Practica tus estrategias en la arena.</Text>
+            </View>
+          </View>
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel="Jugar batalla rápida"
+            testID="home-quick-battle"
+            onPress={() => router.push('/battle')}
+            style={({ pressed }) => [styles.quickBattleButton, { backgroundColor: colors.primary, opacity: pressed ? 0.76 : 1 }]}
+          >
+            <Text style={[styles.quickBattleButtonText, { color: colors.primaryForeground }]}>JUGAR</Text>
+          </Pressable>
+        </Animated.View>
+
         <Animated.View entering={FadeInDown.delay(80).duration(450)} style={[styles.resourceCard, { backgroundColor: colors.panelStrong, borderColor: colors.border }]}>
           <View>
             <SectionLabel color={colors.mutedForeground}>BALANCE DE FORJA</SectionLabel>
@@ -188,12 +220,33 @@ export default function ForgeScreen() {
               <View style={styles.eventCopy}>
                 <SectionLabel color={colors.accent}>EVENTO ACTIVO · TEMPORADA 1</SectionLabel>
                 <Text style={[styles.eventTitle, { color: colors.foreground }]}>{home.stats.active_event.name}</Text>
-                <Text style={[styles.cardBody, { color: colors.mutedForeground }]}>Completa misiones del Festival y gana recompensas exclusivas.</Text>
+               <Text style={[styles.cardBody, { color: colors.mutedForeground }]}>Completa misiones del Festival y gana recompensas exclusivas.</Text>
               </View>
               <View style={styles.eventTimer}><Text style={[styles.timerLabel, { color: colors.mutedForeground }]}>TERMINA EN</Text><Text style={[styles.timer, { color: colors.accent }]}>{countdown(home.stats.active_event.ends_at)}</Text></View>
             </View>
             <View style={styles.progressHeader}><Text style={[styles.timerLabel, { color: colors.mutedForeground }]}>PROGRESO GLOBAL</Text><Text style={[styles.timerLabel, { color: colors.accent }]}>{home.stats.active_event.progress ?? 0}%</Text></View>
             <ProgressBar value={Math.max(0, Math.min(100, home.stats.active_event.progress ?? 0))} color={colors.accent} />
+             <Pressable
+               accessibilityRole="button"
+               testID="home-event-arena"
+               onPress={() => router.push('/battle')}
+               style={({ pressed }) => [styles.eventButton, { borderColor: colors.accent, opacity: pressed ? 0.7 : 1 }]}
+             >
+               <Text style={[styles.eventButtonText, { color: colors.accent }]}>ENTRAR A LA ARENA</Text>
+               <Ionicons name="arrow-forward" size={15} color={colors.accent} />
+             </Pressable>
+          </Animated.View>
+        ) : home.stats?.season ? (
+          <Animated.View entering={FadeInDown.delay(140).duration(450)} style={[styles.seasonCard, { backgroundColor: colors.panel, borderColor: colors.border }]}>
+            <View style={styles.seasonCopy}>
+              <SectionLabel color={colors.accent}>TEMPORADA ACTUAL</SectionLabel>
+              <Text style={[styles.seasonTitle, { color: colors.foreground }]}>{home.stats.season.name}</Text>
+              <Text style={[styles.cardBody, { color: colors.mutedForeground }]}>La arena sigue abierta para los forjadores.</Text>
+            </View>
+            <View style={styles.seasonStatus}>
+              <Ionicons name="radio-outline" size={20} color={colors.success} />
+              <Text style={[styles.seasonStatusText, { color: colors.success }]}>EN VIVO</Text>
+            </View>
           </Animated.View>
         ) : null}
 
@@ -215,6 +268,12 @@ export default function ForgeScreen() {
               </View>
             </View>
           </Animated.View>
+        ) : !homeLoading ? (
+          <View style={[styles.emptyCard, { backgroundColor: colors.panel, borderColor: colors.border }]}>
+            <SectionLabel color={colors.accent}>CARTA DEL DÍA</SectionLabel>
+            <Text style={[styles.emptyTitle, { color: colors.foreground }]}>La rotación está en pausa.</Text>
+            <Text style={[styles.cardBody, { color: colors.mutedForeground }]}>Vuelve a sincronizar más tarde para descubrir la siguiente carta destacada.</Text>
+          </View>
         ) : null}
 
         <Animated.View entering={FadeInDown.delay(260).duration(450)}>
@@ -263,7 +322,31 @@ export default function ForgeScreen() {
               ))}
             </View>
           </View>
+        ) : !homeLoading ? (
+          <View style={[styles.emptyCard, { backgroundColor: colors.panel, borderColor: colors.border }]}>
+            <SectionLabel color={colors.accent}>ACTIVIDAD RECIENTE</SectionLabel>
+            <Text style={[styles.emptyTitle, { color: colors.foreground }]}>Aún no hay actividad pública.</Text>
+            <Text style={[styles.cardBody, { color: colors.mutedForeground }]}>Las misiones completadas aparecerán aquí.</Text>
+          </View>
         ) : null}
+
+        <Animated.View entering={FadeInDown.delay(320).duration(450)}>
+          <SectionLabel color={colors.accent}>SISTEMAS DE LA FORJA</SectionLabel>
+          <View style={styles.featureGrid}>
+            {FEATURE_HIGHLIGHTS.map((feature) => {
+              const featureColor = colors[feature.color];
+              return (
+                <View key={feature.title} style={[styles.featureCard, { backgroundColor: colors.panel, borderColor: colors.border }]}>
+                  <View style={[styles.featureIcon, { backgroundColor: `${featureColor}18` }]}>
+                    <Ionicons name={feature.icon} size={19} color={featureColor} />
+                  </View>
+                  <Text style={[styles.featureTitle, { color: colors.foreground }]}>{feature.title}</Text>
+                  <Text style={[styles.featureDescription, { color: colors.mutedForeground }]}>{feature.description}</Text>
+                </View>
+              );
+            })}
+          </View>
+        </Animated.View>
       </View>
     </ScrollView>
   );
@@ -287,8 +370,8 @@ const styles = StyleSheet.create({
   actionRow: { flexDirection: 'row', gap: 10 },
   actionButton: { minHeight: 42, borderRadius: 12, borderWidth: 1, paddingHorizontal: 14, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8, flex: 1 },
   actionText: { fontSize: 10, fontWeight: '800', letterSpacing: 0.7 },
-  heroStats: { flexDirection: 'row', gap: 26, marginTop: 28 },
-  heroStat: { alignItems: 'flex-start' },
+   heroStats: { flexDirection: 'row', flexWrap: 'wrap', columnGap: 22, rowGap: 12, marginTop: 28 },
+   heroStat: { alignItems: 'flex-start', minWidth: 62 },
   heroStatValue: { fontSize: 21, fontWeight: '800' },
   heroStatLabel: { fontSize: 9, letterSpacing: 1.2, fontWeight: '700', marginTop: 3 },
   content: { padding: 20, gap: 24 },
@@ -311,6 +394,8 @@ const styles = StyleSheet.create({
   eventCopy: { flex: 1 },
   eventTitle: { fontSize: 19, fontWeight: '700', marginTop: 8, marginBottom: 5 },
   eventTimer: { alignItems: 'flex-end' },
+   eventButton: { alignSelf: 'flex-start', flexDirection: 'row', alignItems: 'center', gap: 7, borderWidth: 1, borderRadius: 9, paddingHorizontal: 10, paddingVertical: 7, marginTop: 15 },
+   eventButtonText: { fontSize: 9, fontWeight: '800', letterSpacing: 0.7 },
   timerLabel: { fontSize: 9, letterSpacing: 1.1, fontWeight: '700' },
   timer: { fontSize: 15, fontWeight: '800', marginTop: 7 },
   progressHeader: { flexDirection: 'row', justifyContent: 'space-between', marginTop: 16, marginBottom: 7 },
@@ -342,4 +427,23 @@ const styles = StyleSheet.create({
   activityRow: { flexDirection: 'row', alignItems: 'center', gap: 9, paddingHorizontal: 13, paddingVertical: 12 },
   activityText: { flex: 1, fontSize: 11 },
   activityTime: { fontSize: 9 },
+   quickBattle: { borderWidth: 1, borderRadius: 18, padding: 14, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 12 },
+   quickBattleCopy: { flex: 1, flexDirection: 'row', alignItems: 'center', gap: 11 },
+   quickBattleText: { flex: 1 },
+   quickBattleTitle: { fontSize: 11, fontWeight: '800', letterSpacing: 0.7 },
+   quickBattleBody: { fontSize: 11, lineHeight: 16, marginTop: 3 },
+   quickBattleButton: { borderRadius: 9, paddingHorizontal: 12, paddingVertical: 9 },
+   quickBattleButtonText: { fontSize: 9, fontWeight: '800', letterSpacing: 0.7 },
+   seasonCard: { borderWidth: 1, borderRadius: 18, padding: 16, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 12 },
+   seasonCopy: { flex: 1 },
+   seasonTitle: { fontSize: 19, fontWeight: '700', marginTop: 8, marginBottom: 5 },
+   seasonStatus: { alignItems: 'center', gap: 5 },
+   seasonStatusText: { fontSize: 9, fontWeight: '800', letterSpacing: 0.9 },
+   emptyCard: { borderWidth: 1, borderRadius: 16, padding: 16, gap: 6 },
+   emptyTitle: { fontSize: 16, fontWeight: '700', marginTop: 3 },
+   featureGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 10, marginTop: 12 },
+   featureCard: { width: '48%', minHeight: 138, borderWidth: 1, borderRadius: 16, padding: 13 },
+   featureIcon: { width: 36, height: 36, borderRadius: 11, alignItems: 'center', justifyContent: 'center', marginBottom: 12 },
+   featureTitle: { fontSize: 13, fontWeight: '800' },
+   featureDescription: { fontSize: 11, lineHeight: 16, marginTop: 5 },
 });
