@@ -9,13 +9,62 @@ PROYECTO
 - Proyecto: VEXFORGE
 - Repositorio oficial: https://github.com/grandmaster68081-byte/Vexforge-web.git
 - Supabase oficial: https://rscuzqnfccqvltkdcdny.supabase.co
-- Deploy oficial: https://vexforge-web.pages.dev
+- Producto oficial ACTIVO: aplicación Android (`mobile/`, Expo 54 / React Native 0.81, expo-router).
+- Canal de entrega oficial de la app: GitHub Releases del repo (`vexforge-android-build-N` → `app-release.apk`), generado por `.github/workflows/vexforge-android-apk.yml` al hacer push a `main` con cambios en `mobile/**`.
+- Deploy web: https://vexforge-web.pages.dev (referencia viva y espejo de mantenimiento; ya no es el producto prioritario).
 - Fuentes canónicas principales:
   - vexforge_master_protocol_v2
   - vexforge_forge_formation_engine_v1
   - documentos oficiales de la unidad activa
   - CONTINUITY.md
-  - código real, Supabase vivo y deploy actualizado
+  - código real, Supabase vivo, release APK vigente y deploy actualizado
+
+0. LEY DE TRANSICIÓN: ENTORNO ACTIVO = APLICACIÓN ANDROID
+
+Decisión del operador (2026-08-25): el producto VEXFORGE migra de la web a la
+aplicación Android. Esta ley gobierna todo el trabajo desde su registro.
+
+1. Entorno activo: el código de producto vive en `mobile/` del repositorio
+   oficial (Expo 54 / React Native 0.81, expo-router, TypeScript). Toda unidad
+   nueva de producto se implementa ahí.
+2. La web (`src/`) queda en mantenimiento: es la fuente de verdad de la
+   funcionalidad, flujos, textos, diseño y datos ya construidos. No se abren
+   unidades nuevas exclusivas de web salvo corrección crítica.
+3. Orden de trabajo obligatorio:
+   a. FASE PORT (prioritaria): vaciar todo lo construido en la web hacia la
+      app — superficies, flujos, datos reales de Supabase, assets del
+      manifiesto oficial, audio, motion y estados (carga/vacío/error) —,
+      pulirla y compilarla a APK. Cada superficie o flujo portado es una
+      unidad `VE-MOB-*` con criterios de aceptación y evidencia propios. El
+      inventario oficial del port es `docs/VE-MOB-0-PORT-INVENTORY.md`.
+   b. FASE CONTINUIDAD: completado el port, continuar el plan del protocolo
+      (fases Tier 1 y criterios de `public.vexforge_visual_tier1_objective`)
+      reinterpretado sobre la app.
+4. Unidades web pendientes (p. ej. `VE-VIS-6-GAME-LOOP-TELEMETRY`) se
+   reevalúan: si el criterio aplica al producto, se implementa en la app; la
+   instrumentación web existente se conserva mientras la web siga publicada.
+5. Backend único: la app consume el mismo Supabase oficial, las mismas RPCs,
+   RLS y datos autoritativos. Prohibido duplicar o reimplementar lógica
+   autoritativa en el cliente móvil; la app es capa de presentación y
+   consumo, igual que la web.
+6. Ciclo de entrega de la app: push a `main` con cambios en `mobile/**`
+   dispara el workflow `vexforge-android-apk.yml`, que compila
+   `assembleRelease`, verifica que el APK contiene `assets/index.android.bundle`
+   y publica el release `vexforge-android-build-N` con `app-release.apk`.
+   El operador descarga e instala ese APK para ver los cambios. No existe
+   ningún otro canal de entrega autorizado (ni EAS, ni builds manuales, ni
+   Metro en producción).
+7. Verificación de build Android (sustituye al `build-manifest.json` web como
+   evidencia de publicación de la app): run del workflow en success, release
+   publicado con tag correlativo, APK con bundle JS embebido y firma v2. El
+   commit del run debe corresponder al commit auditado de `main`.
+8. QA de unidades móviles: el recorrido se realiza sobre el APK del release
+   que corresponde al commit, en dispositivo físico (operador) o emulador
+   cuando esté disponible. Sin esa evidencia, la unidad queda
+   `IMPLEMENTED_UNVERIFIED`; nunca se declara `OPERATIONAL` por compilar.
+9. Regla de no regresión web: la transición no debe romper el build web
+   (`npm run verify:build`) ni las guardas (`npm run verify:all`); ambos
+   siguen siendo gates de todo push a `main`.
 
 1. ACCESO SEGURO OBLIGATORIO
 
@@ -75,7 +124,8 @@ Antes de modificar o ejecutar cualquier cosa:
 
 - Lee completos el Protocolo Maestro, el plan activo, los documentos de la unidad y CONTINUITY.md.
 - Revisa la estructura real del repositorio, package.json, rutas, componentes, servicios, assets, audio, Storage y configuración de despliegue.
-- Comprueba el estado actual de main, Supabase y Cloudflare Pages.
+- Revisa el entorno móvil: `mobile/package.json`, `mobile/app/` (rutas expo-router), `mobile/components/`, `mobile/lib/`, el workflow `vexforge-android-apk.yml` y el último release `vexforge-android-build-N` publicado.
+- Comprueba el estado actual de main, Supabase, el último release APK y Cloudflare Pages.
 - Compara el código del repositorio con el bundle publicado.
 - Ejecuta el build automático desde la raíz del repositorio (`npm run verify:build`).
 - La única salida de producción válida es `dist/` generado desde el `package.json` y
@@ -279,7 +329,7 @@ Si no existe una sesión normal autorizada del jugador o owner:
 Después de publicar una unidad completada en `main` y esperar la propagación del deploy oficial:
 
 1. Localiza la cuenta QA canónica en `auth.users` y crea o recupera una sesión normal autorizada mediante el flujo de autenticación del producto. La cuenta canónica actualmente registrada es `pavilo20.qa@vexforge.test`; su contraseña, tokens y enlaces nunca se guardan en código, continuidad, commits, URLs, logs o capturas.
-2. Abre el deploy público que corresponde al commit publicado; comprueba `build-manifest.json` y no aceptes un bundle anterior como evidencia del commit nuevo.
+2. Abre el artefacto público que corresponde al commit publicado: para unidades de app, el release `vexforge-android-build-N` cuyo run de workflow corresponde a ese commit (APK con bundle embebido); para unidades web, `build-manifest.json`. No aceptes un artefacto anterior como evidencia del commit nuevo.
 3. Recorre con esa sesión las rutas y criterios de aceptación afectados por la unidad. Comprueba el resultado visible, estados de carga/vacío/error, navegación, focus, responsive, reduced motion y las respuestas reales relevantes.
 4. Cuando la unidad toque un flujo autenticado, ejecuta la mutación o recorrido real con la cuenta QA y verifica el estado resultante desde la interfaz y las sondas autorizadas. No basta con HTTP 200, una fila esperada o una confirmación textual.
 5. Registra rutas, acciones, resultado observado, commit, deploy, fecha, evidencia y cualquier discrepancia en `CONTINUITY.md` y en la decisión/migración oficial correspondiente.
@@ -287,13 +337,15 @@ Después de publicar una unidad completada en `main` y esperar la propagación d
 
 La cuenta QA es un gate de verificación posterior al despliegue, no una autorización para fabricar sesiones, resultados de combate, settlements, recompensas, economía o estados de cuenta.
 
-13. COMPROBACIÓN DE GITHUB Y CLOUDFLARE
+13. COMPROBACIÓN DE GITHUB, RELEASES APK Y CLOUDFLARE
 
 Cuando sea relevante:
 
 - Comprueba acceso al repositorio oficial mediante GITHUB_PAT.
 - Verifica branch, commit, estado limpio y diferencias reales.
-- Ejecuta build y comprobaciones proporcionales.
+- Ejecuta build y comprobaciones proporcionales (`npm run typecheck` en raíz y en `mobile/` cuando la unidad toque la app).
+- Para unidades de app: comprueba que el push a `main` disparó el workflow `vexforge-android-apk.yml`, que el run terminó en success sobre el commit auditado, que el release `vexforge-android-build-N` publicó `app-release.apk` y que la guarda del workflow confirmó el bundle JS embebido. El cierre de una unidad de app exige esa cadena; un run fallido o ausente deja la unidad `IMPLEMENTED_UNVERIFIED`.
+- Nunca compiles ni publiques APKs por canales manuales o paralelos (EAS Build, Gradle local con publicación, releases creados a mano): el único canal autorizado es el workflow oficial sobre `main`.
 - Compara los assets y bundles locales con los servidos por Cloudflare Pages.
 - Comprueba HTTP 200 en las rutas relevantes.
 - Verifica que el deploy público corresponde al commit que se está auditando.

@@ -1,3 +1,16 @@
+## 2026-08-25 — VE-MOB-0-PROTOCOL-TRANSITION-TO-ANDROID — OPERATIONAL
+
+- Tipo de sesión: DOCUMENTACIÓN (transición de entorno activo). Sin cambios de código, datos, esquema, RLS, Storage ni arte; sin `service_role`.
+- Decisión del operador: el producto migra de web a aplicación Android. Orden de trabajo: (1) FASE PORT — vaciar todo lo construido en la web hacia la app, pulirla y compilarla a APK; (2) FASE CONTINUIDAD — seguir el plan del protocolo (Tier 1) sobre la app. Sistema de entrega: push a `main` → workflow `vexforge-android-apk.yml` → release `app-release.apk` que el operador instala.
+- Cambios: `VEXFORGE_PROTOCOL_V2.md` — nueva sección 0 "LEY DE TRANSICIÓN: ENTORNO ACTIVO = APLICACIÓN ANDROID" (entorno activo, web en mantenimiento, orden PORT→CONTINUIDAD, backend único, ciclo de entrega por Releases, verificación de build APK, QA sobre APK, no regresión web); bloque PROYECTO actualizado; sección 3 incluye revisión del entorno móvil; sección 12 admite el release APK como artefacto de evidencia; sección 13 renombrada "GITHUB, RELEASES APK Y CLOUDFLARE" con la cadena workflow→release y prohibición de canales paralelos (EAS/manual).
+- Nuevo: `docs/VE-MOB-0-PORT-INVENTORY.md` — inventario oficial del port: 38 superficies web → 14 unidades `VE-MOB-2…15` en 4 fases (P1 núcleo jugable, P2 progresión/economía, P3 mundo/social, P4 admin diferida), criterios transversales y reevaluación de `VE-VIS-6` para la app.
+- Reconciliación: `VE-VIS-6` queda `IMPLEMENTED_UNVERIFIED` en web y pasa a cola de reevaluación móvil; `VE-VIS-*` restantes conservan su estado. Nada cerrado cambia de estado.
+- Estado inicial: `IN_PROGRESS / protocolo gobernando sólo web`. Estado actual: `OPERATIONAL`. Nivel Q: Q1.
+- Condición de reapertura: el operador revierte la transición, cambia el canal de entrega del APK o la web vuelve a ser producto prioritario.
+- Siguiente acción verificable: abrir `VE-MOB-2-AUTH` (login real contra Supabase Auth en la app), primera unidad de la FASE P1 del inventario.
+
+---
+
 ## 2026-08-24 — VE-MOB-1-ANDROID-APK-STANDALONE + VE-CI-1-VERIFY-ACTIVATION — OPERATIONAL
 
 - Tipo de sesion: IMPLEMENTACION + verificacion de artefacto publicado (APK) y activacion de CI.
