@@ -1,3 +1,17 @@
+## 2026-08-25 — VE-MOB-2-AUTH — IMPLEMENTED_UNVERIFIED
+
+- Tipo de sesión: AUDITORÍA + BLOQUEO de cierre QA; sin cambios de código, datos, esquema, RLS, Storage, economía ni resultados de jugadores.
+- Fuente canónica: `main` en `bc4ae1e5110fb143bde5349083ced30afebcded6`, Supabase vivo `rscuzqnfccqvltkdcdny`, workflow `vexforge-android-apk.yml` y release asociado.
+- Estado inicial: `IN_PROGRESS / VE-MOB-2-AUTH` pendiente desde la transición a Android. Estado actual: `IMPLEMENTED_UNVERIFIED`. Nivel Q: Q1 actual / Q2 objetivo.
+- Implementación verificada en `main`: formulario de inicio/registro, sesión persistida y renovable con Supabase Auth, guard de navegación de tabs y consumo autenticado de perfil, wallet, estadísticas y RPCs existentes.
+- Evidencia local: `npm run verify:mobile-auth` correcto y `npm run verify:build` correcto. `npm run verify:all` no cierra por falta de eventos reales de telemetría (`forge_action`), deuda independiente de esta unidad.
+- Evidencia publicada: run APK #10 sobre el mismo commit terminó `success`; release `vexforge-android-build-10` publicado con `app-release.apk` (90,841,303 bytes) y `assets/index.android.bundle` embebido (3,003,204 bytes). Cloudflare Pages expone `build-manifest.json` con el mismo commit.
+- Evidencia Supabase: Management API autenticada responde correctamente; la cuenta QA canónica `pavilo20.qa@vexforge.test` existe y tiene acceso reciente. No se creó ni suplantó una sesión normal en esta sesión.
+- Limitación de verificación local: `npm ci` móvil no pudo completar porque el espejo de paquetes del entorno rechazó `npm-package-arg@11.0.3`; no se usa como evidencia negativa, ya que el workflow oficial sí pasó `npm ci`, `npm run typecheck` y la compilación APK.
+- Bloqueo: falta recorrer el APK 10 con una sesión normal de la cuenta QA en dispositivo físico o emulador y verificar inicio, registro controlado, persistencia/renovación, logout, estados de error y aislamiento de rutas. No se declara `OPERATIONAL` por compilar.
+- Condición de reapertura: APK nuevo, cambio en Supabase Auth/RLS, cambio del guard de navegación, regresión de renovación de sesión o disponibilidad de una sesión QA normal utilizable.
+- Siguiente acción verificable: ejecutar el recorrido autenticado sobre `vexforge-android-build-10`; si pasa, registrar evidencia y cerrar `VE-MOB-2-AUTH`, después abrir `VE-MOB-3-HOME`.
+
 ## 2026-08-25 — VE-MOB-0-PROTOCOL-TRANSITION-TO-ANDROID — OPERATIONAL
 
 - Tipo de sesión: DOCUMENTACIÓN (transición de entorno activo). Sin cambios de código, datos, esquema, RLS, Storage ni arte; sin `service_role`.
