@@ -25,9 +25,23 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
     return body;
     }
 
+    type AuthResponse = Partial<Session> & { user?: User; message?: string };
+
     async function authRequest(path: string, body: Json) {
     const response = await fetch(SUPABASE_URL + '/auth/v1/' + path, { method: 'POST', headers: headers(), body: JSON.stringify(body) });
-    return parse(response) as Promise<Session & { message?: string }>;
+    return parse(response) as Promise<AuthResponse>;
+    }
+
+    function requireSession(response: AuthResponse): Session {
+    if (!response.access_token || !response.refresh_token || !response.user?.id) {
+      throw new Error('Supabase no devolvió una sesión válida.');
+    }
+    return {
+      access_token: response.access_token,
+      refresh_token: response.refresh_token,
+      expires_at: response.expires_at,
+      user: response.user,
+    };
     }
 
     async function saveSession(session: Session | null) {
@@ -36,15 +50,29 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
     }
 
     export async function signIn(email: string, password: string): Promise<Session> {
-    const session = await authRequest('token?grant_type=password', { email: email.trim(), password });
+    const session = requireSession(await authRequest('token?grant_type=password', { email: email.trim(), password }));
     await saveSession(session);
     return session;
     }
 
     export async function signUp(email: string, password: string): Promise<Session | null> {
-    const session = await authRequest('signup', { email: email.trim(), password });
-    if (session?.access_token) await saveSession(session);
-    return session?.access_token ? session : null;
+    const response = await authRequest('signup', { email: email.trim(), password });
+    if (response.user) {
+      try { await ensurePlayerRow(email); } catch { /* Auth remains valid; the database trigger retries provisioning. */ }
+    }
+    if (response.access_token && response.refresh_token && response.user) {
+      const session = requireSession(response);
+      await saveSession(session);
+      return session;
+    }
+    return null;
+    }
+
+    async function ensurePlayerRow(email: string) {
+    await restRpc('ensure_player_row', {
+      p_email: email.trim(),
+      p_display_name: email.trim().split('@')[0],
+    });
     }
 
     export async function signOut() { await saveSession(null); }
@@ -57,7 +85,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
     if (saved.expires_at && saved.expires_at * 1000 > Date.now() + 60_000) return saved;
     if (!saved.refresh_token) { await saveSession(null); return null; }
     try {
-      const refreshed = await authRequest('token?grant_type=refresh_token', { refresh_token: saved.refresh_token });
+      const refreshed = requireSession(await authRequest('token?grant_type=refresh_token', { refresh_token: saved.refresh_token }));
       await saveSession(refreshed);
       return refreshed;
     } catch { await saveSession(null); return null; }

@@ -1,12 +1,14 @@
 import React from 'react';
-import { Platform, StyleSheet, useColorScheme, View } from 'react-native';
+import { ActivityIndicator, Platform, StyleSheet, Text, useColorScheme, View } from 'react-native';
 import { useColors } from '@/hooks/useColors';
 import { Feather } from '@expo/vector-icons';
 import { BlurView } from 'expo-blur';
 import { isLiquidGlassAvailable } from 'expo-glass-effect';
 import { Tabs } from 'expo-router';
+import { Redirect } from 'expo-router';
 import { Icon, Label, NativeTabs } from 'expo-router/unstable-native-tabs';
 import { SymbolView } from 'expo-symbols';
+import { useGame } from '@/context/GameContext';
 
 // IMPORTANT: iOS 26 uses NativeTabs for native tabs with liquid glass support.
 // NativeTabs intentionally does NOT use custom design tokens — liquid glass
@@ -93,8 +95,27 @@ function ClassicTabLayout() {
 }
 
 export default function TabLayout() {
+  const colors = useColors();
+  const { session, authLoading } = useGame();
+
+  if (authLoading) {
+    return (
+      <View style={[styles.authLoading, { backgroundColor: colors.background }]}>
+        <ActivityIndicator color={colors.primary} />
+        <Text style={[styles.authLoadingText, { color: colors.mutedForeground }]}>CONECTANDO CON NEXUS</Text>
+      </View>
+    );
+  }
+
+  if (!session) return <Redirect href="/auth" />;
+
   if (isLiquidGlassAvailable()) {
     return <NativeTabLayout />;
   }
   return <ClassicTabLayout />;
 }
+
+const styles = StyleSheet.create({
+  authLoading: { flex: 1, alignItems: 'center', justifyContent: 'center', gap: 14 },
+  authLoadingText: { fontSize: 10, fontWeight: '700', letterSpacing: 1.5 },
+});
