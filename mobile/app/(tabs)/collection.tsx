@@ -46,12 +46,13 @@ function rarityColor(rarity: string | null | undefined, colors: ReturnType<typeo
 }
 
 function factionIcon(faction: string | null | undefined): keyof typeof Feather.glyphMap {
-  return {
+  const icon = {
     Guerrero: 'zap',
     Mago: 'star',
     Paladín: 'shield',
     Pícaro: 'target',
-  }[faction ?? ''] ?? 'compass';
+  }[faction ?? ''];
+  return (icon ?? 'compass') as keyof typeof Feather.glyphMap;
 }
 
 function CardArt({
