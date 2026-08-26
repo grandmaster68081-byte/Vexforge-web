@@ -1,3 +1,18 @@
+## 2026-08-26 — PROTOCOL-VISUAL-EXPERIENCE-LAYER-AND-DAILY-CONTEXT-LAW — OPERATIONAL
+
+- Tipo de sesión: GOBERNANZA + INTEGRACIÓN DOCUMENTAL; sin cambios de código de producto, datos de jugadores, economía, combate, RPCs, RLS, triggers, Auth, Storage, assets ni releases Android.
+- Preflight cumplido: se leyó y analizó el protocolo maestro completo vivo en Supabase, la continuidad oficial, el inventario VE-MOB-0 y la extensión visual completa antes de escribir cualquier cambio.
+- Cambio canónico: la extensión de benchmark visual y producto se registró como documento oficial y se integró en el Protocolo Maestro como TIER 1 EXPERIENCE LAYER, sin crear un plan paralelo y conservando Supabase como autoridad única.
+- Ley reforzada: cada día de trabajo y cada nueva sesión debe leer, comprender y analizar el protocolo completo de Supabase antes de ejecutar cualquier trabajo. Una continuidad detallada nunca sustituye ese preflight. Si el contexto completo no está disponible, el trabajo dependiente queda BLOCKED; el preflight, las fuentes reconciliadas, la unidad y el gate deben registrarse aquí.
+- Normas integradas: Game First, referente sin copia, Anti-Mockup Gate, Anti-Empty-Screen Gate, Design QA de diez pases, rúbrica 0-5, vertical slice transversal, mobile-first y capas visuales reversibles. La implementación futura debe mapearse a T0-T10, VE-MOB, criterios Tier 1, superficie/asset y evidencia.
+- Estado: la integración documental queda OPERATIONAL como gobierno del trabajo; no cambia por sí sola el estado de ningún criterio Tier 1 ni declara una superficie visual terminada. Nivel Q: Q0 contractual actual / Q1 objetivo de adopción verificable.
+- Evidencia Supabase: documento oficial vexforge_visual_benchmark_fates_extension_v1, addendum presente en vexforge_master_protocol_v2 y decisión VE-VIS-EXT-GAME-FIRST-EXPERIENCE-LAYER verificados mediante Management API autenticada.
+- Evidencia de repositorio: VEXFORGE_PROTOCOL_V2.md sincronizado con la directiva y la extensión conservada en docs/VEXFORGE-VISUAL-BENCHMARK-FATES-EXTENSION-V1.md; no se modificó mobile/**, por lo que no corresponde publicar un APK nuevo en esta sesión.
+- Deuda y riesgo: la capa visual aún debe materializarse por la unidad mínima bloqueante vigente; conservar rendimiento Android, accesibilidad, reduced-motion, autoridad del backend y prohibición de genéricos durante la implementación.
+- Condición de reapertura: cambio del protocolo, del documento fuente, de la autoridad viva, del inventario Android o evidencia de que una implementación visual contradice una regla canónica.
+- Siguiente acción verificable: repetir la Ley Diaria de Contexto Completo al iniciar la próxima sesión y elegir la siguiente unidad por la fase abierta más baja y criterio bloqueante, sin reabrir trabajo completado ni crear un plan paralelo.
+
+---
 ## 2026-08-26 — VE-MOB-4-COLLECTION — IMPLEMENTED_UNVERIFIED
 
 - Tipo de sesión: IMPLEMENTACIÓN Android + verificación proporcional previa a publicación.

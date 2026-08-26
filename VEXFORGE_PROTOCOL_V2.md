@@ -1,5 +1,7 @@
 # VEXFORGE — PROTOCOLO ACTIVO V2
 
+> La versión canónica viva de este protocolo se mantiene en Supabase como `vexforge_master_protocol_v2`; este archivo debe permanecer sincronizado tras cada cambio permanente.
+
 > Esta es la referencia operativa activa. El material histórico de planes y gates anteriores no debe usarse para decidir el trabajo actual.
 > El historial de Git se conserva para auditoría, pero los archivos históricos retirados no son instrucciones vigentes.
 
@@ -453,11 +455,11 @@ No propongas conectores cuando ya existan credenciales seguras autorizadas.
 
 Empieza siempre leyendo, analizando y reconciliando todas las fuentes; después elige una unidad concreta y continúa hasta completar, bloquear justificadamente o dejar registrada la siguiente acción verificable.
 
-Tu primer paso es pedirme las credenciales de Supabase PAT y GitHub pat , una vez conectado a todo el entorno de trabajo empezarás a ejecutar las órdenes del protocolo dentro de Supabase 
+Tu primer paso es pedirme las credenciales de Supabase PAT y GitHub pat , una vez conectado a todo el entorno de trabajo empezarás a ejecutar las órdenes del protocolo dentro de Supabase
 
-Está prohibido trabajar en cualquier entorno local oh fuera de los entornos de trabajo q indico yo , todo cambio debería quedar actualizado en la raíz del proyecto y en la continuidad 
+Está prohibido trabajar en cualquier entorno local oh fuera de los entornos de trabajo q indico yo , todo cambio debería quedar actualizado en la raíz del proyecto y en la continuidad
 
-No te detengas para mostrarme ninguna auditoría, solo déjalo como fuente de información para ti , tu apenas analices todo empieza con el trabajo, sin detenerte hasta terminar , después al final actualizas lo q hiciste en el deploy siguiendo el flujo q tenemos y actualiza la continuidad 
+No te detengas para mostrarme ninguna auditoría, solo déjalo como fuente de información para ti , tu apenas analices todo empieza con el trabajo, sin detenerte hasta terminar , después al final actualizas lo q hiciste en el deploy siguiendo el flujo q tenemos y actualiza la continuidad
 ## 25. OBJETIVO FINAL: JUEGO TIER 1 DEL GENERO (VE-VIS-2)
 
 La fuente autoritativa del objetivo final NO es este documento: son dos tablas del
@@ -479,3 +481,75 @@ Leyes:
 3. Los cambios de estado del plan se hacen por migracion SQL, nunca a mano.
 4. Tier 1 solo puede declararse cuando ningun criterio con `blocking = true` esta fuera de
    `MET`; la decision se registra en `public.vexforge_project_decisions`.
+
+---
+
+# ADDENDUM AUTORITATIVO — VEXFORGE GAME-FIRST EXPERIENCE LAYER v1
+**Fecha de incorporación:** 2026-08-26
+**Documento fuente:** `vexforge_visual_benchmark_fates_extension_v1`
+**Estado:** OFICIAL — INTEGRADO EN EL PROTOCOLO MAESTRO
+**Naturaleza:** capa de experiencia Tier 1 sobre el plan existente; no sustituye el protocolo, ForgeFormation, la autoridad de Supabase, las reglas de Android, la economía, la seguridad, RLS, RPCs, Storage ni los gates de entrega.
+
+## LEY DIARIA DE CONTEXTO COMPLETO Y CONTINUIDAD
+
+Al comenzar cada día de trabajo y cada nueva sesión operativa, antes de ejecutar cualquier trabajo, la IA debe leer, comprender y analizar el protocolo completo vigente en Supabase. Esta obligación se mantiene aunque `CONTINUITY.md` describa con exactitud la tarea, aunque exista una instrucción aparentemente inequívoca o aunque la IA crea recordar el método de trabajo.
+
+El orden obligatorio de preflight es:
+
+1. Leer el documento completo `vexforge_master_protocol_v2` desde Supabase, sin sustituirlo por un resumen, una memoria, una copia cacheada o una sola sección.
+2. Leer la entrada completa más reciente de `CONTINUITY.md` y el resto de la continuidad necesaria para entender el estado y la deuda.
+3. Leer el plan oficial aplicable y, cuando el trabajo sea Android, `docs/VE-MOB-0-PORT-INVENTORY.md`.
+4. Reconciliar lo leído con GitHub `main`, el esquema vivo de Supabase, RPCs, RLS, triggers, Auth, Storage, assets, contratos, release y deploy que correspondan.
+5. Confirmar el método de trabajo, las fuentes de autoridad, la unidad concreta, los límites y los gates antes de escribir, ejecutar SQL, crear assets, modificar código, hacer commit o publicar.
+
+La continuidad nunca concede una excepción a esta ley: indica desde dónde continuar, pero no reemplaza la comprensión del protocolo completo. La finalidad es evitar incompatibilidades de contexto —no colocar una losa de granito sobre un piso de mármol— y preservar decisiones, secuencias, salvaguardas y estándares acumulados.
+
+Si no es posible leer el protocolo completo o reconciliar las fuentes críticas, el trabajo dependiente queda `BLOCKED`; no se adivina, no se ejecuta parcialmente y no se presenta una suposición como autoridad. Cada sesión que ejecute trabajo debe registrar en la continuidad que el preflight fue realizado, qué fuentes fueron reconciliadas y qué unidad/gate se eligió.
+
+## 1. ALCANCE DE LA CAPA DE EXPERIENCIA
+
+La extensión oficial de referente visual y de producto se integra como `TIER 1 EXPERIENCE LAYER`. No crea un plan paralelo. Cada trabajo visual debe vincularse simultáneamente a:
+
+- una fase T0-T10;
+- una unidad `VE-MOB-*` cuando afecte Android;
+- uno o más criterios existentes de `public.vexforge_visual_tier1_objective`;
+- una superficie, asset o componente identificable;
+- evidencia reproducible y una condición de reapertura.
+
+La meta es que VEXFORGE funcione y se sienta como un videojuego de cartas premium: mundo, identidad, Campeón, ForgeFormation, Reserva, Reliquias, regiones, progresión, economía justa, autoridad backend, claridad, feedback, motion, audio, rendimiento y accesibilidad.
+
+## 2. LEY GAME FIRST
+
+Las superficies se diseñan como escenas y momentos jugables, no como formularios o paneles administrativos. La carta es un objeto de deseo y conserva el protagonismo; la presentación no debe ocultar datos ni convertir el cliente en autoridad. Cada superficie debe expresar contexto de juego, objeto, acción y feedback, incluidos sus estados de carga, vacío, error, victoria y derrota.
+
+Se prohíben placeholders, emojis, iconos de sistema, arte de stock sin identidad, sonidos genéricos, texto inventado y controles intercambiables cuando falte una fuente oficial. La ausencia de un recurso se registra como `BLOCKED` o `DRAFT`, nunca se oculta con un sustituto genérico.
+
+## 3. LEY DE REFERENTES SIN COPIA
+
+Might & Magic Fates Heroes TCG se usa como benchmark de presentación, jerarquía, claridad, atmósfera, UX móvil, combate, colección y progresión; nunca como plantilla. Se permiten principios UX y patrones conceptuales, pero no se copian identidad visual, arte, iconografía, personajes, textos, assets, composiciones literales, layout ni mecánicas específicas. VEXFORGE debe conservar y superar con identidad propia sus pilares canónicos.
+
+## 4. DESIGN QA Y RÚBRICA
+
+Cada superficie principal pasa, cuando corresponda, por FUNCTIONAL, DATA, VISUAL, MOTION, AUDIO, MOBILE, ACCESSIBILITY, PERFORMANCE, IDENTITY y BENCHMARK. La superficie no se considera `TIER1_READY` hasta completar los pases aplicables y registrar evidencia.
+
+La evaluación visual usa escala 0-5: 0 inexistente, 1 funcional, 2 coherente, 3 identidad propia, 4 premium y 5 Tier 1. El objetivo es al menos 4 en superficies principales y 3.5 en secundarias, sin sacrificar claridad, accesibilidad, rendimiento ni autoridad. El Anti-Mockup Gate rechaza una pantalla que pueda pertenecer a cualquier app, parezca administración, dependa de controles genéricos o no tenga escena, contexto, feedback y personalidad. El Anti-Empty-Screen Gate exige `SCENE + OBJECT + ACTION + FEEDBACK`.
+
+## 5. ORDEN DE IMPLEMENTACIÓN VISUAL
+
+La primera demostración transversal será un vertical slice trazable: HOME → CHAMPION → COLLECTION → CARD DETAIL → DECK/FORGE → FORMATION → BATTLE → RESULT → REWARD → HOME. La refactorización visual es reversible y se realiza por capas: tokens, iconografía, tipografía, fondos, cartas, botones, paneles, motion, audio, composición de escena y reconstrucción por superficie.
+
+La aplicación Android se prioriza desde touch, pantalla pequeña, alcance del pulgar, legibilidad, FPS, memoria, accesibilidad y `reduced-motion`. El espectáculo nunca puede bloquear el input ni ocultar el estado autoritativo.
+
+## 6. SUPABASE, TELEMETRÍA Y NO REGRESIÓN
+
+Esta capa sólo consume datos reales y contratos existentes. No autoriza mocks, datos inventados, lógica local autoritativa, settlements locales ni economía local. El estado local sólo controla presentación y nunca resuelve combate, recompensas, inventario, progreso o autenticación.
+
+La telemetría visual —cuando el contrato canónico la soporte— puede observar entradas/salidas de superficies, inspección de cartas, deck/formation, batalla, resultados, recompensas, tienda y nodos del mundo para medir tiempo, abandono, interacción, errores y rendimiento; no es una fuente de verdad del juego.
+
+Todo cambio conserva la arquitectura oficial: GitHub `main` como fuente de código, Supabase como autoridad de datos/esquema/RPC/RLS/Auth/Storage, releases Android como canal móvil y Cloudflare Pages como deploy web de mantenimiento. Ninguna mejora visual puede degradar economía, seguridad, integridad competitiva, rendimiento, accesibilidad, build, workflow, release o evidencia.
+
+## 7. REGLA DE CIERRE
+
+No declarar Tier 1, `OPERATIONAL` ni una superficie terminada sólo porque compile o funcione. Deben existir evidencia, gates aplicables, estado Q, deuda, condición de reapertura y continuidad actualizada. Una superficie `OPERATIONAL`, `REFINED` o `Q5` puede reabrirse cuando cambie el contexto o aparezca una brecha demostrable.
+
+La extensión queda integrada formalmente como directiva permanente. La siguiente implementación se seleccionará mediante la regla ya vigente de fase abierta más baja y criterio bloqueante, después del preflight exigido por la Ley Diaria de Contexto Completo.
