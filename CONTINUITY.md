@@ -375,3 +375,19 @@
 - Deuda restante: la implementacion completa de la unidad (pasos 1-10 del plan); QA autenticada `BLOCKED` sin sesion normal autorizada; CI `.github/workflows/verify.yml` pendiente de `GITHUB_PAT` con scope `workflow`; HTTP 429 de Storage en `verify:all`; artes duplicados pendientes de autorizacion; 942 columnas legado sin describir.
 - Condicion de reapertura: cambio del bucle de juego o de los eventos canonicos declarados en el plan.
 - Siguiente accion verificable: ejecutar el paso 1 del plan (`supabase/migrations/0039_ve_vis_6_game_loop_telemetry.sql` sin `update` a `MET`) y continuar la secuencia en orden estricto hasta el paso 10.
+
+---
+## 2026-08-26 — CANONICAL-SOURCE-RECONCILIATION — RECONCILED
+
+- Tipo de sesión: RECONCILIACIÓN DOCUMENTAL + corrección de fuente canónica; no se modificó `mobile/**`, web, lógica de juego, economía, datos de jugadores, RPCs, RLS, Auth, Storage, assets, releases ni deploys.
+- La entrada anterior `PREFLIGHT-SUPABASE-CANONICAL-SOURCES — BLOCKED` se conserva como historial exacto del diagnóstico inicial; no se revierte ni se edita. El bloqueo queda reabierto sólo después de corregir la ruta de lectura y reconciliar el contenido.
+- Ruta canónica verificada: Supabase Management API → proyecto `rscuzqnfccqvltkdcdny` → `public.vexforge_official_documents` → `doc_key = vexforge_master_protocol_v2` → `content_markdown`. La búsqueda exclusiva en catálogo SQL/to_regclass no era suficiente para documentos.
+- Estado canónico verificado después de la corrección: `doc_version = v2.5-canonical-source-flow`, `status = active`, contenido completo de 1192 líneas y 92430 bytes; hash SHA-256 del contenido sincronizado: `cab4064a2b254c1da35b1a8b63c0d23afe01054ac2450fb8ae5711dc9c9e44ea`.
+- Reconciliación aplicada sin pérdida: se preservó el protocolo vivo completo, incluido el roadmap T0-T10, la extensión Game First, los gates de calidad, la cadena de deploy y las reglas de seguridad; se incorporó la Ley de Transición Android ya registrada en `main` y la regla explícita de resolución de discrepancias entre fuentes.
+- Precedencia fijada: la fila activa de Supabase es la autoridad normativa; `main`, `CONTINUITY.md`, el inventario Android, Supabase vivo, releases y deploys aportan estado/evidencia. Si vuelven a diferir, el trabajo dependiente queda `BLOCKED` hasta una nueva reconciliación aditiva; nunca se sobrescribe una fuente por suposición ni se borra historial.
+- Selección fijada: mientras la FASE PORT no esté completada, el inventario `docs/VE-MOB-0-PORT-INVENTORY.md` gobierna el orden Android y `VE-MOB-5-DECK` es la siguiente unidad después de VE-MOB-4. Los criterios Tier 1/T0-T10 y sus gates siguen siendo obligatorios; no se declara iniciada ni completada ninguna unidad por esta corrección documental.
+- Sincronización preparada en un único commit atómico de `main`: `VEXFORGE_PROTOCOL_V2.md` se actualizará con el contenido canónico fusionado y esta continuidad registrará la evidencia de ese mismo estado. No se crea una copia, entorno o canal paralelo.
+- Evidencia de escritura Supabase: Management API respondió HTTP 201 y devolvió `vexforge_master_protocol_v2`, estado `active`, versión `v2.5-canonical-source-flow`, `content_bytes = 92432` y `content_md5 = 161c9b66454d1a64d4fd9e0031e004ea`.
+- Estado: preflight documental `RECONCILED`; producto sin cambio; siguiente trabajo permitido sólo sobre `VE-MOB-5-DECK` tras leer su documento de unidad, el código real y los contratos móviles pertinentes.
+- Siguiente acción verificable: completar el análisis de `VE-MOB-5-DECK` desde el `main` sincronizado; si no aparecen contradicciones, implementar únicamente su alcance, verificar proporcionalmente y publicar sólo por el workflow Android oficial.
+
