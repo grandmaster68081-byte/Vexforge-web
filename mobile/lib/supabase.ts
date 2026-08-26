@@ -62,6 +62,8 @@ export type PlayerProgress = { level: number; xp: number; xp_to_next: number; en
 export type Wallet = { vex_ingame: number; vex_tradeable: number; reserved_ingame: number; reserved_tradeable: number };
 export type Opponent = { player_id: string; display_name: string; mmr: number; wins: number; losses: number };
 export type BattleResult = { ok: boolean; match_id?: string; you_won?: boolean; winner_id?: string; elo_change?: number; error?: string };
+export const TUTORIAL_DONE_STEP = 99;
+export const TUTORIAL_TOTAL_STEPS = 7;
 export type HomeStats = {
   active_players: number;
   total_battles: number;
@@ -291,6 +293,31 @@ export async function loadProgress(session: Session, playerId: string): Promise<
   await restRpc('sync_player_energy', {}, session);
   const rows = await rest('player_progress?select=level%2Cxp%2Cxp_to_next%2Cenergy%2Cmax_energy%2Ctutorial_step%2Cstarter_region&player_id=eq.' + encodeURIComponent(playerId) + '&limit=1', session) as PlayerProgress[];
   return rows[0] ?? null;
+}
+
+export async function advanceTutorialStep(session: Session, playerId: string, toStep: number): Promise<void> {
+  const target = Math.max(0, Math.min(TUTORIAL_DONE_STEP, Math.floor(toStep)));
+  await rest(
+    'player_progress?player_id=eq.' + encodeURIComponent(playerId) + '&tutorial_step=lt.' + target,
+    session,
+    {
+      method: 'PATCH',
+      headers: { Prefer: 'return=minimal' },
+      body: JSON.stringify({ tutorial_step: target, updated_at: new Date().toISOString() }),
+    },
+  );
+}
+
+export async function skipTutorial(session: Session, playerId: string): Promise<void> {
+  await rest(
+    'player_progress?player_id=eq.' + encodeURIComponent(playerId),
+    session,
+    {
+      method: 'PATCH',
+      headers: { Prefer: 'return=minimal' },
+      body: JSON.stringify({ tutorial_step: TUTORIAL_DONE_STEP, updated_at: new Date().toISOString() }),
+    },
+  );
 }
 
 export async function loadStats(session: Session, playerId: string) {

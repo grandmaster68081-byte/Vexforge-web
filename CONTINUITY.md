@@ -1,3 +1,15 @@
+## 2026-08-26 — VE-MOB-6-TUTORIAL — IMPLEMENTED_UNVERIFIED
+
+- Tipo de sesión: PREFLIGHT CANÓNICO + implementación Android de la siguiente unidad del inventario.
+- Fuente canónica: protocolo maestro activo en Supabase, copia de `main`, `docs/VE-MOB-0-PORT-INVENTORY.md`, `src/routes/TutorialRoute.tsx`, `src/shared/components/TutorialOverlay.tsx`, `src/domains/tutorial/repository.ts` y `player_progress.tutorial_step`.
+- Reconciliación: Supabase no expone una RPC específica de tutorial; el progreso canónico se conserva mediante actualización autenticada monotónica de `player_progress`, igual que la implementación web. El combate permanece bajo las superficies y RPCs reales existentes.
+- Cambios: nueva ruta `mobile/app/tutorial.tsx` con siete pasos, carga/error, safe area, accesibilidad, acción de arena real, avance/omisión persistentes y estado final; registro en el stack raíz; acceso desde Home; funciones de progreso en `mobile/lib/supabase.ts`; guard `scripts/verify-mobile-tutorial.mjs`; documento `docs/VE-MOB-6-TUTORIAL.md`.
+- Alcance preservado: sin mocks de jugador/cartas/combate, sin RPCs nuevas, sin cambios en tablas, RLS, Storage, economía, autenticación, recompensas o datos de jugadores.
+- Estado: `IMPLEMENTED_UNVERIFIED`. Nivel Q: Q2 actual / Q3 objetivo. No se declara `OPERATIONAL` sin recorrido del operador en dispositivo o emulador.
+- Siguiente acción verificable: ejecutar typecheck y guards, publicar `main`, confirmar workflow/release correlativos y entregar el APK para QA del operador.
+
+---
+
 ## 2026-08-26 — VE-MOB-5-DECK — IMPLEMENTED_UNVERIFIED
 
 - Tipo de sesión: PREFLIGHT CANÓNICO + verificación proporcional de la unidad Android, sin rehacer implementación existente.

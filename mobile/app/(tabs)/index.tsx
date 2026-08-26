@@ -152,6 +152,17 @@ export default function ForgeScreen() {
             <ActionButton label="Mi colección" icon="layers-outline" onPress={() => router.push('/collection')} colors={colors} testID="home-collection" />
             <ActionButton label="Entrar a la arena" icon="flash-outline" onPress={() => router.push('/battle')} colors={colors} secondary testID="home-battle" />
           </View>
+           <Pressable
+             accessibilityRole="button"
+             accessibilityLabel="Abrir tutorial de la Forja"
+             testID="home-tutorial"
+             onPress={() => router.push('/tutorial')}
+             style={({ pressed }) => [styles.tutorialLink, { borderColor: colors.border, opacity: pressed ? 0.72 : 1 }]}
+           >
+             <Ionicons name="compass-outline" size={16} color={colors.accent} />
+             <Text style={[styles.tutorialLinkText, { color: colors.accent }]}>APRENDER A JUGAR</Text>
+             <Ionicons name="arrow-forward" size={15} color={colors.accent} />
+           </Pressable>
 
            <View style={styles.heroStats}>
             <View style={styles.heroStat}><Text style={[styles.heroStatValue, { color: colors.accent }]}>{home.stats?.total_cards ?? '—'}</Text><Text style={[styles.heroStatLabel, { color: colors.mutedForeground }]}>CARTAS</Text></View>
@@ -374,6 +385,8 @@ const styles = StyleSheet.create({
    heroStat: { alignItems: 'flex-start', minWidth: 62 },
   heroStatValue: { fontSize: 21, fontWeight: '800' },
   heroStatLabel: { fontSize: 9, letterSpacing: 1.2, fontWeight: '700', marginTop: 3 },
+   tutorialLink: { alignSelf: 'flex-start', flexDirection: 'row', alignItems: 'center', gap: 8, borderWidth: 1, borderRadius: 10, paddingHorizontal: 11, paddingVertical: 8, marginTop: 12 },
+   tutorialLinkText: { fontSize: 9, fontWeight: '800', letterSpacing: 0.8 },
   content: { padding: 20, gap: 24 },
   connectionCard: { flexDirection: 'row', alignItems: 'center', borderWidth: 1, borderRadius: 16, padding: 13 },
   connectionDot: { width: 8, height: 8, borderRadius: 4, marginRight: 11 },
