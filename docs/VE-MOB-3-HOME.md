@@ -54,8 +54,13 @@ evento/temporada, carta destacada, actividad pública y acceso rápido a la aren
 - `npm run verify:build` web correcto.
 - `npm run verify:all` web alcanza las guardas y conserva el bloqueo vivo
   preexistente de telemetría sin `forge_action`; no se fabrica cobertura.
-- Cierre pendiente: workflow oficial de APK sobre el commit publicado, release
-  correlativo con `app-release.apk` y QA funcional del operador.
+- Workflow oficial completado: run 12 (`32911859725`) terminó `success` sobre el
+  commit `bf6599ced6e2cbc1bcf8b41210befebcdc5d38ff`.
+- Release correlativo: [vexforge-android-build-12](https://github.com/grandmaster68081-byte/Vexforge-web/releases/tag/vexforge-android-build-12)
+  con `app-release.apk`; el asset tiene SHA-256
+  `9f49cf26f1b4b6561b74c6c00ee69567c8a228e378a4d1d4a2c68df19b6f1ee0`,
+  contiene `assets/index.android.bundle` y pasó la comprobación `APK Sig Block 42`.
+- Cierre pendiente únicamente de QA funcional del operador en el APK instalado.
 
 ## Estado y deuda
 

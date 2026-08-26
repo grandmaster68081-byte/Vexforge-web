@@ -17,11 +17,13 @@
 - Cambios: `mobile/app/(tabs)/index.tsx` completa el port del Home con estadísticas globales, temporada/evento, batalla rápida, carta del día, estado del jugador, misiones, top de arena, actividad, estados vacío/error y destacados de sistemas.
 - Alcance preservado: consumo del Supabase oficial y sus RPCs existentes; sin mocks, sin duplicación de lógica autoritativa, sin cambios de combate, economía, RLS, Storage, datos de jugador o plan Tier 1.
 - Evidencia local: `npm run typecheck` en `mobile/` correcto; `npm run verify:mobile-auth` correcto (8/8); `npm run verify:build` web correcto. `npm run verify:all` conserva el bloqueo preexistente de telemetría viva por ausencia de `forge_action`, sin fabricar eventos.
-- Evidencia de entrega: pendiente del push a `main`, workflow `vexforge-android-apk.yml`, release correlativo y comprobación del APK standalone.
+- Evidencia de entrega: commit `bf6599ced6e2cbc1bcf8b41210befebcdc5d38ff`; run 12 (`32911859725`) de `vexforge-android-apk.yml` terminó `success` sobre el mismo commit; release `vexforge-android-build-12` publicado con `app-release.apk` (90,865,271 bytes), `assets/index.android.bundle` embebido (3,027,176 bytes) y `APK Sig Block 42` presente. SHA-256 del asset: `9f49cf26f1b4b6561b74c6c00ee69567c8a228e378a4d1d4a2c68df19b6f1ee0`.
+- Ruta oficial de instalación: https://github.com/grandmaster68081-byte/Vexforge-web/releases/download/vexforge-android-build-12/app-release.apk
+- Evidencia pública: `https://vexforge-web.pages.dev/build-manifest.json` responde HTTP 200 y declara `sourceCommit` `bf6599ced6e2cbc1bcf8b41210befebcdc5d38ff`; la raíz pública responde HTTP 200.
 - QA pendiente: recorrido funcional de Home en el APK por el operador con sesión normal. No se declara `OPERATIONAL`.
 - Deuda: completar las unidades siguientes del port P1 (`VE-MOB-4` a `VE-MOB-8`); resolver la cobertura real de telemetría web/app cuando corresponda.
 - Condición de reapertura: workflow o release fallido, cambio del contrato Home en Supabase, ruta muerta, regresión de estados reales o hallazgo QA del operador.
-- Siguiente acción verificable: commit/push a `main`, esperar el workflow oficial y entregar `app-release.apk`; después abrir `VE-MOB-4-COLLECTION`.
+- Siguiente acción verificable: instalar `app-release.apk` en dispositivo o emulador y ejecutar QA funcional de Home con sesión normal; después abrir `VE-MOB-4-COLLECTION`.
 
 ## 2026-08-25 — VE-MOB-2-AUTH — IMPLEMENTED_UNVERIFIED
 
