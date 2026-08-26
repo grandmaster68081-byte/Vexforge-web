@@ -7,7 +7,39 @@ const SESSION_KEY = 'vexforge.supabase.session';
 type Json = Record<string, unknown>;
 export type User = { id: string; email?: string };
 export type Session = { access_token: string; refresh_token: string; expires_at?: number; user: User };
-export type PublicCard = { id: string; code: string; name: string; faction: string | null; rarity: string | null; image_url: string | null; power?: number | null; lore?: string | null };
+export type PublicCard = {
+  id: string;
+  code: string;
+  name: string;
+  faction: string | null;
+  rarity: string | null;
+  specialization?: string | null;
+  power?: number | null;
+  affinity?: number | null;
+  prestige?: number | null;
+  charge?: number | null;
+  lore?: string | null;
+  image_url: string | null;
+  supply?: number | null;
+  minted?: number | null;
+  is_founder?: boolean;
+  is_legendary?: boolean;
+  card_tier?: string | null;
+  card_domain?: string | null;
+  marketable?: boolean;
+  fusion_enabled?: boolean;
+  release_status?: string | null;
+  synergy_json?: Record<string, unknown> | null;
+};
+export type PlayerCard = PublicCard & {
+  player_card_id: string;
+  card_id: string;
+  quantity: number;
+  locked: boolean;
+  listed: boolean;
+  source_tracking: Record<string, unknown> | null;
+  acquired_at: string | null;
+};
 export type PlayerProfile = { id: string; display_name: string | null; email: string | null; role: string | null; status: string | null; created_at: string | null };
 export type PlayerProgress = { level: number; xp: number; xp_to_next: number; energy: number; max_energy: number; tutorial_step: number | null; starter_region: string | null };
 export type Wallet = { vex_ingame: number; vex_tradeable: number; reserved_ingame: number; reserved_tradeable: number };
@@ -113,8 +145,41 @@ async function rest(path: string, session?: Session, init?: RequestInit) {
 }
 
 export async function loadCatalogSnapshot(session?: Session) {
-  const cards = await rest('cards?select=id%2Ccode%2Cname%2Cfaction%2Crarity%2Cimage_url%2Cpower&active=eq.true&order=name.asc&limit=30', session, { headers: { Prefer: 'count=exact' } }) as PublicCard[];
+  const cards = await rest(
+    'cards?select=id%2Ccode%2Cname%2Cfaction%2Crarity%2Cspecialization%2Cpower%2Caffinity%2Cprestige%2Ccharge%2Clore%2Cimage_url%2Csupply%2Cminted%2Cis_founder%2Cis_legendary%2Ccard_tier%2Ccard_domain%2Cmarketable%2Cfusion_enabled%2Crelease_status%2Csynergy_json&active=eq.true&order=name.asc&limit=1000',
+    session,
+  ) as PublicCard[];
   return { cardsTotal: cards.length, featuredCards: cards };
+}
+
+export async function loadPlayerCollection(session: Session): Promise<PlayerCard[]> {
+  const players = await rest(
+    'players?select=id&auth_user_id=eq.' + encodeURIComponent(session.user.id) + '&limit=1',
+    session,
+  ) as Array<{ id: string }>;
+  const playerId = players[0]?.id;
+  if (!playerId) return [];
+
+  const rows = await rest(
+    'player_cards?select=id%2Ccard_id%2Cquantity%2Clocked%2Clisted%2Csource_tracking%2Ccreated_at%2Ccards!inner(id%2Ccode%2Cname%2Cfaction%2Crarity%2Cspecialization%2Cpower%2Caffinity%2Cprestige%2Ccharge%2Clore%2Cimage_url%2Csupply%2Cminted%2Cis_founder%2Cis_legendary%2Ccard_tier%2Ccard_domain%2Cmarketable%2Cfusion_enabled%2Crelease_status%2Csynergy_json)&player_id=eq.' +
+      encodeURIComponent(playerId) +
+      '&quantity=gt.0&order=card_id.asc',
+    session,
+  ) as Array<Record<string, unknown> & { cards?: PublicCard | PublicCard[] }>;
+
+  return rows.map((row) => {
+    const card = Array.isArray(row.cards) ? row.cards[0] : row.cards;
+    return {
+      ...(card ?? {}),
+      player_card_id: String(row.id ?? ''),
+      card_id: String(row.card_id ?? card?.id ?? ''),
+      quantity: Number(row.quantity ?? 0),
+      locked: Boolean(row.locked),
+      listed: Boolean(row.listed),
+      source_tracking: (row.source_tracking as Record<string, unknown> | null) ?? null,
+      acquired_at: (row.created_at as string | null) ?? null,
+    } as PlayerCard;
+  });
 }
 
 export async function loadHomeStats(): Promise<HomeStats> {

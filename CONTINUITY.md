@@ -1,3 +1,18 @@
+## 2026-08-26 — VE-MOB-4-COLLECTION — IMPLEMENTED_UNVERIFIED
+
+- Tipo de sesión: IMPLEMENTACIÓN Android + verificación proporcional previa a publicación.
+- Fuente canónica: `main` en el repositorio oficial, `src/routes/CardsRoute.tsx`, repositorios de cartas/colección, Supabase vivo y `docs/VE-MOB-0-PORT-INVENTORY.md`.
+- Estado inicial: `NOT_STARTED / VE-MOB-4-COLLECTION` según el inventario oficial. Estado actual: `IMPLEMENTED_UNVERIFIED`. Nivel Q: Q2 actual / Q3 objetivo.
+- Cambios: catálogo móvil completo desde `cards`; lectura autenticada de `player_cards` con RLS; porcentaje de colección y cantidades; búsqueda, filtros de rareza/facción, orden por rareza/nombre/poder; inspector táctil con arte, estadísticas, habilidades, lore, sistemas y supply; estados de carga, error, vacío y sin coincidencias.
+- Archivos: `mobile/app/(tabs)/collection.tsx`, `mobile/lib/supabase.ts`, `mobile/context/GameContext.tsx`, `mobile/constants/colors.ts` y `docs/VE-MOB-4-COLLECTION.md`.
+- Alcance preservado: sin mocks, sin duplicar lógica autoritativa, sin cambios en combate, economía, recompensas, RPCs, RLS, Storage ni datos de jugador.
+- Evidencia Supabase: las columnas consultadas existen en `cards` y `player_cards`; consulta pública del catálogo activo responde HTTP 200; el acceso Management API autenticado responde correctamente.
+- Evidencia local: `npm run verify:mobile-auth` correcto (8/8); parseo TypeScript de archivos modificados correcto; `git diff --check` correcto. `npm ci` móvil y `npm run verify:build` quedan limitados por dependencias rechazadas/faltantes del entorno local (`npm-package-arg@11.0.3` / `vite`), sin evidencia de fallo funcional de esta unidad.
+- QA pendiente: recorrido de catálogo, filtros, detalle, estados y colección autenticada en el APK por el operador. No se declara `OPERATIONAL`.
+- Deuda y riesgo: confirmar typecheck y compilación en el workflow oficial; revisar el encaje visual en dispositivo real y cualquier diferencia entre `image_url` y Storage durante el recorrido.
+- Condición de reapertura: cambio del contrato vivo, RLS, arte canónico, ruta muerta, fallo de workflow/release o hallazgo QA del operador.
+- Siguiente acción verificable: publicar en `main`, confirmar `vexforge-android-apk.yml` success sobre el commit, release `vexforge-android-build-N` con `app-release.apk`, bundle JS embebido y firma v2; luego entregar el APK para QA.
+
 ## 2026-08-25 — SUPREME-LAW-OPERATOR-QA-HANDOFF — OPERATIONAL
 
 - Tipo de sesión: DOCUMENTACIÓN + cambio de flujo de entrega solicitado por el operador.
