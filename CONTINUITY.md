@@ -1,3 +1,17 @@
+## 2026-08-26 — VE-MOB-5-DECK — IMPLEMENTED_UNVERIFIED
+
+- Tipo de sesión: PREFLIGHT CANÓNICO + verificación proporcional de la unidad Android, sin rehacer implementación existente.
+- Fuente canónica: protocolo maestro leído desde `public.vexforge_official_documents` vía Supabase Management API; copia de `main`; inventario `docs/VE-MOB-0-PORT-INVENTORY.md`; contratos vivos de `player_deck`, `player_cards`, `validate_deck` y `save_deck`.
+- Reconciliación: el protocolo vivo y `VEXFORGE_PROTOCOL_V2.md` coinciden en contenido; la única diferencia era el salto de línea final. La discrepancia documental previa queda resuelta para esta sesión.
+- Estado verificado en `main` `550550c`: VE-MOB-5 ya está implementada en `mobile/app/(tabs)/deck.tsx`, con colección real, mazo persistido, filtros, selección táctil, límites estándar, lectura de Deck Power, Campeón orientativo, validación y guardado por RPC autoritativa, y estados explícitos de carga/error/vacío/sin coincidencias.
+- Evidencia local: `npm run typecheck`, `npm run verify:build`, `npm run verify:mobile-deck` y `cd mobile && npm run typecheck` correctos. La instalación móvil limpia sin compatibilidad de peer dependencies rechaza el lockfile antes de compilar; no se regeneró ni modificó el lockfile.
+- Evidencia de entrega: el APK oficial `vexforge-android-build-16` terminó `success`; sus fuentes móviles relevantes coinciden con `main` actual. No se generó un APK nuevo porque este registro no modifica `mobile/**`.
+- Estado: `IMPLEMENTED_UNVERIFIED`. Nivel Q: Q2 actual / Q3 objetivo. No se declara `OPERATIONAL` sin recorrido del operador en dispositivo o emulador.
+- Alcance preservado: sin cambios en tablas, RPCs, RLS, Storage, economía, combate, autenticación ni datos de jugadores.
+- Siguiente acción verificable: instalar y recorrer el APK 16 con una sesión normal; después abrir VE-MOB-6-TUTORIAL según el orden del inventario.
+
+---
+
 ## 2026-08-26 — PREFLIGHT-SUPABASE-CANONICAL-SOURCES — BLOCKED
 
 - Tipo de sesión: BLOQUEO / preflight de fuentes canónicas antes de seleccionar unidad o ejecutar cambios.
