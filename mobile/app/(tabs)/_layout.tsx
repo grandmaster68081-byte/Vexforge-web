@@ -29,6 +29,10 @@ function NativeTabLayout() {
         <Icon sf={{ default: 'square.stack.3d.up', selected: 'square.stack.3d.up.fill' }} />
         <Label>Cartas</Label>
       </NativeTabs.Trigger>
+      <NativeTabs.Trigger name="deck">
+        <Icon sf={{ default: 'rectangle.stack', selected: 'rectangle.stack.fill' }} />
+        <Label>Mazo</Label>
+      </NativeTabs.Trigger>
       <NativeTabs.Trigger name="profile">
         <Icon sf={{ default: 'person', selected: 'person.fill' }} />
         <Label>Perfil</Label>
@@ -89,6 +93,7 @@ function ClassicTabLayout() {
       />
       <Tabs.Screen name="battle" options={{ title: 'Batalla', tabBarIcon: ({ color }) => <Feather name="zap" size={22} color={color} /> }} />
       <Tabs.Screen name="collection" options={{ title: 'Cartas', tabBarIcon: ({ color }) => <Feather name="layers" size={22} color={color} /> }} />
+      <Tabs.Screen name="deck" options={{ title: 'Mazo', tabBarIcon: ({ color }) => <Feather name="columns" size={22} color={color} /> }} />
       <Tabs.Screen name="profile" options={{ title: 'Perfil', tabBarIcon: ({ color }) => <Feather name="user" size={22} color={color} /> }} />
     </Tabs>
   );

@@ -26,7 +26,8 @@
     "verify:audio-flow": "node scripts/verify-audio-flow.mjs",
     "verify:telemetry": "node scripts/verify-telemetry.mjs",
     "verify:mobile-auth": "node scripts/verify-mobile-auth.mjs",
-    "verify:all": "npm run typecheck && npm run verify:build && npm run verify:telemetry && npm run verify:motion && npm run verify:combat-scene && npm run verify:audio-flow && npm run verify:ui-identity && npm run verify:identity-data && npm run verify:boss-art && npm run verify:card-art && npm run verify:surface-art && npm run verify:residual-art && npm run verify:manifest && npm run verify:assets && npm run verify:auth-guard && npm run verify:mobile-auth && npm run verify:table-docs && npm run verify:column-docs && npm run verify:support-column-docs"
+    "verify:mobile-deck": "node scripts/verify-mobile-deck.mjs",
+    "verify:all": "npm run typecheck && npm run verify:build && npm run verify:telemetry && npm run verify:motion && npm run verify:combat-scene && npm run verify:audio-flow && npm run verify:ui-identity && npm run verify:identity-data && npm run verify:boss-art && npm run verify:card-art && npm run verify:surface-art && npm run verify:residual-art && npm run verify:manifest && npm run verify:assets && npm run verify:auth-guard && npm run verify:mobile-auth && npm run verify:mobile-deck && npm run verify:table-docs && npm run verify:column-docs && npm run verify:support-column-docs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.45.0",

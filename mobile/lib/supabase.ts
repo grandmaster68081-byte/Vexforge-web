@@ -40,6 +40,23 @@ export type PlayerCard = PublicCard & {
   source_tracking: Record<string, unknown> | null;
   acquired_at: string | null;
 };
+export type DeckSlot = {
+  slot_number: number;
+  card_id: string;
+  code: string;
+  name: string;
+  rarity: string;
+  faction: string;
+  power: number;
+};
+export type DeckValidation = {
+  valid: boolean;
+  errors: string[];
+  card_count: number;
+  mythic_count: number;
+  legendary_count: number;
+};
+export type SaveDeckResult = { ok: boolean; slots_saved?: number; reason?: string };
 export type PlayerProfile = { id: string; display_name: string | null; email: string | null; role: string | null; status: string | null; created_at: string | null };
 export type PlayerProgress = { level: number; xp: number; xp_to_next: number; energy: number; max_energy: number; tutorial_step: number | null; starter_region: string | null };
 export type Wallet = { vex_ingame: number; vex_tradeable: number; reserved_ingame: number; reserved_tradeable: number };
@@ -180,6 +197,50 @@ export async function loadPlayerCollection(session: Session): Promise<PlayerCard
       acquired_at: (row.created_at as string | null) ?? null,
     } as PlayerCard;
   });
+}
+
+export async function loadPlayerDeck(session: Session, playerId: string): Promise<DeckSlot[]> {
+  const rows = await rest(
+    'player_deck?select=slot_number%2Ccard_id%2Ccards!inner(code%2Cname%2Crarity%2Cfaction%2Cpower)&player_id=eq.' +
+      encodeURIComponent(playerId) +
+      '&order=slot_number.asc',
+    session,
+  ) as Array<Record<string, unknown> & { cards?: PublicCard | PublicCard[] }>;
+
+  return rows
+    .map((row) => {
+      const card = Array.isArray(row.cards) ? row.cards[0] : row.cards;
+      return {
+        slot_number: Number(row.slot_number ?? 0),
+        card_id: String(row.card_id ?? card?.id ?? ''),
+        code: String(card?.code ?? ''),
+        name: String(card?.name ?? ''),
+        rarity: String(card?.rarity ?? 'Common'),
+        faction: String(card?.faction ?? 'Sin facción'),
+        power: Number(card?.power ?? 0),
+      };
+    })
+    .filter((slot) => slot.card_id && slot.name);
+}
+
+export async function validateDeck(cardIds: string[], session: Session): Promise<DeckValidation> {
+  const result = await restRpc('validate_deck', { p_card_ids: cardIds }, session) as Partial<DeckValidation> | null;
+  return {
+    valid: Boolean(result?.valid),
+    errors: Array.isArray(result?.errors) ? result.errors.map(String) : ['El servidor no pudo validar el mazo.'],
+    card_count: Number(result?.card_count ?? cardIds.length),
+    mythic_count: Number(result?.mythic_count ?? 0),
+    legendary_count: Number(result?.legendary_count ?? 0),
+  };
+}
+
+export async function saveDeck(cardIds: string[], session: Session): Promise<SaveDeckResult> {
+  const result = await restRpc('save_deck', { p_card_ids: cardIds }, session) as SaveDeckResult | null;
+  return {
+    ok: Boolean(result?.ok),
+    slots_saved: result?.slots_saved,
+    reason: result?.reason,
+  };
 }
 
 export async function loadHomeStats(): Promise<HomeStats> {
