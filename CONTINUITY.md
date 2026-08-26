@@ -1,3 +1,16 @@
+## 2026-08-26 — PREFLIGHT-SUPABASE-CANONICAL-SOURCES — BLOCKED
+
+- Tipo de sesión: BLOQUEO / preflight de fuentes canónicas antes de seleccionar unidad o ejecutar cambios.
+- Unidad prevista: `VE-MOB-5-DECK` como siguiente unidad de la FASE P1; no se inició implementación por falta de reconciliación crítica.
+- Preflight ejecutado: `main` validado por Git smart HTTP sobre HTTPS con Basic y usuario `x-access-token`; GitHub API autenticada respondió HTTP 200; el proyecto Supabase `rscuzqnfccqvltkdcdny` está `ACTIVE_HEALTHY` y Management API respondió correctamente.
+- Discrepancia crítica: la consulta autenticada de catálogo (`pg_catalog`/`information_schema`) no encuentra en ningún esquema ni como tabla, vista, relación o función los objetos canónicos `vexforge_master_protocol_v2` y `vexforge_forge_formation_engine_v1`; `to_regclass` devuelve `null` y la lectura directa no puede ejecutarse. Sí están disponibles las tablas Tier 1 y los criterios abiertos, pero no sustituyen la lectura completa exigida del protocolo y del motor de formación.
+- Fuente de comparación: `VEXFORGE_PROTOCOL_V2.md`, la entrada más reciente de esta continuidad y `docs/VE-MOB-0-PORT-INVENTORY.md` fueron leídos desde `main`; la copia del protocolo del repositorio declara que las fuentes vivas de Supabase tienen precedencia, por lo que no se toma la copia Git como reemplazo.
+- Estado: `BLOCKED`. Nivel Q: Q0 de contexto; no hay implementación ni evidencia de unidad.
+- Alcance preservado: no se modificaron `mobile/**`, web, SQL, RPCs, RLS, Auth, Storage, assets, economía, combate, continuidad de jugador, releases APK ni deploys.
+- Condición de reapertura: restaurar o identificar los objetos canónicos vivos, permitir su lectura completa mediante Management API y reconciliar su contenido con `main` antes de elegir la unidad; después repetir el preflight diario completo.
+- Siguiente acción verificable: resolver la discrepancia de las fuentes canónicas en Supabase y reabrir `VE-MOB-5-DECK` sólo con el contexto completo disponible.
+
+---
 ## 2026-08-26 — PROTOCOL-VISUAL-EXPERIENCE-LAYER-AND-DAILY-CONTEXT-LAW — OPERATIONAL
 
 - Tipo de sesión: GOBERNANZA + INTEGRACIÓN DOCUMENTAL; sin cambios de código de producto, datos de jugadores, economía, combate, RPCs, RLS, triggers, Auth, Storage, assets ni releases Android.
