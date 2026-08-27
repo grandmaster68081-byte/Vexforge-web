@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import { ActivityIndicator, Pressable, Redirect, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { useRouter } from 'expo-router';
+import { Redirect, useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useColors } from '@/hooks/useColors';
 import { useGame } from '@/context/GameContext';
@@ -181,7 +181,7 @@ export default function TutorialScreen() {
   const isLastStep = currentStep === TUTORIAL_TOTAL_STEPS - 1;
   const accent = colors[step.accent];
 
-  async function persistAndContinue() {
+  const persistAndContinue = async () => {
     if (busy) return;
     setBusy(true);
     setActionError(null);
@@ -199,18 +199,18 @@ export default function TutorialScreen() {
     } finally {
       setBusy(false);
     }
-  }
+  };
 
-  function handlePrimary() {
+  const handlePrimary = () => {
     if (isBattleStep && !arenaOpened) {
       setArenaOpened(true);
       router.push('/battle');
       return;
     }
     void persistAndContinue();
-  }
+  };
 
-  async function handleSkip() {
+  const handleSkip = async () => {
     if (busy) return;
     setBusy(true);
     setActionError(null);
@@ -223,7 +223,7 @@ export default function TutorialScreen() {
     } finally {
       setBusy(false);
     }
-  }
+  };
 
   return (
     <ScrollView
