@@ -1190,3 +1190,4 @@ Todo cambio conserva la arquitectura oficial: GitHub `main` como fuente de códi
 No declarar Tier 1, `OPERATIONAL` ni una superficie terminada sólo porque compile o funcione. Deben existir evidencia, gates aplicables, estado Q, deuda, condición de reapertura y continuidad actualizada. Una superficie `OPERATIONAL`, `REFINED` o `Q5` puede reabrirse cuando cambie el contexto o aparezca una brecha demostrable.
 
 La extensión queda integrada formalmente como directiva permanente. Durante la FASE PORT, la siguiente implementación se selecciona por el orden del inventario Android y el siguiente elemento no completado; cada unidad debe mapearse a los criterios Tier 1/T0-T10 y superar sus gates aplicables. Una vez completado el port, vuelve a regir la selección por fase abierta más baja y criterio bloqueante, después del preflight exigido por la Ley Diaria de Contexto Completo.
+

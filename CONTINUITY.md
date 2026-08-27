@@ -1,4 +1,16 @@
-## 2026-08-27 — VE-MOB-6-TUTORIAL-DELIVERY-REPAIR — OPERATIONAL
+## 2026-08-27 — PREFLIGHT-CANONICAL-AND-DELIVERY-CHECK — BLOCKED
+
+- Tipo de sesión: preflight documental y verificación de entrega; sin cambios de producto, `mobile/**`, Supabase, Auth, RLS, RPCs, Storage, economía, combate, assets ni datos de jugadores.
+- Fuentes reconciliadas: fila activa `vexforge_master_protocol_v2` en `public.vexforge_official_documents` leída completa mediante Supabase Management API; `CONTINUITY.md`, `docs/VE-MOB-0-PORT-INVENTORY.md`, `docs/VE-MOB-5-DECK.md` y código real leídos desde `main`.
+- Hallazgo: el contenido normativo era idéntico entre Supabase y `main` salvo un salto de línea final ausente en la copia de `main`. Se sincroniza la copia del repositorio con el contenido vivo completo; no hubo divergencia semántica ni pérdida de historial.
+- Entrega Android: el workflow oficial `vexforge-android-apk.yml` run 18 terminó `success` sobre `c42b392ff563b07574e632b341f1801f9b339b83`; el release `vexforge-android-build-18` está publicado con `app-release.apk`.
+- Selección vigente: la FASE PORT y el inventario oficial gobiernan el orden. VE-MOB-2 AUTH, VE-MOB-3 HOME, VE-MOB-4 COLLECTION y VE-MOB-6 TUTORIAL tienen implementación registrada; la unidad VE-MOB-6 sigue `IMPLEMENTED_UNVERIFIED` hasta QA real. No se reabre AUTH ni se salta a una unidad nueva por la instrucción histórica del archivo de inicio.
+- Estado: `BLOCKED` para continuar con VE-MOB-7 hasta que el operador instale el APK del release 18 y complete el recorrido normal autenticado de las unidades portadas, incluyendo carga de colección/mazo, tutorial y estados críticos. La compilación verde no sustituye la QA en dispositivo.
+- Evidencia pendiente: captura o reporte del operador con sesión normal, sin privilegios administrativos ni sesión fabricada. Si la QA pasa, abrir VE-MOB-7-BATTLE según el inventario; si no, corregir sólo la unidad afectada.
+- Condición de reapertura: evidencia QA utilizable del release 18 o un nuevo cambio/fallo en el workflow, el contrato Supabase o la app Android.
+- Siguiente acción verificable: instalar `https://github.com/grandmaster68081-byte/Vexforge-web/releases/download/vexforge-android-build-18/app-release.apk`, ejecutar la QA autenticada normal y devolver los resultados para cerrar la unidad o corregir el hallazgo antes de continuar.
+
+---## 2026-08-27 — VE-MOB-6-TUTORIAL-DELIVERY-REPAIR — OPERATIONAL
 
 - Tipo de sesion: reparacion de cadena de entrega Android. Sin cambios de esquema, datos, RLS, grants, RPCs, economia autoritativa, Storage ni arte.
 - Preflight: protocolo maestro leido completo desde la fila activa `vexforge_master_protocol_v2` en `public.vexforge_official_documents` via Supabase Management API; `CONTINUITY.md` e inventario `docs/VE-MOB-0-PORT-INVENTORY.md` leidos desde `main`. Regla de Reconciliacion aplicada: la copia `VEXFORGE_PROTOCOL_V2.md` de `main` es identica byte a byte a la fila viva (90776 caracteres, md5 b73aaa8dd7e63a669622073afed3454a) — sin discrepancia, trabajo dependiente habilitado.
@@ -432,4 +444,3 @@
 - Evidencia de escritura Supabase: Management API respondió HTTP 201 y devolvió `vexforge_master_protocol_v2`, estado `active`, versión `v2.5-canonical-source-flow`, `content_bytes = 92432` y `content_md5 = 161c9b66454d1a64d4fd9e0031e004ea`.
 - Estado: preflight documental `RECONCILED`; producto sin cambio; siguiente trabajo permitido sólo sobre `VE-MOB-5-DECK` tras leer su documento de unidad, el código real y los contratos móviles pertinentes.
 - Siguiente acción verificable: completar el análisis de `VE-MOB-5-DECK` desde el `main` sincronizado; si no aparecen contradicciones, implementar únicamente su alcance, verificar proporcionalmente y publicar sólo por el workflow Android oficial.
-
