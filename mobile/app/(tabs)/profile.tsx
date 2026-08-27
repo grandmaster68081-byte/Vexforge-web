@@ -337,6 +337,7 @@ export default function ProfileScreen() {
           <QuickAction icon="flag-outline" label="Misiones y recompensas" onPress={() => router.push('/missions')} colors={colors} testID="profile-missions" />
           <QuickAction icon="layers-outline" label="Explorar colección" onPress={() => router.push('/collection')} colors={colors} testID="profile-collection" />
           <QuickAction icon="grid-outline" label="Preparar mazo" onPress={() => router.push('/deck')} colors={colors} testID="profile-deck" />
+           <QuickAction icon="storefront-outline" label="Forja, tienda e inventario" onPress={() => router.push('/store')} colors={colors} testID="profile-store" />
         </View>
       </KeyboardAwareScrollViewCompat>
     </View>

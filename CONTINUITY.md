@@ -1,3 +1,18 @@
+## 2026-08-27 — VE-MOB-10-PACKS-SHOP — IMPLEMENTED_UNVERIFIED
+
+- Tipo de sesión: implementación Android de la siguiente unidad elegible de la FASE P2, con QA manual post-entrega no bloqueante según el protocolo activo.
+- Fuente canónica: protocolo maestro activo, `main`, inventario Android, rutas web de packs/shop/fusion/evolution/inventory y contratos vivos de Supabase.
+- Reconciliación: los catálogos, tablas de estado y RPCs usados por la unidad existen en Supabase oficial; no se agregaron tablas, RPCs, datos de jugador ni lógica económica al cliente.
+- Cambios: nueva ruta `mobile/app/store.tsx`, registrada en el stack raíz y accesible desde Home y Perfil. Cubre packs/apertura, tienda/órdenes/pagos, inventario, fusión y evolución con navegación por cámaras.
+- Contrato móvil: `mobile/lib/supabase.ts` consulta `vexforge_pack_catalog`, `vexforge_shop_catalog`, `player_cards`, `vexforge_player_shards`, `card_evolution_paths` y estado activo; llama únicamente a `vexforge_buy_pack_with_vex`, `vexforge_open_pack`, `vexforge_create_shop_order`, `vexforge_submit_shop_order_payment`, `vexforge_get_my_shop_orders`, `vexforge_fusion_policy`, `vexforge_apply_fusion` y `vexforge_evolve_card`.
+- Presentación: mobile-first, safe-area, accesible, pull-to-refresh, estados de carga/error/vacío, búsqueda de inventario y revelación de cartas; sin emojis, mocks, datos inventados ni lógica autoritativa duplicada.
+- Evidencia local: `cd mobile && npm run typecheck` OK. Se añade `verify:mobile-store` para comprobar superficie, contratos, estados y accesibilidad.
+- Limitación independiente: `npm ci` móvil continúa bloqueado por la discrepancia preexistente del lockfile (`react-dom` y `scheduler` faltantes); el typecheck se valida con instalación temporal sin regenerar el lockfile.
+- Estado: `IMPLEMENTED_UNVERIFIED`. Nivel Q: Q2 actual / Q3 objetivo. No se declara `OPERATIONAL`, `TIER1_READY` ni `PASS` sin recorrido del operador en el APK.
+- Siguiente acción verificable: ejecutar la batería web/móvil, publicar este cambio en `main`, confirmar el workflow Android oficial y el release correlativo con `app-release.apk`; luego entregar el APK para QA manual post-entrega.
+
+---
+
 ## 2026-08-27 — VE-MOB-9-PROFILE — IMPLEMENTED_UNVERIFIED
 
 - Tipo de sesión: implementación Android de la siguiente unidad de la FASE P2, con QA manual post-entrega no bloqueante según el protocolo activo.

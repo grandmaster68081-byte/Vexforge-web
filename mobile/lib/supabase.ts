@@ -224,6 +224,90 @@ export type MissionReward = {
   reason?: string;
 };
 
+export type MobilePack = {
+  pack_key: string;
+  pack_name: string;
+  price_vex: number;
+  price_usdt: number;
+  card_count: number;
+  notes: string | null;
+  rarity_weights: Record<string, number> | null;
+};
+export type MobileOpenedCard = {
+  id: string;
+  name: string;
+  rarity: string;
+  faction?: string;
+  image_url?: string;
+  quantity_change?: number;
+};
+export type MobilePackOrder = {
+  id: string;
+  pack_key: string;
+  price_usdt: number;
+  status: string;
+  payment_method: string | null;
+  cards_received?: MobileOpenedCard[];
+  created_at: string;
+};
+export type MobileShopItem = {
+  id: string;
+  item_key: string;
+  name: string;
+  description: string;
+  category: string;
+  price_usdt: number;
+  price_vex: number | null;
+  active: boolean;
+  icon: string | null;
+};
+export type MobileShopOrder = {
+  id?: string;
+  order_id?: string;
+  item_key: string;
+  item_name?: string;
+  price_usdt: number;
+  status: string;
+  fulfillment_status: string;
+  tx_hash?: string | null;
+  payer_wallet_address?: string | null;
+  treasury_wallet_address?: string;
+  chain?: string;
+  token_symbol?: string;
+  token_standard?: string;
+  created_at?: string;
+  payment_submitted?: boolean;
+};
+export type MobileActiveBoost = { id: string; boost_type: string; multiplier: number; expires_at: string };
+export type MobileConsumable = { id: string; item_key: string; quantity: number };
+export type MobileFusableCard = {
+  player_card_id: string;
+  card_id: string;
+  name: string;
+  rarity: string;
+  quantity: number;
+};
+export type MobileFusionPolicy = {
+  neededCards: number;
+  requiredShards: number;
+  ingameCost: number;
+  targetRarity: string;
+};
+export type MobileTargetCard = { id: string; name: string; rarity: string };
+export type MobileShardBalance = { rarity: string; quantity: number };
+export type MobileEvolutionPath = {
+  id: string;
+  card_id: string;
+  evolves_to_card_id: string;
+  cost_json: { vex_ingame?: number; copies_required?: number };
+  requirements_json: { level_required?: number; pvp_wins?: number; description?: string };
+  from_name: string;
+  from_rarity: string;
+  from_faction: string;
+  to_name: string;
+  to_rarity: string;
+};
+
 export const STORAGE_BASE = 'https://rscuzqnfccqvltkdcdny.supabase.co/storage/v1/object/public/vexforge-assets';
 export function storageAsset(path: string) { return `${STORAGE_BASE}/${path}`; }
 
@@ -587,6 +671,192 @@ export async function loadPlayerAchievements(session: Session, playerId: string)
       unlocked_at: row.unlocked_at ?? null,
     };
   }).filter((achievement) => achievement.id && achievement.code);
+}
+
+export async function loadMobilePacks(): Promise<MobilePack[]> {
+  const rows = await rest(
+    'vexforge_pack_catalog?select=pack_key%2Cpack_name%2Cprice_vex%2Cprice_usdt%2Ccard_count%2Cnotes%2Cmetadata&active=eq.true&order=price_vex.asc',
+  ) as Array<Record<string, unknown>>;
+  return rows.map((row) => {
+    const metadata = (row.metadata as { rarity_weights?: Record<string, number> } | null) ?? {};
+    return {
+      pack_key: String(row.pack_key ?? ''),
+      pack_name: String(row.pack_name ?? ''),
+      price_vex: Number(row.price_vex ?? 0),
+      price_usdt: Number(row.price_usdt ?? 0),
+      card_count: Number(row.card_count ?? 0),
+      notes: (row.notes as string | null) ?? null,
+      rarity_weights: metadata.rarity_weights ?? null,
+    };
+  }).filter((pack) => pack.pack_key && pack.pack_name);
+}
+
+export async function loadMobilePackBalance(session: Session): Promise<number> {
+  const playerId = await currentPlayerId(session);
+  if (!playerId) return 0;
+  const rows = await rest(
+    'player_wallet?select=vex_tradeable&player_id=eq.' + encodeURIComponent(playerId) + '&limit=1',
+    session,
+  ) as Array<{ vex_tradeable?: number }>;
+  return Number(rows[0]?.vex_tradeable ?? 0);
+}
+
+export async function loadMobilePackHistory(session: Session): Promise<MobilePackOrder[]> {
+  const playerId = await currentPlayerId(session);
+  if (!playerId) return [];
+  const rows = await rest(
+    'vexforge_pack_orders?select=id%2Cpack_key%2Cprice_usdt%2Cstatus%2Cpayment_method%2Cmetadata%2Ccreated_at&player_id=eq.' +
+      encodeURIComponent(playerId) + '&order=created_at.desc&limit=20',
+    session,
+  ) as Array<Record<string, unknown>>;
+  return rows.map((row) => ({
+    id: String(row.id ?? ''),
+    pack_key: String(row.pack_key ?? ''),
+    price_usdt: Number(row.price_usdt ?? 0),
+    status: String(row.status ?? ''),
+    payment_method: (row.payment_method as string | null) ?? null,
+    cards_received: ((row.metadata as { cards?: MobileOpenedCard[] } | null)?.cards),
+    created_at: String(row.created_at ?? ''),
+  }));
+}
+
+export async function buyMobilePack(session: Session, packKey: string): Promise<{ ok: boolean; orderId?: string; reason?: string }> {
+  const result = await restRpc('vexforge_buy_pack_with_vex', { p_pack_key: packKey }, session) as { ok?: boolean; order_id?: string; reason?: string } | null;
+  return { ok: Boolean(result?.ok), orderId: result?.order_id, reason: result?.reason };
+}
+
+export async function openMobilePack(session: Session, orderId: string): Promise<{ ok: boolean; cards?: MobileOpenedCard[]; reason?: string }> {
+  const result = await restRpc('vexforge_open_pack', { p_order_id: orderId }, session) as { ok?: boolean; cards?: Array<MobileOpenedCard & { card_id?: string }>; reason?: string } | null;
+  return {
+    ok: Boolean(result?.ok),
+    cards: result?.cards?.map((card) => ({ ...card, id: card.id || card.card_id || '' })),
+    reason: result?.reason,
+  };
+}
+
+export async function loadMobileShopCatalog(): Promise<MobileShopItem[]> {
+  const rows = await rest('vexforge_shop_catalog?select=id%2Citem_key%2Cname%2Cdescription%2Ccategory%2Cprice_usdt%2Cprice_vex%2Cactive%2Cicon&active=eq.true&order=sort_order.asc%2Cprice_usdt.asc') as MobileShopItem[];
+  return rows ?? [];
+}
+
+export async function loadMobileShopItems(session: Session): Promise<{ boosts: MobileActiveBoost[]; consumables: MobileConsumable[] }> {
+  const playerId = await currentPlayerId(session);
+  if (!playerId) return { boosts: [], consumables: [] };
+  const now = new Date().toISOString();
+  const [boosts, consumables] = await Promise.all([
+    rest('player_active_boosts?select=id%2Cboost_type%2Cmultiplier%2Cexpires_at&player_id=eq.' + encodeURIComponent(playerId) + '&expires_at=gt.' + encodeURIComponent(now) + '&order=expires_at.asc', session) as Promise<MobileActiveBoost[]>,
+    rest('player_consumables?select=id%2Citem_key%2Cquantity&player_id=eq.' + encodeURIComponent(playerId) + '&quantity=gt.0', session) as Promise<MobileConsumable[]>,
+  ]);
+  return { boosts: boosts ?? [], consumables: consumables ?? [] };
+}
+
+export async function loadMobileShopOrders(session: Session): Promise<MobileShopOrder[]> {
+  const rows = await restRpc('vexforge_get_my_shop_orders', { p_limit: 10 }, session);
+  return Array.isArray(rows) ? rows as MobileShopOrder[] : [];
+}
+
+export async function createMobileShopOrder(session: Session, itemKey: string): Promise<MobileShopOrder> {
+  const reference = 'mobile-shop-' + itemKey + '-' + Date.now();
+  const result = await restRpc('vexforge_create_shop_order', {
+    p_item_key: itemKey,
+    p_client_reference: reference,
+    p_payment_reference: null,
+    p_tx_hash: null,
+    p_payer_wallet_address: null,
+  }, session) as MobileShopOrder & { ok?: boolean; reason?: string };
+  if (!result?.ok) throw new Error(result?.reason ?? 'No se pudo crear la orden.');
+  return result;
+}
+
+export async function submitMobileShopPayment(
+  session: Session,
+  orderId: string,
+  txHash: string,
+  payerWalletAddress: string,
+): Promise<MobileShopOrder> {
+  const result = await restRpc('vexforge_submit_shop_order_payment', {
+    p_order_id: orderId,
+    p_tx_hash: txHash,
+    p_payer_wallet_address: payerWalletAddress,
+    p_payment_reference: null,
+  }, session) as MobileShopOrder & { ok?: boolean; reason?: string };
+  if (!result?.ok) throw new Error(result?.reason ?? 'No se pudo registrar el pago.');
+  return result;
+}
+
+export async function loadMobileFusableCards(session: Session, playerId: string): Promise<MobileFusableCard[]> {
+  const owned = await rest(
+    'player_cards?select=id%2Ccard_id%2Cquantity%2Clocked%2Clisted&player_id=eq.' + encodeURIComponent(playerId) +
+      '&locked=eq.false&listed=eq.false&quantity=gt.0',
+    session,
+  ) as Array<{ id: string; card_id: string; quantity: number }>;
+  if (!owned.length) return [];
+  const ids = owned.map((card) => card.card_id).join(',');
+  const definitions = await rest(
+    'cards?select=id%2Cname%2Crarity%2Cfusion_enabled&id=in.(' + encodeURIComponent(ids) + ')&fusion_enabled=eq.true&active=eq.true',
+    session,
+  ) as Array<{ id: string; name: string; rarity: string }>;
+  const byId = new Map(definitions.map((card) => [card.id, card]));
+  return owned.filter((card) => byId.has(card.card_id)).map((card) => {
+    const definition = byId.get(card.card_id)!;
+    return { player_card_id: card.id, card_id: card.card_id, name: definition.name, rarity: definition.rarity, quantity: Number(card.quantity) };
+  });
+}
+
+export async function loadMobileFusionPolicy(sourceRarity: string): Promise<MobileFusionPolicy | null> {
+  const result = await restRpc('vexforge_fusion_policy', { p_source_rarity: sourceRarity });
+  const row = Array.isArray(result) ? result[0] : result;
+  if (!row) return null;
+  return {
+    neededCards: Number(row.needed_cards ?? 0),
+    requiredShards: Number(row.required_shards ?? 0),
+    ingameCost: Number(row.ingame_cost ?? 0),
+    targetRarity: String(row.target_rarity ?? ''),
+  };
+}
+
+export async function loadMobileFusionTargets(targetRarity: string): Promise<MobileTargetCard[]> {
+  return rest(
+    'cards?select=id%2Cname%2Crarity&rarity=eq.' + encodeURIComponent(targetRarity) + '&fusion_enabled=eq.true&active=eq.true&order=name.asc',
+  ) as Promise<MobileTargetCard[]>;
+}
+
+export async function loadMobileShards(session: Session, playerId: string): Promise<MobileShardBalance[]> {
+  const rows = await rest('vexforge_player_shards?select=shard_rarity%2Cquantity&player_id=eq.' + encodeURIComponent(playerId), session) as Array<{ shard_rarity: string; quantity: number }>;
+  return rows.map((row) => ({ rarity: row.shard_rarity, quantity: Number(row.quantity) }));
+}
+
+export async function applyMobileFusion(session: Session, playerId: string, sourceCardId: string, targetCardId: string): Promise<{ ok: boolean; reason?: string }> {
+  const result = await restRpc('vexforge_apply_fusion', {
+    p_player_id: playerId,
+    p_source_card_id: sourceCardId,
+    p_target_card_id: targetCardId,
+  }, session) as { ok?: boolean; reason?: string } | null;
+  return { ok: Boolean(result?.ok), reason: result?.reason };
+}
+
+export async function loadMobileEvolutionPaths(): Promise<MobileEvolutionPath[]> {
+  const rows = await rest(
+    'card_evolution_paths?select=id%2Ccard_id%2Cevolves_to_card_id%2Ccost_json%2Crequirements_json%2Cfrom_card%3Acards!card_id(name%2Crarity%2Cfaction)%2Cto_card%3Acards!evolves_to_card_id(name%2Crarity)&order=created_at.asc',
+  ) as Array<Record<string, unknown> & { from_card?: Record<string, string>; to_card?: Record<string, string> }>;
+  return rows.map((row) => ({
+    id: String(row.id ?? ''),
+    card_id: String(row.card_id ?? ''),
+    evolves_to_card_id: String(row.evolves_to_card_id ?? ''),
+    cost_json: (row.cost_json as MobileEvolutionPath['cost_json']) ?? {},
+    requirements_json: (row.requirements_json as MobileEvolutionPath['requirements_json']) ?? {},
+    from_name: row.from_card?.name ?? '',
+    from_rarity: row.from_card?.rarity ?? '',
+    from_faction: row.from_card?.faction ?? '',
+    to_name: row.to_card?.name ?? '',
+    to_rarity: row.to_card?.rarity ?? '',
+  })).filter((path) => path.id && path.card_id && path.from_name && path.to_name);
+}
+
+export async function evolveMobileCard(session: Session, playerId: string, cardId: string): Promise<{ ok: boolean; message?: string }> {
+  const result = await restRpc('vexforge_evolve_card', { p_card_id: cardId, p_player_id: playerId }, session) as { ok?: boolean; message?: string; reason?: string } | null;
+  const ok = result?.ok !== false;
+  return { ok, message: result?.message ?? result?.reason ?? (ok ? 'Carta evolucionada.' : 'No se pudo evolucionar la carta.') };
 }
 
 async function restRpc(name: string, body: Json = {}, session?: Session) {
