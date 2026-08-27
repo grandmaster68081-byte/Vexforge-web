@@ -134,6 +134,54 @@ export type HomeStats = {
 export type DailyCard = PublicCard & { rarity: string; faction: string; power: number; lore: string | null };
 export type ActivityItem = { id: string; text: string; time: string };
 export type HomeMission = { id: string; name: string; energy_cost: number | null; reward_xp: number | null; reward_vex_ingame: number | null; difficulty: string | null; mission_type: string | null };
+export type DailyQuest = {
+  id: string;
+  quest_id: string;
+  assigned_date: string;
+  status: string;
+  progress: number;
+  completed_at: string | null;
+  claimed_at: string | null;
+  quest: {
+    id: string;
+    quest_key: string;
+    title: string;
+    description: string;
+    quest_type: string;
+    target_count: number;
+    reward_vex_ingame: number;
+    reward_xp: number;
+  } | null;
+};
+export type DailyQuestClaim = {
+  claimed: boolean;
+  xp_applied?: number;
+  vex_applied?: number;
+  pendingRewards?: boolean;
+  reason?: string;
+};
+export type MobileMission = {
+  id: string;
+  code: string;
+  name: string;
+  mission_type: string | null;
+  energy_cost: number | null;
+  reward_xp: number | null;
+  reward_vex_ingame: number | null;
+  reward_vex_tradeable: number | null;
+  cooldown_seconds: number | null;
+  difficulty: string | null;
+  mission_group: string | null;
+};
+export type MissionReward = {
+  success: boolean;
+  run_id?: string;
+  xp_reward?: number;
+  ingame_reward?: number;
+  tradeable_reward?: number;
+  energy?: number;
+  reason?: string;
+};
 
 export const STORAGE_BASE = 'https://rscuzqnfccqvltkdcdny.supabase.co/storage/v1/object/public/vexforge-assets';
 export function storageAsset(path: string) { return `${STORAGE_BASE}/${path}`; }
@@ -335,6 +383,78 @@ export async function loadRecentActivity(limit = 8): Promise<ActivityItem[]> {
 
 export async function loadHomeMissions(session?: Session): Promise<HomeMission[]> {
   return rest('missions?select=id%2Cname%2Cenergy_cost%2Creward_xp%2Creward_vex_ingame%2Cdifficulty%2Cmission_type&active=eq.true&production_ready=eq.true&order=mission_order.asc&limit=3', session) as Promise<HomeMission[]>;
+}
+
+async function currentPlayerId(session: Session): Promise<string | null> {
+  const players = await rest(
+    'players?select=id&auth_user_id=eq.' + encodeURIComponent(session.user.id) + '&limit=1',
+    session,
+  ) as Array<{ id: string }>;
+  return players[0]?.id ?? null;
+}
+
+export async function loadDailyQuests(session: Session): Promise<DailyQuest[]> {
+  const playerId = await currentPlayerId(session);
+  if (!playerId) return [];
+  const rows = await rest(
+    'player_daily_quests?select=id%2Cquest_id%2Cassigned_date%2Cstatus%2Cprogress%2Ccompleted_at%2Cclaimed_at%2Cdaily_quests%28id%2Cquest_key%2Ctitle%2Cdescription%2Cquest_type%2Ctarget_count%2Creward_vex_ingame%2Creward_xp%29&player_id=eq.' +
+      encodeURIComponent(playerId) +
+      '&order=assigned_date.desc',
+    session,
+  ) as Array<Record<string, unknown> & { daily_quests?: DailyQuest['quest'] | DailyQuest['quest'][] | null }>;
+  return rows.map((row) => {
+    const quest = Array.isArray(row.daily_quests) ? row.daily_quests[0] : row.daily_quests;
+    return {
+      id: String(row.id ?? ''),
+      quest_id: String(row.quest_id ?? ''),
+      assigned_date: String(row.assigned_date ?? ''),
+      status: String(row.status ?? 'active'),
+      progress: Number(row.progress ?? 0),
+      completed_at: (row.completed_at as string | null) ?? null,
+      claimed_at: (row.claimed_at as string | null) ?? null,
+      quest: quest ?? null,
+    };
+  });
+}
+
+export async function claimDailyQuest(session: Session, assignmentId: string): Promise<DailyQuestClaim> {
+  const result = await restRpc('claim_daily_quest', { p_quest_assignment_id: assignmentId }, session) as DailyQuestClaim | null;
+  return {
+    claimed: Boolean(result?.claimed ?? (result as { ok?: boolean } | null)?.ok),
+    xp_applied: result?.xp_applied,
+    vex_applied: result?.vex_applied,
+    pendingRewards: result?.pendingRewards,
+    reason: result?.reason,
+  };
+}
+
+export async function loadMissions(session: Session): Promise<MobileMission[]> {
+  return rest(
+    'missions?select=id%2Ccode%2Cname%2Cmission_type%2Cenergy_cost%2Creward_xp%2Creward_vex_ingame%2Creward_vex_tradeable%2Ccooldown_seconds%2Cdifficulty%2Cmission_group&active=eq.true&system_locked=eq.false&production_ready=eq.true&order=mission_order.asc',
+    session,
+  ) as Promise<MobileMission[]>;
+}
+
+export async function executeMobileMission(
+  session: Session,
+  playerId: string,
+  missionId: string,
+): Promise<MissionReward> {
+  const execution = await restRpc('execute_mission', { p_player: playerId, p_mission: missionId }, session) as MissionReward | null;
+  if (!execution?.success) {
+    throw new Error(execution?.reason ?? 'La misión fue rechazada por el servidor.');
+  }
+  if (!execution.run_id) return execution;
+
+  const claim = await restRpc('claim_mission_reward', {
+    p_mission_run_id: execution.run_id,
+    p_player_id: playerId,
+    p_reference_id: `mission:${execution.run_id}`,
+  }, session) as { success?: boolean; ok?: boolean; reason?: string } | null;
+  if (!claim?.success && !claim?.ok) {
+    throw new Error(claim?.reason ?? 'La recompensa de la misión no pudo liquidarse.');
+  }
+  return execution;
 }
 
 export async function loadPlayerProfile(session: Session): Promise<PlayerProfile | null> {

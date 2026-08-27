@@ -1,3 +1,16 @@
+## 2026-08-27 — VE-MOB-8-REWARDS — IMPLEMENTED_UNVERIFIED
+
+- Tipo de sesión: implementación Android de la siguiente unidad de la FASE P1, con QA manual post-entrega no bloqueante según el protocolo activo.
+- Fuente canónica: protocolo maestro activo `vexforge_master_protocol_v2` leído desde Supabase Management API, `main`, inventario Android, `vexforge_rewards_catalog`, `vexforge_missions_system`, `vexforge_game_loop`, `vexforge_screen_manifest` y las rutas web de quests/misiones.
+- Reconciliación: el protocolo vivo es `v2.6-qa-nonblocking-continuity`; coincide semánticamente con `main` y sólo difiere por un salto de línea final adicional en la copia del repositorio. No hay divergencia normativa.
+- Cambios: nueva superficie `mobile/app/missions.tsx` con quests diarias, progreso, reclamación, misiones activas, ejecución, recompensas, cooldowns y estados explícitos de carga/error/vacío/resultado; acceso desde Home y registro en el stack raíz.
+- Contrato móvil: `mobile/lib/supabase.ts` consulta datos reales bajo la misma sesión/RLS y usa únicamente `claim_daily_quest`, `execute_mission` y `claim_mission_reward`; no se calcula progreso, energía, recompensa ni liquidación en el cliente.
+- Presentación: VEX y XP se muestran desde las respuestas del servidor; flujo táctil, accesible, mobile-first y sin emojis, datos de demostración ni arte genérico.
+- Evidencia local: typecheck móvil OK; typecheck web OK; `verify:build` OK; guardas `verify:mobile-auth` 8/8, `verify:mobile-deck` 10/10, `verify:mobile-battle` 12/12, `verify:mobile-rewards` 12/12 y `verify:mobile-tutorial` 14/14 OK.
+- Limitación independiente: `npm ci` móvil sigue bloqueado por la discrepancia preexistente del lockfile (`react-dom` y `scheduler` faltantes); el typecheck se validó con instalación temporal sin escribir el lockfile. No se modificó el lockfile.
+- Estado: `IMPLEMENTED_UNVERIFIED`. Nivel Q: Q2 actual / Q3 objetivo. No se declara `OPERATIONAL`, `TIER1_READY` ni `PASS` sin recorrido del operador en el APK.
+- Siguiente acción verificable: publicar este commit en `main`, confirmar el workflow Android oficial y el release correlativo con `app-release.apk`; luego entregar el enlace para QA manual post-entrega.
+
 ## 2026-08-27 — VE-MOB-7-BATTLE — IMPLEMENTED_UNVERIFIED
 
 - Tipo de sesión: implementación Android de la siguiente unidad de la FASE P1, con QA manual post-entrega no bloqueante según el protocolo activo.

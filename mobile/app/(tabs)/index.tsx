@@ -299,7 +299,7 @@ export default function ForgeScreen() {
 
         {home.missions.length > 0 ? (
           <View>
-            <View style={styles.sectionHeader}><SectionLabel color={colors.accent}>PRÓXIMAS MISIONES</SectionLabel><Pressable accessibilityRole="button" testID="home-missions" onPress={() => router.push('/battle')}><Text style={[styles.counter, { color: colors.accent }]}>ENTRAR A LA ARENA</Text></Pressable></View>
+          <View style={styles.sectionHeader}><SectionLabel color={colors.accent}>PRÓXIMAS MISIONES</SectionLabel><Pressable accessibilityRole="button" testID="home-missions" onPress={() => router.push('/missions')}><Text style={[styles.counter, { color: colors.accent }]}>VER MISIONES</Text></Pressable></View>
             {home.missions.map((mission) => (
               <View key={mission.id} style={[styles.missionRow, { backgroundColor: colors.card, borderColor: colors.border }]}>
                 <View style={[styles.missionIcon, { backgroundColor: colors.muted }]}><Ionicons name="shield-checkmark-outline" size={20} color={colors.success} /></View>
