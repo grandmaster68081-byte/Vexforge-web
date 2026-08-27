@@ -1,4 +1,14 @@
-## 2026-08-27 — PREFLIGHT-CANONICAL-AND-DELIVERY-CHECK — BLOCKED
+## 2026-08-27 — ANDROID-QA-ENVIRONMENT-GATE — BLOCKED
+
+- Tipo de sesión: preflight diario + comprobación de capacidad de QA; sin cambios en código de producto, `mobile/**`, Supabase, Auth, RLS, RPCs, Storage, economía, combate, assets ni datos de jugadores.
+- Preflight completado: protocolo activo `vexforge_master_protocol_v2` leído completo desde Supabase Management API, versión `v2.5-canonical-source-flow`, estado `active`; su hash coincide byte a byte con `VEXFORGE_PROTOCOL_V2.md` en `main`.
+- Estado de entrega confirmado: workflow Android run 18 `success` sobre el commit de código `c42b392ff563b07574e632b341f1801f9b339b83`; release `vexforge-android-build-18` publicado con `app-release.apk`. El commit documental posterior no activa un nuevo APK porque no toca `mobile/**`.
+- Gate de QA: este entorno no tiene `adb` ni `emulator`, por lo que no existe un dispositivo o emulador disponible para ejecutar la sesión normal requerida. No se sustituye esa evidencia con una compilación, una consulta administrativa ni una sesión fabricada.
+- Estado canónico: VE-MOB-6 y las unidades Android portadas permanecen `IMPLEMENTED_UNVERIFIED`; no se abre VE-MOB-7-BATTLE ni se declara `OPERATIONAL` hasta completar la QA del APK 18.
+- Condición de reapertura: disponer de un dispositivo/emulador Android y un reporte de sesión normal sobre el APK 18, o detectar un fallo real que requiera corrección.
+- Siguiente acción verificable: instalar el APK publicado, recorrer autenticación, Home, colección, mazo y tutorial con la cuenta QA normal, registrar resultados y devolver la evidencia para cerrar o corregir la unidad afectada.
+
+---## 2026-08-27 — PREFLIGHT-CANONICAL-AND-DELIVERY-CHECK — BLOCKED
 
 - Tipo de sesión: preflight documental y verificación de entrega; sin cambios de producto, `mobile/**`, Supabase, Auth, RLS, RPCs, Storage, economía, combate, assets ni datos de jugadores.
 - Fuentes reconciliadas: fila activa `vexforge_master_protocol_v2` en `public.vexforge_official_documents` leída completa mediante Supabase Management API; `CONTINUITY.md`, `docs/VE-MOB-0-PORT-INVENTORY.md`, `docs/VE-MOB-5-DECK.md` y código real leídos desde `main`.
