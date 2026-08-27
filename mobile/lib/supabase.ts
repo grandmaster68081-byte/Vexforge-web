@@ -61,7 +61,65 @@ export type PlayerProfile = { id: string; display_name: string | null; email: st
 export type PlayerProgress = { level: number; xp: number; xp_to_next: number; energy: number; max_energy: number; tutorial_step: number | null; starter_region: string | null };
 export type Wallet = { vex_ingame: number; vex_tradeable: number; reserved_ingame: number; reserved_tradeable: number };
 export type Opponent = { player_id: string; display_name: string; mmr: number; wins: number; losses: number };
-export type BattleResult = { ok: boolean; match_id?: string; you_won?: boolean; winner_id?: string; elo_change?: number; error?: string };
+export type BattleActor = {
+  name: string;
+  faction?: string;
+  rarity?: string;
+  image_url?: string;
+  hp?: number;
+  max_hp?: number;
+  atk?: number;
+  def?: number;
+  spd?: number;
+};
+export type BattleEvent = {
+  type: string;
+  unit?: string;
+  side?: 'a' | 'b';
+  dmg?: number;
+  heal?: number;
+  hp?: number;
+};
+export type BattleTurn = {
+  turn: number;
+  atk_side?: 'a' | 'b';
+  attacker?: BattleActor;
+  defender?: BattleActor;
+  damage?: number;
+  is_crit?: boolean;
+  is_kill?: boolean;
+  lifesteal_heal?: number;
+  events?: BattleEvent[];
+  alive_a?: number;
+  alive_b?: number;
+  p_card?: string;
+  o_card?: string;
+  p_hp?: number;
+  o_hp?: number;
+};
+export type BattleUnit = {
+  name?: string;
+  faction?: string;
+  rarity?: string;
+  hp?: number;
+  max_hp?: number;
+  alive?: boolean;
+};
+export type BattleResult = {
+  ok: boolean;
+  match_id?: string;
+  you_won?: boolean;
+  winner_id?: string;
+  player_name?: string;
+  opponent_name?: string;
+  total_turns?: number;
+  turns?: BattleTurn[];
+  final_units?: BattleUnit[];
+  engine?: string;
+  elo_change?: number;
+  error?: string;
+  reason?: string;
+};
 export const TUTORIAL_DONE_STEP = 99;
 export const TUTORIAL_TOTAL_STEPS = 7;
 export type HomeStats = {

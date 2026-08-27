@@ -1,3 +1,18 @@
+## 2026-08-27 — VE-MOB-7-BATTLE — IMPLEMENTED_UNVERIFIED
+
+- Tipo de sesión: implementación Android de la siguiente unidad de la FASE P1, con QA manual post-entrega no bloqueante según el protocolo activo.
+- Fuente canónica: protocolo maestro activo en Supabase, `main`, `docs/VE-MOB-0-PORT-INVENTORY.md`, `src/routes/PvpRoute.tsx`, `src/domains/pvp/`, `src/lib/battleTypes.ts` y los RPCs vivos de PvP.
+- Preflight: la fila normativa activa `vexforge_master_protocol_v2` gobierna la continuidad; el contrato vivo de `vexforge_battle_resolve` conserva la autoridad del servidor sobre ganador, daño, turnos, unidades finales y ELO.
+- Cambios: `mobile/app/(tabs)/battle.tsx` deja de ser un lobby mínimo y cubre búsqueda de oponentes, selección, confirmación, carga, error, lista vacía, resolución por RPC, lectura visual secuencial de turnos y resultado final con match/ELO/estado de victoria.
+- Contrato móvil: `mobile/lib/supabase.ts` conserva `turns`, `final_units`, `total_turns`, `engine`, identidad de jugadores y eventos de turno sin reproducir lógica de combate en el cliente.
+- Presentación: los cues de crítico, derrota, barrera, veneno, drenaje y doble golpe son únicamente lectura de eventos devueltos por Supabase; se respeta `AccessibilityInfo.isReduceMotionEnabled()` y no se usan emojis ni datos de demostración.
+- Guardas y evidencia local: `verify:mobile-battle` OK 12/12; `verify:mobile-auth` OK 8/8; `verify:mobile-deck` OK 10/10; `verify:mobile-tutorial` OK 14/14; typecheck web y móvil OK; build Vite OK; guardas web restantes OK.
+- Limitación independiente: `verify:telemetry` continúa fallando por ausencia de un evento vivo `forge_action`; no se fabricó telemetría ni se alteró esa deuda preexistente. `verify-build.mjs` requiere `.git` local, ausente en la copia descargada por API.
+- Estado: `IMPLEMENTED_UNVERIFIED`. Nivel Q: Q2 actual / Q3 objetivo. No se declara `OPERATIONAL`, `TIER1_READY` ni `PASS` sin recorrido del operador en el APK.
+- Siguiente acción verificable: publicar este commit en `main`, confirmar el workflow Android oficial y el release correlativo con `app-release.apk`; luego entregar el enlace para QA manual post-entrega.
+
+---
+
 ## 2026-08-27 — QA-HUMAN-POST-DELIVERY-POLICY — OPERATIONAL
 
 - Tipo de sesión: cambio de gobernanza solicitado explícitamente por el operador; sin cambios en código de producto, `mobile/**`, Supabase Auth, RLS, RPCs, Storage, economía, combate, assets ni datos de jugadores.
