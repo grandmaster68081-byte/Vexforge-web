@@ -1,3 +1,17 @@
+## 2026-08-27 — VE-MOB-10-CONTINUITY-CLOSEOUT — IMPLEMENTED_UNVERIFIED
+
+- Tipo de sesión: preflight diario + verificación técnica y de entrega de la unidad Android vigente; sin cambios de código de producto, Supabase, Auth, RLS, RPCs, Storage, economía, combate, datos de jugadores ni assets.
+- Preflight completado: la fila activa `vexforge_master_protocol_v2` fue leída completa mediante Supabase Management API; la copia de `main` coincide byte a byte con la fuente viva (`md5 4818d42b5f177e1d85a7c98382d01480`). Se leyó la continuidad más reciente, el inventario Android y `docs/VE-MOB-10-PACKS-SHOP.md`.
+- Fuentes reconciliadas: `main` en `76275c7`, contratos vivos de Supabase, tablas de packs/tienda/inventario/shards/evolución y el catálogo PostgREST de RPCs. Los objetos y las RPCs de la unidad están disponibles; no se inventaron datos ni se ejecutaron mutaciones.
+- Verificación local: `npm run typecheck` y `npm run verify:build` web correctos; guards `verify:mobile-auth`, `verify:mobile-deck`, `verify:mobile-battle`, `verify:mobile-rewards`, `verify:mobile-profile`, `verify:mobile-tutorial` y `verify:mobile-store` correctos; `mobile/npm run typecheck` correcto tras instalar dependencias temporalmente desde el registro público sin regenerar ni modificar `mobile/package-lock.json`.
+- Limitación de entorno: el primer `npm ci` móvil fue rechazado por una URL interna del firewall del entorno para `npm-package-arg@11.0.3`; no representa un fallo del código y no se trasladó al lockfile.
+- Gate integral: `npm run verify:all` pasa typecheck y build, pero se detiene en `verify:telemetry` porque Supabase no tiene un evento real `forge_action`; bloqueo preexistente documentado. No se fabricó telemetría ni se modificó el backend para forzar cobertura.
+- Entrega Android: el workflow oficial `vexforge-android-apk.yml` terminó `success` en el run 22 sobre `76275c7`; el release `vexforge-android-build-22` está publicado en GitHub con `app-release.apk` y el workflow verificó el bundle JS embebido.
+- Estado: `VE-MOB-10-PACKS-SHOP` permanece `IMPLEMENTED_UNVERIFIED`, nivel Q2 actual / Q3 objetivo. No se declara `OPERATIONAL`, `TIER1_READY` ni `PASS`; la QA funcional del operador sigue siendo post-entrega.
+- Siguiente acción verificable: instalar `vexforge-android-build-22` y ejecutar el recorrido post-entrega; después resolver la evidencia real de `forge_action` sin simular sesiones ni alterar contratos autoritativos.
+
+---
+
 ## 2026-08-27 — VE-MOB-10-PACKS-SHOP — IMPLEMENTED_UNVERIFIED
 
 - Tipo de sesión: implementación Android de la siguiente unidad elegible de la FASE P2, con QA manual post-entrega no bloqueante según el protocolo activo.
