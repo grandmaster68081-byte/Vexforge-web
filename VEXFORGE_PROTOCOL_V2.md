@@ -16,8 +16,16 @@ Esta ley no crea un plan paralelo ni elimina los gates del Protocolo Maestro. De
 4. El orden de la FASE PORT es el inventario oficial `docs/VE-MOB-0-PORT-INVENTORY.md`; durante esta fase la siguiente unidad se determina por el siguiente elemento no completado del inventario, no por reabrir una tarea histórica ni por saltar a una unidad web.
 5. La app usa el mismo Supabase oficial, las mismas RPCs, RLS y datos autoritativos. El cliente Android presenta y consume contratos; no duplica lógica de combate, recompensas, inventario, progreso, economía o autenticación.
 6. La entrega Android sólo ocurre por push a `main` con cambios en `mobile/**`, el workflow oficial `.github/workflows/vexforge-android-apk.yml`, el release correlativo y el APK `app-release.apk`. No se autorizan EAS, builds manuales, releases manuales ni canales paralelos.
-7. Cada unidad Android conserva todos los gates del protocolo: análisis integral, datos reales, cero genéricos, accesibilidad, reduced-motion, rendimiento, verificación proporcional, correspondencia commit/run/release y continuidad. La ausencia de QA del operador deja la unidad en `IMPLEMENTED_UNVERIFIED`; no se suplanta QA.
+7. Cada unidad Android conserva todos los gates del protocolo: análisis integral, datos reales, cero genéricos, accesibilidad, reduced-motion, rendimiento, verificación proporcional, correspondencia commit/run/release y continuidad. La QA humana del operador es una validación post-entrega y no bloquea la continuidad del trabajo: su ausencia deja la unidad en `IMPLEMENTED_UNVERIFIED`, permite seleccionar y ejecutar la siguiente unidad elegible, y se conserva como evidencia pendiente. El agente no debe declarar `OPERATIONAL`, `TIER1_READY`, `PASS` ni cerrar la QA en nombre del operador.
 8. Una vez completado el port, la FASE CONTINUIDAD retoma el roadmap Tier 1/T0-T10 y sus criterios sobre la app, sin perder la evidencia ni las protecciones acumuladas.
+
+## REGLA DE CONTINUIDAD SIN BLOQUEO POR QA HUMANA
+
+1. La QA manual del owner, operador o usuario real es una validación post-entrega y pertenece a la evidencia de uso real; no es una condición para que la IA continúe con la siguiente unidad elegible.
+2. Cuando el código, los datos, los contratos, los gates técnicos y la verificación proporcional están completos, la IA debe integrar y documentar la unidad como `IMPLEMENTED_UNVERIFIED` si todavía falta la QA humana, y continuar según el orden oficial.
+3. La ausencia de QA humana no permite inventar resultados, simular una sesión, modificar datos para fabricar evidencia ni declarar `OPERATIONAL`, `TIER1_READY`, `PASS` o launch gate.
+4. El owner puede validar posteriormente el APK, dispositivo, navegador o flujo real. Un hallazgo suyo reabre la unidad afectada con su historial intacto; no invalida ni bloquea las demás unidades ya elegibles.
+5. Sólo un bloqueo técnico, contractual, de datos, fuente, asset, herramienta o verificación necesaria para implementar/comprobar el paquete puede detener la ejecución, y debe registrarse con causa y alternativa intentada.
 
 ## REGLA DE RECONCILIACIÓN ENTRE FUENTES
 
@@ -25,7 +33,7 @@ Esta ley no crea un plan paralelo ni elimina los gates del Protocolo Maestro. De
 2. GitHub `main`, `CONTINUITY.md`, el inventario Android, Supabase vivo, el release y el deploy son fuentes de estado operativo y evidencia; no sustituyen el texto normativo del protocolo.
 3. Si la copia del protocolo en `main` difiere de la fila activa de Supabase, el trabajo dependiente queda detenido hasta reconciliar. La reparación conserva el contenido vivo completo, incorpora sólo decisiones oficiales ya registradas y vuelve a sincronizar ambas copias; nunca se elige una fuente por suposición ni se borra historia.
 4. El plan `vexforge_forge_formation_engine_v1` está marcado `superseded`: se consulta para historial y checkpoints compatibles, pero no puede reabrir ni reemplazar el plan vigente.
-5. Mientras la FASE PORT esté incompleta, su orden de inventario gobierna la selección de la unidad Android. Los criterios Tier 1, el roadmap T0-T10 y los gates de calidad siguen siendo obligatorios y se mapean a cada unidad; al completar el port, vuelve a aplicarse la priorización por fase abierta más baja y criterio bloqueante.
+5. Mientras la FASE PORT esté incompleta, su orden de inventario gobierna la selección de la unidad Android. Los criterios Tier 1, el roadmap T0-T10 y los gates técnicos de calidad siguen siendo obligatorios y se mapean a cada unidad; la falta de QA humana no se considera criterio bloqueante de continuidad. Al completar el port, vuelve a aplicarse la priorización por fase abierta más baja y criterio bloqueante.
 
 ---
 
@@ -873,14 +881,14 @@ Estados válidos:
 - `NOT_STARTED`: no iniciado.
 - `DRAFT`: propuesta o asset no integrado.
 - `IN_PROGRESS`: en ejecución.
-- `BLOCKED`: requiere una fuente, sesión, asset, dato o validación que no existe.
-- `IMPLEMENTED_UNVERIFIED`: integrado pero sin gate completo.
+- `BLOCKED`: requiere una fuente, sesión, asset, dato o verificación técnica necesaria que no existe o no puede sustituirse con una alternativa compatible. La falta de QA manual del owner no entra en este estado si la unidad ya está integrada y sus gates técnicos pasan.
+- `IMPLEMENTED_UNVERIFIED`: integrado pero sin gate completo o sin QA humana posterior; puede continuar la siguiente unidad elegible mientras queda pendiente la validación del owner.
 - `OPERATIONAL`: pasa el gate del nivel actual.
 - `CANDIDATE_FOR_REVIEW`: operativo, pero con una oportunidad concreta de mejora.
 - `REFINED`: supera una revisión posterior documentada.
 - `DEFERRED`: aplazado con motivo explícito.
 
-No se permite borrar el historial de una unidad ni convertir `BLOCKED` en `OPERATIONAL` sin evidencia. Una unidad `OPERATIONAL` o `REFINED` puede reabrirse con `CANDIDATE_FOR_REVIEW` cuando cambie el contexto, aparezca un asset mejor o el criterio de calidad suba.
+No se permite borrar el historial de una unidad ni convertir `BLOCKED` en `OPERATIONAL` sin evidencia. La ausencia de QA humana no bloquea la implementación ni el avance a la siguiente unidad: sólo impide declarar esa unidad `OPERATIONAL` hasta que el owner aporte la validación correspondiente. Una unidad `OPERATIONAL` o `REFINED` puede reabrirse con `CANDIDATE_FOR_REVIEW` cuando cambie el contexto, aparezca un asset mejor o el criterio de calidad suba.
 
 ## 4. Escala universal de calidad
 
@@ -999,8 +1007,8 @@ Una ruta no se considera visualmente terminada si sólo tiene un fondo. Debe ten
 **Gate:** revisión cruzada de cartas, rutas, tutorial, combate y audio; nada se marca como perfecto o definitivo.
 
 ### VE-11 — Validación cerrada y preparación de lanzamiento
-**Objetivo:** combinar gates técnicos del Protocolo/T10 con validación manual del owner, QA y después jugadores reales.  
-**Regla:** T10 sigue `NO-GO` hasta la sesión autenticada documentada. El trabajo visual puede avanzar como track controlado, pero no convierte por sí solo el proyecto en lanzamiento público.
+**Objetivo:** combinar gates técnicos del Protocolo/T10 con validación manual del owner, QA y después jugadores reales. La validación manual es posterior a la implementación y documenta el estado de uso real; no bloquea la ejecución de la siguiente unidad.  
+**Regla:** T10 sigue `NO-GO` hasta la sesión autenticada documentada. El trabajo visual y de producto puede avanzar como track controlado, pero no convierte por sí solo el proyecto en lanzamiento público ni permite declarar `OPERATIONAL` una unidad sin la evidencia aplicable.
 
 ## 8. Priorización y paquetes para cualquier sesión
 
@@ -1012,11 +1020,11 @@ El tamaño recomendado es: una carta representativa; una familia de cartas con e
 
 Al cerrar una unidad o paquete, el agente debe registrar: archivos y superficies afectadas, assets y versiones, fuente canónica consultada, estado anterior/nuevo, quality level, verificaciones ejecutadas, limitaciones, bloqueos, deuda y próximo criterio de reentrada. Debe actualizar `CONTINUITY.md` y este plan activo sin reescribir la historia.
 
-No se ejecutan builds o validaciones irrelevantes sólo por rutina; sí se ejecuta la verificación mínima que corresponda al riesgo del paquete. Nunca se inventan resultados. Si la sesión no puede acceder a navegador autenticado, usuario real, asset externo o validación de rendimiento, se marca `BLOCKED` y se explica qué evidencia falta.
+No se ejecutan builds o validaciones irrelevantes sólo por rutina; sí se ejecuta la verificación mínima que corresponda al riesgo del paquete. Nunca se inventan resultados. Si la sesión no puede acceder a una fuente, asset externo o verificación técnica necesaria para implementar o comprobar razonablemente el paquete, se marca `BLOCKED` y se explica qué falta. Si lo único pendiente es navegador autenticado, usuario real, dispositivo o QA manual del owner después de que los gates técnicos pasan, se marca `IMPLEMENTED_UNVERIFIED`, se registra la evidencia pendiente y se continúa con la siguiente unidad elegible.
 
 ## 10. Estado inicial de este addendum
 
-- T10: `BLOCKED / PRE-LAUNCH INTERNAL QA`; falta sign-off autenticado del owner según la continuidad vigente.
+- T10: `BLOCKED / PRE-LAUNCH INTERNAL QA`; falta sign-off autenticado del owner según la continuidad vigente. Este estado limita el launch gate, pero no detiene la implementación ni la preparación de las siguientes unidades.
 - Fase visual histórica B1-B4, C1-C2, D1-D2, G1-G3, H1-H4, I1-I2 y assets listados: conservar como `OPERATIONAL` sólo en el nivel documentado; quedan abiertas a reevaluación Q3-Q5.
 - P1: `NOT_STARTED` como identidad audiovisual completa por carta; los efectos actuales por facción/rareza no satisfacen por sí solos los cuatro ejes de identidad.
 - Tutorial: existe una base guiada, pero la revolución contextual VE-5/TU.0-TU.1 sigue abierta hasta demostrar aprendizaje dentro de la interfaz real.
@@ -1187,7 +1195,8 @@ Todo cambio conserva la arquitectura oficial: GitHub `main` como fuente de códi
 
 ## 7. REGLA DE CIERRE
 
-No declarar Tier 1, `OPERATIONAL` ni una superficie terminada sólo porque compile o funcione. Deben existir evidencia, gates aplicables, estado Q, deuda, condición de reapertura y continuidad actualizada. Una superficie `OPERATIONAL`, `REFINED` o `Q5` puede reabrirse cuando cambie el contexto o aparezca una brecha demostrable.
+No declarar Tier 1, `OPERATIONAL` ni una superficie terminada sólo porque compile o funcione. Deben existir evidencia, gates aplicables, estado Q, deuda, condición de reapertura y continuidad actualizada. La QA humana pendiente no detiene la siguiente implementación, pero sí conserva la unidad como `IMPLEMENTED_UNVERIFIED` y evita una declaración operativa prematura. Una superficie `OPERATIONAL`, `REFINED` o `Q5` puede reabrirse cuando cambie el contexto o aparezca una brecha demostrable.
 
-La extensión queda integrada formalmente como directiva permanente. Durante la FASE PORT, la siguiente implementación se selecciona por el orden del inventario Android y el siguiente elemento no completado; cada unidad debe mapearse a los criterios Tier 1/T0-T10 y superar sus gates aplicables. Una vez completado el port, vuelve a regir la selección por fase abierta más baja y criterio bloqueante, después del preflight exigido por la Ley Diaria de Contexto Completo.
+La extensión queda integrada formalmente como directiva permanente. Durante la FASE PORT, la siguiente implementación se selecciona por el orden del inventario Android y el siguiente elemento no completado; cada unidad debe mapearse a los criterios Tier 1/T0-T10 y superar sus gates técnicos aplicables. La QA humana pendiente no impide seleccionar ni ejecutar la siguiente unidad, y cualquier hallazgo posterior puede reabrir la unidad correspondiente sin borrar su historial. Una vez completado el port, vuelve a regir la selección por fase abierta más baja y criterio bloqueante, después del preflight exigido por la Ley Diaria de Contexto Completo.
+
 

@@ -1,4 +1,14 @@
-## 2026-08-27 — ANDROID-QA-ENVIRONMENT-GATE — BLOCKED
+## 2026-08-27 — QA-HUMAN-POST-DELIVERY-POLICY — OPERATIONAL
+
+- Tipo de sesión: cambio de gobernanza solicitado explícitamente por el operador; sin cambios en código de producto, `mobile/**`, Supabase Auth, RLS, RPCs, Storage, economía, combate, assets ni datos de jugadores.
+- Decisión canónica: la QA manual del owner/operador es post-entrega y ya no bloquea la selección ni la implementación de la siguiente unidad elegible. Una unidad sin ese recorrido queda `IMPLEMENTED_UNVERIFIED` y conserva la evidencia pendiente.
+- Protecciones preservadas: no se fabrican sesiones ni resultados, no se declaran `OPERATIONAL`, `TIER1_READY`, `PASS` ni launch gate sin la evidencia aplicable, y cualquier hallazgo posterior del owner puede reabrir sólo la unidad afectada.
+- Supabase: la fila activa `vexforge_master_protocol_v2` se actualizó a `v2.6-qa-nonblocking-continuity` y contiene la nueva regla permanente de continuidad sin bloqueo por QA humana.
+- GitHub: esta política se sincroniza con `VEXFORGE_PROTOCOL_V2.md` en `main`; el contenido del repositorio se toma de la fila canónica viva de Supabase.
+- Selección vigente: la QA pendiente de VE-MOB-2 a VE-MOB-6 deja de impedir el avance. La siguiente unidad de la FASE P1 es `VE-MOB-7-BATTLE`, que se ejecutará con los gates técnicos y quedará `IMPLEMENTED_UNVERIFIED` hasta la validación posterior del operador.
+- Siguiente acción verificable: leer el alcance y contratos de `VE-MOB-7-BATTLE`, implementar sólo esa unidad sobre Android, ejecutar typecheck/guardas/workflow APK y registrar la evidencia técnica sin esperar la QA manual.
+
+---## 2026-08-27 — ANDROID-QA-ENVIRONMENT-GATE — BLOCKED
 
 - Tipo de sesión: preflight diario + comprobación de capacidad de QA; sin cambios en código de producto, `mobile/**`, Supabase, Auth, RLS, RPCs, Storage, economía, combate, assets ni datos de jugadores.
 - Preflight completado: protocolo activo `vexforge_master_protocol_v2` leído completo desde Supabase Management API, versión `v2.5-canonical-source-flow`, estado `active`; su hash coincide byte a byte con `VEXFORGE_PROTOCOL_V2.md` en `main`.
