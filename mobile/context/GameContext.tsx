@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useEffect, useMemo, useState } from 'react';
-import { findOpponents, loadCatalogSnapshot, loadPlayerCollection, loadPlayerProfile, loadProgress, loadSession, loadStats, loadWallet, signIn as signInRemote, signOut as signOutRemote, signUp as signUpRemote, startBattle as startBattleRemote, type BattleResult, type Opponent, type PlayerCard, type PlayerProfile, type PlayerProgress, type PublicCard, type Session, type Wallet } from '@/lib/supabase';
+import { findOpponents, loadCatalogSnapshot, loadPlayerCollection, loadPlayerProfile, loadProgress, loadSession, loadStats, loadWallet, signIn as signInRemote, signOut as signOutRemote, signUp as signUpRemote, startBattle as startBattleRemote, type BattleResult, type Opponent, type PlayerCard, type PlayerProfile, type PlayerProgress, type PlayerStats, type PublicCard, type Session, type Wallet } from '@/lib/supabase';
 
 export type SyncState = 'loading' | 'connected' | 'offline';
 type GameContextValue = {
@@ -7,7 +7,7 @@ type GameContextValue = {
     player: PlayerProfile | null;
     progress: PlayerProgress | null;
     wallet: Wallet | null;
-    stats: { pvp_wins?: number; missions_completed?: number; cards_owned?: number } | null;
+    stats: PlayerStats | null;
     cardsTotal: number;
     featuredCards: PublicCard[];
     collection: PlayerCard[];

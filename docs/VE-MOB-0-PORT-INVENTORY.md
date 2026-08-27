@@ -1,11 +1,12 @@
 # VE-MOB-0 — INVENTARIO OFICIAL DEL PORT WEB → APP ANDROID
 
-Fuente: `src/routes/` (38 superficies web) vs `mobile/app/(tabs)/` (4 pantallas, 3 de ellas esqueleto).
+Fuente: `src/routes/` (38 superficies web) vs `mobile/app/(tabs)/` (5 superficies Android, con Profile incorporando identidad, logros y progreso).
 Regla: cada superficie portada es una unidad `VE-MOB-*` con criterios, guarda y evidencia propios. La app consume el mismo Supabase oficial; prohibido duplicar lógica autoritativa.
 
 ## Estado del esqueleto actual
 - `index.tsx` (Home, 160 líneas) — parcial.
-- `battle.tsx`, `collection.tsx`, `profile.tsx` — stubs (5–17 líneas). Calidad declarada insuficiente por el operador: se reconstruyen, no se pulen sobre lo actual.
+- `battle.tsx`, `collection.tsx` — unidades portadas e implementadas según sus documentos.
+- `profile.tsx` — `VE-MOB-9` implementada con perfil, logros, progreso, estados explícitos y accesos rápidos; permanece `IMPLEMENTED_UNVERIFIED` hasta QA.
 
 ## Fases del port (orden obligatorio)
 

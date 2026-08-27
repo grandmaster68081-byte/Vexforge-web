@@ -1,3 +1,18 @@
+## 2026-08-27 — VE-MOB-9-PROFILE — IMPLEMENTED_UNVERIFIED
+
+- Tipo de sesión: implementación Android de la siguiente unidad de la FASE P2, con QA manual post-entrega no bloqueante según el protocolo activo.
+- Fuente canónica: protocolo maestro activo `vexforge_master_protocol_v2` leído desde Supabase Management API, `main`, inventario Android, `vexforge_screen_manifest`, `vexforge_player_journey`, `vexforge_game_loop` y los contratos vivos de perfil.
+- Reconciliación: Supabase expone `players`, `player_progress`, `player_wallet`, `player_achievements`, `achievements`, `get_player_rank` y `get_player_stats`; los contratos usados por Android existen bajo el esquema público oficial.
+- Cambios: `mobile/app/(tabs)/profile.tsx` deja de ser un perfil mínimo y cubre identidad, conexión, rango PvP/MMR, nivel/XP/energía/región, VEX, estadísticas, logros desbloqueados, accesos rápidos y cierre de sesión.
+- Contrato móvil: `mobile/lib/supabase.ts` amplía la lectura autenticada de `players`, conserva `get_player_stats`, añade `get_player_rank` y consulta `player_achievements → achievements`; no se calcula rango, XP, recompensa ni estadística autoritativa en el cliente.
+- Presentación: superficie mobile-first, accesible, safe-area, pull-to-refresh, estados de carga/error/vacío y sin emojis, datos de demostración ni arte genérico.
+- Evidencia local: typecheck móvil OK; `git diff --check` OK; typecheck web y `verify:build` pendientes de la batería final; guarda específica `verify:mobile-profile` añadida para comprobar los contratos y estados de la unidad.
+- Limitación independiente: `npm ci` móvil continúa bloqueado por la discrepancia preexistente del lockfile (`react-dom` y `scheduler` faltantes); el typecheck se validará con instalación temporal sin escribir el lockfile. No se regenera el lockfile.
+- Estado: `IMPLEMENTED_UNVERIFIED`. Nivel Q: Q2 actual / Q3 objetivo. No se declara `OPERATIONAL`, `TIER1_READY` ni `PASS` sin recorrido del operador en el APK.
+- Siguiente acción verificable: ejecutar la batería web/móvil, publicar este commit en `main`, confirmar el workflow Android oficial y el release correlativo con `app-release.apk`; luego entregar el enlace para QA manual post-entrega.
+
+---
+
 ## 2026-08-27 — VE-MOB-8-REWARDS — IMPLEMENTED_UNVERIFIED
 
 - Tipo de sesión: implementación Android de la siguiente unidad de la FASE P1, con QA manual post-entrega no bloqueante según el protocolo activo.

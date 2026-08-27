@@ -57,8 +57,49 @@ export type DeckValidation = {
   legendary_count: number;
 };
 export type SaveDeckResult = { ok: boolean; slots_saved?: number; reason?: string };
-export type PlayerProfile = { id: string; display_name: string | null; email: string | null; role: string | null; status: string | null; created_at: string | null };
+export type PlayerProfile = {
+  id: string;
+  display_name: string | null;
+  email: string | null;
+  role: string | null;
+  status: string | null;
+  created_at: string | null;
+  is_admin?: boolean | null;
+  is_super_admin?: boolean | null;
+  telegram_username?: string | null;
+};
 export type PlayerProgress = { level: number; xp: number; xp_to_next: number; energy: number; max_energy: number; tutorial_step: number | null; starter_region: string | null };
+export type PlayerStats = {
+  pvp_wins?: number;
+  pvp_losses?: number;
+  missions_completed?: number;
+  cards_owned?: number;
+  market_sales?: number;
+  packs_opened?: number;
+  boss_kills?: number;
+};
+export type PlayerRank = {
+  ok?: boolean;
+  mmr?: number;
+  tier?: string;
+  tier_color?: string;
+  tier_icon?: string;
+  tier_min?: number;
+  shields?: number;
+  wins?: number;
+  losses?: number;
+  season_id?: string | null;
+};
+export type PlayerAchievement = {
+  id: string;
+  code: string;
+  title: string;
+  description: string;
+  category: string | null;
+  points: number;
+  icon: string | null;
+  unlocked_at: string | null;
+};
 export type Wallet = { vex_ingame: number; vex_tradeable: number; reserved_ingame: number; reserved_tradeable: number };
 export type Opponent = { player_id: string; display_name: string; mmr: number; wins: number; losses: number };
 export type BattleActor = {
@@ -458,7 +499,7 @@ export async function executeMobileMission(
 }
 
 export async function loadPlayerProfile(session: Session): Promise<PlayerProfile | null> {
-  const rows = await rest('players?select=id%2Cdisplay_name%2Cemail%2Crole%2Cstatus%2Ccreated_at&auth_user_id=eq.' + encodeURIComponent(session.user.id) + '&limit=1', session) as PlayerProfile[];
+  const rows = await rest('players?select=id%2Cdisplay_name%2Cemail%2Crole%2Cstatus%2Ccreated_at%2Cis_admin%2Cis_super_admin%2Ctelegram_username&auth_user_id=eq.' + encodeURIComponent(session.user.id) + '&limit=1', session) as PlayerProfile[];
   return rows[0] ?? null;
 }
 
@@ -498,8 +539,54 @@ export async function skipTutorial(session: Session, playerId: string): Promise<
   );
 }
 
-export async function loadStats(session: Session, playerId: string) {
-  return restRpc('get_player_stats', { p_player_id: playerId }, session) as Promise<{ pvp_wins?: number; missions_completed?: number; cards_owned?: number }>;
+export async function loadStats(session: Session, playerId: string): Promise<PlayerStats> {
+  return restRpc('get_player_stats', { p_player_id: playerId }, session) as Promise<PlayerStats>;
+}
+
+export async function loadPlayerRank(session: Session, playerId: string): Promise<PlayerRank | null> {
+  const result = await restRpc('get_player_rank', { p_player_id: playerId }, session) as PlayerRank | null;
+  return result && result.ok !== false ? result : null;
+}
+
+export async function loadPlayerAchievements(session: Session, playerId: string): Promise<PlayerAchievement[]> {
+  const rows = await rest(
+    'player_achievements?select=achievement_id%2Cunlocked_at%2Cachievements%21inner%28code%2Ctitle%2Cdescription%2Ccategory%2Cpoints%2Cicon%29&player_id=eq.' +
+      encodeURIComponent(playerId) +
+      '&order=unlocked_at.desc&limit=50',
+    session,
+  ) as Array<{
+    achievement_id?: string;
+    unlocked_at?: string | null;
+    achievements?: {
+      code?: string;
+      title?: string;
+      description?: string;
+      category?: string | null;
+      points?: number;
+      icon?: string | null;
+    } | Array<{
+      code?: string;
+      title?: string;
+      description?: string;
+      category?: string | null;
+      points?: number;
+      icon?: string | null;
+    }> | null;
+  }>;
+
+  return rows.map((row) => {
+    const achievement = Array.isArray(row.achievements) ? row.achievements[0] : row.achievements;
+    return {
+      id: String(row.achievement_id ?? ''),
+      code: String(achievement?.code ?? ''),
+      title: String(achievement?.title ?? 'Logro'),
+      description: String(achievement?.description ?? ''),
+      category: achievement?.category ?? null,
+      points: Number(achievement?.points ?? 0),
+      icon: achievement?.icon ?? null,
+      unlocked_at: row.unlocked_at ?? null,
+    };
+  }).filter((achievement) => achievement.id && achievement.code);
 }
 
 async function restRpc(name: string, body: Json = {}, session?: Session) {
