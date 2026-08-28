@@ -1,3 +1,14 @@
+## 2026-08-28 — VE-MOB-11-ECONOMY-SCOPE — READY_FOR_IMPLEMENTATION
+
+- Tipo de sesión: continuación del preflight Android después de corregir el transporte de credenciales; sin cambios de código de producto, `mobile/`, datos de jugadores, economía, combate, Auth, RLS, RPCs, Storage, assets, APK ni deploy.
+- Fuente canónica: protocolo maestro actualizado, inventario Android, rutas/repositorios web de economía y catálogo vivo de Supabase.
+- Decisión derivada: se creó `docs/VE-MOB-11-ECONOMY.md` porque no existía el documento específico; define el alcance de cartera/ledger, mercado, depósitos, retiros y referidos a partir de contratos verificables.
+- Protecciones: Android sólo presentará datos reales y llamará RPCs oficiales; no se crearán saldos, recompensas, comisiones, tasas, liquidaciones ni validaciones autoritativas en el cliente.
+- Estado: la unidad queda `READY_FOR_IMPLEMENTATION`; el bloqueo documental anterior queda resuelto por la Ley de Creación Autónoma por Contexto Incompleto, sin declarar la unidad implementada ni pasar gates de APK/QA.
+- Siguiente acción verificable: implementar la unidad sobre `mobile/`, verificar typecheck/guards y publicar el workflow Android oficial; cualquier QA humana pendiente conservará `IMPLEMENTED_UNVERIFIED`.
+
+---
+
 ## 2026-08-28 — HTTPS-CREDENTIAL-TRANSPORT-LAW — OPERATIONAL
 
 - Tipo de sesión: corrección normativa solicitada por el operador; sin cambios de código de producto, `mobile/`, datos de jugadores, economía, combate, Auth, RLS, RPCs, Storage, assets, APK ni deploy.
