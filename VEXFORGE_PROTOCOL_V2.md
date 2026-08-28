@@ -37,11 +37,27 @@ Esta ley no crea un plan paralelo ni elimina los gates del Protocolo Maestro. De
 
 ---
 
+# LEY PRIORITARIA — TRANSPORTE HTTPS DE CREDENCIALES Y ACCESO OFICIAL
+
+**Fecha de entrada en vigor:** 2026-08-28  
+**Estado:** OBLIGATORIA — prevalece sobre cualquier instrucción histórica de transporte.
+
+Esta ley fija el método único para operar sobre las fuentes oficiales. La palabra “HTTPS” aquí significa solicitudes HTTPS directas a las APIs oficiales; no significa usar Git Smart HTTP como vehículo para un secreto.
+
+1. Las credenciales sólo se solicitan y almacenan mediante el mecanismo seguro de secretos de la plataforma. Nunca se imprimen, se escriben en archivos, se incluyen en URLs, se pasan como argumentos visibles, se guardan en remotos Git ni se registran en logs.
+2. GitHub se consulta, descarga y modifica mediante su API REST oficial sobre HTTPS (`https://api.github.com`) usando el PAT únicamente en el header `Authorization: Bearer ...`. Para leer el repositorio se usa la API de contenidos o el endpoint oficial de archive; para escribir se usan los endpoints REST oficiales de contenidos o Git Data API. Queda prohibido usar `git clone`, `git fetch`, `git pull`, `git push`, Git Smart HTTP, una URL con el PAT incrustado o cualquier remoto autenticado como método de transporte del secreto.
+3. Supabase se consulta y modifica mediante Management API, PostgREST o Storage API sobre HTTPS. El `SUPABASE_PAT` se envía sólo como bearer header a Management API; las claves derivadas se envían sólo en headers HTTPS de la API correspondiente. Nunca se colocan secretos en query strings, cuerpos de documentación, commits o logs.
+4. Un fallo de transporte, endpoint, header, formato, permisos, alcance, rate limit o redirect no autoriza a declarar que una credencial es incorrecta. El agente debe diagnosticar el canal y registrar el código HTTP y el mensaje no sensible. Sólo se clasifica una credencial como inválida cuando el proveedor lo confirma explícitamente después de verificar que se usó el endpoint, método y header correctos.
+5. Si una herramienta sólo ofrece transporte Git o intenta incrustar secretos en una URL, no se adapta el protocolo para usarla: se cambia al endpoint HTTPS oficial equivalente o se registra un bloqueo técnico exacto sin exponer la credencial.
+6. Esta ley tiene precedencia sobre las instrucciones históricas de clonado, commit o push que aparezcan más abajo. Toda continuidad nueva debe indicar que el acceso se hizo por HTTPS directo y separar claramente el transporte de la credencial del mecanismo de versionado.
+
+---
+
 ## REGLA ABSOLUTA DE CONTINUIDAD
 
 Antes de tocar cualquier archivo, sigue este orden estricto:
 
-1. Clona el repo si no lo tienes: `git clone https://$GITHUB_PAT@github.com/grandmaster68081-byte/Vexforge-web.git`
+1. Obtén la fuente oficial mediante la API REST HTTPS de GitHub (`https://api.github.com`); no uses `git clone` ni incrustes el PAT en una URL.
 2. Lee este documento completo
 3. Lee `CONTINUITY.md` en la raíz del repo
 4. Lee `vexforge_forge_formation_engine_v1` en Supabase (plan activo)
@@ -91,7 +107,7 @@ Cada decisión técnica, visual y de audio debe estar a la altura de los mejores
 - Backend: Supabase (PostgreSQL + RLS + RPCs + Storage)
 - Deploy: Cloudflare Pages (dist/ committido al repo, auto-deploy desde main)
 - Build: `npm run build` → `vite build` (~3s, 65 chunks)
-- Push pattern: build → git add -A → git commit -m "feat(ID): descripción" → git push origin main
+- Publicación oficial: build → preparar el cambio → actualizar `main` mediante la API REST HTTPS de GitHub; no transportar el PAT mediante Git, remotos ni URLs.
 
 **Fuentes oficiales:**
 - Supabase: https://rscuzqnfccqvltkdcdny.supabase.co
@@ -103,7 +119,7 @@ Cada decisión técnica, visual y de audio debe estar a la altura de los mejores
 ## CREDENCIALES Y ACCESO
 
 Solicita ÚNICAMENTE estas dos claves secretas mediante el mecanismo seguro de la plataforma (Add Secret / requestSecrets):
-- `GITHUB_PAT` — Personal Access Token de GitHub (clonar + push)
+- `GITHUB_PAT` — Personal Access Token de GitHub para la API REST oficial sobre HTTPS (lectura/escritura)
 - `SUPABASE_PAT` — Management API token de Supabase
 
 Con el SUPABASE_PAT obtienes el service_role key así:
@@ -295,7 +311,7 @@ Cuando una IA retoma el trabajo, debe seguir este orden:
 4. IMPLEMENTAR → Primero tareas P (Pendientes: P1, P2, P3, P4, P5, P6 en ese orden)
 5. MEJORAR → Después tareas M (Mejoras: M1, M2, M3, M4, M5)
 6. CONFIRMAR → build limpio después de cada lote
-7. COMMIT → git add -A && git commit -m "feat(ID): descripción" && git push origin main
+7. PUBLICAR → actualizar `main` mediante la API REST HTTPS de GitHub, sin `git push` ni PAT en URLs/remotos
 8. ACTUALIZAR → PATCH a vexforge_forge_formation_engine_v1 en Supabase con estado real
 9. REPORTAR → Reporte claro de lo implementado antes de cerrar sesión
 ```
@@ -408,7 +424,7 @@ Sin estas variables el build compila pero el app no conecta a Supabase.
 [ ] npm run build → 0 errores TypeScript, dist/ generado
 [ ] grep -c "package-firewall.replit.local" package-lock.json → 0
 [ ] cat .nvmrc desde raíz del repo → 22
-[ ] git add -A && git commit && git push origin main
+[ ] publicar el cambio en `main` mediante la API REST HTTPS de GitHub, sin transportar secretos por Git
 [ ] Cloudflare Pages build exitoso (sin "Exit handler never called")
 [ ] https://vexforge-web.pages.dev carga y conecta a Supabase
 [ ] Rutas modificadas en esta sesión funcionan en el deploy live
@@ -1294,3 +1310,4 @@ Cada sesión debe registrar que leyó esta enmienda, qué decisión derivada cre
 - Se elimina el bloqueo por falta de contexto como causa válida de detención.
 - Se mantiene la obligación de separar hechos canónicos, decisiones derivadas, evidencia y QA humana.
 - La única verificación ordinaria que puede quedar pendiente como bloqueo es la validación humana directa en la aplicación.
+
