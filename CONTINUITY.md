@@ -1,3 +1,18 @@
+## 2026-08-28 — HTTPS-CREDENTIAL-TRANSPORT-LAW — OPERATIONAL
+
+- Tipo de sesión: corrección normativa solicitada por el operador; sin cambios de código de producto, `mobile/`, datos de jugadores, economía, combate, Auth, RLS, RPCs, Storage, assets, APK ni deploy.
+- Diagnóstico verificado: la API REST HTTPS de GitHub aceptó la credencial y respondió `200`; el intento previo que devolvió `invalid credentials` fue una operación Git sobre HTTPS, no evidencia de una credencial inválida.
+- Causa del fallo: se interpretó “clonar” literalmente y se usó Git como transporte autenticado, aunque la instrucción del operador exige solicitudes HTTPS directas a la API oficial.
+- Cambio canónico: se añadió al protocolo maestro la `LEY PRIORITARIA — TRANSPORTE HTTPS DE CREDENCIALES Y ACCESO OFICIAL`, con precedencia sobre instrucciones históricas de `clone`, `push`, `pull` y Git Smart HTTP.
+- Regla establecida: GitHub se consulta, descarga y modifica mediante API REST/Git Data API sobre HTTPS con el PAT sólo en el header Bearer; Supabase se opera mediante Management API, PostgREST o Storage API sobre HTTPS; nunca se incrustan secretos en URLs, remotos, argumentos, cuerpos de documentación ni logs.
+- Protección de diagnóstico: un error de transporte, endpoint, header, formato, permisos, alcance, rate limit o redirect no se etiqueta como credencial incorrecta sin confirmación explícita del proveedor y verificación del canal correcto.
+- Supabase: la fila activa `public.vexforge_official_documents` con `doc_key = vexforge_master_protocol_v2` se actualizó con la enmienda completa y se verificó de nuevo mediante HTTPS.
+- GitHub: `VEXFORGE_PROTOCOL_V2.md` y esta continuidad se publicaron en `main` mediante la API HTTPS oficial, sin `git clone`, `git push` ni PAT en URLs/remotos.
+- Estado: la ley de transporte HTTPS queda `OPERATIONAL`; no se declara ninguna unidad de producto terminada ni se altera el orden vigente de la FASE PORT.
+- Siguiente acción verificable: ejecutar el próximo preflight y cualquier trabajo de producto sólo desde las fuentes oficiales, usando API HTTPS directa y registrando la evidencia de método sin exponer secretos.
+
+---
+
 ## 2026-08-28 — CONTEXT-CREATION-LAW — OPERATIONAL
 
 - Tipo de sesión: modificación normativa solicitada por el operador; sin cambios de código de producto, mobile/, datos de jugadores, economía, combate, Auth, RLS, RPCs, Storage, assets, APK ni deploy.
