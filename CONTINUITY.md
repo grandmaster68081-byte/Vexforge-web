@@ -1,3 +1,16 @@
+## 2026-08-28 — CONTEXT-CREATION-LAW — OPERATIONAL
+
+- Tipo de sesión: modificación normativa solicitada por el operador; sin cambios de código de producto, mobile/, datos de jugadores, economía, combate, Auth, RLS, RPCs, Storage, assets, APK ni deploy.
+- Preflight completado: el protocolo maestro completo fue leído desde Supabase Management API; CONTINUITY.md, el inventario Android y el estado real de main fueron reconciliados antes de escribir.
+- Cambio canónico: se añadió al final de VEXFORGE_PROTOCOL_V2.md la enmienda LEY DE CREACIÓN AUTÓNOMA POR CONTEXTO INCOMPLETO, con precedencia máxima sobre bloqueos epistemológicos.
+- Regla establecida: la falta de documentación, teoría, contexto, tabla, RPC, ruta, asset o decisión no bloquea si el análisis integral permite derivar, crear, documentar, verificar y revertir una solución compatible con la visión Tier 1.
+- Protecciones preservadas: no se falsifican hechos canónicos, resultados, sesiones, QA, evidencia ni estados operativos; permanecen la autoridad de Supabase, la seguridad, RLS, la economía, ForgeFormation, los gates técnicos y la QA humana como validación ordinaria pendiente.
+- Supabase: la fila activa vexforge_master_protocol_v2 queda actualizada a v2.7-autonomous-context-law; la copia publicada en GitHub se sincroniza con el mismo contenido.
+- Estado: enmienda normativa OPERATIONAL; no se declara ninguna unidad de producto terminada ni se desbloquea por sí sola una implementación económica.
+- Siguiente acción verificable: aplicar esta ley en el próximo preflight de la unidad Android elegible, registrar las decisiones derivadas y conservar la QA humana como IMPLEMENTED_UNVERIFIED cuando corresponda.
+
+---
+
 ## 2026-08-28 — PREFLIGHT-GITHUB-SYNC-AND-VE-MOB-11-BLOCKED — BLOCKED
 
 - Tipo de sesión: preflight canónico y sincronización del repositorio oficial; sin cambios de código de producto, `mobile/**`, Supabase, Auth, RLS, RPCs, Storage, economía, combate, datos de jugadores ni assets.

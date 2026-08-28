@@ -1,5 +1,5 @@
 # VEXFORGE — Protocolo Maestro Universal v2
-**Última actualización:** 2026-08-26 | **Mantenido por:** Replit Agent Chat 116
+**Última actualización:** 2026-08-28 | **Mantenido por:** Replit Agent
 **Documento clave en Supabase:** `vexforge_master_protocol_v2`
 
 ---
@@ -1198,5 +1198,99 @@ Todo cambio conserva la arquitectura oficial: GitHub `main` como fuente de códi
 No declarar Tier 1, `OPERATIONAL` ni una superficie terminada sólo porque compile o funcione. Deben existir evidencia, gates aplicables, estado Q, deuda, condición de reapertura y continuidad actualizada. La QA humana pendiente no detiene la siguiente implementación, pero sí conserva la unidad como `IMPLEMENTED_UNVERIFIED` y evita una declaración operativa prematura. Una superficie `OPERATIONAL`, `REFINED` o `Q5` puede reabrirse cuando cambie el contexto o aparezca una brecha demostrable.
 
 La extensión queda integrada formalmente como directiva permanente. Durante la FASE PORT, la siguiente implementación se selecciona por el orden del inventario Android y el siguiente elemento no completado; cada unidad debe mapearse a los criterios Tier 1/T0-T10 y superar sus gates técnicos aplicables. La QA humana pendiente no impide seleccionar ni ejecutar la siguiente unidad, y cualquier hallazgo posterior puede reabrir la unidad correspondiente sin borrar su historial. Una vez completado el port, vuelve a regir la selección por fase abierta más baja y criterio bloqueante, después del preflight exigido por la Ley Diaria de Contexto Completo.
+---
+# ENMIENDA PERMANENTE — LEY DE CREACIÓN AUTÓNOMA POR CONTEXTO INCOMPLETO
+**Fecha de entrada en vigor:** 2026-08-28  
+**Estado:** OFICIAL — INTEGRADA EN EL PROTOCOLO MAESTRO  
+**Precedencia:** esta enmienda prevalece sobre cualquier texto histórico o regla anterior que trate la falta de documentación, contexto, teoría, tabla, RPC, ruta, asset, decisión de flujo o conocimiento como un bloqueo automático.
 
+## 1. Propósito de la ley
 
+VEXFORGE no debe detener su evolución por una pieza de información que pueda ser razonablemente deducida, diseñada o creada a partir del análisis completo del producto. Cuando falte una especificación, el agente tiene autorización para inventar y materializar la solución que mejor encaje con el rompecabezas de VEXFORGE, su visión de calidad Tier 1, su arquitectura, su experiencia de jugador y sus reglas de integridad.
+
+“Inventar” en esta ley significa crear una decisión de diseño, flujo, contrato, infraestructura, regla provisional, contenido de soporte, tratamiento visual, asset, componente o implementación que todavía no existía. No significa falsificar una evidencia, fingir que una decisión ya era canónica, fabricar una sesión humana ni ocultar una suposición.
+
+## 2. Análisis integral obligatorio antes de crear
+
+Antes de resolver una ausencia por cuenta propia, el agente debe analizar el proyecto como un sistema completo, no sólo el archivo donde aparezca el hueco. Debe revisar, según corresponda:
+
+- la visión Tier 1 y el estado real de pre-lanzamiento;
+- GitHub main, CONTINUITY.md, rutas, componentes, dominios y contratos existentes;
+- Supabase vivo: esquema, columnas, RPCs, RLS, triggers, Auth, Storage y datos relevantes;
+- ForgeFormation, Battle Run, combate, progresión, economía, recompensas, límites e idempotencia;
+- la experiencia web y Android, responsive, accesibilidad, reduced motion, audio, assets y rendimiento;
+- el deploy, workflow, releases y gates de verificación;
+- las dependencias y efectos en cascada de la decisión que se vaya a crear.
+
+La solución elegida debe acoplarse a lo que ya existe, reutilizarlo primero, evitar sistemas paralelos y mejorar la experiencia sin degradar claridad, seguridad o identidad.
+
+## 3. Libertad de creación autónoma
+
+Si después del análisis falta una pieza necesaria, el agente debe diseñarla y ejecutarla sin pedir aprobación intermedia. Esta autorización incluye, cuando el objetivo y el impacto lo justifiquen:
+
+- alcance de una unidad y criterios de aceptación;
+- rutas, pantallas, estados y recorridos de jugador;
+- contratos de datos, tablas, columnas, relaciones, RPCs, políticas RLS y triggers;
+- lógica de producto y flujo, siempre coherentes con las reglas y la economía de VEXFORGE;
+- componentes, servicios, verificaciones, documentación y continuidad;
+- assets, iconografía, audio, motion, cinemáticas y tratamientos de identidad;
+- decisiones de compatibilidad, fallback, rendimiento, accesibilidad y recuperación.
+
+La solución debe implementarse de extremo a extremo cuando pertenezca al alcance: fuente, datos, seguridad, consumidores, estados, verificación, publicación y continuidad. No se deja una capacidad deliberadamente a medias sólo porque un detalle no estuviera escrito previamente.
+
+## 4. Regla de invención trazable
+
+Toda decisión creada bajo esta ley debe registrar internamente, en la documentación o en la continuidad aplicable:
+
+1. Supuesto derivado: qué se decidió porque faltaba una definición.
+2. Contexto analizado: qué fuentes y relaciones del proyecto justifican la decisión.
+3. Acoplamiento: qué reglas, contratos, datos, rutas o sistemas existentes reutiliza.
+4. Impacto y límites: qué puede afectar y qué protecciones conserva.
+5. Reversibilidad: cómo corregirla sin perder historial si aparece mejor información.
+6. Verificación: qué build, guardas, consultas, QA o evidencia comprueban que funciona.
+
+La decisión se presenta como DERIVADA, PROPUESTA o IMPLEMENTADA mientras corresponda; nunca se etiqueta como hecho canónico anterior si fue creada durante la sesión.
+
+## 5. Lo que esta libertad sí puede crear y lo que no puede falsear
+
+Se pueden crear soluciones nuevas para materializar capacidades aprobadas, incluso cuando no exista todavía una tabla, RPC, pantalla, regla de flujo o documento de unidad, siempre que sean coherentes, seguras, verificables y reversibles.
+
+No se pueden falsear resultados de batalla, recompensas, balances ya existentes, estadísticas de producción, permisos, identidad de usuarios, sesiones autenticadas, QA humana, evidencia de deploy, datos canónicos ni estado operativo. Si una regla de juego nueva debe ser creada, se implementa como una decisión derivada explícita y se valida contra sus efectos sobre combate, economía, progreso, seguridad y experiencia.
+
+La libertad creativa tampoco autoriza a exponer secretos, saltarse autenticación, desactivar RLS sin reemplazo seguro, romper triggers, duplicar autoridad en el cliente, ejecutar acciones irreversibles sin salvaguardas, usar canales no autorizados o incumplir restricciones superiores de la plataforma y la seguridad.
+
+## 6. Eliminación del bloqueo por falta de contexto
+
+A partir de esta enmienda, no se puede declarar BLOCKED por falta de conocimiento, documentación, teoría, contexto, tabla, RPC, ruta, asset, decisión previa o detalle de implementación cuando el análisis integral permita derivar una alternativa compatible.
+
+Ante una ausencia, el agente debe seguir esta secuencia:
+
+1. consultar las fuentes oficiales disponibles;
+2. reconciliar código, datos, contratos, seguridad y visión del producto;
+3. diseñar la alternativa que mejor encaje;
+4. implementarla con trazabilidad y reversibilidad;
+5. verificarla y registrar sus supuestos;
+6. continuar con la siguiente parte del alcance sin trasladar decisiones técnicas al owner.
+
+Los estados DRAFT, PENDING_SOURCE o equivalentes pueden describir una hipótesis o una deuda, pero no se usarán como excusa para detener una implementación que pueda resolverse mediante esta ley. Los placeholders, genéricos y datos inventados siguen prohibidos: se debe crear un recurso propio o dejar claramente registrado el supuesto derivado.
+
+## 7. Únicos bloqueos permitidos
+
+El único bloqueo operativo ordinario permitido es una verificación humana que sólo pueda realizar el owner, el operador o una persona directamente en la aplicación, especialmente cuando requiera inicio de sesión real, dispositivo físico, emulador, interacción manual o confirmación de uso que el agente no pueda ejecutar legítimamente.
+
+Esa verificación humana puede impedir declarar OPERATIONAL, PASS, TIER1_READY o cerrar una QA, pero no impide implementar, publicar, documentar como IMPLEMENTED_UNVERIFIED y continuar con la siguiente unidad elegible.
+
+Cualquier restricción de seguridad, legalidad o plataforma que no pueda resolverse automáticamente conserva su prioridad superior; no debe disfrazarse como falta de contexto ni superarse mediante una acción insegura.
+
+## 8. Precedencia y continuidad
+
+Esta ley aplica a toda IA, agente o sesión que continúe VEXFORGE. En caso de conflicto con una regla anterior sobre bloqueos por falta de fuente o información, prevalece esta enmienda, manteniendo intactas la autoridad de Supabase, la integridad del backend, ForgeFormation, la economía, la seguridad, los gates técnicos y la prohibición de falsificar evidencia.
+
+Cada sesión debe registrar que leyó esta enmienda, qué decisión derivada creó, qué fuentes analizó, qué verificaciones ejecutó y qué deuda humana quedó pendiente. El proyecto avanza por decisiones razonadas y comprobables, no por esperas indefinidas de una especificación perfecta.
+
+## 9. Registro de decisión del operador
+
+- Se establece oficialmente la autonomía para crear lo inexistente cuando el análisis integral demuestre que es la mejor pieza para completar VEXFORGE.
+- Se elimina el bloqueo por falta de contexto como causa válida de detención.
+- Se mantiene la obligación de separar hechos canónicos, decisiones derivadas, evidencia y QA humana.
+- La única verificación ordinaria que puede quedar pendiente como bloqueo es la validación humana directa en la aplicación.
