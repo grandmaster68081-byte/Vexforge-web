@@ -1,3 +1,15 @@
+## 2026-08-28 — PREFLIGHT-GITHUB-SYNC-AND-VE-MOB-11-BLOCKED — BLOCKED
+
+- Tipo de sesión: preflight canónico y sincronización del repositorio oficial; sin cambios de código de producto, `mobile/**`, Supabase, Auth, RLS, RPCs, Storage, economía, combate, datos de jugadores ni assets.
+- GitHub: el token actualizado fue validado por API y por Git Smart HTTP sobre HTTPS usando Basic con usuario `x-access-token`; el workspace quedó sincronizado con `grandmaster68081-byte/Vexforge-web` `main` en `46d6b4a`.
+- Supabase: la fila activa `public.vexforge_official_documents` con `doc_key = vexforge_master_protocol_v2` fue leída mediante Management API; `VEXFORGE_PROTOCOL_V2.md` y la copia canónica coinciden byte a byte (95,411 bytes; md5 `4818d42b5f177e1d85a7c98382d01480`).
+- Selección: el inventario oficial marca `VE-MOB-11-ECONOMY` como siguiente unidad elegible después de `VE-MOB-10-PACKS-SHOP`. Las rutas web y los contratos vivos de economía, mercado, depósitos, retiros y referidos están disponibles.
+- Bloqueo normativo: `docs/VE-MOB-11-ECONOMY.md` no existe en `main`; el protocolo impide inventar el alcance, criterios de aceptación o una implementación Android sin la documentación canónica de la unidad.
+- Estado: `BLOCKED`. No se rehicieron unidades ya implementadas, no se ejecutaron RPCs de escritura y no se fabricó evidencia de QA, APK, release ni telemetría.
+- Siguiente acción verificable: restaurar o publicar por el canal oficial el documento canónico de `VE-MOB-11-ECONOMY`; después reconciliarlo con el protocolo vivo y ejecutar sólo ese alcance sobre Android.
+
+---
+
 ## 2026-08-27 — VE-MOB-10-CONTINUITY-CLOSEOUT — IMPLEMENTED_UNVERIFIED
 
 - Tipo de sesión: preflight diario + verificación técnica y de entrega de la unidad Android vigente; sin cambios de código de producto, Supabase, Auth, RLS, RPCs, Storage, economía, combate, datos de jugadores ni assets.
