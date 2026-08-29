@@ -1,3 +1,14 @@
+## 2026-08-29 — CANONICAL-PROTOCOL-RECONCILIATION — RECONCILED
+
+- Tipo de sesión: preflight documental; sin cambios en código de producto, `mobile/**`, datos de jugadores, economía, combate, Auth, RLS, RPCs, Storage, assets, APK ni deploy.
+- Supabase: la fila activa `vexforge_master_protocol_v2` está en versión `v2.7-autonomous-context-law`; se leyó mediante Management API y se confirmó el proyecto oficial `ACTIVE_HEALTHY`.
+- GitHub: la copia de `VEXFORGE_PROTOCOL_V2.md` difería únicamente por un salto de línea final adicional; se sincronizó con el contenido vivo mediante la API REST HTTPS oficial, sin transportar credenciales por Git.
+- Selección vigente: la FASE PORT Android gobierna el orden; `VE-MOB-11-ECONOMY` es la siguiente unidad `READY_FOR_IMPLEMENTATION` documentada en `main`. El plan histórico `vexforge_forge_formation_engine_v1` está `superseded`.
+- Estado: reconciliación `RECONCILED`; no se inicia implementación ni se alteran contratos, balances, RPCs, RLS, releases o datos sin una ejecución explícita de la unidad elegible.
+- Siguiente acción verificable: implementar `VE-MOB-11-ECONOMY` sobre `mobile/`, verificando consumidores, guards, typecheck, workflow APK y continuidad por la cadena oficial.
+
+---
+
 ## 2026-08-28 — VE-MOB-11-ECONOMY-SCOPE — READY_FOR_IMPLEMENTATION
 
 - Tipo de sesión: continuación del preflight Android después de corregir el transporte de credenciales; sin cambios de código de producto, `mobile/`, datos de jugadores, economía, combate, Auth, RLS, RPCs, Storage, assets, APK ni deploy.
