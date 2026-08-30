@@ -15,6 +15,8 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ForgeMark } from '@/components/ForgeMark';
 import { useColors } from '@/hooks/useColors';
 import { useGame } from '@/context/GameContext';
+import { ScreenShell } from '@/components/ScreenShell';
+import { ForgeText } from '@/components/ForgeText';
 
 function readableAuthError(message: string | null) {
   if (!message) return null;
@@ -79,8 +81,9 @@ export default function AuthScreen() {
   };
 
   return (
-    <KeyboardAvoidingView
-      style={[styles.screen, { backgroundColor: colors.background }]}
+    <ScreenShell surface="home">
+      <KeyboardAvoidingView
+      style={[styles.screen, { backgroundColor: 'transparent' }]}
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
     >
       <ScrollView
@@ -94,7 +97,7 @@ export default function AuthScreen() {
         <View style={styles.brand}>
           <ForgeMark />
           <View>
-            <Text style={[styles.brandName, { color: colors.foreground }]}>VEXFORGE</Text>
+            <ForgeText variant="title" style={[styles.brandName, { color: colors.foreground }]}>VEXFORGE</ForgeText>
             <Text style={[styles.brandCode, { color: colors.primary }]}>NEXUS // ACCESS</Text>
           </View>
         </View>
@@ -219,7 +222,8 @@ export default function AuthScreen() {
           Tu identidad se valida con el Nexus oficial de VEXFORGE.
         </Text>
       </ScrollView>
-    </KeyboardAvoidingView>
+      </KeyboardAvoidingView>
+    </ScreenShell>
   );
 }
 

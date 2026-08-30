@@ -17,6 +17,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useColors } from '@/hooks/useColors';
 import { ProgressBar } from '@/components/ProgressBar';
 import { useGame } from '@/context/GameContext';
+import { ScreenShell } from '@/components/ScreenShell';
 import type { PlayerCard, PublicCard } from '@/lib/supabase';
 
 const RARITIES = ['Common', 'Uncommon', 'Rare', 'Epic', 'Legendary', 'Mythic'] as const;
@@ -317,7 +318,8 @@ export default function CollectionScreen() {
 
   const hasFilters = Boolean(search || rarity !== 'all' || faction !== 'all');
   return (
-    <View style={[styles.root, { backgroundColor: colors.background }]}>
+    <ScreenShell surface="home">
+      <View style={[styles.root, { backgroundColor: 'transparent' }]}>
       <FlatList
         data={filtered}
         keyExtractor={(item) => item.id}
@@ -411,7 +413,8 @@ export default function CollectionScreen() {
         }
       />
       {selected && <CardDetail card={selected} owned={ownedById.get(selected.id)} colors={colors} onClose={() => setSelected(null)} />}
-    </View>
+      </View>
+    </ScreenShell>
   );
 }
 

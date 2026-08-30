@@ -5,6 +5,7 @@ import { Redirect, useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useColors } from '@/hooks/useColors';
 import { useGame } from '@/context/GameContext';
+import { ScreenShell } from '@/components/ScreenShell';
 import { advanceTutorialStep, skipTutorial, TUTORIAL_DONE_STEP, TUTORIAL_TOTAL_STEPS } from '@/lib/supabase';
 
 type TutorialRoute = '/collection' | '/battle' | '/deck';
@@ -127,8 +128,9 @@ function CompletedState({
   onReturn: () => void;
 }) {
   return (
-    <ScrollView
-      style={[styles.screen, { backgroundColor: colors.background }]}
+    <ScreenShell surface="missions">
+      <ScrollView
+      style={[styles.screen, { backgroundColor: 'transparent' }]}
       contentContainerStyle={[styles.completedContent, { paddingBottom: insetsBottom + 32 }]}
     >
       <View style={[styles.completedIcon, { backgroundColor: `${colors.accent}18`, borderColor: `${colors.accent}66` }]}>
@@ -148,7 +150,8 @@ function CompletedState({
         <Ionicons name="home-outline" size={17} color={colors.primaryForeground} />
         <Text style={[styles.primaryButtonText, { color: colors.primaryForeground }]}>VOLVER A LA FORJA</Text>
       </Pressable>
-    </ScrollView>
+      </ScrollView>
+    </ScreenShell>
   );
 }
 

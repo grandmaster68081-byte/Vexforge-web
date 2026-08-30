@@ -9,6 +9,9 @@ import { loadDailyFeaturedCard, loadHomeMissions, loadHomeStats, loadRecentActiv
 import { ForgeMark } from '@/components/ForgeMark';
 import { ProgressBar } from '@/components/ProgressBar';
 import { useRouter } from 'expo-router';
+import { ForgeButton } from '@/components/ForgeButton';
+import { ForgeText } from '@/components/ForgeText';
+import { ScreenShell } from '@/components/ScreenShell';
 
 type HomeSnapshot = {
   stats: HomeStats | null;
@@ -58,24 +61,11 @@ function rankName(mmr: number) {
 }
 
 function SectionLabel({ children, color }: { children: string; color: string }) {
-  return <Text style={[styles.eyebrow, { color }]}>{children}</Text>;
+  return <ForgeText variant="label" style={[styles.eyebrow, { color }]}>{children}</ForgeText>;
 }
 
 function ActionButton({ label, icon, onPress, colors, secondary = false, testID }: { label: string; icon: keyof typeof Ionicons.glyphMap; onPress: () => void; colors: ReturnType<typeof useColors>; secondary?: boolean; testID: string }) {
-  return (
-    <Pressable
-      accessibilityRole="button"
-      testID={testID}
-      onPress={onPress}
-      style={({ pressed }) => [
-        styles.actionButton,
-        { backgroundColor: secondary ? colors.secondary : colors.primary, borderColor: secondary ? colors.border : colors.primary, opacity: pressed ? 0.78 : 1 },
-      ]}
-    >
-      <Ionicons name={icon} size={16} color={secondary ? colors.foreground : colors.primaryForeground} />
-      <Text style={[styles.actionText, { color: secondary ? colors.foreground : colors.primaryForeground }]}>{label}</Text>
-    </Pressable>
-  );
+  return <ForgeButton label={label} icon={icon} onPress={onPress} secondary={secondary} testID={testID} />;
 }
 
 export default function ForgeScreen() {
@@ -117,12 +107,13 @@ export default function ForgeScreen() {
   const energyPercent = progress ? Math.min(100, Math.round((progress.energy / Math.max(1, progress.max_energy)) * 100)) : 0;
 
   return (
-    <ScrollView
-      style={[styles.screen, { backgroundColor: colors.background }]}
-      contentContainerStyle={{ paddingBottom: insets.bottom + 112 }}
-      refreshControl={<RefreshControl refreshing={homeLoading || syncState === 'loading'} onRefresh={handleRefresh} tintColor={colors.primary} />}
-      showsVerticalScrollIndicator={false}
-    >
+    <ScreenShell surface="home">
+      <ScrollView
+        style={[styles.screen, { backgroundColor: 'transparent' }]}
+        contentContainerStyle={{ paddingBottom: insets.bottom + 112 }}
+        refreshControl={<RefreshControl refreshing={homeLoading || syncState === 'loading'} onRefresh={handleRefresh} tintColor={colors.primary} />}
+        showsVerticalScrollIndicator={false}
+      >
       <Animated.View entering={FadeIn.duration(450)} style={[styles.hero, { borderBottomColor: colors.border }]}>
         <Image source={{ uri: storageAsset('lobby/main.jpg') }} style={StyleSheet.absoluteFillObject} resizeMode="cover" />
         <View style={[StyleSheet.absoluteFillObject, { backgroundColor: colors.ink, opacity: 0.78 }]} />
@@ -381,7 +372,8 @@ export default function ForgeScreen() {
           </View>
         </Animated.View>
       </View>
-    </ScrollView>
+      </ScrollView>
+    </ScreenShell>
   );
 }
 

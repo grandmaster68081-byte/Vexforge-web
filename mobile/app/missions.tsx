@@ -13,6 +13,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { useColors } from '@/hooks/useColors';
 import { useGame } from '@/context/GameContext';
+import { ScreenShell } from '@/components/ScreenShell';
 import {
   claimDailyQuest,
   executeMobileMission,
@@ -269,7 +270,8 @@ export default function MissionsScreen() {
   }
 
   return (
-    <View style={[styles.screen, { backgroundColor: colors.background, paddingTop: insets.top }]}>
+    <ScreenShell surface="missions">
+      <View style={[styles.screen, { backgroundColor: 'transparent', paddingTop: insets.top }]}>
       <ScrollView
         contentContainerStyle={[styles.content, { paddingBottom: insets.bottom + 32 }]}
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={() => load(true)} tintColor={colors.accent} />}
@@ -339,7 +341,8 @@ export default function MissionsScreen() {
           </>
         )}
       </ScrollView>
-    </View>
+      </View>
+    </ScreenShell>
   );
 }
 

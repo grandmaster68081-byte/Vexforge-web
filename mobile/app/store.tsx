@@ -15,6 +15,7 @@ import { Redirect, router } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useColors } from '@/hooks/useColors';
 import { useGame } from '@/context/GameContext';
+import { ScreenShell } from '@/components/ScreenShell';
 import {
   applyMobileFusion,
   buyMobilePack,
@@ -390,7 +391,8 @@ export default function StoreScreen() {
   }
 
   return (
-    <View style={[styles.screen, { backgroundColor: colors.background }]}>
+    <ScreenShell surface="packs">
+      <View style={[styles.screen, { backgroundColor: 'transparent' }]}>
       <ScrollView
         showsVerticalScrollIndicator={false}
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={() => void handleRefresh()} tintColor={colors.accent} />}
@@ -409,7 +411,8 @@ export default function StoreScreen() {
         {mode === 'evolution' ? <EvolutionSection session={session} playerId={player.id} colors={colors} onRefresh={refresh} /> : null}
         {mode === 'inventory' ? <InventorySection colors={colors} /> : null}
       </ScrollView>
-    </View>
+      </View>
+    </ScreenShell>
   );
 }
 

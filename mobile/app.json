@@ -6,22 +6,22 @@
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "vexforge-android",
-    "userInterfaceStyle": "automatic",
+    "userInterfaceStyle": "dark",
     "newArchEnabled": true,
     "splash": {
       "image": "./assets/images/icon.png",
       "resizeMode": "contain",
-      "backgroundColor": "#07101C"
+      "backgroundColor": "#05050D"
     },
     "ios": {
       "supportsTablet": false
     },
     "android": {
       "package": "com.vexforge.android",
-      "versionCode": 1,
+      "versionCode": 2,
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/icon.png",
-        "backgroundColor": "#07101C"
+        "backgroundColor": "#05050D"
       }
     },
     "web": {

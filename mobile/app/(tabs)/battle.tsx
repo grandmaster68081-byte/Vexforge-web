@@ -13,6 +13,7 @@ import {
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useColors } from '@/hooks/useColors';
 import { useGame } from '@/context/GameContext';
+import { ScreenShell } from '@/components/ScreenShell';
 import { loadPlayerDeck } from '@/lib/supabase';
 import type { BattleResult, BattleTurn, DeckSlot, Opponent } from '@/lib/supabase';
 import { ForgeFormationPreview } from '@/components/ForgeFormationPreview';
@@ -319,9 +320,10 @@ export default function BattleScreen() {
   };
 
   return (
-    <ScrollView
+    <ScreenShell surface="pvp">
+      <ScrollView
       testID="battle-screen"
-      style={{ backgroundColor: colors.background }}
+      style={{ backgroundColor: 'transparent' }}
       contentContainerStyle={[styles.screen, { paddingTop: insets.top + 20, paddingBottom: insets.bottom + 108 }]}
       refreshControl={<RefreshControl refreshing={searching} onRefresh={handleFind} tintColor={colors.primary} />}
       showsVerticalScrollIndicator={false}
@@ -426,7 +428,8 @@ export default function BattleScreen() {
           ) : null}
         </>
       )}
-    </ScrollView>
+      </ScrollView>
+    </ScreenShell>
   );
 }
 

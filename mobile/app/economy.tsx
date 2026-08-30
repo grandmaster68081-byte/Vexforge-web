@@ -16,6 +16,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useColors } from '@/hooks/useColors';
 import { useGame } from '@/context/GameContext';
 import { KeyboardAwareScrollViewCompat } from '@/components/KeyboardAwareScrollViewCompat';
+import { ScreenShell } from '@/components/ScreenShell';
 import {
   buyMarketListing,
   cancelMarketListing,
@@ -659,7 +660,8 @@ export default function EconomyScreen() {
   }
 
   return (
-    <View style={[styles.screen, { backgroundColor: colors.background }]}>
+    <ScreenShell surface="economy">
+      <View style={[styles.screen, { backgroundColor: 'transparent' }]}>
       <KeyboardAwareScrollViewCompat
         contentContainerStyle={{ paddingTop: insets.top + 18, paddingBottom: insets.bottom + 28 }}
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={() => void refreshEconomy('refresh')} tintColor={colors.accent} />}
@@ -690,7 +692,8 @@ export default function EconomyScreen() {
         </ScrollView>
         {sectionContent}
       </KeyboardAwareScrollViewCompat>
-    </View>
+      </View>
+    </ScreenShell>
   );
 }
 

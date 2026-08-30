@@ -23,6 +23,7 @@ import {
   type PlayerCard,
 } from '@/lib/supabase';
 import { useGame } from '@/context/GameContext';
+import { ScreenShell } from '@/components/ScreenShell';
 
 const RARITIES = ['Mythic', 'Legendary', 'Epic', 'Rare', 'Uncommon', 'Common'] as const;
 const FACTIONS = ['Guerrero', 'Mago', 'Paladín', 'Pícaro'] as const;
@@ -337,7 +338,8 @@ export default function DeckScreen() {
   };
 
   return (
-    <View style={[styles.root, { backgroundColor: colors.background }]}>
+    <ScreenShell surface="forge">
+      <View style={[styles.root, { backgroundColor: 'transparent' }]}>
       <FlatList
         data={filtered}
         keyExtractor={(item) => item.card_id}
@@ -512,7 +514,8 @@ export default function DeckScreen() {
           ) : null
         }
       />
-    </View>
+      </View>
+    </ScreenShell>
   );
 }
 

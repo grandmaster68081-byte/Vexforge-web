@@ -14,6 +14,7 @@ import Animated, { FadeIn, FadeInDown } from 'react-native-reanimated';
 import { useRouter } from 'expo-router';
 import { useColors } from '@/hooks/useColors';
 import { useGame } from '@/context/GameContext';
+import { ScreenShell } from '@/components/ScreenShell';
 import {
   loadPlayerAchievements,
   loadPlayerRank,
@@ -123,8 +124,9 @@ function AuthPrompt({ colors, insets }: { colors: Colors; insets: { top: number;
   const [mode, setMode] = useState<'signin' | 'signup'>('signin');
 
   return (
-    <KeyboardAwareScrollViewCompat
-      style={[styles.screen, { backgroundColor: colors.background }]}
+    <ScreenShell surface="profile">
+      <KeyboardAwareScrollViewCompat
+      style={[styles.screen, { backgroundColor: 'transparent' }]}
       contentContainerStyle={[styles.authContent, { paddingTop: insets.top + 44, paddingBottom: insets.bottom + 40 }]}
     >
       <View style={[styles.authMark, { backgroundColor: colors.panel, borderColor: colors.border }]}>
@@ -149,7 +151,8 @@ function AuthPrompt({ colors, insets }: { colors: Colors; insets: { top: number;
       <Pressable accessibilityRole="button" onPress={() => setMode(mode === 'signin' ? 'signup' : 'signin')} style={styles.modeButton}>
         <Text style={[styles.modeText, { color: colors.mutedForeground }]}>{mode === 'signin' ? '¿Nuevo en VEXFORGE? Crear cuenta' : 'Ya tengo cuenta · Iniciar sesión'}</Text>
       </Pressable>
-    </KeyboardAwareScrollViewCompat>
+      </KeyboardAwareScrollViewCompat>
+    </ScreenShell>
   );
 }
 
@@ -221,7 +224,8 @@ export default function ProfileScreen() {
   }
 
   return (
-    <View style={[styles.screen, { backgroundColor: colors.background }]}>
+    <ScreenShell surface="profile">
+      <View style={[styles.screen, { backgroundColor: 'transparent' }]}>
       <KeyboardAwareScrollViewCompat
         contentContainerStyle={{ paddingBottom: insets.bottom + 112 }}
         refreshControl={<RefreshControl refreshing={refreshing || syncState === 'loading'} onRefresh={handleRefresh} tintColor={colors.accent} />}
@@ -341,7 +345,8 @@ export default function ProfileScreen() {
            <QuickAction icon="wallet-outline" label="Cartera, mercado y retiros" onPress={() => router.push('/economy')} colors={colors} testID="profile-economy" />
         </View>
       </KeyboardAwareScrollViewCompat>
-    </View>
+      </View>
+    </ScreenShell>
   );
 }
 

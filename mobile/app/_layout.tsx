@@ -5,6 +5,17 @@ import { KeyboardProvider } from 'react-native-keyboard-controller';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import {
+  Cinzel_400Regular,
+  Cinzel_700Bold,
+  useFonts as useCinzelFonts,
+} from '@expo-google-fonts/cinzel';
+import {
+  Rajdhani_500Medium,
+  Rajdhani_600SemiBold,
+  Rajdhani_700Bold,
+  useFonts as useRajdhaniFonts,
+} from '@expo-google-fonts/rajdhani';
+import {
   Inter_400Regular,
   Inter_500Medium,
   Inter_600SemiBold,
@@ -33,12 +44,20 @@ function RootLayoutNav() {
 }
 
 export default function RootLayout() {
-  const [fontsLoaded, fontError] = useFonts({
+  const [interLoaded, interError] = useFonts({
     Inter_400Regular,
     Inter_500Medium,
     Inter_600SemiBold,
     Inter_700Bold,
   });
+  const [cinzelLoaded, cinzelError] = useCinzelFonts({ Cinzel_400Regular, Cinzel_700Bold });
+  const [rajdhaniLoaded, rajdhaniError] = useRajdhaniFonts({
+    Rajdhani_500Medium,
+    Rajdhani_600SemiBold,
+    Rajdhani_700Bold,
+  });
+  const fontsLoaded = interLoaded && cinzelLoaded && rajdhaniLoaded;
+  const fontError = interError || cinzelError || rajdhaniError;
 
   useEffect(() => {
     if (fontsLoaded || fontError) {

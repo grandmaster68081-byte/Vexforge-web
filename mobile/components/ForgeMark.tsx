@@ -1,12 +1,11 @@
-import { StyleSheet, View } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import { Image, StyleSheet, View } from 'react-native';
 import { useColors } from '@/hooks/useColors';
 
 export function ForgeMark({ compact = false }: { compact?: boolean }) {
   const colors = useColors();
   return (
     <View style={[styles.frame, compact && styles.compact, { borderColor: colors.primary }]}>
-      <Ionicons name="flash" size={compact ? 14 : 18} color={colors.primary} />
+      <Image source={require('@/assets/images/icon.png')} style={styles.image} resizeMode="contain" />
     </View>
   );
 }
@@ -25,5 +24,10 @@ const styles = StyleSheet.create({
     width: 30,
     height: 30,
     borderRadius: 9,
+  },
+  image: {
+    width: '72%',
+    height: '72%',
+    borderRadius: 6,
   },
 });
