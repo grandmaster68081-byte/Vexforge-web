@@ -5,7 +5,6 @@ import {
   KeyboardAvoidingView,
   Platform,
   Pressable,
-  ScrollView,
   StyleSheet,
   Text,
   TextInput,
@@ -15,6 +14,8 @@ import { Redirect } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ForgeMark } from '@/components/ForgeMark';
+import { Feather } from '@/components/ForgeIcon';
+import { KeyboardAwareScrollViewCompat } from '@/components/KeyboardAwareScrollViewCompat';
 import { useColors } from '@/hooks/useColors';
 import { useGame } from '@/context/GameContext';
 import { ScreenShell } from '@/components/ScreenShell';
@@ -35,7 +36,7 @@ function readableAuthError(message: string | null) {
 export default function AuthScreen() {
   const colors = useColors();
   const insets = useSafeAreaInsets();
-  const { session, authLoading, authError, signIn, signUp } = useGame();
+  const { session, authLoading, authError, signIn, signInWithGoogle, signUp } = useGame();
   const [mode, setMode] = useState<'signin' | 'signup'>('signin');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -98,8 +99,12 @@ export default function AuthScreen() {
         >
           <KeyboardAvoidingView
             style={styles.posterOverlay}
-            behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+            behavior="padding"
+            keyboardVerticalOffset={0}
           >
+            <View pointerEvents="none" style={[styles.posterFormSurface, { backgroundColor: `${colors.ink}F8`, borderColor: `${colors.accent}66` }]} />
+            <Text style={[styles.posterFieldLabel, styles.posterEmailLabel, { color: colors.mutedForeground }]}>CORREO ELECTRÓNICO</Text>
+            <Text style={[styles.posterFieldLabel, styles.posterPasswordLabel, { color: colors.mutedForeground }]}>CONTRASEÑA</Text>
             <TextInput
               testID="auth-email"
               accessibilityLabel="Correo electrónico"
@@ -109,8 +114,9 @@ export default function AuthScreen() {
               autoCorrect={false}
               keyboardType="email-address"
               textContentType="emailAddress"
-              placeholder=""
-              style={[styles.posterEmail, { color: colors.foreground }]}
+              placeholder="Escribe tu correo"
+              placeholderTextColor={colors.mutedForeground}
+              style={[styles.posterEmail, { color: colors.foreground, backgroundColor: colors.input, borderColor: colors.border }]}
               editable={!authLoading}
               returnKeyType="next"
             />
@@ -119,10 +125,11 @@ export default function AuthScreen() {
               accessibilityLabel="Contraseña"
               value={password}
               onChangeText={setPassword}
-              placeholder=""
+              placeholder="Escribe tu contraseña"
+              placeholderTextColor={colors.mutedForeground}
               secureTextEntry={!showPassword}
               textContentType="password"
-              style={[styles.posterPassword, { color: colors.foreground }]}
+              style={[styles.posterPassword, { color: colors.foreground, backgroundColor: colors.input, borderColor: colors.border }]}
               editable={!authLoading}
               returnKeyType="go"
               onSubmitEditing={submit}
@@ -141,8 +148,21 @@ export default function AuthScreen() {
               accessibilityLabel="Entrar al Nexus"
               onPress={submit}
               disabled={authLoading}
-              style={({ pressed }) => [styles.posterSubmit, { opacity: pressed ? 0.8 : 1 }]}
-            />
+              style={({ pressed }) => [styles.posterSubmit, { backgroundColor: colors.primary, borderColor: colors.accent, opacity: pressed || authLoading ? 0.75 : 1 }]}
+            >
+              {authLoading ? <ActivityIndicator color={colors.primaryForeground} /> : <Text style={[styles.posterSubmitText, { color: colors.primaryForeground }]}>ENTRAR AL NEXUS</Text>}
+            </Pressable>
+            <Pressable
+              testID="auth-google"
+              accessibilityRole="button"
+              accessibilityLabel="Continuar con Google"
+              onPress={() => void signInWithGoogle()}
+              disabled={authLoading}
+              style={({ pressed }) => [styles.posterGoogle, { borderColor: `${colors.accent}88`, backgroundColor: `${colors.panel}F2`, opacity: pressed || authLoading ? 0.72 : 1 }]}
+            >
+              <Feather name="account" size={14} color={colors.accent} />
+              <Text style={[styles.posterGoogleText, { color: colors.accent }]}>CONTINUAR CON GOOGLE</Text>
+            </Pressable>
             {authLoading && (
               <ActivityIndicator
                 accessibilityLabel="Conectando con Nexus"
@@ -182,15 +202,13 @@ export default function AuthScreen() {
 
   return (
     <ScreenShell surface="auth">
-      <KeyboardAvoidingView
-      style={[styles.screen, { backgroundColor: 'transparent' }]}
-      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-    >
-      <ScrollView
+      <KeyboardAwareScrollViewCompat
+        style={[styles.screen, { backgroundColor: 'transparent' }]}
         contentContainerStyle={[
           styles.content,
           { paddingTop: insets.top + 38, paddingBottom: insets.bottom + 32 },
         ]}
+        bottomOffset={24}
         keyboardShouldPersistTaps="handled"
         showsVerticalScrollIndicator={false}
       >
@@ -321,8 +339,7 @@ export default function AuthScreen() {
         <Text style={[styles.legal, { color: colors.mutedForeground }]}>
           Tu identidad se valida con el Nexus oficial de VEXFORGE.
         </Text>
-      </ScrollView>
-      </KeyboardAvoidingView>
+      </KeyboardAwareScrollViewCompat>
     </ScreenShell>
   );
 }
@@ -332,6 +349,10 @@ const styles = StyleSheet.create({
   posterArtwork: { flex: 1, width: '100%', height: '100%' },
   posterImage: { width: '100%', height: '100%' },
   posterOverlay: { flex: 1, width: '100%', height: '100%' },
+  posterFormSurface: { position: 'absolute', left: '5%', top: '41%', width: '90%', height: '29.2%', borderWidth: 1, borderRadius: 18 },
+  posterFieldLabel: { position: 'absolute', left: '10%', fontFamily: typography.bodyBold, fontSize: 8, letterSpacing: 1.2 },
+  posterEmailLabel: { top: '43.8%' },
+  posterPasswordLabel: { top: '51.7%' },
   posterEmail: {
     position: 'absolute',
     left: '10%',

@@ -35,6 +35,7 @@ function RootLayoutNav() {
   return (
     <Stack screenOptions={{ headerBackTitle: 'Back' }}>
       <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+      <Stack.Screen name="auth" options={{ headerShown: false, gestureEnabled: false }} />
       <Stack.Screen name="tutorial" options={{ headerShown: false }} />
       <Stack.Screen name="missions" options={{ headerShown: false }} />
       <Stack.Screen name="store" options={{ headerShown: false }} />

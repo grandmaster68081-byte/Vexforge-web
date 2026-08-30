@@ -1,4 +1,8 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as Linking from 'expo-linking';
+import * as WebBrowser from 'expo-web-browser';
+
+WebBrowser.maybeCompleteAuthSession();
 
 const SUPABASE_URL = process.env.EXPO_PUBLIC_SUPABASE_URL ?? 'https://rscuzqnfccqvltkdcdny.supabase.co';
 const SUPABASE_ANON_KEY = process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY ?? 'sb_publishable_3eGRSpvxptO09eQQzpxysQ_Imq8zi58';
@@ -568,6 +572,40 @@ async function saveSession(session: Session | null) {
 
 export async function signIn(email: string, password: string): Promise<Session> {
   const session = requireSession(await authRequest('token?grant_type=password', { email: email.trim(), password }));
+  await saveSession(session);
+  return session;
+}
+
+function parseOAuthFragment(url: string) {
+  const fragment = url.split('#')[1] ?? '';
+  return Object.fromEntries(fragment.split('&').filter(Boolean).map((part) => {
+    const [key, value = ''] = part.split('=');
+    return [decodeURIComponent(key), decodeURIComponent(value.replace(/\+/g, ' '))];
+  }));
+}
+
+export async function signInWithGoogle(): Promise<Session> {
+  const redirectTo = Linking.createURL('auth-callback');
+  const authorizeUrl = SUPABASE_URL + '/auth/v1/authorize?provider=google&flow_type=implicit&prompt=select_account&redirect_to=' + encodeURIComponent(redirectTo);
+  const result = await WebBrowser.openAuthSessionAsync(authorizeUrl, redirectTo);
+  if (result.type !== 'success' || !('url' in result) || !result.url) {
+    throw new Error('Inicio con Google cancelado.');
+  }
+  const params = parseOAuthFragment(result.url);
+  if (params.error_description) throw new Error(String(params.error_description));
+  const accessToken = String(params.access_token ?? '');
+  const refreshToken = String(params.refresh_token ?? '');
+  if (!accessToken || !refreshToken) {
+    throw new Error('Google no devolvió una sesión válida. Revisa que Google esté habilitado en Supabase.');
+  }
+  const userResponse = await fetch(SUPABASE_URL + '/auth/v1/user', { headers: headers(accessToken) });
+  const user = await parse(userResponse) as User;
+  const session: Session = {
+    access_token: accessToken,
+    refresh_token: refreshToken,
+    expires_at: Math.floor(Date.now() / 1000) + Number(params.expires_in ?? 3600),
+    user,
+  };
   await saveSession(session);
   return session;
 }

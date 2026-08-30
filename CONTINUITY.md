@@ -1,3 +1,14 @@
+## 2026-08-30 — VE-MOB-VIS-2-MOBILE-FIT-AND-GOOGLE-AUTH — IMPLEMENTED_UNVERIFIED
+
+- Revisión solicitada: se corrige el ajuste móvil de Auth y de la barra inferior; la ruta `auth` queda sin header del Stack y la tab bar usa el inset inferior real, separación táctil y ocultación al abrir el teclado.
+- Texto fantasma: el login ya no deja los textos baked-in del arte debajo de los campos; una superficie limpia cubre la tarjeta de formulario y los `TextInput` tienen placeholder/color propios.
+- Teclado: el registro usa `KeyboardAwareScrollViewCompat` con `bottomOffset`, y el login aplica comportamiento `padding` para mantener los controles visibles.
+- Acceso Google: se añade `CONTINUAR CON GOOGLE` con selector `prompt=select_account`, `expo-web-browser` y retorno al esquema `vexforge-android`; Supabase sigue siendo la autoridad y muestra un error explícito si el proveedor Google no está habilitado/configurado.
+- Estado: `IMPLEMENTED_UNVERIFIED`; no se declara `OPERATIONAL`, `PASS` ni `TIER1_READY` sin typecheck/build Android y QA manual del operador.
+- Siguiente acción verificable: ejecutar el siguiente workflow Android sobre este ajuste y confirmar en un dispositivo que el selector Google, el teclado y la barra inferior se comportan correctamente.
+
+---
+
 ## 2026-08-30 — VE-MOB-12-WORLD — IMPLEMENTED_UNVERIFIED
 
 - Tipo de sesión: implementación Android de la siguiente unidad elegible de la FASE PORT, usando el repositorio y Supabase oficiales; no se altera la lógica autoritativa web ni se añaden tablas, RPCs o datos inventados.

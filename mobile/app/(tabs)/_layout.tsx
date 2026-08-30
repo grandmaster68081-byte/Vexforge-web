@@ -1,6 +1,7 @@
 import React from 'react';
 import { ActivityIndicator, Platform, StyleSheet, Text, View } from 'react-native';
 import { useColors } from '@/hooks/useColors';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Feather, VexIcon as SymbolView } from '@/components/ForgeIcon';
 import { LinearGradient } from 'expo-linear-gradient';
 import { isLiquidGlassAvailable } from 'expo-glass-effect';
@@ -45,6 +46,8 @@ function ClassicTabLayout() {
   const colors = useColors();
   const isIOS = Platform.OS === 'ios';
   const isWeb = Platform.OS === 'web';
+  const insets = useSafeAreaInsets();
+  const bottomInset = isWeb ? 34 : insets.bottom;
 
   return (
     <Tabs
@@ -59,10 +62,13 @@ function ClassicTabLayout() {
           borderTopWidth: isWeb ? 1 : StyleSheet.hairlineWidth,
           borderTopColor: colors.border,
           elevation: 12,
-          height: isWeb ? 84 : 76,
-          paddingTop: 8,
-          paddingBottom: isWeb ? 34 : 10,
+          height: isWeb ? 84 : 72 + bottomInset,
+          paddingTop: 6,
+          paddingBottom: bottomInset + 6,
+          paddingHorizontal: 4,
         },
+        tabBarItemStyle: { minHeight: 54, paddingVertical: 2 },
+        tabBarHideOnKeyboard: true,
         tabBarBackground: () => (
           <LinearGradient
             colors={[`${colors.panelStrong}F7`, `${colors.ink}FF`]}
