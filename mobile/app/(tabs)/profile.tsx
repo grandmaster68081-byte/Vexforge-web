@@ -345,6 +345,7 @@ export default function ProfileScreen() {
            <QuickAction icon="wallet-outline" label="Cartera, mercado y retiros" onPress={() => router.push('/economy')} colors={colors} testID="profile-economy" />
            <QuickAction icon="globe-outline" label="Explorar mundo, raids y Codex" onPress={() => router.push('/world')} colors={colors} testID="profile-world" />
            <QuickAction icon="people-outline" label="Amigos, clanes y ranking PvP" onPress={() => router.push('/social')} colors={colors} testID="profile-social" />
+           <QuickAction icon="settings" label="Cuenta, ajustes y sistemas" onPress={() => router.push('/meta')} colors={colors} testID="profile-meta" />
         </View>
       </KeyboardAwareScrollViewCompat>
       </View>

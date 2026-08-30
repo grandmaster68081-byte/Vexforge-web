@@ -42,6 +42,7 @@ function RootLayoutNav() {
       <Stack.Screen name="economy" options={{ headerShown: false }} />
       <Stack.Screen name="world" options={{ headerShown: false }} />
       <Stack.Screen name="social" options={{ headerShown: false }} />
+      <Stack.Screen name="meta" options={{ headerShown: false }} />
     </Stack>
   );
 }

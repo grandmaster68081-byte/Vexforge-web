@@ -824,3 +824,12 @@
 - Mobile typecheck: PASS on the committed state.
 - Android workflow run 55 is still `in_progress` in the official release workflow; APK/release evidence is not yet available.
 - Status remains `IMPLEMENTED_UNVERIFIED` pending the official APK gate and operator device/emulator QA.
+
+### VE-MOB-14 Meta implementation
+
+- Android Meta aggregator implemented with Account/Settings, Cosmetics, Relics, NFT, Forge Ads, and the administrative Assets state.
+- Supabase reads use the existing RLS-visible tables. Relic and cosmetic equipment uses the existing RPC/direct contract already consumed by the web domains; no client-side business rules were added.
+- NFT supports Polygon wallet linking and queue/contract visibility. Forge Ads preserves the web quota of 5 views/day and 20 in-game VEX per completed 30-second view.
+- `docs/VE-MOB-14-META.md` records the scope, live contracts, and acceptance gates.
+- Mobile typecheck: PASS. Existing `verify:mobile-profile` and `verify:mobile-world`: PASS.
+- Status remains `IMPLEMENTED_UNVERIFIED` pending the official Android workflow/release and operator device/emulator QA. No operational status is claimed.

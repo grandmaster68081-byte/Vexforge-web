@@ -217,6 +217,81 @@ export type MobileClanWar = { id: string; clan_a_id: string; clan_b_id: string; 
 export type MobileSocialMatch = { id: string; player_a: string; player_b: string; winner: string | null; status: string; elo_change_a: number | null; elo_change_b: number | null; created_at: string; opponent_name: string | null };
 export type MobilePvpRanking = { player_id: string; display_name: string | null; mmr: number; wins: number; losses: number; draws: number; rank_position: number };
 export type MobileSocialSnapshot = { friends: MobileSocialFriend[]; pendingRequests: MobileSocialFriend[]; challenges: MobileDirectChallenge[]; clan: { clan: MobileClan; member: MobileClanMember; members: MobileClanMember[]; wars: MobileClanWar[] } | null; clans: MobileClan[]; rankings: MobilePvpRanking[]; matches: MobileSocialMatch[]; seasonName: string | null };
+export type MobileSettings = {
+  player_id: string;
+  telegram_enabled: boolean;
+  notifications_enabled: boolean;
+  language: string;
+  timezone: string;
+  ui_mode: string;
+};
+export type MobileCosmetic = {
+  id: string;
+  code: string;
+  name: string;
+  cosmetic_type: string;
+  description: string | null;
+  rarity: string | null;
+  preview_url: string | null;
+  obtainable_via: string[] | null;
+  metadata: Record<string, unknown> | null;
+};
+export type MobilePlayerCosmetic = {
+  id: string;
+  cosmetic_id: string;
+  equipped: boolean;
+  obtained_via: string | null;
+  obtained_at: string | null;
+};
+export type MobileRelic = {
+  id: string;
+  code: string;
+  name: string;
+  effect_type: string | null;
+  effect_value: number | null;
+  metadata: Record<string, unknown> | null;
+  created_at: string | null;
+};
+export type MobilePlayerRelic = {
+  id: string;
+  relic_id: string;
+  equipped: boolean;
+  acquired_at: string | null;
+  relic: MobileRelic | null;
+};
+export type MobileNftContract = {
+  id: string;
+  chain_id: number;
+  contract_address: string;
+  name: string;
+  symbol: string;
+  max_supply: number;
+  status: string;
+  deployed_at: string | null;
+};
+export type MobileNftWalletLink = {
+  id: string;
+  wallet_address: string;
+  chain_id: number;
+  verified: boolean;
+  linked_at: string;
+};
+export type MobileNftMint = {
+  id: string;
+  card_id: string;
+  wallet_address: string;
+  status: string;
+  tx_hash: string | null;
+  token_id: number | null;
+  error_message: string | null;
+  requested_at: string;
+  processed_at: string | null;
+};
+export type MobileAdStats = {
+  watched_today: number;
+  total_vex_earned: number;
+  last_watched_at: string | null;
+};
 async function resolveMobilePublicNames(session: Session, ids: string[]) { const uniqueIds = [...new Set(ids.filter(Boolean))]; if (!uniqueIds.length) return new Map<string, { display_name: string | null; level: number; mmr: number }>(); const rows = await restRpc('get_public_player_names', { p_player_ids: uniqueIds }, session) as Array<{ id: string; display_name: string | null; level: number; mmr: number }> | null; return new Map((rows ?? []).map((row) => [row.id, row])); }
 function mobileSocialAction(result: unknown, fallback: string) { const value = result as { ok?: boolean; success?: boolean; reason?: string; message?: string } | null; const ok = value?.ok === true || value?.success === true; return { ok, reason: value?.reason ?? value?.message ?? (ok ? undefined : fallback) }; }
 export async function sendMobileFriendRequest(session: Session, targetId: string) { return mobileSocialAction(await restRpc('send_friend_request', { p_target_id: targetId }, session), 'No se pudo enviar la solicitud.'); }
@@ -586,6 +661,7 @@ export type MobileWorldSnapshot = {
 };
 
 export type MobileWorldAction = { ok: boolean; reason?: string };
+export type MobileAction = { ok: boolean; reason?: string };
 
 export const STORAGE_BASE = 'https://rscuzqnfccqvltkdcdny.supabase.co/storage/v1/object/public/vexforge-assets';
 export function storageAsset(path: string) { return `${STORAGE_BASE}/${path}`; }
@@ -992,6 +1068,104 @@ export async function executeMobileMission(
 export async function loadPlayerProfile(session: Session): Promise<PlayerProfile | null> {
   const rows = await rest('players?select=id%2Cdisplay_name%2Cemail%2Crole%2Cstatus%2Ccreated_at%2Cis_admin%2Cis_super_admin%2Ctelegram_username&auth_user_id=eq.' + encodeURIComponent(session.user.id) + '&limit=1', session) as PlayerProfile[];
   return rows[0] ?? null;
+}
+
+export async function loadMobileSettings(session: Session): Promise<MobileSettings | null> {
+  const rows = await rest('player_settings?select=player_id%2Ctelegram_enabled%2Cnotifications_enabled%2Clanguage%2Ctimezone%2Cui_mode&limit=1', session) as MobileSettings[];
+  return rows[0] ?? null;
+}
+
+export async function updateMobileSettings(session: Session, patch: Partial<Omit<MobileSettings, 'player_id'>>): Promise<MobileSettings | null> {
+  const playerRows = await rest('players?select=id&auth_user_id=eq.' + encodeURIComponent(session.user.id) + '&limit=1', session) as Array<{ id: string }>;
+  const playerId = playerRows[0]?.id;
+  if (!playerId) throw new Error('No se encontró tu perfil de jugador.');
+  const rows = await rest('player_settings?player_id=eq.' + encodeURIComponent(playerId), session, { method: 'PATCH', headers: { Prefer: 'return=representation' }, body: JSON.stringify(patch) }) as MobileSettings[];
+  return rows[0] ?? null;
+}
+
+export async function loadMobileCosmetics(session: Session): Promise<{ catalog: MobileCosmetic[]; owned: MobilePlayerCosmetic[] }> {
+  const [catalog, owned] = await Promise.all([
+    rest('cosmetics?select=id%2Ccode%2Cname%2Ccosmetic_type%2Cdescription%2Crarity%2Cpreview_url%2Cobtainable_via%2Cmetadata&active=eq.true&order=rarity.asc%2Cname.asc&limit=100', session) as Promise<MobileCosmetic[]>,
+    rest('player_cosmetics?select=id%2Ccosmetic_id%2Cequipped%2Cobtained_via%2Cobtained_at&limit=100', session) as Promise<MobilePlayerCosmetic[]>,
+  ]);
+  return { catalog: catalog ?? [], owned: owned ?? [] };
+}
+
+export async function equipMobileCosmetic(session: Session, cosmeticId: string, slot: string): Promise<MobileAction> {
+  return mobileSocialAction(await restRpc('equip_cosmetic', { p_cosmetic_id: cosmeticId, p_slot: slot }, session), 'No se pudo equipar el cosmético.');
+}
+
+export async function unequipMobileCosmetic(session: Session, cosmeticId: string): Promise<MobileAction> {
+  await rest('equipped_cosmetics?cosmetic_id=eq.' + encodeURIComponent(cosmeticId), session, { method: 'DELETE' });
+  return { ok: true };
+}
+
+export async function loadMobileRelics(session: Session): Promise<{ catalog: MobileRelic[]; owned: MobilePlayerRelic[] }> {
+  const [catalog, owned] = await Promise.all([
+    rest('relics?select=id%2Ccode%2Cname%2Ceffect_type%2Ceffect_value%2Cmetadata%2Ccreated_at&order=name.asc&limit=100', session) as Promise<MobileRelic[]>,
+    rest('player_relics?select=id%2Crelic_id%2Cis_equipped%2Cacquired_at%2Crelic%3Arelics(id%2Ccode%2Cname%2Ceffect_type%2Ceffect_value%2Cmetadata%2Ccreated_at)&order=acquired_at.asc&limit=100', session) as Promise<Array<Record<string, unknown>>>,
+  ]);
+  return {
+    catalog: catalog ?? [],
+    owned: (owned ?? []).map((row) => ({
+      id: String(row.id ?? ''),
+      relic_id: String(row.relic_id ?? ''),
+      equipped: row.is_equipped === true,
+      acquired_at: typeof row.acquired_at === 'string' ? row.acquired_at : null,
+      relic: (row.relic as MobileRelic | null) ?? null,
+    })),
+  };
+}
+
+export async function claimMobileStarterRelics(session: Session): Promise<MobileAction> {
+  return mobileSocialAction(await restRpc('grant_starter_relics', {}, session), 'No se pudieron reclamar las reliquias iniciales.');
+}
+
+export async function equipMobileRelic(session: Session, relicId: string): Promise<MobileAction> {
+  return mobileSocialAction(await restRpc('equip_relic', { p_relic_id: relicId }, session), 'No se pudo equipar la reliquia.');
+}
+
+export async function unequipMobileRelic(session: Session, relicId: string): Promise<MobileAction> {
+  return mobileSocialAction(await restRpc('unequip_relic', { p_relic_id: relicId }, session), 'No se pudo retirar la reliquia.');
+}
+
+export async function loadMobileNft(session: Session): Promise<{ contract: MobileNftContract | null; wallet: MobileNftWalletLink | null; queue: MobileNftMint[] }> {
+  const [contracts, wallets, queue] = await Promise.all([
+    rest('vexforge_nft_contracts?select=id%2Cchain_id%2Ccontract_address%2Cname%2Csymbol%2Cmax_supply%2Cstatus%2Cdeployed_at&order=created_at.desc&limit=1', session) as Promise<MobileNftContract[]>,
+    rest('vexforge_nft_wallet_links?select=id%2Cwallet_address%2Cchain_id%2Cverified%2Clinked_at&order=linked_at.desc&limit=1', session) as Promise<MobileNftWalletLink[]>,
+    rest('vexforge_nft_mint_queue?select=id%2Ccard_id%2Cwallet_address%2Cstatus%2Ctx_hash%2Ctoken_id%2Cerror_message%2Crequested_at%2Cprocessed_at&order=requested_at.desc&limit=20', session) as Promise<MobileNftMint[]>,
+  ]);
+  return { contract: contracts?.[0] ?? null, wallet: wallets?.[0] ?? null, queue: queue ?? [] };
+}
+
+export async function linkMobileWallet(session: Session, walletAddress: string): Promise<MobileNftWalletLink | null> {
+  const playerRows = await rest('players?select=id&auth_user_id=eq.' + encodeURIComponent(session.user.id) + '&limit=1', session) as Array<{ id: string }>;
+  const playerId = playerRows[0]?.id;
+  if (!playerId) throw new Error('No se encontró tu perfil de jugador.');
+  const rows = await rest('vexforge_nft_wallet_links?on_conflict=player_id%2Cwallet_address', session, {
+    method: 'POST',
+    headers: { Prefer: 'resolution=merge-duplicates,return=representation' },
+    body: JSON.stringify({ player_id: playerId, wallet_address: walletAddress, chain_id: 137, verified: true }),
+  }) as MobileNftWalletLink[];
+  return rows[0] ?? null;
+}
+
+export async function loadMobileAdStats(session: Session): Promise<MobileAdStats> {
+  const day = new Date().toISOString().split('T')[0];
+  const [today, allTime] = await Promise.all([
+    rest('vexforge_ad_views?select=id%2Cvex_awarded%2Ccreated_at&player_auth_id=eq.' + encodeURIComponent(session.user.id) + '&created_at=gte.' + encodeURIComponent(day) + '&order=created_at.desc', session) as Promise<Array<{ id: string; vex_awarded: number; created_at: string }>>,
+    rest('vexforge_ad_views?select=vex_awarded&player_auth_id=eq.' + encodeURIComponent(session.user.id), session) as Promise<Array<{ vex_awarded: number }>>,
+  ]);
+  return { watched_today: today?.length ?? 0, total_vex_earned: (allTime ?? []).reduce((total, row) => total + Number(row.vex_awarded ?? 0), 0), last_watched_at: today?.[0]?.created_at ?? null };
+}
+
+export async function recordMobileAdView(session: Session): Promise<MobileAction> {
+  const response = await rest('vexforge_ad_views', session, {
+    method: 'POST',
+    headers: { Prefer: 'return=representation' },
+    body: JSON.stringify({ player_auth_id: session.user.id, ad_network: 'organic', completed: true, vex_awarded: 20, watched_pct: 100 }),
+  }) as unknown[];
+  return { ok: Array.isArray(response) && response.length > 0, reason: 'No se pudo registrar el anuncio.' };
 }
 
 export async function loadWallet(session: Session, playerId: string): Promise<Wallet | null> {
