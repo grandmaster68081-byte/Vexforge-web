@@ -1,3 +1,14 @@
+## 2026-08-30 — VE-MOB-VIS-1-FORGE-IDENTITY-PACK-3-BUILD-REPAIR — IN_PROGRESS
+
+- Evidencia: el checkpoint de launch assets ejecutó el workflow Android y falló en `npm run typecheck`; no se alcanzó prebuild ni se publicó APK.
+- Causa técnica aislada: el lockfile móvil conservaba 22 URLs internas `package-firewall.replit.local`, y el catálogo tipado de ForgeIcon no declaraba nueve aliases ya consumidos por Economy, Store y Profile.
+- Reparación: se normalizan las URLs del lockfile a `https://registry.npmjs.org/` conservando las integridades, y se incorporan los aliases al catálogo SVG oficial sin reintroducir icon fonts ni cambiar lógica de producto.
+- Integridad preservada: Auth, RPCs, RLS, economía, combate, Storage, assets canónicos y datos de jugadores permanecen sin cambios.
+- Estado: `IN_PROGRESS`; la reparación sólo se promueve a `IMPLEMENTED_UNVERIFIED` después de un workflow Android nuevo que pase typecheck y compile la APK standalone.
+- Siguiente acción verificable: observar los workflows disparados por este checkpoint y registrar el resultado real del build, sin fabricar evidencia ni declarar QA humana.
+
+---
+
 ## 2026-08-30 — VE-MOB-VIS-1-FORGE-IDENTITY-PACK-3-OFFICIAL-LAUNCH-ASSETS — IMPLEMENTED_UNVERIFIED
 
 - Preflight: Supabase Management API, Storage oficial y GitHub `main` se validaron por HTTPS directo; el protocolo activo `v2.7-autonomous-context-law` coincide con `main`.
