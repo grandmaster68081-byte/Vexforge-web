@@ -52,6 +52,7 @@ export default function AuthScreen() {
   }, [mode]);
 
   const error = useMemo(() => localError ?? readableAuthError(authError), [authError, localError]);
+  const authMode: 'signin' | 'signup' = mode;
 
   if (session) return <Redirect href="/(tabs)" />;
 
@@ -84,7 +85,7 @@ export default function AuthScreen() {
     }
   };
 
-  if (mode === 'signin') {
+  if (authMode === 'signin') {
     return (
       <View style={[styles.posterRoot, { backgroundColor: colors.background }]}>
         <StatusBar style="light" translucent backgroundColor="transparent" />
