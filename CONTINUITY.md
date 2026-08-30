@@ -3,7 +3,7 @@
 - Reconciliación canónica: ForgeFormation es el núcleo obligatorio del combate. El documento histórico `vexforge_forge_formation_engine_v1` está `superseded` como plan de trabajo, no como sistema de juego; no existe un motor de combate alternativo que lo reemplace.
 - Hallazgo: Android ya llamaba la RPC autoritativa `vexforge_battle_resolve` y reproducía turnos, pero no presentaba explícitamente la formación Vanguardia/Campeón/Centinela/Reserva. Por eso el APK podía parecer sin sistema de combate aunque el backend sí aplicara ForgeFormation.
 - Implementación: la pantalla Battle carga el mazo real autenticado, identifica el Campeón desde `player_deck.is_champion`, presenta línea activa y reserva, y bloquea el inicio sin al menos tres unidades. El cliente sigue sin simular daño, ganador, recompensas ni economía.
-- Verificación: guarda móvil ampliada pasa 15/15; el typecheck móvil del workflow oficial también pasó. El control separado `verify` falla después en cobertura de telemetría web por el evento heredado `forge_action`, ajeno a este cambio.
+- Verificación: guarda móvil ampliada pasa 15/15. El primer intento del workflow APK detectó y permitió corregir una referencia inválida; el segundo quedó bloqueado antes de emitir el typecheck Android. El control separado `verify` falla después en cobertura de telemetría web por el evento heredado `forge_action`, ajeno a este cambio.
 - Entrega: el workflow APK quedó bloqueado sin logs ni artefacto en dos intentos, fue cancelado y no produjo un release correlativo. El código permanece en `main` y la unidad sigue `IMPLEMENTED_UNVERIFIED`; la QA manual del operador y la generación del APK quedan pendientes, sin inventar evidencia.
 
 ---

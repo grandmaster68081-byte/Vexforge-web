@@ -63,8 +63,9 @@ genérica aunque el servidor ya aplicara las reglas ForgeFormation.
 ## Estado y evidencia
 
 Estado de implementación: `IMPLEMENTED_UNVERIFIED` después de publicar el código
-en `main` y pasar el typecheck móvil. La ejecución oficial que debía producir el
-APK correlativo quedó bloqueada en el runner y fue cancelada; por eso no se
+en `main` y pasar la guarda móvil 15/15. El primer intento del workflow APK
+detectó y permitió corregir una referencia inválida; el segundo quedó bloqueado
+en el runner antes de emitir el typecheck Android y fue cancelado. Por eso no se
 declara un nuevo release. La QA manual del operador sigue siendo necesaria para
 instalar el APK y recorrer una partida autenticada; la compilación y las guardas
 técnicas no sustituyen esa comprobación.
