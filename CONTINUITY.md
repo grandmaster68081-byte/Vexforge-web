@@ -1,3 +1,14 @@
+## 2026-08-30 — VE-MOB-VIS-2-MOBILE-FIT-AND-GOOGLE-AUTH — VERIFIED_RELEASED
+
+- El commit `ad42a5f1c4fbf34c2f73a7ae7d71f8715f280e9a` quedó publicado en `main`.
+- Validación general: run 66 (`33325413977`) terminó `success`.
+- Android: run 52 (`33325413983`) terminó `success`; typecheck, Expo prebuild, `assembleRelease`, verificación de bundle JS standalone y publicación del APK pasaron.
+- Release oficial: `vexforge-android-build-52`; asset `app-release.apk` (aprox. 88M / 91,705,979 bytes).
+- Run 50 (`33324808430`) también terminó `success`, pero corresponde al commit WORLD anterior y no incluye los ajustes de Auth/layout; el APK actualizado es el del run 52.
+- Estado: `VERIFIED_RELEASED`; queda QA manual del operador para confirmar en dispositivo el selector de cuenta Google, el retorno por `vexforge-android`, el teclado y el inset de navegación.
+
+---
+
 ## 2026-08-30 — VE-MOB-VIS-2-MOBILE-FIT-AND-GOOGLE-AUTH — IMPLEMENTED_UNVERIFIED
 
 - Revisión solicitada: se corrige el ajuste móvil de Auth y de la barra inferior; la ruta `auth` queda sin header del Stack y la tab bar usa el inset inferior real, separación táctil y ocultación al abrir el teclado.
