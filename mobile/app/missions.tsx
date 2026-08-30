@@ -1,4 +1,4 @@
-import { Ionicons } from '@expo/vector-icons';
+import { Ionicons } from '@/components/ForgeIcon';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   ActivityIndicator,

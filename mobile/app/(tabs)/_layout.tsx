@@ -1,13 +1,12 @@
 import React from 'react';
 import { ActivityIndicator, Platform, StyleSheet, Text, View } from 'react-native';
 import { useColors } from '@/hooks/useColors';
-import { Feather } from '@expo/vector-icons';
+import { Feather, VexIcon as SymbolView } from '@/components/ForgeIcon';
 import { LinearGradient } from 'expo-linear-gradient';
 import { isLiquidGlassAvailable } from 'expo-glass-effect';
 import { Tabs } from 'expo-router';
 import { Redirect } from 'expo-router';
 import { Icon, Label, NativeTabs } from 'expo-router/unstable-native-tabs';
-import { SymbolView } from 'expo-symbols';
 import { useGame } from '@/context/GameContext';
 import { typography } from '@/constants/typography';
 

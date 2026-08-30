@@ -1,4 +1,4 @@
-import { Feather } from '@expo/vector-icons';
+import { Feather } from '@/components/ForgeIcon';
 import { useEffect, useMemo, useState } from 'react';
 import {
   AccessibilityInfo,

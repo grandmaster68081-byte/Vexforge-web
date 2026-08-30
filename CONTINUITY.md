@@ -1,3 +1,15 @@
+## 2026-08-30 — VE-MOB-VIS-1-FORGE-IDENTITY-PACK-2 — IMPLEMENTED_UNVERIFIED
+
+- Tipo de sesión: sustitución incremental de iconografía genérica en Android por el lenguaje SVG propio de ForgeIcon; no se rehacen unidades funcionales ni se alteran Auth, RPCs, RLS, economía, combate o datos de jugadores.
+- Cambios: se añade `mobile/components/ForgeIcon.tsx` con las geometrías SVG oficiales y aliases compatibles; las pantallas móviles, tabs, tienda, misiones, tutorial, perfil, colección, mazo, batalla y estados compartidos dejan de importar icon fonts externos.
+- Dependencias: se eliminan las dependencias directas de `@expo/vector-icons` y `expo-symbols`; `react-native-svg` sigue siendo la única base de renderizado vectorial y Expo puede conservar su dependencia transitiva interna sin ser usada por la app.
+- Verificación: guardas Auth 8/8 y Battle 15/15, transpilación TypeScript/JSX de 29 fuentes sin diagnósticos, guardia web de identidad 0 sustitutos y auditoría automatizada de nombres usados sin mappings faltantes.
+- Limitación: el typecheck móvil completo no pudo ejecutarse en este checkout porque el firewall del entorno devolvió 404 para `npm-package-arg@11.0.3`; no se modificó la lógica ni se relajaron los gates.
+- Estado: `IMPLEMENTED_UNVERIFIED`. No se declara `OPERATIONAL`, `PASS` ni `TIER1_READY` sin workflow Android y QA manual del operador.
+- Siguiente acción verificable: publicar el checkpoint por Git Data API HTTPS, ejecutar el workflow Android oficial y verificar el release correlativo sin inventar QA humana.
+
+---
+
 ## 2026-08-30 — VE-MOB-VIS-1-FORGE-IDENTITY-PACK-1 — IMPLEMENTED_UNVERIFIED
 
 - Tipo de sesión: paquete incremental de identidad visual Android sobre la base ya implementada; no se rehacen unidades funcionales ni se alteran Auth, RPCs, RLS, economía, combate o datos de jugadores.
