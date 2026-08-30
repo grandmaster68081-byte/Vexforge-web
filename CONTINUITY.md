@@ -2,7 +2,7 @@
 
  - Tipo de sesión: implementación visual Android sobre la superficie móvil oficial del repositorio, siguiendo el protocolo vivo v2.7-autonomous-context-law.
  - Alcance: se conserva la funcionalidad oficial de Supabase/RPC/Auth/Storage y se aplica identidad Forge a las rutas móviles: Cinzel para display, Rajdhani para interfaz, fondos canónicos por superficie, gradientes obsidiana-oro, ForgeText, ForgeButton, ScreenShell y barra Android de cinco tabs.
- - Assets: se generó arte propio para icono/splash, sin texto ni caracteres, y se configuró android.versionCode: 2 sobre el valor oficial anterior.
+ - Assets: se descartó el arte generado durante la primera iteración y se consume el logotipo oficial inscrito en Storage (logo/IMG_20260606_040509_906.jpg) como icono y splash; android.versionCode queda en 2 sobre el valor oficial anterior.
  - Verificación local: typecheck móvil OK; expo install --check OK; workflow Expo levantado y preview web comprobado tras corregir la dependencia web compatible con SDK 54.
  - Publicación: cambios sincronizados a main mediante Git Data API HTTPS en el commit e0e40e0fd6118f56a73780f5496ed562e2ec7232; el workflow Android oficial queda listo para generar el release.
  - Estado: IMPLEMENTED_UNVERIFIED. No se declara OPERATIONAL, PASS ni TIER1_READY hasta que el operador instale y pruebe manualmente la APK.

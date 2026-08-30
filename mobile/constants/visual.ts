@@ -2,6 +2,7 @@ import { storageAsset } from '@/lib/supabase';
 
 export const CANONICAL_BACKGROUNDS = {
   home: storageAsset('lobby/main.jpg'),
+  auth: storageAsset('cover/main.jpg'),
   pvp: storageAsset('backgrounds/bg_pvp.jpg'),
   missions: storageAsset('backgrounds/bg_missions.jpg'),
   packs: storageAsset('backgrounds/bg_packs.jpg'),

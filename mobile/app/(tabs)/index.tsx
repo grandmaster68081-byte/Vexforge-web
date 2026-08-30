@@ -135,7 +135,7 @@ export default function ForgeScreen() {
 
           <View style={styles.greeting}>
             <SectionLabel color={colors.accent}>VEXFORGE — TRADING CARD GAME</SectionLabel>
-            <Text style={[styles.title, { color: colors.foreground }]}>Forja tu{'\n'}leyenda.</Text>
+            <ForgeText variant="display" style={[styles.title, { color: colors.foreground }]}>Forja tu{'\n'}leyenda.</ForgeText>
             <Text style={[styles.heroBody, { color: colors.mutedForeground }]}>Compite, forja y domina la arena con cartas de valor real.</Text>
           </View>
 

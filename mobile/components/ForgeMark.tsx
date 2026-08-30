@@ -5,7 +5,7 @@ export function ForgeMark({ compact = false }: { compact?: boolean }) {
   const colors = useColors();
   return (
     <View style={[styles.frame, compact && styles.compact, { borderColor: colors.primary }]}>
-      <Image source={require('@/assets/images/icon.png')} style={styles.image} resizeMode="contain" />
+      <Image source={require('@/assets/images/icon.jpg')} style={styles.image} resizeMode="cover" />
     </View>
   );
 }

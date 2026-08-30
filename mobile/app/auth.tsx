@@ -81,7 +81,7 @@ export default function AuthScreen() {
   };
 
   return (
-    <ScreenShell surface="home">
+    <ScreenShell surface="auth">
       <KeyboardAvoidingView
       style={[styles.screen, { backgroundColor: 'transparent' }]}
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
@@ -106,9 +106,9 @@ export default function AuthScreen() {
           <Text style={[styles.eyebrow, { color: colors.mutedForeground }]}>
             {mode === 'signin' ? 'IDENTIDAD REQUERIDA' : 'NUEVO FORJADOR'}
           </Text>
-          <Text style={[styles.title, { color: colors.foreground }]}>
+          <ForgeText variant="title" style={[styles.title, { color: colors.foreground }]}>
             {mode === 'signin' ? 'Regresa al Nexus.' : 'Forja tu entrada.'}
-          </Text>
+          </ForgeText>
           <Text style={[styles.subtitle, { color: colors.mutedForeground }]}>
             {mode === 'signin'
               ? 'Tu colección y tu progreso esperan en el otro lado.'

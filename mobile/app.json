@@ -4,12 +4,12 @@
     "slug": "vexforge",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "icon": "./assets/images/icon.jpg",
     "scheme": "vexforge-android",
     "userInterfaceStyle": "dark",
     "newArchEnabled": true,
     "splash": {
-      "image": "./assets/images/icon.png",
+      "image": "./assets/images/icon.jpg",
       "resizeMode": "contain",
       "backgroundColor": "#05050D"
     },
@@ -20,12 +20,12 @@
       "package": "com.vexforge.android",
       "versionCode": 2,
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/icon.png",
+        "foregroundImage": "./assets/images/icon.jpg",
         "backgroundColor": "#05050D"
       }
     },
     "web": {
-      "favicon": "./assets/images/icon.png"
+      "favicon": "./assets/images/icon.jpg"
     },
     "plugins": [
       [
