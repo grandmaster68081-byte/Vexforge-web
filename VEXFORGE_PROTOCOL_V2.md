@@ -1333,3 +1333,4 @@ Cada sesión debe registrar que leyó esta enmienda, qué decisión derivada cre
 - La única verificación ordinaria que puede quedar pendiente como bloqueo es la validación humana directa en la aplicación.
 
 
+
