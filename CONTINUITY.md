@@ -30,6 +30,16 @@
 
 ---
 
+## 2026-08-30 — VE-MOB-VIS-1-PACK-1-DELIVERY-REPAIR-3 — IN_PROGRESS
+
+- Evidencia adicional: los guards de cartas y superficies pasaron en el CI nuevo; `verify-assets` fue el siguiente punto de rate limit (tres respuestas HTTP 429). Android continúa fallando en la instalación antes de compilar, incluso con `npm install --ignore-scripts`.
+- Reparación acotada: `verify-assets` aplica backoff sólo para 429/5xx; el workflow Android fija Node 20 para evitar la combinación Node 22/npm 10.9.8 que reproduce `Exit handler never called`.
+- Integridad preservada: la lista de assets canónicos y todos los fallos no recuperables siguen siendo obligatorios; no se omiten objetos ni se cambia la app.
+- Estado: `IN_PROGRESS`. La entrega Android y el paquete visual siguen `IMPLEMENTED_UNVERIFIED` hasta una ejecución nueva exitosa.
+- Siguiente acción verificable: publicar esta tercera reparación mediante Git Data API HTTPS y comprobar los runs resultantes.
+
+---
+
 ## 2026-08-30 — VE-MOB-VIS-1-FORGE-IDENTITY — IMPLEMENTED_UNVERIFIED
 
  - Tipo de sesión: implementación visual Android sobre la superficie móvil oficial del repositorio, siguiendo el protocolo vivo v2.7-autonomous-context-law.
