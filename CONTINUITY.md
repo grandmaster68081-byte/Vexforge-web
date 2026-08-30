@@ -1,3 +1,13 @@
+## 2026-08-30 — VE-MOB-VIS-1-FORGE-IDENTITY-PACK-3-BUILD-REPAIR-2 — IMPLEMENTED_UNVERIFIED
+
+- Evidencia de entrega: el workflow Android oficial 49 terminó `success` sobre el commit `89aed1edc90d6f8c42ed264e99d9093fa5b8b589`; completó typecheck, prebuild, compilación release y comprobación del bundle standalone.
+- APK: se publicó `vexforge-android-build-49/app-release.apk`; la inspección del archivo confirma `assets/index.android.bundle`, `AndroidManifest.xml` y `resources.arsc`.
+- Alcance: el alias `cart-outline` quedó resuelto dentro del catálogo SVG oficial de ForgeIcon; se conserva la eliminación de icon fonts externos y no se modifican Auth, RPCs, RLS, economía, combate, Storage ni datos de jugadores.
+- Estado: `IMPLEMENTED_UNVERIFIED`. El build y el release están verificados; la QA manual del operador sigue pendiente y no se declara `OPERATIONAL`, `PASS` ni `TIER1_READY`.
+- Siguiente acción verificable: continuar con la siguiente brecha visual real de la FASE PORT, sin rehacer este paquete ni fabricar evidencia de uso humano.
+
+---
+
 ## 2026-08-30 — VE-VIS-3-OFFICIAL-VISUAL-CONSUMPTION-LAW — IMPLEMENTED
 
 - Decisión normativa: toda unidad nueva, existente o reabierta debe consumir el apartado visual oficial del proyecto; queda prohibido cerrar con arte, iconografía o representación diegética genérica.
