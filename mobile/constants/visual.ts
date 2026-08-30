@@ -29,6 +29,7 @@ export const CANONICAL_BACKGROUNDS = {
   leaderboard: storageAsset('backgrounds/bg_leaderboard.jpg'),
   achievements: storageAsset('backgrounds/bg_achievements.jpg'),
   raids: storageAsset('backgrounds/bg_bosses.jpg'),
+  world: storageAsset('backgrounds/bg_bosses.jpg'),
   tutorial: OFFICIAL_ASSETS.tutorialHero,
 } as const;
 

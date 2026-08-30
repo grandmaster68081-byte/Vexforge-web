@@ -39,6 +39,7 @@ function RootLayoutNav() {
       <Stack.Screen name="missions" options={{ headerShown: false }} />
       <Stack.Screen name="store" options={{ headerShown: false }} />
       <Stack.Screen name="economy" options={{ headerShown: false }} />
+      <Stack.Screen name="world" options={{ headerShown: false }} />
     </Stack>
   );
 }

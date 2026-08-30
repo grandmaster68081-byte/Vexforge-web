@@ -411,6 +411,122 @@ export type MobileEvolutionPath = {
   to_rarity: string;
 };
 
+export type MobileWorldBoss = {
+  id: string;
+  boss_code: string;
+  name: string;
+  region_id: string | null;
+  tier: string;
+  power_level: number;
+  hp: number;
+  reward_pool: Record<string, unknown>;
+  active: boolean;
+  metadata: Record<string, unknown>;
+  created_at: string;
+  image_url: string | null;
+};
+
+export type MobileBossEncounter = {
+  id: string;
+  world_boss_id: string;
+  player_id: string;
+  damage: number;
+  reward_json: Record<string, unknown>;
+  status: string;
+  created_at: string;
+};
+
+export type MobileRaidRun = {
+  id: string;
+  raid_code: string;
+  region_id: string;
+  status: string;
+  started_at: string | null;
+  ended_at: string | null;
+  metadata: {
+    name?: string;
+    difficulty?: string;
+    max_participants?: number;
+    reward_multiplier?: number;
+  };
+  created_at: string;
+};
+
+export type MobileRaidParticipant = {
+  id: string;
+  raid_run_id: string;
+  player_id: string;
+  contribution: number;
+  status: string;
+};
+
+export type MobileLoreEntry = {
+  id: string;
+  entry_code: string | null;
+  title: string | null;
+  content: string | null;
+  category: string | null;
+  related_entity: string | null;
+  metadata: Record<string, unknown>;
+  created_at: string | null;
+};
+
+export type MobileSeasonPass = {
+  id: string;
+  name: string;
+  season_number: number;
+  start_at: string;
+  end_at: string;
+  active: boolean;
+  metadata: Record<string, unknown>;
+};
+
+export type MobileSeasonTier = {
+  tier: number;
+  xp_required: number;
+  is_premium: boolean;
+  reward: Record<string, unknown>;
+  unlocked: boolean;
+  claimed: boolean;
+};
+
+export type MobileSeasonProgress = {
+  ok: boolean;
+  season_name?: string;
+  season_number?: number;
+  end_at?: string;
+  player_xp?: number;
+  current_tier?: number;
+  is_premium?: boolean;
+  tiers?: MobileSeasonTier[];
+  reason?: string;
+};
+
+export type MobileSeasonRanking = {
+  rank_position: number;
+  mmr: number;
+  wins: number;
+  losses: number;
+  draws: number;
+  season_key: string;
+  player_id: string;
+  display_name?: string;
+};
+
+export type MobileWorldSnapshot = {
+  bosses: MobileWorldBoss[];
+  encounters: MobileBossEncounter[];
+  raids: MobileRaidRun[];
+  lore: MobileLoreEntry[];
+  season: MobileSeasonPass | null;
+  seasonTiers: MobileSeasonTier[];
+  seasonProgress: MobileSeasonProgress | null;
+  rankings: MobileSeasonRanking[];
+  myRaidIds: string[];
+};
+
+export type MobileWorldAction = { ok: boolean; reason?: string };
+
 export const STORAGE_BASE = 'https://rscuzqnfccqvltkdcdny.supabase.co/storage/v1/object/public/vexforge-assets';
 export function storageAsset(path: string) { return `${STORAGE_BASE}/${path}`; }
 
@@ -582,6 +698,99 @@ export async function saveDeck(cardIds: string[], session: Session): Promise<Sav
 
 export async function loadHomeStats(): Promise<HomeStats> {
   return restRpc('get_home_stats') as Promise<HomeStats>;
+}
+
+async function loadWorldPlayerId(session?: Session): Promise<string | null> {
+  if (!session) return null;
+  const players = await rest(
+    'players?select=id&auth_user_id=eq.' + encodeURIComponent(session.user.id) + '&limit=1',
+    session,
+  ) as Array<{ id: string }>;
+  return players[0]?.id ?? null;
+}
+
+function asWorldTier(row: Record<string, unknown>): MobileSeasonTier {
+  return {
+    tier: Number(row.tier ?? row.tier_level ?? 0),
+    xp_required: Number(row.xp_required ?? 0),
+    is_premium: Boolean(row.is_premium),
+    reward: (row.reward ?? row.reward_json ?? {}) as Record<string, unknown>,
+    unlocked: Boolean(row.unlocked),
+    claimed: Boolean(row.claimed),
+  };
+}
+
+export async function loadWorldSnapshot(session?: Session): Promise<MobileWorldSnapshot> {
+  const [bosses, raids, lore, seasons] = await Promise.all([
+    rest('world_bosses?select=id%2Cboss_code%2Cname%2Cregion_id%2Ctier%2Cpower_level%2Chp%2Creward_pool%2Cactive%2Cmetadata%2Ccreated_at%2Cimage_url&active=eq.true&order=tier.asc%2Cname.asc&limit=50', session),
+    rest('raid_runs?select=id%2Craid_code%2Cregion_id%2Cstatus%2Cstarted_at%2Cended_at%2Cmetadata%2Ccreated_at&status=in.(pending%2Cactive)&order=created_at.desc&limit=50', session),
+    rest('lore_codex?select=id%2Centry_code%2Ctitle%2Ccontent%2Ccategory%2Crelated_entity%2Cmetadata%2Ccreated_at&order=category.asc%2Ctitle.asc&limit=100', session),
+    rest('season_passes?select=id%2Cname%2Cseason_number%2Cstart_at%2Cend_at%2Cactive%2Cmetadata&active=eq.true&order=season_number.desc&limit=1', session),
+  ]) as [MobileWorldBoss[], MobileRaidRun[], MobileLoreEntry[], MobileSeasonPass[]];
+
+  const season = seasons[0] ?? null;
+  const playerId = await loadWorldPlayerId(session);
+  const [tiers, encounters, seasonProgress, rankingRows, myRaidRows] = await Promise.all([
+    season
+      ? rest('season_pass_tiers?select=id%2Cseason_pass_id%2Ctier_level%2Cxp_required%2Cis_premium%2Creward_json&season_pass_id=eq.' + encodeURIComponent(season.id) + '&order=tier_level.asc&limit=200', session)
+      : Promise.resolve([]),
+    playerId
+      ? rest('world_boss_encounters?select=id%2Cworld_boss_id%2Cplayer_id%2Cdamage%2Creward_json%2Cstatus%2Ccreated_at&player_id=eq.' + encodeURIComponent(playerId) + '&order=created_at.desc&limit=50', session)
+      : Promise.resolve([]),
+    playerId
+      ? restRpc('get_season_progress', { p_player_id: playerId }, session).catch(() => null)
+      : Promise.resolve(null),
+    rest('season_rankings?select=rank_position%2Cmmr%2Cwins%2Closses%2Cdraws%2Cseason_key%2Cplayer_id&season_key=eq.S1_2026&order=rank_position.asc&limit=100', session),
+    playerId
+      ? rest('raid_participants?select=raid_run_id&player_id=eq.' + encodeURIComponent(playerId) + '&limit=100', session)
+      : Promise.resolve([]),
+  ]) as [Array<Record<string, unknown>>, MobileBossEncounter[], MobileSeasonProgress | null, MobileSeasonRanking[], Array<{ raid_run_id: string }>];
+
+  const playerNames = rankingRows.length
+    ? await restRpc('get_public_player_names', { p_player_ids: rankingRows.map((row) => row.player_id) }, session).catch(() => []) as Array<{ id: string; display_name: string }>
+    : [];
+  const nameMap = Object.fromEntries(playerNames.map((row) => [row.id, row.display_name]));
+  const progressTiers = Array.isArray(seasonProgress?.tiers) ? seasonProgress.tiers : [];
+  const seasonTiers = progressTiers.length
+    ? progressTiers.map((row) => asWorldTier(row as unknown as Record<string, unknown>))
+    : tiers.map(asWorldTier);
+
+  return {
+    bosses: bosses ?? [],
+    encounters: encounters ?? [],
+    raids: raids ?? [],
+    lore: lore ?? [],
+    season,
+    seasonTiers,
+    seasonProgress,
+    rankings: (rankingRows ?? []).map((row) => ({ ...row, display_name: nameMap[row.player_id] ?? undefined })),
+    myRaidIds: (myRaidRows ?? []).map((row) => row.raid_run_id),
+  };
+}
+
+export async function loadWorldRaidParticipants(raidRunId: string, session?: Session): Promise<MobileRaidParticipant[]> {
+  return rest(
+    'raid_participants?select=id%2Craid_run_id%2Cplayer_id%2Ccontribution%2Cstatus&raid_run_id=eq.' + encodeURIComponent(raidRunId) + '&order=contribution.desc&limit=50',
+    session,
+  ) as Promise<MobileRaidParticipant[]>;
+}
+
+export async function joinWorldRaid(raidRunId: string, session?: Session): Promise<MobileWorldAction> {
+  if (!session) return { ok: false, reason: 'Inicia sesión para unirte al raid.' };
+  const result = await restRpc('vexforge_join_raid', { p_raid_run_id: raidRunId }, session) as MobileWorldAction | null;
+  return result ?? { ok: false, reason: 'El servidor no devolvió una respuesta.' };
+}
+
+export async function contributeWorldRaid(raidRunId: string, session?: Session): Promise<MobileWorldAction> {
+  if (!session) return { ok: false, reason: 'Inicia sesión para contribuir.' };
+  const result = await restRpc('vexforge_contribute_raid', { p_raid_run_id: raidRunId, p_contribution: 1 }, session) as MobileWorldAction | null;
+  return result ?? { ok: false, reason: 'El servidor no devolvió una respuesta.' };
+}
+
+export async function claimWorldSeasonTier(tier: number, session?: Session): Promise<MobileWorldAction> {
+  if (!session) return { ok: false, reason: 'Inicia sesión para reclamar recompensas.' };
+  const result = await restRpc('claim_season_pass_reward', { p_player_id: await loadWorldPlayerId(session), p_tier: tier }, session) as MobileWorldAction | null;
+  return result ?? { ok: false, reason: 'El servidor no devolvió una respuesta.' };
 }
 
 export async function loadDailyFeaturedCard(): Promise<DailyCard | null> {

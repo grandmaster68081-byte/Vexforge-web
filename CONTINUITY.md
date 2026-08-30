@@ -1,3 +1,16 @@
+## 2026-08-30 — VE-MOB-12-WORLD — IMPLEMENTED_UNVERIFIED
+
+- Tipo de sesión: implementación Android de la siguiente unidad elegible de la FASE PORT, usando el repositorio y Supabase oficiales; no se altera la lógica autoritativa web ni se añaden tablas, RPCs o datos inventados.
+- Alcance: nueva ruta WORLD mobile-first con paneles internos de Bosses, Raids, Codex, Pase y Ranking; accesible desde Home y Perfil sin añadir otra tab principal.
+- Contratos: la pantalla consume `world_bosses`, `world_boss_encounters`, `raid_runs`, `raid_participants`, `lore_codex`, `season_passes`, `season_pass_tiers` y `season_rankings`; nombres de ranking mediante `get_public_player_names`.
+- Mutaciones: unirse/contribuir en raids y reclamar tiers sólo llaman `vexforge_join_raid`, `vexforge_contribute_raid` y `claim_season_pass_reward`; bosses continúan entrando en Battle Run y Android no calcula daño, HP, victoria, MMR ni recompensas.
+- Assets: el fondo WORLD se resuelve desde el registro visual canónico `backgrounds/bg_bosses.jpg`; el arte de bosses sólo consume `image_url` oficial de Supabase Storage.
+- Verificación local: gate `verify:mobile-world` correcto, transpilación TypeScript/JSX de los archivos nuevos correcta y contrato de iconos SVG sin nombres faltantes. El typecheck móvil completo queda sujeto al runner oficial porque este checkout temporal no pudo instalar `npm-package-arg@11.0.3` desde el firewall del entorno.
+- Estado: `IMPLEMENTED_UNVERIFIED`; no se declara `OPERATIONAL`, `PASS` ni `TIER1_READY` hasta workflow Android y QA manual del operador.
+- Siguiente acción verificable: ejecutar el workflow Android oficial, comprobar typecheck, APK standalone y release correlativo; después registrar sólo la evidencia real del build.
+
+---
+
 ## 2026-08-30 — VE-MOB-VIS-1-FORGE-IDENTITY-PACK-3-BUILD-REPAIR-2 — IMPLEMENTED_UNVERIFIED
 
 - Evidencia de entrega: el workflow Android oficial 49 terminó `success` sobre el commit `89aed1edc90d6f8c42ed264e99d9093fa5b8b589`; completó typecheck, prebuild, compilación release y comprobación del bundle standalone.
