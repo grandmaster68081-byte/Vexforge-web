@@ -1341,5 +1341,6 @@ Cada sesión debe registrar que leyó esta enmienda, qué decisión derivada cre
 - Unit: `VE-MOB-13-SOCIAL`
 - Implementation commit: `c44302b0bb848c6d7c596b9cffaff1c46d438c8b`
 - Mobile TypeScript check: passed.
-- Official Android workflow: run `55`, currently `in_progress`; no APK or release claim is made here.
+- Official Android workflow: run `55` passed and published prerelease `vexforge-android-build-55`: https://github.com/grandmaster68081-byte/Vexforge-web/releases/tag/vexforge-android-build-55
+- APK SHA-256: `9577bdf841dcf09fb2028b599fa8994538893c27471a6c70c4db5524c62eab9a`; standalone bundle `assets/index.android.bundle` verified present.
 - Integrity status: `IMPLEMENTED_UNVERIFIED`; operator installation/device QA remains required.
