@@ -1,3 +1,15 @@
+## 2026-08-30 — VE-MOB-VIS-1-FORGE-IDENTITY — IMPLEMENTED_UNVERIFIED
+
+ - Tipo de sesión: implementación visual Android sobre la superficie móvil oficial del repositorio, siguiendo el protocolo vivo v2.7-autonomous-context-law.
+ - Alcance: se conserva la funcionalidad oficial de Supabase/RPC/Auth/Storage y se aplica identidad Forge a las rutas móviles: Cinzel para display, Rajdhani para interfaz, fondos canónicos por superficie, gradientes obsidiana-oro, ForgeText, ForgeButton, ScreenShell y barra Android de cinco tabs.
+ - Assets: se generó arte propio para icono/splash, sin texto ni caracteres, y se configuró android.versionCode: 2 sobre el valor oficial anterior.
+ - Verificación local: typecheck móvil OK; expo install --check OK; workflow Expo levantado y preview web comprobado tras corregir la dependencia web compatible con SDK 54.
+ - Publicación: cambios sincronizados a main mediante Git Data API HTTPS en el commit e0e40e0fd6118f56a73780f5496ed562e2ec7232; el workflow Android oficial queda listo para generar el release.
+ - Estado: IMPLEMENTED_UNVERIFIED. No se declara OPERATIONAL, PASS ni TIER1_READY hasta que el operador instale y pruebe manualmente la APK.
+ - Siguiente acción verificable: completar el workflow Android oficial, verificar que app-release.apk contiene el bundle standalone y registrar la evidencia del release sin inventar QA humana.
+
+---
+
 ## 2026-08-30 — FORGEFORMATION-CANONICAL-RECONCILIATION + VE-MOB-7-BATTLE — IMPLEMENTATION
 
 - Reconciliación canónica: ForgeFormation es el núcleo obligatorio del combate. El documento histórico `vexforge_forge_formation_engine_v1` está `superseded` como plan de trabajo, no como sistema de juego; no existe un motor de combate alternativo que lo reemplace.
