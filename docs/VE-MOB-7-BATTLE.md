@@ -32,17 +32,43 @@ El dispositivo no calcula daño, combate, ganador, recompensas ni economía.
 6. La unidad no usa emojis, datos de demostración ni arte genérico.
 7. Se ejecutan typecheck móvil, guardas móviles, verificaciones web y workflow APK.
 
+## Reconciliación canónica — 2026-08-30
+
+ForgeFormation **no está suspendido ni reemplazado**. El documento histórico
+`vexforge_forge_formation_engine_v1` aparece como `superseded` porque su plan de
+trabajo fue absorbido por la directiva Tier 1; ese estado no cancela las reglas ni
+el motor de combate. El protocolo activo y la RPC viva confirman que
+ForgeFormation es el núcleo obligatorio del juego.
+
+La discrepancia encontrada está en el port Android: la pantalla ya resolvía
+partidas reales mediante `vexforge_battle_resolve`, pero la evidencia técnica sólo
+comprobaba el RPC y la lectura de turnos. No mostraba explícitamente la formación
+Vanguardia/Campeón/Centinela/Reserva, por lo que una APK podía parecer una arena
+genérica aunque el servidor ya aplicara las reglas ForgeFormation.
+
+## Alcance cerrado en esta unidad
+
+- La APK presenta la formación real derivada del mazo autenticado: Vanguardia,
+  Campeón, Centinela y Reserva.
+- El Campeón se identifica desde `player_deck.is_champion`; si falta, la
+  representación respeta el fallback del contrato autoritativo.
+- La reserva y las tres posiciones activas se presentan como estado de lectura; no
+  se simula ni se altera el resultado en el cliente.
+- El combate continúa entrando únicamente por `vexforge_battle_resolve`, que aplica
+  estadísticas, bonificaciones, guardias, turnos, muerte del Campeón, ganador, ELO
+  y recompensas en Supabase.
+- El botón de inicio queda bloqueado sin un mazo con al menos tres unidades para no
+  presentar un combate ForgeFormation inválido.
+
 ## Estado y evidencia
 
-Estado de implementación: `IMPLEMENTED_UNVERIFIED` tras publicar el APK del
-commit de cierre. La QA funcional posterior requiere que el operador instale el
-release y recorra una partida con una sesión normal; esa evidencia no se inventa
-ni se sustituye por una compilación.
+Estado de implementación: `IMPLEMENTED_UNVERIFIED` después del nuevo build oficial.
+La QA manual del operador sigue siendo necesaria para instalar el APK y recorrer
+una partida autenticada; la compilación y las guardas técnicas no sustituyen esa
+comprobación.
 
 Nivel Q: Q2 actual / Q3 objetivo.
 
-## Condición de reapertura
-
-Reabrir si cambia el contrato del RPC o del leaderboard, se muestran resultados no
-autoritativos, falla el workflow/release, o el operador reporta un problema de
-interacción, accesibilidad, rendimiento o estado real.
+Condición de reapertura: cambio del contrato `vexforge_battle_resolve`, ausencia de
+la formación real en Android, resultado no autoritativo, fallo del workflow/release
+o reporte del operador sobre interacción, accesibilidad, rendimiento o datos.

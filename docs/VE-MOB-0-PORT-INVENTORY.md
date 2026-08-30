@@ -5,7 +5,8 @@ Regla: cada superficie portada es una unidad `VE-MOB-*` con criterios, guarda y 
 
 ## Estado del esqueleto actual
 - `index.tsx` (Home, 160 líneas) — parcial.
-- `battle.tsx`, `collection.tsx` — unidades portadas e implementadas según sus documentos.
+- `collection.tsx` — unidad portada e implementada según su documento.
+- `battle.tsx` — resolución PvP autoritativa ya conectada; el tablero ForgeFormation Android se cierra en esta unidad y queda `IMPLEMENTED_UNVERIFIED` hasta QA manual del APK.
 - `profile.tsx` — `VE-MOB-9` implementada con perfil, logros, progreso, estados explícitos y accesos rápidos; permanece `IMPLEMENTED_UNVERIFIED` hasta QA.
 
 ## Fases del port (orden obligatorio)
@@ -16,7 +17,7 @@ Regla: cada superficie portada es una unidad `VE-MOB-*` con criterios, guarda y 
 3. VE-MOB-4 COLLECTION: CardsRoute + inspector/detalle de carta con arte canónico del manifiesto.
 4. VE-MOB-5 DECK: DeckBuilderRoute + selección/formación.
 5. VE-MOB-6 TUTORIAL: TutorialRoute con el flujo real.
-6. VE-MOB-7 BATTLE: tablero de combate completo (InteractiveBattleBoard, cues, cinematicas, BattleResultScreen) — presentación fiel a resultados autoritativos, jamás lógica de combate en cliente.
+6. VE-MOB-7 BATTLE: tablero ForgeFormation completo en Android (Vanguardia, Campeón, Centinela, Reserva, cues, replay y resultado) — presentación fiel a resultados autoritativos, jamás lógica de combate en cliente. Estado actual: `IMPLEMENTED_UNVERIFIED` hasta QA del APK.
 7. VE-MOB-8 REWARDS: recompensas, QuestsRoute, MissionsRoute.
 
 ### FASE P2 — Progresión y economía (solo lectura/consumo de RPCs autoritativas)

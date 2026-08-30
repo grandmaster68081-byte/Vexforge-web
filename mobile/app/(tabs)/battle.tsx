@@ -13,7 +13,9 @@ import {
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useColors } from '@/hooks/useColors';
 import { useGame } from '@/context/GameContext';
-import type { BattleResult, BattleTurn, Opponent } from '@/lib/supabase';
+import { loadPlayerDeck } from '@/lib/supabase';
+import type { BattleResult, BattleTurn, DeckSlot, Opponent } from '@/lib/supabase';
+import { ForgeFormationPreview } from '@/components/ForgeFormationPreview';
 
 type Phase = 'lobby' | 'confirm' | 'replay' | 'result';
 
@@ -228,8 +230,32 @@ export default function BattleScreen() {
   const [turnIndex, setTurnIndex] = useState(0);
   const [reducedMotion, setReducedMotion] = useState(false);
   const [localError, setLocalError] = useState<string | null>(null);
+  const [formationSlots, setFormationSlots] = useState<DeckSlot[]>([]);
+  const [formationLoading, setFormationLoading] = useState(false);
+  const [formationError, setFormationError] = useState<string | null>(null);
   const turns = battleResult?.turns ?? [];
   const currentTurn = turns[turnIndex] ?? null;
+
+  const refreshFormation = async () => {
+    if (!session || !player) return;
+    setFormationLoading(true);
+    setFormationError(null);
+    try {
+      setFormationSlots(await loadPlayerDeck(session, player.id));
+    } catch (error) {
+      setFormationError(error instanceof Error ? error.message : 'No se pudo cargar tu formación real.');
+    } finally {
+      setFormationLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (!session || !player) {
+      setFormationSlots([]);
+      return;
+    }
+    void refreshFormation();
+  }, [session, player?.id]);
 
   useEffect(() => {
     AccessibilityInfo.isReduceMotionEnabled().then(setReducedMotion).catch(() => {});
@@ -335,6 +361,13 @@ export default function BattleScreen() {
         <ResultPanel result={battleResult} colors={colors} onDismiss={handleDismiss} />
       ) : (
         <>
+          <ForgeFormationPreview
+            slots={formationSlots}
+            loading={formationLoading}
+            error={formationError}
+            colors={colors}
+            onRetry={() => { void refreshFormation(); }}
+          />
           <View style={[styles.statusPanel, { backgroundColor: colors.panel, borderColor: colors.border }]}>
             <View style={styles.statusCopy}>
               <Text style={[styles.statusTitle, { color: colors.foreground }]}>MOTOR DE COMBATE</Text>
@@ -361,7 +394,7 @@ export default function BattleScreen() {
                 <Pressable accessibilityRole="button" disabled={battleLoading} onPress={() => setSelectedOpponent(null)} style={[styles.cancelButton, { borderColor: colors.border }]}>
                   <Text style={[styles.cancelText, { color: colors.mutedForeground }]}>CANCELAR</Text>
                 </Pressable>
-                <Pressable testID="battle-confirm" accessibilityRole="button" disabled={battleLoading} onPress={handleStartBattle} style={[styles.confirmButton, { backgroundColor: colors.accent, opacity: battleLoading ? 0.7 : 1 }]}>
+                <Pressable testID="battle-confirm" accessibilityRole="button" disabled={battleLoading || formationSlots.length < 3} onPress={handleStartBattle} style={[styles.confirmButton, { backgroundColor: colors.accent, opacity: battleLoading || formationSlots.length < 3 ? 0.7 : 1 }]}>
                   {battleLoading ? <ActivityIndicator color={colors.accentForeground} /> : <Feather name="crosshair" size={16} color={colors.accentForeground} />}
                   <Text style={[styles.confirmText, { color: colors.accentForeground }]}>{battleLoading ? 'RESOLVIENDO' : 'INICIAR COMBATE'}</Text>
                 </Pressable>

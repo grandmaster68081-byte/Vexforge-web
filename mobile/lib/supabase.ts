@@ -42,6 +42,7 @@ export type PlayerCard = PublicCard & {
 };
 export type DeckSlot = {
   slot_number: number;
+  is_champion: boolean;
   card_id: string;
   code: string;
   name: string;
@@ -536,7 +537,7 @@ export async function loadPlayerCollection(session: Session): Promise<PlayerCard
 
 export async function loadPlayerDeck(session: Session, playerId: string): Promise<DeckSlot[]> {
   const rows = await rest(
-    'player_deck?select=slot_number%2Ccard_id%2Ccards!inner(code%2Cname%2Crarity%2Cfaction%2Cpower)&player_id=eq.' +
+    'player_deck?select=slot_number%2Ccard_id%2Cis_champion%2Ccards!inner(code%2Cname%2Crarity%2Cfaction%2Cpower)&player_id=eq.' +
       encodeURIComponent(playerId) +
       '&order=slot_number.asc',
     session,
@@ -547,6 +548,7 @@ export async function loadPlayerDeck(session: Session, playerId: string): Promis
       const card = Array.isArray(row.cards) ? row.cards[0] : row.cards;
       return {
         slot_number: Number(row.slot_number ?? 0),
+        is_champion: row.is_champion === true,
         card_id: String(row.card_id ?? card?.id ?? ''),
         code: String(card?.code ?? ''),
         name: String(card?.name ?? ''),

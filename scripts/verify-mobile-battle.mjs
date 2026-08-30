@@ -3,6 +3,7 @@ import { readFile } from 'node:fs/promises';
 const files = {
   screen: 'mobile/app/(tabs)/battle.tsx',
   supabase: 'mobile/lib/supabase.ts',
+  formation: 'mobile/components/ForgeFormationPreview.tsx',
 };
 
 const contents = Object.fromEntries(
@@ -11,6 +12,9 @@ const contents = Object.fromEntries(
 
 const assertions = [
   ['battle screen exists', contents.screen.includes('export default function BattleScreen')],
+  ['battle loads the real deck formation', contents.screen.includes('loadPlayerDeck') && contents.screen.includes('formationSlots')],
+  ['battle presents ForgeFormation roles', contents.screen.includes('ForgeFormationPreview') && contents.formation.includes('VANGUARDIA') && contents.formation.includes('CAMPEÓN') && contents.formation.includes('CENTINELA') && contents.formation.includes('RESERVA')],
+  ['formation preview is read-only', contents.formation.includes('no calcula daño, turnos ni ganador') && !contents.formation.includes('Math.random') && !contents.formation.includes('simulate')],
   ['battle loads real opponents', contents.screen.includes('findOpponents') && contents.screen.includes('battle-find-opponents')],
   ['battle requires explicit confirmation', contents.screen.includes('battle-confirmation') && contents.screen.includes('battle-confirm')],
   ['battle resolves through the authoritative action', contents.screen.includes('startBattle(selectedOpponent.player_id)')],
