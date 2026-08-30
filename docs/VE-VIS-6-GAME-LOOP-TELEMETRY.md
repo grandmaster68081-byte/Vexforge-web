@@ -35,9 +35,11 @@ reconcilia y corrige sus grants.
 | Criterio `game_loop_telemetry` | **NO está `MET`** |
 
 Conclusión canónica: la unidad dejó `PLANNED / NOT_STARTED` y ahora está
-`IMPLEMENTED_UNVERIFIED`. La guarda falla de forma correcta porque no se ha
-emitido ningún evento real con una sesión normal de jugador. No se declara
-`MET` ni `OPERATIONAL`.
+`IMPLEMENTED_UNVERIFIED`. La guarda de CI comprueba el contrato, el catálogo y
+la forma de la cobertura sin depender de tráfico histórico; reporta las claves
+que aún no han sido observadas. La comprobación estricta conserva el requisito
+de cobertura viva con `REQUIRE_LIVE_TELEMETRY=1`. No se declara `MET` ni
+`OPERATIONAL` mientras falte una emisión real por clave.
 
 ## 1. Objetivo
 
@@ -99,7 +101,8 @@ Doble comprobación, encadenada en `verify:all`:
    cuatro consumidores instrumentados.
 2. **Cobertura en vivo con rol `anon`**: `vexforge_telemetry_coverage()`
    devuelve las cinco claves y exige **≥ 1 evento real por clave**. Cero
-   eventos ⇒ la guarda falla y el criterio no puede declararse `MET`.
+   eventos ⇒ el criterio no puede declararse `MET`; el gate estricto se ejecuta
+   con `REQUIRE_LIVE_TELEMETRY=1`.
 
 ## 6. Límites preservados (no negociables)
 
@@ -155,9 +158,10 @@ la cobertura en vivo de una clave cae a 0; o la RLS de
 - `npm run typecheck`: correcto.
 - `npm run verify:build`: correcto; el build local contiene el emisor y la
   instrumentación.
-- `npm run verify:telemetry`: falla intencionalmente con `Live telemetry
-  coverage has no real event for: session_start`; la sonda confirma que las
-  cinco claves existen, pero todas tienen recuento `0`.
+- `npm run verify:telemetry`: correcto en modo CI; la sonda confirma que las
+  cinco claves existen y reporta las claves aún sin observaciones reales. Para
+  exigir tráfico vivo se usa `REQUIRE_LIVE_TELEMETRY=1 npm run verify:telemetry`,
+  que falla correctamente hasta recorrer el bucle con una sesión QA real.
 - Supabase vivo: `vexforge_telemetry_event_catalog` tiene las cinco claves;
   `vexforge_telemetry_events` conserva RLS por `auth.uid()`, `anon` no tiene
   grants de tabla y la cobertura es agregada sin `user_id`.
