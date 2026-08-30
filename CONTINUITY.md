@@ -610,3 +610,11 @@
 - Evidencia de escritura Supabase: Management API respondió HTTP 201 y devolvió `vexforge_master_protocol_v2`, estado `active`, versión `v2.5-canonical-source-flow`, `content_bytes = 92432` y `content_md5 = 161c9b66454d1a64d4fd9e0031e004ea`.
 - Estado: preflight documental `RECONCILED`; producto sin cambio; siguiente trabajo permitido sólo sobre `VE-MOB-5-DECK` tras leer su documento de unidad, el código real y los contratos móviles pertinentes.
 - Siguiente acción verificable: completar el análisis de `VE-MOB-5-DECK` desde el `main` sincronizado; si no aparecen contradicciones, implementar únicamente su alcance, verificar proporcionalmente y publicar sólo por el workflow Android oficial.
+## 2026-08-30 — VE-MOB-11-ECONOMY — APK RELEASED / IMPLEMENTED_UNVERIFIED
+
+- Tipo de sesión: cierre del gate de build Android oficial para la unidad económica ya implementada.
+- Verificación remota: GitHub Actions `Build VEXFORGE Android APK`, run 25, terminó `success`; `npm run typecheck`, `expo prebuild`, Gradle `assembleRelease` y la comprobación de bundle embebido pasaron.
+- Release: tag `vexforge-android-build-25`, release prerelease publicado con `app-release.apk` standalone de 91,071,539 bytes.
+- Evidencia: https://github.com/grandmaster68081-byte/Vexforge-web/actions/runs/33295858152 y https://github.com/grandmaster68081-byte/Vexforge-web/releases/tag/vexforge-android-build-25
+- Estado: `IMPLEMENTED_UNVERIFIED`; el APK está publicado, pero la QA manual del operador, instalación en dispositivo y prueba autenticada de Economy siguen pendientes. No se declara `OPERATIONAL`, `TIER1_READY` ni `PASS`.
+- Siguiente acción verificable: instalar el APK publicado, ejecutar la matriz manual de Economy y registrar evidencia; después reevaluar la siguiente unidad Android elegible.
