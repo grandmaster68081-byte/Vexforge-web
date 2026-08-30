@@ -733,3 +733,13 @@
 - Evidencia: https://github.com/grandmaster68081-byte/Vexforge-web/actions/runs/33295858152 y https://github.com/grandmaster68081-byte/Vexforge-web/releases/tag/vexforge-android-build-25
 - Estado: `IMPLEMENTED_UNVERIFIED`; el APK está publicado, pero la QA manual del operador, instalación en dispositivo y prueba autenticada de Economy siguen pendientes. No se declara `OPERATIONAL`, `TIER1_READY` ni `PASS`.
 - Siguiente acción verificable: instalar el APK publicado, ejecutar la matriz manual de Economy y registrar evidencia; después reevaluar la siguiente unidad Android elegible.
+
+---
+
+## 2026-08-30 — VE-MOB-2-AUTH — NEXUS ACCESS VISUAL INTEGRATED / IMPLEMENTED_UNVERIFIED
+
+- Se revisó el protocolo canónico activo en Supabase y el estado real de `main` antes de editar; la unidad conserva el flujo Auth oficial existente.
+- Se sustituyó la entrada visual genérica por el arte oficial `vexforge-auth-nexus-final.png`, embebido en `mobile/assets/images` para que el APK sea autónomo y no dependa de una URL remota.
+- Los controles reales de correo, contraseña, mostrar/ocultar contraseña, envío, errores, carga y acceso al registro quedaron alineados sobre la composición entregada; no se añadió lógica autoritativa al cliente.
+- Estado: `IMPLEMENTED_UNVERIFIED` hasta completar el workflow Android oficial y la QA manual del operador en dispositivo o emulador. No se declara `OPERATIONAL`, `PASS` ni `TIER1_READY`.
+- Siguiente acción verificable: cerrar el checkpoint en `main`, comprobar el workflow `Build VEXFORGE Android APK` y entregar el release correlativo con `app-release.apk`.

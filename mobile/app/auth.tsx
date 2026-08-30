@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import {
   ActivityIndicator,
+  ImageBackground,
   KeyboardAvoidingView,
   Platform,
   Pressable,
@@ -11,12 +12,14 @@ import {
   View,
 } from 'react-native';
 import { Redirect } from 'expo-router';
+import { StatusBar } from 'expo-status-bar';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ForgeMark } from '@/components/ForgeMark';
 import { useColors } from '@/hooks/useColors';
 import { useGame } from '@/context/GameContext';
 import { ScreenShell } from '@/components/ScreenShell';
 import { ForgeText } from '@/components/ForgeText';
+import { typography } from '@/constants/typography';
 
 function readableAuthError(message: string | null) {
   if (!message) return null;
@@ -37,6 +40,7 @@ export default function AuthScreen() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [localError, setLocalError] = useState<string | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
 
@@ -79,6 +83,101 @@ export default function AuthScreen() {
       setNotice('Cuenta creada. Revisa tu correo para confirmar el acceso.');
     }
   };
+
+  if (mode === 'signin') {
+    return (
+      <View style={[styles.posterRoot, { backgroundColor: colors.background }]}>
+        <StatusBar style="light" translucent backgroundColor="transparent" />
+        <ImageBackground
+          source={require('../../assets/images/vexforge-auth-nexus-final.png')}
+          resizeMode="stretch"
+          style={styles.posterArtwork}
+          imageStyle={styles.posterImage}
+          accessibilityIgnoresInvertColors
+        >
+          <KeyboardAvoidingView
+            style={styles.posterOverlay}
+            behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+          >
+            <TextInput
+              testID="auth-email"
+              accessibilityLabel="Correo electrónico"
+              value={email}
+              onChangeText={setEmail}
+              autoCapitalize="none"
+              autoCorrect={false}
+              keyboardType="email-address"
+              textContentType="emailAddress"
+              placeholder=""
+              style={[styles.posterEmail, { color: colors.foreground }]}
+              editable={!authLoading}
+              returnKeyType="next"
+            />
+            <TextInput
+              testID="auth-password"
+              accessibilityLabel="Contraseña"
+              value={password}
+              onChangeText={setPassword}
+              placeholder=""
+              secureTextEntry={!showPassword}
+              textContentType="password"
+              style={[styles.posterPassword, { color: colors.foreground }]}
+              editable={!authLoading}
+              returnKeyType="go"
+              onSubmitEditing={submit}
+            />
+            <Pressable
+              testID="auth-toggle-password"
+              accessibilityRole="button"
+              accessibilityLabel={showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'}
+              onPress={() => setShowPassword((visible) => !visible)}
+              disabled={authLoading}
+              style={styles.posterPasswordToggle}
+            />
+            <Pressable
+              testID="auth-submit"
+              accessibilityRole="button"
+              accessibilityLabel="Entrar al Nexus"
+              onPress={submit}
+              disabled={authLoading}
+              style={({ pressed }) => [styles.posterSubmit, { opacity: pressed ? 0.8 : 1 }]}
+            />
+            {authLoading && (
+              <ActivityIndicator
+                accessibilityLabel="Conectando con Nexus"
+                color={colors.primaryForeground}
+                style={styles.posterLoading}
+              />
+            )}
+            {(error || notice) && (
+              <View
+                accessibilityRole="alert"
+                style={[
+                  styles.posterFeedback,
+                  {
+                    backgroundColor: `${colors.ink}F5`,
+                    borderColor: error ? colors.danger : colors.success,
+                  },
+                ]}
+              >
+                <Text style={[styles.feedbackText, { color: error ? colors.danger : colors.success }]}>
+                  {error ?? notice}
+                </Text>
+              </View>
+            )}
+            <Pressable
+              testID="auth-open-signup"
+              accessibilityRole="button"
+              accessibilityLabel="Crear acceso"
+              onPress={() => setMode('signup')}
+              disabled={authLoading}
+              style={styles.posterSignup}
+            />
+          </KeyboardAvoidingView>
+        </ImageBackground>
+      </View>
+    );
+  }
 
   return (
     <ScreenShell surface="auth">
@@ -228,6 +327,73 @@ export default function AuthScreen() {
 }
 
 const styles = StyleSheet.create({
+  posterRoot: { flex: 1 },
+  posterArtwork: { flex: 1, width: '100%', height: '100%' },
+  posterImage: { width: '100%', height: '100%' },
+  posterOverlay: { flex: 1, width: '100%', height: '100%' },
+  posterEmail: {
+    position: 'absolute',
+    left: '10%',
+    top: '45.4%',
+    width: '80%',
+    height: '5.5%',
+    paddingHorizontal: 14,
+    paddingVertical: 0,
+    fontFamily: typography.body,
+    fontSize: 14,
+    lineHeight: 18,
+    backgroundColor: 'transparent',
+  },
+  posterPassword: {
+    position: 'absolute',
+    left: '10%',
+    top: '54.2%',
+    width: '80%',
+    height: '5.5%',
+    paddingHorizontal: 14,
+    paddingVertical: 0,
+    paddingRight: 48,
+    fontFamily: typography.body,
+    fontSize: 14,
+    lineHeight: 18,
+    backgroundColor: 'transparent',
+  },
+  posterPasswordToggle: {
+    position: 'absolute',
+    right: '8%',
+    top: '54.1%',
+    width: '14%',
+    height: '5.8%',
+  },
+  posterSubmit: {
+    position: 'absolute',
+    left: '10%',
+    top: '59.2%',
+    width: '80%',
+    height: '6.5%',
+  },
+  posterLoading: {
+    position: 'absolute',
+    top: '61%',
+    left: '50%',
+    marginLeft: -10,
+  },
+  posterFeedback: {
+    position: 'absolute',
+    top: '15%',
+    left: '8%',
+    width: '84%',
+    borderWidth: 1,
+    borderRadius: 10,
+    padding: 10,
+  },
+  posterSignup: {
+    position: 'absolute',
+    left: '32%',
+    top: '70.3%',
+    width: '38%',
+    height: '5.2%',
+  },
   screen: { flex: 1 },
   content: { flexGrow: 1, paddingHorizontal: 24 },
   brand: { flexDirection: 'row', alignItems: 'center', gap: 14 },
