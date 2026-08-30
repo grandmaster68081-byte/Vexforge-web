@@ -1,6 +1,6 @@
 # VE-MOB-11 — ECONOMÍA
 
-**Estado:** DERIVED_SCOPE / READY_FOR_IMPLEMENTATION  
+**Estado:** IMPLEMENTED_UNVERIFIED  
 **Fecha:** 2026-08-28  
 **Fase:** P2 — Progresión y economía  
 **Fuente de selección:** `docs/VE-MOB-0-PORT-INVENTORY.md`
@@ -44,7 +44,15 @@ Este alcance es una decisión **DERIVADA** porque no existía un documento canó
 - Retiro bloquea visualmente montos por debajo del mínimo del contrato web, pero el backend sigue siendo la autoridad final; muestra pendientes, comisión y resultado real.
 - Referidos muestra estados y recompensas registradas; no fabrica ni adelanta VEX.
 - Todas las superficies usan iconografía propia disponible en la app, son legibles en pantalla pequeña, soportan reduced-motion y no usan emojis ni datos inventados.
-- La unidad se documenta como `IMPLEMENTED_UNVERIFIED` sólo después de typecheck, guards específicos, verificación web/móvil y publicación del workflow APK; la QA humana del operador permanece separada.
+
+## Evidencia de implementación
+
+- Ruta unificada `mobile/app/economy.tsx`, registrada en el stack raíz y accesible desde Home y Perfil.
+- Consumidores reales añadidos a `mobile/lib/supabase.ts` para cartera/ledger, mercado, tesorería/depósitos, retiros y referidos.
+- Sin escrituras directas desde Android sobre economía: las mutaciones de mercado, depósito y retiro llaman únicamente a los RPC oficiales.
+- Verificación móvil: `cd mobile && pnpm typecheck` OK.
+- Guarda específica: `node scripts/verify-mobile-economy.mjs` OK, 9/9 comprobaciones.
+- Estado de la unidad: `IMPLEMENTED_UNVERIFIED`; falta la evidencia del workflow/release APK y la QA humana del operador.
 
 ## Decisiones derivadas y reversibilidad
 
@@ -60,4 +68,4 @@ Este alcance es una decisión **DERIVADA** porque no existía un documento canó
 
 ## Siguiente acción
 
-Implementar esta unidad sobre `mobile/`, añadir los consumidores a `mobile/lib/supabase.ts`, registrar la navegación sin romper Tabs, ejecutar las verificaciones proporcionales y publicar por el workflow Android oficial. No modificar tablas, RLS, RPCs, balances, economía ni releases manualmente.
+Publicar por el workflow Android oficial y conservar la unidad como `IMPLEMENTED_UNVERIFIED` hasta que el operador complete la QA del APK. No modificar tablas, RLS, RPCs, balances, economía ni releases manualmente.

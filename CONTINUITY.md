@@ -1,3 +1,15 @@
+## 2026-08-29 — VE-MOB-11-ECONOMY — IMPLEMENTED_UNVERIFIED
+
+- Tipo de sesión: implementación Android de la unidad económica derivada del inventario oficial y de los contratos vivos de Supabase.
+- Cambios: se creó `mobile/app/economy.tsx` como superficie unificada para cartera/ledger, mercado, depósitos, retiros y referidos; se registró en el stack raíz y se añadió acceso desde Home y Perfil.
+- Consumidores: `mobile/lib/supabase.ts` ahora contiene lecturas reales y las llamadas RPC `vexforge_get_my_economy_stats`, `create_listing`, `buy_listing`, `cancel_listing`, `vexforge_submit_deposit`, `vexforge_get_my_deposits` y `vexforge_request_withdrawal`.
+- Seguridad económica: Android no escribe directamente en tablas de economía ni calcula/acredita recompensas, comisiones o liquidaciones; sólo presenta fórmulas informativas de retiro y estados devueltos por Supabase.
+- Verificación local: `cd mobile && pnpm typecheck` OK; `node scripts/verify-mobile-economy.mjs` OK (9/9). El typecheck web completo sigue condicionado por dependencias ausentes del checkout temporal y no se modificó el producto web.
+- Estado: `IMPLEMENTED_UNVERIFIED`. La QA manual del operador sigue pendiente; no se declara `OPERATIONAL`, `TIER1_READY` ni `PASS`.
+- Siguiente acción verificable: publicar por el workflow Android oficial, verificar el APK standalone y actualizar la evidencia del release sin transportar credenciales fuera de headers HTTPS.
+
+---
+
 ## 2026-08-29 — CANONICAL-PROTOCOL-RECONCILIATION — RECONCILED
 
 - Tipo de sesión: preflight documental; sin cambios en código de producto, `mobile/**`, datos de jugadores, economía, combate, Auth, RLS, RPCs, Storage, assets, APK ni deploy.

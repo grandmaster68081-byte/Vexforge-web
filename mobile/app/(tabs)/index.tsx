@@ -174,6 +174,17 @@ export default function ForgeScreen() {
               <Text style={[styles.tutorialLinkText, { color: colors.accent }]}>FORJA Y RECURSOS</Text>
               <Ionicons name="arrow-forward" size={15} color={colors.accent} />
             </Pressable>
+            <Pressable
+              accessibilityRole="button"
+              accessibilityLabel="Abrir economía"
+              testID="home-economy"
+              onPress={() => router.push('/economy')}
+              style={({ pressed }) => [styles.tutorialLink, { borderColor: colors.border, opacity: pressed ? 0.72 : 1 }]}
+            >
+              <Ionicons name="wallet-outline" size={16} color={colors.accent} />
+              <Text style={[styles.tutorialLinkText, { color: colors.accent }]}>ECONOMÍA Y MERCADO</Text>
+              <Ionicons name="arrow-forward" size={15} color={colors.accent} />
+            </Pressable>
 
            <View style={styles.heroStats}>
             <View style={styles.heroStat}><Text style={[styles.heroStatValue, { color: colors.accent }]}>{home.stats?.total_cards ?? '—'}</Text><Text style={[styles.heroStatLabel, { color: colors.mutedForeground }]}>CARTAS</Text></View>

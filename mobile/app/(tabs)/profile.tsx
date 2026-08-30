@@ -338,6 +338,7 @@ export default function ProfileScreen() {
           <QuickAction icon="layers-outline" label="Explorar colección" onPress={() => router.push('/collection')} colors={colors} testID="profile-collection" />
           <QuickAction icon="grid-outline" label="Preparar mazo" onPress={() => router.push('/deck')} colors={colors} testID="profile-deck" />
            <QuickAction icon="storefront-outline" label="Forja, tienda e inventario" onPress={() => router.push('/store')} colors={colors} testID="profile-store" />
+           <QuickAction icon="wallet-outline" label="Cartera, mercado y retiros" onPress={() => router.push('/economy')} colors={colors} testID="profile-economy" />
         </View>
       </KeyboardAwareScrollViewCompat>
     </View>

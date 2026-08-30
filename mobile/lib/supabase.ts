@@ -101,6 +101,108 @@ export type PlayerAchievement = {
   unlocked_at: string | null;
 };
 export type Wallet = { vex_ingame: number; vex_tradeable: number; reserved_ingame: number; reserved_tradeable: number };
+export type EconomyLedgerEntry = {
+  id: string;
+  entry_type: string;
+  currency: string;
+  amount: number;
+  balance_before: number | null;
+  balance_after: number | null;
+  source_table: string | null;
+  metadata: Record<string, unknown> | null;
+  created_at: string;
+};
+export type EconomyStats = {
+  ok: boolean;
+  entry_count: number;
+  total_credited: number;
+  total_debited: number;
+  net_ingame: number;
+  net_tradeable: number;
+  largest_credit: number;
+  by_type: Array<{ entry_type: string; currency: string; count: number; total_amount: number }>;
+};
+export type MarketListing = {
+  id: string;
+  reference_id: string;
+  player_id: string;
+  player_card_id: string;
+  price: number;
+  fee: number;
+  status: string;
+  expires_at: string | null;
+  locked: boolean;
+  card_name: string | null;
+  card_rarity: string | null;
+};
+export type MarketOwnedCard = {
+  id: string;
+  card_id: string;
+  card_name: string | null;
+  card_rarity: string | null;
+  quantity: number;
+  locked: boolean;
+  listed: boolean;
+};
+export type TreasuryWallet = {
+  chain: string;
+  token_symbol: string;
+  wallet_address: string;
+  token_standard: string | null;
+};
+export type DepositRecord = {
+  id: string;
+  amount_usdt: number;
+  vex_credited: number;
+  chain: string;
+  token_symbol: string;
+  tx_hash: string;
+  status: 'pending' | 'approved' | 'rejected' | string;
+  created_at: string;
+};
+export type SubmitDepositResult = {
+  ok: boolean;
+  deposit_id?: string;
+  vex_pending?: number;
+  reason?: string;
+};
+export type TradeableBalance = { balance: number; locked: number; pending: boolean };
+export type WithdrawalRequest = {
+  id: string;
+  player_id: string;
+  tradeable_amount: number;
+  usdt_gross: number;
+  fee_usdt: number;
+  usdt_net: number;
+  status: string;
+  rejected_reason: string | null;
+  payout_tx_hash: string | null;
+  created_at: string;
+  processed_at: string | null;
+};
+export type RequestWithdrawalResult = {
+  ok: boolean;
+  request_id?: string;
+  usdt_gross?: number;
+  fee_usdt?: number;
+  usdt_net?: number;
+  reason?: string;
+};
+export type ReferralRecord = {
+  id: string;
+  referred_display_name: string | null;
+  status: string;
+  reward_granted: boolean;
+  first_pack_rewarded: boolean;
+  created_at: string;
+};
+export type ReferralSummary = {
+  referral_code: string | null;
+  total_referrals: number;
+  pending: number;
+  completed: number;
+  rewards_granted: number;
+};
 export type Opponent = { player_id: string; display_name: string; mmr: number; wins: number; losses: number };
 export type BattleActor = {
   name: string;
@@ -590,6 +692,266 @@ export async function loadPlayerProfile(session: Session): Promise<PlayerProfile
 export async function loadWallet(session: Session, playerId: string): Promise<Wallet | null> {
   const rows = await rest('player_wallet?select=vex_ingame%2Cvex_tradeable%2Creserved_ingame%2Creserved_tradeable&player_id=eq.' + encodeURIComponent(playerId) + '&limit=1', session) as Wallet[];
   return rows[0] ?? null;
+}
+
+const economyNumber = (value: unknown) => Number(value ?? 0);
+
+export async function loadEconomyStats(session: Session): Promise<EconomyStats> {
+  const result = await restRpc('vexforge_get_my_economy_stats', {}, session) as Partial<EconomyStats> & { reason?: string } | null;
+  if (!result?.ok) throw new Error(result?.reason ?? 'No se pudieron cargar las estadísticas económicas.');
+  return {
+    ok: true,
+    entry_count: economyNumber(result.entry_count),
+    total_credited: economyNumber(result.total_credited),
+    total_debited: economyNumber(result.total_debited),
+    net_ingame: economyNumber(result.net_ingame),
+    net_tradeable: economyNumber(result.net_tradeable),
+    largest_credit: economyNumber(result.largest_credit),
+    by_type: Array.isArray(result.by_type)
+      ? result.by_type.map((item) => ({
+          entry_type: String(item.entry_type ?? ''),
+          currency: String(item.currency ?? ''),
+          count: economyNumber(item.count),
+          total_amount: economyNumber(item.total_amount),
+        }))
+      : [],
+  };
+}
+
+export async function loadEconomyLedger(session: Session, limit = 30, offset = 0): Promise<EconomyLedgerEntry[]> {
+  const safeLimit = Math.max(1, Math.min(100, Math.floor(limit)));
+  const safeOffset = Math.max(0, Math.floor(offset));
+  const rows = await rest(
+    'economy_ledger?select=id%2Centry_type%2Ccurrency%2Camount%2Cbalance_before%2Cbalance_after%2Csource_table%2Cmetadata%2Ccreated_at&order=created_at.desc&limit=' +
+      safeLimit + '&offset=' + safeOffset,
+    session,
+  ) as Array<Record<string, unknown>>;
+  return rows.map((row) => ({
+    id: String(row.id ?? ''),
+    entry_type: String(row.entry_type ?? ''),
+    currency: String(row.currency ?? ''),
+    amount: economyNumber(row.amount),
+    balance_before: row.balance_before == null ? null : economyNumber(row.balance_before),
+    balance_after: row.balance_after == null ? null : economyNumber(row.balance_after),
+    source_table: row.source_table == null ? null : String(row.source_table),
+    metadata: (row.metadata as Record<string, unknown> | null) ?? null,
+    created_at: String(row.created_at ?? ''),
+  }));
+}
+
+function nestedRow(value: unknown): Record<string, unknown> | null {
+  if (Array.isArray(value)) return (value[0] as Record<string, unknown> | undefined) ?? null;
+  return (value as Record<string, unknown> | null) ?? null;
+}
+
+export async function loadMarketListings(session: Session): Promise<MarketListing[]> {
+  const rows = await rest(
+    'market_listings?select=id%2Creference_id%2Cplayer_id%2Cplayer_card_id%2Cprice%2Cfee%2Cstatus%2Cexpires_at%2Clocked%2Cplayer_cards%21player_card_id%28cards%21card_id%28name%2Crarity%29%29&status=eq.active&order=price.asc',
+    session,
+  ) as Array<Record<string, unknown>>;
+  return rows.map((row) => {
+    const playerCard = nestedRow(row.player_cards);
+    const card = nestedRow(playerCard?.cards);
+    return {
+      id: String(row.id ?? ''),
+      reference_id: String(row.reference_id ?? ''),
+      player_id: String(row.player_id ?? ''),
+      player_card_id: String(row.player_card_id ?? ''),
+      price: economyNumber(row.price),
+      fee: economyNumber(row.fee),
+      status: String(row.status ?? ''),
+      expires_at: row.expires_at == null ? null : String(row.expires_at),
+      locked: Boolean(row.locked),
+      card_name: card?.name == null ? null : String(card.name),
+      card_rarity: card?.rarity == null ? null : String(card.rarity),
+    };
+  });
+}
+
+export async function loadMarketOwnedCards(session: Session, playerId: string): Promise<MarketOwnedCard[]> {
+  const rows = await rest(
+    'player_cards?select=id%2Ccard_id%2Cquantity%2Clocked%2Clisted%2Ccards%21card_id%28name%2Crarity%29&player_id=eq.' +
+      encodeURIComponent(playerId) + '&listed=eq.false&locked=eq.false&quantity=gt.0&order=created_at.asc',
+    session,
+  ) as Array<Record<string, unknown>>;
+  return rows.map((row) => {
+    const card = nestedRow(row.cards);
+    return {
+      id: String(row.id ?? ''),
+      card_id: String(row.card_id ?? ''),
+      card_name: card?.name == null ? null : String(card.name),
+      card_rarity: card?.rarity == null ? null : String(card.rarity),
+      quantity: economyNumber(row.quantity),
+      locked: Boolean(row.locked),
+      listed: Boolean(row.listed),
+    };
+  });
+}
+
+function mobileReference(prefix: string) {
+  return `mobile-${prefix}-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+}
+
+export async function createMarketListing(
+  session: Session,
+  playerId: string,
+  playerCardId: string,
+  price: number,
+): Promise<{ ok: boolean; listing_id?: string; reason?: string }> {
+  if (!Number.isFinite(price) || price <= 0) return { ok: false, reason: 'El precio debe ser mayor que 0.' };
+  const data = await restRpc('create_listing', {
+    p_player_id: playerId,
+    p_player_card_id: playerCardId,
+    p_price: price,
+    p_reference_id: mobileReference('listing'),
+    p_fee: 0,
+    p_expires_at: null,
+    p_metadata: { source: 'mobile' },
+  }, session) as string | null;
+  if (!data) return { ok: false, reason: 'El servidor no devolvió el listado creado.' };
+  return { ok: true, listing_id: String(data) };
+}
+
+export async function buyMarketListing(
+  session: Session,
+  playerId: string,
+  listingId: string,
+): Promise<{ ok: boolean; reason?: string }> {
+  const data = await restRpc('buy_listing', {
+    p_buyer_id: playerId,
+    p_listing_id: listingId,
+    p_reference_id: mobileReference('buy'),
+    p_metadata: { source: 'mobile' },
+  }, session) as { ok?: boolean; reason?: string } | null;
+  if (data?.ok === false) return { ok: false, reason: data.reason ?? 'La compra fue rechazada por el servidor.' };
+  return { ok: true };
+}
+
+export async function cancelMarketListing(
+  session: Session,
+  playerId: string,
+  listingId: string,
+): Promise<{ ok: boolean; reason?: string }> {
+  const data = await restRpc('cancel_listing', {
+    p_player_id: playerId,
+    p_listing_id: listingId,
+    p_reference_id: mobileReference('cancel'),
+    p_metadata: { source: 'mobile' },
+  }, session) as { ok?: boolean; reason?: string } | null;
+  if (data?.ok === false) return { ok: false, reason: data.reason ?? 'La cancelación fue rechazada por el servidor.' };
+  return { ok: true };
+}
+
+export async function loadTreasuryWallets(session: Session): Promise<TreasuryWallet[]> {
+  const rows = await rest(
+    'vexforge_treasury?select=chain%2Ctoken_symbol%2Cwallet_address%2Ctoken_standard&active=eq.true&purpose=eq.project_treasury&order=chain.asc',
+    session,
+  ) as TreasuryWallet[];
+  return rows;
+}
+
+export async function loadMyDeposits(session: Session): Promise<DepositRecord[]> {
+  const data = await restRpc('vexforge_get_my_deposits', {}, session) as unknown;
+  return Array.isArray(data) ? data.map((row) => {
+    const item = row as Record<string, unknown>;
+    return {
+      id: String(item.id ?? ''),
+      amount_usdt: economyNumber(item.amount_usdt),
+      vex_credited: economyNumber(item.vex_credited),
+      chain: String(item.chain ?? ''),
+      token_symbol: String(item.token_symbol ?? ''),
+      tx_hash: String(item.tx_hash ?? ''),
+      status: String(item.status ?? ''),
+      created_at: String(item.created_at ?? ''),
+    };
+  }) : [];
+}
+
+export async function submitMobileDeposit(
+  session: Session,
+  amountUsdt: number,
+  chain: string,
+  tokenSymbol: string,
+  txHash: string,
+  payerWalletAddress: string,
+): Promise<SubmitDepositResult> {
+  const data = await restRpc('vexforge_submit_deposit', {
+    p_amount_usdt: amountUsdt,
+    p_chain: chain,
+    p_token_symbol: tokenSymbol,
+    p_tx_hash: txHash.trim(),
+    p_payer_wallet_address: payerWalletAddress.trim(),
+  }, session) as SubmitDepositResult | null;
+  return data ?? { ok: false, reason: 'El servidor no devolvió el resultado del depósito.' };
+}
+
+export async function loadTradeableBalance(session: Session, playerId: string): Promise<TradeableBalance | null> {
+  const rows = await rest(
+    'player_economy_state?select=trade_balance%2Ctrade_balance_locked%2Cwithdrawal_pending&player_id=eq.' +
+      encodeURIComponent(playerId) + '&limit=1',
+    session,
+  ) as Array<Record<string, unknown>>;
+  const row = rows[0];
+  return row ? {
+    balance: economyNumber(row.trade_balance),
+    locked: economyNumber(row.trade_balance_locked),
+    pending: Boolean(row.withdrawal_pending),
+  } : null;
+}
+
+export async function loadMyWithdrawals(session: Session, playerId: string): Promise<WithdrawalRequest[]> {
+  const rows = await rest(
+    'vexforge_withdrawal_requests_official?select=id%2Cplayer_id%2Ctradeable_amount%2Cusdt_gross%2Cfee_usdt%2Cusdt_net%2Cstatus%2Crejected_reason%2Cpayout_tx_hash%2Ccreated_at%2Cprocessed_at&player_id=eq.' +
+      encodeURIComponent(playerId) + '&order=created_at.desc',
+    session,
+  ) as Array<Record<string, unknown>>;
+  return rows.map((row) => ({
+    id: String(row.id ?? ''),
+    player_id: String(row.player_id ?? ''),
+    tradeable_amount: economyNumber(row.tradeable_amount),
+    usdt_gross: economyNumber(row.usdt_gross),
+    fee_usdt: economyNumber(row.fee_usdt),
+    usdt_net: economyNumber(row.usdt_net),
+    status: String(row.status ?? ''),
+    rejected_reason: row.rejected_reason == null ? null : String(row.rejected_reason),
+    payout_tx_hash: row.payout_tx_hash == null ? null : String(row.payout_tx_hash),
+    created_at: String(row.created_at ?? ''),
+    processed_at: row.processed_at == null ? null : String(row.processed_at),
+  }));
+}
+
+export async function requestMobileWithdrawal(
+  session: Session,
+  playerId: string,
+  tradeableAmount: number,
+): Promise<RequestWithdrawalResult> {
+  const data = await restRpc('vexforge_request_withdrawal', {
+    p_player_id: playerId,
+    p_tradeable_amount: tradeableAmount,
+  }, session) as RequestWithdrawalResult | null;
+  return data ?? { ok: false, reason: 'El servidor no devolvió el resultado del retiro.' };
+}
+
+export async function loadReferralSummary(session: Session): Promise<{ summary: ReferralSummary; referrals: ReferralRecord[] }> {
+  const players = await rest(
+    'players?select=referral_code&auth_user_id=eq.' + encodeURIComponent(session.user.id) + '&limit=1',
+    session,
+  ) as Array<{ referral_code?: string | null }>;
+  const referrals = await rest(
+    'vexforge_referrals?select=id%2Creferred_display_name%2Cstatus%2Creward_granted%2Cfirst_pack_rewarded%2Ccreated_at&referrer_auth_id=eq.' +
+      encodeURIComponent(session.user.id) + '&order=created_at.desc&limit=50',
+    session,
+  ) as ReferralRecord[];
+  return {
+    summary: {
+      referral_code: players[0]?.referral_code ?? null,
+      total_referrals: referrals.length,
+      pending: referrals.filter((item) => item.status === 'pending').length,
+      completed: referrals.filter((item) => item.status === 'completed').length,
+      rewards_granted: referrals.filter((item) => item.reward_granted).length,
+    },
+    referrals,
+  };
 }
 
 export async function loadProgress(session: Session, playerId: string): Promise<PlayerProgress | null> {
