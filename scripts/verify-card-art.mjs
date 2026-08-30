@@ -88,9 +88,23 @@ for (const path of cardArtPaths) {
   if (!consumed.has(path)) failures.push("arte de carta inscrito y no consumido por ninguna carta: " + path);
 }
 
+async function verifyStorageObject(path) {
+  let lastStatus = 0;
+  for (let attempt = 0; attempt < 4; attempt += 1) {
+    const response = await fetch(STORAGE_BASE + "/" + path, { method: "HEAD" });
+    if (response.ok) return null;
+    lastStatus = response.status;
+    if (response.status !== 429 && response.status < 500) return response.status;
+    const retryAfter = Number(response.headers.get("retry-after") ?? 0);
+    const waitMs = Math.min(5000, Math.max(750, retryAfter * 1000 || 0));
+    await new Promise((resolve) => setTimeout(resolve, waitMs));
+  }
+  return lastStatus;
+}
+
 for (const path of cardArtPaths) {
-  const head = await fetch(STORAGE_BASE + "/" + path, { method: "HEAD" });
-  if (!head.ok) failures.push("arte de carta inscrito y ausente en Storage: " + path + " -> HTTP " + head.status);
+  const status = await verifyStorageObject(path);
+  if (status) failures.push("arte de carta inscrito y ausente en Storage: " + path + " -> HTTP " + status);
 }
 
 function walk(dir) {

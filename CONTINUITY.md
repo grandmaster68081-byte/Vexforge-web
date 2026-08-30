@@ -10,6 +10,16 @@
 
 ---
 
+## 2026-08-30 — VE-MOB-VIS-1-PACK-1-DELIVERY-REPAIR — IN_PROGRESS
+
+- Hallazgo de entrega: el workflow Android falló dos veces en `npm ci` con el error interno de npm `Exit handler never called`; la verificación general falló al recibir HTTP 429 al consultar cuatro objetos de Storage.
+- Reparación acotada: la instalación CI conserva `npm ci` y el lockfile, pero usa `--ignore-scripts`; `verify-card-art` reintenta sólo 429/5xx con backoff y continúa fallando ante una ausencia real o un HTTP no recuperable.
+- Alcance preservado: no se relajan las guardas de procedencia, no se sustituyen assets, no se modifican contratos Supabase y no se cambia la funcionalidad Android.
+- Estado: `IN_PROGRESS`. La reparación sólo se considerará verificable cuando un workflow Android y un workflow de validación nuevos terminen con evidencia real.
+- Siguiente acción verificable: publicar esta reparación por Git Data API HTTPS y observar ejecuciones nuevas sobre `main`.
+
+---
+
 ## 2026-08-30 — VE-MOB-VIS-1-FORGE-IDENTITY — IMPLEMENTED_UNVERIFIED
 
  - Tipo de sesión: implementación visual Android sobre la superficie móvil oficial del repositorio, siguiendo el protocolo vivo v2.7-autonomous-context-law.
