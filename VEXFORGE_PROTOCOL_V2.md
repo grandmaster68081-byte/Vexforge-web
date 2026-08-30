@@ -1,5 +1,5 @@
 # VEXFORGE — Protocolo Maestro Universal v2
-**Última actualización:** 2026-08-28 | **Mantenido por:** Replit Agent
+**Última actualización:** 2026-08-30 | **Mantenido por:** Replit Agent
 **Documento clave en Supabase:** `vexforge_master_protocol_v2`
 
 ---
@@ -18,6 +18,25 @@ Esta ley no crea un plan paralelo ni elimina los gates del Protocolo Maestro. De
 6. La entrega Android sólo ocurre por push a `main` con cambios en `mobile/**`, el workflow oficial `.github/workflows/vexforge-android-apk.yml`, el release correlativo y el APK `app-release.apk`. No se autorizan EAS, builds manuales, releases manuales ni canales paralelos.
 7. Cada unidad Android conserva todos los gates del protocolo: análisis integral, datos reales, cero genéricos, accesibilidad, reduced-motion, rendimiento, verificación proporcional, correspondencia commit/run/release y continuidad. La QA humana del operador es una validación post-entrega y no bloquea la continuidad del trabajo: su ausencia deja la unidad en `IMPLEMENTED_UNVERIFIED`, permite seleccionar y ejecutar la siguiente unidad elegible, y se conserva como evidencia pendiente. El agente no debe declarar `OPERATIONAL`, `TIER1_READY`, `PASS` ni cerrar la QA en nombre del operador.
 8. Una vez completado el port, la FASE CONTINUIDAD retoma el roadmap Tier 1/T0-T10 y sus criterios sobre la app, sin perder la evidencia ni las protecciones acumuladas.
+
+## LEY OBLIGATORIA — CONSUMO VISUAL OFICIAL Y COBERTURA SIN SUSTITUTOS
+
+**Fecha de entrada en vigor:** 2026-08-30  
+**Estado:** OBLIGATORIA — aplica a toda unidad existente, nueva o reabierta, en web, Android y cualquier otro cliente oficial.
+
+Esta ley conecta la regla **Cero Genéricos** con la Directiva de **Análisis Integral y Ejecución Autónoma**. El plan de trabajo no se detiene porque falte una pieza visual: el trabajo funcional y la producción del arte pueden avanzar en paralelo. Sin embargo, ninguna unidad puede cerrarse, publicarse como completa o presentarse como visualmente conforme mientras consuma un sustituto genérico.
+
+1. **Inventario antes de renderizar.** Antes de implementar una pantalla, estado, carta, criatura, objeto, decoración, efecto, icono, animación o sonido, el agente debe identificar su recurso oficial, su rol semántico, su ruta canónica y su consumidor. No se permite introducir una referencia visual sin procedencia.
+2. **Si el recurso existe, se consume el oficial.** La implementación debe enlazar el asset del manifiesto oficial y del bucket canónico `vexforge-assets`, a través del registro visual del cliente (`src/lib/assetManifest.ts`, `mobile/constants/visual.ts` o el equivalente oficial). No se copian versiones paralelas ni se inventan sustitutos locales.
+3. **Si el recurso no existe, se crea antes de cerrar la unidad.** La Directiva de Ejecución Autónoma autoriza a diseñar o generar el recurso faltante siguiendo la identidad VEXFORGE, los criterios Tier 1 y la extensión visual vigente. Después debe subirse al Storage oficial, inscribirse en `public.vexforge_official_asset_manifest`, asignársele un rol semántico y enlazarse desde el consumidor real. Crear el archivo sin registrarlo y consumirlo directamente no cumple esta ley.
+4. **Cero sustitutos diegéticos.** Quedan prohibidos para representar elementos del universo VEXFORGE: palitos, matas, criaturas, armas, cartas, edificios, fondos, adornos, iconos de acción, emojis, Unicode, imágenes stock, placeholders visibles, dibujos temporales, gradientes o formas CSS que pretendan ser el arte final. Las formas CSS sí pueden usarse para geometría de interfaz, separadores, barras de progreso y feedback no diegético; nunca para simular un objeto del mundo que requiere arte propio.
+5. **No hay fallback silencioso.** Si el asset oficial no carga, la pantalla debe mostrar un estado de error o vacío explícito, accesible y con identidad VEXFORGE, sin sustituirlo por otra imagen, emoji, icono genérico o recurso de demostración.
+6. **La continuidad no se bloquea; el cierre visual sí.** Si falta arte, el agente debe abrir inmediatamente la pista de producción/enlace del asset y continuar las partes independientes del plan. La unidad se conserva como incompleta visualmente (`ASSET_REQUIRED`, `ASSET_IN_PROGRESS` o `IMPLEMENTED_UNVERIFIED`, según corresponda) hasta que el recurso esté creado, registrado, enlazado y comprobado.
+7. **Gate obligatorio de cobertura.** Cada unidad debe conservar una matriz `elemento → rol semántico → ruta Storage → registro → consumidor → evidencia`. El cierre requiere que no existan referencias visuales sin registro, registros sin objeto en Storage, consumidores con fallback genérico ni elementos nuevos sin decisión de procedencia.
+8. **Evidencia proporcional.** El agente debe ejecutar la guarda de manifiesto disponible (`npm run verify:manifest`, `npm run verify:assets` o su equivalente móvil), comprobar el consumidor real y actualizar `CONTINUITY.md`. La QA humana posterior puede quedar pendiente según la ley de continuidad, pero no puede inventarse ni sustituirse por una afirmación del agente.
+9. **Precedencia y conexión.** Esta ley prevalece sobre documentos históricos que permitan placeholders y se aplica junto con la ley de transición Android, la regla de continuidad sin bloqueo por QA humana, la regla Cero Genéricos y la Directiva de Ejecución Autónoma. La autonomía permite producir lo que falta; no permite declarar oficial un recurso que aún no fue inscrito y consumido por el producto.
+
+**Definición operativa:** una superficie está **VISUALMENTE CUBIERTA** sólo cuando todos sus elementos de mundo y de identidad tienen procedencia oficial comprobable y sus consumidores apuntan a esa procedencia. Un estado explícito de carga, vacío o error no cuenta como sustituto genérico; un placeholder que intenta parecer el elemento final sí cuenta como violación.
 
 ## REGLA DE CONTINUIDAD SIN BLOQUEO POR QA HUMANA
 
@@ -142,6 +161,7 @@ Columna de contenido en vexforge_official_documents: `content_markdown`
 6. **ForgeFormation como núcleo de combate** — Todas las batallas (PvP, Raids, Jefes) deben usar ForgeFormationBoard
 7. **Performance** — Efectos y animaciones deben mantener 60fps en móvil; optimizar antes de añadir más partículas
 8. **Logging** — Nunca console.log en producción; usar el sistema de errores silenciosos existente (try/catch)
+9. **Cobertura visual oficial** — Todo elemento diegético nuevo debe existir en Storage oficial, estar registrado en el manifiesto y ser consumido por su registro visual; si falta, se produce y enlaza antes del cierre.
 
 ---
 
@@ -308,12 +328,13 @@ Cuando una IA retoma el trabajo, debe seguir este orden:
 1. LEER → CONTINUITY.md (estado real del repo)
 2. LEER → vexforge_forge_formation_engine_v1 (plan activo con último estado)
 3. VERIFICAR → npm run build (debe ser 0 errores antes de tocar nada)
-4. IMPLEMENTAR → Primero tareas P (Pendientes: P1, P2, P3, P4, P5, P6 en ese orden)
-5. MEJORAR → Después tareas M (Mejoras: M1, M2, M3, M4, M5)
-6. CONFIRMAR → build limpio después de cada lote
-7. PUBLICAR → actualizar `main` mediante la API REST HTTPS de GitHub, sin `git push` ni PAT en URLs/remotos
-8. ACTUALIZAR → PATCH a vexforge_forge_formation_engine_v1 en Supabase con estado real
-9. REPORTAR → Reporte claro de lo implementado antes de cerrar sesión
+4. INVENTARIAR → Cada elemento visual nuevo: procedencia, rol, Storage, manifiesto y consumidor
+5. IMPLEMENTAR → Primero tareas P (Pendientes: P1, P2, P3, P4, P5, P6 en ese orden), con su pista visual paralela
+6. MEJORAR → Después tareas M (Mejoras: M1, M2, M3, M4, M5), sin sustitutos visuales
+7. CONFIRMAR → build limpio, cobertura del manifiesto y guarda específica después de cada lote
+8. PUBLICAR → actualizar `main` mediante la API REST HTTPS de GitHub, sin `git push` ni PAT en URLs/remotos
+9. ACTUALIZAR → PATCH a vexforge_forge_formation_engine_v1 en Supabase con estado real
+10. REPORTAR → Reporte claro de lo implementado, la cobertura visual y cualquier asset aún en producción
 ```
 
 ---

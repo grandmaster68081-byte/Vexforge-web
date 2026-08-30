@@ -85,3 +85,16 @@ fabricar QA.
 
 Cambio del inventario del bucket, decisión canónica sobre los artes
 duplicados, o fallo de `npm run verify:manifest`.
+
+## Contrato permanente de consumo visual
+
+Desde la entrada en vigor de `VE-VIS-3`, toda superficie nueva debe declarar
+sus elementos visuales y resolver cada uno contra este manifiesto antes del
+cierre. Si un elemento todavía no existe, se produce en la pista visual
+paralela, se sube al bucket `vexforge-assets`, se inscribe aquí con rol
+semántico y después se enlaza desde el consumidor. No se permite sustituirlo
+por una forma CSS, emoji, icono genérico, imagen stock o placeholder visible.
+
+La ausencia temporal del asset no detiene las partes independientes del plan,
+pero deja la unidad en `ASSET_REQUIRED` o `ASSET_IN_PROGRESS` y bloquea su
+declaración como visualmente cubierta hasta que la guarda del manifiesto pase.

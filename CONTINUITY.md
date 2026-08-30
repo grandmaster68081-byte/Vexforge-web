@@ -1,3 +1,13 @@
+## 2026-08-30 — VE-VIS-3-OFFICIAL-VISUAL-CONSUMPTION-LAW — IMPLEMENTED
+
+- Decisión normativa: toda unidad nueva, existente o reabierta debe consumir el apartado visual oficial del proyecto; queda prohibido cerrar con arte, iconografía o representación diegética genérica.
+- Flujo obligatorio: si el asset existe, se resuelve desde el registro y el manifiesto oficial; si no existe, se produce siguiendo la Directiva de Ejecución Autónoma, se sube a `vexforge-assets`, se inscribe y después se enlaza al consumidor.
+- Continuidad: la falta temporal de arte no detiene las partes funcionales independientes, pero deja la unidad en `ASSET_REQUIRED` o `ASSET_IN_PROGRESS` y bloquea su cierre visual hasta completar la cobertura.
+- Enforce: la ley se añade al Protocolo Maestro activo, a `VE-VIS-3-OFFICIAL-VISUAL-CONSUMPTION-LAW.md` y al contrato permanente del manifiesto; queda conectada con Cero Genéricos, la Ley de Transición Android y la Directiva de Ejecución Autónoma.
+- Estado: `IMPLEMENTED`; se sincroniza la misma revisión normativa en GitHub `main` y en la fila activa `vexforge_master_protocol_v2` de Supabase.
+
+---
+
 ## 2026-08-30 — VE-MOB-VIS-1-FORGE-IDENTITY-PACK-3-BUILD-REPAIR-2 — IN_PROGRESS
 
 - Evidencia: el segundo workflow Android pasó la instalación y redujo el fallo de typecheck a un único consumidor, `cart-outline`, todavía no declarado en el catálogo tipado de ForgeIcon.
