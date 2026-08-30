@@ -62,10 +62,12 @@ genérica aunque el servidor ya aplicara las reglas ForgeFormation.
 
 ## Estado y evidencia
 
-Estado de implementación: `IMPLEMENTED_UNVERIFIED` después del nuevo build oficial.
-La QA manual del operador sigue siendo necesaria para instalar el APK y recorrer
-una partida autenticada; la compilación y las guardas técnicas no sustituyen esa
-comprobación.
+Estado de implementación: `IMPLEMENTED_UNVERIFIED` después de publicar el código
+en `main` y pasar el typecheck móvil. La ejecución oficial que debía producir el
+APK correlativo quedó bloqueada en el runner y fue cancelada; por eso no se
+declara un nuevo release. La QA manual del operador sigue siendo necesaria para
+instalar el APK y recorrer una partida autenticada; la compilación y las guardas
+técnicas no sustituyen esa comprobación.
 
 Nivel Q: Q2 actual / Q3 objetivo.
 
