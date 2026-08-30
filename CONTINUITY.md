@@ -1,3 +1,14 @@
+## 2026-08-30 — VE-MOB-VIS-1-FORGE-IDENTITY-PACK-3-OFFICIAL-LAUNCH-ASSETS — IMPLEMENTED_UNVERIFIED
+
+- Preflight: Supabase Management API, Storage oficial y GitHub `main` se validaron por HTTPS directo; el protocolo activo `v2.7-autonomous-context-law` coincide con `main`.
+- Alcance: se reemplaza el recurso local empaquetado usado como icono, splash, adaptive icon y favicon por el objeto canónico `logo/IMG_20260606_040509_906.jpg` del bucket oficial `vexforge-assets`.
+- Limpieza: se eliminan `mobile/assets/images/icon.png` y `mobile/assets/images/icon_2.png`; la búsqueda de referencias confirma que eran recursos sin consumidores y no se elimina ninguna fuente visual usada por la app.
+- Integridad preservada: no se modifican Auth, RPCs, RLS, economía, combate, datos de jugadores, contratos ni lógica de presentación. Las superficies continúan usando el registro visual canónico de `mobile/constants/visual.ts` y los iconos SVG de ForgeIcon.
+- Estado: `IMPLEMENTED_UNVERIFIED`. El checkpoint queda publicado, pero no se declara `OPERATIONAL` hasta que el workflow Android genere un APK standalone y el operador complete la QA manual posterior.
+- Siguiente acción verificable: observar el workflow `vexforge-android-apk.yml`, comprobar el bundle Android y registrar el release correlativo; después continuar con la siguiente brecha visual real del inventario, sin rehacer este paquete.
+
+---
+
 ## 2026-08-30 — VE-MOB-VIS-1-FORGE-IDENTITY-PACK-2-BUILD-FIX — IMPLEMENTED_UNVERIFIED
 
 - Evidencia de entrega: el workflow Android oficial ejecutó sobre el commit visual y falló únicamente en `mobile/tsconfig.json`, porque el TypeScript del runner rechaza la opción retirada `baseUrl`; no alcanzó compilación ni release.
