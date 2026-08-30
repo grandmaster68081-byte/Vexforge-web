@@ -19,6 +19,7 @@ import { ProgressBar } from '@/components/ProgressBar';
 import { useGame } from '@/context/GameContext';
 import { ScreenShell } from '@/components/ScreenShell';
 import type { PlayerCard, PublicCard } from '@/lib/supabase';
+import { FACTION_ICONS } from '@/constants/visual';
 
 const RARITIES = ['Common', 'Uncommon', 'Rare', 'Epic', 'Legendary', 'Mythic'] as const;
 const FACTIONS = ['Guerrero', 'Mago', 'Paladín', 'Pícaro'] as const;
@@ -46,16 +47,6 @@ function rarityColor(rarity: string | null | undefined, colors: ReturnType<typeo
   }[rarity ?? ''] ?? colors.mutedForeground;
 }
 
-function factionIcon(faction: string | null | undefined): keyof typeof Feather.glyphMap {
-  const icon = {
-    Guerrero: 'zap',
-    Mago: 'star',
-    Paladín: 'shield',
-    Pícaro: 'target',
-  }[faction ?? ''];
-  return (icon ?? 'compass') as keyof typeof Feather.glyphMap;
-}
-
 function CardArt({
   card,
   colors,
@@ -78,7 +69,11 @@ function CardArt({
       ) : (
         <View style={styles.artFallback}>
           <View style={[styles.rune, { borderColor: `${accent}88` }]}>
-            <Feather name={factionIcon(card.faction)} size={detail ? 46 : 28} color={accent} />
+            {FACTION_ICONS[card.faction ?? ''] ? (
+              <Image source={{ uri: FACTION_ICONS[card.faction ?? ''] }} style={detail ? styles.factionIconDetail : styles.factionIcon} resizeMode="contain" accessibilityLabel={`Emblema oficial de ${card.faction ?? 'la facción'}`} />
+            ) : (
+              <Feather name="compass" size={detail ? 46 : 28} color={accent} />
+            )}
           </View>
           <Text style={[styles.fallbackName, { color: accent }]} numberOfLines={2}>
             {card.name}
@@ -146,7 +141,9 @@ function CardTile({
         <View style={styles.tileMeta}>
           <Text style={[styles.rarity, { color: accent }]}>{rarityLabel(card.rarity)}</Text>
           <Text style={[styles.dot, { color: colors.border }]}>·</Text>
-          <Feather name={factionIcon(card.faction)} size={11} color={colors.mutedForeground} />
+          {FACTION_ICONS[card.faction ?? ''] ? (
+            <Image source={{ uri: FACTION_ICONS[card.faction ?? ''] }} style={styles.factionIconMeta} resizeMode="contain" accessibilityLabel={`Emblema oficial de ${card.faction ?? 'la facción'}`} />
+          ) : <Feather name="compass" size={11} color={colors.mutedForeground} />}
         </View>
         <View style={styles.tileStats}>
           <Text style={[styles.tileStat, { color: colors.danger }]}>PWR {card.power ?? 0}</Text>
@@ -318,7 +315,7 @@ export default function CollectionScreen() {
 
   const hasFilters = Boolean(search || rarity !== 'all' || faction !== 'all');
   return (
-    <ScreenShell surface="home">
+    <ScreenShell surface="collection">
       <View style={[styles.root, { backgroundColor: 'transparent' }]}>
       <FlatList
         data={filtered}
@@ -453,6 +450,9 @@ const styles = StyleSheet.create({
   art: { aspectRatio: 0.78, borderBottomWidth: 1, overflow: 'hidden', position: 'relative' },
   artDetail: { aspectRatio: 0.72, borderRadius: 12, borderWidth: 1 },
   artFallback: { flex: 1, alignItems: 'center', justifyContent: 'center', padding: 12, gap: 10 },
+  factionIcon: { width: 30, height: 30, transform: [{ rotate: '-45deg' }] },
+  factionIconDetail: { width: 48, height: 48, transform: [{ rotate: '-45deg' }] },
+  factionIconMeta: { width: 13, height: 13 },
   rune: { width: 58, height: 58, borderWidth: 1, borderRadius: 18, alignItems: 'center', justifyContent: 'center', transform: [{ rotate: '45deg' }] },
   fallbackName: { fontSize: 10, fontWeight: '800', textAlign: 'center', textTransform: 'uppercase' },
   artShade: { ...StyleSheet.absoluteFillObject },

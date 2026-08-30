@@ -1,3 +1,15 @@
+## 2026-08-30 — VE-MOB-VIS-1-FORGE-IDENTITY-PACK-1 — IMPLEMENTED_UNVERIFIED
+
+- Tipo de sesión: paquete incremental de identidad visual Android sobre la base ya implementada; no se rehacen unidades funcionales ni se alteran Auth, RPCs, RLS, economía, combate o datos de jugadores.
+- Cambios: se centraliza el registro visual móvil en un catálogo canónico de rutas de Supabase Storage; perfil y economía pasan a consumir su arte oficial específico; colección y tutorial dejan de depender de superficies visuales genéricas.
+- Assets: se conectan `heroes/hero_profile.jpg`, `heroes/hero_economy.jpg`, `heroes/hero_assets.jpg`, `tutorial/main.png`, el logotipo oficial y los cuatro emblemas oficiales de facción inscritos en el manifiesto.
+- Regla preservada: los artes de cartas continúan llegando desde `image_url` autoritativo; sólo se usa emblema oficial de Supabase cuando falta arte de carta, sin emojis, stock, mockups ni sustitutos inventados.
+- Verificación: la transpilación TypeScript/JSX de los cinco archivos modificados pasa; el typecheck completo queda pendiente de instalar las dependencias del checkout temporal (`node_modules` y `expo/tsconfig.base` no están disponibles en esta copia).
+- Estado: `IMPLEMENTED_UNVERIFIED`. No se declara `OPERATIONAL`, `PASS` ni `TIER1_READY` sin workflow Android y QA manual del operador.
+- Siguiente acción verificable: publicar el checkpoint por Git Data API HTTPS, ejecutar el workflow Android oficial, verificar el APK standalone y después continuar con la iconografía propia y motion/feedback.
+
+---
+
 ## 2026-08-30 — VE-MOB-VIS-1-FORGE-IDENTITY — IMPLEMENTED_UNVERIFIED
 
  - Tipo de sesión: implementación visual Android sobre la superficie móvil oficial del repositorio, siguiendo el protocolo vivo v2.7-autonomous-context-law.

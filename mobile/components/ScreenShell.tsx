@@ -2,8 +2,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { Image, Platform, StyleSheet, View, type ViewProps } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useColors } from '@/hooks/useColors';
-import { CANONICAL_BACKGROUNDS, type VisualSurface } from '@/constants/visual';
-import { storageAsset } from '@/lib/supabase';
+import { CANONICAL_BACKGROUNDS, OFFICIAL_ASSETS, type VisualSurface } from '@/constants/visual';
 
 export function ScreenShell({ surface = 'home', children, style, ...props }: ViewProps & { surface?: VisualSurface }) {
   const colors = useColors();
@@ -25,7 +24,7 @@ export function ScreenShell({ surface = 'home', children, style, ...props }: Vie
         style={StyleSheet.absoluteFillObject}
       />
       <Image
-        source={{ uri: storageAsset('logo/IMG_20260606_040509_906.jpg') }}
+        source={{ uri: OFFICIAL_ASSETS.logo }}
         style={styles.watermark}
         resizeMode="contain"
       />

@@ -1,11 +1,12 @@
 import { useState } from 'react';
-import { ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, Image, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { Redirect, useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useColors } from '@/hooks/useColors';
 import { useGame } from '@/context/GameContext';
 import { ScreenShell } from '@/components/ScreenShell';
+import { OFFICIAL_ASSETS } from '@/constants/visual';
 import { advanceTutorialStep, skipTutorial, TUTORIAL_DONE_STEP, TUTORIAL_TOTAL_STEPS } from '@/lib/supabase';
 
 type TutorialRoute = '/collection' | '/battle' | '/deck';
@@ -229,8 +230,9 @@ export default function TutorialScreen() {
   };
 
   return (
-    <ScrollView
-      style={[styles.screen, { backgroundColor: colors.background }]}
+    <ScreenShell surface="tutorial">
+      <ScrollView
+      style={[styles.screen, { backgroundColor: 'transparent' }]}
       contentContainerStyle={[styles.content, { paddingTop: insets.top + 18, paddingBottom: insets.bottom + 34 }]}
       showsVerticalScrollIndicator={false}
     >
@@ -259,7 +261,8 @@ export default function TutorialScreen() {
         <View style={[styles.progressFill, { backgroundColor: accent, width: `${Math.max(4, (currentStep / (TUTORIAL_TOTAL_STEPS - 1)) * 100)}%` }]} />
       </View>
 
-      <View style={[styles.card, { backgroundColor: colors.panel, borderColor: `${accent}66` }]}>
+      <View style={[styles.card, { backgroundColor: `${colors.panel}E8`, borderColor: `${accent}66` }]}>
+        <Image source={{ uri: OFFICIAL_ASSETS.tutorialHero }} style={styles.heroArt} resizeMode="cover" accessibilityLabel="Arte oficial del tutorial de VEXFORGE" />
         <View style={[styles.iconFrame, { backgroundColor: `${accent}18`, borderColor: `${accent}66` }]}>
           <Ionicons name={step.icon} size={44} color={accent} />
         </View>
@@ -299,7 +302,8 @@ export default function TutorialScreen() {
           <View key={tutorialStep.title} style={[styles.dot, { backgroundColor: index <= currentStep ? accent : colors.border, width: index === currentStep ? 22 : 7 }]} />
         ))}
       </View>
-    </ScrollView>
+      </ScrollView>
+    </ScreenShell>
   );
 }
 
@@ -317,7 +321,8 @@ const styles = StyleSheet.create({
   stepCount: { fontSize: 10, fontWeight: '800', letterSpacing: 0.8 },
   progressTrack: { height: 5, borderRadius: 4, overflow: 'hidden' },
   progressFill: { height: '100%', borderRadius: 4 },
-  card: { borderWidth: 1, borderRadius: 22, paddingHorizontal: 22, paddingVertical: 28, alignItems: 'center', minHeight: 370 },
+  card: { borderWidth: 1, borderRadius: 22, paddingHorizontal: 22, paddingVertical: 28, alignItems: 'center', minHeight: 370, overflow: 'hidden' },
+  heroArt: { alignSelf: 'stretch', height: 112, marginTop: -28, marginBottom: 20, opacity: 0.72 },
   iconFrame: { width: 92, height: 92, borderRadius: 46, borderWidth: 1, alignItems: 'center', justifyContent: 'center', marginBottom: 20 },
   stepLabel: { fontSize: 9, fontWeight: '800', letterSpacing: 1.4 },
   title: { fontSize: 25, lineHeight: 31, fontWeight: '800', textAlign: 'center', marginTop: 12 },
