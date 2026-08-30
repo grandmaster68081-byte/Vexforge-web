@@ -1,3 +1,12 @@
+## 2026-08-30 — VE-MOB-VIS-1-FORGE-IDENTITY-PACK-2-BUILD-FIX — IMPLEMENTED_UNVERIFIED
+
+- Evidencia de entrega: el workflow Android oficial ejecutó sobre el commit visual y falló únicamente en `mobile/tsconfig.json`, porque el TypeScript del runner rechaza la opción retirada `baseUrl`; no alcanzó compilación ni release.
+- Reparación acotada: se elimina sólo `baseUrl` del `tsconfig` móvil; se conservan `strict`, el alias `@/*`, el lockfile y toda la lógica de Auth, Supabase, combate y economía.
+- Estado: `IMPLEMENTED_UNVERIFIED`. No existe release nuevo todavía; se requiere una nueva ejecución Android y la QA manual del operador.
+- Siguiente acción verificable: publicar esta reparación por Git Data API HTTPS y comprobar que el workflow avance más allá de typecheck.
+
+---
+
 ## 2026-08-30 — VE-MOB-VIS-1-FORGE-IDENTITY-PACK-2 — IMPLEMENTED_UNVERIFIED
 
 - Tipo de sesión: sustitución incremental de iconografía genérica en Android por el lenguaje SVG propio de ForgeIcon; no se rehacen unidades funcionales ni se alteran Auth, RPCs, RLS, economía, combate o datos de jugadores.
