@@ -1,3 +1,11 @@
+## 2026-08-30 — VE-MOB-VIS-1-FORGE-IDENTITY-PACK-3-BUILD-REPAIR-2 — IN_PROGRESS
+
+- Evidencia: el segundo workflow Android pasó la instalación y redujo el fallo de typecheck a un único consumidor, `cart-outline`, todavía no declarado en el catálogo tipado de ForgeIcon.
+- Reparación: se añade `cart-outline` como alias del símbolo SVG oficial de tienda; no se reintroduce ninguna librería de iconos externa.
+- Estado: `IN_PROGRESS`; queda pendiente únicamente el workflow Android posterior y la comprobación del APK standalone.
+
+---
+
 ## 2026-08-30 — VE-MOB-VIS-1-FORGE-IDENTITY-PACK-3-BUILD-REPAIR — IN_PROGRESS
 
 - Evidencia: el checkpoint de launch assets ejecutó el workflow Android y falló en `npm run typecheck`; no se alcanzó prebuild ni se publicó APK.
