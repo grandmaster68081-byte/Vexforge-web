@@ -237,11 +237,11 @@ export default function BattleScreen() {
   const currentTurn = turns[turnIndex] ?? null;
 
   const refreshFormation = async () => {
-    if (!session || !player) return;
+    if (!session) return;
     setFormationLoading(true);
     setFormationError(null);
     try {
-      setFormationSlots(await loadPlayerDeck(session, player.id));
+      setFormationSlots(await loadPlayerDeck(session, session.user.id));
     } catch (error) {
       setFormationError(error instanceof Error ? error.message : 'No se pudo cargar tu formación real.');
     } finally {
@@ -250,12 +250,12 @@ export default function BattleScreen() {
   };
 
   useEffect(() => {
-    if (!session || !player) {
+    if (!session) {
       setFormationSlots([]);
       return;
     }
     void refreshFormation();
-  }, [session, player?.id]);
+  }, [session]);
 
   useEffect(() => {
     AccessibilityInfo.isReduceMotionEnabled().then(setReducedMotion).catch(() => {});
