@@ -815,3 +815,12 @@
 - Verificación adicional del APK descargado: `assets/index.android.bundle` presente, 3,080,780 bytes. El APK es autónomo respecto a Metro y conserva la corrección de ruta del arte Nexus Access.
 - Estado: `IMPLEMENTED_UNVERIFIED`; la instalación, inicio de sesión/registro y recorrido Auth en dispositivo o emulador siguen pendientes de QA manual del operador. No se declara `OPERATIONAL`, `PASS` ni `TIER1_READY`.
 - Siguiente acción verificable: ejecutar la matriz manual de AUTH con el APK publicado y continuar con `VE-MOB-13-SOCIAL`, siguiente unidad Android sin entrada de implementación en la continuidad tras WORLD.
+
+
+### VE-MOB-13 Social implementation
+
+- Android Social aggregator implemented in commit `c44302b0bb848c6d7c596b9cffaff1c46d438c8b`.
+- Scope covers Friends, direct challenges, Clans, roster/war registration, PvP ranking/history, and navigation to Battle for authoritative combat resolution.
+- Mobile typecheck: PASS on the committed state.
+- Android workflow run 55 is still `in_progress` in the official release workflow; APK/release evidence is not yet available.
+- Status remains `IMPLEMENTED_UNVERIFIED` pending the official APK gate and operator device/emulator QA.

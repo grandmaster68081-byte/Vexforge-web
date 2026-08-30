@@ -1334,3 +1334,12 @@ Cada sesión debe registrar que leyó esta enmienda, qué decisión derivada cre
 
 
 
+
+
+### Android Social evidence — 2026-08-30
+
+- Unit: `VE-MOB-13-SOCIAL`
+- Implementation commit: `c44302b0bb848c6d7c596b9cffaff1c46d438c8b`
+- Mobile TypeScript check: passed.
+- Official Android workflow: run `55`, currently `in_progress`; no APK or release claim is made here.
+- Integrity status: `IMPLEMENTED_UNVERIFIED`; operator installation/device QA remains required.
