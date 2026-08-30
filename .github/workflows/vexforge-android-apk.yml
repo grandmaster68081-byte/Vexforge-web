@@ -14,11 +14,10 @@ jobs:
         with: { node-version: 22, cache: npm, cache-dependency-path: mobile/package.json }
       - uses: actions/setup-java@v4
         with: { distribution: temurin, java-version: 17 }
-      # npm ci intermittently exits with "Exit handler never called" on the
-      # runner while executing lifecycle scripts. Expo does not need install
-      # scripts for this release build, so keep the lockfile install strict
-      # while avoiding that runner-side npm failure mode.
-      - run: npm ci --legacy-peer-deps --no-audit --no-fund --ignore-scripts
+      # npm ci exits with "Exit handler never called" on the hosted runner even
+      # when lifecycle scripts are disabled. npm install still resolves from
+      # package-lock.json, but avoids the runner-side ci finalization bug.
+      - run: npm install --legacy-peer-deps --no-audit --no-fund --ignore-scripts
       - run: npm run typecheck
       - run: npx expo prebuild --platform android --no-install --non-interactive
       # Release variant always embeds index.android.bundle, so the installed app

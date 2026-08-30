@@ -20,6 +20,16 @@
 
 ---
 
+## 2026-08-30 — VE-MOB-VIS-1-PACK-1-DELIVERY-REPAIR-2 — IN_PROGRESS
+
+- Evidencia adicional: dos ejecuciones manuales del workflow Android repitieron el fallo interno de `npm ci`, incluso con `--ignore-scripts`; el CI web superó `verify:card-art` y volvió a detenerse en HTTP 429 de `verify:surface-art`.
+- Reparación acotada: Android usa `npm install` contra el `package-lock.json` existente, sin scripts ni auditoría durante el runner; `verify-surface-art` adopta el mismo backoff limitado para 429/5xx que el guard de cartas.
+- Integridad preservada: no se elimina ninguna comprobación de procedencia, manifiesto, Storage, contratos Supabase o contenido visual oficial; los HTTP no recuperables siguen causando fallo.
+- Estado: `IN_PROGRESS`. El paquete visual permanece `IMPLEMENTED_UNVERIFIED` hasta obtener un APK y una validación CI nuevos.
+- Siguiente acción verificable: publicar esta segunda reparación mediante Git Data API HTTPS y comprobar los runs resultantes.
+
+---
+
 ## 2026-08-30 — VE-MOB-VIS-1-FORGE-IDENTITY — IMPLEMENTED_UNVERIFIED
 
  - Tipo de sesión: implementación visual Android sobre la superficie móvil oficial del repositorio, siguiendo el protocolo vivo v2.7-autonomous-context-law.
