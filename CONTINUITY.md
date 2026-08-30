@@ -743,3 +743,11 @@
 - Los controles reales de correo, contraseña, mostrar/ocultar contraseña, envío, errores, carga y acceso al registro quedaron alineados sobre la composición entregada; no se añadió lógica autoritativa al cliente.
 - Estado: `IMPLEMENTED_UNVERIFIED` hasta completar el workflow Android oficial y la QA manual del operador en dispositivo o emulador. No se declara `OPERATIONAL`, `PASS` ni `TIER1_READY`.
 - Siguiente acción verificable: cerrar el checkpoint en `main`, comprobar el workflow `Build VEXFORGE Android APK` y entregar el release correlativo con `app-release.apk`.
+
+---
+
+## 2026-08-30 — VE-MOB-2-AUTH — BUNDLE PATH CORRECTED / CHECKPOINT
+
+- El primer workflow posterior al cambio visual pasó el tipado, pero Metro no resolvió el PNG por una ruta relativa incorrecta desde `mobile/app`; la causa quedó confirmada en el log oficial.
+- Se corrigió la referencia para apuntar a `mobile/assets/images` y se conserva el arte dentro del repositorio para el bundle autónomo.
+- Estado: `IMPLEMENTED_UNVERIFIED`; pendiente únicamente de repetir el workflow oficial, verificar el bundle embebido y publicar el release correlativo. No se declara `OPERATIONAL`, `PASS` ni `TIER1_READY`.

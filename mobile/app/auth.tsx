@@ -90,7 +90,7 @@ export default function AuthScreen() {
       <View style={[styles.posterRoot, { backgroundColor: colors.background }]}>
         <StatusBar style="light" translucent backgroundColor="transparent" />
         <ImageBackground
-          source={require('../../assets/images/vexforge-auth-nexus-final.png')}
+          source={require('../assets/images/vexforge-auth-nexus-final.png')}
           resizeMode="stretch"
           style={styles.posterArtwork}
           imageStyle={styles.posterImage}
