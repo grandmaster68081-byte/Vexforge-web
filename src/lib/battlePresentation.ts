@@ -62,6 +62,26 @@ function turnSteps(turn: BattleTurnData): BattlePresentationStep[] {
   return steps;
 }
 
+export interface BattlePresentationCursor {
+  phase: string;
+  hasImpact: boolean;
+  hasCurrentTurn: boolean;
+  result: 'victory' | 'defeat' | 'unknown';
+}
+
+export function resolveBattlePresentationState(cursor: BattlePresentationCursor): BattlePresentationState {
+  if (cursor.phase === 'error') return 'reconnect';
+  if (cursor.phase === 'champion_summon') return 'summon';
+  if (cursor.phase === 'intro') return 'intro';
+  if (cursor.phase === 'reserve') return 'reserve_entry';
+  if (cursor.phase === 'champion_dead') return 'death';
+  if (cursor.phase === 'done') return cursor.result === 'victory' ? 'victory' : cursor.result === 'defeat' ? 'defeat' : 'reconnect';
+  if (cursor.phase === 'battle') {
+    if (cursor.hasImpact) return 'impact';
+    return cursor.hasCurrentTurn ? 'target_lock' : 'idle';
+  }
+  return 'idle';
+}
 export function createBattlePresentationContract(result: BattlePresentationSource): BattlePresentationContract {
   const timeline: BattlePresentationStep[] = [step('intro', 'intro'), step('formation_ready', 'intro'), step('summon', 'intro')];
   if (result.ok === false) {

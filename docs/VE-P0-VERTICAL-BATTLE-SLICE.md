@@ -32,3 +32,8 @@ No se infiere una reserva contando `final_units`: la forma de los datos no decla
 ## Consumidor PvE conectado
 
 `ForgeFormationBoard` crea el contrato desde los turnos reales de `simulateFormationBattle` y conserva la secuencia de formación, invocación, batalla, reserva y resultado existente. La capa audiovisual sólo describe el estado temporal y no modifica la simulación ni el settlement.
+
+
+## Cursor activo
+
+El consumidor PvE expone `data-presentation-state` derivado de su fase, turno real, impacto y resultado. Cuando el operador activa FX reducidos o el sistema informa `prefers-reduced-motion`, el root expone fallback `reduced`; ante error o resultado ambiguo usa `reconnect/static`.

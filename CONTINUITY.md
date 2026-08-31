@@ -1,3 +1,11 @@
+## 2026-08-31 — VE-P0 ACTIVE PRESENTATION CURSOR — IMPLEMENTED_UNVERIFIED
+
+- ForgeFormationBoard ahora expone el estado audiovisual activo derivado de phase, turno real, hitFlash y you_won.
+- El fallback cambia a reduced cuando el usuario/sistema reduce FX; error o resultado ambiguo conserva reconnect/static.
+- El cursor es sólo presentacional: no escribe resultados, no decide daño y no sustituye onComplete/onDismiss.
+- QA sigue diferida por instrucción del operador; no se declara OPERATIONAL, PASS ni TIER1_READY.
+
+---
 ## 2026-08-31 — VE-P0.1 CONSUMIDOR PVE — IMPLEMENTED_UNVERIFIED
 
 - ForgeFormationBoard quedó conectado al contrato ve-p0-presentation-v1 con sus turnos y you_won reales.

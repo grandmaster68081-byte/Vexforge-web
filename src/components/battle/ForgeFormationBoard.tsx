@@ -15,7 +15,7 @@ import {
 } from '../../lib/forgeFormation';
 import type { AIDifficulty } from '../../lib/aiBattleEngine';
 import { AudioEngine } from '../../lib/audioEngine';
-import { createBattlePresentationContract } from '../../lib/battlePresentation';
+import { createBattlePresentationContract, resolveBattlePresentationState } from '../../lib/battlePresentation';
 import { particleEngine } from '../../lib/particleEngine';
 import { ForgeIcon, type ForgeIconName } from '../../shared/components/ForgeIcon';
 
@@ -2236,6 +2236,12 @@ export function ForgeFormationBoard({
         s => (finalFormation[s] as BattleUnit | null)?.name === defenderName
       ) ?? null
     : null;
+  const activePresentationState = resolveBattlePresentationState({
+    phase,
+    hasImpact: hitFlash !== null,
+    hasCurrentTurn: Boolean(currentTurn),
+    result: battleResult.you_won === true ? 'victory' : battleResult.you_won === false ? 'defeat' : 'unknown',
+  });
   // Player is "winning" if they won OR fewer rage stacks (lost fewer allies)
   const playerWinning   = battleResult.you_won || rageStacks < 3;
   const criticalHp      = progressPct > 0.75;
@@ -2249,7 +2255,8 @@ export function ForgeFormationBoard({
       fontFamily: '"Rajdhani",sans-serif', overflow: 'hidden',
     }}
       data-presentation-contract={presentationContract.version}
-      data-presentation-fallback={presentationContract.fallback}
+      data-presentation-state={activePresentationState}
+      data-presentation-fallback={reducedEffects ? 'reduced' : presentationContract.fallback}
       data-presentation-state-count={presentationContract.timeline.length}
     >
       <style>{`
