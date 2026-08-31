@@ -1,3 +1,12 @@
+## 2026-08-31 — FASE 3 H3 TERRAIN PARTICLES — IMPLEMENTED_UNVERIFIED
+
+- Se enriqueció la atmósfera del tablero con partículas authored por facción en ambos lados del campo.
+- Guerrero usa fragmentos de ataque; Mago y Paladín usan sigilos; Pícaro/Explorador usan retículas orgánicas; Comerciante usa monedas; el default conserva chispa azul. Cada variante deriva de la facción real y del catálogo ForgeIcon existente.
+- Se añadió movimiento de ascenso/drift, silueta por tipo, acento propio, glow contextual de zona y fallback reduced-motion sin añadir assets, datos ni dependencias nuevas.
+- El cambio permanece exclusivamente en la capa de presentación; no toca ForgeFormation, fórmulas, RPCs, economía, Storage ni resultados autoritativos.
+- QA omitida por instrucción del operador y queda pendiente para el cierre final. No se declara OPERATIONAL, PASS ni TIER1_READY.
+
+---
 ## 2026-08-31 — FASE 3 H2 TARGET LOCK — IMPLEMENTED_UNVERIFIED
 
 - Se implementó la capa visual Target Lock en InteractiveBattleBoard.tsx.

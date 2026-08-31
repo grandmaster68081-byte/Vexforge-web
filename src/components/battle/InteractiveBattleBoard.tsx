@@ -39,6 +39,18 @@ const FACTION_ZONE: Record<string, { primary: string; glow: string; gradient: st
   default:     { primary: '#4a9eff', glow: 'rgba(74,158,255,0.35)',  gradient: 'linear-gradient(180deg,rgba(5,20,50,0.7) 0%,rgba(5,10,25,0.4) 100%)',   arenaImg: storageAsset("backgrounds/bg_missions.jpg") },
 };
 
+// H3 — authored terrain language; each faction gets a distinct glyph, accent and silhouette.
+type TerrainParticleSpec = { glyph: ForgeIconName; accent: string; kind: 'shard' | 'orb' | 'sigil' };
+const TERRAIN_PARTICLE: Record<string, TerrainParticleSpec> = {
+  Guerrero:    { glyph: 'attack', accent: '#ff6b6b', kind: 'shard' },
+  Mago:        { glyph: 'spark',  accent: '#c09cff', kind: 'sigil' },
+  'Pícaro':    { glyph: 'target', accent: '#65e89a', kind: 'orb' },
+  Explorador:  { glyph: 'target', accent: '#65e89a', kind: 'orb' },
+  'Paladín':   { glyph: 'shield', accent: '#ffe08a', kind: 'sigil' },
+  Comerciante: { glyph: 'coin',   accent: '#f3c969', kind: 'orb' },
+  default:     { glyph: 'spark',  accent: '#75b9ff', kind: 'orb' },
+};
+
 // ─── HP Bar épica ───────────────────────────────────────────────────────────────
 // ─── VX.3: Segmented HP Bar ────────────────────────────────────────────────────
 function EpicHpBar({ hp, max, color }: { hp: number; max: number; color: string }) {
@@ -710,6 +722,8 @@ export function InteractiveBattleBoard({
   const targetSide: 'player' | 'opponent' | null = state.currentTurn
     ? (state.currentTurn.atk_side === 'a' ? 'opponent' : 'player')
     : null;
+  const playerParticle = TERRAIN_PARTICLE[playerFaction] ?? TERRAIN_PARTICLE.default;
+  const opponentParticle = TERRAIN_PARTICLE[oppFaction] ?? TERRAIN_PARTICLE.default;
 
   // Beam + flash + hit effects when animating + FASE 2: cinematic trigger
   useEffect(() => {
@@ -886,21 +900,34 @@ export function InteractiveBattleBoard({
         position: 'absolute', inset: 0, zIndex: 0, pointerEvents: 'none',
         background: 'radial-gradient(ellipse 110% 110% at 50% 50%, transparent 55%, rgba(0,0,0,0.75) 100%)',
       }} />
-      {/* Faction ambient particles — 6 floating rune orbs */}
-      {[0,1,2,3,4,5].map(i => (
-        <div key={`fap-${i}`} style={{
-          position: 'absolute', zIndex: 1, pointerEvents: 'none',
-          width: 4 + (i % 3), height: 4 + (i % 3),
-          borderRadius: '50%',
-          background: playerZone.primary,
-          opacity: 0,
-          left: `${10 + i * 15}%`,
-          bottom: `${15 + (i % 3) * 12}%`,
-          boxShadow: `0 0 8px ${playerZone.primary}, 0 0 16px ${playerZone.primary}55`,
-          animation: `hero-particle-rise ${3 + i * 0.7}s ease-out ${i * 0.9}s infinite`,
-        }} />
-      ))}
-
+      {/* H3 — terrain particles carry the active faction language on both sides of the arena */}
+      {[0,1,2,3,4,5,6,7,8,9,10,11].map(i => {
+        const isOpponentParticle = i >= 6;
+        const particleIndex = i % 6;
+        const spec = isOpponentParticle ? opponentParticle : playerParticle;
+        const zone = isOpponentParticle ? oppZone : playerZone;
+        const left = isOpponentParticle ? 56 + particleIndex * 7 : 4 + particleIndex * 7;
+        const bottom = 13 + (particleIndex % 3) * 13;
+        const size = spec.kind === 'sigil' ? 15 : spec.kind === 'shard' ? 12 : 14;
+        return (
+          <div
+            key={'terrain-particle-' + (isOpponentParticle ? 'opp' : 'player') + '-' + particleIndex}
+            className="terrain-particle"
+            aria-hidden="true"
+            style={{
+              position: 'absolute', zIndex: 1, pointerEvents: 'none',
+              width: size, height: size, left: left + '%', bottom: bottom + '%',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              color: spec.accent, opacity: 0,
+              clipPath: spec.kind === 'shard' ? 'polygon(50% 0%, 100% 42%, 62% 100%, 0% 66%)' : undefined,
+              filter: 'drop-shadow(0 0 5px ' + spec.accent + ') drop-shadow(0 0 12px ' + zone.primary + '88)',
+              animation: 'terrain-particle-rise ' + (3.6 + particleIndex * 0.42) + 's ease-in-out ' + (particleIndex * 0.32) + 's infinite',
+            }}
+          >
+            <ForgeIcon name={spec.glyph} size={spec.kind === 'sigil' ? 13 : 11} strokeWidth={1.35} />
+          </div>
+        );
+      })}
       {/* BA.1 / VX.1: Keyword Activation FX Overlay — shown over player card */}
       {kwEffects.length > 0 && (
         <div style={{
@@ -947,6 +974,15 @@ export function InteractiveBattleBoard({
         @keyframes target-pulse {
           0%,100% { border-color: rgba(232,184,75,0.8); box-shadow: 0 0 20px rgba(232,184,75,0.5); }
           50%      { border-color: rgba(232,184,75,0.4); box-shadow: 0 0 40px rgba(232,184,75,0.8); }
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .terrain-particle { animation: none !important; opacity: 0.22 !important; }
+        }
+        @keyframes terrain-particle-rise {
+          0%   { opacity: 0; transform: translate3d(0, 14px, 0) rotate(-12deg) scale(0.65); }
+          25%  { opacity: 0.44; }
+          55%  { opacity: 0.22; transform: translate3d(10px, -8px, 0) rotate(12deg) scale(1); }
+          100% { opacity: 0; transform: translate3d(-6px, -34px, 0) rotate(28deg) scale(0.72); }
         }
         @keyframes attack-beam-shoot {
           0%   { opacity: 0; transform: scaleX(0) translateX(-50%); }
