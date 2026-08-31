@@ -844,3 +844,12 @@
 - Mobile typecheck: PASS. Existing `verify:mobile-profile` and `verify:mobile-world`: PASS.
 - Android workflow run 56 terminó `success` y publicó `vexforge-android-build-56`; APK SHA-256 `5587a4926d0c6010c11192d36b5cf17739ea4267c1e8c1156113d76c3b08013f`.
 - Status remains `IMPLEMENTED_UNVERIFIED` pending operator device/emulator QA. No operational status is claimed.
+---
+## 2026-08-31 — HTTPS PREFLIGHT + VERIFY RE-RUN — RECONCILED
+
+- Preflight oficial completado por HTTPS directo: GitHub REST confirmó el repositorio público `grandmaster68081-byte/Vexforge-web`, la rama `main` y el commit `384957a6616c2a392cba1ccf8b8bf77e1ee77bfc`; Supabase Management API respondió correctamente y permitió consultar el esquema, RPCs, documentos y criterios vivos del proyecto oficial.
+- La fila activa `vexforge_master_protocol_v2` está en versión `v2.8-official-visual-consumption-law`; su contenido coincide byte a byte con `VEXFORGE_PROTOCOL_V2.md` en `main` (`114313` bytes, MD5 `c48e521f40c9a468f0c0c39bcc6dafd3`).
+- El workflow `verify`, run 75, falló inicialmente sólo porque `verify-card-art` recibió HTTP 429 temporal al comprobar `cards/uncommon_mensajero_del_caos.jpg`; el mismo run se reintentó por la API oficial y terminó `success`, sin modificar código, datos ni assets.
+- El último build Android vigente sigue siendo `vexforge-android-build-56`, publicado con éxito. No hubo cambios en `mobile/**` en esta sesión, por lo que no corresponde crear un APK nuevo ni alterar el release vigente.
+- Estado: `RECONCILED`; VE-MOB-13 y VE-MOB-14 continúan `IMPLEMENTED_UNVERIFIED`, con QA humana del operador pendiente. No se declara `OPERATIONAL`, `PASS` ni `TIER1_READY`.
+- Siguiente acción verificable: conservar la QA Android pendiente y seleccionar la primera unidad Tier 1 real tras el baseline T0; cualquier nueva unidad debe respetar el protocolo activo, contratos vivos, assets canónicos y los gates de build/continuidad.
