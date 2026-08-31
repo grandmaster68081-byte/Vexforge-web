@@ -7,6 +7,7 @@ import { AudioEngine } from "../lib/audioEngine";
 import { GuestDiscoveryBanner } from "../shared/components/GuestDiscoveryBanner";
 import { ForgeIcon, type ForgeIconName } from "../shared/components/ForgeIcon";
 import { storageAsset } from "../lib/assetManifest";
+import { getCardPilotIdentity } from "../lib/cardPilot";
 
 // ─── CONFIG ─────────────────────────────────────────────────────────────────
 const RARITY_CFG: Record<string, { color: string; glow: string; label: string; order: number }> = {
@@ -50,12 +51,21 @@ function FilterBtn({ active, color, onClick, children }: {
 function CardArt({ card }: { card: Card }) {
   const faction = FACTION_CFG[card.faction] ?? FACTION_CFG.Guerrero;
   const rarity  = RARITY_CFG[card.rarity]  ?? RARITY_CFG.Common;
+  const identity = getCardPilotIdentity(card.code);
   if (card.image_url) {
     return (
-      <div style={{ width: "100%", aspectRatio: "3/4", overflow: "hidden", borderRadius: "6px 6px 0 0" }}>
+      <div data-card-pilot={identity?.treatment ?? undefined} style={{ width: "100%", aspectRatio: "3/4", overflow: "hidden", borderRadius: "6px 6px 0 0", position: "relative" }}>
         <img src={card.image_url} alt={card.name}
           style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
           onError={e => { (e.target as HTMLImageElement).style.display = "none"; }} />
+        {identity && (
+          <div aria-hidden="true" style={{ position: "absolute", inset: 0, pointerEvents: "none", background: identity.overlay, boxShadow: `inset 0 -3px 0 ${identity.edge}` }} />
+        )}
+        {identity && (
+          <div aria-hidden="true" style={{ position: "absolute", top: 8, right: 8, width: 24, height: 24, borderRadius: "50%", display: "grid", placeItems: "center", color: identity.accent, background: "rgba(5,5,13,.72)", border: `1px solid ${identity.edge}`, boxShadow: `0 0 14px ${identity.edge}` }}>
+            <ForgeIcon name={identity.icon} size={13} strokeWidth={1.7} />
+          </div>
+        )}
       </div>
     );
   }
@@ -143,6 +153,7 @@ function CardTile({ card, owned, quantity, onClick, reducedMotion }: {
 }) {
   const rarity      = RARITY_CFG[card.rarity]  ?? RARITY_CFG.Common;
   const faction     = FACTION_CFG[card.faction] ?? FACTION_CFG.Guerrero;
+  const identity     = getCardPilotIdentity(card.code);
   const isEpicPlus  = ["Epic","Legendary","Mythic"].includes(card.rarity);
   const isLegPlus   = ["Legendary","Mythic"].includes(card.rarity);
   const rarityKey   = card.rarity.toLowerCase();
@@ -161,6 +172,7 @@ function CardTile({ card, owned, quantity, onClick, reducedMotion }: {
       role="button"
       tabIndex={0}
       aria-label={`Ver detalles de ${card.name}`}
+      data-card-pilot={identity?.treatment ?? undefined}
       className={`vex-card-3d${card.rarity === 'Mythic' ? ' card-mythic-aura' : card.rarity === 'Legendary' ? ' card-legendary-aura' : ''}`}
       style={{
         position: "relative", cursor: "pointer",
@@ -168,6 +180,7 @@ function CardTile({ card, owned, quantity, onClick, reducedMotion }: {
         border: `1.5px solid ${rarity.color}`,
         boxShadow: isEpicPlus ? rarity.glow : "none",
         overflow: "hidden",
+        borderLeft: identity ? `3px solid ${identity.edge}` : undefined,
       }}
       onMouseEnter={e => {
         if (reducedMotion) return;
@@ -212,6 +225,11 @@ function CardTile({ card, owned, quantity, onClick, reducedMotion }: {
     >
       {/* Holographic shimmer overlay — mouse-tracked, only visible for Epic+ */}
       <div data-holo="1" className="vex-holo" />
+      {identity && (
+        <div aria-hidden="true" style={{ position: "absolute", top: 8, right: 8, zIndex: 14, width: 24, height: 24, borderRadius: "50%", display: "grid", placeItems: "center", color: identity.accent, background: "rgba(5,5,13,.72)", border: `1px solid ${identity.edge}` }}>
+          <ForgeIcon name={identity.icon} size={13} strokeWidth={1.7} />
+        </div>
+      )}
       {/* Animated rarity glow ring for Epic / Legendary / Mythic */}
       {isEpicPlus && <div className={`vex-rarity-ring vex-rarity-ring-${rarityKey}`} />}
       {/* Diagonal scanline sweep for Legendary / Mythic */}

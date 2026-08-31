@@ -109,6 +109,7 @@ for (const path of paths) {
 }
 
 const routeSource = readFileSync(join("src", "routes", "CardsRoute.tsx"), "utf8");
+const pilotSource = readFileSync(join("src", "lib", "cardPilot.ts"), "utf8");
 const battleSource = readFileSync(
   join("src", "components", "battle", "BattleCard.tsx"),
   "utf8",
@@ -122,6 +123,14 @@ for (const [label, source, markers] of [
       failures.push(`${label} dejó de consumir datos reales: ${marker}`);
     }
   }
+}
+for (const code of pilotCodes) {
+  if (!pilotSource.includes(`"${code}"`)) {
+    failures.push(`registro authored ausente para ${code}`);
+  }
+}
+if (!pilotSource.includes("getCardPilotIdentity") || !routeSource.includes("getCardPilotIdentity")) {
+  failures.push("el tratamiento authored no está conectado a CardsRoute");
 }
 if (routeSource.match(/["'`]cards\/[^"'`]+["'`]/)) {
   failures.push("CardsRoute contiene una ruta cards/ literal fuera del dato");
