@@ -914,3 +914,13 @@
 - Deploy público: `/` y `/build-manifest.json` respondieron HTTP 200 y el manifiesto reflejó `e22d4feca065018159ad9358c3999aaf945ef440`. La captura pública de `/cards` cargó el shell, datos, nombres y stats, pero no mostró la ilustración en los tiles; la comprobación directa del asset fue HTTP 200, JPEG válido 853×1280, 271167 bytes y `Access-Control-Allow-Origin: *`. Se registra como discrepancia de revisión visual, no como ausencia de Storage ni como PASS del consumidor.
 - Estado: `IMPLEMENTED_UNVERIFIED`, `Q2 → Q3` para dossier/guarda y authored de lista/inspector; `IN_PROGRESS` para integración de batalla, Android y revisión visual. No se declara `OPERATIONAL`, `PASS` ni `TIER1_READY`.
 - Deuda y reapertura: resolver la visibilidad del arte en captura/navegador real sin añadir fallback; transportar un identificador canónico seguro al contrato de batalla si se autoriza; validar Android; y mantener `element`, criatura, personalidad, audio propio y región ausentes como `PENDIENTE_DE_FUENTE`.
+
+---
+## 2026-08-31 — VE-3-PILOT — ANDROID COLLECTION CHECKPOINT
+
+- Se extendió el piloto authored a la Colección y al Detalle de carta Android mediante un registro móvil keyed exclusivamente por los códigos canónicos `VEX-0016`, `VEX-0017` y `VEX-0097`.
+- La superficie nativa conserva `PublicCard.image_url` desde Supabase y añade únicamente overlay, borde e icono authored; no crea rutas de Storage, no reemplaza arte oficial y no modifica stats, colección, combate, economía, Auth, RPCs ni RLS.
+- Se añadió `verify:mobile-card-pilot`, que confirma 6/6 condiciones: registro, tres códigos, consumidor por `card.code`, imagen oficial, tratamiento presentation-only y hooks visuales de prueba.
+- Verificación local: guarda móvil 6/6, `npm run typecheck`, `npm run build` y `verify:card-pilot` pasan. El tipado Expo local queda sujeto al runner oficial porque el firewall del entorno devolvió HTTP 404 al resolver `npm-package-arg`; no se alteró el lockfile.
+- Commit funcional publicado en `main`: `dcccbe0fef67efe9dc38e1a038780469ef9b0e25`. El workflow Android oficial fue iniciado para producir el APK standalone correlativo; la QA en dispositivo/emulador continúa pendiente.
+- Estado: `IMPLEMENTED_UNVERIFIED`, `Q2 → Q3` para Colección/Detalle Android. No se declara `OPERATIONAL`, `PASS` ni `TIER1_READY`.
