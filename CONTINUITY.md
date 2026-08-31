@@ -924,3 +924,12 @@
 - Verificación local: guarda móvil 6/6, `npm run typecheck`, `npm run build` y `verify:card-pilot` pasan. El tipado Expo local queda sujeto al runner oficial porque el firewall del entorno devolvió HTTP 404 al resolver `npm-package-arg`; no se alteró el lockfile.
 - Commit funcional publicado en `main`: `dcccbe0fef67efe9dc38e1a038780469ef9b0e25`. El workflow Android oficial fue iniciado para producir el APK standalone correlativo; la QA en dispositivo/emulador continúa pendiente.
 - Estado: `IMPLEMENTED_UNVERIFIED`, `Q2 → Q3` para Colección/Detalle Android. No se declara `OPERATIONAL`, `PASS` ni `TIER1_READY`.
+
+---
+## 2026-08-31 — VE-3-PILOT — ANDROID APK GATE
+
+- El workflow oficial `Build VEXFORGE Android APK` run 60 terminó `success` sobre `dcccbe0fef67efe9dc38e1a038780469ef9b0e25`.
+- Pasaron en el runner oficial: `npm install --legacy-peer-deps`, `npm run typecheck`, `npx expo prebuild --platform android --no-install --non-interactive`, `./gradlew assembleRelease` y la guarda de APK standalone con `assets/index.android.bundle` embebido.
+- El release prerelease `vexforge-android-build-60` publicó `app-release.apk` (91,790,915 bytes); el asset descargable respondió HTTP 200. La inspección del APK en dispositivo/emulador aún no se ha ejecutado.
+- La guarda amplia `verify` run 89 pasó `verify:card-art` en el reintento, pero volvió a detenerse en `verify:card-pilot` por HTTP 429 transitorio al leer dos objetos oficiales de Storage. La guarda específica local del piloto permanece 6/6 y los tres objetos directos responden HTTP 200; no se clasifica como fallo de código ni se oculta como PASS global.
+- Estado: `IMPLEMENTED_UNVERIFIED`, `Q3` para integración Android Colección/Detalle. No se declara `OPERATIONAL`, `PASS` ni `TIER1_READY`; queda pendiente la QA humana del APK y la posterior evidencia de continuidad.
