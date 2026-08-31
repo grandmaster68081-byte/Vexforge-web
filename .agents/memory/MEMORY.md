@@ -2,3 +2,4 @@
 - [Supabase contract audits](supabase-contract-audits.md) — audit live columns, constraints, RPC bodies, and grants before changing client contracts or migrations.
 - [Canonical source and deployment flow](canonical-source-deployment-flow.md) — GitHub main is the only source; Cloudflare deploys automatically and Supabase owns backend, data and Storage.
 - [Official access and rate limits](official-access-and-rate-limits.md) — use transport-correct GitHub auth and treat Storage 429s as retryable verification limits.
+- [Tier 1 criterion states](supabase-tier1-status.md) — live objective rows use `PARTIAL` for implementation pending human verification, not `IMPLEMENTED_UNVERIFIED`.
