@@ -1,3 +1,12 @@
+## 2026-08-31 — VE-MOB-8-REWARDS — RELEASE RECONCILIATION — IMPLEMENTED_UNVERIFIED
+
+- La siguiente unidad P1 ya estaba implementada en `main`; no se reabrió ni se duplicó código. Android presenta quests diarias, misiones activas, reclamaciones, ejecución, liquidación y estados explícitos sin calcular progreso, energía, recompensas o inventario localmente.
+- Contratos vivos verificados mediante Supabase Management API: `claim_daily_quest(p_player_quest_id uuid)`, `execute_mission(p_player uuid, p_mission uuid)` y `claim_mission_reward(p_player_id uuid, p_mission_run_id uuid, p_reference_id text)`, todos con resultado `jsonb`.
+- Guarda específica: `verify:mobile-rewards` 12/12. `npm run typecheck` móvil pasó. La pantalla usa únicamente respuestas de Supabase y no contiene simulación local, datos demo, emojis ni arte genérico.
+- Entrega verificada en el commit `9e6ddc87b1449f6e4626277ad6d8b0248c78b187`: runs 57 (`33365849985`) y 58 (`33365855394`) del workflow Android terminaron `success`; release `vexforge-android-build-58` publicado con `app-release.apk`.
+- Estado: `VE-MOB-8` IMPLEMENTED_UNVERIFIED; QA humana de quests, reclamación y misión con sesión normal sigue pendiente. No se declara `OPERATIONAL`, `PASS` ni `TIER1_READY`.
+
+---
 ## 2026-08-31 — VE-MOB-7-BATTLE — RELEASE RECONCILIATION — IMPLEMENTED_UNVERIFIED
 
 - La siguiente unidad P1 ya estaba implementada en `main`; no se reabrió ni se duplicó código. La pantalla presenta ForgeFormation (Vanguardia, Campeón, Centinela y Reserva), oponentes reales, confirmación explícita, replay y resultado autoritativo.

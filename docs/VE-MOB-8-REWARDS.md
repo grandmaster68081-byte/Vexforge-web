@@ -37,8 +37,14 @@ recompensas, inventario ni liquidación local.
 
 ## Estado y evidencia
 
-Estado de implementación: `IMPLEMENTED_UNVERIFIED`. La QA posterior requiere
-instalar el release y recorrer quests, reclamación y misión con una sesión normal.
+Estado de implementación: `IMPLEMENTED_UNVERIFIED`. La guarda móvil de Rewards
+pasa 12/12 y el typecheck móvil pasa. La entrega actual quedó incluida en el
+commit `9e6ddc87b1449f6e4626277ad6d8b0248c78b187`; los runs 57
+(`33365849985`) y 58 (`33365855394`) del workflow Android oficial terminaron
+`success`, incluyendo `assembleRelease`, bundle JS standalone y publicación.
+El release vigente es `vexforge-android-build-58`, con `app-release.apk`.
+La QA posterior requiere instalar el release y recorrer quests, reclamación y
+misión con una sesión normal.
 
 Nivel Q: Q2 actual / Q3 objetivo.
 
