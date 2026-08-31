@@ -66,6 +66,7 @@ export interface BattlePresentationCursor {
   phase: string;
   hasImpact: boolean;
   hasCurrentTurn: boolean;
+  hasAttackCue?: boolean;
   result: 'victory' | 'defeat' | 'unknown';
 }
 
@@ -78,6 +79,7 @@ export function resolveBattlePresentationState(cursor: BattlePresentationCursor)
   if (cursor.phase === 'done') return cursor.result === 'victory' ? 'victory' : cursor.result === 'defeat' ? 'defeat' : 'reconnect';
   if (cursor.phase === 'battle') {
     if (cursor.hasImpact) return 'impact';
+    if (cursor.hasAttackCue) return 'attack';
     return cursor.hasCurrentTurn ? 'target_lock' : 'idle';
   }
   return 'idle';

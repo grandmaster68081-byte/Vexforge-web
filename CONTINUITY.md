@@ -1,3 +1,11 @@
+## 2026-08-31 — VE-P0 MOTOR PVP — IMPLEMENTED_UNVERIFIED
+
+- BattleBoardEngine quedó conectado al contrato con resultado, turno activo, cinematicVisible, impacto de unidad e isDone reales.
+- La secuencia audiovisual observable ahora distingue attack, impact, target_lock y resultado dentro del consumidor PvP existente.
+- No se alteraron turnos, HP, keywords, audio autoritativo, callbacks ni resultado; sólo se expuso el estado presentacional.
+- QA sigue diferida por instrucción del operador; no se declara OPERATIONAL, PASS ni TIER1_READY.
+
+---
 ## 2026-08-31 — VE-P0 ACTIVE PRESENTATION CURSOR — IMPLEMENTED_UNVERIFIED
 
 - ForgeFormationBoard ahora expone el estado audiovisual activo derivado de phase, turno real, hitFlash y you_won.

@@ -8,6 +8,7 @@ import { RARITY_COLOR, RARITY_GLOW, KEYWORD_ICON } from '../../lib/battleTypes';
 import { AudioEngine } from '../../lib/audioEngine';
 import { particleEngine } from '../../lib/particleEngine';
 import { CardAttackCinematic } from './CardAttackCinematic';
+import { createBattlePresentationContract, resolveBattlePresentationState } from '../../lib/battlePresentation';
 import { ForgeIcon, type ForgeIconName } from '../../shared/components/ForgeIcon';
 
 const FACTION_FORGE_ICON: Record<string, ForgeIconName> = {
@@ -289,6 +290,7 @@ function TurnHeader({ turn, side, attackerName, damage, isCrit }: {
 export function BattleBoardEngine({ result, playerName, opponentName, onComplete, speed = 1 }: BattleBoardEngineProps) {
   const finalUnits = result.final_units ?? [];
   const turns      = result.turns ?? [];
+  const presentationContract = createBattlePresentationContract(result);
   const playerSide: 'a' | 'b' = 'a';
 
   // v1.1: Derive player faction for AudioEngine + faction ambient particles
@@ -529,9 +531,23 @@ export function BattleBoardEngine({ result, playerName, opponentName, onComplete
 
   const sideA = Object.values(states).filter(s => s.unit.side === 'a');
   const sideB = Object.values(states).filter(s => s.unit.side === 'b');
+  const activePresentationState = resolveBattlePresentationState({
+    phase: isDone ? 'done' : 'battle',
+    hasImpact: Object.values(states).some(s => s.isTakingHit),
+    hasCurrentTurn: Boolean(activeTurn),
+    hasAttackCue: cinematicVisible,
+    result: result.you_won === true ? 'victory' : result.you_won === false ? 'defeat' : 'unknown',
+  });
 
   return (
-    <div ref={boardRef} style={{ position: 'relative', width: '100%', flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden', background: 'linear-gradient(180deg, #060614 0%, #090920 50%, #06060f 100%)' }}>
+    <div
+      ref={boardRef}
+      data-presentation-contract={presentationContract.version}
+      data-presentation-state={activePresentationState}
+      data-presentation-fallback={presentationContract.fallback}
+      data-presentation-state-count={presentationContract.timeline.length}
+      style={{ position: 'relative', width: '100%', flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden', background: 'linear-gradient(180deg, #060614 0%, #090920 50%, #06060f 100%)' }}
+    >
       {/* Hex grid tactical floor overlay */}
       <div aria-hidden style={{
         position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 0,

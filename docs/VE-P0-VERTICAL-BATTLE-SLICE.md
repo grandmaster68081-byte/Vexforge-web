@@ -37,3 +37,8 @@ No se infiere una reserva contando `final_units`: la forma de los datos no decla
 ## Cursor activo
 
 El consumidor PvE expone `data-presentation-state` derivado de su fase, turno real, impacto y resultado. Cuando el operador activa FX reducidos o el sistema informa `prefers-reduced-motion`, el root expone fallback `reduced`; ante error o resultado ambiguo usa `reconnect/static`.
+
+
+## Motor PvP conectado
+
+`BattleBoardEngine` usa la misma fuente real de turnos y expone el cursor activo: `attack` durante `CardAttackCinematic`, `impact` cuando una unidad recibe el impacto, `target_lock` mientras existe turno activo y `victory`/`defeat` al completar.
