@@ -1336,7 +1336,14 @@ Cada sesión debe registrar que leyó esta enmienda, qué decisión derivada cre
 
 
 ---
-## 2026-08-30 — VE-MOB-2-AUTH — APK RELEASED / IMPLEMENTED_UNVERIFIED\n\n- Verificación remota: GitHub Actions `Build VEXFORGE Android APK`, run `52`, terminó `success` sobre `main` en el commit `d820f9ea1686804faecb67ec92808381d97d4e9a`.\n- Gates técnicos confirmados por el log oficial: `npm run typecheck`, `expo prebuild`, Gradle `assembleRelease` y la guarda de APK standalone pasaron; el log reporta `OK: JS bundle embedded (88M)`.\n- Release oficial: [vexforge-android-build-52](https://github.com/grandmaster68081-byte/Vexforge-web/releases/tag/vexforge-android-build-52), asset `app-release.apk`, 91,705,979 bytes; digest GitHub/SHA-256 verificado: `f093a742189db76cf2c20315f7304a5859228bcb239808ebb32b6875c3062abe`.\n- Verificación adicional del APK descargado: `assets/index.android.bundle` presente, 3,080,780 bytes. El APK es autónomo respecto a Metro y conserva la corrección de ruta del arte Nexus Access.\n- Estado: `IMPLEMENTED_UNVERIFIED`; la instalación, inicio de sesión/registro y recorrido Auth en dispositivo o emulador siguen pendientes de QA manual del operador. No se declara `OPERATIONAL`, `PASS` ni `TIER1_READY`.\n- Siguiente acción verificable: ejecutar la matriz manual de AUTH con el APK publicado y continuar con `VE-MOB-13-SOCIAL`, siguiente unidad Android sin entrada de implementación en la continuidad tras WORLD.
+## 2026-08-30 — VE-MOB-2-AUTH — APK RELEASED / IMPLEMENTED_UNVERIFIED
+
+- Verificación remota: GitHub Actions `Build VEXFORGE Android APK`, run `52`, terminó `success` sobre `main` en el commit `d820f9ea1686804faecb67ec92808381d97d4e9a`.
+- Gates técnicos confirmados por el log oficial: `npm run typecheck`, `expo prebuild`, Gradle `assembleRelease` y la guarda de APK standalone pasaron; el log reporta `OK: JS bundle embedded (88M)`.
+- Release oficial: [vexforge-android-build-52](https://github.com/grandmaster68081-byte/Vexforge-web/releases/tag/vexforge-android-build-52), asset `app-release.apk`, 91,705,979 bytes; digest GitHub/SHA-256 verificado: `f093a742189db76cf2c20315f7304a5859228bcb239808ebb32b6875c3062abe`.
+- Verificación adicional del APK descargado: `assets/index.android.bundle` presente, 3,080,780 bytes. El APK es autónomo respecto a Metro y conserva la corrección de ruta del arte Nexus Access.
+- Estado: `IMPLEMENTED_UNVERIFIED`; la instalación, inicio de sesión/registro y recorrido Auth en dispositivo o emulador siguen pendientes de QA manual del operador. No se declara `OPERATIONAL`, `PASS` ni `TIER1_READY`.
+- Siguiente acción verificable: ejecutar la matriz manual de AUTH con el APK publicado y continuar con `VE-MOB-13-SOCIAL`, siguiente unidad Android sin entrada de implementación en la continuidad tras WORLD.
 
 ---
 ## 2026-08-30 — VE-MOB-13-SOCIAL — APK RELEASED / IMPLEMENTED_UNVERIFIED
