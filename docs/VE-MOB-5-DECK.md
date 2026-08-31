@@ -7,6 +7,7 @@ Portar a la aplicación Android el constructor de mazos de VEXFORGE:
 - colección real del jugador como fuente de cartas disponibles;
 - mazo persistido desde `public.player_deck`;
 - selección de 5 a 30 cartas, máximo 2 copias y máximo 1 copia de cartas Legendary/Mythic;
+- límites globales del contrato vivo: máximo 1 carta Mythic y 3 cartas Legendary por mazo;
 - máximo de 2 facciones en el formato estándar;
 - lectura de potencia del mazo y selección local de Campeón para orientar la formación;
 - validación y guardado a través de `validate_deck` y `save_deck`;
@@ -28,7 +29,7 @@ Portar a la aplicación Android el constructor de mazos de VEXFORGE:
 5. El Deck Power Score es una lectura visual derivada y no altera combate, daño, settlement, recompensas o economía.
 6. Búsqueda y filtros funcionan sin perder el mazo seleccionado.
 7. Los estados de carga, error, vacío y cero coincidencias son explícitos; no hay loaders eternos.
-8. La unidad conserva iconografía de VEXFORGE, no usa emojis ni arte genérico, y respeta el tema semántico de Android.
+8. La unidad conserva iconografía de VEXFORGE, no usa emojis ni arte genérico, muestra explícitamente cualquier arte canónico pendiente y respeta el tema semántico de Android.
 9. La entrega se verifica con typecheck móvil, `verify:mobile-deck`, guards web sin regresión y workflow APK oficial exitoso con release correlativo.
 
 ## Implementación

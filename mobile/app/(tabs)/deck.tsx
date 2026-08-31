@@ -29,6 +29,8 @@ const RARITIES = ['Mythic', 'Legendary', 'Epic', 'Rare', 'Uncommon', 'Common'] a
 const FACTIONS = ['Guerrero', 'Mago', 'Paladín', 'Pícaro'] as const;
 const MAX_DECK = 30;
 const MIN_DECK = 5;
+const MAX_MYTHIC = 1;
+const MAX_LEGENDARY = 3;
 
 function rarityLabel(rarity: string) {
   return {
@@ -130,10 +132,7 @@ function DeckCard({
           <Image source={{ uri: card.image_url }} style={StyleSheet.absoluteFill} resizeMode="cover" accessibilityLabel={`Arte de ${card.name}`} />
         ) : (
           <View style={styles.artFallback}>
-            <View style={[styles.artSeal, { borderColor: `${accent}99` }]}>
-              <Feather name="layers" size={22} color={accent} />
-            </View>
-            <Text style={[styles.artFallbackText, { color: accent }]} numberOfLines={2}>{card.name}</Text>
+            <Text style={[styles.artFallbackText, { color: accent }]} numberOfLines={3}>ARTE CANÓNICO PENDIENTE</Text>
           </View>
         )}
         <View style={[styles.artShade, { backgroundColor: `${colors.ink}55` }]} />
@@ -278,12 +277,19 @@ export default function DeckScreen() {
     [selectedCards],
   );
   const factionList = Object.entries(factionCounts).sort((a, b) => b[1] - a[1]);
+  const mythicCount = selectedCards.filter((card) => card.rarity === 'Mythic').length;
+  const legendaryCount = selectedCards.filter((card) => card.rarity === 'Legendary').length;
   const power = deckPower(collection, selectedIds, championId);
   const tier = powerTier(power, colors);
   const eligibleChampions = selectedCards.filter((card) => card.rarity === 'Legendary' || card.rarity === 'Mythic')
     .filter((card, index, cards) => cards.findIndex((item) => item.card_id === card.card_id) === index);
   const hasFilters = Boolean(search || rarity !== 'all' || faction !== 'all');
-  const deckReady = selectedIds.length >= MIN_DECK && selectedIds.length <= MAX_DECK && factionList.length <= 2;
+  const deckReady =
+    selectedIds.length >= MIN_DECK &&
+    selectedIds.length <= MAX_DECK &&
+    factionList.length <= 2 &&
+    mythicCount <= MAX_MYTHIC &&
+    legendaryCount <= MAX_LEGENDARY;
 
   const toggleCard = (card: PlayerCard) => {
     setMessage(null);
@@ -291,6 +297,12 @@ export default function DeckScreen() {
     setSelectedIds((current) => {
       const count = current.filter((id) => id === card.card_id).length;
       if (count >= maxCopiesFor(card)) return current.filter((id) => id !== card.card_id);
+      const rarityCount = current.reduce((total, id) => {
+        const selectedCard = collection.find((item) => item.card_id === id);
+        return total + (selectedCard?.rarity === card.rarity ? 1 : 0);
+      }, 0);
+      if (card.rarity === 'Mythic' && rarityCount >= MAX_MYTHIC) return current;
+      if (card.rarity === 'Legendary' && rarityCount >= MAX_LEGENDARY) return current;
       if (current.length >= MAX_DECK || count >= card.quantity) return current;
       return [...current, card.card_id];
     });
@@ -313,7 +325,15 @@ export default function DeckScreen() {
   const handleSave = async () => {
     if (!session) return;
     if (!deckReady) {
-      setMessage(selectedIds.length < MIN_DECK ? `El mazo necesita al menos ${MIN_DECK} cartas.` : 'El formato permite un máximo de 2 facciones.');
+      setMessage(
+        selectedIds.length < MIN_DECK
+          ? `El mazo necesita al menos ${MIN_DECK} cartas.`
+          : factionList.length > 2
+            ? 'El formato permite un máximo de 2 facciones.'
+            : mythicCount > MAX_MYTHIC
+              ? `El formato permite ${MAX_MYTHIC} carta Mítica por mazo.`
+              : `El formato permite ${MAX_LEGENDARY} cartas Legendarias por mazo.`,
+      );
       return;
     }
     setSaving(true);
@@ -352,7 +372,13 @@ export default function DeckScreen() {
             card={item}
             count={counts[item.card_id] ?? 0}
             selected={Boolean(counts[item.card_id])}
-            disabled={selectedIds.length >= MAX_DECK || (counts[item.card_id] ?? 0) >= maxCopiesFor(item) || (counts[item.card_id] ?? 0) >= item.quantity}
+            disabled={
+              selectedIds.length >= MAX_DECK ||
+              (counts[item.card_id] ?? 0) >= maxCopiesFor(item) ||
+              (counts[item.card_id] ?? 0) >= item.quantity ||
+              (item.rarity === 'Mythic' && mythicCount >= MAX_MYTHIC) ||
+              (item.rarity === 'Legendary' && legendaryCount >= MAX_LEGENDARY)
+            }
             colors={colors}
             onPress={() => toggleCard(item)}
           />
@@ -388,6 +414,8 @@ export default function DeckScreen() {
               <View style={styles.powerFooter}>
                 <Text style={[styles.counter, { color: selectedIds.length >= MIN_DECK ? colors.success : colors.danger }]}>{selectedIds.length}/{MAX_DECK} cartas</Text>
                 <Text style={[styles.counter, { color: factionList.length > 2 ? colors.danger : colors.mutedForeground }]}>{factionList.length}/2 facciones</Text>
+                <Text style={[styles.counter, { color: mythicCount > MAX_MYTHIC ? colors.danger : colors.mutedForeground }]}>Míticas {mythicCount}/{MAX_MYTHIC}</Text>
+                <Text style={[styles.counter, { color: legendaryCount > MAX_LEGENDARY ? colors.danger : colors.mutedForeground }]}>Legendarias {legendaryCount}/{MAX_LEGENDARY}</Text>
               </View>
               <View style={styles.championSection}>
                 <Text style={[styles.sectionLabel, { color: colors.mutedForeground }]}>DESIGNAR CAMPEÓN · LEGENDARY / MYTHIC</Text>
@@ -534,7 +562,7 @@ const styles = StyleSheet.create({
   powerValue: { alignItems: 'flex-end', gap: 4 },
   powerNumber: { fontSize: 24, fontWeight: '900' },
   powerTier: { borderWidth: 1, borderRadius: 12, paddingHorizontal: 7, paddingVertical: 3, fontSize: 9, fontWeight: '900', letterSpacing: 0.5 },
-  powerFooter: { flexDirection: 'row', justifyContent: 'space-between', marginTop: 9 },
+  powerFooter: { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between', columnGap: 8, rowGap: 5, marginTop: 9 },
   counter: { fontSize: 11, fontWeight: '800' },
   championSection: { borderTopWidth: 1, borderTopColor: 'rgba(255,255,255,0.06)', marginTop: 13, paddingTop: 12 },
   sectionLabel: { fontSize: 9, fontWeight: '900', letterSpacing: 1 },
@@ -571,9 +599,8 @@ const styles = StyleSheet.create({
   gridRow: { gap: 10, marginBottom: 10 },
   card: { flex: 1, minWidth: 0, borderWidth: 1, borderRadius: 12, overflow: 'hidden' },
   cardArt: { aspectRatio: 0.78, borderBottomWidth: 1, overflow: 'hidden', position: 'relative' },
-  artFallback: { flex: 1, alignItems: 'center', justifyContent: 'center', gap: 9, padding: 9 },
-  artSeal: { width: 52, height: 52, borderWidth: 1, borderRadius: 17, alignItems: 'center', justifyContent: 'center', transform: [{ rotate: '45deg' }] },
-  artFallbackText: { fontSize: 9, fontWeight: '900', textAlign: 'center', textTransform: 'uppercase' },
+  artFallback: { flex: 1, alignItems: 'center', justifyContent: 'center', padding: 12 },
+  artFallbackText: { fontSize: 9, fontWeight: '900', textAlign: 'center', textTransform: 'uppercase', letterSpacing: 0.7, lineHeight: 14 },
   artShade: { ...StyleSheet.absoluteFillObject },
   countBadge: { position: 'absolute', top: 7, right: 7, borderRadius: 12, paddingHorizontal: 7, paddingVertical: 4 },
   countText: { fontSize: 10, fontWeight: '900' },
