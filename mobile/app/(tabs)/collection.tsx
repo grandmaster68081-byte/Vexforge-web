@@ -20,6 +20,7 @@ import { useGame } from '@/context/GameContext';
 import { ScreenShell } from '@/components/ScreenShell';
 import type { PlayerCard, PublicCard } from '@/lib/supabase';
 import { FACTION_ICONS } from '@/constants/visual';
+import { getCardPilotIdentity } from '@/constants/cardPilot';
 
 const RARITIES = ['Common', 'Uncommon', 'Rare', 'Epic', 'Legendary', 'Mythic'] as const;
 const FACTIONS = ['Guerrero', 'Mago', 'Paladín', 'Pícaro'] as const;
@@ -57,8 +58,9 @@ function CardArt({
   detail?: boolean;
 }) {
   const accent = rarityColor(card.rarity, colors);
+  const identity = getCardPilotIdentity(card.code);
   return (
-    <View style={[styles.art, detail && styles.artDetail, { borderColor: accent, backgroundColor: colors.panelStrong }]}>
+    <View style={[styles.art, detail && styles.artDetail, { borderColor: identity?.edge ?? accent, backgroundColor: colors.panelStrong }]}>
       {card.image_url ? (
         <Image
           source={{ uri: card.image_url }}
@@ -81,6 +83,13 @@ function CardArt({
         </View>
       )}
       <View style={[styles.artShade, { backgroundColor: `${colors.ink}66` }]} />
+      {identity ? (
+        <View pointerEvents="none" testID={`card-pilot-${card.code}`} style={[styles.pilotOverlay, { backgroundColor: identity.overlay }]}>
+          <View style={[styles.pilotBadge, { backgroundColor: `${colors.ink}C7`, borderColor: identity.edge }]}>
+            <Feather name={identity.icon} size={detail ? 15 : 12} color={identity.accent} />
+          </View>
+        </View>
+      ) : null}
       <View style={[styles.artRule, { backgroundColor: accent }]} />
     </View>
   );
@@ -456,6 +465,8 @@ const styles = StyleSheet.create({
   rune: { width: 58, height: 58, borderWidth: 1, borderRadius: 18, alignItems: 'center', justifyContent: 'center', transform: [{ rotate: '45deg' }] },
   fallbackName: { fontSize: 10, fontWeight: '800', textAlign: 'center', textTransform: 'uppercase' },
   artShade: { ...StyleSheet.absoluteFillObject },
+  pilotOverlay: { ...StyleSheet.absoluteFillObject },
+  pilotBadge: { position: 'absolute', top: 8, right: 8, width: 26, height: 26, borderWidth: 1, borderRadius: 13, alignItems: 'center', justifyContent: 'center' },
   artRule: { position: 'absolute', bottom: 0, left: 12, right: 12, height: 2, opacity: 0.8 },
   tileBody: { padding: 10 },
   tileName: { fontSize: 13, fontWeight: '800' },

@@ -188,12 +188,21 @@ No se rellenan con interpretación artística.
 | Idle/ataque/impacto | `BattleCard`, `ForgeFormationBoard`, cues de combate | eventos y estados actuales conservados | `IN_PROGRESS`; authored por carta requiere `code` o un identificador canónico |
 | Resultado | `BattleResultScreen` y escena de combate | resultado/turnos siguen siendo autoritativos | `APLICA` común; no authored hasta tener fuente |
 | Pack/evolución/colección | rutas de colección y pack | arte y datos reales | `IN_PROGRESS` |
-| Android colección/deck | `mobile/lib/supabase.ts` y pantallas nativas | `PublicCard` transporta `code`, `image_url`, rareza, facción y synergy | `IN_PROGRESS`; falta QA APK |
+| Android colección/deck | `mobile/lib/supabase.ts` y pantallas nativas | `PublicCard` transporta `code`, `image_url`, rareza, facción y synergy | `IMPLEMENTED_UNVERIFIED` en Colección; falta QA APK |
 
 No se puede afirmar integración authored completa en batalla hasta que el
 contrato entregue un identificador canónico sin cambiar la autoridad del
 combate. Añadirlo es una unidad de integración posterior; no se usa el nombre
 como clave silenciosa.
+
+### Android — Colección y detalle
+
+La pantalla nativa de Colección consume el mismo piloto por `PublicCard.code`
+mediante `mobile/constants/cardPilot.ts`. El tratamiento sólo añade overlay,
+borde e icono authored sobre el `image_url` oficial ya entregado por Supabase;
+no crea una ruta de Storage, no reemplaza el arte y no cambia estadísticas,
+colección, combate o recompensas. Los tres códigos tienen una marca visual
+verificable `card-pilot-<code>` para la validación del APK.
 
 ## Responsive, accesibilidad y rendimiento
 
@@ -235,14 +244,15 @@ declara `OPERATIONAL`, `PASS` ni `TIER1_READY`.
 
 Deuda concreta:
 
-1. Integrar un mapa authored seguro para los tres códigos en tile/inspector/
+1. Integrar el mapa authored seguro para los tres códigos en tile/inspector/
    pack y en el contrato de batalla sin usar nombres como claves.
 2. Decidir si se crean motifs no verbales por carta; hasta entonces sólo se
    usan contextos `sfx:ui`, `sfx:combat` y `sfx:rewards`.
 3. Resolver los campos `element`, criatura, personalidad y relaciones sólo
    cuando una fuente oficial los proporcione.
 4. Ejecutar la matriz visual en navegador y Android real, incluida la variante
-   reduced-motion.
+   reduced-motion; la integración de Colección Android queda
+   `IMPLEMENTED_UNVERIFIED` hasta esa revisión.
 5. Comparar cada carta contra otra carta del mismo sistema y registrar peso,
    memoria, carga y estabilidad.
 
