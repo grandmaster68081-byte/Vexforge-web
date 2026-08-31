@@ -1,3 +1,13 @@
+## 2026-08-31 — VE-P0.0/P0.1 VERTICAL BATTLE SLICE — IMPLEMENTED_UNVERIFIED
+
+- Se registró el contrato audiovisual tipado ve-p0-presentation-v1 en src/lib/battlePresentation.ts y se conectó a BattleCinematicScreen.
+- El adaptador traduce RealBattleResult y sus turnos/eventos reales a intro, formación, invocación, idle, target lock, anticipación, ataque, impacto, daño, keyword, muerte, resultado y reconexión.
+- Reserve entry sólo se emite cuando final_units contiene más de dos unidades; boss_phase y reward permanecen declarados pero no se emiten sin fuente. No se inventan datos.
+- Cada paso declara timing, cancelación, replay, refresh, reconexión y fallback. El consumidor conserva la secuencia existente Intro → BattleBoardEngine → BattleResultScreen.
+- H2 Target Lock y H3 Terrain Particles siguen incluidos como capas presentacionales del mismo vertical slice.
+- QA omitida por instrucción del operador y queda pendiente para el cierre final. No se declara OPERATIONAL, PASS ni TIER1_READY.
+
+---
 ## 2026-08-31 — FASE 3 H3 TERRAIN PARTICLES — IMPLEMENTED_UNVERIFIED
 
 - Se enriqueció la atmósfera del tablero con partículas authored por facción en ambos lados del campo.

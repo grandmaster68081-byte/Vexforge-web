@@ -9,6 +9,7 @@ import { particleEngine } from '../../lib/particleEngine';
 import { BattleIntroScreen } from './BattleIntroScreen';
 import { BattleBoardEngine } from './BattleBoardEngine';
 import { BattleResultScreen } from './BattleResultScreen';
+import { createBattlePresentationContract } from '../../lib/battlePresentation';
 import { AudioControls } from './AudioControls';
 import { ForgeIcon } from '../../shared/components/ForgeIcon';
 
@@ -33,6 +34,7 @@ export function BattleCinematicScreen({
   const finalUnits  = result.final_units ?? [];
   const playerFaction   = deriveFaction(finalUnits, 'a');
   const opponentFaction = deriveFaction(finalUnits, 'b');
+  const presentationContract = createBattlePresentationContract(result);
 
   const [phase, setPhase] = useState<Phase>('intro');
   const [speed, setSpeed] = useState<1 | 2 | 3>(1);
@@ -78,7 +80,11 @@ export function BattleCinematicScreen({
       display: 'flex', flexDirection: 'column',
       background: '#060610',
       maxWidth: 820, margin: '0 auto',
-    }}>
+    }}
+      data-presentation-contract={presentationContract.version}
+      data-presentation-fallback={presentationContract.fallback}
+      data-presentation-state-count={presentationContract.timeline.length}
+    >
       {/* Shared canvas for intro/result particles */}
       <canvas
         ref={canvasRef}
