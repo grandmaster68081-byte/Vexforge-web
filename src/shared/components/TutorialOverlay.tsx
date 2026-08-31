@@ -7,6 +7,7 @@
     import { useTutorial, TUTORIAL_TOTAL_STEPS } from "../../domains/tutorial/useTutorial";
     import { TutorialBattle } from "../../components/battle/TutorialBattle";
 import { ForgeIcon, type ForgeIconName } from "./ForgeIcon";
+import { emitTelemetry } from "../../lib/telemetry";
 
     type TutorialStep = {
     step: number; title: string; subtitle: string; desc: string;
@@ -85,6 +86,9 @@ import { ForgeIcon, type ForgeIconName } from "./ForgeIcon";
       if (isLast) { await skip(); return; }
       if (tutorialStep === 4) { setShowBattle(true); return; }
       if (step.action) navigate(step.action);
+      if (tutorialStep === 2) {
+        void emitTelemetry("forge_action", { action: "tutorial_forge", tutorial_step: tutorialStep });
+      }
       await advance(tutorialStep + 1);
     }
 

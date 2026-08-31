@@ -1,3 +1,14 @@
+## 2026-08-31 — VE-VIS-7-FIRST-SESSION-FLOW — IMPLEMENTED_UNVERIFIED
+
+- Se corrigió el arranque de cuenta nueva: el tutorial web reacciona a `SIGNED_IN`/`SIGNED_OUT`/`TOKEN_REFRESHED` y deja de depender del primer montaje de la aplicación.
+- Se eliminó la modal de bienvenida duplicada para que exista un único recorrido persistente gobernado por `player_progress.tutorial_step`.
+- Android redirige una cuenta nueva al tutorial antes del shell de pestañas; el paso packs/forja abre la cámara `store` oficial y conserva los siete pasos.
+- El recorrido conserva el combate tutorial real y las mutaciones autenticadas existentes; se añadió observación `forge_action` al acceso de forja tutorial sin crear autoridad local.
+- Fuente web sincronizada en `vexforge_frontend_source_files`; no se modificaron datos de juego, RPCs, Auth, Storage ni reglas de Supabase.
+- Evidencia técnica: web `typecheck`, `build`, `verify:build`, `verify:auth-guard`, `verify:identity-data`, `verify:telemetry`, `verify:mobile-tutorial`, `verify:mobile-store`; Android `npm run typecheck`; verificaciones Android Auth/Deck/Battle/Rewards/Profile/Meta en verde.
+- La compilación Android/APK, publicación en `main`, verificación pública y actualización del criterio vivo de Supabase quedan pendientes de cierre operativo. QA humana de primer recorrido continúa diferida; no se declara `PASS`, `OPERATIONAL` ni `TIER1_READY`.
+
+---
 ## 2026-08-31 — VE-VIS-3-EMPTY-STATE-ART — EVIDENCIA PÚBLICA RECONCILIADA
 
 - Preflight contra `main` y el deploy: el commit oficial y `build-manifest.json` coinciden en `a590758b0b2d2033dd543c1e7e5f03216a3b9e20`.

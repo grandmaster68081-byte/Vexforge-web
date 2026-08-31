@@ -101,7 +101,7 @@ function ClassicTabLayout() {
 
 export default function TabLayout() {
   const colors = useColors();
-  const { session, authLoading } = useGame();
+  const { session, authLoading, progress, syncState } = useGame();
 
   if (authLoading) {
     return (
@@ -113,6 +113,13 @@ export default function TabLayout() {
   }
 
   if (!session) return <Redirect href="/auth" />;
+
+  // A new account must see the persistent, Supabase-backed tutorial before
+  // landing in the tab shell. Once step 0 is advanced, normal navigation is
+  // intentionally unrestricted so the tutorial can open real surfaces.
+  if (syncState !== 'offline' && progress && (progress.tutorial_step ?? 0) === 0) {
+    return <Redirect href="/tutorial" />;
+  }
 
   if (isLiquidGlassAvailable()) {
     return <NativeTabLayout />;

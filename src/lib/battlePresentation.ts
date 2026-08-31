@@ -1,4 +1,4 @@
-import type { BattleEvent, BattleTurnData } from './battleTypes';
+import type { BattleEvent, BattleTurnData, BattleUnit } from './battleTypes';
 
 // VE-P0.0 — authoritative presentation vocabulary. These states never mutate battle data.
 export const BATTLE_PRESENTATION_STATES = [

@@ -9,7 +9,7 @@ import { ScreenShell } from '@/components/ScreenShell';
 import { OFFICIAL_ASSETS } from '@/constants/visual';
 import { advanceTutorialStep, skipTutorial, TUTORIAL_DONE_STEP, TUTORIAL_TOTAL_STEPS } from '@/lib/supabase';
 
-type TutorialRoute = '/collection' | '/battle' | '/deck';
+type TutorialRoute = '/collection' | '/battle' | '/deck' | '/store';
 type TutorialAccent = 'accent' | 'danger' | 'rarityEpic' | 'success' | 'primary';
 
 type TutorialStep = {
@@ -41,12 +41,13 @@ const TUTORIAL_STEPS: TutorialStep[] = [
     route: '/collection',
   },
   {
-    title: 'Abre nuevos caminos',
-    subtitle: 'Packs y forja amplían tus posibilidades',
-    description: 'Los packs y la forja forman parte del universo de VEXFORGE. Esta superficie móvil se incorporará en su unidad oficial; por ahora puedes continuar sin datos inventados.',
+    title: 'Abre tu primera forja',
+    subtitle: 'Packs y fusión amplían tus posibilidades',
+    description: 'Entra en la cámara oficial de packs y forja. El servidor valida tu balance, tus cartas y cada resultado; el dispositivo nunca inventa recompensas.',
     icon: 'cube-outline',
     accent: 'rarityEpic',
-    actionLabel: 'CONTINUAR',
+    actionLabel: 'ABRIR FORJA',
+    route: '/store',
   },
   {
     title: 'Ejecuta misiones',

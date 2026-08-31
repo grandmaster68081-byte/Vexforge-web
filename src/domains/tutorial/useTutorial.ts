@@ -14,9 +14,14 @@ export function useTutorial() {
     let cancelled = false;
 
     async function loadTutorial() {
+      if (!cancelled) setLoading(true);
       const { data: { session } } = await supabase.auth.getSession();
       if (!session?.user) {
-        if (!cancelled) setLoading(false);
+        if (!cancelled) {
+          setPlayerId(null);
+          setTutorialStep(null);
+          setLoading(false);
+        }
         return;
       }
 
@@ -28,6 +33,7 @@ export function useTutorial() {
 
       if (cancelled) return;
       if (error || !player?.id) {
+        setPlayerId(null);
         setTutorialStep(null);
         setLoading(false);
         return;
@@ -42,8 +48,16 @@ export function useTutorial() {
     }
 
     void loadTutorial();
+    const { data: subscription } = supabase.auth.onAuthStateChange((event) => {
+      if (cancelled) return;
+      if (event === "SIGNED_IN" || event === "SIGNED_OUT" || event === "TOKEN_REFRESHED") {
+        void loadTutorial();
+      }
+    });
+
     return () => {
       cancelled = true;
+      subscription.subscription.unsubscribe();
     };
   }, []);
 

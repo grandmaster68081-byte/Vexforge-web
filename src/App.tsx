@@ -13,7 +13,6 @@ import { AudioControls }        from "./components/battle/AudioControls";
 import { EnergyBar }             from "./shared/components/EnergyBar";
 import { QuestBadge }             from "./shared/components/QuestBadge";
 import { StarterDeckReveal }      from "./shared/components/StarterDeckReveal";
-import { OnboardingModal }        from "./shared/components/OnboardingModal";
 import { ProtectedAdminRoute }       from "./shared/components/ProtectedAdminRoute";
 import { AudioEngine }               from "./lib/audioEngine";
 import { ForgeIcon, type ForgeIconName } from "./shared/components/ForgeIcon";
@@ -587,7 +586,6 @@ export default function App() {
         <StarterDeckReveal />
         <LevelUpModal />
         <AchievementToastCard />
-        <OnboardingModal />
       </ErrorBoundary>
       </ToastProvider>
     </BrowserRouter>

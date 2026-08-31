@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
 import type { Session } from "@supabase/supabase-js";
 import { supabase } from "../lib/supabase";
+import { trackSessionEntry } from "../lib/telemetry";
 
 /**
 * Auth provider — chat 36.
@@ -74,6 +75,7 @@ useEffect(() => {
     if (s?.user) {
       await ensurePlayerRow(s.user.email ?? "");
       await processPendingReferral(s.user.id);
+      void trackSessionEntry();
     }
     setLoading(false);
   });
@@ -84,6 +86,7 @@ useEffect(() => {
     if (event === "SIGNED_IN" && newSession?.user) {
       await ensurePlayerRow(newSession.user.email ?? "");
       await processPendingReferral(newSession.user.id);
+      void trackSessionEntry();
     }
   });
 
