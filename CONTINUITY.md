@@ -1,3 +1,10 @@
+## 2026-08-31 — VE-P0.6 RAID SURFACE — IMPLEMENTED_UNVERIFIED
+
+- RaidsRoute declara presentationSurface=raid sobre ForgeFormationBoard.
+- Se conservaron join, contribution, cooldowns, completado, recompensas y settlement; no se añadieron eventos raid inventados.
+- QA sigue diferida por instrucción del operador; no se declara OPERATIONAL, PASS ni TIER1_READY.
+
+---
 ## 2026-08-31 — VE-P0.6 WORLD BOSS SURFACE — IMPLEMENTED_UNVERIFIED
 
 - WorldBossesRoute declara presentationSurface=world-boss sobre ForgeFormationBoard.

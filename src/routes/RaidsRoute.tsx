@@ -454,6 +454,7 @@ export function RaidsRoute() {
         equippedRelics={equippedRelics}
         onComplete={handleRaidBattleComplete}
         onDismiss={dismissRaidBattle}
+        presentationSurface="raid"
       />
     );
   }

@@ -1879,7 +1879,7 @@ export interface ForgeFormationBoardProps {
     championDied: boolean,
     result: ReturnType<typeof simulateFormationBattle>,
   ) => void;
-  presentationSurface?: 'pve' | 'tutorial' | 'pvp' | 'world-boss';
+  presentationSurface?: 'pve' | 'tutorial' | 'pvp' | 'world-boss' | 'raid';
   onDismiss: () => void;
 }
 

@@ -77,3 +77,8 @@ El tutorial comparte `ForgeFormationBoard` y declara `presentationSurface="tutor
 ## World Bosses
 
 World Bosses comparte `ForgeFormationBoard` con `presentationSurface="world-boss"`. La superficie sólo etiqueta el contexto visual; el `battle_run`, la simulación, el cálculo de daño, `attackWorldBoss` y el settlement siguen siendo los flujos existentes.
+
+
+## Raids
+
+Raids comparte `ForgeFormationBoard` con `presentationSurface="raid"`. La superficie no crea una autoridad paralela: unión, contribución, cooldowns, completado, recompensas y settlement permanecen en los RPC/repositorios existentes.
