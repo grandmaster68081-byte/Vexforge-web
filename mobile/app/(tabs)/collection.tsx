@@ -1,5 +1,5 @@
 import { Feather } from '@/components/ForgeIcon';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   ActivityIndicator,
   FlatList,
@@ -59,31 +59,40 @@ function CardArt({
 }) {
   const accent = rarityColor(card.rarity, colors);
   const identity = getCardPilotIdentity(card.code);
+  const [artState, setArtState] = useState<'loading' | 'ready' | 'error'>(
+    card.image_url ? 'loading' : 'error',
+  );
+
+  useEffect(() => {
+    setArtState(card.image_url ? 'loading' : 'error');
+  }, [card.image_url]);
+
   return (
     <View style={[styles.art, detail && styles.artDetail, { borderColor: identity?.edge ?? accent, backgroundColor: colors.panelStrong }]}>
-      {card.image_url ? (
+      {card.image_url && artState !== 'error' ? (
         <Image
           source={{ uri: card.image_url }}
-          style={StyleSheet.absoluteFill}
+          style={[StyleSheet.absoluteFill, { opacity: artState === 'ready' ? 1 : 0 }]}
           resizeMode="cover"
-          accessibilityLabel={`Arte de ${card.name}`}
+          accessibilityLabel={`Arte oficial de ${card.name}`}
+          onLoad={() => setArtState('ready')}
+          onError={() => setArtState('error')}
         />
-      ) : (
-        <View style={styles.artFallback}>
-          <View style={[styles.rune, { borderColor: `${accent}88` }]}>
-            {FACTION_ICONS[card.faction ?? ''] ? (
-              <Image source={{ uri: FACTION_ICONS[card.faction ?? ''] }} style={detail ? styles.factionIconDetail : styles.factionIcon} resizeMode="contain" accessibilityLabel={`Emblema oficial de ${card.faction ?? 'la facción'}`} />
-            ) : (
-              <Feather name="compass" size={detail ? 46 : 28} color={accent} />
-            )}
-          </View>
-          <Text style={[styles.fallbackName, { color: accent }]} numberOfLines={2}>
-            {card.name}
-          </Text>
+      ) : null}
+      {artState === 'loading' ? (
+        <View style={styles.artStatus} accessibilityLiveRegion="polite">
+          <Feather name="cards" size={detail ? 30 : 22} color={colors.mutedForeground} />
+          <Text style={[styles.artStatusText, { color: colors.mutedForeground }]}>Cargando arte oficial</Text>
         </View>
-      )}
-      <View style={[styles.artShade, { backgroundColor: `${colors.ink}66` }]} />
-      {identity ? (
+      ) : null}
+      {artState === 'error' ? (
+        <View style={styles.artStatus} accessibilityRole="image" accessibilityLabel={`Arte oficial no disponible para ${card.name}`}>
+          <Feather name="warning" size={detail ? 30 : 22} color={colors.mutedForeground} />
+          <Text style={[styles.artStatusText, { color: colors.mutedForeground }]}>Arte oficial no disponible</Text>
+        </View>
+      ) : null}
+      {artState === 'ready' ? <View style={[styles.artShade, { backgroundColor: `${colors.ink}66` }]} /> : null}
+      {identity && artState === 'ready' ? (
         <View pointerEvents="none" testID={`card-pilot-${card.code}`} style={[styles.pilotOverlay, { backgroundColor: identity.overlay }]}>
           <View style={[styles.pilotBadge, { backgroundColor: `${colors.ink}C7`, borderColor: identity.edge }]}>
             <Feather name={identity.icon} size={detail ? 15 : 12} color={identity.accent} />
@@ -458,12 +467,9 @@ const styles = StyleSheet.create({
   tile: { flex: 1, minWidth: 0, borderWidth: 1, borderRadius: 12, overflow: 'hidden' },
   art: { aspectRatio: 0.78, borderBottomWidth: 1, overflow: 'hidden', position: 'relative' },
   artDetail: { aspectRatio: 0.72, borderRadius: 12, borderWidth: 1 },
-  artFallback: { flex: 1, alignItems: 'center', justifyContent: 'center', padding: 12, gap: 10 },
-  factionIcon: { width: 30, height: 30, transform: [{ rotate: '-45deg' }] },
-  factionIconDetail: { width: 48, height: 48, transform: [{ rotate: '-45deg' }] },
   factionIconMeta: { width: 13, height: 13 },
-  rune: { width: 58, height: 58, borderWidth: 1, borderRadius: 18, alignItems: 'center', justifyContent: 'center', transform: [{ rotate: '45deg' }] },
-  fallbackName: { fontSize: 10, fontWeight: '800', textAlign: 'center', textTransform: 'uppercase' },
+  artStatus: { ...StyleSheet.absoluteFillObject, alignItems: 'center', justifyContent: 'center', padding: 16, gap: 8 },
+  artStatusText: { fontSize: 10, fontWeight: '700', letterSpacing: 0.8, textAlign: 'center', textTransform: 'uppercase' },
   artShade: { ...StyleSheet.absoluteFillObject },
   pilotOverlay: { ...StyleSheet.absoluteFillObject },
   pilotBadge: { position: 'absolute', top: 8, right: 8, width: 26, height: 26, borderWidth: 1, borderRadius: 13, alignItems: 'center', justifyContent: 'center' },

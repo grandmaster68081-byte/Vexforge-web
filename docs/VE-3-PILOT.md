@@ -3,7 +3,7 @@
 **Fecha de preflight:** 2026-08-31  
 **Unidad:** `VE-3-PILOT`  
 **Estado:** `IMPLEMENTED_UNVERIFIED` para el dossier y la guarda de procedencia;
-`IN_PROGRESS` para la integración authored por superficie  
+`IN_PROGRESS` para la integración authored por superficie y la QA visual  
 **Nivel:** `Q2 → Q3`  
 **Fuente de código:** `grandmaster68081-byte/Vexforge-web`, `main`,
 `d70663ed13801177736b892459ac083ef4e4c6e8` durante el preflight  
@@ -182,8 +182,8 @@ No se rellenan con interpretación artística.
 
 | Superficie | Consumidor actual | Baseline comprobable | Integración authored |
 |---|---|---|---|
-| Tile/lista | `src/routes/CardsRoute.tsx` | `image_url`, rareza, facción y keywords provienen de `cards` | `IN_PROGRESS` |
-| Inspector | `src/routes/CardsRoute.tsx` | consulta `getCardByCode` y muestra datos reales | `IN_PROGRESS` |
+| Tile/lista | `src/routes/CardsRoute.tsx` | `image_url`, rareza, facción y keywords provienen de `cards` | `IMPLEMENTED_UNVERIFIED`; loading/error de arte explícitos |
+| Inspector | `src/routes/CardsRoute.tsx` | consulta `getCardByCode` y muestra datos reales | `IMPLEMENTED_UNVERIFIED`; loading/error de arte explícitos |
 | Entrada al tablero | `src/components/battle/BattleCard.tsx` | imagen, rareza, facción, stats y keywords vienen de `BattleUnit` | `PENDIENTE_DE_FUENTE`: el payload de batalla no transporta `code` |
 | Idle/ataque/impacto | `BattleCard`, `ForgeFormationBoard`, cues de combate | eventos y estados actuales conservados | `IN_PROGRESS`; authored por carta requiere `code` o un identificador canónico |
 | Resultado | `BattleResultScreen` y escena de combate | resultado/turnos siguen siendo autoritativos | `APLICA` común; no authored hasta tener fuente |
@@ -216,7 +216,8 @@ verificable `card-pilot-<code>` para la validación del APK.
 - No se añaden requests: las imágenes siguen siendo `cards.image_url` y el
   audio sigue el manifiesto procedural de contexto.
 - Los estados `loading`, `empty`, `error`, `locked` y `unlocked` no reciben
-  sustitutos diegéticos. Si falta el arte, el estado debe ser explícito.
+  sustitutos diegéticos. Si falta el arte, el estado debe ser explícito. Tile, inspector y
+  Colección Android no ocultan una imagen fallida ni pintan emblemas como sustituto del arte.
 
 ## Guardas y evidencia
 

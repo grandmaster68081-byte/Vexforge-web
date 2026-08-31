@@ -49,82 +49,99 @@ function FilterBtn({ active, color, onClick, children }: {
 }
 
 function CardArt({ card }: { card: Card }) {
-  const faction = FACTION_CFG[card.faction] ?? FACTION_CFG.Guerrero;
-  const rarity  = RARITY_CFG[card.rarity]  ?? RARITY_CFG.Common;
   const identity = getCardPilotIdentity(card.code);
-  if (card.image_url) {
-    return (
-      <div data-card-pilot={identity?.treatment ?? undefined} style={{ width: "100%", aspectRatio: "3/4", overflow: "hidden", borderRadius: "6px 6px 0 0", position: "relative" }}>
-        <img src={card.image_url} alt={card.name}
-          style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
-          onError={e => { (e.target as HTMLImageElement).style.display = "none"; }} />
-        {identity && (
+  const [artState, setArtState] = useState<"loading" | "ready" | "error">(
+    card.image_url ? "loading" : "error",
+  );
+
+  useEffect(() => {
+    setArtState(card.image_url ? "loading" : "error");
+  }, [card.image_url]);
+
+  return (
+    <div
+      data-card-pilot={identity?.treatment ?? undefined}
+      style={{
+        width: "100%",
+        aspectRatio: "3/4",
+        overflow: "hidden",
+        borderRadius: "6px 6px 0 0",
+        position: "relative",
+        background: "#0b0b16",
+      }}
+    >
+      {card.image_url && artState !== "error" && (
+        <img
+          src={card.image_url}
+          alt={card.name}
+          style={{
+            width: "100%",
+            height: "100%",
+            objectFit: "cover",
+            display: "block",
+            opacity: artState === "ready" ? 1 : 0,
+            transition: "opacity .18s ease",
+          }}
+          onLoad={() => setArtState("ready")}
+          onError={() => setArtState("error")}
+        />
+      )}
+      {artState === "loading" && (
+        <div
+          aria-live="polite"
+          style={{
+            position: "absolute",
+            inset: 0,
+            display: "grid",
+            placeItems: "center",
+            alignContent: "center",
+            gap: 8,
+            color: "#8888aa",
+            fontFamily: "Rajdhani,sans-serif",
+            fontSize: 10,
+            fontWeight: 700,
+            letterSpacing: ".08em",
+            textAlign: "center",
+            textTransform: "uppercase",
+          }}
+        >
+          <ForgeIcon name="cards" size={24} strokeWidth={1.4} />
+          <span>Cargando arte oficial</span>
+        </div>
+      )}
+      {artState === "error" && (
+        <div
+          role="img"
+          aria-label={`Arte oficial no disponible para ${card.name}`}
+          style={{
+            position: "absolute",
+            inset: 0,
+            display: "grid",
+            placeItems: "center",
+            alignContent: "center",
+            gap: 8,
+            padding: 16,
+            color: "#a7a7c2",
+            fontFamily: "Rajdhani,sans-serif",
+            fontSize: 10,
+            fontWeight: 700,
+            letterSpacing: ".08em",
+            textAlign: "center",
+            textTransform: "uppercase",
+          }}
+        >
+          <ForgeIcon name="warning" size={24} strokeWidth={1.4} />
+          <span>Arte oficial no disponible</span>
+        </div>
+      )}
+      {identity && artState === "ready" && (
+        <>
           <div aria-hidden="true" style={{ position: "absolute", inset: 0, pointerEvents: "none", background: identity.overlay, boxShadow: `inset 0 -3px 0 ${identity.edge}` }} />
-        )}
-        {identity && (
           <div aria-hidden="true" style={{ position: "absolute", top: 8, right: 8, width: 24, height: 24, borderRadius: "50%", display: "grid", placeItems: "center", color: identity.accent, background: "rgba(5,5,13,.72)", border: `1px solid ${identity.edge}`, boxShadow: `0 0 14px ${identity.edge}` }}>
             <ForgeIcon name={identity.icon} size={13} strokeWidth={1.7} />
           </div>
-        )}
-      </div>
-    );
-  }
-  return (
-    <div style={{
-      width: "100%", aspectRatio: "3/4", borderRadius: "6px 6px 0 0",
-      background: faction.bg,
-      display: "flex", flexDirection: "column",
-      alignItems: "center", justifyContent: "center",
-      position: "relative", overflow: "hidden",
-    }}>
-      {/* Faction bg image (if available) */}
-      {faction.bgImg && (
-        <div style={{
-          position: "absolute", inset: 0,
-          backgroundImage: `url(${faction.bgImg})`,
-          backgroundSize: "cover", backgroundPosition: "center",
-          opacity: 0.25, filter: "blur(2px) saturate(1.4)",
-        }} />
+        </>
       )}
-      {/* Diagonal rune grid pattern */}
-      <div style={{
-        position: "absolute", inset: 0,
-        backgroundImage: `repeating-linear-gradient(45deg, ${rarity.color}08 0, ${rarity.color}08 1px, transparent 0, transparent 50%)`,
-        backgroundSize: "14px 14px",
-      }} />
-      {/* Radial glow centered */}
-      <div style={{
-        position: "absolute", inset: 0,
-        background: `radial-gradient(circle at 50% 45%, ${rarity.color}20 0%, transparent 65%)`,
-      }} />
-      {/* Faction icon — large with glow */}
-      <div style={{
-        position: "relative", fontSize: 44, lineHeight: 1, marginBottom: 10,
-        filter: `drop-shadow(0 0 12px ${rarity.color}) drop-shadow(0 0 24px ${rarity.color}66)`,
-        textShadow: `0 0 20px ${rarity.color}`,
-      }}>
-        <ForgeIcon name={faction.icon} size={44} strokeWidth={1.5} />
-      </div>
-      {/* Horizontal separator */}
-      <div style={{
-        width: 40, height: 1, marginBottom: 8,
-        background: `linear-gradient(90deg, transparent, ${rarity.color}88, transparent)`,
-      }} />
-      {/* Card name */}
-      <p style={{
-        fontFamily: "Cinzel,serif", color: rarity.color, fontSize: 9,
-        textAlign: "center", lineHeight: 1.4, margin: "0 8px",
-        textTransform: "uppercase", letterSpacing: "0.08em",
-        wordBreak: "break-word", position: "relative",
-        textShadow: `0 0 10px ${rarity.color}66`,
-        fontWeight: 700,
-      }}>{card.name}</p>
-      {/* Bottom glow strip */}
-      <div style={{
-        position: "absolute", bottom: 0, left: 0, right: 0, height: 2,
-        background: `linear-gradient(90deg, transparent, ${rarity.color}, transparent)`,
-        opacity: 0.6,
-      }} />
     </div>
   );
 }
