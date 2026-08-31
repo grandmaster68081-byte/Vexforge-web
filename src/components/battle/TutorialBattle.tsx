@@ -318,6 +318,7 @@ export function TutorialBattle({ onComplete, onSkip }: TutorialBattleProps) {
         difficulty="tutorial"
         onComplete={(won) => onComplete(won)}
         onDismiss={onSkip}
+        presentationSurface="tutorial"
       />
     );
   }

@@ -1,3 +1,11 @@
+## 2026-08-31 — VE-P0.6 TUTORIAL SURFACE — IMPLEMENTED_UNVERIFIED
+
+- TutorialBattle continúa usando ForgeFormationBoard y ahora declara explícitamente la superficie tutorial.
+- Misiones declara la superficie pve; ambos flujos comparten contrato, arena, cues, reduced motion y semántica sin duplicar motores.
+- tutorial_step, selección, resultados, callbacks y settlement no fueron modificados.
+- QA sigue diferida por instrucción del operador; no se declara OPERATIONAL, PASS ni TIER1_READY.
+
+---
 ## 2026-08-31 — VE-P0.5 SEMANTIC BATTLE FALLBACK — IMPLEMENTED_UNVERIFIED
 
 - BattleBoardEngine y ForgeFormationBoard exponen regiones accesibles; BattleCard anuncia identidad canónica y HP real.

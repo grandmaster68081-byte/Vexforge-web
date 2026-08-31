@@ -67,3 +67,8 @@ P0.4 centraliza el perfil semántico de actor a partir de `BattleUnit`: facción
 ## Semántica y fallback DOM
 
 Los tableros exponen una región accesible y el cinemático anuncia acción/daño/eliminación con datos reales. Las cartas anuncian nombre, facción, rareza y HP. El Canvas de partículas es decorativo (`aria-hidden`) y no sustituye texto, controles ni HUD.
+
+
+## Expansión controlada
+
+El tutorial comparte `ForgeFormationBoard` y declara `presentationSurface="tutorial"`; Misiones declara `presentationSurface="pve"`. Es un contexto de presentación, no una segunda autoridad: `tutorial_step`, formación, resultado y settlement siguen viniendo de sus fuentes existentes.

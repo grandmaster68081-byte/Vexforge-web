@@ -1293,6 +1293,7 @@ export function MissionsRoute() {
         equippedRelics={equippedRelics}
         onComplete={handleBattleComplete}
         onDismiss={handleBattleDismiss}
+        presentationSurface="pve"
       />
     );
   }

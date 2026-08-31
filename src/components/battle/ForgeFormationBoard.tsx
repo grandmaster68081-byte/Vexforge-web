@@ -1879,6 +1879,7 @@ export interface ForgeFormationBoardProps {
     championDied: boolean,
     result: ReturnType<typeof simulateFormationBattle>,
   ) => void;
+  presentationSurface?: 'pve' | 'tutorial' | 'pvp';
   onDismiss: () => void;
 }
 
@@ -1894,7 +1895,7 @@ function isBossEncounter(opponentName: string): boolean {
 
 export function ForgeFormationBoard({
   initialFormation, playerName = 'Tú', opponentName = 'Rival',
-  difficulty, equippedRelics = [], onComplete, onDismiss,
+  difficulty, equippedRelics = [], onComplete, onDismiss, presentationSurface = 'pve',
 }: ForgeFormationBoardProps) {
   const [formation, setFormation]     = useState<FormationState>(initialFormation);
   const [simulation] = useState<FormationSimulationState>(() => {
@@ -2257,6 +2258,7 @@ export function ForgeFormationBoard({
       fontFamily: '"Rajdhani",sans-serif', overflow: 'hidden',
     }}
       data-arena-profile={arenaProfile.id}
+      data-presentation-surface={presentationSurface}
       role="region"
       aria-label="Tablero de formación VEXFORGE"
       aria-live="polite"
