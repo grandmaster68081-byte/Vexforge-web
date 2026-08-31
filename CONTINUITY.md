@@ -1,3 +1,12 @@
+## 2026-08-31 — VE-MOB-7-BATTLE — RELEASE RECONCILIATION — IMPLEMENTED_UNVERIFIED
+
+- La siguiente unidad P1 ya estaba implementada en `main`; no se reabrió ni se duplicó código. La pantalla presenta ForgeFormation (Vanguardia, Campeón, Centinela y Reserva), oponentes reales, confirmación explícita, replay y resultado autoritativo.
+- Contratos vivos verificados mediante Supabase Management API: `get_leaderboard(p_limit integer)` y `vexforge_battle_resolve(p_challenger_id uuid, p_opponent_id uuid, p_idempotency_key text)`, ambos con resultado `jsonb`/tabla canónica.
+- Guarda específica: `verify:mobile-battle` 15/15. `npm run typecheck` móvil pasó. El cliente no simula daño, ganador, recompensas ni economía.
+- Entrega verificada en el commit `9e6ddc87b1449f6e4626277ad6d8b0248c78b187`: runs 57 (`33365849985`) y 58 (`33365855394`) del workflow Android terminaron `success`; release `vexforge-android-build-58` publicado con `app-release.apk`.
+- Estado: `VE-MOB-7` IMPLEMENTED_UNVERIFIED; QA humana de una partida autenticada, formación y derrota del Campeón sigue pendiente. No se declara `OPERATIONAL`, `PASS` ni `TIER1_READY`.
+
+---
 ## 2026-08-31 — VE-MOB-5-DECK — IMPLEMENTED_UNVERIFIED
 
 - Preflight documental reconciliado: la copia de `main` del protocolo se sincronizó con la fila activa de Supabase; la única diferencia era el salto de línea final.

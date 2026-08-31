@@ -62,13 +62,15 @@ genérica aunque el servidor ya aplicara las reglas ForgeFormation.
 
 ## Estado y evidencia
 
-Estado de implementación: `IMPLEMENTED_UNVERIFIED` después de publicar el código
-en `main` y pasar la guarda móvil 15/15. El primer intento del workflow APK
-detectó y permitió corregir una referencia inválida; el segundo quedó bloqueado
-en el runner antes de emitir el typecheck Android y fue cancelado. Por eso no se
-declara un nuevo release. La QA manual del operador sigue siendo necesaria para
-instalar el APK y recorrer una partida autenticada; la compilación y las guardas
-técnicas no sustituyen esa comprobación.
+Estado de implementación: `IMPLEMENTED_UNVERIFIED`. La guarda móvil pasa 15/15
+y el typecheck móvil pasa. La entrega actual quedó incluida en el commit
+`9e6ddc87b1449f6e4626277ad6d8b0248c78b187`; los runs 57
+(`33365849985`) y 58 (`33365855394`) del workflow Android oficial terminaron
+`success`, incluyendo `assembleRelease`, bundle JS standalone y publicación.
+El release vigente es `vexforge-android-build-58`, con `app-release.apk`.
+La QA manual del operador sigue siendo necesaria para instalar el APK y
+recorrer una partida autenticada; la compilación y las guardas técnicas no
+sustituyen esa comprobación.
 
 Nivel Q: Q2 actual / Q3 objetivo.
 
