@@ -6,7 +6,9 @@
 - El recorrido conserva el combate tutorial real y las mutaciones autenticadas existentes; se añadió observación `forge_action` al acceso de forja tutorial sin crear autoridad local.
 - Fuente web sincronizada en `vexforge_frontend_source_files`; no se modificaron datos de juego, RPCs, Auth, Storage ni reglas de Supabase.
 - Evidencia técnica: web `typecheck`, `build`, `verify:build`, `verify:auth-guard`, `verify:identity-data`, `verify:telemetry`, `verify:mobile-tutorial`, `verify:mobile-store`; Android `npm run typecheck`; verificaciones Android Auth/Deck/Battle/Rewards/Profile/Meta en verde.
-- La compilación Android/APK, publicación en `main`, verificación pública y actualización del criterio vivo de Supabase quedan pendientes de cierre operativo. QA humana de primer recorrido continúa diferida; no se declara `PASS`, `OPERATIONAL` ni `TIER1_READY`.
+- `main` publicado en `40e69f80abca4ca0ffbd2e8afa0171fbc8704793`; el workflow Android oficial run 62 terminó `success`, verificó el bundle JS embebido y publicó `vexforge-android-build-62/app-release.apk` (91,791,587 bytes; SHA-256 `d1d3a1f84982a483e9f3dbf10f2e03bc44d0a8998bd07246361284fe33f8dc05`).
+- Cloudflare Pages terminó el deploy del commit; el job independiente `verify` falló en `verify-card-pilot` por HTTP 429 al leer un arte de Storage, no en el flujo de primera sesión. La evidencia técnica específica de este alcance sigue en verde.
+- El criterio vivo de Supabase quedó en `PARTIAL`, equivalente al estado de implementación no verificada del protocolo. QA humana de primer recorrido continúa diferida; no se declara `PASS`, `OPERATIONAL` ni `TIER1_READY`.
 
 ---
 ## 2026-08-31 — VE-VIS-3-EMPTY-STATE-ART — EVIDENCIA PÚBLICA RECONCILIADA
