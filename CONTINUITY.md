@@ -4,7 +4,7 @@
 - Contratos vivos verificados mediante Supabase Management API: `player_deck`, `validate_deck(p_card_ids uuid[])` y `save_deck(p_card_ids uuid[])`; las RPC mantienen RLS/ownership y orden de slots.
 - Android consume la colección real del jugador, carga el mazo persistido, conserva cantidades disponibles, limita 5–30 cartas, 2 copias por carta, 2 facciones, 1 Mythic global y 3 Legendary global, con Campeón local.
 - La pantalla mantiene búsqueda, filtros, estados de carga/error/vacío/sin coincidencias, Deck Power Score y validación/guardado autoritativos; el arte ausente se declara explícitamente y no se sustituye por iconografía genérica.
-- Guarda específica: `verify:mobile-deck` 13/13. Typecheck local pendiente de ejecutar porque el entorno bloqueó la instalación por su proxy npm interno; no se alteraron dependencias.
+- Guarda específica: `verify:mobile-deck` 13/13. `npm run typecheck` pasó localmente usando el registro público explícito para la instalación; no se alteraron dependencias ni el lockfile.
 - Publicación verificada: commit `9e6ddc87b1449f6e4626277ad6d8b0248c78b187`; run 58 (`33365855394`) terminó `success` el 2026-08-31; release oficial `vexforge-android-build-58` publicó `app-release.apk` de 91,789,723 bytes.
 - Estado: `VE-MOB-5` IMPLEMENTED_UNVERIFIED; QA humana en dispositivo/emulador pendiente. No se declara `OPERATIONAL`, `PASS` ni `TIER1_READY`.
 
