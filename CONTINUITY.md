@@ -1,3 +1,10 @@
+## 2026-08-31 — VE-P0.6 WORLD BOSS SURFACE — IMPLEMENTED_UNVERIFIED
+
+- WorldBossesRoute declara presentationSurface=world-boss sobre ForgeFormationBoard.
+- Se conservaron battle_run, simulación, cálculo de daño, attackWorldBoss, cooldowns y settlement; no se añadieron eventos boss_phase, reserve_entry ni reward sin fuente explícita.
+- QA sigue diferida por instrucción del operador; no se declara OPERATIONAL, PASS ni TIER1_READY.
+
+---
 ## 2026-08-31 — VE-P0.6 TUTORIAL SURFACE — IMPLEMENTED_UNVERIFIED
 
 - TutorialBattle continúa usando ForgeFormationBoard y ahora declara explícitamente la superficie tutorial.

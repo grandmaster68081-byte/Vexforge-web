@@ -72,3 +72,8 @@ Los tableros exponen una región accesible y el cinemático anuncia acción/dañ
 ## Expansión controlada
 
 El tutorial comparte `ForgeFormationBoard` y declara `presentationSurface="tutorial"`; Misiones declara `presentationSurface="pve"`. Es un contexto de presentación, no una segunda autoridad: `tutorial_step`, formación, resultado y settlement siguen viniendo de sus fuentes existentes.
+
+
+## World Bosses
+
+World Bosses comparte `ForgeFormationBoard` con `presentationSurface="world-boss"`. La superficie sólo etiqueta el contexto visual; el `battle_run`, la simulación, el cálculo de daño, `attackWorldBoss` y el settlement siguen siendo los flujos existentes.

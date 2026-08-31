@@ -440,6 +440,7 @@ export function WorldBossesRoute() {
         equippedRelics={equippedRelics}
         onComplete={handleBattleComplete}
         onDismiss={dismissBattle}
+        presentationSurface="world-boss"
       />
     );
   }
