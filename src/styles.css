@@ -8717,3 +8717,125 @@ button:active { animation: chip-select-pop 0.15s ease; }
   .motion-nudge, .motion-reveal { animation: none !important; transform: none !important; filter: none !important; }
 }
 
+
+
+/* ─── VEXFORGE state art — shared empty/loading/error language ───────────── */
+.forge-state-art {
+  --state-art-color: #f0c050;
+  position: relative;
+  width: 76px;
+  height: 76px;
+  display: grid;
+  place-items: center;
+  isolation: isolate;
+  flex: 0 0 auto;
+  margin-bottom: 2px;
+}
+.forge-state-art::before,
+.forge-state-art::after {
+  content: "";
+  position: absolute;
+  border: 1px solid color-mix(in srgb, var(--state-art-color) 48%, transparent);
+  transform: rotate(45deg);
+  pointer-events: none;
+}
+.forge-state-art::before {
+  inset: 8px;
+  border-radius: 12px;
+  animation: forge-state-art-orbit 8s linear infinite;
+}
+.forge-state-art::after {
+  inset: 16px;
+  border-radius: 50%;
+  border-style: dashed;
+  opacity: 0.65;
+  animation: forge-state-art-orbit-reverse 11s linear infinite;
+}
+.forge-state-art-orbit {
+  position: absolute;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--state-art-color);
+  box-shadow: 0 0 10px var(--state-art-color);
+  pointer-events: none;
+}
+.forge-state-art-orbit-a {
+  top: 5px;
+  right: 16px;
+  animation: forge-state-art-pulse 2.8s ease-in-out infinite;
+}
+.forge-state-art-orbit-b {
+  bottom: 10px;
+  left: 10px;
+  opacity: 0.65;
+  animation: forge-state-art-pulse 2.8s 0.8s ease-in-out infinite;
+}
+.forge-state-art-mark {
+  position: relative;
+  z-index: 1;
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  color: var(--state-art-color);
+  border: 1px solid color-mix(in srgb, var(--state-art-color) 72%, transparent);
+  border-radius: 14px;
+  background: radial-gradient(circle at 35% 25%, rgba(255,255,255,0.1), rgba(10,10,18,0.92) 66%);
+  box-shadow: 0 0 18px color-mix(in srgb, var(--state-art-color) 26%, transparent), inset 0 0 12px rgba(255,255,255,0.04);
+  transform: rotate(-4deg);
+  animation: forge-state-art-breathe 3.2s ease-in-out infinite;
+}
+.forge-state-art-mark > svg { transform: rotate(4deg); filter: drop-shadow(0 0 7px currentColor); }
+.forge-state-art-empty { --state-art-color: #f0c050; }
+.forge-state-art-loading { --state-art-color: #7b4fd4; }
+.forge-state-art-error { --state-art-color: #e84040; }
+.forge-state-art-locked { --state-art-color: #f0c050; }
+@keyframes forge-state-art-orbit {
+  to { transform: rotate(405deg); }
+}
+@keyframes forge-state-art-orbit-reverse {
+  to { transform: rotate(-315deg); }
+}
+@keyframes forge-state-art-pulse {
+  0%,100% { opacity: 0.3; transform: scale(0.8); }
+  50% { opacity: 1; transform: scale(1.25); }
+}
+@keyframes forge-state-art-breathe {
+  0%,100% { transform: rotate(-4deg) scale(1); }
+  50% { transform: rotate(4deg) scale(1.04); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .forge-state-art,
+  .forge-state-art::before,
+  .forge-state-art::after,
+  .forge-state-art-orbit,
+  .forge-state-art-mark {
+    animation: none !important;
+  }
+}
+
+/* Legacy route-local empty cards receive the same branded sigil treatment. */
+.empty-state {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+.empty-state::before {
+  content: "";
+  position: absolute;
+  width: 82px;
+  height: 82px;
+  top: 22px;
+  left: 50%;
+  border: 1px solid rgba(240,192,80,0.32);
+  border-radius: 16px;
+  transform: translateX(-50%) rotate(45deg);
+  box-shadow: 0 0 24px rgba(201,144,31,0.12), inset 0 0 18px rgba(201,144,31,0.05);
+  pointer-events: none;
+  animation: forge-state-art-orbit 9s linear infinite;
+}
+.empty-state > * { position: relative; z-index: 1; }
+@media (prefers-reduced-motion: reduce) {
+  .empty-state::before { animation: none; }
+}

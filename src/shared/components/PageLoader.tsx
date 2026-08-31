@@ -51,7 +51,7 @@ const WRAP_STYLE: CSSProperties = {
 export function PageLoader({ message }: { message?: string }) {
   const label = message ?? "Cargando…";
   return (
-    <div style={WRAP_STYLE} data-forge-loader role="status" aria-live="polite" aria-label={label}>
+    <div style={WRAP_STYLE} data-forge-loader data-forge-state-art="loading" role="status" aria-busy="true" aria-live="polite" aria-label={label}>
       <style>{KEYFRAMES}</style>
 
       {/* Multi-ring spinner */}

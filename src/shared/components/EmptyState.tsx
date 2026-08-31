@@ -1,5 +1,6 @@
 import type { CSSProperties, ReactNode } from "react";
 import { ForgeIcon } from "./ForgeIcon";
+import { ForgeStateArt } from "./ForgeStateArt";
 
 /**
  * EmptyState — canonical empty-content card for VEXFORGE routes.
@@ -23,6 +24,9 @@ export function EmptyState({ icon = <ForgeIcon name="collection" size={36} />, t
   const pad = compact ? "20px 16px" : "40px 24px";
   return (
     <div
+      data-forge-state="empty"
+      role="status"
+      aria-live="polite"
       style={{
         textAlign: "center",
         padding: pad,
@@ -36,9 +40,7 @@ export function EmptyState({ icon = <ForgeIcon name="collection" size={36} />, t
         ...style,
       }}
     >
-      <div style={{ color: "var(--ember-gold-lt, #f0c050)", display: "grid", placeItems: "center", minHeight: compact ? 28 : 36 }}>
-        {icon}
-      </div>
+      <ForgeStateArt variant="empty" icon={icon} />
       <div
         style={{
           color: "var(--fg-primary, #e8e8f0)",

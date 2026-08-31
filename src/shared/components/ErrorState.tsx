@@ -1,5 +1,6 @@
 import type { CSSProperties, ReactNode } from "react";
 import { ForgeIcon } from "./ForgeIcon";
+import { ForgeStateArt } from "./ForgeStateArt";
 
 /**
  * ErrorState — canonical error display for VEXFORGE domain failures.
@@ -27,6 +28,9 @@ export function ErrorState({
   const pad = compact ? "16px" : "32px 24px";
   return (
     <div
+      data-forge-state="error"
+      role="alert"
+      aria-live="assertive"
       style={{
         textAlign: "center",
         padding: pad,
@@ -40,7 +44,7 @@ export function ErrorState({
         ...style,
       }}
     >
-      <div style={{ color: "#E84040", display: "grid", placeItems: "center", minHeight: compact ? 24 : 32 }}>{icon}</div>
+      <ForgeStateArt variant="error" icon={icon} />
       <div
         style={{
           color: "#E84040",

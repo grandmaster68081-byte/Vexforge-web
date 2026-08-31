@@ -1,6 +1,7 @@
 import type { CSSProperties } from "react";
 import { Link } from "react-router-dom";
 import { ForgeIcon, type ForgeIconName } from "./ForgeIcon";
+import { ForgeStateArt } from "./ForgeStateArt";
 
 /**
  * BlockedAuthState — pantalla épica "acceso requerido" de VEXFORGE.
@@ -75,13 +76,7 @@ export function BlockedAuthState({
       }} />
 
       {/* Lock sigil */}
-      <div style={{
-        color: "#f0c050", marginBottom: 20, lineHeight: 1,
-        animation: "ba-lock-breathe 3s ease-in-out infinite",
-        zIndex: 1,
-      }}>
-        <ForgeIcon name="lock" size={56} />
-      </div>
+      <ForgeStateArt variant="locked" icon={<ForgeIcon name="lock" size={32} />} />
 
       {/* Title */}
       <div style={{
