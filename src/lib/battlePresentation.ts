@@ -73,6 +73,27 @@ export function getBattlePresentationCue(event: BattleEvent): BattlePresentation
   return BATTLE_EVENT_CUES[event.type];
 }
 
+export interface BattleArenaProfile {
+  id: 'war-forge' | 'arcane-nexus' | 'holy-bastion' | 'shadow-veil' | 'wild-frontier' | 'trade-citadel' | 'neutral-forge';
+  background: string;
+  fog: string;
+  terrain: 'embers' | 'runes' | 'halo' | 'mist' | 'wind' | 'coins' | 'static';
+}
+
+const BATTLE_ARENA_PROFILES: Record<string, BattleArenaProfile> = {
+  Guerrero: { id: 'war-forge', background: 'radial-gradient(ellipse at 50% 0%, #301015 0%, #0b0710 48%, #030308 100%)', fog: 'rgba(232,64,64,0.16)', terrain: 'embers' },
+  Mago: { id: 'arcane-nexus', background: 'radial-gradient(ellipse at 50% 0%, #211342 0%, #0a0718 48%, #030308 100%)', fog: 'rgba(168,85,247,0.16)', terrain: 'runes' },
+  'Paladín': { id: 'holy-bastion', background: 'radial-gradient(ellipse at 50% 0%, #3a2c12 0%, #0d0a08 48%, #030308 100%)', fog: 'rgba(232,184,75,0.15)', terrain: 'halo' },
+  'Pícaro': { id: 'shadow-veil', background: 'radial-gradient(ellipse at 50% 0%, #102b20 0%, #050c0c 48%, #030308 100%)', fog: 'rgba(61,201,107,0.14)', terrain: 'mist' },
+  Explorador: { id: 'wild-frontier', background: 'radial-gradient(ellipse at 50% 0%, #102c2b 0%, #050d12 48%, #030308 100%)', fog: 'rgba(93,232,138,0.13)', terrain: 'wind' },
+  Comerciante: { id: 'trade-citadel', background: 'radial-gradient(ellipse at 50% 0%, #34220d 0%, #0d0906 48%, #030308 100%)', fog: 'rgba(245,213,133,0.14)', terrain: 'coins' },
+  default: { id: 'neutral-forge', background: 'radial-gradient(ellipse at 50% 0%, #0f0820 0%, #060610 55%, #030308 100%)', fog: 'rgba(74,158,255,0.12)', terrain: 'static' },
+};
+
+export function getBattleArenaProfile(faction: string | null | undefined): BattleArenaProfile {
+  return BATTLE_ARENA_PROFILES[faction ?? 'default'] ?? BATTLE_ARENA_PROFILES.default;
+}
+
 function turnSteps(turn: BattleTurnData): BattlePresentationStep[] {
   const steps: BattlePresentationStep[] = [
     step('idle', 'board', turn.turn),

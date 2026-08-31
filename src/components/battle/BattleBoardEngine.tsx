@@ -8,7 +8,7 @@ import { RARITY_COLOR, RARITY_GLOW, KEYWORD_ICON } from '../../lib/battleTypes';
 import { AudioEngine } from '../../lib/audioEngine';
 import { particleEngine } from '../../lib/particleEngine';
 import { CardAttackCinematic } from './CardAttackCinematic';
-import { createBattlePresentationContract, getBattlePresentationCue, resolveBattlePresentationState } from '../../lib/battlePresentation';
+import { createBattlePresentationContract, getBattleArenaProfile, getBattlePresentationCue, resolveBattlePresentationState } from '../../lib/battlePresentation';
 import { ForgeIcon, type ForgeIconName } from '../../shared/components/ForgeIcon';
 
 const FACTION_FORGE_ICON: Record<string, ForgeIconName> = {
@@ -298,6 +298,7 @@ export function BattleBoardEngine({ result, playerName, opponentName, onComplete
     const pu = finalUnits.find(u => u.side === 'a');
     return pu?.faction ?? 'default';
   }, [finalUnits]);
+  const arenaProfile = getBattleArenaProfile(playerFaction);
 
   const [states, setStates]       = useState<Record<number, UnitState>>(() => buildUnitStates(finalUnits));
   const [_turnIdx, _setTurnIdx]     = useState(-1);
@@ -549,11 +550,12 @@ export function BattleBoardEngine({ result, playerName, opponentName, onComplete
   return (
     <div
       ref={boardRef}
+      data-arena-profile={arenaProfile.id}
       data-presentation-contract={presentationContract.version}
       data-presentation-state={activePresentationState}
       data-presentation-fallback={reducedEffects ? 'reduced' : presentationContract.fallback}
       data-presentation-state-count={presentationContract.timeline.length}
-      style={{ position: 'relative', width: '100%', flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden', background: 'linear-gradient(180deg, #060614 0%, #090920 50%, #06060f 100%)' }}
+      style={{ position: 'relative', width: '100%', flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden', background: arenaProfile.background, boxShadow: `inset 0 0 120px ${arenaProfile.fog}` }}
     >
       {/* Hex grid tactical floor overlay */}
       <div aria-hidden style={{

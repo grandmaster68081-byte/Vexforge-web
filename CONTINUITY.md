@@ -1,3 +1,11 @@
+## 2026-08-31 — VE-P0.3 ARENA PROFILES — IMPLEMENTED_UNVERIFIED
+
+- Se añadieron perfiles de arena authored por facción para Guerrero, Mago, Paladín, Pícaro, Explorador y Comerciante, con fallback neutral.
+- BattleBoardEngine y ForgeFormationBoard usan el perfil para fondo, niebla y token de terreno; no se añadieron assets ni regiones inventadas.
+- Canvas, HUD, DOM, HP, controles, turnos y settlement permanecen sin cambios de autoridad; el fallback visual es CSS estático.
+- QA sigue diferida por instrucción del operador; no se declara OPERATIONAL, PASS ni TIER1_READY.
+
+---
 ## 2026-08-31 — VE-P0.2 EVENT CUES — IMPLEMENTED_UNVERIFIED
 
 - Se formalizaron cues semánticos para los seis tipos de BattleEvent existentes, con color, forma, target, duración y audio sólo cuando AudioEngine ya lo soporta.

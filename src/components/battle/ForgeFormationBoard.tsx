@@ -15,7 +15,7 @@ import {
 } from '../../lib/forgeFormation';
 import type { AIDifficulty } from '../../lib/aiBattleEngine';
 import { AudioEngine } from '../../lib/audioEngine';
-import { createBattlePresentationContract, resolveBattlePresentationState } from '../../lib/battlePresentation';
+import { createBattlePresentationContract, getBattleArenaProfile, resolveBattlePresentationState } from '../../lib/battlePresentation';
 import { particleEngine } from '../../lib/particleEngine';
 import { ForgeIcon, type ForgeIconName } from '../../shared/components/ForgeIcon';
 
@@ -2225,6 +2225,7 @@ export function ForgeFormationBoard({
 
   // ─── Derived for Forge Barrier & terrain ─────────────────────────────────────
   const champFaction    = formation.champion.faction ?? 'default';
+  const arenaProfile = getBattleArenaProfile(champFaction);
   const terrain         = getTerrain(champFaction);
 
   // ─── H2: Target Lock — derive which opponent slot the player is targeting ────
@@ -2250,10 +2251,12 @@ export function ForgeFormationBoard({
   return (
     <div style={{
       position: 'fixed', inset: 0, zIndex: 100,
-      background: 'radial-gradient(ellipse at 50% 0%, #0f0820 0%, #060610 55%, #030308 100%)',
+      background: arenaProfile.background,
+      boxShadow: `inset 0 0 120px ${arenaProfile.fog}`, 
       display: 'flex', flexDirection: 'column',
       fontFamily: '"Rajdhani",sans-serif', overflow: 'hidden',
     }}
+      data-arena-profile={arenaProfile.id}
       data-presentation-contract={presentationContract.version}
       data-presentation-state={activePresentationState}
       data-presentation-fallback={reducedEffects ? 'reduced' : presentationContract.fallback}

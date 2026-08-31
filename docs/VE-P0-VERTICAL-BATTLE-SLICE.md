@@ -52,3 +52,8 @@ El consumidor PvE expone `data-presentation-state` derivado de su fase, turno re
 ## Cues por evento
 
 P0.2 formaliza los eventos reales `shield_block`, `poisoned`, `poison_tick`, `poison_death`, `lifesteal` y `double_strike` como cues con label, color, forma, target, duración y audio existente cuando aplica. `BattleBoardEngine` los consume sin inventar keywords ni cambiar el resultado.
+
+
+## Arena por facción
+
+P0.3 añade perfiles authored derivados de la facción existente: fondo, niebla y terreno semántico con fallback `neutral-forge`. Se aplican como CSS en los dos consumidores de batalla; el HUD y el DOM permanecen fuera del Canvas y los efectos previos continúan siendo los únicos emisores de partículas.
