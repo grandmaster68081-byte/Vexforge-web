@@ -95,6 +95,7 @@ interface FighterCardProps {
   isActive: boolean;
   isAnimating: boolean;
   isDropTarget: boolean;
+  isTargetLocked: boolean;
   isDraggingFrom: boolean;
   isBeingHit: boolean;
   onPointerDown?: (e: React.PointerEvent) => void;
@@ -116,7 +117,7 @@ function useCardSize() {
 }
 
 function FighterCard({
-  unit, side, isActive, isAnimating, isDropTarget, isDraggingFrom, isBeingHit,
+  unit, side, isActive, isAnimating, isDropTarget, isTargetLocked, isDraggingFrom, isBeingHit,
   onPointerDown, onPointerEnter, dropRef,
 }: FighterCardProps) {
   const rarColor = RARITY_COLOR[unit.rarity] ?? '#8b8b9e';
@@ -130,7 +131,7 @@ function FighterCard({
     position: 'relative',
     width: cs.width, minHeight: cs.minHeight,
     borderRadius: 12,
-    border: `2px solid ${isDropTarget ? '#e8b84b' : isActive ? rarColor : rarColor + '55'}`,
+    border: `2px solid ${isDropTarget ? '#e8b84b' : isTargetLocked ? '#ff6b35' : isActive ? rarColor : rarColor + '55'}`,
     background: unit.image_url
       ? `linear-gradient(180deg, transparent 0%, rgba(5,5,14,0.85) 65%), url(${unit.image_url}) center/cover no-repeat`
       : `linear-gradient(160deg, ${rarColor}22 0%, rgba(5,5,14,0.97) 60%), ${zone.gradient}`,
@@ -138,6 +139,8 @@ function FighterCard({
       ? `0 0 30px rgba(232,184,75,0.8), 0 0 60px rgba(232,184,75,0.4), inset 0 0 20px rgba(232,184,75,0.1)`
       : isBeingHit
         ? `0 0 40px rgba(255,50,50,0.9), 0 0 80px rgba(255,50,50,0.5)`
+        : isTargetLocked
+          ? `0 0 26px rgba(255,107,53,0.82), 0 0 58px rgba(255,107,53,0.34), inset 0 0 16px rgba(255,107,53,0.15)`
         : isActive
           ? `0 0 24px ${rarGlow}, 0 0 48px ${rarColor}44, inset 0 0 12px ${rarColor}11`
           : `0 4px 20px rgba(0,0,0,0.7)`,
@@ -271,6 +274,28 @@ function FighterCard({
           </div>
         )}
       </div>
+
+      {/* H2 — authored target lock: the defender of the real current turn */}
+      {isTargetLocked && (
+        <div
+          role="status"
+          aria-label={'Objetivo fijado: ' + unit.name}
+          style={{
+            position: 'absolute', top: 34, right: 6, zIndex: 4,
+            display: 'flex', alignItems: 'center', gap: 4,
+            padding: '3px 6px', borderRadius: 5,
+            color: '#ffd1bd', background: 'rgba(51,12,5,0.88)',
+            border: '1px solid rgba(255,107,53,0.78)',
+            boxShadow: '0 0 12px rgba(255,107,53,0.48)',
+            fontSize: 7, fontWeight: 900, letterSpacing: '0.08em',
+            fontFamily: '"Rajdhani",sans-serif', textTransform: 'uppercase',
+            pointerEvents: 'none', animation: 'target-pulse 0.9s ease-in-out infinite',
+          }}
+        >
+          <ForgeIcon name="target" size={11} strokeWidth={2} />
+          <span>OBJETIVO FIJADO</span>
+        </div>
+      )}
 
       {/* Drop target overlay */}
       {isDropTarget && (
@@ -680,6 +705,11 @@ export function InteractiveBattleBoard({
   const oppFaction    = opponentUnit?.faction ?? 'default';
   const playerZone    = FACTION_ZONE[playerFaction] ?? FACTION_ZONE['default'];
   const oppZone       = FACTION_ZONE[oppFaction] ?? FACTION_ZONE['default'];
+  // H2: lock the defender named by the current authoritative turn event.
+  const targetName = state.currentTurn?.defender?.name ?? null;
+  const targetSide: 'player' | 'opponent' | null = state.currentTurn
+    ? (state.currentTurn.atk_side === 'a' ? 'opponent' : 'player')
+    : null;
 
   // Beam + flash + hit effects when animating + FASE 2: cinematic trigger
   useEffect(() => {
@@ -1194,6 +1224,7 @@ export function InteractiveBattleBoard({
               isActive={!isPlayerAttacking && state.phase === 'ANIMATING'}
               isAnimating={state.phase === 'ANIMATING'}
               isDropTarget={state.isDragging}
+              isTargetLocked={targetSide === 'opponent' && targetName === opponentUnit.name}
               isDraggingFrom={false}
               isBeingHit={hitSide === 'opponent'}
               dropRef={dropZoneRef}
@@ -1268,7 +1299,8 @@ export function InteractiveBattleBoard({
               isActive={isPlayerAttacking && state.phase === 'ANIMATING'}
               isAnimating={state.phase === 'ANIMATING'}
               isDropTarget={false}
-              isDraggingFrom={state.isDragging}
+               isTargetLocked={targetSide === 'player' && targetName === playerUnit.name}
+               isDraggingFrom={state.isDragging}
               isBeingHit={hitSide === 'player'}
               onPointerDown={onPointerDown}
               onPointerEnter={() => { if (!state.isDragging) AudioEngine.sfxCardHover?.(); }}
