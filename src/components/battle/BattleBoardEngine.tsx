@@ -8,7 +8,7 @@ import { RARITY_COLOR, RARITY_GLOW, KEYWORD_ICON } from '../../lib/battleTypes';
 import { AudioEngine } from '../../lib/audioEngine';
 import { particleEngine } from '../../lib/particleEngine';
 import { CardAttackCinematic } from './CardAttackCinematic';
-import { createBattlePresentationContract, resolveBattlePresentationState } from '../../lib/battlePresentation';
+import { createBattlePresentationContract, getBattlePresentationCue, resolveBattlePresentationState } from '../../lib/battlePresentation';
 import { ForgeIcon, type ForgeIconName } from '../../shared/components/ForgeIcon';
 
 const FACTION_FORGE_ICON: Record<string, ForgeIconName> = {
@@ -471,23 +471,13 @@ export function BattleBoardEngine({ result, playerName, opponentName, onComplete
         return next;
       });
 
-      // Keyword events
+      // P0.2: event-specific cue; existing event names remain authoritative.
       (t.events ?? []).forEach(ev => {
-        if (ev.type === 'shield_block' && defenderIdx >= 0) {
-          AudioEngine.triggerKeyword('Guard');
-          const pos = getCardCenter(defenderIdx);
-          if (pos) particleEngine.triggerKeyword('Guard', pos.x, pos.y);
-        }
-        if (ev.type === 'poisoned') {
-          AudioEngine.triggerKeyword('Poison');
-          const pos = getCardCenter(defenderIdx);
-          if (pos) particleEngine.triggerKeyword('Poison', pos.x, pos.y);
-        }
-        if (ev.type === 'lifesteal') {
-          AudioEngine.triggerKeyword('Drain');
-          const pos = getCardCenter(attackerIdx);
-          if (pos) particleEngine.triggerKeyword('Drain', pos.x, pos.y);
-        }
+        const cue = getBattlePresentationCue(ev);
+        const cueIdx = cue.target === 'attacker' ? attackerIdx : defenderIdx;
+        const pos = cueIdx >= 0 ? getCardCenter(cueIdx) : null;
+        if (cue.audioKeyword) AudioEngine.triggerKeyword(cue.audioKeyword);
+        if (pos) particleEngine.triggerKeyword(cue.particleKeyword, pos.x, pos.y);
       });
 
       // Log line

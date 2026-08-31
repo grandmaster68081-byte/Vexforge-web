@@ -49,6 +49,30 @@ function keywordEvent(event: BattleEvent): boolean {
     event.type === 'poison_tick' || event.type === 'poison_death' || event.type === 'double_strike';
 }
 
+export interface BattlePresentationCue {
+  event: BattleEvent['type'];
+  label: string;
+  color: string;
+  shape: 'shield-burst' | 'poison-drip' | 'heal-pulse' | 'double-strike';
+  audioKeyword: 'Guard' | 'Poison' | 'Drain' | null;
+  particleKeyword: 'Guard' | 'Poison' | 'Drain' | 'DoubleStrike';
+  target: 'attacker' | 'defender';
+  durationMs: number;
+}
+
+const BATTLE_EVENT_CUES: Record<BattleEvent['type'], BattlePresentationCue> = {
+  shield_block: { event: 'shield_block', label: 'BLOQUEADO', color: '#4a9eff', shape: 'shield-burst', audioKeyword: 'Guard', particleKeyword: 'Guard', target: 'defender', durationMs: 720 },
+  poisoned: { event: 'poisoned', label: 'ENVENENADO', color: '#a855f7', shape: 'poison-drip', audioKeyword: 'Poison', particleKeyword: 'Poison', target: 'defender', durationMs: 760 },
+  poison_tick: { event: 'poison_tick', label: '−HP', color: '#a855f7', shape: 'poison-drip', audioKeyword: 'Poison', particleKeyword: 'Poison', target: 'defender', durationMs: 620 },
+  poison_death: { event: 'poison_death', label: 'VENENO', color: '#a855f7', shape: 'poison-drip', audioKeyword: 'Poison', particleKeyword: 'Poison', target: 'defender', durationMs: 900 },
+  lifesteal: { event: 'lifesteal', label: 'DRENAR', color: '#3ddc84', shape: 'heal-pulse', audioKeyword: 'Drain', particleKeyword: 'Drain', target: 'attacker', durationMs: 680 },
+  double_strike: { event: 'double_strike', label: '2° GOLPE', color: '#ff6b35', shape: 'double-strike', audioKeyword: null, particleKeyword: 'DoubleStrike', target: 'defender', durationMs: 820 },
+};
+
+export function getBattlePresentationCue(event: BattleEvent): BattlePresentationCue {
+  return BATTLE_EVENT_CUES[event.type];
+}
+
 function turnSteps(turn: BattleTurnData): BattlePresentationStep[] {
   const steps: BattlePresentationStep[] = [
     step('idle', 'board', turn.turn),

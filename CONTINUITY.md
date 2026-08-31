@@ -1,3 +1,11 @@
+## 2026-08-31 — VE-P0.2 EVENT CUES — IMPLEMENTED_UNVERIFIED
+
+- Se formalizaron cues semánticos para los seis tipos de BattleEvent existentes, con color, forma, target, duración y audio sólo cuando AudioEngine ya lo soporta.
+- BattleBoardEngine reemplazó condiciones duplicadas por getBattlePresentationCue; DoubleStrike usa el soporte existente de partículas y no fabrica audio.
+- No se añadieron keywords, estadísticas, resultados ni RPCs; el cambio sólo organiza la presentación de eventos autoritativos.
+- QA sigue diferida por instrucción del operador; no se declara OPERATIONAL, PASS ni TIER1_READY.
+
+---
 ## 2026-08-31 — VE-P0 REDUCED MOTION PVP — IMPLEMENTED_UNVERIFIED
 
 - BattleBoardEngine ahora sincroniza prefers-reduced-motion con particleEngine.setReducedEffects y expone fallback reduced.
