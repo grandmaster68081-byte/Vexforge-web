@@ -8,6 +8,7 @@ import type { BattleUnit } from '../../lib/battleTypes';
 import { RARITY_COLOR, KEYWORD_ICON } from '../../lib/battleTypes';
 import { AudioEngine } from '../../lib/audioEngine';
 import { ForgeIcon, type ForgeIconName } from '../../shared/components/ForgeIcon';
+import { getBattleCardActorProfile } from '../../lib/battlePresentation';
 
 interface CardAttackCinematicProps {
   unit: BattleUnit | null;
@@ -722,13 +723,19 @@ export function CardAttackCinematic({
   const nameAccent  = nameProfile?.accentColor ?? factionColor;
   const nameIcon    = nameProfile?.nameIcon ?? '';
   const bg = FACTION_BG[faction] ?? FACTION_BG.default;
+  const actorProfile = unit ? getBattleCardActorProfile(unit) : null;
   const rarityOverlay = RARITY_BG_OVERLAY[rarity] ?? 'rgba(74,158,255,0.10)';
 
   // Damage color
   const dmgColor = isCrit ? '#e8b84b' : isKill ? '#ff4444' : '#ffffff';
 
   return (
-    <div style={{
+    <div
+      data-card-faction={actorProfile?.faction ?? faction}
+      data-card-rarity={actorProfile?.rarity ?? rarity}
+      data-card-has-art={actorProfile?.hasArt ? 'true' : 'false'}
+      data-card-keyword-count={actorProfile?.keywordCount ?? 0}
+      style={{
       position: 'fixed', inset: 0, zIndex: 500,
       display: 'flex', alignItems: 'center', justifyContent: 'center',
       background: bg,

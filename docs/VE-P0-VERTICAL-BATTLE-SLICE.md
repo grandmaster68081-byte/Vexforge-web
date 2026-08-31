@@ -57,3 +57,8 @@ P0.2 formaliza los eventos reales `shield_block`, `poisoned`, `poison_tick`, `po
 ## Arena por facción
 
 P0.3 añade perfiles authored derivados de la facción existente: fondo, niebla y terreno semántico con fallback `neutral-forge`. Se aplican como CSS en los dos consumidores de batalla; el HUD y el DOM permanecen fuera del Canvas y los efectos previos continúan siendo los únicos emisores de partículas.
+
+
+## Carta como actor
+
+P0.4 centraliza el perfil semántico de actor a partir de `BattleUnit`: facción, rareza, arte disponible y cantidad de keywords. `BattleCard` y `CardAttackCinematic` lo exponen para diagnóstico y composición visual, manteniendo sus animaciones y mappings canónicos existentes.

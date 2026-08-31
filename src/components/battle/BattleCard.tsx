@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react';
 import type { BattleUnit } from '../../lib/battleTypes';
 import { RARITY_COLOR, RARITY_GLOW, FACTION_BG } from '../../lib/battleTypes';
+import { getBattleCardActorProfile } from '../../lib/battlePresentation';
 import { ForgeIcon, type ForgeIconName } from '../../shared/components/ForgeIcon';
 
 export interface BattleCardAnimState {
@@ -74,6 +75,7 @@ export function BattleCard({ unit, anim, side, isActive, cardRef }: BattleCardPr
   const color = RARITY_COLOR[unit.rarity] ?? '#8b8b9e';
   const glow  = RARITY_GLOW[unit.rarity]  ?? 'rgba(139,139,158,0.3)';
   const bg    = FACTION_BG[unit.faction]  ?? 'linear-gradient(135deg,#1a1a2e 0%,#0f0f1a 100%)';
+  const actorProfile = getBattleCardActorProfile(unit);
 
   const floatRef = useRef<HTMLDivElement>(null);
 
@@ -132,7 +134,14 @@ export function BattleCard({ unit, anim, side, isActive, cardRef }: BattleCardPr
   };
 
   return (
-    <div style={cardStyle} ref={cardRef}>
+    <div
+      style={cardStyle}
+      ref={cardRef}
+      data-card-faction={actorProfile.faction}
+      data-card-rarity={actorProfile.rarity}
+      data-card-has-art={actorProfile.hasArt ? 'true' : 'false'}
+      data-card-keyword-count={actorProfile.keywordCount}
+    >
       {/* Card image */}
       <div style={{ height: 78, overflow: 'hidden', position: 'relative' }}>
         {unit.image_url ? (

@@ -94,6 +94,17 @@ export function getBattleArenaProfile(faction: string | null | undefined): Battl
   return BATTLE_ARENA_PROFILES[faction ?? 'default'] ?? BATTLE_ARENA_PROFILES.default;
 }
 
+export interface BattleCardActorProfile {
+  faction: string;
+  rarity: string;
+  hasArt: boolean;
+  keywordCount: number;
+}
+
+export function getBattleCardActorProfile(unit: Pick<BattleUnit, 'faction' | 'rarity' | 'image_url' | 'keywords'>): BattleCardActorProfile {
+  return { faction: unit.faction, rarity: unit.rarity, hasArt: Boolean(unit.image_url), keywordCount: unit.keywords?.length ?? 0 };
+}
+
 function turnSteps(turn: BattleTurnData): BattlePresentationStep[] {
   const steps: BattlePresentationStep[] = [
     step('idle', 'board', turn.turn),

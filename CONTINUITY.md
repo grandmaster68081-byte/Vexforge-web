@@ -1,3 +1,11 @@
+## 2026-08-31 — VE-P0.4 CARD ACTOR PROFILE — IMPLEMENTED_UNVERIFIED
+
+- Se añadió un perfil puro de actor derivado de BattleUnit para facción, rareza, arte y keywords.
+- BattleCard y CardAttackCinematic consumen el perfil sin crear lore, estadísticas, personalidad, voces ni assets nuevos.
+- Los mappings visuales por facción/rareza y keywords existentes permanecen intactos; sólo se consolidó su procedencia semántica.
+- QA sigue diferida por instrucción del operador; no se declara OPERATIONAL, PASS ni TIER1_READY.
+
+---
 ## 2026-08-31 — VE-P0.3 ARENA PROFILES — IMPLEMENTED_UNVERIFIED
 
 - Se añadieron perfiles de arena authored por facción para Guerrero, Mago, Paladín, Pícaro, Explorador y Comerciante, con fallback neutral.
