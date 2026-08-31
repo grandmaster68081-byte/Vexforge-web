@@ -550,6 +550,9 @@ export function BattleBoardEngine({ result, playerName, opponentName, onComplete
   return (
     <div
       ref={boardRef}
+      role="region"
+      aria-label="Arena de batalla VEXFORGE"
+      aria-live="polite"
       data-arena-profile={arenaProfile.id}
       data-presentation-contract={presentationContract.version}
       data-presentation-state={activePresentationState}
@@ -564,7 +567,7 @@ export function BattleBoardEngine({ result, playerName, opponentName, onComplete
         backgroundSize: '60px 52px',
       }} />
       {/* Particle canvas overlay */}
-      <canvas ref={canvasRef} style={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 10 }} />
+      <canvas ref={canvasRef} aria-hidden="true" style={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 10 }} />
 
       {/* FASE 2 v5: Card Attack Cinematic — attacker + defender + damage */}
       <CardAttackCinematic

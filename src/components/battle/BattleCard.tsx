@@ -135,6 +135,8 @@ export function BattleCard({ unit, anim, side, isActive, cardRef }: BattleCardPr
 
   return (
     <div
+      role="group"
+      aria-label={`Carta ${unit.name}. Facción ${unit.faction}. Rareza ${unit.rarity}. Vida ${anim.currentHp} de ${unit.max_hp}.`}
       style={cardStyle}
       ref={cardRef}
       data-card-faction={actorProfile.faction}

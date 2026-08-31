@@ -731,6 +731,10 @@ export function CardAttackCinematic({
 
   return (
     <div
+      role="status"
+      aria-live="polite"
+      aria-atomic="true"
+      aria-label={`${attackLabel}${damage !== undefined ? `. Daño ${damage}.` : ''}${isKill ? ' Eliminado.' : ''}`}
       data-card-faction={actorProfile?.faction ?? faction}
       data-card-rarity={actorProfile?.rarity ?? rarity}
       data-card-has-art={actorProfile?.hasArt ? 'true' : 'false'}

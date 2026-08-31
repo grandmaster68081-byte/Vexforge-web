@@ -1,3 +1,11 @@
+## 2026-08-31 — VE-P0.5 SEMANTIC BATTLE FALLBACK — IMPLEMENTED_UNVERIFIED
+
+- BattleBoardEngine y ForgeFormationBoard exponen regiones accesibles; BattleCard anuncia identidad canónica y HP real.
+- CardAttackCinematic anuncia ataque, daño y eliminación cuando esos datos existen; Canvas queda marcado como decorativo.
+- No se declara responsive, contraste, teclado, FPS, orientación ni estabilidad de dispositivo: esas comprobaciones siguen reservadas para QA/Q5.
+- QA sigue diferida por instrucción del operador; no se declara OPERATIONAL, PASS ni TIER1_READY.
+
+---
 ## 2026-08-31 — VE-P0.4 CARD ACTOR PROFILE — IMPLEMENTED_UNVERIFIED
 
 - Se añadió un perfil puro de actor derivado de BattleUnit para facción, rareza, arte y keywords.

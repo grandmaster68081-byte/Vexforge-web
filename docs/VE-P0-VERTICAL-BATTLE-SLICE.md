@@ -62,3 +62,8 @@ P0.3 añade perfiles authored derivados de la facción existente: fondo, niebla 
 ## Carta como actor
 
 P0.4 centraliza el perfil semántico de actor a partir de `BattleUnit`: facción, rareza, arte disponible y cantidad de keywords. `BattleCard` y `CardAttackCinematic` lo exponen para diagnóstico y composición visual, manteniendo sus animaciones y mappings canónicos existentes.
+
+
+## Semántica y fallback DOM
+
+Los tableros exponen una región accesible y el cinemático anuncia acción/daño/eliminación con datos reales. Las cartas anuncian nombre, facción, rareza y HP. El Canvas de partículas es decorativo (`aria-hidden`) y no sustituye texto, controles ni HUD.

@@ -2257,6 +2257,9 @@ export function ForgeFormationBoard({
       fontFamily: '"Rajdhani",sans-serif', overflow: 'hidden',
     }}
       data-arena-profile={arenaProfile.id}
+      role="region"
+      aria-label="Tablero de formación VEXFORGE"
+      aria-live="polite"
       data-presentation-contract={presentationContract.version}
       data-presentation-state={activePresentationState}
       data-presentation-fallback={reducedEffects ? 'reduced' : presentationContract.fallback}
