@@ -1,3 +1,10 @@
+## 2026-08-31 — VE-P0 REDUCED MOTION PVP — IMPLEMENTED_UNVERIFIED
+
+- BattleBoardEngine ahora sincroniza prefers-reduced-motion con particleEngine.setReducedEffects y expone fallback reduced.
+- No se modifican los callbacks temporales de CardAttackCinematic ni la autoridad de turnos, HP o resultados.
+- QA final sigue diferida por instrucción del operador; no se declara OPERATIONAL, PASS ni TIER1_READY.
+
+---
 ## 2026-08-31 — VE-P0 MOTOR PVP — IMPLEMENTED_UNVERIFIED
 
 - BattleBoardEngine quedó conectado al contrato con resultado, turno activo, cinematicVisible, impacto de unidad e isDone reales.

@@ -304,6 +304,9 @@ export function BattleBoardEngine({ result, playerName, opponentName, onComplete
   const [log, setLog]             = useState<string[]>(['La batalla comienza...']);
   const [activeTurn, setActiveTurn] = useState<BattleTurnData | null>(null);
   const [isDone, setIsDone]       = useState(false);
+  const [reducedEffects, setReducedEffects] = useState(() =>
+    typeof window !== 'undefined' && window.matchMedia?.('(prefers-reduced-motion: reduce)').matches,
+  );
   
   // FASE 2 v5: Card Attack Cinematic state — con defender + stats
   const [attackingUnit, setAttackingUnit]   = useState<BattleUnit | null>(null);
@@ -319,6 +322,20 @@ export function BattleBoardEngine({ result, playerName, opponentName, onComplete
 
   const TURN_DUR = Math.max(400, 1200 / speed);
   const HIT_DUR  = Math.max(150, 350 / speed);
+
+  // Respect the operating system preference without changing authoritative timing.
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const media = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const update = () => setReducedEffects(media.matches);
+    media.addEventListener?.('change', update);
+    return () => media.removeEventListener?.('change', update);
+  }, []);
+
+  useEffect(() => {
+    particleEngine.setReducedEffects(reducedEffects);
+    return () => particleEngine.setReducedEffects(false);
+  }, [reducedEffects]);
 
   // Mount particle canvas + faction music + ambient particles (v1.1)
   useEffect(() => {
@@ -544,7 +561,7 @@ export function BattleBoardEngine({ result, playerName, opponentName, onComplete
       ref={boardRef}
       data-presentation-contract={presentationContract.version}
       data-presentation-state={activePresentationState}
-      data-presentation-fallback={presentationContract.fallback}
+      data-presentation-fallback={reducedEffects ? 'reduced' : presentationContract.fallback}
       data-presentation-state-count={presentationContract.timeline.length}
       style={{ position: 'relative', width: '100%', flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden', background: 'linear-gradient(180deg, #060614 0%, #090920 50%, #06060f 100%)' }}
     >

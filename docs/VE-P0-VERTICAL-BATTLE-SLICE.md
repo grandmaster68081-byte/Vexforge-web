@@ -42,3 +42,8 @@ El consumidor PvE expone `data-presentation-state` derivado de su fase, turno re
 ## Motor PvP conectado
 
 `BattleBoardEngine` usa la misma fuente real de turnos y expone el cursor activo: `attack` durante `CardAttackCinematic`, `impact` cuando una unidad recibe el impacto, `target_lock` mientras existe turno activo y `victory`/`defeat` al completar.
+
+
+## Reduced motion
+
+`BattleBoardEngine` escucha `prefers-reduced-motion` y activa `particleEngine.setReducedEffects` sin alterar los tiempos ni los datos autoritativos. El contrato expone fallback `reduced` mientras la preferencia está activa.
