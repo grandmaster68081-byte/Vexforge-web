@@ -1,3 +1,12 @@
+## 2026-08-31 — VE-VIS-3-EMPTY-STATE-ART — EVIDENCIA PÚBLICA RECONCILIADA
+
+- Preflight contra `main` y el deploy: el commit oficial y `build-manifest.json` coinciden en `a590758b0b2d2033dd543c1e7e5f03216a3b9e20`.
+- El router declara 53 rutas concretas, excluyendo la ruta comodín; las 53 respondieron HTTP 200 en el smoke test público de `https://vexforge-web.pages.dev`.
+- La inspección visual pública de Home y Cartas confirmó superficies VEXFORGE authored y estados explícitos de visitante/carga; esta evidencia no afirma que los datos autenticados hayan cargado.
+- No se modificó código, contratos, datos, Auth, Storage, economía, combate ni `mobile/**`; no corresponde nuevo workflow ni release APK.
+- `loading_and_empty_states` permanece `PARTIAL`: falta la matriz autenticada de carga/vacío/error y la prueba de ausencia de loaders eternos en navegador. No se declara `OPERATIONAL`, `PASS` ni `TIER1_READY`.
+
+---
 ## 2026-08-31 — VE-P0.6 RAID SURFACE — IMPLEMENTED_UNVERIFIED
 
 - RaidsRoute declara presentationSurface=raid sobre ForgeFormationBoard.
