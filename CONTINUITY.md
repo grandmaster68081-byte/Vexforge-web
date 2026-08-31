@@ -853,3 +853,13 @@
 - El último build Android vigente sigue siendo `vexforge-android-build-56`, publicado con éxito. No hubo cambios en `mobile/**` en esta sesión, por lo que no corresponde crear un APK nuevo ni alterar el release vigente.
 - Estado: `RECONCILED`; VE-MOB-13 y VE-MOB-14 continúan `IMPLEMENTED_UNVERIFIED`, con QA humana del operador pendiente. No se declara `OPERATIONAL`, `PASS` ni `TIER1_READY`.
 - Siguiente acción verificable: conservar la QA Android pendiente y seleccionar la primera unidad Tier 1 real tras el baseline T0; cualquier nueva unidad debe respetar el protocolo activo, contratos vivos, assets canónicos y los gates de build/continuidad.
+
+---
+## 2026-08-31 — VE-1-VISUAL-BIBLE — IMPLEMENTED_UNVERIFIED
+
+- Preflight completado por HTTPS directo: se leyó el protocolo activo completo desde Supabase Management API, el plan de ejecución, la continuidad, el inventario Android y el snapshot de `main`; no se reabrieron Auth, Social, Meta ni ninguna unidad ya publicada.
+- Baseline técnico del `main` actual: `npm run typecheck` y `npm run build` pasaron; `dist/` se generó; `.nvmrc` devuelve `22`; el lockfile no contiene URLs `package-firewall.replit.local`.
+- Se añadió `VE-1-VISUAL-BIBLE.md` como contrato mínimo de identidad visual, movimiento, audio, estados y accesibilidad para web y Android. La decisión reutiliza los tokens, `ForgeIcon`, los registros de assets y la cadena de audio existentes; no añade assets, dependencias, rutas, tablas, RPCs, RLS, economía ni lógica autoritativa.
+- La matriz documenta cuatro superficies reales (carta, batalla, ruta y tutorial), la procedencia de sus consumidores, el uso obligatorio de assets oficiales, la gramática de anticipación/acción/impacto/recuperación/reposo y el fallback de reduced-motion. Las brechas no se ocultan: cobertura global de reduced-motion, auditoría visual manual y pasaportes de tres cartas quedan en deuda Q3.
+- Estado: `IMPLEMENTED_UNVERIFIED`, nivel `Q0 → Q2`; no se declara `OPERATIONAL`, `PASS` ni `TIER1_READY` porque esta sesión no fabrica evidencia de navegador autenticado ni de dispositivo Android.
+- Siguiente acción verificable: seleccionar tres cartas canónicas contrastantes para `VE-3-PILOT`, usando el lenguaje documentado y validando procedencia, integración, rendimiento y revisión visual antes de escalar.
