@@ -1,4 +1,4 @@
-import type { BattleEvent, BattleTurnData, RealBattleResult } from './battleTypes';
+import type { BattleEvent, BattleTurnData } from './battleTypes';
 
 // VE-P0.0 — authoritative presentation vocabulary. These states never mutate battle data.
 export const BATTLE_PRESENTATION_STATES = [
@@ -11,6 +11,12 @@ export type BattlePresentationState = typeof BATTLE_PRESENTATION_STATES[number];
 export type PresentationPhase = 'intro' | 'board' | 'result' | 'fallback';
 export type PresentationFallback = 'full' | 'reduced' | 'minimal' | 'static';
 export type PresentationReconnect = 'resume' | 'restart' | 'static';
+
+export interface BattlePresentationSource {
+  ok?: boolean;
+  turns?: BattleTurnData[];
+  you_won?: boolean;
+}
 
 export interface BattlePresentationStep {
   state: BattlePresentationState;
@@ -56,9 +62,9 @@ function turnSteps(turn: BattleTurnData): BattlePresentationStep[] {
   return steps;
 }
 
-export function createBattlePresentationContract(result: RealBattleResult): BattlePresentationContract {
+export function createBattlePresentationContract(result: BattlePresentationSource): BattlePresentationContract {
   const timeline: BattlePresentationStep[] = [step('intro', 'intro'), step('formation_ready', 'intro'), step('summon', 'intro')];
-  if (!result.ok) {
+  if (result.ok === false) {
     timeline.push({ ...step('reconnect', 'fallback'), cancel: 'dismiss', reconnect: 'static', fallback: 'static' });
     return { version: 've-p0-presentation-v1', source: 'real_battle_result', fallback: 'static', timeline };
   }

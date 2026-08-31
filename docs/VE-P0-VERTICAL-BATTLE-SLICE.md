@@ -16,7 +16,7 @@ Cada paso declara entrada, permanencia, salida, cancelación, replay, refresh, r
 
 ## Integración existente
 
-Si `you_won` está ausente o es ambiguo, el adaptador entra en `reconnect` con fallback `static`; no transforma incertidumbre en derrota. `BattleCinematicScreen` conserva la secuencia Intro → BattleBoardEngine → BattleResultScreen y expone el contrato en atributos de diagnóstico del root. `InteractiveBattleBoard` conserva Target Lock y las partículas por facción implementadas en H2/H3.
+Si `you_won` está ausente o es ambiguo, el adaptador entra en `reconnect` con fallback `static`; no transforma incertidumbre en derrota. `BattleCinematicScreen` y `ForgeFormationBoard` conservan sus consumidores reales y exponen el contrato en atributos de diagnóstico del root. Misiones continúa usando el tablero PvE existente; `InteractiveBattleBoard` conserva Target Lock y las partículas por facción implementadas en H2/H3.
 
 ## Dependencias y deuda
 
@@ -27,3 +27,8 @@ Si `you_won` está ausente o es ambiguo, el adaptador entra en `reconnect` con f
 ## Corrección de integridad
 
 No se infiere una reserva contando `final_units`: la forma de los datos no declara reserva. Tampoco se emite victoria/derrota si `you_won` no es booleano; se usa `reconnect` estático hasta recibir una fuente autoritativa.
+
+
+## Consumidor PvE conectado
+
+`ForgeFormationBoard` crea el contrato desde los turnos reales de `simulateFormationBattle` y conserva la secuencia de formación, invocación, batalla, reserva y resultado existente. La capa audiovisual sólo describe el estado temporal y no modifica la simulación ni el settlement.

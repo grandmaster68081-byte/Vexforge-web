@@ -1,3 +1,12 @@
+## 2026-08-31 — VE-P0.1 CONSUMIDOR PVE — IMPLEMENTED_UNVERIFIED
+
+- ForgeFormationBoard quedó conectado al contrato ve-p0-presentation-v1 con sus turnos y you_won reales.
+- Misiones mantiene sus fases briefing → loading → formation → battle → reward y sus callbacks onComplete/onDismiss; no se reemplazó el tablero ni se alteró la simulación.
+- BattleCinematicScreen e ForgeFormationBoard exponen versión, fallback y cantidad de estados como atributos de diagnóstico para facilitar el cierre posterior.
+- El recorrido completo Home → Cartas → Detalle → Selección → Tutorial → Formación continúa parcialmente conectado; esta entrega sólo cierra la conexión del consumidor PvE ya existente.
+- QA omitida por instrucción del operador y queda pendiente para el cierre final. No se declara OPERATIONAL, PASS ni TIER1_READY.
+
+---
 ## 2026-08-31 — VE-P0 CONTRACT INTEGRITY CORRECTION — IMPLEMENTED_UNVERIFIED
 
 - Corrección preventiva del adaptador: se eliminó la inferencia de reserve_entry basada en contar final_units.

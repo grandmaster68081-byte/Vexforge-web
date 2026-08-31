@@ -15,6 +15,7 @@ import {
 } from '../../lib/forgeFormation';
 import type { AIDifficulty } from '../../lib/aiBattleEngine';
 import { AudioEngine } from '../../lib/audioEngine';
+import { createBattlePresentationContract } from '../../lib/battlePresentation';
 import { particleEngine } from '../../lib/particleEngine';
 import { ForgeIcon, type ForgeIconName } from '../../shared/components/ForgeIcon';
 
@@ -1955,6 +1956,7 @@ export function ForgeFormationBoard({
   const bossEncounter = isBossEncounter(opponentName);
 
   const battleTurns  = battleResult.turns ?? [];
+  const presentationContract = createBattlePresentationContract({ ok: true, turns: battleTurns, you_won: battleResult.you_won });
 
   // ─── Summon cinematic done → show intro ──────────────────────────────────────
   const handleSummonDone = useCallback(() => {
@@ -2245,7 +2247,11 @@ export function ForgeFormationBoard({
       background: 'radial-gradient(ellipse at 50% 0%, #0f0820 0%, #060610 55%, #030308 100%)',
       display: 'flex', flexDirection: 'column',
       fontFamily: '"Rajdhani",sans-serif', overflow: 'hidden',
-    }}>
+    }}
+      data-presentation-contract={presentationContract.version}
+      data-presentation-fallback={presentationContract.fallback}
+      data-presentation-state-count={presentationContract.timeline.length}
+    >
       <style>{`
         @keyframes intro-forge-in {
           0% { transform: scale(1.18) translateY(-20px); opacity: 0; filter: blur(12px); }
