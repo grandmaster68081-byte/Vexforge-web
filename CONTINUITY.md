@@ -863,3 +863,12 @@
 - La matriz documenta cuatro superficies reales (carta, batalla, ruta y tutorial), la procedencia de sus consumidores, el uso obligatorio de assets oficiales, la gramática de anticipación/acción/impacto/recuperación/reposo y el fallback de reduced-motion. Las brechas no se ocultan: cobertura global de reduced-motion, auditoría visual manual y pasaportes de tres cartas quedan en deuda Q3.
 - Estado: `IMPLEMENTED_UNVERIFIED`, nivel `Q0 → Q2`; no se declara `OPERATIONAL`, `PASS` ni `TIER1_READY` porque esta sesión no fabrica evidencia de navegador autenticado ni de dispositivo Android.
 - Siguiente acción verificable: seleccionar tres cartas canónicas contrastantes para `VE-3-PILOT`, usando el lenguaje documentado y validando procedencia, integración, rendimiento y revisión visual antes de escalar.
+
+---
+## 2026-08-31 — VE-1-VISUAL-BIBLE — GATES RECONCILED
+
+- Evidencia proporcional posterior al checkpoint: `npm run verify:ui-identity` pasó con 189 archivos y 0 violaciones; `verify:motion` pasó con 17 tokens, 8 clases y reduced-motion; `verify:audio-flow` pasó con 12 entradas y 4 contextos requeridos.
+- `verify:assets` confirmó 21/21 assets disponibles en Storage. `verify:manifest` recibió HTTP 429 transitorio en los primeros intentos y pasó al reintentar: 218 filas inscritas, 21 rutas de código presentes y 0 referencias rotas.
+- El deploy público `https://vexforge-web.pages.dev` respondió HTTP 200 en `/` y `/build-manifest.json`; el manifiesto público declaró el commit de publicación de la biblia en `main`.
+- No se modificó `mobile/**`; no corresponde generar APK nuevo ni ejecutar el workflow Android para esta unidad documental. Auth, Social, Meta, economía, combate, RLS, RPCs, Storage y datos de jugadores permanecen intactos.
+- Estado se mantiene `IMPLEMENTED_UNVERIFIED`, nivel `Q0 → Q2`; la validación visual manual, la matriz global de reduced-motion y la revisión de tres cartas siguen siendo deuda Q3. No se declara `OPERATIONAL`, `PASS` ni `TIER1_READY`.
