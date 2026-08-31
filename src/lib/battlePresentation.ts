@@ -63,8 +63,9 @@ export function createBattlePresentationContract(result: RealBattleResult): Batt
     return { version: 've-p0-presentation-v1', source: 'real_battle_result', fallback: 'static', timeline };
   }
   for (const turn of result.turns ?? []) timeline.push(...turnSteps(turn));
-  const unitCount = result.final_units?.length ?? 0;
-  if (unitCount > 2) timeline.push(step('reserve_entry', 'board'));
-  timeline.push(step(result.you_won ? 'victory' : 'defeat', 'result'));
-  return { version: 've-p0-presentation-v1', source: 'real_battle_result', fallback: 'full', timeline };
+  if (result.you_won === true) timeline.push(step('victory', 'result'));
+  else if (result.you_won === false) timeline.push(step('defeat', 'result'));
+  else timeline.push({ ...step('reconnect', 'fallback'), cancel: 'dismiss', reconnect: 'static', fallback: 'static' });
+  const fallback = result.you_won === true || result.you_won === false ? 'full' : 'static';
+  return { version: 've-p0-presentation-v1', source: 'real_battle_result', fallback, timeline };
 }

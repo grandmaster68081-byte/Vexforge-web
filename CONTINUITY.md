@@ -1,3 +1,10 @@
+## 2026-08-31 — VE-P0 CONTRACT INTEGRITY CORRECTION — IMPLEMENTED_UNVERIFIED
+
+- Corrección preventiva del adaptador: se eliminó la inferencia de reserve_entry basada en contar final_units.
+- Si you_won no es true/false, el contrato emite reconnect con fallback static en vez de inventar derrota; victory/defeat sólo aparecen con el booleano autoritativo.
+- QA continúa omitida por instrucción del operador; no se declara OPERATIONAL, PASS ni TIER1_READY.
+
+---
 ## 2026-08-31 — VE-P0.0/P0.1 VERTICAL BATTLE SLICE — IMPLEMENTED_UNVERIFIED
 
 - Se registró el contrato audiovisual tipado ve-p0-presentation-v1 en src/lib/battlePresentation.ts y se conectó a BattleCinematicScreen.
