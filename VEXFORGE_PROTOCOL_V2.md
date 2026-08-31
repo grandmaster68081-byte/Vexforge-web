@@ -1,5 +1,5 @@
 # VEXFORGE — Protocolo Maestro Universal v2
-**Última actualización:** 2026-08-30 | **Mantenido por:** Replit Agent
+**Última actualización:** 2026-08-31 | **Mantenido por:** Replit Agent
 **Documento clave en Supabase:** `vexforge_master_protocol_v2`
 
 ---
@@ -1335,12 +1335,26 @@ Cada sesión debe registrar que leyó esta enmienda, qué decisión derivada cre
 
 
 
+---
+## 2026-08-30 — VE-MOB-2-AUTH — APK RELEASED / IMPLEMENTED_UNVERIFIED\n\n- Verificación remota: GitHub Actions `Build VEXFORGE Android APK`, run `52`, terminó `success` sobre `main` en el commit `d820f9ea1686804faecb67ec92808381d97d4e9a`.\n- Gates técnicos confirmados por el log oficial: `npm run typecheck`, `expo prebuild`, Gradle `assembleRelease` y la guarda de APK standalone pasaron; el log reporta `OK: JS bundle embedded (88M)`.\n- Release oficial: [vexforge-android-build-52](https://github.com/grandmaster68081-byte/Vexforge-web/releases/tag/vexforge-android-build-52), asset `app-release.apk`, 91,705,979 bytes; digest GitHub/SHA-256 verificado: `f093a742189db76cf2c20315f7304a5859228bcb239808ebb32b6875c3062abe`.\n- Verificación adicional del APK descargado: `assets/index.android.bundle` presente, 3,080,780 bytes. El APK es autónomo respecto a Metro y conserva la corrección de ruta del arte Nexus Access.\n- Estado: `IMPLEMENTED_UNVERIFIED`; la instalación, inicio de sesión/registro y recorrido Auth en dispositivo o emulador siguen pendientes de QA manual del operador. No se declara `OPERATIONAL`, `PASS` ni `TIER1_READY`.\n- Siguiente acción verificable: ejecutar la matriz manual de AUTH con el APK publicado y continuar con `VE-MOB-13-SOCIAL`, siguiente unidad Android sin entrada de implementación en la continuidad tras WORLD.
 
-### Android Social evidence — 2026-08-30
+---
+## 2026-08-30 — VE-MOB-13-SOCIAL — APK RELEASED / IMPLEMENTED_UNVERIFIED
 
-- Unit: `VE-MOB-13-SOCIAL`
-- Implementation commit: `c44302b0bb848c6d7c596b9cffaff1c46d438c8b`
-- Mobile TypeScript check: passed.
-- Official Android workflow: run `55` passed and published prerelease `vexforge-android-build-55`: https://github.com/grandmaster68081-byte/Vexforge-web/releases/tag/vexforge-android-build-55
-- APK SHA-256: `9577bdf841dcf09fb2028b599fa8994538893c27471a6c70c4db5524c62eab9a`; standalone bundle `assets/index.android.bundle` verified present.
-- Integrity status: `IMPLEMENTED_UNVERIFIED`; operator installation/device QA remains required.
+- Implementación Android publicada en main sobre el commit c44302b0bb848c6d7c596b9cffaff1c46d438c8b.
+- El workflow Android oficial, run 55, terminó success y publicó el prerelease vexforge-android-build-55; la APK autónoma incluye assets/index.android.bundle.
+- Estado: IMPLEMENTED_UNVERIFIED; la instalación y QA del operador en dispositivo o emulador siguen pendientes.
+
+---
+## 2026-08-30 — VE-MOB-14-META — APK RELEASED / IMPLEMENTED_UNVERIFIED
+
+- Implementación Android publicada en main sobre el commit b3d82107bc2d53b7879df72567e974ffac898f0e.
+- El workflow Android oficial, run 56, terminó success y publicó vexforge-android-build-56; digest SHA-256 de app-release.apk: 5587a4926d0c6010c11192d36b5cf17739ea4267c1e8c1156113d76c3b08013f.
+- Estado: IMPLEMENTED_UNVERIFIED; la instalación y QA del operador en dispositivo o emulador siguen pendientes.
+
+---
+## 2026-08-31 — PREFLIGHT-DOCUMENTAL — RECONCILED
+
+- La fila activa vexforge_master_protocol_v2 de Supabase se conserva como autoridad normativa; la copia de main se sincroniza con su contenido completo y con las evidencias Android verificadas ya registradas en continuidad.
+- La guarda web run 73 falló inicialmente por HTTP 429 transitorio al consultar dos objetos del manifiesto; el reintento oficial (attempt 2) terminó success y verificó 21/21 assets en Storage. No se sustituyó ningún asset.
+- Las unidades Android Social y Meta permanecen IMPLEMENTED_UNVERIFIED; no se declara OPERATIONAL, PASS ni TIER1_READY sin QA humana.

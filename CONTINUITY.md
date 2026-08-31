@@ -1,3 +1,13 @@
+## 2026-08-31 — PREFLIGHT-DOCUMENTAL + VE-MOB-13/14 — RECONCILED
+
+- Preflight completado: protocolo activo leído completo desde Supabase Management API, continuidad, plan activo, inventario Android y código de main reconciliados.
+- Se detectó y corrigió una discrepancia documental: la fila viva de Supabase contenía la evidencia AUTH más reciente y main contenía la evidencia Social; se conserva el contenido vivo y se integran ambas evidencias verificadas, junto con Meta.
+- Run 55 (Social) y run 56 (Meta) terminaron success y sus releases Android están publicados.
+- La verificación web run 73 falló inicialmente por HTTP 429 al consultar dos objetos del manifiesto oficial; el reintento oficial (attempt 2) terminó success y verificó 21/21 assets, sin fallback ni sustitución.
+- Estado: VE-MOB-13 y VE-MOB-14 IMPLEMENTED_UNVERIFIED; QA humana del operador pendiente. VE-MOB-15 Admin permanece diferida según el inventario oficial.
+- No se declara OPERATIONAL, PASS ni TIER1_READY.
+
+---
 ## 2026-08-30 — VE-MOB-VIS-2-MOBILE-FIT-AND-GOOGLE-AUTH — VERIFIED_RELEASED
 
 - El commit `ad42a5f1c4fbf34c2f73a7ae7d71f8715f280e9a` quedó publicado en `main`.
@@ -822,7 +832,7 @@
 - Android Social aggregator implemented in commit `c44302b0bb848c6d7c596b9cffaff1c46d438c8b`.
 - Scope covers Friends, direct challenges, Clans, roster/war registration, PvP ranking/history, and navigation to Battle for authoritative combat resolution.
 - Mobile typecheck: PASS on the committed state.
-- Android workflow run 55 is still `in_progress` in the official release workflow; APK/release evidence is not yet available.
+- Android workflow run 55 terminó `success` en el workflow oficial y publicó `vexforge-android-build-55` con APK standalone; la QA del operador sigue pendiente.
 - Status remains `IMPLEMENTED_UNVERIFIED` pending the official APK gate and operator device/emulator QA.
 
 ### VE-MOB-14 Meta implementation
@@ -832,4 +842,5 @@
 - NFT supports Polygon wallet linking and queue/contract visibility. Forge Ads preserves the web quota of 5 views/day and 20 in-game VEX per completed 30-second view.
 - `docs/VE-MOB-14-META.md` records the scope, live contracts, and acceptance gates.
 - Mobile typecheck: PASS. Existing `verify:mobile-profile` and `verify:mobile-world`: PASS.
-- Status remains `IMPLEMENTED_UNVERIFIED` pending the official Android workflow/release and operator device/emulator QA. No operational status is claimed.
+- Android workflow run 56 terminó `success` y publicó `vexforge-android-build-56`; APK SHA-256 `5587a4926d0c6010c11192d36b5cf17739ea4267c1e8c1156113d76c3b08013f`.
+- Status remains `IMPLEMENTED_UNVERIFIED` pending operator device/emulator QA. No operational status is claimed.
