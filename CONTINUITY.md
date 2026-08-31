@@ -946,3 +946,13 @@
 - El release prerelease `vexforge-android-build-60` publicó `app-release.apk` (91,790,915 bytes); el asset descargable respondió HTTP 200. La inspección del APK en dispositivo/emulador aún no se ha ejecutado.
 - La guarda amplia `verify` run 89 pasó `verify:card-art` en el reintento, pero volvió a detenerse en `verify:card-pilot` por HTTP 429 transitorio al leer dos objetos oficiales de Storage. La guarda específica local del piloto permanece 6/6 y los tres objetos directos responden HTTP 200; no se clasifica como fallo de código ni se oculta como PASS global.
 - Estado: `IMPLEMENTED_UNVERIFIED`, `Q3` para integración Android Colección/Detalle. No se declara `OPERATIONAL`, `PASS` ni `TIER1_READY`; queda pendiente la QA humana del APK y la posterior evidencia de continuidad.
+
+---
+## 2026-08-31 — VE-3-PILOT — ANDROID APK GATE RECONCILED
+
+- El workflow oficial `Build VEXFORGE Android APK`, run `61`, terminó `success` sobre `main` en el commit `3e49d3b43fc233ec7b89581ea228138f1f0d7b01`.
+- El job oficial `build-apk` pasó `npm run typecheck`, `expo prebuild`, Gradle `assembleRelease`, la guarda de APK standalone y la publicación del release.
+- El release prerelease `vexforge-android-build-61` publicó `app-release.apk`; tamaño `91,791,483` bytes; SHA-256 `0e9f57c065d2e29ae54e4a8127e929634ce6b4b749cf179439dc00421d3fcfb9`.
+- La inspección directa del APK descargado confirmó `assets/index.android.bundle` embebido (`3,166,284` bytes) y tipo Android Package. Enlace: https://github.com/grandmaster68081-byte/Vexforge-web/releases/download/vexforge-android-build-61/app-release.apk
+- La unidad permanece `IMPLEMENTED_UNVERIFIED`, `Q3` para Colección/Detalle Android; la instalación, recorrido y QA manual del operador siguen pendientes. No se declara `OPERATIONAL`, `PASS` ni `TIER1_READY`.
+- Siguiente acción verificable: continuar la integración authored de VE-3 en las superficies de batalla sólo cuando exista identificador canónico en el contrato `BattleUnit`, sin usar el nombre como clave silenciosa ni alterar autoridad de combate.
