@@ -1,3 +1,16 @@
+## 2026-08-31 — VE-VIS-3-EMPTY-STATE-ART — IMPLEMENTED_UNVERIFIED
+
+- Preflight: el port Android P1 está reconciliado hasta `VE-MOB-14`; `VE-MOB-15 ADMIN` permanece diferida por decisión del operador. La siguiente brecha abierta más baja era `loading_and_empty_states`, sin reabrir `VE-MOB-5-DECK` ya implementada.
+- Cambios publicados en `main` mediante commit atómico `4afe095e9e2b8a926aaae62e0a7012bd11a7c4d1`: `ForgeStateArt` con variantes `empty`, `loading`, `error` y `locked`; integración en `EmptyState`, `ErrorState`, `BlockedAuthState` y `PageLoader`; cobertura CSS para tarjetas heredadas `.empty-state`; guarda `verify:state-art` encadenada en `verify:all`; documento `docs/VE-VIS-3-EMPTY-STATE-ART.md`.
+- Alcance preservado: sin cambios en RPCs, tablas, RLS, Auth, Storage, assets, economía, combate, resultados ni datos de jugadores. El arte de estado usa CSS y el catálogo SVG existente de `ForgeIcon`; no se inventan datos ni se introducen emojis/pictogramas Unicode.
+- Evidencia local desde el tarball exacto del commit: `npm run typecheck` correcto; `npm run verify:state-art` correcto (4 variantes, 4 consumidores, cobertura heredada y reduced-motion); `npm run verify:build` correcto tras recrear sólo la referencia temporal de `HEAD`; guards de motion, combate, audio, piloto de cartas, piloto móvil y arte residual correctas.
+- Evidencia pública: `https://vexforge-web.pages.dev/build-manifest.json` respondió HTTP 200 y declaró `sourceCommit` `4afe095e9e2b8a926aaae62e0a7012bd11a7c4d1`; la raíz pública respondió HTTP 200 y fue inspeccionada visualmente.
+- Gate completo: `npm run verify:all` no cierra por deudas preexistentes no causadas por esta unidad: cobertura viva ausente para `forge_action`, `combat_resolved` y `reward_claimed`, y HTTP 429 del Storage al verificar arte de jefes. No se fabrican eventos ni se falsea evidencia.
+- Estado: `IMPLEMENTED_UNVERIFIED` para la unidad; el criterio Tier 1 `loading_and_empty_states` permanece `PARTIAL` hasta ejecutar la matriz runtime de las 39 rutas y comprobar que no hay loaders eternos. No se declara `OPERATIONAL`, `PASS` ni `TIER1_READY`.
+- Siguiente acción verificable: auditar en navegador las 39 rutas reales, registrar los casos de carga/vacío/error y actualizar el criterio únicamente con evidencia reproducible; después continuar por la siguiente brecha bloqueante abierta.
+
+---
+
 ## 2026-08-31 — VE-MOB-8-REWARDS — RELEASE RECONCILIATION — IMPLEMENTED_UNVERIFIED
 
 - La siguiente unidad P1 ya estaba implementada en `main`; no se reabrió ni se duplicó código. Android presenta quests diarias, misiones activas, reclamaciones, ejecución, liquidación y estados explícitos sin calcular progreso, energía, recompensas o inventario localmente.
