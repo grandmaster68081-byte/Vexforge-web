@@ -8,6 +8,7 @@
 completa
 **Nivel Q:** Q2 actual / Q3 objetivo
 **Fuente canónica:** `main`, `VEXFORGE_PROTOCOL_V2.md`, `CONTINUITY.md`,
+**Alcance Android vigente:** por la Ley Suprema de ejecución exclusiva Android y web congelada, esta unidad se implementa en mobile/; las rutas y emisores web que aparecen abajo son referencia histórica de contrato y no pueden modificarse.
 `public.vexforge_visual_tier1_objective`, `public.vexforge_project_decisions`.
 
 > Este documento es el trazado canónico y único de la unidad. Cualquier sesión
@@ -93,6 +94,19 @@ reproducible que una guarda pueda exigir.
 | `src/components/battle/BattleResultScreen.tsx` | `combat_resolved` |
 | `src/routes/QuestsRoute.tsx` | `reward_claimed` |
 
+## 4A. Consumidores Android vigentes
+
+La implementación Android equivalente observa el mismo catálogo y conserva el principio best-effort absoluto:
+
+| Superficie Android | Evento |
+| --- | --- |
+| mobile/context/GameContext.tsx | session_start, return_visit |
+| mobile/app/store.tsx | forge_action |
+| mobile/app/(tabs)/battle.tsx | combat_resolved |
+| mobile/app/missions.tsx | reward_claimed |
+
+El emisor mobile/lib/telemetry.ts usa AsyncStorage por jugador para el umbral de retorno, un identificador de sesión de ejecución y el transporte autenticado de Supabase. No calcula ni muta estado del juego; un fallo de observación se absorbe sin interrumpir la app.
+
 ## 5. Guarda (`scripts/verify-telemetry.mjs`)
 
 Doble comprobación, encadenada en `verify:all`:
@@ -112,6 +126,9 @@ lore. No se usa `service_role` desde el cliente ni desde scripts de
 verificación. Telemetría es observación, nunca fuente de verdad de juego.
 
 ## 7. Secuencia de ejecución (orden obligatorio)
+
+> **Ejecución Android vigente:** los pasos de implementación que mencionan src/ o la web quedan congelados como historial. Para esta fase, el equivalente operativo es mantener el emisor y consumidores Android anteriores, ejecutar mobile/scripts/verify-telemetry.mjs, pasar typecheck y el workflow APK oficial, y conservar game_loop_telemetry en PARTIAL hasta observar las cinco claves con una sesión QA real.
+
 
 1. Reescribir `supabase/migrations/0039_ve_vis_6_game_loop_telemetry.sql` según
    la sección 2, **sin** el `update` a `MET`.
