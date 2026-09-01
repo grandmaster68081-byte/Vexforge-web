@@ -6,9 +6,9 @@ const checks = [
   ['lib/telemetry.ts', ['session_start', 'forge_action', 'combat_resolved', 'reward_claimed', 'return_visit', 'trackSessionEntry']],
   ['lib/supabase.ts', ['insertTelemetryEvent', 'vexforge_telemetry_events']],
   ['context/GameContext.tsx', ['trackSessionEntry(session)']],
-  ['app/(tabs)/battle.tsx', ['emitTelemetry(session, 'combat_resolved'']],
-  ['app/missions.tsx', ['emitTelemetry(session, 'reward_claimed'']],
-  ['app/store.tsx', ['emitTelemetry(session, 'forge_action'']],
+  ['app/(tabs)/battle.tsx', ["emitTelemetry(session, 'combat_resolved'"]],
+  ['app/missions.tsx', ["emitTelemetry(session, 'reward_claimed'"]],
+  ['app/store.tsx', ["emitTelemetry(session, 'forge_action'"]],
 ];
 for (const [relative, needles] of checks) {
   const file = path.join(root, relative);
