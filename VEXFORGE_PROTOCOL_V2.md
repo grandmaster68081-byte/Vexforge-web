@@ -1381,3 +1381,4 @@ Cada sesión debe registrar que leyó esta enmienda, qué decisión derivada cre
 - La fila activa vexforge_master_protocol_v2 de Supabase se conserva como autoridad normativa; la copia de main se sincroniza con su contenido completo y con las evidencias Android verificadas ya registradas en continuidad.
 - La guarda web run 73 falló inicialmente por HTTP 429 transitorio al consultar dos objetos del manifiesto; el reintento oficial (attempt 2) terminó success y verificó 21/21 assets en Storage. No se sustituyó ningún asset.
 - Las unidades Android Social y Meta permanecen IMPLEMENTED_UNVERIFIED; no se declara OPERATIONAL, PASS ni TIER1_READY sin QA humana.
+
