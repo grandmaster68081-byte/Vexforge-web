@@ -13,6 +13,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { useColors } from '@/hooks/useColors';
 import { useGame } from '@/context/GameContext';
+import { emitTelemetry } from '@/lib/telemetry';
 import { ScreenShell } from '@/components/ScreenShell';
 import {
   claimDailyQuest,
@@ -227,6 +228,7 @@ export default function MissionsScreen() {
     try {
       const result = await claimDailyQuest(session, assignmentId);
       if (!result.claimed) throw new Error(result.reason ?? 'La recompensa no pudo reclamarse.');
+      void emitTelemetry(session, 'reward_claimed', { source: 'daily_quest' });
       setActionMessage(result.pendingRewards ? 'Misión completada. La recompensa se aplicará en breve.' : 'Recompensa reclamada correctamente.');
       await load(true);
       await refresh();
@@ -243,6 +245,7 @@ export default function MissionsScreen() {
     setActionMessage(null);
     try {
       const reward: MissionReward = await executeMobileMission(session, player.id, mission.id);
+      void emitTelemetry(session, 'reward_claimed', { source: 'mission' });
       setActionMessage(`Misión completada: +${reward.xp_reward ?? 0} XP y +${reward.ingame_reward ?? 0} VEX.`);
       if ((mission.cooldown_seconds ?? 0) > 0) {
         setCooldowns((current) => ({ ...current, [mission.id]: Date.now() + (mission.cooldown_seconds ?? 0) * 1000 }));

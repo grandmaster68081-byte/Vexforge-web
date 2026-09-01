@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useEffect, useMemo, useState } from 'react';
+import { trackSessionEntry } from '@/lib/telemetry';
 import { findOpponents, loadCatalogSnapshot, loadPlayerCollection, loadPlayerProfile, loadProgress, loadSession, loadStats, loadWallet, signIn as signInRemote, signInWithGoogle as signInWithGoogleRemote, signOut as signOutRemote, signUp as signUpRemote, startBattle as startBattleRemote, type BattleResult, type Opponent, type PlayerCard, type PlayerProfile, type PlayerProgress, type PlayerStats, type PublicCard, type Session, type Wallet } from '@/lib/supabase';
 
 export type SyncState = 'loading' | 'connected' | 'offline';
@@ -82,6 +83,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
     };
 
     useEffect(() => { loadSession().then((saved) => { setSession(saved); setAuthLoading(false); }).catch(() => setAuthLoading(false)); }, []);
+    useEffect(() => { if (session) void trackSessionEntry(session); }, [session]);
     useEffect(() => { if (!authLoading) void refresh(); }, [authLoading, session]);
 
     const signIn = async (email: string, password: string) => { setAuthError(null); setAuthLoading(true); try { const next = await signInRemote(email, password); setSession(next); } catch (error) { setAuthError(error instanceof Error ? error.message : 'No se pudo iniciar sesión'); } finally { setAuthLoading(false); } };

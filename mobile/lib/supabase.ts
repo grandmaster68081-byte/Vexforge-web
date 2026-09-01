@@ -783,6 +783,19 @@ async function rest(path: string, session?: Session, init?: RequestInit) {
   return parse(response);
 }
 
+export async function insertTelemetryEvent(
+  session: Session,
+  eventKey: string,
+  clientSessionId: string,
+  payload: Record<string, string | number | boolean | null>,
+): Promise<void> {
+  await rest('vexforge_telemetry_events', session, {
+    method: 'POST',
+    headers: { Prefer: 'return=minimal' },
+    body: JSON.stringify({ event_key: eventKey, client_session_id: clientSessionId, payload }),
+  });
+}
+
 export async function loadCatalogSnapshot(session?: Session) {
   const cards = await rest(
     'cards?select=id%2Ccode%2Cname%2Cfaction%2Crarity%2Cspecialization%2Cpower%2Caffinity%2Cprestige%2Ccharge%2Clore%2Cimage_url%2Csupply%2Cminted%2Cis_founder%2Cis_legendary%2Ccard_tier%2Ccard_domain%2Cmarketable%2Cfusion_enabled%2Crelease_status%2Csynergy_json&active=eq.true&order=name.asc&limit=1000',

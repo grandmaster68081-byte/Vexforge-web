@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "expo start --port ${PORT:-8081}",
     "start": "expo start",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "verify:telemetry": "node scripts/verify-telemetry.mjs"
   },
   "dependencies": {
     "@expo-google-fonts/cinzel": "^0.4.2",

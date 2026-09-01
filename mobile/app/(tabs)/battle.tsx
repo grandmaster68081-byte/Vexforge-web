@@ -1,5 +1,5 @@
 import { Feather } from '@/components/ForgeIcon';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import {
   AccessibilityInfo,
   ActivityIndicator,
@@ -13,6 +13,7 @@ import {
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useColors } from '@/hooks/useColors';
 import { useGame } from '@/context/GameContext';
+import { emitTelemetry } from '@/lib/telemetry';
 import { ScreenShell } from '@/components/ScreenShell';
 import { loadPlayerDeck } from '@/lib/supabase';
 import type { BattleResult, BattleTurn, DeckSlot, Opponent } from '@/lib/supabase';
@@ -236,6 +237,7 @@ export default function BattleScreen() {
   const [formationError, setFormationError] = useState<string | null>(null);
   const turns = battleResult?.turns ?? [];
   const currentTurn = turns[turnIndex] ?? null;
+  const emittedBattleRef = useRef<BattleResult | null>(null);
 
   const refreshFormation = async () => {
     if (!session) return;
@@ -273,6 +275,16 @@ export default function BattleScreen() {
     setTurnIndex(0);
     setPhase(turns.length > 0 ? 'replay' : 'result');
   }, [battleResult, turns.length]);
+
+  useEffect(() => {
+    if (!session || !battleResult?.ok || emittedBattleRef.current === battleResult) return;
+    emittedBattleRef.current = battleResult;
+    const outcome = battleResult.you_won ? 'victory' : battleResult.winner_id ? 'defeat' : 'draw';
+    void emitTelemetry(session, 'combat_resolved', {
+      outcome,
+      turns: battleResult.turns?.length ?? battleResult.total_turns ?? 0,
+    });
+  }, [battleResult, session]);
 
   useEffect(() => {
     if (phase !== 'replay' || reducedMotion || turns.length === 0 || turnIndex >= turns.length - 1) return;
