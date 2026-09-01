@@ -19,6 +19,7 @@ jobs:
       # package-lock.json, but avoids the runner-side ci finalization bug.
       - run: npm install --legacy-peer-deps --no-audit --no-fund --ignore-scripts
       - run: npm run typecheck
+      - run: npm run verify:telemetry
       - run: npx expo prebuild --platform android --no-install --non-interactive
       # Release variant always embeds index.android.bundle, so the installed app
       # never looks for a Metro dev server. Expo's template signs release with the
