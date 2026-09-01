@@ -1,3 +1,13 @@
+## 2026-09-01 — VE-VIS-6 — ANDROID TELEMETRY — IMPLEMENTED_UNVERIFIED
+
+- La implementación pendiente del loop de juego se ejecutó exclusivamente en Android: mobile/lib/telemetry.ts emite las cinco claves canónicas con transporte autenticado y best-effort.
+- Consumidores Android: GameContext para session_start/return_visit; store para forge_action; Battle para combat_resolved; Missions para reward_claimed. No se modificó ningún consumidor web.
+- Se añadió la guarda mobile/scripts/verify-telemetry.mjs y quedó conectada al package script y al workflow APK oficial. La guarda estática oficial pasa: cinco claves, transporte y consumidores presentes.
+- Commit de implementación Android: e9478ef66fd88112ff7523321b17956c2f2a1232. Corrección de guarda: 04d423a77a8976e4af77fccd8d83aeac8009d7ab. Workflow guard: 2ab6d414c593554192d9ebe4bb9878e00ff0770f. Documento de unidad Android: a68f7741a1c288de692c8d1eacaaf607ec120ae9.
+- Supabase continúa como autoridad: no se añadieron tablas, RPCs, datos ni lógica de juego. La cobertura viva de las cinco claves sigue pendiente de una sesión QA humana autorizada; game_loop_telemetry permanece PARTIAL y no se declara MET, PASS, OPERATIONAL ni TIER1_READY.
+- El workflow Android oficial se ejecutará sobre el main final para confirmar typecheck, APK standalone, bundle JS embebido y release correlativo.
+
+---
 ## 2026-08-31 — GOVERNANCE — ANDROID-ONLY / WEB-FREEZE
 
 - Decisión explícita del operador: todo el trabajo restante del protocolo se ejecuta únicamente en la aplicación Android oficial bajo mobile/.
