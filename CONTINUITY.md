@@ -5,7 +5,8 @@
 - Se añadió la guarda mobile/scripts/verify-telemetry.mjs y quedó conectada al package script y al workflow APK oficial. La guarda estática oficial pasa: cinco claves, transporte y consumidores presentes.
 - Commit de implementación Android: e9478ef66fd88112ff7523321b17956c2f2a1232. Corrección de guarda: 04d423a77a8976e4af77fccd8d83aeac8009d7ab. Workflow guard: 2ab6d414c593554192d9ebe4bb9878e00ff0770f. Documento de unidad Android: a68f7741a1c288de692c8d1eacaaf607ec120ae9.
 - Supabase continúa como autoridad: no se añadieron tablas, RPCs, datos ni lógica de juego. La cobertura viva de las cinco claves sigue pendiente de una sesión QA humana autorizada; game_loop_telemetry permanece PARTIAL y no se declara MET, PASS, OPERATIONAL ni TIER1_READY.
-- El workflow Android oficial se ejecutará sobre el main final para confirmar typecheck, APK standalone, bundle JS embebido y release correlativo.
+- Evidencia oficial APK: workflow run 64 (`33533506162`) sobre el commit de implementación Android `04d423a77a8976e4af77fccd8d83aeac8009d7ab` terminó `success`; `typecheck`, `expo prebuild`, `assembleRelease`, verificación del bundle standalone y publicación pasaron. Release: https://github.com/grandmaster68081-byte/Vexforge-web/releases/tag/vexforge-android-build-64; `app-release.apk`, 91,794,303 bytes.
+- El run 66 (`33534888670`) sobre el `main` documental `25f6caf373421d8fababb6875979282da6ef2bc8` pasó `typecheck`, `verify:telemetry` y `expo prebuild`, pero permanece `in_progress` en Gradle; no se usa como evidencia adicional ni se fabrica un resultado.
 
 ---
 ## 2026-08-31 — GOVERNANCE — ANDROID-ONLY / WEB-FREEZE
