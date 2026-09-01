@@ -1,6 +1,22 @@
 # VEXFORGE — Protocolo Maestro Universal v2
-**Última actualización:** 2026-08-31 | **Mantenido por:** Replit Agent
+**Última actualización:** 2026-08-31 — ley mobile-only/web-freeze adoptada | **Mantenido por:** Replit Agent
 **Documento clave en Supabase:** `vexforge_master_protocol_v2`
+
+---
+
+## LEY SUPREMA — EJECUCIÓN EXCLUSIVA ANDROID Y CONGELACIÓN WEB
+
+**Entrada en vigor:** 2026-08-31
+**Decisión explícita del operador:** el único producto activo para el trabajo restante es la aplicación Android oficial en mobile/.
+**Prioridad:** esta ley prevalece sobre cualquier texto histórico que describa la web como superficie de mantenimiento o como destino del roadmap.
+
+1. **Superficie única de implementación:** todas las unidades pendientes, mejoras, correcciones, verificaciones funcionales y entregas del roadmap se ejecutan exclusivamente sobre Android en mobile/, siguiendo el inventario VE-MOB-0 y sus gates.
+2. **Web congelada:** src/, public/, dist/, las rutas web, componentes web, estilos web, telemetría web, pruebas web y cualquier otro consumidor web son solo referencia de lectura. Ninguna IA puede modificarlos, refactorizarlos, corregirlos, instrumentarlos, añadirles features, generarles assets ni abrir unidades nuevas para ellos.
+3. **Uso permitido de la web:** se puede leer el código y la documentación web únicamente para portar a Android comportamiento, contratos, textos, diseño y reglas ya existentes. El port debe producir cambios en mobile/; no se devuelve el cambio a la web.
+4. **Supabase compartido:** solo se permiten cambios de Supabase cuando sean estrictamente necesarios para una capacidad Android del inventario y estén trazados a esa unidad. Queda prohibido cualquier trabajo de backend, datos, Storage o RPC destinado únicamente a la web.
+5. **Entrega y validación:** la entrega del producto restante se hace con cambios Android, el workflow oficial .github/workflows/vexforge-android-apk.yml, su release y el APK correlativo. El deploy web no es un objetivo de implementación de esta fase.
+6. **Guarda de selección:** antes de editar, la IA debe comprobar que el objetivo es Android. Si la tarea apunta a la web o no tiene una unidad VE-MOB-*/Android explícita, debe detener la implementación, registrarla como no elegible y seleccionar la siguiente unidad Android del inventario. Las actualizaciones de este protocolo y de CONTINUITY.md para registrar decisiones o evidencia sí están permitidas y no cuentan como trabajo de producto web.
+7. **Levantamiento:** esta congelación solo puede levantarse mediante una nueva decisión explícita del operador registrada como oficial en Supabase y sincronizada en GitHub. Ninguna IA puede inferir una excepción a partir de documentos históricos.
 
 ---
 
@@ -11,7 +27,7 @@
 Esta ley no crea un plan paralelo ni elimina los gates del Protocolo Maestro. Define el orden de ejecución del producto mientras el port oficial permanezca incompleto:
 
 1. El producto activo es la aplicación Android en `mobile/` del repositorio oficial, con Expo 54, React Native 0.81 y expo-router.
-2. La web en `src/` queda como fuente de verdad de funcionalidad, flujos, textos, diseño y datos ya construidos, y como superficie de mantenimiento. No se abren unidades nuevas exclusivas de web salvo corrección crítica.
+2. La web en `src/` queda congelada como referencia de lectura para el port Android; no es superficie de mantenimiento ni destino de implementación. No se abren unidades web.
 3. La FASE PORT es prioritaria: se trasladan a Android las superficies y flujos existentes, con datos reales de Supabase, assets del manifiesto oficial, audio, motion y estados de carga/vacío/error. Cada superficie o flujo es una unidad `VE-MOB-*` con criterios y evidencia propios.
 4. El orden de la FASE PORT es el inventario oficial `docs/VE-MOB-0-PORT-INVENTORY.md`; durante esta fase la siguiente unidad se determina por el siguiente elemento no completado del inventario, no por reabrir una tarea histórica ni por saltar a una unidad web.
 5. La app usa el mismo Supabase oficial, las mismas RPCs, RLS y datos autoritativos. El cliente Android presenta y consume contratos; no duplica lógica de combate, recompensas, inventario, progreso, economía o autenticación.
