@@ -2,7 +2,7 @@
 
 - Decisión explícita del operador: todo el trabajo restante del protocolo se ejecuta únicamente en la aplicación Android oficial bajo mobile/.
 - La web queda congelada como referencia de lectura para el port: no se permiten nuevas features, correcciones, refactors, telemetría, tests, assets ni unidades de producto web. Supabase solo cambia cuando una unidad Android lo requiera.
-- La ley quedó sincronizada en Supabase como documento oficial y en GitHub main mediante el commit 70c94e75e419911d0f099dd49a4120719029fc91; la frase histórica de “superficie de mantenimiento” fue reemplazada para eliminar la ambigüedad.
+- La ley quedó sincronizada byte a byte en Supabase como documento oficial y en GitHub main mediante el commit 460e4adc1d6257d9003ab632e6cbab41b449a003; la frase histórica de “superficie de mantenimiento” fue reemplazada para eliminar la ambigüedad.
 - Las actualizaciones de protocolo y continuidad son gobernanza/evidencia, no trabajo de producto web. No se modificó ningún archivo de implementación web en esta decisión.
 - A partir de ahora, una tarea sin unidad VE-MOB-*/Android explícita no es elegible; solo una nueva decisión oficial del operador puede levantar la congelación.
 
