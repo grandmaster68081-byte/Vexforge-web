@@ -1,3 +1,12 @@
+## 2026-09-02 — PREFLIGHT + RECONCILIACIÓN ANDROID — NON-QA WORK COMPLETE
+
+- Se leyó el protocolo maestro vigente, la continuidad, el inventario oficial Android y el plan activo desde las fuentes oficiales; la ley Android-only y la congelación web siguen vigentes.
+- `main` estaba limpio en `0282c9c96a0be61d6209ed21a68f052381c93503`. El workflow Android oficial run `67` terminó `success` sobre `25f6caf373421d8fababb6875979282da6ef2bc8`, con typecheck, Expo prebuild, Gradle, bundle JS standalone y publicación del APK superados.
+- Las guardas no-QA de Android pasan: AUTH 13/13, DECK 13/13, BATTLE 15/15, REWARDS 12/12, PROFILE 13/13, TUTORIAL 14/14, STORE 11/11, ECONOMY 9/9, WORLD correcto, META 11/11 y telemetría 5/5 eventos canónicos.
+- VE-MOB-2 a VE-MOB-14 ya están implementadas y permanecen `IMPLEMENTED_UNVERIFIED` por la QA humana pendiente. VE-MOB-15 ADMIN permanece diferida por el inventario oficial; no se abre sin una decisión nueva del operador.
+- No se modifica `mobile/**` en esta reconciliación: no se crea un APK redundante ni se altera la evidencia del release 67. La web continúa sólo como referencia congelada.
+- El trabajo no-QA autorizado queda agotado para el port Android actual. No se declara `OPERATIONAL`, `PASS` ni `TIER1_READY`; la siguiente acción real es la QA del operador y, después, la selección de una unidad Tier 1 Android explícita.
+
 ## 2026-09-01 — VE-VIS-6 — ANDROID TELEMETRY — IMPLEMENTED_UNVERIFIED
 
 - La implementación pendiente del loop de juego se ejecutó exclusivamente en Android: mobile/lib/telemetry.ts emite las cinco claves canónicas con transporte autenticado y best-effort.
