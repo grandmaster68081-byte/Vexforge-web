@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { ActivityIndicator, Image, Pressable, RefreshControl, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@/components/ForgeIcon';
 import Animated, { FadeIn, FadeInDown } from 'react-native-reanimated';
@@ -115,9 +116,20 @@ export default function ForgeScreen() {
         showsVerticalScrollIndicator={false}
       >
       <Animated.View entering={FadeIn.duration(450)} style={[styles.hero, { borderBottomColor: colors.border }]}>
-        <Image source={{ uri: storageAsset('lobby/main.jpg') }} style={StyleSheet.absoluteFillObject} resizeMode="cover" />
-        <View style={[StyleSheet.absoluteFillObject, { backgroundColor: colors.ink, opacity: 0.78 }]} />
-        <View style={[StyleSheet.absoluteFillObject, styles.heroVignette, { backgroundColor: colors.ink }]} />
+         <Image source={{ uri: storageAsset('lobby/main.jpg') }} style={[StyleSheet.absoluteFillObject, styles.heroImage]} resizeMode="cover" />
+         <LinearGradient
+           colors={[`${colors.ink}18`, `${colors.ink}54`, `${colors.ink}C4`]}
+           locations={[0, 0.46, 1]}
+           style={StyleSheet.absoluteFillObject}
+         />
+         <LinearGradient
+           colors={[`${colors.accent}26`, 'transparent', `${colors.primary}18`]}
+           start={{ x: 0, y: 0 }}
+           end={{ x: 1, y: 1 }}
+           style={StyleSheet.absoluteFillObject}
+         />
+         <View style={[styles.heroGlow, { backgroundColor: `${colors.accent}20` }]} />
+         <View style={[styles.heroGlowRight, { backgroundColor: `${colors.primary}18` }]} />
         <View style={[styles.heroContent, { paddingTop: insets.top + 20 }]}>
           <View style={styles.header}>
             <View style={styles.brand}>
@@ -391,7 +403,9 @@ export default function ForgeScreen() {
 const styles = StyleSheet.create({
   screen: { flex: 1 },
   hero: { minHeight: 430, overflow: 'hidden', borderBottomWidth: 1 },
-  heroVignette: { opacity: 0.58 },
+  heroImage: { opacity: 0.98 },
+  heroGlow: { position: 'absolute', width: 260, height: 260, borderRadius: 130, top: 92, left: -170 },
+  heroGlowRight: { position: 'absolute', width: 300, height: 300, borderRadius: 150, top: 120, right: -190 },
   heroContent: { paddingHorizontal: 20, paddingBottom: 28 },
   header: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
   brand: { flexDirection: 'row', alignItems: 'center', gap: 13 },
