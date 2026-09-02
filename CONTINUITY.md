@@ -1,3 +1,12 @@
+## 2026-09-02 — PREFLIGHT CI — STORAGE RATE-LIMIT EVIDENCE
+
+- El preflight oficial confirmó que `main` sigue en el commit documental `6fcad64d769fda6b0250307e912aaa673e72eaec`; la ley Android-only y la congelación web siguen vigentes.
+- El workflow `verify` run `33672460981` terminó `failure` en sus intentos 1 y 2, exclusivamente en `verify:card-art`, después de que typecheck, build y las guardas anteriores pasaran.
+- Los fallos fueron respuestas `HTTP 429` para cartas distintas (`cards/uncommon_explorador_de_sombras.jpg` y `cards/uncommon_maestro_de_las_runas.jpg`), lo que demuestra rate limiting intermitente durante el recorrido masivo, no un objeto fijo ausente.
+- Supabase confirma 127 filas en `public.cards` y 127 objetos bajo `vexforge-assets/cards/`; ambas rutas afectadas existen. Las comprobaciones directas actuales de esas rutas responden `HTTP 200`.
+- Se relanzó el job fallido mediante la API oficial; el segundo intento repitió el patrón con otra ruta. No se modifica el verificador, la web, Storage ni los datos: la ley vigente no permite corregir CI/web durante Android-only.
+- El release Android `vexforge-android-build-67` y las guardas Android no-QA permanecen válidos. No se declara `OPERATIONAL`, `PASS` ni `TIER1_READY`.
+
 ## 2026-09-02 — PREFLIGHT + RECONCILIACIÓN ANDROID — NON-QA WORK COMPLETE
 
 - Se leyó el protocolo maestro vigente, la continuidad, el inventario oficial Android y el plan activo desde las fuentes oficiales; la ley Android-only y la congelación web siguen vigentes.
