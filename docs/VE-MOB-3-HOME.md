@@ -70,3 +70,23 @@ evento/temporada, carta destacada, actividad pública y acceso rápido a la aren
 - La unidad se reabre si falla el release, cambia el contrato de Home en
   Supabase, aparece una superficie con ruta muerta o se pierde la equivalencia
   visual/datos con la fuente web.
+## Orden de trabajo vigente — QA visual-first del dominio Forja
+
+**Decisión del operador:** el primer dominio de QA será **Forja**, representado por la superficie Android `VE-MOB-3 HOME` y las tres capturas de referencia entregadas para su lectura completa.
+
+La ejecución se divide en dos fases obligatorias y no se mezclan:
+
+1. **Fase VISUAL — reconstrucción de experiencia de juego.** Elevar la pantalla desde una presentación administrativa hacia un home de videojuego de cartas: hacer que la escena del Nexus tenga presencia y profundidad, mejorar la lectura del fondo oficial, reforzar la jerarquía tipográfica, enriquecer marcos, paneles, bordes, contraste, composición, estados y micro-motion, y conservar la identidad VEXFORGE. El fondo y cualquier elemento diegético deben proceder del manifiesto/Storage oficial; se reutilizan primero `mobile/constants/visual.ts`, `ScreenShell` y los componentes authored existentes.
+2. **Fase FUNCTIONAL — matriz de botones, enlaces y estados.** Después del pase visual y con las capturas adicionales del operador, revisar cada control visible del dominio Forja: cabecera, colección, arena, tutorial, forja/recursos, economía/mercado, mundo, batalla rápida, evento, carta destacada, misiones y navegación inferior. Cada control debe abrir una ruta existente, ejecutar una acción real o mostrar un estado explícito; ninguna interacción se considera correcta por cambiar sólo la apariencia.
+
+### Alcance visual de la Fase VISUAL
+
+- Escena principal: `CANONICAL_BACKGROUNDS.home` / `lobby/main.jpg`, con mayor visibilidad y capas de atmósfera sin esconder el contenido autoritativo.
+- Identidad: tipografía Cinzel/Rajdhani ya cargada, escala de títulos y etiquetas coherente, contraste suficiente y lenguaje de Forja reconocible.
+- Superficies: marcos y paneles con profundidad, separación entre escena y UI, jerarquía de acción clara y tarjetas tratadas como objetos del juego, no como filas administrativas.
+- Feedback: estados de carga, vacío, error, sincronización y `reduced-motion` deben conservarse y seguir siendo explícitos.
+- Límites: no se modifica la autoridad de Supabase, la economía, combate, recompensas, inventario, Auth ni contratos; no se usan emojis, placeholders ni arte genérico.
+
+### Gate de salida
+
+La Fase VISUAL no se declara cerrada sólo por compilar: debe alcanzar al menos Q4 en la revisión visual de superficie principal, conservar los gates de identidad, datos, mobile, accesibilidad, performance y reduced-motion, y producir evidencia reproducible. La Fase FUNCTIONAL requiere además la matriz de recorrido real y la QA manual del operador en el APK. Hasta entonces, `VE-MOB-3 HOME` permanece `IMPLEMENTED_UNVERIFIED` y no se declara `PASS`, `OPERATIONAL` ni `TIER1_READY`.

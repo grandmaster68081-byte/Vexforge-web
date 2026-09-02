@@ -1,5 +1,5 @@
 # VEXFORGE — Protocolo Maestro Universal v2
-**Última actualización:** 2026-08-31 — ley mobile-only/web-freeze adoptada | **Mantenido por:** Replit Agent
+**Última actualización:** 2026-09-02 — orden QA visual-first de VE-MOB-3 HOME / Forja adoptada | **Mantenido por:** Replit Agent
 **Documento clave en Supabase:** `vexforge_master_protocol_v2`
 
 ---
@@ -1382,3 +1382,19 @@ Cada sesión debe registrar que leyó esta enmienda, qué decisión derivada cre
 - La guarda web run 73 falló inicialmente por HTTP 429 transitorio al consultar dos objetos del manifiesto; el reintento oficial (attempt 2) terminó success y verificó 21/21 assets en Storage. No se sustituyó ningún asset.
 - Las unidades Android Social y Meta permanecen IMPLEMENTED_UNVERIFIED; no se declara OPERATIONAL, PASS ni TIER1_READY sin QA humana.
 
+
+---
+## ENMIENDA OPERATIVA — VE-MOB-3 HOME / FORJA — ORDEN QA VISUAL-FIRST
+**Fecha de incorporación:** 2026-09-02  
+**Estado:** OFICIAL — decisión del operador integrada en el protocolo maestro  
+**Unidad:** `VE-MOB-3 HOME` / dominio `Forja`
+
+El primer dominio de verificación QA se trabajará sobre la pantalla Forja completa, tomando como referencia las tres capturas entregadas por el operador. La secuencia obligatoria es:
+
+1. **VISUAL primero:** reconstruir la experiencia de la pantalla para que se sienta como el home de un videojuego de cartas y no como un panel administrativo. La escena del Nexus debe tener protagonismo, profundidad, atmósfera y legibilidad; la tipografía, los marcos, los bordes, los paneles, los estados y el motion deben formar un sistema visual VEXFORGE coherente.
+2. **FUNCTIONAL después:** cuando el operador entregue las capturas adicionales de comportamiento, levantar la matriz de todos los botones, enlaces, tabs, CTAs y estados visibles del dominio; corregir únicamente las interacciones reales que estén rotas y verificar navegación, sesión, carga, vacío, error y retorno.
+3. **No adelantar evidencia:** una mejora visual no demuestra una interacción funcional. Un botón no se considera correcto por verse activo, y una ruta no se considera correcta por existir: el recorrido debe ejecutarse con la sesión y los contratos reales.
+4. **Fuentes y límites:** el fondo de Forja consume `CANONICAL_BACKGROUNDS.home` (`lobby/main.jpg`) y los elementos visuales se resuelven desde el registro oficial. No se crean sustitutos genéricos ni lógica autoritativa en el cliente. Supabase, Auth, economía, combate, recompensas, inventario y contratos quedan intactos salvo necesidad Android trazable.
+5. **Gate:** la unidad continúa `IMPLEMENTED_UNVERIFIED` hasta tener la evidencia técnica correspondiente, el workflow/release Android correlativo y la QA manual del operador. No se declara `PASS`, `OPERATIONAL` ni `TIER1_READY` por inspección visual o compilación aislada.
+
+Esta orden es un desglose operativo de la Ley Game First y de la rúbrica de Design QA; no crea una fase paralela ni levanta la congelación web.

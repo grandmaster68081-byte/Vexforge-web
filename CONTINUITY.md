@@ -1,3 +1,13 @@
+## 2026-09-02 — VE-MOB-3 HOME / FORJA — QA VISUAL-FIRST ADOPTADA
+
+- Decisión explícita del operador: el primer dominio QA será Forja, correspondiente a `VE-MOB-3 HOME` y a las tres capturas de referencia de la pantalla completa.
+- Orden de trabajo inscrito: primero reconstrucción visual del home para alcanzar una experiencia de videojuego (escena, profundidad, tipografía, marcos, paneles, contraste, estados y motion); después matriz funcional de botones, enlaces, tabs y rutas con las capturas adicionales del operador.
+- La Fase VISUAL consume la escena canónica `lobby/main.jpg` mediante el registro móvil oficial y no autoriza emojis, placeholders, arte genérico ni lógica local autoritativa.
+- La Fase FUNCTIONAL verificará cada control visible y separará apariencia de comportamiento; una ruta o botón no se considera validado sólo por compilar o cambiar de pantalla.
+- El dominio permanece `IMPLEMENTED_UNVERIFIED`; no se declara `PASS`, `OPERATIONAL` ni `TIER1_READY`. La QA manual del operador y la evidencia del APK siguen siendo obligatorias.
+- Esta sesión actualiza el plan operativo y la primera capa visual Android sin tocar web, economía, combate, Auth, contratos ni datos autoritativos.
+
+---
 ## 2026-09-02 — PREFLIGHT CI — STORAGE RATE-LIMIT EVIDENCE
 
 - El preflight oficial confirmó que `main` sigue en el commit documental `6fcad64d769fda6b0250307e912aaa673e72eaec`; la ley Android-only y la congelación web siguen vigentes.

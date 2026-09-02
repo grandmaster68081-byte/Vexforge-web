@@ -6,13 +6,15 @@ import { Ionicons } from '@/components/ForgeIcon';
 import Animated, { FadeIn, FadeInDown } from 'react-native-reanimated';
 import { useColors } from '@/hooks/useColors';
 import { useGame } from '@/context/GameContext';
-import { loadDailyFeaturedCard, loadHomeMissions, loadHomeStats, loadRecentActivity, storageAsset, type ActivityItem, type DailyCard, type HomeMission, type HomeStats } from '@/lib/supabase';
+import { loadDailyFeaturedCard, loadHomeMissions, loadHomeStats, loadRecentActivity, type ActivityItem, type DailyCard, type HomeMission, type HomeStats } from '@/lib/supabase';
 import { ForgeMark } from '@/components/ForgeMark';
 import { ProgressBar } from '@/components/ProgressBar';
 import { useRouter } from 'expo-router';
 import { ForgeButton } from '@/components/ForgeButton';
 import { ForgeText } from '@/components/ForgeText';
 import { ScreenShell } from '@/components/ScreenShell';
+import { CANONICAL_BACKGROUNDS } from '@/constants/visual';
+import { typography } from '@/constants/typography';
 
 type HomeSnapshot = {
   stats: HomeStats | null;
@@ -116,20 +118,21 @@ export default function ForgeScreen() {
         showsVerticalScrollIndicator={false}
       >
       <Animated.View entering={FadeIn.duration(450)} style={[styles.hero, { borderBottomColor: colors.border }]}>
-         <Image source={{ uri: storageAsset('lobby/main.jpg') }} style={[StyleSheet.absoluteFillObject, styles.heroImage]} resizeMode="cover" />
+         <Image source={{ uri: CANONICAL_BACKGROUNDS.home }} style={[StyleSheet.absoluteFillObject, styles.heroImage]} resizeMode="cover" />
          <LinearGradient
-           colors={[`${colors.ink}18`, `${colors.ink}54`, `${colors.ink}C4`]}
+           colors={[`${colors.ink}10`, `${colors.ink}30`, `${colors.background}A8`]}
            locations={[0, 0.46, 1]}
            style={StyleSheet.absoluteFillObject}
          />
          <LinearGradient
-           colors={[`${colors.accent}26`, 'transparent', `${colors.primary}18`]}
+           colors={[`${colors.accent}38`, 'transparent', `${colors.primary}30`]}
            start={{ x: 0, y: 0 }}
            end={{ x: 1, y: 1 }}
            style={StyleSheet.absoluteFillObject}
          />
          <View style={[styles.heroGlow, { backgroundColor: `${colors.accent}20` }]} />
          <View style={[styles.heroGlowRight, { backgroundColor: `${colors.primary}18` }]} />
+        <Text pointerEvents="none" style={[styles.sceneWord, { color: `${colors.accent}12` }]}>FORJA</Text>
         <View style={[styles.heroContent, { paddingTop: insets.top + 20 }]}>
           <View style={styles.header}>
             <View style={styles.brand}>
@@ -143,6 +146,13 @@ export default function ForgeScreen() {
               <Ionicons name="notifications-outline" size={20} color={colors.foreground} />
               <View style={[styles.notificationDot, { backgroundColor: colors.accent }]} />
             </View>
+          </View>
+
+          <View style={styles.heroSignal}>
+            <View style={[styles.signalDot, { backgroundColor: colors.success }]} />
+            <Text style={[styles.signalText, { color: colors.success }]}>NEXUS ONLINE</Text>
+            <View style={[styles.signalRule, { backgroundColor: `${colors.accent}45` }]} />
+            <Text style={[styles.signalText, { color: colors.mutedForeground }]}>SEASON 01</Text>
           </View>
 
           <View style={styles.greeting}>
@@ -200,7 +210,7 @@ export default function ForgeScreen() {
                <Ionicons name="arrow-forward" size={15} color={colors.accent} />
              </Pressable>
 
-           <View style={styles.heroStats}>
+           <View style={[styles.heroStats, { borderTopColor: `${colors.accent}45` }]}>
             <View style={styles.heroStat}><Text style={[styles.heroStatValue, { color: colors.accent }]}>{home.stats?.total_cards ?? '—'}</Text><Text style={[styles.heroStatLabel, { color: colors.mutedForeground }]}>CARTAS</Text></View>
             <View style={styles.heroStat}><Text style={[styles.heroStatValue, { color: colors.accent }]}>{home.stats?.active_players ?? '—'}</Text><Text style={[styles.heroStatLabel, { color: colors.mutedForeground }]}>FORJADORES</Text></View>
             <View style={styles.heroStat}><Text style={[styles.heroStatValue, { color: colors.accent }]}>{home.stats?.total_battles ?? '—'}</Text><Text style={[styles.heroStatLabel, { color: colors.mutedForeground }]}>BATALLAS</Text></View>
@@ -402,32 +412,37 @@ export default function ForgeScreen() {
 
 const styles = StyleSheet.create({
   screen: { flex: 1 },
-  hero: { minHeight: 430, overflow: 'hidden', borderBottomWidth: 1 },
-  heroImage: { opacity: 0.98 },
-  heroGlow: { position: 'absolute', width: 260, height: 260, borderRadius: 130, top: 92, left: -170 },
-  heroGlowRight: { position: 'absolute', width: 300, height: 300, borderRadius: 150, top: 120, right: -190 },
-  heroContent: { paddingHorizontal: 20, paddingBottom: 28 },
+  hero: { minHeight: 486, overflow: 'hidden', borderBottomWidth: 1, borderTopWidth: 1 },
+  heroImage: { opacity: 1 },
+  heroGlow: { position: 'absolute', width: 300, height: 300, borderRadius: 150, top: 74, left: -184, opacity: 0.8 },
+  heroGlowRight: { position: 'absolute', width: 360, height: 360, borderRadius: 180, top: 150, right: -218, opacity: 0.82 },
+  heroContent: { paddingHorizontal: 20, paddingBottom: 30 },
+  sceneWord: { position: 'absolute', right: -20, top: 168, fontFamily: typography.display, fontSize: 84, letterSpacing: 8, transform: [{ rotate: '-12deg' }] },
   header: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
+  heroSignal: { flexDirection: 'row', alignItems: 'center', gap: 8, marginTop: 24 },
+  signalDot: { width: 7, height: 7, borderRadius: 4 },
+  signalText: { fontFamily: typography.bodyBold, fontSize: 9, letterSpacing: 1.2 },
+  signalRule: { flex: 1, height: 1, marginHorizontal: 4 },
   brand: { flexDirection: 'row', alignItems: 'center', gap: 13 },
-  kicker: { fontSize: 15, fontWeight: '700', letterSpacing: 3 },
-  subtitle: { fontSize: 9, fontWeight: '600', letterSpacing: 2, marginTop: 3 },
+  kicker: { fontFamily: typography.bodyBold, fontSize: 15, fontWeight: '700', letterSpacing: 3 },
+  subtitle: { fontFamily: typography.bodySemiBold, fontSize: 9, fontWeight: '600', letterSpacing: 2, marginTop: 3 },
   iconButton: { width: 42, height: 42, borderWidth: 1, borderRadius: 14, alignItems: 'center', justifyContent: 'center' },
   notificationDot: { width: 6, height: 6, borderRadius: 3, position: 'absolute', top: 9, right: 10 },
   greeting: { marginTop: 46, marginBottom: 22 },
-  eyebrow: { fontSize: 10, letterSpacing: 1.6, fontWeight: '700' },
-  title: { fontSize: 38, lineHeight: 43, fontWeight: '700', marginTop: 12 },
-  heroBody: { fontSize: 14, lineHeight: 21, maxWidth: 300, marginTop: 13 },
+  eyebrow: { fontFamily: typography.bodyBold, fontSize: 10, letterSpacing: 1.6, fontWeight: '700' },
+  title: { fontFamily: typography.display, fontSize: 40, lineHeight: 45, fontWeight: '700', letterSpacing: 0.3, marginTop: 12 },
+  heroBody: { fontFamily: typography.body, fontSize: 15, lineHeight: 22, maxWidth: 310, marginTop: 14 },
   actionRow: { flexDirection: 'row', gap: 10 },
   actionButton: { minHeight: 42, borderRadius: 12, borderWidth: 1, paddingHorizontal: 14, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8, flex: 1 },
   actionText: { fontSize: 10, fontWeight: '800', letterSpacing: 0.7 },
-   heroStats: { flexDirection: 'row', flexWrap: 'wrap', columnGap: 22, rowGap: 12, marginTop: 28 },
+   heroStats: { flexDirection: 'row', flexWrap: 'wrap', columnGap: 22, rowGap: 12, marginTop: 28, paddingTop: 17, borderTopWidth: 1 },
    heroStat: { alignItems: 'flex-start', minWidth: 62 },
-  heroStatValue: { fontSize: 21, fontWeight: '800' },
-  heroStatLabel: { fontSize: 9, letterSpacing: 1.2, fontWeight: '700', marginTop: 3 },
+  heroStatValue: { fontFamily: typography.bodyBold, fontSize: 23, fontWeight: '800' },
+  heroStatLabel: { fontFamily: typography.bodyBold, fontSize: 9, letterSpacing: 1.2, fontWeight: '700', marginTop: 4 },
    tutorialLink: { alignSelf: 'flex-start', flexDirection: 'row', alignItems: 'center', gap: 8, borderWidth: 1, borderRadius: 10, paddingHorizontal: 11, paddingVertical: 8, marginTop: 12 },
    tutorialLinkText: { fontSize: 9, fontWeight: '800', letterSpacing: 0.8 },
   content: { padding: 20, gap: 24 },
-  connectionCard: { flexDirection: 'row', alignItems: 'center', borderWidth: 1, borderRadius: 16, padding: 13 },
+  connectionCard: { flexDirection: 'row', alignItems: 'center', borderWidth: 1, borderRadius: 18, padding: 14, shadowColor: '#000000', shadowOpacity: 0.24, shadowRadius: 14, shadowOffset: { width: 0, height: 8 }, elevation: 5 },
   connectionDot: { width: 8, height: 8, borderRadius: 4, marginRight: 11 },
   connectionCopy: { flex: 1 },
   connectionTitle: { fontSize: 10, fontWeight: '800', letterSpacing: 1.1 },
@@ -435,13 +450,13 @@ const styles = StyleSheet.create({
   errorCard: { flexDirection: 'row', alignItems: 'center', gap: 10, borderWidth: 1, borderRadius: 14, padding: 13 },
   errorText: { flex: 1, fontSize: 12, lineHeight: 17 },
   retryText: { fontSize: 10, fontWeight: '800', letterSpacing: 0.6 },
-  resourceCard: { borderWidth: 1, borderRadius: 22, padding: 19, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
+  resourceCard: { borderWidth: 1, borderRadius: 24, padding: 20, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', shadowColor: '#000000', shadowOpacity: 0.28, shadowRadius: 18, shadowOffset: { width: 0, height: 10 }, elevation: 6 },
   balance: { fontSize: 32, fontWeight: '700', letterSpacing: 0.5, marginTop: 3 },
   resourceLabel: { fontSize: 9, letterSpacing: 1.5, fontWeight: '700', marginTop: 4 },
   resourceSide: { alignItems: 'flex-end' },
   resourcePill: { flexDirection: 'row', alignItems: 'center', gap: 7, borderRadius: 12, paddingHorizontal: 11, paddingVertical: 8 },
   pillText: { fontSize: 16, fontWeight: '700' },
-  eventCard: { borderWidth: 1, borderRadius: 18, padding: 16 },
+  eventCard: { borderWidth: 1, borderRadius: 21, padding: 17, shadowColor: '#000000', shadowOpacity: 0.24, shadowRadius: 16, shadowOffset: { width: 0, height: 9 }, elevation: 5 },
   eventHeader: { flexDirection: 'row', gap: 12 },
   eventCopy: { flex: 1 },
   eventTitle: { fontSize: 19, fontWeight: '700', marginTop: 8, marginBottom: 5 },
@@ -451,7 +466,7 @@ const styles = StyleSheet.create({
   timerLabel: { fontSize: 9, letterSpacing: 1.1, fontWeight: '700' },
   timer: { fontSize: 15, fontWeight: '800', marginTop: 7 },
   progressHeader: { flexDirection: 'row', justifyContent: 'space-between', marginTop: 16, marginBottom: 7 },
-  dailyCard: { flexDirection: 'row', gap: 15, borderWidth: 1, borderRadius: 18, padding: 14, marginTop: 12 },
+  dailyCard: { flexDirection: 'row', gap: 15, borderWidth: 1, borderRadius: 21, padding: 15, marginTop: 12, shadowColor: '#000000', shadowOpacity: 0.24, shadowRadius: 16, shadowOffset: { width: 0, height: 9 }, elevation: 5 },
   cardImageFrame: { width: 92, height: 124, borderRadius: 10, borderWidth: 1, overflow: 'hidden', alignItems: 'center', justifyContent: 'center' },
   cardImage: { width: '100%', height: '100%' },
   dailyCopy: { flex: 1, justifyContent: 'space-between', gap: 7 },
@@ -469,8 +484,8 @@ const styles = StyleSheet.create({
   missionRow: { flexDirection: 'row', alignItems: 'center', gap: 12, borderWidth: 1, borderRadius: 14, padding: 12, marginTop: 10 },
   missionIcon: { width: 40, height: 40, borderRadius: 12, alignItems: 'center', justifyContent: 'center' },
   missionCopy: { flex: 1 },
-  cardTitle: { fontSize: 14, fontWeight: '700' },
-  cardBody: { fontSize: 11, lineHeight: 16, marginTop: 3 },
+  cardTitle: { fontFamily: typography.bodyBold, fontSize: 14, fontWeight: '700' },
+  cardBody: { fontFamily: typography.body, fontSize: 12, lineHeight: 17, marginTop: 3 },
   leaderRow: { flexDirection: 'row', alignItems: 'center', borderWidth: 1, borderRadius: 14, padding: 13, marginTop: 10 },
   leaderRank: { width: 35, fontSize: 15, fontWeight: '800' },
   leaderCopy: { flex: 1 },
@@ -494,7 +509,7 @@ const styles = StyleSheet.create({
    emptyCard: { borderWidth: 1, borderRadius: 16, padding: 16, gap: 6 },
    emptyTitle: { fontSize: 16, fontWeight: '700', marginTop: 3 },
    featureGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 10, marginTop: 12 },
-   featureCard: { width: '48%', minHeight: 138, borderWidth: 1, borderRadius: 16, padding: 13 },
+   featureCard: { width: '48%', minHeight: 142, borderWidth: 1, borderRadius: 19, padding: 14, shadowColor: '#000000', shadowOpacity: 0.2, shadowRadius: 12, shadowOffset: { width: 0, height: 7 }, elevation: 4 },
    featureIcon: { width: 36, height: 36, borderRadius: 11, alignItems: 'center', justifyContent: 'center', marginBottom: 12 },
    featureTitle: { fontSize: 13, fontWeight: '800' },
    featureDescription: { fontSize: 11, lineHeight: 16, marginTop: 5 },

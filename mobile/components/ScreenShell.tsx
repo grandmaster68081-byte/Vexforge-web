@@ -66,12 +66,12 @@ export function ScreenShell({ surface = 'home', children, style, ...props }: Vie
     <View {...props} style={[styles.root, { backgroundColor: colors.background, paddingTop: webTopInset }, style]}>
       <Image source={{ uri: CANONICAL_BACKGROUNDS[surface] }} style={[StyleSheet.absoluteFillObject, styles.backgroundImage]} resizeMode="cover" />
       <LinearGradient
-        colors={[`${colors.ink}30`, `${colors.ink}64`, `${colors.background}D8`]}
+        colors={[`${colors.ink}08`, `${colors.ink}20`, `${colors.background}9C`]}
         locations={[0, 0.48, 1]}
         style={StyleSheet.absoluteFillObject}
       />
       <LinearGradient
-        colors={[`${atmosphereColor}32`, 'transparent', `${colors.primary}1E`]}
+        colors={[`${atmosphereColor}48`, 'transparent', `${colors.primary}32`]}
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 1 }}
         style={StyleSheet.absoluteFillObject}
@@ -101,8 +101,8 @@ export function ScreenShell({ surface = 'home', children, style, ...props }: Vie
 const styles = StyleSheet.create({
   root: { flex: 1, overflow: 'hidden' },
   content: { flex: 1 },
-  backgroundImage: { opacity: 0.88 },
-  ambientGlow: { position: 'absolute', width: 260, height: 260, borderRadius: 130 },
+  backgroundImage: { opacity: 0.98 },
+  ambientGlow: { position: 'absolute', width: 300, height: 300, borderRadius: 150 },
   ambientGlowLeft: { top: 96, left: -174 },
   ambientGlowRight: { top: 300, right: -188 },
   orbit: {
@@ -115,5 +115,5 @@ const styles = StyleSheet.create({
     right: -250,
     transform: [{ rotate: '18deg' }],
   },
-  watermark: { position: 'absolute', width: 180, height: 180, top: 18, right: -46, opacity: 0.14 },
+  watermark: { position: 'absolute', width: 220, height: 220, top: 12, right: -54, opacity: 0.2 },
 });
