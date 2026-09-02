@@ -220,15 +220,6 @@ export default function ForgeScreen() {
       </Animated.View>
 
       <View style={styles.content}>
-        <View style={[styles.connectionCard, { backgroundColor: colors.panel, borderColor: colors.border }]}>
-          <View style={[styles.connectionDot, { backgroundColor: syncState === 'connected' ? colors.success : syncState === 'loading' ? colors.accent : colors.danger }]} />
-          <View style={styles.connectionCopy}>
-            <Text style={[styles.connectionTitle, { color: colors.foreground }]}>NEXUS {syncState === 'connected' ? 'CONECTADO' : syncState === 'loading' ? 'SINCRONIZANDO' : 'SIN CONEXIÓN'}</Text>
-            <Text style={[styles.connectionBody, { color: colors.mutedForeground }]}>{syncState === 'connected' ? 'Datos vivos de Supabase oficial' : 'Desliza para volver a intentar'}</Text>
-          </View>
-          <Ionicons name={syncState === 'connected' ? 'checkmark-circle-outline' : 'cloud-outline'} size={21} color={syncState === 'connected' ? colors.success : colors.mutedForeground} />
-        </View>
-
         {homeError ? (
           <View style={[styles.errorCard, { backgroundColor: colors.panel, borderColor: colors.danger }]}>
             <Ionicons name="alert-circle-outline" size={20} color={colors.danger} />
@@ -255,6 +246,15 @@ export default function ForgeScreen() {
             <Text style={[styles.quickBattleButtonText, { color: colors.primaryForeground }]}>JUGAR</Text>
           </Pressable>
         </Animated.View>
+
+        <View style={[styles.connectionCard, { backgroundColor: colors.panel, borderColor: colors.border }]}>
+          <View style={[styles.connectionDot, { backgroundColor: syncState === 'connected' ? colors.success : syncState === 'loading' ? colors.accent : colors.danger }]} />
+          <View style={styles.connectionCopy}>
+            <Text style={[styles.connectionTitle, { color: colors.foreground }]}>NEXUS {syncState === 'connected' ? 'CONECTADO' : syncState === 'loading' ? 'SINCRONIZANDO' : 'SIN CONEXIÓN'}</Text>
+            <Text style={[styles.connectionBody, { color: colors.mutedForeground }]}>{syncState === 'connected' ? 'Datos vivos de Supabase oficial' : 'Desliza para volver a intentar'}</Text>
+          </View>
+          <Ionicons name={syncState === 'connected' ? 'checkmark-circle-outline' : 'cloud-outline'} size={21} color={syncState === 'connected' ? colors.success : colors.mutedForeground} />
+        </View>
 
         <Animated.View entering={FadeInDown.delay(80).duration(450)} style={[styles.resourceCard, { backgroundColor: colors.panelStrong, borderColor: colors.border }]}>
           <View>
@@ -412,11 +412,11 @@ export default function ForgeScreen() {
 
 const styles = StyleSheet.create({
   screen: { flex: 1 },
-  hero: { minHeight: 486, overflow: 'hidden', borderBottomWidth: 1, borderTopWidth: 1 },
-  heroImage: { opacity: 1 },
+  hero: { minHeight: 486, overflow: 'hidden', borderBottomWidth: 1, borderTopWidth: 0, shadowColor: '#000000', shadowOpacity: 0.35, shadowRadius: 24, shadowOffset: { width: 0, height: 14 }, elevation: 8 },
+  heroImage: { opacity: 0.72 },
   heroGlow: { position: 'absolute', width: 300, height: 300, borderRadius: 150, top: 74, left: -184, opacity: 0.8 },
   heroGlowRight: { position: 'absolute', width: 360, height: 360, borderRadius: 180, top: 150, right: -218, opacity: 0.82 },
-  heroContent: { paddingHorizontal: 20, paddingBottom: 30 },
+  heroContent: { paddingHorizontal: 20, paddingBottom: 34 },
   sceneWord: { position: 'absolute', right: -20, top: 168, fontFamily: typography.display, fontSize: 84, letterSpacing: 8, transform: [{ rotate: '-12deg' }] },
   header: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
   heroSignal: { flexDirection: 'row', alignItems: 'center', gap: 8, marginTop: 24 },
@@ -428,9 +428,9 @@ const styles = StyleSheet.create({
   subtitle: { fontFamily: typography.bodySemiBold, fontSize: 9, fontWeight: '600', letterSpacing: 2, marginTop: 3 },
   iconButton: { width: 42, height: 42, borderWidth: 1, borderRadius: 14, alignItems: 'center', justifyContent: 'center' },
   notificationDot: { width: 6, height: 6, borderRadius: 3, position: 'absolute', top: 9, right: 10 },
-  greeting: { marginTop: 46, marginBottom: 22 },
+  greeting: { marginTop: 40, marginBottom: 24 },
   eyebrow: { fontFamily: typography.bodyBold, fontSize: 10, letterSpacing: 1.6, fontWeight: '700' },
-  title: { fontFamily: typography.display, fontSize: 40, lineHeight: 45, fontWeight: '700', letterSpacing: 0.3, marginTop: 12 },
+  title: { fontFamily: typography.display, fontSize: 42, lineHeight: 47, fontWeight: '700', letterSpacing: 0.3, marginTop: 12, textShadowColor: 'rgba(0,0,0,0.42)', textShadowOffset: { width: 0, height: 2 }, textShadowRadius: 12 },
   heroBody: { fontFamily: typography.body, fontSize: 15, lineHeight: 22, maxWidth: 310, marginTop: 14 },
   actionRow: { flexDirection: 'row', gap: 10 },
   actionButton: { minHeight: 42, borderRadius: 12, borderWidth: 1, paddingHorizontal: 14, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8, flex: 1 },
@@ -441,8 +441,8 @@ const styles = StyleSheet.create({
   heroStatLabel: { fontFamily: typography.bodyBold, fontSize: 9, letterSpacing: 1.2, fontWeight: '700', marginTop: 4 },
    tutorialLink: { alignSelf: 'flex-start', flexDirection: 'row', alignItems: 'center', gap: 8, borderWidth: 1, borderRadius: 10, paddingHorizontal: 11, paddingVertical: 8, marginTop: 12 },
    tutorialLinkText: { fontSize: 9, fontWeight: '800', letterSpacing: 0.8 },
-  content: { padding: 20, gap: 24 },
-  connectionCard: { flexDirection: 'row', alignItems: 'center', borderWidth: 1, borderRadius: 18, padding: 14, shadowColor: '#000000', shadowOpacity: 0.24, shadowRadius: 14, shadowOffset: { width: 0, height: 8 }, elevation: 5 },
+  content: { padding: 20, paddingTop: 22, gap: 27 },
+  connectionCard: { flexDirection: 'row', alignItems: 'center', borderWidth: 1, borderRadius: 16, padding: 14, shadowColor: '#000000', shadowOpacity: 0.32, shadowRadius: 18, shadowOffset: { width: 0, height: 10 }, elevation: 6 },
   connectionDot: { width: 8, height: 8, borderRadius: 4, marginRight: 11 },
   connectionCopy: { flex: 1 },
   connectionTitle: { fontSize: 10, fontWeight: '800', letterSpacing: 1.1 },
@@ -450,13 +450,13 @@ const styles = StyleSheet.create({
   errorCard: { flexDirection: 'row', alignItems: 'center', gap: 10, borderWidth: 1, borderRadius: 14, padding: 13 },
   errorText: { flex: 1, fontSize: 12, lineHeight: 17 },
   retryText: { fontSize: 10, fontWeight: '800', letterSpacing: 0.6 },
-  resourceCard: { borderWidth: 1, borderRadius: 24, padding: 20, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', shadowColor: '#000000', shadowOpacity: 0.28, shadowRadius: 18, shadowOffset: { width: 0, height: 10 }, elevation: 6 },
+  resourceCard: { borderWidth: 1, borderRadius: 20, padding: 20, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', shadowColor: '#000000', shadowOpacity: 0.34, shadowRadius: 20, shadowOffset: { width: 0, height: 11 }, elevation: 7 },
   balance: { fontSize: 32, fontWeight: '700', letterSpacing: 0.5, marginTop: 3 },
   resourceLabel: { fontSize: 9, letterSpacing: 1.5, fontWeight: '700', marginTop: 4 },
   resourceSide: { alignItems: 'flex-end' },
   resourcePill: { flexDirection: 'row', alignItems: 'center', gap: 7, borderRadius: 12, paddingHorizontal: 11, paddingVertical: 8 },
   pillText: { fontSize: 16, fontWeight: '700' },
-  eventCard: { borderWidth: 1, borderRadius: 21, padding: 17, shadowColor: '#000000', shadowOpacity: 0.24, shadowRadius: 16, shadowOffset: { width: 0, height: 9 }, elevation: 5 },
+  eventCard: { borderWidth: 1, borderRadius: 18, padding: 18, shadowColor: '#000000', shadowOpacity: 0.32, shadowRadius: 20, shadowOffset: { width: 0, height: 10 }, elevation: 7 },
   eventHeader: { flexDirection: 'row', gap: 12 },
   eventCopy: { flex: 1 },
   eventTitle: { fontSize: 19, fontWeight: '700', marginTop: 8, marginBottom: 5 },
@@ -466,7 +466,7 @@ const styles = StyleSheet.create({
   timerLabel: { fontSize: 9, letterSpacing: 1.1, fontWeight: '700' },
   timer: { fontSize: 15, fontWeight: '800', marginTop: 7 },
   progressHeader: { flexDirection: 'row', justifyContent: 'space-between', marginTop: 16, marginBottom: 7 },
-  dailyCard: { flexDirection: 'row', gap: 15, borderWidth: 1, borderRadius: 21, padding: 15, marginTop: 12, shadowColor: '#000000', shadowOpacity: 0.24, shadowRadius: 16, shadowOffset: { width: 0, height: 9 }, elevation: 5 },
+  dailyCard: { flexDirection: 'row', gap: 15, borderWidth: 1, borderRadius: 18, padding: 15, marginTop: 12, shadowColor: '#000000', shadowOpacity: 0.32, shadowRadius: 20, shadowOffset: { width: 0, height: 10 }, elevation: 7 },
   cardImageFrame: { width: 92, height: 124, borderRadius: 10, borderWidth: 1, overflow: 'hidden', alignItems: 'center', justifyContent: 'center' },
   cardImage: { width: '100%', height: '100%' },
   dailyCopy: { flex: 1, justifyContent: 'space-between', gap: 7 },
@@ -481,7 +481,7 @@ const styles = StyleSheet.create({
   stateCard: { width: '48%', minHeight: 94, borderWidth: 1, borderRadius: 14, padding: 12 },
   stateLabel: { fontSize: 9, letterSpacing: 1.1, fontWeight: '700', marginTop: 8 },
   stateValue: { fontSize: 15, fontWeight: '700', marginTop: 4 },
-  missionRow: { flexDirection: 'row', alignItems: 'center', gap: 12, borderWidth: 1, borderRadius: 14, padding: 12, marginTop: 10 },
+  missionRow: { flexDirection: 'row', alignItems: 'center', gap: 12, borderWidth: 1, borderRadius: 16, padding: 13, marginTop: 10, shadowColor: '#000000', shadowOpacity: 0.25, shadowRadius: 14, shadowOffset: { width: 0, height: 7 }, elevation: 4 },
   missionIcon: { width: 40, height: 40, borderRadius: 12, alignItems: 'center', justifyContent: 'center' },
   missionCopy: { flex: 1 },
   cardTitle: { fontFamily: typography.bodyBold, fontSize: 14, fontWeight: '700' },
@@ -494,7 +494,7 @@ const styles = StyleSheet.create({
   activityRow: { flexDirection: 'row', alignItems: 'center', gap: 9, paddingHorizontal: 13, paddingVertical: 12 },
   activityText: { flex: 1, fontSize: 11 },
   activityTime: { fontSize: 9 },
-   quickBattle: { borderWidth: 1, borderRadius: 18, padding: 14, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 12 },
+   quickBattle: { borderWidth: 1, borderRadius: 16, padding: 15, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 12, shadowColor: '#000000', shadowOpacity: 0.3, shadowRadius: 16, shadowOffset: { width: 0, height: 8 }, elevation: 6 },
    quickBattleCopy: { flex: 1, flexDirection: 'row', alignItems: 'center', gap: 11 },
    quickBattleText: { flex: 1 },
    quickBattleTitle: { fontSize: 11, fontWeight: '800', letterSpacing: 0.7 },
@@ -509,7 +509,7 @@ const styles = StyleSheet.create({
    emptyCard: { borderWidth: 1, borderRadius: 16, padding: 16, gap: 6 },
    emptyTitle: { fontSize: 16, fontWeight: '700', marginTop: 3 },
    featureGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 10, marginTop: 12 },
-   featureCard: { width: '48%', minHeight: 142, borderWidth: 1, borderRadius: 19, padding: 14, shadowColor: '#000000', shadowOpacity: 0.2, shadowRadius: 12, shadowOffset: { width: 0, height: 7 }, elevation: 4 },
+   featureCard: { width: '48%', minHeight: 148, borderWidth: 1, borderRadius: 17, padding: 14, shadowColor: '#000000', shadowOpacity: 0.28, shadowRadius: 16, shadowOffset: { width: 0, height: 8 }, elevation: 5 },
    featureIcon: { width: 36, height: 36, borderRadius: 11, alignItems: 'center', justifyContent: 'center', marginBottom: 12 },
    featureTitle: { fontSize: 13, fontWeight: '800' },
    featureDescription: { fontSize: 11, lineHeight: 16, marginTop: 5 },

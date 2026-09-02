@@ -1,3 +1,12 @@
+## 2026-09-02 — VE-MOB-3 HOME / FORJA — CAPA VISUAL IMPLEMENTADA
+
+- La fuente remota de `main` y los consumidores Android se reconciliaron por GitHub REST HTTPS; no se usó Git como transporte ni se modificó la web congelada.
+- Se implementó el pase visual acotado en `mobile/app/(tabs)/index.tsx` y `mobile/components/ScreenShell.tsx`: Batalla rápida como primera llamada del home, paneles con profundidad y separación de capas, escena `lobby/main.jpg` con contraste cinematográfico y reporte explícito si falla el arte oficial.
+- No se alteraron Supabase, Auth, economía, combate, recompensas, inventario, navegación, contratos ni datos autoritativos; no se añadieron assets ni placeholders genéricos.
+- Evidencia local: `verify:telemetry` pasa 5/5 eventos canónicos; el parser TSX acepta los dos archivos modificados. `npm ci` no pudo iniciar el typecheck porque el firewall de paquetes devolvió HTTP 404 para `npm-package-arg@11.0.3`, sin modificar dependencias ni lockfile.
+- Estado: `IMPLEMENTED_UNVERIFIED`. No se declara `PASS`, `OPERATIONAL` ni `TIER1_READY`; queda pendiente el workflow Android oficial, el release correlativo y la QA humana visual.
+
+---
 ## 2026-09-02 — VE-MOB-3 HOME / FORJA — QA VISUAL-FIRST ADOPTADA
 
 - Decisión explícita del operador: el primer dominio QA será Forja, correspondiente a `VE-MOB-3 HOME` y a las tres capturas de referencia de la pantalla completa.
