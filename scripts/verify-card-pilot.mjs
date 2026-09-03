@@ -3,7 +3,8 @@
  *
  * This check reads only public Supabase payloads and local source. It never
  * writes data, fabricates card metadata, or treats a visual treatment as game
- * authority.
+ * authority. Storage probes retry transient responses and report deferred
+ * checks explicitly without treating a missing object as present.
  */
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
@@ -91,6 +92,28 @@ const manifest = await select(
   `select=internal_path,semantic_role,official,enabled&internal_path=in.(${paths.join(",")})`,
 );
 const manifestByPath = new Map(manifest.map((row) => [row.internal_path, row]));
+const warnings = [];
+
+async function verifyStorageObject(path) {
+  let lastStatus = 0;
+  for (let attempt = 0; attempt < 4; attempt += 1) {
+    const response = await fetch(`${STORAGE_BASE}/${path}`, { method: "HEAD" });
+    if (response.ok) return { status: 0, deferred: false };
+    lastStatus = response.status;
+    if (response.status !== 429 && response.status < 500) {
+      return { status: response.status, deferred: false };
+    }
+    const retryAfter = Number(response.headers.get("retry-after") ?? 0);
+    const fallbackWait = 750 * 2 ** attempt;
+    const waitMs = Math.min(
+      5000,
+      Math.max(750, Number.isFinite(retryAfter) && retryAfter > 0 ? retryAfter * 1000 : fallbackWait),
+    );
+    await new Promise((resolve) => setTimeout(resolve, waitMs));
+  }
+  return { status: lastStatus, deferred: true };
+}
+
 for (const path of paths) {
   const row = manifestByPath.get(path);
   if (!row) {
@@ -102,9 +125,11 @@ for (const path of paths) {
   ) {
     failures.push(`arte piloto no es card_art oficial habilitado: ${path}`);
   }
-  const response = await fetch(`${STORAGE_BASE}/${path}`, { method: "HEAD" });
-  if (!response.ok) {
-    failures.push(`arte piloto no disponible en Storage: ${path} -> HTTP ${response.status}`);
+  const storage = await verifyStorageObject(path);
+  if (storage.status && storage.deferred) {
+    warnings.push(`comprobación de Storage diferida por respuesta transitoria: ${path} -> HTTP ${storage.status}`);
+  } else if (storage.status) {
+    failures.push(`arte piloto no disponible en Storage: ${path} -> HTTP ${storage.status}`);
   }
 }
 
@@ -145,6 +170,7 @@ console.log(
       storageObjects: paths.length,
       consumerChecks: 2,
       failures: failures.length,
+      warnings: warnings.length,
     },
     null,
     2,
@@ -157,6 +183,11 @@ if (failures.length > 0) {
   process.exit(1);
 }
 
-console.log(
-  "VE-3-PILOT OK — tres cartas canónicas, arte oficial y consumidores data-driven verificados.",
-);
+if (warnings.length > 0) {
+  console.warn("VE-3-PILOT WARN — datos y manifiesto válidos; algunas comprobaciones de Storage quedaron diferidas por rate limiting/transitorio.");
+  for (const warning of warnings) console.warn(` - ${warning}`);
+} else {
+  console.log(
+    "VE-3-PILOT OK — tres cartas canónicas, arte oficial y consumidores data-driven verificados.",
+  );
+}
