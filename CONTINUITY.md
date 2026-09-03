@@ -1184,3 +1184,13 @@
 - Se publicó `docs/VE-UI-TIER1-T0-RECONCILIATION.md` con hechos, criterios aún bloqueantes, matriz de brechas y orden de ejecución. El baseline confirma que el vertical slice y el contrato selección → reveal → inspector → estadísticas → retorno de carta siguen siendo trabajo de implementación, no evidencia existente.
 - El lockfile Android no contiene URLs del firewall. La instalación local no llegó a typecheck por HTTP 404 del firewall al resolver `npm-package-arg@11.0.3`; se conserva como bloqueo del runner, sin modificar lockfile ni inventar resultado.
 - El plan queda listo para su primera ejecución de producto: `VE-MOB-3-HOME-SCENE`, seguido por HERO/ACTION/CARD/PROGRESS/STATES. No se declara `PASS`, `OPERATIONAL` ni `TIER1_READY`.
+
+---
+## 2026-09-03 — VE-MOB-3-HOME-SCENE — IMPLEMENTED_UNVERIFIED
+
+- Se publicó la primera ejecución de producto del plan Android Tier 1 en `main`: `VE-MOB-3-HOME-SCENE`.
+- La Home usa la escena oficial de `lobby/main.jpg` como hero único; `ScreenShell` admite modo `hero` para evitar doble fondo. Se añadió composición por planos, CTA primaria `ENTRAR A LA ARENA`, CTA secundaria `MI COLECCIÓN`, estado visible de carga/error de escena y carta del día como objeto interactivo en primer foco.
+- La carta conserva dato vivo de Supabase y sólo permite continuar a la colección; si falta el arte, muestra `ARTE PENDIENTE` en vez de inventar un sustituto. Si no hay carta, muestra estado vacío explícito.
+- Verificación local: `npm run typecheck`, `npm run verify:telemetry` y `npx expo export --platform android` pasaron. El APK oficial build 72 pasó `assembleRelease`, verificación de bundle embebido y publicación como `vexforge-android-build-72`.
+- `verify` run 137 quedó `failure` en `VE-3-PILOT` porque Storage respondió HTTP 429 para `cards/IMG_20260606_012328_631.jpg`; las etapas de instalación, typecheck y todas las guardas anteriores pasaron. Esto no se atribuye al cambio Home.
+- Estado del paquete: `IMPLEMENTED_UNVERIFIED`, pendiente de QA humana en APK oficial. No se declara `PASS`, `OPERATIONAL` ni `TIER1_READY`.
