@@ -1194,3 +1194,13 @@
 - Verificación local: `npm run typecheck`, `npm run verify:telemetry` y `npx expo export --platform android` pasaron. El APK oficial build 72 pasó `assembleRelease`, verificación de bundle embebido y publicación como `vexforge-android-build-72`.
 - `verify` run 137 quedó `failure` en `VE-3-PILOT` porque Storage respondió HTTP 429 para `cards/IMG_20260606_012328_631.jpg`; las etapas de instalación, typecheck y todas las guardas anteriores pasaron. Esto no se atribuye al cambio Home.
 - Estado del paquete: `IMPLEMENTED_UNVERIFIED`, pendiente de QA humana en APK oficial. No se declara `PASS`, `OPERATIONAL` ni `TIER1_READY`.
+
+---
+## 2026-09-03 — FINAL TIER 1 RECONCILIATION — CLOSED WITH LIMITATIONS
+
+- Se revisaron las últimas secciones de `CONTINUITY.md`, `VEXFORGE_PROTOCOL_V2.md`, T0, `VE-MOB-3-HOME-SCENE`, el APK gate y las guardas de arte. El protocolo activo de Supabase sigue siendo `v2.10-android-visual-first-execution-plan` con `149893` bytes; no hay discrepancia normativa con `main`.
+- Se corrigió una discrepancia real de verificación: `scripts/verify-card-pilot.mjs` ahora reintenta respuestas transitorias 429/5xx con backoff y las reporta como comprobaciones diferidas; 404, carta ausente/inactiva, campos canónicos faltantes, arte no inscrito o mismatch de manifiesto siguen siendo fallos bloqueantes. Una carta ausente no se convierte en PASS por este cambio.
+- El workflow `verify` run 139 terminó `success` sobre `17b49986130eef3691296b13ebd182f0e25fca95`; `VE-3-PILOT` terminó con `failures: 0, warnings: 0` y `VE-10` confirmó 127 cartas, 127 artes y 127 consumos únicos.
+- La referencia `3cc4a88dfa507ef76119ad1bb3eccc6378bb2b76` observada en el log no es un commit de `main`: es el commit de la imagen del runner GitHub Actions. El checkout de código corresponde al `head_sha` del run (`17b4998`).
+- El APK oficial build 72 continúa correlacionado con el commit Android `a7ff094d0c42e13f9547c2529b5c457ccac8b2da`, pasó `assembleRelease`, bundle JS embebido y publicación del release `vexforge-android-build-72`.
+- Estado final de esta sección: Home Scene y la guardia de piloto quedan `IMPLEMENTED_UNVERIFIED`; el APK es entregable, pero la instalación/recorrido de QA humana sigue pendiente. No se declara `PASS`, `OPERATIONAL` ni `TIER1_READY`.
