@@ -1,5 +1,5 @@
 # VEXFORGE — Protocolo Maestro Universal v2
-**Última actualización:** 2026-09-02 — orden QA visual-first de VE-MOB-3 HOME / Forja adoptada | **Mantenido por:** Replit Agent
+**Última actualización:** 2026-09-03 — plan visual Android-first VE-UI-TIER1-ANDROID-01 integrado | **Mantenido por:** Replit Agent
 **Documento clave en Supabase:** `vexforge_master_protocol_v2`
 
 ---
@@ -349,7 +349,7 @@ Cuando una IA retoma el trabajo, debe seguir este orden:
 6. MEJORAR → Después tareas M (Mejoras: M1, M2, M3, M4, M5), sin sustitutos visuales
 7. CONFIRMAR → build limpio, cobertura del manifiesto y guarda específica después de cada lote
 8. PUBLICAR → actualizar `main` mediante la API REST HTTPS de GitHub, sin `git push` ni PAT en URLs/remotos
-9. ACTUALIZAR → PATCH a vexforge_forge_formation_engine_v1 en Supabase con estado real
+9. ACTUALIZAR → este bloque operativo en el protocolo maestro y CONTINUITY.md con estado real
 10. REPORTAR → Reporte claro de lo implementado, la cobertura visual y cualquier asset aún en producción
 ```
 
@@ -373,7 +373,7 @@ Consultar con SELECT content_markdown FROM vexforge_official_documents WHERE doc
 | doc_key | Contenido |
 |---------|-----------|
 | `vexforge_master_protocol_v2` | **ESTE DOCUMENTO — Protocolo Maestro Universal** |
-| `vexforge_forge_formation_engine_v1` | Plan activo con estado sesión a sesión |
+| `vexforge_forge_formation_engine_v1` | Plan histórico superseded; sólo contexto y checkpoints compatibles |
 | `vexforge_combat_core_detailed` | Reglas detalladas del sistema de combate |
 | `vexforge_cards_core` | Estructura de cartas, atributos, rareza |
 | `vexforge_economy_core` | Econom��a del juego (VEX, shards, packs) |
@@ -906,8 +906,9 @@ Quedan fuera de esta directiva salvo aprobación expresa y análisis independien
 1. Código real de GitHub `main` y esquema vivo de Supabase.
 2. Este Protocolo Maestro.
 3. Este addendum visual.
-4. `vexforge_forge_formation_engine_v1`.
+4. El bloque operativo canónico VE-UI-TIER1-ANDROID-01 de este protocolo.
 5. Documentos oficiales de dominio y continuidad.
+6. `vexforge_forge_formation_engine_v1` sólo como historial superseded.
 6. El recurso generado o la propuesta estética sólo puede entrar en producción si respeta las fuentes anteriores.
 
 Nunca se usan placeholders, emojis, iconos de sistema, arte de stock sin identidad, sonidos genéricos o texto inventado para ocultar una carencia. Si falta un recurso, el estado es `BLOCKED` o `DRAFT`, con la carencia documentada.
@@ -1398,3 +1399,255 @@ El primer dominio de verificación QA se trabajará sobre la pantalla Forja comp
 5. **Gate:** la unidad continúa `IMPLEMENTED_UNVERIFIED` hasta tener la evidencia técnica correspondiente, el workflow/release Android correlativo y la QA manual del operador. No se declara `PASS`, `OPERATIONAL` ni `TIER1_READY` por inspección visual o compilación aislada.
 
 Esta orden es un desglose operativo de la Ley Game First y de la rúbrica de Design QA; no crea una fase paralela ni levanta la congelación web.
+
+---
+## PLAN OPERATIVO CANÓNICO — VE-UI-TIER1-ANDROID-01
+**Fecha de incorporación:** 2026-09-03
+**Estado:** IN_PROGRESS — plan visual Android-first integrado en el protocolo maestro
+**Unidad raíz:** VE-MOB-3 HOME / FORJA
+**Fuente de diseño:** VE-UI-TIER1-01 entregado por el operador, reconciliado contra el protocolo vivo, VE-MOB-0, la continuidad, la matriz visual, el código Android real y la evidencia QA adjunta
+**Precedencia:** este bloque gobierna la ejecución visual Android. Conserva las leyes superiores del protocolo y reemplaza cualquier orden histórica que apunte a web, a un plan superseded o a una reconstrucción no vinculada a VE-MOB-*.
+
+### 1. Decisión ejecutiva
+
+VEXFORGE no se va a tratar como una aplicación con decoración medieval. Se va a reconstruir como una experiencia de TCG móvil premium: primero se lee como juego, después como mundo, después como colección y finalmente como sistema.
+
+La transformación se ejecutará por vertical slices pequeños y reversibles. El primer slice es Forja/Home porque es la primera impresión, el punto de retorno y la superficie que conecta identidad, carta, actividad, progresión y entrada a la arena. No se abrirá un rediseño simultáneo de todas las rutas ni se reabrirá código que ya cumple su contrato sólo para cambiar su aspecto.
+
+La regla de oro es:
+
+TCG primero → mundo propio después → acción clara siempre.
+
+Una pantalla sólo supera este plan cuando el jugador puede entender qué es, qué está vivo, qué puede tocar y por qué importa sin leer un panel de administración. La inmersión nunca autoriza a inventar datos, resultados, lore, assets o autoridad de juego.
+
+### 2. Baseline reconciliado y límites
+
+- Android es la única superficie de implementación. La web queda congelada como referencia de lectura.
+- VE-MOB-2 a VE-MOB-14 están implementadas pero siguen IMPLEMENTED_UNVERIFIED por QA humana pendiente; no se reabren sin una brecha visual, funcional o de evidencia demostrable.
+- VE-MOB-15 ADMIN sigue diferida por el inventario oficial.
+- VE-MOB-3 HOME / FORJA tiene una primera capa visual implementada, pero permanece IMPLEMENTED_UNVERIFIED y no alcanza todavía el objetivo de reconstrucción visual completa.
+- El Home ya consume la escena oficial lobby/main.jpg mediante mobile/constants/visual.ts, usa tipografías Cinzel/Rajdhani, iconografía VEXFORGE authored, estados explícitos y datos vivos. Estos elementos son baseline reutilizable, no motivo para empezar de cero.
+- Supabase, Auth, RLS, RPCs, economía, combate, inventario, recompensas, colección, mazos, progresión y telemetría permanecen autoritativos. El cliente Android sólo presenta y consume sus contratos.
+- Ningún color, panel, sombra o gradiente por sí solo cuenta como avance Tier 1. El progreso debe cambiar la lectura, la jerarquía, la interacción o la identidad perceptible.
+- El plan histórico vexforge_fase3_polish_battle_v1 y el plan superseded vexforge_forge_formation_engine_v1 se conservan para historial y compatibilidad; no gobiernan la selección del siguiente paquete visual.
+
+### 3. Resultado visual objetivo
+
+Al abrir Forja, el jugador debe percibir en este orden:
+
+1. una escena del universo VEXFORGE, no un fondo detrás de una lista;
+2. una acción primaria inequívoca y una actividad viva;
+3. una carta o señal coleccionable que invite a inspección;
+4. progreso y recursos como parte del taller, no como una tabla;
+5. una entrada natural a Batalla, Cartas, Mazo y Perfil;
+6. una gramática común que haga que todas las superficies parezcan regiones del mismo juego.
+
+La prueba de cinco segundos es obligatoria: sin leer todo el texto, una persona nueva debe identificar que está ante un TCG, distinguir la acción principal y localizar la carta o evento relevante. Si sólo recuerda que vio paneles, el paquete falla aunque compile.
+
+### 4. VEXFORGE Visual DNA — reglas de sistema
+
+#### 4.1 Jerarquía
+
+- Una pantalla tiene un foco primario, un foco secundario y una capa de contexto. No se permite que cinco CTAs compitan con el mismo peso.
+- En Home, la escena y la acción primaria ocupan la primera impresión; estadísticas, actividad y sistemas secundarios se escalonan debajo.
+- Los datos de Supabase se muestran como momentos del juego: evento activo, carta destacada, misión próxima, energía, rango y actividad. No se convierten automáticamente en tarjetas idénticas.
+- Sobre el primer pliegue móvil se limita la acumulación de superficies elevadas: una escena/hero, una llamada primaria y como máximo dos bloques de soporte visualmente diferenciados.
+
+#### 4.2 Escena y atmósfera
+
+- El arte oficial participa en la composición: define profundidad, recorte, temperatura, contraste y dirección de la mirada.
+- Cada escena debe tener fondo, plano atmosférico, plano de lectura y plano interactivo. El contenido no se pega como texto plano encima de la imagen.
+- Las superposiciones oscurecen sólo donde hace falta leer. No se tapa todo el arte con una capa uniforme ni se usa un glow para simular ilustración ausente.
+- El registro visual móvil es la única puerta para fondos, logos, facciones, cartas y assets de ruta. Si falla un asset oficial, se muestra el estado VEXFORGE explícito de error/carga/vacío; nunca otro asset, emoji o dibujo temporal.
+
+#### 4.3 Materiales y geometría
+
+- El negro profundo, índigo, oro VEX, azul de energía, verde de éxito y rojo de peligro son tokens semánticos existentes; el oro comunica foco, rareza o acción, no decora cada borde.
+- Los paneles tienen tres elevaciones: superficie de lectura, superficie elevada y superficie de evento. Cada una tiene contraste, opacidad, borde y sombra propios.
+- Las formas angulares, marcos, líneas de energía y separadores sólo se usan cuando explican jerarquía, facción, rareza, estado o navegación. La decoración sin función se elimina en la segunda pasada.
+- Los botones deben tener estado normal, pressed, disabled, loading y, cuando aplique, selected/focus. El área táctil mínima objetivo es 44×44 dp aunque el ornamento sea menor.
+
+#### 4.4 Tipografía e iconografía
+
+- Cinzel se reserva para títulos de mundo, nombres heroicos y momentos de alto peso; Rajdhani sostiene lectura, datos, navegación y etiquetas.
+- No se usa mayúscula espaciada como textura en párrafos ni texto gris de bajo contraste para información necesaria.
+- ForgeIcon/VexIcon y el registro authored son la gramática de símbolos. No se introducen iconos de sistema, emojis ni Unicode como sustitutos diegéticos.
+- Cada icono debe comunicar una acción o estado; si sólo rellena espacio, se elimina.
+
+#### 4.5 Cartas
+
+- La carta es un objeto valioso, no una miniatura dentro de una fila administrativa.
+- La prioridad visual es arte → nombre → rareza/facción → poder/keywords → acción; el texto auxiliar nunca compite con la ilustración.
+- Tile, selección, inspector, entrada al tablero, invocación, ataque, impacto, muerte, recompensa y evolución comparten marco y datos, pero no se fuerzan a tener la misma animación.
+- La identidad por carta deriva de datos oficiales y de authored data trazable. Facción o rareza pueden modular una presentación, pero no reemplazan criatura, elemento, poder, personalidad o keyword cuando esos campos existen.
+- Una carta sin arte final se marca de forma honesta como carga, vacío o error. No se simula una carta terminada con una forma CSS.
+
+### 5. Motion grammar y respuesta táctil
+
+El movimiento tiene intención y una causa legible:
+
+- Entrada: revela jerarquía y dirección, no hace esperar al jugador.
+- Presencia: un loop atmosférico lento sólo comunica vida; nunca roba foco ni se multiplica por lista.
+- Decisión: pressed/focus responde inmediatamente y conserva la relación causa → efecto.
+- Impacto: ataque, selección, recompensa o cambio de estado tiene un acento breve y contextual.
+- Recuperación: la pantalla vuelve a lectura estable sin encadenar efectos.
+- Resultado: victoria, derrota, error, vacío y reconexión tienen tratamientos distintos y explícitos.
+
+Presupuesto base: una interacción no bloquea el control, las transiciones de interfaz son cortas, las listas no animan cada fila al mismo tiempo y ningún efecto visual puede cambiar el dato autoritativo. Reduced motion elimina loops, partículas y desplazamientos no esenciales, conserva cambio de estado, foco, texto, contraste y feedback táctil, y no crea una ruta visual rota.
+
+### 6. Roadmap T0–T10 y paquetes ejecutables
+
+Cada paquete tiene unidad VE-MOB-* o VE-VIS-* estable, dependencia explícita, nivel actual → objetivo, gate y condición de reapertura. Se ejecuta sólo si el paquete anterior necesario está reconciliado.
+
+#### T0 — Reconciliación y baseline
+**Unidades:** VE-MOB-0, VE-MOB-3-HOME-BASELINE
+**Salida:** protocolo, continuidad, inventario, matriz visual, código real, Storage y capturas comparados; lista de brechas con evidencia.
+**Gate Q0:** cada elemento visual tiene fuente, rol, consumidor y estado. No se edita producto para resolver una suposición.
+**Estado:** VE-MOB-3-HOME-BASELINE IMPLEMENTED_UNVERIFIED → Q1/Q2 confirmado por código; QA visual completa pendiente.
+
+#### T1 — Sistema visual móvil
+**Unidad:** VE-VIS-ANDROID-DNA
+**Dependencias:** T0, constants/colors.ts, constants/typography.ts, constants/visual.ts, ScreenShell, ForgeButton, ForgeText, ForgeIcon.
+**Salida:** tokens, elevaciones, marcos, variantes de panel, botones, card grammar, safe areas y motion tokens documentados sin duplicar componentes existentes.
+**Gate Q2:** una ruta de Home, una carta, una arena y un estado pueden convivir sin parecer cuatro productos.
+**Reapertura:** sólo si una captura o auditoría muestra divergencia concreta de token, legibilidad o comportamiento.
+
+#### T2 — Escena y composición
+**Unidad:** VE-MOB-3-HOME-SCENE
+**Dependencias:** T1, asset oficial lobby/main.jpg y manifiesto móvil.
+**Salida:** escena por planos, recorte responsive, contraste local, contenido seguro para notch/navigation inset, error de asset y carga sin salto.
+**Gate Q1/Q3:** el arte participa en la lectura, la primera acción no se pierde y no aparece fallback silencioso.
+**Reapertura:** si cambia el asset canónico, falla la lectura en un viewport objetivo o la escena provoca regresión de rendimiento.
+
+#### T3 — Forja como primer vertical slice
+**Unidades:** VE-MOB-3-HOME-HERO, VE-MOB-3-HOME-ACTION, VE-MOB-3-HOME-CARD, VE-MOB-3-HOME-PROGRESS.
+**Dependencias:** T2 y contratos ya existentes.
+**Salida:** hero con contexto vivo, CTA primaria, entrada secundaria, carta/evento destacado, recursos y progresión ordenados como taller/forja, no como dashboard.
+**Gate Q1 → Q4:** cinco segundos, foco único, jerarquía clara, carta reconocible, acción táctil y profundidad consistente; datos siguen siendo los de Supabase.
+**Regla:** no añadir una sexta sección sólo para llenar espacio. Reducir ruido antes de añadir adornos.
+
+#### T4 — Estados honestos del Home
+**Unidad:** VE-MOB-3-HOME-STATES
+**Dependencias:** T3, estados ya existentes de carga/vacío/error, conexión y retry.
+**Salida:** loading, empty, error, no-results, offline/reconnect y success con copy, icono authored, layout y motion propios; nunca loader eterno ni estado que parezca dato real.
+**Gate Q1/Q2:** cada estado explica qué ocurre y cuál es la siguiente acción; el fallo de un bloque no borra silenciosamente los datos válidos de los demás.
+**Reapertura:** cualquier captura que muestre falsa disponibilidad, ausencia de retry o bloqueo de navegación.
+
+#### T5 — Navegación como sistema del juego
+**Unidades:** VE-MOB-NAV, VE-MOB-3-HOME-NAV-SAFETY.
+**Dependencias:** T1 y T3.
+**Salida:** tab bar legible en Android, safe-area correcta, iconos authored, estado activo/inactivo, retorno y deep links existentes sin cambiar rutas ni autoridad.
+**Gate Q1/Q2:** el jugador entiende dónde está, adónde puede ir y cómo volver; la navegación no compite con la escena.
+
+#### T6 — Arena y cartas como regiones conectadas
+**Unidades:** VE-MOB-7-BATTLE-VIS, VE-MOB-4-COLLECTION-VIS, VE-VIS-3-CARD-INSPECTOR.
+**Dependencias:** T1, T4 y contratos/estado ya implementados en cada VE-MOB.
+**Salida:** arena con lectura de turno/objetivo/impacto/resultado; colección con densidad de compendio; inspector con carta como objeto; efectos derivados de eventos reales.
+**Gate Q3/Q4:** identidad de arena y carta, claridad de resultado, replay/reconnect/reduced motion y cero lógica de combate duplicada.
+**Reapertura:** sólo por evidencia funcional/visual nueva, asset canónico mejor o regresión demostrable.
+
+#### T7 — Mazo y Perfil como fantasía de jugador
+**Unidades:** VE-MOB-5-DECK-VIS, VE-MOB-9-PROFILE-VIS.
+**Dependencias:** T1, T6 y datos reales ya conectados.
+**Salida:** Mazo como mesa de construcción y Perfil como identidad/progresión del forjador; los límites, validaciones, logros y energía siguen viniendo del contrato.
+**Gate Q3/Q4:** selección, validación, guardado, progreso y navegación son comprensibles sin hacer que la pantalla parezca un formulario.
+
+#### T8 — Superficies secundarias por familias
+**Unidades:** VE-MOB-6-TUTORIAL-VIS, VE-MOB-8-REWARDS-VIS, VE-MOB-10-PACKS-VIS, VE-MOB-11-ECONOMY-VIS, VE-MOB-12-WORLD-VIS, VE-MOB-13-SOCIAL-VIS, VE-MOB-14-META-VIS.
+**Dependencias:** T1 y el patrón de estados T4.
+**Salida:** cada familia recibe ambiente y jerarquía propios, pero conserva la gramática común; no se abren rutas web ni se crean paneles aislados.
+**Gate Q2/Q3:** ninguna superficie se describe mejor como dashboard, catálogo o formulario que como taller, mundo, colección, arena o perfil.
+
+#### T9 — Unificación, accesibilidad y rendimiento
+**Unidades:** VE-VIS-ANDROID-QA, VE-VIS-6-GAME-LOOP-ANDROID.
+**Dependencias:** paquetes visuales cerrados técnicamente.
+**Salida:** matriz por viewport y dispositivo, contraste, tamaño táctil, lector de pantalla, reduced motion, memoria, carga de imágenes, estabilidad y telemetría de cinco eventos canónicos.
+**Gate Q5 candidato:** 60 FPS objetivo durante scroll/entrada/interacción en dispositivos representativos, sin crash, sin loader eterno, sin regresión de contratos y con evidencia reproducible. Q5 no se declara sólo con typecheck.
+
+#### T10 — Checkpoint, release y QA humana
+**Unidades:** VE-MOB-ANDROID-RELEASE, VE-UI-TIER1-REVIEW.
+**Dependencias:** T9 y workflow oficial.
+**Salida:** commit main, workflow APK oficial, release correlativo, APK autónoma, matriz de capturas y continuidad sincronizada con Supabase.
+**Gate:** technical success + evidencia visual + QA humana del operador. Sin la última, el estado es IMPLEMENTED_UNVERIFIED y el launch gate permanece NO-GO.
+
+### 7. Matriz de procedencia visual obligatoria
+
+Antes de cerrar cada paquete, registrar una fila por elemento:
+
+**elemento → función diegética/UI → dato canónico → ruta Storage o CSS permitido → registro/manifiesto → consumidor Android → estado → evidencia.**
+
+- Fondos, logos, facciones, cartas, marcos, ilustraciones, VFX authored y audio de mundo requieren Storage/manifiesto y consumidor real.
+- Barras, separadores, scrims, focus rings, estados de progreso y geometría de interfaz pueden ser CSS/React Native si no pretenden ser un objeto del universo.
+- Un asset existente se consume; no se duplica. Uno ausente se crea, se revisa, se sube, se registra y se enlaza antes del cierre visual.
+- ASSET_REQUIRED, ASSET_IN_PROGRESS y IMPLEMENTED_UNVERIFIED son estados honestos. No se renombran como PASS para ocultar una ausencia.
+
+### 8. Gates de calidad por paquete
+
+- **Q0 Contrato:** unidad Android, fuente, alcance, dependencias y límites definidos.
+- **Q1 Legible:** acción, estado, dato y resultado entendibles en cinco segundos y con texto/semántica accesibles.
+- **Q2 Coherente:** tokens, tipo, iconos, materiales, sonido, motion, estados y safe areas pertenecen al mismo sistema.
+- **Q3 Identitario:** la ruta, carta, facción, arena o perfil tiene rasgos propios derivados de datos oficiales; no es una plantilla intercambiable.
+- **Q4 Premium:** composición, timing, capas, interacción, transición, audio cuando exista y reducción de ruido están pulidos; no hay genéricos ni fallbacks silenciosos.
+- **Q5 Candidato Tier 1:** matriz de dispositivos/viewports, rendimiento, accesibilidad, estabilidad, consistencia global, release y revisión visual reproducible superados. Requiere después QA humana; no es garantía comercial.
+
+Cada reporte debe escribir nivel actual → objetivo, evidencia, deuda y condición de reapertura. Una unidad puede estar en Q2 y seguir abierta a Q3/Q4/Q5.
+
+### 9. Verificación Android y evidencia mínima
+
+Por cada lote, ejecutar sólo las guardas proporcionales al riesgo, como mínimo:
+
+1. typecheck de mobile;
+2. guarda específica de la unidad;
+3. manifiesto/asset coverage cuando haya recursos;
+4. prueba de estados y reduced motion;
+5. revisión de safe areas y tamaños táctiles;
+6. build APK oficial cuando el lote toque producto;
+7. workflow/release correlativos y bundle standalone;
+8. capturas top/intermedio/inferior para Home y estados relevantes;
+9. matriz de interacción separada de la matriz visual;
+10. actualización de CONTINUITY.md y del plan canónico.
+
+La evidencia debe decir qué se comprobó, qué no se pudo comprobar y qué no se afirma. Compilar, navegar a una ruta o ver un componente aislado no prueba un vertical slice completo.
+
+### 10. Rendimiento, accesibilidad y compatibilidad
+
+- Objetivo operativo: 60 FPS en scroll, entrada de pantalla, selección y efectos esenciales en dispositivos Android representativos; medir antes de aumentar partículas o blur.
+- Una sola escena hero se carga y decodifica con prioridad; listas usan lazy loading y no montan imágenes grandes fuera de viewport sin necesidad.
+- Evitar loops por fila, sombras excesivas, blur permanente, re-render de todo el feed y múltiples imágenes grandes simultáneas. Preferir capas estáticas y animar sólo el foco.
+- Verificar viewport estrecho menor de 360 dp, viewport común de 390–430 dp, tablet si forma parte del workflow, notch, barra de navegación, teclado, orientación soportada y reanudación.
+- Contraste legible sobre arte, etiquetas que no dependan sólo del color, orden de lectura, accessibilityRole/Label/Hint, focus/pressed/disabled y targets táctiles adecuados.
+- Reduced motion debe conservar comprensión, navegación, feedback y resultado; no se reemplaza por silencio visual ambiguo.
+- Un problema de rendimiento o accesibilidad reabre el paquete correspondiente y bloquea añadir VFX nuevos, no bloquea el resto del roadmap Android.
+
+### 11. Checkpoints y protocolo de reentrada
+
+- **ANDROID-A:** DNA y shell visual reconciliados.
+- **ANDROID-B:** Forja/Home visual-first con estados.
+- **ANDROID-C:** cartas/inspector y colección.
+- **ANDROID-D:** arena y resultados.
+- **ANDROID-E:** mazo y perfil.
+- **ANDROID-F:** familias secundarias.
+- **ANDROID-G:** unificación, QA, release y evidencia.
+
+Cada checkpoint es atómico y reversible: cambios Android, verificación, release si aplica, continuidad y sincronización normativa. Nunca borrar historia ni reescribir un estado anterior.
+
+Una unidad OPERATIONAL, REFINED o Q5 puede reabrirse como CANDIDATE_FOR_REVIEW si aparece una regresión, cambia el asset canónico, sube la exigencia Tier 1, falla un dispositivo, el operador aporta una captura contradictoria o el recorrido deja de ser comprensible. Una QA humana pendiente no justifica esperar ni declarar aprobado.
+
+### 12. Orden de la siguiente sesión
+
+1. Leer la fila viva de este protocolo y confirmar que la copia de GitHub coincide salvo el salto de línea final.
+2. Leer CONTINUITY.md, VE-MOB-0, matriz visual, plan histórico sólo como contexto y el código real del paquete.
+3. Ejecutar T0 sin modificar producto.
+4. Continuar por VE-MOB-3-HOME-SCENE, después HERO/ACTION/CARD/PROGRESS y STATES, sin abrir Batalla o superficies secundarias antes de que el Home tenga evidencia visual suficiente.
+5. Implementar sólo el paquete elegido, respetando assets y contratos.
+6. Ejecutar sus gates y registrar nivel actual → objetivo.
+7. Publicar por el workflow Android oficial si hubo código.
+8. Actualizar continuidad, este bloque y la evidencia; dejar la QA humana como IMPLEMENTED_UNVERIFIED cuando corresponda.
+
+### 13. Definición de terminado
+
+Este plan no está terminado si sólo cambian colores, radios, botones, sombras o fondos; si el Home sigue siendo un dashboard; si las cartas siguen siendo imágenes planas; si el scroll es estático; si los estados mienten; si la navegación parece ajena al juego; si falta procedencia; o si la primera impresión no cambia de forma notable.
+
+Está listo para revisión Tier 1 cuando Forja, Batalla, Cartas, Mazo y Perfil se sienten como regiones del mismo TCG, cada acción tiene feedback, cada dato sigue siendo verdadero, cada asset diegético tiene procedencia, el rendimiento y la accesibilidad pasan sus matrices y el APK correlativo puede recorrerse con evidencia. Hasta entonces, el estado correcto es el nivel real más alto alcanzado, no una promesa.
+
+Esta enmienda es normativa y operativa para futuras IAs. No crea una nueva superficie de producto, no levanta la congelación web, no altera contratos y no autoriza a inventar evidencia.
