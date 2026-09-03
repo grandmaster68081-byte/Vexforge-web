@@ -12,10 +12,11 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useColors } from '@/hooks/useColors';
 import { CANONICAL_BACKGROUNDS, OFFICIAL_ASSETS, type VisualSurface } from '@/constants/visual';
 
-export function ScreenShell({ surface = 'home', children, style, ...props }: ViewProps & { surface?: VisualSurface }) {
+export function ScreenShell({ surface = 'home', sceneMode = 'shell', children, style, ...props }: ViewProps & { surface?: VisualSurface; sceneMode?: 'shell' | 'hero' }) {
   const colors = useColors();
   const insets = useSafeAreaInsets();
   const webTopInset = Platform.OS === 'web' ? 67 : 0;
+  const ownsScene = sceneMode === 'shell';
   const pulse = useSharedValue(0);
   const [sceneState, setSceneState] = useState<'loading' | 'ready' | 'error'>('loading');
   const atmosphereKey: Record<VisualSurface, 'accent' | 'primary' | 'danger' | 'success' | 'rarityEpic' | 'rarityRare'> = {
@@ -65,25 +66,29 @@ export function ScreenShell({ surface = 'home', children, style, ...props }: Vie
 
   return (
     <View {...props} style={[styles.root, { backgroundColor: colors.background, paddingTop: webTopInset }, style]}>
-      <Image
-        source={{ uri: CANONICAL_BACKGROUNDS[surface] }}
-        style={[StyleSheet.absoluteFillObject, styles.backgroundImage]}
-        resizeMode="cover"
-        accessibilityLabel="Escena oficial del Nexus"
-        onLoad={() => setSceneState('ready')}
-        onError={() => setSceneState('error')}
-      />
-      <LinearGradient
-        colors={[`${colors.ink}18`, `${colors.ink}38`, `${colors.background}C8`]}
-        locations={[0, 0.48, 1]}
-        style={StyleSheet.absoluteFillObject}
-      />
-      <LinearGradient
-        colors={[`${atmosphereColor}48`, 'transparent', `${colors.primary}32`]}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 1 }}
-        style={StyleSheet.absoluteFillObject}
-      />
+      {ownsScene ? (
+        <>
+          <Image
+            source={{ uri: CANONICAL_BACKGROUNDS[surface] }}
+            style={[StyleSheet.absoluteFillObject, styles.backgroundImage]}
+            resizeMode="cover"
+            accessibilityLabel="Escena oficial del Nexus"
+            onLoad={() => setSceneState('ready')}
+            onError={() => setSceneState('error')}
+          />
+          <LinearGradient
+            colors={[`${colors.ink}18`, `${colors.ink}38`, `${colors.background}C8`]}
+            locations={[0, 0.48, 1]}
+            style={StyleSheet.absoluteFillObject}
+          />
+          <LinearGradient
+            colors={[`${atmosphereColor}48`, 'transparent', `${colors.primary}32`]}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}
+            style={StyleSheet.absoluteFillObject}
+          />
+        </>
+      ) : null}
       <Animated.View
         pointerEvents="none"
         style={[styles.ambientGlow, styles.ambientGlowLeft, { backgroundColor: atmosphereColor }, leftGlowStyle]}
@@ -92,16 +97,20 @@ export function ScreenShell({ surface = 'home', children, style, ...props }: Vie
         pointerEvents="none"
         style={[styles.ambientGlow, styles.ambientGlowRight, { backgroundColor: colors.primary }, rightGlowStyle]}
       />
-      <View
-        pointerEvents="none"
-        style={[styles.orbit, { borderColor: `${atmosphereColor}26` }]}
-      />
-      <Image
-        source={{ uri: OFFICIAL_ASSETS.logo }}
-        style={styles.watermark}
-        resizeMode="contain"
-      />
-      {sceneState === 'error' ? (
+      {ownsScene ? (
+        <>
+          <View
+            pointerEvents="none"
+            style={[styles.orbit, { borderColor: `${atmosphereColor}26` }]}
+          />
+          <Image
+            source={{ uri: OFFICIAL_ASSETS.logo }}
+            style={styles.watermark}
+            resizeMode="contain"
+          />
+        </>
+      ) : null}
+      {ownsScene && sceneState === 'error' ? (
         <View pointerEvents="none" style={styles.assetError}>
           <View style={[styles.assetErrorPanel, { backgroundColor: `${colors.panelStrong}F2`, borderColor: `${colors.accent}66` }]}>
             <Text style={[styles.assetErrorTitle, { color: colors.accent }]}>ESCENA DEL NEXUS</Text>
