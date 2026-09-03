@@ -1166,3 +1166,13 @@
 - La inspección directa del APK descargado confirmó `assets/index.android.bundle` embebido (`3,166,284` bytes) y tipo Android Package. Enlace: https://github.com/grandmaster68081-byte/Vexforge-web/releases/download/vexforge-android-build-61/app-release.apk
 - La unidad permanece `IMPLEMENTED_UNVERIFIED`, `Q3` para Colección/Detalle Android; la instalación, recorrido y QA manual del operador siguen pendientes. No se declara `OPERATIONAL`, `PASS` ni `TIER1_READY`.
 - Siguiente acción verificable: continuar la integración authored de VE-3 en las superficies de batalla sólo cuando exista identificador canónico en el contrato `BattleUnit`, sin usar el nombre como clave silenciosa ni alterar autoridad de combate.
+
+---
+## 2026-09-03 — VE-UI-TIER1-ANDROID-01 — PLAN REVIEW HARDENED
+
+- Se completó la revisión solicitada del plan visual contra el protocolo maestro completo, CONTINUITY, VE-MOB-0, el manifiesto de pantallas, el journey oficial, la matriz viva `public.vexforge_visual_tier1_objective`, los contratos Android y el referente de presentación de TCG móvil; se confirma la dirección y se documentan cinco cierres necesarios.
+- Se incorporó al protocolo maestro la enmienda oficial de endurecimiento: vertical slice bloqueante `HOME → CHAMPION → COLLECTION → CARD → DECK/FORGE → FORMATION → BATTLE → RESULT → REWARD → HOME`, matriz mínima por superficie, contrato explícito de selección/reveal/inspector/estadísticas de carta, umbrales Q0–Q5 y evidencia reproducible.
+- La cadencia semanal queda subordinada al plan: revisión T0, lenguaje/Home, carta/inspector, mazo/formación, batalla/resultado, recompensa/retorno, expansión controlada y launch gate. No se autoriza abrir expansión visual antes de que el núcleo jugable alcance Q4 en sus superficies principales.
+- Esta sesión no modificó `mobile/**`, web, backend, Auth, RLS, RPCs, economía, datos, Storage, workflow ni release. No corresponde generar APK ni declarar `PASS`, `OPERATIONAL` o `TIER1_READY`.
+- El preflight Android local se detuvo en instalación por HTTP 404 del firewall al resolver `npm-package-arg@11.0.3`; no se alcanzó typecheck, no se alteró ningún lockfile y esto queda separado de la revisión del plan.
+- Estado del plan: `READY_FOR_EXECUTION_AFTER_T0`. Siguiente unidad de implementación: ejecutar T0 sin modificar producto y después iniciar `VE-MOB-3-HOME-SCENE`, siempre con el nuevo gate del vertical slice y manteniendo las unidades Android previas como `IMPLEMENTED_UNVERIFIED` hasta QA humana.
