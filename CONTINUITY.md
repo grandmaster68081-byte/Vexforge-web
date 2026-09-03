@@ -1176,3 +1176,11 @@
 - Esta sesión no modificó `mobile/**`, web, backend, Auth, RLS, RPCs, economía, datos, Storage, workflow ni release. No corresponde generar APK ni declarar `PASS`, `OPERATIONAL` o `TIER1_READY`.
 - El preflight Android local se detuvo en instalación por HTTP 404 del firewall al resolver `npm-package-arg@11.0.3`; no se alcanzó typecheck, no se alteró ningún lockfile y esto queda separado de la revisión del plan.
 - Estado del plan: `READY_FOR_EXECUTION_AFTER_T0`. Siguiente unidad de implementación: ejecutar T0 sin modificar producto y después iniciar `VE-MOB-3-HOME-SCENE`, siempre con el nuevo gate del vertical slice y manteniendo las unidades Android previas como `IMPLEMENTED_UNVERIFIED` hasta QA humana.
+
+---
+## 2026-09-03 — VE-UI-TIER1-T0 — RECONCILIATION DOCUMENTED
+
+- T0 se ejecutó sin modificar producto: se reconciliaron `main`, el protocolo activo de Supabase, CONTINUITY, VE-MOB-0, los contratos Android, el manifiesto de pantallas, los criterios vivos Tier 1, los assets y el código móvil real.
+- Se publicó `docs/VE-UI-TIER1-T0-RECONCILIATION.md` con hechos, criterios aún bloqueantes, matriz de brechas y orden de ejecución. El baseline confirma que el vertical slice y el contrato selección → reveal → inspector → estadísticas → retorno de carta siguen siendo trabajo de implementación, no evidencia existente.
+- El lockfile Android no contiene URLs del firewall. La instalación local no llegó a typecheck por HTTP 404 del firewall al resolver `npm-package-arg@11.0.3`; se conserva como bloqueo del runner, sin modificar lockfile ni inventar resultado.
+- El plan queda listo para su primera ejecución de producto: `VE-MOB-3-HOME-SCENE`, seguido por HERO/ACTION/CARD/PROGRESS/STATES. No se declara `PASS`, `OPERATIONAL` ni `TIER1_READY`.
