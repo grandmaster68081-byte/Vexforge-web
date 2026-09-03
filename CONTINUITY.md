@@ -1,3 +1,13 @@
+## 2026-09-03 — VE-UI-TIER1-ANDROID-01 — PLAN CANÓNICO INTEGRADO
+
+- Se reconcilió el plan visual adjunto con el protocolo maestro vivo, la ley Android-only, VE-MOB-0, la matriz visual, el código Android real y las capturas QA.
+- Se integró en Supabase como el bloque normativo PLAN OPERATIVO CANÓNICO — VE-UI-TIER1-ANDROID-01 y se sincronizó la copia de VEXFORGE_PROTOCOL_V2.md mediante GitHub REST HTTPS.
+- El plan convierte la reconstrucción visual en paquetes T0–T10 ligados a VE-MOB-* y gates Q0–Q5; prioriza VE-MOB-3 HOME / FORJA, separa visual de funcional, y conserva Auth, RLS, RPC, economía, combate, inventario, cartas, mazos y progresión sin cambios.
+- Se marcó vexforge_fase3_polish_battle_v1 como superseded por su orientación histórica/web; vexforge_forge_formation_engine_v1 ya permanecía superseded. Los dos quedan sólo como contexto y checkpoints compatibles.
+- No se modificó mobile/**, web, Storage, datos ni backend. VE-MOB-3 HOME sigue IMPLEMENTED_UNVERIFIED; no se declara PASS, OPERATIONAL ni TIER1_READY.
+- Siguiente paquete elegible: VE-MOB-3-HOME-SCENE, precedido por T0 de reconciliación y seguido por HERO/ACTION/CARD/PROGRESS y STATES.
+
+---
 ## 2026-09-02 — VE-MOB-3 HOME / FORJA — CAPA VISUAL IMPLEMENTADA
 
 - La fuente remota de `main` y los consumidores Android se reconciliaron por GitHub REST HTTPS; no se usó Git como transporte ni se modificó la web congelada.
