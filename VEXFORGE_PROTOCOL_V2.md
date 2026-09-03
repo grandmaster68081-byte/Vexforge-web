@@ -1651,3 +1651,129 @@ Este plan no está terminado si sólo cambian colores, radios, botones, sombras 
 Está listo para revisión Tier 1 cuando Forja, Batalla, Cartas, Mazo y Perfil se sienten como regiones del mismo TCG, cada acción tiene feedback, cada dato sigue siendo verdadero, cada asset diegético tiene procedencia, el rendimiento y la accesibilidad pasan sus matrices y el APK correlativo puede recorrerse con evidencia. Hasta entonces, el estado correcto es el nivel real más alto alcanzado, no una promesa.
 
 Esta enmienda es normativa y operativa para futuras IAs. No crea una nueva superficie de producto, no levanta la congelación web, no altera contratos y no autoriza a inventar evidencia.
+
+
+---
+## ENMIENDA OPERATIVA — REVISIÓN Y ENDURECIMIENTO DEL PLAN TIER 1
+**Fecha de incorporación:** 2026-09-03  
+**Estado:** OFICIAL — plan revisado y listo para ejecución controlada  
+**Ámbito:** `VE-UI-TIER1-ANDROID-01`, T0–T10 y unidades `VE-MOB-*` visuales  
+**Naturaleza:** revisión de suficiencia; no crea un plan paralelo ni modifica reglas de juego
+
+### 1. Resultado de la revisión
+
+La auditoría del plan contra el código Android de `main`, `VE-MOB-0`, `VE-MOB-2` a `VE-MOB-14`, el manifiesto de pantallas, el journey oficial, la matriz `public.vexforge_visual_tier1_objective`, el programa Visual Excellence y referentes actuales del género confirma que la dirección es correcta, pero que el plan necesitaba cinco cierres explícitos para garantizar el resultado y no sólo describirlo:
+
+1. un gate bloqueante de vertical slice completo, para impedir que se acumulen pantallas visualmente aisladas;
+2. una matriz de aceptación por superficie crítica, con objeto, acción, feedback, salida y autoridad de datos;
+3. un contrato inequívoco para la interacción carta: selección → reveal/foco → inspector → estadísticas → retorno;
+4. umbrales mínimos de calidad y evidencia que separen “se ve bien”, “funciona” y “Tier 1 candidato”;
+5. una cadencia semanal que ejecute trabajo dentro del plan, sin saltarse dependencias ni abrir expansión antes de cerrar el núcleo jugable.
+
+Conclusión: el plan queda aprobado como dirección, pero ninguna fase puede llamarse Tier 1 por completar colores, fondos, componentes o rutas aisladas. La revisión queda incorporada mediante las reglas siguientes.
+
+### 2. Contrato de producto Tier 1 — vertical slice bloqueante
+
+El primer entregable demostrable es un recorrido jugable continuo y medible:
+
+`HOME / FORJA → CAMPEÓN → COLECCIÓN → CARTA → MAZO / FORJA → FORMACIÓN → BATALLA → RESULTADO → RECOMPENSA → HOME`
+
+Este recorrido es un **gate de producto**, no una galería de mockups. T4–T8 pueden trabajar en paquetes pequeños, pero no se autoriza abrir expansión visual de World, Social, Shop, Profile o Meta como prioridad semanal mientras el slice no alcance Q4 en todas sus superficies principales. Las unidades Android ya implementadas pueden seguir `IMPLEMENTED_UNVERIFIED`; eso no sustituye el gate de experiencia.
+
+El slice sólo pasa cuando:
+
+- una persona nueva reconoce un videojuego TCG VEXFORGE antes que una aplicación administrativa;
+- existe una acción primaria clara en cada superficie;
+- cada acción relevante produce feedback visible y táctil, y audio cuando el sistema lo soporte;
+- el resultado de combate, recompensa, inventario y progreso proviene de contratos autoritativos y puede recuperarse sin settlement local;
+- el jugador puede volver al Home sin perder contexto ni quedar en una ruta muerta;
+- la carta mantiene protagonismo desde la lista hasta el tablero y la recompensa;
+- loading, vacío, error, reconnect, reduced-motion y accesibilidad conservan la misma información funcional;
+- el recorrido se evidencia en un APK oficial, no sólo en un preview o en un typecheck.
+
+### 3. Matriz mínima de aceptación por superficie
+
+Cada unidad debe completar esta matriz antes de cerrar su gate. La matriz admite `APLICA`, `NO_APLICA` o `PENDIENTE_DE_FUENTE`; no permite omitir una dimensión sin registrarla.
+
+| Superficie | Escena / objeto dominante | Acción principal | Feedback obligatorio | Salida y dato autoritativo |
+|---|---|---|---|---|
+| Home / Forja | Nexus, Campeón, actividad o carta destacada | entrar a la actividad recomendada o arena | press, transición, estado vivo y retry honesto | ruta existente; estado de jugador/evento desde Supabase |
+| Colección | arsenal y cartas como objetos | inspeccionar una carta o filtrar el arsenal | foco de carta, estado de selección y resultado del filtro | cartas, propiedad, cantidad y metadatos reales |
+| Carta / Inspector | la carta ampliada y su identidad | explorar detalle o añadirla al flujo permitido | reveal/foco, stats legibles, affordance de retorno | imagen, nombre, rareza, facción, poder, keywords, lore y propiedad sólo si constan |
+| Mazo / Forja | mesa de construcción, Campeón y formación | seleccionar, validar y guardar el mazo/elección | aceptación, conflicto, límite, sinergia o error contextual | validación y persistencia de contratos existentes |
+| Formación | Vanguardia, Campeón, Centinela y Reserva | confirmar formación e iniciar | slots diferenciados, protección, reserva y confirmación | formación y reglas recibidas/aceptadas por el flujo oficial |
+| Batalla | arena ForgeFormation y amenaza | ejecutar la acción disponible | anticipación, impacto, daño, defensa, muerte, turno y reconnect | eventos/resultados autoritativos; nunca decisión visual local |
+| Resultado | marcador, Campeón/MVP si corresponde | continuar, reclamar o volver | victoria/derrota, desglose y estado de settlement | resultado y recompensas persistentes e idempotentes |
+| Recompensa | cámara de recompensa y carta/objeto obtenido | revelar y continuar | rareza, reveal, audio/VFX y confirmación | reward/claim reales; regreso al Home con progreso actualizado |
+
+La matriz funcional se mantiene separada de la matriz visual: una apariencia activa no prueba que el control funcione, y una ruta existente no prueba que el recorrido sea correcto.
+
+### 4. Contrato obligatorio de carta — selección, reveal, inspector y estadísticas
+
+La interacción de carta que atraviesa Home, Colección, Mazo, Formación, Batalla y Recompensa queda definida así:
+
+1. **Selección:** el toque debe producir respuesta inmediata `pressed/focus/selected`, elevar o separar visualmente la carta y dejar claro cuál fue elegida. El feedback no puede depender sólo del color.
+2. **Reveal/foco:** la carta seleccionada entra al foco con una transición breve y cancelable que conserva continuidad espacial con el tile o escena de origen. En reduced-motion se reemplaza por un cambio de foco/escala/transparencia funcional, no por ausencia de respuesta.
+3. **Inspector:** el detalle muestra la carta como objeto del juego: arte, nombre, rareza, facción, poder y demás atributos existentes, habilidades/keywords, lore y estado de propiedad cuando estén disponibles en la fuente. Si un atributo no existe, se omite o se marca como pendiente; jamás se inventa.
+4. **Estadísticas y contexto:** las estadísticas se presentan con iconografía authored y jerarquía legible, vinculadas al dato canónico. El tratamiento visual puede dramatizar la lectura, pero nunca alterar el valor ni convertir una predicción en un hecho.
+5. **Continuación:** desde el inspector se puede volver al origen sin perder filtros/selección cuando el contrato lo permita, o continuar únicamente a una acción real del flujo. No se simula añadir, equipar, fusionar o combatir si la ruta no lo respalda.
+6. **Identidad:** rareza, facción, elemento, criatura, poder, personalidad y keywords modulan la presentación sólo cuando existen en la fuente oficial y están trazados en el pasaporte `VE-CARD`.
+7. **Rendimiento:** una carta enfocada puede recibir el tratamiento premium; la colección no monta loops, partículas o imágenes grandes innecesarias por cada fila.
+
+Este contrato es requisito de `VE-VIS-3-CARD-INSPECTOR`, `VE-MOB-4-COLLECTION-VIS`, `VE-MOB-5-DECK-VIS`, `VE-MOB-7-BATTLE-VIS` y `VE-MOB-8-REWARDS-VIS`.
+
+### 5. Umbrales de calidad y evidencia
+
+Antes de ampliar el alcance, el vertical slice debe alcanzar:
+
+- **Q0:** fuente, unidad, dependencia, estado y límites trazados;
+- **Q1:** comprensión en cinco segundos, acción, estado y siguiente paso claros;
+- **Q2:** tokens, iconografía, tipografía, motion, audio, estados y safe areas coherentes;
+- **Q3:** identidad propia por escena, carta, facción, región o momento;
+- **Q4:** composición, profundidad, timing, foco, transición, feedback y reducción de ruido pulidos;
+- **Q5 candidato:** dispositivos representativos, estabilidad, rendimiento, accesibilidad, release y evidencia reproducible.
+
+Para las superficies principales, la rúbrica 0–5 debe registrar como mínimo `4` en composición, identidad, jerarquía, claridad e interacción; ninguna dimensión aplicable puede quedar por debajo de `3`. Q5 candidato no equivale a `OPERATIONAL` ni a lanzamiento: la QA humana del operador y la validación cerrada siguen siendo obligatorias.
+
+El paquete de evidencia mínimo por checkpoint es:
+
+- commit de `main` y workflow/release Android correlativo;
+- APK autónoma con bundle embebido y digest verificable;
+- capturas o grabación de top/intermedio/inferior de Home y del recorrido del slice;
+- matriz de interacción separada de la matriz visual;
+- prueba en viewport estrecho y común, además de un dispositivo Android representativo de menor capacidad;
+- estado normal, carga, vacío, error/retry, reconnect, reduced-motion y resultado cuando apliquen;
+- registro de procedencia de cada asset y de cada dato canónico mostrado;
+- evidencia de typecheck, guardas específicas, estabilidad, FPS/memoria cuando se declare Q5;
+- limitaciones, deuda, estado real y condición de reapertura.
+
+### 6. Cadencia semanal subordinada al plan
+
+La semana de trabajo se ejecuta dentro de esta secuencia y no como una lista independiente:
+
+- **Semana 0 — Revisión y reconciliación:** T0, baseline real, matriz de brechas y contrato del slice. No se modifica producto para resolver suposiciones.
+- **Semana 1 — Lenguaje y entrada:** T1, DNA visual Android, Home/Forja escena, jerarquía, estados y navegación segura.
+- **Semana 2 — Objeto carta:** Colección, selección, reveal, inspector, estadísticas, authored identity y retorno.
+- **Semana 3 — Preparación:** Mazo, Forja, formación, validaciones, reserva, Campeón y transición a arena.
+- **Semana 4 — Momento jugable:** Batalla, timeline visual de eventos autoritativos, targeting, impacto, muerte, reconnect y resultado.
+- **Semana 5 — Cierre del loop:** scoreboard, reward reveal, claim/persistencia real, progreso y retorno al Home; medición de primera sesión.
+- **Semana 6 — Expansión controlada:** World/PvE/Boss/Raid/PvP y Social/Shop/Profile sólo después del gate del slice; cada familia conserva su matriz propia.
+- **Semana 7 — Unificación y launch gate:** T9/T10, accesibilidad, reduced-motion, rendimiento, asset hygiene, benchmark, release y QA humana.
+
+Si una semana deja una unidad en `IMPLEMENTED_UNVERIFIED`, la siguiente puede continuar sólo con la dependencia que esté técnicamente habilitada; no se rebautiza como `OPERATIONAL`, no se oculta la deuda y no se saltan los gates del slice.
+
+### 7. Revisión anti-dashboard y anti-genericidad
+
+Antes de aceptar una superficie principal, el reviewer debe poder responder afirmativamente a `SCENE + OBJECT + ACTION + FEEDBACK + EXIT`. Debe poder nombrar qué hace a esa superficie VEXFORGE sin leer su ruta o su nombre. Cualquier icono, fondo, sonido, panel, estado o transición intercambiable se registra como fuga de identidad y reabre la unidad afectada.
+
+La revisión también comprueba la cadena:
+
+`dato canónico → decisión de diseño → asset/componente → interacción → feedback → evidencia`
+
+El plan no autoriza convertir esta cadena en mocks, inventar estadísticas, copiar referentes, duplicar autoridad de combate o usar una apariencia premium para esconder una capacidad inexistente.
+
+### 8. Decisión de ejecución
+
+Esta enmienda cierra la revisión solicitada del plan. El plan queda **READY_FOR_EXECUTION_AFTER_T0**: primero se ejecuta T0 sin editar producto; luego se implementan los paquetes Android en el orden de la Semana 1 a la Semana 7, manteniendo la cadena oficial GitHub `main` → Supabase → workflow/release → evidencia → continuidad. La siguiente sesión de implementación no debe saltar directamente a un paquete aislado sin registrar este gate y su evidencia.
+
+El estado global sigue siendo `PRE-LAUNCH INTERNAL QA`; no se declara `PASS`, `OPERATIONAL`, `TIER1_READY` ni cierre de QA humana por la incorporación de esta revisión.
