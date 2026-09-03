@@ -79,6 +79,7 @@ export default function ForgeScreen() {
   const [home, setHome] = useState<HomeSnapshot>({ stats: null, dailyCard: null, missions: [], activity: [] });
   const [homeLoading, setHomeLoading] = useState(true);
   const [homeError, setHomeError] = useState<string | null>(null);
+  const [homeSceneState, setHomeSceneState] = useState<'loading' | 'ready' | 'error'>('loading');
 
   const loadHome = useCallback(async () => {
     setHomeLoading(true);
@@ -110,24 +111,31 @@ export default function ForgeScreen() {
   const energyPercent = progress ? Math.min(100, Math.round((progress.energy / Math.max(1, progress.max_energy)) * 100)) : 0;
 
   return (
-    <ScreenShell surface="home">
+    <ScreenShell surface="home" sceneMode="hero">
       <ScrollView
         style={[styles.screen, { backgroundColor: 'transparent' }]}
         contentContainerStyle={{ paddingBottom: insets.bottom + 112 }}
         refreshControl={<RefreshControl refreshing={homeLoading || syncState === 'loading'} onRefresh={handleRefresh} tintColor={colors.primary} />}
         showsVerticalScrollIndicator={false}
       >
-      <Animated.View entering={FadeIn.duration(450)} style={[styles.hero, { borderBottomColor: colors.border }]}>
-         <Image source={{ uri: CANONICAL_BACKGROUNDS.home }} style={[StyleSheet.absoluteFillObject, styles.heroImage]} resizeMode="cover" />
+       <Animated.View entering={FadeIn.duration(450)} style={[styles.hero, { borderBottomColor: colors.border }]}>
+          <Image
+            source={{ uri: CANONICAL_BACKGROUNDS.home }}
+            style={[StyleSheet.absoluteFillObject, styles.heroImage]}
+            resizeMode="cover"
+            accessibilityLabel="Escena oficial de la Forja"
+            onLoad={() => setHomeSceneState('ready')}
+            onError={() => setHomeSceneState('error')}
+          />
          <LinearGradient
-           colors={[`${colors.ink}10`, `${colors.ink}30`, `${colors.background}A8`]}
+            colors={['transparent', `${colors.ink}36`, `${colors.background}F2`]}
            locations={[0, 0.46, 1]}
            style={StyleSheet.absoluteFillObject}
          />
          <LinearGradient
-           colors={[`${colors.accent}38`, 'transparent', `${colors.primary}30`]}
+            colors={[`${colors.ink}C2`, `${colors.ink}26`, 'transparent']}
            start={{ x: 0, y: 0 }}
-           end={{ x: 1, y: 1 }}
+            end={{ x: 1, y: 0.64 }}
            style={StyleSheet.absoluteFillObject}
          />
          <View style={[styles.heroGlow, { backgroundColor: `${colors.accent}20` }]} />
@@ -155,16 +163,68 @@ export default function ForgeScreen() {
             <Text style={[styles.signalText, { color: colors.mutedForeground }]}>SEASON 01</Text>
           </View>
 
+           {homeSceneState === 'loading' ? (
+             <View style={[styles.sceneNotice, { backgroundColor: `${colors.panelStrong}D9`, borderColor: `${colors.accent}66` }]}>
+               <ActivityIndicator size="small" color={colors.accent} />
+               <Text style={[styles.sceneNoticeText, { color: colors.mutedForeground }]}>CARGANDO ESCENA DEL NEXUS</Text>
+             </View>
+           ) : homeSceneState === 'error' ? (
+             <View accessibilityRole="alert" style={[styles.sceneNotice, { backgroundColor: `${colors.danger}18`, borderColor: colors.danger }]}>
+               <Ionicons name="alert-circle-outline" size={15} color={colors.danger} />
+               <Text style={[styles.sceneNoticeText, { color: colors.foreground }]}>EL ARTE OFICIAL NO ESTÁ DISPONIBLE</Text>
+             </View>
+           ) : null}
+
           <View style={styles.greeting}>
             <SectionLabel color={colors.accent}>VEXFORGE — TRADING CARD GAME</SectionLabel>
             <ForgeText variant="display" style={[styles.title, { color: colors.foreground }]}>Forja tu{'\n'}leyenda.</ForgeText>
-            <Text style={[styles.heroBody, { color: colors.mutedForeground }]}>Compite, forja y domina la arena con cartas de valor real.</Text>
+             <Text style={[styles.heroBody, { color: colors.mutedForeground }]}>Elige tu formación, entra en la arena y forja tu próxima victoria.</Text>
           </View>
 
           <View style={styles.actionRow}>
-            <ActionButton label="Mi colección" icon="layers-outline" onPress={() => router.push('/collection')} colors={colors} testID="home-collection" />
-            <ActionButton label="Entrar a la arena" icon="flash-outline" onPress={() => router.push('/battle')} colors={colors} secondary testID="home-battle" />
+             <ActionButton label="Entrar a la arena" icon="flash-outline" onPress={() => router.push('/battle')} colors={colors} testID="home-battle" />
+             <ActionButton label="Mi colección" icon="layers-outline" onPress={() => router.push('/collection')} colors={colors} secondary testID="home-collection" />
           </View>
+
+           {home.dailyCard ? (
+             <Pressable
+               accessibilityRole="button"
+               accessibilityLabel={`Inspeccionar carta destacada ${home.dailyCard.name}`}
+               testID="home-featured-card"
+               onPress={() => router.push('/collection')}
+               style={({ pressed }) => [styles.featuredCardDock, { backgroundColor: `${colors.panelStrong}D9`, borderColor: `${colors.accent}8C`, opacity: pressed ? 0.8 : 1, transform: [{ scale: pressed ? 0.985 : 1 }] }]}
+             >
+               <View style={[styles.featuredCardFrame, { borderColor: colors.accent }]}>
+                 {home.dailyCard.image_url ? (
+                   <Image source={{ uri: home.dailyCard.image_url }} style={styles.featuredCardImage} resizeMode="cover" accessibilityLabel={`Arte de ${home.dailyCard.name}`} />
+                 ) : (
+                   <View style={[styles.featuredCardEmpty, { backgroundColor: `${colors.muted}CC` }]}>
+                     <Ionicons name="image-outline" size={19} color={colors.accent} />
+                     <Text style={[styles.featuredCardEmptyText, { color: colors.mutedForeground }]}>ARTE PENDIENTE</Text>
+                   </View>
+                 )}
+               </View>
+               <View style={styles.featuredCardCopy}>
+                 <Text style={[styles.featuredCardMeta, { color: colors.accent }]}>OBJETO DESTACADO · CARTA DEL DÍA</Text>
+                 <Text style={[styles.featuredCardTitle, { color: colors.foreground }]} numberOfLines={2}>{home.dailyCard.name}</Text>
+                 <Text style={[styles.featuredCardMeta, { color: colors.mutedForeground }]}>{home.dailyCard.faction} · {home.dailyCard.rarity} · PODER {home.dailyCard.power}</Text>
+                 <Text style={[styles.featuredCardAction, { color: colors.accent }]}>TOCA PARA INSPECCIONAR</Text>
+               </View>
+               <Ionicons name="chevron-forward" size={19} color={colors.accent} />
+             </Pressable>
+           ) : !homeLoading ? (
+             <View style={[styles.featuredCardDock, { backgroundColor: `${colors.panelStrong}D9`, borderColor: colors.border }]}>
+               <View style={[styles.featuredCardEmpty, { backgroundColor: colors.muted }]}>
+                 <Ionicons name="layers-outline" size={19} color={colors.mutedForeground} />
+               </View>
+               <View style={styles.featuredCardCopy}>
+                 <Text style={[styles.featuredCardMeta, { color: colors.accent }]}>CARTA DEL DÍA</Text>
+                 <Text style={[styles.featuredCardTitle, { color: colors.foreground }]}>La rotación está en pausa.</Text>
+                 <Text style={[styles.featuredCardMeta, { color: colors.mutedForeground }]}>Vuelve a sincronizar para descubrir la siguiente carta.</Text>
+               </View>
+             </View>
+           ) : null}
+
            <Pressable
              accessibilityRole="button"
              accessibilityLabel="Abrir tutorial de la Forja"
@@ -307,32 +367,6 @@ export default function ForgeScreen() {
           </Animated.View>
         ) : null}
 
-        {home.dailyCard ? (
-          <Animated.View entering={FadeInDown.delay(200).duration(450)}>
-            <SectionLabel color={colors.accent}>CARTA DEL DÍA</SectionLabel>
-            <View style={[styles.dailyCard, { backgroundColor: colors.card, borderColor: colors.border }]}>
-              <View style={[styles.cardImageFrame, { borderColor: colors.accent }]}>
-                {home.dailyCard.image_url ? <Image source={{ uri: home.dailyCard.image_url }} style={styles.cardImage} resizeMode="cover" /> : <Ionicons name="layers-outline" size={34} color={colors.accent} />}
-              </View>
-              <View style={styles.dailyCopy}>
-                <Text style={[styles.cardMeta, { color: colors.accent }]}>DESTACADA HOY · {home.dailyCard.faction}</Text>
-                <Text style={[styles.dailyTitle, { color: colors.foreground }]}>{home.dailyCard.name}</Text>
-                <Text style={[styles.cardMeta, { color: colors.mutedForeground }]}>PODER {home.dailyCard.power} · {home.dailyCard.rarity}</Text>
-                {home.dailyCard.lore ? <Text style={[styles.lore, { color: colors.mutedForeground }]} numberOfLines={3}>"{home.dailyCard.lore}"</Text> : null}
-                <Pressable accessibilityRole="button" testID="home-daily-card" onPress={() => router.push('/collection')} style={({ pressed }) => [styles.inlineButton, { borderColor: colors.accent, opacity: pressed ? 0.7 : 1 }]}>
-                  <Text style={[styles.inlineButtonText, { color: colors.accent }]}>VER COLECCIÓN</Text><Ionicons name="arrow-forward" size={15} color={colors.accent} />
-                </Pressable>
-              </View>
-            </View>
-          </Animated.View>
-        ) : !homeLoading ? (
-          <View style={[styles.emptyCard, { backgroundColor: colors.panel, borderColor: colors.border }]}>
-            <SectionLabel color={colors.accent}>CARTA DEL DÍA</SectionLabel>
-            <Text style={[styles.emptyTitle, { color: colors.foreground }]}>La rotación está en pausa.</Text>
-            <Text style={[styles.cardBody, { color: colors.mutedForeground }]}>Vuelve a sincronizar más tarde para descubrir la siguiente carta destacada.</Text>
-          </View>
-        ) : null}
-
         <Animated.View entering={FadeInDown.delay(260).duration(450)}>
           <View style={styles.sectionHeader}><SectionLabel color={colors.accent}>TU ESTADO</SectionLabel><Text style={[styles.counter, { color: colors.mutedForeground }]}>{stats?.pvp_wins ?? 0} VICTORIAS</Text></View>
           <View style={styles.stateGrid}>
@@ -412,8 +446,8 @@ export default function ForgeScreen() {
 
 const styles = StyleSheet.create({
   screen: { flex: 1 },
-  hero: { minHeight: 486, overflow: 'hidden', borderBottomWidth: 1, borderTopWidth: 0, shadowColor: '#000000', shadowOpacity: 0.35, shadowRadius: 24, shadowOffset: { width: 0, height: 14 }, elevation: 8 },
-  heroImage: { opacity: 0.72 },
+  hero: { minHeight: 620, overflow: 'hidden', borderBottomWidth: 1, borderTopWidth: 0, shadowColor: '#000000', shadowOpacity: 0.35, shadowRadius: 24, shadowOffset: { width: 0, height: 14 }, elevation: 8 },
+  heroImage: { opacity: 0.94 },
   heroGlow: { position: 'absolute', width: 300, height: 300, borderRadius: 150, top: 74, left: -184, opacity: 0.8 },
   heroGlowRight: { position: 'absolute', width: 360, height: 360, borderRadius: 180, top: 150, right: -218, opacity: 0.82 },
   heroContent: { paddingHorizontal: 20, paddingBottom: 34 },
@@ -439,6 +473,17 @@ const styles = StyleSheet.create({
    heroStat: { alignItems: 'flex-start', minWidth: 62 },
   heroStatValue: { fontFamily: typography.bodyBold, fontSize: 23, fontWeight: '800' },
   heroStatLabel: { fontFamily: typography.bodyBold, fontSize: 9, letterSpacing: 1.2, fontWeight: '700', marginTop: 4 },
+  sceneNotice: { alignSelf: 'flex-start', flexDirection: 'row', alignItems: 'center', gap: 8, borderWidth: 1, borderRadius: 10, paddingHorizontal: 10, paddingVertical: 8, marginTop: 22 },
+  sceneNoticeText: { fontFamily: typography.bodyBold, fontSize: 9, letterSpacing: 0.7 },
+  featuredCardDock: { flexDirection: 'row', alignItems: 'center', gap: 12, borderWidth: 1, borderRadius: 16, padding: 10, marginTop: 14, shadowColor: '#000000', shadowOpacity: 0.34, shadowRadius: 18, shadowOffset: { width: 0, height: 9 }, elevation: 7 },
+  featuredCardFrame: { width: 58, height: 78, borderWidth: 1, borderRadius: 8, overflow: 'hidden', alignItems: 'center', justifyContent: 'center' },
+  featuredCardImage: { width: '100%', height: '100%' },
+  featuredCardCopy: { flex: 1, gap: 4 },
+  featuredCardMeta: { fontFamily: typography.bodyBold, fontSize: 8, letterSpacing: 0.85, fontWeight: '700' },
+  featuredCardTitle: { fontFamily: typography.bodyBold, fontSize: 15, lineHeight: 18, fontWeight: '800' },
+  featuredCardAction: { fontFamily: typography.bodyBold, fontSize: 8, letterSpacing: 0.75, fontWeight: '800', marginTop: 2 },
+  featuredCardEmpty: { width: '100%', height: '100%', alignItems: 'center', justifyContent: 'center', gap: 5 },
+  featuredCardEmptyText: { fontFamily: typography.bodyBold, fontSize: 6, letterSpacing: 0.5, textAlign: 'center' },
    tutorialLink: { alignSelf: 'flex-start', flexDirection: 'row', alignItems: 'center', gap: 8, borderWidth: 1, borderRadius: 10, paddingHorizontal: 11, paddingVertical: 8, marginTop: 12 },
    tutorialLinkText: { fontSize: 9, fontWeight: '800', letterSpacing: 0.8 },
   content: { padding: 20, paddingTop: 22, gap: 27 },
@@ -466,10 +511,6 @@ const styles = StyleSheet.create({
   timerLabel: { fontSize: 9, letterSpacing: 1.1, fontWeight: '700' },
   timer: { fontSize: 15, fontWeight: '800', marginTop: 7 },
   progressHeader: { flexDirection: 'row', justifyContent: 'space-between', marginTop: 16, marginBottom: 7 },
-  dailyCard: { flexDirection: 'row', gap: 15, borderWidth: 1, borderRadius: 18, padding: 15, marginTop: 12, shadowColor: '#000000', shadowOpacity: 0.32, shadowRadius: 20, shadowOffset: { width: 0, height: 10 }, elevation: 7 },
-  cardImageFrame: { width: 92, height: 124, borderRadius: 10, borderWidth: 1, overflow: 'hidden', alignItems: 'center', justifyContent: 'center' },
-  cardImage: { width: '100%', height: '100%' },
-  dailyCopy: { flex: 1, justifyContent: 'space-between', gap: 7 },
   cardMeta: { fontSize: 9, letterSpacing: 1.1, fontWeight: '700' },
   dailyTitle: { fontSize: 18, fontWeight: '700', lineHeight: 22 },
   lore: { fontSize: 11, lineHeight: 16, fontStyle: 'italic' },
