@@ -8,26 +8,39 @@ Este documento resume la enmienda vigente del protocolo maestro para que cada ag
 - AAB: único artefacto de publicación en Google Play.
 - OTA: sólo JavaScript/assets compatibles con el runtime nativo instalado.
 
-## Estado actual auditado
+## Estado de ejecución
 
 - Package estable: `com.vexforge.android`.
-- `versionCode` de la línea base era `2`; el candidato T0 usa `3` con política monotónica.
-- Runtime declarado por la línea candidata: `1.0.0`.
-- Target API declarado por la línea candidata: `35`.
-- Workflow APK existente: continúa siendo el canal de QA/sideload.
-- Nuevo workflow manual: `.github/workflows/vexforge-android-aab-candidate.yml`.
-- Firma Play: el workflow exige una upload key separada; si faltan los secretos de GitHub, falla de forma explícita y no usa debug keystore.
-- `expo-updates`: todavía no está activado porque Supabase no tiene un endpoint de manifiesto compatible. No se publica una OTA falsa ni se descarga código desde una URL arbitraria.
-- Release 72: válido como baseline de QA, no como candidato de Play.
+- Runtime de la base nueva: `1.0.0`.
+- Target API de la base nueva: `35`.
+- `versionCode` inicial de la base nueva: `3`.
+- Endpoint Expo Updates activo: `https://rscuzqnfccqvltkdcdny.supabase.co/functions/v1/vexforge-updates`.
+- La APK 72 anterior no es compatible con este endpoint porque fue compilada sin `expo-updates`.
 
 ## Clasificación por sección
 
 | Tipo | Cambios permitidos | Entrega |
 |---|---|---|
-| `OTA_UPDATE` | JS/TS, navegación, estilos, copy y assets compatibles | Manifiesto HTTPS, hash, canal, runtime, rollback; la app descarga sólo lo nuevo |
-| `NATIVE_PLAY_RELEASE` | SDK, permisos, plugins, dependencias nativas, app config, runtime o firma | Nuevo AAB con `versionCode` mayor; APK adicional sólo para QA |
+| `OTA_UPDATE` | JS/TS, navegación, estilos, copy y assets compatibles | Workflow OTA, manifiesto HTTPS, hash, canal, runtime y rollback |
+| `NATIVE_PLAY_RELEASE` | SDK, permisos, plugins, dependencias nativas, app config, runtime o firma | AAB firmado con `versionCode` mayor; APK adicional sólo para QA |
 
 Nunca se distribuyen APK parciales propios. Si Play entrega una descarga diferencial, eso lo gestiona Google desde el AAB completo.
+
+## Ciclo automático por sección
+
+Después de completar y confirmar una sección, la IA debe ejecutar:
+
+```bash
+node mobile/scripts/dispatch-section-release.mjs \
+  --section-id VE-MOB-X \
+  --delivery-type OTA_UPDATE \
+  --channel production \
+  --app-version 1.0.0 \
+  --runtime-version 1.0.0 \
+  --message "Resumen de la sección"
+```
+
+Para cualquier cambio nativo debe usar `--delivery-type NATIVE_PLAY_RELEASE`; el workflow AAB se dispara por separado. El resumen del workflow devuelve la URL de actualización y el hash. El usuario no descarga la APK completa para una OTA.
 
 ## Registro autoritativo en Supabase
 
@@ -39,7 +52,7 @@ La migración `backend/sql-migrations/AA-release-control-plane.sql` crea `public
 - estado `DRAFT`, `VALIDATED`, `PUBLISHED`, `ROLLED_BACK` o `BLOCKED`;
 - objetivo de rollback, limitaciones y fecha de publicación.
 
-Los clientes sólo pueden leer registros `PUBLISHED`. No existen políticas de escritura para `anon` o `authenticated`; las publicaciones deben pasar por un proceso controlado con `service_role`/servidor. Supabase no guarda claves privadas, contraseñas, tokens ni credenciales de Play.
+Los clientes sólo pueden leer registros `PUBLISHED`. No existen políticas de escritura para `anon` o `authenticated`; las publicaciones pasan por el workflow usando el secreto de GitHub. Supabase no guarda claves privadas, contraseñas, tokens ni credenciales de Play.
 
 ## Gates
 
@@ -47,9 +60,8 @@ Los clientes sólo pueden leer registros `PUBLISHED`. No existen políticas de e
 2. `SECTION_UPDATE_READY`: clasificación correcta, runtime compatible, manifiesto/hash, fallback embebido, rollback y evidencia de compatibilidad.
 3. `PLAY_STORE_READY`: gates anteriores más políticas, privacidad, Data Safety, contenido, QA humana, rendimiento, estabilidad, accesibilidad y primera sesión.
 
-## Bloqueos reales actuales
+## Bloqueos reales restantes
 
-- Falta registrar/probar la upload key y activar Play App Signing en la cuenta de Google Play.
-- Falta ejecutar el primer AAB firmado en un track interno o cerrado.
-- Falta un endpoint HTTPS compatible con el protocolo Expo Updates; por eso la descarga OTA por código aún no se anuncia como activa.
-- Las claves privadas y credenciales sólo pueden configurarse en secretos de GitHub/Replit/Google, nunca en Supabase.
+- La APK/AAB base nueva debe terminar su compilación y prueba antes de ser la aplicación oficial de Play.
+- La upload key/Play App Signing y el primer track interno o cerrado siguen siendo requisitos de publicación de Google Play, no bloqueos de las OTA.
+- La APK 72 no debe recibir OTA; se conserva como baseline de QA.

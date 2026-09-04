@@ -37,12 +37,22 @@
       ],
       "expo-font",
       "expo-web-browser",
+      "expo-updates",
       "./plugins/withEmbeddedJsBundle"
     ],
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
     },
-    "runtimeVersion": "1.0.0"
+    "runtimeVersion": "1.0.0",
+    "updates": {
+      "url": "https://rscuzqnfccqvltkdcdny.supabase.co/functions/v1/vexforge-updates",
+      "enabled": true,
+      "checkAutomatically": "ON_LOAD",
+      "fallbackToCacheTimeout": 0,
+      "requestHeaders": {
+        "expo-channel-name": "production"
+      }
+    }
   }
 }

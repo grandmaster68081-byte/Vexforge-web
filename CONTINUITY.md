@@ -1,3 +1,14 @@
+## 2026-09-04 — AUTOMATIC SECTION DELIVERY — OTA SERVICE ACTIVATED
+
+- Se desplegó `vexforge-updates` en Supabase con protocolo Expo Updates; filtra Android/runtime/canal y nunca funciona como proxy abierto.
+- Se añadió `expo-updates` compatible con Expo 54 a la APK base, con runtime `1.0.0`, comprobación al iniciar, fallback embebido y canal production. La APK 72 anterior queda fuera de OTA por no contener el módulo.
+- Se añadió el workflow automático `vexforge-android-ota-release.yml`: exporta la sección, sube bundle/assets al bucket oficial, calcula SHA-256, registra `PUBLISHED` y muestra al final la URL de actualización.
+- `mobile/scripts/dispatch-section-release.mjs` es la orden estándar de la IA: `OTA_UPDATE` publica actualización; `NATIVE_PLAY_RELEASE` despacha el carril AAB. No se crean APK parciales.
+- La clave de almacenamiento de Supabase quedó configurada como secreto de GitHub; no se guardó en el repositorio ni en Supabase como dato de la aplicación.
+- Siguiente base: la APK/AAB compilada desde este commit. Sólo esa base podrá recibir las OTA futuras del runtime `1.0.0`.
+
+---
+
 ## 2026-09-04 — ANDROID RELEASE CONTROL PLANE — T0 IMPLEMENTED
 
 - Se reconcilió la copia de GitHub con el protocolo activo de Supabase por API REST HTTPS. Supabase queda en `v2.13-play-aab-ota-control-plane` y conserva la política Android por sección.

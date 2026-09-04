@@ -1,6 +1,8 @@
 name: Build VEXFORGE Android AAB Candidate
 
 on:
+  repository_dispatch:
+    types: [vexforge-native-release]
   workflow_dispatch:
     inputs:
       section_id:
@@ -42,6 +44,13 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     env:
+      VEXFORGE_SECTION_ID: ${{ github.event_name == 'repository_dispatch' && github.event.client_payload.section_id || inputs.section_id }}
+      VEXFORGE_DELIVERY_TYPE: ${{ github.event_name == 'repository_dispatch' && github.event.client_payload.delivery_type || inputs.delivery_type }}
+      VEXFORGE_CHANNEL: ${{ github.event_name == 'repository_dispatch' && github.event.client_payload.channel || inputs.channel }}
+      VEXFORGE_APP_VERSION: ${{ github.event_name == 'repository_dispatch' && github.event.client_payload.app_version || inputs.app_version }}
+      VEXFORGE_VERSION_CODE: ${{ github.event_name == 'repository_dispatch' && github.event.client_payload.version_code || inputs.version_code }}
+      VEXFORGE_SOURCE_COMMIT: ${{ github.event_name == 'repository_dispatch' && github.event.client_payload.source_commit || github.sha }}
+      VEXFORGE_RELEASE_MESSAGE: ${{ github.event_name == 'repository_dispatch' && github.event.client_payload.message || '' }}
       VEXFORGE_UPLOAD_STORE_FILE: upload-keystore.jks
       VEXFORGE_UPLOAD_STORE_PASSWORD: ${{ secrets.VEXFORGE_ANDROID_UPLOAD_STORE_PASSWORD }}
       VEXFORGE_UPLOAD_KEY_ALIAS: ${{ secrets.VEXFORGE_ANDROID_UPLOAD_KEY_ALIAS }}
@@ -62,9 +71,9 @@ jobs:
       - name: Validate release inputs and signing material
         working-directory: mobile
         env:
-          INPUT_APP_VERSION: ${{ inputs.app_version }}
-          INPUT_VERSION_CODE: ${{ inputs.version_code }}
-          INPUT_DELIVERY_TYPE: ${{ inputs.delivery_type }}
+          INPUT_APP_VERSION: ${{ env.VEXFORGE_APP_VERSION }}
+          INPUT_VERSION_CODE: ${{ env.VEXFORGE_VERSION_CODE }}
+          INPUT_DELIVERY_TYPE: ${{ env.VEXFORGE_DELIVERY_TYPE }}
         run: |
           node - <<'NODE'
           const fs = require('node:fs');
@@ -135,7 +144,7 @@ jobs:
       - name: Upload AAB and QA APK artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: vexforge-${{ inputs.section_id }}-${{ inputs.version_code }}-${{ inputs.channel }}
+          name: vexforge-${{ env.VEXFORGE_SECTION_ID }}-${{ env.VEXFORGE_VERSION_CODE }}-${{ env.VEXFORGE_CHANNEL }}
           path: |
             mobile/android/app/build/outputs/bundle/release/app-release.aab
             mobile/android/app/build/outputs/apk/release/app-release.apk
@@ -147,11 +156,11 @@ jobs:
           tag_name: vexforge-android-aab-${{ github.run_number }}
           name: VEXFORGE Android AAB candidate ${{ github.run_number }}
           body: |
-            SECTION_ID: ${{ inputs.section_id }}
-            DELIVERY_TYPE: ${{ inputs.delivery_type }}
-            CHANNEL: ${{ inputs.channel }}
-            APP_VERSION: ${{ inputs.app_version }}
-            VERSION_CODE: ${{ inputs.version_code }}
+            SECTION_ID: ${{ env.VEXFORGE_SECTION_ID }}
+            DELIVERY_TYPE: ${{ env.VEXFORGE_DELIVERY_TYPE }}
+            CHANNEL: ${{ env.VEXFORGE_CHANNEL }}
+            APP_VERSION: ${{ env.VEXFORGE_APP_VERSION }}
+            VERSION_CODE: ${{ env.VEXFORGE_VERSION_CODE }}
             SOURCE_COMMIT: ${{ github.sha }}
             This is a signed AAB candidate for the declared Play track. It is not PLAY_STORE_READY until Supabase registry, track validation, policy review, and human QA are complete.
           files: |

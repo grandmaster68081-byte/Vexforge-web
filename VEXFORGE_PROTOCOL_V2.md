@@ -2101,3 +2101,16 @@ La fase Android-only permanece activa. La web congelada no se modifica para reso
 6. Una sección no puede declararse `SECTION_UPDATE_READY` si no existe evidencia de compatibilidad, manifiesto/hash, fallback, rollback y prueba de rechazo de incompatibles. Una sección no puede declararse `PLAY_COMPATIBLE_CANDIDATE` si el AAB no está firmado con upload key válida y validado en un track interno o cerrado.
 7. Si el endpoint Expo Updates, la firma Play o el track de validación no están disponibles, la IA debe registrar el bloqueo exacto y mantener la sección en `BLOCKED` o `DRAFT`; está prohibido activar una configuración falsa, descargar código desde una URL arbitraria o simular una publicación.
 8. La autoridad de las reglas es este protocolo activo en Supabase. GitHub `main`, los workflows, los manifiestos y los releases son evidencia operativa y deben mantenerse sincronizados mediante APIs HTTPS oficiales.
+
+## 11. IMPLEMENTACIÓN DEL CICLO AUTOMÁTICO — OTA Y BASE ANDROID
+
+**Entrada en vigor:** 2026-09-04  
+**Estado:** IMPLEMENTED — pendiente únicamente de construir y validar la nueva APK/AAB base.
+
+- Se desplegó la Edge Function pública `vexforge-updates` en el proyecto Supabase. Responde al protocolo Expo Updates, filtra por plataforma Android, runtime, canal y releases `PUBLISHED`, y sólo acepta manifiestos alojados en el bucket oficial `vexforge-updates`.
+- La configuración futura de la APK base usa `expo-updates`, `runtimeVersion: 1.0.0`, comprobación `ON_LOAD`, fallback embebido inmediato y canal `production`.
+- El workflow `vexforge-android-ota-release.yml` exporta el bundle, crea/actualiza el almacenamiento oficial, calcula SHA-256, registra `PUBLISHED` en Supabase y deja en el resumen la URL que debe conservar el usuario.
+- El workflow `vexforge-android-aab-candidate.yml` acepta también despachos automáticos `vexforge-native-release`; el APK sigue separado como QA.
+- La orden operativa para una IA después de cerrar una sección es `node mobile/scripts/dispatch-section-release.mjs --section-id ... --delivery-type OTA_UPDATE ...`. Para impacto nativo usa `NATIVE_PLAY_RELEASE`; el carril correcto se dispara sin crear APK parcial.
+- El flujo normal de una sección queda: commit en `main` → despacho por sección → workflow correcto → export/build → digest y validaciones → publicación/registro → URL de actualización en el resumen del workflow.
+- La APK 72 no puede recibir estas OTA porque no contenía `expo-updates`. La próxima APK/AAB base será el punto de partida oficial; no se debe publicar una OTA para la APK 72.

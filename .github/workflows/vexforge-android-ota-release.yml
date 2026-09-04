@@ -1,0 +1,90 @@
+name: Publish VEXFORGE OTA Section Update
+
+on:
+  repository_dispatch:
+    types: [vexforge-section-release]
+  workflow_dispatch:
+    inputs:
+      section_id:
+        description: 'Completed VE-MOB section'
+        required: true
+        type: string
+      channel:
+        description: 'OTA channel'
+        required: true
+        default: production
+        type: choice
+        options:
+          - internal
+          - closed
+          - production
+      app_version:
+        description: 'Version declared by the base app'
+        required: true
+        default: '1.0.0'
+        type: string
+      runtime_version:
+        description: 'Native runtime that can receive this OTA'
+        required: true
+        default: '1.0.0'
+        type: string
+      release_message:
+        description: 'Short section summary'
+        required: false
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  publish-ota:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      SUPABASE_URL: https://rscuzqnfccqvltkdcdny.supabase.co
+      SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.VEXFORGE_SUPABASE_SERVICE_ROLE_KEY }}
+      SECTION_ID: ${{ github.event_name == 'repository_dispatch' && github.event.client_payload.section_id || inputs.section_id }}
+      CHANNEL: ${{ github.event_name == 'repository_dispatch' && github.event.client_payload.channel || inputs.channel }}
+      APP_VERSION: ${{ github.event_name == 'repository_dispatch' && github.event.client_payload.app_version || inputs.app_version }}
+      RUNTIME_VERSION: ${{ github.event_name == 'repository_dispatch' && github.event.client_payload.runtime_version || inputs.runtime_version }}
+      SOURCE_COMMIT: ${{ github.event_name == 'repository_dispatch' && github.event.client_payload.source_commit || github.sha }}
+      RELEASE_MESSAGE: ${{ github.event_name == 'repository_dispatch' && github.event.client_payload.message || inputs.release_message }}
+      GITHUB_RUN_URL: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.SOURCE_COMMIT }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: mobile/package-lock.json
+      - name: Validate OTA inputs
+        run: |
+          test -n "$SUPABASE_SERVICE_ROLE_KEY" || { echo 'Missing VEXFORGE_SUPABASE_SERVICE_ROLE_KEY'; exit 1; }
+          test -n "$SECTION_ID" || { echo 'Missing section id'; exit 1; }
+          test -n "$SOURCE_COMMIT" || { echo 'Missing source commit'; exit 1; }
+          test "$RUNTIME_VERSION" = '1.0.0' || { echo "Unsupported runtime $RUNTIME_VERSION"; exit 1; }
+      - name: Install mobile dependencies
+        working-directory: mobile
+        run: npm ci --ignore-scripts --no-audit --no-fund
+      - name: Export Android OTA bundle
+        working-directory: mobile
+        env:
+          EXPO_NO_DOCTOR: '1'
+        run: npx expo export --platform android --output-dir dist
+      - name: Publish update and register release
+        id: publish
+        working-directory: mobile
+        run: node scripts/publish-ota.mjs
+      - name: Publish OTA result
+        run: |
+          {
+            echo '## VEXFORGE OTA published'
+            echo "- Section: $SECTION_ID"
+            echo "- Runtime: $RUNTIME_VERSION"
+            echo "- Channel: $CHANNEL"
+            echo "- Update URL: ${{ steps.publish.outputs.update_url }}"
+            echo "- Manifest URL: ${{ steps.publish.outputs.manifest_url }}"
+            echo "- Launch SHA-256: ${{ steps.publish.outputs.launch_sha256 }}"
+          } >> "$GITHUB_STEP_SUMMARY"
