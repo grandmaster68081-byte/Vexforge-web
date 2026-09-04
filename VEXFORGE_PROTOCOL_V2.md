@@ -1,5 +1,5 @@
 # VEXFORGE — Protocolo Maestro Universal v2
-**Última actualización:** 2026-09-03 — plan visual Android-first VE-UI-TIER1-ANDROID-01 integrado | **Mantenido por:** Replit Agent
+**Última actualización:** 2026-09-04 — base Android OTA publicada y validada | **Mantenido por:** Replit Agent
 **Documento clave en Supabase:** `vexforge_master_protocol_v2`
 
 ---
@@ -2105,12 +2105,17 @@ La fase Android-only permanece activa. La web congelada no se modifica para reso
 ## 11. IMPLEMENTACIÓN DEL CICLO AUTOMÁTICO — OTA Y BASE ANDROID
 
 **Entrada en vigor:** 2026-09-04  
-**Estado:** IMPLEMENTED — pendiente únicamente de construir y validar la nueva APK/AAB base.
+**Estado:** IMPLEMENTED — BASE OTA PUBLICADA Y VALIDADA.
 
-- Se desplegó la Edge Function pública `vexforge-updates` en el proyecto Supabase. Responde al protocolo Expo Updates, filtra por plataforma Android, runtime, canal y releases `PUBLISHED`, y sólo acepta manifiestos alojados en el bucket oficial `vexforge-updates`.
-- La configuración futura de la APK base usa `expo-updates`, `runtimeVersion: 1.0.0`, comprobación `ON_LOAD`, fallback embebido inmediato y canal `production`.
-- El workflow `vexforge-android-ota-release.yml` exporta el bundle, crea/actualiza el almacenamiento oficial, calcula SHA-256, registra `PUBLISHED` en Supabase y deja en el resumen la URL que debe conservar el usuario.
-- El workflow `vexforge-android-aab-candidate.yml` acepta también despachos automáticos `vexforge-native-release`; el APK sigue separado como QA.
-- La orden operativa para una IA después de cerrar una sección es `node mobile/scripts/dispatch-section-release.mjs --section-id ... --delivery-type OTA_UPDATE ...`. Para impacto nativo usa `NATIVE_PLAY_RELEASE`; el carril correcto se dispara sin crear APK parcial.
-- El flujo normal de una sección queda: commit en `main` → despacho por sección → workflow correcto → export/build → digest y validaciones → publicación/registro → URL de actualización en el resumen del workflow.
-- La APK 72 no puede recibir estas OTA porque no contenía `expo-updates`. La próxima APK/AAB base será el punto de partida oficial; no se debe publicar una OTA para la APK 72.
+- La Edge Function pública `vexforge-updates` responde al protocolo Expo Updates, filtra por plataforma Android, `runtimeVersion`, canal y releases `PUBLISHED`, y sólo acepta manifiestos alojados en el bucket oficial `vexforge-updates`.
+- La APK base oficial usa `expo-updates`, `runtimeVersion: 1.0.0`, comprobación `ON_LOAD`, fallback embebido inmediato y canal `production`.
+- La base Android quedó publicada como release `vexforge-android-build-78`, construida desde el commit `6de1af807c4a1546cc3d0f0b4dd5afe256d22d0b`, con `app_version: 1.0.0`, `versionCode: 3` y artefacto `app-release.apk`.
+- La descarga directa validada de la base es `https://github.com/grandmaster68081-byte/Vexforge-web/releases/download/vexforge-android-build-78/app-release.apk`. El archivo mide `95296812` bytes y su SHA-256 es `a386f0793928f17e3d9aee7ccbfce7a2d26c6001afa77d3d7c08d39e0947ac65`.
+- La APK contiene `assets/index.android.bundle` de `3176784` bytes, por lo que es standalone y no depende de Metro. Esta APK es la base oficial QA/sideload para recibir las futuras OTA del runtime `1.0.0`; no es una declaración de `PLAY_STORE_READY`.
+- El registro canónico de esta base está en `public.vexforge_android_release_registry` con `SECTION_ID=VE-MOB-BASE-OTA`, `DELIVERY_TYPE=NATIVE_PLAY_RELEASE`, `status=PUBLISHED`, `channel=production`, rollout `100%`, validaciones de descarga/bundle y limitaciones de APK QA/sideload.
+- La APK 72 queda fuera del ciclo porque no contenía `expo-updates`; no se debe publicar una OTA dirigida a la APK 72.
+- Para cada sección futura, la IA debe asignar primero `DELIVERY_TYPE`: `OTA_UPDATE` para JavaScript/TypeScript, navegación, estilos, copy y assets compatibles con el runtime `1.0.0`; `NATIVE_PLAY_RELEASE` para permisos, SDK, plugins, dependencias nativas, app config, runtime, firma o cualquier cambio que requiera recompilación.
+- Una sección compatible debe seguir `commit en main → dispatch por sección → workflow OTA → manifiesto HTTPS firmado/hash → registro PUBLISHED en Supabase → rollout/rollback`. No se debe construir ni descargar otra APK completa para una sección compatible.
+- Si el cambio es nativo, el flujo correcto es el workflow AAB firmado con `versionCode` monotónico; el APK asociado sólo sirve para QA/sideload. Nunca se publican APK parciales ni se simula una OTA si faltan manifiesto, hash, fallback, rollback o rechazo seguro de runtime incompatible.
+- La orden operativa de una sección compatible es `node mobile/scripts/dispatch-section-release.mjs --section-id ... --delivery-type OTA_UPDATE ...`; para impacto nativo se debe usar `NATIVE_PLAY_RELEASE`.
+- El flujo normal queda: commit en `main` → clasificación de sección → workflow correcto → digest y validaciones → publicación y registro en Supabase → URL del manifiesto/artefacto en el resumen del workflow.
