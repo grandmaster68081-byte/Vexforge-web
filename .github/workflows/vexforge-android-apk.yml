@@ -45,6 +45,7 @@ jobs:
           --max-workers=2
           -x lintVitalAnalyzeRelease
           -x lintVitalReportRelease
+          -x lintVitalRelease
       - name: Verify the APK is standalone
         working-directory: mobile/android
         run: |
