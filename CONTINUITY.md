@@ -1,3 +1,12 @@
+## 2026-09-04 — ANDROID BASE APK — CI INSTALL RECOVERY IN PROGRESS
+
+- El workflow oficial del commit `0fc528f3d6e0894edab7c8dc2aa36ef6a59c1406` alcanzó el runner y falló dos veces antes de typecheck/Gradle por `npm error Exit handler never called` durante `npm install`; no se generó release nuevo.
+- Se confirmó que el cambio de ese commit no altera `mobile/**`: sólo ajusta workflows, documentación y control de la entrega; la base OTA sigue siendo la aplicación Android del ciclo `runtimeVersion 1.0.0`.
+- Se corrigió únicamente `.github/workflows/vexforge-android-apk.yml` para que CI instale desde `mobile/package.json` con el registro público y sin consumir el lockfile con URLs internas de Replit. La ruta se reprodujo localmente con Expo CLI disponible.
+- No se modificaron web, lógica Android, Supabase, Auth, RLS, RPCs, Storage, firma ni datos. El release base permanece pendiente hasta que el workflow oficial termine en `success` y publique el APK correlativo.
+
+---
+
 ## 2026-09-04 — AUTOMATIC SECTION DELIVERY — OTA SERVICE ACTIVATED
 
 - Se desplegó `vexforge-updates` en Supabase con protocolo Expo Updates; filtra Android/runtime/canal y nunca funciona como proxy abierto.
