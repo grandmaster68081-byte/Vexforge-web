@@ -1899,3 +1899,379 @@ La ausencia temporal de QA humana nunca autoriza a fabricar evidencia ni detiene
 El plan queda corregido como READY_FOR_EXECUTION_AFTER_T0. La siguiente ejecución debe comenzar por el T0 de reconciliación Android y producir la matriz de evidencia del APK actual antes de ampliar escenas o volumen de assets. Después se ejecutan los tracks F y V en paralelo sólo donde sus dependencias estén habilitadas, convergiendo siempre en el gate del vertical slice. El APK publicado más reciente se usa como baseline de medición, no como prueba de Tier 1.
 
 Se mantiene el estado global PRE-LAUNCH INTERNAL QA. Esta enmienda no declara PASS, TIER1_READY ni OPERATIONAL.
+
+---
+# ENMIENDA PERMANENTE — COMPATIBILIDAD GOOGLE PLAY Y ACTUALIZACIONES POR SECCIÓN
+
+**Fecha de incorporación:** 2026-09-04  
+**Estado:** OFICIAL — INTEGRADA EN EL PROTOCOLO MAESTRO  
+**Precedencia:** esta enmienda prevalece sobre cualquier flujo que trate un APK standalone como artefacto de producción, use firma debug para Play, cambie el package ID, distribuya parches no verificables o descargue código remoto fuera del protocolo de actualizaciones.
+
+## 1. Objetivo de distribución
+
+El destino final de VEXFORGE Android es Google Play. El APK standalone deja de ser el formato de producción: se conserva únicamente como artefacto de QA interna, instalación directa y diagnóstico.
+
+El artefacto de publicación para Google Play será un Android App Bundle (`.aab`) firmado con una clave de subida válida y entregado a Play App Signing. Google Play genera los APK optimizados por dispositivo y gestiona su distribución diferencial. El workflow del proyecto debe producir y verificar el AAB; nunca debe presentar el APK debug como release de tienda.
+
+La política vigente de Google Play consultada el 2026-09-04 exige para nuevas aplicaciones y actualizaciones un target API 35 o superior desde el 31 de agosto de 2026. Este umbral se debe volver a consultar en cada preparación de lanzamiento porque la política puede subir anualmente.
+
+Fuentes de referencia que deben revisarse antes de un release:
+
+- https://developer.android.com/google/play/requirements/target-sdk
+- https://developer.android.com/guide/app-bundle
+- https://support.google.com/googleplay/android-developer/answer/9842756?hl=en
+- https://docs.expo.dev/technical-specs/expo-updates-1
+
+## 2. Diagnóstico actual y brechas de Play
+
+La configuración reconciliada de main demuestra estas brechas, que no deben ocultarse:
+
+- El workflow actual ejecuta `assembleRelease`, publica un `.apk` y documenta que la plantilla usa debug keystore para mantenerlo instalable por sideload.
+- No se genera `.aab`.
+- `mobile/app.json` conserva el package estable `com.vexforge.android`, lo cual debe preservarse.
+- `mobile/app.json` declara `versionCode: 2`; el número de build del workflow no puede sustituirlo automáticamente sin una política de versionado monotónica y verificable.
+- `expo-updates` no está instalado ni configurado.
+- El plugin `withEmbeddedJsBundle` garantiza fallback standalone, pero no constituye un sistema OTA. Debe conservarse sólo si las pruebas demuestran que no interfiere con Expo Updates.
+- No existe todavía evidencia de clave de subida, Play App Signing, target API mínimo validado, bundletool, track interno ni rollback OTA.
+
+Por tanto, el APK publicado más reciente no es `PLAY_COMPATIBLE_CANDIDATE`; es `QA_APK_BASELINE`.
+
+## 3. Dos canales de entrega, sin confundirlos
+
+Cada sección de trabajo debe clasificarse antes de implementarse como `OTA_UPDATE` o `NATIVE_PLAY_RELEASE`.
+
+### 3.1 `OTA_UPDATE` — actualización por sección sin APK completo
+
+Se permite cuando la sección cambia únicamente JavaScript/TypeScript, navegación, estilos, copy, lógica de presentación o assets compatibles con el runtime nativo instalado. La aplicación consulta un manifiesto OTA por HTTPS, valida la compatibilidad y descarga sólo el bundle/assets que no tenga en caché. El usuario no debe descargar manualmente un archivo de parche.
+
+La unidad descargable es un release OTA firmado/identificado por hash, no un APK parcial. La sección se publica con canal, runtime, versión mínima, rollout, fecha, changelog, assets, migraciones y rollback. El cliente aplica la actualización de forma segura y vuelve a la versión anterior si el arranque o la validación fallan.
+
+OTA no puede:
+
+- cambiar permisos Android, package ID, SDK, manifest, Gradle o configuración nativa;
+- agregar/quitar módulos nativos o cambiar la interfaz JS-nativa;
+- cambiar Expo/React Native o cualquier dependencia que requiera recompilación;
+- introducir un esquema de datos incompatible sin migración autoritativa;
+- resolver combate, economía, recompensas, settlement o autenticación fuera de Supabase;
+- descargar y ejecutar código desde una URL arbitraria o fuera del manifiesto oficial.
+
+### 3.2 `NATIVE_PLAY_RELEASE` — actualización que requiere AAB
+
+Cualquier cambio nativo, de permisos, SDK, plugin, dependencia nativa, app config, runtime compatible, firma, assets nativos o comportamiento que no sea compatible con el runtime instalado exige un nuevo AAB con `versionCode` mayor. El APK de QA puede generarse además, pero nunca reemplaza al AAB de Play.
+
+Google Play puede entregar al usuario sólo los módulos/diferencias necesarios, pero el proyecto debe subir un AAB completo. No se debe prometer al usuario un “APK parcial” ni construir un parche binario propio.
+
+## 4. Contrato de runtime y versionado
+
+- `com.vexforge.android` es inmutable después del primer registro en Play.
+- `versionCode` es entero, monotónico y único para cada AAB. No se reutiliza, no se reduce y no depende sólo de un número de workflow si puede colisionar.
+- `version` es la versión visible para el jugador y se actualiza según la política de release.
+- `runtimeVersion` identifica la compatibilidad entre un binario nativo y sus actualizaciones OTA. Todo cambio de interfaz nativa obliga a crear un runtime nuevo y publicar AAB antes de enviar OTA.
+- Cada OTA declara explícitamente el runtime compatible, la versión mínima de aplicación, el canal, el hash del bundle/manifiesto y la estrategia de rollback.
+- La app debe arrancar con el bundle embebido conocido si no puede validar o descargar una OTA. Nunca debe quedar en loader eterno ni ejecutar una actualización parcialmente descargada.
+- Las migraciones de datos se hacen antes de liberar una OTA/AAB incompatible y deben ser reversibles o tener reparación documentada.
+
+## 5. Firma, secretos y Play App Signing
+
+Google Play App Signing es el modelo oficial recomendado. La clave de firma de aplicación queda protegida por Google; el workflow usa una clave de subida separada y protegida.
+
+- La clave de subida, contraseña, alias, service account de Play y cualquier token son secretos de GitHub/Replit/Google, nunca contenido de Supabase, documentación, APK, logs o continuidad.
+- Ningún agente debe pedir al usuario que pegue una clave privada en chat.
+- El workflow de producción falla si intenta firmar el AAB con debug keystore, clave efímera o credencial no verificable.
+- Antes de la primera subida se registra el package ID, huella de certificado, propietario de Play App Signing, procedimiento de recuperación y responsable de la cuenta.
+- El artefacto de QA puede usar una firma separada para sideload, pero se etiqueta como QA y nunca se sube al track de producción.
+
+## 6. Sistema de trabajo por secciones
+
+Cada sección completada genera un registro de release con esta información mínima:
+
+```text
+SECTION_ID:
+SECTION_SCOPE:
+DELIVERY_TYPE: OTA_UPDATE | NATIVE_PLAY_RELEASE
+RUNTIME_VERSION:
+APP_VERSION:
+VERSION_CODE:
+CHANNEL: development | internal | closed | production
+SOURCE_COMMIT:
+SUPABASE_SCHEMA_OR_RPC_IMPACT:
+ASSET_MANIFEST:
+BUNDLE_OR_AAB_DIGEST:
+MINIMUM_APP_VERSION:
+ROLLOUT:
+ROLLBACK_TARGET:
+VALIDATION:
+KNOWN_LIMITATIONS:
+STATUS:
+```
+
+Secuencia obligatoria por sección:
+
+1. reconciliar protocolo, continuidad, main, Supabase y el runtime Android actual;
+2. clasificar la sección como OTA o AAB antes de editar;
+3. implementar la sección completa sin autoridad local ni mocks;
+4. ejecutar typecheck, guards, validaciones de contratos, seguridad y build que correspondan;
+5. publicar el artefacto de sección: manifiesto OTA o AAB/QA APK;
+6. validar instalación, arranque, rollback y recorrido afectado;
+7. registrar digest, evidencia, límites y estado en continuidad;
+8. dejar el canal anterior disponible hasta confirmar recuperación.
+
+El usuario recibirá una actualización OTA sólo cuando la sección sea OTA-compatible. Si la sección requiere código nativo, recibirá una actualización a través del track de Play; durante QA interna podrá descargarse el APK de esa compilación, pero no se presentará como actualización parcial.
+
+## 7. Autoridad de Supabase para el sistema de releases
+
+Supabase es la autoridad de metadatos de releases, canales, compatibilidad, hashes, estado, rollback y evidencia; no es un almacén de claves privadas ni sustituye a Google Play.
+
+El sistema que se implemente debe mantener un registro autoritativo de, como mínimo:
+
+- release y sección;
+- tipo OTA/AAB;
+- runtime y versión mínima;
+- canal y rollout;
+- bundle/manifiesto/AAB digest;
+- estado `DRAFT`, `VALIDATED`, `PUBLISHED`, `ROLLED_BACK` o `BLOCKED`;
+- release anterior de rollback;
+- checks ejecutados y evidencia;
+- fecha, commit y responsable técnico.
+
+La entrega OTA debe usar HTTPS y un endpoint/manifiesto compatible con el protocolo Expo Updates. Storage puede alojar bundles/assets públicos versionados; la publicación debe estar gobernada por el registro y no por URLs mutables improvisadas. RLS, Auth y permisos deben impedir que un cliente modifique el release publicado o el canal de producción.
+
+La telemetría de actualización debe distinguir consulta, descarga, instalación, arranque exitoso, rollback, error de compatibilidad y abandono. Nunca debe incluir secretos.
+
+## 8. Gates de compatibilidad
+
+### `PLAY_COMPATIBLE_CANDIDATE`
+
+Requiere todos estos puntos:
+
+- AAB generado y verificable;
+- package `com.vexforge.android` sin cambios;
+- `versionCode` mayor que el último AAB aceptado;
+- target API mínimo vigente de Google Play, actualmente 35 o superior;
+- AAB firmado con upload key válida, no debug key;
+- Play App Signing preparado o activo;
+- manifest, permisos, icono, splash, política de privacidad, Data Safety, clasificación de contenido y acceso de revisión documentados;
+- instalación/validación en track interno o cerrado;
+- workflow reproducible, digest, logs y rollback documentados;
+- no hay crash, ANR, loader eterno ni regresión crítica en el vertical slice Android.
+
+### `SECTION_UPDATE_READY`
+
+Requiere además:
+
+- clasificación OTA/AAB explícita;
+- runtime compatible;
+- manifiesto y hashes verificables;
+- fallback embebido funcional;
+- descarga reanudable y rollback;
+- prueba de una OTA compatible y rechazo seguro de una OTA incompatible;
+- evidencia de que la sección no altera autoridad de Supabase ni datos del jugador.
+
+### `PLAY_STORE_READY`
+
+No se declara hasta completar los gates anteriores, la revisión de políticas vigente, la QA humana autorizada, el recorrido de primera sesión, estabilidad, accesibilidad, rendimiento, privacidad, contenido y el track de publicación elegido.
+
+## 9. Regla de no regresión y precedencia
+
+La APK completa sigue siendo necesaria para cada cambio nativo y para el primer binario de un runtime. La OTA sólo reduce descargas cuando el cambio es compatible; no elimina los builds nativos ni permite saltarse Play.
+
+No se permite:
+
+- publicar un APK debug como producción;
+- guardar signing keys o credenciales en Supabase;
+- usar `versionCode` repetido o decreciente;
+- enviar OTA a un runtime incompatible;
+- mutar el canal de producción desde el cliente;
+- declarar Play compatible por tener un APK instalable;
+- ejecutar comandos de publicación no registrados ni usar un servicio paralelo como fuente de verdad;
+- declarar `PLAY_STORE_READY`, `TIER1_READY` u `OPERATIONAL` sin evidencia real y QA humana.
+
+La fase Android-only permanece activa. La web congelada no se modifica para resolver Play ni OTA Android. La siguiente ejecución elegible es el T0 de release Android: auditoría de target API, versionado, firma, AAB, runtime y contrato de releases antes de tocar una feature.
+
+---
+# ENMIENDA PERMANENTE — COMPATIBILIDAD GOOGLE PLAY Y ACTUALIZACIONES POR SECCIÓN
+
+**Fecha de incorporación:** 2026-09-04  
+**Estado:** OFICIAL — INTEGRADA EN EL PROTOCOLO MAESTRO  
+**Precedencia:** esta enmienda prevalece sobre cualquier flujo que trate un APK standalone como artefacto de producción, use firma debug para Play, cambie el package ID, distribuya parches no verificables o descargue código remoto fuera del protocolo de actualizaciones.
+
+## 1. Objetivo de distribución
+
+El destino final de VEXFORGE Android es Google Play. El APK standalone deja de ser el formato de producción: se conserva únicamente como artefacto de QA interna, instalación directa y diagnóstico.
+
+El artefacto de publicación para Google Play será un Android App Bundle (`.aab`) firmado con una clave de subida válida y entregado a Play App Signing. Google Play genera los APK optimizados por dispositivo y gestiona su distribución diferencial. El workflow del proyecto debe producir y verificar el AAB; nunca debe presentar el APK debug como release de tienda.
+
+La política vigente de Google Play consultada el 2026-09-04 exige para nuevas aplicaciones y actualizaciones un target API 35 o superior desde el 31 de agosto de 2026. Este umbral se debe volver a consultar en cada preparación de lanzamiento porque la política puede subir anualmente.
+
+Fuentes de referencia que deben revisarse antes de un release:
+
+- https://developer.android.com/google/play/requirements/target-sdk
+- https://developer.android.com/guide/app-bundle
+- https://support.google.com/googleplay/android-developer/answer/9842756?hl=en
+- https://docs.expo.dev/technical-specs/expo-updates-1
+
+## 2. Diagnóstico actual y brechas de Play
+
+La configuración reconciliada de main demuestra estas brechas, que no deben ocultarse:
+
+- El workflow actual ejecuta `assembleRelease`, publica un `.apk` y documenta que la plantilla usa debug keystore para mantenerlo instalable por sideload.
+- No se genera `.aab`.
+- `mobile/app.json` conserva el package estable `com.vexforge.android`, lo cual debe preservarse.
+- `mobile/app.json` declara `versionCode: 2`; el número de build del workflow no puede sustituirlo automáticamente sin una política de versionado monotónica y verificable.
+- `expo-updates` no está instalado ni configurado.
+- El plugin `withEmbeddedJsBundle` garantiza fallback standalone, pero no constituye un sistema OTA. Debe conservarse sólo si las pruebas demuestran que no interfiere con Expo Updates.
+- No existe todavía evidencia de clave de subida, Play App Signing, target API mínimo validado, bundletool, track interno ni rollback OTA.
+
+Por tanto, el APK publicado más reciente no es `PLAY_COMPATIBLE_CANDIDATE`; es `QA_APK_BASELINE`.
+
+## 3. Dos canales de entrega, sin confundirlos
+
+Cada sección de trabajo debe clasificarse antes de implementarse como `OTA_UPDATE` o `NATIVE_PLAY_RELEASE`.
+
+### 3.1 `OTA_UPDATE` — actualización por sección sin APK completo
+
+Se permite cuando la sección cambia únicamente JavaScript/TypeScript, navegación, estilos, copy, lógica de presentación o assets compatibles con el runtime nativo instalado. La aplicación consulta un manifiesto OTA por HTTPS, valida la compatibilidad y descarga sólo el bundle/assets que no tenga en caché. El usuario no debe descargar manualmente un archivo de parche.
+
+La unidad descargable es un release OTA firmado/identificado por hash, no un APK parcial. La sección se publica con canal, runtime, versión mínima, rollout, fecha, changelog, assets, migraciones y rollback. El cliente aplica la actualización de forma segura y vuelve a la versión anterior si el arranque o la validación fallan.
+
+OTA no puede:
+
+- cambiar permisos Android, package ID, SDK, manifest, Gradle o configuración nativa;
+- agregar/quitar módulos nativos o cambiar la interfaz JS-nativa;
+- cambiar Expo/React Native o cualquier dependencia que requiera recompilación;
+- introducir un esquema de datos incompatible sin migración autoritativa;
+- resolver combate, economía, recompensas, settlement o autenticación fuera de Supabase;
+- descargar y ejecutar código desde una URL arbitraria o fuera del manifiesto oficial.
+
+### 3.2 `NATIVE_PLAY_RELEASE` — actualización que requiere AAB
+
+Cualquier cambio nativo, de permisos, SDK, plugin, dependencia nativa, app config, runtime compatible, firma, assets nativos o comportamiento que no sea compatible con el runtime instalado exige un nuevo AAB con `versionCode` mayor. El APK de QA puede generarse además, pero nunca reemplaza al AAB de Play.
+
+Google Play puede entregar al usuario sólo los módulos/diferencias necesarios, pero el proyecto debe subir un AAB completo. No se debe prometer al usuario un “APK parcial” ni construir un parche binario propio.
+
+## 4. Contrato de runtime y versionado
+
+- `com.vexforge.android` es inmutable después del primer registro en Play.
+- `versionCode` es entero, monotónico y único para cada AAB. No se reutiliza, no se reduce y no depende sólo de un número de workflow si puede colisionar.
+- `version` es la versión visible para el jugador y se actualiza según la política de release.
+- `runtimeVersion` identifica la compatibilidad entre un binario nativo y sus actualizaciones OTA. Todo cambio de interfaz nativa obliga a crear un runtime nuevo y publicar AAB antes de enviar OTA.
+- Cada OTA declara explícitamente el runtime compatible, la versión mínima de aplicación, el canal, el hash del bundle/manifiesto y la estrategia de rollback.
+- La app debe arrancar con el bundle embebido conocido si no puede validar o descargar una OTA. Nunca debe quedar en loader eterno ni ejecutar una actualización parcialmente descargada.
+- Las migraciones de datos se hacen antes de liberar una OTA/AAB incompatible y deben ser reversibles o tener reparación documentada.
+
+## 5. Firma, secretos y Play App Signing
+
+Google Play App Signing es el modelo oficial recomendado. La clave de firma de aplicación queda protegida por Google; el workflow usa una clave de subida separada y protegida.
+
+- La clave de subida, contraseña, alias, service account de Play y cualquier token son secretos de GitHub/Replit/Google, nunca contenido de Supabase, documentación, APK, logs o continuidad.
+- Ningún agente debe pedir al usuario que pegue una clave privada en chat.
+- El workflow de producción falla si intenta firmar el AAB con debug keystore, clave efímera o credencial no verificable.
+- Antes de la primera subida se registra el package ID, huella de certificado, propietario de Play App Signing, procedimiento de recuperación y responsable de la cuenta.
+- El artefacto de QA puede usar una firma separada para sideload, pero se etiqueta como QA y nunca se sube al track de producción.
+
+## 6. Sistema de trabajo por secciones
+
+Cada sección completada genera un registro de release con esta información mínima:
+
+```text
+SECTION_ID:
+SECTION_SCOPE:
+DELIVERY_TYPE: OTA_UPDATE | NATIVE_PLAY_RELEASE
+RUNTIME_VERSION:
+APP_VERSION:
+VERSION_CODE:
+CHANNEL: development | internal | closed | production
+SOURCE_COMMIT:
+SUPABASE_SCHEMA_OR_RPC_IMPACT:
+ASSET_MANIFEST:
+BUNDLE_OR_AAB_DIGEST:
+MINIMUM_APP_VERSION:
+ROLLOUT:
+ROLLBACK_TARGET:
+VALIDATION:
+KNOWN_LIMITATIONS:
+STATUS:
+```
+
+Secuencia obligatoria por sección:
+
+1. reconciliar protocolo, continuidad, main, Supabase y el runtime Android actual;
+2. clasificar la sección como OTA o AAB antes de editar;
+3. implementar la sección completa sin autoridad local ni mocks;
+4. ejecutar typecheck, guards, validaciones de contratos, seguridad y build que correspondan;
+5. publicar el artefacto de sección: manifiesto OTA o AAB/QA APK;
+6. validar instalación, arranque, rollback y recorrido afectado;
+7. registrar digest, evidencia, límites y estado en continuidad;
+8. dejar el canal anterior disponible hasta confirmar recuperación.
+
+El usuario recibirá una actualización OTA sólo cuando la sección sea OTA-compatible. Si la sección requiere código nativo, recibirá una actualización a través del track de Play; durante QA interna podrá descargarse el APK de esa compilación, pero no se presentará como actualización parcial.
+
+## 7. Autoridad de Supabase para el sistema de releases
+
+Supabase es la autoridad de metadatos de releases, canales, compatibilidad, hashes, estado, rollback y evidencia; no es un almacén de claves privadas ni sustituye a Google Play.
+
+El sistema que se implemente debe mantener un registro autoritativo de, como mínimo:
+
+- release y sección;
+- tipo OTA/AAB;
+- runtime y versión mínima;
+- canal y rollout;
+- bundle/manifiesto/AAB digest;
+- estado `DRAFT`, `VALIDATED`, `PUBLISHED`, `ROLLED_BACK` o `BLOCKED`;
+- release anterior de rollback;
+- checks ejecutados y evidencia;
+- fecha, commit y responsable técnico.
+
+La entrega OTA debe usar HTTPS y un endpoint/manifiesto compatible con el protocolo Expo Updates. Storage puede alojar bundles/assets públicos versionados; la publicación debe estar gobernada por el registro y no por URLs mutables improvisadas. RLS, Auth y permisos deben impedir que un cliente modifique el release publicado o el canal de producción.
+
+La telemetría de actualización debe distinguir consulta, descarga, instalación, arranque exitoso, rollback, error de compatibilidad y abandono. Nunca debe incluir secretos.
+
+## 8. Gates de compatibilidad
+
+### `PLAY_COMPATIBLE_CANDIDATE`
+
+Requiere todos estos puntos:
+
+- AAB generado y verificable;
+- package `com.vexforge.android` sin cambios;
+- `versionCode` mayor que el último AAB aceptado;
+- target API mínimo vigente de Google Play, actualmente 35 o superior;
+- AAB firmado con upload key válida, no debug key;
+- Play App Signing preparado o activo;
+- manifest, permisos, icono, splash, política de privacidad, Data Safety, clasificación de contenido y acceso de revisión documentados;
+- instalación/validación en track interno o cerrado;
+- workflow reproducible, digest, logs y rollback documentados;
+- no hay crash, ANR, loader eterno ni regresión crítica en el vertical slice Android.
+
+### `SECTION_UPDATE_READY`
+
+Requiere además:
+
+- clasificación OTA/AAB explícita;
+- runtime compatible;
+- manifiesto y hashes verificables;
+- fallback embebido funcional;
+- descarga reanudable y rollback;
+- prueba de una OTA compatible y rechazo seguro de una OTA incompatible;
+- evidencia de que la sección no altera autoridad de Supabase ni datos del jugador.
+
+### `PLAY_STORE_READY`
+
+No se declara hasta completar los gates anteriores, la revisión de políticas vigente, la QA humana autorizada, el recorrido de primera sesión, estabilidad, accesibilidad, rendimiento, privacidad, contenido y el track de publicación elegido.
+
+## 9. Regla de no regresión y precedencia
+
+La APK completa sigue siendo necesaria para cada cambio nativo y para el primer binario de un runtime. La OTA sólo reduce descargas cuando el cambio es compatible; no elimina los builds nativos ni permite saltarse Play.
+
+No se permite:
+
+- publicar un APK debug como producción;
+- guardar signing keys o credenciales en Supabase;
+- usar `versionCode` repetido o decreciente;
+- enviar OTA a un runtime incompatible;
+- mutar el canal de producción desde el cliente;
+- declarar Play compatible por tener un APK instalable;
+- ejecutar comandos de publicación no registrados ni usar un servicio paralelo como fuente de verdad;
+- declarar `PLAY_STORE_READY`, `TIER1_READY` u `OPERATIONAL` sin evidencia real y QA humana.
+
+La fase Android-only permanece activa. La web congelada no se modifica para resolver Play ni OTA Android. La siguiente ejecución elegible es el T0 de release Android: auditoría de target API, versionado, firma, AAB, runtime y contrato de releases antes de tocar una feature.

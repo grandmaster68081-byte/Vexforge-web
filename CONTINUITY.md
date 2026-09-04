@@ -1,3 +1,13 @@
+## 2026-09-04 — PLAY STORE + ACTUALIZACIONES POR SECCIÓN — PLAN OFICIAL
+
+- Se revisó la configuración Android oficial: el workflow actual sólo publica APK con assembleRelease y firma debug; app.json conserva com.vexforge.android con versionCode 2; expo-updates no está instalado; el APK 72 queda clasificado como QA_APK_BASELINE.
+- Se fijó el modelo de distribución: AAB firmado para Google Play; APK sólo para QA/sideload; OTA únicamente para cambios JS/assets compatibles con el runtime. Google Play puede optimizar la descarga del AAB, pero no se construyen APK parciales propios.
+- Se establecieron runtimeVersion, versionCode monotónico, Play App Signing, upload key fuera de Supabase, canales, rollback, hashes, manifiestos y gates PLAY_COMPATIBLE_CANDIDATE, SECTION_UPDATE_READY y PLAY_STORE_READY.
+- Supabase queda como autoridad de metadatos, compatibilidad, hashes, estado y rollback de releases; nunca almacena claves privadas, credenciales de Play ni tokens. La futura entrega OTA debe ser HTTPS y compatible con el protocolo Expo Updates.
+- No se modificó mobile/**, web, datos, Auth, RLS, RPCs, Storage, firma ni workflow de producto en esta sesión. El siguiente trabajo es T0 de release Android y requiere validar el target API vigente, el AAB firmado y el contrato OTA antes de implementar una sección.
+
+---
+
 ## 2026-09-04 — VE-UI-TIER1-ANDROID-02 — T0 APK 72 BASELINE
 
 - Se ejecutó el T0 estático sobre el asset oficial app-release.apk del release vexforge-android-build-72: 91,802,119 bytes, SHA-256 9ab761c736dd19d09799a654647639d8d4a4e827db16d709a0fc167401d7a524.
