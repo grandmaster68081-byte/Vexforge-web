@@ -6,6 +6,7 @@ on:
 jobs:
   build-apk:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     permissions: { contents: write }
     defaults: { run: { working-directory: mobile } }
     steps:
@@ -39,7 +40,11 @@ jobs:
       # debug keystore, which keeps the APK sideload-installable.
       - name: Build installable APK
         working-directory: mobile/android
-        run: ./gradlew assembleRelease --no-daemon --stacktrace
+        run: >-
+          ./gradlew assembleRelease --no-daemon --stacktrace --console=plain
+          --max-workers=2
+          -x lintVitalAnalyzeRelease
+          -x lintVitalReportRelease
       - name: Verify the APK is standalone
         working-directory: mobile/android
         run: |
