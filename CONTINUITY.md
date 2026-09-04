@@ -1,3 +1,13 @@
+## 2026-09-04 — VE-UI-TIER1-ANDROID-02 — T0 APK 72 BASELINE
+
+- Se ejecutó el T0 estático sobre el asset oficial app-release.apk del release vexforge-android-build-72: 91,802,119 bytes, SHA-256 9ab761c736dd19d09799a654647639d8d4a4e827db16d709a0fc167401d7a524.
+- El ZIP/APK pasó la comprobación CRC, contiene 1,247 entradas, assets/index.android.bundle, assets/app.config y cuatro ABIs: arm64-v8a, armeabi-v7a, x86 y x86_64.
+- El workflow correlativo run 33813451975 / número 72 terminó success sobre el commit a7ff094d0c42e13f9547c2529b5c457ccac8b2da. Esto valida la integridad del artefacto y la reproducibilidad del release, no el rendimiento ni el vertical slice.
+- El entorno de medición no tiene adb, emulador ni dispositivo Android conectado. Cold start, FPS, memoria, ANR/OOM, compatibilidad, reduced-motion, estados runtime, reconnect, vertical slice y QA humana quedan IMPLEMENTED_UNVERIFIED; no se fabrican métricas ni se promueve ANDROID_GAME_TIER1_CANDIDATE.
+- Se publicó el reporte docs/VE-UI-TIER1-ANDROID-02-T0-APK72-BASELINE.md. No se modificó mobile/**, la web, Supabase, contratos, datos, Storage, Auth, RPCs ni el release existente.
+
+---
+
 ## 2026-09-04 — RECONCILIACIÓN DEL PLAN TIER 1 ANDROID — OFICIAL
 
 - Se completó el análisis del plan contra el protocolo vivo, el plan histórico ForgeFormation, la matriz viva de 45 objetivos, el inventario Android, el código móvil y el APK publicado más reciente (release 72).
