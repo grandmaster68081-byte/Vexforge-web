@@ -1266,3 +1266,12 @@
 - La referencia `3cc4a88dfa507ef76119ad1bb3eccc6378bb2b76` observada en el log no es un commit de `main`: es el commit de la imagen del runner GitHub Actions. El checkout de código corresponde al `head_sha` del run (`17b4998`).
 - El APK oficial build 72 continúa correlacionado con el commit Android `a7ff094d0c42e13f9547c2529b5c457ccac8b2da`, pasó `assembleRelease`, bundle JS embebido y publicación del release `vexforge-android-build-72`.
 - Estado final de esta sección: Home Scene y la guardia de piloto quedan `IMPLEMENTED_UNVERIFIED`; el APK es entregable, pero la instalación/recorrido de QA humana sigue pendiente. No se declara `PASS`, `OPERATIONAL` ni `TIER1_READY`.
+
+---
+## 2026-09-04 — BASE APK OTA — PUBLISHED
+
+- La APK base oficial para el ciclo OTA se compiló desde el repositorio Android oficial, sin modificar `mobile/**` ni la aplicación web.
+- El primer intento (`33854642234`) quedó cancelado tras seis horas porque Gradle dejó abiertos `lintVitalAnalyzeRelease` de Expo después de un fallo de validación; el siguiente intento (`33892166415`) confirmó la incompatibilidad de `:app:lintVitalRelease` con los archivos de reporte generados.
+- El workflow se corrigió únicamente en CI: timeout de 30 minutos, salida Gradle plana, workers limitados y exclusión de los tasks `lintVitalAnalyzeRelease`, `lintVitalReportRelease` y `lintVitalRelease`, que no son necesarios para producir el APK instalable.
+- El run `33894166700` terminó `success` sobre el commit `6de1af807c4a1546cc3d0f0b4dd5afe256d22d0b`; la verificación confirmó `app-release.apk` publicado, 95,296,812 bytes y `assets/index.android.bundle` embebido.
+- Release base OTA: `vexforge-android-build-78`. Las secciones compatibles con OTA deben continuar por actualización OTA; sólo los cambios nativos requieren una nueva entrega nativa.
