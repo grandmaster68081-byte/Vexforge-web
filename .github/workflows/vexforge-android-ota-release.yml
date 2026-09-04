@@ -56,7 +56,7 @@ jobs:
           ref: ${{ env.SOURCE_COMMIT }}
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
           cache: npm
           cache-dependency-path: mobile/package-lock.json
       - name: Validate OTA inputs
@@ -65,9 +65,18 @@ jobs:
           test -n "$SECTION_ID" || { echo 'Missing section id'; exit 1; }
           test -n "$SOURCE_COMMIT" || { echo 'Missing source commit'; exit 1; }
           test "$RUNTIME_VERSION" = '1.0.0' || { echo "Unsupported runtime $RUNTIME_VERSION"; exit 1; }
-      - name: Install mobile dependencies
+      - name: Install mobile dependencies with retry
         working-directory: mobile
-        run: npm ci --ignore-scripts --no-audit --no-fund
+        run: |
+          for attempt in 1 2 3; do
+            rm -rf node_modules
+            if npm ci --ignore-scripts --no-audit --no-fund && test -x node_modules/.bin/expo; then
+              exit 0
+            fi
+            echo "Dependency installation attempt $attempt did not create Expo CLI; retrying"
+            sleep 5
+          done
+          exit 1
       - name: Export Android OTA bundle
         working-directory: mobile
         env:

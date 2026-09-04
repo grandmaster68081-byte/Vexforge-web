@@ -11,13 +11,20 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
-        with: { node-version: 20, cache: npm, cache-dependency-path: mobile/package.json }
+        with: { node-version: 22, cache: npm, cache-dependency-path: mobile/package.json }
       - uses: actions/setup-java@v4
         with: { distribution: temurin, java-version: 17 }
-      # npm ci exits with "Exit handler never called" on the hosted runner even
-      # when lifecycle scripts are disabled. npm install still resolves from
-      # package-lock.json, but avoids the runner-side ci finalization bug.
-      - run: npm install --legacy-peer-deps --no-audit --no-fund --ignore-scripts
+      - name: Install dependencies with retry
+        run: |
+          for attempt in 1 2 3; do
+            rm -rf node_modules
+            if npm install --legacy-peer-deps --no-audit --no-fund --ignore-scripts && test -x node_modules/.bin/expo; then
+              exit 0
+            fi
+            echo "Dependency installation attempt $attempt did not create Expo CLI; retrying"
+            sleep 5
+          done
+          exit 1
       - run: npm run typecheck
       - run: npm run verify:telemetry
       - run: npx expo prebuild --platform android --no-install --non-interactive

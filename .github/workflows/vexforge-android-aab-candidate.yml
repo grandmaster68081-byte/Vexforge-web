@@ -60,7 +60,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
           cache: npm
           cache-dependency-path: mobile/package.json
       - uses: actions/setup-java@v4
@@ -89,9 +89,18 @@ jobs:
           test -n "$VEXFORGE_UPLOAD_KEY_ALIAS" || { echo 'Missing VEXFORGE_ANDROID_UPLOAD_KEY_ALIAS'; exit 1; }
           test -n "$VEXFORGE_UPLOAD_KEY_PASSWORD" || { echo 'Missing VEXFORGE_ANDROID_UPLOAD_KEY_PASSWORD'; exit 1; }
 
-      - name: Install dependencies
+      - name: Install dependencies with retry
         working-directory: mobile
-        run: npm install --legacy-peer-deps --no-audit --no-fund --ignore-scripts
+        run: |
+          for attempt in 1 2 3; do
+            rm -rf node_modules
+            if npm install --legacy-peer-deps --no-audit --no-fund --ignore-scripts && test -x node_modules/.bin/expo; then
+              exit 0
+            fi
+            echo "Dependency installation attempt $attempt did not create Expo CLI; retrying"
+            sleep 5
+          done
+          exit 1
       - name: Typecheck
         working-directory: mobile
         run: npm run typecheck
