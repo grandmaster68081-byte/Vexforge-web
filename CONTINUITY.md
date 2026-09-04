@@ -1,3 +1,14 @@
+## 2026-09-04 — ANDROID RELEASE CONTROL PLANE — T0 IMPLEMENTED
+
+- Se reconcilió la copia de GitHub con el protocolo activo de Supabase por API REST HTTPS. Supabase queda en `v2.13-play-aab-ota-control-plane` y conserva la política Android por sección.
+- Se creó y aplicó `public.vexforge_android_release_registry`: clasifica cada sección como `OTA_UPDATE` o `NATIVE_PLAY_RELEASE`, conserva runtime, canal, rollout, hashes, validaciones, rollback y estado; sólo permite lectura de releases `PUBLISHED` desde clientes.
+- Se fijó el baseline técnico Android: package inmutable `com.vexforge.android`, runtime `1.0.0`, target API `35` y `versionCode` monotónico inicial `3`.
+- Se añadió el workflow manual `.github/workflows/vexforge-android-aab-candidate.yml`, separado del APK de QA. Exige upload key no-debug, genera AAB firmado y APK de QA, valida target API, tipo de entrega, bundle standalone y publica artefactos candidatos.
+- La descarga por sección queda organizada: OTA sólo para cambios compatibles con runtime mediante manifiesto Expo HTTPS; cualquier cambio nativo va por AAB/Play. No se crean APK parciales ni se anuncia `PLAY_COMPATIBLE_CANDIDATE`, `SECTION_UPDATE_READY` o `PLAY_STORE_READY` sin evidencia.
+- Bloqueos explícitos: faltan upload key/Play App Signing/track interno y endpoint de manifiesto Expo Updates. La app mantiene fallback embebido y no se activa una OTA falsa.
+
+---
+
 ## 2026-09-04 — PLAY STORE + ACTUALIZACIONES POR SECCIÓN — PLAN OFICIAL
 
 - Se revisó la configuración Android oficial: el workflow actual sólo publica APK con assembleRelease y firma debug; app.json conserva com.vexforge.android con versionCode 2; expo-updates no está instalado; el APK 72 queda clasificado como QA_APK_BASELINE.

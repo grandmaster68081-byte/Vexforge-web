@@ -18,11 +18,12 @@
     },
     "android": {
       "package": "com.vexforge.android",
-      "versionCode": 2,
+      "versionCode": 3,
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/icon.jpg",
         "backgroundColor": "#05050D"
-      }
+      },
+      "targetSdkVersion": 35
     },
     "web": {
       "favicon": "./assets/images/icon.jpg"
@@ -41,6 +42,7 @@
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
-    }
+    },
+    "runtimeVersion": "1.0.0"
   }
 }

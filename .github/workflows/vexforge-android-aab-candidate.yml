@@ -1,0 +1,160 @@
+name: Build VEXFORGE Android AAB Candidate
+
+on:
+  workflow_dispatch:
+    inputs:
+      section_id:
+        description: 'VE-MOB or release section being delivered'
+        required: true
+        type: string
+      delivery_type:
+        description: 'Release lane'
+        required: true
+        default: NATIVE_PLAY_RELEASE
+        type: choice
+        options:
+          - NATIVE_PLAY_RELEASE
+      channel:
+        description: 'Google Play track represented by this candidate'
+        required: true
+        default: internal
+        type: choice
+        options:
+          - internal
+          - closed
+          - production
+      app_version:
+        description: 'Visible Android app version from mobile/app.json'
+        required: true
+        default: '1.0.0'
+        type: string
+      version_code:
+        description: 'Monotonic Android versionCode'
+        required: true
+        default: '3'
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  build-aab:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      VEXFORGE_UPLOAD_STORE_FILE: upload-keystore.jks
+      VEXFORGE_UPLOAD_STORE_PASSWORD: ${{ secrets.VEXFORGE_ANDROID_UPLOAD_STORE_PASSWORD }}
+      VEXFORGE_UPLOAD_KEY_ALIAS: ${{ secrets.VEXFORGE_ANDROID_UPLOAD_KEY_ALIAS }}
+      VEXFORGE_UPLOAD_KEY_PASSWORD: ${{ secrets.VEXFORGE_ANDROID_UPLOAD_KEY_PASSWORD }}
+      VEXFORGE_UPLOAD_KEYSTORE_BASE64: ${{ secrets.VEXFORGE_ANDROID_UPLOAD_KEYSTORE_BASE64 }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: mobile/package.json
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: Validate release inputs and signing material
+        working-directory: mobile
+        env:
+          INPUT_APP_VERSION: ${{ inputs.app_version }}
+          INPUT_VERSION_CODE: ${{ inputs.version_code }}
+          INPUT_DELIVERY_TYPE: ${{ inputs.delivery_type }}
+        run: |
+          node - <<'NODE'
+          const fs = require('node:fs');
+          const config = JSON.parse(fs.readFileSync('app.json', 'utf8')).expo;
+          if (config.android?.package !== 'com.vexforge.android') throw new Error('Package ID changed');
+          if (String(config.version) !== process.env.INPUT_APP_VERSION) throw new Error(`app.json version ${config.version} does not match input`);
+          if (String(config.android?.versionCode) !== process.env.INPUT_VERSION_CODE) throw new Error(`app.json versionCode ${config.android?.versionCode} does not match input`);
+          if (process.env.INPUT_DELIVERY_TYPE !== 'NATIVE_PLAY_RELEASE') throw new Error('This workflow only builds native Play releases');
+          if (config.android?.targetSdkVersion !== 35) throw new Error('targetSdkVersion must be 35 for this candidate');
+          NODE
+          test -n "$VEXFORGE_UPLOAD_KEYSTORE_BASE64" || { echo 'Missing VEXFORGE_ANDROID_UPLOAD_KEYSTORE_BASE64'; exit 1; }
+          test -n "$VEXFORGE_UPLOAD_STORE_PASSWORD" || { echo 'Missing VEXFORGE_ANDROID_UPLOAD_STORE_PASSWORD'; exit 1; }
+          test -n "$VEXFORGE_UPLOAD_KEY_ALIAS" || { echo 'Missing VEXFORGE_ANDROID_UPLOAD_KEY_ALIAS'; exit 1; }
+          test -n "$VEXFORGE_UPLOAD_KEY_PASSWORD" || { echo 'Missing VEXFORGE_ANDROID_UPLOAD_KEY_PASSWORD'; exit 1; }
+
+      - name: Install dependencies
+        working-directory: mobile
+        run: npm install --legacy-peer-deps --no-audit --no-fund --ignore-scripts
+      - name: Typecheck
+        working-directory: mobile
+        run: npm run typecheck
+      - name: Verify telemetry guard
+        working-directory: mobile
+        run: npm run verify:telemetry
+      - name: Generate Android project
+        working-directory: mobile
+        run: npx expo prebuild --platform android --no-install --non-interactive
+
+      - name: Prepare upload signing
+        working-directory: mobile
+        run: |
+          printf '%s' "$VEXFORGE_UPLOAD_KEYSTORE_BASE64" | base64 --decode > "android/$VEXFORGE_UPLOAD_STORE_FILE"
+          chmod 600 "android/$VEXFORGE_UPLOAD_STORE_FILE"
+          {
+            echo "VEXFORGE_UPLOAD_STORE_FILE=$VEXFORGE_UPLOAD_STORE_FILE"
+            echo "VEXFORGE_UPLOAD_STORE_PASSWORD=$VEXFORGE_UPLOAD_STORE_PASSWORD"
+            echo "VEXFORGE_UPLOAD_KEY_ALIAS=$VEXFORGE_UPLOAD_KEY_ALIAS"
+            echo "VEXFORGE_UPLOAD_KEY_PASSWORD=$VEXFORGE_UPLOAD_KEY_PASSWORD"
+          } >> android/gradle.properties
+          node scripts/apply-play-signing.mjs
+
+      - name: Verify target API
+        working-directory: mobile
+        run: |
+          TARGET_SDK=$(grep -RhoE 'targetSdkVersion[[:space:]]+[0-9]+' android | awk '{print $2}' | sort -n | tail -1)
+          test -n "$TARGET_SDK" || { echo 'targetSdkVersion not found'; exit 1; }
+          test "$TARGET_SDK" -ge 35 || { echo "targetSdkVersion=$TARGET_SDK is below 35"; exit 1; }
+          echo "OK: targetSdkVersion=$TARGET_SDK"
+
+      - name: Build signed AAB
+        working-directory: mobile/android
+        run: ./gradlew bundleRelease --no-daemon --stacktrace
+      - name: Build signed QA APK
+        working-directory: mobile/android
+        run: ./gradlew assembleRelease --no-daemon --stacktrace
+
+      - name: Verify Play candidate artifacts
+        working-directory: mobile
+        run: |
+          AAB=android/app/build/outputs/bundle/release/app-release.aab
+          APK=android/app/build/outputs/apk/release/app-release.apk
+          test -f "$AAB" || { echo 'AAB missing'; exit 1; }
+          test -f "$APK" || { echo 'QA APK missing'; exit 1; }
+          unzip -l "$APK" | grep -q 'assets/index.android.bundle' || { echo 'QA APK is not standalone'; exit 1; }
+          ! unzip -p "$APK" META-INF/MANIFEST.MF 2>/dev/null | grep -qi 'debug' || { echo 'Debug signature marker found'; exit 1; }
+          sha256sum "$AAB" "$APK"
+
+      - name: Upload AAB and QA APK artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: vexforge-${{ inputs.section_id }}-${{ inputs.version_code }}-${{ inputs.channel }}
+          path: |
+            mobile/android/app/build/outputs/bundle/release/app-release.aab
+            mobile/android/app/build/outputs/apk/release/app-release.apk
+          if-no-files-found: error
+
+      - name: Publish candidate release record
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: vexforge-android-aab-${{ github.run_number }}
+          name: VEXFORGE Android AAB candidate ${{ github.run_number }}
+          body: |
+            SECTION_ID: ${{ inputs.section_id }}
+            DELIVERY_TYPE: ${{ inputs.delivery_type }}
+            CHANNEL: ${{ inputs.channel }}
+            APP_VERSION: ${{ inputs.app_version }}
+            VERSION_CODE: ${{ inputs.version_code }}
+            SOURCE_COMMIT: ${{ github.sha }}
+            This is a signed AAB candidate for the declared Play track. It is not PLAY_STORE_READY until Supabase registry, track validation, policy review, and human QA are complete.
+          files: |
+            mobile/android/app/build/outputs/bundle/release/app-release.aab
+            mobile/android/app/build/outputs/apk/release/app-release.apk
+          prerelease: true
