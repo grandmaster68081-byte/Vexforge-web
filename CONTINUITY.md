@@ -1,3 +1,14 @@
+## 2026-09-04 — RECONCILIACIÓN DEL PLAN TIER 1 ANDROID — OFICIAL
+
+- Se completó el análisis del plan contra el protocolo vivo, el plan histórico ForgeFormation, la matriz viva de 45 objetivos, el inventario Android, el código móvil y el APK publicado más reciente (release 72).
+- La conclusión es que el plan sí puede llevar la APK a una experiencia Tier 1, pero sólo después de separar explícitamente el track funcional F-T0…F-T10 del track visual Android V-T0…V-T10 y hacer que ambos converjan en un gate bloqueante del vertical slice completo.
+- Se añadió al protocolo la definición de ANDROID_GAME_TIER1_CANDIDATE, TIER1_READY/OPERATIONAL y PUBLIC_LAUNCH_READY. Pagos, monetización, backup/restore, retención y métricas web quedan reclasificados como lanzamiento público o mantenimiento posterior; no bloquean la implementación Android durante QA interna.
+- Se corrigieron las métricas conceptuales para APK: rutas Android del inventario en lugar de 39 rutas web, dispositivos Android en lugar de desktop/iOS, cold start/frame pacing/ANR/OOM/memoria en lugar de LCP/bundle gzip, y estabilidad/reconnect en lugar de errores de consola web.
+- El gate vertical ahora exige HOME/FORJA → CAMPEÓN → COLECCIÓN → CARTA/INSPECTOR → MAZO/FORJA → FORMACIÓN → BATALLA → RESULTADO → RECOMPENSA → HOME con datos reales, settlement idempotente, estados honestos, cinco eventos canónicos, evidencia reproducible y nivel visual Q4 en superficies críticas.
+- No se modificó mobile/**, web, contratos, datos, Storage, Auth, RPCs ni releases. La QA humana sigue pendiente y las unidades continúan IMPLEMENTED_UNVERIFIED; no se declara PASS, TIER1_READY ni OPERATIONAL.
+
+---
+
 ## 2026-09-03 — VE-UI-TIER1-ANDROID-01 — PLAN CANÓNICO INTEGRADO
 
 - Se reconcilió el plan visual adjunto con el protocolo maestro vivo, la ley Android-only, VE-MOB-0, la matriz visual, el código Android real y las capturas QA.

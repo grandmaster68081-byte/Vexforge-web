@@ -1777,3 +1777,125 @@ El plan no autoriza convertir esta cadena en mocks, inventar estadísticas, copi
 Esta enmienda cierra la revisión solicitada del plan. El plan queda **READY_FOR_EXECUTION_AFTER_T0**: primero se ejecuta T0 sin editar producto; luego se implementan los paquetes Android en el orden de la Semana 1 a la Semana 7, manteniendo la cadena oficial GitHub `main` → Supabase → workflow/release → evidencia → continuidad. La siguiente sesión de implementación no debe saltar directamente a un paquete aislado sin registrar este gate y su evidencia.
 
 El estado global sigue siendo `PRE-LAUNCH INTERNAL QA`; no se declara `PASS`, `OPERATIONAL`, `TIER1_READY` ni cierre de QA humana por la incorporación de esta revisión.
+
+---
+# ENMIENDA PERMANENTE — RECONCILIACIÓN DEL PLAN TIER 1 ANDROID Y GATES DE PRODUCTO
+
+**Fecha de incorporación:** 2026-09-04
+**Estado:** OFICIAL — INTEGRADA EN EL PROTOCOLO MAESTRO
+**Precedencia:** esta enmienda prevalece, durante la fase Android-only, sobre los bloques históricos que mezclen web, Cloudflare, src/, dist/, navegadores de escritorio o publicación web con la ejecución del producto móvil. No borra la evidencia histórica: la reclasifica como contexto o como gate posterior.
+
+## 1. Resultado de la revisión
+
+El plan anterior sí tenía los ingredientes para una experiencia Tier 1 —autoridad de Supabase, ForgeFormation, Battle Run, vertical slice, identidad visual, estados, motion, audio, accesibilidad, rendimiento y release—, pero no podía garantizar ese resultado sin esta reconciliación por cuatro razones:
+
+1. Existían dos secuencias T0–T10 con el mismo nombre: una de producto/gameplay y otra visual Android. Sin una relación explícita, una podía darse por terminada sin la otra.
+2. El vertical slice Android estaba descrito como objetivo, pero no como gate bloqueante único de experiencia completa con evidencia de APK, datos autoritativos, settlement, recompensa y regreso al Home.
+3. La matriz de 45 objetivos mezclaba bloqueantes de APK con bloqueantes de lanzamiento público: pagos, backup/restore, retención, métricas web, navegadores de escritorio, iOS Safari y Cloudflare. Eso podía detener el trabajo Android sin mejorar la APK.
+4. Algunos objetivos medían la web —por ejemplo LCP, bundle gzip o 39/39 rutas— y no tenían un umbral equivalente para la APK real.
+
+La revisión histórica de vexforge_forge_formation_engine_v1 confirma que ese documento queda como checkpoint subordinado y contexto de decisiones anteriores. No sustituye este plan Android ni autoriza reabrir la web.
+
+## 2. Dos gates distintos: juego Android y lanzamiento público
+
+Desde esta fecha no se usa un único booleano ambiguo para afirmar que VEXFORGE es Tier 1. Se distinguen estos estados:
+
+### 2.1 ANDROID_GAME_TIER1_CANDIDATE
+
+Es el gate de implementación y experiencia del juego. Sólo puede alcanzarse cuando el APK candidato demuestra, sobre datos y contratos reales:
+
+- el vertical slice completo HOME / FORJA → CAMPEÓN → COLECCIÓN → CARTA / INSPECTOR → MAZO / FORJA → FORMACIÓN → BATALLA → RESULTADO → RECOMPENSA → HOME;
+- decisiones jugables observables, Battle Run/ForgeFormation y settlement autoritativo e idempotente;
+- identidad visual propia, lectura de juego, estados honestos, feedback, motion/audio contextual y ausencia de genéricos en las superficies críticas;
+- accesibilidad, reduced-motion, compatibilidad Android, estabilidad y presupuesto de rendimiento medidos;
+- evidencia reproducible del APK, workflow, digest, recorrido, datos, guards y telemetría.
+
+Este estado permite continuar la validación sin fingir que la QA humana ya ocurrió. No equivale a TIER1_READY, PASS ni OPERATIONAL.
+
+### 2.2 TIER1_READY / OPERATIONAL
+
+Requieren además la evidencia real del APK candidato y la QA humana autorizada. La QA humana pendiente no bloquea nuevas implementaciones: conserva las unidades como IMPLEMENTED_UNVERIFIED y bloquea únicamente la promoción del estado.
+
+### 2.3 PUBLIC_LAUNCH_READY
+
+Es un gate posterior y separado. Incluye cumplimiento comercial, pagos, monetización justa, backup/restore, monitorización operativa, rollback, soporte, retención y cualquier requisito de publicación externa. Un fallo en este gate no invalida por sí mismo que la experiencia de juego Android haya alcanzado ANDROID_GAME_TIER1_CANDIDATE.
+
+## 3. Alcance y precedencia Android-only
+
+- El producto activo de esta fase es exclusivamente la APK bajo mobile/, su workflow oficial, sus releases y el backend/Storage/Auth/RPC/RLS de Supabase que el flujo Android necesite.
+- La web y Cloudflare quedan congelados como referencia histórica o de lectura. No se exige modificar, desplegar ni medir la web para cerrar un gate Android.
+- Desktop Chrome/Firefox/Safari, iOS Safari, LCP web, bundle gzip web y Cloudflare no bloquean ANDROID_GAME_TIER1_CANDIDATE. Si se mantienen en la matriz, pertenecen a PUBLIC_LAUNCH_READY o a mantenimiento web futuro.
+- Ningún gate autoriza mocks, placeholders, datos inventados, settlement local, lógica de combate local ni sustitución de la autoridad de Supabase.
+
+## 4. Cómo se conectan los dos T0–T10
+
+Para eliminar la ambigüedad, el plan se lee con dos prefijos conceptuales:
+
+- **F-T0…F-T10 — track funcional:** autoridad y baseline; contratos Battle Run; ForgeFormation; vertical slice; expansión PvE; World Bosses/Raids; PvP; cartas/colección/profundidad; onboarding/live ops; QA, seguridad y release.
+- **V-T0…V-T10 — track visual Android:** baseline APK; DNA visual; escena Home/Forja; Hero/Action/Card/Progress; estados honestos; navegación; arena/cartas/inspector; mazo/perfil; superficies secundarias; accesibilidad/rendimiento; release/evidencia.
+
+La relación obligatoria es:
+
+| Track | Unidades Android y evidencia mínima |
+|---|---|
+| F-T0 + V-T0 | VE-MOB-0, baseline del APK publicado más reciente, manifiesto, esquema, contratos, rutas y matriz de dispositivos |
+| F-T1/F-T2 + V-T5/V-T6 | Battle Run, ForgeFormation, Campeón, Reserva, turnos, targeting, resultado y reconnect sobre las unidades de deck/battle/rewards |
+| F-T3 + V-T2/V-T3/V-T4 | El vertical slice completo, empezando en VE-MOB-3 HOME y atravesando colección, carta, mazo, formación, batalla, resultado y recompensa |
+| F-T4/F-T5/F-T6 + V-T8 | PvE, World, Bosses, Raids, PvP y Social sólo con sus contratos reales y una superficie Android propia; no se consideran completos por existir una ruta |
+| F-T7 + V-T3/V-T6/V-T7 | Colección, identidad de carta, sinergias, mazo, Campeón, Reserva y decisiones distinguibles en código y presentación |
+| F-T8/F-T9 + V-T1/V-T7/V-T8/V-T9 | Audio, motion, onboarding, narrativa, accesibilidad, reduced-motion, rendimiento, estabilidad y telemetría sin degradar gameplay |
+| F-T10 + V-T10 | workflow oficial, APK reproducible, digest, guards, evidencia de recorrido, release, QA humana y promoción de estado |
+
+Ningún track puede cerrar el producto por separado. Un paquete visual sin capacidad jugable sigue incompleto; una capacidad funcional sin escena, feedback, legibilidad y estados sigue por debajo de Tier 1.
+
+## 5. Bloqueantes del gate de juego Android
+
+Para ANDROID_GAME_TIER1_CANDIDATE son bloqueantes, dentro del alcance Android, los objetivos de arte/manifiesto, iconografía authored, estados de carga/vacío/error/retry/reconnect, layout móvil, tokens, audio y combate, motion/feedback, economía legible, primera sesión, telemetría del loop, salud de rutas Android, profundidad de decisión, profundidad/calidad/balance de contenido, temporadas cuando estén en el inventario activo, competencia y reconexión, accesibilidad, dirección de arte, higiene de assets, audio producido para contextos críticos, regresión automatizada, unicidad, compatibilidad de dispositivos Android, acabado, primera impresión, rendimiento, estabilidad, benchmark, integridad competitiva, resiliencia de red, confianza del jugador, reproducibilidad de evidencia y release Android.
+
+La lista operativa de claves que bloquean ese gate es:
+
+asset_manifest_integrity, boss_art, card_art, surface_backgrounds, icon_language, loading_and_empty_states, mobile_layout, ui_identity_tokens, audio_flow, combat_scene_direction, motion_and_feedback, economy_readability, first_session_flow, game_loop_telemetry, route_health_maturity, combat_decision_depth, content_depth, content_quality, gameplay_balance, live_ops_seasons, social_competitive, accessibility_baseline, art_direction_quality, asset_hygiene, audio_authored_production, automated_regression_suite, design_uniqueness, device_compatibility, finish_quality, first_impression, performance_budget, stability_error_budget, benchmark_definition, benchmark_positioning, competitive_integrity, network_resilience, player_trust, evidence_reproducibility, release_readiness.
+
+Los objetivos payments_compliance_reconciliation, monetization_fairness, backup_restore_drill y retention_validation pertenecen al gate PUBLIC_LAUNCH_READY; no bloquean la implementación del juego Android mientras el producto permanezca en QA interna. localization_coverage y prelaunch_presentation son requisitos de lanzamiento o calidad posterior salvo que una unidad Android los active expresamente.
+
+## 6. Correcciones de medición para no evaluar la APK con métricas web
+
+- route_health_maturity: sustituir el objetivo fijo 39/39 por el 100% de las rutas Android activas del inventario VE-MOB-2 a VE-MOB-14, cada una con contenido, carga, vacío, error/retry y salida utilizable.
+- device_compatibility: validar perfiles Android representativos de pantalla pequeña, media y menor capacidad; comprobar overflow, touch targets, orientación soportada, feedback, reduced-motion y recuperación.
+- performance_budget: usar cold start hasta primera interacción, frame pacing del slice, ausencia de ANR/OOM, memoria de las superficies críticas, peso de assets y estabilidad del APK. El objetivo operativo inicial es P95 de primera interacción ≤ 3 s en el dispositivo de referencia, objetivo de 60 FPS y ≤ 1% de frames con bloqueo > 50 ms durante el slice, sin ANR/OOM; cualquier excepción debe quedar medida y explicada.
+- stability_error_budget: sustituir errores de consola web por cero crashes/ANR y cero errores no recuperados en el recorrido Android, con retry/reconnect verificables y sin doble settlement.
+- benchmark_definition y benchmark_positioning: comparar juegos móviles de cartas/estrategia y alternativas de la misma experiencia táctil, no páginas web; la matriz debe evaluar identidad, claridad, profundidad, feedback, onboarding y rendimiento Android.
+- first_session_flow, art_direction_quality, finish_quality y first_impression: la evidencia debe provenir de la APK y de las superficies reales, no sólo del código ni de una maqueta.
+
+## 7. Gate bloqueante del vertical slice Android
+
+El slice es el gate de producto que une los tracks. No pasa por tener las pantallas individualmente hechas. Debe demostrar, con una cuenta de prueba normal y datos oficiales:
+
+1. entrada al Home/Forja y lectura del siguiente objetivo;
+2. selección de Campeón y carta desde Colección/Inspector;
+3. construcción o elección de Mazo/Forja y validación de límites/sinergia;
+4. Formación con Vanguardia, Campeón, Centinela y Reserva cuando el contrato aplique;
+5. batalla real con decisiones, turnos y feedback de cada evento autoritativo;
+6. resultado de servidor, settlement idempotente y recuperación ante refresh, timeout o reconnect;
+7. recompensa real, claim persistente y retorno al Home con progreso/economía actualizados.
+
+El gate falla si hay una ruta muerta, un botón sin feedback, un estado ambiguo, una recompensa fabricada en cliente, una acción no respaldada por contrato, un arte genérico, un loader eterno, una pérdida de selección, una duplicación de settlement o una pantalla que parezca un dashboard intercambiable. El recorrido debe emitirse mediante los cinco eventos canónicos cuando corresponda y conservar trazabilidad de datos.
+
+En visual, Home, Colección/Inspector, Mazo/Forja/Formación, Batalla y Resultado/Recompensa deben alcanzar al menos Q4 en composición, identidad, jerarquía, claridad e interacción; ninguna dimensión aplicable puede quedar por debajo de 3. Las superficies secundarias deben alcanzar al menos Q3 antes de ampliar el alcance. Q5 exige además evidencia de dispositivo, accesibilidad, reduced-motion, rendimiento, estabilidad y consistencia.
+
+## 8. Evidencia y estados de promoción
+
+Cada checkpoint del gate Android debe incluir: commit de main, run del workflow oficial, release y digest del APK, bundle JS embebido, captura/grabación de todas las etapas del slice, matriz de controles, datos y RPCs consultados, estados normal/carga/vacío/error/retry/reconnect, reduced-motion, guardas, telemetría, dispositivos probados, mediciones de FPS/memoria/arranque y deuda explícita.
+
+- IMPLEMENTED_UNVERIFIED: implementación y verificaciones técnicas disponibles; QA humana pendiente.
+- ANDROID_GAME_TIER1_CANDIDATE: bloqueantes Android y vertical slice demostrados, pero aún no se promociona a TIER1_READY sin QA humana.
+- TIER1_READY: evidencia Android completa más QA humana autorizada, sin gates críticos omitidos.
+- OPERATIONAL: además, release/operación pública aprobados según el gate aplicable.
+
+La ausencia temporal de QA humana nunca autoriza a fabricar evidencia ni detiene la ejecución de unidades independientes. Sí impide declarar cualquiera de los estados promocionados.
+
+## 9. Decisión oficial
+
+El plan queda corregido como READY_FOR_EXECUTION_AFTER_T0. La siguiente ejecución debe comenzar por el T0 de reconciliación Android y producir la matriz de evidencia del APK actual antes de ampliar escenas o volumen de assets. Después se ejecutan los tracks F y V en paralelo sólo donde sus dependencias estén habilitadas, convergiendo siempre en el gate del vertical slice. El APK publicado más reciente se usa como baseline de medición, no como prueba de Tier 1.
+
+Se mantiene el estado global PRE-LAUNCH INTERNAL QA. Esta enmienda no declara PASS, TIER1_READY ni OPERATIONAL.
