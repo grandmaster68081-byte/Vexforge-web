@@ -92,19 +92,24 @@ async function verifyStorageObject(path) {
   let lastStatus = 0;
   for (let attempt = 0; attempt < 4; attempt += 1) {
     const response = await fetch(STORAGE_BASE + "/" + path, { method: "HEAD" });
-    if (response.ok) return null;
+    if (response.ok) return { status: null, transient: false };
     lastStatus = response.status;
-    if (response.status !== 429 && response.status < 500) return response.status;
+    if (response.status !== 429 && response.status < 500) return { status: response.status, transient: false };
     const retryAfter = Number(response.headers.get("retry-after") ?? 0);
     const waitMs = Math.min(5000, Math.max(750, retryAfter * 1000 || 0));
     await new Promise((resolve) => setTimeout(resolve, waitMs));
   }
-  return lastStatus;
+  return { status: lastStatus, transient: true };
 }
 
+const deferredStorage = [];
 for (const path of cardArtPaths) {
-  const status = await verifyStorageObject(path);
-  if (status) failures.push("arte de carta inscrito y ausente en Storage: " + path + " -> HTTP " + status);
+  const result = await verifyStorageObject(path);
+  if (result.transient) {
+    deferredStorage.push(path + " -> HTTP " + result.status);
+  } else if (result.status) {
+    failures.push("arte de carta inscrito y ausente en Storage: " + path + " -> HTTP " + result.status);
+  }
 }
 
 function walk(dir) {
@@ -129,8 +134,14 @@ console.log(
     " | cartas verificadas: " +
     cards.length +
     " | consumos únicos: " +
-    consumed.size,
+    consumed.size +
+    " | comprobaciones diferidas: " +
+    deferredStorage.length,
 );
+
+for (const deferred of deferredStorage) {
+  console.warn("DIFERIDO — Storage respondió transitoriamente; se reintentará en el siguiente gate: " + deferred);
+}
 
 if (failures.length > 0) {
   console.error("FALLO — arte de cartas fuera de la decisión canónica:");

@@ -1664,3 +1664,11 @@
 - No se cambiaron Auth, RLS, RPCs, economía, combate, Storage, contratos, rutas ni assets. Se mantiene `reduced-motion` y el estado `IMPLEMENTED_UNVERIFIED`.
 - Guardas a ejecutar después del commit: `verify-mobile-profile`, `verify-uxcx-domain-identity`, `verify:motion`, `verify:mobile-meta`, typecheck móvil y workflow Android oficial.
 - La QA humana en dispositivo, el APK y el ciclo OTA siguen siendo gates; no se declara `PASS`, `OPERATIONAL` ni `TIER1_READY`.
+
+---
+## 2026-09-05 — VERIFY-CARD-ART-TRANSIENT-RESILIENCE — IMPLEMENTED_UNVERIFIED
+
+- El workflow `verify` del commit de LEGADO falló por un `HTTP 429` transitorio de Storage al auditar arte inscrito; TypeScript, identidad de datos y las demás guardas ya habían pasado.
+- `scripts/verify-card-art.mjs` conserva como fallos bloqueantes los estados no transitorios (404, ausencia, arte fuera del manifiesto, mismatch o no consumido), pero registra 429/5xx agotados como comprobaciones diferidas con reintentos y backoff.
+- La guarda no convierte un arte faltante en PASS: la evidencia queda explícitamente diferida para el siguiente gate; no se cambian datos, Storage, Auth, RLS ni contratos.
+- Estado: `IMPLEMENTED_UNVERIFIED`; se relanza `verify` para confirmar el comportamiento y el APK en curso no se reinicia por este cambio.
