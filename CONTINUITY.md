@@ -1574,3 +1574,18 @@
 - Estado correcto: `IMPLEMENTED_UNVERIFIED`. No se declara `PASS`,
   `OPERATIONAL` ni `TIER1_READY`; la QA humana en dispositivo continúa como
   gate.
+
+---
+## 2026-09-05 — VE-UXCX-3-ARENA-COMPETITIVE-ENTRY — ANDROID APK GATE
+
+- El workflow oficial `Build VEXFORGE Android APK`, run `95`, terminó
+  `success` sobre el commit de Arena `5879b275f5129e8f4620ef676e4d60f2f2382c46`.
+- Pasaron `npm run typecheck`, `npm run verify:telemetry`, `expo prebuild`,
+  Gradle `assembleRelease` y la guarda de APK standalone con el bundle
+  `assets/index.android.bundle` embebido.
+- El release prerelease `vexforge-android-build-95` publicó `app-release.apk`;
+  tamaño `95,312,520` bytes; SHA-256
+  `18119dc8dee0a6ed6a0332429681df33984041ed2b0ab13ce99e929965069d69`.
+- La unidad continúa en `IMPLEMENTED_UNVERIFIED`: el gate de compilación y
+  publicación pasó, pero la QA manual del operador en dispositivo sigue
+  pendiente. No se declara `PASS`, `OPERATIONAL` ni `TIER1_READY`.
