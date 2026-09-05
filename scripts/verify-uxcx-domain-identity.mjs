@@ -66,10 +66,36 @@ for (const [file, domain] of screens) {
   }
 }
 
+// ITERACIÓN 2 — FOJA LIVING HUB: la base debe leerse como lugar vivo y no
+// como panel: identidad compartida, tokens de motion/profundidad, parallax de
+// scroll, ambiente idle y hotspots hacia dominios reales.
+const fojaPath = resolve(root, 'mobile/app/(tabs)/index.tsx');
+if (!existsSync(fojaPath)) {
+  failures.push('mobile/app/(tabs)/index.tsx is missing');
+} else {
+  const foja = readFileSync(fojaPath, 'utf8');
+  const fojaChecks = [
+    ["from '@/constants/experience'", 'FOJA must consume the shared experience tokens'],
+    ['DOMAIN_IDENTITY.foja', 'FOJA must present itself through the shared identity registry'],
+    ['MOTION.', 'FOJA must use MOTION tokens instead of ad-hoc durations'],
+    ['DEPTH.', 'FOJA must layer its scene with DEPTH tokens'],
+    ['useAnimatedScrollHandler', 'FOJA must drive parallax from scroll'],
+    ['useReducedMotion', 'FOJA must honour reduced motion'],
+    ['SceneOrbitPoint', 'FOJA must expose world hotspots'],
+    ['signal={domainSignals.', 'FOJA hotspots must carry contextual activity from real data'],
+  ];
+  for (const [needle, message] of fojaChecks) {
+    if (!foja.includes(needle)) failures.push(message);
+  }
+  if (/duration:\s*\d{3,}/.test(foja.replace(/MOTION\.[a-z]+\s*\*\s*\d+/g, ''))) {
+    failures.push('FOJA still declares raw animation durations outside MOTION tokens');
+  }
+}
+
 if (failures.length > 0) {
   console.error('VE-UXCX domain identity guard failed:');
   for (const failure of failures) console.error(` - ${failure}`);
   process.exit(1);
 }
 
-console.log(`VE-UXCX domain identity guard passed (${screens.length} domain screens, 5 identities).`);
+console.log(`VE-UXCX domain identity guard passed (${screens.length + 1} domain screens, 5 identities, FOJA living hub).`);

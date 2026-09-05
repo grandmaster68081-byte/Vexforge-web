@@ -38,6 +38,7 @@ import { ForgeText } from '@/components/ForgeText';
 import { ProgressBar } from '@/components/ProgressBar';
 import { ScreenShell } from '@/components/ScreenShell';
 import { CANONICAL_BACKGROUNDS, FACTION_BACKGROUNDS } from '@/constants/visual';
+import { DEPTH, DOMAIN_IDENTITY, MOTION } from '@/constants/experience';
 import { typography } from '@/constants/typography';
 
 type HomeSnapshot = {
@@ -84,15 +85,17 @@ function SectionLabel({ children, color }: { children: string; color: string }) 
   return <ForgeText variant="label" style={[styles.eyebrow, { color }]}>{children}</ForgeText>;
 }
 
+// Ambiente idle de la escena. Las duraciones derivan de MOTION.ambient para que
+// el ritmo del Nexus siga el mismo lenguaje de movimiento que el resto del juego.
 const SCENE_PARTICLES = [
-  { left: '13%', top: '29%', size: 3, delay: 0, duration: 5200 },
-  { left: '28%', top: '37%', size: 2, delay: 900, duration: 6100 },
-  { left: '78%', top: '27%', size: 3, delay: 1500, duration: 5700 },
-  { left: '88%', top: '42%', size: 2, delay: 250, duration: 6800 },
-  { left: '18%', top: '61%', size: 2, delay: 1200, duration: 6400 },
-  { left: '84%', top: '64%', size: 3, delay: 2100, duration: 5900 },
-  { left: '39%', top: '71%', size: 2, delay: 700, duration: 6300 },
-  { left: '67%', top: '74%', size: 2, delay: 1800, duration: 5500 },
+  { left: '13%', top: '29%', size: 3, delay: 0, drift: 1.86 },
+  { left: '28%', top: '37%', size: 2, delay: MOTION.micro * 6, drift: 2.18 },
+  { left: '78%', top: '27%', size: 3, delay: MOTION.reveal * 5, drift: 2.04 },
+  { left: '88%', top: '42%', size: 2, delay: MOTION.micro * 2, drift: 2.43 },
+  { left: '18%', top: '61%', size: 2, delay: MOTION.navigation * 3, drift: 2.29 },
+  { left: '84%', top: '64%', size: 3, delay: MOTION.reveal * 7, drift: 2.11 },
+  { left: '39%', top: '71%', size: 2, delay: MOTION.micro * 4, drift: 2.25 },
+  { left: '67%', top: '74%', size: 2, delay: MOTION.navigation * 4, drift: 1.96 },
 ] as const;
 
 function SceneParticle({
@@ -100,11 +103,12 @@ function SceneParticle({
   top,
   size,
   delay,
-  duration,
+  drift,
   color,
   reduceMotion,
 }: (typeof SCENE_PARTICLES)[number] & { color: string; reduceMotion: boolean | null }) {
   const motion = useSharedValue(0);
+  const duration = Math.round(MOTION.ambient * drift);
 
   useEffect(() => {
     if (reduceMotion) {
@@ -150,18 +154,20 @@ function SceneOrbitPoint({
   point,
   position,
   colors,
+  signal,
   onPress,
 }: {
   point: (typeof DOMAIN_POINTS)[number];
   position: 'topLeft' | 'topRight' | 'bottomLeft' | 'bottomRight' | 'bottomCenter';
   colors: ReturnType<typeof useColors>;
+  signal?: string | null;
   onPress: () => void;
 }) {
   const toneColor = colors[point.tone];
   return (
     <Pressable
       accessibilityRole="button"
-      accessibilityLabel={`${point.name}: ${point.description}`}
+      accessibilityLabel={signal ? `${point.name}: ${point.description} · ${signal}` : `${point.name}: ${point.description}`}
       testID={`home-domain-${point.name.toLowerCase()}`}
       onPress={onPress}
       style={({ pressed }) => [
@@ -176,6 +182,9 @@ function SceneOrbitPoint({
         </View>
       </View>
       <Text style={[styles.orbitLabel, { color: colors.foreground }]}>{point.name.toUpperCase()}</Text>
+      {signal ? (
+        <Text numberOfLines={1} style={[styles.orbitSignal, { color: toneColor }]}>{signal}</Text>
+      ) : null}
     </Pressable>
   );
 }
@@ -201,7 +210,7 @@ export default function ForgeScreen() {
       return;
     }
     ambientMotion.value = withRepeat(
-      withSequence(withTiming(1, { duration: 10000 }), withTiming(0, { duration: 10000 })),
+      withSequence(withTiming(1, { duration: MOTION.ambient * 4 }), withTiming(0, { duration: MOTION.ambient * 4 })),
       -1,
       false,
     );
@@ -272,6 +281,7 @@ export default function ForgeScreen() {
   useEffect(() => { setFeaturedCardImageFailed(false); }, [home.dailyCard?.image_url]);
 
   const handleRefresh = () => { void Promise.all([refresh(), loadHome()]); };
+  const identity = DOMAIN_IDENTITY.foja;
   const displayName = player?.display_name?.trim() || 'FORJADOR';
   const event = home.stats?.active_event;
   const frontName = event?.name ?? home.stats?.season?.name ?? 'Arena Nexus';
@@ -296,10 +306,20 @@ export default function ForgeScreen() {
       ? 100
       : Math.min(100, Math.round((tutorialStep / Math.max(1, TUTORIAL_TOTAL_STEPS - 1)) * 100));
 
+  // Actividad contextual: los hotspots del Nexus muestran datos reales ya
+  // cargados por el juego, nunca cifras inventadas.
+  const domainSignals = {
+    cartas: stats?.cards_owned != null ? `${stats.cards_owned} cartas` : null,
+    forja: null,
+    mundo: event ? `${Math.max(0, Math.min(100, event.progress ?? 0))}%` : null,
+    social: null,
+    perfil: progress ? `Nv ${progress.level}` : null,
+  };
+
   useEffect(() => {
     progressMotion.value = reduceMotion
       ? xpPercent
-      : withTiming(xpPercent, { duration: 700 });
+      : withTiming(xpPercent, { duration: MOTION.navigation });
   }, [progressMotion, reduceMotion, xpPercent]);
 
   return (
@@ -312,7 +332,7 @@ export default function ForgeScreen() {
         scrollEventThrottle={16}
         showsVerticalScrollIndicator={false}
       >
-        <Animated.View testID="home-scene" entering={reduceMotion ? undefined : FadeIn.duration(500)} style={[styles.scene, { borderBottomColor: colors.border, shadowColor: colors.shadow }]}>
+        <Animated.View testID="home-scene" entering={reduceMotion ? undefined : FadeIn.duration(MOTION.navigation)} style={[styles.scene, { borderBottomColor: colors.border, shadowColor: colors.shadow }]}>
           <Animated.View pointerEvents="none" style={[StyleSheet.absoluteFillObject, sceneParallaxStyle]}>
             <Image
               source={{ uri: CANONICAL_BACKGROUNDS.home }}
@@ -347,8 +367,8 @@ export default function ForgeScreen() {
               <SceneParticle key={`${particle.left}-${particle.top}`} {...particle} color={colors.accent} reduceMotion={reduceMotion} />
             ))}
           </View>
-          <Animated.View pointerEvents="none" style={[styles.sceneGlow, { backgroundColor: colors.accent }, ambientGlowStyle]} />
-          <View pointerEvents="none" style={[styles.sceneFrame, { borderColor: `${colors.accent}20` }]} />
+          <Animated.View pointerEvents="none" style={[styles.sceneGlow, { backgroundColor: colors.accent, zIndex: DEPTH.ambient }, ambientGlowStyle]} />
+          <View pointerEvents="none" style={[styles.sceneFrame, { borderColor: `${colors.accent}20`, zIndex: DEPTH.surface }]} />
 
           <View style={[styles.sceneContent, { paddingTop: insets.top + 16 }]}>
             <View style={styles.topBar}>
@@ -356,7 +376,7 @@ export default function ForgeScreen() {
                 <ForgeMark />
                 <View>
                   <Text style={[styles.brandName, { color: colors.accent }]}>VEXFORGE</Text>
-                  <Text style={[styles.brandSubline, { color: colors.mutedForeground }]}>FOJA // NEXUS 01</Text>
+                  <Text style={[styles.brandSubline, { color: colors.mutedForeground }]}>{`${identity.place} // NEXUS 01`}</Text>
                 </View>
               </View>
               <Pressable accessibilityRole="button" accessibilityLabel="Abrir perfil" onPress={() => router.push('/profile')} style={({ pressed }) => [styles.profileOrb, { borderColor: `${colors.accent}66`, backgroundColor: `${colors.ink}B8`, opacity: pressed ? 0.72 : 1 }]}>
@@ -383,7 +403,7 @@ export default function ForgeScreen() {
               <View style={[styles.signalDot, { backgroundColor: nexusStatus.color }]} />
               <Text style={[styles.signalText, { color: nexusStatus.color }]}>{nexusStatus.label}</Text>
               <View style={[styles.signalRule, { backgroundColor: `${colors.accent}4A` }]} />
-              <Text style={[styles.signalText, { color: colors.mutedForeground }]}>BASE FOJA</Text>
+              <Text style={[styles.signalText, { color: colors.mutedForeground }]}>{`BASE ${identity.place}`}</Text>
             </View>
 
             {homeSceneState === 'loading' ? (
@@ -399,19 +419,19 @@ export default function ForgeScreen() {
             ) : null}
 
             <View style={styles.sceneHeading}>
-              <SectionLabel color={colors.accent}>EL NEXUS · FORJA VIVA</SectionLabel>
+              <SectionLabel color={colors.accent}>{`${identity.place} · ${identity.title.toUpperCase()}`}</SectionLabel>
               <ForgeText variant="display" style={[styles.sceneTitle, { color: colors.foreground }]}>La arena{'\n'}te está llamando.</ForgeText>
-              <Text style={[styles.sceneDescription, { color: colors.mutedForeground }]}>Una base para volver. Un frente para conquistar.</Text>
+              <Text style={[styles.sceneDescription, { color: colors.mutedForeground }]}>{identity.purpose}</Text>
             </View>
 
-            <View style={styles.sceneStage}>
+            <View style={[styles.sceneStage, { zIndex: DEPTH.focus }]}>
               <View pointerEvents="none" style={[styles.stageRingOuter, { borderColor: `${colors.accent}35` }]} />
               <View pointerEvents="none" style={[styles.stageRingInner, { borderColor: `${colors.accent}24` }]} />
-              <SceneOrbitPoint point={DOMAIN_POINTS[0]} position="topLeft" colors={colors} onPress={() => router.push(DOMAIN_POINTS[0].route)} />
-              <SceneOrbitPoint point={DOMAIN_POINTS[1]} position="topRight" colors={colors} onPress={() => router.push(DOMAIN_POINTS[1].route)} />
-              <SceneOrbitPoint point={DOMAIN_POINTS[2]} position="bottomLeft" colors={colors} onPress={() => router.push(DOMAIN_POINTS[2].route)} />
-              <SceneOrbitPoint point={DOMAIN_POINTS[3]} position="bottomRight" colors={colors} onPress={() => router.push(DOMAIN_POINTS[3].route)} />
-              <SceneOrbitPoint point={DOMAIN_POINTS[4]} position="bottomCenter" colors={colors} onPress={() => router.push(DOMAIN_POINTS[4].route)} />
+              <SceneOrbitPoint point={DOMAIN_POINTS[0]} position="topLeft" colors={colors} signal={domainSignals.cartas} onPress={() => router.push(DOMAIN_POINTS[0].route)} />
+              <SceneOrbitPoint point={DOMAIN_POINTS[1]} position="topRight" colors={colors} signal={domainSignals.forja} onPress={() => router.push(DOMAIN_POINTS[1].route)} />
+              <SceneOrbitPoint point={DOMAIN_POINTS[2]} position="bottomLeft" colors={colors} signal={domainSignals.mundo} onPress={() => router.push(DOMAIN_POINTS[2].route)} />
+              <SceneOrbitPoint point={DOMAIN_POINTS[3]} position="bottomRight" colors={colors} signal={domainSignals.social} onPress={() => router.push(DOMAIN_POINTS[3].route)} />
+              <SceneOrbitPoint point={DOMAIN_POINTS[4]} position="bottomCenter" colors={colors} signal={domainSignals.perfil} onPress={() => router.push(DOMAIN_POINTS[4].route)} />
               <Animated.View style={[styles.stageArtifact, focalMotionStyle]}>
                 <Pressable
                   accessibilityRole="button"
@@ -687,6 +707,7 @@ const styles = StyleSheet.create({
   orbitPointBottomCenter: { left: '50%', marginLeft: -33, bottom: -2 },
   orbitSeal: { width: 46, height: 46, borderWidth: 1, borderRadius: 23, alignItems: 'center', justifyContent: 'center', shadowOpacity: 0.32, shadowRadius: 14, elevation: 6 },
   orbitSealInner: { width: 34, height: 34, borderWidth: 1, borderRadius: 17, alignItems: 'center', justifyContent: 'center' },
+  orbitSignal: { fontFamily: typography.bodyBold, fontSize: 7, letterSpacing: 0.5, fontWeight: '700', marginTop: 1 },
   orbitLabel: { fontFamily: typography.bodyBold, fontSize: 7, letterSpacing: 0.85, fontWeight: '800' },
   frontPanel: { minHeight: 52, borderWidth: 1, borderRadius: 14, paddingHorizontal: 12, paddingVertical: 9, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 11 },
   frontPanelCopy: { flex: 1 },

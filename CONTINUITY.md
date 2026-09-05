@@ -1505,3 +1505,45 @@
 - Estado correcto: `IMPLEMENTED_UNVERIFIED`. No se declara `PASS`,
   `OPERATIONAL` ni `TIER1_READY`. Próximo criterio: ITERACIÓN 2 (FOJA living
   hub: capas, parallax y actividad contextual) sobre esta base compartida.
+
+---
+## 2026-09-05 — VE-UXCX-2-FOJA-LIVING-HUB — IMPLEMENTED_UNVERIFIED
+
+- Verificación previa a implementar: se leyó la directiva
+  `docs/VE-UXCX-TIER1-2026/` (MASTER + 06 plan por iteraciones + 07 checklist)
+  y el estado real de `mobile/app/(tabs)/index.tsx`. La ITERACIÓN 1 ya estaba
+  cerrada (`DOMAIN_IDENTITY`, `MOTION`, `DEPTH`, `DomainHeader` en ARENA,
+  ARCHIVO, FORJA y LEGADO). La brecha real de la ITERACIÓN 2 no era "añadir
+  parallax" —ya existía— sino que FOJA seguía fuera del lenguaje compartido:
+  copy propio, duraciones crudas, capas sin tokens de profundidad y hotspots
+  sin actividad contextual.
+- Alcance: exclusivamente la aplicación (`mobile/`). La superficie web queda
+  descartada por decisión del propietario y no se tocó.
+- FOJA consume ahora `DOMAIN_IDENTITY.foja` (lugar, título, propósito) para su
+  marca, cabecera de escena y señal de base; deja de inventar textos propios.
+- Todo el movimiento de la escena deriva de los tokens `MOTION`: revelado de
+  escena, ambiente idle, partículas (multiplicadores de `MOTION.ambient`) y la
+  animación de progreso. No quedan duraciones literales en la pantalla.
+- Las capas de la escena (ambiente, marco, foco) se ordenan con los tokens
+  `DEPTH`, de modo que la profundidad es una decisión de sistema y no un
+  z-index improvisado.
+- Los hotspots del Nexus muestran actividad contextual tomada de datos ya
+  cargados por el juego (cartas poseídas, progreso del frente activo, nivel del
+  forjador). No se inventaron cifras ni se añadieron consultas nuevas; cuando
+  el dato no existe la señal simplemente no se dibuja. La señal también se
+  expone en la etiqueta de accesibilidad del hotspot.
+- La guarda offline `verify:uxcx-domain-identity` se amplía a FOJA: exige
+  consumo de `@/constants/experience`, identidad compartida, tokens `MOTION` y
+  `DEPTH`, parallax de scroll, respeto de `reduced-motion`, hotspots y señales
+  contextuales, y falla si reaparece una duración cruda.
+- Sin cambios en Supabase, Auth, RLS, RPCs, Storage, contratos, economía,
+  combate, rutas ni assets. No se creó ninguna ruta nueva.
+- Verificación local: `mobile` `tsc --noEmit` limpio; raíz `npm run typecheck`,
+  `npm run build`, `verify:uxcx-domain-identity`, `verify:ui-identity`
+  (192 archivos, 0 violaciones), `verify:motion` y `verify:mobile-meta` pasan.
+- Por instrucción del propietario, esta sesión NO compila ni publica APK: el
+  trabajo queda reflejado en el código de GitHub para una compilación futura.
+- Estado correcto: `IMPLEMENTED_UNVERIFIED`. No se declara `PASS`,
+  `OPERATIONAL` ni `TIER1_READY`. La QA humana en dispositivo sigue siendo gate.
+- Próximo criterio: ITERACIÓN 3 (ARENA: entrada a competición, estados de
+  matchmaking, temporada/rango y transición teatral al combate).
