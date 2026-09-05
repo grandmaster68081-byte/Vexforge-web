@@ -15,6 +15,7 @@ import { useColors } from '@/hooks/useColors';
 import { useGame } from '@/context/GameContext';
 import { emitTelemetry } from '@/lib/telemetry';
 import { ScreenShell } from '@/components/ScreenShell';
+import { DomainHeader } from '@/components/DomainHeader';
 import { loadPlayerDeck } from '@/lib/supabase';
 import type { BattleResult, BattleTurn, DeckSlot, Opponent } from '@/lib/supabase';
 import { ForgeFormationPreview } from '@/components/ForgeFormationPreview';
@@ -340,15 +341,7 @@ export default function BattleScreen() {
       refreshControl={<RefreshControl refreshing={searching} onRefresh={handleFind} tintColor={colors.primary} />}
       showsVerticalScrollIndicator={false}
     >
-      <View style={styles.headingRow}>
-        <View style={[styles.headingSeal, { borderColor: colors.primary, backgroundColor: `${colors.primary}12` }]}>
-          <Feather name="zap" size={18} color={colors.primary} />
-        </View>
-        <View>
-          <Text style={[styles.eyebrow, { color: colors.primary }]}>VEXFORGE / P1</Text>
-          <Text style={[styles.title, { color: colors.foreground }]}>Arena oficial</Text>
-        </View>
-      </View>
+      <DomainHeader domain="arena" />
       <Text style={[styles.copy, { color: colors.mutedForeground }]}>Cada combate se resuelve en Supabase y llega a tu dispositivo como evidencia de la partida. El cliente no calcula victorias, daño ni recompensas.</Text>
 
       {phase === 'replay' && currentTurn && battleResult ? (

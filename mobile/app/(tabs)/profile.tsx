@@ -15,6 +15,7 @@ import { useRouter } from 'expo-router';
 import { useColors } from '@/hooks/useColors';
 import { useGame } from '@/context/GameContext';
 import { ScreenShell } from '@/components/ScreenShell';
+import { DomainHeader } from '@/components/DomainHeader';
 import {
   loadPlayerAchievements,
   loadPlayerRank,
@@ -232,15 +233,15 @@ export default function ProfileScreen() {
         refreshControl={<RefreshControl refreshing={refreshing || syncState === 'loading'} onRefresh={handleRefresh} tintColor={colors.accent} />}
         showsVerticalScrollIndicator={false}
       >
-        <Animated.View entering={reduceMotion ? undefined : FadeIn.duration(400)} style={[styles.header, { paddingTop: insets.top + 22, borderBottomColor: colors.border }]}>
-          <View>
-            <Text style={[styles.eyebrow, { color: colors.accent }]}>IDENTIDAD DEL NEXUS</Text>
-            <Text style={[styles.screenTitle, { color: colors.foreground }]}>Perfil del forjador</Text>
-          </View>
-          <Pressable accessibilityRole="button" accessibilityLabel="Cerrar sesión" testID="profile-sign-out" onPress={() => { void signOut(); }} style={({ pressed }) => [styles.iconButton, { borderColor: colors.border, opacity: pressed ? 0.68 : 1 }]}>
-            <Ionicons name="log-out-outline" size={20} color={colors.foreground} />
-          </Pressable>
-        </Animated.View>
+        <DomainHeader
+          domain="legado"
+          style={[styles.header, { paddingTop: insets.top + 22, borderBottomColor: colors.border }]}
+          trailing={
+            <Pressable accessibilityRole="button" accessibilityLabel="Cerrar sesión" testID="profile-sign-out" onPress={() => { void signOut(); }} style={({ pressed }) => [styles.iconButton, { borderColor: colors.border, opacity: pressed ? 0.68 : 1 }]}>
+              <Ionicons name="log-out-outline" size={20} color={colors.foreground} />
+            </Pressable>
+          }
+        />
 
         {syncError || detailsError ? (
           <View accessibilityRole="alert" style={[styles.message, { backgroundColor: `${colors.danger}16`, borderColor: `${colors.danger}55` }]}>

@@ -24,6 +24,7 @@ import {
 } from '@/lib/supabase';
 import { useGame } from '@/context/GameContext';
 import { ScreenShell } from '@/components/ScreenShell';
+import { DomainHeader } from '@/components/DomainHeader';
 
 const RARITIES = ['Mythic', 'Legendary', 'Epic', 'Rare', 'Uncommon', 'Common'] as const;
 const FACTIONS = ['Guerrero', 'Mago', 'Paladín', 'Pícaro'] as const;
@@ -387,16 +388,10 @@ export default function DeckScreen() {
         contentContainerStyle={{ paddingTop: insets.top + 18, paddingBottom: insets.bottom + 104, paddingHorizontal: 16 }}
         ListHeaderComponent={
           <View>
-            <View style={styles.header}>
-              <View style={styles.headerTop}>
-                <View style={[styles.mark, { borderColor: colors.primary }]}>
-                  <Feather name="columns" size={17} color={colors.primary} />
-                </View>
-                <Text style={[styles.eyebrow, { color: colors.primary }]}>ESTRATEGIA DE VEXFORGE</Text>
-              </View>
-              <Text style={[styles.title, { color: colors.foreground }]}>Constructor de mazos</Text>
-              <Text style={[styles.subtitle, { color: colors.mutedForeground }]}>Formato estándar · {MIN_DECK}–{MAX_DECK} cartas · 2 copias · 2 facciones</Text>
-            </View>
+            <DomainHeader
+              domain="forja"
+              status={`Formato estándar · ${MIN_DECK}–${MAX_DECK} cartas · 2 copias · 2 facciones`}
+            />
 
             <View style={[styles.powerPanel, { borderColor: `${colors.accent}66`, backgroundColor: `${colors.accent}0B` }]}>
               <View style={styles.powerHeader}>

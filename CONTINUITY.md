@@ -1466,3 +1466,42 @@
 - El workflow APK oficial, el release correlativo y la QA humana en
   dispositivo siguen siendo gates. No se declara `PASS`, `OPERATIONAL` ni
   `TIER1_READY`.
+
+---
+## 2026-09-05 — VE-UXCX-1-DOMAIN-IDENTITY-SHELL — IMPLEMENTED_UNVERIFIED
+
+- Se incorporó al canon del repositorio la directiva de UX/CX entregada por el
+  propietario: `docs/VE-UXCX-TIER1-2026/` (MASTER + 10 documentos, incluidos
+  master directive, benchmark 2026, arquitectura de dominios, análisis del
+  estado actual, plan por iteraciones y checklist de aceptación). El paquete
+  complementa, no sustituye, `VEXFORGE_PROTOCOL_V2.md`.
+- ITERACIÓN 0 (reconocimiento): los cinco dominios de la directiva se
+  corresponden con rutas reales existentes — FOJA `mobile/app/(tabs)/index.tsx`,
+  ARENA `battle.tsx`, ARCHIVO `collection.tsx`, FORJA `deck.tsx`, LEGADO
+  `profile.tsx`. Los sistemas secundarios (economy, store, world, social, meta,
+  missions, tutorial) ya son rutas satélite que alimentan esos espacios.
+- ITERACIÓN 1 (shell de experiencia, primer lote): se creó
+  `mobile/constants/experience.ts` con el registro compartido `DOMAIN_IDENTITY`
+  (lugar, título, propósito, sigilo, tono) y los tokens `MOTION` (micro,
+  reveal, navigation, ambient) y `DEPTH`. Se creó
+  `mobile/components/DomainHeader.tsx`, cabecera común que presenta cada
+  dominio como lugar del mundo y no como título de aplicación, con revelado
+  breve y respeto de `reduced-motion`.
+- ARENA, ARCHIVO, FORJA y LEGADO consumen ahora `DomainHeader`; se eliminaron
+  las cabeceras improvisadas por pantalla. No se cambiaron datos, rutas,
+  contratos, RLS, RPCs, Storage, economía ni combate; el estado vivo se pasa
+  por `status`/`trailing`.
+- Nueva guarda offline `verify:uxcx-domain-identity`
+  (`scripts/verify-uxcx-domain-identity.mjs`) integrada en `verify:all`:
+  exige las cinco identidades, los cuatro tokens de motion, el respeto de
+  reduced-motion y el consumo de `DomainHeader` en las cuatro pantallas.
+- Verificación local: `mobile` `tsc --noEmit` limpio; raíz `npm run typecheck`,
+  `npm run build`, `verify:uxcx-domain-identity`, `verify:ui-identity`
+  (192 archivos, 0 violaciones), `verify:motion` y `verify:mobile-meta`
+  pasan. `npx expo export` no pudo ejecutarse en este entorno porque la
+  instalación de dependencias móviles terminó con el fallo conocido de npm
+  (`Exit handler never called`) y no dejó el binario `expo`; queda como gate
+  pendiente junto al workflow Android y la QA humana en dispositivo.
+- Estado correcto: `IMPLEMENTED_UNVERIFIED`. No se declara `PASS`,
+  `OPERATIONAL` ni `TIER1_READY`. Próximo criterio: ITERACIÓN 2 (FOJA living
+  hub: capas, parallax y actividad contextual) sobre esta base compartida.

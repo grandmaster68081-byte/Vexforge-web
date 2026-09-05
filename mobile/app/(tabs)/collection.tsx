@@ -18,6 +18,7 @@ import { useColors } from '@/hooks/useColors';
 import { ProgressBar } from '@/components/ProgressBar';
 import { useGame } from '@/context/GameContext';
 import { ScreenShell } from '@/components/ScreenShell';
+import { DomainHeader } from '@/components/DomainHeader';
 import type { PlayerCard, PublicCard } from '@/lib/supabase';
 import { FACTION_ICONS } from '@/constants/visual';
 import { getCardPilotIdentity } from '@/constants/cardPilot';
@@ -347,19 +348,12 @@ export default function CollectionScreen() {
         contentContainerStyle={{ paddingTop: insets.top + 18, paddingBottom: insets.bottom + 104, paddingHorizontal: 16 }}
         ListHeaderComponent={
           <View>
-            <View style={styles.header}>
-              <View style={styles.headerTop}>
-                <View style={[styles.mark, { borderColor: colors.primary }]}>
-                  <Feather name="layers" size={17} color={colors.primary} />
-                </View>
-                <Text style={[styles.eyebrow, { color: colors.primary }]}>COMPENDIO DE VEXFORGE</Text>
-              </View>
-              <Text style={[styles.title, { color: colors.foreground }]}>Cartas</Text>
-              <Text style={[styles.subtitle, { color: colors.mutedForeground }]}>
-                {collectionLoading ? 'Sincronizando tu colección…' : `${ownedById.size}/${cardsTotal} cartas · ${completion}% completado`}
-              </Text>
+            <DomainHeader
+              domain="archivo"
+              status={collectionLoading ? 'Sincronizando tu colección…' : `${ownedById.size}/${cardsTotal} cartas · ${completion}% completado`}
+            >
               <ProgressBar value={completion} color={colors.primary} />
-            </View>
+            </DomainHeader>
             <View style={[styles.searchBox, { borderColor: colors.border, backgroundColor: colors.panel }]}>
               <Feather name="search" size={17} color={colors.mutedForeground} />
               <TextInputCompat value={search} onChangeText={setSearch} colors={colors} />
