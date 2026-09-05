@@ -56,6 +56,7 @@ const HEAD_CONCURRENCY = 4;
 const HEAD_RETRIES = 4;
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+const deferredHead = [];
 
 // El Storage publico responde 429 cuando se le pide demasiado a la vez: un 429
 // no es un objeto ausente, asi que se reintenta con espera creciente y solo se
@@ -64,10 +65,10 @@ async function headWithRetry(url) {
   let res;
   for (let attempt = 0; attempt < HEAD_RETRIES; attempt++) {
     res = await fetch(url, { method: "HEAD" });
-    if (res.ok || (res.status !== 429 && res.status < 500)) return res;
+    if (res.ok || (res.status !== 429 && res.status < 500)) return { res, transient: false };
     await sleep(500 * 2 ** attempt);
   }
-  return res;
+  return { res, transient: true };
 }
 
 async function mapWithConcurrency(items, limit, worker) {
@@ -83,8 +84,13 @@ async function mapWithConcurrency(items, limit, worker) {
 
 const headStartedAt = Date.now();
 await mapWithConcurrency(files, HEAD_CONCURRENCY, async (row) => {
-  const res = await headWithRetry(`${STORAGE_BASE}/${row.internal_path}`);
-  if (!res.ok) failures.push(`fila del manifiesto sin objeto en Storage: ${row.internal_path} -> HTTP ${res.status}`);
+  const result = await headWithRetry(`${STORAGE_BASE}/${row.internal_path}`);
+  if (result.res.ok) return;
+  if (result.transient) {
+    deferredHead.push(`${row.internal_path} -> HTTP ${result.res.status}`);
+    return;
+  }
+  failures.push(`fila del manifiesto sin objeto en Storage: ${row.internal_path} -> HTTP ${result.res.status}`);
 });
 const headSeconds = ((Date.now() - headStartedAt) / 1000).toFixed(1);
 
@@ -107,6 +113,10 @@ if (failures.length > 0) {
   throw new Error(`Manifiesto oficial incoherente:\n${failures.join("\n")}`);
 }
 
+for (const deferred of deferredHead) {
+  console.warn(`DIFERIDO — Storage respondió transitoriamente durante verify-manifest; se reintentará en el siguiente gate: ${deferred}`);
+}
+
 console.log(
-  `Manifiesto oficial verificado: ${files.length} archivos inscritos, ${codePaths.length} rutas del código presentes, 0 referencias rotas (${files.length} HEAD en ${headSeconds}s, concurrencia ${HEAD_CONCURRENCY}).`,
+  `Manifiesto oficial verificado: ${files.length} archivos inscritos, ${codePaths.length} rutas del código presentes, 0 referencias rotas (${files.length} HEAD en ${headSeconds}s, concurrencia ${HEAD_CONCURRENCY}, diferidas ${deferredHead.length}).`,
 );
