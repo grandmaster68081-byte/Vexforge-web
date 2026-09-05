@@ -1547,3 +1547,30 @@
   `OPERATIONAL` ni `TIER1_READY`. La QA humana en dispositivo sigue siendo gate.
 - Próximo criterio: ITERACIÓN 3 (ARENA: entrada a competición, estados de
   matchmaking, temporada/rango y transición teatral al combate).
+
+---
+## 2026-09-05 — VE-UXCX-3-ARENA-COMPETITIVE-ENTRY — IMPLEMENTED_UNVERIFIED
+
+- Preflight reconciliado contra el protocolo vivo de Supabase, el snapshot de
+  `main`, la continuidad y el plan UX/CX. El protocolo vivo y la copia de
+  GitHub son equivalentes en contenido; la única diferencia observada es un
+  salto de línea final adicional en Supabase.
+- ARENA mantiene el flujo autoritativo existente: formación real, leaderboard
+  vivo, confirmación, RPC `vexforge_battle_resolve`, idempotencia, replay,
+  resultado y telemetría. No se cambiaron tablas, RPCs, RLS, fórmulas,
+  economía, combate ni assets.
+- La entrada competitiva ahora presenta el rango PvP real mediante
+  `get_player_rank`, temporada activa como contexto, victorias/derrotas y
+  escudos; el mensaje de estado distingue espera, búsqueda, desafío y
+  resolución.
+- El orden de rivales y la diferencia del desafío usan el MMR real del
+  jugador cuando está disponible, sin sustituir el matchmaking del servidor.
+  Si el rango no carga, la UI lo declara como pendiente y conserva la ruta
+  oficial de búsqueda.
+- Guardas verificadas: `verify-mobile-battle` 15/15,
+  `verify-uxcx-domain-identity` 5/5 y `git diff --check` limpio. El
+  typecheck local queda pendiente de dependencias del snapshot descargado;
+  el workflow oficial Android es el gate de compilación siguiente.
+- Estado correcto: `IMPLEMENTED_UNVERIFIED`. No se declara `PASS`,
+  `OPERATIONAL` ni `TIER1_READY`; la QA humana en dispositivo continúa como
+  gate.
