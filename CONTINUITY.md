@@ -1368,3 +1368,13 @@
 - La carta destacada conserva el objeto real, facción, rareza, poder y ruta de inspección. Si la URL de arte existe pero falla en runtime, el Home ahora muestra `ARTE NO DISPONIBLE` en vez de dejar un marco vacío.
 - El fallback distingue ausencia de arte (`ARTE PENDIENTE`) de fallo de entrega, manteniendo estados honestos y sin inventar un asset sustituto.
 - Estado: `IN_PROGRESS / IMPLEMENTED_UNVERIFIED`; requiere QA visual en APK junto con Hero/Action antes de cualquier OTA.
+
+---
+## 2026-09-05 — VE-MOB-3-HOME-SCENE-PORTALS — IN_PROGRESS
+
+- El Home Android de Foja avanzó sobre la composición de escena oficial: el primer plano ahora presenta HUD vivo del forjador, frente activo, CTA primaria `ENTRAR A LA ARENA` y portales táctiles hacia Arena, Cartas, Mazo y Mundo usando rutas existentes.
+- Los accesos de tutorial, forja/tienda y economía se conservaron como navegación secundaria compacta; no se modificaron Auth, Supabase, contratos de datos, autoridad de combate ni la superficie web.
+- El lote usa los datos vivos ya existentes (`player`, `wallet`, temporada/evento y carta destacada), conserva estados honestos de arte, reduced-motion y testIDs de interacción. No agrega dependencias nativas.
+- Commit Android publicado por GitHub REST: `c4a748ce1b6164c8dfca3d93a970da4c21648b77`. El protocolo `VEXFORGE_PROTOCOL_V2.md` quedó reconciliado previamente con `public.vexforge_official_documents` / `v2.14-automatic-ota-cycle`.
+- Verificación local: `npm run build`, `npm run typecheck`, `verify:motion`, `verify:ui-identity`, `verify:surface-art`, `verify:mobile-meta` y `verify:assets` pasan. `verify:build` no puede resolver `git rev-parse HEAD` en la descarga REST sin metadatos Git; el `npm ci` nativo fue bloqueado por 404 del mirror interno para `npm-package-arg@11.0.3`, sin cambios de dependencias.
+- El workflow APK oficial y la QA humana en dispositivo siguen siendo el gate. Estado correcto: `VE-MOB-3-HOME-HERO`, `VE-MOB-3-HOME-ACTION`, `VE-MOB-3-HOME-CARD` y este lote `IMPLEMENTED_UNVERIFIED`; no se declara `PASS`, `OPERATIONAL` ni `TIER1_READY`.
