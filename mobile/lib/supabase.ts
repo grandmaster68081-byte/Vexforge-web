@@ -7,6 +7,8 @@ WebBrowser.maybeCompleteAuthSession();
 const SUPABASE_URL = process.env.EXPO_PUBLIC_SUPABASE_URL ?? 'https://rscuzqnfccqvltkdcdny.supabase.co';
 const SUPABASE_ANON_KEY = process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY ?? 'sb_publishable_3eGRSpvxptO09eQQzpxysQ_Imq8zi58';
 const SESSION_KEY = 'vexforge.supabase.session';
+const ACTIVE_PVP_BATTLE_KEY_PREFIX = 'vexforge.active-pvp-battle.v1';
+const pendingPvpBattleKeys = new Map<string, Promise<string>>();
 
 type Json = Record<string, unknown>;
 export type User = { id: string; email?: string };
@@ -1718,14 +1720,48 @@ async function restRpc(name: string, body: Json = {}, session?: Session) {
   return parse(response);
 }
 
+function pvpBattleStorageKey(playerId: string, opponentId: string) {
+  return `${ACTIVE_PVP_BATTLE_KEY_PREFIX}:${playerId}:${opponentId}`;
+}
+
+async function getOrCreatePvpBattleKey(playerId: string, opponentId: string) {
+  const storageKey = pvpBattleStorageKey(playerId, opponentId);
+  const pending = pendingPvpBattleKeys.get(storageKey);
+  if (pending) return pending;
+
+  const operation = (async () => {
+    const saved = await AsyncStorage.getItem(storageKey);
+    if (saved) return saved;
+
+    const created = `mobile_${playerId}_${opponentId}_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
+    await AsyncStorage.setItem(storageKey, created);
+    return created;
+  })();
+  pendingPvpBattleKeys.set(storageKey, operation);
+  try {
+    return await operation;
+  } finally {
+    pendingPvpBattleKeys.delete(storageKey);
+  }
+}
+
+async function clearPvpBattleKey(playerId: string, opponentId: string) {
+  await AsyncStorage.removeItem(pvpBattleStorageKey(playerId, opponentId));
+}
+
 export async function findOpponents(session: Session, playerId: string): Promise<Opponent[]> {
   const rows = await restRpc('get_leaderboard', { p_limit: 20 }, session) as any[];
   return (rows ?? []).filter((row) => row.player_id !== playerId).slice(0, 10).map((row) => ({ player_id: row.player_id, display_name: row.display_name ?? 'Forjador', mmr: Number(row.mmr ?? 1000), wins: Number(row.wins ?? 0), losses: Number(row.losses ?? 0) }));
 }
 
 export async function startBattle(session: Session, playerId: string, opponentId: string): Promise<BattleResult> {
-  const result = await restRpc('vexforge_battle_resolve', { p_challenger_id: playerId, p_opponent_id: opponentId, p_idempotency_key: 'mobile_' + playerId + '_' + opponentId + '_' + Date.now() }, session) as BattleResult;
-  if (!result?.ok) throw new Error(result?.error ?? 'El combate fue rechazado por el servidor');
+  const idempotencyKey = await getOrCreatePvpBattleKey(playerId, opponentId);
+  const result = await restRpc('vexforge_battle_resolve', { p_challenger_id: playerId, p_opponent_id: opponentId, p_idempotency_key: idempotencyKey }, session) as BattleResult;
+  if (!result?.ok) {
+    await clearPvpBattleKey(playerId, opponentId);
+    throw new Error(result?.error ?? 'El combate fue rechazado por el servidor');
+  }
+  await clearPvpBattleKey(playerId, opponentId);
   return result;
 }
     

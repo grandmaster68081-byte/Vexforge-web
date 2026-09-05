@@ -1,3 +1,12 @@
+## 2026-09-04 — ANDROID PVP — IDEMPOTENCY SURVIVES RETRIES
+
+- `mobile/lib/supabase.ts` ya persiste la clave de idempotencia por pareja jugador/oponente antes de llamar a `vexforge_battle_resolve`; un timeout o refresh reutiliza la misma resolución en vez de crear otra partida.
+- La clave se limpia tras una respuesta exitosa o un rechazo explícito del servidor, pero permanece ante errores de transporte para permitir un reintento seguro. Las llamadas concurrentes comparten la misma promesa de creación.
+- Verificación local completada: `npm run typecheck` y `npm run verify:telemetry` pasan; el guard confirma los 5 eventos canónicos y su transporte Android.
+- Este cambio toca `mobile/**`, por lo que el workflow APK oficial debe compilar y publicar el release correlativo antes de marcar esta sección como verificada. No se declara `PASS` sin el resultado oficial del workflow.
+
+---
+
 ## 2026-09-04 — ANDROID BASE APK — INSTALL TRANSPORT REPAIRED
 
 - Se reprodujo el bloqueo del workflow oficial en un entorno limpio: `npm ci` no puede consumir el lockfile porque conserva URLs internas del firewall de paquetes de Replit; el error es de transporte de dependencias, no de Expo, Gradle ni credenciales.
