@@ -1,3 +1,13 @@
+## 2026-09-05 — VE-MOB-3 HOME / FOJA — LIVING HUB BASE IMPLEMENTED_UNVERIFIED
+
+- Se reconstruyó `mobile/app/(tabs)/index.tsx` sobre el estado real de `main` siguiendo `VE-HOME-LIVING-HUB-01`: la primera vista ahora es una escena vertical con objeto de carta real, acción de arena y camino de puntos de interés.
+- Los cinco dominios visuales se representan sin rutas nuevas ni lógica duplicada: Cartas (`/collection`), Forja (`/deck`), Mundo (`/world`), Social (`/social`) y Perfil (`/profile`). Batalla (`/battle`) queda como acción primaria del gameloop.
+- El scroll añade parallax ligero entre escena y contenido; las señales de retorno, energía, cartas, VEX, evento, misión y actividad siguen viniendo de `GameContext`/Supabase. `reduced-motion`, estados de carga/error y feedback de press se conservan.
+- Verificación local: `mobile` typecheck, `verify:telemetry`, export Android de Expo y `expo prebuild --platform android --no-install --non-interactive` pasan. Gradle local no pudo ejecutarse porque el contenedor no tiene Java; queda pendiente el workflow APK oficial.
+- Estado: `IMPLEMENTED_UNVERIFIED`. No se declara `PASS`, `TIER1_READY` ni `OPERATIONAL` sin el workflow oficial y la QA visual/táctil humana en dispositivo.
+
+---
+
 ## 2026-09-05 — VE-9 ANDROID — APK RELEASE 85 PUBLISHED
 
 - El commit `affba20af4ca1b35722851a6852392ab10f99124` terminó con `success` en el workflow Android run `33940189565`.
