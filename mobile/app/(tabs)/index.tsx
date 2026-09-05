@@ -3,7 +3,7 @@ import { ActivityIndicator, Image, Pressable, RefreshControl, ScrollView, StyleS
 import { LinearGradient } from 'expo-linear-gradient';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@/components/ForgeIcon';
-import Animated, { FadeIn, FadeInDown } from 'react-native-reanimated';
+import Animated, { cancelAnimation, FadeIn, FadeInDown, interpolate, useAnimatedStyle, useReducedMotion, useSharedValue, withRepeat, withSequence, withTiming } from 'react-native-reanimated';
 import { useColors } from '@/hooks/useColors';
 import { useGame } from '@/context/GameContext';
 import { loadDailyFeaturedCard, loadHomeMissions, loadHomeStats, loadRecentActivity, type ActivityItem, type DailyCard, type HomeMission, type HomeStats } from '@/lib/supabase';
@@ -80,6 +80,37 @@ export default function ForgeScreen() {
   const [homeLoading, setHomeLoading] = useState(true);
   const [homeError, setHomeError] = useState<string | null>(null);
   const [homeSceneState, setHomeSceneState] = useState<'loading' | 'ready' | 'error'>('loading');
+  const sceneMotion = useSharedValue(0);
+  const reduceMotion = useReducedMotion();
+
+  useEffect(() => {
+    if (reduceMotion) {
+      sceneMotion.value = 0;
+      return;
+    }
+    sceneMotion.value = withRepeat(
+      withSequence(
+        withTiming(1, { duration: 9000 }),
+        withTiming(0, { duration: 9000 }),
+      ),
+      -1,
+      false,
+    );
+    return () => cancelAnimation(sceneMotion);
+  }, [reduceMotion, sceneMotion]);
+
+  const sceneMotionStyle = useAnimatedStyle(() => ({
+    transform: [
+      { translateX: interpolate(sceneMotion.value, [0, 1], [-5, 5]) },
+      { translateY: interpolate(sceneMotion.value, [0, 1], [2, -2]) },
+      { scale: interpolate(sceneMotion.value, [0, 1], [1.04, 1.08]) },
+    ],
+  }));
+
+  const glowMotionStyle = useAnimatedStyle(() => ({
+    opacity: interpolate(sceneMotion.value, [0, 1], [0.48, 0.82]),
+    transform: [{ scale: interpolate(sceneMotion.value, [0, 1], [0.96, 1.08]) }],
+  }));
 
   const loadHome = useCallback(async () => {
     setHomeLoading(true);
@@ -119,14 +150,16 @@ export default function ForgeScreen() {
         showsVerticalScrollIndicator={false}
       >
        <Animated.View entering={FadeIn.duration(450)} style={[styles.hero, { borderBottomColor: colors.border }]}>
-          <Image
-            source={{ uri: CANONICAL_BACKGROUNDS.home }}
-            style={[StyleSheet.absoluteFillObject, styles.heroImage]}
-            resizeMode="cover"
-            accessibilityLabel="Escena oficial de la Forja"
-            onLoad={() => setHomeSceneState('ready')}
-            onError={() => setHomeSceneState('error')}
-          />
+          <Animated.View pointerEvents="none" style={[StyleSheet.absoluteFillObject, sceneMotionStyle]}>
+            <Image
+              source={{ uri: CANONICAL_BACKGROUNDS.home }}
+              style={[StyleSheet.absoluteFillObject, styles.heroImage]}
+              resizeMode="cover"
+              accessibilityLabel="Escena oficial de la Forja"
+              onLoad={() => setHomeSceneState('ready')}
+              onError={() => setHomeSceneState('error')}
+            />
+          </Animated.View>
          <LinearGradient
             colors={['transparent', `${colors.ink}36`, `${colors.background}F2`]}
            locations={[0, 0.46, 1]}
@@ -138,7 +171,7 @@ export default function ForgeScreen() {
             end={{ x: 1, y: 0.64 }}
            style={StyleSheet.absoluteFillObject}
          />
-         <View style={[styles.heroGlow, { backgroundColor: `${colors.accent}20` }]} />
+         <Animated.View style={[styles.heroGlow, { backgroundColor: `${colors.accent}20` }, glowMotionStyle]} />
          <View style={[styles.heroGlowRight, { backgroundColor: `${colors.primary}18` }]} />
         <Text pointerEvents="none" style={[styles.sceneWord, { color: `${colors.accent}12` }]}>FORJA</Text>
         <View style={[styles.heroContent, { paddingTop: insets.top + 20 }]}>
