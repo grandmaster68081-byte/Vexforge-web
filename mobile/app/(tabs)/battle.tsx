@@ -17,7 +17,7 @@ import { emitTelemetry } from '@/lib/telemetry';
 import { ScreenShell } from '@/components/ScreenShell';
 import { DomainHeader } from '@/components/DomainHeader';
 import { loadPlayerDeck } from '@/lib/supabase';
-import type { BattleResult, BattleTurn, DeckSlot, Opponent } from '@/lib/supabase';
+import { loadPlayerRank, type BattleResult, type BattleTurn, type DeckSlot, type Opponent, type PlayerRank } from '@/lib/supabase';
 import { ForgeFormationPreview } from '@/components/ForgeFormationPreview';
 
 type Phase = 'lobby' | 'confirm' | 'replay' | 'result';
@@ -92,6 +92,43 @@ function OpponentRow({
       </View>
       <Feather name={selected ? 'check-circle' : 'chevron-right'} size={19} color={selected ? colors.primary : colors.mutedForeground} />
     </Pressable>
+  );
+}
+
+function ArenaRankCard({
+  rank,
+  stats,
+  loading,
+  colors,
+}: {
+  rank: PlayerRank | null;
+  stats: { pvp_wins?: number; pvp_losses?: number } | null;
+  loading: boolean;
+  colors: ReturnType<typeof useColors>;
+}) {
+  const mmr = typeof rank?.mmr === 'number' ? rank.mmr : null;
+  const tier = rank?.tier?.trim().toUpperCase() || (mmr === null ? 'RANGO PENDIENTE' : rankName(mmr));
+  const wins = rank?.wins ?? stats?.pvp_wins ?? 0;
+  const losses = rank?.losses ?? stats?.pvp_losses ?? 0;
+  const shields = rank?.shields ?? 0;
+
+  return (
+    <View testID="battle-rank-card" style={[styles.rankCard, { backgroundColor: `${colors.panelStrong}E8`, borderColor: `${colors.danger}66` }]}>
+      <View style={[styles.rankIcon, { backgroundColor: `${colors.danger}18`, borderColor: `${colors.danger}66` }]}>
+        <Feather name="shield" size={24} color={colors.danger} />
+      </View>
+      <View style={styles.rankCopy}>
+        <Text style={[styles.sectionLabel, { color: colors.danger }]}>TEMPORADA ACTIVA · RANGO PvP</Text>
+        <Text style={[styles.rankTitle, { color: colors.foreground }]}>{loading ? 'SINCRONIZANDO' : tier}</Text>
+        <Text style={[styles.rankMeta, { color: colors.mutedForeground }]}>
+          {mmr === null ? 'MMR pendiente' : `${mmr} MMR`} · {wins}V / {losses}D
+        </Text>
+      </View>
+      <View style={styles.rankScore}>
+        <Text style={[styles.rankScoreValue, { color: colors.accent }]}>{shields}</Text>
+        <Text style={[styles.rankScoreLabel, { color: colors.mutedForeground }]}>ESCUDOS</Text>
+      </View>
+    </View>
   );
 }
 
@@ -219,6 +256,8 @@ export default function BattleScreen() {
   const insets = useSafeAreaInsets();
   const {
     session,
+    player,
+    stats,
     opponents,
     findOpponents,
     startBattle,
@@ -236,6 +275,9 @@ export default function BattleScreen() {
   const [formationSlots, setFormationSlots] = useState<DeckSlot[]>([]);
   const [formationLoading, setFormationLoading] = useState(false);
   const [formationError, setFormationError] = useState<string | null>(null);
+  const [rank, setRank] = useState<PlayerRank | null>(null);
+  const [rankLoading, setRankLoading] = useState(false);
+  const [rankError, setRankError] = useState<string | null>(null);
   const turns = battleResult?.turns ?? [];
   const currentTurn = turns[turnIndex] ?? null;
   const emittedBattleRef = useRef<BattleResult | null>(null);
@@ -253,6 +295,22 @@ export default function BattleScreen() {
     }
   };
 
+  const refreshRank = async () => {
+    if (!session || !player?.id) {
+      setRank(null);
+      return;
+    }
+    setRankLoading(true);
+    setRankError(null);
+    try {
+      setRank(await loadPlayerRank(session, player.id));
+    } catch (error) {
+      setRankError(error instanceof Error ? error.message : 'No se pudo cargar tu rango PvP.');
+    } finally {
+      setRankLoading(false);
+    }
+  };
+
   useEffect(() => {
     if (!session) {
       setFormationSlots([]);
@@ -260,6 +318,10 @@ export default function BattleScreen() {
     }
     void refreshFormation();
   }, [session]);
+
+  useEffect(() => {
+    void refreshRank();
+  }, [player?.id, session, battleResult]);
 
   useEffect(() => {
     AccessibilityInfo.isReduceMotionEnabled().then(setReducedMotion).catch(() => {});
@@ -293,10 +355,30 @@ export default function BattleScreen() {
     return () => clearTimeout(timer);
   }, [phase, reducedMotion, turnIndex, turns.length]);
 
+  const playerMmr = typeof rank?.mmr === 'number' ? rank.mmr : null;
+  const mmrReference = playerMmr ?? 1000;
   const sortedOpponents = useMemo(
-    () => [...opponents].sort((a, b) => Math.abs(a.mmr - 1000) - Math.abs(b.mmr - 1000)),
-    [opponents],
+    () => [...opponents].sort((a, b) => Math.abs(a.mmr - mmrReference) - Math.abs(b.mmr - mmrReference)),
+    [mmrReference, opponents],
   );
+  const arenaStatus = battleLoading
+    ? 'PREPARANDO COMBATE'
+    : searching
+      ? 'BUSCANDO RIVAL'
+      : selectedOpponent
+        ? 'DESAFÍO LISTO'
+        : opponents.length > 0
+          ? 'RIVALES EN LA ARENA'
+          : 'ARENA EN ESPERA';
+  const arenaStatusCopy = battleLoading
+    ? 'El servidor está resolviendo la partida oficial.'
+    : searching
+      ? 'Consultando la clasificación viva para encontrar un rival.'
+      : selectedOpponent
+        ? 'Revisa la formación y confirma cuándo estés listo.'
+        : opponents.length > 0
+          ? 'Selecciona un rival para abrir el desafío.'
+          : 'Busca rivales para abrir la competición.';
 
   if (!session) {
     return (
@@ -342,7 +424,7 @@ export default function BattleScreen() {
       showsVerticalScrollIndicator={false}
     >
       <DomainHeader domain="arena" />
-      <Text style={[styles.copy, { color: colors.mutedForeground }]}>Cada combate se resuelve en Supabase y llega a tu dispositivo como evidencia de la partida. El cliente no calcula victorias, daño ni recompensas.</Text>
+      <Text style={[styles.copy, { color: colors.mutedForeground }]}>La Arena es el frente competitivo del Nexus. Tu rango y cada resolución llegan del servidor; este dispositivo solo presenta la evidencia de la partida.</Text>
 
       {phase === 'replay' && currentTurn && battleResult ? (
         <View testID="battle-replay">
@@ -368,6 +450,7 @@ export default function BattleScreen() {
         <ResultPanel result={battleResult} colors={colors} onDismiss={handleDismiss} />
       ) : (
         <>
+          <ArenaRankCard rank={rank} stats={stats} loading={rankLoading} colors={colors} />
           <ForgeFormationPreview
             slots={formationSlots}
             loading={formationLoading}
@@ -376,11 +459,12 @@ export default function BattleScreen() {
             onRetry={() => { void refreshFormation(); }}
           />
           <View style={[styles.statusPanel, { backgroundColor: colors.panel, borderColor: colors.border }]}>
+            <View style={[styles.statusDot, { backgroundColor: battleLoading || searching ? colors.accent : colors.success }]} />
             <View style={styles.statusCopy}>
-              <Text style={[styles.statusTitle, { color: colors.foreground }]}>MOTOR DE COMBATE</Text>
-              <Text style={[styles.statusBody, { color: colors.mutedForeground }]}>RPC autoritativa · RLS activa · sin simulación local</Text>
+              <Text testID="battle-arena-status" style={[styles.statusTitle, { color: colors.foreground }]}>{arenaStatus}</Text>
+              <Text style={[styles.statusBody, { color: colors.mutedForeground }]}>{arenaStatusCopy}</Text>
             </View>
-            <Feather name="radio" size={19} color={colors.success} />
+            <Feather name={battleLoading ? 'loader' : selectedOpponent ? 'crosshair' : 'radio'} size={19} color={battleLoading || searching ? colors.accent : colors.success} />
           </View>
           <Pressable
             testID="battle-find-opponents"
@@ -396,7 +480,7 @@ export default function BattleScreen() {
             <View testID="battle-confirmation" style={[styles.confirmation, { backgroundColor: colors.panelStrong, borderColor: colors.accent }]}>
               <Text style={[styles.sectionLabel, { color: colors.accent }]}>CONFIRMAR DESAFÍO</Text>
               <Text style={[styles.confirmTitle, { color: colors.foreground }]}>{selectedOpponent.display_name}</Text>
-              <Text style={[styles.meta, { color: colors.mutedForeground }]}>{rankName(selectedOpponent.mmr)} · {selectedOpponent.mmr} MMR · diferencia {selectedOpponent.mmr - 1000 >= 0 ? '+' : ''}{selectedOpponent.mmr - 1000}</Text>
+              <Text style={[styles.meta, { color: colors.mutedForeground }]}>{rankName(selectedOpponent.mmr)} · {selectedOpponent.mmr} MMR · diferencia {playerMmr === null ? '—' : `${selectedOpponent.mmr - playerMmr >= 0 ? '+' : ''}${selectedOpponent.mmr - playerMmr}`}</Text>
               <View style={styles.confirmActions}>
                 <Pressable accessibilityRole="button" disabled={battleLoading} onPress={() => setSelectedOpponent(null)} style={[styles.cancelButton, { borderColor: colors.border }]}>
                   <Text style={[styles.cancelText, { color: colors.mutedForeground }]}>CANCELAR</Text>
@@ -425,10 +509,10 @@ export default function BattleScreen() {
               onPress={() => setSelectedOpponent(opponent)}
             />
           ))}
-          {(localError || authError) ? (
+          {(localError || authError || rankError) ? (
             <View style={[styles.error, { borderColor: `${colors.danger}66`, backgroundColor: `${colors.danger}12` }]}>
               <Feather name="alert-circle" size={17} color={colors.danger} />
-              <Text style={[styles.errorText, { color: colors.danger }]}>{localError ?? authError}</Text>
+              <Text style={[styles.errorText, { color: colors.danger }]}>{localError ?? authError ?? rankError}</Text>
             </View>
           ) : null}
         </>
@@ -447,11 +531,20 @@ const styles = StyleSheet.create({
   title: { fontSize: 29, fontWeight: '800', marginTop: 4 },
   copy: { fontSize: 13, lineHeight: 20, marginBottom: 8 },
   statusPanel: { borderWidth: 1, borderRadius: 16, padding: 14, flexDirection: 'row', alignItems: 'center' },
+  statusDot: { width: 8, height: 8, borderRadius: 4, marginRight: 10 },
   statusCopy: { flex: 1 },
   statusTitle: { fontSize: 10, fontWeight: '900', letterSpacing: 1.2 },
   statusBody: { fontSize: 11, lineHeight: 16, marginTop: 4 },
   button: { minHeight: 50, borderRadius: 13, alignItems: 'center', justifyContent: 'center', flexDirection: 'row', gap: 9, paddingHorizontal: 18, marginBottom: 7 },
   buttonText: { fontSize: 11, fontWeight: '900', letterSpacing: 0.9 },
+  rankCard: { borderWidth: 1, borderRadius: 18, padding: 14, flexDirection: 'row', alignItems: 'center', gap: 12 },
+  rankIcon: { width: 48, height: 48, borderWidth: 1, borderRadius: 16, alignItems: 'center', justifyContent: 'center' },
+  rankCopy: { flex: 1, minWidth: 0 },
+  rankTitle: { fontSize: 20, fontWeight: '900', letterSpacing: 0.5, marginTop: 4 },
+  rankMeta: { fontSize: 11, marginTop: 3 },
+  rankScore: { alignItems: 'center', minWidth: 48 },
+  rankScoreValue: { fontSize: 20, fontWeight: '900' },
+  rankScoreLabel: { fontSize: 7, fontWeight: '900', letterSpacing: 0.7, marginTop: 3 },
   sectionLabel: { fontSize: 10, fontWeight: '900', letterSpacing: 1.2, marginTop: 4 },
   opponent: { flexDirection: 'row', alignItems: 'center', gap: 12, borderWidth: 1, borderRadius: 16, padding: 14 },
   rankSeal: { width: 40, height: 40, borderWidth: 1, borderRadius: 14, alignItems: 'center', justifyContent: 'center' },
