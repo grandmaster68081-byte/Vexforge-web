@@ -1609,3 +1609,25 @@
 - Estado correcto: `IMPLEMENTED_UNVERIFIED`. El typecheck y el APK se
   confirmarán en el workflow oficial; la QA humana en dispositivo continúa
   pendiente y no se declara `PASS`, `OPERATIONAL` ni `TIER1_READY`.
+
+---
+## 2026-09-05 — VE-UXCX-5-DECK-FORGE — IMPLEMENTED_UNVERIFIED
+
+- Preflight completado contra el protocolo activo y la siguiente unidad del
+  plan UX/CX. FOJA, ARENA y ARCHIVO no se reabrieron.
+- FORJA conserva la carga del mazo, selección desde la colección del jugador,
+  filtros, límites locales, designación de Campeón, validación RPC y guardado
+  RPC existentes.
+- El mazo ahora se presenta como el núcleo de la Forja, con estado visible
+  `NÚCLEO VACÍO` / `FORJA EN CURSO` / `LISTA PARA LA ARENA`, métricas de
+  composición y acciones rápidas de reinicio y entrada a Arena.
+- `PROBAR EN ARENA` guarda primero mediante el contrato oficial y sólo navega
+  a `/battle` cuando el mazo es válido y el servidor acepta el guardado.
+- No se cambiaron tablas, RPCs, Auth, RLS, economía, Storage, reglas de
+  combate ni la fuente canónica de cartas.
+- Guardas locales: `verify-mobile-deck` 13/13,
+  `verify-mobile-battle` 15/15, `verify-uxcx-domain-identity` correcto,
+  `verify-card-art-state` correcto.
+- Estado correcto: `IMPLEMENTED_UNVERIFIED`. El typecheck y APK quedan
+  pendientes del workflow oficial; la QA humana en dispositivo sigue
+  pendiente y no se declara `PASS`, `OPERATIONAL` ni `TIER1_READY`.

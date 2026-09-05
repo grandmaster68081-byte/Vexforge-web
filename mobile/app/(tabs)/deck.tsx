@@ -13,6 +13,7 @@ import {
   View,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useRouter } from 'expo-router';
 import { useColors } from '@/hooks/useColors';
 import { ProgressBar } from '@/components/ProgressBar';
 import {
@@ -212,6 +213,7 @@ function EmptyState({
 export default function DeckScreen() {
   const colors = useColors();
   const insets = useSafeAreaInsets();
+  const router = useRouter();
   const { session, player, collection, collectionLoading, syncState, syncError, refresh } = useGame();
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [championId, setChampionId] = useState<string | null>(null);
@@ -291,6 +293,11 @@ export default function DeckScreen() {
     factionList.length <= 2 &&
     mythicCount <= MAX_MYTHIC &&
     legendaryCount <= MAX_LEGENDARY;
+  const forgeState = deckReady
+    ? { label: 'LISTA PARA LA ARENA', color: colors.success }
+    : selectedIds.length === 0
+      ? { label: 'NÚCLEO VACÍO', color: colors.mutedForeground }
+      : { label: 'FORJA EN CURSO', color: colors.primary };
 
   const toggleCard = (card: PlayerCard) => {
     setMessage(null);
@@ -354,6 +361,40 @@ export default function DeckScreen() {
     }
   };
 
+  const handleOpenArena = async () => {
+    if (!deckReady) {
+      setMessage(
+        selectedIds.length < MIN_DECK
+          ? `Añade al menos ${MIN_DECK} cartas antes de entrar en la Arena.`
+          : 'Corrige los límites de facción y rareza antes de entrar en la Arena.',
+      );
+      return;
+    }
+    if (!session || saving) return;
+    setSaving(true);
+    setMessage(null);
+    try {
+      const result = await saveDeck(selectedIds, session);
+      if (!result.ok) {
+        setMessage(result.reason ?? 'El servidor rechazó el guardado del mazo.');
+        return;
+      }
+      await loadDeck();
+      router.push('/battle');
+    } catch (error) {
+      setMessage(error instanceof Error ? error.message : 'No se pudo preparar el mazo para la Arena.');
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const resetDraft = () => {
+    setSelectedIds([]);
+    setChampionId(null);
+    setValidation(null);
+    setMessage('Borrador de forja reiniciado.');
+  };
+
   const onRefresh = async () => {
     await Promise.all([refresh(), loadDeck()]);
   };
@@ -393,11 +434,11 @@ export default function DeckScreen() {
               status={`Formato estándar · ${MIN_DECK}–${MAX_DECK} cartas · 2 copias · 2 facciones`}
             />
 
-            <View style={[styles.powerPanel, { borderColor: `${colors.accent}66`, backgroundColor: `${colors.accent}0B` }]}>
+              <View testID="forge-core" style={[styles.powerPanel, { borderColor: `${colors.accent}66`, backgroundColor: `${colors.accent}0B` }]}>
               <View style={styles.powerHeader}>
                 <View>
-                  <Text style={[styles.powerEyebrow, { color: colors.accent }]}>DECK POWER SCORE</Text>
-                  <Text style={[styles.powerCopy, { color: colors.mutedForeground }]}>Lectura de fuerza del mazo seleccionado</Text>
+                    <Text style={[styles.powerEyebrow, { color: colors.accent }]}>NÚCLEO DE LA FORJA</Text>
+                    <Text style={[styles.powerCopy, { color: colors.mutedForeground }]}>La herramienta que llevarás a la Arena</Text>
                 </View>
                 <View style={styles.powerValue}>
                   <Feather name={tier.icon} size={18} color={tier.color} />
@@ -405,6 +446,10 @@ export default function DeckScreen() {
                   <Text style={[styles.powerTier, { color: tier.color, borderColor: `${tier.color}66`, backgroundColor: `${tier.color}16` }]}>{tier.label}</Text>
                 </View>
               </View>
+                <View style={[styles.forgeState, { borderColor: `${forgeState.color}66`, backgroundColor: `${forgeState.color}12` }]}>
+                  <View style={[styles.forgeStateDot, { backgroundColor: forgeState.color }]} />
+                  <Text style={[styles.forgeStateText, { color: forgeState.color }]}>{forgeState.label}</Text>
+                </View>
               <ProgressBar value={(power / 2000) * 100} color={tier.color} />
               <View style={styles.powerFooter}>
                 <Text style={[styles.counter, { color: selectedIds.length >= MIN_DECK ? colors.success : colors.danger }]}>{selectedIds.length}/{MAX_DECK} cartas</Text>
@@ -497,6 +542,32 @@ export default function DeckScreen() {
                 <Text style={[styles.primaryButtonText, { color: deckReady ? colors.primaryForeground : colors.mutedForeground }]}>{saving ? 'GUARDANDO' : 'GUARDAR MAZO'}</Text>
               </Pressable>
             </View>
+            <View style={styles.quickActionRow}>
+              <Pressable
+                testID="reset-deck-draft"
+                accessibilityRole="button"
+                accessibilityLabel="Reiniciar el borrador de forja"
+                onPress={resetDraft}
+                style={({ pressed }) => [styles.quickAction, { borderColor: colors.border, backgroundColor: colors.panel, opacity: pressed ? 0.72 : 1 }]}
+              >
+                <Feather name="rotate-ccw" size={14} color={colors.mutedForeground} />
+                <Text style={[styles.quickActionText, { color: colors.mutedForeground }]}>REINICIAR BORRADOR</Text>
+              </Pressable>
+              <Pressable
+                testID="open-arena-from-forge"
+                accessibilityRole="button"
+                accessibilityLabel="Guardar el mazo y entrar en la Arena"
+                disabled={saving}
+                onPress={handleOpenArena}
+                style={({ pressed }) => [
+                  styles.quickAction,
+                  { borderColor: deckReady ? `${colors.primary}88` : colors.border, backgroundColor: deckReady ? `${colors.primary}14` : colors.panel, opacity: pressed ? 0.72 : deckReady ? 1 : 0.5 },
+                ]}
+              >
+                <Feather name="zap" size={14} color={deckReady ? colors.primary : colors.mutedForeground} />
+                <Text style={[styles.quickActionText, { color: deckReady ? colors.primary : colors.mutedForeground }]}>PROBAR EN ARENA</Text>
+              </Pressable>
+            </View>
             {validation && (
               <View style={[styles.validation, { borderColor: validation.valid ? `${colors.success}66` : `${colors.danger}66`, backgroundColor: validation.valid ? `${colors.success}12` : `${colors.danger}12` }]}>
                 <Feather name={validation.valid ? 'check-circle' : 'alert-circle'} size={16} color={validation.valid ? colors.success : colors.danger} />
@@ -557,6 +628,9 @@ const styles = StyleSheet.create({
   powerValue: { alignItems: 'flex-end', gap: 4 },
   powerNumber: { fontSize: 24, fontWeight: '900' },
   powerTier: { borderWidth: 1, borderRadius: 12, paddingHorizontal: 7, paddingVertical: 3, fontSize: 9, fontWeight: '900', letterSpacing: 0.5 },
+  forgeState: { alignSelf: 'flex-start', borderWidth: 1, borderRadius: 12, paddingHorizontal: 9, paddingVertical: 5, flexDirection: 'row', alignItems: 'center', gap: 6, marginTop: 10 },
+  forgeStateDot: { width: 6, height: 6, borderRadius: 3 },
+  forgeStateText: { fontSize: 9, fontWeight: '900', letterSpacing: 0.7 },
   powerFooter: { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between', columnGap: 8, rowGap: 5, marginTop: 9 },
   counter: { fontSize: 11, fontWeight: '800' },
   championSection: { borderTopWidth: 1, borderTopColor: 'rgba(255,255,255,0.06)', marginTop: 13, paddingTop: 12 },
@@ -577,6 +651,9 @@ const styles = StyleSheet.create({
   chip: { borderWidth: 1, borderRadius: 18, paddingHorizontal: 12, paddingVertical: 7 },
   chipText: { fontSize: 11, fontWeight: '700' },
   actionRow: { flexDirection: 'row', gap: 9, marginTop: 4, marginBottom: 10 },
+  quickActionRow: { flexDirection: 'row', gap: 8, marginBottom: 10 },
+  quickAction: { flex: 1, minHeight: 40, borderWidth: 1, borderRadius: 10, alignItems: 'center', justifyContent: 'center', flexDirection: 'row', gap: 6, paddingHorizontal: 8 },
+  quickActionText: { fontSize: 9, fontWeight: '900', letterSpacing: 0.45, textAlign: 'center' },
   primaryButton: { flex: 1, minHeight: 44, borderRadius: 11, alignItems: 'center', justifyContent: 'center', flexDirection: 'row', gap: 7, paddingHorizontal: 10 },
   primaryButtonText: { fontSize: 10, fontWeight: '900', letterSpacing: 0.6 },
   secondaryButton: { minHeight: 44, borderWidth: 1, borderRadius: 11, alignItems: 'center', justifyContent: 'center', flexDirection: 'row', gap: 7, paddingHorizontal: 14 },
