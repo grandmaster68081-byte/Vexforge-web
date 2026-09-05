@@ -70,6 +70,23 @@ evento/temporada, carta destacada, actividad pública y acceso rápido a la aren
 - La unidad se reabre si falla el release, cambia el contrato de Home en
   Supabase, aparece una superficie con ruta muerta o se pierde la equivalencia
   visual/datos con la fuente web.
+
+## Lote visual — 2026-09-05 — acción y portales
+
+- La acción primaria `ENTRAR A LA ARENA` queda inmediatamente después del
+  frente activo y comparte el primer plano con una entrada secundaria real a
+  `MI COLECCIÓN`; ambas conservan sus rutas existentes y `testID`.
+- El progreso de XP se revela con una transición breve y se vuelve estático
+  cuando `reduced-motion` está activo. No cambia el valor autoritativo ni
+  introduce un loop por fila.
+- No se modificaron Supabase, Auth, RLS, RPCs, Storage, navegación existente,
+  assets canónicos ni la superficie web.
+- Verificación del lote: `npm run typecheck` en `mobile/`, `npm run build` en
+  la web de regresión, `npm run verify:telemetry`, `verify:motion`,
+  `verify:ui-identity`, `verify:surface-art`, `verify:mobile-meta`,
+  `verify:assets` y `npx expo export --platform android`.
+- Estado correcto: `IMPLEMENTED_UNVERIFIED`; el workflow Android oficial,
+  release correlativo y QA humana del APK siguen siendo gates de cierre.
 ## Orden de trabajo vigente — QA visual-first del dominio Forja
 
 **Decisión del operador:** el primer dominio de QA será **Forja**, representado por la superficie Android `VE-MOB-3 HOME` y las tres capturas de referencia entregadas para su lectura completa.

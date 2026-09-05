@@ -1416,3 +1416,25 @@
 - Commit Android publicado por GitHub REST: `c4a748ce1b6164c8dfca3d93a970da4c21648b77`. El protocolo `VEXFORGE_PROTOCOL_V2.md` quedó reconciliado previamente con `public.vexforge_official_documents` / `v2.14-automatic-ota-cycle`.
 - Verificación local: `npm run build`, `npm run typecheck`, `verify:motion`, `verify:ui-identity`, `verify:surface-art`, `verify:mobile-meta` y `verify:assets` pasan. `verify:build` no puede resolver `git rev-parse HEAD` en la descarga REST sin metadatos Git; el `npm ci` nativo fue bloqueado por 404 del mirror interno para `npm-package-arg@11.0.3`, sin cambios de dependencias.
 - El workflow APK oficial y la QA humana en dispositivo siguen siendo el gate. Estado correcto: `VE-MOB-3-HOME-HERO`, `VE-MOB-3-HOME-ACTION`, `VE-MOB-3-HOME-CARD` y este lote `IMPLEMENTED_UNVERIFIED`; no se declara `PASS`, `OPERATIONAL` ni `TIER1_READY`.
+
+---
+## 2026-09-05 — VE-MOB-3-HOME-ACTION-CARD-PORTALS — IMPLEMENTED_UNVERIFIED
+
+- Se cerró el lote de composición Android sobre `mobile/app/(tabs)/index.tsx`:
+  `ENTRAR A LA ARENA` queda junto al frente activo como acción dominante y
+  `MI COLECCIÓN` vuelve a estar disponible como entrada secundaria directa.
+- La barra de XP ahora revela el progreso con una transición breve y conserva
+  una escena estática bajo `reduced-motion`.
+- El cambio reutiliza datos, rutas, assets, tokens y componentes authored
+  existentes. No modifica Supabase, Auth, RLS, RPCs, Storage, economía,
+  combate ni la superficie web.
+- La fuente canónica `vexforge_master_protocol_v2` fue leída desde Supabase
+  Management API y coincide byte a byte con `VEXFORGE_PROTOCOL_V2.md` antes
+  de editar.
+- Verificación local: `npm run typecheck` en `mobile/`, `npm run build` en la
+  raíz web, `npm run verify:telemetry`, `verify:motion`,
+  `verify:ui-identity`, `verify:surface-art`, `verify:mobile-meta`,
+  `verify:assets`, `npx expo export --platform android` y `git diff --check`.
+- El workflow APK oficial, el release correlativo y la QA humana en
+  dispositivo siguen siendo gates. No se declara `PASS`, `OPERATIONAL` ni
+  `TIER1_READY`.

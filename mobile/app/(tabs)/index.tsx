@@ -129,6 +129,7 @@ export default function ForgeScreen() {
   const [homeSceneState, setHomeSceneState] = useState<'loading' | 'ready' | 'error'>('loading');
   const scrollY = useSharedValue(0);
   const ambientMotion = useSharedValue(0);
+  const progressMotion = useSharedValue(0);
   const reduceMotion = useReducedMotion();
 
   useEffect(() => {
@@ -175,6 +176,10 @@ export default function ForgeScreen() {
       { translateY: interpolate(ambientMotion.value, [0, 1], [4, -4]) },
       { rotate: `${interpolate(ambientMotion.value, [0, 1], [-1, 1])}deg` },
     ],
+  }));
+
+  const progressFillStyle = useAnimatedStyle(() => ({
+    width: `${progressMotion.value}%`,
   }));
 
   const loadHome = useCallback(async () => {
@@ -227,6 +232,12 @@ export default function ForgeScreen() {
     : tutorialComplete
       ? 100
       : Math.min(100, Math.round((tutorialStep / Math.max(1, TUTORIAL_TOTAL_STEPS - 1)) * 100));
+
+  useEffect(() => {
+    progressMotion.value = reduceMotion
+      ? xpPercent
+      : withTiming(xpPercent, { duration: 700 });
+  }, [progressMotion, reduceMotion, xpPercent]);
 
   return (
     <ScreenShell surface="home" sceneMode="hero">
@@ -377,6 +388,20 @@ export default function ForgeScreen() {
               ) : <Text style={[styles.frontTimerValue, { color: colors.mutedForeground }]}>SIN FRENTE ACTIVO</Text>}
             </View>
 
+            <View style={styles.actionRail}>
+              <ForgeButton label="ENTRAR A LA ARENA" icon="arena" onPress={() => router.push('/battle')} testID="home-battle" />
+              <Pressable
+                accessibilityRole="button"
+                accessibilityLabel="Abrir mi colección"
+                testID="home-collection"
+                onPress={() => router.push('/collection')}
+                style={({ pressed }) => [styles.secondaryAction, { borderColor: `${colors.accent}7A`, backgroundColor: `${colors.ink}C9`, opacity: pressed ? 0.72 : 1 }]}
+              >
+                <Ionicons name="cards" size={16} color={colors.accent} />
+                <Text style={[styles.secondaryActionText, { color: colors.foreground }]}>MI COLECCIÓN</Text>
+              </Pressable>
+            </View>
+
             <View style={[styles.sceneProgress, { borderColor: `${colors.accent}52`, backgroundColor: `${colors.ink}B8` }]}>
               <View style={styles.sceneProgressHeader}>
                 <View>
@@ -390,7 +415,7 @@ export default function ForgeScreen() {
                 </Text>
               </View>
               <View style={[styles.sceneProgressTrack, { backgroundColor: `${colors.foreground}18` }]}>
-                <View style={[styles.sceneProgressFill, { width: `${xpPercent}%`, backgroundColor: colors.accent }]} />
+                <Animated.View style={[styles.sceneProgressFill, progressFillStyle, { backgroundColor: colors.accent }]} />
               </View>
               <Text style={[styles.sceneProgressMeta, { color: colors.mutedForeground }]}>
                 {tutorialStep == null
@@ -417,10 +442,6 @@ export default function ForgeScreen() {
               </View>
               <Ionicons name="chevron-forward" size={15} color={colors.mutedForeground} />
             </Pressable>
-
-            <View style={styles.primaryAction}>
-              <ForgeButton label="ENTRAR A LA ARENA" icon="arena" onPress={() => router.push('/battle')} testID="home-battle" />
-            </View>
 
             <View style={styles.sceneHint}>
               <Ionicons name="compass-outline" size={16} color={colors.accent} />
@@ -618,7 +639,9 @@ const styles = StyleSheet.create({
   tutorialEntryCopy: { flex: 1 },
   tutorialEntryLabel: { fontFamily: typography.bodyBold, fontSize: 8, letterSpacing: 0.8, fontWeight: '800' },
   tutorialEntryMeta: { fontFamily: typography.body, fontSize: 8, marginTop: 2 },
-  primaryAction: { marginTop: 11 },
+  actionRail: { flexDirection: 'row', gap: 8, marginTop: 11 },
+  secondaryAction: { flex: 1, minHeight: 46, borderWidth: 1, borderRadius: 12, paddingHorizontal: 9, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 6 },
+  secondaryActionText: { fontFamily: typography.bodyBold, fontSize: 8, letterSpacing: 0.35, fontWeight: '800' },
   sceneHint: { minHeight: 27, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8, marginTop: 8 },
   sceneHintText: { fontFamily: typography.bodyBold, fontSize: 7, letterSpacing: 1, fontWeight: '700' },
   content: { paddingHorizontal: 20, paddingTop: 9, gap: 14 },

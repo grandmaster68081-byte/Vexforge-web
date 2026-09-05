@@ -1578,6 +1578,24 @@ Antes de cerrar cada paquete, registrar una fila por elemento:
 
 - Fondos, logos, facciones, cartas, marcos, ilustraciones, VFX authored y audio de mundo requieren Storage/manifiesto y consumidor real.
 - Barras, separadores, scrims, focus rings, estados de progreso y geometría de interfaz pueden ser CSS/React Native si no pretenden ser un objeto del universo.
+
+---
+
+## PATCH OPERATIVO — 2026-09-05 — VE-MOB-3 HOME
+
+- La superficie activa continúa siendo Android `mobile/`; la web permanece
+  congelada como referencia de lectura.
+- El lote visual actual coloca `ENTRAR A LA ARENA` junto al frente activo,
+  devuelve `MI COLECCIÓN` como entrada secundaria real y anima únicamente la
+  revelación del progreso XP. `reduced-motion` elimina la transición y deja el
+  valor estable.
+- No se cambiaron contratos, datos, Auth, RLS, RPCs, Storage, economía,
+  combate, assets canónicos ni rutas existentes.
+- La implementación queda `IMPLEMENTED_UNVERIFIED`. El workflow Android
+  oficial, el release correlativo y la QA humana del APK siguen siendo
+  obligatorios antes de declarar `PASS`, `OPERATIONAL` o `TIER1_READY`.
+- Evidencia técnica del lote: typecheck móvil, build web de regresión, guardas
+  de telemetría/motion/identidad/arte/metadata/assets y export Android pasan.
 - Un asset existente se consume; no se duplica. Uno ausente se crea, se revisa, se sube, se registra y se enlaza antes del cierre visual.
 - ASSET_REQUIRED, ASSET_IN_PROGRESS y IMPLEMENTED_UNVERIFIED son estados honestos. No se renombran como PASS para ocultar una ausencia.
 
