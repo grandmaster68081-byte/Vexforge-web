@@ -1,7 +1,6 @@
 import { Feather } from '@/components/ForgeIcon';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import {
-  ActivityIndicator,
   FlatList,
   Image,
   Modal,
@@ -19,6 +18,7 @@ import { useColors } from '@/hooks/useColors';
 import { ProgressBar } from '@/components/ProgressBar';
 import { useGame } from '@/context/GameContext';
 import { ScreenShell } from '@/components/ScreenShell';
+import { DomainState } from '@/components/DomainState';
 import { DomainHeader } from '@/components/DomainHeader';
 import type { PlayerCard, PublicCard } from '@/lib/supabase';
 import { FACTION_ICONS } from '@/constants/visual';
@@ -474,18 +474,26 @@ export default function CollectionScreen() {
                 ))}
               </ScrollView>
             </View>
-            {syncState === 'offline' && (
-              <View style={[styles.error, { borderColor: `${colors.danger}66`, backgroundColor: `${colors.danger}12` }]}>
-                <Feather name="alert-circle" size={18} color={colors.danger} />
-                <Text style={[styles.errorText, { color: colors.danger }]}>{syncError ?? 'No se pudo sincronizar el compendio.'}</Text>
-              </View>
-            )}
-            {syncState === 'loading' && featuredCards.length === 0 && (
-              <View style={styles.loading}>
-                <ActivityIndicator color={colors.primary} />
-                <Text style={[styles.loadingText, { color: colors.mutedForeground }]}>CONECTANDO CON SUPABASE</Text>
-              </View>
-            )}
+            {syncState === 'offline' ? (
+              <DomainState
+                kind="error"
+                icon="warning"
+                title="El archivo perdió la señal"
+                message={syncError ?? 'No se pudo sincronizar el compendio. La forja puede reintentarlo cuando vuelvas a tener conexión.'}
+                actionLabel="REINTENTAR SINCRONIZACIÓN"
+                onAction={refresh}
+                testID="collection-sync-error"
+              />
+            ) : null}
+            {syncState === 'loading' && featuredCards.length === 0 ? (
+              <DomainState
+                kind="loading"
+                icon="collection"
+                title="Abriendo el archivo"
+                message="Estamos reuniendo tus cartas y su procedencia oficial."
+                testID="collection-loading"
+              />
+            ) : null}
             {hasFilters && filtered.length === 0 && featuredCards.length > 0 && (
               <View style={[styles.empty, { borderColor: colors.border, backgroundColor: colors.panel }]}>
                 <Feather name="target" size={32} color={colors.primary} />
@@ -500,11 +508,15 @@ export default function CollectionScreen() {
         }
         ListEmptyComponent={
           !hasFilters && syncState !== 'loading' ? (
-            <View style={[styles.empty, { borderColor: colors.border, backgroundColor: colors.panel }]}>
-              <Feather name="layers" size={34} color={colors.primary} />
-              <Text style={[styles.emptyTitle, { color: colors.foreground }]}>Compendio sin cartas</Text>
-              <Text style={[styles.emptyText, { color: colors.mutedForeground }]}>No hay cartas activas disponibles en Supabase en este momento.</Text>
-            </View>
+            <DomainState
+              kind="empty"
+              icon="collection"
+              title="El compendio aún está en silencio"
+              message="No hay cartas activas disponibles en Supabase en este momento. Vuelve a sincronizar cuando el archivo reciba nuevas piezas."
+              actionLabel="ACTUALIZAR ARCHIVO"
+              onAction={refresh}
+              testID="collection-empty"
+            />
           ) : null
         }
       />

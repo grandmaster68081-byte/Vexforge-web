@@ -23,6 +23,7 @@ import {
   useFonts,
 } from '@expo-google-fonts/inter';
 import { Stack } from 'expo-router';
+import { useReducedMotion } from 'react-native-reanimated';
 import * as SplashScreen from 'expo-splash-screen';
 import { GameProvider } from '@/context/GameContext';
 
@@ -32,8 +33,10 @@ SplashScreen.preventAutoHideAsync();
 const queryClient = new QueryClient();
 
 function RootLayoutNav() {
+  const reduceMotion = useReducedMotion();
+
   return (
-    <Stack screenOptions={{ headerBackTitle: 'Back' }}>
+    <Stack screenOptions={{ headerBackTitle: 'Back', animation: reduceMotion ? 'none' : 'fade' }}>
       <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
       <Stack.Screen name="auth" options={{ headerShown: false, gestureEnabled: false }} />
       <Stack.Screen name="tutorial" options={{ headerShown: false }} />
