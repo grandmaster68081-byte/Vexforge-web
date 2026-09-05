@@ -73,3 +73,13 @@ Los criterios `MET` no se reinterpretan como cierre global: prueban sólo su pro
 ## No afirmado
 
 Este baseline no afirma que el APK haya sido instalado por un operador, que el typecheck local haya pasado, que el Home sea Q4, que la primera sesión esté medida, que el benchmark esté cerrado o que VEXFORGE esté `OPERATIONAL`, `PASS` o `TIER1_READY`.
+
+
+---
+## Addendum 2026-09-04 — Reconciliación actual y primer lote Hero
+
+La reconciliación T0 se mantiene como una salida documental, no como un pase de Tier 1. Se actualiza su contexto operativo: el documento normativo activo es `v2.14-automatic-ota-cycle`; la APK base OTA es `vexforge-android-build-78`, runtime `1.0.0`, app `1.0.0`, `versionCode: 3`, canal `production`, con SHA-256 registrado en `public.vexforge_android_release_registry` bajo `VE-MOB-BASE-OTA`.
+
+El primer lote posterior a T0 comenzó en `VE-MOB-3-HOME-HERO` con el commit `2d3123fac9899f048486589785b0801009981514`. El lote añade movimiento ambiental reversible y respetuoso de `reduced-motion` al Hero existente, sin cambiar contratos ni autoridad. Permanece `IN_PROGRESS / IMPLEMENTED_UNVERIFIED`: todavía requiere evidencia en APK, revisión del Home completo y el gate visual `HOME_GAME_SCENE_QUALITY_V1`; no se publica OTA mientras el lote no esté cerrado.
+
+El run `33933157525` de verificación quedó separado como bloqueo transitorio de Storage HTTP 429. El build Android `33933157629` se conserva como evidencia del commit y debe concluir antes de declarar el lote verificado.

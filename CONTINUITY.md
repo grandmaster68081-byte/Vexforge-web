@@ -1275,3 +1275,14 @@
 - El workflow se corrigió únicamente en CI: timeout de 30 minutos, salida Gradle plana, workers limitados y exclusión de los tasks `lintVitalAnalyzeRelease`, `lintVitalReportRelease` y `lintVitalRelease`, que no son necesarios para producir el APK instalable.
 - El run `33894166700` terminó `success` sobre el commit `6de1af807c4a1546cc3d0f0b4dd5afe256d22d0b`; la verificación confirmó `app-release.apk` publicado, 95,296,812 bytes y `assets/index.android.bundle` embebido.
 - Release base OTA: `vexforge-android-build-78`. Las secciones compatibles con OTA deben continuar por actualización OTA; sólo los cambios nativos requieren una nueva entrega nativa.
+
+
+---
+## 2026-09-04 — VE-MOB-3-HOME-HERO — IN_PROGRESS
+
+- Se revalidó T0 contra la fila activa de Supabase `vexforge_master_protocol_v2`, versión `v2.14-automatic-ota-cycle`, y contra el protocolo sincronizado en GitHub. La base nativa vigente es `vexforge-android-build-78`, runtime `1.0.0`, `versionCode: 3`, canal `production`, con `expo-updates` y bundle embebido verificados.
+- La referencia visual `HOME_GAME_SCENE_QUALITY_V1` queda aplicada como gate: escena authored, foco, atmósfera, HUD, acción, movimiento, feedback, estados, procedencia y evidencia en APK.
+- Se inició el siguiente lote visual sobre `mobile/app/(tabs)/index.tsx` en el commit `2d3123fac9899f048486589785b0801009981514`: movimiento ambiental lento del fondo oficial y pulso de atmósfera; `reduced-motion` conserva una escena estática. No cambia navegación, contratos, datos, assets ni autoridad de Supabase.
+- El workflow `verify` run `33933157525` terminó `failure` por HTTP 429 transitorio para dos objetos del manifiesto de Storage (`cards/uncommon_oraculo_del_templo.jpg` y `cards/uncommon_maestro_del_escudo.jpg`); no se atribuye al lote Hero. El workflow Android run `33933157629` seguía en curso al registrar esta entrada.
+- No se publicó OTA ni APK nuevo: el lote aún no cierra `HOME_GAME_SCENE_QUALITY_V1` ni Q4. Estado correcto: `VE-MOB-3-HOME-HERO = IN_PROGRESS / IMPLEMENTED_UNVERIFIED`.
+- Próximo criterio: confirmar build Android, revisar evidencia en dispositivo y continuar con composición Hero/Action antes de emitir una OTA de sección.
