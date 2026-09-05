@@ -1286,3 +1286,11 @@
 - El workflow `verify` run `33933157525` terminó `failure` por HTTP 429 transitorio para dos objetos del manifiesto de Storage (`cards/uncommon_oraculo_del_templo.jpg` y `cards/uncommon_maestro_del_escudo.jpg`); no se atribuye al lote Hero. El workflow Android run `33933157629` seguía en curso al registrar esta entrada.
 - No se publicó OTA ni APK nuevo: el lote aún no cierra `HOME_GAME_SCENE_QUALITY_V1` ni Q4. Estado correcto: `VE-MOB-3-HOME-HERO = IN_PROGRESS / IMPLEMENTED_UNVERIFIED`.
 - Próximo criterio: confirmar build Android, revisar evidencia en dispositivo y continuar con composición Hero/Action antes de emitir una OTA de sección.
+
+
+---
+## 2026-09-04 — VE-MOB-3-HOME-ACTION — IN_PROGRESS
+
+- El siguiente lote del Home aplica la regla `SCENE + OBJECT + ACTION + FEEDBACK + EXIT`: la CTA primaria `ENTRAR A LA ARENA` ahora recibe mayor peso visual que `MI COLECCIÓN`, sin cambiar rutas ni comportamiento.
+- El cambio es compatible con el runtime `1.0.0`, no agrega dependencia nativa y permanece dentro de la misma unidad visual Hero/Action.
+- Estado: `IN_PROGRESS / IMPLEMENTED_UNVERIFIED`; no se publica OTA hasta que Hero/Action tenga evidencia en APK y pase el gate `HOME_GAME_SCENE_QUALITY_V1`.

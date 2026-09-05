@@ -83,3 +83,8 @@ La reconciliación T0 se mantiene como una salida documental, no como un pase de
 El primer lote posterior a T0 comenzó en `VE-MOB-3-HOME-HERO` con el commit `2d3123fac9899f048486589785b0801009981514`. El lote añade movimiento ambiental reversible y respetuoso de `reduced-motion` al Hero existente, sin cambiar contratos ni autoridad. Permanece `IN_PROGRESS / IMPLEMENTED_UNVERIFIED`: todavía requiere evidencia en APK, revisión del Home completo y el gate visual `HOME_GAME_SCENE_QUALITY_V1`; no se publica OTA mientras el lote no esté cerrado.
 
 El run `33933157525` de verificación quedó separado como bloqueo transitorio de Storage HTTP 429. El build Android `33933157629` se conserva como evidencia del commit y debe concluir antes de declarar el lote verificado.
+
+
+## Addendum 2026-09-04 — Acción primaria del Home
+
+El lote siguiente a Hero mantiene una sola CTA dominante (`ENTRAR A LA ARENA`) y subordina visualmente `MI COLECCIÓN`, conservando ambas rutas existentes. La implementación se mantiene dentro de `VE-MOB-3-HOME-ACTION`, sigue siendo OTA-compatible y no se considera cerrada hasta contar con evidencia de APK y puntuación Q4 conforme a `HOME_GAME_SCENE_QUALITY_V1`.

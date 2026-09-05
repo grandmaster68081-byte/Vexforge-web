@@ -68,7 +68,11 @@ function SectionLabel({ children, color }: { children: string; color: string }) 
 }
 
 function ActionButton({ label, icon, onPress, colors, secondary = false, testID }: { label: string; icon: keyof typeof Ionicons.glyphMap; onPress: () => void; colors: ReturnType<typeof useColors>; secondary?: boolean; testID: string }) {
-  return <ForgeButton label={label} icon={icon} onPress={onPress} secondary={secondary} testID={testID} />;
+  return (
+    <View style={secondary ? styles.secondaryAction : styles.primaryAction}>
+      <ForgeButton label={label} icon={icon} onPress={onPress} secondary={secondary} testID={testID} />
+    </View>
+  );
 }
 
 export default function ForgeScreen() {
@@ -500,6 +504,8 @@ const styles = StyleSheet.create({
   title: { fontFamily: typography.display, fontSize: 42, lineHeight: 47, fontWeight: '700', letterSpacing: 0.3, marginTop: 12, textShadowColor: 'rgba(0,0,0,0.42)', textShadowOffset: { width: 0, height: 2 }, textShadowRadius: 12 },
   heroBody: { fontFamily: typography.body, fontSize: 15, lineHeight: 22, maxWidth: 310, marginTop: 14 },
   actionRow: { flexDirection: 'row', gap: 10 },
+  primaryAction: { flex: 1.12 },
+  secondaryAction: { flex: 0.88 },
   actionButton: { minHeight: 42, borderRadius: 12, borderWidth: 1, paddingHorizontal: 14, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8, flex: 1 },
   actionText: { fontSize: 10, fontWeight: '800', letterSpacing: 0.7 },
    heroStats: { flexDirection: 'row', flexWrap: 'wrap', columnGap: 22, rowGap: 12, marginTop: 28, paddingTop: 17, borderTopWidth: 1 },
