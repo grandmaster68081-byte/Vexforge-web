@@ -1,3 +1,12 @@
+## 2026-09-05 — VE-9 ANDROID — REDUCED MOTION IN SCREEN SHELL
+
+- `mobile/components/ScreenShell.tsx` ahora respeta `useReducedMotion`: detiene el pulso ambiental compartido y mantiene la atmósfera en un estado estático cuando el sistema solicita reducir movimiento.
+- La corrección no cambia navegación, datos, RPCs, economía, Auth ni el contenido visual oficial; sólo evita la animación ambiental común bajo reduced motion.
+- Verificación local completada: `npm run typecheck` y `npm run verify:telemetry` pasan con los 5 eventos canónicos y transporte Android.
+- Al tocar `mobile/**`, el workflow APK debe producir el siguiente release completo. El estado seguirá `IMPLEMENTED_UNVERIFIED` hasta la publicación técnica y la QA humana separada.
+
+---
+
 ## 2026-09-05 — ANDROID DELIVERY — APK RELEASES 82/83 PUBLISHED
 
 - El workflow `Build VEXFORGE Android APK` terminó en `success` para los dos commits: `e213768e30c5a489838368ccbb5a1b6c05e638cf` (run 33937274698) y `3ac37d65f1bc60cffd10885b68f017f6b5b48c44` (run 33937352689).

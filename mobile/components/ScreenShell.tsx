@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react';
 import { LinearGradient } from 'expo-linear-gradient';
 import Animated, {
+  cancelAnimation,
   useAnimatedStyle,
   useSharedValue,
+  useReducedMotion,
   withRepeat,
   withSequence,
   withTiming,
@@ -18,6 +20,7 @@ export function ScreenShell({ surface = 'home', sceneMode = 'shell', children, s
   const webTopInset = Platform.OS === 'web' ? 67 : 0;
   const ownsScene = sceneMode === 'shell';
   const pulse = useSharedValue(0);
+  const reduceMotion = useReducedMotion();
   const [sceneState, setSceneState] = useState<'loading' | 'ready' | 'error'>('loading');
   const atmosphereKey: Record<VisualSurface, 'accent' | 'primary' | 'danger' | 'success' | 'rarityEpic' | 'rarityRare'> = {
     home: 'accent',
@@ -39,6 +42,11 @@ export function ScreenShell({ surface = 'home', sceneMode = 'shell', children, s
   const atmosphereColor = colors[atmosphereKey[surface]];
 
   useEffect(() => {
+    if (reduceMotion) {
+      cancelAnimation(pulse);
+      pulse.value = 0;
+      return;
+    }
     pulse.value = withRepeat(
       withSequence(
         withTiming(1, { duration: 2800 }),
@@ -47,7 +55,8 @@ export function ScreenShell({ surface = 'home', sceneMode = 'shell', children, s
       -1,
       false,
     );
-  }, [pulse]);
+    return () => cancelAnimation(pulse);
+  }, [pulse, reduceMotion]);
 
   const leftGlowStyle = useAnimatedStyle(() => ({
     opacity: 0.1 + pulse.value * 0.1,
