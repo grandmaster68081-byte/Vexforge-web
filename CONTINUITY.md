@@ -1,3 +1,13 @@
+## 2026-09-05 — VE-9 ANDROID — APK RELEASE 85 PUBLISHED
+
+- El commit `affba20af4ca1b35722851a6852392ab10f99124` terminó con `success` en el workflow Android run `33940189565`.
+- Pasaron instalación de dependencias, typecheck, guard de telemetría, `expo prebuild`, Gradle release, verificación de `assets/index.android.bundle` y publicación del APK.
+- Release técnico: https://github.com/grandmaster68081-byte/Vexforge-web/releases/tag/vexforge-android-build-85
+- APK: `app-release.apk`, 95,300,860 bytes, SHA-256 `cbb7bff49ec5e1b08ebeddfdd0ee17dc3706fab5f9f85aa791f2fe2913bb2cd`.
+- El lote Home/Perfil de reduced motion queda entregado técnicamente; continúa `IMPLEMENTED_UNVERIFIED` por QA humana pendiente. No se declara `PASS`, `TIER1_READY` ni `OPERATIONAL`.
+
+---
+
 ## 2026-09-05 — VE-9 ANDROID — REDUCED MOTION EN HOME Y PERFIL
 
 - Home y Perfil Android ahora desactivan sus entradas `FadeIn`/`FadeInDown` cuando `useReducedMotion` está activo; los datos, el orden, los estados y la navegación permanecen iguales.
