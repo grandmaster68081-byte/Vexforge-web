@@ -1594,6 +1594,9 @@ Antes de cerrar cada paquete, registrar una fila por elemento:
 - La implementación queda `IMPLEMENTED_UNVERIFIED`. El workflow Android
   oficial, el release correlativo y la QA humana del APK siguen siendo
   obligatorios antes de declarar `PASS`, `OPERATIONAL` o `TIER1_READY`.
+- Commit publicado por GitHub REST: `a7c22190761e57036d47996faecb56d0f9157df7`.
+- Workflows en curso al registrar este parche: Android run `33953469478`
+  (build 91) y verificación run `33953469496` (run 173).
 - Evidencia técnica del lote: typecheck móvil, build web de regresión, guardas
   de telemetría/motion/identidad/arte/metadata/assets y export Android pasan.
 - Un asset existente se consume; no se duplica. Uno ausente se crea, se revisa, se sube, se registra y se enlaza antes del cierre visual.

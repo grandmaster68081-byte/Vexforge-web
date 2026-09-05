@@ -1431,6 +1431,9 @@
 - La fuente canónica `vexforge_master_protocol_v2` fue leída desde Supabase
   Management API y coincide byte a byte con `VEXFORGE_PROTOCOL_V2.md` antes
   de editar.
+- Commit Android publicado por GitHub REST: `a7c22190761e57036d47996faecb56d0f9157df7`.
+- El workflow Android oficial es el run `33953469478` / build 91 y `verify` es
+  el run `33953469496` / run 173; ambos quedaron en curso sobre ese commit.
 - Verificación local: `npm run typecheck` en `mobile/`, `npm run build` en la
   raíz web, `npm run verify:telemetry`, `verify:motion`,
   `verify:ui-identity`, `verify:surface-art`, `verify:mobile-meta`,
