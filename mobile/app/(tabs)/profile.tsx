@@ -118,6 +118,18 @@ function LoadingBlock({ colors }: { colors: Colors }) {
   );
 }
 
+function LegacySignal({ icon, label, value, color, colors }: { icon: keyof typeof Ionicons.glyphMap; label: string; value: string | number; color: string; colors: Colors }) {
+  return (
+    <View style={styles.legacySignal}>
+      <View style={[styles.legacySignalIcon, { borderColor: `${color}55`, backgroundColor: `${color}12` }]}>
+        <Ionicons name={icon} size={15} color={color} />
+      </View>
+      <Text style={[styles.legacySignalValue, { color: colors.foreground }]}>{value}</Text>
+      <Text style={[styles.legacySignalLabel, { color: colors.mutedForeground }]}>{label}</Text>
+    </View>
+  );
+}
+
 function AuthPrompt({ colors, insets }: { colors: Colors; insets: { top: number; bottom: number } }) {
   const { authError, authLoading, signIn, signUp } = useGame();
   const [email, setEmail] = useState('');
@@ -216,6 +228,16 @@ export default function ProfileScreen() {
   const rankColor = toneColor(colors, rankInfo.tone);
   const xpPercent = progress ? Math.min(100, Math.max(0, Math.round((Number(progress.xp) / Math.max(1, Number(progress.xp_to_next))) * 100))) : 0;
   const totalPoints = useMemo(() => achievements.reduce((total, achievement) => total + achievement.points, 0), [achievements]);
+  const legacySummary = useMemo(() => {
+    const signals = [
+      progress?.level ? `nivel ${progress.level}` : null,
+      achievements.length > 0 ? `${achievements.length} logro${achievements.length === 1 ? '' : 's'}` : null,
+      stats?.pvp_wins ? `${stats.pvp_wins} victoria${stats.pvp_wins === 1 ? '' : 's'}` : null,
+    ].filter(Boolean);
+    return signals.length > 0
+      ? `Tu rastro en el Nexus ya guarda ${signals.join(' · ')}.`
+      : 'Tu rastro en el Nexus comenzará a tomar forma con tus primeras victorias.';
+  }, [achievements.length, progress?.level, stats?.pvp_wins]);
 
   if (authLoading && !session) {
     return <View style={[styles.center, { backgroundColor: colors.background }]}><ActivityIndicator color={colors.accent} /></View>;
@@ -279,6 +301,25 @@ export default function ProfileScreen() {
           <View style={styles.rankScore}>
             <Text style={[styles.rankScoreValue, { color: rankColor }]}>{Number(rank?.shields ?? 0)}</Text>
             <Text style={[styles.rankScoreLabel, { color: colors.mutedForeground }]}>ESCUDOS</Text>
+          </View>
+        </Animated.View>
+
+        <Animated.View testID="profile-legacy-record" entering={reduceMotion ? undefined : FadeInDown.delay(200).duration(400)} style={[styles.legacyCard, { backgroundColor: colors.panelStrong, borderColor: `${colors.rarityEpic}55` }]}>
+          <View style={styles.legacyCardHeader}>
+            <View style={[styles.legacyMark, { backgroundColor: `${colors.rarityEpic}18`, borderColor: `${colors.rarityEpic}55` }]}>
+              <Ionicons name="award" size={21} color={colors.rarityEpic} />
+            </View>
+            <View style={styles.legacyCardCopy}>
+              <Text style={[styles.eyebrow, { color: colors.rarityEpic }]}>REGISTRO DE LEGADO</Text>
+              <Text style={[styles.legacyCardTitle, { color: colors.foreground }]}>Lo que has conseguido</Text>
+            </View>
+          </View>
+          <Text style={[styles.legacySummary, { color: colors.mutedForeground }]}>{legacySummary}</Text>
+          <View style={[styles.legacySignalRow, { borderTopColor: colors.border }]}>
+            <LegacySignal icon="progress" label="NIVEL" value={progress?.level ?? '—'} color={colors.accent} colors={colors} />
+            <LegacySignal icon="ribbon-outline" label="LOGROS" value={achievements.length} color={colors.rarityEpic} colors={colors} />
+            <LegacySignal icon="trophy-outline" label="VICTORIAS" value={stats?.pvp_wins ?? 0} color={colors.success} colors={colors} />
+            <LegacySignal icon="layers-outline" label="CARTAS" value={stats?.cards_owned ?? 0} color={colors.rarityRare} colors={colors} />
           </View>
         </Animated.View>
 
@@ -413,6 +454,17 @@ const styles = StyleSheet.create({
   quickAction: { flexDirection: 'row', alignItems: 'center', padding: 15, borderWidth: 1, borderRadius: 13 },
   quickActionLabel: { flex: 1, fontSize: 13, fontWeight: '600', marginLeft: 10 },
   stateBlock: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 10, marginHorizontal: 16, marginTop: 16, padding: 14, borderWidth: 1, borderRadius: 13 },
+  legacyCard: { marginHorizontal: 16, marginTop: 14, padding: 16, borderWidth: 1, borderRadius: 16 },
+  legacyCardHeader: { flexDirection: 'row', alignItems: 'center' },
+  legacyMark: { width: 44, height: 44, alignItems: 'center', justifyContent: 'center', borderWidth: 1, borderRadius: 13 },
+  legacyCardCopy: { flex: 1, marginLeft: 11 },
+  legacyCardTitle: { fontSize: 18, fontWeight: '800', marginTop: 3 },
+  legacySummary: { fontSize: 12, lineHeight: 18, marginTop: 14 },
+  legacySignalRow: { flexDirection: 'row', justifyContent: 'space-between', marginTop: 18, paddingTop: 15, borderTopWidth: StyleSheet.hairlineWidth },
+  legacySignal: { flex: 1, alignItems: 'center' },
+  legacySignalIcon: { width: 28, height: 28, alignItems: 'center', justifyContent: 'center', borderWidth: 1, borderRadius: 9 },
+  legacySignalValue: { fontSize: 15, fontWeight: '800', marginTop: 6 },
+  legacySignalLabel: { fontSize: 7, fontWeight: '800', letterSpacing: 0.7, marginTop: 3 },
   authContent: { alignItems: 'stretch', paddingHorizontal: 24 },
   authMark: { alignSelf: 'center', width: 64, height: 64, alignItems: 'center', justifyContent: 'center', borderWidth: 1, borderRadius: 18, marginBottom: 22 },
   authTitle: { fontSize: 30, fontWeight: '800', marginTop: 7 },

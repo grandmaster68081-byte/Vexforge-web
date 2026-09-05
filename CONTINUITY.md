@@ -1654,3 +1654,13 @@
 - Ambas unidades permanecen `IMPLEMENTED_UNVERIFIED`: la QA humana en
   dispositivo sigue pendiente; no se declara `PASS`, `OPERATIONAL` ni
   `TIER1_READY`.
+
+---
+## 2026-09-05 — VE-UXCX-6-LEGACY-RECORD — IMPLEMENTED_UNVERIFIED
+
+- Preflight reconciliado contra el protocolo activo, la continuidad y la rama `main`; FOJA, ARENA, ARCHIVO y FORJA no se reabrieron.
+- LEGADO conserva identidad, rango, progresión, estadísticas, logros y accesos reales, pero añade un registro visual de trayectoria con señales derivadas exclusivamente de nivel, logros, victorias y cartas ya cargados.
+- El resumen narrativo no inventa títulos, historial, temporadas, decks ni presencia social; cuando un dato no existe, se muestra el estado vacío existente o un guion.
+- No se cambiaron Auth, RLS, RPCs, economía, combate, Storage, contratos, rutas ni assets. Se mantiene `reduced-motion` y el estado `IMPLEMENTED_UNVERIFIED`.
+- Guardas a ejecutar después del commit: `verify-mobile-profile`, `verify-uxcx-domain-identity`, `verify:motion`, `verify:mobile-meta`, typecheck móvil y workflow Android oficial.
+- La QA humana en dispositivo, el APK y el ciclo OTA siguen siendo gates; no se declara `PASS`, `OPERATIONAL` ni `TIER1_READY`.
