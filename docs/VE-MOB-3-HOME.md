@@ -122,3 +122,11 @@ La Fase VISUAL no se declara cerrada sólo por compilar: debe alcanzar al menos 
 - Cada partícula tiene una deriva lenta y una variación de opacidad/escala; el movimiento queda desactivado cuando `reduced-motion` está activo.
 - Las partículas viven detrás del contenido interactivo, no modifican datos, navegación, Supabase, Auth, RLS, RPCs ni la lógica de combate.
 - Estado: `IMPLEMENTED_UNVERIFIED`; requiere el workflow APK oficial y revisión visual/táctil del operador para cualquier promoción.
+
+## Evidencia de entrega — 2026-09-05
+
+- Commit Android: `bb1d0842b971e76bc62fa74a69a37113d21073a5`.
+- Workflow APK: run `33957157748`, `success`; el workflow ejecutó `npm run typecheck`, las guardas de telemetría, el prebuild Expo y la compilación release con bundle JS embebido.
+- Verificación: run `33957157749`, `success`.
+- Release: [vexforge-android-build-92](https://github.com/grandmaster68081-byte/Vexforge-web/releases/tag/vexforge-android-build-92), con `app-release.apk` de 95,305,264 bytes y SHA-256 `305a1cace9edc3c0bbc0fa05adf39ec95ca9bdd2e395d3757d7aa1603b921194`.
+- Esta evidencia técnica no sustituye la QA humana ni permite promover la unidad a `PASS`, `Q4`, `TIER1_READY` u `OPERATIONAL`.

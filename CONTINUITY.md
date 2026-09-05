@@ -1,3 +1,13 @@
+## 2026-09-05 — VE-MOB-3 HOME / APK BUILD 92 — IMPLEMENTED_UNVERIFIED
+
+- Commit Android: `bb1d0842b971e76bc62fa74a69a37113d21073a5`.
+- Workflow oficial `Build VEXFORGE Android APK`, run `33957157748`: `success`; completó instalación, `npm run typecheck`, `npm run verify:telemetry`, prebuild Expo, compilación release y comprobación del bundle JS embebido.
+- Workflow `verify`, run `33957157749`: `success`.
+- Release: https://github.com/grandmaster68081-byte/Vexforge-web/releases/tag/vexforge-android-build-92 — asset `app-release.apk`, 95,305,264 bytes, SHA-256 `305a1cace9edc3c0bbc0fa05adf39ec95ca9bdd2e395d3757d7aa1603b921194`.
+- La APK queda publicada para instalación y contiene `assets/index.android.bundle`; la unidad permanece `IMPLEMENTED_UNVERIFIED` porque la QA humana y la revisión visual Q4 siguen fuera de este alcance.
+
+---
+
 ## 2026-09-05 — VE-MOB-3 HOME / AMBIENT PARTICLES — IMPLEMENTED_UNVERIFIED
 
 - Se añadió una capa ambiental ligera en la escena FOJA: ocho partículas deterministas con deriva lenta, escala y opacidad animadas; no usa arte genérico ni modifica contratos.
