@@ -12,18 +12,22 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
-        with: { node-version: 22, cache: npm, cache-dependency-path: mobile/package.json }
+        with: { node-version: 22, cache: npm, cache-dependency-path: mobile/package-lock.json }
       - uses: actions/setup-java@v4
         with: { distribution: temurin, java-version: 17 }
       - name: Install dependencies from package manifest
         run: |
-          # The committed lockfile was generated inside Replit and contains
-          # development-only package-firewall URLs. GitHub Actions must resolve
-          # from the public registry instead of consuming those URLs.
+          # Replit's package firewall can leak into runner-level npm config.
+          # Keep the install deterministic from the manifest while forcing the
+          # public registry and never writing a runner-generated lockfile.
           for attempt in 1 2 3; do
             rm -rf node_modules
             if env -u npm_config_registry -u NPM_CONFIG_REGISTRY \
               npm_config_registry=https://registry.npmjs.org/ \
+              npm_config_fetch_retries=5 \
+              npm_config_fetch_retry_factor=2 \
+              npm_config_fetch_retry_mintimeout=1000 \
+              npm_config_fetch_retry_maxtimeout=120000 \
               npm install --package-lock=false --legacy-peer-deps --no-audit --no-fund --ignore-scripts --prefer-online \
               && test -x node_modules/.bin/expo; then
               exit 0

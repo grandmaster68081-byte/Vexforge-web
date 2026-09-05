@@ -1,3 +1,12 @@
+## 2026-09-04 — ANDROID BASE APK — INSTALL TRANSPORT REPAIRED
+
+- Se reprodujo el bloqueo del workflow oficial en un entorno limpio: `npm ci` no puede consumir el lockfile porque conserva URLs internas del firewall de paquetes de Replit; el error es de transporte de dependencias, no de Expo, Gradle ni credenciales.
+- La ruta que evita el lockfile y fuerza `https://registry.npmjs.org/` fue validada localmente con el manifiesto oficial: `npm install --package-lock=false --legacy-peer-deps --ignore-scripts` instaló 796 paquetes y dejó `node_modules/.bin/expo` disponible.
+- Se actualizó únicamente `.github/workflows/vexforge-android-apk.yml`: cache basada en `mobile/package-lock.json`, registro público explícito y reintentos de descarga npm con backoff; no se modifica `mobile/**`, la lógica del juego ni Supabase.
+- El workflow Android debe ejecutarse sobre este commit para confirmar typecheck, prebuild, Gradle, bundle standalone y release correlativo. Hasta ese resultado, la base OTA permanece `IMPLEMENTED_UNVERIFIED` y no se declara release publicado.
+
+---
+
 ## 2026-09-04 — ANDROID BASE APK — CI INSTALL RECOVERY IN PROGRESS
 
 - El workflow oficial del commit `0fc528f3d6e0894edab7c8dc2aa36ef6a59c1406` alcanzó el runner y falló dos veces antes de typecheck/Gradle por `npm error Exit handler never called` durante `npm install`; no se generó release nuevo.
