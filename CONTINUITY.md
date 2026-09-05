@@ -1434,6 +1434,11 @@
 - Commit Android publicado por GitHub REST: `a7c22190761e57036d47996faecb56d0f9157df7`.
 - El workflow Android oficial es el run `33953469478` / build 91 y `verify` es
   el run `33953469496` / run 173; ambos quedaron en curso sobre ese commit.
+- El build Android terminó `success` y publicó
+  `vexforge-android-build-91` con `app-release.apk` (95,302,924 bytes):
+  `https://github.com/grandmaster68081-byte/Vexforge-web/releases/download/vexforge-android-build-91/app-release.apk`.
+- El workflow `verify` 173 terminó `cancelled`; las guardas locales del lote
+  siguen pasando y no sustituyen la QA humana requerida por el protocolo.
 - Verificación local: `npm run typecheck` en `mobile/`, `npm run build` en la
   raíz web, `npm run verify:telemetry`, `verify:motion`,
   `verify:ui-identity`, `verify:surface-art`, `verify:mobile-meta`,

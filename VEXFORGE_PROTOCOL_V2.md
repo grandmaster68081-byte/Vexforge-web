@@ -1597,6 +1597,9 @@ Antes de cerrar cada paquete, registrar una fila por elemento:
 - Commit publicado por GitHub REST: `a7c22190761e57036d47996faecb56d0f9157df7`.
 - Workflows en curso al registrar este parche: Android run `33953469478`
   (build 91) y verificación run `33953469496` (run 173).
+- El build Android 91 terminó `success` y publicó el release
+  `vexforge-android-build-91` con `app-release.apk`. El workflow de
+  verificación 173 terminó `cancelled`; esto no equivale a QA humana.
 - Evidencia técnica del lote: typecheck móvil, build web de regresión, guardas
   de telemetría/motion/identidad/arte/metadata/assets y export Android pasan.
 - Un asset existente se consume; no se duplica. Uno ausente se crea, se revisa, se sube, se registra y se enlaza antes del cierre visual.
