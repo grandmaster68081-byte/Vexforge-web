@@ -1,3 +1,12 @@
+## 2026-09-05 — VE-MOB-3 HOME / PROGRESS + STATES — IMPLEMENTED_UNVERIFIED
+
+- El Home Android añade un pulso de progreso dentro de la escena usando `player_progress` real: nivel, XP y avance del rito de entrada; no se crean datos ni autoridad local.
+- El HUD de conexión distingue online, sincronización y offline, y el frente sin evento deja de mostrarse como `EN VIVO`; esto conserva estados honestos durante carga, desconexión y ausencia de actividad.
+- Los portales existentes, la CTA de arena, el arte oficial, `reduced-motion` y los `testID` del Home se conservan sin nuevas rutas, dependencias nativas ni cambios en Supabase/Auth/RLS/RPC/economía.
+- El cambio es compatible con runtime Android `1.0.0`; por tocar `mobile/**`, requiere el workflow APK oficial y release correlativo. Se mantiene `IMPLEMENTED_UNVERIFIED` y no se declara `PASS`, `Q4`, `TIER1_READY` ni `OPERATIONAL` sin evidencia APK y QA humana.
+
+---
+
 ## 2026-09-05 — VE-MOB-3 HOME / FOJA — COMPOSICIÓN DE ESCENA REFORZADA
 
 - La segunda pasada visual mueve los cinco dominios dentro del primer viewport como puntos orbitales laterales alrededor de la reliquia viva; se elimina el listado vertical duplicado que hacía que el Home se leyera como dashboard.

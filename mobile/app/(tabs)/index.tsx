@@ -23,6 +23,8 @@ import {
   loadHomeMissions,
   loadHomeStats,
   loadRecentActivity,
+  TUTORIAL_DONE_STEP,
+  TUTORIAL_TOTAL_STEPS,
   type ActivityItem,
   type DailyCard,
   type HomeMission,
@@ -210,6 +212,21 @@ export default function ForgeScreen() {
   const factionScene = featuredCard?.faction
     ? FACTION_BACKGROUNDS[featuredCard.faction as keyof typeof FACTION_BACKGROUNDS]
     : null;
+  const nexusStatus = syncState === 'connected'
+    ? { label: 'NEXUS ONLINE', color: colors.success }
+    : syncState === 'loading'
+      ? { label: 'SINCRONIZANDO', color: colors.accent }
+      : { label: 'NEXUS OFFLINE', color: colors.danger };
+  const xpPercent = progress
+    ? Math.min(100, Math.round((progress.xp / Math.max(1, progress.xp_to_next)) * 100))
+    : 0;
+  const tutorialStep = progress?.tutorial_step;
+  const tutorialComplete = tutorialStep != null && tutorialStep >= TUTORIAL_DONE_STEP;
+  const tutorialPercent = tutorialStep == null
+    ? 0
+    : tutorialComplete
+      ? 100
+      : Math.min(100, Math.round((tutorialStep / Math.max(1, TUTORIAL_TOTAL_STEPS - 1)) * 100));
 
   return (
     <ScreenShell surface="home" sceneMode="hero">
@@ -284,8 +301,8 @@ export default function ForgeScreen() {
             </View>
 
             <View style={styles.sceneSignal}>
-              <View style={[styles.signalDot, { backgroundColor: colors.success }]} />
-              <Text style={[styles.signalText, { color: colors.success }]}>NEXUS ONLINE</Text>
+              <View style={[styles.signalDot, { backgroundColor: nexusStatus.color }]} />
+              <Text style={[styles.signalText, { color: nexusStatus.color }]}>{nexusStatus.label}</Text>
               <View style={[styles.signalRule, { backgroundColor: `${colors.accent}4A` }]} />
               <Text style={[styles.signalText, { color: colors.mutedForeground }]}>BASE FOJA</Text>
             </View>
@@ -357,7 +374,31 @@ export default function ForgeScreen() {
                   <Text style={[styles.frontTimerLabel, { color: colors.mutedForeground }]}>TERMINA EN</Text>
                   <Text style={[styles.frontTimerValue, { color: colors.accent }]}>{countdown(event.ends_at)}</Text>
                 </View>
-              ) : <Text style={[styles.frontTimerValue, { color: colors.success }]}>EN VIVO</Text>}
+              ) : <Text style={[styles.frontTimerValue, { color: colors.mutedForeground }]}>SIN FRENTE ACTIVO</Text>}
+            </View>
+
+            <View style={[styles.sceneProgress, { borderColor: `${colors.accent}52`, backgroundColor: `${colors.ink}B8` }]}>
+              <View style={styles.sceneProgressHeader}>
+                <View>
+                  <Text style={[styles.sceneProgressLabel, { color: colors.mutedForeground }]}>PULSO DEL FORJADOR</Text>
+                  <Text style={[styles.sceneProgressTitle, { color: colors.foreground }]}>
+                    {progress ? `NIVEL ${progress.level}` : 'PROGRESO NO DISPONIBLE'}
+                  </Text>
+                </View>
+                <Text style={[styles.sceneProgressValue, { color: colors.accent }]}>
+                  {progress ? `${progress.xp}/${progress.xp_to_next} XP` : '—'}
+                </Text>
+              </View>
+              <View style={[styles.sceneProgressTrack, { backgroundColor: `${colors.foreground}18` }]}>
+                <View style={[styles.sceneProgressFill, { width: `${xpPercent}%`, backgroundColor: colors.accent }]} />
+              </View>
+              <Text style={[styles.sceneProgressMeta, { color: colors.mutedForeground }]}>
+                {tutorialStep == null
+                  ? 'Sincroniza tu progreso para continuar.'
+                  : tutorialComplete
+                    ? 'Rito de entrada completado · el Nexus está abierto.'
+                    : `Rito de entrada · paso ${Math.min(tutorialStep + 1, TUTORIAL_TOTAL_STEPS)} de ${TUTORIAL_TOTAL_STEPS} · ${tutorialPercent}%`}
+              </Text>
             </View>
 
             <View style={styles.primaryAction}>
@@ -546,7 +587,15 @@ const styles = StyleSheet.create({
   frontTitle: { fontFamily: typography.bodyBold, fontSize: 13, fontWeight: '800', marginTop: 3 },
   frontTimer: { alignItems: 'flex-end', paddingLeft: 10 },
   frontTimerLabel: { fontFamily: typography.bodyBold, fontSize: 7, letterSpacing: 0.8, fontWeight: '700' },
-  frontTimerValue: { fontFamily: typography.bodyBold, fontSize: 12, fontWeight: '800', marginTop: 3 },
+  frontTimerValue: { fontFamily: typography.bodyBold, fontSize: 10, fontWeight: '800', marginTop: 3, textAlign: 'right' },
+  sceneProgress: { borderWidth: 1, borderRadius: 14, paddingHorizontal: 11, paddingVertical: 9, marginTop: 10 },
+  sceneProgressHeader: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 10 },
+  sceneProgressLabel: { fontFamily: typography.bodyBold, fontSize: 7, letterSpacing: 1, fontWeight: '800' },
+  sceneProgressTitle: { fontFamily: typography.bodyBold, fontSize: 12, fontWeight: '800', marginTop: 3 },
+  sceneProgressValue: { fontFamily: typography.bodyBold, fontSize: 10, fontWeight: '800' },
+  sceneProgressTrack: { height: 4, borderRadius: 2, overflow: 'hidden', marginTop: 8 },
+  sceneProgressFill: { height: '100%', borderRadius: 2 },
+  sceneProgressMeta: { fontFamily: typography.body, fontSize: 8, marginTop: 6 },
   primaryAction: { marginTop: 11 },
   sceneHint: { minHeight: 27, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8, marginTop: 8 },
   sceneHintText: { fontFamily: typography.bodyBold, fontSize: 7, letterSpacing: 1, fontWeight: '700' },

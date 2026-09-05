@@ -90,3 +90,11 @@ La ejecución se divide en dos fases obligatorias y no se mezclan:
 ### Gate de salida
 
 La Fase VISUAL no se declara cerrada sólo por compilar: debe alcanzar al menos Q4 en la revisión visual de superficie principal, conservar los gates de identidad, datos, mobile, accesibilidad, performance y reduced-motion, y producir evidencia reproducible. La Fase FUNCTIONAL requiere además la matriz de recorrido real y la QA manual del operador en el APK. Hasta entonces, `VE-MOB-3 HOME` permanece `IMPLEMENTED_UNVERIFIED` y no se declara `PASS`, `OPERATIONAL` ni `TIER1_READY`.
+
+
+## Addendum 2026-09-05 — PROGRESS / STATES / PORTALS
+
+- El Home Android incorpora en la escena el pulso real del Forjador: nivel, XP y avance del rito de entrada consumidos desde `player_progress`, sin inventar progreso ni cambiar autoridad.
+- El HUD de conexión ahora distingue `NEXUS ONLINE`, `SINCRONIZANDO` y `NEXUS OFFLINE`; un frente sin evento se muestra como `SIN FRENTE ACTIVO` en lugar de presentarse como actividad viva.
+- La composición conserva la acción primaria `ENTRAR A LA ARENA`, los portales de rutas existentes y los estados explícitos de arte, error, retry y `reduced-motion`.
+- Estado: `IMPLEMENTED_UNVERIFIED`; falta el workflow APK oficial y la QA humana separada.
