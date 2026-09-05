@@ -88,3 +88,8 @@ El run `33933157525` de verificación quedó separado como bloqueo transitorio d
 ## Addendum 2026-09-04 — Acción primaria del Home
 
 El lote siguiente a Hero mantiene una sola CTA dominante (`ENTRAR A LA ARENA`) y subordina visualmente `MI COLECCIÓN`, conservando ambas rutas existentes. La implementación se mantiene dentro de `VE-MOB-3-HOME-ACTION`, sigue siendo OTA-compatible y no se considera cerrada hasta contar con evidencia de APK y puntuación Q4 conforme a `HOME_GAME_SCENE_QUALITY_V1`.
+
+
+## Addendum 2026-09-04 — Estados honestos de la carta destacada
+
+`VE-MOB-3-HOME-CARD` conserva el dato real de la carta y separa los estados `ARTE PENDIENTE` y `ARTE NO DISPONIBLE`. Una URL rota ya no puede presentarse como una superficie vacía; el lote sigue pendiente de evidencia de APK y del gate visual Q4.

@@ -83,6 +83,7 @@ export default function ForgeScreen() {
   const [home, setHome] = useState<HomeSnapshot>({ stats: null, dailyCard: null, missions: [], activity: [] });
   const [homeLoading, setHomeLoading] = useState(true);
   const [homeError, setHomeError] = useState<string | null>(null);
+  const [featuredCardImageFailed, setFeaturedCardImageFailed] = useState(false);
   const [homeSceneState, setHomeSceneState] = useState<'loading' | 'ready' | 'error'>('loading');
   const sceneMotion = useSharedValue(0);
   const reduceMotion = useReducedMotion();
@@ -140,6 +141,10 @@ export default function ForgeScreen() {
   }, []);
 
   useEffect(() => { void loadHome(); }, [loadHome]);
+
+  useEffect(() => {
+    setFeaturedCardImageFailed(false);
+  }, [home.dailyCard?.image_url]);
 
   const handleRefresh = () => { void Promise.all([refresh(), loadHome()]); };
   const displayName = player?.display_name?.trim() || 'FORJADOR';
@@ -232,12 +237,18 @@ export default function ForgeScreen() {
                style={({ pressed }) => [styles.featuredCardDock, { backgroundColor: `${colors.panelStrong}D9`, borderColor: `${colors.accent}8C`, opacity: pressed ? 0.8 : 1, transform: [{ scale: pressed ? 0.985 : 1 }] }]}
              >
                <View style={[styles.featuredCardFrame, { borderColor: colors.accent }]}>
-                 {home.dailyCard.image_url ? (
-                   <Image source={{ uri: home.dailyCard.image_url }} style={styles.featuredCardImage} resizeMode="cover" accessibilityLabel={`Arte de ${home.dailyCard.name}`} />
+                 {home.dailyCard.image_url && !featuredCardImageFailed ? (
+                   <Image
+                     source={{ uri: home.dailyCard.image_url }}
+                     style={styles.featuredCardImage}
+                     resizeMode="cover"
+                     accessibilityLabel={`Arte de ${home.dailyCard.name}`}
+                     onError={() => setFeaturedCardImageFailed(true)}
+                   />
                  ) : (
                    <View style={[styles.featuredCardEmpty, { backgroundColor: `${colors.muted}CC` }]}>
                      <Ionicons name="image-outline" size={19} color={colors.accent} />
-                     <Text style={[styles.featuredCardEmptyText, { color: colors.mutedForeground }]}>ARTE PENDIENTE</Text>
+                     <Text style={[styles.featuredCardEmptyText, { color: colors.mutedForeground }]}>{featuredCardImageFailed ? 'ARTE NO DISPONIBLE' : 'ARTE PENDIENTE'}</Text>
                    </View>
                  )}
                </View>

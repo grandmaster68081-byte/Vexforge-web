@@ -1294,3 +1294,11 @@
 - El siguiente lote del Home aplica la regla `SCENE + OBJECT + ACTION + FEEDBACK + EXIT`: la CTA primaria `ENTRAR A LA ARENA` ahora recibe mayor peso visual que `MI COLECCIÓN`, sin cambiar rutas ni comportamiento.
 - El cambio es compatible con el runtime `1.0.0`, no agrega dependencia nativa y permanece dentro de la misma unidad visual Hero/Action.
 - Estado: `IN_PROGRESS / IMPLEMENTED_UNVERIFIED`; no se publica OTA hasta que Hero/Action tenga evidencia en APK y pase el gate `HOME_GAME_SCENE_QUALITY_V1`.
+
+
+---
+## 2026-09-04 — VE-MOB-3-HOME-CARD — IN_PROGRESS
+
+- La carta destacada conserva el objeto real, facción, rareza, poder y ruta de inspección. Si la URL de arte existe pero falla en runtime, el Home ahora muestra `ARTE NO DISPONIBLE` en vez de dejar un marco vacío.
+- El fallback distingue ausencia de arte (`ARTE PENDIENTE`) de fallo de entrega, manteniendo estados honestos y sin inventar un asset sustituto.
+- Estado: `IN_PROGRESS / IMPLEMENTED_UNVERIFIED`; requiere QA visual en APK junto con Hero/Action antes de cualquier OTA.
