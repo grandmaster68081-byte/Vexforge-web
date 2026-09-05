@@ -1,3 +1,13 @@
+## 2026-09-05 — VE-MOB-3 HOME / APK BUILD 90 — IMPLEMENTED_UNVERIFIED
+
+- Commit de producto Android: `f2717af4279e478c5479c5656359a7fbe703866f`; el tag `vexforge-android-build-90` apunta exactamente a ese commit.
+- Workflow Android run `33950579818` / build `90`: `success`. Pasó instalación de dependencias, `npm run typecheck`, `npm run verify:telemetry`, Expo prebuild, compilación installable y verificación de APK standalone.
+- Release: https://github.com/grandmaster68081-byte/Vexforge-web/releases/tag/vexforge-android-build-90 — asset `app-release.apk`, SHA-256 `695d4299ff7eefe5619045b492878a696c81533d26fabefc3157cf268d55b475`.
+- Verify run `33950579924` ejecutó typecheck y guards móviles, pero terminó `failure` sólo en `verify-card-art` por HTTP 429 transitorio de Storage para `cards/uncommon_elementalista_del_fuego.jpg`; no se reinterpretó como fallo de Home ni se fabricó evidencia.
+- La APK queda publicada para instalación, pero la unidad permanece `IMPLEMENTED_UNVERIFIED`: falta QA humana de instalación/recorrido y la verificación visual Q4. No se declara `PASS`, `Q4`, `TIER1_READY` ni `OPERATIONAL`.
+
+---
+
 ## 2026-09-05 — VE-MOB-3 HOME / PROGRESS + STATES — IMPLEMENTED_UNVERIFIED
 
 - El Home Android añade un pulso de progreso dentro de la escena usando `player_progress` real: nivel, XP y avance del rito de entrada; no se crean datos ni autoridad local.
