@@ -1672,3 +1672,11 @@
 - `scripts/verify-card-art.mjs` conserva como fallos bloqueantes los estados no transitorios (404, ausencia, arte fuera del manifiesto, mismatch o no consumido), pero registra 429/5xx agotados como comprobaciones diferidas con reintentos y backoff.
 - La guarda no convierte un arte faltante en PASS: la evidencia queda explícitamente diferida para el siguiente gate; no se cambian datos, Storage, Auth, RLS ni contratos.
 - Estado: `IMPLEMENTED_UNVERIFIED`; se relanza `verify` para confirmar el comportamiento y el APK en curso no se reinicia por este cambio.
+
+---
+## 2026-09-05 — OTA-METADATA-FORMAT-COMPATIBILITY — IMPLEMENTED_UNVERIFIED
+
+- La primera OTA de LEGADO exportó correctamente el bundle Android, pero el publicador asumía `metadata.bundles.android`; Expo 54 entregó `metadata.bundles` como arreglo y el registro no llegó a publicarse.
+- `mobile/scripts/publish-ota.mjs` acepta ahora ambos formatos, selecciona el bundle cuyo `runtimeVersion` coincide y conserva una guarda bloqueante si no existe un archivo Android.
+- No se cambian runtime, canal, manifiesto, hashes, Storage, Supabase, Auth, RLS ni contratos; la publicación se reintentará sobre este commit con la misma clasificación `OTA_UPDATE`.
+- Estado: `IMPLEMENTED_UNVERIFIED`; la OTA anterior quedó `failure` antes de subir arte o registrar release.

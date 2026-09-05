@@ -15,7 +15,8 @@ const exportMetadataPath = join(root, 'metadata.json');
 if (!existsSync(exportMetadataPath)) throw new Error('Expo export metadata.json not found');
 
 const metadata = JSON.parse(readFileSync(exportMetadataPath, 'utf8'));
-const androidBundle = metadata.bundles?.android?.find((item) => item.runtimeVersion === runtimeVersion) ?? metadata.bundles?.android?.[0];
+const androidBundles = Array.isArray(metadata.bundles) ? metadata.bundles : metadata.bundles?.android ?? [];
+const androidBundle = androidBundles.find((item) => item.runtimeVersion === runtimeVersion) ?? androidBundles[0];
 if (!androidBundle?.file) throw new Error('Expo export did not contain an Android launch bundle');
 const allFiles = [];
 function walk(directory) {
