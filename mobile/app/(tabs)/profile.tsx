@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@/components/ForgeIcon';
-import Animated, { FadeIn, FadeInDown } from 'react-native-reanimated';
+import Animated, { FadeIn, FadeInDown, useReducedMotion } from 'react-native-reanimated';
 import { useRouter } from 'expo-router';
 import { useColors } from '@/hooks/useColors';
 import { useGame } from '@/context/GameContext';
@@ -92,9 +92,9 @@ function QuickAction({ icon, label, onPress, colors, testID }: { icon: keyof typ
   );
 }
 
-function AchievementCard({ achievement, colors, index }: { achievement: PlayerAchievement; colors: Colors; index: number }) {
+function AchievementCard({ achievement, colors, index, reduceMotion }: { achievement: PlayerAchievement; colors: Colors; index: number; reduceMotion: boolean | null }) {
   return (
-    <Animated.View entering={FadeInDown.delay(index * 45).duration(350)} style={[styles.achievementCard, { backgroundColor: colors.panel, borderColor: colors.border }]}>
+    <Animated.View entering={reduceMotion ? undefined : FadeInDown.delay(index * 45).duration(350)} style={[styles.achievementCard, { backgroundColor: colors.panel, borderColor: colors.border }]}>
       <View style={[styles.achievementIcon, { backgroundColor: `${colors.accent}1A`, borderColor: `${colors.accent}55` }]}>
         <Ionicons name="ribbon-outline" size={21} color={colors.accent} />
       </View>
@@ -185,6 +185,7 @@ export default function ProfileScreen() {
   const [detailsLoading, setDetailsLoading] = useState(false);
   const [detailsError, setDetailsError] = useState<string | null>(null);
   const [refreshing, setRefreshing] = useState(false);
+  const reduceMotion = useReducedMotion();
 
   const loadDetails = useCallback(async (isRefresh = false) => {
     if (!session || !player?.id) return;
@@ -231,7 +232,7 @@ export default function ProfileScreen() {
         refreshControl={<RefreshControl refreshing={refreshing || syncState === 'loading'} onRefresh={handleRefresh} tintColor={colors.accent} />}
         showsVerticalScrollIndicator={false}
       >
-        <Animated.View entering={FadeIn.duration(400)} style={[styles.header, { paddingTop: insets.top + 22, borderBottomColor: colors.border }]}>
+        <Animated.View entering={reduceMotion ? undefined : FadeIn.duration(400)} style={[styles.header, { paddingTop: insets.top + 22, borderBottomColor: colors.border }]}>
           <View>
             <Text style={[styles.eyebrow, { color: colors.accent }]}>IDENTIDAD DEL NEXUS</Text>
             <Text style={[styles.screenTitle, { color: colors.foreground }]}>Perfil del forjador</Text>
@@ -248,7 +249,7 @@ export default function ProfileScreen() {
           </View>
         ) : null}
 
-        <Animated.View entering={FadeInDown.delay(80).duration(400)} style={[styles.identityCard, { backgroundColor: colors.panelStrong, borderColor: colors.border }]}>
+        <Animated.View entering={reduceMotion ? undefined : FadeInDown.delay(80).duration(400)} style={[styles.identityCard, { backgroundColor: colors.panelStrong, borderColor: colors.border }]}>
           <View style={[styles.avatar, { backgroundColor: colors.accent }]}>
             <Text style={[styles.avatarText, { color: colors.ink }]}>{initials(displayName)}</Text>
           </View>
@@ -265,7 +266,7 @@ export default function ProfileScreen() {
 
         {detailsLoading && !rank ? <LoadingBlock colors={colors} /> : null}
 
-        <Animated.View entering={FadeInDown.delay(140).duration(400)} style={[styles.rankCard, { backgroundColor: colors.card, borderColor: `${rankColor}66` }]}>
+        <Animated.View entering={reduceMotion ? undefined : FadeInDown.delay(140).duration(400)} style={[styles.rankCard, { backgroundColor: colors.card, borderColor: `${rankColor}66` }]}>
           <View style={[styles.rankIcon, { backgroundColor: `${rankColor}1A`, borderColor: `${rankColor}55` }]}>
             <Ionicons name={rankInfo.icon} size={27} color={rankColor} />
           </View>
@@ -323,7 +324,7 @@ export default function ProfileScreen() {
           <Text style={[styles.sectionCounter, { color: colors.mutedForeground }]}>{achievements.length}</Text>
         </View>
 
-        {achievements.length > 0 ? achievements.map((achievement, index) => <AchievementCard key={achievement.id} achievement={achievement} colors={colors} index={index} />) : (
+        {achievements.length > 0 ? achievements.map((achievement, index) => <AchievementCard key={achievement.id} achievement={achievement} colors={colors} index={index} reduceMotion={reduceMotion} />) : (
           <View testID="profile-empty-achievements" style={[styles.emptyCard, { backgroundColor: colors.panel, borderColor: colors.border }]}>
             <Ionicons name="ribbon-outline" size={28} color={colors.accent} />
             <Text style={[styles.emptyTitle, { color: colors.foreground }]}>Aún no hay logros</Text>

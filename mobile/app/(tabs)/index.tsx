@@ -158,7 +158,7 @@ export default function ForgeScreen() {
         refreshControl={<RefreshControl refreshing={homeLoading || syncState === 'loading'} onRefresh={handleRefresh} tintColor={colors.primary} />}
         showsVerticalScrollIndicator={false}
       >
-       <Animated.View entering={FadeIn.duration(450)} style={[styles.hero, { borderBottomColor: colors.border }]}>
+       <Animated.View entering={reduceMotion ? undefined : FadeIn.duration(450)} style={[styles.hero, { borderBottomColor: colors.border }]}>
           <Animated.View pointerEvents="none" style={[StyleSheet.absoluteFillObject, sceneMotionStyle]}>
             <Image
               source={{ uri: CANONICAL_BACKGROUNDS.home }}
@@ -336,7 +336,7 @@ export default function ForgeScreen() {
           </View>
         ) : null}
 
-        <Animated.View entering={FadeInDown.delay(40).duration(450)} style={[styles.quickBattle, { backgroundColor: colors.secondary, borderColor: colors.primary }]}>
+        <Animated.View entering={reduceMotion ? undefined : FadeInDown.delay(40).duration(450)} style={[styles.quickBattle, { backgroundColor: colors.secondary, borderColor: colors.primary }]}>
           <View style={styles.quickBattleCopy}>
             <Ionicons name="flash-outline" size={22} color={colors.primary} />
             <View style={styles.quickBattleText}>
@@ -364,7 +364,7 @@ export default function ForgeScreen() {
           <Ionicons name={syncState === 'connected' ? 'checkmark-circle-outline' : 'cloud-outline'} size={21} color={syncState === 'connected' ? colors.success : colors.mutedForeground} />
         </View>
 
-        <Animated.View entering={FadeInDown.delay(80).duration(450)} style={[styles.resourceCard, { backgroundColor: colors.panelStrong, borderColor: colors.border }]}>
+        <Animated.View entering={reduceMotion ? undefined : FadeInDown.delay(80).duration(450)} style={[styles.resourceCard, { backgroundColor: colors.panelStrong, borderColor: colors.border }]}>
           <View>
             <SectionLabel color={colors.mutedForeground}>BALANCE DE FORJA</SectionLabel>
             <Text style={[styles.balance, { color: colors.foreground }]}>{(wallet?.vex_ingame ?? 0).toLocaleString('es')}</Text>
@@ -380,7 +380,7 @@ export default function ForgeScreen() {
         </Animated.View>
 
         {home.stats?.active_event ? (
-          <Animated.View entering={FadeInDown.delay(140).duration(450)} style={[styles.eventCard, { backgroundColor: colors.panelStrong, borderColor: colors.accent }]}>
+          <Animated.View entering={reduceMotion ? undefined : FadeInDown.delay(140).duration(450)} style={[styles.eventCard, { backgroundColor: colors.panelStrong, borderColor: colors.accent }]}>
             <View style={styles.eventHeader}>
               <View style={styles.eventCopy}>
                 <SectionLabel color={colors.accent}>EVENTO ACTIVO · TEMPORADA 1</SectionLabel>
@@ -402,7 +402,7 @@ export default function ForgeScreen() {
              </Pressable>
           </Animated.View>
         ) : home.stats?.season ? (
-          <Animated.View entering={FadeInDown.delay(140).duration(450)} style={[styles.seasonCard, { backgroundColor: colors.panel, borderColor: colors.border }]}>
+          <Animated.View entering={reduceMotion ? undefined : FadeInDown.delay(140).duration(450)} style={[styles.seasonCard, { backgroundColor: colors.panel, borderColor: colors.border }]}>
             <View style={styles.seasonCopy}>
               <SectionLabel color={colors.accent}>TEMPORADA ACTUAL</SectionLabel>
               <Text style={[styles.seasonTitle, { color: colors.foreground }]}>{home.stats.season.name}</Text>
@@ -415,7 +415,7 @@ export default function ForgeScreen() {
           </Animated.View>
         ) : null}
 
-        <Animated.View entering={FadeInDown.delay(260).duration(450)}>
+        <Animated.View entering={reduceMotion ? undefined : FadeInDown.delay(260).duration(450)}>
           <View style={styles.sectionHeader}><SectionLabel color={colors.accent}>TU ESTADO</SectionLabel><Text style={[styles.counter, { color: colors.mutedForeground }]}>{stats?.pvp_wins ?? 0} VICTORIAS</Text></View>
           <View style={styles.stateGrid}>
             <View style={[styles.stateCard, { backgroundColor: colors.panel, borderColor: colors.border }]}><Ionicons name="person-outline" size={19} color={colors.accent} /><Text style={[styles.stateLabel, { color: colors.mutedForeground }]}>JUGADOR</Text><Text style={[styles.stateValue, { color: colors.foreground }]} numberOfLines={1}>{displayName}</Text></View>
@@ -469,7 +469,7 @@ export default function ForgeScreen() {
           </View>
         ) : null}
 
-        <Animated.View entering={FadeInDown.delay(320).duration(450)}>
+        <Animated.View entering={reduceMotion ? undefined : FadeInDown.delay(320).duration(450)}>
           <SectionLabel color={colors.accent}>SISTEMAS DE LA FORJA</SectionLabel>
           <View style={styles.featureGrid}>
             {FEATURE_HIGHLIGHTS.map((feature) => {

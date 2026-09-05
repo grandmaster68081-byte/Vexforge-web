@@ -1,3 +1,12 @@
+## 2026-09-05 — VE-9 ANDROID — REDUCED MOTION EN HOME Y PERFIL
+
+- Home y Perfil Android ahora desactivan sus entradas `FadeIn`/`FadeInDown` cuando `useReducedMotion` está activo; los datos, el orden, los estados y la navegación permanecen iguales.
+- El fallback cubre la atmósfera común de `ScreenShell`, la escena/entradas de Home y el encabezado, identidad, rango y logros de Perfil.
+- Verificación local: `npm run typecheck` y `npm run verify:telemetry` pasan; el guard confirma los 5 eventos canónicos y consumidores Android.
+- Este lote toca `mobile/**`; se publicará por el workflow APK y quedará `IMPLEMENTED_UNVERIFIED` hasta la evidencia técnica y la QA humana separada.
+
+---
+
 ## 2026-09-05 — VE-9 ANDROID — APK RELEASE 84 PUBLISHED
 
 - El commit `32715935810de60e4991210331844257df8b0268` terminó con `success` en el workflow Android run `33938587293`.
