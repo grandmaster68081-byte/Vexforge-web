@@ -1,3 +1,12 @@
+## 2026-09-05 — VE-MOB-3 HOME / FOJA — COMPOSICIÓN DE ESCENA REFORZADA
+
+- La segunda pasada visual mueve los cinco dominios dentro del primer viewport como puntos orbitales laterales alrededor de la reliquia viva; se elimina el listado vertical duplicado que hacía que el Home se leyera como dashboard.
+- El frente activo puede sumar una segunda capa ambiental oficial de facción (`factions/bg_guerrero.jpg`, `bg_mago.jpg`, `bg_paladin.jpg`, `bg_picaro.jpg`) según la carta diaria real; no se introduce avatar genérico.
+- La carta destacada queda como foco escénico sin tarjeta administrativa de ancho completo; la CTA de arena, el frente y la exploración permanecen integrados alrededor de la escena.
+- Verificación de esta iteración: `npm run typecheck`, `npm run verify:telemetry` y export Android de Expo pasan. Continúa `IMPLEMENTED_UNVERIFIED`; aún falta workflow APK y QA visual/táctil humana.
+
+---
+
 ## 2026-09-05 — VE-MOB-3 HOME / FOJA — LIVING HUB BASE IMPLEMENTED_UNVERIFIED
 
 - Se reconstruyó `mobile/app/(tabs)/index.tsx` sobre el estado real de `main` siguiendo `VE-HOME-LIVING-HUB-01`: la primera vista ahora es una escena vertical con objeto de carta real, acción de arena y camino de puntos de interés.

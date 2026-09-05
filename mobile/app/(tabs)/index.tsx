@@ -34,7 +34,7 @@ import { ForgeMark } from '@/components/ForgeMark';
 import { ForgeText } from '@/components/ForgeText';
 import { ProgressBar } from '@/components/ProgressBar';
 import { ScreenShell } from '@/components/ScreenShell';
-import { CANONICAL_BACKGROUNDS } from '@/constants/visual';
+import { CANONICAL_BACKGROUNDS, FACTION_BACKGROUNDS } from '@/constants/visual';
 import { typography } from '@/constants/typography';
 
 type HomeSnapshot = {
@@ -81,52 +81,36 @@ function SectionLabel({ children, color }: { children: string; color: string }) 
   return <ForgeText variant="label" style={[styles.eyebrow, { color }]}>{children}</ForgeText>;
 }
 
-function SceneWaypoint({
-  name,
-  subtitle,
-  description,
-  icon,
-  route,
-  tone,
+function SceneOrbitPoint({
+  point,
+  position,
   colors,
-  index,
   onPress,
 }: {
-  name: string;
-  subtitle: string;
-  description: string;
-  icon: string;
-  route: DomainRoute;
-  tone: DomainTone;
+  point: (typeof DOMAIN_POINTS)[number];
+  position: 'topLeft' | 'topRight' | 'bottomLeft' | 'bottomRight' | 'bottomCenter';
   colors: ReturnType<typeof useColors>;
-  index: number;
   onPress: () => void;
 }) {
-  const toneColor = colors[tone];
-  const reversed = index % 2 === 1;
+  const toneColor = colors[point.tone];
   return (
     <Pressable
       accessibilityRole="button"
-      accessibilityLabel={`${name}: ${description}`}
-      testID={`home-domain-${name.toLowerCase()}`}
+      accessibilityLabel={`${point.name}: ${point.description}`}
+      testID={`home-domain-${point.name.toLowerCase()}`}
       onPress={onPress}
       style={({ pressed }) => [
-        styles.waypoint,
-        reversed ? styles.waypointReversed : null,
-        { opacity: pressed ? 0.72 : 1, transform: [{ scale: pressed ? 0.98 : 1 }] },
+        styles.orbitPoint,
+        styles[`orbitPoint${position[0].toUpperCase()}${position.slice(1)}` as 'orbitPointTopLeft'],
+        { opacity: pressed ? 0.72 : 1, transform: [{ scale: pressed ? 0.93 : 1 }] },
       ]}
     >
-      <View style={[styles.waypointSeal, { borderColor: `${toneColor}A8`, backgroundColor: `${colors.ink}E6`, shadowColor: toneColor }]}>
-        <View style={[styles.waypointSealInner, { borderColor: `${toneColor}66`, backgroundColor: `${toneColor}18` }]}>
-          <Ionicons name={icon} size={21} color={toneColor} />
+      <View style={[styles.orbitSeal, { borderColor: `${toneColor}A8`, backgroundColor: `${colors.ink}E6`, shadowColor: toneColor }]}>
+        <View style={[styles.orbitSealInner, { borderColor: `${toneColor}66`, backgroundColor: `${toneColor}18` }]}>
+          <Ionicons name={point.icon} size={18} color={toneColor} />
         </View>
       </View>
-      <View style={[styles.waypointCopy, reversed ? styles.waypointCopyReversed : null]}>
-        <Text style={[styles.waypointSubtitle, { color: toneColor }]}>{subtitle}</Text>
-        <Text style={[styles.waypointName, { color: colors.foreground }]}>{name}</Text>
-        <Text style={[styles.waypointDescription, { color: colors.mutedForeground }]} numberOfLines={2}>{description}</Text>
-      </View>
-      <Ionicons name={reversed ? 'chevron-left' : 'chevron-forward'} size={17} color={toneColor} />
+      <Text style={[styles.orbitLabel, { color: colors.foreground }]}>{point.name.toUpperCase()}</Text>
     </Pressable>
   );
 }
@@ -166,6 +150,13 @@ export default function ForgeScreen() {
     transform: [
       { translateY: interpolate(scrollY.value, [0, 700], [0, 74]) },
       { scale: interpolate(scrollY.value, [0, 700], [1.06, 1.14]) },
+    ],
+  }));
+
+  const factionParallaxStyle = useAnimatedStyle(() => ({
+    transform: [
+      { translateY: interpolate(scrollY.value, [0, 700], [0, 38]) },
+      { scale: interpolate(scrollY.value, [0, 700], [1.08, 1.18]) },
     ],
   }));
 
@@ -216,6 +207,9 @@ export default function ForgeScreen() {
   const frontName = event?.name ?? home.stats?.season?.name ?? 'Arena Nexus';
   const energyPercent = progress ? Math.min(100, Math.round((progress.energy / Math.max(1, progress.max_energy)) * 100)) : 0;
   const featuredCard = home.dailyCard;
+  const factionScene = featuredCard?.faction
+    ? FACTION_BACKGROUNDS[featuredCard.faction as keyof typeof FACTION_BACKGROUNDS]
+    : null;
 
   return (
     <ScreenShell surface="home" sceneMode="hero">
@@ -238,6 +232,14 @@ export default function ForgeScreen() {
               onError={() => setHomeSceneState('error')}
             />
           </Animated.View>
+          {factionScene ? (
+            <Animated.Image
+              source={{ uri: factionScene }}
+              style={[StyleSheet.absoluteFillObject, styles.sceneFactionImage, factionParallaxStyle]}
+              resizeMode="cover"
+              accessibilityLabel="Atmósfera oficial de la facción activa"
+            />
+          ) : null}
           <LinearGradient
             colors={[`${colors.ink}B8`, `${colors.ink}18`, `${colors.background}EC`]}
             locations={[0, 0.38, 1]}
@@ -306,39 +308,44 @@ export default function ForgeScreen() {
               <Text style={[styles.sceneDescription, { color: colors.mutedForeground }]}>Una base para volver. Un frente para conquistar.</Text>
             </View>
 
-            <Animated.View style={[styles.focalObject, focalMotionStyle]}>
-              <Pressable
-                accessibilityRole="button"
-                accessibilityLabel={featuredCard ? `Inspeccionar ${featuredCard.name}` : 'Abrir colección'}
-                testID="home-featured-card"
-                onPress={() => router.push('/collection')}
-                style={({ pressed }) => [styles.artifactCard, { borderColor: `${colors.accent}A8`, backgroundColor: `${colors.ink}D8`, opacity: pressed ? 0.8 : 1, transform: [{ scale: pressed ? 0.97 : 1 }] }]}
-              >
-                <View style={[styles.artifactFrame, { borderColor: colors.accent }]}>
-                  {featuredCard?.image_url && !featuredCardImageFailed ? (
-                    <Image
-                      source={{ uri: featuredCard.image_url }}
-                      style={styles.artifactImage}
-                      resizeMode="cover"
-                      accessibilityLabel={`Arte de ${featuredCard.name}`}
-                      onError={() => setFeaturedCardImageFailed(true)}
-                    />
-                  ) : (
-                    <View style={[styles.artifactFallback, { backgroundColor: `${colors.muted}D9` }]}>
-                      <Ionicons name="card" size={27} color={colors.accent} />
-                      <Text style={[styles.artifactFallbackText, { color: colors.mutedForeground }]}>{featuredCardImageFailed ? 'ARTE NO DISPONIBLE' : 'ARTE PENDIENTE'}</Text>
-                    </View>
-                  )}
-                </View>
-                <View style={styles.artifactCopy}>
+            <View style={styles.sceneStage}>
+              <View pointerEvents="none" style={[styles.stageRingOuter, { borderColor: `${colors.accent}35` }]} />
+              <View pointerEvents="none" style={[styles.stageRingInner, { borderColor: `${colors.accent}24` }]} />
+              <SceneOrbitPoint point={DOMAIN_POINTS[0]} position="topLeft" colors={colors} onPress={() => router.push(DOMAIN_POINTS[0].route)} />
+              <SceneOrbitPoint point={DOMAIN_POINTS[1]} position="topRight" colors={colors} onPress={() => router.push(DOMAIN_POINTS[1].route)} />
+              <SceneOrbitPoint point={DOMAIN_POINTS[2]} position="bottomLeft" colors={colors} onPress={() => router.push(DOMAIN_POINTS[2].route)} />
+              <SceneOrbitPoint point={DOMAIN_POINTS[3]} position="bottomRight" colors={colors} onPress={() => router.push(DOMAIN_POINTS[3].route)} />
+              <SceneOrbitPoint point={DOMAIN_POINTS[4]} position="bottomCenter" colors={colors} onPress={() => router.push(DOMAIN_POINTS[4].route)} />
+              <Animated.View style={[styles.stageArtifact, focalMotionStyle]}>
+                <Pressable
+                  accessibilityRole="button"
+                  accessibilityLabel={featuredCard ? `Inspeccionar ${featuredCard.name}` : 'Abrir colección'}
+                  testID="home-featured-card"
+                  onPress={() => router.push('/collection')}
+                  style={({ pressed }) => [styles.stageCard, { opacity: pressed ? 0.8 : 1, transform: [{ scale: pressed ? 0.97 : 1 }] }]}
+                >
+                  <View style={[styles.artifactFrameLarge, { borderColor: colors.accent, shadowColor: colors.accent }]}>
+                    {featuredCard?.image_url && !featuredCardImageFailed ? (
+                      <Image
+                        source={{ uri: featuredCard.image_url }}
+                        style={styles.artifactImage}
+                        resizeMode="cover"
+                        accessibilityLabel={`Arte de ${featuredCard.name}`}
+                        onError={() => setFeaturedCardImageFailed(true)}
+                      />
+                    ) : (
+                      <View style={[styles.artifactFallback, { backgroundColor: `${colors.muted}D9` }]}>
+                        <Ionicons name="card" size={27} color={colors.accent} />
+                        <Text style={[styles.artifactFallbackText, { color: colors.mutedForeground }]}>{featuredCardImageFailed ? 'ARTE NO DISPONIBLE' : 'ARTE PENDIENTE'}</Text>
+                      </View>
+                    )}
+                  </View>
                   <Text style={[styles.artifactKicker, { color: colors.accent }]}>RELIQUIA EN ROTACIÓN</Text>
-                  <Text style={[styles.artifactName, { color: colors.foreground }]} numberOfLines={2}>{featuredCard?.name ?? 'Carta del día'}</Text>
-                  <Text style={[styles.artifactMeta, { color: colors.mutedForeground }]}>{featuredCard ? `${featuredCard.faction} · ${featuredCard.rarity} · PODER ${featuredCard.power}` : 'Sincronizando archivo oficial'}</Text>
-                  <Text style={[styles.artifactAction, { color: colors.accent }]}>TOCAR PARA INSPECCIONAR</Text>
-                </View>
-                <Ionicons name="chevron-forward" size={19} color={colors.accent} />
-              </Pressable>
-            </Animated.View>
+                  <Text style={[styles.stageArtifactName, { color: colors.foreground }]} numberOfLines={1}>{featuredCard?.name ?? 'Carta del día'}</Text>
+                  <Text style={[styles.stageArtifactMeta, { color: colors.mutedForeground }]}>{featuredCard ? `${featuredCard.faction} · ${featuredCard.rarity}` : 'Sincronizando'}</Text>
+                </Pressable>
+              </Animated.View>
+            </View>
 
             <View style={[styles.frontPanel, { borderColor: `${colors.accent}85`, backgroundColor: `${colors.ink}C9` }]}>
               <View style={styles.frontPanelCopy}>
@@ -364,32 +371,6 @@ export default function ForgeScreen() {
             </View>
           </View>
         </Animated.View>
-
-        <View style={styles.worldSection}>
-          <View style={styles.worldHeader}>
-            <View style={styles.worldHeaderCopy}>
-              <SectionLabel color={colors.accent}>PUNTOS DE INTERÉS</SectionLabel>
-              <Text style={[styles.worldTitle, { color: colors.foreground }]}>El camino del Nexus</Text>
-              <Text style={[styles.worldDescription, { color: colors.mutedForeground }]}>Cinco dominios. Un solo mundo. Elige dónde continuar.</Text>
-            </View>
-            <View style={[styles.worldSeal, { borderColor: `${colors.accent}70`, backgroundColor: `${colors.accent}12` }]}>
-              <Ionicons name="compass" size={21} color={colors.accent} />
-            </View>
-          </View>
-
-          <View style={styles.waypointMap}>
-            <View style={[styles.pathLine, { backgroundColor: `${colors.accent}55` }]} />
-            {DOMAIN_POINTS.map((point, index) => (
-              <SceneWaypoint
-                key={point.route}
-                {...point}
-                colors={colors}
-                index={index}
-                onPress={() => router.push(point.route)}
-              />
-            ))}
-          </View>
-        </View>
 
         <View style={styles.content}>
           {homeError ? (
@@ -511,6 +492,7 @@ const styles = StyleSheet.create({
   screen: { flex: 1 },
   scene: { minHeight: 700, overflow: 'hidden', borderBottomWidth: 1, shadowColor: '#000000', shadowOpacity: 0.52, shadowRadius: 28, shadowOffset: { width: 0, height: 18 }, elevation: 10 },
   sceneImage: { opacity: 0.96 },
+  sceneFactionImage: { opacity: 0.36 },
   sceneContent: { paddingHorizontal: 20, paddingBottom: 20 },
   sceneGlow: { position: 'absolute', width: 320, height: 320, borderRadius: 160, top: 250, right: -150 },
   sceneFrame: { position: 'absolute', left: 12, right: 12, top: 12, bottom: 12, borderWidth: 1, borderRadius: 24 },
@@ -537,17 +519,27 @@ const styles = StyleSheet.create({
   eyebrow: { fontFamily: typography.bodyBold, fontSize: 9, letterSpacing: 1.5, fontWeight: '800' },
   sceneTitle: { fontFamily: typography.display, fontSize: 36, lineHeight: 40, fontWeight: '700', marginTop: 8, textShadowColor: 'rgba(0,0,0,0.58)', textShadowOffset: { width: 0, height: 2 }, textShadowRadius: 14 },
   sceneDescription: { fontFamily: typography.body, fontSize: 13, lineHeight: 18, maxWidth: 285, marginTop: 8 },
-  focalObject: { marginTop: 14 },
-  artifactCard: { width: '100%', minHeight: 127, borderWidth: 1, borderRadius: 17, padding: 10, flexDirection: 'row', alignItems: 'center', gap: 11, shadowColor: '#000000', shadowOpacity: 0.44, shadowRadius: 22, shadowOffset: { width: 0, height: 12 }, elevation: 8 },
-  artifactFrame: { width: 74, height: 100, borderWidth: 1, borderRadius: 9, overflow: 'hidden', alignItems: 'center', justifyContent: 'center' },
+  sceneStage: { height: 230, marginTop: 13, position: 'relative', alignItems: 'center', justifyContent: 'center' },
+  stageRingOuter: { position: 'absolute', width: 198, height: 198, top: 11, borderWidth: 1, borderRadius: 99 },
+  stageRingInner: { position: 'absolute', width: 146, height: 146, top: 37, borderWidth: 1, borderRadius: 73 },
+  stageArtifact: { position: 'absolute', top: 15, left: 72, right: 72, alignItems: 'center', zIndex: 2 },
+  stageCard: { alignItems: 'center' },
+  artifactFrameLarge: { width: 88, height: 123, borderWidth: 1, borderRadius: 14, overflow: 'hidden', alignItems: 'center', justifyContent: 'center', shadowOpacity: 0.42, shadowRadius: 18, shadowOffset: { width: 0, height: 10 }, elevation: 8 },
   artifactImage: { width: '100%', height: '100%' },
   artifactFallback: { width: '100%', height: '100%', alignItems: 'center', justifyContent: 'center', gap: 7, padding: 5 },
   artifactFallbackText: { fontFamily: typography.bodyBold, fontSize: 6, letterSpacing: 0.45, textAlign: 'center' },
-  artifactCopy: { flex: 1, gap: 4 },
   artifactKicker: { fontFamily: typography.bodyBold, fontSize: 7, letterSpacing: 0.8, fontWeight: '800' },
-  artifactName: { fontFamily: typography.bodyBold, fontSize: 15, lineHeight: 18, fontWeight: '800' },
-  artifactMeta: { fontFamily: typography.body, fontSize: 9, lineHeight: 13 },
-  artifactAction: { fontFamily: typography.bodyBold, fontSize: 7, letterSpacing: 0.7, fontWeight: '800', marginTop: 2 },
+  stageArtifactName: { fontFamily: typography.bodyBold, fontSize: 11, lineHeight: 14, fontWeight: '800', maxWidth: 118, marginTop: 2 },
+  stageArtifactMeta: { fontFamily: typography.body, fontSize: 8, marginTop: 2 },
+  orbitPoint: { position: 'absolute', width: 66, alignItems: 'center', gap: 4, zIndex: 3 },
+  orbitPointTopLeft: { left: 0, top: 19 },
+  orbitPointTopRight: { right: 0, top: 19 },
+  orbitPointBottomLeft: { left: 2, bottom: 14 },
+  orbitPointBottomRight: { right: 2, bottom: 14 },
+  orbitPointBottomCenter: { left: '50%', marginLeft: -33, bottom: -2 },
+  orbitSeal: { width: 46, height: 46, borderWidth: 1, borderRadius: 23, alignItems: 'center', justifyContent: 'center', shadowOpacity: 0.32, shadowRadius: 14, elevation: 6 },
+  orbitSealInner: { width: 34, height: 34, borderWidth: 1, borderRadius: 17, alignItems: 'center', justifyContent: 'center' },
+  orbitLabel: { fontFamily: typography.bodyBold, fontSize: 7, letterSpacing: 0.85, fontWeight: '800' },
   frontPanel: { minHeight: 52, borderWidth: 1, borderRadius: 14, paddingHorizontal: 12, paddingVertical: 9, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 11 },
   frontPanelCopy: { flex: 1 },
   frontKicker: { fontFamily: typography.bodyBold, fontSize: 7, letterSpacing: 1.1, fontWeight: '800' },
@@ -558,23 +550,6 @@ const styles = StyleSheet.create({
   primaryAction: { marginTop: 11 },
   sceneHint: { minHeight: 27, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8, marginTop: 8 },
   sceneHintText: { fontFamily: typography.bodyBold, fontSize: 7, letterSpacing: 1, fontWeight: '700' },
-  worldSection: { paddingHorizontal: 20, paddingTop: 26, paddingBottom: 14 },
-  worldHeader: { flexDirection: 'row', justifyContent: 'space-between', gap: 16 },
-  worldHeaderCopy: { flex: 1 },
-  worldTitle: { fontFamily: typography.display, fontSize: 25, fontWeight: '700', marginTop: 7 },
-  worldDescription: { fontFamily: typography.body, fontSize: 11, lineHeight: 16, marginTop: 5, maxWidth: 265 },
-  worldSeal: { width: 45, height: 45, borderWidth: 1, borderRadius: 16, alignItems: 'center', justifyContent: 'center' },
-  waypointMap: { position: 'relative', marginTop: 22, gap: 11, paddingVertical: 4 },
-  pathLine: { position: 'absolute', width: 1, top: 15, bottom: 15, left: 30 },
-  waypoint: { minHeight: 70, flexDirection: 'row', alignItems: 'center', gap: 11, paddingRight: 7 },
-  waypointReversed: { flexDirection: 'row-reverse', paddingRight: 0, paddingLeft: 7 },
-  waypointSeal: { width: 60, height: 60, borderWidth: 1, borderRadius: 30, alignItems: 'center', justifyContent: 'center', shadowOpacity: 0.28, shadowRadius: 14, elevation: 5 },
-  waypointSealInner: { width: 42, height: 42, borderWidth: 1, borderRadius: 21, alignItems: 'center', justifyContent: 'center' },
-  waypointCopy: { flex: 1, paddingLeft: 1 },
-  waypointCopyReversed: { alignItems: 'flex-end', paddingLeft: 0, paddingRight: 1 },
-  waypointSubtitle: { fontFamily: typography.bodyBold, fontSize: 7, letterSpacing: 1, fontWeight: '800' },
-  waypointName: { fontFamily: typography.bodyBold, fontSize: 16, fontWeight: '800', marginTop: 2 },
-  waypointDescription: { fontFamily: typography.body, fontSize: 10, lineHeight: 14, marginTop: 3, maxWidth: 210 },
   content: { paddingHorizontal: 20, paddingTop: 9, gap: 14 },
   errorBar: { minHeight: 48, borderWidth: 1, borderRadius: 13, padding: 11, flexDirection: 'row', alignItems: 'center', gap: 9 },
   errorText: { flex: 1, fontFamily: typography.body, fontSize: 11, lineHeight: 15 },

@@ -33,6 +33,13 @@ export const CANONICAL_BACKGROUNDS = {
   tutorial: OFFICIAL_ASSETS.tutorialHero,
 } as const;
 
+export const FACTION_BACKGROUNDS = {
+  Guerrero: storageAsset('factions/bg_guerrero.jpg'),
+  Mago: storageAsset('factions/bg_mago.jpg'),
+  Paladín: storageAsset('factions/bg_paladin.jpg'),
+  Pícaro: storageAsset('factions/bg_picaro.jpg'),
+} as const;
+
 export type VisualSurface = keyof typeof CANONICAL_BACKGROUNDS;
 
 export const FACTION_ICONS: Record<string, string> = {
