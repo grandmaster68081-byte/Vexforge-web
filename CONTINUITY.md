@@ -1680,3 +1680,11 @@
 - `mobile/scripts/publish-ota.mjs` acepta ahora ambos formatos, selecciona el bundle cuyo `runtimeVersion` coincide y conserva una guarda bloqueante si no existe un archivo Android.
 - No se cambian runtime, canal, manifiesto, hashes, Storage, Supabase, Auth, RLS ni contratos; la publicación se reintentará sobre este commit con la misma clasificación `OTA_UPDATE`.
 - Estado: `IMPLEMENTED_UNVERIFIED`; la OTA anterior quedó `failure` antes de subir arte o registrar release.
+
+---
+## 2026-09-05 — OTA-METADATA-FILEMETADATA — IMPLEMENTED_UNVERIFIED
+
+- El segundo intento confirmó que Expo SDK 54 exporta `metadata.fileMetadata.android.bundle` y `metadata.fileMetadata.android.assets`; el publicador ya no debe buscar solamente `metadata.bundles`.
+- `publish-ota.mjs` acepta el formato Expo 54 y conserva compatibilidad con la forma legacy; el manifiesto usa los assets Android exportados para no publicar una actualización incompleta.
+- El segundo intento también falló antes de subir/registrar porque el parser todavía no contemplaba `fileMetadata`; no hubo release publicado.
+- Estado: `IMPLEMENTED_UNVERIFIED`; se ejecutará `verify` y se hará un tercer intento controlado de OTA sobre este commit.

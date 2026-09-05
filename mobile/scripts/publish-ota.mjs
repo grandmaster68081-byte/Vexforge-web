@@ -15,8 +15,13 @@ const exportMetadataPath = join(root, 'metadata.json');
 if (!existsSync(exportMetadataPath)) throw new Error('Expo export metadata.json not found');
 
 const metadata = JSON.parse(readFileSync(exportMetadataPath, 'utf8'));
-const androidBundles = Array.isArray(metadata.bundles) ? metadata.bundles : metadata.bundles?.android ?? [];
-const androidBundle = androidBundles.find((item) => item.runtimeVersion === runtimeVersion) ?? androidBundles[0];
+const legacyAndroidBundles = Array.isArray(metadata.bundles) ? metadata.bundles : metadata.bundles?.android ?? [];
+const legacyAndroidBundle = legacyAndroidBundles.find((item) => item.runtimeVersion === runtimeVersion) ?? legacyAndroidBundles[0];
+const androidMetadata = metadata.fileMetadata?.android;
+const androidBundle = androidMetadata?.bundle
+  ? { file: androidMetadata.bundle, assets: androidMetadata.assets ?? [] }
+  : legacyAndroidBundle;
+const androidAssets = androidMetadata?.assets ?? androidBundle?.assets ?? metadata.assets ?? [];
 if (!androidBundle?.file) throw new Error('Expo export did not contain an Android launch bundle');
 const allFiles = [];
 function walk(directory) {
@@ -68,7 +73,7 @@ const manifest = {
   createdAt: new Date().toISOString(),
   runtimeVersion,
   launchAsset: { url: publicUrl(bundlePath), key: basename(androidBundle.file), version: launchDigest, contentType: 'application/javascript' },
-  assets: (metadata.assets ?? []).map((asset) => {
+  assets: androidAssets.map((asset) => {
     const path = String(asset.path ?? asset.file ?? '').replaceAll('\\', '/');
     return { hash: asset.hash ?? asset.key ?? basename(path), key: asset.key ?? basename(path), name: asset.name ?? basename(path), type: asset.type ?? extname(path).replace('.', ''), url: publicUrl(`${prefix}/${path}`) };
   }),
