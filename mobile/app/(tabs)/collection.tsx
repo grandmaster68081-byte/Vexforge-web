@@ -14,6 +14,7 @@ import {
   View,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useRouter } from 'expo-router';
 import { useColors } from '@/hooks/useColors';
 import { ProgressBar } from '@/components/ProgressBar';
 import { useGame } from '@/context/GameContext';
@@ -184,6 +185,67 @@ function CardTile({
   );
 }
 
+function CardSpotlight({
+  card,
+  owned,
+  colors,
+  onPress,
+  onOpenForge,
+}: {
+  card: PublicCard;
+  owned?: PlayerCard;
+  colors: ReturnType<typeof useColors>;
+  onPress: () => void;
+  onOpenForge: () => void;
+}) {
+  const accent = rarityColor(card.rarity, colors);
+  return (
+    <View testID="cards-spotlight" style={[styles.spotlight, { backgroundColor: `${colors.panelStrong}EE`, borderColor: `${accent}88` }]}>
+      <Pressable
+        accessibilityRole="button"
+        accessibilityLabel={`Inspeccionar artefacto destacado ${card.name}`}
+        onPress={onPress}
+        style={({ pressed }) => [styles.spotlightArt, { borderColor: accent, opacity: pressed ? 0.82 : 1 }]}
+      >
+        <CardArt card={card} colors={colors} detail />
+      </Pressable>
+      <View style={styles.spotlightCopy}>
+        <Text style={[styles.spotlightKicker, { color: accent }]}>ARTEFACTO DESTACADO</Text>
+        <Text style={[styles.spotlightTitle, { color: colors.foreground }]} numberOfLines={2}>{card.name}</Text>
+        <Text style={[styles.spotlightMeta, { color: colors.mutedForeground }]}>
+          {rarityLabel(card.rarity)} · {card.faction ?? 'Sin facción'} · PWR {card.power ?? 0}
+        </Text>
+        <Text style={[styles.spotlightLore, { color: colors.mutedForeground }]} numberOfLines={3}>
+          {card.lore ?? card.specialization ?? 'Una pieza registrada en el archivo oficial de VEXFORGE.'}
+        </Text>
+        <View style={styles.spotlightActions}>
+          <Pressable
+            testID="cards-spotlight-inspect"
+            accessibilityRole="button"
+            onPress={onPress}
+            style={[styles.spotlightInspect, { borderColor: accent }]}
+          >
+            <Text style={[styles.spotlightInspectText, { color: accent }]}>INSPECCIONAR</Text>
+          </Pressable>
+          <Pressable
+            testID="cards-open-forge"
+            accessibilityRole="button"
+            accessibilityLabel="Abrir la Forja de mazos"
+            onPress={onOpenForge}
+            style={[styles.spotlightForge, { backgroundColor: colors.primary }]}
+          >
+            <Feather name="columns" size={13} color={colors.primaryForeground} />
+            <Text style={[styles.spotlightForgeText, { color: colors.primaryForeground }]}>FORJAR</Text>
+          </Pressable>
+        </View>
+        <Text style={[styles.spotlightOwnership, { color: owned ? colors.accent : colors.mutedForeground }]}>
+          {owned ? `En tu archivo · x${owned.quantity}` : 'Aún no forma parte de tu archivo'}
+        </Text>
+      </View>
+    </View>
+  );
+}
+
 function CardDetail({
   card,
   owned,
@@ -300,20 +362,32 @@ function CardDetail({
 export default function CollectionScreen() {
   const colors = useColors();
   const insets = useSafeAreaInsets();
+  const router = useRouter();
   const { featuredCards, cardsTotal, collection, collectionLoading, syncState, syncError, refresh } = useGame();
   const [search, setSearch] = useState('');
   const [rarity, setRarity] = useState<Rarity | 'all'>('all');
   const [faction, setFaction] = useState<(typeof FACTIONS)[number] | 'all'>('all');
   const [sort, setSort] = useState<'rarity' | 'name' | 'power'>('rarity');
+  const [scope, setScope] = useState<'all' | 'owned'>('all');
   const [selected, setSelected] = useState<PublicCard | null>(null);
   const ownedById = useMemo(() => new Map(collection.map((card) => [card.card_id, card])), [collection]);
   const completion = cardsTotal > 0 ? Math.round((ownedById.size / cardsTotal) * 100) : 0;
+  const spotlightCard = useMemo(() => {
+    const rarityOrder = Object.fromEntries(RARITIES.map((name, index) => [name, index]));
+    return [...featuredCards].sort((a, b) => {
+      const ownedDelta = Number(ownedById.has(b.id)) - Number(ownedById.has(a.id));
+      if (ownedDelta !== 0) return ownedDelta;
+      const rarityDelta = (rarityOrder[b.rarity ?? 'Common'] ?? 0) - (rarityOrder[a.rarity ?? 'Common'] ?? 0);
+      return rarityDelta || (b.power ?? 0) - (a.power ?? 0) || a.name.localeCompare(b.name);
+    })[0] ?? null;
+  }, [featuredCards, ownedById]);
 
   const filtered = useMemo(() => {
     const rarityOrder = Object.fromEntries(RARITIES.map((name, index) => [name, index]));
     const query = search.trim().toLowerCase();
     return featuredCards
       .filter((card) => {
+        if (scope === 'owned' && !ownedById.has(card.id)) return false;
         if (rarity !== 'all' && card.rarity !== rarity) return false;
         if (faction !== 'all' && card.faction !== faction) return false;
         return !query || card.name.toLowerCase().includes(query) || card.code.toLowerCase().includes(query);
@@ -323,7 +397,7 @@ export default function CollectionScreen() {
         if (sort === 'power') return (b.power ?? 0) - (a.power ?? 0);
         return (rarityOrder[a.rarity ?? 'Common'] ?? 0) - (rarityOrder[b.rarity ?? 'Common'] ?? 0) || a.name.localeCompare(b.name);
       });
-  }, [featuredCards, faction, rarity, search, sort]);
+  }, [featuredCards, faction, ownedById, rarity, scope, search, sort]);
 
   const renderCard = useCallback(
     ({ item }: { item: PublicCard }) => (
@@ -332,7 +406,7 @@ export default function CollectionScreen() {
     [colors, ownedById],
   );
 
-  const hasFilters = Boolean(search || rarity !== 'all' || faction !== 'all');
+  const hasFilters = Boolean(search || rarity !== 'all' || faction !== 'all' || scope !== 'all');
   return (
     <ScreenShell surface="collection">
       <View style={[styles.root, { backgroundColor: 'transparent' }]}>
@@ -354,6 +428,15 @@ export default function CollectionScreen() {
             >
               <ProgressBar value={completion} color={colors.primary} />
             </DomainHeader>
+            {spotlightCard ? (
+              <CardSpotlight
+                card={spotlightCard}
+                owned={ownedById.get(spotlightCard.id)}
+                colors={colors}
+                onPress={() => setSelected(spotlightCard)}
+                onOpenForge={() => router.push('/deck')}
+              />
+            ) : null}
             <View style={[styles.searchBox, { borderColor: colors.border, backgroundColor: colors.panel }]}>
               <Feather name="search" size={17} color={colors.mutedForeground} />
               <TextInputCompat value={search} onChangeText={setSearch} colors={colors} />
@@ -363,6 +446,10 @@ export default function CollectionScreen() {
                 </Pressable>
               ) : null}
             </View>
+            <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.chips}>
+              <Chip label="Todas" active={scope === 'all'} onPress={() => setScope('all')} colors={colors} />
+              <Chip label="Mi archivo" active={scope === 'owned'} onPress={() => setScope('owned')} colors={colors} accent={colors.accent} />
+            </ScrollView>
             <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.chips}>
               <Chip label="Todas" active={rarity === 'all'} onPress={() => setRarity('all')} colors={colors} />
               {RARITIES.map((value) => (
@@ -402,9 +489,9 @@ export default function CollectionScreen() {
             {hasFilters && filtered.length === 0 && featuredCards.length > 0 && (
               <View style={[styles.empty, { borderColor: colors.border, backgroundColor: colors.panel }]}>
                 <Feather name="target" size={32} color={colors.primary} />
-                <Text style={[styles.emptyTitle, { color: colors.foreground }]}>Sin coincidencias</Text>
-                <Text style={[styles.emptyText, { color: colors.mutedForeground }]}>Ninguna carta coincide con tus filtros actuales.</Text>
-                <Pressable testID="clear-filters" onPress={() => { setSearch(''); setRarity('all'); setFaction('all'); }} style={[styles.clearButton, { borderColor: colors.primary }]}>
+                  <Text style={[styles.emptyTitle, { color: colors.foreground }]}>{scope === 'owned' && !search && rarity === 'all' && faction === 'all' ? 'Tu archivo está esperando' : 'Sin coincidencias'}</Text>
+                  <Text style={[styles.emptyText, { color: colors.mutedForeground }]}>{scope === 'owned' && !search && rarity === 'all' && faction === 'all' ? 'Las cartas que poseas aparecerán aquí para ser estudiadas y forjadas.' : 'Ninguna carta coincide con tus filtros actuales.'}</Text>
+                  <Pressable testID="clear-filters" onPress={() => { setSearch(''); setRarity('all'); setFaction('all'); setScope('all'); }} style={[styles.clearButton, { borderColor: colors.primary }]}>
                   <Text style={[styles.clearButtonText, { color: colors.primary }]}>LIMPIAR FILTROS</Text>
                 </Pressable>
               </View>
@@ -457,6 +544,19 @@ const styles = StyleSheet.create({
   results: { fontSize: 12, fontWeight: '600' },
   sorts: { gap: 14 },
   sortText: { fontSize: 11, fontWeight: '700' },
+  spotlight: { flexDirection: 'row', gap: 14, borderWidth: 1, borderRadius: 18, padding: 12, marginBottom: 4, overflow: 'hidden' },
+  spotlightArt: { width: '36%', borderWidth: 1, borderRadius: 14, overflow: 'hidden', alignSelf: 'flex-start' },
+  spotlightCopy: { flex: 1, minWidth: 0, justifyContent: 'center' },
+  spotlightKicker: { fontSize: 9, fontWeight: '900', letterSpacing: 1.2 },
+  spotlightTitle: { fontSize: 20, lineHeight: 24, fontWeight: '900', marginTop: 5 },
+  spotlightMeta: { fontSize: 10, lineHeight: 15, marginTop: 5 },
+  spotlightLore: { fontSize: 11, lineHeight: 16, marginTop: 8 },
+  spotlightActions: { flexDirection: 'row', gap: 7, marginTop: 11 },
+  spotlightInspect: { minHeight: 34, borderWidth: 1, borderRadius: 9, paddingHorizontal: 9, alignItems: 'center', justifyContent: 'center' },
+  spotlightInspectText: { fontSize: 8, fontWeight: '900', letterSpacing: 0.6 },
+  spotlightForge: { minHeight: 34, borderRadius: 9, paddingHorizontal: 10, alignItems: 'center', justifyContent: 'center', flexDirection: 'row', gap: 5 },
+  spotlightForgeText: { fontSize: 8, fontWeight: '900', letterSpacing: 0.6 },
+  spotlightOwnership: { fontSize: 9, fontWeight: '800', marginTop: 8 },
   gridRow: { gap: 10, marginBottom: 10 },
   tile: { flex: 1, minWidth: 0, borderWidth: 1, borderRadius: 12, overflow: 'hidden' },
   art: { aspectRatio: 0.78, borderBottomWidth: 1, overflow: 'hidden', position: 'relative' },

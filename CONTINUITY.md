@@ -1589,3 +1589,23 @@
 - La unidad continúa en `IMPLEMENTED_UNVERIFIED`: el gate de compilación y
   publicación pasó, pero la QA manual del operador en dispositivo sigue
   pendiente. No se declara `PASS`, `OPERATIONAL` ni `TIER1_READY`.
+
+---
+## 2026-09-05 — VE-UXCX-4-CARD-ARCHIVE — IMPLEMENTED_UNVERIFIED
+
+- Preflight completado contra el protocolo activo de Supabase, la continuidad
+  y la siguiente unidad del plan UX/CX. FOJA y ARENA no se reabrieron.
+- ARCHIVO conserva el catálogo oficial completo, búsqueda, filtros, rareza,
+  facción, orden, propiedad, arte, detalle, estadísticas, habilidades, lore
+  y estados explícitos de carga/error.
+- La carta ahora domina la entrada visual mediante un artefacto destacado
+  derivado del catálogo y la propiedad real del jugador. Se añadió el alcance
+  `Todas` / `Mi archivo` sin inventar estados de descubrimiento o novedad.
+- El detalle ofrece un puente real a la FORJA mediante `/deck`; no se
+  cambiaron datos, contratos, Auth, RLS, RPCs, economía, Storage ni combate.
+- Guardas locales: `verify-mobile-card-pilot` 6/6,
+  `verify-card-art-state` correcto, `verify-uxcx-domain-identity` correcto,
+  `verify-mobile-deck` 13/13 y diff whitespace limpio.
+- Estado correcto: `IMPLEMENTED_UNVERIFIED`. El typecheck y el APK se
+  confirmarán en el workflow oficial; la QA humana en dispositivo continúa
+  pendiente y no se declara `PASS`, `OPERATIONAL` ni `TIER1_READY`.
