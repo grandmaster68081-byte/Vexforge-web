@@ -37,6 +37,20 @@ const mime = (file) => ({
   '.png': 'image/png', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.webp': 'image/webp',
   '.gif': 'image/gif', '.woff': 'font/woff', '.ttf': 'font/ttf', '.bin': 'application/octet-stream',
 }[extname(file).toLowerCase()] ?? 'application/octet-stream');
+const wait = (milliseconds) => new Promise((resolve) => setTimeout(resolve, milliseconds));
+const fetchWithTransientRetry = async (url, options, operation) => {
+  let response;
+  for (let attempt = 0; attempt < 4; attempt += 1) {
+    response = await fetch(url, options);
+    if (response.status !== 429 && response.status < 500) return response;
+    if (attempt === 3) break;
+    const retryAfter = Number(response.headers.get('retry-after') ?? 0);
+    const delay = Math.min(8000, Math.max(1000, retryAfter * 1000 || 2 ** attempt * 1000));
+    console.warn(`${operation} respondió ${response.status}; reintentando en ${delay}ms (${attempt + 1}/3)`);
+    await wait(delay);
+  }
+  return response;
+};
 const sha256 = async (file) => new Promise((resolve, reject) => {
   const hash = createHash('sha256');
   const stream = createReadStream(file);
@@ -45,17 +59,17 @@ const sha256 = async (file) => new Promise((resolve, reject) => {
   stream.on('end', () => resolve(hash.digest('hex')));
 });
 const upload = async (objectPath, body, contentType) => {
-  const response = await fetch(`${supabaseUrl}/storage/v1/object/${bucket}/${objectPath}`, {
+  const response = await fetchWithTransientRetry(`${supabaseUrl}/storage/v1/object/${bucket}/${objectPath}`, {
     method: 'POST',
     headers: { Authorization: `Bearer ${serviceKey}`, apikey: serviceKey, 'x-upsert': 'true', 'content-type': contentType },
     body,
-  });
+  }, `Storage upload ${objectPath}`);
   if (!response.ok && response.status !== 409) throw new Error(`Storage upload failed for ${objectPath}: ${response.status} ${await response.text()}`);
 };
-const bucketResponse = await fetch(`${supabaseUrl}/storage/v1/bucket`, {
+const bucketResponse = await fetchWithTransientRetry(`${supabaseUrl}/storage/v1/bucket`, {
   method: 'POST', headers: { Authorization: `Bearer ${serviceKey}`, apikey: serviceKey, 'content-type': 'application/json' },
   body: JSON.stringify({ id: bucket, name: bucket, public: true }),
-});
+}, 'Update bucket creation');
 if (!bucketResponse.ok && bucketResponse.status !== 409) throw new Error(`Could not create update bucket: ${bucketResponse.status} ${await bucketResponse.text()}`);
 
 const prefix = `releases/${runtimeVersion}/${channel}/${sourceCommit}`;
@@ -106,9 +120,9 @@ const registryRow = {
   status: 'PUBLISHED',
   responsible: 'github-actions',
 };
-const registryResponse = await fetch(`${supabaseUrl}/rest/v1/vexforge_android_release_registry?on_conflict=section_id,channel,delivery_type,source_commit`, {
+const registryResponse = await fetchWithTransientRetry(`${supabaseUrl}/rest/v1/vexforge_android_release_registry?on_conflict=section_id,channel,delivery_type,source_commit`, {
   method: 'POST', headers: { Authorization: `Bearer ${serviceKey}`, apikey: serviceKey, Prefer: 'resolution=merge-duplicates,return=representation', 'content-type': 'application/json' }, body: JSON.stringify(registryRow),
-});
+}, 'Release registry write');
 if (!registryResponse.ok) throw new Error(`Registry write failed: ${registryResponse.status} ${await registryResponse.text()}`);
 const updateUrl = `${supabaseUrl}/functions/v1/vexforge-updates`;
 const output = { sectionId: process.env.SECTION_ID, runtimeVersion, channel, sourceCommit, updateUrl, manifestUrl: publicUrl(manifestPath), launchAssetUrl: publicUrl(bundlePath), launchSha256: launchDigest, manifestSha256: manifestDigest };
