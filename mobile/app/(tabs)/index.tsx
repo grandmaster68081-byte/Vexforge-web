@@ -35,6 +35,29 @@ const FEATURE_HIGHLIGHTS: Array<{
   { title: 'Misiones diarias', description: 'Completa objetivos y gana recompensas.', icon: 'shield-checkmark-outline', color: 'accent' },
 ];
 
+const SCENE_PORTALS: Array<{
+  label: string;
+  hint: string;
+  icon: keyof typeof Ionicons.glyphMap;
+  tone: 'danger' | 'accent' | 'primary' | 'success';
+  route: '/battle' | '/collection' | '/deck' | '/world';
+}> = [
+  { label: 'ARENA', hint: 'COMBATIR', icon: 'arena', tone: 'danger', route: '/battle' },
+  { label: 'CARTAS', hint: 'INSPECCIONAR', icon: 'cards', tone: 'accent', route: '/collection' },
+  { label: 'MAZO', hint: 'PREPARAR', icon: 'deck', tone: 'primary', route: '/deck' },
+  { label: 'MUNDO', hint: 'EXPLORAR', icon: 'map', tone: 'success', route: '/world' },
+];
+
+const UTILITY_PORTALS: Array<{
+  label: string;
+  icon: keyof typeof Ionicons.glyphMap;
+  route: '/tutorial' | '/store' | '/economy';
+}> = [
+  { label: 'APRENDER A JUGAR', icon: 'map', route: '/tutorial' },
+  { label: 'FORJA Y RECURSOS', icon: 'shop', route: '/store' },
+  { label: 'ECONOMÍA Y MERCADO', icon: 'wallet-outline', route: '/economy' },
+];
+
 function timeAgo(iso: string) {
   const minutes = Math.max(0, Math.floor((Date.now() - new Date(iso).getTime()) / 60000));
   if (minutes < 1) return 'ahora';
@@ -72,6 +95,33 @@ function ActionButton({ label, icon, onPress, colors, secondary = false, testID 
     <View style={secondary ? styles.secondaryAction : styles.primaryAction}>
       <ForgeButton label={label} icon={icon} onPress={onPress} secondary={secondary} testID={testID} />
     </View>
+  );
+}
+
+function ScenePortal({ label, hint, icon, tone, onPress, colors, testID }: {
+  label: string;
+  hint: string;
+  icon: keyof typeof Ionicons.glyphMap;
+  tone: 'danger' | 'accent' | 'primary' | 'success';
+  onPress: () => void;
+  colors: ReturnType<typeof useColors>;
+  testID: string;
+}) {
+  const toneColor = colors[tone];
+  return (
+    <Pressable
+      accessibilityRole="button"
+      accessibilityLabel={`${label}: ${hint}`}
+      testID={testID}
+      onPress={onPress}
+      style={({ pressed }) => [styles.scenePortal, { borderColor: `${toneColor}75`, backgroundColor: `${colors.ink}A8`, opacity: pressed ? 0.72 : 1, transform: [{ translateY: pressed ? 1 : 0 }] }]}
+    >
+      <View style={[styles.scenePortalIcon, { backgroundColor: `${toneColor}20`, borderColor: `${toneColor}66` }]}>
+        <Ionicons name={icon} size={19} color={toneColor} />
+      </View>
+      <Text style={[styles.scenePortalLabel, { color: colors.foreground }]}>{label}</Text>
+      <Text style={[styles.scenePortalHint, { color: toneColor }]}>{hint}</Text>
+    </Pressable>
   );
 }
 
@@ -198,6 +248,22 @@ export default function ForgeScreen() {
             </View>
           </View>
 
+           <View style={[styles.statusHud, { borderColor: `${colors.accent}45`, backgroundColor: `${colors.ink}88` }]}>
+             <View style={styles.playerHud}>
+               <View style={[styles.playerHudIcon, { backgroundColor: `${colors.accent}1C`, borderColor: `${colors.accent}75` }]}>
+                 <Ionicons name="profile" size={18} color={colors.accent} />
+               </View>
+               <View>
+                 <Text style={[styles.hudEyebrow, { color: colors.mutedForeground }]}>FORJADOR ACTIVO</Text>
+                 <Text style={[styles.hudName, { color: colors.foreground }]} numberOfLines={1}>{displayName}</Text>
+               </View>
+             </View>
+             <View style={styles.hudResource}>
+               <Text style={[styles.hudEyebrow, { color: colors.mutedForeground }]}>VEX</Text>
+               <Text style={[styles.hudValue, { color: colors.accent }]}>{(wallet?.vex_ingame ?? 0).toLocaleString('es')}</Text>
+             </View>
+           </View>
+
           <View style={styles.heroSignal}>
             <View style={[styles.signalDot, { backgroundColor: colors.success }]} />
             <Text style={[styles.signalText, { color: colors.success }]}>NEXUS ONLINE</Text>
@@ -219,9 +285,21 @@ export default function ForgeScreen() {
 
           <View style={styles.greeting}>
             <SectionLabel color={colors.accent}>VEXFORGE — TRADING CARD GAME</SectionLabel>
-            <ForgeText variant="display" style={[styles.title, { color: colors.foreground }]}>Forja tu{'\n'}leyenda.</ForgeText>
-             <Text style={[styles.heroBody, { color: colors.mutedForeground }]}>Elige tu formación, entra en la arena y forja tu próxima victoria.</Text>
+             <ForgeText variant="display" style={[styles.title, { color: colors.foreground }]}>La forja{'\n'}te espera.</ForgeText>
+              <Text style={[styles.heroBody, { color: colors.mutedForeground }]}>Un frente vivo. Una carta en rotación. Tu próxima victoria empieza aquí.</Text>
           </View>
+
+           <View style={[styles.sceneAnchor, { borderColor: `${colors.accent}75`, backgroundColor: `${colors.ink}B8` }]}>
+             <View style={[styles.sceneAnchorRing, { borderColor: `${colors.accent}32` }]} />
+             <View style={[styles.sceneAnchorCore, { backgroundColor: `${colors.accent}D9` }]}>
+               <Ionicons name="target" size={19} color={colors.ink} />
+             </View>
+             <View style={styles.sceneAnchorCopy}>
+               <Text style={[styles.sceneAnchorEyebrow, { color: colors.accent }]}>FRENTE ACTIVO</Text>
+               <Text style={[styles.sceneAnchorTitle, { color: colors.foreground }]} numberOfLines={1}>{home.stats?.active_event?.name ?? home.stats?.season?.name ?? 'ARENA NEXUS'}</Text>
+               <Text style={[styles.sceneAnchorBody, { color: colors.mutedForeground }]}>Elige tu formación para entrar en la escena.</Text>
+             </View>
+           </View>
 
           <View style={styles.actionRow}>
              <ActionButton label="Entrar a la arena" icon="flash-outline" onPress={() => router.push('/battle')} colors={colors} testID="home-battle" />
@@ -273,50 +351,11 @@ export default function ForgeScreen() {
              </View>
            ) : null}
 
-           <Pressable
-             accessibilityRole="button"
-             accessibilityLabel="Abrir tutorial de la Forja"
-             testID="home-tutorial"
-             onPress={() => router.push('/tutorial')}
-             style={({ pressed }) => [styles.tutorialLink, { borderColor: colors.border, opacity: pressed ? 0.72 : 1 }]}
-           >
-             <Ionicons name="compass-outline" size={16} color={colors.accent} />
-             <Text style={[styles.tutorialLinkText, { color: colors.accent }]}>APRENDER A JUGAR</Text>
-             <Ionicons name="arrow-forward" size={15} color={colors.accent} />
-           </Pressable>
-            <Pressable
-              accessibilityRole="button"
-              accessibilityLabel="Abrir forja y tienda"
-              testID="home-store"
-              onPress={() => router.push('/store')}
-              style={({ pressed }) => [styles.tutorialLink, { borderColor: colors.border, opacity: pressed ? 0.72 : 1 }]}
-            >
-              <Ionicons name="storefront-outline" size={16} color={colors.accent} />
-              <Text style={[styles.tutorialLinkText, { color: colors.accent }]}>FORJA Y RECURSOS</Text>
-              <Ionicons name="arrow-forward" size={15} color={colors.accent} />
-            </Pressable>
-            <Pressable
-              accessibilityRole="button"
-              accessibilityLabel="Abrir economía"
-              testID="home-economy"
-              onPress={() => router.push('/economy')}
-              style={({ pressed }) => [styles.tutorialLink, { borderColor: colors.border, opacity: pressed ? 0.72 : 1 }]}
-            >
-              <Ionicons name="wallet-outline" size={16} color={colors.accent} />
-              <Text style={[styles.tutorialLinkText, { color: colors.accent }]}>ECONOMÍA Y MERCADO</Text>
-              <Ionicons name="arrow-forward" size={15} color={colors.accent} />
-            </Pressable>
-             <Pressable
-               accessibilityRole="button"
-               accessibilityLabel="Abrir mundo"
-               testID="home-world"
-               onPress={() => router.push('/world')}
-               style={({ pressed }) => [styles.tutorialLink, { borderColor: colors.border, opacity: pressed ? 0.72 : 1 }]}
-             >
-               <Ionicons name="globe-outline" size={16} color={colors.accent} />
-               <Text style={[styles.tutorialLinkText, { color: colors.accent }]}>EXPLORAR EL MUNDO</Text>
-               <Ionicons name="arrow-forward" size={15} color={colors.accent} />
-             </Pressable>
+           <View style={styles.scenePortalGrid}>
+             {SCENE_PORTALS.map((portal) => (
+               <ScenePortal key={portal.route} {...portal} colors={colors} testID={`home-portal-${portal.label.toLowerCase()}`} onPress={() => router.push(portal.route)} />
+             ))}
+           </View>
 
            <View style={[styles.heroStats, { borderTopColor: `${colors.accent}45` }]}>
             <View style={styles.heroStat}><Text style={[styles.heroStatValue, { color: colors.accent }]}>{home.stats?.total_cards ?? '—'}</Text><Text style={[styles.heroStatLabel, { color: colors.mutedForeground }]}>CARTAS</Text></View>
@@ -363,6 +402,21 @@ export default function ForgeScreen() {
           </View>
           <Ionicons name={syncState === 'connected' ? 'checkmark-circle-outline' : 'cloud-outline'} size={21} color={syncState === 'connected' ? colors.success : colors.mutedForeground} />
         </View>
+
+         <View style={styles.utilityRail}>
+           {UTILITY_PORTALS.map((portal) => (
+             <Pressable
+               key={portal.route}
+               accessibilityRole="button"
+               testID={`home-utility-${portal.route.slice(1)}`}
+               onPress={() => router.push(portal.route)}
+               style={({ pressed }) => [styles.utilityPortal, { borderColor: colors.border, backgroundColor: colors.panel, opacity: pressed ? 0.72 : 1 }]}
+             >
+               <Ionicons name={portal.icon} size={16} color={colors.accent} />
+               <Text style={[styles.utilityPortalText, { color: colors.foreground }]}>{portal.label}</Text>
+             </Pressable>
+           ))}
+         </View>
 
         <Animated.View entering={reduceMotion ? undefined : FadeInDown.delay(80).duration(450)} style={[styles.resourceCard, { backgroundColor: colors.panelStrong, borderColor: colors.border }]}>
           <View>
@@ -501,6 +555,13 @@ const styles = StyleSheet.create({
   heroContent: { paddingHorizontal: 20, paddingBottom: 34 },
   sceneWord: { position: 'absolute', right: -20, top: 168, fontFamily: typography.display, fontSize: 84, letterSpacing: 8, transform: [{ rotate: '-12deg' }] },
   header: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
+  statusHud: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', borderWidth: 1, borderRadius: 14, paddingHorizontal: 10, paddingVertical: 9, marginTop: 18 },
+  playerHud: { flexDirection: 'row', alignItems: 'center', gap: 9, flex: 1 },
+  playerHudIcon: { width: 32, height: 32, borderRadius: 10, borderWidth: 1, alignItems: 'center', justifyContent: 'center' },
+  hudEyebrow: { fontFamily: typography.bodyBold, fontSize: 8, letterSpacing: 1, fontWeight: '700' },
+  hudName: { fontFamily: typography.bodyBold, fontSize: 13, fontWeight: '800', marginTop: 2, maxWidth: 160 },
+  hudResource: { alignItems: 'flex-end', paddingLeft: 12 },
+  hudValue: { fontFamily: typography.bodyBold, fontSize: 14, fontWeight: '800', marginTop: 2 },
   heroSignal: { flexDirection: 'row', alignItems: 'center', gap: 8, marginTop: 24 },
   signalDot: { width: 7, height: 7, borderRadius: 4 },
   signalText: { fontFamily: typography.bodyBold, fontSize: 9, letterSpacing: 1.2 },
@@ -514,6 +575,13 @@ const styles = StyleSheet.create({
   eyebrow: { fontFamily: typography.bodyBold, fontSize: 10, letterSpacing: 1.6, fontWeight: '700' },
   title: { fontFamily: typography.display, fontSize: 42, lineHeight: 47, fontWeight: '700', letterSpacing: 0.3, marginTop: 12, textShadowColor: 'rgba(0,0,0,0.42)', textShadowOffset: { width: 0, height: 2 }, textShadowRadius: 12 },
   heroBody: { fontFamily: typography.body, fontSize: 15, lineHeight: 22, maxWidth: 310, marginTop: 14 },
+  sceneAnchor: { flexDirection: 'row', alignItems: 'center', gap: 12, borderWidth: 1, borderRadius: 16, padding: 11, marginBottom: 13 },
+  sceneAnchorRing: { position: 'absolute', left: 9, width: 40, height: 40, borderWidth: 1, borderRadius: 20 },
+  sceneAnchorCore: { width: 38, height: 38, borderRadius: 19, alignItems: 'center', justifyContent: 'center' },
+  sceneAnchorCopy: { flex: 1, gap: 2 },
+  sceneAnchorEyebrow: { fontFamily: typography.bodyBold, fontSize: 8, letterSpacing: 1.1, fontWeight: '800' },
+  sceneAnchorTitle: { fontFamily: typography.bodyBold, fontSize: 14, fontWeight: '800' },
+  sceneAnchorBody: { fontFamily: typography.body, fontSize: 10, lineHeight: 14 },
   actionRow: { flexDirection: 'row', gap: 10 },
   primaryAction: { flex: 1.12 },
   secondaryAction: { flex: 0.88 },
@@ -534,14 +602,20 @@ const styles = StyleSheet.create({
   featuredCardAction: { fontFamily: typography.bodyBold, fontSize: 8, letterSpacing: 0.75, fontWeight: '800', marginTop: 2 },
   featuredCardEmpty: { width: '100%', height: '100%', alignItems: 'center', justifyContent: 'center', gap: 5 },
   featuredCardEmptyText: { fontFamily: typography.bodyBold, fontSize: 6, letterSpacing: 0.5, textAlign: 'center' },
-   tutorialLink: { alignSelf: 'flex-start', flexDirection: 'row', alignItems: 'center', gap: 8, borderWidth: 1, borderRadius: 10, paddingHorizontal: 11, paddingVertical: 8, marginTop: 12 },
-   tutorialLinkText: { fontSize: 9, fontWeight: '800', letterSpacing: 0.8 },
+  scenePortalGrid: { flexDirection: 'row', gap: 8, marginTop: 14 },
+  scenePortal: { width: '22.7%', minHeight: 84, borderWidth: 1, borderRadius: 13, paddingHorizontal: 4, paddingVertical: 9, alignItems: 'center', justifyContent: 'center', gap: 3 },
+  scenePortalIcon: { width: 31, height: 31, borderRadius: 10, borderWidth: 1, alignItems: 'center', justifyContent: 'center', marginBottom: 2 },
+  scenePortalLabel: { fontFamily: typography.bodyBold, fontSize: 8, letterSpacing: 0.8, fontWeight: '800' },
+  scenePortalHint: { fontFamily: typography.bodyBold, fontSize: 6.5, letterSpacing: 0.45, fontWeight: '700' },
   content: { padding: 20, paddingTop: 22, gap: 27 },
   connectionCard: { flexDirection: 'row', alignItems: 'center', borderWidth: 1, borderRadius: 16, padding: 14, shadowColor: '#000000', shadowOpacity: 0.32, shadowRadius: 18, shadowOffset: { width: 0, height: 10 }, elevation: 6 },
   connectionDot: { width: 8, height: 8, borderRadius: 4, marginRight: 11 },
   connectionCopy: { flex: 1 },
   connectionTitle: { fontSize: 10, fontWeight: '800', letterSpacing: 1.1 },
   connectionBody: { fontSize: 11, marginTop: 4 },
+  utilityRail: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
+  utilityPortal: { flexGrow: 1, flexBasis: '30%', minHeight: 38, borderWidth: 1, borderRadius: 11, paddingHorizontal: 9, paddingVertical: 8, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 6 },
+  utilityPortalText: { fontFamily: typography.bodyBold, fontSize: 8, letterSpacing: 0.45, fontWeight: '800', flexShrink: 1 },
   errorCard: { flexDirection: 'row', alignItems: 'center', gap: 10, borderWidth: 1, borderRadius: 14, padding: 13 },
   errorText: { flex: 1, fontSize: 12, lineHeight: 17 },
   retryText: { fontSize: 10, fontWeight: '800', letterSpacing: 0.6 },
