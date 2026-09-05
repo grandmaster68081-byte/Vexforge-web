@@ -1,3 +1,13 @@
+## 2026-09-05 — VE-MOB-3 HOME / AMBIENT PARTICLES — IMPLEMENTED_UNVERIFIED
+
+- Se añadió una capa ambiental ligera en la escena FOJA: ocho partículas deterministas con deriva lenta, escala y opacidad animadas; no usa arte genérico ni modifica contratos.
+- El color procede del token de acento de VEXFORGE y el campo completo queda estático cuando `reduced-motion` está activo.
+- Se conserva la jerarquía de la escena, los portales reales, los estados de carga/error y la CTA de arena; se añadió `testID="home-scene"` para evidencia de superficie.
+- `verify:mobile-auth`, `verify:motion`, `verify:telemetry`, `verify:ui-identity` y `git diff --check` pasan. El typecheck local queda sin evidencia porque `npm ci --ignore-scripts` fue rechazado por el firewall del paquete `npm-package-arg@11.0.3`; no se interpreta como regresión.
+- La unidad permanece `IMPLEMENTED_UNVERIFIED`; se requiere el workflow APK oficial y QA visual/táctil del operador. No se declara `PASS`, `Q4`, `TIER1_READY` ni `OPERATIONAL`.
+
+---
+
 ## 2026-09-05 — VE-MOB-3 HOME / APK BUILD 90 — IMPLEMENTED_UNVERIFIED
 
 - Commit de producto Android: `f2717af4279e478c5479c5656359a7fbe703866f`; el tag `vexforge-android-build-90` apunta exactamente a ese commit.

@@ -11,6 +11,7 @@ import Animated, {
   useAnimatedStyle,
   useReducedMotion,
   useSharedValue,
+  withDelay,
   withRepeat,
   withSequence,
   withTiming,
@@ -81,6 +82,68 @@ function timeAgo(iso: string) {
 
 function SectionLabel({ children, color }: { children: string; color: string }) {
   return <ForgeText variant="label" style={[styles.eyebrow, { color }]}>{children}</ForgeText>;
+}
+
+const SCENE_PARTICLES = [
+  { left: '13%', top: '29%', size: 3, delay: 0, duration: 5200 },
+  { left: '28%', top: '37%', size: 2, delay: 900, duration: 6100 },
+  { left: '78%', top: '27%', size: 3, delay: 1500, duration: 5700 },
+  { left: '88%', top: '42%', size: 2, delay: 250, duration: 6800 },
+  { left: '18%', top: '61%', size: 2, delay: 1200, duration: 6400 },
+  { left: '84%', top: '64%', size: 3, delay: 2100, duration: 5900 },
+  { left: '39%', top: '71%', size: 2, delay: 700, duration: 6300 },
+  { left: '67%', top: '74%', size: 2, delay: 1800, duration: 5500 },
+] as const;
+
+function SceneParticle({
+  left,
+  top,
+  size,
+  delay,
+  duration,
+  color,
+  reduceMotion,
+}: (typeof SCENE_PARTICLES)[number] & { color: string; reduceMotion: boolean | null }) {
+  const motion = useSharedValue(0);
+
+  useEffect(() => {
+    if (reduceMotion) {
+      motion.value = 0;
+      return;
+    }
+    motion.value = withDelay(
+      delay,
+      withRepeat(
+        withSequence(
+          withTiming(1, { duration }),
+          withTiming(0, { duration }),
+        ),
+        -1,
+        false,
+      ),
+    );
+    return () => cancelAnimation(motion);
+  }, [delay, duration, motion, reduceMotion]);
+
+  const animatedStyle = useAnimatedStyle(() => ({
+    opacity: interpolate(motion.value, [0, 0.5, 1], [0.08, 0.62, 0.08]),
+    transform: [
+      { translateY: interpolate(motion.value, [0, 1], [14, -18]) },
+      { translateX: interpolate(motion.value, [0, 1], [-4, 9]) },
+      { scale: interpolate(motion.value, [0, 0.5, 1], [0.7, 1.25, 0.7]) },
+    ],
+  }));
+
+  return (
+    <Animated.View
+      pointerEvents="none"
+      style={[
+        styles.sceneParticle,
+        { left, top, width: size, height: size, borderRadius: size / 2, backgroundColor: color, shadowColor: color },
+        animatedStyle,
+      ]}
+    />
+  );
 }
 
 function SceneOrbitPoint({
@@ -249,7 +312,7 @@ export default function ForgeScreen() {
         scrollEventThrottle={16}
         showsVerticalScrollIndicator={false}
       >
-        <Animated.View entering={reduceMotion ? undefined : FadeIn.duration(500)} style={[styles.scene, { borderBottomColor: colors.border }]}>
+        <Animated.View testID="home-scene" entering={reduceMotion ? undefined : FadeIn.duration(500)} style={[styles.scene, { borderBottomColor: colors.border, shadowColor: colors.shadow }]}>
           <Animated.View pointerEvents="none" style={[StyleSheet.absoluteFillObject, sceneParallaxStyle]}>
             <Image
               source={{ uri: CANONICAL_BACKGROUNDS.home }}
@@ -279,6 +342,11 @@ export default function ForgeScreen() {
             end={{ x: 1, y: 1 }}
             style={StyleSheet.absoluteFillObject}
           />
+          <View pointerEvents="none" style={StyleSheet.absoluteFillObject}>
+            {SCENE_PARTICLES.map((particle) => (
+              <SceneParticle key={`${particle.left}-${particle.top}`} {...particle} color={colors.accent} reduceMotion={reduceMotion} />
+            ))}
+          </View>
           <Animated.View pointerEvents="none" style={[styles.sceneGlow, { backgroundColor: colors.accent }, ambientGlowStyle]} />
           <View pointerEvents="none" style={[styles.sceneFrame, { borderColor: `${colors.accent}20` }]} />
 
@@ -569,10 +637,11 @@ export default function ForgeScreen() {
 
 const styles = StyleSheet.create({
   screen: { flex: 1 },
-  scene: { minHeight: 700, overflow: 'hidden', borderBottomWidth: 1, shadowColor: '#000000', shadowOpacity: 0.52, shadowRadius: 28, shadowOffset: { width: 0, height: 18 }, elevation: 10 },
+  scene: { minHeight: 700, overflow: 'hidden', borderBottomWidth: 1, shadowOpacity: 0.52, shadowRadius: 28, shadowOffset: { width: 0, height: 18 }, elevation: 10 },
   sceneImage: { opacity: 0.96 },
   sceneFactionImage: { opacity: 0.36 },
   sceneContent: { paddingHorizontal: 20, paddingBottom: 20 },
+  sceneParticle: { position: 'absolute', shadowOpacity: 0.78, shadowRadius: 8, shadowOffset: { width: 0, height: 0 }, elevation: 3 },
   sceneGlow: { position: 'absolute', width: 320, height: 320, borderRadius: 160, top: 250, right: -150 },
   sceneFrame: { position: 'absolute', left: 12, right: 12, top: 12, bottom: 12, borderWidth: 1, borderRadius: 24 },
   topBar: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },

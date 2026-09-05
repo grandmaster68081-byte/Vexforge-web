@@ -115,3 +115,10 @@ La Fase VISUAL no se declara cerrada sólo por compilar: debe alcanzar al menos 
 - El HUD de conexión ahora distingue `NEXUS ONLINE`, `SINCRONIZANDO` y `NEXUS OFFLINE`; un frente sin evento se muestra como `SIN FRENTE ACTIVO` en lugar de presentarse como actividad viva.
 - La composición conserva la acción primaria `ENTRAR A LA ARENA`, expone la entrada real `home-tutorial` hacia `/tutorial`, mantiene los portales existentes y conserva los estados explícitos de arte, error, retry y `reduced-motion`.
 - Estado: `IMPLEMENTED_UNVERIFIED`; falta el workflow APK oficial y la QA humana separada.
+
+## Addendum 2026-09-05 — AMBIENT PARTICLES
+
+- La escena FOJA incorpora ocho partículas ambientales deterministas como VFX ligero, usando el color de acento canónico y sin cargar nuevos assets.
+- Cada partícula tiene una deriva lenta y una variación de opacidad/escala; el movimiento queda desactivado cuando `reduced-motion` está activo.
+- Las partículas viven detrás del contenido interactivo, no modifican datos, navegación, Supabase, Auth, RLS, RPCs ni la lógica de combate.
+- Estado: `IMPLEMENTED_UNVERIFIED`; requiere el workflow APK oficial y revisión visual/táctil del operador para cualquier promoción.
