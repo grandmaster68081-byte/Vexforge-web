@@ -1,5 +1,5 @@
 # VEXFORGE — Protocolo Maestro Universal v2
-**Última actualización:** 2026-09-04 — base Android OTA publicada y validada | **Mantenido por:** Replit Agent
+**Última actualización:** 2026-09-04 — base Android OTA publicada y umbral visual Home/Forja calibrado | **Mantenido por:** Replit Agent
 **Documento clave en Supabase:** `vexforge_master_protocol_v2`
 
 ---
@@ -1929,9 +1929,9 @@ La configuración reconciliada de main demuestra estas brechas, que no deben ocu
 - El workflow actual ejecuta `assembleRelease`, publica un `.apk` y documenta que la plantilla usa debug keystore para mantenerlo instalable por sideload.
 - No se genera `.aab`.
 - `mobile/app.json` conserva el package estable `com.vexforge.android`, lo cual debe preservarse.
-- `mobile/app.json` declara `versionCode: 2`; el número de build del workflow no puede sustituirlo automáticamente sin una política de versionado monotónica y verificable.
-- `expo-updates` no está instalado ni configurado.
-- El plugin `withEmbeddedJsBundle` garantiza fallback standalone, pero no constituye un sistema OTA. Debe conservarse sólo si las pruebas demuestran que no interfiere con Expo Updates.
+- `mobile/app.json` usa `versionCode: 3`; el número de build del workflow no puede sustituirlo automáticamente sin una política de versionado monotónica y verificable.
+- `expo-updates` está instalado y configurado para `runtimeVersion: 1.0.0`, canal `production`, comprobación `ON_LOAD` y fallback embebido; cualquier cambio a ese contrato requiere una nueva validación nativa.
+- El plugin `withEmbeddedJsBundle` y el fallback standalone deben conservarse sólo si las pruebas demuestran que no interfieren con Expo Updates.
 - No existe todavía evidencia de clave de subida, Play App Signing, target API mínimo validado, bundletool, track interno ni rollback OTA.
 
 Por tanto, el APK publicado más reciente no es `PLAY_COMPATIBLE_CANDIDATE`; es `QA_APK_BASELINE`.
@@ -2119,3 +2119,92 @@ La fase Android-only permanece activa. La web congelada no se modifica para reso
 - Si el cambio es nativo, el flujo correcto es el workflow AAB firmado con `versionCode` monotónico; el APK asociado sólo sirve para QA/sideload. Nunca se publican APK parciales ni se simula una OTA si faltan manifiesto, hash, fallback, rollback o rechazo seguro de runtime incompatible.
 - La orden operativa de una sección compatible es `node mobile/scripts/dispatch-section-release.mjs --section-id ... --delivery-type OTA_UPDATE ...`; para impacto nativo se debe usar `NATIVE_PLAY_RELEASE`.
 - El flujo normal queda: commit en `main` → clasificación de sección → workflow correcto → digest y validaciones → publicación y registro en Supabase → URL del manifiesto/artefacto en el resumen del workflow.
+
+
+
+---
+# ENMIENDA PERMANENTE — UMBRAL DE CALIDAD VISUAL DEL HOME / FORJA
+
+**Fecha de incorporación:** 2026-09-04  
+**Estado:** OFICIAL — BLOQUEANTE PARA `VE-MOB-3-HOME-SCENE`  
+**Referencia:** `HOME_GAME_SCENE_QUALITY_V1`  
+**Precedencia:** esta enmienda concreta los criterios visuales de `VE-UI-TIER1-ANDROID-01`, V-T1, V-T2 y `VE-MOB-3-HOME-SCENE`. No cambia la autoridad funcional, no reabre la web congelada y no autoriza a copiar assets o propiedad intelectual de un referente externo.
+
+## 1. Motivo y lectura de la referencia
+
+El owner aportó una captura de un Home de videojuego como referencia de calidad visual. La captura debe evaluarse por la calidad de la escena que contiene, no por el marco de la fotografía, el espacio alrededor del teléfono ni por la orientación aparente de la captura. El estándar que debe conservarse en la APK es el siguiente:
+
+- se reconoce primero un **mundo de juego** y no un dashboard administrativo;
+- existe un foco protagonista —campeón, héroe, Nexus, carta o actividad viva— con una composición intencional;
+- el fondo tiene ambiente, escala y capas suficientes para dar sensación de lugar, no sólo un color o una imagen plana detrás de paneles;
+- navegación, recursos y acciones están integrados en una lectura de HUD coherente con el juego;
+- la paleta, la luz, los marcos, la iconografía y la tipografía pertenecen al mismo universo visual;
+- la pantalla comunica una actividad jugable y una próxima acción sin necesitar explicación externa;
+- la versión real añade vida a la composición mediante idle del protagonista, ambiente, transiciones, respuesta táctil y actualización honesta de estados. La captura es estática, pero el estándar no lo es.
+
+La referencia no exige reproducir el mismo género, ilustración, layout exacto o cantidad de elementos. Exige alcanzar una **densidad de intención visual semejante**: escena authored, foco, atmósfera, HUD, acción y movimiento trabajando como una sola experiencia.
+
+## 2. Corrección del plan
+
+El plan anterior tenía los conceptos necesarios —DNA visual, escena Home, identidad, profundidad, motion, estados y anti-dashboard—, pero no convertía la referencia en un gate suficientemente observable. Desde esta enmienda, `VE-MOB-3-HOME-SCENE` no se puede cerrar por:
+
+- cambiar colores, radios, sombras, fondos o tipografía sin cambiar la lectura de la escena;
+- montar tarjetas, botones o iconos genéricos sobre una imagen de fondo;
+- presentar una captura estática o un mockup sin demostrar el comportamiento en la APK;
+- declarar motion porque existe una transición de navegación, sin idle, ambiente y feedback de interacción;
+- usar datos ficticios, arte placeholder o una acción que no tenga contrato real;
+- extender el mismo tratamiento de Home a todas las pantallas sin una dirección propia por superficie.
+
+La nueva regla de ejecución es: **T0 de reconciliación → DNA visual Android → Home/Forja como vertical slice visual → evidencia en movimiento → sólo entonces expansión a Cartas, Mazo, Batalla y superficies secundarias**. El Home sigue siendo el primer juez de calidad del producto.
+
+## 3. Contrato visual obligatorio del Home
+
+Para entrar en `Q4`, el Home debe demostrar todos estos componentes, con datos y rutas reales cuando correspondan:
+
+| Dimensión | Mínimo exigible |
+|---|---|
+| Escena | fondo authored con profundidad perceptible, punto de entrada claro y composición que sobreviva a estados de carga, vacío y error |
+| Foco | protagonista u objeto dominante con silueta, escala, iluminación y contraste suficientes para atraer la mirada sin tapar la acción |
+| Atmósfera | relación coherente entre fondo, medio, foreground, color, luz y espacio; no una colección de paneles flotantes sin mundo |
+| HUD | recursos, navegación y estado del jugador agrupados con jerarquía consistente, iconografía legible y superficies que parezcan parte del juego |
+| Acción | una acción primaria reconocible en cinco segundos y acciones secundarias subordinadas; cada una debe llevar a una ruta existente |
+| Movimiento | idle o respiración del foco, al menos un loop ambiental sutil y transiciones de entrada/foco/salida; reduced-motion conserva feedback funcional sin animación excesiva |
+| Interacción | pressed, focus, selected, loading, retry y confirmación visibles; tocar no puede producir silencio visual |
+| Identidad | recursos visuales propios de VEXFORGE: tratamiento de cartas, marcos, iconos, lettering, color y lenguaje de escena con procedencia registrada |
+| Veracidad | progreso, recursos, actividad y CTA vienen de contratos autorizados; los estados vacíos y no disponibles no se disfrazan de contenido vivo |
+| Rendimiento | la escena conserva estabilidad, touch targets y lectura en los dispositivos definidos; no se compra espectacularidad con loader eterno, ANR, OOM o caída de frames no medida |
+
+La composición puede variar entre Home, Forja, Nexus o actividad destacada, pero no puede convertirse en un dashboard intercambiable. Debe existir una razón visual para que el jugador quiera permanecer en la escena y continuar.
+
+## 4. Rúbrica de aceptación `HOME_GAME_SCENE_QUALITY_V1`
+
+La revisión de `VE-MOB-3-HOME-SCENE` registra una puntuación de 0 a 5 para cada dimensión aplicable:
+
+1. escena y atmósfera;
+2. foco protagonista y lectura de profundidad;
+3. identidad VEXFORGE y coherencia de assets;
+4. jerarquía de HUD y acción primaria;
+5. movimiento, liveness y transición;
+6. feedback táctil y claridad de estados;
+7. legibilidad en el dispositivo real;
+8. cohesión y acabado de producción.
+
+El Home sólo alcanza `Q4` si obtiene `4` o más en cada dimensión aplicable y ninguna queda por debajo de `3`. Una imagen atractiva sin movimiento, una escena con movimiento pero sin acción real, o un HUD funcional sin identidad visual no pasan el gate. `Q5` añade evidencia de rendimiento, accesibilidad, reduced-motion, estabilidad, procedencia de assets y QA humana según las reglas generales.
+
+## 5. Evidencia mínima para cerrar el Home
+
+Cada intento de cierre debe conservar en la evidencia del release:
+
+- un vídeo de 10–15 segundos en la APK instalada mostrando entrada, estado normal, idle/ambiente y una interacción real con su transición;
+- capturas de la misma escena en el viewport Android pequeño y en el dispositivo de referencia, sin usar un mockup como sustituto del APK;
+- una toma del estado de carga y del estado vacío/error/retry cuando la superficie los soporte;
+- la rúbrica `HOME_GAME_SCENE_QUALITY_V1` con puntuación, observaciones y deuda explícita;
+- procedencia de los assets principales y relación entre cada dato mostrado y su contrato autoritativo;
+- evidencia de FPS/frame pacing, memoria, arranque y ausencia de ANR/OOM cuando se declare Q4 o superior;
+- verificación de que el Home puede regresar al flujo oficial y no es una pantalla de demostración aislada.
+
+Si falta movimiento, interacción, procedencia, ruta real o evidencia en APK, el estado correcto es `IMPLEMENTED_UNVERIFIED` y la unidad se reabre; no se promociona a `Q4`, `ANDROID_GAME_TIER1_CANDIDATE` ni `TIER1_READY`.
+
+## 6. Decisión normativa
+
+La referencia aportada sí representa el nivel visual que el plan debe perseguir: **una pantalla que se siente como un juego vivo, con escena, protagonista, atmósfera, HUD y acción integrada**. Esta enmienda convierte esa opinión visual en una obligación de diseño y validación para el Home. No garantiza el resultado por sí sola: el resultado sólo existe cuando la APK implementada supera la rúbrica, el recorrido real, el rendimiento y la evidencia exigida.
