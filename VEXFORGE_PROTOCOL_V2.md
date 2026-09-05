@@ -2233,3 +2233,4 @@ Si falta movimiento, interacción, procedencia, ruta real o evidencia en APK, el
 
 La referencia aportada sí representa el nivel visual que el plan debe perseguir: **una pantalla que se siente como un juego vivo, con escena, protagonista, atmósfera, HUD y acción integrada**. Esta enmienda convierte esa opinión visual en una obligación de diseño y validación para el Home. No garantiza el resultado por sí sola: el resultado sólo existe cuando la APK implementada supera la rúbrica, el recorrido real, el rendimiento y la evidencia exigida.
 
+
