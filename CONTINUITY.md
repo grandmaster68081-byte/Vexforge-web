@@ -1,3 +1,13 @@
+## 2026-09-05 — VE-9 ANDROID — APK RELEASE 84 PUBLISHED
+
+- El commit `32715935810de60e4991210331844257df8b0268` terminó con `success` en el workflow Android run `33938587293`.
+- Pasaron instalación pública de dependencias, typecheck, guard de telemetría, `expo prebuild`, Gradle release, verificación de `assets/index.android.bundle` y publicación del APK.
+- Release técnico: https://github.com/grandmaster68081-byte/Vexforge-web/releases/tag/vexforge-android-build-84
+- APK: `app-release.apk`, 95,300,600 bytes, SHA-256 `cb2a0819b5e80bd24c300f9b0afaf3645e79072eafcb58d2490e95124a73395d`.
+- El gate técnico queda cumplido para esta unidad; continúa `IMPLEMENTED_UNVERIFIED` por QA humana pendiente. No se declara `PASS`, `TIER1_READY` ni `OPERATIONAL`.
+
+---
+
 ## 2026-09-05 — VE-9 ANDROID — REDUCED MOTION IN SCREEN SHELL
 
 - `mobile/components/ScreenShell.tsx` ahora respeta `useReducedMotion`: detiene el pulso ambiental compartido y mantiene la atmósfera en un estado estático cuando el sistema solicita reducir movimiento.
