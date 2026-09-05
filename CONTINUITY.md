@@ -2,7 +2,7 @@
 
 - El Home Android añade un pulso de progreso dentro de la escena usando `player_progress` real: nivel, XP y avance del rito de entrada; no se crean datos ni autoridad local.
 - El HUD de conexión distingue online, sincronización y offline, y el frente sin evento deja de mostrarse como `EN VIVO`; esto conserva estados honestos durante carga, desconexión y ausencia de actividad.
-- Los portales existentes, la CTA de arena, el arte oficial, `reduced-motion` y los `testID` del Home se conservan sin nuevas rutas, dependencias nativas ni cambios en Supabase/Auth/RLS/RPC/economía.
+- Los portales existentes, la CTA de arena y la entrada real `home-tutorial` hacia `/tutorial`, junto con el arte oficial, `reduced-motion` y los `testID` del Home, se conservan sin dependencias nativas ni cambios en Supabase/Auth/RLS/RPC/economía.
 - El cambio es compatible con runtime Android `1.0.0`; por tocar `mobile/**`, requiere el workflow APK oficial y release correlativo. Se mantiene `IMPLEMENTED_UNVERIFIED` y no se declara `PASS`, `Q4`, `TIER1_READY` ni `OPERATIONAL` sin evidencia APK y QA humana.
 
 ---

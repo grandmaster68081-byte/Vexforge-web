@@ -96,5 +96,5 @@ La Fase VISUAL no se declara cerrada sólo por compilar: debe alcanzar al menos 
 
 - El Home Android incorpora en la escena el pulso real del Forjador: nivel, XP y avance del rito de entrada consumidos desde `player_progress`, sin inventar progreso ni cambiar autoridad.
 - El HUD de conexión ahora distingue `NEXUS ONLINE`, `SINCRONIZANDO` y `NEXUS OFFLINE`; un frente sin evento se muestra como `SIN FRENTE ACTIVO` en lugar de presentarse como actividad viva.
-- La composición conserva la acción primaria `ENTRAR A LA ARENA`, los portales de rutas existentes y los estados explícitos de arte, error, retry y `reduced-motion`.
+- La composición conserva la acción primaria `ENTRAR A LA ARENA`, expone la entrada real `home-tutorial` hacia `/tutorial`, mantiene los portales existentes y conserva los estados explícitos de arte, error, retry y `reduced-motion`.
 - Estado: `IMPLEMENTED_UNVERIFIED`; falta el workflow APK oficial y la QA humana separada.

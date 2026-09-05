@@ -401,6 +401,23 @@ export default function ForgeScreen() {
               </Text>
             </View>
 
+            <Pressable
+              accessibilityRole="button"
+              accessibilityLabel={tutorialComplete ? 'Revisar tutorial oficial' : 'Continuar tutorial oficial'}
+              testID="home-tutorial"
+              onPress={() => router.push('/tutorial')}
+              style={({ pressed }) => [styles.tutorialEntry, { borderColor: `${colors.accent}52`, backgroundColor: `${colors.ink}A8`, opacity: pressed ? 0.78 : 1 }]}
+            >
+              <View style={[styles.tutorialEntryIcon, { backgroundColor: `${colors.accent}18` }]}>
+                <Ionicons name={tutorialComplete ? 'checkmark-circle-outline' : 'compass-outline'} size={16} color={colors.accent} />
+              </View>
+              <View style={styles.tutorialEntryCopy}>
+                <Text style={[styles.tutorialEntryLabel, { color: colors.accent }]}>{tutorialComplete ? 'RITO COMPLETADO' : 'CONTINUAR RITO'}</Text>
+                <Text style={[styles.tutorialEntryMeta, { color: colors.mutedForeground }]}>{tutorialComplete ? 'Volver a consultar la guía oficial' : 'Abrir el tutorial de entrada'}</Text>
+              </View>
+              <Ionicons name="chevron-forward" size={15} color={colors.mutedForeground} />
+            </Pressable>
+
             <View style={styles.primaryAction}>
               <ForgeButton label="ENTRAR A LA ARENA" icon="arena" onPress={() => router.push('/battle')} testID="home-battle" />
             </View>
@@ -596,6 +613,11 @@ const styles = StyleSheet.create({
   sceneProgressTrack: { height: 4, borderRadius: 2, overflow: 'hidden', marginTop: 8 },
   sceneProgressFill: { height: '100%', borderRadius: 2 },
   sceneProgressMeta: { fontFamily: typography.body, fontSize: 8, marginTop: 6 },
+  tutorialEntry: { minHeight: 46, borderWidth: 1, borderRadius: 12, flexDirection: 'row', alignItems: 'center', paddingHorizontal: 9, paddingVertical: 7, gap: 9, marginTop: 8 },
+  tutorialEntryIcon: { width: 29, height: 29, borderRadius: 9, alignItems: 'center', justifyContent: 'center' },
+  tutorialEntryCopy: { flex: 1 },
+  tutorialEntryLabel: { fontFamily: typography.bodyBold, fontSize: 8, letterSpacing: 0.8, fontWeight: '800' },
+  tutorialEntryMeta: { fontFamily: typography.body, fontSize: 8, marginTop: 2 },
   primaryAction: { marginTop: 11 },
   sceneHint: { minHeight: 27, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8, marginTop: 8 },
   sceneHintText: { fontFamily: typography.bodyBold, fontSize: 7, letterSpacing: 1, fontWeight: '700' },
