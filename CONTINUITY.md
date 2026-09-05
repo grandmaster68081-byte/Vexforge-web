@@ -1,3 +1,13 @@
+## 2026-09-05 — ANDROID DELIVERY — APK RELEASES 82/83 PUBLISHED
+
+- El workflow `Build VEXFORGE Android APK` terminó en `success` para los dos commits: `e213768e30c5a489838368ccbb5a1b6c05e638cf` (run 33937274698) y `3ac37d65f1bc60cffd10885b68f017f6b5b48c44` (run 33937352689).
+- Se publicaron los artefactos completos `vexforge-android-build-82` y `vexforge-android-build-83`, ambos con `app-release.apk`, bundle Android embebido verificado y tamaño aproximado de 95 MB.
+- Release 82: https://github.com/grandmaster68081-byte/Vexforge-web/releases/tag/vexforge-android-build-82
+- Release 83: https://github.com/grandmaster68081-byte/Vexforge-web/releases/tag/vexforge-android-build-83
+- Esto confirma la entrega técnica de la base Android y del cambio de idempotencia PvP. No equivale a QA humana ni permite declarar `PASS`, `TIER1_READY` u `OPERATIONAL` sin esa evidencia separada.
+
+---
+
 ## 2026-09-04 — ANDROID PVP — IDEMPOTENCY SURVIVES RETRIES
 
 - `mobile/lib/supabase.ts` ya persiste la clave de idempotencia por pareja jugador/oponente antes de llamar a `vexforge_battle_resolve`; un timeout o refresh reutiliza la misma resolución en vez de crear otra partida.
