@@ -1631,3 +1631,26 @@
 - Estado correcto: `IMPLEMENTED_UNVERIFIED`. El typecheck y APK quedan
   pendientes del workflow oficial; la QA humana en dispositivo sigue
   pendiente y no se declara `PASS`, `OPERATIONAL` ni `TIER1_READY`.
+
+---
+## 2026-09-05 — UX/CX-ARCHIVE-FORGE-DELIVERY — IMPLEMENTED_UNVERIFIED
+
+- ARCHIVO: commit `3bc93d71c0c3340a523354a1b116be109e517e15`,
+  verificación `33992421805` correcta, APK workflow `33992421814` correcto,
+  release `vexforge-android-build-96`.
+- APK 96 validada por descarga: `95,317,572` bytes, SHA-256
+  `db9429ff7edcbf425d24f073f44452dd5bc5c232f3b22521bc59a4685e40ae56`,
+  `assets/index.android.bundle` de `3,197,544` bytes.
+- FORJA: commit `0903d27d3f1369cfc16034148885907cbd8fa09f`,
+  verificación `33992853967` correcta, APK workflow `33992854020` correcto,
+  release `vexforge-android-build-97`.
+- APK 97 validada por descarga: `95,320,248` bytes, SHA-256
+  `1ff47b42b434d15b3aae46d595c4b871518d2434b8d4144a97025939390bbc78`,
+  `assets/index.android.bundle` de `3,200,220` bytes.
+- El preflight de LEGADO pasa `verify-mobile-profile` 13/13 y confirma
+  identidad, rango, progresión, estadísticas, logros y accesos sociales ya
+  respaldados por datos oficiales. No se inventan títulos, historial o
+  presencia social adicional sin contratos canónicos expuestos.
+- Ambas unidades permanecen `IMPLEMENTED_UNVERIFIED`: la QA humana en
+  dispositivo sigue pendiente; no se declara `PASS`, `OPERATIONAL` ni
+  `TIER1_READY`.
