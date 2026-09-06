@@ -110,6 +110,7 @@ function ErrorState({
       <Text style={[styles.errorBody, { color: colors.mutedForeground }]}>{message}</Text>
       <Pressable
         accessibilityRole="button"
+        accessibilityLabel="Reintentar cargar el tutorial"
         testID="tutorial-retry"
         onPress={onRetry}
         style={[styles.secondaryButton, { borderColor: colors.primary }]}
@@ -145,6 +146,7 @@ function CompletedState({
       </Text>
       <Pressable
         accessibilityRole="button"
+        accessibilityLabel="Volver a la Forja"
         testID="tutorial-return-home"
         onPress={onReturn}
         style={[styles.primaryButton, { backgroundColor: colors.primary }]}
@@ -245,6 +247,7 @@ export default function TutorialScreen() {
         <Pressable
           accessibilityRole="button"
           accessibilityLabel="Omitir tutorial"
+          accessibilityState={{ disabled: busy }}
           testID="tutorial-skip"
           disabled={busy}
           onPress={() => void handleSkip()}
@@ -289,6 +292,8 @@ export default function TutorialScreen() {
 
       <Pressable
         accessibilityRole="button"
+        accessibilityLabel={isLastStep ? 'Completar tutorial' : isBattleStep && !arenaOpened ? 'Abrir arena' : step.actionLabel}
+        accessibilityState={{ disabled: busy }}
         testID="tutorial-primary"
         disabled={busy}
         onPress={handlePrimary}
