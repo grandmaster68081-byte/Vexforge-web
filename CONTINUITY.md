@@ -1,3 +1,13 @@
+## 2026-09-05 — VE-UXCX-7 / APK BUILD 103 — IMPLEMENTED_UNVERIFIED
+
+- Commit Android: `8c7d26e35659ddff3165729f2cd160e0f094a51d`.
+- Workflow oficial `Build VEXFORGE Android APK`, run `34000226516` / build `103`: `success`; pasaron typecheck móvil, telemetría, prebuild Expo, Gradle release, comprobación de `assets/index.android.bundle` y publicación.
+- Workflow `verify`, run `34000226548` / build `194`: `success`.
+- Release: https://github.com/grandmaster68081-byte/Vexforge-web/releases/tag/vexforge-android-build-103 — asset `app-release.apk`, 95,325,960 bytes, SHA-256 `e4b0eee2fa8fc5de2b1473339b3fc92107f64021cdc506843c54e28cf707f471`.
+- La APK queda publicada como artefacto técnico instalable. La unidad permanece `IMPLEMENTED_UNVERIFIED` porque la QA humana y la revisión visual Q4 siguen fuera de este alcance; no se declara `PASS`, `TIER1_READY` ni `OPERATIONAL`.
+
+---
+
 ## 2026-09-05 — VE-UXCX-7 SYSTEM STATES / ROUTE HEALTH — IMPLEMENTED_UNVERIFIED
 
 - Se inició la Iteración 7 sobre `main` sin reabrir FOJA, ARENA, ARCHIVO, FORJA ni LEGADO: los estados compartidos ahora usan el contrato de motion existente, loading incluye una lectura tipo skeleton y los reintentos haptic fallan de forma segura.
