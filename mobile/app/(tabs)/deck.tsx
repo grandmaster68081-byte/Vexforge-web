@@ -118,7 +118,7 @@ function DeckCard({
       testID={`deck-card-${card.code}`}
       accessibilityRole="button"
       accessibilityLabel={`${selected ? 'Quitar' : 'Añadir'} ${card.name} al mazo`}
-      accessibilityState={{ selected, disabled }}
+      accessibilityState={{ selected, disabled: disabled && !selected }}
       disabled={disabled && !selected}
       onPress={onPress}
       style={({ pressed }) => [

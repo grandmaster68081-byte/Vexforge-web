@@ -1,3 +1,13 @@
+## 2026-09-06 — VE-MOB-5-DECK / ACCESSIBILITY STATE — IN_PROGRESS
+
+- Preflight reconciliado contra el protocolo vivo de Supabase, `CONTINUITY.md`, `VE-MOB-0`, `VE-MOB-5-DECK` y el código real de `main`. La superficie sigue siendo exclusivamente Android y la web permanece congelada.
+- `DELIVERY_TYPE`: `OTA_UPDATE` · `SECTION_ID`: `VE-MOB-5-DECK-A11Y-DISABLED-STATE` · runtime `1.0.0` · app `1.0.0` · `versionCode` `3` · canal `production`.
+- Corrección acotada en `mobile/app/(tabs)/deck.tsx`: una carta seleccionada que alcanzó el límite de copias sigue siendo una acción válida para retirarla, por lo que TalkBack ya no la anuncia como deshabilitada; los límites, `validate_deck`, `save_deck`, datos, Auth, RLS, RPCs, economía y combate no cambian.
+- Guardas locales: `verify-mobile-deck` 13/13, `verify-mobile-auth` 13/13, telemetría Android con 5 eventos canónicos y `git diff --check` pasan. Typecheck móvil y la entrega oficial quedan delegados al workflow correlativo.
+- Estado: `IN_PROGRESS` hasta publicar el commit por GitHub REST y obtener la evidencia del workflow OTA/APK correspondiente. La QA táctil humana continúa pendiente; no se declara `PASS`, `OPERATIONAL` ni `TIER1_READY`.
+
+---
+
 ## 2026-09-06 — VE-MOB-7 AI FALLBACK / EMPTY PLAYER POOL — IMPLEMENTED_UNVERIFIED
 
 - El operador reportó que Arena quedaba en espera cuando no había forjadores reales. El preflight confirmó que el flujo Android sólo consultaba `get_leaderboard` y que `vexforge_battle_resolve` exige dos jugadores reales; los registros nominales de entrenamiento no tenían cartas ni ranking válido para resolver una partida PvP.
