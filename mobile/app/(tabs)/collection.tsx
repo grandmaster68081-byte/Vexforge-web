@@ -222,6 +222,7 @@ function CardSpotlight({
           <Pressable
             testID="cards-spotlight-inspect"
             accessibilityRole="button"
+            accessibilityLabel={`Inspeccionar ${card.name}`}
             onPress={onPress}
             style={[styles.spotlightInspect, { borderColor: accent }]}
           >
@@ -499,7 +500,7 @@ export default function CollectionScreen() {
                 <Feather name="target" size={32} color={colors.primary} />
                   <Text style={[styles.emptyTitle, { color: colors.foreground }]}>{scope === 'owned' && !search && rarity === 'all' && faction === 'all' ? 'Tu archivo está esperando' : 'Sin coincidencias'}</Text>
                   <Text style={[styles.emptyText, { color: colors.mutedForeground }]}>{scope === 'owned' && !search && rarity === 'all' && faction === 'all' ? 'Las cartas que poseas aparecerán aquí para ser estudiadas y forjadas.' : 'Ninguna carta coincide con tus filtros actuales.'}</Text>
-                  <Pressable testID="clear-filters" onPress={() => { setSearch(''); setRarity('all'); setFaction('all'); setScope('all'); }} style={[styles.clearButton, { borderColor: colors.primary }]}>
+                  <Pressable testID="clear-filters" accessibilityRole="button" accessibilityLabel="Limpiar filtros de colección" onPress={() => { setSearch(''); setRarity('all'); setFaction('all'); setScope('all'); }} style={[styles.clearButton, { borderColor: colors.primary }]}>
                   <Text style={[styles.clearButtonText, { color: colors.primary }]}>LIMPIAR FILTROS</Text>
                 </Pressable>
               </View>
@@ -533,7 +534,7 @@ function TextInputCompat({ value, onChangeText, colors }: { value: string; onCha
 function Chip({ label, active, onPress, colors, accent }: { label: string; active: boolean; onPress: () => void; colors: ReturnType<typeof useColors>; accent?: string }) {
   const color = accent ?? colors.primary;
   return (
-    <Pressable accessibilityRole="button" accessibilityState={{ selected: active }} onPress={onPress} style={[styles.chip, { borderColor: active ? color : colors.border, backgroundColor: active ? `${color}1C` : colors.panel }]}>
+    <Pressable accessibilityRole="button" accessibilityLabel={label} accessibilityState={{ selected: active }} onPress={onPress} style={[styles.chip, { borderColor: active ? color : colors.border, backgroundColor: active ? `${color}1C` : colors.panel }]}>
       <Text style={[styles.chipText, { color: active ? color : colors.mutedForeground }]}>{label}</Text>
     </Pressable>
   );
