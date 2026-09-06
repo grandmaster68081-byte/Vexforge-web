@@ -1,3 +1,12 @@
+## 2026-09-06 — ANDROID ACCESSIBILITY HARDENING / APK 114 — PUBLISHED / IMPLEMENTED_UNVERIFIED
+
+- Preflight reconciliado contra el protocolo vivo de Supabase, la continuidad, el inventario Android, el código de `main` y los gates activos. El alcance permaneció exclusivamente en Android; la web y los contratos autoritativos no se reabrieron.
+- El commit Android `98ef5f4252a0511274e643b2a5282612bb08a31c` completó el lote de accesibilidad de Rewards. La verificación web integral sobre ese commit terminó correctamente: build, identidad de datos, manifiesto, arte, motion, estados, contratos y guardas Android estáticas sin violaciones.
+- El workflow `verify`, run `208` / id `34059864552`, terminó `success`. El workflow oficial `Build VEXFORGE Android APK`, run `114` / id `34059864550`, terminó `success` con typecheck móvil, telemetría, prebuild Expo, Gradle, comprobación standalone y publicación.
+- Release: https://github.com/grandmaster68081-byte/Vexforge-web/releases/tag/vexforge-android-build-114 — `app-release.apk`, 95,323,044 bytes, SHA-256 `1f0ed3ed51e18cd7b13048f1eb77eadf1d514daafb47fbb657f4c76999d60770`.
+- No se modificaron web, Supabase, Auth, RLS, RPCs, economía, combate, Storage ni assets canónicos. La QA humana visual/táctil en dispositivo sigue pendiente; el estado correcto permanece `IMPLEMENTED_UNVERIFIED` y no se declara `PASS`, `OPERATIONAL` ni `TIER1_READY`.
+
+---
 ## 2026-09-06 — VE-MOB-2-AUTH + VE-MOB-3-HOME — IMPLEMENTED_UNVERIFIED
 
 - Se corrigió el port Android sin tocar la web: login, registro y Google ahora llaman `ensure_player_row` con la sesión autenticada; si la provisión falla ya no se descarta silenciosamente. Los registros que requieren confirmación de correo no inventan una sesión ni ejecutan RPC sin identidad.
