@@ -21,6 +21,7 @@ export function ForgeButton({ label, icon, onPress, secondary = false, disabled 
     <Pressable
       accessibilityRole="button"
       accessibilityLabel={label}
+      accessibilityState={{ disabled }}
       disabled={disabled}
       testID={testID}
       onPress={() => {

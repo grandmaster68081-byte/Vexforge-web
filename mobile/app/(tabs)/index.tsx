@@ -544,7 +544,7 @@ export default function ForgeScreen() {
             <View style={[styles.errorBar, { borderColor: colors.danger, backgroundColor: `${colors.danger}16` }]}>
               <Ionicons name="alert-circle-outline" size={18} color={colors.danger} />
               <Text style={[styles.errorText, { color: colors.foreground }]}>{homeError}</Text>
-              <Pressable accessibilityRole="button" testID="home-retry" onPress={() => void loadHome()}>
+              <Pressable accessibilityRole="button" accessibilityLabel="Reintentar sincronización del Home" testID="home-retry" onPress={() => void loadHome()}>
                 <Text style={[styles.retryText, { color: colors.accent }]}>REINTENTAR</Text>
               </Pressable>
             </View>
@@ -597,7 +597,7 @@ export default function ForgeScreen() {
                 <Text style={[styles.eventPercent, { color: colors.accent }]}>{event.progress ?? 0}%</Text>
               </View>
               <ProgressBar value={Math.max(0, Math.min(100, event.progress ?? 0))} color={colors.accent} />
-              <Pressable accessibilityRole="button" testID="home-event-arena" onPress={() => router.push('/battle')} style={({ pressed }) => [styles.eventLink, { borderColor: colors.accent, opacity: pressed ? 0.7 : 1 }]}>
+              <Pressable accessibilityRole="button" accessibilityLabel="Ver el frente activo en la arena" testID="home-event-arena" onPress={() => router.push('/battle')} style={({ pressed }) => [styles.eventLink, { borderColor: colors.accent, opacity: pressed ? 0.7 : 1 }]}>
                 <Text style={[styles.eventLinkText, { color: colors.accent }]}>VER EL FRENTE</Text>
                 <Ionicons name="arrow-forward" size={15} color={colors.accent} />
               </Pressable>
@@ -614,7 +614,7 @@ export default function ForgeScreen() {
                 <Text style={[styles.signalPanelTitle, { color: colors.foreground }]} numberOfLines={1}>{home.missions[0].name}</Text>
                 <Text style={[styles.signalPanelMeta, { color: colors.mutedForeground }]}>{home.missions[0].difficulty ?? 'Misión'} · +{home.missions[0].reward_vex_ingame ?? 0} VEX</Text>
               </View>
-              <Pressable accessibilityRole="button" testID="home-missions" onPress={() => router.push('/missions')} style={({ pressed }) => [styles.signalPanelAction, { borderColor: colors.success, opacity: pressed ? 0.72 : 1 }]}>
+              <Pressable accessibilityRole="button" accessibilityLabel="Abrir misiones disponibles" testID="home-missions" onPress={() => router.push('/missions')} style={({ pressed }) => [styles.signalPanelAction, { borderColor: colors.success, opacity: pressed ? 0.72 : 1 }]}>
                 <Ionicons name="arrow-forward" size={16} color={colors.success} />
               </Pressable>
             </View>
@@ -640,11 +640,11 @@ export default function ForgeScreen() {
           ) : null}
 
           <View style={styles.secondaryLinks}>
-            <Pressable accessibilityRole="button" testID="home-forge-store" onPress={() => router.push('/store')} style={({ pressed }) => [styles.secondaryLink, { borderColor: colors.border, opacity: pressed ? 0.7 : 1 }]}>
+            <Pressable accessibilityRole="button" accessibilityLabel="Abrir forja y recursos" testID="home-forge-store" onPress={() => router.push('/store')} style={({ pressed }) => [styles.secondaryLink, { borderColor: colors.border, opacity: pressed ? 0.7 : 1 }]}>
               <Ionicons name="shop" size={15} color={colors.accent} />
               <Text style={[styles.secondaryLinkText, { color: colors.foreground }]}>FORJA Y RECURSOS</Text>
             </Pressable>
-            <Pressable accessibilityRole="button" testID="home-economy" onPress={() => router.push('/economy')} style={({ pressed }) => [styles.secondaryLink, { borderColor: colors.border, opacity: pressed ? 0.7 : 1 }]}>
+            <Pressable accessibilityRole="button" accessibilityLabel="Abrir economía" testID="home-economy" onPress={() => router.push('/economy')} style={({ pressed }) => [styles.secondaryLink, { borderColor: colors.border, opacity: pressed ? 0.7 : 1 }]}>
               <Ionicons name="wallet-outline" size={15} color={colors.accent} />
               <Text style={[styles.secondaryLinkText, { color: colors.foreground }]}>ECONOMÍA</Text>
             </Pressable>

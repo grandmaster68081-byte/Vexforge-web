@@ -706,6 +706,7 @@ async function saveSession(session: Session | null) {
 
 export async function signIn(email: string, password: string): Promise<Session> {
   const session = requireSession(await authRequest('token?grant_type=password', { email: email.trim(), password }));
+  await ensurePlayerRow(email, session);
   await saveSession(session);
   return session;
 }
@@ -740,28 +741,27 @@ export async function signInWithGoogle(): Promise<Session> {
     expires_at: Math.floor(Date.now() / 1000) + Number(params.expires_in ?? 3600),
     user,
   };
+  if (user.email) await ensurePlayerRow(user.email, session);
   await saveSession(session);
   return session;
 }
 
 export async function signUp(email: string, password: string): Promise<Session | null> {
   const response = await authRequest('signup', { email: email.trim(), password });
-  if (response.user) {
-    try { await ensurePlayerRow(email); } catch { /* Auth remains valid; the database trigger retries provisioning. */ }
-  }
   if (response.access_token && response.refresh_token && response.user) {
     const session = requireSession(response);
+    await ensurePlayerRow(email, session);
     await saveSession(session);
     return session;
   }
   return null;
 }
 
-async function ensurePlayerRow(email: string) {
+async function ensurePlayerRow(email: string, session: Session) {
   await restRpc('ensure_player_row', {
     p_email: email.trim(),
     p_display_name: email.trim().split('@')[0],
-  });
+  }, session);
 }
 
 export async function signOut() { await saveSession(null); }
