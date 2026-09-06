@@ -1,3 +1,13 @@
+## 2026-09-06 — TIER-1-REPLIT-DIRECTIVE — ADDITIVE INTEGRATION
+
+- Preflight completado contra el protocolo vivo de Supabase, la continuidad, el inventario Android, el código de main y el plan histórico vexforge_forge_formation_engine_v1; este último permanece superseded y no se reabre.
+- El paquete aportado por el operador VEXFORGE_TCG_TIER1_2026_REPLIT_DIRECTIVE_ENHANCED_1788696578299.zip se integró como addendum oficial independiente: documento Supabase vexforge_tier1_replit_directive_enhanced_2026, versión 2026.09.06-additive, y carpeta textual docs/VE-TIER1-REPLIT-DIRECTIVE-2026/ en GitHub. SHA-256 del ZIP: c386172478f9e2c271c3967df68574e47974f74f60b8dc3f6e24434723ca2875.
+- El Protocolo Maestro conserva todo su contenido previo y ahora enlaza esta capa con precedencia explícita: protocolo, contratos Supabase y VE-MOB primero; addendum después; capturas y tablero solo como referencia de diseño.
+- Se incorporan sin reemplazo los Gates 0–10, las iteraciones 0–8, el scorecard, la matriz de regresión, el ciclo autónomo de reparación, el handoff humano y la regla de usar uno o dos subagentes en paralelo cuando existan pistas independientes.
+- Esta integración es documental y de planificación; no modifica mobile/**, web, Auth, RLS, RPCs, economía, combate, Storage ni assets, y no crea un nuevo APK. La QA humana y cualquier estado PASS, OPERATIONAL o TIER1_READY siguen requiriendo evidencia real.
+- Próximo criterio: seleccionar la siguiente unidad Android elegible desde el inventario, aplicar primero los gates funcionales y de integridad, y actualizar evidencia por unidad sin saltar la precedencia.
+
+---
 ## 2026-09-06 — OTA-METADATA-FILEMETADATA / APK 107 — PUBLISHED / IMPLEMENTED_UNVERIFIED
 
 - Preflight reconciliado mediante HTTPS contra la fila activa `vexforge_master_protocol_v2` en Supabase (`v2.14-automatic-ota-cycle`), `CONTINUITY.md`, el inventario Android, el plan histórico `vexforge_forge_formation_engine_v1` (superseded) y el código de `main`. El protocolo vivo y la copia de `main` coinciden byte a byte.
