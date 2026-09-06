@@ -1,3 +1,12 @@
+## 2026-09-06 — OTA-METADATA-FILEMETADATA / APK 107 — PUBLISHED / IMPLEMENTED_UNVERIFIED
+
+- Preflight reconciliado mediante HTTPS contra la fila activa `vexforge_master_protocol_v2` en Supabase (`v2.14-automatic-ota-cycle`), `CONTINUITY.md`, el inventario Android, el plan histórico `vexforge_forge_formation_engine_v1` (superseded) y el código de `main`. El protocolo vivo y la copia de `main` coinciden byte a byte.
+- El tercer intento controlado de OTA del arreglo Expo 54 terminó `success`: workflow `Publish VEXFORGE OTA Section Update`, run `33998619706` / run `4`, sobre `b9d4f414a70944db6f8176b9e0b08e5ff69f808a`. La exportación Android, publicación del manifiesto y registro Supabase pasaron.
+- El registro `VE-UXCX-6-LEGACY-RECORD` quedó `PUBLISHED` como `OTA_UPDATE`, runtime `1.0.0`, canal `production`; launch bundle SHA-256 `b0fb590545141ed59a83de94f56bb1722423f3991e9bf14a0c60b9f8476fd958`; manifest SHA-256 `80277a768037eb5bf01e1fa960ad8532acaf0a20c9171263471539193f660893`.
+- La rama `main` continuó con cambios Android posteriores y el commit actual previo a esta nota es `422cb2e77bb042bcb032a336bc5dddbed1994f4c`; el workflow Android run `34027136813` / build `107` y `verify` run `34027136811` terminaron `success`. Release: https://github.com/grandmaster68081-byte/Vexforge-web/releases/tag/vexforge-android-build-107 — `app-release.apk`, 95,321,952 bytes, SHA-256 `d3f81185bea250eb3a42b76c5eb170bb48bbd6af13b0cd0f51493b23b5daee9c`.
+- No se modificaron web, Supabase, Auth, RLS, RPCs, economía, combate ni assets en esta reconciliación. La QA humana visual/táctil sigue pendiente; el estado correcto permanece `IMPLEMENTED_UNVERIFIED`, sin declarar `PASS`, `OPERATIONAL` ni `TIER1_READY`.
+
+---
 ## 2026-09-06 — VE-MOB-7-BATTLE-VIS / ARENA STATES — IMPLEMENTED_UNVERIFIED
 
 - La Arena adopta el contrato `DomainState` para clasificación no disponible, formación vacía/error, lista de oponentes vacía y fallos de consulta; cada estado conserva retry, `testID`, accesibilidad, reduced-motion y feedback haptic seguro.
