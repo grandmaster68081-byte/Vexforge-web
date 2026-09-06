@@ -1086,7 +1086,14 @@ export async function loadPlayerProfile(session: Session): Promise<PlayerProfile
 }
 
 export async function loadMobileSettings(session: Session): Promise<MobileSettings | null> {
-  const rows = await rest('player_settings?select=player_id%2Ctelegram_enabled%2Cnotifications_enabled%2Clanguage%2Ctimezone%2Cui_mode&limit=1', session) as MobileSettings[];
+  const playerId = await currentPlayerId(session);
+  if (!playerId) return null;
+  const rows = await rest(
+    'player_settings?select=player_id%2Ctelegram_enabled%2Cnotifications_enabled%2Clanguage%2Ctimezone%2Cui_mode&player_id=eq.' +
+      encodeURIComponent(playerId) +
+      '&limit=1',
+    session,
+  ) as MobileSettings[];
   return rows[0] ?? null;
 }
 
