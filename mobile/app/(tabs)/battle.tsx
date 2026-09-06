@@ -245,7 +245,7 @@ function ResultPanel({
           <View style={styles.resultStat}><Text style={[styles.resultValue, { color: colors.accent }]}>{result.match_id ? result.match_id.slice(0, 8).toUpperCase() : '—'}</Text><Text style={[styles.resultLabel, { color: colors.mutedForeground }]}>MATCH</Text></View>
         </View>
       ) : null}
-      <Pressable testID="battle-close-result" accessibilityRole="button" onPress={onDismiss} style={[styles.closeResult, { borderColor: colors.border }]}>
+      <Pressable testID="battle-close-result" accessibilityRole="button" accessibilityLabel="Volver a la Arena" onPress={onDismiss} style={[styles.closeResult, { borderColor: colors.border }]}>
         <Text style={[styles.closeResultText, { color: colors.foreground }]}>VOLVER A LA ARENA</Text>
       </Pressable>
     </View>
@@ -284,11 +284,11 @@ export default function BattleScreen() {
   const emittedBattleRef = useRef<BattleResult | null>(null);
 
   const refreshFormation = async () => {
-    if (!session) return;
+    if (!session || !player?.id) return;
     setFormationLoading(true);
     setFormationError(null);
     try {
-      setFormationSlots(await loadPlayerDeck(session, session.user.id));
+      setFormationSlots(await loadPlayerDeck(session, player.id));
     } catch (error) {
       setFormationError(error instanceof Error ? error.message : 'No se pudo cargar tu formación real.');
     } finally {
@@ -318,7 +318,7 @@ export default function BattleScreen() {
       return;
     }
     void refreshFormation();
-  }, [session]);
+  }, [player?.id, session]);
 
   useEffect(() => {
     void refreshRank();
@@ -437,6 +437,7 @@ export default function BattleScreen() {
           <Pressable
             testID="battle-next-turn"
             accessibilityRole="button"
+            accessibilityLabel={turnIndex >= turns.length - 1 ? 'Ver resultado del combate' : 'Avanzar al siguiente turno'}
             onPress={() => {
               if (turnIndex >= turns.length - 1) setPhase('result');
               else setTurnIndex((current) => current + 1);
@@ -470,6 +471,8 @@ export default function BattleScreen() {
           <Pressable
             testID="battle-find-opponents"
             accessibilityRole="button"
+            accessibilityLabel={searching ? 'Buscando oponentes' : 'Buscar oponentes'}
+            accessibilityState={{ disabled: searching || battleLoading }}
             disabled={searching || battleLoading}
             onPress={handleFind}
             style={({ pressed }) => [styles.button, { backgroundColor: colors.primary, opacity: pressed ? 0.78 : searching ? 0.65 : 1 }]}
@@ -483,10 +486,10 @@ export default function BattleScreen() {
               <Text style={[styles.confirmTitle, { color: colors.foreground }]}>{selectedOpponent.display_name}</Text>
               <Text style={[styles.meta, { color: colors.mutedForeground }]}>{rankName(selectedOpponent.mmr)} · {selectedOpponent.mmr} MMR · diferencia {playerMmr === null ? '—' : `${selectedOpponent.mmr - playerMmr >= 0 ? '+' : ''}${selectedOpponent.mmr - playerMmr}`}</Text>
               <View style={styles.confirmActions}>
-                <Pressable accessibilityRole="button" disabled={battleLoading} onPress={() => setSelectedOpponent(null)} style={[styles.cancelButton, { borderColor: colors.border }]}>
+                <Pressable accessibilityRole="button" accessibilityLabel="Cancelar desafío" accessibilityState={{ disabled: battleLoading }} disabled={battleLoading} onPress={() => setSelectedOpponent(null)} style={[styles.cancelButton, { borderColor: colors.border }]}>
                   <Text style={[styles.cancelText, { color: colors.mutedForeground }]}>CANCELAR</Text>
                 </Pressable>
-                <Pressable testID="battle-confirm" accessibilityRole="button" disabled={battleLoading || formationSlots.length < 3} onPress={handleStartBattle} style={[styles.confirmButton, { backgroundColor: colors.accent, opacity: battleLoading || formationSlots.length < 3 ? 0.7 : 1 }]}>
+                <Pressable testID="battle-confirm" accessibilityRole="button" accessibilityLabel="Iniciar combate oficial" accessibilityState={{ disabled: battleLoading || formationSlots.length < 3 }} disabled={battleLoading || formationSlots.length < 3} onPress={handleStartBattle} style={[styles.confirmButton, { backgroundColor: colors.accent, opacity: battleLoading || formationSlots.length < 3 ? 0.7 : 1 }]}>
                   {battleLoading ? <ActivityIndicator color={colors.accentForeground} /> : <Feather name="crosshair" size={16} color={colors.accentForeground} />}
                   <Text style={[styles.confirmText, { color: colors.accentForeground }]}>{battleLoading ? 'RESOLVIENDO' : 'INICIAR COMBATE'}</Text>
                 </Pressable>
