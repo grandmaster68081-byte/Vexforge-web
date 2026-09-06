@@ -36,7 +36,7 @@ function RootLayoutNav() {
   const reduceMotion = useReducedMotion();
 
   return (
-    <Stack screenOptions={{ headerBackTitle: 'Back', animation: reduceMotion ? 'none' : 'fade' }}>
+    <Stack screenOptions={{ headerBackTitle: 'Volver', animation: reduceMotion ? 'none' : 'fade' }}>
       <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
       <Stack.Screen name="auth" options={{ headerShown: false, gestureEnabled: false }} />
       <Stack.Screen name="tutorial" options={{ headerShown: false }} />

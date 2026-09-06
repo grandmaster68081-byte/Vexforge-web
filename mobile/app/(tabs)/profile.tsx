@@ -23,6 +23,7 @@ import {
   type PlayerRank,
 } from '@/lib/supabase';
 import { KeyboardAwareScrollViewCompat } from '@/components/KeyboardAwareScrollViewCompat';
+import { MOTION } from '@/constants/experience';
 
 type Colors = ReturnType<typeof useColors>;
 type RankTone = 'primary' | 'accent' | 'success' | 'mutedForeground' | 'rarityRare' | 'rarityEpic' | 'rarityLegendary';
@@ -95,7 +96,7 @@ function QuickAction({ icon, label, onPress, colors, testID }: { icon: keyof typ
 
 function AchievementCard({ achievement, colors, index, reduceMotion }: { achievement: PlayerAchievement; colors: Colors; index: number; reduceMotion: boolean | null }) {
   return (
-    <Animated.View entering={reduceMotion ? undefined : FadeInDown.delay(index * 45).duration(350)} style={[styles.achievementCard, { backgroundColor: colors.panel, borderColor: colors.border }]}>
+    <Animated.View entering={reduceMotion ? undefined : FadeInDown.delay(index * 45).duration(MOTION.reveal)} style={[styles.achievementCard, { backgroundColor: colors.panel, borderColor: colors.border }]}>
       <View style={[styles.achievementIcon, { backgroundColor: `${colors.accent}1A`, borderColor: `${colors.accent}55` }]}>
         <Ionicons name="ribbon-outline" size={21} color={colors.accent} />
       </View>
@@ -272,7 +273,7 @@ export default function ProfileScreen() {
           </View>
         ) : null}
 
-        <Animated.View entering={reduceMotion ? undefined : FadeInDown.delay(80).duration(400)} style={[styles.identityCard, { backgroundColor: colors.panelStrong, borderColor: colors.border }]}>
+        <Animated.View entering={reduceMotion ? undefined : FadeInDown.delay(80).duration(MOTION.reveal)} style={[styles.identityCard, { backgroundColor: colors.panelStrong, borderColor: colors.border }]}>
           <View style={[styles.avatar, { backgroundColor: colors.accent }]}>
             <Text style={[styles.avatarText, { color: colors.ink }]}>{initials(displayName)}</Text>
           </View>
@@ -289,7 +290,7 @@ export default function ProfileScreen() {
 
         {detailsLoading && !rank ? <LoadingBlock colors={colors} /> : null}
 
-        <Animated.View entering={reduceMotion ? undefined : FadeInDown.delay(140).duration(400)} style={[styles.rankCard, { backgroundColor: colors.card, borderColor: `${rankColor}66` }]}>
+        <Animated.View entering={reduceMotion ? undefined : FadeInDown.delay(140).duration(MOTION.reveal)} style={[styles.rankCard, { backgroundColor: colors.card, borderColor: `${rankColor}66` }]}>
           <View style={[styles.rankIcon, { backgroundColor: `${rankColor}1A`, borderColor: `${rankColor}55` }]}>
             <Ionicons name={rankInfo.icon} size={27} color={rankColor} />
           </View>
@@ -304,7 +305,7 @@ export default function ProfileScreen() {
           </View>
         </Animated.View>
 
-        <Animated.View testID="profile-legacy-record" entering={reduceMotion ? undefined : FadeInDown.delay(200).duration(400)} style={[styles.legacyCard, { backgroundColor: colors.panelStrong, borderColor: `${colors.rarityEpic}55` }]}>
+        <Animated.View testID="profile-legacy-record" entering={reduceMotion ? undefined : FadeInDown.delay(200).duration(MOTION.reveal)} style={[styles.legacyCard, { backgroundColor: colors.panelStrong, borderColor: `${colors.rarityEpic}55` }]}>
           <View style={styles.legacyCardHeader}>
             <View style={[styles.legacyMark, { backgroundColor: `${colors.rarityEpic}18`, borderColor: `${colors.rarityEpic}55` }]}>
               <Ionicons name="award" size={21} color={colors.rarityEpic} />

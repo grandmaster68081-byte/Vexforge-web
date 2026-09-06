@@ -1,3 +1,13 @@
+## 2026-09-05 — VE-UXCX-7 SYSTEM STATES / ROUTE HEALTH — IMPLEMENTED_UNVERIFIED
+
+- Se inició la Iteración 7 sobre `main` sin reabrir FOJA, ARENA, ARCHIVO, FORJA ni LEGADO: los estados compartidos ahora usan el contrato de motion existente, loading incluye una lectura tipo skeleton y los reintentos haptic fallan de forma segura.
+- La ruta inexistente dejó de mostrar el fallback genérico en inglés y ahora vuelve al Nexus con shell visual, lenguaje de Forja, estado de error explícito y `testID` para evidencia.
+- `ScreenShell`, `DomainState`, Perfil y la navegación raíz consumen tokens compartidos o copy canónico; no se modifican web, Supabase, Auth, RLS, RPCs, economía, combate ni datos autoritativos.
+- Verificaciones locales: `verify:telemetry`, `verify:motion`, `verify:ui-identity`, `verify:mobile-auth` y la comprobación de whitespace pasan. El typecheck móvil queda delegado al workflow oficial porque esta copia HTTPS no tiene dependencias instaladas localmente.
+- Al tocar `mobile/**`, esta unidad requiere el workflow APK oficial y su release correlativo. Permanece `IMPLEMENTED_UNVERIFIED`; no se declara `PASS`, `TIER1_READY` ni `OPERATIONAL` sin evidencia APK y QA humana separada.
+
+---
+
 ## 2026-09-05 — VE-MOB-3 HOME / APK BUILD 92 — IMPLEMENTED_UNVERIFIED
 
 - Commit Android: `bb1d0842b971e76bc62fa74a69a37113d21073a5`.

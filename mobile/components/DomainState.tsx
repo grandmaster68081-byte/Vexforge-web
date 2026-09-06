@@ -1,8 +1,9 @@
 import * as Haptics from 'expo-haptics';
 import Animated, { FadeIn, useReducedMotion } from 'react-native-reanimated';
-import { ActivityIndicator, Pressable, StyleSheet, Text } from 'react-native';
+import { ActivityIndicator, Pressable, StyleSheet, Text, View } from 'react-native';
 import { useColors } from '@/hooks/useColors';
 import { ForgeIconName, VexIcon } from '@/components/ForgeIcon';
+import { MOTION } from '@/constants/experience';
 
 type DomainStateProps = {
   kind: 'loading' | 'empty' | 'error';
@@ -22,20 +23,30 @@ export function DomainState({ kind, title, message, icon, actionLabel, onAction,
 
   return (
     <Animated.View
-      entering={reduceMotion ? undefined : FadeIn.duration(260)}
+      entering={reduceMotion ? undefined : FadeIn.duration(MOTION.micro)}
       testID={testID}
       accessibilityLiveRegion={kind === 'error' ? 'assertive' : 'polite'}
       style={[styles.container, { backgroundColor: `${colors.panel}D9`, borderColor: `${accent}66` }]}
     >
-      {kind === 'loading' ? <ActivityIndicator color={accent} /> : <VexIcon name={resolvedIcon} size={34} color={accent} />}
+      {kind === 'loading' ? (
+        <>
+          <ActivityIndicator color={accent} />
+          <View accessibilityLabel="Cargando contenido" style={styles.skeleton} pointerEvents="none">
+            <View style={[styles.skeletonLine, styles.skeletonLineLong, { backgroundColor: `${accent}2E` }]} />
+            <View style={[styles.skeletonLine, { backgroundColor: `${accent}1F` }]} />
+            <View style={[styles.skeletonLine, styles.skeletonLineShort, { backgroundColor: `${accent}1F` }]} />
+          </View>
+        </>
+      ) : <VexIcon name={resolvedIcon} size={34} color={accent} />}
       <Text style={[styles.title, { color: colors.foreground }]}>{title}</Text>
       <Text style={[styles.message, { color: colors.mutedForeground }]}>{message}</Text>
       {actionLabel && onAction ? (
         <Pressable
           accessibilityRole="button"
           accessibilityLabel={actionLabel}
+          testID={testID ? `${testID}-action` : undefined}
           onPress={() => {
-            void Haptics.selectionAsync();
+            void Haptics.selectionAsync().catch(() => undefined);
             onAction();
           }}
           style={[styles.action, { borderColor: accent }]}
@@ -57,6 +68,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 18,
     paddingVertical: 22,
   },
+  skeleton: { width: '78%', gap: 6, marginTop: 2, marginBottom: 2 },
+  skeletonLine: { height: 7, width: '100%', borderRadius: 4 },
+  skeletonLineLong: { width: '88%' },
+  skeletonLineShort: { width: '62%' },
   title: { fontSize: 15, fontWeight: '800', letterSpacing: 0.4, textAlign: 'center' },
   message: { fontSize: 12, lineHeight: 18, maxWidth: 310, textAlign: 'center' },
   action: { borderWidth: 1, borderRadius: 10, marginTop: 3, paddingHorizontal: 12, paddingVertical: 9 },

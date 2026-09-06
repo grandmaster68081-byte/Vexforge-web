@@ -13,6 +13,7 @@ import { Image, Platform, StyleSheet, Text, View, type ViewProps } from 'react-n
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useColors } from '@/hooks/useColors';
 import { CANONICAL_BACKGROUNDS, OFFICIAL_ASSETS, type VisualSurface } from '@/constants/visual';
+import { MOTION } from '@/constants/experience';
 
 export function ScreenShell({ surface = 'home', sceneMode = 'shell', children, style, ...props }: ViewProps & { surface?: VisualSurface; sceneMode?: 'shell' | 'hero' }) {
   const colors = useColors();
@@ -49,8 +50,8 @@ export function ScreenShell({ surface = 'home', sceneMode = 'shell', children, s
     }
     pulse.value = withRepeat(
       withSequence(
-        withTiming(1, { duration: 2800 }),
-        withTiming(0, { duration: 2800 }),
+        withTiming(1, { duration: MOTION.ambient }),
+        withTiming(0, { duration: MOTION.ambient }),
       ),
       -1,
       false,
