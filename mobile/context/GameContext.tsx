@@ -25,7 +25,7 @@ type GameContextValue = {
     opponents: Opponent[];
     battleLoading: boolean;
     battleResult: BattleResult | null;
-    findOpponents: () => Promise<void>;
+    findOpponents: () => Promise<Opponent[] | null>;
     startBattle: (opponentId: string) => Promise<void>;
     clearBattleResult: () => void;
 };
@@ -90,7 +90,17 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
     const signUp = async (email: string, password: string) => { setAuthError(null); setAuthLoading(true); try { const next = await signUpRemote(email, password); if (next) setSession(next); return Boolean(next); } catch (error) { setAuthError(error instanceof Error ? error.message : 'No se pudo crear la cuenta'); return false; } finally { setAuthLoading(false); } };
     const signInWithGoogle = async () => { setAuthError(null); setAuthLoading(true); try { const next = await signInWithGoogleRemote(); setSession(next); } catch (error) { setAuthError(error instanceof Error ? error.message : 'No se pudo iniciar sesión con Google'); } finally { setAuthLoading(false); } };
     const signOut = async () => { await signOutRemote(); setSession(null); setPlayer(null); setProgress(null); setWallet(null); setStats(null); setCollection([]); setOpponents([]); };
-    const find = async () => { if (!session || !player) return; try { setOpponents(await findOpponents(session, player.id)); } catch (error) { setAuthError(error instanceof Error ? error.message : 'No se pudieron cargar oponentes'); } };
+    const find = async (): Promise<Opponent[] | null> => {
+      if (!session || !player) return null;
+      try {
+        const nextOpponents = await findOpponents(session, player.id);
+        setOpponents(nextOpponents);
+        return nextOpponents;
+      } catch (error) {
+        setAuthError(error instanceof Error ? error.message : 'No se pudieron cargar oponentes');
+        return null;
+      }
+    };
     const battle = async (opponentId: string) => { if (!session || !player) return; setBattleLoading(true); setBattleResult(null); try { setBattleResult(await startBattleRemote(session, player.id, opponentId)); await refresh(); } catch (error) { setAuthError(error instanceof Error ? error.message : 'No se pudo iniciar el combate'); } finally { setBattleLoading(false); } };
 
     const value = useMemo(() => ({ session, player, progress, wallet, stats, cardsTotal, featuredCards, collection, collectionLoading, syncState, syncError, authLoading, authError, signIn, signInWithGoogle, signUp, signOut, refresh, opponents, battleLoading, battleResult, findOpponents: find, startBattle: battle, clearBattleResult: () => setBattleResult(null) }), [session, player, progress, wallet, stats, cardsTotal, featuredCards, collection, collectionLoading, syncState, syncError, authLoading, authError, opponents, battleLoading, battleResult, signInWithGoogle]);

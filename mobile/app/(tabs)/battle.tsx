@@ -19,6 +19,7 @@ import { DomainHeader } from '@/components/DomainHeader';
 import { DomainState } from '@/components/DomainState';
 import { loadPlayerDeck } from '@/lib/supabase';
 import { loadPlayerRank, type BattleResult, type BattleTurn, type DeckSlot, type Opponent, type PlayerRank } from '@/lib/supabase';
+import { simulateQuickAIBattle } from '@/lib/aiBattle';
 import { ForgeFormationPreview } from '@/components/ForgeFormationPreview';
 
 type Phase = 'lobby' | 'confirm' | 'replay' | 'result';
@@ -44,6 +45,7 @@ function factionColor(faction: string | undefined, colors: ReturnType<typeof use
 
 function resultTitle(result: BattleResult) {
   if (!result.ok) return 'Resolución rechazada';
+  if (result.engine === 'client_ai_v1') return result.you_won ? 'Victoria contra la IA' : 'Derrota contra la IA';
   return result.you_won ? 'Victoria confirmada' : 'Derrota registrada';
 }
 
@@ -229,6 +231,7 @@ function ResultPanel({
   onDismiss: () => void;
 }) {
   const won = Boolean(result.ok && result.you_won);
+  const isTraining = result.engine === 'client_ai_v1';
   return (
     <View testID="battle-result" style={[styles.result, { backgroundColor: won ? `${colors.success}10` : `${colors.danger}0E`, borderColor: won ? colors.success : colors.danger }]}>
       <View style={[styles.resultSeal, { borderColor: won ? colors.success : colors.danger }]}>
@@ -241,8 +244,8 @@ function ResultPanel({
       {result.ok ? (
         <View style={styles.resultStats}>
           <View style={styles.resultStat}><Text style={[styles.resultValue, { color: colors.foreground }]}>{result.total_turns ?? result.turns?.length ?? 0}</Text><Text style={[styles.resultLabel, { color: colors.mutedForeground }]}>TURNOS</Text></View>
-          <View style={styles.resultStat}><Text style={[styles.resultValue, { color: result.elo_change && result.elo_change > 0 ? colors.success : colors.danger }]}>{result.elo_change && result.elo_change > 0 ? '+' : ''}{result.elo_change ?? 0}</Text><Text style={[styles.resultLabel, { color: colors.mutedForeground }]}>MMR</Text></View>
-          <View style={styles.resultStat}><Text style={[styles.resultValue, { color: colors.accent }]}>{result.match_id ? result.match_id.slice(0, 8).toUpperCase() : '—'}</Text><Text style={[styles.resultLabel, { color: colors.mutedForeground }]}>MATCH</Text></View>
+           <View style={styles.resultStat}><Text style={[styles.resultValue, { color: isTraining ? colors.mutedForeground : result.elo_change && result.elo_change > 0 ? colors.success : colors.danger }]}>{isTraining ? '—' : `${result.elo_change && result.elo_change > 0 ? '+' : ''}${result.elo_change ?? 0}`}</Text><Text style={[styles.resultLabel, { color: colors.mutedForeground }]}>MMR</Text></View>
+           <View style={styles.resultStat}><Text style={[styles.resultValue, { color: colors.accent }]}>{isTraining ? 'IA' : result.match_id ? result.match_id.slice(0, 8).toUpperCase() : '—'}</Text><Text style={[styles.resultLabel, { color: colors.mutedForeground }]}>{isTraining ? 'MODO' : 'MATCH'}</Text></View>
         </View>
       ) : null}
       <Pressable testID="battle-close-result" accessibilityRole="button" accessibilityLabel="Volver a la Arena" onPress={onDismiss} style={[styles.closeResult, { borderColor: colors.border }]}>
@@ -279,7 +282,9 @@ export default function BattleScreen() {
   const [rank, setRank] = useState<PlayerRank | null>(null);
   const [rankLoading, setRankLoading] = useState(false);
   const [rankError, setRankError] = useState<string | null>(null);
-  const turns = battleResult?.turns ?? [];
+  const [aiBattleResult, setAIBattleResult] = useState<BattleResult | null>(null);
+  const activeBattleResult = battleResult ?? aiBattleResult;
+  const turns = activeBattleResult?.turns ?? [];
   const currentTurn = turns[turnIndex] ?? null;
   const emittedBattleRef = useRef<BattleResult | null>(null);
 
@@ -391,11 +396,28 @@ export default function BattleScreen() {
     );
   }
 
+  const handleStartAIBattle = () => {
+    if (formationSlots.length < 3) {
+      setLocalError('Necesitas una formación de al menos tres cartas para entrenar contra la IA.');
+      return;
+    }
+    clearBattleResult();
+    setSelectedOpponent(null);
+    setLocalError(null);
+    const result = simulateQuickAIBattle(formationSlots);
+    setAIBattleResult(result);
+    setTurnIndex(0);
+    setPhase(result.turns?.length ? 'replay' : 'result');
+  };
+
   const handleFind = async () => {
     setSearching(true);
     setLocalError(null);
     try {
-      await findOpponents();
+      const found = await findOpponents();
+      if (found && found.length === 0) {
+        handleStartAIBattle();
+      }
     } finally {
       setSearching(false);
     }
@@ -405,11 +427,13 @@ export default function BattleScreen() {
     if (!selectedOpponent) return;
     setPhase('lobby');
     setLocalError(null);
+    setAIBattleResult(null);
     await startBattle(selectedOpponent.player_id);
   };
 
   const handleDismiss = () => {
     clearBattleResult();
+    setAIBattleResult(null);
     setSelectedOpponent(null);
     setTurnIndex(0);
     setPhase('lobby');
@@ -427,11 +451,11 @@ export default function BattleScreen() {
       <DomainHeader domain="arena" />
       <Text style={[styles.copy, { color: colors.mutedForeground }]}>La Arena es el frente competitivo del Nexus. Tu rango y cada resolución llegan del servidor; este dispositivo solo presenta la evidencia de la partida.</Text>
 
-      {phase === 'replay' && currentTurn && battleResult ? (
+      {phase === 'replay' && currentTurn && activeBattleResult ? (
         <View testID="battle-replay">
           <View style={[styles.liveBanner, { borderColor: `${colors.primary}66`, backgroundColor: `${colors.primary}0D` }]}>
             <View style={[styles.liveDot, { backgroundColor: colors.success }]} />
-            <Text style={[styles.liveText, { color: colors.success }]}>RESOLUCIÓN RECIBIDA · {battleResult.engine ?? 'MOTOR OFICIAL'}</Text>
+           <Text style={[styles.liveText, { color: colors.success }]}>{activeBattleResult.engine === 'client_ai_v1' ? 'ENTRENAMIENTO VS IA · SIN MMR' : `RESOLUCIÓN RECIBIDA · ${activeBattleResult.engine ?? 'MOTOR OFICIAL'}`}</Text>
           </View>
           <TurnView turn={currentTurn} index={turnIndex} total={turns.length} colors={colors} />
           <Pressable
@@ -448,8 +472,8 @@ export default function BattleScreen() {
             <Feather name={turnIndex >= turns.length - 1 ? 'award' : 'arrow-right'} size={16} color={colors.primaryForeground} />
           </Pressable>
         </View>
-      ) : phase === 'result' && battleResult ? (
-        <ResultPanel result={battleResult} colors={colors} onDismiss={handleDismiss} />
+      ) : phase === 'result' && activeBattleResult ? (
+        <ResultPanel result={activeBattleResult} colors={colors} onDismiss={handleDismiss} />
       ) : (
         <>
           {rankError ? <DomainState kind="error" title="Rango no disponible" message={rankError} actionLabel="REINTENTAR RANGO" onAction={() => { void refreshRank(); }} testID="battle-rank-error" /> : <ArenaRankCard rank={rank} stats={stats} loading={rankLoading} colors={colors} />}
@@ -471,15 +495,29 @@ export default function BattleScreen() {
           <Pressable
             testID="battle-find-opponents"
             accessibilityRole="button"
-            accessibilityLabel={searching ? 'Buscando oponentes' : 'Buscar oponentes'}
+             accessibilityLabel={searching ? 'Buscando oponentes reales' : 'Buscar oponentes reales'}
             accessibilityState={{ disabled: searching || battleLoading }}
             disabled={searching || battleLoading}
             onPress={handleFind}
             style={({ pressed }) => [styles.button, { backgroundColor: colors.primary, opacity: pressed ? 0.78 : searching ? 0.65 : 1 }]}
           >
             {searching ? <ActivityIndicator color={colors.primaryForeground} /> : <Feather name="search" size={17} color={colors.primaryForeground} />}
-            <Text style={[styles.buttonText, { color: colors.primaryForeground }]}>{searching ? 'BUSCANDO OPONENTES' : 'BUSCAR OPONENTES'}</Text>
+             <Text style={[styles.buttonText, { color: colors.primaryForeground }]}>{searching ? 'BUSCANDO OPONENTES' : 'BUSCAR OPONENTES'}</Text>
           </Pressable>
+           {sortedOpponents.length === 0 && !searching ? (
+             <Pressable
+               testID="battle-ai-fallback"
+               accessibilityRole="button"
+               accessibilityLabel="Iniciar batalla rápida contra la IA"
+               accessibilityState={{ disabled: formationLoading || formationSlots.length < 3 }}
+               disabled={formationLoading || formationSlots.length < 3}
+               onPress={handleStartAIBattle}
+               style={({ pressed }) => [styles.trainingButton, { borderColor: colors.accent, opacity: pressed ? 0.75 : formationLoading || formationSlots.length < 3 ? 0.45 : 1 }]}
+             >
+               <Feather name="spark" size={17} color={colors.accent} />
+               <Text style={[styles.buttonText, { color: colors.accent }]}>BATALLA RÁPIDA VS IA</Text>
+             </Pressable>
+           ) : null}
           {selectedOpponent ? (
             <View testID="battle-confirmation" style={[styles.confirmation, { backgroundColor: colors.panelStrong, borderColor: colors.accent }]}>
               <Text style={[styles.sectionLabel, { color: colors.accent }]}>CONFIRMAR DESAFÍO</Text>
@@ -501,7 +539,7 @@ export default function BattleScreen() {
             <DomainState
               kind="empty"
               title="La arena está en espera"
-              message="Busca oponentes para cargar la clasificación viva. Si no aparecen, vuelve a intentarlo."
+               message="No hay forjadores reales disponibles ahora. La batalla rápida contra la IA no afecta tu MMR ni tu economía."
               testID="battle-opponents-empty"
             />
           ) : sortedOpponents.map((opponent) => (
@@ -545,6 +583,7 @@ const styles = StyleSheet.create({
   statusTitle: { fontSize: 10, fontWeight: '900', letterSpacing: 1.2 },
   statusBody: { fontSize: 11, lineHeight: 16, marginTop: 4 },
   button: { minHeight: 50, borderRadius: 13, alignItems: 'center', justifyContent: 'center', flexDirection: 'row', gap: 9, paddingHorizontal: 18, marginBottom: 7 },
+  trainingButton: { minHeight: 50, borderWidth: 1, borderRadius: 13, alignItems: 'center', justifyContent: 'center', flexDirection: 'row', gap: 9, paddingHorizontal: 18, marginBottom: 7 },
   buttonText: { fontSize: 11, fontWeight: '900', letterSpacing: 0.9 },
   rankCard: { borderWidth: 1, borderRadius: 18, padding: 14, flexDirection: 'row', alignItems: 'center', gap: 12 },
   rankIcon: { width: 48, height: 48, borderWidth: 1, borderRadius: 16, alignItems: 'center', justifyContent: 'center' },
