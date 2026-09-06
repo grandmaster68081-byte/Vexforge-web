@@ -17,6 +17,7 @@ import { useColors } from '@/hooks/useColors';
 import { useGame } from '@/context/GameContext';
 import { emitTelemetry } from '@/lib/telemetry';
 import { ScreenShell } from '@/components/ScreenShell';
+import { DomainState } from '@/components/DomainState';
 import {
   applyMobileFusion,
   buyMobilePack,
@@ -77,23 +78,14 @@ const MODES: Array<{ key: StoreMode; label: string; icon: keyof typeof Ionicons.
   { key: 'inventory', label: 'Inventario', icon: 'layers-outline' },
 ];
 
-function ErrorBanner({ message, colors }: { message: string; colors: Palette }) {
-  return (
-    <View accessibilityRole="alert" style={[styles.message, { backgroundColor: `${colors.danger}16`, borderColor: `${colors.danger}55` }]}>
-      <Ionicons name="warning-outline" size={18} color={colors.danger} />
-      <Text style={[styles.messageText, { color: colors.foreground }]}>{message}</Text>
-    </View>
-  );
+function ErrorBanner({ message, colors, onRetry }: { message: string; colors: Palette; onRetry?: () => void }) {
+  void colors;
+  return <DomainState kind="error" title="Estado de Forja no disponible" message={message} actionLabel={onRetry ? 'REINTENTAR SINCRONIZACIÓN' : undefined} onAction={onRetry} />;
 }
 
 function EmptyBlock({ icon, title, body, colors }: { icon: keyof typeof Ionicons.glyphMap; title: string; body: string; colors: Palette }) {
-  return (
-    <View style={[styles.emptyBlock, { backgroundColor: colors.panel, borderColor: colors.border }]}>
-      <Ionicons name={icon} size={30} color={colors.accent} />
-      <Text style={[styles.emptyTitle, { color: colors.foreground }]}>{title}</Text>
-      <Text style={[styles.body, { color: colors.mutedForeground }]}>{body}</Text>
-    </View>
-  );
+  void colors;
+  return <DomainState kind="empty" title={title} message={body} testID={`store-empty-${String(icon)}`} />;
 }
 
 function ActionButton({ label, onPress, colors, disabled = false, secondary = false, testID }: { label: string; onPress: () => void; colors: Palette; disabled?: boolean; secondary?: boolean; testID?: string }) {
@@ -372,7 +364,8 @@ function InventorySection({ colors }: { colors: Palette }) {
 }
 
 function LoadingBlock({ colors, label }: { colors: Palette; label: string }) {
-  return <View testID="store-loading" style={[styles.loadingBlock, { backgroundColor: colors.panel, borderColor: colors.border }]}><ActivityIndicator color={colors.accent} /><Text style={[styles.bodyLeft, { color: colors.mutedForeground }]}>{label}</Text></View>;
+  void colors;
+  return <DomainState kind="loading" title="Sincronizando Forja" message={label} testID="store-loading" />;
 }
 
 function ValueRow({ label, value, colors }: { label: string; value: string; colors: Palette }) {

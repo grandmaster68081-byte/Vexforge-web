@@ -1,7 +1,8 @@
 import { Feather } from '@/components/ForgeIcon';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import { useColors } from '@/hooks/useColors';
 import type { DeckSlot } from '@/lib/supabase';
+import { DomainState } from '@/components/DomainState';
 
 type FormationRole = 'VANGUARDIA' | 'CAMPEÓN' | 'CENTINELA' | 'RESERVA';
 type FormationColors = ReturnType<typeof useColors>;
@@ -113,31 +114,11 @@ export function ForgeFormationPreview({
         combate. El dispositivo sólo la presenta: no calcula daño, turnos ni ganador.
       </Text>
       {loading ? (
-        <View style={styles.feedback}>
-          <Feather name="loader" size={17} color={colors.primary} />
-          <Text style={[styles.feedbackText, { color: colors.mutedForeground }]}>
-            CARGANDO FORMACIÓN REAL
-          </Text>
-        </View>
+        <DomainState kind="loading" title="Cargando formación real" message="El servidor está derivando tu formación para la Arena." testID="forgeformation-loading" />
       ) : error ? (
-        <View style={styles.feedback}>
-          <Feather name="alert-circle" size={17} color={colors.danger} />
-          <Text style={[styles.feedbackText, { color: colors.danger }]}>{error}</Text>
-          <Pressable
-            accessibilityRole="button"
-            onPress={onRetry}
-            style={[styles.retry, { borderColor: colors.border }]}
-          >
-            <Text style={[styles.retryText, { color: colors.foreground }]}>REINTENTAR</Text>
-          </Pressable>
-        </View>
+        <DomainState kind="error" title="Formación no disponible" message={error} actionLabel="REINTENTAR" onAction={onRetry} testID="forgeformation-error" />
       ) : ordered.length === 0 ? (
-        <View style={styles.feedback}>
-          <Feather name="inbox" size={17} color={colors.mutedForeground} />
-          <Text style={[styles.feedbackText, { color: colors.mutedForeground }]}>
-            CARGA UN MAZO VÁLIDO PARA ACTIVAR EL COMBATE
-          </Text>
-        </View>
+        <DomainState kind="empty" title="Formación vacía" message="Carga un mazo válido para activar el combate." testID="forgeformation-empty" />
       ) : (
         <>
           <Text style={[styles.section, { color: colors.mutedForeground }]}>LÍNEA ACTIVA</Text>

@@ -1,3 +1,12 @@
+## 2026-09-06 — VE-UXCX-7 / SHARED DOMAIN STATES — IMPLEMENTED_UNVERIFIED
+
+- Se extendió `DomainState` a las rutas Android activas de Economía, Sistemas, Misiones, Social, Forja/Tienda, Mundo, Arena y Formación; se conservaron los estados contextuales internos, el copy canónico y los datos reales.
+- Loading, vacío y error comparten ahora skeleton, motion, reduced-motion, accesibilidad, haptics seguros, `testID` y acciones de reintento donde el flujo las soporta. No se tocaron web, Supabase, Auth, RLS, RPCs, economía autoritativa, combate ni Storage.
+- `mobile/scripts/verify-telemetry.mjs` pasa localmente. El typecheck local no es ejecutable en la copia HTTPS porque no contiene `node_modules`; la autoridad de typecheck, prebuild, Gradle, APK standalone y release queda en el workflow oficial.
+- La unidad permanece `IMPLEMENTED_UNVERIFIED`; no se declara `PASS`, `TIER1_READY` ni `OPERATIONAL` sin workflow correlativo y QA humana visual/táctil.
+
+---
+
 ## 2026-09-05 — VE-UXCX-7 / APK BUILD 103 — IMPLEMENTED_UNVERIFIED
 
 - Commit Android: `8c7d26e35659ddff3165729f2cd160e0f094a51d`.

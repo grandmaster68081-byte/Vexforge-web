@@ -16,6 +16,7 @@ import { useGame } from '@/context/GameContext';
 import { emitTelemetry } from '@/lib/telemetry';
 import { ScreenShell } from '@/components/ScreenShell';
 import { DomainHeader } from '@/components/DomainHeader';
+import { DomainState } from '@/components/DomainState';
 import { loadPlayerDeck } from '@/lib/supabase';
 import { loadPlayerRank, type BattleResult, type BattleTurn, type DeckSlot, type Opponent, type PlayerRank } from '@/lib/supabase';
 import { ForgeFormationPreview } from '@/components/ForgeFormationPreview';
@@ -450,7 +451,7 @@ export default function BattleScreen() {
         <ResultPanel result={battleResult} colors={colors} onDismiss={handleDismiss} />
       ) : (
         <>
-          <ArenaRankCard rank={rank} stats={stats} loading={rankLoading} colors={colors} />
+          {rankError ? <DomainState kind="error" title="Rango no disponible" message={rankError} actionLabel="REINTENTAR RANGO" onAction={() => { void refreshRank(); }} testID="battle-rank-error" /> : <ArenaRankCard rank={rank} stats={stats} loading={rankLoading} colors={colors} />}
           <ForgeFormationPreview
             slots={formationSlots}
             loading={formationLoading}

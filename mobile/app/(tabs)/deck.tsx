@@ -26,6 +26,7 @@ import {
 import { useGame } from '@/context/GameContext';
 import { ScreenShell } from '@/components/ScreenShell';
 import { DomainHeader } from '@/components/DomainHeader';
+import { DomainState } from '@/components/DomainState';
 
 const RARITIES = ['Mythic', 'Legendary', 'Epic', 'Rare', 'Uncommon', 'Common'] as const;
 const FACTIONS = ['Guerrero', 'Mago', 'Paladín', 'Pícaro'] as const;
@@ -194,20 +195,7 @@ function EmptyState({
   colors: ReturnType<typeof useColors>;
   action?: { label: string; onPress: () => void };
 }) {
-  return (
-    <View style={[styles.empty, { borderColor: colors.border, backgroundColor: colors.panel }]}>
-      <View style={[styles.emptySeal, { borderColor: `${colors.primary}77` }]}>
-        <Feather name="columns" size={28} color={colors.primary} />
-      </View>
-      <Text style={[styles.emptyTitle, { color: colors.foreground }]}>{title}</Text>
-      <Text style={[styles.emptyText, { color: colors.mutedForeground }]}>{description}</Text>
-      {action ? (
-        <Pressable onPress={action.onPress} style={[styles.clearButton, { borderColor: colors.primary }]}>
-          <Text style={[styles.clearButtonText, { color: colors.primary }]}>{action.label}</Text>
-        </Pressable>
-      ) : null}
-    </View>
-  );
+  return <DomainState kind="empty" title={title} message={description} actionLabel={action?.label} onAction={action?.onPress} testID="deck-empty" />;
 }
 
 export default function DeckScreen() {
@@ -579,16 +567,17 @@ export default function DeckScreen() {
             )}
             {message ? <Text style={[styles.message, { color: message.startsWith('Mazo guardado') ? colors.success : colors.danger }]}>{message}</Text> : null}
             {deckError || syncState === 'offline' ? (
-              <View style={[styles.error, { borderColor: `${colors.danger}66`, backgroundColor: `${colors.danger}12` }]}>
-                <Feather name="alert-circle" size={17} color={colors.danger} />
-                <Text style={[styles.errorText, { color: colors.danger }]}>{deckError ?? syncError ?? 'No se pudo sincronizar tu colección.'}</Text>
-              </View>
+              <DomainState
+                kind="error"
+                title="La Forja no está sincronizada"
+                message={deckError ?? syncError ?? 'No se pudo sincronizar tu colección.'}
+                actionLabel="REINTENTAR SINCRONIZACIÓN"
+                onAction={() => { void onRefresh(); }}
+                testID="deck-sync-error"
+              />
             ) : null}
             {collectionLoading || deckLoading ? (
-              <View style={styles.loading}>
-                <ActivityIndicator color={colors.primary} />
-                <Text style={[styles.loadingText, { color: colors.mutedForeground }]}>CARGANDO TU FORMACIÓN</Text>
-              </View>
+              <DomainState kind="loading" title="Cargando tu formación" message="La Forja está consultando tu colección y tu mazo real." testID="deck-loading" />
             ) : null}
             {!collectionLoading && !deckLoading && collection.length > 0 ? (
               <Text style={[styles.results, { color: colors.mutedForeground }]}>

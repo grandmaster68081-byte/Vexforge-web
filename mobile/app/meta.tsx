@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import {
-  ActivityIndicator,
   Image,
   Pressable,
   RefreshControl,
@@ -16,6 +15,7 @@ import { Feather } from '@/components/ForgeIcon';
 import { useColors } from '@/hooks/useColors';
 import { useGame } from '@/context/GameContext';
 import { ScreenShell } from '@/components/ScreenShell';
+import { DomainState } from '@/components/DomainState';
 import {
   claimMobileStarterRelics,
   equipMobileCosmetic,
@@ -249,7 +249,7 @@ export default function MetaScreen() {
   useEffect(() => { void load(); }, [load]);
 
   if (!session) return <ScreenShell surface="profile"><View style={[styles.center, { paddingTop: insets.top }]}><StateMessage icon="lock" title="Sesión requerida" body="Inicia sesión para gestionar tu cuenta y sistemas." colors={colors} /><ActionButton label="Ir a acceso" icon="arrow-right" onPress={() => router.replace('/auth')} colors={colors} testID="meta-go-auth" /></View></ScreenShell>;
-  if (!data && !error) return <ScreenShell surface="profile"><View style={[styles.center, { paddingTop: insets.top }]}><ActivityIndicator size="large" color={colors.accent} /><Text style={[styles.body, { color: colors.mutedForeground }]}>Sincronizando sistemas del Nexus…</Text></View></ScreenShell>;
+  if (!data && !error) return <ScreenShell surface="profile"><View style={[styles.center, { paddingTop: insets.top }]}><DomainState kind="loading" title="Sincronizando sistemas" message="El Nexus está cargando tu configuración oficial." testID="meta-loading" /></View></ScreenShell>;
 
   const content = data ? {
     account: <AccountPanel colors={colors} data={data} player={player} session={session} onReload={() => { void load(); }} />,
@@ -263,7 +263,7 @@ export default function MetaScreen() {
   return <ScreenShell surface="profile"><KeyboardAwareScrollViewCompat contentContainerStyle={{ paddingTop: insets.top + 18, paddingBottom: insets.bottom + 108 }} refreshControl={<RefreshControl refreshing={refreshing} onRefresh={() => { void load(true); }} tintColor={colors.accent} />} showsVerticalScrollIndicator={false}>
     <View style={styles.header}><Pressable accessibilityRole="button" accessibilityLabel="Volver al perfil" testID="meta-back" onPress={() => router.back()}><Feather name="chevron-left" size={24} color={colors.foreground} /></Pressable><View style={styles.flex}><Text style={[styles.eyebrow, { color: colors.accent }]}>FORGE CONTROL</Text><Text style={[styles.screenTitle, { color: colors.foreground }]}>Sistemas</Text></View><Feather name="settings" size={22} color={colors.accent} /></View>
     <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.panelRail}>{PANELS.map((panel) => <PanelButton key={panel.id} panel={panel} active={activePanel === panel.id} colors={colors} onPress={() => setActivePanel(panel.id)} />)}</ScrollView>
-    {error ? <View style={[styles.error, { backgroundColor: `${colors.danger}12`, borderColor: colors.danger }]}><Feather name="alert-circle" size={18} color={colors.danger} /><Text style={[styles.body, { color: colors.foreground }]}>{error}</Text><Pressable accessibilityRole="button" accessibilityLabel="Reintentar sincronización" testID="meta-retry" onPress={() => { void load(); }}><Feather name="refresh-outline" size={18} color={colors.accent} /></Pressable></View> : null}
+     {error ? <DomainState kind="error" title="Sistemas no disponibles" message={error} actionLabel="REINTENTAR SINCRONIZACIÓN" onAction={() => { void load(); }} testID="meta-sync-error" /> : null}
     {content}
   </KeyboardAwareScrollViewCompat></ScreenShell>;
 }

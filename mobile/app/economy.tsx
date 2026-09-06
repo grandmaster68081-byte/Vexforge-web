@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useMemo, useState, type ReactNode } from 'react';
 import {
-  ActivityIndicator,
   Alert,
   Pressable,
   RefreshControl,
@@ -17,6 +16,7 @@ import { useColors } from '@/hooks/useColors';
 import { useGame } from '@/context/GameContext';
 import { KeyboardAwareScrollViewCompat } from '@/components/KeyboardAwareScrollViewCompat';
 import { ScreenShell } from '@/components/ScreenShell';
+import { DomainState } from '@/components/DomainState';
 import {
   buyMarketListing,
   cancelMarketListing,
@@ -201,25 +201,12 @@ function Field({
 }
 
 function EmptyState({ icon, title, body, colors }: { icon: keyof typeof Ionicons.glyphMap; title: string; body: string; colors: Colors }) {
-  return (
-    <View style={[styles.emptyState, { borderColor: colors.border }]}>
-      <Ionicons name={icon} size={25} color={colors.mutedForeground} />
-      <Text style={[styles.emptyTitle, { color: colors.foreground }]}>{title}</Text>
-      <Text style={[styles.body, { color: colors.mutedForeground }]}>{body}</Text>
-    </View>
-  );
+  void colors;
+  return <DomainState kind="empty" title={title} message={body} testID={`economy-empty-${String(icon)}`} />;
 }
 
 function ErrorNotice({ message, onRetry, colors }: { message: string; onRetry: () => void; colors: Colors }) {
-  return (
-    <View style={[styles.notice, { backgroundColor: `${colors.danger}12`, borderColor: `${colors.danger}55` }]}>
-      <Ionicons name="alert-circle-outline" size={19} color={colors.danger} />
-      <Text style={[styles.noticeText, { color: colors.foreground }]}>{message}</Text>
-      <Pressable accessibilityRole="button" testID="economy-retry" onPress={onRetry}>
-        <Text style={[styles.noticeAction, { color: colors.accent }]}>REINTENTAR</Text>
-      </Pressable>
-    </View>
-  );
+  return <DomainState kind="error" title="Operación económica no disponible" message={message} actionLabel="REINTENTAR" onAction={onRetry} testID="economy-operation-error" />;
 }
 
 export default function EconomyScreen() {
@@ -641,10 +628,11 @@ export default function EconomyScreen() {
 
   if (authLoading || loading) {
     return (
-      <View style={[styles.center, { backgroundColor: colors.background }]}>
-        <ActivityIndicator color={colors.accent} />
-        <Text style={[styles.loadingText, { color: colors.mutedForeground }]}>SINCRONIZANDO ECONOMÍA</Text>
-      </View>
+      <ScreenShell surface="economy">
+        <View style={[styles.center, { backgroundColor: 'transparent', paddingTop: insets.top }]}>
+          <DomainState kind="loading" title="Sincronizando economía" message="El Nexus está consultando cartera, ledger y mercado oficiales." testID="economy-loading" />
+        </View>
+      </ScreenShell>
     );
   }
 
@@ -656,6 +644,16 @@ export default function EconomyScreen() {
         <Text style={[styles.body, { color: colors.mutedForeground, textAlign: 'center' }]}>Inicia sesión para consultar cartera, mercado, depósitos, retiros y referidos.</Text>
         <ActionButton label="IR A PERFIL" icon="person-outline" onPress={() => router.push('/profile')} colors={colors} testID="economy-auth-profile" />
       </View>
+    );
+  }
+
+  if (error && !wallet && !stats && !tradeable && !referralSummary) {
+    return (
+      <ScreenShell surface="economy">
+        <View style={[styles.center, { backgroundColor: 'transparent', paddingTop: insets.top }]}>
+          <DomainState kind="error" title="Economía no disponible" message={error} actionLabel="REINTENTAR SINCRONIZACIÓN" onAction={() => { void refreshEconomy('refresh'); }} testID="economy-error" />
+        </View>
+      </ScreenShell>
     );
   }
 

@@ -15,6 +15,7 @@ import { useColors } from '@/hooks/useColors';
 import { useGame } from '@/context/GameContext';
 import { emitTelemetry } from '@/lib/telemetry';
 import { ScreenShell } from '@/components/ScreenShell';
+import { DomainState } from '@/components/DomainState';
 import {
   claimDailyQuest,
   executeMobileMission,
@@ -299,7 +300,9 @@ export default function MissionsScreen() {
             <Text style={[styles.messageText, { color: colors.foreground }]}>{actionMessage}</Text>
           </View>
         ) : null}
-        {error ? (
+        {error && quests.length === 0 && missions.length === 0 ? (
+          <DomainState kind="error" title="Misiones no disponibles" message={error} actionLabel="REINTENTAR SINCRONIZACIÓN" onAction={() => { void load(); }} testID="missions-error" />
+        ) : error ? (
           <View accessibilityRole="alert" style={[styles.message, { backgroundColor: `${colors.danger}16`, borderColor: `${colors.danger}66` }]}>
             <Ionicons name="warning-outline" size={18} color={colors.danger} />
             <Text style={[styles.messageText, { color: colors.foreground }]}>{error}</Text>
@@ -307,7 +310,7 @@ export default function MissionsScreen() {
         ) : null}
 
         {loading ? (
-          <View testID="missions-loading" style={styles.stateBlock}><ActivityIndicator size="large" color={colors.accent} /><Text style={[styles.cardBody, { color: colors.mutedForeground }]}>Sincronizando actividad real…</Text></View>
+          <DomainState kind="loading" title="Sincronizando actividad" message="El Nexus está consultando misiones y recompensas reales." testID="missions-loading" />
         ) : (
           <>
             <View style={styles.sectionHeading}>
