@@ -1,3 +1,12 @@
+## 2026-09-06 — VE-MOB-7-BATTLE-VIS / ARENA STATES — IMPLEMENTED_UNVERIFIED
+
+- La Arena adopta el contrato `DomainState` para clasificación no disponible, formación vacía/error, lista de oponentes vacía y fallos de consulta; cada estado conserva retry, `testID`, accesibilidad, reduced-motion y feedback haptic seguro.
+- La unidad sigue presentando únicamente rango, oponentes, formación, turnos y resultado devueltos por Supabase/RPC; no se añadió cálculo local de combate, daño, ganador, recompensa ni economía.
+- El alcance es Android `mobile/**`; web, Auth, RLS, RPCs, Storage, datos y contratos autoritativos permanecen intactos. La evidencia de typecheck/prebuild/Gradle/APK queda delegada al workflow oficial correlativo.
+- Estado: `IMPLEMENTED_UNVERIFIED`. No se declara `PASS`, `TIER1_READY` ni `OPERATIONAL` sin release correlativo y QA humana de Arena.
+
+---
+
 ## 2026-09-06 — VE-UXCX-7 / SHARED DOMAIN STATES — IMPLEMENTED_UNVERIFIED
 
 - Se extendió `DomainState` a las rutas Android activas de Economía, Sistemas, Misiones, Social, Forja/Tienda, Mundo, Arena y Formación; se conservaron los estados contextuales internos, el copy canónico y los datos reales.

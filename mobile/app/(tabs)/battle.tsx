@@ -495,11 +495,12 @@ export default function BattleScreen() {
           ) : null}
           <Text style={[styles.sectionLabel, { color: colors.mutedForeground }]}>OPONENTES DISPONIBLES</Text>
           {sortedOpponents.length === 0 ? (
-            <View style={[styles.empty, { backgroundColor: colors.panel, borderColor: colors.border }]}>
-              <Feather name="compass" size={25} color={colors.mutedForeground} />
-              <Text style={[styles.emptyTitle, { color: colors.foreground }]}>La arena está en espera</Text>
-              <Text style={[styles.emptyCopy, { color: colors.mutedForeground }]}>Busca oponentes para cargar la clasificación viva. Si no aparecen, vuelve a intentarlo.</Text>
-            </View>
+            <DomainState
+              kind="empty"
+              title="La arena está en espera"
+              message="Busca oponentes para cargar la clasificación viva. Si no aparecen, vuelve a intentarlo."
+              testID="battle-opponents-empty"
+            />
           ) : sortedOpponents.map((opponent) => (
             <OpponentRow
               key={opponent.player_id}
@@ -510,11 +511,15 @@ export default function BattleScreen() {
               onPress={() => setSelectedOpponent(opponent)}
             />
           ))}
-          {(localError || authError || rankError) ? (
-            <View style={[styles.error, { borderColor: `${colors.danger}66`, backgroundColor: `${colors.danger}12` }]}>
-              <Feather name="alert-circle" size={17} color={colors.danger} />
-              <Text style={[styles.errorText, { color: colors.danger }]}>{localError ?? authError ?? rankError}</Text>
-            </View>
+          {(localError || authError) ? (
+            <DomainState
+              kind="error"
+              title="La Arena no pudo actualizarse"
+              message={localError ?? authError ?? 'No se pudo consultar la Arena.'}
+              actionLabel="REINTENTAR OPONENTES"
+              onAction={() => { void handleFind(); }}
+              testID="battle-opponents-error"
+            />
           ) : null}
         </>
       )}
