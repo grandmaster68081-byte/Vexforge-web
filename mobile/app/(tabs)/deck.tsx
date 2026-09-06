@@ -175,6 +175,7 @@ function FilterChip({
   return (
     <Pressable
       accessibilityRole="button"
+      accessibilityLabel={label}
       accessibilityState={{ selected: active }}
       onPress={onPress}
       style={[styles.chip, { borderColor: active ? color : colors.border, backgroundColor: active ? `${color}1C` : colors.panel }]}
@@ -458,6 +459,7 @@ export default function DeckScreen() {
                         <Pressable
                           key={card.card_id}
                           accessibilityRole="button"
+                          accessibilityLabel={`${active ? 'Quitar' : 'Elegir'} ${card.name} como Campeón`}
                           accessibilityState={{ selected: active }}
                           onPress={() => setChampionId(active ? null : card.card_id)}
                           style={[styles.championChip, { borderColor: active ? accent : `${accent}55`, backgroundColor: active ? `${accent}18` : colors.panel }]}
@@ -521,11 +523,11 @@ export default function DeckScreen() {
             </ScrollView>
 
             <View style={styles.actionRow}>
-              <Pressable testID="validate-deck" accessibilityRole="button" onPress={handleValidate} style={[styles.secondaryButton, { borderColor: `${colors.accent}77`, backgroundColor: colors.panel }]}>
+              <Pressable testID="validate-deck" accessibilityRole="button" accessibilityLabel="Validar mazo contra las reglas oficiales" onPress={handleValidate} style={[styles.secondaryButton, { borderColor: `${colors.accent}77`, backgroundColor: colors.panel }]}>
                 <Feather name="check-circle" size={15} color={colors.accent} />
                 <Text style={[styles.secondaryButtonText, { color: colors.accent }]}>VALIDAR</Text>
               </Pressable>
-              <Pressable testID="save-deck" accessibilityRole="button" disabled={saving} onPress={handleSave} style={[styles.primaryButton, { backgroundColor: deckReady ? colors.primary : colors.muted, opacity: saving ? 0.7 : 1 }]}>
+              <Pressable testID="save-deck" accessibilityRole="button" accessibilityLabel="Guardar mazo" accessibilityState={{ disabled: saving }} disabled={saving} onPress={handleSave} style={[styles.primaryButton, { backgroundColor: deckReady ? colors.primary : colors.muted, opacity: saving ? 0.7 : 1 }]}>
                 {saving ? <ActivityIndicator color={colors.primaryForeground} size="small" /> : <Feather name="save" size={15} color={deckReady ? colors.primaryForeground : colors.mutedForeground} />}
                 <Text style={[styles.primaryButtonText, { color: deckReady ? colors.primaryForeground : colors.mutedForeground }]}>{saving ? 'GUARDANDO' : 'GUARDAR MAZO'}</Text>
               </Pressable>
