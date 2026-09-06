@@ -80,7 +80,17 @@ const MODES: Array<{ key: StoreMode; label: string; icon: keyof typeof Ionicons.
 
 function ErrorBanner({ message, colors, onRetry }: { message: string; colors: Palette; onRetry?: () => void }) {
   void colors;
-  return <DomainState kind="error" title="Estado de Forja no disponible" message={message} actionLabel={onRetry ? 'REINTENTAR SINCRONIZACIÓN' : undefined} onAction={onRetry} />;
+  return (
+    <View accessibilityRole="alert" accessibilityLiveRegion="assertive">
+      <DomainState
+        kind="error"
+        title="Estado de Forja no disponible"
+        message={message}
+        actionLabel={onRetry ? 'REINTENTAR SINCRONIZACIÓN' : undefined}
+        onAction={onRetry}
+      />
+    </View>
+  );
 }
 
 function EmptyBlock({ icon, title, body, colors }: { icon: keyof typeof Ionicons.glyphMap; title: string; body: string; colors: Palette }) {
