@@ -105,6 +105,7 @@ function QuestCard({
           testID={`mission-claim-${quest.id}`}
           accessibilityRole="button"
           accessibilityLabel={`Reclamar recompensa de ${definition?.title ?? 'misión diaria'}`}
+          accessibilityState={{ disabled: claiming === quest.id }}
           disabled={claiming === quest.id}
           onPress={() => onClaim(quest.id)}
           style={({ pressed }) => [
@@ -266,7 +267,7 @@ export default function MissionsScreen() {
         <Ionicons name="lock-closed-outline" size={34} color={colors.accent} />
         <Text style={[styles.emptyTitle, { color: colors.foreground }]}>Inicia sesión para continuar</Text>
         <Text style={[styles.cardBody, { color: colors.mutedForeground }]}>Tus misiones y recompensas pertenecen a tu cuenta de forjador.</Text>
-        <Pressable accessibilityRole="button" onPress={() => router.replace('/auth')} style={[styles.primaryButton, { backgroundColor: colors.accent }]}>
+        <Pressable accessibilityRole="button" accessibilityLabel="Ir a inicio de sesión" onPress={() => router.replace('/auth')} style={[styles.primaryButton, { backgroundColor: colors.accent }]}>
           <Text style={[styles.claimText, { color: colors.ink }]}>IR A INICIO DE SESIÓN</Text>
         </Pressable>
       </View>
