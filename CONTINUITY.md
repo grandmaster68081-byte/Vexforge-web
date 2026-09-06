@@ -1,3 +1,12 @@
+## 2026-09-06 — VE-MOB-2-AUTH + VE-MOB-3-HOME — IMPLEMENTED_UNVERIFIED
+
+- Se corrigió el port Android sin tocar la web: login, registro y Google ahora llaman `ensure_player_row` con la sesión autenticada; si la provisión falla ya no se descarta silenciosamente. Los registros que requieren confirmación de correo no inventan una sesión ni ejecutan RPC sin identidad.
+- Se cerraron nombres de accesibilidad del Home para reintento, frente activo, misiones, Forja/recursos y economía; `ForgeButton` expone también el estado deshabilitado a TalkBack. No cambian rutas, datos, economía, combate, Auth del servidor, RLS, RPCs ni assets.
+- Guardas estáticas: `verify-mobile-auth` 13/13 y guardia Home 6/6. La instalación local quedó bloqueada por `package-firewall.replit.local` devolviendo HTTP 404 para `npm-package-arg@11.0.3`; el typecheck vinculante queda delegado al workflow oficial.
+- Commit Android publicado por GitHub REST: `49e7c6e11a430ad8ec63e8a0a04bdf93361b96ef`. Workflow APK oficial #109 / run `34057233446` está `in_progress`; release y `app-release.apk` quedan pendientes hasta su conclusión. La QA humana del APK sigue pendiente.
+
+---
+
 ## 2026-09-06 — TIER-1-REPLIT-DIRECTIVE — ADDITIVE INTEGRATION
 
 - Preflight completado contra el protocolo vivo de Supabase, la continuidad, el inventario Android, el código de main y el plan histórico vexforge_forge_formation_engine_v1; este último permanece superseded y no se reabre.

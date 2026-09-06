@@ -57,3 +57,14 @@ La QA funcional requiere que el operador disponga de una sesión QA normal y un
 dispositivo o emulador. Reabrir si el operador reporta un hallazgo, o si cambia
 el contrato de Supabase Auth, la RPC de provisión, el mecanismo de
 almacenamiento de sesión o la barrera de rutas.
+
+## Addendum 2026-09-06 — provisión autenticada y estados de sesión
+
+- Login, registro con sesión inmediata y Google pasan la sesión recibida a
+  `ensure_player_row`; el cliente ya no intenta ejecutar esa RPC con la clave
+  anónima ni descarta su fallo.
+- Cuando Supabase exige confirmación de correo, la app conserva el estado sin
+  sesión y muestra la confirmación; la provisión posterior continúa dependiendo
+  del flujo Auth/RPC oficial, sin inventar una identidad local.
+- Estado: `IMPLEMENTED_UNVERIFIED`; el workflow APK y la QA humana permanecen
+  pendientes.

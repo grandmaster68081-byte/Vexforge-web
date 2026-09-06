@@ -130,3 +130,13 @@ La Fase VISUAL no se declara cerrada sólo por compilar: debe alcanzar al menos 
 - Verificación: run `33957157749`, `success`.
 - Release: [vexforge-android-build-92](https://github.com/grandmaster68081-byte/Vexforge-web/releases/tag/vexforge-android-build-92), con `app-release.apk` de 95,305,264 bytes y SHA-256 `305a1cace9edc3c0bbc0fa05adf39ec95ca9bdd2e395d3757d7aa1603b921194`.
 - Esta evidencia técnica no sustituye la QA humana ni permite promover la unidad a `PASS`, `Q4`, `TIER1_READY` u `OPERATIONAL`.
+
+## Addendum 2026-09-06 — accesibilidad de acciones
+
+- El reintento de sincronización, el frente activo, las misiones, Forja/recursos
+  y economía exponen etiquetas accesibles canónicas aunque su affordance visual
+  sea un icono o una flecha.
+- `ForgeButton` comunica a TalkBack cuando está deshabilitado, conservando el
+  mismo feedback visual y la misma acción existente.
+- Estado: `IMPLEMENTED_UNVERIFIED`; no cambia la navegación ni sustituye la QA
+  táctil del APK.
