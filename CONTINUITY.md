@@ -3,7 +3,7 @@
 - El operador reportó que Arena quedaba en espera cuando no había forjadores reales. El preflight confirmó que el flujo Android sólo consultaba `get_leaderboard` y que `vexforge_battle_resolve` exige dos jugadores reales; los registros nominales de entrenamiento no tenían cartas ni ranking válido para resolver una partida PvP.
 - Android conserva el camino PvP autoritativo y ahora, cuando una consulta exitosa devuelve cero oponentes, entra automáticamente en el modo de entrenamiento IA existente (`client_ai_v1`). También queda disponible una CTA manual `BATALLA RÁPIDA VS IA` cuando la lista está vacía.
 - El entrenamiento usa la formación Android cargada, se presenta como `SIN MMR`, no llama a `vexforge_battle_resolve`, no crea `pvp_matches` y no modifica VEX, economía, inventario, Auth, RLS ni RPCs. No se inventa un `player_id` IA ni se hace autoemparejamiento.
-- La guarda Android de batalla pasa `17/17` y `npm run verify:all` pasa localmente. El typecheck móvil queda delegado al workflow oficial porque el clon local no tiene las dependencias Expo instaladas. La unidad permanece `IMPLEMENTED_UNVERIFIED` hasta workflow/release y QA humana del APK.
+- La guarda Android de batalla pasa `17/17` y `npm run verify:all` pasa localmente. El workflow oficial `verify` run 210 pasó y el workflow `Build VEXFORGE Android APK` run 115 terminó correctamente. Release: `vexforge-android-build-115`; APK SHA-256: `627302ec1495695db180ef47b6d6a9e76aa42ff961e7bc185d18ccd1c8931039`. El typecheck móvil oficial pasó; la unidad permanece `IMPLEMENTED_UNVERIFIED` hasta QA humana del APK.
 
 ---
 ## 2026-09-06 — ANDROID ACCESSIBILITY HARDENING / APK 114 — PUBLISHED / IMPLEMENTED_UNVERIFIED
