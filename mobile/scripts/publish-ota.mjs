@@ -70,7 +70,10 @@ const bucketResponse = await fetchWithTransientRetry(`${supabaseUrl}/storage/v1/
   method: 'POST', headers: { Authorization: `Bearer ${serviceKey}`, apikey: serviceKey, 'content-type': 'application/json' },
   body: JSON.stringify({ id: bucket, name: bucket, public: true }),
 }, 'Update bucket creation');
-if (!bucketResponse.ok && bucketResponse.status !== 409) throw new Error(`Could not create update bucket: ${bucketResponse.status} ${await bucketResponse.text()}`);
+const bucketResponseBody = await bucketResponse.text();
+const bucketAlreadyExists = bucketResponse.status === 409
+  || (bucketResponse.status === 400 && /BucketAlreadyExists|resource already exists/i.test(bucketResponseBody));
+if (!bucketResponse.ok && !bucketAlreadyExists) throw new Error(`Could not create update bucket: ${bucketResponse.status} ${bucketResponseBody}`);
 
 const prefix = `releases/${runtimeVersion}/${channel}/${sourceCommit}`;
 for (const file of allFiles) {

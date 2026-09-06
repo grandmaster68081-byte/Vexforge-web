@@ -1,3 +1,12 @@
+## 2026-09-06 — OTA PUBLISH RETRY / BUCKET IDEMPOTENCY — IN_PROGRESS
+
+- El workflow OTA 5 exportó correctamente el bundle Android del commit `b2686baf4cd98d4b589202a95567f4b262f46c85`, pero terminó al crear el bucket porque Supabase respondió HTTP 400 con `BucketAlreadyExists` y código interno 409.
+- Se ajustó `mobile/scripts/publish-ota.mjs` para aceptar sólo ese duplicado idempotente conocido —HTTP 409 o HTTP 400 con `BucketAlreadyExists`/`resource already exists`— y seguir rechazando cualquier otro error.
+- No se modifican Auth, RLS, RPCs, economía, combate, datos de jugador ni assets canónicos. La corrección permanece en el carril `OTA_UPDATE`, runtime `1.0.0`, canal `production`.
+- El workflow OTA debe relanzarse sobre el nuevo commit; el APK y la verificación del lote siguen sujetos a sus workflows correlativos. Estado provisional: `IN_PROGRESS`, sin declarar `PASS`, `OPERATIONAL` ni `TIER1_READY`.
+
+---
+
 ## 2026-09-06 — VE-MOB-5-DECK / ACCESSIBILITY STATE — IN_PROGRESS
 
 - Preflight reconciliado contra el protocolo vivo de Supabase, `CONTINUITY.md`, `VE-MOB-0`, `VE-MOB-5-DECK` y el código real de `main`. La superficie sigue siendo exclusivamente Android y la web permanece congelada.
