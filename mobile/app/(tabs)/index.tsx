@@ -388,9 +388,40 @@ export default function ForgeScreen() {
                   <Text style={[styles.brandSubline, { color: colors.mutedForeground }]}>{`${identity.place} // NEXUS 01`}</Text>
                 </View>
               </View>
-              <Pressable accessibilityRole="button" accessibilityLabel="Abrir perfil" onPress={() => router.push('/profile')} style={({ pressed }) => [styles.profileOrb, { borderColor: `${colors.accent}66`, backgroundColor: `${colors.ink}B8`, opacity: pressed ? 0.72 : 1 }]}>
+              <Pressable
+                accessibilityRole="button"
+                accessibilityLabel="Abrir perfil"
+                testID="home-profile"
+                onPress={() => router.push('/profile')}
+                style={({ pressed }) => [styles.profileOrb, { borderColor: `${colors.accent}66`, backgroundColor: `${colors.ink}B8`, opacity: pressed ? 0.72 : 1 }]}
+              >
                 <Ionicons name="profile" size={19} color={colors.foreground} />
                 <View style={[styles.notificationDot, { backgroundColor: colors.accent }]} />
+              </Pressable>
+            </View>
+            <View style={styles.hudRail}>
+              <View style={[styles.hudChip, { borderColor: `${colors.success}55`, backgroundColor: `${colors.success}12` }]}>
+                <Ionicons name="energy" size={13} color={colors.success} />
+                <View style={styles.hudChipCopy}>
+                  <Text style={[styles.hudChipLabel, { color: `${colors.success}B8` }]}>ENERGÍA</Text>
+                  <Text style={[styles.hudChipValue, { color: colors.success }]}>{progress ? `${progress.energy}/${progress.max_energy}` : '—'}</Text>
+                </View>
+              </View>
+              <View style={[styles.hudChip, { borderColor: `${colors.rarityRare}55`, backgroundColor: `${colors.rarityRare}12` }]}>
+                <Ionicons name="diamond-outline" size={13} color={colors.rarityRare} />
+                <View style={styles.hudChipCopy}>
+                  <Text style={[styles.hudChipLabel, { color: `${colors.rarityRare}B8` }]}>VEX</Text>
+                  <Text style={[styles.hudChipValue, { color: colors.rarityRare }]}>{(wallet?.vex_ingame ?? 0).toLocaleString('es')}</Text>
+                </View>
+              </View>
+              <Pressable
+                accessibilityRole="button"
+                accessibilityLabel="Abrir sistemas y ajustes"
+                testID="home-settings"
+                onPress={() => router.push('/meta')}
+                style={({ pressed }) => [styles.hudAction, { borderColor: `${colors.accent}66`, backgroundColor: `${colors.ink}B8`, opacity: pressed ? 0.72 : 1 }]}
+              >
+                <Ionicons name="settings" size={17} color={colors.accent} />
               </Pressable>
             </View>
 
@@ -429,8 +460,8 @@ export default function ForgeScreen() {
 
             <View style={styles.sceneHeading}>
               <SectionLabel color={colors.accent}>{`${identity.place} · ${identity.title.toUpperCase()}`}</SectionLabel>
-              <ForgeText variant="display" style={[styles.sceneTitle, { color: colors.foreground }]}>La arena{'\n'}te está llamando.</ForgeText>
-              <Text style={[styles.sceneDescription, { color: colors.mutedForeground }]}>{identity.purpose}</Text>
+              <ForgeText variant="display" style={[styles.sceneTitle, { color: colors.foreground }]}>{'FOJA\nNEXUS VIVO.'}</ForgeText>
+              <Text style={[styles.sceneDescription, { color: colors.mutedForeground }]}>Tu base, tu colección y la próxima batalla en una sola escena.</Text>
             </View>
 
             <View style={[styles.sceneStage, { zIndex: DEPTH.focus }]}>
@@ -699,14 +730,20 @@ export default function ForgeScreen() {
 
 const styles = StyleSheet.create({
   screen: { flex: 1 },
-  scene: { minHeight: 700, overflow: 'hidden', borderBottomWidth: 1, shadowOpacity: 0.52, shadowRadius: 28, shadowOffset: { width: 0, height: 18 }, elevation: 10 },
+  scene: { minHeight: 820, overflow: 'hidden', borderBottomWidth: 1, shadowOpacity: 0.52, shadowRadius: 28, shadowOffset: { width: 0, height: 18 }, elevation: 10 },
   sceneImage: { opacity: 0.96 },
   sceneFactionImage: { opacity: 0.36 },
-  sceneContent: { paddingHorizontal: 20, paddingBottom: 20 },
+  sceneContent: { paddingHorizontal: 18, paddingBottom: 24 },
   sceneParticle: { position: 'absolute', shadowOpacity: 0.78, shadowRadius: 8, shadowOffset: { width: 0, height: 0 }, elevation: 3 },
   sceneGlow: { position: 'absolute', width: 320, height: 320, borderRadius: 160, top: 250, right: -150 },
   sceneFrame: { position: 'absolute', left: 12, right: 12, top: 12, bottom: 12, borderWidth: 1, borderRadius: 24 },
   topBar: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
+  hudRail: { flexDirection: 'row', alignItems: 'center', gap: 6, marginTop: 10 },
+  hudChip: { flex: 1, minHeight: 42, borderWidth: 1, borderRadius: 12, paddingHorizontal: 8, flexDirection: 'row', alignItems: 'center', gap: 6 },
+  hudChipCopy: { flex: 1 },
+  hudChipLabel: { fontFamily: typography.bodyBold, fontSize: 7, letterSpacing: 0.75, fontWeight: '800' },
+  hudChipValue: { fontFamily: typography.bodyBold, fontSize: 11, fontWeight: '800', marginTop: 2 },
+  hudAction: { width: 42, height: 42, borderWidth: 1, borderRadius: 12, alignItems: 'center', justifyContent: 'center' },
   brand: { flexDirection: 'row', alignItems: 'center', gap: 12 },
   brandName: { fontFamily: typography.bodyBold, fontSize: 15, fontWeight: '800', letterSpacing: 3 },
   brandSubline: { fontFamily: typography.bodySemiBold, fontSize: 8, letterSpacing: 1.8, marginTop: 3 },
@@ -725,25 +762,25 @@ const styles = StyleSheet.create({
   signalRule: { flex: 1, height: 1, marginHorizontal: 2 },
   sceneNotice: { alignSelf: 'flex-start', flexDirection: 'row', alignItems: 'center', gap: 8, borderWidth: 1, borderRadius: 10, paddingHorizontal: 9, paddingVertical: 7, marginTop: 15 },
   sceneNoticeText: { fontFamily: typography.bodyBold, fontSize: 8, letterSpacing: 0.75 },
-  sceneHeading: { marginTop: 22 },
+  sceneHeading: { marginTop: 27 },
   eyebrow: { fontFamily: typography.bodyBold, fontSize: 9, letterSpacing: 1.5, fontWeight: '800' },
   sceneTitle: { fontFamily: typography.display, fontSize: 36, lineHeight: 40, fontWeight: '700', marginTop: 8, textShadowColor: 'rgba(0,0,0,0.58)', textShadowOffset: { width: 0, height: 2 }, textShadowRadius: 14 },
   sceneDescription: { fontFamily: typography.body, fontSize: 13, lineHeight: 18, maxWidth: 285, marginTop: 8 },
-  sceneStage: { height: 230, marginTop: 13, position: 'relative', alignItems: 'center', justifyContent: 'center' },
-  stageRingOuter: { position: 'absolute', width: 198, height: 198, top: 11, borderWidth: 1, borderRadius: 99 },
-  stageRingInner: { position: 'absolute', width: 146, height: 146, top: 37, borderWidth: 1, borderRadius: 73 },
+  sceneStage: { height: 278, marginTop: 13, position: 'relative', alignItems: 'center', justifyContent: 'center' },
+  stageRingOuter: { position: 'absolute', width: 246, height: 246, top: 9, borderWidth: 1, borderRadius: 99 },
+  stageRingInner: { position: 'absolute', width: 182, height: 182, top: 41, borderWidth: 1, borderRadius: 73 },
   stageBurst: { ...StyleSheet.absoluteFillObject, borderRadius: 26, opacity: 0.38 },
   stageAssetStatus: { position: 'absolute', bottom: 7, left: 0, right: 0, alignItems: 'center', justifyContent: 'center', gap: 4, zIndex: 4 },
   stageAssetStatusText: { fontFamily: typography.bodyBold, fontSize: 7, letterSpacing: 0.7, fontWeight: '800' },
   stageAssetNotice: { alignSelf: 'center', flexDirection: 'row', alignItems: 'center', gap: 6, borderWidth: 1, borderRadius: 8, paddingHorizontal: 8, paddingVertical: 5, marginTop: 5 },
   stageAssetNoticeText: { fontFamily: typography.bodyBold, fontSize: 7, letterSpacing: 0.6, fontWeight: '800' },
-  stagePlatform: { position: 'absolute', width: 214, height: 76, top: 104, alignItems: 'center', justifyContent: 'center', zIndex: 1 },
-  stagePlatformGlow: { width: 194, height: 54, borderWidth: 1, borderRadius: 27 },
-  stagePlatformLight: { position: 'absolute', width: 178, height: 44, borderRadius: 22 },
-  stagePlatformLine: { position: 'absolute', width: 112, height: 1, bottom: 13, borderRadius: 1 },
-  stageArtifact: { position: 'absolute', top: 15, left: 72, right: 72, alignItems: 'center', zIndex: 2 },
+  stagePlatform: { position: 'absolute', width: 250, height: 86, top: 132, alignItems: 'center', justifyContent: 'center', zIndex: 1 },
+  stagePlatformGlow: { width: 226, height: 62, borderWidth: 1, borderRadius: 27 },
+  stagePlatformLight: { position: 'absolute', width: 208, height: 52, borderRadius: 22 },
+  stagePlatformLine: { position: 'absolute', width: 142, height: 1, bottom: 14, borderRadius: 1 },
+  stageArtifact: { position: 'absolute', top: 13, left: 64, right: 64, alignItems: 'center', zIndex: 2 },
   stageCard: { alignItems: 'center' },
-  artifactFrameLarge: { width: 88, height: 123, borderWidth: 1, borderRadius: 14, overflow: 'hidden', alignItems: 'center', justifyContent: 'center', shadowOpacity: 0.42, shadowRadius: 18, shadowOffset: { width: 0, height: 10 }, elevation: 8 },
+  artifactFrameLarge: { width: 112, height: 156, borderWidth: 1, borderRadius: 14, overflow: 'hidden', alignItems: 'center', justifyContent: 'center', shadowOpacity: 0.42, shadowRadius: 18, shadowOffset: { width: 0, height: 10 }, elevation: 8 },
   artifactImage: { width: '100%', height: '100%' },
   artifactFallback: { width: '100%', height: '100%', alignItems: 'center', justifyContent: 'center', gap: 7, padding: 5 },
   artifactFallbackText: { fontFamily: typography.bodyBold, fontSize: 6, letterSpacing: 0.45, textAlign: 'center' },
@@ -751,13 +788,13 @@ const styles = StyleSheet.create({
   stageArtifactName: { fontFamily: typography.bodyBold, fontSize: 11, lineHeight: 14, fontWeight: '800', maxWidth: 118, marginTop: 2 },
   stageArtifactMeta: { fontFamily: typography.body, fontSize: 8, marginTop: 2 },
   orbitPoint: { position: 'absolute', width: 66, alignItems: 'center', gap: 4, zIndex: 3 },
-  orbitPointTopLeft: { left: 0, top: 19 },
-  orbitPointTopRight: { right: 0, top: 19 },
-  orbitPointBottomLeft: { left: 2, bottom: 14 },
-  orbitPointBottomRight: { right: 2, bottom: 14 },
+  orbitPointTopLeft: { left: 0, top: 25 },
+  orbitPointTopRight: { right: 0, top: 25 },
+  orbitPointBottomLeft: { left: 2, bottom: 20 },
+  orbitPointBottomRight: { right: 2, bottom: 20 },
   orbitPointBottomCenter: { left: '50%', marginLeft: -33, bottom: -2 },
-  orbitSeal: { width: 46, height: 46, borderWidth: 1, borderRadius: 23, alignItems: 'center', justifyContent: 'center', shadowOpacity: 0.32, shadowRadius: 14, elevation: 6 },
-  orbitSealInner: { width: 34, height: 34, borderWidth: 1, borderRadius: 17, alignItems: 'center', justifyContent: 'center' },
+  orbitSeal: { width: 52, height: 52, borderWidth: 1, borderRadius: 23, alignItems: 'center', justifyContent: 'center', shadowOpacity: 0.32, shadowRadius: 14, elevation: 6 },
+  orbitSealInner: { width: 38, height: 38, borderWidth: 1, borderRadius: 17, alignItems: 'center', justifyContent: 'center' },
   orbitSignal: { fontFamily: typography.bodyBold, fontSize: 7, letterSpacing: 0.5, fontWeight: '700', marginTop: 1 },
   orbitLabel: { fontFamily: typography.bodyBold, fontSize: 7, letterSpacing: 0.85, fontWeight: '800' },
   frontPanel: { minHeight: 52, borderWidth: 1, borderRadius: 14, paddingHorizontal: 12, paddingVertical: 9, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 11 },

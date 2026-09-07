@@ -1,3 +1,14 @@
+## 2026-09-07 — VE-MOB-3-HOME — NEXUS HUD / IMPLEMENTED_UNVERIFIED
+
+- Se refinó únicamente la superficie Android de Home/Forja en `mobile/app/(tabs)/index.tsx`: HUD superior con Energía y VEX reales, acceso a Sistemas y Perfil, foco central más dominante y órbita de destinos más legible.
+- Los valores siguen viniendo de `progress` y `wallet`; los hotspots conservan rutas Expo Router existentes. No se añadió una ruta, contrato, recompensa, personaje ni dato ficticio.
+- La escena continúa usando `lobby/main.jpg`, `OFFICIAL_ASSETS.homeNexusBurst` y la carta destacada cargada desde Supabase. La referencia adjunta no se usa como textura de fondo.
+- Se conservaron carga, error de arte, retry, estados degradados, refresh, reduced-motion, safe-area y etiquetas de accesibilidad. El cambio sigue limitado a `mobile/**`.
+- Guardas locales: `git diff --check`, validación de parse TSX sin errores de sintaxis y comprobaciones de rutas/assets del Home. El typecheck móvil completo queda pendiente del workflow oficial porque el entorno local no pudo instalar `npm-package-arg@11.0.3` desde el firewall.
+- El commit queda pendiente del workflow Android APK oficial y de QA visual/táctil humana sobre el APK. Estado honesto: `IMPLEMENTED_UNVERIFIED`; no se declara `PASS`, `Q4`, `TIER1_READY` ni `OPERATIONAL`.
+
+---
+
 ## 2026-09-07 — VE-MOB-3-HOME — OFFICIAL NEXUS BURST CONSUMER — IMPLEMENTED_UNVERIFIED
 
 - Se promovió `misc/IMG_20260619_122314.jpg` desde reserva residual a consumidor Android autorizado en `VE-MOB-3-HOME`.
