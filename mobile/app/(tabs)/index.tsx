@@ -8,7 +8,7 @@ import { ScreenShell } from '@/components/ScreenShell';
 
 const HOME_REFERENCE_BACKGROUND = require('../../../assets/images/home-reference-scene.png');
 
-type HomeRoute = '/' | '/battle' | '/collection' | '/deck' | '/missions' | '/world' | '/profile';
+type HomeRoute = '/' | '/battle' | '/collection' | '/deck' | '/missions' | '/world' | '/profile' | '/tutorial';
 
 type Hotspot = {
   id: string;
