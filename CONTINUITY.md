@@ -1804,3 +1804,29 @@
 - `publish-ota.mjs` acepta el formato Expo 54 y conserva compatibilidad con la forma legacy; el manifiesto usa los assets Android exportados para no publicar una actualización incompleta.
 - El segundo intento también falló antes de subir/registrar porque el parser todavía no contemplaba `fileMetadata`; no hubo release publicado.
 - Estado: `IMPLEMENTED_UNVERIFIED`; se ejecutará `verify` y se hará un tercer intento controlado de OTA sobre este commit.
+
+---
+## 2026-09-07 — VE-PVP-1-BATTLE-RESOLVE-BROKEN — DIAGNOSED_UNFIXED
+
+- Sesión dedicada a reparar el PVP. Se emitió sesión autenticada real con la
+  cuenta QA autorizada `cristiangalvez815@gmail.com` (contraseña sólo como
+  secreto `VEXFORGE_QA_PASSWORD`; nunca en el repositorio ni en logs).
+- CAUSA RAÍZ DEL PVP ROTO: `public.vexforge_battle_resolve` devuelve
+  `{"ok":false,"error":"UPDATE requires a WHERE clause","sqlstate":"21000"}`
+  para el par (QA, `09f80fb9-42cb-434b-b56f-a27cadf5597a`). El RPC responde
+  HTTP 200 con `ok:false`, así que la UI muestra el error crudo y ninguna
+  batalla PVP se resuelve en producción.
+- Permisos descartados como causa: `authenticated` tiene EXECUTE sobre
+  `vexforge_battle_resolve`, `vexforge_pvp_forfeit`,
+  `vexforge_pvp_store_formation`, `get_pvp_opponents`, `get_leaderboard`,
+  `get_public_player_names` y `get_public_pvp_rankings`.
+  `start_pvp_match`/`resolve_pvp_match` son `service_role`: el camino legacy
+  `startBattle()` está muerto desde el cliente.
+- Deriva registrada: todos los oponentes tienen `has_deck:false` /
+  `deck_size:0`; `players` no tiene columnas `mmr` ni `level` (viven en
+  `pvp_rankings`); `listOpponents()` usa `get_leaderboard` en lugar del
+  canónico `get_pvp_opponents`.
+- No se aplicó migración ni cambio de código en esta pasada (créditos
+  agotados antes de la fase CREATE). Estado honesto: `DIAGNOSED_UNFIXED`;
+  no se declara PASS, OPERATIONAL ni TIER1_READY.
+- Orden de ejecución detallada en `docs/VE-PVP-1-BATTLE-RESOLVE-BROKEN.md`.
