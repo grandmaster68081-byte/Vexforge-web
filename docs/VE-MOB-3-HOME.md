@@ -207,3 +207,12 @@ La Fase VISUAL no se declara cerrada sólo por compilar: debe alcanzar al menos 
   APK siguen siendo gates de cierre.
 - Estado: `IMPLEMENTED_UNVERIFIED`; no se declara `PASS`, `Q4`,
   `TIER1_READY` ni `OPERATIONAL`.
+
+
+## Lote de estados honestos — 2026-09-07 — VE-MOB-3-HOME-STATES
+
+- El Home distingue `loading`, `empty`, `error`, `partial` y `ready` para las señales agregadas sin cambiar la autoridad de los datos.
+- Durante la carga, la carta y la misión muestran una espera explícita; cuando no existe contenido publicado, muestran un vacío honesto; cuando falla el arte de una carta existente, muestran un error de asset separado.
+- Un evento inexistente ya no desaparece silenciosamente: se comunica como `Sin evento activo`. Los errores totales o parciales exponen una acción accesible de reintento mediante `testID=home-retry`.
+- La implementación permanece limitada a Android y conserva `reduced-motion`, safe-area, rutas existentes y la regla de cero genéricos. El workflow Android oficial y la QA humana del APK son gates pendientes.
+- Estado: `IMPLEMENTED_UNVERIFIED`; no se declara `PASS`, `Q4`, `TIER1_READY` u `OPERATIONAL`.

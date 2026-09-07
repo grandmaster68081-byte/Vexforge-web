@@ -327,6 +327,12 @@ export default function ForgeScreen() {
   };
   const cardWidth = Math.min(Math.max(width * 0.34, 132), 174);
   const cardHeight = cardWidth * 1.42;
+  const hasHomePayload = Boolean(home.stats || home.dailyCard || home.missions.length > 0 || home.activity.length > 0);
+  const homeDataState: 'loading' | 'partial' | 'error' | 'empty' | 'ready' = homeLoading && !hasHomePayload
+    ? 'loading'
+    : homeError
+      ? hasHomePayload ? 'partial' : 'error'
+      : hasHomePayload ? 'ready' : 'empty';
 
   useEffect(() => {
     progressMotion.value = reduceMotion ? xpPercent : withTiming(xpPercent, { duration: MOTION.navigation });
@@ -533,10 +539,20 @@ export default function ForgeScreen() {
                         accessibilityLabel={`Arte de ${featuredCard.name}`}
                         onError={() => setFeaturedCardImageFailed(true)}
                       />
+                    ) : featuredCard || featuredCardImageFailed ? (
+                      <View style={[styles.cardError, { backgroundColor: `${colors.ink}EE` }]}>
+                        <Ionicons name="warning" size={29} color={colors.danger} />
+                        <Text style={[styles.cardErrorText, { color: colors.mutedForeground }]}>ARTE NO DISPONIBLE</Text>
+                      </View>
+                    ) : homeLoading ? (
+                      <View style={[styles.cardError, { backgroundColor: `${colors.ink}EE` }]}>
+                        <ActivityIndicator size="small" color={colors.accent} />
+                        <Text style={[styles.cardErrorText, { color: colors.mutedForeground }]}>CARGANDO CARTA</Text>
+                      </View>
                     ) : (
                       <View style={[styles.cardError, { backgroundColor: `${colors.ink}EE` }]}>
-                        <Ionicons name="card" size={29} color={colors.accent} />
-                        <Text style={[styles.cardErrorText, { color: colors.mutedForeground }]}>ARTE NO DISPONIBLE</Text>
+                        <Ionicons name="card" size={29} color={colors.mutedForeground} />
+                        <Text style={[styles.cardErrorText, { color: colors.mutedForeground }]}>CARTA NO PUBLICADA</Text>
                       </View>
                     )}
                     <LinearGradient
@@ -548,8 +564,8 @@ export default function ForgeScreen() {
                     <View pointerEvents="none" style={[styles.cardCornerBottom, { borderColor: `${colors.accent}AA` }]} />
                     <View style={styles.cardCaption}>
                       <Text style={[styles.cardKicker, { color: colors.accent }]}>RELIQUIA ACTIVA</Text>
-                      <Text style={[styles.cardName, { color: colors.foreground }]} numberOfLines={1}>{featuredCard?.name ?? 'CARTA DEL DÍA'}</Text>
-                      <Text style={[styles.cardMeta, { color: colors.mutedForeground }]}>{featuredCard ? `${featuredCard.rarity} · ${featuredCard.faction}` : 'Sincronizando'}</Text>
+                      <Text style={[styles.cardName, { color: colors.foreground }]} numberOfLines={1}>{featuredCard?.name ?? (homeLoading ? 'CARTA DEL DÍA' : 'CARTA NO PUBLICADA')}</Text>
+                      <Text style={[styles.cardMeta, { color: colors.mutedForeground }]}>{featuredCard ? `${featuredCard.rarity} · ${featuredCard.faction}` : homeLoading ? 'Sincronizando' : 'Sin registro oficial'}</Text>
                     </View>
                   </View>
                 </Pressable>
@@ -562,9 +578,9 @@ export default function ForgeScreen() {
                 </View>
                 <View style={styles.missionCopy}>
                   <Text style={[styles.missionEyebrow, { color: colors.accent }]}>MISIÓN DIARIA</Text>
-                  <Text style={[styles.missionTitle, { color: colors.foreground }]} numberOfLines={1}>{home.missions[0]?.name ?? 'El Nexus aguarda'}</Text>
+                  <Text style={[styles.missionTitle, { color: colors.foreground }]} numberOfLines={1}>{home.missions[0]?.name ?? (homeLoading ? 'Sincronizando misión' : 'No hay misión publicada')}</Text>
                   <Text style={[styles.missionMeta, { color: colors.mutedForeground }]}>
-                    {home.missions[0] ? `${home.missions[0].difficulty ?? 'Misión'} · +${home.missions[0].reward_vex_ingame ?? 0} VEX` : 'Sin misiones publicadas'}
+                    {home.missions[0] ? `${home.missions[0].difficulty ?? 'Misión'} · +${home.missions[0].reward_vex_ingame ?? 0} VEX` : homeLoading ? 'Consultando el Nexus' : 'Sin misiones publicadas'}
                   </Text>
                 </View>
                 <Pressable
@@ -604,6 +620,17 @@ export default function ForgeScreen() {
                 </View>
                 <Ionicons name="chevron-right" size={18} color={colors.rarityEpic} />
               </Pressable>
+            ) : !homeLoading ? (
+              <View testID="home-event-empty" accessibilityRole="status" style={[styles.eventCard, { borderColor: colors.border, backgroundColor: `${colors.ink}B8` }]}>
+                <View style={[styles.eventSeal, { borderColor: colors.border, backgroundColor: `${colors.foreground}0D` }]}>
+                  <Ionicons name="spark" size={23} color={colors.mutedForeground} />
+                </View>
+                <View style={styles.eventCopy}>
+                  <Text style={[styles.eventEyebrow, { color: colors.mutedForeground }]}>EVENTO ESPECIAL</Text>
+                  <Text style={[styles.eventTitle, { color: colors.foreground }]}>Sin evento activo</Text>
+                  <Text style={[styles.eventMeta, { color: colors.mutedForeground }]}>El Nexus publicará el próximo evento aquí.</Text>
+                </View>
+              </View>
             ) : null}
 
             <Pressable
@@ -637,13 +664,30 @@ export default function ForgeScreen() {
         </Animated.View>
 
         <View style={styles.content}>
-          {homeError ? (
-            <View style={[styles.errorBar, { borderColor: colors.danger, backgroundColor: `${colors.danger}16` }]}>
-              <Ionicons name="warning" size={18} color={colors.danger} />
-              <Text style={[styles.errorText, { color: colors.foreground }]}>{homeError}</Text>
-              <Pressable accessibilityRole="button" accessibilityLabel="Reintentar sincronización del Home" testID="home-retry" onPress={() => void loadHome()}>
-                <Text style={[styles.retryText, { color: colors.accent }]}>REINTENTAR</Text>
-              </Pressable>
+          {homeDataState !== 'ready' ? (
+            <View
+              testID="home-data-state"
+              accessibilityRole={homeDataState === 'partial' || homeDataState === 'error' ? 'alert' : 'status'}
+              style={[styles.statePanel, { borderColor: homeDataState === 'loading' || homeDataState === 'empty' ? `${colors.accent}66` : colors.danger, backgroundColor: homeDataState === 'loading' || homeDataState === 'empty' ? `${colors.accent}12` : `${colors.danger}16` }]}
+            >
+              {homeDataState === 'loading' ? (
+                <ActivityIndicator size="small" color={colors.accent} />
+              ) : (
+                <Ionicons name={homeDataState === 'empty' ? 'radio' : 'warning'} size={18} color={homeDataState === 'empty' ? colors.accent : colors.danger} />
+              )}
+              <View style={styles.stateCopy}>
+                <Text style={[styles.stateTitle, { color: homeDataState === 'loading' || homeDataState === 'empty' ? colors.accent : colors.danger }]}>
+                  {homeDataState === 'loading' ? 'SINCRONIZANDO FOJA' : homeDataState === 'partial' ? 'SEÑALES PARCIALES' : homeDataState === 'error' ? 'FOJA NO DISPONIBLE' : 'NEXUS EN ESPERA'}
+                </Text>
+                <Text style={[styles.stateText, { color: colors.foreground }]}>
+                  {homeDataState === 'loading' ? 'Los datos reales del Nexus están llegando.' : homeDataState === 'partial' ? 'Parte del contenido sigue disponible; actualiza para completar la escena.' : homeDataState === 'error' ? homeError ?? 'No se pudo sincronizar el contenido de Foja.' : 'No hay contenido publicado para esta superficie.'}
+                </Text>
+              </View>
+              {homeDataState !== 'loading' ? (
+                <Pressable accessibilityRole="button" accessibilityLabel="Reintentar sincronización del Home" testID="home-retry" onPress={() => void loadHome()}>
+                  <Text style={[styles.retryText, { color: colors.accent }]}>REINTENTAR</Text>
+                </Pressable>
+              ) : null}
             </View>
           ) : null}
 
@@ -651,7 +695,7 @@ export default function ForgeScreen() {
             <View style={styles.statusHeader}>
               <View>
                 <SectionLabel color={colors.accent}>ESTADO DE LA BASE</SectionLabel>
-                <Text style={[styles.statusTitle, { color: colors.foreground }]}>Tu mundo, siempre listo.</Text>
+                <Text style={[styles.statusTitle, { color: colors.foreground }]}>{homeDataState === 'ready' ? 'Tu mundo, siempre listo.' : 'Señales del Nexus.'}</Text>
               </View>
               <View style={[styles.connectionPill, { borderColor: `${nexusStatus.color}66`, backgroundColor: `${nexusStatus.color}16` }]}>
                 <View style={[styles.connectionDot, { backgroundColor: nexusStatus.color }]} />
@@ -833,6 +877,10 @@ const styles = StyleSheet.create({
   content: { paddingHorizontal: 16, paddingTop: 11, gap: 11 },
   errorBar: { minHeight: 48, borderWidth: 1, borderRadius: 13, padding: 11, flexDirection: 'row', alignItems: 'center', gap: 9 },
   errorText: { flex: 1, fontFamily: typography.body, fontSize: 11, lineHeight: 15 },
+  statePanel: { minHeight: 62, borderWidth: 1, borderRadius: 14, paddingHorizontal: 11, paddingVertical: 10, flexDirection: 'row', alignItems: 'center', gap: 9 },
+  stateCopy: { flex: 1, gap: 4 },
+  stateTitle: { fontFamily: typography.bodyBold, fontSize: 8, letterSpacing: 0.8, fontWeight: '800' },
+  stateText: { fontFamily: typography.body, fontSize: 10, lineHeight: 14 },
   retryText: { fontFamily: typography.bodyBold, fontSize: 8, letterSpacing: 0.7, fontWeight: '800' },
   statusPanel: { borderWidth: 1, borderRadius: 17, padding: 14 },
   statusHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', gap: 10 },

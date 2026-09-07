@@ -1,3 +1,13 @@
+## 2026-09-07 — VE-MOB-3-HOME-STATES — IMPLEMENTED_UNVERIFIED
+
+- Preflight reconciliado contra el protocolo activo de Supabase v2.15, `VE-MOB-0`, la matriz funcional de Home y el código Android real de `main`.
+- Se implementaron estados honestos para la carga, vacío, error y respuesta parcial de Home: la carta ausente ya no se presenta como arte fallido, el evento sin datos queda visible como vacío explícito y la sincronización de señales conserva retry accesible.
+- El cambio queda limitado a `mobile/app/(tabs)/index.tsx`; no modifica web, Auth, RLS, RPCs, economía, combate, Storage ni contratos autoritativos. No se añaden datos ni assets.
+- Gate técnico pendiente: typecheck/guards del workflow Android oficial y release correlativo. La QA visual/táctil humana en APK sigue pendiente; no se declara `PASS`, `Q4`, `TIER1_READY` ni `OPERATIONAL`.
+- Siguiente acción verificable: publicar este commit en `main`, esperar el workflow Android y registrar el release/digest correlativo; después continuar con el paquete Home permitido por el plan sin saltar a Batalla.
+
+---
+
 ## 2026-09-07 — VE-MOB-3-HOME — FOJA VISUAL HUB / IMPLEMENTED_UNVERIFIED
 
 - Se reemplazó la composición anterior del Home Android por un hub vertical
