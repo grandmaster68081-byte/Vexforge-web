@@ -436,7 +436,6 @@ export default function ForgeScreen() {
             <View style={[styles.sceneStage, { zIndex: DEPTH.focus }]}>
               <Image
                 testID="home-official-nexus-burst"
-                pointerEvents="none"
                 source={{ uri: OFFICIAL_ASSETS.homeNexusBurst }}
                 style={styles.stageBurst}
                 resizeMode="cover"
