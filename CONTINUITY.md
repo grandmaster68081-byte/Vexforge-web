@@ -1908,3 +1908,36 @@
   UPDATE sin WHERE (reproducir con sesión QA `cristiangalvez815@gmail.com`,
   contraseña sólo en secreto `VEXFORGE_QA_PASSWORD`), corregir con migración,
   y continuar FASES 6-13 (battlefield real con cartas/ilustraciones).
+
+---
+## 2026-09-07 — VE-PVP-02-P0-ROOT-CAUSE-WHERE-TRUE — DIAGNOSED_UNFIXED
+
+- Sesión iniciada con el paquete `VEXFORGE_PVP_BATTLEFIELD_LOVABLE_PACKAGE`
+  (directiva de battlefield + evidencia de auditoría + 3 referencias visuales).
+  Orden obligatorio del prompt: AUDITAR → REPARAR MOTOR → REPARAR DATOS/ASSETS →
+  CONSTRUIR TABLERO → CONECTAR EVENTOS → ANIMAR → PROBAR → REGRESAR → DOCUMENTAR.
+- CAUSA RAÍZ DEL P0 AISLADA Y CONFIRMADA: el rol `authenticator` precarga la
+  librería `safeupdate` (`session_preload_libraries=supautils, safeupdate`).
+  No existe ningún `UPDATE` sin `WHERE` en las 348 funciones de aplicación; el
+  bloqueo lo causan los `UPDATE ... WHERE true`, porque el planificador elimina
+  el qual constante y `safeupdate` inspecciona el plan, no el texto.
+- Inventario cerrado: 13 sentencias `WHERE true` en 9 funciones
+  (`update_reward_scaling`, `vexforge_meta_tick`, `economic_brake_check`,
+  `meta_system_tick`, `economy_os_orchestrator`, `update_market_stability`,
+  `mutate_reality`, `sync_to_canonical_reality`, `apply_reality_rules`).
+  `update_reward_scaling` (candidata de VE-PVP-01) queda confirmada, pero NO es
+  la única: corregir sólo esa dejaría el bloqueo vivo por otras ramas de trigger.
+- PRUEBA DIFERENCIAL: ejecutado `vexforge_battle_resolve` por vía administrativa
+  (sin `safeupdate`) con claim JWT simulado → `ok:true`, `turns[]` completo,
+  `final_units[]`, formación CAMPEÓN/VANGUARDIA/CENTINELA e `image_url` real de
+  las cartas (`vexforge-assets/cards/*.jpg`). El motor de combate NO está roto;
+  el bloqueo es exclusivamente la interacción `WHERE true` × `safeupdate`.
+- No se aplicó migración en esta pasada (sesión detenida por créditos antes de
+  la fase CREATE). Corrección diseñada y documentada:
+  `0046_ve_pvp_2_where_true_safeupdate_fix.sql`, sustituyendo `WHERE true` por
+  `WHERE <pk> IS NOT NULL`. Prohibido desactivar `safeupdate` o simular combate.
+- Detalle completo, evidencia y criterios de verificación en
+  `docs/VE-PVP-02-P0-ROOT-CAUSE-WHERE-TRUE.md`.
+- Estado honesto: `DIAGNOSED_UNFIXED`. No se declara PASS, OPERATIONAL ni
+  TIER1_READY. Siguiente unidad: aplicar 0046, reverificar PVP end-to-end con la
+  cuenta QA y continuar con la construcción del battlefield vertical.
