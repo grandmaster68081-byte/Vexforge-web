@@ -151,6 +151,15 @@ La Fase VISUAL no se declara cerrada sólo por compilar: debe alcanzar al menos 
 - Guardas estáticas del lote: `verify:motion`, `verify:ui-identity`, `verify:surface-art`, `verify:mobile-meta`, `verify:assets` y `verify:mobile-battle` pasan.
 - Estado: `IMPLEMENTED_UNVERIFIED`; falta typecheck/build del workflow Android oficial y QA visual/táctil humana en APK.
 
+## Addendum 2026-09-07 — ASSET OFICIAL DEL NÚCLEO NEXUS
+
+- El Home consume `OFFICIAL_ASSETS.homeNexusBurst`, registrado en `mobile/constants/visual.ts` como `misc/IMG_20260619_122314.jpg`.
+- El asset se usa únicamente como capa estática de atmósfera detrás del escenario central y la carta destacada; `CANONICAL_BACKGROUNDS.home` (`lobby/main.jpg`) continúa siendo el fondo principal.
+- El consumidor comunica carga y error explícitos (`home-nexus-burst-loading`, `home-nexus-burst-error`) y expone una etiqueta accesible. No añade movimiento ni cambia el comportamiento bajo `reduced-motion`.
+- La ruta deja de ser reserva residual porque existe un consumidor Android autorizado. Los otros cinco archivos del lote permanecen reservados y sin sustitutos.
+- No se modifican Supabase, Auth, RLS, RPCs, economía, combate, navegación ni la web como superficie de producto.
+- El estado sigue `IMPLEMENTED_UNVERIFIED`; requiere typecheck/build del workflow APK oficial y QA visual/táctil humana.
+
 ## Evidencia de entrega — 2026-09-07 — lote Nexus core
 
 - Commit Android: `2d98d0f7097f4ecfff90a88bd366acaf28402986`.

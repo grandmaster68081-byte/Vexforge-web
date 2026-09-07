@@ -13,6 +13,7 @@ export const OFFICIAL_ASSETS = {
   factionPaladin: storageAsset('factions/icon_paladin.png'),
   factionPicaro: storageAsset('factions/icon_picaro.png'),
   tutorialHero: storageAsset('tutorial/main.png'),
+  homeNexusBurst: storageAsset('misc/IMG_20260619_122314.jpg'),
 } as const;
 
 export const CANONICAL_BACKGROUNDS = {

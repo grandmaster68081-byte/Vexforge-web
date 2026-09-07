@@ -2327,3 +2327,13 @@ Cada unidad registra: alcance, archivos/superficies, fuente canónica, estado an
 - Esta evidencia es documental y de procedencia; no altera contratos de combate, economía, Auth, RLS, RPCs, datos de jugador ni el alcance Android.
 - Guarda: `node scripts/verify-residual-art.mjs` pasa con 57 filas residuales, 38 objetos, 35 reservas y 19 prefijos.
 - Estado: `ASSET_PROVENANCE_RESOLVED`; sigue vigente `PRE-LAUNCH INTERNAL QA` y ninguna unidad se promociona a `PASS`, `TIER1_READY` u `OPERATIONAL`.
+
+---
+## PATCH OPERATIVO — 2026-09-07 — CONSUMIDOR ANDROID AUTORIZADO
+
+- `misc/IMG_20260619_122314.jpg` queda promovido desde reserva residual a consumidor Android explícito de `VE-MOB-3-HOME`.
+- El registro `OFFICIAL_ASSETS.homeNexusBurst` lo usa como atmósfera estática del escenario central, detrás de la carta destacada; el fondo canónico `lobby/main.jpg` no se sustituye.
+- El consumidor tiene estados de carga y error accesibles, conserva el comportamiento `reduced-motion` y no introduce sustitutos genéricos.
+- Los otros cinco archivos extraídos del lote permanecen en reserva declarada y sin consumidor autorizado.
+- La guarda proporcional nueva es `verify:mobile-home-official-assets`; también deben pasar `verify:residual-art`, `verify:manifest`, typecheck y el workflow APK oficial.
+- Estado de `VE-MOB-3-HOME`: `IMPLEMENTED_UNVERIFIED`; no se declara `PASS`, `Q4`, `TIER1_READY` u `OPERATIONAL` por esta implementación.

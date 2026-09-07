@@ -38,6 +38,7 @@ export const VERIFIED_ASSETS = [
   "heroes/hero_market.jpg",
   "lobby/main.jpg",
   "logo/IMG_20260606_040509_906.jpg",
+  "misc/IMG_20260619_122314.jpg",
 ] as const;
 
 export type VerifiedAssetPath = (typeof VERIFIED_ASSETS)[number];
@@ -156,8 +157,10 @@ export const RESERVED_SURFACE_ART: ReadonlyArray<string> = [
  * wallet_hero y las filas `*_collection`.
  *
  * Consumo canónico actual: `cover/main.jpg` (portada de cuenta),
- * `lobby/main.jpg` (portada de inicio) y `logo/IMG_20260606_040509_906.jpg`
- * (logotipo oficial), todos resueltos con `storageAsset()`.
+ * `lobby/main.jpg` (portada de inicio), `misc/IMG_20260619_122314.jpg`
+ * (atmósfera estática del núcleo Nexus Android) y
+ * `logo/IMG_20260606_040509_906.jpg` (logotipo oficial), todos resueltos con
+ * `storageAsset()` en sus consumidores autorizados.
  *
  * El resto queda como reserva declarada y reversible: arte oficial inscrito y
  * disponible en Storage que ninguna superficie consume todavía. No se elimina,
@@ -195,7 +198,6 @@ export const RESERVED_RESIDUAL_ART: ReadonlyArray<string> = [
   "wallet/main.jpg",
   "founders/IMG_20260619_113831.jpg",
   "misc/IMG_20260619_122016.jpg",
-  "misc/IMG_20260619_122314.jpg",
   "sessions/IMG_20260619_111025.jpg",
   "ui sistema/IMG_20260619_115844.jpg",
   "ui sistema/IMG_20260619_120107.jpg",

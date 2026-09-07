@@ -1,3 +1,13 @@
+## 2026-09-07 — VE-MOB-3-HOME — OFFICIAL NEXUS BURST CONSUMER — IMPLEMENTED_UNVERIFIED
+
+- Se promovió `misc/IMG_20260619_122314.jpg` desde reserva residual a consumidor Android autorizado en `VE-MOB-3-HOME`.
+- `mobile/constants/visual.ts` lo registra como `OFFICIAL_ASSETS.homeNexusBurst`; `mobile/app/(tabs)/index.tsx` lo consume como atmósfera estática detrás de la carta destacada.
+- `lobby/main.jpg` continúa siendo el fondo canónico del Home. El nuevo asset tiene carga explícita, error accesible y no añade movimiento, por lo que `reduced-motion` conserva un render estático.
+- Guarda nueva: `node scripts/verify-mobile-home-official-assets.mjs` pasa 5/5. `verify-residual-art` pasa con 4 objetos consumidos y 34 reservas; `verify-manifest` no tiene referencias rotas y puede diferir HEADs por HTTP 429 transitorio.
+- El cambio modifica `mobile/**` y requiere workflow APK oficial, release correlativo y QA visual/táctil humana. La unidad permanece `IMPLEMENTED_UNVERIFIED`; no se declara `PASS`, `Q4`, `TIER1_READY` u `OPERATIONAL`.
+
+---
+
 ## 2026-09-07 — VE-ASSET-ZIP-BUNDLES — EXTRACTED / MANIFEST VERIFIED
 
 - El plan vivo en Supabase registraba cuatro bundles oficiales que existían sólo como ZIP: `founders.zip`, `misc.zip`, `sessions.zip` y `ui sistema.zip`.

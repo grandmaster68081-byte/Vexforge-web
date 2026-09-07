@@ -17,12 +17,20 @@ Se ejecutó la acción de procedencia indicada por el plan vivo de VEXFORGE para
 |---|---|---|
 | founders | `founders/IMG_20260619_113831.jpg` | oficial, habilitado, reservado |
 | misc | `misc/IMG_20260619_122016.jpg` | oficial, habilitado, reservado |
-| misc | `misc/IMG_20260619_122314.jpg` | oficial, habilitado, reservado |
+| misc | `misc/IMG_20260619_122314.jpg` | oficial, habilitado, consumidor Android Home |
 | sessions | `sessions/IMG_20260619_111025.jpg` | oficial, habilitado, reservado |
 | ui_system | `ui sistema/IMG_20260619_115844.jpg` | oficial, habilitado, reservado |
 | ui_system | `ui sistema/IMG_20260619_120107.jpg` | oficial, habilitado, reservado |
 
-Cada archivo conserva su ZIP de origen en el manifiesto. Las rutas quedan en `RESERVED_RESIDUAL_ART` porque aún no existe un consumidor Android autorizado para ellas; no se asignó una superficie por inferencia visual ni se reemplazó arte pendiente.
+Cada archivo conserva su ZIP de origen en el manifiesto. La ruta `misc/IMG_20260619_122314.jpg` fue promovida con una decisión de consumidor explícita para la atmósfera estática del escenario central de `VE-MOB-3-HOME`; las otras cinco rutas siguen en `RESERVED_RESIDUAL_ART`. No se asignó una superficie por inferencia visual ni se reemplazó arte pendiente.
+
+## Consumidor Android autorizado
+
+- Superficie: `VE-MOB-3-HOME`, escena del Nexus.
+- Registro Android: `mobile/constants/visual.ts`, entrada `OFFICIAL_ASSETS.homeNexusBurst`.
+- Uso: capa estática de atmósfera detrás de la carta destacada; `lobby/main.jpg` continúa siendo el fondo canónico.
+- Estados: carga explícita, error accesible y sin movimiento adicional para respetar `reduced-motion`.
+- La promoción no altera datos, Auth, RLS, RPCs, economía, combate ni navegación.
 
 ## Verificación
 
@@ -33,4 +41,4 @@ Cada archivo conserva su ZIP de origen en el manifiesto. Las rutas quedan en `RE
 
 ## Estado
 
-`ASSET_PROVENANCE_RESOLVED` para estos cuatro bundles. Los assets siguen reservados: no se declara cobertura visual de una superficie ni se eleva ninguna unidad Android por esta operación.
+`ASSET_PROVENANCE_RESOLVED` para estos cuatro bundles. Un asset tiene ahora un consumidor Android autorizado y cinco permanecen reservados. La unidad Home sigue `IMPLEMENTED_UNVERIFIED` hasta workflow APK y QA humana.

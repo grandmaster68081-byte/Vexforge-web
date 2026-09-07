@@ -37,7 +37,7 @@ import { ForgeMark } from '@/components/ForgeMark';
 import { ForgeText } from '@/components/ForgeText';
 import { ProgressBar } from '@/components/ProgressBar';
 import { ScreenShell } from '@/components/ScreenShell';
-import { CANONICAL_BACKGROUNDS, FACTION_BACKGROUNDS } from '@/constants/visual';
+import { CANONICAL_BACKGROUNDS, FACTION_BACKGROUNDS, OFFICIAL_ASSETS } from '@/constants/visual';
 import { DEPTH, DOMAIN_IDENTITY, MOTION } from '@/constants/experience';
 import { typography } from '@/constants/typography';
 
@@ -200,6 +200,7 @@ export default function ForgeScreen() {
   const [featuredCardImageFailed, setFeaturedCardImageFailed] = useState(false);
   const [factionSceneFailed, setFactionSceneFailed] = useState(false);
   const [homeSceneState, setHomeSceneState] = useState<'loading' | 'ready' | 'error'>('loading');
+  const [homeNexusBurstState, setHomeNexusBurstState] = useState<'loading' | 'ready' | 'error'>('loading');
   const scrollY = useSharedValue(0);
   const ambientMotion = useSharedValue(0);
   const progressMotion = useSharedValue(0);
@@ -433,6 +434,22 @@ export default function ForgeScreen() {
             </View>
 
             <View style={[styles.sceneStage, { zIndex: DEPTH.focus }]}>
+              <Image
+                testID="home-official-nexus-burst"
+                pointerEvents="none"
+                source={{ uri: OFFICIAL_ASSETS.homeNexusBurst }}
+                style={styles.stageBurst}
+                resizeMode="cover"
+                accessibilityLabel="Atmósfera oficial del pulso del Nexus"
+                onLoad={() => setHomeNexusBurstState('ready')}
+                onError={() => setHomeNexusBurstState('error')}
+              />
+              {homeNexusBurstState === 'loading' ? (
+                <View testID="home-nexus-burst-loading" pointerEvents="none" style={styles.stageAssetStatus}>
+                  <ActivityIndicator size="small" color={colors.accent} />
+                  <Text style={[styles.stageAssetStatusText, { color: colors.mutedForeground }]}>CARGANDO PULSO OFICIAL</Text>
+                </View>
+              ) : null}
               <View pointerEvents="none" style={[styles.stageRingOuter, { borderColor: `${colors.accent}35` }]} />
               <View pointerEvents="none" style={[styles.stageRingInner, { borderColor: `${colors.accent}24` }]} />
               <View pointerEvents="none" style={styles.stagePlatform}>
@@ -480,6 +497,12 @@ export default function ForgeScreen() {
                 </Pressable>
               </Animated.View>
             </View>
+            {homeNexusBurstState === 'error' ? (
+              <View testID="home-nexus-burst-error" accessibilityRole="alert" style={[styles.stageAssetNotice, { borderColor: colors.danger, backgroundColor: `${colors.danger}1A` }]}>
+                <Ionicons name="alert-circle-outline" size={13} color={colors.danger} />
+                <Text style={[styles.stageAssetNoticeText, { color: colors.foreground }]}>ATMÓSFERA OFICIAL NO DISPONIBLE</Text>
+              </View>
+            ) : null}
 
             <View style={[styles.frontPanel, { borderColor: `${colors.accent}85`, backgroundColor: `${colors.ink}C9` }]}>
               <View style={styles.frontPanelCopy}>
@@ -710,6 +733,11 @@ const styles = StyleSheet.create({
   sceneStage: { height: 230, marginTop: 13, position: 'relative', alignItems: 'center', justifyContent: 'center' },
   stageRingOuter: { position: 'absolute', width: 198, height: 198, top: 11, borderWidth: 1, borderRadius: 99 },
   stageRingInner: { position: 'absolute', width: 146, height: 146, top: 37, borderWidth: 1, borderRadius: 73 },
+  stageBurst: { ...StyleSheet.absoluteFillObject, borderRadius: 26, opacity: 0.38 },
+  stageAssetStatus: { position: 'absolute', bottom: 7, left: 0, right: 0, alignItems: 'center', justifyContent: 'center', gap: 4, zIndex: 4 },
+  stageAssetStatusText: { fontFamily: typography.bodyBold, fontSize: 7, letterSpacing: 0.7, fontWeight: '800' },
+  stageAssetNotice: { alignSelf: 'center', flexDirection: 'row', alignItems: 'center', gap: 6, borderWidth: 1, borderRadius: 8, paddingHorizontal: 8, paddingVertical: 5, marginTop: 5 },
+  stageAssetNoticeText: { fontFamily: typography.bodyBold, fontSize: 7, letterSpacing: 0.6, fontWeight: '800' },
   stagePlatform: { position: 'absolute', width: 214, height: 76, top: 104, alignItems: 'center', justifyContent: 'center', zIndex: 1 },
   stagePlatformGlow: { width: 194, height: 54, borderWidth: 1, borderRadius: 27 },
   stagePlatformLight: { position: 'absolute', width: 178, height: 44, borderRadius: 22 },
