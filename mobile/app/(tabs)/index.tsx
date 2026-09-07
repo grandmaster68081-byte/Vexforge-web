@@ -621,7 +621,7 @@ export default function ForgeScreen() {
                 <Ionicons name="chevron-right" size={18} color={colors.rarityEpic} />
               </Pressable>
             ) : !homeLoading ? (
-              <View testID="home-event-empty" accessibilityRole="status" style={[styles.eventCard, { borderColor: colors.border, backgroundColor: `${colors.ink}B8` }]}>
+              <View testID="home-event-empty" accessibilityRole="text" style={[styles.eventCard, { borderColor: colors.border, backgroundColor: `${colors.ink}B8` }]}>
                 <View style={[styles.eventSeal, { borderColor: colors.border, backgroundColor: `${colors.foreground}0D` }]}>
                   <Ionicons name="spark" size={23} color={colors.mutedForeground} />
                 </View>
@@ -667,7 +667,7 @@ export default function ForgeScreen() {
           {homeDataState !== 'ready' ? (
             <View
               testID="home-data-state"
-              accessibilityRole={homeDataState === 'partial' || homeDataState === 'error' ? 'alert' : 'status'}
+              accessibilityRole={homeDataState === 'partial' || homeDataState === 'error' ? 'alert' : 'text'}
               style={[styles.statePanel, { borderColor: homeDataState === 'loading' || homeDataState === 'empty' ? `${colors.accent}66` : colors.danger, backgroundColor: homeDataState === 'loading' || homeDataState === 'empty' ? `${colors.accent}12` : `${colors.danger}16` }]}
             >
               {homeDataState === 'loading' ? (
