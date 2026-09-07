@@ -1,6 +1,6 @@
 # VE-PVP-02 — CAUSA RAÍZ AISLADA DEL BLOQUEO P0 PVP (`UPDATE requires a WHERE clause`, SQLSTATE 21000)
 
-Estado: `DIAGNOSED_UNFIXED` (causa raíz confirmada por reproducción; migración correctiva pendiente).
+Estado: `PARTIAL_FIX_APPLIED` (causa raíz confirmada por reproducción; migración correctiva pendiente).
 Fecha: 2026-09-07. Sesión PVP (paquete `VEXFORGE_PVP_BATTLEFIELD_LOVABLE_PACKAGE`).
 
 ## 1. Hecho verificado: la protección activa es `safeupdate`
@@ -86,3 +86,9 @@ Prohibido expresamente: desactivar `safeupdate`, envolver el RPC en
 Hasta esa verificación humana en dispositivo, el estado honesto sigue siendo
 `DIAGNOSED_UNFIXED` / `IMPLEMENTED_UNVERIFIED`. No se declara PASS, OPERATIONAL
 ni TIER1_READY.
+
+## 6. Aplicación de la corrección
+
+- La migración `0046_ve_pvp_2_where_true_safeupdate_fix.sql` fue aplicada en Supabase oficial mediante la Management API.
+- Verificación administrativa posterior: las nueve funciones objetivo contienen `0` ocurrencias de `WHERE true`.
+- La reproducción end-to-end con una sesión autenticada de QA y la confirmación de ELO, `pvp_matches`, recompensas y `player_progress` siguen siendo evidencia pendiente; no se declara `PASS`, `OPERATIONAL` ni `TIER1_READY`.

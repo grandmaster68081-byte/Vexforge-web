@@ -1952,3 +1952,13 @@
 - Estado honesto: `DIAGNOSED_UNFIXED`. No se declara PASS, OPERATIONAL ni
   TIER1_READY. Siguiente unidad: aplicar 0046, reverificar PVP end-to-end con la
   cuenta QA y continuar con la construcción del battlefield vertical.
+
+---
+## 2026-09-07 — VE-PVP-02-P0-ROOT-CAUSE-WHERE-TRUE — PARTIAL_FIX_APPLIED
+
+- La migración `supabase/migrations/0046_ve_pvp_2_where_true_safeupdate_fix.sql` fue aplicada en Supabase oficial por Management API.
+- La migración conserva las nueve definiciones vivas y sustituye únicamente las 13 condiciones `WHERE true` por predicados reales `WHERE id IS NOT NULL` sobre las claves primarias de las tablas singleton.
+- Verificación administrativa posterior: las nueve funciones objetivo quedan con cero ocurrencias de `WHERE true`; `safeupdate` no se desactivó y el RPC de combate no fue simulado ni reescrito.
+- El battlefield Android existente permanece como consumidor de `final_units`, `turns` e `image_url` del RPC autoritativo; no se tocó `mobile/**`, por lo que no corresponde fabricar un APK nuevo para este cambio de datos.
+- Estado honesto: `PARTIAL_FIX_APPLIED`. La reproducción desde una sesión QA autenticada real y la confirmación de ELO, `pvp_matches`, recompensas y `player_progress` siguen pendientes. No se declara `PASS`, `OPERATIONAL` ni `TIER1_READY`.
+- Siguiente acción verificable: completar la verificación QA end-to-end y, si pasa, continuar la evidencia del battlefield vertical.

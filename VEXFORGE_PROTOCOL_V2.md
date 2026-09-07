@@ -2316,3 +2316,4 @@ Cuando existan pistas independientes, la sesión debe usar uno o dos subagentes 
 ### 8. Cierre obligatorio y handoff
 
 Cada unidad registra: alcance, archivos/superficies, fuente canónica, estado anterior/nuevo, gate, scorecard, guardas, workflow, commit, release, assets y limitaciones. El handoff humano debe enumerar dispositivo, sesión, pasos, resultado esperado y cualquier revisión visual subjetiva o acción externa que la IA no pueda probar.
+
