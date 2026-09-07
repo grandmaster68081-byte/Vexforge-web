@@ -68,3 +68,65 @@ como `ok:false`, por lo que no aparece en logs de PostgREST.
 5. Sembrar mazos reales para los oponentes de entrenamiento o excluir a los
    jugadores sin mazo del matchmaking.
 6. Registrar cierre en `CONTINUITY.md` sólo con evidencia de batalla real.
+
+---
+
+## Actualización 2026-09-07 (sesión 2) — CAUSA RAÍZ CONFIRMADA
+
+Estado: `ROOT_CAUSE_CONFIRMED / NOT_FIXED`. No se declara PASS ni OPERATIONAL.
+
+### Método
+
+Se volcó `pg_get_functiondef('public.vexforge_battle_resolve')` (1157 líneas)
+desde el proyecto oficial `rscuzqnfccqvltkdcdny` y se reprodujo el RPC por SQL
+con claims JWT de la cuenta QA autorizada (`sub` =
+`a70f8be8-15b5-4634-9b0d-6202bb41491c`), tanto como `postgres` como con
+`SET LOCAL ROLE authenticated`.
+
+### Hallazgos
+
+1. **No existe ningún `UPDATE`/`DELETE` sin `WHERE`.** Las tres escrituras del
+   RPC (`player_progress` x2 y los upserts de `pvp_rankings`) llevan `WHERE`
+   por `player_id` / `ON CONFLICT (season_id, player_id)`. Tampoco lo tienen
+   los 16 triggers de `pvp_matches` ni `safe_wallet_transaction`. El mensaje
+   `UPDATE requires a WHERE clause` (sqlstate 21000) registrado en la sesión
+   anterior no es reproducible hoy y queda descartado como causa.
+
+2. **Causa raíz real (reproducible, fase 16 del RPC):**
+
+```
+select public.vexforge_battle_resolve(<QA>, 09f80fb9-..., 'diag_<ts>')
+=> { "ok": false,
+     "error": "invalid input value for enum ledger_entry_type: \"in\"",
+     "sqlstate": "22P02" }
+```
+
+   El RPC llama `public.wallet_tx(..., p_direction => 'in', ...)`, que delega en
+   `public.safe_wallet_transaction`, y ésta hace `p_direction::ledger_entry_type`
+   al insertar en `economy_ledger`. El enum `ledger_entry_type` **no** contiene
+   `'in'`; sus valores son: `credit, debit, reserve, release, burn, fee, reward,
+   purchase, transfer, mission_reward, combat_reward, market_buy, market_sell,
+   market_fee, fusion, withdrawal_request, withdrawal_approved,
+   withdrawal_rejected, pack_purchase`.
+
+   Consecuencia: el `INSERT` en `pvp_matches` y los upserts de ranking ocurren,
+   pero la transacción entera aborta en el pago de recompensas y el
+   `EXCEPTION WHEN OTHERS` devuelve `ok:false` con 200, por lo que la UI
+   (`startRealBattle`) sólo muestra texto crudo. Ninguna batalla se completa.
+
+3. Datos comprobados: los 15 jugadores tienen `player_wallet`, así que
+   `WALLET_NOT_FOUND` no es un riesgo activo; la deriva de mazos vacíos en
+   `get_pvp_opponents` sigue vigente.
+
+### Orden de trabajo (siguiente sesión, sin re-diagnóstico)
+
+1. Migración `supabase/migrations/0044_ve_pvp_1_battle_resolve_ledger_enum.sql`:
+   redefinir `vexforge_battle_resolve` cambiando ambas llamadas
+   `wallet_tx(..., 'in', ...)` por el valor de enum válido
+   (`'combat_reward'`, o `'credit'` si se prefiere el genérico), sin tocar el
+   resto del cuerpo. No silenciar el sqlstate.
+2. Re-ejecutar el RPC con la cuenta QA hasta obtener `ok:true`, `match_id`,
+   `turns` y delta de ELO reales, y confirmar la fila en `economy_ledger`.
+3. Migrar `listOpponents()` a `get_pvp_opponents`, retirar `startBattle()`.
+4. Sembrar mazos reales o excluir del matchmaking a jugadores sin mazo.
+5. Cierre en `CONTINUITY.md` sólo con evidencia de batalla real en vivo.

@@ -1,3 +1,14 @@
+## 2026-09-07 — VE-PVP-1-BATTLE-RESOLVE-BROKEN — ROOT_CAUSE_CONFIRMED / NOT_FIXED
+
+- Sesión dedicada a reparar PVP. Se volcó el cuerpo completo de `public.vexforge_battle_resolve` (1157 líneas) del proyecto oficial `rscuzqnfccqvltkdcdny` y se reprodujo el RPC por SQL con claims JWT de la cuenta QA autorizada `cristiangalvez815@gmail.com` (`sub` `a70f8be8-15b5-4634-9b0d-6202bb41491c`), como `postgres` y con `SET LOCAL ROLE authenticated`.
+- Descartada la hipótesis previa: no hay ningún `UPDATE`/`DELETE` sin `WHERE` en el RPC, ni en los 16 triggers de `pvp_matches`, ni en `safe_wallet_transaction`. El mensaje `UPDATE requires a WHERE clause` (21000) no es reproducible hoy.
+- Causa raíz confirmada y reproducible: el RPC llama `wallet_tx(..., p_direction => 'in', ...)` y `safe_wallet_transaction` castea `p_direction::ledger_entry_type` al insertar en `economy_ledger`. El enum no admite `'in'` → `{"ok":false,"error":"invalid input value for enum ledger_entry_type: \"in\"","sqlstate":"22P02"}`. La transacción aborta en la fase 16 (recompensas) y ninguna batalla se completa.
+- Verificado además que los 15 jugadores tienen `player_wallet` (no hay riesgo de `WALLET_NOT_FOUND`) y que sigue vigente la deriva de oponentes sin mazo en `get_pvp_opponents`.
+- No se aplicó ninguna migración ni cambio de esquema en esta sesión: sólo lectura y diagnóstico. El plan de reparación exacto (migración `0044_ve_pvp_1_battle_resolve_ledger_enum.sql`, re-prueba con la cuenta QA, `listOpponents()` → `get_pvp_opponents`, mazos de oponentes) queda escrito en `docs/VE-PVP-1-BATTLE-RESOLVE-BROKEN.md`.
+- Estado final de esta entrega: `ROOT_CAUSE_CONFIRMED / NOT_FIXED`. No se declara `PASS`, `OPERATIONAL` ni `TIER1_READY`.
+
+---
+
 ## 2026-09-07 — VE-MOB-6-TUTORIAL / COMPLETION SURFACE — PUBLISHED / IMPLEMENTED_UNVERIFIED
 
 - Preflight reconciliado contra el inventario Android y la continuidad publicada en `main` (`09f35cba35b833f22e4cddaf37a6f4f324825fe4`). La unidad elegible es VE-MOB-6-TUTORIAL; no se abre VE-MOB-7 mientras la QA humana siga pendiente.
