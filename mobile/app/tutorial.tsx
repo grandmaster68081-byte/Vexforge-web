@@ -131,7 +131,7 @@ function CompletedState({
   onReturn: () => void;
 }) {
   return (
-    <ScreenShell surface="missions">
+    <ScreenShell surface="tutorial">
       <ScrollView
       style={[styles.screen, { backgroundColor: 'transparent' }]}
       contentContainerStyle={[styles.completedContent, { paddingBottom: insetsBottom + 32 }]}

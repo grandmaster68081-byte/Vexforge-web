@@ -1,3 +1,13 @@
+## 2026-09-07 — VE-MOB-6-TUTORIAL / COMPLETION SURFACE — IN_PROGRESS
+
+- Preflight reconciliado contra el inventario Android y la continuidad publicada en `main` (`09f35cba35b833f22e4cddaf37a6f4f324825fe4`). La unidad elegible es VE-MOB-6-TUTORIAL; no se abre VE-MOB-7 mientras la QA humana siga pendiente.
+- Corrección Android acotada: `CompletedState` conserva la superficie visual `tutorial` después de completar u omitir el recorrido, en vez de renderizar la atmósfera de `missions`. Se añadió una guarda específica para impedir la regresión.
+- Guardas locales: Tutorial 15/15, Deck 13/13, Auth 13/13, telemetría 5/5, sintaxis de la guarda y `git diff --check` pasan. No se modifican Auth, progreso autoritativo, RLS, RPCs, economía, combate, datos ni assets.
+- `DELIVERY_TYPE`: `OTA_UPDATE` · runtime `1.0.0` · app `1.0.0` · canal `production`. Por tocar `mobile/**`, también se requiere el workflow APK correlativo.
+- Estado provisional: `IN_PROGRESS` hasta publicar por GitHub REST y obtener evidencia OTA/APK/verify. La QA visual/táctil humana de Tutorial y TalkBack sigue pendiente; no se declara `PASS`, `OPERATIONAL` ni `TIER1_READY`.
+
+---
+
 ## 2026-09-06 — OTA PUBLISH RETRY / BUCKET IDEMPOTENCY — PUBLISHED / IMPLEMENTED_UNVERIFIED
 
 - El workflow OTA 5 exportó correctamente el bundle Android del commit `b2686baf4cd98d4b589202a95567f4b262f46c85`, pero terminó al crear el bucket porque Supabase respondió HTTP 400 con `BucketAlreadyExists` y código interno 409; se conservó como evidencia de la primera tentativa fallida.

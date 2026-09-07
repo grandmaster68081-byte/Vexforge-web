@@ -10,6 +10,10 @@ const files = {
 const contents = Object.fromEntries(
   await Promise.all(Object.entries(files).map(async ([key, path]) => [key, await readFile(path, 'utf8')])),
 );
+const completedStateSource = contents.route.slice(
+  contents.route.indexOf('function CompletedState'),
+  contents.route.indexOf('export default function TutorialScreen'),
+);
 
 const assertions = [
   ['tutorial route exists', contents.route.includes('export default function TutorialScreen')],
@@ -20,6 +24,7 @@ const assertions = [
   ['tutorial links only existing mobile surfaces', ['/collection', '/battle', '/deck'].every((route) => contents.route.includes(`'${route}'`))],
   ['tutorial guards unauthenticated access', contents.route.includes('Redirect href="/auth"')],
   ['tutorial exposes loading and error states', contents.route.includes('LoadingState') && contents.route.includes('ErrorState')],
+  ['tutorial completion preserves tutorial surface', completedStateSource.includes('<ScreenShell surface="tutorial">')],
   ['tutorial has accessible test hooks', ['tutorial-primary', 'tutorial-skip', 'tutorial-retry'].every((testID) => contents.route.includes(`testID="${testID}"`))],
   ['tutorial has no client combat simulation', !contents.route.includes('simulate') && !contents.route.includes('fake') && !contents.route.includes('mock')],
   ['tutorial is registered in the root stack', contents.layout.includes('name="tutorial"')],
