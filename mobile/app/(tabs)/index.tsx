@@ -6,7 +6,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { loadHomeStats, type HomeStats } from '@/lib/supabase';
 import { ScreenShell } from '@/components/ScreenShell';
 
-const HOME_REFERENCE_BACKGROUND = require('../../../assets/images/home-reference-scene.png');
+const HOME_REFERENCE_BACKGROUND = require('../../assets/images/home-reference-scene.png');
 
 type HomeRoute = '/' | '/battle' | '/collection' | '/deck' | '/missions' | '/world' | '/profile' | '/tutorial' | '/economy' | '/social' | '/meta';
 
