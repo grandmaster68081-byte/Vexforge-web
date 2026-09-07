@@ -2023,3 +2023,12 @@
 - Release correlativo: `vexforge-android-build-121`, `app-release.apk`, 95,335,180 bytes, SHA-256 `b881111862f0cd3405a7c01111d2cf27c32a3dfead2f5391a842a3297cfb1904`.
 - El bundle standalone contiene `forge-battlefield`, `CAMPO DE BATALLA`, `vexforge_battle_resolve`, `ARTE NO DISPONIBLE` y `battle-next-turn`.
 - El lote Home queda técnicamente verificable y publicado; falta únicamente la QA visual/táctil humana en el APK para evaluar composición, safe areas, interacción, accesibilidad y rendimiento real. Estado honesto: `IMPLEMENTED_UNVERIFIED`; no se declara `PASS`, `OPERATIONAL`, `Q4` ni `TIER1_READY`.
+
+---
+## 2026-09-07 — VE-MOB-3-HOME — APK 124 PUBLISHED / VISUAL QA PENDING
+
+- El commit `3c374b6db2ae472af8078c5b572c0377e11dcc42` pasó el workflow Android oficial `124` (`34153959509`) con `success`.
+- El workflow completó typecheck móvil, telemetría, prebuild Expo, compilación release, verificación standalone y publicación.
+- Release correlativo: `vexforge-android-build-124`, `app-release.apk`, 95,339,892 bytes, SHA-256 `933ccd2eecdc5f2902f04faf47934fa205b8f522d2b6ab33ef12e8005291a057`.
+- APK publicado: `https://github.com/grandmaster68081-byte/Vexforge-web/releases/download/vexforge-android-build-124/app-release.apk`.
+- El lote Home queda técnicamente compilado, verificado y publicado; falta únicamente la QA visual/táctil humana en el APK para evaluar composición, safe areas, interacción, accesibilidad y rendimiento real. Estado honesto: `IMPLEMENTED_UNVERIFIED`; no se declara `PASS`, `OPERATIONAL`, `Q4` ni `TIER1_READY`.
