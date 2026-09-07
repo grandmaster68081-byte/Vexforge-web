@@ -1878,3 +1878,33 @@
 - Estado honesto: `PARTIAL_FIX_APPLIED`. No se declara PASS ni OPERATIONAL.
 - Siguiente unidad: confirmar el callee/trigger culpable, corregirlo con
   migración, reverificar el PVP end-to-end con la cuenta QA y desplegar.
+
+---
+## 2026-09-07 — VE-PVP-01-AUDIT-SESSION — DIAGNOSED_UNFIXED
+
+- Sesión PVP-only (directiva VE-PVP-01). FASE 1-2 completadas sobre producción
+  y código; sin cambios aplicados (sesión interrumpida por cuota antes de CREATE).
+- Fuente de verdad del motor confirmada: `public.vexforge_battle_resolve(uuid,uuid,text)`
+  es el RPC autoritativo accesible desde cliente; `start_pvp_match`/`resolve_pvp_match`
+  son `service_role` (camino legacy `startBattle()` muerto desde cliente).
+- El motor implementa el modelo canónico: CAMPEÓN/VANGUARDIA/CENTINELA activos,
+  reserva con sustitución, derivación de stats desde columnas canónicas de `cards`,
+  keywords (Guard/Drain/Veil/Surge), ELO con k=32, temporada activa vía
+  `pvp_seasons`/`pvp_rankings`, idempotencia por `reference_id` en `pvp_matches`
+  (devuelve `turns` y `final_units` cacheados). El servidor SÍ envía
+  `image_url` por unidad.
+- Bloqueo P0 vigente: `vexforge_battle_resolve` sigue devolviendo
+  `{"ok":false,"error":"UPDATE requires a WHERE clause","sqlstate":"21000"}`.
+  Los dos `UPDATE public.player_progress` del RPC tienen WHERE (líneas ~1096/1118
+  del body). Los 16 triggers de `pvp_matches` y `players` no contienen UPDATE
+  sin WHERE. El origen está en un callee anidado; señalada `update_reward_scaling`
+  como candidata pendiente de aislar con reproducción QA.
+- Inventario de triggers sobre `pvp_matches`: audit_pvp, trg_achievements_on_pvp,
+  trg_canon_guard_pvp, trg_compiler_pvp, trg_event_router_pvp, trg_guard_pvp,
+  trg_kernel_pvp, trg_pvp_anomaly, trg_pvp_event, trg_pvp_reward,
+  trg_pvp_updated_at, trg_pvp_xp, trg_rebalance_pvp, trg_rule_pvp,
+  trg_self_compile_pvp.
+- Estado honesto: `DIAGNOSED_UNFIXED`. Siguiente unidad: aislar el callee con
+  UPDATE sin WHERE (reproducir con sesión QA `cristiangalvez815@gmail.com`,
+  contraseña sólo en secreto `VEXFORGE_QA_PASSWORD`), corregir con migración,
+  y continuar FASES 6-13 (battlefield real con cartas/ilustraciones).
