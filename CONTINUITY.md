@@ -1962,3 +1962,13 @@
 - El battlefield Android existente permanece como consumidor de `final_units`, `turns` e `image_url` del RPC autoritativo; no se tocó `mobile/**`, por lo que no corresponde fabricar un APK nuevo para este cambio de datos.
 - Estado honesto: `PARTIAL_FIX_APPLIED`. La reproducción desde una sesión QA autenticada real y la confirmación de ELO, `pvp_matches`, recompensas y `player_progress` siguen pendientes. No se declara `PASS`, `OPERATIONAL` ni `TIER1_READY`.
 - Siguiente acción verificable: completar la verificación QA end-to-end y, si pasa, continuar la evidencia del battlefield vertical.
+
+---
+## 2026-09-07 — VE-PVP-02-P0-ROOT-CAUSE-WHERE-TRUE — BACKEND E2E VERIFIED / APK QA PENDING
+
+- La cuenta QA autenticada por Supabase ejecutó `public.vexforge_battle_resolve` contra el oponente real `1ece9f66-5955-4cf5-a493-d5695328e62d` con mazo elegible de cinco cartas.
+- Resultado real: `ok:true`, motor `vexforge_battle_resolve_v1`, victoria QA, 5 turnos, 13 unidades finales y 13/13 con `image_url` oficial.
+- La repetición con la misma clave `qa_verify_0046_20260907_a70f8be8` devolvió el mismo `match_id` `e119ebc3-e01a-4877-bcb4-d6035fe38020`, confirmando idempotencia sin duplicar la resolución.
+- Persistencia confirmada en Supabase: `pvp_matches.status=resolved`, `winner` QA, `rewards_json` objeto, ranking QA actualizado y `player_progress.updated_at` correspondiente a la resolución.
+- La corrección `0046` queda verificada end-to-end para el cliente autenticado. No se modificó `mobile/**`, por lo que no se ejecutó un APK nuevo; la QA visual/manual del battlefield en APK sigue pendiente.
+- Estado honesto: `IMPLEMENTED_UNVERIFIED` para la unidad Android. No se declara `PASS`, `OPERATIONAL` ni `TIER1_READY`.

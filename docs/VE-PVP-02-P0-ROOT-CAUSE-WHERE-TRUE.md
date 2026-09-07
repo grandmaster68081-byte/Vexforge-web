@@ -1,6 +1,6 @@
 # VE-PVP-02 — CAUSA RAÍZ AISLADA DEL BLOQUEO P0 PVP (`UPDATE requires a WHERE clause`, SQLSTATE 21000)
 
-Estado: `PARTIAL_FIX_APPLIED` (causa raíz confirmada por reproducción; migración correctiva pendiente).
+Estado: `IMPLEMENTED_UNVERIFIED` (corrección aplicada y backend E2E verificado; QA del APK pendiente).
 Fecha: 2026-09-07. Sesión PVP (paquete `VEXFORGE_PVP_BATTLEFIELD_LOVABLE_PACKAGE`).
 
 ## 1. Hecho verificado: la protección activa es `safeupdate`
@@ -91,4 +91,12 @@ ni TIER1_READY.
 
 - La migración `0046_ve_pvp_2_where_true_safeupdate_fix.sql` fue aplicada en Supabase oficial mediante la Management API.
 - Verificación administrativa posterior: las nueve funciones objetivo contienen `0` ocurrencias de `WHERE true`.
-- La reproducción end-to-end con una sesión autenticada de QA y la confirmación de ELO, `pvp_matches`, recompensas y `player_progress` siguen siendo evidencia pendiente; no se declara `PASS`, `OPERATIONAL` ni `TIER1_READY`.
+- La reproducción end-to-end con una sesión autenticada de QA y la confirmación de ELO, `pvp_matches`, recompensas y `player_progress` ya fueron completadas; la QA visual/manual del APK sigue pendiente y no se declara `PASS`, `OPERATIONAL` ni `TIER1_READY`.
+
+## 7. Verificación QA end-to-end completada
+
+- La cuenta QA autenticada por Supabase ejecutó `public.vexforge_battle_resolve` contra un oponente real con mazo de cinco cartas.
+- Resultado: `ok:true`, motor `vexforge_battle_resolve_v1`, victoria del jugador QA, 5 turnos, 13 unidades finales y 13/13 unidades con `image_url` oficial.
+- Repetir la misma clave de idempotencia devolvió el mismo `match_id`, con 5 turnos y 13 unidades, sin crear una segunda resolución.
+- Persistencia comprobada: `pvp_matches.status=resolved`, ganador QA, `rewards_json` como objeto, ranking y progreso actualizados.
+- La verificación visual/manual dentro del APK sigue pendiente; por eso la unidad permanece `IMPLEMENTED_UNVERIFIED` y no se declara `PASS`, `OPERATIONAL` ni `TIER1_READY`.
