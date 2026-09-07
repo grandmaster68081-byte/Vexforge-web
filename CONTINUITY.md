@@ -2066,3 +2066,12 @@
 - La APK publicada más reciente al iniciar esta revisión fue `vexforge-android-build-126`, standalone, con bundle Android embebido y marcadores de la escena Home (`home-scene`, `home-featured-card`, `home-missions`, `home-official-nexus-burst`).
 - La referencia visual coincide en la escena, HUD, temporada, carta central, portales, misión, evento y navegación. Se corrigieron las dos etiquetas Android de la pestaña Home para mostrar `Inicio`, como en la referencia, manteniendo la ruta `/` y la acción funcional.
 - El cambio está publicado en `main` y requiere workflow Android y release correlativo. La QA visual/táctil final en dispositivo o emulador sigue siendo el gate para declarar `PASS`, `Q4`, `OPERATIONAL` o `TIER1_READY`.
+
+---
+## 2026-09-07 — VE-MOB-3-HOME — APK 127 PUBLISHED / VISUAL QA PENDING
+
+- El workflow Android oficial `127` (`34164725389`) terminó `success` para el commit `e43b65c82c9be5c71ee85f31b6569b2b032f2e3d`.
+- El workflow completó typecheck móvil, verificación de telemetría, prebuild Expo, compilación release, verificación del bundle standalone y publicación.
+- Release correlativo: `vexforge-android-build-127`, `app-release.apk`, SHA-256 `dffa72ba31ca208d25b564d1158146e910f76ee5a184e895fe6d7d15ba10b49f`.
+- APK publicado: `https://github.com/grandmaster68081-byte/Vexforge-web/releases/download/vexforge-android-build-127/app-release.apk`.
+- La corrección de navegación Home/`Inicio` queda técnicamente compilada, verificada y publicada; falta únicamente la QA visual/táctil humana en el APK para evaluar composición, safe areas, interacción, accesibilidad y rendimiento real. Estado honesto: `IMPLEMENTED_UNVERIFIED`; no se declara `PASS`, `OPERATIONAL`, `Q4` ni `TIER1_READY`.
