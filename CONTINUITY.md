@@ -1841,3 +1841,22 @@
   agotados antes de la fase CREATE). Estado honesto: `DIAGNOSED_UNFIXED`;
   no se declara PASS, OPERATIONAL ni TIER1_READY.
 - Orden de ejecución detallada en `docs/VE-PVP-1-BATTLE-RESOLVE-BROKEN.md`.
+
+---
+## 2026-09-07 — VE-PVP-1-BATTLE-RESOLVE-BROKEN — PARTIAL_FIX_APPLIED
+
+- Corregido el primer bloqueo real: `public.vexforge_battle_resolve` llamaba a
+  `wallet_tx` con dirección de ledger inválida `'in'`. Migración
+  `supabase/migrations/0044_ve_pvp_1_battle_resolve_ledger_enum.sql` reemplaza
+  únicamente esos dos valores por la operación válida `'combat_reward'`,
+  conservando el resto del cuerpo del RPC. Migración APLICADA en Supabase.
+- Verificación con sesión QA autenticada real: el fallo de enum desapareció.
+- Bloqueo restante: el RPC aún devuelve
+  `{"ok":false,"error":"UPDATE requires a WHERE clause","sqlstate":"21000"}`.
+  Los UPDATE de `vexforge_battle_resolve` sí tienen WHERE, por lo que el fallo
+  proviene de un callee/trigger. El barrido de las 344 funciones públicas
+  señala `update_reward_scaling` como candidata con UPDATE sin WHERE; falta
+  aislar y corregir la ruta exacta.
+- Estado honesto: `PARTIAL_FIX_APPLIED`. No se declara PASS ni OPERATIONAL.
+- Siguiente unidad: confirmar el callee/trigger culpable, corregirlo con
+  migración, reverificar el PVP end-to-end con la cuenta QA y desplegar.
