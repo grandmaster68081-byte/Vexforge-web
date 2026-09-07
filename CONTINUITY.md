@@ -2097,3 +2097,10 @@
 - Release correlativo: `vexforge-android-build-127`, `app-release.apk`, SHA-256 `dffa72ba31ca208d25b564d1158146e910f76ee5a184e895fe6d7d15ba10b49f`.
 - APK publicado: `https://github.com/grandmaster68081-byte/Vexforge-web/releases/download/vexforge-android-build-127/app-release.apk`.
 - La corrección de navegación Home/`Inicio` queda técnicamente compilada, verificada y publicada; falta únicamente la QA visual/táctil humana en el APK para evaluar composición, safe areas, interacción, accesibilidad y rendimiento real. Estado honesto: `IMPLEMENTED_UNVERIFIED`; no se declara `PASS`, `OPERATIONAL`, `Q4` ni `TIER1_READY`.
+
+---
+## 2026-09-07 — VE-MOB-3-HOME — OPERATOR REFERENCE BACKGROUND / IMPLEMENTED_UNVERIFIED
+
+- Se incorporó la imagen de referencia entregada por el operador como escena visual del Home Android en `mobile/assets/images/home-reference-scene.png`, recortada únicamente para dejar la barra nativa de pestañas fuera del arte.
+- El Home conserva `get_home_stats` contra Supabase y navegación real por zonas táctiles transparentes; se retiraron del primer viewport los paneles superpuestos que alteraban el fondo y se dejó la escena dentro de un `ScrollView`.
+- El gate técnico de typecheck, build/release y la QA visual/táctil humana siguen pendientes; el estado correcto antes de esos gates es `IMPLEMENTED_UNVERIFIED`.
