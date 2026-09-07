@@ -210,7 +210,7 @@ export type ReferralSummary = {
   completed: number;
   rewards_granted: number;
 };
-export type Opponent = { player_id: string; display_name: string; mmr: number; wins: number; losses: number };
+export type Opponent = { player_id: string; display_name: string; mmr: number; wins: number; losses: number; has_deck: boolean };
 export type MobileSocialFriend = { id: string; friend_id: string; display_name: string | null; level: number; created_at: string };
 export type MobileDirectChallenge = { id: string; challenger_id: string; challenged_id: string; challenger_name: string | null; challenged_name: string | null; status: string; created_at: string };
 export type MobileClan = { id: string; code: string | null; name: string; description: string | null; leader_player_id: string | null; prestige: number; contribution_total: number; created_at: string | null; rank_position?: number | null };
@@ -1757,8 +1757,29 @@ async function clearPvpBattleKey(playerId: string, opponentId: string) {
 }
 
 export async function findOpponents(session: Session, playerId: string): Promise<Opponent[]> {
-  const rows = await restRpc('get_leaderboard', { p_limit: 20 }, session) as any[];
-  return (rows ?? []).filter((row) => row.player_id !== playerId).slice(0, 10).map((row) => ({ player_id: row.player_id, display_name: row.display_name ?? 'Forjador', mmr: Number(row.mmr ?? 1000), wins: Number(row.wins ?? 0), losses: Number(row.losses ?? 0) }));
+  // VE-PVP-2: la fuente canonica de oponentes PVP es get_pvp_opponents, que excluye
+  // cuentas de sistema/admin/QA y ordena con has_deck primero. Si el RPC no esta
+  // disponible (perfil antiguo), se cae a get_leaderboard como respaldo de solo
+  // lectura, sin filtrado de decks.
+  const mapRows = (rows: any[], withDeck: boolean): Opponent[] =>
+    (rows ?? [])
+      .filter((row) => row.player_id !== playerId)
+      .slice(0, 10)
+      .map((row) => ({
+        player_id: row.player_id,
+        display_name: row.display_name ?? 'Forjador',
+        mmr: Number(row.mmr ?? 1000),
+        wins: Number(row.wins ?? 0),
+        losses: Number(row.losses ?? 0),
+        has_deck: withDeck ? Boolean(row.has_deck) : true,
+      }));
+  try {
+    const rows = await restRpc('get_pvp_opponents', { p_limit: 20 }, session) as any[];
+    return mapRows(rows ?? [], true);
+  } catch {
+    const rows = await restRpc('get_leaderboard', { p_limit: 20 }, session) as any[];
+    return mapRows(rows ?? [], false);
+  }
 }
 
 export async function startBattle(session: Session, playerId: string, opponentId: string): Promise<BattleResult> {

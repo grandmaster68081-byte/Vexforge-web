@@ -16,7 +16,7 @@ const assertions = [
   ['battle loads the real deck formation', contents.screen.includes('loadPlayerDeck') && contents.screen.includes('formationSlots')],
   ['battle presents ForgeFormation roles', contents.screen.includes('ForgeFormationPreview') && contents.formation.includes('VANGUARDIA') && contents.formation.includes('CAMPEÓN') && contents.formation.includes('CENTINELA') && contents.formation.includes('RESERVA')],
   ['formation preview is read-only', contents.formation.includes('no calcula daño, turnos ni ganador') && !contents.formation.includes('Math.random') && !contents.formation.includes('simulate')],
-  ['battle loads real opponents', contents.screen.includes('findOpponents') && contents.screen.includes('battle-find-opponents')],
+  ['battle loads real opponents', contents.screen.includes('findOpponents') && contents.screen.includes('battle-find-opponents')], ['opponent selection uses get_pvp_opponents with deck awareness', contents.supabase.includes('get_pvp_opponents') && contents.supabase.includes('has_deck')],
   ['battle falls back to the existing AI training mode when empty', contents.screen.includes('simulateQuickAIBattle') && contents.screen.includes('battle-ai-fallback') && contents.ai.includes('client_ai_v1')],
   ['AI fallback does not claim MMR or economy', contents.screen.includes('SIN MMR') && contents.ai.includes('elo_change: 0') && !contents.ai.includes('claim_ai_battle_reward')],
   ['battle requires explicit confirmation', contents.screen.includes('battle-confirmation') && contents.screen.includes('battle-confirm')],

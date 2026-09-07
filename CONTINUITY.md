@@ -1,3 +1,10 @@
+## 2026-09-07 — VE-PVP-2-OPPONENT-SELECTION-DECK-AWARE — FIXED / PUBLISHED
+
+- `mobile/lib/supabase.ts` `findOpponents` dejaba de usar `get_leaderboard` (mezcla bots, admin y jugadores sin mazo) como fuente de oponentes PVP. Ahora llama `get_pvp_opponents` (RPC canonica, excluye sistema/admin/QA y ordena con `has_deck` primero), con respaldo de solo lectura a `get_leaderboard` si el RPC no existe en un perfil antiguo.
+- Tipo `Opponent` extendido con `has_deck: boolean`.
+- Guardia `scripts/verify-mobile-battle.mjs` ampliada: exige `get_pvp_opponents` + `has_deck` en la capa de datos. Resultado: 18/18 checks OK; bundle esbuild de `supabase.ts` OK.
+- Estado honesto: la RPC `get_pvp_opponents` en produccion aun devuelve cuentas sin mazo en su lista (la excluye de ordenarlas mal, no de listarlas); la correccion de su SQL queda como deuda (VE-PVP-3, requiere migracion). QA autenticado E2E en app sigue pendiente.
+
 ## 2026-09-07 — VE-PVP-1-BATTLE-RESOLVE-BROKEN — ROOT_CAUSE_CONFIRMED / NOT_FIXED
 
 - Sesión dedicada a reparar PVP. Se volcó el cuerpo completo de `public.vexforge_battle_resolve` (1157 líneas) del proyecto oficial `rscuzqnfccqvltkdcdny` y se reprodujo el RPC por SQL con claims JWT de la cuenta QA autorizada `cristiangalvez815@gmail.com` (`sub` `a70f8be8-15b5-4634-9b0d-6202bb41491c`), como `postgres` y con `SET LOCAL ROLE authenticated`.
