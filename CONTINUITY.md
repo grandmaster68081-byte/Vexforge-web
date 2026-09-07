@@ -1,10 +1,12 @@
-## 2026-09-07 — VE-MOB-6-TUTORIAL / COMPLETION SURFACE — IN_PROGRESS
+## 2026-09-07 — VE-MOB-6-TUTORIAL / COMPLETION SURFACE — PUBLISHED / IMPLEMENTED_UNVERIFIED
 
 - Preflight reconciliado contra el inventario Android y la continuidad publicada en `main` (`09f35cba35b833f22e4cddaf37a6f4f324825fe4`). La unidad elegible es VE-MOB-6-TUTORIAL; no se abre VE-MOB-7 mientras la QA humana siga pendiente.
 - Corrección Android acotada: `CompletedState` conserva la superficie visual `tutorial` después de completar u omitir el recorrido, en vez de renderizar la atmósfera de `missions`. Se añadió una guarda específica para impedir la regresión.
 - Guardas locales: Tutorial 15/15, Deck 13/13, Auth 13/13, telemetría 5/5, sintaxis de la guarda y `git diff --check` pasan. No se modifican Auth, progreso autoritativo, RLS, RPCs, economía, combate, datos ni assets.
 - `DELIVERY_TYPE`: `OTA_UPDATE` · runtime `1.0.0` · app `1.0.0` · canal `production`. Por tocar `mobile/**`, también se requiere el workflow APK correlativo.
-- Estado provisional: `IN_PROGRESS` hasta publicar por GitHub REST y obtener evidencia OTA/APK/verify. La QA visual/táctil humana de Tutorial y TalkBack sigue pendiente; no se declara `PASS`, `OPERATIONAL` ni `TIER1_READY`.
+- OTA 7 / run `34069722139`, `verify` 215 / run `34069717401` y APK 118 / run `34069717382` terminaron `success` sobre `84089a426f6a7b790ef5092fa28f3bc06be84bb3`. El registro Supabase quedó `PUBLISHED` como `OTA_UPDATE`, runtime `1.0.0`, canal `production`, bundle SHA-256 `11b2b4e315597ade947780fea99b6a4a2bd6fca3c51f590bedf1e066d22f6d0e` y manifest SHA-256 `255c93d2e17b7a72fb54137548e24b0c0389ba08a3d8a226e47901c86f927e78`.
+- Release: https://github.com/grandmaster68081-byte/Vexforge-web/releases/tag/vexforge-android-build-118 — `app-release.apk`, 95,326,364 bytes, SHA-256 `0d03ad90be6e9839c74388020f43dcf900b2ab0df2e5f4f11d59d9a436a1373c`.
+- Estado final de esta entrega: `IMPLEMENTED_UNVERIFIED`. La QA visual/táctil humana de Tutorial y TalkBack sigue pendiente; no se declara `PASS`, `OPERATIONAL` ni `TIER1_READY`.
 
 ---
 
