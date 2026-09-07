@@ -1,3 +1,14 @@
+## 2026-09-07 — VE-ASSET-ZIP-BUNDLES — EXTRACTED / MANIFEST VERIFIED
+
+- El plan vivo en Supabase registraba cuatro bundles oficiales que existían sólo como ZIP: `founders.zip`, `misc.zip`, `sessions.zip` y `ui sistema.zip`.
+- Se descomprimieron y publicaron seis archivos individuales en las carpetas canónicas `founders/`, `misc/`, `sessions/` y `ui sistema/` del bucket oficial `vexforge-assets`.
+- Se inscribieron seis filas nuevas en `public.vexforge_official_asset_manifest`, todas oficiales y habilitadas, y se declararon como reserva en `src/lib/assetManifest.ts`; no se inventó ningún consumidor ni se reabrió la web.
+- Guarda local: `node scripts/verify-residual-art.mjs` pasa con 57 filas residuales, 38 objetos, 35 reservas y 19 prefijos.
+- No se modificó `mobile/**`, por lo que no corresponde un APK nuevo para este lote. El estado de los assets es `ASSET_PROVENANCE_RESOLVED`; las unidades Android y la QA humana conservan su estado previo `IMPLEMENTED_UNVERIFIED`.
+- Evidencia detallada: `docs/VE-ASSET-ZIP-EXTRACTION-2026-09-07.md`.
+
+---
+
 ## 2026-09-07 — VE-PVP-4-BATTLEFIELD-VERTICAL — IMPLEMENTED_UNVERIFIED
 
 - Se verificó primero el entorno oficial por HTTPS: Supabase rscuzqnfccqvltkdcdny está saludable; la cuenta QA autentica y get_pvp_opponents(20) devuelve dos oponentes con mazos reales. Una resolución real devolvió ok:true, match_id, un turno, 13 final_units, image_url de Storage y roles de formación.

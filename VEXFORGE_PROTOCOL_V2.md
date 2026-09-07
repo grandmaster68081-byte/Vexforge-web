@@ -2317,3 +2317,13 @@ Cuando existan pistas independientes, la sesión debe usar uno o dos subagentes 
 
 Cada unidad registra: alcance, archivos/superficies, fuente canónica, estado anterior/nuevo, gate, scorecard, guardas, workflow, commit, release, assets y limitaciones. El handoff humano debe enumerar dispositivo, sesión, pasos, resultado esperado y cualquier revisión visual subjetiva o acción externa que la IA no pueda probar.
 
+
+---
+## PATCH OPERATIVO — 2026-09-07 — PROCEDENCIA DE BUNDLES VISUALES
+
+- La directiva de cero genéricos y el plan de Storage se ejecutaron sobre los cuatro ZIP oficiales que ya estaban registrados en el bucket: `founders.zip`, `misc.zip`, `sessions.zip` y `ui sistema.zip`.
+- Se publicaron sus seis archivos internos como objetos individuales y se inscribieron en `public.vexforge_official_asset_manifest` con `official=true`, `enabled=true` y su ruta de origen.
+- Los seis objetos quedaron en reserva declarada: la inscripción no autoriza un consumidor ni sustituye un asset de una superficie existente.
+- Esta evidencia es documental y de procedencia; no altera contratos de combate, economía, Auth, RLS, RPCs, datos de jugador ni el alcance Android.
+- Guarda: `node scripts/verify-residual-art.mjs` pasa con 57 filas residuales, 38 objetos, 35 reservas y 19 prefijos.
+- Estado: `ASSET_PROVENANCE_RESOLVED`; sigue vigente `PRE-LAUNCH INTERNAL QA` y ninguna unidad se promociona a `PASS`, `TIER1_READY` u `OPERATIONAL`.

@@ -193,6 +193,12 @@ export const RESERVED_RESIDUAL_ART: ReadonlyArray<string> = [
   "rewards/IMG_20260619_111433.jpg",
   "tutorial/main.png",
   "wallet/main.jpg",
+  "founders/IMG_20260619_113831.jpg",
+  "misc/IMG_20260619_122016.jpg",
+  "misc/IMG_20260619_122314.jpg",
+  "sessions/IMG_20260619_111025.jpg",
+  "ui sistema/IMG_20260619_115844.jpg",
+  "ui sistema/IMG_20260619_120107.jpg",
 ];
 
 /**
