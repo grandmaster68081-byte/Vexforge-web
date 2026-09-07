@@ -8,7 +8,7 @@ import { ScreenShell } from '@/components/ScreenShell';
 
 const HOME_REFERENCE_BACKGROUND = require('../../../assets/images/home-reference-scene.png');
 
-type HomeRoute = '/' | '/battle' | '/collection' | '/deck' | '/missions' | '/world' | '/profile' | '/tutorial';
+type HomeRoute = '/' | '/battle' | '/collection' | '/deck' | '/missions' | '/world' | '/profile' | '/tutorial' | '/economy' | '/social' | '/meta';
 
 type Hotspot = {
   id: string;
@@ -21,6 +21,11 @@ type Hotspot = {
 };
 
 const HOTSPOTS: Hotspot[] = [
+  { id: 'player-profile', label: 'Abrir perfil del forjador', route: '/profile', left: '10%', top: '0%', width: '24%', height: '7%' },
+  { id: 'energy-economy', label: 'Abrir economía y energía', route: '/economy', left: '45%', top: '0%', width: '18%', height: '7%' },
+  { id: 'vex-economy', label: 'Abrir cartera VEX', route: '/economy', left: '63%', top: '0%', width: '18%', height: '7%' },
+  { id: 'messages', label: 'Abrir mensajes del Nexus', route: '/social', left: '84%', top: '0%', width: '8%', height: '7%' },
+  { id: 'settings', label: 'Abrir ajustes de cuenta', route: '/meta', left: '92%', top: '0%', width: '8%', height: '7%' },
   { id: 'season', label: 'Abrir temporada activa', route: '/world', left: '0%', top: '5%', width: '46%', height: '11%' },
   { id: 'daily-mission', label: 'Abrir misión diaria', route: '/missions', left: '66%', top: '5%', width: '34%', height: '11%' },
   { id: 'forge', label: 'Entrar a Foja', route: '/', left: '0%', top: '19%', width: '29%', height: '24%' },
@@ -86,6 +91,8 @@ export default function ForgeScreen() {
                 key={hotspot.id}
                 accessibilityRole="button"
                 accessibilityLabel={hotspot.label}
+                accessibilityHint="Toca dos veces para abrir esta sección."
+                hitSlop={8}
                 testID={`home-reference-${hotspot.id}`}
                 onPress={() => routeTo(hotspot.route)}
                 style={({ pressed }) => [
