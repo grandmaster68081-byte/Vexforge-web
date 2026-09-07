@@ -1,3 +1,14 @@
+## 2026-09-07 — VE-PVP-3-OPPONENTS-REQUIRE-DECK — FIXED / APPLIED / PUBLISHED
+
+- Deuda de VE-PVP-2 cerrada. Migracion `supabase/migrations/0045_ve_pvp_3_opponents_require_deck.sql` aplicada en el proyecto oficial `rscuzqnfccqvltkdcdny`: `public.get_pvp_opponents` ahora devuelve solo jugadores con mazo jugable (`deck_size >= 5`, minimo real de `validate_deck`), sigue excluyendo al propio llamante, a los admins y a los registros de sistema (`VEXFORGE\_%`, `SIM\_BOT\_%`), y deja de excluir por `is_qa` a cuentas reales con mazo valido (con ese filtro la lista efectiva quedaba vacia).
+- Verificacion en produccion con claims JWT de la cuenta QA autorizada `cristiangalvez815@gmail.com` (`sub` `a70f8be8-15b5-4634-9b0d-6202bb41491c`): `get_pvp_opponents(20)` devuelve 2 rivales validos (`Pavilo20 Opponent` y `Pavilo20`, 5 cartas cada uno) y ninguna cuenta sin mazo.
+- Confirmado que VE-PVP-1 (`0044`, enum del ledger) esta activo en produccion: `vexforge_battle_resolve` usa `combat_reward` y una resolucion real challenger QA vs `Pavilo20` devolvio `{"ok":true, turns:[...]}` completa, sin el error 22P02 anterior.
+- No se toca el motor de combate, la economia, RLS, Auth ni datos de jugador. No se compila APK en esta sesion por instruccion del operador: los cambios quedan en codigo en `main`.
+- Estado final de esta entrega: `IMPLEMENTED_UNVERIFIED` en app. La QA humana en dispositivo (Arena -> seleccion de rival -> combate -> recompensas) sigue pendiente; no se declara `PASS`, `OPERATIONAL` ni `TIER1_READY`.
+- Deuda declarada: ningun jugador no-QA tiene mazo (>=5 cartas) hoy, por lo que en cuentas nuevas la Arena seguira cayendo al entrenamiento IA hasta que existan mazos reales.
+
+---
+
 ## 2026-09-07 — VE-PVP-2-OPPONENT-SELECTION-DECK-AWARE — FIXED / PUBLISHED
 
 - `mobile/lib/supabase.ts` `findOpponents` dejaba de usar `get_leaderboard` (mezcla bots, admin y jugadores sin mazo) como fuente de oponentes PVP. Ahora llama `get_pvp_opponents` (RPC canonica, excluye sistema/admin/QA y ordena con `has_deck` primero), con respaldo de solo lectura a `get_leaderboard` si el RPC no existe en un perfil antiguo.
