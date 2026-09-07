@@ -1982,3 +1982,12 @@
 - El asset de atmósfera de facción se limpia al cambiar la carta y deja de renderizarse si falla; no se inventa arte sustituto.
 - Guardas estáticas ejecutadas sobre el lote: motion/reduced-motion, identidad, arte de superficie, metadata móvil, assets y batalla pasan.
 - Pendiente normativo: typecheck/build en el workflow Android oficial y QA visual/táctil humana en el APK. Estado honesto: `IMPLEMENTED_UNVERIFIED`; no se declara `PASS`, `OPERATIONAL`, `Q4` ni `TIER1_READY`.
+
+---
+## 2026-09-07 — VE-MOB-3-HOME — APK 121 PUBLISHED / VISUAL QA PENDING
+
+- El commit `2d98d0f7097f4ecfff90a88bd366acaf28402986` pasó el workflow de verificación `229` (`34143020880`) con `success`.
+- El workflow Android `121` (`34143020831`) terminó `success` en typecheck móvil, telemetría, prebuild Expo, compilación release, verificación standalone y publicación.
+- Release correlativo: `vexforge-android-build-121`, `app-release.apk`, 95,335,180 bytes, SHA-256 `b881111862f0cd3405a7c01111d2cf27c32a3dfead2f5391a842a3297cfb1904`.
+- El bundle standalone contiene `forge-battlefield`, `CAMPO DE BATALLA`, `vexforge_battle_resolve`, `ARTE NO DISPONIBLE` y `battle-next-turn`.
+- El lote Home queda técnicamente verificable y publicado; falta únicamente la QA visual/táctil humana en el APK para evaluar composición, safe areas, interacción, accesibilidad y rendimiento real. Estado honesto: `IMPLEMENTED_UNVERIFIED`; no se declara `PASS`, `OPERATIONAL`, `Q4` ni `TIER1_READY`.

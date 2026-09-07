@@ -150,3 +150,12 @@ La Fase VISUAL no se declara cerrada sólo por compilar: debe alcanzar al menos 
 - No se modifican Supabase, Auth, RLS, RPCs, economía, combate, navegación ni web.
 - Guardas estáticas del lote: `verify:motion`, `verify:ui-identity`, `verify:surface-art`, `verify:mobile-meta`, `verify:assets` y `verify:mobile-battle` pasan.
 - Estado: `IMPLEMENTED_UNVERIFIED`; falta typecheck/build del workflow Android oficial y QA visual/táctil humana en APK.
+
+## Evidencia de entrega — 2026-09-07 — lote Nexus core
+
+- Commit Android: `2d98d0f7097f4ecfff90a88bd366acaf28402986`.
+- Workflow de verificación: run `229` (`34143020880`), `success`.
+- Workflow Android: run `121` (`34143020831`), `success`; ejecutó typecheck móvil, telemetría, prebuild Expo, compilación release, verificación standalone y publicación.
+- Release correlativo: [vexforge-android-build-121](https://github.com/grandmaster68081-byte/Vexforge-web/releases/tag/vexforge-android-build-121), con `app-release.apk` de `95,335,180` bytes y SHA-256 `b881111862f0cd3405a7c01111d2cf27c32a3dfead2f5391a842a3297cfb1904`.
+- El bundle standalone contiene `assets/index.android.bundle` y conserva `forge-battlefield`, `CAMPO DE BATALLA`, `vexforge_battle_resolve`, `ARTE NO DISPONIBLE` y `battle-next-turn`.
+- Esta evidencia técnica no sustituye la QA visual/táctil humana ni permite promover la unidad a `PASS`, `Q4`, `TIER1_READY` u `OPERATIONAL`.
