@@ -399,7 +399,7 @@ export default function ForgeScreen() {
                   accessibilityRole="button"
                   accessibilityLabel="Abrir bandeja de notificaciones"
                   testID="home-inbox"
-                  onPress={() => routeTo('/missions')}
+                  onPress={() => router.push('/missions')}
                   style={({ pressed }) => [styles.topAction, { borderColor: `${colors.foreground}36`, backgroundColor: `${colors.ink}B8`, opacity: pressed ? 0.72 : 1 }]}
                 >
                   <Ionicons name="mail" size={17} color={colors.foreground} />
@@ -571,7 +571,7 @@ export default function ForgeScreen() {
                   accessibilityRole="button"
                   accessibilityLabel="Abrir misiones diarias"
                   testID="home-missions"
-                  onPress={() => routeTo('/missions')}
+                  onPress={() => router.push('/missions')}
                   style={({ pressed }) => [styles.missionAction, { borderColor: `${colors.accent}8A`, opacity: pressed ? 0.72 : 1 }]}
                 >
                   <Ionicons name="chevron-right" size={17} color={colors.accent} />
