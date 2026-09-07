@@ -216,3 +216,11 @@ La Fase VISUAL no se declara cerrada sólo por compilar: debe alcanzar al menos 
 - Un evento inexistente ya no desaparece silenciosamente: se comunica como `Sin evento activo`. Los errores totales o parciales exponen una acción accesible de reintento mediante `testID=home-retry`.
 - La implementación permanece limitada a Android y conserva `reduced-motion`, safe-area, rutas existentes y la regla de cero genéricos. El workflow Android oficial y la QA humana del APK son gates pendientes.
 - Estado: `IMPLEMENTED_UNVERIFIED`; no se declara `PASS`, `Q4`, `TIER1_READY` u `OPERATIONAL`.
+
+## Evidencia APK 129 — 2026-09-07
+
+- Commit: `eb87f20ce5fed27c91cf9a6f768210aa2a1caa9c`.
+- Workflow: `129` (`34167262779`), `success`; ejecutó typecheck, telemetría, prebuild Expo, Gradle release, verificación standalone y publicación.
+- APK: `vexforge-android-build-129/app-release.apk`, 95,339,228 bytes, SHA-256 `50e8f09ee063b4b1aa0ce7d7cfdf313424b06cfc18b57b375b01132f87836ae6`.
+- La inspección del bundle embebido confirmó `home-scene`, `home-world`, `home-featured-card`, `home-battle`, `home-missions`, `home-event`, `home-tutorial`, `FOJA`, `ARENA` y `ARCHIVO`.
+- Esta evidencia confirma que la compilación contiene el Home de escena continua y flujos nuevos; no sustituye la QA humana de instalación, touch, safe areas, legibilidad y rendimiento.

@@ -1,3 +1,15 @@
+## 2026-09-07 — VE-MOB-3-HOME-STATES — APK 129 PUBLISHED / VISUAL QA PENDING
+
+- El commit `eb87f20ce5fed27c91cf9a6f768210aa2a1caa9c` pasó el workflow Android oficial `129` (`34167262779`) con `success`.
+- El fallo de la revisión anterior quedó corregido en el typecheck: `accessibilityRole="status"` no es válido para React Native 0.81.5 y fue sustituido por roles compatibles sin cambiar la semántica del Home.
+- El workflow completó typecheck móvil, verificación de telemetría, prebuild Expo, compilación release, verificación standalone y publicación.
+- Release correlativo: `vexforge-android-build-129`, `app-release.apk`, 95,339,228 bytes, SHA-256 `50e8f09ee063b4b1aa0ce7d7cfdf313424b06cfc18b57b375b01132f87836ae6`.
+- Verificación del bundle publicado: contiene `assets/index.android.bundle` y los marcadores `home-scene`, `home-world`, `home-featured-card`, `home-battle`, `home-missions`, `home-event`, `home-tutorial`, `FOJA`, `ARENA` y `ARCHIVO`.
+- APK publicado: `https://github.com/grandmaster68081-byte/Vexforge-web/releases/download/vexforge-android-build-129/app-release.apk`.
+- La pantalla nueva queda técnicamente compilada y embebida en el APK; falta la QA visual/táctil humana en dispositivo o emulador para evaluar composición, safe areas, interacción, accesibilidad y rendimiento real. Estado honesto: `IMPLEMENTED_UNVERIFIED`; no se declara `PASS`, `OPERATIONAL`, `Q4` ni `TIER1_READY`.
+
+---
+
 ## 2026-09-07 — VE-MOB-3-HOME-STATES — IMPLEMENTED_UNVERIFIED
 
 - Preflight reconciliado contra el protocolo activo de Supabase v2.15, `VE-MOB-0`, la matriz funcional de Home y el código Android real de `main`.
