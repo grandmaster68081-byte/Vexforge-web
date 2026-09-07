@@ -1,19 +1,21 @@
-## 2026-09-06 — OTA PUBLISH RETRY / BUCKET IDEMPOTENCY — IN_PROGRESS
+## 2026-09-06 — OTA PUBLISH RETRY / BUCKET IDEMPOTENCY — PUBLISHED / IMPLEMENTED_UNVERIFIED
 
-- El workflow OTA 5 exportó correctamente el bundle Android del commit `b2686baf4cd98d4b589202a95567f4b262f46c85`, pero terminó al crear el bucket porque Supabase respondió HTTP 400 con `BucketAlreadyExists` y código interno 409.
+- El workflow OTA 5 exportó correctamente el bundle Android del commit `b2686baf4cd98d4b589202a95567f4b262f46c85`, pero terminó al crear el bucket porque Supabase respondió HTTP 400 con `BucketAlreadyExists` y código interno 409; se conservó como evidencia de la primera tentativa fallida.
 - Se ajustó `mobile/scripts/publish-ota.mjs` para aceptar sólo ese duplicado idempotente conocido —HTTP 409 o HTTP 400 con `BucketAlreadyExists`/`resource already exists`— y seguir rechazando cualquier otro error.
 - No se modifican Auth, RLS, RPCs, economía, combate, datos de jugador ni assets canónicos. La corrección permanece en el carril `OTA_UPDATE`, runtime `1.0.0`, canal `production`.
-- El workflow OTA debe relanzarse sobre el nuevo commit; el APK y la verificación del lote siguen sujetos a sus workflows correlativos. Estado provisional: `IN_PROGRESS`, sin declarar `PASS`, `OPERATIONAL` ni `TIER1_READY`.
+- El workflow OTA 6 / run `34067735819` terminó `success` sobre `44ecb9bc600303a6a4cbed48ed9830b5f5a5da94`; el registro Supabase quedó `PUBLISHED` como `OTA_UPDATE`, runtime `1.0.0`, canal `production`, bundle SHA-256 `7d21a9c5b26969be2b87b4cdee28158d16e36f8c35192f91cef43576735e2fa7` y manifest SHA-256 `689200be7adc0efed975443a930a19d64fda7dc998d9a899851e5ad7208ce27f`.
+- El workflow `verify` 213 / run `34067730930` y el workflow `Build VEXFORGE Android APK` 117 / run `34067730913` terminaron `success`. Release: https://github.com/grandmaster68081-byte/Vexforge-web/releases/tag/vexforge-android-build-117 — `app-release.apk`, 95,326,364 bytes, SHA-256 `b300baedef4106b473e0a4208350846dc326704682efc2cc1b40023c68e72723`.
+- Estado final de esta entrega: `IMPLEMENTED_UNVERIFIED`; la QA visual/táctil humana del APK y TalkBack sigue pendiente. No se declara `PASS`, `OPERATIONAL` ni `TIER1_READY`.
 
 ---
 
-## 2026-09-06 — VE-MOB-5-DECK / ACCESSIBILITY STATE — IN_PROGRESS
+## 2026-09-06 — VE-MOB-5-DECK / ACCESSIBILITY STATE — IMPLEMENTED_UNVERIFIED
 
 - Preflight reconciliado contra el protocolo vivo de Supabase, `CONTINUITY.md`, `VE-MOB-0`, `VE-MOB-5-DECK` y el código real de `main`. La superficie sigue siendo exclusivamente Android y la web permanece congelada.
 - `DELIVERY_TYPE`: `OTA_UPDATE` · `SECTION_ID`: `VE-MOB-5-DECK-A11Y-DISABLED-STATE` · runtime `1.0.0` · app `1.0.0` · `versionCode` `3` · canal `production`.
 - Corrección acotada en `mobile/app/(tabs)/deck.tsx`: una carta seleccionada que alcanzó el límite de copias sigue siendo una acción válida para retirarla, por lo que TalkBack ya no la anuncia como deshabilitada; los límites, `validate_deck`, `save_deck`, datos, Auth, RLS, RPCs, economía y combate no cambian.
 - Guardas locales: `verify-mobile-deck` 13/13, `verify-mobile-auth` 13/13, telemetría Android con 5 eventos canónicos y `git diff --check` pasan. Typecheck móvil y la entrega oficial quedan delegados al workflow correlativo.
-- Estado: `IN_PROGRESS` hasta publicar el commit por GitHub REST y obtener la evidencia del workflow OTA/APK correspondiente. La QA táctil humana continúa pendiente; no se declara `PASS`, `OPERATIONAL` ni `TIER1_READY`.
+- Estado: `IMPLEMENTED_UNVERIFIED` tras el commit `44ecb9bc600303a6a4cbed48ed9830b5f5a5da94`, OTA 6, `verify` 213 y APK 117 exitosos. La QA táctil humana continúa pendiente; no se declara `PASS`, `OPERATIONAL` ni `TIER1_READY`.
 
 ---
 
