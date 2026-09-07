@@ -20,7 +20,7 @@ function NativeTabLayout() {
     <NativeTabs>
       <NativeTabs.Trigger name="index">
         <Icon sf={{ default: 'house', selected: 'house.fill' }} />
-        <Label>Forja</Label>
+        <Label>Inicio</Label>
       </NativeTabs.Trigger>
       <NativeTabs.Trigger name="battle">
         <Icon sf={{ default: 'bolt', selected: 'bolt.fill' }} />
@@ -82,7 +82,7 @@ function ClassicTabLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Forja',
+          title: 'Inicio',
           tabBarIcon: ({ color }) =>
             isIOS ? (
               <SymbolView name="house" tintColor={color} size={24} />
