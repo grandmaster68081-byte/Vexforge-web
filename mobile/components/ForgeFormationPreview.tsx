@@ -1,5 +1,5 @@
 import { Feather } from '@/components/ForgeIcon';
-import { StyleSheet, Text, View } from 'react-native';
+import { Image, StyleSheet, Text, View } from 'react-native';
 import { useColors } from '@/hooks/useColors';
 import type { DeckSlot } from '@/lib/supabase';
 import { DomainState } from '@/components/DomainState';
@@ -50,6 +50,7 @@ function FormationCard({
       </View>
       {slot ? (
         <>
+          {slot.image_url ? <Image source={{ uri: slot.image_url }} resizeMode="cover" style={styles.cardArt} /> : null}
           <Text style={[styles.name, { color: colors.foreground }]} numberOfLines={2}>
             {slot.name}
           </Text>
@@ -178,6 +179,7 @@ const styles = StyleSheet.create({
   reserveRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 6 },
   card: { flex: 1, minWidth: 92, borderWidth: 1, borderRadius: 12, padding: 8, gap: 4 },
   cardHeader: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 4 },
+  cardArt: { width: '100%', height: 64, borderRadius: 8, backgroundColor: 'rgba(0,0,0,0.2)' },
   role: { flex: 1, fontSize: 8, fontWeight: '900', letterSpacing: 0.5 },
   name: { fontSize: 11, lineHeight: 14, fontWeight: '800', minHeight: 28 },
   meta: { fontSize: 8, lineHeight: 12 },

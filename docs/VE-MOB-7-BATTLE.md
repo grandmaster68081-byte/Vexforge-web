@@ -77,3 +77,13 @@ Nivel Q: Q2 actual / Q3 objetivo.
 Condición de reapertura: cambio del contrato `vexforge_battle_resolve`, ausencia de
 la formación real en Android, resultado no autoritativo, fallo del workflow/release
 o reporte del operador sobre interacción, accesibilidad, rendimiento o datos.
+
+## Reconciliación con el paquete PVP Battlefield — 2026-09-07
+
+La resolución PVP viva fue verificada contra Supabase oficial antes de modificar la presentación: la cuenta QA obtuvo ok:true, match_id, turnos reales, 13 unidades finales, arte image_url y roles de formación. El cliente Android no añade autoridad de combate ni reemplaza vexforge_battle_resolve.
+
+El lote visual añade un campo vertical Android con dos mitades espejadas, tres posiciones semánticas por lado, reserva, arte canónico, vida, keywords, target lock, impacto, daño, crítico, muerte y resultado. Si el servidor no entrega arte, la pantalla comunica explícitamente la ausencia; no crea una carta genérica.
+
+La función de oponentes queda restringida al RPC canónico get_pvp_opponents y a mazos reales de al menos cinco cartas; no hay fallback silencioso a rankings decorativos.
+
+Estado de esta capa: IMPLEMENTED_UNVERIFIED. Falta instalar el APK, completar una partida real y verificar visualmente Touch/TalkBack/reduced-motion.

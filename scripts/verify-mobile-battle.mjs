@@ -5,6 +5,7 @@ const files = {
   supabase: 'mobile/lib/supabase.ts',
   formation: 'mobile/components/ForgeFormationPreview.tsx',
   ai: 'mobile/lib/aiBattle.ts',
+  battlefield: 'mobile/components/ForgeBattlefield.tsx',
 };
 
 const contents = Object.fromEntries(
@@ -15,6 +16,8 @@ const assertions = [
   ['battle screen exists', contents.screen.includes('export default function BattleScreen')],
   ['battle loads the real deck formation', contents.screen.includes('loadPlayerDeck') && contents.screen.includes('formationSlots')],
   ['battle presents ForgeFormation roles', contents.screen.includes('ForgeFormationPreview') && contents.formation.includes('VANGUARDIA') && contents.formation.includes('CAMPEÓN') && contents.formation.includes('CENTINELA') && contents.formation.includes('RESERVA')],
+  ['battlefield uses the real vertical formation', contents.screen.includes('ForgeBattlefield') && contents.battlefield.includes('battlefield-${side}-formation') && contents.battlefield.includes('battlefield-confrontation-lane')],
+  ['battlefield renders authoritative card art and roles', contents.battlefield.includes('image_url') && contents.battlefield.includes('CAMPEÓN') && contents.battlefield.includes('VANGUARDIA') && contents.battlefield.includes('CENTINELA') && contents.battlefield.includes('RESERVA') && contents.formation.includes('slot.image_url')],
   ['formation preview is read-only', contents.formation.includes('no calcula daño, turnos ni ganador') && !contents.formation.includes('Math.random') && !contents.formation.includes('simulate')],
   ['battle loads real opponents', contents.screen.includes('findOpponents') && contents.screen.includes('battle-find-opponents')], ['opponent selection uses get_pvp_opponents with deck awareness', contents.supabase.includes('get_pvp_opponents') && contents.supabase.includes('has_deck')],
   ['battle falls back to the existing AI training mode when empty', contents.screen.includes('simulateQuickAIBattle') && contents.screen.includes('battle-ai-fallback') && contents.ai.includes('client_ai_v1')],
@@ -25,7 +28,7 @@ const assertions = [
   ['battle renders the authoritative result', contents.screen.includes('battle-result') && contents.screen.includes('result.match_id')],
   ['battle exposes loading and error states', contents.screen.includes('ActivityIndicator') && contents.screen.includes('localError || authError')],
   ['battle supports reduced motion', contents.screen.includes('isReduceMotionEnabled') && contents.screen.includes('reducedMotion')],
-  ['supabase exposes the battle turn contract', contents.supabase.includes('export type BattleTurn') && contents.supabase.includes('turns?: BattleTurn[]')],
+  ['supabase exposes the battle turn contract', contents.supabase.includes('export type BattleTurn') && contents.supabase.includes('turns?: BattleTurn[]') && contents.supabase.includes('image_url?: string | null') && contents.supabase.includes('slot?: string')],
   ['supabase calls the official resolve RPC', contents.supabase.includes("'vexforge_battle_resolve'")],
   ['no client PvP battle simulation', contents.screen.includes('startBattle(selectedOpponent.player_id)') && !contents.screen.includes('simulateFormation') && !contents.screen.includes('Math.random')],
   ['no emoji characters in battle UI', !/[\u{1F000}-\u{1FAFF}]/u.test(contents.screen)],

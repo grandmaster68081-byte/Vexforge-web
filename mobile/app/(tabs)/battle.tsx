@@ -21,6 +21,7 @@ import { loadPlayerDeck } from '@/lib/supabase';
 import { loadPlayerRank, type BattleResult, type BattleTurn, type DeckSlot, type Opponent, type PlayerRank } from '@/lib/supabase';
 import { simulateQuickAIBattle } from '@/lib/aiBattle';
 import { ForgeFormationPreview } from '@/components/ForgeFormationPreview';
+import { ForgeBattlefield } from '@/components/ForgeBattlefield';
 
 type Phase = 'lobby' | 'confirm' | 'replay' | 'result';
 
@@ -457,7 +458,14 @@ export default function BattleScreen() {
             <View style={[styles.liveDot, { backgroundColor: colors.success }]} />
            <Text style={[styles.liveText, { color: colors.success }]}>{activeBattleResult.engine === 'client_ai_v1' ? 'ENTRENAMIENTO VS IA · SIN MMR' : `RESOLUCIÓN RECIBIDA · ${activeBattleResult.engine ?? 'MOTOR OFICIAL'}`}</Text>
           </View>
-          <TurnView turn={currentTurn} index={turnIndex} total={turns.length} colors={colors} />
+          <ForgeBattlefield
+            finalUnits={activeBattleResult.final_units ?? []}
+            currentTurn={currentTurn}
+            turnIndex={turnIndex}
+            totalTurns={turns.length}
+            reducedMotion={reducedMotion}
+            youWon={activeBattleResult.you_won}
+          />
           <Pressable
             testID="battle-next-turn"
             accessibilityRole="button"

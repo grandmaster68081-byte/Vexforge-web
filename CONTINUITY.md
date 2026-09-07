@@ -1,3 +1,14 @@
+## 2026-09-07 — VE-PVP-4-BATTLEFIELD-VERTICAL — IMPLEMENTED_UNVERIFIED
+
+- Se verificó primero el entorno oficial por HTTPS: Supabase rscuzqnfccqvltkdcdny está saludable; la cuenta QA autentica y get_pvp_opponents(20) devuelve dos oponentes con mazos reales. Una resolución real devolvió ok:true, match_id, un turno, 13 final_units, image_url de Storage y roles de formación.
+- Se descartó reescribir el motor: el RPC vigente usa combat_reward y resuelve ELO/recompensas en la ruta autoritativa. El WHERE true restante pertenece a una función económica global fuera del camino PVP y queda como deuda separada; no se altera a ciegas en VE-MOB-7.
+- Android añade un battlefield vertical real con rival arriba, confrontación central, jugador abajo, tres posiciones semánticas, reserva, arte canónico, HP, keywords, target lock, impacto, daño, crítico, muerte y resultado. La formación previa también consume image_url.
+- findOpponents queda restringido a get_pvp_opponents y a mazos reales de al menos cinco cartas; se elimina el fallback silencioso a get_leaderboard para no convertir rankings en oponentes de combate.
+- La guarda Android añade cobertura del tablero vertical, arte real y roles. No se modifican reglas, RPCs, RLS, Auth, economía ni Storage.
+- Estado honesto: IMPLEMENTED_UNVERIFIED. Pendiente instalar el APK, recorrer una partida PVP real, comprobar la superficie visual, TalkBack y reduced-motion. No se declara PASS, OPERATIONAL ni TIER1_READY.
+
+---
+
 ## 2026-09-07 — VE-PVP-3-OPPONENTS-REQUIRE-DECK — FIXED / APPLIED / PUBLISHED
 
 - Deuda de VE-PVP-2 cerrada. Migracion `supabase/migrations/0045_ve_pvp_3_opponents_require_deck.sql` aplicada en el proyecto oficial `rscuzqnfccqvltkdcdny`: `public.get_pvp_opponents` ahora devuelve solo jugadores con mazo jugable (`deck_size >= 5`, minimo real de `validate_deck`), sigue excluyendo al propio llamante, a los admins y a los registros de sistema (`VEXFORGE\_%`, `SIM\_BOT\_%`), y deja de excluir por `is_qa` a cuentas reales con mazo valido (con ese filtro la lista efectiva quedaba vacia).
