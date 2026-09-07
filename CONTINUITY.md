@@ -2057,3 +2057,12 @@
 - Release correlativo: `vexforge-android-build-124`, `app-release.apk`, 95,339,892 bytes, SHA-256 `933ccd2eecdc5f2902f04faf47934fa205b8f522d2b6ab33ef12e8005291a057`.
 - APK publicado: `https://github.com/grandmaster68081-byte/Vexforge-web/releases/download/vexforge-android-build-124/app-release.apk`.
 - El lote Home queda técnicamente compilado, verificado y publicado; falta únicamente la QA visual/táctil humana en el APK para evaluar composición, safe areas, interacción, accesibilidad y rendimiento real. Estado honesto: `IMPLEMENTED_UNVERIFIED`; no se declara `PASS`, `OPERATIONAL`, `Q4` ni `TIER1_READY`.
+
+---
+## 2026-09-07 — VE-MOB-3-HOME — QA DATA + NAV LABEL ALIGNMENT / APK QA PENDING
+
+- La cuenta QA autenticó correctamente contra Supabase oficial y `get_home_stats` devolvió temporada activa, evento, cartas, batallas, jugadores activos y ranking reales.
+- Las consultas consumidas por Home para carta destacada, misiones y actividad devolvieron datos reales; `lobby/main.jpg` y `misc/IMG_20260619_122314.jpg` respondieron HTTP 200 desde Storage oficial.
+- La APK publicada más reciente al iniciar esta revisión fue `vexforge-android-build-126`, standalone, con bundle Android embebido y marcadores de la escena Home (`home-scene`, `home-featured-card`, `home-missions`, `home-official-nexus-burst`).
+- La referencia visual coincide en la escena, HUD, temporada, carta central, portales, misión, evento y navegación. Se corrigieron las dos etiquetas Android de la pestaña Home para mostrar `Inicio`, como en la referencia, manteniendo la ruta `/` y la acción funcional.
+- El cambio está publicado en `main` y requiere workflow Android y release correlativo. La QA visual/táctil final en dispositivo o emulador sigue siendo el gate para declarar `PASS`, `Q4`, `OPERATIONAL` o `TIER1_READY`.
