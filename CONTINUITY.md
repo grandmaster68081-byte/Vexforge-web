@@ -1972,3 +1972,13 @@
 - Persistencia confirmada en Supabase: `pvp_matches.status=resolved`, `winner` QA, `rewards_json` objeto, ranking QA actualizado y `player_progress.updated_at` correspondiente a la resolución.
 - La corrección `0046` queda verificada end-to-end para el cliente autenticado. No se modificó `mobile/**`, por lo que no se ejecutó un APK nuevo; la QA visual/manual del battlefield en APK sigue pendiente.
 - Estado honesto: `IMPLEMENTED_UNVERIFIED` para la unidad Android. No se declara `PASS`, `OPERATIONAL` ni `TIER1_READY`.
+
+---
+## 2026-09-07 — VE-MOB-3-HOME — NEXUS CORE / PARTIAL SYNC STATES
+
+- Se implementó un lote Android acotado en `mobile/app/(tabs)/index.tsx`, respetando el orden normativo que mantiene Home/Forja antes de ampliar Batalla o superficies secundarias.
+- La carta destacada conserva el protagonismo sobre una plataforma central authored derivada de tokens y colores existentes; `ENTRAR A LA ARENA` queda visualmente por encima de `MI COLECCIÓN` sin cambiar rutas ni contratos.
+- Las cargas de estadísticas, carta, misiones y actividad siguen usando `Promise.allSettled`, pero ahora una falla parcial muestra el error y reintento explícitos en vez de degradar silenciosamente.
+- El asset de atmósfera de facción se limpia al cambiar la carta y deja de renderizarse si falla; no se inventa arte sustituto.
+- Guardas estáticas ejecutadas sobre el lote: motion/reduced-motion, identidad, arte de superficie, metadata móvil, assets y batalla pasan.
+- Pendiente normativo: typecheck/build en el workflow Android oficial y QA visual/táctil humana en el APK. Estado honesto: `IMPLEMENTED_UNVERIFIED`; no se declara `PASS`, `OPERATIONAL`, `Q4` ni `TIER1_READY`.

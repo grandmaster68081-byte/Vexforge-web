@@ -198,6 +198,7 @@ export default function ForgeScreen() {
   const [homeLoading, setHomeLoading] = useState(true);
   const [homeError, setHomeError] = useState<string | null>(null);
   const [featuredCardImageFailed, setFeaturedCardImageFailed] = useState(false);
+  const [factionSceneFailed, setFactionSceneFailed] = useState(false);
   const [homeSceneState, setHomeSceneState] = useState<'loading' | 'ready' | 'error'>('loading');
   const scrollY = useSharedValue(0);
   const ambientMotion = useSharedValue(0);
@@ -271,14 +272,20 @@ export default function ForgeScreen() {
       activity: activityResult.status === 'fulfilled' ? activityResult.value : [],
     };
     setHome(nextHome);
-    if (!nextHome.stats && !nextHome.dailyCard && nextHome.missions.length === 0 && nextHome.activity.length === 0) {
-      setHomeError('No se pudo sincronizar el contenido del Nexus.');
+    const failedRequests = results.filter((result) => result.status === 'rejected').length;
+    if (failedRequests > 0) {
+      setHomeError(nextHome.stats || nextHome.dailyCard || nextHome.missions.length > 0 || nextHome.activity.length > 0
+        ? 'Algunas señales no se pudieron sincronizar. Reintenta para actualizar el Nexus.'
+        : 'No se pudo sincronizar el contenido del Nexus.');
     }
     setHomeLoading(false);
   }, []);
 
   useEffect(() => { void loadHome(); }, [loadHome]);
-  useEffect(() => { setFeaturedCardImageFailed(false); }, [home.dailyCard?.image_url]);
+  useEffect(() => {
+    setFeaturedCardImageFailed(false);
+    setFactionSceneFailed(false);
+  }, [home.dailyCard?.image_url, home.dailyCard?.faction]);
 
   const handleRefresh = () => { void Promise.all([refresh(), loadHome()]); };
   const identity = DOMAIN_IDENTITY.foja;
@@ -287,7 +294,7 @@ export default function ForgeScreen() {
   const frontName = event?.name ?? home.stats?.season?.name ?? 'Arena Nexus';
   const energyPercent = progress ? Math.min(100, Math.round((progress.energy / Math.max(1, progress.max_energy)) * 100)) : 0;
   const featuredCard = home.dailyCard;
-  const factionScene = featuredCard?.faction
+  const factionScene = featuredCard?.faction && !factionSceneFailed
     ? FACTION_BACKGROUNDS[featuredCard.faction as keyof typeof FACTION_BACKGROUNDS]
     : null;
   const nexusStatus = syncState === 'connected'
@@ -349,6 +356,7 @@ export default function ForgeScreen() {
               style={[StyleSheet.absoluteFillObject, styles.sceneFactionImage, factionParallaxStyle]}
               resizeMode="cover"
               accessibilityLabel="Atmósfera oficial de la facción activa"
+              onError={() => setFactionSceneFailed(true)}
             />
           ) : null}
           <LinearGradient
@@ -427,6 +435,16 @@ export default function ForgeScreen() {
             <View style={[styles.sceneStage, { zIndex: DEPTH.focus }]}>
               <View pointerEvents="none" style={[styles.stageRingOuter, { borderColor: `${colors.accent}35` }]} />
               <View pointerEvents="none" style={[styles.stageRingInner, { borderColor: `${colors.accent}24` }]} />
+              <View pointerEvents="none" style={styles.stagePlatform}>
+                <View style={[styles.stagePlatformGlow, { borderColor: `${colors.accent}55`, backgroundColor: `${colors.ink}52` }]} />
+                <LinearGradient
+                  colors={[`${colors.accent}46`, `${colors.primary}14`, `${colors.ink}00`]}
+                  start={{ x: 0.5, y: 0 }}
+                  end={{ x: 0.5, y: 1 }}
+                  style={styles.stagePlatformLight}
+                />
+                <View style={[styles.stagePlatformLine, { backgroundColor: `${colors.accent}8A` }]} />
+              </View>
               <SceneOrbitPoint point={DOMAIN_POINTS[0]} position="topLeft" colors={colors} signal={domainSignals.cartas} onPress={() => router.push(DOMAIN_POINTS[0].route)} />
               <SceneOrbitPoint point={DOMAIN_POINTS[1]} position="topRight" colors={colors} signal={domainSignals.forja} onPress={() => router.push(DOMAIN_POINTS[1].route)} />
               <SceneOrbitPoint point={DOMAIN_POINTS[2]} position="bottomLeft" colors={colors} signal={domainSignals.mundo} onPress={() => router.push(DOMAIN_POINTS[2].route)} />
@@ -477,7 +495,9 @@ export default function ForgeScreen() {
             </View>
 
             <View style={styles.actionRail}>
-              <ForgeButton label="ENTRAR A LA ARENA" icon="arena" onPress={() => router.push('/battle')} testID="home-battle" />
+              <View style={styles.primaryAction}>
+                <ForgeButton label="ENTRAR A LA ARENA" icon="arena" onPress={() => router.push('/battle')} testID="home-battle" />
+              </View>
               <Pressable
                 accessibilityRole="button"
                 accessibilityLabel="Abrir mi colección"
@@ -690,6 +710,10 @@ const styles = StyleSheet.create({
   sceneStage: { height: 230, marginTop: 13, position: 'relative', alignItems: 'center', justifyContent: 'center' },
   stageRingOuter: { position: 'absolute', width: 198, height: 198, top: 11, borderWidth: 1, borderRadius: 99 },
   stageRingInner: { position: 'absolute', width: 146, height: 146, top: 37, borderWidth: 1, borderRadius: 73 },
+  stagePlatform: { position: 'absolute', width: 214, height: 76, top: 104, alignItems: 'center', justifyContent: 'center', zIndex: 1 },
+  stagePlatformGlow: { width: 194, height: 54, borderWidth: 1, borderRadius: 27 },
+  stagePlatformLight: { position: 'absolute', width: 178, height: 44, borderRadius: 22 },
+  stagePlatformLine: { position: 'absolute', width: 112, height: 1, bottom: 13, borderRadius: 1 },
   stageArtifact: { position: 'absolute', top: 15, left: 72, right: 72, alignItems: 'center', zIndex: 2 },
   stageCard: { alignItems: 'center' },
   artifactFrameLarge: { width: 88, height: 123, borderWidth: 1, borderRadius: 14, overflow: 'hidden', alignItems: 'center', justifyContent: 'center', shadowOpacity: 0.42, shadowRadius: 18, shadowOffset: { width: 0, height: 10 }, elevation: 8 },
@@ -730,6 +754,7 @@ const styles = StyleSheet.create({
   tutorialEntryLabel: { fontFamily: typography.bodyBold, fontSize: 8, letterSpacing: 0.8, fontWeight: '800' },
   tutorialEntryMeta: { fontFamily: typography.body, fontSize: 8, marginTop: 2 },
   actionRail: { flexDirection: 'row', gap: 8, marginTop: 11 },
+  primaryAction: { flex: 1.22 },
   secondaryAction: { flex: 1, minHeight: 46, borderWidth: 1, borderRadius: 12, paddingHorizontal: 9, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 6 },
   secondaryActionText: { fontFamily: typography.bodyBold, fontSize: 8, letterSpacing: 0.35, fontWeight: '800' },
   sceneHint: { minHeight: 27, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8, marginTop: 8 },

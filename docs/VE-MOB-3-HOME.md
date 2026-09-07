@@ -140,3 +140,13 @@ La Fase VISUAL no se declara cerrada sólo por compilar: debe alcanzar al menos 
   mismo feedback visual y la misma acción existente.
 - Estado: `IMPLEMENTED_UNVERIFIED`; no cambia la navegación ni sustituye la QA
   táctil del APK.
+
+## Lote visual y de estados — 2026-09-07 — núcleo del Nexus y sincronización parcial
+
+- La escena Home conserva `lobby/main.jpg` y los assets de facción del manifiesto; se añadió una plataforma central authored detrás de la carta destacada para dar continuidad espacial al objeto focal sin introducir arte nuevo.
+- `ENTRAR A LA ARENA` recibe una jerarquía ligeramente superior a `MI COLECCIÓN`, manteniendo ambas rutas existentes, `testID` y accesibilidad.
+- Las cuatro cargas de Home ahora comunican degradación parcial: si una señal falla pero otras llegan, el Home muestra reintento explícito en lugar de ocultar el estado; si todas fallan, conserva el error total existente.
+- La atmósfera de facción limpia su estado de error cuando cambia la carta y deja de renderizarse si el asset oficial no carga; no se sustituye por un placeholder silencioso.
+- No se modifican Supabase, Auth, RLS, RPCs, economía, combate, navegación ni web.
+- Guardas estáticas del lote: `verify:motion`, `verify:ui-identity`, `verify:surface-art`, `verify:mobile-meta`, `verify:assets` y `verify:mobile-battle` pasan.
+- Estado: `IMPLEMENTED_UNVERIFIED`; falta typecheck/build del workflow Android oficial y QA visual/táctil humana en APK.
