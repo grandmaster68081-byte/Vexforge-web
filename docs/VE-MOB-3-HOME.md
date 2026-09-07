@@ -168,3 +168,42 @@ La Fase VISUAL no se declara cerrada sólo por compilar: debe alcanzar al menos 
 - Release correlativo: [vexforge-android-build-121](https://github.com/grandmaster68081-byte/Vexforge-web/releases/tag/vexforge-android-build-121), con `app-release.apk` de `95,335,180` bytes y SHA-256 `b881111862f0cd3405a7c01111d2cf27c32a3dfead2f5391a842a3297cfb1904`.
 - El bundle standalone contiene `assets/index.android.bundle` y conserva `forge-battlefield`, `CAMPO DE BATALLA`, `vexforge_battle_resolve`, `ARTE NO DISPONIBLE` y `battle-next-turn`.
 - Esta evidencia técnica no sustituye la QA visual/táctil humana ni permite promover la unidad a `PASS`, `Q4`, `TIER1_READY` u `OPERATIONAL`.
+
+## Addendum 2026-09-07 — FOJA VISUAL HUB / FUNCTIONAL MATRIX
+
+- La superficie Android se reconstruyó como una escena nativa vertical de Foja,
+  usando `CANONICAL_BACKGROUNDS.home`, el asset oficial `homeNexusBurst`, la
+  capa de facción autorizada y el arte real de la carta destacada. La referencia
+  visual no se incrusta como una textura estática ni recibe botones transparentes.
+- El HUD conserva jugador, nivel, Energía, VEX, temporada, estado Nexus,
+  mensajes y ajustes. La escena expone hotspots diegéticos para Foja, Arena,
+  Archivo y Forja, además de carta destacada, misión diaria, evento y rito de
+  entrada.
+- El contenido continúa leyendo `GameContext` y las cargas reales de Supabase.
+  No se añadieron rutas, datos, recompensas, personajes, contratos ni lógica
+  autoritativa nuevos. `reduced-motion`, safe-area, pull-to-refresh, estados
+  parciales, error total, error de arte y accesibilidad se mantienen explícitos.
+
+### Matriz funcional de recorrido
+
+| Control visible | Ruta/acción real | Datos/estado | Evidencia |
+| --- | --- | --- | --- |
+| Mensajes | `/missions` | Misiones y sincronización | `home-inbox` |
+| Ajustes | `/meta` | Sistemas Android existentes | `home-settings` |
+| Perfil / medallón | `/profile` | `player`, `progress`, wallet | `home-profile` |
+| Foja | `/` | Superficie Home actual | `home-hotspot-foja` |
+| Arena | `/battle` | Combate Android existente | `home-battle` |
+| Archivo | `/collection` | Colección real | `home-hotspot-archivo`, `home-featured-card` |
+| Forja | `/deck` | Mazo/formación existente | `home-hotspot-forja` |
+| Misión diaria | `/missions` | `loadHomeMissions` | `home-missions` |
+| Evento especial | `/world` | `active_event` de Home | `home-event` |
+| Continuar rito | `/tutorial` | `tutorial_step` persistido | `home-tutorial` |
+| Mundo | `/world` | Superficie Mundo existente | `home-world` |
+| Economía | `/economy` | Economía Android existente | `home-economy` |
+
+- Guardas ejecutadas en la copia de trabajo: typecheck móvil, `verify:motion`,
+  `verify:mobile-home-official-assets`, `verify:mobile-tutorial` y `git diff
+  --check` pasan. El workflow Android oficial y la QA visual/táctil humana del
+  APK siguen siendo gates de cierre.
+- Estado: `IMPLEMENTED_UNVERIFIED`; no se declara `PASS`, `Q4`,
+  `TIER1_READY` ni `OPERATIONAL`.

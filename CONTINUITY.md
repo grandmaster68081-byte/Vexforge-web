@@ -1,3 +1,28 @@
+## 2026-09-07 — VE-MOB-3-HOME — FOJA VISUAL HUB / IMPLEMENTED_UNVERIFIED
+
+- Se reemplazó la composición anterior del Home Android por un hub vertical
+  nativo de Foja inspirado en la referencia adjunta: HUD superior, temporada,
+  carta central, hotspots diegéticos de Foja/Arena/Archivo/Forja, misión diaria,
+  evento y Continuar Rito.
+- Se conservan las fuentes reales de `GameContext` y Supabase (`wallet`,
+  `progress`, `loadHomeStats`, `loadDailyFeaturedCard`, `loadHomeMissions`,
+  `loadRecentActivity`). No se inventan rutas, assets, datos ni autoridad de
+  juego; la referencia no se usa como textura.
+- La matriz funcional queda documentada en `docs/VE-MOB-3-HOME.md`. Las rutas
+  visibles apuntan a superficies Android existentes y exponen `testID`,
+  accesibilidad y estados explícitos de carga, error, degradación parcial,
+  reduced-motion y refresh.
+- Verificación local: `mobile/npm run typecheck`, `verify:mobile-home-official-assets`
+  5/5, `verify:mobile-tutorial` 15/15, `verify:motion` y `git diff --check`.
+  La instalación inicial con firewall local falló para `npm-package-arg@11.0.3`;
+  se repitió con el registro público, como en el workflow oficial, y el
+  typecheck terminó correctamente.
+- El commit, workflow APK y release correlativo quedan pendientes de publicar.
+  Estado honesto: `IMPLEMENTED_UNVERIFIED`; no se declara `PASS`, `Q4`,
+  `TIER1_READY` ni `OPERATIONAL` hasta la QA humana visual/táctil del APK.
+
+---
+
 ## 2026-09-07 — VE-MOB-3-HOME — NEXUS HUD / IMPLEMENTED_UNVERIFIED
 
 - Se refinó únicamente la superficie Android de Home/Forja en `mobile/app/(tabs)/index.tsx`: HUD superior con Energía y VEX reales, acceso a Sistemas y Perfil, foco central más dominante y órbita de destinos más legible.
