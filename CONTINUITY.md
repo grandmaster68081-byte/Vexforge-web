@@ -2178,3 +2178,13 @@
 - Se incorporó la imagen de referencia entregada por el operador como escena visual del Home Android en `mobile/assets/images/home-reference-scene.png`, recortada únicamente para dejar la barra nativa de pestañas fuera del arte.
 - El Home conserva `get_home_stats` contra Supabase y navegación real por zonas táctiles transparentes; se retiraron del primer viewport los paneles superpuestos que alteraban el fondo y se dejó la escena dentro de un `ScrollView`.
 - El gate técnico de typecheck, build/release y la QA visual/táctil humana siguen pendientes; el estado correcto antes de esos gates es `IMPLEMENTED_UNVERIFIED`.
+
+---
+## 2026-09-08 — VE-MOB-9-PROFILE — OPERATOR REFERENCE / READY FOR APK
+
+- Se reabrió la unidad Android de Perfil para sustituir el lienzo estirado por el frame oficial 2:3 de la referencia entregada por el operador; el arte `profile-reference-scene.png` coincide byte a byte con la referencia.
+- `mobile/app/(tabs)/profile.tsx` conserva los contratos vivos de Supabase y ahora escala el frame, textos y barra de XP sin deformar la composición; el objetivo de diseño es 683×1024 px.
+- Se conectaron las zonas visibles de configuración, avisos, navegación, edición, estadísticas, logros, títulos, historial, ranking, temporada, progreso, mazos, cartas, misiones, recompensas, red social y cierre de sesión.
+- Se añadieron estados explícitos de carga, error, vacío de logros, sincronización y pull-to-refresh; los datos siguen siendo identidad, rango, estadísticas, progreso, cartera, actividad y logros reales bajo la sesión y RLS existentes.
+- Evidencia local: `npm run typecheck` móvil OK, `verify-mobile-profile.mjs` 13/13 OK y QA HTTPS contra Supabase OK con sesión, perfil, rango, estadísticas y 10 logros.
+- Estado honesto: `IMPLEMENTED_UNVERIFIED`. Falta el workflow Android oficial, el release correlativo y el recorrido visual/táctil humano en la APK; no se declara `PASS`, `OPERATIONAL`, `Q4` ni `TIER1_READY`.

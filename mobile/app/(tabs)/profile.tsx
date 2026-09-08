@@ -1,9 +1,11 @@
 import { useCallback, useEffect, useMemo, useState, type ReactNode } from 'react';
 import {
+  Alert,
   ActivityIndicator,
   Image,
   Modal,
   Pressable,
+  RefreshControl,
   ScrollView,
   StyleSheet,
   Text,
@@ -27,8 +29,10 @@ import {
 import { typography } from '@/constants/typography';
 
 const PROFILE_REFERENCE = require('../../assets/images/profile-reference-scene.png');
-type Panel = 'stats' | 'achievements' | 'titles' | 'history' | 'ranking' | 'season' | null;
-type ProfileAction = 'collection' | 'owned' | 'fusion' | 'achievements' | 'profile' | 'meta' | 'deck' | 'missions' | 'social' | 'home' | 'battle' | 'stats' | 'titles' | 'history' | 'ranking' | 'season';
+const DESIGN_WIDTH = 683;
+const DESIGN_HEIGHT = 1024;
+type Panel = 'stats' | 'achievements' | 'titles' | 'history' | 'ranking' | 'season' | 'progress' | 'account' | null;
+type ProfileAction = 'collection' | 'owned' | 'fusion' | 'achievements' | 'profile' | 'meta' | 'deck' | 'missions' | 'social' | 'home' | 'battle' | 'stats' | 'titles' | 'history' | 'ranking' | 'season' | 'progress';
 
 const PROFILE_HOTSPOTS: Array<{
   id: string;
@@ -44,6 +48,8 @@ const PROFILE_HOTSPOTS: Array<{
   { id: 'fusion', label: 'Abrir fusión', left: '43%', top: '11%', width: '17%', height: '7%', action: 'fusion' },
   { id: 'achievements-top', label: 'Abrir logros', left: '61%', top: '11%', width: '17%', height: '7%', action: 'achievements' },
   { id: 'profile-top', label: 'Perfil', left: '80%', top: '11%', width: '17%', height: '7%', action: 'profile' },
+  { id: 'settings', label: 'Abrir configuración de cuenta', left: '84%', top: '3%', width: '8%', height: '7%', action: 'meta' },
+  { id: 'notifications', label: 'Abrir misiones y avisos', left: '92%', top: '3%', width: '7%', height: '7%', action: 'missions' },
   { id: 'edit-profile', label: 'Editar perfil', left: '75%', top: '21%', width: '20%', height: '7%', action: 'meta' },
   { id: 'stats', label: 'Ver estadísticas', left: '3%', top: '32%', width: '18%', height: '8%', action: 'stats' },
   { id: 'achievements', label: 'Ver logros', left: '22%', top: '32%', width: '18%', height: '8%', action: 'achievements' },
@@ -53,7 +59,7 @@ const PROFILE_HOTSPOTS: Array<{
   { id: 'season', label: 'Ver detalles de temporada', left: '77%', top: '43%', width: '19%', height: '8%', action: 'season' },
   { id: 'decks', label: 'Abrir mis mazos', left: '4%', top: '62%', width: '29%', height: '11%', action: 'deck' },
   { id: 'cards', label: 'Abrir cartas obtenidas', left: '35%', top: '62%', width: '30%', height: '11%', action: 'owned' },
-  { id: 'progress', label: 'Abrir progreso', left: '68%', top: '72%', width: '28%', height: '8%', action: 'missions' },
+  { id: 'progress', label: 'Abrir progreso', left: '68%', top: '72%', width: '28%', height: '8%', action: 'progress' },
   { id: 'quick-achievements', label: 'Logros', left: '3%', top: '81%', width: '21%', height: '9%', action: 'achievements' },
   { id: 'quick-titles', label: 'Títulos', left: '26%', top: '81%', width: '21%', height: '9%', action: 'achievements' },
   { id: 'quick-rewards', label: 'Recompensas', left: '50%', top: '81%', width: '21%', height: '9%', action: 'missions' },
@@ -98,6 +104,7 @@ function PanelContent({
   colors,
   playerId,
   playerName,
+  playerEmail,
   rank,
   stats,
   progress,
@@ -106,11 +113,13 @@ function PanelContent({
   social,
   collectionCount,
   onClose,
+  onSignOut,
 }: {
   panel: Exclude<Panel, null>;
   colors: ReturnType<typeof useColors>;
   playerId: string;
   playerName: string;
+  playerEmail: string;
   rank: PlayerRank | null;
   stats: ReturnType<typeof useGame>['stats'];
   progress: ReturnType<typeof useGame>['progress'];
@@ -119,8 +128,9 @@ function PanelContent({
   social: MobileSocialSnapshot | null;
   collectionCount: number;
   onClose: () => void;
+  onSignOut: () => Promise<void>;
 }) {
-  const title = panel === 'stats' ? 'ESTADÍSTICAS' : panel === 'achievements' ? 'LOGROS' : panel === 'titles' ? 'TÍTULOS' : panel === 'history' ? 'HISTORIAL' : panel === 'ranking' ? 'RANKING' : 'TEMPORADA ACTUAL';
+  const title = panel === 'stats' ? 'ESTADÍSTICAS' : panel === 'achievements' ? 'LOGROS' : panel === 'titles' ? 'TÍTULOS' : panel === 'history' ? 'HISTORIAL' : panel === 'ranking' ? 'RANKING' : panel === 'progress' ? 'PROGRESO' : panel === 'account' ? 'CUENTA' : 'TEMPORADA ACTUAL';
   return (
     <View style={[styles.modalPanel, { backgroundColor: colors.panelStrong, borderColor: colors.accent }]}>
       <View style={styles.modalHeader}>
@@ -147,8 +157,39 @@ function PanelContent({
           <Text style={[styles.modalMuted, { color: colors.mutedForeground }]}>Energía {number(progress?.energy)} / {number(progress?.max_energy)} · {social?.seasonName ?? 'Temporada activa'}</Text>
         </View>
       ) : null}
+      {panel === 'progress' ? (
+        <View style={styles.modalCopy}>
+          <Text style={[styles.modalBody, { color: colors.foreground }]}>Tu camino en VEXFORGE</Text>
+          <Text style={[styles.modalMuted, { color: colors.mutedForeground }]}>Nivel {progress?.level ?? '—'} · {number(progress?.xp)} / {number(progress?.xp_to_next)} XP</Text>
+          <Text style={[styles.modalMuted, { color: colors.mutedForeground }]}>Energía {number(progress?.energy)} / {number(progress?.max_energy)}</Text>
+          <Text style={[styles.modalMuted, { color: colors.mutedForeground }]}>Región inicial: {progress?.starter_region ?? '—'}</Text>
+        </View>
+      ) : null}
+      {panel === 'account' ? (
+        <View style={styles.modalCopy}>
+          <Text style={[styles.modalBody, { color: colors.foreground }]}>{playerName}</Text>
+          <Text style={[styles.modalMuted, { color: colors.mutedForeground }]}>{playerEmail}</Text>
+          <Text style={[styles.modalMuted, { color: colors.mutedForeground }]}>ID de forjador: {playerId}</Text>
+          <Text style={[styles.modalMuted, { color: colors.mutedForeground }]}>Rango actual: {rankLabel(rank)}</Text>
+          <Pressable
+            testID="profile-sign-out"
+            accessibilityRole="button"
+            accessibilityLabel="Cerrar sesión"
+            onPress={() => {
+              Alert.alert('Cerrar sesión', '¿Quieres salir de esta cuenta?', [
+                { text: 'Cancelar', style: 'cancel' },
+                { text: 'Cerrar sesión', style: 'destructive', onPress: () => { void onSignOut(); } },
+              ]);
+            }}
+            style={[styles.signOutButton, { borderColor: colors.danger, backgroundColor: `${colors.danger}12` }]}
+          >
+            <Ionicons name="log-out-outline" size={17} color={colors.danger} />
+            <Text style={[styles.signOutText, { color: colors.danger }]}>CERRAR SESIÓN</Text>
+          </Pressable>
+        </View>
+      ) : null}
       {panel === 'achievements' || panel === 'titles' ? (
-        achievements.length ? <ScrollView style={styles.modalList}>{achievements.map((achievement) => <View key={achievement.id} style={[styles.modalRow, { borderColor: colors.border }]}><Ionicons name={panel === 'titles' ? 'crown' : 'trophy-outline'} size={18} color={colors.accent} /><View style={styles.modalRowCopy}><Text style={[styles.modalRowTitle, { color: colors.foreground }]}>{achievement.title}</Text><Text style={[styles.modalMuted, { color: colors.mutedForeground }]}>{achievement.description}</Text></View><Text style={[styles.modalPoints, { color: colors.accent }]}>{achievement.points}</Text></View>)}</ScrollView> : <Text style={[styles.modalMuted, { color: colors.mutedForeground }]}>Todavía no hay registros disponibles.</Text>
+        achievements.length ? <ScrollView style={styles.modalList}>{achievements.map((achievement) => <View key={achievement.id} style={[styles.modalRow, { borderColor: colors.border }]}><Ionicons name={panel === 'titles' ? 'crown' : 'trophy-outline'} size={18} color={colors.accent} /><View style={styles.modalRowCopy}><Text style={[styles.modalRowTitle, { color: colors.foreground }]}>{achievement.title}</Text><Text style={[styles.modalMuted, { color: colors.mutedForeground }]}>{achievement.description}</Text></View><Text style={[styles.modalPoints, { color: colors.accent }]}>{achievement.points}</Text></View>)}</ScrollView> : <Text testID="profile-empty-achievements" style={[styles.modalMuted, { color: colors.mutedForeground }]}>Todavía no hay registros disponibles.</Text>
       ) : null}
       {panel === 'history' ? (
         social?.matches.length ? <ScrollView style={styles.modalList}>{social.matches.map((match) => { const won = match.winner === playerId; const elo = match.player_a === playerId ? match.elo_change_a : match.elo_change_b; return <View key={match.id} style={[styles.modalRow, { borderColor: colors.border }]}><Ionicons name={won ? 'checkmark-circle' : 'close-circle-outline'} size={18} color={won ? colors.success : colors.danger} /><View style={styles.modalRowCopy}><Text style={[styles.modalRowTitle, { color: colors.foreground }]}>{won ? 'Victoria' : 'Derrota'} · {match.opponent_name ?? 'Forjador rival'}</Text><Text style={[styles.modalMuted, { color: colors.mutedForeground }]}>{formatDate(match.created_at)}</Text></View><Text style={[styles.modalPoints, { color: elo && elo > 0 ? colors.success : colors.danger }]}>{elo == null ? '—' : `${elo > 0 ? '+' : ''}${elo}`}</Text></View>; })}</ScrollView> : <Text style={[styles.modalMuted, { color: colors.mutedForeground }]}>No hay combates registrados.</Text>
@@ -171,17 +212,23 @@ export default function ProfileScreen() {
   const router = useRouter();
   const { width: viewportWidth, height: viewportHeight } = useWindowDimensions();
   const { section: requestedSection } = useLocalSearchParams<{ section?: string }>();
-  const { session, player, progress, wallet, stats, collection, syncState, syncError } = useGame();
+  const { session, player, progress, wallet, stats, collection, syncState, syncError, signOut } = useGame();
   const [rank, setRank] = useState<PlayerRank | null>(null);
   const [achievements, setAchievements] = useState<PlayerAchievement[]>([]);
   const [social, setSocial] = useState<MobileSocialSnapshot | null>(null);
   const [panel, setPanel] = useState<Panel>(requestedSection === 'achievements' ? 'achievements' : null);
   const [loading, setLoading] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
+  const [detailsError, setDetailsError] = useState<string | null>(null);
   const canvasHeight = Math.max(1, viewportHeight - insets.top - insets.bottom);
+  const frameScale = Math.max(viewportWidth / DESIGN_WIDTH, canvasHeight / DESIGN_HEIGHT);
+  const frameWidth = DESIGN_WIDTH * frameScale;
+  const frameHeight = DESIGN_HEIGHT * frameScale;
 
   const loadDetails = useCallback(async () => {
     if (!session || !player?.id) return;
     setLoading(true);
+    setDetailsError(null);
     const [rankResult, achievementsResult, socialResult] = await Promise.allSettled([
       loadPlayerRank(session, player.id),
       loadPlayerAchievements(session, player.id),
@@ -190,12 +237,16 @@ export default function ProfileScreen() {
     if (rankResult.status === 'fulfilled') setRank(rankResult.value);
     if (achievementsResult.status === 'fulfilled') setAchievements(achievementsResult.value);
     if (socialResult.status === 'fulfilled') setSocial(socialResult.value);
+    const rejected = [rankResult, achievementsResult, socialResult].find((result) => result.status === 'rejected');
+    if (rejected?.status === 'rejected') setDetailsError(rejected.reason instanceof Error ? rejected.reason.message : 'No se pudo sincronizar el detalle del perfil');
     setLoading(false);
   }, [player?.id, session]);
 
   useEffect(() => { void loadDetails(); }, [loadDetails]);
 
   const displayName = player?.display_name?.trim() || session?.user.email?.split('@')[0] || 'Forjador';
+  const playerEmail = player ? player.email : null;
+  const email = playerEmail || session?.user.email || '—';
   const energy = progress ? `${progress.energy}/${progress.max_energy}` : '—/—';
   const vex = wallet ? Math.round(wallet.vex_ingame).toLocaleString('es-ES') : '—';
   const xpPercent = progress && progress.xp_to_next > 0 ? Math.min(100, Math.round((progress.xp / progress.xp_to_next) * 100)) : 0;
@@ -206,6 +257,15 @@ export default function ProfileScreen() {
     number(getStreak(social?.matches ?? [], player?.id ?? '')),
     number(rank?.mmr),
   ], [player?.id, rank?.mmr, social?.matches, stats?.pvp_losses, stats?.pvp_wins]);
+
+  const handleRefresh = async () => {
+    setRefreshing(true);
+    try {
+      await loadDetails();
+    } finally {
+      setRefreshing(false);
+    }
+  };
 
   const action = (kind: ProfileAction) => {
     if (kind === 'collection') return router.push('/collection');
@@ -223,51 +283,68 @@ export default function ProfileScreen() {
     if (kind === 'history') return setPanel('history');
     if (kind === 'ranking') return setPanel('ranking');
     if (kind === 'season') return setPanel('season');
-    if (kind === 'profile') return setPanel(null);
+    if (kind === 'progress') return setPanel('progress');
+    if (kind === 'profile') return setPanel('account');
   };
 
   if (!session || !player) {
-    return <ScreenShell surface="profile" sceneMode="hero"><View style={styles.loadingScreen}><ActivityIndicator color={colors.accent} /><Text style={[styles.loadingText, { color: colors.foreground }]}>CARGANDO PERFIL DEL NEXUS</Text></View></ScreenShell>;
+    return <ScreenShell surface="profile" sceneMode="hero"><View testID="profile-loading" style={styles.loadingScreen}><ActivityIndicator color={colors.accent} /><Text style={[styles.loadingText, { color: colors.foreground }]}>CARGANDO PERFIL DEL NEXUS</Text></View></ScreenShell>;
   }
 
   return (
     <ScreenShell surface="profile" sceneMode="hero">
       <View style={[styles.referenceRoot, { marginBottom: -insets.bottom }]}>
-        <View testID="profile-reference-scene" style={[styles.canvas, { width: viewportWidth, height: canvasHeight, marginTop: insets.top }]}>
-          <Image source={PROFILE_REFERENCE} style={StyleSheet.absoluteFillObject} resizeMode="stretch" accessibilityLabel="Composición oficial de Perfil VEXFORGE" accessibilityIgnoresInvertColors />
-          <View pointerEvents="none" style={[styles.identityMask, { backgroundColor: `${colors.ink}D4` }]} />
-          <View pointerEvents="none" style={[styles.dataLayer, { width: viewportWidth, height: canvasHeight }]}>
-            <DataText style={styles.displayName}>{displayName.toUpperCase()}</DataText>
-            <DataText style={styles.handle}>@{displayName.toLowerCase().replace(/\s+/g, '_')}</DataText>
-            <DataText style={styles.status}>●  {syncState === 'connected' ? 'En línea' : 'Sin conexión'}</DataText>
-            <DataText style={styles.rank}>{currentRank}</DataText>
-            <DataText style={styles.memberSince}>DESDE {formatDate(player.created_at)}</DataText>
-            <DataText style={styles.statOne}>{statValues[0]}</DataText>
-            <DataText style={styles.statTwo}>{statValues[1]}</DataText>
-            <DataText style={styles.statThree}>{statValues[2]}</DataText>
-            <DataText style={styles.statFour}>{statValues[3]}</DataText>
-            <DataText style={styles.xpValue}>{number(progress?.xp)} / {number(progress?.xp_to_next)} XP</DataText>
-            <View style={[styles.xpFill, { width: `${xpPercent}%`, backgroundColor: colors.accent }]} />
-            <DataText style={styles.collectionValue}>{collection.length ? collection.length.toLocaleString('es-ES') : '—'}</DataText>
-            <DataText style={styles.walletValue}>{vex} VEX</DataText>
-            <Text pointerEvents="none" style={[styles.syncText, { color: loading ? colors.accent : syncError ? colors.danger : colors.mutedForeground }]}>{loading ? 'Sincronizando tu perfil…' : syncError ?? `${energy} · ${vex} VEX`}</Text>
+        <ScrollView
+          testID="profile-screen"
+          style={styles.profileScroll}
+          contentContainerStyle={[styles.profileScrollContent, { minHeight: canvasHeight }]}
+          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={() => { void handleRefresh(); }} tintColor={colors.accent} />}
+          showsVerticalScrollIndicator={false}
+        >
+          <View testID="profile-reference-scene" style={[styles.canvas, { width: viewportWidth, height: canvasHeight, marginTop: insets.top }]}>
+            <View style={[styles.frame, { width: frameWidth, height: frameHeight, left: (viewportWidth - frameWidth) / 2, top: (canvasHeight - frameHeight) / 2 }]}>
+              <Image source={PROFILE_REFERENCE} style={StyleSheet.absoluteFillObject} resizeMode="contain" accessibilityLabel="Composición oficial de Perfil VEXFORGE" accessibilityIgnoresInvertColors />
+              <View pointerEvents="none" style={[styles.identityMask, { backgroundColor: `${colors.ink}D4`, borderRadius: 8 * frameScale }]} />
+              <View pointerEvents="none" style={styles.dataLayer}>
+                <DataText style={[styles.displayName, { fontSize: 17 * frameScale }]}>{displayName.toUpperCase()}</DataText>
+                <DataText style={[styles.handle, { fontSize: 9 * frameScale }]}>@{displayName.toLowerCase().replace(/\s+/g, '_')}</DataText>
+                <DataText style={[styles.status, { fontSize: 9 * frameScale }]}>●  {syncState === 'connected' ? 'En línea' : 'Sin conexión'}</DataText>
+                <DataText style={[styles.rank, { fontSize: 9 * frameScale }]}>{currentRank}</DataText>
+                <DataText style={[styles.memberSince, { fontSize: 7 * frameScale }]}>{`DESDE ${formatDate(player.created_at)}`}</DataText>
+                <DataText style={[styles.statOne, { fontSize: 17 * frameScale }]}>{statValues[0]}</DataText>
+                <DataText style={[styles.statTwo, { fontSize: 17 * frameScale }]}>{statValues[1]}</DataText>
+                <DataText style={[styles.statThree, { fontSize: 17 * frameScale }]}>{statValues[2]}</DataText>
+                <DataText style={[styles.statFour, { fontSize: 17 * frameScale }]}>{statValues[3]}</DataText>
+                <DataText style={[styles.xpValue, { fontSize: 8 * frameScale }]}>{number(progress?.xp)} / {number(progress?.xp_to_next)} XP</DataText>
+                <View style={[styles.xpFill, { width: `${xpPercent}%`, height: 8 * frameScale, borderRadius: 8 * frameScale, backgroundColor: colors.accent }]} />
+                <DataText style={[styles.collectionValue, { fontSize: 11 * frameScale }]}>{collection.length ? collection.length.toLocaleString('es-ES') : '—'}</DataText>
+                <DataText style={[styles.walletValue, { fontSize: 8 * frameScale }]}>{vex} VEX</DataText>
+                <Text pointerEvents="none" style={[styles.syncText, { color: loading ? colors.accent : syncError || detailsError ? colors.danger : colors.mutedForeground, fontSize: 10 * frameScale }]}>{loading ? 'Sincronizando tu perfil…' : syncError ?? detailsError ?? `${energy} · ${vex} VEX`}</Text>
+              </View>
+              <View style={styles.hotspotLayer}>
+                {PROFILE_HOTSPOTS.map((hotspot) => (
+                  <Pressable
+                    key={hotspot.id}
+                    testID={`profile-reference-${hotspot.id}`}
+                    accessibilityRole="button"
+                    accessibilityLabel={hotspot.label}
+                    accessibilityHint="Toca dos veces para abrir este flujo."
+                    onPress={() => action(hotspot.action)}
+                    style={({ pressed }) => [styles.hotspot, { left: hotspot.left, top: hotspot.top, width: hotspot.width, height: hotspot.height, opacity: pressed ? 0.7 : 1 }]}
+                  />
+                ))}
+              </View>
+            </View>
           </View>
-          <View style={styles.hotspotLayer}>
-            {PROFILE_HOTSPOTS.map((hotspot) => (
-              <Pressable
-                key={hotspot.id}
-                testID={`profile-reference-${hotspot.id}`}
-                accessibilityRole="button"
-                accessibilityLabel={hotspot.label}
-                accessibilityHint="Toca dos veces para abrir este flujo."
-                onPress={() => action(hotspot.action)}
-                style={({ pressed }) => [styles.hotspot, { left: hotspot.left, top: hotspot.top, width: hotspot.width, height: hotspot.height, opacity: pressed ? 0.7 : 1 }]}
-              />
-            ))}
+        </ScrollView>
+        {syncError || detailsError ? (
+          <View testID="profile-sync-error" accessibilityRole="alert" style={[styles.errorNotice, { backgroundColor: `${colors.danger}E8`, borderColor: colors.danger }]}>
+            <Ionicons name="alert-circle-outline" size={16} color={colors.foreground} />
+            <Text style={[styles.errorNoticeText, { color: colors.foreground }]}>{syncError ?? detailsError}</Text>
           </View>
-        </View>
+        ) : null}
         <Modal visible={panel !== null} animationType="slide" transparent onRequestClose={() => setPanel(null)}>
-          {panel ? <View style={styles.modalBackdrop}><PanelContent panel={panel} colors={colors} playerId={player.id} playerName={displayName} rank={rank} stats={stats} progress={progress} wallet={wallet} achievements={achievements} social={social} collectionCount={collection.length} onClose={() => setPanel(null)} /></View> : null}
+          {panel ? <View style={styles.modalBackdrop}><PanelContent panel={panel} colors={colors} playerId={player.id} playerName={displayName} playerEmail={email} rank={rank} stats={stats} progress={progress} wallet={wallet} achievements={achievements} social={social} collectionCount={collection.length} onClose={() => setPanel(null)} onSignOut={async () => { await signOut(); setPanel(null); }} /></View> : null}
         </Modal>
       </View>
     </ScreenShell>
@@ -276,7 +353,10 @@ export default function ProfileScreen() {
 
 const styles = StyleSheet.create({
   referenceRoot: { flex: 1, width: '100%', overflow: 'hidden' },
+  profileScroll: { flex: 1 },
+  profileScrollContent: { flexGrow: 1 },
   canvas: { position: 'relative', overflow: 'hidden' },
+  frame: { position: 'absolute', overflow: 'hidden' },
   dataLayer: { ...StyleSheet.absoluteFillObject },
   hotspotLayer: { ...StyleSheet.absoluteFillObject },
   hotspot: { position: 'absolute' },
@@ -296,6 +376,8 @@ const styles = StyleSheet.create({
   collectionValue: { right: '6%', top: '17.6%', width: '18%', textAlign: 'right', fontSize: 11, color: '#F0C050' },
   walletValue: { left: '74%', top: '5.5%', width: '20%', textAlign: 'center', fontSize: 8, color: '#FFFFFF' },
   syncText: { position: 'absolute', left: '17%', right: '17%', top: '41.2%', textAlign: 'center', fontFamily: typography.body, fontSize: 10 },
+  errorNotice: { position: 'absolute', left: 18, right: 18, bottom: 14, minHeight: 42, borderWidth: 1, borderRadius: 12, paddingHorizontal: 12, paddingVertical: 8, flexDirection: 'row', alignItems: 'center', gap: 8 },
+  errorNoticeText: { flex: 1, fontFamily: typography.body, fontSize: 11, lineHeight: 15 },
   loadingScreen: { flex: 1, alignItems: 'center', justifyContent: 'center', gap: 10 },
   loadingText: { fontFamily: typography.bodyBold, fontSize: 10, letterSpacing: 1.3 },
   modalBackdrop: { flex: 1, justifyContent: 'flex-end', backgroundColor: '#000000B8' },
@@ -318,4 +400,6 @@ const styles = StyleSheet.create({
   modalPoints: { fontFamily: typography.bodyBold, fontSize: 12 },
   modalRank: { width: 35, fontFamily: typography.display, fontSize: 15 },
   modalFooter: { fontFamily: typography.bodySemiBold, fontSize: 10, marginTop: 14, textAlign: 'center' },
+  signOutButton: { minHeight: 46, borderWidth: 1, borderRadius: 11, paddingHorizontal: 14, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8, marginTop: 10 },
+  signOutText: { fontFamily: typography.bodyBold, fontSize: 11, letterSpacing: 0.8 },
 });
