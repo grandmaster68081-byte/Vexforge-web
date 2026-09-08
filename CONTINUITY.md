@@ -1,3 +1,14 @@
+## 2026-09-08 — VE-MOB-3-HOME — OPERATOR REFERENCE COMPOSITION / IMPLEMENTED_UNVERIFIED
+
+- Se sustituyó la escena anterior del Home Android por la imagen de referencia proporcionada por el operador, conservada como asset local de `mobile/**` con sus dimensiones originales 1024×1536.
+- La imagen ya no funciona como fondo decorativo de una pantalla genérica: es la composición completa del Home, incluida su navegación inferior visual.
+- Se retiró la barra nativa duplicada únicamente de Inicio. Los accesos invisibles sobre los elementos dibujados en la imagen enrutan a Perfil, Economía, Meta, Mundo, Foja, Arena, Cartas, Archivo, Misiones, Batalla, Mazo e Inicio.
+- Se conservaron `loadHomeStats`, Supabase, la sesión y las rutas existentes. No se agregaron textos, paneles ni botones visibles encima de la obra.
+- Verificación local: `npm run typecheck`, `npm run verify:telemetry`, `expo prebuild` y coincidencia SHA-256 del asset Android con la imagen proporcionada.
+- El workflow APK oficial y la QA visual/táctil humana del APK siguen pendientes. Estado honesto: `IMPLEMENTED_UNVERIFIED`; no se declara `PASS`, `Q4`, `TIER1_READY` ni `OPERATIONAL`.
+
+---
+
 ## 2026-09-07 — VE-MOB-3-HOME-STATES — APK 129 PUBLISHED / VISUAL QA PENDING
 
 - El commit `eb87f20ce5fed27c91cf9a6f768210aa2a1caa9c` pasó el workflow Android oficial `129` (`34167262779`) con `success`.

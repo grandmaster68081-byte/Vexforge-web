@@ -21,21 +21,23 @@ type Hotspot = {
 };
 
 const HOTSPOTS: Hotspot[] = [
-  { id: 'player-profile', label: 'Abrir perfil del forjador', route: '/profile', left: '10%', top: '0%', width: '24%', height: '7%' },
-  { id: 'energy-economy', label: 'Abrir economía y energía', route: '/economy', left: '45%', top: '0%', width: '18%', height: '7%' },
-  { id: 'vex-economy', label: 'Abrir cartera VEX', route: '/economy', left: '63%', top: '0%', width: '18%', height: '7%' },
-  { id: 'messages', label: 'Abrir mensajes del Nexus', route: '/social', left: '84%', top: '0%', width: '8%', height: '7%' },
-  { id: 'settings', label: 'Abrir ajustes de cuenta', route: '/meta', left: '92%', top: '0%', width: '8%', height: '7%' },
-  { id: 'season', label: 'Abrir temporada activa', route: '/world', left: '0%', top: '5%', width: '46%', height: '11%' },
-  { id: 'daily-mission', label: 'Abrir misión diaria', route: '/missions', left: '66%', top: '5%', width: '34%', height: '11%' },
-  { id: 'forge', label: 'Entrar a Foja', route: '/', left: '0%', top: '19%', width: '29%', height: '24%' },
-  { id: 'arena', label: 'Entrar a Arena', route: '/battle', left: '70%', top: '19%', width: '30%', height: '24%' },
-  { id: 'featured-card', label: 'Inspeccionar carta destacada', route: '/collection', left: '32%', top: '22%', width: '37%', height: '30%' },
-  { id: 'archive', label: 'Abrir Archivo', route: '/collection', left: '0%', top: '40%', width: '34%', height: '27%' },
-  { id: 'deck', label: 'Entrar a Forja', route: '/deck', left: '70%', top: '40%', width: '30%', height: '27%' },
-  { id: 'event', label: 'Abrir evento especial', route: '/world', left: '0%', top: '65%', width: '55%', height: '18%' },
-  { id: 'mission', label: 'Abrir misión', route: '/missions', left: '55%', top: '65%', width: '45%', height: '18%' },
-  { id: 'ritual', label: 'Continuar tu rito', route: '/tutorial', left: '20%', top: '81%', width: '66%', height: '9%' },
+  { id: 'player-profile', label: 'Abrir perfil del forjador', route: '/profile', left: '1%', top: '0%', width: '36%', height: '7%' },
+  { id: 'energy-economy', label: 'Abrir economía y energía', route: '/economy', left: '38%', top: '0%', width: '14%', height: '7%' },
+  { id: 'vex-economy', label: 'Abrir cartera VEX', route: '/economy', left: '51%', top: '0%', width: '14%', height: '7%' },
+  { id: 'settings', label: 'Abrir ajustes de cuenta', route: '/meta', left: '61%', top: '0%', width: '14%', height: '7%' },
+  { id: 'season', label: 'Abrir temporada activa', route: '/world', left: '70%', top: '4%', width: '29%', height: '10%' },
+  { id: 'forge', label: 'Entrar a Foja', route: '/', left: '1%', top: '18%', width: '29%', height: '22%' },
+  { id: 'arena', label: 'Entrar a Arena', route: '/battle', left: '70%', top: '18%', width: '29%', height: '23%' },
+  { id: 'featured-card', label: 'Inspeccionar carta destacada', route: '/collection', left: '27%', top: '21%', width: '44%', height: '29%' },
+  { id: 'world', label: 'Explorar Mundo', route: '/world', left: '1%', top: '39%', width: '29%', height: '22%' },
+  { id: 'archive', label: 'Abrir Archivo', route: '/collection', left: '70%', top: '40%', width: '29%', height: '22%' },
+  { id: 'event', label: 'Abrir evento especial', route: '/world', left: '7%', top: '63%', width: '42%', height: '18%' },
+  { id: 'mission', label: 'Abrir misión', route: '/missions', left: '67%', top: '63%', width: '32%', height: '18%' },
+  { id: 'navigation-home', label: 'Ir a Inicio', route: '/', left: '0%', top: '91%', width: '20%', height: '9%' },
+  { id: 'navigation-battle', label: 'Ir a Batalla', route: '/battle', left: '20%', top: '91%', width: '20%', height: '9%' },
+  { id: 'navigation-cards', label: 'Ir a Cartas', route: '/collection', left: '40%', top: '91%', width: '20%', height: '9%' },
+  { id: 'navigation-deck', label: 'Ir a Mazo', route: '/deck', left: '60%', top: '91%', width: '20%', height: '9%' },
+  { id: 'navigation-profile', label: 'Ir a Perfil', route: '/profile', left: '80%', top: '91%', width: '20%', height: '9%' },
 ];
 
 export default function ForgeScreen() {
@@ -74,7 +76,7 @@ export default function ForgeScreen() {
     <ScreenShell surface="home" sceneMode="hero">
       <Animated.ScrollView
         style={styles.screen}
-        contentContainerStyle={{ paddingBottom: insets.bottom + 96 }}
+        contentContainerStyle={{ paddingBottom: insets.bottom }}
         showsVerticalScrollIndicator={false}
         entering={reduceMotion ? undefined : FadeIn.duration(450)}
       >
@@ -118,7 +120,7 @@ const styles = StyleSheet.create({
   screen: { flex: 1 },
   scene: {
     width: '100%',
-    aspectRatio: 941 / 1538,
+    aspectRatio: 1024 / 1536,
     overflow: 'hidden',
   },
   hotspotLayer: {

@@ -99,14 +99,18 @@ export function ScreenShell({ surface = 'home', sceneMode = 'shell', children, s
           />
         </>
       ) : null}
-      <Animated.View
-        pointerEvents="none"
-        style={[styles.ambientGlow, styles.ambientGlowLeft, { backgroundColor: atmosphereColor }, leftGlowStyle]}
-      />
-      <Animated.View
-        pointerEvents="none"
-        style={[styles.ambientGlow, styles.ambientGlowRight, { backgroundColor: colors.primary }, rightGlowStyle]}
-      />
+      {ownsScene ? (
+        <>
+          <Animated.View
+            pointerEvents="none"
+            style={[styles.ambientGlow, styles.ambientGlowLeft, { backgroundColor: atmosphereColor }, leftGlowStyle]}
+          />
+          <Animated.View
+            pointerEvents="none"
+            style={[styles.ambientGlow, styles.ambientGlowRight, { backgroundColor: colors.primary }, rightGlowStyle]}
+          />
+        </>
+      ) : null}
       {ownsScene ? (
         <>
           <View

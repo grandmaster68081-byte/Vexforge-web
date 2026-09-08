@@ -83,6 +83,10 @@ function ClassicTabLayout() {
         name="index"
         options={{
           title: 'Inicio',
+          // The reference artwork already contains the complete bottom
+          // navigation. Home hotspots route to the same tab destinations,
+          // so a second native bar would cover the authored composition.
+          tabBarStyle: { display: 'none' },
           tabBarIcon: ({ color }) =>
             isIOS ? (
               <SymbolView name="house" tintColor={color} size={24} />
