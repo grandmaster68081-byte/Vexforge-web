@@ -366,7 +366,8 @@ export default function DeckScreen() {
 
   return (
     <ScreenShell sceneMode="hero">
-      <View style={[styles.referenceRoot, { marginBottom: -insets.bottom, paddingTop: insets.top }]}>
+      <View style={[styles.referenceRoot, { marginBottom: -insets.bottom }]}>
+        <View style={[styles.referenceCanvas, { width, height: canvasHeight, marginTop: insets.top }]}>
         <Image source={DECK_REFERENCE} style={StyleSheet.absoluteFillObject} resizeMode="stretch" accessibilityLabel="Composición oficial de Mazos VEXFORGE" />
         <View pointerEvents="none" style={[styles.referenceShade, { backgroundColor: `${colors.ink}18` }]} />
         <View pointerEvents="box-none" style={StyleSheet.absoluteFillObject}>
@@ -441,6 +442,7 @@ export default function DeckScreen() {
             <Pressable testID="reference-deck" accessibilityRole="button" accessibilityLabel="Mazo" onPress={() => navigate('/deck')} style={styles.bottomHit} />
             <Pressable testID="reference-profile" accessibilityRole="button" accessibilityLabel="Perfil" onPress={() => navigate('/profile')} style={styles.bottomHit} />
           </View>
+          </View>
         </View>
         <DetailModal slot={detail} colors={colors} onClose={() => setDetail(null)} />
         <EditorModal
@@ -464,7 +466,8 @@ export default function DeckScreen() {
 }
 
 const styles = StyleSheet.create({
-  referenceRoot: { flex: 1, overflow: 'hidden' },
+  referenceRoot: { flex: 1, width: '100%', overflow: 'hidden' },
+  referenceCanvas: { position: 'relative', overflow: 'hidden' },
   referenceShade: { ...StyleSheet.absoluteFillObject },
   deckCounter: { position: 'absolute', alignItems: 'flex-end', zIndex: 4 },
   deckCounterValue: { fontSize: 13, fontWeight: '900', letterSpacing: 0.7 },

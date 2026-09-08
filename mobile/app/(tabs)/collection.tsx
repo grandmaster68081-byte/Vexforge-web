@@ -496,7 +496,8 @@ export default function CollectionScreen() {
   const hasFilters = Boolean(search || rarity !== 'all' || faction !== 'all' || scope !== 'all');
   return (
     <ScreenShell sceneMode="hero">
-      <View style={[styles.referenceRoot, { marginBottom: -insets.bottom, paddingTop: insets.top }]}>
+      <View style={[styles.referenceRoot, { marginBottom: -insets.bottom }]}>
+        <View style={[styles.referenceCanvas, { width, height: canvasHeight, marginTop: insets.top }]}>
         <Image
           source={COLLECTION_REFERENCE}
           style={StyleSheet.absoluteFillObject}
@@ -685,6 +686,7 @@ export default function CollectionScreen() {
           </View>
         </View>
 
+        </View>
         {selected && <CardDetail card={selected} owned={ownedById.get(selected.id)} colors={colors} onClose={() => setSelected(null)} />}
       </View>
     </ScreenShell>
@@ -706,7 +708,8 @@ function Chip({ label, active, onPress, colors, accent }: { label: string; activ
 
 const styles = StyleSheet.create({
   root: { flex: 1 },
-  referenceRoot: { flex: 1, overflow: 'hidden' },
+  referenceRoot: { flex: 1, width: '100%', overflow: 'hidden' },
+  referenceCanvas: { position: 'relative', overflow: 'hidden' },
   referenceShade: { ...StyleSheet.absoluteFillObject },
   referenceCounter: { position: 'absolute', alignItems: 'flex-end', zIndex: 4 },
   referenceCounterValue: { fontSize: 13, fontWeight: '900', letterSpacing: 0.7 },

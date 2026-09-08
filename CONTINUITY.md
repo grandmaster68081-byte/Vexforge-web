@@ -1,3 +1,15 @@
+## 2026-09-08 — VE-MOB-4/5-REFERENCE-CANVAS — IMPLEMENTED_UNVERIFIED / OTA PENDING
+
+- Se corrigió el desajuste visible en las capturas de Cartas y Mazos: el arte oficial y todas las capas táctiles/dinámicas ahora comparten un lienzo explícito con el viewport real de Android y sus áreas seguras, en lugar de mezclar el alto del contenedor con el alto del canvas.
+- El ajuste conserva el contenido y los flujos existentes: búsqueda, filtros, paginación, detalle, colección/mazos, fusión, logros, edición, validación, guardado y entrada a Arena no fueron reemplazados ni duplicados.
+- La auditoría incluyó Inicio, Batalla, Cartas, Mazos y Perfil. Inicio, Batalla y Perfil ya usan un canvas explícito; el cambio necesario quedó acotado a `mobile/app/(tabs)/collection.tsx` y `mobile/app/(tabs)/deck.tsx`.
+- La pantalla de referencia del QA mide 720×1640 px; la APK mantiene orientación portrait y runtime `1.0.0`. Los assets de escena locales son 1024×1536 (Home/Colección/Mazos/Perfil) y 941×1672 (Batalla); se escalan dentro del canvas del viewport, sin recortar horizontalmente.
+- Supabase Management API confirmó el proyecto `ACTIVE_HEALTHY` y el protocolo activo `v2.15-tier1-additive-integration-assets-20260907`. No se modificaron Auth, RLS, RPCs, Storage, economía, combate ni datos.
+- Guardas locales: el parseo TSX de las superficies modificadas, `git diff --check` y `verify-mobile-battle` pasan. El typecheck completo quedó bloqueado en este entorno porque `npm ci` fue rechazado por el firewall de paquetes al descargar una dependencia histórica; `verify-mobile-deck` y `verify-mobile-home-official-assets` conservan fallos previos de arte/reduced-motion, no introducidos por este cambio.
+- Estado honesto: `IMPLEMENTED_UNVERIFIED`; falta publicar el commit, ejecutar la OTA compatible con runtime `1.0.0` y hacer QA visual/táctil en la APK. No se declara `PASS`, `Q4`, `TIER1_READY` ni `OPERATIONAL`.
+
+---
+
 ## 2026-09-08 — VE-MOB-6-PROFILE-REFERENCE — IMPLEMENTED_UNVERIFIED / WORKFLOW PENDING
 
 - Se reemplazó la pantalla móvil de Perfil por una composición nativa responsive inspirada en la referencia del operador; la captura no se usa como fondo de la pantalla.
