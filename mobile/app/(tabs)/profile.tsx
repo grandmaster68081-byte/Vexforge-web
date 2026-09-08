@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState, type ReactNode } from 'react';
 import {
   ActivityIndicator,
   Image,
@@ -89,7 +89,7 @@ function getStreak(matches: MobileSocialSnapshot['matches'], playerId: string) {
   return streak;
 }
 
-function DataText({ children, style }: { children: string; style?: object }) {
+function DataText({ children, style }: { children: ReactNode; style?: object }) {
   return <Text pointerEvents="none" style={[styles.dataText, style]}>{children}</Text>;
 }
 
