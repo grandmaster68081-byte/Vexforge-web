@@ -1,26 +1,25 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import {
   ActivityIndicator,
-  ImageBackground,
-  KeyboardAvoidingView,
+  Image,
   Platform,
   Pressable,
   StyleSheet,
   Text,
   TextInput,
   View,
+  useWindowDimensions,
 } from 'react-native';
 import { Redirect } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { ForgeMark } from '@/components/ForgeMark';
-import { Feather } from '@/components/ForgeIcon';
 import { KeyboardAwareScrollViewCompat } from '@/components/KeyboardAwareScrollViewCompat';
 import { useColors } from '@/hooks/useColors';
 import { useGame } from '@/context/GameContext';
-import { ScreenShell } from '@/components/ScreenShell';
-import { ForgeText } from '@/components/ForgeText';
-import { typography } from '@/constants/typography';
+import type { OAuthProvider } from '@/lib/supabase';
+
+const AUTH_REFERENCE_WIDTH = 1024;
+const AUTH_REFERENCE_HEIGHT = 1536;
 
 function readableAuthError(message: string | null) {
   if (!message) return null;
@@ -29,6 +28,7 @@ function readableAuthError(message: string | null) {
   if (normalized.includes('email not confirmed')) return 'Confirma tu correo antes de iniciar sesión.';
   if (normalized.includes('user already registered')) return 'Ese correo ya está registrado. Inicia sesión.';
   if (normalized.includes('password should be at least')) return 'La contraseña debe tener al menos 6 caracteres.';
+  if (normalized.includes('provider') || normalized.includes('unsupported')) return 'Este acceso social no está habilitado en Supabase.';
   if (normalized.includes('rate limit')) return 'Demasiados intentos. Espera un momento y vuelve a probar.';
   return message;
 }
@@ -36,33 +36,40 @@ function readableAuthError(message: string | null) {
 export default function AuthScreen() {
   const colors = useColors();
   const insets = useSafeAreaInsets();
-  const { session, authLoading, authError, signIn, signInWithGoogle, signUp } = useGame();
+  const { width: viewportWidth, height: viewportHeight } = useWindowDimensions();
+  const {
+    session,
+    authLoading,
+    authError,
+    signIn,
+    signInWithProvider,
+    signUp,
+    resetPassword,
+  } = useGame();
   const [mode, setMode] = useState<'signin' | 'signup'>('signin');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
+  const [rememberSession, setRememberSession] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
   const [localError, setLocalError] = useState<string | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
 
-  useEffect(() => {
-    setLocalError(null);
-    setNotice(null);
-    setPassword('');
-    setConfirmPassword('');
-  }, [mode]);
-
-  const error = useMemo(() => localError ?? readableAuthError(authError), [authError, localError]);
-  const authMode: 'signin' | 'signup' = mode;
+  const sceneHeight = viewportWidth * (AUTH_REFERENCE_HEIGHT / AUTH_REFERENCE_WIDTH);
+  const error = useMemo(
+    () => localError ?? readableAuthError(authError),
+    [authError, localError],
+  );
 
   if (session) return <Redirect href="/(tabs)" />;
 
+  const cleanEmail = () => email.trim().toLowerCase();
+
   const submit = async () => {
-    const cleanEmail = email.trim().toLowerCase();
+    const normalizedEmail = cleanEmail();
     setLocalError(null);
     setNotice(null);
 
-    if (!cleanEmail || !cleanEmail.includes('@')) {
+    if (!normalizedEmail || !normalizedEmail.includes('@')) {
       setLocalError('Introduce un correo válido.');
       return;
     }
@@ -70,113 +77,207 @@ export default function AuthScreen() {
       setLocalError('La contraseña debe tener al menos 6 caracteres.');
       return;
     }
-    if (mode === 'signup' && password !== confirmPassword) {
-      setLocalError('Las contraseñas no coinciden.');
-      return;
-    }
 
     if (mode === 'signin') {
-      await signIn(cleanEmail, password);
+      await signIn(normalizedEmail, password, rememberSession);
       return;
     }
 
-    const createdSession = await signUp(cleanEmail, password);
+    const createdSession = await signUp(normalizedEmail, password);
     if (!createdSession) {
       setNotice('Cuenta creada. Revisa tu correo para confirmar el acceso.');
     }
   };
 
-  if (authMode === 'signin') {
-    return (
-      <View style={[styles.posterRoot, { backgroundColor: colors.background }]}>
-        <StatusBar style="light" translucent backgroundColor="transparent" />
-        <ImageBackground
-          source={require('../assets/images/vexforge-auth-nexus-final.png')}
-          resizeMode="stretch"
-          style={styles.posterArtwork}
-          imageStyle={styles.posterImage}
-          accessibilityIgnoresInvertColors
+  const recoverPassword = async () => {
+    const normalizedEmail = cleanEmail();
+    setLocalError(null);
+    setNotice(null);
+    if (!normalizedEmail || !normalizedEmail.includes('@')) {
+      setLocalError('Escribe tu correo para recuperar la contraseña.');
+      return;
+    }
+    if (await resetPassword(normalizedEmail)) {
+      setNotice('Te enviamos un enlace para recuperar tu contraseña.');
+    }
+  };
+
+  const socialLogin = async (provider: OAuthProvider) => {
+    setLocalError(null);
+    setNotice(null);
+    await signInWithProvider(provider, rememberSession);
+  };
+
+  return (
+    <View style={[styles.root, { backgroundColor: colors.background }]}>
+      <StatusBar style="light" translucent backgroundColor="transparent" />
+      <KeyboardAwareScrollViewCompat
+        style={styles.screen}
+        contentContainerStyle={[
+          styles.content,
+          {
+            minHeight: Math.max(viewportHeight, sceneHeight + insets.bottom),
+            paddingBottom: insets.bottom,
+          },
+        ]}
+        bottomOffset={24}
+        keyboardShouldPersistTaps="handled"
+        showsVerticalScrollIndicator={false}
+      >
+        <View
+          style={[styles.scene, { width: viewportWidth, height: sceneHeight }]}
+          testID="auth-reference-scene"
         >
-          <KeyboardAvoidingView
-            style={styles.posterOverlay}
-            behavior="padding"
-            keyboardVerticalOffset={0}
-          >
-            <View pointerEvents="none" style={[styles.posterFormSurface, { backgroundColor: `${colors.ink}F8`, borderColor: `${colors.accent}66` }]} />
-            <Text style={[styles.posterFieldLabel, styles.posterEmailLabel, { color: colors.mutedForeground }]}>CORREO ELECTRÓNICO</Text>
-            <Text style={[styles.posterFieldLabel, styles.posterPasswordLabel, { color: colors.mutedForeground }]}>CONTRASEÑA</Text>
+          <Image
+            source={require('../assets/images/auth-reference-scene.png')}
+            style={styles.sceneImage}
+            resizeMode="stretch"
+            accessibilityLabel="Pantalla de acceso de VEXFORGE proporcionada por el operador"
+            accessibilityIgnoresInvertColors
+          />
+
+          <View style={styles.interactionLayer} accessibilityLabel="Acciones de acceso de VEXFORGE">
             <TextInput
               testID="auth-email"
               accessibilityLabel="Correo electrónico"
               value={email}
-              onChangeText={setEmail}
+              onChangeText={(value) => {
+                setEmail(value);
+                setLocalError(null);
+              }}
               autoCapitalize="none"
               autoCorrect={false}
               keyboardType="email-address"
               textContentType="emailAddress"
-              placeholder="Escribe tu correo"
-              placeholderTextColor={colors.mutedForeground}
-              style={[styles.posterEmail, { color: colors.foreground, backgroundColor: colors.input, borderColor: colors.border }]}
+              placeholder=""
+              style={[styles.emailInput, { color: colors.foreground }]}
               editable={!authLoading}
               returnKeyType="next"
+              selectionColor={colors.accent}
             />
+
             <TextInput
               testID="auth-password"
               accessibilityLabel="Contraseña"
               value={password}
-              onChangeText={setPassword}
-              placeholder="Escribe tu contraseña"
-              placeholderTextColor={colors.mutedForeground}
+              onChangeText={(value) => {
+                setPassword(value);
+                setLocalError(null);
+              }}
+              autoCapitalize="none"
+              autoCorrect={false}
               secureTextEntry={!showPassword}
               textContentType="password"
-              style={[styles.posterPassword, { color: colors.foreground, backgroundColor: colors.input, borderColor: colors.border }]}
+              placeholder=""
+              style={[styles.passwordInput, { color: colors.foreground }]}
               editable={!authLoading}
               returnKeyType="go"
-              onSubmitEditing={submit}
+              onSubmitEditing={() => void submit()}
+              selectionColor={colors.accent}
             />
+
             <Pressable
               testID="auth-toggle-password"
               accessibilityRole="button"
               accessibilityLabel={showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'}
+              accessibilityState={{ disabled: authLoading }}
               onPress={() => setShowPassword((visible) => !visible)}
               disabled={authLoading}
-              style={styles.posterPasswordToggle}
+              style={styles.passwordToggle}
             />
+
+            <Pressable
+              testID="auth-remember"
+              accessibilityRole="checkbox"
+              accessibilityLabel="Recordar sesión"
+              accessibilityState={{ checked: rememberSession, disabled: authLoading }}
+              onPress={() => setRememberSession((remember) => !remember)}
+              disabled={authLoading}
+              style={styles.rememberToggle}
+            >
+              <View
+                pointerEvents="none"
+                style={[
+                  styles.rememberIndicator,
+                  {
+                    borderColor: colors.accent,
+                    backgroundColor: rememberSession ? colors.accent : 'transparent',
+                    opacity: rememberSession ? 0.95 : 0.2,
+                  },
+                ]}
+              />
+            </Pressable>
+
+            <Pressable
+              testID="auth-forgot-password"
+              accessibilityRole="button"
+              accessibilityLabel="¿Olvidaste tu contraseña?"
+              onPress={() => void recoverPassword()}
+              disabled={authLoading}
+              style={styles.forgotPassword}
+            />
+
             <Pressable
               testID="auth-submit"
               accessibilityRole="button"
-              accessibilityLabel="Entrar al Nexus"
-              onPress={submit}
+              accessibilityLabel={mode === 'signin' ? 'Entrar' : 'Crear cuenta'}
+              onPress={() => void submit()}
               disabled={authLoading}
-              style={({ pressed }) => [styles.posterSubmit, { backgroundColor: colors.primary, borderColor: colors.accent, opacity: pressed || authLoading ? 0.75 : 1 }]}
+              style={({ pressed }) => [
+                styles.submit,
+                { opacity: pressed || authLoading ? 0.55 : 1 },
+              ]}
             >
-              {authLoading ? <ActivityIndicator color={colors.primaryForeground} /> : <Text style={[styles.posterSubmitText, { color: colors.primaryForeground }]}>ENTRAR AL NEXUS</Text>}
+              {authLoading ? <ActivityIndicator color={colors.accent} /> : null}
             </Pressable>
+
             <Pressable
               testID="auth-google"
               accessibilityRole="button"
               accessibilityLabel="Continuar con Google"
-              onPress={() => void signInWithGoogle()}
+              onPress={() => void socialLogin('google')}
               disabled={authLoading}
-              style={({ pressed }) => [styles.posterGoogle, { borderColor: `${colors.accent}88`, backgroundColor: `${colors.panel}F2`, opacity: pressed || authLoading ? 0.72 : 1 }]}
-            >
-              <Feather name="account" size={14} color={colors.accent} />
-              <Text style={[styles.posterGoogleText, { color: colors.accent }]}>CONTINUAR CON GOOGLE</Text>
-            </Pressable>
-            {authLoading && (
-              <ActivityIndicator
-                accessibilityLabel="Conectando con Nexus"
-                color={colors.primaryForeground}
-                style={styles.posterLoading}
-              />
-            )}
+              style={({ pressed }) => [{ opacity: pressed || authLoading ? 0.55 : 1 }, styles.google]}
+            />
+            <Pressable
+              testID="auth-discord"
+              accessibilityRole="button"
+              accessibilityLabel="Continuar con Discord"
+              onPress={() => void socialLogin('discord')}
+              disabled={authLoading}
+              style={({ pressed }) => [{ opacity: pressed || authLoading ? 0.55 : 1 }, styles.discord]}
+            />
+            <Pressable
+              testID="auth-apple"
+              accessibilityRole="button"
+              accessibilityLabel="Continuar con Apple"
+              onPress={() => void socialLogin('apple')}
+              disabled={authLoading}
+              style={({ pressed }) => [{ opacity: pressed || authLoading ? 0.55 : 1 }, styles.apple]}
+            />
+
+            <Pressable
+              testID="auth-toggle-mode"
+              accessibilityRole="button"
+              accessibilityLabel={mode === 'signin' ? 'Crear cuenta' : 'Volver a iniciar sesión'}
+              accessibilityState={{ disabled: authLoading }}
+              onPress={() => {
+                setMode((current) => (current === 'signin' ? 'signup' : 'signin'));
+                setLocalError(null);
+                setNotice(null);
+              }}
+              disabled={authLoading}
+              style={styles.createAccount}
+            />
+
             {(error || notice) && (
               <View
+                testID="auth-feedback"
                 accessibilityRole="alert"
                 style={[
-                  styles.posterFeedback,
+                  styles.feedback,
                   {
-                    backgroundColor: `${colors.ink}F5`,
+                    backgroundColor: `${colors.ink}F2`,
                     borderColor: error ? colors.danger : colors.success,
                   },
                 ]}
@@ -186,270 +287,132 @@ export default function AuthScreen() {
                 </Text>
               </View>
             )}
-            <Pressable
-              testID="auth-open-signup"
-              accessibilityRole="button"
-              accessibilityLabel="Crear acceso"
-              onPress={() => setMode('signup')}
-              disabled={authLoading}
-              style={styles.posterSignup}
-            />
-          </KeyboardAvoidingView>
-        </ImageBackground>
-      </View>
-    );
-  }
-
-  return (
-    <ScreenShell surface="auth">
-      <KeyboardAwareScrollViewCompat
-        style={[styles.screen, { backgroundColor: 'transparent' }]}
-        contentContainerStyle={[
-          styles.content,
-          { paddingTop: insets.top + 38, paddingBottom: insets.bottom + 32 },
-        ]}
-        bottomOffset={24}
-        keyboardShouldPersistTaps="handled"
-        showsVerticalScrollIndicator={false}
-      >
-        <View style={styles.brand}>
-          <ForgeMark />
-          <View>
-            <ForgeText variant="title" style={[styles.brandName, { color: colors.foreground }]}>VEXFORGE</ForgeText>
-            <Text style={[styles.brandCode, { color: colors.primary }]}>NEXUS // ACCESS</Text>
           </View>
         </View>
-
-        <View style={styles.intro}>
-          <Text style={[styles.eyebrow, { color: colors.mutedForeground }]}>
-            {mode === 'signin' ? 'IDENTIDAD REQUERIDA' : 'NUEVO FORJADOR'}
-          </Text>
-          <ForgeText variant="title" style={[styles.title, { color: colors.foreground }]}>
-            {mode === 'signin' ? 'Regresa al Nexus.' : 'Forja tu entrada.'}
-          </ForgeText>
-          <Text style={[styles.subtitle, { color: colors.mutedForeground }]}>
-            {mode === 'signin'
-              ? 'Tu colección y tu progreso esperan en el otro lado.'
-              : 'Crea una cuenta para guardar tu progreso en el Nexus.'}
-          </Text>
-        </View>
-
-        <View style={[styles.form, { backgroundColor: colors.panel, borderColor: colors.border }]}>
-          <View style={styles.field}>
-            <Text style={[styles.label, { color: colors.mutedForeground }]}>CORREO ELECTRÓNICO</Text>
-            <View style={[styles.inputShell, { backgroundColor: colors.input, borderColor: colors.border }]}>
-              <TextInput
-                value={email}
-                onChangeText={setEmail}
-                placeholder="forjador@nexus.com"
-                placeholderTextColor={colors.mutedForeground}
-                autoCapitalize="none"
-                autoCorrect={false}
-                keyboardType="email-address"
-                textContentType="emailAddress"
-                style={[styles.input, { color: colors.foreground }]}
-                editable={!authLoading}
-              />
-            </View>
-          </View>
-
-          <View style={styles.field}>
-            <Text style={[styles.label, { color: colors.mutedForeground }]}>CONTRASEÑA</Text>
-            <View style={[styles.inputShell, { backgroundColor: colors.input, borderColor: colors.border }]}>
-              <TextInput
-                value={password}
-                onChangeText={setPassword}
-                placeholder="Mínimo 6 caracteres"
-                placeholderTextColor={colors.mutedForeground}
-                secureTextEntry
-                textContentType="password"
-                style={[styles.input, { color: colors.foreground }]}
-                editable={!authLoading}
-              />
-            </View>
-          </View>
-
-          {mode === 'signup' && (
-            <View style={styles.field}>
-              <Text style={[styles.label, { color: colors.mutedForeground }]}>CONFIRMA LA CONTRASEÑA</Text>
-              <View style={[styles.inputShell, { backgroundColor: colors.input, borderColor: colors.border }]}>
-                <TextInput
-                  value={confirmPassword}
-                  onChangeText={setConfirmPassword}
-                  placeholder="Repite tu contraseña"
-                  placeholderTextColor={colors.mutedForeground}
-                  secureTextEntry
-                  textContentType="newPassword"
-                  style={[styles.input, { color: colors.foreground }]}
-                  editable={!authLoading}
-                />
-              </View>
-            </View>
-          )}
-
-          {(error || notice) && (
-            <View
-              style={[
-                styles.feedback,
-                {
-                  backgroundColor: error ? `${colors.danger}18` : `${colors.success}18`,
-                  borderColor: error ? colors.danger : colors.success,
-                },
-              ]}
-            >
-              <Text style={[styles.feedbackText, { color: error ? colors.danger : colors.success }]}>
-                {error ?? notice}
-              </Text>
-            </View>
-          )}
-
-          <Pressable
-            onPress={submit}
-            disabled={authLoading}
-            style={({ pressed }) => [
-              styles.submit,
-              { backgroundColor: colors.primary, opacity: pressed || authLoading ? 0.7 : 1 },
-            ]}
-          >
-            {authLoading ? (
-              <ActivityIndicator color={colors.primaryForeground} />
-            ) : (
-              <>
-                <Text style={[styles.submitText, { color: colors.primaryForeground }]}>
-                  {mode === 'signin' ? 'ENTRAR AL NEXUS' : 'CREAR CUENTA'}
-                </Text>
-              </>
-            )}
-          </Pressable>
-        </View>
-
-        <Pressable
-          onPress={() => setMode(mode === 'signin' ? 'signup' : 'signin')}
-          disabled={authLoading}
-          style={styles.modeSwitch}
-        >
-          <Text style={[styles.switchText, { color: colors.mutedForeground }]}>
-            {mode === 'signin' ? '¿Aún no tienes cuenta?' : '¿Ya tienes una cuenta?'}
-          </Text>
-          <Text style={[styles.switchAction, { color: colors.primary }]}>
-            {mode === 'signin' ? 'Crear acceso' : 'Iniciar sesión'}
-          </Text>
-        </Pressable>
-
-        <Text style={[styles.legal, { color: colors.mutedForeground }]}>
-          Tu identidad se valida con el Nexus oficial de VEXFORGE.
-        </Text>
       </KeyboardAwareScrollViewCompat>
-    </ScreenShell>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  posterRoot: { flex: 1 },
-  posterArtwork: { flex: 1, width: '100%', height: '100%' },
-  posterImage: { width: '100%', height: '100%' },
-  posterOverlay: { flex: 1, width: '100%', height: '100%' },
-  posterFormSurface: { position: 'absolute', left: '5%', top: '41%', width: '90%', height: '29.2%', borderWidth: 1, borderRadius: 18 },
-  posterFieldLabel: { position: 'absolute', left: '10%', fontFamily: typography.bodyBold, fontSize: 8, letterSpacing: 1.2 },
-  posterEmailLabel: { top: '43.8%' },
-  posterPasswordLabel: { top: '51.7%' },
-  posterEmail: {
+  root: { flex: 1 },
+  screen: { flex: 1 },
+  content: {
+    alignItems: 'flex-start',
+  },
+  scene: {
+    position: 'relative',
+    overflow: 'hidden',
+  },
+  sceneImage: {
+    width: '100%',
+    height: '100%',
+  },
+  interactionLayer: {
+    ...StyleSheet.absoluteFillObject,
+  },
+  emailInput: {
     position: 'absolute',
-    left: '10%',
-    top: '44.8%',
-    width: '80%',
-    height: '6%',
+    left: '44.5%',
+    top: '52.3%',
+    width: '45%',
+    height: '5.3%',
     paddingHorizontal: 14,
     paddingVertical: 0,
-    fontFamily: typography.body,
     fontSize: 14,
     lineHeight: 18,
-    borderWidth: 1,
-    borderRadius: 10,
     backgroundColor: 'transparent',
+    borderWidth: 0,
   },
-  posterPassword: {
+  passwordInput: {
     position: 'absolute',
-    left: '10%',
-    top: '52.7%',
-    width: '80%',
-    height: '6%',
+    left: '44.5%',
+    top: '58.5%',
+    width: '45%',
+    height: '5.3%',
     paddingHorizontal: 14,
     paddingVertical: 0,
-    paddingRight: 48,
-    fontFamily: typography.body,
+    paddingRight: 42,
     fontSize: 14,
     lineHeight: 18,
-    borderWidth: 1,
-    borderRadius: 10,
     backgroundColor: 'transparent',
+    borderWidth: 0,
   },
-  posterPasswordToggle: {
+  passwordToggle: {
+    position: 'absolute',
+    right: '8.5%',
+    top: '58.4%',
+    width: '8%',
+    height: '5.5%',
+  },
+  rememberToggle: {
+    position: 'absolute',
+    left: '44.5%',
+    top: '63.6%',
+    width: '5%',
+    height: '3.8%',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  rememberIndicator: {
+    width: 12,
+    height: 12,
+    borderWidth: 1,
+  },
+  forgotPassword: {
     position: 'absolute',
     right: '8%',
-    top: '52.6%',
-    width: '17%',
-    height: '6%',
+    top: '63.3%',
+    width: '25%',
+    height: '4%',
+  },
+  submit: {
+    position: 'absolute',
+    left: '44%',
+    top: '66.5%',
+    width: '46%',
+    height: '6.5%',
     alignItems: 'center',
     justifyContent: 'center',
   },
-  posterToggleText: { fontSize: 8, fontWeight: '800', letterSpacing: 0.5 },
-  posterSubmit: {
+  google: {
     position: 'absolute',
-    left: '10%',
-    top: '59.5%',
-    width: '80%',
-    height: '6.3%',
+    left: '53%',
+    top: '75.3%',
+    width: '8%',
+    height: '5.5%',
+  },
+  discord: {
+    position: 'absolute',
+    left: '63%',
+    top: '75.3%',
+    width: '8%',
+    height: '5.5%',
+  },
+  apple: {
+    position: 'absolute',
+    left: '73%',
+    top: '75.3%',
+    width: '8%',
+    height: '5.5%',
+  },
+  createAccount: {
+    position: 'absolute',
+    left: '51%',
+    top: '84.2%',
+    width: '29%',
+    height: '5%',
+  },
+  feedback: {
+    position: 'absolute',
+    left: '43%',
+    top: '46%',
+    width: '48%',
     borderWidth: 1,
-    borderRadius: 10,
-    alignItems: 'center',
-    justifyContent: 'center',
+    padding: 8,
   },
-  posterSubmitText: { fontSize: 9, fontWeight: '900', letterSpacing: 0.8 },
-  posterGoogle: { position: 'absolute', left: '10%', top: '66.1%', width: '80%', height: '4.2%', borderWidth: 1, borderRadius: 9, alignItems: 'center', justifyContent: 'center', flexDirection: 'row', gap: 7 },
-  posterGoogleText: { fontSize: 8, fontWeight: '800', letterSpacing: 0.65 },
-  posterLoading: {
-    position: 'absolute',
-    top: '61%',
-    left: '50%',
-    marginLeft: -10,
+  feedbackText: {
+    fontSize: 11,
+    lineHeight: 15,
   },
-  posterFeedback: {
-    position: 'absolute',
-    top: '15%',
-    left: '8%',
-    width: '84%',
-    borderWidth: 1,
-    borderRadius: 10,
-    padding: 10,
-  },
-  posterSignup: {
-    position: 'absolute',
-    left: '32%',
-    top: '70.3%',
-    width: '38%',
-    height: '5.2%',
-  },
-  screen: { flex: 1 },
-  content: { flexGrow: 1, paddingHorizontal: 24 },
-  brand: { flexDirection: 'row', alignItems: 'center', gap: 14 },
-  brandName: { fontSize: 17, fontWeight: '800', letterSpacing: 3 },
-  brandCode: { fontSize: 9, fontWeight: '700', letterSpacing: 1.8, marginTop: 4 },
-  intro: { marginTop: 68, marginBottom: 28 },
-  eyebrow: { fontSize: 10, fontWeight: '800', letterSpacing: 1.8 },
-  title: { fontSize: 32, fontWeight: '800', letterSpacing: -0.8, marginTop: 10 },
-  subtitle: { fontSize: 14, lineHeight: 21, marginTop: 10, maxWidth: 300 },
-  form: { borderWidth: 1, borderRadius: 22, padding: 18, gap: 18 },
-  field: { gap: 8 },
-  label: { fontSize: 9, fontWeight: '800', letterSpacing: 1.2 },
-  inputShell: { minHeight: 52, borderWidth: 1, borderRadius: 13, flexDirection: 'row', alignItems: 'center', paddingHorizontal: 14 },
-  input: { flex: 1, fontSize: 15, paddingVertical: 12 },
-  feedback: { borderWidth: 1, borderRadius: 12, padding: 11 },
-  feedbackText: { flex: 1, fontSize: 12, lineHeight: 17 },
-  submit: { minHeight: 52, borderRadius: 13, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginTop: 2 },
-  submitText: { fontSize: 11, fontWeight: '800', letterSpacing: 1.2 },
-  modeSwitch: { alignItems: 'center', justifyContent: 'center', marginTop: 25, gap: 5 },
-  switchText: { fontSize: 13 },
-  switchAction: { fontSize: 13, fontWeight: '800' },
-  legal: { fontSize: 10, lineHeight: 15, textAlign: 'center', marginTop: 'auto', paddingTop: 38 },
 });

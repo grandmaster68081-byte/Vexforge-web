@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useEffect, useMemo, useState } from 'react';
 import { trackSessionEntry } from '@/lib/telemetry';
-import { findOpponents, loadCatalogSnapshot, loadPlayerCollection, loadPlayerProfile, loadProgress, loadSession, loadStats, loadWallet, signIn as signInRemote, signInWithGoogle as signInWithGoogleRemote, signOut as signOutRemote, signUp as signUpRemote, startBattle as startBattleRemote, type BattleResult, type Opponent, type PlayerCard, type PlayerProfile, type PlayerProgress, type PlayerStats, type PublicCard, type Session, type Wallet } from '@/lib/supabase';
+import { findOpponents, loadCatalogSnapshot, loadPlayerCollection, loadPlayerProfile, loadProgress, loadSession, loadStats, loadWallet, resetPassword as resetPasswordRemote, signIn as signInRemote, signInWithGoogle as signInWithGoogleRemote, signInWithProvider as signInWithProviderRemote, signOut as signOutRemote, signUp as signUpRemote, startBattle as startBattleRemote, type BattleResult, type OAuthProvider, type Opponent, type PlayerCard, type PlayerProfile, type PlayerProgress, type PlayerStats, type PublicCard, type Session, type Wallet } from '@/lib/supabase';
 
 export type SyncState = 'loading' | 'connected' | 'offline';
 type GameContextValue = {
@@ -17,9 +17,11 @@ type GameContextValue = {
     syncError: string | null;
     authLoading: boolean;
     authError: string | null;
-    signIn: (email: string, password: string) => Promise<void>;
-    signInWithGoogle: () => Promise<void>;
+    signIn: (email: string, password: string, remember?: boolean) => Promise<void>;
+    signInWithProvider: (provider: OAuthProvider, remember?: boolean) => Promise<void>;
+    signInWithGoogle: (remember?: boolean) => Promise<void>;
     signUp: (email: string, password: string) => Promise<boolean>;
+    resetPassword: (email: string) => Promise<boolean>;
     signOut: () => Promise<void>;
     refresh: () => Promise<void>;
     opponents: Opponent[];
@@ -86,9 +88,11 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
     useEffect(() => { if (session) void trackSessionEntry(session); }, [session]);
     useEffect(() => { if (!authLoading) void refresh(); }, [authLoading, session]);
 
-    const signIn = async (email: string, password: string) => { setAuthError(null); setAuthLoading(true); try { const next = await signInRemote(email, password); setSession(next); } catch (error) { setAuthError(error instanceof Error ? error.message : 'No se pudo iniciar sesión'); } finally { setAuthLoading(false); } };
+    const signIn = async (email: string, password: string, remember = true) => { setAuthError(null); setAuthLoading(true); try { const next = await signInRemote(email, password, remember); setSession(next); } catch (error) { setAuthError(error instanceof Error ? error.message : 'No se pudo iniciar sesión'); } finally { setAuthLoading(false); } };
     const signUp = async (email: string, password: string) => { setAuthError(null); setAuthLoading(true); try { const next = await signUpRemote(email, password); if (next) setSession(next); return Boolean(next); } catch (error) { setAuthError(error instanceof Error ? error.message : 'No se pudo crear la cuenta'); return false; } finally { setAuthLoading(false); } };
-    const signInWithGoogle = async () => { setAuthError(null); setAuthLoading(true); try { const next = await signInWithGoogleRemote(); setSession(next); } catch (error) { setAuthError(error instanceof Error ? error.message : 'No se pudo iniciar sesión con Google'); } finally { setAuthLoading(false); } };
+    const signInWithProvider = async (provider: OAuthProvider, remember = true) => { setAuthError(null); setAuthLoading(true); try { const next = await signInWithProviderRemote(provider, remember); setSession(next); } catch (error) { setAuthError(error instanceof Error ? error.message : 'No se pudo iniciar sesión con ' + provider); } finally { setAuthLoading(false); } };
+    const signInWithGoogle = async (remember = true) => { setAuthError(null); setAuthLoading(true); try { const next = await signInWithGoogleRemote(remember); setSession(next); } catch (error) { setAuthError(error instanceof Error ? error.message : 'No se pudo iniciar sesión con Google'); } finally { setAuthLoading(false); } };
+    const resetPassword = async (email: string) => { setAuthError(null); setAuthLoading(true); try { await resetPasswordRemote(email); return true; } catch (error) { setAuthError(error instanceof Error ? error.message : 'No se pudo enviar el correo de recuperación'); return false; } finally { setAuthLoading(false); } };
     const signOut = async () => { await signOutRemote(); setSession(null); setPlayer(null); setProgress(null); setWallet(null); setStats(null); setCollection([]); setOpponents([]); };
     const find = async (): Promise<Opponent[] | null> => {
       if (!session || !player) return null;
@@ -103,7 +107,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
     };
     const battle = async (opponentId: string) => { if (!session || !player) return; setBattleLoading(true); setBattleResult(null); try { setBattleResult(await startBattleRemote(session, player.id, opponentId)); await refresh(); } catch (error) { setAuthError(error instanceof Error ? error.message : 'No se pudo iniciar el combate'); } finally { setBattleLoading(false); } };
 
-    const value = useMemo(() => ({ session, player, progress, wallet, stats, cardsTotal, featuredCards, collection, collectionLoading, syncState, syncError, authLoading, authError, signIn, signInWithGoogle, signUp, signOut, refresh, opponents, battleLoading, battleResult, findOpponents: find, startBattle: battle, clearBattleResult: () => setBattleResult(null) }), [session, player, progress, wallet, stats, cardsTotal, featuredCards, collection, collectionLoading, syncState, syncError, authLoading, authError, opponents, battleLoading, battleResult, signInWithGoogle]);
+    const value = useMemo(() => ({ session, player, progress, wallet, stats, cardsTotal, featuredCards, collection, collectionLoading, syncState, syncError, authLoading, authError, signIn, signInWithProvider, signInWithGoogle, signUp, resetPassword, signOut, refresh, opponents, battleLoading, battleResult, findOpponents: find, startBattle: battle, clearBattleResult: () => setBattleResult(null) }), [session, player, progress, wallet, stats, cardsTotal, featuredCards, collection, collectionLoading, syncState, syncError, authLoading, authError, opponents, battleLoading, battleResult]);
     return <GameContext.Provider value={value}>{children}</GameContext.Provider>;
 }
 

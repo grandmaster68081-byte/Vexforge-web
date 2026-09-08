@@ -13,6 +13,7 @@ const pendingPvpBattleKeys = new Map<string, Promise<string>>();
 type Json = Record<string, unknown>;
 export type User = { id: string; email?: string };
 export type Session = { access_token: string; refresh_token: string; expires_at?: number; user: User };
+export type OAuthProvider = 'google' | 'discord' | 'apple';
 export type PublicCard = {
   id: string;
   code: string;
@@ -716,10 +717,10 @@ async function saveSession(session: Session | null) {
   else await AsyncStorage.removeItem(SESSION_KEY);
 }
 
-export async function signIn(email: string, password: string): Promise<Session> {
+export async function signIn(email: string, password: string, remember = true): Promise<Session> {
   const session = requireSession(await authRequest('token?grant_type=password', { email: email.trim(), password }));
   await ensurePlayerRow(email, session);
-  await saveSession(session);
+  await saveSession(remember ? session : null);
   return session;
 }
 
@@ -731,19 +732,19 @@ function parseOAuthFragment(url: string) {
   }));
 }
 
-export async function signInWithGoogle(): Promise<Session> {
+export async function signInWithProvider(provider: OAuthProvider, remember = true): Promise<Session> {
   const redirectTo = Linking.createURL('auth-callback');
-  const authorizeUrl = SUPABASE_URL + '/auth/v1/authorize?provider=google&flow_type=implicit&prompt=select_account&redirect_to=' + encodeURIComponent(redirectTo);
+  const authorizeUrl = SUPABASE_URL + '/auth/v1/authorize?provider=' + provider + '&flow_type=implicit&prompt=select_account&redirect_to=' + encodeURIComponent(redirectTo);
   const result = await WebBrowser.openAuthSessionAsync(authorizeUrl, redirectTo);
   if (result.type !== 'success' || !('url' in result) || !result.url) {
-    throw new Error('Inicio con Google cancelado.');
+    throw new Error('Inicio con ' + provider + ' cancelado.');
   }
   const params = parseOAuthFragment(result.url);
   if (params.error_description) throw new Error(String(params.error_description));
   const accessToken = String(params.access_token ?? '');
   const refreshToken = String(params.refresh_token ?? '');
   if (!accessToken || !refreshToken) {
-    throw new Error('Google no devolvió una sesión válida. Revisa que Google esté habilitado en Supabase.');
+    throw new Error(provider + ' no devolvió una sesión válida. Revisa que el proveedor esté habilitado en Supabase.');
   }
   const userResponse = await fetch(SUPABASE_URL + '/auth/v1/user', { headers: headers(accessToken) });
   const user = await parse(userResponse) as User;
@@ -754,8 +755,16 @@ export async function signInWithGoogle(): Promise<Session> {
     user,
   };
   if (user.email) await ensurePlayerRow(user.email, session);
-  await saveSession(session);
+  await saveSession(remember ? session : null);
   return session;
+}
+
+export async function signInWithGoogle(remember = true): Promise<Session> {
+  return signInWithProvider('google', remember);
+}
+
+export async function resetPassword(email: string): Promise<void> {
+  await authRequest('recover', { email: email.trim() });
 }
 
 export async function signUp(email: string, password: string): Promise<Session | null> {
