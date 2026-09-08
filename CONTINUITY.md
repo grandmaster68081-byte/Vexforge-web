@@ -1,3 +1,15 @@
+## 2026-09-08 — VE-MOB-2-AUTH + VE-MOB-3-HOME — APK 136 PUBLISHED / IMPLEMENTED_UNVERIFIED
+
+- Se reemplazó completamente la superficie Android de Auth por la imagen de referencia proporcionada por el operador (`auth-reference-scene.png`, 1024×1536). La obra es la composición visible completa; los campos, botones y enlaces funcionan mediante zonas interactivas transparentes alineadas sobre el arte.
+- Auth conserva Supabase como autoridad real: inicio de sesión, creación de cuenta, recuperación de contraseña, recordar sesión y OAuth para Google, Discord y Apple. Google usa una sola ruta OAuth y una sola zona táctil, sin duplicar la imagen ni superponer un segundo Auth.
+- Se empaquetó junto con la corrección del Home que fija explícitamente el viewport de la imagen 1024×1536 y mantiene scroll sin el zoom/crop defectuoso del APK 134.
+- Commit combinado: `8ff0440`. El workflow Android oficial `136` (`34205647319`) terminó `success`: typecheck, telemetría, prebuild Expo, compilación release, verificación del bundle standalone y publicación pasaron.
+- Release correlativo: `vexforge-android-build-136`, `app-release.apk`, 99,509,200 bytes, SHA-256 `232ad069070afc71875e19a8769383afc0f3343469359f95fe821fd8f53b1ee2`.
+- APK: `https://github.com/grandmaster68081-byte/Vexforge-web/releases/download/vexforge-android-build-136/app-release.apk`.
+- La QA visual/táctil humana en dispositivo sigue pendiente: escala completa del Home y Auth, scroll, safe areas, login/registro/recuperación, OAuth configurado, navegación invisible y TalkBack. Estado honesto: `IMPLEMENTED_UNVERIFIED`; no se declara `PASS`, `Q4`, `TIER1_READY` ni `OPERATIONAL`.
+
+---
+
 ## 2026-09-08 — VE-MOB-3-HOME — OPERATOR REFERENCE COMPOSITION / IMPLEMENTED_UNVERIFIED
 
 - Se sustituyó la escena anterior del Home Android por la imagen de referencia proporcionada por el operador, conservada como asset local de `mobile/**` con sus dimensiones originales 1024×1536.
