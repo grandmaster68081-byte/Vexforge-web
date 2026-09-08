@@ -6,7 +6,8 @@
 - La pantalla de referencia del QA mide 720×1640 px; la APK mantiene orientación portrait y runtime `1.0.0`. Los assets de escena locales son 1024×1536 (Home/Colección/Mazos/Perfil) y 941×1672 (Batalla); se escalan dentro del canvas del viewport, sin recortar horizontalmente.
 - Supabase Management API confirmó el proyecto `ACTIVE_HEALTHY` y el protocolo activo `v2.15-tier1-additive-integration-assets-20260907`. No se modificaron Auth, RLS, RPCs, Storage, economía, combate ni datos.
 - Guardas locales: el parseo TSX de las superficies modificadas, `git diff --check` y `verify-mobile-battle` pasan. El typecheck completo quedó bloqueado en este entorno porque `npm ci` fue rechazado por el firewall de paquetes al descargar una dependencia histórica; `verify-mobile-deck` y `verify-mobile-home-official-assets` conservan fallos previos de arte/reduced-motion, no introducidos por este cambio.
-- Estado honesto: `IMPLEMENTED_UNVERIFIED`; falta publicar el commit, ejecutar la OTA compatible con runtime `1.0.0` y hacer QA visual/táctil en la APK. No se declara `PASS`, `Q4`, `TIER1_READY` ni `OPERATIONAL`.
+- El commit de código `0b4de78f5427720aced5fc51e904dd4c188a1b9d` quedó publicado en `main`. El workflow OTA `34278846319` terminó `success` y registró `VE-MOB-4-5-REFERENCE-CANVAS` como `PUBLISHED`, `OTA_UPDATE`, `production`, rollout `100%`, runtime/app `1.0.0`, con `expo_export=true`, `runtime_match=true`, fallback embebido y rollback disponible. Launch SHA-256: `0c95162f1724f5a9d6d534a396095e279d5b31165477b1bbfce17fa964eb2731`; manifiesto: `https://rscuzqnfccqvltkdcdny.supabase.co/storage/v1/object/public/vexforge-updates/releases/1.0.0/production/0b4de78f5427720aced5fc51e904dd4c188a1b9d/manifest.json`.
+- Estado honesto: `IMPLEMENTED_UNVERIFIED`; sólo queda la QA visual/táctil humana en la APK/dispositivo. No se declara `PASS`, `Q4`, `TIER1_READY` ni `OPERATIONAL`.
 
 ---
 
