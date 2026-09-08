@@ -30,7 +30,6 @@ import { typography } from '@/constants/typography';
 
 const PROFILE_REFERENCE = require('../../assets/images/profile-reference-scene.png');
 const DESIGN_WIDTH = 683;
-const DESIGN_HEIGHT = 1024;
 type Panel = 'stats' | 'achievements' | 'titles' | 'history' | 'ranking' | 'season' | 'progress' | 'account' | null;
 type ProfileAction = 'collection' | 'owned' | 'fusion' | 'achievements' | 'profile' | 'meta' | 'deck' | 'missions' | 'social' | 'home' | 'battle' | 'stats' | 'titles' | 'history' | 'ranking' | 'season' | 'progress';
 
@@ -221,9 +220,7 @@ export default function ProfileScreen() {
   const [refreshing, setRefreshing] = useState(false);
   const [detailsError, setDetailsError] = useState<string | null>(null);
   const canvasHeight = Math.max(1, viewportHeight - insets.top - insets.bottom);
-  const frameScale = Math.max(viewportWidth / DESIGN_WIDTH, canvasHeight / DESIGN_HEIGHT);
-  const frameWidth = DESIGN_WIDTH * frameScale;
-  const frameHeight = DESIGN_HEIGHT * frameScale;
+  const frameScale = viewportWidth / DESIGN_WIDTH;
 
   const loadDetails = useCallback(async () => {
     if (!session || !player?.id) return;
@@ -302,8 +299,8 @@ export default function ProfileScreen() {
           showsVerticalScrollIndicator={false}
         >
           <View testID="profile-reference-scene" style={[styles.canvas, { width: viewportWidth, height: canvasHeight, marginTop: insets.top }]}>
-            <View style={[styles.frame, { width: frameWidth, height: frameHeight, left: (viewportWidth - frameWidth) / 2, top: (canvasHeight - frameHeight) / 2 }]}>
-              <Image source={PROFILE_REFERENCE} style={StyleSheet.absoluteFillObject} resizeMode="contain" accessibilityLabel="Composición oficial de Perfil VEXFORGE" accessibilityIgnoresInvertColors />
+            <View style={[styles.frame, { width: viewportWidth, height: canvasHeight, left: 0, top: 0 }]}>
+              <Image source={PROFILE_REFERENCE} style={StyleSheet.absoluteFillObject} resizeMode="stretch" accessibilityLabel="Composición oficial de Perfil VEXFORGE" accessibilityIgnoresInvertColors />
               <View pointerEvents="none" style={[styles.identityMask, { backgroundColor: `${colors.ink}D4`, borderRadius: 8 * frameScale }]} />
               <View pointerEvents="none" style={styles.dataLayer}>
                 <DataText style={[styles.displayName, { fontSize: 17 * frameScale }]}>{displayName.toUpperCase()}</DataText>

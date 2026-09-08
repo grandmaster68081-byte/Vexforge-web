@@ -2230,3 +2230,13 @@
 - Se restauró explícitamente la entrada con `FadeIn` condicionada por `useReducedMotion`, sin alterar la composición visual cuando el movimiento reducido está activo.
 - Evidencia local: `npm run verify:mobile-home-official-assets` — 7/7; `git diff --check` — OK. No se ejecutó build, compilación de APK ni workflow Android por instrucción explícita del operador.
 - Estado honesto: `IMPLEMENTED_UNVERIFIED`; la QA visual/táctil humana y una futura compilación Android siguen pendientes. El cambio queda publicado en `main`.
+
+---
+
+## 2026-09-08 — VE-MOB-REFERENCE-METRICS — FIVE SCREEN AUDIT / APK BUILD REQUESTED
+
+- Se auditaron las cinco superficies Android de referencia: Inicio, Cartas, Batalla, Mazos y Perfil. Los cinco assets locales existen y conservan sus dimensiones entregadas: Inicio/Cartas/Mazos/Perfil `1024×1536` y Batalla `941×1672`.
+- El contrato común de las superficies referencia usa el canvas seguro de la APK (`viewportWidth`, `viewportHeight - insets.top - insets.bottom`, `marginTop: insets.top`, compensación del inset inferior) y el ajuste directo al canvas. Perfil era la excepción: escalaba por `cover/contain`, lo que podía recortar laterales en dispositivos estrechos.
+- Perfil fue alineado al mismo contrato que las otras cuatro pantallas: la escena ocupa exactamente el canvas disponible, usa `resizeMode="stretch"` y los datos superpuestos siguen escalando desde el ancho de diseño `683` sin cambiar sus posiciones porcentuales.
+- Guardas estáticas: Home `7/7`, Batalla `20/20`, Mazos `13/13`, Perfil `14/14`, piloto visual de Cartas `6/6`; `git diff --check` OK. El typecheck local no pudo ejecutarse porque faltan dependencias Expo en el entorno actual; el workflow oficial reinstala `mobile/package.json` desde cero.
+- Se solicitó la compilación oficial Android después de publicar esta alineación. Estado: `IMPLEMENTED_UNVERIFIED` hasta que el workflow termine y publique la APK.

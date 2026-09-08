@@ -20,6 +20,7 @@ const assertions = [
   ['profile exposes loading and error states', contents.screen.includes('profile-loading') && contents.screen.includes('accessibilityRole="alert"')],
   ['profile exposes an empty achievements state', contents.screen.includes('profile-empty-achievements')],
   ['profile supports pull to refresh', contents.screen.includes('RefreshControl') && contents.screen.includes('handleRefresh')],
+  ['profile uses the shared APK reference canvas contract', contents.screen.includes('const frameScale = viewportWidth / DESIGN_WIDTH') && contents.screen.includes('width: viewportWidth, height: canvasHeight, left: 0, top: 0') && contents.screen.includes('resizeMode="stretch"') && !contents.screen.includes('resizeMode="contain"')],
   ['profile has tactile navigation actions', contents.screen.includes("router.push('/missions')") && contents.screen.includes("router.push('/collection')") && contents.screen.includes("router.push('/deck')")],
   ['profile has account sign out', contents.screen.includes('profile-sign-out') && contents.screen.includes('signOut')],
   ['no client profile simulation', !contents.screen.includes('Math.random') && !contents.screen.includes('mock')],
