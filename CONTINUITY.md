@@ -5,7 +5,9 @@
 - Se retiró la barra nativa duplicada únicamente de Inicio. Los accesos invisibles sobre los elementos dibujados en la imagen enrutan a Perfil, Economía, Meta, Mundo, Foja, Arena, Cartas, Archivo, Misiones, Batalla, Mazo e Inicio.
 - Se conservaron `loadHomeStats`, Supabase, la sesión y las rutas existentes. No se agregaron textos, paneles ni botones visibles encima de la obra.
 - Verificación local: `npm run typecheck`, `npm run verify:telemetry`, `expo prebuild` y coincidencia SHA-256 del asset Android con la imagen proporcionada.
-- El workflow APK oficial y la QA visual/táctil humana del APK siguen pendientes. Estado honesto: `IMPLEMENTED_UNVERIFIED`; no se declara `PASS`, `Q4`, `TIER1_READY` ni `OPERATIONAL`.
+- El workflow APK oficial `134` (`34199652437`) terminó con `success`: typecheck, telemetría, prebuild Expo, compilación release, verificación del bundle standalone y publicación pasaron correctamente.
+- Release correlativo: `vexforge-android-build-134`, `app-release.apk`, 98,152,008 bytes. APK: `https://github.com/grandmaster68081-byte/Vexforge-web/releases/download/vexforge-android-build-134/app-release.apk`.
+- La QA visual/táctil humana en dispositivo sigue pendiente. Estado honesto: `IMPLEMENTED_UNVERIFIED`; no se declara `PASS`, `Q4`, `TIER1_READY` ni `OPERATIONAL`.
 
 ---
 
