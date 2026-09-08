@@ -1,3 +1,13 @@
+## 2026-09-08 — VE-MOB-4-COLLECTION — OPERATOR REFERENCE / IMPLEMENTED_UNVERIFIED
+
+- La referencia entregada para Cartas coincide byte a byte con `mobile/assets/images/collection-reference-scene.png`, con dimensiones `1024×1536` y proporción `2:3`, equivalente al objetivo visual `683×1024` de la APK.
+- La superficie mantiene la composición oficial y los flujos reales: catálogo y colección del jugador desde Supabase, búsqueda, paginación, filtro por facción y rareza, orden, detalle, propiedad, arte destacado, estados de carga/error/vacío y navegación inferior.
+- Se corrigió quirúrgicamente la zona `FUSIÓN`: ahora abre la cámara de Fusión existente con `mode=fusion`, en lugar de enviar a Mazos. No se duplicó lógica de negocio ni se modificaron contratos, datos, Auth, RLS, Storage o RPCs.
+- Evidencia local: `verify-mobile-card-pilot.mjs` — 6/6; `verify-card-art-state.mjs` — estados explícitos correctos; `git diff --check` — OK. No se ejecutó build, compilación de APK ni workflow Android.
+- Estado honesto: `IMPLEMENTED_UNVERIFIED`; queda pendiente la QA visual/táctil humana en la APK.
+
+---
+
 ## 2026-09-08 — VE-MOB-5-DECK — CANONICAL ART STATE / IMPLEMENTED_UNVERIFIED
 
 - La referencia entregada para Mazos coincide byte a byte con `mobile/assets/images/decks-reference-scene.png`, con dimensiones oficiales `1024×1536` y proporción `2:3`, equivalente al objetivo visual `683×1024` de la APK.

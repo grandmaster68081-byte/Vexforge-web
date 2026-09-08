@@ -538,7 +538,7 @@ export default function CollectionScreen() {
             testID="fusion-tab"
             accessibilityRole="button"
             accessibilityLabel="Abrir fusión y forja"
-            onPress={() => router.push('/deck')}
+            onPress={() => router.push('/store?mode=fusion')}
             style={[styles.referenceTopHotspot, { left: width * 0.53, top: canvasHeight * 0.108, width: width * 0.19 }]}
           />
           <Pressable
