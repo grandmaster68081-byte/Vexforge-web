@@ -1,3 +1,14 @@
+## 2026-09-08 — VE-MOB-4-COLLECTION-REFERENCE — IMPLEMENTED_UNVERIFIED / WORKFLOW PENDING
+
+- Se reemplazó la superficie vertical de Cartas por la composición de colección proporcionada por el operador (`collection-reference-scene.png`, 1024×1536), ocupando la pantalla completa sin espacios vacíos y sin scroll vertical.
+- La pantalla mantiene Supabase como autoridad real: catálogo activo, colección de la sesión, cantidades, búsqueda, filtros de facción/rareza, orden, paginación lateral y detalle de carta siguen alimentándose de `loadCatalogSnapshot` y `loadPlayerCollection`.
+- Se muestran ocho cartas por página con desplazamiento horizontal; cada carta abre el inspector existente con arte canónico, identidad, estadísticas, habilidades, sistemas, lore y supply. Las ranuras vacías y los errores de arte permanecen explícitos.
+- Se conservaron los flujos de la referencia: Colección, Tus cartas, Fusión/Forja, Logros y navegación inferior mediante zonas táctiles accesibles. La barra nativa duplicada queda oculta sólo en esta pestaña.
+- Verificación local: `npm run typecheck`, `npm run verify:telemetry` y `git diff --check` correctos. El APK 138 anterior terminó `success` y publicó `app-release.apk`; el workflow correlativo de este cambio queda pendiente después del push.
+- Estado honesto: `IMPLEMENTED_UNVERIFIED`; falta confirmar workflow APK, release correlativo y QA visual/táctil humana en dispositivo. No se declara `PASS`, `Q4`, `TIER1_READY` ni `OPERATIONAL`.
+
+---
+
 ## 2026-09-08 — VE-MOB-2-AUTH + VE-MOB-3-HOME — APK 136 PUBLISHED / IMPLEMENTED_UNVERIFIED
 
 - Se reemplazó completamente la superficie Android de Auth por la imagen de referencia proporcionada por el operador (`auth-reference-scene.png`, 1024×1536). La obra es la composición visible completa; los campos, botones y enlaces funcionan mediante zonas interactivas transparentes alineadas sobre el arte.

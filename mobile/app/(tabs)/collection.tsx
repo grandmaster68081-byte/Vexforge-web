@@ -1,5 +1,5 @@
 import { Feather } from '@/components/ForgeIcon';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   FlatList,
   Image,
@@ -11,6 +11,7 @@ import {
   Text,
   TextInput,
   View,
+  useWindowDimensions,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
@@ -27,6 +28,7 @@ import { getCardPilotIdentity } from '@/constants/cardPilot';
 const RARITIES = ['Common', 'Uncommon', 'Rare', 'Epic', 'Legendary', 'Mythic'] as const;
 const FACTIONS = ['Guerrero', 'Mago', 'Paladín', 'Pícaro'] as const;
 type Rarity = (typeof RARITIES)[number];
+const COLLECTION_REFERENCE = require('@/assets/images/collection-reference-scene.png');
 
 function rarityLabel(rarity: string | null | undefined) {
   return {
@@ -54,10 +56,12 @@ function CardArt({
   card,
   colors,
   detail = false,
+  compact = false,
 }: {
   card: PublicCard;
   colors: ReturnType<typeof useColors>;
   detail?: boolean;
+  compact?: boolean;
 }) {
   const accent = rarityColor(card.rarity, colors);
   const identity = getCardPilotIdentity(card.code);
@@ -70,7 +74,7 @@ function CardArt({
   }, [card.image_url]);
 
   return (
-    <View style={[styles.art, detail && styles.artDetail, { borderColor: identity?.edge ?? accent, backgroundColor: colors.panelStrong }]}>
+    <View style={[styles.art, compact && styles.referenceArt, detail && styles.artDetail, { borderColor: identity?.edge ?? accent, backgroundColor: colors.panelStrong }]}>
       {card.image_url && artState !== 'error' ? (
         <Image
           source={{ uri: card.image_url }}
@@ -103,6 +107,53 @@ function CardArt({
       ) : null}
       <View style={[styles.artRule, { backgroundColor: accent }]} />
     </View>
+  );
+}
+
+function ReferenceCardSlot({
+  card,
+  owned,
+  colors,
+  onPress,
+}: {
+  card?: PublicCard;
+  owned?: PlayerCard;
+  colors: ReturnType<typeof useColors>;
+  onPress: () => void;
+}) {
+  if (!card) {
+    return (
+      <View
+        testID="collection-empty-slot"
+        accessible
+        accessibilityRole="image"
+        accessibilityLabel="Ranura de carta vacía"
+        style={[styles.referenceCardSlot, styles.referenceEmptySlot, { borderColor: `${colors.border}CC` }]}
+      >
+        <Feather name="cards" size={18} color={`${colors.mutedForeground}88`} />
+      </View>
+    );
+  }
+
+  const accent = rarityColor(card.rarity, colors);
+  return (
+    <Pressable
+      testID={`reference-card-${card.code}`}
+      accessibilityRole="button"
+      accessibilityLabel={`Ver detalles de ${card.name}`}
+      onPress={onPress}
+      style={({ pressed }) => [
+        styles.referenceCardSlot,
+        { borderColor: accent, opacity: pressed ? 0.72 : 1 },
+      ]}
+    >
+      <CardArt card={card} colors={colors} compact />
+      {owned ? (
+        <View style={[styles.referenceOwned, { backgroundColor: `${colors.ink}E8`, borderColor: accent }]}>
+          <Text style={[styles.referenceOwnedText, { color: colors.foreground }]}>x{owned.quantity}</Text>
+        </View>
+      ) : null}
+    </Pressable>
   );
 }
 
@@ -364,6 +415,7 @@ export default function CollectionScreen() {
   const colors = useColors();
   const insets = useSafeAreaInsets();
   const router = useRouter();
+  const { width, height } = useWindowDimensions();
   const { featuredCards, cardsTotal, collection, collectionLoading, syncState, syncError, refresh } = useGame();
   const [search, setSearch] = useState('');
   const [rarity, setRarity] = useState<Rarity | 'all'>('all');
@@ -371,17 +423,10 @@ export default function CollectionScreen() {
   const [sort, setSort] = useState<'rarity' | 'name' | 'power'>('rarity');
   const [scope, setScope] = useState<'all' | 'owned'>('all');
   const [selected, setSelected] = useState<PublicCard | null>(null);
+  const [pageIndex, setPageIndex] = useState(0);
+  const pagerRef = useRef<FlatList<PublicCard[]>>(null);
   const ownedById = useMemo(() => new Map(collection.map((card) => [card.card_id, card])), [collection]);
   const completion = cardsTotal > 0 ? Math.round((ownedById.size / cardsTotal) * 100) : 0;
-  const spotlightCard = useMemo(() => {
-    const rarityOrder = Object.fromEntries(RARITIES.map((name, index) => [name, index]));
-    return [...featuredCards].sort((a, b) => {
-      const ownedDelta = Number(ownedById.has(b.id)) - Number(ownedById.has(a.id));
-      if (ownedDelta !== 0) return ownedDelta;
-      const rarityDelta = (rarityOrder[b.rarity ?? 'Common'] ?? 0) - (rarityOrder[a.rarity ?? 'Common'] ?? 0);
-      return rarityDelta || (b.power ?? 0) - (a.power ?? 0) || a.name.localeCompare(b.name);
-    })[0] ?? null;
-  }, [featuredCards, ownedById]);
 
   const filtered = useMemo(() => {
     const rarityOrder = Object.fromEntries(RARITIES.map((name, index) => [name, index]));
@@ -400,128 +445,245 @@ export default function CollectionScreen() {
       });
   }, [featuredCards, faction, ownedById, rarity, scope, search, sort]);
 
-  const renderCard = useCallback(
-    ({ item }: { item: PublicCard }) => (
-      <CardTile card={item} owned={ownedById.get(item.id)} onPress={() => setSelected(item)} colors={colors} />
-    ),
-    [colors, ownedById],
+  const pages = useMemo(() => {
+    const result: PublicCard[][] = [];
+    for (let index = 0; index < filtered.length; index += 8) {
+      result.push(filtered.slice(index, index + 8));
+    }
+    return result.length > 0 ? result : [[]];
+  }, [filtered]);
+
+  useEffect(() => {
+    setPageIndex(0);
+    pagerRef.current?.scrollToOffset({ offset: 0, animated: false });
+  }, [faction, rarity, scope, search, sort]);
+
+  const changePage = (delta: number) => {
+    const nextPage = Math.min(Math.max(pageIndex + delta, 0), pages.length - 1);
+    if (nextPage === pageIndex) return;
+    setPageIndex(nextPage);
+    pagerRef.current?.scrollToIndex({ index: nextPage, animated: true });
+  };
+
+  const navigateFromReference = (destination: '/index' | '/battle' | '/deck' | '/profile' | '/collection') => {
+    router.push(destination);
+  };
+
+  const renderPage = useCallback(
+    ({ item, index }: { item: PublicCard[]; index: number }) => {
+      const slots = Array.from({ length: 8 }, (_, slotIndex) => item[slotIndex]);
+      return (
+        <View style={[styles.referencePage, { width }]}>
+          <View style={styles.referenceGrid}>
+            {slots.map((card, slotIndex) => (
+              <ReferenceCardSlot
+                key={card?.id ?? `empty-${index}-${slotIndex}`}
+                card={card}
+                owned={card ? ownedById.get(card.id) : undefined}
+                colors={colors}
+                onPress={() => card && setSelected(card)}
+              />
+            ))}
+          </View>
+        </View>
+      );
+    },
+    [colors, ownedById, width],
   );
 
   const hasFilters = Boolean(search || rarity !== 'all' || faction !== 'all' || scope !== 'all');
   return (
-    <ScreenShell surface="collection">
-      <View style={[styles.root, { backgroundColor: 'transparent' }]}>
-      <FlatList
-        data={filtered}
-        keyExtractor={(item) => item.id}
-        numColumns={2}
-        renderItem={renderCard}
-        columnWrapperStyle={styles.gridRow}
-        showsVerticalScrollIndicator={false}
-        scrollEnabled={filtered.length > 0}
-        refreshControl={<RefreshControl refreshing={syncState === 'loading'} onRefresh={refresh} tintColor={colors.primary} />}
-        contentContainerStyle={{ paddingTop: insets.top + 18, paddingBottom: insets.bottom + 104, paddingHorizontal: 16 }}
-        ListHeaderComponent={
-          <View>
-            <DomainHeader
-              domain="archivo"
-              status={collectionLoading ? 'Sincronizando tu colección…' : `${ownedById.size}/${cardsTotal} cartas · ${completion}% completado`}
-            >
-              <ProgressBar value={completion} color={colors.primary} />
-            </DomainHeader>
-            {spotlightCard ? (
-              <CardSpotlight
-                card={spotlightCard}
-                owned={ownedById.get(spotlightCard.id)}
-                colors={colors}
-                onPress={() => setSelected(spotlightCard)}
-                onOpenForge={() => router.push('/deck')}
-              />
-            ) : null}
-            <View style={[styles.searchBox, { borderColor: colors.border, backgroundColor: colors.panel }]}>
-              <Feather name="search" size={17} color={colors.mutedForeground} />
-              <TextInputCompat value={search} onChangeText={setSearch} colors={colors} />
-              {search ? (
-                <Pressable testID="clear-search" accessibilityRole="button" accessibilityLabel="Limpiar búsqueda" onPress={() => setSearch('')}>
-                  <Feather name="x-circle" size={17} color={colors.mutedForeground} />
-                </Pressable>
-              ) : null}
-            </View>
-            <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.chips}>
-              <Chip label="Todas" active={scope === 'all'} onPress={() => setScope('all')} colors={colors} />
-              <Chip label="Mi archivo" active={scope === 'owned'} onPress={() => setScope('owned')} colors={colors} accent={colors.accent} />
-            </ScrollView>
-            <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.chips}>
-              <Chip label="Todas" active={rarity === 'all'} onPress={() => setRarity('all')} colors={colors} />
-              {RARITIES.map((value) => (
-                <Chip key={value} label={rarityLabel(value)} active={rarity === value} onPress={() => setRarity(rarity === value ? 'all' : value)} colors={colors} accent={rarityColor(value, colors)} />
-              ))}
-            </ScrollView>
-            <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.chips}>
-              <Chip label="Todas" active={faction === 'all'} onPress={() => setFaction('all')} colors={colors} />
-              {FACTIONS.map((value) => (
-                <Chip key={value} label={value} active={faction === value} onPress={() => setFaction(faction === value ? 'all' : value)} colors={colors} />
-              ))}
-            </ScrollView>
-            <View style={styles.resultsBar}>
-              <Text style={[styles.results, { color: colors.mutedForeground }]}>
-                {syncState === 'loading' && featuredCards.length === 0 ? 'Cargando compendio…' : `${filtered.length} resultado${filtered.length === 1 ? '' : 's'}`}
-              </Text>
-              <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.sorts}>
-                {(['rarity', 'name', 'power'] as const).map((value) => (
-                  <Pressable key={value} testID={`sort-${value}`} onPress={() => setSort(value)} accessibilityRole="button" accessibilityLabel={`Ordenar por ${value === 'rarity' ? 'rareza' : value === 'name' ? 'nombre' : 'poder'}`}>
-                    <Text style={[styles.sortText, { color: sort === value ? colors.primary : colors.mutedForeground }]}>{value === 'rarity' ? 'Rareza' : value === 'name' ? 'Nombre' : 'Poder'}</Text>
-                  </Pressable>
-                ))}
-              </ScrollView>
-            </View>
-            {syncState === 'offline' ? (
-              <DomainState
-                kind="error"
-                icon="warning"
-                title="El archivo perdió la señal"
-                message={syncError ?? 'No se pudo sincronizar el compendio. La forja puede reintentarlo cuando vuelvas a tener conexión.'}
-                actionLabel="REINTENTAR SINCRONIZACIÓN"
-                onAction={refresh}
-                testID="collection-sync-error"
-              />
-            ) : null}
-            {syncState === 'loading' && featuredCards.length === 0 ? (
-              <DomainState
-                kind="loading"
-                icon="collection"
-                title="Abriendo el archivo"
-                message="Estamos reuniendo tus cartas y su procedencia oficial."
-                testID="collection-loading"
-              />
-            ) : null}
-            {hasFilters && filtered.length === 0 && featuredCards.length > 0 && (
-              <View style={[styles.empty, { borderColor: colors.border, backgroundColor: colors.panel }]}>
-                <Feather name="target" size={32} color={colors.primary} />
-                  <Text style={[styles.emptyTitle, { color: colors.foreground }]}>{scope === 'owned' && !search && rarity === 'all' && faction === 'all' ? 'Tu archivo está esperando' : 'Sin coincidencias'}</Text>
-                  <Text style={[styles.emptyText, { color: colors.mutedForeground }]}>{scope === 'owned' && !search && rarity === 'all' && faction === 'all' ? 'Las cartas que poseas aparecerán aquí para ser estudiadas y forjadas.' : 'Ninguna carta coincide con tus filtros actuales.'}</Text>
-                  <Pressable testID="clear-filters" accessibilityRole="button" accessibilityLabel="Limpiar filtros de colección" onPress={() => { setSearch(''); setRarity('all'); setFaction('all'); setScope('all'); }} style={[styles.clearButton, { borderColor: colors.primary }]}>
-                  <Text style={[styles.clearButtonText, { color: colors.primary }]}>LIMPIAR FILTROS</Text>
-                </Pressable>
-              </View>
-            )}
+    <ScreenShell sceneMode="hero">
+      <View style={[styles.referenceRoot, { marginBottom: -insets.bottom }]}>
+        <Image
+          source={COLLECTION_REFERENCE}
+          style={StyleSheet.absoluteFillObject}
+          resizeMode="cover"
+          accessibilityLabel="Composición oficial de la colección VEXFORGE"
+        />
+        <View pointerEvents="none" style={[styles.referenceShade, { backgroundColor: `${colors.ink}20` }]} />
+
+        <View pointerEvents="box-none" style={StyleSheet.absoluteFillObject}>
+          <View style={[styles.referenceCounter, { top: height * 0.185, right: width * 0.115 }]}>
+            <Text style={[styles.referenceCounterValue, { color: colors.foreground }]}>{ownedById.size} / {cardsTotal || filtered.length}</Text>
+            <Text style={[styles.referenceCounterLabel, { color: colors.mutedForeground }]}>CARTAS TOTALES</Text>
           </View>
-        }
-        ListEmptyComponent={
-          !hasFilters && syncState !== 'loading' ? (
-            <DomainState
-              kind="empty"
-              icon="collection"
-              title="El compendio aún está en silencio"
-              message="No hay cartas activas disponibles en Supabase en este momento. Vuelve a sincronizar cuando el archivo reciba nuevas piezas."
-              actionLabel="ACTUALIZAR ARCHIVO"
-              onAction={refresh}
-              testID="collection-empty"
+
+          <Pressable
+            testID="collection-refresh"
+            accessibilityRole="button"
+            accessibilityLabel="Actualizar colección"
+            onPress={refresh}
+            style={[styles.referenceRefreshHotspot, { top: height * 0.185, right: width * 0.04 }]}
+          />
+
+          <Pressable
+            testID="collection-tab"
+            accessibilityRole="button"
+            accessibilityLabel="Colección"
+            onPress={() => { setScope('all'); setPageIndex(0); }}
+            style={[styles.referenceTopHotspot, { left: width * 0.05, top: height * 0.108, width: width * 0.26 }]}
+          />
+          <Pressable
+            testID="owned-tab"
+            accessibilityRole="button"
+            accessibilityLabel="Tus cartas"
+            onPress={() => { setScope('owned'); setPageIndex(0); }}
+            style={[styles.referenceTopHotspot, { left: width * 0.31, top: height * 0.108, width: width * 0.21 }]}
+          />
+          <Pressable
+            testID="fusion-tab"
+            accessibilityRole="button"
+            accessibilityLabel="Abrir fusión y forja"
+            onPress={() => router.push('/deck')}
+            style={[styles.referenceTopHotspot, { left: width * 0.53, top: height * 0.108, width: width * 0.19 }]}
+          />
+          <Pressable
+            testID="achievements-tab"
+            accessibilityRole="button"
+            accessibilityLabel="Abrir logros"
+            onPress={() => router.push('/profile')}
+            style={[styles.referenceTopHotspot, { right: width * 0.05, top: height * 0.108, width: width * 0.18 }]}
+          />
+
+          <View style={[styles.referenceSearch, { left: width * 0.075, top: height * 0.319, width: width * 0.56 }]}>
+            <Feather name="search" size={Math.max(14, width * 0.04)} color={colors.mutedForeground} />
+            <TextInputCompat value={search} onChangeText={setSearch} colors={colors} />
+            {search ? (
+              <Pressable testID="clear-search" accessibilityRole="button" accessibilityLabel="Limpiar búsqueda" onPress={() => setSearch('')}>
+                <Feather name="x-circle" size={15} color={colors.mutedForeground} />
+              </Pressable>
+            ) : null}
+          </View>
+
+          <Pressable
+            testID="sort-toggle"
+            accessibilityRole="button"
+            accessibilityLabel="Cambiar orden de las cartas"
+            onPress={() => setSort(sort === 'rarity' ? 'name' : sort === 'name' ? 'power' : 'rarity')}
+            style={[styles.referenceSortHotspot, { right: width * 0.075, top: height * 0.319, width: width * 0.24 }]}
+          >
+            <Text style={[styles.referenceSortText, { color: colors.mutedForeground }]}>
+              {sort === 'rarity' ? 'Rareza' : sort === 'name' ? 'Nombre' : 'Poder'}
+            </Text>
+          </Pressable>
+
+          <View style={[styles.referenceFilterRow, { top: height * 0.266, left: width * 0.05, right: width * 0.05 }]}>
+            <Pressable
+              testID="faction-all"
+              accessibilityRole="button"
+              accessibilityLabel="Todas las facciones"
+              onPress={() => setFaction('all')}
+              style={styles.referenceFilterHit}
             />
-          ) : null
-        }
-      />
-      {selected && <CardDetail card={selected} owned={ownedById.get(selected.id)} colors={colors} onClose={() => setSelected(null)} />}
+            {FACTIONS.map((value, index) => (
+              <Pressable
+                key={value}
+                testID={`faction-${value}`}
+                accessibilityRole="button"
+                accessibilityLabel={`Filtrar por ${value}`}
+                onPress={() => setFaction(faction === value ? 'all' : value)}
+                style={[styles.referenceFilterHit, { left: `${20 * (index + 1)}%` }]}
+              />
+            ))}
+          </View>
+
+          <View style={[styles.referenceRarityRow, { top: height * 0.372, left: width * 0.045, right: width * 0.045 }]}>
+            <Pressable
+              testID="rarity-all"
+              accessibilityRole="button"
+              accessibilityLabel="Todas las rarezas"
+              onPress={() => setRarity('all')}
+              style={styles.referenceRarityHit}
+            />
+            {RARITIES.map((value, index) => (
+              <Pressable
+                key={value}
+                testID={`rarity-${value}`}
+                accessibilityRole="button"
+                accessibilityLabel={`Filtrar por rareza ${rarityLabel(value)}`}
+                onPress={() => setRarity(rarity === value ? 'all' : value)}
+                style={[styles.referenceRarityHit, { left: `${14.25 * (index + 1)}%` }]}
+              />
+            ))}
+          </View>
+
+          <FlatList
+            ref={pagerRef}
+            data={pages}
+            keyExtractor={(_, index) => `collection-page-${index}`}
+            horizontal
+            pagingEnabled
+            bounces={false}
+            showsHorizontalScrollIndicator={false}
+            scrollEnabled={pages.length > 1}
+            renderItem={renderPage}
+            style={[styles.referencePager, { top: height * 0.435, height: height * 0.375 }]}
+            onMomentumScrollEnd={(event) => setPageIndex(Math.round(event.nativeEvent.contentOffset.x / Math.max(width, 1)))}
+            getItemLayout={(_, index) => ({ length: width, offset: width * index, index })}
+          />
+
+          {filtered.length === 0 ? (
+            <View style={[styles.referenceEmptyMessage, { top: height * 0.54, left: width * 0.16, right: width * 0.16, backgroundColor: `${colors.ink}D9`, borderColor: `${colors.accent}99` }]}>
+              <Feather name="cards" size={20} color={colors.accent} />
+              <Text style={[styles.referenceEmptyTitle, { color: colors.foreground }]}>
+                {hasFilters ? 'SIN COINCIDENCIAS' : 'EL COMPENDIO ESTÁ EN SILENCIO'}
+              </Text>
+              <Text style={[styles.referenceEmptyText, { color: colors.mutedForeground }]}>
+                {hasFilters ? 'Prueba con otra búsqueda o filtro.' : 'No hay cartas activas disponibles.'}
+              </Text>
+            </View>
+          ) : null}
+
+          {syncState === 'offline' ? (
+            <Pressable
+              testID="collection-sync-error"
+              accessibilityRole="button"
+              accessibilityLabel="Reintentar sincronización de colección"
+              onPress={refresh}
+              style={[styles.referenceSyncError, { backgroundColor: `${colors.ink}E8`, borderColor: `${colors.danger}AA` }]}
+            >
+              <Feather name="warning" size={16} color={colors.danger} />
+              <Text style={[styles.referenceSyncText, { color: colors.foreground }]}>SIN SEÑAL · TOCA PARA REINTENTAR</Text>
+            </Pressable>
+          ) : null}
+
+          <View style={[styles.referencePagination, { bottom: height * 0.106, left: width * 0.28, right: width * 0.28 }]}>
+            <Pressable
+              testID="collection-page-previous"
+              accessibilityRole="button"
+              accessibilityLabel="Página anterior de cartas"
+              disabled={pageIndex === 0}
+              onPress={() => changePage(-1)}
+              style={styles.referencePageButton}
+            >
+              <Feather name="chevron-left" size={18} color={pageIndex === 0 ? `${colors.mutedForeground}66` : colors.accent} />
+            </Pressable>
+            <Text testID="collection-page-indicator" style={[styles.referencePageText, { color: colors.foreground }]}>
+              {pageIndex + 1} / {pages.length}
+            </Text>
+            <Pressable
+              testID="collection-page-next"
+              accessibilityRole="button"
+              accessibilityLabel="Página siguiente de cartas"
+              disabled={pageIndex === pages.length - 1}
+              onPress={() => changePage(1)}
+              style={styles.referencePageButton}
+            >
+              <Feather name="chevron-right" size={18} color={pageIndex === pages.length - 1 ? `${colors.mutedForeground}66` : colors.accent} />
+            </Pressable>
+          </View>
+
+          <View style={styles.referenceBottomNavigation}>
+            <Pressable testID="reference-home" accessibilityRole="button" accessibilityLabel="Inicio" onPress={() => navigateFromReference('/index')} style={styles.referenceBottomHit} />
+            <Pressable testID="reference-battle" accessibilityRole="button" accessibilityLabel="Batalla" onPress={() => navigateFromReference('/battle')} style={styles.referenceBottomHit} />
+            <Pressable testID="reference-cards" accessibilityRole="button" accessibilityLabel="Cartas" onPress={() => navigateFromReference('/collection')} style={styles.referenceBottomHit} />
+            <Pressable testID="reference-deck" accessibilityRole="button" accessibilityLabel="Mazo" onPress={() => navigateFromReference('/deck')} style={styles.referenceBottomHit} />
+            <Pressable testID="reference-profile" accessibilityRole="button" accessibilityLabel="Perfil" onPress={() => navigateFromReference('/profile')} style={styles.referenceBottomHit} />
+          </View>
+        </View>
+
+        {selected && <CardDetail card={selected} owned={ownedById.get(selected.id)} colors={colors} onClose={() => setSelected(null)} />}
       </View>
     </ScreenShell>
   );
@@ -542,6 +704,38 @@ function Chip({ label, active, onPress, colors, accent }: { label: string; activ
 
 const styles = StyleSheet.create({
   root: { flex: 1 },
+  referenceRoot: { flex: 1, overflow: 'hidden' },
+  referenceShade: { ...StyleSheet.absoluteFillObject },
+  referenceCounter: { position: 'absolute', alignItems: 'flex-end', zIndex: 4 },
+  referenceCounterValue: { fontSize: 13, fontWeight: '900', letterSpacing: 0.7 },
+  referenceCounterLabel: { fontSize: 6, fontWeight: '800', letterSpacing: 0.7, marginTop: 2 },
+  referenceRefreshHotspot: { position: 'absolute', width: 38, height: 38, zIndex: 8 },
+  referenceTopHotspot: { position: 'absolute', height: 48, zIndex: 8 },
+  referenceSearch: { position: 'absolute', height: 38, borderWidth: 1, borderColor: 'rgba(255,255,255,0.14)', borderRadius: 18, backgroundColor: 'rgba(3,10,22,0.25)', flexDirection: 'row', alignItems: 'center', paddingHorizontal: 10, gap: 7, zIndex: 8 },
+  referenceSortHotspot: { position: 'absolute', height: 38, borderWidth: 1, borderColor: 'rgba(255,255,255,0.14)', borderRadius: 18, backgroundColor: 'rgba(3,10,22,0.25)', justifyContent: 'center', alignItems: 'center', zIndex: 8 },
+  referenceSortText: { fontSize: 9, fontWeight: '700' },
+  referenceFilterRow: { position: 'absolute', height: 40, flexDirection: 'row', zIndex: 8 },
+  referenceFilterHit: { position: 'absolute', top: 0, width: '20%', height: 40 },
+  referenceRarityRow: { position: 'absolute', height: 38, flexDirection: 'row', zIndex: 8 },
+  referenceRarityHit: { position: 'absolute', top: 0, width: '14.25%', height: 38 },
+  referencePager: { position: 'absolute', left: 0, right: 0, zIndex: 3 },
+  referencePage: { flex: 1, justifyContent: 'center' },
+  referenceGrid: { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center', alignContent: 'center', columnGap: 5, rowGap: 10, paddingHorizontal: '7%' },
+  referenceCardSlot: { width: '21%', aspectRatio: 0.62, borderWidth: 1, borderRadius: 8, overflow: 'hidden', position: 'relative', backgroundColor: 'rgba(3,10,22,0.64)' },
+  referenceArt: { width: '100%', height: '100%', flex: 1, aspectRatio: 0.62, borderBottomWidth: 0, borderRadius: 7 },
+  referenceEmptySlot: { alignItems: 'center', justifyContent: 'center' },
+  referenceOwned: { position: 'absolute', right: 3, top: 3, minWidth: 19, height: 17, borderWidth: 1, borderRadius: 8, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 3 },
+  referenceOwnedText: { fontSize: 8, fontWeight: '900' },
+  referenceEmptyMessage: { position: 'absolute', alignItems: 'center', borderWidth: 1, borderRadius: 12, paddingHorizontal: 14, paddingVertical: 12, zIndex: 9 },
+  referenceEmptyTitle: { fontSize: 10, fontWeight: '900', letterSpacing: 0.8, marginTop: 6 },
+  referenceEmptyText: { fontSize: 10, textAlign: 'center', marginTop: 4 },
+  referenceSyncError: { position: 'absolute', top: '46%', left: '10%', right: '10%', minHeight: 38, borderWidth: 1, borderRadius: 10, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8, zIndex: 10 },
+  referenceSyncText: { fontSize: 9, fontWeight: '900', letterSpacing: 0.5 },
+  referencePagination: { position: 'absolute', height: 34, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', zIndex: 10 },
+  referencePageButton: { width: 30, height: 30, alignItems: 'center', justifyContent: 'center' },
+  referencePageText: { fontSize: 11, fontWeight: '800', letterSpacing: 1 },
+  referenceBottomNavigation: { position: 'absolute', left: 0, right: 0, bottom: 0, height: '11%', flexDirection: 'row', zIndex: 11 },
+  referenceBottomHit: { flex: 1 },
   header: { paddingBottom: 18 },
   headerTop: { flexDirection: 'row', alignItems: 'center', gap: 10 },
   mark: { width: 34, height: 34, borderWidth: 1, borderRadius: 10, alignItems: 'center', justifyContent: 'center' },
