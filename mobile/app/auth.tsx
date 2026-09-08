@@ -2,7 +2,6 @@ import { useMemo, useState } from 'react';
 import {
   ActivityIndicator,
   Image,
-  Platform,
   Pressable,
   StyleSheet,
   Text,
@@ -49,7 +48,7 @@ export default function AuthScreen() {
   const [mode, setMode] = useState<'signin' | 'signup'>('signin');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [rememberSession, setRememberSession] = useState(true);
+  const [rememberSession, setRememberSession] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [localError, setLocalError] = useState<string | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
@@ -201,11 +200,14 @@ export default function AuthScreen() {
                   styles.rememberIndicator,
                   {
                     borderColor: colors.accent,
-                    backgroundColor: rememberSession ? colors.accent : 'transparent',
-                    opacity: rememberSession ? 0.95 : 0.2,
+                    opacity: rememberSession ? 1 : 0.55,
                   },
                 ]}
-              />
+              >
+                <Text style={[styles.rememberCheck, { color: colors.accent }]}>
+                  {rememberSession ? '✓' : ''}
+                </Text>
+              </View>
             </Pressable>
 
             <Pressable
@@ -355,9 +357,18 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   rememberIndicator: {
-    width: 12,
-    height: 12,
+    width: 9,
+    height: 9,
     borderWidth: 1,
+    borderRadius: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'transparent',
+  },
+  rememberCheck: {
+    fontSize: 8,
+    lineHeight: 9,
+    fontWeight: '900',
   },
   forgotPassword: {
     position: 'absolute',
