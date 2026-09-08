@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Image, Pressable, StyleSheet, Text, View, useWindowDimensions } from 'react-native';
+import Animated, { FadeIn, useReducedMotion } from 'react-native-reanimated';
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { loadHomeStats, type HomeStats } from '@/lib/supabase';
@@ -8,7 +9,7 @@ import { useGame } from '@/context/GameContext';
 
 const HOME_REFERENCE_BACKGROUND = require('../../assets/images/home-reference-scene.png');
 
-type HomeRoute = '/' | '/battle' | '/collection' | '/deck' | '/missions' | '/world' | '/profile' | '/tutorial' | '/economy' | '/social' | '/meta';
+type HomeRoute = '/' | '/battle' | '/collection' | '/deck' | '/missions' | '/world' | '/profile' | '/tutorial' | '/economy' | '/social' | '/meta' | '/store?mode=fusion';
 
 type Hotspot = {
   id: string;
@@ -22,11 +23,11 @@ type Hotspot = {
 
 const HOTSPOTS: Hotspot[] = [
   { id: 'player-profile', label: 'Abrir perfil del forjador', route: '/profile', left: '1%', top: '0%', width: '36%', height: '7%' },
-  { id: 'energy-economy', label: 'Abrir economía y energía', route: '/economy', left: '38%', top: '0%', width: '14%', height: '7%' },
-  { id: 'vex-economy', label: 'Abrir cartera VEX', route: '/economy', left: '51%', top: '0%', width: '14%', height: '7%' },
-  { id: 'settings', label: 'Abrir ajustes de cuenta', route: '/meta', left: '61%', top: '0%', width: '14%', height: '7%' },
-  { id: 'season', label: 'Abrir temporada activa', route: '/world', left: '70%', top: '4%', width: '29%', height: '10%' },
-  { id: 'forge', label: 'Entrar a Foja', route: '/', left: '1%', top: '18%', width: '29%', height: '22%' },
+  { id: 'energy-economy', label: 'Abrir economía y energía', route: '/economy', left: '57%', top: '0%', width: '18%', height: '8%' },
+  { id: 'vex-economy', label: 'Abrir cartera VEX', route: '/economy', left: '75%', top: '0%', width: '16%', height: '8%' },
+  { id: 'settings', label: 'Abrir ajustes de cuenta', route: '/meta', left: '90%', top: '0%', width: '10%', height: '8%' },
+  { id: 'season', label: 'Abrir temporada activa', route: '/world', left: '70%', top: '7%', width: '29%', height: '9%' },
+  { id: 'forge', label: 'Entrar a la Forja', route: '/store?mode=fusion', left: '1%', top: '18%', width: '29%', height: '22%' },
   { id: 'arena', label: 'Entrar a Arena', route: '/battle', left: '70%', top: '18%', width: '29%', height: '23%' },
   { id: 'featured-card', label: 'Inspeccionar carta destacada', route: '/collection', left: '27%', top: '21%', width: '44%', height: '29%' },
   { id: 'world', label: 'Explorar Mundo', route: '/world', left: '1%', top: '39%', width: '29%', height: '22%' },
@@ -44,6 +45,7 @@ export default function ForgeScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const { width: viewportWidth, height: viewportHeight } = useWindowDimensions();
+  const reduceMotion = useReducedMotion();
   const { player, session, progress, wallet } = useGame();
   const [homeStats, setHomeStats] = useState<HomeStats | null>(null);
   const [homeError, setHomeError] = useState<string | null>(null);
@@ -69,20 +71,22 @@ export default function ForgeScreen() {
     router.push(route);
   };
 
-  const accessibilitySummary = homeStats
-    ? `Temporada ${homeStats.season?.name ?? 'activa'}, ${homeStats.total_cards} cartas, ${homeStats.active_players} jugadores activos.`
-    : homeError ?? 'Sincronizando datos de Foja.';
   const sceneHeight = Math.max(1, viewportHeight - insets.top - insets.bottom);
   const displayName = player?.display_name?.trim() || session?.user.email?.split('@')[0] || 'Forjador';
   const levelLabel = progress ? `NIVEL ${progress.level}` : 'NIVEL —';
   const energyLabel = progress ? `${progress.energy}/${progress.max_energy}` : '—/—';
   const vexLabel = wallet ? Math.round(wallet.vex_ingame).toLocaleString('es-ES') : '—';
+  const accessibilitySummary = homeStats
+    ? `Temporada ${homeStats.season?.name ?? 'activa'}, ${homeStats.total_cards} cartas, ${homeStats.active_players} jugadores activos.`
+    : homeError ?? 'Sincronizando datos de Foja.';
+  const playerSummary = `Jugador ${displayName}, ${levelLabel}, energía ${energyLabel}, ${vexLabel} VEX`;
 
   return (
     <ScreenShell surface="home" sceneMode="hero">
       <View style={[styles.screen, { marginBottom: -insets.bottom }]}>
-        <View
+        <Animated.View
           style={[styles.scene, { width: viewportWidth, height: sceneHeight, marginTop: insets.top }]}
+          entering={reduceMotion ? undefined : FadeIn.duration(450)}
           testID="home-reference-scene"
         >
           <Image
@@ -91,19 +95,7 @@ export default function ForgeScreen() {
             resizeMode="stretch"
             accessibilityLabel="Escena de Home proporcionada por el operador"
           />
-          <View style={styles.hotspotLayer} accessibilityLabel={accessibilitySummary}>
-            <View
-              pointerEvents="none"
-              accessible
-              accessibilityLabel={`Jugador ${displayName}, ${levelLabel}, energía ${energyLabel}, ${vexLabel} VEX`}
-              style={styles.playerData}
-            >
-              <View style={styles.playerDataRule} />
-              <View style={styles.playerDataText}>
-                <Text numberOfLines={1} style={styles.playerName}>@{displayName}</Text>
-                <Text numberOfLines={1} style={styles.playerMeta}>{levelLabel}</Text>
-              </View>
-            </View>
+          <View style={styles.hotspotLayer} accessibilityLabel={`${accessibilitySummary} ${playerSummary}`}>
             <Text pointerEvents="none" style={[styles.energyValue, { color: '#F4F6FF' }]}>{energyLabel}</Text>
             <Text pointerEvents="none" style={[styles.vexValue, { color: '#F4F6FF' }]}>{vexLabel}</Text>
             {HOTSPOTS.map((hotspot) => (
@@ -128,7 +120,7 @@ export default function ForgeScreen() {
               />
             ))}
           </View>
-        </View>
+        </Animated.View>
       </View>
     </ScreenShell>
   );
@@ -136,9 +128,6 @@ export default function ForgeScreen() {
 
 const styles = StyleSheet.create({
   screen: { flex: 1 },
-  contentContainer: {
-    alignItems: 'flex-start',
-  },
   scene: {
     overflow: 'hidden',
   },
@@ -148,44 +137,6 @@ const styles = StyleSheet.create({
   },
   hotspotLayer: {
     ...StyleSheet.absoluteFillObject,
-  },
-  playerData: {
-    position: 'absolute',
-    left: '3%',
-    top: '11.5%',
-    width: '35%',
-    height: '7%',
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  playerDataRule: {
-    width: 2,
-    height: '62%',
-    backgroundColor: '#F0C050',
-    shadowColor: '#F0C050',
-    shadowOpacity: 0.9,
-    shadowRadius: 4,
-  },
-  playerDataText: {
-    minWidth: 0,
-    marginLeft: 7,
-    paddingRight: 5,
-    textShadowColor: '#000000',
-    textShadowOffset: { width: 0, height: 1 },
-    textShadowRadius: 3,
-  },
-  playerName: {
-    color: '#FFFFFF',
-    fontSize: 10,
-    fontWeight: '800',
-    letterSpacing: 0.7,
-  },
-  playerMeta: {
-    color: '#F0C050',
-    fontSize: 7,
-    fontWeight: '700',
-    letterSpacing: 1.1,
-    marginTop: 2,
   },
   energyValue: {
     position: 'absolute',

@@ -2219,3 +2219,14 @@
 - No se modificaron Auth, RLS, RPCs, Storage ni la autoridad del combate. La resolución, turnos, formación, arte de cartas y resultado continúan llegando de Supabase.
 - Evidencia local: `npm run verify:mobile-battle` — 20/20; `git diff --check` — OK. No se ejecutó build, compilación de APK ni workflow Android por instrucción explícita del operador.
 - Estado honesto: `IMPLEMENTED_UNVERIFIED`; la QA visual/táctil humana y una futura compilación Android siguen pendientes. El cambio queda publicado en `main`.
+
+---
+
+## 2026-09-08 — VE-MOB-3-HOME — OPERATOR REFERENCE / MAIN PUBLISHED
+
+- La pantalla de Inicio conserva la referencia oficial `mobile/assets/images/home-reference-scene.png`, que coincide byte a byte con la entrega del operador y mide `1024×1536` en proporción vertical `2:3`.
+- Se conectaron los flujos visibles a superficies Android reales: Forja abre Fusión con las reglas y mutaciones de Supabase; Arena abre Batalla; Cartas y Archivo abren Colección; Mundo y Eventos abren Mundo; Misión abre Misiones; temporada, economía, ajustes y navegación inferior mantienen sus rutas funcionales.
+- Se reajustaron las zonas táctiles superiores para coincidir con los iconos reales de energía, VEX y configuración, y se retiró texto superpuesto que no forma parte de la composición entregada. Energía, VEX, perfil y el resumen de temporada siguen expuestos desde datos reales para accesibilidad y HUD dinámico.
+- Se restauró explícitamente la entrada con `FadeIn` condicionada por `useReducedMotion`, sin alterar la composición visual cuando el movimiento reducido está activo.
+- Evidencia local: `npm run verify:mobile-home-official-assets` — 7/7; `git diff --check` — OK. No se ejecutó build, compilación de APK ni workflow Android por instrucción explícita del operador.
+- Estado honesto: `IMPLEMENTED_UNVERIFIED`; la QA visual/táctil humana y una futura compilación Android siguen pendientes. El cambio queda publicado en `main`.
