@@ -3,13 +3,16 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import {
   AccessibilityInfo,
   ActivityIndicator,
+  Image,
   Pressable,
   RefreshControl,
   ScrollView,
   StyleSheet,
   Text,
   View,
+  useWindowDimensions,
 } from 'react-native';
+import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useColors } from '@/hooks/useColors';
 import { useGame } from '@/context/GameContext';
@@ -24,6 +27,33 @@ import { ForgeFormationPreview } from '@/components/ForgeFormationPreview';
 import { ForgeBattlefield } from '@/components/ForgeBattlefield';
 
 type Phase = 'lobby' | 'confirm' | 'replay' | 'result';
+const BATTLE_REFERENCE_BACKGROUND = require('../../assets/images/battle-reference-scene.png');
+
+type ReferenceHotspot = {
+  id: string;
+  label: string;
+  left: `${number}%`;
+  top: `${number}%`;
+  width: `${number}%`;
+  height: `${number}%`;
+};
+
+const REFERENCE_HOTSPOTS: ReferenceHotspot[] = [
+  { id: 'reference-pvp', label: 'Abrir PVP Arena', left: '4%', top: '23%', width: '22%', height: '23%' },
+  { id: 'reference-pve', label: 'Abrir PVE Misiones', left: '27%', top: '23%', width: '22%', height: '23%' },
+  { id: 'reference-boss', label: 'Abrir Jefe Raid', left: '52%', top: '23%', width: '22%', height: '23%' },
+  { id: 'reference-quick-battle', label: 'Iniciar batalla rápida práctica', left: '76%', top: '23%', width: '22%', height: '23%' },
+  { id: 'reference-vanguard', label: 'Abrir formación Vanguardia', left: '5%', top: '48%', width: '27%', height: '17%' },
+  { id: 'reference-champion', label: 'Abrir formación Campeón', left: '34%', top: '48%', width: '28%', height: '17%' },
+  { id: 'reference-sentinel', label: 'Abrir formación Centinela', left: '66%', top: '48%', width: '28%', height: '17%' },
+  { id: 'reference-reserve', label: 'Abrir reserva de formación', left: '34%', top: '62%', width: '30%', height: '13%' },
+  { id: 'reference-enter-combat', label: 'Entrar en combate', left: '24%', top: '75%', width: '53%', height: '15%' },
+  { id: 'reference-home', label: 'Ir a Inicio', left: '0%', top: '89%', width: '20%', height: '11%' },
+  { id: 'reference-battle', label: 'Permanecer en Batalla', left: '20%', top: '89%', width: '20%', height: '11%' },
+  { id: 'reference-cards', label: 'Ir a Cartas', left: '40%', top: '89%', width: '20%', height: '11%' },
+  { id: 'reference-deck', label: 'Ir a Mazo', left: '60%', top: '89%', width: '20%', height: '11%' },
+  { id: 'reference-profile', label: 'Ir a Perfil', left: '80%', top: '89%', width: '20%', height: '11%' },
+];
 
 function rankName(mmr: number) {
   if (mmr >= 3000) return 'MYTHIC';
@@ -259,9 +289,13 @@ function ResultPanel({
 export default function BattleScreen() {
   const colors = useColors();
   const insets = useSafeAreaInsets();
+  const router = useRouter();
+  const { width: viewportWidth, height: viewportHeight } = useWindowDimensions();
   const {
     session,
     player,
+    progress,
+    wallet,
     stats,
     opponents,
     findOpponents,
@@ -418,6 +452,8 @@ export default function BattleScreen() {
       const found = await findOpponents();
       if (found && found.length === 0) {
         handleStartAIBattle();
+      } else if (found && found.length > 0) {
+        setSelectedOpponent(found[0]);
       }
     } finally {
       setSearching(false);
@@ -439,6 +475,103 @@ export default function BattleScreen() {
     setTurnIndex(0);
     setPhase('lobby');
   };
+
+  const routeFromReference = (id: string) => {
+    if (id === 'reference-home') return router.replace('/');
+    if (id === 'reference-cards') return router.push('/collection');
+    if (id === 'reference-deck' || id.startsWith('reference-vanguard') || id.startsWith('reference-champion') || id.startsWith('reference-sentinel') || id.startsWith('reference-reserve')) {
+      return router.push('/deck');
+    }
+    if (id === 'reference-profile') return router.push('/profile');
+    if (id === 'reference-boss') return router.push('/world');
+    if (id === 'reference-pve') return router.push('/missions');
+    if (id === 'reference-pvp') {
+      void handleFind();
+      return;
+    }
+    if (id === 'reference-quick-battle') {
+      handleStartAIBattle();
+      return;
+    }
+    if (id === 'reference-enter-combat') {
+      if (selectedOpponent) void handleStartBattle();
+      else void handleFind();
+    }
+  };
+
+  const referenceStatus = battleLoading
+    ? 'RESOLVIENDO COMBATE'
+    : searching
+      ? 'BUSCANDO RIVAL'
+      : selectedOpponent
+        ? `RIVAL: ${selectedOpponent.display_name}`
+        : localError || authError || 'SELECCIONA UN FRENTE';
+  const referenceEnergy = progress ? `${progress.energy}/${progress.max_energy}` : '—/—';
+  const referenceVex = wallet ? Math.round(wallet.vex_ingame).toLocaleString('es-ES') : '—';
+  const referencePlayer = player?.display_name?.trim() || session.user.email?.split('@')[0] || 'Forjador';
+
+  if (phase === 'lobby') {
+    return (
+      <ScreenShell surface="pvp" sceneMode="hero">
+        <ScrollView
+          style={styles.referenceScreen}
+          contentContainerStyle={[
+            styles.referenceContent,
+            { minHeight: Math.max(viewportHeight, viewportHeight + insets.bottom), paddingBottom: insets.bottom },
+          ]}
+          showsVerticalScrollIndicator={false}
+          refreshControl={<RefreshControl refreshing={searching} onRefresh={handleFind} tintColor={colors.primary} />}
+        >
+          <View
+            testID="battle-reference-scene"
+            style={[styles.referenceScene, { width: viewportWidth, height: viewportHeight }]}
+          >
+            <Image
+              source={BATTLE_REFERENCE_BACKGROUND}
+              style={styles.referenceImage}
+              resizeMode="stretch"
+              accessibilityLabel="Pantalla de Batalla proporcionada por el operador"
+              accessibilityIgnoresInvertColors
+            />
+            <View style={styles.referenceLayer} accessibilityLabel={`Batalla de ${referencePlayer}. ${referenceStatus}`}>
+              <Text pointerEvents="none" style={styles.referencePlayer}>@{referencePlayer}</Text>
+              <Text pointerEvents="none" style={styles.referenceEnergy}>{referenceEnergy}</Text>
+              <Text pointerEvents="none" style={styles.referenceVex}>{referenceVex}</Text>
+              <Text
+                pointerEvents="none"
+                accessibilityLiveRegion="polite"
+                style={[styles.referenceStatus, { color: localError || authError ? colors.danger : colors.accent }]}
+              >
+                {referenceStatus}
+              </Text>
+              {REFERENCE_HOTSPOTS.map((hotspot) => (
+                <Pressable
+                  key={hotspot.id}
+                  testID={`battle-${hotspot.id}`}
+                  accessibilityRole="button"
+                  accessibilityLabel={hotspot.label}
+                  accessibilityHint="Toca dos veces para abrir este flujo."
+                  accessibilityState={{ disabled: battleLoading || searching }}
+                  disabled={battleLoading || searching}
+                  onPress={() => routeFromReference(hotspot.id)}
+                  style={({ pressed }) => [
+                    styles.referenceHotspot,
+                    {
+                      left: hotspot.left,
+                      top: hotspot.top,
+                      width: hotspot.width,
+                      height: hotspot.height,
+                      opacity: pressed ? 0.78 : 1,
+                    },
+                  ]}
+                />
+              ))}
+            </View>
+          </View>
+        </ScrollView>
+      </ScreenShell>
+    );
+  }
 
   return (
     <ScreenShell surface="pvp">
@@ -578,6 +711,69 @@ export default function BattleScreen() {
 }
 
 const styles = StyleSheet.create({
+  referenceScreen: { flex: 1, backgroundColor: '#05050D' },
+  referenceContent: { alignItems: 'flex-start' },
+  referenceScene: { position: 'relative', overflow: 'hidden' },
+  referenceImage: { width: '100%', height: '100%' },
+  referenceLayer: { ...StyleSheet.absoluteFillObject },
+  referencePlayer: {
+    position: 'absolute',
+    left: '5%',
+    top: '4.2%',
+    width: '31%',
+    color: '#FFFFFF',
+    fontSize: 9,
+    fontWeight: '800',
+    letterSpacing: 0.7,
+    textShadowColor: '#000000',
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 3,
+  },
+  referenceEnergy: {
+    position: 'absolute',
+    left: '59%',
+    top: '3.2%',
+    width: '17%',
+    color: '#FFFFFF',
+    textAlign: 'center',
+    fontSize: 8,
+    fontWeight: '800',
+    textShadowColor: '#000000',
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 3,
+  },
+  referenceVex: {
+    position: 'absolute',
+    left: '77%',
+    top: '3.2%',
+    width: '13%',
+    color: '#FFFFFF',
+    textAlign: 'center',
+    fontSize: 8,
+    fontWeight: '800',
+    textShadowColor: '#000000',
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 3,
+  },
+  referenceStatus: {
+    position: 'absolute',
+    left: '23%',
+    top: '70.8%',
+    width: '54%',
+    textAlign: 'center',
+    fontSize: 8,
+    fontWeight: '900',
+    letterSpacing: 0.45,
+    textShadowColor: '#000000',
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 3,
+  },
+  referenceHotspot: {
+    position: 'absolute',
+    borderWidth: 1,
+    borderColor: 'transparent',
+    backgroundColor: 'transparent',
+  },
   screen: { paddingHorizontal: 18, gap: 12 },
   center: { flex: 1, justifyContent: 'center', alignItems: 'center', padding: 24 },
   headingRow: { flexDirection: 'row', alignItems: 'center', gap: 12, marginBottom: 2 },
