@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { Image, Pressable, StyleSheet, View } from 'react-native';
+import { Image, Pressable, StyleSheet, View, useWindowDimensions } from 'react-native';
 import Animated, { FadeIn, useReducedMotion } from 'react-native-reanimated';
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -7,6 +7,8 @@ import { loadHomeStats, type HomeStats } from '@/lib/supabase';
 import { ScreenShell } from '@/components/ScreenShell';
 
 const HOME_REFERENCE_BACKGROUND = require('../../assets/images/home-reference-scene.png');
+const HOME_REFERENCE_WIDTH = 1024;
+const HOME_REFERENCE_HEIGHT = 1536;
 
 type HomeRoute = '/' | '/battle' | '/collection' | '/deck' | '/missions' | '/world' | '/profile' | '/tutorial' | '/economy' | '/social' | '/meta';
 
@@ -43,6 +45,7 @@ const HOTSPOTS: Hotspot[] = [
 export default function ForgeScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
+  const { width: viewportWidth, height: viewportHeight } = useWindowDimensions();
   const reduceMotion = useReducedMotion();
   const [homeStats, setHomeStats] = useState<HomeStats | null>(null);
   const [homeError, setHomeError] = useState<string | null>(null);
@@ -71,20 +74,30 @@ export default function ForgeScreen() {
   const accessibilitySummary = homeStats
     ? `Temporada ${homeStats.season?.name ?? 'activa'}, ${homeStats.total_cards} cartas, ${homeStats.active_players} jugadores activos.`
     : homeError ?? 'Sincronizando datos de Foja.';
+  const sceneHeight = viewportWidth * (HOME_REFERENCE_HEIGHT / HOME_REFERENCE_WIDTH);
 
   return (
     <ScreenShell surface="home" sceneMode="hero">
       <Animated.ScrollView
         style={styles.screen}
-        contentContainerStyle={{ paddingBottom: insets.bottom }}
+        contentContainerStyle={[
+          styles.contentContainer,
+          {
+            minHeight: Math.max(viewportHeight, sceneHeight + insets.bottom),
+            paddingBottom: insets.bottom,
+          },
+        ]}
         showsVerticalScrollIndicator={false}
         entering={reduceMotion ? undefined : FadeIn.duration(450)}
       >
-        <View style={styles.scene} testID="home-reference-scene">
+        <View
+          style={[styles.scene, { width: viewportWidth, height: sceneHeight }]}
+          testID="home-reference-scene"
+        >
           <Image
             source={HOME_REFERENCE_BACKGROUND}
-            style={StyleSheet.absoluteFillObject}
-            resizeMode="cover"
+            style={styles.sceneImage}
+            resizeMode="stretch"
             accessibilityLabel="Escena de Home proporcionada por el operador"
           />
           <View style={styles.hotspotLayer} accessibilityLabel={accessibilitySummary}>
@@ -118,10 +131,15 @@ export default function ForgeScreen() {
 
 const styles = StyleSheet.create({
   screen: { flex: 1 },
+  contentContainer: {
+    alignItems: 'flex-start',
+  },
   scene: {
-    width: '100%',
-    aspectRatio: 1024 / 1536,
     overflow: 'hidden',
+  },
+  sceneImage: {
+    width: '100%',
+    height: '100%',
   },
   hotspotLayer: {
     ...StyleSheet.absoluteFillObject,
