@@ -98,7 +98,7 @@ function ClassicTabLayout() {
       <Tabs.Screen name="battle" options={{ title: 'Batalla', tabBarStyle: { display: 'none' }, tabBarIcon: ({ color }) => <Feather name="zap" size={22} color={color} /> }} />
       <Tabs.Screen name="collection" options={{ title: 'Cartas', tabBarStyle: { display: 'none' }, tabBarIcon: ({ color }) => <Feather name="layers" size={22} color={color} /> }} />
       <Tabs.Screen name="deck" options={{ title: 'Mazo', tabBarStyle: { display: 'none' }, tabBarIcon: ({ color }) => <Feather name="columns" size={22} color={color} /> }} />
-      <Tabs.Screen name="profile" options={{ title: 'Perfil', tabBarIcon: ({ color }) => <Feather name="user" size={22} color={color} /> }} />
+      <Tabs.Screen name="profile" options={{ title: 'Perfil', tabBarStyle: { display: 'none' }, tabBarIcon: ({ color }) => <Feather name="user" size={22} color={color} /> }} />
     </Tabs>
   );
 }

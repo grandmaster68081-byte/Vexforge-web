@@ -1,3 +1,13 @@
+## 2026-09-08 — VE-MOB-6-PROFILE-REFERENCE — IMPLEMENTED_UNVERIFIED / WORKFLOW PENDING
+
+- Se reemplazó la pantalla móvil de Perfil por una composición nativa responsive inspirada en la referencia del operador; la captura no se usa como fondo de la pantalla.
+- Perfil consume los datos existentes de Supabase para identidad, sincronización, progreso, energía, VEX, rango/ELO, logros, ranking PvP, historial y racha; los accesos conectan colección, fusión, mazos, misiones, sistemas y red social.
+- Se añadieron pestañas funcionales de Estadísticas, Logros, Títulos, Historial y Ranking, edición de perfil mediante la superficie Meta existente, estados de carga/error/vacío y navegación inferior propia sin barra Android duplicada.
+- No se inventan métricas ni se sobrescriben datos de juego. El build Android 140 previo terminó `success` y publicó `vexforge-android-build-140`; este cambio requiere el workflow correlativo después del push.
+- Estado honesto: `IMPLEMENTED_UNVERIFIED`; falta confirmar typecheck/build/release correlativo y QA visual/táctil humana en APK. No se declara `PASS`, `Q4`, `TIER1_READY` ni `OPERATIONAL`.
+
+---
+
 ## 2026-09-08 — VE-MOB-5-DECKS-REFERENCE — IMPLEMENTED_UNVERIFIED / WORKFLOW PENDING
 
 - Se reemplazó la superficie vertical de Mazos por la composición oficial proporcionada por el operador (`decks-reference-scene.png`, 1024×1536), a pantalla completa y sin scroll vertical en la superficie principal.

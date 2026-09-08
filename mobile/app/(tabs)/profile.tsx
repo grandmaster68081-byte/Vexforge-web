@@ -1,49 +1,59 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import {
   ActivityIndicator,
+  Image,
   Pressable,
   RefreshControl,
+  ScrollView,
   StyleSheet,
   Text,
   TextInput,
   View,
+  useWindowDimensions,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Ionicons } from '@/components/ForgeIcon';
-import Animated, { FadeIn, FadeInDown, useReducedMotion } from 'react-native-reanimated';
 import { useRouter } from 'expo-router';
+import { LinearGradient } from 'expo-linear-gradient';
+import Animated, { FadeInDown } from 'react-native-reanimated';
+import { Ionicons } from '@/components/ForgeIcon';
 import { useColors } from '@/hooks/useColors';
 import { useGame } from '@/context/GameContext';
 import { ScreenShell } from '@/components/ScreenShell';
-import { DomainHeader } from '@/components/DomainHeader';
 import {
   loadPlayerAchievements,
   loadPlayerRank,
+  loadSocialSnapshot,
+  type MobileSocialSnapshot,
   type PlayerAchievement,
   type PlayerRank,
 } from '@/lib/supabase';
+import { CANONICAL_BACKGROUNDS, OFFICIAL_ASSETS } from '@/constants/visual';
+import { typography } from '@/constants/typography';
 import { KeyboardAwareScrollViewCompat } from '@/components/KeyboardAwareScrollViewCompat';
 import { MOTION } from '@/constants/experience';
 
 type Colors = ReturnType<typeof useColors>;
-type RankTone = 'primary' | 'accent' | 'success' | 'mutedForeground' | 'rarityRare' | 'rarityEpic' | 'rarityLegendary';
+type ProfileSection = 'stats' | 'achievements' | 'titles' | 'history' | 'ranking';
+type IconName = keyof typeof Ionicons.glyphMap;
 
-function rankDetails(mmr: number) {
-  if (mmr >= 3000) return { label: 'MYTHIC', icon: 'diamond' as const, tone: 'rarityLegendary' as RankTone };
-  if (mmr >= 2400) return { label: 'DIAMOND', icon: 'diamond-outline' as const, tone: 'rarityRare' as RankTone };
-  if (mmr >= 1800) return { label: 'PLATINUM', icon: 'medal-outline' as const, tone: 'rarityEpic' as RankTone };
-  if (mmr >= 1300) return { label: 'GOLD', icon: 'trophy-outline' as const, tone: 'accent' as RankTone };
-  if (mmr >= 900) return { label: 'SILVER', icon: 'shield-outline' as const, tone: 'rarityRare' as RankTone };
-  if (mmr >= 500) return { label: 'BRONZE', icon: 'shield-half-outline' as const, tone: 'primary' as RankTone };
-  return { label: 'IRON', icon: 'ellipse-outline' as const, tone: 'mutedForeground' as RankTone };
-}
+const TOP_NAV: Array<{ label: string; icon: IconName; section?: ProfileSection; on: 'collection' | 'fusion' | 'achievements' | 'profile' }> = [
+  { label: 'COLECCIÓN', icon: 'collection', on: 'collection' },
+  { label: 'TUS CARTAS', icon: 'cards', on: 'collection' },
+  { label: 'FUSIÓN', icon: 'fusion', on: 'fusion' },
+  { label: 'LOGROS', icon: 'achievements', section: 'achievements', on: 'achievements' },
+  { label: 'PERFIL', icon: 'profile', section: 'stats', on: 'profile' },
+];
 
-function toneColor(colors: Colors, tone: RankTone) {
-  return colors[tone];
-}
+const PROFILE_SECTIONS: Array<{ id: ProfileSection; label: string; icon: IconName }> = [
+  { id: 'stats', label: 'ESTADÍSTICAS', icon: 'progress' },
+  { id: 'achievements', label: 'LOGROS', icon: 'trophy-outline' },
+  { id: 'titles', label: 'TÍTULOS', icon: 'crown' },
+  { id: 'history', label: 'HISTORIAL', icon: 'time-outline' },
+  { id: 'ranking', label: 'RANKING', icon: 'star' },
+];
 
-function initials(name: string) {
-  return name
+function initials(value: string) {
+  return value
     .split(/\s+/)
     .filter(Boolean)
     .slice(0, 2)
@@ -52,81 +62,344 @@ function initials(name: string) {
 }
 
 function formatMemberSince(iso: string | null | undefined) {
-  if (!iso) return 'Fecha no disponible';
+  if (!iso) return 'FECHA NO DISPONIBLE';
   const date = new Date(iso);
-  if (Number.isNaN(date.getTime())) return 'Fecha no disponible';
-  return `Desde ${date.toLocaleDateString('es-ES', { month: 'short', year: 'numeric' }).replace('.', '').toUpperCase()}`;
+  return Number.isNaN(date.getTime())
+    ? 'FECHA NO DISPONIBLE'
+    : `DESDE ${date.toLocaleDateString('es-ES', { month: 'short', year: 'numeric' }).replace('.', '').toUpperCase()}`;
 }
 
-function formatDate(iso: string | null) {
+function formatDate(iso: string | null | undefined) {
   if (!iso) return 'Fecha no disponible';
   const date = new Date(iso);
-  if (Number.isNaN(date.getTime())) return 'Fecha no disponible';
-  return date.toLocaleDateString('es-ES', { day: 'numeric', month: 'short', year: 'numeric' }).replace('.', '');
+  return Number.isNaN(date.getTime())
+    ? 'Fecha no disponible'
+    : date.toLocaleDateString('es-ES', { day: 'numeric', month: 'short' }).replace('.', '');
 }
 
-function StatCell({ icon, label, value, colors }: { icon: keyof typeof Ionicons.glyphMap; label: string; value: string | number; colors: Colors }) {
+function rankDetails(mmr: number) {
+  if (mmr >= 3000) return { label: 'MYTHIC', icon: 'diamond' as IconName, tone: 'rarityLegendary' as const };
+  if (mmr >= 2400) return { label: 'DIAMOND', icon: 'diamond-outline' as IconName, tone: 'rarityRare' as const };
+  if (mmr >= 1800) return { label: 'PLATINUM', icon: 'medal-outline' as IconName, tone: 'rarityEpic' as const };
+  if (mmr >= 1300) return { label: 'GOLD', icon: 'trophy-outline' as IconName, tone: 'accent' as const };
+  if (mmr >= 900) return { label: 'SILVER', icon: 'shield-outline' as IconName, tone: 'rarityRare' as const };
+  if (mmr >= 500) return { label: 'BRONZE', icon: 'shield-half-outline' as IconName, tone: 'primary' as const };
+  return { label: 'SIN RANGO', icon: 'ellipse-outline' as IconName, tone: 'mutedForeground' as const };
+}
+
+function getWinStreak(matches: MobileSocialSnapshot['matches'], playerId: string) {
+  let streak = 0;
+  for (const match of matches) {
+    if (match.status !== 'resolved') continue;
+    if (match.winner === playerId) streak += 1;
+    else break;
+  }
+  return streak;
+}
+
+function ActionLink({
+  label,
+  icon,
+  onPress,
+  colors,
+  testID,
+  compact = false,
+}: {
+  label: string;
+  icon: IconName;
+  onPress: () => void;
+  colors: Colors;
+  testID: string;
+  compact?: boolean;
+}) {
+  return (
+    <Pressable
+      testID={testID}
+      accessibilityRole="button"
+      accessibilityLabel={label}
+      onPress={onPress}
+      style={({ pressed }) => [
+        styles.actionLink,
+        compact && styles.actionLinkCompact,
+        { borderColor: `${colors.accent}99`, opacity: pressed ? 0.68 : 1 },
+      ]}
+    >
+      <Ionicons name={icon} size={compact ? 13 : 15} color={colors.accent} />
+      <Text style={[styles.actionLinkText, { color: colors.accent }]}>{label}</Text>
+      <Ionicons name="chevron-right" size={14} color={colors.accent} />
+    </Pressable>
+  );
+}
+
+function TopNav({
+  active,
+  colors,
+  onNavigate,
+}: {
+  active: ProfileSection;
+  colors: Colors;
+  onNavigate: (item: (typeof TOP_NAV)[number]) => void;
+}) {
+  return (
+    <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.topNav}>
+      {TOP_NAV.map((item) => {
+        const selected = item.section === active || (item.on === 'profile' && active === 'stats');
+        return (
+          <Pressable
+            key={item.label}
+            testID={`profile-top-${item.label.toLowerCase().replace(/\s+/g, '-')}`}
+            accessibilityRole="tab"
+            accessibilityState={{ selected }}
+            accessibilityLabel={item.label}
+            onPress={() => onNavigate(item)}
+            style={({ pressed }) => [
+              styles.topNavItem,
+              { borderColor: selected ? colors.accent : colors.border, backgroundColor: selected ? `${colors.accent}16` : `${colors.ink}B8`, opacity: pressed ? 0.72 : 1 },
+            ]}
+          >
+            <Ionicons name={item.icon} size={18} color={selected ? colors.accent : colors.rarityRare} />
+            <Text style={[styles.topNavText, { color: selected ? colors.accent : colors.foreground }]}>{item.label}</Text>
+          </Pressable>
+        );
+      })}
+    </ScrollView>
+  );
+}
+
+function ProfileIdentity({
+  colors,
+  displayName,
+  email,
+  createdAt,
+  online,
+  rankLabel,
+  onEdit,
+}: {
+  colors: Colors;
+  displayName: string;
+  email: string;
+  createdAt: string | null;
+  online: boolean;
+  rankLabel: string;
+  onEdit: () => void;
+}) {
+  return (
+    <Animated.View entering={FadeInDown.delay(70).duration(MOTION.reveal)} style={[styles.identityCard, { borderColor: `${colors.accent}AA` }]}>
+      <Image source={{ uri: CANONICAL_BACKGROUNDS.profile }} style={StyleSheet.absoluteFillObject} resizeMode="cover" accessibilityLabel="Arte oficial del perfil VEXFORGE" />
+      <LinearGradient colors={[`${colors.ink}D8`, `${colors.ink}7A`, `${colors.ink}E8`]} start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} style={StyleSheet.absoluteFillObject} />
+      <View style={[styles.identityAvatar, { borderColor: colors.accent, backgroundColor: `${colors.ink}D9` }]}>
+        <Ionicons name="profile" size={39} color={colors.accent} />
+        <View style={[styles.avatarRing, { borderColor: `${colors.accent}66` }]} />
+      </View>
+      <View style={styles.identityCopy}>
+        <Text style={[styles.identityName, { color: colors.foreground }]} numberOfLines={1}>{displayName}</Text>
+        <Text style={[styles.identityHandle, { color: colors.mutedForeground }]} numberOfLines={1}>@{displayName.toLowerCase().replace(/\s+/g, '_')}</Text>
+        <View style={styles.identityMeta}>
+          <View style={[styles.onlineDot, { backgroundColor: online ? colors.success : colors.danger }]} />
+          <Text style={[styles.identityStatus, { color: online ? colors.success : colors.mutedForeground }]}>{online ? 'En línea' : 'Sin conexión'}</Text>
+          <View style={[styles.rankPill, { borderColor: colors.border }]}>
+            <Ionicons name="shield-outline" size={13} color={colors.mutedForeground} />
+            <Text style={[styles.rankPillText, { color: colors.mutedForeground }]}>{rankLabel}</Text>
+          </View>
+        </View>
+        <Text style={[styles.identityEmail, { color: `${colors.foreground}99` }]} numberOfLines={1}>{email}</Text>
+      </View>
+      <ActionLink label="EDITAR PERFIL" icon="edit" onPress={onEdit} colors={colors} testID="profile-edit" compact />
+      <Text style={[styles.memberSince, { color: `${colors.foreground}99` }]}>{formatMemberSince(createdAt)}</Text>
+    </Animated.View>
+  );
+}
+
+function SeasonCard({ colors, level, xp, xpToNext, onDetails }: { colors: Colors; level: number | string; xp: number; xpToNext: number; onDetails: () => void }) {
+  const percent = Math.min(100, Math.max(0, Math.round((xp / Math.max(1, xpToNext)) * 100)));
+  return (
+    <Animated.View entering={FadeInDown.delay(145).duration(MOTION.reveal)} style={[styles.seasonCard, { borderColor: `${colors.rarityEpic}99` }]}>
+      <Image source={{ uri: CANONICAL_BACKGROUNDS.profile }} style={StyleSheet.absoluteFillObject} resizeMode="cover" />
+      <LinearGradient colors={[`${colors.ink}DA`, `${colors.rarityEpic}44`, `${colors.ink}F2`]} start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} style={StyleSheet.absoluteFillObject} />
+      <View style={[styles.seasonSeal, { borderColor: colors.rarityEpic, backgroundColor: `${colors.ink}CC` }]}>
+        <Ionicons name="crown" size={27} color={colors.rarityEpic} />
+      </View>
+      <View style={styles.seasonCopy}>
+        <Text style={[styles.eyebrow, { color: colors.rarityEpic }]}>TEMPORADA ACTUAL</Text>
+        <Text style={[styles.seasonTitle, { color: colors.foreground }]}>Tu camino en Vexforge</Text>
+        <Text style={[styles.seasonSubtitle, { color: colors.mutedForeground }]}>Compite, evoluciona, deja tu huella.</Text>
+      </View>
+      <ActionLink label="VER DETALLES" icon="eye" onPress={onDetails} colors={colors} testID="profile-season-details" compact />
+      <View style={styles.seasonProgress}>
+        <Text style={[styles.levelText, { color: colors.foreground }]}>Nv. {level}</Text>
+        <View style={[styles.progressTrack, { backgroundColor: `${colors.mutedForeground}44` }]}>
+          <View style={[styles.progressFill, { backgroundColor: colors.accent, width: `${percent}%` }]} />
+        </View>
+        <Text style={[styles.progressTarget, { color: colors.mutedForeground }]}>{xp.toLocaleString('es-ES')} / {xpToNext.toLocaleString('es-ES')} XP</Text>
+      </View>
+    </Animated.View>
+  );
+}
+
+function StatCell({ icon, label, value, colors }: { icon: IconName; label: string; value: string | number; colors: Colors }) {
   return (
     <View style={styles.statCell}>
-      <Ionicons name={icon} size={18} color={colors.accent} />
+      <Ionicons name={icon} size={19} color={colors.accent} />
       <Text style={[styles.statValue, { color: colors.foreground }]}>{value}</Text>
       <Text style={[styles.statLabel, { color: colors.mutedForeground }]}>{label}</Text>
     </View>
   );
 }
 
-function QuickAction({ icon, label, onPress, colors, testID }: { icon: keyof typeof Ionicons.glyphMap; label: string; onPress: () => void; colors: Colors; testID: string }) {
+function AchievementRow({ achievement, colors }: { achievement: PlayerAchievement; colors: Colors }) {
   return (
-    <Pressable
-      accessibilityRole="button"
-      accessibilityLabel={label}
-      testID={testID}
-      onPress={onPress}
-      style={({ pressed }) => [
-        styles.quickAction,
-        { backgroundColor: colors.panel, borderColor: colors.border, opacity: pressed ? 0.72 : 1 },
-      ]}
-    >
-      <Ionicons name={icon} size={19} color={colors.accent} />
-      <Text style={[styles.quickActionLabel, { color: colors.foreground }]}>{label}</Text>
-      <Ionicons name="chevron-forward" size={16} color={colors.mutedForeground} />
-    </Pressable>
-  );
-}
-
-function AchievementCard({ achievement, colors, index, reduceMotion }: { achievement: PlayerAchievement; colors: Colors; index: number; reduceMotion: boolean | null }) {
-  return (
-    <Animated.View entering={reduceMotion ? undefined : FadeInDown.delay(index * 45).duration(MOTION.reveal)} style={[styles.achievementCard, { backgroundColor: colors.panel, borderColor: colors.border }]}>
-      <View style={[styles.achievementIcon, { backgroundColor: `${colors.accent}1A`, borderColor: `${colors.accent}55` }]}>
-        <Ionicons name="ribbon-outline" size={21} color={colors.accent} />
+    <View testID={`profile-achievement-${achievement.id}`} style={[styles.achievementRow, { backgroundColor: `${colors.panel}E8`, borderColor: colors.border }]}>
+      <View style={[styles.achievementIcon, { borderColor: `${colors.accent}99`, backgroundColor: `${colors.accent}15` }]}>
+        <Ionicons name="trophy-outline" size={19} color={colors.accent} />
       </View>
-      <View style={styles.achievementCopy}>
-        <Text style={[styles.achievementTitle, { color: colors.foreground }]}>{achievement.title}</Text>
-        <Text style={[styles.achievementDescription, { color: colors.mutedForeground }]} numberOfLines={2}>{achievement.description}</Text>
-        <Text style={[styles.achievementMeta, { color: colors.accent }]}>{achievement.points} PTS · {formatDate(achievement.unlocked_at)}</Text>
+      <View style={styles.rowCopy}>
+        <Text style={[styles.rowTitle, { color: colors.foreground }]} numberOfLines={1}>{achievement.title}</Text>
+        <Text style={[styles.rowBody, { color: colors.mutedForeground }]} numberOfLines={2}>{achievement.description}</Text>
+        <Text style={[styles.rowMeta, { color: colors.accent }]}>{achievement.points} PTS · {formatDate(achievement.unlocked_at)}</Text>
       </View>
-      <Ionicons name="checkmark-circle" size={19} color={colors.success} />
-    </Animated.View>
-  );
-}
-
-function LoadingBlock({ colors }: { colors: Colors }) {
-  return (
-    <View testID="profile-loading" style={[styles.stateBlock, { backgroundColor: colors.panel, borderColor: colors.border }]}>
-      <ActivityIndicator size="small" color={colors.accent} />
-      <Text style={[styles.body, { color: colors.mutedForeground }]}>Sincronizando perfil, rango y logros…</Text>
+      <Ionicons name="checkmark-circle" size={18} color={colors.success} />
     </View>
   );
 }
 
-function LegacySignal({ icon, label, value, color, colors }: { icon: keyof typeof Ionicons.glyphMap; label: string; value: string | number; color: string; colors: Colors }) {
+function HistoryRow({ match, playerId, colors }: { match: MobileSocialSnapshot['matches'][number]; playerId: string; colors: Colors }) {
+  const won = match.status === 'resolved' && match.winner === playerId;
+  const draw = match.status === 'resolved' && !match.winner;
+  const tone = match.status !== 'resolved' ? colors.accent : won ? colors.success : draw ? colors.mutedForeground : colors.danger;
+  const elo = match.player_a === playerId ? match.elo_change_a : match.elo_change_b;
   return (
-    <View style={styles.legacySignal}>
-      <View style={[styles.legacySignalIcon, { borderColor: `${color}55`, backgroundColor: `${color}12` }]}>
-        <Ionicons name={icon} size={15} color={color} />
+    <View style={[styles.historyRow, { borderColor: `${tone}77`, backgroundColor: `${colors.panel}E8` }]}>
+      <View style={[styles.historyIcon, { borderColor: tone, backgroundColor: `${tone}18` }]}>
+        <Ionicons name={match.status !== 'resolved' ? 'time-outline' : won ? 'checkmark-circle' : 'close-circle-outline'} size={17} color={tone} />
       </View>
-      <Text style={[styles.legacySignalValue, { color: colors.foreground }]}>{value}</Text>
-      <Text style={[styles.legacySignalLabel, { color: colors.mutedForeground }]}>{label}</Text>
+      <View style={styles.rowCopy}>
+        <Text style={[styles.rowTitle, { color: colors.foreground }]}>{match.status !== 'resolved' ? 'Combate pendiente' : won ? 'Victoria' : draw ? 'Empate' : 'Derrota'}</Text>
+        <Text style={[styles.rowBody, { color: colors.mutedForeground }]}>contra {match.opponent_name ?? 'Forjador rival'} · {formatDate(match.created_at)}</Text>
+      </View>
+      <Text style={[styles.eloValue, { color: tone }]}>{elo == null ? '—' : `${elo > 0 ? '+' : ''}${elo}`}</Text>
+    </View>
+  );
+}
+
+function RankingRow({ entry, isMe, colors }: { entry: MobileSocialSnapshot['rankings'][number]; isMe: boolean; colors: Colors }) {
+  return (
+    <View style={[styles.rankingRow, { borderColor: isMe ? colors.accent : colors.border, backgroundColor: isMe ? `${colors.accent}12` : `${colors.panel}E8` }]}>
+      <Text style={[styles.rankPosition, { color: isMe ? colors.accent : colors.mutedForeground }]}>#{entry.rank_position}</Text>
+      <View style={styles.rowCopy}>
+        <Text style={[styles.rowTitle, { color: colors.foreground }]} numberOfLines={1}>{entry.display_name ?? 'Forjador'}{isMe ? ' · TÚ' : ''}</Text>
+        <Text style={[styles.rowBody, { color: colors.mutedForeground }]}>{entry.mmr} ELO · {entry.wins}V / {entry.losses}D</Text>
+      </View>
+      <Ionicons name="shield-outline" size={17} color={isMe ? colors.accent : colors.rarityRare} />
+    </View>
+  );
+}
+
+function EmptyPanel({ icon, title, body, colors }: { icon: IconName; title: string; body: string; colors: Colors }) {
+  return (
+    <View style={[styles.emptyPanel, { backgroundColor: `${colors.panel}E8`, borderColor: colors.border }]}>
+      <Ionicons name={icon} size={28} color={colors.accent} />
+      <Text style={[styles.emptyTitle, { color: colors.foreground }]}>{title}</Text>
+      <Text style={[styles.emptyBody, { color: colors.mutedForeground }]}>{body}</Text>
+    </View>
+  );
+}
+
+function ContentPanel({
+  section,
+  colors,
+  stats,
+  achievements,
+  social,
+  playerId,
+  progress,
+  wallet,
+  onNavigate,
+}: {
+  section: ProfileSection;
+  colors: Colors;
+  stats: ReturnType<typeof useGame>['stats'];
+  achievements: PlayerAchievement[];
+  social: MobileSocialSnapshot | null;
+  playerId: string;
+  progress: ReturnType<typeof useGame>['progress'];
+  wallet: ReturnType<typeof useGame>['wallet'];
+  onNavigate: (target: 'collection' | 'deck' | 'missions' | 'social' | 'meta') => void;
+}) {
+  if (section === 'achievements') {
+    return achievements.length ? <View style={styles.contentStack}>{achievements.map((achievement) => <AchievementRow key={achievement.id} achievement={achievement} colors={colors} />)}</View> : <EmptyPanel icon="trophy-outline" title="Aún no hay logros" body="Completa misiones y combates para registrar tus primeros hitos." colors={colors} />;
+  }
+  if (section === 'titles') {
+    return achievements.length ? (
+      <View style={styles.contentStack}>
+        <Text style={[styles.sectionHint, { color: colors.mutedForeground }]}>Tus títulos se desbloquean a partir de los logros registrados por el servidor.</Text>
+        {achievements.map((achievement) => (
+          <Pressable key={achievement.id} testID={`profile-title-${achievement.id}`} accessibilityRole="button" accessibilityLabel={`Ver título ${achievement.title}`} onPress={() => onNavigate('meta')} style={[styles.titleRow, { backgroundColor: `${colors.panel}E8`, borderColor: colors.rarityEpic }]}>
+            <Ionicons name="crown" size={20} color={colors.rarityEpic} />
+            <View style={styles.rowCopy}><Text style={[styles.rowTitle, { color: colors.foreground }]}>{achievement.title}</Text><Text style={[styles.rowBody, { color: colors.mutedForeground }]}>{achievement.description}</Text></View>
+            <Ionicons name="chevron-right" size={16} color={colors.rarityEpic} />
+          </Pressable>
+        ))}
+      </View>
+    ) : <EmptyPanel icon="crown" title="Sin títulos desbloqueados" body="Tus próximos logros aparecerán aquí como títulos de forjador." colors={colors} />;
+  }
+  if (section === 'history') {
+    return social?.matches.length ? <View style={styles.contentStack}>{social.matches.map((match) => <HistoryRow key={match.id} match={match} playerId={playerId} colors={colors} />)}</View> : <EmptyPanel icon="time-outline" title="Sin combates registrados" body="Tus partidas aparecerán aquí después de una resolución oficial." colors={colors} />;
+  }
+  if (section === 'ranking') {
+    return social?.rankings.length ? <View style={styles.contentStack}>{social.rankings.map((entry) => <RankingRow key={entry.player_id} entry={entry} isMe={entry.player_id === playerId} colors={colors} />)}</View> : <EmptyPanel icon="star" title="Ranking en espera" body="Aún no hay registros de temporada publicados para mostrar." colors={colors} />;
+  }
+  return (
+    <View style={styles.contentStack}>
+      <View style={styles.statGrid}>
+        <StatCell icon="trophy-outline" label="VICTORIAS" value={stats?.pvp_wins ?? 0} colors={colors} />
+        <StatCell icon="close-circle-outline" label="DERROTAS" value={stats?.pvp_losses ?? 0} colors={colors} />
+        <StatCell icon="flame" label="RACHA" value={getWinStreak(social?.matches ?? [], playerId) || '—'} colors={colors} />
+        <StatCell icon="shield-outline" label="ELO" value={social?.rankings.find((entry) => entry.player_id === playerId)?.mmr ?? '—'} colors={colors} />
+      </View>
+      <View style={styles.shortcutGrid}>
+        <ShortcutCard icon="deck" label="MIS MAZOS" body="Gestiona tus mazos de batalla" onPress={() => onNavigate('deck')} colors={colors} testID="profile-decks" />
+        <ShortcutCard icon="cards" label="CARTAS OBTENIDAS" body="Explora tu colección" onPress={() => onNavigate('collection')} colors={colors} testID="profile-cards" />
+      </View>
+      <View style={[styles.resourceStrip, { borderColor: colors.border, backgroundColor: `${colors.panel}E8` }]}>
+        <Ionicons name="flash-outline" size={17} color={colors.rarityRare} />
+        <View style={styles.rowCopy}><Text style={[styles.resourceLabel, { color: colors.mutedForeground }]}>ENERGÍA</Text><Text style={[styles.resourceValue, { color: colors.foreground }]}>{progress?.energy ?? '—'} / {progress?.max_energy ?? '—'}</Text></View>
+        <Ionicons name="coin" size={17} color={colors.accent} />
+        <View style={styles.rowCopy}><Text style={[styles.resourceLabel, { color: colors.mutedForeground }]}>VEX DISPONIBLE</Text><Text style={[styles.resourceValue, { color: colors.foreground }]}>{(wallet?.vex_ingame ?? 0).toLocaleString('es-ES')}</Text></View>
+      </View>
+    </View>
+  );
+}
+
+function ShortcutCard({ icon, label, body, onPress, colors, testID }: { icon: IconName; label: string; body: string; onPress: () => void; colors: Colors; testID: string }) {
+  return (
+    <Pressable testID={testID} accessibilityRole="button" accessibilityLabel={label} onPress={onPress} style={({ pressed }) => [styles.shortcutCard, { borderColor: `${colors.accent}88`, backgroundColor: `${colors.panel}E8`, opacity: pressed ? 0.7 : 1 }]}>
+      <View style={[styles.shortcutIcon, { borderColor: colors.accent, backgroundColor: `${colors.accent}12` }]}><Ionicons name={icon} size={20} color={colors.accent} /></View>
+      <Text style={[styles.shortcutLabel, { color: colors.foreground }]} numberOfLines={1}>{label}</Text>
+      <Text style={[styles.shortcutBody, { color: colors.mutedForeground }]} numberOfLines={2}>{body}</Text>
+      <Ionicons name="chevron-right" size={15} color={colors.accent} />
+    </Pressable>
+  );
+}
+
+function BottomNav({ colors, onNavigate }: { colors: Colors; onNavigate: (target: 'home' | 'battle' | 'collection' | 'deck' | 'profile') => void }) {
+  const items: Array<{ label: string; icon: IconName; target: 'home' | 'battle' | 'collection' | 'deck' | 'profile' }> = [
+    { label: 'Inicio', icon: 'home', target: 'home' },
+    { label: 'Batalla', icon: 'arena', target: 'battle' },
+    { label: 'Cartas', icon: 'cards', target: 'collection' },
+    { label: 'Mazo', icon: 'deck', target: 'deck' },
+    { label: 'Perfil', icon: 'profile', target: 'profile' },
+  ];
+  return (
+    <View style={[styles.bottomNav, { borderTopColor: colors.border, backgroundColor: `${colors.ink}F5` }]}>
+      {items.map((item) => {
+        const active = item.target === 'profile';
+        return (
+          <Pressable key={item.target} testID={`profile-bottom-${item.target}`} accessibilityRole="tab" accessibilityState={{ selected: active }} accessibilityLabel={item.label} onPress={() => onNavigate(item.target)} style={({ pressed }) => [styles.bottomNavItem, { opacity: pressed ? 0.62 : 1 }]}>
+            <Ionicons name={item.icon} size={21} color={active ? colors.accent : colors.mutedForeground} />
+            <Text style={[styles.bottomNavText, { color: active ? colors.accent : colors.mutedForeground }]}>{item.label}</Text>
+          </Pressable>
+        );
+      })}
     </View>
   );
 }
@@ -136,35 +409,20 @@ function AuthPrompt({ colors, insets }: { colors: Colors; insets: { top: number;
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [mode, setMode] = useState<'signin' | 'signup'>('signin');
-
   return (
     <ScreenShell surface="profile">
-      <KeyboardAwareScrollViewCompat
-      style={[styles.screen, { backgroundColor: 'transparent' }]}
-      contentContainerStyle={[styles.authContent, { paddingTop: insets.top + 44, paddingBottom: insets.bottom + 40 }]}
-    >
-      <View style={[styles.authMark, { backgroundColor: colors.panel, borderColor: colors.border }]}>
-        <Ionicons name="person-outline" size={28} color={colors.accent} />
-      </View>
-      <Text style={[styles.eyebrow, { color: colors.accent }]}>IDENTIDAD DEL NEXUS</Text>
-      <Text style={[styles.authTitle, { color: colors.foreground }]}>Tu perfil espera.</Text>
-      <Text style={[styles.body, { color: colors.mutedForeground }]}>Inicia sesión para consultar tu progreso, rango y recompensas.</Text>
-      <View style={styles.authFields}>
+      <KeyboardAwareScrollViewCompat contentContainerStyle={[styles.authContent, { paddingTop: insets.top + 44, paddingBottom: insets.bottom + 40 }]}>
+        <View style={[styles.authMark, { backgroundColor: colors.panel, borderColor: colors.border }]}><Ionicons name="profile" size={28} color={colors.accent} /></View>
+        <Text style={[styles.eyebrow, { color: colors.accent }]}>IDENTIDAD DEL NEXUS</Text>
+        <Text style={[styles.authTitle, { color: colors.foreground }]}>Tu perfil espera.</Text>
+        <Text style={[styles.authBody, { color: colors.mutedForeground }]}>Inicia sesión para consultar tu progreso, rango y recompensas.</Text>
         <TextInputField label="CORREO" value={email} onChangeText={setEmail} placeholder="forjador@ejemplo.com" colors={colors} keyboardType="email-address" />
         <TextInputField label="CONTRASEÑA" value={password} onChangeText={setPassword} placeholder="••••••••" colors={colors} secureTextEntry />
-      </View>
-      {authError ? <Text accessibilityRole="alert" style={[styles.errorText, { color: colors.danger }]}>{authError}</Text> : null}
-      <Pressable
-        accessibilityRole="button"
-        disabled={authLoading || !email || !password}
-        onPress={() => { void (mode === 'signin' ? signIn(email, password) : signUp(email, password)); }}
-        style={({ pressed }) => [styles.primaryButton, { backgroundColor: colors.accent, opacity: pressed ? 0.76 : authLoading || !email || !password ? 0.45 : 1 }]}
-      >
-        {authLoading ? <ActivityIndicator color={colors.ink} /> : <Text style={[styles.primaryButtonText, { color: colors.ink }]}>{mode === 'signin' ? 'ENTRAR AL NEXUS' : 'CREAR CUENTA'}</Text>}
-      </Pressable>
-      <Pressable accessibilityRole="button" onPress={() => setMode(mode === 'signin' ? 'signup' : 'signin')} style={styles.modeButton}>
-        <Text style={[styles.modeText, { color: colors.mutedForeground }]}>{mode === 'signin' ? '¿Nuevo en VEXFORGE? Crear cuenta' : 'Ya tengo cuenta · Iniciar sesión'}</Text>
-      </Pressable>
+        {authError ? <Text accessibilityRole="alert" style={[styles.errorText, { color: colors.danger }]}>{authError}</Text> : null}
+        <Pressable accessibilityRole="button" disabled={authLoading || !email || !password} onPress={() => { void (mode === 'signin' ? signIn(email, password) : signUp(email, password)); }} style={[styles.primaryButton, { backgroundColor: colors.accent, opacity: authLoading || !email || !password ? 0.45 : 1 }]}>
+          {authLoading ? <ActivityIndicator color={colors.ink} /> : <Text style={[styles.primaryButtonText, { color: colors.ink }]}>{mode === 'signin' ? 'ENTRAR AL NEXUS' : 'CREAR CUENTA'}</Text>}
+        </Pressable>
+        <Pressable accessibilityRole="button" onPress={() => setMode(mode === 'signin' ? 'signup' : 'signin')} style={styles.modeButton}><Text style={[styles.modeText, { color: colors.mutedForeground }]}>{mode === 'signin' ? '¿Nuevo en VEXFORGE? Crear cuenta' : 'Ya tengo cuenta · Iniciar sesión'}</Text></Pressable>
       </KeyboardAwareScrollViewCompat>
     </ScreenShell>
   );
@@ -174,17 +432,7 @@ function TextInputField({ label, value, onChangeText, placeholder, colors, secur
   return (
     <View style={styles.inputGroup}>
       <Text style={[styles.inputLabel, { color: colors.mutedForeground }]}>{label}</Text>
-      <TextInput
-        accessibilityLabel={label}
-        value={value}
-        onChangeText={onChangeText}
-        placeholder={placeholder}
-        placeholderTextColor={colors.mutedForeground}
-        secureTextEntry={secureTextEntry}
-        keyboardType={keyboardType}
-        autoCapitalize="none"
-        style={[styles.input, { color: colors.foreground, backgroundColor: colors.panel, borderColor: colors.border }]}
-      />
+      <TextInput accessibilityLabel={label} value={value} onChangeText={onChangeText} placeholder={placeholder} placeholderTextColor={colors.mutedForeground} secureTextEntry={secureTextEntry} keyboardType={keyboardType} autoCapitalize="none" style={[styles.input, { color: colors.foreground, backgroundColor: colors.panel, borderColor: colors.border }]} />
     </View>
   );
 }
@@ -193,205 +441,108 @@ export default function ProfileScreen() {
   const colors = useColors();
   const insets = useSafeAreaInsets();
   const router = useRouter();
-  const { session, player, progress, wallet, stats, syncState, syncError, authLoading, refresh, signOut } = useGame();
+  const { width } = useWindowDimensions();
+  const { session, player, progress, stats, collection, syncState, syncError, authLoading, refresh, signOut } = useGame();
   const [rank, setRank] = useState<PlayerRank | null>(null);
   const [achievements, setAchievements] = useState<PlayerAchievement[]>([]);
+  const [social, setSocial] = useState<MobileSocialSnapshot | null>(null);
+  const [section, setSection] = useState<ProfileSection>('stats');
   const [detailsLoading, setDetailsLoading] = useState(false);
   const [detailsError, setDetailsError] = useState<string | null>(null);
   const [refreshing, setRefreshing] = useState(false);
-  const reduceMotion = useReducedMotion();
+  const compact = width < 370;
 
   const loadDetails = useCallback(async (isRefresh = false) => {
     if (!session || !player?.id) return;
     if (isRefresh) setRefreshing(true);
     else setDetailsLoading(true);
     setDetailsError(null);
-    try {
-      const [nextRank, nextAchievements] = await Promise.all([
-        loadPlayerRank(session, player.id),
-        loadPlayerAchievements(session, player.id),
-      ]);
-      setRank(nextRank);
-      setAchievements(nextAchievements);
-    } catch (error) {
-      setDetailsError(error instanceof Error ? error.message : 'No se pudo sincronizar el detalle del perfil.');
-    } finally {
-      setDetailsLoading(false);
-      setRefreshing(false);
-    }
+    const results = await Promise.allSettled([
+      loadPlayerRank(session, player.id),
+      loadPlayerAchievements(session, player.id),
+      loadSocialSnapshot(session, player.id),
+    ]);
+    const [rankResult, achievementsResult, socialResult] = results;
+    if (rankResult.status === 'fulfilled') setRank(rankResult.value);
+    if (achievementsResult.status === 'fulfilled') setAchievements(achievementsResult.value);
+    if (socialResult.status === 'fulfilled') setSocial(socialResult.value);
+    const firstError = results.find((result) => result.status === 'rejected');
+    if (firstError?.status === 'rejected') setDetailsError(firstError.reason instanceof Error ? firstError.reason.message : 'No se pudo sincronizar el detalle del perfil.');
+    setDetailsLoading(false);
+    setRefreshing(false);
   }, [player?.id, session]);
 
   useEffect(() => { void loadDetails(); }, [loadDetails]);
 
-  const handleRefresh = () => { void Promise.all([refresh(), loadDetails(true)]); };
   const displayName = player?.display_name?.trim() || 'FORJADOR';
+  const email = player?.email ?? session?.user.email ?? 'Cuenta VEXFORGE';
   const rankInfo = rankDetails(Number(rank?.mmr ?? 0));
-  const rankColor = toneColor(colors, rankInfo.tone);
-  const xpPercent = progress ? Math.min(100, Math.max(0, Math.round((Number(progress.xp) / Math.max(1, Number(progress.xp_to_next))) * 100))) : 0;
-  const totalPoints = useMemo(() => achievements.reduce((total, achievement) => total + achievement.points, 0), [achievements]);
-  const legacySummary = useMemo(() => {
-    const signals = [
-      progress?.level ? `nivel ${progress.level}` : null,
-      achievements.length > 0 ? `${achievements.length} logro${achievements.length === 1 ? '' : 's'}` : null,
-      stats?.pvp_wins ? `${stats.pvp_wins} victoria${stats.pvp_wins === 1 ? '' : 's'}` : null,
-    ].filter(Boolean);
-    return signals.length > 0
-      ? `Tu rastro en el Nexus ya guarda ${signals.join(' · ')}.`
-      : 'Tu rastro en el Nexus comenzará a tomar forma con tus primeras victorias.';
-  }, [achievements.length, progress?.level, stats?.pvp_wins]);
+  const rankColor = colors[rankInfo.tone];
+  const xp = Number(progress?.xp ?? 0);
+  const xpToNext = Number(progress?.xp_to_next ?? 0);
 
-  if (authLoading && !session) {
-    return <View style={[styles.center, { backgroundColor: colors.background }]}><ActivityIndicator color={colors.accent} /></View>;
-  }
+  const navigate = (target: 'collection' | 'deck' | 'missions' | 'social' | 'meta') => {
+    if (target === 'collection') router.push('/collection');
+    if (target === 'deck') router.push('/deck');
+    if (target === 'missions') router.push('/missions');
+    if (target === 'social') router.push('/social');
+    if (target === 'meta') router.push('/meta');
+  };
+  const navigateBottom = (target: 'home' | 'battle' | 'collection' | 'deck' | 'profile') => {
+    if (target === 'home') router.push('/');
+    if (target === 'battle') router.push('/battle');
+    if (target === 'collection') router.push('/collection');
+    if (target === 'deck') router.push('/deck');
+  };
+  const navigateTop = (item: (typeof TOP_NAV)[number]) => {
+    if (item.on === 'collection') navigate('collection');
+    if (item.on === 'fusion') router.push('/store?mode=fusion');
+    if (item.on === 'achievements') setSection('achievements');
+    if (item.on === 'profile') setSection('stats');
+  };
+
+  if (authLoading && !session) return <View style={[styles.center, { backgroundColor: colors.background }]}><ActivityIndicator color={colors.accent} /></View>;
   if (!session) return <AuthPrompt colors={colors} insets={insets} />;
-  if (!player) {
-    return <View style={[styles.screen, { backgroundColor: colors.background, paddingTop: insets.top + 22 }]}><LoadingBlock colors={colors} /></View>;
-  }
+  if (!player) return <ScreenShell surface="profile"><View style={[styles.center, { paddingTop: insets.top }]}><ActivityIndicator color={colors.accent} /><Text style={[styles.authBody, { color: colors.mutedForeground }]}>Cargando identidad del Nexus…</Text></View></ScreenShell>;
 
   return (
     <ScreenShell surface="profile">
-      <View style={[styles.screen, { backgroundColor: 'transparent' }]}>
-      <KeyboardAwareScrollViewCompat
-        contentContainerStyle={{ paddingBottom: insets.bottom + 112 }}
-        refreshControl={<RefreshControl refreshing={refreshing || syncState === 'loading'} onRefresh={handleRefresh} tintColor={colors.accent} />}
-        showsVerticalScrollIndicator={false}
-      >
-        <DomainHeader
-          domain="legado"
-          style={[styles.header, { paddingTop: insets.top + 22, borderBottomColor: colors.border }]}
-          trailing={
-            <Pressable accessibilityRole="button" accessibilityLabel="Cerrar sesión" testID="profile-sign-out" onPress={() => { void signOut(); }} style={({ pressed }) => [styles.iconButton, { borderColor: colors.border, opacity: pressed ? 0.68 : 1 }]}>
-              <Ionicons name="log-out-outline" size={20} color={colors.foreground} />
-            </Pressable>
-          }
-        />
-
-        {syncError || detailsError ? (
-          <View accessibilityRole="alert" style={[styles.message, { backgroundColor: `${colors.danger}16`, borderColor: `${colors.danger}55` }]}>
-            <Ionicons name="warning-outline" size={18} color={colors.danger} />
-            <Text style={[styles.messageText, { color: colors.foreground }]}>{detailsError ?? syncError}</Text>
-          </View>
-        ) : null}
-
-        <Animated.View entering={reduceMotion ? undefined : FadeInDown.delay(80).duration(MOTION.reveal)} style={[styles.identityCard, { backgroundColor: colors.panelStrong, borderColor: colors.border }]}>
-          <View style={[styles.avatar, { backgroundColor: colors.accent }]}>
-            <Text style={[styles.avatarText, { color: colors.ink }]}>{initials(displayName)}</Text>
-          </View>
-          <View style={styles.identityCopy}>
-            <Text style={[styles.identityName, { color: colors.foreground }]}>{displayName}</Text>
-            <Text style={[styles.identityEmail, { color: colors.mutedForeground }]}>{player.email ?? session.user.email ?? 'Cuenta VEXFORGE'}</Text>
-            <View style={styles.identityMeta}>
-              <Ionicons name="radio-outline" size={13} color={syncState === 'connected' ? colors.success : colors.danger} />
-              <Text style={[styles.identityStatus, { color: syncState === 'connected' ? colors.success : colors.danger }]}>{syncState === 'connected' ? 'NEXUS CONECTADO' : 'MODO SINCRONIZACIÓN LIMITADA'}</Text>
+      <View style={styles.screen}>
+        <ScrollView
+          testID="profile-screen"
+          contentContainerStyle={{ paddingTop: insets.top + 10, paddingBottom: insets.bottom + 96 }}
+          refreshControl={<RefreshControl refreshing={refreshing || syncState === 'loading'} onRefresh={() => { void Promise.all([refresh(), loadDetails(true)]); }} tintColor={colors.accent} />}
+          showsVerticalScrollIndicator={false}
+        >
+          <View style={styles.header}>
+            <Image source={{ uri: OFFICIAL_ASSETS.logo }} style={styles.logo} resizeMode="contain" accessibilityLabel="VEXFORGE · Forja tu leyenda" />
+            <View style={styles.headerActions}>
+              <Pressable testID="profile-settings" accessibilityRole="button" accessibilityLabel="Abrir sistemas" onPress={() => navigate('meta')} style={[styles.headerIcon, { borderColor: colors.border }]}><Ionicons name="gear" size={19} color={colors.accent} /></Pressable>
+              <Pressable testID="profile-notifications" accessibilityRole="button" accessibilityLabel="Abrir misiones y recompensas" onPress={() => navigate('missions')} style={[styles.headerIcon, { borderColor: colors.border }]}><Ionicons name="notifications-outline" size={19} color={colors.accent} /></Pressable>
+              <Pressable testID="profile-sign-out" accessibilityRole="button" accessibilityLabel="Cerrar sesión" onPress={() => { void signOut(); }} style={[styles.headerIcon, { borderColor: colors.border }]}><Ionicons name="log-out-outline" size={18} color={colors.mutedForeground} /></Pressable>
             </View>
           </View>
-          <Text style={[styles.memberSince, { color: colors.mutedForeground }]}>{formatMemberSince(player.created_at)}</Text>
-        </Animated.View>
-
-        {detailsLoading && !rank ? <LoadingBlock colors={colors} /> : null}
-
-        <Animated.View entering={reduceMotion ? undefined : FadeInDown.delay(140).duration(MOTION.reveal)} style={[styles.rankCard, { backgroundColor: colors.card, borderColor: `${rankColor}66` }]}>
-          <View style={[styles.rankIcon, { backgroundColor: `${rankColor}1A`, borderColor: `${rankColor}55` }]}>
-            <Ionicons name={rankInfo.icon} size={27} color={rankColor} />
+          <TopNav active={section} colors={colors} onNavigate={navigateTop} />
+          <ProfileIdentity colors={colors} displayName={displayName} email={email} createdAt={player.created_at} online={syncState === 'connected'} rankLabel={rank?.tier?.toUpperCase() ?? rankInfo.label} onEdit={() => navigate('meta')} />
+          {syncError || detailsError ? <View accessibilityRole="alert" style={[styles.message, { borderColor: `${colors.danger}77`, backgroundColor: `${colors.danger}14` }]}><Ionicons name="warning-outline" size={17} color={colors.danger} /><Text style={[styles.messageText, { color: colors.foreground }]}>{detailsError ?? syncError}</Text></View> : null}
+          <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.profileSections}>
+            {PROFILE_SECTIONS.map((item) => {
+              const active = item.id === section;
+              return <Pressable key={item.id} testID={`profile-section-${item.id}`} accessibilityRole="tab" accessibilityState={{ selected: active }} onPress={() => setSection(item.id)} style={({ pressed }) => [styles.profileSection, { borderColor: active ? colors.accent : colors.border, backgroundColor: active ? `${colors.accent}16` : `${colors.ink}C8`, opacity: pressed ? 0.72 : 1 }]}><Ionicons name={item.icon} size={18} color={active ? colors.accent : colors.rarityRare} /><Text style={[styles.profileSectionText, { color: active ? colors.accent : colors.foreground }]}>{compact && item.id === 'achievements' ? 'LOGROS' : item.label}</Text></Pressable>;
+            })}
+          </ScrollView>
+          {detailsLoading && !rank ? <View style={[styles.loadingBlock, { borderColor: colors.border, backgroundColor: `${colors.panel}E8` }]}><ActivityIndicator size="small" color={colors.accent} /><Text style={[styles.rowBody, { color: colors.mutedForeground }]}>Sincronizando tu perfil…</Text></View> : null}
+          <SeasonCard colors={colors} level={progress?.level ?? '—'} xp={xp} xpToNext={xpToNext} onDetails={() => setSection('ranking')} />
+          <View style={styles.sectionHeading}><View><Text style={[styles.eyebrow, { color: colors.accent }]}>REGISTRO DEL FORJADOR</Text><Text style={[styles.sectionTitle, { color: colors.foreground }]}>{PROFILE_SECTIONS.find((item) => item.id === section)?.label ?? 'ESTADÍSTICAS'}</Text></View><Text style={[styles.sectionCounter, { color: colors.mutedForeground }]}>{section === 'achievements' ? achievements.length : section === 'ranking' ? social?.rankings.length ?? 0 : section === 'history' ? social?.matches.length ?? 0 : collection.length}</Text></View>
+          <ContentPanel section={section} colors={colors} stats={stats} achievements={achievements} social={social} playerId={player.id} progress={progress} wallet={wallet} onNavigate={navigate} />
+          <View style={styles.quickLinks}>
+            <ActionLink label="LOGROS" icon="trophy-outline" onPress={() => setSection('achievements')} colors={colors} testID="profile-quick-achievements" />
+            <ActionLink label="TÍTULOS" icon="crown" onPress={() => setSection('titles')} colors={colors} testID="profile-quick-titles" />
+            <ActionLink label="RECOMPENSAS" icon="gift" onPress={() => navigate('missions')} colors={colors} testID="profile-quick-rewards" />
+            <ActionLink label="RED DE FORJADORES" icon="people-outline" onPress={() => navigate('social')} colors={colors} testID="profile-quick-social" />
           </View>
-          <View style={styles.rankCopy}>
-            <Text style={[styles.eyebrow, { color: rankColor }]}>RANGO PvP</Text>
-            <Text style={[styles.rankTitle, { color: colors.foreground }]}>{rank?.tier?.toUpperCase() ?? rankInfo.label}</Text>
-            <Text style={[styles.rankMeta, { color: colors.mutedForeground }]}>{Number(rank?.mmr ?? 0)} MMR · {Number(rank?.wins ?? stats?.pvp_wins ?? 0)}V / {Number(rank?.losses ?? stats?.pvp_losses ?? 0)}D</Text>
-          </View>
-          <View style={styles.rankScore}>
-            <Text style={[styles.rankScoreValue, { color: rankColor }]}>{Number(rank?.shields ?? 0)}</Text>
-            <Text style={[styles.rankScoreLabel, { color: colors.mutedForeground }]}>ESCUDOS</Text>
-          </View>
-        </Animated.View>
-
-        <Animated.View testID="profile-legacy-record" entering={reduceMotion ? undefined : FadeInDown.delay(200).duration(MOTION.reveal)} style={[styles.legacyCard, { backgroundColor: colors.panelStrong, borderColor: `${colors.rarityEpic}55` }]}>
-          <View style={styles.legacyCardHeader}>
-            <View style={[styles.legacyMark, { backgroundColor: `${colors.rarityEpic}18`, borderColor: `${colors.rarityEpic}55` }]}>
-              <Ionicons name="award" size={21} color={colors.rarityEpic} />
-            </View>
-            <View style={styles.legacyCardCopy}>
-              <Text style={[styles.eyebrow, { color: colors.rarityEpic }]}>REGISTRO DE LEGADO</Text>
-              <Text style={[styles.legacyCardTitle, { color: colors.foreground }]}>Lo que has conseguido</Text>
-            </View>
-          </View>
-          <Text style={[styles.legacySummary, { color: colors.mutedForeground }]}>{legacySummary}</Text>
-          <View style={[styles.legacySignalRow, { borderTopColor: colors.border }]}>
-            <LegacySignal icon="progress" label="NIVEL" value={progress?.level ?? '—'} color={colors.accent} colors={colors} />
-            <LegacySignal icon="ribbon-outline" label="LOGROS" value={achievements.length} color={colors.rarityEpic} colors={colors} />
-            <LegacySignal icon="trophy-outline" label="VICTORIAS" value={stats?.pvp_wins ?? 0} color={colors.success} colors={colors} />
-            <LegacySignal icon="layers-outline" label="CARTAS" value={stats?.cards_owned ?? 0} color={colors.rarityRare} colors={colors} />
-          </View>
-        </Animated.View>
-
-        <View style={styles.sectionHeading}>
-          <View>
-            <Text style={[styles.eyebrow, { color: colors.accent }]}>ESTADO DEL FORJADOR</Text>
-            <Text style={[styles.sectionTitle, { color: colors.foreground }]}>Nivel y recursos</Text>
-          </View>
-          <Text style={[styles.sectionCounter, { color: colors.mutedForeground }]}>NIVEL {progress?.level ?? '—'}</Text>
-        </View>
-
-        <View style={[styles.progressCard, { backgroundColor: colors.panel, borderColor: colors.border }]}>
-          <View style={styles.progressTop}>
-            <View>
-              <Text style={[styles.progressLabel, { color: colors.mutedForeground }]}>EXPERIENCIA</Text>
-              <Text style={[styles.progressValue, { color: colors.foreground }]}>{Number(progress?.xp ?? 0).toLocaleString('es-ES')} <Text style={[styles.progressTarget, { color: colors.mutedForeground }]}>/ {Number(progress?.xp_to_next ?? 0).toLocaleString('es-ES')} XP</Text></Text>
-            </View>
-            <Text style={[styles.progressPercent, { color: colors.accent }]}>{xpPercent}%</Text>
-          </View>
-          <View style={[styles.progressTrack, { backgroundColor: colors.muted }]}>
-            <View style={[styles.progressFill, { backgroundColor: colors.accent, width: `${xpPercent}%` }]} />
-          </View>
-          <View style={styles.resourceRow}>
-            <View style={styles.resourceItem}><Ionicons name="flash-outline" size={16} color={colors.rarityRare} /><Text style={[styles.resourceValue, { color: colors.foreground }]}>{progress?.energy ?? '—'}/{progress?.max_energy ?? '—'}</Text><Text style={[styles.resourceLabel, { color: colors.mutedForeground }]}>ENERGÍA</Text></View>
-            <View style={styles.resourceItem}><Ionicons name="logo-bitcoin" size={16} color={colors.accent} /><Text style={[styles.resourceValue, { color: colors.foreground }]}>{Number(wallet?.vex_ingame ?? 0).toLocaleString('es-ES')}</Text><Text style={[styles.resourceLabel, { color: colors.mutedForeground }]}>VEX</Text></View>
-            <View style={styles.resourceItem}><Ionicons name="globe-outline" size={16} color={colors.success} /><Text style={[styles.resourceValue, { color: colors.foreground }]}>{progress?.starter_region ?? 'NEXUS'}</Text><Text style={[styles.resourceLabel, { color: colors.mutedForeground }]}>REGIÓN</Text></View>
-          </View>
-        </View>
-
-        <View style={styles.statGrid}>
-          <StatCell icon="trophy-outline" label="VICTORIAS" value={stats?.pvp_wins ?? 0} colors={colors} />
-          <StatCell icon="flag-outline" label="MISIONES" value={stats?.missions_completed ?? 0} colors={colors} />
-          <StatCell icon="layers-outline" label="CARTAS" value={stats?.cards_owned ?? 0} colors={colors} />
-          <StatCell icon="cube-outline" label="PACKS" value={stats?.packs_opened ?? 0} colors={colors} />
-          <StatCell icon="storefront-outline" label="VENTAS" value={stats?.market_sales ?? 0} colors={colors} />
-          <StatCell icon="ribbon-outline" label="PTS LOGRO" value={totalPoints} colors={colors} />
-        </View>
-
-        <View style={styles.sectionHeading}>
-          <View>
-            <Text style={[styles.eyebrow, { color: colors.accent }]}>REGISTRO DE HAZAÑAS</Text>
-            <Text style={[styles.sectionTitle, { color: colors.foreground }]}>Logros desbloqueados</Text>
-          </View>
-          <Text style={[styles.sectionCounter, { color: colors.mutedForeground }]}>{achievements.length}</Text>
-        </View>
-
-        {achievements.length > 0 ? achievements.map((achievement, index) => <AchievementCard key={achievement.id} achievement={achievement} colors={colors} index={index} reduceMotion={reduceMotion} />) : (
-          <View testID="profile-empty-achievements" style={[styles.emptyCard, { backgroundColor: colors.panel, borderColor: colors.border }]}>
-            <Ionicons name="ribbon-outline" size={28} color={colors.accent} />
-            <Text style={[styles.emptyTitle, { color: colors.foreground }]}>Aún no hay logros</Text>
-            <Text style={[styles.body, { color: colors.mutedForeground }]}>Completa misiones y combates para registrar tus primeros hitos.</Text>
-          </View>
-        )}
-
-        <View style={styles.sectionHeading}>
-          <View>
-            <Text style={[styles.eyebrow, { color: colors.accent }]}>ACCESOS RÁPIDOS</Text>
-            <Text style={[styles.sectionTitle, { color: colors.foreground }]}>Continúa tu recorrido</Text>
-          </View>
-        </View>
-        <View style={styles.quickActions}>
-          <QuickAction icon="flag-outline" label="Misiones y recompensas" onPress={() => router.push('/missions')} colors={colors} testID="profile-missions" />
-          <QuickAction icon="layers-outline" label="Explorar colección" onPress={() => router.push('/collection')} colors={colors} testID="profile-collection" />
-          <QuickAction icon="grid-outline" label="Preparar mazo" onPress={() => router.push('/deck')} colors={colors} testID="profile-deck" />
-           <QuickAction icon="storefront-outline" label="Forja, tienda e inventario" onPress={() => router.push('/store')} colors={colors} testID="profile-store" />
-           <QuickAction icon="wallet-outline" label="Cartera, mercado y retiros" onPress={() => router.push('/economy')} colors={colors} testID="profile-economy" />
-           <QuickAction icon="globe-outline" label="Explorar mundo, raids y Codex" onPress={() => router.push('/world')} colors={colors} testID="profile-world" />
-           <QuickAction icon="people-outline" label="Amigos, clanes y ranking PvP" onPress={() => router.push('/social')} colors={colors} testID="profile-social" />
-           <QuickAction icon="settings" label="Cuenta, ajustes y sistemas" onPress={() => router.push('/meta')} colors={colors} testID="profile-meta" />
-        </View>
-      </KeyboardAwareScrollViewCompat>
+        </ScrollView>
+        <BottomNav colors={colors} onNavigate={navigateBottom} />
       </View>
     </ScreenShell>
   );
@@ -399,83 +550,93 @@ export default function ProfileScreen() {
 
 const styles = StyleSheet.create({
   screen: { flex: 1 },
-  center: { flex: 1, alignItems: 'center', justifyContent: 'center' },
-  header: { flexDirection: 'row', alignItems: 'flex-end', justifyContent: 'space-between', paddingHorizontal: 20, paddingBottom: 18, borderBottomWidth: StyleSheet.hairlineWidth },
-  eyebrow: { fontSize: 10, fontWeight: '700', letterSpacing: 1.35 },
-  screenTitle: { fontSize: 25, fontWeight: '700', marginTop: 4 },
-  iconButton: { width: 42, height: 42, alignItems: 'center', justifyContent: 'center', borderWidth: 1, borderRadius: 21 },
-  message: { flexDirection: 'row', alignItems: 'center', gap: 10, margin: 16, padding: 12, borderWidth: 1, borderRadius: 12 },
-  messageText: { flex: 1, fontSize: 12, lineHeight: 18 },
-  identityCard: { flexDirection: 'row', alignItems: 'center', margin: 16, padding: 16, borderWidth: 1, borderRadius: 16 },
-  avatar: { width: 58, height: 58, borderRadius: 29, alignItems: 'center', justifyContent: 'center' },
-  avatarText: { fontSize: 20, fontWeight: '800', letterSpacing: 1 },
-  identityCopy: { flex: 1, marginLeft: 13 },
-  identityName: { fontSize: 18, fontWeight: '700' },
-  identityEmail: { fontSize: 11, marginTop: 3 },
+  center: { flex: 1, alignItems: 'center', justifyContent: 'center', gap: 12 },
+  header: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 17, minHeight: 58 },
+  logo: { width: 185, height: 49 },
+  headerActions: { flexDirection: 'row', gap: 7 },
+  headerIcon: { width: 35, height: 35, borderWidth: 1, borderRadius: 12, alignItems: 'center', justifyContent: 'center' },
+  topNav: { gap: 7, paddingHorizontal: 17, paddingVertical: 8 },
+  topNavItem: { minHeight: 40, borderWidth: 1, borderRadius: 12, paddingHorizontal: 11, flexDirection: 'row', alignItems: 'center', gap: 6 },
+  topNavText: { fontFamily: typography.bodyBold, fontSize: 9, letterSpacing: 0.55 },
+  identityAvatar: { width: 70, height: 70, borderWidth: 1, borderRadius: 35, alignItems: 'center', justifyContent: 'center' },
+  avatarRing: { position: 'absolute', width: 62, height: 62, borderWidth: 1, borderRadius: 31 },
+  identityCopy: { flex: 1, minWidth: 0 },
+  identityName: { fontFamily: typography.display, fontSize: 17 },
+  identityHandle: { fontFamily: typography.body, fontSize: 11, marginTop: 1 },
   identityMeta: { flexDirection: 'row', alignItems: 'center', gap: 5, marginTop: 9 },
-  identityStatus: { fontSize: 9, fontWeight: '700', letterSpacing: 0.55 },
-  memberSince: { alignSelf: 'flex-start', fontSize: 9, fontWeight: '700', letterSpacing: 0.55, maxWidth: 70, textAlign: 'right' },
-  rankCard: { flexDirection: 'row', alignItems: 'center', marginHorizontal: 16, padding: 16, borderWidth: 1, borderRadius: 16 },
-  rankIcon: { width: 56, height: 56, alignItems: 'center', justifyContent: 'center', borderWidth: 1, borderRadius: 14 },
-  rankCopy: { flex: 1, marginLeft: 13 },
-  rankTitle: { fontSize: 21, fontWeight: '800', letterSpacing: 0.5, marginTop: 2 },
-  rankMeta: { fontSize: 11, marginTop: 4 },
-  rankScore: { alignItems: 'flex-end' },
-  rankScoreValue: { fontSize: 20, fontWeight: '800' },
-  rankScoreLabel: { fontSize: 8, fontWeight: '700', letterSpacing: 0.8, marginTop: 2 },
-  sectionHeading: { flexDirection: 'row', alignItems: 'flex-end', justifyContent: 'space-between', marginHorizontal: 16, marginTop: 28, marginBottom: 11 },
-  sectionTitle: { fontSize: 20, fontWeight: '700', marginTop: 3 },
-  sectionCounter: { fontSize: 11, fontWeight: '700', letterSpacing: 0.6, marginBottom: 2 },
-  progressCard: { marginHorizontal: 16, padding: 16, borderWidth: 1, borderRadius: 16 },
-  progressTop: { flexDirection: 'row', alignItems: 'flex-end', justifyContent: 'space-between' },
-  progressLabel: { fontSize: 9, fontWeight: '700', letterSpacing: 1 },
-  progressValue: { fontSize: 22, fontWeight: '800', marginTop: 4 },
-  progressTarget: { fontSize: 12, fontWeight: '500' },
-  progressPercent: { fontSize: 13, fontWeight: '800' },
-  progressTrack: { height: 8, borderRadius: 4, overflow: 'hidden', marginTop: 12 },
-  progressFill: { height: '100%', borderRadius: 4 },
-  resourceRow: { flexDirection: 'row', justifyContent: 'space-between', marginTop: 18 },
-  resourceItem: { flex: 1, flexDirection: 'row', alignItems: 'center', flexWrap: 'wrap', columnGap: 5 },
-  resourceValue: { fontSize: 13, fontWeight: '700' },
-  resourceLabel: { width: '100%', fontSize: 8, fontWeight: '700', letterSpacing: 0.8, marginTop: 4 },
-  statGrid: { flexDirection: 'row', flexWrap: 'wrap', marginHorizontal: 16, marginTop: 12, backgroundColor: 'transparent' },
-  statCell: { width: '50%', alignItems: 'center', paddingVertical: 14, borderBottomWidth: StyleSheet.hairlineWidth },
-  statValue: { fontSize: 20, fontWeight: '800', marginTop: 5 },
-  statLabel: { fontSize: 8, fontWeight: '700', letterSpacing: 0.8, marginTop: 3 },
-  achievementCard: { flexDirection: 'row', alignItems: 'center', marginHorizontal: 16, marginBottom: 9, padding: 13, borderWidth: 1, borderRadius: 13 },
-  achievementIcon: { width: 42, height: 42, alignItems: 'center', justifyContent: 'center', borderWidth: 1, borderRadius: 12 },
-  achievementCopy: { flex: 1, marginHorizontal: 11 },
-  achievementTitle: { fontSize: 13, fontWeight: '700' },
-  achievementDescription: { fontSize: 11, lineHeight: 16, marginTop: 2 },
-  achievementMeta: { fontSize: 9, fontWeight: '700', letterSpacing: 0.5, marginTop: 5 },
-  emptyCard: { alignItems: 'center', marginHorizontal: 16, padding: 26, borderWidth: 1, borderRadius: 16 },
-  emptyTitle: { fontSize: 15, fontWeight: '700', marginTop: 10 },
-  body: { fontSize: 12, lineHeight: 19, textAlign: 'center', marginTop: 7 },
-  quickActions: { gap: 9, marginHorizontal: 16 },
-  quickAction: { flexDirection: 'row', alignItems: 'center', padding: 15, borderWidth: 1, borderRadius: 13 },
-  quickActionLabel: { flex: 1, fontSize: 13, fontWeight: '600', marginLeft: 10 },
-  stateBlock: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 10, marginHorizontal: 16, marginTop: 16, padding: 14, borderWidth: 1, borderRadius: 13 },
-  legacyCard: { marginHorizontal: 16, marginTop: 14, padding: 16, borderWidth: 1, borderRadius: 16 },
-  legacyCardHeader: { flexDirection: 'row', alignItems: 'center' },
-  legacyMark: { width: 44, height: 44, alignItems: 'center', justifyContent: 'center', borderWidth: 1, borderRadius: 13 },
-  legacyCardCopy: { flex: 1, marginLeft: 11 },
-  legacyCardTitle: { fontSize: 18, fontWeight: '800', marginTop: 3 },
-  legacySummary: { fontSize: 12, lineHeight: 18, marginTop: 14 },
-  legacySignalRow: { flexDirection: 'row', justifyContent: 'space-between', marginTop: 18, paddingTop: 15, borderTopWidth: StyleSheet.hairlineWidth },
-  legacySignal: { flex: 1, alignItems: 'center' },
-  legacySignalIcon: { width: 28, height: 28, alignItems: 'center', justifyContent: 'center', borderWidth: 1, borderRadius: 9 },
-  legacySignalValue: { fontSize: 15, fontWeight: '800', marginTop: 6 },
-  legacySignalLabel: { fontSize: 7, fontWeight: '800', letterSpacing: 0.7, marginTop: 3 },
+  onlineDot: { width: 8, height: 8, borderRadius: 4 },
+  identityStatus: { fontFamily: typography.bodySemiBold, fontSize: 11 },
+  rankPill: { flexDirection: 'row', alignItems: 'center', gap: 4, borderWidth: 1, borderRadius: 10, paddingHorizontal: 6, paddingVertical: 3, marginLeft: 4 },
+  rankPillText: { fontFamily: typography.bodySemiBold, fontSize: 9 },
+  identityEmail: { fontFamily: typography.body, fontSize: 9, marginTop: 5 },
+  memberSince: { position: 'absolute', right: 14, bottom: 8, fontFamily: typography.bodyBold, fontSize: 8, letterSpacing: 0.6 },
+  actionLink: { minHeight: 36, borderWidth: 1, borderRadius: 10, paddingHorizontal: 9, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 5 },
+  actionLinkCompact: { minHeight: 32, paddingHorizontal: 8 },
+  actionLinkText: { fontFamily: typography.bodyBold, fontSize: 9, letterSpacing: 0.55 },
+  identityCard: { minHeight: 132, marginHorizontal: 17, marginTop: 8, borderWidth: 1, borderRadius: 18, overflow: 'hidden', flexDirection: 'row', alignItems: 'center', padding: 14, gap: 11 },
+  profileSections: { gap: 7, paddingHorizontal: 17, paddingTop: 13, paddingBottom: 2 },
+  profileSection: { minHeight: 65, width: 78, borderWidth: 1, borderRadius: 13, alignItems: 'center', justifyContent: 'center', gap: 6 },
+  profileSectionText: { fontFamily: typography.bodyBold, fontSize: 8, letterSpacing: 0.35, textAlign: 'center' },
+  message: { flexDirection: 'row', alignItems: 'center', gap: 8, marginHorizontal: 17, marginTop: 10, padding: 10, borderWidth: 1, borderRadius: 11 },
+  messageText: { flex: 1, fontFamily: typography.body, fontSize: 11, lineHeight: 16 },
+  loadingBlock: { marginHorizontal: 17, marginTop: 12, padding: 12, borderWidth: 1, borderRadius: 12, flexDirection: 'row', justifyContent: 'center', alignItems: 'center', gap: 8 },
+  seasonCard: { minHeight: 180, marginHorizontal: 17, marginTop: 14, borderWidth: 1, borderRadius: 18, overflow: 'hidden', padding: 15, flexDirection: 'row', alignItems: 'flex-start', gap: 10 },
+  seasonSeal: { width: 55, height: 55, borderWidth: 1, borderRadius: 28, alignItems: 'center', justifyContent: 'center' },
+  seasonCopy: { flex: 1 },
+  eyebrow: { fontFamily: typography.bodyBold, fontSize: 9, letterSpacing: 1.1 },
+  seasonTitle: { fontFamily: typography.display, fontSize: 17, marginTop: 4 },
+  seasonSubtitle: { fontFamily: typography.body, fontSize: 11, marginTop: 3 },
+  seasonProgress: { position: 'absolute', left: 15, right: 15, bottom: 13, flexDirection: 'row', alignItems: 'center', gap: 8 },
+  levelText: { fontFamily: typography.bodyBold, fontSize: 10, width: 32 },
+  progressTrack: { flex: 1, height: 7, borderRadius: 5, overflow: 'hidden' },
+  progressFill: { height: '100%', borderRadius: 5 },
+  progressTarget: { fontFamily: typography.bodySemiBold, fontSize: 9, width: 68, textAlign: 'right' },
+  sectionHeading: { flexDirection: 'row', alignItems: 'flex-end', justifyContent: 'space-between', marginHorizontal: 17, marginTop: 22, marginBottom: 10 },
+  sectionTitle: { fontFamily: typography.display, fontSize: 19, marginTop: 3 },
+  sectionCounter: { fontFamily: typography.bodyBold, fontSize: 10, letterSpacing: 0.7 },
+  contentStack: { marginHorizontal: 17, gap: 8 },
+  statGrid: { flexDirection: 'row', flexWrap: 'wrap', borderWidth: 1, borderColor: 'transparent', backgroundColor: 'transparent' },
+  statCell: { width: '25%', alignItems: 'center', paddingVertical: 11, minWidth: 66 },
+  statValue: { fontFamily: typography.display, fontSize: 17, marginTop: 4 },
+  statLabel: { fontFamily: typography.bodyBold, fontSize: 7, letterSpacing: 0.55, marginTop: 3, textAlign: 'center' },
+  shortcutGrid: { flexDirection: 'row', gap: 8, marginTop: 9 },
+  shortcutCard: { flex: 1, minHeight: 119, borderWidth: 1, borderRadius: 14, padding: 10, gap: 5 },
+  shortcutIcon: { width: 31, height: 31, borderWidth: 1, borderRadius: 10, alignItems: 'center', justifyContent: 'center' },
+  shortcutLabel: { fontFamily: typography.display, fontSize: 11 },
+  shortcutBody: { flex: 1, fontFamily: typography.body, fontSize: 10, lineHeight: 14 },
+  resourceStrip: { minHeight: 56, marginTop: 9, borderWidth: 1, borderRadius: 13, padding: 11, flexDirection: 'row', alignItems: 'center', gap: 7 },
+  resourceLabel: { fontFamily: typography.bodyBold, fontSize: 8, letterSpacing: 0.6 },
+  resourceValue: { fontFamily: typography.bodySemiBold, fontSize: 12, marginTop: 1 },
+  achievementRow: { minHeight: 72, borderWidth: 1, borderRadius: 13, padding: 11, flexDirection: 'row', alignItems: 'center', gap: 10 },
+  achievementIcon: { width: 40, height: 40, borderWidth: 1, borderRadius: 12, alignItems: 'center', justifyContent: 'center' },
+  rowCopy: { flex: 1, minWidth: 0 },
+  rowTitle: { fontFamily: typography.bodyBold, fontSize: 13 },
+  rowBody: { fontFamily: typography.body, fontSize: 11, lineHeight: 15, marginTop: 2 },
+  rowMeta: { fontFamily: typography.bodySemiBold, fontSize: 9, marginTop: 3 },
+  titleRow: { minHeight: 64, borderWidth: 1, borderRadius: 13, padding: 12, flexDirection: 'row', alignItems: 'center', gap: 10 },
+  sectionHint: { fontFamily: typography.body, fontSize: 11, lineHeight: 16, marginBottom: 2 },
+  historyRow: { minHeight: 64, borderWidth: 1, borderRadius: 13, padding: 11, flexDirection: 'row', alignItems: 'center', gap: 10 },
+  historyIcon: { width: 36, height: 36, borderWidth: 1, borderRadius: 11, alignItems: 'center', justifyContent: 'center' },
+  eloValue: { fontFamily: typography.bodyBold, fontSize: 12 },
+  rankingRow: { minHeight: 61, borderWidth: 1, borderRadius: 13, padding: 11, flexDirection: 'row', alignItems: 'center', gap: 10 },
+  rankPosition: { fontFamily: typography.display, fontSize: 15, width: 36 },
+  emptyPanel: { minHeight: 150, marginHorizontal: 17, borderWidth: 1, borderRadius: 15, padding: 25, alignItems: 'center', justifyContent: 'center' },
+  emptyTitle: { fontFamily: typography.display, fontSize: 16, marginTop: 9, textAlign: 'center' },
+  emptyBody: { fontFamily: typography.body, fontSize: 11, lineHeight: 17, textAlign: 'center', marginTop: 5 },
+  quickLinks: { marginHorizontal: 17, marginTop: 18, gap: 8 },
+  bottomNav: { position: 'absolute', left: 0, right: 0, bottom: 0, minHeight: 70, borderTopWidth: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-around', paddingHorizontal: 4 },
+  bottomNavItem: { flex: 1, alignItems: 'center', justifyContent: 'center', gap: 3 },
+  bottomNavText: { fontFamily: typography.bodySemiBold, fontSize: 10 },
   authContent: { alignItems: 'stretch', paddingHorizontal: 24 },
   authMark: { alignSelf: 'center', width: 64, height: 64, alignItems: 'center', justifyContent: 'center', borderWidth: 1, borderRadius: 18, marginBottom: 22 },
-  authTitle: { fontSize: 30, fontWeight: '800', marginTop: 7 },
-  authFields: { gap: 14, marginTop: 28 },
-  inputGroup: { gap: 7 },
-  inputLabel: { fontSize: 10, fontWeight: '700', letterSpacing: 1 },
-  input: { minHeight: 50, borderWidth: 1, borderRadius: 12, paddingHorizontal: 14, fontSize: 14 },
-  errorText: { fontSize: 12, lineHeight: 18, marginTop: 14 },
+  authTitle: { fontFamily: typography.display, fontSize: 27, marginTop: 7 },
+  authBody: { fontFamily: typography.body, fontSize: 12, lineHeight: 18, marginTop: 7 },
+  inputGroup: { gap: 7, marginTop: 16 },
+  inputLabel: { fontFamily: typography.bodyBold, fontSize: 9, letterSpacing: 1 },
+  input: { minHeight: 50, borderWidth: 1, borderRadius: 12, paddingHorizontal: 14, fontFamily: typography.body, fontSize: 14 },
+  errorText: { fontFamily: typography.body, fontSize: 12, lineHeight: 18, marginTop: 14 },
   primaryButton: { minHeight: 50, alignItems: 'center', justifyContent: 'center', borderRadius: 12, marginTop: 20 },
-  primaryButtonText: { fontSize: 12, fontWeight: '800', letterSpacing: 0.8 },
+  primaryButtonText: { fontFamily: typography.bodyBold, fontSize: 12, letterSpacing: 0.8 },
   modeButton: { alignItems: 'center', paddingVertical: 17 },
-  modeText: { fontSize: 12, fontWeight: '600' },
+  modeText: { fontFamily: typography.bodySemiBold, fontSize: 12 },
 });
