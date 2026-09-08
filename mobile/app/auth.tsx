@@ -116,7 +116,7 @@ export default function AuthScreen() {
           styles.content,
           {
             minHeight: sceneHeight + insets.top + insets.bottom,
-            paddingTop: insets.top,
+            paddingTop: 0,
             paddingBottom: insets.bottom,
           },
         ]}
@@ -125,7 +125,7 @@ export default function AuthScreen() {
         showsVerticalScrollIndicator={false}
       >
         <View
-          style={[styles.scene, { width: viewportWidth, height: sceneHeight }]}
+          style={[styles.scene, { width: viewportWidth, height: sceneHeight, marginTop: insets.top }]}
           testID="auth-reference-scene"
         >
           <Image

@@ -80,9 +80,9 @@ export default function ForgeScreen() {
 
   return (
     <ScreenShell surface="home" sceneMode="hero">
-      <View style={[styles.screen, { marginBottom: -insets.bottom, paddingTop: insets.top }]}>
+      <View style={[styles.screen, { marginBottom: -insets.bottom }]}>
         <View
-          style={[styles.scene, { width: viewportWidth, height: sceneHeight }]}
+          style={[styles.scene, { width: viewportWidth, height: sceneHeight, marginTop: insets.top }]}
           testID="home-reference-scene"
         >
           <Image

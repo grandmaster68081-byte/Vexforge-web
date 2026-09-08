@@ -232,8 +232,8 @@ export default function ProfileScreen() {
 
   return (
     <ScreenShell surface="profile" sceneMode="hero">
-      <View style={[styles.referenceRoot, { marginBottom: -insets.bottom, paddingTop: insets.top }]}>
-        <View testID="profile-reference-scene" style={[styles.canvas, { width: viewportWidth, height: canvasHeight }]}>
+      <View style={[styles.referenceRoot, { marginBottom: -insets.bottom }]}>
+        <View testID="profile-reference-scene" style={[styles.canvas, { width: viewportWidth, height: canvasHeight, marginTop: insets.top }]}>
           <Image source={PROFILE_REFERENCE} style={StyleSheet.absoluteFillObject} resizeMode="stretch" accessibilityLabel="Composición oficial de Perfil VEXFORGE" accessibilityIgnoresInvertColors />
           <View pointerEvents="none" style={[styles.identityMask, { backgroundColor: `${colors.ink}D4` }]} />
           <View pointerEvents="none" style={[styles.dataLayer, { width: viewportWidth, height: canvasHeight }]}>
@@ -275,7 +275,7 @@ export default function ProfileScreen() {
 }
 
 const styles = StyleSheet.create({
-  referenceRoot: { flex: 1, overflow: 'hidden' },
+  referenceRoot: { flex: 1, width: '100%', overflow: 'hidden' },
   canvas: { position: 'relative', overflow: 'hidden' },
   dataLayer: { ...StyleSheet.absoluteFillObject },
   hotspotLayer: { ...StyleSheet.absoluteFillObject },

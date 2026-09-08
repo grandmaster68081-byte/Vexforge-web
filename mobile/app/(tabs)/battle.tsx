@@ -514,8 +514,8 @@ export default function BattleScreen() {
   if (phase === 'lobby') {
     return (
       <ScreenShell surface="pvp" sceneMode="hero">
-        <View style={[styles.referenceScreen, { marginBottom: -insets.bottom, paddingTop: insets.top }]}>
-          <View style={styles.referenceContent}>
+        <View style={[styles.referenceScreen, { marginBottom: -insets.bottom }]}>
+          <View style={[styles.referenceContent, { marginTop: insets.top }]}>
             <View
               testID="battle-reference-scene"
               style={[styles.referenceScene, { width: viewportWidth, height: canvasHeight }]}
@@ -706,7 +706,7 @@ export default function BattleScreen() {
 }
 
 const styles = StyleSheet.create({
-  referenceScreen: { flex: 1, backgroundColor: '#05050D' },
+  referenceScreen: { flex: 1, width: '100%', backgroundColor: '#05050D' },
   referenceContent: { alignItems: 'flex-start' },
   referenceScene: { position: 'relative', overflow: 'hidden' },
   referenceImage: { width: '100%', height: '100%' },
