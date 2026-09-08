@@ -14,7 +14,7 @@ import {
   useWindowDimensions,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { useRouter } from 'expo-router';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useColors } from '@/hooks/useColors';
 import { ProgressBar } from '@/components/ProgressBar';
 import { useGame } from '@/context/GameContext';
@@ -415,13 +415,14 @@ export default function CollectionScreen() {
   const colors = useColors();
   const insets = useSafeAreaInsets();
   const router = useRouter();
+  const { scope: scopeParam } = useLocalSearchParams<{ scope?: string }>();
   const { width, height } = useWindowDimensions();
   const { featuredCards, cardsTotal, collection, collectionLoading, syncState, syncError, refresh } = useGame();
   const [search, setSearch] = useState('');
   const [rarity, setRarity] = useState<Rarity | 'all'>('all');
   const [faction, setFaction] = useState<(typeof FACTIONS)[number] | 'all'>('all');
   const [sort, setSort] = useState<'rarity' | 'name' | 'power'>('rarity');
-  const [scope, setScope] = useState<'all' | 'owned'>('all');
+  const [scope, setScope] = useState<'all' | 'owned'>(scopeParam === 'owned' ? 'owned' : 'all');
   const [selected, setSelected] = useState<PublicCard | null>(null);
   const [pageIndex, setPageIndex] = useState(0);
   const pagerRef = useRef<FlatList<PublicCard[]>>(null);

@@ -11,7 +11,7 @@ import {
   View,
 } from 'react-native';
 import { Ionicons } from '@/components/ForgeIcon';
-import { Redirect, router } from 'expo-router';
+import { Redirect, router, useLocalSearchParams } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useColors } from '@/hooks/useColors';
 import { useGame } from '@/context/GameContext';
@@ -386,7 +386,9 @@ export default function StoreScreen() {
   const colors = useColors();
   const insets = useSafeAreaInsets();
   const { session, player, refresh } = useGame();
-  const [mode, setMode] = useState<StoreMode>('packs');
+  const { mode: modeParam } = useLocalSearchParams<{ mode?: string }>();
+  const initialMode: StoreMode = modeParam === 'fusion' || modeParam === 'shop' || modeParam === 'evolution' || modeParam === 'inventory' ? modeParam : 'packs';
+  const [mode, setMode] = useState<StoreMode>(initialMode);
   const [refreshing, setRefreshing] = useState(false);
   if (!session || !player) return <Redirect href="/auth" />;
 

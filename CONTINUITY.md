@@ -1,3 +1,15 @@
+## 2026-09-08 — VE-MOB-5-DECKS-REFERENCE — IMPLEMENTED_UNVERIFIED / WORKFLOW PENDING
+
+- Se reemplazó la superficie vertical de Mazos por la composición oficial proporcionada por el operador (`decks-reference-scene.png`, 1024×1536), a pantalla completa y sin scroll vertical en la superficie principal.
+- Mazos conserva Supabase como autoridad real: carga el mazo activo con `loadPlayerDeck`, usa la colección autenticada para la edición, valida con `validateDeck`, guarda con `saveDeck` y mantiene refresh/error/loading explícitos.
+- Los hotspots de Colección, Tus cartas, Fusión, Logros y navegación inferior enrutan a las superficies existentes. Filtros de facción, búsqueda, orden, contador, crear borrador, editar, detalle y entrada a Arena son funcionales.
+- Se añadió un editor accesible sobre la imagen para seleccionar cartas reales, validar, guardar y probar en Arena. La barra nativa duplicada queda oculta en Mazos, igual que en Cartas.
+- Cartas y Mazos quedan incluidos en el mismo cambio móvil; también se conectó `scope=owned` para Tus cartas y `mode=fusion` para Fusión.
+- Verificación local: `npm run typecheck`, `npm run verify:telemetry` y `git diff --check` correctos. Falta publicar el commit, confirmar el workflow Android correlativo, el release y la QA visual/táctil humana en APK.
+- Estado honesto: `IMPLEMENTED_UNVERIFIED`; no se declara `PASS`, `Q4`, `TIER1_READY` ni `OPERATIONAL`.
+
+---
+
 ## 2026-09-08 — VE-MOB-4-COLLECTION-REFERENCE — IMPLEMENTED_UNVERIFIED / WORKFLOW PENDING
 
 - Se reemplazó la superficie vertical de Cartas por la composición de colección proporcionada por el operador (`collection-reference-scene.png`, 1024×1536), ocupando la pantalla completa sin espacios vacíos y sin scroll vertical.
