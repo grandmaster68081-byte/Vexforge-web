@@ -291,6 +291,7 @@ export default function BattleScreen() {
   const insets = useSafeAreaInsets();
   const router = useRouter();
   const { width: viewportWidth, height: viewportHeight } = useWindowDimensions();
+  const canvasHeight = Math.max(1, viewportHeight - insets.top - insets.bottom);
   const {
     session,
     player,
@@ -513,19 +514,12 @@ export default function BattleScreen() {
   if (phase === 'lobby') {
     return (
       <ScreenShell surface="pvp" sceneMode="hero">
-        <ScrollView
-          style={styles.referenceScreen}
-          contentContainerStyle={[
-            styles.referenceContent,
-            { minHeight: Math.max(viewportHeight, viewportHeight + insets.bottom), paddingBottom: insets.bottom },
-          ]}
-          showsVerticalScrollIndicator={false}
-          refreshControl={<RefreshControl refreshing={searching} onRefresh={handleFind} tintColor={colors.primary} />}
-        >
-          <View
-            testID="battle-reference-scene"
-            style={[styles.referenceScene, { width: viewportWidth, height: viewportHeight }]}
-          >
+        <View style={[styles.referenceScreen, { marginBottom: -insets.bottom, paddingTop: insets.top }]}>
+          <View style={styles.referenceContent}>
+            <View
+              testID="battle-reference-scene"
+              style={[styles.referenceScene, { width: viewportWidth, height: canvasHeight }]}
+            >
             <Image
               source={BATTLE_REFERENCE_BACKGROUND}
               style={styles.referenceImage}
@@ -567,8 +561,9 @@ export default function BattleScreen() {
                 />
               ))}
             </View>
+            </View>
           </View>
-        </ScrollView>
+        </View>
       </ScreenShell>
     );
   }

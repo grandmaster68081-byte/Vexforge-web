@@ -53,7 +53,7 @@ export default function AuthScreen() {
   const [localError, setLocalError] = useState<string | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
 
-  const sceneHeight = viewportWidth * (AUTH_REFERENCE_HEIGHT / AUTH_REFERENCE_WIDTH);
+  const sceneHeight = Math.max(1, viewportHeight - insets.top - insets.bottom);
   const error = useMemo(
     () => localError ?? readableAuthError(authError),
     [authError, localError],
@@ -115,7 +115,8 @@ export default function AuthScreen() {
         contentContainerStyle={[
           styles.content,
           {
-            minHeight: Math.max(viewportHeight, sceneHeight + insets.bottom),
+            minHeight: sceneHeight + insets.top + insets.bottom,
+            paddingTop: insets.top,
             paddingBottom: insets.bottom,
           },
         ]}

@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Image, Pressable, StyleSheet, Text, View, useWindowDimensions } from 'react-native';
-import Animated, { FadeIn, useReducedMotion } from 'react-native-reanimated';
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { loadHomeStats, type HomeStats } from '@/lib/supabase';
@@ -45,7 +44,6 @@ export default function ForgeScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const { width: viewportWidth, height: viewportHeight } = useWindowDimensions();
-  const reduceMotion = useReducedMotion();
   const { player, session, progress, wallet } = useGame();
   const [homeStats, setHomeStats] = useState<HomeStats | null>(null);
   const [homeError, setHomeError] = useState<string | null>(null);
@@ -74,7 +72,7 @@ export default function ForgeScreen() {
   const accessibilitySummary = homeStats
     ? `Temporada ${homeStats.season?.name ?? 'activa'}, ${homeStats.total_cards} cartas, ${homeStats.active_players} jugadores activos.`
     : homeError ?? 'Sincronizando datos de Foja.';
-  const sceneHeight = Math.max(1, viewportHeight);
+  const sceneHeight = Math.max(1, viewportHeight - insets.top - insets.bottom);
   const displayName = player?.display_name?.trim() || session?.user.email?.split('@')[0] || 'Forjador';
   const levelLabel = progress ? `NIVEL ${progress.level}` : 'NIVEL —';
   const energyLabel = progress ? `${progress.energy}/${progress.max_energy}` : '—/—';
@@ -82,18 +80,7 @@ export default function ForgeScreen() {
 
   return (
     <ScreenShell surface="home" sceneMode="hero">
-      <Animated.ScrollView
-        style={styles.screen}
-        contentContainerStyle={[
-          styles.contentContainer,
-          {
-            minHeight: Math.max(viewportHeight, sceneHeight + insets.bottom),
-            paddingBottom: insets.bottom,
-          },
-        ]}
-        showsVerticalScrollIndicator={false}
-        entering={reduceMotion ? undefined : FadeIn.duration(450)}
-      >
+      <View style={[styles.screen, { marginBottom: -insets.bottom, paddingTop: insets.top }]}>
         <View
           style={[styles.scene, { width: viewportWidth, height: sceneHeight }]}
           testID="home-reference-scene"
@@ -142,7 +129,7 @@ export default function ForgeScreen() {
             ))}
           </View>
         </View>
-      </Animated.ScrollView>
+      </View>
     </ScreenShell>
   );
 }
