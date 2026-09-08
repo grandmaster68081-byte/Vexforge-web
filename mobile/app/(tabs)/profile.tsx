@@ -204,7 +204,7 @@ function ProfileIdentity({
         </View>
         <Text style={[styles.identityEmail, { color: `${colors.foreground}99` }]} numberOfLines={1}>{email}</Text>
       </View>
-      <ActionLink label="EDITAR PERFIL" icon="edit" onPress={onEdit} colors={colors} testID="profile-edit" compact />
+      <ActionLink label="EDITAR PERFIL" icon="settings" onPress={onEdit} colors={colors} testID="profile-edit" compact />
       <Text style={[styles.memberSince, { color: `${colors.foreground}99` }]}>{formatMemberSince(createdAt)}</Text>
     </Animated.View>
   );
@@ -224,7 +224,7 @@ function SeasonCard({ colors, level, xp, xpToNext, onDetails }: { colors: Colors
         <Text style={[styles.seasonTitle, { color: colors.foreground }]}>Tu camino en Vexforge</Text>
         <Text style={[styles.seasonSubtitle, { color: colors.mutedForeground }]}>Compite, evoluciona, deja tu huella.</Text>
       </View>
-      <ActionLink label="VER DETALLES" icon="eye" onPress={onDetails} colors={colors} testID="profile-season-details" compact />
+      <ActionLink label="VER DETALLES" icon="progress" onPress={onDetails} colors={colors} testID="profile-season-details" compact />
       <View style={styles.seasonProgress}>
         <Text style={[styles.levelText, { color: colors.foreground }]}>Nv. {level}</Text>
         <View style={[styles.progressTrack, { backgroundColor: `${colors.mutedForeground}44` }]}>
@@ -442,7 +442,7 @@ export default function ProfileScreen() {
   const insets = useSafeAreaInsets();
   const router = useRouter();
   const { width } = useWindowDimensions();
-  const { session, player, progress, stats, collection, syncState, syncError, authLoading, refresh, signOut } = useGame();
+  const { session, player, progress, wallet, stats, collection, syncState, syncError, authLoading, refresh, signOut } = useGame();
   const [rank, setRank] = useState<PlayerRank | null>(null);
   const [achievements, setAchievements] = useState<PlayerAchievement[]>([]);
   const [social, setSocial] = useState<MobileSocialSnapshot | null>(null);
