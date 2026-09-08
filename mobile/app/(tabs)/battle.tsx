@@ -39,6 +39,7 @@ type ReferenceHotspot = {
 };
 
 const REFERENCE_HOTSPOTS: ReferenceHotspot[] = [
+  { id: 'reference-settings', label: 'Abrir configuración', left: '88%', top: '1%', width: '11%', height: '8%' },
   { id: 'reference-pvp', label: 'Abrir PVP Arena', left: '4%', top: '23%', width: '22%', height: '23%' },
   { id: 'reference-pve', label: 'Abrir PVE Misiones', left: '27%', top: '23%', width: '22%', height: '23%' },
   { id: 'reference-boss', label: 'Abrir Jefe Raid', left: '52%', top: '23%', width: '22%', height: '23%' },
@@ -451,10 +452,10 @@ export default function BattleScreen() {
     setLocalError(null);
     try {
       const found = await findOpponents();
-      if (found && found.length === 0) {
-        handleStartAIBattle();
-      } else if (found && found.length > 0) {
+      if (found && found.length > 0) {
         setSelectedOpponent(found[0]);
+      } else if (found && found.length === 0) {
+        setLocalError('No hay un rival real disponible ahora. Usa Batalla rápida práctica para entrenar sin MMR.');
       }
     } finally {
       setSearching(false);
@@ -479,6 +480,7 @@ export default function BattleScreen() {
 
   const routeFromReference = (id: string) => {
     if (id === 'reference-home') return router.replace('/');
+    if (id === 'reference-settings') return router.push('/meta');
     if (id === 'reference-cards') return router.push('/collection');
     if (id === 'reference-deck' || id.startsWith('reference-vanguard') || id.startsWith('reference-champion') || id.startsWith('reference-sentinel') || id.startsWith('reference-reserve')) {
       return router.push('/deck');
@@ -528,7 +530,6 @@ export default function BattleScreen() {
               accessibilityIgnoresInvertColors
             />
             <View style={styles.referenceLayer} accessibilityLabel={`Batalla de ${referencePlayer}. ${referenceStatus}`}>
-              <Text pointerEvents="none" style={styles.referencePlayer}>@{referencePlayer}</Text>
               <Text pointerEvents="none" style={styles.referenceEnergy}>{referenceEnergy}</Text>
               <Text pointerEvents="none" style={styles.referenceVex}>{referenceVex}</Text>
               <Text
@@ -711,19 +712,6 @@ const styles = StyleSheet.create({
   referenceScene: { position: 'relative', overflow: 'hidden' },
   referenceImage: { width: '100%', height: '100%' },
   referenceLayer: { ...StyleSheet.absoluteFillObject },
-  referencePlayer: {
-    position: 'absolute',
-    left: '5%',
-    top: '4.2%',
-    width: '31%',
-    color: '#FFFFFF',
-    fontSize: 9,
-    fontWeight: '800',
-    letterSpacing: 0.7,
-    textShadowColor: '#000000',
-    textShadowOffset: { width: 0, height: 1 },
-    textShadowRadius: 3,
-  },
   referenceEnergy: {
     position: 'absolute',
     left: '59%',

@@ -2208,3 +2208,14 @@
 - Se añadieron estados explícitos de carga, error, vacío de logros, sincronización y pull-to-refresh; los datos siguen siendo identidad, rango, estadísticas, progreso, cartera, actividad y logros reales bajo la sesión y RLS existentes.
 - Evidencia local: `npm run typecheck` móvil OK, `verify-mobile-profile.mjs` 13/13 OK y QA HTTPS contra Supabase OK con sesión, perfil, rango, estadísticas y 10 logros.
 - Estado honesto: `IMPLEMENTED_UNVERIFIED`. Falta el workflow Android oficial, el release correlativo y el recorrido visual/táctil humano en la APK; no se declara `PASS`, `OPERATIONAL`, `Q4` ni `TIER1_READY`.
+
+---
+
+## 2026-09-08 — VE-MOB-7-BATTLE — OPERATOR REFERENCE / MAIN PUBLISHED
+
+- La pantalla de Batalla conserva la referencia oficial `mobile/assets/images/battle-reference-scene.png` de `941×1672`, escalada al canvas vertical Android existente sin recorte horizontal ni sustitución del arte entregado.
+- Se conectaron los accesos visibles de la referencia: PVP consulta oponentes reales y resuelve por `vexforge_battle_resolve`; PVE abre Misiones; Jefe Raid abre Mundo; las posiciones de formación abren Mazos; la práctica IA queda explícita en Batalla rápida; navegación inferior mantiene Inicio, Batalla, Cartas, Mazo y Perfil; configuración abre Meta.
+- PVP ya no inicia una simulación local cuando no existe rival real. Presenta un estado explícito y reserva la práctica IA para su acceso dedicado, sin MMR ni economía.
+- No se modificaron Auth, RLS, RPCs, Storage ni la autoridad del combate. La resolución, turnos, formación, arte de cartas y resultado continúan llegando de Supabase.
+- Evidencia local: `npm run verify:mobile-battle` — 20/20; `git diff --check` — OK. No se ejecutó build, compilación de APK ni workflow Android por instrucción explícita del operador.
+- Estado honesto: `IMPLEMENTED_UNVERIFIED`; la QA visual/táctil humana y una futura compilación Android siguen pendientes. El cambio queda publicado en `main`.
