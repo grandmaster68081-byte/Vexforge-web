@@ -10,11 +10,11 @@ const contents = Object.fromEntries(
 );
 
 const assertions = [
-  ['Home burst is registered in the Android visual registry', contents.visual.includes("homeNexusBurst: storageAsset('misc/IMG_20260619_122314.jpg')")],
-  ['Home consumes the registered burst asset', contents.screen.includes("OFFICIAL_ASSETS.homeNexusBurst")],
-  ['Home exposes a visual test hook and accessibility label', contents.screen.includes('testID="home-official-nexus-burst"') && contents.screen.includes('Atmósfera oficial del pulso del Nexus')],
-  ['Home reports loading and error states for the burst', contents.screen.includes('home-nexus-burst-loading') && contents.screen.includes('home-nexus-burst-error')],
-  ['Home keeps the existing reduced-motion contract', contents.screen.includes('useReducedMotion()') && contents.screen.includes('reduceMotion ? undefined : FadeIn.duration(MOTION.navigation)')],
+  ['Home consumes the registered operator reference scene', contents.screen.includes("require('../../assets/images/home-reference-scene.png')")],
+  ['Home exposes the reference scene hook and accessibility label', contents.screen.includes('testID="home-reference-scene"') && contents.screen.includes('Escena de Home proporcionada por el operador')],
+  ['Home exposes functional reference hotspots', contents.screen.includes('const HOTSPOTS') && contents.screen.includes('testID={`home-reference-${hotspot.id}`}') && contents.screen.includes('onPress={() => routeTo(hotspot.route)}')],
+  ['Home reports synchronization and error states', contents.screen.includes('Sincronizando datos de Foja.') && contents.screen.includes('homeError') && contents.screen.includes('setHomeError')],
+  ['Home keeps the existing reduced-motion contract', contents.screen.includes('useReducedMotion()') && contents.screen.includes('reduceMotion ? undefined : FadeIn.duration(450)')],
 ];
 
 const failures = assertions.filter(([, passed]) => !passed).map(([name]) => name);

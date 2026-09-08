@@ -6,6 +6,7 @@
 - Se añadió un editor accesible sobre la imagen para seleccionar cartas reales, validar, guardar y probar en Arena. La barra nativa duplicada queda oculta en Mazos, igual que en Cartas.
 - Cartas y Mazos quedan incluidos en el mismo cambio móvil; también se conectó `scope=owned` para Tus cartas y `mode=fusion` para Fusión.
 - Verificación local: `npm run typecheck`, `npm run verify:telemetry` y `git diff --check` correctos. Falta publicar el commit, confirmar el workflow Android correlativo, el release y la QA visual/táctil humana en APK.
+- El gate `verify-mobile-home-official-assets` fue reconciliado con la composición vigente de Home: valida el asset local de referencia, hotspots, sincronización/error y reduced-motion sin relajar el gate.
 - Estado honesto: `IMPLEMENTED_UNVERIFIED`; no se declara `PASS`, `Q4`, `TIER1_READY` ni `OPERATIONAL`.
 
 ---
