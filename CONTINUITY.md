@@ -1,3 +1,13 @@
+## 2026-09-08 — VE-MOB-5-DECK — CANONICAL ART STATE / IMPLEMENTED_UNVERIFIED
+
+- La referencia entregada para Mazos coincide byte a byte con `mobile/assets/images/decks-reference-scene.png`, con dimensiones oficiales `1024×1536` y proporción `2:3`, equivalente al objetivo visual `683×1024` de la APK.
+- La superficie conserva la composición oficial y sus flujos reales: colección del jugador, mazo persistido, búsqueda, filtros por facción, detalle, edición, límites del formato, `validate_deck`, `save_deck` y entrada a Arena.
+- Se corrigieron los estados sin `image_url` en carrusel, detalle y editor: ahora muestran explícitamente `ARTE CANÓNICO PENDIENTE` y no sustituyen arte del universo por iconografía genérica.
+- Evidencia local: `node scripts/verify-mobile-deck.mjs` — 13/13; `git diff --check` — OK. No se ejecutó build, compilación de APK ni workflow Android por instrucción explícita del operador.
+- Estado honesto: `IMPLEMENTED_UNVERIFIED`; la QA visual/táctil humana en dispositivo y el workflow Android quedan pendientes para una futura entrega de APK.
+
+---
+
 ## 2026-09-08 — VE-MOB-4/5-REFERENCE-CANVAS — IMPLEMENTED_UNVERIFIED / OTA PENDING
 
 - Se corrigió el desajuste visible en las capturas de Cartas y Mazos: el arte oficial y todas las capas táctiles/dinámicas ahora comparten un lienzo explícito con el viewport real de Android y sus áreas seguras, en lugar de mezclar el alto del contenedor con el alto del canvas.

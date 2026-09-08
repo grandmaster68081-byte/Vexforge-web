@@ -101,7 +101,7 @@ function DeckPreviewCard({
         <Image source={{ uri: slot.image_url }} style={StyleSheet.absoluteFillObject} resizeMode="cover" />
       ) : (
         <View style={[StyleSheet.absoluteFillObject, styles.deckPreviewFallback, { backgroundColor: `${colors.ink}E8` }]}>
-          <Feather name={slot ? 'columns' : 'plus'} size={slot ? 31 : 35} color={slot ? accent : colors.accent} />
+          {slot ? <Text style={[styles.missingArtText, { color: accent }]}>ARTE CANÓNICO PENDIENTE</Text> : <Feather name="plus" size={35} color={colors.accent} />}
         </View>
       )}
       <View style={[styles.deckPreviewShade, { backgroundColor: `${colors.ink}98` }]} />
@@ -145,7 +145,7 @@ function DetailModal({
             </Pressable>
           </View>
           <View style={styles.detailBody}>
-            {slot.image_url ? <Image source={{ uri: slot.image_url }} style={[styles.detailArt, { borderColor: factionColor(slot.faction, colors) }]} resizeMode="cover" /> : <View style={[styles.detailArtFallback, { borderColor: factionColor(slot.faction, colors) }]}><Feather name="columns" size={36} color={colors.accent} /></View>}
+            {slot.image_url ? <Image source={{ uri: slot.image_url }} style={[styles.detailArt, { borderColor: factionColor(slot.faction, colors) }]} resizeMode="cover" /> : <View style={[styles.detailArtFallback, { borderColor: factionColor(slot.faction, colors) }]}><Text style={[styles.detailMissingArtText, { color: factionColor(slot.faction, colors) }]}>ARTE CANÓNICO PENDIENTE</Text></View>}
             <Text style={[styles.detailFaction, { color: factionColor(slot.faction, colors) }]}>{slot.faction}</Text>
             <Text style={[styles.detailCopy, { color: colors.mutedForeground }]}>Formación sincronizada desde tu mazo activo. Edita las cartas desde la Forja para prepararte para la Arena.</Text>
             <View style={styles.detailStats}>
@@ -218,7 +218,7 @@ function EditorModal({
                   onPress={() => onToggle(card)}
                   style={({ pressed }) => [styles.editorCard, { borderColor: count ? accent : colors.border, backgroundColor: count ? `${accent}18` : colors.panel, opacity: pressed ? 0.76 : 1 }]}
                 >
-                  {card.image_url ? <Image source={{ uri: card.image_url }} style={styles.editorArt} resizeMode="cover" /> : <View style={[styles.editorArtFallback, { backgroundColor: `${accent}18` }]}><Feather name="layers" size={17} color={accent} /></View>}
+                  {card.image_url ? <Image source={{ uri: card.image_url }} style={styles.editorArt} resizeMode="cover" /> : <View style={[styles.editorArtFallback, { backgroundColor: `${accent}18`, borderColor: `${accent}88` }]}><Text style={[styles.missingArtText, { color: accent }]}>ARTE CANÓNICO PENDIENTE</Text></View>}
                   <View style={styles.editorCardCopy}>
                     <Text style={[styles.editorCardName, { color: colors.foreground }]} numberOfLines={1}>{card.name}</Text>
                     <Text style={[styles.editorCardMeta, { color: accent }]}>{card.rarity} · {card.faction ?? 'Sin facción'} · disponibles ×{card.quantity}</Text>
@@ -416,7 +416,7 @@ export default function DeckScreen() {
               <Text style={[styles.detailDeckName, { color: colors.foreground }]} numberOfLines={1}>{selectedPreview?.name || 'MAZO SIN NOMBRE'}</Text>
               <Text style={[styles.detailDeckFaction, { color: factionColor(currentFaction, colors) }]}>{currentFaction}</Text>
               <View style={styles.detailMetrics}>
-                <Text style={[styles.metric, { color: colors.mutedForeground }]}><Feather name="layers" size={12} color={colors.mutedForeground} /> Cartas {selectedIds.length || '—'}</Text>
+                <Text style={[styles.metric, { color: colors.mutedForeground }]}><Feather name="card" size={12} color={colors.mutedForeground} /> Cartas {selectedIds.length || '—'}</Text>
                 <Text style={[styles.metric, { color: colors.mutedForeground }]}><Feather name="target" size={12} color={colors.mutedForeground} /> Poder {power || '—'}</Text>
               </View>
             </View>
@@ -483,7 +483,8 @@ const styles = StyleSheet.create({
   filterButton: { position: 'absolute', width: 38, height: 38, borderWidth: 1, borderRadius: 19, alignItems: 'center', justifyContent: 'center', zIndex: 8 },
   deckCarousel: { position: 'absolute', height: 190, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', zIndex: 5 },
   deckPreview: { height: 180, borderWidth: 1, borderRadius: 10, overflow: 'hidden', position: 'relative', justifyContent: 'flex-end' },
-  deckPreviewFallback: { alignItems: 'center', justifyContent: 'center' },
+  deckPreviewFallback: { alignItems: 'center', justifyContent: 'center', paddingHorizontal: 8 },
+  missingArtText: { fontSize: 7, lineHeight: 9, fontWeight: '900', letterSpacing: 0.2, textAlign: 'center' },
   deckPreviewShade: { ...StyleSheet.absoluteFillObject },
   createDeckCopy: { padding: 8, minHeight: 63, justifyContent: 'flex-end' },
   createDeckTitle: { fontSize: 8, fontWeight: '900', textAlign: 'center', letterSpacing: 0.3 },
@@ -520,6 +521,7 @@ const styles = StyleSheet.create({
   detailBody: { padding: 18, alignItems: 'center' },
   detailArt: { width: 130, height: 160, borderWidth: 1, borderRadius: 12 },
   detailArtFallback: { width: 130, height: 160, borderWidth: 1, borderRadius: 12, alignItems: 'center', justifyContent: 'center' },
+  detailMissingArtText: { maxWidth: 86, fontSize: 9, lineHeight: 13, fontWeight: '900', letterSpacing: 0.4, textAlign: 'center' },
   detailFaction: { fontSize: 12, fontWeight: '900', marginTop: 10 },
   detailCopy: { fontSize: 12, lineHeight: 18, textAlign: 'center', marginTop: 8, maxWidth: 330 },
   detailStats: { flexDirection: 'row', gap: 25, marginTop: 16 },
