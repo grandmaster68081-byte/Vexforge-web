@@ -3,7 +3,8 @@
 - Se reemplazó la pantalla móvil de Perfil por una composición nativa responsive inspirada en la referencia del operador; la captura no se usa como fondo de la pantalla.
 - Perfil consume los datos existentes de Supabase para identidad, sincronización, progreso, energía, VEX, rango/ELO, logros, ranking PvP, historial y racha; los accesos conectan colección, fusión, mazos, misiones, sistemas y red social.
 - Se añadieron pestañas funcionales de Estadísticas, Logros, Títulos, Historial y Ranking, edición de perfil mediante la superficie Meta existente, estados de carga/error/vacío y navegación inferior propia sin barra Android duplicada.
-- No se inventan métricas ni se sobrescriben datos de juego. El build Android 140 previo terminó `success` y publicó `vexforge-android-build-140`; este cambio requiere el workflow correlativo después del push.
+- No se inventan métricas ni se sobrescriben datos de juego. El commit de implementación `12da4246131799710d5ad2b13ce2022c88724775` pasó el workflow Android 142 (`34217887486`) con `success`, incluyendo typecheck, telemetría, prebuild, Gradle, verificación standalone y publicación.
+- Release correlativo: `vexforge-android-build-142`, `app-release.apk`, 106,016,228 bytes, digest SHA-256 `d5d6ce9cdeda1d3683d58c3e8282511c6c5e626b69c77cf134b95877844560d0`. APK: `https://github.com/grandmaster68081-byte/Vexforge-web/releases/download/vexforge-android-build-142/app-release.apk`.
 - Estado honesto: `IMPLEMENTED_UNVERIFIED`; falta confirmar typecheck/build/release correlativo y QA visual/táctil humana en APK. No se declara `PASS`, `Q4`, `TIER1_READY` ni `OPERATIONAL`.
 
 ---
