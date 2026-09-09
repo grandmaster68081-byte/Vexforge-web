@@ -22,6 +22,7 @@
     "verify:card-pilot": "node scripts/verify-card-pilot.mjs",
     "verify:card-art-state": "node scripts/verify-card-art-state.mjs",
     "verify:mobile-card-pilot": "node scripts/verify-mobile-card-pilot.mjs",
+    "verify:mobile-collection-reference": "node scripts/verify-mobile-collection-reference.mjs",
     "verify:mobile-home-official-assets": "node scripts/verify-mobile-home-official-assets.mjs",
     "verify:surface-art": "node scripts/verify-surface-art.mjs",
     "verify:residual-art": "node scripts/verify-residual-art.mjs",

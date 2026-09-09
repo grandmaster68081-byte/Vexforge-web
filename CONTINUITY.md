@@ -1,3 +1,14 @@
+## 2026-09-09 — VE-MOB-4-COLLECTION — NEW OPERATOR REFERENCE / IMPLEMENTED_UNVERIFIED
+
+- Se reemplazó `mobile/assets/images/collection-reference-scene.png` por la referencia entregada para Cartas, normalizada exactamente a `1080×2340`, PNG RGB/sRGB y proporción `9:19.5`.
+- La composición Android conserva la autoridad de Supabase y ahora calibra sus capas táctiles/dinámicas al nuevo lienzo: catálogo y colección reales, búsqueda, filtros, detalle, navegación, Fusión y Logros.
+- El orden visible `Recientes` usa `cards.created_at` real; la paginación muestra doce cartas por página; Fusión abre `store?mode=fusion` y Logros abre el panel `profile?section=achievements`.
+- Guardas locales: `verify:mobile-collection-reference` — 10/10; `verify:mobile-card-pilot` — 6/6; `verify:card-art-state` — OK; `verify:mobile-auth` — 13/13; `vite build` — OK; `git diff --check` — OK.
+- Limitación local: la instalación de dependencias Android fue rechazada por el firewall al descargar `npm-package-arg@11.0.3`; el typecheck completo queda delegado al workflow oficial, que instala desde el registro público. No se modificaron Auth, RLS, RPCs, Storage, economía ni combate.
+- Estado honesto: `IMPLEMENTED_UNVERIFIED`; quedan pendientes el workflow APK correlativo, su release y la QA visual/táctil humana en dispositivo. No se declara `PASS`, `Q4`, `TIER1_READY` ni `OPERATIONAL`.
+
+---
+
 ## 2026-09-08 — VE-MOB-4-COLLECTION — OPERATOR REFERENCE / IMPLEMENTED_UNVERIFIED
 
 - La referencia entregada para Cartas coincide byte a byte con `mobile/assets/images/collection-reference-scene.png`, con dimensiones `1024×1536` y proporción `2:3`, equivalente al objetivo visual `683×1024` de la APK.

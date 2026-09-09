@@ -421,7 +421,7 @@ export default function CollectionScreen() {
   const [search, setSearch] = useState('');
   const [rarity, setRarity] = useState<Rarity | 'all'>('all');
   const [faction, setFaction] = useState<(typeof FACTIONS)[number] | 'all'>('all');
-  const [sort, setSort] = useState<'rarity' | 'name' | 'power'>('rarity');
+  const [sort, setSort] = useState<'recent' | 'rarity' | 'name' | 'power'>('recent');
   const [scope, setScope] = useState<'all' | 'owned'>(scopeParam === 'owned' ? 'owned' : 'all');
   const [selected, setSelected] = useState<PublicCard | null>(null);
   const [pageIndex, setPageIndex] = useState(0);
@@ -441,6 +441,9 @@ export default function CollectionScreen() {
         return !query || card.name.toLowerCase().includes(query) || card.code.toLowerCase().includes(query);
       })
       .sort((a, b) => {
+        if (sort === 'recent') {
+          return (Date.parse(b.created_at ?? '') || 0) - (Date.parse(a.created_at ?? '') || 0);
+        }
         if (sort === 'name') return a.name.localeCompare(b.name);
         if (sort === 'power') return (b.power ?? 0) - (a.power ?? 0);
         return (rarityOrder[a.rarity ?? 'Common'] ?? 0) - (rarityOrder[b.rarity ?? 'Common'] ?? 0) || a.name.localeCompare(b.name);
@@ -449,8 +452,8 @@ export default function CollectionScreen() {
 
   const pages = useMemo(() => {
     const result: PublicCard[][] = [];
-    for (let index = 0; index < filtered.length; index += 8) {
-      result.push(filtered.slice(index, index + 8));
+    for (let index = 0; index < filtered.length; index += 12) {
+      result.push(filtered.slice(index, index + 12));
     }
     return result.length > 0 ? result : [[]];
   }, [filtered]);
@@ -473,7 +476,7 @@ export default function CollectionScreen() {
 
   const renderPage = useCallback(
     ({ item, index }: { item: PublicCard[]; index: number }) => {
-      const slots = Array.from({ length: 8 }, (_, slotIndex) => item[slotIndex]);
+      const slots = Array.from({ length: 12 }, (_, slotIndex) => item[slotIndex]);
       return (
         <View style={[styles.referencePage, { width }]}>
           <View style={styles.referenceGrid}>
@@ -545,11 +548,11 @@ export default function CollectionScreen() {
             testID="achievements-tab"
             accessibilityRole="button"
             accessibilityLabel="Abrir logros"
-            onPress={() => router.push('/profile')}
+            onPress={() => router.push('/profile?section=achievements')}
             style={[styles.referenceTopHotspot, { right: width * 0.05, top: canvasHeight * 0.108, width: width * 0.18 }]}
           />
 
-          <View style={[styles.referenceSearch, { left: width * 0.075, top: canvasHeight * 0.319, width: width * 0.56 }]}>
+          <View style={[styles.referenceSearch, { left: width * 0.075, top: canvasHeight * 0.332, width: width * 0.56 }]}>
             <Feather name="search" size={Math.max(14, width * 0.04)} color={colors.mutedForeground} />
             <TextInputCompat value={search} onChangeText={setSearch} colors={colors} />
             {search ? (
@@ -562,16 +565,12 @@ export default function CollectionScreen() {
           <Pressable
             testID="sort-toggle"
             accessibilityRole="button"
-            accessibilityLabel="Cambiar orden de las cartas"
-            onPress={() => setSort(sort === 'rarity' ? 'name' : sort === 'name' ? 'power' : 'rarity')}
-            style={[styles.referenceSortHotspot, { right: width * 0.075, top: canvasHeight * 0.319, width: width * 0.24 }]}
-          >
-            <Text style={[styles.referenceSortText, { color: colors.mutedForeground }]}>
-              {sort === 'rarity' ? 'Rareza' : sort === 'name' ? 'Nombre' : 'Poder'}
-            </Text>
-          </Pressable>
+            accessibilityLabel={`Cambiar orden de las cartas. Orden actual: ${sort === 'recent' ? 'recientes' : sort === 'name' ? 'nombre' : sort === 'power' ? 'poder' : 'rareza'}`}
+            onPress={() => setSort(sort === 'recent' ? 'name' : sort === 'name' ? 'power' : sort === 'power' ? 'rarity' : 'recent')}
+             style={[styles.referenceSortHotspot, { right: width * 0.075, top: canvasHeight * 0.332, width: width * 0.24 }]}
+          />
 
-          <View style={[styles.referenceFilterRow, { top: canvasHeight * 0.266, left: width * 0.05, right: width * 0.05 }]}>
+           <View style={[styles.referenceFilterRow, { top: canvasHeight * 0.278, left: width * 0.05, right: width * 0.05 }]}>
             <Pressable
               testID="faction-all"
               accessibilityRole="button"
@@ -621,7 +620,7 @@ export default function CollectionScreen() {
             showsHorizontalScrollIndicator={false}
             scrollEnabled={pages.length > 1}
             renderItem={renderPage}
-            style={[styles.referencePager, { top: canvasHeight * 0.435, height: canvasHeight * 0.375 }]}
+             style={[styles.referencePager, { top: canvasHeight * 0.425, height: canvasHeight * 0.39 }]}
             onMomentumScrollEnd={(event) => setPageIndex(Math.round(event.nativeEvent.contentOffset.x / Math.max(width, 1)))}
             getItemLayout={(_, index) => ({ length: width, offset: width * index, index })}
           />
@@ -725,9 +724,9 @@ const styles = StyleSheet.create({
   referenceRarityHit: { position: 'absolute', top: 0, width: '14.25%', height: 38 },
   referencePager: { position: 'absolute', left: 0, right: 0, zIndex: 3 },
   referencePage: { flex: 1, justifyContent: 'center' },
-  referenceGrid: { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center', alignContent: 'center', columnGap: 5, rowGap: 10, paddingHorizontal: '7%' },
-  referenceCardSlot: { width: '21%', aspectRatio: 0.62, borderWidth: 1, borderRadius: 8, overflow: 'hidden', position: 'relative', backgroundColor: 'rgba(3,10,22,0.64)' },
-  referenceArt: { width: '100%', height: '100%', flex: 1, aspectRatio: 0.62, borderBottomWidth: 0, borderRadius: 7 },
+  referenceGrid: { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center', alignContent: 'center', columnGap: 8, rowGap: 10, paddingHorizontal: '8%' },
+  referenceCardSlot: { width: '18%', aspectRatio: 0.68, borderWidth: 1, borderRadius: 8, overflow: 'hidden', position: 'relative', backgroundColor: 'rgba(3,10,22,0.64)' },
+  referenceArt: { width: '100%', height: '100%', flex: 1, aspectRatio: 0.68, borderBottomWidth: 0, borderRadius: 7 },
   referenceEmptySlot: { alignItems: 'center', justifyContent: 'center' },
   referenceOwned: { position: 'absolute', right: 3, top: 3, minWidth: 19, height: 17, borderWidth: 1, borderRadius: 8, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 3 },
   referenceOwnedText: { fontSize: 8, fontWeight: '900' },

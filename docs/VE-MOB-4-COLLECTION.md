@@ -6,7 +6,7 @@ Portar a la aplicación Android la superficie de colección de cartas de VEXFORG
 
 - catálogo activo completo desde `public.cards`;
 - colección del jugador desde `public.player_cards` con relación al catálogo;
-- búsqueda por nombre o código, filtros por rareza y facción, y orden por rareza, nombre o poder;
+- búsqueda por nombre o código, filtros por rareza y facción, y orden por recientes, rareza, nombre o poder;
 - inspector de carta con arte canónico, identidad, estadísticas, habilidades, sistemas, lore y supply;
 - estados de carga, error, catálogo vacío y filtros sin coincidencias;
 - compatibilidad con lector de pantalla, objetivos táctiles y reduced motion sin animaciones obligatorias.
@@ -42,8 +42,9 @@ Portar a la aplicación Android la superficie de colección de cartas de VEXFORG
 - Estado de implementación: `IMPLEMENTED_UNVERIFIED` hasta recibir recorrido funcional del operador sobre el APK.
 - Nivel Q: Q2 actual / Q3 objetivo.
 - Supabase: campos usados verificados en el catálogo vivo; la lectura pública de `cards` responde HTTP 200.
-- Guardas locales: `verify:mobile-auth` 8/8; parseo TypeScript de los cuatro archivos modificados correcto; `git diff --check` correcto.
-- Limitación local: `npm ci` móvil fue rechazado por el espejo del entorno para `npm-package-arg@11.0.3`; el typecheck completo queda delegado al workflow oficial.
+- Guardas locales: `verify:mobile-collection-reference` 10/10; `verify:mobile-card-pilot` 6/6; `verify:card-art-state` correcto; `verify:mobile-auth` 13/13; `vite build` correcto; `git diff --check` correcto.
+- Referencia y composición: `mobile/assets/images/collection-reference-scene.png` mide `1080×2340` RGB/sRGB; la superficie muestra doce cartas por página y `Recientes` ordena por `cards.created_at`.
+- Limitación local: `npm ci` móvil fue rechazado por el firewall para `npm-package-arg@11.0.3`; el typecheck completo queda delegado al workflow oficial, que fuerza el registro público.
 - Deuda: QA funcional en dispositivo/emulador con sesión normal; completar evidencia del workflow y release después del push.
 
 ## Condición de reapertura

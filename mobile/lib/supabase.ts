@@ -18,6 +18,7 @@ export type PublicCard = {
   id: string;
   code: string;
   name: string;
+  created_at?: string | null;
   faction: string | null;
   rarity: string | null;
   specialization?: string | null;
@@ -821,7 +822,7 @@ export async function insertTelemetryEvent(
 
 export async function loadCatalogSnapshot(session?: Session) {
   const cards = await rest(
-    'cards?select=id%2Ccode%2Cname%2Cfaction%2Crarity%2Cspecialization%2Cpower%2Caffinity%2Cprestige%2Ccharge%2Clore%2Cimage_url%2Csupply%2Cminted%2Cis_founder%2Cis_legendary%2Ccard_tier%2Ccard_domain%2Cmarketable%2Cfusion_enabled%2Crelease_status%2Csynergy_json&active=eq.true&order=name.asc&limit=1000',
+    'cards?select=id%2Ccode%2Cname%2Ccreated_at%2Cfaction%2Crarity%2Cspecialization%2Cpower%2Caffinity%2Cprestige%2Ccharge%2Clore%2Cimage_url%2Csupply%2Cminted%2Cis_founder%2Cis_legendary%2Ccard_tier%2Ccard_domain%2Cmarketable%2Cfusion_enabled%2Crelease_status%2Csynergy_json&active=eq.true&order=name.asc&limit=1000',
     session,
   ) as PublicCard[];
   return { cardsTotal: cards.length, featuredCards: cards };
