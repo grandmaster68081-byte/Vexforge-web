@@ -1,3 +1,13 @@
+## 2026-09-09 — VE-MOB-2-AUTH — OPERATOR REFERENCE / IMPLEMENTED_UNVERIFIED
+
+- Se reemplazó `mobile/assets/images/auth-reference-scene.png` por la composición entregada para Auth, normalizada exactamente a `1080×2340`, PNG RGB/sRGB y proporción `9:19.5`.
+- Auth conserva los flujos reales de Supabase: inicio de sesión, recordar sesión, mostrar/ocultar contraseña, recuperación, registro y acceso OAuth con Google, Discord y Apple.
+- Las capas interactivas transparentes fueron recalibradas al nuevo lienzo para que los campos y acciones coincidan con la tarjeta de acceso de la referencia, manteniendo el scroll compatible con teclado y los estados de error/confirmación.
+- Se añadió una guarda de dimensiones al verificador móvil de Auth. Esta sesión no compila APK ni inicia el workflow Android por instrucción explícita del operador.
+- Estado honesto: `IMPLEMENTED_UNVERIFIED`; queda pendiente typecheck/workflow correlativo y QA visual/táctil humana en dispositivo.
+
+---
+
 ## 2026-09-09 — VE-MOB-7-BATTLE — OPERATOR REFERENCE / IMPLEMENTED_UNVERIFIED
 
 - Se reemplazó `mobile/assets/images/battle-reference-scene.png` por la composición entregada para Batalla, normalizada exactamente a `1080×2340`, PNG RGB/sRGB y proporción `9:19.5`.

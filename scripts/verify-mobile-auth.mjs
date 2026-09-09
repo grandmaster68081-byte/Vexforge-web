@@ -10,9 +10,16 @@ const files = {
 const contents = Object.fromEntries(
   await Promise.all(Object.entries(files).map(async ([key, path]) => [key, await readFile(path, "utf8")])),
 );
+const authAsset = await readFile("mobile/assets/images/auth-reference-scene.png");
+const authAssetIsTargetCanvas =
+  authAsset.readUInt32BE(0) === 0x89504e47 &&
+  authAsset.readUInt32BE(16) === 1080 &&
+  authAsset.readUInt32BE(20) === 2340 &&
+  authAsset[25] === 2;
 
 const assertions = [
   ["auth screen exists", contents.auth.includes("export default function AuthScreen")],
+  ["auth reference uses the target Android canvas", contents.auth.includes("AUTH_REFERENCE_WIDTH = 1080") && contents.auth.includes("AUTH_REFERENCE_HEIGHT = 2340") && authAssetIsTargetCanvas],
   ["sign-in form uses context action", contents.auth.includes("await signIn(normalizedEmail, password, rememberSession)")],
   ["sign-up form uses context action", contents.auth.includes("const createdSession = await signUp(normalizedEmail, password)")],
   ["tabs are guarded by session", contents.tabs.includes("if (!session) return <Redirect href=\"/auth\" />")],

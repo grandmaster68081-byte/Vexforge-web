@@ -17,8 +17,8 @@ import { useColors } from '@/hooks/useColors';
 import { useGame } from '@/context/GameContext';
 import type { OAuthProvider } from '@/lib/supabase';
 
-const AUTH_REFERENCE_WIDTH = 1024;
-const AUTH_REFERENCE_HEIGHT = 1536;
+const AUTH_REFERENCE_WIDTH = 1080;
+const AUTH_REFERENCE_HEIGHT = 2340;
 
 function readableAuthError(message: string | null) {
   if (!message) return null;
@@ -53,9 +53,8 @@ export default function AuthScreen() {
   const [localError, setLocalError] = useState<string | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
 
-  // The supplied artwork is authored at 1024×1536 (2:3). Keep that ratio
-  // instead of stretching it to the device viewport; on shorter screens the
-  // keyboard-aware scroll container provides access to the complete scene.
+  // The supplied artwork is authored at 1080×2340 (9:19.5). Keep that ratio
+  // so the complete composition remains visible on the Android portrait canvas.
   const sceneHeight = Math.max(
     1,
     viewportWidth * (AUTH_REFERENCE_HEIGHT / AUTH_REFERENCE_WIDTH),
@@ -322,10 +321,10 @@ const styles = StyleSheet.create({
   },
   emailInput: {
     position: 'absolute',
-    left: '29.5%',
-    top: '32.2%',
-    width: '56%',
-    height: '4.8%',
+    left: '50%',
+    top: '53.1%',
+    width: '38%',
+    height: '4.6%',
     paddingHorizontal: 14,
     paddingVertical: 0,
     fontSize: 14,
@@ -335,10 +334,10 @@ const styles = StyleSheet.create({
   },
   passwordInput: {
     position: 'absolute',
-    left: '29.5%',
-    top: '36.1%',
-    width: '56%',
-    height: '4.8%',
+    left: '50%',
+    top: '57.2%',
+    width: '32%',
+    height: '4.6%',
     paddingHorizontal: 14,
     paddingVertical: 0,
     paddingRight: 42,
@@ -349,17 +348,17 @@ const styles = StyleSheet.create({
   },
   passwordToggle: {
     position: 'absolute',
-    right: '7.5%',
-    top: '35.8%',
+    right: '7%',
+    top: '56.8%',
     width: '11%',
     height: '5.8%',
   },
   rememberToggle: {
     position: 'absolute',
-    left: '29.5%',
-    top: '39.7%',
-    width: '5%',
-    height: '3.5%',
+    left: '40%',
+    top: '62.8%',
+    width: '12%',
+    height: '4%',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -380,52 +379,52 @@ const styles = StyleSheet.create({
   forgotPassword: {
     position: 'absolute',
     right: '7%',
-    top: '39.6%',
-    width: '29%',
-    height: '3.5%',
+    top: '62.8%',
+    width: '28%',
+    height: '4%',
   },
   submit: {
     position: 'absolute',
-    left: '29.5%',
-    top: '42.4%',
-    width: '57%',
-    height: '5.2%',
+    left: '41%',
+    top: '66.4%',
+    width: '51%',
+    height: '5.5%',
     alignItems: 'center',
     justifyContent: 'center',
   },
   google: {
     position: 'absolute',
-    left: '32.5%',
-    top: '49.2%',
-    width: '9%',
-    height: '5.2%',
+    left: '48%',
+    top: '74%',
+    width: '10%',
+    height: '5.5%',
   },
   discord: {
     position: 'absolute',
-    left: '41%',
-    top: '49.2%',
-    width: '9%',
-    height: '5.2%',
+    left: '61%',
+    top: '74%',
+    width: '10%',
+    height: '5.5%',
   },
   apple: {
     position: 'absolute',
-    left: '49.5%',
-    top: '49.2%',
-    width: '9%',
-    height: '5.2%',
+    left: '74%',
+    top: '74%',
+    width: '10%',
+    height: '5.5%',
   },
   createAccount: {
     position: 'absolute',
-    left: '38%',
-    top: '55.2%',
-    width: '25%',
-    height: '4.2%',
+    left: '54%',
+    top: '82.5%',
+    width: '27%',
+    height: '4.5%',
   },
   feedback: {
     position: 'absolute',
-    left: '28%',
-    top: '60%',
-    width: '60%',
+    left: '41%',
+    top: '87%',
+    width: '51%',
     borderWidth: 1,
     padding: 8,
   },
