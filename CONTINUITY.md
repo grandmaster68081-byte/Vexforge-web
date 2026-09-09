@@ -1,3 +1,12 @@
+## 2026-09-09 — VE-MOB-7-BATTLE — OPERATOR REFERENCE / IMPLEMENTED_UNVERIFIED
+
+- Se reemplazó `mobile/assets/images/battle-reference-scene.png` por la composición entregada para Batalla, normalizada exactamente a `1080×2340`, PNG RGB/sRGB y proporción `9:19.5`.
+- La pantalla conserva la autoridad de Supabase y los flujos reales existentes: PVP consulta oponentes, exige confirmación y resuelve por `vexforge_battle_resolve`; PVE, Jefe Raid, formación y navegación inferior enrutan a sus superficies Android.
+- Las zonas táctiles transparentes fueron recalibradas al nuevo lienzo: cuatro frentes, Vanguardia/Campeón/Centinela/Reserva, entrar en combate y las cinco pestañas visibles. No se añadió lógica de combate ni dato decorativo.
+- Esta sesión no compila APK ni inicia el workflow Android por instrucción explícita del operador. El estado queda `IMPLEMENTED_UNVERIFIED`; falta typecheck/workflow correlativo y QA visual/táctil humana en dispositivo.
+
+---
+
 ## 2026-09-09 — VE-MOB-4-COLLECTION — NEW OPERATOR REFERENCE / IMPLEMENTED_UNVERIFIED
 
 - Se reemplazó `mobile/assets/images/collection-reference-scene.png` por la referencia entregada para Cartas, normalizada exactamente a `1080×2340`, PNG RGB/sRGB y proporción `9:19.5`.

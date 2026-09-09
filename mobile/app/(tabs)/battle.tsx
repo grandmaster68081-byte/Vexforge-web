@@ -39,16 +39,15 @@ type ReferenceHotspot = {
 };
 
 const REFERENCE_HOTSPOTS: ReferenceHotspot[] = [
-  { id: 'reference-settings', label: 'Abrir configuración', left: '88%', top: '1%', width: '11%', height: '8%' },
-  { id: 'reference-pvp', label: 'Abrir PVP Arena', left: '4%', top: '23%', width: '22%', height: '23%' },
-  { id: 'reference-pve', label: 'Abrir PVE Misiones', left: '27%', top: '23%', width: '22%', height: '23%' },
-  { id: 'reference-boss', label: 'Abrir Jefe Raid', left: '52%', top: '23%', width: '22%', height: '23%' },
-  { id: 'reference-quick-battle', label: 'Iniciar batalla rápida práctica', left: '76%', top: '23%', width: '22%', height: '23%' },
-  { id: 'reference-vanguard', label: 'Abrir formación Vanguardia', left: '5%', top: '48%', width: '27%', height: '17%' },
-  { id: 'reference-champion', label: 'Abrir formación Campeón', left: '34%', top: '48%', width: '28%', height: '17%' },
-  { id: 'reference-sentinel', label: 'Abrir formación Centinela', left: '66%', top: '48%', width: '28%', height: '17%' },
-  { id: 'reference-reserve', label: 'Abrir reserva de formación', left: '34%', top: '62%', width: '30%', height: '13%' },
-  { id: 'reference-enter-combat', label: 'Entrar en combate', left: '24%', top: '75%', width: '53%', height: '15%' },
+  { id: 'reference-pvp', label: 'Abrir PVP Arena', left: '0%', top: '14%', width: '25%', height: '31%' },
+  { id: 'reference-pve', label: 'Abrir PVE Misiones', left: '25%', top: '14%', width: '25%', height: '31%' },
+  { id: 'reference-boss', label: 'Abrir Jefe Raid', left: '50%', top: '14%', width: '25%', height: '31%' },
+  { id: 'reference-quick-battle', label: 'Iniciar batalla rápida práctica', left: '75%', top: '14%', width: '25%', height: '31%' },
+  { id: 'reference-vanguard', label: 'Abrir formación Vanguardia', left: '0%', top: '45%', width: '33%', height: '19%' },
+  { id: 'reference-champion', label: 'Abrir formación Campeón', left: '33%', top: '45%', width: '34%', height: '19%' },
+  { id: 'reference-sentinel', label: 'Abrir formación Centinela', left: '67%', top: '45%', width: '33%', height: '19%' },
+  { id: 'reference-reserve', label: 'Abrir reserva de formación', left: '30%', top: '61%', width: '40%', height: '14%' },
+  { id: 'reference-enter-combat', label: 'Entrar en combate', left: '20%', top: '74%', width: '60%', height: '14%' },
   { id: 'reference-home', label: 'Ir a Inicio', left: '0%', top: '89%', width: '20%', height: '11%' },
   { id: 'reference-battle', label: 'Permanecer en Batalla', left: '20%', top: '89%', width: '20%', height: '11%' },
   { id: 'reference-cards', label: 'Ir a Cartas', left: '40%', top: '89%', width: '20%', height: '11%' },
@@ -296,8 +295,6 @@ export default function BattleScreen() {
   const {
     session,
     player,
-    progress,
-    wallet,
     stats,
     opponents,
     findOpponents,
@@ -480,7 +477,6 @@ export default function BattleScreen() {
 
   const routeFromReference = (id: string) => {
     if (id === 'reference-home') return router.replace('/');
-    if (id === 'reference-settings') return router.push('/meta');
     if (id === 'reference-cards') return router.push('/collection');
     if (id === 'reference-deck' || id.startsWith('reference-vanguard') || id.startsWith('reference-champion') || id.startsWith('reference-sentinel') || id.startsWith('reference-reserve')) {
       return router.push('/deck');
@@ -509,8 +505,6 @@ export default function BattleScreen() {
       : selectedOpponent
         ? `RIVAL: ${selectedOpponent.display_name}`
         : localError || authError || 'SELECCIONA UN FRENTE';
-  const referenceEnergy = progress ? `${progress.energy}/${progress.max_energy}` : '—/—';
-  const referenceVex = wallet ? Math.round(wallet.vex_ingame).toLocaleString('es-ES') : '—';
   const referencePlayer = player?.display_name?.trim() || session.user.email?.split('@')[0] || 'Forjador';
 
   if (phase === 'lobby') {
@@ -530,8 +524,6 @@ export default function BattleScreen() {
               accessibilityIgnoresInvertColors
             />
             <View style={styles.referenceLayer} accessibilityLabel={`Batalla de ${referencePlayer}. ${referenceStatus}`}>
-              <Text pointerEvents="none" style={styles.referenceEnergy}>{referenceEnergy}</Text>
-              <Text pointerEvents="none" style={styles.referenceVex}>{referenceVex}</Text>
               <Text
                 pointerEvents="none"
                 accessibilityLiveRegion="polite"
@@ -712,32 +704,6 @@ const styles = StyleSheet.create({
   referenceScene: { position: 'relative', overflow: 'hidden' },
   referenceImage: { width: '100%', height: '100%' },
   referenceLayer: { ...StyleSheet.absoluteFillObject },
-  referenceEnergy: {
-    position: 'absolute',
-    left: '59%',
-    top: '3.2%',
-    width: '17%',
-    color: '#FFFFFF',
-    textAlign: 'center',
-    fontSize: 8,
-    fontWeight: '800',
-    textShadowColor: '#000000',
-    textShadowOffset: { width: 0, height: 1 },
-    textShadowRadius: 3,
-  },
-  referenceVex: {
-    position: 'absolute',
-    left: '77%',
-    top: '3.2%',
-    width: '13%',
-    color: '#FFFFFF',
-    textAlign: 'center',
-    fontSize: 8,
-    fontWeight: '800',
-    textShadowColor: '#000000',
-    textShadowOffset: { width: 0, height: 1 },
-    textShadowRadius: 3,
-  },
   referenceStatus: {
     position: 'absolute',
     left: '23%',
