@@ -3,6 +3,7 @@ import Animated, { FadeIn, useReducedMotion } from 'react-native-reanimated';
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ScreenShell } from '@/components/ScreenShell';
+import { getCanonicalFrameMetrics } from '@/components/CanonicalFrame';
 
 const HOME_REFERENCE_BACKGROUND = require('../../assets/images/home-reference-scene.png');
 
@@ -47,20 +48,23 @@ export default function ForgeScreen() {
     router.push(route);
   };
 
-  const sceneHeight = Math.max(1, viewportHeight);
+  const { width: frameWidth, height: sceneHeight } = getCanonicalFrameMetrics(
+    viewportWidth,
+    Math.max(1, viewportHeight - insets.top - insets.bottom),
+  );
 
   return (
     <ScreenShell surface="home" sceneMode="hero">
       <View style={[styles.screen, { marginBottom: -insets.bottom }]}>
         <Animated.View
-          style={[styles.scene, { width: viewportWidth, height: sceneHeight, marginTop: 0 }]}
+          style={[styles.scene, { width: frameWidth, height: sceneHeight, marginTop: insets.top, alignSelf: 'center' }]}
           entering={reduceMotion ? undefined : FadeIn.duration(450)}
           testID="home-reference-scene"
         >
           <Image
             source={HOME_REFERENCE_BACKGROUND}
             style={styles.sceneImage}
-            resizeMode="stretch"
+            resizeMode="contain"
             accessibilityLabel="Escena de Home proporcionada por el operador"
           />
           <View style={styles.hotspotLayer} accessibilityLabel="Acciones visibles del Inicio de VEXFORGE">

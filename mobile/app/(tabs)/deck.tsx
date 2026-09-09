@@ -25,6 +25,7 @@ import {
   type PlayerCard,
 } from '@/lib/supabase';
 import { ScreenShell } from '@/components/ScreenShell';
+import { getCanonicalFrameMetrics } from '@/components/CanonicalFrame';
 
 const MAX_DECKS = 10;
 const MAX_DECK = 30;
@@ -244,7 +245,11 @@ function EditorModal({
 export default function DeckScreen() {
   const colors = useColors();
   const insets = useSafeAreaInsets();
-  const { width, height } = useWindowDimensions();
+  const { width: viewportWidth, height: viewportHeight } = useWindowDimensions();
+  const { width, height: canvasHeight } = getCanonicalFrameMetrics(
+    viewportWidth,
+    Math.max(1, viewportHeight - insets.top - insets.bottom),
+  );
   const router = useRouter();
   const { session, player, collection, collectionLoading, syncState, syncError, refresh } = useGame();
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
@@ -258,10 +263,6 @@ export default function DeckScreen() {
   const [faction, setFaction] = useState<Faction | 'all'>('all');
   const [sort, setSort] = useState<SortMode>('recent');
   const [detail, setDetail] = useState<DeckSlot | null>(null);
-  // Keep the visual frame at the full Android viewport height. Subtracting
-  // safe-area insets here compresses the reference art while the touch zones
-  // still use the uncompressed percentage coordinates.
-  const canvasHeight = Math.max(1, height);
   const [editing, setEditing] = useState(false);
 
   const loadDeck = useCallback(async () => {
@@ -370,8 +371,8 @@ export default function DeckScreen() {
   return (
     <ScreenShell sceneMode="hero">
       <View style={[styles.referenceRoot, { marginBottom: -insets.bottom }]}>
-        <View style={[styles.referenceCanvas, { width, height: canvasHeight, marginTop: 0 }]}>
-        <Image source={DECK_REFERENCE} style={StyleSheet.absoluteFillObject} resizeMode="stretch" accessibilityLabel="Composición oficial de Mazos VEXFORGE" />
+        <View style={[styles.referenceCanvas, { width, height: canvasHeight, marginTop: insets.top, alignSelf: 'center' }]}>
+        <Image source={DECK_REFERENCE} style={StyleSheet.absoluteFillObject} resizeMode="contain" accessibilityLabel="Composición oficial de Mazos VEXFORGE" />
         <View pointerEvents="none" style={[styles.referenceShade, { backgroundColor: `${colors.ink}18` }]} />
         <View pointerEvents="box-none" style={StyleSheet.absoluteFillObject}>
           <View style={[styles.deckCounter, { top: canvasHeight * 0.19, right: width * 0.115 }]}>

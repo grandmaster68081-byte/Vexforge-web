@@ -13,12 +13,10 @@ import { Redirect } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { KeyboardAwareScrollViewCompat } from '@/components/KeyboardAwareScrollViewCompat';
+import { getCanonicalFrameMetrics } from '@/components/CanonicalFrame';
 import { useColors } from '@/hooks/useColors';
 import { useGame } from '@/context/GameContext';
 import type { OAuthProvider } from '@/lib/supabase';
-
-const AUTH_REFERENCE_WIDTH = 1080;
-const AUTH_REFERENCE_HEIGHT = 2340;
 
 function readableAuthError(message: string | null) {
   if (!message) return null;
@@ -53,11 +51,11 @@ export default function AuthScreen() {
   const [localError, setLocalError] = useState<string | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
 
-  // The supplied artwork is authored at 1080×2340 (9:19.5). Keep that ratio
-  // so the complete composition remains visible on the Android portrait canvas.
-  const sceneHeight = Math.max(
-    1,
-    viewportWidth * (AUTH_REFERENCE_HEIGHT / AUTH_REFERENCE_WIDTH),
+  // Keep the authored 1080×2340 frame intact. On a different viewport the
+  // frame may letterbox, but it must never be stretched or cropped.
+  const { width: frameWidth, height: sceneHeight } = getCanonicalFrameMetrics(
+    viewportWidth,
+    Math.max(1, viewportHeight - insets.top - insets.bottom),
   );
   const error = useMemo(
     () => localError ?? readableAuthError(authError),
@@ -130,13 +128,13 @@ export default function AuthScreen() {
         showsVerticalScrollIndicator={false}
       >
         <View
-          style={[styles.scene, { width: viewportWidth, height: sceneHeight, marginTop: insets.top }]}
+          style={[styles.scene, { width: frameWidth, height: sceneHeight, marginTop: insets.top, alignSelf: 'center' }]}
           testID="auth-reference-scene"
         >
           <Image
             source={require('../assets/images/auth-reference-scene.png')}
             style={styles.sceneImage}
-            resizeMode="stretch"
+            resizeMode="contain"
             accessibilityLabel="Pantalla de acceso de VEXFORGE proporcionada por el operador"
             accessibilityIgnoresInvertColors
           />

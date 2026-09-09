@@ -16,6 +16,7 @@ import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@/components/ForgeIcon';
 import { ScreenShell } from '@/components/ScreenShell';
+import { getCanonicalFrameMetrics } from '@/components/CanonicalFrame';
 import { useColors } from '@/hooks/useColors';
 import { useGame } from '@/context/GameContext';
 import {
@@ -29,7 +30,6 @@ import {
 import { typography } from '@/constants/typography';
 
 const PROFILE_REFERENCE = require('../../assets/images/profile-reference-scene.png');
-const DESIGN_WIDTH = 683;
 type Panel = 'stats' | 'achievements' | 'titles' | 'history' | 'ranking' | 'season' | 'progress' | 'account' | null;
 type ProfileAction = 'collection' | 'owned' | 'fusion' | 'achievements' | 'profile' | 'meta' | 'deck' | 'missions' | 'social' | 'home' | 'battle' | 'stats' | 'titles' | 'history' | 'ranking' | 'season' | 'progress';
 
@@ -219,11 +219,13 @@ export default function ProfileScreen() {
   const [loading, setLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const [detailsError, setDetailsError] = useState<string | null>(null);
-  // The profile reference is a complete 1080x2340 Android frame. Keep the
-  // scene and every percentage-based hotspot on the same full-screen canvas;
-  // reducing the height by safe-area insets shifts all profile flows upward.
-  const canvasHeight = Math.max(1, viewportHeight);
-  const frameScale = viewportWidth / DESIGN_WIDTH;
+  // Keep artwork, data overlays, and percentage-based hotspots on the same
+  // proportional 1080×2340 frame. Extra viewport space becomes letterbox
+  // space instead of stretching the authored composition.
+  const { width: frameWidth, height: canvasHeight, scale: frameScale } = getCanonicalFrameMetrics(
+    viewportWidth,
+    Math.max(1, viewportHeight - insets.top - insets.bottom),
+  );
 
   const loadDetails = useCallback(async () => {
     if (!session || !player?.id) return;
@@ -301,9 +303,9 @@ export default function ProfileScreen() {
           refreshControl={<RefreshControl refreshing={refreshing} onRefresh={() => { void handleRefresh(); }} tintColor={colors.accent} />}
           showsVerticalScrollIndicator={false}
         >
-          <View testID="profile-reference-scene" style={[styles.canvas, { width: viewportWidth, height: canvasHeight, marginTop: 0 }]}>
-            <View style={[styles.frame, { width: viewportWidth, height: canvasHeight, left: 0, top: 0 }]}>
-              <Image source={PROFILE_REFERENCE} style={StyleSheet.absoluteFillObject} resizeMode="stretch" accessibilityLabel="Composición oficial de Perfil VEXFORGE" accessibilityIgnoresInvertColors />
+          <View testID="profile-reference-scene" style={[styles.canvas, { width: frameWidth, height: canvasHeight, marginTop: insets.top, alignSelf: 'center' }]}>
+            <View style={[styles.frame, { width: frameWidth, height: canvasHeight, left: 0, top: 0 }]}>
+              <Image source={PROFILE_REFERENCE} style={StyleSheet.absoluteFillObject} resizeMode="contain" accessibilityLabel="Composición oficial de Perfil VEXFORGE" accessibilityIgnoresInvertColors />
               <View pointerEvents="none" style={[styles.identityMask, { backgroundColor: `${colors.ink}D4`, borderRadius: 8 * frameScale }]} />
               <View pointerEvents="none" style={styles.dataLayer}>
                 <DataText style={[styles.displayName, { fontSize: 17 * frameScale }]}>{displayName.toUpperCase()}</DataText>

@@ -18,6 +18,7 @@ import { useColors } from '@/hooks/useColors';
 import { useGame } from '@/context/GameContext';
 import { emitTelemetry } from '@/lib/telemetry';
 import { ScreenShell } from '@/components/ScreenShell';
+import { getCanonicalFrameMetrics } from '@/components/CanonicalFrame';
 import { DomainHeader } from '@/components/DomainHeader';
 import { DomainState } from '@/components/DomainState';
 import { loadPlayerDeck } from '@/lib/supabase';
@@ -291,7 +292,10 @@ export default function BattleScreen() {
   const insets = useSafeAreaInsets();
   const router = useRouter();
   const { width: viewportWidth, height: viewportHeight } = useWindowDimensions();
-  const canvasHeight = Math.max(1, viewportHeight - insets.top - insets.bottom);
+  const { width: frameWidth, height: canvasHeight } = getCanonicalFrameMetrics(
+    viewportWidth,
+    Math.max(1, viewportHeight - insets.top - insets.bottom),
+  );
   const {
     session,
     player,
@@ -514,12 +518,12 @@ export default function BattleScreen() {
           <View style={[styles.referenceContent, { marginTop: insets.top }]}>
             <View
               testID="battle-reference-scene"
-              style={[styles.referenceScene, { width: viewportWidth, height: canvasHeight }]}
+              style={[styles.referenceScene, { width: frameWidth, height: canvasHeight, alignSelf: 'center' }]}
             >
             <Image
               source={BATTLE_REFERENCE_BACKGROUND}
               style={styles.referenceImage}
-              resizeMode="stretch"
+              resizeMode="contain"
               accessibilityLabel="Pantalla de Batalla proporcionada por el operador"
               accessibilityIgnoresInvertColors
             />

@@ -19,6 +19,7 @@ import { useColors } from '@/hooks/useColors';
 import { ProgressBar } from '@/components/ProgressBar';
 import { useGame } from '@/context/GameContext';
 import { ScreenShell } from '@/components/ScreenShell';
+import { getCanonicalFrameMetrics } from '@/components/CanonicalFrame';
 import { DomainState } from '@/components/DomainState';
 import { DomainHeader } from '@/components/DomainHeader';
 import type { PlayerCard, PublicCard } from '@/lib/supabase';
@@ -416,7 +417,11 @@ export default function CollectionScreen() {
   const insets = useSafeAreaInsets();
   const router = useRouter();
   const { scope: scopeParam } = useLocalSearchParams<{ scope?: string }>();
-  const { width, height } = useWindowDimensions();
+  const { width: viewportWidth, height: viewportHeight } = useWindowDimensions();
+  const { width, height: canvasHeight } = getCanonicalFrameMetrics(
+    viewportWidth,
+    Math.max(1, viewportHeight - insets.top - insets.bottom),
+  );
   const { featuredCards, cardsTotal, collection, collectionLoading, syncState, syncError, refresh } = useGame();
   const [search, setSearch] = useState('');
   const [rarity, setRarity] = useState<Rarity | 'all'>('all');
@@ -428,7 +433,6 @@ export default function CollectionScreen() {
   // The reference artwork is authored for the complete Android viewport
   // (1080x2340). Safe-area insets must not shrink this frame, otherwise the
   // image and its percentage-based touch map drift apart vertically.
-  const canvasHeight = Math.max(1, height);
   const pagerRef = useRef<FlatList<PublicCard[]>>(null);
   const ownedById = useMemo(() => new Map(collection.map((card) => [card.card_id, card])), [collection]);
   const completion = cardsTotal > 0 ? Math.round((ownedById.size / cardsTotal) * 100) : 0;
@@ -503,11 +507,11 @@ export default function CollectionScreen() {
   return (
     <ScreenShell sceneMode="hero">
       <View style={[styles.referenceRoot, { marginBottom: -insets.bottom }]}>
-        <View style={[styles.referenceCanvas, { width, height: canvasHeight, marginTop: 0 }]}>
+        <View style={[styles.referenceCanvas, { width, height: canvasHeight, marginTop: insets.top, alignSelf: 'center' }]}>
         <Image
           source={COLLECTION_REFERENCE}
           style={StyleSheet.absoluteFillObject}
-          resizeMode="stretch"
+          resizeMode="contain"
           accessibilityLabel="Composición oficial de la colección VEXFORGE"
         />
         <View pointerEvents="none" style={[styles.referenceShade, { backgroundColor: `${colors.ink}20` }]} />
