@@ -1,3 +1,9 @@
+Referencia visual vigente: `mobile/assets/images/home-reference-scene.png`
+mide `1080×2340`, PNG RGB/sRGB, proporción `9:19.5`. La imagen se muestra
+como composición completa del Inicio; los recursos superiores no se pintan
+como una segunda capa y sólo quedan hotspots transparentes sobre las acciones
+visibles de la referencia.
+
 # VE-MOB-3 — HOME
 
 ## Objetivo

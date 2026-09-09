@@ -8,6 +8,15 @@
 
 ---
 
+## 2026-09-09 — VE-MOB-3-HOME — FULL REPLACEMENT REFERENCE / APK BUILD REQUESTED
+
+- Se reemplazó por completo `home-reference-scene.png` con la segunda referencia entregada por el operador, normalizada a `1080×2340`, PNG RGB/sRGB y proporción `9:19.5`.
+- Se eliminaron los textos superpuestos de energía, fragmentos/Bakúmo y ajustes que duplicaban elementos sobre el arte; Inicio queda como una sola composición visual, no como una imagen con otra pantalla encima.
+- Se mantuvieron sólo hotspots transparentes sobre Forja, Arena, Cartas, Mundo, Archivo, Eventos, Misión y las cinco pestañas inferiores, conectados a sus rutas reales.
+- Estado: `IMPLEMENTED_UNVERIFIED`; esta corrección debe viajar en la misma compilación Android que el ajuste de Cartas, Mazos y Perfil.
+
+---
+
 ## 2026-09-09 — VE-MOB-2-AUTH — OPERATOR REFERENCE / IMPLEMENTED_UNVERIFIED
 
 - Se reemplazó `mobile/assets/images/auth-reference-scene.png` por la composición entregada para Auth, normalizada exactamente a `1080×2340`, PNG RGB/sRGB y proporción `9:19.5`.
