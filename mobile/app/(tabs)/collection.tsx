@@ -425,7 +425,10 @@ export default function CollectionScreen() {
   const [scope, setScope] = useState<'all' | 'owned'>(scopeParam === 'owned' ? 'owned' : 'all');
   const [selected, setSelected] = useState<PublicCard | null>(null);
   const [pageIndex, setPageIndex] = useState(0);
-  const canvasHeight = Math.max(1, height - insets.top - insets.bottom);
+  // The reference artwork is authored for the complete Android viewport
+  // (1080x2340). Safe-area insets must not shrink this frame, otherwise the
+  // image and its percentage-based touch map drift apart vertically.
+  const canvasHeight = Math.max(1, height);
   const pagerRef = useRef<FlatList<PublicCard[]>>(null);
   const ownedById = useMemo(() => new Map(collection.map((card) => [card.card_id, card])), [collection]);
   const completion = cardsTotal > 0 ? Math.round((ownedById.size / cardsTotal) * 100) : 0;
@@ -500,7 +503,7 @@ export default function CollectionScreen() {
   return (
     <ScreenShell sceneMode="hero">
       <View style={[styles.referenceRoot, { marginBottom: -insets.bottom }]}>
-        <View style={[styles.referenceCanvas, { width, height: canvasHeight, marginTop: insets.top }]}>
+        <View style={[styles.referenceCanvas, { width, height: canvasHeight, marginTop: 0 }]}>
         <Image
           source={COLLECTION_REFERENCE}
           style={StyleSheet.absoluteFillObject}

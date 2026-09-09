@@ -258,7 +258,10 @@ export default function DeckScreen() {
   const [faction, setFaction] = useState<Faction | 'all'>('all');
   const [sort, setSort] = useState<SortMode>('recent');
   const [detail, setDetail] = useState<DeckSlot | null>(null);
-  const canvasHeight = Math.max(1, height - insets.top - insets.bottom);
+  // Keep the visual frame at the full Android viewport height. Subtracting
+  // safe-area insets here compresses the reference art while the touch zones
+  // still use the uncompressed percentage coordinates.
+  const canvasHeight = Math.max(1, height);
   const [editing, setEditing] = useState(false);
 
   const loadDeck = useCallback(async () => {
@@ -367,7 +370,7 @@ export default function DeckScreen() {
   return (
     <ScreenShell sceneMode="hero">
       <View style={[styles.referenceRoot, { marginBottom: -insets.bottom }]}>
-        <View style={[styles.referenceCanvas, { width, height: canvasHeight, marginTop: insets.top }]}>
+        <View style={[styles.referenceCanvas, { width, height: canvasHeight, marginTop: 0 }]}>
         <Image source={DECK_REFERENCE} style={StyleSheet.absoluteFillObject} resizeMode="stretch" accessibilityLabel="Composición oficial de Mazos VEXFORGE" />
         <View pointerEvents="none" style={[styles.referenceShade, { backgroundColor: `${colors.ink}18` }]} />
         <View pointerEvents="box-none" style={StyleSheet.absoluteFillObject}>

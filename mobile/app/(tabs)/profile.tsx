@@ -219,7 +219,10 @@ export default function ProfileScreen() {
   const [loading, setLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const [detailsError, setDetailsError] = useState<string | null>(null);
-  const canvasHeight = Math.max(1, viewportHeight - insets.top - insets.bottom);
+  // The profile reference is a complete 1080x2340 Android frame. Keep the
+  // scene and every percentage-based hotspot on the same full-screen canvas;
+  // reducing the height by safe-area insets shifts all profile flows upward.
+  const canvasHeight = Math.max(1, viewportHeight);
   const frameScale = viewportWidth / DESIGN_WIDTH;
 
   const loadDetails = useCallback(async () => {
@@ -294,11 +297,11 @@ export default function ProfileScreen() {
         <ScrollView
           testID="profile-screen"
           style={styles.profileScroll}
-          contentContainerStyle={[styles.profileScrollContent, { minHeight: canvasHeight }]}
+          contentContainerStyle={[styles.profileScrollContent, { minHeight: canvasHeight, paddingBottom: 0 }]}
           refreshControl={<RefreshControl refreshing={refreshing} onRefresh={() => { void handleRefresh(); }} tintColor={colors.accent} />}
           showsVerticalScrollIndicator={false}
         >
-          <View testID="profile-reference-scene" style={[styles.canvas, { width: viewportWidth, height: canvasHeight, marginTop: insets.top }]}>
+          <View testID="profile-reference-scene" style={[styles.canvas, { width: viewportWidth, height: canvasHeight, marginTop: 0 }]}>
             <View style={[styles.frame, { width: viewportWidth, height: canvasHeight, left: 0, top: 0 }]}>
               <Image source={PROFILE_REFERENCE} style={StyleSheet.absoluteFillObject} resizeMode="stretch" accessibilityLabel="Composición oficial de Perfil VEXFORGE" accessibilityIgnoresInvertColors />
               <View pointerEvents="none" style={[styles.identityMask, { backgroundColor: `${colors.ink}D4`, borderRadius: 8 * frameScale }]} />

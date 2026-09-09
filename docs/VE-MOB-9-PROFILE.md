@@ -50,6 +50,10 @@ accesos rápidos y el cierre de sesión con una cuenta normal.
 
 Nivel Q: Q2 actual / Q3 objetivo.
 
+Referencia y composición: `mobile/assets/images/profile-reference-scene.png`
+mide `1080×2340`, PNG RGB/sRGB, proporción `9:19.5`; la imagen y las zonas
+táctiles ocupan el viewport Android completo sin restar las safe areas al frame.
+
 ## Condición de reapertura
 
 Reabrir si cambian los contratos de perfil, rango, estadísticas o logros; si se

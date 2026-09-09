@@ -45,6 +45,7 @@ Portar a la aplicación Android el constructor de mazos de VEXFORGE:
 - Estado de implementación: `IMPLEMENTED_UNVERIFIED` después del workflow APK; requiere recorrido del operador en dispositivo o emulador.
 - Nivel Q: Q2 actual / Q3 objetivo.
 - Datos autoritativos: no se cambiaron tablas, RPCs, RLS, Storage, economía ni resultados de combate.
+- Referencia y composición: `mobile/assets/images/decks-reference-scene.png` mide `1080×2340`, PNG RGB/sRGB, proporción `9:19.5`; la superficie usa el viewport completo y mantiene los hotspots sobre el mismo frame.
 
 ## Deuda y condición de reapertura
 

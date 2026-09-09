@@ -9,6 +9,10 @@ const files = {
 const contents = Object.fromEntries(
   await Promise.all(Object.entries(files).map(async ([key, path]) => [key, await readFile(path, 'utf8')])),
 );
+const referenceAsset = await readFile('mobile/assets/images/profile-reference-scene.png');
+const referenceColorType = referenceAsset[25];
+const referenceWidth = referenceAsset.readUInt32BE(16);
+const referenceHeight = referenceAsset.readUInt32BE(20);
 
 const assertions = [
   ['profile screen exists', contents.screen.includes('export default function ProfileScreen')],
@@ -21,6 +25,8 @@ const assertions = [
   ['profile exposes an empty achievements state', contents.screen.includes('profile-empty-achievements')],
   ['profile supports pull to refresh', contents.screen.includes('RefreshControl') && contents.screen.includes('handleRefresh')],
   ['profile uses the shared APK reference canvas contract', contents.screen.includes('const frameScale = viewportWidth / DESIGN_WIDTH') && contents.screen.includes('width: viewportWidth, height: canvasHeight, left: 0, top: 0') && contents.screen.includes('resizeMode="stretch"') && !contents.screen.includes('resizeMode="contain"')],
+  ['profile reference is 1080x2340 RGB', referenceWidth === 1080 && referenceHeight === 2340 && referenceColorType === 2],
+  ['profile uses the full-height reference canvas', contents.screen.includes('const canvasHeight = Math.max(1, viewportHeight)') && contents.screen.includes('marginTop: 0')],
   ['profile has tactile navigation actions', contents.screen.includes("router.push('/missions')") && contents.screen.includes("router.push('/collection')") && contents.screen.includes("router.push('/deck')")],
   ['profile has account sign out', contents.screen.includes('profile-sign-out') && contents.screen.includes('signOut')],
   ['no client profile simulation', !contents.screen.includes('Math.random') && !contents.screen.includes('mock')],

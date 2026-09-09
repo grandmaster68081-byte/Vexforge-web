@@ -9,6 +9,10 @@ const files = {
 const contents = Object.fromEntries(
   await Promise.all(Object.entries(files).map(async ([key, path]) => [key, await readFile(path, 'utf8')])),
 );
+const referenceAsset = await readFile('mobile/assets/images/decks-reference-scene.png');
+const referenceColorType = referenceAsset[25];
+const referenceWidth = referenceAsset.readUInt32BE(16);
+const referenceHeight = referenceAsset.readUInt32BE(20);
 
 const assertions = [
   ['deck screen exists', contents.screen.includes('export default function DeckScreen')],
@@ -22,6 +26,8 @@ const assertions = [
   ['deck saves through the authoritative action', contents.screen.includes('saveDeck(selectedIds, session)')],
   ['supabase exposes deck RPCs', contents.supabase.includes("'validate_deck'") && contents.supabase.includes("'save_deck'")],
   ['deck is registered in both tab layouts', contents.tabs.includes('name="deck"') && contents.tabs.includes("name=\"deck\" options=")],
+  ['deck reference is 1080x2340 RGB', referenceWidth === 1080 && referenceHeight === 2340 && referenceColorType === 2],
+  ['deck uses a full-height reference canvas', contents.screen.includes('const canvasHeight = Math.max(1, height)') && contents.screen.includes('marginTop: 0')],
   ['no emoji characters in deck UI', !/[\u{1F000}-\u{1FAFF}]/u.test(contents.screen)],
   ['missing art is explicit, not generic', contents.screen.includes('ARTE CANÓNICO PENDIENTE') && !contents.screen.includes('Feather name="layers"')],
 ];

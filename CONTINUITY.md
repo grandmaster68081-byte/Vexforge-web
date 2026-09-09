@@ -1,3 +1,13 @@
+## 2026-09-09 — VE-MOB-4/5/9 — FULLSCREEN REFERENCE CANVAS / APK BUILD REQUESTED
+
+- Se reabrieron Cartas, Mazos y Perfil por hallazgo del operador: el lienzo visible no coincidía con el frame de la APK y desplazaba los flujos táctiles respecto al arte.
+- Las tres referencias visuales quedan normalizadas exactamente a `1080×2340`, proporción `9:19.5`, PNG RGB/sRGB: `collection-reference-scene.png`, `decks-reference-scene.png` y `profile-reference-scene.png`.
+- Las tres superficies ahora usan el alto completo del viewport Android para la imagen y sus capas de datos/hotspots; ya no descuentan `insets.top`/`insets.bottom` del lienzo, evitando que el arte se comprima y que los accesos queden corridos.
+- Se conservaron los contratos reales de Supabase y los flujos existentes: colección/inspector, fusión, logros, mazos, validación/guardado, Arena, perfil, progreso, estadísticas, social, misiones, cuenta y navegación inferior.
+- Guardas estáticas actualizadas para verificar dimensiones y color RGB de Mazos y Perfil. Estado: `IMPLEMENTED_UNVERIFIED`; queda typecheck/workflow APK correlativo y QA visual/táctil en dispositivo.
+
+---
+
 ## 2026-09-09 — VE-MOB-2-AUTH — OPERATOR REFERENCE / IMPLEMENTED_UNVERIFIED
 
 - Se reemplazó `mobile/assets/images/auth-reference-scene.png` por la composición entregada para Auth, normalizada exactamente a `1080×2340`, PNG RGB/sRGB y proporción `9:19.5`.
