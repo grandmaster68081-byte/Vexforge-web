@@ -40,7 +40,8 @@ jobs:
       - run: npm run verify:telemetry
       - name: Verify all mobile contracts
         run: |
-          for guard in ../scripts/verify-mobile-*.mjs; do
+          cd ..
+          for guard in scripts/verify-mobile-*.mjs; do
             echo "Running $guard"
             node "$guard"
           done

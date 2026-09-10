@@ -2306,3 +2306,11 @@
 - Se corrigió `mobile/app/(tabs)/profile.tsx`: el acceso visible `Títulos` abre el panel de títulos en lugar de Logros, y `section=achievements` vuelve a abrir el panel cuando Perfil ya estaba montado y recibe navegación desde Cartas o Mazos.
 - Se reforzó `scripts/verify-mobile-profile.mjs` con ambas regresiones de flujo. Guardas locales: Auth `14/14`, Home `8/8`, Cartas `12/12`, Batalla `20/20`, Mazos `18/18`, Perfil `18/18`; telemetría Android `5` eventos canónicos.
 - Estado: `IMPLEMENTED_UNVERIFIED` hasta completar el workflow Android oficial, publicar el release correlativo y recibir QA visual/táctil humana. La APK solicitada debe corresponder al commit de este registro.
+
+---
+## 2026-09-10 — VE-MOB-REFERENCE-FLOW-CHECK — WORKFLOW PREFLIGHT REPAIRED
+
+- Las ejecuciones oficiales `34449578967` y `34449589134` sobre el commit de esta unidad pasaron instalación de dependencias, `npm run typecheck` y telemetría, pero fallaron antes de Gradle en `Verify all mobile contracts`.
+- Causa reproducible: el job usa `mobile/` como directorio de trabajo por defecto, mientras las guardas leen rutas desde la raíz del repositorio; el primer intento abría `mobile/app/auth.tsx` desde dentro de `mobile/`.
+- Se corrigió únicamente el workflow oficial para subir a la raíz antes de ejecutar `scripts/verify-mobile-*.mjs`. No se modificaron código Android, Supabase, Auth, RLS, RPCs, Storage ni assets.
+- No hubo APK ni release publicado en esos runs. Estado: `IMPLEMENTED_UNVERIFIED`; queda pendiente una ejecución posterior que atraviese guardas, prebuild, Gradle y publicación.
