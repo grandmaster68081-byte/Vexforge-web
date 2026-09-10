@@ -6,7 +6,7 @@
 - Batalla mantiene la consulta real de oponentes, la confirmación explícita, la formación derivada del mazo, el acceso a PVE/Jefe y práctica IA separada; el combate PvP sigue resolviéndose sólo por vexforge_battle_resolve. No se ejecutó una resolución de combate contra datos vivos durante la auditoría.
 - Evidencia QA no destructiva: Supabase respondió correctamente para perfil, mazo, rango PvP y oponentes usando el players.id canónico; el mazo QA devolvió 30 ranuras con arte canónico y 2 oponentes elegibles.
 - Guardas locales: verify-mobile-auth 14/14, Home 8/8, Batalla 20/20, Mazos 22/22, Perfil 21/21, Colección 12/12, Card Pilot 6/6 y estados de arte OK.
-- El APK oficial se está construyendo sobre el commit Android auditado 6f93a9f; queda pendiente confirmar el resultado del workflow y el release correlativo, además de la QA visual/táctil humana. Estado honesto: IMPLEMENTED_UNVERIFIED.
+- El workflow oficial Build VEXFORGE Android APK terminó success en el run 34465956502 (build 172) sobre el commit Android auditado 6f93a9fbaa09e8e67f9055c9160ed9f544d996e2. El release correlativo vexforge-android-build-172 publicó app-release.apk, 113807220 bytes, SHA-256 cb378656b255f04dd470bafe46767f41311d160cf71e4314d4adbbf24e8f6433. La QA visual/táctil humana sigue pendiente; estado honesto: IMPLEMENTED_UNVERIFIED.
 
 ---
 
