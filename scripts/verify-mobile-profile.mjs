@@ -31,6 +31,9 @@ const assertions = [
   ['profile quick titles opens titles panel', contents.screen.includes("id: 'quick-titles'") && contents.screen.includes("id: 'quick-titles', label: 'Títulos'") && contents.screen.includes("id: 'quick-titles', label: 'Títulos', left: '26%', top: '81%', width: '21%', height: '9%', action: 'titles'")],
   ['profile responds to achievements route params', contents.screen.includes("if (requestedSection === 'achievements')") && contents.screen.includes("setPanel('achievements')")],
   ['profile has account sign out', contents.screen.includes('profile-sign-out') && contents.screen.includes('signOut')],
+  ['profile uses the canonical username field', contents.screen.includes('player.telegram_username') && !contents.screen.includes('displayName.toLowerCase().replace')],
+  ['profile does not repeat identity in achievement panels', !contents.screen.includes('modalFooter') && !contents.screen.includes('playerName} · {rankLabel(rank)')],
+  ['profile places count and level in their reference cards', contents.screen.includes("top: '64.4%'") && contents.screen.includes("top: '74.8%'") && !contents.screen.includes('walletValue')],
   ['no client profile simulation', !contents.screen.includes('Math.random') && !contents.screen.includes('mock')],
   ['no emoji characters in profile UI', !/[\u{1F000}-\u{1FAFF}]/u.test(contents.screen)],
 ];

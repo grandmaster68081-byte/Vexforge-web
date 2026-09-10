@@ -61,26 +61,42 @@ function maxCopiesFor(card: PlayerCard) {
   return card.rarity === 'Legendary' || card.rarity === 'Mythic' ? 1 : 2;
 }
 
-function deckPower(cards: PlayerCard[], selectedIds: string[]) {
-  const multiplier: Record<string, number> = { Common: 1, Uncommon: 1.3, Rare: 1.6, Epic: 2.1, Legendary: 3, Mythic: 4 };
-  return Math.round(selectedIds.reduce((total, id) => {
-    const card = cards.find((item) => item.card_id === id);
-    return total + (card?.power ?? 1) * (multiplier[card?.rarity ?? 'Common'] ?? 1);
-  }, 0));
-}
+type DeckSummary = {
+  cardCount: number;
+  power: number;
+  factions: string[];
+  factionLabel: string;
+  primaryFaction: string | null;
+  championName: string | null;
+};
 
-function slotFaction(slots: DeckSlot[]) {
-  return slots[0]?.faction ?? 'Sin facción';
+function summarizeDeck(slots: DeckSlot[]): DeckSummary {
+  const factions = [...new Set(
+    slots
+      .map((slot) => slot.faction.trim())
+      .filter((faction) => faction.length > 0),
+  )];
+  const champion = slots.find((slot) => slot.is_champion);
+  return {
+    cardCount: slots.length,
+    power: slots.reduce((total, slot) => total + slot.power, 0),
+    factions,
+    factionLabel: factions.length > 0 ? factions.join(' · ') : '—',
+    primaryFaction: factions[0] ?? null,
+    championName: champion?.name || null,
+  };
 }
 
 function DeckPreviewCard({
   slot,
+  summary,
   colors,
   width,
   active,
   onPress,
 }: {
   slot?: DeckSlot;
+  summary?: DeckSummary;
   colors: ReturnType<typeof useColors>;
   width: number;
   active?: boolean;
@@ -91,7 +107,7 @@ function DeckPreviewCard({
     <Pressable
       testID={slot ? 'saved-deck-card' : 'empty-deck-slot'}
       accessibilityRole="button"
-      accessibilityLabel={slot ? `Editar ${slot.name}` : 'Crear un nuevo mazo'}
+      accessibilityLabel={slot ? 'Editar mazo activo' : 'Crear un nuevo mazo'}
       onPress={onPress}
       style={({ pressed }) => [
         styles.deckPreview,
@@ -113,8 +129,8 @@ function DeckPreviewCard({
         </View>
       ) : (
         <View style={styles.deckPreviewCopy}>
-          <Text style={[styles.deckPreviewName, { color: colors.foreground }]} numberOfLines={1}>{slot.name || 'MAZO SIN NOMBRE'}</Text>
-          <Text style={[styles.deckPreviewFaction, { color: accent }]}>{slot.faction}</Text>
+          <Text style={[styles.deckPreviewName, { color: colors.foreground }]} numberOfLines={1}>MAZO ACTIVO</Text>
+          <Text style={[styles.deckPreviewFaction, { color: accent }]}>{summary?.cardCount ?? 0} CARTAS · {summary?.factionLabel ?? '—'}</Text>
           <Feather name="more-horizontal" size={17} color={colors.foreground} />
         </View>
       )}
@@ -124,10 +140,12 @@ function DeckPreviewCard({
 
 function DetailModal({
   slot,
+  summary,
   colors,
   onClose,
 }: {
   slot: DeckSlot | null;
+  summary: DeckSummary;
   colors: ReturnType<typeof useColors>;
   onClose: () => void;
 }) {
@@ -139,7 +157,7 @@ function DetailModal({
           <View style={styles.detailHeader}>
             <View style={{ flex: 1 }}>
               <Text style={[styles.detailEyebrow, { color: colors.accent }]}>DETALLE DEL MAZO</Text>
-              <Text style={[styles.detailTitle, { color: colors.foreground }]}>{slot.name || 'MAZO SIN NOMBRE'}</Text>
+              <Text style={[styles.detailTitle, { color: colors.foreground }]}>MAZO ACTIVO</Text>
             </View>
             <Pressable testID="close-deck-detail" accessibilityRole="button" accessibilityLabel="Cerrar detalle del mazo" onPress={onClose} style={[styles.closeButton, { borderColor: colors.border }]}>
               <Feather name="x" size={18} color={colors.foreground} />
@@ -147,11 +165,11 @@ function DetailModal({
           </View>
           <View style={styles.detailBody}>
             {slot.image_url ? <Image source={{ uri: slot.image_url }} style={[styles.detailArt, { borderColor: factionColor(slot.faction, colors) }]} resizeMode="cover" /> : <View style={[styles.detailArtFallback, { borderColor: factionColor(slot.faction, colors) }]}><Text style={[styles.detailMissingArtText, { color: factionColor(slot.faction, colors) }]}>ARTE CANÓNICO PENDIENTE</Text></View>}
-            <Text style={[styles.detailFaction, { color: factionColor(slot.faction, colors) }]}>{slot.faction}</Text>
-            <Text style={[styles.detailCopy, { color: colors.mutedForeground }]}>Formación sincronizada desde tu mazo activo. Edita las cartas desde la Forja para prepararte para la Arena.</Text>
+            <Text style={[styles.detailFaction, { color: factionColor(summary.primaryFaction ?? '', colors) }]}>{summary.factionLabel}</Text>
+            <Text style={[styles.detailCopy, { color: colors.mutedForeground }]}>{summary.cardCount} cartas sincronizadas desde tu formación oficial.{summary.championName ? ` Campeón: ${summary.championName}.` : ''}</Text>
             <View style={styles.detailStats}>
-              <Text style={[styles.detailStat, { color: colors.foreground }]}>{slot.power} <Text style={{ color: colors.mutedForeground }}>PODER</Text></Text>
-              <Text style={[styles.detailStat, { color: colors.foreground }]}>{slot.is_champion ? 'CAMPEÓN' : 'RESERVA'}</Text>
+              <Text style={[styles.detailStat, { color: colors.foreground }]}>{summary.power} <Text style={{ color: colors.mutedForeground }}>PODER</Text></Text>
+              <Text style={[styles.detailStat, { color: colors.foreground }]}>{summary.championName ? `CAMPEÓN · ${summary.championName}` : 'CAMPEÓN · —'}</Text>
             </View>
           </View>
         </View>
@@ -222,7 +240,7 @@ function EditorModal({
                   {card.image_url ? <Image source={{ uri: card.image_url }} style={styles.editorArt} resizeMode="cover" /> : <View style={[styles.editorArtFallback, { backgroundColor: `${accent}18`, borderColor: `${accent}88` }]}><Text style={[styles.missingArtText, { color: accent }]}>ARTE CANÓNICO PENDIENTE</Text></View>}
                   <View style={styles.editorCardCopy}>
                     <Text style={[styles.editorCardName, { color: colors.foreground }]} numberOfLines={1}>{card.name}</Text>
-                    <Text style={[styles.editorCardMeta, { color: accent }]}>{card.rarity} · {card.faction ?? 'Sin facción'} · disponibles ×{card.quantity}</Text>
+                    <Text style={[styles.editorCardMeta, { color: accent }]}>{card.rarity || '—'} · {card.faction?.trim() || '—'} · disponibles ×{card.quantity}</Text>
                   </View>
                   <Text style={[styles.editorCount, { color: count ? accent : colors.mutedForeground }]}>{count ? `×${count}` : '+'}</Text>
                 </Pressable>
@@ -294,22 +312,27 @@ export default function DeckScreen() {
 
   const selectedCards = useMemo(() => selectedIds.map((id) => collection.find((card) => card.card_id === id)).filter((card): card is PlayerCard => Boolean(card)), [collection, selectedIds]);
   const factionCounts = useMemo(() => selectedCards.reduce<Record<string, number>>((result, card) => {
-    const name = card.faction ?? 'Sin facción';
-    result[name] = (result[name] ?? 0) + 1;
+    const name = card.faction?.trim();
+    if (name) result[name] = (result[name] ?? 0) + 1;
     return result;
   }, {}), [selectedCards]);
   const factionsInDraft = Object.keys(factionCounts);
   const mythicCount = selectedCards.filter((card) => card.rarity === 'Mythic').length;
   const legendaryCount = selectedCards.filter((card) => card.rarity === 'Legendary').length;
   const deckReady = selectedIds.length >= MIN_DECK && selectedIds.length <= MAX_DECK && factionsInDraft.length <= 2 && mythicCount <= MAX_MYTHIC && legendaryCount <= MAX_LEGENDARY;
-  const currentFaction = slotFaction(savedSlots);
+  const savedSummary = useMemo(() => summarizeDeck(savedSlots), [savedSlots]);
   const hasSavedDeck = savedSlots.length > 0;
   const visibleSavedDeck = useMemo(() => {
     if (!hasSavedDeck) return false;
     const query = search.trim().toLowerCase();
-    if (faction !== 'all' && currentFaction !== faction) return false;
-    return !query || 'mazo sin nombre'.includes(query) || currentFaction.toLowerCase().includes(query);
-  }, [currentFaction, faction, hasSavedDeck, search]);
+    if (faction !== 'all' && !savedSummary.factions.includes(faction)) return false;
+    const officialText = [
+      savedSummary.factionLabel,
+      savedSummary.championName ?? '',
+      ...savedSlots.flatMap((slot) => [slot.name, slot.code]),
+    ].join(' ').toLowerCase();
+    return !query || officialText.includes(query);
+  }, [faction, hasSavedDeck, savedSlots, savedSummary, search]);
 
   const toggleCard = (card: PlayerCard) => {
     setMessage(null);
@@ -428,8 +451,30 @@ export default function DeckScreen() {
           <Pressable testID="deck-sort" accessibilityRole="button" accessibilityLabel={`Cambiar orden de mazos: ${sort === 'recent' ? 'Recientes' : sort === 'name' ? 'Nombre' : 'Poder'}`} onPress={() => setSort(sort === 'recent' ? 'name' : sort === 'name' ? 'power' : 'recent')} style={[styles.sortHit, { top: canvasHeight * 0.374, left: width * 0.65, width: width * 0.26, height: canvasHeight * 0.04 }]} />
           <Pressable testID="deck-filter" accessibilityRole="button" accessibilityLabel="Restablecer filtros de mazos" onPress={() => { setFaction('all'); setSearch(''); setSort('recent'); }} style={[styles.filterHit, { top: canvasHeight * 0.374, right: width * 0.045, width: width * 0.1, height: canvasHeight * 0.04 }]} />
 
+          {hasSavedDeck ? (
+            <View testID="deck-summary-overlay" pointerEvents="none" style={[styles.deckSummaryOverlay, { top: canvasHeight * 0.735, left: frameWidth * 0.205, width: frameWidth * 0.48 }]}>
+              <View style={[styles.deckSummaryMask, { backgroundColor: `${colors.ink}C9` }]} />
+              <Text style={[styles.deckSummaryTitle, { color: colors.foreground }]} numberOfLines={1}>MAZO ACTIVO</Text>
+              <Text style={[styles.deckSummaryFaction, { color: factionColor(savedSummary.primaryFaction ?? '', colors) }]} numberOfLines={1}>{savedSummary.factionLabel}</Text>
+              <View style={styles.deckSummaryStats}>
+                <View style={styles.deckSummaryStat}>
+                  <Text style={[styles.deckSummaryValue, { color: colors.foreground }]}>{savedSummary.cardCount}</Text>
+                  <Text style={[styles.deckSummaryLabel, { color: colors.mutedForeground }]}>CARTAS</Text>
+                </View>
+                <View style={styles.deckSummaryStat}>
+                  <Text style={[styles.deckSummaryValue, { color: colors.foreground }]}>{savedSummary.power}</Text>
+                  <Text style={[styles.deckSummaryLabel, { color: colors.mutedForeground }]}>PODER</Text>
+                </View>
+                <View style={styles.deckSummaryStat}>
+                  <Text style={[styles.deckSummaryValue, { color: colors.foreground }]} numberOfLines={1}>{savedSummary.championName ?? '—'}</Text>
+                  <Text style={[styles.deckSummaryLabel, { color: colors.mutedForeground }]}>CAMPEÓN</Text>
+                </View>
+              </View>
+            </View>
+          ) : null}
+
           <Pressable testID="create-deck-slot" accessibilityRole="button" accessibilityLabel="Crear un nuevo mazo" onPress={handleCreate} style={[styles.deckSlotHit, { top: canvasHeight * 0.445, left: width * 0.04, width: width * 0.23, height: canvasHeight * 0.23 }]} />
-          <Pressable testID="saved-deck-slot" accessibilityRole="button" accessibilityLabel={hasSavedDeck ? `Editar ${selectedPreview?.name ?? 'mazo guardado'}` : 'Crear un nuevo mazo'} onPress={() => {
+           <Pressable testID="saved-deck-slot" accessibilityRole="button" accessibilityLabel={hasSavedDeck ? 'Editar mazo activo' : 'Crear un nuevo mazo'} onPress={() => {
             if (!visibleSavedDeck) return handleCreate();
             setSelectedIds(savedSlots.map((slot) => slot.card_id));
             setMessage('Mazo cargado para edición.');
@@ -459,7 +504,7 @@ export default function DeckScreen() {
           </View>
           </View>
         </View>
-        <DetailModal slot={detail} colors={colors} onClose={() => setDetail(null)} />
+         <DetailModal slot={detail} summary={savedSummary} colors={colors} onClose={() => setDetail(null)} />
         <EditorModal
           visible={editing}
           colors={colors}
@@ -495,6 +540,14 @@ const styles = StyleSheet.create({
   clearSearchHit: { position: 'absolute', zIndex: 9 },
   sortHit: { position: 'absolute', zIndex: 8 },
   filterHit: { position: 'absolute', zIndex: 8 },
+  deckSummaryOverlay: { position: 'absolute', minHeight: 126, zIndex: 5, paddingHorizontal: 8, paddingVertical: 5 },
+  deckSummaryMask: { ...StyleSheet.absoluteFillObject, borderRadius: 4 },
+  deckSummaryTitle: { fontSize: 11, fontWeight: '900', letterSpacing: 0.8 },
+  deckSummaryFaction: { fontSize: 8, fontWeight: '800', marginTop: 2 },
+  deckSummaryStats: { flexDirection: 'row', gap: 10, marginTop: 16 },
+  deckSummaryStat: { minWidth: 42 },
+  deckSummaryValue: { fontSize: 10, fontWeight: '900' },
+  deckSummaryLabel: { fontSize: 6, fontWeight: '800', letterSpacing: 0.4, marginTop: 2 },
   deckSlotHit: { position: 'absolute', zIndex: 8 },
   detailEditHit: { position: 'absolute', width: '25%', zIndex: 8 },
   detailViewHit: { position: 'absolute', width: '25%', zIndex: 8 },

@@ -191,12 +191,11 @@ function PanelContent({
         achievements.length ? <ScrollView style={styles.modalList}>{achievements.map((achievement) => <View key={achievement.id} style={[styles.modalRow, { borderColor: colors.border }]}><Ionicons name={panel === 'titles' ? 'crown' : 'trophy-outline'} size={18} color={colors.accent} /><View style={styles.modalRowCopy}><Text style={[styles.modalRowTitle, { color: colors.foreground }]}>{achievement.title}</Text><Text style={[styles.modalMuted, { color: colors.mutedForeground }]}>{achievement.description}</Text></View><Text style={[styles.modalPoints, { color: colors.accent }]}>{achievement.points}</Text></View>)}</ScrollView> : <Text testID="profile-empty-achievements" style={[styles.modalMuted, { color: colors.mutedForeground }]}>Todavía no hay registros disponibles.</Text>
       ) : null}
       {panel === 'history' ? (
-        social?.matches.length ? <ScrollView style={styles.modalList}>{social.matches.map((match) => { const won = match.winner === playerId; const elo = match.player_a === playerId ? match.elo_change_a : match.elo_change_b; return <View key={match.id} style={[styles.modalRow, { borderColor: colors.border }]}><Ionicons name={won ? 'checkmark-circle' : 'close-circle-outline'} size={18} color={won ? colors.success : colors.danger} /><View style={styles.modalRowCopy}><Text style={[styles.modalRowTitle, { color: colors.foreground }]}>{won ? 'Victoria' : 'Derrota'} · {match.opponent_name ?? 'Forjador rival'}</Text><Text style={[styles.modalMuted, { color: colors.mutedForeground }]}>{formatDate(match.created_at)}</Text></View><Text style={[styles.modalPoints, { color: elo && elo > 0 ? colors.success : colors.danger }]}>{elo == null ? '—' : `${elo > 0 ? '+' : ''}${elo}`}</Text></View>; })}</ScrollView> : <Text style={[styles.modalMuted, { color: colors.mutedForeground }]}>No hay combates registrados.</Text>
+        social?.matches.length ? <ScrollView style={styles.modalList}>{social.matches.map((match) => { const won = match.winner === playerId; const elo = match.player_a === playerId ? match.elo_change_a : match.elo_change_b; return <View key={match.id} style={[styles.modalRow, { borderColor: colors.border }]}><Ionicons name={won ? 'checkmark-circle' : 'close-circle-outline'} size={18} color={won ? colors.success : colors.danger} /><View style={styles.modalRowCopy}><Text style={[styles.modalRowTitle, { color: colors.foreground }]}>{won ? 'Victoria' : 'Derrota'} · {match.opponent_name ?? '—'}</Text><Text style={[styles.modalMuted, { color: colors.mutedForeground }]}>{formatDate(match.created_at)}</Text></View><Text style={[styles.modalPoints, { color: elo && elo > 0 ? colors.success : colors.danger }]}>{elo == null ? '—' : `${elo > 0 ? '+' : ''}${elo}`}</Text></View>; })}</ScrollView> : <Text style={[styles.modalMuted, { color: colors.mutedForeground }]}>No hay combates registrados.</Text>
       ) : null}
       {panel === 'ranking' ? (
-        social?.rankings.length ? <ScrollView style={styles.modalList}>{social.rankings.map((entry) => <View key={entry.player_id} style={[styles.modalRow, { borderColor: entry.player_id === playerId ? colors.accent : colors.border }]}><Text style={[styles.modalRank, { color: entry.player_id === playerId ? colors.accent : colors.mutedForeground }]}>#{entry.rank_position}</Text><View style={styles.modalRowCopy}><Text style={[styles.modalRowTitle, { color: colors.foreground }]}>{entry.display_name ?? 'Forjador'}{entry.player_id === playerId ? ' · TÚ' : ''}</Text><Text style={[styles.modalMuted, { color: colors.mutedForeground }]}>{entry.mmr} ELO · {entry.wins}V / {entry.losses}D</Text></View><Ionicons name="shield-outline" size={18} color={colors.accent} /></View>)}</ScrollView> : <Text style={[styles.modalMuted, { color: colors.mutedForeground }]}>El ranking de temporada todavía no está disponible.</Text>
+        social?.rankings.length ? <ScrollView style={styles.modalList}>{social.rankings.map((entry) => <View key={entry.player_id} style={[styles.modalRow, { borderColor: entry.player_id === playerId ? colors.accent : colors.border }]}><Text style={[styles.modalRank, { color: entry.player_id === playerId ? colors.accent : colors.mutedForeground }]}>#{entry.rank_position}</Text><View style={styles.modalRowCopy}><Text style={[styles.modalRowTitle, { color: colors.foreground }]}>{entry.display_name ?? '—'}{entry.player_id === playerId ? ' · TÚ' : ''}</Text><Text style={[styles.modalMuted, { color: colors.mutedForeground }]}>{entry.mmr} ELO · {entry.wins}V / {entry.losses}D</Text></View><Ionicons name="shield-outline" size={18} color={colors.accent} /></View>)}</ScrollView> : <Text style={[styles.modalMuted, { color: colors.mutedForeground }]}>El ranking de temporada todavía no está disponible.</Text>
       ) : null}
-      <Text accessibilityLabel={`Perfil de ${playerName}, rango ${rankLabel(rank)}`} style={[styles.modalFooter, { color: colors.mutedForeground }]}>{playerName} · {rankLabel(rank)}</Text>
     </View>
   );
 }
@@ -259,11 +258,10 @@ export default function ProfileScreen() {
     }
   }, [requestedSection]);
 
-  const displayName = player?.display_name?.trim() || session?.user.email?.split('@')[0] || 'Forjador';
+  const displayName = player?.display_name?.trim() || '—';
+  const handle = player?.telegram_username?.trim() ? `@${player.telegram_username.trim().replace(/^@+/, '')}` : '—';
   const playerEmail = player ? player.email : null;
   const email = playerEmail || session?.user.email || '—';
-  const energy = progress ? `${progress.energy}/${progress.max_energy}` : '—/—';
-  const vex = wallet ? Math.round(wallet.vex_ingame).toLocaleString('es-ES') : '—';
   const xpPercent = progress && progress.xp_to_next > 0 ? Math.min(100, Math.round((progress.xp / progress.xp_to_next) * 100)) : 0;
   const currentRank = rankLabel(rank);
   const statValues = useMemo(() => [
@@ -324,7 +322,7 @@ export default function ProfileScreen() {
               <View pointerEvents="none" style={[styles.identityMask, { backgroundColor: `${colors.ink}D4`, borderRadius: 8 * frameScale }]} />
               <View pointerEvents="none" style={styles.dataLayer}>
                 <DataText style={[styles.displayName, { fontSize: 17 * frameScale }]}>{displayName.toUpperCase()}</DataText>
-                <DataText style={[styles.handle, { fontSize: 9 * frameScale }]}>@{displayName.toLowerCase().replace(/\s+/g, '_')}</DataText>
+                <DataText style={[styles.handle, { fontSize: 9 * frameScale }]}>{handle}</DataText>
                 <DataText style={[styles.status, { fontSize: 9 * frameScale }]}>●  {syncState === 'connected' ? 'En línea' : 'Sin conexión'}</DataText>
                 <DataText style={[styles.rank, { fontSize: 9 * frameScale }]}>{currentRank}</DataText>
                 <DataText style={[styles.memberSince, { fontSize: 7 * frameScale }]}>{`DESDE ${formatDate(player.created_at)}`}</DataText>
@@ -334,9 +332,8 @@ export default function ProfileScreen() {
                 <DataText style={[styles.statFour, { fontSize: 17 * frameScale }]}>{statValues[3]}</DataText>
                 <DataText style={[styles.xpValue, { fontSize: 8 * frameScale }]}>{number(progress?.xp)} / {number(progress?.xp_to_next)} XP</DataText>
                 <View style={[styles.xpFill, { width: `${xpPercent}%`, height: 8 * frameScale, borderRadius: 8 * frameScale, backgroundColor: colors.accent }]} />
-                <DataText style={[styles.collectionValue, { fontSize: 11 * frameScale }]}>{collection.length ? collection.length.toLocaleString('es-ES') : '—'}</DataText>
-                <DataText style={[styles.walletValue, { fontSize: 8 * frameScale }]}>{vex} VEX</DataText>
-                <Text pointerEvents="none" style={[styles.syncText, { color: loading ? colors.accent : syncError || detailsError ? colors.danger : colors.mutedForeground, fontSize: 10 * frameScale }]}>{loading ? 'Sincronizando tu perfil…' : syncError ?? detailsError ?? `${energy} · ${vex} VEX`}</Text>
+                <DataText style={[styles.collectionValue, { fontSize: 10 * frameScale }]}>{collection.length.toLocaleString('es-ES')} CARTAS</DataText>
+                <DataText style={[styles.progressLevel, { fontSize: 8 * frameScale }]}>Nv. {progress?.level ?? '—'}</DataText>
               </View>
               <View style={styles.hotspotLayer}>
                 {PROFILE_HOTSPOTS.map((hotspot) => (
@@ -389,9 +386,8 @@ const styles = StyleSheet.create({
   statFour: { left: '80%', top: '57.6%', width: '10%', textAlign: 'center', fontSize: 17, color: '#F0C050' },
   xpFill: { position: 'absolute', left: '13%', top: '77.3%', height: 8, borderRadius: 8, maxWidth: '56%' },
   xpValue: { right: '5%', top: '76.5%', width: '23%', textAlign: 'right', fontSize: 8, color: '#C8D0E9' },
-  collectionValue: { right: '6%', top: '17.6%', width: '18%', textAlign: 'right', fontSize: 11, color: '#F0C050' },
-  walletValue: { left: '74%', top: '5.5%', width: '20%', textAlign: 'center', fontSize: 8, color: '#FFFFFF' },
-  syncText: { position: 'absolute', left: '17%', right: '17%', top: '41.2%', textAlign: 'center', fontFamily: typography.body, fontSize: 10 },
+  collectionValue: { left: '68%', top: '64.4%', width: '25%', textAlign: 'right', fontSize: 10, color: '#F0C050' },
+  progressLevel: { left: '7%', top: '74.8%', width: '10%', textAlign: 'left', fontSize: 8, color: '#C8D0E9' },
   errorNotice: { position: 'absolute', left: 18, right: 18, bottom: 14, minHeight: 42, borderWidth: 1, borderRadius: 12, paddingHorizontal: 12, paddingVertical: 8, flexDirection: 'row', alignItems: 'center', gap: 8 },
   errorNoticeText: { flex: 1, fontFamily: typography.body, fontSize: 11, lineHeight: 15 },
   loadingScreen: { flex: 1, alignItems: 'center', justifyContent: 'center', gap: 10 },
@@ -415,7 +411,6 @@ const styles = StyleSheet.create({
   modalRowTitle: { fontFamily: typography.bodyBold, fontSize: 13 },
   modalPoints: { fontFamily: typography.bodyBold, fontSize: 12 },
   modalRank: { width: 35, fontFamily: typography.display, fontSize: 15 },
-  modalFooter: { fontFamily: typography.bodySemiBold, fontSize: 10, marginTop: 14, textAlign: 'center' },
   signOutButton: { minHeight: 46, borderWidth: 1, borderRadius: 11, paddingHorizontal: 14, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8, marginTop: 10 },
   signOutText: { fontFamily: typography.bodyBold, fontSize: 11, letterSpacing: 0.8 },
 });

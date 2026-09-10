@@ -874,9 +874,9 @@ export async function loadPlayerDeck(session: Session, playerId: string): Promis
         is_champion: row.is_champion === true,
         card_id: String(row.card_id ?? card?.id ?? ''),
         code: String(card?.code ?? ''),
-        name: String(card?.name ?? ''),
-        rarity: String(card?.rarity ?? 'Common'),
-        faction: String(card?.faction ?? 'Sin facción'),
+        name: typeof card?.name === 'string' ? card.name : '',
+        rarity: typeof card?.rarity === 'string' ? card.rarity : '',
+        faction: typeof card?.faction === 'string' ? card.faction : '',
         power: Number(card?.power ?? 0),
         image_url: typeof card?.image_url === 'string' ? card.image_url : null,
       };

@@ -1,3 +1,14 @@
+## 2026-09-10 — VE-MOB-5/9 — CANONICAL DATA ZONES / IMPLEMENTED_UNVERIFIED
+
+- La referencia visual de Mazos, Cartas y Perfil permanece intacta. Los textos genéricos que ya forman parte del PNG no se tratan como datos del jugador ni se sustituyen con una segunda composición.
+- Se reforzó la separación entre arte y datos: los overlays dinámicos se montan dentro del frame proporcional común y sólo en las zonas funcionales que les corresponden.
+- Mazos conserva `player_deck` como fuente real. El resumen visible se deriva de sus slots y de `cards`: cantidad, poder sumado, facciones presentes y campeón real. El panel de detalle cubre únicamente su zona de datos; no crea nombre persistido ni facción.
+- Perfil conserva la identidad real en la tarjeta de identidad (`players.display_name` y `players.telegram_username` cuando existen), coloca el contador de cartas y el nivel en sus tarjetas de referencia, y no repite el nombre en Logros/Títulos. VEX y energía permanecen en los paneles de Estadísticas/Temporada/Progreso donde el flujo los define.
+- Cartas mantiene `ReferenceCardSlot` para que cada arte oficial ocupe su ranura proporcional; no se superponen cartas fuera de la cuadrícula de la composición.
+- Verificación: Mazos `22/22`, Perfil `21/21`, todas las guardas Android restantes pasan y `npm run typecheck` pasa desde `mobile/`. No se ejecutó APK/workflow en esta unidad; el estado honesto sigue `IMPLEMENTED_UNVERIFIED` hasta QA visual/táctil humana.
+
+---
+
 ## 2026-09-10 — VE-MOB-4/5/9 — MEASURED NATIVE FRAME / IMPLEMENTED_UNVERIFIED
 
 - La causa comprobada de las tres capturas rotas no era el PNG: las referencias siguen siendo RGB `1080×2340` y conservan la proporción correcta.
