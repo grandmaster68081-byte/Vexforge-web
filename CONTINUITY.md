@@ -2289,3 +2289,12 @@
 - Perfil fue alineado al mismo contrato que las otras cuatro pantallas: la escena ocupa exactamente el canvas disponible, usa `resizeMode="stretch"` y los datos superpuestos siguen escalando desde el ancho de diseño `683` sin cambiar sus posiciones porcentuales.
 - Guardas estáticas: Home `7/7`, Batalla `20/20`, Mazos `13/13`, Perfil `14/14`, piloto visual de Cartas `6/6`; `git diff --check` OK. El typecheck local no pudo ejecutarse porque faltan dependencias Expo en el entorno actual; el workflow oficial reinstala `mobile/package.json` desde cero.
 - Se solicitó la compilación oficial Android después de publicar esta alineación. Estado: `IMPLEMENTED_UNVERIFIED` hasta que el workflow termine y publique la APK.
+
+---
+## 2026-09-10 — VE-MOB-5-DECK — CANONICAL REFERENCE TOUCH MAP / MAIN PUBLISHED
+
+- Se corrigió la superficie Android de Mazos para consumir la composición oficial completa `mobile/assets/images/decks-reference-scene.png` como un único frame `1080×2340`, PNG RGB/sRGB, proporción `9:19.5`.
+- Se retiraron las tarjetas, paneles, filtros y controles visuales duplicados que se dibujaban encima del arte. La pantalla conserva la obra entregada y usa un mapa táctil transparente con coordenadas relativas al mismo frame canónico; `resizeMode="stretch"` evita el recorte/zoom de `cover`.
+- Las zonas visibles quedan conectadas a los flujos reales existentes: Colección, Tus cartas, Fusión, Logros, filtros por facción, búsqueda, orden, restablecer filtros, crear/editar mazo, detalle, navegación inferior, validación `validate_deck`, guardado `save_deck`, sincronización y entrada a Arena. No se modificaron Supabase, RLS, RPCs, economía, combate ni assets oficiales.
+- Evidencia estática: `verify-mobile-deck` `18/18`, `verify:mobile-collection-reference` `12/12`, Home `8/8` y Perfil `16/16`. El typecheck móvil no pudo ejecutarse porque el firewall de paquetes devolvió `404` al instalar `npm-package-arg@11.0.3`; no se compiló APK ni se ejecutó el workflow Android por instrucción del operador.
+- Estado honesto: `IMPLEMENTED_UNVERIFIED`. No se declara QA humana, `PASS`, `OPERATIONAL`, `TIER1_READY` ni release Android para este cambio; el commit de código queda publicado en `main` sin publicar aplicación.
