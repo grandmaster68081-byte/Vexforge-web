@@ -16,7 +16,7 @@ import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@/components/ForgeIcon';
 import { ScreenShell } from '@/components/ScreenShell';
-import { getCanonicalFrameMetrics } from '@/components/CanonicalFrame';
+import { useMeasuredCanonicalFrame } from '@/components/CanonicalFrame';
 import { useColors } from '@/hooks/useColors';
 import { useGame } from '@/context/GameContext';
 import {
@@ -222,9 +222,11 @@ export default function ProfileScreen() {
   // Keep artwork, data overlays, and percentage-based hotspots on the same
   // proportional 1080×2340 frame. Extra viewport space becomes letterbox
   // space instead of stretching the authored composition.
-  const { width: frameWidth, height: canvasHeight, scale: frameScale } = getCanonicalFrameMetrics(
+  const { width: frameWidth, height: canvasHeight, scale: frameScale, onLayout } = useMeasuredCanonicalFrame(
     viewportWidth,
-    Math.max(1, viewportHeight - insets.top - insets.bottom),
+    viewportHeight,
+    insets.top,
+    insets.bottom,
   );
 
   const loadDetails = useCallback(async () => {
@@ -301,7 +303,7 @@ export default function ProfileScreen() {
 
   return (
     <ScreenShell surface="profile" sceneMode="hero">
-      <View style={[styles.referenceRoot, { marginBottom: -insets.bottom }]}>
+      <View onLayout={onLayout} style={[styles.referenceRoot, { marginBottom: -insets.bottom }]}>
         <ScrollView
           testID="profile-screen"
           style={styles.profileScroll}
@@ -311,7 +313,7 @@ export default function ProfileScreen() {
         >
           <View testID="profile-reference-scene" style={[styles.canvas, { width: frameWidth, height: canvasHeight, marginTop: insets.top, alignSelf: 'center' }]}>
             <View style={[styles.frame, { width: frameWidth, height: canvasHeight, left: 0, top: 0 }]}>
-              <Image source={PROFILE_REFERENCE} style={StyleSheet.absoluteFillObject} resizeMode="cover" accessibilityLabel="Composición oficial de Perfil VEXFORGE" accessibilityIgnoresInvertColors />
+              <Image source={PROFILE_REFERENCE} style={StyleSheet.absoluteFillObject} resizeMode="stretch" accessibilityLabel="Composición oficial de Perfil VEXFORGE" accessibilityIgnoresInvertColors />
               <View pointerEvents="none" style={[styles.identityMask, { backgroundColor: `${colors.ink}D4`, borderRadius: 8 * frameScale }]} />
               <View pointerEvents="none" style={styles.dataLayer}>
                 <DataText style={[styles.displayName, { fontSize: 17 * frameScale }]}>{displayName.toUpperCase()}</DataText>

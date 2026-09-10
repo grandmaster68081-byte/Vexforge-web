@@ -1,3 +1,6 @@
+import { useCallback, useState } from 'react';
+import type { LayoutChangeEvent } from 'react-native';
+
 export const CANONICAL_FRAME_WIDTH = 1080;
 export const CANONICAL_FRAME_HEIGHT = 2340;
 export const CANONICAL_FRAME_ASPECT_RATIO = CANONICAL_FRAME_WIDTH / CANONICAL_FRAME_HEIGHT;
@@ -25,5 +28,46 @@ export function getCanonicalFrameMetrics(viewportWidth: number, viewportHeight: 
     width: CANONICAL_FRAME_WIDTH * scale,
     height: CANONICAL_FRAME_HEIGHT * scale,
     scale,
+  };
+}
+
+/**
+ * Uses the measured native container as the source of truth for screens that
+ * are mounted inside scrollable or tab content. Some Android builds report
+ * window dimensions in a different coordinate space from the actual layout;
+ * using that value directly can render a 1080×2340 asset at native size and
+ * show only a cropped portion of it.
+ */
+export function useMeasuredCanonicalFrame(
+  viewportWidth: number,
+  viewportHeight: number,
+  topInset = 0,
+  bottomInset = 0,
+): CanonicalFrameMetrics & { onLayout: (event: LayoutChangeEvent) => void } {
+  const fallback = getCanonicalFrameMetrics(
+    viewportWidth,
+    Math.max(1, viewportHeight - topInset - bottomInset),
+  );
+  const [container, setContainer] = useState({ width: 0, height: 0 });
+  const onLayout = useCallback((event: LayoutChangeEvent) => {
+    const { width, height } = event.nativeEvent.layout;
+    if (width <= 0 || height <= 0) return;
+    setContainer((current) => (
+      current.width === width && current.height === height
+        ? current
+        : { width, height }
+    ));
+  }, []);
+
+  const width = container.width > 0 ? container.width : fallback.width;
+  const height = container.height > 0
+    ? Math.max(1, container.height - topInset)
+    : fallback.height;
+
+  return {
+    width,
+    height,
+    scale: width / CANONICAL_FRAME_WIDTH,
+    onLayout,
   };
 }

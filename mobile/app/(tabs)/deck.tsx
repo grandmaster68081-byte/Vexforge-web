@@ -25,7 +25,7 @@ import {
   type PlayerCard,
 } from '@/lib/supabase';
 import { ScreenShell } from '@/components/ScreenShell';
-import { getCanonicalFrameMetrics } from '@/components/CanonicalFrame';
+import { useMeasuredCanonicalFrame } from '@/components/CanonicalFrame';
 
 const MAX_DECKS = 10;
 const MAX_DECK = 30;
@@ -246,9 +246,11 @@ export default function DeckScreen() {
   const colors = useColors();
   const insets = useSafeAreaInsets();
   const { width: viewportWidth, height: viewportHeight } = useWindowDimensions();
-  const { width, height: canvasHeight } = getCanonicalFrameMetrics(
+  const { width, height: canvasHeight, onLayout } = useMeasuredCanonicalFrame(
     viewportWidth,
-    Math.max(1, viewportHeight - insets.top - insets.bottom),
+    viewportHeight,
+    insets.top,
+    insets.bottom,
   );
   const router = useRouter();
   const { session, player, collection, collectionLoading, syncState, syncError, refresh } = useGame();
@@ -375,12 +377,12 @@ export default function DeckScreen() {
 
   return (
     <ScreenShell sceneMode="hero">
-      <View style={[styles.referenceRoot, { marginBottom: -insets.bottom, backgroundColor: colors.ink }]}>
+      <View onLayout={onLayout} style={[styles.referenceRoot, { marginBottom: -insets.bottom, backgroundColor: colors.ink }]}>
         <View style={[styles.referenceCanvas, { width, height: canvasHeight, marginTop: insets.top, alignSelf: 'center' }]}>
         <Image
           source={DECK_REFERENCE}
           style={StyleSheet.absoluteFillObject}
-          resizeMode="cover"
+          resizeMode="stretch"
           accessibilityLabel="Composición oficial de Mazos VEXFORGE"
         />
         <View pointerEvents="box-none" style={StyleSheet.absoluteFillObject}>

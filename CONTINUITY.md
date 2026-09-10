@@ -2314,3 +2314,11 @@
 - Causa reproducible: el job usa `mobile/` como directorio de trabajo por defecto, mientras las guardas leen rutas desde la raíz del repositorio; el primer intento abría `mobile/app/auth.tsx` desde dentro de `mobile/`.
 - Se corrigió únicamente el workflow oficial para subir a la raíz antes de ejecutar `scripts/verify-mobile-*.mjs`. No se modificaron código Android, Supabase, Auth, RLS, RPCs, Storage ni assets.
 - No hubo APK ni release publicado en esos runs. Estado: `IMPLEMENTED_UNVERIFIED`; queda pendiente una ejecución posterior que atraviese guardas, prebuild, Gradle y publicación.
+
+---
+## 2026-09-10 — VE-MOB-REFERENCE-FRAME — ANDROID MEASURED-CANVAS REPAIR
+
+- El diagnóstico de Cartas, Mazos y Perfil encontró que las tres pantallas calculaban el canvas únicamente desde `useWindowDimensions()` aunque están montadas dentro de contenedores con safe area, tabs y, en dos casos, scroll. Ese contrato podía dejar el arte `1080×2340` en otra unidad de coordenadas que el contenedor nativo y producir zoom/recorte en la APK.
+- Se añadió una medición del contenedor nativo como fuente final de ancho y alto. El cálculo anterior queda sólo como fallback inicial; después de `onLayout`, el arte, las capas de datos y las zonas porcentuales comparten exactamente el tamaño medido.
+- En las tres pantallas afectadas, la referencia oficial ahora usa `resizeMode="stretch"` dentro del canvas medido para garantizar que se vea el frame completo sin recortar laterales. No se cambiaron flujos, Supabase, RPCs, RLS, assets ni la web congelada.
+- Se actualizaron las guardas específicas para exigir el canvas medido, `onLayout` y ausencia de recorte. Estado honesto: `IMPLEMENTED_UNVERIFIED` hasta completar typecheck, Gradle, publicación de la APK y QA visual en dispositivo.
