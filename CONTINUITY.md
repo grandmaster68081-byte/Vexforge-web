@@ -1,3 +1,15 @@
+## 2026-09-10 — VE-MOB-2/3/7 — LIVE FLOW AUDIT / IMPLEMENTED_UNVERIFIED
+
+- Se reconcilió la autoridad normativa por HTTPS directo: la fila activa de Supabase vexforge_master_protocol_v2 quedó sincronizada byte a byte con VEXFORGE_PROTOCOL_V2.md de main, versión v2.15-tier1-additive-integration-assets-20260907.
+- Auth conserva inicio de sesión, registro, recuperación, recordar sesión, visibilidad de contraseña y OAuth Google/Discord/Apple conectados a Supabase Auth y a ensure_player_row; la sesión QA real autenticó correctamente.
+- Inicio mantiene el arte de referencia intacto y sus hotspots transparentes enrutan Forja→Fusión, Arena→Batalla, Cartas, Mundo, Archivo, Eventos, Misión y las cinco pestañas reales.
+- Batalla mantiene la consulta real de oponentes, la confirmación explícita, la formación derivada del mazo, el acceso a PVE/Jefe y práctica IA separada; el combate PvP sigue resolviéndose sólo por vexforge_battle_resolve. No se ejecutó una resolución de combate contra datos vivos durante la auditoría.
+- Evidencia QA no destructiva: Supabase respondió correctamente para perfil, mazo, rango PvP y oponentes usando el players.id canónico; el mazo QA devolvió 30 ranuras con arte canónico y 2 oponentes elegibles.
+- Guardas locales: verify-mobile-auth 14/14, Home 8/8, Batalla 20/20, Mazos 22/22, Perfil 21/21, Colección 12/12, Card Pilot 6/6 y estados de arte OK.
+- El APK oficial se está construyendo sobre el commit Android auditado 6f93a9f; queda pendiente confirmar el resultado del workflow y el release correlativo, además de la QA visual/táctil humana. Estado honesto: IMPLEMENTED_UNVERIFIED.
+
+---
+
 ## 2026-09-10 — VE-MOB-5/9 — CANONICAL DATA ZONES / IMPLEMENTED_UNVERIFIED
 
 - La referencia visual de Mazos, Cartas y Perfil permanece intacta. Los textos genéricos que ya forman parte del PNG no se tratan como datos del jugador ni se sustituyen con una segunda composición.
