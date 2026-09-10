@@ -230,3 +230,14 @@ La Fase VISUAL no se declara cerrada sólo por compilar: debe alcanzar al menos 
 - APK: `vexforge-android-build-129/app-release.apk`, 95,339,228 bytes, SHA-256 `50e8f09ee063b4b1aa0ce7d7cfdf313424b06cfc18b57b375b01132f87836ae6`.
 - La inspección del bundle embebido confirmó `home-scene`, `home-world`, `home-featured-card`, `home-battle`, `home-missions`, `home-event`, `home-tutorial`, `FOJA`, `ARENA` y `ARCHIVO`.
 - Esta evidencia confirma que la compilación contiene el Home de escena continua y flujos nuevos; no sustituye la QA humana de instalación, touch, safe areas, legibilidad y rendimiento.
+
+
+## Lote visual y táctil — 2026-09-10 — REFERENCE REPLACEMENT / IMPLEMENTED_UNVERIFIED
+
+- Se reemplazó por completo `mobile/assets/images/home-reference-scene.png` por la referencia entregada por el operador. Se normalizó a `1080×2340`, PNG RGB/sRGB y proporción `9:19.5`, sin pintar una pantalla adicional encima del arte.
+- Las zonas transparentes se recalibraron a la composición visible: ajustes → `/meta`, avisos → `/missions`, Forja → `/deck`, Arena → `/battle`, Fusión → `/store?mode=fusion`, Archivo → `/collection`, Tienda → `/store?mode=shop`, Evolución → `/store?mode=evolution` y Packs → `/store?mode=packs`.
+- Se añadió feedback localizado en el punto real del toque: aro luminoso breve, núcleo de color acorde al portal y selección háptica; `reduced-motion` conserva una señal visible sin expansión animada.
+- Videos no tiene una superficie Android existente en el inventario. El hotspot no inventa una ruta: muestra un estado explícito al tocarlo para evitar una navegación falsa.
+- No se modificaron Supabase, Auth, RLS, RPCs, economía, combate ni la web congelada.
+- Verificación local: `npm run typecheck` en `mobile/`, `node scripts/verify-mobile-home-official-assets.mjs`, `node scripts/verify-motion.mjs`, `node scripts/verify-mobile-store.mjs` y validación de imagen `1080×2340 RGB` pasan.
+- Por instrucción explícita del operador no se ejecuta el workflow ni se genera una APK nueva. Estado: `IMPLEMENTED_UNVERIFIED`; queda pendiente QA visual/táctil humana en el APK ya publicado.

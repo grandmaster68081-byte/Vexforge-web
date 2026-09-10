@@ -1,3 +1,14 @@
+## 2026-09-10 — VE-MOB-3-HOME — REFERENCE REPLACEMENT / IMPLEMENTED_UNVERIFIED
+
+- Se reemplazó por completo `mobile/assets/images/home-reference-scene.png` con la nueva referencia del operador, normalizada a `1080×2340`, PNG RGB/sRGB y proporción `9:19.5`; no se superpuso otra pantalla sobre la composición.
+- Se recalibraron los hotspots transparentes del lienzo: Ajustes → `/meta`, Avisos → `/missions`, Forja → `/deck`, Arena → `/battle`, Fusión → `/store?mode=fusion`, Archivo → `/collection`, Tienda → `/store?mode=shop`, Evolución → `/store?mode=evolution` y Packs → `/store?mode=packs`.
+- Se añadió un reflejo visual localizado en el punto exacto del toque, con color por portal, señal háptica y comportamiento compatible con `reduced-motion`.
+- Videos no cuenta con una ruta Android existente; el hotspot muestra un estado explícito y no inventa navegación ni datos. No se modificaron Supabase, Auth, RLS, RPCs, economía, combate ni la web congelada.
+- Guardas: `npm run typecheck` en `mobile/`, `verify-mobile-home-official-assets` — 9/9, `verify-motion`, `verify-mobile-store` y validación `1080×2340 RGB` pasan.
+- No se ejecutó el workflow Android ni se generó una APK nueva por instrucción explícita del operador. Estado honesto: `IMPLEMENTED_UNVERIFIED`; falta QA visual/táctil humana sobre el APK ya publicado. Transporte y publicación de esta actualización: API REST HTTPS de GitHub, sin Git Smart HTTP.
+
+---
+
 ## 2026-09-10 — VE-MOB-2/3/7 — LIVE FLOW AUDIT / IMPLEMENTED_UNVERIFIED
 
 - Se reconcilió la autoridad normativa por HTTPS directo: la fila activa de Supabase vexforge_master_protocol_v2 quedó sincronizada byte a byte con VEXFORGE_PROTOCOL_V2.md de main, versión v2.15-tier1-additive-integration-assets-20260907.
