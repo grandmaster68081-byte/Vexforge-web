@@ -5,7 +5,7 @@
 - Se añadió un reflejo visual localizado en el punto exacto del toque, con color por portal, señal háptica y comportamiento compatible con `reduced-motion`.
 - Videos no cuenta con una ruta Android existente; el hotspot muestra un estado explícito y no inventa navegación ni datos. No se modificaron Supabase, Auth, RLS, RPCs, economía, combate ni la web congelada.
 - Guardas: `npm run typecheck` en `mobile/`, `verify-mobile-home-official-assets` — 9/9, `verify-motion`, `verify-mobile-store` y validación `1080×2340 RGB` pasan.
-- No se ejecutó el workflow Android ni se generó una APK nueva por instrucción explícita del operador. Estado honesto: `IMPLEMENTED_UNVERIFIED`; falta QA visual/táctil humana sobre el APK ya publicado. Transporte y publicación de esta actualización: API REST HTTPS de GitHub, sin Git Smart HTTP.
+- Commit de implementación publicado en `main`: `b2e9dabee7bd49c90d199032d71544ac5547589c`. No se ejecutó el workflow Android ni se generó una APK nueva por instrucción explícita del operador. Estado honesto: `IMPLEMENTED_UNVERIFIED`; falta QA visual/táctil humana sobre el APK ya publicado. Transporte y publicación de esta actualización: API REST HTTPS de GitHub, sin Git Smart HTTP.
 
 ---
 
