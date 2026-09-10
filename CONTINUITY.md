@@ -2298,3 +2298,11 @@
 - Las zonas visibles quedan conectadas a los flujos reales existentes: Colección, Tus cartas, Fusión, Logros, filtros por facción, búsqueda, orden, restablecer filtros, crear/editar mazo, detalle, navegación inferior, validación `validate_deck`, guardado `save_deck`, sincronización y entrada a Arena. No se modificaron Supabase, RLS, RPCs, economía, combate ni assets oficiales.
 - Evidencia estática: `verify-mobile-deck` `18/18`, `verify:mobile-collection-reference` `12/12`, Home `8/8` y Perfil `16/16`. El typecheck móvil no pudo ejecutarse porque el firewall de paquetes devolvió `404` al instalar `npm-package-arg@11.0.3`; no se compiló APK ni se ejecutó el workflow Android por instrucción del operador.
 - Estado honesto: `IMPLEMENTED_UNVERIFIED`. No se declara QA humana, `PASS`, `OPERATIONAL`, `TIER1_READY` ni release Android para este cambio; el commit de código queda publicado en `main` sin publicar aplicación.
+
+---
+## 2026-09-10 — VE-MOB-REFERENCE-FLOW-CHECK — PROFILE ROUTE REPAIR / APK REQUESTED
+
+- Se compararon Auth, Inicio, Batalla, Cartas, Mazos y Perfil contra el contrato común del frame Android `1080×2340`, las métricas de área segura, el arte oficial y el mapa táctil proporcional. No se modificó la web congelada ni Supabase.
+- Se corrigió `mobile/app/(tabs)/profile.tsx`: el acceso visible `Títulos` abre el panel de títulos en lugar de Logros, y `section=achievements` vuelve a abrir el panel cuando Perfil ya estaba montado y recibe navegación desde Cartas o Mazos.
+- Se reforzó `scripts/verify-mobile-profile.mjs` con ambas regresiones de flujo. Guardas locales: Auth `14/14`, Home `8/8`, Cartas `12/12`, Batalla `20/20`, Mazos `18/18`, Perfil `18/18`; telemetría Android `5` eventos canónicos.
+- Estado: `IMPLEMENTED_UNVERIFIED` hasta completar el workflow Android oficial, publicar el release correlativo y recibir QA visual/táctil humana. La APK solicitada debe corresponder al commit de este registro.

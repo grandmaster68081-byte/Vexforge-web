@@ -60,7 +60,7 @@ const PROFILE_HOTSPOTS: Array<{
   { id: 'cards', label: 'Abrir cartas obtenidas', left: '35%', top: '62%', width: '30%', height: '11%', action: 'owned' },
   { id: 'progress', label: 'Abrir progreso', left: '68%', top: '72%', width: '28%', height: '8%', action: 'progress' },
   { id: 'quick-achievements', label: 'Logros', left: '3%', top: '81%', width: '21%', height: '9%', action: 'achievements' },
-  { id: 'quick-titles', label: 'Títulos', left: '26%', top: '81%', width: '21%', height: '9%', action: 'achievements' },
+  { id: 'quick-titles', label: 'Títulos', left: '26%', top: '81%', width: '21%', height: '9%', action: 'titles' },
   { id: 'quick-rewards', label: 'Recompensas', left: '50%', top: '81%', width: '21%', height: '9%', action: 'missions' },
   { id: 'quick-social', label: 'Red de forjadores', left: '74%', top: '81%', width: '23%', height: '9%', action: 'social' },
   { id: 'nav-home', label: 'Inicio', left: '0%', top: '91%', width: '20%', height: '9%', action: 'home' },
@@ -245,6 +245,12 @@ export default function ProfileScreen() {
   }, [player?.id, session]);
 
   useEffect(() => { void loadDetails(); }, [loadDetails]);
+
+  useEffect(() => {
+    if (requestedSection === 'achievements') {
+      setPanel('achievements');
+    }
+  }, [requestedSection]);
 
   const displayName = player?.display_name?.trim() || session?.user.email?.split('@')[0] || 'Forjador';
   const playerEmail = player ? player.email : null;

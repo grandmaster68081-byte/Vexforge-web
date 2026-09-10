@@ -28,6 +28,8 @@ const assertions = [
   ['profile reference is 1080x2340 RGB', referenceWidth === 1080 && referenceHeight === 2340 && referenceColorType === 2],
   ['profile preserves the canonical frame ratio', contents.screen.includes('frameScale') && contents.screen.includes('Math.max(1, viewportHeight - insets.top - insets.bottom)')],
   ['profile has tactile navigation actions', contents.screen.includes("router.push('/missions')") && contents.screen.includes("router.push('/collection')") && contents.screen.includes("router.push('/deck')")],
+  ['profile quick titles opens titles panel', contents.screen.includes("id: 'quick-titles'") && contents.screen.includes("id: 'quick-titles', label: 'Títulos'") && contents.screen.includes("id: 'quick-titles', label: 'Títulos', left: '26%', top: '81%', width: '21%', height: '9%', action: 'titles'")],
+  ['profile responds to achievements route params', contents.screen.includes("if (requestedSection === 'achievements')") && contents.screen.includes("setPanel('achievements')")],
   ['profile has account sign out', contents.screen.includes('profile-sign-out') && contents.screen.includes('signOut')],
   ['no client profile simulation', !contents.screen.includes('Math.random') && !contents.screen.includes('mock')],
   ['no emoji characters in profile UI', !/[\u{1F000}-\u{1FAFF}]/u.test(contents.screen)],
