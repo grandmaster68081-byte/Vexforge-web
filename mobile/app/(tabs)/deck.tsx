@@ -365,14 +365,20 @@ export default function DeckScreen() {
   };
 
   const onRefresh = async () => { await Promise.all([refresh(), loadDeck()]); };
-  const navigate = (destination: '/index' | '/battle' | '/collection' | '/deck' | '/profile') => router.push(destination);
+  const navigate = (destination: '/' | '/battle' | '/collection' | '/deck' | '/profile') => {
+    if (destination === '/') {
+      router.replace('/');
+      return;
+    }
+    router.push(destination);
+  };
   const selectedPreview = savedSlots[0] ?? null;
 
   return (
     <ScreenShell sceneMode="hero">
       <View style={[styles.referenceRoot, { marginBottom: -insets.bottom }]}>
         <View style={[styles.referenceCanvas, { width, height: canvasHeight, marginTop: insets.top, alignSelf: 'center' }]}>
-        <Image source={DECK_REFERENCE} style={StyleSheet.absoluteFillObject} resizeMode="contain" accessibilityLabel="Composición oficial de Mazos VEXFORGE" />
+        <Image source={DECK_REFERENCE} style={StyleSheet.absoluteFillObject} resizeMode="cover" accessibilityLabel="Composición oficial de Mazos VEXFORGE" />
         <View pointerEvents="none" style={[styles.referenceShade, { backgroundColor: `${colors.ink}18` }]} />
         <View pointerEvents="box-none" style={StyleSheet.absoluteFillObject}>
           <View style={[styles.deckCounter, { top: canvasHeight * 0.19, right: width * 0.115 }]}>
@@ -393,12 +399,12 @@ export default function DeckScreen() {
             ))}
           </View>
 
-          <View style={[styles.searchBox, { top: canvasHeight * 0.394, left: width * 0.065, width: width * 0.59, borderColor: `${colors.foreground}44`, backgroundColor: `${colors.ink}44` }]}>
+           <View style={[styles.searchBox, { top: canvasHeight * 0.374, left: width * 0.065, width: width * 0.59, borderColor: `${colors.foreground}44`, backgroundColor: `${colors.ink}44` }]}>
             <Feather name="search" size={16} color={colors.mutedForeground} />
             <TextInput testID="deck-search" accessibilityLabel="Buscar mazo por nombre" value={search} onChangeText={setSearch} placeholder="Buscar mazo por nombre..." placeholderTextColor={colors.mutedForeground} style={[styles.searchInput, { color: colors.foreground }]} autoCorrect={false} />
             {search ? <Pressable testID="deck-clear-search" accessibilityRole="button" accessibilityLabel="Limpiar búsqueda" onPress={() => setSearch('')}><Feather name="x-circle" size={15} color={colors.mutedForeground} /></Pressable> : null}
           </View>
-          <Pressable testID="deck-sort" accessibilityRole="button" accessibilityLabel="Cambiar orden de mazos" onPress={() => setSort(sort === 'recent' ? 'name' : sort === 'name' ? 'power' : 'recent')} style={[styles.sortBox, { top: canvasHeight * 0.394, right: width * 0.16, width: width * 0.32, borderColor: `${colors.foreground}44`, backgroundColor: `${colors.ink}44` }]}>
+          <Pressable testID="deck-sort" accessibilityRole="button" accessibilityLabel="Cambiar orden de mazos" onPress={() => setSort(sort === 'recent' ? 'name' : sort === 'name' ? 'power' : 'recent')} style={[styles.sortBox, { top: canvasHeight * 0.374, right: width * 0.16, width: width * 0.32, borderColor: `${colors.foreground}44`, backgroundColor: `${colors.ink}44` }]}>
             <Text style={[styles.sortText, { color: colors.mutedForeground }]}>Ordenar: {sort === 'recent' ? 'Recientes' : sort === 'name' ? 'Nombre' : 'Poder'}</Text>
             <Feather name="chevron-down" size={14} color={colors.mutedForeground} />
           </Pressable>
@@ -406,7 +412,7 @@ export default function DeckScreen() {
             <Feather name="sliders" size={18} color={colors.accent} />
           </Pressable>
 
-          <View style={[styles.deckCarousel, { top: canvasHeight * 0.485, left: width * 0.04, right: width * 0.04 }]}>
+           <View style={[styles.deckCarousel, { top: canvasHeight * 0.445, left: width * 0.04, right: width * 0.04 }]}>
             <DeckPreviewCard colors={colors} width={cardWidth} onPress={handleCreate} />
             {visibleSavedDeck && selectedPreview ? <DeckPreviewCard slot={selectedPreview} colors={colors} width={cardWidth} active={selectedIds.length > 0} onPress={() => { setSelectedIds(savedSlots.map((slot) => slot.card_id)); setMessage('Mazo cargado para edición.'); setEditing(true); }} /> : null}
             {Array.from({ length: Math.max(0, 3 - (visibleSavedDeck && selectedPreview ? 1 : 0)) }, (_, index) => <DeckPreviewCard key={`empty-${index}`} colors={colors} width={cardWidth} onPress={handleCreate} />)}
@@ -440,7 +446,7 @@ export default function DeckScreen() {
           {validation ? <Pressable testID="deck-validation" accessibilityRole="alert" onPress={() => setValidation(null)} style={[styles.validation, { borderColor: validation.valid ? colors.success : colors.danger, backgroundColor: `${colors.ink}EE` }]}><Feather name={validation.valid ? 'check-circle' : 'alert-circle'} size={15} color={validation.valid ? colors.success : colors.danger} /><Text style={[styles.validationText, { color: colors.foreground }]}>{validation.valid ? 'MAZO VÁLIDO' : validation.errors.join(' ')}</Text></Pressable> : null}
 
           <View style={styles.bottomNavigation}>
-            <Pressable testID="reference-home" accessibilityRole="button" accessibilityLabel="Inicio" onPress={() => navigate('/index')} style={styles.bottomHit} />
+            <Pressable testID="reference-home" accessibilityRole="button" accessibilityLabel="Inicio" onPress={() => navigate('/')} style={styles.bottomHit} />
             <Pressable testID="reference-battle" accessibilityRole="button" accessibilityLabel="Batalla" onPress={() => navigate('/battle')} style={styles.bottomHit} />
             <Pressable testID="reference-cards" accessibilityRole="button" accessibilityLabel="Cartas" onPress={() => navigate('/collection')} style={styles.bottomHit} />
             <Pressable testID="reference-deck" accessibilityRole="button" accessibilityLabel="Mazo" onPress={() => navigate('/deck')} style={styles.bottomHit} />

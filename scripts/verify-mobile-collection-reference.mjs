@@ -21,6 +21,7 @@ const checks = [
   ['collection uses the canonical reference asset', collection.includes("collection-reference-scene.png")],
   ['reference fills the calibrated canvas', collection.includes('resizeMode="cover"') && collection.includes('top: canvasHeight * 0.392')],
   ['cards use the four-column reference grid', collection.includes("width: '22%'") && collection.includes("justifyContent: 'space-between'")],
+  ['home connector uses the canonical root route', collection.includes("navigateFromReference('/')") && !collection.includes("navigateFromReference('/index')")],
   ['catalog exposes the real creation date', supabase.includes('created_at%2Cfaction')],
   ['recent ordering is implemented', collection.includes("sort === 'recent'")],
   ['collection paginates twelve cards', collection.includes('index += 12') && collection.includes('length: 12')],

@@ -477,7 +477,11 @@ export default function CollectionScreen() {
     pagerRef.current?.scrollToIndex({ index: nextPage, animated: true });
   };
 
-  const navigateFromReference = (destination: '/index' | '/battle' | '/deck' | '/profile' | '/collection') => {
+  const navigateFromReference = (destination: '/' | '/battle' | '/deck' | '/profile' | '/collection') => {
+    if (destination === '/') {
+      router.replace('/');
+      return;
+    }
     router.push(destination);
   };
 
@@ -684,7 +688,7 @@ export default function CollectionScreen() {
           </View>
 
           <View style={styles.referenceBottomNavigation}>
-            <Pressable testID="reference-home" accessibilityRole="button" accessibilityLabel="Inicio" onPress={() => navigateFromReference('/index')} style={styles.referenceBottomHit} />
+            <Pressable testID="reference-home" accessibilityRole="button" accessibilityLabel="Inicio" onPress={() => navigateFromReference('/')} style={styles.referenceBottomHit} />
             <Pressable testID="reference-battle" accessibilityRole="button" accessibilityLabel="Batalla" onPress={() => navigateFromReference('/battle')} style={styles.referenceBottomHit} />
             <Pressable testID="reference-cards" accessibilityRole="button" accessibilityLabel="Cartas" onPress={() => navigateFromReference('/collection')} style={styles.referenceBottomHit} />
             <Pressable testID="reference-deck" accessibilityRole="button" accessibilityLabel="Mazo" onPress={() => navigateFromReference('/deck')} style={styles.referenceBottomHit} />
