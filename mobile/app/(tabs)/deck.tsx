@@ -25,7 +25,7 @@ import {
   type PlayerCard,
 } from '@/lib/supabase';
 import { ScreenShell } from '@/components/ScreenShell';
-import { getCanonicalFrameMetrics } from '@/components/CanonicalFrame';
+import { useMeasuredCanonicalFrame } from '@/components/CanonicalFrame';
 
 const MAX_DECKS = 10;
 const MAX_DECK = 30;
@@ -246,10 +246,17 @@ export default function DeckScreen() {
   const colors = useColors();
   const insets = useSafeAreaInsets();
   const { width: viewportWidth, height: viewportHeight } = useWindowDimensions();
-  const { width, height: canvasHeight } = getCanonicalFrameMetrics(
+  const {
+    width: frameWidth,
+    height: canvasHeight,
+    onLayout: onReferenceRootLayout,
+  } = useMeasuredCanonicalFrame(
     viewportWidth,
-    Math.max(1, viewportHeight - insets.top - insets.bottom),
+    viewportHeight,
+    insets.top,
+    insets.bottom,
   );
+  const width = frameWidth;
   const router = useRouter();
   const { session, player, collection, collectionLoading, syncState, syncError, refresh } = useGame();
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
@@ -375,8 +382,11 @@ export default function DeckScreen() {
 
   return (
     <ScreenShell sceneMode="hero">
-      <View style={[styles.referenceRoot, { marginBottom: -insets.bottom, backgroundColor: colors.ink }]}>
-        <View style={[styles.referenceScene, { width, height: canvasHeight, marginTop: insets.top, alignSelf: 'center' }]}>
+      <View
+        onLayout={onReferenceRootLayout}
+        style={[styles.referenceRoot, { marginBottom: -insets.bottom, backgroundColor: colors.ink }]}
+      >
+        <View style={[styles.referenceScene, { width: frameWidth, height: canvasHeight, marginTop: insets.top, alignSelf: 'center' }]}>
         <Image
           source={DECK_REFERENCE}
           style={styles.referenceImage}
@@ -385,14 +395,14 @@ export default function DeckScreen() {
         />
         <View pointerEvents="box-none" style={StyleSheet.absoluteFillObject}>
           {hasSavedDeck ? (
-            <View pointerEvents="none" style={[styles.deckCounter, { top: canvasHeight * 0.19, right: width * 0.115 }]}>
+            <View pointerEvents="none" style={[styles.deckCounter, { top: canvasHeight * 0.19, right: frameWidth * 0.115 }]}>
               <Text style={[styles.deckCounterValue, { color: colors.foreground }]}>1 / {MAX_DECKS}</Text>
               <Text style={[styles.deckCounterLabel, { color: colors.mutedForeground }]}>MAZOS CREADOS</Text>
             </View>
           ) : null}
-          <Pressable testID="deck-refresh" accessibilityRole="button" accessibilityLabel="Actualizar mazos" onPress={onRefresh} style={[styles.refreshHotspot, { top: canvasHeight * 0.18, right: width * 0.04, width: width * 0.1, height: canvasHeight * 0.035 }]} />
+          <Pressable testID="deck-refresh" accessibilityRole="button" accessibilityLabel="Actualizar mazos" onPress={onRefresh} style={[styles.refreshHotspot, { top: canvasHeight * 0.18, right: frameWidth * 0.04, width: frameWidth * 0.1, height: canvasHeight * 0.035 }]} />
 
-          <Pressable testID="deck-collection-tab" accessibilityRole="button" accessibilityLabel="Abrir colección" onPress={() => navigate('/collection')} style={[styles.topHotspot, { left: width * 0.04, top: canvasHeight * 0.108, width: width * 0.24, height: canvasHeight * 0.04 }]} />
+          <Pressable testID="deck-collection-tab" accessibilityRole="button" accessibilityLabel="Abrir colección" onPress={() => navigate('/collection')} style={[styles.topHotspot, { left: frameWidth * 0.04, top: canvasHeight * 0.108, width: frameWidth * 0.24, height: canvasHeight * 0.04 }]} />
           <Pressable testID="deck-owned-tab" accessibilityRole="button" accessibilityLabel="Abrir tus cartas" onPress={() => router.push('/collection?scope=owned')} style={[styles.topHotspot, { left: width * 0.29, top: canvasHeight * 0.108, width: width * 0.23, height: canvasHeight * 0.04 }]} />
           <Pressable testID="deck-fusion-tab" accessibilityRole="button" accessibilityLabel="Abrir fusión" onPress={() => router.push('/store?mode=fusion')} style={[styles.topHotspot, { left: width * 0.52, top: canvasHeight * 0.108, width: width * 0.19, height: canvasHeight * 0.04 }]} />
           <Pressable testID="deck-achievements-tab" accessibilityRole="button" accessibilityLabel="Abrir logros" onPress={() => router.push('/profile?section=achievements')} style={[styles.topHotspot, { right: width * 0.04, top: canvasHeight * 0.108, width: width * 0.19, height: canvasHeight * 0.04 }]} />

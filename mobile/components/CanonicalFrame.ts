@@ -59,15 +59,18 @@ export function useMeasuredCanonicalFrame(
     ));
   }, []);
 
-  const width = container.width > 0 ? container.width : fallback.width;
-  const height = container.height > 0
-    ? Math.max(1, container.height - topInset)
-    : fallback.height;
+  if (container.width <= 0 || container.height <= 0) {
+    return { ...fallback, onLayout };
+  }
 
+  // Android can report window dimensions in physical pixels while native
+  // layout events are expressed in dp. Fit from the measured container so
+  // the authored frame cannot be mounted at the wrong coordinate scale.
   return {
-    width,
-    height,
-    scale: width / CANONICAL_FRAME_WIDTH,
+    ...getCanonicalFrameMetrics(
+      container.width,
+      Math.max(1, container.height - topInset),
+    ),
     onLayout,
   };
 }

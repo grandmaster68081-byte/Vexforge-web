@@ -19,7 +19,7 @@ import { useColors } from '@/hooks/useColors';
 import { ProgressBar } from '@/components/ProgressBar';
 import { useGame } from '@/context/GameContext';
 import { ScreenShell } from '@/components/ScreenShell';
-import { getCanonicalFrameMetrics } from '@/components/CanonicalFrame';
+import { useMeasuredCanonicalFrame } from '@/components/CanonicalFrame';
 import { DomainState } from '@/components/DomainState';
 import { DomainHeader } from '@/components/DomainHeader';
 import type { PlayerCard, PublicCard } from '@/lib/supabase';
@@ -418,9 +418,15 @@ export default function CollectionScreen() {
   const router = useRouter();
   const { scope: scopeParam } = useLocalSearchParams<{ scope?: string }>();
   const { width: viewportWidth, height: viewportHeight } = useWindowDimensions();
-  const { width: frameWidth, height: canvasHeight } = getCanonicalFrameMetrics(
+  const {
+    width: frameWidth,
+    height: canvasHeight,
+    onLayout: onReferenceRootLayout,
+  } = useMeasuredCanonicalFrame(
     viewportWidth,
-    Math.max(1, viewportHeight - insets.top - insets.bottom),
+    viewportHeight,
+    insets.top,
+    insets.bottom,
   );
   const { featuredCards, cardsTotal, collection, collectionLoading, syncState, syncError, refresh } = useGame();
   const [search, setSearch] = useState('');
@@ -510,7 +516,10 @@ export default function CollectionScreen() {
   const hasFilters = Boolean(search || rarity !== 'all' || faction !== 'all' || scope !== 'all');
   return (
     <ScreenShell sceneMode="hero">
-      <View style={[styles.referenceRoot, { marginBottom: -insets.bottom }]}>
+      <View
+        onLayout={onReferenceRootLayout}
+        style={[styles.referenceRoot, { marginBottom: -insets.bottom }]}
+      >
         <View style={[styles.referenceScene, { width: frameWidth, height: canvasHeight, marginTop: insets.top, alignSelf: 'center' }]}>
         <Image
           source={COLLECTION_REFERENCE}

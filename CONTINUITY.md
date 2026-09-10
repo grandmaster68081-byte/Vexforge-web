@@ -1,3 +1,13 @@
+## 2026-09-10 — VE-MOB-4/5/9 — MEASURED NATIVE FRAME / IMPLEMENTED_UNVERIFIED
+
+- La causa comprobada de las tres capturas rotas no era el PNG: las referencias siguen siendo RGB `1080×2340` y conservan la proporción correcta.
+- Cartas, Mazos y Perfil tomaban el tamaño de `useWindowDimensions()` como autoridad directa. En el Android afectado ese valor estaba en otra coordenada que el layout nativo; el resultado era montar la composición a escala nativa y mostrar sólo su zona izquierda.
+- Se activó `useMeasuredCanonicalFrame()` en las tres superficies y cada raíz mide su contenedor nativo con `onLayout`. La medida real se vuelve a ajustar con `getCanonicalFrameMetrics()`, manteniendo imagen, overlays y hotspots en el mismo frame proporcional.
+- Se conservaron los flujos reales de Supabase, paginación, filtros, detalle, Fusión, Logros, edición/validación/guardado de mazos, Arena, estadísticas, perfil, ranking y navegación inferior.
+- Se actualizaron las guardas estáticas para validar el contrato medido. No se compiló APK ni se inició el workflow Android en esta sesión; el estado queda `IMPLEMENTED_UNVERIFIED` hasta QA visual/táctil en dispositivo.
+
+---
+
 ## 2026-09-09 — VE-MOB-4/5/9 — FULLSCREEN REFERENCE CANVAS / APK BUILD REQUESTED
 
 - Se reabrieron Cartas, Mazos y Perfil por hallazgo del operador: el lienzo visible no coincidía con el frame de la APK y desplazaba los flujos táctiles respecto al arte.
