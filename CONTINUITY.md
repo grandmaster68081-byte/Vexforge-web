@@ -2366,3 +2366,13 @@
 - Se alinearon las tres pantallas afectadas con el contrato que ya funciona: un único `referenceScene`, imagen dimensionada al `100%` del frame y el mismo cálculo seguro `viewportHeight - insets.top - insets.bottom`. Las capas de datos, paginación y hotspots siguen dentro de ese mismo frame; no se tocó backend ni se eliminó la actualización de Perfil.
 - Se descartó el enfoque intermedio de medir el contenedor y estirar el arte: aunque podía ocultar el recorte, habría dejado las tres pantallas con un contrato distinto al de las pantallas sanas. Las guardas ahora exigen paridad explícita con el patrón completo.
 - Estado honesto: `IMPLEMENTED_UNVERIFIED` hasta completar typecheck, Gradle, instalación de la APK y comparación visual en dispositivo. No se considera resuelto sólo por pasar guardas estáticas.
+
+---
+## 2026-09-10 — VE-MOB-REFERENCE-FLOW-CHECK — APK 174 PUBLICADA
+
+- Se corrigió la guarda de recompensas Android en `mobile/app/(tabs)/index.tsx`: el hotspot visible de avisos y misiones conserva la ruta real `/missions` y vuelve a usar el identificador semántico `mission` exigido por `verify-mobile-rewards.mjs`. No se modificaron la web, Supabase, Auth, RLS, RPCs, economía, combate ni Storage.
+- Commit de entrega: `7873a9d3fd9b96c2e760df6a6e9f85caa5e8810a`, publicado en `main` mediante la API HTTPS de GitHub.
+- Workflow oficial `vexforge-android-apk.yml`: run `34517114784` / build `174`, `success`. Pasaron instalación de dependencias, `npm run typecheck`, telemetría, todos los contratos móviles, `expo prebuild`, Gradle `assembleRelease` y la guarda de APK standalone con bundle Android embebido.
+- Release publicado: `vexforge-android-build-174`, asset `app-release.apk`, tamaño `113731324` bytes, SHA-256 `a70effb962df5b68e9f08c93036b156b0e3a8e11b6a8e0970e6194a2cf9b3f73`.
+- Descarga oficial: `https://github.com/grandmaster68081-byte/Vexforge-web/releases/download/vexforge-android-build-174/app-release.apk`.
+- La verificación general paralela `verify` terminó con fallo en `verify:uxcx-domain-identity` por contratos de identidad de Collection/Deck/Profile y FOJA; no bloqueó ni formó parte del workflow oficial de APK, que terminó correctamente. La QA visual/táctil humana en dispositivo sigue pendiente, por lo que el estado honesto continúa siendo `IMPLEMENTED_UNVERIFIED`; no se declara `PASS`, `OPERATIONAL` ni `TIER1_READY`.
