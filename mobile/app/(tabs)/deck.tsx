@@ -380,7 +380,7 @@ export default function DeckScreen() {
         <Image
           source={DECK_REFERENCE}
           style={StyleSheet.absoluteFillObject}
-          resizeMode="stretch"
+          resizeMode="cover"
           accessibilityLabel="Composición oficial de Mazos VEXFORGE"
         />
         <View pointerEvents="box-none" style={StyleSheet.absoluteFillObject}>
