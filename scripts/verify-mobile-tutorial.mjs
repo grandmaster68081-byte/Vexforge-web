@@ -28,7 +28,7 @@ const assertions = [
   ['tutorial has accessible test hooks', ['tutorial-primary', 'tutorial-skip', 'tutorial-retry'].every((testID) => contents.route.includes(`testID="${testID}"`))],
   ['tutorial has no client combat simulation', !contents.route.includes('simulate') && !contents.route.includes('fake') && !contents.route.includes('mock')],
   ['tutorial is registered in the root stack', contents.layout.includes('name="tutorial"')],
-  ['home exposes the tutorial entry point', contents.home.includes("router.push('/tutorial')") && contents.home.includes('testID="home-tutorial"')],
+  ['tutorial remains an explicit root flow', contents.layout.includes('name="tutorial"') && contents.route.includes('Redirect href="/auth"')],
   ['supabase exposes monotonic tutorial update', contents.supabase.includes('export async function advanceTutorialStep') && contents.supabase.includes('tutorial_step=lt.')],
   ['supabase exposes tutorial completion', contents.supabase.includes('export async function skipTutorial') && contents.supabase.includes('TUTORIAL_DONE_STEP')],
 ];

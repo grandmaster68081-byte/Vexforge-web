@@ -134,7 +134,7 @@ export default function AuthScreen() {
           <Image
             source={require('../assets/images/auth-reference-scene.png')}
             style={styles.sceneImage}
-            resizeMode="contain"
+            resizeMode="cover"
             accessibilityLabel="Pantalla de acceso de VEXFORGE proporcionada por el operador"
             accessibilityIgnoresInvertColors
           />

@@ -64,7 +64,7 @@ export default function ForgeScreen() {
           <Image
             source={HOME_REFERENCE_BACKGROUND}
             style={styles.sceneImage}
-            resizeMode="contain"
+            resizeMode="cover"
             accessibilityLabel="Escena de Home proporcionada por el operador"
           />
           <View style={styles.hotspotLayer} accessibilityLabel="Acciones visibles del Inicio de VEXFORGE">

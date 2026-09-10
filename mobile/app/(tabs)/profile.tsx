@@ -305,7 +305,7 @@ export default function ProfileScreen() {
         >
           <View testID="profile-reference-scene" style={[styles.canvas, { width: frameWidth, height: canvasHeight, marginTop: insets.top, alignSelf: 'center' }]}>
             <View style={[styles.frame, { width: frameWidth, height: canvasHeight, left: 0, top: 0 }]}>
-              <Image source={PROFILE_REFERENCE} style={StyleSheet.absoluteFillObject} resizeMode="contain" accessibilityLabel="Composición oficial de Perfil VEXFORGE" accessibilityIgnoresInvertColors />
+              <Image source={PROFILE_REFERENCE} style={StyleSheet.absoluteFillObject} resizeMode="cover" accessibilityLabel="Composición oficial de Perfil VEXFORGE" accessibilityIgnoresInvertColors />
               <View pointerEvents="none" style={[styles.identityMask, { backgroundColor: `${colors.ink}D4`, borderRadius: 8 * frameScale }]} />
               <View pointerEvents="none" style={styles.dataLayer}>
                 <DataText style={[styles.displayName, { fontSize: 17 * frameScale }]}>{displayName.toUpperCase()}</DataText>

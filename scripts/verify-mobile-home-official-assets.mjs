@@ -19,7 +19,7 @@ const assertions = [
   ['Home exposes functional reference hotspots', contents.screen.includes('const HOTSPOTS') && contents.screen.includes('testID={`home-reference-${hotspot.id}`}') && contents.screen.includes('onPress={() => routeTo(hotspot.route)}')],
   ['Home routes the visible forge action to the real fusion flow', contents.screen.includes("route: '/store?mode=fusion'") && contents.screen.includes("id: 'forge'")],
   ['Home reference is 1080x2340 RGB', referenceWidth === 1080 && referenceHeight === 2340 && referenceColorType === 2],
-  ['Home uses the full-height reference canvas', contents.screen.includes('const sceneHeight = Math.max(1, viewportHeight)') && contents.screen.includes('marginTop: 0')],
+  ['Home uses the shared canonical reference canvas', contents.screen.includes('getCanonicalFrameMetrics') && contents.screen.includes('width: frameWidth') && contents.screen.includes('height: sceneHeight') && contents.screen.includes('marginTop: insets.top') && contents.screen.includes('resizeMode="cover"')],
   ['Home does not duplicate live resource overlays', !contents.screen.includes('energyValue') && !contents.screen.includes('vexValue') && !contents.screen.includes("id: 'energy-economy'") && !contents.screen.includes("id: 'vex-economy'")],
   ['Home keeps the existing reduced-motion contract', contents.screen.includes('useReducedMotion()') && contents.screen.includes('reduceMotion ? undefined : FadeIn.duration(450)')],
 ];

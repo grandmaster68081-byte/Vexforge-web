@@ -523,7 +523,7 @@ export default function BattleScreen() {
             <Image
               source={BATTLE_REFERENCE_BACKGROUND}
               style={styles.referenceImage}
-              resizeMode="contain"
+              resizeMode="cover"
               accessibilityLabel="Pantalla de Batalla proporcionada por el operador"
               accessibilityIgnoresInvertColors
             />

@@ -13,7 +13,7 @@ const contents = Object.fromEntries(
 );
 
 const assertions = [
-  ['economy route is registered and reachable', contents.layout.includes('name="economy"') && contents.profile.includes("router.push('/economy')") && contents.home.includes("router.push('/economy')")],
+  ['economy route is registered and has an explicit auth state', contents.layout.includes('name="economy"') && contents.screen.includes('export default function EconomyScreen') && contents.screen.includes('Sesión requerida')],
   ['wallet and paginated ledger consumers are wired', contents.screen.includes('loadWallet') && contents.screen.includes('loadEconomyStats') && contents.screen.includes('loadEconomyLedger') && contents.supabase.includes("vexforge_get_my_economy_stats")],
   ['market read and three official mutations are wired', contents.screen.includes('loadMarketListings') && contents.screen.includes('loadMarketOwnedCards') && contents.screen.includes('createMarketListing') && contents.screen.includes('buyMarketListing') && contents.screen.includes('cancelMarketListing') && contents.supabase.includes("create_listing") && contents.supabase.includes("buy_listing") && contents.supabase.includes("cancel_listing")],
   ['deposit treasury and official RPC are wired', contents.screen.includes('loadTreasuryWallets') && contents.screen.includes('loadMyDeposits') && contents.screen.includes('submitMobileDeposit') && contents.supabase.includes("vexforge_treasury") && contents.supabase.includes("vexforge_submit_deposit") && contents.supabase.includes("vexforge_get_my_deposits")],

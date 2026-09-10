@@ -38,6 +38,12 @@ jobs:
           exit 1
       - run: npm run typecheck
       - run: npm run verify:telemetry
+      - name: Verify all mobile contracts
+        run: |
+          for guard in ../scripts/verify-mobile-*.mjs; do
+            echo "Running $guard"
+            node "$guard"
+          done
       - run: npx expo prebuild --platform android --no-install --non-interactive
       # Release variant always embeds index.android.bundle, so the installed app
       # never looks for a Metro dev server. Expo's template signs release with the
