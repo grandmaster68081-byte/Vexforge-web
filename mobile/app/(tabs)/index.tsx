@@ -44,7 +44,7 @@ type TapMarker = { x: number; y: number; color: string };
 
 const HOTSPOTS: Hotspot[] = [
   { id: 'settings', label: 'Abrir ajustes', route: '/meta', left: '79%', top: '1%', width: '10%', height: '8%', color: '#FFD98A' },
-  { id: 'inbox', label: 'Abrir avisos y misiones', route: '/missions', left: '89%', top: '1%', width: '11%', height: '8%', color: '#FFB86B' },
+  { id: 'mission', label: 'Abrir avisos y misiones', route: '/missions', left: '89%', top: '1%', width: '11%', height: '8%', color: '#FFB86B' },
   { id: 'forge', label: 'Abrir Forja de mazos', route: '/deck', left: '0%', top: '26%', width: '42%', height: '15%', color: '#75C9FF' },
   { id: 'arena', label: 'Entrar a Arena', route: '/battle', left: '60%', top: '26%', width: '40%', height: '15%', color: '#FFB04D' },
   { id: 'fusion', label: 'Abrir Fusión', route: '/store?mode=fusion', left: '12%', top: '41%', width: '52%', height: '15%', color: '#D98BFF' },
