@@ -2316,9 +2316,9 @@
 - No hubo APK ni release publicado en esos runs. Estado: `IMPLEMENTED_UNVERIFIED`; queda pendiente una ejecución posterior que atraviese guardas, prebuild, Gradle y publicación.
 
 ---
-## 2026-09-10 — VE-MOB-REFERENCE-FRAME — ANDROID MEASURED-CANVAS REPAIR
+## 2026-09-10 — VE-MOB-REFERENCE-FRAME — EXACT FULL-FRAME PARITY REPAIR
 
-- El diagnóstico de Cartas, Mazos y Perfil encontró que las tres pantallas calculaban el canvas únicamente desde `useWindowDimensions()` aunque están montadas dentro de contenedores con safe area, tabs y, en dos casos, scroll. Ese contrato podía dejar el arte `1080×2340` en otra unidad de coordenadas que el contenedor nativo y producir zoom/recorte en la APK.
-- Se añadió una medición del contenedor nativo como fuente final de ancho y alto. El cálculo anterior queda sólo como fallback inicial; después de `onLayout`, el arte, las capas de datos y las zonas porcentuales comparten exactamente el tamaño medido.
-- En las tres pantallas afectadas, la referencia oficial ahora usa `resizeMode="stretch"` dentro del canvas medido para garantizar que se vea el frame completo sin recortar laterales. No se cambiaron flujos, Supabase, RPCs, RLS, assets ni la web congelada.
-- Se actualizaron las guardas específicas para exigir el canvas medido, `onLayout` y ausencia de recorte. Estado honesto: `IMPLEMENTED_UNVERIFIED` hasta completar typecheck, Gradle, publicación de la APK y QA visual en dispositivo.
+- La comparación estructural confirmó que Inicio y Batalla dibujan su arte con un único frame normal, dimensiones de `getCanonicalFrameMetrics`, `marginTop: insets.top`, `alignSelf: 'center'` y una imagen `width: '100%'`, `height: '100%'`, `resizeMode="cover"`. Cartas, Mazos y Perfil usaban una capa de canvas adicional, `absoluteFillObject` para la imagen y, en Perfil, un frame interno dentro del `ScrollView`; no era el mismo contrato.
+- Se alinearon las tres pantallas afectadas con el contrato que ya funciona: un único `referenceScene`, imagen dimensionada al `100%` del frame y el mismo cálculo seguro `viewportHeight - insets.top - insets.bottom`. Las capas de datos, paginación y hotspots siguen dentro de ese mismo frame; no se tocó backend ni se eliminó la actualización de Perfil.
+- Se descartó el enfoque intermedio de medir el contenedor y estirar el arte: aunque podía ocultar el recorte, habría dejado las tres pantallas con un contrato distinto al de las pantallas sanas. Las guardas ahora exigen paridad explícita con el patrón completo.
+- Estado honesto: `IMPLEMENTED_UNVERIFIED` hasta completar typecheck, Gradle, instalación de la APK y comparación visual en dispositivo. No se considera resuelto sólo por pasar guardas estáticas.

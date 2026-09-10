@@ -25,7 +25,7 @@ import {
   type PlayerCard,
 } from '@/lib/supabase';
 import { ScreenShell } from '@/components/ScreenShell';
-import { useMeasuredCanonicalFrame } from '@/components/CanonicalFrame';
+import { getCanonicalFrameMetrics } from '@/components/CanonicalFrame';
 
 const MAX_DECKS = 10;
 const MAX_DECK = 30;
@@ -246,11 +246,9 @@ export default function DeckScreen() {
   const colors = useColors();
   const insets = useSafeAreaInsets();
   const { width: viewportWidth, height: viewportHeight } = useWindowDimensions();
-  const { width, height: canvasHeight, onLayout } = useMeasuredCanonicalFrame(
+  const { width, height: canvasHeight } = getCanonicalFrameMetrics(
     viewportWidth,
-    viewportHeight,
-    insets.top,
-    insets.bottom,
+    Math.max(1, viewportHeight - insets.top - insets.bottom),
   );
   const router = useRouter();
   const { session, player, collection, collectionLoading, syncState, syncError, refresh } = useGame();
@@ -377,12 +375,12 @@ export default function DeckScreen() {
 
   return (
     <ScreenShell sceneMode="hero">
-      <View onLayout={onLayout} style={[styles.referenceRoot, { marginBottom: -insets.bottom, backgroundColor: colors.ink }]}>
-        <View style={[styles.referenceCanvas, { width, height: canvasHeight, marginTop: insets.top, alignSelf: 'center' }]}>
+      <View style={[styles.referenceRoot, { marginBottom: -insets.bottom, backgroundColor: colors.ink }]}>
+        <View style={[styles.referenceScene, { width, height: canvasHeight, marginTop: insets.top, alignSelf: 'center' }]}>
         <Image
           source={DECK_REFERENCE}
-          style={StyleSheet.absoluteFillObject}
-          resizeMode="stretch"
+          style={styles.referenceImage}
+          resizeMode="cover"
           accessibilityLabel="Composición oficial de Mazos VEXFORGE"
         />
         <View pointerEvents="box-none" style={StyleSheet.absoluteFillObject}>
@@ -474,7 +472,8 @@ export default function DeckScreen() {
 
 const styles = StyleSheet.create({
   referenceRoot: { flex: 1, width: '100%', overflow: 'hidden' },
-  referenceCanvas: { position: 'relative', overflow: 'hidden' },
+  referenceScene: { overflow: 'hidden' },
+  referenceImage: { width: '100%', height: '100%' },
   deckCounter: { position: 'absolute', alignItems: 'flex-end', zIndex: 4 },
   deckCounterValue: { fontSize: 13, fontWeight: '900', letterSpacing: 0.7 },
   deckCounterLabel: { fontSize: 6, fontWeight: '800', letterSpacing: 0.7, marginTop: 2 },

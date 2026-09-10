@@ -19,7 +19,7 @@ import { useColors } from '@/hooks/useColors';
 import { ProgressBar } from '@/components/ProgressBar';
 import { useGame } from '@/context/GameContext';
 import { ScreenShell } from '@/components/ScreenShell';
-import { useMeasuredCanonicalFrame } from '@/components/CanonicalFrame';
+import { getCanonicalFrameMetrics } from '@/components/CanonicalFrame';
 import { DomainState } from '@/components/DomainState';
 import { DomainHeader } from '@/components/DomainHeader';
 import type { PlayerCard, PublicCard } from '@/lib/supabase';
@@ -418,11 +418,9 @@ export default function CollectionScreen() {
   const router = useRouter();
   const { scope: scopeParam } = useLocalSearchParams<{ scope?: string }>();
   const { width: viewportWidth, height: viewportHeight } = useWindowDimensions();
-  const { width, height: canvasHeight, onLayout } = useMeasuredCanonicalFrame(
+  const { width: frameWidth, height: canvasHeight } = getCanonicalFrameMetrics(
     viewportWidth,
-    viewportHeight,
-    insets.top,
-    insets.bottom,
+    Math.max(1, viewportHeight - insets.top - insets.bottom),
   );
   const { featuredCards, cardsTotal, collection, collectionLoading, syncState, syncError, refresh } = useGame();
   const [search, setSearch] = useState('');
@@ -491,7 +489,7 @@ export default function CollectionScreen() {
     ({ item, index }: { item: PublicCard[]; index: number }) => {
       const slots = Array.from({ length: 12 }, (_, slotIndex) => item[slotIndex]);
       return (
-        <View style={[styles.referencePage, { width }]}>
+        <View style={[styles.referencePage, { width: frameWidth }]}>
           <View style={styles.referenceGrid}>
             {slots.map((card, slotIndex) => (
               <ReferenceCardSlot
@@ -506,24 +504,24 @@ export default function CollectionScreen() {
         </View>
       );
     },
-    [colors, ownedById, width],
+    [colors, frameWidth, ownedById],
   );
 
   const hasFilters = Boolean(search || rarity !== 'all' || faction !== 'all' || scope !== 'all');
   return (
     <ScreenShell sceneMode="hero">
-      <View onLayout={onLayout} style={[styles.referenceRoot, { marginBottom: -insets.bottom }]}>
-        <View style={[styles.referenceCanvas, { width, height: canvasHeight, marginTop: insets.top, alignSelf: 'center' }]}>
+      <View style={[styles.referenceRoot, { marginBottom: -insets.bottom }]}>
+        <View style={[styles.referenceScene, { width: frameWidth, height: canvasHeight, marginTop: insets.top, alignSelf: 'center' }]}>
         <Image
           source={COLLECTION_REFERENCE}
-          style={StyleSheet.absoluteFillObject}
-          resizeMode="stretch"
+          style={styles.referenceImage}
+          resizeMode="cover"
           accessibilityLabel="Composición oficial de la colección VEXFORGE"
         />
         <View pointerEvents="none" style={[styles.referenceShade, { backgroundColor: `${colors.ink}20` }]} />
 
-        <View pointerEvents="box-none" style={StyleSheet.absoluteFillObject}>
-          <View style={[styles.referenceCounter, { top: canvasHeight * 0.185, right: width * 0.115 }]}>
+           <View pointerEvents="box-none" style={StyleSheet.absoluteFillObject}>
+           <View style={[styles.referenceCounter, { top: canvasHeight * 0.185, right: frameWidth * 0.115 }]}>
             <Text style={[styles.referenceCounterValue, { color: colors.foreground }]}>{ownedById.size} / {cardsTotal || filtered.length}</Text>
             <Text style={[styles.referenceCounterLabel, { color: colors.mutedForeground }]}>CARTAS TOTALES</Text>
           </View>
@@ -533,7 +531,7 @@ export default function CollectionScreen() {
             accessibilityRole="button"
             accessibilityLabel="Actualizar colección"
             onPress={refresh}
-            style={[styles.referenceRefreshHotspot, { top: canvasHeight * 0.185, right: width * 0.04 }]}
+             style={[styles.referenceRefreshHotspot, { top: canvasHeight * 0.185, right: frameWidth * 0.04 }]}
           />
 
           <Pressable
@@ -541,32 +539,32 @@ export default function CollectionScreen() {
             accessibilityRole="button"
             accessibilityLabel="Colección"
             onPress={() => { setScope('all'); setPageIndex(0); }}
-            style={[styles.referenceTopHotspot, { left: width * 0.05, top: canvasHeight * 0.108, width: width * 0.26 }]}
+             style={[styles.referenceTopHotspot, { left: frameWidth * 0.05, top: canvasHeight * 0.108, width: frameWidth * 0.26 }]}
           />
           <Pressable
             testID="owned-tab"
             accessibilityRole="button"
             accessibilityLabel="Tus cartas"
             onPress={() => { setScope('owned'); setPageIndex(0); }}
-            style={[styles.referenceTopHotspot, { left: width * 0.31, top: canvasHeight * 0.108, width: width * 0.21 }]}
+             style={[styles.referenceTopHotspot, { left: frameWidth * 0.31, top: canvasHeight * 0.108, width: frameWidth * 0.21 }]}
           />
           <Pressable
             testID="fusion-tab"
             accessibilityRole="button"
             accessibilityLabel="Abrir fusión y forja"
             onPress={() => router.push('/store?mode=fusion')}
-            style={[styles.referenceTopHotspot, { left: width * 0.53, top: canvasHeight * 0.108, width: width * 0.19 }]}
+             style={[styles.referenceTopHotspot, { left: frameWidth * 0.53, top: canvasHeight * 0.108, width: frameWidth * 0.19 }]}
           />
           <Pressable
             testID="achievements-tab"
             accessibilityRole="button"
             accessibilityLabel="Abrir logros"
             onPress={() => router.push('/profile?section=achievements')}
-            style={[styles.referenceTopHotspot, { right: width * 0.05, top: canvasHeight * 0.108, width: width * 0.18 }]}
+             style={[styles.referenceTopHotspot, { right: frameWidth * 0.05, top: canvasHeight * 0.108, width: frameWidth * 0.18 }]}
           />
 
-          <View style={[styles.referenceSearch, { left: width * 0.075, top: canvasHeight * 0.332, width: width * 0.56 }]}>
-            <Feather name="search" size={Math.max(14, width * 0.04)} color={colors.mutedForeground} />
+           <View style={[styles.referenceSearch, { left: frameWidth * 0.075, top: canvasHeight * 0.332, width: frameWidth * 0.56 }]}>
+             <Feather name="search" size={Math.max(14, frameWidth * 0.04)} color={colors.mutedForeground} />
             <TextInputCompat value={search} onChangeText={setSearch} colors={colors} />
             {search ? (
               <Pressable testID="clear-search" accessibilityRole="button" accessibilityLabel="Limpiar búsqueda" onPress={() => setSearch('')}>
@@ -580,10 +578,10 @@ export default function CollectionScreen() {
             accessibilityRole="button"
             accessibilityLabel={`Cambiar orden de las cartas. Orden actual: ${sort === 'recent' ? 'recientes' : sort === 'name' ? 'nombre' : sort === 'power' ? 'poder' : 'rareza'}`}
             onPress={() => setSort(sort === 'recent' ? 'name' : sort === 'name' ? 'power' : sort === 'power' ? 'rarity' : 'recent')}
-             style={[styles.referenceSortHotspot, { right: width * 0.075, top: canvasHeight * 0.332, width: width * 0.24 }]}
+              style={[styles.referenceSortHotspot, { right: frameWidth * 0.075, top: canvasHeight * 0.332, width: frameWidth * 0.24 }]}
           />
 
-           <View style={[styles.referenceFilterRow, { top: canvasHeight * 0.278, left: width * 0.05, right: width * 0.05 }]}>
+           <View style={[styles.referenceFilterRow, { top: canvasHeight * 0.278, left: frameWidth * 0.05, right: frameWidth * 0.05 }]}>
             <Pressable
               testID="faction-all"
               accessibilityRole="button"
@@ -603,7 +601,7 @@ export default function CollectionScreen() {
             ))}
           </View>
 
-          <View style={[styles.referenceRarityRow, { top: canvasHeight * 0.372, left: width * 0.045, right: width * 0.045 }]}>
+           <View style={[styles.referenceRarityRow, { top: canvasHeight * 0.372, left: frameWidth * 0.045, right: frameWidth * 0.045 }]}>
             <Pressable
               testID="rarity-all"
               accessibilityRole="button"
@@ -634,12 +632,12 @@ export default function CollectionScreen() {
             scrollEnabled={pages.length > 1}
             renderItem={renderPage}
              style={[styles.referencePager, { top: canvasHeight * 0.392, height: canvasHeight * 0.43 }]}
-            onMomentumScrollEnd={(event) => setPageIndex(Math.round(event.nativeEvent.contentOffset.x / Math.max(width, 1)))}
-            getItemLayout={(_, index) => ({ length: width, offset: width * index, index })}
+            onMomentumScrollEnd={(event) => setPageIndex(Math.round(event.nativeEvent.contentOffset.x / Math.max(frameWidth, 1)))}
+            getItemLayout={(_, index) => ({ length: frameWidth, offset: frameWidth * index, index })}
           />
 
           {filtered.length === 0 ? (
-            <View style={[styles.referenceEmptyMessage, { top: canvasHeight * 0.54, left: width * 0.16, right: width * 0.16, backgroundColor: `${colors.ink}D9`, borderColor: `${colors.accent}99` }]}>
+            <View style={[styles.referenceEmptyMessage, { top: canvasHeight * 0.54, left: frameWidth * 0.16, right: frameWidth * 0.16, backgroundColor: `${colors.ink}D9`, borderColor: `${colors.accent}99` }]}>
               <Feather name="cards" size={20} color={colors.accent} />
               <Text style={[styles.referenceEmptyTitle, { color: colors.foreground }]}>
                 {hasFilters ? 'SIN COINCIDENCIAS' : 'EL COMPENDIO ESTÁ EN SILENCIO'}
@@ -663,7 +661,7 @@ export default function CollectionScreen() {
             </Pressable>
           ) : null}
 
-          <View style={[styles.referencePagination, { bottom: canvasHeight * 0.106, left: width * 0.28, right: width * 0.28 }]}>
+          <View style={[styles.referencePagination, { bottom: canvasHeight * 0.106, left: frameWidth * 0.28, right: frameWidth * 0.28 }]}>
             <Pressable
               testID="collection-page-previous"
               accessibilityRole="button"
@@ -721,7 +719,8 @@ function Chip({ label, active, onPress, colors, accent }: { label: string; activ
 const styles = StyleSheet.create({
   root: { flex: 1 },
   referenceRoot: { flex: 1, width: '100%', overflow: 'hidden' },
-  referenceCanvas: { position: 'relative', overflow: 'hidden' },
+  referenceScene: { overflow: 'hidden' },
+  referenceImage: { width: '100%', height: '100%' },
   referenceShade: { ...StyleSheet.absoluteFillObject },
   referenceCounter: { position: 'absolute', alignItems: 'flex-end', zIndex: 4 },
   referenceCounterValue: { fontSize: 13, fontWeight: '900', letterSpacing: 0.7 },

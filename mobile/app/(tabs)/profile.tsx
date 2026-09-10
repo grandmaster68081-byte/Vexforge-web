@@ -16,7 +16,7 @@ import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@/components/ForgeIcon';
 import { ScreenShell } from '@/components/ScreenShell';
-import { useMeasuredCanonicalFrame } from '@/components/CanonicalFrame';
+import { getCanonicalFrameMetrics } from '@/components/CanonicalFrame';
 import { useColors } from '@/hooks/useColors';
 import { useGame } from '@/context/GameContext';
 import {
@@ -222,11 +222,9 @@ export default function ProfileScreen() {
   // Keep artwork, data overlays, and percentage-based hotspots on the same
   // proportional 1080×2340 frame. Extra viewport space becomes letterbox
   // space instead of stretching the authored composition.
-  const { width: frameWidth, height: canvasHeight, scale: frameScale, onLayout } = useMeasuredCanonicalFrame(
+  const { width: frameWidth, height: canvasHeight, scale: frameScale } = getCanonicalFrameMetrics(
     viewportWidth,
-    viewportHeight,
-    insets.top,
-    insets.bottom,
+    Math.max(1, viewportHeight - insets.top - insets.bottom),
   );
 
   const loadDetails = useCallback(async () => {
@@ -303,17 +301,16 @@ export default function ProfileScreen() {
 
   return (
     <ScreenShell surface="profile" sceneMode="hero">
-      <View onLayout={onLayout} style={[styles.referenceRoot, { marginBottom: -insets.bottom }]}>
+      <View style={[styles.referenceRoot, { marginBottom: -insets.bottom }]}>
         <ScrollView
           testID="profile-screen"
           style={styles.profileScroll}
-          contentContainerStyle={[styles.profileScrollContent, { minHeight: canvasHeight, paddingBottom: 0 }]}
+          contentContainerStyle={[styles.profileScrollContent, { minHeight: canvasHeight + insets.top, paddingTop: 0, paddingBottom: 0 }]}
           refreshControl={<RefreshControl refreshing={refreshing} onRefresh={() => { void handleRefresh(); }} tintColor={colors.accent} />}
           showsVerticalScrollIndicator={false}
         >
-          <View testID="profile-reference-scene" style={[styles.canvas, { width: frameWidth, height: canvasHeight, marginTop: insets.top, alignSelf: 'center' }]}>
-            <View style={[styles.frame, { width: frameWidth, height: canvasHeight, left: 0, top: 0 }]}>
-              <Image source={PROFILE_REFERENCE} style={StyleSheet.absoluteFillObject} resizeMode="stretch" accessibilityLabel="Composición oficial de Perfil VEXFORGE" accessibilityIgnoresInvertColors />
+          <View testID="profile-reference-scene" style={[styles.referenceScene, { width: frameWidth, height: canvasHeight, marginTop: insets.top, alignSelf: 'center' }]}>
+              <Image source={PROFILE_REFERENCE} style={styles.referenceImage} resizeMode="cover" accessibilityLabel="Composición oficial de Perfil VEXFORGE" accessibilityIgnoresInvertColors />
               <View pointerEvents="none" style={[styles.identityMask, { backgroundColor: `${colors.ink}D4`, borderRadius: 8 * frameScale }]} />
               <View pointerEvents="none" style={styles.dataLayer}>
                 <DataText style={[styles.displayName, { fontSize: 17 * frameScale }]}>{displayName.toUpperCase()}</DataText>
@@ -344,7 +341,6 @@ export default function ProfileScreen() {
                   />
                 ))}
               </View>
-            </View>
           </View>
         </ScrollView>
         {syncError || detailsError ? (
@@ -365,8 +361,8 @@ const styles = StyleSheet.create({
   referenceRoot: { flex: 1, width: '100%', overflow: 'hidden' },
   profileScroll: { flex: 1 },
   profileScrollContent: { flexGrow: 1 },
-  canvas: { position: 'relative', overflow: 'hidden' },
-  frame: { position: 'absolute', overflow: 'hidden' },
+  referenceScene: { overflow: 'hidden' },
+  referenceImage: { width: '100%', height: '100%' },
   dataLayer: { ...StyleSheet.absoluteFillObject },
   hotspotLayer: { ...StyleSheet.absoluteFillObject },
   hotspot: { position: 'absolute' },

@@ -27,7 +27,7 @@ const assertions = [
   ['supabase exposes deck RPCs', contents.supabase.includes("'validate_deck'") && contents.supabase.includes("'save_deck'")],
   ['deck is registered in both tab layouts', contents.tabs.includes('name="deck"') && contents.tabs.includes("name=\"deck\" options=")],
   ['deck reference is 1080x2340 RGB', referenceWidth === 1080 && referenceHeight === 2340 && referenceColorType === 2],
-  ['deck uses the measured canonical reference canvas', contents.screen.includes('useMeasuredCanonicalFrame') && contents.screen.includes('onLayout={onLayout}') && contents.screen.includes('marginTop: insets.top') && contents.screen.includes('resizeMode="stretch"')],
+  ['deck uses the same full-frame image contract as working screens', contents.screen.includes('getCanonicalFrameMetrics') && contents.screen.includes('referenceScene') && contents.screen.includes('referenceImage') && contents.screen.includes("width: '100%'") && contents.screen.includes("height: '100%'") && contents.screen.includes('marginTop: insets.top') && contents.screen.includes('resizeMode="cover"')],
   ['deck keeps the authored scene free of duplicate chrome', contents.screen.includes('pointerEvents="box-none"') && contents.screen.includes('deckSlotHit') && !contents.screen.includes('<View style={[styles.deckCarousel')],
   ['deck controls align to the reference flows', contents.screen.includes('top: canvasHeight * 0.374') && contents.screen.includes('top: canvasHeight * 0.445') && contents.screen.includes('top: canvasHeight * 0.731')],
   ['deck home connector uses the canonical root route', contents.screen.includes("navigate('/')") && !contents.screen.includes("navigate('/index')")],

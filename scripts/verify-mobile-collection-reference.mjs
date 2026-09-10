@@ -19,7 +19,7 @@ const checks = [
   ['reference is 1080x2340', width === 1080 && height === 2340],
   ['reference is RGB', colorType === 2],
   ['collection uses the canonical reference asset', collection.includes("collection-reference-scene.png")],
-  ['reference fills the measured canvas without crop', collection.includes('useMeasuredCanonicalFrame') && collection.includes('onLayout={onLayout}') && collection.includes('resizeMode="stretch"') && collection.includes('top: canvasHeight * 0.392')],
+  ['reference uses the same full-frame image contract as working screens', collection.includes('getCanonicalFrameMetrics') && collection.includes('referenceScene') && collection.includes('referenceImage') && collection.includes("width: '100%'") && collection.includes("height: '100%'") && collection.includes('resizeMode="cover"') && collection.includes('top: canvasHeight * 0.392')],
   ['cards use the four-column reference grid', collection.includes("width: '22%'") && collection.includes("justifyContent: 'space-between'")],
   ['home connector uses the canonical root route', collection.includes("navigateFromReference('/')") && !collection.includes("navigateFromReference('/index')")],
   ['catalog exposes the real creation date', supabase.includes('created_at%2Cfaction')],
