@@ -430,9 +430,9 @@ export default function CollectionScreen() {
   const [scope, setScope] = useState<'all' | 'owned'>(scopeParam === 'owned' ? 'owned' : 'all');
   const [selected, setSelected] = useState<PublicCard | null>(null);
   const [pageIndex, setPageIndex] = useState(0);
-  // The reference artwork is authored for the complete Android viewport
-  // (1080x2340). Safe-area insets must not shrink this frame, otherwise the
-  // image and its percentage-based touch map drift apart vertically.
+  // The reference artwork is authored for a 1080×2340 Android viewport.
+  // Insets only reserve the system-bar space; artwork, cards, and touch
+  // overlays all stay inside the same aspect-ratio-preserving frame.
   const pagerRef = useRef<FlatList<PublicCard[]>>(null);
   const ownedById = useMemo(() => new Map(collection.map((card) => [card.card_id, card])), [collection]);
   const completion = cardsTotal > 0 ? Math.round((ownedById.size / cardsTotal) * 100) : 0;
@@ -511,7 +511,7 @@ export default function CollectionScreen() {
         <Image
           source={COLLECTION_REFERENCE}
           style={StyleSheet.absoluteFillObject}
-          resizeMode="contain"
+          resizeMode="cover"
           accessibilityLabel="Composición oficial de la colección VEXFORGE"
         />
         <View pointerEvents="none" style={[styles.referenceShade, { backgroundColor: `${colors.ink}20` }]} />
@@ -627,7 +627,7 @@ export default function CollectionScreen() {
             showsHorizontalScrollIndicator={false}
             scrollEnabled={pages.length > 1}
             renderItem={renderPage}
-             style={[styles.referencePager, { top: canvasHeight * 0.425, height: canvasHeight * 0.39 }]}
+             style={[styles.referencePager, { top: canvasHeight * 0.392, height: canvasHeight * 0.43 }]}
             onMomentumScrollEnd={(event) => setPageIndex(Math.round(event.nativeEvent.contentOffset.x / Math.max(width, 1)))}
             getItemLayout={(_, index) => ({ length: width, offset: width * index, index })}
           />
@@ -730,9 +730,9 @@ const styles = StyleSheet.create({
   referenceRarityRow: { position: 'absolute', height: 38, flexDirection: 'row', zIndex: 8 },
   referenceRarityHit: { position: 'absolute', top: 0, width: '14.25%', height: 38 },
   referencePager: { position: 'absolute', left: 0, right: 0, zIndex: 3 },
-  referencePage: { flex: 1, justifyContent: 'center' },
-  referenceGrid: { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center', alignContent: 'center', columnGap: 8, rowGap: 10, paddingHorizontal: '8%' },
-  referenceCardSlot: { width: '18%', aspectRatio: 0.68, borderWidth: 1, borderRadius: 8, overflow: 'hidden', position: 'relative', backgroundColor: 'rgba(3,10,22,0.64)' },
+  referencePage: { flex: 1, justifyContent: 'flex-start' },
+  referenceGrid: { width: '100%', flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between', alignContent: 'flex-start', columnGap: 8, rowGap: 10, paddingHorizontal: '8%' },
+  referenceCardSlot: { width: '22%', aspectRatio: 0.68, borderWidth: 1, borderRadius: 8, overflow: 'hidden', position: 'relative', backgroundColor: 'rgba(3,10,22,0.92)' },
   referenceArt: { width: '100%', height: '100%', flex: 1, aspectRatio: 0.68, borderBottomWidth: 0, borderRadius: 7 },
   referenceEmptySlot: { alignItems: 'center', justifyContent: 'center' },
   referenceOwned: { position: 'absolute', right: 3, top: 3, minWidth: 19, height: 17, borderWidth: 1, borderRadius: 8, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 3 },
