@@ -20,7 +20,7 @@ const assertions = [
   ['explicit loading and error states', contents.screen.includes('missions-loading') && contents.screen.includes('accessibilityRole="alert"')],
   ['explicit empty states', contents.screen.includes('missions-empty-quests') && contents.screen.includes('missions-empty')],
   ['rewards are visible', contents.screen.includes('VEX') && contents.screen.includes('XP')],
-  ['home links to missions', contents.home.includes("id: 'mission'") && contents.home.includes("route: '/missions'") && contents.home.includes('routeTo(hotspot.route)')],
+  ['home links to missions', contents.home.includes('testID="home-missions"') && contents.home.includes("navigate('/missions')") && contents.home.includes('loadHomeMissions')],
   ['missions route is registered', contents.layout.includes('name="missions"')],
   ['no local mission simulation', !contents.screen.includes('Math.random') && !contents.screen.includes('simulate')],
   ['no emoji characters in missions UI', !/[\u{1F000}-\u{1FAFF}]/u.test(contents.screen)],

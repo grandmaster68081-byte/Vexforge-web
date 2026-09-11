@@ -13,7 +13,7 @@ const contents = Object.fromEntries(
 );
 
 const assertions = [
-  ['store screen is registered and reachable', contents.layout.includes('name="store"') && contents.profile.includes("router.push('/store?mode=fusion')") && contents.home.includes("route: '/store?mode=fusion'")],
+  ['store screen is registered and reachable', contents.layout.includes('name="store"') && contents.profile.includes("router.push('/store?mode=fusion')") && contents.home.includes("navigate('/store?mode=fusion')")],
   ['real pack catalog and VEX purchase are wired', contents.screen.includes('loadMobilePacks') && contents.screen.includes('buyMobilePack') && contents.supabase.includes("vexforge_buy_pack_with_vex")],
   ['real pack opening and reveal state are wired', contents.screen.includes('openMobilePack') && contents.screen.includes('openedCards') && contents.supabase.includes("vexforge_open_pack")],
   ['real shop catalog and order flow are wired', contents.screen.includes('loadMobileShopCatalog') && contents.screen.includes('createMobileShopOrder') && contents.supabase.includes("vexforge_create_shop_order")],

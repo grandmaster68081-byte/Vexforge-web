@@ -1,3 +1,5 @@
+Vigencia del contrato: desde el 2026-09-11, la referencia PNG descrita abajo queda como evidencia histórica del Home anterior. El consumidor Android vigente es una composición nativa en `mobile/app/(tabs)/index.tsx`; no monta el PNG ni usa hotspots transparentes. Los assets de fondo y atmósfera siguen viniendo del manifiesto oficial y Storage.
+
 Referencia visual vigente: `mobile/assets/images/home-reference-scene.png`
 mide `1080×2340`, PNG RGB/sRGB, proporción `9:19.5`. La imagen se muestra
 como composición completa del Inicio; los recursos superiores no se pintan
@@ -241,3 +243,12 @@ La Fase VISUAL no se declara cerrada sólo por compilar: debe alcanzar al menos 
 - No se modificaron Supabase, Auth, RLS, RPCs, economía, combate ni la web congelada.
 - Verificación local: `npm run typecheck` en `mobile/`, `node scripts/verify-mobile-home-official-assets.mjs`, `node scripts/verify-motion.mjs`, `node scripts/verify-mobile-store.mjs` y validación de imagen `1080×2340 RGB` pasan.
 - Por instrucción explícita del operador no se ejecuta el workflow ni se genera una APK nueva. Estado: `IMPLEMENTED_UNVERIFIED`; queda pendiente QA visual/táctil humana en el APK ya publicado.
+
+## Addendum 2026-09-11 — RECONSTRUCCIÓN NATIVA TIER 1
+
+- Se reemplazó la composición estática de referencia por una escena nativa vertical con HUD de sincronización, identidad del Forjador, progreso real, acceso a Arena, tutorial, Mundo, Misiones, Colección, Forja y Economía.
+- La pantalla consume `get_home_stats`, `loadDailyFeaturedCard`, `loadHomeMissions` y `loadRecentActivity` en paralelo, conserva el estado del jugador desde `GameContext` y no fabrica progreso, economía, recompensas ni resultados.
+- La atmósfera usa `ScreenShell` con `CANONICAL_BACKGROUNDS.home` y `OFFICIAL_ASSETS.homeNexusBurst`; la carta destacada usa `image_url` oficial y muestra `ARTE NO DISPONIBLE` si Storage no entrega un asset válido.
+- Se añadieron estados explícitos `loading`, `partial`, `error`, vacío, sincronización y `reduced-motion`, además de pull-to-refresh, labels accesibles y `testID` de revisión.
+- La guardia del Home y la guardia de recompensas fueron actualizadas para validar esta composición nativa; ninguna superficie web ni contrato Supabase fue modificado.
+- Estado: `IMPLEMENTED_UNVERIFIED`; queda pendiente el workflow APK correlativo y la QA visual/táctil humana sobre el APK instalado.
