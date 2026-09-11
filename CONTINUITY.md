@@ -2448,3 +2448,12 @@
 - La dirección visual se contrastó con los patrones públicos de Hearthstone, Marvel Snap, Pokémon TCG Pocket, Yu-Gi-Oh! Master Duel y Shadowverse: Worlds Beyond: escena dominante, lectura inmediata de la acción principal, HUD compacto, profundidad por capas y ritmo de descubrimiento sin convertir el primer viewport en un panel administrativo.
 - Verificación local: `npm run typecheck` en `mobile` OK, `npm run verify-mobile-home-official-assets` OK, `git diff --check` OK y `package-lock.json` sin referencias al registry privado. No se compiló APK ni se inició el workflow Android por instrucción explícita del operador.
 - Commit publicado mediante la API REST HTTPS oficial de GitHub en `main`. Estado honesto: `IMPLEMENTED_UNVERIFIED`; la QA visual/táctil humana y la futura compilación Android siguen pendientes. No se declara `PASS`, `OPERATIONAL`, `TIER1_READY` ni release nuevo.
+
+---
+## 2026-09-11 — VE-MOB-3-HOME — NEXUS DEPTH / RESPONSIVE HERO PASS
+
+- Se refinó la primera impresión de `mobile/app/(tabs)/index.tsx` sin cambiar contratos, datos, rutas, economía, combate, Auth, Supabase ni assets oficiales: el hero calcula una altura fluida para distintos teléfonos, añade esquinas de interfaz diegética y etiqueta de escena, y conserva safe-area, parallax y reduced-motion.
+- La constelación de dominios ahora tiene un núcleo central de señal que refuerza la relación entre Arena, Forja, Archivo, Mundo, Misiones y Economía sin convertirlo en una ruta nueva ni bloquear los controles existentes.
+- La carta destacada recibe un barrido de luz animado ligado al ciclo ambiental ya existente, manteniendo la inspección táctil, el estado `ARTE NO DISPONIBLE` y la política de cero genéricos.
+- Guardas locales: composición oficial de Home `10/10`, contrato de movimiento `17` tokens / `8` clases / `3` consumidores y parseo TypeScript/JSX OK. El typecheck completo no pudo ejecutarse porque el firewall del entorno devolvió `404` al instalar `npm-package-arg@11.0.3`; no se modificaron dependencias ni se generó APK.
+- Estado honesto: `IMPLEMENTED_UNVERIFIED`. El cambio se publicará en `main`; no se declara `PASS`, `OPERATIONAL` ni `TIER1_READY` hasta la QA visual/táctil humana.

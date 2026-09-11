@@ -235,6 +235,9 @@ export default function ForgeScreen() {
       { scale: 1.04 + Math.min(scrollY.value / 2400, 0.08) },
     ],
   }));
+  const featuredSheenStyle = useAnimatedStyle(() => ({
+    transform: [{ translateX: (orbit.value * 2 - 1) * 150 }, { rotate: '-24deg' }],
+  }));
   const sentinelParallaxStyle = useAnimatedStyle(() => ({
     opacity: 0.92,
     transform: [
@@ -256,6 +259,7 @@ export default function ForgeScreen() {
   const connectionLabel = syncState === 'connected' ? 'NEXUS ONLINE' : syncState === 'offline' ? 'NEXUS OFFLINE' : 'SINCRONIZANDO';
   const connectionColor = syncState === 'connected' ? colors.success : syncState === 'offline' ? colors.danger : colors.accent;
   const viewportPadding = Math.max(18, Math.min(26, width * 0.06));
+  const heroHeight = Math.min(648, Math.max(586, width * 1.43));
   const ranking = home.stats?.top3 ?? [];
   const hasPlayerData = Boolean(player || progress || wallet || playerStats);
   const domainPortals: Array<{ id: string; label: string; title: string; status: string; icon: IconName; route: HomeRoute; color: string }> = [
@@ -300,7 +304,7 @@ export default function ForgeScreen() {
           onScroll={scrollHandler}
           scrollEventThrottle={16}
         >
-          <View style={styles.heroStage}>
+           <View style={[styles.heroStage, { height: heroHeight }]}>
             <Animated.Image
               source={OFFICIAL_ASSETS.homeHero}
               style={[styles.heroArt, heroParallaxStyle]}
@@ -315,6 +319,13 @@ export default function ForgeScreen() {
               style={StyleSheet.absoluteFill}
             />
             <LinearGradient colors={['#A78BFA36', 'transparent', '#F0C05022']} style={StyleSheet.absoluteFill} />
+             <View pointerEvents="none" style={styles.heroFrame}>
+               <View style={[styles.heroFrameCorner, styles.heroFrameTopLeft, { borderColor: `${colors.accent}A8` }]} />
+               <View style={[styles.heroFrameCorner, styles.heroFrameTopRight, { borderColor: `${colors.accent}66` }]} />
+               <View style={[styles.heroFrameCorner, styles.heroFrameBottomLeft, { borderColor: `${colors.rarityEpic}66` }]} />
+               <View style={[styles.heroFrameCorner, styles.heroFrameBottomRight, { borderColor: `${colors.rarityEpic}A8` }]} />
+               <Text style={[styles.heroFrameLabel, { color: `${colors.foreground}80` }]}>NEXUS / 01</Text>
+             </View>
             <View pointerEvents="none" style={styles.heroAtmosphere}>
               <View style={[styles.heroAtmosphereLine, { backgroundColor: `${colors.rarityEpic}44` }]} />
               <View style={[styles.heroAtmosphereLineShort, { backgroundColor: `${colors.accent}66` }]} />
@@ -423,6 +434,9 @@ export default function ForgeScreen() {
               </View>
                <View style={styles.domainMap} accessibilityLabel="Dominios conectados del Nexus">
                  <View pointerEvents="none" style={[styles.domainSpine, { backgroundColor: `${colors.rarityEpic}35` }]} />
+                  <View pointerEvents="none" style={[styles.domainCore, { borderColor: `${colors.rarityEpic}62`, backgroundColor: `${colors.rarityEpic}12` }]}>
+                    <View style={[styles.domainCoreDot, { backgroundColor: `${colors.accent}CC` }]} />
+                  </View>
                  {domainRows.map((row) => (
                    <View key={`${row[0].id}-${row[1].id}`} style={styles.domainRow}>
                      <NexusPortal portal={row[0]} onPress={() => navigate(row[0].route)} />
@@ -472,7 +486,7 @@ export default function ForgeScreen() {
                   onError={() => setFeaturedAssetState('error')}
                 />
                 <LinearGradient colors={['transparent', '#05050D66', '#05050DCC']} style={StyleSheet.absoluteFill} />
-                <View style={styles.featuredSheen} pointerEvents="none" />
+                 <Animated.View style={[styles.featuredSheen, featuredSheenStyle]} pointerEvents="none" />
                 {featuredAssetState === 'error' ? (
                   <View style={[styles.featuredAssetError, { backgroundColor: `${colors.panelStrong}F4` }]}>
                     <Icon name="alert-triangle" color={colors.accent} size={16} />
@@ -545,7 +559,7 @@ function NexusPortal({ portal, onPress }: { portal: { id: string; label: string;
 const styles = StyleSheet.create({
   root: { flex: 1 },
   scrollContent: { gap: 0 },
-   heroStage: { height: 608, overflow: 'hidden', position: 'relative' },
+   heroStage: { overflow: 'hidden', position: 'relative' },
   heroArt: { height: '100%', left: 0, position: 'absolute', top: 0, width: '100%' },
   heroSentinel: { bottom: -88, height: 590, position: 'absolute', right: -104, width: 580 },
   heroOrbit: { borderRadius: 210, borderWidth: 1, height: 420, position: 'absolute', right: -158, top: 112, width: 420 },
@@ -553,6 +567,13 @@ const styles = StyleSheet.create({
   heroAtmosphere: { bottom: 46, left: 18, opacity: 0.75, position: 'absolute', right: 18 },
   heroAtmosphereLine: { height: 1, marginBottom: 7, width: '72%' },
   heroAtmosphereLineShort: { height: 1, width: '34%' },
+  heroFrame: { ...StyleSheet.absoluteFillObject, opacity: 0.82 },
+  heroFrameCorner: { height: 38, position: 'absolute', width: 38 },
+  heroFrameTopLeft: { borderLeftWidth: 1, borderTopWidth: 1, left: 15, top: 15 },
+  heroFrameTopRight: { borderRightWidth: 1, borderTopWidth: 1, right: 15, top: 15 },
+  heroFrameBottomLeft: { borderBottomWidth: 1, borderLeftWidth: 1, bottom: 18, left: 15 },
+  heroFrameBottomRight: { borderBottomWidth: 1, borderRightWidth: 1, bottom: 18, right: 15 },
+  heroFrameLabel: { bottom: 24, fontFamily: 'Rajdhani_700Bold', fontSize: 8, letterSpacing: 1.8, position: 'absolute', right: 23 },
   heroAssetError: { alignItems: 'center', borderColor: '#F0C05080', borderRadius: 8, borderWidth: 1, left: 24, paddingHorizontal: 10, paddingVertical: 7, position: 'absolute', right: 24, top: 182 },
   heroAssetErrorTitle: { fontFamily: 'Rajdhani_700Bold', fontSize: 10, letterSpacing: 1.3 },
   heroAssetErrorBody: { fontFamily: 'Rajdhani_500Medium', fontSize: 10, marginTop: 2 },
@@ -616,6 +637,8 @@ const styles = StyleSheet.create({
   liveSignalText: { fontFamily: 'Rajdhani_700Bold', fontSize: 9, letterSpacing: 1 },
   domainMap: { gap: 9, position: 'relative' },
   domainSpine: { bottom: 18, left: '50%', position: 'absolute', top: 18, width: 1 },
+  domainCore: { alignItems: 'center', borderRadius: 12, borderWidth: 1, height: 24, justifyContent: 'center', left: '50%', marginLeft: -12, position: 'absolute', top: '50%', width: 24, zIndex: 2 },
+  domainCoreDot: { borderRadius: 3, height: 6, width: 6 },
   domainRow: { alignItems: 'stretch', flexDirection: 'row', gap: 7 },
   domainPortal: { alignItems: 'center', borderRadius: 14, borderWidth: 1, flex: 1, flexDirection: 'row', gap: 9, minHeight: 91, paddingHorizontal: 11, paddingVertical: 10, shadowColor: '#000000', shadowOffset: { height: 6, width: 0 }, shadowOpacity: 0.2, shadowRadius: 12 },
   domainNode: { alignItems: 'center', borderRadius: 10, borderWidth: 1, height: 34, justifyContent: 'center', width: 34 },
