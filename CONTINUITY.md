@@ -1,3 +1,14 @@
+## 2026-09-11 — VE-MOB-3-HOME — CINEMATIC NATIVE HOMEPAGE / IMPLEMENTED_UNVERIFIED
+
+- La revisión visual del operador confirmó que el Home anterior tenía estructura de panel administrativo: demasiadas tarjetas del mismo peso, fondo remoto de baja presencia, ausencia de una pieza heroica y una jerarquía insuficiente para una portada de TCG.
+- Se reconstruyó `mobile/app/(tabs)/index.tsx` como una portada nativa de juego: arte hero local de VEXFORGE, gradientes cinematográficos, CTA dominante a Arena, identidad superior sobre la escena y datos vivos en capas de soporte.
+- Se eliminó de esta superficie el consumo de `CANONICAL_BACKGROUNDS.home`, `OFFICIAL_ASSETS.homeNexusBurst` y el arte remoto de la carta destacada. Los datos de temporada, evento, jugador, misiones, actividad, ranking y carta siguen siendo Supabase/RPC autoritativos.
+- Se añadieron `mobile/assets/images/vexforge-home-hero.png` y `mobile/assets/images/vexforge-feature-card.png` como arte original local, sin texto incrustado ni dependencia de Storage.
+- La copia se validó sintácticamente con TypeScript. La instalación local quedó bloqueada por el firewall del registro interno al resolver `npm-package-arg`; el typecheck y el build final quedan delegados al workflow oficial de GitHub, que instala desde cero.
+- Estado honesto: `IMPLEMENTED_UNVERIFIED`; falta publicar el commit, completar el workflow Android y hacer QA visual/táctil del APK instalada.
+
+---
+
 ## 2026-09-10 — VE-MOB-3-HOME — REFERENCE REPLACEMENT / IMPLEMENTED_UNVERIFIED
 
 - Se reemplazó por completo `mobile/assets/images/home-reference-scene.png` con la nueva referencia del operador, normalizada a `1080×2340`, PNG RGB/sRGB y proporción `9:19.5`; no se superpuso otra pantalla sobre la composición.

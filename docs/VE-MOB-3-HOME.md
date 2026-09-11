@@ -1,4 +1,4 @@
-Vigencia del contrato: desde el 2026-09-11, la referencia PNG descrita abajo queda como evidencia histórica del Home anterior. El consumidor Android vigente es una composición nativa en `mobile/app/(tabs)/index.tsx`; no monta el PNG ni usa hotspots transparentes. Los assets de fondo y atmósfera siguen viniendo del manifiesto oficial y Storage.
+Vigencia del contrato: desde el 2026-09-11, la referencia PNG descrita abajo queda como evidencia histórica del Home anterior. El consumidor Android vigente es una composición nativa en `mobile/app/(tabs)/index.tsx`; no monta el PNG ni usa hotspots transparentes. La superficie Home usa arte local original de VEXFORGE para su escena principal y carta destacada; los datos y contratos siguen viniendo de Supabase.
 
 Referencia visual vigente: `mobile/assets/images/home-reference-scene.png`
 mide `1080×2340`, PNG RGB/sRGB, proporción `9:19.5`. La imagen se muestra
@@ -20,7 +20,7 @@ evento/temporada, carta destacada, actividad pública y acceso rápido a la aren
   `src/domains/home/`).
 - Supabase oficial y sus RPCs existentes (`get_home_stats`,
   `get_public_player_names`).
-- Assets públicos del manifiesto oficial y Storage (`lobby/main.jpg` y `cards/*`).
+- Arte local original del Home (`vexforge-home-hero.png` y `vexforge-feature-card.png`); no se usa el fondo Home ni el arte de carta remoto de Storage en esta superficie.
 - `docs/VE-MOB-0-PORT-INVENTORY.md` y `VEXFORGE_PROTOCOL_V2.md`.
 
 ## Cambios
@@ -32,7 +32,7 @@ evento/temporada, carta destacada, actividad pública y acceso rápido a la aren
   - batalla rápida contra IA enlazada al tablero existente;
   - temporada activa o estado en vivo de la temporada;
   - evento activo con progreso y cuenta regresiva;
-  - carta del día con arte servido desde Storage;
+  - carta del día con datos reales y arte local original de la superficie;
   - estado del jugador, nivel, energía, VEX y victorias;
   - próximas misiones, top de arena y actividad reciente;
   - destacados de los sistemas de la Forja;
@@ -106,11 +106,12 @@ La ejecución se divide en dos fases obligatorias y no se mezclan:
 
 ### Alcance visual de la Fase VISUAL
 
-- Escena principal: `CANONICAL_BACKGROUNDS.home` / `lobby/main.jpg`, con mayor visibilidad y capas de atmósfera sin esconder el contenido autoritativo.
+- Escena principal: `mobile/assets/images/vexforge-home-hero.png`, con una composición de portada de videojuego, capas de atmósfera y un CTA dominante sin esconder el contenido autoritativo.
 - Identidad: tipografía Cinzel/Rajdhani ya cargada, escala de títulos y etiquetas coherente, contraste suficiente y lenguaje de Forja reconocible.
 - Superficies: marcos y paneles con profundidad, separación entre escena y UI, jerarquía de acción clara y tarjetas tratadas como objetos del juego, no como filas administrativas.
 - Feedback: estados de carga, vacío, error, sincronización y `reduced-motion` deben conservarse y seguir siendo explícitos.
-- Límites: no se modifica la autoridad de Supabase, la economía, combate, recompensas, inventario, Auth ni contratos; no se usan emojis, placeholders ni arte genérico.
+- Carta destacada: `mobile/assets/images/vexforge-feature-card.png` como arte local original; el texto, rareza y estadísticas continúan viniendo del registro real cuando está disponible.
+- Límites: no se modifica la autoridad de Supabase, la economía, combate, recompensas, inventario, Auth ni contratos; no se usan emojis, placeholders, assets antiguos de Storage ni arte genérico.
 
 ### Gate de salida
 
