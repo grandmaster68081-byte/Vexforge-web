@@ -36,6 +36,7 @@ evento/temporada, carta destacada, actividad pública y acceso rápido a la aren
   - estado del jugador, nivel, energía, VEX y victorias;
   - próximas misiones, top de arena y actividad reciente;
   - destacados de los sistemas de la Forja;
+  - red de portales del Nexus integrada en la portada, con conexiones visibles a Arena, Forja, Archivo, Mundo, Misiones y Economía; cada portal expone estado real y navega a una ruta Android existente.
   - estados explícitos de error y vacío, además de pull-to-refresh.
 - Las superficies todavía no portadas no se anuncian como rutas navegables desde
   Home; los CTAs sólo apuntan a pantallas Android existentes.
@@ -51,7 +52,8 @@ evento/temporada, carta destacada, actividad pública y acceso rápido a la aren
    estados vacíos explícitos sin loaders eternos.
 5. El layout usa safe area, tokens locales, contenido desplazable y controles
    accesibles con `testID`.
-6. No se añaden emojis, texto como iconografía, arte genérico ni lógica
+6. La red de dominios permanece conectada a rutas Android existentes, muestra estados derivados de datos reales y conserva accesibilidad, feedback táctil y reduced-motion.
+7. No se añaden emojis, texto como iconografía, arte genérico ni lógica
    autoritativa de juego al cliente móvil.
 
 ## Verificación
