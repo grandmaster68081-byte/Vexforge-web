@@ -93,12 +93,10 @@ function GlassButton({
     >
       <View style={[styles.glassButtonGlyph, { borderColor: `${palette.border}CC`, backgroundColor: `${palette.border}24` }]}>
         <Icon name={icon} color={palette.text} size={large ? 17 : 15} />
+        <View style={[styles.glassButtonGlyphDot, { backgroundColor: palette.text }]} />
       </View>
-      <View style={styles.glassButtonCopy}>
-        <Text style={[styles.glassButtonText, { color: palette.text }]}>{label}</Text>
-        <Text style={[styles.glassButtonMeta, { color: `${palette.text}A8` }]}>ABRIR</Text>
-      </View>
-      <Icon name="arrow-up" color={`${palette.text}CC`} size={13} />
+      <Text style={[styles.glassButtonText, { color: palette.text }]}>{label}</Text>
+      <Text style={[styles.glassButtonMeta, { color: `${palette.text}A8` }]}>GATE</Text>
     </Pressable>
   );
 }
@@ -478,6 +476,8 @@ export default function ForgeScreen() {
 
              <SectionHeading eyebrow="SEÑAL DEL NEXUS" title="El frente de hoy" action="ABRIR MUNDO" onAction={() => navigate('/world')} />
              <Pressable accessibilityRole="button" accessibilityLabel="Abrir evento activo" testID="home-event" onPress={() => navigate('/world')} style={({ pressed }) => [styles.eventCard, { borderColor: `${colors.rarityRare}80`, backgroundColor: `${colors.panelStrong}38`, opacity: pressed ? 0.8 : 1 }]}>
+               <View pointerEvents="none" style={[styles.eventCorner, styles.eventCornerTop, { borderColor: `${colors.rarityRare}A8` }]} />
+               <View pointerEvents="none" style={[styles.eventCorner, styles.eventCornerBottom, { borderColor: `${colors.rarityRare}70` }]} />
               <View style={styles.eventOrbWrap}><View style={[styles.eventOrb, { borderColor: `${colors.rarityRare}80` }]}><Animated.View style={[styles.eventOrbCore, { backgroundColor: colors.rarityRare }, pulseStyle]} /></View><View style={[styles.eventOrbRing, { borderColor: `${colors.rarityRare}35` }]} /></View>
               <View style={styles.eventCopy}><Text style={[styles.eventType, { color: colors.rarityRare }]}>{activeEvent?.type?.toUpperCase() ?? 'SEÑAL GLOBAL'}</Text><Text style={[styles.eventTitle, { color: colors.foreground }]}>{activeEvent?.name ?? 'El Nexus espera un nuevo frente'}</Text><Text style={[styles.eventMeta, { color: colors.mutedForeground }]}>{activeEvent ? `CIERRA EN ${formatEventTime(activeEvent.ends_at)}` : 'No hay evento activo publicado'}</Text></View>
               <View style={styles.eventProgress}><Text style={[styles.eventProgressValue, { color: colors.rarityRare }]}>{activeEvent ? `${Math.round(activeEvent.progress)}%` : '—'}</Text><ProgressRail value={activeEvent?.progress ?? 0} total={100} color={colors.rarityRare} background={`${colors.rarityRare}20`} /><Icon name="arrow-up" color={colors.rarityRare} size={16} /></View>
@@ -541,8 +541,9 @@ export default function ForgeScreen() {
                </Pressable>
             </View>
 
-            <View style={[styles.storePortal, { borderColor: `${colors.success}72`, backgroundColor: `${colors.panelStrong}26` }]}>
-               <View style={styles.storePortalHeading}><View><Text style={[styles.portalEyebrow, { color: colors.success }]}>CÁMARA DE FORJA</Text><Text style={[styles.storePortalTitle, { color: colors.foreground }]}>Elige tu siguiente operación</Text></View><Icon name="shop" color={colors.success} size={18} /></View>
+              <View style={[styles.storePortal, { borderColor: `${colors.success}72`, backgroundColor: `${colors.panelStrong}26` }]}>
+               <View pointerEvents="none" style={[styles.storePortalTrace, { backgroundColor: `${colors.success}70` }]} />
+               <View style={styles.storePortalHeading}><View><Text style={[styles.portalEyebrow, { color: colors.success }]}>CÁMARA DE FORJA</Text><Text style={[styles.storePortalTitle, { color: colors.foreground }]}>Elige tu siguiente operación</Text></View><View style={[styles.storePortalMark, { borderColor: `${colors.success}80`, backgroundColor: `${colors.success}16` }]}><Icon name="shop" color={colors.success} size={18} /></View></View>
               <View style={styles.storeActions}>
                 <GlassButton label="PACKS" icon="packs" onPress={() => navigate('/store?mode=packs')} tone="quiet" testID="home-store-packs" />
                 <GlassButton label="TIENDA" icon="shop" onPress={() => navigate('/store?mode=shop')} tone="quiet" testID="home-store-shop" />
@@ -582,13 +583,14 @@ function NexusPortal({ portal, onPress }: { portal: { id: string; label: string;
   return <Pressable accessibilityRole="button" accessibilityLabel={`Abrir dominio ${portal.label}`} testID={`home-domain-${portal.id}`} onPress={onPress} style={({ pressed }) => [styles.domainPortal, { borderColor: `${portal.color}80`, backgroundColor: `${colors.panelStrong}26`, opacity: pressed ? 0.74 : 1 }]}>
     <View pointerEvents="none" style={[styles.domainCorner, styles.domainCornerTop, { borderColor: `${portal.color}A8` }]} />
     <View pointerEvents="none" style={[styles.domainCorner, styles.domainCornerBottom, { borderColor: `${portal.color}70` }]} />
+    <View pointerEvents="none" style={[styles.domainNodeHalo, { borderColor: `${portal.color}38` }]} />
     <View style={[styles.domainNode, { borderColor: `${portal.color}A8`, backgroundColor: `${portal.color}1C` }]}><Icon name={portal.icon} color={portal.color} size={17} /></View>
     <View style={styles.domainCopy}>
       <View style={styles.domainLabelLine}><Text style={[styles.domainEyebrow, { color: portal.color }]}>{portal.label}</Text><View style={[styles.domainPulse, { backgroundColor: portal.color }]} /></View>
       <Text style={[styles.domainPortalTitle, { color: colors.foreground }]}>{portal.title}</Text>
       <Text numberOfLines={1} style={[styles.domainStatus, { color: colors.mutedForeground }]}>{portal.status}</Text>
     </View>
-    <Icon name="arrow-up" color={`${portal.color}CC`} size={14} />
+    <View style={[styles.domainGateway, { borderColor: `${portal.color}70`, backgroundColor: `${portal.color}12` }]}><Icon name="arrow-up" color={`${portal.color}CC`} size={12} /></View>
   </Pressable>;
 }
 
@@ -647,12 +649,12 @@ const styles = StyleSheet.create({
   heroPrimaryButtonMark: { alignItems: 'center', borderRadius: 8, borderWidth: 1, height: 22, justifyContent: 'center', marginLeft: 2, width: 22 },
   heroSecondaryButton: { alignItems: 'center', borderRadius: 5, borderWidth: 1, flexDirection: 'row', gap: 8, minHeight: 54, paddingHorizontal: 10, paddingVertical: 8 },
   heroSecondaryButtonText: { fontFamily: 'Rajdhani_700Bold', fontSize: 11, letterSpacing: 0.9 },
-  glassButton: { alignItems: 'center', borderRadius: 8, borderWidth: 1, flexDirection: 'row', flexGrow: 1, gap: 8, minHeight: 47, minWidth: 132, paddingHorizontal: 9, paddingVertical: 7 },
+  glassButton: { alignItems: 'center', borderRadius: 11, borderWidth: 1, flexGrow: 1, gap: 4, justifyContent: 'center', minHeight: 66, minWidth: 72, paddingHorizontal: 6, paddingVertical: 7 },
   glassButtonLarge: { minHeight: 45, paddingHorizontal: 15 },
-  glassButtonGlyph: { alignItems: 'center', borderRadius: 7, borderWidth: 1, height: 29, justifyContent: 'center', width: 29 },
-  glassButtonCopy: { flex: 1, gap: 1 },
-  glassButtonText: { fontFamily: 'Rajdhani_700Bold', fontSize: 11, letterSpacing: 1 },
-  glassButtonMeta: { fontFamily: 'Rajdhani_600SemiBold', fontSize: 8, letterSpacing: 0.8 },
+  glassButtonGlyph: { alignItems: 'center', borderRadius: 15, borderWidth: 1, height: 31, justifyContent: 'center', position: 'relative', width: 31 },
+  glassButtonGlyphDot: { borderRadius: 2, bottom: 3, height: 4, position: 'absolute', right: 3, width: 4 },
+  glassButtonText: { fontFamily: 'Rajdhani_700Bold', fontSize: 9, letterSpacing: 1, textAlign: 'center' },
+  glassButtonMeta: { fontFamily: 'Rajdhani_600SemiBold', fontSize: 7, letterSpacing: 0.8 },
   heroFooter: { borderTopColor: '#FFFFFF20', borderTopWidth: 1, flexDirection: 'row', flexWrap: 'wrap', gap: 13, marginTop: 17, paddingTop: 12 },
   heroFooterItem: { alignItems: 'center', flexDirection: 'row', gap: 5 },
   heroFooterGateway: { alignItems: 'center', borderRadius: 5, borderWidth: 1, flexDirection: 'row', gap: 3, minHeight: 27, paddingHorizontal: 7 },
@@ -684,17 +686,19 @@ const styles = StyleSheet.create({
   domainCore: { alignItems: 'center', borderRadius: 12, borderWidth: 1, height: 24, justifyContent: 'center', left: '50%', marginLeft: -12, position: 'absolute', top: '50%', width: 24, zIndex: 2 },
   domainCoreDot: { borderRadius: 3, height: 6, width: 6 },
   domainRow: { alignItems: 'stretch', flexDirection: 'row', gap: 7 },
-  domainPortal: { alignItems: 'center', borderRadius: 14, borderWidth: 1, flex: 1, flexDirection: 'row', gap: 9, minHeight: 91, paddingHorizontal: 11, paddingVertical: 10, shadowColor: '#000000', shadowOffset: { height: 6, width: 0 }, shadowOpacity: 0.2, shadowRadius: 12 },
+  domainPortal: { alignItems: 'center', borderRadius: 8, borderWidth: 1, flex: 1, flexDirection: 'row', gap: 9, minHeight: 84, paddingHorizontal: 11, paddingVertical: 10, shadowColor: '#000000', shadowOffset: { height: 6, width: 0 }, shadowOpacity: 0.2, shadowRadius: 12 },
   domainCorner: { height: 16, position: 'absolute', width: 16 },
   domainCornerTop: { borderRightWidth: 1, borderTopWidth: 1, right: 7, top: 7 },
   domainCornerBottom: { borderBottomWidth: 1, borderLeftWidth: 1, bottom: 7, left: 7 },
-  domainNode: { alignItems: 'center', borderRadius: 10, borderWidth: 1, height: 34, justifyContent: 'center', width: 34 },
+  domainNodeHalo: { borderRadius: 22, borderWidth: 1, height: 44, left: 7, position: 'absolute', width: 44 },
+  domainNode: { alignItems: 'center', borderRadius: 16, borderWidth: 1, height: 34, justifyContent: 'center', width: 34 },
   domainCopy: { flex: 1, gap: 2, minWidth: 0 },
   domainLabelLine: { alignItems: 'center', flexDirection: 'row', gap: 5 },
   domainPulse: { borderRadius: 3, height: 5, opacity: 0.9, width: 5 },
   domainEyebrow: { fontFamily: 'Rajdhani_700Bold', fontSize: 8, letterSpacing: 1.2 },
   domainPortalTitle: { fontFamily: 'Cinzel_600SemiBold', fontSize: 11.5, lineHeight: 15 },
   domainStatus: { fontFamily: 'Rajdhani_600SemiBold', fontSize: 8, letterSpacing: 0.25 },
+  domainGateway: { alignItems: 'center', borderRadius: 6, borderWidth: 1, height: 25, justifyContent: 'center', width: 25 },
   domainConnector: { alignItems: 'center', flexDirection: 'row', gap: 1, justifyContent: 'center', width: 17 },
   domainConnectorLine: { height: 1, flex: 1 },
   domainSignal: { borderRadius: 3, height: 5, width: 5 },
@@ -716,7 +720,10 @@ const styles = StyleSheet.create({
   sectionAction: { alignItems: 'center', flexDirection: 'row', gap: 5, paddingBottom: 2, paddingLeft: 10 },
   sectionGatewayFrame: { alignItems: 'center', borderRadius: 7, borderWidth: 1, height: 31, justifyContent: 'center', width: 31 },
   sectionGatewaySignal: { borderRadius: 2, height: 4, width: 4 },
-  eventCard: { alignItems: 'center', backgroundColor: '#14142886', borderColor: '#6EA8FE80', borderRadius: 16, borderWidth: 1, flexDirection: 'row', gap: 12, padding: 14, shadowColor: '#000000', shadowOffset: { height: 8, width: 0 }, shadowOpacity: 0.26, shadowRadius: 16 },
+  eventCard: { alignItems: 'center', backgroundColor: '#14142886', borderColor: '#6EA8FE80', borderRadius: 5, borderWidth: 1, flexDirection: 'row', gap: 12, minHeight: 102, overflow: 'hidden', padding: 14, position: 'relative', shadowColor: '#000000', shadowOffset: { height: 8, width: 0 }, shadowOpacity: 0.26, shadowRadius: 16 },
+  eventCorner: { height: 18, position: 'absolute', width: 18 },
+  eventCornerTop: { borderRightWidth: 1, borderTopWidth: 1, right: 8, top: 8 },
+  eventCornerBottom: { borderBottomWidth: 1, borderLeftWidth: 1, bottom: 8, left: 8 },
   eventOrbWrap: { alignItems: 'center', height: 58, justifyContent: 'center', width: 58 },
   eventOrb: { alignItems: 'center', borderRadius: 26, borderWidth: 1, height: 52, justifyContent: 'center', width: 52 },
   eventOrbRing: { borderRadius: 30, borderWidth: 1, height: 58, position: 'absolute', width: 58 },
@@ -728,7 +735,7 @@ const styles = StyleSheet.create({
   eventProgress: { alignItems: 'flex-end', gap: 6, width: 48 },
   eventProgressValue: { fontFamily: 'Rajdhani_700Bold', fontSize: 13 },
   missionList: { gap: 9 },
-  missionRow: { alignItems: 'center', backgroundColor: '#14142878', borderColor: '#FFFFFF18', borderRadius: 13, borderWidth: 1, flexDirection: 'row', gap: 11, padding: 13, shadowColor: '#000000', shadowOffset: { height: 5, width: 0 }, shadowOpacity: 0.18, shadowRadius: 12 },
+  missionRow: { alignItems: 'center', backgroundColor: '#14142878', borderColor: '#FFFFFF18', borderRadius: 5, borderLeftWidth: 2, borderWidth: 1, flexDirection: 'row', gap: 11, padding: 13, shadowColor: '#000000', shadowOffset: { height: 5, width: 0 }, shadowOpacity: 0.18, shadowRadius: 12 },
   missionIndex: { alignItems: 'center', borderRadius: 6, borderWidth: 1, height: 32, justifyContent: 'center', width: 32 },
   missionIndexText: { fontFamily: 'Rajdhani_700Bold', fontSize: 11 },
   missionCopy: { flex: 1, gap: 3 },
@@ -752,10 +759,12 @@ const styles = StyleSheet.create({
   featuredLore: { fontFamily: 'Rajdhani_500Medium', fontSize: 12, lineHeight: 16, marginTop: 11 },
   featuredHint: { fontFamily: 'Rajdhani_700Bold', fontSize: 9, letterSpacing: 1.1, marginTop: 18 },
   dualGrid: { flexDirection: 'row', gap: 9 },
-  storePortal: { borderColor: '#3DC96B72', borderRadius: 16, borderWidth: 1, padding: 14, shadowColor: '#000000', shadowOffset: { height: 8, width: 0 }, shadowOpacity: 0.2, shadowRadius: 16 },
+  storePortal: { borderColor: '#3DC96B72', borderRadius: 5, borderWidth: 1, overflow: 'hidden', padding: 14, position: 'relative', shadowColor: '#000000', shadowOffset: { height: 8, width: 0 }, shadowOpacity: 0.2, shadowRadius: 16 },
+  storePortalTrace: { height: 1, left: 14, position: 'absolute', right: 14, top: 8 },
   storePortalHeading: { alignItems: 'center', flexDirection: 'row', justifyContent: 'space-between' },
+  storePortalMark: { alignItems: 'center', borderRadius: 15, borderWidth: 1, height: 32, justifyContent: 'center', width: 32 },
   storePortalTitle: { fontFamily: 'Cinzel_600SemiBold', fontSize: 15, marginTop: 4 },
-  storeActions: { flexDirection: 'row', flexWrap: 'wrap', gap: 7, marginTop: 12 },
+  storeActions: { flexDirection: 'row', flexWrap: 'wrap', gap: 7, marginTop: 14 },
   portalCard: { borderRadius: 16, borderWidth: 1, flex: 1, minHeight: 142, padding: 13, position: 'relative', shadowColor: '#000000', shadowOffset: { height: 8, width: 0 }, shadowOpacity: 0.2, shadowRadius: 16 },
   portalCorner: { height: 17, position: 'absolute', width: 17 },
   portalCornerTop: { borderRightWidth: 1, borderTopWidth: 1, right: 8, top: 8 },
