@@ -265,3 +265,11 @@ La Fase VISUAL no se declara cerrada sólo por compilar: debe alcanzar al menos 
 - Se amplió el espacio inferior seguro para que la navegación persistente no cubra la actividad final, manteniendo pull-to-refresh, reduced-motion, safe-area, accesibilidad y todos los estados explícitos existentes.
 - El pase conserva la escena y los assets oficiales ya registrados. No introduce arte genérico, imágenes de sustitución, contratos nuevos, Supabase, Auth, RLS, RPCs, economía, combate ni cambios en la web congelada.
 - Estado: `IMPLEMENTED_UNVERIFIED`; requiere typecheck, guardas, workflow APK correlativo y QA visual/táctil humana en dispositivo.
+
+## Evidencia de entrega — 2026-09-11 — APK 186
+
+- El workflow Android oficial ejecutó el Home nativo de `main` sobre el commit `c8f85ab7adaa5ace41407897536e1f7df428ee88` y terminó en `success` (run `34637967798`, build `186`).
+- Pasaron typecheck móvil, telemetría, todos los contratos Android, prebuild Expo, Gradle release y la guarda standalone con `assets/index.android.bundle` embebido.
+- Release publicado: `vexforge-android-build-186`, `app-release.apk`, `114535020` bytes, SHA-256 `331575d4e8bc284702d3502291338ea223819bdbfe93e3cf635425c7586c328e`.
+- Descarga oficial: https://github.com/grandmaster68081-byte/Vexforge-web/releases/download/vexforge-android-build-186/app-release.apk
+- Estado honesto: `IMPLEMENTED_UNVERIFIED`. La QA visual/táctil humana, el criterio vivo de primera impresión y la medición Android de accesibilidad/rendimiento siguen pendientes; compilar correctamente no permite declarar `TIER1_READY`.

@@ -2337,3 +2337,13 @@ Cada unidad registra: alcance, archivos/superficies, fuente canónica, estado an
 - Los otros cinco archivos extraídos del lote permanecen en reserva declarada y sin consumidor autorizado.
 - La guarda proporcional nueva es `verify:mobile-home-official-assets`; también deben pasar `verify:residual-art`, `verify:manifest`, typecheck y el workflow APK oficial.
 - Estado de `VE-MOB-3-HOME`: `IMPLEMENTED_UNVERIFIED`; no se declara `PASS`, `Q4`, `TIER1_READY` u `OPERATIONAL` por esta implementación.
+
+
+---
+## PATCH 2026-09-11 — VE-MOB-3-HOME — PREMIUM TCG HOME PASS
+
+- Android Home actualizado en main con un pase integral de calidad TCG premium: escena de entrada, HUD del jugador, accesos de dominios, señal de temporada, evento, misiones, carta destacada, economía, actividad y ranking.
+- Se conservaron datos autoritativos de Supabase, rutas, testIDs, accesibilidad, safe-area, reduced-motion, iconografía y assets oficiales; no se añadió arte genérico ni se modificó la web congelada.
+- Commit de GitHub: fe8f69756a1613f7f14314a351ab24c24e973c3b.
+- Verificación: typecheck Android OK; guardas Home oficial, motion, assets, manifest y telemetry OK. El manifiesto dejó tres HEAD diferidos por HTTP 429 transitorio, sin referencias rotas. No se compiló APK.
+- Estado honesto: IMPLEMENTED_UNVERIFIED; queda pendiente QA visual/táctil humana y futura compilación Android.

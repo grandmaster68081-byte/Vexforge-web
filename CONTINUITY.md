@@ -2457,3 +2457,12 @@
 - La carta destacada recibe un barrido de luz animado ligado al ciclo ambiental ya existente, manteniendo la inspección táctil, el estado `ARTE NO DISPONIBLE` y la política de cero genéricos.
 - Guardas locales: composición oficial de Home `10/10`, contrato de movimiento `17` tokens / `8` clases / `3` consumidores y parseo TypeScript/JSX OK. El typecheck completo no pudo ejecutarse porque el firewall del entorno devolvió `404` al instalar `npm-package-arg@11.0.3`; no se modificaron dependencias ni se generó APK.
 - Estado honesto: `IMPLEMENTED_UNVERIFIED`. El cambio se publicará en `main`; no se declara `PASS`, `OPERATIONAL` ni `TIER1_READY` hasta la QA visual/táctil humana.
+
+---
+## 2026-09-11 — VE-MOB-3-HOME — APK 186 / TECHNICAL GATE PASSED
+
+- Se ejecutó el workflow Android oficial `vexforge-android-apk.yml` sobre `main` en el commit `c8f85ab7adaa5ace41407897536e1f7df428ee88`.
+- Run oficial: `34637967798` / build `186`, `success`. Pasaron instalación de dependencias, `npm run typecheck`, telemetría, todos los contratos móviles, `expo prebuild`, `assembleRelease`, verificación standalone con `assets/index.android.bundle` embebido y publicación del release.
+- Release: `vexforge-android-build-186`, asset `app-release.apk`, `114535020` bytes, SHA-256 `331575d4e8bc284702d3502291338ea223819bdbfe93e3cf635425c7586c328e`.
+- Descarga oficial: https://github.com/grandmaster68081-byte/Vexforge-web/releases/download/vexforge-android-build-186/app-release.apk
+- El estado sigue `IMPLEMENTED_UNVERIFIED`: la auditoría técnica pasa, pero la revisión visual/táctil humana en dispositivo y los criterios vivos de primera impresión, accesibilidad y rendimiento todavía no están verificados. No se declara `PASS`, `OPERATIONAL` ni `TIER1_READY`.
