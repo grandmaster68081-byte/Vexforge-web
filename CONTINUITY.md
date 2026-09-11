@@ -2466,3 +2466,11 @@
 - Release: `vexforge-android-build-186`, asset `app-release.apk`, `114535020` bytes, SHA-256 `331575d4e8bc284702d3502291338ea223819bdbfe93e3cf635425c7586c328e`.
 - Descarga oficial: https://github.com/grandmaster68081-byte/Vexforge-web/releases/download/vexforge-android-build-186/app-release.apk
 - El estado sigue `IMPLEMENTED_UNVERIFIED`: la auditoría técnica pasa, pero la revisión visual/táctil humana en dispositivo y los criterios vivos de primera impresión, accesibilidad y rendimiento todavía no están verificados. No se declara `PASS`, `OPERATIONAL` ni `TIER1_READY`.
+
+---
+## 2026-09-11 — VE-MOB-3-HOME — IN-SCENE GATEWAYS / TECHNICAL PREFLIGHT
+
+- Se completó una nueva pasada visual Android-first sobre `mobile/app/(tabs)/index.tsx` a partir de las capturas del Home: los CTA principales, portales de dominio, accesos de sección, rutas de Forja/Economía y operaciones de la Cámara de Forja ahora se presentan como gateways, sigilos y marcos de navegación integrados en la escena, en lugar de controles textuales planos.
+- Se conservaron las rutas, `testID`, datos vivos de Supabase, estados de error/carga/vacío, haptics, accesibilidad, reduced-motion y los assets oficiales registrados. No se modificó la web congelada, Supabase, Auth, economía, combate, recompensas, inventario ni contratos.
+- Guardas locales: `npm run typecheck` en `mobile` OK; `npm run verify:mobile-home-official-assets` OK (10/10); `npm run verify:telemetry` OK (5/5 eventos canónicos); `npm run verify:motion` OK (17 tokens, 8 clases, reduced-motion y 3 consumidores); `git diff --check` OK; `mobile/package-lock.json` sin cambios.
+- Estado: `IMPLEMENTED_UNVERIFIED` hasta que el workflow Android oficial termine sobre el commit publicado, exista el release correlativo y el operador complete la QA visual/táctil en dispositivo. No se declara `PASS`, `OPERATIONAL` ni `TIER1_READY`.

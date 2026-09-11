@@ -91,8 +91,14 @@ function GlassButton({
         { backgroundColor: palette.fill, borderColor: palette.border, opacity: pressed ? 0.76 : 1 },
       ]}
     >
-      <Icon name={icon} color={palette.text} size={large ? 17 : 15} />
-      <Text style={[styles.glassButtonText, { color: palette.text }]}>{label}</Text>
+      <View style={[styles.glassButtonGlyph, { borderColor: `${palette.border}CC`, backgroundColor: `${palette.border}24` }]}>
+        <Icon name={icon} color={palette.text} size={large ? 17 : 15} />
+      </View>
+      <View style={styles.glassButtonCopy}>
+        <Text style={[styles.glassButtonText, { color: palette.text }]}>{label}</Text>
+        <Text style={[styles.glassButtonMeta, { color: `${palette.text}A8` }]}>ABRIR</Text>
+      </View>
+      <Icon name="arrow-up" color={`${palette.text}CC`} size={13} />
     </Pressable>
   );
 }
@@ -111,8 +117,13 @@ function HeroPrimaryButton({ label, icon, onPress, testID }: { label: string; ic
       style={({ pressed }) => [styles.heroPrimaryButtonPressable, { opacity: pressed ? 0.82 : 1 }]}
     >
       <LinearGradient colors={[colors.accent, '#C9901F']} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={styles.heroPrimaryButton}>
-        <Icon name={icon} color={colors.ink} size={17} />
-        <Text style={[styles.heroPrimaryButtonText, { color: colors.ink }]}>{label}</Text>
+        <View style={[styles.heroActionIconFrame, { borderColor: `${colors.ink}70`, backgroundColor: `${colors.ink}12` }]}>
+          <Icon name={icon} color={colors.ink} size={17} />
+        </View>
+        <View style={styles.heroActionCopy}>
+          <Text style={[styles.heroPrimaryButtonText, { color: colors.ink }]}>{label}</Text>
+          <Text style={[styles.heroActionMeta, { color: `${colors.ink}B8` }]}>ACCESO PRINCIPAL</Text>
+        </View>
         <View style={[styles.heroPrimaryButtonMark, { borderColor: `${colors.ink}5C` }]}>
           <Icon name="arrow-up" color={colors.ink} size={11} />
         </View>
@@ -137,8 +148,13 @@ function HeroSecondaryButton({ label, icon, onPress, testID }: { label: string; 
         { borderColor: `${colors.foreground}70`, backgroundColor: `${colors.ink}8C`, opacity: pressed ? 0.72 : 1 },
       ]}
     >
-      <Icon name={icon} color={colors.foreground} size={15} />
-      <Text style={[styles.heroSecondaryButtonText, { color: colors.foreground }]}>{label}</Text>
+      <View style={[styles.heroSecondaryIconFrame, { borderColor: `${colors.foreground}72` }]}>
+        <Icon name={icon} color={colors.foreground} size={15} />
+      </View>
+      <View style={styles.heroActionCopy}>
+        <Text style={[styles.heroSecondaryButtonText, { color: colors.foreground }]}>{label}</Text>
+        <Text style={[styles.heroActionMeta, { color: `${colors.foreground}98` }]}>CONTINUAR</Text>
+      </View>
     </Pressable>
   );
 }
@@ -155,9 +171,11 @@ function SectionHeading({ eyebrow, title, action, onAction }: { eyebrow: string;
         <Text style={[styles.sectionTitle, { color: colors.foreground }]}>{title}</Text>
       </View>
       {action && onAction ? (
-        <Pressable accessibilityRole="button" accessibilityLabel={action} onPress={onAction} style={styles.sectionAction}>
-          <Text style={[styles.sectionActionText, { color: colors.mutedForeground }]}>{action}</Text>
-          <Icon name="arrow-up" color={colors.accent} size={14} />
+        <Pressable accessibilityRole="button" accessibilityLabel={action} accessibilityHint="Abre esta región del Nexus" onPress={onAction} style={styles.sectionAction}>
+          <View style={[styles.sectionGatewayFrame, { borderColor: `${colors.accent}72`, backgroundColor: `${colors.accent}12` }]}>
+            <Icon name="arrow-up" color={colors.accent} size={14} />
+          </View>
+          <View style={[styles.sectionGatewaySignal, { backgroundColor: `${colors.accent}A8` }]} />
         </Pressable>
       ) : null}
     </View>
@@ -394,7 +412,7 @@ export default function ForgeScreen() {
                  <View style={styles.heroFooter}>
                    <View style={styles.heroFooterItem}><Icon name="zap" color={colors.accent} size={13} /><Text style={[styles.heroFooterText, { color: '#D7D0E8CC' }]}>{progress ? `${formatNumber(progress.energy)} / ${formatNumber(progress.max_energy)} ENERGÍA` : 'ENERGÍA EN ESPERA'}</Text></View>
                    <View style={styles.heroFooterItem}><Icon name="gem" color={colors.rarityEpic} size={13} /><Text style={[styles.heroFooterText, { color: '#D7D0E8CC' }]}>{formatNumber(wallet?.vex_ingame)} VEX</Text></View>
-                   <Pressable accessibilityRole="button" accessibilityLabel="Abrir mundo" testID="home-world" onPress={() => navigate('/world')} style={styles.heroFooterItem}><Icon name="globe" color={colors.rarityRare} size={13} /><Text style={[styles.heroFooterText, { color: colors.rarityRare }]}>MUNDO</Text></Pressable>
+                    <Pressable accessibilityRole="button" accessibilityLabel="Abrir mundo" testID="home-world" onPress={() => navigate('/world')} style={[styles.heroFooterGateway, { borderColor: `${colors.rarityRare}88`, backgroundColor: `${colors.rarityRare}16` }]}><Icon name="globe" color={colors.rarityRare} size={13} /><Icon name="arrow-up" color={colors.rarityRare} size={9} /></Pressable>
                  </View>
                </View>
             </Animated.View>
@@ -459,7 +477,7 @@ export default function ForgeScreen() {
             </View>
 
              <SectionHeading eyebrow="SEÑAL DEL NEXUS" title="El frente de hoy" action="ABRIR MUNDO" onAction={() => navigate('/world')} />
-            <Pressable accessibilityRole="button" accessibilityLabel="Abrir evento activo" testID="home-event" onPress={() => navigate('/world')} style={[styles.eventCard, { borderColor: `${colors.rarityRare}80`, backgroundColor: `${colors.panelStrong}38` }]}>
+             <Pressable accessibilityRole="button" accessibilityLabel="Abrir evento activo" testID="home-event" onPress={() => navigate('/world')} style={({ pressed }) => [styles.eventCard, { borderColor: `${colors.rarityRare}80`, backgroundColor: `${colors.panelStrong}38`, opacity: pressed ? 0.8 : 1 }]}>
               <View style={styles.eventOrbWrap}><View style={[styles.eventOrb, { borderColor: `${colors.rarityRare}80` }]}><Animated.View style={[styles.eventOrbCore, { backgroundColor: colors.rarityRare }, pulseStyle]} /></View><View style={[styles.eventOrbRing, { borderColor: `${colors.rarityRare}35` }]} /></View>
               <View style={styles.eventCopy}><Text style={[styles.eventType, { color: colors.rarityRare }]}>{activeEvent?.type?.toUpperCase() ?? 'SEÑAL GLOBAL'}</Text><Text style={[styles.eventTitle, { color: colors.foreground }]}>{activeEvent?.name ?? 'El Nexus espera un nuevo frente'}</Text><Text style={[styles.eventMeta, { color: colors.mutedForeground }]}>{activeEvent ? `CIERRA EN ${formatEventTime(activeEvent.ends_at)}` : 'No hay evento activo publicado'}</Text></View>
               <View style={styles.eventProgress}><Text style={[styles.eventProgressValue, { color: colors.rarityRare }]}>{activeEvent ? `${Math.round(activeEvent.progress)}%` : '—'}</Text><ProgressRail value={activeEvent?.progress ?? 0} total={100} color={colors.rarityRare} background={`${colors.rarityRare}20`} /><Icon name="arrow-up" color={colors.rarityRare} size={16} /></View>
@@ -502,9 +520,25 @@ export default function ForgeScreen() {
               </View>
             </Pressable>
 
-            <View style={styles.dualGrid}>
-              <Pressable accessibilityRole="button" accessibilityLabel="Abrir Forja" testID="home-forge" onPress={() => navigate('/deck')} style={[styles.portalCard, { borderColor: `${colors.rarityEpic}80`, backgroundColor: `${colors.panelStrong}26` }]}><View style={[styles.portalIcon, { backgroundColor: `${colors.rarityEpic}24`, borderColor: `${colors.rarityEpic}80` }]}><Icon name="deck" color={colors.rarityEpic} size={19} /></View><Text style={[styles.portalEyebrow, { color: colors.rarityEpic }]}>FORJA</Text><Text style={[styles.portalTitle, { color: colors.foreground }]}>Construye tu línea</Text><Text style={[styles.portalBody, { color: colors.mutedForeground }]}>Mazos y formación</Text><Icon name="arrow-up" color={colors.rarityEpic} size={15} style={styles.portalArrow} /></Pressable>
-              <Pressable accessibilityRole="button" accessibilityLabel="Abrir economía" testID="home-economy" onPress={() => navigate('/economy')} style={[styles.portalCard, { borderColor: `${colors.accent}80`, backgroundColor: `${colors.panelStrong}26` }]}><View style={[styles.portalIcon, { backgroundColor: `${colors.accent}1C`, borderColor: `${colors.accent}80` }]}><Icon name="trending-up-outline" color={colors.accent} size={19} /></View><Text style={[styles.portalEyebrow, { color: colors.accent }]}>ECONOMÍA</Text><Text style={[styles.portalTitle, { color: colors.foreground }]}>Mueve el VEX</Text><Text style={[styles.portalBody, { color: colors.mutedForeground }]}>Mercado y recursos</Text><Icon name="arrow-up" color={colors.accent} size={15} style={styles.portalArrow} /></Pressable>
+             <View style={styles.dualGrid}>
+               <Pressable accessibilityRole="button" accessibilityLabel="Abrir Forja" testID="home-forge" onPress={() => navigate('/deck')} style={({ pressed }) => [styles.portalCard, { borderColor: `${colors.rarityEpic}80`, backgroundColor: `${colors.panelStrong}26`, opacity: pressed ? 0.76 : 1 }]}>
+                 <View pointerEvents="none" style={[styles.portalCorner, styles.portalCornerTop, { borderColor: `${colors.rarityEpic}A8` }]} />
+                 <View pointerEvents="none" style={[styles.portalCorner, styles.portalCornerBottom, { borderColor: `${colors.rarityEpic}70` }]} />
+                 <View style={[styles.portalIcon, { backgroundColor: `${colors.rarityEpic}24`, borderColor: `${colors.rarityEpic}80` }]}><Icon name="deck" color={colors.rarityEpic} size={19} /></View>
+                 <Text style={[styles.portalEyebrow, { color: colors.rarityEpic }]}>FORJA</Text>
+                 <Text style={[styles.portalTitle, { color: colors.foreground }]}>Construye tu línea</Text>
+                 <Text style={[styles.portalBody, { color: colors.mutedForeground }]}>Mazos y formación</Text>
+                 <View style={[styles.portalGateway, { borderColor: `${colors.rarityEpic}70`, backgroundColor: `${colors.rarityEpic}12` }]}><Icon name="arrow-up" color={colors.rarityEpic} size={13} /></View>
+               </Pressable>
+               <Pressable accessibilityRole="button" accessibilityLabel="Abrir economía" testID="home-economy" onPress={() => navigate('/economy')} style={({ pressed }) => [styles.portalCard, { borderColor: `${colors.accent}80`, backgroundColor: `${colors.panelStrong}26`, opacity: pressed ? 0.76 : 1 }]}>
+                 <View pointerEvents="none" style={[styles.portalCorner, styles.portalCornerTop, { borderColor: `${colors.accent}A8` }]} />
+                 <View pointerEvents="none" style={[styles.portalCorner, styles.portalCornerBottom, { borderColor: `${colors.accent}70` }]} />
+                 <View style={[styles.portalIcon, { backgroundColor: `${colors.accent}1C`, borderColor: `${colors.accent}80` }]}><Icon name="trending-up-outline" color={colors.accent} size={19} /></View>
+                 <Text style={[styles.portalEyebrow, { color: colors.accent }]}>ECONOMÍA</Text>
+                 <Text style={[styles.portalTitle, { color: colors.foreground }]}>Mueve el VEX</Text>
+                 <Text style={[styles.portalBody, { color: colors.mutedForeground }]}>Mercado y recursos</Text>
+                 <View style={[styles.portalGateway, { borderColor: `${colors.accent}70`, backgroundColor: `${colors.accent}12` }]}><Icon name="arrow-up" color={colors.accent} size={13} /></View>
+               </Pressable>
             </View>
 
             <View style={[styles.storePortal, { borderColor: `${colors.success}72`, backgroundColor: `${colors.panelStrong}26` }]}>
@@ -546,6 +580,8 @@ function MissionRow({ mission, index, onPress }: { mission: HomeMission; index: 
 function NexusPortal({ portal, onPress }: { portal: { id: string; label: string; title: string; status: string; icon: IconName; route: HomeRoute; color: string }; onPress: () => void }) {
   const colors = useColors();
   return <Pressable accessibilityRole="button" accessibilityLabel={`Abrir dominio ${portal.label}`} testID={`home-domain-${portal.id}`} onPress={onPress} style={({ pressed }) => [styles.domainPortal, { borderColor: `${portal.color}80`, backgroundColor: `${colors.panelStrong}26`, opacity: pressed ? 0.74 : 1 }]}>
+    <View pointerEvents="none" style={[styles.domainCorner, styles.domainCornerTop, { borderColor: `${portal.color}A8` }]} />
+    <View pointerEvents="none" style={[styles.domainCorner, styles.domainCornerBottom, { borderColor: `${portal.color}70` }]} />
     <View style={[styles.domainNode, { borderColor: `${portal.color}A8`, backgroundColor: `${portal.color}1C` }]}><Icon name={portal.icon} color={portal.color} size={17} /></View>
     <View style={styles.domainCopy}>
       <View style={styles.domainLabelLine}><Text style={[styles.domainEyebrow, { color: portal.color }]}>{portal.label}</Text><View style={[styles.domainPulse, { backgroundColor: portal.color }]} /></View>
@@ -602,16 +638,24 @@ const styles = StyleSheet.create({
   heroDescription: { fontFamily: 'Rajdhani_500Medium', fontSize: 15, lineHeight: 20, marginTop: 8, maxWidth: 290 },
   heroActions: { alignItems: 'center', flexDirection: 'row', flexWrap: 'wrap', gap: 9, marginTop: 17 },
   heroPrimaryButtonPressable: { borderRadius: 5, shadowColor: '#F0C050', shadowOffset: { height: 7, width: 0 }, shadowOpacity: 0.28, shadowRadius: 14 },
-  heroPrimaryButton: { alignItems: 'center', borderRadius: 5, flexDirection: 'row', gap: 7, minHeight: 47, paddingHorizontal: 14, paddingVertical: 10 },
+  heroPrimaryButton: { alignItems: 'center', borderRadius: 5, flexDirection: 'row', gap: 8, minHeight: 54, paddingHorizontal: 10, paddingVertical: 8 },
+  heroActionIconFrame: { alignItems: 'center', borderRadius: 8, borderWidth: 1, height: 35, justifyContent: 'center', width: 35 },
+  heroSecondaryIconFrame: { alignItems: 'center', borderRadius: 8, borderWidth: 1, height: 32, justifyContent: 'center', width: 32 },
+  heroActionCopy: { gap: 1 },
   heroPrimaryButtonText: { fontFamily: 'Rajdhani_700Bold', fontSize: 11, letterSpacing: 1.05 },
+  heroActionMeta: { fontFamily: 'Rajdhani_600SemiBold', fontSize: 8, letterSpacing: 0.8 },
   heroPrimaryButtonMark: { alignItems: 'center', borderRadius: 8, borderWidth: 1, height: 22, justifyContent: 'center', marginLeft: 2, width: 22 },
-  heroSecondaryButton: { alignItems: 'center', borderRadius: 5, borderWidth: 1, flexDirection: 'row', gap: 7, minHeight: 47, paddingHorizontal: 13, paddingVertical: 10 },
+  heroSecondaryButton: { alignItems: 'center', borderRadius: 5, borderWidth: 1, flexDirection: 'row', gap: 8, minHeight: 54, paddingHorizontal: 10, paddingVertical: 8 },
   heroSecondaryButtonText: { fontFamily: 'Rajdhani_700Bold', fontSize: 11, letterSpacing: 0.9 },
-  glassButton: { alignItems: 'center', borderRadius: 8, borderWidth: 1, flexDirection: 'row', gap: 7, minHeight: 39, paddingHorizontal: 12, paddingVertical: 9 },
+  glassButton: { alignItems: 'center', borderRadius: 8, borderWidth: 1, flexDirection: 'row', flexGrow: 1, gap: 8, minHeight: 47, minWidth: 132, paddingHorizontal: 9, paddingVertical: 7 },
   glassButtonLarge: { minHeight: 45, paddingHorizontal: 15 },
+  glassButtonGlyph: { alignItems: 'center', borderRadius: 7, borderWidth: 1, height: 29, justifyContent: 'center', width: 29 },
+  glassButtonCopy: { flex: 1, gap: 1 },
   glassButtonText: { fontFamily: 'Rajdhani_700Bold', fontSize: 11, letterSpacing: 1 },
+  glassButtonMeta: { fontFamily: 'Rajdhani_600SemiBold', fontSize: 8, letterSpacing: 0.8 },
   heroFooter: { borderTopColor: '#FFFFFF20', borderTopWidth: 1, flexDirection: 'row', flexWrap: 'wrap', gap: 13, marginTop: 17, paddingTop: 12 },
   heroFooterItem: { alignItems: 'center', flexDirection: 'row', gap: 5 },
+  heroFooterGateway: { alignItems: 'center', borderRadius: 5, borderWidth: 1, flexDirection: 'row', gap: 3, minHeight: 27, paddingHorizontal: 7 },
   heroFooterText: { fontFamily: 'Rajdhani_600SemiBold', fontSize: 10, letterSpacing: 0.65 },
   dashboard: { gap: 17, paddingTop: 0 },
   errorBanner: { alignItems: 'center', borderRadius: 14, borderWidth: 1, flexDirection: 'row', gap: 10, padding: 13, shadowColor: '#000000', shadowOffset: { height: 8, width: 0 }, shadowOpacity: 0.24, shadowRadius: 16 },
@@ -641,6 +685,9 @@ const styles = StyleSheet.create({
   domainCoreDot: { borderRadius: 3, height: 6, width: 6 },
   domainRow: { alignItems: 'stretch', flexDirection: 'row', gap: 7 },
   domainPortal: { alignItems: 'center', borderRadius: 14, borderWidth: 1, flex: 1, flexDirection: 'row', gap: 9, minHeight: 91, paddingHorizontal: 11, paddingVertical: 10, shadowColor: '#000000', shadowOffset: { height: 6, width: 0 }, shadowOpacity: 0.2, shadowRadius: 12 },
+  domainCorner: { height: 16, position: 'absolute', width: 16 },
+  domainCornerTop: { borderRightWidth: 1, borderTopWidth: 1, right: 7, top: 7 },
+  domainCornerBottom: { borderBottomWidth: 1, borderLeftWidth: 1, bottom: 7, left: 7 },
   domainNode: { alignItems: 'center', borderRadius: 10, borderWidth: 1, height: 34, justifyContent: 'center', width: 34 },
   domainCopy: { flex: 1, gap: 2, minWidth: 0 },
   domainLabelLine: { alignItems: 'center', flexDirection: 'row', gap: 5 },
@@ -666,8 +713,9 @@ const styles = StyleSheet.create({
    sectionKickerLine: { height: 1, width: 18 },
   eyebrow: { fontFamily: 'Rajdhani_700Bold', fontSize: 9, letterSpacing: 1.8 },
   sectionTitle: { fontFamily: 'Cinzel_600SemiBold', fontSize: 18, letterSpacing: 0.4, marginTop: 5 },
-  sectionAction: { alignItems: 'center', flexDirection: 'row', gap: 3, paddingBottom: 2 },
-  sectionActionText: { fontFamily: 'Rajdhani_700Bold', fontSize: 9, letterSpacing: 0.8 },
+  sectionAction: { alignItems: 'center', flexDirection: 'row', gap: 5, paddingBottom: 2, paddingLeft: 10 },
+  sectionGatewayFrame: { alignItems: 'center', borderRadius: 7, borderWidth: 1, height: 31, justifyContent: 'center', width: 31 },
+  sectionGatewaySignal: { borderRadius: 2, height: 4, width: 4 },
   eventCard: { alignItems: 'center', backgroundColor: '#14142886', borderColor: '#6EA8FE80', borderRadius: 16, borderWidth: 1, flexDirection: 'row', gap: 12, padding: 14, shadowColor: '#000000', shadowOffset: { height: 8, width: 0 }, shadowOpacity: 0.26, shadowRadius: 16 },
   eventOrbWrap: { alignItems: 'center', height: 58, justifyContent: 'center', width: 58 },
   eventOrb: { alignItems: 'center', borderRadius: 26, borderWidth: 1, height: 52, justifyContent: 'center', width: 52 },
@@ -709,11 +757,14 @@ const styles = StyleSheet.create({
   storePortalTitle: { fontFamily: 'Cinzel_600SemiBold', fontSize: 15, marginTop: 4 },
   storeActions: { flexDirection: 'row', flexWrap: 'wrap', gap: 7, marginTop: 12 },
   portalCard: { borderRadius: 16, borderWidth: 1, flex: 1, minHeight: 142, padding: 13, position: 'relative', shadowColor: '#000000', shadowOffset: { height: 8, width: 0 }, shadowOpacity: 0.2, shadowRadius: 16 },
+  portalCorner: { height: 17, position: 'absolute', width: 17 },
+  portalCornerTop: { borderRightWidth: 1, borderTopWidth: 1, right: 8, top: 8 },
+  portalCornerBottom: { borderBottomWidth: 1, borderLeftWidth: 1, bottom: 8, left: 8 },
   portalIcon: { alignItems: 'center', borderRadius: 10, borderWidth: 1, height: 37, justifyContent: 'center', width: 37 },
   portalEyebrow: { fontFamily: 'Rajdhani_700Bold', fontSize: 9, letterSpacing: 1.2, marginTop: 12 },
   portalTitle: { fontFamily: 'Cinzel_600SemiBold', fontSize: 13, lineHeight: 18, marginTop: 4 },
   portalBody: { fontFamily: 'Rajdhani_500Medium', fontSize: 10, marginTop: 2 },
-  portalArrow: { bottom: 12, position: 'absolute', right: 12 },
+  portalGateway: { alignItems: 'center', borderRadius: 6, borderWidth: 1, bottom: 11, height: 26, justifyContent: 'center', position: 'absolute', right: 11, width: 26 },
   activityPanel: { borderColor: '#FFFFFF20', borderRadius: 16, borderWidth: 1, paddingHorizontal: 14, paddingVertical: 4, shadowColor: '#000000', shadowOffset: { height: 8, width: 0 }, shadowOpacity: 0.18, shadowRadius: 16 },
   activityRow: { alignItems: 'center', borderBottomColor: '#FFFFFF14', borderBottomWidth: 1, flexDirection: 'row', gap: 10, paddingVertical: 11 },
   activityDot: { borderRadius: 4, height: 7, width: 7 },
