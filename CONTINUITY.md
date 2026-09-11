@@ -2491,3 +2491,11 @@
 - El workflow Android oficial run `189` falló antes de `expo prebuild` porque `verify-mobile-store.mjs` exigía una llamada literal `navigate('/store?mode=fusion')` que ya no corresponde a la tabla de gateways del Home; los contratos funcionales y el typecheck habían pasado.
 - La guarda se ajustó para reconocer el contrato real: la ruta de fusión debe estar declarada en los gateways y consumirse mediante `navigate(route as HomeRoute)`. No se modificaron rutas, datos, RPCs, Auth, Supabase, assets ni lógica de Store.
 - El cambio queda preparado para incorporarse al commit objetivo y relanzar el workflow Android oficial. Estado: `IMPLEMENTED_UNVERIFIED` hasta que el workflow y el release correlativo terminen correctamente y el operador complete la QA visual/táctil.
+
+---
+## 2026-09-11 — VE-MOB-3-HOME — APK 190 / RELEASE PUBLICADA
+
+- El workflow Android oficial `vexforge-android-apk.yml` se ejecutó sobre `main` en el commit `e37c6f257a3fae6b37e04f4d0729b067d6ca2b53`.
+- Run oficial: `34658224645` / build `190`, `success`. Pasaron instalación de dependencias, typecheck, telemetría, todos los contratos móviles, `expo prebuild`, Gradle release y la verificación standalone con `assets/index.android.bundle` embebido.
+- Release prerelease publicado: `vexforge-android-build-190`.
+- APK: `app-release.apk` (114,529,424 bytes). Se mantiene el estado `IMPLEMENTED_UNVERIFIED` hasta la QA visual/táctil humana del operador en dispositivo; no se declara `PASS`, `OPERATIONAL` ni `TIER1_READY`.
