@@ -259,7 +259,6 @@ export default function ForgeScreen() {
               accessibilityLabel="Guardián astral de la Forja"
               onLoad={() => setSentinelAssetState('ready')}
               onError={() => setSentinelAssetState('error')}
-              pointerEvents="none"
             />
             <Animated.View pointerEvents="none" style={[styles.heroOrbit, { borderColor: `${colors.rarityEpic}72` }, orbitStyle]} />
             <Animated.View pointerEvents="none" style={[styles.heroCore, { backgroundColor: `${colors.rarityEpic}A8` }, pulseStyle]} />
