@@ -1,3 +1,13 @@
+## 2026-09-11 — VE-MOB-3-HOME — APK 178 PUBLICADA / IMPLEMENTED_UNVERIFIED
+
+- El workflow Android oficial `34612487343` / build `178` terminó en `success` sobre el commit de código `b09bd1e2bc7dfe8bd4af3d05744b8cf67a5a0a50`, después de retirar la prop no válida de `Animated.Image`.
+- Pasaron instalación de dependencias, `npm run typecheck`, telemetría, todas las guardas móviles, `expo prebuild`, Gradle `assembleRelease` y la verificación de APK standalone con `assets/index.android.bundle` embebido.
+- Release publicado: `vexforge-android-build-178`, asset `app-release.apk`, tamaño `114518256` bytes, SHA-256 `3c83961161dda93b124b8b4a0e30d958223483d9d42800ae0701b6f9052a863a`.
+- Descarga oficial: `https://github.com/grandmaster68081-byte/Vexforge-web/releases/download/vexforge-android-build-178/app-release.apk`.
+- El APK queda alineado con el commit Android corregido y el run oficial. La QA visual/táctil humana en dispositivo sigue pendiente; estado honesto: `IMPLEMENTED_UNVERIFIED`. No se declara `PASS`, `OPERATIONAL` ni `TIER1_READY`.
+
+---
+
 ## 2026-09-11 — VE-MOB-3-HOME — APK BUILD BLOCKER REPAIRED / IMPLEMENTED_UNVERIFIED
 
 - El commit `2ff6adbeb17676a8149e14955da0c2a3449de2f5` añadió la escena Nexus cinematográfica del Home, pero el workflow Android oficial `34610891894` / build `177` quedó bloqueado en `npm run typecheck` antes de Gradle.
