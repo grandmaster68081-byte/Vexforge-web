@@ -2475,3 +2475,19 @@
 - Se conservaron las rutas, `testID`, datos vivos de Supabase, estados de error/carga/vacío, haptics, accesibilidad, reduced-motion y los assets oficiales registrados. No se modificó la web congelada, Supabase, Auth, economía, combate, recompensas, inventario ni contratos.
 - Guardas locales: `npm run typecheck` en `mobile` OK; `npm run verify:mobile-home-official-assets` OK (10/10); `npm run verify:telemetry` OK (5/5 eventos canónicos); `npm run verify:motion` OK (17 tokens, 8 clases, reduced-motion y 3 consumidores); `git diff --check` OK; `mobile/package-lock.json` sin cambios.
 - Estado: `IMPLEMENTED_UNVERIFIED` hasta que el workflow Android oficial termine sobre el commit publicado, exista el release correlativo y el operador complete la QA visual/táctil en dispositivo. No se declara `PASS`, `OPERATIONAL` ni `TIER1_READY`.
+
+---
+## 2026-09-11 — VE-MOB-3-HOME — VEXFORGE UI ART DIRECTION PASS
+
+- Se aplicó exclusivamente en Android un pase de dirección visual sobre `mobile/app/(tabs)/index.tsx`, tomando el Home como referencia maestra del lenguaje futuro de VEXFORGE.
+- La composición abandona la repetición de tarjetas glassmorphism: la escena, el ledger del forjador, la constelación de dominios, las líneas de señal, el artefacto destacado y los ritos de operación usan jerarquías y formas diferenciadas.
+- Se conservaron assets oficiales, rutas, datos vivos de Supabase, contratos de carga, refresh, estados de carga/error/vacío, accesibilidad, haptics, reduced-motion y todos los `testID` del Home. No se modificó la web congelada ni otras pantallas Android.
+- Guardas locales: typecheck de `mobile` OK; `verify:mobile-home-official-assets` OK (10/10); `verify:motion` OK; `verify:telemetry` OK; build y typecheck web sin regresión; `git diff --check` OK.
+- Las guardas preexistentes de Store y de identidad de otras pantallas continúan separadas de este cambio; no se alteraron para cerrar esta unidad.
+- Estado: `IMPLEMENTED_UNVERIFIED` hasta que el workflow Android oficial termine sobre el commit publicado, exista el release correlativo y el operador complete la QA visual/táctil en dispositivo.
+
+## 2026-09-11 — VE-MOB-3-HOME — APK 189 / PREFLIGHT REPAIRED
+
+- El workflow Android oficial run `189` falló antes de `expo prebuild` porque `verify-mobile-store.mjs` exigía una llamada literal `navigate('/store?mode=fusion')` que ya no corresponde a la tabla de gateways del Home; los contratos funcionales y el typecheck habían pasado.
+- La guarda se ajustó para reconocer el contrato real: la ruta de fusión debe estar declarada en los gateways y consumirse mediante `navigate(route as HomeRoute)`. No se modificaron rutas, datos, RPCs, Auth, Supabase, assets ni lógica de Store.
+- El cambio queda preparado para incorporarse al commit objetivo y relanzar el workflow Android oficial. Estado: `IMPLEMENTED_UNVERIFIED` hasta que el workflow y el release correlativo terminen correctamente y el operador complete la QA visual/táctil.
