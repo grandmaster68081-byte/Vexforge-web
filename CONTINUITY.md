@@ -1,3 +1,13 @@
+## 2026-09-11 — VE-MOB-3-HOME — NEXUS TYPOGRAPHIC PASS / IMPLEMENTED_UNVERIFIED
+
+- Se hizo un pase quirúrgico sobre la Home Android existente, sin sustituir la escena, los assets, los datos, las rutas ni el flujo de Supabase.
+- La jerarquía ahora reserva el mayor peso a la escena, la acción primaria y la carta/evento: los títulos de sección llevan una señal lineal de dominio, el hero tiene un plano local de lectura y los metadatos quedan más ligeros.
+- Se redujeron superficies opacas y radios repetidos en portales, métricas, misiones, actividad, ranking y acciones secundarias; se conservaron las superficies necesarias para carta, error, carga y vacío.
+- Se conservaron `testID`, accesibilidad, reduced-motion, safe-area, estados explícitos, iconografía authored y navegación Android existente. No se tocaron Supabase, Auth, RLS, RPCs, economía, combate, assets ni la web congelada.
+- No se compiló APK ni se inició el workflow Android, por instrucción explícita. Estado honesto: `IMPLEMENTED_UNVERIFIED`; quedan typecheck/guardas locales, publicación en `main` y QA visual/táctil humana.
+
+---
+
 ## 2026-09-11 — VE-MOB-3-HOME — NEXUS CONSTELLATION / IMPLEMENTED_UNVERIFIED
 
 - La revisión de tres capturas del APK mostró que el Home nativo tenía una presencia visual sólida, pero los dominios estaban comprimidos en una fila horizontal y la navegación Android inferior no era visible.
