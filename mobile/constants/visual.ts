@@ -1,10 +1,15 @@
 import { storageAsset } from '@/lib/supabase';
 
+const HOME_HERO_ART = require('../assets/images/vexforge-home-hero.png');
+const HOME_FEATURE_CARD_ART = require('../assets/images/vexforge-feature-card.png');
+const HOME_SENTINEL_ART = require('../assets/images/vexforge-hero-sentinel.png');
+
 /**
  * VEXFORGE visual registry.
  *
- * Every entry points at a path that is part of the official Supabase Storage
- * manifest. Keep route art here so screens never invent a local substitute.
+ * Route art is registered here so screens never invent an untracked substitute.
+ * The Home's authored scene is bundled locally; live player/card data still
+ * comes from Supabase and remote Storage remains the source for other routes.
  */
 export const OFFICIAL_ASSETS = {
   logo: storageAsset('logo/IMG_20260606_040509_906.jpg'),
@@ -13,11 +18,14 @@ export const OFFICIAL_ASSETS = {
   factionPaladin: storageAsset('factions/icon_paladin.png'),
   factionPicaro: storageAsset('factions/icon_picaro.png'),
   tutorialHero: storageAsset('tutorial/main.png'),
-  homeNexusBurst: storageAsset('misc/IMG_20260619_122314.jpg'),
+  homeNexusBurst: HOME_HERO_ART,
+  homeHero: HOME_HERO_ART,
+  homeSentinel: HOME_SENTINEL_ART,
+  homeFeatureCard: HOME_FEATURE_CARD_ART,
 } as const;
 
 export const CANONICAL_BACKGROUNDS = {
-  home: storageAsset('lobby/main.jpg'),
+  home: HOME_HERO_ART,
   auth: storageAsset('cover/main.jpg'),
   pvp: storageAsset('backgrounds/bg_pvp.jpg'),
   missions: storageAsset('backgrounds/bg_missions.jpg'),

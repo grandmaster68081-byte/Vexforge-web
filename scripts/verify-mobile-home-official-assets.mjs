@@ -7,10 +7,10 @@ const requiredDataLoaders = ['loadHomeStats', 'loadDailyFeaturedCard', 'loadHome
 const requiredTestIds = ['home-scene', 'home-sync', 'home-battle', 'home-event', 'home-missions', 'home-featured-card', 'home-profile', 'home-world'];
 
 const assertions = [
-  ['Home is a native composition inside the shared shell', screen.includes('<ScreenShell surface="home" sceneMode="shell">') && screen.includes('ScrollView')],
+  ['Home is a native composition inside the shared shell', screen.includes('<ScreenShell surface="home" sceneMode="shell">') && screen.includes('Animated.ScrollView')],
   ['Home no longer mounts the legacy reference scene or hotspot overlay', !screen.includes('home-reference-scene.png') && !screen.includes('const HOTSPOTS') && !screen.includes('home-reference-')],
   ['Home consumes live Nexus data contracts', requiredDataLoaders.every((loader) => screen.includes(loader)) && screen.includes('Promise.allSettled')],
-  ['Home uses registered official visual assets', screen.includes('OFFICIAL_ASSETS.homeNexusBurst') && visual.includes('homeNexusBurst') && screen.includes('source={{ uri: OFFICIAL_ASSETS.homeNexusBurst }}')],
+  ['Home uses registered official visual assets', screen.includes('OFFICIAL_ASSETS.homeHero') && screen.includes('OFFICIAL_ASSETS.homeSentinel') && screen.includes('OFFICIAL_ASSETS.homeFeatureCard') && visual.includes('homeHero') && visual.includes('homeSentinel') && visual.includes('homeFeatureCard')],
   ['Home exposes explicit visual asset failure states', screen.includes('ARTE NO DISPONIBLE') && screen.includes('NEXUS CORE OFFLINE') && screen.includes('onError={() => setFeaturedAssetState')],
   ['Home exposes functional Android routes', screen.includes("navigate('/battle')") && screen.includes("navigate('/missions')") && screen.includes("navigate('/collection')") && screen.includes("navigate('/world')") && screen.includes("navigate('/economy')")],
   ['Home exposes the live resource HUD', screen.includes('progress.energy') && screen.includes('wallet?.vex_ingame') && screen.includes('playerStats?.pvp_wins')],

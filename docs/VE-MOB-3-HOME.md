@@ -20,7 +20,7 @@ evento/temporada, carta destacada, actividad pública y acceso rápido a la aren
   `src/domains/home/`).
 - Supabase oficial y sus RPCs existentes (`get_home_stats`,
   `get_public_player_names`).
-- Arte local original del Home (`vexforge-home-hero.png` y `vexforge-feature-card.png`); no se usa el fondo Home ni el arte de carta remoto de Storage en esta superficie.
+- Arte local original del Home (`vexforge-home-hero.png`, `vexforge-hero-sentinel.png` y `vexforge-feature-card.png`); no se usa el fondo Home ni el arte de carta remoto de Storage en esta superficie.
 - `docs/VE-MOB-0-PORT-INVENTORY.md` y `VEXFORGE_PROTOCOL_V2.md`.
 
 ## Cambios
@@ -107,6 +107,7 @@ La ejecución se divide en dos fases obligatorias y no se mezclan:
 ### Alcance visual de la Fase VISUAL
 
 - Escena principal: `mobile/assets/images/vexforge-home-hero.png`, con una composición de portada de videojuego, capas de atmósfera y un CTA dominante sin esconder el contenido autoritativo.
+- Movimiento: parallax de scroll, pulso del núcleo, órbita de energía y personaje separado en primer plano; todo respeta `reduced-motion`.
 - Identidad: tipografía Cinzel/Rajdhani ya cargada, escala de títulos y etiquetas coherente, contraste suficiente y lenguaje de Forja reconocible.
 - Superficies: marcos y paneles con profundidad, separación entre escena y UI, jerarquía de acción clara y tarjetas tratadas como objetos del juego, no como filas administrativas.
 - Feedback: estados de carga, vacío, error, sincronización y `reduced-motion` deben conservarse y seguir siendo explícitos.

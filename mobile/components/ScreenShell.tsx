@@ -79,7 +79,11 @@ export function ScreenShell({ surface = 'home', sceneMode = 'shell', children, s
       {ownsScene ? (
         <>
           <Image
-            source={{ uri: CANONICAL_BACKGROUNDS[surface] }}
+            source={
+              typeof CANONICAL_BACKGROUNDS[surface] === 'string'
+                ? { uri: CANONICAL_BACKGROUNDS[surface] }
+                : CANONICAL_BACKGROUNDS[surface]
+            }
             style={[StyleSheet.absoluteFillObject, styles.backgroundImage]}
             resizeMode="cover"
             accessibilityLabel="Escena oficial del Nexus"

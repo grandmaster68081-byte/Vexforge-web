@@ -1,13 +1,14 @@
 import { useCallback, useEffect, useState } from 'react';
 import type { StyleProp, ViewStyle } from 'react-native';
 import { Image, Pressable, RefreshControl, ScrollView, StyleSheet, Text, View, useWindowDimensions } from 'react-native';
-import Animated, { Easing, FadeIn, FadeInDown, FadeInUp, useAnimatedStyle, useReducedMotion, useSharedValue, withRepeat, withTiming } from 'react-native-reanimated';
+import Animated, { Easing, FadeIn, FadeInDown, FadeInUp, useAnimatedScrollHandler, useAnimatedStyle, useReducedMotion, useSharedValue, withRepeat, withTiming } from 'react-native-reanimated';
 import { LinearGradient } from 'expo-linear-gradient';
 import * as Haptics from 'expo-haptics';
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ScreenShell } from '@/components/ScreenShell';
 import { ForgeIconName, VexIcon } from '@/components/ForgeIcon';
+import { OFFICIAL_ASSETS } from '@/constants/visual';
 import { useColors } from '@/hooks/useColors';
 import { useGame } from '@/context/GameContext';
 import {
@@ -20,9 +21,6 @@ import {
   type HomeMission,
   type HomeStats,
 } from '@/lib/supabase';
-
-const HERO_ART = require('../../assets/images/vexforge-home-hero.png');
-const FEATURE_CARD_ART = require('../../assets/images/vexforge-feature-card.png');
 
 type IconName = ForgeIconName;
 type HomeRoute = '/' | '/battle' | '/collection' | '/deck' | '/missions' | '/profile' | '/meta' | '/world' | '/tutorial' | '/economy' | '/store?mode=fusion' | '/store?mode=shop' | '/store?mode=evolution' | '/store?mode=packs';
@@ -137,6 +135,11 @@ export default function ForgeScreen() {
   const [refreshing, setRefreshing] = useState(false);
   const [featuredExpanded, setFeaturedExpanded] = useState(false);
   const pulse = useSharedValue(0);
+  const orbit = useSharedValue(0);
+  const scrollY = useSharedValue(0);
+  const [heroAssetState, setHeroAssetState] = useState<'loading' | 'ready' | 'error'>('loading');
+  const [sentinelAssetState, setSentinelAssetState] = useState<'loading' | 'ready' | 'error'>('loading');
+  const [featuredAssetState, setFeaturedAssetState] = useState<'loading' | 'ready' | 'error'>('loading');
 
   const loadHome = useCallback(async () => {
     setHomeState((current) => (current === 'ready' ? 'loading' : current));
@@ -159,14 +162,40 @@ export default function ForgeScreen() {
   useEffect(() => {
     if (reduceMotion) {
       pulse.value = 0;
+      orbit.value = 0;
       return;
     }
     pulse.value = withRepeat(withTiming(1, { duration: 2200, easing: Easing.inOut(Easing.quad) }), -1, true);
-  }, [pulse, reduceMotion]);
+    orbit.value = withRepeat(withTiming(1, { duration: 9200, easing: Easing.linear }), -1, false);
+  }, [orbit, pulse, reduceMotion]);
+
+  const scrollHandler = useAnimatedScrollHandler({
+    onScroll: (event) => {
+      scrollY.value = event.contentOffset.y;
+    },
+  });
 
   const pulseStyle = useAnimatedStyle(() => ({
     opacity: 0.36 + pulse.value * 0.28,
     transform: [{ scale: 0.88 + pulse.value * 0.16 }],
+  }));
+  const heroParallaxStyle = useAnimatedStyle(() => ({
+    transform: [
+      { translateY: scrollY.value * 0.12 },
+      { scale: 1.04 + Math.min(scrollY.value / 2400, 0.08) },
+    ],
+  }));
+  const sentinelParallaxStyle = useAnimatedStyle(() => ({
+    opacity: 0.92,
+    transform: [
+      { translateY: scrollY.value * 0.22 },
+      { translateX: Math.sin(orbit.value * Math.PI * 2) * 3 },
+      { scale: 1.02 + pulse.value * 0.025 },
+    ],
+  }));
+  const orbitStyle = useAnimatedStyle(() => ({
+    opacity: 0.26 + pulse.value * 0.28,
+    transform: [{ rotate: `${orbit.value * 360}deg` }, { scale: 0.9 + pulse.value * 0.08 }],
   }));
   const activeCard = home.card ?? featuredCards[0] ?? null;
   const playerName = capitalize(player?.display_name, 'Forjador');
@@ -198,22 +227,48 @@ export default function ForgeScreen() {
   };
 
   return (
-    <ScreenShell surface="home" sceneMode="hero">
+    <ScreenShell surface="home" sceneMode="shell">
       <View style={styles.root} testID="home-scene">
-        <ScrollView
+        <Animated.ScrollView
           contentContainerStyle={[styles.scrollContent, { paddingBottom: Math.max(36, insets.bottom + 28) }]}
           refreshControl={<RefreshControl refreshing={refreshing} onRefresh={doRefresh} tintColor={colors.accent} colors={[colors.accent]} />}
           showsVerticalScrollIndicator={false}
           accessibilityLabel="Inicio de Vexforge"
+          onScroll={scrollHandler}
+          scrollEventThrottle={16}
         >
           <View style={styles.heroStage}>
-            <Image source={HERO_ART} style={styles.heroArt} resizeMode="cover" accessibilityLabel="Arte principal del Nexus" />
+            <Animated.Image
+              source={OFFICIAL_ASSETS.homeHero}
+              style={[styles.heroArt, heroParallaxStyle]}
+              resizeMode="cover"
+              accessibilityLabel="Arte principal del Nexus"
+              onLoad={() => setHeroAssetState('ready')}
+              onError={() => setHeroAssetState('error')}
+            />
             <LinearGradient
               colors={['#05050D12', '#05050D38', '#05050DE8', colors.background]}
               locations={[0, 0.32, 0.74, 1]}
               style={StyleSheet.absoluteFill}
             />
             <LinearGradient colors={['#A78BFA2E', 'transparent', '#F0C05016']} style={StyleSheet.absoluteFill} />
+            <Animated.Image
+              source={OFFICIAL_ASSETS.homeSentinel}
+              style={[styles.heroSentinel, sentinelParallaxStyle]}
+              resizeMode="contain"
+              accessibilityLabel="Guardián astral de la Forja"
+              onLoad={() => setSentinelAssetState('ready')}
+              onError={() => setSentinelAssetState('error')}
+              pointerEvents="none"
+            />
+            <Animated.View pointerEvents="none" style={[styles.heroOrbit, { borderColor: `${colors.rarityEpic}72` }, orbitStyle]} />
+            <Animated.View pointerEvents="none" style={[styles.heroCore, { backgroundColor: `${colors.rarityEpic}A8` }, pulseStyle]} />
+            {heroAssetState === 'error' || sentinelAssetState === 'error' ? (
+              <View pointerEvents="none" style={styles.heroAssetError}>
+                <Text style={[styles.heroAssetErrorTitle, { color: colors.accent }]}>NEXUS CORE OFFLINE</Text>
+                <Text style={[styles.heroAssetErrorBody, { color: '#E5E0EACC' }]}>El arte de la escena no está disponible.</Text>
+              </View>
+            ) : null}
             <View style={[styles.heroTopBar, { paddingTop: Math.max(12, insets.top + 6), paddingHorizontal: viewportPadding }]}>
               <Animated.View entering={reduceMotion ? undefined : FadeIn.duration(420)} style={styles.brandLockup}>
                 <View style={[styles.brandMark, { borderColor: `${colors.accent}B8`, backgroundColor: '#05050DB8' }]}>
@@ -308,9 +363,22 @@ export default function ForgeScreen() {
             <SectionHeading eyebrow="CARTA DESTACADA" title="Objeto de resonancia" action="ABRIR ARCHIVO" onAction={() => navigate('/collection')} />
             <Pressable accessibilityRole="button" accessibilityLabel="Inspeccionar carta destacada" testID="home-featured-card" onPress={openFeatured} style={[styles.featuredCard, { borderColor: `${colors.rarityLegendary}A0`, backgroundColor: `${colors.panelStrong}F4` }]}>
               <View style={styles.featuredArtFrame}>
-                <Image source={FEATURE_CARD_ART} style={styles.featuredArt} resizeMode="cover" accessibilityLabel="Arte original del objeto de resonancia" />
+                <Image
+                  source={OFFICIAL_ASSETS.homeFeatureCard}
+                  style={styles.featuredArt}
+                  resizeMode="cover"
+                  accessibilityLabel="Arte original del objeto de resonancia"
+                  onLoad={() => setFeaturedAssetState('ready')}
+                  onError={() => setFeaturedAssetState('error')}
+                />
                 <LinearGradient colors={['transparent', '#05050D66', '#05050DCC']} style={StyleSheet.absoluteFill} />
                 <View style={styles.featuredSheen} pointerEvents="none" />
+                {featuredAssetState === 'error' ? (
+                  <View style={[styles.featuredAssetError, { backgroundColor: `${colors.panelStrong}F4` }]}>
+                    <Icon name="alert-triangle" color={colors.accent} size={16} />
+                    <Text style={[styles.featuredAssetErrorText, { color: colors.accent }]}>ARTE NO DISPONIBLE</Text>
+                  </View>
+                ) : null}
               </View>
               <View style={styles.featuredCopy}>
                 <View style={styles.featuredTagLine}><Text style={[styles.featuredTag, { color: colors.rarityLegendary }]}>{activeCard?.rarity?.toUpperCase() ?? 'LEGENDARY'}</Text><Text style={[styles.featuredCode, { color: colors.mutedForeground }]}>{activeCard?.code ?? 'VEX-0017'}</Text></View>
@@ -345,7 +413,7 @@ export default function ForgeScreen() {
               {ranking.length > 0 ? ranking.map((entry, index) => <View key={`${entry.rank}-${entry.display_name}`} style={styles.rankingRow}><Text style={[styles.rankPosition, { color: index === 0 ? colors.accent : colors.mutedForeground }]}>{String(entry.rank).padStart(2, '0')}</Text><View style={[styles.rankAvatar, { borderColor: `${index === 0 ? colors.accent : colors.border}99` }]}><Text style={[styles.rankAvatarText, { color: index === 0 ? colors.accent : colors.mutedForeground }]}>{entry.display_name.slice(0, 1).toUpperCase()}</Text></View><View style={styles.rankIdentity}><Text style={[styles.rankName, { color: colors.foreground }]}>{entry.display_name}</Text><Text style={[styles.rankMeta, { color: colors.mutedForeground }]}>{formatNumber(entry.wins)} VICTORIAS / {formatNumber(entry.mmr)} MMR</Text></View><Icon name={index === 0 ? 'award' : 'chevron-right'} color={index === 0 ? colors.accent : colors.mutedForeground} size={16} /></View>) : <Text style={[styles.emptyBody, { color: colors.mutedForeground }]}>El ranking de la temporada todavía no tiene posiciones publicadas.</Text>}
             </View>
           </View>
-        </ScrollView>
+        </Animated.ScrollView>
       </View>
     </ScreenShell>
   );
@@ -366,6 +434,12 @@ const styles = StyleSheet.create({
   scrollContent: { gap: 0 },
   heroStage: { height: 566, overflow: 'hidden', position: 'relative' },
   heroArt: { height: '100%', left: 0, position: 'absolute', top: 0, width: '100%' },
+  heroSentinel: { bottom: -54, height: 530, position: 'absolute', right: -78, width: 520 },
+  heroOrbit: { borderRadius: 180, borderWidth: 1, height: 360, position: 'absolute', right: -128, top: 116, width: 360 },
+  heroCore: { borderRadius: 34, height: 68, opacity: 0.28, position: 'absolute', right: 113, top: 240, width: 68 },
+  heroAssetError: { alignItems: 'center', borderColor: '#F0C05080', borderRadius: 8, borderWidth: 1, left: 24, paddingHorizontal: 10, paddingVertical: 7, position: 'absolute', right: 24, top: 182 },
+  heroAssetErrorTitle: { fontFamily: 'Rajdhani_700Bold', fontSize: 10, letterSpacing: 1.3 },
+  heroAssetErrorBody: { fontFamily: 'Rajdhani_500Medium', fontSize: 10, marginTop: 2 },
   heroTopBar: { alignItems: 'center', flexDirection: 'row', justifyContent: 'space-between' },
   heroContent: { bottom: 0, left: 0, paddingBottom: 27, position: 'absolute', right: 0 },
   brandLockup: { alignItems: 'center', flexDirection: 'row', gap: 10 },
@@ -445,6 +519,8 @@ const styles = StyleSheet.create({
   featuredArtFrame: { backgroundColor: '#05050D', borderColor: '#F0C05070', borderRadius: 10, height: 162, overflow: 'hidden', position: 'relative', width: 116 },
   featuredArt: { height: '100%', width: '100%' },
   featuredSheen: { backgroundColor: '#FFFFFF28', height: 15, left: -20, position: 'absolute', top: 26, transform: [{ rotate: '-24deg' }], width: 170 },
+  featuredAssetError: { alignItems: 'center', bottom: 8, left: 7, paddingHorizontal: 5, paddingVertical: 6, position: 'absolute', right: 7 },
+  featuredAssetErrorText: { fontFamily: 'Rajdhani_700Bold', fontSize: 8, letterSpacing: 0.7, marginTop: 3, textAlign: 'center' },
   featuredCopy: { flex: 1, justifyContent: 'center', paddingVertical: 7 },
   featuredTagLine: { alignItems: 'center', flexDirection: 'row', justifyContent: 'space-between' },
   featuredTag: { fontFamily: 'Rajdhani_700Bold', fontSize: 10, letterSpacing: 1.2 },

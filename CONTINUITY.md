@@ -2,10 +2,12 @@
 
 - La revisión visual del operador confirmó que el Home anterior tenía estructura de panel administrativo: demasiadas tarjetas del mismo peso, fondo remoto de baja presencia, ausencia de una pieza heroica y una jerarquía insuficiente para una portada de TCG.
 - Se reconstruyó `mobile/app/(tabs)/index.tsx` como una portada nativa de juego: arte hero local de VEXFORGE, gradientes cinematográficos, CTA dominante a Arena, identidad superior sobre la escena y datos vivos en capas de soporte.
-- Se eliminó de esta superficie el consumo de `CANONICAL_BACKGROUNDS.home`, `OFFICIAL_ASSETS.homeNexusBurst` y el arte remoto de la carta destacada. Los datos de temporada, evento, jugador, misiones, actividad, ranking y carta siguen siendo Supabase/RPC autoritativos.
-- Se añadieron `mobile/assets/images/vexforge-home-hero.png` y `mobile/assets/images/vexforge-feature-card.png` como arte original local, sin texto incrustado ni dependencia de Storage.
-- La copia se validó sintácticamente con TypeScript. La instalación local quedó bloqueada por el firewall del registro interno al resolver `npm-package-arg`; el typecheck y el build final quedan delegados al workflow oficial de GitHub, que instala desde cero.
-- Estado honesto: `IMPLEMENTED_UNVERIFIED`; falta publicar el commit, completar el workflow Android y hacer QA visual/táctil del APK instalada.
+- Se reemplazó en el registro visual el fondo remoto de `CANONICAL_BACKGROUNDS.home` y `OFFICIAL_ASSETS.homeNexusBurst` por la escena local; también se retiró el arte remoto de la carta destacada. Los datos de temporada, evento, jugador, misiones, actividad, ranking y carta siguen siendo Supabase/RPC autoritativos.
+- Se añadieron `mobile/assets/images/vexforge-home-hero.png`, `mobile/assets/images/vexforge-hero-sentinel.png` y `mobile/assets/images/vexforge-feature-card.png` como arte original local, sin texto incrustado ni dependencia de Storage.
+- El segundo pase añade parallax ligado al scroll, órbita de energía, pulso del núcleo, personaje separado en primer plano y fallback explícito `NEXUS CORE OFFLINE` / `ARTE NO DISPONIBLE`; la guarda oficial se actualizó a 10/10 para el contrato local registrado.
+- El primer workflow del commit anterior falló en `verify-mobile-home-official-assets` porque la implementación no declaró los nuevos assets en el registro ni conservó los estados de error exigidos. No llegó a Gradle ni generó APK; el fallo queda corregido antes del siguiente commit.
+- La copia se validó sintácticamente con TypeScript y la guarda Home 10/10. La instalación local quedó bloqueada por el firewall del registro interno al resolver `npm-package-arg`; el typecheck y el build final quedan delegados al workflow oficial de GitHub, que instala desde cero.
+- Estado honesto: `IMPLEMENTED_UNVERIFIED`; falta publicar este segundo pase, completar el workflow Android y hacer QA visual/táctil del APK instalada.
 
 ---
 
