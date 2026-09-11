@@ -1,3 +1,13 @@
+## 2026-09-11 — VE-MOB-3-HOME — NEXUS DOMAIN RAIL / IMPLEMENTED_UNVERIFIED
+
+- Se extendió la portada nativa sin rehacer su escena heroica: la continuidad del Home ahora incorpora una red horizontal de portales conectados para Arena, Forja, Archivo, Mundo, Misiones y Economía.
+- Cada portal consume únicamente estado ya disponible en Home/GameContext (evento activo, nivel, cartas, misiones y VEX) y navega a rutas Android existentes; no se añadieron mocks, rutas nuevas, lógica autoritativa ni cambios de Supabase.
+- La red usa la iconografía VEXFORGE existente, feedback táctil, estados de señal y accesibilidad, manteniendo el comportamiento de reduced-motion de la escena.
+- Transporte del cambio previsto: API REST HTTPS oficial de GitHub, sin Git Smart HTTP ni PAT en URLs. La verificación de typecheck, guardas, build Android, release correlativo y QA visual/táctil quedan pendientes del workflow oficial y del operador.
+- Estado honesto: IMPLEMENTED_UNVERIFIED; no se declara PASS, OPERATIONAL ni TIER1_READY.
+
+---
+
 ## 2026-09-11 — VE-MOB-3-HOME — APK 178 PUBLICADA / IMPLEMENTED_UNVERIFIED
 
 - El workflow Android oficial `34612487343` / build `178` terminó en `success` sobre el commit de código `b09bd1e2bc7dfe8bd4af3d05744b8cf67a5a0a50`, después de retirar la prop no válida de `Animated.Image`.
