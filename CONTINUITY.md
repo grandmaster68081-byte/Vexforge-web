@@ -4,7 +4,7 @@
 - La jerarquía ahora reserva el mayor peso a la escena, la acción primaria y la carta/evento: los títulos de sección llevan una señal lineal de dominio, el hero tiene un plano local de lectura y los metadatos quedan más ligeros.
 - Se redujeron superficies opacas y radios repetidos en portales, métricas, misiones, actividad, ranking y acciones secundarias; se conservaron las superficies necesarias para carta, error, carga y vacío.
 - Se conservaron `testID`, accesibilidad, reduced-motion, safe-area, estados explícitos, iconografía authored y navegación Android existente. No se tocaron Supabase, Auth, RLS, RPCs, economía, combate, assets ni la web congelada.
-- No se compiló APK ni se inició el workflow Android, por instrucción explícita. Estado honesto: `IMPLEMENTED_UNVERIFIED`; quedan typecheck/guardas locales, publicación en `main` y QA visual/táctil humana.
+- No se compiló APK ni se inició el workflow Android, por instrucción explícita. Las guardas Home/motion/estado pasaron; el typecheck local quedó no concluyente por dependencias Expo ausentes. El commit `0b043b25bbe8b94f12420cba889b83cd9b4ed731` ya está publicado en `main`. Estado honesto: `IMPLEMENTED_UNVERIFIED`; queda QA visual/táctil humana.
 
 ---
 
