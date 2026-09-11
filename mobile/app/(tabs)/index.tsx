@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import type { StyleProp, ViewStyle } from 'react-native';
 import { Image, Pressable, RefreshControl, ScrollView, StyleSheet, Text, View, useWindowDimensions } from 'react-native';
 import Animated, { Easing, FadeIn, FadeInDown, FadeInUp, useAnimatedScrollHandler, useAnimatedStyle, useReducedMotion, useSharedValue, withRepeat, withTiming } from 'react-native-reanimated';
+import { BlurView } from 'expo-blur';
 import { LinearGradient } from 'expo-linear-gradient';
 import * as Haptics from 'expo-haptics';
 import { useRouter } from 'expo-router';
@@ -92,6 +93,52 @@ function GlassButton({
     >
       <Icon name={icon} color={palette.text} size={large ? 17 : 15} />
       <Text style={[styles.glassButtonText, { color: palette.text }]}>{label}</Text>
+    </Pressable>
+  );
+}
+
+function HeroPrimaryButton({ label, icon, onPress, testID }: { label: string; icon: IconName; onPress: () => void; testID: string }) {
+  const colors = useColors();
+  return (
+    <Pressable
+      accessibilityRole="button"
+      accessibilityLabel={label}
+      testID={testID}
+      onPress={() => {
+        void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium).catch(() => undefined);
+        onPress();
+      }}
+      style={({ pressed }) => [styles.heroPrimaryButtonPressable, { opacity: pressed ? 0.82 : 1 }]}
+    >
+      <LinearGradient colors={[colors.accent, '#C9901F']} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={styles.heroPrimaryButton}>
+        <Icon name={icon} color={colors.ink} size={17} />
+        <Text style={[styles.heroPrimaryButtonText, { color: colors.ink }]}>{label}</Text>
+        <View style={[styles.heroPrimaryButtonMark, { borderColor: `${colors.ink}5C` }]}>
+          <Icon name="arrow-up" color={colors.ink} size={11} />
+        </View>
+      </LinearGradient>
+    </Pressable>
+  );
+}
+
+function HeroSecondaryButton({ label, icon, onPress, testID }: { label: string; icon: IconName; onPress: () => void; testID: string }) {
+  const colors = useColors();
+  return (
+    <Pressable
+      accessibilityRole="button"
+      accessibilityLabel={label}
+      testID={testID}
+      onPress={() => {
+        void Haptics.selectionAsync().catch(() => undefined);
+        onPress();
+      }}
+      style={({ pressed }) => [
+        styles.heroSecondaryButton,
+        { borderColor: `${colors.foreground}70`, backgroundColor: `${colors.ink}8C`, opacity: pressed ? 0.72 : 1 },
+      ]}
+    >
+      <Icon name={icon} color={colors.foreground} size={15} />
+      <Text style={[styles.heroSecondaryButtonText, { color: colors.foreground }]}>{label}</Text>
     </Pressable>
   );
 }
@@ -263,11 +310,15 @@ export default function ForgeScreen() {
               onError={() => setHeroAssetState('error')}
             />
             <LinearGradient
-              colors={['#05050D12', '#05050D38', '#05050DE8', colors.background]}
-              locations={[0, 0.32, 0.74, 1]}
+              colors={['#05050D08', '#05050D30', '#05050DA8', '#05050DF5', colors.background]}
+              locations={[0, 0.24, 0.54, 0.82, 1]}
               style={StyleSheet.absoluteFill}
             />
-            <LinearGradient colors={['#A78BFA2E', 'transparent', '#F0C05016']} style={StyleSheet.absoluteFill} />
+            <LinearGradient colors={['#A78BFA36', 'transparent', '#F0C05022']} style={StyleSheet.absoluteFill} />
+            <View pointerEvents="none" style={styles.heroAtmosphere}>
+              <View style={[styles.heroAtmosphereLine, { backgroundColor: `${colors.rarityEpic}44` }]} />
+              <View style={[styles.heroAtmosphereLineShort, { backgroundColor: `${colors.accent}66` }]} />
+            </View>
             <Animated.Image
               source={OFFICIAL_ASSETS.homeSentinel}
               style={[styles.heroSentinel, sentinelParallaxStyle]}
@@ -284,29 +335,31 @@ export default function ForgeScreen() {
                 <Text style={[styles.heroAssetErrorBody, { color: '#E5E0EACC' }]}>El arte de la escena no está disponible.</Text>
               </View>
             ) : null}
-            <View style={[styles.heroTopBar, { paddingTop: Math.max(12, insets.top + 6), paddingHorizontal: viewportPadding }]}>
-              <Animated.View entering={reduceMotion ? undefined : FadeIn.duration(420)} style={styles.brandLockup}>
-                <View style={[styles.brandMark, { borderColor: `${colors.accent}B8`, backgroundColor: '#05050DB8' }]}>
-                  <Text style={[styles.brandMarkText, { color: colors.accent }]}>V</Text>
-                </View>
-                <View>
-                  <Text style={[styles.brandName, { color: colors.foreground }]}>VEXFORGE</Text>
-                   <Text style={[styles.brandSubline, { color: '#D7D0E8CC' }]}>NEXUS // RED DE DOMINIOS</Text>
-                </View>
-              </Animated.View>
-              <View style={styles.topActions}>
-                <Pressable accessibilityRole="button" accessibilityLabel="Abrir perfil" testID="home-profile" onPress={() => navigate('/profile')} style={[styles.iconButton, { borderColor: `${colors.accent}80`, backgroundColor: '#05050DB8' }]}>
-                  <Icon name="user" color={colors.accent} size={17} />
-                </Pressable>
-                <Pressable accessibilityRole="button" accessibilityLabel="Abrir mensajes y misiones" testID="home-inbox" onPress={() => navigate('/missions')} style={[styles.iconButton, { borderColor: `${colors.accent}80`, backgroundColor: '#05050DB8' }]}>
-                  <Icon name="inbox" color={colors.foreground} size={17} />
-                  {home.missions.length > 0 ? <View style={[styles.notificationDot, { backgroundColor: colors.accent }]} /> : null}
-                </Pressable>
-                <Pressable accessibilityRole="button" accessibilityLabel="Abrir ajustes" testID="home-settings" onPress={() => navigate('/meta')} style={[styles.iconButton, { borderColor: `${colors.accent}80`, backgroundColor: '#05050DB8' }]}>
-                  <Icon name="settings" color={colors.foreground} size={17} />
-                </Pressable>
-              </View>
-            </View>
+             <BlurView intensity={22} tint="dark" style={[styles.heroTopBarGlass, { marginTop: Math.max(12, insets.top + 6), marginHorizontal: viewportPadding, borderColor: `${colors.foreground}22` }]}>
+               <View style={styles.heroTopBar}>
+                 <Animated.View entering={reduceMotion ? undefined : FadeIn.duration(420)} style={styles.brandLockup}>
+                   <View style={[styles.brandMark, { borderColor: `${colors.accent}B8`, backgroundColor: '#05050DB8' }]}>
+                     <Text style={[styles.brandMarkText, { color: colors.accent }]}>V</Text>
+                   </View>
+                   <View>
+                     <Text style={[styles.brandName, { color: colors.foreground }]}>VEXFORGE</Text>
+                     <Text style={[styles.brandSubline, { color: '#D7D0E8CC' }]}>NEXUS // RED DE DOMINIOS</Text>
+                   </View>
+                 </Animated.View>
+                 <View style={styles.topActions}>
+                   <Pressable accessibilityRole="button" accessibilityLabel="Abrir perfil" testID="home-profile" onPress={() => navigate('/profile')} style={[styles.iconButton, { borderColor: `${colors.accent}80`, backgroundColor: '#05050DB8' }]}>
+                     <Icon name="user" color={colors.accent} size={17} />
+                   </Pressable>
+                   <Pressable accessibilityRole="button" accessibilityLabel="Abrir mensajes y misiones" testID="home-inbox" onPress={() => navigate('/missions')} style={[styles.iconButton, { borderColor: `${colors.accent}80`, backgroundColor: '#05050DB8' }]}>
+                     <Icon name="inbox" color={colors.foreground} size={17} />
+                     {home.missions.length > 0 ? <View style={[styles.notificationDot, { backgroundColor: colors.accent }]} /> : null}
+                   </Pressable>
+                   <Pressable accessibilityRole="button" accessibilityLabel="Abrir ajustes" testID="home-settings" onPress={() => navigate('/meta')} style={[styles.iconButton, { borderColor: `${colors.accent}80`, backgroundColor: '#05050DB8' }]}>
+                     <Icon name="settings" color={colors.foreground} size={17} />
+                   </Pressable>
+                 </View>
+               </View>
+             </BlurView>
 
             <Animated.View entering={reduceMotion ? undefined : FadeInDown.delay(90).duration(600)} style={[styles.heroContent, { paddingHorizontal: viewportPadding }]}>
                <View style={styles.heroReadingField}>
@@ -316,12 +369,16 @@ export default function ForgeScreen() {
                    <Text style={[styles.syncDivider, { color: '#D7D0E880' }]}>/</Text>
                    <Text style={[styles.syncMeta, { color: '#D7D0E8CC' }]}>{season?.name ?? 'SEASON 01 // FORGE OF LEGENDS'}</Text>
                  </View>
-                  <Text style={[styles.heroEyebrow, { color: colors.accent }]}>TEMPORADA ACTIVA · NEXUS ONLINE</Text>
+                   <View style={styles.heroEyebrowRow}>
+                     <Text style={[styles.heroEyebrow, { color: colors.accent }]}>TEMPORADA ACTIVA</Text>
+                     <View style={[styles.heroEyebrowRule, { backgroundColor: `${colors.accent}7A` }]} />
+                     <Text style={[styles.heroEyebrowMeta, { color: '#D7D0E8CC' }]}>FRENTE VIVO</Text>
+                   </View>
                   <Text style={[styles.heroHeadline, { color: colors.foreground }]}>CRUZA{'\n'}EL UMBRAL</Text>
                   <Text style={[styles.heroDescription, { color: '#E5E0EACC' }]}>Tu frente está vivo. Elige un dominio y forja la próxima victoria.</Text>
                  <View style={styles.heroActions}>
-                   <GlassButton label="ENTRAR A LA ARENA" icon="target" onPress={() => navigate('/battle')} testID="home-battle" large />
-                   <GlassButton label="CONTINUAR RITO" icon="arrow-right" onPress={() => navigate('/tutorial')} tone="violet" testID="home-tutorial" />
+                    <HeroPrimaryButton label="ENTRAR A LA ARENA" icon="target" onPress={() => navigate('/battle')} testID="home-battle" />
+                    <HeroSecondaryButton label="CONTINUAR RITO" icon="arrow-right" onPress={() => navigate('/tutorial')} testID="home-tutorial" />
                  </View>
                  <View style={styles.heroFooter}>
                    <View style={styles.heroFooterItem}><Icon name="zap" color={colors.accent} size={13} /><Text style={[styles.heroFooterText, { color: '#D7D0E8CC' }]}>{progress ? `${formatNumber(progress.energy)} / ${formatNumber(progress.max_energy)} ENERGÍA` : 'ENERGÍA EN ESPERA'}</Text></View>
@@ -346,13 +403,15 @@ export default function ForgeScreen() {
               </Animated.View>
             ) : null}
 
-              <Animated.View entering={reduceMotion ? undefined : FadeInUp.delay(180).duration(600)} style={styles.playerStrip}>
-              <View style={styles.playerIdentity}>
-                <View style={[styles.avatarRing, { borderColor: colors.accent, backgroundColor: `${colors.accent}12` }]}><Text style={[styles.avatarLetter, { color: colors.accent }]}>{playerName.slice(0, 1).toUpperCase()}</Text></View>
-                <View style={styles.playerCopy}><Text style={[styles.playerName, { color: colors.foreground }]}>{playerName}</Text><Text style={[styles.playerMeta, { color: colors.mutedForeground }]}>NIVEL {formatNumber(progress?.level)} / FORJADOR</Text></View>
-              </View>
-              <View style={styles.playerProgress}><View style={styles.levelLine}><Text style={[styles.progressLabel, { color: colors.mutedForeground }]}>RANGO DE FORJA</Text><Text style={[styles.progressValue, { color: colors.accent }]}>{formatNumber(xp)} / {formatNumber(xpToNext)} XP</Text></View><ProgressRail value={xp} total={xpToNext} color={colors.accent} background={`${colors.accent}28`} /></View>
-            </Animated.View>
+             <BlurView intensity={18} tint="dark" style={[styles.playerStripGlass, { borderColor: `${colors.accent}55` }]}>
+               <Animated.View entering={reduceMotion ? undefined : FadeInUp.delay(180).duration(600)} style={styles.playerStrip}>
+                 <View style={styles.playerIdentity}>
+                   <View style={[styles.avatarRing, { borderColor: colors.accent, backgroundColor: `${colors.accent}12` }]}><Text style={[styles.avatarLetter, { color: colors.accent }]}>{playerName.slice(0, 1).toUpperCase()}</Text></View>
+                   <View style={styles.playerCopy}><Text style={[styles.playerName, { color: colors.foreground }]}>{playerName}</Text><Text style={[styles.playerMeta, { color: colors.mutedForeground }]}>NIVEL {formatNumber(progress?.level)} / FORJADOR</Text></View>
+                 </View>
+                 <View style={styles.playerProgress}><View style={styles.levelLine}><Text style={[styles.progressLabel, { color: colors.mutedForeground }]}>RANGO DE FORJA</Text><Text style={[styles.progressValue, { color: colors.accent }]}>{formatNumber(xp)} / {formatNumber(xpToNext)} XP</Text></View><ProgressRail value={xp} total={xpToNext} color={colors.accent} background={`${colors.accent}28`} /></View>
+               </Animated.View>
+             </BlurView>
 
             <Animated.View entering={reduceMotion ? undefined : FadeInUp.delay(120).duration(560)} style={styles.domainSection} testID="home-domain-rail">
               <View style={styles.domainHeading}>
@@ -486,15 +545,19 @@ function NexusPortal({ portal, onPress }: { portal: { id: string; label: string;
 const styles = StyleSheet.create({
   root: { flex: 1 },
   scrollContent: { gap: 0 },
-   heroStage: { height: 566, overflow: 'hidden', position: 'relative' },
+   heroStage: { height: 608, overflow: 'hidden', position: 'relative' },
   heroArt: { height: '100%', left: 0, position: 'absolute', top: 0, width: '100%' },
-  heroSentinel: { bottom: -54, height: 530, position: 'absolute', right: -78, width: 520 },
-  heroOrbit: { borderRadius: 180, borderWidth: 1, height: 360, position: 'absolute', right: -128, top: 116, width: 360 },
-  heroCore: { borderRadius: 34, height: 68, opacity: 0.28, position: 'absolute', right: 113, top: 240, width: 68 },
+  heroSentinel: { bottom: -88, height: 590, position: 'absolute', right: -104, width: 580 },
+  heroOrbit: { borderRadius: 210, borderWidth: 1, height: 420, position: 'absolute', right: -158, top: 112, width: 420 },
+  heroCore: { borderRadius: 34, height: 68, opacity: 0.28, position: 'absolute', right: 114, top: 266, width: 68 },
+  heroAtmosphere: { bottom: 46, left: 18, opacity: 0.75, position: 'absolute', right: 18 },
+  heroAtmosphereLine: { height: 1, marginBottom: 7, width: '72%' },
+  heroAtmosphereLineShort: { height: 1, width: '34%' },
   heroAssetError: { alignItems: 'center', borderColor: '#F0C05080', borderRadius: 8, borderWidth: 1, left: 24, paddingHorizontal: 10, paddingVertical: 7, position: 'absolute', right: 24, top: 182 },
   heroAssetErrorTitle: { fontFamily: 'Rajdhani_700Bold', fontSize: 10, letterSpacing: 1.3 },
   heroAssetErrorBody: { fontFamily: 'Rajdhani_500Medium', fontSize: 10, marginTop: 2 },
-  heroTopBar: { alignItems: 'center', flexDirection: 'row', justifyContent: 'space-between' },
+  heroTopBarGlass: { borderRadius: 13, borderWidth: 1, overflow: 'hidden' },
+  heroTopBar: { alignItems: 'center', flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 9, paddingVertical: 8 },
    heroContent: { bottom: 0, left: 0, paddingBottom: 27, position: 'absolute', right: 0 },
    heroReadingField: { borderLeftColor: '#F0C050B8', borderLeftWidth: 1, paddingLeft: 14, paddingTop: 8 },
   brandLockup: { alignItems: 'center', flexDirection: 'row', gap: 10 },
@@ -510,24 +573,34 @@ const styles = StyleSheet.create({
   syncText: { fontFamily: 'Rajdhani_700Bold', fontSize: 10, letterSpacing: 1.1 },
   syncDivider: { fontFamily: 'Rajdhani_600SemiBold', fontSize: 10 },
   syncMeta: { fontFamily: 'Rajdhani_600SemiBold', fontSize: 9, letterSpacing: 0.65 },
-  heroEyebrow: { fontFamily: 'Rajdhani_700Bold', fontSize: 10, letterSpacing: 1.8, marginTop: 18 },
-  heroHeadline: { fontFamily: 'Cinzel_700Bold', fontSize: 39, letterSpacing: 1.2, lineHeight: 43, marginTop: 8 },
-  heroDescription: { fontFamily: 'Rajdhani_500Medium', fontSize: 15, lineHeight: 20, marginTop: 7, maxWidth: 300 },
+  heroEyebrowRow: { alignItems: 'center', flexDirection: 'row', gap: 8, marginTop: 18 },
+  heroEyebrow: { fontFamily: 'Rajdhani_700Bold', fontSize: 10, letterSpacing: 1.8 },
+  heroEyebrowRule: { height: 1, width: 28 },
+  heroEyebrowMeta: { fontFamily: 'Rajdhani_700Bold', fontSize: 9, letterSpacing: 1.35 },
+  heroHeadline: { fontFamily: 'Cinzel_700Bold', fontSize: 41, letterSpacing: 1.1, lineHeight: 45, marginTop: 8, textShadowColor: '#000000B8', textShadowOffset: { height: 2, width: 0 }, textShadowRadius: 12 },
+  heroDescription: { fontFamily: 'Rajdhani_500Medium', fontSize: 15, lineHeight: 20, marginTop: 8, maxWidth: 290 },
   heroActions: { alignItems: 'center', flexDirection: 'row', flexWrap: 'wrap', gap: 9, marginTop: 17 },
-   glassButton: { alignItems: 'center', borderRadius: 4, borderWidth: 1, flexDirection: 'row', gap: 7, minHeight: 37, paddingHorizontal: 12, paddingVertical: 9 },
+  heroPrimaryButtonPressable: { borderRadius: 5, shadowColor: '#F0C050', shadowOffset: { height: 7, width: 0 }, shadowOpacity: 0.28, shadowRadius: 14 },
+  heroPrimaryButton: { alignItems: 'center', borderRadius: 5, flexDirection: 'row', gap: 7, minHeight: 47, paddingHorizontal: 14, paddingVertical: 10 },
+  heroPrimaryButtonText: { fontFamily: 'Rajdhani_700Bold', fontSize: 11, letterSpacing: 1.05 },
+  heroPrimaryButtonMark: { alignItems: 'center', borderRadius: 8, borderWidth: 1, height: 22, justifyContent: 'center', marginLeft: 2, width: 22 },
+  heroSecondaryButton: { alignItems: 'center', borderRadius: 5, borderWidth: 1, flexDirection: 'row', gap: 7, minHeight: 47, paddingHorizontal: 13, paddingVertical: 10 },
+  heroSecondaryButtonText: { fontFamily: 'Rajdhani_700Bold', fontSize: 11, letterSpacing: 0.9 },
+  glassButton: { alignItems: 'center', borderRadius: 8, borderWidth: 1, flexDirection: 'row', gap: 7, minHeight: 39, paddingHorizontal: 12, paddingVertical: 9 },
   glassButtonLarge: { minHeight: 45, paddingHorizontal: 15 },
   glassButtonText: { fontFamily: 'Rajdhani_700Bold', fontSize: 11, letterSpacing: 1 },
   heroFooter: { borderTopColor: '#FFFFFF20', borderTopWidth: 1, flexDirection: 'row', flexWrap: 'wrap', gap: 13, marginTop: 17, paddingTop: 12 },
   heroFooterItem: { alignItems: 'center', flexDirection: 'row', gap: 5 },
   heroFooterText: { fontFamily: 'Rajdhani_600SemiBold', fontSize: 10, letterSpacing: 0.65 },
-  dashboard: { gap: 16, paddingTop: 0 },
-  errorBanner: { alignItems: 'center', borderRadius: 12, borderWidth: 1, flexDirection: 'row', gap: 10, padding: 12 },
+  dashboard: { gap: 17, paddingTop: 0 },
+  errorBanner: { alignItems: 'center', borderRadius: 14, borderWidth: 1, flexDirection: 'row', gap: 10, padding: 13, shadowColor: '#000000', shadowOffset: { height: 8, width: 0 }, shadowOpacity: 0.24, shadowRadius: 16 },
   errorCopy: { flex: 1, gap: 2 },
   errorTitle: { fontFamily: 'Rajdhani_700Bold', fontSize: 11, letterSpacing: 1 },
   errorBody: { fontFamily: 'Rajdhani_500Medium', fontSize: 11, lineHeight: 15 },
   retryButton: { borderRadius: 5, borderWidth: 1, paddingHorizontal: 8, paddingVertical: 7 },
   retryText: { fontFamily: 'Rajdhani_700Bold', fontSize: 9, letterSpacing: 0.8 },
-   playerStrip: { alignItems: 'center', backgroundColor: '#0D0D1A66', borderBottomColor: '#F0C05080', borderBottomWidth: 1, borderTopColor: '#F0C05080', borderTopWidth: 1, flexDirection: 'row', gap: 14, marginTop: -18, paddingHorizontal: 2, paddingVertical: 13 },
+  playerStripGlass: { borderBottomWidth: 1, borderRadius: 11, borderTopWidth: 1, marginTop: -18, overflow: 'hidden' },
+  playerStrip: { alignItems: 'center', backgroundColor: '#0D0D1A66', flexDirection: 'row', gap: 14, paddingHorizontal: 11, paddingVertical: 13 },
   playerIdentity: { alignItems: 'center', flexDirection: 'row', gap: 9 },
   avatarRing: { alignItems: 'center', borderRadius: 22, borderWidth: 1, height: 39, justifyContent: 'center', width: 39 },
   avatarLetter: { fontFamily: 'Cinzel_700Bold', fontSize: 17 },
@@ -535,22 +608,22 @@ const styles = StyleSheet.create({
   playerName: { fontFamily: 'Rajdhani_700Bold', fontSize: 14, letterSpacing: 0.7 },
   playerMeta: { fontFamily: 'Rajdhani_600SemiBold', fontSize: 9, letterSpacing: 0.9 },
   playerProgress: { flex: 1, gap: 7 },
-  domainSection: { gap: 11, marginTop: 18 },
+  domainSection: { gap: 12, marginTop: 20 },
   domainHeading: { alignItems: 'flex-end', flexDirection: 'row', justifyContent: 'space-between' },
-  domainTitle: { fontFamily: 'Cinzel_600SemiBold', fontSize: 17, letterSpacing: 0.3, marginTop: 3 },
+  domainTitle: { fontFamily: 'Cinzel_600SemiBold', fontSize: 18, letterSpacing: 0.3, marginTop: 4 },
   liveSignal: { alignItems: 'center', flexDirection: 'row', gap: 5, paddingBottom: 2 },
   liveSignalDot: { borderRadius: 4, height: 6, width: 6 },
   liveSignalText: { fontFamily: 'Rajdhani_700Bold', fontSize: 9, letterSpacing: 1 },
   domainMap: { gap: 9, position: 'relative' },
   domainSpine: { bottom: 18, left: '50%', position: 'absolute', top: 18, width: 1 },
   domainRow: { alignItems: 'stretch', flexDirection: 'row', gap: 7 },
-   domainPortal: { alignItems: 'center', borderBottomWidth: 1, borderLeftWidth: 2, borderRadius: 0, borderRightWidth: 0, borderTopWidth: 0, flex: 1, flexDirection: 'row', gap: 8, minHeight: 84, paddingHorizontal: 10, paddingVertical: 9 },
+  domainPortal: { alignItems: 'center', borderRadius: 14, borderWidth: 1, flex: 1, flexDirection: 'row', gap: 9, minHeight: 91, paddingHorizontal: 11, paddingVertical: 10, shadowColor: '#000000', shadowOffset: { height: 6, width: 0 }, shadowOpacity: 0.2, shadowRadius: 12 },
   domainNode: { alignItems: 'center', borderRadius: 10, borderWidth: 1, height: 34, justifyContent: 'center', width: 34 },
   domainCopy: { flex: 1, gap: 2, minWidth: 0 },
   domainLabelLine: { alignItems: 'center', flexDirection: 'row', gap: 5 },
   domainPulse: { borderRadius: 3, height: 5, opacity: 0.9, width: 5 },
   domainEyebrow: { fontFamily: 'Rajdhani_700Bold', fontSize: 8, letterSpacing: 1.2 },
-  domainPortalTitle: { fontFamily: 'Cinzel_600SemiBold', fontSize: 11, lineHeight: 15 },
+  domainPortalTitle: { fontFamily: 'Cinzel_600SemiBold', fontSize: 11.5, lineHeight: 15 },
   domainStatus: { fontFamily: 'Rajdhani_600SemiBold', fontSize: 8, letterSpacing: 0.25 },
   domainConnector: { alignItems: 'center', flexDirection: 'row', gap: 1, justifyContent: 'center', width: 17 },
   domainConnectorLine: { height: 1, flex: 1 },
@@ -560,19 +633,19 @@ const styles = StyleSheet.create({
   progressValue: { fontFamily: 'Rajdhani_700Bold', fontSize: 9, letterSpacing: 0.4 },
   progressRail: { borderRadius: 6, height: 6, overflow: 'hidden', width: '100%' },
   progressFill: { borderRadius: 6, height: '100%' },
-  metricGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
-   metricCard: { borderBottomWidth: 1, borderTopWidth: 1, flexGrow: 1, minWidth: '22%', padding: 10 },
+  metricGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginTop: 2 },
+  metricCard: { borderRadius: 13, borderWidth: 1, flexGrow: 1, minWidth: '22%', padding: 11, shadowColor: '#000000', shadowOffset: { height: 5, width: 0 }, shadowOpacity: 0.18, shadowRadius: 10 },
   metricValue: { fontFamily: 'Cinzel_700Bold', fontSize: 16, marginTop: 7 },
   metricLabel: { fontFamily: 'Rajdhani_700Bold', fontSize: 8, letterSpacing: 1, marginTop: 2 },
-   sectionHeading: { alignItems: 'flex-end', flexDirection: 'row', justifyContent: 'space-between', marginTop: 13 },
+  sectionHeading: { alignItems: 'flex-end', flexDirection: 'row', justifyContent: 'space-between', marginTop: 18 },
    sectionHeadingCopy: { flex: 1 },
    sectionKicker: { alignItems: 'center', flexDirection: 'row', gap: 7 },
    sectionKickerLine: { height: 1, width: 18 },
   eyebrow: { fontFamily: 'Rajdhani_700Bold', fontSize: 9, letterSpacing: 1.8 },
-   sectionTitle: { fontFamily: 'Cinzel_600SemiBold', fontSize: 18, letterSpacing: 0.4, marginTop: 4 },
+  sectionTitle: { fontFamily: 'Cinzel_600SemiBold', fontSize: 18, letterSpacing: 0.4, marginTop: 5 },
   sectionAction: { alignItems: 'center', flexDirection: 'row', gap: 3, paddingBottom: 2 },
   sectionActionText: { fontFamily: 'Rajdhani_700Bold', fontSize: 9, letterSpacing: 0.8 },
-   eventCard: { alignItems: 'center', backgroundColor: '#14142854', borderBottomColor: '#6EA8FE80', borderBottomWidth: 1, borderLeftColor: '#6EA8FE80', borderLeftWidth: 2, borderTopColor: '#6EA8FE40', borderTopWidth: 1, flexDirection: 'row', gap: 12, padding: 14 },
+  eventCard: { alignItems: 'center', backgroundColor: '#14142886', borderColor: '#6EA8FE80', borderRadius: 16, borderWidth: 1, flexDirection: 'row', gap: 12, padding: 14, shadowColor: '#000000', shadowOffset: { height: 8, width: 0 }, shadowOpacity: 0.26, shadowRadius: 16 },
   eventOrbWrap: { alignItems: 'center', height: 58, justifyContent: 'center', width: 58 },
   eventOrb: { alignItems: 'center', borderRadius: 26, borderWidth: 1, height: 52, justifyContent: 'center', width: 52 },
   eventOrbRing: { borderRadius: 30, borderWidth: 1, height: 58, position: 'absolute', width: 58 },
@@ -583,18 +656,18 @@ const styles = StyleSheet.create({
   eventMeta: { fontFamily: 'Rajdhani_500Medium', fontSize: 10, letterSpacing: 0.6 },
   eventProgress: { alignItems: 'flex-end', gap: 6, width: 48 },
   eventProgressValue: { fontFamily: 'Rajdhani_700Bold', fontSize: 13 },
-  missionList: { gap: 8 },
-   missionRow: { alignItems: 'center', backgroundColor: '#1414283D', borderBottomWidth: 1, borderLeftWidth: 2, flexDirection: 'row', gap: 11, padding: 12 },
+  missionList: { gap: 9 },
+  missionRow: { alignItems: 'center', backgroundColor: '#14142878', borderColor: '#FFFFFF18', borderRadius: 13, borderWidth: 1, flexDirection: 'row', gap: 11, padding: 13, shadowColor: '#000000', shadowOffset: { height: 5, width: 0 }, shadowOpacity: 0.18, shadowRadius: 12 },
   missionIndex: { alignItems: 'center', borderRadius: 6, borderWidth: 1, height: 32, justifyContent: 'center', width: 32 },
   missionIndexText: { fontFamily: 'Rajdhani_700Bold', fontSize: 11 },
   missionCopy: { flex: 1, gap: 3 },
   missionName: { fontFamily: 'Rajdhani_700Bold', fontSize: 14, letterSpacing: 0.3 },
   missionMeta: { fontFamily: 'Rajdhani_500Medium', fontSize: 10, letterSpacing: 0.55 },
-  emptyCard: { alignItems: 'center', borderRadius: 12, borderWidth: 1, gap: 8, paddingHorizontal: 20, paddingVertical: 24 },
+  emptyCard: { alignItems: 'center', borderRadius: 15, borderWidth: 1, gap: 8, paddingHorizontal: 20, paddingVertical: 25 },
   emptyTitle: { fontFamily: 'Rajdhani_700Bold', fontSize: 12, letterSpacing: 1.2 },
   emptyBody: { fontFamily: 'Rajdhani_500Medium', fontSize: 12, lineHeight: 17, textAlign: 'center' },
-   featuredCard: { borderBottomWidth: 1, borderLeftWidth: 2, borderRightWidth: 1, borderTopWidth: 1, flexDirection: 'row', gap: 13, overflow: 'hidden', padding: 10 },
-  featuredArtFrame: { backgroundColor: '#05050D', borderColor: '#F0C05070', borderRadius: 10, height: 162, overflow: 'hidden', position: 'relative', width: 116 },
+  featuredCard: { borderColor: '#F0C050A0', borderRadius: 18, borderWidth: 1, flexDirection: 'row', gap: 13, overflow: 'hidden', padding: 11, shadowColor: '#F0C050', shadowOffset: { height: 8, width: 0 }, shadowOpacity: 0.12, shadowRadius: 20 },
+  featuredArtFrame: { backgroundColor: '#05050D', borderColor: '#F0C05070', borderRadius: 13, borderWidth: 1, height: 166, overflow: 'hidden', position: 'relative', width: 118 },
   featuredArt: { height: '100%', width: '100%' },
   featuredSheen: { backgroundColor: '#FFFFFF28', height: 15, left: -20, position: 'absolute', top: 26, transform: [{ rotate: '-24deg' }], width: 170 },
   featuredAssetError: { alignItems: 'center', bottom: 8, left: 7, paddingHorizontal: 5, paddingVertical: 6, position: 'absolute', right: 7 },
@@ -603,29 +676,29 @@ const styles = StyleSheet.create({
   featuredTagLine: { alignItems: 'center', flexDirection: 'row', justifyContent: 'space-between' },
   featuredTag: { fontFamily: 'Rajdhani_700Bold', fontSize: 10, letterSpacing: 1.2 },
   featuredCode: { fontFamily: 'Rajdhani_600SemiBold', fontSize: 9, letterSpacing: 0.8 },
-  featuredName: { fontFamily: 'Cinzel_600SemiBold', fontSize: 18, lineHeight: 23, marginTop: 11 },
+  featuredName: { fontFamily: 'Cinzel_600SemiBold', fontSize: 18, lineHeight: 23, marginTop: 12 },
   featuredFaction: { fontFamily: 'Rajdhani_600SemiBold', fontSize: 10, letterSpacing: 0.5, marginTop: 5 },
   featuredLore: { fontFamily: 'Rajdhani_500Medium', fontSize: 12, lineHeight: 16, marginTop: 11 },
-  featuredHint: { fontFamily: 'Rajdhani_700Bold', fontSize: 9, letterSpacing: 1.1, marginTop: 17 },
+  featuredHint: { fontFamily: 'Rajdhani_700Bold', fontSize: 9, letterSpacing: 1.1, marginTop: 18 },
   dualGrid: { flexDirection: 'row', gap: 9 },
-   storePortal: { borderBottomWidth: 1, borderTopWidth: 1, padding: 13 },
+  storePortal: { borderColor: '#3DC96B72', borderRadius: 16, borderWidth: 1, padding: 14, shadowColor: '#000000', shadowOffset: { height: 8, width: 0 }, shadowOpacity: 0.2, shadowRadius: 16 },
   storePortalHeading: { alignItems: 'center', flexDirection: 'row', justifyContent: 'space-between' },
   storePortalTitle: { fontFamily: 'Cinzel_600SemiBold', fontSize: 15, marginTop: 4 },
   storeActions: { flexDirection: 'row', flexWrap: 'wrap', gap: 7, marginTop: 12 },
-   portalCard: { borderBottomWidth: 1, borderTopWidth: 1, flex: 1, minHeight: 130, padding: 12, position: 'relative' },
-  portalIcon: { alignItems: 'center', borderRadius: 8, borderWidth: 1, height: 35, justifyContent: 'center', width: 35 },
+  portalCard: { borderRadius: 16, borderWidth: 1, flex: 1, minHeight: 142, padding: 13, position: 'relative', shadowColor: '#000000', shadowOffset: { height: 8, width: 0 }, shadowOpacity: 0.2, shadowRadius: 16 },
+  portalIcon: { alignItems: 'center', borderRadius: 10, borderWidth: 1, height: 37, justifyContent: 'center', width: 37 },
   portalEyebrow: { fontFamily: 'Rajdhani_700Bold', fontSize: 9, letterSpacing: 1.2, marginTop: 12 },
   portalTitle: { fontFamily: 'Cinzel_600SemiBold', fontSize: 13, lineHeight: 18, marginTop: 4 },
   portalBody: { fontFamily: 'Rajdhani_500Medium', fontSize: 10, marginTop: 2 },
   portalArrow: { bottom: 12, position: 'absolute', right: 12 },
-   activityPanel: { borderBottomWidth: 1, borderTopWidth: 1, paddingHorizontal: 13, paddingVertical: 4 },
+  activityPanel: { borderColor: '#FFFFFF20', borderRadius: 16, borderWidth: 1, paddingHorizontal: 14, paddingVertical: 4, shadowColor: '#000000', shadowOffset: { height: 8, width: 0 }, shadowOpacity: 0.18, shadowRadius: 16 },
   activityRow: { alignItems: 'center', borderBottomColor: '#FFFFFF14', borderBottomWidth: 1, flexDirection: 'row', gap: 10, paddingVertical: 11 },
   activityDot: { borderRadius: 4, height: 7, width: 7 },
   activityText: { flex: 1, gap: 3 },
   activityCopy: { fontFamily: 'Rajdhani_500Medium', fontSize: 12, lineHeight: 16 },
   activityTime: { fontFamily: 'Rajdhani_700Bold', fontSize: 9, letterSpacing: 0.8 },
   emptyActivity: { alignItems: 'center', gap: 9, paddingHorizontal: 14, paddingVertical: 20 },
-   rankingPanel: { borderBottomWidth: 1, borderTopWidth: 1, paddingHorizontal: 13 },
+  rankingPanel: { borderColor: '#F0C05072', borderRadius: 16, borderWidth: 1, paddingHorizontal: 14, shadowColor: '#000000', shadowOffset: { height: 8, width: 0 }, shadowOpacity: 0.18, shadowRadius: 16 },
   rankingRow: { alignItems: 'center', borderBottomColor: '#FFFFFF14', borderBottomWidth: 1, flexDirection: 'row', gap: 9, paddingVertical: 11 },
   rankPosition: { fontFamily: 'Rajdhani_700Bold', fontSize: 11, width: 21 },
   rankAvatar: { alignItems: 'center', borderRadius: 16, borderWidth: 1, height: 30, justifyContent: 'center', width: 30 },

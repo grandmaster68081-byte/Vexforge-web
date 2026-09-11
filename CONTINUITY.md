@@ -2439,3 +2439,12 @@
 - Release publicado: `vexforge-android-build-174`, asset `app-release.apk`, tamaño `113731324` bytes, SHA-256 `a70effb962df5b68e9f08c93036b156b0e3a8e11b6a8e0970e6194a2cf9b3f73`.
 - Descarga oficial: `https://github.com/grandmaster68081-byte/Vexforge-web/releases/download/vexforge-android-build-174/app-release.apk`.
 - La verificación general paralela `verify` terminó con fallo en `verify:uxcx-domain-identity` por contratos de identidad de Collection/Deck/Profile y FOJA; no bloqueó ni formó parte del workflow oficial de APK, que terminó correctamente. La QA visual/táctil humana en dispositivo sigue pendiente, por lo que el estado honesto continúa siendo `IMPLEMENTED_UNVERIFIED`; no se declara `PASS`, `OPERATIONAL` ni `TIER1_READY`.
+
+---
+## 2026-09-11 — VE-MOB-3-HOME — PREMIUM TCG HERO PASS / MAIN PUBLISHED
+
+- Se elevó exclusivamente el primer viewport de `mobile/app/(tabs)/index.tsx` para que el Home comunique una entrada TCG premium desde el primer segundo: barra superior con profundidad, capas de atmósfera, CTA principal con jerarquía reforzada, CTA secundario de continuidad y tira de jugador integrada con blur.
+- Se conservaron los contratos existentes, la navegación, `Promise.allSettled`, los datos vivos de Supabase, la política de reduced-motion y todos los assets oficiales ya registrados. No se añadió arte genérico, emoji, placeholder ni sustituto diegético.
+- La dirección visual se contrastó con los patrones públicos de Hearthstone, Marvel Snap, Pokémon TCG Pocket, Yu-Gi-Oh! Master Duel y Shadowverse: Worlds Beyond: escena dominante, lectura inmediata de la acción principal, HUD compacto, profundidad por capas y ritmo de descubrimiento sin convertir el primer viewport en un panel administrativo.
+- Verificación local: `npm run typecheck` en `mobile` OK, `npm run verify-mobile-home-official-assets` OK, `git diff --check` OK y `package-lock.json` sin referencias al registry privado. No se compiló APK ni se inició el workflow Android por instrucción explícita del operador.
+- Commit publicado mediante la API REST HTTPS oficial de GitHub en `main`. Estado honesto: `IMPLEMENTED_UNVERIFIED`; la QA visual/táctil humana y la futura compilación Android siguen pendientes. No se declara `PASS`, `OPERATIONAL`, `TIER1_READY` ni release nuevo.
