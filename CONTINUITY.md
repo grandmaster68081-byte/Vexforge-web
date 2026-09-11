@@ -1,3 +1,14 @@
+## 2026-09-11 — VE-MOB-3-HOME — NEXUS CONSTELLATION / IMPLEMENTED_UNVERIFIED
+
+- La revisión de tres capturas del APK mostró que el Home nativo tenía una presencia visual sólida, pero los dominios estaban comprimidos en una fila horizontal y la navegación Android inferior no era visible.
+- La causa funcional fue una configuración heredada que ocultaba la barra de pestañas en todas las superficies porque la referencia estática anterior ya contenía navegación; esa premisa dejó de ser válida tras la reconstrucción nativa.
+- El Home ahora muestra los seis dominios como una constelación visible en tres pares conectados: Arena, Forja, Archivo, Mundo, Misiones y Economía. Cada nodo conserva su ruta existente, iconografía oficial y estado derivado de Supabase/GameContext.
+- Se refinó el copy de la portada para que exprese frente, rito, señal, formación y operación sin inventar datos. Se amplió el padding inferior para convivir con la navegación persistente y se conservó reduced-motion, safe-area, accesibilidad, pull-to-refresh y manejo explícito de errores/vacíos.
+- No se modificaron Supabase, Auth, RLS, RPCs, economía, combate, assets oficiales ni la web congelada. La guardia Home de 10/10 pasa sobre la copia de trabajo.
+- Transporte pendiente de este registro: API REST HTTPS oficial de GitHub, sin Git Smart HTTP ni PAT en URLs. Falta typecheck/workflow APK correlativo y QA visual/táctil humana; estado honesto: `IMPLEMENTED_UNVERIFIED`.
+
+---
+
 ## 2026-09-11 — VE-MOB-3-HOME — NEXUS DOMAIN RAIL / IMPLEMENTED_UNVERIFIED
 
 - Se extendió la portada nativa sin rehacer su escena heroica: la continuidad del Home ahora incorpora una red horizontal de portales conectados para Arena, Forja, Archivo, Mundo, Misiones y Economía.

@@ -83,10 +83,6 @@ function ClassicTabLayout() {
         name="index"
         options={{
           title: 'Inicio',
-          // The reference artwork already contains the complete bottom
-          // navigation. Home hotspots route to the same tab destinations,
-          // so a second native bar would cover the authored composition.
-          tabBarStyle: { display: 'none' },
           tabBarIcon: ({ color }) =>
             isIOS ? (
               <SymbolView name="house" tintColor={color} size={24} />
@@ -95,10 +91,10 @@ function ClassicTabLayout() {
             ),
         }}
       />
-      <Tabs.Screen name="battle" options={{ title: 'Batalla', tabBarStyle: { display: 'none' }, tabBarIcon: ({ color }) => <Feather name="zap" size={22} color={color} /> }} />
-      <Tabs.Screen name="collection" options={{ title: 'Cartas', tabBarStyle: { display: 'none' }, tabBarIcon: ({ color }) => <Feather name="layers" size={22} color={color} /> }} />
-      <Tabs.Screen name="deck" options={{ title: 'Mazo', tabBarStyle: { display: 'none' }, tabBarIcon: ({ color }) => <Feather name="columns" size={22} color={color} /> }} />
-      <Tabs.Screen name="profile" options={{ title: 'Perfil', tabBarStyle: { display: 'none' }, tabBarIcon: ({ color }) => <Feather name="user" size={22} color={color} /> }} />
+      <Tabs.Screen name="battle" options={{ title: 'Batalla', tabBarIcon: ({ color }) => <Feather name="zap" size={22} color={color} /> }} />
+      <Tabs.Screen name="collection" options={{ title: 'Cartas', tabBarIcon: ({ color }) => <Feather name="layers" size={22} color={color} /> }} />
+      <Tabs.Screen name="deck" options={{ title: 'Mazo', tabBarIcon: ({ color }) => <Feather name="columns" size={22} color={color} /> }} />
+      <Tabs.Screen name="profile" options={{ title: 'Perfil', tabBarIcon: ({ color }) => <Feather name="user" size={22} color={color} /> }} />
     </Tabs>
   );
 }

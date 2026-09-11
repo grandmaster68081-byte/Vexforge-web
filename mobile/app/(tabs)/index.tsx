@@ -209,13 +209,18 @@ export default function ForgeScreen() {
   const ranking = home.stats?.top3 ?? [];
   const hasPlayerData = Boolean(player || progress || wallet || playerStats);
   const domainPortals: Array<{ id: string; label: string; title: string; status: string; icon: IconName; route: HomeRoute; color: string }> = [
-    { id: 'arena', label: 'ARENA', title: 'Cruza el umbral', status: home.stats?.active_event ? 'EVENTO ACTIVO' : 'BUSCA OPONENTE', icon: 'target', route: '/battle', color: colors.rarityRare },
-    { id: 'forge', label: 'FORJA', title: 'Traza tu línea', status: `NIVEL ${formatNumber(progress?.level)}`, icon: 'deck', route: '/deck', color: colors.rarityEpic },
-    { id: 'archive', label: 'ARCHIVO', title: 'Despierta tu colección', status: `${formatNumber(cardsTotal)} CARTAS`, icon: 'collection', route: '/collection', color: colors.rarityLegendary },
-    { id: 'world', label: 'MUNDO', title: 'Lee el frente', status: activeEvent ? `CIERRA ${formatEventTime(activeEvent.ends_at)}` : 'SIN EVENTO ACTIVO', icon: 'map', route: '/world', color: colors.rarityRare },
-    { id: 'missions', label: 'MISIONES', title: 'Forja el ciclo', status: `${formatNumber(home.missions.length)} ACTIVAS`, icon: 'missions', route: '/missions', color: colors.success },
-    { id: 'economy', label: 'ECONOMÍA', title: 'Mueve el VEX', status: `${formatNumber(wallet?.vex_ingame)} VEX`, icon: 'economy', route: '/economy', color: colors.accent },
+    { id: 'arena', label: 'ARENA', title: 'Cruza el umbral', status: home.stats?.active_event ? 'EVENTO ACTIVO' : 'OPONENTES EN ESPERA', icon: 'target', route: '/battle', color: colors.rarityRare },
+    { id: 'forge', label: 'FORJA', title: 'Traza tu formación', status: `NIVEL ${formatNumber(progress?.level)} · MAZO ACTIVO`, icon: 'deck', route: '/deck', color: colors.rarityEpic },
+    { id: 'archive', label: 'ARCHIVO', title: 'Revela tu colección', status: `${formatNumber(cardsTotal)} CARTAS REGISTRADAS`, icon: 'collection', route: '/collection', color: colors.rarityLegendary },
+    { id: 'world', label: 'MUNDO', title: 'Lee la señal', status: activeEvent ? `CIERRA EN ${formatEventTime(activeEvent.ends_at)}` : 'SIN FRENTE PUBLICADO', icon: 'map', route: '/world', color: colors.rarityRare },
+    { id: 'missions', label: 'MISIONES', title: 'Cumple el rito', status: `${formatNumber(home.missions.length)} ÓRDENES ACTIVAS`, icon: 'missions', route: '/missions', color: colors.success },
+    { id: 'economy', label: 'ECONOMÍA', title: 'Mueve el VEX', status: `${formatNumber(wallet?.vex_ingame)} VEX DISPONIBLES`, icon: 'economy', route: '/economy', color: colors.accent },
   ];
+  const domainRows = [
+    [domainPortals[0], domainPortals[1]],
+    [domainPortals[2], domainPortals[3]],
+    [domainPortals[4], domainPortals[5]],
+  ] as const;
 
   const navigate = (route: HomeRoute) => {
     void Haptics.selectionAsync().catch(() => undefined);
@@ -238,7 +243,7 @@ export default function ForgeScreen() {
     <ScreenShell surface="home" sceneMode="shell">
       <View style={styles.root} testID="home-scene">
         <Animated.ScrollView
-          contentContainerStyle={[styles.scrollContent, { paddingBottom: Math.max(36, insets.bottom + 28) }]}
+           contentContainerStyle={[styles.scrollContent, { paddingBottom: Math.max(112, insets.bottom + 100) }]}
           refreshControl={<RefreshControl refreshing={refreshing} onRefresh={doRefresh} tintColor={colors.accent} colors={[colors.accent]} />}
           showsVerticalScrollIndicator={false}
           accessibilityLabel="Inicio de Vexforge"
@@ -283,7 +288,7 @@ export default function ForgeScreen() {
                 </View>
                 <View>
                   <Text style={[styles.brandName, { color: colors.foreground }]}>VEXFORGE</Text>
-                  <Text style={[styles.brandSubline, { color: '#D7D0E8CC' }]}>NEXUS // FORJA ACTIVA</Text>
+                   <Text style={[styles.brandSubline, { color: '#D7D0E8CC' }]}>NEXUS // RED DE DOMINIOS</Text>
                 </View>
               </Animated.View>
               <View style={styles.topActions}>
@@ -307,9 +312,9 @@ export default function ForgeScreen() {
                 <Text style={[styles.syncDivider, { color: '#D7D0E880' }]}>/</Text>
                 <Text style={[styles.syncMeta, { color: '#D7D0E8CC' }]}>{season?.name ?? 'SEASON 01 // FORGE OF LEGENDS'}</Text>
               </View>
-              <Text style={[styles.heroEyebrow, { color: colors.accent }]}>TEMPORADA ACTIVA · FRENTE VIVO</Text>
-              <Text style={[styles.heroHeadline, { color: colors.foreground }]}>ENTRA{'\n'}AL VEX</Text>
-              <Text style={[styles.heroDescription, { color: '#E5E0EACC' }]}>Forja tu identidad. Lee el frente. Decide cuándo cruzar el umbral.</Text>
+               <Text style={[styles.heroEyebrow, { color: colors.accent }]}>TEMPORADA ACTIVA · NEXUS ONLINE</Text>
+               <Text style={[styles.heroHeadline, { color: colors.foreground }]}>CRUZA{'\n'}EL UMBRAL</Text>
+               <Text style={[styles.heroDescription, { color: '#E5E0EACC' }]}>Tu frente está vivo. Elige un dominio y forja la próxima victoria.</Text>
               <View style={styles.heroActions}>
                 <GlassButton label="ENTRAR A LA ARENA" icon="target" onPress={() => navigate('/battle')} testID="home-battle" large />
                 <GlassButton label="CONTINUAR RITO" icon="arrow-right" onPress={() => navigate('/tutorial')} tone="violet" testID="home-tutorial" />
@@ -348,18 +353,24 @@ export default function ForgeScreen() {
               <View style={styles.domainHeading}>
                 <View>
                   <Text style={[styles.eyebrow, { color: colors.rarityRare }]}>CONSTELACIÓN DEL NEXUS</Text>
-                  <Text style={[styles.domainTitle, { color: colors.foreground }]}>Tus frentes activos</Text>
+                     <Text style={[styles.domainTitle, { color: colors.foreground }]}>Elige dónde forjar</Text>
                 </View>
                 <View style={styles.liveSignal}><View style={[styles.liveSignalDot, { backgroundColor: connectionColor }]} /><Text style={[styles.liveSignalText, { color: connectionColor }]}>SEÑAL VIVA</Text></View>
               </View>
-              <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.domainRail} accessibilityLabel="Dominios conectados del Nexus">
-                {domainPortals.map((portal, index) => (
-                  <View key={portal.id} style={styles.domainRailItem}>
-                    <NexusPortal portal={portal} onPress={() => navigate(portal.route)} />
-                    {index < domainPortals.length - 1 ? <View style={styles.domainConnector}><View style={[styles.domainConnectorLine, { backgroundColor: `${portal.color}66` }]} /><Animated.View style={[styles.domainSignal, { backgroundColor: portal.color }, pulseStyle]} /><Icon name="chevron-right" color={`${portal.color}B8`} size={12} /></View> : null}
-                  </View>
-                ))}
-              </ScrollView>
+               <View style={styles.domainMap} accessibilityLabel="Dominios conectados del Nexus">
+                 <View pointerEvents="none" style={[styles.domainSpine, { backgroundColor: `${colors.rarityEpic}35` }]} />
+                 {domainRows.map((row) => (
+                   <View key={`${row[0].id}-${row[1].id}`} style={styles.domainRow}>
+                     <NexusPortal portal={row[0]} onPress={() => navigate(row[0].route)} />
+                     <View pointerEvents="none" style={styles.domainConnector}>
+                       <View style={[styles.domainConnectorLine, { backgroundColor: `${row[0].color}66` }]} />
+                       <Animated.View style={[styles.domainSignal, { backgroundColor: row[0].color }, pulseStyle]} />
+                       <Icon name="chevron-right" color={`${row[0].color}B8`} size={11} />
+                     </View>
+                     <NexusPortal portal={row[1]} onPress={() => navigate(row[1].route)} />
+                   </View>
+                 ))}
+               </View>
             </Animated.View>
 
             <View style={styles.metricGrid}>
@@ -369,14 +380,14 @@ export default function ForgeScreen() {
               <Metric label="PACKS" value={formatNumber(home.stats?.packs_opened)} icon="packs" color={colors.success} />
             </View>
 
-            <SectionHeading eyebrow="SEÑAL DEL NEXUS" title="El frente de hoy" action="VER MUNDO" onAction={() => navigate('/world')} />
+             <SectionHeading eyebrow="SEÑAL DEL NEXUS" title="El frente de hoy" action="ABRIR MUNDO" onAction={() => navigate('/world')} />
             <Pressable accessibilityRole="button" accessibilityLabel="Abrir evento activo" testID="home-event" onPress={() => navigate('/world')} style={[styles.eventCard, { borderColor: `${colors.rarityRare}80`, backgroundColor: `${colors.panelStrong}F0` }]}>
               <View style={styles.eventOrbWrap}><View style={[styles.eventOrb, { borderColor: `${colors.rarityRare}80` }]}><Animated.View style={[styles.eventOrbCore, { backgroundColor: colors.rarityRare }, pulseStyle]} /></View><View style={[styles.eventOrbRing, { borderColor: `${colors.rarityRare}35` }]} /></View>
               <View style={styles.eventCopy}><Text style={[styles.eventType, { color: colors.rarityRare }]}>{activeEvent?.type?.toUpperCase() ?? 'SEÑAL GLOBAL'}</Text><Text style={[styles.eventTitle, { color: colors.foreground }]}>{activeEvent?.name ?? 'El Nexus espera un nuevo frente'}</Text><Text style={[styles.eventMeta, { color: colors.mutedForeground }]}>{activeEvent ? `CIERRA EN ${formatEventTime(activeEvent.ends_at)}` : 'No hay evento activo publicado'}</Text></View>
               <View style={styles.eventProgress}><Text style={[styles.eventProgressValue, { color: colors.rarityRare }]}>{activeEvent ? `${Math.round(activeEvent.progress)}%` : '—'}</Text><ProgressRail value={activeEvent?.progress ?? 0} total={100} color={colors.rarityRare} background={`${colors.rarityRare}20`} /><Icon name="arrow-up" color={colors.rarityRare} size={16} /></View>
             </Pressable>
 
-            <SectionHeading eyebrow={home.missions.length === 1 ? 'MISIÓN ACTIVA' : 'MISIONES ACTIVAS'} title="Acciones que forjan" action="ABRIR MISIONES" onAction={() => navigate('/missions')} />
+             <SectionHeading eyebrow={home.missions.length === 1 ? 'ORDEN ACTIVA' : 'ÓRDENES ACTIVAS'} title="El rito continúa" action="ABRIR MISIONES" onAction={() => navigate('/missions')} />
             {home.missions.length > 0 ? (
               <View style={styles.missionList}>
                 {home.missions.slice(0, 3).map((mission, index) => <MissionRow key={mission.id} mission={mission} index={index} onPress={() => navigate('/missions')} />)}
@@ -419,7 +430,7 @@ export default function ForgeScreen() {
             </View>
 
             <View style={[styles.storePortal, { borderColor: `${colors.success}72`, backgroundColor: `${colors.panelStrong}F0` }]}>
-              <View style={styles.storePortalHeading}><View><Text style={[styles.portalEyebrow, { color: colors.success }]}>SISTEMAS DE LA FORJA</Text><Text style={[styles.storePortalTitle, { color: colors.foreground }]}>Abre el siguiente ciclo</Text></View><Icon name="shop" color={colors.success} size={18} /></View>
+               <View style={styles.storePortalHeading}><View><Text style={[styles.portalEyebrow, { color: colors.success }]}>CÁMARA DE FORJA</Text><Text style={[styles.storePortalTitle, { color: colors.foreground }]}>Elige tu siguiente operación</Text></View><Icon name="shop" color={colors.success} size={18} /></View>
               <View style={styles.storeActions}>
                 <GlassButton label="PACKS" icon="packs" onPress={() => navigate('/store?mode=packs')} tone="quiet" testID="home-store-packs" />
                 <GlassButton label="TIENDA" icon="shop" onPress={() => navigate('/store?mode=shop')} tone="quiet" testID="home-store-shop" />
@@ -428,12 +439,12 @@ export default function ForgeScreen() {
               </View>
             </View>
 
-            <SectionHeading eyebrow="PULSO PÚBLICO" title="Actividad del Nexus" action="VER RANKING" onAction={() => navigate('/world')} />
+             <SectionHeading eyebrow="PULSO PÚBLICO" title="Actividad del Nexus" action="VER CLASIFICACIÓN" onAction={() => navigate('/world')} />
             <View style={[styles.activityPanel, { borderColor: `${colors.border}CC`, backgroundColor: `${colors.panelStrong}F0` }]}>
               {home.activity.length > 0 ? home.activity.slice(0, 3).map((item) => <View key={item.id} style={styles.activityRow}><View style={[styles.activityDot, { backgroundColor: colors.success }]} /><View style={styles.activityText}><Text style={[styles.activityCopy, { color: colors.foreground }]}>{item.text}</Text><Text style={[styles.activityTime, { color: colors.mutedForeground }]}>{new Date(item.time).toLocaleDateString('es-ES', { day: '2-digit', month: 'short' }).toUpperCase()}</Text></View></View>) : <View style={styles.emptyActivity}><Icon name="radio" color={colors.mutedForeground} size={18} /><Text style={[styles.emptyBody, { color: colors.mutedForeground }]}>El pulso público se mostrará cuando exista actividad confirmada.</Text></View>}
             </View>
 
-            <SectionHeading eyebrow="CIRCUITO ACTIVO" title="Top del frente" action="ABRIR MUNDO" onAction={() => navigate('/world')} />
+             <SectionHeading eyebrow="CIRCUITO ACTIVO" title="Clasificación del frente" action="ABRIR MUNDO" onAction={() => navigate('/world')} />
             <View style={[styles.rankingPanel, { borderColor: `${colors.accent}72`, backgroundColor: `${colors.panelStrong}F0` }]}>
               {ranking.length > 0 ? ranking.map((entry, index) => <View key={`${entry.rank}-${entry.display_name}`} style={styles.rankingRow}><Text style={[styles.rankPosition, { color: index === 0 ? colors.accent : colors.mutedForeground }]}>{String(entry.rank).padStart(2, '0')}</Text><View style={[styles.rankAvatar, { borderColor: `${index === 0 ? colors.accent : colors.border}99` }]}><Text style={[styles.rankAvatarText, { color: index === 0 ? colors.accent : colors.mutedForeground }]}>{entry.display_name.slice(0, 1).toUpperCase()}</Text></View><View style={styles.rankIdentity}><Text style={[styles.rankName, { color: colors.foreground }]}>{entry.display_name}</Text><Text style={[styles.rankMeta, { color: colors.mutedForeground }]}>{formatNumber(entry.wins)} VICTORIAS / {formatNumber(entry.mmr)} MMR</Text></View><Icon name={index === 0 ? 'award' : 'chevron-right'} color={index === 0 ? colors.accent : colors.mutedForeground} size={16} /></View>) : <Text style={[styles.emptyBody, { color: colors.mutedForeground }]}>El ranking de la temporada todavía no tiene posiciones publicadas.</Text>}
             </View>
@@ -458,7 +469,11 @@ function NexusPortal({ portal, onPress }: { portal: { id: string; label: string;
   const colors = useColors();
   return <Pressable accessibilityRole="button" accessibilityLabel={`Abrir dominio ${portal.label}`} testID={`home-domain-${portal.id}`} onPress={onPress} style={({ pressed }) => [styles.domainPortal, { borderColor: `${portal.color}80`, backgroundColor: `${colors.panelStrong}E8`, opacity: pressed ? 0.74 : 1 }]}>
     <View style={[styles.domainNode, { borderColor: `${portal.color}A8`, backgroundColor: `${portal.color}1C` }]}><Icon name={portal.icon} color={portal.color} size={17} /></View>
-    <View style={styles.domainCopy}><Text style={[styles.domainEyebrow, { color: portal.color }]}>{portal.label}</Text><Text style={[styles.domainPortalTitle, { color: colors.foreground }]}>{portal.title}</Text><Text style={[styles.domainStatus, { color: colors.mutedForeground }]}>{portal.status}</Text></View>
+    <View style={styles.domainCopy}>
+      <View style={styles.domainLabelLine}><Text style={[styles.domainEyebrow, { color: portal.color }]}>{portal.label}</Text><View style={[styles.domainPulse, { backgroundColor: portal.color }]} /></View>
+      <Text style={[styles.domainPortalTitle, { color: colors.foreground }]}>{portal.title}</Text>
+      <Text numberOfLines={1} style={[styles.domainStatus, { color: colors.mutedForeground }]}>{portal.status}</Text>
+    </View>
     <Icon name="arrow-up" color={`${portal.color}CC`} size={14} />
   </Pressable>;
 }
@@ -520,15 +535,18 @@ const styles = StyleSheet.create({
   liveSignal: { alignItems: 'center', flexDirection: 'row', gap: 5, paddingBottom: 2 },
   liveSignalDot: { borderRadius: 4, height: 6, width: 6 },
   liveSignalText: { fontFamily: 'Rajdhani_700Bold', fontSize: 9, letterSpacing: 1 },
-  domainRail: { alignItems: 'center', paddingRight: 16 },
-  domainRailItem: { alignItems: 'center', flexDirection: 'row' },
-  domainPortal: { alignItems: 'center', borderRadius: 12, borderWidth: 1, flexDirection: 'row', gap: 9, height: 82, paddingHorizontal: 11, width: 166 },
+  domainMap: { gap: 9, position: 'relative' },
+  domainSpine: { bottom: 18, left: '50%', position: 'absolute', top: 18, width: 1 },
+  domainRow: { alignItems: 'stretch', flexDirection: 'row', gap: 7 },
+  domainPortal: { alignItems: 'center', borderRadius: 13, borderWidth: 1, flex: 1, flexDirection: 'row', gap: 8, minHeight: 84, paddingHorizontal: 10, paddingVertical: 9 },
   domainNode: { alignItems: 'center', borderRadius: 10, borderWidth: 1, height: 34, justifyContent: 'center', width: 34 },
-  domainCopy: { flex: 1, gap: 2 },
+  domainCopy: { flex: 1, gap: 2, minWidth: 0 },
+  domainLabelLine: { alignItems: 'center', flexDirection: 'row', gap: 5 },
+  domainPulse: { borderRadius: 3, height: 5, opacity: 0.9, width: 5 },
   domainEyebrow: { fontFamily: 'Rajdhani_700Bold', fontSize: 8, letterSpacing: 1.2 },
   domainPortalTitle: { fontFamily: 'Cinzel_600SemiBold', fontSize: 11, lineHeight: 15 },
-  domainStatus: { fontFamily: 'Rajdhani_600SemiBold', fontSize: 9, letterSpacing: 0.45 },
-  domainConnector: { alignItems: 'center', flexDirection: 'row', gap: 1, width: 24 },
+  domainStatus: { fontFamily: 'Rajdhani_600SemiBold', fontSize: 8, letterSpacing: 0.25 },
+  domainConnector: { alignItems: 'center', flexDirection: 'row', gap: 1, justifyContent: 'center', width: 17 },
   domainConnectorLine: { height: 1, flex: 1 },
   domainSignal: { borderRadius: 3, height: 5, width: 5 },
   levelLine: { flexDirection: 'row', justifyContent: 'space-between' },

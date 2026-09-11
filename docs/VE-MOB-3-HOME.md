@@ -256,3 +256,12 @@ La Fase VISUAL no se declara cerrada sólo por compilar: debe alcanzar al menos 
 - Se añadieron estados explícitos `loading`, `partial`, `error`, vacío, sincronización y `reduced-motion`, además de pull-to-refresh, labels accesibles y `testID` de revisión.
 - La guardia del Home y la guardia de recompensas fueron actualizadas para validar esta composición nativa; ninguna superficie web ni contrato Supabase fue modificado.
 - Estado: `IMPLEMENTED_UNVERIFIED`; queda pendiente el workflow APK correlativo y la QA visual/táctil humana sobre el APK instalado.
+
+## Addendum 2026-09-11 — CONSTELACIÓN DEL NEXUS / REFINAMIENTO VISUAL DEL OPERADOR
+
+- La revisión de las capturas del APK confirmó que los dominios existían en el código, pero la fila horizontal de portales sólo hacía visibles uno o dos nodos a la vez y se percibía como contenido secundario. Se sustituyó por una constelación visible de seis dominios en tres pares, con conectores, señales cromáticas y estados derivados de los datos reales.
+- Se restauró la navegación inferior Android para `Inicio`, `Batalla`, `Cartas`, `Mazo` y `Perfil`. La barra había quedado oculta para no cubrir la referencia estática anterior, pero el Home actual es una composición nativa y necesita un acceso persistente a las demás superficies.
+- Se elevó el lenguaje de la portada: el hero, los portales y los encabezados usan copy de frente, rito, señal, formación y operación; no se alteran nombres de rutas, datos, recompensas ni lógica autoritativa.
+- Se amplió el espacio inferior seguro para que la navegación persistente no cubra la actividad final, manteniendo pull-to-refresh, reduced-motion, safe-area, accesibilidad y todos los estados explícitos existentes.
+- El pase conserva la escena y los assets oficiales ya registrados. No introduce arte genérico, imágenes de sustitución, contratos nuevos, Supabase, Auth, RLS, RPCs, economía, combate ni cambios en la web congelada.
+- Estado: `IMPLEMENTED_UNVERIFIED`; requiere typecheck, guardas, workflow APK correlativo y QA visual/táctil humana en dispositivo.
