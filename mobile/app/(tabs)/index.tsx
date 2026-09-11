@@ -208,6 +208,14 @@ export default function ForgeScreen() {
   const viewportPadding = Math.max(18, Math.min(26, width * 0.06));
   const ranking = home.stats?.top3 ?? [];
   const hasPlayerData = Boolean(player || progress || wallet || playerStats);
+  const domainPortals: Array<{ id: string; label: string; title: string; status: string; icon: IconName; route: HomeRoute; color: string }> = [
+    { id: 'arena', label: 'ARENA', title: 'Cruza el umbral', status: home.stats?.active_event ? 'EVENTO ACTIVO' : 'BUSCA OPONENTE', icon: 'target', route: '/battle', color: colors.rarityRare },
+    { id: 'forge', label: 'FORJA', title: 'Traza tu línea', status: `NIVEL ${formatNumber(progress?.level)}`, icon: 'deck', route: '/deck', color: colors.rarityEpic },
+    { id: 'archive', label: 'ARCHIVO', title: 'Despierta tu colección', status: `${formatNumber(cardsTotal)} CARTAS`, icon: 'collection', route: '/collection', color: colors.rarityLegendary },
+    { id: 'world', label: 'MUNDO', title: 'Lee el frente', status: activeEvent ? `CIERRA ${formatEventTime(activeEvent.ends_at)}` : 'SIN EVENTO ACTIVO', icon: 'map', route: '/world', color: colors.rarityRare },
+    { id: 'missions', label: 'MISIONES', title: 'Forja el ciclo', status: `${formatNumber(home.missions.length)} ACTIVAS`, icon: 'missions', route: '/missions', color: colors.success },
+    { id: 'economy', label: 'ECONOMÍA', title: 'Mueve el VEX', status: `${formatNumber(wallet?.vex_ingame)} VEX`, icon: 'economy', route: '/economy', color: colors.accent },
+  ];
 
   const navigate = (route: HomeRoute) => {
     void Haptics.selectionAsync().catch(() => undefined);
@@ -336,6 +344,24 @@ export default function ForgeScreen() {
               <View style={styles.playerProgress}><View style={styles.levelLine}><Text style={[styles.progressLabel, { color: colors.mutedForeground }]}>RANGO DE FORJA</Text><Text style={[styles.progressValue, { color: colors.accent }]}>{formatNumber(xp)} / {formatNumber(xpToNext)} XP</Text></View><ProgressRail value={xp} total={xpToNext} color={colors.accent} background={`${colors.accent}28`} /></View>
             </Animated.View>
 
+            <Animated.View entering={reduceMotion ? undefined : FadeInUp.delay(120).duration(560)} style={styles.domainSection} testID="home-domain-rail">
+              <View style={styles.domainHeading}>
+                <View>
+                  <Text style={[styles.eyebrow, { color: colors.rarityRare }]}>RED DEL NEXUS</Text>
+                  <Text style={[styles.domainTitle, { color: colors.foreground }]}>Cruza a un dominio</Text>
+                </View>
+                <View style={styles.liveSignal}><View style={[styles.liveSignalDot, { backgroundColor: connectionColor }]} /><Text style={[styles.liveSignalText, { color: connectionColor }]}>SEÑAL VIVA</Text></View>
+              </View>
+              <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.domainRail} accessibilityLabel="Dominios conectados del Nexus">
+                {domainPortals.map((portal, index) => (
+                  <View key={portal.id} style={styles.domainRailItem}>
+                    <NexusPortal portal={portal} onPress={() => navigate(portal.route)} />
+                    {index < domainPortals.length - 1 ? <View style={styles.domainConnector}><View style={[styles.domainConnectorLine, { backgroundColor: `${portal.color}66` }]} /><Icon name="chevron-right" color={`${portal.color}B8`} size={12} /></View> : null}
+                  </View>
+                ))}
+              </ScrollView>
+            </Animated.View>
+
             <View style={styles.metricGrid}>
               <Metric label="CARTAS" value={hasPlayerData ? formatNumber(progress?.level ? playerStats?.cards_owned ?? cardsTotal : cardsTotal) : formatNumber(cardsTotal)} icon="layers" color={colors.rarityRare} />
               <Metric label="VICTORIAS" value={formatNumber(playerStats?.pvp_wins)} icon="award" color={colors.accent} />
@@ -428,6 +454,15 @@ function MissionRow({ mission, index, onPress }: { mission: HomeMission; index: 
   return <Pressable accessibilityRole="button" accessibilityLabel={`Abrir misión ${mission.name}`} testID="home-missions" onPress={onPress} style={({ pressed }) => [styles.missionRow, { borderColor: `${colors.border}CC`, backgroundColor: `${colors.panelStrong}F0`, opacity: pressed ? 0.72 : 1 }]}><View style={[styles.missionIndex, { borderColor: `${colors.accent}80` }]}><Text style={[styles.missionIndexText, { color: colors.accent }]}>0{index + 1}</Text></View><View style={styles.missionCopy}><Text style={[styles.missionName, { color: colors.foreground }]}>{mission.name}</Text><Text style={[styles.missionMeta, { color: colors.mutedForeground }]}>{capitalize(mission.difficulty, 'RITO')}  /  {formatNumber(mission.reward_xp)} XP  /  {formatNumber(mission.reward_vex_ingame)} VEX</Text></View><Icon name="chevron-right" color={colors.accent} size={17} /></Pressable>;
 }
 
+function NexusPortal({ portal, onPress }: { portal: { id: string; label: string; title: string; status: string; icon: IconName; route: HomeRoute; color: string }; index: number; onPress: () => void }) {
+  const colors = useColors();
+  return <Pressable accessibilityRole="button" accessibilityLabel={`Abrir dominio ${portal.label}`} testID={`home-domain-${portal.id}`} onPress={onPress} style={({ pressed }) => [styles.domainPortal, { borderColor: `${portal.color}80`, backgroundColor: `${colors.panelStrong}E8`, opacity: pressed ? 0.74 : 1 }]}>
+    <View style={[styles.domainNode, { borderColor: `${portal.color}A8`, backgroundColor: `${portal.color}1C` }]}><Icon name={portal.icon} color={portal.color} size={17} /></View>
+    <View style={styles.domainCopy}><Text style={[styles.domainEyebrow, { color: portal.color }]}>{portal.label}</Text><Text style={[styles.domainPortalTitle, { color: colors.foreground }]}>{portal.title}</Text><Text style={[styles.domainStatus, { color: colors.mutedForeground }]}>{portal.status}</Text></View>
+    <Icon name="arrow-up" color={`${portal.color}CC`} size={14} />
+  </Pressable>;
+}
+
 const styles = StyleSheet.create({
   root: { flex: 1 },
   scrollContent: { gap: 0 },
@@ -479,6 +514,22 @@ const styles = StyleSheet.create({
   playerName: { fontFamily: 'Rajdhani_700Bold', fontSize: 14, letterSpacing: 0.7 },
   playerMeta: { fontFamily: 'Rajdhani_600SemiBold', fontSize: 9, letterSpacing: 0.9 },
   playerProgress: { flex: 1, gap: 7 },
+  domainSection: { gap: 11, marginTop: 18 },
+  domainHeading: { alignItems: 'flex-end', flexDirection: 'row', justifyContent: 'space-between' },
+  domainTitle: { fontFamily: 'Cinzel_600SemiBold', fontSize: 17, letterSpacing: 0.3, marginTop: 3 },
+  liveSignal: { alignItems: 'center', flexDirection: 'row', gap: 5, paddingBottom: 2 },
+  liveSignalDot: { borderRadius: 4, height: 6, width: 6 },
+  liveSignalText: { fontFamily: 'Rajdhani_700Bold', fontSize: 9, letterSpacing: 1 },
+  domainRail: { alignItems: 'center', paddingRight: 16 },
+  domainRailItem: { alignItems: 'center', flexDirection: 'row' },
+  domainPortal: { alignItems: 'center', borderRadius: 12, borderWidth: 1, flexDirection: 'row', gap: 9, height: 82, paddingHorizontal: 11, width: 166 },
+  domainNode: { alignItems: 'center', borderRadius: 10, borderWidth: 1, height: 34, justifyContent: 'center', width: 34 },
+  domainCopy: { flex: 1, gap: 2 },
+  domainEyebrow: { fontFamily: 'Rajdhani_700Bold', fontSize: 8, letterSpacing: 1.2 },
+  domainPortalTitle: { fontFamily: 'Cinzel_600SemiBold', fontSize: 11, lineHeight: 15 },
+  domainStatus: { fontFamily: 'Rajdhani_600SemiBold', fontSize: 9, letterSpacing: 0.45 },
+  domainConnector: { alignItems: 'center', flexDirection: 'row', gap: 1, width: 24 },
+  domainConnectorLine: { height: 1, flex: 1 },
   levelLine: { flexDirection: 'row', justifyContent: 'space-between' },
   progressLabel: { fontFamily: 'Rajdhani_700Bold', fontSize: 9, letterSpacing: 0.9 },
   progressValue: { fontFamily: 'Rajdhani_700Bold', fontSize: 9, letterSpacing: 0.4 },
