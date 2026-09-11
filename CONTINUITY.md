@@ -1,0 +1,2400 @@
+## 2026-09-11 — VE-MOB-3-HOME — APK BUILD BLOCKER REPAIRED / IMPLEMENTED_UNVERIFIED
+
+- El commit `2ff6adbeb17676a8149e14955da0c2a3449de2f5` añadió la escena Nexus cinematográfica del Home, pero el workflow Android oficial `34610891894` / build `177` quedó bloqueado en `npm run typecheck` antes de Gradle.
+- La causa exacta fue una prop `pointerEvents` no soportada por los tipos de `Animated.Image` de React Native 0.81. Se retiró únicamente esa prop no válida; no se modificaron los datos, Supabase, Auth, RLS, RPCs, economía, combate ni la web congelada.
+- El cambio debe publicarse mediante la API REST HTTPS oficial de GitHub y volver a pasar typecheck, guardas móviles, prebuild, Gradle, verificación de bundle standalone y publicación del release correlativo.
+- Estado honesto: `IMPLEMENTED_UNVERIFIED` hasta que el workflow Android termine en `success`, exista el APK correlativo y se complete la QA visual/táctil humana.
+
+---
+
+## 2026-09-11 — VE-MOB-3-HOME — CINEMATIC NATIVE HOMEPAGE / IMPLEMENTED_UNVERIFIED
+
+- La revisión visual del operador confirmó que el Home anterior tenía estructura de panel administrativo: demasiadas tarjetas del mismo peso, fondo remoto de baja presencia, ausencia de una pieza heroica y una jerarquía insuficiente para una portada de TCG.
+- Se reconstruyó `mobile/app/(tabs)/index.tsx` como una portada nativa de juego: arte hero local de VEXFORGE, gradientes cinematográficos, CTA dominante a Arena, identidad superior sobre la escena y datos vivos en capas de soporte.
+- Se reemplazó en el registro visual el fondo remoto de `CANONICAL_BACKGROUNDS.home` y `OFFICIAL_ASSETS.homeNexusBurst` por la escena local; también se retiró el arte remoto de la carta destacada. Los datos de temporada, evento, jugador, misiones, actividad, ranking y carta siguen siendo Supabase/RPC autoritativos.
+- Se añadieron `mobile/assets/images/vexforge-home-hero.png`, `mobile/assets/images/vexforge-hero-sentinel.png` y `mobile/assets/images/vexforge-feature-card.png` como arte original local, sin texto incrustado ni dependencia de Storage.
+- El segundo pase añade parallax ligado al scroll, órbita de energía, pulso del núcleo, personaje separado en primer plano y fallback explícito `NEXUS CORE OFFLINE` / `ARTE NO DISPONIBLE`; la guarda oficial se actualizó a 10/10 para el contrato local registrado.
+- El primer workflow del commit anterior falló en `verify-mobile-home-official-assets` porque la implementación no declaró los nuevos assets en el registro ni conservó los estados de error exigidos. No llegó a Gradle ni generó APK; el fallo queda corregido antes del siguiente commit.
+- La copia se validó sintácticamente con TypeScript y la guarda Home 10/10. La instalación local quedó bloqueada por el firewall del registro interno al resolver `npm-package-arg`; el typecheck y el build final quedan delegados al workflow oficial de GitHub, que instala desde cero.
+- Estado honesto: `IMPLEMENTED_UNVERIFIED`; falta publicar este segundo pase, completar el workflow Android y hacer QA visual/táctil del APK instalada.
+
+---
+
+## 2026-09-10 — VE-MOB-3-HOME — REFERENCE REPLACEMENT / IMPLEMENTED_UNVERIFIED
+
+- Se reemplazó por completo `mobile/assets/images/home-reference-scene.png` con la nueva referencia del operador, normalizada a `1080×2340`, PNG RGB/sRGB y proporción `9:19.5`; no se superpuso otra pantalla sobre la composición.
+- Se recalibraron los hotspots transparentes del lienzo: Ajustes → `/meta`, Avisos → `/missions`, Forja → `/deck`, Arena → `/battle`, Fusión → `/store?mode=fusion`, Archivo → `/collection`, Tienda → `/store?mode=shop`, Evolución → `/store?mode=evolution` y Packs → `/store?mode=packs`.
+- Se añadió un reflejo visual localizado en el punto exacto del toque, con color por portal, señal háptica y comportamiento compatible con `reduced-motion`.
+- Videos no cuenta con una ruta Android existente; el hotspot muestra un estado explícito y no inventa navegación ni datos. No se modificaron Supabase, Auth, RLS, RPCs, economía, combate ni la web congelada.
+- Guardas: `npm run typecheck` en `mobile/`, `verify-mobile-home-official-assets` — 9/9, `verify-motion`, `verify-mobile-store` y validación `1080×2340 RGB` pasan.
+- Commit de implementación publicado en `main`: `b2e9dabee7bd49c90d199032d71544ac5547589c`. No se ejecutó el workflow Android ni se generó una APK nueva por instrucción explícita del operador. Estado honesto: `IMPLEMENTED_UNVERIFIED`; falta QA visual/táctil humana sobre el APK ya publicado. Transporte y publicación de esta actualización: API REST HTTPS de GitHub, sin Git Smart HTTP.
+
+---
+
+## 2026-09-10 — VE-MOB-2/3/7 — LIVE FLOW AUDIT / IMPLEMENTED_UNVERIFIED
+
+- Se reconcilió la autoridad normativa por HTTPS directo: la fila activa de Supabase vexforge_master_protocol_v2 quedó sincronizada byte a byte con VEXFORGE_PROTOCOL_V2.md de main, versión v2.15-tier1-additive-integration-assets-20260907.
+- Auth conserva inicio de sesión, registro, recuperación, recordar sesión, visibilidad de contraseña y OAuth Google/Discord/Apple conectados a Supabase Auth y a ensure_player_row; la sesión QA real autenticó correctamente.
+- Inicio mantiene el arte de referencia intacto y sus hotspots transparentes enrutan Forja→Fusión, Arena→Batalla, Cartas, Mundo, Archivo, Eventos, Misión y las cinco pestañas reales.
+- Batalla mantiene la consulta real de oponentes, la confirmación explícita, la formación derivada del mazo, el acceso a PVE/Jefe y práctica IA separada; el combate PvP sigue resolviéndose sólo por vexforge_battle_resolve. No se ejecutó una resolución de combate contra datos vivos durante la auditoría.
+- Evidencia QA no destructiva: Supabase respondió correctamente para perfil, mazo, rango PvP y oponentes usando el players.id canónico; el mazo QA devolvió 30 ranuras con arte canónico y 2 oponentes elegibles.
+- Guardas locales: verify-mobile-auth 14/14, Home 8/8, Batalla 20/20, Mazos 22/22, Perfil 21/21, Colección 12/12, Card Pilot 6/6 y estados de arte OK.
+- El workflow oficial Build VEXFORGE Android APK terminó success en el run 34465956502 (build 172) sobre el commit Android auditado 6f93a9fbaa09e8e67f9055c9160ed9f544d996e2. El release correlativo vexforge-android-build-172 publicó app-release.apk, 113807220 bytes, SHA-256 cb378656b255f04dd470bafe46767f41311d160cf71e4314d4adbbf24e8f6433. La QA visual/táctil humana sigue pendiente; estado honesto: IMPLEMENTED_UNVERIFIED.
+
+---
+
+## 2026-09-10 — VE-MOB-5/9 — CANONICAL DATA ZONES / IMPLEMENTED_UNVERIFIED
+
+- La referencia visual de Mazos, Cartas y Perfil permanece intacta. Los textos genéricos que ya forman parte del PNG no se tratan como datos del jugador ni se sustituyen con una segunda composición.
+- Se reforzó la separación entre arte y datos: los overlays dinámicos se montan dentro del frame proporcional común y sólo en las zonas funcionales que les corresponden.
+- Mazos conserva `player_deck` como fuente real. El resumen visible se deriva de sus slots y de `cards`: cantidad, poder sumado, facciones presentes y campeón real. El panel de detalle cubre únicamente su zona de datos; no crea nombre persistido ni facción.
+- Perfil conserva la identidad real en la tarjeta de identidad (`players.display_name` y `players.telegram_username` cuando existen), coloca el contador de cartas y el nivel en sus tarjetas de referencia, y no repite el nombre en Logros/Títulos. VEX y energía permanecen en los paneles de Estadísticas/Temporada/Progreso donde el flujo los define.
+- Cartas mantiene `ReferenceCardSlot` para que cada arte oficial ocupe su ranura proporcional; no se superponen cartas fuera de la cuadrícula de la composición.
+- Verificación: Mazos `22/22`, Perfil `21/21`, todas las guardas Android restantes pasan y `npm run typecheck` pasa desde `mobile/`. No se ejecutó APK/workflow en esta unidad; el estado honesto sigue `IMPLEMENTED_UNVERIFIED` hasta QA visual/táctil humana.
+
+---
+
+## 2026-09-10 — VE-MOB-4/5/9 — MEASURED NATIVE FRAME / IMPLEMENTED_UNVERIFIED
+
+- La causa comprobada de las tres capturas rotas no era el PNG: las referencias siguen siendo RGB `1080×2340` y conservan la proporción correcta.
+- Cartas, Mazos y Perfil tomaban el tamaño de `useWindowDimensions()` como autoridad directa. En el Android afectado ese valor estaba en otra coordenada que el layout nativo; el resultado era montar la composición a escala nativa y mostrar sólo su zona izquierda.
+- Se activó `useMeasuredCanonicalFrame()` en las tres superficies y cada raíz mide su contenedor nativo con `onLayout`. La medida real se vuelve a ajustar con `getCanonicalFrameMetrics()`, manteniendo imagen, overlays y hotspots en el mismo frame proporcional.
+- Se conservaron los flujos reales de Supabase, paginación, filtros, detalle, Fusión, Logros, edición/validación/guardado de mazos, Arena, estadísticas, perfil, ranking y navegación inferior.
+- Se actualizaron las guardas estáticas para validar el contrato medido. No se compiló APK ni se inició el workflow Android en esta sesión; el estado queda `IMPLEMENTED_UNVERIFIED` hasta QA visual/táctil en dispositivo.
+
+---
+
+## 2026-09-09 — VE-MOB-4/5/9 — FULLSCREEN REFERENCE CANVAS / APK BUILD REQUESTED
+
+- Se reabrieron Cartas, Mazos y Perfil por hallazgo del operador: el lienzo visible no coincidía con el frame de la APK y desplazaba los flujos táctiles respecto al arte.
+- Las tres referencias visuales quedan normalizadas exactamente a `1080×2340`, proporción `9:19.5`, PNG RGB/sRGB: `collection-reference-scene.png`, `decks-reference-scene.png` y `profile-reference-scene.png`.
+- Las tres superficies ahora usan el alto completo del viewport Android para la imagen y sus capas de datos/hotspots; ya no descuentan `insets.top`/`insets.bottom` del lienzo, evitando que el arte se comprima y que los accesos queden corridos.
+- Se conservaron los contratos reales de Supabase y los flujos existentes: colección/inspector, fusión, logros, mazos, validación/guardado, Arena, perfil, progreso, estadísticas, social, misiones, cuenta y navegación inferior.
+- Guardas estáticas actualizadas para verificar dimensiones y color RGB de Mazos y Perfil. Estado: `IMPLEMENTED_UNVERIFIED`; queda typecheck/workflow APK correlativo y QA visual/táctil en dispositivo.
+
+---
+
+## 2026-09-09 — VE-MOB-3-HOME — FULL REPLACEMENT REFERENCE / APK BUILD REQUESTED
+
+- Se reemplazó por completo `home-reference-scene.png` con la segunda referencia entregada por el operador, normalizada a `1080×2340`, PNG RGB/sRGB y proporción `9:19.5`.
+- Se eliminaron los textos superpuestos de energía, fragmentos/Bakúmo y ajustes que duplicaban elementos sobre el arte; Inicio queda como una sola composición visual, no como una imagen con otra pantalla encima.
+- Se mantuvieron sólo hotspots transparentes sobre Forja, Arena, Cartas, Mundo, Archivo, Eventos, Misión y las cinco pestañas inferiores, conectados a sus rutas reales.
+- Estado: `IMPLEMENTED_UNVERIFIED`; esta corrección debe viajar en la misma compilación Android que el ajuste de Cartas, Mazos y Perfil.
+
+---
+
+## 2026-09-09 — VE-MOB-2-AUTH — OPERATOR REFERENCE / IMPLEMENTED_UNVERIFIED
+
+- Se reemplazó `mobile/assets/images/auth-reference-scene.png` por la composición entregada para Auth, normalizada exactamente a `1080×2340`, PNG RGB/sRGB y proporción `9:19.5`.
+- Auth conserva los flujos reales de Supabase: inicio de sesión, recordar sesión, mostrar/ocultar contraseña, recuperación, registro y acceso OAuth con Google, Discord y Apple.
+- Las capas interactivas transparentes fueron recalibradas al nuevo lienzo para que los campos y acciones coincidan con la tarjeta de acceso de la referencia, manteniendo el scroll compatible con teclado y los estados de error/confirmación.
+- Se añadió una guarda de dimensiones al verificador móvil de Auth. Esta sesión no compila APK ni inicia el workflow Android por instrucción explícita del operador.
+- Estado honesto: `IMPLEMENTED_UNVERIFIED`; queda pendiente typecheck/workflow correlativo y QA visual/táctil humana en dispositivo.
+
+---
+
+## 2026-09-09 — VE-MOB-7-BATTLE — OPERATOR REFERENCE / IMPLEMENTED_UNVERIFIED
+
+- Se reemplazó `mobile/assets/images/battle-reference-scene.png` por la composición entregada para Batalla, normalizada exactamente a `1080×2340`, PNG RGB/sRGB y proporción `9:19.5`.
+- La pantalla conserva la autoridad de Supabase y los flujos reales existentes: PVP consulta oponentes, exige confirmación y resuelve por `vexforge_battle_resolve`; PVE, Jefe Raid, formación y navegación inferior enrutan a sus superficies Android.
+- Las zonas táctiles transparentes fueron recalibradas al nuevo lienzo: cuatro frentes, Vanguardia/Campeón/Centinela/Reserva, entrar en combate y las cinco pestañas visibles. No se añadió lógica de combate ni dato decorativo.
+- Esta sesión no compila APK ni inicia el workflow Android por instrucción explícita del operador. El estado queda `IMPLEMENTED_UNVERIFIED`; falta typecheck/workflow correlativo y QA visual/táctil humana en dispositivo.
+
+---
+
+## 2026-09-09 — VE-MOB-4-COLLECTION — NEW OPERATOR REFERENCE / IMPLEMENTED_UNVERIFIED
+
+- Se reemplazó `mobile/assets/images/collection-reference-scene.png` por la referencia entregada para Cartas, normalizada exactamente a `1080×2340`, PNG RGB/sRGB y proporción `9:19.5`.
+- La composición Android conserva la autoridad de Supabase y ahora calibra sus capas táctiles/dinámicas al nuevo lienzo: catálogo y colección reales, búsqueda, filtros, detalle, navegación, Fusión y Logros.
+- El orden visible `Recientes` usa `cards.created_at` real; la paginación muestra doce cartas por página; Fusión abre `store?mode=fusion` y Logros abre el panel `profile?section=achievements`.
+- Guardas locales: `verify:mobile-collection-reference` — 10/10; `verify:mobile-card-pilot` — 6/6; `verify:card-art-state` — OK; `verify:mobile-auth` — 13/13; `vite build` — OK; `git diff --check` — OK.
+- Limitación local: la instalación de dependencias Android fue rechazada por el firewall al descargar `npm-package-arg@11.0.3`; el typecheck completo queda delegado al workflow oficial, que instala desde el registro público. No se modificaron Auth, RLS, RPCs, Storage, economía ni combate.
+- Estado honesto: `IMPLEMENTED_UNVERIFIED`; quedan pendientes el workflow APK correlativo, su release y la QA visual/táctil humana en dispositivo. No se declara `PASS`, `Q4`, `TIER1_READY` ni `OPERATIONAL`.
+
+---
+
+## 2026-09-08 — VE-MOB-4-COLLECTION — OPERATOR REFERENCE / IMPLEMENTED_UNVERIFIED
+
+- La referencia entregada para Cartas coincide byte a byte con `mobile/assets/images/collection-reference-scene.png`, con dimensiones `1024×1536` y proporción `2:3`, equivalente al objetivo visual `683×1024` de la APK.
+- La superficie mantiene la composición oficial y los flujos reales: catálogo y colección del jugador desde Supabase, búsqueda, paginación, filtro por facción y rareza, orden, detalle, propiedad, arte destacado, estados de carga/error/vacío y navegación inferior.
+- Se corrigió quirúrgicamente la zona `FUSIÓN`: ahora abre la cámara de Fusión existente con `mode=fusion`, en lugar de enviar a Mazos. No se duplicó lógica de negocio ni se modificaron contratos, datos, Auth, RLS, Storage o RPCs.
+- Evidencia local: `verify-mobile-card-pilot.mjs` — 6/6; `verify-card-art-state.mjs` — estados explícitos correctos; `git diff --check` — OK. No se ejecutó build, compilación de APK ni workflow Android.
+- Estado honesto: `IMPLEMENTED_UNVERIFIED`; queda pendiente la QA visual/táctil humana en la APK.
+
+---
+
+## 2026-09-08 — VE-MOB-5-DECK — CANONICAL ART STATE / IMPLEMENTED_UNVERIFIED
+
+- La referencia entregada para Mazos coincide byte a byte con `mobile/assets/images/decks-reference-scene.png`, con dimensiones oficiales `1024×1536` y proporción `2:3`, equivalente al objetivo visual `683×1024` de la APK.
+- La superficie conserva la composición oficial y sus flujos reales: colección del jugador, mazo persistido, búsqueda, filtros por facción, detalle, edición, límites del formato, `validate_deck`, `save_deck` y entrada a Arena.
+- Se corrigieron los estados sin `image_url` en carrusel, detalle y editor: ahora muestran explícitamente `ARTE CANÓNICO PENDIENTE` y no sustituyen arte del universo por iconografía genérica.
+- Evidencia local: `node scripts/verify-mobile-deck.mjs` — 13/13; `git diff --check` — OK. No se ejecutó build, compilación de APK ni workflow Android por instrucción explícita del operador.
+- Estado honesto: `IMPLEMENTED_UNVERIFIED`; la QA visual/táctil humana en dispositivo y el workflow Android quedan pendientes para una futura entrega de APK.
+
+---
+
+## 2026-09-08 — VE-MOB-4/5-REFERENCE-CANVAS — IMPLEMENTED_UNVERIFIED / OTA PENDING
+
+- Se corrigió el desajuste visible en las capturas de Cartas y Mazos: el arte oficial y todas las capas táctiles/dinámicas ahora comparten un lienzo explícito con el viewport real de Android y sus áreas seguras, en lugar de mezclar el alto del contenedor con el alto del canvas.
+- El ajuste conserva el contenido y los flujos existentes: búsqueda, filtros, paginación, detalle, colección/mazos, fusión, logros, edición, validación, guardado y entrada a Arena no fueron reemplazados ni duplicados.
+- La auditoría incluyó Inicio, Batalla, Cartas, Mazos y Perfil. Inicio, Batalla y Perfil ya usan un canvas explícito; el cambio necesario quedó acotado a `mobile/app/(tabs)/collection.tsx` y `mobile/app/(tabs)/deck.tsx`.
+- La pantalla de referencia del QA mide 720×1640 px; la APK mantiene orientación portrait y runtime `1.0.0`. Los assets de escena locales son 1024×1536 (Home/Colección/Mazos/Perfil) y 941×1672 (Batalla); se escalan dentro del canvas del viewport, sin recortar horizontalmente.
+- Supabase Management API confirmó el proyecto `ACTIVE_HEALTHY` y el protocolo activo `v2.15-tier1-additive-integration-assets-20260907`. No se modificaron Auth, RLS, RPCs, Storage, economía, combate ni datos.
+- Guardas locales: el parseo TSX de las superficies modificadas, `git diff --check` y `verify-mobile-battle` pasan. El typecheck completo quedó bloqueado en este entorno porque `npm ci` fue rechazado por el firewall de paquetes al descargar una dependencia histórica; `verify-mobile-deck` y `verify-mobile-home-official-assets` conservan fallos previos de arte/reduced-motion, no introducidos por este cambio.
+- El commit de código `0b4de78f5427720aced5fc51e904dd4c188a1b9d` quedó publicado en `main`. El workflow OTA `34278846319` terminó `success` y registró `VE-MOB-4-5-REFERENCE-CANVAS` como `PUBLISHED`, `OTA_UPDATE`, `production`, rollout `100%`, runtime/app `1.0.0`, con `expo_export=true`, `runtime_match=true`, fallback embebido y rollback disponible. Launch SHA-256: `0c95162f1724f5a9d6d534a396095e279d5b31165477b1bbfce17fa964eb2731`; manifiesto: `https://rscuzqnfccqvltkdcdny.supabase.co/storage/v1/object/public/vexforge-updates/releases/1.0.0/production/0b4de78f5427720aced5fc51e904dd4c188a1b9d/manifest.json`.
+- Estado honesto: `IMPLEMENTED_UNVERIFIED`; sólo queda la QA visual/táctil humana en la APK/dispositivo. No se declara `PASS`, `Q4`, `TIER1_READY` ni `OPERATIONAL`.
+
+---
+
+## 2026-09-08 — VE-MOB-6-PROFILE-REFERENCE — IMPLEMENTED_UNVERIFIED / WORKFLOW PENDING
+
+- Se reemplazó la pantalla móvil de Perfil por una composición nativa responsive inspirada en la referencia del operador; la captura no se usa como fondo de la pantalla.
+- Perfil consume los datos existentes de Supabase para identidad, sincronización, progreso, energía, VEX, rango/ELO, logros, ranking PvP, historial y racha; los accesos conectan colección, fusión, mazos, misiones, sistemas y red social.
+- Se añadieron pestañas funcionales de Estadísticas, Logros, Títulos, Historial y Ranking, edición de perfil mediante la superficie Meta existente, estados de carga/error/vacío y navegación inferior propia sin barra Android duplicada.
+- No se inventan métricas ni se sobrescriben datos de juego. El commit de implementación `12da4246131799710d5ad2b13ce2022c88724775` pasó el workflow Android 142 (`34217887486`) con `success`, incluyendo typecheck, telemetría, prebuild, Gradle, verificación standalone y publicación.
+- Release correlativo: `vexforge-android-build-142`, `app-release.apk`, 106,016,228 bytes, digest SHA-256 `d5d6ce9cdeda1d3683d58c3e8282511c6c5e626b69c77cf134b95877844560d0`. APK: `https://github.com/grandmaster68081-byte/Vexforge-web/releases/download/vexforge-android-build-142/app-release.apk`.
+- Estado honesto: `IMPLEMENTED_UNVERIFIED`; falta confirmar typecheck/build/release correlativo y QA visual/táctil humana en APK. No se declara `PASS`, `Q4`, `TIER1_READY` ni `OPERATIONAL`.
+
+---
+
+## 2026-09-08 — VE-MOB-5-DECKS-REFERENCE — IMPLEMENTED_UNVERIFIED / WORKFLOW PENDING
+
+- Se reemplazó la superficie vertical de Mazos por la composición oficial proporcionada por el operador (`decks-reference-scene.png`, 1024×1536), a pantalla completa y sin scroll vertical en la superficie principal.
+- Mazos conserva Supabase como autoridad real: carga el mazo activo con `loadPlayerDeck`, usa la colección autenticada para la edición, valida con `validateDeck`, guarda con `saveDeck` y mantiene refresh/error/loading explícitos.
+- Los hotspots de Colección, Tus cartas, Fusión, Logros y navegación inferior enrutan a las superficies existentes. Filtros de facción, búsqueda, orden, contador, crear borrador, editar, detalle y entrada a Arena son funcionales.
+- Se añadió un editor accesible sobre la imagen para seleccionar cartas reales, validar, guardar y probar en Arena. La barra nativa duplicada queda oculta en Mazos, igual que en Cartas.
+- Cartas y Mazos quedan incluidos en el mismo cambio móvil; también se conectó `scope=owned` para Tus cartas y `mode=fusion` para Fusión.
+- Verificación local: `npm run typecheck`, `npm run verify:telemetry` y `git diff --check` correctos. Falta publicar el commit, confirmar el workflow Android correlativo, el release y la QA visual/táctil humana en APK.
+- El gate `verify-mobile-home-official-assets` fue reconciliado con la composición vigente de Home: valida el asset local de referencia, hotspots, sincronización/error y reduced-motion sin relajar el gate.
+- También se reconciliaron las aserciones de `verify-mobile-auth` con Auth vigente: acciones normalizadas de contexto, selector OAuth y flujo Supabase genérico con `provider`.
+- Estado honesto: `IMPLEMENTED_UNVERIFIED`; no se declara `PASS`, `Q4`, `TIER1_READY` ni `OPERATIONAL`.
+
+---
+
+## 2026-09-08 — VE-MOB-4-COLLECTION-REFERENCE — IMPLEMENTED_UNVERIFIED / WORKFLOW PENDING
+
+- Se reemplazó la superficie vertical de Cartas por la composición de colección proporcionada por el operador (`collection-reference-scene.png`, 1024×1536), ocupando la pantalla completa sin espacios vacíos y sin scroll vertical.
+- La pantalla mantiene Supabase como autoridad real: catálogo activo, colección de la sesión, cantidades, búsqueda, filtros de facción/rareza, orden, paginación lateral y detalle de carta siguen alimentándose de `loadCatalogSnapshot` y `loadPlayerCollection`.
+- Se muestran ocho cartas por página con desplazamiento horizontal; cada carta abre el inspector existente con arte canónico, identidad, estadísticas, habilidades, sistemas, lore y supply. Las ranuras vacías y los errores de arte permanecen explícitos.
+- Se conservaron los flujos de la referencia: Colección, Tus cartas, Fusión/Forja, Logros y navegación inferior mediante zonas táctiles accesibles. La barra nativa duplicada queda oculta sólo en esta pestaña.
+- Verificación local: `npm run typecheck`, `npm run verify:telemetry` y `git diff --check` correctos. El APK 138 anterior terminó `success` y publicó `app-release.apk`; el workflow correlativo de este cambio queda pendiente después del push.
+- Estado honesto: `IMPLEMENTED_UNVERIFIED`; falta confirmar workflow APK, release correlativo y QA visual/táctil humana en dispositivo. No se declara `PASS`, `Q4`, `TIER1_READY` ni `OPERATIONAL`.
+
+---
+
+## 2026-09-08 — VE-MOB-2-AUTH + VE-MOB-3-HOME — APK 136 PUBLISHED / IMPLEMENTED_UNVERIFIED
+
+- Se reemplazó completamente la superficie Android de Auth por la imagen de referencia proporcionada por el operador (`auth-reference-scene.png`, 1024×1536). La obra es la composición visible completa; los campos, botones y enlaces funcionan mediante zonas interactivas transparentes alineadas sobre el arte.
+- Auth conserva Supabase como autoridad real: inicio de sesión, creación de cuenta, recuperación de contraseña, recordar sesión y OAuth para Google, Discord y Apple. Google usa una sola ruta OAuth y una sola zona táctil, sin duplicar la imagen ni superponer un segundo Auth.
+- Se empaquetó junto con la corrección del Home que fija explícitamente el viewport de la imagen 1024×1536 y mantiene scroll sin el zoom/crop defectuoso del APK 134.
+- Commit combinado: `8ff0440`. El workflow Android oficial `136` (`34205647319`) terminó `success`: typecheck, telemetría, prebuild Expo, compilación release, verificación del bundle standalone y publicación pasaron.
+- Release correlativo: `vexforge-android-build-136`, `app-release.apk`, 99,509,200 bytes, SHA-256 `232ad069070afc71875e19a8769383afc0f3343469359f95fe821fd8f53b1ee2`.
+- APK: `https://github.com/grandmaster68081-byte/Vexforge-web/releases/download/vexforge-android-build-136/app-release.apk`.
+- La QA visual/táctil humana en dispositivo sigue pendiente: escala completa del Home y Auth, scroll, safe areas, login/registro/recuperación, OAuth configurado, navegación invisible y TalkBack. Estado honesto: `IMPLEMENTED_UNVERIFIED`; no se declara `PASS`, `Q4`, `TIER1_READY` ni `OPERATIONAL`.
+
+---
+
+## 2026-09-08 — VE-MOB-3-HOME — OPERATOR REFERENCE COMPOSITION / IMPLEMENTED_UNVERIFIED
+
+- Se sustituyó la escena anterior del Home Android por la imagen de referencia proporcionada por el operador, conservada como asset local de `mobile/**` con sus dimensiones originales 1024×1536.
+- La imagen ya no funciona como fondo decorativo de una pantalla genérica: es la composición completa del Home, incluida su navegación inferior visual.
+- Se retiró la barra nativa duplicada únicamente de Inicio. Los accesos invisibles sobre los elementos dibujados en la imagen enrutan a Perfil, Economía, Meta, Mundo, Foja, Arena, Cartas, Archivo, Misiones, Batalla, Mazo e Inicio.
+- Se conservaron `loadHomeStats`, Supabase, la sesión y las rutas existentes. No se agregaron textos, paneles ni botones visibles encima de la obra.
+- Verificación local: `npm run typecheck`, `npm run verify:telemetry`, `expo prebuild` y coincidencia SHA-256 del asset Android con la imagen proporcionada.
+- El workflow APK oficial `134` (`34199652437`) terminó con `success`: typecheck, telemetría, prebuild Expo, compilación release, verificación del bundle standalone y publicación pasaron correctamente.
+- Release correlativo: `vexforge-android-build-134`, `app-release.apk`, 98,152,008 bytes. APK: `https://github.com/grandmaster68081-byte/Vexforge-web/releases/download/vexforge-android-build-134/app-release.apk`.
+- La QA visual/táctil humana en dispositivo sigue pendiente. Estado honesto: `IMPLEMENTED_UNVERIFIED`; no se declara `PASS`, `Q4`, `TIER1_READY` ni `OPERATIONAL`.
+
+---
+
+## 2026-09-07 — VE-MOB-3-HOME-STATES — APK 129 PUBLISHED / VISUAL QA PENDING
+
+- El commit `eb87f20ce5fed27c91cf9a6f768210aa2a1caa9c` pasó el workflow Android oficial `129` (`34167262779`) con `success`.
+- El fallo de la revisión anterior quedó corregido en el typecheck: `accessibilityRole="status"` no es válido para React Native 0.81.5 y fue sustituido por roles compatibles sin cambiar la semántica del Home.
+- El workflow completó typecheck móvil, verificación de telemetría, prebuild Expo, compilación release, verificación standalone y publicación.
+- Release correlativo: `vexforge-android-build-129`, `app-release.apk`, 95,339,228 bytes, SHA-256 `50e8f09ee063b4b1aa0ce7d7cfdf313424b06cfc18b57b375b01132f87836ae6`.
+- Verificación del bundle publicado: contiene `assets/index.android.bundle` y los marcadores `home-scene`, `home-world`, `home-featured-card`, `home-battle`, `home-missions`, `home-event`, `home-tutorial`, `FOJA`, `ARENA` y `ARCHIVO`.
+- APK publicado: `https://github.com/grandmaster68081-byte/Vexforge-web/releases/download/vexforge-android-build-129/app-release.apk`.
+- La pantalla nueva queda técnicamente compilada y embebida en el APK; falta la QA visual/táctil humana en dispositivo o emulador para evaluar composición, safe areas, interacción, accesibilidad y rendimiento real. Estado honesto: `IMPLEMENTED_UNVERIFIED`; no se declara `PASS`, `OPERATIONAL`, `Q4` ni `TIER1_READY`.
+
+---
+
+## 2026-09-07 — VE-MOB-3-HOME-STATES — IMPLEMENTED_UNVERIFIED
+
+- Preflight reconciliado contra el protocolo activo de Supabase v2.15, `VE-MOB-0`, la matriz funcional de Home y el código Android real de `main`.
+- Se implementaron estados honestos para la carga, vacío, error y respuesta parcial de Home: la carta ausente ya no se presenta como arte fallido, el evento sin datos queda visible como vacío explícito y la sincronización de señales conserva retry accesible.
+- El cambio queda limitado a `mobile/app/(tabs)/index.tsx`; no modifica web, Auth, RLS, RPCs, economía, combate, Storage ni contratos autoritativos. No se añaden datos ni assets.
+- Gate técnico pendiente: typecheck/guards del workflow Android oficial y release correlativo. La QA visual/táctil humana en APK sigue pendiente; no se declara `PASS`, `Q4`, `TIER1_READY` ni `OPERATIONAL`.
+- Siguiente acción verificable: publicar este commit en `main`, esperar el workflow Android y registrar el release/digest correlativo; después continuar con el paquete Home permitido por el plan sin saltar a Batalla.
+
+---
+
+## 2026-09-07 — VE-MOB-3-HOME — FOJA VISUAL HUB / IMPLEMENTED_UNVERIFIED
+
+- Se reemplazó la composición anterior del Home Android por un hub vertical
+  nativo de Foja inspirado en la referencia adjunta: HUD superior, temporada,
+  carta central, hotspots diegéticos de Foja/Arena/Archivo/Forja, misión diaria,
+  evento y Continuar Rito.
+- Se conservan las fuentes reales de `GameContext` y Supabase (`wallet`,
+  `progress`, `loadHomeStats`, `loadDailyFeaturedCard`, `loadHomeMissions`,
+  `loadRecentActivity`). No se inventan rutas, assets, datos ni autoridad de
+  juego; la referencia no se usa como textura.
+- La matriz funcional queda documentada en `docs/VE-MOB-3-HOME.md`. Las rutas
+  visibles apuntan a superficies Android existentes y exponen `testID`,
+  accesibilidad y estados explícitos de carga, error, degradación parcial,
+  reduced-motion y refresh.
+- Verificación local: `mobile/npm run typecheck`, `verify:mobile-home-official-assets`
+  5/5, `verify:mobile-tutorial` 15/15, `verify:motion` y `git diff --check`.
+  La instalación inicial con firewall local falló para `npm-package-arg@11.0.3`;
+  se repitió con el registro público, como en el workflow oficial, y el
+  typecheck terminó correctamente.
+- El commit, workflow APK y release correlativo quedan pendientes de publicar.
+  Estado honesto: `IMPLEMENTED_UNVERIFIED`; no se declara `PASS`, `Q4`,
+  `TIER1_READY` ni `OPERATIONAL` hasta la QA humana visual/táctil del APK.
+
+---
+
+## 2026-09-07 — VE-MOB-3-HOME — NEXUS HUD / IMPLEMENTED_UNVERIFIED
+
+- Se refinó únicamente la superficie Android de Home/Forja en `mobile/app/(tabs)/index.tsx`: HUD superior con Energía y VEX reales, acceso a Sistemas y Perfil, foco central más dominante y órbita de destinos más legible.
+- Los valores siguen viniendo de `progress` y `wallet`; los hotspots conservan rutas Expo Router existentes. No se añadió una ruta, contrato, recompensa, personaje ni dato ficticio.
+- La escena continúa usando `lobby/main.jpg`, `OFFICIAL_ASSETS.homeNexusBurst` y la carta destacada cargada desde Supabase. La referencia adjunta no se usa como textura de fondo.
+- Se conservaron carga, error de arte, retry, estados degradados, refresh, reduced-motion, safe-area y etiquetas de accesibilidad. El cambio sigue limitado a `mobile/**`.
+- Guardas locales: `git diff --check`, validación de parse TSX sin errores de sintaxis y comprobaciones de rutas/assets del Home. El typecheck móvil completo queda pendiente del workflow oficial porque el entorno local no pudo instalar `npm-package-arg@11.0.3` desde el firewall.
+- El commit queda pendiente del workflow Android APK oficial y de QA visual/táctil humana sobre el APK. Estado honesto: `IMPLEMENTED_UNVERIFIED`; no se declara `PASS`, `Q4`, `TIER1_READY` ni `OPERATIONAL`.
+
+---
+
+## 2026-09-07 — VE-MOB-3-HOME — OFFICIAL NEXUS BURST CONSUMER — IMPLEMENTED_UNVERIFIED
+
+- Se promovió `misc/IMG_20260619_122314.jpg` desde reserva residual a consumidor Android autorizado en `VE-MOB-3-HOME`.
+- `mobile/constants/visual.ts` lo registra como `OFFICIAL_ASSETS.homeNexusBurst`; `mobile/app/(tabs)/index.tsx` lo consume como atmósfera estática detrás de la carta destacada.
+- `lobby/main.jpg` continúa siendo el fondo canónico del Home. El nuevo asset tiene carga explícita, error accesible y no añade movimiento, por lo que `reduced-motion` conserva un render estático.
+- Guarda nueva: `node scripts/verify-mobile-home-official-assets.mjs` pasa 5/5. `verify-residual-art` pasa con 4 objetos consumidos y 34 reservas; `verify-manifest` no tiene referencias rotas y puede diferir HEADs por HTTP 429 transitorio.
+- El cambio modifica `mobile/**` y requiere workflow APK oficial, release correlativo y QA visual/táctil humana. La unidad permanece `IMPLEMENTED_UNVERIFIED`; no se declara `PASS`, `Q4`, `TIER1_READY` u `OPERATIONAL`.
+
+---
+
+## 2026-09-07 — VE-ASSET-ZIP-BUNDLES — EXTRACTED / MANIFEST VERIFIED
+
+- El plan vivo en Supabase registraba cuatro bundles oficiales que existían sólo como ZIP: `founders.zip`, `misc.zip`, `sessions.zip` y `ui sistema.zip`.
+- Se descomprimieron y publicaron seis archivos individuales en las carpetas canónicas `founders/`, `misc/`, `sessions/` y `ui sistema/` del bucket oficial `vexforge-assets`.
+- Se inscribieron seis filas nuevas en `public.vexforge_official_asset_manifest`, todas oficiales y habilitadas, y se declararon como reserva en `src/lib/assetManifest.ts`; no se inventó ningún consumidor ni se reabrió la web.
+- Guarda local: `node scripts/verify-residual-art.mjs` pasa con 57 filas residuales, 38 objetos, 35 reservas y 19 prefijos.
+- No se modificó `mobile/**`, por lo que no corresponde un APK nuevo para este lote. El estado de los assets es `ASSET_PROVENANCE_RESOLVED`; las unidades Android y la QA humana conservan su estado previo `IMPLEMENTED_UNVERIFIED`.
+- Evidencia detallada: `docs/VE-ASSET-ZIP-EXTRACTION-2026-09-07.md`.
+
+---
+
+## 2026-09-07 — VE-PVP-4-BATTLEFIELD-VERTICAL — IMPLEMENTED_UNVERIFIED
+
+- Se verificó primero el entorno oficial por HTTPS: Supabase rscuzqnfccqvltkdcdny está saludable; la cuenta QA autentica y get_pvp_opponents(20) devuelve dos oponentes con mazos reales. Una resolución real devolvió ok:true, match_id, un turno, 13 final_units, image_url de Storage y roles de formación.
+- Se descartó reescribir el motor: el RPC vigente usa combat_reward y resuelve ELO/recompensas en la ruta autoritativa. El WHERE true restante pertenece a una función económica global fuera del camino PVP y queda como deuda separada; no se altera a ciegas en VE-MOB-7.
+- Android añade un battlefield vertical real con rival arriba, confrontación central, jugador abajo, tres posiciones semánticas, reserva, arte canónico, HP, keywords, target lock, impacto, daño, crítico, muerte y resultado. La formación previa también consume image_url.
+- findOpponents queda restringido a get_pvp_opponents y a mazos reales de al menos cinco cartas; se elimina el fallback silencioso a get_leaderboard para no convertir rankings en oponentes de combate.
+- La guarda Android añade cobertura del tablero vertical, arte real y roles. No se modifican reglas, RPCs, RLS, Auth, economía ni Storage.
+- Estado honesto: IMPLEMENTED_UNVERIFIED. Pendiente instalar el APK, recorrer una partida PVP real, comprobar la superficie visual, TalkBack y reduced-motion. No se declara PASS, OPERATIONAL ni TIER1_READY.
+
+---
+
+## 2026-09-07 — VE-PVP-3-OPPONENTS-REQUIRE-DECK — FIXED / APPLIED / PUBLISHED
+
+- Deuda de VE-PVP-2 cerrada. Migracion `supabase/migrations/0045_ve_pvp_3_opponents_require_deck.sql` aplicada en el proyecto oficial `rscuzqnfccqvltkdcdny`: `public.get_pvp_opponents` ahora devuelve solo jugadores con mazo jugable (`deck_size >= 5`, minimo real de `validate_deck`), sigue excluyendo al propio llamante, a los admins y a los registros de sistema (`VEXFORGE\_%`, `SIM\_BOT\_%`), y deja de excluir por `is_qa` a cuentas reales con mazo valido (con ese filtro la lista efectiva quedaba vacia).
+- Verificacion en produccion con claims JWT de la cuenta QA autorizada `cristiangalvez815@gmail.com` (`sub` `a70f8be8-15b5-4634-9b0d-6202bb41491c`): `get_pvp_opponents(20)` devuelve 2 rivales validos (`Pavilo20 Opponent` y `Pavilo20`, 5 cartas cada uno) y ninguna cuenta sin mazo.
+- Confirmado que VE-PVP-1 (`0044`, enum del ledger) esta activo en produccion: `vexforge_battle_resolve` usa `combat_reward` y una resolucion real challenger QA vs `Pavilo20` devolvio `{"ok":true, turns:[...]}` completa, sin el error 22P02 anterior.
+- No se toca el motor de combate, la economia, RLS, Auth ni datos de jugador. No se compila APK en esta sesion por instruccion del operador: los cambios quedan en codigo en `main`.
+- Estado final de esta entrega: `IMPLEMENTED_UNVERIFIED` en app. La QA humana en dispositivo (Arena -> seleccion de rival -> combate -> recompensas) sigue pendiente; no se declara `PASS`, `OPERATIONAL` ni `TIER1_READY`.
+- Deuda declarada: ningun jugador no-QA tiene mazo (>=5 cartas) hoy, por lo que en cuentas nuevas la Arena seguira cayendo al entrenamiento IA hasta que existan mazos reales.
+
+---
+
+## 2026-09-07 — VE-PVP-2-OPPONENT-SELECTION-DECK-AWARE — FIXED / PUBLISHED
+
+- `mobile/lib/supabase.ts` `findOpponents` dejaba de usar `get_leaderboard` (mezcla bots, admin y jugadores sin mazo) como fuente de oponentes PVP. Ahora llama `get_pvp_opponents` (RPC canonica, excluye sistema/admin/QA y ordena con `has_deck` primero), con respaldo de solo lectura a `get_leaderboard` si el RPC no existe en un perfil antiguo.
+- Tipo `Opponent` extendido con `has_deck: boolean`.
+- Guardia `scripts/verify-mobile-battle.mjs` ampliada: exige `get_pvp_opponents` + `has_deck` en la capa de datos. Resultado: 18/18 checks OK; bundle esbuild de `supabase.ts` OK.
+- Estado honesto: la RPC `get_pvp_opponents` en produccion aun devuelve cuentas sin mazo en su lista (la excluye de ordenarlas mal, no de listarlas); la correccion de su SQL queda como deuda (VE-PVP-3, requiere migracion). QA autenticado E2E en app sigue pendiente.
+
+## 2026-09-07 — VE-PVP-1-BATTLE-RESOLVE-BROKEN — ROOT_CAUSE_CONFIRMED / NOT_FIXED
+
+- Sesión dedicada a reparar PVP. Se volcó el cuerpo completo de `public.vexforge_battle_resolve` (1157 líneas) del proyecto oficial `rscuzqnfccqvltkdcdny` y se reprodujo el RPC por SQL con claims JWT de la cuenta QA autorizada `cristiangalvez815@gmail.com` (`sub` `a70f8be8-15b5-4634-9b0d-6202bb41491c`), como `postgres` y con `SET LOCAL ROLE authenticated`.
+- Descartada la hipótesis previa: no hay ningún `UPDATE`/`DELETE` sin `WHERE` en el RPC, ni en los 16 triggers de `pvp_matches`, ni en `safe_wallet_transaction`. El mensaje `UPDATE requires a WHERE clause` (21000) no es reproducible hoy.
+- Causa raíz confirmada y reproducible: el RPC llama `wallet_tx(..., p_direction => 'in', ...)` y `safe_wallet_transaction` castea `p_direction::ledger_entry_type` al insertar en `economy_ledger`. El enum no admite `'in'` → `{"ok":false,"error":"invalid input value for enum ledger_entry_type: \"in\"","sqlstate":"22P02"}`. La transacción aborta en la fase 16 (recompensas) y ninguna batalla se completa.
+- Verificado además que los 15 jugadores tienen `player_wallet` (no hay riesgo de `WALLET_NOT_FOUND`) y que sigue vigente la deriva de oponentes sin mazo en `get_pvp_opponents`.
+- No se aplicó ninguna migración ni cambio de esquema en esta sesión: sólo lectura y diagnóstico. El plan de reparación exacto (migración `0044_ve_pvp_1_battle_resolve_ledger_enum.sql`, re-prueba con la cuenta QA, `listOpponents()` → `get_pvp_opponents`, mazos de oponentes) queda escrito en `docs/VE-PVP-1-BATTLE-RESOLVE-BROKEN.md`.
+- Estado final de esta entrega: `ROOT_CAUSE_CONFIRMED / NOT_FIXED`. No se declara `PASS`, `OPERATIONAL` ni `TIER1_READY`.
+
+---
+
+## 2026-09-07 — VE-MOB-6-TUTORIAL / COMPLETION SURFACE — PUBLISHED / IMPLEMENTED_UNVERIFIED
+
+- Preflight reconciliado contra el inventario Android y la continuidad publicada en `main` (`09f35cba35b833f22e4cddaf37a6f4f324825fe4`). La unidad elegible es VE-MOB-6-TUTORIAL; no se abre VE-MOB-7 mientras la QA humana siga pendiente.
+- Corrección Android acotada: `CompletedState` conserva la superficie visual `tutorial` después de completar u omitir el recorrido, en vez de renderizar la atmósfera de `missions`. Se añadió una guarda específica para impedir la regresión.
+- Guardas locales: Tutorial 15/15, Deck 13/13, Auth 13/13, telemetría 5/5, sintaxis de la guarda y `git diff --check` pasan. No se modifican Auth, progreso autoritativo, RLS, RPCs, economía, combate, datos ni assets.
+- `DELIVERY_TYPE`: `OTA_UPDATE` · runtime `1.0.0` · app `1.0.0` · canal `production`. Por tocar `mobile/**`, también se requiere el workflow APK correlativo.
+- OTA 7 / run `34069722139`, `verify` 215 / run `34069717401` y APK 118 / run `34069717382` terminaron `success` sobre `84089a426f6a7b790ef5092fa28f3bc06be84bb3`. El registro Supabase quedó `PUBLISHED` como `OTA_UPDATE`, runtime `1.0.0`, canal `production`, bundle SHA-256 `11b2b4e315597ade947780fea99b6a4a2bd6fca3c51f590bedf1e066d22f6d0e` y manifest SHA-256 `255c93d2e17b7a72fb54137548e24b0c0389ba08a3d8a226e47901c86f927e78`.
+- Release: https://github.com/grandmaster68081-byte/Vexforge-web/releases/tag/vexforge-android-build-118 — `app-release.apk`, 95,326,364 bytes, SHA-256 `0d03ad90be6e9839c74388020f43dcf900b2ab0df2e5f4f11d59d9a436a1373c`.
+- Estado final de esta entrega: `IMPLEMENTED_UNVERIFIED`. La QA visual/táctil humana de Tutorial y TalkBack sigue pendiente; no se declara `PASS`, `OPERATIONAL` ni `TIER1_READY`.
+
+---
+
+## 2026-09-06 — OTA PUBLISH RETRY / BUCKET IDEMPOTENCY — PUBLISHED / IMPLEMENTED_UNVERIFIED
+
+- El workflow OTA 5 exportó correctamente el bundle Android del commit `b2686baf4cd98d4b589202a95567f4b262f46c85`, pero terminó al crear el bucket porque Supabase respondió HTTP 400 con `BucketAlreadyExists` y código interno 409; se conservó como evidencia de la primera tentativa fallida.
+- Se ajustó `mobile/scripts/publish-ota.mjs` para aceptar sólo ese duplicado idempotente conocido —HTTP 409 o HTTP 400 con `BucketAlreadyExists`/`resource already exists`— y seguir rechazando cualquier otro error.
+- No se modifican Auth, RLS, RPCs, economía, combate, datos de jugador ni assets canónicos. La corrección permanece en el carril `OTA_UPDATE`, runtime `1.0.0`, canal `production`.
+- El workflow OTA 6 / run `34067735819` terminó `success` sobre `44ecb9bc600303a6a4cbed48ed9830b5f5a5da94`; el registro Supabase quedó `PUBLISHED` como `OTA_UPDATE`, runtime `1.0.0`, canal `production`, bundle SHA-256 `7d21a9c5b26969be2b87b4cdee28158d16e36f8c35192f91cef43576735e2fa7` y manifest SHA-256 `689200be7adc0efed975443a930a19d64fda7dc998d9a899851e5ad7208ce27f`.
+- El workflow `verify` 213 / run `34067730930` y el workflow `Build VEXFORGE Android APK` 117 / run `34067730913` terminaron `success`. Release: https://github.com/grandmaster68081-byte/Vexforge-web/releases/tag/vexforge-android-build-117 — `app-release.apk`, 95,326,364 bytes, SHA-256 `b300baedef4106b473e0a4208350846dc326704682efc2cc1b40023c68e72723`.
+- Estado final de esta entrega: `IMPLEMENTED_UNVERIFIED`; la QA visual/táctil humana del APK y TalkBack sigue pendiente. No se declara `PASS`, `OPERATIONAL` ni `TIER1_READY`.
+
+---
+
+## 2026-09-06 — VE-MOB-5-DECK / ACCESSIBILITY STATE — IMPLEMENTED_UNVERIFIED
+
+- Preflight reconciliado contra el protocolo vivo de Supabase, `CONTINUITY.md`, `VE-MOB-0`, `VE-MOB-5-DECK` y el código real de `main`. La superficie sigue siendo exclusivamente Android y la web permanece congelada.
+- `DELIVERY_TYPE`: `OTA_UPDATE` · `SECTION_ID`: `VE-MOB-5-DECK-A11Y-DISABLED-STATE` · runtime `1.0.0` · app `1.0.0` · `versionCode` `3` · canal `production`.
+- Corrección acotada en `mobile/app/(tabs)/deck.tsx`: una carta seleccionada que alcanzó el límite de copias sigue siendo una acción válida para retirarla, por lo que TalkBack ya no la anuncia como deshabilitada; los límites, `validate_deck`, `save_deck`, datos, Auth, RLS, RPCs, economía y combate no cambian.
+- Guardas locales: `verify-mobile-deck` 13/13, `verify-mobile-auth` 13/13, telemetría Android con 5 eventos canónicos y `git diff --check` pasan. Typecheck móvil y la entrega oficial quedan delegados al workflow correlativo.
+- Estado: `IMPLEMENTED_UNVERIFIED` tras el commit `44ecb9bc600303a6a4cbed48ed9830b5f5a5da94`, OTA 6, `verify` 213 y APK 117 exitosos. La QA táctil humana continúa pendiente; no se declara `PASS`, `OPERATIONAL` ni `TIER1_READY`.
+
+---
+
+## 2026-09-06 — VE-MOB-7 AI FALLBACK / EMPTY PLAYER POOL — IMPLEMENTED_UNVERIFIED
+
+- El operador reportó que Arena quedaba en espera cuando no había forjadores reales. El preflight confirmó que el flujo Android sólo consultaba `get_leaderboard` y que `vexforge_battle_resolve` exige dos jugadores reales; los registros nominales de entrenamiento no tenían cartas ni ranking válido para resolver una partida PvP.
+- Android conserva el camino PvP autoritativo y ahora, cuando una consulta exitosa devuelve cero oponentes, entra automáticamente en el modo de entrenamiento IA existente (`client_ai_v1`). También queda disponible una CTA manual `BATALLA RÁPIDA VS IA` cuando la lista está vacía.
+- El entrenamiento usa la formación Android cargada, se presenta como `SIN MMR`, no llama a `vexforge_battle_resolve`, no crea `pvp_matches` y no modifica VEX, economía, inventario, Auth, RLS ni RPCs. No se inventa un `player_id` IA ni se hace autoemparejamiento.
+- La guarda Android de batalla pasa `17/17` y `npm run verify:all` pasa localmente. El workflow oficial `verify` run 210 pasó y el workflow `Build VEXFORGE Android APK` run 115 terminó correctamente. Release: `vexforge-android-build-115`; APK SHA-256: `627302ec1495695db180ef47b6d6a9e76aa42ff961e7bc185d18ccd1c8931039`. El typecheck móvil oficial pasó; la unidad permanece `IMPLEMENTED_UNVERIFIED` hasta QA humana del APK.
+
+---
+## 2026-09-06 — ANDROID ACCESSIBILITY HARDENING / APK 114 — PUBLISHED / IMPLEMENTED_UNVERIFIED
+
+- Preflight reconciliado contra el protocolo vivo de Supabase, la continuidad, el inventario Android, el código de `main` y los gates activos. El alcance permaneció exclusivamente en Android; la web y los contratos autoritativos no se reabrieron.
+- El commit Android `98ef5f4252a0511274e643b2a5282612bb08a31c` completó el lote de accesibilidad de Rewards. La verificación web integral sobre ese commit terminó correctamente: build, identidad de datos, manifiesto, arte, motion, estados, contratos y guardas Android estáticas sin violaciones.
+- El workflow `verify`, run `208` / id `34059864552`, terminó `success`. El workflow oficial `Build VEXFORGE Android APK`, run `114` / id `34059864550`, terminó `success` con typecheck móvil, telemetría, prebuild Expo, Gradle, comprobación standalone y publicación.
+- Release: https://github.com/grandmaster68081-byte/Vexforge-web/releases/tag/vexforge-android-build-114 — `app-release.apk`, 95,323,044 bytes, SHA-256 `1f0ed3ed51e18cd7b13048f1eb77eadf1d514daafb47fbb657f4c76999d60770`.
+- No se modificaron web, Supabase, Auth, RLS, RPCs, economía, combate, Storage ni assets canónicos. La QA humana visual/táctil en dispositivo sigue pendiente; el estado correcto permanece `IMPLEMENTED_UNVERIFIED` y no se declara `PASS`, `OPERATIONAL` ni `TIER1_READY`.
+
+---
+## 2026-09-06 — VE-MOB-2-AUTH + VE-MOB-3-HOME — IMPLEMENTED_UNVERIFIED
+
+- Se corrigió el port Android sin tocar la web: login, registro y Google ahora llaman `ensure_player_row` con la sesión autenticada; si la provisión falla ya no se descarta silenciosamente. Los registros que requieren confirmación de correo no inventan una sesión ni ejecutan RPC sin identidad.
+- Se cerraron nombres de accesibilidad del Home para reintento, frente activo, misiones, Forja/recursos y economía; `ForgeButton` expone también el estado deshabilitado a TalkBack. No cambian rutas, datos, economía, combate, Auth del servidor, RLS, RPCs ni assets.
+- Guardas estáticas: `verify-mobile-auth` 13/13 y guardia Home 6/6. La instalación local quedó bloqueada por `package-firewall.replit.local` devolviendo HTTP 404 para `npm-package-arg@11.0.3`; el typecheck vinculante queda delegado al workflow oficial.
+- Commit Android publicado por GitHub REST: `49e7c6e11a430ad8ec63e8a0a04bdf93361b96ef`. Workflow APK oficial #109 / run `34057233446` está `in_progress`; release y `app-release.apk` quedan pendientes hasta su conclusión. La QA humana del APK sigue pendiente.
+
+---
+
+## 2026-09-06 — TIER-1-REPLIT-DIRECTIVE — ADDITIVE INTEGRATION
+
+- Preflight completado contra el protocolo vivo de Supabase, la continuidad, el inventario Android, el código de main y el plan histórico vexforge_forge_formation_engine_v1; este último permanece superseded y no se reabre.
+- El paquete aportado por el operador VEXFORGE_TCG_TIER1_2026_REPLIT_DIRECTIVE_ENHANCED_1788696578299.zip se integró como addendum oficial independiente: documento Supabase vexforge_tier1_replit_directive_enhanced_2026, versión 2026.09.06-additive, y carpeta textual docs/VE-TIER1-REPLIT-DIRECTIVE-2026/ en GitHub. SHA-256 del ZIP: c386172478f9e2c271c3967df68574e47974f74f60b8dc3f6e24434723ca2875.
+- El Protocolo Maestro conserva todo su contenido previo y ahora enlaza esta capa con precedencia explícita: protocolo, contratos Supabase y VE-MOB primero; addendum después; capturas y tablero solo como referencia de diseño.
+- Se incorporan sin reemplazo los Gates 0–10, las iteraciones 0–8, el scorecard, la matriz de regresión, el ciclo autónomo de reparación, el handoff humano y la regla de usar uno o dos subagentes en paralelo cuando existan pistas independientes.
+- Esta integración es documental y de planificación; no modifica mobile/**, web, Auth, RLS, RPCs, economía, combate, Storage ni assets, y no crea un nuevo APK. La QA humana y cualquier estado PASS, OPERATIONAL o TIER1_READY siguen requiriendo evidencia real.
+- Próximo criterio: seleccionar la siguiente unidad Android elegible desde el inventario, aplicar primero los gates funcionales y de integridad, y actualizar evidencia por unidad sin saltar la precedencia.
+
+---
+## 2026-09-06 — OTA-METADATA-FILEMETADATA / APK 107 — PUBLISHED / IMPLEMENTED_UNVERIFIED
+
+- Preflight reconciliado mediante HTTPS contra la fila activa `vexforge_master_protocol_v2` en Supabase (`v2.14-automatic-ota-cycle`), `CONTINUITY.md`, el inventario Android, el plan histórico `vexforge_forge_formation_engine_v1` (superseded) y el código de `main`. El protocolo vivo y la copia de `main` coinciden byte a byte.
+- El tercer intento controlado de OTA del arreglo Expo 54 terminó `success`: workflow `Publish VEXFORGE OTA Section Update`, run `33998619706` / run `4`, sobre `b9d4f414a70944db6f8176b9e0b08e5ff69f808a`. La exportación Android, publicación del manifiesto y registro Supabase pasaron.
+- El registro `VE-UXCX-6-LEGACY-RECORD` quedó `PUBLISHED` como `OTA_UPDATE`, runtime `1.0.0`, canal `production`; launch bundle SHA-256 `b0fb590545141ed59a83de94f56bb1722423f3991e9bf14a0c60b9f8476fd958`; manifest SHA-256 `80277a768037eb5bf01e1fa960ad8532acaf0a20c9171263471539193f660893`.
+- La rama `main` continuó con cambios Android posteriores y el commit actual previo a esta nota es `422cb2e77bb042bcb032a336bc5dddbed1994f4c`; el workflow Android run `34027136813` / build `107` y `verify` run `34027136811` terminaron `success`. Release: https://github.com/grandmaster68081-byte/Vexforge-web/releases/tag/vexforge-android-build-107 — `app-release.apk`, 95,321,952 bytes, SHA-256 `d3f81185bea250eb3a42b76c5eb170bb48bbd6af13b0cd0f51493b23b5daee9c`.
+- No se modificaron web, Supabase, Auth, RLS, RPCs, economía, combate ni assets en esta reconciliación. La QA humana visual/táctil sigue pendiente; el estado correcto permanece `IMPLEMENTED_UNVERIFIED`, sin declarar `PASS`, `OPERATIONAL` ni `TIER1_READY`.
+
+---
+## 2026-09-06 — VE-MOB-7-BATTLE-VIS / ARENA STATES — IMPLEMENTED_UNVERIFIED
+
+- La Arena adopta el contrato `DomainState` para clasificación no disponible, formación vacía/error, lista de oponentes vacía y fallos de consulta; cada estado conserva retry, `testID`, accesibilidad, reduced-motion y feedback haptic seguro.
+- La unidad sigue presentando únicamente rango, oponentes, formación, turnos y resultado devueltos por Supabase/RPC; no se añadió cálculo local de combate, daño, ganador, recompensa ni economía.
+- El alcance es Android `mobile/**`; web, Auth, RLS, RPCs, Storage, datos y contratos autoritativos permanecen intactos. La evidencia de typecheck/prebuild/Gradle/APK queda delegada al workflow oficial correlativo.
+- Estado: `IMPLEMENTED_UNVERIFIED`. No se declara `PASS`, `TIER1_READY` ni `OPERATIONAL` sin release correlativo y QA humana de Arena.
+
+---
+
+## 2026-09-06 — VE-UXCX-7 / SHARED DOMAIN STATES — IMPLEMENTED_UNVERIFIED
+
+- Se extendió `DomainState` a las rutas Android activas de Economía, Sistemas, Misiones, Social, Forja/Tienda, Mundo, Arena y Formación; se conservaron los estados contextuales internos, el copy canónico y los datos reales.
+- Loading, vacío y error comparten ahora skeleton, motion, reduced-motion, accesibilidad, haptics seguros, `testID` y acciones de reintento donde el flujo las soporta. No se tocaron web, Supabase, Auth, RLS, RPCs, economía autoritativa, combate ni Storage.
+- `mobile/scripts/verify-telemetry.mjs` pasa localmente. El typecheck local no es ejecutable en la copia HTTPS porque no contiene `node_modules`; la autoridad de typecheck, prebuild, Gradle, APK standalone y release queda en el workflow oficial.
+- La unidad permanece `IMPLEMENTED_UNVERIFIED`; no se declara `PASS`, `TIER1_READY` ni `OPERATIONAL` sin workflow correlativo y QA humana visual/táctil.
+
+---
+
+## 2026-09-05 — VE-UXCX-7 / APK BUILD 103 — IMPLEMENTED_UNVERIFIED
+
+- Commit Android: `8c7d26e35659ddff3165729f2cd160e0f094a51d`.
+- Workflow oficial `Build VEXFORGE Android APK`, run `34000226516` / build `103`: `success`; pasaron typecheck móvil, telemetría, prebuild Expo, Gradle release, comprobación de `assets/index.android.bundle` y publicación.
+- Workflow `verify`, run `34000226548` / build `194`: `success`.
+- Release: https://github.com/grandmaster68081-byte/Vexforge-web/releases/tag/vexforge-android-build-103 — asset `app-release.apk`, 95,325,960 bytes, SHA-256 `e4b0eee2fa8fc5de2b1473339b3fc92107f64021cdc506843c54e28cf707f471`.
+- La APK queda publicada como artefacto técnico instalable. La unidad permanece `IMPLEMENTED_UNVERIFIED` porque la QA humana y la revisión visual Q4 siguen fuera de este alcance; no se declara `PASS`, `TIER1_READY` ni `OPERATIONAL`.
+
+---
+
+## 2026-09-05 — VE-UXCX-7 SYSTEM STATES / ROUTE HEALTH — IMPLEMENTED_UNVERIFIED
+
+- Se inició la Iteración 7 sobre `main` sin reabrir FOJA, ARENA, ARCHIVO, FORJA ni LEGADO: los estados compartidos ahora usan el contrato de motion existente, loading incluye una lectura tipo skeleton y los reintentos haptic fallan de forma segura.
+- La ruta inexistente dejó de mostrar el fallback genérico en inglés y ahora vuelve al Nexus con shell visual, lenguaje de Forja, estado de error explícito y `testID` para evidencia.
+- `ScreenShell`, `DomainState`, Perfil y la navegación raíz consumen tokens compartidos o copy canónico; no se modifican web, Supabase, Auth, RLS, RPCs, economía, combate ni datos autoritativos.
+- Verificaciones locales: `verify:telemetry`, `verify:motion`, `verify:ui-identity`, `verify:mobile-auth` y la comprobación de whitespace pasan. El typecheck móvil queda delegado al workflow oficial porque esta copia HTTPS no tiene dependencias instaladas localmente.
+- Al tocar `mobile/**`, esta unidad requiere el workflow APK oficial y su release correlativo. Permanece `IMPLEMENTED_UNVERIFIED`; no se declara `PASS`, `TIER1_READY` ni `OPERATIONAL` sin evidencia APK y QA humana separada.
+
+---
+
+## 2026-09-05 — VE-MOB-3 HOME / APK BUILD 92 — IMPLEMENTED_UNVERIFIED
+
+- Commit Android: `bb1d0842b971e76bc62fa74a69a37113d21073a5`.
+- Workflow oficial `Build VEXFORGE Android APK`, run `33957157748`: `success`; completó instalación, `npm run typecheck`, `npm run verify:telemetry`, prebuild Expo, compilación release y comprobación del bundle JS embebido.
+- Workflow `verify`, run `33957157749`: `success`.
+- Release: https://github.com/grandmaster68081-byte/Vexforge-web/releases/tag/vexforge-android-build-92 — asset `app-release.apk`, 95,305,264 bytes, SHA-256 `305a1cace9edc3c0bbc0fa05adf39ec95ca9bdd2e395d3757d7aa1603b921194`.
+- La APK queda publicada para instalación y contiene `assets/index.android.bundle`; la unidad permanece `IMPLEMENTED_UNVERIFIED` porque la QA humana y la revisión visual Q4 siguen fuera de este alcance.
+
+---
+
+## 2026-09-05 — VE-MOB-3 HOME / AMBIENT PARTICLES — IMPLEMENTED_UNVERIFIED
+
+- Se añadió una capa ambiental ligera en la escena FOJA: ocho partículas deterministas con deriva lenta, escala y opacidad animadas; no usa arte genérico ni modifica contratos.
+- El color procede del token de acento de VEXFORGE y el campo completo queda estático cuando `reduced-motion` está activo.
+- Se conserva la jerarquía de la escena, los portales reales, los estados de carga/error y la CTA de arena; se añadió `testID="home-scene"` para evidencia de superficie.
+- `verify:mobile-auth`, `verify:motion`, `verify:telemetry`, `verify:ui-identity` y `git diff --check` pasan. El typecheck local queda sin evidencia porque `npm ci --ignore-scripts` fue rechazado por el firewall del paquete `npm-package-arg@11.0.3`; no se interpreta como regresión.
+- La unidad permanece `IMPLEMENTED_UNVERIFIED`; se requiere el workflow APK oficial y QA visual/táctil del operador. No se declara `PASS`, `Q4`, `TIER1_READY` ni `OPERATIONAL`.
+
+---
+
+## 2026-09-05 — VE-MOB-3 HOME / APK BUILD 90 — IMPLEMENTED_UNVERIFIED
+
+- Commit de producto Android: `f2717af4279e478c5479c5656359a7fbe703866f`; el tag `vexforge-android-build-90` apunta exactamente a ese commit.
+- Workflow Android run `33950579818` / build `90`: `success`. Pasó instalación de dependencias, `npm run typecheck`, `npm run verify:telemetry`, Expo prebuild, compilación installable y verificación de APK standalone.
+- Release: https://github.com/grandmaster68081-byte/Vexforge-web/releases/tag/vexforge-android-build-90 — asset `app-release.apk`, SHA-256 `695d4299ff7eefe5619045b492878a696c81533d26fabefc3157cf268d55b475`.
+- Verify run `33950579924` ejecutó typecheck y guards móviles, pero terminó `failure` sólo en `verify-card-art` por HTTP 429 transitorio de Storage para `cards/uncommon_elementalista_del_fuego.jpg`; no se reinterpretó como fallo de Home ni se fabricó evidencia.
+- La APK queda publicada para instalación, pero la unidad permanece `IMPLEMENTED_UNVERIFIED`: falta QA humana de instalación/recorrido y la verificación visual Q4. No se declara `PASS`, `Q4`, `TIER1_READY` ni `OPERATIONAL`.
+
+---
+
+## 2026-09-05 — VE-MOB-3 HOME / PROGRESS + STATES — IMPLEMENTED_UNVERIFIED
+
+- El Home Android añade un pulso de progreso dentro de la escena usando `player_progress` real: nivel, XP y avance del rito de entrada; no se crean datos ni autoridad local.
+- El HUD de conexión distingue online, sincronización y offline, y el frente sin evento deja de mostrarse como `EN VIVO`; esto conserva estados honestos durante carga, desconexión y ausencia de actividad.
+- Los portales existentes, la CTA de arena y la entrada real `home-tutorial` hacia `/tutorial`, junto con el arte oficial, `reduced-motion` y los `testID` del Home, se conservan sin dependencias nativas ni cambios en Supabase/Auth/RLS/RPC/economía.
+- El cambio es compatible con runtime Android `1.0.0`; por tocar `mobile/**`, requiere el workflow APK oficial y release correlativo. Se mantiene `IMPLEMENTED_UNVERIFIED` y no se declara `PASS`, `Q4`, `TIER1_READY` ni `OPERATIONAL` sin evidencia APK y QA humana.
+
+---
+
+## 2026-09-05 — VE-MOB-3 HOME / FOJA — COMPOSICIÓN DE ESCENA REFORZADA
+
+- La segunda pasada visual mueve los cinco dominios dentro del primer viewport como puntos orbitales laterales alrededor de la reliquia viva; se elimina el listado vertical duplicado que hacía que el Home se leyera como dashboard.
+- El frente activo puede sumar una segunda capa ambiental oficial de facción (`factions/bg_guerrero.jpg`, `bg_mago.jpg`, `bg_paladin.jpg`, `bg_picaro.jpg`) según la carta diaria real; no se introduce avatar genérico.
+- La carta destacada queda como foco escénico sin tarjeta administrativa de ancho completo; la CTA de arena, el frente y la exploración permanecen integrados alrededor de la escena.
+- Verificación de esta iteración: `npm run typecheck`, `npm run verify:telemetry` y export Android de Expo pasan. Continúa `IMPLEMENTED_UNVERIFIED`; aún falta workflow APK y QA visual/táctil humana.
+
+---
+
+## 2026-09-05 — VE-MOB-3 HOME / FOJA — LIVING HUB BASE IMPLEMENTED_UNVERIFIED
+
+- Se reconstruyó `mobile/app/(tabs)/index.tsx` sobre el estado real de `main` siguiendo `VE-HOME-LIVING-HUB-01`: la primera vista ahora es una escena vertical con objeto de carta real, acción de arena y camino de puntos de interés.
+- Los cinco dominios visuales se representan sin rutas nuevas ni lógica duplicada: Cartas (`/collection`), Forja (`/deck`), Mundo (`/world`), Social (`/social`) y Perfil (`/profile`). Batalla (`/battle`) queda como acción primaria del gameloop.
+- El scroll añade parallax ligero entre escena y contenido; las señales de retorno, energía, cartas, VEX, evento, misión y actividad siguen viniendo de `GameContext`/Supabase. `reduced-motion`, estados de carga/error y feedback de press se conservan.
+- Verificación local: `mobile` typecheck, `verify:telemetry`, export Android de Expo y `expo prebuild --platform android --no-install --non-interactive` pasan. Gradle local no pudo ejecutarse porque el contenedor no tiene Java; queda pendiente el workflow APK oficial.
+- Estado: `IMPLEMENTED_UNVERIFIED`. No se declara `PASS`, `TIER1_READY` ni `OPERATIONAL` sin el workflow oficial y la QA visual/táctil humana en dispositivo.
+
+---
+
+## 2026-09-05 — VE-9 ANDROID — APK RELEASE 85 PUBLISHED
+
+- El commit `affba20af4ca1b35722851a6852392ab10f99124` terminó con `success` en el workflow Android run `33940189565`.
+- Pasaron instalación de dependencias, typecheck, guard de telemetría, `expo prebuild`, Gradle release, verificación de `assets/index.android.bundle` y publicación del APK.
+- Release técnico: https://github.com/grandmaster68081-byte/Vexforge-web/releases/tag/vexforge-android-build-85
+- APK: `app-release.apk`, 95,300,860 bytes, SHA-256 `8cbb7bff49ec5e1b08ebeddfdd0ee17dc3706fab5f9f85aa791f2fe2913bb2cd`.
+- El lote Home/Perfil de reduced motion queda entregado técnicamente; continúa `IMPLEMENTED_UNVERIFIED` por QA humana pendiente. No se declara `PASS`, `TIER1_READY` ni `OPERATIONAL`.
+
+---
+
+## 2026-09-05 — VE-9 ANDROID — REDUCED MOTION EN HOME Y PERFIL
+
+- Home y Perfil Android ahora desactivan sus entradas `FadeIn`/`FadeInDown` cuando `useReducedMotion` está activo; los datos, el orden, los estados y la navegación permanecen iguales.
+- El fallback cubre la atmósfera común de `ScreenShell`, la escena/entradas de Home y el encabezado, identidad, rango y logros de Perfil.
+- Verificación local: `npm run typecheck` y `npm run verify:telemetry` pasan; el guard confirma los 5 eventos canónicos y consumidores Android.
+- Este lote toca `mobile/**`; se publicará por el workflow APK y quedará `IMPLEMENTED_UNVERIFIED` hasta la evidencia técnica y la QA humana separada.
+
+---
+
+## 2026-09-05 — VE-9 ANDROID — APK RELEASE 84 PUBLISHED
+
+- El commit `32715935810de60e4991210331844257df8b0268` terminó con `success` en el workflow Android run `33938587293`.
+- Pasaron instalación pública de dependencias, typecheck, guard de telemetría, `expo prebuild`, Gradle release, verificación de `assets/index.android.bundle` y publicación del APK.
+- Release técnico: https://github.com/grandmaster68081-byte/Vexforge-web/releases/tag/vexforge-android-build-84
+- APK: `app-release.apk`, 95,300,600 bytes, SHA-256 `cb2a0819b5e80bd24c300f9b0afaf3645e79072eafcb58d2490e95124a73395d`.
+- El gate técnico queda cumplido para esta unidad; continúa `IMPLEMENTED_UNVERIFIED` por QA humana pendiente. No se declara `PASS`, `TIER1_READY` ni `OPERATIONAL`.
+
+---
+
+## 2026-09-05 — VE-9 ANDROID — REDUCED MOTION IN SCREEN SHELL
+
+- `mobile/components/ScreenShell.tsx` ahora respeta `useReducedMotion`: detiene el pulso ambiental compartido y mantiene la atmósfera en un estado estático cuando el sistema solicita reducir movimiento.
+- La corrección no cambia navegación, datos, RPCs, economía, Auth ni el contenido visual oficial; sólo evita la animación ambiental común bajo reduced motion.
+- Verificación local completada: `npm run typecheck` y `npm run verify:telemetry` pasan con los 5 eventos canónicos y transporte Android.
+- Al tocar `mobile/**`, el workflow APK debe producir el siguiente release completo. El estado seguirá `IMPLEMENTED_UNVERIFIED` hasta la publicación técnica y la QA humana separada.
+
+---
+
+## 2026-09-05 — ANDROID DELIVERY — APK RELEASES 82/83 PUBLISHED
+
+- El workflow `Build VEXFORGE Android APK` terminó en `success` para los dos commits: `e213768e30c5a489838368ccbb5a1b6c05e638cf` (run 33937274698) y `3ac37d65f1bc60cffd10885b68f017f6b5b48c44` (run 33937352689).
+- Se publicaron los artefactos completos `vexforge-android-build-82` y `vexforge-android-build-83`, ambos con `app-release.apk`, bundle Android embebido verificado y tamaño aproximado de 95 MB.
+- Release 82: https://github.com/grandmaster68081-byte/Vexforge-web/releases/tag/vexforge-android-build-82
+- Release 83: https://github.com/grandmaster68081-byte/Vexforge-web/releases/tag/vexforge-android-build-83
+- Esto confirma la entrega técnica de la base Android y del cambio de idempotencia PvP. No equivale a QA humana ni permite declarar `PASS`, `TIER1_READY` u `OPERATIONAL` sin esa evidencia separada.
+
+---
+
+## 2026-09-04 — ANDROID PVP — IDEMPOTENCY SURVIVES RETRIES
+
+- `mobile/lib/supabase.ts` ya persiste la clave de idempotencia por pareja jugador/oponente antes de llamar a `vexforge_battle_resolve`; un timeout o refresh reutiliza la misma resolución en vez de crear otra partida.
+- La clave se limpia tras una respuesta exitosa o un rechazo explícito del servidor, pero permanece ante errores de transporte para permitir un reintento seguro. Las llamadas concurrentes comparten la misma promesa de creación.
+- Verificación local completada: `npm run typecheck` y `npm run verify:telemetry` pasan; el guard confirma los 5 eventos canónicos y su transporte Android.
+- Este cambio toca `mobile/**`, por lo que el workflow APK oficial debe compilar y publicar el release correlativo antes de marcar esta sección como verificada. No se declara `PASS` sin el resultado oficial del workflow.
+
+---
+
+## 2026-09-04 — ANDROID BASE APK — INSTALL TRANSPORT REPAIRED
+
+- Se reprodujo el bloqueo del workflow oficial en un entorno limpio: `npm ci` no puede consumir el lockfile porque conserva URLs internas del firewall de paquetes de Replit; el error es de transporte de dependencias, no de Expo, Gradle ni credenciales.
+- La ruta que evita el lockfile y fuerza `https://registry.npmjs.org/` fue validada localmente con el manifiesto oficial: `npm install --package-lock=false --legacy-peer-deps --ignore-scripts` instaló 796 paquetes y dejó `node_modules/.bin/expo` disponible.
+- Se actualizó únicamente `.github/workflows/vexforge-android-apk.yml`: cache basada en `mobile/package-lock.json`, registro público explícito y reintentos de descarga npm con backoff; no se modifica `mobile/**`, la lógica del juego ni Supabase.
+- El workflow Android debe ejecutarse sobre este commit para confirmar typecheck, prebuild, Gradle, bundle standalone y release correlativo. Hasta ese resultado, la base OTA permanece `IMPLEMENTED_UNVERIFIED` y no se declara release publicado.
+
+---
+
+## 2026-09-04 — ANDROID BASE APK — CI INSTALL RECOVERY IN PROGRESS
+
+- El workflow oficial del commit `0fc528f3d6e0894edab7c8dc2aa36ef6a59c1406` alcanzó el runner y falló dos veces antes de typecheck/Gradle por `npm error Exit handler never called` durante `npm install`; no se generó release nuevo.
+- Se confirmó que el cambio de ese commit no altera `mobile/**`: sólo ajusta workflows, documentación y control de la entrega; la base OTA sigue siendo la aplicación Android del ciclo `runtimeVersion 1.0.0`.
+- Se corrigió únicamente `.github/workflows/vexforge-android-apk.yml` para que CI instale desde `mobile/package.json` con el registro público y sin consumir el lockfile con URLs internas de Replit. La ruta se reprodujo localmente con Expo CLI disponible.
+- No se modificaron web, lógica Android, Supabase, Auth, RLS, RPCs, Storage, firma ni datos. El release base permanece pendiente hasta que el workflow oficial termine en `success` y publique el APK correlativo.
+
+---
+
+## 2026-09-04 — AUTOMATIC SECTION DELIVERY — OTA SERVICE ACTIVATED
+
+- Se desplegó `vexforge-updates` en Supabase con protocolo Expo Updates; filtra Android/runtime/canal y nunca funciona como proxy abierto.
+- Se añadió `expo-updates` compatible con Expo 54 a la APK base, con runtime `1.0.0`, comprobación al iniciar, fallback embebido y canal production. La APK 72 anterior queda fuera de OTA por no contener el módulo.
+- Se añadió el workflow automático `vexforge-android-ota-release.yml`: exporta la sección, sube bundle/assets al bucket oficial, calcula SHA-256, registra `PUBLISHED` y muestra al final la URL de actualización.
+- `mobile/scripts/dispatch-section-release.mjs` es la orden estándar de la IA: `OTA_UPDATE` publica actualización; `NATIVE_PLAY_RELEASE` despacha el carril AAB. No se crean APK parciales.
+- La clave de almacenamiento de Supabase quedó configurada como secreto de GitHub; no se guardó en el repositorio ni en Supabase como dato de la aplicación.
+- Siguiente base: la APK/AAB compilada desde este commit. Sólo esa base podrá recibir las OTA futuras del runtime `1.0.0`.
+
+---
+
+## 2026-09-04 — ANDROID RELEASE CONTROL PLANE — T0 IMPLEMENTED
+
+- Se reconcilió la copia de GitHub con el protocolo activo de Supabase por API REST HTTPS. Supabase queda en `v2.13-play-aab-ota-control-plane` y conserva la política Android por sección.
+- Se creó y aplicó `public.vexforge_android_release_registry`: clasifica cada sección como `OTA_UPDATE` o `NATIVE_PLAY_RELEASE`, conserva runtime, canal, rollout, hashes, validaciones, rollback y estado; sólo permite lectura de releases `PUBLISHED` desde clientes.
+- Se fijó el baseline técnico Android: package inmutable `com.vexforge.android`, runtime `1.0.0`, target API `35` y `versionCode` monotónico inicial `3`.
+- Se añadió el workflow manual `.github/workflows/vexforge-android-aab-candidate.yml`, separado del APK de QA. Exige upload key no-debug, genera AAB firmado y APK de QA, valida target API, tipo de entrega, bundle standalone y publica artefactos candidatos.
+- La descarga por sección queda organizada: OTA sólo para cambios compatibles con runtime mediante manifiesto Expo HTTPS; cualquier cambio nativo va por AAB/Play. No se crean APK parciales ni se anuncia `PLAY_COMPATIBLE_CANDIDATE`, `SECTION_UPDATE_READY` o `PLAY_STORE_READY` sin evidencia.
+- Bloqueos explícitos: faltan upload key/Play App Signing/track interno y endpoint de manifiesto Expo Updates. La app mantiene fallback embebido y no se activa una OTA falsa.
+
+---
+
+## 2026-09-04 — PLAY STORE + ACTUALIZACIONES POR SECCIÓN — PLAN OFICIAL
+
+- Se revisó la configuración Android oficial: el workflow actual sólo publica APK con assembleRelease y firma debug; app.json conserva com.vexforge.android con versionCode 2; expo-updates no está instalado; el APK 72 queda clasificado como QA_APK_BASELINE.
+- Se fijó el modelo de distribución: AAB firmado para Google Play; APK sólo para QA/sideload; OTA únicamente para cambios JS/assets compatibles con el runtime. Google Play puede optimizar la descarga del AAB, pero no se construyen APK parciales propios.
+- Se establecieron runtimeVersion, versionCode monotónico, Play App Signing, upload key fuera de Supabase, canales, rollback, hashes, manifiestos y gates PLAY_COMPATIBLE_CANDIDATE, SECTION_UPDATE_READY y PLAY_STORE_READY.
+- Supabase queda como autoridad de metadatos, compatibilidad, hashes, estado y rollback de releases; nunca almacena claves privadas, credenciales de Play ni tokens. La futura entrega OTA debe ser HTTPS y compatible con el protocolo Expo Updates.
+- No se modificó mobile/**, web, datos, Auth, RLS, RPCs, Storage, firma ni workflow de producto en esta sesión. El siguiente trabajo es T0 de release Android y requiere validar el target API vigente, el AAB firmado y el contrato OTA antes de implementar una sección.
+
+---
+
+## 2026-09-04 — VE-UI-TIER1-ANDROID-02 — T0 APK 72 BASELINE
+
+- Se ejecutó el T0 estático sobre el asset oficial app-release.apk del release vexforge-android-build-72: 91,802,119 bytes, SHA-256 9ab761c736dd19d09799a654647639d8d4a4e827db16d709a0fc167401d7a524.
+- El ZIP/APK pasó la comprobación CRC, contiene 1,247 entradas, assets/index.android.bundle, assets/app.config y cuatro ABIs: arm64-v8a, armeabi-v7a, x86 y x86_64.
+- El workflow correlativo run 33813451975 / número 72 terminó success sobre el commit a7ff094d0c42e13f9547c2529b5c457ccac8b2da. Esto valida la integridad del artefacto y la reproducibilidad del release, no el rendimiento ni el vertical slice.
+- El entorno de medición no tiene adb, emulador ni dispositivo Android conectado. Cold start, FPS, memoria, ANR/OOM, compatibilidad, reduced-motion, estados runtime, reconnect, vertical slice y QA humana quedan IMPLEMENTED_UNVERIFIED; no se fabrican métricas ni se promueve ANDROID_GAME_TIER1_CANDIDATE.
+- Se publicó el reporte docs/VE-UI-TIER1-ANDROID-02-T0-APK72-BASELINE.md. No se modificó mobile/**, la web, Supabase, contratos, datos, Storage, Auth, RPCs ni el release existente.
+
+---
+
+## 2026-09-04 — RECONCILIACIÓN DEL PLAN TIER 1 ANDROID — OFICIAL
+
+- Se completó el análisis del plan contra el protocolo vivo, el plan histórico ForgeFormation, la matriz viva de 45 objetivos, el inventario Android, el código móvil y el APK publicado más reciente (release 72).
+- La conclusión es que el plan sí puede llevar la APK a una experiencia Tier 1, pero sólo después de separar explícitamente el track funcional F-T0…F-T10 del track visual Android V-T0…V-T10 y hacer que ambos converjan en un gate bloqueante del vertical slice completo.
+- Se añadió al protocolo la definición de ANDROID_GAME_TIER1_CANDIDATE, TIER1_READY/OPERATIONAL y PUBLIC_LAUNCH_READY. Pagos, monetización, backup/restore, retención y métricas web quedan reclasificados como lanzamiento público o mantenimiento posterior; no bloquean la implementación Android durante QA interna.
+- Se corrigieron las métricas conceptuales para APK: rutas Android del inventario en lugar de 39 rutas web, dispositivos Android en lugar de desktop/iOS, cold start/frame pacing/ANR/OOM/memoria en lugar de LCP/bundle gzip, y estabilidad/reconnect en lugar de errores de consola web.
+- El gate vertical ahora exige HOME/FORJA → CAMPEÓN → COLECCIÓN → CARTA/INSPECTOR → MAZO/FORJA → FORMACIÓN → BATALLA → RESULTADO → RECOMPENSA → HOME con datos reales, settlement idempotente, estados honestos, cinco eventos canónicos, evidencia reproducible y nivel visual Q4 en superficies críticas.
+- No se modificó mobile/**, web, contratos, datos, Storage, Auth, RPCs ni releases. La QA humana sigue pendiente y las unidades continúan IMPLEMENTED_UNVERIFIED; no se declara PASS, TIER1_READY ni OPERATIONAL.
+
+---
+
+## 2026-09-03 — VE-UI-TIER1-ANDROID-01 — PLAN CANÓNICO INTEGRADO
+
+- Se reconcilió el plan visual adjunto con el protocolo maestro vivo, la ley Android-only, VE-MOB-0, la matriz visual, el código Android real y las capturas QA.
+- Se integró en Supabase como el bloque normativo PLAN OPERATIVO CANÓNICO — VE-UI-TIER1-ANDROID-01 y se sincronizó la copia de VEXFORGE_PROTOCOL_V2.md mediante GitHub REST HTTPS.
+- El plan convierte la reconstrucción visual en paquetes T0–T10 ligados a VE-MOB-* y gates Q0–Q5; prioriza VE-MOB-3 HOME / FORJA, separa visual de funcional, y conserva Auth, RLS, RPC, economía, combate, inventario, cartas, mazos y progresión sin cambios.
+- Se marcó vexforge_fase3_polish_battle_v1 como superseded por su orientación histórica/web; vexforge_forge_formation_engine_v1 ya permanecía superseded. Los dos quedan sólo como contexto y checkpoints compatibles.
+- No se modificó mobile/**, web, Storage, datos ni backend. VE-MOB-3 HOME sigue IMPLEMENTED_UNVERIFIED; no se declara PASS, OPERATIONAL ni TIER1_READY.
+- Siguiente paquete elegible: VE-MOB-3-HOME-SCENE, precedido por T0 de reconciliación y seguido por HERO/ACTION/CARD/PROGRESS y STATES.
+
+---
+## 2026-09-02 — VE-MOB-3 HOME / FORJA — CAPA VISUAL IMPLEMENTADA
+
+- La fuente remota de `main` y los consumidores Android se reconciliaron por GitHub REST HTTPS; no se usó Git como transporte ni se modificó la web congelada.
+- Se implementó el pase visual acotado en `mobile/app/(tabs)/index.tsx` y `mobile/components/ScreenShell.tsx`: Batalla rápida como primera llamada del home, paneles con profundidad y separación de capas, escena `lobby/main.jpg` con contraste cinematográfico y reporte explícito si falla el arte oficial.
+- No se alteraron Supabase, Auth, economía, combate, recompensas, inventario, navegación, contratos ni datos autoritativos; no se añadieron assets ni placeholders genéricos.
+- Evidencia local: `verify:telemetry` pasa 5/5 eventos canónicos; el parser TSX acepta los dos archivos modificados. `npm ci` no pudo iniciar el typecheck porque el firewall de paquetes devolvió HTTP 404 para `npm-package-arg@11.0.3`, sin modificar dependencias ni lockfile.
+- Estado: `IMPLEMENTED_UNVERIFIED`. No se declara `PASS`, `OPERATIONAL` ni `TIER1_READY`; queda pendiente el workflow Android oficial, el release correlativo y la QA humana visual.
+
+---
+## 2026-09-02 — VE-MOB-3 HOME / FORJA — QA VISUAL-FIRST ADOPTADA
+
+- Decisión explícita del operador: el primer dominio QA será Forja, correspondiente a `VE-MOB-3 HOME` y a las tres capturas de referencia de la pantalla completa.
+- Orden de trabajo inscrito: primero reconstrucción visual del home para alcanzar una experiencia de videojuego (escena, profundidad, tipografía, marcos, paneles, contraste, estados y motion); después matriz funcional de botones, enlaces, tabs y rutas con las capturas adicionales del operador.
+- La Fase VISUAL consume la escena canónica `lobby/main.jpg` mediante el registro móvil oficial y no autoriza emojis, placeholders, arte genérico ni lógica local autoritativa.
+- La Fase FUNCTIONAL verificará cada control visible y separará apariencia de comportamiento; una ruta o botón no se considera validado sólo por compilar o cambiar de pantalla.
+- El dominio permanece `IMPLEMENTED_UNVERIFIED`; no se declara `PASS`, `OPERATIONAL` ni `TIER1_READY`. La QA manual del operador y la evidencia del APK siguen siendo obligatorias.
+- Esta sesión actualiza el plan operativo y la primera capa visual Android sin tocar web, economía, combate, Auth, contratos ni datos autoritativos.
+
+---
+## 2026-09-02 — PREFLIGHT CI — STORAGE RATE-LIMIT EVIDENCE
+
+- El preflight oficial confirmó que `main` sigue en el commit documental `6fcad64d769fda6b0250307e912aaa673e72eaec`; la ley Android-only y la congelación web siguen vigentes.
+- El workflow `verify` run `33672460981` terminó `failure` en sus intentos 1 y 2, exclusivamente en `verify:card-art`, después de que typecheck, build y las guardas anteriores pasaran.
+- Los fallos fueron respuestas `HTTP 429` para cartas distintas (`cards/uncommon_explorador_de_sombras.jpg` y `cards/uncommon_maestro_de_las_runas.jpg`), lo que demuestra rate limiting intermitente durante el recorrido masivo, no un objeto fijo ausente.
+- Supabase confirma 127 filas en `public.cards` y 127 objetos bajo `vexforge-assets/cards/`; ambas rutas afectadas existen. Las comprobaciones directas actuales de esas rutas responden `HTTP 200`.
+- Se relanzó el job fallido mediante la API oficial; el segundo intento repitió el patrón con otra ruta. No se modifica el verificador, la web, Storage ni los datos: la ley vigente no permite corregir CI/web durante Android-only.
+- El release Android `vexforge-android-build-67` y las guardas Android no-QA permanecen válidos. No se declara `OPERATIONAL`, `PASS` ni `TIER1_READY`.
+
+## 2026-09-02 — PREFLIGHT + RECONCILIACIÓN ANDROID — NON-QA WORK COMPLETE
+
+- Se leyó el protocolo maestro vigente, la continuidad, el inventario oficial Android y el plan activo desde las fuentes oficiales; la ley Android-only y la congelación web siguen vigentes.
+- `main` estaba limpio en `0282c9c96a0be61d6209ed21a68f052381c93503`. El workflow Android oficial run `67` terminó `success` sobre `25f6caf373421d8fababb6875979282da6ef2bc8`, con typecheck, Expo prebuild, Gradle, bundle JS standalone y publicación del APK superados.
+- Las guardas no-QA de Android pasan: AUTH 13/13, DECK 13/13, BATTLE 15/15, REWARDS 12/12, PROFILE 13/13, TUTORIAL 14/14, STORE 11/11, ECONOMY 9/9, WORLD correcto, META 11/11 y telemetría 5/5 eventos canónicos.
+- VE-MOB-2 a VE-MOB-14 ya están implementadas y permanecen `IMPLEMENTED_UNVERIFIED` por la QA humana pendiente. VE-MOB-15 ADMIN permanece diferida por el inventario oficial; no se abre sin una decisión nueva del operador.
+- No se modifica `mobile/**` en esta reconciliación: no se crea un APK redundante ni se altera la evidencia del release 67. La web continúa sólo como referencia congelada.
+- El trabajo no-QA autorizado queda agotado para el port Android actual. No se declara `OPERATIONAL`, `PASS` ni `TIER1_READY`; la siguiente acción real es la QA del operador y, después, la selección de una unidad Tier 1 Android explícita.
+
+## 2026-09-01 — VE-VIS-6 — ANDROID TELEMETRY — IMPLEMENTED_UNVERIFIED
+
+- La implementación pendiente del loop de juego se ejecutó exclusivamente en Android: mobile/lib/telemetry.ts emite las cinco claves canónicas con transporte autenticado y best-effort.
+- Consumidores Android: GameContext para session_start/return_visit; store para forge_action; Battle para combat_resolved; Missions para reward_claimed. No se modificó ningún consumidor web.
+- Se añadió la guarda mobile/scripts/verify-telemetry.mjs y quedó conectada al package script y al workflow APK oficial. La guarda estática oficial pasa: cinco claves, transporte y consumidores presentes.
+- Commit de implementación Android: e9478ef66fd88112ff7523321b17956c2f2a1232. Corrección de guarda: 04d423a77a8976e4af77fccd8d83aeac8009d7ab. Workflow guard: 2ab6d414c593554192d9ebe4bb9878e00ff0770f. Documento de unidad Android: a68f7741a1c288de692c8d1eacaaf607ec120ae9.
+- Supabase continúa como autoridad: no se añadieron tablas, RPCs, datos ni lógica de juego. La cobertura viva de las cinco claves sigue pendiente de una sesión QA humana autorizada; game_loop_telemetry permanece PARTIAL y no se declara MET, PASS, OPERATIONAL ni TIER1_READY.
+- Evidencia oficial APK: workflow run 64 (`33533506162`) sobre el commit de implementación Android `04d423a77a8976e4af77fccd8d83aeac8009d7ab` terminó `success`; `typecheck`, `expo prebuild`, `assembleRelease`, verificación del bundle standalone y publicación pasaron. Release: https://github.com/grandmaster68081-byte/Vexforge-web/releases/tag/vexforge-android-build-64; `app-release.apk`, 91,794,303 bytes.
+- El run 66 (`33534888670`) sobre el `main` documental `25f6caf373421d8fababb6875979282da6ef2bc8` pasó `typecheck`, `verify:telemetry` y `expo prebuild`, pero permanece `in_progress` en Gradle; no se usa como evidencia adicional ni se fabrica un resultado.
+
+---
+## 2026-08-31 — GOVERNANCE — ANDROID-ONLY / WEB-FREEZE
+
+- Decisión explícita del operador: todo el trabajo restante del protocolo se ejecuta únicamente en la aplicación Android oficial bajo mobile/.
+- La web queda congelada como referencia de lectura para el port: no se permiten nuevas features, correcciones, refactors, telemetría, tests, assets ni unidades de producto web. Supabase solo cambia cuando una unidad Android lo requiera.
+- La ley quedó sincronizada byte a byte en Supabase como documento oficial y en GitHub main mediante el commit 460e4adc1d6257d9003ab632e6cbab41b449a003; la frase histórica de “superficie de mantenimiento” fue reemplazada para eliminar la ambigüedad.
+- Las actualizaciones de protocolo y continuidad son gobernanza/evidencia, no trabajo de producto web. No se modificó ningún archivo de implementación web en esta decisión.
+- A partir de ahora, una tarea sin unidad VE-MOB-*/Android explícita no es elegible; solo una nueva decisión oficial del operador puede levantar la congelación.
+
+---
+## 2026-08-31 — VE-VIS-7-FIRST-SESSION-FLOW — IMPLEMENTED_UNVERIFIED
+
+- Se corrigió el arranque de cuenta nueva: el tutorial web reacciona a `SIGNED_IN`/`SIGNED_OUT`/`TOKEN_REFRESHED` y deja de depender del primer montaje de la aplicación.
+- Se eliminó la modal de bienvenida duplicada para que exista un único recorrido persistente gobernado por `player_progress.tutorial_step`.
+- Android redirige una cuenta nueva al tutorial antes del shell de pestañas; el paso packs/forja abre la cámara `store` oficial y conserva los siete pasos.
+- El recorrido conserva el combate tutorial real y las mutaciones autenticadas existentes; se añadió observación `forge_action` al acceso de forja tutorial sin crear autoridad local.
+- Fuente web sincronizada en `vexforge_frontend_source_files`; no se modificaron datos de juego, RPCs, Auth, Storage ni reglas de Supabase.
+- Evidencia técnica: web `typecheck`, `build`, `verify:build`, `verify:auth-guard`, `verify:identity-data`, `verify:telemetry`, `verify:mobile-tutorial`, `verify:mobile-store`; Android `npm run typecheck`; verificaciones Android Auth/Deck/Battle/Rewards/Profile/Meta en verde.
+- `main` publicado en `40e69f80abca4ca0ffbd2e8afa0171fbc8704793`; el workflow Android oficial run 62 terminó `success`, verificó el bundle JS embebido y publicó `vexforge-android-build-62/app-release.apk` (91,791,587 bytes; SHA-256 `d1d3a1f84982a483e9f3dbf10f2e03bc44d0a8998bd07246361284fe33f8dc05`).
+- Cloudflare Pages terminó el deploy del commit; el job independiente `verify` falló en `verify-card-pilot` por HTTP 429 al leer un arte de Storage, no en el flujo de primera sesión. La evidencia técnica específica de este alcance sigue en verde.
+- El criterio vivo de Supabase quedó en `PARTIAL`, equivalente al estado de implementación no verificada del protocolo. QA humana de primer recorrido continúa diferida; no se declara `PASS`, `OPERATIONAL` ni `TIER1_READY`.
+
+---
+## 2026-08-31 — VE-VIS-3-EMPTY-STATE-ART — EVIDENCIA PÚBLICA RECONCILIADA
+
+- Preflight contra `main` y el deploy: el commit oficial y `build-manifest.json` coinciden en `a590758b0b2d2033dd543c1e7e5f03216a3b9e20`.
+- El router declara 53 rutas concretas, excluyendo la ruta comodín; las 53 respondieron HTTP 200 en el smoke test público de `https://vexforge-web.pages.dev`.
+- La inspección visual pública de Home y Cartas confirmó superficies VEXFORGE authored y estados explícitos de visitante/carga; esta evidencia no afirma que los datos autenticados hayan cargado.
+- No se modificó código, contratos, datos, Auth, Storage, economía, combate ni `mobile/**`; no corresponde nuevo workflow ni release APK.
+- `loading_and_empty_states` permanece `PARTIAL`: falta la matriz autenticada de carga/vacío/error y la prueba de ausencia de loaders eternos en navegador. No se declara `OPERATIONAL`, `PASS` ni `TIER1_READY`.
+
+---
+## 2026-08-31 — VE-P0.6 RAID SURFACE — IMPLEMENTED_UNVERIFIED
+
+- RaidsRoute declara presentationSurface=raid sobre ForgeFormationBoard.
+- Se conservaron join, contribution, cooldowns, completado, recompensas y settlement; no se añadieron eventos raid inventados.
+- QA sigue diferida por instrucción del operador; no se declara OPERATIONAL, PASS ni TIER1_READY.
+
+---
+## 2026-08-31 — VE-P0.6 WORLD BOSS SURFACE — IMPLEMENTED_UNVERIFIED
+
+- WorldBossesRoute declara presentationSurface=world-boss sobre ForgeFormationBoard.
+- Se conservaron battle_run, simulación, cálculo de daño, attackWorldBoss, cooldowns y settlement; no se añadieron eventos boss_phase, reserve_entry ni reward sin fuente explícita.
+- QA sigue diferida por instrucción del operador; no se declara OPERATIONAL, PASS ni TIER1_READY.
+
+---
+## 2026-08-31 — VE-P0.6 TUTORIAL SURFACE — IMPLEMENTED_UNVERIFIED
+
+- TutorialBattle continúa usando ForgeFormationBoard y ahora declara explícitamente la superficie tutorial.
+- Misiones declara la superficie pve; ambos flujos comparten contrato, arena, cues, reduced motion y semántica sin duplicar motores.
+- tutorial_step, selección, resultados, callbacks y settlement no fueron modificados.
+- QA sigue diferida por instrucción del operador; no se declara OPERATIONAL, PASS ni TIER1_READY.
+
+---
+## 2026-08-31 — VE-P0.5 SEMANTIC BATTLE FALLBACK — IMPLEMENTED_UNVERIFIED
+
+- BattleBoardEngine y ForgeFormationBoard exponen regiones accesibles; BattleCard anuncia identidad canónica y HP real.
+- CardAttackCinematic anuncia ataque, daño y eliminación cuando esos datos existen; Canvas queda marcado como decorativo.
+- No se declara responsive, contraste, teclado, FPS, orientación ni estabilidad de dispositivo: esas comprobaciones siguen reservadas para QA/Q5.
+- QA sigue diferida por instrucción del operador; no se declara OPERATIONAL, PASS ni TIER1_READY.
+
+---
+## 2026-08-31 — VE-P0.4 CARD ACTOR PROFILE — IMPLEMENTED_UNVERIFIED
+
+- Se añadió un perfil puro de actor derivado de BattleUnit para facción, rareza, arte y keywords.
+- BattleCard y CardAttackCinematic consumen el perfil sin crear lore, estadísticas, personalidad, voces ni assets nuevos.
+- Los mappings visuales por facción/rareza y keywords existentes permanecen intactos; sólo se consolidó su procedencia semántica.
+- QA sigue diferida por instrucción del operador; no se declara OPERATIONAL, PASS ni TIER1_READY.
+
+---
+## 2026-08-31 — VE-P0.3 ARENA PROFILES — IMPLEMENTED_UNVERIFIED
+
+- Se añadieron perfiles de arena authored por facción para Guerrero, Mago, Paladín, Pícaro, Explorador y Comerciante, con fallback neutral.
+- BattleBoardEngine y ForgeFormationBoard usan el perfil para fondo, niebla y token de terreno; no se añadieron assets ni regiones inventadas.
+- Canvas, HUD, DOM, HP, controles, turnos y settlement permanecen sin cambios de autoridad; el fallback visual es CSS estático.
+- QA sigue diferida por instrucción del operador; no se declara OPERATIONAL, PASS ni TIER1_READY.
+
+---
+## 2026-08-31 — VE-P0.2 EVENT CUES — IMPLEMENTED_UNVERIFIED
+
+- Se formalizaron cues semánticos para los seis tipos de BattleEvent existentes, con color, forma, target, duración y audio sólo cuando AudioEngine ya lo soporta.
+- BattleBoardEngine reemplazó condiciones duplicadas por getBattlePresentationCue; DoubleStrike usa el soporte existente de partículas y no fabrica audio.
+- No se añadieron keywords, estadísticas, resultados ni RPCs; el cambio sólo organiza la presentación de eventos autoritativos.
+- QA sigue diferida por instrucción del operador; no se declara OPERATIONAL, PASS ni TIER1_READY.
+
+---
+## 2026-08-31 — VE-P0 REDUCED MOTION PVP — IMPLEMENTED_UNVERIFIED
+
+- BattleBoardEngine ahora sincroniza prefers-reduced-motion con particleEngine.setReducedEffects y expone fallback reduced.
+- No se modifican los callbacks temporales de CardAttackCinematic ni la autoridad de turnos, HP o resultados.
+- QA final sigue diferida por instrucción del operador; no se declara OPERATIONAL, PASS ni TIER1_READY.
+
+---
+## 2026-08-31 — VE-P0 MOTOR PVP — IMPLEMENTED_UNVERIFIED
+
+- BattleBoardEngine quedó conectado al contrato con resultado, turno activo, cinematicVisible, impacto de unidad e isDone reales.
+- La secuencia audiovisual observable ahora distingue attack, impact, target_lock y resultado dentro del consumidor PvP existente.
+- No se alteraron turnos, HP, keywords, audio autoritativo, callbacks ni resultado; sólo se expuso el estado presentacional.
+- QA sigue diferida por instrucción del operador; no se declara OPERATIONAL, PASS ni TIER1_READY.
+
+---
+## 2026-08-31 — VE-P0 ACTIVE PRESENTATION CURSOR — IMPLEMENTED_UNVERIFIED
+
+- ForgeFormationBoard ahora expone el estado audiovisual activo derivado de phase, turno real, hitFlash y you_won.
+- El fallback cambia a reduced cuando el usuario/sistema reduce FX; error o resultado ambiguo conserva reconnect/static.
+- El cursor es sólo presentacional: no escribe resultados, no decide daño y no sustituye onComplete/onDismiss.
+- QA sigue diferida por instrucción del operador; no se declara OPERATIONAL, PASS ni TIER1_READY.
+
+---
+## 2026-08-31 — VE-P0.1 CONSUMIDOR PVE — IMPLEMENTED_UNVERIFIED
+
+- ForgeFormationBoard quedó conectado al contrato ve-p0-presentation-v1 con sus turnos y you_won reales.
+- Misiones mantiene sus fases briefing → loading → formation → battle → reward y sus callbacks onComplete/onDismiss; no se reemplazó el tablero ni se alteró la simulación.
+- BattleCinematicScreen e ForgeFormationBoard exponen versión, fallback y cantidad de estados como atributos de diagnóstico para facilitar el cierre posterior.
+- El recorrido completo Home → Cartas → Detalle → Selección → Tutorial → Formación continúa parcialmente conectado; esta entrega sólo cierra la conexión del consumidor PvE ya existente.
+- QA omitida por instrucción del operador y queda pendiente para el cierre final. No se declara OPERATIONAL, PASS ni TIER1_READY.
+
+---
+## 2026-08-31 — VE-P0 CONTRACT INTEGRITY CORRECTION — IMPLEMENTED_UNVERIFIED
+
+- Corrección preventiva del adaptador: se eliminó la inferencia de reserve_entry basada en contar final_units.
+- Si you_won no es true/false, el contrato emite reconnect con fallback static en vez de inventar derrota; victory/defeat sólo aparecen con el booleano autoritativo.
+- QA continúa omitida por instrucción del operador; no se declara OPERATIONAL, PASS ni TIER1_READY.
+
+---
+## 2026-08-31 — VE-P0.0/P0.1 VERTICAL BATTLE SLICE — IMPLEMENTED_UNVERIFIED
+
+- Se registró el contrato audiovisual tipado ve-p0-presentation-v1 en src/lib/battlePresentation.ts y se conectó a BattleCinematicScreen.
+- El adaptador traduce RealBattleResult y sus turnos/eventos reales a intro, formación, invocación, idle, target lock, anticipación, ataque, impacto, daño, keyword, muerte, resultado y reconexión.
+- Reserve entry sólo se emite cuando final_units contiene más de dos unidades; boss_phase y reward permanecen declarados pero no se emiten sin fuente. No se inventan datos.
+- Cada paso declara timing, cancelación, replay, refresh, reconexión y fallback. El consumidor conserva la secuencia existente Intro → BattleBoardEngine → BattleResultScreen.
+- H2 Target Lock y H3 Terrain Particles siguen incluidos como capas presentacionales del mismo vertical slice.
+- QA omitida por instrucción del operador y queda pendiente para el cierre final. No se declara OPERATIONAL, PASS ni TIER1_READY.
+
+---
+## 2026-08-31 — FASE 3 H3 TERRAIN PARTICLES — IMPLEMENTED_UNVERIFIED
+
+- Se enriqueció la atmósfera del tablero con partículas authored por facción en ambos lados del campo.
+- Guerrero usa fragmentos de ataque; Mago y Paladín usan sigilos; Pícaro/Explorador usan retículas orgánicas; Comerciante usa monedas; el default conserva chispa azul. Cada variante deriva de la facción real y del catálogo ForgeIcon existente.
+- Se añadió movimiento de ascenso/drift, silueta por tipo, acento propio, glow contextual de zona y fallback reduced-motion sin añadir assets, datos ni dependencias nuevas.
+- El cambio permanece exclusivamente en la capa de presentación; no toca ForgeFormation, fórmulas, RPCs, economía, Storage ni resultados autoritativos.
+- QA omitida por instrucción del operador y queda pendiente para el cierre final. No se declara OPERATIONAL, PASS ni TIER1_READY.
+
+---
+## 2026-08-31 — FASE 3 H2 TARGET LOCK — IMPLEMENTED_UNVERIFIED
+
+- Se implementó la capa visual Target Lock en InteractiveBattleBoard.tsx.
+- El objetivo se deriva únicamente de state.currentTurn.defender y atk_side, datos del evento autoritativo existente; no se añaden fórmulas, estados de combate, RPCs, tablas ni decisiones de backend.
+- La carta defensora recibe borde, aura, retícula y etiqueta accesible OBJETIVO FIJADO; la presentación conserva el nombre real de la unidad y respeta el estado reduced-motion existente mediante la misma familia de pulso de objetivo ya usada por el tablero.
+- QA omitida por instrucción del operador y queda pendiente para el cierre final. No se declara OPERATIONAL, PASS ni TIER1_READY.
+- H3 Terrain particles queda como siguiente pieza implementable de esta Fase 3; los bundles visuales bloqueados por owner no se sustituyen.
+
+---
+## 2026-08-31 — VE-VIS-3-EMPTY-STATE-ART — MATRIZ PÚBLICA PARCIAL RECONCILIADA\n\n- Preflight realizado antes de escribir: protocolo maestro completo leído desde la fila viva de Supabase mediante content_markdown; la copia de GitHub main coincide salvo el salto de línea final. También se reconciliaron CONTINUITY.md, el inventario Android, el plan activo y el código real de main en el commit actual.\n- El commit oficial actual es b0dadfaacde1a029a8fe78ee310bde63692f70fa; el manifiesto público de Cloudflare declara el mismo sourceCommit.\n- Auditoría HTTP pública: 35 rutas de entrada comprobadas contra https://vexforge-web.pages.dev; todas respondieron HTTP 200. Se capturaron y revisaron visualmente las superficies públicas Home y Cartas.\n- Evidencia observada: Home sirve la escena VEXFORGE y el evento activo; Cartas sirve el compendio, el estado explícito CARGANDO ARTE OFICIAL y la invitación de visitante, sin declarar que el arte haya cargado cuando la captura aún estaba en estado de carga.\n- No se modificó código de producto, contratos, datos, Auth, Storage, economía, combate ni mobile/**; por tanto no se disparó un nuevo workflow ni release APK en esta sesión.\n- Estado: VE-VIS-3-EMPTY-STATE-ART permanece IMPLEMENTED_UNVERIFIED. La matriz runtime completa de las rutas y la QA autenticada siguen pendientes; no se declara OPERATIONAL, PASS ni TIER1_READY.\n- Siguiente acción verificable: completar la matriz de carga/vacío/error en navegador con sesión normal cuando exista una ventana interactiva disponible, registrar cada caso y reabrir sólo las superficies que fallen.\n\n---\n## 2026-08-31 — VE-VIS-3-EMPTY-STATE-ART — IMPLEMENTED_UNVERIFIED
+
+- Preflight: el port Android P1 está reconciliado hasta `VE-MOB-14`; `VE-MOB-15 ADMIN` permanece diferida por decisión del operador. La siguiente brecha abierta más baja era `loading_and_empty_states`, sin reabrir `VE-MOB-5-DECK` ya implementada.
+- Cambios publicados en `main` mediante commit atómico `4afe095e9e2b8a926aaae62e0a7012bd11a7c4d1`: `ForgeStateArt` con variantes `empty`, `loading`, `error` y `locked`; integración en `EmptyState`, `ErrorState`, `BlockedAuthState` y `PageLoader`; cobertura CSS para tarjetas heredadas `.empty-state`; guarda `verify:state-art` encadenada en `verify:all`; documento `docs/VE-VIS-3-EMPTY-STATE-ART.md`.
+- Alcance preservado: sin cambios en RPCs, tablas, RLS, Auth, Storage, assets, economía, combate, resultados ni datos de jugadores. El arte de estado usa CSS y el catálogo SVG existente de `ForgeIcon`; no se inventan datos ni se introducen emojis/pictogramas Unicode.
+- Evidencia local desde el tarball exacto del commit: `npm run typecheck` correcto; `npm run verify:state-art` correcto (4 variantes, 4 consumidores, cobertura heredada y reduced-motion); `npm run verify:build` correcto tras recrear sólo la referencia temporal de `HEAD`; guards de motion, combate, audio, piloto de cartas, piloto móvil y arte residual correctas.
+- Evidencia pública: `https://vexforge-web.pages.dev/build-manifest.json` respondió HTTP 200 y declaró `sourceCommit` `4afe095e9e2b8a926aaae62e0a7012bd11a7c4d1`; la raíz pública respondió HTTP 200 y fue inspeccionada visualmente.
+- Gate completo: `npm run verify:all` no cierra por deudas preexistentes no causadas por esta unidad: cobertura viva ausente para `forge_action`, `combat_resolved` y `reward_claimed`, y HTTP 429 del Storage al verificar arte de jefes. No se fabrican eventos ni se falsea evidencia.
+- Estado: `IMPLEMENTED_UNVERIFIED` para la unidad; el criterio Tier 1 `loading_and_empty_states` permanece `PARTIAL` hasta ejecutar la matriz runtime de las 39 rutas y comprobar que no hay loaders eternos. No se declara `OPERATIONAL`, `PASS` ni `TIER1_READY`.
+- Siguiente acción verificable: auditar en navegador las 39 rutas reales, registrar los casos de carga/vacío/error y actualizar el criterio únicamente con evidencia reproducible; después continuar por la siguiente brecha bloqueante abierta.
+
+---
+
+## 2026-08-31 — VE-MOB-8-REWARDS — RELEASE RECONCILIATION — IMPLEMENTED_UNVERIFIED
+
+- La siguiente unidad P1 ya estaba implementada en `main`; no se reabrió ni se duplicó código. Android presenta quests diarias, misiones activas, reclamaciones, ejecución, liquidación y estados explícitos sin calcular progreso, energía, recompensas o inventario localmente.
+- Contratos vivos verificados mediante Supabase Management API: `claim_daily_quest(p_player_quest_id uuid)`, `execute_mission(p_player uuid, p_mission uuid)` y `claim_mission_reward(p_player_id uuid, p_mission_run_id uuid, p_reference_id text)`, todos con resultado `jsonb`.
+- Guarda específica: `verify:mobile-rewards` 12/12. `npm run typecheck` móvil pasó. La pantalla usa únicamente respuestas de Supabase y no contiene simulación local, datos demo, emojis ni arte genérico.
+- Entrega verificada en el commit `9e6ddc87b1449f6e4626277ad6d8b0248c78b187`: runs 57 (`33365849985`) y 58 (`33365855394`) del workflow Android terminaron `success`; release `vexforge-android-build-58` publicado con `app-release.apk`.
+- Estado: `VE-MOB-8` IMPLEMENTED_UNVERIFIED; QA humana de quests, reclamación y misión con sesión normal sigue pendiente. No se declara `OPERATIONAL`, `PASS` ni `TIER1_READY`.
+
+---
+## 2026-08-31 — VE-MOB-7-BATTLE — RELEASE RECONCILIATION — IMPLEMENTED_UNVERIFIED
+
+- La siguiente unidad P1 ya estaba implementada en `main`; no se reabrió ni se duplicó código. La pantalla presenta ForgeFormation (Vanguardia, Campeón, Centinela y Reserva), oponentes reales, confirmación explícita, replay y resultado autoritativo.
+- Contratos vivos verificados mediante Supabase Management API: `get_leaderboard(p_limit integer)` y `vexforge_battle_resolve(p_challenger_id uuid, p_opponent_id uuid, p_idempotency_key text)`, ambos con resultado `jsonb`/tabla canónica.
+- Guarda específica: `verify:mobile-battle` 15/15. `npm run typecheck` móvil pasó. El cliente no simula daño, ganador, recompensas ni economía.
+- Entrega verificada en el commit `9e6ddc87b1449f6e4626277ad6d8b0248c78b187`: runs 57 (`33365849985`) y 58 (`33365855394`) del workflow Android terminaron `success`; release `vexforge-android-build-58` publicado con `app-release.apk`.
+- Estado: `VE-MOB-7` IMPLEMENTED_UNVERIFIED; QA humana de una partida autenticada, formación y derrota del Campeón sigue pendiente. No se declara `OPERATIONAL`, `PASS` ni `TIER1_READY`.
+
+---
+## 2026-08-31 — VE-MOB-5-DECK — IMPLEMENTED_UNVERIFIED
+
+- Preflight documental reconciliado: la copia de `main` del protocolo se sincronizó con la fila activa de Supabase; la única diferencia era el salto de línea final.
+- Contratos vivos verificados mediante Supabase Management API: `player_deck`, `validate_deck(p_card_ids uuid[])` y `save_deck(p_card_ids uuid[])`; las RPC mantienen RLS/ownership y orden de slots.
+- Android consume la colección real del jugador, carga el mazo persistido, conserva cantidades disponibles, limita 5–30 cartas, 2 copias por carta, 2 facciones, 1 Mythic global y 3 Legendary global, con Campeón local.
+- La pantalla mantiene búsqueda, filtros, estados de carga/error/vacío/sin coincidencias, Deck Power Score y validación/guardado autoritativos; el arte ausente se declara explícitamente y no se sustituye por iconografía genérica.
+- Guarda específica: `verify:mobile-deck` 13/13. `npm run typecheck` pasó localmente usando el registro público explícito para la instalación; no se alteraron dependencias ni el lockfile.
+- Publicación verificada: commit `9e6ddc87b1449f6e4626277ad6d8b0248c78b187`; run 58 (`33365855394`) terminó `success` el 2026-08-31; release oficial `vexforge-android-build-58` publicó `app-release.apk` de 91,789,723 bytes.
+- Estado: `VE-MOB-5` IMPLEMENTED_UNVERIFIED; QA humana en dispositivo/emulador pendiente. No se declara `OPERATIONAL`, `PASS` ni `TIER1_READY`.
+
+---
+## 2026-08-31 — PREFLIGHT-DOCUMENTAL + VE-MOB-13/14 — RECONCILED
+
+- Preflight completado: protocolo activo leído completo desde Supabase Management API, continuidad, plan activo, inventario Android y código de main reconciliados.
+- Se detectó y corrigió una discrepancia documental: la fila viva de Supabase contenía la evidencia AUTH más reciente y main contenía la evidencia Social; se conserva el contenido vivo y se integran ambas evidencias verificadas, junto con Meta.
+- Run 55 (Social) y run 56 (Meta) terminaron success y sus releases Android están publicados.
+- La verificación web run 73 falló inicialmente por HTTP 429 al consultar dos objetos del manifiesto oficial; el reintento oficial (attempt 2) terminó success y verificó 21/21 assets, sin fallback ni sustitución.
+- Estado: VE-MOB-13 y VE-MOB-14 IMPLEMENTED_UNVERIFIED; QA humana del operador pendiente. VE-MOB-15 Admin permanece diferida según el inventario oficial.
+- No se declara OPERATIONAL, PASS ni TIER1_READY.
+
+---
+## 2026-08-30 — VE-MOB-VIS-2-MOBILE-FIT-AND-GOOGLE-AUTH — VERIFIED_RELEASED
+
+- El commit `ad42a5f1c4fbf34c2f73a7ae7d71f8715f280e9a` quedó publicado en `main`.
+- Validación general: run 66 (`33325413977`) terminó `success`.
+- Android: run 52 (`33325413983`) terminó `success`; typecheck, Expo prebuild, `assembleRelease`, verificación de bundle JS standalone y publicación del APK pasaron.
+- Release oficial: `vexforge-android-build-52`; asset `app-release.apk` (aprox. 88M / 91,705,979 bytes).
+- Run 50 (`33324808430`) también terminó `success`, pero corresponde al commit WORLD anterior y no incluye los ajustes de Auth/layout; el APK actualizado es el del run 52.
+- Estado: `VERIFIED_RELEASED`; queda QA manual del operador para confirmar en dispositivo el selector de cuenta Google, el retorno por `vexforge-android`, el teclado y el inset de navegación.
+
+---
+
+## 2026-08-30 — VE-MOB-VIS-2-MOBILE-FIT-AND-GOOGLE-AUTH — IMPLEMENTED_UNVERIFIED
+
+- Revisión solicitada: se corrige el ajuste móvil de Auth y de la barra inferior; la ruta `auth` queda sin header del Stack y la tab bar usa el inset inferior real, separación táctil y ocultación al abrir el teclado.
+- Texto fantasma: el login ya no deja los textos baked-in del arte debajo de los campos; una superficie limpia cubre la tarjeta de formulario y los `TextInput` tienen placeholder/color propios.
+- Teclado: el registro usa `KeyboardAwareScrollViewCompat` con `bottomOffset`, y el login aplica comportamiento `padding` para mantener los controles visibles.
+- Acceso Google: se añade `CONTINUAR CON GOOGLE` con selector `prompt=select_account`, `expo-web-browser` y retorno al esquema `vexforge-android`; Supabase sigue siendo la autoridad y muestra un error explícito si el proveedor Google no está habilitado/configurado.
+- Estado: `IMPLEMENTED_UNVERIFIED`; no se declara `OPERATIONAL`, `PASS` ni `TIER1_READY` sin typecheck/build Android y QA manual del operador.
+- Siguiente acción verificable: ejecutar el siguiente workflow Android sobre este ajuste y confirmar en un dispositivo que el selector Google, el teclado y la barra inferior se comportan correctamente.
+
+---
+
+## 2026-08-30 — VE-MOB-12-WORLD — IMPLEMENTED_UNVERIFIED
+
+- Tipo de sesión: implementación Android de la siguiente unidad elegible de la FASE PORT, usando el repositorio y Supabase oficiales; no se altera la lógica autoritativa web ni se añaden tablas, RPCs o datos inventados.
+- Alcance: nueva ruta WORLD mobile-first con paneles internos de Bosses, Raids, Codex, Pase y Ranking; accesible desde Home y Perfil sin añadir otra tab principal.
+- Contratos: la pantalla consume `world_bosses`, `world_boss_encounters`, `raid_runs`, `raid_participants`, `lore_codex`, `season_passes`, `season_pass_tiers` y `season_rankings`; nombres de ranking mediante `get_public_player_names`.
+- Mutaciones: unirse/contribuir en raids y reclamar tiers sólo llaman `vexforge_join_raid`, `vexforge_contribute_raid` y `claim_season_pass_reward`; bosses continúan entrando en Battle Run y Android no calcula daño, HP, victoria, MMR ni recompensas.
+- Assets: el fondo WORLD se resuelve desde el registro visual canónico `backgrounds/bg_bosses.jpg`; el arte de bosses sólo consume `image_url` oficial de Supabase Storage.
+- Verificación local: gate `verify:mobile-world` correcto, transpilación TypeScript/JSX de los archivos nuevos correcta y contrato de iconos SVG sin nombres faltantes. El typecheck móvil completo queda sujeto al runner oficial porque este checkout temporal no pudo instalar `npm-package-arg@11.0.3` desde el firewall del entorno.
+- Estado: `IMPLEMENTED_UNVERIFIED`; no se declara `OPERATIONAL`, `PASS` ni `TIER1_READY` hasta workflow Android y QA manual del operador.
+- Siguiente acción verificable: ejecutar el workflow Android oficial, comprobar typecheck, APK standalone y release correlativo; después registrar sólo la evidencia real del build.
+
+---
+
+## 2026-08-30 — VE-MOB-VIS-1-FORGE-IDENTITY-PACK-3-BUILD-REPAIR-2 — IMPLEMENTED_UNVERIFIED
+
+- Evidencia de entrega: el workflow Android oficial 49 terminó `success` sobre el commit `89aed1edc90d6f8c42ed264e99d9093fa5b8b589`; completó typecheck, prebuild, compilación release y comprobación del bundle standalone.
+- APK: se publicó `vexforge-android-build-49/app-release.apk`; la inspección del archivo confirma `assets/index.android.bundle`, `AndroidManifest.xml` y `resources.arsc`.
+- Alcance: el alias `cart-outline` quedó resuelto dentro del catálogo SVG oficial de ForgeIcon; se conserva la eliminación de icon fonts externos y no se modifican Auth, RPCs, RLS, economía, combate, Storage ni datos de jugadores.
+- Estado: `IMPLEMENTED_UNVERIFIED`. El build y el release están verificados; la QA manual del operador sigue pendiente y no se declara `OPERATIONAL`, `PASS` ni `TIER1_READY`.
+- Siguiente acción verificable: continuar con la siguiente brecha visual real de la FASE PORT, sin rehacer este paquete ni fabricar evidencia de uso humano.
+
+---
+
+## 2026-08-30 — VE-VIS-3-OFFICIAL-VISUAL-CONSUMPTION-LAW — IMPLEMENTED
+
+- Decisión normativa: toda unidad nueva, existente o reabierta debe consumir el apartado visual oficial del proyecto; queda prohibido cerrar con arte, iconografía o representación diegética genérica.
+- Flujo obligatorio: si el asset existe, se resuelve desde el registro y el manifiesto oficial; si no existe, se produce siguiendo la Directiva de Ejecución Autónoma, se sube a `vexforge-assets`, se inscribe y después se enlaza al consumidor.
+- Continuidad: la falta temporal de arte no detiene las partes funcionales independientes, pero deja la unidad en `ASSET_REQUIRED` o `ASSET_IN_PROGRESS` y bloquea su cierre visual hasta completar la cobertura.
+- Enforce: la ley se añade al Protocolo Maestro activo, a `VE-VIS-3-OFFICIAL-VISUAL-CONSUMPTION-LAW.md` y al contrato permanente del manifiesto; queda conectada con Cero Genéricos, la Ley de Transición Android y la Directiva de Ejecución Autónoma.
+- Estado: `IMPLEMENTED`; se sincroniza la misma revisión normativa en GitHub `main` y en la fila activa `vexforge_master_protocol_v2` de Supabase.
+
+---
+
+## 2026-08-30 — VE-MOB-VIS-1-FORGE-IDENTITY-PACK-3-BUILD-REPAIR-2 — IN_PROGRESS
+
+- Evidencia: el segundo workflow Android pasó la instalación y redujo el fallo de typecheck a un único consumidor, `cart-outline`, todavía no declarado en el catálogo tipado de ForgeIcon.
+- Reparación: se añade `cart-outline` como alias del símbolo SVG oficial de tienda; no se reintroduce ninguna librería de iconos externa.
+- Estado: `IN_PROGRESS`; queda pendiente únicamente el workflow Android posterior y la comprobación del APK standalone.
+
+---
+
+## 2026-08-30 — VE-MOB-VIS-1-FORGE-IDENTITY-PACK-3-BUILD-REPAIR — IN_PROGRESS
+
+- Evidencia: el checkpoint de launch assets ejecutó el workflow Android y falló en `npm run typecheck`; no se alcanzó prebuild ni se publicó APK.
+- Causa técnica aislada: el lockfile móvil conservaba 22 URLs internas `package-firewall.replit.local`, y el catálogo tipado de ForgeIcon no declaraba nueve aliases ya consumidos por Economy, Store y Profile.
+- Reparación: se normalizan las URLs del lockfile a `https://registry.npmjs.org/` conservando las integridades, y se incorporan los aliases al catálogo SVG oficial sin reintroducir icon fonts ni cambiar lógica de producto.
+- Integridad preservada: Auth, RPCs, RLS, economía, combate, Storage, assets canónicos y datos de jugadores permanecen sin cambios.
+- Estado: `IN_PROGRESS`; la reparación sólo se promueve a `IMPLEMENTED_UNVERIFIED` después de un workflow Android nuevo que pase typecheck y compile la APK standalone.
+- Siguiente acción verificable: observar los workflows disparados por este checkpoint y registrar el resultado real del build, sin fabricar evidencia ni declarar QA humana.
+
+---
+
+## 2026-08-30 — VE-MOB-VIS-1-FORGE-IDENTITY-PACK-3-OFFICIAL-LAUNCH-ASSETS — IMPLEMENTED_UNVERIFIED
+
+- Preflight: Supabase Management API, Storage oficial y GitHub `main` se validaron por HTTPS directo; el protocolo activo `v2.7-autonomous-context-law` coincide con `main`.
+- Alcance: se reemplaza el recurso local empaquetado usado como icono, splash, adaptive icon y favicon por el objeto canónico `logo/IMG_20260606_040509_906.jpg` del bucket oficial `vexforge-assets`.
+- Limpieza: se eliminan `mobile/assets/images/icon.png` y `mobile/assets/images/icon_2.png`; la búsqueda de referencias confirma que eran recursos sin consumidores y no se elimina ninguna fuente visual usada por la app.
+- Integridad preservada: no se modifican Auth, RPCs, RLS, economía, combate, datos de jugadores, contratos ni lógica de presentación. Las superficies continúan usando el registro visual canónico de `mobile/constants/visual.ts` y los iconos SVG de ForgeIcon.
+- Estado: `IMPLEMENTED_UNVERIFIED`. El checkpoint queda publicado, pero no se declara `OPERATIONAL` hasta que el workflow Android genere un APK standalone y el operador complete la QA manual posterior.
+- Siguiente acción verificable: observar el workflow `vexforge-android-apk.yml`, comprobar el bundle Android y registrar el release correlativo; después continuar con la siguiente brecha visual real del inventario, sin rehacer este paquete.
+
+---
+
+## 2026-08-30 — VE-MOB-VIS-1-FORGE-IDENTITY-PACK-2-BUILD-FIX — IMPLEMENTED_UNVERIFIED
+
+- Evidencia de entrega: el workflow Android oficial ejecutó sobre el commit visual y falló únicamente en `mobile/tsconfig.json`, porque el TypeScript del runner rechaza la opción retirada `baseUrl`; no alcanzó compilación ni release.
+- Reparación acotada: se elimina sólo `baseUrl` del `tsconfig` móvil; se conservan `strict`, el alias `@/*`, el lockfile y toda la lógica de Auth, Supabase, combate y economía.
+- Estado: `IMPLEMENTED_UNVERIFIED`. No existe release nuevo todavía; se requiere una nueva ejecución Android y la QA manual del operador.
+- Siguiente acción verificable: publicar esta reparación por Git Data API HTTPS y comprobar que el workflow avance más allá de typecheck.
+
+---
+
+## 2026-08-30 — VE-MOB-VIS-1-FORGE-IDENTITY-PACK-2 — IMPLEMENTED_UNVERIFIED
+
+- Tipo de sesión: sustitución incremental de iconografía genérica en Android por el lenguaje SVG propio de ForgeIcon; no se rehacen unidades funcionales ni se alteran Auth, RPCs, RLS, economía, combate o datos de jugadores.
+- Cambios: se añade `mobile/components/ForgeIcon.tsx` con las geometrías SVG oficiales y aliases compatibles; las pantallas móviles, tabs, tienda, misiones, tutorial, perfil, colección, mazo, batalla y estados compartidos dejan de importar icon fonts externos.
+- Dependencias: se eliminan las dependencias directas de `@expo/vector-icons` y `expo-symbols`; `react-native-svg` sigue siendo la única base de renderizado vectorial y Expo puede conservar su dependencia transitiva interna sin ser usada por la app.
+- Verificación: guardas Auth 8/8 y Battle 15/15, transpilación TypeScript/JSX de 29 fuentes sin diagnósticos, guardia web de identidad 0 sustitutos y auditoría automatizada de nombres usados sin mappings faltantes.
+- Limitación: el typecheck móvil completo no pudo ejecutarse en este checkout porque el firewall del entorno devolvió 404 para `npm-package-arg@11.0.3`; no se modificó la lógica ni se relajaron los gates.
+- Estado: `IMPLEMENTED_UNVERIFIED`. No se declara `OPERATIONAL`, `PASS` ni `TIER1_READY` sin workflow Android y QA manual del operador.
+- Siguiente acción verificable: publicar el checkpoint por Git Data API HTTPS, ejecutar el workflow Android oficial y verificar el release correlativo sin inventar QA humana.
+
+---
+
+## 2026-08-30 — VE-MOB-VIS-1-FORGE-IDENTITY-PACK-1 — IMPLEMENTED_UNVERIFIED
+
+- Tipo de sesión: paquete incremental de identidad visual Android sobre la base ya implementada; no se rehacen unidades funcionales ni se alteran Auth, RPCs, RLS, economía, combate o datos de jugadores.
+- Cambios: se centraliza el registro visual móvil en un catálogo canónico de rutas de Supabase Storage; perfil y economía pasan a consumir su arte oficial específico; colección y tutorial dejan de depender de superficies visuales genéricas.
+- Assets: se conectan `heroes/hero_profile.jpg`, `heroes/hero_economy.jpg`, `heroes/hero_assets.jpg`, `tutorial/main.png`, el logotipo oficial y los cuatro emblemas oficiales de facción inscritos en el manifiesto.
+- Regla preservada: los artes de cartas continúan llegando desde `image_url` autoritativo; sólo se usa emblema oficial de Supabase cuando falta arte de carta, sin emojis, stock, mockups ni sustitutos inventados.
+- Verificación: la transpilación TypeScript/JSX de los cinco archivos modificados pasa; el typecheck completo queda pendiente de instalar las dependencias del checkout temporal (`node_modules` y `expo/tsconfig.base` no están disponibles en esta copia).
+- Estado: `IMPLEMENTED_UNVERIFIED`. No se declara `OPERATIONAL`, `PASS` ni `TIER1_READY` sin workflow Android y QA manual del operador.
+- Siguiente acción verificable: publicar el checkpoint por Git Data API HTTPS, ejecutar el workflow Android oficial, verificar el APK standalone y después continuar con la iconografía propia y motion/feedback.
+
+---
+
+## 2026-08-30 — VE-MOB-VIS-1-PACK-1-DELIVERY-REPAIR — IN_PROGRESS
+
+- Hallazgo de entrega: el workflow Android falló dos veces en `npm ci` con el error interno de npm `Exit handler never called`; la verificación general falló al recibir HTTP 429 al consultar cuatro objetos de Storage.
+- Reparación acotada: la instalación CI conserva `npm ci` y el lockfile, pero usa `--ignore-scripts`; `verify-card-art` reintenta sólo 429/5xx con backoff y continúa fallando ante una ausencia real o un HTTP no recuperable.
+- Alcance preservado: no se relajan las guardas de procedencia, no se sustituyen assets, no se modifican contratos Supabase y no se cambia la funcionalidad Android.
+- Estado: `IN_PROGRESS`. La reparación sólo se considerará verificable cuando un workflow Android y un workflow de validación nuevos terminen con evidencia real.
+- Siguiente acción verificable: publicar esta reparación por Git Data API HTTPS y observar ejecuciones nuevas sobre `main`.
+
+---
+
+## 2026-08-30 — VE-MOB-VIS-1-PACK-1-DELIVERY-REPAIR-2 — IN_PROGRESS
+
+- Evidencia adicional: dos ejecuciones manuales del workflow Android repitieron el fallo interno de `npm ci`, incluso con `--ignore-scripts`; el CI web superó `verify:card-art` y volvió a detenerse en HTTP 429 de `verify:surface-art`.
+- Reparación acotada: Android usa `npm install` contra el `package-lock.json` existente, sin scripts ni auditoría durante el runner; `verify-surface-art` adopta el mismo backoff limitado para 429/5xx que el guard de cartas.
+- Integridad preservada: no se elimina ninguna comprobación de procedencia, manifiesto, Storage, contratos Supabase o contenido visual oficial; los HTTP no recuperables siguen causando fallo.
+- Estado: `IN_PROGRESS`. El paquete visual permanece `IMPLEMENTED_UNVERIFIED` hasta obtener un APK y una validación CI nuevos.
+- Siguiente acción verificable: publicar esta segunda reparación mediante Git Data API HTTPS y comprobar los runs resultantes.
+
+---
+
+## 2026-08-30 — VE-MOB-VIS-1-PACK-1-DELIVERY-REPAIR-3 — IN_PROGRESS
+
+- Evidencia adicional: los guards de cartas y superficies pasaron en el CI nuevo; `verify-assets` fue el siguiente punto de rate limit (tres respuestas HTTP 429). Android continúa fallando en la instalación antes de compilar, incluso con `npm install --ignore-scripts`.
+- Reparación acotada: `verify-assets` aplica backoff sólo para 429/5xx; el workflow Android fija Node 20 para evitar la combinación Node 22/npm 10.9.8 que reproduce `Exit handler never called`.
+- Integridad preservada: la lista de assets canónicos y todos los fallos no recuperables siguen siendo obligatorios; no se omiten objetos ni se cambia la app.
+- Estado: `IN_PROGRESS`. La entrega Android y el paquete visual siguen `IMPLEMENTED_UNVERIFIED` hasta una ejecución nueva exitosa.
+- Siguiente acción verificable: publicar esta tercera reparación mediante Git Data API HTTPS y comprobar los runs resultantes.
+
+---
+
+## 2026-08-30 — VE-MOB-VIS-1-FORGE-IDENTITY — IMPLEMENTED_UNVERIFIED
+
+ - Tipo de sesión: implementación visual Android sobre la superficie móvil oficial del repositorio, siguiendo el protocolo vivo v2.7-autonomous-context-law.
+ - Alcance: se conserva la funcionalidad oficial de Supabase/RPC/Auth/Storage y se aplica identidad Forge a las rutas móviles: Cinzel para display, Rajdhani para interfaz, fondos canónicos por superficie, gradientes obsidiana-oro, ForgeText, ForgeButton, ScreenShell y barra Android de cinco tabs.
+ - Assets: se descartó el arte generado durante la primera iteración y se consume el logotipo oficial inscrito en Storage (logo/IMG_20260606_040509_906.jpg) como icono y splash; android.versionCode queda en 2 sobre el valor oficial anterior.
+ - Verificación local: typecheck móvil OK; expo install --check OK; workflow Expo levantado y preview web comprobado tras corregir la dependencia web compatible con SDK 54.
+ - Publicación: cambios sincronizados a main mediante Git Data API HTTPS en el commit e0e40e0fd6118f56a73780f5496ed562e2ec7232; el workflow Android oficial queda listo para generar el release.
+ - Estado: IMPLEMENTED_UNVERIFIED. No se declara OPERATIONAL, PASS ni TIER1_READY hasta que el operador instale y pruebe manualmente la APK.
+ - Siguiente acción verificable: completar el workflow Android oficial, verificar que app-release.apk contiene el bundle standalone y registrar la evidencia del release sin inventar QA humana.
+
+---
+
+## 2026-08-30 — FORGEFORMATION-CANONICAL-RECONCILIATION + VE-MOB-7-BATTLE — IMPLEMENTATION
+
+- Reconciliación canónica: ForgeFormation es el núcleo obligatorio del combate. El documento histórico `vexforge_forge_formation_engine_v1` está `superseded` como plan de trabajo, no como sistema de juego; no existe un motor de combate alternativo que lo reemplace.
+- Hallazgo: Android ya llamaba la RPC autoritativa `vexforge_battle_resolve` y reproducía turnos, pero no presentaba explícitamente la formación Vanguardia/Campeón/Centinela/Reserva. Por eso el APK podía parecer sin sistema de combate aunque el backend sí aplicara ForgeFormation.
+- Implementación: la pantalla Battle carga el mazo real autenticado, identifica el Campeón desde `player_deck.is_champion`, presenta línea activa y reserva, y bloquea el inicio sin al menos tres unidades. El cliente sigue sin simular daño, ganador, recompensas ni economía.
+- Verificación: guarda móvil ampliada pasa 15/15. El gate `verify:telemetry` pasa validando contrato, catálogo y forma de cobertura; reporta `forge_action` sin observaciones en vez de fabricar tráfico. El run Android 29 completó correctamente typecheck, Expo prebuild, `assembleRelease` y la comprobación del bundle standalone.
+- Entrega: tras tres intentos previos bloqueados/cancelados, el run 29 (`33300817365`) generó y publicó `vexforge-android-build-29` sobre `main` (`5a418950…`). El asset `app-release.apk` contiene `assets/index.android.bundle`; la APK ya está disponible para descarga. La unidad conserva `IMPLEMENTED_UNVERIFIED` hasta completar QA manual de formación y derrota del Campeón, sin inventar esa evidencia.
+
+---
+
+## 2026-08-29 — VE-MOB-11-ECONOMY — IMPLEMENTED_UNVERIFIED
+
+- Tipo de sesión: implementación Android de la unidad económica derivada del inventario oficial y de los contratos vivos de Supabase.
+- Cambios: se creó `mobile/app/economy.tsx` como superficie unificada para cartera/ledger, mercado, depósitos, retiros y referidos; se registró en el stack raíz y se añadió acceso desde Home y Perfil.
+- Consumidores: `mobile/lib/supabase.ts` ahora contiene lecturas reales y las llamadas RPC `vexforge_get_my_economy_stats`, `create_listing`, `buy_listing`, `cancel_listing`, `vexforge_submit_deposit`, `vexforge_get_my_deposits` y `vexforge_request_withdrawal`.
+- Seguridad económica: Android no escribe directamente en tablas de economía ni calcula/acredita recompensas, comisiones o liquidaciones; sólo presenta fórmulas informativas de retiro y estados devueltos por Supabase.
+- Verificación local: `cd mobile && pnpm typecheck` OK; `node scripts/verify-mobile-economy.mjs` OK (9/9). El typecheck web completo sigue condicionado por dependencias ausentes del checkout temporal y no se modificó el producto web.
+- Estado: `IMPLEMENTED_UNVERIFIED`. La QA manual del operador sigue pendiente; no se declara `OPERATIONAL`, `TIER1_READY` ni `PASS`.
+- Siguiente acción verificable: publicar por el workflow Android oficial, verificar el APK standalone y actualizar la evidencia del release sin transportar credenciales fuera de headers HTTPS.
+
+---
+
+## 2026-08-29 — CANONICAL-PROTOCOL-RECONCILIATION — RECONCILED
+
+- Tipo de sesión: preflight documental; sin cambios en código de producto, `mobile/**`, datos de jugadores, economía, combate, Auth, RLS, RPCs, Storage, assets, APK ni deploy.
+- Supabase: la fila activa `vexforge_master_protocol_v2` está en versión `v2.7-autonomous-context-law`; se leyó mediante Management API y se confirmó el proyecto oficial `ACTIVE_HEALTHY`.
+- GitHub: la copia de `VEXFORGE_PROTOCOL_V2.md` difería únicamente por un salto de línea final adicional; se sincronizó con el contenido vivo mediante la API REST HTTPS oficial, sin transportar credenciales por Git.
+- Selección vigente: la FASE PORT Android gobierna el orden; `VE-MOB-11-ECONOMY` es la siguiente unidad `READY_FOR_IMPLEMENTATION` documentada en `main`. El plan histórico `vexforge_forge_formation_engine_v1` está `superseded`.
+- Estado: reconciliación `RECONCILED`; no se inicia implementación ni se alteran contratos, balances, RPCs, RLS, releases o datos sin una ejecución explícita de la unidad elegible.
+- Siguiente acción verificable: implementar `VE-MOB-11-ECONOMY` sobre `mobile/`, verificando consumidores, guards, typecheck, workflow APK y continuidad por la cadena oficial.
+
+---
+
+## 2026-08-28 — VE-MOB-11-ECONOMY-SCOPE — READY_FOR_IMPLEMENTATION
+
+- Tipo de sesión: continuación del preflight Android después de corregir el transporte de credenciales; sin cambios de código de producto, `mobile/`, datos de jugadores, economía, combate, Auth, RLS, RPCs, Storage, assets, APK ni deploy.
+- Fuente canónica: protocolo maestro actualizado, inventario Android, rutas/repositorios web de economía y catálogo vivo de Supabase.
+- Decisión derivada: se creó `docs/VE-MOB-11-ECONOMY.md` porque no existía el documento específico; define el alcance de cartera/ledger, mercado, depósitos, retiros y referidos a partir de contratos verificables.
+- Protecciones: Android sólo presentará datos reales y llamará RPCs oficiales; no se crearán saldos, recompensas, comisiones, tasas, liquidaciones ni validaciones autoritativas en el cliente.
+- Estado: la unidad queda `READY_FOR_IMPLEMENTATION`; el bloqueo documental anterior queda resuelto por la Ley de Creación Autónoma por Contexto Incompleto, sin declarar la unidad implementada ni pasar gates de APK/QA.
+- Siguiente acción verificable: implementar la unidad sobre `mobile/`, verificar typecheck/guards y publicar el workflow Android oficial; cualquier QA humana pendiente conservará `IMPLEMENTED_UNVERIFIED`.
+
+---
+
+## 2026-08-28 — HTTPS-CREDENTIAL-TRANSPORT-LAW — OPERATIONAL
+
+- Tipo de sesión: corrección normativa solicitada por el operador; sin cambios de código de producto, `mobile/`, datos de jugadores, economía, combate, Auth, RLS, RPCs, Storage, assets, APK ni deploy.
+- Diagnóstico verificado: la API REST HTTPS de GitHub aceptó la credencial y respondió `200`; el intento previo que devolvió `invalid credentials` fue una operación Git sobre HTTPS, no evidencia de una credencial inválida.
+- Causa del fallo: se interpretó “clonar” literalmente y se usó Git como transporte autenticado, aunque la instrucción del operador exige solicitudes HTTPS directas a la API oficial.
+- Cambio canónico: se añadió al protocolo maestro la `LEY PRIORITARIA — TRANSPORTE HTTPS DE CREDENCIALES Y ACCESO OFICIAL`, con precedencia sobre instrucciones históricas de `clone`, `push`, `pull` y Git Smart HTTP.
+- Regla establecida: GitHub se consulta, descarga y modifica mediante API REST/Git Data API sobre HTTPS con el PAT sólo en el header Bearer; Supabase se opera mediante Management API, PostgREST o Storage API sobre HTTPS; nunca se incrustan secretos en URLs, remotos, argumentos, cuerpos de documentación ni logs.
+- Protección de diagnóstico: un error de transporte, endpoint, header, formato, permisos, alcance, rate limit o redirect no se etiqueta como credencial incorrecta sin confirmación explícita del proveedor y verificación del canal correcto.
+- Supabase: la fila activa `public.vexforge_official_documents` con `doc_key = vexforge_master_protocol_v2` se actualizó con la enmienda completa y se verificó de nuevo mediante HTTPS.
+- GitHub: `VEXFORGE_PROTOCOL_V2.md` y esta continuidad se publicaron en `main` mediante la API HTTPS oficial, sin `git clone`, `git push` ni PAT en URLs/remotos.
+- Estado: la ley de transporte HTTPS queda `OPERATIONAL`; no se declara ninguna unidad de producto terminada ni se altera el orden vigente de la FASE PORT.
+- Siguiente acción verificable: ejecutar el próximo preflight y cualquier trabajo de producto sólo desde las fuentes oficiales, usando API HTTPS directa y registrando la evidencia de método sin exponer secretos.
+
+---
+
+## 2026-08-28 — CONTEXT-CREATION-LAW — OPERATIONAL
+
+- Tipo de sesión: modificación normativa solicitada por el operador; sin cambios de código de producto, mobile/, datos de jugadores, economía, combate, Auth, RLS, RPCs, Storage, assets, APK ni deploy.
+- Preflight completado: el protocolo maestro completo fue leído desde Supabase Management API; CONTINUITY.md, el inventario Android y el estado real de main fueron reconciliados antes de escribir.
+- Cambio canónico: se añadió al final de VEXFORGE_PROTOCOL_V2.md la enmienda LEY DE CREACIÓN AUTÓNOMA POR CONTEXTO INCOMPLETO, con precedencia máxima sobre bloqueos epistemológicos.
+- Regla establecida: la falta de documentación, teoría, contexto, tabla, RPC, ruta, asset o decisión no bloquea si el análisis integral permite derivar, crear, documentar, verificar y revertir una solución compatible con la visión Tier 1.
+- Protecciones preservadas: no se falsifican hechos canónicos, resultados, sesiones, QA, evidencia ni estados operativos; permanecen la autoridad de Supabase, la seguridad, RLS, la economía, ForgeFormation, los gates técnicos y la QA humana como validación ordinaria pendiente.
+- Supabase: la fila activa vexforge_master_protocol_v2 queda actualizada a v2.7-autonomous-context-law; la copia publicada en GitHub se sincroniza con el mismo contenido.
+- Estado: enmienda normativa OPERATIONAL; no se declara ninguna unidad de producto terminada ni se desbloquea por sí sola una implementación económica.
+- Siguiente acción verificable: aplicar esta ley en el próximo preflight de la unidad Android elegible, registrar las decisiones derivadas y conservar la QA humana como IMPLEMENTED_UNVERIFIED cuando corresponda.
+
+---
+
+## 2026-08-28 — PREFLIGHT-GITHUB-SYNC-AND-VE-MOB-11-BLOCKED — BLOCKED
+
+- Tipo de sesión: preflight canónico y sincronización del repositorio oficial; sin cambios de código de producto, `mobile/**`, Supabase, Auth, RLS, RPCs, Storage, economía, combate, datos de jugadores ni assets.
+- GitHub: el token actualizado fue validado por API y por Git Smart HTTP sobre HTTPS usando Basic con usuario `x-access-token`; el workspace quedó sincronizado con `grandmaster68081-byte/Vexforge-web` `main` en `46d6b4a`.
+- Supabase: la fila activa `public.vexforge_official_documents` con `doc_key = vexforge_master_protocol_v2` fue leída mediante Management API; `VEXFORGE_PROTOCOL_V2.md` y la copia canónica coinciden byte a byte (95,411 bytes; md5 `4818d42b5f177e1d85a7c98382d01480`).
+- Selección: el inventario oficial marca `VE-MOB-11-ECONOMY` como siguiente unidad elegible después de `VE-MOB-10-PACKS-SHOP`. Las rutas web y los contratos vivos de economía, mercado, depósitos, retiros y referidos están disponibles.
+- Bloqueo normativo: `docs/VE-MOB-11-ECONOMY.md` no existe en `main`; el protocolo impide inventar el alcance, criterios de aceptación o una implementación Android sin la documentación canónica de la unidad.
+- Estado: `BLOCKED`. No se rehicieron unidades ya implementadas, no se ejecutaron RPCs de escritura y no se fabricó evidencia de QA, APK, release ni telemetría.
+- Siguiente acción verificable: restaurar o publicar por el canal oficial el documento canónico de `VE-MOB-11-ECONOMY`; después reconciliarlo con el protocolo vivo y ejecutar sólo ese alcance sobre Android.
+
+---
+
+## 2026-08-27 — VE-MOB-10-CONTINUITY-CLOSEOUT — IMPLEMENTED_UNVERIFIED
+
+- Tipo de sesión: preflight diario + verificación técnica y de entrega de la unidad Android vigente; sin cambios de código de producto, Supabase, Auth, RLS, RPCs, Storage, economía, combate, datos de jugadores ni assets.
+- Preflight completado: la fila activa `vexforge_master_protocol_v2` fue leída completa mediante Supabase Management API; la copia de `main` coincide byte a byte con la fuente viva (`md5 4818d42b5f177e1d85a7c98382d01480`). Se leyó la continuidad más reciente, el inventario Android y `docs/VE-MOB-10-PACKS-SHOP.md`.
+- Fuentes reconciliadas: `main` en `76275c7`, contratos vivos de Supabase, tablas de packs/tienda/inventario/shards/evolución y el catálogo PostgREST de RPCs. Los objetos y las RPCs de la unidad están disponibles; no se inventaron datos ni se ejecutaron mutaciones.
+- Verificación local: `npm run typecheck` y `npm run verify:build` web correctos; guards `verify:mobile-auth`, `verify:mobile-deck`, `verify:mobile-battle`, `verify:mobile-rewards`, `verify:mobile-profile`, `verify:mobile-tutorial` y `verify:mobile-store` correctos; `mobile/npm run typecheck` correcto tras instalar dependencias temporalmente desde el registro público sin regenerar ni modificar `mobile/package-lock.json`.
+- Limitación de entorno: el primer `npm ci` móvil fue rechazado por una URL interna del firewall del entorno para `npm-package-arg@11.0.3`; no representa un fallo del código y no se trasladó al lockfile.
+- Gate integral: `npm run verify:all` pasa typecheck y build, pero se detiene en `verify:telemetry` porque Supabase no tiene un evento real `forge_action`; bloqueo preexistente documentado. No se fabricó telemetría ni se modificó el backend para forzar cobertura.
+- Entrega Android: el workflow oficial `vexforge-android-apk.yml` terminó `success` en el run 22 sobre `76275c7`; el release `vexforge-android-build-22` está publicado en GitHub con `app-release.apk` y el workflow verificó el bundle JS embebido.
+- Estado: `VE-MOB-10-PACKS-SHOP` permanece `IMPLEMENTED_UNVERIFIED`, nivel Q2 actual / Q3 objetivo. No se declara `OPERATIONAL`, `TIER1_READY` ni `PASS`; la QA funcional del operador sigue siendo post-entrega.
+- Siguiente acción verificable: instalar `vexforge-android-build-22` y ejecutar el recorrido post-entrega; después resolver la evidencia real de `forge_action` sin simular sesiones ni alterar contratos autoritativos.
+
+---
+
+## 2026-08-27 — VE-MOB-10-PACKS-SHOP — IMPLEMENTED_UNVERIFIED
+
+- Tipo de sesión: implementación Android de la siguiente unidad elegible de la FASE P2, con QA manual post-entrega no bloqueante según el protocolo activo.
+- Fuente canónica: protocolo maestro activo, `main`, inventario Android, rutas web de packs/shop/fusion/evolution/inventory y contratos vivos de Supabase.
+- Reconciliación: los catálogos, tablas de estado y RPCs usados por la unidad existen en Supabase oficial; no se agregaron tablas, RPCs, datos de jugador ni lógica económica al cliente.
+- Cambios: nueva ruta `mobile/app/store.tsx`, registrada en el stack raíz y accesible desde Home y Perfil. Cubre packs/apertura, tienda/órdenes/pagos, inventario, fusión y evolución con navegación por cámaras.
+- Contrato móvil: `mobile/lib/supabase.ts` consulta `vexforge_pack_catalog`, `vexforge_shop_catalog`, `player_cards`, `vexforge_player_shards`, `card_evolution_paths` y estado activo; llama únicamente a `vexforge_buy_pack_with_vex`, `vexforge_open_pack`, `vexforge_create_shop_order`, `vexforge_submit_shop_order_payment`, `vexforge_get_my_shop_orders`, `vexforge_fusion_policy`, `vexforge_apply_fusion` y `vexforge_evolve_card`.
+- Presentación: mobile-first, safe-area, accesible, pull-to-refresh, estados de carga/error/vacío, búsqueda de inventario y revelación de cartas; sin emojis, mocks, datos inventados ni lógica autoritativa duplicada.
+- Evidencia local: `cd mobile && npm run typecheck` OK. Se añade `verify:mobile-store` para comprobar superficie, contratos, estados y accesibilidad.
+- Limitación independiente: `npm ci` móvil continúa bloqueado por la discrepancia preexistente del lockfile (`react-dom` y `scheduler` faltantes); el typecheck se valida con instalación temporal sin regenerar el lockfile.
+- Estado: `IMPLEMENTED_UNVERIFIED`. Nivel Q: Q2 actual / Q3 objetivo. No se declara `OPERATIONAL`, `TIER1_READY` ni `PASS` sin recorrido del operador en el APK.
+- Siguiente acción verificable: ejecutar la batería web/móvil, publicar este cambio en `main`, confirmar el workflow Android oficial y el release correlativo con `app-release.apk`; luego entregar el APK para QA manual post-entrega.
+
+---
+
+## 2026-08-27 — VE-MOB-9-PROFILE — IMPLEMENTED_UNVERIFIED
+
+- Tipo de sesión: implementación Android de la siguiente unidad de la FASE P2, con QA manual post-entrega no bloqueante según el protocolo activo.
+- Fuente canónica: protocolo maestro activo `vexforge_master_protocol_v2` leído desde Supabase Management API, `main`, inventario Android, `vexforge_screen_manifest`, `vexforge_player_journey`, `vexforge_game_loop` y los contratos vivos de perfil.
+- Reconciliación: Supabase expone `players`, `player_progress`, `player_wallet`, `player_achievements`, `achievements`, `get_player_rank` y `get_player_stats`; los contratos usados por Android existen bajo el esquema público oficial.
+- Cambios: `mobile/app/(tabs)/profile.tsx` deja de ser un perfil mínimo y cubre identidad, conexión, rango PvP/MMR, nivel/XP/energía/región, VEX, estadísticas, logros desbloqueados, accesos rápidos y cierre de sesión.
+- Contrato móvil: `mobile/lib/supabase.ts` amplía la lectura autenticada de `players`, conserva `get_player_stats`, añade `get_player_rank` y consulta `player_achievements → achievements`; no se calcula rango, XP, recompensa ni estadística autoritativa en el cliente.
+- Presentación: superficie mobile-first, accesible, safe-area, pull-to-refresh, estados de carga/error/vacío y sin emojis, datos de demostración ni arte genérico.
+- Evidencia local: typecheck móvil OK; `git diff --check` OK; typecheck web y `verify:build` pendientes de la batería final; guarda específica `verify:mobile-profile` añadida para comprobar los contratos y estados de la unidad.
+- Limitación independiente: `npm ci` móvil continúa bloqueado por la discrepancia preexistente del lockfile (`react-dom` y `scheduler` faltantes); el typecheck se validará con instalación temporal sin escribir el lockfile. No se regenera el lockfile.
+- Estado: `IMPLEMENTED_UNVERIFIED`. Nivel Q: Q2 actual / Q3 objetivo. No se declara `OPERATIONAL`, `TIER1_READY` ni `PASS` sin recorrido del operador en el APK.
+- Siguiente acción verificable: ejecutar la batería web/móvil, publicar este commit en `main`, confirmar el workflow Android oficial y el release correlativo con `app-release.apk`; luego entregar el enlace para QA manual post-entrega.
+
+---
+
+## 2026-08-27 — VE-MOB-8-REWARDS — IMPLEMENTED_UNVERIFIED
+
+- Tipo de sesión: implementación Android de la siguiente unidad de la FASE P1, con QA manual post-entrega no bloqueante según el protocolo activo.
+- Fuente canónica: protocolo maestro activo `vexforge_master_protocol_v2` leído desde Supabase Management API, `main`, inventario Android, `vexforge_rewards_catalog`, `vexforge_missions_system`, `vexforge_game_loop`, `vexforge_screen_manifest` y las rutas web de quests/misiones.
+- Reconciliación: el protocolo vivo es `v2.6-qa-nonblocking-continuity`; coincide semánticamente con `main` y sólo difiere por un salto de línea final adicional en la copia del repositorio. No hay divergencia normativa.
+- Cambios: nueva superficie `mobile/app/missions.tsx` con quests diarias, progreso, reclamación, misiones activas, ejecución, recompensas, cooldowns y estados explícitos de carga/error/vacío/resultado; acceso desde Home y registro en el stack raíz.
+- Contrato móvil: `mobile/lib/supabase.ts` consulta datos reales bajo la misma sesión/RLS y usa únicamente `claim_daily_quest`, `execute_mission` y `claim_mission_reward`; no se calcula progreso, energía, recompensa ni liquidación en el cliente.
+- Presentación: VEX y XP se muestran desde las respuestas del servidor; flujo táctil, accesible, mobile-first y sin emojis, datos de demostración ni arte genérico.
+- Evidencia local: typecheck móvil OK; typecheck web OK; `verify:build` OK; guardas `verify:mobile-auth` 8/8, `verify:mobile-deck` 10/10, `verify:mobile-battle` 12/12, `verify:mobile-rewards` 12/12 y `verify:mobile-tutorial` 14/14 OK.
+- Limitación independiente: `npm ci` móvil sigue bloqueado por la discrepancia preexistente del lockfile (`react-dom` y `scheduler` faltantes); el typecheck se validó con instalación temporal sin escribir el lockfile. No se modificó el lockfile.
+- Estado: `IMPLEMENTED_UNVERIFIED`. Nivel Q: Q2 actual / Q3 objetivo. No se declara `OPERATIONAL`, `TIER1_READY` ni `PASS` sin recorrido del operador en el APK.
+- Siguiente acción verificable: publicar este commit en `main`, confirmar el workflow Android oficial y el release correlativo con `app-release.apk`; luego entregar el enlace para QA manual post-entrega.
+
+## 2026-08-27 — VE-MOB-7-BATTLE — IMPLEMENTED_UNVERIFIED
+
+- Tipo de sesión: implementación Android de la siguiente unidad de la FASE P1, con QA manual post-entrega no bloqueante según el protocolo activo.
+- Fuente canónica: protocolo maestro activo en Supabase, `main`, `docs/VE-MOB-0-PORT-INVENTORY.md`, `src/routes/PvpRoute.tsx`, `src/domains/pvp/`, `src/lib/battleTypes.ts` y los RPCs vivos de PvP.
+- Preflight: la fila normativa activa `vexforge_master_protocol_v2` gobierna la continuidad; el contrato vivo de `vexforge_battle_resolve` conserva la autoridad del servidor sobre ganador, daño, turnos, unidades finales y ELO.
+- Cambios: `mobile/app/(tabs)/battle.tsx` deja de ser un lobby mínimo y cubre búsqueda de oponentes, selección, confirmación, carga, error, lista vacía, resolución por RPC, lectura visual secuencial de turnos y resultado final con match/ELO/estado de victoria.
+- Contrato móvil: `mobile/lib/supabase.ts` conserva `turns`, `final_units`, `total_turns`, `engine`, identidad de jugadores y eventos de turno sin reproducir lógica de combate en el cliente.
+- Presentación: los cues de crítico, derrota, barrera, veneno, drenaje y doble golpe son únicamente lectura de eventos devueltos por Supabase; se respeta `AccessibilityInfo.isReduceMotionEnabled()` y no se usan emojis ni datos de demostración.
+- Guardas y evidencia local: `verify:mobile-battle` OK 12/12; `verify:mobile-auth` OK 8/8; `verify:mobile-deck` OK 10/10; `verify:mobile-tutorial` OK 14/14; typecheck web y móvil OK; build Vite OK; guardas web restantes OK.
+- Limitación independiente: `verify:telemetry` continúa fallando por ausencia de un evento vivo `forge_action`; no se fabricó telemetría ni se alteró esa deuda preexistente. `verify-build.mjs` requiere `.git` local, ausente en la copia descargada por API.
+- Estado: `IMPLEMENTED_UNVERIFIED`. Nivel Q: Q2 actual / Q3 objetivo. No se declara `OPERATIONAL`, `TIER1_READY` ni `PASS` sin recorrido del operador en el APK.
+- Siguiente acción verificable: publicar este commit en `main`, confirmar el workflow Android oficial y el release correlativo con `app-release.apk`; luego entregar el enlace para QA manual post-entrega.
+
+---
+
+## 2026-08-27 — QA-HUMAN-POST-DELIVERY-POLICY — OPERATIONAL
+
+- Tipo de sesión: cambio de gobernanza solicitado explícitamente por el operador; sin cambios en código de producto, `mobile/**`, Supabase Auth, RLS, RPCs, Storage, economía, combate, assets ni datos de jugadores.
+- Decisión canónica: la QA manual del owner/operador es post-entrega y ya no bloquea la selección ni la implementación de la siguiente unidad elegible. Una unidad sin ese recorrido queda `IMPLEMENTED_UNVERIFIED` y conserva la evidencia pendiente.
+- Protecciones preservadas: no se fabrican sesiones ni resultados, no se declaran `OPERATIONAL`, `TIER1_READY`, `PASS` ni launch gate sin la evidencia aplicable, y cualquier hallazgo posterior del owner puede reabrir sólo la unidad afectada.
+- Supabase: la fila activa `vexforge_master_protocol_v2` se actualizó a `v2.6-qa-nonblocking-continuity` y contiene la nueva regla permanente de continuidad sin bloqueo por QA humana.
+- GitHub: esta política se sincroniza con `VEXFORGE_PROTOCOL_V2.md` en `main`; el contenido del repositorio se toma de la fila canónica viva de Supabase.
+- Selección vigente: la QA pendiente de VE-MOB-2 a VE-MOB-6 deja de impedir el avance. La siguiente unidad de la FASE P1 es `VE-MOB-7-BATTLE`, que se ejecutará con los gates técnicos y quedará `IMPLEMENTED_UNVERIFIED` hasta la validación posterior del operador.
+- Siguiente acción verificable: leer el alcance y contratos de `VE-MOB-7-BATTLE`, implementar sólo esa unidad sobre Android, ejecutar typecheck/guardas/workflow APK y registrar la evidencia técnica sin esperar la QA manual.
+
+---## 2026-08-27 — ANDROID-QA-ENVIRONMENT-GATE — BLOCKED
+
+- Tipo de sesión: preflight diario + comprobación de capacidad de QA; sin cambios en código de producto, `mobile/**`, Supabase, Auth, RLS, RPCs, Storage, economía, combate, assets ni datos de jugadores.
+- Preflight completado: protocolo activo `vexforge_master_protocol_v2` leído completo desde Supabase Management API, versión `v2.5-canonical-source-flow`, estado `active`; su hash coincide byte a byte con `VEXFORGE_PROTOCOL_V2.md` en `main`.
+- Estado de entrega confirmado: workflow Android run 18 `success` sobre el commit de código `c42b392ff563b07574e632b341f1801f9b339b83`; release `vexforge-android-build-18` publicado con `app-release.apk`. El commit documental posterior no activa un nuevo APK porque no toca `mobile/**`.
+- Gate de QA: este entorno no tiene `adb` ni `emulator`, por lo que no existe un dispositivo o emulador disponible para ejecutar la sesión normal requerida. No se sustituye esa evidencia con una compilación, una consulta administrativa ni una sesión fabricada.
+- Estado canónico: VE-MOB-6 y las unidades Android portadas permanecen `IMPLEMENTED_UNVERIFIED`; no se abre VE-MOB-7-BATTLE ni se declara `OPERATIONAL` hasta completar la QA del APK 18.
+- Condición de reapertura: disponer de un dispositivo/emulador Android y un reporte de sesión normal sobre el APK 18, o detectar un fallo real que requiera corrección.
+- Siguiente acción verificable: instalar el APK publicado, recorrer autenticación, Home, colección, mazo y tutorial con la cuenta QA normal, registrar resultados y devolver la evidencia para cerrar o corregir la unidad afectada.
+
+---## 2026-08-27 — PREFLIGHT-CANONICAL-AND-DELIVERY-CHECK — BLOCKED
+
+- Tipo de sesión: preflight documental y verificación de entrega; sin cambios de producto, `mobile/**`, Supabase, Auth, RLS, RPCs, Storage, economía, combate, assets ni datos de jugadores.
+- Fuentes reconciliadas: fila activa `vexforge_master_protocol_v2` en `public.vexforge_official_documents` leída completa mediante Supabase Management API; `CONTINUITY.md`, `docs/VE-MOB-0-PORT-INVENTORY.md`, `docs/VE-MOB-5-DECK.md` y código real leídos desde `main`.
+- Hallazgo: el contenido normativo era idéntico entre Supabase y `main` salvo un salto de línea final ausente en la copia de `main`. Se sincroniza la copia del repositorio con el contenido vivo completo; no hubo divergencia semántica ni pérdida de historial.
+- Entrega Android: el workflow oficial `vexforge-android-apk.yml` run 18 terminó `success` sobre `c42b392ff563b07574e632b341f1801f9b339b83`; el release `vexforge-android-build-18` está publicado con `app-release.apk`.
+- Selección vigente: la FASE PORT y el inventario oficial gobiernan el orden. VE-MOB-2 AUTH, VE-MOB-3 HOME, VE-MOB-4 COLLECTION y VE-MOB-6 TUTORIAL tienen implementación registrada; la unidad VE-MOB-6 sigue `IMPLEMENTED_UNVERIFIED` hasta QA real. No se reabre AUTH ni se salta a una unidad nueva por la instrucción histórica del archivo de inicio.
+- Estado: `BLOCKED` para continuar con VE-MOB-7 hasta que el operador instale el APK del release 18 y complete el recorrido normal autenticado de las unidades portadas, incluyendo carga de colección/mazo, tutorial y estados críticos. La compilación verde no sustituye la QA en dispositivo.
+- Evidencia pendiente: captura o reporte del operador con sesión normal, sin privilegios administrativos ni sesión fabricada. Si la QA pasa, abrir VE-MOB-7-BATTLE según el inventario; si no, corregir sólo la unidad afectada.
+- Condición de reapertura: evidencia QA utilizable del release 18 o un nuevo cambio/fallo en el workflow, el contrato Supabase o la app Android.
+- Siguiente acción verificable: instalar `https://github.com/grandmaster68081-byte/Vexforge-web/releases/download/vexforge-android-build-18/app-release.apk`, ejecutar la QA autenticada normal y devolver los resultados para cerrar la unidad o corregir el hallazgo antes de continuar.
+
+---## 2026-08-27 — VE-MOB-6-TUTORIAL-DELIVERY-REPAIR — OPERATIONAL
+
+- Tipo de sesion: reparacion de cadena de entrega Android. Sin cambios de esquema, datos, RLS, grants, RPCs, economia autoritativa, Storage ni arte.
+- Preflight: protocolo maestro leido completo desde la fila activa `vexforge_master_protocol_v2` en `public.vexforge_official_documents` via Supabase Management API; `CONTINUITY.md` e inventario `docs/VE-MOB-0-PORT-INVENTORY.md` leidos desde `main`. Regla de Reconciliacion aplicada: la copia `VEXFORGE_PROTOCOL_V2.md` de `main` es identica byte a byte a la fila viva (90776 caracteres, md5 b73aaa8dd7e63a669622073afed3454a) — sin discrepancia, trabajo dependiente habilitado.
+- Motivo: la unidad VE-MOB-6-TUTORIAL quedo registrada como `IMPLEMENTED_UNVERIFIED` pero su entrega nunca se cerro. El run 17 del workflow oficial `vexforge-android-apk.yml` sobre `97cbcca1` fallo en el paso `npm run typecheck`, por lo que no se genero APK ni release: el ultimo release publicado seguia siendo `vexforge-android-build-16` sobre `9019a89b`. Segun la Ley de Transicion (punto 6 y 7) la unidad no puede avanzar sin correspondencia commit/run/release.
+- Diagnostico verificado en el log del run 17: `app/tutorial.tsx(2,40) TS2305` — `Redirect` importado desde `react-native`, donde no existe (pertenece a `expo-router`); y `TS2345`/`TS18047` en las lineas 190, 192 y 218 — `session` (`Session | null`) y `player` (posiblemente `null`) perdian el estrechamiento de tipos dentro de `persistAndContinue`, `handlePrimary` y `handleSkip`, porque TypeScript no preserva la reduccion de union de un `const` dentro de declaraciones de funcion hoisted.
+- Cambios: `mobile/app/tutorial.tsx` unicamente. `Redirect` se importa de `expo-router`; las tres funciones internas pasan de declaraciones hoisted a expresiones flecha `const`, con lo que el estrechamiento posterior a los guards (`if (!session) return <Redirect href="/auth" />` y `if (!player || ...) return <LoadingState .../>`) se preserva en el closure. No se renombraron variables ni se cambio la firma de las llamadas autoritativas: `advanceTutorialStep(session, player.id, currentStep + 1)` y `skipTutorial(session, player.id)` se conservan intactas, igual que los siete pasos, rutas, estados de carga/error, `testID` y accesibilidad ya portados.
+- Cero logica autoritativa en cliente: el avance y la omision del tutorial siguen resolviendose contra Supabase mediante las funciones existentes de `mobile/lib/supabase.ts` (actualizacion monotona `tutorial_step=lt.` y cierre en `TUTORIAL_DONE_STEP`). Ninguna regla de progreso se duplico en la app.
+- Evidencia local: `npm run typecheck` (mobile) verde sin errores; `node scripts/verify-mobile-tutorial.mjs` — OK 14/14; `node scripts/verify-mobile-auth.mjs` — OK 8/8; `node scripts/verify-mobile-deck.mjs` — OK 10/10. Sin regresion en las guardas de las unidades previas del port.
+- Estado: VE-MOB-6-TUTORIAL pasa de entrega rota a entregable. Nivel Q: Q2 actual / Q3 objetivo. La unidad permanece `IMPLEMENTED_UNVERIFIED` hasta la QA en dispositivo del operador; no se suplanta QA.
+- Deuda restante: QA en dispositivo de VE-MOB-2 a VE-MOB-6 pendiente del operador; `.github/workflows/verify.yml` sigue pendiente de `GITHUB_PAT` con scope `workflow`; cron/logica temporal autoritativa en servidor; artes duplicados del bucket pendientes de autorizacion de listado; columnas publicas legado sin describir.
+- Condicion de reapertura: nuevo fallo del workflow Android sobre `main`, o cambio en los contratos de progreso del tutorial en Supabase.
+- Siguiente accion verificable: confirmar que el workflow Android termina en `success` sobre este commit y que el release correlativo queda publicado con `app-release.apk`; instalarlo y recorrer el tutorial con sesion normal; despues abrir `VE-MOB-7-BATTLE`, siguiente unidad no completada de la FASE P1 del inventario oficial.
+
+---
+
+## 2026-08-26 — VE-MOB-6-TUTORIAL — IMPLEMENTED_UNVERIFIED
+
+- Tipo de sesión: PREFLIGHT CANÓNICO + implementación Android de la siguiente unidad del inventario.
+- Fuente canónica: protocolo maestro activo en Supabase, copia de `main`, `docs/VE-MOB-0-PORT-INVENTORY.md`, `src/routes/TutorialRoute.tsx`, `src/shared/components/TutorialOverlay.tsx`, `src/domains/tutorial/repository.ts` y `player_progress.tutorial_step`.
+- Reconciliación: Supabase no expone una RPC específica de tutorial; el progreso canónico se conserva mediante actualización autenticada monotónica de `player_progress`, igual que la implementación web. El combate permanece bajo las superficies y RPCs reales existentes.
+- Cambios: nueva ruta `mobile/app/tutorial.tsx` con siete pasos, carga/error, safe area, accesibilidad, acción de arena real, avance/omisión persistentes y estado final; registro en el stack raíz; acceso desde Home; funciones de progreso en `mobile/lib/supabase.ts`; guard `scripts/verify-mobile-tutorial.mjs`; documento `docs/VE-MOB-6-TUTORIAL.md`.
+- Alcance preservado: sin mocks de jugador/cartas/combate, sin RPCs nuevas, sin cambios en tablas, RLS, Storage, economía, autenticación, recompensas o datos de jugadores.
+- Estado: `IMPLEMENTED_UNVERIFIED`. Nivel Q: Q2 actual / Q3 objetivo. No se declara `OPERATIONAL` sin recorrido del operador en dispositivo o emulador.
+- Siguiente acción verificable: ejecutar typecheck y guards, publicar `main`, confirmar workflow/release correlativos y entregar el APK para QA del operador.
+
+---
+
+## 2026-08-26 — VE-MOB-5-DECK — IMPLEMENTED_UNVERIFIED
+
+- Tipo de sesión: PREFLIGHT CANÓNICO + verificación proporcional de la unidad Android, sin rehacer implementación existente.
+- Fuente canónica: protocolo maestro leído desde `public.vexforge_official_documents` vía Supabase Management API; copia de `main`; inventario `docs/VE-MOB-0-PORT-INVENTORY.md`; contratos vivos de `player_deck`, `player_cards`, `validate_deck` y `save_deck`.
+- Reconciliación: el protocolo vivo y `VEXFORGE_PROTOCOL_V2.md` coinciden en contenido; la única diferencia era el salto de línea final. La discrepancia documental previa queda resuelta para esta sesión.
+- Estado verificado en `main` `550550c`: VE-MOB-5 ya está implementada en `mobile/app/(tabs)/deck.tsx`, con colección real, mazo persistido, filtros, selección táctil, límites estándar, lectura de Deck Power, Campeón orientativo, validación y guardado por RPC autoritativa, y estados explícitos de carga/error/vacío/sin coincidencias.
+- Evidencia local: `npm run typecheck`, `npm run verify:build`, `npm run verify:mobile-deck` y `cd mobile && npm run typecheck` correctos. La instalación móvil limpia sin compatibilidad de peer dependencies rechaza el lockfile antes de compilar; no se regeneró ni modificó el lockfile.
+- Evidencia de entrega: el APK oficial `vexforge-android-build-16` terminó `success`; sus fuentes móviles relevantes coinciden con `main` actual. No se generó un APK nuevo porque este registro no modifica `mobile/**`.
+- Estado: `IMPLEMENTED_UNVERIFIED`. Nivel Q: Q2 actual / Q3 objetivo. No se declara `OPERATIONAL` sin recorrido del operador en dispositivo o emulador.
+- Alcance preservado: sin cambios en tablas, RPCs, RLS, Storage, economía, combate, autenticación ni datos de jugadores.
+- Siguiente acción verificable: instalar y recorrer el APK 16 con una sesión normal; después abrir VE-MOB-6-TUTORIAL según el orden del inventario.
+
+---
+
+## 2026-08-26 — PREFLIGHT-SUPABASE-CANONICAL-SOURCES — BLOCKED
+
+- Tipo de sesión: BLOQUEO / preflight de fuentes canónicas antes de seleccionar unidad o ejecutar cambios.
+- Unidad prevista: `VE-MOB-5-DECK` como siguiente unidad de la FASE P1; no se inició implementación por falta de reconciliación crítica.
+- Preflight ejecutado: `main` validado por Git smart HTTP sobre HTTPS con Basic y usuario `x-access-token`; GitHub API autenticada respondió HTTP 200; el proyecto Supabase `rscuzqnfccqvltkdcdny` está `ACTIVE_HEALTHY` y Management API respondió correctamente.
+- Discrepancia crítica: la consulta autenticada de catálogo (`pg_catalog`/`information_schema`) no encuentra en ningún esquema ni como tabla, vista, relación o función los objetos canónicos `vexforge_master_protocol_v2` y `vexforge_forge_formation_engine_v1`; `to_regclass` devuelve `null` y la lectura directa no puede ejecutarse. Sí están disponibles las tablas Tier 1 y los criterios abiertos, pero no sustituyen la lectura completa exigida del protocolo y del motor de formación.
+- Fuente de comparación: `VEXFORGE_PROTOCOL_V2.md`, la entrada más reciente de esta continuidad y `docs/VE-MOB-0-PORT-INVENTORY.md` fueron leídos desde `main`; la copia del protocolo del repositorio declara que las fuentes vivas de Supabase tienen precedencia, por lo que no se toma la copia Git como reemplazo.
+- Estado: `BLOCKED`. Nivel Q: Q0 de contexto; no hay implementación ni evidencia de unidad.
+- Alcance preservado: no se modificaron `mobile/**`, web, SQL, RPCs, RLS, Auth, Storage, assets, economía, combate, continuidad de jugador, releases APK ni deploys.
+- Condición de reapertura: restaurar o identificar los objetos canónicos vivos, permitir su lectura completa mediante Management API y reconciliar su contenido con `main` antes de elegir la unidad; después repetir el preflight diario completo.
+- Siguiente acción verificable: resolver la discrepancia de las fuentes canónicas en Supabase y reabrir `VE-MOB-5-DECK` sólo con el contexto completo disponible.
+
+---
+## 2026-08-26 — PROTOCOL-VISUAL-EXPERIENCE-LAYER-AND-DAILY-CONTEXT-LAW — OPERATIONAL
+
+- Tipo de sesión: GOBERNANZA + INTEGRACIÓN DOCUMENTAL; sin cambios de código de producto, datos de jugadores, economía, combate, RPCs, RLS, triggers, Auth, Storage, assets ni releases Android.
+- Preflight cumplido: se leyó y analizó el protocolo maestro completo vivo en Supabase, la continuidad oficial, el inventario VE-MOB-0 y la extensión visual completa antes de escribir cualquier cambio.
+- Cambio canónico: la extensión de benchmark visual y producto se registró como documento oficial y se integró en el Protocolo Maestro como TIER 1 EXPERIENCE LAYER, sin crear un plan paralelo y conservando Supabase como autoridad única.
+- Ley reforzada: cada día de trabajo y cada nueva sesión debe leer, comprender y analizar el protocolo completo de Supabase antes de ejecutar cualquier trabajo. Una continuidad detallada nunca sustituye ese preflight. Si el contexto completo no está disponible, el trabajo dependiente queda BLOCKED; el preflight, las fuentes reconciliadas, la unidad y el gate deben registrarse aquí.
+- Normas integradas: Game First, referente sin copia, Anti-Mockup Gate, Anti-Empty-Screen Gate, Design QA de diez pases, rúbrica 0-5, vertical slice transversal, mobile-first y capas visuales reversibles. La implementación futura debe mapearse a T0-T10, VE-MOB, criterios Tier 1, superficie/asset y evidencia.
+- Estado: la integración documental queda OPERATIONAL como gobierno del trabajo; no cambia por sí sola el estado de ningún criterio Tier 1 ni declara una superficie visual terminada. Nivel Q: Q0 contractual actual / Q1 objetivo de adopción verificable.
+- Evidencia Supabase: documento oficial vexforge_visual_benchmark_fates_extension_v1, addendum presente en vexforge_master_protocol_v2 y decisión VE-VIS-EXT-GAME-FIRST-EXPERIENCE-LAYER verificados mediante Management API autenticada.
+- Evidencia de repositorio: VEXFORGE_PROTOCOL_V2.md sincronizado con la directiva y la extensión conservada en docs/VEXFORGE-VISUAL-BENCHMARK-FATES-EXTENSION-V1.md; no se modificó mobile/**, por lo que no corresponde publicar un APK nuevo en esta sesión.
+- Gate observado: el workflow verify del commit de integración pasó instalación, typecheck y verify:build, pero terminó `failure` en `verify:telemetry` porque Supabase no tiene un evento real `forge_action`; es el bloqueo preexistente ya documentado y no se resuelve fabricando telemetría ni alterando este cambio documental.
+- Deuda y riesgo: la capa visual aún debe materializarse por la unidad mínima bloqueante vigente; conservar rendimiento Android, accesibilidad, reduced-motion, autoridad del backend y prohibición de genéricos durante la implementación.
+- Condición de reapertura: cambio del protocolo, del documento fuente, de la autoridad viva, del inventario Android o evidencia de que una implementación visual contradice una regla canónica.
+- Siguiente acción verificable: repetir la Ley Diaria de Contexto Completo al iniciar la próxima sesión y elegir la siguiente unidad por la fase abierta más baja y criterio bloqueante, sin reabrir trabajo completado ni crear un plan paralelo.
+
+---
+## 2026-08-26 — VE-MOB-4-COLLECTION — IMPLEMENTED_UNVERIFIED
+
+- Tipo de sesión: IMPLEMENTACIÓN Android + verificación proporcional previa a publicación.
+- Fuente canónica: `main` en el repositorio oficial, `src/routes/CardsRoute.tsx`, repositorios de cartas/colección, Supabase vivo y `docs/VE-MOB-0-PORT-INVENTORY.md`.
+- Estado inicial: `NOT_STARTED / VE-MOB-4-COLLECTION` según el inventario oficial. Estado actual: `IMPLEMENTED_UNVERIFIED`. Nivel Q: Q2 actual / Q3 objetivo.
+- Cambios: catálogo móvil completo desde `cards`; lectura autenticada de `player_cards` con RLS; porcentaje de colección y cantidades; búsqueda, filtros de rareza/facción, orden por rareza/nombre/poder; inspector táctil con arte, estadísticas, habilidades, lore, sistemas y supply; estados de carga, error, vacío y sin coincidencias.
+- Archivos: `mobile/app/(tabs)/collection.tsx`, `mobile/lib/supabase.ts`, `mobile/context/GameContext.tsx`, `mobile/constants/colors.ts` y `docs/VE-MOB-4-COLLECTION.md`.
+- Alcance preservado: sin mocks, sin duplicar lógica autoritativa, sin cambios en combate, economía, recompensas, RPCs, RLS, Storage ni datos de jugador.
+- Evidencia Supabase: las columnas consultadas existen en `cards` y `player_cards`; consulta pública del catálogo activo responde HTTP 200; el acceso Management API autenticado responde correctamente.
+- Evidencia local: `npm run verify:mobile-auth` correcto (8/8); parseo TypeScript de archivos modificados correcto; `git diff --check` correcto. `npm ci` móvil y `npm run verify:build` quedan limitados por dependencias rechazadas/faltantes del entorno local (`npm-package-arg@11.0.3` / `vite`), sin evidencia de fallo funcional de esta unidad.
+- QA pendiente: recorrido de catálogo, filtros, detalle, estados y colección autenticada en el APK por el operador. No se declara `OPERATIONAL`.
+- Deuda y riesgo: confirmar typecheck y compilación en el workflow oficial; revisar el encaje visual en dispositivo real y cualquier diferencia entre `image_url` y Storage durante el recorrido.
+- Condición de reapertura: cambio del contrato vivo, RLS, arte canónico, ruta muerta, fallo de workflow/release o hallazgo QA del operador.
+- Siguiente acción verificable: publicar en `main`, confirmar `vexforge-android-apk.yml` success sobre el commit, release `vexforge-android-build-N` con `app-release.apk`, bundle JS embebido y firma v2; luego entregar el APK para QA.
+
+## 2026-08-25 — SUPREME-LAW-OPERATOR-QA-HANDOFF — OPERATIONAL
+
+- Tipo de sesión: DOCUMENTACIÓN + cambio de flujo de entrega solicitado por el operador.
+- Fuente canónica: decisión explícita del operador, `VEXFORGE_PROTOCOL_V2.md` y Supabase vivo.
+- Cambio: la IA ya no crea ni recupera sesiones QA ni recorre el APK después de cada unidad. Debe completar la implementación, publicar en `main`, esperar el workflow oficial, confirmar el release correlativo y devolver el enlace de descarga.
+- Estado de entrega: la ausencia de QA no bloquea el cierre de implementación; la unidad queda `IMPLEMENTED_UNVERIFIED` hasta la verificación funcional del operador. `OPERATIONAL`, `PASS` y `GO` siguen reservados para evidencia aportada por el operador.
+- Seguridad preservada: no se fabrican sesiones, resultados de combate, settlements, recompensas, economía ni estados de cuenta; no se usa `service_role`.
+- Evidencia Supabase: decisión `SUPREME-LAW-OPERATOR-QA-HANDOFF` registrada mediante migración `0043_supreme_law_operator_qa_handoff.sql`.
+- Condición de reapertura: hallazgo QA del operador, discrepancia entre commit y release, workflow fallido o APK sin bundle JS embebido.
+- Siguiente acción verificable: aplicar este flujo en la siguiente unidad Android y entregar su APK oficial.
+
+## 2026-08-25 — VE-MOB-3-HOME — IMPLEMENTED_UNVERIFIED
+
+- Tipo de sesión: IMPLEMENTACIÓN + verificación proporcional de la superficie Home Android.
+- Fuente canónica: código de `main`, `src/routes/HomeRoute.tsx`, `src/domains/home/`, Supabase vivo y `docs/VE-MOB-0-PORT-INVENTORY.md`.
+- Estado inicial: `NOT_STARTED / VE-MOB-3-HOME` después de AUTH. Estado actual: `IMPLEMENTED_UNVERIFIED`. Nivel Q: Q2 actual / Q3 objetivo.
+- Cambios: `mobile/app/(tabs)/index.tsx` completa el port del Home con estadísticas globales, temporada/evento, batalla rápida, carta del día, estado del jugador, misiones, top de arena, actividad, estados vacío/error y destacados de sistemas.
+- Alcance preservado: consumo del Supabase oficial y sus RPCs existentes; sin mocks, sin duplicación de lógica autoritativa, sin cambios de combate, economía, RLS, Storage, datos de jugador o plan Tier 1.
+- Evidencia local: `npm run typecheck` en `mobile/` correcto; `npm run verify:mobile-auth` correcto (8/8); `npm run verify:build` web correcto. `npm run verify:all` conserva el bloqueo preexistente de telemetría viva por ausencia de `forge_action`, sin fabricar eventos.
+- Evidencia de entrega: commit `bf6599ced6e2cbc1bcf8b41210befebcdc5d38ff`; run 12 (`32911859725`) de `vexforge-android-apk.yml` terminó `success` sobre el mismo commit; release `vexforge-android-build-12` publicado con `app-release.apk` (90,865,271 bytes), `assets/index.android.bundle` embebido (3,027,176 bytes) y `APK Sig Block 42` presente. SHA-256 del asset: `9f49cf26f1b4b6561b74c6c00ee69567c8a228e378a4d1d4a2c68df19b6f1ee0`.
+- Ruta oficial de instalación: https://github.com/grandmaster68081-byte/Vexforge-web/releases/download/vexforge-android-build-12/app-release.apk
+- Evidencia pública: `https://vexforge-web.pages.dev/build-manifest.json` responde HTTP 200 y declara `sourceCommit` `bf6599ced6e2cbc1bcf8b41210befebcdc5d38ff`; la raíz pública responde HTTP 200.
+- QA pendiente: recorrido funcional de Home en el APK por el operador con sesión normal. No se declara `OPERATIONAL`.
+- Deuda: completar las unidades siguientes del port P1 (`VE-MOB-4` a `VE-MOB-8`); resolver la cobertura real de telemetría web/app cuando corresponda.
+- Condición de reapertura: workflow o release fallido, cambio del contrato Home en Supabase, ruta muerta, regresión de estados reales o hallazgo QA del operador.
+- Siguiente acción verificable: instalar `app-release.apk` en dispositivo o emulador y ejecutar QA funcional de Home con sesión normal; después abrir `VE-MOB-4-COLLECTION`.
+
+## 2026-08-25 — VE-MOB-2-AUTH — IMPLEMENTED_UNVERIFIED
+
+- Tipo de sesión: AUDITORÍA + BLOQUEO de cierre QA; sin cambios de código, datos, esquema, RLS, Storage, economía ni resultados de jugadores.
+- Fuente canónica: `main` en `bc4ae1e5110fb143bde5349083ced30afebcded6`, Supabase vivo `rscuzqnfccqvltkdcdny`, workflow `vexforge-android-apk.yml` y release asociado.
+- Estado inicial: `IN_PROGRESS / VE-MOB-2-AUTH` pendiente desde la transición a Android. Estado actual: `IMPLEMENTED_UNVERIFIED`. Nivel Q: Q1 actual / Q2 objetivo.
+- Implementación verificada en `main`: formulario de inicio/registro, sesión persistida y renovable con Supabase Auth, guard de navegación de tabs y consumo autenticado de perfil, wallet, estadísticas y RPCs existentes.
+- Evidencia local: `npm run verify:mobile-auth` correcto y `npm run verify:build` correcto. `npm run verify:all` no cierra por falta de eventos reales de telemetría (`forge_action`), deuda independiente de esta unidad.
+- Evidencia publicada: run APK #10 sobre el mismo commit terminó `success`; release `vexforge-android-build-10` publicado con `app-release.apk` (90,841,303 bytes) y `assets/index.android.bundle` embebido (3,003,204 bytes). Cloudflare Pages expone `build-manifest.json` con el mismo commit.
+- Evidencia Supabase: Management API autenticada responde correctamente; la cuenta QA canónica `pavilo20.qa@vexforge.test` existe y tiene acceso reciente. No se creó ni suplantó una sesión normal en esta sesión.
+- Limitación de verificación local: `npm ci` móvil no pudo completar porque el espejo de paquetes del entorno rechazó `npm-package-arg@11.0.3`; no se usa como evidencia negativa, ya que el workflow oficial sí pasó `npm ci`, `npm run typecheck` y la compilación APK.
+- Bloqueo: falta recorrer el APK 10 con una sesión normal de la cuenta QA en dispositivo físico o emulador y verificar inicio, registro controlado, persistencia/renovación, logout, estados de error y aislamiento de rutas. No se declara `OPERATIONAL` por compilar.
+- Condición de reapertura: APK nuevo, cambio en Supabase Auth/RLS, cambio del guard de navegación, regresión de renovación de sesión o disponibilidad de una sesión QA normal utilizable.
+- Siguiente acción verificable: ejecutar el recorrido autenticado sobre `vexforge-android-build-10`; si pasa, registrar evidencia y cerrar `VE-MOB-2-AUTH`, después abrir `VE-MOB-3-HOME`.
+
+## 2026-08-25 — VE-MOB-0-PROTOCOL-TRANSITION-TO-ANDROID — OPERATIONAL
+
+- Tipo de sesión: DOCUMENTACIÓN (transición de entorno activo). Sin cambios de código, datos, esquema, RLS, Storage ni arte; sin `service_role`.
+- Decisión del operador: el producto migra de web a aplicación Android. Orden de trabajo: (1) FASE PORT — vaciar todo lo construido en la web hacia la app, pulirla y compilarla a APK; (2) FASE CONTINUIDAD — seguir el plan del protocolo (Tier 1) sobre la app. Sistema de entrega: push a `main` → workflow `vexforge-android-apk.yml` → release `app-release.apk` que el operador instala.
+- Cambios: `VEXFORGE_PROTOCOL_V2.md` — nueva sección 0 "LEY DE TRANSICIÓN: ENTORNO ACTIVO = APLICACIÓN ANDROID" (entorno activo, web en mantenimiento, orden PORT→CONTINUIDAD, backend único, ciclo de entrega por Releases, verificación de build APK, QA sobre APK, no regresión web); bloque PROYECTO actualizado; sección 3 incluye revisión del entorno móvil; sección 12 admite el release APK como artefacto de evidencia; sección 13 renombrada "GITHUB, RELEASES APK Y CLOUDFLARE" con la cadena workflow→release y prohibición de canales paralelos (EAS/manual).
+- Nuevo: `docs/VE-MOB-0-PORT-INVENTORY.md` — inventario oficial del port: 38 superficies web → 14 unidades `VE-MOB-2…15` en 4 fases (P1 núcleo jugable, P2 progresión/economía, P3 mundo/social, P4 admin diferida), criterios transversales y reevaluación de `VE-VIS-6` para la app.
+- Reconciliación: `VE-VIS-6` queda `IMPLEMENTED_UNVERIFIED` en web y pasa a cola de reevaluación móvil; `VE-VIS-*` restantes conservan su estado. Nada cerrado cambia de estado.
+- Estado inicial: `IN_PROGRESS / protocolo gobernando sólo web`. Estado actual: `OPERATIONAL`. Nivel Q: Q1.
+- Condición de reapertura: el operador revierte la transición, cambia el canal de entrega del APK o la web vuelve a ser producto prioritario.
+- Siguiente acción verificable: abrir `VE-MOB-2-AUTH` (login real contra Supabase Auth en la app), primera unidad de la FASE P1 del inventario.
+
+---
+
+## 2026-08-24 — VE-MOB-1-ANDROID-APK-STANDALONE + VE-CI-1-VERIFY-ACTIVATION — OPERATIONAL
+
+- Tipo de sesion: IMPLEMENTACION + verificacion de artefacto publicado (APK) y activacion de CI.
+- Fuente canonica: `main`, workflow `.github/workflows/vexforge-android-apk.yml`, releases publicos del repo.
+- Credencial: `GITHUB_PAT` rotado por el operador; verificado `GET /user` 200 con `x-oauth-scopes: repo, workflow`. Desbloquea escritura bajo `.github/workflows/`.
+- Hallazgo (causa raiz del APK roto): las builds 1-8 publicaban `app-debug.apk` (187 MB) SIN `assets/index.android.bundle`. El plugin `withEmbeddedJsBundle` no logro forzar el bundling en la variante debug, por lo que la app instalada buscaba un servidor Metro y fallaba al arrancar ("Unable to load script").
+- Correccion: el workflow ahora compila `assembleRelease` (la variante release siempre embebe el bundle y Expo la firma con el keystore debug, manteniendola sideload-installable), anade `setup-java 17` y una guarda que aborta la publicacion si el APK no contiene `assets/index.android.bundle`.
+- Evidencia verificada: run #9 (`cee0ab6`) success; release `vexforge-android-build-9` con `app-release.apk` de 86.6 MB; inspeccion del APK descargado: `assets/index.android.bundle` presente (2.99 MB), 3 dex, ABIs arm64-v8a/armeabi-v7a/x86/x86_64, bloque de firma `APK Sig Block 42` (v2) presente.
+- Ruta oficial de instalacion: https://github.com/grandmaster68081-byte/Vexforge-web/releases/download/vexforge-android-build-9/app-release.apk
+- VE-CI-1: `ci/verify.workflow.yml` copiado a `.github/workflows/verify.yml`; la deuda "CI bloqueado por scope `workflow`" queda cerrada.
+- Alcance preservado: sin cambios en combate, economia, RLS, RPCs, Storage, arte ni codigo de la web.
+- Deuda restante: QA del APK en dispositivo fisico (solo el operador puede instalarlo); `VE-VIS-6` sigue `PLANNED`; HTTP 429 de Storage en `verify:all`.
+- Condicion de reapertura: cambio de la variante de build, del keystore o de la version de Expo/RN.
+- Siguiente accion verificable: instalar `app-release.apk` en dispositivo y confirmar arranque sin error; luego retomar `VE-VIS-6` paso 1.
+
+---
+
+## 2026-08-22 — SUPREME-LAW-QA-DEPLOY-CLOSURE-GATE — OPERATIONAL
+
+- Tipo de sesión: DOCUMENTACIÓN + endurecimiento del cierre QA posterior al deploy.
+- Fuente canónica: `main`, `VEXFORGE_PROTOCOL_V2.md`, continuidad oficial, decisión suprema de preflight y Supabase vivo `rscuzqnfccqvltkdcdny`.
+- Corrección permanente: toda unidad completada debe verificarse después del deploy público con una sesión normal de `pavilo20.qa@vexforge.test`, recorriendo las rutas y criterios afectados y observando el resultado real.
+- La comprobación exige que `build-manifest.json` corresponda al commit publicado, flujo autenticado visible, estados reales, respuestas relevantes, responsive, focus y reduced motion cuando apliquen.
+- Una confirmación de archivos, HTTP 200 o texto declarativo no es evidencia suficiente. Sin sesión QA utilizable, el estado queda `IMPLEMENTED_UNVERIFIED` o `BLOCKED`; no se declara `OPERATIONAL`, `PASS`, `GO` ni `COMPLETED`.
+- Alcance preservado: nunca se guardan contraseña, tokens, enlaces ni credenciales; no se usa `service_role` para suplantar jugadores o fabricar resultados.
+- Evidencia de configuración: la cuenta QA existe en `auth.users` y tiene acceso reciente registrado el 2026-08-22; la ley fue aplicada mediante `0042_qa_deploy_verification_gate.sql`.
+- Estado inicial: `IN_PROGRESS / gate QA posterior al deploy incompleto`. Estado actual: `OPERATIONAL`. Nivel Q: Q0 actual / Q1 objetivo para esta regla.
+- Condición de reapertura: una unidad se cierra sin recorrido QA real, el manifiesto público no coincide con el commit, la sesión QA deja de ser utilizable o se intenta sustituir QA por privilegios administrativos.
+- Siguiente acción verificable: aplicar este gate al cerrar la próxima unidad de implementación; para `VE-VIS-6`, recorrer el bucle real con la cuenta QA antes de aplicar `0040`.
+
+---
+
+## 2026-08-22 — SUPREME-LAW-TRANSPORT-FAIL-CLOSED — OPERATIONAL
+
+- Tipo de sesión: DOCUMENTACIÓN + reconciliación de preflight; no se ejecutó ninguna unidad del juego ni se fabricó QA.
+- Fuente canónica: `main`, `VEXFORGE_PROTOCOL_V2.md`, memoria/decisiones oficiales y Supabase vivo `rscuzqnfccqvltkdcdny`.
+- Hallazgo: el PAT estaba disponible y Supabase estaba accesible, pero el primer intento Git usó `Bearer` en Git smart HTTP y fue rechazado. Eso no demostraba una credencial inválida.
+- Corrección permanente: el protocolo ahora exige autenticación nativa por transporte, diagnóstico antes de clasificar el secreto, cierre fail-closed si `main` no se valida y uso de la cuenta QA canónica antes de declarar una prueba autenticada bloqueada.
+- Evidencia: `git clone` HTTPS con Basic `x-access-token` validó `main`; Supabase Management API respondió `200`; `auth.users` contiene la cuenta QA canónica `pavilo20.qa@vexforge.test`, con último acceso registrado el 2026-08-22.
+- Alcance preservado: sin cambios en combate, economía, recompensas, autenticación, RLS, RPCs autoritativas, Storage, assets, deploy ni resultados de QA.
+- Estado inicial: `IN_PROGRESS / regla de preflight incompleta`. Estado actual: `OPERATIONAL`. Nivel Q: Q0 actual / Q1 objetivo para esta regla.
+- Bloqueos: ninguno para el acceso oficial en esta sesión. La verificación autenticada de una unidad sólo puede ejecutarse con una sesión normal QA utilizable; no se suplanta con privilegios administrativos.
+- Condición de reapertura: cambio de proveedor/transporte, rechazo de `main`, cambio de la cuenta QA canónica o cualquier sesión que vuelva a clasificar un fallo de transporte como credencial inválida sin diagnóstico.
+- Siguiente acción verificable: continuar desde la prioridad oficial viva sólo después de reconciliar el plan y los documentos de la unidad activa; para `VE-VIS-6`, reconstruir la implementación desde `NOT_STARTED` y no aplicar `0040` sin cobertura real.
+
+---
+
+## 2026-08-22 — VE-VIS-6-GAME-LOOP-TELEMETRY — IMPLEMENTED_UNVERIFIED
+
+- Tipo de sesion: IMPLEMENTACION + verificacion proporcional de contrato, sin suplantar una sesion QA.
+- Fuente canonica: `main`, `VEXFORGE_PROTOCOL_V2.md`, `docs/VE-VIS-6-GAME-LOOP-TELEMETRY.md` y Supabase vivo `rscuzqnfccqvltkdcdny`.
+- Estado inicial: `PLANNED / NOT_STARTED`. Estado actual: `IMPLEMENTED_UNVERIFIED`. Nivel Q: Q2 actual / Q3 objetivo.
+- Cambios: migracion `0039_ve_vis_6_game_loop_telemetry.sql` aplicada en Supabase; emisor best-effort `src/lib/telemetry.ts`; instrumentacion de `App.tsx`, `FusionRoute.tsx`, `BattleResultScreen.tsx` y `QuestsRoute.tsx`; guarda `scripts/verify-telemetry.mjs`; `verify:telemetry` encadenada en `verify:all`; migracion condicionada `0040_ve_vis_6_game_loop_telemetry_met.sql`.
+- Alcance preservado: sin cambios en combate autoritativo, dano, settlement, recompensas, economia, RPCs autoritativas, autenticacion, Storage, arte ni lore. El emisor nunca elige `user_id`; Supabase lo deriva de `auth.uid()`.
+- Reconciliacion viva: las tablas y la funcion ya existian en Supabase sin migracion equivalente en `main`; 0039 conserva la firma viva de cinco columnas, elimina policies duplicadas, fija RLS y deja `anon` sin grants sobre eventos.
+- Evidencia local: `npm run typecheck` y `npm run verify:build` correctos. `npm run verify:all` llega a `verify:telemetry` y falla correctamente porque la cobertura viva devuelve 0 emisiones para las cinco claves.
+- Evidencia Supabase: migracion 0039 aplicada por Management API; catalogo de 5/5 claves; funcion `vexforge_telemetry_coverage()` responde con rol `anon`; cobertura actual `0/5`; objetivo sigue `NOT_STARTED`; grants de tabla auditados (catalogo solo lectura publica, eventos solo `authenticated select/insert`).
+- Evidencia local: `npm ci --ignore-scripts`, `npm run typecheck` y `npm run verify:build` correctos; `npm run verify:telemetry` falla correctamente al detectar que no existe una emision real para `session_start`.
+- Evidencia deploy: `https://vexforge-web.pages.dev/build-manifest.json` declara el commit actualmente publicado de `main`; la raiz publica responde HTTP 200. No se publico un bundle nuevo porque no hubo cambio de código en esta unidad.
+- Bloqueo: falta una sesion normal autenticada de la cuenta QA canonica para recorrer el bucle real. No se usa `service_role`, no se fabrican eventos ni resultados y 0040 no se aplica sin cobertura.
+- Responsive, accesibilidad, focus y reduced motion: la telemetria no crea UI ni focos; el flujo visual existente y sus guardas se conservan.
+- Condicion de reapertura: se anade/retira una clave, una superficie deja de emitir, una clave cae a 0 o RLS deja de aislar por `auth.uid()`.
+- Siguiente accion verificable: ejecutar el flujo real con sesion QA autorizada, comprobar `>=1` por clave mediante la cobertura anon, aplicar 0040 y verificar el `build-manifest.json` publico del commit de cierre.
+
+---
+
+## 2026-08-21 — VE-VIS-5-AUDIO-FLOW — OPERATIONAL
+
+- Tipo de sesion: IMPLEMENTACION + verificacion proporcional para cerrar el criterio bloqueante `audio_flow` de la fase 3 del plan Tier 1.
+- Fuente canonica: `main`, `VEXFORGE_PROTOCOL_V2.md`, `public.vexforge_visual_tier1_objective`, decisiones oficiales de audio y `docs/VE-VIS-5-AUDIO-FLOW.md`.
+- Problema: el motor procedural ya emitia audio, pero no existia un catalogo verificable de procedencia/consumidores ni una guarda que demostrara cuatro contextos musicales.
+- Cambios preparados: `AUDIO_MANIFEST` con 12 entradas procedurales; guarda `verify:audio-flow` encadenada en `verify:all`; documento de unidad y migracion `0038_ve_vis_5_audio_flow.sql`.
+- Sin cambios en combate autoritativo, dano, settlement, recompensas, economia, RPCs, RLS, autenticacion, Storage, lore ni estadisticas.
+- Evidencia local: `npm run typecheck`, `npm run verify:audio-flow` y `npm run verify:build` correctos. `npm run verify:all` llega hasta `verify:card-art`, donde Storage devuelve HTTP 429 reintentable para seis objetos; las guardas anteriores, incluida audio, son correctas.
+- Responsive, accesibilidad, focus y reduced motion: se conserva el desbloqueo por gesto, mute/volumen existentes y la guarda visual global.
+- Evidencia Supabase: migracion `0038_ve_vis_5_audio_flow.sql` aplicada via Management API; `audio_flow = MET` y decision oficial `VE-VIS-5-AUDIO-FLOW` registrada.
+- Estado: `NOT_STARTED` -> `OPERATIONAL`. Nivel Q: Q3 actual / Q3 objetivo.
+- Bloqueo/deuda: `verify:all` conserva deuda operativa separada por HTTP 429 de Storage; no afecta el contrato de audio procedural.
+- Condicion de reapertura: contexto sin musica, accion critica sin SFX, procedencia ausente o regresion del desbloqueo/accesibilidad.
+- Siguiente accion verificable: hacer commit/push a `main` y verificar que el deploy publico refleja el commit auditado.
+
+---
+
+## 2026-08-21 — VE-VIS-4-COMBAT-SCENE-DIRECTION — OPERATIONAL
+
+- Tipo de sesion: IMPLEMENTACION + verificacion proporcional para cerrar el criterio bloqueante `combat_scene_direction` de la fase 3 del plan Tier 1.
+- Fuente canonica: `main`, `VEXFORGE_PROTOCOL_V2.md`, `public.vexforge_visual_tier1_objective`, `public.vexforge_project_decisions` y `docs/VE-VIS-4-COMBAT-SCENE-DIRECTION.md`.
+- Problema: el tablero ya tenia impactos, numeros y cinematicas, pero no una señal semantica comun que distinguiera cada accion de combate durante la resolucion.
+- Cambios: `CombatActionCue` en `InteractiveBattleBoard.tsx`; estilos `.combat-action-cue` con reduced motion; `scripts/verify-combat-scene.mjs`; encadenamiento en `verify:all`; documento y migracion `0037_ve_vis_4_combat_scene_direction.sql`.
+- Sin cambios en combate autoritativo, daño, settlement, recompensas, economia, RPCs, RLS, autenticacion, Storage, lore, estadisticas ni assets.
+- Evidencia local: `npm run typecheck`, `npm run verify:combat-scene` y `npm run verify:build` correctos. `npm run verify:all` llega hasta las guardas de Storage, donde el bucket responde `HTTP 429` en consumos repetidos; queda registrado como limitacion externa reintentable, no como fallo del contrato de escena.
+- Responsive, accesibilidad, focus y reduced motion: cue limitado al viewport, `role=status`, `aria-live=polite`, sin foco nuevo y animacion desactivada con `prefers-reduced-motion: reduce`.
+- Evidencia Supabase: migracion `0037_ve_vis_4_combat_scene_direction.sql` aplicada via Management API; `combat_scene_direction = MET`; decision oficial `VE-VIS-4-COMBAT-SCENE-DIRECTION` registrada.
+- Evidencia deploy: `build-manifest.json` publico declara el commit auditado `487c8215151489897f881a6f2561e9636d77c671`; el manifiesto y la aplicacion publica responden por el flujo oficial de Cloudflare.
+- Estado: `NOT_STARTED` -> `OPERATIONAL`. Nivel Q: Q3 actual / Q3 objetivo.
+- Bloqueo/deuda: `verify:all` requiere reintento de Storage por `HTTP 429`; no se declara verde extremo a extremo en esta ejecucion. `audio_flow` y las unidades posteriores de fase 3+ siguen abiertas.
+- Condicion de reapertura: una accion resuelta sin cue dedicado, una rama de evento nueva sin guarda o regresion de accesibilidad/reduced motion.
+- Siguiente accion verificable: abrir `VE-VIS-5-AUDIO-FLOW`, manteniendo el rate limit de Storage como deuda operativa separada.
+
+---
+
+## 2026-08-21 — VE-VIS-3-MOTION-SYSTEM — OPERATIONAL
+
+- Tipo de sesion: IMPLEMENTACION + verificacion proporcional para cerrar el criterio bloqueante `motion_and_feedback` de la fase 3 del plan Tier 1.
+- Fuente canonica: `main` commit `c5d1a6b9326348bdfcdb54213815f2c7d03385ff`, `VEXFORGE_PROTOCOL_V2.md`, `public.vexforge_visual_tier1_objective`, `public.vexforge_project_decisions` y `docs/VE-VIS-3-MOTION-SYSTEM.md`.
+- Problema: no existia un sistema de motion unificado en el repositorio; las superficies usaban duraciones, easing y keyframes locales sin un contrato comun ni guarda especifica.
+- Cambios: `src/styles.css` declara 17 tokens y 8 clases publicas; `App.tsx`, `HomeRoute.tsx` y `BattleResultScreen.tsx` consumen el contrato; `scripts/verify-motion.mjs` se encadena en `verify:all`; `supabase/migrations/0036_ve_vis_3_motion_system.sql` registra la evidencia y el criterio.
+- Sin cambios en combate autoritativo, daño, settlement, recompensas, economia, RPCs, RLS, autenticacion, Storage, lore, estadisticas ni assets.
+- Evidencia local: `npm run typecheck`, `npm run verify:motion`, `npm run verify:build` y `npm run verify:all` correctos. `verify:all` confirma identidad 188/188, datos 274 filas sin violaciones, arte canonico 15/15, cartas 127/127, manifiesto 218, assets 21/21, auth guard 4/4 y documentacion 218/218 tablas, 536/536 columnas runtime, 549/549 columnas de soporte.
+- Evidencia Supabase: migracion aplicada via Management API; `motion_and_feedback = MET`, `blocking = true`, `owning_unit = null`; decision oficial `VE-VIS-3-MOTION-SYSTEM` registrada.
+- Responsive, accesibilidad, focus y reduced motion: no se añaden superficies ni focos; el fallback global `prefers-reduced-motion: reduce` desactiva animaciones, transformaciones y transiciones no esenciales; los breakpoints existentes se conservan.
+- Estado: `NOT_STARTED` -> `OPERATIONAL`. Nivel Q: Q3 actual / Q3 objetivo.
+- Bloqueo/deuda: `combat_scene_direction`, `audio_flow` y el resto de criterios posteriores de fase 3+ siguen abiertos; `loading_and_empty_states` permanece `PARTIAL`; el bucket conserva higiene de assets bloqueada por autorizacion de listado.
+- Condicion de reapertura: una superficie critica introduce motion fuera del contrato, la guarda pierde cobertura o falla el comportamiento reduced-motion.
+- Siguiente accion verificable: abrir `VE-VIS-4-COMBAT-SCENE-DIRECTION`, dependiente del sistema base, y medir feedback dedicado por accion de combate sin alterar resultados autoritativos.
+
+## 2026-08-21 — VE-VIS-3-ICON-LANGUAGE-RESIDUAL — OPERATIONAL
+
+- Tipo de sesion: IMPLEMENTACION + verificacion estatica para cerrar el criterio bloqueante `icon_language` de la fase 2 del plan Tier 1.
+- Fuente canonica: `main`, `VEXFORGE_PROTOCOL_V2.md`, `public.vexforge_visual_tier1_objective`, `ForgeIcon.tsx` y `verify-ui-identity.mjs`.
+- Problema: la guarda excluia el rango runico U+1600-U+16FF y `CardAttackCinematic` lo usaba como texto visual en particulas de ataque.
+- Cambios: `src/components/battle/CardAttackCinematic.tsx` usa `ForgeIcon` SVG para las particulas; `scripts/verify-ui-identity.mjs` bloquea el rango runico; nueva migracion `0035_ve_vis_3_icon_language_residual_closure.sql`; documento de unidad.
+- Sin cambios en combate autoritativo, economia, RPCs, RLS, autenticacion, Storage, lore, estadisticas ni assets.
+- Evidencia local: `npm run typecheck`, `npm run verify:ui-identity` (188/188, 0 violaciones) y `npm run verify:build` correctos.
+- Estado: `IN_PROGRESS` -> `OPERATIONAL`. Nivel Q: Q3 actual / Q3 objetivo.
+- Responsive, accesibilidad y reduced motion: se conserva la superficie existente; los iconos son decorativos `aria-hidden`, sin foco ni nuevas peticiones.
+- Evidencia de cierre: migracion aplicada y confirmada en Supabase (`icon_language = MET`, decision oficial registrada); `build-manifest.json` publico declara `a0239e9c1ac79aba05f6bb06c3ad6ed8fa8a986b`; `/` y `/pvp` responden HTTP 200; `index-B-yvjgw2.js` y `PvpRoute-e5Nrkyo6.js` coinciden bit a bit con `dist`.
+- Bloqueo/deuda: `loading_and_empty_states` sigue `PARTIAL` y mantiene abierta la fase 2; la siguiente unidad elegible es `VE-VIS-3-EMPTY-STATE-ART`.
+- Condicion de reapertura: nuevo icono visible como texto, cambio de contrato de `ForgeIcon` o regresion de la guarda Unicode.
+- Condicion de reapertura: nuevo icono visible como texto, cambio de contrato de `ForgeIcon` o regresion de la guarda Unicode.
+- Siguiente accion verificable: abrir `VE-VIS-3-EMPTY-STATE-ART` y cerrar los estados vacios sin arte de marca con evidencia de navegador autenticada.
+
+## 2026-08-21 — VE-VIS-1-TIER1-VISUAL-OBJECTIVE — OPERATIONAL
+
+- Tipo de sesion: gobierno del objetivo final del protocolo (calidad visual Tier 1 del genero) trazado como dato medible en la fuente autoritativa. Sin cambios de esquema de juego, economia autoritativa, RLS de datos de jugador, Storage ni arte.
+- Motivo: la vision final ("juego visualmente Tier 1 para su genero") no tenia criterios medibles ni estado por criterio; no era posible declarar si la meta esta alcanzada ni cual es la ruta critica restante.
+- Cambios: `supabase/migrations/0030_ve_vis_1_tier1_visual_objective.sql` (tabla `public.vexforge_visual_tier1_objective` con GRANTs explicitos, RLS y politica de lectura publica, `comment on` de tabla y de las 12 columnas, y 10 criterios sembrados con `on conflict do update`) y `docs/VE-VIS-1-TIER1-VISUAL-OBJECTIVE.md` (lectura del estado y ruta critica).
+- Aplicacion: migracion aplicada en produccion contra `rscuzqnfccqvltkdcdny` via Management API y confirmada por consulta (10/10 criterios presentes y ordenados).
+- Medicion registrada: MET en `surface_backgrounds`, `boss_art` (15/15), `card_art` (127/127), `asset_manifest_integrity` (218 filas / 21 assets), `ui_identity_tokens` (0 violaciones) y `mobile_layout`; PARTIAL en `icon_language` y `loading_and_empty_states`; NOT_STARTED en `motion_and_feedback`; BLOCKED en `asset_hygiene`.
+- Veredicto: **Tier 1 NO alcanzado todavia**. La capa de arte e identidad estatica esta cerrada; la brecha real es de vida en pantalla (motion y feedback) mas los restos de lenguaje de iconos.
+- Verify: `npm run verify:all` verde en typecheck, build, ui-identity, identity-data (274 filas, 0 violaciones), boss-art 15/15, card-art 127/127, surface-art 29 inscritos / 18 consumidos, y assets 21/21.
+- Anomalia observada VE-OBS-02: `verify:manifest` fallo en esta ejecucion por `HTTP 429` de Storage al comprobar `cards/IMG_20260606_012301_077.jpg`, no por incoherencia del manifiesto. Es limitacion de tasa del bucket bajo verificacion secuencial de 218 filas inmediatamente despues de `verify:card-art`/`verify:surface-art`, que ya recorren Storage. Mitigacion propuesta y no aplicada por cuota: reintento con backoff y tratamiento de 429 como reintentable en `scripts/verify-manifest.mjs`.
+- Estado: NOT_STARTED -> OPERATIONAL. Nivel Q: Q3.
+- Deuda restante: `motion_and_feedback` NOT_STARTED (bloqueante de Tier 1); limpieza Unicode en `NotFoundRoute`/`PvpRoute` y motores de batalla; estados vacios sin arte de marca; artes duplicados del bucket pendientes de autorizacion de listado; CI `BLOCKED` (`GITHUB_PAT` sin scope `workflow`); cron/logica temporal autoritativa en servidor; VE-OBS-02 sin mitigar.
+- Condicion de reapertura: cambio de estado real de cualquier criterio sin actualizar la tabla por migracion, o incorporacion de un criterio visual nuevo no trazado.
+- Siguiente accion verificable: abrir `VE-VIS-2-MOTION-SYSTEM` — definir tokens de motion (duracion, easing, distancia) en el sistema de diseno, aplicarlos a transicion de entrada de superficie y a estados hover/press, y actualizar `motion_and_feedback` a MET por migracion con evidencia de navegador sobre el deploy publico.
+
+---
+
+## 2026-08-21 — VE-CI-1-WORKFLOW-HANDOFF — OPERATIONAL
+
+- Tipo de sesion: cierre de verificacion visual autenticada de VE-QA-1 sobre el deploy vivo + entrega ejecutable del CI bloqueado. Sin cambios de esquema, RLS, economia autoritativa, Storage ni arte.
+- Verificacion pendiente de VE-QA-1 resuelta: el deploy de Cloudflare ya propago `sourceCommit=4617f44` (`build-manifest.json`) y los chunks publicos coinciden bit a bit con el build local por SHA-256 (`DepositRoute-CIBCojdg.js`, `AdminDepositsRoute-COl6Hq54.js`, `index-FI4daHK-.js`, los tres `match=YES`).
+- Evidencia visual autenticada (Chromium, sesion real de `pavilo20.qa@vexforge.test` inyectada en el sitio publicado): `/deposit` ya renderiza la pantalla completa "Obtener VEX" — saldos (VEX ingame 210 / tradeable 0), selector de red `BNB Chain (USDT BEP-20)`, direccion de tesoro `0x29B2907d6E10BeB2becb9bA82f2b6af04815c403` con boton Copiar, formulario de registro (monto/TX hash/wallet origen) y tabla de referencia de precios. Sin loader eterno. Barrido de `/deposit`, `/withdraw`, `/economy`, `/profile`, `/missions`, `/pvp`: 0 errores de consola y 0 respuestas HTTP >= 400.
+- Estado de VE-QA-1: `IMPLEMENTED_UNVERIFIED` -> `VERIFIED/OPERATIONAL` con evidencia de navegador real sobre el deploy publico.
+- CI: bloqueo diagnosticado con evidencia, no supuesto. `PUT /repos/grandmaster68081-byte/Vexforge-web/contents/.github/workflows/verify.yml` devuelve `404 Not Found` con el `GITHUB_PAT` actual, comportamiento documentado de GitHub cuando el token carece del scope `workflow`.
+- Cambios: `ci/verify.workflow.yml` (workflow `verify` completo y listo para copiar: checkout, Node 20 con cache npm, `npm ci --ignore-scripts`, `tsc --noEmit -p tsconfig.app.json`, `npm run verify:all`, con `VITE_SUPABASE_URL`/`VITE_SUPABASE_ANON_KEY` publicos como respaldo y sobreescribibles por *Repository variables*) y `docs/CI_ACTIVATION.md` (dos vias de desbloqueo: commit del archivo desde la web de GitHub, que ignora el limite de scope, o reemisar `GITHUB_PAT` con scope `workflow`).
+- Verify: `npm run verify:all` verde de extremo a extremo (typecheck, build, ui-identity, identity-data, artes, manifest 218, assets 21/21, auth-guard, table-docs 216/216, column-docs 536/536, support-column-docs 528/528). El workflow no se encadena en `verify:all` porque vive fuera de `.github/workflows/` y no es ejecutable hasta activarse.
+- Estado: NOT_STARTED -> OPERATIONAL. Nivel Q: Q3.
+- Deuda restante: CI sigue `BLOCKED` en ejecucion real hasta que se cree `.github/workflows/verify.yml` (accion humana de un paso, ya documentada); cron/logica temporal autoritativa en servidor; artes duplicados del bucket pendientes de autorizacion de listado; limpieza Unicode en motores de batalla; 942 columnas de tablas publicas legado sin describir.
+- Condicion de reapertura: cambio en los scripts de `verify:all` que invalide el workflow entregado, o activacion del CI con fallo en la primera ejecucion.
+- Siguiente accion verificable: tras activar `.github/workflows/verify.yml`, leer la primera ejecucion de `Actions` y ajustar el workflow con la evidencia del log; en paralelo, mutaciones economicas reales con jugador QA (deposito pendiente -> aprobacion admin -> acreditacion VEX).
+
+---
+
+## 2026-08-21 — VE-QA-1-AUTHENTICATED-SURFACE-SWEEP — OPERATIONAL
+
+- Tipo de sesion: QA autenticada de superficie sobre el deploy vivo + correccion del hallazgo real medido. Sin cambios de economia autoritativa, Storage ni arte.
+- Motivo: levantar la deuda historica "QA autenticada BLOCKED" emitiendo una sesion de jugador real y barriendo la superficie completa contra el sitio publicado.
+- Sesion QA: `pavilo20.qa@vexforge.test` emitida via Admin API (magic link -> OTP -> tokens) e inyectada en Playwright contra `vexforge-web.pages.dev`. Credenciales solo en el entorno de ejecucion: nunca en el repositorio ni en el chat.
+- Evidencia del barrido: 32 rutas autenticadas con 0 errores de consola y 0 respuestas HTTP >= 400, contenido real renderizado por pantalla, y `/admin` en "Acceso Denegado" para jugador sin privilegios (gate confirmado). Flujos interactivos verificados: tutorial descartable, PvP -> Forge Formation (Campeon/Vanguardia/Centinela), quests diarias con progreso real y packs en "VEX insuficiente" con saldo 0 (comportamiento correcto).
+- Hallazgo real corregido: `/deposit` colgado en "CARGANDO..." indefinidamente. Causa raiz medida en el catalogo vivo: `public.vexforge_treasury` tenia RLS con una unica politica `TO service_role`; `authenticated` tenia GRANT de columnas pero ninguna politica, por lo que el `select` devolvia 0 filas sin error y `chains.length === 0` bloqueaba el loader.
+- Cambios: `supabase/migrations/0029_ve_qa_1_treasury_deposit_read.sql` (politica de minimo privilegio `authenticated_read_active_project_treasury`, solo `active = true and purpose = 'project_treasury'`; `anon` sigue sin lectura) y `src/routes/DepositRoute.tsx` (estado `chainsLoaded` que separa "cargando" de "sin wallets" y muestra estado vacio en vez de loader eterno).
+- Aplicacion: migracion ya aplicada en produccion contra `rscuzqnfccqvltkdcdny` via Management API y confirmada en `pg_policy`. Verificado por REST: `authenticated` -> 1 wallet (BSC/USDT/BEP20), `anon` -> `[]`.
+- Verify: `npx tsc` limpio y `npm run verify:all` verde de extremo a extremo (manifest 218, assets 21/21, auth-guard, table-docs 216/216, column-docs 536/536, support-column-docs 528/528).
+- Estado: NOT_STARTED -> OPERATIONAL. Nivel Q: Q3. Deuda "QA autenticada: BLOCKED" -> RESUELTA.
+- Deuda restante: CI sigue `BLOCKED` (`GITHUB_PAT` sin scope `workflow`, `.github/workflows/verify.yml` no activable); cron/logica temporal autoritativa en servidor; artes duplicados del bucket pendientes de autorizacion de listado; limpieza Unicode en `NotFoundRoute`/`PvpRoute`/motores de batalla.
+- Condicion de reapertura: nueva ruta autenticada sin barrido, revocacion de la politica de lectura del tesoro, o perdida de la sesion QA.
+- Siguiente accion verificable: extender el barrido autenticado a mutaciones economicas reales (deposito pendiente -> aprobacion admin -> acreditacion VEX) con un jugador QA y saldo controlado.
+
+---
+
+## 2026-08-21 — VE-DOC-5-SUPPORT-COLUMN-COMMENTS — OPERATIONAL
+
+- Tipo de sesion: higiene documental de columnas de soporte interno. Solo metadatos: sin cambios de esquema, datos, RLS, grants, RPCs, economia autoritativa, Storage ni arte.
+- Motivo: ejecutar la siguiente accion verificable declarada en VE-DOC-4 (extender la cobertura documental de columnas a las tablas de soporte interno `vexforge_*` con dependencia en funciones o vistas del catalogo vivo). CI sigue BLOCKED por `GITHUB_PAT` sin scope `workflow`.
+- Estado previo medido en vivo: 24 tablas `vexforge_*` con dependencia en funciones o vistas; 17 de ellas con 181 columnas sin `col_description`.
+- Cambios: `supabase/migrations/0027_ve_doc_5_support_column_comments.sql` (181 `comment on column` generados desde evidencia real del catalogo: tipo, clave primaria, referencia foranea, obligatoriedad y valor por defecto), `scripts/verify-support-column-docs.mjs` (nuevo, alcance declarado por el repositorio: toda tabla `vexforge_*` con `comment on column` en `supabase/migrations/`, leido contra la sonda `vexforge_column_doc_coverage` con el rol anon) y `package.json` (`verify:support-column-docs` encadenado en `verify:all`).
+- Aplicacion: migracion aplicada contra `rscuzqnfccqvltkdcdny` via Management API. Reutiliza la sonda existente; no se creo ninguna funcion nueva.
+- Evidencia: recuento en vivo => 24/24 tablas de soporte con 0 columnas sin describir. `npm run verify:all` verde de extremo a extremo, incluido `verify:support-column-docs — OK: 287/287 columnas documentadas en 28 tabla(s) de soporte interno`, `verify:column-docs — OK: 536/536` y `verify:table-docs — OK: 216/216`.
+- Estado: NOT_STARTED -> OPERATIONAL. Nivel Q: Q3.
+- Deuda restante: QA autenticada `BLOCKED` sin sesion normal autorizada; `.github/workflows/verify.yml` pendiente de `GITHUB_PAT` con scope `workflow`; cron/logica temporal autoritativa en servidor; artes duplicados del bucket pendientes de autorizacion de listado; columnas de tablas de soporte sin dependencia detectada en funciones o vistas todavia sin describir.
+- Condicion de reapertura: nueva columna en las tablas `vexforge_*` de alcance sin `comment on column`, o revocacion del `execute` de la sonda a `anon`.
+- Siguiente accion verificable: completar la cobertura documental de las columnas publicas restantes fuera de alcance (tablas de soporte sin consumidor ni dependencia detectada) y volver a medir `1900` columnas del catalogo publico.
+
+---
+
+## 2026-08-21 — VE-DOC-6-RESIDUAL-SUPPORT-COLUMN-COMMENTS — OPERATIONAL
+
+- Tipo de sesion: higiene documental de columnas. Solo metadatos: sin cambios de esquema, datos, RLS, grants, RPCs, economia autoritativa, Storage ni arte.
+- Motivo: ejecutar la siguiente accion verificable declarada en VE-DOC-5 (cerrar la cobertura de las tablas de soporte `vexforge_*` sin consumidor ni dependencia detectada y volver a medir el catalogo publico de 1900 columnas).
+- Estado previo medido en vivo: 27 tablas `vexforge_*` con 241 columnas sin `col_description`.
+- Cambios: `supabase/migrations/0028_ve_doc_6_residual_support_column_comments.sql` (241 `comment on column` generados desde evidencia real del catalogo: tipo, clave primaria, referencia foranea, obligatoriedad y valor por defecto). Sin scripts nuevos: la guarda existente `verify:support-column-docs` amplia su alcance sola porque lo declara el repositorio.
+- Aplicacion: migracion aplicada contra `rscuzqnfccqvltkdcdny` via Management API.
+- Evidencia: recuento en vivo => 0 columnas `vexforge_*` sin describir. `npm run verify:all` verde de extremo a extremo, incluido `verify:support-column-docs — OK: 528/528 columnas documentadas en 55 tabla(s) de soporte interno`, `verify:column-docs — OK: 536/536` y `verify:table-docs — OK: 216/216`. Catalogo publico: 1900 columnas totales, 942 sin describir (todas en tablas legado no `vexforge_*`).
+- Estado: NOT_STARTED -> OPERATIONAL. Nivel Q: Q3.
+- Deuda restante: QA autenticada `BLOCKED` sin sesion normal autorizada; `.github/workflows/verify.yml` pendiente de `GITHUB_PAT` con scope `workflow`; cron/logica temporal autoritativa en servidor; artes duplicados del bucket pendientes de autorizacion de listado; 942 columnas de tablas publicas legado (`tg_*`, `player_state`, `wallet_transactions`, `daily_quests`, ...) sin describir.
+- Condicion de reapertura: nueva columna en cualquier tabla `vexforge_*` sin `comment on column`.
+- Siguiente accion verificable: documentar las columnas de las tablas publicas legado consumidas por el cliente y por RPCs autoritativas (empezando por `player_state`, `wallet_transactions` y `daily_quests`) y extender la guarda a ese alcance.
+
+---
+
+## 2026-08-21 — VE-VIS-2-TIER1-PLAN-EXTENSION — OPERATIONAL
+
+- Tipo de sesion: gobierno del plan. Solo metadatos: sin cambios de esquema de juego, datos de jugador, economia autoritativa, RLS de datos, Storage, arte ni codigo de aplicacion.
+- Motivo: el plan VE-VIS-1 solo cubria arte e identidad estatica; cumplirlo no producia un juego Tier 1 del genero (RPG de forja / gacha competitivo). Ademas, el sistema de motion disenado en la sesion anterior nunca llego al repositorio (vivia en un clon temporal sin commit).
+- Cambios: `supabase/migrations/0031_ve_vis_2_tier1_plan_extension.sql`. Anade `owning_unit` y `phase` (documentadas) a `public.vexforge_visual_tier1_objective`; crea `public.vexforge_tier1_phases` (6 fases, lectura publica, RLS y grants explicitos); asigna fase y unidad responsable a los 10 criterios existentes; reescribe `motion_and_feedback` como contrato de la unidad `VE-VIS-3-MOTION-SYSTEM` (sigue `NOT_STARTED`: el codigo no existe en el repo); anade 12 criterios nuevos: `combat_scene_direction`, `audio_flow`, `game_loop_telemetry`, `first_session_flow`, `economy_readability`, `content_depth`, `live_ops_seasons`, `social_competitive`, `performance_budget`, `accessibility_baseline`, `stability_error_budget`, `design_uniqueness`; registra la decision oficial `VE-VIS-2-TIER1-PLAN-EXTENSION` en `public.vexforge_project_decisions`.
+- Aplicacion: migracion aplicada en produccion contra `rscuzqnfccqvltkdcdny` via Management API.
+- Evidencia en vivo: 22 criterios inscritos — fase 1: 4/4 MET; fase 2: 2 MET + 2 PARTIAL; fase 3: 3 NOT_STARTED; fase 4: 2 NOT_STARTED + 1 PARTIAL; fase 5: 3 PARTIAL; fase 6: 2 NOT_STARTED + 2 PARTIAL + 1 BLOCKED. `vexforge_tier1_phases`: 1 DONE, 2 IN_PROGRESS, 3-6 NOT_STARTED.
+- Reglas canonicas inscritas: ningun criterio pasa a `MET` sin evidencia reproducible (guarda encadenada en `verify:all` o recorrido de navegador sobre el deploy vivo); las fases se ejecutan en orden ascendente; Tier 1 solo puede declararse cuando ningun criterio con `blocking = true` esta fuera de `MET`.
+- Estado: NOT_STARTED -> OPERATIONAL. Nivel Q: Q3.
+- Deuda restante: sistema de motion sin implementar (`VE-VIS-3-MOTION-SYSTEM`); CI `BLOCKED` (`GITHUB_PAT` sin scope `workflow`); artes duplicados del bucket pendientes de autorizacion; limpieza Unicode residual; 942 columnas legado sin describir.
+- Condicion de reapertura: cambio de genero o alcance del producto, o incorporacion de un criterio nuevo de Tier 1.
+- Siguiente accion verificable: ejecutar `VE-VIS-3-MOTION-SYSTEM` — implementar en el repositorio los tokens y clases de motion en `src/styles.css`, su consumo en `App.tsx`, `HomeRoute.tsx` y `BattleResultScreen.tsx`, y la guarda `scripts/verify-motion.mjs` encadenada en `verify:all`; despues actualizar el criterio `motion_and_feedback` a `MET` por migracion, con la evidencia real.
+
+---
+
+
+---
+
+## 2026-08-21 — VE-TIER1-3-BENCHMARK-AND-RELEASE-GATE — OPERATIONAL
+
+- Tipo de sesion: auditoria y refuerzo del plan Tier 1 vigente contra Supabase, main y referencias actuales del genero.
+- Veredicto: el plan original era necesario pero insuficiente; no podia garantizar Tier 1 porque permitia criterios no bloqueantes fuera de MET, no tenia benchmark vivo y carecia de gates de integridad, red, monetizacion, retencion, operacion y confianza.
+- Cambios canonicos: fase 7 de benchmark y release readiness; ocho criterios bloqueantes: benchmark_definition, competitive_integrity, network_resilience, monetization_fairness, retention_validation, release_readiness, player_trust y evidence_reproducibility.
+- Regla nueva: Tier 1 solo puede declararse cuando todos los criterios del plan estan en MET y cada uno tiene evidencia reproducible vinculada a commit, deploy, fecha y fuente.
+- Estado: el objetivo Tier 1 sigue NOT_REACHED_UNTIL_ALL_CRITERIA_MET. No se declara Tier 1 por completar fases nominales.
+- Contradiccion registrada: project_memory conserva active_plan GAME_ENGINE_COMBAT_TUTORIAL, mientras la decision visual Tier 1 define VE-VIS-3-MOTION-SYSTEM como siguiente unidad; ambas capas deben reconciliarse antes de declarar el plan operativo como ruta unica.
+- Siguiente accion verificable: ejecutar VE-VIS-3-MOTION-SYSTEM y actualizar los valores current_value solo con verify:all y evidencia del deploy vivo.
+
+
+---
+
+## 2026-08-21 — VE-TIER1-4-PRELAUNCH-CANDIDATE — OPERATIONAL
+
+- Correccion de alcance: VEXFORGE aun no esta lanzado; el objetivo inmediato es una candidatura Tier 1 prelaunch, no una validacion de anos de mercado.
+- Se retiraron del gate actual las dependencias imposibles antes del lanzamiento: D1/D7/D30 historicos, poblacion real de matchmaking, estabilidad a escala y resultados de economia observados. Quedan como validacion postlaunch.
+- El gate actual exige experiencia de entrada comparable al benchmark, 12 evaluadores en dos rondas para la primera sesion, pruebas autenticadas controladas con cuentas QA normales, una temporada simulada completa, integridad autoritativa, red, economia, accesibilidad, rendimiento, estabilidad, confianza y evidencia reproducible.
+- Nueva regla: PRELAUNCH_TIER1_CANDIDATE se alcanza con todos los criterios prelaunch en MET y puntuacion ponderada >=85/100 contra cinco competidores directos y dos alternativas indirectas versionados. No requiere jugadores publicos ni historial de retencion.
+- LIVE_TIER1_VALIDATED queda separado y se revisara solo despues del lanzamiento.
+- Siguiente accion verificable: construir la matriz benchmark y ejecutar la primera sesion controlada; no declarar Tier 1 hasta que la evidencia exista.
+
+
+---
+
+## 2026-08-21 — VE-TIER1-5-STRONG-PRELAUNCH-BAND — OPERATIONAL
+
+- El objetivo se eleva de Tier 1 prelaunch nominal a Tier 1 Strong prelaunch.
+- Nuevos gates: benchmark_positioning, first_impression, gameplay_balance, content_quality, device_compatibility y finish_quality.
+- Umbral: >=90/100 ponderado, ninguna dimension critica <85/100, ninguna brecha critica >10 puntos frente al mejor benchmark y victoria en al menos 3/5 comparaciones directas.
+- Hard fails: gate critico fuera de MET, estrategia dominante, ruta muerta, fallo critico de auth/settlement, bloqueo movil o placeholder/generico sin resolver.
+- Alcance: sigue siendo prelaunch y no exige poblacion publica, retencion historica ni escala postlaunch.
+- Estado: TIER1_STRONG_PRELAUNCH aun no alcanzado; la matriz y las pruebas de calidad siguen pendientes.
+- Siguiente accion verificable: construir benchmark_positioning y ejecutar first_impression/gameplay_balance antes de declarar cualquier estado Tier 1.
+
+---
+
+## 2026-08-22 — VE-VIS-6-GAME-LOOP-TELEMETRY — PLANNED (plan trazado, sin implementacion)
+
+- Tipo de sesion: gobierno del plan. Solo documentacion: sin cambios de esquema, datos, RLS, grants, RPCs, economia autoritativa, Storage, arte ni codigo de aplicacion.
+- Motivo: la sesion anterior escribio la implementacion de la unidad en un clon temporal (`/tmp/vx`) y agoto creditos antes de commitear; el clon fue destruido. Habia riesgo de que la proxima sesion asumiera codigo existente.
+- Hecho verificado contra `main` (baseline `7fb7db0`): NO existen `supabase/migrations/0039_ve_vis_6_game_loop_telemetry.sql` (la ultima migracion es `0038`), `src/lib/telemetry.ts`, `scripts/verify-telemetry.mjs`, la instrumentacion de `App.tsx` / `FusionRoute.tsx` / `BattleResultScreen.tsx` / `QuestsRoute.tsx`, ni `verify:telemetry` en `package.json`. La migracion `0039` NO fue aplicada en `rscuzqnfccqvltkdcdny` y el criterio `game_loop_telemetry` NO esta `MET`.
+- Correccion de estado canonica: la unidad NO esta `IMPLEMENTED_UNVERIFIED`. Su estado real es `PLANNED / NOT_STARTED` y debe reconstruirse desde cero.
+- Cambios de esta sesion: `docs/VE-VIS-6-GAME-LOOP-TELEMETRY.md` — plan de ejecucion canonico e inequivoco: contrato de datos de la migracion `0039` (catalogo publico de 5 eventos, `vexforge_telemetry_events` con RLS estricta por `auth.uid()`, grants explicitos sin `anon`, indices, `vexforge_telemetry_coverage()` `security definer` con `search_path` fijo, `comment on` de tablas, 11 columnas y funcion, decision oficial), emisor best-effort `src/lib/telemetry.ts`, los 4 consumidores instrumentados, la guarda doble `scripts/verify-telemetry.mjs`, los limites preservados, la secuencia obligatoria de 10 pasos, los 5 criterios de aceptacion y la condicion de reapertura.
+- Ley de la unidad inscrita: la migracion `0039` NO pone `game_loop_telemetry` en `MET`; el paso a `MET` va en una migracion posterior (`0040`) y solo con cobertura en vivo >= 1 evento real por cada una de las 5 claves, medida con rol `anon`.
+- Estado: NOT_STARTED -> PLANNED (plan trazado). Nivel Q: sin asignar, no hay implementacion ni evidencia.
+- Deuda restante: la implementacion completa de la unidad (pasos 1-10 del plan); QA autenticada `BLOCKED` sin sesion normal autorizada; CI `.github/workflows/verify.yml` pendiente de `GITHUB_PAT` con scope `workflow`; HTTP 429 de Storage en `verify:all`; artes duplicados pendientes de autorizacion; 942 columnas legado sin describir.
+- Condicion de reapertura: cambio del bucle de juego o de los eventos canonicos declarados en el plan.
+- Siguiente accion verificable: ejecutar el paso 1 del plan (`supabase/migrations/0039_ve_vis_6_game_loop_telemetry.sql` sin `update` a `MET`) y continuar la secuencia en orden estricto hasta el paso 10.
+
+---
+## 2026-08-26 — CANONICAL-SOURCE-RECONCILIATION — RECONCILED
+
+- Tipo de sesión: RECONCILIACIÓN DOCUMENTAL + corrección de fuente canónica; no se modificó `mobile/**`, web, lógica de juego, economía, datos de jugadores, RPCs, RLS, Auth, Storage, assets, releases ni deploys.
+- La entrada anterior `PREFLIGHT-SUPABASE-CANONICAL-SOURCES — BLOCKED` se conserva como historial exacto del diagnóstico inicial; no se revierte ni se edita. El bloqueo queda reabierto sólo después de corregir la ruta de lectura y reconciliar el contenido.
+- Ruta canónica verificada: Supabase Management API → proyecto `rscuzqnfccqvltkdcdny` → `public.vexforge_official_documents` → `doc_key = vexforge_master_protocol_v2` → `content_markdown`. La búsqueda exclusiva en catálogo SQL/to_regclass no era suficiente para documentos.
+- Estado canónico verificado después de la corrección: `doc_version = v2.5-canonical-source-flow`, `status = active`, contenido completo de 1192 líneas y 92430 bytes; hash SHA-256 del contenido sincronizado: `cab4064a2b254c1da35b1a8b63c0d23afe01054ac2450fb8ae5711dc9c9e44ea`.
+- Reconciliación aplicada sin pérdida: se preservó el protocolo vivo completo, incluido el roadmap T0-T10, la extensión Game First, los gates de calidad, la cadena de deploy y las reglas de seguridad; se incorporó la Ley de Transición Android ya registrada en `main` y la regla explícita de resolución de discrepancias entre fuentes.
+- Precedencia fijada: la fila activa de Supabase es la autoridad normativa; `main`, `CONTINUITY.md`, el inventario Android, Supabase vivo, releases y deploys aportan estado/evidencia. Si vuelven a diferir, el trabajo dependiente queda `BLOCKED` hasta una nueva reconciliación aditiva; nunca se sobrescribe una fuente por suposición ni se borra historial.
+- Selección fijada: mientras la FASE PORT no esté completada, el inventario `docs/VE-MOB-0-PORT-INVENTORY.md` gobierna el orden Android y `VE-MOB-5-DECK` es la siguiente unidad después de VE-MOB-4. Los criterios Tier 1/T0-T10 y sus gates siguen siendo obligatorios; no se declara iniciada ni completada ninguna unidad por esta corrección documental.
+- Sincronización preparada en un único commit atómico de `main`: `VEXFORGE_PROTOCOL_V2.md` se actualizará con el contenido canónico fusionado y esta continuidad registrará la evidencia de ese mismo estado. No se crea una copia, entorno o canal paralelo.
+- Evidencia de escritura Supabase: Management API respondió HTTP 201 y devolvió `vexforge_master_protocol_v2`, estado `active`, versión `v2.5-canonical-source-flow`, `content_bytes = 92432` y `content_md5 = 161c9b66454d1a64d4fd9e0031e004ea`.
+- Estado: preflight documental `RECONCILED`; producto sin cambio; siguiente trabajo permitido sólo sobre `VE-MOB-5-DECK` tras leer su documento de unidad, el código real y los contratos móviles pertinentes.
+- Siguiente acción verificable: completar el análisis de `VE-MOB-5-DECK` desde el `main` sincronizado; si no aparecen contradicciones, implementar únicamente su alcance, verificar proporcionalmente y publicar sólo por el workflow Android oficial.
+## 2026-08-30 — VE-MOB-11-ECONOMY — APK RELEASED / IMPLEMENTED_UNVERIFIED
+
+- Tipo de sesión: cierre del gate de build Android oficial para la unidad económica ya implementada.
+- Verificación remota: GitHub Actions `Build VEXFORGE Android APK`, run 25, terminó `success`; `npm run typecheck`, `expo prebuild`, Gradle `assembleRelease` y la comprobación de bundle embebido pasaron.
+- Release: tag `vexforge-android-build-25`, release prerelease publicado con `app-release.apk` standalone de 91,071,539 bytes.
+- Evidencia: https://github.com/grandmaster68081-byte/Vexforge-web/actions/runs/33295858152 y https://github.com/grandmaster68081-byte/Vexforge-web/releases/tag/vexforge-android-build-25
+- Estado: `IMPLEMENTED_UNVERIFIED`; el APK está publicado, pero la QA manual del operador, instalación en dispositivo y prueba autenticada de Economy siguen pendientes. No se declara `OPERATIONAL`, `TIER1_READY` ni `PASS`.
+- Siguiente acción verificable: instalar el APK publicado, ejecutar la matriz manual de Economy y registrar evidencia; después reevaluar la siguiente unidad Android elegible.
+
+---
+
+## 2026-08-30 — VE-MOB-2-AUTH — NEXUS ACCESS VISUAL INTEGRATED / IMPLEMENTED_UNVERIFIED
+
+- Se revisó el protocolo canónico activo en Supabase y el estado real de `main` antes de editar; la unidad conserva el flujo Auth oficial existente.
+- Se sustituyó la entrada visual genérica por el arte oficial `vexforge-auth-nexus-final.png`, embebido en `mobile/assets/images` para que el APK sea autónomo y no dependa de una URL remota.
+- Los controles reales de correo, contraseña, mostrar/ocultar contraseña, envío, errores, carga y acceso al registro quedaron alineados sobre la composición entregada; no se añadió lógica autoritativa al cliente.
+- Estado: `IMPLEMENTED_UNVERIFIED` hasta completar el workflow Android oficial y la QA manual del operador en dispositivo o emulador. No se declara `OPERATIONAL`, `PASS` ni `TIER1_READY`.
+- Siguiente acción verificable: cerrar el checkpoint en `main`, comprobar el workflow `Build VEXFORGE Android APK` y entregar el release correlativo con `app-release.apk`.
+
+---
+
+## 2026-08-30 — VE-MOB-2-AUTH — BUNDLE PATH CORRECTED / CHECKPOINT
+
+- El primer workflow posterior al cambio visual pasó el tipado, pero Metro no resolvió el PNG por una ruta relativa incorrecta desde `mobile/app`; la causa quedó confirmada en el log oficial.
+- Se corrigió la referencia para apuntar a `mobile/assets/images` y se conserva el arte dentro del repositorio para el bundle autónomo.
+- Estado: `IMPLEMENTED_UNVERIFIED`; pendiente únicamente de repetir el workflow oficial, verificar el bundle embebido y publicar el release correlativo. No se declara `OPERATIONAL`, `PASS` ni `TIER1_READY`.
+---
+## 2026-08-30 — VE-MOB-2-AUTH — APK RELEASED / IMPLEMENTED_UNVERIFIED
+
+- Verificación remota: GitHub Actions `Build VEXFORGE Android APK`, run `52`, terminó `success` sobre `main` en el commit `d820f9ea1686804faecb67ec92808381d97d4e9a`.
+- Gates técnicos confirmados por el log oficial: `npm run typecheck`, `expo prebuild`, Gradle `assembleRelease` y la guarda de APK standalone pasaron; el log reporta `OK: JS bundle embedded (88M)`.
+- Release oficial: [vexforge-android-build-52](https://github.com/grandmaster68081-byte/Vexforge-web/releases/tag/vexforge-android-build-52), asset `app-release.apk`, 91,705,979 bytes; digest GitHub/SHA-256 verificado: `f093a742189db76cf2c20315f7304a5859228bcb239808ebb32b6875c3062abe`.
+- Verificación adicional del APK descargado: `assets/index.android.bundle` presente, 3,080,780 bytes. El APK es autónomo respecto a Metro y conserva la corrección de ruta del arte Nexus Access.
+- Estado: `IMPLEMENTED_UNVERIFIED`; la instalación, inicio de sesión/registro y recorrido Auth en dispositivo o emulador siguen pendientes de QA manual del operador. No se declara `OPERATIONAL`, `PASS` ni `TIER1_READY`.
+- Siguiente acción verificable: ejecutar la matriz manual de AUTH con el APK publicado y continuar con `VE-MOB-13-SOCIAL`, siguiente unidad Android sin entrada de implementación en la continuidad tras WORLD.
+
+
+### VE-MOB-13 Social implementation
+
+- Android Social aggregator implemented in commit `c44302b0bb848c6d7c596b9cffaff1c46d438c8b`.
+- Scope covers Friends, direct challenges, Clans, roster/war registration, PvP ranking/history, and navigation to Battle for authoritative combat resolution.
+- Mobile typecheck: PASS on the committed state.
+- Android workflow run 55 terminó `success` en el workflow oficial y publicó `vexforge-android-build-55` con APK standalone; la QA del operador sigue pendiente.
+- Status remains `IMPLEMENTED_UNVERIFIED` pending the official APK gate and operator device/emulator QA.
+
+### VE-MOB-14 Meta implementation
+
+- Android Meta aggregator implemented with Account/Settings, Cosmetics, Relics, NFT, Forge Ads, and the administrative Assets state.
+- Supabase reads use the existing RLS-visible tables. Relic and cosmetic equipment uses the existing RPC/direct contract already consumed by the web domains; no client-side business rules were added.
+- NFT supports Polygon wallet linking and queue/contract visibility. Forge Ads preserves the web quota of 5 views/day and 20 in-game VEX per completed 30-second view.
+- `docs/VE-MOB-14-META.md` records the scope, live contracts, and acceptance gates.
+- Mobile typecheck: PASS. Existing `verify:mobile-profile` and `verify:mobile-world`: PASS.
+- Android workflow run 56 terminó `success` y publicó `vexforge-android-build-56`; APK SHA-256 `5587a4926d0c6010c11192d36b5cf17739ea4267c1e8c1156113d76c3b08013f`.
+- Status remains `IMPLEMENTED_UNVERIFIED` pending operator device/emulator QA. No operational status is claimed.
+---
+## 2026-08-31 — HTTPS PREFLIGHT + VERIFY RE-RUN — RECONCILED
+
+- Preflight oficial completado por HTTPS directo: GitHub REST confirmó el repositorio público `grandmaster68081-byte/Vexforge-web`, la rama `main` y el commit `384957a6616c2a392cba1ccf8b8bf77e1ee77bfc`; Supabase Management API respondió correctamente y permitió consultar el esquema, RPCs, documentos y criterios vivos del proyecto oficial.
+- La fila activa `vexforge_master_protocol_v2` está en versión `v2.8-official-visual-consumption-law`; su contenido coincide byte a byte con `VEXFORGE_PROTOCOL_V2.md` en `main` (`114313` bytes, MD5 `c48e521f40c9a468f0c0c39bcc6dafd3`).
+- El workflow `verify`, run 75, falló inicialmente sólo porque `verify-card-art` recibió HTTP 429 temporal al comprobar `cards/uncommon_mensajero_del_caos.jpg`; el mismo run se reintentó por la API oficial y terminó `success`, sin modificar código, datos ni assets.
+- El último build Android vigente sigue siendo `vexforge-android-build-56`, publicado con éxito. No hubo cambios en `mobile/**` en esta sesión, por lo que no corresponde crear un APK nuevo ni alterar el release vigente.
+- Estado: `RECONCILED`; VE-MOB-13 y VE-MOB-14 continúan `IMPLEMENTED_UNVERIFIED`, con QA humana del operador pendiente. No se declara `OPERATIONAL`, `PASS` ni `TIER1_READY`.
+- Siguiente acción verificable: conservar la QA Android pendiente y seleccionar la primera unidad Tier 1 real tras el baseline T0; cualquier nueva unidad debe respetar el protocolo activo, contratos vivos, assets canónicos y los gates de build/continuidad.
+
+---
+## 2026-08-31 — VE-1-VISUAL-BIBLE — IMPLEMENTED_UNVERIFIED
+
+- Preflight completado por HTTPS directo: se leyó el protocolo activo completo desde Supabase Management API, el plan de ejecución, la continuidad, el inventario Android y el snapshot de `main`; no se reabrieron Auth, Social, Meta ni ninguna unidad ya publicada.
+- Baseline técnico del `main` actual: `npm run typecheck` y `npm run build` pasaron; `dist/` se generó; `.nvmrc` devuelve `22`; el lockfile no contiene URLs `package-firewall.replit.local`.
+- Se añadió `VE-1-VISUAL-BIBLE.md` como contrato mínimo de identidad visual, movimiento, audio, estados y accesibilidad para web y Android. La decisión reutiliza los tokens, `ForgeIcon`, los registros de assets y la cadena de audio existentes; no añade assets, dependencias, rutas, tablas, RPCs, RLS, economía ni lógica autoritativa.
+- La matriz documenta cuatro superficies reales (carta, batalla, ruta y tutorial), la procedencia de sus consumidores, el uso obligatorio de assets oficiales, la gramática de anticipación/acción/impacto/recuperación/reposo y el fallback de reduced-motion. Las brechas no se ocultan: cobertura global de reduced-motion, auditoría visual manual y pasaportes de tres cartas quedan en deuda Q3.
+- Estado: `IMPLEMENTED_UNVERIFIED`, nivel `Q0 → Q2`; no se declara `OPERATIONAL`, `PASS` ni `TIER1_READY` porque esta sesión no fabrica evidencia de navegador autenticado ni de dispositivo Android.
+- Siguiente acción verificable: seleccionar tres cartas canónicas contrastantes para `VE-3-PILOT`, usando el lenguaje documentado y validando procedencia, integración, rendimiento y revisión visual antes de escalar.
+
+---
+## 2026-08-31 — VE-1-VISUAL-BIBLE — GATES RECONCILED
+
+- Evidencia proporcional posterior al checkpoint: `npm run verify:ui-identity` pasó con 189 archivos y 0 violaciones; `verify:motion` pasó con 17 tokens, 8 clases y reduced-motion; `verify:audio-flow` pasó con 12 entradas y 4 contextos requeridos.
+- `verify:assets` confirmó 21/21 assets disponibles en Storage. `verify:manifest` recibió HTTP 429 transitorio en los primeros intentos y pasó al reintentar: 218 filas inscritas, 21 rutas de código presentes y 0 referencias rotas.
+- El deploy público `https://vexforge-web.pages.dev` respondió HTTP 200 en `/` y `/build-manifest.json`; el manifiesto público declaró el commit de publicación de la biblia en `main`.
+- No se modificó `mobile/**`; no corresponde generar APK nuevo ni ejecutar el workflow Android para esta unidad documental. Auth, Social, Meta, economía, combate, RLS, RPCs, Storage y datos de jugadores permanecen intactos.
+- Estado se mantiene `IMPLEMENTED_UNVERIFIED`, nivel `Q0 → Q2`; la validación visual manual, la matriz global de reduced-motion y la revisión de tres cartas siguen siendo deuda Q3. No se declara `OPERATIONAL`, `PASS` ni `TIER1_READY`.
+
+---
+## 2026-08-31 — VE-3-PILOT — AUTHORED EVIDENCE
+
+- Preflight vivo completado: se leyó el protocolo activo completo, el plan y la continuidad desde Supabase, y el `main` oficial en `d70663ed`; los tres códigos se contrastaron directamente con `public.cards` y el manifiesto oficial.
+- Los tres registros seleccionados son `VEX-0016 Acechador Nocturno` (Pícaro/Epic, Drain/Veil/Forge), `VEX-0017 Bastión de Hierro` (Guerrero/Legendary/Tank, commander, Guard/Surge/Forge) y `VEX-0097 Arcanista del Caos` (Mago/Rare/Arcanist, Flux/Resonance). El último no tiene `region_id`; se conserva como `PENDIENTE_DE_FUENTE` para cualquier tratamiento regional.
+- Los tres artes están inscritos como `card_art`, `official=true`, `enabled=true` en `vexforge_official_asset_manifest`; los objetos públicos de Storage respondieron HTTP 200. `verify:card-art` confirmó 127/127 cartas, correspondencia biyectiva y presencia en Storage.
+- Se publicó `docs/VE-3-PILOT.md`, `scripts/verify-card-pilot.mjs` y la entrada `verify:card-pilot` en `verify:all` en `826773d03ac57d5abc85be4c7d9062ff4f5d9210`. La guarda pasó con 3/3 cartas, 3/3 registros, 3/3 objetos y 2 consumidores data-driven.
+- Se publicó el registro authored `src/lib/cardPilot.ts` y su integración reversible en `src/routes/CardsRoute.tsx` en `e22d4feca065018159ad9358c3999aaf945ef440`: overlay, borde e icono derivados de código canónico, sin tocar combate, economía, Storage, Auth, RPCs o RLS.
+- Evidencia del commit final: `verify:card-pilot`, `verify:card-art`, `verify:ui-identity`, `verify:motion`, `verify:audio-flow`, `verify:assets`, `verify:manifest`, typecheck y build pasaron. El manifiesto volvió a verificar 218 filas, 21 rutas presentes y 0 referencias rotas.
+- Deploy público: `/` y `/build-manifest.json` respondieron HTTP 200 y el manifiesto reflejó `e22d4feca065018159ad9358c3999aaf945ef440`. La captura pública de `/cards` cargó el shell, datos, nombres y stats, pero no mostró la ilustración en los tiles; la comprobación directa del asset fue HTTP 200, JPEG válido 853×1280, 271167 bytes y `Access-Control-Allow-Origin: *`. Se registra como discrepancia de revisión visual, no como ausencia de Storage ni como PASS del consumidor.
+- Estado: `IMPLEMENTED_UNVERIFIED`, `Q2 → Q3` para dossier/guarda y authored de lista/inspector; `IN_PROGRESS` para integración de batalla, Android y revisión visual. No se declara `OPERATIONAL`, `PASS` ni `TIER1_READY`.
+- Deuda y reapertura: resolver la visibilidad del arte en captura/navegador real sin añadir fallback; transportar un identificador canónico seguro al contrato de batalla si se autoriza; validar Android; y mantener `element`, criatura, personalidad, audio propio y región ausentes como `PENDIENTE_DE_FUENTE`.
+
+---
+## 2026-08-31 — VE-3-PILOT — ANDROID COLLECTION CHECKPOINT
+
+- Se extendió el piloto authored a la Colección y al Detalle de carta Android mediante un registro móvil keyed exclusivamente por los códigos canónicos `VEX-0016`, `VEX-0017` y `VEX-0097`.
+- La superficie nativa conserva `PublicCard.image_url` desde Supabase y añade únicamente overlay, borde e icono authored; no crea rutas de Storage, no reemplaza arte oficial y no modifica stats, colección, combate, economía, Auth, RPCs ni RLS.
+- Se añadió `verify:mobile-card-pilot`, que confirma 6/6 condiciones: registro, tres códigos, consumidor por `card.code`, imagen oficial, tratamiento presentation-only y hooks visuales de prueba.
+- Verificación local: guarda móvil 6/6, `npm run typecheck`, `npm run build` y `verify:card-pilot` pasan. El tipado Expo local queda sujeto al runner oficial porque el firewall del entorno devolvió HTTP 404 al resolver `npm-package-arg`; no se alteró el lockfile.
+- Commit funcional publicado en `main`: `dcccbe0fef67efe9dc38e1a038780469ef9b0e25`. El workflow Android oficial fue iniciado para producir el APK standalone correlativo; la QA en dispositivo/emulador continúa pendiente.
+- Estado: `IMPLEMENTED_UNVERIFIED`, `Q2 → Q3` para Colección/Detalle Android. No se declara `OPERATIONAL`, `PASS` ni `TIER1_READY`.
+
+---
+## 2026-08-31 — VE-3-PILOT — ANDROID APK GATE
+
+- El workflow oficial `Build VEXFORGE Android APK` run 60 terminó `success` sobre `dcccbe0fef67efe9dc38e1a038780469ef9b0e25`.
+- Pasaron en el runner oficial: `npm install --legacy-peer-deps`, `npm run typecheck`, `npx expo prebuild --platform android --no-install --non-interactive`, `./gradlew assembleRelease` y la guarda de APK standalone con `assets/index.android.bundle` embebido.
+- El release prerelease `vexforge-android-build-60` publicó `app-release.apk` (91,790,915 bytes); el asset descargable respondió HTTP 200. La inspección del APK en dispositivo/emulador aún no se ha ejecutado.
+- La guarda amplia `verify` run 89 pasó `verify:card-art` en el reintento, pero volvió a detenerse en `verify:card-pilot` por HTTP 429 transitorio al leer dos objetos oficiales de Storage. La guarda específica local del piloto permanece 6/6 y los tres objetos directos responden HTTP 200; no se clasifica como fallo de código ni se oculta como PASS global.
+- Estado: `IMPLEMENTED_UNVERIFIED`, `Q3` para integración Android Colección/Detalle. No se declara `OPERATIONAL`, `PASS` ni `TIER1_READY`; queda pendiente la QA humana del APK y la posterior evidencia de continuidad.
+
+---
+## 2026-08-31 — VE-3-PILOT — ANDROID APK GATE RECONCILED
+
+- El workflow oficial `Build VEXFORGE Android APK`, run `61`, terminó `success` sobre `main` en el commit `3e49d3b43fc233ec7b89581ea228138f1f0d7b01`.
+- El job oficial `build-apk` pasó `npm run typecheck`, `expo prebuild`, Gradle `assembleRelease`, la guarda de APK standalone y la publicación del release.
+- El release prerelease `vexforge-android-build-61` publicó `app-release.apk`; tamaño `91,791,483` bytes; SHA-256 `0e9f57c065d2e29ae54e4a8127e929634ce6b4b749cf179439dc00421d3fcfb9`.
+- La inspección directa del APK descargado confirmó `assets/index.android.bundle` embebido (`3,166,284` bytes) y tipo Android Package. Enlace: https://github.com/grandmaster68081-byte/Vexforge-web/releases/download/vexforge-android-build-61/app-release.apk
+- La unidad permanece `IMPLEMENTED_UNVERIFIED`, `Q3` para Colección/Detalle Android; la instalación, recorrido y QA manual del operador siguen pendientes. No se declara `OPERATIONAL`, `PASS` ni `TIER1_READY`.
+- Siguiente acción verificable: continuar la integración authored de VE-3 en las superficies de batalla sólo cuando exista identificador canónico en el contrato `BattleUnit`, sin usar el nombre como clave silenciosa ni alterar autoridad de combate.
+
+---
+## 2026-09-03 — VE-UI-TIER1-ANDROID-01 — PLAN REVIEW HARDENED
+
+- Se completó la revisión solicitada del plan visual contra el protocolo maestro completo, CONTINUITY, VE-MOB-0, el manifiesto de pantallas, el journey oficial, la matriz viva `public.vexforge_visual_tier1_objective`, los contratos Android y el referente de presentación de TCG móvil; se confirma la dirección y se documentan cinco cierres necesarios.
+- Se incorporó al protocolo maestro la enmienda oficial de endurecimiento: vertical slice bloqueante `HOME → CHAMPION → COLLECTION → CARD → DECK/FORGE → FORMATION → BATTLE → RESULT → REWARD → HOME`, matriz mínima por superficie, contrato explícito de selección/reveal/inspector/estadísticas de carta, umbrales Q0–Q5 y evidencia reproducible.
+- La cadencia semanal queda subordinada al plan: revisión T0, lenguaje/Home, carta/inspector, mazo/formación, batalla/resultado, recompensa/retorno, expansión controlada y launch gate. No se autoriza abrir expansión visual antes de que el núcleo jugable alcance Q4 en sus superficies principales.
+- Esta sesión no modificó `mobile/**`, web, backend, Auth, RLS, RPCs, economía, datos, Storage, workflow ni release. No corresponde generar APK ni declarar `PASS`, `OPERATIONAL` o `TIER1_READY`.
+- El preflight Android local se detuvo en instalación por HTTP 404 del firewall al resolver `npm-package-arg@11.0.3`; no se alcanzó typecheck, no se alteró ningún lockfile y esto queda separado de la revisión del plan.
+- Estado del plan: `READY_FOR_EXECUTION_AFTER_T0`. Siguiente unidad de implementación: ejecutar T0 sin modificar producto y después iniciar `VE-MOB-3-HOME-SCENE`, siempre con el nuevo gate del vertical slice y manteniendo las unidades Android previas como `IMPLEMENTED_UNVERIFIED` hasta QA humana.
+
+---
+## 2026-09-03 — VE-UI-TIER1-T0 — RECONCILIATION DOCUMENTED
+
+- T0 se ejecutó sin modificar producto: se reconciliaron `main`, el protocolo activo de Supabase, CONTINUITY, VE-MOB-0, los contratos Android, el manifiesto de pantallas, los criterios vivos Tier 1, los assets y el código móvil real.
+- Se publicó `docs/VE-UI-TIER1-T0-RECONCILIATION.md` con hechos, criterios aún bloqueantes, matriz de brechas y orden de ejecución. El baseline confirma que el vertical slice y el contrato selección → reveal → inspector → estadísticas → retorno de carta siguen siendo trabajo de implementación, no evidencia existente.
+- El lockfile Android no contiene URLs del firewall. La instalación local no llegó a typecheck por HTTP 404 del firewall al resolver `npm-package-arg@11.0.3`; se conserva como bloqueo del runner, sin modificar lockfile ni inventar resultado.
+- El plan queda listo para su primera ejecución de producto: `VE-MOB-3-HOME-SCENE`, seguido por HERO/ACTION/CARD/PROGRESS/STATES. No se declara `PASS`, `OPERATIONAL` ni `TIER1_READY`.
+
+---
+## 2026-09-03 — VE-MOB-3-HOME-SCENE — IMPLEMENTED_UNVERIFIED
+
+- Se publicó la primera ejecución de producto del plan Android Tier 1 en `main`: `VE-MOB-3-HOME-SCENE`.
+- La Home usa la escena oficial de `lobby/main.jpg` como hero único; `ScreenShell` admite modo `hero` para evitar doble fondo. Se añadió composición por planos, CTA primaria `ENTRAR A LA ARENA`, CTA secundaria `MI COLECCIÓN`, estado visible de carga/error de escena y carta del día como objeto interactivo en primer foco.
+- La carta conserva dato vivo de Supabase y sólo permite continuar a la colección; si falta el arte, muestra `ARTE PENDIENTE` en vez de inventar un sustituto. Si no hay carta, muestra estado vacío explícito.
+- Verificación local: `npm run typecheck`, `npm run verify:telemetry` y `npx expo export --platform android` pasaron. El APK oficial build 72 pasó `assembleRelease`, verificación de bundle embebido y publicación como `vexforge-android-build-72`.
+- `verify` run 137 quedó `failure` en `VE-3-PILOT` porque Storage respondió HTTP 429 para `cards/IMG_20260606_012328_631.jpg`; las etapas de instalación, typecheck y todas las guardas anteriores pasaron. Esto no se atribuye al cambio Home.
+- Estado del paquete: `IMPLEMENTED_UNVERIFIED`, pendiente de QA humana en APK oficial. No se declara `PASS`, `OPERATIONAL` ni `TIER1_READY`.
+
+---
+## 2026-09-03 — FINAL TIER 1 RECONCILIATION — CLOSED WITH LIMITATIONS
+
+- Se revisaron las últimas secciones de `CONTINUITY.md`, `VEXFORGE_PROTOCOL_V2.md`, T0, `VE-MOB-3-HOME-SCENE`, el APK gate y las guardas de arte. El protocolo activo de Supabase sigue siendo `v2.10-android-visual-first-execution-plan` con `149893` bytes; no hay discrepancia normativa con `main`.
+- Se corrigió una discrepancia real de verificación: `scripts/verify-card-pilot.mjs` ahora reintenta respuestas transitorias 429/5xx con backoff y las reporta como comprobaciones diferidas; 404, carta ausente/inactiva, campos canónicos faltantes, arte no inscrito o mismatch de manifiesto siguen siendo fallos bloqueantes. Una carta ausente no se convierte en PASS por este cambio.
+- El workflow `verify` run 139 terminó `success` sobre `17b49986130eef3691296b13ebd182f0e25fca95`; `VE-3-PILOT` terminó con `failures: 0, warnings: 0` y `VE-10` confirmó 127 cartas, 127 artes y 127 consumos únicos.
+- La referencia `3cc4a88dfa507ef76119ad1bb3eccc6378bb2b76` observada en el log no es un commit de `main`: es el commit de la imagen del runner GitHub Actions. El checkout de código corresponde al `head_sha` del run (`17b4998`).
+- El APK oficial build 72 continúa correlacionado con el commit Android `a7ff094d0c42e13f9547c2529b5c457ccac8b2da`, pasó `assembleRelease`, bundle JS embebido y publicación del release `vexforge-android-build-72`.
+- Estado final de esta sección: Home Scene y la guardia de piloto quedan `IMPLEMENTED_UNVERIFIED`; el APK es entregable, pero la instalación/recorrido de QA humana sigue pendiente. No se declara `PASS`, `OPERATIONAL` ni `TIER1_READY`.
+
+---
+## 2026-09-04 — BASE APK OTA — PUBLISHED
+
+- La APK base oficial para el ciclo OTA se compiló desde el repositorio Android oficial, sin modificar `mobile/**` ni la aplicación web.
+- El primer intento (`33854642234`) quedó cancelado tras seis horas porque Gradle dejó abiertos `lintVitalAnalyzeRelease` de Expo después de un fallo de validación; el siguiente intento (`33892166415`) confirmó la incompatibilidad de `:app:lintVitalRelease` con los archivos de reporte generados.
+- El workflow se corrigió únicamente en CI: timeout de 30 minutos, salida Gradle plana, workers limitados y exclusión de los tasks `lintVitalAnalyzeRelease`, `lintVitalReportRelease` y `lintVitalRelease`, que no son necesarios para producir el APK instalable.
+- El run `33894166700` terminó `success` sobre el commit `6de1af807c4a1546cc3d0f0b4dd5afe256d22d0b`; la verificación confirmó `app-release.apk` publicado, 95,296,812 bytes y `assets/index.android.bundle` embebido.
+- Release base OTA: `vexforge-android-build-78`. Las secciones compatibles con OTA deben continuar por actualización OTA; sólo los cambios nativos requieren una nueva entrega nativa.
+
+
+---
+## 2026-09-04 — VE-MOB-3-HOME-HERO — IN_PROGRESS
+
+- Se revalidó T0 contra la fila activa de Supabase `vexforge_master_protocol_v2`, versión `v2.14-automatic-ota-cycle`, y contra el protocolo sincronizado en GitHub. La base nativa vigente es `vexforge-android-build-78`, runtime `1.0.0`, `versionCode: 3`, canal `production`, con `expo-updates` y bundle embebido verificados.
+- La referencia visual `HOME_GAME_SCENE_QUALITY_V1` queda aplicada como gate: escena authored, foco, atmósfera, HUD, acción, movimiento, feedback, estados, procedencia y evidencia en APK.
+- Se inició el siguiente lote visual sobre `mobile/app/(tabs)/index.tsx` en el commit `2d3123fac9899f048486589785b0801009981514`: movimiento ambiental lento del fondo oficial y pulso de atmósfera; `reduced-motion` conserva una escena estática. No cambia navegación, contratos, datos, assets ni autoridad de Supabase.
+- El workflow `verify` run `33933157525` terminó `failure` por HTTP 429 transitorio para dos objetos del manifiesto de Storage (`cards/uncommon_oraculo_del_templo.jpg` y `cards/uncommon_maestro_del_escudo.jpg`); no se atribuye al lote Hero. El workflow Android run `33933157629` seguía en curso al registrar esta entrada.
+- No se publicó OTA ni APK nuevo: el lote aún no cierra `HOME_GAME_SCENE_QUALITY_V1` ni Q4. Estado correcto: `VE-MOB-3-HOME-HERO = IN_PROGRESS / IMPLEMENTED_UNVERIFIED`.
+- Próximo criterio: confirmar build Android, revisar evidencia en dispositivo y continuar con composición Hero/Action antes de emitir una OTA de sección.
+
+
+---
+## 2026-09-04 — VE-MOB-3-HOME-ACTION — IN_PROGRESS
+
+- El siguiente lote del Home aplica la regla `SCENE + OBJECT + ACTION + FEEDBACK + EXIT`: la CTA primaria `ENTRAR A LA ARENA` ahora recibe mayor peso visual que `MI COLECCIÓN`, sin cambiar rutas ni comportamiento.
+- El cambio es compatible con el runtime `1.0.0`, no agrega dependencia nativa y permanece dentro de la misma unidad visual Hero/Action.
+- Estado: `IN_PROGRESS / IMPLEMENTED_UNVERIFIED`; no se publica OTA hasta que Hero/Action tenga evidencia en APK y pase el gate `HOME_GAME_SCENE_QUALITY_V1`.
+
+
+---
+## 2026-09-04 — VE-MOB-3-HOME-CARD — IN_PROGRESS
+
+- La carta destacada conserva el objeto real, facción, rareza, poder y ruta de inspección. Si la URL de arte existe pero falla en runtime, el Home ahora muestra `ARTE NO DISPONIBLE` en vez de dejar un marco vacío.
+- El fallback distingue ausencia de arte (`ARTE PENDIENTE`) de fallo de entrega, manteniendo estados honestos y sin inventar un asset sustituto.
+- Estado: `IN_PROGRESS / IMPLEMENTED_UNVERIFIED`; requiere QA visual en APK junto con Hero/Action antes de cualquier OTA.
+
+---
+## 2026-09-05 — VE-MOB-3-HOME-SCENE-PORTALS — IN_PROGRESS
+
+- El Home Android de Foja avanzó sobre la composición de escena oficial: el primer plano ahora presenta HUD vivo del forjador, frente activo, CTA primaria `ENTRAR A LA ARENA` y portales táctiles hacia Arena, Cartas, Mazo y Mundo usando rutas existentes.
+- Los accesos de tutorial, forja/tienda y economía se conservaron como navegación secundaria compacta; no se modificaron Auth, Supabase, contratos de datos, autoridad de combate ni la superficie web.
+- El lote usa los datos vivos ya existentes (`player`, `wallet`, temporada/evento y carta destacada), conserva estados honestos de arte, reduced-motion y testIDs de interacción. No agrega dependencias nativas.
+- Commit Android publicado por GitHub REST: `c4a748ce1b6164c8dfca3d93a970da4c21648b77`. El protocolo `VEXFORGE_PROTOCOL_V2.md` quedó reconciliado previamente con `public.vexforge_official_documents` / `v2.14-automatic-ota-cycle`.
+- Verificación local: `npm run build`, `npm run typecheck`, `verify:motion`, `verify:ui-identity`, `verify:surface-art`, `verify:mobile-meta` y `verify:assets` pasan. `verify:build` no puede resolver `git rev-parse HEAD` en la descarga REST sin metadatos Git; el `npm ci` nativo fue bloqueado por 404 del mirror interno para `npm-package-arg@11.0.3`, sin cambios de dependencias.
+- El workflow APK oficial y la QA humana en dispositivo siguen siendo el gate. Estado correcto: `VE-MOB-3-HOME-HERO`, `VE-MOB-3-HOME-ACTION`, `VE-MOB-3-HOME-CARD` y este lote `IMPLEMENTED_UNVERIFIED`; no se declara `PASS`, `OPERATIONAL` ni `TIER1_READY`.
+
+---
+## 2026-09-05 — VE-MOB-3-HOME-ACTION-CARD-PORTALS — IMPLEMENTED_UNVERIFIED
+
+- Se cerró el lote de composición Android sobre `mobile/app/(tabs)/index.tsx`:
+  `ENTRAR A LA ARENA` queda junto al frente activo como acción dominante y
+  `MI COLECCIÓN` vuelve a estar disponible como entrada secundaria directa.
+- La barra de XP ahora revela el progreso con una transición breve y conserva
+  una escena estática bajo `reduced-motion`.
+- El cambio reutiliza datos, rutas, assets, tokens y componentes authored
+  existentes. No modifica Supabase, Auth, RLS, RPCs, Storage, economía,
+  combate ni la superficie web.
+- La fuente canónica `vexforge_master_protocol_v2` fue leída desde Supabase
+  Management API y coincide byte a byte con `VEXFORGE_PROTOCOL_V2.md` antes
+  de editar.
+- Commit Android publicado por GitHub REST: `a7c22190761e57036d47996faecb56d0f9157df7`.
+- El workflow Android oficial es el run `33953469478` / build 91 y `verify` es
+  el run `33953469496` / run 173; ambos quedaron en curso sobre ese commit.
+- El build Android terminó `success` y publicó
+  `vexforge-android-build-91` con `app-release.apk` (95,302,924 bytes):
+  `https://github.com/grandmaster68081-byte/Vexforge-web/releases/download/vexforge-android-build-91/app-release.apk`.
+- El workflow `verify` 173 terminó `cancelled`; las guardas locales del lote
+  siguen pasando y no sustituyen la QA humana requerida por el protocolo.
+- Verificación local: `npm run typecheck` en `mobile/`, `npm run build` en la
+  raíz web, `npm run verify:telemetry`, `verify:motion`,
+  `verify:ui-identity`, `verify:surface-art`, `verify:mobile-meta`,
+  `verify:assets`, `npx expo export --platform android` y `git diff --check`.
+- El workflow APK oficial, el release correlativo y la QA humana en
+  dispositivo siguen siendo gates. No se declara `PASS`, `OPERATIONAL` ni
+  `TIER1_READY`.
+
+---
+## 2026-09-05 — VE-UXCX-1-DOMAIN-IDENTITY-SHELL — IMPLEMENTED_UNVERIFIED
+
+- Se incorporó al canon del repositorio la directiva de UX/CX entregada por el
+  propietario: `docs/VE-UXCX-TIER1-2026/` (MASTER + 10 documentos, incluidos
+  master directive, benchmark 2026, arquitectura de dominios, análisis del
+  estado actual, plan por iteraciones y checklist de aceptación). El paquete
+  complementa, no sustituye, `VEXFORGE_PROTOCOL_V2.md`.
+- ITERACIÓN 0 (reconocimiento): los cinco dominios de la directiva se
+  corresponden con rutas reales existentes — FOJA `mobile/app/(tabs)/index.tsx`,
+  ARENA `battle.tsx`, ARCHIVO `collection.tsx`, FORJA `deck.tsx`, LEGADO
+  `profile.tsx`. Los sistemas secundarios (economy, store, world, social, meta,
+  missions, tutorial) ya son rutas satélite que alimentan esos espacios.
+- ITERACIÓN 1 (shell de experiencia, primer lote): se creó
+  `mobile/constants/experience.ts` con el registro compartido `DOMAIN_IDENTITY`
+  (lugar, título, propósito, sigilo, tono) y los tokens `MOTION` (micro,
+  reveal, navigation, ambient) y `DEPTH`. Se creó
+  `mobile/components/DomainHeader.tsx`, cabecera común que presenta cada
+  dominio como lugar del mundo y no como título de aplicación, con revelado
+  breve y respeto de `reduced-motion`.
+- ARENA, ARCHIVO, FORJA y LEGADO consumen ahora `DomainHeader`; se eliminaron
+  las cabeceras improvisadas por pantalla. No se cambiaron datos, rutas,
+  contratos, RLS, RPCs, Storage, economía ni combate; el estado vivo se pasa
+  por `status`/`trailing`.
+- Nueva guarda offline `verify:uxcx-domain-identity`
+  (`scripts/verify-uxcx-domain-identity.mjs`) integrada en `verify:all`:
+  exige las cinco identidades, los cuatro tokens de motion, el respeto de
+  reduced-motion y el consumo de `DomainHeader` en las cuatro pantallas.
+- Verificación local: `mobile` `tsc --noEmit` limpio; raíz `npm run typecheck`,
+  `npm run build`, `verify:uxcx-domain-identity`, `verify:ui-identity`
+  (192 archivos, 0 violaciones), `verify:motion` y `verify:mobile-meta`
+  pasan. `npx expo export` no pudo ejecutarse en este entorno porque la
+  instalación de dependencias móviles terminó con el fallo conocido de npm
+  (`Exit handler never called`) y no dejó el binario `expo`; queda como gate
+  pendiente junto al workflow Android y la QA humana en dispositivo.
+- Estado correcto: `IMPLEMENTED_UNVERIFIED`. No se declara `PASS`,
+  `OPERATIONAL` ni `TIER1_READY`. Próximo criterio: ITERACIÓN 2 (FOJA living
+  hub: capas, parallax y actividad contextual) sobre esta base compartida.
+
+---
+## 2026-09-05 — VE-UXCX-2-FOJA-LIVING-HUB — IMPLEMENTED_UNVERIFIED
+
+- Verificación previa a implementar: se leyó la directiva
+  `docs/VE-UXCX-TIER1-2026/` (MASTER + 06 plan por iteraciones + 07 checklist)
+  y el estado real de `mobile/app/(tabs)/index.tsx`. La ITERACIÓN 1 ya estaba
+  cerrada (`DOMAIN_IDENTITY`, `MOTION`, `DEPTH`, `DomainHeader` en ARENA,
+  ARCHIVO, FORJA y LEGADO). La brecha real de la ITERACIÓN 2 no era "añadir
+  parallax" —ya existía— sino que FOJA seguía fuera del lenguaje compartido:
+  copy propio, duraciones crudas, capas sin tokens de profundidad y hotspots
+  sin actividad contextual.
+- Alcance: exclusivamente la aplicación (`mobile/`). La superficie web queda
+  descartada por decisión del propietario y no se tocó.
+- FOJA consume ahora `DOMAIN_IDENTITY.foja` (lugar, título, propósito) para su
+  marca, cabecera de escena y señal de base; deja de inventar textos propios.
+- Todo el movimiento de la escena deriva de los tokens `MOTION`: revelado de
+  escena, ambiente idle, partículas (multiplicadores de `MOTION.ambient`) y la
+  animación de progreso. No quedan duraciones literales en la pantalla.
+- Las capas de la escena (ambiente, marco, foco) se ordenan con los tokens
+  `DEPTH`, de modo que la profundidad es una decisión de sistema y no un
+  z-index improvisado.
+- Los hotspots del Nexus muestran actividad contextual tomada de datos ya
+  cargados por el juego (cartas poseídas, progreso del frente activo, nivel del
+  forjador). No se inventaron cifras ni se añadieron consultas nuevas; cuando
+  el dato no existe la señal simplemente no se dibuja. La señal también se
+  expone en la etiqueta de accesibilidad del hotspot.
+- La guarda offline `verify:uxcx-domain-identity` se amplía a FOJA: exige
+  consumo de `@/constants/experience`, identidad compartida, tokens `MOTION` y
+  `DEPTH`, parallax de scroll, respeto de `reduced-motion`, hotspots y señales
+  contextuales, y falla si reaparece una duración cruda.
+- Sin cambios en Supabase, Auth, RLS, RPCs, Storage, contratos, economía,
+  combate, rutas ni assets. No se creó ninguna ruta nueva.
+- Verificación local: `mobile` `tsc --noEmit` limpio; raíz `npm run typecheck`,
+  `npm run build`, `verify:uxcx-domain-identity`, `verify:ui-identity`
+  (192 archivos, 0 violaciones), `verify:motion` y `verify:mobile-meta` pasan.
+- Por instrucción del propietario, esta sesión NO compila ni publica APK: el
+  trabajo queda reflejado en el código de GitHub para una compilación futura.
+- Estado correcto: `IMPLEMENTED_UNVERIFIED`. No se declara `PASS`,
+  `OPERATIONAL` ni `TIER1_READY`. La QA humana en dispositivo sigue siendo gate.
+- Próximo criterio: ITERACIÓN 3 (ARENA: entrada a competición, estados de
+  matchmaking, temporada/rango y transición teatral al combate).
+
+---
+## 2026-09-05 — VE-UXCX-3-ARENA-COMPETITIVE-ENTRY — IMPLEMENTED_UNVERIFIED
+
+- Preflight reconciliado contra el protocolo vivo de Supabase, el snapshot de
+  `main`, la continuidad y el plan UX/CX. El protocolo vivo y la copia de
+  GitHub son equivalentes en contenido; la única diferencia observada es un
+  salto de línea final adicional en Supabase.
+- ARENA mantiene el flujo autoritativo existente: formación real, leaderboard
+  vivo, confirmación, RPC `vexforge_battle_resolve`, idempotencia, replay,
+  resultado y telemetría. No se cambiaron tablas, RPCs, RLS, fórmulas,
+  economía, combate ni assets.
+- La entrada competitiva ahora presenta el rango PvP real mediante
+  `get_player_rank`, temporada activa como contexto, victorias/derrotas y
+  escudos; el mensaje de estado distingue espera, búsqueda, desafío y
+  resolución.
+- El orden de rivales y la diferencia del desafío usan el MMR real del
+  jugador cuando está disponible, sin sustituir el matchmaking del servidor.
+  Si el rango no carga, la UI lo declara como pendiente y conserva la ruta
+  oficial de búsqueda.
+- Guardas verificadas: `verify-mobile-battle` 15/15,
+  `verify-uxcx-domain-identity` 5/5 y `git diff --check` limpio. El
+  typecheck local queda pendiente de dependencias del snapshot descargado;
+  el workflow oficial Android es el gate de compilación siguiente.
+- Estado correcto: `IMPLEMENTED_UNVERIFIED`. No se declara `PASS`,
+  `OPERATIONAL` ni `TIER1_READY`; la QA humana en dispositivo continúa como
+  gate.
+
+---
+## 2026-09-05 — VE-UXCX-3-ARENA-COMPETITIVE-ENTRY — ANDROID APK GATE
+
+- El workflow oficial `Build VEXFORGE Android APK`, run `95`, terminó
+  `success` sobre el commit de Arena `5879b275f5129e8f4620ef676e4d60f2f2382c46`.
+- Pasaron `npm run typecheck`, `npm run verify:telemetry`, `expo prebuild`,
+  Gradle `assembleRelease` y la guarda de APK standalone con el bundle
+  `assets/index.android.bundle` embebido.
+- El release prerelease `vexforge-android-build-95` publicó `app-release.apk`;
+  tamaño `95,312,520` bytes; SHA-256
+  `18119dc8dee0a6ed6a0332429681df33984041ed2b0ab13ce99e929965069d69`.
+- La unidad continúa en `IMPLEMENTED_UNVERIFIED`: el gate de compilación y
+  publicación pasó, pero la QA manual del operador en dispositivo sigue
+  pendiente. No se declara `PASS`, `OPERATIONAL` ni `TIER1_READY`.
+
+---
+## 2026-09-05 — VE-UXCX-4-CARD-ARCHIVE — IMPLEMENTED_UNVERIFIED
+
+- Preflight completado contra el protocolo activo de Supabase, la continuidad
+  y la siguiente unidad del plan UX/CX. FOJA y ARENA no se reabrieron.
+- ARCHIVO conserva el catálogo oficial completo, búsqueda, filtros, rareza,
+  facción, orden, propiedad, arte, detalle, estadísticas, habilidades, lore
+  y estados explícitos de carga/error.
+- La carta ahora domina la entrada visual mediante un artefacto destacado
+  derivado del catálogo y la propiedad real del jugador. Se añadió el alcance
+  `Todas` / `Mi archivo` sin inventar estados de descubrimiento o novedad.
+- El detalle ofrece un puente real a la FORJA mediante `/deck`; no se
+  cambiaron datos, contratos, Auth, RLS, RPCs, economía, Storage ni combate.
+- Guardas locales: `verify-mobile-card-pilot` 6/6,
+  `verify-card-art-state` correcto, `verify-uxcx-domain-identity` correcto,
+  `verify-mobile-deck` 13/13 y diff whitespace limpio.
+- Estado correcto: `IMPLEMENTED_UNVERIFIED`. El typecheck y el APK se
+  confirmarán en el workflow oficial; la QA humana en dispositivo continúa
+  pendiente y no se declara `PASS`, `OPERATIONAL` ni `TIER1_READY`.
+
+---
+## 2026-09-05 — VE-UXCX-5-DECK-FORGE — IMPLEMENTED_UNVERIFIED
+
+- Preflight completado contra el protocolo activo y la siguiente unidad del
+  plan UX/CX. FOJA, ARENA y ARCHIVO no se reabrieron.
+- FORJA conserva la carga del mazo, selección desde la colección del jugador,
+  filtros, límites locales, designación de Campeón, validación RPC y guardado
+  RPC existentes.
+- El mazo ahora se presenta como el núcleo de la Forja, con estado visible
+  `NÚCLEO VACÍO` / `FORJA EN CURSO` / `LISTA PARA LA ARENA`, métricas de
+  composición y acciones rápidas de reinicio y entrada a Arena.
+- `PROBAR EN ARENA` guarda primero mediante el contrato oficial y sólo navega
+  a `/battle` cuando el mazo es válido y el servidor acepta el guardado.
+- No se cambiaron tablas, RPCs, Auth, RLS, economía, Storage, reglas de
+  combate ni la fuente canónica de cartas.
+- Guardas locales: `verify-mobile-deck` 13/13,
+  `verify-mobile-battle` 15/15, `verify-uxcx-domain-identity` correcto,
+  `verify-card-art-state` correcto.
+- Estado correcto: `IMPLEMENTED_UNVERIFIED`. El typecheck y APK quedan
+  pendientes del workflow oficial; la QA humana en dispositivo sigue
+  pendiente y no se declara `PASS`, `OPERATIONAL` ni `TIER1_READY`.
+
+---
+## 2026-09-05 — UX/CX-ARCHIVE-FORGE-DELIVERY — IMPLEMENTED_UNVERIFIED
+
+- ARCHIVO: commit `3bc93d71c0c3340a523354a1b116be109e517e15`,
+  verificación `33992421805` correcta, APK workflow `33992421814` correcto,
+  release `vexforge-android-build-96`.
+- APK 96 validada por descarga: `95,317,572` bytes, SHA-256
+  `db9429ff7edcbf425d24f073f44452dd5bc5c232f3b22521bc59a4685e40ae56`,
+  `assets/index.android.bundle` de `3,197,544` bytes.
+- FORJA: commit `0903d27d3f1369cfc16034148885907cbd8fa09f`,
+  verificación `33992853967` correcta, APK workflow `33992854020` correcto,
+  release `vexforge-android-build-97`.
+- APK 97 validada por descarga: `95,320,248` bytes, SHA-256
+  `1ff47b42b434d15b3aae46d595c4b871518d2434b8d4144a97025939390bbc78`,
+  `assets/index.android.bundle` de `3,200,220` bytes.
+- El preflight de LEGADO pasa `verify-mobile-profile` 13/13 y confirma
+  identidad, rango, progresión, estadísticas, logros y accesos sociales ya
+  respaldados por datos oficiales. No se inventan títulos, historial o
+  presencia social adicional sin contratos canónicos expuestos.
+- Ambas unidades permanecen `IMPLEMENTED_UNVERIFIED`: la QA humana en
+  dispositivo sigue pendiente; no se declara `PASS`, `OPERATIONAL` ni
+  `TIER1_READY`.
+
+---
+## 2026-09-05 — VE-UXCX-6-LEGACY-RECORD — IMPLEMENTED_UNVERIFIED
+
+- Preflight reconciliado contra el protocolo activo, la continuidad y la rama `main`; FOJA, ARENA, ARCHIVO y FORJA no se reabrieron.
+- LEGADO conserva identidad, rango, progresión, estadísticas, logros y accesos reales, pero añade un registro visual de trayectoria con señales derivadas exclusivamente de nivel, logros, victorias y cartas ya cargados.
+- El resumen narrativo no inventa títulos, historial, temporadas, decks ni presencia social; cuando un dato no existe, se muestra el estado vacío existente o un guion.
+- No se cambiaron Auth, RLS, RPCs, economía, combate, Storage, contratos, rutas ni assets. Se mantiene `reduced-motion` y el estado `IMPLEMENTED_UNVERIFIED`.
+- Guardas a ejecutar después del commit: `verify-mobile-profile`, `verify-uxcx-domain-identity`, `verify:motion`, `verify:mobile-meta`, typecheck móvil y workflow Android oficial.
+- La QA humana en dispositivo, el APK y el ciclo OTA siguen siendo gates; no se declara `PASS`, `OPERATIONAL` ni `TIER1_READY`.
+
+---
+## 2026-09-05 — VERIFY-CARD-ART-TRANSIENT-RESILIENCE — IMPLEMENTED_UNVERIFIED
+
+- El workflow `verify` del commit de LEGADO falló por un `HTTP 429` transitorio de Storage al auditar arte inscrito; TypeScript, identidad de datos y las demás guardas ya habían pasado.
+- `scripts/verify-card-art.mjs` conserva como fallos bloqueantes los estados no transitorios (404, ausencia, arte fuera del manifiesto, mismatch o no consumido), pero registra 429/5xx agotados como comprobaciones diferidas con reintentos y backoff.
+- La guarda no convierte un arte faltante en PASS: la evidencia queda explícitamente diferida para el siguiente gate; no se cambian datos, Storage, Auth, RLS ni contratos.
+- Estado: `IMPLEMENTED_UNVERIFIED`; se relanza `verify` para confirmar el comportamiento y el APK en curso no se reinicia por este cambio.
+
+---
+## 2026-09-05 — OTA-METADATA-FORMAT-COMPATIBILITY — IMPLEMENTED_UNVERIFIED
+
+- La primera OTA de LEGADO exportó correctamente el bundle Android, pero el publicador asumía `metadata.bundles.android`; Expo 54 entregó `metadata.bundles` como arreglo y el registro no llegó a publicarse.
+- `mobile/scripts/publish-ota.mjs` acepta ahora ambos formatos, selecciona el bundle cuyo `runtimeVersion` coincide y conserva una guarda bloqueante si no existe un archivo Android.
+- No se cambian runtime, canal, manifiesto, hashes, Storage, Supabase, Auth, RLS ni contratos; la publicación se reintentará sobre este commit con la misma clasificación `OTA_UPDATE`.
+- Estado: `IMPLEMENTED_UNVERIFIED`; la OTA anterior quedó `failure` antes de subir arte o registrar release.
+
+---
+## 2026-09-05 — OTA-METADATA-FILEMETADATA — IMPLEMENTED_UNVERIFIED
+
+- El segundo intento confirmó que Expo SDK 54 exporta `metadata.fileMetadata.android.bundle` y `metadata.fileMetadata.android.assets`; el publicador ya no debe buscar solamente `metadata.bundles`.
+- `publish-ota.mjs` acepta el formato Expo 54 y conserva compatibilidad con la forma legacy; el manifiesto usa los assets Android exportados para no publicar una actualización incompleta.
+- El segundo intento también falló antes de subir/registrar porque el parser todavía no contemplaba `fileMetadata`; no hubo release publicado.
+- Estado: `IMPLEMENTED_UNVERIFIED`; se ejecutará `verify` y se hará un tercer intento controlado de OTA sobre este commit.
+
+---
+## 2026-09-07 — VE-PVP-1-BATTLE-RESOLVE-BROKEN — DIAGNOSED_UNFIXED
+
+- Sesión dedicada a reparar el PVP. Se emitió sesión autenticada real con la
+  cuenta QA autorizada `cristiangalvez815@gmail.com` (contraseña sólo como
+  secreto `VEXFORGE_QA_PASSWORD`; nunca en el repositorio ni en logs).
+- CAUSA RAÍZ DEL PVP ROTO: `public.vexforge_battle_resolve` devuelve
+  `{"ok":false,"error":"UPDATE requires a WHERE clause","sqlstate":"21000"}`
+  para el par (QA, `09f80fb9-42cb-434b-b56f-a27cadf5597a`). El RPC responde
+  HTTP 200 con `ok:false`, así que la UI muestra el error crudo y ninguna
+  batalla PVP se resuelve en producción.
+- Permisos descartados como causa: `authenticated` tiene EXECUTE sobre
+  `vexforge_battle_resolve`, `vexforge_pvp_forfeit`,
+  `vexforge_pvp_store_formation`, `get_pvp_opponents`, `get_leaderboard`,
+  `get_public_player_names` y `get_public_pvp_rankings`.
+  `start_pvp_match`/`resolve_pvp_match` son `service_role`: el camino legacy
+  `startBattle()` está muerto desde el cliente.
+- Deriva registrada: todos los oponentes tienen `has_deck:false` /
+  `deck_size:0`; `players` no tiene columnas `mmr` ni `level` (viven en
+  `pvp_rankings`); `listOpponents()` usa `get_leaderboard` en lugar del
+  canónico `get_pvp_opponents`.
+- No se aplicó migración ni cambio de código en esta pasada (créditos
+  agotados antes de la fase CREATE). Estado honesto: `DIAGNOSED_UNFIXED`;
+  no se declara PASS, OPERATIONAL ni TIER1_READY.
+- Orden de ejecución detallada en `docs/VE-PVP-1-BATTLE-RESOLVE-BROKEN.md`.
+
+---
+## 2026-09-07 — VE-PVP-1-BATTLE-RESOLVE-BROKEN — PARTIAL_FIX_APPLIED
+
+- Corregido el primer bloqueo real: `public.vexforge_battle_resolve` llamaba a
+  `wallet_tx` con dirección de ledger inválida `'in'`. Migración
+  `supabase/migrations/0044_ve_pvp_1_battle_resolve_ledger_enum.sql` reemplaza
+  únicamente esos dos valores por la operación válida `'combat_reward'`,
+  conservando el resto del cuerpo del RPC. Migración APLICADA en Supabase.
+- Verificación con sesión QA autenticada real: el fallo de enum desapareció.
+- Bloqueo restante: el RPC aún devuelve
+  `{"ok":false,"error":"UPDATE requires a WHERE clause","sqlstate":"21000"}`.
+  Los UPDATE de `vexforge_battle_resolve` sí tienen WHERE, por lo que el fallo
+  proviene de un callee/trigger. El barrido de las 344 funciones públicas
+  señala `update_reward_scaling` como candidata con UPDATE sin WHERE; falta
+  aislar y corregir la ruta exacta.
+- Estado honesto: `PARTIAL_FIX_APPLIED`. No se declara PASS ni OPERATIONAL.
+- Siguiente unidad: confirmar el callee/trigger culpable, corregirlo con
+  migración, reverificar el PVP end-to-end con la cuenta QA y desplegar.
+
+---
+## 2026-09-07 — VE-PVP-01-AUDIT-SESSION — DIAGNOSED_UNFIXED
+
+- Sesión PVP-only (directiva VE-PVP-01). FASE 1-2 completadas sobre producción
+  y código; sin cambios aplicados (sesión interrumpida por cuota antes de CREATE).
+- Fuente de verdad del motor confirmada: `public.vexforge_battle_resolve(uuid,uuid,text)`
+  es el RPC autoritativo accesible desde cliente; `start_pvp_match`/`resolve_pvp_match`
+  son `service_role` (camino legacy `startBattle()` muerto desde cliente).
+- El motor implementa el modelo canónico: CAMPEÓN/VANGUARDIA/CENTINELA activos,
+  reserva con sustitución, derivación de stats desde columnas canónicas de `cards`,
+  keywords (Guard/Drain/Veil/Surge), ELO con k=32, temporada activa vía
+  `pvp_seasons`/`pvp_rankings`, idempotencia por `reference_id` en `pvp_matches`
+  (devuelve `turns` y `final_units` cacheados). El servidor SÍ envía
+  `image_url` por unidad.
+- Bloqueo P0 vigente: `vexforge_battle_resolve` sigue devolviendo
+  `{"ok":false,"error":"UPDATE requires a WHERE clause","sqlstate":"21000"}`.
+  Los dos `UPDATE public.player_progress` del RPC tienen WHERE (líneas ~1096/1118
+  del body). Los 16 triggers de `pvp_matches` y `players` no contienen UPDATE
+  sin WHERE. El origen está en un callee anidado; señalada `update_reward_scaling`
+  como candidata pendiente de aislar con reproducción QA.
+- Inventario de triggers sobre `pvp_matches`: audit_pvp, trg_achievements_on_pvp,
+  trg_canon_guard_pvp, trg_compiler_pvp, trg_event_router_pvp, trg_guard_pvp,
+  trg_kernel_pvp, trg_pvp_anomaly, trg_pvp_event, trg_pvp_reward,
+  trg_pvp_updated_at, trg_pvp_xp, trg_rebalance_pvp, trg_rule_pvp,
+  trg_self_compile_pvp.
+- Estado honesto: `DIAGNOSED_UNFIXED`. Siguiente unidad: aislar el callee con
+  UPDATE sin WHERE (reproducir con sesión QA `cristiangalvez815@gmail.com`,
+  contraseña sólo en secreto `VEXFORGE_QA_PASSWORD`), corregir con migración,
+  y continuar FASES 6-13 (battlefield real con cartas/ilustraciones).
+
+---
+## 2026-09-07 — VE-PVP-02-P0-ROOT-CAUSE-WHERE-TRUE — DIAGNOSED_UNFIXED
+
+- Sesión iniciada con el paquete `VEXFORGE_PVP_BATTLEFIELD_LOVABLE_PACKAGE`
+  (directiva de battlefield + evidencia de auditoría + 3 referencias visuales).
+  Orden obligatorio del prompt: AUDITAR → REPARAR MOTOR → REPARAR DATOS/ASSETS →
+  CONSTRUIR TABLERO → CONECTAR EVENTOS → ANIMAR → PROBAR → REGRESAR → DOCUMENTAR.
+- CAUSA RAÍZ DEL P0 AISLADA Y CONFIRMADA: el rol `authenticator` precarga la
+  librería `safeupdate` (`session_preload_libraries=supautils, safeupdate`).
+  No existe ningún `UPDATE` sin `WHERE` en las 348 funciones de aplicación; el
+  bloqueo lo causan los `UPDATE ... WHERE true`, porque el planificador elimina
+  el qual constante y `safeupdate` inspecciona el plan, no el texto.
+- Inventario cerrado: 13 sentencias `WHERE true` en 9 funciones
+  (`update_reward_scaling`, `vexforge_meta_tick`, `economic_brake_check`,
+  `meta_system_tick`, `economy_os_orchestrator`, `update_market_stability`,
+  `mutate_reality`, `sync_to_canonical_reality`, `apply_reality_rules`).
+  `update_reward_scaling` (candidata de VE-PVP-01) queda confirmada, pero NO es
+  la única: corregir sólo esa dejaría el bloqueo vivo por otras ramas de trigger.
+- PRUEBA DIFERENCIAL: ejecutado `vexforge_battle_resolve` por vía administrativa
+  (sin `safeupdate`) con claim JWT simulado → `ok:true`, `turns[]` completo,
+  `final_units[]`, formación CAMPEÓN/VANGUARDIA/CENTINELA e `image_url` real de
+  las cartas (`vexforge-assets/cards/*.jpg`). El motor de combate NO está roto;
+  el bloqueo es exclusivamente la interacción `WHERE true` × `safeupdate`.
+- No se aplicó migración en esta pasada (sesión detenida por créditos antes de
+  la fase CREATE). Corrección diseñada y documentada:
+  `0046_ve_pvp_2_where_true_safeupdate_fix.sql`, sustituyendo `WHERE true` por
+  `WHERE <pk> IS NOT NULL`. Prohibido desactivar `safeupdate` o simular combate.
+- Detalle completo, evidencia y criterios de verificación en
+  `docs/VE-PVP-02-P0-ROOT-CAUSE-WHERE-TRUE.md`.
+- Estado honesto: `DIAGNOSED_UNFIXED`. No se declara PASS, OPERATIONAL ni
+  TIER1_READY. Siguiente unidad: aplicar 0046, reverificar PVP end-to-end con la
+  cuenta QA y continuar con la construcción del battlefield vertical.
+
+---
+## 2026-09-07 — VE-PVP-02-P0-ROOT-CAUSE-WHERE-TRUE — PARTIAL_FIX_APPLIED
+
+- La migración `supabase/migrations/0046_ve_pvp_2_where_true_safeupdate_fix.sql` fue aplicada en Supabase oficial por Management API.
+- La migración conserva las nueve definiciones vivas y sustituye únicamente las 13 condiciones `WHERE true` por predicados reales `WHERE id IS NOT NULL` sobre las claves primarias de las tablas singleton.
+- Verificación administrativa posterior: las nueve funciones objetivo quedan con cero ocurrencias de `WHERE true`; `safeupdate` no se desactivó y el RPC de combate no fue simulado ni reescrito.
+- El battlefield Android existente permanece como consumidor de `final_units`, `turns` e `image_url` del RPC autoritativo; no se tocó `mobile/**`, por lo que no corresponde fabricar un APK nuevo para este cambio de datos.
+- Estado honesto: `PARTIAL_FIX_APPLIED`. La reproducción desde una sesión QA autenticada real y la confirmación de ELO, `pvp_matches`, recompensas y `player_progress` siguen pendientes. No se declara `PASS`, `OPERATIONAL` ni `TIER1_READY`.
+- Siguiente acción verificable: completar la verificación QA end-to-end y, si pasa, continuar la evidencia del battlefield vertical.
+
+---
+## 2026-09-07 — VE-PVP-02-P0-ROOT-CAUSE-WHERE-TRUE — BACKEND E2E VERIFIED / APK QA PENDING
+
+- La cuenta QA autenticada por Supabase ejecutó `public.vexforge_battle_resolve` contra el oponente real `1ece9f66-5955-4cf5-a493-d5695328e62d` con mazo elegible de cinco cartas.
+- Resultado real: `ok:true`, motor `vexforge_battle_resolve_v1`, victoria QA, 5 turnos, 13 unidades finales y 13/13 con `image_url` oficial.
+- La repetición con la misma clave `qa_verify_0046_20260907_a70f8be8` devolvió el mismo `match_id` `e119ebc3-e01a-4877-bcb4-d6035fe38020`, confirmando idempotencia sin duplicar la resolución.
+- Persistencia confirmada en Supabase: `pvp_matches.status=resolved`, `winner` QA, `rewards_json` objeto, ranking QA actualizado y `player_progress.updated_at` correspondiente a la resolución.
+- La corrección `0046` queda verificada end-to-end para el cliente autenticado. No se modificó `mobile/**`, por lo que no se ejecutó un APK nuevo; la QA visual/manual del battlefield en APK sigue pendiente.
+- Estado honesto: `IMPLEMENTED_UNVERIFIED` para la unidad Android. No se declara `PASS`, `OPERATIONAL` ni `TIER1_READY`.
+
+---
+## 2026-09-07 — VE-MOB-3-HOME — NEXUS CORE / PARTIAL SYNC STATES
+
+- Se implementó un lote Android acotado en `mobile/app/(tabs)/index.tsx`, respetando el orden normativo que mantiene Home/Forja antes de ampliar Batalla o superficies secundarias.
+- La carta destacada conserva el protagonismo sobre una plataforma central authored derivada de tokens y colores existentes; `ENTRAR A LA ARENA` queda visualmente por encima de `MI COLECCIÓN` sin cambiar rutas ni contratos.
+- Las cargas de estadísticas, carta, misiones y actividad siguen usando `Promise.allSettled`, pero ahora una falla parcial muestra el error y reintento explícitos en vez de degradar silenciosamente.
+- El asset de atmósfera de facción se limpia al cambiar la carta y deja de renderizarse si falla; no se inventa arte sustituto.
+- Guardas estáticas ejecutadas sobre el lote: motion/reduced-motion, identidad, arte de superficie, metadata móvil, assets y batalla pasan.
+- Pendiente normativo: typecheck/build en el workflow Android oficial y QA visual/táctil humana en el APK. Estado honesto: `IMPLEMENTED_UNVERIFIED`; no se declara `PASS`, `OPERATIONAL`, `Q4` ni `TIER1_READY`.
+
+---
+## 2026-09-07 — VE-MOB-3-HOME — APK 121 PUBLISHED / VISUAL QA PENDING
+
+- El commit `2d98d0f7097f4ecfff90a88bd366acaf28402986` pasó el workflow de verificación `229` (`34143020880`) con `success`.
+- El workflow Android `121` (`34143020831`) terminó `success` en typecheck móvil, telemetría, prebuild Expo, compilación release, verificación standalone y publicación.
+- Release correlativo: `vexforge-android-build-121`, `app-release.apk`, 95,335,180 bytes, SHA-256 `b881111862f0cd3405a7c01111d2cf27c32a3dfead2f5391a842a3297cfb1904`.
+- El bundle standalone contiene `forge-battlefield`, `CAMPO DE BATALLA`, `vexforge_battle_resolve`, `ARTE NO DISPONIBLE` y `battle-next-turn`.
+- El lote Home queda técnicamente verificable y publicado; falta únicamente la QA visual/táctil humana en el APK para evaluar composición, safe areas, interacción, accesibilidad y rendimiento real. Estado honesto: `IMPLEMENTED_UNVERIFIED`; no se declara `PASS`, `OPERATIONAL`, `Q4` ni `TIER1_READY`.
+
+---
+## 2026-09-07 — VE-MOB-3-HOME — APK 124 PUBLISHED / VISUAL QA PENDING
+
+- El commit `3c374b6db2ae472af8078c5b572c0377e11dcc42` pasó el workflow Android oficial `124` (`34153959509`) con `success`.
+- El workflow completó typecheck móvil, telemetría, prebuild Expo, compilación release, verificación standalone y publicación.
+- Release correlativo: `vexforge-android-build-124`, `app-release.apk`, 95,339,892 bytes, SHA-256 `933ccd2eecdc5f2902f04faf47934fa205b8f522d2b6ab33ef12e8005291a057`.
+- APK publicado: `https://github.com/grandmaster68081-byte/Vexforge-web/releases/download/vexforge-android-build-124/app-release.apk`.
+- El lote Home queda técnicamente compilado, verificado y publicado; falta únicamente la QA visual/táctil humana en el APK para evaluar composición, safe areas, interacción, accesibilidad y rendimiento real. Estado honesto: `IMPLEMENTED_UNVERIFIED`; no se declara `PASS`, `OPERATIONAL`, `Q4` ni `TIER1_READY`.
+
+---
+## 2026-09-07 — VE-MOB-3-HOME — QA DATA + NAV LABEL ALIGNMENT / APK QA PENDING
+
+- La cuenta QA autenticó correctamente contra Supabase oficial y `get_home_stats` devolvió temporada activa, evento, cartas, batallas, jugadores activos y ranking reales.
+- Las consultas consumidas por Home para carta destacada, misiones y actividad devolvieron datos reales; `lobby/main.jpg` y `misc/IMG_20260619_122314.jpg` respondieron HTTP 200 desde Storage oficial.
+- La APK publicada más reciente al iniciar esta revisión fue `vexforge-android-build-126`, standalone, con bundle Android embebido y marcadores de la escena Home (`home-scene`, `home-featured-card`, `home-missions`, `home-official-nexus-burst`).
+- La referencia visual coincide en la escena, HUD, temporada, carta central, portales, misión, evento y navegación. Se corrigieron las dos etiquetas Android de la pestaña Home para mostrar `Inicio`, como en la referencia, manteniendo la ruta `/` y la acción funcional.
+- El cambio está publicado en `main` y requiere workflow Android y release correlativo. La QA visual/táctil final en dispositivo o emulador sigue siendo el gate para declarar `PASS`, `Q4`, `OPERATIONAL` o `TIER1_READY`.
+
+---
+## 2026-09-07 — VE-MOB-3-HOME — APK 127 PUBLISHED / VISUAL QA PENDING
+
+- El workflow Android oficial `127` (`34164725389`) terminó `success` para el commit `e43b65c82c9be5c71ee85f31b6569b2b032f2e3d`.
+- El workflow completó typecheck móvil, verificación de telemetría, prebuild Expo, compilación release, verificación del bundle standalone y publicación.
+- Release correlativo: `vexforge-android-build-127`, `app-release.apk`, SHA-256 `dffa72ba31ca208d25b564d1158146e910f76ee5a184e895fe6d7d15ba10b49f`.
+- APK publicado: `https://github.com/grandmaster68081-byte/Vexforge-web/releases/download/vexforge-android-build-127/app-release.apk`.
+- La corrección de navegación Home/`Inicio` queda técnicamente compilada, verificada y publicada; falta únicamente la QA visual/táctil humana en el APK para evaluar composición, safe areas, interacción, accesibilidad y rendimiento real. Estado honesto: `IMPLEMENTED_UNVERIFIED`; no se declara `PASS`, `OPERATIONAL`, `Q4` ni `TIER1_READY`.
+
+---
+## 2026-09-07 — VE-MOB-3-HOME — OPERATOR REFERENCE BACKGROUND / IMPLEMENTED_UNVERIFIED
+
+- Se incorporó la imagen de referencia entregada por el operador como escena visual del Home Android en `mobile/assets/images/home-reference-scene.png`, recortada únicamente para dejar la barra nativa de pestañas fuera del arte.
+- El Home conserva `get_home_stats` contra Supabase y navegación real por zonas táctiles transparentes; se retiraron del primer viewport los paneles superpuestos que alteraban el fondo y se dejó la escena dentro de un `ScrollView`.
+- El gate técnico de typecheck, build/release y la QA visual/táctil humana siguen pendientes; el estado correcto antes de esos gates es `IMPLEMENTED_UNVERIFIED`.
+
+---
+## 2026-09-08 — VE-MOB-9-PROFILE — OPERATOR REFERENCE / READY FOR APK
+
+- Se reabrió la unidad Android de Perfil para sustituir el lienzo estirado por el frame oficial 2:3 de la referencia entregada por el operador; el arte `profile-reference-scene.png` coincide byte a byte con la referencia.
+- `mobile/app/(tabs)/profile.tsx` conserva los contratos vivos de Supabase y ahora escala el frame, textos y barra de XP sin deformar la composición; el objetivo de diseño es 683×1024 px.
+- Se conectaron las zonas visibles de configuración, avisos, navegación, edición, estadísticas, logros, títulos, historial, ranking, temporada, progreso, mazos, cartas, misiones, recompensas, red social y cierre de sesión.
+- Se añadieron estados explícitos de carga, error, vacío de logros, sincronización y pull-to-refresh; los datos siguen siendo identidad, rango, estadísticas, progreso, cartera, actividad y logros reales bajo la sesión y RLS existentes.
+- Evidencia local: `npm run typecheck` móvil OK, `verify-mobile-profile.mjs` 13/13 OK y QA HTTPS contra Supabase OK con sesión, perfil, rango, estadísticas y 10 logros.
+- Estado honesto: `IMPLEMENTED_UNVERIFIED`. Falta el workflow Android oficial, el release correlativo y el recorrido visual/táctil humano en la APK; no se declara `PASS`, `OPERATIONAL`, `Q4` ni `TIER1_READY`.
+
+---
+
+## 2026-09-08 — VE-MOB-7-BATTLE — OPERATOR REFERENCE / MAIN PUBLISHED
+
+- La pantalla de Batalla conserva la referencia oficial `mobile/assets/images/battle-reference-scene.png` de `941×1672`, escalada al canvas vertical Android existente sin recorte horizontal ni sustitución del arte entregado.
+- Se conectaron los accesos visibles de la referencia: PVP consulta oponentes reales y resuelve por `vexforge_battle_resolve`; PVE abre Misiones; Jefe Raid abre Mundo; las posiciones de formación abren Mazos; la práctica IA queda explícita en Batalla rápida; navegación inferior mantiene Inicio, Batalla, Cartas, Mazo y Perfil; configuración abre Meta.
+- PVP ya no inicia una simulación local cuando no existe rival real. Presenta un estado explícito y reserva la práctica IA para su acceso dedicado, sin MMR ni economía.
+- No se modificaron Auth, RLS, RPCs, Storage ni la autoridad del combate. La resolución, turnos, formación, arte de cartas y resultado continúan llegando de Supabase.
+- Evidencia local: `npm run verify:mobile-battle` — 20/20; `git diff --check` — OK. No se ejecutó build, compilación de APK ni workflow Android por instrucción explícita del operador.
+- Estado honesto: `IMPLEMENTED_UNVERIFIED`; la QA visual/táctil humana y una futura compilación Android siguen pendientes. El cambio queda publicado en `main`.
+
+---
+
+## 2026-09-08 — VE-MOB-3-HOME — OPERATOR REFERENCE / MAIN PUBLISHED
+
+- La pantalla de Inicio conserva la referencia oficial `mobile/assets/images/home-reference-scene.png`, que coincide byte a byte con la entrega del operador y mide `1024×1536` en proporción vertical `2:3`.
+- Se conectaron los flujos visibles a superficies Android reales: Forja abre Fusión con las reglas y mutaciones de Supabase; Arena abre Batalla; Cartas y Archivo abren Colección; Mundo y Eventos abren Mundo; Misión abre Misiones; temporada, economía, ajustes y navegación inferior mantienen sus rutas funcionales.
+- Se reajustaron las zonas táctiles superiores para coincidir con los iconos reales de energía, VEX y configuración, y se retiró texto superpuesto que no forma parte de la composición entregada. Energía, VEX, perfil y el resumen de temporada siguen expuestos desde datos reales para accesibilidad y HUD dinámico.
+- Se restauró explícitamente la entrada con `FadeIn` condicionada por `useReducedMotion`, sin alterar la composición visual cuando el movimiento reducido está activo.
+- Evidencia local: `npm run verify:mobile-home-official-assets` — 7/7; `git diff --check` — OK. No se ejecutó build, compilación de APK ni workflow Android por instrucción explícita del operador.
+- Estado honesto: `IMPLEMENTED_UNVERIFIED`; la QA visual/táctil humana y una futura compilación Android siguen pendientes. El cambio queda publicado en `main`.
+
+---
+
+## 2026-09-08 — VE-MOB-REFERENCE-METRICS — FIVE SCREEN AUDIT / APK BUILD REQUESTED
+
+- Se auditaron las cinco superficies Android de referencia: Inicio, Cartas, Batalla, Mazos y Perfil. Los cinco assets locales existen y conservan sus dimensiones entregadas: Inicio/Cartas/Mazos/Perfil `1024×1536` y Batalla `941×1672`.
+- El contrato común de las superficies referencia usa el canvas seguro de la APK (`viewportWidth`, `viewportHeight - insets.top - insets.bottom`, `marginTop: insets.top`, compensación del inset inferior) y el ajuste directo al canvas. Perfil era la excepción: escalaba por `cover/contain`, lo que podía recortar laterales en dispositivos estrechos.
+- Perfil fue alineado al mismo contrato que las otras cuatro pantallas: la escena ocupa exactamente el canvas disponible, usa `resizeMode="stretch"` y los datos superpuestos siguen escalando desde el ancho de diseño `683` sin cambiar sus posiciones porcentuales.
+- Guardas estáticas: Home `7/7`, Batalla `20/20`, Mazos `13/13`, Perfil `14/14`, piloto visual de Cartas `6/6`; `git diff --check` OK. El typecheck local no pudo ejecutarse porque faltan dependencias Expo en el entorno actual; el workflow oficial reinstala `mobile/package.json` desde cero.
+- Se solicitó la compilación oficial Android después de publicar esta alineación. Estado: `IMPLEMENTED_UNVERIFIED` hasta que el workflow termine y publique la APK.
+
+---
+## 2026-09-10 — VE-MOB-5-DECK — CANONICAL REFERENCE TOUCH MAP / MAIN PUBLISHED
+
+- Se corrigió la superficie Android de Mazos para consumir la composición oficial completa `mobile/assets/images/decks-reference-scene.png` como un único frame `1080×2340`, PNG RGB/sRGB, proporción `9:19.5`.
+- Se retiraron las tarjetas, paneles, filtros y controles visuales duplicados que se dibujaban encima del arte. La pantalla conserva la obra entregada y usa un mapa táctil transparente con coordenadas relativas al mismo frame canónico; `resizeMode="cover"` queda alineado con Inicio, Batalla, Cartas y Perfil dentro de un frame con la misma proporción, por lo que no recorta el arte.
+- Las zonas visibles quedan conectadas a los flujos reales existentes: Colección, Tus cartas, Fusión, Logros, filtros por facción, búsqueda, orden, restablecer filtros, crear/editar mazo, detalle, navegación inferior, validación `validate_deck`, guardado `save_deck`, sincronización y entrada a Arena. No se modificaron Supabase, RLS, RPCs, economía, combate ni assets oficiales.
+- Evidencia estática: `verify-mobile-deck` `18/18`, `verify:mobile-collection-reference` `12/12`, Home `8/8` y Perfil `16/16`. El typecheck móvil no pudo ejecutarse porque el firewall de paquetes devolvió `404` al instalar `npm-package-arg@11.0.3`; no se compiló APK ni se ejecutó el workflow Android por instrucción del operador.
+- Estado honesto: `IMPLEMENTED_UNVERIFIED`. No se declara QA humana, `PASS`, `OPERATIONAL`, `TIER1_READY` ni release Android para este cambio; el commit de código queda publicado en `main` sin publicar aplicación.
+
+---
+## 2026-09-10 — VE-MOB-REFERENCE-FLOW-CHECK — PROFILE ROUTE REPAIR / APK REQUESTED
+
+- Se compararon Auth, Inicio, Batalla, Cartas, Mazos y Perfil contra el contrato común del frame Android `1080×2340`, las métricas de área segura, el arte oficial y el mapa táctil proporcional. No se modificó la web congelada ni Supabase.
+- Se corrigió `mobile/app/(tabs)/profile.tsx`: el acceso visible `Títulos` abre el panel de títulos en lugar de Logros, y `section=achievements` vuelve a abrir el panel cuando Perfil ya estaba montado y recibe navegación desde Cartas o Mazos.
+- Se reforzó `scripts/verify-mobile-profile.mjs` con ambas regresiones de flujo. Guardas locales: Auth `14/14`, Home `8/8`, Cartas `12/12`, Batalla `20/20`, Mazos `18/18`, Perfil `18/18`; telemetría Android `5` eventos canónicos.
+- Estado: `IMPLEMENTED_UNVERIFIED` hasta completar el workflow Android oficial, publicar el release correlativo y recibir QA visual/táctil humana. La APK solicitada debe corresponder al commit de este registro.
+
+---
+## 2026-09-10 — VE-MOB-REFERENCE-FLOW-CHECK — WORKFLOW PREFLIGHT REPAIRED
+
+- Las ejecuciones oficiales `34449578967` y `34449589134` sobre el commit de esta unidad pasaron instalación de dependencias, `npm run typecheck` y telemetría, pero fallaron antes de Gradle en `Verify all mobile contracts`.
+- Causa reproducible: el job usa `mobile/` como directorio de trabajo por defecto, mientras las guardas leen rutas desde la raíz del repositorio; el primer intento abría `mobile/app/auth.tsx` desde dentro de `mobile/`.
+- Se corrigió únicamente el workflow oficial para subir a la raíz antes de ejecutar `scripts/verify-mobile-*.mjs`. No se modificaron código Android, Supabase, Auth, RLS, RPCs, Storage ni assets.
+- No hubo APK ni release publicado en esos runs. Estado: `IMPLEMENTED_UNVERIFIED`; queda pendiente una ejecución posterior que atraviese guardas, prebuild, Gradle y publicación.
+
+---
+## 2026-09-10 — VE-MOB-REFERENCE-FRAME — EXACT FULL-FRAME PARITY REPAIR
+
+- La comparación estructural confirmó que Inicio y Batalla dibujan su arte con un único frame normal, dimensiones de `getCanonicalFrameMetrics`, `marginTop: insets.top`, `alignSelf: 'center'` y una imagen `width: '100%'`, `height: '100%'`, `resizeMode="cover"`. Cartas, Mazos y Perfil usaban una capa de canvas adicional, `absoluteFillObject` para la imagen y, en Perfil, un frame interno dentro del `ScrollView`; no era el mismo contrato.
+- Se alinearon las tres pantallas afectadas con el contrato que ya funciona: un único `referenceScene`, imagen dimensionada al `100%` del frame y el mismo cálculo seguro `viewportHeight - insets.top - insets.bottom`. Las capas de datos, paginación y hotspots siguen dentro de ese mismo frame; no se tocó backend ni se eliminó la actualización de Perfil.
+- Se descartó el enfoque intermedio de medir el contenedor y estirar el arte: aunque podía ocultar el recorte, habría dejado las tres pantallas con un contrato distinto al de las pantallas sanas. Las guardas ahora exigen paridad explícita con el patrón completo.
+- Estado honesto: `IMPLEMENTED_UNVERIFIED` hasta completar typecheck, Gradle, instalación de la APK y comparación visual en dispositivo. No se considera resuelto sólo por pasar guardas estáticas.
+
+---
+## 2026-09-10 — VE-MOB-REFERENCE-FLOW-CHECK — APK 174 PUBLICADA
+
+- Se corrigió la guarda de recompensas Android en `mobile/app/(tabs)/index.tsx`: el hotspot visible de avisos y misiones conserva la ruta real `/missions` y vuelve a usar el identificador semántico `mission` exigido por `verify-mobile-rewards.mjs`. No se modificaron la web, Supabase, Auth, RLS, RPCs, economía, combate ni Storage.
+- Commit de entrega: `7873a9d3fd9b96c2e760df6a6e9f85caa5e8810a`, publicado en `main` mediante la API HTTPS de GitHub.
+- Workflow oficial `vexforge-android-apk.yml`: run `34517114784` / build `174`, `success`. Pasaron instalación de dependencias, `npm run typecheck`, telemetría, todos los contratos móviles, `expo prebuild`, Gradle `assembleRelease` y la guarda de APK standalone con bundle Android embebido.
+- Release publicado: `vexforge-android-build-174`, asset `app-release.apk`, tamaño `113731324` bytes, SHA-256 `a70effb962df5b68e9f08c93036b156b0e3a8e11b6a8e0970e6194a2cf9b3f73`.
+- Descarga oficial: `https://github.com/grandmaster68081-byte/Vexforge-web/releases/download/vexforge-android-build-174/app-release.apk`.
+- La verificación general paralela `verify` terminó con fallo en `verify:uxcx-domain-identity` por contratos de identidad de Collection/Deck/Profile y FOJA; no bloqueó ni formó parte del workflow oficial de APK, que terminó correctamente. La QA visual/táctil humana en dispositivo sigue pendiente, por lo que el estado honesto continúa siendo `IMPLEMENTED_UNVERIFIED`; no se declara `PASS`, `OPERATIONAL` ni `TIER1_READY`.
