@@ -347,8 +347,8 @@ export default function ForgeScreen() {
             <Animated.View entering={reduceMotion ? undefined : FadeInUp.delay(120).duration(560)} style={styles.domainSection} testID="home-domain-rail">
               <View style={styles.domainHeading}>
                 <View>
-                  <Text style={[styles.eyebrow, { color: colors.rarityRare }]}>RED DEL NEXUS</Text>
-                  <Text style={[styles.domainTitle, { color: colors.foreground }]}>Cruza a un dominio</Text>
+                  <Text style={[styles.eyebrow, { color: colors.rarityRare }]}>CONSTELACIÓN DEL NEXUS</Text>
+                  <Text style={[styles.domainTitle, { color: colors.foreground }]}>Tus frentes activos</Text>
                 </View>
                 <View style={styles.liveSignal}><View style={[styles.liveSignalDot, { backgroundColor: connectionColor }]} /><Text style={[styles.liveSignalText, { color: connectionColor }]}>SEÑAL VIVA</Text></View>
               </View>
@@ -356,7 +356,7 @@ export default function ForgeScreen() {
                 {domainPortals.map((portal, index) => (
                   <View key={portal.id} style={styles.domainRailItem}>
                     <NexusPortal portal={portal} onPress={() => navigate(portal.route)} />
-                    {index < domainPortals.length - 1 ? <View style={styles.domainConnector}><View style={[styles.domainConnectorLine, { backgroundColor: `${portal.color}66` }]} /><Icon name="chevron-right" color={`${portal.color}B8`} size={12} /></View> : null}
+                    {index < domainPortals.length - 1 ? <View style={styles.domainConnector}><View style={[styles.domainConnectorLine, { backgroundColor: `${portal.color}66` }]} /><Animated.View style={[styles.domainSignal, { backgroundColor: portal.color }, pulseStyle]} /><Icon name="chevron-right" color={`${portal.color}B8`} size={12} /></View> : null}
                   </View>
                 ))}
               </ScrollView>
@@ -530,6 +530,7 @@ const styles = StyleSheet.create({
   domainStatus: { fontFamily: 'Rajdhani_600SemiBold', fontSize: 9, letterSpacing: 0.45 },
   domainConnector: { alignItems: 'center', flexDirection: 'row', gap: 1, width: 24 },
   domainConnectorLine: { height: 1, flex: 1 },
+  domainSignal: { borderRadius: 3, height: 5, width: 5 },
   levelLine: { flexDirection: 'row', justifyContent: 'space-between' },
   progressLabel: { fontFamily: 'Rajdhani_700Bold', fontSize: 9, letterSpacing: 0.9 },
   progressValue: { fontFamily: 'Rajdhani_700Bold', fontSize: 9, letterSpacing: 0.4 },
