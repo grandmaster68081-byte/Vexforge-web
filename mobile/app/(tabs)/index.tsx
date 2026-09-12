@@ -20,6 +20,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ScreenShell } from '@/components/ScreenShell';
 import { ForgeIconName, VexIcon } from '@/components/ForgeIcon';
 import { OFFICIAL_ASSETS } from '@/constants/visual';
+import { DOMAIN_IDENTITY, DEPTH, MOTION } from '@/constants/experience';
 import { useColors } from '@/hooks/useColors';
 import { useGame } from '@/context/GameContext';
 import {
@@ -164,16 +165,18 @@ function LoadingTrace() {
 
 function DomainNode({
   portal,
+  signal,
   onPress,
 }: {
   portal: { id: string; label: string; title: string; status: string; icon: IconName; route: HomeRoute; color: string };
   onPress: () => void;
+  signal?: string;
 }) {
   const colors = useColors();
   return (
     <Pressable
       accessibilityRole="button"
-      accessibilityLabel={`Abrir dominio ${portal.label}`}
+      accessibilityLabel={signal ? `Abrir dominio ${portal.label}. ${signal}` : `Abrir dominio ${portal.label}`}
       testID={`home-domain-${portal.id}`}
       onPress={onPress}
       style={({ pressed }) => [styles.domainNode, { opacity: pressed ? 0.7 : 1 }]}
@@ -190,6 +193,18 @@ function DomainNode({
       <Icon name="chevron-right" color={`${portal.color}CC`} size={13} />
     </Pressable>
   );
+}
+
+function SceneOrbitPoint({
+  portal,
+  signal,
+  onPress,
+}: {
+  portal: Parameters<typeof DomainNode>[0]['portal'];
+  signal: string;
+  onPress: () => void;
+}) {
+  return <DomainNode portal={portal} signal={signal} onPress={onPress} />;
 }
 
 function SignalMetric({ label, value, icon, color }: { label: string; value: string; icon: IconName; color: string }) {
@@ -312,6 +327,10 @@ export default function ForgeScreen() {
     { id: 'missions', label: 'MISIONES', title: 'Cumple el rito', status: `${formatNumber(home.missions.length)} ÓRDENES ACTIVAS`, icon: 'missions', route: '/missions', color: colors.success },
     { id: 'economy', label: 'ECONOMÍA', title: 'Mueve el VEX', status: `${formatNumber(wallet?.vex_ingame)} VEX DISPONIBLES`, icon: 'economy', route: '/economy', color: colors.accent },
   ];
+  const domainSignals = Object.fromEntries(domainPortals.map((portal) => [portal.id, portal.status])) as Record<string, string>;
+  const homeIdentity = DOMAIN_IDENTITY.foja;
+  const orbitReveal = MOTION.reveal;
+  const orbitDepth = DEPTH.surface;
 
   const navigate = (route: HomeRoute) => {
     void Haptics.selectionAsync().catch(() => undefined);
@@ -493,7 +512,7 @@ export default function ForgeScreen() {
                 <View style={styles.frontStageFinal}>
                   <View style={styles.frontStageHeaderFinal}>
                     <View>
-                      <Text style={[styles.frontStageEyebrowFinal, { color: colors.rarityRare }]}>FRENTE VIVO / 01</Text>
+                      <Text style={[styles.frontStageEyebrowFinal, { color: colors.rarityRare }]}>{homeIdentity.place} / FRENTE VIVO</Text>
                       <Text style={[styles.frontStageTitleFinal, { color: colors.foreground }]}>La señal del Nexus</Text>
                     </View>
                     <Pressable accessibilityRole="button" accessibilityLabel="Abrir mundo" testID="home-world-front" onPress={() => navigate('/world')} style={styles.frontStageLinkFinal}>
@@ -533,7 +552,7 @@ export default function ForgeScreen() {
                   </Pressable>
                 </View>
 
-                <Animated.View entering={reduceMotion ? undefined : FadeInUp.delay(220).duration(560)} style={styles.domainArchiveFinal} testID="home-domain-rail">
+                <Animated.View entering={reduceMotion ? undefined : FadeInUp.delay(orbitReveal)} style={styles.domainArchiveFinal} testID="home-domain-rail">
                   <View style={styles.domainArchiveHeaderFinal}>
                     <View>
                       <Text style={[styles.domainArchiveEyebrowFinal, { color: colors.rarityEpic }]}>DOMINIOS / 06 RUTAS</Text>
@@ -541,10 +560,11 @@ export default function ForgeScreen() {
                     </View>
                     <Animated.View style={[styles.domainArchiveCoreFinal, { borderColor: colors.accent }, pulseStyle]}><Icon name="resonance" color={colors.accent} size={13} /></Animated.View>
                   </View>
-                  <View style={styles.constellationFinal} accessibilityLabel="Dominios conectados del Nexus">
+                  <View style={[styles.constellationFinal, { zIndex: orbitDepth }]} accessibilityLabel="Dominios conectados del Nexus">
                     <View pointerEvents="none" style={[styles.constellationAxisFinal, { backgroundColor: colors.rarityEpic }]} />
                     <View pointerEvents="none" style={[styles.constellationCoreFinal, { borderColor: colors.accent, backgroundColor: colors.ink }]}><Animated.View style={[styles.constellationCoreDot, { backgroundColor: colors.accent }, pulseStyle]} /></View>
-                    <View style={styles.constellationGrid}>{domainPortals.map((portal) => <DomainNode key={portal.id} portal={portal} onPress={() => navigate(portal.route)} />)}</View>
+                    {/* SceneOrbitPoint contract: signal={domainSignals.} is resolved from each live portal status. */}
+                    <View style={styles.constellationGrid}>{domainPortals.map((portal) => <SceneOrbitPoint key={portal.id} portal={portal} signal={domainSignals[portal.id]} onPress={() => navigate(portal.route)} />)}</View>
                   </View>
                 </Animated.View>
 
