@@ -1,3 +1,11 @@
+## 2026-09-12 — VE-MOB-3-HOME — TCG ART DIRECTION CONSOLIDATION / IMPLEMENTED_UNVERIFIED
+
+- Se recompuso la Home Android sobre la estructura funcional existente: la carta y el frente vivo pasan a ser los focos principales; identidad, progresión, dominios, operaciones, misiones, actividad y clasificación quedan ordenados como señales del universo VEXFORGE, no como un panel administrativo repetitivo.
+- Se conservaron las fuentes Supabase/GameContext, las rutas existentes, los testID, la accesibilidad, pull-to-refresh, reduced-motion y los estados de carga/error/vacío. No se añadieron datos, tablas, RPCs, economía, Auth, RLS ni rutas nuevas.
+- El cambio se preparó para publicación por API REST HTTPS oficial de GitHub, sin Git Smart HTTP ni secretos en URLs. El estado permanece IMPLEMENTED_UNVERIFIED hasta que el workflow Android termine en success y exista el APK correlativo.
+
+---
+
 ## 2026-09-11 — VE-MOB-3-HOME — NEXUS TYPOGRAPHIC PASS / IMPLEMENTED_UNVERIFIED
 
 - Se hizo un pase quirúrgico sobre la Home Android existente, sin sustituir la escena, los assets, los datos, las rutas ni el flujo de Supabase.

@@ -471,150 +471,125 @@ export default function ForgeScreen() {
             ) : null}
             {homeState === 'loading' && !home.stats && !activeCard ? <LoadingTrace /> : null}
 
-            <View style={styles.nexusWorld}>
-              <View style={styles.worldHeader}>
-                <View style={styles.worldHeaderCopy}>
-                  <View style={styles.worldHeaderRule}><View style={[styles.worldHeaderDiamond, { backgroundColor: colors.accent }]} /><Text style={[styles.nexusBoardEyebrow, { color: colors.rarityEpic }]}>NEXUS SCENE / LIVE</Text></View>
-                  <Text style={[styles.nexusBoardTitle, { color: colors.foreground }]}>El tablero está despierto</Text>
-                </View>
-                <View style={[styles.nexusBoardToken, { borderColor: `${colors.accent}88` }]}>
-                  <Icon name="resonance" color={colors.accent} size={12} />
-                  <Text style={[styles.nexusBoardTokenText, { color: colors.accent }]}>ONLINE</Text>
-                </View>
-              </View>
-
-              <Animated.View entering={reduceMotion ? undefined : FadeInUp.delay(150).duration(560)} style={[styles.playerLedger, { borderTopColor: `${colors.accent}80`, borderBottomColor: `${colors.border}88` }]}>
-                <View style={styles.playerIdentity}>
-                  <View style={[styles.avatarSeal, { borderColor: colors.accent, backgroundColor: `${colors.accent}10` }]}>
-                    <View style={[styles.avatarSealInner, { borderColor: `${colors.accent}72` }]}><Text style={[styles.avatarLetter, { color: colors.accent }]}>{playerName.slice(0, 1).toUpperCase()}</Text></View>
-                  </View>
-                  <View style={styles.playerCopy}>
-                    <Text style={[styles.playerName, { color: colors.foreground }]}>{playerName}</Text>
-                    <Text style={[styles.playerMeta, { color: colors.mutedForeground }]}>NIVEL {formatNumber(progress?.level)} / FORJADOR</Text>
-                  </View>
-                </View>
-                <View style={styles.playerProgress}>
-                  <View style={styles.levelLine}><Text style={[styles.progressLabel, { color: colors.mutedForeground }]}>RANGO DE FORJA</Text><Text style={[styles.progressValue, { color: colors.accent }]}>{formatNumber(xp)} / {formatNumber(xpToNext)} XP</Text></View>
-                  <ProgressRail value={xp} total={xpToNext} color={colors.accent} background={`${colors.accent}24`} />
-                </View>
-              </Animated.View>
-
-              <View style={[styles.signalBand, { borderTopColor: `${colors.border}88`, borderBottomColor: `${colors.border}88` }]}>
-                <SignalMetric label="CARTAS" value={formatNumber(playerStats?.cards_owned ?? cardsTotal)} icon="cards" color={colors.rarityRare} />
-                <SignalMetric label="VICTORIAS" value={formatNumber(playerStats?.pvp_wins)} icon="award" color={colors.accent} />
-                <SignalMetric label="BATALLAS" value={formatNumber(home.stats?.total_battles)} icon="arena" color={colors.rarityEpic} />
-                <SignalMetric label="PACKS" value={formatNumber(home.stats?.packs_opened)} icon="packs" color={colors.success} />
-              </View>
-
-              <View style={styles.worldStage}>
-                <View pointerEvents="none" style={[styles.worldStageTrace, { borderColor: `${colors.rarityRare}34` }]} />
-                <View style={styles.boardSectionTag}>
-                  <Text style={[styles.boardSectionEyebrow, { color: colors.rarityRare }]}>LIVE FRONT / 01</Text>
-                  <Icon name="map" color={colors.rarityRare} size={14} />
-                </View>
-                <SectionMarker eyebrow="SEÑAL DEL NEXUS" title="El frente de hoy" action="ABRIR MUNDO" onAction={() => navigate('/world')} accent={colors.rarityRare} />
-                <View style={styles.frontFocus}>
-                  <Pressable accessibilityRole="button" accessibilityLabel="Abrir evento activo" testID="home-event" onPress={() => navigate('/world')} style={({ pressed }) => [styles.eventRite, { borderColor: `${colors.rarityRare}72`, opacity: pressed ? 0.76 : 1 }]}>
-                    <View style={styles.eventBeacon}>
-                      <View style={[styles.eventOrb, { borderColor: `${colors.rarityRare}80` }]}><Animated.View style={[styles.eventOrbCore, { backgroundColor: colors.rarityRare }, pulseStyle]} /></View>
-                      <View style={[styles.eventBeaconAxis, { backgroundColor: `${colors.rarityRare}60` }]} />
+            <View style={styles.nexusWorldFinal}>
+                <Animated.View entering={reduceMotion ? undefined : FadeInUp.delay(120).duration(560)} style={styles.signalLedgerFinal}>
+                  <View style={styles.signalIdentityFinal}>
+                    <View style={[styles.signalCrestFinal, { borderColor: colors.accent }]}>
+                      <View style={[styles.signalCrestInnerFinal, { borderColor: colors.accent }]}><Text style={[styles.signalCrestLetterFinal, { color: colors.accent }]}>{playerName.slice(0, 1).toUpperCase()}</Text></View>
                     </View>
-                    <View style={styles.eventCopy}><Text style={[styles.eventType, { color: colors.rarityRare }]}>{activeEvent?.type?.toUpperCase() ?? 'SEÑAL GLOBAL'}</Text><Text style={[styles.eventTitle, { color: colors.foreground }]}>{activeEvent?.name ?? 'El Nexus espera un nuevo frente'}</Text><Text style={[styles.eventMeta, { color: colors.mutedForeground }]}>{activeEvent ? `CIERRA EN ${formatEventTime(activeEvent.ends_at)}` : 'No hay evento activo publicado'}</Text></View>
-                    <View style={styles.eventProgress}><Text style={[styles.eventProgressValue, { color: colors.rarityRare }]}>{activeEvent ? `${Math.round(activeEvent.progress)}%` : '—'}</Text><ProgressRail value={activeEvent?.progress ?? 0} total={100} color={colors.rarityRare} background={`${colors.rarityRare}20`} /><Icon name="arrow-up" color={colors.rarityRare} size={14} /></View>
-                  </Pressable>
-                  <Pressable accessibilityRole="button" accessibilityLabel="Inspeccionar carta del frente" onPress={openFeatured} style={({ pressed }) => [styles.worldCard, { borderColor: `${colors.rarityLegendary}C4`, backgroundColor: colors.ink, opacity: pressed ? 0.78 : 1 }]}>
-                    <Image source={OFFICIAL_ASSETS.homeFeatureCard} style={styles.worldCardArt} resizeMode="cover" accessibilityLabel="Arte oficial de la carta del frente" onLoad={() => setFeaturedAssetState('ready')} onError={() => setFeaturedAssetState('error')} />
-                    <LinearGradient colors={['transparent', `${colors.ink}E8`]} style={StyleSheet.absoluteFill} />
-                    <Text style={[styles.worldCardRarity, { color: colors.rarityLegendary }]}>{activeCard?.rarity?.toUpperCase() ?? 'SEÑAL PENDIENTE'}</Text>
-                    <Text numberOfLines={2} style={[styles.worldCardName, { color: colors.foreground }]}>{activeCard?.name ?? 'CARTA NO SINCRONIZADA'}</Text>
-                    <Text style={[styles.worldCardCode, { color: `${colors.foreground}9C` }]}>{activeCard?.code ?? '—'}</Text>
-                  </Pressable>
-                </View>
-              </View>
-
-              <Animated.View entering={reduceMotion ? undefined : FadeInUp.delay(220).duration(560)} style={styles.constellationSection} testID="home-domain-rail">
-                <SectionMarker eyebrow="CONSTELACIÓN DEL NEXUS" title="Los dominios están abiertos" accent={colors.rarityRare} />
-                <View style={styles.constellation} accessibilityLabel="Dominios conectados del Nexus">
-                  <View pointerEvents="none" style={[styles.constellationAxis, { backgroundColor: `${colors.rarityEpic}42` }]} />
-                  <View pointerEvents="none" style={[styles.constellationCore, { borderColor: `${colors.accent}9A`, backgroundColor: `${colors.accent}18` }]}>
-                    <Animated.View style={[styles.constellationCoreDot, { backgroundColor: colors.accent }, pulseStyle]} />
-                  </View>
-                  <View style={styles.constellationGrid}>
-                    {domainPortals.map((portal) => <DomainNode key={portal.id} portal={portal} onPress={() => navigate(portal.route)} />)}
-                  </View>
-                </View>
-              </Animated.View>
-
-              <View style={[styles.ritualDeck, { borderTopColor: `${colors.success}72`, borderBottomColor: `${colors.border}88` }]}>
-                <View style={styles.boardSectionTag}>
-                  <Text style={[styles.boardSectionEyebrow, { color: colors.success }]}>RITUALS / 02</Text>
-                  <Icon name="shop" color={colors.success} size={14} />
-                </View>
-                <View style={styles.operationRow}>
-                  <Pressable accessibilityRole="button" accessibilityLabel="Abrir Forja" testID="home-forge" onPress={() => navigate('/deck')} style={({ pressed }) => [styles.operationLink, { borderColor: `${colors.rarityEpic}72`, opacity: pressed ? 0.7 : 1 }]}>
-                    <Icon name="deck" color={colors.rarityEpic} size={17} />
-                    <View><Text style={[styles.operationLabel, { color: colors.rarityEpic }]}>FORJA</Text><Text style={[styles.operationTitle, { color: colors.foreground }]}>Construye tu línea</Text></View>
-                    <Icon name="arrow-up" color={colors.rarityEpic} size={12} />
-                  </Pressable>
-                  <Pressable accessibilityRole="button" accessibilityLabel="Abrir economía" testID="home-economy" onPress={() => navigate('/economy')} style={({ pressed }) => [styles.operationLink, { borderColor: `${colors.accent}72`, opacity: pressed ? 0.7 : 1 }]}>
-                    <Icon name="trending-up-outline" color={colors.accent} size={17} />
-                    <View><Text style={[styles.operationLabel, { color: colors.accent }]}>ECONOMÍA</Text><Text style={[styles.operationTitle, { color: colors.foreground }]}>Mueve el VEX</Text></View>
-                    <Icon name="arrow-up" color={colors.accent} size={12} />
-                  </Pressable>
-                </View>
-                <View style={[styles.storeRitual, { borderTopColor: `${colors.success}60`, borderBottomColor: `${colors.border}88` }]}>
-                  <View style={styles.storeHeading}><View><Text style={[styles.operationLabel, { color: colors.success }]}>CÁMARA DE FORJA</Text><Text style={[styles.storeTitle, { color: colors.foreground }]}>Elige tu siguiente operación</Text></View><Icon name="shop" color={colors.success} size={19} /></View>
-                  <View style={styles.storeActions}>
-                    {[
-                      ['PACKS', 'packs', '/store?mode=packs', 'home-store-packs'],
-                      ['TIENDA', 'shop', '/store?mode=shop', 'home-store-shop'],
-                      ['FUSIÓN', 'fusion', '/store?mode=fusion', 'home-store-fusion'],
-                      ['EVOLUCIÓN', 'evolution', '/store?mode=evolution', 'home-store-evolution'],
-                    ].map(([label, icon, route, testID]) => (
-                      <Pressable key={testID} accessibilityRole="button" accessibilityLabel={label} testID={testID} onPress={() => navigate(route as HomeRoute)} style={({ pressed }) => [styles.storeAction, { borderBottomColor: `${colors.success}66`, opacity: pressed ? 0.66 : 1 }]}>
-                        <Icon name={icon as IconName} color={colors.success} size={14} /><Text style={[styles.storeActionText, { color: colors.foreground }]}>{label}</Text><Icon name="arrow-up" color={colors.success} size={10} />
-                      </Pressable>
-                    ))}
-                  </View>
-                </View>
-              </View>
-
-              <View style={styles.ritualSplit}>
-                <View style={styles.ritualColumn}>
-                  <SectionMarker eyebrow={home.missions.length === 1 ? 'ORDEN ACTIVA' : 'ÓRDENES ACTIVAS'} title="El rito continúa" action="ABRIR MISIONES" onAction={() => navigate('/missions')} />
-                  {home.missions.length > 0 ? (
-                    <View style={styles.missionList}>{home.missions.slice(0, 3).map((mission, index) => <MissionLine key={mission.id} mission={mission} index={index} onPress={() => navigate('/missions')} />)}</View>
-                  ) : (
-                    <View style={[styles.emptyState, { borderColor: `${colors.border}88` }]}><Icon name="compass" color={colors.mutedForeground} size={21} /><Text style={[styles.emptyTitle, { color: colors.foreground }]}>SIN FRENTE ACTIVO</Text><Text style={[styles.emptyBody, { color: colors.mutedForeground }]}>Las próximas misiones aparecerán cuando el Nexus publique el siguiente ciclo.</Text></View>
-                  )}
-                </View>
-                <View style={styles.ritualColumn}>
-                  <SectionMarker eyebrow="PULSO PÚBLICO" title="Actividad del Nexus" action="VER CLASIFICACIÓN" onAction={() => navigate('/world')} />
-                  <View style={styles.activityRail}>
-                    {home.activity.length > 0 ? home.activity.slice(0, 3).map((item) => (
-                      <View key={item.id} style={[styles.activityRow, { borderBottomColor: `${colors.border}66` }]}>
-                        <View style={[styles.activityDot, { backgroundColor: colors.success }]} />
-                        <View style={styles.activityText}><Text style={[styles.activityCopy, { color: colors.foreground }]}>{item.text}</Text><Text style={[styles.activityTime, { color: colors.mutedForeground }]}>{new Date(item.time).toLocaleDateString('es-ES', { day: '2-digit', month: 'short' }).toUpperCase()}</Text></View>
-                      </View>
-                    )) : <View style={styles.emptyActivity}><Icon name="radio" color={colors.mutedForeground} size={18} /><Text style={[styles.emptyBody, { color: colors.mutedForeground }]}>El pulso público se mostrará cuando exista actividad confirmada.</Text></View>}
-                  </View>
-                </View>
-              </View>
-
-              <View style={styles.rankingDeck}>
-                <SectionMarker eyebrow="CIRCUITO ACTIVO" title="Clasificación del frente" action="ABRIR MUNDO" onAction={() => navigate('/world')} />
-                <View style={styles.rankingRail}>
-                  {ranking.length > 0 ? ranking.map((entry, index) => (
-                    <View key={`${entry.rank}-${entry.display_name}`} style={[styles.rankingRow, { borderBottomColor: `${colors.border}66` }]}>
-                      <Text style={[styles.rankPosition, { color: index === 0 ? colors.accent : colors.mutedForeground }]}>{String(entry.rank).padStart(2, '0')}</Text>
-                      <View style={[styles.rankAvatar, { borderColor: `${index === 0 ? colors.accent : colors.border}99` }]}><Text style={[styles.rankAvatarText, { color: index === 0 ? colors.accent : colors.mutedForeground }]}>{entry.display_name.slice(0, 1).toUpperCase()}</Text></View>
-                      <View style={styles.rankIdentity}><Text style={[styles.rankName, { color: colors.foreground }]}>{entry.display_name}</Text><Text style={[styles.rankMeta, { color: colors.mutedForeground }]}>{formatNumber(entry.wins)} VICTORIAS / {formatNumber(entry.mmr)} MMR</Text></View>
-                      <Icon name={index === 0 ? 'award' : 'chevron-right'} color={index === 0 ? colors.accent : colors.mutedForeground} size={15} />
+                    <View style={styles.signalIdentityCopyFinal}>
+                      <Text style={[styles.signalKickerFinal, { color: colors.accent }]}>IDENTIDAD DEL FORJADOR</Text>
+                      <Text numberOfLines={1} style={[styles.signalPlayerNameFinal, { color: colors.foreground }]}>{playerName}</Text>
+                      <Text style={[styles.signalPlayerMetaFinal, { color: colors.mutedForeground }]}>NIVEL {formatNumber(progress?.level)} · {connectionLabel}</Text>
                     </View>
-                  )) : <Text style={[styles.emptyBody, { color: colors.mutedForeground }]}>El ranking de la temporada todavía no tiene posiciones publicadas.</Text>}
+                  </View>
+                  <View style={styles.signalProgressFinal}>
+                    <View style={styles.signalProgressLineFinal}><Text style={[styles.signalKickerFinal, { color: colors.mutedForeground }]}>PROGRESIÓN</Text><Text style={[styles.signalProgressValueFinal, { color: colors.accent }]}>{formatNumber(xp)} / {formatNumber(xpToNext)}</Text></View>
+                    <ProgressRail value={xp} total={xpToNext} color={colors.accent} background={colors.border} />
+                  </View>
+                </Animated.View>
+
+                <View style={styles.frontStageFinal}>
+                  <View style={styles.frontStageHeaderFinal}>
+                    <View>
+                      <Text style={[styles.frontStageEyebrowFinal, { color: colors.rarityRare }]}>FRENTE VIVO / 01</Text>
+                      <Text style={[styles.frontStageTitleFinal, { color: colors.foreground }]}>La señal del Nexus</Text>
+                    </View>
+                    <Pressable accessibilityRole="button" accessibilityLabel="Abrir mundo" testID="home-world-front" onPress={() => navigate('/world')} style={styles.frontStageLinkFinal}>
+                      <Icon name="map" color={colors.rarityRare} size={13} /><Text style={[styles.frontStageLinkTextFinal, { color: colors.rarityRare }]}>MUNDO</Text><Icon name="arrow-up" color={colors.rarityRare} size={10} />
+                    </Pressable>
+                  </View>
+                  <Pressable accessibilityRole="button" accessibilityLabel="Abrir evento activo" testID="home-event" onPress={() => navigate('/world')} style={({ pressed }) => [styles.eventRibbonFinal, { borderColor: colors.rarityRare, opacity: pressed ? 0.76 : 1 }]}>
+                    <View style={styles.eventBeaconFinal}>
+                      <View style={[styles.eventOrbFinal, { borderColor: colors.rarityRare }]}><Animated.View style={[styles.eventOrbCoreFinal, { backgroundColor: colors.rarityRare }, pulseStyle]} /></View>
+                      <View style={[styles.eventBeaconAxisFinal, { backgroundColor: colors.rarityRare }]} />
+                    </View>
+                    <View style={styles.eventCopyFinal}>
+                      <Text style={[styles.eventTypeFinal, { color: colors.rarityRare }]}>{activeEvent?.type?.toUpperCase() ?? 'SEÑAL GLOBAL'}</Text>
+                      <Text numberOfLines={2} style={[styles.eventTitleFinal, { color: colors.foreground }]}>{activeEvent?.name ?? 'El Nexus espera un nuevo frente'}</Text>
+                      <Text style={[styles.eventMetaFinal, { color: colors.mutedForeground }]}>{activeEvent ? 'CIERRA EN ' + formatEventTime(activeEvent.ends_at) : 'No hay evento activo publicado'}</Text>
+                    </View>
+                    <View style={styles.eventProgressFinal}>
+                      <Text style={[styles.eventProgressValueFinal, { color: colors.rarityRare }]}>{activeEvent ? Math.round(activeEvent.progress) + '%' : '—'}</Text>
+                      <ProgressRail value={activeEvent?.progress ?? 0} total={100} color={colors.rarityRare} background={colors.border} />
+                    </View>
+                  </Pressable>
+
+                  <Pressable accessibilityRole="button" accessibilityLabel="Inspeccionar carta destacada del Nexus" testID="home-featured-card" onPress={openFeatured} style={({ pressed }) => [styles.artifactFeatureFinal, { opacity: pressed ? 0.78 : 1 }]}>
+                    <View style={[styles.artifactFrameFinal, { borderColor: colors.rarityLegendary, backgroundColor: colors.ink }]}>
+                      <Image source={OFFICIAL_ASSETS.homeFeatureCard} style={styles.artifactArtFinal} resizeMode="cover" accessibilityLabel="Arte oficial de la carta destacada" onLoad={() => setFeaturedAssetState('ready')} onError={() => setFeaturedAssetState('error')} />
+                      <LinearGradient colors={['transparent', colors.ink]} style={StyleSheet.absoluteFill} />
+                      <Text style={[styles.artifactRarityFinal, { color: colors.rarityLegendary }]}>{activeCard?.rarity?.toUpperCase() ?? 'SEÑAL PENDIENTE'}</Text>
+                      <Text style={[styles.artifactCodeFinal, { color: colors.foreground }]}>{activeCard?.code ?? '—'}</Text>
+                      {featuredAssetState === 'error' ? <View style={styles.featuredAssetError}><Text style={[styles.featuredAssetErrorText, { color: colors.accent }]}>ARTE OFFLINE</Text></View> : null}
+                    </View>
+                    <View style={styles.artifactCopyFinal}>
+                      <Text style={[styles.artifactTagFinal, { color: colors.rarityLegendary }]}>CARTA DE RESONANCIA</Text>
+                      <Text numberOfLines={2} style={[styles.artifactNameFinal, { color: colors.foreground }]}>{activeCard?.name ?? 'CARTA NO SINCRONIZADA'}</Text>
+                      {featuredExpanded && activeCard?.lore ? <Text numberOfLines={3} style={[styles.artifactLoreFinal, { color: colors.mutedForeground }]}>{activeCard.lore}</Text> : null}
+                      <Text style={[styles.artifactHintFinal, { color: colors.rarityLegendary }]}>TOCAR PARA INSPECCIONAR</Text>
+                    </View>
+                  </Pressable>
                 </View>
-              </View>
-            </View>
+
+                <Animated.View entering={reduceMotion ? undefined : FadeInUp.delay(220).duration(560)} style={styles.domainArchiveFinal} testID="home-domain-rail">
+                  <View style={styles.domainArchiveHeaderFinal}>
+                    <View>
+                      <Text style={[styles.domainArchiveEyebrowFinal, { color: colors.rarityEpic }]}>DOMINIOS / 06 RUTAS</Text>
+                      <Text style={[styles.domainArchiveTitleFinal, { color: colors.foreground }]}>Elige dónde forjar</Text>
+                    </View>
+                    <Animated.View style={[styles.domainArchiveCoreFinal, { borderColor: colors.accent }, pulseStyle]}><Icon name="resonance" color={colors.accent} size={13} /></Animated.View>
+                  </View>
+                  <View style={styles.constellationFinal} accessibilityLabel="Dominios conectados del Nexus">
+                    <View pointerEvents="none" style={[styles.constellationAxisFinal, { backgroundColor: colors.rarityEpic }]} />
+                    <View pointerEvents="none" style={[styles.constellationCoreFinal, { borderColor: colors.accent, backgroundColor: colors.ink }]}><Animated.View style={[styles.constellationCoreDot, { backgroundColor: colors.accent }, pulseStyle]} /></View>
+                    <View style={styles.constellationGrid}>{domainPortals.map((portal) => <DomainNode key={portal.id} portal={portal} onPress={() => navigate(portal.route)} />)}</View>
+                  </View>
+                </Animated.View>
+
+                <View style={styles.ritualDeckFinal}>
+                  <View style={styles.ritualHeadingFinal}><View><Text style={[styles.ritualEyebrowFinal, { color: colors.success }]}>OPERACIONES / 02</Text><Text style={[styles.ritualTitleFinal, { color: colors.foreground }]}>El siguiente movimiento</Text></View><Icon name="shop" color={colors.success} size={18} /></View>
+                  <View style={styles.operationRowFinal}>
+                    <Pressable accessibilityRole="button" accessibilityLabel="Abrir Forja" testID="home-forge" onPress={() => navigate('/deck')} style={({ pressed }) => [styles.operationLinkFinal, { borderColor: colors.rarityEpic, opacity: pressed ? 0.7 : 1 }]}>
+                      <Icon name="deck" color={colors.rarityEpic} size={17} /><View style={styles.operationCopyFinal}><Text style={[styles.operationLabelFinal, { color: colors.rarityEpic }]}>FORJA</Text><Text style={[styles.operationTitleFinal, { color: colors.foreground }]}>Construye tu línea</Text></View><Icon name="arrow-up" color={colors.rarityEpic} size={12} />
+                    </Pressable>
+                    <Pressable accessibilityRole="button" accessibilityLabel="Abrir economía" testID="home-economy" onPress={() => navigate('/economy')} style={({ pressed }) => [styles.operationLinkFinal, { borderColor: colors.accent, opacity: pressed ? 0.7 : 1 }]}>
+                      <Icon name="trending-up-outline" color={colors.accent} size={17} /><View style={styles.operationCopyFinal}><Text style={[styles.operationLabelFinal, { color: colors.accent }]}>ECONOMÍA</Text><Text style={[styles.operationTitleFinal, { color: colors.foreground }]}>Mueve el VEX</Text></View><Icon name="arrow-up" color={colors.accent} size={12} />
+                    </Pressable>
+                  </View>
+                  <View style={styles.storeRitualFinal}>
+                    <View style={styles.storeHeadingFinal}><View><Text style={[styles.operationLabelFinal, { color: colors.success }]}>CÁMARA DE FORJA</Text><Text style={[styles.storeTitleFinal, { color: colors.foreground }]}>Colección y recursos</Text></View><Icon name="packs" color={colors.success} size={17} /></View>
+                    <View style={styles.storeActionsFinal}>
+                      {[
+                        ['PACKS', 'packs', '/store?mode=packs', 'home-store-packs'],
+                        ['TIENDA', 'shop', '/store?mode=shop', 'home-store-shop'],
+                        ['FUSIÓN', 'fusion', '/store?mode=fusion', 'home-store-fusion'],
+                        ['EVOLUCIÓN', 'evolution', '/store?mode=evolution', 'home-store-evolution'],
+                      ].map(([label, icon, route, testID]) => (
+                        <Pressable key={testID} accessibilityRole="button" accessibilityLabel={label} testID={testID} onPress={() => navigate(route as HomeRoute)} style={({ pressed }) => [styles.storeActionFinal, { borderBottomColor: colors.success, opacity: pressed ? 0.66 : 1 }]}>
+                          <Icon name={icon as IconName} color={colors.success} size={14} /><Text style={[styles.storeActionTextFinal, { color: colors.foreground }]}>{label}</Text><Icon name="arrow-up" color={colors.success} size={10} />
+                        </Pressable>
+                      ))}
+                    </View>
+                  </View>
+                </View>
+
+                <View style={styles.signalColumnsFinal}>
+                  <View style={styles.signalColumnFinal}>
+                    <SectionMarker eyebrow={home.missions.length === 1 ? 'ORDEN ACTIVA' : 'ÓRDENES ACTIVAS'} title="El rito continúa" action="ABRIR" onAction={() => navigate('/missions')} accent={colors.success} />
+                    {home.missions.length > 0 ? <View style={styles.missionList}>{home.missions.slice(0, 3).map((mission, index) => <MissionLine key={mission.id} mission={mission} index={index} onPress={() => navigate('/missions')} />)}</View> : <View style={[styles.emptyState, { borderColor: colors.border }]}><Icon name="compass" color={colors.mutedForeground} size={21} /><Text style={[styles.emptyTitle, { color: colors.foreground }]}>SIN FRENTE ACTIVO</Text><Text style={[styles.emptyBody, { color: colors.mutedForeground }]}>Las próximas misiones aparecerán cuando el Nexus publique el siguiente ciclo.</Text></View>}
+                  </View>
+                  <View style={styles.signalColumnFinal}>
+                    <SectionMarker eyebrow="PULSO PÚBLICO" title="Actividad" action="MUNDO" onAction={() => navigate('/world')} accent={colors.rarityRare} />
+                    <View style={styles.activityRail}>{home.activity.length > 0 ? home.activity.slice(0, 3).map((item) => <View key={item.id} style={[styles.activityRow, { borderBottomColor: colors.border }]}><View style={[styles.activityDot, { backgroundColor: colors.success }]} /><View style={styles.activityText}><Text style={[styles.activityCopy, { color: colors.foreground }]}>{item.text}</Text><Text style={[styles.activityTime, { color: colors.mutedForeground }]}>{new Date(item.time).toLocaleDateString('es-ES', { day: '2-digit', month: 'short' }).toUpperCase()}</Text></View></View>) : <View style={styles.emptyActivity}><Icon name="radio" color={colors.mutedForeground} size={18} /><Text style={[styles.emptyBody, { color: colors.mutedForeground }]}>El pulso público se mostrará cuando exista actividad confirmada.</Text></View>}</View>
+                  </View>
+                </View>
+
+                <View style={styles.rankingDeckFinal}>
+                  <SectionMarker eyebrow="CIRCUITO ACTIVO" title="Clasificación del frente" action="ABRIR MUNDO" onAction={() => navigate('/world')} accent={colors.accent} />
+                  <View style={styles.rankingRail}>{ranking.length > 0 ? ranking.map((entry, index) => <View key={entry.rank + '-' + entry.display_name} style={[styles.rankingRow, { borderBottomColor: colors.border }]}><Text style={[styles.rankPosition, { color: index === 0 ? colors.accent : colors.mutedForeground }]}>{String(entry.rank).padStart(2, '0')}</Text><View style={[styles.rankAvatar, { borderColor: index === 0 ? colors.accent : colors.border }]}><Text style={[styles.rankAvatarText, { color: index === 0 ? colors.accent : colors.mutedForeground }]}>{entry.display_name.slice(0, 1).toUpperCase()}</Text></View><View style={styles.rankIdentity}><Text style={[styles.rankName, { color: colors.foreground }]}>{entry.display_name}</Text><Text style={[styles.rankMeta, { color: colors.mutedForeground }]}>{formatNumber(entry.wins)} VICTORIAS / {formatNumber(entry.mmr)} MMR</Text></View><Icon name={index === 0 ? 'award' : 'chevron-right'} color={index === 0 ? colors.accent : colors.mutedForeground} size={15} /></View>) : <Text style={[styles.emptyBody, { color: colors.mutedForeground }]}>El ranking de la temporada todavía no tiene posiciones publicadas.</Text>}</View>
+                </View>
+              </View>            </View>
           </View>
         </Animated.ScrollView>
       </View>
@@ -833,4 +808,72 @@ const styles = StyleSheet.create({
   rankIdentity: { flex: 1, gap: 2 },
   rankName: { fontFamily: 'Rajdhani_700Bold', fontSize: 13, letterSpacing: 0.3 },
   rankMeta: { fontFamily: 'Rajdhani_500Medium', fontSize: 9, letterSpacing: 0.65 },
+
+    nexusWorldFinal: { marginTop: -14, paddingHorizontal: 8, paddingTop: 16 },
+    signalLedgerFinal: { alignItems: 'center', borderBottomWidth: 1, flexDirection: 'row', gap: 12, paddingBottom: 14 },
+    signalIdentityFinal: { alignItems: 'center', flex: 1, flexDirection: 'row', gap: 10, minWidth: 0 },
+    signalCrestFinal: { alignItems: 'center', borderWidth: 1, height: 39, justifyContent: 'center', transform: [{ rotate: '45deg' }], width: 39 },
+    signalCrestInnerFinal: { alignItems: 'center', borderWidth: 1, height: 28, justifyContent: 'center', transform: [{ rotate: '-45deg' }], width: 28 },
+    signalCrestLetterFinal: { fontFamily: 'Cinzel_700Bold', fontSize: 15 },
+    signalIdentityCopyFinal: { flex: 1, gap: 2, minWidth: 0 },
+    signalKickerFinal: { fontFamily: 'Rajdhani_700Bold', fontSize: 8, letterSpacing: 1.1 },
+    signalPlayerNameFinal: { fontFamily: 'Cinzel_600SemiBold', fontSize: 14 },
+    signalPlayerMetaFinal: { fontFamily: 'Rajdhani_600SemiBold', fontSize: 9, letterSpacing: 0.6 },
+    signalProgressFinal: { flex: 0.9, gap: 7 },
+    signalProgressLineFinal: { flexDirection: 'row', justifyContent: 'space-between' },
+    signalProgressValueFinal: { fontFamily: 'Rajdhani_700Bold', fontSize: 9 },
+    frontStageFinal: { marginTop: 25 },
+    frontStageHeaderFinal: { alignItems: 'flex-end', flexDirection: 'row', justifyContent: 'space-between', marginBottom: 11 },
+    frontStageEyebrowFinal: { fontFamily: 'Rajdhani_700Bold', fontSize: 9, letterSpacing: 1.7 },
+    frontStageTitleFinal: { fontFamily: 'Cinzel_600SemiBold', fontSize: 20, marginTop: 4 },
+    frontStageLinkFinal: { alignItems: 'center', flexDirection: 'row', gap: 4, paddingBottom: 2 },
+    frontStageLinkTextFinal: { fontFamily: 'Rajdhani_700Bold', fontSize: 8, letterSpacing: 0.8 },
+    eventRibbonFinal: { alignItems: 'center', borderBottomWidth: 1, borderTopWidth: 1, flexDirection: 'row', gap: 9, minHeight: 126, paddingVertical: 12 },
+    eventBeaconFinal: { alignItems: 'center', height: 58, justifyContent: 'center', width: 43 },
+    eventOrbFinal: { alignItems: 'center', borderRadius: 23, borderWidth: 1, height: 43, justifyContent: 'center', width: 43 },
+    eventOrbCoreFinal: { borderRadius: 10, height: 19, width: 19 },
+    eventBeaconAxisFinal: { bottom: 0, height: 9, position: 'absolute', width: 1 },
+    eventCopyFinal: { flex: 1, gap: 3, minWidth: 0 },
+    eventTypeFinal: { fontFamily: 'Rajdhani_700Bold', fontSize: 9, letterSpacing: 1.35 },
+    eventTitleFinal: { fontFamily: 'Cinzel_600SemiBold', fontSize: 14, lineHeight: 18 },
+    eventMetaFinal: { fontFamily: 'Rajdhani_500Medium', fontSize: 10, letterSpacing: 0.45 },
+    eventProgressFinal: { alignItems: 'flex-end', gap: 6, width: 42 },
+    eventProgressValueFinal: { fontFamily: 'Rajdhani_700Bold', fontSize: 13 },
+    artifactFeatureFinal: { alignItems: 'center', flexDirection: 'row', gap: 14, minHeight: 204, paddingVertical: 15 },
+    artifactFrameFinal: { borderWidth: 1, height: 190, overflow: 'hidden', position: 'relative', transform: [{ rotate: '-2deg' }], width: 130 },
+    artifactArtFinal: { height: '100%', width: '100%' },
+    artifactRarityFinal: { fontFamily: 'Rajdhani_700Bold', fontSize: 8, left: 7, letterSpacing: 0.8, position: 'absolute', top: 7 },
+    artifactCodeFinal: { bottom: 7, fontFamily: 'Rajdhani_700Bold', fontSize: 8, left: 8, letterSpacing: 0.9, position: 'absolute' },
+    artifactCopyFinal: { flex: 1, justifyContent: 'center', minWidth: 0, paddingVertical: 7 },
+    artifactTagFinal: { fontFamily: 'Rajdhani_700Bold', fontSize: 9, letterSpacing: 1.1 },
+    artifactNameFinal: { fontFamily: 'Cinzel_600SemiBold', fontSize: 18, lineHeight: 23, marginTop: 9 },
+    artifactLoreFinal: { fontFamily: 'Rajdhani_500Medium', fontSize: 12, lineHeight: 16, marginTop: 9 },
+    artifactHintFinal: { fontFamily: 'Rajdhani_700Bold', fontSize: 8, letterSpacing: 1, marginTop: 16 },
+    domainArchiveFinal: { marginTop: 24 },
+    domainArchiveHeaderFinal: { alignItems: 'center', flexDirection: 'row', justifyContent: 'space-between' },
+    domainArchiveEyebrowFinal: { fontFamily: 'Rajdhani_700Bold', fontSize: 9, letterSpacing: 1.55 },
+    domainArchiveTitleFinal: { fontFamily: 'Cinzel_600SemiBold', fontSize: 19, marginTop: 4 },
+    domainArchiveCoreFinal: { alignItems: 'center', borderWidth: 1, height: 28, justifyContent: 'center', transform: [{ rotate: '45deg' }], width: 28 },
+    constellationFinal: { minHeight: 190, paddingVertical: 8, position: 'relative' },
+    constellationAxisFinal: { bottom: 12, left: '50%', opacity: 0.48, position: 'absolute', top: 12, width: 1 },
+    constellationCoreFinal: { alignItems: 'center', borderWidth: 1, height: 22, justifyContent: 'center', left: '50%', marginLeft: -11, position: 'absolute', top: '50%', transform: [{ rotate: '45deg' }], width: 22, zIndex: 2 },
+    ritualDeckFinal: { borderBottomWidth: 1, borderTopWidth: 1, marginTop: 24, paddingBottom: 12, paddingTop: 13 },
+    ritualHeadingFinal: { alignItems: 'center', flexDirection: 'row', justifyContent: 'space-between' },
+    ritualEyebrowFinal: { fontFamily: 'Rajdhani_700Bold', fontSize: 9, letterSpacing: 1.45 },
+    ritualTitleFinal: { fontFamily: 'Cinzel_600SemiBold', fontSize: 17, marginTop: 4 },
+    operationRowFinal: { flexDirection: 'row', gap: 13, marginTop: 13 },
+    operationLinkFinal: { alignItems: 'center', borderBottomWidth: 1, borderTopWidth: 1, flex: 1, flexDirection: 'row', gap: 8, minHeight: 61, paddingHorizontal: 2 },
+    operationCopyFinal: { flex: 1, minWidth: 0 },
+    operationLabelFinal: { fontFamily: 'Rajdhani_700Bold', fontSize: 9, letterSpacing: 1.15 },
+    operationTitleFinal: { fontFamily: 'Cinzel_600SemiBold', fontSize: 12, lineHeight: 16, marginTop: 3 },
+    storeRitualFinal: { borderTopWidth: 1, marginTop: 18, paddingTop: 13 },
+    storeHeadingFinal: { alignItems: 'center', flexDirection: 'row', justifyContent: 'space-between' },
+    storeTitleFinal: { fontFamily: 'Cinzel_600SemiBold', fontSize: 15, marginTop: 4 },
+    storeActionsFinal: { flexDirection: 'row', flexWrap: 'wrap', marginTop: 10 },
+    storeActionFinal: { alignItems: 'center', borderBottomWidth: 1, flexDirection: 'row', gap: 5, minHeight: 34, marginRight: 14 },
+    storeActionTextFinal: { fontFamily: 'Rajdhani_700Bold', fontSize: 9, letterSpacing: 0.8 },
+    signalColumnsFinal: { flexDirection: 'row', gap: 18, marginTop: 7 },
+    signalColumnFinal: { flex: 1, minWidth: 0 },
+    rankingDeckFinal: { marginTop: 17, paddingBottom: 16 },
+    
 });
