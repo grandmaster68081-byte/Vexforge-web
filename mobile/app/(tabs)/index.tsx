@@ -443,15 +443,15 @@ export default function ForgeScreen() {
                 />
                 <LinearGradient colors={['transparent', `${colors.ink}E8`]} style={StyleSheet.absoluteFill} />
                 <View style={[styles.heroCardRarity, { borderColor: `${colors.rarityLegendary}A8`, backgroundColor: `${colors.ink}C8` }]}>
-                  <Text style={[styles.heroCardRarityText, { color: colors.rarityLegendary }]}>{activeCard?.rarity?.toUpperCase() ?? 'LEGENDARY'}</Text>
+                  <Text style={[styles.heroCardRarityText, { color: colors.rarityLegendary }]}>{activeCard?.rarity?.toUpperCase() ?? 'SEÑAL PENDIENTE'}</Text>
                 </View>
                 {featuredAssetState === 'error' ? <View style={styles.heroCardAssetError}><Text style={[styles.heroCardAssetErrorText, { color: colors.accent }]}>ARTE OFFLINE</Text></View> : null}
-                <Text style={[styles.heroCardCode, { color: `${colors.foreground}B8` }]}>{activeCard?.code ?? 'VEX-0017'}</Text>
+                <Text style={[styles.heroCardCode, { color: `${colors.foreground}B8` }]}>{activeCard?.code ?? '—'}</Text>
               </View>
               <View style={styles.heroCardCopy}>
                 <Text style={[styles.heroCardEyebrow, { color: colors.rarityLegendary }]}>RESONANCIA ACTIVA</Text>
-                <Text numberOfLines={1} style={[styles.heroCardName, { color: colors.foreground }]}>{activeCard?.name ?? 'Bastión de Hierro'}</Text>
-                {featuredExpanded ? <Text numberOfLines={2} style={[styles.heroCardLore, { color: `${colors.foreground}B8` }]}>{activeCard?.lore ?? 'La resonancia todavía no ha sido registrada.'}</Text> : null}
+                <Text numberOfLines={1} style={[styles.heroCardName, { color: colors.foreground }]}>{activeCard?.name ?? 'CARTA NO SINCRONIZADA'}</Text>
+                {featuredExpanded && activeCard?.lore ? <Text numberOfLines={2} style={[styles.heroCardLore, { color: `${colors.foreground}B8` }]}>{activeCard.lore}</Text> : null}
               </View>
             </Pressable>
           </View>
@@ -525,9 +525,9 @@ export default function ForgeScreen() {
                   <Pressable accessibilityRole="button" accessibilityLabel="Inspeccionar carta del frente" onPress={openFeatured} style={({ pressed }) => [styles.worldCard, { borderColor: `${colors.rarityLegendary}C4`, backgroundColor: colors.ink, opacity: pressed ? 0.78 : 1 }]}>
                     <Image source={OFFICIAL_ASSETS.homeFeatureCard} style={styles.worldCardArt} resizeMode="cover" accessibilityLabel="Arte oficial de la carta del frente" onLoad={() => setFeaturedAssetState('ready')} onError={() => setFeaturedAssetState('error')} />
                     <LinearGradient colors={['transparent', `${colors.ink}E8`]} style={StyleSheet.absoluteFill} />
-                    <Text style={[styles.worldCardRarity, { color: colors.rarityLegendary }]}>{activeCard?.rarity?.toUpperCase() ?? 'LEGENDARY'}</Text>
-                    <Text numberOfLines={2} style={[styles.worldCardName, { color: colors.foreground }]}>{activeCard?.name ?? 'Bastión de Hierro'}</Text>
-                    <Text style={[styles.worldCardCode, { color: `${colors.foreground}9C` }]}>{activeCard?.code ?? 'VEX-0017'}</Text>
+                    <Text style={[styles.worldCardRarity, { color: colors.rarityLegendary }]}>{activeCard?.rarity?.toUpperCase() ?? 'SEÑAL PENDIENTE'}</Text>
+                    <Text numberOfLines={2} style={[styles.worldCardName, { color: colors.foreground }]}>{activeCard?.name ?? 'CARTA NO SINCRONIZADA'}</Text>
+                    <Text style={[styles.worldCardCode, { color: `${colors.foreground}9C` }]}>{activeCard?.code ?? '—'}</Text>
                   </Pressable>
                 </View>
               </View>

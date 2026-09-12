@@ -2555,3 +2555,11 @@
 - Se conservaron rutas, datos vivos de Supabase, `testID`, accesibilidad, estados loading/partial/error/vacío, refresh/retry, haptics, reduced-motion y los assets oficiales registrados. No se modificó la web congelada ni otras pantallas Android.
 - Preflight: protocolo vivo `v2.16-shared-identity-contextual-assets-20260911` leído por REST HTTPS desde Supabase; `main` confirmado por REST HTTPS de GitHub. La única evidencia ejecutada en esta sesión es `git diff --check`; no se ejecutaron typecheck, workflow Android, compilación APK ni QA visual/táctil humana.
 - Estado honesto: `IMPLEMENTED_UNVERIFIED`; la publicación en `main` queda registrada mediante la API Git Data de GitHub y la QA humana Android sigue pendiente. No se declara `PASS`, `OPERATIONAL` ni `TIER1_READY`.
+---
+## 2026-09-12 — VE-MOB-3-HOME — REAL CARD DATA FALLBACK CLOSURE / MAIN SYNCHRONIZED
+
+- Se corrigió exclusivamente `mobile/app/(tabs)/index.tsx`: cuando la señal de carta real no está disponible, el Home ya no inventa rareza, nombre, código ni lore para acompañar el arte oficial.
+- La escena TCG, la carta oficial, las rutas, Supabase, `testID`, accesibilidad, loading/partial/error/vacío, refresh/retry, haptics, reduced-motion y navegación authored permanecen intactos. La carta real sigue mostrando sus datos vivos; el estado sin datos ahora es explícito.
+- No se modificaron la web congelada, Auth, RLS, RPCs, economía, combate, assets ni workflows. No se ejecutaron typecheck, guards, workflow Android, compilación APK ni release.
+- Estado honesto: `IMPLEMENTED_UNVERIFIED`. La QA visual/táctil humana Android y la verificación de build siguen pendientes; no se declara `PASS`, `OPERATIONAL` ni `TIER1_READY`.
+
