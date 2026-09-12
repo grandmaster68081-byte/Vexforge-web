@@ -35,7 +35,10 @@ Estos assets quedan disponibles para selección, comparación, inspiración o re
 | `mobile/assets/images/vexforge-auth-nexus-final.png` | Referencia opcional para futuras composiciones de Auth/Nexus |
 | `mobile/assets/images/icon.jpg` | Referencia de estilo heredado; no arte diegético obligatorio |
 
-Un asset de esta lista sólo pasa a producción después de una decisión explícita, validación de procedencia y registro en el consumidor real. La disponibilidad en Storage no equivale a una obligación de consumo.
+Un asset de esta lista conserva el estado `AVAILABLE_UNASSIGNED` hasta que una
+composición lo seleccione. Sólo pasa a producción después de una decisión
+explícita, validación de procedencia y registro en el consumidor real. La
+disponibilidad en Storage no equivale a una obligación de consumo.
 
 ## 2. Prioridad de selección para nuevas composiciones
 
