@@ -43,7 +43,7 @@ Portar a la aplicación Android la superficie de colección de cartas de VEXFORG
 - Nivel Q: Q2 actual / Q3 objetivo.
 - Supabase: campos usados verificados en el catálogo vivo; la lectura pública de `cards` responde HTTP 200.
 - Guardas locales: `verify:mobile-collection-reference` 10/10; `verify:mobile-card-pilot` 6/6; `verify:card-art-state` correcto; `verify:mobile-auth` 13/13; `vite build` correcto; `git diff --check` correcto.
-- Referencia y composición: `mobile/assets/images/collection-reference-scene.png` mide `1080×2340` RGB/sRGB; la superficie muestra doce cartas por página y `Recientes` ordena por `cards.created_at`.
+- Referencia y composición: `mobile/assets/images/collection-archive-scene.jpg` mide `1136×2048` RGB/sRGB; la superficie conserva el CanonicalFrame 1080×2340, muestra doce cartas por página y `Recientes` ordena por `cards.created_at`.
 - Limitación local: `npm ci` móvil fue rechazado por el firewall para `npm-package-arg@11.0.3`; el typecheck completo queda delegado al workflow oficial, que fuerza el registro público.
 - Deuda: QA funcional en dispositivo/emulador con sesión normal; completar evidencia del workflow y release después del push.
 

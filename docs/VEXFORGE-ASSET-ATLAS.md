@@ -16,7 +16,7 @@ Estos assets ya tienen un consumidor real en Android o forman parte del registro
 | `mobile/assets/images/vexforge-feature-card.png` | Home | Carta destacada |
 | `mobile/assets/images/auth-reference-scene.png` | Auth | Escena de acceso |
 | `mobile/assets/images/battle-reference-scene.png` | Batalla | Escena de combate |
-| `mobile/assets/images/collection-reference-scene.png` | Colección | Escena de colección |
+| `mobile/assets/images/collection-archive-scene.jpg` | Colección | Escena oficial de archivo |
 | `mobile/assets/images/decks-reference-scene.png` | Mazo | Escena de formación |
 | `mobile/assets/images/profile-reference-scene.png` | Perfil | Escena de identidad |
 | `OFFICIAL_ASSETS.logo` | Compartido | Marca oficial |

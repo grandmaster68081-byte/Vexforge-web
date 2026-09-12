@@ -2631,3 +2631,13 @@
   tres posiciones, ilustraciones reales, daño, muerte y sustitución.
 - Estado honesto: `IMPLEMENTED_UNVERIFIED`. No se declara PASS, OPERATIONAL ni
   TIER1_READY: falta QA humana en dispositivo sobre el nuevo contrato.
+
+---
+## 2026-09-12 — VE-MOB-4-COLLECTION — ARCHIVE SKIN / IMPLEMENTED_UNVERIFIED
+
+- Se sincronizó la base oficial de `main` y se sustituyó exclusivamente la escena visual activa de `/collection` por `mobile/assets/images/collection-archive-scene.jpg`, el asset de archivo monumental entregado por el operador.
+- `CanonicalFrame` permanece en 1080×2340 y todos los hotspots, cartas, filtros, búsqueda, paginación, inspector, navegación inferior y Safe Area continúan calculándose dentro de ese marco medido. La nueva imagen se monta con `resizeMode="cover"` para conservar proporción; al ajustar 1136×2048 al marco se recortan aproximadamente 95 px de cada lado en coordenadas del asset, sin deformar la arquitectura central.
+- La referencia anterior contenía controles horneados en la imagen. Para que la nueva escena no deje la interfaz invisible, se hicieron visibles únicamente las pestañas, filtros, ordenación y navegación inferior que ya existían como zonas táctiles; no se añadieron datos, rutas ni consultas nuevas.
+- No se modificaron otras pantallas, GameContext, Supabase, RPCs, tablas, API ni el modelo de cartas. El asset anterior queda sin consumidor activo para conservar el historial de referencias.
+- `verify:mobile-collection-reference` pasa 11/11 y `git diff --check` pasa. El typecheck móvil no pudo ejecutarse porque `mobile/node_modules` y `expo/tsconfig.base` no están disponibles en este entorno; no se declara QA Android ni APK verificada.
+- Estado honesto: `IMPLEMENTED_UNVERIFIED`; queda pendiente la comprobación visual/táctil en dispositivo o workflow Android.
