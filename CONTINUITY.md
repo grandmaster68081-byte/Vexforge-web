@@ -1,3 +1,9 @@
+## 2026-09-12 — VE-MOB-3-HOME — REVIEW SELECTORS / IMPLEMENTED_UNVERIFIED
+
+- Se hicieron únicos los identificadores de revisión del Home para no confundir la carta destacada duplicada visualmente ni las filas de misiones múltiples.
+- No se cambiaron contratos de datos, rutas, assets, Supabase ni lógica de juego.
+- Guardas oficiales y typecheck local pasan; queda cierre con workflow APK correlativo y release.
+
 ## 2026-09-12 — VE-MOB-3-HOME — TCG ART DIRECTION CONSOLIDATION / IMPLEMENTED_UNVERIFIED
 
 - Se recompuso la Home Android sobre la estructura funcional existente: la carta y el frente vivo pasan a ser los focos principales; identidad, progresión, dominios, operaciones, misiones, actividad y clasificación quedan ordenados como señales del universo VEXFORGE, no como un panel administrativo repetitivo.

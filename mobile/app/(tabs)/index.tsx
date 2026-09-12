@@ -226,7 +226,7 @@ function MissionLine({ mission, index, onPress }: { mission: HomeMission; index:
     <Pressable
       accessibilityRole="button"
       accessibilityLabel={`Abrir misión ${mission.name}`}
-      testID="home-missions"
+      testID={`home-mission-${mission.id}`}
       onPress={onPress}
       style={({ pressed }) => [styles.missionLine, { borderBottomColor: `${colors.border}88`, opacity: pressed ? 0.68 : 1 }]}
     >
@@ -535,7 +535,7 @@ export default function ForgeScreen() {
                     </View>
                   </Pressable>
 
-                  <Pressable accessibilityRole="button" accessibilityLabel="Inspeccionar carta destacada del Nexus" testID="home-featured-card" onPress={openFeatured} style={({ pressed }) => [styles.artifactFeatureFinal, { opacity: pressed ? 0.78 : 1 }]}>
+                  <Pressable accessibilityRole="button" accessibilityLabel="Inspeccionar carta destacada del Nexus" testID="home-featured-card-detail" onPress={openFeatured} style={({ pressed }) => [styles.artifactFeatureFinal, { opacity: pressed ? 0.78 : 1 }]}>
                     <View style={[styles.artifactFrameFinal, { borderColor: colors.rarityLegendary, backgroundColor: colors.ink }]}>
                       <Image source={OFFICIAL_ASSETS.homeFeatureCard} style={styles.artifactArtFinal} resizeMode="cover" accessibilityLabel="Arte oficial de la carta destacada" onLoad={() => setFeaturedAssetState('ready')} onError={() => setFeaturedAssetState('error')} />
                       <LinearGradient colors={['transparent', colors.ink]} style={StyleSheet.absoluteFill} />
@@ -598,7 +598,7 @@ export default function ForgeScreen() {
                 <View style={styles.signalColumnsFinal}>
                   <View style={styles.signalColumnFinal}>
                     <SectionMarker eyebrow={home.missions.length === 1 ? 'ORDEN ACTIVA' : 'ÓRDENES ACTIVAS'} title="El rito continúa" action="ABRIR" onAction={() => navigate('/missions')} accent={colors.success} />
-                    {home.missions.length > 0 ? <View style={styles.missionList}>{home.missions.slice(0, 3).map((mission, index) => <MissionLine key={mission.id} mission={mission} index={index} onPress={() => navigate('/missions')} />)}</View> : <View style={[styles.emptyState, { borderColor: colors.border }]}><Icon name="compass" color={colors.mutedForeground} size={21} /><Text style={[styles.emptyTitle, { color: colors.foreground }]}>SIN FRENTE ACTIVO</Text><Text style={[styles.emptyBody, { color: colors.mutedForeground }]}>Las próximas misiones aparecerán cuando el Nexus publique el siguiente ciclo.</Text></View>}
+                    {home.missions.length > 0 ? <View testID="home-missions" style={styles.missionList}>{home.missions.slice(0, 3).map((mission, index) => <MissionLine key={mission.id} mission={mission} index={index} onPress={() => navigate('/missions')} />)}</View> : <View style={[styles.emptyState, { borderColor: colors.border }]}><Icon name="compass" color={colors.mutedForeground} size={21} /><Text style={[styles.emptyTitle, { color: colors.foreground }]}>SIN FRENTE ACTIVO</Text><Text style={[styles.emptyBody, { color: colors.mutedForeground }]}>Las próximas misiones aparecerán cuando el Nexus publique el siguiente ciclo.</Text></View>}
                   </View>
                   <View style={styles.signalColumnFinal}>
                     <SectionMarker eyebrow="PULSO PÚBLICO" title="Actividad" action="MUNDO" onAction={() => navigate('/world')} accent={colors.rarityRare} />
