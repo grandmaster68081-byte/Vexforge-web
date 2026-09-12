@@ -25,6 +25,7 @@ import {
   type PlayerCard,
 } from '@/lib/supabase';
 import { ScreenShell } from '@/components/ScreenShell';
+import { DomainHeader } from '@/components/DomainHeader';
 import { useMeasuredCanonicalFrame } from '@/components/CanonicalFrame';
 
 const MAX_DECKS = 10;
@@ -405,6 +406,7 @@ export default function DeckScreen() {
 
   return (
     <ScreenShell sceneMode="hero">
+      <DomainHeader domain="forja" pointerEvents="none" style={{ position: 'absolute', left: 18, right: 18, top: insets.top + 14, zIndex: 5 }} />
       <View
         onLayout={onReferenceRootLayout}
         style={[styles.referenceRoot, { marginBottom: -insets.bottom, backgroundColor: colors.ink }]}

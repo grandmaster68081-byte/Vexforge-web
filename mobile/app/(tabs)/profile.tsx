@@ -16,6 +16,7 @@ import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@/components/ForgeIcon';
 import { ScreenShell } from '@/components/ScreenShell';
+import { DomainHeader } from '@/components/DomainHeader';
 import { useMeasuredCanonicalFrame } from '@/components/CanonicalFrame';
 import { useColors } from '@/hooks/useColors';
 import { useGame } from '@/context/GameContext';
@@ -306,6 +307,7 @@ export default function ProfileScreen() {
 
   return (
     <ScreenShell surface="profile" sceneMode="hero">
+      <DomainHeader domain="legado" pointerEvents="none" style={{ position: 'absolute', left: 18, right: 18, top: insets.top + 14, zIndex: 5 }} />
       <View
         onLayout={onReferenceRootLayout}
         style={[styles.referenceRoot, { marginBottom: -insets.bottom }]}
