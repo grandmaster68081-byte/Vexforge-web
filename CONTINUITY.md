@@ -2527,3 +2527,12 @@
 - Cuando falte una pieza o no encaje ningún asset registrado, la IA puede generar arte nuevo siguiendo el DNA visual de VEXFORGE y acoplarlo como pieza authored, con procedencia, rol, consumidor y estado registrados antes del cierre.
 - Continúan prohibidos los sustitutos genéricos, los fallbacks silenciosos y la invención de datos autoritativos para acompañar una imagen.
 - Esta enmienda es normativa/documental; no modifica la web congelada, Auth, economía, RPCs, RLS ni los datos de juego.
+
+---
+## 2026-09-12 — VE-MOB-3-HOME — HANDOFF OFICIAL SIN BUILD
+
+- Se leyó el protocolo vivo y el plan activo por HTTPS directo. La fila `vexforge_master_protocol_v2` quedó reconciliada con la copia de `main` en la versión `v2.16-shared-identity-contextual-assets-20260911`; la única diferencia residual es una línea en blanco final.
+- Se confirmó en el código oficial que el pase `TCG NEXUS SCENE PASS` ya está integrado exclusivamente en `mobile/`: escena del Nexus, carta oficial destacada, recursos, frente/evento, constelación de dominios, ritos de Forja/Economía, misiones, actividad pública, clasificación y navegación authored.
+- No se duplicó ni se reescribió el Home existente. Se sincronizó la base oficial al entorno de trabajo y se conservó la web congelada; no se modificaron Auth, RLS, RPCs, economía, combate, contratos ni datos de juego.
+- Por instrucción expresa del operador no se ejecutaron typecheck, guardas, workflow Android, compilación APK ni QA visual/táctil. No se fabrica evidencia de esas comprobaciones.
+- Estado honesto: `IMPLEMENTED_UNVERIFIED`. El commit y la publicación del APK quedan para la siguiente sesión en la que el operador autorice la ejecución; no se declara `PASS`, `OPERATIONAL` ni `TIER1_READY`.
