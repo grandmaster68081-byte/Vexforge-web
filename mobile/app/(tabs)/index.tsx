@@ -471,15 +471,15 @@ export default function ForgeScreen() {
             ) : null}
             {homeState === 'loading' && !home.stats && !activeCard ? <LoadingTrace /> : null}
 
-            <View style={[styles.nexusWorld, { borderColor: `${colors.rarityEpic}72`, backgroundColor: `${colors.ink}66` }]}>
+            <View style={styles.nexusWorld}>
               <View style={styles.worldHeader}>
                 <View style={styles.worldHeaderCopy}>
-                  <View style={styles.worldHeaderRule}><View style={[styles.worldHeaderDiamond, { backgroundColor: colors.accent }]} /><Text style={[styles.nexusBoardEyebrow, { color: colors.rarityEpic }]}>NEXUS TABLE / LIVE</Text></View>
+                  <View style={styles.worldHeaderRule}><View style={[styles.worldHeaderDiamond, { backgroundColor: colors.accent }]} /><Text style={[styles.nexusBoardEyebrow, { color: colors.rarityEpic }]}>NEXUS SCENE / LIVE</Text></View>
                   <Text style={[styles.nexusBoardTitle, { color: colors.foreground }]}>El tablero está despierto</Text>
                 </View>
                 <View style={[styles.nexusBoardToken, { borderColor: `${colors.accent}88` }]}>
                   <Icon name="resonance" color={colors.accent} size={12} />
-                  <Text style={[styles.nexusBoardTokenText, { color: colors.accent }]}>CORE</Text>
+                  <Text style={[styles.nexusBoardTokenText, { color: colors.accent }]}>ONLINE</Text>
                 </View>
               </View>
 
@@ -506,7 +506,7 @@ export default function ForgeScreen() {
                 <SignalMetric label="PACKS" value={formatNumber(home.stats?.packs_opened)} icon="packs" color={colors.success} />
               </View>
 
-              <View style={[styles.worldStage, { borderColor: `${colors.rarityRare}6E` }]}>
+              <View style={styles.worldStage}>
                 <View pointerEvents="none" style={[styles.worldStageTrace, { borderColor: `${colors.rarityRare}34` }]} />
                 <View style={styles.boardSectionTag}>
                   <Text style={[styles.boardSectionEyebrow, { color: colors.rarityRare }]}>LIVE FRONT / 01</Text>
@@ -534,7 +534,7 @@ export default function ForgeScreen() {
 
               <Animated.View entering={reduceMotion ? undefined : FadeInUp.delay(220).duration(560)} style={styles.constellationSection} testID="home-domain-rail">
                 <SectionMarker eyebrow="CONSTELACIÓN DEL NEXUS" title="Los dominios están abiertos" accent={colors.rarityRare} />
-                <View style={[styles.constellation, { borderColor: `${colors.rarityEpic}45` }]} accessibilityLabel="Dominios conectados del Nexus">
+                <View style={styles.constellation} accessibilityLabel="Dominios conectados del Nexus">
                   <View pointerEvents="none" style={[styles.constellationAxis, { backgroundColor: `${colors.rarityEpic}42` }]} />
                   <View pointerEvents="none" style={[styles.constellationCore, { borderColor: `${colors.accent}9A`, backgroundColor: `${colors.accent}18` }]}>
                     <Animated.View style={[styles.constellationCoreDot, { backgroundColor: colors.accent }, pulseStyle]} />
@@ -673,8 +673,8 @@ const styles = StyleSheet.create({
   heroFooterText: { fontFamily: 'Rajdhani_600SemiBold', fontSize: 10, letterSpacing: 0.55 },
   heroWorldLink: { alignItems: 'center', flexDirection: 'row', gap: 4, marginLeft: 'auto' },
   heroWorldText: { fontFamily: 'Rajdhani_700Bold', fontSize: 9, letterSpacing: 1 },
-  heroCardAnchor: { alignItems: 'center', bottom: 92, position: 'absolute', right: 14, width: 112, zIndex: 5 },
-  heroCardFrame: { borderWidth: 1, height: 142, overflow: 'hidden', position: 'relative', transform: [{ rotate: '3deg' }], width: 98 },
+  heroCardAnchor: { alignItems: 'center', bottom: 88, position: 'absolute', right: 10, width: 122, zIndex: 5 },
+  heroCardFrame: { borderWidth: 1, height: 164, overflow: 'hidden', position: 'relative', transform: [{ rotate: '3deg' }], width: 114 },
   heroCardArt: { height: '100%', width: '100%' },
   heroCardRarity: { borderWidth: 1, left: 6, paddingHorizontal: 4, paddingVertical: 2, position: 'absolute', top: 7 },
   heroCardRarityText: { fontFamily: 'Rajdhani_700Bold', fontSize: 7, letterSpacing: 0.8 },
@@ -686,25 +686,25 @@ const styles = StyleSheet.create({
   heroCardName: { fontFamily: 'Cinzel_600SemiBold', fontSize: 10, lineHeight: 13, marginTop: 2 },
   heroCardLore: { fontFamily: 'Rajdhani_500Medium', fontSize: 8, lineHeight: 10, marginTop: 3 },
   content: { gap: 0, paddingTop: 0 },
-  nexusWorld: { borderWidth: 1, marginTop: -12, overflow: 'hidden', paddingHorizontal: 12, paddingTop: 11, position: 'relative' },
-  worldHeader: { alignItems: 'center', flexDirection: 'row', justifyContent: 'space-between' },
+  nexusWorld: { marginTop: -12, overflow: 'visible', paddingHorizontal: 8, paddingTop: 11, position: 'relative' },
+  worldHeader: { alignItems: 'center', borderBottomWidth: 1, flexDirection: 'row', justifyContent: 'space-between', paddingBottom: 10 },
   worldHeaderCopy: { gap: 3 },
   worldHeaderRule: { alignItems: 'center', flexDirection: 'row', gap: 7 },
   worldHeaderDiamond: { height: 5, transform: [{ rotate: '45deg' }], width: 5 },
-  worldStage: { borderWidth: 1, marginTop: 20, overflow: 'hidden', paddingBottom: 9, paddingHorizontal: 9, position: 'relative' },
-  worldStageTrace: { borderWidth: 1, borderRadius: 80, height: 180, position: 'absolute', right: -74, top: -48, transform: [{ rotate: '-18deg' }], width: 230 },
-  frontFocus: { flexDirection: 'row', gap: 9, marginTop: 8 },
-  eventRite: { alignItems: 'center', borderBottomWidth: 1, borderTopWidth: 1, flex: 1, flexDirection: 'row', gap: 7, minHeight: 126, paddingVertical: 10 },
-  worldCard: { borderWidth: 1, height: 126, overflow: 'hidden', position: 'relative', transform: [{ rotate: '3deg' }], width: 86 },
+  worldStage: { marginTop: 18, overflow: 'hidden', paddingBottom: 9, paddingHorizontal: 2, position: 'relative' },
+  worldStageTrace: { borderWidth: 1, borderRadius: 80, height: 206, position: 'absolute', right: -78, top: -58, transform: [{ rotate: '-18deg' }], width: 252 },
+  frontFocus: { alignItems: 'stretch', flexDirection: 'row', gap: 12, marginTop: 12 },
+  eventRite: { alignItems: 'center', borderBottomWidth: 1, borderTopWidth: 1, flex: 1, flexDirection: 'row', gap: 8, minHeight: 154, paddingVertical: 12 },
+  worldCard: { borderWidth: 1, height: 154, overflow: 'hidden', position: 'relative', transform: [{ rotate: '3deg' }], width: 104 },
   worldCardArt: { height: '100%', width: '100%' },
   worldCardRarity: { fontFamily: 'Rajdhani_700Bold', fontSize: 7, left: 5, letterSpacing: 0.7, position: 'absolute', top: 6 },
   worldCardName: { bottom: 20, fontFamily: 'Cinzel_600SemiBold', fontSize: 8, left: 5, lineHeight: 10, position: 'absolute', right: 5 },
   worldCardCode: { bottom: 5, fontFamily: 'Rajdhani_700Bold', fontSize: 7, left: 5, letterSpacing: 0.7, position: 'absolute' },
   constellationGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 5, justifyContent: 'space-between', paddingTop: 5 },
-  ritualDeck: { borderBottomWidth: 1, borderTopWidth: 1, marginTop: 22, paddingBottom: 2, paddingTop: 2 },
+  ritualDeck: { marginTop: 22, paddingBottom: 2, paddingTop: 2 },
   ritualSplit: { flexDirection: 'row', gap: 16, marginTop: 2 },
   ritualColumn: { flex: 1, minWidth: 0 },
-  rankingDeck: { borderTopWidth: 1, marginTop: 18, paddingTop: 2 },
+  rankingDeck: { marginTop: 18, paddingTop: 2 },
   errorBanner: { alignItems: 'center', borderBottomWidth: 1, borderTopWidth: 1, flexDirection: 'row', gap: 10, marginBottom: 14, paddingVertical: 12 },
   errorCopy: { flex: 1, gap: 2 },
   errorTitle: { fontFamily: 'Rajdhani_700Bold', fontSize: 11, letterSpacing: 1 },
@@ -748,7 +748,7 @@ const styles = StyleSheet.create({
   sectionTitle: { fontFamily: 'Cinzel_600SemiBold', fontSize: 18, letterSpacing: 0.35, marginTop: 5 },
   markerAction: { alignItems: 'center', flexDirection: 'row', gap: 6, paddingBottom: 2, paddingLeft: 10 },
   markerActionText: { fontFamily: 'Rajdhani_700Bold', fontSize: 8, letterSpacing: 0.55 },
-  constellation: { borderWidth: 1, minHeight: 184, paddingHorizontal: 4, paddingVertical: 4, position: 'relative' },
+  constellation: { minHeight: 200, paddingHorizontal: 0, paddingVertical: 4, position: 'relative' },
   constellationAxis: { bottom: 12, left: '50%', position: 'absolute', top: 12, width: 1 },
   constellationCore: { alignItems: 'center', borderRadius: 10, borderWidth: 1, height: 21, justifyContent: 'center', left: '50%', marginLeft: -10, position: 'absolute', top: '50%', width: 21, zIndex: 2 },
   constellationCoreDot: { borderRadius: 3, height: 6, width: 6 },
@@ -756,14 +756,14 @@ const styles = StyleSheet.create({
   constellationRowReverse: { flexDirection: 'row-reverse' },
   constellationLink: { height: 1, marginHorizontal: 3, width: 12 },
   constellationSignal: { borderRadius: 3, height: 5, marginTop: -2, width: 5 },
-  domainNode: { alignItems: 'center', flexDirection: 'row', gap: 7, minHeight: 72, paddingHorizontal: 3, width: '48%' },
+  domainNode: { alignItems: 'center', flexDirection: 'row', gap: 7, minHeight: 78, paddingHorizontal: 3, width: '48%' },
   domainNodeStem: { height: 24, width: 1 },
   domainSigil: { alignItems: 'center', borderWidth: 1, height: 37, justifyContent: 'center', transform: [{ rotate: '45deg' }], width: 37 },
   domainNodeCopy: { flex: 1, gap: 2, minWidth: 0, transform: [{ translateX: -2 }] },
   domainLabel: { fontFamily: 'Rajdhani_700Bold', fontSize: 8, letterSpacing: 1.2 },
   domainNodeTitle: { fontFamily: 'Cinzel_600SemiBold', fontSize: 11.5, lineHeight: 15 },
   domainStatus: { fontFamily: 'Rajdhani_600SemiBold', fontSize: 8, letterSpacing: 0.2 },
-  signalBand: { borderBottomWidth: 1, borderTopWidth: 1, flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between', marginTop: 13, paddingVertical: 14, rowGap: 13 },
+  signalBand: { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between', marginTop: 8, paddingVertical: 12, rowGap: 13 },
   signalMetric: { alignItems: 'center', flexDirection: 'row', gap: 7, minWidth: '47%' },
   signalMetricCopy: { gap: 1 },
   signalValue: { fontFamily: 'Cinzel_700Bold', fontSize: 15 },
