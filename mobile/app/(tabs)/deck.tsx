@@ -25,7 +25,6 @@ import {
   type PlayerCard,
 } from '@/lib/supabase';
 import { ScreenShell } from '@/components/ScreenShell';
-import { DomainHeader } from '@/components/DomainHeader';
 import { useMeasuredCanonicalFrame } from '@/components/CanonicalFrame';
 
 const MAX_DECKS = 10;
@@ -36,7 +35,7 @@ const MAX_LEGENDARY = 3;
 const FACTIONS = ['Guerrero', 'Mago', 'Paladín', 'Pícaro'] as const;
 type Faction = (typeof FACTIONS)[number];
 type SortMode = 'recent' | 'name' | 'power';
-const DECK_REFERENCE = require('@/assets/images/decks-reference-scene.png');
+const DECK_REFERENCE = require('@/assets/images/deck-forge-scene.jpg');
 
 function rarityColor(rarity: string, colors: ReturnType<typeof useColors>) {
   return {
@@ -406,35 +405,32 @@ export default function DeckScreen() {
 
   return (
     <ScreenShell sceneMode="hero">
-      <View pointerEvents="none" style={{ position: 'absolute', left: 18, right: 18, top: insets.top + 14, zIndex: 5 }}>
-        <DomainHeader domain="forja" />
-      </View>
       <View
         onLayout={onReferenceRootLayout}
         style={[styles.referenceRoot, { marginBottom: -insets.bottom, backgroundColor: colors.ink }]}
       >
-        <View style={[styles.referenceScene, { width: frameWidth, height: canvasHeight, marginTop: insets.top, alignSelf: 'center' }]}>
+        <View style={[styles.referenceScene, { width: frameWidth, height: canvasHeight, marginTop: insets.top, alignSelf: 'center', backgroundColor: colors.ink }]}>
         <Image
           source={DECK_REFERENCE}
           style={styles.referenceImage}
-          resizeMode="cover"
+          resizeMode="contain"
           accessibilityLabel="Composición oficial de Mazos VEXFORGE"
         />
         <View pointerEvents="box-none" style={StyleSheet.absoluteFillObject}>
           {hasSavedDeck ? (
-            <View pointerEvents="none" style={[styles.deckCounter, { top: canvasHeight * 0.19, right: frameWidth * 0.115 }]}>
+            <View pointerEvents="none" style={[styles.deckCounter, { top: canvasHeight * 0.205, right: frameWidth * 0.115 }]}>
               <Text style={[styles.deckCounterValue, { color: colors.foreground }]}>1 / {MAX_DECKS}</Text>
               <Text style={[styles.deckCounterLabel, { color: colors.mutedForeground }]}>MAZOS CREADOS</Text>
             </View>
           ) : null}
-          <Pressable testID="deck-refresh" accessibilityRole="button" accessibilityLabel="Actualizar mazos" onPress={onRefresh} style={[styles.refreshHotspot, { top: canvasHeight * 0.18, right: frameWidth * 0.04, width: frameWidth * 0.1, height: canvasHeight * 0.035 }]} />
+          <Pressable testID="deck-refresh" accessibilityRole="button" accessibilityLabel="Actualizar mazos" onPress={onRefresh} style={[styles.refreshHotspot, { top: canvasHeight * 0.205, right: frameWidth * 0.04, width: frameWidth * 0.1, height: canvasHeight * 0.035 }]} />
 
-          <Pressable testID="deck-collection-tab" accessibilityRole="button" accessibilityLabel="Abrir colección" onPress={() => navigate('/collection')} style={[styles.topHotspot, { left: frameWidth * 0.04, top: canvasHeight * 0.108, width: frameWidth * 0.24, height: canvasHeight * 0.04 }]} />
-          <Pressable testID="deck-owned-tab" accessibilityRole="button" accessibilityLabel="Abrir tus cartas" onPress={() => router.push('/collection?scope=owned')} style={[styles.topHotspot, { left: width * 0.29, top: canvasHeight * 0.108, width: width * 0.23, height: canvasHeight * 0.04 }]} />
-          <Pressable testID="deck-fusion-tab" accessibilityRole="button" accessibilityLabel="Abrir fusión" onPress={() => router.push('/store?mode=fusion')} style={[styles.topHotspot, { left: width * 0.52, top: canvasHeight * 0.108, width: width * 0.19, height: canvasHeight * 0.04 }]} />
-          <Pressable testID="deck-achievements-tab" accessibilityRole="button" accessibilityLabel="Abrir logros" onPress={() => router.push('/profile?section=achievements')} style={[styles.topHotspot, { right: width * 0.04, top: canvasHeight * 0.108, width: width * 0.19, height: canvasHeight * 0.04 }]} />
+          <Pressable testID="deck-collection-tab" accessibilityRole="button" accessibilityLabel="Abrir colección" onPress={() => navigate('/collection')} style={[styles.topHotspot, { left: frameWidth * 0.04, top: canvasHeight * 0.245, width: frameWidth * 0.24, height: canvasHeight * 0.04 }]} />
+          <Pressable testID="deck-owned-tab" accessibilityRole="button" accessibilityLabel="Abrir tus cartas" onPress={() => router.push('/collection?scope=owned')} style={[styles.topHotspot, { left: width * 0.29, top: canvasHeight * 0.245, width: width * 0.23, height: canvasHeight * 0.04 }]} />
+          <Pressable testID="deck-fusion-tab" accessibilityRole="button" accessibilityLabel="Abrir fusión" onPress={() => router.push('/store?mode=fusion')} style={[styles.topHotspot, { left: width * 0.52, top: canvasHeight * 0.245, width: width * 0.19, height: canvasHeight * 0.04 }]} />
+          <Pressable testID="deck-achievements-tab" accessibilityRole="button" accessibilityLabel="Abrir logros" onPress={() => router.push('/profile?section=achievements')} style={[styles.topHotspot, { right: width * 0.04, top: canvasHeight * 0.245, width: width * 0.19, height: canvasHeight * 0.04 }]} />
 
-          <View style={[styles.factionRow, { top: canvasHeight * 0.315, left: width * 0.04, right: width * 0.04, height: canvasHeight * 0.035 }]}>
+          <View style={[styles.factionRow, { top: canvasHeight * 0.405, left: width * 0.04, right: width * 0.04, height: canvasHeight * 0.035 }]}>
             <Pressable testID="deck-faction-all" accessibilityRole="button" accessibilityLabel="Todos los mazos" onPress={() => setFaction('all')} style={[styles.factionHit, { height: canvasHeight * 0.035 }]} />
             {FACTIONS.map((value, index) => (
               <Pressable key={value} testID={`deck-faction-${value}`} accessibilityRole="button" accessibilityLabel={`Filtrar mazos por ${value}`} onPress={() => setFaction(faction === value ? 'all' : value)} style={[styles.factionHit, { left: `${20 * (index + 1)}%`, height: canvasHeight * 0.035 }]} />
@@ -448,15 +444,15 @@ export default function DeckScreen() {
             onChangeText={setSearch}
             placeholder=""
             placeholderTextColor="transparent"
-            style={[styles.searchInput, { top: canvasHeight * 0.374, left: width * 0.065, width: width * 0.59, height: canvasHeight * 0.04, color: colors.foreground }]}
+            style={[styles.searchInput, { top: canvasHeight * 0.462, left: width * 0.065, width: width * 0.59, height: canvasHeight * 0.04, color: colors.foreground }]}
             autoCorrect={false}
           />
-          {search ? <Pressable testID="deck-clear-search" accessibilityRole="button" accessibilityLabel="Limpiar búsqueda" onPress={() => setSearch('')} style={[styles.clearSearchHit, { top: canvasHeight * 0.374, left: width * 0.61, width: width * 0.08, height: canvasHeight * 0.04 }]} /> : null}
-          <Pressable testID="deck-sort" accessibilityRole="button" accessibilityLabel={`Cambiar orden de mazos: ${sort === 'recent' ? 'Recientes' : sort === 'name' ? 'Nombre' : 'Poder'}`} onPress={() => setSort(sort === 'recent' ? 'name' : sort === 'name' ? 'power' : 'recent')} style={[styles.sortHit, { top: canvasHeight * 0.374, left: width * 0.65, width: width * 0.26, height: canvasHeight * 0.04 }]} />
-          <Pressable testID="deck-filter" accessibilityRole="button" accessibilityLabel="Restablecer filtros de mazos" onPress={() => { setFaction('all'); setSearch(''); setSort('recent'); }} style={[styles.filterHit, { top: canvasHeight * 0.374, right: width * 0.045, width: width * 0.1, height: canvasHeight * 0.04 }]} />
+          {search ? <Pressable testID="deck-clear-search" accessibilityRole="button" accessibilityLabel="Limpiar búsqueda" onPress={() => setSearch('')} style={[styles.clearSearchHit, { top: canvasHeight * 0.462, left: width * 0.61, width: width * 0.08, height: canvasHeight * 0.04 }]} /> : null}
+          <Pressable testID="deck-sort" accessibilityRole="button" accessibilityLabel={`Cambiar orden de mazos: ${sort === 'recent' ? 'Recientes' : sort === 'name' ? 'Nombre' : 'Poder'}`} onPress={() => setSort(sort === 'recent' ? 'name' : sort === 'name' ? 'power' : 'recent')} style={[styles.sortHit, { top: canvasHeight * 0.462, left: width * 0.65, width: width * 0.26, height: canvasHeight * 0.04 }]} />
+          <Pressable testID="deck-filter" accessibilityRole="button" accessibilityLabel="Restablecer filtros de mazos" onPress={() => { setFaction('all'); setSearch(''); setSort('recent'); }} style={[styles.filterHit, { top: canvasHeight * 0.462, right: width * 0.045, width: width * 0.1, height: canvasHeight * 0.04 }]} />
 
           {hasSavedDeck ? (
-            <View testID="deck-summary-overlay" pointerEvents="none" style={[styles.deckSummaryOverlay, { top: canvasHeight * 0.735, left: frameWidth * 0.205, width: frameWidth * 0.48 }]}>
+            <View testID="deck-summary-overlay" pointerEvents="none" style={[styles.deckSummaryOverlay, { top: canvasHeight * 0.755, left: frameWidth * 0.17, width: frameWidth * 0.66 }]}>
               <View style={[styles.deckSummaryMask, { backgroundColor: `${colors.ink}C9` }]} />
               <Text style={[styles.deckSummaryTitle, { color: colors.foreground }]} numberOfLines={1}>MAZO ACTIVO</Text>
               <Text style={[styles.deckSummaryFaction, { color: factionColor(savedSummary.primaryFaction ?? '', colors) }]} numberOfLines={1}>{savedSummary.factionLabel}</Text>
@@ -477,22 +473,22 @@ export default function DeckScreen() {
             </View>
           ) : null}
 
-          <Pressable testID="create-deck-slot" accessibilityRole="button" accessibilityLabel="Crear un nuevo mazo" onPress={handleCreate} style={[styles.deckSlotHit, { top: canvasHeight * 0.445, left: width * 0.04, width: width * 0.23, height: canvasHeight * 0.23 }]} />
+          <Pressable testID="create-deck-slot" accessibilityRole="button" accessibilityLabel="Crear un nuevo mazo" onPress={handleCreate} style={[styles.deckSlotHit, { top: canvasHeight * 0.555, left: width * 0.04, width: width * 0.23, height: canvasHeight * 0.19 }]} />
            <Pressable testID="saved-deck-slot" accessibilityRole="button" accessibilityLabel={hasSavedDeck ? 'Editar mazo activo' : 'Crear un nuevo mazo'} onPress={() => {
             if (!visibleSavedDeck) return handleCreate();
             setSelectedIds(savedSlots.map((slot) => slot.card_id));
             setMessage('Mazo cargado para edición.');
             setEditing(true);
-          }} style={[styles.deckSlotHit, { top: canvasHeight * 0.445, left: width * 0.29, width: width * 0.22, height: canvasHeight * 0.23 }]} />
-          <Pressable testID="empty-deck-slot-2" accessibilityRole="button" accessibilityLabel="Crear un nuevo mazo" onPress={handleCreate} style={[styles.deckSlotHit, { top: canvasHeight * 0.445, left: width * 0.52, width: width * 0.22, height: canvasHeight * 0.23 }]} />
-          <Pressable testID="empty-deck-slot-3" accessibilityRole="button" accessibilityLabel="Crear un nuevo mazo" onPress={handleCreate} style={[styles.deckSlotHit, { top: canvasHeight * 0.445, left: width * 0.75, width: width * 0.21, height: canvasHeight * 0.23 }]} />
+           }} style={[styles.deckSlotHit, { top: canvasHeight * 0.555, left: width * 0.29, width: width * 0.22, height: canvasHeight * 0.19 }]} />
+           <Pressable testID="empty-deck-slot-2" accessibilityRole="button" accessibilityLabel="Crear un nuevo mazo" onPress={handleCreate} style={[styles.deckSlotHit, { top: canvasHeight * 0.555, left: width * 0.52, width: width * 0.22, height: canvasHeight * 0.19 }]} />
+           <Pressable testID="empty-deck-slot-3" accessibilityRole="button" accessibilityLabel="Crear un nuevo mazo" onPress={handleCreate} style={[styles.deckSlotHit, { top: canvasHeight * 0.555, left: width * 0.75, width: width * 0.21, height: canvasHeight * 0.19 }]} />
 
           <Pressable testID="edit-deck" accessibilityRole="button" accessibilityLabel="Editar mazo" onPress={() => {
             setSelectedIds(savedSlots.map((slot) => slot.card_id));
             setMessage(hasSavedDeck ? 'Mazo cargado para edición.' : 'Nuevo borrador listo para forjar.');
             setEditing(true);
-          }} style={[styles.detailEditHit, { top: canvasHeight * 0.731, right: width * 0.075, height: canvasHeight * 0.045 }]} />
-          <Pressable testID="view-deck-detail" accessibilityRole="button" accessibilityLabel="Ver detalle del mazo" onPress={() => setDetail(selectedPreview)} style={[styles.detailViewHit, { top: canvasHeight * 0.785, right: width * 0.075, height: canvasHeight * 0.045 }]} />
+           }} style={[styles.detailEditHit, { top: canvasHeight * 0.755, right: width * 0.055, height: canvasHeight * 0.045 }]} />
+           <Pressable testID="view-deck-detail" accessibilityRole="button" accessibilityLabel="Ver detalle del mazo" onPress={() => setDetail(selectedPreview)} style={[styles.detailViewHit, { top: canvasHeight * 0.805, right: width * 0.055, height: canvasHeight * 0.045 }]} />
 
           {deckError || syncState === 'offline' ? <Pressable testID="deck-sync-error" accessibilityRole="button" accessibilityLabel="Reintentar sincronización de mazos" onPress={onRefresh} style={[styles.syncError, { backgroundColor: `${colors.ink}E8`, borderColor: `${colors.danger}AA` }]}><Feather name="alert-triangle" size={15} color={colors.danger} /><Text style={[styles.syncText, { color: colors.foreground }]}>{deckError ?? syncError ?? 'SIN SEÑAL · TOCA PARA REINTENTAR'}</Text></Pressable> : null}
           {collectionLoading || deckLoading ? <View style={[styles.loadingState, { backgroundColor: `${colors.ink}C9` }]}><ActivityIndicator color={colors.accent} /><Text style={[styles.loadingText, { color: colors.foreground }]}>SINCRONIZANDO MAZOS</Text></View> : null}
