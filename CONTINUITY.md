@@ -2499,3 +2499,10 @@
 - Run oficial: `34658224645` / build `190`, `success`. Pasaron instalación de dependencias, typecheck, telemetría, todos los contratos móviles, `expo prebuild`, Gradle release y la verificación standalone con `assets/index.android.bundle` embebido.
 - Release prerelease publicado: `vexforge-android-build-190`.
 - APK: `app-release.apk` (114,529,424 bytes). Se mantiene el estado `IMPLEMENTED_UNVERIFIED` hasta la QA visual/táctil humana del operador en dispositivo; no se declara `PASS`, `OPERATIONAL` ni `TIER1_READY`.
+
+---
+## 2026-09-12 — VE-MOB-3-HOME — APK 192 CANCELADA POR OPERADOR
+
+- El run Android oficial `34664830231` / build `192`, iniciado sobre el commit `f0f9344ec3d38b95af873577e018536f03b5bc41`, fue cancelado explícitamente por el operador antes de completar la compilación.
+- No se generó ni publicó una APK nueva ni un release correlativo. El commit de la segunda fase visual permanece en `main` para continuar ampliando el Home antes de volver a compilar.
+- Estado honesto: `IMPLEMENTED_UNVERIFIED`; la QA visual/táctil y la compilación final quedan pendientes hasta nueva instrucción.
