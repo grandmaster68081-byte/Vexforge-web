@@ -1,0 +1,188 @@
+import React from "react";
+import { useLeaderboard } from "../domains/leaderboard/useLeaderboard";
+import { SkeletonTable } from "../shared/components/Skeleton";
+import { EmptyState } from "../shared/components/EmptyState";
+import { ErrorState } from "../shared/components/ErrorState";
+import { supabase } from "../lib/supabase";
+import { GuestDiscoveryBanner } from "../shared/components/GuestDiscoveryBanner";
+import { ForgeIcon, type ForgeIconName } from "../shared/components/ForgeIcon";
+import { surfaceBackground } from "../lib/assetManifest";
+
+const BG_URL = surfaceBackground("leaderboard");
+
+interface RankTier { name: string; color: string; icon: ForgeIconName; }
+
+function getRank(mmr: number): RankTier {
+  if (mmr >= 3000) return { name: "Mythic",   color: "#ff4444", icon: "spark" };
+  if (mmr >= 2400) return { name: "Legend",   color: "#e8b84b", icon: "crown" };
+  if (mmr >= 1800) return { name: "Diamond",  color: "#4a9eff", icon: "spark" };
+  if (mmr >= 1200) return { name: "Platinum", color: "#3ddc84", icon: "trophy" };
+  if (mmr >= 600)  return { name: "Gold",     color: "#f59e0b", icon: "trophy" };
+  if (mmr >= 200)  return { name: "Silver",   color: "#8b8b9e", icon: "shield" };
+  return           { name: "Bronze",          color: "#cd7f32", icon: "shield" };
+}
+
+
+const DPS_TIERS: Array<{ label: string; min: number; color: string; icon: ForgeIconName }> = [
+  { label: 'LEYENDA',  min: 2000, color: '#ffd700', icon: 'spark' },
+  { label: 'MAESTRO',  min: 1200, color: '#e8b84b', icon: 'spark' },
+  { label: 'FORJADOR', min: 600,  color: '#a855f7', icon: 'energy' },
+  { label: 'APRENDIZ', min: 200,  color: '#4a9eff', icon: 'shield' },
+  { label: 'RECLUTA',  min: 0,    color: '#8b8b9e', icon: 'attack' },
+];
+function getDPSTier(dps: number | null | undefined) {
+  if (!dps) return DPS_TIERS[4];
+  return DPS_TIERS.find(t => dps >= t.min) ?? DPS_TIERS[4];
+}
+const FACTIONS = ['Todas', 'Guerrero', 'Mago', 'Paladín', 'Pícaro'];
+const MEDAL: ForgeIconName[] = ["trophy", "crown", "spark"];
+const TIER_THRESHOLDS: Array<{ name: string; min: number; color: string; icon: ForgeIconName }> = [
+  { name: "Mythic",   min: 3000, color: "#ff4444", icon: "spark" },
+  { name: "Legend",   min: 2400, color: "#e8b84b", icon: "crown" },
+  { name: "Diamond",  min: 1800, color: "#4a9eff", icon: "spark" },
+  { name: "Platinum", min: 1200, color: "#3ddc84", icon: "trophy" },
+  { name: "Gold",     min: 600,  color: "#f59e0b", icon: "trophy" },
+  { name: "Silver",   min: 200,  color: "#8b8b9e", icon: "shield" },
+  { name: "Bronze",   min: 0,    color: "#cd7f32", icon: "shield" },
+];
+
+export function LeaderboardRoute() {
+  const { status, data, myPlayerId: myId, reload } = useLeaderboard(100);
+  const [factionFilter, setFactionFilter] = React.useState("Todas");
+  const [isAuth, setIsAuth] = React.useState(false);
+  const rows   = data ?? [];
+  const filteredRows = factionFilter === "Todas" ? rows : rows.filter(r => (r as any).champion_faction === factionFilter);
+  const loading = status === "loading";
+  const error   = status === "ready" && !data ? "Error al cargar el clasificatorio" : null;
+
+  React.useEffect(() => {
+    supabase.auth.getSession().then(({ data: s }) => setIsAuth(!!s.session));
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_e, s) => setIsAuth(!!s));
+    return () => subscription.unsubscribe();
+  }, []);
+
+  return (
+    <div style={{
+      minHeight: "100vh",
+      background: "#0a0a12",
+      backgroundImage: BG_URL ? `url(${BG_URL})` : undefined,
+      backgroundSize: "cover",
+      backgroundPosition: "center",
+      backgroundAttachment: "fixed",
+    }}>
+    <div style={{ minHeight: "100vh", background: "rgba(10,10,18,0.87)" }}>
+    <main style={{ maxWidth: 900, margin: "0 auto", padding: "32px 16px" }}>
+      {!isAuth && <GuestDiscoveryBanner />}
+      {/* Header */}
+      <div style={{ marginBottom: 24 }}>
+        <p style={{ fontSize: 11, letterSpacing: "0.14em", color: "#e8b84b", textTransform: "uppercase", fontFamily: "Rajdhani,sans-serif", fontWeight: 700, marginBottom: 8 }}><span className="forge-eyebrow">Clasificatorio</span></p>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 8 }}>
+          <h1 style={{ display: "flex", alignItems: "center", gap: 8, fontFamily: "Cinzel,serif", color: "#e8e8f0", fontSize: 26, margin: 0 }}><ForgeIcon name="trophy" size={24} />Leaderboard</h1>
+          <button onClick={reload} style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "7px 18px", borderRadius: 8, border: "1px solid #2a2a3a", background: "transparent", color: "#888", fontSize: 11, cursor: "pointer" }}><ForgeIcon name="refresh" size={13} />Actualizar</button>
+        </div>
+        <p style={{ color: "#666", margin: "4px 0 0", fontSize: 12 }}>Clasificación global por MMR. Los mejores 100 jugadores.</p>
+      </div>
+
+      {/* Tier legend */}
+      <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginBottom: 20 }}>
+        {TIER_THRESHOLDS.map(t => (
+          <div key={t.name} style={{ display: "flex", alignItems: "center", gap: 4, background: "#12121a", border: `1px solid ${t.color}33`, borderRadius: 8, padding: "4px 10px" }}>
+            <ForgeIcon name={t.icon} size={12} />
+            <span style={{ color: t.color, fontSize: 10, fontWeight: 700 }}>{t.name}</span>
+            <span style={{ color: "#5a5a7a", fontSize: 9 }}>{t.min}+</span>
+          </div>
+        ))}
+      </div>
+
+
+      {/* Faction filter */}
+      <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginBottom: 16 }}>
+        {FACTIONS.map(f => (
+          <button key={f} onClick={() => setFactionFilter(f)} style={{
+            padding: "5px 14px", borderRadius: 20, cursor: "pointer",
+            border: factionFilter === f ? "1px solid #e8b84b" : "1px solid #2a2a3a",
+            background: factionFilter === f ? "rgba(232,184,75,0.12)" : "transparent",
+            color: factionFilter === f ? "#e8b84b" : "#5a5a7a",
+            fontSize: 10, fontFamily: "Rajdhani,sans-serif", fontWeight: 700,
+            transition: "all 0.15s ease",
+          }}>{f}</button>
+        ))}
+      </div>
+      {error && <ErrorState message={error} onRetry={reload} />}
+      {loading && <SkeletonTable cols={5} rows={7} />}
+      {!loading && !error && rows.length === 0 && (
+        <EmptyState
+          icon={<ForgeIcon name="attack" size={36} />}
+          title="Sin clasificados aún"
+          description="Todavía no hay jugadores clasificados. ¡Sé el primero en jugar PvP para aparecer aquí!"
+        />
+      )}
+
+      {/* Rankings table */}
+      {!loading && !error && rows.length > 0 && (
+        <div style={{ background: "#12121a", border: "1px solid #2a2a3a", borderRadius: 12, overflow: "hidden" }}>
+        <div className="forge-table-scroll" tabIndex={0} role="group" aria-label="Tabla de clasificación (desplazable en horizontal)">
+        <div className="forge-table-min">
+          {/* Column headers */}
+          <div style={{ display: "grid", gridTemplateColumns: "48px 1fr 100px 120px 60px 100px", padding: "8px 16px", borderBottom: "1px solid #1a1a2e" }}>
+            <div style={{ color: "#5a5a7a", fontSize: 9, fontWeight: 700 }}>#</div>
+            <div style={{ color: "#5a5a7a", fontSize: 9, fontWeight: 700 }}>JUGADOR</div>
+            <div style={{ color: "#5a5a7a", fontSize: 9, fontWeight: 700, textAlign: "right" }}>MMR</div>
+            <div style={{ color: "#5a5a7a", fontSize: 9, fontWeight: 700, textAlign: "center" }}>W / L</div>
+            <div style={{ color: "#5a5a7a", fontSize: 9, fontWeight: 700, textAlign: "right" }}>WIN%</div>
+            <div style={{ color: "#5a5a7a", fontSize: 9, fontWeight: 700, textAlign: "center" }}>DPS TIER</div>
+          </div>
+          {filteredRows.map((row, i) => {
+            const tier = getRank(row.mmr);
+            const isMe = row.player_id === myId;
+            return (
+              <div key={row.player_id}
+                className={`leaderboard-row-animate${isMe ? ' leaderboard-my-row' : ''}`}
+                style={{
+                display: "grid", gridTemplateColumns: "48px 1fr 100px 120px 60px 100px", alignItems: "center",
+                padding: "12px 16px", borderBottom: i < rows.length - 1 ? "1px solid #1a1a2e" : "none",
+                background: isMe ? "rgba(61,220,132,0.04)" : i % 2 === 0 ? "transparent" : "#0f0f1a22",
+                animationDelay: `${i * 0.04}s`,
+              }}>
+                <div style={{ fontFamily: "Cinzel,serif", fontWeight: 800, color: i < 3 ? "#e8b84b" : "#555", fontSize: i < 3 ? 16 : 13 }}>
+                  {i < 3 ? <ForgeIcon name={MEDAL[i]} size={18} /> : `#${row.rank_position}`}
+                </div>
+                <div>
+                  <span style={{ color: isMe ? "#3ddc84" : "#e8e8f0", fontWeight: 700, fontSize: 13 }}>{row.display_name}</span>
+                  {isMe && <span style={{ color: "#3ddc84", fontSize: 9, marginLeft: 6 }}>TÚ</span>}
+                  <div style={{ display: "inline-flex", alignItems: "center", gap: 4, color: tier.color, fontSize: 10 }}><ForgeIcon name={tier.icon} size={11} />{tier.name}</div>
+                  {(row as any).champion_name && <div style={{ display: "inline-flex", alignItems: "center", gap: 3, color: "#7a5a2a", fontSize: 9, marginTop: 1 }}><ForgeIcon name="crown" size={10} />{(row as any).champion_name}</div>}
+                </div>
+                <div style={{ color: "#e8b84b", fontWeight: 700, fontSize: 14, textAlign: "right" }}>{row.mmr}</div>
+                <div style={{ color: "#7a7a9a", fontSize: 11, textAlign: "center" }}>
+                  <span style={{ color: "#3ddc84" }}>{row.wins}W</span> · <span style={{ color: "#ff6b6b" }}>{row.losses}L</span>
+                </div>
+                <div style={{ color: "#888", fontSize: 11, textAlign: "right" }}>{row.win_rate}%</div>
+                {(() => {
+                  const t = getDPSTier((row as any).avg_dps_score);
+                  return (
+                    <div style={{ textAlign: "center" }}>
+                      <span style={{
+                        fontFamily: "Rajdhani,sans-serif", fontSize: 9, fontWeight: 800,
+                        color: t.color, background: `${t.color}18`, border: `1px solid ${t.color}33`,
+                        borderRadius: 12, padding: "2px 7px", display: "inline-flex", alignItems: "center", gap: 4,
+                        letterSpacing: "0.06em",
+                      }}><ForgeIcon name={t.icon} size={10} />{t.label}</span>
+                      {(row as any).champion_card_id && (
+                        <div style={{ display: "inline-flex", alignItems: "center", gap: 3, fontSize: 8, color: "#5a5a7a", marginTop: 2 }}><ForgeIcon name="crown" size={9} />Campeón</div>
+                      )}
+                    </div>
+                  );
+                })()}
+              </div>
+            );
+          })}
+        </div>
+        </div>
+        </div>
+      )}
+    </main>
+    </div>
+    </div>
+  );
+}

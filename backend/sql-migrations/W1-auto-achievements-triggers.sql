@@ -1,0 +1,14 @@
+-- W.1: Sistema de logros automaticos -- Chat 80 (2026-07-21)
+-- Ejecutado via Management API. Funcion principal + 6 triggers + RPC publico.
+-- fn_check_and_grant_achievements(p_player_id uuid) -- CREADA Y ACTIVA
+-- Disparadores instalados en:
+--   mission_runs            -> AFTER UPDATE (status=completed)
+--   player_cards            -> AFTER INSERT OR UPDATE
+--   world_boss_encounters   -> AFTER INSERT OR UPDATE
+--   market_listings         -> AFTER UPDATE (status=sold/completed)
+--   pvp_matches             -> AFTER UPDATE (winner set)
+--   vexforge_pack_orders    -> AFTER INSERT OR UPDATE (status=completed)
+-- check_my_achievements()  -- RPC publico, GRANT TO authenticated
+-- Cubre 19 de 25 logros directamente via triggers
+-- forger_5/25/100 pendiente: requiere tabla fusion_log (no existe aun)
+-- daily_streak_7/30 pendiente: requiere logica de streak en player_daily_quests

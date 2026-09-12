@@ -1,0 +1,35 @@
+# VEXFORGE — CI de verificacion (archivo listo para activar)
+#
+# Este archivo NO se ejecuta desde `ci/`. Para activarlo hay que copiarlo a
+# `.github/workflows/verify.yml` en `main` (ver docs/CI_ACTIVATION.md).
+# Se mantiene aqui porque el token de automatizacion no tiene el scope `workflow`
+# y la API de GitHub rechaza cualquier escritura bajo `.github/workflows/`.
+name: verify
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+concurrency:
+  group: verify-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      # Valores publicos (publishable + URL del proyecto). Nunca poner service_role aqui.
+      VITE_SUPABASE_URL: ${{ vars.VITE_SUPABASE_URL || 'https://rscuzqnfccqvltkdcdny.supabase.co' }}
+      VITE_SUPABASE_ANON_KEY: ${{ vars.VITE_SUPABASE_ANON_KEY || 'sb_publishable_3eGRSpvxptO09eQQzpxysQ_Imq8zi58' }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+      - name: Instalar dependencias
+        run: npm ci --ignore-scripts
+      - name: Typecheck
+        run: npx tsc --noEmit -p tsconfig.app.json
+      - name: Verificacion completa
+        run: npm run verify:all
