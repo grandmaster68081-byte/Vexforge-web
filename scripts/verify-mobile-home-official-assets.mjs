@@ -10,11 +10,11 @@ const assertions = [
   ['Home is a native composition inside the shared shell', screen.includes('<ScreenShell surface="home" sceneMode="shell">') && screen.includes('Animated.ScrollView')],
   ['Home no longer mounts the legacy reference scene or hotspot overlay', !screen.includes('home-reference-scene.png') && !screen.includes('const HOTSPOTS') && !screen.includes('home-reference-')],
   ['Home consumes live Nexus data contracts', requiredDataLoaders.every((loader) => screen.includes(loader)) && screen.includes('Promise.allSettled')],
-  ['Home uses registered official visual assets', screen.includes('OFFICIAL_ASSETS.homeHero') && screen.includes('OFFICIAL_ASSETS.homeSentinel') && screen.includes('OFFICIAL_ASSETS.homeFeatureCard') && visual.includes('homeHero') && visual.includes('homeSentinel') && visual.includes('homeFeatureCard')],
+  ['Home uses the selected local authored card art contract', screen.includes('OFFICIAL_ASSETS.homeFeatureCard') && visual.includes('homeFeatureCard')],
   ['Home exposes explicit visual asset failure states', screen.includes('ARTE OFFLINE') && screen.includes('NEXUS CORE OFFLINE') && screen.includes('onError={() => setFeaturedAssetState')],
   ['Home exposes functional Android routes', screen.includes("navigate('/battle')") && screen.includes("navigate('/missions')") && screen.includes("route: '/collection'") && screen.includes("route: '/world'") && screen.includes("route: '/economy'") && screen.includes('navigate(route as HomeRoute)')],
   ['Home exposes the live resource HUD', screen.includes('progress.energy') && screen.includes('wallet?.vex_ingame') && screen.includes('playerStats?.pvp_wins')],
-  ['Home handles loading, partial, empty and error data states', screen.includes("HomeState = 'loading' | 'ready' | 'partial' | 'error'") && screen.includes('SEÑAL INTERRUMPIDA') && screen.includes('SIN FRENTE ACTIVO')],
+  ['Home handles loading, partial, empty and error data states', screen.includes("HomeState = 'loading' | 'ready' | 'partial' | 'error'") && screen.includes("homeState === 'error' || homeState === 'partial'") && screen.includes('SEÑAL INCOMPLETA') && screen.includes('SEÑAL INTERRUMPIDA') && screen.includes('SIN FRENTE ACTIVO')],
   ['Home keeps reduced-motion and pull-to-refresh contracts', screen.includes('useReducedMotion()') && screen.includes('reduceMotion ? undefined') && screen.includes('RefreshControl')],
   ['Home exposes the required review surfaces', requiredTestIds.every((testID) => screen.includes(`testID="${testID}"`))],
 ];

@@ -244,7 +244,7 @@ export default function ForgeScreen() {
   const scrollY = useSharedValue(0);
 
   const loadHome = useCallback(async () => {
-    setHomeState((current) => (current === 'ready' ? 'loading' : current));
+    setHomeState('loading');
     const results = await Promise.allSettled([loadHomeStats(), loadDailyFeaturedCard(), loadHomeMissions(), loadRecentActivity(5)]);
     const [statsResult, cardResult, missionResult, activityResult] = results;
     setHome((current) => ({
@@ -457,12 +457,12 @@ export default function ForgeScreen() {
           </View>
 
           <View style={[styles.content, { paddingHorizontal: viewportPadding }]}>
-            {homeState === 'error' ? (
+            {homeState === 'error' || homeState === 'partial' ? (
               <Animated.View entering={reduceMotion ? undefined : FadeIn.duration(350)} style={[styles.errorBanner, { borderColor: `${colors.danger}80` }]} testID="home-retry">
                 <Icon name="alert-triangle" color={colors.danger} size={18} />
                 <View style={styles.errorCopy}>
-                  <Text style={[styles.errorTitle, { color: colors.foreground }]}>SEÑAL INTERRUMPIDA</Text>
-                  <Text style={[styles.errorBody, { color: colors.mutedForeground }]}>{syncError ?? 'No se pudo sincronizar la señal del Nexus.'}</Text>
+                  <Text style={[styles.errorTitle, { color: colors.foreground }]}>{homeState === 'partial' ? 'SEÑAL INCOMPLETA' : 'SEÑAL INTERRUMPIDA'}</Text>
+                  <Text style={[styles.errorBody, { color: colors.mutedForeground }]}>{homeState === 'partial' ? 'Algunas señales del Nexus no llegaron. Reintenta para completar la escena.' : syncError ?? 'No se pudo sincronizar la señal del Nexus.'}</Text>
                 </View>
                 <Pressable accessibilityRole="button" accessibilityLabel="Reintentar sincronización" onPress={doRefresh} style={[styles.retryButton, { borderColor: colors.danger }]}>
                   <Text style={[styles.retryText, { color: colors.danger }]}>REINTENTAR</Text>
@@ -523,7 +523,7 @@ export default function ForgeScreen() {
                     <View style={styles.eventProgress}><Text style={[styles.eventProgressValue, { color: colors.rarityRare }]}>{activeEvent ? `${Math.round(activeEvent.progress)}%` : '—'}</Text><ProgressRail value={activeEvent?.progress ?? 0} total={100} color={colors.rarityRare} background={`${colors.rarityRare}20`} /><Icon name="arrow-up" color={colors.rarityRare} size={14} /></View>
                   </Pressable>
                   <Pressable accessibilityRole="button" accessibilityLabel="Inspeccionar carta del frente" onPress={openFeatured} style={({ pressed }) => [styles.worldCard, { borderColor: `${colors.rarityLegendary}C4`, backgroundColor: colors.ink, opacity: pressed ? 0.78 : 1 }]}>
-                    <Image source={OFFICIAL_ASSETS.homeFeatureCard} style={styles.worldCardArt} resizeMode="cover" accessibilityLabel="Arte oficial de la carta del frente" onError={() => setFeaturedAssetState('error')} />
+                    <Image source={OFFICIAL_ASSETS.homeFeatureCard} style={styles.worldCardArt} resizeMode="cover" accessibilityLabel="Arte oficial de la carta del frente" onLoad={() => setFeaturedAssetState('ready')} onError={() => setFeaturedAssetState('error')} />
                     <LinearGradient colors={['transparent', `${colors.ink}E8`]} style={StyleSheet.absoluteFill} />
                     <Text style={[styles.worldCardRarity, { color: colors.rarityLegendary }]}>{activeCard?.rarity?.toUpperCase() ?? 'LEGENDARY'}</Text>
                     <Text numberOfLines={2} style={[styles.worldCardName, { color: colors.foreground }]}>{activeCard?.name ?? 'Bastión de Hierro'}</Text>
