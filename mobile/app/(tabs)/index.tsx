@@ -282,8 +282,8 @@ export default function ForgeScreen() {
       orbit.value = 0;
       return;
     }
-    pulse.value = withRepeat(withTiming(1, { duration: 2200, easing: Easing.inOut(Easing.quad) }), -1, true);
-    orbit.value = withRepeat(withTiming(1, { duration: 9200, easing: Easing.linear }), -1, false);
+    pulse.value = withRepeat(withTiming(1, { duration: MOTION.ambient, easing: Easing.inOut(Easing.quad) }), -1, true);
+    orbit.value = withRepeat(withTiming(1, { duration: MOTION.ambient * 3, easing: Easing.linear }), -1, false);
   }, [orbit, pulse, reduceMotion]);
 
   const scrollHandler = useAnimatedScrollHandler({
@@ -394,7 +394,7 @@ export default function ForgeScreen() {
             ) : null}
 
             <View style={[styles.heroTopBar, { marginTop: Math.max(12, insets.top + 6), marginHorizontal: viewportPadding }]}>
-              <Animated.View entering={reduceMotion ? undefined : FadeIn.duration(420)} style={styles.brandLockup}>
+              <Animated.View entering={reduceMotion ? undefined : FadeIn.duration(MOTION.reveal + MOTION.micro)} style={styles.brandLockup}>
                 <View style={[styles.brandSeal, { borderColor: `${colors.accent}C0`, backgroundColor: `${colors.ink}B8` }]}>
                   <Text style={[styles.brandSealText, { color: colors.accent }]}>V</Text>
                 </View>
@@ -417,7 +417,7 @@ export default function ForgeScreen() {
               </View>
             </View>
 
-            <Animated.View entering={reduceMotion ? undefined : FadeInDown.delay(90).duration(600)} style={[styles.heroContent, { paddingHorizontal: viewportPadding }]}>
+            <Animated.View entering={reduceMotion ? undefined : FadeInDown.delay(MOTION.micro).duration(MOTION.navigation + MOTION.micro)} style={[styles.heroContent, { paddingHorizontal: viewportPadding }]}>
               <View style={[styles.heroReadingField, { borderLeftColor: `${colors.accent}B8` }]}>
                 <View style={[styles.syncLine, { borderColor: `${connectionColor}90` }]} testID="home-sync">
                   <View style={[styles.syncPulse, { backgroundColor: connectionColor }]} />
@@ -477,7 +477,7 @@ export default function ForgeScreen() {
 
           <View style={[styles.content, { paddingHorizontal: viewportPadding }]}>
             {homeState === 'error' || homeState === 'partial' ? (
-              <Animated.View entering={reduceMotion ? undefined : FadeIn.duration(350)} style={[styles.errorBanner, { borderColor: `${colors.danger}80` }]} testID="home-retry">
+              <Animated.View entering={reduceMotion ? undefined : FadeIn.duration(MOTION.reveal)} style={[styles.errorBanner, { borderColor: `${colors.danger}80` }]} testID="home-retry">
                 <Icon name="alert-triangle" color={colors.danger} size={18} />
                 <View style={styles.errorCopy}>
                   <Text style={[styles.errorTitle, { color: colors.foreground }]}>{homeState === 'partial' ? 'SEÑAL INCOMPLETA' : 'SEÑAL INTERRUMPIDA'}</Text>
@@ -491,7 +491,7 @@ export default function ForgeScreen() {
             {homeState === 'loading' && !home.stats && !activeCard ? <LoadingTrace /> : null}
 
             <View style={styles.nexusWorldFinal}>
-                <Animated.View entering={reduceMotion ? undefined : FadeInUp.delay(120).duration(560)} style={styles.signalLedgerFinal}>
+                <Animated.View entering={reduceMotion ? undefined : FadeInUp.delay(MOTION.micro).duration(MOTION.navigation)} style={styles.signalLedgerFinal}>
                   <View style={styles.signalIdentityFinal}>
                     <View style={[styles.signalCrestFinal, { borderColor: colors.accent }]}>
                       <View style={[styles.signalCrestInnerFinal, { borderColor: colors.accent }]}><Text style={[styles.signalCrestLetterFinal, { color: colors.accent }]}>{playerName.slice(0, 1).toUpperCase()}</Text></View>
