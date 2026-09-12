@@ -2577,3 +2577,11 @@
 - No se modificaron la web congelada, Auth, RLS, RPCs, economía, combate, assets ni workflows. No se ejecutaron typecheck, guards, workflow Android, compilación APK ni release.
 - Estado honesto: `IMPLEMENTED_UNVERIFIED`. La QA visual/táctil humana Android y la verificación de build siguen pendientes; no se declara `PASS`, `OPERATIONAL` ni `TIER1_READY`.
 
+
+## VE-AUDIT-02-SUPABASE-LIB — OPERATIONAL (documental)
+
+- Alcance: auditoria de solo lectura de `mobile/lib/supabase.ts` (1808 lineas). Sin cambios de codigo.
+- Resultado: 111 funciones (91 exportadas, 20 privadas), 0 funciones muertas, 0 nombres duplicados, 45 RPC y 46 tablas distintas.
+- Duplicaciones probadas: 12 (D1..D12) documentadas con linea y evidencia; criticas D1/D2 (resolutor de player_id repetido 6 veces) y D12 (45 queries concatenadas a mano).
+- Evidencia: `docs/VE-AUDIT-LIB-SUPABASE-CATALOG.md`.
+- Siguiente accion verificable: unificar el resolutor de player_id en un unico helper y encadenar un guard `verify:supabase-lib` que falle si reaparece la concatenacion manual del query de `players?select=id`.
