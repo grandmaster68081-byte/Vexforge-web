@@ -2585,3 +2585,49 @@
 - Duplicaciones probadas: 12 (D1..D12) documentadas con linea y evidencia; criticas D1/D2 (resolutor de player_id repetido 6 veces) y D12 (45 queries concatenadas a mano).
 - Evidencia: `docs/VE-AUDIT-LIB-SUPABASE-CATALOG.md`.
 - Siguiente accion verificable: unificar el resolutor de player_id en un unico helper y encadenar un guard `verify:supabase-lib` que falle si reaparece la concatenacion manual del query de `players?select=id`.
+
+---
+## 2026-09-12 — VE-PVP-04-FORMATION-SLOTS-IN-ENGINE — IMPLEMENTED_UNVERIFIED
+
+- Sesión PVP. Sesión autenticada real emitida para la cuenta QA autorizada
+  `cristiangalvez815@gmail.com` (sin contraseña en repo, logs ni commits: se
+  usó un enlace de un solo uso emitido por la Admin API).
+- BLOQUEO P0 ANTERIOR CERRADO POR EVIDENCIA: `vexforge_battle_resolve` ya no
+  devuelve `{"ok":false,"error":"UPDATE requires a WHERE clause"}`. Tres
+  llamadas QA reales con claves de idempotencia nuevas
+  (`qa-probe-2026-pvp-01/02/03`) devolvieron `ok:true`, `match_id`,
+  `winner_id`, `turns` y `final_units`.
+  Causa confirmada del error histórico: la extensión `safeupdate` está
+  precargada para el rol `authenticator`
+  (`session_preload_libraries=supautils, safeupdate`), por lo que cualquier
+  UPDATE/DELETE sin WHERE en la cadena falla con SQLSTATE 21000. El barrido
+  estático de todas las funciones de todos los esquemas de aplicación ya no
+  encuentra ningún UPDATE/DELETE sin WHERE alcanzable desde el PVP
+  (`update_reward_scaling` hoy tiene `WHERE true`; sólo quedan tres UPDATE
+  sin WHERE en `econ_sim.step`, no alcanzable desde el PVP).
+- BUG P1 REPARADO (representación del estado real del motor): el RPC devolvía
+  `is_champion` tal como venía de `player_decks` (false cuando el mazo no
+  marca campeón) y nunca exponía el slot resuelto, por lo que la interfaz NO
+  podía representar CAMPEÓN / VANGUARDIA / CENTINELA.
+  Migración `supabase/migrations/0047_ve_pvp_4_formation_slots_in_engine.sql`
+  (APLICADA en producción) publica en el JSON de salida:
+  * `slot` por unidad en `final_units`:
+    `champion` | `vanguard` | `sentinel` | `reserve` | `fallen`
+  * `is_champion` con el campeón realmente resuelto (incluye el fallback por
+    poder que el motor ya aplicaba)
+  * `id` y `slot` de atacante y defensor en cada turno
+  * la unidad que entra desde la reserva hereda el slot y la caída queda
+    marcada como `fallen`
+- NO se cambió ninguna regla: stats, daño, keywords, reserva, bonificación de
+  facción (+15%), ELO, XP, recompensas, RLS, Auth y economía quedan idénticos.
+- Evidencia QA en vivo tras aplicar la migración:
+  `('a','champion',true,'Sombra del Fin')`, `('a','vanguard',...)`,
+  `('a','sentinel',...)`, resto `reserve`; turno 1 con
+  `attacker.slot=champion` y `defender.slot=vanguard`.
+- Deriva registrada (pendiente, no reparada en esta pasada): varias cartas del
+  oponente llegan con `image_url` vacío; `elo_change` fue 0 por diferencia de
+  MMR (comportamiento del motor, no bug).
+- PENDIENTE: el battlefield vertical real (FASES 6-13 de la directiva) con las
+  tres posiciones, ilustraciones reales, daño, muerte y sustitución.
+- Estado honesto: `IMPLEMENTED_UNVERIFIED`. No se declara PASS, OPERATIONAL ni
+  TIER1_READY: falta QA humana en dispositivo sobre el nuevo contrato.
