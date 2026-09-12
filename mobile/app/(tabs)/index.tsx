@@ -481,6 +481,7 @@ export default function ForgeScreen() {
                       <Text style={[styles.signalKickerFinal, { color: colors.accent }]}>IDENTIDAD DEL FORJADOR</Text>
                       <Text numberOfLines={1} style={[styles.signalPlayerNameFinal, { color: colors.foreground }]}>{playerName}</Text>
                       <Text style={[styles.signalPlayerMetaFinal, { color: colors.mutedForeground }]}>NIVEL {formatNumber(progress?.level)} · {connectionLabel}</Text>
+                      <Text style={[styles.signalPlayerMetaFinal, { color: colors.mutedForeground }]}>{formatNumber(playerStats?.pvp_wins)} VICTORIAS · {formatNumber(wallet?.vex_ingame)} VEX</Text>
                     </View>
                   </View>
                   <View style={styles.signalProgressFinal}>
@@ -589,7 +590,7 @@ export default function ForgeScreen() {
                   <SectionMarker eyebrow="CIRCUITO ACTIVO" title="Clasificación del frente" action="ABRIR MUNDO" onAction={() => navigate('/world')} accent={colors.accent} />
                   <View style={styles.rankingRail}>{ranking.length > 0 ? ranking.map((entry, index) => <View key={entry.rank + '-' + entry.display_name} style={[styles.rankingRow, { borderBottomColor: colors.border }]}><Text style={[styles.rankPosition, { color: index === 0 ? colors.accent : colors.mutedForeground }]}>{String(entry.rank).padStart(2, '0')}</Text><View style={[styles.rankAvatar, { borderColor: index === 0 ? colors.accent : colors.border }]}><Text style={[styles.rankAvatarText, { color: index === 0 ? colors.accent : colors.mutedForeground }]}>{entry.display_name.slice(0, 1).toUpperCase()}</Text></View><View style={styles.rankIdentity}><Text style={[styles.rankName, { color: colors.foreground }]}>{entry.display_name}</Text><Text style={[styles.rankMeta, { color: colors.mutedForeground }]}>{formatNumber(entry.wins)} VICTORIAS / {formatNumber(entry.mmr)} MMR</Text></View><Icon name={index === 0 ? 'award' : 'chevron-right'} color={index === 0 ? colors.accent : colors.mutedForeground} size={15} /></View>) : <Text style={[styles.emptyBody, { color: colors.mutedForeground }]}>El ranking de la temporada todavía no tiene posiciones publicadas.</Text>}</View>
                 </View>
-              </View>            </View>
+              </View>
           </View>
         </Animated.ScrollView>
       </View>
