@@ -2536,3 +2536,13 @@
 - No se duplicó ni se reescribió el Home existente. Se sincronizó la base oficial al entorno de trabajo y se conservó la web congelada; no se modificaron Auth, RLS, RPCs, economía, combate, contratos ni datos de juego.
 - Por instrucción expresa del operador no se ejecutaron typecheck, guardas, workflow Android, compilación APK ni QA visual/táctil. No se fabrica evidencia de esas comprobaciones.
 - Estado honesto: `IMPLEMENTED_UNVERIFIED`. El commit y la publicación del APK quedan para la siguiente sesión en la que el operador autorice la ejecución; no se declara `PASS`, `OPERATIONAL` ni `TIER1_READY`.
+
+
+## 2026-09-12 — VE-MOB-3-HOME — APK 194 / RELEASE PUBLICADA
+
+- Se verificó el `main` oficial sobre el commit de código `94e80616213ba9d4a437ba708121e13cfb003116` (`fix(home): surface partial Nexus sync failures`).
+- El workflow Android oficial `Build VEXFORGE Android APK`, run `194` (`34674932105`), terminó `success` sobre `main`.
+- Pasaron los gates del workflow: instalación de dependencias, typecheck móvil, telemetría, contratos móviles, prebuild Expo, `assembleRelease`, verificación standalone con `assets/index.android.bundle` embebido y publicación.
+- Release prerelease publicado: `vexforge-android-build-194`; asset `app-release.apk`, 114535964 bytes.
+- Descarga oficial: https://github.com/grandmaster68081-byte/Vexforge-web/releases/download/vexforge-android-build-194/app-release.apk
+- Estado honesto: `IMPLEMENTED_UNVERIFIED`; la QA visual/táctil humana en dispositivo sigue pendiente. No se declara `PASS`, `OPERATIONAL` ni `TIER1_READY`.
