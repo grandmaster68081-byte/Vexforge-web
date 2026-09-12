@@ -516,7 +516,9 @@ export default function CollectionScreen() {
   const hasFilters = Boolean(search || rarity !== 'all' || faction !== 'all' || scope !== 'all');
   return (
     <ScreenShell sceneMode="hero">
-      <DomainHeader domain="archivo" pointerEvents="none" style={{ position: 'absolute', left: 18, right: 18, top: insets.top + 14, zIndex: 5 }} />
+      <View pointerEvents="none" style={{ position: 'absolute', left: 18, right: 18, top: insets.top + 14, zIndex: 5 }}>
+        <DomainHeader domain="archivo" />
+      </View>
       <View
         onLayout={onReferenceRootLayout}
         style={[styles.referenceRoot, { marginBottom: -insets.bottom }]}

@@ -406,7 +406,9 @@ export default function DeckScreen() {
 
   return (
     <ScreenShell sceneMode="hero">
-      <DomainHeader domain="forja" pointerEvents="none" style={{ position: 'absolute', left: 18, right: 18, top: insets.top + 14, zIndex: 5 }} />
+      <View pointerEvents="none" style={{ position: 'absolute', left: 18, right: 18, top: insets.top + 14, zIndex: 5 }}>
+        <DomainHeader domain="forja" />
+      </View>
       <View
         onLayout={onReferenceRootLayout}
         style={[styles.referenceRoot, { marginBottom: -insets.bottom, backgroundColor: colors.ink }]}

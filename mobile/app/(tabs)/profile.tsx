@@ -307,7 +307,9 @@ export default function ProfileScreen() {
 
   return (
     <ScreenShell surface="profile" sceneMode="hero">
-      <DomainHeader domain="legado" pointerEvents="none" style={{ position: 'absolute', left: 18, right: 18, top: insets.top + 14, zIndex: 5 }} />
+      <View pointerEvents="none" style={{ position: 'absolute', left: 18, right: 18, top: insets.top + 14, zIndex: 5 }}>
+        <DomainHeader domain="legado" />
+      </View>
       <View
         onLayout={onReferenceRootLayout}
         style={[styles.referenceRoot, { marginBottom: -insets.bottom }]}
