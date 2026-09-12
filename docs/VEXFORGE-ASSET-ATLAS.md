@@ -7,7 +7,7 @@
 
 ### Canon activo
 
-Estos assets ya tienen un consumidor real en Android o forman parte del registro visual compartido. Se mantienen en el juego y no se reemplazan automáticamente:
+Estos assets ya tienen un consumidor real en Android o forman parte del registro visual compartido. Se mantienen disponibles y no se reemplazan automáticamente; su presencia no obliga a usarlos en cada nueva composición:
 
 | Asset | Superficie | Rol |
 |---|---|---|
@@ -35,9 +35,23 @@ Estos assets quedan disponibles para selección, comparación, inspiración o re
 | `mobile/assets/images/vexforge-auth-nexus-final.png` | Referencia opcional para futuras composiciones de Auth/Nexus |
 | `mobile/assets/images/icon.jpg` | Referencia de estilo heredado; no arte diegético obligatorio |
 
-Un asset de esta lista solo pasa a producción después de una decisión explícita, validación de procedencia y registro en el consumidor real.
+Un asset de esta lista sólo pasa a producción después de una decisión explícita, validación de procedencia y registro en el consumidor real. La disponibilidad en Storage no equivale a una obligación de consumo.
 
-## 2. Regla de generación para nuevas pantallas
+## 2. Prioridad de selección para nuevas composiciones
+
+La identidad compartida es obligatoria; la elección de archivo es contextual:
+
+1. usar primero una carta real cuando su imagen y datos canónicos expresen el
+   momento del juego;
+2. elegir un asset oficial registrado cuando resuelva el rol visual;
+3. generar una pieza nueva cuando falte o no encaje la pieza necesaria.
+
+Las cartas pueden reutilizarse en distintas composiciones —destacada, dominio,
+misión, recompensa, evento o señal del mundo— porque son el núcleo vivo del TCG.
+Se reutilizan sus datos reales y no se inventa una variante que contradiga la
+fuente canónica.
+
+## 3. Regla de generación para nuevas pantallas
 
 Cada nueva imagen debe derivarse del Home maestro, no de una plantilla genérica. La continuidad visual debe conservar:
 
@@ -51,7 +65,7 @@ Cada nueva imagen debe derivarse del Home maestro, no de una plantilla genérica
 
 La selección de una referencia no obliga a copiarla. Sirve para mantener proporción, atmósfera o lenguaje de forma mientras el arte final se genera de acuerdo con VEXFORGE.
 
-## 3. Cierre de un asset nuevo
+## 4. Cierre de un asset nuevo
 
 Antes de usar un asset nuevo en una pantalla:
 

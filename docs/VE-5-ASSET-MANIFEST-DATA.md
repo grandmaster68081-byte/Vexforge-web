@@ -89,8 +89,11 @@ duplicados, o fallo de `npm run verify:manifest`.
 ## Contrato permanente de consumo visual
 
 Desde la entrada en vigor de `VE-VIS-3`, toda superficie nueva debe declarar
-sus elementos visuales y resolver cada uno contra este manifiesto antes del
-cierre. Si un elemento todavía no existe, se produce en la pista visual
+sus elementos visuales seleccionados y resolver cada uno contra este manifiesto
+antes del cierre. Los archivos disponibles en el manifiesto que no tengan un
+consumidor seleccionado permanecen como reserva `AVAILABLE_UNASSIGNED` y no
+bloquean por sí solos una unidad. Si un elemento seleccionado todavía no existe,
+se produce en la pista visual
 paralela, se sube al bucket `vexforge-assets`, se inscribe aquí con rol
 semántico y después se enlaza desde el consumidor. No se permite sustituirlo
 por una forma CSS, emoji, icono genérico, imagen stock o placeholder visible.

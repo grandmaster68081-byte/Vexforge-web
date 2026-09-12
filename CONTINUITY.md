@@ -2516,3 +2516,14 @@
 - No se modificó la web congelada, Auth, Supabase, RLS, RPCs, economía, combate ni otras pantallas Android.
 - Guardas locales: `verify:mobile-home-official-assets` OK (10/10), `verify:motion` OK, `verify:telemetry` OK y `git diff --check` OK. El typecheck local quedó bloqueado por el mirror de paquetes al resolver `npm-package-arg@11.0.3`, antes de cargar el `expo/tsconfig.base` del proyecto.
 - Estado honesto: `IMPLEMENTED_UNVERIFIED`; requiere commit en `main`, workflow APK oficial, release correlativo y QA visual/táctil humana del operador. No se declara `PASS`, `OPERATIONAL` ni `TIER1_READY`.
+
+---
+## 2026-09-11 — PROTOCOLO — IDENTIDAD COMPARTIDA Y ASSETS CONTEXTUALES
+
+- Se aclaró la Ley de Consumo Visual en la copia de `main` y en la fila activa `vexforge_master_protocol_v2` de Supabase, ahora en versión `v2.16-shared-identity-contextual-assets-20260911`.
+- La identidad compartida de VEXFORGE continúa siendo obligatoria. La existencia de un archivo en Storage o en el manifiesto ya no obliga a consumirlo: sólo los elementos seleccionados para una composición, exigidos por datos vivos o asignados explícitamente deben tener procedencia, registro y consumidor.
+- Los assets disponibles pero no seleccionados quedan como `AVAILABLE_UNASSIGNED`; no se fuerzan, no se convierten en fallback y no bloquean una unidad por sí solos.
+- Las cartas reales con imagen y datos canónicos son la primera opción recomendada cuando expresan el momento del juego y pueden reutilizarse en Home, dominios, misiones, recompensas, eventos y señales del mundo sin duplicar su identidad.
+- Cuando falte una pieza o no encaje ningún asset registrado, la IA puede generar arte nuevo siguiendo el DNA visual de VEXFORGE y acoplarlo como pieza authored, con procedencia, rol, consumidor y estado registrados antes del cierre.
+- Continúan prohibidos los sustitutos genéricos, los fallbacks silenciosos y la invención de datos autoritativos para acompañar una imagen.
+- Esta enmienda es normativa/documental; no modifica la web congelada, Auth, economía, RPCs, RLS ni los datos de juego.

@@ -42,9 +42,11 @@ files in Storage (verified: zero non-zip objects under their folder):
 
 ## Rule for whoever generates these next
 
-Per the project owner: the CARD IMAGE is the single source of truth for a
-card (name, rarity, faction, stats, lore all come from what is depicted in
-the image, nothing is invented separately). The same principle should extend
-to any new asset: generate the image first, on the same visual/tonal line as
-the existing 24 cards and the cover/logo already in Storage, then read its
-identity from it -- do not invent names/stats/lore ahead of the art.
+Per the project owner: real card data and its CARD IMAGE are the first visual
+choice whenever a composition needs a card. The card's canonical fields remain
+the source of truth; the image is reused across featured cards, domains,
+missions, rewards and world signals without inventing a second identity.
+For a genuinely new visual role with no fitting registered asset, generate the
+image on the same visual/tonal line as the existing cards and cover/logo, then
+register its role and provenance. Never invent names, stats or lore to justify
+an image, and never force an unrelated available asset into a composition.
