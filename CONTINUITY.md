@@ -2506,3 +2506,13 @@
 - El run Android oficial `34664830231` / build `192`, iniciado sobre el commit `f0f9344ec3d38b95af873577e018536f03b5bc41`, fue cancelado explícitamente por el operador antes de completar la compilación.
 - No se generó ni publicó una APK nueva ni un release correlativo. El commit de la segunda fase visual permanece en `main` para continuar ampliando el Home antes de volver a compilar.
 - Estado honesto: `IMPLEMENTED_UNVERIFIED`; la QA visual/táctil y la compilación final quedan pendientes hasta nueva instrucción.
+
+---
+## 2026-09-11 — VE-MOB-3-HOME — TCG NEXUS SCENE PASS
+
+- Se aplicó exclusivamente en Android una segunda fase de dirección visual sobre `mobile/app/(tabs)/index.tsx`, tomando el Home como escena interactiva de TCG y no como dashboard de paneles.
+- La composición ahora reúne el ledger del forjador, recursos, frente/evento, carta oficial destacada, constelación de dominios, ritos de forja/economía, misiones, actividad pública y clasificación dentro de una mesa única del Nexus, con jerarquía espacial y objetos de juego diferenciados.
+- Se mantuvieron los assets oficiales, datos vivos de Supabase, rutas, estados de carga/error/vacío, refresh, accesibilidad, haptics, reduced-motion y todos los `testID` existentes del Home. La navegación inferior usa el catálogo de iconos authored de VEXFORGE en Android.
+- No se modificó la web congelada, Auth, Supabase, RLS, RPCs, economía, combate ni otras pantallas Android.
+- Guardas locales: `verify:mobile-home-official-assets` OK (10/10), `verify:motion` OK, `verify:telemetry` OK y `git diff --check` OK. El typecheck local quedó bloqueado por el mirror de paquetes al resolver `npm-package-arg@11.0.3`, antes de cargar el `expo/tsconfig.base` del proyecto.
+- Estado honesto: `IMPLEMENTED_UNVERIFIED`; requiere commit en `main`, workflow APK oficial, release correlativo y QA visual/táctil humana del operador. No se declara `PASS`, `OPERATIONAL` ni `TIER1_READY`.

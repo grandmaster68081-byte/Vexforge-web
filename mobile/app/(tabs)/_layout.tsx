@@ -2,7 +2,7 @@ import React from 'react';
 import { ActivityIndicator, Platform, StyleSheet, Text, View } from 'react-native';
 import { useColors } from '@/hooks/useColors';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Feather, VexIcon as SymbolView } from '@/components/ForgeIcon';
+import { VexIcon as SymbolView } from '@/components/ForgeIcon';
 import { LinearGradient } from 'expo-linear-gradient';
 import { isLiquidGlassAvailable } from 'expo-glass-effect';
 import { Tabs } from 'expo-router';
@@ -44,7 +44,6 @@ function NativeTabLayout() {
 
 function ClassicTabLayout() {
   const colors = useColors();
-  const isIOS = Platform.OS === 'ios';
   const isWeb = Platform.OS === 'web';
   const insets = useSafeAreaInsets();
   const bottomInset = isWeb ? 34 : insets.bottom;
@@ -52,7 +51,7 @@ function ClassicTabLayout() {
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: colors.accent,
+          tabBarActiveTintColor: colors.accent,
         tabBarInactiveTintColor: colors.mutedForeground,
         headerShown: false,
         tabBarLabelStyle: { fontFamily: typography.bodyBold, fontSize: 10, letterSpacing: 0.5 },
@@ -65,7 +64,7 @@ function ClassicTabLayout() {
           height: isWeb ? 84 : 72 + bottomInset,
           paddingTop: 6,
           paddingBottom: bottomInset + 6,
-          paddingHorizontal: 4,
+          paddingHorizontal: 7,
         },
         tabBarItemStyle: { minHeight: 54, paddingVertical: 2 },
         tabBarHideOnKeyboard: true,
@@ -83,18 +82,13 @@ function ClassicTabLayout() {
         name="index"
         options={{
           title: 'Inicio',
-          tabBarIcon: ({ color }) =>
-            isIOS ? (
-              <SymbolView name="house" tintColor={color} size={24} />
-            ) : (
-              <Feather name="home" size={22} color={color} />
-            ),
+          tabBarIcon: ({ color, focused }) => <SymbolView name={focused ? 'home' : 'home-outline'} color={color} size={23} />,
         }}
       />
-      <Tabs.Screen name="battle" options={{ title: 'Batalla', tabBarIcon: ({ color }) => <Feather name="zap" size={22} color={color} /> }} />
-      <Tabs.Screen name="collection" options={{ title: 'Cartas', tabBarIcon: ({ color }) => <Feather name="layers" size={22} color={color} /> }} />
-      <Tabs.Screen name="deck" options={{ title: 'Mazo', tabBarIcon: ({ color }) => <Feather name="columns" size={22} color={color} /> }} />
-      <Tabs.Screen name="profile" options={{ title: 'Perfil', tabBarIcon: ({ color }) => <Feather name="user" size={22} color={color} /> }} />
+      <Tabs.Screen name="battle" options={{ title: 'Batalla', tabBarIcon: ({ color, focused }) => <SymbolView name={focused ? 'arena' : 'target'} size={22} color={color} /> }} />
+      <Tabs.Screen name="collection" options={{ title: 'Cartas', tabBarIcon: ({ color, focused }) => <SymbolView name={focused ? 'cards' : 'collection'} size={22} color={color} /> }} />
+      <Tabs.Screen name="deck" options={{ title: 'Mazo', tabBarIcon: ({ color, focused }) => <SymbolView name={focused ? 'deck' : 'layers'} size={22} color={color} /> }} />
+      <Tabs.Screen name="profile" options={{ title: 'Perfil', tabBarIcon: ({ color, focused }) => <SymbolView name={focused ? 'profile' : 'account'} size={22} color={color} /> }} />
     </Tabs>
   );
 }
