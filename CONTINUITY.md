@@ -1,3 +1,11 @@
+## 2026-09-13 — VE-MOB-3-HOME — RETRY SIGNAL PRESS DEPTH / IMPLEMENTED_UNVERIFIED
+
+- Se cerró un microbloque de FASE 11 exclusivamente en `mobile/app/(tabs)/index.tsx`: el reintento de sincronización ahora responde físicamente al toque sin perder su estado `busy/disabled`.
+- El control reduce su intensidad y desciende sólo cuando está disponible; durante la recepción mantiene el bloqueo y el copy `RECIBIENDO`.
+- No se modificaron datos, Supabase, RPCs, GameContext, Auth, otras pantallas, assets ni la web congelada.
+- El bloque queda `IMPLEMENTED_UNVERIFIED` hasta completar el workflow Android y la revisión visual/táctil humana del APK.
+- Siguiente acción de esta sesión: ejecutar el workflow oficial Android y registrar su resultado y release correlativo.
+
 ## 2026-09-13 — VE-MOB-3-HOME — COMMAND SEAL PRESS DEPTH / IMPLEMENTED_UNVERIFIED
 
 - Se cerró un microbloque de FASE 9/11 exclusivamente en `mobile/app/(tabs)/index.tsx`: los sellos de perfil, misiones y ajustes del encabezado ahora responden como controles físicos del umbral.

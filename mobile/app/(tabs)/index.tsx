@@ -832,7 +832,21 @@ export default function ForgeScreen() {
                   <Text style={[styles.errorTitle, { color: colors.foreground }]}>{homeState === 'partial' ? 'SEÑAL INCOMPLETA' : 'SEÑAL INTERRUMPIDA'}</Text>
                   <Text style={[styles.errorBody, { color: colors.mutedForeground }]}>{homeState === 'partial' ? 'Algunas señales del Nexus no llegaron. Reintenta para completar la escena.' : syncError ?? 'No se pudo sincronizar la señal del Nexus.'}</Text>
                 </View>
-                <Pressable accessibilityRole="button" accessibilityLabel={refreshing ? 'Sincronización en curso' : 'Reintentar sincronización'} accessibilityState={{ busy: refreshing, disabled: refreshing }} disabled={refreshing} onPress={doRefresh} style={[styles.retryButton, { borderColor: colors.danger, opacity: refreshing ? 0.52 : 1 }]}>
+                <Pressable
+                  accessibilityRole="button"
+                  accessibilityLabel={refreshing ? 'Sincronización en curso' : 'Reintentar sincronización'}
+                  accessibilityState={{ busy: refreshing, disabled: refreshing }}
+                  disabled={refreshing}
+                  onPress={doRefresh}
+                  style={({ pressed }) => [
+                    styles.retryButton,
+                    {
+                      borderColor: colors.danger,
+                      opacity: refreshing ? 0.52 : pressed ? 0.68 : 1,
+                      transform: [{ translateY: pressed && !refreshing ? 2 : 0 }],
+                    },
+                  ]}
+                >
                   <Text style={[styles.retryText, { color: colors.danger }]}>{refreshing ? 'RECIBIENDO' : 'REINTENTAR'}</Text>
                 </Pressable>
               </Animated.View>
