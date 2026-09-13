@@ -83,6 +83,7 @@ function OpponentRow({
           backgroundColor: selected ? `${colors.primary}14` : colors.panel,
           borderColor: selected ? colors.primary : colors.border,
           opacity: pressed ? 0.78 : disabled ? 0.55 : 1,
+          transform: [{ translateY: pressed ? 2 : 0 }],
         },
       ]}
     >
@@ -249,7 +250,16 @@ function ResultPanel({
            <View style={styles.resultStat}><Text style={[styles.resultValue, { color: colors.accent }]}>{isTraining ? 'IA' : result.match_id ? result.match_id.slice(0, 8).toUpperCase() : '—'}</Text><Text style={[styles.resultLabel, { color: colors.mutedForeground }]}>{isTraining ? 'MODO' : 'MATCH'}</Text></View>
         </View>
       ) : null}
-      <Pressable testID="battle-close-result" accessibilityRole="button" accessibilityLabel="Volver a la Arena" onPress={onDismiss} style={[styles.closeResult, { borderColor: colors.border }]}>
+      <Pressable
+        testID="battle-close-result"
+        accessibilityRole="button"
+        accessibilityLabel="Volver a la Arena"
+        onPress={onDismiss}
+        style={({ pressed }) => [
+          styles.closeResult,
+          { borderColor: colors.border, opacity: pressed ? 0.78 : 1, transform: [{ translateY: pressed ? 2 : 0 }] },
+        ]}
+      >
         <Text style={[styles.closeResultText, { color: colors.foreground }]}>VOLVER A LA ARENA</Text>
       </Pressable>
     </View>
