@@ -443,7 +443,7 @@ export default function BattleScreen() {
   };
 
   return (
-    <ScreenShell surface="pvp">
+    <ScreenShell surface="pvp" sceneMode="hero">
       <ScrollView
       testID="battle-screen"
       style={{ backgroundColor: 'transparent' }}

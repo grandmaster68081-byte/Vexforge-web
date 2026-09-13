@@ -1,3 +1,12 @@
+## 2026-09-13 — VE-MOB-3 — SUPERFICIES ANDROID PROGRAMÁTICAS SIN SKINS / IMPLEMENTED_UNVERIFIED
+
+- Se desmontaron las imágenes de fondo de las cinco superficies activas indicadas por el operador: Auth ya estaba programática; Battle quedó sin escena global; Cartas, Mazos y Perfil dejaron de renderizar sus escenas de referencia.
+- Cartas conserva catálogo real, búsqueda, filtros, rareza, facción, orden, paginación, detalle, Fusión, Logros, navegación y estados de sincronización. Mazos conserva carga, límites, validación, guardado, edición, detalle, búsqueda, filtros, navegación y entrada a Arena. Perfil conserva identidad, rango, estadísticas, progresión, logros, historial, ranking, cuenta, cierre de sesión, navegación y pull-to-refresh.
+- Se añadieron superficies visibles programáticas para que los datos reales no queden ocultos bajo una composición artística. No se modificaron Supabase, RLS, RPCs, economía, combate, contratos ni assets canónicos de cartas.
+- Las guardas móviles actualizadas pasan: Auth 14/14, Battle 21/21, Cartas 11/11, Mazos 22/22 y Perfil 21/21. La instalación local de mobile queda limitada por el firewall al resolver `npm-package-arg@11.0.3`; el workflow oficial instala desde cero.
+- Estado honesto: `IMPLEMENTED_UNVERIFIED`; falta publicar este bloque en `main`, completar el workflow Android y confirmar el release `app-release.apk`.
+- Siguiente bloque: ejecutar QA visual/táctil sobre la APK publicada y continuar Home sólo con cambios que respeten `vexforge_home_world_system_protocol_v3`.
+
 ## 2026-09-13 — VE-MOB-3-BATTLE — LOBBY PROGRAMÁTICO SIN SKIN / IMPLEMENTED_UNVERIFIED
 
 - Se desmontó exclusivamente la imagen `battle-reference-scene.png` de `mobile/app/(tabs)/battle.tsx`; el lobby ahora entra directamente en la interfaz programática real con rango, formación, estado de Arena, búsqueda de rivales, entrenamiento IA, confirmación y estados vacío/error.

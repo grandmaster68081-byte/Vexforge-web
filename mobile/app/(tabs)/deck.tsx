@@ -35,7 +35,6 @@ const MAX_LEGENDARY = 3;
 const FACTIONS = ['Guerrero', 'Mago', 'Paladín', 'Pícaro'] as const;
 type Faction = (typeof FACTIONS)[number];
 type SortMode = 'recent' | 'name' | 'power';
-const DECK_REFERENCE = require('@/assets/images/deck-forge-scene.jpg');
 
 function rarityColor(rarity: string, colors: ReturnType<typeof useColors>) {
   return {
@@ -409,13 +408,30 @@ export default function DeckScreen() {
         onLayout={onReferenceRootLayout}
         style={[styles.referenceRoot, { marginBottom: -insets.bottom, backgroundColor: colors.ink }]}
       >
-        <View style={[styles.referenceScene, { width: frameWidth, height: canvasHeight, marginTop: insets.top, alignSelf: 'center', backgroundColor: colors.ink }]}>
-        <Image
-          source={DECK_REFERENCE}
-          style={styles.referenceImage}
-          resizeMode="contain"
-          accessibilityLabel="Composición oficial de Mazos VEXFORGE"
-        />
+        <View style={[styles.referenceScene, { width: frameWidth, height: canvasHeight, marginTop: insets.top, alignSelf: 'center', backgroundColor: colors.background }]}>
+        <View testID="deck-programmatic-surface" style={[styles.programmaticSurface, { backgroundColor: colors.background }]}>
+          <View style={styles.programmaticHeading}>
+            <View>
+              <Text style={[styles.programmaticEyebrow, { color: colors.accent }]}>FORJA DE MAZOS</Text>
+              <Text style={[styles.programmaticTitle, { color: colors.foreground }]}>Tu formación oficial</Text>
+              <Text style={[styles.programmaticCopy, { color: colors.mutedForeground }]}>Construye una estrategia real con las cartas sincronizadas desde tu colección.</Text>
+            </View>
+            <Pressable testID="deck-refresh-visible" accessibilityRole="button" accessibilityLabel="Actualizar mazos" onPress={onRefresh} style={[styles.programmaticRefresh, { borderColor: colors.border }]}>
+              <Feather name="refresh-cw" size={16} color={colors.accent} />
+            </Pressable>
+          </View>
+          <View style={styles.programmaticDeckRow}>
+            <DeckPreviewCard slot={selectedPreview ?? undefined} summary={savedSummary} colors={colors} width={Math.max(132, frameWidth * 0.43)} active={hasSavedDeck} onPress={hasSavedDeck ? () => setEditing(true) : handleCreate} />
+            <View style={styles.programmaticStats}>
+              <Text style={[styles.programmaticStatValue, { color: colors.foreground }]}>{savedSummary.cardCount}</Text>
+              <Text style={[styles.programmaticStatLabel, { color: colors.mutedForeground }]}>CARTAS</Text>
+              <Text style={[styles.programmaticStatValue, { color: colors.foreground }]}>{savedSummary.power}</Text>
+              <Text style={[styles.programmaticStatLabel, { color: colors.mutedForeground }]}>PODER</Text>
+              <Text style={[styles.programmaticStatValue, { color: factionColor(savedSummary.primaryFaction ?? '', colors) }]}>{savedSummary.factionLabel}</Text>
+              <Text style={[styles.programmaticStatLabel, { color: colors.mutedForeground }]}>FACCIONES</Text>
+            </View>
+          </View>
+        </View>
         <View pointerEvents="box-none" style={StyleSheet.absoluteFillObject}>
           {hasSavedDeck ? (
             <View pointerEvents="none" style={[styles.deckCounter, { top: canvasHeight * 0.205, right: frameWidth * 0.115 }]}>
@@ -529,6 +545,16 @@ const styles = StyleSheet.create({
   referenceRoot: { flex: 1, width: '100%', overflow: 'hidden' },
   referenceScene: { overflow: 'hidden' },
   referenceImage: { width: '100%', height: '100%' },
+  programmaticSurface: { position: 'absolute', top: 18, left: 18, right: 18, padding: 16, borderWidth: 1, borderColor: 'rgba(255,255,255,0.08)', borderRadius: 18, zIndex: 2 },
+  programmaticHeading: { flexDirection: 'row', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12 },
+  programmaticEyebrow: { fontSize: 9, fontWeight: '900', letterSpacing: 1.3 },
+  programmaticTitle: { fontSize: 21, fontWeight: '900', marginTop: 5 },
+  programmaticCopy: { maxWidth: 240, fontSize: 11, lineHeight: 16, marginTop: 5 },
+  programmaticRefresh: { width: 38, height: 38, borderWidth: 1, borderRadius: 11, alignItems: 'center', justifyContent: 'center' },
+  programmaticDeckRow: { flexDirection: 'row', alignItems: 'stretch', gap: 12, marginTop: 18 },
+  programmaticStats: { flex: 1, justifyContent: 'center', gap: 2 },
+  programmaticStatValue: { fontSize: 16, fontWeight: '900', marginTop: 7 },
+  programmaticStatLabel: { fontSize: 8, fontWeight: '800', letterSpacing: 0.8 },
   deckCounter: { position: 'absolute', alignItems: 'flex-end', zIndex: 4 },
   deckCounterValue: { fontSize: 13, fontWeight: '900', letterSpacing: 0.7 },
   deckCounterLabel: { fontSize: 6, fontWeight: '800', letterSpacing: 0.7, marginTop: 2 },

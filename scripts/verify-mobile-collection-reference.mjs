@@ -40,8 +40,8 @@ const dimensions = readJpegDimensions(asset);
 const checks = [
   ['archive asset is JPEG', asset.subarray(0, 2).toString('hex') === 'ffd8'],
   ['archive is 1136x2048 RGB', dimensions?.width === 1136 && dimensions.height === 2048 && dimensions.components === 3],
-  ['collection uses the archive asset', collection.includes("collection-archive-scene.jpg")],
-  ['reference uses a measured canonical frame', collection.includes('useMeasuredCanonicalFrame') && collection.includes('onReferenceRootLayout') && collection.includes('onLayout={onReferenceRootLayout}') && collection.includes('referenceScene') && collection.includes('referenceImage') && collection.includes("width: '100%'") && collection.includes("height: '100%'") && collection.includes('resizeMode="cover"') && collection.includes('top: canvasHeight * 0.392')],
+  ['collection is a programmatic surface without an archive skin', collection.includes('testID="collection-refresh"') && !collection.includes("collection-archive-scene.jpg") && !collection.includes('COLLECTION_REFERENCE')],
+  ['collection keeps the measured programmatic frame', collection.includes('useMeasuredCanonicalFrame') && collection.includes('onReferenceRootLayout') && collection.includes('onLayout={onReferenceRootLayout}') && collection.includes('referenceScene') && collection.includes('top: canvasHeight * 0.392')],
   ['cards use the four-column reference grid', collection.includes("width: '22%'") && collection.includes("justifyContent: 'space-between'")],
   ['home connector uses the canonical root route', collection.includes("navigateFromReference('/')") && !collection.includes("navigateFromReference('/index')")],
   ['catalog exposes the real creation date', supabase.includes('created_at%2Cfaction')],

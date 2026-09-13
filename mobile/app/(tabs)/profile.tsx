@@ -2,7 +2,6 @@ import { useCallback, useEffect, useMemo, useState, type ReactNode } from 'react
 import {
   Alert,
   ActivityIndicator,
-  Image,
   Modal,
   Pressable,
   RefreshControl,
@@ -10,14 +9,12 @@ import {
   StyleSheet,
   Text,
   View,
-  useWindowDimensions,
 } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@/components/ForgeIcon';
 import { ScreenShell } from '@/components/ScreenShell';
 import { DomainHeader } from '@/components/DomainHeader';
-import { useMeasuredCanonicalFrame } from '@/components/CanonicalFrame';
 import { useColors } from '@/hooks/useColors';
 import { useGame } from '@/context/GameContext';
 import {
@@ -30,7 +27,6 @@ import {
 } from '@/lib/supabase';
 import { typography } from '@/constants/typography';
 
-const PROFILE_REFERENCE = require('../../assets/images/profile-reference-scene.png');
 type Panel = 'stats' | 'achievements' | 'titles' | 'history' | 'ranking' | 'season' | 'progress' | 'account' | null;
 type ProfileAction = 'collection' | 'owned' | 'fusion' | 'achievements' | 'profile' | 'meta' | 'deck' | 'missions' | 'social' | 'home' | 'battle' | 'stats' | 'titles' | 'history' | 'ranking' | 'season' | 'progress';
 
@@ -209,7 +205,6 @@ export default function ProfileScreen() {
   const colors = useColors();
   const insets = useSafeAreaInsets();
   const router = useRouter();
-  const { width: viewportWidth, height: viewportHeight } = useWindowDimensions();
   const { section: requestedSection } = useLocalSearchParams<{ section?: string }>();
   const { session, player, progress, wallet, stats, collection, syncState, syncError, signOut } = useGame();
   const [rank, setRank] = useState<PlayerRank | null>(null);
@@ -219,20 +214,6 @@ export default function ProfileScreen() {
   const [loading, setLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const [detailsError, setDetailsError] = useState<string | null>(null);
-  // Keep artwork, data overlays, and percentage-based hotspots on the same
-  // proportional 1080×2340 frame. Extra viewport space becomes letterbox
-  // space instead of stretching the authored composition.
-  const {
-    width: frameWidth,
-    height: canvasHeight,
-    scale: frameScale,
-    onLayout: onReferenceRootLayout,
-  } = useMeasuredCanonicalFrame(
-    viewportWidth,
-    viewportHeight,
-    insets.top,
-    insets.bottom,
-  );
 
   const loadDetails = useCallback(async () => {
     if (!session || !player?.id) return;
@@ -301,6 +282,17 @@ export default function ProfileScreen() {
     if (kind === 'profile') return setPanel('account');
   };
 
+  const quickActions: Array<{ id: string; label: string; icon: string; action: ProfileAction }> = [
+    { id: 'stats', label: 'Estadísticas', icon: 'stats-chart', action: 'stats' },
+    { id: 'achievements', label: 'Logros', icon: 'trophy-outline', action: 'achievements' },
+    { id: 'titles', label: 'Títulos', icon: 'crown', action: 'titles' },
+    { id: 'history', label: 'Historial', icon: 'time', action: 'history' },
+    { id: 'ranking', label: 'Ranking', icon: 'shield-outline', action: 'ranking' },
+    { id: 'deck', label: 'Mazos', icon: 'layers-outline', action: 'deck' },
+    { id: 'cards', label: 'Cartas', icon: 'cards', action: 'owned' },
+    { id: 'social', label: 'Forjadores', icon: 'people-outline', action: 'social' },
+  ];
+
   if (!session || !player) {
     return <ScreenShell surface="profile" sceneMode="hero"><View testID="profile-loading" style={styles.loadingScreen}><ActivityIndicator color={colors.accent} /><Text style={[styles.loadingText, { color: colors.foreground }]}>CARGANDO PERFIL DEL NEXUS</Text></View></ScreenShell>;
   }
@@ -310,60 +302,85 @@ export default function ProfileScreen() {
       <View pointerEvents="none" style={{ position: 'absolute', left: 18, right: 18, top: insets.top + 14, zIndex: 5 }}>
         <DomainHeader domain="legado" />
       </View>
-      <View
-        onLayout={onReferenceRootLayout}
-        style={[styles.referenceRoot, { marginBottom: -insets.bottom }]}
+      <ScrollView
+        testID="profile-screen"
+        style={styles.profileScroll}
+        contentContainerStyle={[styles.programmaticProfileContent, { paddingTop: insets.top + 66, paddingBottom: insets.bottom + 28 }]}
+        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={() => { void handleRefresh(); }} tintColor={colors.accent} />}
+        showsVerticalScrollIndicator={false}
       >
-        <ScrollView
-          testID="profile-screen"
-          style={styles.profileScroll}
-          contentContainerStyle={[styles.profileScrollContent, { minHeight: canvasHeight + insets.top, paddingTop: 0, paddingBottom: 0 }]}
-          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={() => { void handleRefresh(); }} tintColor={colors.accent} />}
-          showsVerticalScrollIndicator={false}
-        >
-          <View testID="profile-reference-scene" style={[styles.referenceScene, { width: frameWidth, height: canvasHeight, marginTop: insets.top, alignSelf: 'center' }]}>
-              <Image source={PROFILE_REFERENCE} style={styles.referenceImage} resizeMode="cover" accessibilityLabel="Composición oficial de Perfil VEXFORGE" accessibilityIgnoresInvertColors />
-              <View pointerEvents="none" style={[styles.identityMask, { backgroundColor: `${colors.ink}D4`, borderRadius: 8 * frameScale }]} />
-              <View pointerEvents="none" style={styles.dataLayer}>
-                <DataText style={[styles.displayName, { fontSize: 17 * frameScale }]}>{displayName.toUpperCase()}</DataText>
-                <DataText style={[styles.handle, { fontSize: 9 * frameScale }]}>{handle}</DataText>
-                <DataText style={[styles.status, { fontSize: 9 * frameScale }]}>●  {syncState === 'connected' ? 'En línea' : 'Sin conexión'}</DataText>
-                <DataText style={[styles.rank, { fontSize: 9 * frameScale }]}>{currentRank}</DataText>
-                <DataText style={[styles.memberSince, { fontSize: 7 * frameScale }]}>{`DESDE ${formatDate(player.created_at)}`}</DataText>
-                <DataText style={[styles.statOne, { fontSize: 17 * frameScale }]}>{statValues[0]}</DataText>
-                <DataText style={[styles.statTwo, { fontSize: 17 * frameScale }]}>{statValues[1]}</DataText>
-                <DataText style={[styles.statThree, { fontSize: 17 * frameScale }]}>{statValues[2]}</DataText>
-                <DataText style={[styles.statFour, { fontSize: 17 * frameScale }]}>{statValues[3]}</DataText>
-                <DataText style={[styles.xpValue, { fontSize: 8 * frameScale }]}>{number(progress?.xp)} / {number(progress?.xp_to_next)} XP</DataText>
-                <View style={[styles.xpFill, { width: `${xpPercent}%`, height: 8 * frameScale, borderRadius: 8 * frameScale, backgroundColor: colors.accent }]} />
-                <DataText style={[styles.collectionValue, { fontSize: 10 * frameScale }]}>{collection.length.toLocaleString('es-ES')} CARTAS</DataText>
-                <DataText style={[styles.progressLevel, { fontSize: 8 * frameScale }]}>Nv. {progress?.level ?? '—'}</DataText>
-              </View>
-              <View style={styles.hotspotLayer}>
-                {PROFILE_HOTSPOTS.map((hotspot) => (
-                  <Pressable
-                    key={hotspot.id}
-                    testID={`profile-reference-${hotspot.id}`}
-                    accessibilityRole="button"
-                    accessibilityLabel={hotspot.label}
-                    accessibilityHint="Toca dos veces para abrir este flujo."
-                    onPress={() => action(hotspot.action)}
-                    style={({ pressed }) => [styles.hotspot, { left: hotspot.left, top: hotspot.top, width: hotspot.width, height: hotspot.height, opacity: pressed ? 0.7 : 1 }]}
-                  />
-                ))}
-              </View>
+        <View testID="profile-reference-scene" style={[styles.programmaticProfileScene, { backgroundColor: colors.background, borderColor: colors.border }]}>
+          <View style={[styles.identityCard, { backgroundColor: colors.panel, borderColor: `${colors.accent}66` }]}>
+            <View style={[styles.avatar, { backgroundColor: `${colors.accent}18`, borderColor: colors.accent }]}>
+              <Text style={[styles.avatarText, { color: colors.accent }]}>{displayName.slice(0, 2).toUpperCase()}</Text>
+            </View>
+            <View style={styles.identityCopy}>
+              <Text style={[styles.identityEyebrow, { color: colors.accent }]}>REGISTRO DEL FORJADOR</Text>
+              <Text style={[styles.identityName, { color: colors.foreground }]}>{displayName}</Text>
+              <Text style={[styles.identityMeta, { color: colors.mutedForeground }]}>{handle} · {email}</Text>
+              <Text style={[styles.identityStatus, { color: syncState === 'connected' ? colors.success : colors.danger }]}>● {syncState === 'connected' ? 'En línea' : 'Sin conexión'} · {currentRank}</Text>
+            </View>
+            <Pressable testID="profile-edit" accessibilityRole="button" accessibilityLabel="Editar perfil" onPress={() => action('meta')} style={[styles.identityAction, { borderColor: colors.border }]}>
+              <Ionicons name="create-outline" size={17} color={colors.accent} />
+            </Pressable>
           </View>
-        </ScrollView>
+          <View style={styles.profileStatsGrid}>
+            {[
+              ['VICTORIAS', statValues[0], 'trophy-outline'],
+              ['DERROTAS', statValues[1], 'close-circle-outline'],
+              ['RACHA', statValues[2], 'flame'],
+              ['ELO', statValues[3], 'shield-outline'],
+            ].map(([label, value, icon]) => (
+              <View key={label} style={[styles.profileStat, { backgroundColor: colors.panel, borderColor: colors.border }]}>
+                <Ionicons name={icon} size={16} color={colors.accent} />
+                <Text style={[styles.profileStatValue, { color: colors.foreground }]}>{value}</Text>
+                <Text style={[styles.profileStatLabel, { color: colors.mutedForeground }]}>{label}</Text>
+              </View>
+            ))}
+          </View>
+          <View style={[styles.progressCard, { backgroundColor: colors.panel, borderColor: colors.border }]}>
+            <View style={styles.progressHeader}>
+              <View>
+                <Text style={[styles.progressEyebrow, { color: colors.accent }]}>PROGRESO DEL NEXUS</Text>
+                <Text style={[styles.progressTitle, { color: colors.foreground }]}>Nivel {progress?.level ?? '—'}</Text>
+              </View>
+              <Text style={[styles.progressValue, { color: colors.foreground }]}>{number(progress?.xp)} / {number(progress?.xp_to_next)} XP</Text>
+            </View>
+            <View style={[styles.progressTrack, { backgroundColor: colors.muted }]}>
+              <View style={[styles.progressFill, { width: `${xpPercent}%`, backgroundColor: colors.accent }]} />
+            </View>
+            <View style={styles.progressMeta}>
+              <Text style={[styles.progressMetaText, { color: colors.mutedForeground }]}>{collection.length} cartas registradas</Text>
+              <Text style={[styles.progressMetaText, { color: colors.mutedForeground }]}>Desde {formatDate(player.created_at)}</Text>
+            </View>
+          </View>
+          <Text style={[styles.actionsTitle, { color: colors.mutedForeground }]}>ACCESOS DEL PERFIL</Text>
+          <View style={styles.actionGrid}>
+            {quickActions.map((item) => (
+              <Pressable
+                key={item.id}
+                testID={`profile-reference-${item.id}`}
+                accessibilityRole="button"
+                accessibilityLabel={item.label}
+                onPress={() => action(item.action)}
+                style={({ pressed }) => [styles.actionCard, { backgroundColor: colors.panel, borderColor: colors.border, opacity: pressed ? 0.72 : 1 }]}
+              >
+                <Ionicons name={item.icon} size={18} color={colors.accent} />
+                <Text style={[styles.actionLabel, { color: colors.foreground }]}>{item.label}</Text>
+              </Pressable>
+            ))}
+          </View>
+        </View>
         {syncError || detailsError ? (
           <View testID="profile-sync-error" accessibilityRole="alert" style={[styles.errorNotice, { backgroundColor: `${colors.danger}E8`, borderColor: colors.danger }]}>
             <Ionicons name="alert-circle-outline" size={16} color={colors.foreground} />
             <Text style={[styles.errorNoticeText, { color: colors.foreground }]}>{syncError ?? detailsError}</Text>
           </View>
         ) : null}
-        <Modal visible={panel !== null} animationType="slide" transparent onRequestClose={() => setPanel(null)}>
-          {panel ? <View style={styles.modalBackdrop}><PanelContent panel={panel} colors={colors} playerId={player.id} playerName={displayName} playerEmail={email} rank={rank} stats={stats} progress={progress} wallet={wallet} achievements={achievements} social={social} collectionCount={collection.length} onClose={() => setPanel(null)} onSignOut={async () => { await signOut(); setPanel(null); }} /></View> : null}
-        </Modal>
-      </View>
+      </ScrollView>
+      <Modal visible={panel !== null} animationType="slide" transparent onRequestClose={() => setPanel(null)}>
+        {panel ? <View style={styles.modalBackdrop}><PanelContent panel={panel} colors={colors} playerId={player.id} playerName={displayName} playerEmail={email} rank={rank} stats={stats} progress={progress} wallet={wallet} achievements={achievements} social={social} collectionCount={collection.length} onClose={() => setPanel(null)} onSignOut={async () => { await signOut(); setPanel(null); }} /></View> : null}
+      </Modal>
     </ScreenShell>
   );
 }
@@ -374,6 +391,34 @@ const styles = StyleSheet.create({
   profileScrollContent: { flexGrow: 1 },
   referenceScene: { overflow: 'hidden' },
   referenceImage: { width: '100%', height: '100%' },
+  programmaticProfileContent: { flexGrow: 1, paddingHorizontal: 18, gap: 14 },
+  programmaticProfileScene: { borderWidth: 1, borderRadius: 20, padding: 14, gap: 14 },
+  identityCard: { borderWidth: 1, borderRadius: 16, padding: 14, flexDirection: 'row', alignItems: 'center', gap: 11 },
+  avatar: { width: 54, height: 54, borderWidth: 1, borderRadius: 17, alignItems: 'center', justifyContent: 'center' },
+  avatarText: { fontFamily: typography.display, fontSize: 20, fontWeight: '900' },
+  identityCopy: { flex: 1, minWidth: 0 },
+  identityEyebrow: { fontFamily: typography.bodyBold, fontSize: 8, letterSpacing: 1.1 },
+  identityName: { fontFamily: typography.display, fontSize: 20, marginTop: 3 },
+  identityMeta: { fontFamily: typography.body, fontSize: 10, marginTop: 3 },
+  identityStatus: { fontFamily: typography.bodyBold, fontSize: 9, marginTop: 5 },
+  identityAction: { width: 36, height: 36, borderWidth: 1, borderRadius: 10, alignItems: 'center', justifyContent: 'center' },
+  profileStatsGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
+  profileStat: { width: '48%', minHeight: 82, borderWidth: 1, borderRadius: 13, padding: 10, justifyContent: 'center', gap: 4 },
+  profileStatValue: { fontFamily: typography.display, fontSize: 20 },
+  profileStatLabel: { fontFamily: typography.bodyBold, fontSize: 8, letterSpacing: 0.8 },
+  progressCard: { borderWidth: 1, borderRadius: 14, padding: 13 },
+  progressHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', gap: 8 },
+  progressEyebrow: { fontFamily: typography.bodyBold, fontSize: 8, letterSpacing: 1 },
+  progressTitle: { fontFamily: typography.display, fontSize: 18, marginTop: 4 },
+  progressValue: { fontFamily: typography.bodyBold, fontSize: 10, marginTop: 2 },
+  progressTrack: { height: 8, borderRadius: 8, overflow: 'hidden', marginTop: 13 },
+  progressFill: { height: '100%', borderRadius: 8 },
+  progressMeta: { flexDirection: 'row', justifyContent: 'space-between', marginTop: 7, gap: 8 },
+  progressMetaText: { fontFamily: typography.body, fontSize: 9 },
+  actionsTitle: { fontFamily: typography.bodyBold, fontSize: 9, letterSpacing: 1.2, marginTop: 2 },
+  actionGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
+  actionCard: { width: '48%', minHeight: 58, borderWidth: 1, borderRadius: 12, paddingHorizontal: 11, flexDirection: 'row', alignItems: 'center', gap: 9 },
+  actionLabel: { fontFamily: typography.bodyBold, fontSize: 11 },
   dataLayer: { ...StyleSheet.absoluteFillObject },
   hotspotLayer: { ...StyleSheet.absoluteFillObject },
   hotspot: { position: 'absolute' },

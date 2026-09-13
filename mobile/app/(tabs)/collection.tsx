@@ -29,9 +29,6 @@ import { getCardPilotIdentity } from '@/constants/cardPilot';
 const RARITIES = ['Common', 'Uncommon', 'Rare', 'Epic', 'Legendary', 'Mythic'] as const;
 const FACTIONS = ['Guerrero', 'Mago', 'Paladín', 'Pícaro'] as const;
 type Rarity = (typeof RARITIES)[number];
-// The archive artwork keeps the existing 1080×2340 canonical frame. Its
-// authored ratio is 1136×2048, so cover preserves the art without stretching.
-const COLLECTION_REFERENCE = require('@/assets/images/collection-archive-scene.jpg');
 
 function rarityLabel(rarity: string | null | undefined) {
   return {
@@ -467,9 +464,6 @@ export default function CollectionScreen() {
   const [scope, setScope] = useState<'all' | 'owned'>(scopeParam === 'owned' ? 'owned' : 'all');
   const [selected, setSelected] = useState<PublicCard | null>(null);
   const [pageIndex, setPageIndex] = useState(0);
-  // The reference artwork is authored for a 1080×2340 Android viewport.
-  // Insets only reserve the system-bar space; artwork, cards, and touch
-  // overlays all stay inside the same aspect-ratio-preserving frame.
   const pagerRef = useRef<FlatList<PublicCard[]>>(null);
   const ownedById = useMemo(() => new Map(collection.map((card) => [card.card_id, card])), [collection]);
   const completion = cardsTotal > 0 ? Math.round((ownedById.size / cardsTotal) * 100) : 0;
@@ -554,14 +548,8 @@ export default function CollectionScreen() {
         onLayout={onReferenceRootLayout}
         style={[styles.referenceRoot, { marginBottom: -insets.bottom }]}
       >
-        <View style={[styles.referenceScene, { width: frameWidth, height: canvasHeight, marginTop: insets.top, alignSelf: 'center' }]}>
-        <Image
-          source={COLLECTION_REFERENCE}
-          style={styles.referenceImage}
-          resizeMode="cover"
-          accessibilityLabel="Composición oficial de la colección VEXFORGE"
-        />
-        <View pointerEvents="none" style={[styles.referenceShade, { backgroundColor: `${colors.ink}20` }]} />
+        <View style={[styles.referenceScene, { width: frameWidth, height: canvasHeight, marginTop: insets.top, alignSelf: 'center', backgroundColor: colors.background }]}>
+        <View pointerEvents="none" style={[styles.referenceShade, { backgroundColor: `${colors.background}FF` }]} />
 
            <View pointerEvents="box-none" style={StyleSheet.absoluteFillObject}>
            <View style={[styles.referenceCounter, { top: canvasHeight * 0.185, right: frameWidth * 0.115 }]}>

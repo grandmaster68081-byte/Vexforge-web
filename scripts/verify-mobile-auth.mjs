@@ -19,7 +19,7 @@ const authAssetIsTargetCanvas =
 
 const assertions = [
   ["auth screen exists", contents.auth.includes("export default function AuthScreen")],
-  ["auth uses the shared canonical reference canvas", contents.auth.includes("getCanonicalFrameMetrics") && contents.auth.includes("width: frameWidth") && contents.auth.includes("height: sceneHeight") && contents.auth.includes("marginTop: insets.top") && contents.auth.includes('resizeMode="cover"') && authAssetIsTargetCanvas],
+  ["auth is a programmatic surface without a background skin", contents.auth.includes('testID="auth-reference-scene"') && !contents.auth.includes("auth-reference-scene.png") && !contents.auth.includes("ImageBackground")],
   ["sign-in form uses context action", contents.auth.includes("await signIn(normalizedEmail, password, rememberSession)")],
   ["sign-up form uses context action", contents.auth.includes("const createdSession = await signUp(normalizedEmail, password)")],
   ["tabs are guarded by session", contents.tabs.includes("if (!session) return <Redirect href=\"/auth\" />")],
