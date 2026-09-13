@@ -2793,6 +2793,15 @@
 - Siguiente microbloque: continuar sólo con una mejora concreta de continuidad, interacción o estado del Home.
 
 ---
+## 2026-09-13 — VE-MOB-3-HOME — HONEST HERO SIGNAL COPY / IMPLEMENTED_UNVERIFIED
+
+- Se cerró un microbloque de fidelidad de datos exclusivamente en `mobile/app/(tabs)/index.tsx`: el eyebrow y la descripción del hero ya no afirman temporada o frente activo cuando esas señales reales no existen.
+- Con temporada y evento publicados se conserva el lenguaje de frente vivo; sin ellos, el hero comunica `TEMPORADA EN ESPERA`, `FRENTE EN ESPERA` y que el Nexus espera una señal publicada.
+- Se conservaron headline, navegación, artwork, datos de Supabase/GameContext, `testID`, accesibilidad, haptics, `reduced-motion` y estados existentes. No se inventan eventos ni métricas.
+- No se inicia workflow, no se compila APK ni se genera release por la instrucción vigente. Estado honesto: `IMPLEMENTED_UNVERIFIED`.
+- Siguiente microbloque: continuar sólo con otra mejora concreta de fidelidad, continuidad o interacción del Home.
+
+---
 ## 2026-09-13 — VE-MOB-3-HOME — FRONT OBJECT PRESS DEPTH / IMPLEMENTED_UNVERIFIED
 
 - Se cerró un microbloque de FASE 11 exclusivamente en `mobile/app/(tabs)/index.tsx`: los umbrales del hero, el frente/evento y la carta de resonancia ahora comparten la respuesta táctil de profundidad del resto de objetos del Home.

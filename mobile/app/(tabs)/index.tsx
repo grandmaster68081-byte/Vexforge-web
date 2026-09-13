@@ -725,13 +725,13 @@ export default function ForgeScreen() {
                   <Text style={[styles.syncText, { color: connectionColor }]}>{connectionLabel}</Text>
                   <Text style={[styles.syncMeta, { color: `${colors.foreground}B0` }]}>{season?.name ?? 'SEASON 01 // FORGE OF LEGENDS'}</Text>
                 </View>
-                <View style={styles.heroEyebrowRow}>
-                  <Text style={[styles.heroEyebrow, { color: colors.accent }]}>TEMPORADA ACTIVA</Text>
+                 <View style={styles.heroEyebrowRow}>
+                   <Text style={[styles.heroEyebrow, { color: colors.accent }]}>{season ? 'TEMPORADA ACTIVA' : 'TEMPORADA EN ESPERA'}</Text>
                   <View style={[styles.heroEyebrowRule, { backgroundColor: `${colors.accent}72` }]} />
-                  <Text style={[styles.heroEyebrowMeta, { color: `${colors.foreground}B0` }]}>FRENTE VIVO</Text>
+                   <Text style={[styles.heroEyebrowMeta, { color: `${colors.foreground}B0` }]}>{activeEvent ? 'FRENTE VIVO' : 'FRENTE EN ESPERA'}</Text>
                 </View>
                 <Text style={[styles.heroHeadline, { color: colors.foreground, textShadowColor: `${colors.ink}B8` }]}>CRUZA{'\n'}EL UMBRAL</Text>
-                <Text style={[styles.heroDescription, { color: `${colors.foreground}D0` }]}>Tu frente está vivo. Elige un dominio y forja la próxima victoria.</Text>
+                 <Text style={[styles.heroDescription, { color: `${colors.foreground}D0` }]}>{activeEvent ? 'Tu frente está vivo. Elige un dominio y forja la próxima victoria.' : 'El Nexus espera un frente publicado. Elige un dominio y lee sus señales.'}</Text>
                 <View style={styles.heroActions}>
                   <ThresholdButton label="ENTRAR A LA ARENA" icon="target" onPress={() => navigate('/battle')} testID="home-battle" />
                   <ThresholdButton label="CONTINUAR" icon="arrow-right" onPress={() => navigate('/tutorial')} testID="home-tutorial" secondary />
