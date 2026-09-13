@@ -806,11 +806,12 @@ export default function ForgeScreen() {
             </Animated.View>
             <Pressable
               accessibilityRole="button"
-              accessibilityLabel={featuredCanExpand ? (featuredExpanded ? 'Ocultar lore de la carta destacada' : 'Inspeccionar lore de la carta destacada') : 'Carta destacada sin lore sincronizado'}
-              accessibilityState={{ disabled: !featuredCanExpand, expanded: featuredCanExpand && featuredExpanded }}
+              accessibilityLabel={activeCard ? 'Abrir carta destacada en Archivo' : 'Carta destacada no sincronizada'}
+              accessibilityState={{ disabled: !activeCard }}
               testID="home-featured-card"
-              onPress={openFeatured}
-               style={({ pressed }) => [styles.heroCardAnchor, { opacity: pressed ? 0.78 : 1, transform: [{ translateY: pressed ? 2 : 0 }] }]}
+              disabled={!activeCard}
+              onPress={() => navigate('/collection')}
+              style={({ pressed }) => [styles.heroCardAnchor, { opacity: pressed ? 0.78 : 1, transform: [{ translateY: pressed ? 2 : 0 }] }]}
             >
               <View style={[styles.heroCardFrame, { borderColor: `${colors.rarityLegendary}CC`, backgroundColor: colors.ink }]}>
                  {activeCard?.image_url ? (

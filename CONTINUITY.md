@@ -1,10 +1,15 @@
-## 2026-09-13 — PROTOCOLO HOME V2.1 — ACTIVE / MAIN SYNCHRONIZED
+## 2026-09-13 — VE-MOB-3-HOME — FEATURED CARD ARCHIVE GATE / IMPLEMENTED_UNVERIFIED
 
-- Se leyó mediante la API REST HTTPS de Supabase la fila activa `public.vexforge_official_documents / vexforge_home_world_system_protocol_v3`; la fuente viva confirmó `ACTIVE`, título `VEXFORGE — VISUAL AAA / TIER-1 VERIFICATION PROTOCOL` y versión V2.0 antes de la integración.
-- Se integró el parche `V2.1 — GAME EXPERIENCE ARCHITECTURE + LIVING UI + FUNCTIONAL COMPLETENESS`: PATCH 00 quedó después de la autoridad V2.0 y PATCH 01–47 antes de la matriz de pantallas, conservando las reglas no conflictivas, citas, evidencia e historial V2.0.
-- Se registró el estado obligatorio: `BASELINE RESET = COMPLETE`; `OLD PRIMARY SKINS = REMOVED`; `CURRENT STATE = FUNCTIONAL UI BASELINE / VISUAL RESET`; `NEXT PILOT = HOME`; `PRIMARY VISUAL IDENTITY SOURCE = CANONICAL VEXFORGE CARDS`; `EXTERNAL DECORATIVE IMAGE ASSETS = DISALLOWED BY DEFAULT`.
-- La fila de Supabase quedó actualizada a versión V2.1, conservó `ACTIVE` y fue releída por HTTPS con coincidencia exacta del contenido fusionado. No se modificaron tablas, RPCs, RLS, Auth, Storage, datos de juego ni código Android.
-- El registro se publica en `main` mediante la API REST HTTPS oficial de GitHub. Este cambio es documental: no toca `mobile/**`, no inicia el workflow APK ni crea un release. El siguiente piloto de producto continúa siendo Home y su implementación sigue honestamente `IMPLEMENTED_UNVERIFIED` hasta sus gates Android y QA humana.
+- **TARGET SCREEN:** Home Android (`mobile/app/(tabs)/index.tsx`); **TARGET BLOCK:** carta destacada del hero.
+- **CURRENT BEHAVIOR:** el card superior activaba la expansión del lore en la sección inferior, sin llevar al jugador a una pantalla visible ni al Archivo; la interacción podía parecer inerte porque el resultado quedaba fuera de la ventana actual.
+- **DESIRED VISUAL/UX DELTA:** el card superior ahora funciona como un umbral diegético hacia Archivo (`/collection`) y conserva su `testID`, safe area, feedback de presión y accesibilidad. La inspección del lore permanece separada en `home-featured-card-detail` y sólo existe cuando hay lore real.
+- **DATA SOURCES:** `loadDailyFeaturedCard`, `featuredCards` de `GameContext`, `activeCard` y su `image_url`; no se añaden datos, lore ni rutas nuevas.
+- **CANONICAL ASSETS:** artwork real de `cards.image_url` y registro visual `getCardIdentityVisual`; no se introducen imágenes decorativas externas.
+- **DO-NOT-CHANGE:** Supabase, RLS, RPCs, Auth, economía, combate, GameContext, otras pantallas Android, web congelada y el contrato de la carta inferior.
+- **PERFORMANCE:** cambio estático de interacción; no añade animación, listener, consulta ni dependencia.
+- **ACCEPTANCE TEST:** `home-featured-card` debe anunciar Archivo, quedar deshabilitado sin carta sincronizada y ejecutar la ruta `/collection` cuando existe `activeCard`; `home-featured-card-detail` debe conservar la expansión sólo con lore real.
+- **ROLLBACK POINT:** commit base sincronizado `f86e70d29d1776c5cde8cc73207d8de3dbf17cbc`.
+- Evidencia local pendiente de ejecutar tras el cambio; el estado permanece honestamente `IMPLEMENTED_UNVERIFIED` hasta typecheck, guardas, workflow APK y QA visual/táctil humana.
 
 ## 2026-09-13 — VE-MOB-3 — SUPERFICIES ANDROID PROGRAMÁTICAS SIN SKINS / IMPLEMENTED_UNVERIFIED
 
