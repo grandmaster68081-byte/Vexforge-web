@@ -510,7 +510,17 @@ export default function ForgeScreen() {
             {homeState === 'loading' && !home.stats && !activeCard ? <LoadingTrace /> : null}
 
             <View style={styles.nexusWorldFinal}>
-                <Animated.View entering={reduceMotion ? undefined : FadeInUp.delay(MOTION.micro).duration(MOTION.navigation)} style={styles.signalLedgerFinal}>
+                <Animated.View
+                  entering={reduceMotion ? undefined : FadeInUp.delay(MOTION.micro).duration(MOTION.navigation)}
+                  style={[
+                    styles.signalLedgerFinal,
+                    {
+                      borderBottomColor: `${identityVisual?.accent ?? colors.accent}80`,
+                      borderTopColor: `${identityVisual?.accent ?? colors.accent}80`,
+                    },
+                  ]}
+                  testID="home-forger-ledger"
+                >
                   <View style={styles.signalIdentityFinal}>
                     <View style={[styles.signalCrestFinal, { borderColor: colors.accent }]}>
                       <View style={[styles.signalCrestInnerFinal, { borderColor: colors.accent }]}><Text style={[styles.signalCrestLetterFinal, { color: colors.accent }]}>{playerName.slice(0, 1).toUpperCase()}</Text></View>
@@ -520,6 +530,12 @@ export default function ForgeScreen() {
                       <Text numberOfLines={1} style={[styles.signalPlayerNameFinal, { color: colors.foreground }]}>{playerName}</Text>
                       <Text style={[styles.signalPlayerMetaFinal, { color: colors.mutedForeground }]}>NIVEL {formatNumber(progress?.level)} · {connectionLabel}</Text>
                       <Text style={[styles.signalPlayerMetaFinal, { color: colors.mutedForeground }]}>{formatNumber(playerStats?.pvp_wins)} VICTORIAS · {formatNumber(wallet?.vex_ingame)} VEX</Text>
+                      <View style={styles.identitySourceFinal}>
+                        <View style={[styles.identitySourceMarkFinal, { backgroundColor: identityVisual?.accent ?? colors.accent }]} />
+                        <Text numberOfLines={1} style={[styles.identitySourceTextFinal, { color: identityVisual?.accent ?? colors.accent }]}>
+                          {identityCard ? `${identityCard.code} · ${identityCard.name}` : 'SEÑAL CANÓNICA PENDIENTE'}
+                        </Text>
+                      </View>
                     </View>
                   </View>
                   <View style={styles.signalProgressFinal}>
@@ -866,6 +882,9 @@ const styles = StyleSheet.create({
     signalKickerFinal: { fontFamily: 'Rajdhani_700Bold', fontSize: 8, letterSpacing: 1.1 },
     signalPlayerNameFinal: { fontFamily: 'Cinzel_600SemiBold', fontSize: 14 },
     signalPlayerMetaFinal: { fontFamily: 'Rajdhani_600SemiBold', fontSize: 9, letterSpacing: 0.6 },
+     identitySourceFinal: { alignItems: 'center', flexDirection: 'row', gap: 5, marginTop: 3, minWidth: 0 },
+     identitySourceMarkFinal: { height: 5, transform: [{ rotate: '45deg' }], width: 5 },
+     identitySourceTextFinal: { flex: 1, fontFamily: 'Rajdhani_700Bold', fontSize: 8, letterSpacing: 0.65 },
     signalProgressFinal: { flex: 0.9, gap: 7 },
     signalProgressLineFinal: { flexDirection: 'row', justifyContent: 'space-between' },
     signalProgressValueFinal: { fontFamily: 'Rajdhani_700Bold', fontSize: 9 },
