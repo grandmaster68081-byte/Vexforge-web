@@ -546,7 +546,7 @@ export default function BattleScreen() {
             accessibilityState={{ disabled: searching || battleLoading }}
             disabled={searching || battleLoading}
             onPress={handleFind}
-            style={({ pressed }) => [styles.button, { backgroundColor: colors.primary, opacity: pressed ? 0.78 : searching ? 0.65 : 1 }]}
+            style={({ pressed }) => [styles.button, { backgroundColor: colors.primary, opacity: pressed ? 0.78 : searching ? 0.65 : 1, transform: [{ translateY: pressed && !searching ? 2 : 0 }] }]}
           >
             {searching ? <ActivityIndicator color={colors.primaryForeground} /> : <Feather name="search" size={17} color={colors.primaryForeground} />}
              <Text style={[styles.buttonText, { color: colors.primaryForeground }]}>{searching ? 'BUSCANDO OPONENTES' : 'BUSCAR OPONENTES'}</Text>
@@ -559,7 +559,7 @@ export default function BattleScreen() {
                accessibilityState={{ disabled: formationLoading || formationSlots.length < 3 }}
                disabled={formationLoading || formationSlots.length < 3}
                onPress={handleStartAIBattle}
-               style={({ pressed }) => [styles.trainingButton, { borderColor: colors.accent, opacity: pressed ? 0.75 : formationLoading || formationSlots.length < 3 ? 0.45 : 1 }]}
+               style={({ pressed }) => [styles.trainingButton, { borderColor: colors.accent, opacity: pressed ? 0.75 : formationLoading || formationSlots.length < 3 ? 0.45 : 1, transform: [{ translateY: pressed ? 2 : 0 }] }]}
              >
                <Feather name="spark" size={17} color={colors.accent} />
                <Text style={[styles.buttonText, { color: colors.accent }]}>BATALLA RÁPIDA VS IA</Text>

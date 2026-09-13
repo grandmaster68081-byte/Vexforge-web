@@ -3072,3 +3072,13 @@
 - Evidencia local: `verify:mobile-profile` 21/21, `verify:ui-identity` 0 violaciones, `typecheck` limpio, `git diff --check` limpio.
 - No se inicia workflow, no se compila APK ni se genera release por la instrucción vigente. Estado honesto: `IMPLEMENTED_UNVERIFIED`.
 - Siguiente microbloque: continuar con otra mejora atómica de fidelidad, continuidad o interacción sin rehacer superficies consolidadas.
+
+---
+## 2026-09-13 — VE-MOB-7-BATTLE — ARENA ACTION PRESS DEPTH / IMPLEMENTED_UNVERIFIED
+
+- Se cerró un microbloque de FASE 11 exclusivamente en `mobile/app/(tabs)/battle.tsx`: la búsqueda de oponentes y la batalla rápida contra la IA adoptan la misma respuesta táctil de profundidad que ya tienen la confirmación de desafío, la cancelación y el avance de turno.
+- Al presionar, el objeto desciende dentro de su plano sin alterar estados `disabled`, indicadores de carga, accesibilidad, `testID`, flujo de emparejamiento ni resolución de combate.
+- No se añadieron datos, assets, rutas ni dependencias; no se tocaron backend, RPC, economía, otras pantallas ni la web congelada.
+- Evidencia local: `verify:mobile-battle` 23/23, `verify:ui-identity` 0 violaciones, `verify:motion` OK, `typecheck` limpio, `git diff --check` limpio.
+- No se inicia workflow, no se compila APK ni se genera release por la instrucción vigente. Estado honesto: `IMPLEMENTED_UNVERIFIED`.
+- Deuda vigente sin cerrar: el PvP real sigue bloqueado por el roster vacío (`get_leaderboard` sin rivales) y por `vexforge_battle_resolve` devolviendo `UPDATE requires a WHERE clause`.
