@@ -399,11 +399,17 @@ function ActivitySignal({ item, index, last, onPress }: { item: ActivityItem; in
   );
 }
 
-function RankingSignal({ entry, index }: { entry: NonNullable<HomeStats['top3']>[number]; index: number }) {
+function RankingSignal({ entry, index, onPress }: { entry: NonNullable<HomeStats['top3']>[number]; index: number; onPress: () => void }) {
   const colors = useColors();
   const accent = index === 0 ? colors.accent : colors.mutedForeground;
   return (
-    <View style={[styles.rankingSignal, { borderColor: `${accent}55`, backgroundColor: `${colors.ink}45` }]}>
+    <Pressable
+      accessibilityRole="button"
+      accessibilityLabel={`Abrir mundo. Posición ${entry.rank}, ${entry.display_name}`}
+      testID={`home-ranking-${entry.rank}`}
+      onPress={onPress}
+      style={({ pressed }) => [styles.rankingSignal, { borderColor: `${accent}55`, backgroundColor: `${colors.ink}45`, opacity: pressed ? 0.7 : 1 }]}
+    >
       <View style={[styles.rankingSignalSigil, { borderColor: accent, backgroundColor: `${accent}12` }]}>
         <Text style={[styles.rankingSignalPosition, { color: accent }]}>{String(entry.rank).padStart(2, '0')}</Text>
       </View>
@@ -415,7 +421,7 @@ function RankingSignal({ entry, index }: { entry: NonNullable<HomeStats['top3']>
         <Text style={[styles.rankingSignalScoreValue, { color: accent }]}>{formatNumber(entry.mmr)}</Text>
         <Text style={[styles.rankingSignalScoreLabel, { color: colors.mutedForeground }]}>MMR</Text>
       </View>
-    </View>
+    </Pressable>
   );
 }
 
@@ -957,7 +963,7 @@ export default function ForgeScreen() {
 
                 <View style={styles.rankingDeckFinal}>
                   <SectionMarker eyebrow="CIRCUITO ACTIVO" title="Clasificación del frente" action="ABRIR MUNDO" onAction={() => navigate('/world')} accent={colors.accent} />
-                  <View testID="home-ranking" style={styles.rankingSignals}>{ranking.length > 0 ? ranking.map((entry, index) => <RankingSignal key={entry.rank + '-' + entry.display_name} entry={entry} index={index} />) : <Text style={[styles.emptyBody, { color: colors.mutedForeground }]}>El ranking de la temporada todavía no tiene posiciones publicadas.</Text>}</View>
+                  <View testID="home-ranking" style={styles.rankingSignals}>{ranking.length > 0 ? ranking.map((entry, index) => <RankingSignal key={entry.rank + '-' + entry.display_name} entry={entry} index={index} onPress={() => navigate('/world')} />) : <Text style={[styles.emptyBody, { color: colors.mutedForeground }]}>El ranking de la temporada todavía no tiene posiciones publicadas.</Text>}</View>
                 </View>
               </View>
               </View>
