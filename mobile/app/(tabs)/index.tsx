@@ -306,6 +306,44 @@ function SignalMetric({ label, value, icon, color }: { label: string; value: str
   );
 }
 
+function ContinuumNode({
+  label,
+  value,
+  detail,
+  icon,
+  color,
+  testID,
+  onPress,
+}: {
+  label: string;
+  value: string;
+  detail: string;
+  icon: IconName;
+  color: string;
+  testID: string;
+  onPress: () => void;
+}) {
+  const colors = useColors();
+  return (
+    <Pressable
+      accessibilityRole="button"
+      accessibilityLabel={`${label}: ${value}. ${detail}`}
+      testID={testID}
+      onPress={onPress}
+      style={({ pressed }) => [
+        styles.continuumNode,
+        { borderColor: `${color}60`, backgroundColor: `${colors.ink}66`, opacity: pressed ? 0.7 : 1 },
+      ]}
+    >
+      <SignalMetric label={label} value={value} icon={icon} color={color} />
+      <Text numberOfLines={1} style={[styles.continuumNodeDetail, { color: colors.mutedForeground }]}>
+        {detail}
+      </Text>
+      <View style={[styles.continuumNodeMark, { backgroundColor: color }]} />
+    </Pressable>
+  );
+}
+
 function MissionSignal({ mission, index, onPress }: { mission: HomeMission; index: number; onPress: () => void }) {
   const colors = useColors();
   return (
@@ -854,6 +892,52 @@ export default function ForgeScreen() {
                   </View>
                 </View>
 
+                <Animated.View
+                  entering={reduceMotion ? undefined : FadeInUp.delay(orbitReveal + MOTION.micro)}
+                  style={styles.continuumBridge}
+                  testID="home-continuum-bridge"
+                >
+                  <View style={styles.continuumBridgeHeader}>
+                    <View>
+                      <Text style={[styles.continuumBridgeEyebrow, { color: colors.rarityRare }]}>TRAZA DEL NEXUS</Text>
+                      <Text style={[styles.continuumBridgeTitle, { color: colors.foreground }]}>El frente se mueve</Text>
+                    </View>
+                    <Animated.View style={[styles.continuumBridgeCore, { borderColor: colors.rarityRare }, pulseStyle]}>
+                      <Icon name="resonance" color={colors.rarityRare} size={12} />
+                    </Animated.View>
+                  </View>
+                  <View style={styles.continuumBridgeRail}>
+                    <View style={[styles.continuumBridgeAxis, { backgroundColor: `${colors.rarityRare}4D` }]} />
+                    <ContinuumNode
+                      label="FORJA"
+                      value={`NIVEL ${formatNumber(progress?.level)}`}
+                      detail={wallet ? `${formatNumber(wallet.vex_ingame)} VEX EN RESERVA` : 'REGISTRO EN ESPERA'}
+                      icon="deck"
+                      color={colors.rarityEpic}
+                      testID="home-continuum-forge"
+                      onPress={() => navigate('/deck')}
+                    />
+                    <ContinuumNode
+                      label="RITO"
+                      value={`${formatNumber(home.missions.length)} ACTIVAS`}
+                      detail={home.missions[0]?.name ?? 'SIN FRENTE PUBLICADO'}
+                      icon="missions"
+                      color={colors.success}
+                      testID="home-continuum-missions"
+                      onPress={() => navigate('/missions')}
+                    />
+                    <ContinuumNode
+                      label="PULSO"
+                      value={`${formatNumber(home.activity.length)} SEÑALES`}
+                      detail={ranking[0] ? `#${ranking[0].rank} ${ranking[0].display_name}` : 'CLASIFICACIÓN EN ESPERA'}
+                      icon="radio"
+                      color={colors.rarityRare}
+                      testID="home-continuum-pulse"
+                      onPress={() => navigate('/world')}
+                    />
+                  </View>
+                </Animated.View>
+
                 <View style={styles.signalColumnsFinal}>
                   <View style={styles.signalColumnFinal}>
                     <SectionMarker eyebrow={home.missions.length === 1 ? 'ORDEN ACTIVA' : 'ÓRDENES ACTIVAS'} title="El rito continúa" action="ABRIR" onAction={() => navigate('/missions')} accent={colors.success} />
@@ -1038,6 +1122,16 @@ const styles = StyleSheet.create({
   signalMetricCopy: { gap: 1 },
   signalValue: { fontFamily: 'Cinzel_700Bold', fontSize: 15 },
   signalLabel: { fontFamily: 'Rajdhani_700Bold', fontSize: 8, letterSpacing: 1 },
+  continuumBridge: { borderLeftWidth: 1, marginTop: 19, paddingBottom: 12, paddingLeft: 10, paddingTop: 2 },
+  continuumBridgeHeader: { alignItems: 'center', flexDirection: 'row', justifyContent: 'space-between' },
+  continuumBridgeEyebrow: { fontFamily: 'Rajdhani_700Bold', fontSize: 9, letterSpacing: 1.45 },
+  continuumBridgeTitle: { fontFamily: 'Cinzel_600SemiBold', fontSize: 17, marginTop: 4 },
+  continuumBridgeCore: { alignItems: 'center', borderWidth: 1, height: 25, justifyContent: 'center', transform: [{ rotate: '45deg' }], width: 25 },
+  continuumBridgeRail: { gap: 8, marginTop: 12, position: 'relative' },
+  continuumBridgeAxis: { bottom: 8, left: 17, position: 'absolute', top: 8, width: 1 },
+  continuumNode: { alignItems: 'center', borderLeftWidth: 2, borderWidth: 1, flexDirection: 'row', gap: 8, minHeight: 58, paddingHorizontal: 9, paddingVertical: 8 },
+  continuumNodeDetail: { flex: 1, fontFamily: 'Rajdhani_500Medium', fontSize: 9, letterSpacing: 0.35, lineHeight: 13 },
+  continuumNodeMark: { borderRadius: 3, height: 6, width: 6 },
   eventLine: { alignItems: 'center', borderBottomWidth: 1, borderTopWidth: 1, flexDirection: 'row', gap: 11, minHeight: 96, paddingVertical: 12 },
   eventBeacon: { alignItems: 'center', height: 54, justifyContent: 'center', width: 48 },
   eventOrb: { alignItems: 'center', borderRadius: 23, borderWidth: 1, height: 44, justifyContent: 'center', width: 44 },
