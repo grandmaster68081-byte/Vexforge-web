@@ -370,7 +370,15 @@ function MissionSignal({ mission, index, onPress }: { mission: HomeMission; inde
       accessibilityLabel={`Abrir misión ${mission.name}`}
       testID={`home-mission-${mission.id}`}
       onPress={onPress}
-      style={({ pressed }) => [styles.missionSignal, { borderColor: `${colors.success}50`, backgroundColor: `${colors.ink}55`, opacity: pressed ? 0.7 : 1 }]}
+      style={({ pressed }) => [
+        styles.missionSignal,
+        {
+          borderColor: `${colors.success}50`,
+          backgroundColor: `${colors.ink}55`,
+          opacity: pressed ? 0.7 : 1,
+          transform: [{ translateY: pressed ? 2 : 0 }],
+        },
+      ]}
     >
       <View style={styles.missionSignalBeacon}>
         <View style={[styles.missionSignalOrbit, { borderColor: `${colors.success}A8`, backgroundColor: `${colors.success}12` }]}>
@@ -402,7 +410,7 @@ function ActivitySignal({ item, index, last, onPress }: { item: ActivityItem; in
       accessibilityLabel={`Abrir mundo. ${item.text}`}
       testID={`home-activity-${item.id}`}
       onPress={onPress}
-      style={({ pressed }) => [styles.activitySignal, { opacity: pressed ? 0.7 : 1 }]}
+      style={({ pressed }) => [styles.activitySignal, { opacity: pressed ? 0.7 : 1, transform: [{ translateY: pressed ? 2 : 0 }] }]}
     >
       <View style={styles.activitySignalRail}>
         <View style={[styles.activitySignalDot, { backgroundColor: colors.rarityRare }]} />
@@ -426,7 +434,15 @@ function RankingSignal({ entry, index, onPress }: { entry: NonNullable<HomeStats
       accessibilityLabel={`Abrir mundo. Posición ${entry.rank}, ${entry.display_name}`}
       testID={`home-ranking-${entry.rank}`}
       onPress={onPress}
-      style={({ pressed }) => [styles.rankingSignal, { borderColor: `${accent}55`, backgroundColor: `${colors.ink}45`, opacity: pressed ? 0.7 : 1 }]}
+      style={({ pressed }) => [
+        styles.rankingSignal,
+        {
+          borderColor: `${accent}55`,
+          backgroundColor: `${colors.ink}45`,
+          opacity: pressed ? 0.7 : 1,
+          transform: [{ translateY: pressed ? 2 : 0 }],
+        },
+      ]}
     >
       <View style={[styles.rankingSignalSigil, { borderColor: accent, backgroundColor: `${accent}12` }]}>
         <Text style={[styles.rankingSignalPosition, { color: accent }]}>{String(entry.rank).padStart(2, '0')}</Text>

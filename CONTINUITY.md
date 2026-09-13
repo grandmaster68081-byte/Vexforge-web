@@ -1,3 +1,11 @@
+## 2026-09-13 — VE-MOB-3-HOME — SECONDARY SIGNAL PRESS DEPTH / IMPLEMENTED_UNVERIFIED
+
+- Se cerró un microbloque de FASE 11 exclusivamente en `mobile/app/(tabs)/index.tsx`: misiones, actividad pública y clasificación ahora comparten la respuesta táctil de profundidad del resto del Home.
+- Al presionar, cada señal reduce su intensidad y desciende ligeramente dentro de su plano; se conservan las rutas, datos reales, `testID`, accesibilidad, haptics, `reduced-motion` y los estados vacío/error.
+- No se modificaron Supabase, RPCs, GameContext, Auth, contratos, otras pantallas Android, assets ni la web congelada.
+- El bloque queda `IMPLEMENTED_UNVERIFIED` hasta que el workflow Android termine en `success`, se publique el release correlativo y se complete la QA visual/táctil humana.
+- Siguiente bloque: continuar sólo con una mejora concreta de continuidad o interacción del Home; no rehacer la escena consolidada.
+
 ## 2026-09-13 — VE-MOB-3-HOME — AUTHORED WORLD NAVIGATION / IMPLEMENTED_UNVERIFIED
 
 - Se continuó la FASE 9 del protocolo sobre la navegación inferior Android: la misma barra y los mismos destinos ahora comparten sellos, beacon activo, rail de luz, tipografía y nombres de dominio del universo (`Nexus`, `Arena`, `Archivo`, `Forja`, `Legado`).
