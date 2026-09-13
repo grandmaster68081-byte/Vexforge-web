@@ -1,3 +1,12 @@
+## 2026-09-13 — PROTOCOLO V2.1 — ALCANCE GLOBAL DE APK CONFIRMADO / ACTIVE
+
+- Se releyó íntegramente la fila activa de Supabase `vexforge_home_world_system_protocol_v3`, versión `V2.1 — GAME EXPERIENCE ARCHITECTURE + LIVING UI + FUNCTIONAL COMPLETENESS`, estado `ACTIVE`.
+- Se confirma que el protocolo **no está limitado a Home**: su encabezado declara la transformación visual de toda la APK; los criterios de cierre exigen auditar todas las pantallas, subpantallas, modales, estados, navegación, motion, rendimiento, identidad y continuidad.
+- Home es únicamente el laboratorio maestro y el primer piloto de arquitectura/card identity. El orden global posterior registrado por el protocolo es: `ARCHIVO / COLLECTION`, `FORJA / DECK`, `ARENA / BATTLE`, `LEGADO / PROFILE`, `AUTH`, `MISSIONS`, `STORE`, `ECONOMY`, `WORLD`, `SOCIAL`, `META` y `TUTORIAL / STATES / ERROR / EMPTY / REWARD`.
+- La interpretación anterior que describía el siguiente trabajo sólo como “continuar Home” queda corregida: desde este punto, cada bloque se selecciona del rollout global y debe conservar la arquitectura demostrada sin reducir VEXFORGE a una aplicación CRUD decorada.
+- Se mantiene la disciplina: datos y assets oficiales, UI diegética, estados completos, navegación real, motion controlado, UX Android, rendimiento y continuidad. No se compila APK en esta fase por instrucción del operador.
+- Fuentes verificadas: protocolo vivo, `docs/VE-MOB-0-PORT-INVENTORY.md`, `docs/VE-MOB-4-COLLECTION.md` y la matriz maestra de pantallas del propio protocolo.
+
 ## 2026-09-13 — VE-MOB-3-HOME — ANDROID WORKFLOW DEFERRED BY OPERATOR / IMPLEMENTED_UNVERIFIED
 
 - El commit `6bb769e79f97424827dbcc1ab7be5c27122ae657` publicó el bloque de acceso de la carta destacada al Archivo y este registro de continuidad.
