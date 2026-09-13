@@ -110,7 +110,11 @@ function QuestCard({
           onPress={() => onClaim(quest.id)}
           style={({ pressed }) => [
             styles.claimButton,
-            { backgroundColor: colors.accent, opacity: pressed ? 0.78 : claiming === quest.id ? 0.58 : 1 },
+            {
+              backgroundColor: colors.accent,
+              opacity: pressed ? 0.78 : claiming === quest.id ? 0.58 : 1,
+              transform: [{ translateY: pressed ? 2 : 0 }],
+            },
           ]}
         >
           {claiming === quest.id ? <ActivityIndicator size="small" color={colors.ink} /> : <Text style={[styles.claimText, { color: colors.ink }]}>RECLAMAR RECOMPENSA</Text>}
@@ -168,7 +172,11 @@ function MissionCard({
         onPress={() => onExecute(mission)}
         style={({ pressed }) => [
           styles.executeButton,
-          { borderColor: accent, opacity: pressed ? 0.76 : disabled ? 0.45 : 1 },
+          {
+            borderColor: accent,
+            opacity: pressed ? 0.76 : disabled ? 0.45 : 1,
+            transform: [{ translateY: pressed ? 2 : 0 }],
+          },
         ]}
       >
         {isBusy ? <ActivityIndicator size="small" color={accent} /> : <Text style={[styles.executeText, { color: accent }]}>{cooldown > 0 ? `DISPONIBLE EN ${cooldown}s` : 'INICIAR MISIÓN'}</Text>}
