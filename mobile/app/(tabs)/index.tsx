@@ -231,7 +231,7 @@ function SignalMetric({ label, value, icon, color }: { label: string; value: str
   );
 }
 
-function MissionLine({ mission, index, onPress }: { mission: HomeMission; index: number; onPress: () => void }) {
+function MissionSignal({ mission, index, onPress }: { mission: HomeMission; index: number; onPress: () => void }) {
   const colors = useColors();
   return (
     <Pressable
@@ -239,15 +239,64 @@ function MissionLine({ mission, index, onPress }: { mission: HomeMission; index:
       accessibilityLabel={`Abrir misión ${mission.name}`}
       testID={`home-mission-${mission.id}`}
       onPress={onPress}
-      style={({ pressed }) => [styles.missionLine, { borderBottomColor: `${colors.border}88`, opacity: pressed ? 0.68 : 1 }]}
+      style={({ pressed }) => [styles.missionSignal, { borderColor: `${colors.success}50`, backgroundColor: `${colors.ink}55`, opacity: pressed ? 0.7 : 1 }]}
     >
-      <Text style={[styles.missionIndex, { color: colors.accent }]}>{String(index + 1).padStart(2, '0')}</Text>
-      <View style={styles.missionLineCopy}>
-        <Text numberOfLines={1} style={[styles.missionName, { color: colors.foreground }]}>{mission.name}</Text>
-        <Text style={[styles.missionMeta, { color: colors.mutedForeground }]}>{capitalize(mission.difficulty, 'RITO')} / {formatNumber(mission.reward_xp)} XP / {formatNumber(mission.reward_vex_ingame)} VEX</Text>
+      <View style={styles.missionSignalBeacon}>
+        <View style={[styles.missionSignalOrbit, { borderColor: `${colors.success}A8`, backgroundColor: `${colors.success}12` }]}>
+          <Text style={[styles.missionSignalIndex, { color: colors.success }]}>{String(index + 1).padStart(2, '0')}</Text>
+        </View>
+        <View style={[styles.missionSignalAxis, { backgroundColor: `${colors.success}70` }]} />
       </View>
-      <Icon name="arrow-up" color={colors.accent} size={13} />
+      <View style={styles.missionSignalCopy}>
+        <Text numberOfLines={1} style={[styles.missionSignalName, { color: colors.foreground }]}>{mission.name}</Text>
+        <View style={styles.missionSignalMeta}>
+          <Text style={[styles.missionSignalDifficulty, { color: colors.success }]}>{capitalize(mission.difficulty, 'RITO')}</Text>
+          <View style={[styles.missionSignalDivider, { backgroundColor: `${colors.success}70` }]} />
+          <Text numberOfLines={1} style={[styles.missionSignalReward, { color: colors.mutedForeground }]}>{formatNumber(mission.reward_xp)} XP · {formatNumber(mission.reward_vex_ingame)} VEX</Text>
+        </View>
+      </View>
+      <View style={styles.missionSignalPulse}>
+        <View style={[styles.missionSignalPulseMark, { backgroundColor: colors.success }]} />
+        <Text style={[styles.missionSignalPulseText, { color: colors.success }]}>ACTIVA</Text>
+      </View>
     </Pressable>
+  );
+}
+
+function ActivitySignal({ item, index, last }: { item: ActivityItem; index: number; last: boolean }) {
+  const colors = useColors();
+  return (
+    <View style={styles.activitySignal}>
+      <View style={styles.activitySignalRail}>
+        <View style={[styles.activitySignalDot, { backgroundColor: colors.rarityRare }]} />
+        {!last ? <View style={[styles.activitySignalLine, { backgroundColor: `${colors.rarityRare}55` }]} /> : null}
+      </View>
+      <View style={styles.activitySignalBody}>
+        <Text numberOfLines={2} style={[styles.activitySignalCopy, { color: colors.foreground }]}>{item.text}</Text>
+        <Text style={[styles.activitySignalTime, { color: colors.rarityRare }]}>{new Date(item.time).toLocaleDateString('es-ES', { day: '2-digit', month: 'short' }).toUpperCase()}</Text>
+      </View>
+      <Text style={[styles.activitySignalStamp, { color: `${colors.rarityRare}99` }]}>{String(index + 1).padStart(2, '0')}</Text>
+    </View>
+  );
+}
+
+function RankingSignal({ entry, index }: { entry: NonNullable<HomeStats['top3']>[number]; index: number }) {
+  const colors = useColors();
+  const accent = index === 0 ? colors.accent : colors.mutedForeground;
+  return (
+    <View style={[styles.rankingSignal, { borderColor: `${accent}55`, backgroundColor: `${colors.ink}45` }]}>
+      <View style={[styles.rankingSignalSigil, { borderColor: accent, backgroundColor: `${accent}12` }]}>
+        <Text style={[styles.rankingSignalPosition, { color: accent }]}>{String(entry.rank).padStart(2, '0')}</Text>
+      </View>
+      <View style={styles.rankingSignalIdentity}>
+        <Text numberOfLines={1} style={[styles.rankingSignalName, { color: colors.foreground }]}>{entry.display_name}</Text>
+        <Text style={[styles.rankingSignalMeta, { color: colors.mutedForeground }]}>{formatNumber(entry.wins)} VICTORIAS</Text>
+      </View>
+      <View style={styles.rankingSignalScore}>
+        <Text style={[styles.rankingSignalScoreValue, { color: accent }]}>{formatNumber(entry.mmr)}</Text>
+        <Text style={[styles.rankingSignalScoreLabel, { color: colors.mutedForeground }]}>MMR</Text>
+      </View>
+    </View>
   );
 }
 
@@ -739,17 +788,17 @@ export default function ForgeScreen() {
                 <View style={styles.signalColumnsFinal}>
                   <View style={styles.signalColumnFinal}>
                     <SectionMarker eyebrow={home.missions.length === 1 ? 'ORDEN ACTIVA' : 'ÓRDENES ACTIVAS'} title="El rito continúa" action="ABRIR" onAction={() => navigate('/missions')} accent={colors.success} />
-                    {home.missions.length > 0 ? <View testID="home-missions" style={styles.missionList}>{home.missions.slice(0, 3).map((mission, index) => <MissionLine key={mission.id} mission={mission} index={index} onPress={() => navigate('/missions')} />)}</View> : <View style={[styles.emptyState, { borderColor: colors.border }]}><Icon name="compass" color={colors.mutedForeground} size={21} /><Text style={[styles.emptyTitle, { color: colors.foreground }]}>SIN FRENTE ACTIVO</Text><Text style={[styles.emptyBody, { color: colors.mutedForeground }]}>Las próximas misiones aparecerán cuando el Nexus publique el siguiente ciclo.</Text></View>}
+                    {home.missions.length > 0 ? <View testID="home-missions" style={styles.missionSignals}>{home.missions.slice(0, 3).map((mission, index) => <MissionSignal key={mission.id} mission={mission} index={index} onPress={() => navigate('/missions')} />)}</View> : <View style={[styles.emptyState, { borderColor: colors.border }]}><Icon name="compass" color={colors.mutedForeground} size={21} /><Text style={[styles.emptyTitle, { color: colors.foreground }]}>SIN FRENTE ACTIVO</Text><Text style={[styles.emptyBody, { color: colors.mutedForeground }]}>Las próximas misiones aparecerán cuando el Nexus publique el siguiente ciclo.</Text></View>}
                   </View>
                   <View style={styles.signalColumnFinal}>
                     <SectionMarker eyebrow="PULSO PÚBLICO" title="Actividad" action="MUNDO" onAction={() => navigate('/world')} accent={colors.rarityRare} />
-                    <View style={styles.activityRail}>{home.activity.length > 0 ? home.activity.slice(0, 3).map((item) => <View key={item.id} style={[styles.activityRow, { borderBottomColor: colors.border }]}><View style={[styles.activityDot, { backgroundColor: colors.success }]} /><View style={styles.activityText}><Text style={[styles.activityCopy, { color: colors.foreground }]}>{item.text}</Text><Text style={[styles.activityTime, { color: colors.mutedForeground }]}>{new Date(item.time).toLocaleDateString('es-ES', { day: '2-digit', month: 'short' }).toUpperCase()}</Text></View></View>) : <View style={styles.emptyActivity}><Icon name="radio" color={colors.mutedForeground} size={18} /><Text style={[styles.emptyBody, { color: colors.mutedForeground }]}>El pulso público se mostrará cuando exista actividad confirmada.</Text></View>}</View>
+                    <View testID="home-activity" style={styles.activitySignals}>{home.activity.length > 0 ? home.activity.slice(0, 3).map((item, index, items) => <ActivitySignal key={item.id} item={item} index={index} last={index === items.length - 1} />) : <View style={styles.emptyActivity}><Icon name="radio" color={colors.mutedForeground} size={18} /><Text style={[styles.emptyBody, { color: colors.mutedForeground }]}>El pulso público se mostrará cuando exista actividad confirmada.</Text></View>}</View>
                   </View>
                 </View>
 
                 <View style={styles.rankingDeckFinal}>
                   <SectionMarker eyebrow="CIRCUITO ACTIVO" title="Clasificación del frente" action="ABRIR MUNDO" onAction={() => navigate('/world')} accent={colors.accent} />
-                  <View style={styles.rankingRail}>{ranking.length > 0 ? ranking.map((entry, index) => <View key={entry.rank + '-' + entry.display_name} style={[styles.rankingRow, { borderBottomColor: colors.border }]}><Text style={[styles.rankPosition, { color: index === 0 ? colors.accent : colors.mutedForeground }]}>{String(entry.rank).padStart(2, '0')}</Text><View style={[styles.rankAvatar, { borderColor: index === 0 ? colors.accent : colors.border }]}><Text style={[styles.rankAvatarText, { color: index === 0 ? colors.accent : colors.mutedForeground }]}>{entry.display_name.slice(0, 1).toUpperCase()}</Text></View><View style={styles.rankIdentity}><Text style={[styles.rankName, { color: colors.foreground }]}>{entry.display_name}</Text><Text style={[styles.rankMeta, { color: colors.mutedForeground }]}>{formatNumber(entry.wins)} VICTORIAS / {formatNumber(entry.mmr)} MMR</Text></View><Icon name={index === 0 ? 'award' : 'chevron-right'} color={index === 0 ? colors.accent : colors.mutedForeground} size={15} /></View>) : <Text style={[styles.emptyBody, { color: colors.mutedForeground }]}>El ranking de la temporada todavía no tiene posiciones publicadas.</Text>}</View>
+                  <View testID="home-ranking" style={styles.rankingSignals}>{ranking.length > 0 ? ranking.map((entry, index) => <RankingSignal key={entry.rank + '-' + entry.display_name} entry={entry} index={index} />) : <Text style={[styles.emptyBody, { color: colors.mutedForeground }]}>El ranking de la temporada todavía no tiene posiciones publicadas.</Text>}</View>
                 </View>
               </View>
               </View>
@@ -936,12 +985,21 @@ const styles = StyleSheet.create({
   publicBoard: { borderWidth: 1, marginTop: 19, paddingHorizontal: 12, paddingBottom: 10, paddingTop: 2 },
   boardSectionTag: { alignItems: 'center', flexDirection: 'row', justifyContent: 'space-between', paddingTop: 10 },
   boardSectionEyebrow: { fontFamily: 'Rajdhani_700Bold', fontSize: 8, letterSpacing: 1.55 },
-  missionList: { marginTop: 4 },
-  missionLine: { alignItems: 'center', borderBottomWidth: 1, flexDirection: 'row', gap: 11, minHeight: 61, paddingVertical: 9 },
-  missionIndex: { fontFamily: 'Rajdhani_700Bold', fontSize: 11, width: 22 },
-  missionLineCopy: { flex: 1, gap: 3 },
-  missionName: { fontFamily: 'Rajdhani_700Bold', fontSize: 14, letterSpacing: 0.3 },
-  missionMeta: { fontFamily: 'Rajdhani_500Medium', fontSize: 10, letterSpacing: 0.45 },
+  missionSignals: { gap: 8, marginTop: 7 },
+  missionSignal: { alignItems: 'center', borderLeftWidth: 2, borderWidth: 1, flexDirection: 'row', gap: 9, minHeight: 74, paddingHorizontal: 9, paddingVertical: 8 },
+  missionSignalBeacon: { alignItems: 'center', height: 56, justifyContent: 'center', width: 43 },
+  missionSignalOrbit: { alignItems: 'center', borderRadius: 17, borderWidth: 1, height: 34, justifyContent: 'center', transform: [{ rotate: '45deg' }], width: 34 },
+  missionSignalIndex: { fontFamily: 'Rajdhani_700Bold', fontSize: 10, transform: [{ rotate: '-45deg' }] },
+  missionSignalAxis: { bottom: 0, height: 10, position: 'absolute', width: 1 },
+  missionSignalCopy: { flex: 1, gap: 6, minWidth: 0 },
+  missionSignalName: { fontFamily: 'Rajdhani_700Bold', fontSize: 14, letterSpacing: 0.3 },
+  missionSignalMeta: { alignItems: 'center', flexDirection: 'row', gap: 6, minWidth: 0 },
+  missionSignalDifficulty: { fontFamily: 'Rajdhani_700Bold', fontSize: 9, letterSpacing: 0.8 },
+  missionSignalDivider: { height: 1, width: 12 },
+  missionSignalReward: { flexShrink: 1, fontFamily: 'Rajdhani_500Medium', fontSize: 9, letterSpacing: 0.3 },
+  missionSignalPulse: { alignItems: 'flex-end', gap: 5, justifyContent: 'center', minWidth: 39 },
+  missionSignalPulseMark: { borderRadius: 3, height: 6, width: 6 },
+  missionSignalPulseText: { fontFamily: 'Rajdhani_700Bold', fontSize: 7, letterSpacing: 0.65 },
   emptyState: { alignItems: 'center', borderBottomWidth: 1, borderTopWidth: 1, gap: 8, marginTop: 5, paddingHorizontal: 20, paddingVertical: 23 },
   emptyTitle: { fontFamily: 'Rajdhani_700Bold', fontSize: 12, letterSpacing: 1.2 },
   emptyBody: { fontFamily: 'Rajdhani_500Medium', fontSize: 12, lineHeight: 17, textAlign: 'center' },
@@ -970,21 +1028,26 @@ const styles = StyleSheet.create({
   storeActions: { flexDirection: 'row', flexWrap: 'wrap', marginTop: 10 },
   storeAction: { alignItems: 'center', borderBottomWidth: 1, flexDirection: 'row', gap: 5, minHeight: 34, marginRight: 14 },
   storeActionText: { fontFamily: 'Rajdhani_700Bold', fontSize: 9, letterSpacing: 0.8 },
-  activityRail: { paddingTop: 3 },
-  activityRow: { alignItems: 'center', borderBottomWidth: 1, flexDirection: 'row', gap: 10, minHeight: 58, paddingVertical: 10 },
-  activityDot: { borderRadius: 3, height: 6, width: 6 },
-  activityText: { flex: 1, gap: 3 },
-  activityCopy: { fontFamily: 'Rajdhani_500Medium', fontSize: 12, lineHeight: 16 },
-  activityTime: { fontFamily: 'Rajdhani_700Bold', fontSize: 9, letterSpacing: 0.8 },
+  activitySignals: { paddingTop: 7 },
+  activitySignal: { alignItems: 'stretch', flexDirection: 'row', gap: 9, minHeight: 60 },
+  activitySignalRail: { alignItems: 'center', width: 13 },
+  activitySignalDot: { borderRadius: 4, height: 8, marginTop: 4, width: 8 },
+  activitySignalLine: { flex: 1, marginVertical: 3, width: 1 },
+  activitySignalBody: { borderBottomWidth: 1, flex: 1, gap: 4, paddingBottom: 10, paddingTop: 1 },
+  activitySignalCopy: { fontFamily: 'Rajdhani_500Medium', fontSize: 12, lineHeight: 16 },
+  activitySignalTime: { fontFamily: 'Rajdhani_700Bold', fontSize: 8, letterSpacing: 0.85 },
+  activitySignalStamp: { fontFamily: 'Rajdhani_700Bold', fontSize: 9, letterSpacing: 0.8, paddingTop: 1, width: 18 },
   emptyActivity: { alignItems: 'center', gap: 9, paddingHorizontal: 14, paddingVertical: 20 },
-  rankingRail: { paddingTop: 3 },
-  rankingRow: { alignItems: 'center', borderBottomWidth: 1, flexDirection: 'row', gap: 9, minHeight: 55, paddingVertical: 10 },
-  rankPosition: { fontFamily: 'Rajdhani_700Bold', fontSize: 11, width: 21 },
-  rankAvatar: { alignItems: 'center', borderRadius: 15, borderWidth: 1, height: 30, justifyContent: 'center', width: 30 },
-  rankAvatarText: { fontFamily: 'Cinzel_700Bold', fontSize: 12 },
-  rankIdentity: { flex: 1, gap: 2 },
-  rankName: { fontFamily: 'Rajdhani_700Bold', fontSize: 13, letterSpacing: 0.3 },
-  rankMeta: { fontFamily: 'Rajdhani_500Medium', fontSize: 9, letterSpacing: 0.65 },
+  rankingSignals: { gap: 8, paddingTop: 7 },
+  rankingSignal: { alignItems: 'center', borderLeftWidth: 2, borderWidth: 1, flexDirection: 'row', gap: 10, minHeight: 57, paddingHorizontal: 10, paddingVertical: 8 },
+  rankingSignalSigil: { alignItems: 'center', borderWidth: 1, height: 31, justifyContent: 'center', transform: [{ rotate: '45deg' }], width: 31 },
+  rankingSignalPosition: { fontFamily: 'Rajdhani_700Bold', fontSize: 10, transform: [{ rotate: '-45deg' }] },
+  rankingSignalIdentity: { flex: 1, gap: 3, minWidth: 0 },
+  rankingSignalName: { fontFamily: 'Rajdhani_700Bold', fontSize: 13, letterSpacing: 0.3 },
+  rankingSignalMeta: { fontFamily: 'Rajdhani_500Medium', fontSize: 9, letterSpacing: 0.65 },
+  rankingSignalScore: { alignItems: 'flex-end', gap: 1, minWidth: 42 },
+  rankingSignalScoreValue: { fontFamily: 'Cinzel_700Bold', fontSize: 13 },
+  rankingSignalScoreLabel: { fontFamily: 'Rajdhani_700Bold', fontSize: 7, letterSpacing: 0.8 },
 
     nexusWorldFinal: { marginTop: -14, overflow: 'hidden', paddingHorizontal: 8, paddingTop: 16, position: 'relative' },
     continuumArt: { height: '62%', left: '-12%', position: 'absolute', top: 0, width: '124%' },
