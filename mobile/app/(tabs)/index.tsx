@@ -376,10 +376,16 @@ function MissionSignal({ mission, index, onPress }: { mission: HomeMission; inde
   );
 }
 
-function ActivitySignal({ item, index, last }: { item: ActivityItem; index: number; last: boolean }) {
+function ActivitySignal({ item, index, last, onPress }: { item: ActivityItem; index: number; last: boolean; onPress: () => void }) {
   const colors = useColors();
   return (
-    <View style={styles.activitySignal}>
+    <Pressable
+      accessibilityRole="button"
+      accessibilityLabel={`Abrir mundo. ${item.text}`}
+      testID={`home-activity-${item.id}`}
+      onPress={onPress}
+      style={({ pressed }) => [styles.activitySignal, { opacity: pressed ? 0.7 : 1 }]}
+    >
       <View style={styles.activitySignalRail}>
         <View style={[styles.activitySignalDot, { backgroundColor: colors.rarityRare }]} />
         {!last ? <View style={[styles.activitySignalLine, { backgroundColor: `${colors.rarityRare}55` }]} /> : null}
@@ -389,7 +395,7 @@ function ActivitySignal({ item, index, last }: { item: ActivityItem; index: numb
         <Text style={[styles.activitySignalTime, { color: colors.rarityRare }]}>{new Date(item.time).toLocaleDateString('es-ES', { day: '2-digit', month: 'short' }).toUpperCase()}</Text>
       </View>
       <Text style={[styles.activitySignalStamp, { color: `${colors.rarityRare}99` }]}>{String(index + 1).padStart(2, '0')}</Text>
-    </View>
+    </Pressable>
   );
 }
 
@@ -945,7 +951,7 @@ export default function ForgeScreen() {
                   </View>
                   <View style={styles.signalColumnFinal}>
                     <SectionMarker eyebrow="PULSO PÚBLICO" title="Actividad" action="MUNDO" onAction={() => navigate('/world')} accent={colors.rarityRare} />
-                    <View testID="home-activity" style={styles.activitySignals}>{home.activity.length > 0 ? home.activity.slice(0, 3).map((item, index, items) => <ActivitySignal key={item.id} item={item} index={index} last={index === items.length - 1} />) : <View style={styles.emptyActivity}><Icon name="radio" color={colors.mutedForeground} size={18} /><Text style={[styles.emptyBody, { color: colors.mutedForeground }]}>El pulso público se mostrará cuando exista actividad confirmada.</Text></View>}</View>
+                    <View testID="home-activity" style={styles.activitySignals}>{home.activity.length > 0 ? home.activity.slice(0, 3).map((item, index, items) => <ActivitySignal key={item.id} item={item} index={index} last={index === items.length - 1} onPress={() => navigate('/world')} />) : <View style={styles.emptyActivity}><Icon name="radio" color={colors.mutedForeground} size={18} /><Text style={[styles.emptyBody, { color: colors.mutedForeground }]}>El pulso público se mostrará cuando exista actividad confirmada.</Text></View>}</View>
                   </View>
                 </View>
 
