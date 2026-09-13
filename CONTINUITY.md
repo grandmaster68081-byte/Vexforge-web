@@ -4,6 +4,7 @@
 - Cada dominio conserva su ruta, estado derivado de datos reales, `testID`, accesibilidad y feedback táctil, pero ahora se presenta como un objeto de umbral con silueta, sigilo, núcleo de señal, traza, identidad cromática y estado legible.
 - No se modificaron Supabase, RPCs, GameContext, Auth, economía, combate, otras pantallas, rutas ni assets. Se reutiliza la iconografía authored existente y se conserva reduced-motion.
 - Se añadió una guarda específica para impedir el retorno del patrón genérico de filas en los dominios. El bloque queda `IMPLEMENTED_UNVERIFIED` hasta publicar en `main`, ejecutar el workflow Android oficial, confirmar el release correlativo y recibir QA visual/táctil humana.
+- El bloque quedó publicado en `main` mediante el commit `6d7e9610b1491cdd51c9b8af93d0f7becb67eba0`. El workflow Android `213` fue cancelado por instrucción del operador; no se generó APK ni release correlativo en esta sesión.
 - Siguiente bloque: continuar con la representación world-first de la información secundaria del Home sin rehacer el hero ni reabrir decisiones visuales ya consolidadas.
 
 ## 2026-09-13 — VE-MOB-3-HOME — LIVING CONTINUUM PASS / IMPLEMENTED_UNVERIFIED
