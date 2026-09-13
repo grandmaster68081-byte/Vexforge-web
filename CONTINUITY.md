@@ -1,3 +1,14 @@
+## 2026-09-13 — VE-MOB-4-COLLECTION — ARCHIVE CONTROL SURFACE PRESS DEPTH / IMPLEMENTED_UNVERIFIED
+
+- **WHAT CHANGED VISUALLY:** los umbrales Colección/Tus cartas/Fusión/Logros, el orden, los filtros de facción y rareza, la paginación y el estado de reintento ahora muestran una respuesta física breve al toque, coherente con las cartas y el inspector del Archivo.
+- **WHAT WAS COMPLETED:** el delta es local, reversible y sólo afecta la presentación de affordances ya existentes; no cambia datos, rutas, paginación, filtros, sincronización ni contratos.
+- **FILES / COMPONENTS:** `mobile/app/(tabs)/collection.tsx`; guardia `scripts/verify-mobile-collection-reference.mjs`; superficies `referenceTopTab`, `referenceChoice`, `referenceSortHotspot`, `referenceSyncError` y `referencePageButton`.
+- **ASSETS / CARD IDENTITY:** no se añadieron assets; las cartas siguen usando el catálogo vivo, el arte oficial y la identidad de carta existente.
+- **VISUAL / MOTION / INTERACTION DECISIONS:** se reutiliza la profundidad diegética de `opacity` + `translateY` sin animación nueva ni listener; el estado se comunica durante la presión y desaparece al soltar.
+- **LIMITATIONS:** las guardas locales pasan; no se inició workflow ni se compiló APK por instrucción explícita. La QA visual/táctil humana y el typecheck completo siguen pendientes.
+- **NEXT BLOCK:** continuar con un bloque Android acotado del Archivo o Home sin reabrir la arquitectura consolidada; no declarar `PASS`, `OPERATIONAL` ni `TIER1_READY`.
+- **ROLLBACK_POINT:** commit base sincronizado de `main` antes de este delta.
+
 ## 2026-09-13 — VE-MOB-4-COLLECTION — ARCHIVE INSPECTION PRESS DEPTH / IMPLEMENTED_UNVERIFIED
 
 - Se continuó el rollout Tier 1 Android en `mobile/app/(tabs)/collection.tsx` con un delta atómico de interacción: las cartas del Archivo, el arte destacado, sus acciones y la navegación inferior responden al toque con profundidad visual coherente.

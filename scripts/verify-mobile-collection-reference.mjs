@@ -49,6 +49,7 @@ const checks = [
   ['collection paginates twelve cards', collection.includes('index += 12') && collection.includes('length: 12')],
   ['fusion route is wired', collection.includes("router.push('/store?mode=fusion')")],
   ['achievements route is wired', collection.includes("router.push('/profile?section=achievements')")],
+  ['archive controls expose diegetic press depth', collection.includes('styles.referenceTopTab') && collection.includes('opacity: pressed ? 0.76 : 1') && collection.includes('styles.referencePageButton') && collection.includes('opacity: pressed ? 0.72 : 1')],
 ];
 
 const failed = checks.filter(([, ok]) => !ok);

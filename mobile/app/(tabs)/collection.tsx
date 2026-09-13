@@ -591,17 +591,19 @@ export default function CollectionScreen() {
             accessibilityLabel="Colección"
            accessibilityState={{ selected: scope === 'all' }}
             onPress={() => { setScope('all'); setPageIndex(0); }}
-            style={[
-              styles.referenceTopHotspot,
-              styles.referenceTopTab,
-              {
-                left: frameWidth * 0.05,
-                top: canvasHeight * 0.108,
-                width: frameWidth * 0.26,
-                borderColor: scope === 'all' ? `${colors.accent}CC` : `${colors.foreground}38`,
-                backgroundColor: scope === 'all' ? `${colors.accent}24` : `${colors.ink}B8`,
-              },
-            ]}
+             style={({ pressed }) => [
+               styles.referenceTopHotspot,
+               styles.referenceTopTab,
+               {
+                 left: frameWidth * 0.05,
+                 top: canvasHeight * 0.108,
+                 width: frameWidth * 0.26,
+                 borderColor: scope === 'all' ? `${colors.accent}CC` : `${colors.foreground}38`,
+                 backgroundColor: scope === 'all' ? `${colors.accent}24` : `${colors.ink}B8`,
+                 opacity: pressed ? 0.76 : 1,
+                 transform: [{ translateY: pressed ? 2 : 0 }],
+               },
+             ]}
           >
             <Feather name="cards" size={14} color={scope === 'all' ? colors.accent : colors.foreground} />
             <Text style={[styles.referenceTopTabText, { color: scope === 'all' ? colors.accent : colors.foreground }]}>COLECCIÓN</Text>
@@ -612,17 +614,19 @@ export default function CollectionScreen() {
             accessibilityLabel="Tus cartas"
             accessibilityState={{ selected: scope === 'owned' }}
             onPress={() => { setScope('owned'); setPageIndex(0); }}
-            style={[
-              styles.referenceTopHotspot,
-              styles.referenceTopTab,
-              {
-                left: frameWidth * 0.31,
-                top: canvasHeight * 0.108,
-                width: frameWidth * 0.21,
-                borderColor: scope === 'owned' ? `${colors.accent}CC` : `${colors.foreground}38`,
-                backgroundColor: scope === 'owned' ? `${colors.accent}24` : `${colors.ink}B8`,
-              },
-            ]}
+             style={({ pressed }) => [
+               styles.referenceTopHotspot,
+               styles.referenceTopTab,
+               {
+                 left: frameWidth * 0.31,
+                 top: canvasHeight * 0.108,
+                 width: frameWidth * 0.21,
+                 borderColor: scope === 'owned' ? `${colors.accent}CC` : `${colors.foreground}38`,
+                 backgroundColor: scope === 'owned' ? `${colors.accent}24` : `${colors.ink}B8`,
+                 opacity: pressed ? 0.76 : 1,
+                 transform: [{ translateY: pressed ? 2 : 0 }],
+               },
+             ]}
           >
             <Feather name="collection" size={14} color={scope === 'owned' ? colors.accent : colors.foreground} />
             <Text style={[styles.referenceTopTabText, { color: scope === 'owned' ? colors.accent : colors.foreground }]}>TUS CARTAS</Text>
@@ -632,12 +636,18 @@ export default function CollectionScreen() {
             accessibilityRole="button"
             accessibilityLabel="Abrir fusión y forja"
             onPress={() => router.push('/store?mode=fusion')}
-            style={[
-              styles.referenceTopHotspot,
-              styles.referenceTopTab,
-              styles.referenceTopTabPassive,
-              { left: frameWidth * 0.53, top: canvasHeight * 0.108, width: frameWidth * 0.19 },
-            ]}
+             style={({ pressed }) => [
+               styles.referenceTopHotspot,
+               styles.referenceTopTab,
+               styles.referenceTopTabPassive,
+               {
+                 left: frameWidth * 0.53,
+                 top: canvasHeight * 0.108,
+                 width: frameWidth * 0.19,
+                 opacity: pressed ? 0.76 : 1,
+                 transform: [{ translateY: pressed ? 2 : 0 }],
+               },
+             ]}
           >
             <Feather name="fusion" size={14} color={colors.foreground} />
             <Text style={[styles.referenceTopTabText, { color: colors.foreground }]}>FUSIÓN</Text>
@@ -647,12 +657,18 @@ export default function CollectionScreen() {
             accessibilityRole="button"
             accessibilityLabel="Abrir logros"
             onPress={() => router.push('/profile?section=achievements')}
-            style={[
-              styles.referenceTopHotspot,
-              styles.referenceTopTab,
-              styles.referenceTopTabPassive,
-              { right: frameWidth * 0.05, top: canvasHeight * 0.108, width: frameWidth * 0.18 },
-            ]}
+             style={({ pressed }) => [
+               styles.referenceTopHotspot,
+               styles.referenceTopTab,
+               styles.referenceTopTabPassive,
+               {
+                 right: frameWidth * 0.05,
+                 top: canvasHeight * 0.108,
+                 width: frameWidth * 0.18,
+                 opacity: pressed ? 0.76 : 1,
+                 transform: [{ translateY: pressed ? 2 : 0 }],
+               },
+             ]}
           >
             <Feather name="trophy" size={14} color={colors.foreground} />
             <Text style={[styles.referenceTopTabText, { color: colors.foreground }]}>LOGROS</Text>
@@ -673,7 +689,16 @@ export default function CollectionScreen() {
             accessibilityRole="button"
             accessibilityLabel={`Cambiar orden de las cartas. Orden actual: ${sort === 'recent' ? 'recientes' : sort === 'name' ? 'nombre' : sort === 'power' ? 'poder' : 'rareza'}`}
             onPress={() => setSort(sort === 'recent' ? 'name' : sort === 'name' ? 'power' : sort === 'power' ? 'rarity' : 'recent')}
-            style={[styles.referenceSortHotspot, { right: frameWidth * 0.075, top: canvasHeight * 0.332, width: frameWidth * 0.24 }]}
+             style={({ pressed }) => [
+               styles.referenceSortHotspot,
+               {
+                 right: frameWidth * 0.075,
+                 top: canvasHeight * 0.332,
+                 width: frameWidth * 0.24,
+                 opacity: pressed ? 0.76 : 1,
+                 transform: [{ translateY: pressed ? 2 : 0 }],
+               },
+             ]}
           >
             <Text style={[styles.referenceSortText, { color: colors.foreground }]}>
               {sort === 'recent' ? 'RECIENTES' : sort === 'name' ? 'NOMBRE' : sort === 'power' ? 'PODER' : 'RAREZA'}
@@ -688,14 +713,16 @@ export default function CollectionScreen() {
               accessibilityLabel="Todas las facciones"
               accessibilityState={{ selected: faction === 'all' }}
               onPress={() => setFaction('all')}
-               style={[
-                 styles.referenceFilterHit,
-                 styles.referenceChoice,
-                 {
-                   borderColor: faction === 'all' ? colors.accent : `${colors.foreground}38`,
-                   backgroundColor: faction === 'all' ? `${colors.accent}28` : `${colors.ink}B8`,
-                 },
-               ]}
+                style={({ pressed }) => [
+                  styles.referenceFilterHit,
+                  styles.referenceChoice,
+                  {
+                    borderColor: faction === 'all' ? colors.accent : `${colors.foreground}38`,
+                    backgroundColor: faction === 'all' ? `${colors.accent}28` : `${colors.ink}B8`,
+                    opacity: pressed ? 0.76 : 1,
+                    transform: [{ translateY: pressed ? 2 : 0 }],
+                  },
+                ]}
              >
                <Feather name="compass" size={11} color={faction === 'all' ? colors.accent : colors.foreground} />
                <Text style={[styles.referenceChoiceText, { color: faction === 'all' ? colors.accent : colors.foreground }]}>TODAS</Text>
@@ -708,15 +735,17 @@ export default function CollectionScreen() {
                 accessibilityLabel={`Filtrar por ${value}`}
                 accessibilityState={{ selected: faction === value }}
                 onPress={() => setFaction(faction === value ? 'all' : value)}
-                 style={[
-                   styles.referenceFilterHit,
-                   styles.referenceChoice,
-                   {
-                     left: `${20 * (index + 1)}%`,
-                     borderColor: faction === value ? colors.accent : `${colors.foreground}38`,
-                     backgroundColor: faction === value ? `${colors.accent}28` : `${colors.ink}B8`,
-                   },
-                 ]}
+                  style={({ pressed }) => [
+                    styles.referenceFilterHit,
+                    styles.referenceChoice,
+                    {
+                      left: `${20 * (index + 1)}%`,
+                      borderColor: faction === value ? colors.accent : `${colors.foreground}38`,
+                      backgroundColor: faction === value ? `${colors.accent}28` : `${colors.ink}B8`,
+                      opacity: pressed ? 0.76 : 1,
+                      transform: [{ translateY: pressed ? 2 : 0 }],
+                    },
+                  ]}
                >
                  <Text style={[styles.referenceChoiceText, { color: faction === value ? colors.accent : colors.foreground }]}>
                    {value.toUpperCase()}
@@ -732,14 +761,16 @@ export default function CollectionScreen() {
               accessibilityLabel="Todas las rarezas"
               accessibilityState={{ selected: rarity === 'all' }}
               onPress={() => setRarity('all')}
-               style={[
-                 styles.referenceRarityHit,
-                 styles.referenceChoice,
-                 {
-                   borderColor: rarity === 'all' ? colors.accent : `${colors.foreground}38`,
-                   backgroundColor: rarity === 'all' ? `${colors.accent}28` : `${colors.ink}B8`,
-                 },
-               ]}
+                style={({ pressed }) => [
+                  styles.referenceRarityHit,
+                  styles.referenceChoice,
+                  {
+                    borderColor: rarity === 'all' ? colors.accent : `${colors.foreground}38`,
+                    backgroundColor: rarity === 'all' ? `${colors.accent}28` : `${colors.ink}B8`,
+                    opacity: pressed ? 0.76 : 1,
+                    transform: [{ translateY: pressed ? 2 : 0 }],
+                  },
+                ]}
              >
                <Text style={[styles.referenceChoiceText, { color: rarity === 'all' ? colors.accent : colors.foreground }]}>TODAS</Text>
              </Pressable>
@@ -751,15 +782,17 @@ export default function CollectionScreen() {
                 accessibilityLabel={`Filtrar por rareza ${rarityLabel(value)}`}
                 accessibilityState={{ selected: rarity === value }}
                 onPress={() => setRarity(rarity === value ? 'all' : value)}
-                 style={[
-                   styles.referenceRarityHit,
-                   styles.referenceChoice,
-                   {
-                     left: `${14.25 * (index + 1)}%`,
-                     borderColor: rarity === value ? rarityColor(value, colors) : `${colors.foreground}38`,
-                     backgroundColor: rarity === value ? `${rarityColor(value, colors)}28` : `${colors.ink}B8`,
-                   },
-                 ]}
+                  style={({ pressed }) => [
+                    styles.referenceRarityHit,
+                    styles.referenceChoice,
+                    {
+                      left: `${14.25 * (index + 1)}%`,
+                      borderColor: rarity === value ? rarityColor(value, colors) : `${colors.foreground}38`,
+                      backgroundColor: rarity === value ? `${rarityColor(value, colors)}28` : `${colors.ink}B8`,
+                      opacity: pressed ? 0.76 : 1,
+                      transform: [{ translateY: pressed ? 2 : 0 }],
+                    },
+                  ]}
                >
                  <Text
                    numberOfLines={1}
@@ -804,7 +837,15 @@ export default function CollectionScreen() {
               accessibilityRole="button"
               accessibilityLabel="Reintentar sincronización de colección"
               onPress={refresh}
-              style={[styles.referenceSyncError, { backgroundColor: `${colors.ink}E8`, borderColor: `${colors.danger}AA` }]}
+              style={({ pressed }) => [
+                styles.referenceSyncError,
+                {
+                  backgroundColor: `${colors.ink}E8`,
+                  borderColor: `${colors.danger}AA`,
+                  opacity: pressed ? 0.78 : 1,
+                  transform: [{ translateY: pressed ? 2 : 0 }],
+                },
+              ]}
             >
               <Feather name="warning" size={16} color={colors.danger} />
               <Text style={[styles.referenceSyncText, { color: colors.foreground }]}>SIN SEÑAL · TOCA PARA REINTENTAR</Text>
@@ -818,7 +859,10 @@ export default function CollectionScreen() {
               accessibilityLabel="Página anterior de cartas"
               disabled={pageIndex === 0}
               onPress={() => changePage(-1)}
-              style={styles.referencePageButton}
+               style={({ pressed }) => [
+                 styles.referencePageButton,
+                 { opacity: pressed ? 0.72 : 1, transform: [{ translateY: pressed ? 2 : 0 }] },
+               ]}
             >
               <Feather name="chevron-left" size={18} color={pageIndex === 0 ? `${colors.mutedForeground}66` : colors.accent} />
             </Pressable>
@@ -831,7 +875,10 @@ export default function CollectionScreen() {
               accessibilityLabel="Página siguiente de cartas"
               disabled={pageIndex === pages.length - 1}
               onPress={() => changePage(1)}
-              style={styles.referencePageButton}
+               style={({ pressed }) => [
+                 styles.referencePageButton,
+                 { opacity: pressed ? 0.72 : 1, transform: [{ translateY: pressed ? 2 : 0 }] },
+               ]}
             >
               <Feather name="chevron-right" size={18} color={pageIndex === pages.length - 1 ? `${colors.mutedForeground}66` : colors.accent} />
             </Pressable>
