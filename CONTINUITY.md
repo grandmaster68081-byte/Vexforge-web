@@ -7,7 +7,7 @@
 - **VISUAL / MOTION / INTERACTION DECISIONS:** se reutiliza `opacity` + `translateY` durante la presión; no se cambia el motor de combate, no se simula PvP en cliente y no se añade dependencia.
 - **LIMITATIONS:** guardia de Arena y contrato global de motion pendientes de ejecutar en este snapshot; no se inició workflow ni se compiló APK por instrucción explícita. QA humana y typecheck completo siguen pendientes.
 - **NEXT BLOCK:** continuar con otro bloque de Arena que mejore una transición o estado visible sin tocar la autoridad de resolución ni inventar contenido.
-- **PERSISTENCIA:** commit de este bloque se registrará en `main` tras la verificación local.
+- **PERSISTENCIA:** commit publicado en `main`: `25aafdff198c78364f0409c13dfdd4b654771ca8` (`feat(mobile): add arena action press depth [skip ci]`).
 - **ROLLBACK_POINT:** `b6e8e319361b702cb84dc0b69c7e0b8056caa0d7`, continuidad publicada antes de este delta.
 
 ## 2026-09-13 — VE-MOB-5-DECK — FORGE ACTION RAIL PRESS DEPTH / IMPLEMENTED_UNVERIFIED
