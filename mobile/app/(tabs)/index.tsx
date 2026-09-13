@@ -482,11 +482,15 @@ export default function ForgeScreen() {
     transform: [{ scale: 0.9 + pulse.value * 0.12 }],
   }));
   const heroParallaxStyle = useAnimatedStyle(() => ({
-    transform: [{ translateY: scrollY.value * 0.1 }, { scale: 1.04 + Math.min(scrollY.value / 2600, 0.07) }],
+    transform: reduceMotion
+      ? []
+      : [{ translateY: scrollY.value * 0.1 }, { scale: 1.04 + Math.min(scrollY.value / 2600, 0.07) }],
   }));
   const sentinelParallaxStyle = useAnimatedStyle(() => ({
     opacity: 0.92,
-    transform: [{ translateY: scrollY.value * 0.2 }, { translateX: Math.sin(orbit.value * Math.PI * 2) * 3 }, { scale: 1.02 + pulse.value * 0.02 }],
+    transform: reduceMotion
+      ? []
+      : [{ translateY: scrollY.value * 0.2 }, { translateX: Math.sin(orbit.value * Math.PI * 2) * 3 }, { scale: 1.02 + pulse.value * 0.02 }],
   }));
   const orbitStyle = useAnimatedStyle(() => ({
     opacity: 0.25 + pulse.value * 0.25,
@@ -502,11 +506,13 @@ export default function ForgeScreen() {
   }));
   const continuumArtStyle = useAnimatedStyle(() => ({
     opacity: 0.17 + pulse.value * 0.05,
-    transform: [
-      { translateY: scrollY.value * -0.08 },
-      { translateX: Math.sin(orbit.value * Math.PI * 2) * 5 },
-      { scale: 1.08 + pulse.value * 0.025 },
-    ],
+    transform: reduceMotion
+      ? []
+      : [
+          { translateY: scrollY.value * -0.08 },
+          { translateX: Math.sin(orbit.value * Math.PI * 2) * 5 },
+          { scale: 1.08 + pulse.value * 0.025 },
+        ],
   }));
   const continuumGlowStyle = useAnimatedStyle(() => ({
     opacity: 0.18 + pulse.value * 0.1,
