@@ -103,7 +103,12 @@ function ThresholdButton({
       }}
       style={({ pressed }) => [
         secondary ? styles.secondaryThreshold : styles.primaryThreshold,
-        { backgroundColor: secondary ? `${colors.ink}99` : undefined, borderColor: secondary ? `${colors.foreground}66` : colors.accent, opacity: pressed ? 0.76 : 1 },
+        {
+          backgroundColor: secondary ? `${colors.ink}99` : undefined,
+          borderColor: secondary ? `${colors.foreground}66` : colors.accent,
+          opacity: pressed ? 0.76 : 1,
+          transform: [{ translateY: pressed ? 2 : 0 }],
+        },
       ]}
     >
       {!secondary ? <LinearGradient colors={[colors.accent, colors.primary]} style={StyleSheet.absoluteFill} /> : null}
@@ -739,7 +744,7 @@ export default function ForgeScreen() {
               accessibilityLabel="Inspeccionar carta destacada del Nexus"
               testID="home-featured-card"
               onPress={openFeatured}
-              style={({ pressed }) => [styles.heroCardAnchor, { opacity: pressed ? 0.78 : 1 }]}
+               style={({ pressed }) => [styles.heroCardAnchor, { opacity: pressed ? 0.78 : 1, transform: [{ translateY: pressed ? 2 : 0 }] }]}
             >
               <View style={[styles.heroCardFrame, { borderColor: `${colors.rarityLegendary}CC`, backgroundColor: colors.ink }]}>
                  {activeCard?.image_url ? (
@@ -855,7 +860,7 @@ export default function ForgeScreen() {
                       <Icon name="map" color={colors.rarityRare} size={13} /><Text style={[styles.frontStageLinkTextFinal, { color: colors.rarityRare }]}>MUNDO</Text><Icon name="arrow-up" color={colors.rarityRare} size={10} />
                     </Pressable>
                   </View>
-                   <Pressable accessibilityRole="button" accessibilityLabel={activeEvent ? 'Abrir evento activo' : 'Abrir mundo para consultar eventos'} testID="home-event" onPress={() => navigate('/world')} style={({ pressed }) => [styles.eventRibbonFinal, { borderLeftColor: eventAccent, backgroundColor: activeEvent ? `${colors.ink}A6` : `${colors.ink}72`, opacity: pressed ? 0.76 : 1 }]}>
+                    <Pressable accessibilityRole="button" accessibilityLabel={activeEvent ? 'Abrir evento activo' : 'Abrir mundo para consultar eventos'} testID="home-event" onPress={() => navigate('/world')} style={({ pressed }) => [styles.eventRibbonFinal, { borderLeftColor: eventAccent, backgroundColor: activeEvent ? `${colors.ink}A6` : `${colors.ink}72`, opacity: pressed ? 0.76 : 1, transform: [{ translateY: pressed ? 2 : 0 }] }]}>
                     <View style={[styles.eventBeaconFinal, { borderColor: `${eventAccent}66`, backgroundColor: `${eventAccent}0D` }]}>
                        <Icon name={activeEvent ? 'resonance' : 'radio'} color={eventAccent} size={23} />
                     </View>
@@ -870,7 +875,7 @@ export default function ForgeScreen() {
                     </View>
                   </Pressable>
 
-                  <Pressable accessibilityRole="button" accessibilityLabel="Inspeccionar carta destacada del Nexus" testID="home-featured-card-detail" onPress={openFeatured} style={({ pressed }) => [styles.artifactFeatureFinal, { opacity: pressed ? 0.78 : 1 }]}>
+                   <Pressable accessibilityRole="button" accessibilityLabel="Inspeccionar carta destacada del Nexus" testID="home-featured-card-detail" onPress={openFeatured} style={({ pressed }) => [styles.artifactFeatureFinal, { opacity: pressed ? 0.78 : 1, transform: [{ translateY: pressed ? 2 : 0 }] }]}>
                     <View style={[styles.artifactFrameFinal, { borderColor: colors.rarityLegendary, backgroundColor: colors.ink }]}>
                        {activeCard?.image_url ? <Image source={{ uri: activeCard.image_url }} style={styles.artifactArtFinal} resizeMode="cover" accessibilityLabel="Arte oficial de la carta destacada" onLoad={() => setFeaturedAssetState('ready')} onError={() => setFeaturedAssetState('error')} /> : null}
                        <LinearGradient colors={['transparent', `${colors.ink}F2`]} style={StyleSheet.absoluteFill} />

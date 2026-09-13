@@ -2775,6 +2775,15 @@
 - Estado honesto: `IMPLEMENTED_UNVERIFIED`. Próximo bloque sugerido: sólo continuar si aparece una mejora concreta de continuidad o interacción; no rediseñar la escena consolidada por novedad.
 
 ---
+## 2026-09-13 — VE-MOB-3-HOME — FRONT OBJECT PRESS DEPTH / IMPLEMENTED_UNVERIFIED
+
+- Se cerró un microbloque de FASE 11 exclusivamente en `mobile/app/(tabs)/index.tsx`: los umbrales del hero, el frente/evento y la carta de resonancia ahora comparten la respuesta táctil de profundidad del resto de objetos del Home.
+- Al presionar, cada objeto reduce intensidad y desciende dentro de su plano sin alterar navegación, expansión de carta, haptics, accesibilidad ni los estados activo/en espera del evento.
+- Se conservaron artwork y datos canónicos, parallax acotado, `reduced-motion`, rutas, `testID`, Supabase/GameContext y todas las superficies fuera del Home.
+- No se inicia workflow, no se compila APK ni se genera release por la instrucción vigente. Estado honesto: `IMPLEMENTED_UNVERIFIED`.
+- Siguiente microbloque: continuar sólo con una mejora concreta de continuidad o interacción, sin rehacer la escena consolidada.
+
+---
 ## 2026-09-13 — VE-MOB-3-HOME — BOUNDED CAMERA PARALLAX / IMPLEMENTED_UNVERIFIED
 
 - Se cerró un microbloque de FASE 10 exclusivamente en `mobile/app/(tabs)/index.tsx`: el desplazamiento de cámara del hero, la identidad en primer plano, la constelación y la atmósfera del Continuum ahora queda limitado a un rango seguro durante recorridos largos.
