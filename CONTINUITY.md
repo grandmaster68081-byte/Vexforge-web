@@ -3,7 +3,7 @@
 - Se evolucionaron exclusivamente las superficies secundarias del Home Android: misiones, actividad pública y clasificación dejaron de renderizarse como filas administrativas repetitivas.
 - Las misiones ahora aparecen como señales de rito con órbita, índice, traza, recompensa y pulso de actividad; la actividad pública como un rastro temporal; la clasificación como nodos de circuito con posición, forjador, victorias y MMR.
 - Se conservaron datos reales, rutas, `testID`, accesibilidad, safe area, reduced-motion, estados vacíos y la navegación existente. No se modificaron Supabase, RPCs, GameContext, Auth, otras pantallas ni assets.
-- La guarda oficial del Home pasa 12/12 y además bloquea el retorno de los patrones `missionLine`, `activityRow` y `rankingRow`. No se ejecutó compilación ni workflow Android, por instrucción explícita; el commit se publicará con `[skip ci]`.
+- La guarda oficial del Home pasa 12/12 y además bloquea el retorno de los patrones `missionLine`, `activityRow` y `rankingRow`. El bloque quedó publicado en `main` mediante el commit `662858eb892f0a43bb07fb3486967bf46dd7d94a`; no se ejecutó compilación ni workflow Android por instrucción explícita y el commit usa `[skip ci]`.
 - Siguiente bloque: revisar la unión entre la escena de dominios y el tramo de operaciones sin rehacer el hero ni convertir la portada en dashboard.
 
 ## 2026-09-13 — VE-MOB-3-HOME — DOMAIN WORLD OBJECTS / IMPLEMENTED_UNVERIFIED
