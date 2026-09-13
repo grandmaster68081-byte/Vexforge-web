@@ -3,22 +3,18 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import {
   AccessibilityInfo,
   ActivityIndicator,
-  Image,
   Pressable,
   RefreshControl,
   ScrollView,
   StyleSheet,
   Text,
   View,
-  useWindowDimensions,
 } from 'react-native';
-import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useColors } from '@/hooks/useColors';
 import { useGame } from '@/context/GameContext';
 import { emitTelemetry } from '@/lib/telemetry';
 import { ScreenShell } from '@/components/ScreenShell';
-import { getCanonicalFrameMetrics } from '@/components/CanonicalFrame';
 import { DomainHeader } from '@/components/DomainHeader';
 import { DomainState } from '@/components/DomainState';
 import { loadPlayerDeck } from '@/lib/supabase';
@@ -28,33 +24,6 @@ import { ForgeFormationPreview } from '@/components/ForgeFormationPreview';
 import { ForgeBattlefield } from '@/components/ForgeBattlefield';
 
 type Phase = 'lobby' | 'confirm' | 'replay' | 'result';
-const BATTLE_REFERENCE_BACKGROUND = require('../../assets/images/battle-reference-scene.png');
-
-type ReferenceHotspot = {
-  id: string;
-  label: string;
-  left: `${number}%`;
-  top: `${number}%`;
-  width: `${number}%`;
-  height: `${number}%`;
-};
-
-const REFERENCE_HOTSPOTS: ReferenceHotspot[] = [
-  { id: 'reference-pvp', label: 'Abrir PVP Arena', left: '0%', top: '14%', width: '25%', height: '31%' },
-  { id: 'reference-pve', label: 'Abrir PVE Misiones', left: '25%', top: '14%', width: '25%', height: '31%' },
-  { id: 'reference-boss', label: 'Abrir Jefe Raid', left: '50%', top: '14%', width: '25%', height: '31%' },
-  { id: 'reference-quick-battle', label: 'Iniciar batalla rápida práctica', left: '75%', top: '14%', width: '25%', height: '31%' },
-  { id: 'reference-vanguard', label: 'Abrir formación Vanguardia', left: '0%', top: '45%', width: '33%', height: '19%' },
-  { id: 'reference-champion', label: 'Abrir formación Campeón', left: '33%', top: '45%', width: '34%', height: '19%' },
-  { id: 'reference-sentinel', label: 'Abrir formación Centinela', left: '67%', top: '45%', width: '33%', height: '19%' },
-  { id: 'reference-reserve', label: 'Abrir reserva de formación', left: '30%', top: '61%', width: '40%', height: '14%' },
-  { id: 'reference-enter-combat', label: 'Entrar en combate', left: '20%', top: '74%', width: '60%', height: '14%' },
-  { id: 'reference-home', label: 'Ir a Inicio', left: '0%', top: '89%', width: '20%', height: '11%' },
-  { id: 'reference-battle', label: 'Permanecer en Batalla', left: '20%', top: '89%', width: '20%', height: '11%' },
-  { id: 'reference-cards', label: 'Ir a Cartas', left: '40%', top: '89%', width: '20%', height: '11%' },
-  { id: 'reference-deck', label: 'Ir a Mazo', left: '60%', top: '89%', width: '20%', height: '11%' },
-  { id: 'reference-profile', label: 'Ir a Perfil', left: '80%', top: '89%', width: '20%', height: '11%' },
-];
 
 function rankName(mmr: number) {
   if (mmr >= 3000) return 'MYTHIC';
@@ -290,12 +259,6 @@ function ResultPanel({
 export default function BattleScreen() {
   const colors = useColors();
   const insets = useSafeAreaInsets();
-  const router = useRouter();
-  const { width: viewportWidth, height: viewportHeight } = useWindowDimensions();
-  const { width: frameWidth, height: canvasHeight } = getCanonicalFrameMetrics(
-    viewportWidth,
-    Math.max(1, viewportHeight - insets.top - insets.bottom),
-  );
   const {
     session,
     player,
@@ -479,92 +442,6 @@ export default function BattleScreen() {
     setPhase('lobby');
   };
 
-  const routeFromReference = (id: string) => {
-    if (id === 'reference-home') return router.replace('/');
-    if (id === 'reference-cards') return router.push('/collection');
-    if (id === 'reference-deck' || id.startsWith('reference-vanguard') || id.startsWith('reference-champion') || id.startsWith('reference-sentinel') || id.startsWith('reference-reserve')) {
-      return router.push('/deck');
-    }
-    if (id === 'reference-profile') return router.push('/profile');
-    if (id === 'reference-boss') return router.push('/world');
-    if (id === 'reference-pve') return router.push('/missions');
-    if (id === 'reference-pvp') {
-      void handleFind();
-      return;
-    }
-    if (id === 'reference-quick-battle') {
-      handleStartAIBattle();
-      return;
-    }
-    if (id === 'reference-enter-combat') {
-      if (selectedOpponent) void handleStartBattle();
-      else void handleFind();
-    }
-  };
-
-  const referenceStatus = battleLoading
-    ? 'RESOLVIENDO COMBATE'
-    : searching
-      ? 'BUSCANDO RIVAL'
-      : selectedOpponent
-        ? `RIVAL: ${selectedOpponent.display_name}`
-        : localError || authError || 'SELECCIONA UN FRENTE';
-  const referencePlayer = player?.display_name?.trim() || session.user.email?.split('@')[0] || 'Forjador';
-
-  if (phase === 'lobby') {
-    return (
-      <ScreenShell surface="pvp" sceneMode="hero">
-        <View style={[styles.referenceScreen, { marginBottom: -insets.bottom }]}>
-          <View style={[styles.referenceContent, { marginTop: insets.top }]}>
-            <View
-              testID="battle-reference-scene"
-              style={[styles.referenceScene, { width: frameWidth, height: canvasHeight, alignSelf: 'center' }]}
-            >
-            <Image
-              source={BATTLE_REFERENCE_BACKGROUND}
-              style={styles.referenceImage}
-              resizeMode="cover"
-              accessibilityLabel="Pantalla de Batalla proporcionada por el operador"
-              accessibilityIgnoresInvertColors
-            />
-            <View style={styles.referenceLayer} accessibilityLabel={`Batalla de ${referencePlayer}. ${referenceStatus}`}>
-              <Text
-                pointerEvents="none"
-                accessibilityLiveRegion="polite"
-                style={[styles.referenceStatus, { color: localError || authError ? colors.danger : colors.accent }]}
-              >
-                {referenceStatus}
-              </Text>
-              {REFERENCE_HOTSPOTS.map((hotspot) => (
-                <Pressable
-                  key={hotspot.id}
-                  testID={`battle-${hotspot.id}`}
-                  accessibilityRole="button"
-                  accessibilityLabel={hotspot.label}
-                  accessibilityHint="Toca dos veces para abrir este flujo."
-                  accessibilityState={{ disabled: battleLoading || searching }}
-                  disabled={battleLoading || searching}
-                  onPress={() => routeFromReference(hotspot.id)}
-                  style={({ pressed }) => [
-                    styles.referenceHotspot,
-                    {
-                      left: hotspot.left,
-                      top: hotspot.top,
-                      width: hotspot.width,
-                      height: hotspot.height,
-                      opacity: pressed ? 0.78 : 1,
-                    },
-                  ]}
-                />
-              ))}
-            </View>
-            </View>
-          </View>
-        </View>
-      </ScreenShell>
-    );
-  }
-
   return (
     <ScreenShell surface="pvp">
       <ScrollView
@@ -703,30 +580,6 @@ export default function BattleScreen() {
 }
 
 const styles = StyleSheet.create({
-  referenceScreen: { flex: 1, width: '100%', backgroundColor: '#05050D' },
-  referenceContent: { alignItems: 'flex-start' },
-  referenceScene: { position: 'relative', overflow: 'hidden' },
-  referenceImage: { width: '100%', height: '100%' },
-  referenceLayer: { ...StyleSheet.absoluteFillObject },
-  referenceStatus: {
-    position: 'absolute',
-    left: '23%',
-    top: '70.8%',
-    width: '54%',
-    textAlign: 'center',
-    fontSize: 8,
-    fontWeight: '900',
-    letterSpacing: 0.45,
-    textShadowColor: '#000000',
-    textShadowOffset: { width: 0, height: 1 },
-    textShadowRadius: 3,
-  },
-  referenceHotspot: {
-    position: 'absolute',
-    borderWidth: 1,
-    borderColor: 'transparent',
-    backgroundColor: 'transparent',
-  },
   screen: { paddingHorizontal: 18, gap: 12 },
   center: { flex: 1, justifyContent: 'center', alignItems: 'center', padding: 24 },
   headingRow: { flexDirection: 'row', alignItems: 'center', gap: 12, marginBottom: 2 },
