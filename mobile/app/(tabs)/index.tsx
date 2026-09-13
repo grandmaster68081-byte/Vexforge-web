@@ -529,6 +529,10 @@ export default function ForgeScreen() {
   const season = home.stats?.season ?? null;
   const xp = progress?.xp ?? 0;
   const xpToNext = progress?.xp_to_next ?? 0;
+  const levelSignal = progress ? `NIVEL ${formatNumber(progress.level)}` : 'NIVEL EN ESPERA';
+  const walletSignal = wallet ? `${formatNumber(wallet?.vex_ingame)} VEX` : 'VEX EN ESPERA';
+  const winsSignal = playerStats ? `${formatNumber(playerStats?.pvp_wins)} VICTORIAS` : 'VICTORIAS EN ESPERA';
+  const progressionSignal = progress ? `${formatNumber(xp)} / ${formatNumber(xpToNext)}` : 'SEÑAL PENDIENTE';
   const connectionLabel = syncState === 'connected' ? 'NEXUS ONLINE' : syncState === 'offline' ? 'NEXUS OFFLINE' : 'SINCRONIZANDO';
   const connectionColor = syncState === 'connected' ? colors.success : syncState === 'offline' ? colors.danger : colors.accent;
   const viewportPadding = Math.max(18, Math.min(25, width * 0.06));
@@ -536,11 +540,11 @@ export default function ForgeScreen() {
   const ranking = home.stats?.top3 ?? [];
   const domainPortals: Array<{ id: string; label: string; title: string; status: string; icon: IconName; route: HomeRoute; color: string }> = [
     { id: 'arena', label: 'ARENA', title: 'Cruza el umbral', status: activeEvent ? 'EVENTO ACTIVO' : 'OPONENTES EN ESPERA', icon: 'target', route: '/battle', color: colors.rarityRare },
-    { id: 'forge', label: 'FORJA', title: 'Traza tu formación', status: `NIVEL ${formatNumber(progress?.level)} · MAZO ACTIVO`, icon: 'deck', route: '/deck', color: colors.rarityEpic },
+    { id: 'forge', label: 'FORJA', title: 'Traza tu formación', status: `${levelSignal} · MAZO ACTIVO`, icon: 'deck', route: '/deck', color: colors.rarityEpic },
     { id: 'archive', label: 'ARCHIVO', title: 'Revela tu colección', status: `${formatNumber(cardsTotal)} CARTAS REGISTRADAS`, icon: 'collection', route: '/collection', color: colors.rarityLegendary },
     { id: 'world', label: 'MUNDO', title: 'Lee la señal', status: activeEvent ? `CIERRA EN ${formatEventTime(activeEvent.ends_at)}` : 'SIN FRENTE PUBLICADO', icon: 'map', route: '/world', color: colors.rarityRare },
     { id: 'missions', label: 'MISIONES', title: 'Cumple el rito', status: `${formatNumber(home.missions.length)} ÓRDENES ACTIVAS`, icon: 'missions', route: '/missions', color: colors.success },
-    { id: 'economy', label: 'ECONOMÍA', title: 'Mueve el VEX', status: `${formatNumber(wallet?.vex_ingame)} VEX DISPONIBLES`, icon: 'economy', route: '/economy', color: colors.accent },
+    { id: 'economy', label: 'ECONOMÍA', title: 'Mueve el VEX', status: wallet ? `${walletSignal} DISPONIBLES` : walletSignal, icon: 'economy', route: '/economy', color: colors.accent },
   ];
   const domainSignals = Object.fromEntries(domainPortals.map((portal) => [portal.id, portal.status])) as Record<string, string>;
   const homeIdentity = DOMAIN_IDENTITY.foja;
@@ -696,7 +700,7 @@ export default function ForgeScreen() {
                 </View>
                 <View style={[styles.heroFooter, { borderTopColor: `${colors.foreground}2A` }]}>
                   <View style={styles.heroFooterItem}><Icon name="zap" color={colors.accent} size={13} /><Text style={[styles.heroFooterText, { color: `${colors.foreground}C0` }]}>{progress ? `${formatNumber(progress.energy)} / ${formatNumber(progress.max_energy)} ENERGÍA` : 'ENERGÍA EN ESPERA'}</Text></View>
-                  <View style={styles.heroFooterItem}><Icon name="gem" color={colors.rarityEpic} size={13} /><Text style={[styles.heroFooterText, { color: `${colors.foreground}C0` }]}>{formatNumber(wallet?.vex_ingame)} VEX</Text></View>
+                  <View style={styles.heroFooterItem}><Icon name="gem" color={colors.rarityEpic} size={13} /><Text style={[styles.heroFooterText, { color: `${colors.foreground}C0` }]}>{walletSignal}</Text></View>
                   <Pressable accessibilityRole="button" accessibilityLabel="Abrir mundo" testID="home-world" onPress={() => navigate('/world')} style={styles.heroWorldLink}>
                     <Icon name="globe" color={colors.rarityRare} size={13} /><Text style={[styles.heroWorldText, { color: colors.rarityRare }]}>MUNDO</Text><Icon name="arrow-up" color={colors.rarityRare} size={9} />
                   </Pressable>
@@ -798,8 +802,8 @@ export default function ForgeScreen() {
                     <View style={styles.signalIdentityCopyFinal}>
                       <Text style={[styles.signalKickerFinal, { color: colors.accent }]}>IDENTIDAD DEL FORJADOR</Text>
                       <Text numberOfLines={1} style={[styles.signalPlayerNameFinal, { color: colors.foreground }]}>{playerName}</Text>
-                      <Text style={[styles.signalPlayerMetaFinal, { color: colors.mutedForeground }]}>NIVEL {formatNumber(progress?.level)} · {connectionLabel}</Text>
-                      <Text style={[styles.signalPlayerMetaFinal, { color: colors.mutedForeground }]}>{formatNumber(playerStats?.pvp_wins)} VICTORIAS · {formatNumber(wallet?.vex_ingame)} VEX</Text>
+                      <Text style={[styles.signalPlayerMetaFinal, { color: colors.mutedForeground }]}>{levelSignal} · {connectionLabel}</Text>
+                      <Text style={[styles.signalPlayerMetaFinal, { color: colors.mutedForeground }]}>{winsSignal} · {walletSignal}</Text>
                       <View style={styles.identitySourceFinal}>
                         <View style={[styles.identitySourceMarkFinal, { backgroundColor: identityVisual?.accent ?? colors.accent }]} />
                         <Text numberOfLines={1} style={[styles.identitySourceTextFinal, { color: identityVisual?.accent ?? colors.accent }]}>
@@ -809,8 +813,8 @@ export default function ForgeScreen() {
                     </View>
                   </View>
                   <View style={styles.signalProgressFinal}>
-                    <View style={styles.signalProgressLineFinal}><Text style={[styles.signalKickerFinal, { color: colors.mutedForeground }]}>PROGRESIÓN</Text><Text style={[styles.signalProgressValueFinal, { color: colors.accent }]}>{formatNumber(xp)} / {formatNumber(xpToNext)}</Text></View>
-                    <ProgressRail value={xp} total={xpToNext} color={colors.accent} background={colors.border} />
+                    <View style={styles.signalProgressLineFinal}><Text style={[styles.signalKickerFinal, { color: colors.mutedForeground }]}>PROGRESIÓN</Text><Text style={[styles.signalProgressValueFinal, { color: progress ? colors.accent : colors.mutedForeground }]}>{progressionSignal}</Text></View>
+                    {progress ? <ProgressRail value={xp} total={xpToNext} color={colors.accent} background={colors.border} /> : <View style={[styles.progressRail, { backgroundColor: `${colors.mutedForeground}44` }]} />}
                   </View>
                 </Animated.View>
 
@@ -893,8 +897,8 @@ export default function ForgeScreen() {
                  >
                   <View style={styles.ritualHeadingFinal}><View><Text style={[styles.ritualEyebrowFinal, { color: colors.success }]}>OPERACIONES / 02</Text><Text style={[styles.ritualTitleFinal, { color: colors.foreground }]}>El siguiente movimiento</Text></View><View style={[styles.ritualHeadingMarkFinal, { borderColor: colors.success }]}><Icon name="resonance" color={colors.success} size={14} /></View></View>
                   <View style={styles.operationRowFinal}>
-                    <OperationGate label="FORJA" title="Construye tu línea" detail={`NIVEL ${formatNumber(progress?.level)} · MAZO ACTIVO`} icon="deck" color={colors.rarityEpic} testID="home-forge" accessibilityLabel="Abrir Forja" onPress={() => navigate('/deck')} />
-                    <OperationGate label="ECONOMÍA" title="Mueve el VEX" detail={`${formatNumber(wallet?.vex_ingame)} VEX DISPONIBLES`} icon="trending-up-outline" color={colors.accent} testID="home-economy" accessibilityLabel="Abrir economía" onPress={() => navigate('/economy')} />
+                    <OperationGate label="FORJA" title="Construye tu línea" detail={`${levelSignal} · MAZO ACTIVO`} icon="deck" color={colors.rarityEpic} testID="home-forge" accessibilityLabel="Abrir Forja" onPress={() => navigate('/deck')} />
+                    <OperationGate label="ECONOMÍA" title="Mueve el VEX" detail={wallet ? `${walletSignal} DISPONIBLES` : walletSignal} icon="trending-up-outline" color={colors.accent} testID="home-economy" accessibilityLabel="Abrir economía" onPress={() => navigate('/economy')} />
                   </View>
                   <View style={styles.storeRitualFinal}>
                     <View style={styles.storeHeadingFinal}><View><Text style={[styles.operationLabelFinal, { color: colors.success }]}>CÁMARA DE FORJA</Text><Text style={[styles.storeTitleFinal, { color: colors.foreground }]}>Colección y recursos</Text></View><View style={[styles.storeHeadingMarkFinal, { backgroundColor: `${colors.success}18`, borderColor: colors.success }]}><Icon name="packs" color={colors.success} size={14} /></View></View>
@@ -929,7 +933,7 @@ export default function ForgeScreen() {
                     <View style={[styles.continuumBridgeAxis, { backgroundColor: `${colors.rarityRare}4D` }]} />
                     <ContinuumNode
                       label="FORJA"
-                      value={`NIVEL ${formatNumber(progress?.level)}`}
+                      value={levelSignal}
                       detail={wallet ? `${formatNumber(wallet.vex_ingame)} VEX EN RESERVA` : 'REGISTRO EN ESPERA'}
                       icon="deck"
                       color={colors.rarityEpic}

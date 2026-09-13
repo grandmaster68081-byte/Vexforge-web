@@ -2728,3 +2728,12 @@
 - Se mantuvieron rutas, `testID`, haptics, reduced-motion, estados de carga/error/vacío, contratos, Supabase, Auth, economía, combate, otras pantallas Android y la web congelada.
 - Evidencia local: `node scripts/verify-motion.mjs` OK (17 tokens, 8 clases, 3 consumidores), `node scripts/verify-mobile-home-official-assets.mjs` OK (13/13) y `git diff --check` OK. El typecheck local sigue pendiente porque `mobile/node_modules` no está disponible.
 - Estado honesto: `IMPLEMENTED_UNVERIFIED`; el bloque queda listo para publicarse en `main`. Por instrucción del operador no se inicia workflow, no se compila la aplicación y no se genera release. Siguiente bloque: continuar con otro micro-bloque de composición del Home sin rediseñar la escena consolidada.
+
+---
+## 2026-09-13 — VE-MOB-3-HOME — EXPLICIT PLAYER SIGNAL STATES / IMPLEMENTED_UNVERIFIED
+
+- Se cerró otro micro-bloque exclusivamente en `mobile/app/(tabs)/index.tsx`: el ledger del Forjador, los portales de Forja/Economía, la Cámara de Forja y la traza del Nexus ya no presentan `0` como dato real cuando `progress`, `wallet` o las estadísticas todavía no están sincronizados.
+- La ausencia de cada fuente ahora comunica `NIVEL EN ESPERA`, `VEX EN ESPERA`, `VICTORIAS EN ESPERA` o `SEÑAL PENDIENTE`; cuando la fuente existe, se mantienen sus valores vivos sin cambios de cálculo ni autoridad.
+- Se conserva el HUD de energía existente, la escena TCG del Nexus, las rutas, `testID`, accesibilidad, haptics, reduced-motion, estados de carga/error/vacío, Supabase, Auth, economía, combate, otras pantallas Android y la web congelada.
+- Evidencia local: `node scripts/verify-motion.mjs` OK (17 tokens, 8 clases, 3 consumidores), `node scripts/verify-mobile-home-official-assets.mjs` OK (13/13) y `git diff --check` OK. El typecheck local sigue pendiente porque `mobile/node_modules` no está disponible.
+- Estado honesto: `IMPLEMENTED_UNVERIFIED`; el bloque queda publicado en `main`. Por instrucción del operador no se inicia workflow, no se compila la aplicación y no se genera release. Siguiente bloque: seleccionar otra mejora atómica del Home sin rediseñar la escena consolidada.
