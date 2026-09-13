@@ -2746,3 +2746,12 @@
 - Se conservaron la escena TCG del Nexus, los valores vivos de progresión/economía/victorias, rutas, `testID`, accesibilidad, haptics, reduced-motion, estados de carga/error/vacío, Supabase, Auth, economía, combate, otras pantallas Android y la web congelada.
 - Evidencia local: `node scripts/verify-motion.mjs` OK (17 tokens, 8 clases, 3 consumidores), `node scripts/verify-mobile-home-official-assets.mjs` OK (13/13) y `git diff --check` OK. El typecheck local sigue pendiente porque `mobile/node_modules` no está disponible.
 - Estado honesto: `IMPLEMENTED_UNVERIFIED`; el bloque queda listo para publicarse en `main`. Por instrucción del operador no se inicia workflow, no se compila la aplicación y no se genera release. Siguiente bloque: seleccionar otra mejora atómica del Home sin rediseñar la escena consolidada.
+
+---
+## 2026-09-13 — VE-MOB-3-HOME — BOUNDED CAMERA PARALLAX / IMPLEMENTED_UNVERIFIED
+
+- Se cerró un microbloque de FASE 10 exclusivamente en `mobile/app/(tabs)/index.tsx`: el desplazamiento de cámara del hero, la identidad en primer plano, la constelación y la atmósfera del Continuum ahora queda limitado a un rango seguro durante recorridos largos.
+- La escena conserva sus proporciones, capas, artwork canónico, datos vivos, rutas, `testID`, accesibilidad, haptics y `reduced-motion`; no se alteraron contratos, Supabase, Auth, economía, combate, otras pantallas Android ni la web congelada.
+- La limitación evita que el parallax saque los planos authored de su composición antes de que la cámara llegue a la siguiente escena. No añade datos, assets ni movimiento sin causa.
+- Evidencia documental/local pendiente de ejecutar en esta copia: el bloque no inicia workflow, no compila APK ni genera release por la instrucción vigente del operador. Estado honesto: `IMPLEMENTED_UNVERIFIED`.
+- Siguiente microbloque: continuar FASE 10/11 con una mejora atómica de continuidad o interacción, sin rehacer la escena consolidada.

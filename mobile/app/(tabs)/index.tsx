@@ -481,39 +481,53 @@ export default function ForgeScreen() {
     opacity: 0.38 + pulse.value * 0.26,
     transform: [{ scale: 0.9 + pulse.value * 0.12 }],
   }));
-  const heroParallaxStyle = useAnimatedStyle(() => ({
-    transform: reduceMotion
-      ? []
-      : [{ translateY: scrollY.value * 0.1 }, { scale: 1.04 + Math.min(scrollY.value / 2600, 0.07) }],
-  }));
-  const sentinelParallaxStyle = useAnimatedStyle(() => ({
-    opacity: 0.92,
-    transform: reduceMotion
-      ? []
-      : [{ translateY: scrollY.value * 0.2 }, { translateX: Math.sin(orbit.value * Math.PI * 2) * 3 }, { scale: 1.02 + pulse.value * 0.02 }],
-  }));
+  const heroParallaxStyle = useAnimatedStyle(() => {
+    // Keep the camera movement bounded so a long scroll cannot pull the hero
+    // out of its authored composition before the next scene takes over.
+    const cameraY = Math.min(Math.max(scrollY.value, 0), 720);
+    return {
+      transform: reduceMotion
+        ? []
+        : [{ translateY: cameraY * 0.1 }, { scale: 1.04 + Math.min(cameraY / 2600, 0.07) }],
+    };
+  });
+  const sentinelParallaxStyle = useAnimatedStyle(() => {
+    const cameraY = Math.min(Math.max(scrollY.value, 0), 720);
+    return {
+      opacity: 0.92,
+      transform: reduceMotion
+        ? []
+        : [{ translateY: cameraY * 0.2 }, { translateX: Math.sin(orbit.value * Math.PI * 2) * 3 }, { scale: 1.02 + pulse.value * 0.02 }],
+    };
+  });
   const orbitStyle = useAnimatedStyle(() => ({
     opacity: 0.25 + pulse.value * 0.25,
     transform: [{ rotate: `${orbit.value * 360}deg` }, { scale: 0.92 + pulse.value * 0.06 }],
   }));
-  const domainSceneDriftStyle = useAnimatedStyle(() => ({
-    transform: reduceMotion
-      ? []
-      : [
-          { translateY: scrollY.value * 0.035 },
-          { translateX: Math.sin(orbit.value * Math.PI * 2) * 1.5 },
-        ],
-  }));
-  const continuumArtStyle = useAnimatedStyle(() => ({
-    opacity: 0.17 + pulse.value * 0.05,
-    transform: reduceMotion
-      ? []
-      : [
-          { translateY: scrollY.value * -0.08 },
-          { translateX: Math.sin(orbit.value * Math.PI * 2) * 5 },
-          { scale: 1.08 + pulse.value * 0.025 },
-        ],
-  }));
+  const domainSceneDriftStyle = useAnimatedStyle(() => {
+    const cameraY = Math.min(Math.max(scrollY.value, 0), 720);
+    return {
+      transform: reduceMotion
+        ? []
+        : [
+            { translateY: cameraY * 0.035 },
+            { translateX: Math.sin(orbit.value * Math.PI * 2) * 1.5 },
+          ],
+    };
+  });
+  const continuumArtStyle = useAnimatedStyle(() => {
+    const cameraY = Math.min(Math.max(scrollY.value, 0), 720);
+    return {
+      opacity: 0.17 + pulse.value * 0.05,
+      transform: reduceMotion
+        ? []
+        : [
+            { translateY: cameraY * -0.08 },
+            { translateX: Math.sin(orbit.value * Math.PI * 2) * 5 },
+            { scale: 1.08 + pulse.value * 0.025 },
+          ],
+    };
+  });
   const continuumGlowStyle = useAnimatedStyle(() => ({
     opacity: 0.18 + pulse.value * 0.1,
     transform: [{ translateY: pulse.value * -18 }, { scale: 1 + pulse.value * 0.08 }],
