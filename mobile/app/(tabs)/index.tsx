@@ -726,14 +726,32 @@ export default function ForgeScreen() {
                 </View>
               </Animated.View>
               <View style={styles.topActions}>
-                <Pressable accessibilityRole="button" accessibilityLabel="Abrir perfil" testID="home-profile" onPress={() => navigate('/profile')} style={[styles.iconButton, { borderColor: `${colors.accent}80`, backgroundColor: `${colors.ink}B8` }]}>
+                <Pressable
+                  accessibilityRole="button"
+                  accessibilityLabel="Abrir perfil"
+                  testID="home-profile"
+                  onPress={() => navigate('/profile')}
+                  style={({ pressed }) => [styles.iconButton, { borderColor: `${colors.accent}80`, backgroundColor: `${colors.ink}B8`, opacity: pressed ? 0.68 : 1, transform: [{ translateY: pressed ? 2 : 0 }] }]}
+                >
                   <Icon name="user" color={colors.accent} size={17} />
                 </Pressable>
-                <Pressable accessibilityRole="button" accessibilityLabel="Abrir mensajes y misiones" testID="home-inbox" onPress={() => navigate('/missions')} style={[styles.iconButton, { borderColor: `${colors.accent}80`, backgroundColor: `${colors.ink}B8` }]}>
+                <Pressable
+                  accessibilityRole="button"
+                  accessibilityLabel="Abrir mensajes y misiones"
+                  testID="home-inbox"
+                  onPress={() => navigate('/missions')}
+                  style={({ pressed }) => [styles.iconButton, { borderColor: `${colors.accent}80`, backgroundColor: `${colors.ink}B8`, opacity: pressed ? 0.68 : 1, transform: [{ translateY: pressed ? 2 : 0 }] }]}
+                >
                   <Icon name="inbox" color={colors.foreground} size={17} />
                   {home.missions.length > 0 ? <View style={[styles.notificationDot, { backgroundColor: colors.accent }]} /> : null}
                 </Pressable>
-                <Pressable accessibilityRole="button" accessibilityLabel="Abrir ajustes" testID="home-settings" onPress={() => navigate('/meta')} style={[styles.iconButton, { borderColor: `${colors.accent}80`, backgroundColor: `${colors.ink}B8` }]}>
+                <Pressable
+                  accessibilityRole="button"
+                  accessibilityLabel="Abrir ajustes"
+                  testID="home-settings"
+                  onPress={() => navigate('/meta')}
+                  style={({ pressed }) => [styles.iconButton, { borderColor: `${colors.accent}80`, backgroundColor: `${colors.ink}B8`, opacity: pressed ? 0.68 : 1, transform: [{ translateY: pressed ? 2 : 0 }] }]}
+                >
                   <Icon name="settings" color={colors.foreground} size={17} />
                 </Pressable>
               </View>

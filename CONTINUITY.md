@@ -1,3 +1,10 @@
+## 2026-09-13 — VE-MOB-3-HOME — COMMAND SEAL PRESS DEPTH / IMPLEMENTED_UNVERIFIED
+
+- Se cerró un microbloque de FASE 9/11 exclusivamente en `mobile/app/(tabs)/index.tsx`: los sellos de perfil, misiones y ajustes del encabezado ahora responden como controles físicos del umbral.
+- Al presionar, cada sello reduce su intensidad y desciende ligeramente; se conservan rutas, `testID`, accesibilidad, haptics y el estado de notificación de misiones.
+- No se modificaron datos, Supabase, RPCs, GameContext, Auth, otras pantallas, assets ni la web congelada.
+- El bloque queda `IMPLEMENTED_UNVERIFIED`; no se compila aplicación. Siguiente bloque: continuar sólo con una mejora concreta de continuidad o interacción del Home.
+
 ## 2026-09-13 — VE-MOB-3-HOME — NAVIGATION LANDMARK PRESS DEPTH / IMPLEMENTED_UNVERIFIED
 
 - Se cerró un microbloque de FASE 9/11 exclusivamente en `mobile/app/(tabs)/index.tsx`: las acciones de sección y los dos accesos directos al Mundo ahora se comportan como umbrales táctiles authored, no como texto decorativo.
