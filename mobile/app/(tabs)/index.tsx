@@ -19,12 +19,14 @@ import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ScreenShell } from '@/components/ScreenShell';
 import { ForgeIconName, VexIcon } from '@/components/ForgeIcon';
+import { getCardIdentityVisual } from '@/constants/cardIdentity';
 import { OFFICIAL_ASSETS } from '@/constants/visual';
 import { DOMAIN_IDENTITY, DEPTH, MOTION } from '@/constants/experience';
 import { useColors } from '@/hooks/useColors';
 import { useGame } from '@/context/GameContext';
 import {
   loadDailyFeaturedCard,
+  loadHomeIdentityCard,
   loadHomeMissions,
   loadHomeStats,
   loadRecentActivity,
@@ -51,9 +53,9 @@ type HomeRoute =
   | '/store?mode=evolution'
   | '/store?mode=packs';
 type HomeState = 'loading' | 'ready' | 'partial' | 'error';
-type RemoteHome = { stats: HomeStats | null; card: DailyCard | null; missions: HomeMission[]; activity: ActivityItem[] };
+type RemoteHome = { stats: HomeStats | null; card: DailyCard | null; identityCard: DailyCard | null; missions: HomeMission[]; activity: ActivityItem[] };
 
-const INITIAL_HOME: RemoteHome = { stats: null, card: null, missions: [], activity: [] };
+const INITIAL_HOME: RemoteHome = { stats: null, card: null, identityCard: null, missions: [], activity: [] };
 
 function formatNumber(value: number | null | undefined) {
   return new Intl.NumberFormat('es-ES').format(Math.max(0, Math.round(value ?? 0)));
@@ -260,13 +262,14 @@ export default function ForgeScreen() {
 
   const loadHome = useCallback(async () => {
     setHomeState('loading');
-    const results = await Promise.allSettled([loadHomeStats(), loadDailyFeaturedCard(), loadHomeMissions(), loadRecentActivity(5)]);
-    const [statsResult, cardResult, missionResult, activityResult] = results;
+    const results = await Promise.allSettled([loadHomeStats(), loadDailyFeaturedCard(), loadHomeMissions(), loadRecentActivity(5), loadHomeIdentityCard()]);
+    const [statsResult, cardResult, missionResult, activityResult, identityResult] = results;
     setHome((current) => ({
       stats: statsResult.status === 'fulfilled' ? statsResult.value : current.stats,
       card: cardResult.status === 'fulfilled' ? cardResult.value : current.card,
       missions: missionResult.status === 'fulfilled' ? missionResult.value : current.missions,
       activity: activityResult.status === 'fulfilled' ? activityResult.value : current.activity,
+      identityCard: identityResult.status === 'fulfilled' ? identityResult.value : current.identityCard,
     }));
     const failed = results.filter((result) => result.status === 'rejected').length;
     setHomeState(failed === results.length ? 'error' : failed > 0 ? 'partial' : 'ready');
@@ -309,6 +312,8 @@ export default function ForgeScreen() {
   }));
 
   const activeCard = home.card ?? featuredCards[0] ?? null;
+  const identityCard = home.identityCard;
+  const identityVisual = getCardIdentityVisual(identityCard?.id);
   const playerName = capitalize(player?.display_name, 'Forjador');
   const activeEvent = home.stats?.active_event ?? null;
   const season = home.stats?.season ?? null;
@@ -376,14 +381,26 @@ export default function ForgeScreen() {
               <View style={[styles.heroCorner, styles.heroBottomRight, { borderColor: `${colors.rarityEpic}A8` }]} />
               <Text style={[styles.heroSceneCode, { color: `${colors.foreground}70` }]}>NEXUS / 01 · THRESHOLD</Text>
             </View>
-            <Animated.Image
-              source={OFFICIAL_ASSETS.homeSentinel}
-              style={[styles.heroSentinel, sentinelParallaxStyle]}
-              resizeMode="contain"
-              accessibilityLabel="Guardián astral de la Forja"
-              onLoad={() => setSentinelAssetState('ready')}
-              onError={() => setSentinelAssetState('error')}
-            />
+             <Animated.View style={[styles.identityStage, { borderColor: `${identityVisual?.accent ?? colors.rarityEpic}B8`, backgroundColor: `${identityVisual?.overlay ?? colors.ink}CC` }, sentinelParallaxStyle]}>
+               {identityCard?.image_url ? (
+                 <Image
+                   source={{ uri: identityCard.image_url }}
+                   style={styles.identityArt}
+                   resizeMode="cover"
+                   accessibilityLabel="Artwork oficial de la identidad canónica del Home"
+                   onLoad={() => setSentinelAssetState('ready')}
+                   onError={() => setSentinelAssetState('error')}
+                 />
+               ) : null}
+               <LinearGradient colors={['transparent', `${colors.ink}D9`]} style={StyleSheet.absoluteFill} />
+               <View style={styles.identityStageRule} />
+               <View style={styles.identityStageCopy}>
+                 <Text style={[styles.identityStageKicker, { color: identityVisual?.accent ?? colors.rarityEpic }]}>IDENTIDAD CANÓNICA</Text>
+                 <Text style={[styles.identityStageCode, { color: `${colors.foreground}B8` }]}>{identityCard?.code ?? 'SEÑAL PENDIENTE'}</Text>
+                 <Text numberOfLines={2} style={[styles.identityStageName, { color: colors.foreground }]}>{identityCard?.name ?? 'IDENTIDAD NO SINCRONIZADA'}</Text>
+                 <Text style={[styles.identityStageMeta, { color: `${colors.foreground}B8` }]}>{identityCard ? `${identityCard.rarity?.toUpperCase()} · ${identityCard.faction?.toUpperCase()}` : 'CARGANDO REGISTRO CANÓNICO'}</Text>
+               </View>
+             </Animated.View>
             <Animated.View pointerEvents="none" style={[styles.heroOrbit, { borderColor: `${colors.rarityEpic}6A` }, orbitStyle]} />
             <Animated.View pointerEvents="none" style={[styles.heroCore, { backgroundColor: `${colors.rarityEpic}A8` }, pulseStyle]} />
             {heroAssetState === 'error' || sentinelAssetState === 'error' ? (
@@ -452,14 +469,16 @@ export default function ForgeScreen() {
               style={({ pressed }) => [styles.heroCardAnchor, { opacity: pressed ? 0.78 : 1 }]}
             >
               <View style={[styles.heroCardFrame, { borderColor: `${colors.rarityLegendary}CC`, backgroundColor: colors.ink }]}>
-                <Image
-                  source={OFFICIAL_ASSETS.homeFeatureCard}
-                  style={styles.heroCardArt}
-                  resizeMode="cover"
-                  accessibilityLabel="Arte oficial de la carta destacada"
-                  onLoad={() => setFeaturedAssetState('ready')}
-                  onError={() => setFeaturedAssetState('error')}
-                />
+                 {activeCard?.image_url ? (
+                   <Image
+                     source={{ uri: activeCard.image_url }}
+                     style={styles.heroCardArt}
+                     resizeMode="cover"
+                     accessibilityLabel="Arte oficial de la carta destacada"
+                     onLoad={() => setFeaturedAssetState('ready')}
+                     onError={() => setFeaturedAssetState('error')}
+                   />
+                 ) : null}
                 <LinearGradient colors={['transparent', `${colors.ink}E8`]} style={StyleSheet.absoluteFill} />
                 <View style={[styles.heroCardRarity, { borderColor: `${colors.rarityLegendary}A8`, backgroundColor: `${colors.ink}C8` }]}>
                   <Text style={[styles.heroCardRarityText, { color: colors.rarityLegendary }]}>{activeCard?.rarity?.toUpperCase() ?? 'SEÑAL PENDIENTE'}</Text>
@@ -537,7 +556,7 @@ export default function ForgeScreen() {
 
                   <Pressable accessibilityRole="button" accessibilityLabel="Inspeccionar carta destacada del Nexus" testID="home-featured-card-detail" onPress={openFeatured} style={({ pressed }) => [styles.artifactFeatureFinal, { opacity: pressed ? 0.78 : 1 }]}>
                     <View style={[styles.artifactFrameFinal, { borderColor: colors.rarityLegendary, backgroundColor: colors.ink }]}>
-                      <Image source={OFFICIAL_ASSETS.homeFeatureCard} style={styles.artifactArtFinal} resizeMode="cover" accessibilityLabel="Arte oficial de la carta destacada" onLoad={() => setFeaturedAssetState('ready')} onError={() => setFeaturedAssetState('error')} />
+                       {activeCard?.image_url ? <Image source={{ uri: activeCard.image_url }} style={styles.artifactArtFinal} resizeMode="cover" accessibilityLabel="Arte oficial de la carta destacada" onLoad={() => setFeaturedAssetState('ready')} onError={() => setFeaturedAssetState('error')} /> : null}
                       <LinearGradient colors={['transparent', colors.ink]} style={StyleSheet.absoluteFill} />
                       <Text style={[styles.artifactRarityFinal, { color: colors.rarityLegendary }]}>{activeCard?.rarity?.toUpperCase() ?? 'SEÑAL PENDIENTE'}</Text>
                       <Text style={[styles.artifactCodeFinal, { color: colors.foreground }]}>{activeCard?.code ?? '—'}</Text>
@@ -623,7 +642,14 @@ const styles = StyleSheet.create({
   scrollContent: { gap: 0 },
   heroStage: { overflow: 'hidden', position: 'relative' },
   heroArt: { height: '100%', left: 0, position: 'absolute', top: 0, width: '100%' },
-  heroSentinel: { bottom: -92, height: 590, position: 'absolute', right: -108, width: 580 },
+  identityStage: { bottom: 42, borderBottomRightRadius: 155, borderTopLeftRadius: 155, borderWidth: 1, height: 432, overflow: 'hidden', position: 'absolute', right: -36, width: 286, zIndex: 2 },
+  identityArt: { height: '155%', left: -96, position: 'absolute', top: -72, width: '180%' },
+  identityStageRule: { borderLeftWidth: 1, borderTopWidth: 1, height: 68, left: 14, position: 'absolute', top: 14, width: 68 },
+  identityStageCopy: { bottom: 20, left: 19, position: 'absolute', right: 20 },
+  identityStageKicker: { fontFamily: 'Rajdhani_700Bold', fontSize: 8, letterSpacing: 1.3 },
+  identityStageCode: { fontFamily: 'Rajdhani_700Bold', fontSize: 8, letterSpacing: 1, marginTop: 4 },
+  identityStageName: { fontFamily: 'Cinzel_600SemiBold', fontSize: 16, lineHeight: 20, marginTop: 4 },
+  identityStageMeta: { fontFamily: 'Rajdhani_600SemiBold', fontSize: 9, letterSpacing: 0.6, marginTop: 4 },
   heroOrbit: { borderRadius: 210, borderWidth: 1, height: 420, position: 'absolute', right: -164, top: 118, width: 420 },
   heroCore: { borderRadius: 34, height: 68, opacity: 0.25, position: 'absolute', right: 112, top: 270, width: 68 },
   heroRuleFrame: { ...StyleSheet.absoluteFillObject, opacity: 0.84 },

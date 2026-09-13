@@ -1,6 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Linking from 'expo-linking';
 import * as WebBrowser from 'expo-web-browser';
+import { HOME_PILOT_CARD_ID } from '@/constants/cardIdentity';
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -1007,6 +1008,15 @@ export async function loadDailyFeaturedCard(): Promise<DailyCard | null> {
   const startOfYear = new Date(new Date().getFullYear(), 0, 0).getTime();
   const dayOfYear = Math.floor((Date.now() - startOfYear) / 86400000);
   return cards[dayOfYear % cards.length] ?? null;
+}
+
+export async function loadHomeIdentityCard(): Promise<DailyCard | null> {
+  const cards = await rest(
+    'cards?select=id%2Ccode%2Cname%2Crarity%2Cfaction%2Cpower%2Clore%2Cimage_url&active=eq.true&id=eq.' +
+      encodeURIComponent(HOME_PILOT_CARD_ID) +
+      '&limit=1',
+  ) as DailyCard[];
+  return cards[0] ?? null;
 }
 
 export async function loadRecentActivity(limit = 8): Promise<ActivityItem[]> {
