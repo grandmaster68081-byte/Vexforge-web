@@ -1,3 +1,25 @@
+## 2026-09-13 — VE-MOB-4-COLLECTION — ARCHIVE INSPECTION PRESS DEPTH / IMPLEMENTED_UNVERIFIED
+
+- Se continuó el rollout Tier 1 Android en `mobile/app/(tabs)/collection.tsx` con un delta atómico de interacción: las cartas del Archivo, el arte destacado, sus acciones y la navegación inferior responden al toque con profundidad visual coherente.
+- Se conservaron catálogo y posesión reales, filtros, búsqueda, orden, paginación, inspector, rutas, estados de carga/error/vacío, testID, accesibilidad, safe area y reduced-motion. No se modificaron Supabase, RLS, RPCs, Auth, economía, assets ni la web congelada.
+- No se introdujeron datos, rutas, dependencias ni sustitutos visuales. El cambio usa únicamente feedback diegético sobre affordances existentes.
+- Estado honesto: `IMPLEMENTED_UNVERIFIED` hasta ejecutar las guardas Android disponibles, publicar el commit en `main`, completar el workflow APK oficial y confirmar el release correlativo. La QA visual/táctil humana permanece pendiente.
+- Siguiente acción: verificar este bloque con las guardas locales y el workflow Android oficial; no declarar `PASS`, `OPERATIONAL` ni `TIER1_READY`.
+
+## 2026-09-13 — VE-MOB-4-COLLECTION — ARCHIVE FILTER SELECTION ACCESSIBILITY / IMPLEMENTED_UNVERIFIED
+
+- Se continuó el bloque Tier 1 del Archivo exclusivamente en `mobile/app/(tabs)/collection.tsx`: los tabs de Colección/Tus cartas y los filtros de facción/rareza ahora exponen su selección real a accesibilidad además de la señal visual existente.
+- Se conservaron catálogo y posesión reales, búsqueda, orden, paginación, inspector, rutas, estados de carga/error/vacío, testID, safe area y reduced-motion. No se modificaron Supabase, RLS, RPCs, Auth, economía, assets ni la web congelada.
+- Commit Android publicado en `main`: `78bdac430847c17b51dcf77e80121ce2e126e0df`. Usa `[skip ci]` por instrucción del operador: no inicia compilación ni release Android. Las guardas estáticas y el typecheck local pasan; el estado sigue `IMPLEMENTED_UNVERIFIED`.
+- Siguiente acción: continuar con otro bloque Android acotado bajo el protocolo, sin declarar `PASS`, `OPERATIONAL` ni `TIER1_READY`.
+
+## 2026-09-13 — VE-MOB-4-COLLECTION — ARCHIVE INSPECTION PRESS DEPTH / IMPLEMENTED_UNVERIFIED
+
+- Se continuó el rollout Tier 1 Android en `mobile/app/(tabs)/collection.tsx` con un delta atómico de interacción: las cartas del Archivo, el arte destacado, sus acciones y la navegación inferior responden al toque con profundidad visual coherente.
+- Se conservaron catálogo y posesión reales, filtros, búsqueda, orden, paginación, inspector, rutas, estados de carga/error/vacío, testID, accesibilidad, safe area y reduced-motion. No se modificaron Supabase, RLS, RPCs, Auth, economía, assets ni la web congelada.
+- No se introdujeron datos, rutas, dependencias ni sustitutos visuales. El cambio usa únicamente feedback diegético sobre affordances existentes.
+- Estado honesto: `IMPLEMENTED_UNVERIFIED`; el workflow 240 fue cancelado antes de compilar por instrucción del operador y no generó APK ni release. La QA visual/táctil humana permanece pendiente.
+
 ## 2026-09-13 — SESIÓN DE RECONCILIACIÓN — ANDROID ACTIVO / SIN UNIDAD DE PRODUCTO SELECCIONADA
 
 - Acceso oficial verificado por HTTPS directo: GitHub REST API para `main` y Supabase Management API para la fila `public.vexforge_official_documents.vexforge_home_world_system_protocol_v3`; no se usó Git como transporte de credenciales ni se expusieron secretos.
