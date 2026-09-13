@@ -1091,6 +1091,30 @@ export default function ForgeScreen() {
 
                 <View style={styles.rankingDeckFinal}>
                   <SectionMarker eyebrow="CIRCUITO ACTIVO" title="Clasificación del frente" action="ABRIR MUNDO" onAction={() => navigate('/world')} accent={colors.accent} />
+                   <View
+                     style={[
+                       styles.rankingMonument,
+                       {
+                         borderLeftColor: `${colors.accent}B8`,
+                         backgroundColor: `${colors.ink}66`,
+                       },
+                     ]}
+                     testID="home-ranking-monument"
+                   >
+                     <Animated.View style={[styles.rankingMonumentSeal, { borderColor: colors.accent, backgroundColor: `${colors.accent}12` }, pulseStyle]}>
+                       <Icon name="award" color={colors.accent} size={16} />
+                     </Animated.View>
+                     <View style={styles.rankingMonumentCopy}>
+                       <Text style={[styles.rankingMonumentEyebrow, { color: colors.accent }]}>ESTELA DE PRESTIGIO</Text>
+                       <Text numberOfLines={1} style={[styles.rankingMonumentLeader, { color: colors.foreground }]}>
+                         {ranking[0] ? `#${ranking[0].rank} ${ranking[0].display_name}` : 'CLASIFICACIÓN EN ESPERA'}
+                       </Text>
+                       <Text style={[styles.rankingMonumentMeta, { color: colors.mutedForeground }]}>
+                         {ranking[0] ? `${formatNumber(ranking[0].mmr)} MMR · ${formatNumber(ranking[0].wins)} VICTORIAS` : 'El frente aún no ha inscrito posiciones.'}
+                       </Text>
+                     </View>
+                     <Text style={[styles.rankingMonumentCount, { color: colors.accent }]}>{ranking.length ? `${ranking.length} POS.` : '—'}</Text>
+                   </View>
                   <View testID="home-ranking" style={styles.rankingSignals}>{ranking.length > 0 ? ranking.map((entry, index) => <RankingSignal key={entry.rank + '-' + entry.display_name} entry={entry} index={index} onPress={() => navigate('/world')} />) : <Text style={[styles.emptyBody, { color: colors.mutedForeground }]}>El ranking de la temporada todavía no tiene posiciones publicadas.</Text>}</View>
                 </View>
               </View>
@@ -1434,7 +1458,14 @@ const styles = StyleSheet.create({
     forgeChamberLabel: { flex: 1, fontFamily: 'Rajdhani_700Bold', fontSize: 8, letterSpacing: 0.8 },
     forgeChamberMark: { borderRadius: 2, height: 4, width: 4 },
     signalColumnsFinal: { flexDirection: 'row', gap: 18, marginTop: 7 },
-    signalColumnFinal: { flex: 1, minWidth: 0 },
+     signalColumnFinal: { flex: 1, minWidth: 0 },
      rankingDeckFinal: { marginTop: 17, paddingBottom: 16 },
+     rankingMonument: { alignItems: 'center', borderLeftWidth: 2, flexDirection: 'row', gap: 10, marginTop: 10, minHeight: 70, paddingHorizontal: 10, paddingVertical: 10 },
+     rankingMonumentSeal: { alignItems: 'center', borderWidth: 1, height: 34, justifyContent: 'center', transform: [{ rotate: '45deg' }], width: 34 },
+     rankingMonumentCopy: { flex: 1, gap: 3, minWidth: 0 },
+     rankingMonumentEyebrow: { fontFamily: 'Rajdhani_700Bold', fontSize: 8, letterSpacing: 1.15 },
+     rankingMonumentLeader: { fontFamily: 'Cinzel_600SemiBold', fontSize: 13, lineHeight: 17 },
+     rankingMonumentMeta: { fontFamily: 'Rajdhani_500Medium', fontSize: 9, letterSpacing: 0.35 },
+     rankingMonumentCount: { fontFamily: 'Rajdhani_700Bold', fontSize: 9, letterSpacing: 0.7 },
 
 });
