@@ -177,7 +177,15 @@ function PanelContent({
                 { text: 'Cerrar sesión', style: 'destructive', onPress: () => { void onSignOut(); } },
               ]);
             }}
-            style={[styles.signOutButton, { borderColor: colors.danger, backgroundColor: `${colors.danger}12` }]}
+            style={({ pressed }) => [
+              styles.signOutButton,
+              {
+                borderColor: colors.danger,
+                backgroundColor: `${colors.danger}12`,
+                opacity: pressed ? 0.78 : 1,
+                transform: [{ translateY: pressed ? 2 : 0 }],
+              },
+            ]}
           >
             <Ionicons name="log-out-outline" size={17} color={colors.danger} />
             <Text style={[styles.signOutText, { color: colors.danger }]}>CERRAR SESIÓN</Text>
@@ -363,7 +371,15 @@ export default function ProfileScreen() {
                 accessibilityRole="button"
                 accessibilityLabel={item.label}
                 onPress={() => action(item.action)}
-                style={({ pressed }) => [styles.actionCard, { backgroundColor: colors.panel, borderColor: colors.border, opacity: pressed ? 0.72 : 1 }]}
+                style={({ pressed }) => [
+                  styles.actionCard,
+                  {
+                    backgroundColor: colors.panel,
+                    borderColor: colors.border,
+                    opacity: pressed ? 0.72 : 1,
+                    transform: [{ translateY: pressed ? 2 : 0 }],
+                  },
+                ]}
               >
                 <Ionicons name={item.icon} size={18} color={colors.accent} />
                 <Text style={[styles.actionLabel, { color: colors.foreground }]}>{item.label}</Text>
