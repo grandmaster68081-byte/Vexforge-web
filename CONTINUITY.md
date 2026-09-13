@@ -2784,6 +2784,15 @@
 - Siguiente microbloque: continuar sólo con una mejora concreta de continuidad o interacción, sin rehacer la escena consolidada.
 
 ---
+## 2026-09-13 — VE-MOB-3-HOME — EXPLICIT RETRY SIGNAL / IMPLEMENTED_UNVERIFIED
+
+- Se cerró un microbloque de estados del Home exclusivamente en `mobile/app/(tabs)/index.tsx`: el reintento de sincronización ahora bloquea solicitudes duplicadas mientras la señal está llegando.
+- El botón cambia a `RECIBIENDO`, comunica `busy/disabled` a accesibilidad y recupera `REINTENTAR` sólo cuando termina la operación. El estado se libera mediante `finally` incluso si una fuente falla.
+- Se conservaron los contratos, `loadHome`, `refresh`, pull-to-refresh, estados `error/partial`, rutas, `testID`, haptics y `reduced-motion`; no se modificaron backend ni datos.
+- No se inicia workflow, no se compila APK ni se genera release por la instrucción vigente. Estado honesto: `IMPLEMENTED_UNVERIFIED`.
+- Siguiente microbloque: continuar sólo con una mejora concreta de continuidad, interacción o estado del Home.
+
+---
 ## 2026-09-13 — VE-MOB-3-HOME — FRONT OBJECT PRESS DEPTH / IMPLEMENTED_UNVERIFIED
 
 - Se cerró un microbloque de FASE 11 exclusivamente en `mobile/app/(tabs)/index.tsx`: los umbrales del hero, el frente/evento y la carta de resonancia ahora comparten la respuesta táctil de profundidad del resto de objetos del Home.
