@@ -169,7 +169,7 @@ function DomainNode({
   signal,
   onPress,
 }: {
-  portal: { id: string; label: string; title: string; status: string; icon: IconName; route: HomeRoute; color: string };
+  portal: { id: string; label: string; title: string; status: string; icon: IconName; route: HomeRoute; color: string; active: boolean };
   onPress: () => void;
   signal?: string;
 }) {
@@ -182,25 +182,25 @@ function DomainNode({
       onPress={onPress}
       style={({ pressed }) => [
         styles.domainWorldObject,
-        { opacity: pressed ? 0.72 : 1, transform: [{ translateY: pressed ? 2 : 0 }] },
+        { opacity: pressed ? 0.72 : portal.active ? 1 : 0.68, transform: [{ translateY: pressed ? 2 : 0 }] },
       ]}
     >
       <View style={styles.domainWorldObjectTop}>
-        <View style={[styles.domainWorldHalo, { borderColor: `${portal.color}70`, backgroundColor: `${portal.color}0C` }]}>
-          <View style={[styles.domainWorldSigil, { borderColor: `${portal.color}B8`, backgroundColor: `${portal.color}18` }]}>
+        <View style={[styles.domainWorldHalo, { borderColor: `${portal.color}${portal.active ? '70' : '38'}`, backgroundColor: portal.active ? `${portal.color}0C` : `${colors.ink}1C` }]}>
+          <View style={[styles.domainWorldSigil, { borderColor: `${portal.color}${portal.active ? 'B8' : '58'}`, backgroundColor: portal.active ? `${portal.color}18` : `${colors.ink}22` }]}>
             <View style={styles.domainWorldGlyph}>
               <Icon name={portal.icon} color={portal.color} size={17} />
             </View>
           </View>
-          <View style={[styles.domainWorldCore, { backgroundColor: portal.color }]} />
+          <View style={[styles.domainWorldCore, { backgroundColor: portal.color, opacity: portal.active ? 1 : 0.42 }]} />
         </View>
         <View style={[styles.domainWorldTrace, { backgroundColor: `${portal.color}70` }]} />
       </View>
       <Text style={[styles.domainWorldLabel, { color: portal.color }]}>{portal.label}</Text>
       <Text numberOfLines={1} style={[styles.domainWorldTitle, { color: colors.foreground }]}>{portal.title}</Text>
       <View style={styles.domainWorldStatusLine}>
-        <View style={[styles.domainWorldStatusMark, { backgroundColor: portal.color }]} />
-        <Text numberOfLines={1} style={[styles.domainWorldStatus, { color: colors.mutedForeground }]}>{portal.status}</Text>
+        <View style={[styles.domainWorldStatusMark, { backgroundColor: portal.color, opacity: portal.active ? 1 : 0.55 }]} />
+        <Text numberOfLines={1} style={[styles.domainWorldStatus, { color: portal.active ? colors.mutedForeground : `${colors.mutedForeground}B0` }]}>{portal.status}</Text>
       </View>
     </Pressable>
   );
@@ -552,13 +552,13 @@ export default function ForgeScreen() {
   const viewportPadding = Math.max(18, Math.min(25, width * 0.06));
   const heroHeight = Math.min(640, Math.max(570, width * 1.38));
   const ranking = home.stats?.top3 ?? [];
-  const domainPortals: Array<{ id: string; label: string; title: string; status: string; icon: IconName; route: HomeRoute; color: string }> = [
-    { id: 'arena', label: 'ARENA', title: 'Cruza el umbral', status: activeEvent ? 'EVENTO ACTIVO' : 'OPONENTES EN ESPERA', icon: 'target', route: '/battle', color: colors.rarityRare },
-    { id: 'forge', label: 'FORJA', title: 'Traza tu formación', status: `${levelSignal} · MAZO ACTIVO`, icon: 'deck', route: '/deck', color: colors.rarityEpic },
-    { id: 'archive', label: 'ARCHIVO', title: 'Revela tu colección', status: `${formatNumber(cardsTotal)} CARTAS REGISTRADAS`, icon: 'collection', route: '/collection', color: colors.rarityLegendary },
-    { id: 'world', label: 'MUNDO', title: 'Lee la señal', status: activeEvent ? `CIERRA EN ${formatEventTime(activeEvent.ends_at)}` : 'SIN FRENTE PUBLICADO', icon: 'map', route: '/world', color: colors.rarityRare },
-    { id: 'missions', label: 'MISIONES', title: 'Cumple el rito', status: `${formatNumber(home.missions.length)} ÓRDENES ACTIVAS`, icon: 'missions', route: '/missions', color: colors.success },
-    { id: 'economy', label: 'ECONOMÍA', title: 'Mueve el VEX', status: wallet ? `${walletSignal} DISPONIBLES` : walletSignal, icon: 'economy', route: '/economy', color: colors.accent },
+  const domainPortals: Array<{ id: string; label: string; title: string; status: string; icon: IconName; route: HomeRoute; color: string; active: boolean }> = [
+    { id: 'arena', label: 'ARENA', title: 'Cruza el umbral', status: activeEvent ? 'EVENTO ACTIVO' : 'OPONENTES EN ESPERA', icon: 'target', route: '/battle', color: colors.rarityRare, active: Boolean(activeEvent) },
+    { id: 'forge', label: 'FORJA', title: 'Traza tu formación', status: `${levelSignal} · MAZO ACTIVO`, icon: 'deck', route: '/deck', color: colors.rarityEpic, active: Boolean(progress) },
+    { id: 'archive', label: 'ARCHIVO', title: 'Revela tu colección', status: `${formatNumber(cardsTotal)} CARTAS REGISTRADAS`, icon: 'collection', route: '/collection', color: colors.rarityLegendary, active: cardsTotal > 0 },
+    { id: 'world', label: 'MUNDO', title: 'Lee la señal', status: activeEvent ? `CIERRA EN ${formatEventTime(activeEvent.ends_at)}` : 'SIN FRENTE PUBLICADO', icon: 'map', route: '/world', color: colors.rarityRare, active: Boolean(activeEvent) },
+    { id: 'missions', label: 'MISIONES', title: 'Cumple el rito', status: `${formatNumber(home.missions.length)} ÓRDENES ACTIVAS`, icon: 'missions', route: '/missions', color: colors.success, active: home.missions.length > 0 },
+    { id: 'economy', label: 'ECONOMÍA', title: 'Mueve el VEX', status: wallet ? `${walletSignal} DISPONIBLES` : walletSignal, icon: 'economy', route: '/economy', color: colors.accent, active: Boolean(wallet) },
   ];
   const domainSignals = Object.fromEntries(domainPortals.map((portal) => [portal.id, portal.status])) as Record<string, string>;
   const homeIdentity = DOMAIN_IDENTITY.foja;
@@ -1332,6 +1332,6 @@ const styles = StyleSheet.create({
     forgeChamberMark: { borderRadius: 2, height: 4, width: 4 },
     signalColumnsFinal: { flexDirection: 'row', gap: 18, marginTop: 7 },
     signalColumnFinal: { flex: 1, minWidth: 0 },
-    rankingDeckFinal: { marginTop: 17, paddingBottom: 16 },
-    
+     rankingDeckFinal: { marginTop: 17, paddingBottom: 16 },
+
 });

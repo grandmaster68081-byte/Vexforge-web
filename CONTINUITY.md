@@ -2748,6 +2748,15 @@
 - Estado honesto: `IMPLEMENTED_UNVERIFIED`; el bloque queda listo para publicarse en `main`. Por instrucción del operador no se inicia workflow, no se compila la aplicación y no se genera release. Siguiente bloque: seleccionar otra mejora atómica del Home sin rediseñar la escena consolidada.
 
 ---
+## 2026-09-13 — VE-MOB-3-HOME — DOMAIN SIGNAL STATES / IMPLEMENTED_UNVERIFIED
+
+- Se cerró un microbloque de FASE 11 exclusivamente en `mobile/app/(tabs)/index.tsx`: los seis objetos de dominio ahora diferencian visualmente una señal activa de una señal en espera sin cambiar su ruta ni su copy real.
+- Arena y Mundo se activan sólo con evento vivo; Forja con progresión disponible; Archivo con cartas registradas; Misiones con órdenes reales; Economía con wallet sincronizada. Cuando la fuente no existe, el sigilo pierde intensidad en vez de representar actividad ficticia.
+- Se conservaron las fuentes Supabase/GameContext, artwork canónico, escena, navegación, `testID`, accesibilidad, haptics, estados explícitos y `reduced-motion`. No se modificaron otras pantallas, contratos ni datos.
+- Evidencia local: Home nativo y motion pasan. La guarda global de identidad sigue bloqueada por el contrato preexistente de `mobile/app/(tabs)/deck.tsx`, fuera del alcance de este bloque. No se ejecuta workflow, no se compila APK ni se genera release por la instrucción vigente.
+- Estado honesto: `IMPLEMENTED_UNVERIFIED`. Siguiente microbloque: continuar con una mejora atómica de interacción/continuidad del Home sin rediseñar la escena consolidada.
+
+---
 ## 2026-09-13 — VE-MOB-3-HOME — BOUNDED CAMERA PARALLAX / IMPLEMENTED_UNVERIFIED
 
 - Se cerró un microbloque de FASE 10 exclusivamente en `mobile/app/(tabs)/index.tsx`: el desplazamiento de cámara del hero, la identidad en primer plano, la constelación y la atmósfera del Continuum ahora queda limitado a un rango seguro durante recorridos largos.
