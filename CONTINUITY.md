@@ -1,3 +1,11 @@
+## 2026-09-13 — PROTOCOLO HOME V2.1 — ACTIVE / MAIN SYNCHRONIZED
+
+- Se leyó mediante la API REST HTTPS de Supabase la fila activa `public.vexforge_official_documents / vexforge_home_world_system_protocol_v3`; la fuente viva confirmó `ACTIVE`, título `VEXFORGE — VISUAL AAA / TIER-1 VERIFICATION PROTOCOL` y versión V2.0 antes de la integración.
+- Se integró el parche `V2.1 — GAME EXPERIENCE ARCHITECTURE + LIVING UI + FUNCTIONAL COMPLETENESS`: PATCH 00 quedó después de la autoridad V2.0 y PATCH 01–47 antes de la matriz de pantallas, conservando las reglas no conflictivas, citas, evidencia e historial V2.0.
+- Se registró el estado obligatorio: `BASELINE RESET = COMPLETE`; `OLD PRIMARY SKINS = REMOVED`; `CURRENT STATE = FUNCTIONAL UI BASELINE / VISUAL RESET`; `NEXT PILOT = HOME`; `PRIMARY VISUAL IDENTITY SOURCE = CANONICAL VEXFORGE CARDS`; `EXTERNAL DECORATIVE IMAGE ASSETS = DISALLOWED BY DEFAULT`.
+- La fila de Supabase quedó actualizada a versión V2.1, conservó `ACTIVE` y fue releída por HTTPS con coincidencia exacta del contenido fusionado. No se modificaron tablas, RPCs, RLS, Auth, Storage, datos de juego ni código Android.
+- El registro se publica en `main` mediante la API REST HTTPS oficial de GitHub. Este cambio es documental: no toca `mobile/**`, no inicia el workflow APK ni crea un release. El siguiente piloto de producto continúa siendo Home y su implementación sigue honestamente `IMPLEMENTED_UNVERIFIED` hasta sus gates Android y QA humana.
+
 ## 2026-09-13 — VE-MOB-3 — SUPERFICIES ANDROID PROGRAMÁTICAS SIN SKINS / IMPLEMENTED_UNVERIFIED
 
 - Se desmontaron las imágenes de fondo de las cinco superficies activas indicadas por el operador: Auth ya estaba programática; Battle quedó sin escena global; Cartas, Mazos y Perfil dejaron de renderizar sus escenas de referencia.
