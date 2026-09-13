@@ -110,7 +110,12 @@ function DeckPreviewCard({
       onPress={onPress}
       style={({ pressed }) => [
         styles.deckPreview,
-        { width, borderColor: active ? colors.accent : `${accent}AA`, opacity: pressed ? 0.76 : 1 },
+        {
+          width,
+          borderColor: active ? colors.accent : `${accent}AA`,
+          opacity: pressed ? 0.76 : 1,
+          transform: [{ translateY: pressed ? 2 : 0 }],
+        },
       ]}
     >
       {slot?.image_url ? (
@@ -234,7 +239,15 @@ function EditorModal({
                   accessibilityLabel={`${count ? 'Quitar' : 'Añadir'} ${card.name}`}
                   accessibilityState={{ selected: count > 0 }}
                   onPress={() => onToggle(card)}
-                  style={({ pressed }) => [styles.editorCard, { borderColor: count ? accent : colors.border, backgroundColor: count ? `${accent}18` : colors.panel, opacity: pressed ? 0.76 : 1 }]}
+                  style={({ pressed }) => [
+                    styles.editorCard,
+                    {
+                      borderColor: count ? accent : colors.border,
+                      backgroundColor: count ? `${accent}18` : colors.panel,
+                      opacity: pressed ? 0.76 : 1,
+                      transform: [{ translateY: pressed ? 2 : 0 }],
+                    },
+                  ]}
                 >
                   {card.image_url ? <Image source={{ uri: card.image_url }} style={styles.editorArt} resizeMode="cover" /> : <View style={[styles.editorArtFallback, { backgroundColor: `${accent}18`, borderColor: `${accent}88` }]}><Text style={[styles.missingArtText, { color: accent }]}>ARTE CANÓNICO PENDIENTE</Text></View>}
                   <View style={styles.editorCardCopy}>
