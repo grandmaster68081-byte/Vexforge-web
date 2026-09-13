@@ -1,3 +1,10 @@
+## 2026-09-13 — VE-MOB-3-HOME — SECTION WAYPOINT SEALS / IMPLEMENTED_UNVERIFIED
+
+- Se cerró un microbloque de FASE 9/11 exclusivamente en `mobile/app/(tabs)/index.tsx`: los marcadores de Misiones, Actividad y Clasificación ahora comparten un sello de waypoint del Nexus en lugar de un separador genérico.
+- Se preservaron los textos, acciones, rutas, datos vivos, `testID`, accesibilidad y estados vacío/error; no se modificaron Supabase, RPCs, GameContext, contratos, assets ni otras pantallas Android.
+- No se compiló APK ni se inició el workflow Android, por instrucción del operador. Estado honesto: `IMPLEMENTED_UNVERIFIED`; commit de implementación publicado en `main`: `2ec97362a0bd0ca20e62b41174618a904d82aaf8`. Esta continuidad se publica mediante la API REST HTTPS oficial de GitHub.
+- Siguiente bloque: continuar con una mejora atómica de interacción o transición del Home, sin rehacer la escena consolidada.
+
 ## 2026-09-13 — VE-MOB-3-HOME — RANKING MONUMENT TOUCH GATE / IMPLEMENTED_UNVERIFIED
 
 - Se cerró un microbloque de FASE 7/11 exclusivamente en `mobile/app/(tabs)/index.tsx`: la estela de prestigio de la clasificación ahora es un objeto táctil authored que abre el Mundo y responde con profundidad al toque.
