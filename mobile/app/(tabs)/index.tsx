@@ -137,7 +137,12 @@ function SectionMarker({ eyebrow, title, action, onAction, accent }: { eyebrow: 
         <Text style={[styles.sectionTitle, { color: colors.foreground }]}>{title}</Text>
       </View>
       {action && onAction ? (
-        <Pressable accessibilityRole="button" accessibilityLabel={action} onPress={onAction} style={styles.markerAction}>
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel={action}
+          onPress={onAction}
+          style={({ pressed }) => [styles.markerAction, { opacity: pressed ? 0.68 : 1, transform: [{ translateY: pressed ? 2 : 0 }] }]}
+        >
           <Text style={[styles.markerActionText, { color: colors.mutedForeground }]}>{action}</Text>
           <Icon name="arrow-up" color={markerColor} size={13} />
         </Pressable>
@@ -755,7 +760,13 @@ export default function ForgeScreen() {
                 <View style={[styles.heroFooter, { borderTopColor: `${colors.foreground}2A` }]}>
                   <View style={styles.heroFooterItem}><Icon name="zap" color={colors.accent} size={13} /><Text style={[styles.heroFooterText, { color: `${colors.foreground}C0` }]}>{progress ? `${formatNumber(progress.energy)} / ${formatNumber(progress.max_energy)} ENERGÍA` : 'ENERGÍA EN ESPERA'}</Text></View>
                   <View style={styles.heroFooterItem}><Icon name="gem" color={colors.rarityEpic} size={13} /><Text style={[styles.heroFooterText, { color: `${colors.foreground}C0` }]}>{walletSignal}</Text></View>
-                  <Pressable accessibilityRole="button" accessibilityLabel="Abrir mundo" testID="home-world" onPress={() => navigate('/world')} style={styles.heroWorldLink}>
+                  <Pressable
+                    accessibilityRole="button"
+                    accessibilityLabel="Abrir mundo"
+                    testID="home-world"
+                    onPress={() => navigate('/world')}
+                    style={({ pressed }) => [styles.heroWorldLink, { opacity: pressed ? 0.68 : 1, transform: [{ translateY: pressed ? 2 : 0 }] }]}
+                  >
                     <Icon name="globe" color={colors.rarityRare} size={13} /><Text style={[styles.heroWorldText, { color: colors.rarityRare }]}>MUNDO</Text><Icon name="arrow-up" color={colors.rarityRare} size={9} />
                   </Pressable>
                 </View>
@@ -879,7 +890,13 @@ export default function ForgeScreen() {
                       <Text style={[styles.frontStageEyebrowFinal, { color: colors.rarityRare }]}>{homeIdentity.place} / FRENTE VIVO</Text>
                       <Text style={[styles.frontStageTitleFinal, { color: colors.foreground }]}>La señal del Nexus</Text>
                     </View>
-                    <Pressable accessibilityRole="button" accessibilityLabel="Abrir mundo" testID="home-world-front" onPress={() => navigate('/world')} style={styles.frontStageLinkFinal}>
+                    <Pressable
+                      accessibilityRole="button"
+                      accessibilityLabel="Abrir mundo"
+                      testID="home-world-front"
+                      onPress={() => navigate('/world')}
+                      style={({ pressed }) => [styles.frontStageLinkFinal, { opacity: pressed ? 0.68 : 1, transform: [{ translateY: pressed ? 2 : 0 }] }]}
+                    >
                       <Icon name="map" color={colors.rarityRare} size={13} /><Text style={[styles.frontStageLinkTextFinal, { color: colors.rarityRare }]}>MUNDO</Text><Icon name="arrow-up" color={colors.rarityRare} size={10} />
                     </Pressable>
                   </View>

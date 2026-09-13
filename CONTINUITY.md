@@ -1,3 +1,10 @@
+## 2026-09-13 — VE-MOB-3-HOME — NAVIGATION LANDMARK PRESS DEPTH / IMPLEMENTED_UNVERIFIED
+
+- Se cerró un microbloque de FASE 9/11 exclusivamente en `mobile/app/(tabs)/index.tsx`: las acciones de sección y los dos accesos directos al Mundo ahora se comportan como umbrales táctiles authored, no como texto decorativo.
+- Al presionar, cada acceso reduce su intensidad y desciende ligeramente; se conserva la navegación existente, el haptic centralizado, la accesibilidad y los `testID`.
+- No se modificaron datos, Supabase, RPCs, GameContext, Auth, otras pantallas, assets ni la web congelada.
+- El bloque queda `IMPLEMENTED_UNVERIFIED`; no se compila aplicación. Siguiente bloque: continuar sólo con una mejora concreta de continuidad o interacción del Home.
+
 ## 2026-09-13 — VE-MOB-3-HOME — SECONDARY SIGNAL PRESS DEPTH / IMPLEMENTED_UNVERIFIED
 
 - Se cerró un microbloque de FASE 11 exclusivamente en `mobile/app/(tabs)/index.tsx`: misiones, actividad pública y clasificación ahora comparten la respuesta táctil de profundidad del resto del Home.
