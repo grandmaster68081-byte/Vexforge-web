@@ -523,7 +523,7 @@ export default function ForgeScreen() {
   const identityCard = home.identityCard;
   const identityVisual = getCardIdentityVisual(identityCard?.id);
   const identityArtUnavailable = identityAssetState === 'error' || Boolean(identityCard && !identityCard.image_url);
-  const playerName = capitalize(player?.display_name, 'Forjador');
+  const playerName = capitalize(player?.display_name, 'IDENTIDAD EN ESPERA');
   const activeEvent = home.stats?.active_event ?? null;
   const eventAccent = activeEvent ? colors.rarityRare : colors.mutedForeground;
   const season = home.stats?.season ?? null;

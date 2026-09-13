@@ -2737,3 +2737,12 @@
 - Se conserva el HUD de energía existente, la escena TCG del Nexus, las rutas, `testID`, accesibilidad, haptics, reduced-motion, estados de carga/error/vacío, Supabase, Auth, economía, combate, otras pantallas Android y la web congelada.
 - Evidencia local: `node scripts/verify-motion.mjs` OK (17 tokens, 8 clases, 3 consumidores), `node scripts/verify-mobile-home-official-assets.mjs` OK (13/13) y `git diff --check` OK. El typecheck local sigue pendiente porque `mobile/node_modules` no está disponible.
 - Estado honesto: `IMPLEMENTED_UNVERIFIED`; el bloque queda publicado en `main`. Por instrucción del operador no se inicia workflow, no se compila la aplicación y no se genera release. Siguiente bloque: seleccionar otra mejora atómica del Home sin rediseñar la escena consolidada.
+
+---
+## 2026-09-13 — VE-MOB-3-HOME — EXPLICIT PLAYER IDENTITY STATE / IMPLEMENTED_UNVERIFIED
+
+- Se cerró otro micro-bloque exclusivamente en `mobile/app/(tabs)/index.tsx`: el ledger del Forjador ya no muestra `Forjador` como nombre supuesto cuando el registro de jugador todavía no está disponible.
+- La ausencia de `player.display_name` se comunica como `IDENTIDAD EN ESPERA`; cuando el registro real existe, se conserva su nombre normalizado. No se inventan nombres, perfiles ni datos de cuenta.
+- Se conservaron la escena TCG del Nexus, los valores vivos de progresión/economía/victorias, rutas, `testID`, accesibilidad, haptics, reduced-motion, estados de carga/error/vacío, Supabase, Auth, economía, combate, otras pantallas Android y la web congelada.
+- Evidencia local: `node scripts/verify-motion.mjs` OK (17 tokens, 8 clases, 3 consumidores), `node scripts/verify-mobile-home-official-assets.mjs` OK (13/13) y `git diff --check` OK. El typecheck local sigue pendiente porque `mobile/node_modules` no está disponible.
+- Estado honesto: `IMPLEMENTED_UNVERIFIED`; el bloque queda listo para publicarse en `main`. Por instrucción del operador no se inicia workflow, no se compila la aplicación y no se genera release. Siguiente bloque: seleccionar otra mejora atómica del Home sin rediseñar la escena consolidada.
