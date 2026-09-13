@@ -418,7 +418,9 @@ function ActivitySignal({ item, index, last, onPress }: { item: ActivityItem; in
       style={({ pressed }) => [styles.activitySignal, { opacity: pressed ? 0.7 : 1, transform: [{ translateY: pressed ? 2 : 0 }] }]}
     >
       <View style={styles.activitySignalRail}>
-        <View style={[styles.activitySignalDot, { backgroundColor: colors.rarityRare }]} />
+        <View style={[styles.activitySignalSeal, { borderColor: `${colors.rarityRare}88`, backgroundColor: `${colors.rarityRare}12` }]}>
+          <Icon name="radio" color={colors.rarityRare} size={11} style={styles.activitySignalSealIcon} />
+        </View>
         {!last ? <View style={[styles.activitySignalLine, { backgroundColor: `${colors.rarityRare}55` }]} /> : null}
       </View>
       <View style={styles.activitySignalBody}>
@@ -1357,8 +1359,9 @@ const styles = StyleSheet.create({
   storeActionText: { fontFamily: 'Rajdhani_700Bold', fontSize: 9, letterSpacing: 0.8 },
   activitySignals: { paddingTop: 7 },
   activitySignal: { alignItems: 'stretch', flexDirection: 'row', gap: 9, minHeight: 60 },
-  activitySignalRail: { alignItems: 'center', width: 13 },
-  activitySignalDot: { borderRadius: 4, height: 8, marginTop: 4, width: 8 },
+   activitySignalRail: { alignItems: 'center', width: 23 },
+   activitySignalSeal: { alignItems: 'center', borderWidth: 1, height: 21, justifyContent: 'center', marginTop: 1, transform: [{ rotate: '45deg' }], width: 21 },
+   activitySignalSealIcon: { transform: [{ rotate: '-45deg' }] },
   activitySignalLine: { flex: 1, marginVertical: 3, width: 1 },
   activitySignalBody: { borderBottomWidth: 1, flex: 1, gap: 4, paddingBottom: 10, paddingTop: 1 },
   activitySignalCopy: { fontFamily: 'Rajdhani_500Medium', fontSize: 12, lineHeight: 16 },
