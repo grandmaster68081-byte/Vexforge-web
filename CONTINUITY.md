@@ -6,6 +6,13 @@
 - Estado honesto: `IMPLEMENTED_UNVERIFIED` hasta ejecutar las guardas Android disponibles, publicar el commit en `main`, completar el workflow APK oficial y confirmar el release correlativo. La QA visual/táctil humana permanece pendiente.
 - Siguiente acción: verificar este bloque con las guardas locales y el workflow Android oficial; no declarar `PASS`, `OPERATIONAL` ni `TIER1_READY`.
 
+## 2026-09-13 — VE-MOB-5-DECK — FORGE CARD PRESS DEPTH / IMPLEMENTED_UNVERIFIED
+
+- Se continuó el rollout Tier 1 Android exclusivamente en `mobile/app/(tabs)/deck.tsx`: la carta de mazo y las cartas seleccionables del editor ahora responden al toque con profundidad física coherente.
+- Se conservaron cartas reales del jugador, límites del formato, selección de Campeón, validación y guardado por RPC, búsqueda, filtros, estados de carga/error/vacío, rutas, testID, accesibilidad y reduced-motion. No se modificaron Supabase, RLS, RPCs, Auth, economía, combate, assets ni la web congelada.
+- Commit Android publicado en `main`: `fb62ef8a782be64db8432a6741593a94d8f344aa`. Usa `[skip ci]` por instrucción del operador para no iniciar compilación ni release. El estado permanece `IMPLEMENTED_UNVERIFIED`.
+- Las guardas locales y el typecheck pasan; no se compiló APK. Siguiente acción: continuar con otro bloque Android acotado bajo el protocolo.
+
 ## 2026-09-13 — VE-MOB-4-COLLECTION — ARCHIVE FILTER SELECTION ACCESSIBILITY / IMPLEMENTED_UNVERIFIED
 
 - Se continuó el bloque Tier 1 del Archivo exclusivamente en `mobile/app/(tabs)/collection.tsx`: los tabs de Colección/Tus cartas y los filtros de facción/rareza ahora exponen su selección real a accesibilidad además de la señal visual existente.
