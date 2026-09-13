@@ -1,3 +1,11 @@
+## 2026-09-13 — VE-MOB-3-HOME — SECONDARY SIGNAL CAMERA DEPTH / IMPLEMENTED_UNVERIFIED
+
+- Se cerró un microbloque de FASE 10/11 exclusivamente en `mobile/app/(tabs)/index.tsx`: las señales secundarias del Home ahora reciben una entrada escalonada y una profundidad diferencial vinculada al movimiento de cámara del Nexus.
+- Misiones, actividad pública y clasificación conservan sus datos vivos, rutas, `testID`, accesibilidad, estados vacío/error y respuesta táctil; no se modificaron Supabase, RPCs, GameContext, contratos, assets ni otras pantallas Android.
+- Verificación: `npm run typecheck` no pudo ejecutar el proyecto descargado porque faltan la base `expo/tsconfig.base` y `@react-native-async-storage/async-storage`; el resultado arrastra 2866 errores de dependencias/configuración y no se atribuye a este bloque. No se compiló APK ni se inició el workflow Android, por instrucción del operador.
+- Estado honesto: `IMPLEMENTED_UNVERIFIED`; commit de implementación publicado en `main`: `f0ed8a4047a12d5b4dd3c13831304db6fd8c58c9`. Esta continuidad se publica mediante la API REST HTTPS oficial de GitHub.
+- Siguiente bloque: continuar FASE 10/11 con una mejora atómica de transición/cámara del Home, sin rehacer la escena consolidada ni tocar otros dominios.
+
 ## 2026-09-13 — VE-MOB-3-HOME — APK 229 PUBLICADA / IMPLEMENTED_UNVERIFIED
 
 - El workflow Android oficial `34765442970` / build `229` terminó en `success` sobre el commit `51b6cc590aaa2b74715402c96f86e72e67d9660f`.
