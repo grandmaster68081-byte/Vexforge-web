@@ -1,3 +1,10 @@
+## 2026-09-13 — VE-MOB-3-HOME — ANDROID WORKFLOW DEFERRED BY OPERATOR / IMPLEMENTED_UNVERIFIED
+
+- El commit `6bb769e79f97424827dbcc1ab7be5c27122ae657` publicó el bloque de acceso de la carta destacada al Archivo y este registro de continuidad.
+- El push inició automáticamente el workflow Android oficial `34788801718` / run `239`; fue cancelado por instrucción explícita del operador antes de completar la compilación. No se generó ni se publicó APK nuevo.
+- La evidencia válida del bloque sigue siendo: Home nativo `13/13`, contrato de motion `17/17` y `git diff --check` limpio. El typecheck queda delegado al workflow futuro porque el snapshot local no tiene `mobile/node_modules`.
+- Estado honesto: `IMPLEMENTED_UNVERIFIED`; no se declara `PASS`, `OPERATIONAL` ni `TIER1_READY`. Se puede continuar con el siguiente microbloque del Home sin iniciar otro workflow hasta autorización.
+
 ## 2026-09-13 — VE-MOB-3-HOME — FEATURED CARD ARCHIVE GATE / IMPLEMENTED_UNVERIFIED
 
 - **TARGET SCREEN:** Home Android (`mobile/app/(tabs)/index.tsx`); **TARGET BLOCK:** carta destacada del hero.
