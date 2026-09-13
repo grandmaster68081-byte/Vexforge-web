@@ -312,6 +312,7 @@ function ContinuumNode({
   detail,
   icon,
   color,
+  active,
   testID,
   onPress,
 }: {
@@ -320,6 +321,7 @@ function ContinuumNode({
   detail: string;
   icon: IconName;
   color: string;
+  active: boolean;
   testID: string;
   onPress: () => void;
 }) {
@@ -327,19 +329,23 @@ function ContinuumNode({
   return (
     <Pressable
       accessibilityRole="button"
-      accessibilityLabel={`${label}: ${value}. ${detail}`}
+      accessibilityLabel={`${label}: ${value}. ${detail}. ${active ? 'Señal activa' : 'Señal en espera'}`}
       testID={testID}
       onPress={onPress}
       style={({ pressed }) => [
         styles.continuumNode,
-        { borderColor: `${color}60`, backgroundColor: `${colors.ink}66`, opacity: pressed ? 0.7 : 1 },
+        {
+          borderColor: `${color}${active ? '60' : '30'}`,
+          backgroundColor: active ? `${colors.ink}66` : `${colors.ink}45`,
+          opacity: pressed ? 0.7 : active ? 1 : 0.72,
+        },
       ]}
     >
       <SignalMetric label={label} value={value} icon={icon} color={color} />
       <Text numberOfLines={1} style={[styles.continuumNodeDetail, { color: colors.mutedForeground }]}>
         {detail}
       </Text>
-      <View style={[styles.continuumNodeMark, { backgroundColor: color }]} />
+      <View style={[styles.continuumNodeMark, { backgroundColor: color, opacity: active ? 1 : 0.42 }]} />
     </Pressable>
   );
 }
@@ -951,6 +957,7 @@ export default function ForgeScreen() {
                       detail={wallet ? `${formatNumber(wallet.vex_ingame)} VEX EN RESERVA` : 'REGISTRO EN ESPERA'}
                       icon="deck"
                       color={colors.rarityEpic}
+                      active={Boolean(wallet)}
                       testID="home-continuum-forge"
                       onPress={() => navigate('/deck')}
                     />
@@ -960,6 +967,7 @@ export default function ForgeScreen() {
                       detail={home.missions[0]?.name ?? 'SIN FRENTE PUBLICADO'}
                       icon="missions"
                       color={colors.success}
+                      active={home.missions.length > 0}
                       testID="home-continuum-missions"
                       onPress={() => navigate('/missions')}
                     />
@@ -969,6 +977,7 @@ export default function ForgeScreen() {
                       detail={ranking[0] ? `#${ranking[0].rank} ${ranking[0].display_name}` : 'CLASIFICACIÓN EN ESPERA'}
                       icon="radio"
                       color={colors.rarityRare}
+                      active={home.activity.length > 0 || ranking.length > 0}
                       testID="home-continuum-pulse"
                       onPress={() => navigate('/world')}
                     />

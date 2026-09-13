@@ -2757,6 +2757,15 @@
 - Estado honesto: `IMPLEMENTED_UNVERIFIED`. Siguiente microbloque: continuar con una mejora atómica de interacción/continuidad del Home sin rediseñar la escena consolidada.
 
 ---
+## 2026-09-13 — VE-MOB-3-HOME — CONTINUUM SIGNAL STATES / IMPLEMENTED_UNVERIFIED
+
+- Se cerró un microbloque de FASE 10/11 exclusivamente en `mobile/app/(tabs)/index.tsx`: la traza del Nexus ahora distingue visual y semánticamente entre FORJA, RITO y PULSO activos o en espera.
+- FORJA se activa sólo con wallet sincronizada; RITO con misiones reales; PULSO con actividad o clasificación publicada. La ausencia se expresa mediante menor intensidad y accesibilidad explícita, sin sustituir datos por ceros ficticios.
+- Se conservaron escena, parallax acotado, artwork canónico, rutas, `testID`, haptics, `reduced-motion`, estados de carga/error/vacío, contratos y fuentes Supabase/GameContext.
+- No se modificaron otras pantallas, backend, Auth, economía, combate, assets ni web. No se inicia workflow, no se compila APK ni se genera release por la instrucción vigente.
+- Estado honesto: `IMPLEMENTED_UNVERIFIED`. Siguiente microbloque: continuar con una mejora atómica de continuidad o interacción del Home sin rehacer la escena consolidada.
+
+---
 ## 2026-09-13 — VE-MOB-3-HOME — BOUNDED CAMERA PARALLAX / IMPLEMENTED_UNVERIFIED
 
 - Se cerró un microbloque de FASE 10 exclusivamente en `mobile/app/(tabs)/index.tsx`: el desplazamiento de cámara del hero, la identidad en primer plano, la constelación y la atmósfera del Continuum ahora queda limitado a un rango seguro durante recorridos largos.
