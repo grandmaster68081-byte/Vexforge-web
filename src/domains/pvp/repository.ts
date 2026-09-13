@@ -122,23 +122,26 @@ export async function listMyMatches(): Promise<DomainResult<PvpMatch[]>> {
 }
 
 /**
- * FIX chat56 BUG-2: was calling vexforge_find_opponents (RPC does not exist).
- * Now uses get_leaderboard (SECURITY DEFINER) filtered to exclude the current player.
+ * VE-PVP-3-OPPONENT-ROSTER: canonical roster source.
+ * Was get_leaderboard (only players with a pvp_rankings row -> empty roster) and it
+ * faked level/deck_size. Now uses get_pvp_opponents (SECURITY DEFINER), which already
+ * excludes the caller, admins and simulation accounts, and requires a real deck (>= 5 cards).
+ * No synthetic values: deck_size and mmr come from the database.
  */
 export async function listOpponents(): Promise<DomainResult<BattleOpponent[]>> {
   const playerId = await getCurrentPlayerId();
   if (!playerId) return { status: "blocked_auth", data: null, reason: "Sign in to find opponents." };
-  const { data, error } = await supabase.rpc("get_leaderboard", { p_limit: 20 });
+  const { data, error } = await supabase.rpc("get_pvp_opponents", { p_limit: 20 });
   if (error) return { status: "ready", data: null, reason: error.message };
   const opponents = ((data ?? []) as any[])
-    .filter((p) => p.player_id !== playerId)
+    .filter((p) => p.player_id !== playerId && (p.deck_size ?? 0) >= 5)
     .slice(0, 15)
     .map((p) => ({
       player_id:    p.player_id,
       display_name: p.display_name ?? "Guerrero",
       level:        1,
-      deck_size:    0,
-      total_power:  p.mmr ?? 0,
+      deck_size:    p.deck_size ?? 0,
+      total_power:  p.mmr ?? 1000,
     })) as BattleOpponent[];
   return { status: "ready", data: opponents };
 }
