@@ -1,3 +1,15 @@
+## 2026-09-13 — VE-MOB-5-DECK — FORGE ACTION RAIL PRESS DEPTH / IMPLEMENTED_UNVERIFIED
+
+- **WHAT CHANGED VISUALLY:** Validar, Guardar, Guardar y probar en Arena y los cierres de detalle/editor ahora responden con una compresión física breve al toque, manteniendo la jerarquía de la Forja.
+- **WHAT WAS COMPLETED:** el delta se limita a affordances existentes del editor; conserva validación oficial, guardado por RPC, navegación a Arena, estados de guardado y contratos de accesibilidad.
+- **FILES / COMPONENTS:** `mobile/app/(tabs)/deck.tsx`; guardia `scripts/verify-mobile-deck.mjs`; superficies `EditorModal`, `DeckDetail` y la rail de acciones de Forja.
+- **ASSETS / CARD IDENTITY:** no se añadieron ni sustituyeron assets; las cartas siguen mostrando arte oficial o el estado honesto `ARTE CANÓNICO PENDIENTE`.
+- **VISUAL / MOTION / INTERACTION DECISIONS:** se reutiliza `opacity` + `translateY` durante la presión; no se añade animación, listener, dependencia ni cambio de datos.
+- **LIMITATIONS:** la guardia específica de Mazos y el contrato global de motion deben pasar; no se inició workflow ni se compiló APK por instrucción explícita. QA visual/táctil humana y typecheck completo siguen pendientes.
+- **NEXT BLOCK:** continuar con otro bloque de Forja o Arena que produzca un delta visible y reversible sin reabrir contratos ni inventar contenido.
+- **PERSISTENCIA:** commit de este bloque se registrará en `main` tras la verificación local.
+- **ROLLBACK_POINT:** commit publicado `8e766747bb711eacd40c298fbc782fa0b034f2ac`.
+
 ## 2026-09-13 — VE-MOB-4-COLLECTION — ARCHIVE CONTROL SURFACE PRESS DEPTH / IMPLEMENTED_UNVERIFIED
 
 - **WHAT CHANGED VISUALLY:** los umbrales Colección/Tus cartas/Fusión/Logros, el orden, los filtros de facción y rareza, la paginación y el estado de reintento ahora muestran una respuesta física breve al toque, coherente con las cartas y el inspector del Archivo.

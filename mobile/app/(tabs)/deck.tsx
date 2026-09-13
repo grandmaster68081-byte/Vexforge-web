@@ -163,7 +163,16 @@ function DetailModal({
               <Text style={[styles.detailEyebrow, { color: colors.accent }]}>DETALLE DEL MAZO</Text>
               <Text style={[styles.detailTitle, { color: colors.foreground }]}>MAZO ACTIVO</Text>
             </View>
-            <Pressable testID="close-deck-detail" accessibilityRole="button" accessibilityLabel="Cerrar detalle del mazo" onPress={onClose} style={[styles.closeButton, { borderColor: colors.border }]}>
+            <Pressable
+              testID="close-deck-detail"
+              accessibilityRole="button"
+              accessibilityLabel="Cerrar detalle del mazo"
+              onPress={onClose}
+              style={({ pressed }) => [
+                styles.closeButton,
+                { borderColor: colors.border, opacity: pressed ? 0.72 : 1, transform: [{ translateY: pressed ? 2 : 0 }] },
+              ]}
+            >
               <Feather name="x" size={18} color={colors.foreground} />
             </Pressable>
           </View>
@@ -221,7 +230,16 @@ function EditorModal({
               <Text style={[styles.detailTitle, { color: colors.foreground }]}>Edita tu formación</Text>
               <Text style={[styles.editorSummary, { color: colors.mutedForeground }]}>{selectedIds.length}/{MAX_DECK} cartas · toca una carta para añadirla o quitarla</Text>
             </View>
-            <Pressable testID="close-deck-editor" accessibilityRole="button" accessibilityLabel="Cerrar editor del mazo" onPress={onClose} style={[styles.closeButton, { borderColor: colors.border }]}>
+            <Pressable
+              testID="close-deck-editor"
+              accessibilityRole="button"
+              accessibilityLabel="Cerrar editor del mazo"
+              onPress={onClose}
+              style={({ pressed }) => [
+                styles.closeButton,
+                { borderColor: colors.border, opacity: pressed ? 0.72 : 1, transform: [{ translateY: pressed ? 2 : 0 }] },
+              ]}
+            >
               <Feather name="x" size={18} color={colors.foreground} />
             </Pressable>
           </View>
@@ -262,10 +280,56 @@ function EditorModal({
           {validation ? <View style={[styles.editorNotice, { borderColor: validation.valid ? colors.success : colors.danger }]}><Feather name={validation.valid ? 'check-circle' : 'alert-circle'} size={15} color={validation.valid ? colors.success : colors.danger} /><Text style={[styles.editorNoticeText, { color: colors.foreground }]}>{validation.valid ? 'MAZO VÁLIDO' : validation.errors.join(' ')}</Text></View> : null}
           {message ? <Text style={[styles.editorMessage, { color: message.startsWith('Mazo guardado') ? colors.success : colors.mutedForeground }]}>{message}</Text> : null}
           <View style={styles.editorActions}>
-            <Pressable testID="validate-deck" accessibilityRole="button" accessibilityLabel="Validar mazo contra las reglas oficiales" onPress={onValidate} style={[styles.editorSecondary, { borderColor: colors.accent }]}><Feather name="check-circle" size={15} color={colors.accent} /><Text style={[styles.editorActionText, { color: colors.accent }]}>VALIDAR</Text></Pressable>
-            <Pressable testID="save-deck" accessibilityRole="button" accessibilityLabel="Guardar mazo" disabled={saving} onPress={onSave} style={[styles.editorPrimary, { backgroundColor: deckReady ? colors.primary : colors.muted, opacity: saving ? 0.7 : 1 }]}>{saving ? <ActivityIndicator color={colors.primaryForeground} size="small" /> : <Feather name="save" size={15} color={deckReady ? colors.primaryForeground : colors.mutedForeground} />}<Text style={[styles.editorActionText, { color: deckReady ? colors.primaryForeground : colors.mutedForeground }]}>{saving ? 'GUARDANDO' : 'GUARDAR'}</Text></Pressable>
+            <Pressable
+              testID="validate-deck"
+              accessibilityRole="button"
+              accessibilityLabel="Validar mazo contra las reglas oficiales"
+              onPress={onValidate}
+              style={({ pressed }) => [
+                styles.editorSecondary,
+                { borderColor: colors.accent, opacity: pressed ? 0.78 : 1, transform: [{ translateY: pressed ? 2 : 0 }] },
+              ]}
+            >
+              <Feather name="check-circle" size={15} color={colors.accent} />
+              <Text style={[styles.editorActionText, { color: colors.accent }]}>VALIDAR</Text>
+            </Pressable>
+            <Pressable
+              testID="save-deck"
+              accessibilityRole="button"
+              accessibilityLabel="Guardar mazo"
+              disabled={saving}
+              onPress={onSave}
+              style={({ pressed }) => [
+                styles.editorPrimary,
+                {
+                  backgroundColor: deckReady ? colors.primary : colors.muted,
+                  opacity: saving ? 0.7 : pressed ? 0.82 : 1,
+                  transform: [{ translateY: pressed && !saving ? 2 : 0 }],
+                },
+              ]}
+            >
+              {saving ? <ActivityIndicator color={colors.primaryForeground} size="small" /> : <Feather name="save" size={15} color={deckReady ? colors.primaryForeground : colors.mutedForeground} />}
+              <Text style={[styles.editorActionText, { color: deckReady ? colors.primaryForeground : colors.mutedForeground }]}>{saving ? 'GUARDANDO' : 'GUARDAR'}</Text>
+            </Pressable>
           </View>
-          <Pressable testID="open-arena-from-forge" accessibilityRole="button" accessibilityLabel="Guardar el mazo y entrar en la Arena" disabled={saving} onPress={onArena} style={[styles.editorArena, { borderColor: deckReady ? `${colors.accent}AA` : colors.border }]}><Feather name="zap" size={15} color={deckReady ? colors.accent : colors.mutedForeground} /><Text style={[styles.editorActionText, { color: deckReady ? colors.accent : colors.mutedForeground }]}>GUARDAR Y PROBAR EN ARENA</Text></Pressable>
+          <Pressable
+            testID="open-arena-from-forge"
+            accessibilityRole="button"
+            accessibilityLabel="Guardar el mazo y entrar en la Arena"
+            disabled={saving}
+            onPress={onArena}
+            style={({ pressed }) => [
+              styles.editorArena,
+              {
+                borderColor: deckReady ? `${colors.accent}AA` : colors.border,
+                opacity: saving ? 0.7 : pressed ? 0.82 : 1,
+                transform: [{ translateY: pressed && !saving ? 2 : 0 }],
+              },
+            ]}
+          >
+            <Feather name="zap" size={15} color={deckReady ? colors.accent : colors.mutedForeground} />
+            <Text style={[styles.editorActionText, { color: deckReady ? colors.accent : colors.mutedForeground }]}>GUARDAR Y PROBAR EN ARENA</Text>
+          </Pressable>
         </View>
       </View>
     </Modal>

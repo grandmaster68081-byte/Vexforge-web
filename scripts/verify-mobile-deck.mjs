@@ -60,6 +60,7 @@ const assertions = [
   ['deck home connector uses the canonical root route', contents.screen.includes("navigate('/')") && !contents.screen.includes("navigate('/index')")],
   ['no emoji characters in deck UI', !/[\u{1F000}-\u{1FAFF}]/u.test(contents.screen)],
   ['missing art is explicit, not generic', contents.screen.includes('ARTE CANÓNICO PENDIENTE') && !contents.screen.includes('Feather name="layers"')],
+  ['forge actions expose diegetic press depth', contents.screen.includes('testID="validate-deck"') && contents.screen.includes('opacity: pressed ? 0.78 : 1') && contents.screen.includes('testID="save-deck"') && contents.screen.includes('opacity: saving ? 0.7 : pressed ? 0.82 : 1')],
 ];
 
 const failures = assertions.filter(([, passed]) => !passed).map(([name]) => name);
