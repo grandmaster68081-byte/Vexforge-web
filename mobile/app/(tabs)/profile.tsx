@@ -134,7 +134,7 @@ function PanelContent({
           <Text style={[styles.modalEyebrow, { color: colors.accent }]}>REGISTRO DEL FORJADOR</Text>
           <Text style={[styles.modalTitle, { color: colors.foreground }]}>{title}</Text>
         </View>
-        <Pressable testID="profile-panel-close" accessibilityRole="button" accessibilityLabel="Cerrar detalle" onPress={onClose} style={[styles.modalClose, { borderColor: colors.border }]}><Ionicons name="close" size={18} color={colors.foreground} /></Pressable>
+        <Pressable testID="profile-panel-close" accessibilityRole="button" accessibilityLabel="Cerrar detalle" onPress={onClose} style={({ pressed }) => [styles.modalClose, { borderColor: colors.border, opacity: pressed ? 0.68 : 1, transform: [{ translateY: pressed ? 2 : 0 }] }]}><Ionicons name="close" size={18} color={colors.foreground} /></Pressable>
       </View>
       {panel === 'stats' ? (
         <View style={styles.modalGrid}>
@@ -328,7 +328,7 @@ export default function ProfileScreen() {
               <Text style={[styles.identityMeta, { color: colors.mutedForeground }]}>{handle} · {email}</Text>
               <Text style={[styles.identityStatus, { color: syncState === 'connected' ? colors.success : colors.danger }]}>● {syncState === 'connected' ? 'En línea' : 'Sin conexión'} · {currentRank}</Text>
             </View>
-            <Pressable testID="profile-edit" accessibilityRole="button" accessibilityLabel="Editar perfil" onPress={() => action('meta')} style={[styles.identityAction, { borderColor: colors.border }]}>
+            <Pressable testID="profile-edit" accessibilityRole="button" accessibilityLabel="Editar perfil" onPress={() => action('meta')} style={({ pressed }) => [styles.identityAction, { borderColor: colors.border, opacity: pressed ? 0.68 : 1, transform: [{ translateY: pressed ? 2 : 0 }] }]}>
               <Ionicons name="create-outline" size={17} color={colors.accent} />
             </Pressable>
           </View>

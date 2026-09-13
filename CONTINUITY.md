@@ -3052,3 +3052,13 @@
 - La limitación evita que el parallax saque los planos authored de su composición antes de que la cámara llegue a la siguiente escena. No añade datos, assets ni movimiento sin causa.
 - Evidencia documental/local pendiente de ejecutar en esta copia: el bloque no inicia workflow, no compila APK ni genera release por la instrucción vigente del operador. Estado honesto: `IMPLEMENTED_UNVERIFIED`.
 - Siguiente microbloque: continuar FASE 10/11 con una mejora atómica de continuidad o interacción, sin rehacer la escena consolidada.
+
+---
+## 2026-09-13 — VE-MOB-9-PROFILE — IDENTITY PRESS DEPTH / IMPLEMENTED_UNVERIFIED
+
+- Se cerró un microbloque de FASE 11 exclusivamente en `mobile/app/(tabs)/profile.tsx`: el acceso de edición de identidad y el cierre de los paneles de registro adoptan la misma respuesta táctil de profundidad ya consolidada en el Home y en los accesos rápidos del Perfil.
+- Al presionar, el objeto reduce ligeramente su intensidad y desciende dentro de su plano; se conservan navegación, apertura/cierre de paneles, targets, `testID`, accesibilidad y el botón de cierre de sesión con su confirmación.
+- No se añadieron datos, assets, rutas ni dependencias; no se tocaron backend, Auth, economía, combate, otras pantallas ni la web congelada.
+- Evidencia local: `verify:mobile-profile` 21/21, `verify:ui-identity` 0 violaciones, `verify:motion` OK, `typecheck` limpio, `git diff --check` limpio.
+- No se inicia workflow, no se compila APK ni se genera release por la instrucción vigente. Estado honesto: `IMPLEMENTED_UNVERIFIED`.
+- Siguiente microbloque: continuar con una mejora atómica de continuidad, interacción o fidelidad de datos en Perfil o en otra superficie ya consolidada.
