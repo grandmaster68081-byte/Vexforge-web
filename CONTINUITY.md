@@ -1,3 +1,10 @@
+## 2026-09-13 — VE-MOB-3-BATTLE — LOBBY PROGRAMÁTICO SIN SKIN / IMPLEMENTED_UNVERIFIED
+
+- Se desmontó exclusivamente la imagen `battle-reference-scene.png` de `mobile/app/(tabs)/battle.tsx`; el lobby ahora entra directamente en la interfaz programática real con rango, formación, estado de Arena, búsqueda de rivales, entrenamiento IA, confirmación y estados vacío/error.
+- Se conservaron la resolución oficial, replay, resultado, MMR, `testID`, accesibilidad, navegación funcional y datos vivos; no se modificaron Supabase, RPCs, GameContext, contratos, assets de cartas ni otras pantallas.
+- No se compiló APK ni se inició el workflow Android, por instrucción del operador. Estado honesto: `IMPLEMENTED_UNVERIFIED`; commit de implementación publicado en `main`: `6b79f5a74ac277cc342a90d5c52128f7b779e911`. Esta continuidad se publica mediante la API REST HTTPS oficial de GitHub.
+- Siguiente bloque: desmontar la escena de fondo de Cartas y dejar el compendio programático visible con filtros, búsqueda, paginación y detalle funcionales.
+
 ## 2026-09-13 — VE-MOB-3-AUTH — AUTH PROGRAMÁTICO SIN SKIN / IMPLEMENTED_UNVERIFIED
 
 - Se desmontó exclusivamente la imagen de fondo de `mobile/app/auth.tsx`; la pantalla de acceso ahora está construida con componentes programáticos visibles: correo, contraseña, recordar sesión, recuperación, acceso social, feedback y cambio entre entrar/crear cuenta.
