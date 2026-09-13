@@ -3062,3 +3062,13 @@
 - Evidencia local: `verify:mobile-profile` 21/21, `verify:ui-identity` 0 violaciones, `verify:motion` OK, `typecheck` limpio, `git diff --check` limpio.
 - No se inicia workflow, no se compila APK ni se genera release por la instrucción vigente. Estado honesto: `IMPLEMENTED_UNVERIFIED`.
 - Siguiente microbloque: continuar con una mejora atómica de continuidad, interacción o fidelidad de datos en Perfil o en otra superficie ya consolidada.
+
+---
+## 2026-09-13 — VE-MOB-9-PROFILE — HONEST SEASON SIGNAL / IMPLEMENTED_UNVERIFIED
+
+- Se cerró un microbloque de fidelidad de datos exclusivamente en `mobile/app/(tabs)/profile.tsx`: el panel de temporada deja de afirmar una "Temporada activa" cuando no existe una temporada publicada en la fuente social.
+- Con temporada real sincronizada se conserva el título `TEMPORADA ACTUAL` y su nombre; sin ella, el panel comunica `TEMPORADA EN ESPERA` tanto en el título como en la línea de energía, sin inventar nombre ni fechas.
+- Se conservaron nivel, XP, energía, rango, accesos, `testID`, accesibilidad y el resto de paneles del registro del forjador. No se tocaron backend, contratos, Auth, economía, combate ni otras pantallas.
+- Evidencia local: `verify:mobile-profile` 21/21, `verify:ui-identity` 0 violaciones, `typecheck` limpio, `git diff --check` limpio.
+- No se inicia workflow, no se compila APK ni se genera release por la instrucción vigente. Estado honesto: `IMPLEMENTED_UNVERIFIED`.
+- Siguiente microbloque: continuar con otra mejora atómica de fidelidad, continuidad o interacción sin rehacer superficies consolidadas.

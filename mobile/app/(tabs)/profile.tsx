@@ -126,7 +126,7 @@ function PanelContent({
   onClose: () => void;
   onSignOut: () => Promise<void>;
 }) {
-  const title = panel === 'stats' ? 'ESTADÍSTICAS' : panel === 'achievements' ? 'LOGROS' : panel === 'titles' ? 'TÍTULOS' : panel === 'history' ? 'HISTORIAL' : panel === 'ranking' ? 'RANKING' : panel === 'progress' ? 'PROGRESO' : panel === 'account' ? 'CUENTA' : 'TEMPORADA ACTUAL';
+  const title = panel === 'stats' ? 'ESTADÍSTICAS' : panel === 'achievements' ? 'LOGROS' : panel === 'titles' ? 'TÍTULOS' : panel === 'history' ? 'HISTORIAL' : panel === 'ranking' ? 'RANKING' : panel === 'progress' ? 'PROGRESO' : panel === 'account' ? 'CUENTA' : social?.seasonName ? 'TEMPORADA ACTUAL' : 'TEMPORADA EN ESPERA';
   return (
     <View style={[styles.modalPanel, { backgroundColor: colors.panelStrong, borderColor: colors.accent }]}>
       <View style={styles.modalHeader}>
@@ -150,7 +150,7 @@ function PanelContent({
         <View style={styles.modalCopy}>
           <Text style={[styles.modalBody, { color: colors.foreground }]}>Tu camino en VEXFORGE</Text>
           <Text style={[styles.modalMuted, { color: colors.mutedForeground }]}>Nivel {progress?.level ?? '—'} · {number(progress?.xp)} / {number(progress?.xp_to_next)} XP</Text>
-          <Text style={[styles.modalMuted, { color: colors.mutedForeground }]}>Energía {number(progress?.energy)} / {number(progress?.max_energy)} · {social?.seasonName ?? 'Temporada activa'}</Text>
+          <Text style={[styles.modalMuted, { color: colors.mutedForeground }]}>Energía {number(progress?.energy)} / {number(progress?.max_energy)} · {social?.seasonName ?? 'TEMPORADA EN ESPERA'}</Text>
         </View>
       ) : null}
       {panel === 'progress' ? (
