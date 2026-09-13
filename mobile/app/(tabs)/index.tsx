@@ -587,10 +587,21 @@ export default function ForgeScreen() {
                   </Pressable>
                 </View>
 
-                <Animated.View entering={reduceMotion ? undefined : FadeInUp.delay(orbitReveal)} style={styles.domainArchiveFinal} testID="home-domain-rail">
+                   <Animated.View
+                     entering={reduceMotion ? undefined : FadeInUp.delay(orbitReveal)}
+                     style={[
+                       styles.domainArchiveFinal,
+                       {
+                         borderLeftColor: `${identityVisual?.accent ?? colors.rarityEpic}80`,
+                       },
+                     ]}
+                     testID="home-domain-rail"
+                   >
                   <View style={styles.domainArchiveHeaderFinal}>
                     <View>
-                      <Text style={[styles.domainArchiveEyebrowFinal, { color: colors.rarityEpic }]}>DOMINIOS / 06 RUTAS</Text>
+                         <Text style={[styles.domainArchiveEyebrowFinal, { color: colors.rarityEpic }]}>
+                           {identityCard ? `DOMINIOS / 06 RUTAS · ${identityCard.faction?.toUpperCase()}` : 'DOMINIOS / 06 RUTAS'}
+                         </Text>
                       <Text style={[styles.domainArchiveTitleFinal, { color: colors.foreground }]}>Elige dónde forjar</Text>
                     </View>
                     <Animated.View style={[styles.domainArchiveCoreFinal, { borderColor: colors.accent }, pulseStyle]}><Icon name="resonance" color={colors.accent} size={13} /></Animated.View>
@@ -603,7 +614,15 @@ export default function ForgeScreen() {
                   </View>
                 </Animated.View>
 
-                <View style={styles.ritualDeckFinal}>
+                 <View
+                   style={[
+                     styles.ritualDeckFinal,
+                     {
+                       borderBottomColor: `${identityVisual?.accent ?? colors.accent}80`,
+                       borderTopColor: `${identityVisual?.accent ?? colors.accent}80`,
+                     },
+                   ]}
+                 >
                   <View style={styles.ritualHeadingFinal}><View><Text style={[styles.ritualEyebrowFinal, { color: colors.success }]}>OPERACIONES / 02</Text><Text style={[styles.ritualTitleFinal, { color: colors.foreground }]}>El siguiente movimiento</Text></View><Icon name="shop" color={colors.success} size={18} /></View>
                   <View style={styles.operationRowFinal}>
                     <Pressable accessibilityRole="button" accessibilityLabel="Abrir Forja" testID="home-forge" onPress={() => navigate('/deck')} style={({ pressed }) => [styles.operationLinkFinal, { borderColor: colors.rarityEpic, opacity: pressed ? 0.7 : 1 }]}>
@@ -915,7 +934,7 @@ const styles = StyleSheet.create({
     artifactNameFinal: { fontFamily: 'Cinzel_600SemiBold', fontSize: 18, lineHeight: 23, marginTop: 9 },
     artifactLoreFinal: { fontFamily: 'Rajdhani_500Medium', fontSize: 12, lineHeight: 16, marginTop: 9 },
     artifactHintFinal: { fontFamily: 'Rajdhani_700Bold', fontSize: 8, letterSpacing: 1, marginTop: 16 },
-    domainArchiveFinal: { marginTop: 24 },
+     domainArchiveFinal: { borderLeftWidth: 1, marginTop: 24, paddingLeft: 10 },
     domainArchiveHeaderFinal: { alignItems: 'center', flexDirection: 'row', justifyContent: 'space-between' },
     domainArchiveEyebrowFinal: { fontFamily: 'Rajdhani_700Bold', fontSize: 9, letterSpacing: 1.55 },
     domainArchiveTitleFinal: { fontFamily: 'Cinzel_600SemiBold', fontSize: 19, marginTop: 4 },
