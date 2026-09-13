@@ -34,6 +34,7 @@ const assertions = [
   ['no client PvP battle simulation', contents.screen.includes('startBattle(selectedOpponent.player_id)') && !contents.screen.includes('simulateFormation') && !contents.screen.includes('Math.random')],
   ['no emoji characters in battle UI', !/[\u{1F000}-\u{1FAFF}]/u.test(contents.screen)],
   ['arena action gates expose diegetic press depth', contents.screen.includes('testID="battle-confirm"') && contents.screen.includes('opacity: battleLoading || formationSlots.length < 3 ? 0.7 : pressed ? 0.82 : 1') && contents.screen.includes('styles.cancelButton') && contents.screen.includes('opacity: pressed ? 0.72 : 1')],
+  ['replay exposes authoritative turn progress', contents.screen.includes('testID="battle-replay-progress"') && contents.screen.includes('turnIndex={turnIndex}') && contents.screen.includes('totalTurns={turns.length}') && contents.screen.includes('replayProgressFill')],
 ];
 
 const failures = assertions.filter(([, passed]) => !passed).map(([name]) => name);

@@ -1,3 +1,15 @@
+## 2026-09-13 — VE-MOB-7-BATTLE — REPLAY TURN PROGRESS / IMPLEMENTED_UNVERIFIED
+
+- **WHAT CHANGED VISUALLY:** el replay de Arena ahora muestra una lectura persistente del turno actual frente al total recibido, con una barra proporcional derivada de la resolución autoritativa.
+- **WHAT WAS COMPLETED:** se conserva el orden de turnos, el campo de batalla, el botón de avance, reduced-motion y los estados de resultado; no se añaden turnos, simulación ni datos locales.
+- **FILES / COMPONENTS:** `mobile/app/(tabs)/battle.tsx`; guardia `scripts/verify-mobile-battle.mjs`; componente `ReplayProgress` y superficie `battle-replay-progress`.
+- **ASSETS / CARD IDENTITY:** no se añadieron assets ni se alteró la identidad de cartas, unidades o formaciones.
+- **VISUAL / MOTION / INTERACTION DECISIONS:** el progreso es estático y legible, sin animación adicional; comunica `turnIndex` y `turns.length` a la vista y a accesibilidad.
+- **LIMITATIONS:** guardia de Arena 23/23 y contrato global de motion pasan localmente; no se inició workflow ni se compiló APK por instrucción explícita. QA humana y typecheck completo siguen pendientes.
+- **NEXT BLOCK:** continuar con otro bloque de Arena o avanzar a Legado sólo si existe un delta visual verificable y no se reabre la arquitectura consolidada.
+- **PERSISTENCIA:** commit de este bloque se registrará en `main` tras la publicación HTTPS.
+- **ROLLBACK_POINT:** `d854a558d8c05a0fedb9059cf1c8ff1d9ce966ec`, continuidad publicada antes de este delta.
+
 ## 2026-09-13 — VE-MOB-7-BATTLE — ARENA ACTION GATES PRESS DEPTH / IMPLEMENTED_UNVERIFIED
 
 - **WHAT CHANGED VISUALLY:** la confirmación de desafío, la cancelación y el avance de lectura del replay ahora responden al toque con una compresión física breve, haciendo explícitos los puntos de decisión de la Arena.

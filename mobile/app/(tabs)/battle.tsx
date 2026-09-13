@@ -55,6 +55,29 @@ function hpPercent(hp: number | undefined, max: number | undefined) {
   return Math.max(0, Math.min(100, (hp / max) * 100));
 }
 
+function ReplayProgress({ turnIndex, totalTurns, colors }: { turnIndex: number; totalTurns: number; colors: ReturnType<typeof useColors> }) {
+  const total = Math.max(totalTurns, 1);
+  const current = Math.min(turnIndex + 1, total);
+  const ratio = current / total;
+  return (
+    <View
+      testID="battle-replay-progress"
+      accessibilityRole="progressbar"
+      accessibilityLabel={`Progreso del replay: turno ${current} de ${total}`}
+      accessibilityValue={{ min: 1, max: total, now: current }}
+      style={styles.replayProgress}
+    >
+      <View style={styles.replayProgressHeader}>
+        <Text style={[styles.replayProgressLabel, { color: colors.mutedForeground }]}>LECTURA DEL COMBATE</Text>
+        <Text style={[styles.replayProgressValue, { color: colors.accent }]}>{current}/{total}</Text>
+      </View>
+      <View style={[styles.replayProgressRail, { backgroundColor: `${colors.border}99` }]}>
+        <View style={[styles.replayProgressFill, { width: `${ratio * 100}%`, backgroundColor: colors.accent }]} />
+      </View>
+    </View>
+  );
+}
+
 function OpponentRow({
   opponent,
   selected,
@@ -478,6 +501,7 @@ export default function BattleScreen() {
             reducedMotion={reducedMotion}
             youWon={activeBattleResult.you_won}
           />
+           <ReplayProgress turnIndex={turnIndex} totalTurns={turns.length} colors={colors} />
           <Pressable
             testID="battle-next-turn"
             accessibilityRole="button"
@@ -663,6 +687,12 @@ const styles = StyleSheet.create({
   liveBanner: { borderWidth: 1, borderRadius: 12, padding: 10, flexDirection: 'row', alignItems: 'center', gap: 8 },
   liveDot: { width: 7, height: 7, borderRadius: 4 },
   liveText: { fontSize: 10, fontWeight: '900', letterSpacing: 0.6 },
+  replayProgress: { borderWidth: 1, borderRadius: 12, padding: 10, marginTop: 9, gap: 7 },
+  replayProgressHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
+  replayProgressLabel: { fontSize: 8, fontWeight: '900', letterSpacing: 1 },
+  replayProgressValue: { fontSize: 10, fontWeight: '900', letterSpacing: 0.5 },
+  replayProgressRail: { height: 5, borderRadius: 3, overflow: 'hidden' },
+  replayProgressFill: { height: '100%', borderRadius: 3 },
   turnHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: 8 },
   turnKicker: { fontSize: 11, fontWeight: '900', letterSpacing: 1.1 },
   turnCount: { fontSize: 11, fontWeight: '700' },
