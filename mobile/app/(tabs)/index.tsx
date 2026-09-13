@@ -1097,15 +1097,20 @@ export default function ForgeScreen() {
 
                 <View style={styles.rankingDeckFinal}>
                   <SectionMarker eyebrow="CIRCUITO ACTIVO" title="Clasificación del frente" action="ABRIR MUNDO" onAction={() => navigate('/world')} accent={colors.accent} />
-                   <View
-                     style={[
+                   <Pressable
+                     accessibilityRole="button"
+                     accessibilityLabel={ranking[0] ? `Abrir Mundo. Lidera la clasificación ${ranking[0].display_name}` : 'Abrir Mundo. Clasificación en espera'}
+                     testID="home-ranking-monument"
+                     onPress={() => navigate('/world')}
+                     style={({ pressed }) => [
                        styles.rankingMonument,
                        {
                          borderLeftColor: `${colors.accent}B8`,
                          backgroundColor: `${colors.ink}66`,
+                         opacity: pressed ? 0.72 : 1,
+                         transform: [{ translateY: pressed ? 2 : 0 }],
                        },
                      ]}
-                     testID="home-ranking-monument"
                    >
                      <Animated.View style={[styles.rankingMonumentSeal, { borderColor: colors.accent, backgroundColor: `${colors.accent}12` }, pulseStyle]}>
                        <Icon name="award" color={colors.accent} size={16} />
@@ -1120,7 +1125,7 @@ export default function ForgeScreen() {
                        </Text>
                      </View>
                      <Text style={[styles.rankingMonumentCount, { color: colors.accent }]}>{ranking.length ? `${ranking.length} POS.` : '—'}</Text>
-                   </View>
+                   </Pressable>
                   <View testID="home-ranking" style={styles.rankingSignals}>{ranking.length > 0 ? ranking.map((entry, index) => <RankingSignal key={entry.rank + '-' + entry.display_name} entry={entry} index={index} onPress={() => navigate('/world')} />) : <Text style={[styles.emptyBody, { color: colors.mutedForeground }]}>El ranking de la temporada todavía no tiene posiciones publicadas.</Text>}</View>
                 </View>
               </View>
