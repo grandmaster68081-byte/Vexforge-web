@@ -311,10 +311,12 @@ export default function ForgeScreen() {
     transform: [{ rotate: `${orbit.value * 360}deg` }, { scale: 0.92 + pulse.value * 0.06 }],
   }));
   const domainSceneDriftStyle = useAnimatedStyle(() => ({
-    transform: [
-      { translateY: scrollY.value * 0.035 },
-      { translateX: Math.sin(orbit.value * Math.PI * 2) * 1.5 },
-    ],
+    transform: reduceMotion
+      ? []
+      : [
+          { translateY: scrollY.value * 0.035 },
+          { translateX: Math.sin(orbit.value * Math.PI * 2) * 1.5 },
+        ],
   }));
 
   const activeCard = home.card ?? featuredCards[0] ?? null;
@@ -387,7 +389,19 @@ export default function ForgeScreen() {
               <View style={[styles.heroCorner, styles.heroBottomRight, { borderColor: `${colors.rarityEpic}A8` }]} />
               <Text style={[styles.heroSceneCode, { color: `${colors.foreground}70` }]}>NEXUS / 01 · THRESHOLD</Text>
             </View>
-             <Animated.View style={[styles.identityStage, { borderColor: `${identityVisual?.accent ?? colors.rarityEpic}B8`, backgroundColor: `${identityVisual?.overlay ?? colors.ink}CC` }, sentinelParallaxStyle]}>
+             <Animated.View
+               style={[
+                 styles.identityStage,
+                 {
+                   borderColor: `${identityVisual?.accent ?? colors.rarityEpic}B8`,
+                   backgroundColor: `${identityVisual?.overlay ?? colors.ink}CC`,
+                   height: Math.min(432, heroHeight * 0.72),
+                   right: -Math.min(36, width * 0.1),
+                   width: Math.min(286, Math.max(236, width * 0.72)),
+                 },
+                 sentinelParallaxStyle,
+               ]}
+             >
                {identityCard?.image_url ? (
                  <Image
                    source={{ uri: identityCard.image_url }}
