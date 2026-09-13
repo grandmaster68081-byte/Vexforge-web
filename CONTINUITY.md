@@ -3,7 +3,7 @@
 - Se revisó exclusivamente la unión entre la escena de dominios y el tramo de operaciones del Home Android, sin rehacer el hero ni convertir la portada en dashboard.
 - Forja y Economía ahora se presentan como portales de operación con sigilo, detalle vivo derivado del estado existente y pulso de entrada; la Cámara de Forja ahora contiene cuatro cámaras individuales para Packs, Tienda, Fusión y Evolución.
 - Se conservaron los mismos destinos, datos, `testID`, accesibilidad y navegación. No se modificaron Supabase, RPCs, GameContext, Auth, otras pantallas ni assets.
-- La guarda oficial del Home pasa 13/13 y bloquea el retorno de `operationLinkFinal` y `storeActionFinal`. El commit se publicará con `[skip ci]` por la instrucción vigente de no compilar ni iniciar workflow Android.
+- La guarda oficial del Home pasa 13/13 y bloquea el retorno de `operationLinkFinal` y `storeActionFinal`. El bloque quedó publicado en `main` mediante el commit `94590291959556d88a7f048a255d5f30b40a6dc7`; usa `[skip ci]` por la instrucción vigente de no compilar ni iniciar workflow Android.
 - Siguiente bloque: observar la continuidad entre Cámara de Forja y las señales secundarias sin reabrir el hero, los dominios ni los contratos de datos.
 
 ## 2026-09-13 — VE-MOB-3-HOME — SECONDARY WORLD SIGNALS / IMPLEMENTED_UNVERIFIED
