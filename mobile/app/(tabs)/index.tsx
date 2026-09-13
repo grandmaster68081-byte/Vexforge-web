@@ -310,6 +310,12 @@ export default function ForgeScreen() {
     opacity: 0.25 + pulse.value * 0.25,
     transform: [{ rotate: `${orbit.value * 360}deg` }, { scale: 0.92 + pulse.value * 0.06 }],
   }));
+  const domainSceneDriftStyle = useAnimatedStyle(() => ({
+    transform: [
+      { translateY: scrollY.value * 0.035 },
+      { translateX: Math.sin(orbit.value * Math.PI * 2) * 1.5 },
+    ],
+  }));
 
   const activeCard = home.card ?? featuredCards[0] ?? null;
   const identityCard = home.identityCard;
@@ -591,6 +597,7 @@ export default function ForgeScreen() {
                      entering={reduceMotion ? undefined : FadeInUp.delay(orbitReveal)}
                      style={[
                        styles.domainArchiveFinal,
+                       domainSceneDriftStyle,
                        {
                          borderLeftColor: `${identityVisual?.accent ?? colors.rarityEpic}80`,
                        },
