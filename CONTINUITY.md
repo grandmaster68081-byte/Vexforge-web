@@ -1,3 +1,11 @@
+## 2026-09-13 — VE-MOB-3-HOME — NEXUS CONTINUUM BRIDGE / IMPLEMENTED_UNVERIFIED
+
+- Se siguió el protocolo vivo `vexforge_home_world_system_protocol_v3` leído desde Supabase por Management API HTTPS. El bloque elegido conecta la Cámara de Forja con las señales secundarias sin rehacer el hero ni convertir Home en dashboard.
+- Se añadió en `mobile/app/(tabs)/index.tsx` una traza viva con tres nodos táctiles: FORJA, RITO y PULSO. Sus valores proceden únicamente de `progress`, `wallet`, `home.missions`, `home.activity` y `ranking`; reutilizan `/deck`, `/missions` y `/world`.
+- Se conservaron contratos, consultas, Supabase, RPCs, GameContext, Auth, assets, rutas existentes, `testID`, accesibilidad, estados vacíos y reduced-motion. No se inventaron nombres, métricas ni datos.
+- El código quedó publicado en `main` por API REST HTTPS de GitHub mediante el commit `a4c7fbb515e84f88524ef92898529ad5bb6d8e35` con `[skip ci]`. No se compiló aplicación, no se inició workflow APK y no se fabricó release por instrucción explícita del operador.
+- Estado honesto: `IMPLEMENTED_UNVERIFIED`; falta verificación visual/táctil en APK cuando el operador autorice compilación. Siguiente bloque: continuar FASE 8/9 con la conexión de actividad y navegación sin reabrir hero, dominios, operaciones ni contratos de datos.
+
 ## 2026-09-13 — VE-MOB-3-HOME — OPERATION GATES / IMPLEMENTED_UNVERIFIED
 
 - Se revisó exclusivamente la unión entre la escena de dominios y el tramo de operaciones del Home Android, sin rehacer el hero ni convertir la portada en dashboard.
