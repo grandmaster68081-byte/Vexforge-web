@@ -1,3 +1,10 @@
+## 2026-09-13 — VE-MOB-3-HOME — ACTIVITY CHRONICLE SEALS / IMPLEMENTED_UNVERIFIED
+
+- Se cerró un microbloque de FASE 8/11 exclusivamente en `mobile/app/(tabs)/index.tsx`: cada señal de actividad real ahora se presenta como un sello de crónica conectado al rail del Nexus, en lugar de un marcador genérico.
+- La actividad conserva el texto, fecha, rutas, `testID`, accesibilidad, estado vacío y respuesta táctil; no se modificaron Supabase, RPCs, GameContext, contratos, assets ni otras pantallas Android.
+- No se compiló APK ni se inició el workflow Android, por instrucción del operador. Estado honesto: `IMPLEMENTED_UNVERIFIED`; commit de implementación publicado en `main`: `ce92c7e1f0513f9e966bc5f29d459acd609e17f3`. Esta continuidad se publica mediante la API REST HTTPS oficial de GitHub.
+- Siguiente bloque: continuar con una mejora atómica de actividad/transición del Home, sin rehacer la escena consolidada.
+
 ## 2026-09-13 — VE-MOB-3-HOME — RANKING MONUMENT / IMPLEMENTED_UNVERIFIED
 
 - Se cerró un microbloque de FASE 7/11 exclusivamente en `mobile/app/(tabs)/index.tsx`: la clasificación del frente ahora tiene una estela de prestigio integrada en la escena antes de sus posiciones, usando únicamente el líder, MMR, victorias y cantidad de registros reales.
