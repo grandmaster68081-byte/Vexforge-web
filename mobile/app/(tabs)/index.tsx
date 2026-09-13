@@ -131,7 +131,9 @@ function SectionMarker({ eyebrow, title, action, onAction, accent }: { eyebrow: 
     <View style={styles.sectionMarker}>
       <View style={styles.sectionMarkerCopy}>
         <View style={styles.markerLine}>
-          <View style={[styles.markerDot, { backgroundColor: markerColor }]} />
+            <View style={[styles.markerSeal, { borderColor: `${markerColor}A8`, backgroundColor: `${markerColor}12` }]}>
+              <View style={[styles.markerSealCore, { backgroundColor: markerColor }]} />
+            </View>
           <Text style={[styles.eyebrow, { color: markerColor }]}>{eyebrow}</Text>
         </View>
         <Text style={[styles.sectionTitle, { color: colors.foreground }]}>{title}</Text>
@@ -1267,7 +1269,8 @@ const styles = StyleSheet.create({
   sectionMarker: { alignItems: 'flex-end', flexDirection: 'row', justifyContent: 'space-between', marginTop: 21 },
   sectionMarkerCopy: { flex: 1 },
   markerLine: { alignItems: 'center', flexDirection: 'row', gap: 7 },
-  markerDot: { height: 1, width: 18 },
+   markerSeal: { alignItems: 'center', borderWidth: 1, height: 9, justifyContent: 'center', transform: [{ rotate: '45deg' }], width: 9 },
+   markerSealCore: { height: 3, transform: [{ rotate: '-45deg' }], width: 3 },
   eyebrow: { fontFamily: 'Rajdhani_700Bold', fontSize: 9, letterSpacing: 1.8 },
   sectionTitle: { fontFamily: 'Cinzel_600SemiBold', fontSize: 18, letterSpacing: 0.35, marginTop: 5 },
   markerAction: { alignItems: 'center', flexDirection: 'row', gap: 6, paddingBottom: 2, paddingLeft: 10 },
