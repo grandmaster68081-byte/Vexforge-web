@@ -1,3 +1,10 @@
+## 2026-09-13 — VE-MOB-3-HOME — ACTIVITY TRACE NAVIGATION / IMPLEMENTED_UNVERIFIED
+
+- Se continuó la FASE 8/9 del protocolo Home: cada señal real de actividad pública ahora es un umbral táctil que conduce a `/world`, conservando el texto y la fecha provenientes de Supabase.
+- Se mantuvieron los estados vacíos, el rastro temporal, los contratos, assets, consultas, rutas, `testID` existentes y reduced-motion. No se añadieron datos ficticios ni se modificaron backend, Supabase, Auth, RPCs o GameContext.
+- El cambio quedó publicado en `main` por API REST HTTPS de GitHub mediante el commit `8d5e2d4e6c28b683024d4acde96a8fe27e43b7a0` con `[skip ci]`. No se compiló aplicación, no se inició workflow APK y no se generó release por instrucción explícita del operador.
+- Estado honesto: `IMPLEMENTED_UNVERIFIED`; la verificación visual/táctil en APK queda para cuando el operador autorice compilación. Siguiente bloque: cerrar la continuidad del circuito de clasificación hacia Mundo sin reabrir el hero ni las operaciones.
+
 ## 2026-09-13 — VE-MOB-3-HOME — NEXUS CONTINUUM BRIDGE / IMPLEMENTED_UNVERIFIED
 
 - Se siguió el protocolo vivo `vexforge_home_world_system_protocol_v3` leído desde Supabase por Management API HTTPS. El bloque elegido conecta la Cámara de Forja con las señales secundarias sin rehacer el hero ni convertir Home en dashboard.
