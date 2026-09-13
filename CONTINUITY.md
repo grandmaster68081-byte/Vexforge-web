@@ -1,3 +1,11 @@
+## 2026-09-13 — VE-MOB-3-HOME — LIVING CONTINUUM PASS / IMPLEMENTED_UNVERIFIED
+
+- Se hizo una continuación quirúrgica del Home Android existente, sin rehacer el hero ni tocar backend, Supabase, `GameContext`, Auth, otras pantallas o rutas.
+- El artwork oficial de la carta de identidad canónica ahora continúa bajo el hero como atmósfera ambiental con parallax y degradados; la identidad del forjador, el evento, la carta destacada, los dominios, las operaciones, las misiones, la actividad y el ranking quedan contenidos en esa escena.
+- Se retiraron del tramo inferior los ejes, órbitas, rombos, círculos y marcos repetitivos que producían apariencia de dashboard genérico. Se conservaron datos reales, navegación, `CanonicalFrame`, accesibilidad, `testID`, estados de carga/error/vacío y reduced-motion.
+- Pasaron las guardas `verify:mobile-home-official-assets` (10/10), `verify:mobile-card-pilot` (6/6), `verify:motion`, `verify:ui-identity` y `verify:residual-art`. La transpilación sintáctica TSX también pasa.
+- El typecheck completo de Expo queda no concluyente porque el clon no tenía dependencias instaladas y `npm ci` fue bloqueado por un 404 del firewall interno para `npm-package-arg@11.0.3`; no se declara PASS. Falta publicar en `main`, ejecutar el workflow Android y confirmar el release APK correlativo.
+
 ## 2026-09-13 — VE-MOB-3-HOME — CARD IDENTITY PILOT / IMPLEMENTED_UNVERIFIED
 
 - Se completó la auditoría del Home Android real antes de editar. El Home vive en `mobile/app/(tabs)/index.tsx`, conserva `CanonicalFrame`/safe area a través del shell, scroll vertical, hotspots Expo Router y las fuentes existentes `get_home_stats`, `cards`, `missions`, `mission_runs` y `get_public_player_names`.

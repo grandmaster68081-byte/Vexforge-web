@@ -180,10 +180,12 @@ function DomainNode({
       accessibilityLabel={signal ? `Abrir dominio ${portal.label}. ${signal}` : `Abrir dominio ${portal.label}`}
       testID={`home-domain-${portal.id}`}
       onPress={onPress}
-      style={({ pressed }) => [styles.domainNode, { opacity: pressed ? 0.7 : 1 }]}
+      style={({ pressed }) => [
+        styles.domainNode,
+        { borderLeftColor: portal.color, opacity: pressed ? 0.7 : 1 },
+      ]}
     >
-      <View style={[styles.domainNodeStem, { backgroundColor: `${portal.color}88` }]} />
-      <View style={[styles.domainSigil, { borderColor: `${portal.color}A8`, backgroundColor: `${portal.color}15` }]}>
+      <View style={styles.domainNodeGlyph}>
         <Icon name={portal.icon} color={portal.color} size={17} />
       </View>
       <View style={styles.domainNodeCopy}>
@@ -315,6 +317,18 @@ export default function ForgeScreen() {
           { translateY: scrollY.value * 0.035 },
           { translateX: Math.sin(orbit.value * Math.PI * 2) * 1.5 },
         ],
+  }));
+  const continuumArtStyle = useAnimatedStyle(() => ({
+    opacity: 0.17 + pulse.value * 0.05,
+    transform: [
+      { translateY: scrollY.value * -0.08 },
+      { translateX: Math.sin(orbit.value * Math.PI * 2) * 5 },
+      { scale: 1.08 + pulse.value * 0.025 },
+    ],
+  }));
+  const continuumGlowStyle = useAnimatedStyle(() => ({
+    opacity: 0.18 + pulse.value * 0.1,
+    transform: [{ translateY: pulse.value * -18 }, { scale: 1 + pulse.value * 0.08 }],
   }));
 
   const activeCard = home.card ?? featuredCards[0] ?? null;
@@ -548,7 +562,35 @@ export default function ForgeScreen() {
             ) : null}
             {homeState === 'loading' && !home.stats && !activeCard ? <LoadingTrace /> : null}
 
-            <View style={styles.nexusWorldFinal}>
+             <View style={styles.nexusWorldFinal} testID="home-continuum">
+               {identityCard?.image_url ? (
+                 <Animated.Image
+                   source={{ uri: identityCard.image_url }}
+                   style={[styles.continuumArt, continuumArtStyle]}
+                   resizeMode="cover"
+                   accessibilityLabel="Atmósfera derivada del artwork oficial de la identidad del Home"
+                 />
+               ) : null}
+               <LinearGradient
+                 colors={[`${identityVisual?.overlay ?? colors.ink}D8`, `${colors.background}E8`, colors.background]}
+                 locations={[0, 0.44, 1]}
+                 style={StyleSheet.absoluteFill}
+               />
+               <LinearGradient
+                 colors={[`${identityVisual?.accent ?? colors.rarityEpic}24`, 'transparent', `${colors.ink}EE`]}
+                 start={{ x: 0, y: 0 }}
+                 end={{ x: 1, y: 0.9 }}
+                 style={StyleSheet.absoluteFill}
+               />
+               <Animated.View
+                 pointerEvents="none"
+                 style={[
+                   styles.continuumGlow,
+                   { backgroundColor: identityVisual?.accent ?? colors.rarityEpic },
+                   continuumGlowStyle,
+                 ]}
+               />
+               <View style={styles.continuumContent}>
                 <Animated.View
                   entering={reduceMotion ? undefined : FadeInUp.delay(MOTION.micro).duration(MOTION.navigation)}
                   style={[
@@ -561,8 +603,8 @@ export default function ForgeScreen() {
                   testID="home-forger-ledger"
                 >
                   <View style={styles.signalIdentityFinal}>
-                    <View style={[styles.signalCrestFinal, { borderColor: colors.accent }]}>
-                      <View style={[styles.signalCrestInnerFinal, { borderColor: colors.accent }]}><Text style={[styles.signalCrestLetterFinal, { color: colors.accent }]}>{playerName.slice(0, 1).toUpperCase()}</Text></View>
+                     <View style={[styles.signalCrestFinal, { borderColor: colors.accent, backgroundColor: `${colors.accent}18` }]}>
+                       <Icon name="profile" color={colors.accent} size={18} />
                     </View>
                     <View style={styles.signalIdentityCopyFinal}>
                       <Text style={[styles.signalKickerFinal, { color: colors.accent }]}>IDENTIDAD DEL FORJADOR</Text>
@@ -593,10 +635,9 @@ export default function ForgeScreen() {
                       <Icon name="map" color={colors.rarityRare} size={13} /><Text style={[styles.frontStageLinkTextFinal, { color: colors.rarityRare }]}>MUNDO</Text><Icon name="arrow-up" color={colors.rarityRare} size={10} />
                     </Pressable>
                   </View>
-                  <Pressable accessibilityRole="button" accessibilityLabel="Abrir evento activo" testID="home-event" onPress={() => navigate('/world')} style={({ pressed }) => [styles.eventRibbonFinal, { borderColor: colors.rarityRare, opacity: pressed ? 0.76 : 1 }]}>
+                   <Pressable accessibilityRole="button" accessibilityLabel="Abrir evento activo" testID="home-event" onPress={() => navigate('/world')} style={({ pressed }) => [styles.eventRibbonFinal, { borderLeftColor: colors.rarityRare, backgroundColor: `${colors.ink}A6`, opacity: pressed ? 0.76 : 1 }]}>
                     <View style={styles.eventBeaconFinal}>
-                      <View style={[styles.eventOrbFinal, { borderColor: colors.rarityRare }]}><Animated.View style={[styles.eventOrbCoreFinal, { backgroundColor: colors.rarityRare }, pulseStyle]} /></View>
-                      <View style={[styles.eventBeaconAxisFinal, { backgroundColor: colors.rarityRare }]} />
+                       <Icon name="resonance" color={colors.rarityRare} size={23} />
                     </View>
                     <View style={styles.eventCopyFinal}>
                       <Text style={[styles.eventTypeFinal, { color: colors.rarityRare }]}>{activeEvent?.type?.toUpperCase() ?? 'SEÑAL GLOBAL'}</Text>
@@ -612,7 +653,7 @@ export default function ForgeScreen() {
                   <Pressable accessibilityRole="button" accessibilityLabel="Inspeccionar carta destacada del Nexus" testID="home-featured-card-detail" onPress={openFeatured} style={({ pressed }) => [styles.artifactFeatureFinal, { opacity: pressed ? 0.78 : 1 }]}>
                     <View style={[styles.artifactFrameFinal, { borderColor: colors.rarityLegendary, backgroundColor: colors.ink }]}>
                        {activeCard?.image_url ? <Image source={{ uri: activeCard.image_url }} style={styles.artifactArtFinal} resizeMode="cover" accessibilityLabel="Arte oficial de la carta destacada" onLoad={() => setFeaturedAssetState('ready')} onError={() => setFeaturedAssetState('error')} /> : null}
-                      <LinearGradient colors={['transparent', colors.ink]} style={StyleSheet.absoluteFill} />
+                       <LinearGradient colors={['transparent', `${colors.ink}F2`]} style={StyleSheet.absoluteFill} />
                       <Text style={[styles.artifactRarityFinal, { color: colors.rarityLegendary }]}>{activeCard?.rarity?.toUpperCase() ?? 'SEÑAL PENDIENTE'}</Text>
                       <Text style={[styles.artifactCodeFinal, { color: colors.foreground }]}>{activeCard?.code ?? '—'}</Text>
                       {featuredAssetState === 'error' ? <View style={styles.featuredAssetError}><Text style={[styles.featuredAssetErrorText, { color: colors.accent }]}>ARTE OFFLINE</Text></View> : null}
@@ -647,8 +688,6 @@ export default function ForgeScreen() {
                     <Animated.View style={[styles.domainArchiveCoreFinal, { borderColor: colors.accent }, pulseStyle]}><Icon name="resonance" color={colors.accent} size={13} /></Animated.View>
                   </View>
                   <View style={[styles.constellationFinal, { zIndex: orbitDepth }]} accessibilityLabel="Dominios conectados del Nexus">
-                    <View pointerEvents="none" style={[styles.constellationAxisFinal, { backgroundColor: colors.rarityEpic }]} />
-                    <View pointerEvents="none" style={[styles.constellationCoreFinal, { borderColor: colors.accent, backgroundColor: colors.ink }]}><Animated.View style={[styles.constellationCoreDot, { backgroundColor: colors.accent }, pulseStyle]} /></View>
                     {/* SceneOrbitPoint contract: signal={domainSignals.} is resolved from each live portal status. */}
                     <View style={styles.constellationGrid}>{domainPortals.map((portal) => <SceneOrbitPoint key={portal.id} portal={portal} signal={domainSignals[portal.id]} onPress={() => navigate(portal.route)} />)}</View>
                   </View>
@@ -658,8 +697,8 @@ export default function ForgeScreen() {
                    style={[
                      styles.ritualDeckFinal,
                      {
-                       borderBottomColor: `${identityVisual?.accent ?? colors.accent}80`,
-                       borderTopColor: `${identityVisual?.accent ?? colors.accent}80`,
+                       borderLeftColor: `${identityVisual?.accent ?? colors.accent}B8`,
+                       backgroundColor: `${colors.ink}98`,
                      },
                    ]}
                  >
@@ -704,6 +743,7 @@ export default function ForgeScreen() {
                   <SectionMarker eyebrow="CIRCUITO ACTIVO" title="Clasificación del frente" action="ABRIR MUNDO" onAction={() => navigate('/world')} accent={colors.accent} />
                   <View style={styles.rankingRail}>{ranking.length > 0 ? ranking.map((entry, index) => <View key={entry.rank + '-' + entry.display_name} style={[styles.rankingRow, { borderBottomColor: colors.border }]}><Text style={[styles.rankPosition, { color: index === 0 ? colors.accent : colors.mutedForeground }]}>{String(entry.rank).padStart(2, '0')}</Text><View style={[styles.rankAvatar, { borderColor: index === 0 ? colors.accent : colors.border }]}><Text style={[styles.rankAvatarText, { color: index === 0 ? colors.accent : colors.mutedForeground }]}>{entry.display_name.slice(0, 1).toUpperCase()}</Text></View><View style={styles.rankIdentity}><Text style={[styles.rankName, { color: colors.foreground }]}>{entry.display_name}</Text><Text style={[styles.rankMeta, { color: colors.mutedForeground }]}>{formatNumber(entry.wins)} VICTORIAS / {formatNumber(entry.mmr)} MMR</Text></View><Icon name={index === 0 ? 'award' : 'chevron-right'} color={index === 0 ? colors.accent : colors.mutedForeground} size={15} /></View>) : <Text style={[styles.emptyBody, { color: colors.mutedForeground }]}>El ranking de la temporada todavía no tiene posiciones publicadas.</Text>}</View>
                 </View>
+              </View>
               </View>
           </View>
         </Animated.ScrollView>
@@ -842,7 +882,7 @@ const styles = StyleSheet.create({
   sectionMarker: { alignItems: 'flex-end', flexDirection: 'row', justifyContent: 'space-between', marginTop: 21 },
   sectionMarkerCopy: { flex: 1 },
   markerLine: { alignItems: 'center', flexDirection: 'row', gap: 7 },
-  markerDot: { height: 5, transform: [{ rotate: '45deg' }], width: 5 },
+  markerDot: { height: 1, width: 18 },
   eyebrow: { fontFamily: 'Rajdhani_700Bold', fontSize: 9, letterSpacing: 1.8 },
   sectionTitle: { fontFamily: 'Cinzel_600SemiBold', fontSize: 18, letterSpacing: 0.35, marginTop: 5 },
   markerAction: { alignItems: 'center', flexDirection: 'row', gap: 6, paddingBottom: 2, paddingLeft: 10 },
@@ -855,7 +895,8 @@ const styles = StyleSheet.create({
   constellationRowReverse: { flexDirection: 'row-reverse' },
   constellationLink: { height: 1, marginHorizontal: 3, width: 12 },
   constellationSignal: { borderRadius: 3, height: 5, marginTop: -2, width: 5 },
-  domainNode: { alignItems: 'center', flexDirection: 'row', gap: 7, minHeight: 78, paddingHorizontal: 3, width: '48%' },
+  domainNode: { alignItems: 'center', borderLeftWidth: 2, flexDirection: 'row', gap: 7, minHeight: 78, paddingLeft: 7, paddingRight: 3, width: '48%' },
+  domainNodeGlyph: { alignItems: 'center', justifyContent: 'center', width: 23 },
   domainNodeStem: { height: 24, width: 1 },
   domainSigil: { alignItems: 'center', borderWidth: 1, height: 37, justifyContent: 'center', transform: [{ rotate: '45deg' }], width: 37 },
   domainNodeCopy: { flex: 1, gap: 2, minWidth: 0, transform: [{ translateX: -2 }] },
@@ -933,11 +974,14 @@ const styles = StyleSheet.create({
   rankName: { fontFamily: 'Rajdhani_700Bold', fontSize: 13, letterSpacing: 0.3 },
   rankMeta: { fontFamily: 'Rajdhani_500Medium', fontSize: 9, letterSpacing: 0.65 },
 
-    nexusWorldFinal: { marginTop: -14, paddingHorizontal: 8, paddingTop: 16 },
-    signalLedgerFinal: { alignItems: 'center', borderBottomWidth: 1, flexDirection: 'row', gap: 12, paddingBottom: 14 },
+    nexusWorldFinal: { marginTop: -14, overflow: 'hidden', paddingHorizontal: 8, paddingTop: 16, position: 'relative' },
+    continuumArt: { height: '62%', left: '-12%', position: 'absolute', top: 0, width: '124%' },
+    continuumGlow: { borderRadius: 220, height: 270, opacity: 0.15, position: 'absolute', right: -132, top: 64, width: 270 },
+    continuumContent: { position: 'relative', zIndex: 1 },
+    signalLedgerFinal: { alignItems: 'center', borderLeftWidth: 2, flexDirection: 'row', gap: 12, paddingBottom: 14, paddingLeft: 12 },
     signalIdentityFinal: { alignItems: 'center', flex: 1, flexDirection: 'row', gap: 10, minWidth: 0 },
-    signalCrestFinal: { alignItems: 'center', borderWidth: 1, height: 39, justifyContent: 'center', transform: [{ rotate: '45deg' }], width: 39 },
-    signalCrestInnerFinal: { alignItems: 'center', borderWidth: 1, height: 28, justifyContent: 'center', transform: [{ rotate: '-45deg' }], width: 28 },
+    signalCrestFinal: { alignItems: 'center', borderRadius: 4, borderWidth: 1, height: 39, justifyContent: 'center', width: 39 },
+    signalCrestInnerFinal: { display: 'none' },
     signalCrestLetterFinal: { fontFamily: 'Cinzel_700Bold', fontSize: 15 },
     signalIdentityCopyFinal: { flex: 1, gap: 2, minWidth: 0 },
     signalKickerFinal: { fontFamily: 'Rajdhani_700Bold', fontSize: 8, letterSpacing: 1.1 },
@@ -955,11 +999,11 @@ const styles = StyleSheet.create({
     frontStageTitleFinal: { fontFamily: 'Cinzel_600SemiBold', fontSize: 20, marginTop: 4 },
     frontStageLinkFinal: { alignItems: 'center', flexDirection: 'row', gap: 4, paddingBottom: 2 },
     frontStageLinkTextFinal: { fontFamily: 'Rajdhani_700Bold', fontSize: 8, letterSpacing: 0.8 },
-    eventRibbonFinal: { alignItems: 'center', borderBottomWidth: 1, borderTopWidth: 1, flexDirection: 'row', gap: 9, minHeight: 126, paddingVertical: 12 },
+    eventRibbonFinal: { alignItems: 'center', borderLeftWidth: 2, flexDirection: 'row', gap: 9, minHeight: 126, paddingLeft: 12, paddingVertical: 12 },
     eventBeaconFinal: { alignItems: 'center', height: 58, justifyContent: 'center', width: 43 },
-    eventOrbFinal: { alignItems: 'center', borderRadius: 23, borderWidth: 1, height: 43, justifyContent: 'center', width: 43 },
-    eventOrbCoreFinal: { borderRadius: 10, height: 19, width: 19 },
-    eventBeaconAxisFinal: { bottom: 0, height: 9, position: 'absolute', width: 1 },
+    eventOrbFinal: { display: 'none' },
+    eventOrbCoreFinal: { display: 'none' },
+    eventBeaconAxisFinal: { display: 'none' },
     eventCopyFinal: { flex: 1, gap: 3, minWidth: 0 },
     eventTypeFinal: { fontFamily: 'Rajdhani_700Bold', fontSize: 9, letterSpacing: 1.35 },
     eventTitleFinal: { fontFamily: 'Cinzel_600SemiBold', fontSize: 14, lineHeight: 18 },
@@ -980,20 +1024,20 @@ const styles = StyleSheet.create({
     domainArchiveHeaderFinal: { alignItems: 'center', flexDirection: 'row', justifyContent: 'space-between' },
     domainArchiveEyebrowFinal: { fontFamily: 'Rajdhani_700Bold', fontSize: 9, letterSpacing: 1.55 },
     domainArchiveTitleFinal: { fontFamily: 'Cinzel_600SemiBold', fontSize: 19, marginTop: 4 },
-    domainArchiveCoreFinal: { alignItems: 'center', borderWidth: 1, height: 28, justifyContent: 'center', transform: [{ rotate: '45deg' }], width: 28 },
+  domainArchiveCoreFinal: { alignItems: 'center', borderLeftWidth: 2, height: 28, justifyContent: 'center', width: 28 },
     constellationFinal: { minHeight: 190, paddingVertical: 8, position: 'relative' },
     constellationAxisFinal: { bottom: 12, left: '50%', opacity: 0.48, position: 'absolute', top: 12, width: 1 },
     constellationCoreFinal: { alignItems: 'center', borderWidth: 1, height: 22, justifyContent: 'center', left: '50%', marginLeft: -11, position: 'absolute', top: '50%', transform: [{ rotate: '45deg' }], width: 22, zIndex: 2 },
-    ritualDeckFinal: { borderBottomWidth: 1, borderTopWidth: 1, marginTop: 24, paddingBottom: 12, paddingTop: 13 },
+    ritualDeckFinal: { marginTop: 24, paddingBottom: 12, paddingTop: 13 },
     ritualHeadingFinal: { alignItems: 'center', flexDirection: 'row', justifyContent: 'space-between' },
     ritualEyebrowFinal: { fontFamily: 'Rajdhani_700Bold', fontSize: 9, letterSpacing: 1.45 },
     ritualTitleFinal: { fontFamily: 'Cinzel_600SemiBold', fontSize: 17, marginTop: 4 },
     operationRowFinal: { flexDirection: 'row', gap: 13, marginTop: 13 },
-    operationLinkFinal: { alignItems: 'center', borderBottomWidth: 1, borderTopWidth: 1, flex: 1, flexDirection: 'row', gap: 8, minHeight: 61, paddingHorizontal: 2 },
+    operationLinkFinal: { alignItems: 'center', borderLeftWidth: 2, flex: 1, flexDirection: 'row', gap: 8, minHeight: 61, paddingLeft: 10, paddingRight: 2 },
     operationCopyFinal: { flex: 1, minWidth: 0 },
     operationLabelFinal: { fontFamily: 'Rajdhani_700Bold', fontSize: 9, letterSpacing: 1.15 },
     operationTitleFinal: { fontFamily: 'Cinzel_600SemiBold', fontSize: 12, lineHeight: 16, marginTop: 3 },
-    storeRitualFinal: { borderTopWidth: 1, marginTop: 18, paddingTop: 13 },
+    storeRitualFinal: { marginTop: 18, paddingTop: 13 },
     storeHeadingFinal: { alignItems: 'center', flexDirection: 'row', justifyContent: 'space-between' },
     storeTitleFinal: { fontFamily: 'Cinzel_600SemiBold', fontSize: 15, marginTop: 4 },
     storeActionsFinal: { flexDirection: 'row', flexWrap: 'wrap', marginTop: 10 },
