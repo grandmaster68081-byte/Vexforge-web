@@ -589,6 +589,7 @@ export default function CollectionScreen() {
             testID="collection-tab"
             accessibilityRole="button"
             accessibilityLabel="Colección"
+           accessibilityState={{ selected: scope === 'all' }}
             onPress={() => { setScope('all'); setPageIndex(0); }}
             style={[
               styles.referenceTopHotspot,
@@ -609,6 +610,7 @@ export default function CollectionScreen() {
             testID="owned-tab"
             accessibilityRole="button"
             accessibilityLabel="Tus cartas"
+            accessibilityState={{ selected: scope === 'owned' }}
             onPress={() => { setScope('owned'); setPageIndex(0); }}
             style={[
               styles.referenceTopHotspot,
@@ -684,6 +686,7 @@ export default function CollectionScreen() {
               testID="faction-all"
               accessibilityRole="button"
               accessibilityLabel="Todas las facciones"
+              accessibilityState={{ selected: faction === 'all' }}
               onPress={() => setFaction('all')}
                style={[
                  styles.referenceFilterHit,
@@ -703,6 +706,7 @@ export default function CollectionScreen() {
                 testID={`faction-${value}`}
                 accessibilityRole="button"
                 accessibilityLabel={`Filtrar por ${value}`}
+                accessibilityState={{ selected: faction === value }}
                 onPress={() => setFaction(faction === value ? 'all' : value)}
                  style={[
                    styles.referenceFilterHit,
@@ -726,6 +730,7 @@ export default function CollectionScreen() {
               testID="rarity-all"
               accessibilityRole="button"
               accessibilityLabel="Todas las rarezas"
+              accessibilityState={{ selected: rarity === 'all' }}
               onPress={() => setRarity('all')}
                style={[
                  styles.referenceRarityHit,
@@ -744,6 +749,7 @@ export default function CollectionScreen() {
                 testID={`rarity-${value}`}
                 accessibilityRole="button"
                 accessibilityLabel={`Filtrar por rareza ${rarityLabel(value)}`}
+                accessibilityState={{ selected: rarity === value }}
                 onPress={() => setRarity(rarity === value ? 'all' : value)}
                  style={[
                    styles.referenceRarityHit,
