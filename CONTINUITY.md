@@ -1,3 +1,10 @@
+## 2026-09-13 — VE-MOB-3-HOME — RANKING CIRCUIT NAVIGATION / IMPLEMENTED_UNVERIFIED
+
+- Se cerró el siguiente enlace de la FASE 7/9: cada nodo real de clasificación ahora conduce a `/world` como parte del circuito vivo, manteniendo posición, forjador, victorias y MMR sin alterar su presentación.
+- Se conservaron los datos de Supabase, estados vacíos, contratos, assets, rutas, accesibilidad y reduced-motion. No se agregaron perfiles falsos, consultas nuevas, backend ni lógica de ranking.
+- El cambio quedó publicado en `main` por API REST HTTPS de GitHub mediante el commit `938789ed8385a7d89e1dc97ceac5d34109b8c3c8` con `[skip ci]`. No se compiló aplicación, no se inició workflow APK y no se generó release por instrucción explícita del operador.
+- Estado honesto: `IMPLEMENTED_UNVERIFIED`; la QA visual/táctil en APK continúa pendiente hasta que el operador autorice compilación. Siguiente bloque: continuar FASE 9 con la navegación authored del Home, sin rehacer hero, dominios, operaciones ni contratos.
+
 ## 2026-09-13 — VE-MOB-3-HOME — ACTIVITY TRACE NAVIGATION / IMPLEMENTED_UNVERIFIED
 
 - Se continuó la FASE 8/9 del protocolo Home: cada señal real de actividad pública ahora es un umbral táctil que conduce a `/world`, conservando el texto y la fecha provenientes de Supabase.
