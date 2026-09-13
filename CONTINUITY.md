@@ -3082,3 +3082,14 @@
 - Evidencia local: `verify:mobile-battle` 23/23, `verify:ui-identity` 0 violaciones, `verify:motion` OK, `typecheck` limpio, `git diff --check` limpio.
 - No se inicia workflow, no se compila APK ni se genera release por la instrucción vigente. Estado honesto: `IMPLEMENTED_UNVERIFIED`.
 - Deuda vigente sin cerrar: el PvP real sigue bloqueado por el roster vacío (`get_leaderboard` sin rivales) y por `vexforge_battle_resolve` devolviendo `UPDATE requires a WHERE clause`.
+
+---
+## 2026-09-13 — VE-PVP-3-OPPONENT-ROSTER — IMPLEMENTED_UNVERIFIED
+
+- Se cerró la deuda P0 heredada del roster PvP vacío. `listOpponents()` en `src/domains/pvp/repository.ts` consultaba `get_leaderboard` (sólo jugadores con fila en `pvp_rankings`, una sola fila y era la propia cuenta QA) e inventaba `level: 1` y `deck_size: 0`.
+- Ahora consume el RPC canónico `public.get_pvp_opponents`, que excluye al llamante, admins y cuentas de simulación, y exige mazo real de cinco cartas. `deck_size` y MMR provienen de la base; no se fabrica ningún valor.
+- Evidencia con sesión QA autenticada real contra el proyecto oficial: `get_pvp_opponents` devuelve 2 rivales reales con `deck_size: 5`, frente a 0 rivales antes de la corrección.
+- Regresión local: `tsc --noEmit` limpio y `npm run build` correcto. No se tocaron backend, migraciones, economía, motor de combate, otras pantallas ni la app Android.
+- Estado honesto: `IMPLEMENTED_UNVERIFIED`; la QA visual del ciclo PvP dentro del APK sigue pendiente. Detalle en `docs/VE-PVP-3-OPPONENT-ROSTER.md`.
+- Deuda vigente: `startBattle()` (camino legacy vía `start_pvp_match`, `service_role` únicamente) sigue muerto y debe eliminarse o endurecerse; falta la verificación visual del combate PvP completo en dispositivo.
+- Siguiente microbloque: retirar el camino legacy `startBattle`/`start_pvp_match` y verificar el ciclo PvP completo (resolución, ELO, recompensas) desde la interfaz con la cuenta QA.
