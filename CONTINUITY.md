@@ -1,3 +1,10 @@
+## 2026-09-13 — VE-MOB-3-HOME — ACTIVE DOMAIN PULSE / IMPLEMENTED_UNVERIFIED
+
+- Se cerró un microbloque de FASE 4/11 exclusivamente en `mobile/app/(tabs)/index.tsx`: los dominios con señal activa ahora tienen un pulso ambiental moderado dentro de su propio objeto, mientras los dominios en espera conservan su estado atenuado.
+- Se preservaron la cuadrícula, rutas, estado activo derivado de datos vivos, `testID`, accesibilidad, reduced motion y rendimiento acotado; no se modificaron Supabase, RPCs, GameContext, contratos, assets ni otras pantallas Android.
+- No se compiló APK ni se inició el workflow Android, por instrucción del operador. Estado honesto: `IMPLEMENTED_UNVERIFIED`; commit de implementación publicado en `main`: `5e631b65da8150088b46d95152891e1ed88b1ea0`. Esta continuidad se publica mediante la API REST HTTPS oficial de GitHub.
+- Siguiente bloque: continuar con una mejora atómica de interacción o transición del Home, sin rehacer la escena consolidada.
+
 ## 2026-09-13 — VE-MOB-3-HOME — ACTIVITY CHRONICLE SEALS / IMPLEMENTED_UNVERIFIED
 
 - Se cerró un microbloque de FASE 8/11 exclusivamente en `mobile/app/(tabs)/index.tsx`: cada señal de actividad real ahora se presenta como un sello de crónica conectado al rail del Nexus, en lugar de un marcador genérico.
