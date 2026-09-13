@@ -567,6 +567,12 @@ export default function ForgeScreen() {
           ],
     };
   });
+  const secondarySceneDepthStyle = useAnimatedStyle(() => {
+    const cameraY = Math.min(Math.max(scrollY.value, 0), 720);
+    return {
+      transform: reduceMotion ? [] : [{ translateY: cameraY * 0.024 }],
+    };
+  });
   const continuumGlowStyle = useAnimatedStyle(() => ({
     opacity: 0.18 + pulse.value * 0.1,
     transform: [{ translateY: pulse.value * -18 }, { scale: 1 + pulse.value * 0.08 }],
@@ -1068,7 +1074,11 @@ export default function ForgeScreen() {
                   </View>
                 </Animated.View>
 
-                <View style={styles.signalColumnsFinal}>
+                 <Animated.View
+                   entering={reduceMotion ? undefined : FadeInUp.delay(orbitReveal + MOTION.navigation)}
+                   style={[styles.signalColumnsFinal, secondarySceneDepthStyle]}
+                   testID="home-secondary-signals"
+                 >
                   <View style={styles.signalColumnFinal}>
                     <SectionMarker eyebrow={home.missions.length === 1 ? 'ORDEN ACTIVA' : 'ÓRDENES ACTIVAS'} title="El rito continúa" action="ABRIR" onAction={() => navigate('/missions')} accent={colors.success} />
                     {home.missions.length > 0 ? <View testID="home-missions" style={styles.missionSignals}>{home.missions.slice(0, 3).map((mission, index) => <MissionSignal key={mission.id} mission={mission} index={index} onPress={() => navigate('/missions')} />)}</View> : <View style={[styles.emptyState, { borderColor: colors.border }]}><Icon name="compass" color={colors.mutedForeground} size={21} /><Text style={[styles.emptyTitle, { color: colors.foreground }]}>SIN FRENTE ACTIVO</Text><Text style={[styles.emptyBody, { color: colors.mutedForeground }]}>Las próximas misiones aparecerán cuando el Nexus publique el siguiente ciclo.</Text></View>}
@@ -1077,7 +1087,7 @@ export default function ForgeScreen() {
                     <SectionMarker eyebrow="PULSO PÚBLICO" title="Actividad" action="MUNDO" onAction={() => navigate('/world')} accent={colors.rarityRare} />
                     <View testID="home-activity" style={styles.activitySignals}>{home.activity.length > 0 ? home.activity.slice(0, 3).map((item, index, items) => <ActivitySignal key={item.id} item={item} index={index} last={index === items.length - 1} onPress={() => navigate('/world')} />) : <View style={styles.emptyActivity}><Icon name="radio" color={colors.mutedForeground} size={18} /><Text style={[styles.emptyBody, { color: colors.mutedForeground }]}>El pulso público se mostrará cuando exista actividad confirmada.</Text></View>}</View>
                   </View>
-                </View>
+                 </Animated.View>
 
                 <View style={styles.rankingDeckFinal}>
                   <SectionMarker eyebrow="CIRCUITO ACTIVO" title="Clasificación del frente" action="ABRIR MUNDO" onAction={() => navigate('/world')} accent={colors.accent} />
