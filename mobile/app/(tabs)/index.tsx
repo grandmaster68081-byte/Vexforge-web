@@ -522,6 +522,10 @@ export default function ForgeScreen() {
     opacity: 0.38 + pulse.value * 0.26,
     transform: [{ scale: 0.9 + pulse.value * 0.12 }],
   }));
+  const activeDomainPulseStyle = useAnimatedStyle(() => ({
+    opacity: 0.94 + pulse.value * 0.06,
+    transform: [{ scale: 1 + pulse.value * 0.018 }],
+  }));
   const heroParallaxStyle = useAnimatedStyle(() => {
     // Keep the camera movement bounded so a long scroll cannot pull the hero
     // out of its authored composition before the next scene takes over.
@@ -994,7 +998,7 @@ export default function ForgeScreen() {
                   </View>
                   <View style={[styles.constellationFinal, { zIndex: orbitDepth }]} accessibilityLabel="Dominios conectados del Nexus">
                     {/* SceneOrbitPoint contract: signal={domainSignals.} is resolved from each live portal status. */}
-                    <View style={styles.constellationGrid}>{domainPortals.map((portal) => <SceneOrbitPoint key={portal.id} portal={portal} signal={domainSignals[portal.id]} onPress={() => navigate(portal.route)} />)}</View>
+                     <View style={styles.constellationGrid}>{domainPortals.map((portal) => <Animated.View key={portal.id} style={[styles.domainPulseWrapper, portal.active ? activeDomainPulseStyle : undefined]}><SceneOrbitPoint portal={portal} signal={domainSignals[portal.id]} onPress={() => navigate(portal.route)} /></Animated.View>)}</View>
                   </View>
                 </Animated.View>
 
@@ -1271,7 +1275,8 @@ const styles = StyleSheet.create({
   constellationRowReverse: { flexDirection: 'row-reverse' },
   constellationLink: { height: 1, marginHorizontal: 3, width: 12 },
   constellationSignal: { borderRadius: 3, height: 5, marginTop: -2, width: 5 },
-   domainWorldObject: { alignItems: 'center', minHeight: 137, paddingHorizontal: 4, paddingVertical: 8, width: '48%' },
+    domainPulseWrapper: { width: '48%' },
+    domainWorldObject: { alignItems: 'center', minHeight: 137, paddingHorizontal: 4, paddingVertical: 8, width: '100%' },
    domainWorldObjectTop: { alignItems: 'center', height: 61, justifyContent: 'flex-start', position: 'relative', width: '100%' },
    domainWorldHalo: { alignItems: 'center', borderRadius: 31, borderWidth: 1, height: 54, justifyContent: 'center', transform: [{ rotate: '45deg' }], width: 54 },
    domainWorldSigil: { alignItems: 'center', borderWidth: 1, height: 34, justifyContent: 'center', transform: [{ rotate: '-45deg' }], width: 34 },
