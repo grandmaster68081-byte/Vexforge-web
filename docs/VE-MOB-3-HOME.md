@@ -1,4 +1,4 @@
-Vigencia del contrato: desde el 2026-09-11, la referencia PNG descrita abajo queda como evidencia histórica del Home anterior. El consumidor Android vigente es una composición nativa en `mobile/app/(tabs)/index.tsx`; no monta el PNG ni usa hotspots transparentes. La superficie Home usa arte local original de VEXFORGE para su escena principal y carta destacada; los datos y contratos siguen viniendo de Supabase.
+Vigencia del contrato: desde el 2026-09-13, la referencia PNG descrita abajo queda como evidencia histórica del Home anterior. El consumidor Android vigente es una composición nativa en `mobile/app/(tabs)/index.tsx`; no monta el PNG ni usa hotspots transparentes. La escena se construye dentro del mismo lienzo del Home con gradientes, trazos y el artwork canónico de la identidad cargado desde Supabase Storage; los datos y contratos siguen viniendo de Supabase.
 
 Referencia visual vigente: `mobile/assets/images/home-reference-scene.png`
 mide `1080×2340`, PNG RGB/sRGB, proporción `9:19.5`. La imagen se muestra
@@ -20,7 +20,7 @@ evento/temporada, carta destacada, actividad pública y acceso rápido a la aren
   `src/domains/home/`).
 - Supabase oficial y sus RPCs existentes (`get_home_stats`,
   `get_public_player_names`).
-- Arte local original del Home (`vexforge-home-hero.png`, `vexforge-hero-sentinel.png` y `vexforge-feature-card.png`); no se usa el fondo Home ni el arte de carta remoto de Storage en esta superficie.
+- Artwork canónico de `cards.image_url` para la identidad y la carta destacada; el Home no inventa una carta, personaje ni escena para sustituir la señal real.
 - `docs/VE-MOB-0-PORT-INVENTORY.md` y `VEXFORGE_PROTOCOL_V2.md`.
 
 ## Cambios
@@ -32,7 +32,7 @@ evento/temporada, carta destacada, actividad pública y acceso rápido a la aren
   - batalla rápida contra IA enlazada al tablero existente;
   - temporada activa o estado en vivo de la temporada;
   - evento activo con progreso y cuenta regresiva;
-  - carta del día con datos reales y arte local original de la superficie;
+  - carta del día e identidad canónica con datos y artwork reales;
   - estado del jugador, nivel, energía, VEX y victorias;
   - próximas misiones, top de arena y actividad reciente;
   - destacados de los sistemas de la Forja;
@@ -108,12 +108,12 @@ La ejecución se divide en dos fases obligatorias y no se mezclan:
 
 ### Alcance visual de la Fase VISUAL
 
-- Escena principal: `mobile/assets/images/vexforge-home-hero.png`, con una composición de portada de videojuego, capas de atmósfera y un CTA dominante sin esconder el contenido autoritativo.
+- Escena principal: el artwork real de la identidad canónica funciona como plano ambiental recortado, con capas authored de atmósfera, lectura y navegación dentro del mismo lienzo.
 - Movimiento: parallax de scroll, pulso del núcleo, órbita de energía y personaje separado en primer plano; todo respeta `reduced-motion`.
 - Identidad: tipografía Cinzel/Rajdhani ya cargada, escala de títulos y etiquetas coherente, contraste suficiente y lenguaje de Forja reconocible.
 - Superficies: marcos y paneles con profundidad, separación entre escena y UI, jerarquía de acción clara y tarjetas tratadas como objetos del juego, no como filas administrativas.
 - Feedback: estados de carga, vacío, error, sincronización y `reduced-motion` deben conservarse y seguir siendo explícitos.
-- Carta destacada: `mobile/assets/images/vexforge-feature-card.png` como arte local original; el texto, rareza y estadísticas continúan viniendo del registro real cuando está disponible.
+- Carta destacada: `cards.image_url` del registro activo; el texto, rareza y lore continúan viniendo del registro real cuando está disponible.
 - Límites: no se modifica la autoridad de Supabase, la economía, combate, recompensas, inventario, Auth ni contratos; no se usan emojis, placeholders, assets antiguos de Storage ni arte genérico.
 
 ### Gate de salida
@@ -165,8 +165,8 @@ La Fase VISUAL no se declara cerrada sólo por compilar: debe alcanzar al menos 
 
 ## Addendum 2026-09-07 — ASSET OFICIAL DEL NÚCLEO NEXUS
 
-- El Home consume `OFFICIAL_ASSETS.homeNexusBurst`, registrado en `mobile/constants/visual.ts` como `misc/IMG_20260619_122314.jpg`.
-- El asset se usa únicamente como capa estática de atmósfera detrás del escenario central y la carta destacada; `CANONICAL_BACKGROUNDS.home` (`lobby/main.jpg`) continúa siendo el fondo principal.
+- Este addendum describe una versión histórica del Home anterior al piloto de identidad canónica del 2026-09-13.
+- El asset se usaba únicamente como capa estática de atmósfera detrás del escenario central y la carta destacada; la implementación vigente ya no depende de esa capa para definir la identidad visual.
 - El consumidor comunica carga y error explícitos (`home-nexus-burst-loading`, `home-nexus-burst-error`) y expone una etiqueta accesible. No añade movimiento ni cambia el comportamiento bajo `reduced-motion`.
 - La ruta deja de ser reserva residual porque existe un consumidor Android autorizado. Los otros cinco archivos del lote permanecen reservados y sin sustitutos.
 - No se modifican Supabase, Auth, RLS, RPCs, economía, combate, navegación ni la web como superficie de producto.
@@ -252,7 +252,7 @@ La Fase VISUAL no se declara cerrada sólo por compilar: debe alcanzar al menos 
 
 - Se reemplazó la composición estática de referencia por una escena nativa vertical con HUD de sincronización, identidad del Forjador, progreso real, acceso a Arena, tutorial, Mundo, Misiones, Colección, Forja y Economía.
 - La pantalla consume `get_home_stats`, `loadDailyFeaturedCard`, `loadHomeMissions` y `loadRecentActivity` en paralelo, conserva el estado del jugador desde `GameContext` y no fabrica progreso, economía, recompensas ni resultados.
-- La atmósfera usa `ScreenShell` con `CANONICAL_BACKGROUNDS.home` y `OFFICIAL_ASSETS.homeNexusBurst`; la carta destacada usa `image_url` oficial y muestra `ARTE NO DISPONIBLE` si Storage no entrega un asset válido.
+- La implementación histórica usaba `ScreenShell` con `CANONICAL_BACKGROUNDS.home`; la implementación vigente usa el `image_url` canónico de la identidad y muestra un estado explícito si Storage no entrega arte válido.
 - Se añadieron estados explícitos `loading`, `partial`, `error`, vacío, sincronización y `reduced-motion`, además de pull-to-refresh, labels accesibles y `testID` de revisión.
 - La guardia del Home y la guardia de recompensas fueron actualizadas para validar esta composición nativa; ninguna superficie web ni contrato Supabase fue modificado.
 - Estado: `IMPLEMENTED_UNVERIFIED`; queda pendiente el workflow APK correlativo y la QA visual/táctil humana sobre el APK instalado.

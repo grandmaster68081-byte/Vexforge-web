@@ -20,7 +20,6 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ScreenShell } from '@/components/ScreenShell';
 import { ForgeIconName, VexIcon } from '@/components/ForgeIcon';
 import { getCardIdentityVisual } from '@/constants/cardIdentity';
-import { OFFICIAL_ASSETS } from '@/constants/visual';
 import { DOMAIN_IDENTITY, DEPTH, MOTION } from '@/constants/experience';
 import { useColors } from '@/hooks/useColors';
 import { useGame } from '@/context/GameContext';
@@ -253,8 +252,7 @@ export default function ForgeScreen() {
   const [homeState, setHomeState] = useState<HomeState>('loading');
   const [refreshing, setRefreshing] = useState(false);
   const [featuredExpanded, setFeaturedExpanded] = useState(false);
-  const [heroAssetState, setHeroAssetState] = useState<'loading' | 'ready' | 'error'>('loading');
-  const [sentinelAssetState, setSentinelAssetState] = useState<'loading' | 'ready' | 'error'>('loading');
+  const [identityAssetState, setIdentityAssetState] = useState<'loading' | 'ready' | 'error'>('loading');
   const [featuredAssetState, setFeaturedAssetState] = useState<'loading' | 'ready' | 'error'>('loading');
   const pulse = useSharedValue(0);
   const orbit = useSharedValue(0);
@@ -322,6 +320,7 @@ export default function ForgeScreen() {
   const activeCard = home.card ?? featuredCards[0] ?? null;
   const identityCard = home.identityCard;
   const identityVisual = getCardIdentityVisual(identityCard?.id);
+  const identityArtUnavailable = identityAssetState === 'error' || Boolean(identityCard && !identityCard.image_url);
   const playerName = capitalize(player?.display_name, 'Forjador');
   const activeEvent = home.stats?.active_event ?? null;
   const season = home.stats?.season ?? null;
@@ -371,17 +370,19 @@ export default function ForgeScreen() {
           onScroll={scrollHandler}
           scrollEventThrottle={16}
         >
-          <View style={[styles.heroStage, { height: heroHeight }]}>
-            <Animated.Image
-              source={OFFICIAL_ASSETS.homeHero}
-              style={[styles.heroArt, heroParallaxStyle]}
-              resizeMode="cover"
-              accessibilityLabel="Arte principal del Nexus"
-              onLoad={() => setHeroAssetState('ready')}
-              onError={() => setHeroAssetState('error')}
-            />
-            <LinearGradient colors={[`${colors.ink}08`, `${colors.ink}28`, `${colors.ink}BC`, colors.background]} locations={[0, 0.25, 0.56, 1]} style={StyleSheet.absoluteFill} />
-            <LinearGradient colors={[`${colors.rarityEpic}28`, 'transparent', `${colors.accent}1C`]} style={StyleSheet.absoluteFill} />
+           <View style={[styles.heroStage, { backgroundColor: identityVisual?.overlay ?? colors.ink, height: heroHeight }]}>
+            {identityCard?.image_url ? (
+              <Animated.Image
+                source={{ uri: identityCard.image_url }}
+                style={[styles.heroArt, heroParallaxStyle]}
+                resizeMode="cover"
+                accessibilityLabel="Artwork oficial de la identidad canónica del Home"
+                onLoad={() => setIdentityAssetState('ready')}
+                onError={() => setIdentityAssetState('error')}
+              />
+            ) : null}
+            <LinearGradient colors={[`${colors.ink}18`, `${colors.ink}42`, `${colors.ink}D4`, colors.background]} locations={[0, 0.25, 0.56, 1]} style={StyleSheet.absoluteFill} />
+            <LinearGradient colors={[`${identityVisual?.accent ?? colors.rarityEpic}38`, 'transparent', `${colors.accent}24`]} style={StyleSheet.absoluteFill} />
             <View pointerEvents="none" style={styles.heroRuleFrame}>
               <View style={[styles.heroCorner, styles.heroTopLeft, { borderColor: `${colors.accent}A8` }]} />
               <View style={[styles.heroCorner, styles.heroTopRight, { borderColor: `${colors.accent}66` }]} />
@@ -390,48 +391,48 @@ export default function ForgeScreen() {
               <Text style={[styles.heroSceneCode, { color: `${colors.foreground}70` }]}>NEXUS / 01 · THRESHOLD</Text>
             </View>
             <Animated.View
-               style={[
-                 styles.identityStage,
-                 {
-                   borderColor: `${identityVisual?.edge ?? colors.rarityEpic}B8`,
-                   backgroundColor: `${identityVisual?.overlay ?? colors.ink}CC`,
-                   height: Math.min(432, heroHeight * 0.72),
-                   right: -Math.min(36, width * 0.1),
-                   width: Math.min(286, Math.max(236, width * 0.72)),
-                 },
-                 sentinelParallaxStyle,
-               ]}
-             >
+              style={[
+                styles.identityStage,
+                {
+                  borderColor: `${identityVisual?.edge ?? colors.rarityEpic}B8`,
+                  backgroundColor: `${identityVisual?.overlay ?? colors.ink}CC`,
+                  height: Math.min(432, heroHeight * 0.72),
+                  right: -Math.min(36, width * 0.1),
+                  width: Math.min(286, Math.max(236, width * 0.72)),
+                },
+                sentinelParallaxStyle,
+              ]}
+            >
                {identityCard?.image_url ? (
                  <Image
                    source={{ uri: identityCard.image_url }}
                    style={styles.identityArt}
                    resizeMode="cover"
                    accessibilityLabel="Artwork oficial de la identidad canónica del Home"
-                   onLoad={() => setSentinelAssetState('ready')}
-                   onError={() => setSentinelAssetState('error')}
-                 />
-               ) : null}
-                <LinearGradient
-                  colors={[
-                    `${identityVisual?.overlay ?? colors.ink}12`,
-                    `${identityVisual?.overlay ?? colors.ink}54`,
-                    `${colors.ink}F0`,
-                  ]}
-                  style={StyleSheet.absoluteFill}
+                  onLoad={() => setIdentityAssetState('ready')}
+                  onError={() => setIdentityAssetState('error')}
                 />
-                <View
-                  pointerEvents="none"
-                  style={[
-                    styles.identityAtmosphere,
-                    {
-                      borderColor: `${identityVisual?.accent ?? colors.rarityEpic}70`,
-                      backgroundColor: `${identityVisual?.accent ?? colors.rarityEpic}14`,
-                    },
-                  ]}
-                />
-                <View pointerEvents="none" style={[styles.identityAxis, { backgroundColor: `${identityVisual?.accent ?? colors.rarityEpic}4D` }]} />
-                <View style={[styles.identityStageRule, { borderColor: `${identityVisual?.accent ?? colors.rarityEpic}9C` }]} />
+              ) : null}
+              <LinearGradient
+                colors={[
+                  `${identityVisual?.overlay ?? colors.ink}12`,
+                  `${identityVisual?.overlay ?? colors.ink}54`,
+                  `${colors.ink}F0`,
+                ]}
+                style={StyleSheet.absoluteFill}
+              />
+              <View
+                pointerEvents="none"
+                style={[
+                  styles.identityAtmosphere,
+                  {
+                    borderColor: `${identityVisual?.accent ?? colors.rarityEpic}70`,
+                    backgroundColor: `${identityVisual?.accent ?? colors.rarityEpic}14`,
+                  },
+                ]}
+              />
+              <View pointerEvents="none" style={[styles.identityAxis, { backgroundColor: `${identityVisual?.accent ?? colors.rarityEpic}4D` }]} />
+              <View style={[styles.identityStageRule, { borderColor: `${identityVisual?.accent ?? colors.rarityEpic}9C` }]} />
                <View style={styles.identityStageCopy}>
                  <Text style={[styles.identityStageKicker, { color: identityVisual?.accent ?? colors.rarityEpic }]}>IDENTIDAD CANÓNICA</Text>
                  <Text style={[styles.identityStageCode, { color: `${colors.foreground}B8` }]}>{identityCard?.code ?? 'SEÑAL PENDIENTE'}</Text>
@@ -441,10 +442,10 @@ export default function ForgeScreen() {
              </Animated.View>
             <Animated.View pointerEvents="none" style={[styles.heroOrbit, { borderColor: `${identityVisual?.accent ?? colors.rarityEpic}6A` }, orbitStyle]} />
             <Animated.View pointerEvents="none" style={[styles.heroCore, { backgroundColor: `${identityVisual?.accent ?? colors.rarityEpic}A8` }, pulseStyle]} />
-            {heroAssetState === 'error' || sentinelAssetState === 'error' ? (
+            {identityArtUnavailable ? (
               <View pointerEvents="none" style={[styles.heroAssetError, { borderColor: `${colors.accent}80` }]}>
                 <Text style={[styles.heroAssetErrorTitle, { color: colors.accent }]}>NEXUS CORE OFFLINE</Text>
-                <Text style={[styles.heroAssetErrorBody, { color: `${colors.foreground}CC` }]}>El arte de la escena no está disponible.</Text>
+                <Text style={[styles.heroAssetErrorBody, { color: `${colors.foreground}CC` }]}>La identidad canónica no está disponible.</Text>
               </View>
             ) : null}
 

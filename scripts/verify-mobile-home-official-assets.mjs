@@ -1,16 +1,14 @@
 import { readFile } from 'node:fs/promises';
 
 const screen = await readFile('mobile/app/(tabs)/index.tsx', 'utf8');
-const visual = await readFile('mobile/constants/visual.ts', 'utf8');
-
-const requiredDataLoaders = ['loadHomeStats', 'loadDailyFeaturedCard', 'loadHomeMissions', 'loadRecentActivity'];
+const requiredDataLoaders = ['loadHomeStats', 'loadDailyFeaturedCard', 'loadHomeIdentityCard', 'loadHomeMissions', 'loadRecentActivity'];
 const requiredTestIds = ['home-scene', 'home-sync', 'home-battle', 'home-event', 'home-missions', 'home-featured-card', 'home-profile', 'home-world'];
 
 const assertions = [
-  ['Home is a native composition inside the shared shell', screen.includes('<ScreenShell surface="home" sceneMode="shell">') && screen.includes('Animated.ScrollView')],
+  ['Home owns its scene inside the shared shell', screen.includes('<ScreenShell surface="home" sceneMode="hero">') && screen.includes('Animated.ScrollView')],
   ['Home no longer mounts the legacy reference scene or hotspot overlay', !screen.includes('home-reference-scene.png') && !screen.includes('const HOTSPOTS') && !screen.includes('home-reference-')],
   ['Home consumes live Nexus data contracts', requiredDataLoaders.every((loader) => screen.includes(loader)) && screen.includes('Promise.allSettled')],
-  ['Home uses the selected local authored card art contract', screen.includes('OFFICIAL_ASSETS.homeFeatureCard') && visual.includes('homeFeatureCard')],
+  ['Home uses the live canonical identity artwork contract', screen.includes('loadHomeIdentityCard') && screen.includes('identityCard?.image_url') && screen.includes('getCardIdentityVisual')],
   ['Home exposes explicit visual asset failure states', screen.includes('ARTE OFFLINE') && screen.includes('NEXUS CORE OFFLINE') && screen.includes('onError={() => setFeaturedAssetState')],
   ['Home exposes functional Android routes', screen.includes("navigate('/battle')") && screen.includes("navigate('/missions')") && screen.includes("route: '/collection'") && screen.includes("route: '/world'") && screen.includes("route: '/economy'") && screen.includes('navigate(route as HomeRoute)')],
   ['Home exposes the live resource HUD', screen.includes('progress.energy') && screen.includes('wallet?.vex_ingame') && screen.includes('playerStats?.pvp_wins')],
