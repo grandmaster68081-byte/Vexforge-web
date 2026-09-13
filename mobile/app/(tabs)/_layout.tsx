@@ -3,6 +3,7 @@ import { ActivityIndicator, Platform, StyleSheet, Text, View } from 'react-nativ
 import { useColors } from '@/hooks/useColors';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { VexIcon as SymbolView } from '@/components/ForgeIcon';
+import type { ForgeIconName } from '@/components/ForgeIcon';
 import { LinearGradient } from 'expo-linear-gradient';
 import { isLiquidGlassAvailable } from 'expo-glass-effect';
 import { Tabs } from 'expo-router';
@@ -42,6 +43,24 @@ function NativeTabLayout() {
   );
 }
 
+function WorldTabIcon({ name, color, focused, size }: { name: ForgeIconName; color: string; focused: boolean; size: number }) {
+  const colors = useColors();
+  return (
+    <View
+      style={[
+        styles.worldTabSeal,
+        {
+          borderColor: focused ? colors.accent : `${colors.border}B8`,
+          backgroundColor: focused ? `${colors.accent}18` : `${colors.ink}80`,
+        },
+      ]}
+    >
+      <SymbolView name={name} color={color} size={size} />
+      <View style={[styles.worldTabBeacon, { backgroundColor: focused ? colors.accent : colors.mutedForeground }]} />
+    </View>
+  );
+}
+
 function ClassicTabLayout() {
   const colors = useColors();
   const isWeb = Platform.OS === 'web';
@@ -51,10 +70,10 @@ function ClassicTabLayout() {
   return (
     <Tabs
       screenOptions={{
-          tabBarActiveTintColor: colors.accent,
+        tabBarActiveTintColor: colors.accent,
         tabBarInactiveTintColor: colors.mutedForeground,
         headerShown: false,
-        tabBarLabelStyle: { fontFamily: typography.bodyBold, fontSize: 10, letterSpacing: 0.5 },
+        tabBarLabelStyle: { fontFamily: typography.bodyBold, fontSize: 9, letterSpacing: 1 },
         tabBarStyle: {
           position: 'absolute',
           backgroundColor: 'transparent',
@@ -66,29 +85,32 @@ function ClassicTabLayout() {
           paddingBottom: bottomInset + 6,
           paddingHorizontal: 7,
         },
-        tabBarItemStyle: { minHeight: 54, paddingVertical: 2 },
+        tabBarItemStyle: { minHeight: 56, paddingVertical: 3 },
         tabBarHideOnKeyboard: true,
         tabBarBackground: () => (
-          <LinearGradient
-            colors={[`${colors.panelStrong}F7`, `${colors.ink}FF`]}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 0, y: 1 }}
-            style={StyleSheet.absoluteFill}
-          />
+          <View style={StyleSheet.absoluteFill}>
+            <LinearGradient
+              colors={[`${colors.panelStrong}F7`, `${colors.ink}FF`]}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 0, y: 1 }}
+              style={StyleSheet.absoluteFill}
+            />
+            <View style={[styles.tabBarTopRail, { backgroundColor: `${colors.accent}B8` }]} />
+          </View>
         ),
       }}
     >
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Inicio',
-          tabBarIcon: ({ color, focused }) => <SymbolView name={focused ? 'home' : 'home-outline'} color={color} size={23} />,
+          title: 'Nexus',
+          tabBarIcon: ({ color, focused }) => <WorldTabIcon name={focused ? 'home' : 'home-outline'} color={color} focused={focused} size={21} />,
         }}
       />
-      <Tabs.Screen name="battle" options={{ title: 'Batalla', tabBarIcon: ({ color, focused }) => <SymbolView name={focused ? 'arena' : 'target'} size={22} color={color} /> }} />
-      <Tabs.Screen name="collection" options={{ title: 'Cartas', tabBarIcon: ({ color, focused }) => <SymbolView name={focused ? 'cards' : 'collection'} size={22} color={color} /> }} />
-      <Tabs.Screen name="deck" options={{ title: 'Mazo', tabBarIcon: ({ color, focused }) => <SymbolView name={focused ? 'deck' : 'layers'} size={22} color={color} /> }} />
-      <Tabs.Screen name="profile" options={{ title: 'Perfil', tabBarIcon: ({ color, focused }) => <SymbolView name={focused ? 'profile' : 'account'} size={22} color={color} /> }} />
+      <Tabs.Screen name="battle" options={{ title: 'Arena', tabBarIcon: ({ color, focused }) => <WorldTabIcon name={focused ? 'arena' : 'target'} size={21} color={color} focused={focused} /> }} />
+      <Tabs.Screen name="collection" options={{ title: 'Archivo', tabBarIcon: ({ color, focused }) => <WorldTabIcon name={focused ? 'cards' : 'collection'} size={21} color={color} focused={focused} /> }} />
+      <Tabs.Screen name="deck" options={{ title: 'Forja', tabBarIcon: ({ color, focused }) => <WorldTabIcon name={focused ? 'deck' : 'layers'} size={21} color={color} focused={focused} /> }} />
+      <Tabs.Screen name="profile" options={{ title: 'Legado', tabBarIcon: ({ color, focused }) => <WorldTabIcon name={focused ? 'profile' : 'account'} size={21} color={color} focused={focused} /> }} />
     </Tabs>
   );
 }
@@ -124,4 +146,7 @@ export default function TabLayout() {
 const styles = StyleSheet.create({
   authLoading: { flex: 1, alignItems: 'center', justifyContent: 'center', gap: 14 },
   authLoadingText: { fontSize: 10, fontWeight: '700', letterSpacing: 1.5 },
+  tabBarTopRail: { height: 1, left: 18, position: 'absolute', right: 18, top: 0 },
+  worldTabSeal: { alignItems: 'center', borderRadius: 4, borderWidth: 1, height: 30, justifyContent: 'center', position: 'relative', width: 38 },
+  worldTabBeacon: { borderRadius: 2, bottom: 3, height: 4, position: 'absolute', width: 4 },
 });
