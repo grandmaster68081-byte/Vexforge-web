@@ -1,3 +1,15 @@
+## 2026-09-13 — VE-MOB-7-BATTLE — ARENA ACTION GATES PRESS DEPTH / IMPLEMENTED_UNVERIFIED
+
+- **WHAT CHANGED VISUALLY:** la confirmación de desafío, la cancelación y el avance de lectura del replay ahora responden al toque con una compresión física breve, haciendo explícitos los puntos de decisión de la Arena.
+- **WHAT WAS COMPLETED:** se conservaron selección de oponente, confirmación explícita, resolución autoritativa, replay, resultado, fallback de práctica, estados de carga/error, accesibilidad y reduced-motion.
+- **FILES / COMPONENTS:** `mobile/app/(tabs)/battle.tsx`; guardia `scripts/verify-mobile-battle.mjs`; superficies `battle-confirmation`, `battle-confirm`, `cancelButton` y `battle-next-turn`.
+- **ASSETS / CARD IDENTITY:** no se añadieron assets ni se alteró la formación oficial; el campo de batalla y sus cartas siguen mostrando datos y arte canónicos.
+- **VISUAL / MOTION / INTERACTION DECISIONS:** se reutiliza `opacity` + `translateY` durante la presión; no se cambia el motor de combate, no se simula PvP en cliente y no se añade dependencia.
+- **LIMITATIONS:** guardia de Arena y contrato global de motion pendientes de ejecutar en este snapshot; no se inició workflow ni se compiló APK por instrucción explícita. QA humana y typecheck completo siguen pendientes.
+- **NEXT BLOCK:** continuar con otro bloque de Arena que mejore una transición o estado visible sin tocar la autoridad de resolución ni inventar contenido.
+- **PERSISTENCIA:** commit de este bloque se registrará en `main` tras la verificación local.
+- **ROLLBACK_POINT:** `b6e8e319361b702cb84dc0b69c7e0b8056caa0d7`, continuidad publicada antes de este delta.
+
 ## 2026-09-13 — VE-MOB-5-DECK — FORGE ACTION RAIL PRESS DEPTH / IMPLEMENTED_UNVERIFIED
 
 - **WHAT CHANGED VISUALLY:** Validar, Guardar, Guardar y probar en Arena y los cierres de detalle/editor ahora responden con una compresión física breve al toque, manteniendo la jerarquía de la Forja.

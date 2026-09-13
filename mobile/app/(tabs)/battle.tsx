@@ -486,7 +486,10 @@ export default function BattleScreen() {
               if (turnIndex >= turns.length - 1) setPhase('result');
               else setTurnIndex((current) => current + 1);
             }}
-            style={[styles.button, { backgroundColor: colors.primary }]}
+             style={({ pressed }) => [
+               styles.button,
+               { backgroundColor: colors.primary, opacity: pressed ? 0.78 : 1, transform: [{ translateY: pressed ? 2 : 0 }] },
+             ]}
           >
             <Text style={[styles.buttonText, { color: colors.primaryForeground }]}>{turnIndex >= turns.length - 1 ? 'VER RESULTADO' : reducedMotion ? 'SIGUIENTE TURNO' : 'CONTINUAR LECTURA'}</Text>
             <Feather name={turnIndex >= turns.length - 1 ? 'award' : 'arrow-right'} size={16} color={colors.primaryForeground} />
@@ -544,10 +547,35 @@ export default function BattleScreen() {
               <Text style={[styles.confirmTitle, { color: colors.foreground }]}>{selectedOpponent.display_name}</Text>
               <Text style={[styles.meta, { color: colors.mutedForeground }]}>{rankName(selectedOpponent.mmr)} · {selectedOpponent.mmr} MMR · diferencia {playerMmr === null ? '—' : `${selectedOpponent.mmr - playerMmr >= 0 ? '+' : ''}${selectedOpponent.mmr - playerMmr}`}</Text>
               <View style={styles.confirmActions}>
-                <Pressable accessibilityRole="button" accessibilityLabel="Cancelar desafío" accessibilityState={{ disabled: battleLoading }} disabled={battleLoading} onPress={() => setSelectedOpponent(null)} style={[styles.cancelButton, { borderColor: colors.border }]}>
+                <Pressable
+                  accessibilityRole="button"
+                  accessibilityLabel="Cancelar desafío"
+                  accessibilityState={{ disabled: battleLoading }}
+                  disabled={battleLoading}
+                  onPress={() => setSelectedOpponent(null)}
+                  style={({ pressed }) => [
+                    styles.cancelButton,
+                    { borderColor: colors.border, opacity: pressed ? 0.72 : 1, transform: [{ translateY: pressed ? 2 : 0 }] },
+                  ]}
+                >
                   <Text style={[styles.cancelText, { color: colors.mutedForeground }]}>CANCELAR</Text>
                 </Pressable>
-                <Pressable testID="battle-confirm" accessibilityRole="button" accessibilityLabel="Iniciar combate oficial" accessibilityState={{ disabled: battleLoading || formationSlots.length < 3 }} disabled={battleLoading || formationSlots.length < 3} onPress={handleStartBattle} style={[styles.confirmButton, { backgroundColor: colors.accent, opacity: battleLoading || formationSlots.length < 3 ? 0.7 : 1 }]}>
+                <Pressable
+                  testID="battle-confirm"
+                  accessibilityRole="button"
+                  accessibilityLabel="Iniciar combate oficial"
+                  accessibilityState={{ disabled: battleLoading || formationSlots.length < 3 }}
+                  disabled={battleLoading || formationSlots.length < 3}
+                  onPress={handleStartBattle}
+                  style={({ pressed }) => [
+                    styles.confirmButton,
+                    {
+                      backgroundColor: colors.accent,
+                      opacity: battleLoading || formationSlots.length < 3 ? 0.7 : pressed ? 0.82 : 1,
+                      transform: [{ translateY: pressed && !battleLoading ? 2 : 0 }],
+                    },
+                  ]}
+                >
                   {battleLoading ? <ActivityIndicator color={colors.accentForeground} /> : <Feather name="crosshair" size={16} color={colors.accentForeground} />}
                   <Text style={[styles.confirmText, { color: colors.accentForeground }]}>{battleLoading ? 'RESOLVIENDO' : 'INICIAR COMBATE'}</Text>
                 </Pressable>
