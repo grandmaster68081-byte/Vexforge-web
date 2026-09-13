@@ -7,7 +7,8 @@
 - **VISUAL / MOTION / INTERACTION DECISIONS:** se reutiliza la profundidad diegética de `opacity` + `translateY` sin animación nueva ni listener; el estado se comunica durante la presión y desaparece al soltar.
 - **LIMITATIONS:** las guardas locales pasan; no se inició workflow ni se compiló APK por instrucción explícita. La QA visual/táctil humana y el typecheck completo siguen pendientes.
 - **NEXT BLOCK:** continuar con un bloque Android acotado del Archivo o Home sin reabrir la arquitectura consolidada; no declarar `PASS`, `OPERATIONAL` ni `TIER1_READY`.
-- **ROLLBACK_POINT:** commit base sincronizado de `main` antes de este delta.
+- **PERSISTENCIA:** commit publicado en `main`: `35bdec410984b13a1851ab8b2449b8698b105aba` (`feat(mobile): add archive control press depth [skip ci]`).
+- **ROLLBACK_POINT:** `ae5c9e4acd0ffe929d79cd62444e79d6aa42c5c7`, commit base sincronizado de `main` antes de este delta.
 
 ## 2026-09-13 — VE-MOB-4-COLLECTION — ARCHIVE INSPECTION PRESS DEPTH / IMPLEMENTED_UNVERIFIED
 
