@@ -1,3 +1,12 @@
+## 2026-09-13 — VE-MOB-3-HOME — APK 229 PUBLICADA / IMPLEMENTED_UNVERIFIED
+
+- El workflow Android oficial `34765442970` / build `229` terminó en `success` sobre el commit `51b6cc590aaa2b74715402c96f86e72e67d9660f`.
+- Pasaron typecheck móvil, telemetría, todos los contratos móviles, `expo prebuild`, Gradle `assembleRelease` y la verificación standalone con `assets/index.android.bundle` embebido.
+- Release publicado: `vexforge-android-build-229`, asset `app-release.apk`, tamaño `109898800` bytes.
+- Descarga oficial: `https://github.com/grandmaster68081-byte/Vexforge-web/releases/download/vexforge-android-build-229/app-release.apk`.
+- Estado honesto: `IMPLEMENTED_UNVERIFIED`; la revisión visual/táctil humana en la APK queda pendiente. No se modificaron Supabase, RPCs, GameContext, Auth ni otras pantallas.
+- Siguiente bloque: continuar sólo después de revisar el resultado en APK; no rehacer la escena consolidada por novedad.
+
 ## 2026-09-13 — VE-MOB-3-HOME — RETRY SIGNAL PRESS DEPTH / IMPLEMENTED_UNVERIFIED
 
 - Se cerró un microbloque de FASE 11 exclusivamente en `mobile/app/(tabs)/index.tsx`: el reintento de sincronización ahora responde físicamente al toque sin perder su estado `busy/disabled`.
