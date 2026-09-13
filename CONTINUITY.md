@@ -6,6 +6,13 @@
 - Estado honesto: `IMPLEMENTED_UNVERIFIED` hasta ejecutar las guardas Android disponibles, publicar el commit en `main`, completar el workflow APK oficial y confirmar el release correlativo. La QA visual/táctil humana permanece pendiente.
 - Siguiente acción: verificar este bloque con las guardas locales y el workflow Android oficial; no declarar `PASS`, `OPERATIONAL` ni `TIER1_READY`.
 
+## 2026-09-13 — VE-MOB-7-BATTLE — ARENA OPPONENT PRESS DEPTH / IMPLEMENTED_UNVERIFIED
+
+- Se continuó el rollout Tier 1 Android exclusivamente en `mobile/app/(tabs)/battle.tsx`: la selección de oponente y el cierre del resultado ahora responden al toque con profundidad física coherente.
+- Se conservaron oponentes reales, formación oficial, confirmación explícita, resolución autoritativa, replay, resultado, fallback de práctica sin MMR/economía, telemetría, estados de carga/error, testID, accesibilidad y reduced-motion. No se modificaron Supabase, RLS, RPCs, Auth, economía, assets ni la web congelada.
+- Commit Android publicado en `main`: `4e0211fc1237e3ff4cef4d1ac75c01fc3e44e990`. Usa `[skip ci]` por instrucción del operador para no iniciar compilación ni release. El estado permanece `IMPLEMENTED_UNVERIFIED`.
+- Las guardas locales y el typecheck pasan; telemetría pasó tras un reintento por 504 transitorio. No se compiló APK. Siguiente acción: continuar con otro bloque Android acotado bajo el protocolo.
+
 ## 2026-09-13 — VE-MOB-5-DECK — FORGE CARD PRESS DEPTH / IMPLEMENTED_UNVERIFIED
 
 - Se continuó el rollout Tier 1 Android exclusivamente en `mobile/app/(tabs)/deck.tsx`: la carta de mazo y las cartas seleccionables del editor ahora responden al toque con profundidad física coherente.
