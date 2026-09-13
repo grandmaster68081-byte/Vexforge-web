@@ -1,3 +1,10 @@
+## 2026-09-13 — VE-MOB-3-HOME — RANKING MONUMENT TOUCH GATE / IMPLEMENTED_UNVERIFIED
+
+- Se cerró un microbloque de FASE 7/11 exclusivamente en `mobile/app/(tabs)/index.tsx`: la estela de prestigio de la clasificación ahora es un objeto táctil authored que abre el Mundo y responde con profundidad al toque.
+- El objeto usa sólo el líder y las métricas reales del ranking, conserva `testID`, accesibilidad, estado vacío y navegación existente; no se modificaron Supabase, RPCs, GameContext, contratos, assets ni otras pantallas Android.
+- No se compiló APK ni se inició el workflow Android, por instrucción del operador. Estado honesto: `IMPLEMENTED_UNVERIFIED`; commit de implementación publicado en `main`: `0b36c41c61a2083370e1d663ba1fd371f971a885`. Esta continuidad se publica mediante la API REST HTTPS oficial de GitHub.
+- Siguiente bloque: continuar con una mejora atómica de interacción o transición del Home, sin rehacer la escena consolidada.
+
 ## 2026-09-13 — VE-MOB-3-HOME — ACTIVE DOMAIN PULSE / IMPLEMENTED_UNVERIFIED
 
 - Se cerró un microbloque de FASE 4/11 exclusivamente en `mobile/app/(tabs)/index.tsx`: los dominios con señal activa ahora tienen un pulso ambiental moderado dentro de su propio objeto, mientras los dominios en espera conservan su estado atenuado.
