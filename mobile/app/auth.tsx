@@ -1,19 +1,16 @@
 import { useMemo, useState } from 'react';
 import {
   ActivityIndicator,
-  Image,
   Pressable,
   StyleSheet,
   Text,
   TextInput,
   View,
-  useWindowDimensions,
 } from 'react-native';
 import { Redirect } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { KeyboardAwareScrollViewCompat } from '@/components/KeyboardAwareScrollViewCompat';
-import { getCanonicalFrameMetrics } from '@/components/CanonicalFrame';
 import { useColors } from '@/hooks/useColors';
 import { useGame } from '@/context/GameContext';
 import type { OAuthProvider } from '@/lib/supabase';
@@ -33,7 +30,6 @@ function readableAuthError(message: string | null) {
 export default function AuthScreen() {
   const colors = useColors();
   const insets = useSafeAreaInsets();
-  const { width: viewportWidth, height: viewportHeight } = useWindowDimensions();
   const {
     session,
     authLoading,
@@ -51,12 +47,6 @@ export default function AuthScreen() {
   const [localError, setLocalError] = useState<string | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
 
-  // Keep the authored 1080×2340 frame intact. On a different viewport the
-  // frame may letterbox, but it must never be stretched or cropped.
-  const { width: frameWidth, height: sceneHeight } = getCanonicalFrameMetrics(
-    viewportWidth,
-    Math.max(1, viewportHeight - insets.top - insets.bottom),
-  );
   const error = useMemo(
     () => localError ?? readableAuthError(authError),
     [authError, localError],
@@ -118,28 +108,30 @@ export default function AuthScreen() {
         contentContainerStyle={[
           styles.content,
           {
-            minHeight: sceneHeight + insets.top + insets.bottom,
-            paddingTop: 0,
-            paddingBottom: insets.bottom,
+            paddingTop: insets.top + 24,
+            paddingBottom: insets.bottom + 32,
           },
         ]}
         bottomOffset={24}
         keyboardShouldPersistTaps="handled"
         showsVerticalScrollIndicator={false}
       >
-        <View
-          style={[styles.scene, { width: frameWidth, height: sceneHeight, marginTop: insets.top, alignSelf: 'center' }]}
-          testID="auth-reference-scene"
-        >
-          <Image
-            source={require('../assets/images/auth-reference-scene.png')}
-            style={styles.sceneImage}
-            resizeMode="cover"
-            accessibilityLabel="Pantalla de acceso de VEXFORGE proporcionada por el operador"
-            accessibilityIgnoresInvertColors
-          />
+        <View testID="auth-reference-scene" style={[styles.authCard, { backgroundColor: colors.panel, borderColor: colors.border }]}>
+          <View style={styles.header}>
+            <View style={[styles.mark, { borderColor: colors.accent, backgroundColor: `${colors.accent}14` }]}>
+              <Text style={[styles.markText, { color: colors.accent }]}>VF</Text>
+            </View>
+            <Text style={[styles.eyebrow, { color: colors.accent }]}>VEXFORGE / ACCESO</Text>
+            <Text style={[styles.title, { color: colors.foreground }]}>
+              {mode === 'signin' ? 'Entra al Nexus' : 'Crea tu identidad'}
+            </Text>
+            <Text style={[styles.subtitle, { color: colors.mutedForeground }]}>
+              {mode === 'signin' ? 'Retoma tu progreso y continúa la forja.' : 'Registra un Forjador para comenzar tu recorrido.'}
+            </Text>
+          </View>
 
-          <View style={styles.interactionLayer} accessibilityLabel="Acciones de acceso de VEXFORGE">
+          <View style={styles.form} accessibilityLabel="Acciones de acceso de VEXFORGE">
+            <Text style={[styles.fieldLabel, { color: colors.mutedForeground }]}>CORREO ELECTRÓNICO</Text>
             <TextInput
               testID="auth-email"
               accessibilityLabel="Correo electrónico"
@@ -152,13 +144,15 @@ export default function AuthScreen() {
               autoCorrect={false}
               keyboardType="email-address"
               textContentType="emailAddress"
-              placeholder=""
+              placeholder="forjador@ejemplo.com"
+              placeholderTextColor={`${colors.mutedForeground}99`}
               style={[styles.emailInput, { color: colors.foreground }]}
               editable={!authLoading}
               returnKeyType="next"
               selectionColor={colors.accent}
             />
 
+            <Text style={[styles.fieldLabel, { color: colors.mutedForeground }]}>CONTRASEÑA</Text>
             <TextInput
               testID="auth-password"
               accessibilityLabel="Contraseña"
@@ -171,7 +165,8 @@ export default function AuthScreen() {
               autoCorrect={false}
               secureTextEntry={!showPassword}
               textContentType="password"
-              placeholder=""
+              placeholder="Mínimo 6 caracteres"
+              placeholderTextColor={`${colors.mutedForeground}99`}
               style={[styles.passwordInput, { color: colors.foreground }]}
               editable={!authLoading}
               returnKeyType="go"
@@ -187,7 +182,20 @@ export default function AuthScreen() {
               onPress={() => setShowPassword((visible) => !visible)}
               disabled={authLoading}
               style={styles.passwordToggle}
-            />
+            >
+              <Text style={[styles.inlineAction, { color: colors.accent }]}>{showPassword ? 'OCULTAR' : 'VER'}</Text>
+            </Pressable>
+
+            <Pressable
+              testID="auth-forgot-password"
+              accessibilityRole="button"
+              accessibilityLabel="¿Olvidaste tu contraseña?"
+              onPress={() => void recoverPassword()}
+              disabled={authLoading}
+              style={styles.forgotPassword}
+            >
+              <Text style={[styles.inlineAction, { color: colors.accent }]}>¿OLVIDASTE TU CONTRASEÑA?</Text>
+            </Pressable>
 
             <Pressable
               testID="auth-remember"
@@ -212,16 +220,8 @@ export default function AuthScreen() {
                   {rememberSession ? '✓' : ''}
                 </Text>
               </View>
+              <Text style={[styles.rememberLabel, { color: colors.mutedForeground }]}>Recordar sesión</Text>
             </Pressable>
-
-            <Pressable
-              testID="auth-forgot-password"
-              accessibilityRole="button"
-              accessibilityLabel="¿Olvidaste tu contraseña?"
-              onPress={() => void recoverPassword()}
-              disabled={authLoading}
-              style={styles.forgotPassword}
-            />
 
             <Pressable
               testID="auth-submit"
@@ -231,11 +231,18 @@ export default function AuthScreen() {
               disabled={authLoading}
               style={({ pressed }) => [
                 styles.submit,
-                { opacity: pressed || authLoading ? 0.55 : 1 },
+                { backgroundColor: colors.accent, opacity: pressed || authLoading ? 0.55 : 1 },
               ]}
             >
               {authLoading ? <ActivityIndicator color={colors.accent} /> : null}
+              {!authLoading ? <Text style={[styles.submitText, { color: colors.background }]}>{mode === 'signin' ? 'ENTRAR AL NEXUS' : 'CREAR CUENTA'}</Text> : null}
             </Pressable>
+
+            <View style={styles.divider}>
+              <View style={[styles.dividerLine, { backgroundColor: colors.border }]} />
+              <Text style={[styles.dividerText, { color: colors.mutedForeground }]}>O CONTINÚA CON</Text>
+              <View style={[styles.dividerLine, { backgroundColor: colors.border }]} />
+            </View>
 
             <Pressable
               testID="auth-google"
@@ -243,24 +250,30 @@ export default function AuthScreen() {
               accessibilityLabel="Continuar con Google"
               onPress={() => void socialLogin('google')}
               disabled={authLoading}
-              style={({ pressed }) => [{ opacity: pressed || authLoading ? 0.55 : 1 }, styles.google]}
-            />
+              style={({ pressed }) => [{ borderColor: colors.border, opacity: pressed || authLoading ? 0.55 : 1 }, styles.socialButton]}
+            >
+              <Text style={[styles.socialText, { color: colors.foreground }]}>Google</Text>
+            </Pressable>
             <Pressable
               testID="auth-discord"
               accessibilityRole="button"
               accessibilityLabel="Continuar con Discord"
               onPress={() => void socialLogin('discord')}
               disabled={authLoading}
-              style={({ pressed }) => [{ opacity: pressed || authLoading ? 0.55 : 1 }, styles.discord]}
-            />
+              style={({ pressed }) => [{ borderColor: colors.border, opacity: pressed || authLoading ? 0.55 : 1 }, styles.socialButton]}
+            >
+              <Text style={[styles.socialText, { color: colors.foreground }]}>Discord</Text>
+            </Pressable>
             <Pressable
               testID="auth-apple"
               accessibilityRole="button"
               accessibilityLabel="Continuar con Apple"
               onPress={() => void socialLogin('apple')}
               disabled={authLoading}
-              style={({ pressed }) => [{ opacity: pressed || authLoading ? 0.55 : 1 }, styles.apple]}
-            />
+              style={({ pressed }) => [{ borderColor: colors.border, opacity: pressed || authLoading ? 0.55 : 1 }, styles.socialButton]}
+            >
+              <Text style={[styles.socialText, { color: colors.foreground }]}>Apple</Text>
+            </Pressable>
 
             <Pressable
               testID="auth-toggle-mode"
@@ -274,7 +287,11 @@ export default function AuthScreen() {
               }}
               disabled={authLoading}
               style={styles.createAccount}
-            />
+            >
+              <Text style={[styles.createAccountText, { color: colors.accent }]}>
+                {mode === 'signin' ? 'CREAR UNA CUENTA' : 'VOLVER A INICIAR SESIÓN'}
+              </Text>
+            </Pressable>
 
             {(error || notice) && (
               <View
@@ -304,67 +321,96 @@ const styles = StyleSheet.create({
   root: { flex: 1 },
   screen: { flex: 1 },
   content: {
-    alignItems: 'flex-start',
+    alignItems: 'center',
   },
-  scene: {
-    position: 'relative',
-    overflow: 'hidden',
-  },
-  sceneImage: {
+  authCard: {
     width: '100%',
-    height: '100%',
+    maxWidth: 520,
+    borderWidth: 1,
+    borderRadius: 18,
+    paddingHorizontal: 22,
+    paddingVertical: 26,
   },
-  interactionLayer: {
-    ...StyleSheet.absoluteFillObject,
+  header: {
+    alignItems: 'center',
+    paddingBottom: 24,
   },
-  emailInput: {
-    position: 'absolute',
-    left: '50%',
-    top: '53.1%',
-    width: '38%',
-    height: '4.6%',
-    paddingHorizontal: 14,
-    paddingVertical: 0,
-    fontSize: 14,
-    lineHeight: 18,
-    backgroundColor: 'transparent',
-    borderWidth: 0,
-  },
-  passwordInput: {
-    position: 'absolute',
-    left: '50%',
-    top: '57.2%',
-    width: '32%',
-    height: '4.6%',
-    paddingHorizontal: 14,
-    paddingVertical: 0,
-    paddingRight: 42,
-    fontSize: 14,
-    lineHeight: 18,
-    backgroundColor: 'transparent',
-    borderWidth: 0,
-  },
-  passwordToggle: {
-    position: 'absolute',
-    right: '7%',
-    top: '56.8%',
-    width: '11%',
-    height: '5.8%',
-  },
-  rememberToggle: {
-    position: 'absolute',
-    left: '40%',
-    top: '62.8%',
-    width: '12%',
-    height: '4%',
+  mark: {
+    width: 52,
+    height: 52,
+    borderWidth: 1,
+    borderRadius: 16,
     alignItems: 'center',
     justifyContent: 'center',
+    marginBottom: 14,
+  },
+  markText: {
+    fontSize: 18,
+    fontWeight: '900',
+    letterSpacing: 1.5,
+  },
+  eyebrow: {
+    fontSize: 10,
+    fontWeight: '800',
+    letterSpacing: 1.6,
+  },
+  title: {
+    fontSize: 28,
+    fontWeight: '900',
+    marginTop: 8,
+    textAlign: 'center',
+  },
+  subtitle: {
+    fontSize: 13,
+    lineHeight: 19,
+    marginTop: 8,
+    maxWidth: 310,
+    textAlign: 'center',
+  },
+  form: {
+    gap: 10,
+  },
+  fieldLabel: {
+    fontSize: 10,
+    fontWeight: '800',
+    letterSpacing: 1,
+    marginTop: 6,
+  },
+  emailInput: {
+    minHeight: 48,
+    width: '100%',
+    borderWidth: 1,
+    borderRadius: 10,
+    paddingHorizontal: 14,
+    fontSize: 14,
+  },
+  passwordInput: {
+    minHeight: 48,
+    width: '100%',
+    borderWidth: 1,
+    borderRadius: 10,
+    paddingHorizontal: 14,
+    paddingRight: 42,
+    fontSize: 14,
+  },
+  passwordToggle: {
+    alignItems: 'flex-end',
+    justifyContent: 'center',
+    minHeight: 32,
+    marginTop: -42,
+    paddingRight: 12,
+  },
+  rememberToggle: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    minHeight: 32,
   },
   rememberIndicator: {
-    width: 9,
-    height: 9,
+    width: 18,
+    height: 18,
     borderWidth: 1,
-    borderRadius: 1,
+    borderRadius: 5,
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: 'transparent',
@@ -374,57 +420,74 @@ const styles = StyleSheet.create({
     lineHeight: 9,
     fontWeight: '900',
   },
+  rememberLabel: {
+    fontSize: 12,
+  },
   forgotPassword: {
-    position: 'absolute',
-    right: '7%',
-    top: '62.8%',
-    width: '28%',
-    height: '4%',
+    alignSelf: 'flex-end',
+    minHeight: 28,
+    justifyContent: 'center',
+  },
+  inlineAction: {
+    fontSize: 10,
+    fontWeight: '800',
+    letterSpacing: 0.5,
   },
   submit: {
-    position: 'absolute',
-    left: '41%',
-    top: '66.4%',
-    width: '51%',
-    height: '5.5%',
+    minHeight: 50,
+    width: '100%',
+    borderRadius: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 8,
+  },
+  submitText: {
+    fontSize: 12,
+    fontWeight: '900',
+    letterSpacing: 0.8,
+  },
+  divider: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: 10,
+    marginVertical: 8,
+  },
+  dividerLine: {
+    flex: 1,
+    height: 1,
+  },
+  dividerText: {
+    fontSize: 9,
+    fontWeight: '800',
+    letterSpacing: 0.8,
+  },
+  socialButton: {
+    minHeight: 44,
+    borderWidth: 1,
+    borderRadius: 10,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  google: {
-    position: 'absolute',
-    left: '48%',
-    top: '74%',
-    width: '10%',
-    height: '5.5%',
-  },
-  discord: {
-    position: 'absolute',
-    left: '61%',
-    top: '74%',
-    width: '10%',
-    height: '5.5%',
-  },
-  apple: {
-    position: 'absolute',
-    left: '74%',
-    top: '74%',
-    width: '10%',
-    height: '5.5%',
+  socialText: {
+    fontSize: 12,
+    fontWeight: '800',
   },
   createAccount: {
-    position: 'absolute',
-    left: '54%',
-    top: '82.5%',
-    width: '27%',
-    height: '4.5%',
+    alignItems: 'center',
+    justifyContent: 'center',
+    minHeight: 42,
+    marginTop: 4,
+  },
+  createAccountText: {
+    fontSize: 11,
+    fontWeight: '900',
+    letterSpacing: 0.5,
   },
   feedback: {
-    position: 'absolute',
-    left: '41%',
-    top: '87%',
-    width: '51%',
     borderWidth: 1,
-    padding: 8,
+    borderRadius: 10,
+    padding: 12,
+    marginTop: 4,
   },
   feedbackText: {
     fontSize: 11,
