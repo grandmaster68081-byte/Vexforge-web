@@ -7,7 +7,7 @@
 - **VISUAL / MOTION / INTERACTION DECISIONS:** el progreso es estático y legible, sin animación adicional; comunica `turnIndex` y `turns.length` a la vista y a accesibilidad.
 - **LIMITATIONS:** guardia de Arena 23/23 y contrato global de motion pasan localmente; no se inició workflow ni se compiló APK por instrucción explícita. QA humana y typecheck completo siguen pendientes.
 - **NEXT BLOCK:** continuar con otro bloque de Arena o avanzar a Legado sólo si existe un delta visual verificable y no se reabre la arquitectura consolidada.
-- **PERSISTENCIA:** commit de este bloque se registrará en `main` tras la publicación HTTPS.
+- **PERSISTENCIA:** commit publicado en `main`: `225b08e3d5c8e73f123b871b12ad962372ce6f04` (`feat(mobile): add arena action press depth [skip ci]`).
 - **ROLLBACK_POINT:** `d854a558d8c05a0fedb9059cf1c8ff1d9ce966ec`, continuidad publicada antes de este delta.
 
 ## 2026-09-13 — VE-MOB-7-BATTLE — ARENA ACTION GATES PRESS DEPTH / IMPLEMENTED_UNVERIFIED
