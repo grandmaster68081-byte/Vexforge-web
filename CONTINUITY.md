@@ -7,8 +7,8 @@
 - **VISUAL / MOTION / INTERACTION DECISIONS:** se reutiliza `opacity` + `translateY` durante la presión; no se añade animación, listener, dependencia ni cambio de datos.
 - **LIMITATIONS:** la guardia específica de Mazos y el contrato global de motion deben pasar; no se inició workflow ni se compiló APK por instrucción explícita. QA visual/táctil humana y typecheck completo siguen pendientes.
 - **NEXT BLOCK:** continuar con otro bloque de Forja o Arena que produzca un delta visible y reversible sin reabrir contratos ni inventar contenido.
-- **PERSISTENCIA:** commit de este bloque se registrará en `main` tras la verificación local.
-- **ROLLBACK_POINT:** commit publicado `8e766747bb711eacd40c298fbc782fa0b034f2ac`.
+- **PERSISTENCIA:** commit publicado en `main`: `e63a1c572a53fe9ba3b9f0bec5422bb67f0a4c4d` (`feat(mobile): add forge action press depth [skip ci]`).
+- **ROLLBACK_POINT:** `8e766747bb711eacd40c298fbc782fa0b034f2ac`, commit base antes de este delta.
 
 ## 2026-09-13 — VE-MOB-4-COLLECTION — ARCHIVE CONTROL SURFACE PRESS DEPTH / IMPLEMENTED_UNVERIFIED
 
