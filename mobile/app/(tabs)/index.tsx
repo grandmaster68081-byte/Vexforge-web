@@ -244,7 +244,10 @@ function OperationGate({
       accessibilityLabel={accessibilityLabel}
       testID={testID}
       onPress={onPress}
-      style={({ pressed }) => [styles.operationGate, { borderColor: `${color}8C`, backgroundColor: `${colors.ink}55`, opacity: pressed ? 0.7 : 1 }]}
+      style={({ pressed }) => [
+        styles.operationGate,
+        { borderColor: `${color}8C`, backgroundColor: `${colors.ink}55`, opacity: pressed ? 0.7 : 1, transform: [{ translateY: pressed ? 2 : 0 }] },
+      ]}
     >
       <View style={[styles.operationGateGlyph, { borderColor: color, backgroundColor: `${color}14` }]}>
         <Icon name={icon} color={color} size={17} />
@@ -282,7 +285,10 @@ function ForgeChamber({
       accessibilityLabel={`Abrir ${label.toLowerCase()}`}
       testID={testID}
       onPress={onPress}
-      style={({ pressed }) => [styles.forgeChamber, { borderColor: `${color}55`, opacity: pressed ? 0.68 : 1 }]}
+      style={({ pressed }) => [
+        styles.forgeChamber,
+        { borderColor: `${color}55`, opacity: pressed ? 0.68 : 1, transform: [{ translateY: pressed ? 2 : 0 }] },
+      ]}
     >
       <View style={[styles.forgeChamberGlyph, { borderColor: color, backgroundColor: `${color}12` }]}>
         <Icon name={icon} color={color} size={14} />
@@ -338,6 +344,7 @@ function ContinuumNode({
           borderColor: `${color}${active ? '60' : '30'}`,
           backgroundColor: active ? `${colors.ink}66` : `${colors.ink}45`,
           opacity: pressed ? 0.7 : active ? 1 : 0.72,
+          transform: [{ translateY: pressed ? 2 : 0 }],
         },
       ]}
     >
