@@ -144,7 +144,11 @@ function ReferenceCardSlot({
       onPress={onPress}
       style={({ pressed }) => [
         styles.referenceCardSlot,
-        { borderColor: accent, opacity: pressed ? 0.72 : 1 },
+        {
+          borderColor: accent,
+          opacity: pressed ? 0.72 : 1,
+          transform: [{ translateY: pressed ? 2 : 0 }],
+        },
       ]}
     >
       <CardArt card={card} colors={colors} compact />
@@ -256,7 +260,14 @@ function CardSpotlight({
         accessibilityRole="button"
         accessibilityLabel={`Inspeccionar artefacto destacado ${card.name}`}
         onPress={onPress}
-        style={({ pressed }) => [styles.spotlightArt, { borderColor: accent, opacity: pressed ? 0.82 : 1 }]}
+        style={({ pressed }) => [
+          styles.spotlightArt,
+          {
+            borderColor: accent,
+            opacity: pressed ? 0.82 : 1,
+            transform: [{ translateY: pressed ? 2 : 0 }],
+          },
+        ]}
       >
         <CardArt card={card} colors={colors} detail />
       </Pressable>
@@ -275,7 +286,10 @@ function CardSpotlight({
             accessibilityRole="button"
             accessibilityLabel={`Inspeccionar ${card.name}`}
             onPress={onPress}
-            style={[styles.spotlightInspect, { borderColor: accent }]}
+            style={({ pressed }) => [
+              styles.spotlightInspect,
+              { borderColor: accent, opacity: pressed ? 0.78 : 1, transform: [{ translateY: pressed ? 2 : 0 }] },
+            ]}
           >
             <Text style={[styles.spotlightInspectText, { color: accent }]}>INSPECCIONAR</Text>
           </Pressable>
@@ -284,7 +298,10 @@ function CardSpotlight({
             accessibilityRole="button"
             accessibilityLabel="Abrir la Forja de mazos"
             onPress={onOpenForge}
-            style={[styles.spotlightForge, { backgroundColor: colors.primary }]}
+            style={({ pressed }) => [
+              styles.spotlightForge,
+              { backgroundColor: colors.primary, opacity: pressed ? 0.82 : 1, transform: [{ translateY: pressed ? 2 : 0 }] },
+            ]}
           >
             <Feather name="columns" size={13} color={colors.primaryForeground} />
             <Text style={[styles.spotlightForgeText, { color: colors.primaryForeground }]}>FORJAR</Text>
@@ -432,7 +449,10 @@ function ArchiveBottomItem({
       accessibilityRole="button"
       accessibilityLabel={label}
       onPress={onPress}
-      style={styles.referenceBottomHit}
+      style={({ pressed }) => [
+        styles.referenceBottomHit,
+        { opacity: pressed ? 0.72 : 1, transform: [{ translateY: pressed ? 2 : 0 }] },
+      ]}
     >
       <Feather name={icon} size={18} color={active ? colors.accent : colors.foreground} />
       <Text style={[styles.referenceBottomLabel, { color: active ? colors.accent : colors.foreground }]}>{label}</Text>
