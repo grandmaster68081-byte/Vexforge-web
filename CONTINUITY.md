@@ -1,3 +1,10 @@
+## 2026-09-13 — VE-MOB-3-HOME — CARD IDENTITY PILOT / IMPLEMENTED_UNVERIFIED
+
+- Se completó la auditoría del Home Android real antes de editar. El Home vive en `mobile/app/(tabs)/index.tsx`, conserva `CanonicalFrame`/safe area a través del shell, scroll vertical, hotspots Expo Router y las fuentes existentes `get_home_stats`, `cards`, `missions`, `mission_runs` y `get_public_player_names`.
+- Se verificaron en Supabase los candidatos Mythic/Legendary con artwork oficial disponible. La identidad seleccionada para el piloto es `VEX-0024` / `Sombra del Fin`, ID `4610f718-76f9-4a8a-83ca-f90eeb26015c`, facción Pícaro, rareza Mythic y lore canónico; la imagen Storage responde como JPEG válido. También quedaron verificados como candidatos `VEX-0022`, `VEX-0021`, `VEX-0023`, `VEX-0125`, `VEX-0127`, `VEX-0017`, `VEX-0126`, `VEX-0020`, `VEX-0019`, `VEX-0018` y `VEX-0124`.
+- El piloto mantiene el backend, `GameContext`, modelo, rutas y otras pantallas intactos. El shell global dejó de duplicar la escena Home para que el propio Home gobierne su fondo; el artwork canónico ahora funciona como una presencia ambiental recortada con aura, eje y parallax, mientras los accesos y la carta destacada adoptan aperturas orgánicas en lugar de marcos rectangulares genéricos.
+- Se conservaron los datos dinámicos, estados de error/carga, reduced-motion, testID y destinos reales. No se ejecutó el workflow Android ni se compiló APK por instrucción explícita. Estado honesto: `IMPLEMENTED_UNVERIFIED`; queda typecheck/guardas locales y QA visual/táctil en APK para el siguiente cierre autorizado.
+
 ## 2026-09-12 — VE-MOB-3-HOME — REVIEW SELECTORS / IMPLEMENTED_UNVERIFIED
 
 - Se hicieron únicos los identificadores de revisión del Home para no confundir la carta destacada duplicada visualmente ni las filas de misiones múltiples.

@@ -361,7 +361,7 @@ export default function ForgeScreen() {
   };
 
   return (
-    <ScreenShell surface="home" sceneMode="shell">
+    <ScreenShell surface="home" sceneMode="hero">
       <View style={styles.root} testID="home-scene">
         <Animated.ScrollView
           contentContainerStyle={[styles.scrollContent, { paddingBottom: Math.max(112, insets.bottom + 100) }]}
@@ -389,11 +389,11 @@ export default function ForgeScreen() {
               <View style={[styles.heroCorner, styles.heroBottomRight, { borderColor: `${colors.rarityEpic}A8` }]} />
               <Text style={[styles.heroSceneCode, { color: `${colors.foreground}70` }]}>NEXUS / 01 · THRESHOLD</Text>
             </View>
-             <Animated.View
+            <Animated.View
                style={[
                  styles.identityStage,
                  {
-                   borderColor: `${identityVisual?.accent ?? colors.rarityEpic}B8`,
+                   borderColor: `${identityVisual?.edge ?? colors.rarityEpic}B8`,
                    backgroundColor: `${identityVisual?.overlay ?? colors.ink}CC`,
                    height: Math.min(432, heroHeight * 0.72),
                    right: -Math.min(36, width * 0.1),
@@ -412,8 +412,26 @@ export default function ForgeScreen() {
                    onError={() => setSentinelAssetState('error')}
                  />
                ) : null}
-               <LinearGradient colors={['transparent', `${colors.ink}D9`]} style={StyleSheet.absoluteFill} />
-               <View style={styles.identityStageRule} />
+                <LinearGradient
+                  colors={[
+                    `${identityVisual?.overlay ?? colors.ink}12`,
+                    `${identityVisual?.overlay ?? colors.ink}54`,
+                    `${colors.ink}F0`,
+                  ]}
+                  style={StyleSheet.absoluteFill}
+                />
+                <View
+                  pointerEvents="none"
+                  style={[
+                    styles.identityAtmosphere,
+                    {
+                      borderColor: `${identityVisual?.accent ?? colors.rarityEpic}70`,
+                      backgroundColor: `${identityVisual?.accent ?? colors.rarityEpic}14`,
+                    },
+                  ]}
+                />
+                <View pointerEvents="none" style={[styles.identityAxis, { backgroundColor: `${identityVisual?.accent ?? colors.rarityEpic}4D` }]} />
+                <View style={[styles.identityStageRule, { borderColor: `${identityVisual?.accent ?? colors.rarityEpic}9C` }]} />
                <View style={styles.identityStageCopy}>
                  <Text style={[styles.identityStageKicker, { color: identityVisual?.accent ?? colors.rarityEpic }]}>IDENTIDAD CANÓNICA</Text>
                  <Text style={[styles.identityStageCode, { color: `${colors.foreground}B8` }]}>{identityCard?.code ?? 'SEÑAL PENDIENTE'}</Text>
@@ -421,8 +439,8 @@ export default function ForgeScreen() {
                  <Text style={[styles.identityStageMeta, { color: `${colors.foreground}B8` }]}>{identityCard ? `${identityCard.rarity?.toUpperCase()} · ${identityCard.faction?.toUpperCase()}` : 'CARGANDO REGISTRO CANÓNICO'}</Text>
                </View>
              </Animated.View>
-            <Animated.View pointerEvents="none" style={[styles.heroOrbit, { borderColor: `${colors.rarityEpic}6A` }, orbitStyle]} />
-            <Animated.View pointerEvents="none" style={[styles.heroCore, { backgroundColor: `${colors.rarityEpic}A8` }, pulseStyle]} />
+            <Animated.View pointerEvents="none" style={[styles.heroOrbit, { borderColor: `${identityVisual?.accent ?? colors.rarityEpic}6A` }, orbitStyle]} />
+            <Animated.View pointerEvents="none" style={[styles.heroCore, { backgroundColor: `${identityVisual?.accent ?? colors.rarityEpic}A8` }, pulseStyle]} />
             {heroAssetState === 'error' || sentinelAssetState === 'error' ? (
               <View pointerEvents="none" style={[styles.heroAssetError, { borderColor: `${colors.accent}80` }]}>
                 <Text style={[styles.heroAssetErrorTitle, { color: colors.accent }]}>NEXUS CORE OFFLINE</Text>
@@ -454,7 +472,7 @@ export default function ForgeScreen() {
               </View>
             </View>
 
-            <Animated.View entering={reduceMotion ? undefined : FadeInDown.delay(MOTION.micro).duration(MOTION.navigation + MOTION.micro)} style={[styles.heroContent, { paddingHorizontal: viewportPadding }]}>
+            <Animated.View entering={reduceMotion ? undefined : FadeInDown.delay(MOTION.micro).duration(MOTION.navigation + MOTION.micro)} style={[styles.heroContent, { paddingHorizontal: viewportPadding, zIndex: 3 }]}>
               <View style={[styles.heroReadingField, { borderLeftColor: `${colors.accent}B8` }]}>
                 <View style={[styles.syncLine, { borderColor: `${connectionColor}90` }]} testID="home-sync">
                   <View style={[styles.syncPulse, { backgroundColor: connectionColor }]} />
@@ -698,10 +716,12 @@ const styles = StyleSheet.create({
   scrollContent: { gap: 0 },
   heroStage: { overflow: 'hidden', position: 'relative' },
   heroArt: { height: '100%', left: 0, position: 'absolute', top: 0, width: '100%' },
-  identityStage: { bottom: 42, borderBottomRightRadius: 155, borderTopLeftRadius: 155, borderWidth: 1, height: 432, overflow: 'hidden', position: 'absolute', right: -36, width: 286, zIndex: 2 },
-  identityArt: { height: '155%', left: -96, position: 'absolute', top: -72, width: '180%' },
-  identityStageRule: { borderLeftWidth: 1, borderTopWidth: 1, height: 68, left: 14, position: 'absolute', top: 14, width: 68 },
-  identityStageCopy: { bottom: 20, left: 19, position: 'absolute', right: 20 },
+  identityStage: { bottom: 36, borderBottomLeftRadius: 220, borderTopLeftRadius: 220, borderWidth: 1, height: 432, overflow: 'hidden', position: 'absolute', right: -36, width: 286, zIndex: 1 },
+  identityArt: { height: '135%', left: -120, opacity: 0.96, position: 'absolute', top: -30, width: '205%' },
+  identityAtmosphere: { borderRadius: 150, borderWidth: 1, height: 296, left: -36, position: 'absolute', top: 46, transform: [{ rotate: '18deg' }], width: 296 },
+  identityAxis: { bottom: 52, position: 'absolute', right: 42, top: 52, width: 1 },
+  identityStageRule: { borderLeftWidth: 1, borderTopWidth: 1, height: 68, left: 22, position: 'absolute', top: 22, width: 68 },
+  identityStageCopy: { bottom: 22, left: 27, position: 'absolute', right: 24 },
   identityStageKicker: { fontFamily: 'Rajdhani_700Bold', fontSize: 8, letterSpacing: 1.3 },
   identityStageCode: { fontFamily: 'Rajdhani_700Bold', fontSize: 8, letterSpacing: 1, marginTop: 4 },
   identityStageName: { fontFamily: 'Cinzel_600SemiBold', fontSize: 16, lineHeight: 20, marginTop: 4 },
@@ -752,8 +772,8 @@ const styles = StyleSheet.create({
   heroWorldLink: { alignItems: 'center', flexDirection: 'row', gap: 4, marginLeft: 'auto' },
   heroWorldText: { fontFamily: 'Rajdhani_700Bold', fontSize: 9, letterSpacing: 1 },
   heroCardAnchor: { alignItems: 'center', bottom: 88, position: 'absolute', right: 10, width: 122, zIndex: 5 },
-  heroCardFrame: { borderWidth: 1, height: 164, overflow: 'hidden', position: 'relative', transform: [{ rotate: '3deg' }], width: 114 },
-  heroCardArt: { height: '100%', width: '100%' },
+  heroCardFrame: { borderBottomLeftRadius: 48, borderTopRightRadius: 48, borderWidth: 1, height: 164, overflow: 'hidden', position: 'relative', transform: [{ rotate: '3deg' }], width: 114 },
+  heroCardArt: { height: '122%', left: '-12%', position: 'absolute', top: '-8%', width: '124%' },
   heroCardRarity: { borderWidth: 1, left: 6, paddingHorizontal: 4, paddingVertical: 2, position: 'absolute', top: 7 },
   heroCardRarityText: { fontFamily: 'Rajdhani_700Bold', fontSize: 7, letterSpacing: 0.8 },
   heroCardCode: { bottom: 7, fontFamily: 'Rajdhani_700Bold', fontSize: 7, left: 7, letterSpacing: 0.8, position: 'absolute' },
@@ -946,8 +966,8 @@ const styles = StyleSheet.create({
     eventProgressFinal: { alignItems: 'flex-end', gap: 6, width: 42 },
     eventProgressValueFinal: { fontFamily: 'Rajdhani_700Bold', fontSize: 13 },
     artifactFeatureFinal: { alignItems: 'center', flexDirection: 'row', gap: 14, minHeight: 204, paddingVertical: 15 },
-    artifactFrameFinal: { borderWidth: 1, height: 190, overflow: 'hidden', position: 'relative', transform: [{ rotate: '-2deg' }], width: 130 },
-    artifactArtFinal: { height: '100%', width: '100%' },
+    artifactFrameFinal: { borderBottomLeftRadius: 18, borderTopRightRadius: 72, borderWidth: 1, height: 190, overflow: 'hidden', position: 'relative', transform: [{ rotate: '-2deg' }], width: 130 },
+    artifactArtFinal: { height: '122%', left: '-12%', position: 'absolute', top: '-8%', width: '124%' },
     artifactRarityFinal: { fontFamily: 'Rajdhani_700Bold', fontSize: 8, left: 7, letterSpacing: 0.8, position: 'absolute', top: 7 },
     artifactCodeFinal: { bottom: 7, fontFamily: 'Rajdhani_700Bold', fontSize: 8, left: 8, letterSpacing: 0.9, position: 'absolute' },
     artifactCopyFinal: { flex: 1, justifyContent: 'center', minWidth: 0, paddingVertical: 7 },
