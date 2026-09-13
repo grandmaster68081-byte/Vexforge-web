@@ -1,3 +1,12 @@
+## 2026-09-13 — SESIÓN DE RECONCILIACIÓN — ANDROID ACTIVO / SIN UNIDAD DE PRODUCTO SELECCIONADA
+
+- Acceso oficial verificado por HTTPS directo: GitHub REST API para `main` y Supabase Management API para la fila `public.vexforge_official_documents.vexforge_home_world_system_protocol_v3`; no se usó Git como transporte de credenciales ni se expusieron secretos.
+- El protocolo vivo está `ACTIVE`, versión `V2.1 — GAME EXPERIENCE ARCHITECTURE + LIVING UI + FUNCTIONAL COMPLETENESS`. Confirma Android en `mobile/` como única superficie activa, web congelada, datos/arte oficiales, regla Cero Genéricos, estados completos, navegación real, reduced-motion, gates técnicos y continuidad honesta.
+- El plan `vexforge_forge_formation_engine_v1` fue consultado sólo para reconciliación y permanece `superseded`; no gobierna la selección actual.
+- `main` actual: `a76ce49c9cd8f00de20a6b5026cbc79a23ec078a` (`docs: confirm V2.1 app-wide rollout scope`). Último workflow Android exitoso: run `238` sobre `c35b791098c8`, con release `vexforge-android-build-238` y `app-release.apk`. El run `239` sobre `6bb769e79f97` fue cancelado y no generó release nuevo.
+- No se modificó `mobile/**`, Supabase, Storage, Auth, RPCs, economía, web ni assets. No se inició un workflow ni se generó una APK nueva en esta sesión; no se eleva ninguna unidad a `PASS`, `OPERATIONAL` o `TIER1_READY`.
+- La continuidad existente declara agotado el trabajo Android no-QA del port y exige seleccionar una unidad Tier 1 Android explícita antes de implementar. No se inventa una unidad por ausencia de una feature concreta del operador; el siguiente paso queda bloqueado de forma justificada hasta esa selección.
+
 ## 2026-09-13 — PROTOCOLO V2.1 — ALCANCE GLOBAL DE APK CONFIRMADO / ACTIVE
 
 - Se releyó íntegramente la fila activa de Supabase `vexforge_home_world_system_protocol_v3`, versión `V2.1 — GAME EXPERIENCE ARCHITECTURE + LIVING UI + FUNCTIONAL COMPLETENESS`, estado `ACTIVE`.
