@@ -1,3 +1,10 @@
+## 2026-09-13 — VE-MOB-3-HOME — RANKING MONUMENT / IMPLEMENTED_UNVERIFIED
+
+- Se cerró un microbloque de FASE 7/11 exclusivamente en `mobile/app/(tabs)/index.tsx`: la clasificación del frente ahora tiene una estela de prestigio integrada en la escena antes de sus posiciones, usando únicamente el líder, MMR, victorias y cantidad de registros reales.
+- La clasificación conserva sus rutas, filas dinámicas, `testID`, accesibilidad, estados vacío/error y navegación a Mundo; no se modificaron Supabase, RPCs, GameContext, contratos, assets ni otras pantallas Android.
+- No se compiló APK ni se inició el workflow Android, por instrucción del operador. Estado honesto: `IMPLEMENTED_UNVERIFIED`; commit de implementación publicado en `main`: `a38a14cb53283228b35cf3f70e7c346186314c43`. Esta continuidad se publica mediante la API REST HTTPS oficial de GitHub.
+- Siguiente bloque: continuar con una mejora atómica de transición o jerarquía world-first del Home, sin rehacer la escena consolidada.
+
 ## 2026-09-13 — VE-MOB-3-HOME — SECONDARY SIGNAL CAMERA DEPTH / IMPLEMENTED_UNVERIFIED
 
 - Se cerró un microbloque de FASE 10/11 exclusivamente en `mobile/app/(tabs)/index.tsx`: las señales secundarias del Home ahora reciben una entrada escalonada y una profundidad diferencial vinculada al movimiento de cámara del Nexus.
