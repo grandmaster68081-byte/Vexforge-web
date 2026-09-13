@@ -552,6 +552,7 @@ export default function ForgeScreen() {
   }));
 
   const activeCard = home.card ?? featuredCards[0] ?? null;
+  const featuredCanExpand = Boolean(activeCard?.lore);
   const identityCard = home.identityCard;
   const identityVisual = getCardIdentityVisual(identityCard?.id);
   const identityArtUnavailable = identityAssetState === 'error' || Boolean(identityCard && !identityCard.image_url);
@@ -594,6 +595,7 @@ export default function ForgeScreen() {
     setRefreshing(false);
   };
   const openFeatured = () => {
+    if (!featuredCanExpand) return;
     setFeaturedExpanded((expanded) => !expanded);
     void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch(() => undefined);
   };
@@ -741,7 +743,8 @@ export default function ForgeScreen() {
             </Animated.View>
             <Pressable
               accessibilityRole="button"
-              accessibilityLabel="Inspeccionar carta destacada del Nexus"
+              accessibilityLabel={featuredCanExpand ? (featuredExpanded ? 'Ocultar lore de la carta destacada' : 'Inspeccionar lore de la carta destacada') : 'Carta destacada sin lore sincronizado'}
+              accessibilityState={{ disabled: !featuredCanExpand, expanded: featuredCanExpand && featuredExpanded }}
               testID="home-featured-card"
               onPress={openFeatured}
                style={({ pressed }) => [styles.heroCardAnchor, { opacity: pressed ? 0.78 : 1, transform: [{ translateY: pressed ? 2 : 0 }] }]}
@@ -875,7 +878,7 @@ export default function ForgeScreen() {
                     </View>
                   </Pressable>
 
-                   <Pressable accessibilityRole="button" accessibilityLabel="Inspeccionar carta destacada del Nexus" testID="home-featured-card-detail" onPress={openFeatured} style={({ pressed }) => [styles.artifactFeatureFinal, { opacity: pressed ? 0.78 : 1, transform: [{ translateY: pressed ? 2 : 0 }] }]}>
+                   <Pressable accessibilityRole="button" accessibilityLabel={featuredCanExpand ? (featuredExpanded ? 'Ocultar lore de la carta destacada' : 'Inspeccionar lore de la carta destacada') : 'Carta destacada sin lore sincronizado'} accessibilityState={{ disabled: !featuredCanExpand, expanded: featuredCanExpand && featuredExpanded }} testID="home-featured-card-detail" onPress={openFeatured} style={({ pressed }) => [styles.artifactFeatureFinal, { opacity: pressed ? 0.78 : 1, transform: [{ translateY: pressed ? 2 : 0 }] }]}>
                     <View style={[styles.artifactFrameFinal, { borderColor: colors.rarityLegendary, backgroundColor: colors.ink }]}>
                        {activeCard?.image_url ? <Image source={{ uri: activeCard.image_url }} style={styles.artifactArtFinal} resizeMode="cover" accessibilityLabel="Arte oficial de la carta destacada" onLoad={() => setFeaturedAssetState('ready')} onError={() => setFeaturedAssetState('error')} /> : null}
                        <LinearGradient colors={['transparent', `${colors.ink}F2`]} style={StyleSheet.absoluteFill} />

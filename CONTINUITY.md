@@ -2775,6 +2775,15 @@
 - Estado honesto: `IMPLEMENTED_UNVERIFIED`. Próximo bloque sugerido: sólo continuar si aparece una mejora concreta de continuidad o interacción; no rediseñar la escena consolidada por novedad.
 
 ---
+## 2026-09-13 — VE-MOB-3-HOME — HONEST CARD INSPECTION STATE / IMPLEMENTED_UNVERIFIED
+
+- Se cerró un microbloque de FASE 11 exclusivamente en `mobile/app/(tabs)/index.tsx`: la carta de resonancia sólo se presenta como expandible cuando existe lore real sincronizado.
+- Cuando el lore no está disponible, los dos puntos de inspección comunican `CARTA DESTACADA SIN LORE SINCRONIZADO`, quedan marcados como no expandibles para accesibilidad y no disparan haptics ni una expansión vacía.
+- Se conservaron carta, artwork, rareza, código, estados de asset, rutas, `testID`, navegación y datos vivos; no se inventa texto ni se modifican contratos o backend.
+- No se inicia workflow, no se compila APK ni se genera release por la instrucción vigente. Estado honesto: `IMPLEMENTED_UNVERIFIED`.
+- Siguiente microbloque: continuar sólo con una mejora concreta de continuidad o interacción, sin rehacer la escena consolidada.
+
+---
 ## 2026-09-13 — VE-MOB-3-HOME — FRONT OBJECT PRESS DEPTH / IMPLEMENTED_UNVERIFIED
 
 - Se cerró un microbloque de FASE 11 exclusivamente en `mobile/app/(tabs)/index.tsx`: los umbrales del hero, el frente/evento y la carta de resonancia ahora comparten la respuesta táctil de profundidad del resto de objetos del Home.
