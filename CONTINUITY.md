@@ -1,3 +1,10 @@
+## 2026-09-13 — VE-MOB-3-HOME — AUTHORED WORLD NAVIGATION / IMPLEMENTED_UNVERIFIED
+
+- Se continuó la FASE 9 del protocolo sobre la navegación inferior Android: la misma barra y los mismos destinos ahora comparten sellos, beacon activo, rail de luz, tipografía y nombres de dominio del universo (`Nexus`, `Arena`, `Archivo`, `Forja`, `Legado`).
+- Se conservaron las rutas `index`, `battle`, `collection`, `deck` y `profile`, el redirect de Auth/tutorial, safe area, variante web y la variante NativeTabs fuera de Android. No se modificaron contratos, datos, Supabase, RPCs, Auth ni assets.
+- El cambio quedó publicado en `main` por API REST HTTPS de GitHub mediante el commit `a3dfa0b5f027ab27183bb5d9c4b2584ff08bfc78` con `[skip ci]`. No se compiló aplicación, no se inició workflow APK y no se generó release por instrucción explícita del operador.
+- Estado honesto: `IMPLEMENTED_UNVERIFIED`; la barra y sus rutas requieren QA visual/táctil en APK cuando el operador autorice compilación. Siguiente bloque: continuar FASE 9/10 sólo si mejora la continuidad del mundo, sin reabrir decisiones ya consolidadas.
+
 ## 2026-09-13 — VE-MOB-3-HOME — RANKING CIRCUIT NAVIGATION / IMPLEMENTED_UNVERIFIED
 
 - Se cerró el siguiente enlace de la FASE 7/9: cada nodo real de clasificación ahora conduce a `/world` como parte del circuito vivo, manteniendo posición, forjador, victorias y MMR sin alterar su presentación.
