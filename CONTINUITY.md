@@ -1,3 +1,10 @@
+## 2026-09-13 — VE-MOB-3-AUTH — AUTH PROGRAMÁTICO SIN SKIN / IMPLEMENTED_UNVERIFIED
+
+- Se desmontó exclusivamente la imagen de fondo de `mobile/app/auth.tsx`; la pantalla de acceso ahora está construida con componentes programáticos visibles: correo, contraseña, recordar sesión, recuperación, acceso social, feedback y cambio entre entrar/crear cuenta.
+- Se conservaron las validaciones, handlers, `testID`, accesibilidad, estados de carga/error, sesión Supabase y redirección; no se modificaron contratos, backend, assets de cartas ni otras pantallas.
+- No se compiló APK ni se inició el workflow Android, por instrucción del operador. Estado honesto: `IMPLEMENTED_UNVERIFIED`; commit de implementación publicado en `main`: `a2860eaaaa7d9c052036766a625f23329101a3c5`. Esta continuidad se publica mediante la API REST HTTPS oficial de GitHub.
+- Siguiente bloque: desmontar la escena de fondo de Batallas y dejar su lobby funcional en UI programática, sin eliminar la resolución real de combates.
+
 ## 2026-09-13 — VE-MOB-3-HOME — SECTION WAYPOINT SEALS / IMPLEMENTED_UNVERIFIED
 
 - Se cerró un microbloque de FASE 9/11 exclusivamente en `mobile/app/(tabs)/index.tsx`: los marcadores de Misiones, Actividad y Clasificación ahora comparten un sello de waypoint del Nexus en lugar de un separador genérico.
