@@ -16,6 +16,7 @@ const assertions = [
   ['Home keeps reduced-motion and pull-to-refresh contracts', screen.includes('useReducedMotion()') && screen.includes('reduceMotion ? undefined') && screen.includes('RefreshControl')],
   ['Home domains use world-object composition instead of generic rows', screen.includes('styles.domainWorldObject') && screen.includes('styles.domainWorldHalo') && screen.includes('domainWorldStatusLine') && !screen.includes('styles.domainNode,')],
   ['Home secondary surfaces use signals instead of generic rows', screen.includes('function MissionSignal') && screen.includes('function ActivitySignal') && screen.includes('function RankingSignal') && screen.includes('styles.missionSignal') && screen.includes('styles.activitySignal') && screen.includes('styles.rankingSignal') && !screen.includes('styles.missionLine') && !screen.includes('styles.activityRow') && !screen.includes('styles.rankingRow')],
+  ['Home operations bridge uses gates and chambers instead of generic links', screen.includes('function OperationGate') && screen.includes('function ForgeChamber') && screen.includes('styles.operationGate') && screen.includes('styles.forgeChamber') && !screen.includes('styles.operationLinkFinal') && !screen.includes('styles.storeActionFinal')],
   ['Home exposes the required review surfaces', requiredTestIds.every((testID) => screen.includes(`testID="${testID}"`))],
 ];
 

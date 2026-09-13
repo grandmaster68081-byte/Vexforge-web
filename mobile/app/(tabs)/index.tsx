@@ -218,6 +218,81 @@ function SceneOrbitPoint({
   return <DomainNode portal={portal} signal={signal} onPress={onPress} />;
 }
 
+function OperationGate({
+  label,
+  title,
+  detail,
+  icon,
+  color,
+  testID,
+  accessibilityLabel,
+  onPress,
+}: {
+  label: string;
+  title: string;
+  detail: string;
+  icon: IconName;
+  color: string;
+  testID: string;
+  accessibilityLabel: string;
+  onPress: () => void;
+}) {
+  const colors = useColors();
+  return (
+    <Pressable
+      accessibilityRole="button"
+      accessibilityLabel={accessibilityLabel}
+      testID={testID}
+      onPress={onPress}
+      style={({ pressed }) => [styles.operationGate, { borderColor: `${color}8C`, backgroundColor: `${colors.ink}55`, opacity: pressed ? 0.7 : 1 }]}
+    >
+      <View style={[styles.operationGateGlyph, { borderColor: color, backgroundColor: `${color}14` }]}>
+        <Icon name={icon} color={color} size={17} />
+      </View>
+      <View style={styles.operationGateCopy}>
+        <Text style={[styles.operationGateLabel, { color }]}>{label}</Text>
+        <Text numberOfLines={1} style={[styles.operationGateTitle, { color: colors.foreground }]}>{title}</Text>
+        <Text numberOfLines={1} style={[styles.operationGateDetail, { color: colors.mutedForeground }]}>{detail}</Text>
+      </View>
+      <View style={styles.operationGateBeacon}>
+        <View style={[styles.operationGateBeaconMark, { backgroundColor: color }]} />
+        <Text style={[styles.operationGateBeaconText, { color }]}>ABRIR</Text>
+      </View>
+    </Pressable>
+  );
+}
+
+function ForgeChamber({
+  label,
+  icon,
+  color,
+  testID,
+  onPress,
+}: {
+  label: string;
+  icon: IconName;
+  color: string;
+  testID: string;
+  onPress: () => void;
+}) {
+  const colors = useColors();
+  return (
+    <Pressable
+      accessibilityRole="button"
+      accessibilityLabel={`Abrir ${label.toLowerCase()}`}
+      testID={testID}
+      onPress={onPress}
+      style={({ pressed }) => [styles.forgeChamber, { borderColor: `${color}55`, opacity: pressed ? 0.68 : 1 }]}
+    >
+      <View style={[styles.forgeChamberGlyph, { borderColor: color, backgroundColor: `${color}12` }]}>
+        <Icon name={icon} color={color} size={14} />
+      </View>
+      <Text style={[styles.forgeChamberLabel, { color: colors.foreground }]}>{label}</Text>
+      <View style={[styles.forgeChamberMark, { backgroundColor: color }]} />
+    </Pressable>
+  );
+}
+
 function SignalMetric({ label, value, icon, color }: { label: string; value: string; icon: IconName; color: string }) {
   const colors = useColors();
   return (
@@ -759,27 +834,21 @@ export default function ForgeScreen() {
                      },
                    ]}
                  >
-                  <View style={styles.ritualHeadingFinal}><View><Text style={[styles.ritualEyebrowFinal, { color: colors.success }]}>OPERACIONES / 02</Text><Text style={[styles.ritualTitleFinal, { color: colors.foreground }]}>El siguiente movimiento</Text></View><Icon name="shop" color={colors.success} size={18} /></View>
+                  <View style={styles.ritualHeadingFinal}><View><Text style={[styles.ritualEyebrowFinal, { color: colors.success }]}>OPERACIONES / 02</Text><Text style={[styles.ritualTitleFinal, { color: colors.foreground }]}>El siguiente movimiento</Text></View><View style={[styles.ritualHeadingMarkFinal, { borderColor: colors.success }]}><Icon name="resonance" color={colors.success} size={14} /></View></View>
                   <View style={styles.operationRowFinal}>
-                    <Pressable accessibilityRole="button" accessibilityLabel="Abrir Forja" testID="home-forge" onPress={() => navigate('/deck')} style={({ pressed }) => [styles.operationLinkFinal, { borderColor: colors.rarityEpic, opacity: pressed ? 0.7 : 1 }]}>
-                      <Icon name="deck" color={colors.rarityEpic} size={17} /><View style={styles.operationCopyFinal}><Text style={[styles.operationLabelFinal, { color: colors.rarityEpic }]}>FORJA</Text><Text style={[styles.operationTitleFinal, { color: colors.foreground }]}>Construye tu línea</Text></View><Icon name="arrow-up" color={colors.rarityEpic} size={12} />
-                    </Pressable>
-                    <Pressable accessibilityRole="button" accessibilityLabel="Abrir economía" testID="home-economy" onPress={() => navigate('/economy')} style={({ pressed }) => [styles.operationLinkFinal, { borderColor: colors.accent, opacity: pressed ? 0.7 : 1 }]}>
-                      <Icon name="trending-up-outline" color={colors.accent} size={17} /><View style={styles.operationCopyFinal}><Text style={[styles.operationLabelFinal, { color: colors.accent }]}>ECONOMÍA</Text><Text style={[styles.operationTitleFinal, { color: colors.foreground }]}>Mueve el VEX</Text></View><Icon name="arrow-up" color={colors.accent} size={12} />
-                    </Pressable>
+                    <OperationGate label="FORJA" title="Construye tu línea" detail={`NIVEL ${formatNumber(progress?.level)} · MAZO ACTIVO`} icon="deck" color={colors.rarityEpic} testID="home-forge" accessibilityLabel="Abrir Forja" onPress={() => navigate('/deck')} />
+                    <OperationGate label="ECONOMÍA" title="Mueve el VEX" detail={`${formatNumber(wallet?.vex_ingame)} VEX DISPONIBLES`} icon="trending-up-outline" color={colors.accent} testID="home-economy" accessibilityLabel="Abrir economía" onPress={() => navigate('/economy')} />
                   </View>
                   <View style={styles.storeRitualFinal}>
-                    <View style={styles.storeHeadingFinal}><View><Text style={[styles.operationLabelFinal, { color: colors.success }]}>CÁMARA DE FORJA</Text><Text style={[styles.storeTitleFinal, { color: colors.foreground }]}>Colección y recursos</Text></View><Icon name="packs" color={colors.success} size={17} /></View>
-                    <View style={styles.storeActionsFinal}>
+                    <View style={styles.storeHeadingFinal}><View><Text style={[styles.operationLabelFinal, { color: colors.success }]}>CÁMARA DE FORJA</Text><Text style={[styles.storeTitleFinal, { color: colors.foreground }]}>Colección y recursos</Text></View><View style={[styles.storeHeadingMarkFinal, { backgroundColor: `${colors.success}18`, borderColor: colors.success }]}><Icon name="packs" color={colors.success} size={14} /></View></View>
+                    <View style={styles.forgeChamberGrid}>
                       {[
                         ['PACKS', 'packs', '/store?mode=packs', 'home-store-packs'],
                         ['TIENDA', 'shop', '/store?mode=shop', 'home-store-shop'],
                         ['FUSIÓN', 'fusion', '/store?mode=fusion', 'home-store-fusion'],
                         ['EVOLUCIÓN', 'evolution', '/store?mode=evolution', 'home-store-evolution'],
                       ].map(([label, icon, route, testID]) => (
-                        <Pressable key={testID} accessibilityRole="button" accessibilityLabel={label} testID={testID} onPress={() => navigate(route as HomeRoute)} style={({ pressed }) => [styles.storeActionFinal, { borderBottomColor: colors.success, opacity: pressed ? 0.66 : 1 }]}>
-                          <Icon name={icon as IconName} color={colors.success} size={14} /><Text style={[styles.storeActionTextFinal, { color: colors.foreground }]}>{label}</Text><Icon name="arrow-up" color={colors.success} size={10} />
-                        </Pressable>
+                        <ForgeChamber key={testID} label={label} icon={icon as IconName} color={colors.success} testID={testID} onPress={() => navigate(route as HomeRoute)} />
                       ))}
                     </View>
                   </View>
@@ -1105,19 +1174,30 @@ const styles = StyleSheet.create({
     constellationCoreFinal: { alignItems: 'center', borderWidth: 1, height: 22, justifyContent: 'center', left: '50%', marginLeft: -11, position: 'absolute', top: '50%', transform: [{ rotate: '45deg' }], width: 22, zIndex: 2 },
     ritualDeckFinal: { marginTop: 24, paddingBottom: 12, paddingTop: 13 },
     ritualHeadingFinal: { alignItems: 'center', flexDirection: 'row', justifyContent: 'space-between' },
+    ritualHeadingMarkFinal: { alignItems: 'center', borderWidth: 1, height: 27, justifyContent: 'center', transform: [{ rotate: '45deg' }], width: 27 },
     ritualEyebrowFinal: { fontFamily: 'Rajdhani_700Bold', fontSize: 9, letterSpacing: 1.45 },
     ritualTitleFinal: { fontFamily: 'Cinzel_600SemiBold', fontSize: 17, marginTop: 4 },
-    operationRowFinal: { flexDirection: 'row', gap: 13, marginTop: 13 },
-    operationLinkFinal: { alignItems: 'center', borderLeftWidth: 2, flex: 1, flexDirection: 'row', gap: 8, minHeight: 61, paddingLeft: 10, paddingRight: 2 },
-    operationCopyFinal: { flex: 1, minWidth: 0 },
+    operationRowFinal: { flexDirection: 'row', gap: 10, marginTop: 13 },
+    operationGate: { alignItems: 'center', borderLeftWidth: 2, borderWidth: 1, flex: 1, flexDirection: 'row', gap: 8, minHeight: 83, paddingHorizontal: 8, paddingVertical: 8 },
+    operationGateGlyph: { alignItems: 'center', borderWidth: 1, height: 35, justifyContent: 'center', transform: [{ rotate: '45deg' }], width: 35 },
+    operationGateCopy: { flex: 1, gap: 3, minWidth: 0 },
+    operationGateLabel: { fontFamily: 'Rajdhani_700Bold', fontSize: 8, letterSpacing: 1.15 },
+    operationGateTitle: { fontFamily: 'Cinzel_600SemiBold', fontSize: 12, lineHeight: 16 },
+    operationGateDetail: { fontFamily: 'Rajdhani_500Medium', fontSize: 8, letterSpacing: 0.35 },
+    operationGateBeacon: { alignItems: 'flex-end', gap: 5, justifyContent: 'center', minWidth: 28 },
+    operationGateBeaconMark: { borderRadius: 3, height: 6, width: 6 },
+    operationGateBeaconText: { fontFamily: 'Rajdhani_700Bold', fontSize: 7, letterSpacing: 0.65 },
     operationLabelFinal: { fontFamily: 'Rajdhani_700Bold', fontSize: 9, letterSpacing: 1.15 },
     operationTitleFinal: { fontFamily: 'Cinzel_600SemiBold', fontSize: 12, lineHeight: 16, marginTop: 3 },
     storeRitualFinal: { marginTop: 18, paddingTop: 13 },
     storeHeadingFinal: { alignItems: 'center', flexDirection: 'row', justifyContent: 'space-between' },
+    storeHeadingMarkFinal: { alignItems: 'center', borderWidth: 1, height: 27, justifyContent: 'center', transform: [{ rotate: '45deg' }], width: 27 },
     storeTitleFinal: { fontFamily: 'Cinzel_600SemiBold', fontSize: 15, marginTop: 4 },
-    storeActionsFinal: { flexDirection: 'row', flexWrap: 'wrap', marginTop: 10 },
-    storeActionFinal: { alignItems: 'center', borderBottomWidth: 1, flexDirection: 'row', gap: 5, minHeight: 34, marginRight: 14 },
-    storeActionTextFinal: { fontFamily: 'Rajdhani_700Bold', fontSize: 9, letterSpacing: 0.8 },
+    forgeChamberGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginTop: 11 },
+    forgeChamber: { alignItems: 'center', borderWidth: 1, flexDirection: 'row', gap: 7, minHeight: 43, paddingHorizontal: 8, width: '47%' },
+    forgeChamberGlyph: { alignItems: 'center', borderWidth: 1, height: 23, justifyContent: 'center', transform: [{ rotate: '45deg' }], width: 23 },
+    forgeChamberLabel: { flex: 1, fontFamily: 'Rajdhani_700Bold', fontSize: 8, letterSpacing: 0.8 },
+    forgeChamberMark: { borderRadius: 2, height: 4, width: 4 },
     signalColumnsFinal: { flexDirection: 'row', gap: 18, marginTop: 7 },
     signalColumnFinal: { flex: 1, minWidth: 0 },
     rankingDeckFinal: { marginTop: 17, paddingBottom: 16 },
