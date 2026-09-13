@@ -2719,3 +2719,12 @@
 - No se modificaron backend, Supabase, RPCs, economía, combate, Auth, otras pantallas Android ni la web congelada.
 - Evidencia local: `node scripts/verify-motion.mjs` OK (17 tokens, 8 clases, 3 consumidores), `node scripts/verify-mobile-home-official-assets.mjs` OK (13/13) y `git diff --check` OK. El typecheck local quedó pendiente porque `mobile/node_modules` no está disponible en el entorno de trabajo.
 - Estado honesto: `IMPLEMENTED_UNVERIFIED`; el bloque quedó publicado en `main`. Por instrucción del operador no se inicia todavía el workflow oficial APK, no se compila ninguna aplicación y no se genera release; la verificación Android y la QA visual/táctil humana quedan pendientes. Siguiente bloque: revisar esa evidencia sin rediseñar la escena consolidada cuando se autorice.
+
+---
+## 2026-09-13 — VE-MOB-3-HOME — EXPLICIT FRONT SIGNAL STATES / IMPLEMENTED_UNVERIFIED
+
+- Se cerró el siguiente micro-bloque exclusivamente en `mobile/app/(tabs)/index.tsx`: el objeto visual del frente ahora diferencia de forma explícita un evento activo de la ausencia real de un frente publicado.
+- Con evento activo se conservan el artwork de resonancia, el color de Arena, el porcentaje y la barra de progreso provenientes de datos vivos. Sin evento, la escena usa una señal de radio neutral, copy de espera, accesibilidad específica para consultar Mundo y una marca de estado sin representar progreso ficticio.
+- Se mantuvieron rutas, `testID`, haptics, reduced-motion, estados de carga/error/vacío, contratos, Supabase, Auth, economía, combate, otras pantallas Android y la web congelada.
+- Evidencia local: `node scripts/verify-motion.mjs` OK (17 tokens, 8 clases, 3 consumidores), `node scripts/verify-mobile-home-official-assets.mjs` OK (13/13) y `git diff --check` OK. El typecheck local sigue pendiente porque `mobile/node_modules` no está disponible.
+- Estado honesto: `IMPLEMENTED_UNVERIFIED`; el bloque queda listo para publicarse en `main`. Por instrucción del operador no se inicia workflow, no se compila la aplicación y no se genera release. Siguiente bloque: continuar con otro micro-bloque de composición del Home sin rediseñar la escena consolidada.

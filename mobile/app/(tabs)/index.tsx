@@ -525,6 +525,7 @@ export default function ForgeScreen() {
   const identityArtUnavailable = identityAssetState === 'error' || Boolean(identityCard && !identityCard.image_url);
   const playerName = capitalize(player?.display_name, 'Forjador');
   const activeEvent = home.stats?.active_event ?? null;
+  const eventAccent = activeEvent ? colors.rarityRare : colors.mutedForeground;
   const season = home.stats?.season ?? null;
   const xp = progress?.xp ?? 0;
   const xpToNext = progress?.xp_to_next ?? 0;
@@ -823,18 +824,18 @@ export default function ForgeScreen() {
                       <Icon name="map" color={colors.rarityRare} size={13} /><Text style={[styles.frontStageLinkTextFinal, { color: colors.rarityRare }]}>MUNDO</Text><Icon name="arrow-up" color={colors.rarityRare} size={10} />
                     </Pressable>
                   </View>
-                   <Pressable accessibilityRole="button" accessibilityLabel="Abrir evento activo" testID="home-event" onPress={() => navigate('/world')} style={({ pressed }) => [styles.eventRibbonFinal, { borderLeftColor: colors.rarityRare, backgroundColor: `${colors.ink}A6`, opacity: pressed ? 0.76 : 1 }]}>
-                    <View style={styles.eventBeaconFinal}>
-                       <Icon name="resonance" color={colors.rarityRare} size={23} />
+                   <Pressable accessibilityRole="button" accessibilityLabel={activeEvent ? 'Abrir evento activo' : 'Abrir mundo para consultar eventos'} testID="home-event" onPress={() => navigate('/world')} style={({ pressed }) => [styles.eventRibbonFinal, { borderLeftColor: eventAccent, backgroundColor: activeEvent ? `${colors.ink}A6` : `${colors.ink}72`, opacity: pressed ? 0.76 : 1 }]}>
+                    <View style={[styles.eventBeaconFinal, { borderColor: `${eventAccent}66`, backgroundColor: `${eventAccent}0D` }]}>
+                       <Icon name={activeEvent ? 'resonance' : 'radio'} color={eventAccent} size={23} />
                     </View>
                     <View style={styles.eventCopyFinal}>
-                      <Text style={[styles.eventTypeFinal, { color: colors.rarityRare }]}>{activeEvent?.type?.toUpperCase() ?? 'SEÑAL GLOBAL'}</Text>
-                      <Text numberOfLines={2} style={[styles.eventTitleFinal, { color: colors.foreground }]}>{activeEvent?.name ?? 'El Nexus espera un nuevo frente'}</Text>
+                      <Text style={[styles.eventTypeFinal, { color: eventAccent }]}>{activeEvent?.type?.toUpperCase() ?? 'SIN FRENTE'}</Text>
+                      <Text numberOfLines={2} style={[styles.eventTitleFinal, { color: colors.foreground }]}>{activeEvent?.name ?? 'Ningún frente está publicado'}</Text>
                       <Text style={[styles.eventMetaFinal, { color: colors.mutedForeground }]}>{activeEvent ? 'CIERRA EN ' + formatEventTime(activeEvent.ends_at) : 'No hay evento activo publicado'}</Text>
                     </View>
                     <View style={styles.eventProgressFinal}>
-                      <Text style={[styles.eventProgressValueFinal, { color: colors.rarityRare }]}>{activeEvent ? Math.round(activeEvent.progress) + '%' : '—'}</Text>
-                      <ProgressRail value={activeEvent?.progress ?? 0} total={100} color={colors.rarityRare} background={colors.border} />
+                      <Text style={[styles.eventProgressValueFinal, { color: eventAccent }]}>{activeEvent ? Math.round(activeEvent.progress) + '%' : '—'}</Text>
+                      {activeEvent ? <ProgressRail value={activeEvent.progress} total={100} color={eventAccent} background={colors.border} /> : <View style={[styles.eventIdleRule, { backgroundColor: `${eventAccent}66` }]} />}
                     </View>
                   </Pressable>
 
@@ -1256,7 +1257,7 @@ const styles = StyleSheet.create({
     frontStageLinkFinal: { alignItems: 'center', flexDirection: 'row', gap: 4, paddingBottom: 2 },
     frontStageLinkTextFinal: { fontFamily: 'Rajdhani_700Bold', fontSize: 8, letterSpacing: 0.8 },
     eventRibbonFinal: { alignItems: 'center', borderLeftWidth: 2, flexDirection: 'row', gap: 9, minHeight: 126, paddingLeft: 12, paddingVertical: 12 },
-    eventBeaconFinal: { alignItems: 'center', height: 58, justifyContent: 'center', width: 43 },
+    eventBeaconFinal: { alignItems: 'center', borderWidth: 1, height: 58, justifyContent: 'center', width: 43 },
     eventOrbFinal: { display: 'none' },
     eventOrbCoreFinal: { display: 'none' },
     eventBeaconAxisFinal: { display: 'none' },
@@ -1266,6 +1267,7 @@ const styles = StyleSheet.create({
     eventMetaFinal: { fontFamily: 'Rajdhani_500Medium', fontSize: 10, letterSpacing: 0.45 },
     eventProgressFinal: { alignItems: 'flex-end', gap: 6, width: 42 },
     eventProgressValueFinal: { fontFamily: 'Rajdhani_700Bold', fontSize: 13 },
+    eventIdleRule: { height: 2, width: 26 },
     artifactFeatureFinal: { alignItems: 'center', flexDirection: 'row', gap: 14, minHeight: 204, paddingVertical: 15 },
     artifactFrameFinal: { borderBottomLeftRadius: 18, borderTopRightRadius: 72, borderWidth: 1, height: 190, overflow: 'hidden', position: 'relative', transform: [{ rotate: '-2deg' }], width: 130 },
     artifactArtFinal: { height: '122%', left: '-12%', position: 'absolute', top: '-8%', width: '124%' },
