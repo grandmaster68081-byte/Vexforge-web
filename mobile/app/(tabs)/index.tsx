@@ -181,19 +181,27 @@ function DomainNode({
       testID={`home-domain-${portal.id}`}
       onPress={onPress}
       style={({ pressed }) => [
-        styles.domainNode,
-        { borderLeftColor: portal.color, opacity: pressed ? 0.7 : 1 },
+        styles.domainWorldObject,
+        { opacity: pressed ? 0.72 : 1, transform: [{ translateY: pressed ? 2 : 0 }] },
       ]}
     >
-      <View style={styles.domainNodeGlyph}>
-        <Icon name={portal.icon} color={portal.color} size={17} />
+      <View style={styles.domainWorldObjectTop}>
+        <View style={[styles.domainWorldHalo, { borderColor: `${portal.color}70`, backgroundColor: `${portal.color}0C` }]}>
+          <View style={[styles.domainWorldSigil, { borderColor: `${portal.color}B8`, backgroundColor: `${portal.color}18` }]}>
+            <View style={styles.domainWorldGlyph}>
+              <Icon name={portal.icon} color={portal.color} size={17} />
+            </View>
+          </View>
+          <View style={[styles.domainWorldCore, { backgroundColor: portal.color }]} />
+        </View>
+        <View style={[styles.domainWorldTrace, { backgroundColor: `${portal.color}70` }]} />
       </View>
-      <View style={styles.domainNodeCopy}>
-        <Text style={[styles.domainLabel, { color: portal.color }]}>{portal.label}</Text>
-        <Text numberOfLines={1} style={[styles.domainNodeTitle, { color: colors.foreground }]}>{portal.title}</Text>
-        <Text numberOfLines={1} style={[styles.domainStatus, { color: colors.mutedForeground }]}>{portal.status}</Text>
+      <Text style={[styles.domainWorldLabel, { color: portal.color }]}>{portal.label}</Text>
+      <Text numberOfLines={1} style={[styles.domainWorldTitle, { color: colors.foreground }]}>{portal.title}</Text>
+      <View style={styles.domainWorldStatusLine}>
+        <View style={[styles.domainWorldStatusMark, { backgroundColor: portal.color }]} />
+        <Text numberOfLines={1} style={[styles.domainWorldStatus, { color: colors.mutedForeground }]}>{portal.status}</Text>
       </View>
-      <Icon name="chevron-right" color={`${portal.color}CC`} size={13} />
     </Pressable>
   );
 }
@@ -895,14 +903,18 @@ const styles = StyleSheet.create({
   constellationRowReverse: { flexDirection: 'row-reverse' },
   constellationLink: { height: 1, marginHorizontal: 3, width: 12 },
   constellationSignal: { borderRadius: 3, height: 5, marginTop: -2, width: 5 },
-  domainNode: { alignItems: 'center', borderLeftWidth: 2, flexDirection: 'row', gap: 7, minHeight: 78, paddingLeft: 7, paddingRight: 3, width: '48%' },
-  domainNodeGlyph: { alignItems: 'center', justifyContent: 'center', width: 23 },
-  domainNodeStem: { height: 24, width: 1 },
-  domainSigil: { alignItems: 'center', borderWidth: 1, height: 37, justifyContent: 'center', transform: [{ rotate: '45deg' }], width: 37 },
-  domainNodeCopy: { flex: 1, gap: 2, minWidth: 0, transform: [{ translateX: -2 }] },
-  domainLabel: { fontFamily: 'Rajdhani_700Bold', fontSize: 8, letterSpacing: 1.2 },
-  domainNodeTitle: { fontFamily: 'Cinzel_600SemiBold', fontSize: 11.5, lineHeight: 15 },
-  domainStatus: { fontFamily: 'Rajdhani_600SemiBold', fontSize: 8, letterSpacing: 0.2 },
+   domainWorldObject: { alignItems: 'center', minHeight: 137, paddingHorizontal: 4, paddingVertical: 8, width: '48%' },
+   domainWorldObjectTop: { alignItems: 'center', height: 61, justifyContent: 'flex-start', position: 'relative', width: '100%' },
+   domainWorldHalo: { alignItems: 'center', borderRadius: 31, borderWidth: 1, height: 54, justifyContent: 'center', transform: [{ rotate: '45deg' }], width: 54 },
+   domainWorldSigil: { alignItems: 'center', borderWidth: 1, height: 34, justifyContent: 'center', transform: [{ rotate: '-45deg' }], width: 34 },
+   domainWorldGlyph: { alignItems: 'center', justifyContent: 'center' },
+   domainWorldCore: { borderRadius: 3, height: 6, position: 'absolute', right: 1, top: 1, width: 6 },
+   domainWorldTrace: { bottom: 0, height: 1, position: 'absolute', width: 34 },
+   domainWorldLabel: { fontFamily: 'Rajdhani_700Bold', fontSize: 8, letterSpacing: 1.35, marginTop: 4 },
+   domainWorldTitle: { fontFamily: 'Cinzel_600SemiBold', fontSize: 11.5, lineHeight: 15, marginTop: 3, textAlign: 'center' },
+   domainWorldStatusLine: { alignItems: 'center', flexDirection: 'row', gap: 5, marginTop: 4, maxWidth: '100%' },
+   domainWorldStatusMark: { borderRadius: 2, height: 4, width: 4 },
+   domainWorldStatus: { flexShrink: 1, fontFamily: 'Rajdhani_600SemiBold', fontSize: 8, letterSpacing: 0.2, textAlign: 'center' },
   signalBand: { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between', marginTop: 8, paddingVertical: 12, rowGap: 13 },
   signalMetric: { alignItems: 'center', flexDirection: 'row', gap: 7, minWidth: '47%' },
   signalMetricCopy: { gap: 1 },

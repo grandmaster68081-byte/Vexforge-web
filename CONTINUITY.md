@@ -1,3 +1,11 @@
+## 2026-09-13 — VE-MOB-3-HOME — DOMAIN WORLD OBJECTS / IMPLEMENTED_UNVERIFIED
+
+- Se evolucionó exclusivamente la composición de dominios del Home Android: Arena, Forja, Archivo, Mundo, Misiones y Economía dejaron de renderizarse como filas repetidas de icono + texto + flecha.
+- Cada dominio conserva su ruta, estado derivado de datos reales, `testID`, accesibilidad y feedback táctil, pero ahora se presenta como un objeto de umbral con silueta, sigilo, núcleo de señal, traza, identidad cromática y estado legible.
+- No se modificaron Supabase, RPCs, GameContext, Auth, economía, combate, otras pantallas, rutas ni assets. Se reutiliza la iconografía authored existente y se conserva reduced-motion.
+- Se añadió una guarda específica para impedir el retorno del patrón genérico de filas en los dominios. El bloque queda `IMPLEMENTED_UNVERIFIED` hasta publicar en `main`, ejecutar el workflow Android oficial, confirmar el release correlativo y recibir QA visual/táctil humana.
+- Siguiente bloque: continuar con la representación world-first de la información secundaria del Home sin rehacer el hero ni reabrir decisiones visuales ya consolidadas.
+
 ## 2026-09-13 — VE-MOB-3-HOME — LIVING CONTINUUM PASS / IMPLEMENTED_UNVERIFIED
 
 - Se hizo una continuación quirúrgica del Home Android existente, sin rehacer el hero ni tocar backend, Supabase, `GameContext`, Auth, otras pantallas o rutas.

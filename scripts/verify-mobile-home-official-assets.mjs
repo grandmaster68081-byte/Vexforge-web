@@ -14,6 +14,7 @@ const assertions = [
   ['Home exposes the live resource HUD', screen.includes('progress.energy') && screen.includes('wallet?.vex_ingame') && screen.includes('playerStats?.pvp_wins')],
   ['Home handles loading, partial, empty and error data states', screen.includes("HomeState = 'loading' | 'ready' | 'partial' | 'error'") && screen.includes("homeState === 'error' || homeState === 'partial'") && screen.includes('SEÑAL INCOMPLETA') && screen.includes('SEÑAL INTERRUMPIDA') && screen.includes('SIN FRENTE ACTIVO')],
   ['Home keeps reduced-motion and pull-to-refresh contracts', screen.includes('useReducedMotion()') && screen.includes('reduceMotion ? undefined') && screen.includes('RefreshControl')],
+  ['Home domains use world-object composition instead of generic rows', screen.includes('styles.domainWorldObject') && screen.includes('styles.domainWorldHalo') && screen.includes('domainWorldStatusLine') && !screen.includes('styles.domainNode,')],
   ['Home exposes the required review surfaces', requiredTestIds.every((testID) => screen.includes(`testID="${testID}"`))],
 ];
 
