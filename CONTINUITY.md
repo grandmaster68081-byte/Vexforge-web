@@ -14,7 +14,7 @@
 - **VISUAL_DEBT_ADDED:** ninguna.
 - **VISUAL_DEBT_REMOVED:** defaults silenciosos de título, descripción, estado, objetivo, progreso, energía y recompensas.
 - **STATUS:** `IMPLEMENTED_UNVERIFIED`.
-- **PERSISTENCIA:** se publicará en `main` mediante la API REST HTTPS oficial de GitHub con `[skip ci]`; sin APK ni release Android nuevo.
+- **PERSISTENCIA:** código y guarda publicados en `main` mediante la API REST HTTPS oficial de GitHub en `e4475c194b14e53505d8c9b3844a52792e7ec4e2` con `[skip ci]`; sin APK ni release Android nuevo.
 - **NEXT_BLOCK:** continuar con otra mejora Android atómica verificable sin tocar la web congelada ni iniciar APK.
 
 ## 2026-09-14 — VE-MOB-10-PACKS-SHOP — HONEST PACK AND INVENTORY SIGNALS / IMPLEMENTED_UNVERIFIED
