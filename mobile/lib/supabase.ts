@@ -214,7 +214,7 @@ export type ReferralSummary = {
   completed: number;
   rewards_granted: number;
 };
-export type Opponent = { player_id: string; display_name: string; mmr: number; wins: number; losses: number; deck_size: number; has_deck: boolean };
+export type Opponent = { player_id: string; display_name: string | null; mmr: number | null; wins: number | null; losses: number | null; deck_size: number | null; has_deck: boolean };
 export type MobileSocialFriend = { id: string; friend_id: string; display_name: string | null; level: number; created_at: string };
 export type MobileDirectChallenge = { id: string; challenger_id: string; challenged_id: string; challenger_name: string | null; challenged_name: string | null; status: string; created_at: string };
 export type MobileClan = { id: string; code: string | null; name: string; description: string | null; leader_player_id: string | null; prestige: number; contribution_total: number; created_at: string | null; rank_position?: number | null };
@@ -1789,20 +1789,34 @@ async function clearPvpBattleKey(playerId: string, opponentId: string) {
   await AsyncStorage.removeItem(pvpBattleStorageKey(playerId, opponentId));
 }
 
+function finiteOpponentNumber(value: unknown) {
+  if (typeof value === 'number' && Number.isFinite(value)) return value;
+  if (typeof value === 'string' && value.trim() !== '') {
+    const parsed = Number(value);
+    return Number.isFinite(parsed) ? parsed : null;
+  }
+  return null;
+}
+
 export async function findOpponents(session: Session, playerId: string): Promise<Opponent[]> {
   const rows = await restRpc('get_pvp_opponents', { p_limit: 20 }, session) as any[];
   return (rows ?? [])
-    .filter((row) => row.player_id !== playerId && row.has_deck === true && Number(row.deck_size ?? 0) >= 5)
-    .slice(0, 10)
-    .map((row) => ({
-      player_id: String(row.player_id),
-      display_name: row.display_name ?? 'Forjador',
-      mmr: Number(row.mmr ?? 1000),
-      wins: Number(row.wins ?? 0),
-      losses: Number(row.losses ?? 0),
-      deck_size: Number(row.deck_size ?? 0),
-      has_deck: true,
-    }));
+    .map((row) => {
+      const deckSize = finiteOpponentNumber(row.deck_size);
+      if (row.player_id === playerId || row.has_deck !== true || deckSize === null || deckSize < 5) return null;
+      const displayName = typeof row.display_name === 'string' && row.display_name.trim() !== '' ? row.display_name.trim() : null;
+      return {
+        player_id: String(row.player_id),
+        display_name: displayName,
+        mmr: finiteOpponentNumber(row.mmr),
+        wins: finiteOpponentNumber(row.wins),
+        losses: finiteOpponentNumber(row.losses),
+        deck_size: deckSize,
+        has_deck: true,
+      };
+    })
+    .filter((row): row is Opponent => row !== null)
+    .slice(0, 10);
 }
 
 export async function startBattle(session: Session, playerId: string, opponentId: string): Promise<BattleResult> {
@@ -1815,4 +1829,4 @@ export async function startBattle(session: Session, playerId: string, opponentId
   await clearPvpBattleKey(playerId, opponentId);
   return result;
 }
-    
+

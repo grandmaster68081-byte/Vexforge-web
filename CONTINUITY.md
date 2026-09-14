@@ -1,3 +1,23 @@
+## 2026-09-14 — VE-MOB-7-BATTLE — HONEST OPPONENT SIGNALS / IMPLEMENTED_UNVERIFIED
+
+- **BRANCH:** `main`.
+- **SCREEN / DOMAIN:** Arena / `ARENA → OPONENTES`.
+- **BLOCK:** fidelidad de identidad, MMR y récord en la lista de rivales.
+- **WHAT CHANGED:** la lectura Android conserva señales ausentes como ausentes; no convierte nombre vacío en Forjador, MMR vacío en 1000 ni victorias/derrotas vacías en cero.
+- **VISUAL DELTA:** el jugador distingue un rival resuelto de una fila con identidad o métricas aún no reportadas; los MMR ausentes no se usan para ordenar ni calcular diferencias inventadas.
+- **LIVE DATA CHECK:** sesión QA de solo lectura contra Supabase oficial: `get_pvp_opponents` devolvió 2 rivales elegibles, ambos con mazo real de 5 y señales numéricas presentes.
+- **DATA PRESERVED:** `get_pvp_opponents`, filtro de mazo real, selección, confirmación, idempotencia, `vexforge_battle_resolve`, replay, MMR, recompensas, Auth, RLS, economía y web congelada.
+- **ASSETS USED:** ninguno nuevo; se mantienen formación y arte canónicos.
+- **MOTION_ADDED:** ninguno; se conservan selección, confirmación y feedback táctil existentes.
+- **PERFORMANCE_NOTES:** normalización finita local sobre la respuesta ya cargada; sin red adicional ni animación.
+- **GATES:** `verify-mobile-battle` pasa 36/36; se validó whitespace en los archivos modificados. El typecheck móvil queda diferido porque el snapshot no incluye `mobile/node_modules`; no se inicia APK, workflow Android ni release por instrucción del operador.
+- **CORE_SCORE:** pendiente de QA visual/táctil en dispositivo.
+- **VISUAL_DEBT_ADDED:** ninguna.
+- **VISUAL_DEBT_REMOVED:** `Forjador`, MMR `1000`, victorias/derrotas `0` y diferencias derivadas como sustitutos de señales no reportadas.
+- **STATUS:** `IMPLEMENTED_UNVERIFIED`.
+- **PERSISTENCIA:** pendiente de publicar en `main` mediante la API REST HTTPS oficial de GitHub con `[skip ci]`; no se generará release Android.
+- **NEXT_BLOCK:** continuar con otra mejora Android atómica del protocolo sin tocar la web congelada ni iniciar APK.
+
 ## 2026-09-13 — VE-MOB-12-WORLD — HONEST RANKING METRICS / IMPLEMENTED_UNVERIFIED
 
 - **BRANCH:** `main`.

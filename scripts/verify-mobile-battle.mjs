@@ -12,6 +12,11 @@ const contents = Object.fromEntries(
   await Promise.all(Object.entries(files).map(async ([key, path]) => [key, await readFile(path, 'utf8')])),
 );
 
+const opponentSource = contents.supabase.slice(
+  contents.supabase.indexOf('function finiteOpponentNumber'),
+  contents.supabase.indexOf('export async function startBattle'),
+);
+
 const assertions = [
   ['battle screen exists', contents.screen.includes('export default function BattleScreen')],
   ['battle loads the real deck formation', contents.screen.includes('loadPlayerDeck') && contents.screen.includes('formationSlots')],
@@ -21,6 +26,9 @@ const assertions = [
   ['battlefield does not infer missing side or slot data', contents.battlefield.includes('battlefield-side-unassigned') && contents.battlefield.includes('POSICIÓN NO REPORTADA') && contents.battlefield.includes('CAÍDA') && !contents.battlefield.includes('Math.ceil(finalUnits.length / 2)') && !contents.battlefield.includes('return index === 0')],
   ['formation preview is read-only', contents.formation.includes('no calcula daño, turnos ni ganador') && !contents.formation.includes('Math.random') && !contents.formation.includes('simulate')],
   ['battle loads real opponents', contents.screen.includes('findOpponents') && contents.screen.includes('battle-find-opponents')], ['opponent selection uses get_pvp_opponents with deck awareness', contents.supabase.includes('get_pvp_opponents') && contents.supabase.includes('has_deck')],
+  ['opponent data preserves missing identity and metrics', contents.supabase.includes('display_name: string | null') && contents.supabase.includes('mmr: number | null') && contents.supabase.includes('wins: number | null') && contents.supabase.includes('losses: number | null') && opponentSource.includes('finiteOpponentNumber') && !opponentSource.includes("row.display_name ?? 'Forjador'") && !opponentSource.includes('row.mmr ?? 1000') && !opponentSource.includes('row.wins ?? 0') && !opponentSource.includes('row.losses ?? 0')],
+  ['opponent UI labels absent signals explicitly', contents.screen.includes('IDENTIDAD NO RESUELTA') && contents.screen.includes('MMR NO REPORTADO') && contents.screen.includes('RÉCORD NO REPORTADO') && contents.screen.includes('DIFERENCIA NO REPORTADA')],
+  ['opponent sorting does not subtract an unknown MMR', contents.screen.includes('a.mmr === null ? Number.POSITIVE_INFINITY') && contents.screen.includes('b.mmr === null ? Number.POSITIVE_INFINITY')],
   ['battle keeps AI training behind the explicit practice tile', contents.screen.includes('simulateQuickAIBattle') && contents.screen.includes('battle-ai-fallback') && contents.ai.includes('client_ai_v1') && contents.screen.includes('No hay un rival real disponible ahora')],
   ['battle is a programmatic surface without a background skin', contents.screen.includes('sceneMode="hero"') && !contents.screen.includes('battle-reference-scene')],
   ['AI fallback does not claim MMR or economy', contents.screen.includes('SIN MMR') && contents.ai.includes('elo_change: 0') && !contents.ai.includes('claim_ai_battle_reward')],

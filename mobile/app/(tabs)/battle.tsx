@@ -27,7 +27,8 @@ import { ForgeBattlefield } from '@/components/ForgeBattlefield';
 type Phase = 'lobby' | 'confirm' | 'replay' | 'result';
 type BattleOutcome = 'victory' | 'defeat' | 'draw';
 
-function rankName(mmr: number) {
+function rankName(mmr: number | null) {
+  if (mmr === null) return 'RANGO NO REPORTADO';
   if (mmr >= 3000) return 'MYTHIC';
   if (mmr >= 2400) return 'DIAMOND';
   if (mmr >= 1800) return 'PLATINUM';
@@ -102,11 +103,15 @@ function OpponentRow({
   onPress: () => void;
 }) {
   const tier = rankName(opponent.mmr);
+  const opponentName = opponent.display_name ?? 'IDENTIDAD NO RESUELTA';
+  const record = opponent.wins === null && opponent.losses === null
+    ? 'RÉCORD NO REPORTADO'
+    : `${opponent.wins ?? '—'}V / ${opponent.losses ?? '—'}D`;
   return (
     <Pressable
       testID={`battle-opponent-${opponent.player_id}`}
       accessibilityRole="button"
-      accessibilityLabel={`Seleccionar oponente ${opponent.display_name}`}
+      accessibilityLabel={`Seleccionar oponente ${opponentName}`}
       accessibilityState={{ selected, disabled }}
       disabled={disabled}
       onPress={() => {
@@ -127,9 +132,9 @@ function OpponentRow({
         <Feather name="shield" size={18} color={colors.accent} />
       </View>
       <View style={styles.opponentCopy}>
-        <Text style={[styles.name, { color: colors.foreground }]} numberOfLines={1}>{opponent.display_name}</Text>
-        <Text style={[styles.meta, { color: colors.mutedForeground }]}>{tier} · {opponent.mmr} MMR</Text>
-        <Text style={[styles.record, { color: colors.mutedForeground }]}>{opponent.wins} victorias · {opponent.losses} derrotas</Text>
+        <Text style={[styles.name, { color: colors.foreground }]} numberOfLines={1}>{opponentName}</Text>
+        <Text style={[styles.meta, { color: colors.mutedForeground }]}>{opponent.mmr === null ? 'MMR NO REPORTADO' : `${tier} · ${opponent.mmr} MMR`}</Text>
+        <Text style={[styles.record, { color: colors.mutedForeground }]}>{record}</Text>
       </View>
       <Feather name={selected ? 'check-circle' : 'chevron-right'} size={19} color={selected ? colors.primary : colors.mutedForeground} />
     </Pressable>
@@ -448,7 +453,11 @@ export default function BattleScreen() {
   const sortedOpponents = useMemo(
     () => playerMmr === null
       ? opponents
-      : [...opponents].sort((a, b) => Math.abs(a.mmr - playerMmr) - Math.abs(b.mmr - playerMmr)),
+      : [...opponents].sort((a, b) => {
+        const distanceA = a.mmr === null ? Number.POSITIVE_INFINITY : Math.abs(a.mmr - playerMmr);
+        const distanceB = b.mmr === null ? Number.POSITIVE_INFINITY : Math.abs(b.mmr - playerMmr);
+        return distanceA - distanceB;
+      }),
     [playerMmr, opponents],
   );
   const arenaStatus = battleLoading
@@ -621,8 +630,12 @@ export default function BattleScreen() {
           {selectedOpponent ? (
             <View testID="battle-confirmation" style={[styles.confirmation, { backgroundColor: colors.panelStrong, borderColor: colors.accent }]}>
               <Text style={[styles.sectionLabel, { color: colors.accent }]}>CONFIRMAR DESAFÍO</Text>
-              <Text style={[styles.confirmTitle, { color: colors.foreground }]}>{selectedOpponent.display_name}</Text>
-              <Text style={[styles.meta, { color: colors.mutedForeground }]}>{rankName(selectedOpponent.mmr)} · {selectedOpponent.mmr} MMR · diferencia {playerMmr === null ? '—' : `${selectedOpponent.mmr - playerMmr >= 0 ? '+' : ''}${selectedOpponent.mmr - playerMmr}`}</Text>
+              <Text style={[styles.confirmTitle, { color: colors.foreground }]}>{selectedOpponent.display_name ?? 'IDENTIDAD NO RESUELTA'}</Text>
+              <Text style={[styles.meta, { color: colors.mutedForeground }]}>
+                {selectedOpponent.mmr === null
+                  ? 'MMR NO REPORTADO · DIFERENCIA NO REPORTADA'
+                  : `${rankName(selectedOpponent.mmr)} · ${selectedOpponent.mmr} MMR · DIFERENCIA ${playerMmr === null ? 'NO REPORTADA' : `${selectedOpponent.mmr - playerMmr >= 0 ? '+' : ''}${selectedOpponent.mmr - playerMmr}`}`}
+              </Text>
               <View style={styles.confirmActions}>
                 <Pressable
                   accessibilityRole="button"
