@@ -21,6 +21,8 @@ const assertions = [
   ['relics surface uses authoritative RPCs', source['mobile/app/meta.tsx'].includes('Reliquias') && source['mobile/lib/supabase.ts'].includes('grant_starter_relics')],
   ['NFT surface reads contract and queue', source['mobile/lib/supabase.ts'].includes('vexforge_nft_contracts') && source['mobile/lib/supabase.ts'].includes('vexforge_nft_mint_queue')],
   ['Forge Ads preserves server record', source['mobile/app/meta.tsx'].includes('Forge Ads') && source['mobile/lib/supabase.ts'].includes('recordMobileAdView')],
+  ['Forge Ads never treats an unconfirmed stat as zero', source['mobile/app/meta.tsx'].includes('meta-ads-pending') && source['mobile/app/meta.tsx'].includes('CUOTA PENDIENTE') && source['mobile/app/meta.tsx'].includes('disabled={!statsReady || !remaining}') && source['mobile/lib/supabase.ts'].includes('Array.isArray(today) ? today.length : null')],
+  ['Meta declares its Legado parent identity', source['mobile/app/meta.tsx'].includes('<DomainHeader domain="legado"') && source['mobile/app/meta.tsx'].includes('Sistemas del Legado') && source['mobile/app/meta.tsx'].includes('SISTEMAS SINCRONIZADOS')],
   ['Assets remains an honest admin state', source['mobile/app/meta.tsx'].includes('Acceso restringido') && source['mobile/app/meta.tsx'].includes('isAdmin')],
   ['explicit loading, error, empty and refresh states', source['mobile/app/meta.tsx'].includes('Sincronizando sistemas') && source['mobile/app/meta.tsx'].includes('meta-sync-error') && source['mobile/app/meta.tsx'].includes('RefreshControl') && source['mobile/app/meta.tsx'].includes('Colección vacía')],
   ['no emoji characters in mobile meta UI', !/[\u{1F000}-\u{1FAFF}]/u.test(source['mobile/app/meta.tsx'])],

@@ -294,8 +294,8 @@ export type MobileNftMint = {
   processed_at: string | null;
 };
 export type MobileAdStats = {
-  watched_today: number;
-  total_vex_earned: number;
+  watched_today: number | null;
+  total_vex_earned: number | null;
   last_watched_at: string | null;
 };
 async function resolveMobilePublicNames(session: Session, ids: string[]) { const uniqueIds = [...new Set(ids.filter(Boolean))]; if (!uniqueIds.length) return new Map<string, { display_name: string | null; level: number; mmr: number }>(); const rows = await restRpc('get_public_player_names', { p_player_ids: uniqueIds }, session) as Array<{ id: string; display_name: string | null; level: number; mmr: number }> | null; return new Map((rows ?? []).map((row) => [row.id, row])); }
@@ -1208,10 +1208,10 @@ export async function linkMobileWallet(session: Session, walletAddress: string):
 export async function loadMobileAdStats(session: Session): Promise<MobileAdStats> {
   const day = new Date().toISOString().split('T')[0];
   const [today, allTime] = await Promise.all([
-    rest('vexforge_ad_views?select=id%2Cvex_awarded%2Ccreated_at&player_auth_id=eq.' + encodeURIComponent(session.user.id) + '&created_at=gte.' + encodeURIComponent(day) + '&order=created_at.desc', session) as Promise<Array<{ id: string; vex_awarded: number; created_at: string }>>,
-    rest('vexforge_ad_views?select=vex_awarded&player_auth_id=eq.' + encodeURIComponent(session.user.id), session) as Promise<Array<{ vex_awarded: number }>>,
+    rest('vexforge_ad_views?select=id%2Cvex_awarded%2Ccreated_at&player_auth_id=eq.' + encodeURIComponent(session.user.id) + '&created_at=gte.' + encodeURIComponent(day) + '&order=created_at.desc', session) as Promise<Array<{ id: string; vex_awarded: number; created_at: string }> | null>,
+    rest('vexforge_ad_views?select=vex_awarded&player_auth_id=eq.' + encodeURIComponent(session.user.id), session) as Promise<Array<{ vex_awarded: number }> | null>,
   ]);
-  return { watched_today: today?.length ?? 0, total_vex_earned: (allTime ?? []).reduce((total, row) => total + Number(row.vex_awarded ?? 0), 0), last_watched_at: today?.[0]?.created_at ?? null };
+  return { watched_today: Array.isArray(today) ? today.length : null, total_vex_earned: Array.isArray(allTime) ? allTime.reduce((total, row) => total + Number(row.vex_awarded ?? 0), 0) : null, last_watched_at: today?.[0]?.created_at ?? null };
 }
 
 export async function recordMobileAdView(session: Session): Promise<MobileAction> {

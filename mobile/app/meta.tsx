@@ -16,6 +16,7 @@ import { useColors } from '@/hooks/useColors';
 import { useGame } from '@/context/GameContext';
 import { ScreenShell } from '@/components/ScreenShell';
 import { DomainState } from '@/components/DomainState';
+import { DomainHeader } from '@/components/DomainHeader';
 import {
   claimMobileStarterRelics,
   equipMobileCosmetic,
@@ -196,9 +197,12 @@ function AdsPanel({ colors, data, session, onReload }: { colors: Colors; data: M
   const [watching, setWatching] = useState(false);
   const [progress, setProgress] = useState(0);
   const [message, setMessage] = useState<string | null>(null);
-  const remaining = Math.max(0, 5 - data.ads.watched_today);
+  const watchedToday = typeof data.ads.watched_today === 'number' && Number.isFinite(data.ads.watched_today) ? data.ads.watched_today : null;
+  const totalVexEarned = typeof data.ads.total_vex_earned === 'number' && Number.isFinite(data.ads.total_vex_earned) ? data.ads.total_vex_earned : null;
+  const statsReady = watchedToday !== null && totalVexEarned !== null;
+  const remaining = watchedToday === null ? 0 : Math.max(0, 5 - watchedToday);
   const watch = async () => {
-    if (!remaining || watching) return;
+    if (!statsReady || !remaining || watching) return;
     setWatching(true); setMessage(null); setProgress(0);
     await new Promise<void>((resolve) => {
       let tick = 0;
@@ -209,7 +213,7 @@ function AdsPanel({ colors, data, session, onReload }: { colors: Colors; data: M
     setMessage(result.ok ? '+20 VEX registrados en tu cuenta.' : result.reason ?? 'No se pudo registrar el anuncio.');
     if (result.ok) onReload();
   };
-  return <View style={styles.stack}><SectionTitle eyebrow="F2P / RECOMPENSAS" title="Forge Ads" colors={colors} /><View style={styles.statsRow}><View style={[styles.stat, { backgroundColor: colors.panel, borderColor: colors.border }]}><Text style={[styles.statValue, { color: colors.accent }]}>{data.ads.watched_today}/5</Text><Text style={[styles.meta, { color: colors.mutedForeground }]}>HOY</Text></View><View style={[styles.stat, { backgroundColor: colors.panel, borderColor: colors.border }]}><Text style={[styles.statValue, { color: colors.success }]}>{data.ads.total_vex_earned}</Text><Text style={[styles.meta, { color: colors.mutedForeground }]}>VEX GANADOS</Text></View></View>{watching ? <View style={[styles.adProgress, { backgroundColor: colors.panel, borderColor: colors.border }]}><Text style={[styles.rowTitle, { color: colors.foreground }]}>Viendo anuncio… {Math.round(progress)}%</Text><View style={[styles.progressTrack, { backgroundColor: colors.muted }]}><View style={[styles.progressFill, { backgroundColor: colors.success, width: `${progress}%` }]} /></View><Text style={[styles.body, { color: colors.mutedForeground }]}>Mantén esta pantalla abierta hasta completar la verificación.</Text></View> : <ActionButton label={remaining ? `Ver anuncio (+20 VEX)` : 'Cuota completada'} icon="play" onPress={() => { void watch(); }} colors={colors} disabled={!remaining} testID="meta-ads-watch" />}{message ? <Text accessibilityRole="alert" style={[styles.notice, { color: message.startsWith('+') ? colors.success : colors.danger }]}>{message}</Text> : null}<View style={[styles.infoCard, { backgroundColor: colors.panel, borderColor: colors.border }]}><Feather name="shield-checkmark-outline" size={19} color={colors.accent} /><Text style={[styles.body, { color: colors.mutedForeground }]}>Máximo 5 anuncios diarios. La recompensa se registra sólo cuando el servidor recibe la vista completa.</Text></View></View>;
+  return <View style={styles.stack}><SectionTitle eyebrow="F2P / RECOMPENSAS" title="Forge Ads" colors={colors} /><View style={styles.statsRow}><View style={[styles.stat, { backgroundColor: colors.panel, borderColor: colors.border }]}><Text style={[styles.statValue, { color: colors.accent }]}>{watchedToday === null ? '—' : `${watchedToday}/5`}</Text><Text style={[styles.meta, { color: colors.mutedForeground }]}>HOY</Text></View><View style={[styles.stat, { backgroundColor: colors.panel, borderColor: colors.border }]}><Text style={[styles.statValue, { color: colors.success }]}>{totalVexEarned === null ? '—' : totalVexEarned}</Text><Text style={[styles.meta, { color: colors.mutedForeground }]}>VEX GANADOS</Text></View></View>{!statsReady ? <View testID="meta-ads-pending" style={[styles.infoCard, { backgroundColor: colors.panel, borderColor: colors.accent }]}><Feather name="radio" size={19} color={colors.accent} /><Text style={[styles.body, { color: colors.mutedForeground }]}>CUOTA Y RECOMPENSA PENDIENTES DE SINCRONIZACIÓN</Text></View> : null}{watching ? <View style={[styles.adProgress, { backgroundColor: colors.panel, borderColor: colors.border }]}><Text style={[styles.rowTitle, { color: colors.foreground }]}>Viendo anuncio… {Math.round(progress)}%</Text><View style={[styles.progressTrack, { backgroundColor: colors.muted }]}><View style={[styles.progressFill, { backgroundColor: colors.success, width: `${progress}%` }]} /></View><Text style={[styles.body, { color: colors.mutedForeground }]}>Mantén esta pantalla abierta hasta completar la verificación.</Text></View> : <ActionButton label={!statsReady ? 'CUOTA PENDIENTE' : remaining ? `Ver anuncio (+20 VEX)` : 'Cuota completada'} icon="play" onPress={() => { void watch(); }} colors={colors} disabled={!statsReady || !remaining} testID="meta-ads-watch" />}{message ? <Text accessibilityRole="alert" style={[styles.notice, { color: message.startsWith('+') ? colors.success : colors.danger }]}>{message}</Text> : null}<View style={[styles.infoCard, { backgroundColor: colors.panel, borderColor: colors.border }]}><Feather name="shield-checkmark-outline" size={19} color={colors.accent} /><Text style={[styles.body, { color: colors.mutedForeground }]}>Máximo 5 anuncios diarios. La recompensa se registra sólo cuando el servidor recibe la vista completa.</Text></View></View>;
 }
 
 function AssetsPanel({ colors, isAdmin }: { colors: Colors; isAdmin: boolean }) {
@@ -261,7 +265,7 @@ export default function MetaScreen() {
   }[activePanel] : null;
 
   return <ScreenShell surface="profile"><KeyboardAwareScrollViewCompat contentContainerStyle={{ paddingTop: insets.top + 18, paddingBottom: insets.bottom + 108 }} refreshControl={<RefreshControl refreshing={refreshing} onRefresh={() => { void load(true); }} tintColor={colors.accent} />} showsVerticalScrollIndicator={false}>
-    <View style={styles.header}><Pressable accessibilityRole="button" accessibilityLabel="Volver al perfil" testID="meta-back" onPress={() => router.back()}><Feather name="chevron-left" size={24} color={colors.foreground} /></Pressable><View style={styles.flex}><Text style={[styles.eyebrow, { color: colors.accent }]}>FORGE CONTROL</Text><Text style={[styles.screenTitle, { color: colors.foreground }]}>Sistemas</Text></View><Feather name="settings" size={22} color={colors.accent} /></View>
+    <DomainHeader domain="legado" title="Sistemas del Legado" status={error ? 'ENLACE INTERRUMPIDO' : data ? 'SISTEMAS SINCRONIZADOS' : 'SINCRONIZANDO SISTEMAS'} trailing={<Pressable accessibilityRole="button" accessibilityLabel="Volver al perfil" testID="meta-back" onPress={() => router.back()}><Feather name="chevron-left" size={24} color={colors.foreground} /></Pressable>} />
     <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.panelRail}>{PANELS.map((panel) => <PanelButton key={panel.id} panel={panel} active={activePanel === panel.id} colors={colors} onPress={() => setActivePanel(panel.id)} />)}</ScrollView>
      {error ? <DomainState kind="error" title="Sistemas no disponibles" message={error} actionLabel="REINTENTAR SINCRONIZACIÓN" onAction={() => { void load(); }} testID="meta-sync-error" /> : null}
     {content}
