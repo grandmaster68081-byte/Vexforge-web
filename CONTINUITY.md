@@ -1,3 +1,22 @@
+## 2026-09-14 — VE-MOB-10-PACKS-SHOP — HONEST SHOP TERMS / IMPLEMENTED_UNVERIFIED
+
+- **BRANCH:** `main`.
+- **SCREEN / DOMAIN:** Sistemas del Legado / `LEGADO → FORJA → TIENDA`.
+- **BLOCK:** fidelidad de precios y términos de pago de la tienda Android.
+- **WHAT CHANGED:** el precio USDT deja de convertirse en `$0.00`; la orden queda bloqueada si el catálogo no entrega un precio válido. Cadena, token, estándar y tesorería ya no usan `BSC`, `USDT` o `BEP20` como defaults silenciosos.
+- **VISUAL DELTA:** el jugador diferencia una condición de pago confirmada de un dato pendiente y no recibe una instrucción de tesorería inventada.
+- **LIVE DATA CHECK:** Supabase vivo confirmó los contratos actuales de `vexforge_shop_catalog`, `vexforge_shop_orders` y `vexforge_treasury`; no se añadieron campos ni datos.
+- **DATA PRESERVED:** catálogo, órdenes, RPCs de compra/pago, tesorería, inventario, fusión, evolución, Auth, economía, assets y navegación.
+- **ASSETS USED:** ninguno nuevo; se mantienen los assets oficiales registrados.
+- **MOTION_ADDED:** ninguno.
+- **PERFORMANCE_NOTES:** presentación local sin red adicional ni animación.
+- **HARD_GATES:** no se inicia APK, workflow Android ni release por instrucción del operador; no se declara QA visual/táctil, `PASS`, `OPERATIONAL` ni `TIER1_READY`.
+- **CORE_SCORE:** pendiente de QA visual/táctil en dispositivo.
+- **VISUAL_DEBT_ADDED:** ninguna.
+- **VISUAL_DEBT_REMOVED:** precios y términos de pago aparentes producidos por defaults silenciosos.
+- **STATUS:** `IMPLEMENTED_UNVERIFIED`.
+- **NEXT_BLOCK:** continuar con otra unidad Android atómica del protocolo sin tocar la web congelada ni iniciar APK.
+
 ## 2026-09-14 — VE-MOB-12-WORLD — HONEST ENCOUNTER DAMAGE / IMPLEMENTED_UNVERIFIED
 
 - **BRANCH:** `main`.
