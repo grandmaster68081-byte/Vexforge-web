@@ -14,7 +14,7 @@
 - **VISUAL_DEBT_ADDED:** ninguna.
 - **VISUAL_DEBT_REMOVED:** MMR, récord, puesto y porcentaje `0` inventados para señales ausentes.
 - **STATUS:** `IMPLEMENTED_UNVERIFIED`.
-- **PERSISTENCIA:** se publicará en `main` mediante la API REST HTTPS oficial de GitHub con `[skip ci]`; sin APK ni release Android nuevo.
+- **PERSISTENCIA:** código y guarda publicados en `main` mediante la API REST HTTPS oficial de GitHub en `24543fa9fbe794b2a75b92ffaaf05e52246836d9` con `[skip ci]`; sin APK ni release Android nuevo.
 - **NEXT_BLOCK:** continuar con otra mejora Android atómica verificable sin tocar la web congelada ni iniciar APK.
 
 ## 2026-09-14 — VE-MOB-7-BATTLE — HONEST BATTLEFIELD SIGNALS / IMPLEMENTED_UNVERIFIED
