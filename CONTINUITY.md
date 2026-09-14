@@ -4241,3 +4241,14 @@
 - Commit Android publicado en `main`: `6a036a3aa53050c223c626ffd12ea8f48e53014c`. Se usó `[skip ci]`; no se inició workflow, no se compiló APK ni se publicó release nuevo por la instrucción vigente.
 - Estado honesto: `IMPLEMENTED_UNVERIFIED`. La lectura del panel de Arena queda pendiente de QA en dispositivo cuando el operador autorice una compilación Android.
 - Siguiente microbloque: continuar con otra mejora Android atómica de fidelidad o interacción, sin tocar la web congelada ni iniciar APK sin autorización.
+
+---
+## 2026-09-14 — VE-MOB-13-SOCIAL — HONEST WIN RATE SIGNAL / IMPLEMENTED_UNVERIFIED
+
+- Se cerró una mejora Android atómica exclusivamente en `mobile/app/social.tsx`: el ranking social ya no presenta `0%` cuando una entrada no tiene partidas reportadas. Si victorias, derrotas o empates faltan, o el total confirmado es cero, la interfaz comunica `PORCENTAJE NO REPORTADO`; con una muestra válida conserva el cálculo entero del porcentaje.
+- Se actualizó `scripts/verify-mobile-social.mjs` para proteger el estado explícito y evitar que vuelva el fallback de cero por ciento en muestras vacías.
+- Se conservaron los rankings, nombres, MMR, historial, acciones sociales, contratos vivos de Supabase, resolución server-authoritative, navegación, accesibilidad, haptics, reduced-motion, estados loading/error/vacío, otras pantallas Android y la web congelada.
+- Evidencia local: `npm run build` OK como preflight del repositorio; `node scripts/verify-mobile-social.mjs` OK (16/16); `git diff --check` OK. El typecheck Android queda diferido porque el snapshot oficial no incluye `mobile/node_modules`.
+- No se inicia workflow Android, no se compila APK ni se publica release por instrucción expresa del operador. Estado honesto: `IMPLEMENTED_UNVERIFIED`; requiere QA visual/táctil en dispositivo cuando el operador autorice una compilación.
+- Publicación: código y esta continuidad se publicarán juntos en `main` mediante la API REST HTTPS oficial de GitHub con `[skip ci]`, sin `git push`, para no disparar el workflow APK.
+- Siguiente microbloque: continuar con otra mejora Android atómica de fidelidad o interacción, sin tocar la web congelada ni iniciar APK sin autorización.
