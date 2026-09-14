@@ -1,3 +1,14 @@
+## 2026-09-13 — VE-MOB-7-BATTLE — AUTHORITATIVE RESULT FORMATION / IMPLEMENTED_UNVERIFIED
+
+- **QUÉ CAMBIÓ VISUALMENTE:** el resultado de una batalla PvP oficial conserva la formación final devuelta por Supabase y la muestra como `FORMACIÓN FINAL VERIFICADA`, manteniendo Vanguardia, Campeón, Centinela, Reserva, arte disponible, HP y estado final dentro del campo de batalla de Arena.
+- **QUÉ SE CONSERVÓ:** `vexforge_battle_resolve`, replay, último turno recibido, MMR/ELO, resultados, estados de error, práctica `client_ai_v1`, `reduceMotion`, accesibilidad y cierre hacia Arena.
+- **FUENTE DE VERDAD:** sólo `BattleResult.final_units` y `BattleResult.turns`; la práctica IA no se presenta como formación PvP oficial y no reclama MMR, economía ni recompensas.
+- **ARCHIVOS:** `mobile/app/(tabs)/battle.tsx`; `scripts/verify-mobile-battle.mjs`; `docs/VE-MOB-7-BATTLE-RESULT-FORMATION.md`.
+- **LÍMITES:** no se tocaron Supabase, RPCs, RLS, Auth, economía, assets, motor de combate ni la web congelada. No se inició workflow Android, no se compiló APK y no se generó release por instrucción explícita del operador.
+- **EVIDENCIA LOCAL:** `verify:mobile-battle` pasa 24/24. El typecheck del clon no pudo ejecutarse porque faltan las dependencias Expo (`expo/tsconfig.base` y módulos nativos); no se presenta ese bloqueo del entorno como un fallo del delta.
+- **ESTADO HONESTO:** `IMPLEMENTED_UNVERIFIED`; la QA visual/táctil en APK y el release correlativo siguen pendientes.
+- **SIGUIENTE BLOQUE:** continuar con otra mejora Android atómica de Arena sólo si aporta un delta visual verificable y no reabre la arquitectura consolidada.
+
 ## 2026-09-14 — VE-PVP-4-LEGACY-START-RETIRED — PVP AUTHORITY SINGLE PATH / VERIFIED
 
 - **QUÉ CAMBIÓ:** la Arena web queda con un único camino de combate autoritativo (`startRealBattle` → `vexforge_battle_resolve`). Se retiró `startBattle()` (RPC `start_pvp_match`, sólo `service_role`, muerto desde el navegador) y sus tipos huérfanos.

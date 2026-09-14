@@ -249,14 +249,18 @@ function TurnView({
 function ResultPanel({
   result,
   colors,
+  reducedMotion,
   onDismiss,
 }: {
   result: BattleResult;
   colors: ReturnType<typeof useColors>;
+  reducedMotion: boolean;
   onDismiss: () => void;
 }) {
   const won = Boolean(result.ok && result.you_won);
   const isTraining = result.engine === 'client_ai_v1';
+  const finalTurn = result.turns?.[Math.max(0, (result.turns?.length ?? 1) - 1)] ?? null;
+  const totalTurns = result.total_turns ?? result.turns?.length ?? 0;
   return (
     <View testID="battle-result" style={[styles.result, { backgroundColor: won ? `${colors.success}10` : `${colors.danger}0E`, borderColor: won ? colors.success : colors.danger }]}>
       <View style={[styles.resultSeal, { borderColor: won ? colors.success : colors.danger }]}>
@@ -271,6 +275,19 @@ function ResultPanel({
           <View style={styles.resultStat}><Text style={[styles.resultValue, { color: colors.foreground }]}>{result.total_turns ?? result.turns?.length ?? 0}</Text><Text style={[styles.resultLabel, { color: colors.mutedForeground }]}>TURNOS</Text></View>
            <View style={styles.resultStat}><Text style={[styles.resultValue, { color: isTraining ? colors.mutedForeground : result.elo_change && result.elo_change > 0 ? colors.success : colors.danger }]}>{isTraining ? '—' : `${result.elo_change && result.elo_change > 0 ? '+' : ''}${result.elo_change ?? 0}`}</Text><Text style={[styles.resultLabel, { color: colors.mutedForeground }]}>MMR</Text></View>
            <View style={styles.resultStat}><Text style={[styles.resultValue, { color: colors.accent }]}>{isTraining ? 'IA' : result.match_id ? result.match_id.slice(0, 8).toUpperCase() : '—'}</Text><Text style={[styles.resultLabel, { color: colors.mutedForeground }]}>{isTraining ? 'MODO' : 'MATCH'}</Text></View>
+        </View>
+      ) : null}
+      {result.ok && !isTraining && (result.final_units?.length ?? 0) > 0 ? (
+        <View testID="battle-result-formation" style={styles.resultFormation}>
+          <Text style={[styles.resultFormationLabel, { color: colors.accent }]}>FORMACIÓN FINAL VERIFICADA</Text>
+          <ForgeBattlefield
+            finalUnits={result.final_units ?? []}
+            currentTurn={finalTurn}
+            turnIndex={Math.max(0, totalTurns - 1)}
+            totalTurns={totalTurns}
+            reducedMotion={reducedMotion}
+            youWon={result.you_won}
+          />
         </View>
       ) : null}
       <Pressable
@@ -520,7 +537,7 @@ export default function BattleScreen() {
           </Pressable>
         </View>
       ) : phase === 'result' && activeBattleResult ? (
-        <ResultPanel result={activeBattleResult} colors={colors} onDismiss={handleDismiss} />
+         <ResultPanel result={activeBattleResult} colors={colors} reducedMotion={reducedMotion} onDismiss={handleDismiss} />
       ) : (
         <>
           {rankError ? <DomainState kind="error" title="Rango no disponible" message={rankError} actionLabel="REINTENTAR RANGO" onAction={() => { void refreshRank(); }} testID="battle-rank-error" /> : <ArenaRankCard rank={rank} stats={stats} loading={rankLoading} colors={colors} />}
@@ -725,5 +742,7 @@ const styles = StyleSheet.create({
   resultLabel: { fontSize: 8, fontWeight: '900', letterSpacing: 1, marginTop: 4 },
   closeResult: { minHeight: 42, borderWidth: 1, borderRadius: 10, paddingHorizontal: 17, alignItems: 'center', justifyContent: 'center', marginTop: 20 },
   closeResultText: { fontSize: 10, fontWeight: '900', letterSpacing: 0.7 },
+  resultFormation: { width: '100%', gap: 8, marginTop: 18 },
+  resultFormationLabel: { fontSize: 9, fontWeight: '900', letterSpacing: 1.1, textAlign: 'left' },
 });
     
