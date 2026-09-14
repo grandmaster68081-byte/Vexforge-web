@@ -12,7 +12,7 @@
 - **GATES:** `verify-mobile-world` y `git diff --check` deben pasar. No se inicia APK, workflow Android ni release por instrucción del operador; no se declara QA visual/táctil, `PASS`, `OPERATIONAL` ni `TIER1_READY`.
 - **ESTADO HONESTO:** `IMPLEMENTED_UNVERIFIED`.
 - **VISUAL_DEBT_REMOVED:** `—`, `#undefined`, porcentajes ambiguos y pérdida de ceros confirmados en Ranking.
-- **PERSISTENCIA:** pendiente de publicar en `main` mediante la API Git Data HTTPS oficial de GitHub con `[skip ci]`; no se generará release Android.
+- **PERSISTENCIA:** código publicado en `main` mediante la API Git Data HTTPS oficial de GitHub en `3da651033eb485d6cb5e48809ca8c4ef4a441b6d` con `[skip ci]`; no se generará release Android.
 - **SIGUIENTE BLOQUE:** continuar con otra mejora Android atómica verificable, sin tocar la web congelada ni iniciar compilación hasta autorización del operador.
 
 ## 2026-09-13 — VE-MOB-12-WORLD — HONEST CODEX AND RAID SIGNALS / IMPLEMENTED_UNVERIFIED
