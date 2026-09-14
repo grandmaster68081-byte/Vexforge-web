@@ -1,3 +1,12 @@
+## 2026-09-14 — VE-PVP-4-LEGACY-START-RETIRED — PVP AUTHORITY SINGLE PATH / VERIFIED
+
+- **QUÉ CAMBIÓ:** la Arena web queda con un único camino de combate autoritativo (`startRealBattle` → `vexforge_battle_resolve`). Se retiró `startBattle()` (RPC `start_pvp_match`, sólo `service_role`, muerto desde el navegador) y sus tipos huérfanos.
+- **DATOS HONESTOS:** `BattleOpponent` pierde el `level: 1` sintético y gana `wins`/`losses`; todos los campos vienen de `get_pvp_opponents`.
+- **ARCHIVOS:** `src/domains/pvp/repository.ts`; nueva guardia `scripts/verify-pvp-authority.mjs`; documento `docs/VE-PVP-4-LEGACY-START-RETIRED.md`.
+- **VERIFICACIÓN:** `tsc --noEmit` limpio, `npm run build` correcto, guardia 6/6 OK. Con la cuenta QA real: roster de 2 rivales con mazo 5, `vexforge_battle_resolve` devolvió `ok:true` (`match_id 05e0d868-0c70-4cfd-be17-e9c2567bb046`, victoria) y el combate aparece en `pvp_matches` como `resolved`.
+- **LIMITACIONES:** `elo_change: 0` porque la cuenta QA está en el tope `mmr 9999` (el rival sí bajó 889 → 857); `total_turns: 1` en esta muestra, falta confirmar el replay multi-turno en pantalla.
+- **SIGUIENTE BLOQUE:** QA visual del replay y del resultado en `PvpRoute`, y revisión del tope de MMR de cuentas QA.
+
 ## 2026-09-13 — VE-MOB-7-BATTLE — REPLAY TURN PROGRESS / IMPLEMENTED_UNVERIFIED
 
 - **WHAT CHANGED VISUALLY:** el replay de Arena ahora muestra una lectura persistente del turno actual frente al total recibido, con una barra proporcional derivada de la resolución autoritativa.
