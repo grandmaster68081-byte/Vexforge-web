@@ -323,7 +323,7 @@ function ResultPanel({
     : Array.isArray(result.turns)
       ? result.turns.length
       : null;
-  const renderTotalTurns = totalTurns ?? 0;
+  const renderTurnIndex = totalTurns === null ? 0 : Math.max(0, totalTurns - 1);
   return (
     <View testID="battle-result" style={[styles.result, { backgroundColor: `${outcomeColor}10`, borderColor: outcomeColor }]}>
       <View style={[styles.resultSeal, { borderColor: outcomeColor }]}>
@@ -346,8 +346,8 @@ function ResultPanel({
           <ForgeBattlefield
             finalUnits={result.final_units ?? []}
             currentTurn={finalTurn}
-            turnIndex={Math.max(0, renderTotalTurns - 1)}
-            totalTurns={renderTotalTurns}
+            turnIndex={renderTurnIndex}
+            totalTurns={totalTurns}
             reducedMotion={reducedMotion}
             outcome={outcome}
           />

@@ -14,7 +14,7 @@ type Props = {
   finalUnits: BattleUnit[];
   currentTurn: BattleTurn | null;
   turnIndex: number;
-  totalTurns: number;
+  totalTurns: number | null;
   reducedMotion: boolean;
   youWon?: boolean;
   outcome?: BattleOutcome;
@@ -303,7 +303,7 @@ export function ForgeBattlefield({ finalUnits, currentTurn, turnIndex, totalTurn
           <Text style={[styles.title, { color: colors.foreground }]}>CAMPO DE BATALLA</Text>
         </View>
         <View style={[styles.turnBadge, { borderColor: colors.primary, backgroundColor: `${colors.primary}18` }]}>
-          <Text style={[styles.turnValue, { color: colors.primary }]}>{currentTurn && totalTurns > 0 ? `${turnIndex + 1}/${totalTurns}` : 'NO REPORTADO'}</Text>
+          <Text style={[styles.turnValue, { color: colors.primary }]}>{currentTurn && totalTurns !== null && totalTurns > 0 ? `${turnIndex + 1}/${totalTurns}` : 'NO REPORTADO'}</Text>
           <Text style={[styles.turnLabel, { color: colors.mutedForeground }]}>TURNO</Text>
         </View>
       </View>

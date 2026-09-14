@@ -4253,3 +4253,15 @@
 - Publicación: código y esta continuidad se publicarán juntos en `main` mediante la API REST HTTPS oficial de GitHub con `[skip ci]`, sin `git push`, para no disparar el workflow APK.
 - Commit remoto de implementación y continuidad: `9e6959e58e246de7ed8720ee4a7a935bce812399`.
 - Siguiente microbloque: continuar con otra mejora Android atómica de fidelidad o interacción, sin tocar la web congelada ni iniciar APK sin autorización.
+
+---
+## 2026-09-14 — VE-MOB-7-BATTLE — HONEST TOTAL TURNS SIGNAL / IMPLEMENTED_UNVERIFIED
+
+- Se corrigió la ruta Android de Battle y el componente `ForgeBattlefield`: cuando el servidor no entrega `total_turns` y tampoco hay una lista de turnos confirmada, el valor permanece ausente hasta la capa visual en lugar de convertirse internamente en `0`.
+- El resultado conserva `TURNOS NO REPORTADOS` y el campo de batalla conserva `NO REPORTADO`; cuando existe un total válido, la navegación del replay y la formación final mantienen el comportamiento autoritativo sin recalcular combate.
+- Se reforzó `scripts/verify-mobile-battle.mjs` con una guarda contra la coerción de turnos ausentes a cero.
+- Se conservaron la geometría Battlefield, formación, replay, resultado, RPC de resolución, Auth, Supabase, navegación, haptics, reduced-motion, estados loading/error/vacío, otras pantallas Android y la web congelada.
+- Evidencia local: `npm run build` OK como preflight; `node scripts/verify-mobile-battle.mjs` OK (47/47); `git diff --check` OK. El typecheck Android queda diferido porque el snapshot oficial no incluye `mobile/node_modules`.
+- No se inicia workflow Android, no se compila APK ni se publica release por instrucción expresa del operador. Estado honesto: `IMPLEMENTED_UNVERIFIED`; requiere QA visual/táctil en dispositivo cuando el operador autorice una compilación.
+- Publicación: código y esta continuidad se publicarán juntos en `main` mediante la API REST HTTPS oficial de GitHub con `[skip ci]`, sin `git push`, para no disparar el workflow APK.
+- Siguiente microbloque: continuar con otra mejora Android atómica de fidelidad o interacción, sin tocar la web congelada ni iniciar APK sin autorización.
