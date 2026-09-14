@@ -1,6 +1,7 @@
 ## 2026-09-14 — VE-MOB-10-PACKS-SHOP — HONEST SHOP TERMS / IMPLEMENTED_UNVERIFIED
 
 - **BRANCH:** `main`.
+- **COMMIT:** `956e1bc04be032c5ff0a8ede31d9a87f17ca5665`.
 - **SCREEN / DOMAIN:** Sistemas del Legado / `LEGADO → FORJA → TIENDA`.
 - **BLOCK:** fidelidad de precios y términos de pago de la tienda Android.
 - **WHAT CHANGED:** el precio USDT deja de convertirse en `$0.00`; la orden queda bloqueada si el catálogo no entrega un precio válido. Cadena, token, estándar y tesorería ya no usan `BSC`, `USDT` o `BEP20` como defaults silenciosos.
