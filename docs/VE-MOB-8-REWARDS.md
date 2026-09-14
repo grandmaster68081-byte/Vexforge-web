@@ -48,6 +48,12 @@ misión con una sesión normal.
 
 Nivel Q: Q2 actual / Q3 objetivo.
 
+## Delta Android — señal de energía honesta
+
+- La píldora de energía usa el valor finito entregado por Supabase, incluido `0`.
+- Si el progreso no publica energía, muestra `ENERGÍA NO REPORTADO` mediante el mismo helper de señales explícitas usado por misiones y quests; no convierte la ausencia en un guion ambiguo.
+- Guarda local actualizada: `node scripts/verify-mobile-rewards.mjs` pasa 17/17. No se inicia workflow ni se compila/publica APK en este bloque.
+
 ## Condición de reapertura
 
 Reabrir si cambian los contratos de quests/misiones, se muestran recompensas no

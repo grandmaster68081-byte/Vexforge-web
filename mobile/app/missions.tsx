@@ -340,7 +340,7 @@ export default function MissionsScreen() {
         >
           <View testID="missions-energy-signal" style={[styles.energyPill, { backgroundColor: colors.panel, borderColor: colors.border }]}>
             <Ionicons name="flash" size={14} color={colors.rarityRare} />
-            <Text style={[styles.energyPillText, { color: colors.foreground }]}>{progress?.energy ?? '—'}</Text>
+            <Text style={[styles.energyPillText, { color: colors.foreground }]}>{numberSignal(progress?.energy, 'ENERGÍA')}</Text>
             <Text style={[styles.energyPillLabel, { color: colors.mutedForeground }]}>ENERGÍA</Text>
           </View>
         </DomainHeader>

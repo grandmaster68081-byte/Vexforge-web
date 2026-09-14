@@ -20,7 +20,7 @@ const assertions = [
   ['explicit loading and error states', contents.screen.includes('missions-loading') && contents.screen.includes('accessibilityRole="alert"')],
   ['explicit empty states', contents.screen.includes('missions-empty-quests') && contents.screen.includes('missions-empty')],
   ['missions are anchored to a living domain', contents.screen.includes('<DomainHeader') && contents.screen.includes('domain="foja"') && contents.screen.includes('activityStatus')],
-  ['missions expose a real activity signal', contents.screen.includes('testID="missions-energy-signal"') && contents.screen.includes('SIN SEÑAL · TOCA PARA REINTENTAR') && contents.screen.includes('ROTACIÓN EN ESPERA · SIN ACTIVIDAD ASIGNADA')],
+  ['missions expose a real activity signal', contents.screen.includes('testID="missions-energy-signal"') && contents.screen.includes('numberSignal(progress?.energy, \'ENERGÍA\')') && contents.screen.includes('SIN SEÑAL · TOCA PARA REINTENTAR') && contents.screen.includes('ROTACIÓN EN ESPERA · SIN ACTIVIDAD ASIGNADA')],
   ['mission and quest missing values stay explicit', contents.screen.includes('MISIÓN SIN TÍTULO REPORTADO') && contents.screen.includes('DESCRIPCIÓN NO REPORTADA') && contents.screen.includes('ESTADO NO REPORTADO') && contents.screen.includes('numberSignal') && contents.screen.includes('PROGRESO NO REPORTADO')],
   ['mission and quest zero values stay visible', contents.screen.includes('Number.isFinite') && contents.screen.includes('numberSignal(definition?.reward_vex_ingame, \'VEX\')') && contents.screen.includes('numberSignal(mission.reward_vex_ingame, \'+VEX\')')],
   ['missions back action has press depth', contents.screen.includes('testID="missions-back"') && contents.screen.includes('translateY: pressed ? 1 : 0')],
