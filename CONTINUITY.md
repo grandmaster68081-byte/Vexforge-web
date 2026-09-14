@@ -3232,6 +3232,17 @@
 - Siguiente microbloque: continuar con otra mejora Android concreta de fidelidad o interacción, manteniendo la regla de no adivinar y sin tocar la web congelada.
 
 ---
+## 2026-09-14 — VE-MOB-9-PROFILE — ACHIEVEMENT PENDING STATES / IMPLEMENTED_UNVERIFIED
+
+- Se corrigieron los paneles `LOGROS` y `TÍTULOS` de `mobile/app/(tabs)/profile.tsx`: durante la carga ya no muestran “Todavía no hay registros disponibles” antes de recibir la respuesta autoritativa.
+- Mientras sincronizan, muestran `LOGROS EN ESPERA` o `TÍTULOS EN ESPERA`; el estado vacío queda reservado para una respuesta cargada que confirme una lista vacía.
+- No se inventan logros, títulos, puntos ni descripciones. No se modificaron RPCs, Auth, economía, navegación ni la web congelada.
+- Guarda local: `node scripts/verify-mobile-profile.mjs` OK, 26/26 comprobaciones. `git diff --check` OK. El typecheck no se ejecutó porque `mobile/node_modules` no está disponible.
+- Commit de código publicado en `main`: `eedf0d47ca0afddf8ff3850929b666bc93d5a39d`. Se usó `[skip ci]`; no se inició workflow, no se compiló APK ni se publicó release nuevo.
+- Estado honesto: `IMPLEMENTED_UNVERIFIED`. La QA visual de estos estados queda reservada para una APK autorizada.
+- Siguiente microbloque: continuar con otra mejora Android concreta de fidelidad o interacción, manteniendo la regla de no adivinar y sin tocar la web congelada.
+
+---
 ## 2026-09-14 — VE-MOB-9-PROFILE — SOCIAL PENDING STATES / IMPLEMENTED_UNVERIFIED
 
 - Se corrigieron los paneles `HISTORIAL` y `RANKING` de `mobile/app/(tabs)/profile.tsx`: cuando la instantánea social aún no está confirmada, ahora muestran estados explícitos de espera en lugar de afirmar que no existen registros.
