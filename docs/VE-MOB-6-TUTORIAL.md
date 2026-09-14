@@ -7,6 +7,7 @@ Portar el onboarding jugable de `TutorialRoute` y `TutorialOverlay` a la aplicac
 ## Comportamiento
 
 - La ruta requiere una sesión Supabase real y muestra estados explícitos de carga, error y progreso inválido.
+- Si la sesión existe pero `tutorial_step` aún no llega desde la fuente autoritativa, la ruta conserva un estado de progreso pendiente y no lo convierte en el paso `0`.
 - Los siete pasos conservan el orden canónico: bienvenida, colección, packs/forja, misiones, primera batalla, mazo y finalización.
 - Las rutas enlazadas sólo apuntan a superficies Android existentes: colección, cámara de packs/forja, arena y mazo.
 - El paso de arena abre la batalla real disponible; no simula daño, victoria, recompensas ni settlement en el dispositivo.

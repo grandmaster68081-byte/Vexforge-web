@@ -121,6 +121,44 @@ function ErrorState({
   );
 }
 
+function ProgressPendingState({
+  colors,
+  insetsBottom,
+  onRetry,
+}: {
+  colors: ReturnType<typeof useColors>;
+  insetsBottom: number;
+  onRetry: () => void;
+}) {
+  return (
+    <ScreenShell surface="tutorial">
+      <ScrollView
+        style={[styles.screen, { backgroundColor: 'transparent' }]}
+        contentContainerStyle={[styles.completedContent, { paddingBottom: insetsBottom + 32 }]}
+      >
+        <View style={[styles.completedIcon, { backgroundColor: `${colors.primary}18`, borderColor: `${colors.primary}66` }]}>
+          <Ionicons name="sync-outline" size={42} color={colors.primary} />
+        </View>
+        <Text style={[styles.eyebrow, { color: colors.primary }]}>PROGRESO DE INICIACIÓN EN ESPERA</Text>
+        <Text style={[styles.completedTitle, { color: colors.foreground }]}>El Nexus todavía no confirma tu paso.</Text>
+        <Text style={[styles.completedBody, { color: colors.mutedForeground }]}>
+          La cuenta está conectada, pero Supabase aún no entregó el paso canónico del tutorial. No se mostrará un paso inventado.
+        </Text>
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel="Reintentar sincronización del progreso del tutorial"
+          testID="tutorial-progress-retry"
+          onPress={onRetry}
+          style={[styles.primaryButton, { backgroundColor: colors.primary }]}
+        >
+          <Ionicons name="refresh-outline" size={17} color={colors.primaryForeground} />
+          <Text style={[styles.primaryButtonText, { color: colors.primaryForeground }]}>REINTENTAR SINCRONIZACIÓN</Text>
+        </Pressable>
+      </ScrollView>
+    </ScreenShell>
+  );
+}
+
 function CompletedState({
   colors,
   insetsBottom,
@@ -175,7 +213,12 @@ export default function TutorialScreen() {
     return <ErrorState colors={colors} message={syncError ?? 'No se recibió el progreso del jugador.'} onRetry={() => void refresh()} />;
   }
 
-  const currentStep = progress.tutorial_step ?? 0;
+  const tutorialStep = progress.tutorial_step;
+  if (typeof tutorialStep !== 'number') {
+    return <ProgressPendingState colors={colors} insetsBottom={insets.bottom} onRetry={() => void refresh()} />;
+  }
+
+  const currentStep = tutorialStep;
   if (currentStep >= TUTORIAL_DONE_STEP) {
     return <CompletedState colors={colors} insetsBottom={insets.bottom} onReturn={() => router.replace('/(tabs)')} />;
   }

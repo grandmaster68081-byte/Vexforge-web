@@ -24,6 +24,7 @@ const assertions = [
   ['tutorial links only existing mobile surfaces', ['/collection', '/battle', '/deck'].every((route) => contents.route.includes(`'${route}'`))],
   ['tutorial guards unauthenticated access', contents.route.includes('Redirect href="/auth"')],
   ['tutorial exposes loading and error states', contents.route.includes('LoadingState') && contents.route.includes('ErrorState')],
+  ['tutorial keeps an unsynced step explicit', contents.route.includes('ProgressPendingState') && contents.route.includes('tutorial-progress-retry') && contents.route.includes('No se mostrará un paso inventado')],
   ['tutorial completion preserves tutorial surface', completedStateSource.includes('<ScreenShell surface="tutorial">')],
   ['tutorial has accessible test hooks', ['tutorial-primary', 'tutorial-skip', 'tutorial-retry'].every((testID) => contents.route.includes(`testID="${testID}"`))],
   ['tutorial has no client combat simulation', !contents.route.includes('simulate') && !contents.route.includes('fake') && !contents.route.includes('mock')],
