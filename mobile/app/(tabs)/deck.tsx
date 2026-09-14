@@ -81,7 +81,7 @@ function summarizeDeck(slots: DeckSlot[]): DeckSummary {
     cardCount: slots.length,
     power: slots.reduce((total, slot) => total + slot.power, 0),
     factions,
-    factionLabel: factions.length > 0 ? factions.join(' · ') : '—',
+    factionLabel: factions.length > 0 ? factions.join(' · ') : 'FACCIONES NO REPORTADAS',
     primaryFaction: factions[0] ?? null,
     championName: champion?.name || null,
   };
@@ -135,7 +135,7 @@ function DeckPreviewCard({
       ) : (
         <View style={styles.deckPreviewCopy}>
           <Text style={[styles.deckPreviewName, { color: colors.foreground }]} numberOfLines={1}>MAZO ACTIVO</Text>
-          <Text style={[styles.deckPreviewFaction, { color: accent }]}>{summary?.cardCount ?? '—'} CARTAS · {summary?.factionLabel ?? '—'}</Text>
+          <Text style={[styles.deckPreviewFaction, { color: accent }]}>{summary ? `${summary.cardCount} CARTAS · ${summary.factionLabel}` : 'RESUMEN DE MAZO NO REPORTADO'}</Text>
           <Feather name="more-horizontal" size={17} color={colors.foreground} />
         </View>
       )}
@@ -180,10 +180,10 @@ function DetailModal({
           <View style={styles.detailBody}>
             {slot.image_url ? <Image source={{ uri: slot.image_url }} style={[styles.detailArt, { borderColor: factionColor(slot.faction, colors) }]} resizeMode="cover" /> : <View style={[styles.detailArtFallback, { borderColor: factionColor(slot.faction, colors) }]}><Text style={[styles.detailMissingArtText, { color: factionColor(slot.faction, colors) }]}>ARTE CANÓNICO PENDIENTE</Text></View>}
             <Text style={[styles.detailFaction, { color: factionColor(summary.primaryFaction ?? '', colors) }]}>{summary.factionLabel}</Text>
-            <Text style={[styles.detailCopy, { color: colors.mutedForeground }]}>{summary.cardCount} cartas sincronizadas desde tu formación oficial.{summary.championName ? ` Campeón: ${summary.championName}.` : ''}</Text>
+            <Text style={[styles.detailCopy, { color: colors.mutedForeground }]}>{summary.cardCount} cartas sincronizadas desde tu formación oficial. {summary.championName ? `Campeón: ${summary.championName}.` : 'Campeón no reportado.'}</Text>
             <View style={styles.detailStats}>
               <Text style={[styles.detailStat, { color: colors.foreground }]}>{summary.power} <Text style={{ color: colors.mutedForeground }}>PODER</Text></Text>
-              <Text style={[styles.detailStat, { color: colors.foreground }]}>{summary.championName ? `CAMPEÓN · ${summary.championName}` : 'CAMPEÓN · —'}</Text>
+              <Text style={[styles.detailStat, { color: colors.foreground }]}>{summary.championName ? `CAMPEÓN · ${summary.championName}` : 'CAMPEÓN NO REPORTADO'}</Text>
             </View>
           </View>
         </View>
@@ -507,11 +507,11 @@ export default function DeckScreen() {
           <View style={styles.programmaticDeckRow}>
             <DeckPreviewCard slot={selectedPreview ?? undefined} summary={savedSummary} colors={colors} width={Math.max(132, frameWidth * 0.43)} active={hasSavedDeck} onPress={hasSavedDeck ? () => setEditing(true) : handleCreate} />
             <View style={styles.programmaticStats}>
-              <Text style={[styles.programmaticStatValue, { color: colors.foreground }]}>{hasSavedDeck ? savedSummary.cardCount : '—'}</Text>
+              <Text style={[styles.programmaticStatValue, { color: colors.foreground }]}>{hasSavedDeck ? savedSummary.cardCount : 'SIN MAZO ACTIVO'}</Text>
               <Text style={[styles.programmaticStatLabel, { color: colors.mutedForeground }]}>CARTAS</Text>
-              <Text style={[styles.programmaticStatValue, { color: colors.foreground }]}>{hasSavedDeck ? savedSummary.power : '—'}</Text>
+              <Text style={[styles.programmaticStatValue, { color: colors.foreground }]}>{hasSavedDeck ? savedSummary.power : 'PODER NO REPORTADO'}</Text>
               <Text style={[styles.programmaticStatLabel, { color: colors.mutedForeground }]}>PODER</Text>
-              <Text style={[styles.programmaticStatValue, { color: factionColor(savedSummary.primaryFaction ?? '', colors) }]}>{hasSavedDeck ? savedSummary.factionLabel : '—'}</Text>
+              <Text style={[styles.programmaticStatValue, { color: factionColor(savedSummary.primaryFaction ?? '', colors) }]}>{hasSavedDeck ? savedSummary.factionLabel : 'FACCIONES NO REPORTADAS'}</Text>
               <Text style={[styles.programmaticStatLabel, { color: colors.mutedForeground }]}>FACCIONES</Text>
             </View>
           </View>
@@ -566,7 +566,7 @@ export default function DeckScreen() {
                   <Text style={[styles.deckSummaryLabel, { color: colors.mutedForeground }]}>PODER</Text>
                 </View>
                 <View style={styles.deckSummaryStat}>
-                  <Text style={[styles.deckSummaryValue, { color: colors.foreground }]} numberOfLines={1}>{savedSummary.championName ?? '—'}</Text>
+                  <Text style={[styles.deckSummaryValue, { color: colors.foreground }]} numberOfLines={1}>{savedSummary.championName ?? 'CAMPEÓN NO REPORTADO'}</Text>
                   <Text style={[styles.deckSummaryLabel, { color: colors.mutedForeground }]}>CAMPEÓN</Text>
                 </View>
               </View>

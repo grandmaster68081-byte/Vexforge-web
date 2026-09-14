@@ -1,3 +1,22 @@
+## 2026-09-14 — VE-MOB-8-DECK — HONEST EMPTY AND MISSING SUMMARY SIGNALS / IMPLEMENTED_UNVERIFIED
+
+- **BRANCH:** `main`.
+- **SCREEN / DOMAIN:** Forja / `DECK → RESUMEN DEL MAZO ACTIVO`.
+- **BLOCK:** eliminar guiones ambiguos cuando no existe un mazo activo o cuando faltan facción/campeón en la fuente oficial.
+- **WHAT CHANGED:** el resumen conserva las cartas y facciones vivas; sin mazo muestra `SIN MAZO ACTIVO`, el poder ausente muestra `PODER NO REPORTADO`, las facciones ausentes muestran `FACCIONES NO REPORTADAS` y el campeón ausente muestra `CAMPEÓN NO REPORTADO`. El detalle de mazo sin campeón también lo declara explícitamente.
+- **LIVE DATA CHECK:** la cuenta QA `cristiangalvez815@gmail.com` autenticó correctamente mediante HTTPS; `players` devolvió 1 fila y `player_deck` devolvió 30 slots sin slot de campeón. No se ejecutaron mutaciones.
+- **DATA PRESERVED:** cartas, códigos, rarezas, facciones, poder, arte oficial, límites del mazo, validación RPC, guardado RPC, Auth, RLS, economía, accesibilidad, reduced-motion y web congelada.
+- **ASSETS USED:** ninguno nuevo; el arte continúa viniendo únicamente de la fuente oficial.
+- **MOTION_ADDED:** ninguno.
+- **PERFORMANCE_NOTES:** sólo cambia la presentación local de señales ya cargadas; sin solicitudes de red, animaciones nuevas ni dependencias.
+- **GATES:** `node scripts/verify-mobile-deck.mjs` OK, 26/26; `git diff --check` limpio. No se inicia workflow Android, no se compila APK ni se publica release por instrucción del operador.
+- **CORE_SCORE:** pendiente de QA visual/táctil en dispositivo.
+- **VISUAL_DEBT_ADDED:** ninguna.
+- **VISUAL_DEBT_REMOVED:** guiones ambiguos en resumen vacío y campeón/facciones no reportados.
+- **STATUS:** `IMPLEMENTED_UNVERIFIED`.
+- **PERSISTENCIA:** código, gate y continuidad se publicarán juntos en `main` mediante la API REST HTTPS oficial de GitHub con `[skip ci]`; sin APK ni release Android nuevo.
+- **NEXT_BLOCK:** continuar con otra unidad Android atómica del protocolo sin tocar la web congelada ni iniciar APK.
+
 ## 2026-09-14 — VE-MOB-7-BATTLE — HONEST TURN EVENT LABEL CONSISTENCY / IMPLEMENTED_UNVERIFIED
 
 - **BRANCH:** `main`.
