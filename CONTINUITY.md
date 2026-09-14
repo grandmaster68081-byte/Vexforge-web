@@ -1,6 +1,7 @@
 ## 2026-09-14 — VE-MOB-12-WORLD — HONEST ENCOUNTER DAMAGE / IMPLEMENTED_UNVERIFIED
 
 - **BRANCH:** `main`.
+- **COMMIT:** `2efe2bda1bcc83f2bbfd9fb358fbdd4ffa080834`.
 - **SCREEN / DOMAIN:** Mundo / `MUNDO → BOSS → DAÑO PROPIO`.
 - **BLOCK:** fidelidad de la señal de daño de encuentros propios.
 - **WHAT CHANGED:** Bosses distingue ausencia de encuentros, daño `0` confirmado y daño ausente o inválido; ya no oculta `Tú 0` ni convierte un valor no reportado en cero.
