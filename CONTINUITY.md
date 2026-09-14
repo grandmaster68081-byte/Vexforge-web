@@ -3230,3 +3230,13 @@
 - Commit de código publicado en `main`: `495cc493eaac2832b52b4cd3299a4b58e155d8c3`. Se usó `[skip ci]`; no se inició workflow, no se compiló APK ni se publicó release nuevo.
 - Estado honesto: `IMPLEMENTED_UNVERIFIED`. La diferencia visual entre señal ausente y racha confirmada queda pendiente de verificación en APK autorizada.
 - Siguiente microbloque: continuar con otra mejora Android concreta de fidelidad o interacción, manteniendo la regla de no adivinar y sin tocar la web congelada.
+
+---
+## 2026-09-14 — VE-MOB-9-PROFILE — SOCIAL PENDING STATES / IMPLEMENTED_UNVERIFIED
+
+- Se corrigieron los paneles `HISTORIAL` y `RANKING` de `mobile/app/(tabs)/profile.tsx`: cuando la instantánea social aún no está confirmada, ahora muestran estados explícitos de espera en lugar de afirmar que no existen registros.
+- Cuando Supabase confirma la instantánea, se conserva la separación entre lista vacía real y datos disponibles. No se fabrican combates, posiciones, MMR, nombres ni resultados.
+- Guarda local: `node scripts/verify-mobile-profile.mjs` OK, 25/25 comprobaciones. `git diff --check` OK. El typecheck no se ejecutó porque `mobile/node_modules` no está disponible.
+- Commit de código publicado en `main`: `43a46e58dfca3fec4b8be8ff96c81381defdc3df`. Se usó `[skip ci]`; no se inició workflow, no se compiló APK ni se publicó release nuevo.
+- Estado honesto: `IMPLEMENTED_UNVERIFIED`. La QA visual de los estados pendientes queda reservada para una APK autorizada.
+- Siguiente microbloque: continuar con otra mejora Android concreta de fidelidad o interacción, manteniendo la regla de no adivinar y sin tocar la web congelada.
