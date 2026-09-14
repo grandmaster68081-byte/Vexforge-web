@@ -1,3 +1,22 @@
+## 2026-09-14 — VE-MOB-7-BATTLE — HONEST BATTLEFIELD SIGNALS / IMPLEMENTED_UNVERIFIED
+
+- **BRANCH:** `main`.
+- **SCREEN / DOMAIN:** Arena / `ARENA → FORGEFORMATION`.
+- **BLOCK:** fidelidad de identidad, HP y daño en la formación final y el carril de confrontación cuando el resultado autoritativo no entrega una señal.
+- **WHAT CHANGED:** HP actual y máximo ausentes muestran estados explícitos; los ceros confirmados permanecen visibles; identidad, facción, atacante, objetivo y daño ausentes ya no se reemplazan por `Unidad`, `Atacante`, `Objetivo` o `0`.
+- **LIVE DATA CHECK:** se conserva `finalUnits`, `currentTurn`, `turns` y la resolución autoritativa; no se añadieron campos, simulaciones, RPCs ni datos.
+- **DATA PRESERVED:** `vexforge_battle_resolve`, replay, formación, reserva, caídas, eventos, MMR, recompensas, Auth, RLS, telemetría, accesibilidad, reduced-motion, assets y web congelada.
+- **ASSETS USED:** ninguno nuevo; se mantienen el arte canónico y la formación existente.
+- **MOTION_ADDED:** ninguno; se conserva el pulso contextual y la protección de reduced-motion.
+- **PERFORMANCE_NOTES:** validación finita local sobre datos ya cargados; sin solicitudes, animaciones o dependencias nuevas.
+- **GATES:** `node scripts/verify-mobile-battle.mjs` OK, 38/38; `git diff --check` limpio. El typecheck móvil queda diferido porque el clon oficial no incluye `mobile/node_modules`; no se compila APK, no se inicia workflow y no se publica release por instrucción del operador.
+- **CORE_SCORE:** pendiente de QA visual/táctil en dispositivo.
+- **VISUAL_DEBT_ADDED:** ninguna.
+- **VISUAL_DEBT_REMOVED:** ceros, nombres y etiquetas genéricas como sustitutos de HP, identidad y daño no reportados.
+- **STATUS:** `IMPLEMENTED_UNVERIFIED`.
+- **PERSISTENCIA:** se publicará en `main` mediante la API REST HTTPS oficial de GitHub con `[skip ci]`; sin APK ni release Android nuevo.
+- **NEXT_BLOCK:** continuar con otra mejora Android atómica verificable sin tocar la web congelada ni iniciar APK.
+
 ## 2026-09-14 — VE-MOB-13-SOCIAL — HONEST IDENTITY SIGNALS / IMPLEMENTED_UNVERIFIED
 
 - **BRANCH:** `main`.

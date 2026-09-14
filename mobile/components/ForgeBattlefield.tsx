@@ -46,6 +46,21 @@ function factionColor(faction: string | undefined, colors: Colors) {
   }[faction ?? ''] ?? colors.primary;
 }
 
+function textSignal(value: string | null | undefined, fallback: string) {
+  const normalized = value?.trim();
+  return normalized || fallback;
+}
+
+function numberSignal(value: number | null | undefined, fallback: string) {
+  return typeof value === 'number' && Number.isFinite(value) ? String(value) : fallback;
+}
+
+function hpSignal(unit: BattleUnit) {
+  const current = numberSignal(unit.hp, 'HP ACTUAL NO REPORTADO');
+  const maximum = numberSignal(unit.max_hp, 'HP MÁXIMO NO REPORTADO');
+  return `${current} / ${maximum} HP`;
+}
+
 function eventLabel(turn: BattleTurn | null) {
   if (!turn) return 'FORMACIÓN LISTA';
   if (turn.is_kill) return 'UNIDAD ELIMINADA';
@@ -60,8 +75,9 @@ function eventLabel(turn: BattleTurn | null) {
 }
 
 function hpPercent(unit: BattleUnit) {
-  const hp = Number(unit.hp ?? 0);
-  const max = Number(unit.max_hp ?? 0);
+  const hp = unit.hp;
+  const max = unit.max_hp;
+  if (typeof hp !== 'number' || !Number.isFinite(hp) || typeof max !== 'number' || !Number.isFinite(max)) return 0;
   return max > 0 ? Math.max(0, Math.min(100, (hp / max) * 100)) : 0;
 }
 
@@ -85,6 +101,8 @@ function UnitCard({
   const pulse = useRef(new Animated.Value(1)).current;
   const accent = unit ? factionColor(unit.faction, colors) : colors.border;
   const percent = unit ? hpPercent(unit) : 0;
+  const name = unit ? textSignal(unit.name, 'IDENTIDAD NO REPORTADA') : 'Posición vacía';
+  const faction = unit ? textSignal(unit.faction, 'FACCIÓN NO REPORTADA') : 'ESPERANDO UNIDAD';
 
   useEffect(() => {
     if (reducedMotion || (!active && !targeted)) {
@@ -102,7 +120,7 @@ function UnitCard({
     return () => animation.stop();
   }, [active, targeted, reducedMotion, pulse]);
 
-  const label = unit ? `${role}. ${unit.name ?? 'Unidad'}. ${unit.hp ?? 0} de ${unit.max_hp ?? 0} HP.` : `${role}. Posición vacía.`;
+  const label = unit ? `${role}. ${name}. ${hpSignal(unit)}.` : `${role}. Posición vacía.`;
   return (
     <Animated.View
       testID={`battlefield-${side}-${ROLE_LABELS[role]}`}
@@ -126,14 +144,14 @@ function UnitCard({
           <Text style={[styles.artMissingText, { color: colors.mutedForeground }]}>ARTE NO DISPONIBLE</Text>
         </View>
       )}
-      <Text style={[styles.unitName, { color: colors.foreground }]} numberOfLines={2}>{unit?.name ?? 'Posición vacía'}</Text>
-      <Text style={[styles.unitFaction, { color: accent }]} numberOfLines={1}>{unit?.faction ?? 'ESPERANDO UNIDAD'}</Text>
+      <Text style={[styles.unitName, { color: colors.foreground }]} numberOfLines={2}>{name}</Text>
+      <Text style={[styles.unitFaction, { color: accent }]} numberOfLines={1}>{faction}</Text>
       {unit ? (
         <>
           <View style={[styles.hpTrack, { backgroundColor: colors.muted }]}>
             <View style={[styles.hpFill, { width: `${percent}%`, backgroundColor: percent > 35 ? colors.success : colors.danger }]} />
           </View>
-          <Text style={[styles.hpText, { color: colors.mutedForeground }]}>{unit.hp ?? 0} / {unit.max_hp ?? 0} HP</Text>
+          <Text style={[styles.hpText, { color: colors.mutedForeground }]}>{hpSignal(unit)}</Text>
           <View style={styles.keywordRow}>
             {(unit.keywords ?? []).slice(0, 2).map((keyword) => (
               <View key={keyword} style={[styles.keyword, { borderColor: `${accent}88`, backgroundColor: `${accent}18` }]}>
@@ -291,9 +309,13 @@ export function ForgeBattlefield({ finalUnits, currentTurn, turnIndex, totalTurn
         <View style={[styles.laneLine, { backgroundColor: colors.accent }]} />
         <Text style={[styles.laneLabel, { color: colors.accent }]}>{eventLabel(currentTurn)}</Text>
         <Text style={[styles.laneCopy, { color: colors.mutedForeground }]}>
-          {currentTurn ? `${currentTurn.attacker?.name ?? 'Atacante'} → ${currentTurn.defender?.name ?? 'Objetivo'}` : 'La formación espera la resolución del servidor'}
+           {currentTurn ? `${textSignal(currentTurn.attacker?.name, 'ATACANTE NO REPORTADO')} → ${textSignal(currentTurn.defender?.name, 'OBJETIVO NO REPORTADO')}` : 'La formación espera la resolución del servidor'}
         </Text>
-        {currentTurn && (currentTurn.damage ?? 0) > 0 ? <Text style={[styles.damageLabel, { color: currentTurn.is_crit ? colors.accent : colors.danger }]}>−{currentTurn.damage}{currentTurn.is_crit ? ' · CRÍTICO' : ' DAÑO'}</Text> : null}
+        {currentTurn && typeof currentTurn.damage === 'number' && Number.isFinite(currentTurn.damage) ? (
+          <Text style={[styles.damageLabel, { color: currentTurn.is_crit ? colors.accent : colors.danger }]}>
+            {currentTurn.damage === 0 ? '0 DAÑO CONFIRMADO' : `−${currentTurn.damage}${currentTurn.is_crit ? ' · CRÍTICO' : ' DAÑO'}`}
+          </Text>
+        ) : currentTurn ? <Text style={[styles.damageLabel, { color: colors.mutedForeground }]}>DAÑO NO REPORTADO</Text> : null}
       </View>
       {formation('a', player)}
       {unknownSideUnits.length > 0 ? (
