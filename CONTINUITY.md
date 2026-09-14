@@ -5,6 +5,7 @@
 - **FUENTE DE VERDAD:** sólo `BattleResult.final_units` y `BattleResult.turns`; la práctica IA no se presenta como formación PvP oficial y no reclama MMR, economía ni recompensas.
 - **ARCHIVOS:** `mobile/app/(tabs)/battle.tsx`; `scripts/verify-mobile-battle.mjs`; `docs/VE-MOB-7-BATTLE-RESULT-FORMATION.md`.
 - **LÍMITES:** no se tocaron Supabase, RPCs, RLS, Auth, economía, assets, motor de combate ni la web congelada. No se inició workflow Android, no se compiló APK y no se generó release por instrucción explícita del operador.
+- **PERSISTENCIA:** cambio publicado en `main` mediante la API REST HTTPS de GitHub en el commit `4bf65ee5368762d674c3331d04f0c3af25b108dc` con `[skip ci]`, por lo que no se inició el workflow Android.
 - **EVIDENCIA LOCAL:** `verify:mobile-battle` pasa 24/24. El typecheck del clon no pudo ejecutarse porque faltan las dependencias Expo (`expo/tsconfig.base` y módulos nativos); no se presenta ese bloqueo del entorno como un fallo del delta.
 - **ESTADO HONESTO:** `IMPLEMENTED_UNVERIFIED`; la QA visual/táctil en APK y el release correlativo siguen pendientes.
 - **SIGUIENTE BLOQUE:** continuar con otra mejora Android atómica de Arena sólo si aporta un delta visual verificable y no reabre la arquitectura consolidada.
