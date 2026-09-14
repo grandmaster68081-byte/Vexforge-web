@@ -962,7 +962,7 @@ export default function ForgeScreen() {
                     </View>
                   </Pressable>
 
-                   <Pressable accessibilityRole="button" accessibilityLabel={featuredCanExpand ? (featuredExpanded ? 'Ocultar lore de la carta destacada' : 'Inspeccionar lore de la carta destacada') : 'Carta destacada sin lore sincronizado'} accessibilityState={{ disabled: !featuredCanExpand, expanded: featuredCanExpand && featuredExpanded }} testID="home-featured-card-detail" onPress={openFeatured} style={({ pressed }) => [styles.artifactFeatureFinal, { opacity: pressed ? 0.78 : 1, transform: [{ translateY: pressed ? 2 : 0 }] }]}>
+                    <Pressable accessibilityRole="button" accessibilityLabel={featuredCanExpand ? (featuredExpanded ? 'Ocultar lore de la carta destacada' : 'Inspeccionar lore de la carta destacada') : 'Carta destacada sin lore sincronizado'} accessibilityState={{ disabled: !featuredCanExpand, expanded: featuredCanExpand && featuredExpanded }} disabled={!featuredCanExpand} testID="home-featured-card-detail" onPress={openFeatured} style={({ pressed }) => [styles.artifactFeatureFinal, { opacity: !featuredCanExpand ? 0.62 : pressed ? 0.78 : 1, transform: [{ translateY: pressed && featuredCanExpand ? 2 : 0 }] }]}>
                     <View style={[styles.artifactFrameFinal, { borderColor: colors.rarityLegendary, backgroundColor: colors.ink }]}>
                        {activeCard?.image_url ? <Image source={{ uri: activeCard.image_url }} style={styles.artifactArtFinal} resizeMode="cover" accessibilityLabel="Arte oficial de la carta destacada" onLoad={() => setFeaturedAssetState('ready')} onError={() => setFeaturedAssetState('error')} /> : null}
                        <LinearGradient colors={['transparent', `${colors.ink}F2`]} style={StyleSheet.absoluteFill} />
@@ -974,7 +974,7 @@ export default function ForgeScreen() {
                       <Text style={[styles.artifactTagFinal, { color: colors.rarityLegendary }]}>CARTA DE RESONANCIA</Text>
                       <Text numberOfLines={2} style={[styles.artifactNameFinal, { color: colors.foreground }]}>{activeCard?.name ?? 'CARTA NO SINCRONIZADA'}</Text>
                       {featuredExpanded && activeCard?.lore ? <Text numberOfLines={3} style={[styles.artifactLoreFinal, { color: colors.mutedForeground }]}>{activeCard.lore}</Text> : null}
-                      <Text style={[styles.artifactHintFinal, { color: colors.rarityLegendary }]}>TOCAR PARA INSPECCIONAR</Text>
+                       <Text style={[styles.artifactHintFinal, { color: featuredCanExpand ? colors.rarityLegendary : colors.mutedForeground }]}>{featuredCanExpand ? (featuredExpanded ? 'TOCAR PARA CERRAR' : 'TOCAR PARA INSPECCIONAR') : 'LORE NO SINCRONIZADO'}</Text>
                     </View>
                   </Pressable>
                 </View>
