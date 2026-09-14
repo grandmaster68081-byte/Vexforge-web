@@ -541,6 +541,7 @@ export default function BattleScreen() {
             outcome={resultOutcome(activeBattleResult)}
           />
            <ReplayProgress turnIndex={turnIndex} totalTurns={turns.length} colors={colors} />
+           <TurnView turn={currentTurn} index={turnIndex} total={turns.length} colors={colors} />
           <Pressable
             testID="battle-next-turn"
             accessibilityRole="button"

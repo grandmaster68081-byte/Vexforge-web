@@ -1,3 +1,16 @@
+## 2026-09-13 — VE-MOB-7-BATTLE — REPLAY TURN DETAIL / IMPLEMENTED_UNVERIFIED
+
+- **TARGET:** Arena Android replay (`mobile/app/(tabs)/battle.tsx`), usando el `BattleTurn` autoritativo ya recibido.
+- **QUÉ CAMBIÓ:** cada paso del replay ahora muestra el detalle del turno actual: atacante, defensor, impacto, tipo de daño, eventos y unidades activas, además del campo de batalla y el progreso.
+- **VISUAL DELTA:** antes el replay sólo presentaba la formación y la barra de lectura; ahora la evidencia del turno seleccionado queda visible y legible dentro de la lectura del combate.
+- **DATOS PRESERVADOS:** `activeBattleResult.turns`, `turnIndex`, `damage`, `events`, `alive_a` y `alive_b`; no se calcula combate en el cliente ni se inventan turnos.
+- **ASSETS / MOTION:** no se añadieron assets; se reutilizan los datos y componentes existentes. No se añade animación nueva y se conserva `reducedMotion`.
+- **ARCHIVOS:** `mobile/app/(tabs)/battle.tsx`; `scripts/verify-mobile-battle.mjs`; `docs/VE-MOB-7-BATTLE-REPLAY-TURN-DETAIL.md`.
+- **GATES:** `verify-mobile-battle` pasa 29/29; `git diff --check` limpio. No se compiló APK ni se inició workflow por instrucción explícita del operador. QA visual/táctil humana y typecheck completo siguen pendientes.
+- **ESTADO HONESTO:** `IMPLEMENTED_UNVERIFIED`; no se declara `PASS`, `OPERATIONAL` ni `TIER1_READY`.
+- **PERSISTENCIA:** pendiente de publicar en `main` mediante API REST HTTPS oficial de GitHub con `[skip ci]`; no generará release Android.
+- **SIGUIENTE BLOQUE:** continuar con otro delta Android verificable de Arena o seleccionar la siguiente unidad global sin reabrir contratos.
+
 ## 2026-09-13 — VE-MOB-7-BATTLE — REPLAY AND RESULT HAPTICS / IMPLEMENTED_UNVERIFIED
 
 - **QUÉ CAMBIÓ:** avanzar el replay o abrir el resultado usa impacto háptico ligero; volver a la Arena desde el resultado usa selección háptica ligera.

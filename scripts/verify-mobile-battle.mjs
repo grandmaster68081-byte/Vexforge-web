@@ -26,6 +26,7 @@ const assertions = [
   ['battle requires explicit confirmation', contents.screen.includes('battle-confirmation') && contents.screen.includes('battle-confirm')],
   ['battle resolves through the authoritative action', contents.screen.includes('startBattle(selectedOpponent.player_id)')],
   ['battle renders server and training turns', contents.screen.includes('activeBattleResult?.turns') && contents.screen.includes('TurnView')],
+  ['replay renders the current authoritative turn detail', contents.screen.includes('<TurnView turn={currentTurn}') && contents.screen.includes('index={turnIndex}') && contents.screen.includes('total={turns.length}')],
   ['battle renders the authoritative result', contents.screen.includes('battle-result') && contents.screen.includes('result.match_id')],
   ['battle exposes loading and error states', contents.screen.includes('ActivityIndicator') && contents.screen.includes('localError || authError')],
   ['battle supports reduced motion', contents.screen.includes('isReduceMotionEnabled') && contents.screen.includes('reducedMotion')],
