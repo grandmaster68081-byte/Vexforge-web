@@ -17,7 +17,11 @@ const PANELS: Array<{ id: Panel; label: string; icon: keyof typeof Feather.glyph
 const FRIEND_PANELS: Array<{ id: FriendPanel; label: string; icon: keyof typeof Feather.glyphMap }> = [{ id: 'friends', label: 'Conectados', icon: 'people' }, { id: 'requests', label: 'Solicitudes', icon: 'mail' }, { id: 'challenges', label: 'Desafíos', icon: 'target' }];
 function displayName(name: string | null | undefined, _id: string) { return name?.trim() || 'IDENTIDAD NO REPORTADA'; }
 function initials(name: string) { return name === 'IDENTIDAD NO REPORTADA' ? '?' : name.split(/\s+/).filter(Boolean).slice(0, 2).map((part) => part[0]?.toUpperCase() ?? '').join('') || '?'; }
-function formatDate(value: string | null | undefined) { if (!value) return 'FECHA NO REPORTADA'; const date = new Date(value); return Number.isNaN(date.getTime()) ? 'FECHA NO REPORTADA' : date.toLocaleDateString('es-ES', { day: 'numeric', month: 'short' }).replace('.', ''); }
+function formatDate(value: string | null | undefined) {
+  if (!value?.trim()) return 'FECHA NO REPORTADA';
+  const date = new Date(value);
+  return Number.isNaN(date.getTime()) ? 'FECHA NO VÁLIDA' : date.toLocaleDateString('es-ES', { day: 'numeric', month: 'short' }).replace('.', '');
+}
 function socialText(value: string | null | undefined, missing: string) { const normalized = value?.trim(); return normalized || missing; }
 function socialNumber(value: number | null | undefined, missing: string) { return typeof value === 'number' && Number.isFinite(value) ? value.toLocaleString('es-ES') : missing; }
 function socialStatus(value: string | null | undefined) { const normalized = value?.trim(); return normalized ? normalized.toUpperCase() : 'ESTADO NO REPORTADO'; }

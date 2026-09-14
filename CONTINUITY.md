@@ -1,3 +1,22 @@
+## 2026-09-14 — VE-MOB-13-SOCIAL — HONEST DATE SIGNALS / IMPLEMENTED_UNVERIFIED
+
+- **BRANCH:** `main`.
+- **SCREEN / DOMAIN:** Red de Forjadores / `LEGADO → SOCIAL → AMIGOS + CLANES + ARENA`.
+- **BLOCK:** distinguir timestamps ausentes de timestamps presentes pero inválidos sin perder la señal viva.
+- **WHAT CHANGED:** Social conserva `FECHA NO REPORTADA` cuando no llega una fecha y muestra `FECHA NO VÁLIDA` cuando llega un valor ilegible; las fechas válidas mantienen el formato localizado.
+- **LIVE DATA CHECK:** no se añadieron consultas ni mutaciones; el cambio sólo normaliza timestamps ya entregados por los contratos vivos de Social.
+- **DATA PRESERVED:** amistades, solicitudes, desafíos, clanes, roster, guerras, ranking, historial, RPCs, RLS, Auth, navegación, accesibilidad, reduced-motion, assets oficiales y web congelada.
+- **ASSETS USED:** ninguno nuevo.
+- **MOTION_ADDED:** ninguno.
+- **PERFORMANCE_NOTES:** validación local de timestamps ya cargados; sin solicitudes nuevas, animaciones ni dependencias.
+- **GATES:** `node scripts/verify-mobile-social.mjs` y `git diff --check`. No se inicia workflow Android, no se compila APK ni se publica release.
+- **CORE_SCORE:** pendiente de QA visual/táctil en dispositivo.
+- **VISUAL_DEBT_ADDED:** ninguna.
+- **VISUAL_DEBT_REMOVED:** fechas inválidas presentadas como si fueran simplemente ausentes.
+- **STATUS:** `IMPLEMENTED_UNVERIFIED`.
+- **PERSISTENCIA:** código, documento y continuidad se publicarán juntos en `main` mediante la API REST HTTPS oficial de GitHub con `[skip ci]`; sin APK ni release Android nuevo.
+- **NEXT_BLOCK:** continuar con otra unidad Android atómica del protocolo sin tocar la web congelada ni iniciar APK.
+
 ## 2026-09-14 — VE-MOB-4-COLLECTION — HONEST CARD IDENTITY AND LORE SIGNALS / IMPLEMENTED_UNVERIFIED
 
 - **BRANCH:** `main`.
