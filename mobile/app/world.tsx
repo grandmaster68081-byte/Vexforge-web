@@ -61,7 +61,7 @@ function labelize(value: string | null | undefined) {
 }
 
 function formatNumber(value: number | null | undefined) {
-  return Number(value ?? 0).toLocaleString('es-ES');
+  return typeof value === 'number' && Number.isFinite(value) ? value.toLocaleString('es-ES') : '—';
 }
 
 function formatDate(value: string | null | undefined) {
@@ -71,12 +71,12 @@ function formatDate(value: string | null | undefined) {
 }
 
 function rewardText(reward: Record<string, unknown> | undefined) {
-  if (!reward) return 'Recompensa registrada';
+  if (!reward) return 'RECOMPENSA NO REPORTADA';
   const parts: string[] = [];
   if (Number(reward.vex_ingame ?? 0) > 0) parts.push(`${formatNumber(Number(reward.vex_ingame))} VEX`);
   if (Number(reward.shards ?? 0) > 0) parts.push(`${formatNumber(Number(reward.shards))} fragmentos`);
   if (reward.card_rarity) parts.push(`carta ${String(reward.card_rarity)}`);
-  return parts.join(' · ') || 'Recompensa registrada';
+  return parts.join(' · ') || 'RECOMPENSA SIN DETALLE';
 }
 
 function WorldHeader({ panel, onPanelChange, onRefresh, refreshing, colors }: { panel: Panel; onPanelChange: (panel: Panel) => void; onRefresh: () => void; refreshing: boolean; colors: Colors }) {
@@ -113,7 +113,7 @@ function WorldHeader({ panel, onPanelChange, onRefresh, refreshing, colors }: { 
 function BossCard({ boss, encounters, onBattle, colors }: { boss: MobileWorldBoss; encounters: MobileBossEncounter[]; onBattle: () => void; colors: Colors }) {
   const tone = tierTone(boss.tier, colors);
   const ownDamage = encounters.filter((entry) => entry.world_boss_id === boss.id).reduce((total, entry) => total + Number(entry.damage ?? 0), 0);
-  const lore = typeof boss.metadata?.lore === 'string' ? boss.metadata.lore : 'Un frente activo del mundo fracturado.';
+  const lore = typeof boss.metadata?.lore === 'string' ? boss.metadata.lore : null;
   return (
     <View testID={`world-boss-${boss.id}`} style={[styles.bossCard, { backgroundColor: colors.panel, borderColor: `${tone}88` }]}>
       <View style={styles.bossArt}>
@@ -126,7 +126,7 @@ function BossCard({ boss, encounters, onBattle, colors }: { boss: MobileWorldBos
         <View style={[styles.tierPill, { backgroundColor: `${tone}22`, borderColor: `${tone}88` }]}><Text style={[styles.tierText, { color: tone }]}>{boss.tier.toUpperCase()}</Text></View>
       </View>
       <View style={styles.bossBody}>
-        <Text style={[styles.bossLore, { color: colors.mutedForeground }]} numberOfLines={2}>{lore}</Text>
+        <Text style={[styles.bossLore, { color: lore ? colors.mutedForeground : colors.accent }]} numberOfLines={2}>{lore ?? 'LORE NO SINCRONIZADO'}</Text>
         <View style={styles.metaRow}><Text style={[styles.metaText, { color: colors.mutedForeground }]}>{labelize(boss.region_id)}</Text><Text style={[styles.metaText, { color: tone }]}>PWR {formatNumber(boss.power_level)}</Text></View>
         <View style={styles.hpRow}><View style={[styles.hpTrack, { backgroundColor: colors.muted }]}><View style={[styles.hpFill, { width: '100%', backgroundColor: tone }]} /></View><Text style={[styles.hpText, { color: colors.foreground }]}>{formatNumber(boss.hp)} HP</Text></View>
         <View style={styles.rewardRow}><Text style={[styles.rewardText, { color: colors.accent }]}>{rewardText(boss.reward_pool)}</Text>{ownDamage > 0 ? <Text style={[styles.damageText, { color: colors.success }]}>Tú {formatNumber(ownDamage)}</Text> : null}</View>
@@ -140,13 +140,13 @@ function BossCard({ boss, encounters, onBattle, colors }: { boss: MobileWorldBos
 }
 
 function RaidCard({ raid, joined, busy, onJoin, onContribute, colors }: { raid: MobileRaidRun; joined: boolean; busy: boolean; onJoin: () => void; onContribute: () => void; colors: Colors }) {
-  const difficulty = raid.metadata?.difficulty ?? 'normal';
+  const difficulty = raid.metadata?.difficulty;
   const tone = difficultyTone(difficulty, colors);
   return (
     <View testID={`world-raid-${raid.id}`} style={[styles.raidCard, { backgroundColor: colors.panel, borderColor: colors.border }]}>
       <View style={[styles.raidStripe, { backgroundColor: tone }]} />
-      <View style={styles.raidHeader}><View style={styles.raidIcon}><Feather name="people" size={18} color={tone} /></View><View style={styles.raidCopy}><Text style={[styles.raidTitle, { color: colors.foreground }]} numberOfLines={2}>{raid.metadata?.name ?? raid.raid_code}</Text><Text style={[styles.metaText, { color: colors.mutedForeground }]}>{labelize(raid.region_id)} · {raid.status.toUpperCase()}</Text></View><Text style={[styles.difficulty, { color: tone }]}>{difficulty.toUpperCase()}</Text></View>
-      <View style={styles.raidStats}><Text style={[styles.metaText, { color: colors.mutedForeground }]}>Límite {raid.metadata?.max_participants ?? '∞'}</Text><Text style={[styles.metaText, { color: colors.accent }]}>x{raid.metadata?.reward_multiplier ?? 1} recompensa</Text><Text style={[styles.metaText, { color: colors.mutedForeground }]}>{formatDate(raid.started_at ?? raid.created_at)}</Text></View>
+       <View style={styles.raidHeader}><View style={styles.raidIcon}><Feather name="people" size={18} color={tone} /></View><View style={styles.raidCopy}><Text style={[styles.raidTitle, { color: colors.foreground }]} numberOfLines={2}>{raid.metadata?.name ?? raid.raid_code}</Text><Text style={[styles.metaText, { color: colors.mutedForeground }]}>{labelize(raid.region_id)} · {raid.status.toUpperCase()}</Text></View><Text style={[styles.difficulty, { color: tone }]}>{difficulty ? difficulty.toUpperCase() : 'DIFICULTAD NO REPORTADA'}</Text></View>
+       <View style={styles.raidStats}><Text style={[styles.metaText, { color: colors.mutedForeground }]}>Límite {formatNumber(raid.metadata?.max_participants)}</Text><Text style={[styles.metaText, { color: colors.accent }]}>{typeof raid.metadata?.reward_multiplier === 'number' ? `x${raid.metadata.reward_multiplier} recompensa` : 'MULTIPLICADOR NO REPORTADO'}</Text><Text style={[styles.metaText, { color: colors.mutedForeground }]}>{formatDate(raid.started_at ?? raid.created_at)}</Text></View>
       <Text style={[styles.raidCode, { color: colors.mutedForeground }]}>{raid.raid_code}</Text>
       <Pressable testID={`world-raid-action-${raid.id}`} accessibilityRole="button" disabled={busy} onPress={joined ? onContribute : onJoin} style={({ pressed }) => [styles.secondaryButton, { borderColor: tone, opacity: pressed ? 0.7 : busy ? 0.5 : 1 }]}>
         {busy ? <ActivityIndicator size="small" color={tone} /> : <Feather name={joined ? 'zap' : 'arrow-forward'} size={15} color={tone} />}
@@ -171,10 +171,11 @@ function SeasonPanel({ snapshot, session, onChanged, colors }: { snapshot: Mobil
   const [notice, setNotice] = useState<string | null>(null);
   const progress = snapshot.seasonProgress;
   const tiers = snapshot.seasonTiers.slice(0, 20);
-  const xp = Number(progress?.player_xp ?? 0);
-  const currentTier = Number(progress?.current_tier ?? 0);
-  const nextTier = tiers.find((tier) => tier.tier > currentTier);
-  const percent = nextTier ? Math.min(100, Math.round((xp / Math.max(1, nextTier.xp_required)) * 100)) : currentTier > 0 ? 100 : 0;
+  const xp = typeof progress?.player_xp === 'number' && Number.isFinite(progress.player_xp) ? progress.player_xp : null;
+  const currentTier = typeof progress?.current_tier === 'number' && Number.isFinite(progress.current_tier) ? progress.current_tier : null;
+  const nextTier = currentTier === null ? undefined : tiers.find((tier) => tier.tier > currentTier);
+  const percent = nextTier && xp !== null ? Math.min(100, Math.round((xp / Math.max(1, nextTier.xp_required)) * 100)) : currentTier !== null && currentTier > 0 ? 100 : null;
+  const passStatus = progress?.is_premium === true ? 'Pase premium activo' : progress?.is_premium === false ? 'Ruta gratuita' : 'Pase no confirmado';
   const handleClaim = async (tier: MobileSeasonTier) => {
     setClaiming(tier.tier); setNotice(null);
     const result = await claimWorldSeasonTier(tier.tier, session ?? undefined);
@@ -183,7 +184,7 @@ function SeasonPanel({ snapshot, session, onChanged, colors }: { snapshot: Mobil
   };
   if (!snapshot.season) return <EmptyState icon="time" title="Sin temporada activa" copy="No hay un pase de temporada publicado en este momento." colors={colors} />;
   return <View style={styles.panelStack}>
-    <View style={[styles.seasonHero, { backgroundColor: colors.panelStrong, borderColor: colors.accent }]}><Text style={[styles.eyebrow, { color: colors.accent }]}>TEMPORADA {snapshot.season.season_number}</Text><Text style={[styles.seasonTitle, { color: colors.foreground }]}>{snapshot.season.name}</Text><Text style={[styles.copy, { color: colors.mutedForeground }]}>Disponible hasta {formatDate(snapshot.season.end_at)} · {progress?.is_premium ? 'Pase premium activo' : 'Ruta gratuita'}</Text><View style={styles.progressTop}><Text style={[styles.metaText, { color: colors.mutedForeground }]}>{formatNumber(xp)} XP</Text><Text style={[styles.metaText, { color: colors.accent }]}>TIER {currentTier}</Text></View><ProgressBar value={percent} color={colors.accent} /></View>
+     <View style={[styles.seasonHero, { backgroundColor: colors.panelStrong, borderColor: colors.accent }]}><Text style={[styles.eyebrow, { color: colors.accent }]}>TEMPORADA {snapshot.season.season_number}</Text><Text style={[styles.seasonTitle, { color: colors.foreground }]}>{snapshot.season.name}</Text><Text style={[styles.copy, { color: colors.mutedForeground }]}>Disponible hasta {formatDate(snapshot.season.end_at)} · {passStatus}</Text><View style={styles.progressTop}><Text style={[styles.metaText, { color: colors.mutedForeground }]}>{formatNumber(xp)} XP</Text><Text style={[styles.metaText, { color: colors.accent }]}>TIER {formatNumber(currentTier)}</Text></View>{percent !== null ? <ProgressBar value={percent} color={colors.accent} /> : <Text style={[styles.integrityNote, { color: colors.accent }]}>PROGRESO DE TEMPORADA NO REPORTADO</Text>}</View>
     {!session ? <View style={[styles.notice, { borderColor: `${colors.accent}66`, backgroundColor: `${colors.accent}12` }]}><Feather name="lock" size={16} color={colors.accent} /><Text style={[styles.noticeText, { color: colors.mutedForeground }]}>Inicia sesión para sincronizar progreso y reclamar recompensas.</Text></View> : null}
     {notice ? <View style={[styles.notice, { borderColor: colors.border, backgroundColor: colors.panel }]}><Feather name="radio" size={16} color={colors.accent} /><Text style={[styles.noticeText, { color: colors.foreground }]}>{notice}</Text></View> : null}
     {tiers.length === 0 ? <EmptyState icon="award" title="Sin tiers configurados" copy="La temporada está publicada, pero aún no tiene recompensas disponibles." colors={colors} /> : tiers.map((tier) => {
@@ -241,7 +242,7 @@ export default function WorldScreen() {
       {snapshot && panel === 'raids' ? <View style={styles.panelStack}><View style={styles.sectionHeader}><View><Text style={[styles.eyebrow, { color: colors.accent }]}>COOPERACIÓN PVE</Text><Text style={[styles.sectionTitle, { color: colors.foreground }]}>Raids en curso</Text></View><Text style={[styles.counter, { color: colors.mutedForeground }]}>{snapshot.raids.length} ABIERTOS</Text></View>{actionNotice ? <View style={[styles.notice, { borderColor: colors.accent, backgroundColor: `${colors.accent}12` }]}><Feather name="radio" size={16} color={colors.accent} /><Text style={[styles.noticeText, { color: colors.foreground }]}>{actionNotice}</Text></View> : null}{snapshot.raids.length ? snapshot.raids.map((raid) => { const joined = snapshot.myRaidIds.includes(raid.id); return <RaidCard key={raid.id} raid={raid} joined={joined} busy={busyRaid === raid.id} onJoin={() => { void handleRaidAction(raid, false); }} onContribute={() => { void handleRaidAction(raid, true); }} colors={colors} />; }) : <EmptyState icon="people" title="Sin raids abiertos" copy="La red cooperativa no tiene incursiones pendientes." colors={colors} />}</View> : null}
       {snapshot && panel === 'lore' ? <View style={styles.panelStack}><Text style={[styles.eyebrow, { color: colors.accent }]}>ARCHIVO CANÓNICO</Text><Text style={[styles.sectionTitle, { color: colors.foreground }]}>Codex de Lore</Text><Text style={[styles.copy, { color: colors.mutedForeground }]}>La Ruptura, las facciones y las reglas que sostienen la Forja.</Text><View style={[styles.searchBox, { backgroundColor: colors.panel, borderColor: colors.border }]}><Feather name="search" size={16} color={colors.mutedForeground} /><TextInput testID="world-lore-search" value={search} onChangeText={setSearch} placeholder="Buscar en el Codex…" placeholderTextColor={colors.mutedForeground} style={[styles.searchInput, { color: colors.foreground }]} /></View><Text style={[styles.counter, { color: colors.mutedForeground }]}>{lore.length} DE {snapshot.lore.length} ENTRADAS</Text>{lore.length ? lore.map((entry) => <LoreCard key={entry.id} entry={entry} expanded={expandedLore === entry.id} onToggle={() => setExpandedLore((value) => value === entry.id ? null : entry.id)} colors={colors} />) : <EmptyState icon="search" title="No hay coincidencias" copy="Prueba con otra búsqueda o limpia el filtro." colors={colors} />}</View> : null}
       {snapshot && panel === 'season' ? <SeasonPanel snapshot={snapshot} session={session} onChanged={() => { void load(true); }} colors={colors} /> : null}
-      {snapshot && panel === 'rankings' ? <View style={styles.panelStack}><Text style={[styles.eyebrow, { color: colors.accent }]}>TEMPORADA S1_2026</Text><Text style={[styles.sectionTitle, { color: colors.foreground }]}>Ranking del mundo</Text><Text style={[styles.copy, { color: colors.mutedForeground }]}>Clasificación pública con nombres resueltos por el RPC oficial.</Text>{rankings.length ? rankings.map((entry) => <View key={`${entry.season_key}-${entry.player_id}`} style={[styles.rankRow, { backgroundColor: colors.panel, borderColor: entry.player_id === myPlayerId ? colors.primary : colors.border }]}><Text style={[styles.rankNumber, { color: entry.rank_position <= 3 ? colors.accent : colors.mutedForeground }]}>#{entry.rank_position}</Text><View style={styles.rankCopy}><Text style={[styles.rankName, { color: colors.foreground }]} numberOfLines={1}>{entry.display_name ?? `Forjador #${entry.rank_position}`}{entry.player_id === myPlayerId ? ' · TÚ' : ''}</Text><Text style={[styles.metaText, { color: colors.mutedForeground }]}>{entry.mmr} MMR · {entry.wins}V / {entry.losses}D / {entry.draws}E</Text></View><Text style={[styles.winRate, { color: colors.success }]}>{entry.wins + entry.losses + entry.draws ? Math.round((entry.wins / (entry.wins + entry.losses + entry.draws)) * 100) : 0}%</Text></View>) : <EmptyState icon="rankings" title="Ranking en espera" copy="Aún no hay registros para esta temporada." colors={colors} />}</View> : null}
+       {snapshot && panel === 'rankings' ? <View style={styles.panelStack}><Text style={[styles.eyebrow, { color: colors.accent }]}>TEMPORADA {rankings[0]?.season_key ?? 'NO CONFIRMADA'}</Text><Text style={[styles.sectionTitle, { color: colors.foreground }]}>Ranking del mundo</Text><Text style={[styles.copy, { color: colors.mutedForeground }]}>Clasificación pública con nombres resueltos por el RPC oficial.</Text>{rankings.length ? rankings.map((entry) => { const totalMatches = entry.wins + entry.losses + entry.draws; const winRate = totalMatches > 0 ? `${Math.round((entry.wins / totalMatches) * 100)}%` : '—'; return <View key={`${entry.season_key}-${entry.player_id}`} style={[styles.rankRow, { backgroundColor: colors.panel, borderColor: entry.player_id === myPlayerId ? colors.primary : colors.border }]}><Text style={[styles.rankNumber, { color: entry.rank_position <= 3 ? colors.accent : colors.mutedForeground }]}>#{entry.rank_position}</Text><View style={styles.rankCopy}><Text style={[styles.rankName, { color: colors.foreground }]} numberOfLines={1}>{entry.display_name ?? 'NOMBRE NO RESUELTO'}{entry.player_id === myPlayerId ? ' · TÚ' : ''}</Text><Text style={[styles.metaText, { color: colors.mutedForeground }]}>{formatNumber(entry.mmr)} MMR · {formatNumber(entry.wins)}V / {formatNumber(entry.losses)}D / {formatNumber(entry.draws)}E</Text></View><Text style={[styles.winRate, { color: colors.success }]}>{winRate}</Text></View>; }) : <EmptyState icon="rankings" title="Ranking en espera" copy="Aún no hay registros para esta temporada." colors={colors} />}</View> : null}
     </View>
   </ScrollView></ScreenShell>;
 }

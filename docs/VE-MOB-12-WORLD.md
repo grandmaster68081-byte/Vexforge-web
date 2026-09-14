@@ -10,6 +10,7 @@ Portar a Android la superficie de mundo navegable de VEXFORGE:
 - temporada activa, progreso, tiers, recompensas y claims autenticados;
 - ranking público de la temporada `S1_2026` con nombres resueltos por el RPC oficial;
 - estados explícitos de carga, error, vacío, sesión y refresh;
+- señales numéricas, lore, nombres y metadatos ausentes comunicados como no confirmados, sin convertirlos en ceros, nombres sintéticos ni valores por defecto;
 - acceso desde Forja y Perfil sin añadir una tab que compita con las cinco superficies principales.
 
 La pantalla presenta el mundo como una ruta única con paneles internos: `Bosses`,
