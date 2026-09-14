@@ -8,7 +8,7 @@
 - **ARCHIVOS:** `mobile/app/(tabs)/battle.tsx`; `scripts/verify-mobile-battle.mjs`; `docs/VE-MOB-7-BATTLE-REPLAY-TURN-DETAIL.md`.
 - **GATES:** `verify-mobile-battle` pasa 29/29; `git diff --check` limpio. No se compiló APK ni se inició workflow por instrucción explícita del operador. QA visual/táctil humana y typecheck completo siguen pendientes.
 - **ESTADO HONESTO:** `IMPLEMENTED_UNVERIFIED`; no se declara `PASS`, `OPERATIONAL` ni `TIER1_READY`.
-- **PERSISTENCIA:** pendiente de publicar en `main` mediante API REST HTTPS oficial de GitHub con `[skip ci]`; no generará release Android.
+- **PERSISTENCIA:** publicado en `main` mediante API REST HTTPS oficial de GitHub en el commit `dc94e1adb7b378b20d66379955e1c9417ee1c544` con `[skip ci]`; no se inició workflow y no generará release Android.
 - **SIGUIENTE BLOQUE:** continuar con otro delta Android verificable de Arena o seleccionar la siguiente unidad global sin reabrir contratos.
 
 ## 2026-09-13 — VE-MOB-7-BATTLE — REPLAY AND RESULT HAPTICS / IMPLEMENTED_UNVERIFIED
