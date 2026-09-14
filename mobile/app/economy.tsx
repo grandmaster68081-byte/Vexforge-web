@@ -55,8 +55,9 @@ const MIN_WITHDRAWAL_VEX = 2500;
 const VEX_PER_USDT = 100;
 const WITHDRAWAL_FEE_RATE = 0.08;
 
-function money(value: number) {
-  return Number(value || 0).toLocaleString('es-ES', { maximumFractionDigits: 2 });
+function money(value: number | null | undefined) {
+  if (typeof value !== 'number' || !Number.isFinite(value)) return '—';
+  return value.toLocaleString('es-ES', { maximumFractionDigits: 2 });
 }
 
 function dateLabel(value: string | null | undefined) {
@@ -400,8 +401,8 @@ export default function EconomyScreen() {
 
   const submitWithdrawal = useCallback(() => {
     if (!session || !player) return;
-    const available = tradeable?.balance ?? 0;
-    if (withdrawalVex < MIN_WITHDRAWAL_VEX || withdrawalVex > available || tradeable?.pending) return;
+    const available = tradeable?.balance;
+    if (typeof available !== 'number' || !Number.isFinite(available) || withdrawalVex < MIN_WITHDRAWAL_VEX || withdrawalVex > available || tradeable?.pending) return;
     void runMutation('request-withdrawal', async () => {
       const result = await requestMobileWithdrawal(session, player.id, withdrawalVex);
       setWithdrawalResult(result);
@@ -420,22 +421,22 @@ export default function EconomyScreen() {
               <Ionicons name="wallet-outline" size={25} color={colors.accent} />
               <View style={{ flex: 1 }}>
                 <Text style={[styles.cardLabel, { color: colors.mutedForeground }]}>VEX TOTAL IN-GAME</Text>
-                <Text style={[styles.walletValue, { color: colors.foreground }]}>{money(wallet?.vex_ingame ?? 0)} <Text style={[styles.walletUnit, { color: colors.accent }]}>VEX</Text></Text>
+                <Text style={[styles.walletValue, { color: colors.foreground }]}>{money(wallet?.vex_ingame)} <Text style={[styles.walletUnit, { color: colors.accent }]}>VEX</Text></Text>
               </View>
             </View>
             <View style={styles.balanceGrid}>
-              <BalanceCell label="Tradeable" value={wallet?.vex_tradeable ?? 0} colors={colors} />
-              <BalanceCell label="Reserva in-game" value={wallet?.reserved_ingame ?? 0} colors={colors} />
-              <BalanceCell label="Reserva tradeable" value={wallet?.reserved_tradeable ?? 0} colors={colors} />
+              <BalanceCell label="Tradeable" value={wallet?.vex_tradeable} colors={colors} />
+              <BalanceCell label="Reserva in-game" value={wallet?.reserved_ingame} colors={colors} />
+              <BalanceCell label="Reserva tradeable" value={wallet?.reserved_tradeable} colors={colors} />
             </View>
           </Panel>
           <Panel colors={colors}>
             <Text style={[styles.cardTitle, { color: colors.foreground }]}>Resumen registrado</Text>
             <View style={styles.statsGrid}>
-              <StatValue label="Entradas" value={stats?.entry_count ?? 0} colors={colors} />
-              <StatValue label="Acreditado" value={stats?.total_credited ?? 0} colors={colors} />
-              <StatValue label="Debitado" value={stats?.total_debited ?? 0} colors={colors} />
-              <StatValue label="Mayor crédito" value={stats?.largest_credit ?? 0} colors={colors} />
+              <StatValue label="Entradas" value={stats?.entry_count} colors={colors} />
+              <StatValue label="Acreditado" value={stats?.total_credited} colors={colors} />
+              <StatValue label="Debitado" value={stats?.total_debited} colors={colors} />
+              <StatValue label="Mayor crédito" value={stats?.largest_credit} colors={colors} />
             </View>
           </Panel>
           <SectionTitle eyebrow="MOVIMIENTOS REALES" title="Ledger económico" colors={colors} />
@@ -554,15 +555,15 @@ export default function EconomyScreen() {
       );
     }
     if (section === 'withdrawals') {
-      const available = tradeable?.balance ?? 0;
-      const withdrawalValid = withdrawalVex >= MIN_WITHDRAWAL_VEX && withdrawalVex <= available && !tradeable?.pending;
+      const available = tradeable?.balance;
+      const withdrawalValid = typeof available === 'number' && Number.isFinite(available) && withdrawalVex >= MIN_WITHDRAWAL_VEX && withdrawalVex <= available && !tradeable?.pending;
       return (
         <>
           <SectionTitle eyebrow="RETIROS" title="Convierte VEX tradeable" colors={colors} />
           <Panel colors={colors}>
             <View style={styles.balanceGrid}>
               <BalanceCell label="Disponible" value={available} colors={colors} />
-              <BalanceCell label="Bloqueado" value={tradeable?.locked ?? 0} colors={colors} />
+              <BalanceCell label="Bloqueado" value={tradeable?.locked} colors={colors} />
             </View>
             <Text style={[styles.body, { color: colors.mutedForeground }]}>Tasa informativa: 100 VEX = 1 USDT. La comisión informativa es 8%; el servidor decide el resultado final.</Text>
             <Field label="Cantidad VEX tradeable" value={withdrawalAmount} onChangeText={setWithdrawalAmount} placeholder={`Mínimo ${MIN_WITHDRAWAL_VEX.toLocaleString('es-ES')} VEX`} colors={colors} keyboardType="decimal-pad" testID="economy-withdrawal-amount" />
@@ -598,10 +599,10 @@ export default function EconomyScreen() {
           <Text selectable style={[styles.referralCode, { color: colors.accent }]}>{referralSummary?.referral_code ?? 'Código no disponible'}</Text>
           <Text style={[styles.body, { color: colors.mutedForeground }]}>Comparte el código desde tus canales habituales. Los estados y las recompensas se acreditan exclusivamente en Supabase.</Text>
           <View style={styles.statsGrid}>
-            <StatValue label="Referidos" value={referralSummary?.total_referrals ?? 0} colors={colors} />
-            <StatValue label="Pendientes" value={referralSummary?.pending ?? 0} colors={colors} />
-            <StatValue label="Completados" value={referralSummary?.completed ?? 0} colors={colors} />
-            <StatValue label="Acreditados" value={referralSummary?.rewards_granted ?? 0} colors={colors} />
+            <StatValue label="Referidos" value={referralSummary?.total_referrals} colors={colors} />
+            <StatValue label="Pendientes" value={referralSummary?.pending} colors={colors} />
+            <StatValue label="Completados" value={referralSummary?.completed} colors={colors} />
+            <StatValue label="Acreditados" value={referralSummary?.rewards_granted} colors={colors} />
           </View>
         </Panel>
         <SectionTitle eyebrow="HISTORIAL" title="Estados de referidos" colors={colors} />
@@ -695,7 +696,7 @@ export default function EconomyScreen() {
   );
 }
 
-function BalanceCell({ label, value, colors }: { label: string; value: number; colors: Colors }) {
+function BalanceCell({ label, value, colors }: { label: string; value: number | null | undefined; colors: Colors }) {
   return (
     <View style={styles.balanceCell}>
       <Text style={[styles.cardLabel, { color: colors.mutedForeground }]}>{label.toUpperCase()}</Text>
@@ -705,7 +706,7 @@ function BalanceCell({ label, value, colors }: { label: string; value: number; c
   );
 }
 
-function StatValue({ label, value, colors }: { label: string; value: number; colors: Colors }) {
+function StatValue({ label, value, colors }: { label: string; value: number | null | undefined; colors: Colors }) {
   return (
     <View style={styles.statValue}>
       <Text style={[styles.statNumber, { color: colors.foreground }]}>{money(value)}</Text>

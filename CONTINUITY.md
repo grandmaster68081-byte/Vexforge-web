@@ -1,3 +1,15 @@
+## 2026-09-14 — VE-MOB-11-ECONOMY — HONEST BALANCE SIGNALS / IMPLEMENTED_UNVERIFIED
+
+- **TARGET:** superficie Android de Economía en `mobile/app/economy.tsx`.
+- **QUÉ CAMBIÓ:** balances, resumen del ledger, referidos y saldo tradeable ausentes muestran `—` en lugar de `0`. El retiro permanece deshabilitado hasta recibir un saldo disponible finito del servidor.
+- **FIDELIDAD:** cero confirmado continúa siendo cero; no se habilita una operación económica usando un fallback del cliente.
+- **CONTRATOS PRESERVADOS:** RPCs económicas, ledger, mercado, tesorería, depósitos, retiros, referidos, Auth y web congelada.
+- **ARCHIVOS:** `mobile/app/economy.tsx`; `scripts/verify-mobile-economy.mjs`; `docs/VE-MOB-11-ECONOMY-HONEST-BALANCE-SIGNALS.md`.
+- **GATES:** `verify-mobile-economy` pasa 10/10 y `git diff --check` queda limpio. El typecheck móvil no se ejecuta porque esta copia no incluye `mobile/node_modules`; no se compila APK ni se inicia workflow por la instrucción explícita del operador.
+- **ESTADO HONESTO:** `IMPLEMENTED_UNVERIFIED`; la QA visual/táctil queda pendiente de una APK autorizada.
+- **PERSISTENCIA:** pendiente de publicar en `main` mediante API REST HTTPS oficial de GitHub con `[skip ci]`; no se generará release Android.
+- **SIGUIENTE BLOQUE:** continuar con otra mejora Android atómica fuera de esta microiteración, sin reabrir contratos consolidados.
+
 ## 2026-09-14 — VE-MOB-3-HOME — HONEST PROGRESSION SIGNAL / IMPLEMENTED_UNVERIFIED
 
 - **TARGET:** HUD de progresión del Home Android en `mobile/app/(tabs)/index.tsx`.
