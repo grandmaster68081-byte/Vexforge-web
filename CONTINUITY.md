@@ -1,3 +1,15 @@
+## 2026-09-14 — VE-MOB-10-PACKS-SHOP — HONEST BALANCE SIGNAL / IMPLEMENTED_UNVERIFIED
+
+- **TARGET:** cámara Android de Packs en `mobile/app/store.tsx`.
+- **QUÉ CAMBIÓ:** el balance VEX sólo se presenta cuando llega como número finito desde la fuente viva; mientras no existe, la UI muestra `—`. La compra queda deshabilitada y comunica `BALANCE PENDIENTE` hasta recibir el balance confirmado.
+- **FIDELIDAD:** se elimina la conversión de balance ausente a `0`, evitando que un estado no confirmado habilite compras o calcule un faltante inventado.
+- **CONTRATOS PRESERVADOS:** catálogo, precios, compra/apertura de packs, RPCs, inventario, Supabase, Auth, economía, assets, rutas y web congelada.
+- **ARCHIVOS:** `mobile/app/store.tsx`; `scripts/verify-mobile-store.mjs`; `docs/VE-MOB-10-PACKS-SHOP-HONEST-BALANCE-SIGNAL.md`.
+- **GATES:** `verify-mobile-store` pasa 15/15 y `git diff --check` queda limpio. El typecheck móvil no se ejecuta porque esta copia no incluye `mobile/node_modules`; no se compila APK ni se inicia workflow por la instrucción explícita del operador.
+- **ESTADO HONESTO:** `IMPLEMENTED_UNVERIFIED`; la QA visual/táctil queda pendiente de una APK autorizada.
+- **PERSISTENCIA:** pendiente de publicar en `main` mediante API REST HTTPS oficial de GitHub con `[skip ci]`; no se generará release Android.
+- **SIGUIENTE BLOQUE:** continuar con otra mejora Android atómica de fidelidad o interacción sin reabrir contratos consolidados.
+
 ## 2026-09-13 — VE-MOB-10-PACKS-SHOP — NEXUS IDENTITY / IMPLEMENTED_UNVERIFIED
 
 - **TARGET:** cámara Android de Packs/Tienda/Fusión/Evolución/Inventario en `mobile/app/store.tsx`.

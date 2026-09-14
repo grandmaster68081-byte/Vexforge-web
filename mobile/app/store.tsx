@@ -204,7 +204,9 @@ function PackSection({ session, colors, onRefresh }: { session: NonNullable<Retu
       <View style={[styles.balanceCard, { backgroundColor: colors.panelStrong, borderColor: colors.accent }]}>
         <View>
           <Text style={[styles.eyebrow, { color: colors.mutedForeground }]}>VEX TRADEABLE</Text>
-          <Text style={[styles.balanceValue, { color: colors.accent }]}>{Number(balance ?? 0).toLocaleString('es-ES')}</Text>
+          <Text style={[styles.balanceValue, { color: colors.accent }]}>
+            {typeof balance === 'number' && Number.isFinite(balance) ? balance.toLocaleString('es-ES') : '—'}
+          </Text>
         </View>
         <Ionicons name="wallet-outline" size={28} color={colors.accent} />
       </View>
@@ -222,7 +224,8 @@ function PackSection({ session, colors, onRefresh }: { session: NonNullable<Retu
       ) : (
         <View style={styles.stack}>
           {packs.map((pack) => {
-            const affordable = Number(balance ?? 0) >= pack.price_vex;
+            const balanceKnown = typeof balance === 'number' && Number.isFinite(balance);
+            const affordable = balanceKnown && balance >= pack.price_vex;
             return (
               <View key={pack.pack_key} testID={`store-pack-${pack.pack_key}`} style={[styles.productCard, { backgroundColor: colors.card, borderColor: colors.border }]}>
                 <View style={styles.productHeader}>
@@ -235,7 +238,21 @@ function PackSection({ session, colors, onRefresh }: { session: NonNullable<Retu
                 </View>
                 {pack.notes ? <Text style={[styles.bodyLeft, { color: colors.mutedForeground }]}>{pack.notes}</Text> : null}
                 {pack.rarity_weights ? <Text style={[styles.meta, { color: colors.mutedForeground }]}>Probabilidades oficiales disponibles en el catálogo</Text> : null}
-                <ActionButton label={busy === pack.pack_key ? 'COMPRANDO…' : affordable ? 'COMPRAR CON VEX' : `FALTAN ${(pack.price_vex - Number(balance ?? 0)).toLocaleString('es-ES')} VEX`} onPress={() => void buy(pack)} colors={colors} disabled={!affordable || busy !== null} testID={`store-pack-buy-${pack.pack_key}`} />
+                <ActionButton
+                  label={
+                    busy === pack.pack_key
+                      ? 'COMPRANDO…'
+                      : !balanceKnown
+                        ? 'BALANCE PENDIENTE'
+                        : affordable
+                          ? 'COMPRAR CON VEX'
+                          : `FALTAN ${(pack.price_vex - balance).toLocaleString('es-ES')} VEX`
+                  }
+                  onPress={() => void buy(pack)}
+                  colors={colors}
+                  disabled={!balanceKnown || !affordable || busy !== null}
+                  testID={`store-pack-buy-${pack.pack_key}`}
+                />
               </View>
             );
           })}

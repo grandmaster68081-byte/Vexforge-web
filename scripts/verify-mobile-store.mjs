@@ -21,6 +21,7 @@ const assertions = [
   ['real fusion policy and atomic RPC are wired', contents.screen.includes('loadMobileFusionPolicy') && contents.screen.includes('applyMobileFusion') && contents.supabase.includes("vexforge_apply_fusion")],
   ['real evolution paths and RPC are wired', contents.screen.includes('loadMobileEvolutionPaths') && contents.screen.includes('evolveMobileCard') && contents.supabase.includes("vexforge_evolve_card")],
   ['real inventory is rendered from GameContext collection', contents.screen.includes('collectionLoading') && contents.screen.includes('collection.filter') && contents.screen.includes('store-inventory-')],
+  ['unknown VEX balance never becomes zero or enables a purchase', contents.screen.includes("typeof balance === 'number' && Number.isFinite(balance)") && contents.screen.includes('BALANCE PENDIENTE') && contents.screen.includes('disabled={!balanceKnown || !affordable || busy !== null}') && !contents.screen.includes('Number(balance ?? 0)')],
   ['loading, error, and empty states are explicit', contents.screen.includes('store-loading') && contents.screen.includes('accessibilityRole="alert"') && contents.screen.includes('EmptyBlock')],
   ['store is anchored to a living domain', contents.screen.includes('<DomainHeader') && contents.screen.includes('domain="foja"') && contents.screen.includes('CÁMARA ACTIVA')],
   ['active chamber exposes live catalog identity', contents.screen.includes('testID="store-domain-status"') && contents.screen.includes('CATÁLOGO VIVO') && contents.screen.includes('activeMode')],
