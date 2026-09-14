@@ -1,3 +1,22 @@
+## 2026-09-14 — VE-MOB-10-PACKS-SHOP — HONEST PACK AND INVENTORY SIGNALS / IMPLEMENTED_UNVERIFIED
+
+- **BRANCH:** `main`.
+- **SCREEN / DOMAIN:** Tienda / `FORJA → PACKS + INVENTARIO`.
+- **BLOCK:** fidelidad de balance, identidad de pack y señales de carta cuando la fuente no reporta esos valores.
+- **WHAT CHANGED:** el balance ausente muestra `BALANCE NO REPORTADO`; packs, nombres de cartas y rarezas ausentes muestran señales explícitas. Los valores vivos permanecen sin transformación semántica.
+- **LIVE DATA CHECK:** no se modificaron loaders, RPCs ni contratos; se conserva la lectura autenticada de catálogo, wallet, pedidos, apertura, colección e inventario. No se ejecutaron mutaciones.
+- **DATA PRESERVED:** compras, apertura de packs, pagos, fusión, evolución, inventario, RPCs, Auth, RLS, navegación, assets y web congelada.
+- **ASSETS USED:** ninguno nuevo; se mantienen los assets oficiales del almacén y la forja.
+- **MOTION_ADDED:** ninguno; se conserva el feedback táctil y pull-to-refresh.
+- **PERFORMANCE_NOTES:** normalización local de strings ya cargados; sin solicitudes de red ni animación nuevas.
+- **GATES:** `node scripts/verify-mobile-store.mjs` y `git diff --check` deben pasar. El typecheck móvil no se ejecuta porque no hay `mobile/node_modules`; no se inicia APK, workflow Android ni release por instrucción del operador.
+- **CORE_SCORE:** pendiente de QA visual/táctil en dispositivo.
+- **VISUAL_DEBT_ADDED:** ninguna.
+- **VISUAL_DEBT_REMOVED:** guion, texto vacío y ausencia visual como sustitutos ambiguos de balance, nombre y rareza.
+- **STATUS:** `IMPLEMENTED_UNVERIFIED`.
+- **PERSISTENCIA:** código y continuidad quedan publicados en `main` mediante la API REST HTTPS oficial de GitHub con `[skip ci]`; no se generará release Android.
+- **NEXT_BLOCK:** continuar con otra unidad Android atómica del protocolo sin tocar la web congelada ni iniciar APK.
+
 ## 2026-09-14 — VE-MOB-3-HOME — HONEST CARD CODE SIGNAL / IMPLEMENTED_UNVERIFIED
 
 - **BRANCH:** `main`.

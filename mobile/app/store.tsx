@@ -143,6 +143,10 @@ function fusionText(value: string | null, missingLabel: string) {
   return typeof value === 'string' && value.trim() ? value : missingLabel;
 }
 
+function storeText(value: string | null | undefined, missingLabel: string) {
+  return typeof value === 'string' && value.trim() ? value : missingLabel;
+}
+
 function PackSection({ session, colors, onRefresh }: { session: NonNullable<ReturnType<typeof useGame>['session']>; colors: Palette; onRefresh: () => Promise<void> }) {
   const [packs, setPacks] = useState<MobilePack[]>([]);
   const [balance, setBalance] = useState<number | null>(null);
@@ -217,7 +221,7 @@ function PackSection({ session, colors, onRefresh }: { session: NonNullable<Retu
         <View>
           <Text style={[styles.eyebrow, { color: colors.mutedForeground }]}>VEX TRADEABLE</Text>
           <Text style={[styles.balanceValue, { color: colors.accent }]}>
-            {typeof balance === 'number' && Number.isFinite(balance) ? balance.toLocaleString('es-ES') : '—'}
+            {typeof balance === 'number' && Number.isFinite(balance) ? balance.toLocaleString('es-ES') : 'BALANCE NO REPORTADO'}
           </Text>
         </View>
         <Ionicons name="wallet-outline" size={28} color={colors.accent} />
@@ -243,8 +247,8 @@ function PackSection({ session, colors, onRefresh }: { session: NonNullable<Retu
                 <View style={styles.productHeader}>
                   <View style={[styles.productIcon, { backgroundColor: `${colors.accent}16`, borderColor: `${colors.accent}55` }]}><Ionicons name="cube-outline" size={25} color={colors.accent} /></View>
                   <View style={{ flex: 1 }}>
-                    <Text style={[styles.cardTitle, { color: colors.foreground }]}>{pack.pack_name}</Text>
-                    <Text style={[styles.meta, { color: colors.mutedForeground }]}>{pack.card_count} cartas · {pack.pack_key}</Text>
+                    <Text style={[styles.cardTitle, { color: colors.foreground }]}>{storeText(pack.pack_name, 'PACK NO REPORTADO')}</Text>
+                    <Text style={[styles.meta, { color: colors.mutedForeground }]}>{pack.card_count} cartas · {storeText(pack.pack_key, 'CLAVE DE PACK NO REPORTADA')}</Text>
                   </View>
                   <Text style={[styles.price, { color: colors.accent }]}>{pack.price_vex.toLocaleString('es-ES')} VEX</Text>
                 </View>
@@ -280,8 +284,8 @@ function PackSection({ session, colors, onRefresh }: { session: NonNullable<Retu
             {openedCards.map((card, index) => (
               <View key={`${card.id}-${index}`} style={[styles.revealedCard, { backgroundColor: colors.card, borderColor: RARITY_COLORS[card.rarity] ?? colors.border }]}>
                 {card.image_url ? <Image source={{ uri: card.image_url }} style={styles.revealedImage} resizeMode="cover" /> : <View style={styles.imageFallback}><Ionicons name="layers-outline" size={24} color={colors.mutedForeground} /></View>}
-                <Text numberOfLines={2} style={[styles.revealedName, { color: colors.foreground }]}>{card.name}</Text>
-                <Text style={[styles.meta, { color: RARITY_COLORS[card.rarity] ?? colors.mutedForeground }]}>{card.rarity}</Text>
+                <Text numberOfLines={2} style={[styles.revealedName, { color: colors.foreground }]}>{storeText(card.name, 'NOMBRE DE CARTA NO REPORTADO')}</Text>
+                <Text style={[styles.meta, { color: RARITY_COLORS[card.rarity] ?? colors.mutedForeground }]}>{storeText(card.rarity, 'RAREZA NO REPORTADA')}</Text>
               </View>
             ))}
           </View>
@@ -414,7 +418,7 @@ function InventorySection({ colors }: { colors: Palette }) {
   const [search, setSearch] = useState('');
   const filtered = useMemo(() => collection.filter((card) => card.name.toLowerCase().includes(search.trim().toLowerCase()) || (card.code ?? '').toLowerCase().includes(search.trim().toLowerCase())), [collection, search]);
   if (collectionLoading) return <LoadingBlock colors={colors} label="Sincronizando inventario..." />;
-  return <View><SectionTitle eyebrow="ALMACÉN DEL NEXUS" title="Inventario de cartas" colors={colors} /><TextInput value={search} onChangeText={setSearch} placeholder="Buscar por nombre o código" placeholderTextColor={colors.mutedForeground} style={[styles.input, { backgroundColor: colors.card, borderColor: colors.border, color: colors.foreground }]} />{filtered.length === 0 ? <EmptyBlock icon="layers-outline" title={collection.length ? 'Sin coincidencias' : 'Inventario vacío'} body={collection.length ? 'Prueba con otro nombre o código.' : 'Abre un pack para registrar tus primeras cartas.'} colors={colors} /> : <View style={styles.inventoryGrid}>{filtered.map((card) => <View key={card.player_card_id} testID={`store-inventory-${card.player_card_id}`} style={[styles.inventoryCard, { backgroundColor: colors.card, borderColor: RARITY_COLORS[card.rarity ?? ''] ?? colors.border }]}>{card.image_url ? <Image source={{ uri: card.image_url }} style={styles.inventoryImage} resizeMode="cover" /> : <View style={styles.imageFallback}><Ionicons name="layers-outline" size={24} color={colors.mutedForeground} /></View>}<Text numberOfLines={2} style={[styles.revealedName, { color: colors.foreground }]}>{card.name}</Text><Text style={[styles.meta, { color: RARITY_COLORS[card.rarity ?? ''] ?? colors.mutedForeground }]}>{card.rarity ?? '—'}</Text><Text style={[styles.quantity, { color: colors.accent }]}>×{card.quantity}</Text></View>)}</View>}</View>;
+  return <View><SectionTitle eyebrow="ALMACÉN DEL NEXUS" title="Inventario de cartas" colors={colors} /><TextInput value={search} onChangeText={setSearch} placeholder="Buscar por nombre o código" placeholderTextColor={colors.mutedForeground} style={[styles.input, { backgroundColor: colors.card, borderColor: colors.border, color: colors.foreground }]} />{filtered.length === 0 ? <EmptyBlock icon="layers-outline" title={collection.length ? 'Sin coincidencias' : 'Inventario vacío'} body={collection.length ? 'Prueba con otro nombre o código.' : 'Abre un pack para registrar tus primeras cartas.'} colors={colors} /> : <View style={styles.inventoryGrid}>{filtered.map((card) => <View key={card.player_card_id} testID={`store-inventory-${card.player_card_id}`} style={[styles.inventoryCard, { backgroundColor: colors.card, borderColor: RARITY_COLORS[card.rarity ?? ''] ?? colors.border }]}>{card.image_url ? <Image source={{ uri: card.image_url }} style={styles.inventoryImage} resizeMode="cover" /> : <View style={styles.imageFallback}><Ionicons name="layers-outline" size={24} color={colors.mutedForeground} /></View>}<Text numberOfLines={2} style={[styles.revealedName, { color: colors.foreground }]}>{storeText(card.name, 'NOMBRE DE CARTA NO REPORTADO')}</Text><Text style={[styles.meta, { color: RARITY_COLORS[card.rarity ?? ''] ?? colors.mutedForeground }]}>{storeText(card.rarity, 'RAREZA NO REPORTADA')}</Text><Text style={[styles.quantity, { color: colors.accent }]}>×{card.quantity}</Text></View>)}</View>}</View>;
 }
 
 function LoadingBlock({ colors, label }: { colors: Palette; label: string }) {
