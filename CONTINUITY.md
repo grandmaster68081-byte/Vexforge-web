@@ -1,3 +1,22 @@
+## 2026-09-14 — VE-MOB-T2V — FORMATION PREVIEW TOKENS / IMPLEMENTED_UNVERIFIED
+
+- **BRANCH:** `main`.
+- **SCREEN / DOMAIN:** formación canónica de Arena / `ForgeFormationPreview`.
+- **BLOCK:** novena pieza ejecutable de `T2V — VISUAL SYSTEM TOKENS + SHARED SCENE PRIMITIVES`.
+- **WHAT CHANGED:** la primitiva de formación consume `VISUAL_TOKENS.formation` para radios, espaciado, escala tipográfica, tarjetas, estados de feedback y acciones de reintento.
+- **DATA PRESERVED:** `DeckSlot[]`, orden Campeón/Vanguardia/Centinela/Reserva, arte real, poder, estados loading/error/empty, Supabase, RPCs, RLS, Auth, combate, event log, settlement, navegación, assets oficiales y web congelada.
+- **AUTHORITY:** no se alteran reglas, daño, turnos, ganador ni derivación de formación; Android continúa siendo renderer del contrato vivo.
+- **ASSETS USED:** ninguno nuevo.
+- **MOTION_ADDED:** ninguno.
+- **PERFORMANCE_NOTES:** tokens estáticos resueltos localmente; no añaden solicitudes, listeners, estado ni renders de datos.
+- **GATES:** `node scripts/verify-mobile-visual-system.mjs`, `node scripts/verify-mobile-battle.mjs`, `git diff --check`; typecheck móvil, workflow APK y QA visual/táctil quedan pendientes de autorización/entorno.
+- **VISUAL_DELTA:** la formación canónica comparte ahora una escala visual explícita con el sistema T2V, sin perder su lectura de posiciones y reservas.
+- **VISUAL_DEBT_REMOVED:** literales geométricos y tipográficos locales de la primitiva.
+- **VISUAL_DEBT_ADDED:** ninguna.
+- **STATUS:** `IMPLEMENTED_UNVERIFIED`.
+- **PERSISTENCIA:** publicar código, guarda, documento y continuidad juntos en `main` mediante la API REST HTTPS oficial de GitHub con `[skip ci]`; no compilar APK ni publicar release.
+- **NEXT_BLOCK:** continuar con otra pieza T2V explícita sin tocar el motor, los contratos de Supabase, la web congelada ni el tutorial.
+
 ## 2026-09-14 — VE-MOB-T2V — SHARED TYPOGRAPHY TOKENS / IMPLEMENTED_UNVERIFIED
 
 - **BRANCH:** `main`.

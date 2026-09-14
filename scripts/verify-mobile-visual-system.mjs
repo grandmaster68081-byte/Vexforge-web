@@ -33,6 +33,7 @@ for (const token of [
   'safeArea:',
   'qualityTiers:',
   'control:',
+  'formation:',
 ]) {
   if (!tokens.includes(token)) failures.push(`shared visual token "${token}" is missing`);
 }
@@ -103,6 +104,14 @@ if (!icon.includes("from '@/constants/experience'")) {
 }
 if (!icon.includes('VISUAL_TOKENS.icon.defaultStroke')) {
   failures.push('ForgeIcon does not consume the default stroke token');
+}
+
+const formation = source('mobile/components/ForgeFormationPreview.tsx');
+if (!formation.includes("from '@/constants/experience'")) {
+  failures.push('ForgeFormationPreview does not consume shared visual tokens');
+}
+if (!formation.includes('VISUAL_TOKENS.formation')) {
+  failures.push('ForgeFormationPreview does not consume formation tokens');
 }
 
 if (failures.length > 0) {

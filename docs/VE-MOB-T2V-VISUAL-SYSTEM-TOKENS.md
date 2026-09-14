@@ -36,6 +36,9 @@ la web congelada.
   preservando mensajes, accesibilidad y acciones de recuperación.
 - `ForgeText` consume `typography` para familia tipográfica, escala,
   interlineado y tracking, conservando las seis variantes y los tonos actuales.
+- `ForgeFormationPreview` consume `formation` para la geometría y escala de su
+  lectura de Vanguardia, Campeón, Centinela y Reserva, preservando la formación
+  derivada del servidor y sus estados de carga, vacío y error.
 
 ## Límites
 

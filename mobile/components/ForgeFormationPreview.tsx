@@ -3,6 +3,7 @@ import { Image, StyleSheet, Text, View } from 'react-native';
 import { useColors } from '@/hooks/useColors';
 import type { DeckSlot } from '@/lib/supabase';
 import { DomainState } from '@/components/DomainState';
+import { VISUAL_TOKENS } from '@/constants/experience';
 
 type FormationRole = 'VANGUARDIA' | 'CAMPEÓN' | 'CENTINELA' | 'RESERVA';
 type FormationColors = ReturnType<typeof useColors>;
@@ -161,44 +162,129 @@ export function ForgeFormationPreview({
 }
 
 const styles = StyleSheet.create({
-  root: { borderWidth: 1, borderRadius: 18, padding: 14, gap: 10 },
-  heading: { flexDirection: 'row', alignItems: 'center', gap: 10 },
-  seal: {
-    width: 36,
-    height: 36,
+  root: {
     borderWidth: 1,
-    borderRadius: 12,
+    borderRadius: VISUAL_TOKENS.formation.root.radius,
+    padding: VISUAL_TOKENS.formation.root.padding,
+    gap: VISUAL_TOKENS.formation.root.gap,
+  },
+  heading: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: VISUAL_TOKENS.formation.heading.gap,
+  },
+  seal: {
+    width: VISUAL_TOKENS.formation.seal.size,
+    height: VISUAL_TOKENS.formation.seal.size,
+    borderWidth: 1,
+    borderRadius: VISUAL_TOKENS.formation.seal.radius,
     alignItems: 'center',
     justifyContent: 'center',
   },
   headingCopy: { flex: 1 },
-  kicker: { fontSize: 9, fontWeight: '900', letterSpacing: 1.2 },
-  title: { fontSize: 19, fontWeight: '900', marginTop: 2 },
-  count: { fontSize: 11, fontWeight: '800' },
-  copy: { fontSize: 11, lineHeight: 17 },
-  section: { fontSize: 9, fontWeight: '900', letterSpacing: 1, marginTop: 3 },
-  activeRow: { flexDirection: 'row', gap: 6 },
-  reserveRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 6 },
-  card: { flex: 1, minWidth: 92, borderWidth: 1, borderRadius: 12, padding: 8, gap: 4 },
-  cardHeader: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 4 },
-  cardArt: { width: '100%', height: 64, borderRadius: 8, backgroundColor: 'rgba(0,0,0,0.2)' },
-  role: { flex: 1, fontSize: 8, fontWeight: '900', letterSpacing: 0.5 },
-  name: { fontSize: 11, lineHeight: 14, fontWeight: '800', minHeight: 28 },
-  meta: { fontSize: 8, lineHeight: 12 },
-  power: { fontSize: 8, fontWeight: '900', marginTop: 2 },
-  emptyCard: { fontSize: 10, lineHeight: 14, minHeight: 28 },
-  feedback: {
-    minHeight: 50,
+  kicker: {
+    fontSize: VISUAL_TOKENS.formation.kicker.fontSize,
+    fontWeight: '900',
+    letterSpacing: VISUAL_TOKENS.formation.kicker.letterSpacing,
+  },
+  title: {
+    fontSize: VISUAL_TOKENS.formation.title.fontSize,
+    fontWeight: '900',
+    marginTop: VISUAL_TOKENS.formation.title.marginTop,
+  },
+  count: { fontSize: VISUAL_TOKENS.formation.count.fontSize, fontWeight: '800' },
+  copy: {
+    fontSize: VISUAL_TOKENS.formation.copy.fontSize,
+    lineHeight: VISUAL_TOKENS.formation.copy.lineHeight,
+  },
+  section: {
+    fontSize: VISUAL_TOKENS.formation.section.fontSize,
+    fontWeight: '900',
+    letterSpacing: VISUAL_TOKENS.formation.section.letterSpacing,
+    marginTop: VISUAL_TOKENS.formation.section.marginTop,
+  },
+  activeRow: { flexDirection: 'row', gap: VISUAL_TOKENS.formation.rows.gap },
+  reserveRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: VISUAL_TOKENS.formation.rows.gap,
+  },
+  card: {
+    flex: 1,
+    minWidth: VISUAL_TOKENS.formation.card.minWidth,
     borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.12)',
-    borderRadius: 12,
-    padding: 10,
+    borderRadius: VISUAL_TOKENS.formation.card.radius,
+    padding: VISUAL_TOKENS.formation.card.padding,
+    gap: VISUAL_TOKENS.formation.card.gap,
+  },
+  cardHeader: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
+    justifyContent: 'space-between',
+    gap: VISUAL_TOKENS.formation.cardHeader.gap,
   },
-  feedbackText: { flex: 1, fontSize: 9, fontWeight: '900', letterSpacing: 0.4, lineHeight: 14 },
-  retry: { borderWidth: 1, borderRadius: 8, paddingHorizontal: 8, paddingVertical: 7 },
-  retryText: { fontSize: 8, fontWeight: '900', letterSpacing: 0.5 },
-  footnote: { fontSize: 9, lineHeight: 14 },
+  cardArt: {
+    width: '100%',
+    height: VISUAL_TOKENS.formation.cardArt.height,
+    borderRadius: VISUAL_TOKENS.formation.cardArt.radius,
+    backgroundColor: 'rgba(0,0,0,0.2)',
+  },
+  role: {
+    flex: 1,
+    fontSize: VISUAL_TOKENS.formation.role.fontSize,
+    fontWeight: '900',
+    letterSpacing: VISUAL_TOKENS.formation.role.letterSpacing,
+  },
+  name: {
+    fontSize: VISUAL_TOKENS.formation.name.fontSize,
+    lineHeight: VISUAL_TOKENS.formation.name.lineHeight,
+    fontWeight: '800',
+    minHeight: VISUAL_TOKENS.formation.name.minHeight,
+  },
+  meta: {
+    fontSize: VISUAL_TOKENS.formation.meta.fontSize,
+    lineHeight: VISUAL_TOKENS.formation.meta.lineHeight,
+  },
+  power: {
+    fontSize: VISUAL_TOKENS.formation.power.fontSize,
+    fontWeight: '900',
+    marginTop: VISUAL_TOKENS.formation.power.marginTop,
+  },
+  emptyCard: {
+    fontSize: VISUAL_TOKENS.formation.emptyCard.fontSize,
+    lineHeight: VISUAL_TOKENS.formation.emptyCard.lineHeight,
+    minHeight: VISUAL_TOKENS.formation.emptyCard.minHeight,
+  },
+  feedback: {
+    minHeight: VISUAL_TOKENS.formation.feedback.minHeight,
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.12)',
+    borderRadius: VISUAL_TOKENS.formation.feedback.radius,
+    padding: VISUAL_TOKENS.formation.feedback.padding,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: VISUAL_TOKENS.formation.feedback.gap,
+  },
+  feedbackText: {
+    flex: 1,
+    fontSize: VISUAL_TOKENS.formation.feedbackText.fontSize,
+    fontWeight: '900',
+    letterSpacing: VISUAL_TOKENS.formation.feedbackText.letterSpacing,
+    lineHeight: VISUAL_TOKENS.formation.feedbackText.lineHeight,
+  },
+  retry: {
+    borderWidth: 1,
+    borderRadius: VISUAL_TOKENS.formation.retry.radius,
+    paddingHorizontal: VISUAL_TOKENS.formation.retry.paddingHorizontal,
+    paddingVertical: VISUAL_TOKENS.formation.retry.paddingVertical,
+  },
+  retryText: {
+    fontSize: VISUAL_TOKENS.formation.retryText.fontSize,
+    fontWeight: '900',
+    letterSpacing: VISUAL_TOKENS.formation.retryText.letterSpacing,
+  },
+  footnote: {
+    fontSize: VISUAL_TOKENS.formation.footnote.fontSize,
+    lineHeight: VISUAL_TOKENS.formation.footnote.lineHeight,
+  },
 });
