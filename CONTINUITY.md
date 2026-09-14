@@ -1,3 +1,20 @@
+## 2026-09-13 — VE-MOB-12-WORLD — HONEST RANKING METRICS / IMPLEMENTED_UNVERIFIED
+
+- **BRANCH:** `main`.
+- **SCREEN / DOMAIN:** Mundo / `MUNDO → RANKING`.
+- **BLOCK:** fidelidad de métricas competitivas faltantes.
+- **WHAT CHANGED:** puesto, MMR, victorias, derrotas, empates y porcentaje ahora distinguen datos no reportados de ceros confirmados; una fila sin partidas muestra `SIN PARTIDAS`.
+- **VISUAL DELTA:** el jugador no confunde una métrica ausente con cero, un puesto inválido con `#undefined` ni una fila sin partidas con un porcentaje vacío.
+- **DATA PRESERVED:** ranking autoritativo, temporada, orden, nombres resueltos por RPC, world bosses, raids, lore, claims, RPCs, RLS, Auth, economía, assets, navegación y web congelada.
+- **ASSETS USED:** ninguno nuevo; se mantienen los assets oficiales registrados.
+- **MOTION_ADDED:** ninguno.
+- **PERFORMANCE_NOTES:** validación y cálculo local sobre métricas ya cargadas; sin red adicional ni animación.
+- **GATES:** `verify-mobile-world` y `git diff --check` deben pasar. No se inicia APK, workflow Android ni release por instrucción del operador; no se declara QA visual/táctil, `PASS`, `OPERATIONAL` ni `TIER1_READY`.
+- **ESTADO HONESTO:** `IMPLEMENTED_UNVERIFIED`.
+- **VISUAL_DEBT_REMOVED:** `—`, `#undefined`, porcentajes ambiguos y pérdida de ceros confirmados en Ranking.
+- **PERSISTENCIA:** pendiente de publicar en `main` mediante la API Git Data HTTPS oficial de GitHub con `[skip ci]`; no se generará release Android.
+- **SIGUIENTE BLOQUE:** continuar con otra mejora Android atómica verificable, sin tocar la web congelada ni iniciar compilación hasta autorización del operador.
+
 ## 2026-09-13 — VE-MOB-12-WORLD — HONEST CODEX AND RAID SIGNALS / IMPLEMENTED_UNVERIFIED
 
 - **BRANCH:** `main`.

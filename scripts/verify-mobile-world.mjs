@@ -26,6 +26,7 @@ const checks = [
   ['honest reward signals', ["function rewardNumber", "appendNumericReward('vex_ingame', 'VEX')", "appendNumericReward('shards', 'FRAGMENTOS')", 'value === null ? `${label} NO REPORTADO`', 'CARTA NO REPORTADA', 'RECOMPENSA SIN DETALLE']],
   ['honest encounter damage', ['ownEncounters', 'ownDamage === null', 'TÚ DAÑO NO REPORTADO', 'TÚ ${formatNumber(ownDamage)}']],
   ['honest lore and raid identity signals', ['function worldStatusLabel', 'ESTADO NO REPORTADO', 'TÍTULO NO REPORTADO', 'CONTENIDO NO REPORTADO', 'REGIÓN NO REPORTADA', 'worldStatusLabel(raid.status)']],
+  ['honest ranking metrics', ['function rankingMetric', 'function rankingWinRate', 'PUESTO NO REPORTADO', 'PORCENTAJE NO REPORTADO', 'SIN PARTIDAS']],
 ];
 for (const [label, needles] of checks) {
   const source = label === 'official world reads' || label === 'official actions' ? supabase : label === 'world background' ? visual : screen;
