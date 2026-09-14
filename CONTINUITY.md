@@ -1,3 +1,22 @@
+## 2026-09-14 — VE-MOB-7-BATTLE — HONEST TURN EVENT LABEL CONSISTENCY / IMPLEMENTED_UNVERIFIED
+
+- **BRANCH:** `main`.
+- **SCREEN / DOMAIN:** Arena / `ARENA → FORGEFORMATION → REPLAY DE TURNO`.
+- **BLOCK:** evitar que el detalle de turno reduzca los eventos `poisoned` y `poison_tick` a la etiqueta genérica `Veneno`.
+- **WHAT CHANGED:** el detalle textual de replay muestra `VENENO CONFIRMADO`, alineado con el battlefield y con el tipo de evento recibido del servidor.
+- **LIVE DATA CHECK:** se conserva el contrato vivo de `BattleTurn.events`; no se añadieron eventos ni datos locales.
+- **DATA PRESERVED:** event log, tipos de evento, daño, turnos, formación, resultado, RPC oficial, Auth, RLS, telemetría, accesibilidad, reduced-motion y web congelada.
+- **ASSETS USED:** ninguno nuevo.
+- **MOTION_ADDED:** ninguno.
+- **PERFORMANCE_NOTES:** traducción local de una señal ya cargada; sin solicitudes de red, animaciones nuevas ni dependencias.
+- **GATES:** `node scripts/verify-mobile-battle.mjs` y `git diff --check`; no se inicia workflow Android, no se compila APK ni se publica release por instrucción del operador.
+- **CORE_SCORE:** pendiente de QA visual/táctil en dispositivo.
+- **VISUAL_DEBT_ADDED:** ninguna.
+- **VISUAL_DEBT_REMOVED:** etiqueta genérica `Veneno` para eventos de veneno confirmados.
+- **STATUS:** `IMPLEMENTED_UNVERIFIED`.
+- **PERSISTENCIA:** código, gate y continuidad se publicarán juntos en `main` mediante la API REST HTTPS oficial de GitHub con `[skip ci]`; sin APK ni release Android nuevo.
+- **NEXT_BLOCK:** continuar con otra unidad Android atómica del protocolo sin tocar la web congelada ni iniciar APK.
+
 ## 2026-09-14 — VE-MOB-7-BATTLE — HONEST BATTLEFIELD HP AND TURN STATUS / IMPLEMENTED_UNVERIFIED
 
 - **BRANCH:** `main`.

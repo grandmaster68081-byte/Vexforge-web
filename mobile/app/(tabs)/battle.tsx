@@ -254,7 +254,7 @@ function TurnView({
   const damage = typeof turn.damage === 'number' && Number.isFinite(turn.damage) ? turn.damage : null;
   const eventLabels = (turn.events ?? []).map((event) => {
     if (event.type === 'shield_block') return 'Barrera activada';
-    if (event.type === 'poisoned' || event.type === 'poison_tick') return 'Veneno';
+    if (event.type === 'poisoned' || event.type === 'poison_tick') return 'VENENO CONFIRMADO';
     if (event.type === 'lifesteal') return 'Drenaje';
     if (event.type === 'double_strike') return 'Doble golpe';
     if (event.type === 'poison_death') return 'UNIDAD ELIMINADA POR VENENO';
