@@ -8,7 +8,7 @@
 - **ARCHIVOS:** `mobile/app/(tabs)/deck.tsx`; `scripts/verify-mobile-deck.mjs`; `docs/VE-MOB-8-DECK-DOMAIN-IDENTITY.md`.
 - **GATES:** `verify-mobile-deck` pasa 25/25, `verify-uxcx-domain-identity` pasa 5/5 dominios y `verify:motion` pasa 17/17; el escaneo de whitespace queda limpio. No se compila APK ni se inicia workflow por instrucción explícita del operador.
 - **ESTADO HONESTO:** `IMPLEMENTED_UNVERIFIED`; no se declara `PASS`, `OPERATIONAL` ni `TIER1_READY`.
-- **PERSISTENCIA:** pendiente de publicar en `main` mediante API REST HTTPS oficial de GitHub con `[skip ci]`.
+- **PERSISTENCIA:** publicado en `main` mediante API REST HTTPS oficial de GitHub en el commit `bcda67084e3f34eab53cdb52c28b780b90f8b266` con `[skip ci]`; no se inició workflow y no se generará release Android.
 - **SIGUIENTE BLOQUE:** continuar con otro delta Android verificable sin reabrir contratos consolidados.
 
 ## 2026-09-13 — VE-MOB-9-PROFILE — HISTORY OUTCOME FIDELITY / IMPLEMENTED_UNVERIFIED
