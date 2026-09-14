@@ -1,3 +1,22 @@
+## 2026-09-14 — VE-MOB-T2V — BATTLEFIELD SOCKET AND CARD PEDESTAL TOKENS / IMPLEMENTED_UNVERIFIED
+
+- **BRANCH:** `main`.
+- **SCREEN / DOMAIN:** Arena / `ForgeBattlefield` y sus sockets de formación, reserva e identidad.
+- **BLOCK:** decimotercera pieza ejecutable de `T2V — VISUAL SYSTEM TOKENS + SHARED SCENE PRIMITIVES`.
+- **WHAT CHANGED:** el battlefield consume `VISUAL_TOKENS.battlefield` para contenedor, identidad, separación de formación, tarjetas de unidad, arte, reserva y carril de confrontación.
+- **DATA PRESERVED:** event log, turnos, HP, daño, formación, Campeón/Vanguardia/Centinela/Reserva, ganador, replay, RPC oficial, Auth, RLS, economía, accesibilidad, reduced-motion, assets oficiales y web congelada.
+- **AUTHORITY:** Android continúa renderizando el contrato vivo; no se alteran targeting, iniciativa, daño, protección, slot count, reglas, resultados ni settlement.
+- **ASSETS USED:** se mantienen únicamente arte y señales oficiales ya recibidos por `BattleUnit`; no se añade fallback diegético.
+- **MOTION_ADDED:** ninguno; la animación existente sigue gobernada por eventos y `reducedMotion`.
+- **PERFORMANCE_NOTES:** tokens estáticos resueltos localmente; sin solicitudes, listeners, estado ni renders de datos adicionales.
+- **GATES:** `node scripts/verify-mobile-visual-system.mjs`, `node --check scripts/verify-mobile-visual-system.mjs` y `git diff --check`; typecheck móvil, workflow APK y QA visual/táctil siguen pendientes y no se inician.
+- **VISUAL_DELTA:** la escena de combate comparte ahora geometría explícita para sockets, cartas de formación, reserva y carril sin reinterpretar el estado autoritativo.
+- **VISUAL_DEBT_REMOVED:** literales geométricos duplicados en la primitiva de battlefield.
+- **VISUAL_DEBT_ADDED:** ninguna.
+- **STATUS:** `IMPLEMENTED_UNVERIFIED`.
+- **PERSISTENCIA:** publicar código, guarda de visual system y continuidad juntos en `main` mediante la API REST HTTPS oficial de GitHub con `[skip ci]`; no compilar APK ni publicar release.
+- **NEXT_BLOCK:** continuar con otra pieza T2V explícita sin tocar el motor, los contratos de Supabase, la web congelada ni el tutorial.
+
 ## 2026-09-14 — VE-MOB-T2V — METRIC PLAQUE TOKENS / IMPLEMENTED_UNVERIFIED
 
 - **BRANCH:** `main`.

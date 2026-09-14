@@ -288,6 +288,23 @@ export const VISUAL_TOKENS = {
     labelSize: 8,
     labelTracking: 0.6,
   },
+  battlefield: {
+    root: { radius: 22, padding: 12, gap: 10 },
+    identity: { markSize: 30, markRadius: 10, gap: 8, paddingHorizontal: 3 },
+    formation: { gap: 6 },
+    unitCard: { radius: 13, padding: 6, gap: 3 },
+    unitArt: { height: 74, radius: 9 },
+    championArtHeight: 92,
+    reserve: {
+      gap: 8,
+      minHeight: 28,
+      paddingHorizontal: 3,
+      itemWidth: 24,
+      itemHeight: 28,
+      itemRadius: 5,
+    },
+    lane: { radius: 12, paddingVertical: 8, paddingHorizontal: 10, gap: 2 },
+  },
   formation: {
     root: { radius: 18, padding: 14, gap: 10 },
     heading: { gap: 10 },

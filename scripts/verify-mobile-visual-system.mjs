@@ -139,10 +139,18 @@ if (!profile.includes('VISUAL_TOKENS.metricPlaque')) {
   failures.push('Profile does not consume metric plaque tokens');
 }
 
+const battlefield = source('mobile/components/ForgeBattlefield.tsx');
+if (!battlefield.includes("from '@/constants/experience'")) {
+  failures.push('ForgeBattlefield does not consume shared visual tokens');
+}
+if (!battlefield.includes('VISUAL_TOKENS.battlefield')) {
+  failures.push('ForgeBattlefield does not consume battlefield tokens');
+}
+
 if (failures.length > 0) {
   console.error('T2V visual system guard failed:');
   for (const failure of failures) console.error(` - ${failure}`);
   process.exit(1);
 }
 
-console.log('T2V visual system guard passed (shared tokens + metric plaque + identity mark + navigation shell + MaterialPanel + DomainState)');
+console.log('T2V visual system guard passed (shared tokens + battlefield + metric plaque + identity mark + navigation shell + MaterialPanel + DomainState)');
