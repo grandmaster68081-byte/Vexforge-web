@@ -4276,4 +4276,5 @@
 - Evidencia local: `npm run build` OK como preflight; `node scripts/verify-mobile-collection-reference.mjs` OK (15/15); `git diff --check` OK. El typecheck Android queda diferido porque el snapshot oficial no incluye `mobile/node_modules`.
 - No se inicia workflow Android, no se compila APK ni se publica release por instrucción expresa del operador. Estado honesto: `IMPLEMENTED_UNVERIFIED`; requiere QA visual/táctil en dispositivo cuando el operador autorice una compilación.
 - Publicación: código y esta continuidad se publicarán en `main` mediante la API REST HTTPS oficial de GitHub con `[skip ci]`, sin `git push`, para no disparar el workflow APK.
+- Commit remoto de implementación: `ed306a44d808a0837da5d18a12cdeb1637d95651`.
 - Siguiente microbloque: continuar con otra mejora Android atómica de fidelidad o interacción, sin tocar la web congelada ni iniciar APK sin autorización.
