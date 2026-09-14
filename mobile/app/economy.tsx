@@ -60,6 +60,13 @@ function money(value: number | null | undefined) {
   return value.toLocaleString('es-ES', { maximumFractionDigits: 2 });
 }
 
+function parseInputNumber(value: string) {
+  const normalized = value.trim().replace(',', '.');
+  if (!normalized) return null;
+  const parsed = Number(normalized);
+  return Number.isFinite(parsed) ? parsed : null;
+}
+
 function dateLabel(value: string | null | undefined) {
   if (!value?.trim()) return 'FECHA NO REPORTADA';
   const date = new Date(value);
@@ -270,10 +277,10 @@ export default function EconomyScreen() {
   const [withdrawalResult, setWithdrawalResult] = useState<RequestWithdrawalResult | null>(null);
 
   const selectedTreasury = treasury[depositWalletIndex] ?? treasury[0] ?? null;
-  const withdrawalVex = Number(withdrawalAmount.replace(',', '.')) || 0;
-  const withdrawalGross = withdrawalVex / VEX_PER_USDT;
-  const withdrawalFee = withdrawalGross * WITHDRAWAL_FEE_RATE;
-  const withdrawalNet = Math.max(0, withdrawalGross - withdrawalFee);
+  const withdrawalVex = parseInputNumber(withdrawalAmount);
+  const withdrawalGross = withdrawalVex === null ? null : withdrawalVex / VEX_PER_USDT;
+  const withdrawalFee = withdrawalGross === null ? null : withdrawalGross * WITHDRAWAL_FEE_RATE;
+  const withdrawalNet = withdrawalGross === null ? null : Math.max(0, withdrawalGross - withdrawalFee);
   const selectedCard = ownedCards.find((card) => card.id === selectedCardId) ?? null;
 
   const refreshEconomy = useCallback(async (mode: 'initial' | 'refresh' = 'initial') => {
@@ -428,7 +435,7 @@ export default function EconomyScreen() {
   const submitWithdrawal = useCallback(() => {
     if (!session || !player) return;
     const available = tradeable?.balance;
-    if (typeof available !== 'number' || !Number.isFinite(available) || withdrawalVex < MIN_WITHDRAWAL_VEX || withdrawalVex > available || tradeable?.pending) return;
+    if (typeof available !== 'number' || !Number.isFinite(available) || typeof withdrawalVex !== 'number' || !Number.isFinite(withdrawalVex) || withdrawalVex < MIN_WITHDRAWAL_VEX || withdrawalVex > available || tradeable?.pending) return;
     void runMutation('request-withdrawal', async () => {
       const result = await requestMobileWithdrawal(session, player.id, withdrawalVex);
       setWithdrawalResult(result);
@@ -582,7 +589,7 @@ export default function EconomyScreen() {
     }
     if (section === 'withdrawals') {
       const available = tradeable?.balance;
-      const withdrawalValid = typeof available === 'number' && Number.isFinite(available) && withdrawalVex >= MIN_WITHDRAWAL_VEX && withdrawalVex <= available && !tradeable?.pending;
+      const withdrawalValid = typeof available === 'number' && Number.isFinite(available) && typeof withdrawalVex === 'number' && Number.isFinite(withdrawalVex) && withdrawalVex >= MIN_WITHDRAWAL_VEX && withdrawalVex <= available && !tradeable?.pending;
       return (
         <>
           <SectionTitle eyebrow="RETIROS" title="Convierte VEX tradeable" colors={colors} />

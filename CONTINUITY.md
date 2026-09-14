@@ -4448,3 +4448,15 @@
 - Publicación: código y esta continuidad se publicarán juntos en `main` mediante la API REST HTTPS oficial de GitHub con `[skip ci]`, sin `git push`, para no disparar el workflow APK.
 - Commit remoto de implementación: `f058fa9577949f0813fc9f02e6725b6eee6da237`.
 - Siguiente microbloque: continuar con otra mejora Android atómica de fidelidad o interacción, sin tocar la web congelada ni iniciar APK sin autorización.
+
+---
+## 2026-09-14 — VE-MOB-11-ECONOMY — HONEST WITHDRAWAL INPUT SIGNAL / IMPLEMENTED_UNVERIFIED
+
+- Se corrigió `mobile/app/economy.tsx`: una cantidad de retiro vacía o no numérica ya no se convierte internamente en `0` ni produce cálculos de bruto, comisión y neto falsamente confirmados.
+- Mientras la entrada no sea numérica, los cálculos permanecen pendientes y la acción de retiro permanece deshabilitada; una cantidad válida conserva la fórmula existente de 100 VEX por USDT y comisión del 8%, sin modificar la RPC autoritativa.
+- Se conservaron balance tradeable, límites, estados de retiro, mercado, depósitos, referrals, tesorería, Supabase, Auth, navegación, accesibilidad, haptics, reduced-motion, estados loading/error/vacío y la web congelada.
+- Se reforzó `scripts/verify-mobile-economy.mjs` con una guarda específica para impedir el fallback `|| 0` en la entrada de retiro.
+- Evidencia local: `node scripts/verify-mobile-economy.mjs` OK (14/14) y `git diff --check` OK. El typecheck Android queda diferido porque el snapshot oficial no incluye `mobile/node_modules`.
+- No se inicia workflow Android, no se compila APK ni se publica release por instrucción expresa del operador. Estado honesto: `IMPLEMENTED_UNVERIFIED`; requiere QA visual/táctil en dispositivo cuando el operador autorice una compilación.
+- Publicación: código y esta continuidad se publicarán juntos en `main` mediante la API REST HTTPS oficial de GitHub con `[skip ci]`, sin `git push`, para no disparar el workflow APK.
+- Siguiente microbloque: continuar con otra mejora Android atómica de fidelidad o interacción, sin tocar la web congelada ni iniciar APK sin autorización.
