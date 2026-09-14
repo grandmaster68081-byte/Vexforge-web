@@ -255,7 +255,7 @@ function TurnView({
   return (
     <View testID="battle-turn-view" accessibilityLiveRegion="polite">
       <View style={styles.turnHeader}>
-        <Text style={[styles.turnKicker, { color: colors.primary }]}>TURNO {turn.turn || index + 1}</Text>
+        <Text style={[styles.turnKicker, { color: colors.primary }]}>TURNO {numberSignal(turn.turn, 'NO REPORTADO')}</Text>
         <Text style={[styles.turnCount, { color: colors.mutedForeground }]}>{index + 1}/{total}</Text>
       </View>
       <View style={styles.vsRow}>
@@ -305,7 +305,10 @@ function ResultPanel({
   const outcomeColor = won ? colors.success : isDraw ? colors.accent : colors.danger;
   const mmrChange = typeof result.elo_change === 'number' ? result.elo_change : null;
   const mmrColor = isTraining || mmrChange === null ? colors.mutedForeground : mmrChange > 0 ? colors.success : mmrChange < 0 ? colors.danger : colors.accent;
-  const mmrLabel = isTraining || mmrChange === null ? '—' : `${mmrChange > 0 ? '+' : ''}${mmrChange}`;
+  const mmrLabel = isTraining ? 'SIN MMR' : mmrChange === null ? 'MMR NO REPORTADO' : `${mmrChange > 0 ? '+' : ''}${mmrChange}`;
+  const playerName = textSignal(result.player_name, 'JUGADOR NO REPORTADO');
+  const opponentName = textSignal(result.opponent_name, 'RIVAL NO REPORTADO');
+  const matchLabel = textSignal(result.match_id ? result.match_id.slice(0, 8).toUpperCase() : null, 'MATCH NO REPORTADO');
   const finalTurn = result.turns?.[Math.max(0, (result.turns?.length ?? 1) - 1)] ?? null;
   const totalTurns = typeof result.total_turns === 'number' && Number.isFinite(result.total_turns)
     ? result.total_turns
@@ -320,13 +323,13 @@ function ResultPanel({
       </View>
       <Text style={[styles.resultTitle, { color: outcomeColor }]}>{resultTitle(result)}</Text>
       <Text style={[styles.resultCopy, { color: colors.mutedForeground }]}>
-        {result.ok ? `${result.player_name ?? 'Tú'} contra ${result.opponent_name ?? 'Oponente'}` : result.error ?? result.reason ?? 'El servidor no completó el combate.'}
+        {result.ok ? `${playerName} contra ${opponentName}` : result.error ?? result.reason ?? 'El servidor no completó el combate.'}
       </Text>
       {result.ok ? (
         <View style={styles.resultStats}>
-            <View style={styles.resultStat}><Text style={[styles.resultValue, { color: colors.foreground }]}>{totalTurns === null ? '—' : totalTurns}</Text><Text style={[styles.resultLabel, { color: colors.mutedForeground }]}>TURNOS</Text></View>
+            <View style={styles.resultStat}><Text style={[styles.resultValue, { color: colors.foreground }]}>{totalTurns === null ? 'TURNOS NO REPORTADOS' : totalTurns}</Text><Text style={[styles.resultLabel, { color: colors.mutedForeground }]}>TURNOS</Text></View>
            <View style={styles.resultStat}><Text style={[styles.resultValue, { color: mmrColor }]}>{mmrLabel}</Text><Text style={[styles.resultLabel, { color: colors.mutedForeground }]}>MMR</Text></View>
-           <View style={styles.resultStat}><Text style={[styles.resultValue, { color: colors.accent }]}>{isTraining ? 'IA' : result.match_id ? result.match_id.slice(0, 8).toUpperCase() : '—'}</Text><Text style={[styles.resultLabel, { color: colors.mutedForeground }]}>{isTraining ? 'MODO' : 'MATCH'}</Text></View>
+           <View style={styles.resultStat}><Text style={[styles.resultValue, { color: colors.accent }]}>{isTraining ? 'IA' : matchLabel}</Text><Text style={[styles.resultLabel, { color: colors.mutedForeground }]}>{isTraining ? 'MODO' : 'MATCH'}</Text></View>
         </View>
       ) : null}
       {result.ok && !isTraining && (result.final_units?.length ?? 0) > 0 ? (

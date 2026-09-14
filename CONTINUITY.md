@@ -1,3 +1,22 @@
+## 2026-09-14 — VE-MOB-7-BATTLE — HONEST RESULT SIGNALS / IMPLEMENTED_UNVERIFIED
+
+- **BRANCH:** `main`.
+- **SCREEN / DOMAIN:** Arena / `ARENA → RESULTADO DE COMBATE`.
+- **BLOCK:** fidelidad de identidad, match, turnos y MMR cuando el resultado autoritativo no entrega una señal.
+- **WHAT CHANGED:** el resumen conserva nombres, match, turnos y cambio de MMR vivos; ausencias muestran `JUGADOR NO REPORTADO`, `RIVAL NO REPORTADO`, `MATCH NO REPORTADO`, `TURNOS NO REPORTADOS` o `MMR NO REPORTADO`. La práctica mantiene `SIN MMR`.
+- **LIVE DATA CHECK:** se conserva el resultado entregado por `vexforge_battle_resolve`; no se añadieron datos, simulaciones, RPCs ni autoridad local.
+- **DATA PRESERVED:** ForgeFormation, Battle Run, event log, replay, settlement, MMR, recompensas, Auth, RLS, navegación, accesibilidad, reduced-motion, assets oficiales y web congelada.
+- **ASSETS USED:** ninguno nuevo.
+- **MOTION_ADDED:** ninguno; se conserva la interacción táctil y la protección de reduced-motion.
+- **PERFORMANCE_NOTES:** normalización local de señales ya cargadas; sin solicitudes de red, animaciones nuevas ni dependencias añadidas.
+- **GATES:** `node scripts/verify-mobile-battle.mjs` y `git diff --check` deben pasar. No se compila APK, no se inicia workflow Android ni se publica release por instrucción del operador.
+- **CORE_SCORE:** pendiente de QA visual/táctil en dispositivo.
+- **VISUAL_DEBT_ADDED:** ninguna.
+- **VISUAL_DEBT_REMOVED:** nombres `Tú`/`Oponente`, guion de match, guion de turnos y guion de MMR como sustitutos de señales ausentes.
+- **STATUS:** `IMPLEMENTED_UNVERIFIED`.
+- **PERSISTENCIA:** pendiente de publicar código y continuidad en `main` mediante la API REST HTTPS oficial de GitHub con `[skip ci]`; sin APK ni release Android nuevo.
+- **NEXT_BLOCK:** continuar con otra unidad Android atómica del protocolo sin tocar la web congelada ni iniciar APK.
+
 ## 2026-09-14 — VE-MOB-7-BATTLE — HONEST TURN DETAIL SIGNALS / IMPLEMENTED_UNVERIFIED
 
 - **BRANCH:** `main`.
