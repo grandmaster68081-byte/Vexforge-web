@@ -5,7 +5,9 @@
 - **DATOS HONESTOS:** no se infiere ganador desde HP, turnos, orden local ni valores inventados. `client_ai_v1` conserva su contrato de práctica y no produce empate por esta ruta.
 - **ARCHIVOS:** `mobile/app/(tabs)/battle.tsx`; `mobile/components/ForgeBattlefield.tsx`; `scripts/verify-mobile-battle.mjs`; `docs/VE-MOB-7-BATTLE-DRAW-FIDELITY.md`.
 - **LÍMITES:** no se tocaron Supabase, RPCs, RLS, Auth, economía, motor de combate, assets ni la web congelada. No se inició workflow Android, no se compiló APK y no se generó release por instrucción explícita del operador.
-- **ESTADO HONESTO:** `IMPLEMENTED_UNVERIFIED`; la guarda local y el typecheck deben quedar registrados antes de cerrar este bloque. La QA visual/táctil en APK y el release correlativo siguen pendientes.
+- **PERSISTENCIA:** cambio publicado en `main` mediante la API REST HTTPS de GitHub en el commit `c092ef6ebd6ed078a9e58f16a9427ef5eff8220b` con `[skip ci]`, por lo que no se inició el workflow Android.
+- **EVIDENCIA LOCAL:** `verify:mobile-battle` pasa 25/25. El typecheck del clon sigue bloqueado porque faltan las dependencias Expo (`expo/tsconfig.base` y módulos nativos); no se presenta ese bloqueo del entorno como un fallo del delta.
+- **ESTADO HONESTO:** `IMPLEMENTED_UNVERIFIED`; la QA visual/táctil en APK y el release correlativo siguen pendientes.
 - **SIGUIENTE BLOQUE:** continuar con otra mejora Android atómica sólo si aporta un delta verificable y conserva la autoridad de los datos.
 
 ## 2026-09-13 — VE-MOB-7-BATTLE — AUTHORITATIVE RESULT FORMATION / IMPLEMENTED_UNVERIFIED
