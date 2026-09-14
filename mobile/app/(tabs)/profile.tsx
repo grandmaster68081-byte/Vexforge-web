@@ -81,7 +81,8 @@ function formatDate(value: string | null | undefined) {
   return Number.isNaN(date.getTime()) ? '—' : date.toLocaleDateString('es-ES', { month: 'short', year: 'numeric' }).replace('.', '').toUpperCase();
 }
 
-function getStreak(matches: MobileSocialSnapshot['matches'], playerId: string) {
+function getStreak(matches: MobileSocialSnapshot['matches'] | null, playerId: string) {
+  if (!matches) return null;
   let streak = 0;
   for (const match of matches) {
     if (match.status !== 'resolved') continue;
@@ -149,7 +150,7 @@ function PanelContent({
         <View style={styles.modalGrid}>
           <ModalMetric label="VICTORIAS" value={number(stats?.pvp_wins)} colors={colors} icon="trophy-outline" />
           <ModalMetric label="DERROTAS" value={number(stats?.pvp_losses)} colors={colors} icon="close-circle-outline" />
-          <ModalMetric label="RACHA" value={number(getStreak(social?.matches ?? [], playerId))} colors={colors} icon="flame" />
+          <ModalMetric label="RACHA" value={number(getStreak(social?.matches ?? null, playerId))} colors={colors} icon="flame" />
           <ModalMetric label="ELO" value={number(rank?.mmr)} colors={colors} icon="shield-outline" />
           <ModalMetric label="CARTAS" value={number(collectionCount)} colors={colors} icon="cards" />
           <ModalMetric label="VEX" value={number(wallet?.vex_ingame)} colors={colors} icon="coin" />
@@ -281,7 +282,7 @@ export default function ProfileScreen() {
   const statValues = useMemo(() => [
     number(stats?.pvp_wins),
     number(stats?.pvp_losses),
-    number(getStreak(social?.matches ?? [], player?.id ?? '')),
+    number(getStreak(social?.matches ?? null, player?.id ?? '')),
     number(rank?.mmr),
   ], [player?.id, rank?.mmr, social?.matches, stats?.pvp_losses, stats?.pvp_wins]);
 
