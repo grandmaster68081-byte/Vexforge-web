@@ -7,23 +7,11 @@ export interface PvpSeason { id: string; season_key: string; name: string; start
 export interface PvpRanking { id: string; season_id: string; player_id: string; display_name: string; level: number | null; mmr: number; rank_position: number | null; wins: number; losses: number; draws: number; win_rate: number; }
 export interface PvpMatch { id: string; reference_id: string; player_a: string; player_b: string; winner: string | null; status: string; elo_change_a: number | null; elo_change_b: number | null; created_at: string; resolved_at: string | null; }
 export interface ArenaPlayer { player_id: string; display_name: string; level: number | null; mmr: number; wins: number; losses: number; }
-export interface BattleOpponent { player_id: string; display_name: string; level: number; deck_size: number; total_power: number; }
-
-export interface BattleTurn {
-  turn: number;
-  p_card: string; p_rarity: string; p_power: number;
-  o_card: string; o_rarity: string; o_power: number;
-  p_hp: number; o_hp: number;
-}
-export interface BattleResult {
-  ok: boolean; reason?: string;
-  session_id?: string; match_id?: string;
-  you_won?: boolean; winner_id?: string;
-  player_name?: string; opponent_name?: string;
-  player_final_hp?: number; opponent_final_hp?: number;
-  total_turns?: number; turns?: BattleTurn[];
-  elo_change?: number;
-}
+/**
+ * VE-PVP-4-LEGACY-START-RETIRED: no synthetic `level`. Every value comes from
+ * get_pvp_opponents; total_power carries the authoritative MMR.
+ */
+export interface BattleOpponent { player_id: string; display_name: string; deck_size: number; total_power: number; wins: number; losses: number; }
 
 async function getCurrentPlayerId(): Promise<string | null> {
   const { data: s } = await supabase.auth.getSession();
@@ -139,55 +127,21 @@ export async function listOpponents(): Promise<DomainResult<BattleOpponent[]>> {
     .map((p) => ({
       player_id:    p.player_id,
       display_name: p.display_name ?? "Guerrero",
-      level:        1,
-      deck_size:    p.deck_size ?? 0,
-      total_power:  p.mmr ?? 1000,
+      deck_size:    Number(p.deck_size ?? 0),
+      total_power:  Number(p.mmr ?? 1000),
+      wins:         Number(p.wins ?? 0),
+      losses:       Number(p.losses ?? 0),
     })) as BattleOpponent[];
   return { status: "ready", data: opponents };
 }
 
 /**
- * FIX chat56 BUG-3: was calling vexforge_start_battle (RPC does not exist).
- * Now uses start_pvp_match(p_a, p_b) which resolves immediately and returns the match UUID.
+ * VE-PVP-4-LEGACY-START-RETIRED
+ * The legacy startBattle() helper (RPC start_pvp_match) was removed: that RPC is
+ * granted to service_role only, so from the browser it could never resolve a match,
+ * and it produced no turn log, rewards or ELO for the player. The single authoritative
+ * PvP entry point is startRealBattle() -> vexforge_battle_resolve (see below).
  */
-export async function startBattle(opponentId: string): Promise<DomainResult<BattleResult>> {
-  const playerId = await getCurrentPlayerId();
-  if (!playerId) return { status: "blocked_auth", data: null, reason: "Sign in to battle." };
-
-  // start_pvp_match(p_a uuid, p_b uuid) → returns match_id uuid
-  const { data: matchId, error } = await supabase.rpc("start_pvp_match", {
-    p_a: playerId,
-    p_b: opponentId,
-  });
-  if (error) return { status: "ready", data: { ok: false, reason: error.message } };
-
-  // Read match result (own match — RLS allows)
-  const { data: match } = await supabase.from("pvp_matches")
-    .select("id,winner,player_a,player_b,elo_change_a,elo_change_b")
-    .eq("id", matchId as string).maybeSingle();
-
-  const youWon = (match?.winner ?? null) === playerId;
-  // BUG FIX: ELO slot is determined by which seat the player occupies, not by win/loss.
-  // player_a always gets elo_change_a; player_b always gets elo_change_b.
-  const isPlayerA = match?.player_a === playerId;
-  const names = await resolvePlayerNames([opponentId]);
-  const eloChange = isPlayerA ? (match?.elo_change_a ?? 0) : (match?.elo_change_b ?? 0);
-
-  return {
-    status: "ready",
-    data: {
-      ok:            true,
-      match_id:      (matchId as string) ?? undefined,
-      you_won:       youWon,
-      winner_id:     match?.winner ?? undefined,
-      player_name:   "Tú",
-      opponent_name: names[opponentId]?.display_name ?? "Oponente",
-      elo_change:    eloChange ?? 0,
-    } as BattleResult,
-  };
-}
-
-
 
 // ── D.2 — Enriched Match History ──────────────────────────────────────────────
 
