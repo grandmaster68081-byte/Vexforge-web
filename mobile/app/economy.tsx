@@ -85,9 +85,23 @@ function referralName(value: string | null | undefined) {
   return value?.trim() || 'IDENTIDAD NO REPORTADA';
 }
 
-function statusColor(status: string, colors: Colors) {
-  if (['approved', 'completed', 'fulfilled'].includes(status)) return colors.success;
-  if (['rejected', 'failed', 'cancelled'].includes(status)) return colors.danger;
+function statusLabel(status: string | null | undefined) {
+  const normalized = status?.trim().toLowerCase();
+  if (normalized === 'pending') return 'PENDIENTE';
+  if (normalized === 'pending_review') return 'REVISIÓN PENDIENTE';
+  if (normalized === 'approved') return 'APROBADO';
+  if (normalized === 'completed') return 'COMPLETADO';
+  if (normalized === 'fulfilled') return 'ENTREGADO';
+  if (normalized === 'rejected') return 'RECHAZADO';
+  if (normalized === 'failed') return 'FALLIDO';
+  if (normalized === 'cancelled') return 'CANCELADO';
+  return normalized ? `ESTADO: ${normalized.toUpperCase()}` : 'ESTADO NO REPORTADO';
+}
+
+function statusColor(status: string | null | undefined, colors: Colors) {
+  const normalized = status?.trim().toLowerCase();
+  if (['approved', 'completed', 'fulfilled'].includes(normalized ?? '')) return colors.success;
+  if (['rejected', 'failed', 'cancelled'].includes(normalized ?? '')) return colors.danger;
   return colors.accent;
 }
 
@@ -560,7 +574,7 @@ export default function EconomyScreen() {
                 <Text style={[styles.cardTitle, { color: colors.foreground }]}>{money(deposit.amount_usdt)} {deposit.token_symbol || 'USDT'}</Text>
                 <Text style={[styles.meta, { color: colors.mutedForeground }]}>{deposit.chain} · {shortHash(deposit.tx_hash)} · {dateLabel(deposit.created_at)}</Text>
               </View>
-              <Text style={[styles.status, { color: statusColor(deposit.status, colors) }]}>{deposit.status}</Text>
+              <Text style={[styles.status, { color: statusColor(deposit.status, colors) }]}>{statusLabel(deposit.status)}</Text>
             </Panel>
           ))}
         </>
@@ -597,7 +611,7 @@ export default function EconomyScreen() {
                 <Text style={[styles.cardTitle, { color: colors.foreground }]}>{money(withdrawal.tradeable_amount)} VEX · {money(withdrawal.usdt_net)} USDT netos</Text>
                 <Text style={[styles.meta, { color: colors.mutedForeground }]}>{dateLabel(withdrawal.created_at)}{withdrawal.rejected_reason ? ` · ${withdrawal.rejected_reason}` : ''}</Text>
               </View>
-              <Text style={[styles.status, { color: statusColor(withdrawal.status, colors) }]}>{withdrawal.status}</Text>
+              <Text style={[styles.status, { color: statusColor(withdrawal.status, colors) }]}>{statusLabel(withdrawal.status)}</Text>
             </Panel>
           ))}
         </>
@@ -626,7 +640,7 @@ export default function EconomyScreen() {
               <Text style={[styles.cardTitle, { color: colors.foreground }]}>{referralName(referral.referred_display_name)}</Text>
               <Text style={[styles.meta, { color: colors.mutedForeground }]}>{dateLabel(referral.created_at)} · {referral.first_pack_rewarded ? 'Primer pack registrado' : 'Sin primer pack registrado'}</Text>
             </View>
-            <Text style={[styles.status, { color: statusColor(referral.status, colors) }]}>{referral.reward_granted ? 'ACREDITADO' : referral.status}</Text>
+            <Text style={[styles.status, { color: statusColor(referral.status, colors) }]}>{referral.reward_granted ? 'ACREDITADO' : statusLabel(referral.status)}</Text>
           </Panel>
         ))}
       </>

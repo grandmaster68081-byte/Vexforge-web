@@ -23,6 +23,7 @@ const assertions = [
   ['loading, error, empty, refresh, and auth states are explicit', contents.screen.includes('DomainState kind="loading"') && contents.screen.includes('economy-loading') && contents.screen.includes('ErrorNotice') && contents.screen.includes('EmptyState') && contents.screen.includes('RefreshControl') && contents.screen.includes('Sesión requerida')],
   ['mobile accessibility and safe area are present', contents.screen.includes('useSafeAreaInsets') && contents.screen.includes('accessibilityRole="button"') && contents.screen.includes('testID="economy-')],
   ['missing market and referral identities remain explicit', contents.screen.includes('CARTA SIN IDENTIDAD REPORTADA') && contents.screen.includes('RAREZA NO REPORTADA') && contents.screen.includes('IDENTIDAD NO REPORTADA') && contents.screen.includes('CÓDIGO NO REPORTADO') && !contents.screen.includes('Carta sin nombre') && !contents.screen.includes('Jugador referido')],
+  ['economic statuses remain readable without hiding unknown values', contents.screen.includes('REVISIÓN PENDIENTE') && contents.screen.includes('ESTADO NO REPORTADO') && contents.screen.includes('statusLabel(deposit.status)') && contents.screen.includes('statusLabel(withdrawal.status)') && contents.screen.includes('statusLabel(referral.status)')],
   ['economy has no direct table writes, mocks, or emoji UI', !/\.insert\(|\.update\(|\.upsert\(|\.delete\(/.test(contents.screen) && !contents.screen.includes('mock') && !/[\u{1F000}-\u{1FAFF}]/u.test(contents.screen)],
 ];
 
