@@ -14,7 +14,7 @@
 - **VISUAL_DEBT_ADDED:** ninguna.
 - **VISUAL_DEBT_REMOVED:** placeholder genérico `Sin unidad`.
 - **STATUS:** `IMPLEMENTED_UNVERIFIED`.
-- **PERSISTENCIA:** pendiente de publicar código y continuidad en `main` mediante la API REST HTTPS oficial de GitHub con `[skip ci]`; sin APK ni release Android nuevo.
+- **PERSISTENCIA:** código y continuidad publicados en `main` mediante la API REST HTTPS oficial de GitHub en `29e7d1945a26e2930c51c6694098d4c6451ce4d5` con `[skip ci]`; sin APK ni release Android nuevo.
 - **NEXT_BLOCK:** continuar con otra unidad Android atómica del protocolo sin tocar la web congelada ni iniciar APK.
 
 ## 2026-09-14 — VE-MOB-7-BATTLE — HONEST RANK SIGNALS / IMPLEMENTED_UNVERIFIED
