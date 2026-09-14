@@ -29,6 +29,7 @@ const checks = [
   ['honest ranking metrics', ['function rankingMetric', 'function rankingWinRate', 'PUESTO NO REPORTADO', 'PORCENTAJE NO REPORTADO', 'SIN PARTIDAS']],
   ['honest date signals', ['function formatDate', 'FECHA NO REPORTADA', 'FECHA NO VÁLIDA', 'toLocaleDateString']],
   ['honest numeric signals', ['function numberSignal', "numberSignal(boss.power_level, 'PWR')", "numberSignal(boss.hp, 'HP')", "numberSignal(raid.metadata?.max_participants, 'LÍMITE')", "numberSignal(xp, 'XP')", "numberSignal(currentTier, 'TIER')", "numberSignal(tier.xp_required, 'XP')", 'formatNumber(value)', 'NO REPORTADO']],
+  ['honest boss identity signals', ['function worldBossIdentity', 'CÓDIGO NO REPORTADO', 'NOMBRE DEL JEFE NO REPORTADO', 'TIER NO REPORTADO', 'worldBossIdentity(boss)', 'identity.code', 'identity.name', 'identity.tier']],
 ];
 for (const [label, needles] of checks) {
   const source = label === 'official world reads' || label === 'official actions' ? supabase : label === 'world background' ? visual : screen;
@@ -36,4 +37,5 @@ for (const [label, needles] of checks) {
 }
 if (screen.includes('Fecha no disponible')) throw new Error('WORLD gate failed: generic date fallback remains');
 if (screen.includes('>—<') || screen.includes('>— </Text>')) throw new Error('WORLD gate failed: generic numeric fallback remains');
+if (screen.includes('>{boss.name}</Text>') || screen.includes('>{boss.boss_code}</Text>') || screen.includes('>{boss.tier.toUpperCase()}</Text>')) throw new Error('WORLD gate failed: raw boss identity remains');
 console.log('verify-mobile-world: ok');

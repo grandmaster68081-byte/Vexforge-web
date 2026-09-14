@@ -43,11 +43,19 @@ const PANELS: Array<{ id: Panel; label: string; icon: keyof typeof Feather.glyph
 ];
 
 function tierTone(tier: string, colors: Colors) {
-  const value = tier.toLowerCase();
+  const value = tier?.trim().toLowerCase() ?? '';
   if (value.includes('6') || value === 'legendary') return colors.danger;
   if (value.includes('5') || value === 'epic') return colors.rarityEpic;
   if (value.includes('4') || value === 'rare') return colors.primary;
   return colors.accent;
+}
+
+function worldBossIdentity(boss: MobileWorldBoss) {
+  return {
+    code: boss.boss_code?.trim() || 'CÓDIGO NO REPORTADO',
+    name: boss.name?.trim() || 'NOMBRE DEL JEFE NO REPORTADO',
+    tier: boss.tier?.trim() ? boss.tier.trim().toUpperCase() : 'TIER NO REPORTADO',
+  };
 }
 
 function difficultyTone(difficulty: string | undefined, colors: Colors) {
@@ -159,6 +167,7 @@ function WorldHeader({ panel, onPanelChange, onRefresh, refreshing, colors }: { 
 }
 
 function BossCard({ boss, encounters, onBattle, colors }: { boss: MobileWorldBoss; encounters: MobileBossEncounter[]; onBattle: () => void; colors: Colors }) {
+  const identity = worldBossIdentity(boss);
   const tone = tierTone(boss.tier, colors);
   const ownEncounters = encounters.filter((entry) => entry.world_boss_id === boss.id);
   const ownDamage = ownEncounters.length === 0
@@ -171,13 +180,13 @@ function BossCard({ boss, encounters, onBattle, colors }: { boss: MobileWorldBos
   return (
     <View testID={`world-boss-${boss.id}`} style={[styles.bossCard, { backgroundColor: colors.panel, borderColor: `${tone}88` }]}>
       <View style={styles.bossArt}>
-        {boss.image_url ? <Image source={{ uri: boss.image_url }} style={StyleSheet.absoluteFill} resizeMode="cover" accessibilityLabel={`Arte oficial de ${boss.name}`} /> : null}
+        {boss.image_url ? <Image source={{ uri: boss.image_url }} style={StyleSheet.absoluteFill} resizeMode="cover" accessibilityLabel={`Arte oficial de ${identity.name}`} /> : null}
         <View style={[StyleSheet.absoluteFill, { backgroundColor: colors.ink, opacity: boss.image_url ? 0.38 : 0.82 }]} />
         <View style={styles.bossArtCopy}>
-          <Text style={[styles.bossCode, { color: tone }]}>{boss.boss_code}</Text>
-          <Text style={[styles.bossTitle, { color: colors.foreground }]} numberOfLines={2}>{boss.name}</Text>
+          <Text style={[styles.bossCode, { color: tone }]}>{identity.code}</Text>
+          <Text style={[styles.bossTitle, { color: colors.foreground }]} numberOfLines={2}>{identity.name}</Text>
         </View>
-        <View style={[styles.tierPill, { backgroundColor: `${tone}22`, borderColor: `${tone}88` }]}><Text style={[styles.tierText, { color: tone }]}>{boss.tier.toUpperCase()}</Text></View>
+        <View style={[styles.tierPill, { backgroundColor: `${tone}22`, borderColor: `${tone}88` }]}><Text style={[styles.tierText, { color: tone }]}>{identity.tier}</Text></View>
       </View>
       <View style={styles.bossBody}>
         <Text style={[styles.bossLore, { color: lore ? colors.mutedForeground : colors.accent }]} numberOfLines={2}>{lore ?? 'LORE NO SINCRONIZADO'}</Text>
