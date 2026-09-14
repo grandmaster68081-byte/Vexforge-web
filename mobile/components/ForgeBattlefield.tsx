@@ -101,8 +101,8 @@ function UnitCard({
   const pulse = useRef(new Animated.Value(1)).current;
   const accent = unit ? factionColor(unit.faction, colors) : colors.border;
   const percent = unit ? hpPercent(unit) : 0;
-  const name = unit ? textSignal(unit.name, 'IDENTIDAD NO REPORTADA') : 'Posición vacía';
-  const faction = unit ? textSignal(unit.faction, 'FACCIÓN NO REPORTADA') : 'ESPERANDO UNIDAD';
+  const name = unit ? textSignal(unit.name, 'IDENTIDAD NO REPORTADA') : 'POSICIÓN VACÍA';
+  const faction = unit ? textSignal(unit.faction, 'FACCIÓN NO REPORTADA') : 'UNIDAD NO REPORTADA';
 
   useEffect(() => {
     if (reducedMotion || (!active && !targeted)) {
@@ -120,7 +120,7 @@ function UnitCard({
     return () => animation.stop();
   }, [active, targeted, reducedMotion, pulse]);
 
-  const label = unit ? `${role}. ${name}. ${hpSignal(unit)}.` : `${role}. Posición vacía.`;
+  const label = unit ? `${role}. ${name}. ${hpSignal(unit)}.` : `${role}. POSICIÓN VACÍA.`;
   return (
     <Animated.View
       testID={`battlefield-${side}-${ROLE_LABELS[role]}`}
@@ -177,7 +177,7 @@ function ReserveRail({ units, colors, side }: { units: BattleUnit[]; colors: Col
           <View key={`${unit.id ?? unit.name ?? 'reserve'}-${index}`} style={[styles.reserveItem, { borderColor: factionColor(unit.faction, colors) }]}>
             {unit.image_url ? <Image source={{ uri: unit.image_url }} resizeMode="cover" style={styles.reserveArt} /> : <Feather name="image" size={12} color={colors.mutedForeground} />}
           </View>
-        )) : <Text style={[styles.emptyReserve, { color: colors.mutedForeground }]}>VACÍA</Text>}
+        )) : <Text style={[styles.emptyReserve, { color: colors.mutedForeground }]}>RESERVA VACÍA</Text>}
       </View>
     </View>
   );

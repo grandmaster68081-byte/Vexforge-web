@@ -1,3 +1,22 @@
+## 2026-09-14 — VE-MOB-7-BATTLE — HONEST EMPTY POSITION AND RESERVE SIGNALS / IMPLEMENTED_UNVERIFIED
+
+- **BRANCH:** `main`.
+- **SCREEN / DOMAIN:** Arena / `ARENA → FORGEFORMATION → CAMPO DE BATALLA`.
+- **BLOCK:** eliminar estados genéricos en slots activos y reserva vacía sin inventar una unidad.
+- **WHAT CHANGED:** el campo de batalla muestra `POSICIÓN VACÍA` cuando un slot activo no tiene unidad reportada, `UNIDAD NO REPORTADA` en su señal secundaria y `RESERVA VACÍA` cuando la reserva no contiene cartas.
+- **LIVE DATA CHECK:** sesión QA autenticada de solo lectura contra Supabase oficial: `cristiangalvez815@gmail.com` autenticó correctamente y `players` devolvió 1 fila. No se ejecutaron mutaciones.
+- **DATA PRESERVED:** `vexforge_battle_resolve`, formación, replay, turnos, daño, resultado, MMR, recompensas, Auth, RLS, telemetría, assets oficiales, navegación, accesibilidad, reduced-motion y web congelada.
+- **ASSETS USED:** ninguno nuevo.
+- **MOTION_ADDED:** ninguno; se conserva el pulso contextual y la protección de reduced-motion.
+- **PERFORMANCE_NOTES:** sólo cambia la presentación local de estados vacíos ya derivados; sin solicitudes de red, animaciones nuevas ni dependencias.
+- **GATES:** protocolo activo `vexforge_home_world_system_protocol_v3`, estado `ACTIVE`, versión viva `V2.1 — FORGEFORMATION V6 / BATTLE RUN V6 / SETTLEMENT V6 / BATTLEFIELD V1.0 / VISUAL SYSTEM V1.0`; `node scripts/verify-mobile-battle.mjs` OK, 43/43; `git diff --check` limpio. No se inicia workflow Android, no se compila APK ni se publica release por instrucción del operador.
+- **CORE_SCORE:** pendiente de QA visual/táctil en dispositivo.
+- **VISUAL_DEBT_ADDED:** ninguna.
+- **VISUAL_DEBT_REMOVED:** `Posición vacía`, `ESPERANDO UNIDAD` y `VACÍA` como estados genéricos del campo de batalla.
+- **STATUS:** `IMPLEMENTED_UNVERIFIED`.
+- **PERSISTENCIA:** código, documento y continuidad se publicarán juntos en `main` mediante la API REST HTTPS oficial de GitHub con `[skip ci]`; sin APK ni release Android nuevo.
+- **NEXT_BLOCK:** continuar con otra unidad Android atómica del protocolo sin tocar la web congelada ni iniciar APK.
+
 ## 2026-09-14 — VE-MOB-7-FORMATION — HONEST EMPTY SLOT SIGNALS / IMPLEMENTED_UNVERIFIED
 
 - **BRANCH:** `main`.
