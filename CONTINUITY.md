@@ -1,3 +1,22 @@
+## 2026-09-14 — VE-MOB-T2V — HERALDIC IDENTITY MARK TOKENS / IMPLEMENTED_UNVERIFIED
+
+- **BRANCH:** `main`.
+- **SCREEN / DOMAIN:** identidad compartida VEXFORGE / `ForgeMark`.
+- **BLOCK:** undécima pieza ejecutable de `T2V — VISUAL SYSTEM TOKENS + SHARED SCENE PRIMITIVES`.
+- **WHAT CHANGED:** `ForgeMark` consume `VISUAL_TOKENS.identityMark` para geometría normal y compacta, rotación, borde, escala del logotipo y radio de imagen; conserva el asset oficial y su accesibilidad.
+- **DATA PRESERVED:** rutas, navegación, Supabase, RPCs, RLS, Auth, economía, combate, event log, settlement, datos vivos, contratos Android y web congelada.
+- **AUTHORITY:** no se alteran reglas de gameplay, datos autoritativos, formación, turnos, ganador ni lógica de sesión.
+- **ASSETS USED:** se conserva exclusivamente `OFFICIAL_ASSETS.logo`; no se añade sustituto ni fallback genérico.
+- **MOTION_ADDED:** ninguno.
+- **PERFORMANCE_NOTES:** tokens estáticos resueltos localmente; sin solicitudes, listeners, estado ni renders adicionales.
+- **GATES:** `node scripts/verify-mobile-visual-system.mjs`, `node --check scripts/verify-mobile-visual-system.mjs` y `git diff --check`; typecheck móvil, workflow APK y QA visual/táctil siguen pendientes y no se inician.
+- **VISUAL_DELTA:** la identidad heráldica compartida deja de depender de literales locales y mantiene la misma geometría entre marca normal y compacta.
+- **VISUAL_DEBT_REMOVED:** dimensiones, rotación y radios duplicados de `ForgeMark`.
+- **VISUAL_DEBT_ADDED:** ninguna.
+- **STATUS:** `IMPLEMENTED_UNVERIFIED`.
+- **PERSISTENCIA:** publicar código, guarda de visual system y continuidad juntos en `main` mediante la API REST HTTPS oficial de GitHub con `[skip ci]`; no compilar APK ni publicar release.
+- **NEXT_BLOCK:** continuar con otra pieza T2V explícita sin tocar el motor, los contratos de Supabase, la web congelada ni el tutorial.
+
 ## 2026-09-14 — VE-MOB-T2V — NAVIGATION SHELL TOKENS / IMPLEMENTED_UNVERIFIED
 
 - **BRANCH:** `main`.

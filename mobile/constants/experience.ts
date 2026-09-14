@@ -261,6 +261,22 @@ export const VISUAL_TOKENS = {
       labelTracking: 1.5,
     },
   },
+  identityMark: {
+    frame: {
+      size: 38,
+      borderWidth: 1,
+      radius: 12,
+      rotation: '45deg',
+    },
+    compact: {
+      size: 30,
+      radius: 9,
+    },
+    image: {
+      scale: '72%',
+      radius: 6,
+    },
+  },
   formation: {
     root: { radius: 18, padding: 14, gap: 10 },
     heading: { gap: 10 },

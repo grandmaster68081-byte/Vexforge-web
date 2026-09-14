@@ -123,10 +123,18 @@ if (!navigation.includes('VISUAL_TOKENS.navigation')) {
   failures.push('TabLayout does not consume navigation tokens');
 }
 
+const identityMark = source('mobile/components/ForgeMark.tsx');
+if (!identityMark.includes("from '@/constants/experience'")) {
+  failures.push('ForgeMark does not consume shared visual tokens');
+}
+if (!identityMark.includes('VISUAL_TOKENS.identityMark')) {
+  failures.push('ForgeMark does not consume identity mark tokens');
+}
+
 if (failures.length > 0) {
   console.error('T2V visual system guard failed:');
   for (const failure of failures) console.error(` - ${failure}`);
   process.exit(1);
 }
 
-console.log('T2V visual system guard passed (shared tokens + navigation shell + MaterialPanel + DomainState)');
+console.log('T2V visual system guard passed (shared tokens + identity mark + navigation shell + MaterialPanel + DomainState)');
