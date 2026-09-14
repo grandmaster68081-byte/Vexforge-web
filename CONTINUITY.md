@@ -4575,3 +4575,17 @@
 - Publicación: código y esta continuidad se publicarán juntos en `main` mediante la API REST HTTPS oficial de GitHub con `[skip ci]`, sin `git push`, para no disparar el workflow APK.
 - Commit remoto de implementación: `5bc35ee56d87db2da3fc70610dd8dedc41da2385`.
 - Siguiente microbloque: continuar con otra mejora Android atómica de fidelidad o interacción, sin tocar la web congelada ni iniciar APK sin autorización.
+
+
+---
+## 2026-09-14 — VE-MOB-VISUAL-FIDELITY-LAYER-V1 — PROTOCOL V2.2 INTEGRATED
+
+- **SCOPE:** Se integró en Supabase el bloque activo \"VISUAL FIDELITY PRODUCTION LAYER v1.0\" dentro de \"vexforge_home_world_system_protocol_v3\".
+- **PURPOSE:** Convertir las referencias VF-REF-NEXUS, VF-REF-BATTLEFIELD, VF-REF-ARCHIVE, VF-REF-FORGE y VF-REF-MISSIONS en una dirección de producción reproducible, sin inventar datos, cartas, estados, reglas ni assets canónicos.
+- **INTEGRATED PLAN:** asset registry, Screen Master Records, visual state matrix, domain scene profiles, event presentation map, device matrix, visual acceptance gates y definición de terminado visual, integrados dentro de T0–T10.
+- **AUTHORITY PRESERVED:** Supabase continúa siendo contenido canónico; ForgeFormation v6 continúa siendo verdad de gameplay; Android continúa siendo renderer/input/replay; no se crean motores ni rutas paralelas.
+- **ASSET POLICY:** las imágenes de cartas, logo, facciones, iconos y lore deben conservar procedencia real. Las escenas pueden ser project-authored o procedurales y deben registrarse como WORLD_SCENE; las referencias visuales son REFERENCE_ONLY.
+- **NO APK:** no se tocó mobile/**; no se inició workflow Android, no se compiló APK y no se publicó release.
+- **PERSISTENCE:** actualización del documento ACTIVE en Supabase a doc_version V2.2; esta entrada se publica en main mediante API REST HTTPS oficial de GitHub con [skip ci].
+- **STATUS:** INTEGRATED_UNVERIFIED; la capa está definida y versionada, pero cada pantalla debe superar sus propios gates visuales, de datos, touch, performance y APK cuando se implemente.
+- **NEXT BLOCK:** producir la matriz de assets y Screen Master Records de T0 antes de ejecutar una nueva pantalla visual.
