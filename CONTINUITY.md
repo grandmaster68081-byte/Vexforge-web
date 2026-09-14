@@ -14,7 +14,7 @@
 - **VISUAL_DEBT_ADDED:** ninguna.
 - **VISUAL_DEBT_REMOVED:** ceros, nombres y etiquetas genéricas como sustitutos de HP, identidad y daño no reportados.
 - **STATUS:** `IMPLEMENTED_UNVERIFIED`.
-- **PERSISTENCIA:** se publicará en `main` mediante la API REST HTTPS oficial de GitHub con `[skip ci]`; sin APK ni release Android nuevo.
+- **PERSISTENCIA:** código y guarda publicados en `main` mediante la API REST HTTPS oficial de GitHub en `416dd865d3bde36b014bfd3b5ced7abb6ea16809` con `[skip ci]`; sin APK ni release Android nuevo.
 - **NEXT_BLOCK:** continuar con otra mejora Android atómica verificable sin tocar la web congelada ni iniciar APK.
 
 ## 2026-09-14 — VE-MOB-13-SOCIAL — HONEST IDENTITY SIGNALS / IMPLEMENTED_UNVERIFIED
