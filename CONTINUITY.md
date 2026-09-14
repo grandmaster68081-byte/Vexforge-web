@@ -1,3 +1,22 @@
+## 2026-09-14 — VE-MOB-3-HOME — HONEST NUMERIC ABSENCE SIGNALS / IMPLEMENTED_UNVERIFIED
+
+- **BRANCH:** `main`.
+- **SCREEN / DOMAIN:** Nexus / `HOME → HUD, EVENTO, MISIONES Y RANKING`.
+- **BLOCK:** eliminar guiones y composiciones numéricas ambiguas cuando una respuesta parcial no entrega XP, VEX, energía, progreso, MMR, victorias, cartas, actividad o posiciones.
+- **WHAT CHANGED:** los números válidos conservan su formato; los ausentes muestran señales contextuales como `XP NO REPORTADO`, `VEX NO REPORTADO`, `ENERGÍA MÁXIMA NO REPORTADA`, `PROGRESO NO REPORTADO`, `MMR NO REPORTADO`, `CARTAS NO REPORTADAS` o `SIN POSICIONES PUBLICADAS`. El rail del evento sólo se dibuja con progreso numérico finito.
+- **LIVE DATA CHECK:** `get_home_stats` respondió mediante HTTPS oficial con 4/4 contadores numéricos, evento activo y 3 posiciones de ranking. No se ejecutaron mutaciones.
+- **DATA PRESERVED:** Nexus, HomeStats, RPC `get_home_stats`, progreso, wallet, ranking, misiones, actividad, navegación, Auth, RLS, economía, accesibilidad, reduced-motion y web congelada.
+- **ASSETS USED:** ninguno nuevo; se mantienen los assets oficiales de Home.
+- **MOTION_ADDED:** ninguno.
+- **PERFORMANCE_NOTES:** normalización local de señales recibidas; sin solicitudes nuevas, animaciones ni dependencias.
+- **GATES:** `node scripts/verify-mobile-home-official-assets.mjs` OK, 15/15; `node --check scripts/verify-mobile-home-official-assets.mjs` OK; `git diff --check` limpio. No se inicia workflow Android, no se compila APK ni se publica release.
+- **CORE_SCORE:** pendiente de QA visual/táctil en dispositivo.
+- **VISUAL_DEBT_ADDED:** ninguna.
+- **VISUAL_DEBT_REMOVED:** guiones ambiguos y rails potencialmente inválidos para progreso de evento ausente.
+- **STATUS:** `IMPLEMENTED_UNVERIFIED`.
+- **PERSISTENCIA:** código, gate y continuidad se publicarán juntos en `main` mediante la API REST HTTPS oficial de GitHub con `[skip ci]`; sin APK ni release Android nuevo.
+- **NEXT_BLOCK:** continuar con otra unidad Android atómica del protocolo sin tocar la web congelada ni iniciar APK.
+
 ## 2026-09-14 — VE-MOB-8-DECK — HONEST EMPTY AND MISSING SUMMARY SIGNALS / IMPLEMENTED_UNVERIFIED
 
 - **BRANCH:** `main`.

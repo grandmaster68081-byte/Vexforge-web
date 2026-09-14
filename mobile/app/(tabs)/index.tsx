@@ -56,9 +56,23 @@ type RemoteHome = { stats: HomeStats | null; card: DailyCard | null; identityCar
 
 const INITIAL_HOME: RemoteHome = { stats: null, card: null, identityCard: null, missions: [], activity: [] };
 
-function formatNumber(value: number | null | undefined) {
-  if (typeof value !== 'number' || !Number.isFinite(value)) return '—';
+function formatNumber(value: number | null | undefined, fallback = 'NO REPORTADO') {
+  if (typeof value !== 'number' || !Number.isFinite(value)) return fallback;
   return new Intl.NumberFormat('es-ES').format(Math.max(0, Math.round(value)));
+}
+
+function formatMetric(value: number | null | undefined, unit: string, fallback: string) {
+  if (typeof value !== 'number' || !Number.isFinite(value)) return fallback;
+  return `${formatNumber(value)} ${unit}`;
+}
+
+function formatPair(first: number | null | undefined, second: number | null | undefined, unit: string, firstFallback: string, secondFallback: string) {
+  return `${formatNumber(first, firstFallback)} / ${formatNumber(second, secondFallback)} ${unit}`;
+}
+
+function formatEventProgress(value: number | null | undefined) {
+  if (typeof value !== 'number' || !Number.isFinite(value)) return 'PROGRESO NO REPORTADO';
+  return `${Math.round(value)}%`;
 }
 
 function formatEventTime(endsAt: string | null | undefined) {
@@ -403,7 +417,7 @@ function MissionSignal({ mission, index, onPress }: { mission: HomeMission; inde
         <View style={styles.missionSignalMeta}>
           <Text style={[styles.missionSignalDifficulty, { color: colors.success }]}>{capitalize(mission.difficulty, 'RITO')}</Text>
           <View style={[styles.missionSignalDivider, { backgroundColor: `${colors.success}70` }]} />
-          <Text numberOfLines={1} style={[styles.missionSignalReward, { color: colors.mutedForeground }]}>{formatNumber(mission.reward_xp)} XP · {formatNumber(mission.reward_vex_ingame)} VEX</Text>
+          <Text numberOfLines={1} style={[styles.missionSignalReward, { color: colors.mutedForeground }]}>{formatMetric(mission.reward_xp, 'XP', 'XP NO REPORTADO')} · {formatMetric(mission.reward_vex_ingame, 'VEX', 'VEX NO REPORTADO')}</Text>
         </View>
       </View>
       <View style={styles.missionSignalPulse}>
@@ -463,10 +477,10 @@ function RankingSignal({ entry, index, onPress }: { entry: NonNullable<HomeStats
       </View>
       <View style={styles.rankingSignalIdentity}>
         <Text numberOfLines={1} style={[styles.rankingSignalName, { color: colors.foreground }]}>{entry.display_name}</Text>
-        <Text style={[styles.rankingSignalMeta, { color: colors.mutedForeground }]}>{formatNumber(entry.wins)} VICTORIAS</Text>
+        <Text style={[styles.rankingSignalMeta, { color: colors.mutedForeground }]}>{formatMetric(entry.wins, 'VICTORIAS', 'VICTORIAS NO REPORTADAS')}</Text>
       </View>
       <View style={styles.rankingSignalScore}>
-        <Text style={[styles.rankingSignalScoreValue, { color: accent }]}>{formatNumber(entry.mmr)}</Text>
+        <Text style={[styles.rankingSignalScoreValue, { color: accent }]}>{formatNumber(entry.mmr, 'MMR NO REPORTADO')}</Text>
         <Text style={[styles.rankingSignalScoreLabel, { color: colors.mutedForeground }]}>MMR</Text>
       </View>
     </Pressable>
@@ -599,14 +613,17 @@ export default function ForgeScreen() {
   const playerName = capitalize(player?.display_name, 'IDENTIDAD EN ESPERA');
   const activeEvent = home.stats?.active_event ?? null;
   const eventAccent = activeEvent ? colors.rarityRare : colors.mutedForeground;
+  const eventProgressAvailable = Boolean(activeEvent && typeof activeEvent.progress === 'number' && Number.isFinite(activeEvent.progress));
   const season = home.stats?.season ?? null;
   const xp = progress?.xp;
   const xpToNext = progress?.xp_to_next;
   const progression = typeof xp === 'number' && Number.isFinite(xp) && typeof xpToNext === 'number' && Number.isFinite(xpToNext) ? { xp, xpToNext } : null;
   const levelSignal = progress ? `NIVEL ${formatNumber(progress.level)}` : 'NIVEL EN ESPERA';
-  const walletSignal = wallet ? `${formatNumber(wallet?.vex_ingame)} VEX` : 'VEX EN ESPERA';
-  const winsSignal = playerStats ? `${formatNumber(playerStats?.pvp_wins)} VICTORIAS` : 'VICTORIAS EN ESPERA';
-  const progressionSignal = progression ? `${formatNumber(progression.xp)} / ${formatNumber(progression.xpToNext)}` : 'PROGRESIÓN EN ESPERA';
+  const walletSignal = wallet ? formatMetric(wallet?.vex_ingame, 'VEX', 'VEX NO REPORTADO') : 'VEX EN ESPERA';
+  const winsSignal = playerStats ? formatMetric(playerStats?.pvp_wins, 'VICTORIAS', 'VICTORIAS NO REPORTADAS') : 'VICTORIAS EN ESPERA';
+  const progressionSignal = progression
+    ? formatPair(progression.xp, progression.xpToNext, 'XP', 'XP NO REPORTADO', 'XP OBJETIVO NO REPORTADO')
+    : 'PROGRESIÓN EN ESPERA';
   const connectionLabel = syncState === 'connected' ? 'NEXUS ONLINE' : syncState === 'offline' ? 'NEXUS OFFLINE' : 'SINCRONIZANDO';
   const connectionColor = syncState === 'connected' ? colors.success : syncState === 'offline' ? colors.danger : colors.accent;
   const viewportPadding = Math.max(18, Math.min(25, width * 0.06));
@@ -615,9 +632,9 @@ export default function ForgeScreen() {
   const domainPortals: Array<{ id: string; label: string; title: string; status: string; icon: IconName; route: HomeRoute; color: string; active: boolean }> = [
     { id: 'arena', label: 'ARENA', title: 'Cruza el umbral', status: activeEvent ? 'EVENTO ACTIVO' : 'OPONENTES EN ESPERA', icon: 'target', route: '/battle', color: colors.rarityRare, active: Boolean(activeEvent) },
     { id: 'forge', label: 'FORJA', title: 'Traza tu formación', status: `${levelSignal} · MAZO ACTIVO`, icon: 'deck', route: '/deck', color: colors.rarityEpic, active: Boolean(progress) },
-    { id: 'archive', label: 'ARCHIVO', title: 'Revela tu colección', status: `${formatNumber(cardsTotal)} CARTAS REGISTRADAS`, icon: 'collection', route: '/collection', color: colors.rarityLegendary, active: cardsTotal > 0 },
+    { id: 'archive', label: 'ARCHIVO', title: 'Revela tu colección', status: formatMetric(cardsTotal, 'CARTAS REGISTRADAS', 'CARTAS NO REPORTADAS'), icon: 'collection', route: '/collection', color: colors.rarityLegendary, active: cardsTotal > 0 },
     { id: 'world', label: 'MUNDO', title: 'Lee la señal', status: activeEvent ? `CIERRA EN ${formatEventTime(activeEvent.ends_at)}` : 'SIN FRENTE PUBLICADO', icon: 'map', route: '/world', color: colors.rarityRare, active: Boolean(activeEvent) },
-    { id: 'missions', label: 'MISIONES', title: 'Cumple el rito', status: `${formatNumber(home.missions.length)} ÓRDENES ACTIVAS`, icon: 'missions', route: '/missions', color: colors.success, active: home.missions.length > 0 },
+    { id: 'missions', label: 'MISIONES', title: 'Cumple el rito', status: formatMetric(home.missions.length, 'ÓRDENES ACTIVAS', 'ÓRDENES NO REPORTADAS'), icon: 'missions', route: '/missions', color: colors.success, active: home.missions.length > 0 },
     { id: 'economy', label: 'ECONOMÍA', title: 'Mueve el VEX', status: wallet ? `${walletSignal} DISPONIBLES` : walletSignal, icon: 'economy', route: '/economy', color: colors.accent, active: Boolean(wallet) },
   ];
   const domainSignals = Object.fromEntries(domainPortals.map((portal) => [portal.id, portal.status])) as Record<string, string>;
@@ -796,7 +813,7 @@ export default function ForgeScreen() {
                   <ThresholdButton label="CONTINUAR" icon="arrow-right" onPress={() => navigate('/tutorial')} testID="home-tutorial" secondary />
                 </View>
                 <View style={[styles.heroFooter, { borderTopColor: `${colors.foreground}2A` }]}>
-                  <View style={styles.heroFooterItem}><Icon name="zap" color={colors.accent} size={13} /><Text style={[styles.heroFooterText, { color: `${colors.foreground}C0` }]}>{progress ? `${formatNumber(progress.energy)} / ${formatNumber(progress.max_energy)} ENERGÍA` : 'ENERGÍA EN ESPERA'}</Text></View>
+                  <View style={styles.heroFooterItem}><Icon name="zap" color={colors.accent} size={13} /><Text style={[styles.heroFooterText, { color: `${colors.foreground}C0` }]}>{progress ? formatPair(progress.energy, progress.max_energy, 'ENERGÍA', 'ENERGÍA NO REPORTADA', 'ENERGÍA MÁXIMA NO REPORTADA') : 'ENERGÍA EN ESPERA'}</Text></View>
                   <View style={styles.heroFooterItem}><Icon name="gem" color={colors.rarityEpic} size={13} /><Text style={[styles.heroFooterText, { color: `${colors.foreground}C0` }]}>{walletSignal}</Text></View>
                   <Pressable
                     accessibilityRole="button"
@@ -963,8 +980,8 @@ export default function ForgeScreen() {
                       <Text style={[styles.eventMetaFinal, { color: colors.mutedForeground }]}>{activeEvent ? 'CIERRA EN ' + formatEventTime(activeEvent.ends_at) : 'No hay evento activo publicado'}</Text>
                     </View>
                     <View style={styles.eventProgressFinal}>
-                      <Text style={[styles.eventProgressValueFinal, { color: eventAccent }]}>{activeEvent ? Math.round(activeEvent.progress) + '%' : '—'}</Text>
-                      {activeEvent ? <ProgressRail value={activeEvent.progress} total={100} color={eventAccent} background={colors.border} /> : <View style={[styles.eventIdleRule, { backgroundColor: `${eventAccent}66` }]} />}
+                      <Text style={[styles.eventProgressValueFinal, { color: eventAccent }]}>{activeEvent ? formatEventProgress(activeEvent.progress) : 'EVENTO EN ESPERA'}</Text>
+                      {eventProgressAvailable ? <ProgressRail value={activeEvent.progress} total={100} color={eventAccent} background={colors.border} /> : <View style={[styles.eventIdleRule, { backgroundColor: `${eventAccent}66` }]} />}
                     </View>
                   </Pressable>
 
@@ -1059,7 +1076,7 @@ export default function ForgeScreen() {
                     <ContinuumNode
                       label="FORJA"
                       value={levelSignal}
-                      detail={wallet ? `${formatNumber(wallet.vex_ingame)} VEX EN RESERVA` : 'REGISTRO EN ESPERA'}
+                      detail={wallet ? formatMetric(wallet.vex_ingame, 'VEX EN RESERVA', 'VEX NO REPORTADO') : 'REGISTRO EN ESPERA'}
                       icon="deck"
                       color={colors.rarityEpic}
                       active={Boolean(wallet)}
@@ -1068,7 +1085,7 @@ export default function ForgeScreen() {
                     />
                     <ContinuumNode
                       label="RITO"
-                      value={`${formatNumber(home.missions.length)} ACTIVAS`}
+                      value={formatMetric(home.missions.length, 'ACTIVAS', 'ÓRDENES NO REPORTADAS')}
                       detail={home.missions[0]?.name ?? 'SIN FRENTE PUBLICADO'}
                       icon="missions"
                       color={colors.success}
@@ -1078,7 +1095,7 @@ export default function ForgeScreen() {
                     />
                     <ContinuumNode
                       label="PULSO"
-                      value={`${formatNumber(home.activity.length)} SEÑALES`}
+                      value={formatMetric(home.activity.length, 'SEÑALES', 'ACTIVIDAD NO REPORTADA')}
                       detail={ranking[0] ? `#${ranking[0].rank} ${ranking[0].display_name}` : 'CLASIFICACIÓN EN ESPERA'}
                       icon="radio"
                       color={colors.rarityRare}
@@ -1130,10 +1147,10 @@ export default function ForgeScreen() {
                          {ranking[0] ? `#${ranking[0].rank} ${ranking[0].display_name}` : 'CLASIFICACIÓN EN ESPERA'}
                        </Text>
                        <Text style={[styles.rankingMonumentMeta, { color: colors.mutedForeground }]}>
-                         {ranking[0] ? `${formatNumber(ranking[0].mmr)} MMR · ${formatNumber(ranking[0].wins)} VICTORIAS` : 'El frente aún no ha inscrito posiciones.'}
+                         {ranking[0] ? `${formatMetric(ranking[0].mmr, 'MMR', 'MMR NO REPORTADO')} · ${formatMetric(ranking[0].wins, 'VICTORIAS', 'VICTORIAS NO REPORTADAS')}` : 'El frente aún no ha inscrito posiciones.'}
                        </Text>
                      </View>
-                     <Text style={[styles.rankingMonumentCount, { color: colors.accent }]}>{ranking.length ? `${ranking.length} POS.` : '—'}</Text>
+                     <Text style={[styles.rankingMonumentCount, { color: colors.accent }]}>{ranking.length ? `${ranking.length} POS.` : 'SIN POSICIONES PUBLICADAS'}</Text>
                    </Pressable>
                   <View testID="home-ranking" style={styles.rankingSignals}>{ranking.length > 0 ? ranking.map((entry, index) => <RankingSignal key={entry.rank + '-' + entry.display_name} entry={entry} index={index} onPress={() => navigate('/world')} />) : <Text style={[styles.emptyBody, { color: colors.mutedForeground }]}>El ranking de la temporada todavía no tiene posiciones publicadas.</Text>}</View>
                 </View>
