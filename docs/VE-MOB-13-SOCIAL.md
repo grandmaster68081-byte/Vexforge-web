@@ -39,3 +39,10 @@ La ruta Android es una superficie no-tab accesible desde Perfil. Sus paneles no 
 ## Estado y evidencia
 
 Estado de implementación: IMPLEMENTED_UNVERIFIED.
+
+## Delta Android — señales sociales honestas
+
+- Las relaciones, clanes, roster, guerras e historial conservan `null` cuando Supabase no entrega nivel, prestigio, contribución, rol, estado, rival o cambio de MMR.
+- La interfaz comunica esas ausencias con estados explícitos; no convierte valores faltantes en `1`, `0`, `Clan`, `Clan rival`, `unknown` o un guion ambiguo.
+- La sesión QA de solo lectura confirmó el contrato vivo sin mutaciones: cuenta autenticada, un clan con señales numéricas presentes, 18 combates y dos ganadores no reportados.
+- Guarda local: `node scripts/verify-mobile-social.mjs` debe pasar 15/15 y `git diff --check` debe permanecer limpio. El typecheck móvil y la QA visual/táctil en APK quedan pendientes porque no se autoriza compilar ni publicar una APK en este bloque.
