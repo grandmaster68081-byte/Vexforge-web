@@ -1,3 +1,22 @@
+## 2026-09-14 — VE-MOB-3-HOME — HONEST CARD CODE SIGNAL / IMPLEMENTED_UNVERIFIED
+
+- **BRANCH:** `main`.
+- **SCREEN / DOMAIN:** Home / `NEXUS → CARTA DESTACADA`.
+- **BLOCK:** fidelidad del código canónico de la carta destacada cuando la fuente no entrega esa señal.
+- **WHAT CHANGED:** el código vivo de la carta se conserva; cuando falta o llega vacío, Home muestra `CÓDIGO NO REPORTADO` tanto en la carta destacada como en la cámara de artefacto, sin convertir la ausencia en `—` ambiguo.
+- **LIVE DATA CHECK:** no se modificaron loaders ni contratos; se conserva la lectura viva de `loadDailyFeaturedCard` y `loadHomeIdentityCard`. No se ejecutaron mutaciones.
+- **DATA PRESERVED:** carta destacada, identidad canónica, artwork, lore, temporada, evento, progreso, recursos, navegación, refresh, Auth, Supabase y web congelada.
+- **ASSETS USED:** ninguno nuevo; se mantienen los assets oficiales ya registrados.
+- **MOTION_ADDED:** ninguno; se conserva la respuesta táctil y `reduced-motion`.
+- **PERFORMANCE_NOTES:** normalización local de una cadena ya cargada; sin red adicional ni animación nueva.
+- **GATES:** `node scripts/verify-mobile-home-official-assets.mjs` y `git diff --check` deben pasar. El typecheck móvil no se ejecuta porque no hay `mobile/node_modules`; no se inicia APK, workflow Android ni release por instrucción del operador.
+- **CORE_SCORE:** pendiente de QA visual/táctil en dispositivo.
+- **VISUAL_DEBT_ADDED:** ninguna.
+- **VISUAL_DEBT_REMOVED:** guion ambiguo como sustituto del código canónico ausente.
+- **STATUS:** `IMPLEMENTED_UNVERIFIED`.
+- **PERSISTENCIA:** código y continuidad quedan publicados en `main` mediante la API REST HTTPS oficial de GitHub con `[skip ci]`; no se generará release Android.
+- **NEXT_BLOCK:** continuar con otra unidad Android atómica del protocolo sin tocar la web congelada ni iniciar APK.
+
 ## 2026-09-14 — VE-MOB-9-PROFILE — HONEST IDENTITY SIGNALS / IMPLEMENTED_UNVERIFIED
 
 - **BRANCH:** `main`.

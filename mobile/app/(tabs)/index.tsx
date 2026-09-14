@@ -75,6 +75,10 @@ function capitalize(value: string | null | undefined, fallback: string) {
   return normalized.charAt(0).toUpperCase() + normalized.slice(1);
 }
 
+function cardCodeLabel(value: string | null | undefined) {
+  return value?.trim() || 'CÓDIGO NO REPORTADO';
+}
+
 function Icon({ name, color, size = 18, style }: { name: IconName; color: string; size?: number; style?: StyleProp<ViewStyle> }) {
   return <VexIcon name={name} color={color} size={size} style={style} />;
 }
@@ -831,7 +835,7 @@ export default function ForgeScreen() {
                   <Text style={[styles.heroCardRarityText, { color: colors.rarityLegendary }]}>{activeCard?.rarity?.toUpperCase() ?? 'SEÑAL PENDIENTE'}</Text>
                 </View>
                 {featuredAssetState === 'error' ? <View style={styles.heroCardAssetError}><Text style={[styles.heroCardAssetErrorText, { color: colors.accent }]}>ARTE OFFLINE</Text></View> : null}
-                <Text style={[styles.heroCardCode, { color: `${colors.foreground}B8` }]}>{activeCard?.code ?? '—'}</Text>
+                 <Text style={[styles.heroCardCode, { color: `${colors.foreground}B8` }]}>{cardCodeLabel(activeCard?.code)}</Text>
               </View>
               <View style={styles.heroCardCopy}>
                 <Text style={[styles.heroCardEyebrow, { color: colors.rarityLegendary }]}>RESONANCIA ACTIVA</Text>
@@ -969,7 +973,7 @@ export default function ForgeScreen() {
                        {activeCard?.image_url ? <Image source={{ uri: activeCard.image_url }} style={styles.artifactArtFinal} resizeMode="cover" accessibilityLabel="Arte oficial de la carta destacada" onLoad={() => setFeaturedAssetState('ready')} onError={() => setFeaturedAssetState('error')} /> : null}
                        <LinearGradient colors={['transparent', `${colors.ink}F2`]} style={StyleSheet.absoluteFill} />
                       <Text style={[styles.artifactRarityFinal, { color: colors.rarityLegendary }]}>{activeCard?.rarity?.toUpperCase() ?? 'SEÑAL PENDIENTE'}</Text>
-                      <Text style={[styles.artifactCodeFinal, { color: colors.foreground }]}>{activeCard?.code ?? '—'}</Text>
+                      <Text style={[styles.artifactCodeFinal, { color: colors.foreground }]}>{cardCodeLabel(activeCard?.code)}</Text>
                       {featuredAssetState === 'error' ? <View style={styles.featuredAssetError}><Text style={[styles.featuredAssetErrorText, { color: colors.accent }]}>ARTE OFFLINE</Text></View> : null}
                     </View>
                     <View style={styles.artifactCopyFinal}>
