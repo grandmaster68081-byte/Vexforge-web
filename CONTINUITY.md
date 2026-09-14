@@ -1,3 +1,22 @@
+## 2026-09-14 — VE-MOB-7-BATTLE — HONEST TURN EVENT SIGNALS / IMPLEMENTED_UNVERIFIED
+
+- **BRANCH:** `main`.
+- **SCREEN / DOMAIN:** Arena / `ARENA → FORGEFORMATION → REPLAY DE TURNO`.
+- **BLOCK:** evitar que la ausencia de evento o un evento de veneno se represente como una acción genérica.
+- **WHAT CHANGED:** `poison_death` muestra `UNIDAD ELIMINADA POR VENENO`, los ticks de veneno muestran `VENENO CONFIRMADO` y un turno sin evento reconocible ni daño numérico muestra `EVENTO NO REPORTADO` en lugar de `TARGET LOCK`.
+- **LIVE DATA CHECK:** se conserva la sesión QA autenticada de solo lectura contra Supabase oficial; no se ejecutaron RPCs mutantes ni cambios de datos.
+- **DATA PRESERVED:** event log, replay, daño, turnos, resultado, formación, MMR, recompensas, Auth, RLS, telemetría, assets oficiales, navegación, accesibilidad, reduced-motion y web congelada.
+- **ASSETS USED:** ninguno nuevo.
+- **MOTION_ADDED:** ninguno; se conserva el pulso contextual y la protección de reduced-motion.
+- **PERFORMANCE_NOTES:** traducción local de tipos de evento ya recibidos; sin solicitudes de red, simulación, animaciones nuevas ni dependencias.
+- **GATES:** `node scripts/verify-mobile-battle.mjs` OK, 44/44; `git diff --check` limpio. No se inicia workflow Android, no se compila APK ni se publica release por instrucción del operador.
+- **CORE_SCORE:** pendiente de QA visual/táctil en dispositivo.
+- **VISUAL_DEBT_ADDED:** ninguna.
+- **VISUAL_DEBT_REMOVED:** `Unidad derrotada` y `TARGET LOCK` como sustitutos ambiguos de señales de evento.
+- **STATUS:** `IMPLEMENTED_UNVERIFIED`.
+- **PERSISTENCIA:** código, documento y continuidad se publicarán juntos en `main` mediante la API REST HTTPS oficial de GitHub con `[skip ci]`; sin APK ni release Android nuevo.
+- **NEXT_BLOCK:** continuar con otra unidad Android atómica del protocolo sin tocar la web congelada ni iniciar APK.
+
 ## 2026-09-14 — VE-MOB-7-BATTLE — HONEST EMPTY POSITION AND RESERVE SIGNALS / IMPLEMENTED_UNVERIFIED
 
 - **BRANCH:** `main`.

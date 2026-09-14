@@ -67,11 +67,12 @@ function eventLabel(turn: BattleTurn | null) {
   if (turn.is_crit) return 'IMPACTO CRÍTICO';
   const event = turn.events?.[0];
   if (event?.type === 'shield_block') return 'GUARDIA ACTIVADA';
-  if (event?.type === 'poisoned' || event?.type === 'poison_tick' || event?.type === 'poison_death') return 'VENENO';
+  if (event?.type === 'poison_death') return 'UNIDAD ELIMINADA POR VENENO';
+  if (event?.type === 'poisoned' || event?.type === 'poison_tick') return 'VENENO CONFIRMADO';
   if (event?.type === 'lifesteal') return 'DRENAJE';
   if (event?.type === 'double_strike') return 'DOBLE GOLPE';
   if (typeof turn.damage === 'number' && turn.damage > 0) return 'IMPACTO CONFIRMADO';
-  return 'TARGET LOCK';
+  return 'EVENTO NO REPORTADO';
 }
 
 function hpPercent(unit: BattleUnit) {
