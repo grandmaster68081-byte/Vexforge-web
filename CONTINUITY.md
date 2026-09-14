@@ -12,7 +12,7 @@
 - **GATES:** `verify-mobile-economy` y `git diff --check` deben pasar. No se inicia APK, workflow Android ni release por instrucción del operador; no se declara QA visual/táctil, `PASS`, `OPERATIONAL` ni `TIER1_READY`.
 - **ESTADO HONESTO:** `IMPLEMENTED_UNVERIFIED`.
 - **VISUAL_DEBT_REMOVED:** `Carta sin nombre`, `Rareza no disponible`, `Jugador referido` y `Código no disponible` como sustitutos ambiguos de datos vivos ausentes.
-- **PERSISTENCIA:** pendiente de publicar en `main` mediante la API REST HTTPS oficial de GitHub con `[skip ci]`; no se generará release Android.
+- **PERSISTENCIA:** código publicado en `main` mediante la API Git Data HTTPS oficial de GitHub en `a40be5994ac8dc194b72b01abeee711490837bf8` con `[skip ci]`; no se generará release Android.
 - **SIGUIENTE BLOQUE:** continuar con otra mejora Android atómica verificable, sin tocar la web congelada ni iniciar compilación hasta autorización del operador.
 
 ## 2026-09-14 — VE-MOB-10-FUSION — HONEST POLICY SIGNALS / IMPLEMENTED_UNVERIFIED
