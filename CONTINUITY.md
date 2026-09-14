@@ -1,3 +1,21 @@
+## 2026-09-14 — VE-MOB-T2V — SHARED TYPOGRAPHY TOKENS / IMPLEMENTED_UNVERIFIED
+
+- **BRANCH:** `main`.
+- **SCREEN / DOMAIN:** primitiva compartida de tipografía Android.
+- **BLOCK:** octava pieza ejecutable de `T2V — VISUAL SYSTEM TOKENS + SHARED SCENE PRIMITIVES`.
+- **WHAT CHANGED:** `ForgeText` consume `VISUAL_TOKENS.typography` para familia, escala, interlineado y tracking; conserva sus seis variantes, tonos y API.
+- **DATA PRESERVED:** Supabase, RPCs, RLS, Auth, economía, combate, event log, settlement, navegación, datos vivos, assets oficiales y web congelada.
+- **ASSETS USED:** ninguno nuevo; se conservan las familias oficiales ya declaradas.
+- **MOTION_ADDED:** ninguno; sólo se centralizaron valores tipográficos estáticos.
+- **PERFORMANCE_NOTES:** los tokens se resuelven localmente; no añaden solicitudes, listeners, estado ni renders de datos.
+- **GATES:** `node scripts/verify-mobile-visual-system.mjs`, `git diff --check`; el typecheck móvil requiere dependencias ausentes en el clon y el workflow APK/QA queda pendiente de autorización.
+- **VISUAL_DELTA:** las seis variantes tipográficas comparten ahora una única fuente T2V de escala y familia.
+- **VISUAL_DEBT_REMOVED:** literales tipográficos duplicados en `ForgeText`.
+- **VISUAL_DEBT_ADDED:** ninguna.
+- **STATUS:** `IMPLEMENTED_UNVERIFIED`.
+- **PERSISTENCIA:** publicar código, guarda, documento y continuidad juntos en `main` mediante la API REST HTTPS oficial de GitHub con `[skip ci]`; no compilar APK ni publicar release.
+- **NEXT_BLOCK:** continuar con otra pieza T2V explícita, sin tocar el motor de juego, la web congelada ni el tutorial.
+
 ## 2026-09-14 — VE-MOB-T2V — DOMAIN STATE TOKENS / IMPLEMENTED_UNVERIFIED
 
 - **BRANCH:** `main`.

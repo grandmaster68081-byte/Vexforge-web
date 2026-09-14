@@ -34,6 +34,8 @@ la web congelada.
   compartida, sin convertir esa capa visual en estado de juego.
 - `DomainState` consume `state` para la geometría de carga, vacío y error,
   preservando mensajes, accesibilidad y acciones de recuperación.
+- `ForgeText` consume `typography` para familia tipográfica, escala,
+  interlineado y tracking, conservando las seis variantes y los tonos actuales.
 
 ## Límites
 

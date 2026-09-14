@@ -77,6 +77,14 @@ if (!domainHeader.includes('VISUAL_TOKENS.domainHeader')) {
   failures.push('DomainHeader does not consume header tokens');
 }
 
+const forgeText = source('mobile/components/ForgeText.tsx');
+if (!forgeText.includes("from '@/constants/experience'")) {
+  failures.push('ForgeText does not consume shared visual tokens');
+}
+if (!forgeText.includes('VISUAL_TOKENS.typography')) {
+  failures.push('ForgeText does not consume typography tokens');
+}
+
 const screenShell = source('mobile/components/ScreenShell.tsx');
 if (!screenShell.includes("from '@/constants/experience'")) {
   failures.push('ScreenShell does not consume shared visual tokens');

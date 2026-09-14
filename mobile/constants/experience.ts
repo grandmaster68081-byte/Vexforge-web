@@ -1,3 +1,5 @@
+import { typography, typeScale } from '@/constants/typography';
+
 /**
  * VEXFORGE — UX/CX TIER 1 2026 experience tokens.
  *
@@ -103,12 +105,12 @@ export const VISUAL_TOKENS = {
     danger: 'danger',
   },
   typography: {
-    display: 'display',
-    title: 'title',
-    section: 'section',
-    body: 'body',
-    meta: 'meta',
-    label: 'label',
+    display: { fontFamily: typography.display, fontSize: typeScale.display, lineHeight: 44, letterSpacing: 0.2 },
+    title: { fontFamily: typography.display, fontSize: typeScale.title, lineHeight: 32, letterSpacing: 0.1 },
+    section: { fontFamily: typography.display, fontSize: typeScale.section, lineHeight: 25 },
+    body: { fontFamily: typography.body, fontSize: typeScale.body, lineHeight: 21 },
+    meta: { fontFamily: typography.bodySemiBold, fontSize: typeScale.meta, lineHeight: 15, letterSpacing: 0.9 },
+    label: { fontFamily: typography.bodyBold, fontSize: typeScale.label, lineHeight: 13, letterSpacing: 1.5 },
   },
   radius: {
     compact: 10,
