@@ -1,3 +1,12 @@
+## 2026-09-13 — VE-MOB-7-BATTLE — REPLAY AND RESULT HAPTICS / IMPLEMENTED_UNVERIFIED
+
+- **QUÉ CAMBIÓ:** avanzar el replay o abrir el resultado usa impacto háptico ligero; volver a la Arena desde el resultado usa selección háptica ligera.
+- **QUÉ SE CONSERVÓ:** orden de turnos, estados autoritativos, resultado, accesibilidad, reduced-motion, cierre de Arena y feedback visual existente.
+- **ARCHIVOS:** `mobile/app/(tabs)/battle.tsx`; `scripts/verify-mobile-battle.mjs`; `docs/VE-MOB-7-BATTLE-REPLAY-HAPTICS.md`.
+- **LÍMITES:** no se activan haptics en estados deshabilitados ni se usa feedback táctil como sustituto del servidor. No se tocaron Supabase, RPCs, RLS, Auth, economía, combate, assets ni la web. No se inició workflow Android, no se compiló APK y no se generó release.
+- **ESTADO HONESTO:** `IMPLEMENTED_UNVERIFIED`; la guarda local, el typecheck y la QA táctil en APK siguen pendientes de registro/autorización.
+- **SIGUIENTE BLOQUE:** continuar sólo con otro delta Android atómico que mejore feedback o fidelidad sin reabrir contratos.
+
 ## 2026-09-13 — VE-MOB-7-BATTLE — ARENA HAPTIC GATES / IMPLEMENTED_UNVERIFIED
 
 - **QUÉ CAMBIÓ:** seleccionar un rival y cancelar el desafío usan selección háptica; iniciar el combate oficial usa impacto medio antes de enviar la acción.

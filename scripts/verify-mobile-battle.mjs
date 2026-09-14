@@ -39,6 +39,7 @@ const assertions = [
   ['result distinguishes an authoritative draw', contents.screen.includes("if (outcome === 'draw') return 'Empate confirmado'") && contents.screen.includes("outcome === 'draw'") && contents.battlefield.includes('EMPATE CONFIRMADO POR EL SERVIDOR')],
   ['result preserves neutral and absent MMR states', contents.screen.includes('const mmrChange = typeof result.elo_change === \'number\' ? result.elo_change : null') && contents.screen.includes('mmrChange < 0 ? colors.danger : colors.accent') && contents.screen.includes("mmrChange === null ? '—'")],
   ['arena gates provide intentional haptic feedback', contents.screen.includes("import * as Haptics from 'expo-haptics'") && contents.screen.includes('Haptics.selectionAsync()') && contents.screen.includes('Haptics.ImpactFeedbackStyle.Medium')],
+  ['replay and result closure provide haptic feedback', contents.screen.includes('testID="battle-next-turn"') && contents.screen.includes('Haptics.ImpactFeedbackStyle.Light') && contents.screen.includes('testID="battle-close-result"') && contents.screen.includes('onDismiss();')],
 ];
 
 const failures = assertions.filter(([, passed]) => !passed).map(([name]) => name);

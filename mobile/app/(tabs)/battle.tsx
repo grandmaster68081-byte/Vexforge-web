@@ -313,7 +313,10 @@ function ResultPanel({
         testID="battle-close-result"
         accessibilityRole="button"
         accessibilityLabel="Volver a la Arena"
-        onPress={onDismiss}
+         onPress={() => {
+           void Haptics.selectionAsync().catch(() => undefined);
+           onDismiss();
+         }}
         style={({ pressed }) => [
           styles.closeResult,
           { borderColor: colors.border, opacity: pressed ? 0.78 : 1, transform: [{ translateY: pressed ? 2 : 0 }] },
@@ -543,6 +546,7 @@ export default function BattleScreen() {
             accessibilityRole="button"
             accessibilityLabel={turnIndex >= turns.length - 1 ? 'Ver resultado del combate' : 'Avanzar al siguiente turno'}
             onPress={() => {
+              void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch(() => undefined);
               if (turnIndex >= turns.length - 1) setPhase('result');
               else setTurnIndex((current) => current + 1);
             }}
