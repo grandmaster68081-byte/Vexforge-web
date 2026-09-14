@@ -1,3 +1,24 @@
+## 2026-09-13 — VE-MOB-14-META — HONEST FORGE ADS SIGNALS / IMPLEMENTED_UNVERIFIED
+
+- **BRANCH:** `main`.
+- **COMMIT:** `b8e87e83f50e786ba6f6ef03fc61dfa0571968ad`.
+- **SCREEN / DOMAIN:** Sistemas del Legado / `LEGADO → META`.
+- **BLOCK:** estado honesto de Forge Ads y relación de dominio para Meta.
+- **WHAT CHANGED:** `MobileAdStats` conserva `null` cuando la fuente no entrega la estadística; Meta muestra `—`, `CUOTA PENDIENTE` y mantiene deshabilitada la recompensa hasta recibir ambos valores. La cabecera declara Meta como sistema del Legado.
+- **VISUAL DELTA:** el jugador distingue cero confirmado de dato ausente y entiende por qué la acción de anuncio todavía no está disponible.
+- **DATA PRESERVED:** `vexforge_ad_views`, `recordMobileAdView`, límite diario, recompensa server-side, reloj de 30 segundos, configuración, cosméticos, reliquias, NFT y permisos administrativos.
+- **ASSETS USED:** catálogo existente de Feather y escena ya registrada; no se añadieron assets.
+- **CARD_IDS_USED:** ninguno.
+- **MOTION_ADDED:** no se añadió motion nuevo; se reutiliza `DomainHeader` y los tokens compartidos.
+- **PERFORMANCE_NOTES:** guarda `verify-mobile-meta` 14/14 y `verify-mobile-social` 9/9; typecheck Expo pendiente porque el clon no incluye `mobile/node_modules`.
+- **HARD_GATES:** sin APK, workflow Android ni release; no se declara QA visual/táctil, `PASS`, `OPERATIONAL` ni `TIER1_READY`.
+- **CORE_SCORE:** pendiente de QA visual/táctil en dispositivo.
+- **VISUAL_DEBT_ADDED:** ninguna.
+- **VISUAL_DEBT_REMOVED:** Forge Ads presentaba una recompensa potencialmente habilitable con estadística no confirmada.
+- **STATUS:** `IMPLEMENTED_UNVERIFIED`.
+- **NEXT_BLOCK:** continuar con la siguiente unidad Android atómica del protocolo sin tocar la web congelada ni iniciar APK.
+- **ROLLBACK_POINT:** commit `b8e87e83f50e786ba6f6ef03fc61dfa0571968ad`.
+
 ## 2026-09-13 — VE-MOB-13-SOCIAL — LEGADO PARENT IDENTITY / IMPLEMENTED_UNVERIFIED
 
 - **BRANCH:** `main`.
