@@ -124,7 +124,13 @@ function WorldHeader({ panel, onPanelChange, onRefresh, refreshing, colors }: { 
 
 function BossCard({ boss, encounters, onBattle, colors }: { boss: MobileWorldBoss; encounters: MobileBossEncounter[]; onBattle: () => void; colors: Colors }) {
   const tone = tierTone(boss.tier, colors);
-  const ownDamage = encounters.filter((entry) => entry.world_boss_id === boss.id).reduce((total, entry) => total + Number(entry.damage ?? 0), 0);
+  const ownEncounters = encounters.filter((entry) => entry.world_boss_id === boss.id);
+  const ownDamage = ownEncounters.length === 0
+    ? null
+    : ownEncounters.reduce<number | null>((total, entry) => {
+        const damage = rewardNumber(entry.damage);
+        return total === null || damage === null ? null : total + damage;
+      }, 0);
   const lore = typeof boss.metadata?.lore === 'string' ? boss.metadata.lore : null;
   return (
     <View testID={`world-boss-${boss.id}`} style={[styles.bossCard, { backgroundColor: colors.panel, borderColor: `${tone}88` }]}>
@@ -141,7 +147,7 @@ function BossCard({ boss, encounters, onBattle, colors }: { boss: MobileWorldBos
         <Text style={[styles.bossLore, { color: lore ? colors.mutedForeground : colors.accent }]} numberOfLines={2}>{lore ?? 'LORE NO SINCRONIZADO'}</Text>
         <View style={styles.metaRow}><Text style={[styles.metaText, { color: colors.mutedForeground }]}>{labelize(boss.region_id)}</Text><Text style={[styles.metaText, { color: tone }]}>PWR {formatNumber(boss.power_level)}</Text></View>
         <View style={styles.hpRow}><View style={[styles.hpTrack, { backgroundColor: colors.muted }]}><View style={[styles.hpFill, { width: '100%', backgroundColor: tone }]} /></View><Text style={[styles.hpText, { color: colors.foreground }]}>{formatNumber(boss.hp)} HP</Text></View>
-        <View style={styles.rewardRow}><Text style={[styles.rewardText, { color: colors.accent }]}>{rewardText(boss.reward_pool)}</Text>{ownDamage > 0 ? <Text style={[styles.damageText, { color: colors.success }]}>Tú {formatNumber(ownDamage)}</Text> : null}</View>
+        <View style={styles.rewardRow}><Text style={[styles.rewardText, { color: colors.accent }]}>{rewardText(boss.reward_pool)}</Text>{ownEncounters.length > 0 ? <Text style={[styles.damageText, { color: ownDamage === null ? colors.accent : colors.success }]}>{ownDamage === null ? 'TÚ DAÑO NO REPORTADO' : `TÚ ${formatNumber(ownDamage)}`}</Text> : null}</View>
         <Pressable testID={`world-boss-battle-${boss.id}`} accessibilityRole="button" onPress={onBattle} style={({ pressed }) => [styles.primaryButton, { backgroundColor: tone, opacity: pressed ? 0.72 : 1 }]}>
           <Feather name="crosshair" size={15} color={colors.ink} /><Text style={[styles.primaryButtonText, { color: colors.ink }]}>PREPARAR BATALLA</Text>
         </Pressable>

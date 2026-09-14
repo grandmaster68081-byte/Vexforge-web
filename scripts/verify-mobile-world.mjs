@@ -24,6 +24,7 @@ const checks = [
   ['explicit states', ['Abriendo rutas del mundo', 'REINTENTAR SINCRONIZACIÓN', 'Sin jefes activos']],
   ['honest missing signals', ['LORE NO SINCRONIZADO', 'DIFICULTAD NO REPORTADA', 'MULTIPLICADOR NO REPORTADO', 'PROGRESO DE TEMPORADA NO REPORTADO', 'NOMBRE NO RESUELTO']],
   ['honest reward signals', ["function rewardNumber", "appendNumericReward('vex_ingame', 'VEX')", "appendNumericReward('shards', 'FRAGMENTOS')", 'value === null ? `${label} NO REPORTADO`', 'CARTA NO REPORTADA', 'RECOMPENSA SIN DETALLE']],
+  ['honest encounter damage', ['ownEncounters', 'ownDamage === null', 'TÚ DAÑO NO REPORTADO', 'TÚ ${formatNumber(ownDamage)}']],
 ];
 for (const [label, needles] of checks) {
   const source = label === 'official world reads' || label === 'official actions' ? supabase : label === 'world background' ? visual : screen;

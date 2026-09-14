@@ -1,3 +1,22 @@
+## 2026-09-14 — VE-MOB-12-WORLD — HONEST ENCOUNTER DAMAGE / IMPLEMENTED_UNVERIFIED
+
+- **BRANCH:** `main`.
+- **SCREEN / DOMAIN:** Mundo / `MUNDO → BOSS → DAÑO PROPIO`.
+- **BLOCK:** fidelidad de la señal de daño de encuentros propios.
+- **WHAT CHANGED:** Bosses distingue ausencia de encuentros, daño `0` confirmado y daño ausente o inválido; ya no oculta `Tú 0` ni convierte un valor no reportado en cero.
+- **VISUAL DELTA:** el jugador entiende si todavía no tiene un encuentro registrado, si aportó cero daño confirmado o si Supabase no entregó la señal.
+- **LIVE DATA CHECK:** se conserva el contrato `MobileBossEncounter.damage`; no se añadieron campos ni datos.
+- **DATA PRESERVED:** world bosses, encounters, raids, lore, temporada, tiers, claims, RPCs, RLS, Auth, economía, assets y navegación.
+- **ASSETS USED:** ninguno nuevo; se mantienen los assets oficiales registrados.
+- **MOTION_ADDED:** ninguno.
+- **PERFORMANCE_NOTES:** cálculo local sobre los encuentros ya cargados; sin red adicional ni animación.
+- **HARD_GATES:** no se inicia APK, workflow Android ni release por instrucción del operador; no se declara QA visual/táctil, `PASS`, `OPERATIONAL` ni `TIER1_READY`.
+- **CORE_SCORE:** pendiente de QA visual/táctil en dispositivo.
+- **VISUAL_DEBT_ADDED:** ninguna.
+- **VISUAL_DEBT_REMOVED:** pérdida silenciosa de la señal de daño cero o ausente.
+- **STATUS:** `IMPLEMENTED_UNVERIFIED`.
+- **NEXT_BLOCK:** continuar con otra unidad Android atómica del protocolo sin tocar la web congelada ni iniciar APK.
+
 ## 2026-09-14 — VE-MOB-12-WORLD — HONEST REWARD SIGNALS / IMPLEMENTED_UNVERIFIED
 
 - **BRANCH:** `main`.
