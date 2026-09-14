@@ -170,6 +170,11 @@ function ArenaRankCard({
     ? 'RÉCORD NO REPORTADO'
     : `${numberSignal(wins, 'VICTORIAS NO REPORTADAS')}V / ${numberSignal(losses, 'DERROTAS NO REPORTADAS')}D`;
   const mmrLabel = mmr === null ? 'MMR NO REPORTADO' : `${mmr} MMR`;
+  const seasonLabel = loading
+    ? 'TEMPORADA EN ESPERA · RANGO PvP'
+    : rank?.season_id?.trim()
+      ? 'TEMPORADA ACTIVA · RANGO PvP'
+      : 'TEMPORADA NO REPORTADA · RANGO PvP';
 
   return (
     <View testID="battle-rank-card" style={[styles.rankCard, { backgroundColor: `${colors.panelStrong}E8`, borderColor: `${colors.danger}66` }]}>
@@ -177,7 +182,7 @@ function ArenaRankCard({
         <Feather name="shield" size={24} color={colors.danger} />
       </View>
       <View style={styles.rankCopy}>
-        <Text style={[styles.sectionLabel, { color: colors.danger }]}>TEMPORADA ACTIVA · RANGO PvP</Text>
+        <Text style={[styles.sectionLabel, { color: colors.danger }]}>{seasonLabel}</Text>
         <Text style={[styles.rankTitle, { color: colors.foreground }]}>{loading ? 'SINCRONIZANDO' : tier}</Text>
         <Text style={[styles.rankMeta, { color: colors.mutedForeground }]}>
           {mmrLabel} · {recordLabel}

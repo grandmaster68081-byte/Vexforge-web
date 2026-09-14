@@ -1,3 +1,22 @@
+## 2026-09-14 — VE-MOB-7-BATTLE — HONEST SEASON SIGNAL / IMPLEMENTED_UNVERIFIED
+
+- **BRANCH:** `main`.
+- **SCREEN / DOMAIN:** Arena / `ARENA → RANGO PvP`.
+- **BLOCK:** evitar una afirmación fija de temporada activa cuando la señal viva aún carga o no existe.
+- **WHAT CHANGED:** la tarjeta usa `TEMPORADA EN ESPERA` durante la carga, `TEMPORADA ACTIVA` sólo con `season_id` confirmado y `TEMPORADA NO REPORTADA` cuando la respuesta no entrega temporada.
+- **LIVE DATA CHECK:** sesión QA autenticada de solo lectura contra Supabase oficial: `get_player_rank` respondió correctamente con `season_id`, MMR y escudos presentes. No se ejecutaron mutaciones.
+- **DATA PRESERVED:** rango, MMR, récord, escudos, temporada, oponentes, matchmaking, resolución PvP, replay, resultado, recompensas, Auth, RLS, telemetría, assets oficiales, navegación, accesibilidad, reduced-motion y web congelada.
+- **ASSETS USED:** ninguno nuevo.
+- **MOTION_ADDED:** ninguno; se conserva la interacción táctil existente.
+- **PERFORMANCE_NOTES:** lectura condicional de una señal ya cargada; sin solicitudes de red, animaciones nuevas ni dependencias.
+- **GATES:** `node scripts/verify-mobile-battle.mjs` OK, 45/45; `git diff --check` limpio. No se inicia workflow Android, no se compila APK ni se publica release por instrucción del operador.
+- **CORE_SCORE:** pendiente de QA visual/táctil en dispositivo.
+- **VISUAL_DEBT_ADDED:** ninguna.
+- **VISUAL_DEBT_REMOVED:** afirmación fija `TEMPORADA ACTIVA · RANGO PvP` cuando la temporada no estaba confirmada.
+- **STATUS:** `IMPLEMENTED_UNVERIFIED`.
+- **PERSISTENCIA:** código, documento y continuidad se publicarán juntos en `main` mediante la API REST HTTPS oficial de GitHub con `[skip ci]`; sin APK ni release Android nuevo.
+- **NEXT_BLOCK:** continuar con otra unidad Android atómica del protocolo sin tocar la web congelada ni iniciar APK.
+
 ## 2026-09-14 — VE-MOB-7-BATTLE — HONEST TURN EVENT SIGNALS / IMPLEMENTED_UNVERIFIED
 
 - **BRANCH:** `main`.
