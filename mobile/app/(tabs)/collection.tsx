@@ -35,6 +35,10 @@ function numberLabel(value: number | null | undefined) {
   return value.toLocaleString('es-ES');
 }
 
+function hasText(value: string | null | undefined): value is string {
+  return typeof value === 'string' && value.trim().length > 0;
+}
+
 function rarityLabel(rarity: string | null | undefined) {
   return {
     Common: 'Común',
@@ -43,7 +47,23 @@ function rarityLabel(rarity: string | null | undefined) {
     Epic: 'Épica',
     Legendary: 'Legendaria',
     Mythic: 'Mítica',
-  }[rarity ?? ''] ?? rarity ?? 'Sin rareza';
+  }[rarity ?? ''] ?? (hasText(rarity) ? rarity.trim() : 'RAREZA NO REPORTADA');
+}
+
+function factionLabel(faction: string | null | undefined) {
+  return hasText(faction) ? faction.trim() : 'FACCION NO REPORTADA';
+}
+
+function loreLabel(card: PublicCard) {
+  if (hasText(card.lore)) return card.lore.trim();
+  if (hasText(card.specialization)) return card.specialization.trim();
+  return 'LORE NO REPORTADO';
+}
+
+function identityLabel(card: PublicCard) {
+  if (hasText(card.specialization)) return card.specialization.trim();
+  if (hasText(card.card_domain)) return card.card_domain.trim();
+  return 'IDENTIDAD NO REPORTADA';
 }
 
 function rarityColor(rarity: string | null | undefined, colors: ReturnType<typeof useColors>) {
@@ -203,6 +223,7 @@ function CardTile({
   colors: ReturnType<typeof useColors>;
 }) {
   const accent = rarityColor(card.rarity, colors);
+  const faction = hasText(card.faction) ? card.faction.trim() : null;
   return (
     <Pressable
       testID={`card-${card.code}`}
@@ -222,8 +243,8 @@ function CardTile({
         <View style={styles.tileMeta}>
           <Text style={[styles.rarity, { color: accent }]}>{rarityLabel(card.rarity)}</Text>
           <Text style={[styles.dot, { color: colors.border }]}>·</Text>
-          {FACTION_ICONS[card.faction ?? ''] ? (
-            <Image source={{ uri: FACTION_ICONS[card.faction ?? ''] }} style={styles.factionIconMeta} resizeMode="contain" accessibilityLabel={`Emblema oficial de ${card.faction ?? 'la facción'}`} />
+          {FACTION_ICONS[faction ?? ''] ? (
+            <Image source={{ uri: FACTION_ICONS[faction ?? ''] }} style={styles.factionIconMeta} resizeMode="contain" accessibilityLabel={`Emblema oficial de ${factionLabel(card.faction)}`} />
           ) : <Feather name="compass" size={11} color={colors.mutedForeground} />}
         </View>
         <View style={styles.tileStats}>
@@ -281,10 +302,10 @@ function CardSpotlight({
         <Text style={[styles.spotlightKicker, { color: accent }]}>ARTEFACTO DESTACADO</Text>
         <Text style={[styles.spotlightTitle, { color: colors.foreground }]} numberOfLines={2}>{card.name}</Text>
         <Text style={[styles.spotlightMeta, { color: colors.mutedForeground }]}>
-          {rarityLabel(card.rarity)} · {card.faction ?? 'Sin facción'} · PWR {numberLabel(card.power)}
+          {rarityLabel(card.rarity)} · {factionLabel(card.faction)} · PWR {numberLabel(card.power)}
         </Text>
         <Text style={[styles.spotlightLore, { color: colors.mutedForeground }]} numberOfLines={3}>
-          {card.lore ?? card.specialization ?? 'Una pieza registrada en el archivo oficial de VEXFORGE.'}
+          {loreLabel(card)}
         </Text>
         <View style={styles.spotlightActions}>
           <Pressable
@@ -343,7 +364,7 @@ function CardDetail({
           <View style={styles.detailHeader}>
             <View style={styles.detailHeading}>
               <Text style={[styles.eyebrow, { color: accent }]}>
-                {rarityLabel(card.rarity)} · {card.faction ?? 'Sin facción'}
+                {rarityLabel(card.rarity)} · {factionLabel(card.faction)}
               </Text>
               <Text style={[styles.detailTitle, { color: colors.foreground }]}>{card.name}</Text>
               <Text style={[styles.code, { color: colors.mutedForeground }]}>
@@ -386,7 +407,7 @@ function CardDetail({
             <View style={[styles.infoPanel, { borderColor: colors.border, backgroundColor: colors.panel }]}>
               <Text style={[styles.sectionLabel, { color: colors.mutedForeground }]}>IDENTIDAD</Text>
               <Text style={[styles.infoText, { color: colors.foreground }]}>
-                {card.specialization ?? card.card_domain ?? 'Carta registrada en el compendio oficial de VEXFORGE.'}
+                {identityLabel(card)}
               </Text>
             </View>
             {keywords.length > 0 && (

@@ -1,4 +1,4 @@
-# VE-MOB-4 — HONEST CARD STATISTICS
+# VE-MOB-4 — HONEST CARD SIGNALS
 
 ## Change boundary
 
@@ -8,7 +8,7 @@
 
 ## Observable change
 
-Power, affinity, prestige, charge, supply, and minted values now remain visibly unconfirmed when the live card record does not provide a finite number. Confirmed zero remains visible as zero. Power sorting keeps cards without a confirmed power value at the end instead of treating them as zero.
+Power, affinity, prestige, charge, supply, and minted values remain visibly unconfirmed when the live card record does not provide a finite number. Confirmed zero remains visible as zero. Power sorting keeps cards without a confirmed power value at the end instead of treating them as zero. Missing rarity, faction, lore, and identity now use explicit unreported signals; the Archive does not invent descriptive copy.
 
 ## Evidence
 

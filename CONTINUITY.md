@@ -1,3 +1,22 @@
+## 2026-09-14 — VE-MOB-4-COLLECTION — HONEST CARD IDENTITY AND LORE SIGNALS / IMPLEMENTED_UNVERIFIED
+
+- **BRANCH:** `main`.
+- **SCREEN / DOMAIN:** Archivo / `COLECCIÓN → INSPECTOR DE CARTA`.
+- **BLOCK:** evitar que rareza, facción, lore o identidad ausentes parezcan datos confirmados mediante etiquetas genéricas o copy inventado.
+- **WHAT CHANGED:** rareza, facción, lore e identidad ahora muestran `RAREZA NO REPORTADA`, `FACCION NO REPORTADA`, `LORE NO REPORTADO` o `IDENTIDAD NO REPORTADA` cuando el registro vivo no entrega una señal textual utilizable; los valores reales se conservan recortados.
+- **LIVE DATA CHECK:** la consulta de solo lectura contra Supabase oficial respondió por HTTPS con 127 cartas activas y 0 ausencias en rareza, facción, lore o especialización; no se ejecutaron mutaciones.
+- **DATA PRESERVED:** catálogo, identidad, arte oficial, posesión, estadísticas, filtros, orden, paginación, fusión, logros, Auth, RLS, navegación, accesibilidad, reduced-motion y web congelada.
+- **ASSETS USED:** ninguno nuevo; se mantiene el arte oficial del catálogo.
+- **MOTION_ADDED:** ninguno.
+- **PERFORMANCE_NOTES:** normalización local de señales de texto ya recibidas; sin solicitudes nuevas, animaciones ni dependencias.
+- **GATES:** `node scripts/verify-mobile-collection-reference.mjs` OK, 14/14; `git diff --check` limpio. No se inicia workflow Android, no se compila APK ni se publica release.
+- **CORE_SCORE:** pendiente de QA visual/táctil en dispositivo.
+- **VISUAL_DEBT_ADDED:** ninguna.
+- **VISUAL_DEBT_REMOVED:** rareza, facción, lore e identidad ausentes como copy genérico o implícito.
+- **STATUS:** `IMPLEMENTED_UNVERIFIED`.
+- **PERSISTENCIA:** código, gate, documentación y continuidad se publicarán juntos en `main` mediante la API REST HTTPS oficial de GitHub con `[skip ci]`; sin APK ni release Android nuevo.
+- **NEXT_BLOCK:** continuar con otra unidad Android atómica del protocolo sin tocar la web congelada ni iniciar APK.
+
 ## 2026-09-14 — VE-MOB-3-HOME — HONEST NUMERIC ABSENCE SIGNALS / IMPLEMENTED_UNVERIFIED
 
 - **BRANCH:** `main`.
