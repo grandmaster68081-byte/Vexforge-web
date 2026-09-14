@@ -3232,6 +3232,16 @@
 - Siguiente microbloque: continuar con otra mejora Android concreta de fidelidad o interacción, manteniendo la regla de no adivinar y sin tocar la web congelada.
 
 ---
+## 2026-09-14 — VE-MOB-5-DECK — HONEST EMPTY SUMMARY / IMPLEMENTED_UNVERIFIED
+
+- Se corrigió `mobile/app/(tabs)/deck.tsx`: sin una formación oficial persistida, las métricas de cartas, poder y facciones muestran `—` en lugar de `0` o una cifra derivada de un array vacío.
+- Un `0` numérico solo vuelve a mostrarse cuando existe un mazo cargado desde la fuente oficial. La creación de borrador, validación, guardado, colección, RPCs, Auth y navegación permanecen intactos.
+- Guarda local: `node scripts/verify-mobile-deck.mjs` OK, 26/26 comprobaciones. `git diff --check` OK. El typecheck no se ejecutó porque `mobile/node_modules` no está disponible.
+- Commit de código publicado en `main`: `f00bfc063e10dc59025d1d71caeb64cf91a567a7`. Se usó `[skip ci]`; no se inició workflow, no se compiló APK ni se publicó release nuevo.
+- Estado honesto: `IMPLEMENTED_UNVERIFIED`. La diferencia visual entre ausencia de formación y métricas confirmadas queda pendiente de QA en APK autorizada.
+- Siguiente microbloque: continuar con otra mejora Android concreta de fidelidad o interacción, manteniendo la regla de no adivinar y sin tocar la web congelada.
+
+---
 ## 2026-09-14 — VE-MOB-9-PROFILE — ACHIEVEMENT PENDING STATES / IMPLEMENTED_UNVERIFIED
 
 - Se corrigieron los paneles `LOGROS` y `TÍTULOS` de `mobile/app/(tabs)/profile.tsx`: durante la carga ya no muestran “Todavía no hay registros disponibles” antes de recibir la respuesta autoritativa.
