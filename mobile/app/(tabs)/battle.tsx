@@ -1,4 +1,5 @@
 import { Feather } from '@/components/ForgeIcon';
+import * as Haptics from 'expo-haptics';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import {
   AccessibilityInfo,
@@ -108,7 +109,10 @@ function OpponentRow({
       accessibilityLabel={`Seleccionar oponente ${opponent.display_name}`}
       accessibilityState={{ selected, disabled }}
       disabled={disabled}
-      onPress={onPress}
+      onPress={() => {
+        void Haptics.selectionAsync().catch(() => undefined);
+        onPress();
+      }}
       style={({ pressed }) => [
         styles.opponent,
         {
@@ -608,7 +612,10 @@ export default function BattleScreen() {
                   accessibilityLabel="Cancelar desafío"
                   accessibilityState={{ disabled: battleLoading }}
                   disabled={battleLoading}
-                  onPress={() => setSelectedOpponent(null)}
+                  onPress={() => {
+                    void Haptics.selectionAsync().catch(() => undefined);
+                    setSelectedOpponent(null);
+                  }}
                   style={({ pressed }) => [
                     styles.cancelButton,
                     { borderColor: colors.border, opacity: pressed ? 0.72 : 1, transform: [{ translateY: pressed ? 2 : 0 }] },
@@ -622,7 +629,10 @@ export default function BattleScreen() {
                   accessibilityLabel="Iniciar combate oficial"
                   accessibilityState={{ disabled: battleLoading || formationSlots.length < 3 }}
                   disabled={battleLoading || formationSlots.length < 3}
-                  onPress={handleStartBattle}
+                  onPress={() => {
+                    void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium).catch(() => undefined);
+                    void handleStartBattle();
+                  }}
                   style={({ pressed }) => [
                     styles.confirmButton,
                     {

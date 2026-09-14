@@ -1,3 +1,12 @@
+## 2026-09-13 — VE-MOB-7-BATTLE — ARENA HAPTIC GATES / IMPLEMENTED_UNVERIFIED
+
+- **QUÉ CAMBIÓ:** seleccionar un rival y cancelar el desafío usan selección háptica; iniciar el combate oficial usa impacto medio antes de enviar la acción.
+- **QUÉ SE CONSERVÓ:** estados visuales de presión, selección, confirmación, carga, accesibilidad, reduced-motion, resolución autoritativa y replay.
+- **ARCHIVOS:** `mobile/app/(tabs)/battle.tsx`; `scripts/verify-mobile-battle.mjs`; `docs/VE-MOB-7-BATTLE-HAPTIC-GATES.md`.
+- **LÍMITES:** no se activan haptics en controles deshabilitados ni se simula respuesta del servidor. No se tocaron Supabase, RPCs, RLS, Auth, economía, combate, assets ni la web. No se inició workflow Android, no se compiló APK y no se generó release.
+- **ESTADO HONESTO:** `IMPLEMENTED_UNVERIFIED`; la guarda local, el typecheck y la QA táctil en APK siguen pendientes de registro/autorización.
+- **SIGUIENTE BLOQUE:** continuar sólo con otro delta Android atómico que mejore feedback o fidelidad sin reabrir contratos.
+
 ## 2026-09-13 — VE-MOB-7-BATTLE — MMR NEUTRALITY / IMPLEMENTED_UNVERIFIED
 
 - **QUÉ CAMBIÓ:** el resultado de Arena diferencia mejora, descenso, cambio neutral (`0`) y MMR ausente; el cero ya no se pinta como penalización y el dato ausente no se fabrica.
