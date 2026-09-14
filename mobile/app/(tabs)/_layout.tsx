@@ -10,7 +10,7 @@ import { Tabs } from 'expo-router';
 import { Redirect } from 'expo-router';
 import { Icon, Label, NativeTabs } from 'expo-router/unstable-native-tabs';
 import { useGame } from '@/context/GameContext';
-import { typography } from '@/constants/typography';
+import { VISUAL_TOKENS } from '@/constants/experience';
 
 // IMPORTANT: iOS 26 uses NativeTabs for native tabs with liquid glass support.
 // NativeTabs intentionally does NOT use custom design tokens — liquid glass
@@ -73,19 +73,26 @@ function ClassicTabLayout() {
         tabBarActiveTintColor: colors.accent,
         tabBarInactiveTintColor: colors.mutedForeground,
         headerShown: false,
-        tabBarLabelStyle: { fontFamily: typography.bodyBold, fontSize: 9, letterSpacing: 1 },
+        tabBarLabelStyle: {
+          fontFamily: VISUAL_TOKENS.typography.label.fontFamily,
+          fontSize: VISUAL_TOKENS.navigation.label.fontSize,
+          letterSpacing: VISUAL_TOKENS.navigation.label.letterSpacing,
+        },
         tabBarStyle: {
           position: 'absolute',
           backgroundColor: 'transparent',
           borderTopWidth: isWeb ? 1 : StyleSheet.hairlineWidth,
           borderTopColor: colors.border,
-          elevation: 12,
-          height: isWeb ? 84 : 72 + bottomInset,
-          paddingTop: 6,
-          paddingBottom: bottomInset + 6,
-          paddingHorizontal: 7,
+          elevation: VISUAL_TOKENS.navigation.bar.elevation,
+          height: isWeb ? VISUAL_TOKENS.navigation.bar.webHeight : VISUAL_TOKENS.navigation.bar.mobileBaseHeight + bottomInset,
+          paddingTop: VISUAL_TOKENS.navigation.bar.topPadding,
+          paddingBottom: bottomInset + VISUAL_TOKENS.navigation.bar.bottomPadding,
+          paddingHorizontal: VISUAL_TOKENS.navigation.bar.horizontalPadding,
         },
-        tabBarItemStyle: { minHeight: 56, paddingVertical: 3 },
+        tabBarItemStyle: {
+          minHeight: VISUAL_TOKENS.navigation.bar.itemMinHeight,
+          paddingVertical: VISUAL_TOKENS.navigation.bar.itemPaddingVertical,
+        },
         tabBarHideOnKeyboard: true,
         tabBarBackground: () => (
           <View style={StyleSheet.absoluteFill}>
@@ -144,9 +151,33 @@ export default function TabLayout() {
 }
 
 const styles = StyleSheet.create({
-  authLoading: { flex: 1, alignItems: 'center', justifyContent: 'center', gap: 14 },
-  authLoadingText: { fontSize: 10, fontWeight: '700', letterSpacing: 1.5 },
-  tabBarTopRail: { height: 1, left: 18, position: 'absolute', right: 18, top: 0 },
-  worldTabSeal: { alignItems: 'center', borderRadius: 4, borderWidth: 1, height: 30, justifyContent: 'center', position: 'relative', width: 38 },
-  worldTabBeacon: { borderRadius: 2, bottom: 3, height: 4, position: 'absolute', width: 4 },
+  authLoading: { flex: 1, alignItems: 'center', justifyContent: 'center', gap: VISUAL_TOKENS.navigation.authLoading.gap },
+  authLoadingText: {
+    fontSize: VISUAL_TOKENS.navigation.authLoading.labelSize,
+    fontWeight: '700',
+    letterSpacing: VISUAL_TOKENS.navigation.authLoading.labelTracking,
+  },
+  tabBarTopRail: {
+    height: VISUAL_TOKENS.navigation.bar.topRailHeight,
+    left: VISUAL_TOKENS.navigation.bar.topRailInset,
+    position: 'absolute',
+    right: VISUAL_TOKENS.navigation.bar.topRailInset,
+    top: 0,
+  },
+  worldTabSeal: {
+    alignItems: 'center',
+    borderRadius: VISUAL_TOKENS.navigation.seal.radius,
+    borderWidth: VISUAL_TOKENS.navigation.seal.borderWidth,
+    height: VISUAL_TOKENS.navigation.seal.height,
+    justifyContent: 'center',
+    position: 'relative',
+    width: VISUAL_TOKENS.navigation.seal.width,
+  },
+  worldTabBeacon: {
+    borderRadius: VISUAL_TOKENS.navigation.seal.beaconRadius,
+    bottom: VISUAL_TOKENS.navigation.seal.beaconBottom,
+    height: VISUAL_TOKENS.navigation.seal.beaconSize,
+    position: 'absolute',
+    width: VISUAL_TOKENS.navigation.seal.beaconSize,
+  },
 });

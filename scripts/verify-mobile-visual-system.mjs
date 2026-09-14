@@ -33,6 +33,7 @@ for (const token of [
   'safeArea:',
   'qualityTiers:',
   'control:',
+  'navigation:',
   'formation:',
 ]) {
   if (!tokens.includes(token)) failures.push(`shared visual token "${token}" is missing`);
@@ -114,10 +115,18 @@ if (!formation.includes('VISUAL_TOKENS.formation')) {
   failures.push('ForgeFormationPreview does not consume formation tokens');
 }
 
+const navigation = source('mobile/app/(tabs)/_layout.tsx');
+if (!navigation.includes("from '@/constants/experience'")) {
+  failures.push('TabLayout does not consume shared visual tokens');
+}
+if (!navigation.includes('VISUAL_TOKENS.navigation')) {
+  failures.push('TabLayout does not consume navigation tokens');
+}
+
 if (failures.length > 0) {
   console.error('T2V visual system guard failed:');
   for (const failure of failures) console.error(` - ${failure}`);
   process.exit(1);
 }
 
-console.log('T2V visual system guard passed (shared tokens + MaterialPanel + DomainState)');
+console.log('T2V visual system guard passed (shared tokens + navigation shell + MaterialPanel + DomainState)');

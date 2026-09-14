@@ -1,3 +1,22 @@
+## 2026-09-14 — VE-MOB-T2V — NAVIGATION SHELL TOKENS / IMPLEMENTED_UNVERIFIED
+
+- **BRANCH:** `main`.
+- **SCREEN / DOMAIN:** shell de navegación inferior Android; `Nexus / Arena / Archivo / Forja / Legado`.
+- **BLOCK:** décima pieza ejecutable de `T2V — VISUAL SYSTEM TOKENS + SHARED SCENE PRIMITIVES`.
+- **WHAT CHANGED:** el `ClassicTabLayout` consume `VISUAL_TOKENS.navigation` para altura, safe-area, espaciado, etiquetas, rail superior, sellos de dominio, beacon y estado de conexión; iOS `NativeTabs` conserva su apariencia nativa.
+- **DATA PRESERVED:** rutas, navegación, autenticación, tutorial gate, Supabase, RPCs, RLS, economía, combate, event log, settlement, datos vivos, assets oficiales, web congelada y contratos de las cinco superficies.
+- **AUTHORITY:** Android continúa siendo renderer/input/replay del contrato vivo; no se tocaron reglas, daño, turnos, ganador, formación ni datos autoritativos.
+- **ASSETS USED:** ninguno nuevo; se mantienen iconos y símbolos oficiales ya consumidos por el shell.
+- **MOTION_ADDED:** ninguno; no cambia el timing de navegación ni el feedback de interacción.
+- **PERFORMANCE_NOTES:** tokens estáticos resueltos localmente; sin solicitudes, listeners, estado o renders de datos adicionales. La ruta iOS nativa permanece fuera de la personalización Android.
+- **GATES:** `node scripts/verify-mobile-visual-system.mjs` OK, `git diff --check` limpio; typecheck móvil pendiente porque `mobile/node_modules` no está instalado; workflow APK y QA visual/táctil quedan pendientes y no se inician por instrucción del operador.
+- **VISUAL_DELTA:** el shell inferior comparte ahora el contrato T2V de geometría, espaciado y legibilidad con las demás primitivas Android.
+- **VISUAL_DEBT_REMOVED:** literales de navegación duplicados en el layout de tabs.
+- **VISUAL_DEBT_ADDED:** ninguna.
+- **STATUS:** `IMPLEMENTED_UNVERIFIED`.
+- **PERSISTENCIA:** publicar código, guarda de visual system y continuidad juntos en `main` mediante la API REST HTTPS oficial de GitHub con `[skip ci]`; no compilar APK ni publicar release.
+- **NEXT_BLOCK:** continuar con otra pieza T2V explícita sin tocar el motor, los contratos de Supabase, la web congelada ni el tutorial.
+
 ## 2026-09-14 — VE-MOB-T2V — FORMATION PREVIEW TOKENS / IMPLEMENTED_UNVERIFIED
 
 - **BRANCH:** `main`.

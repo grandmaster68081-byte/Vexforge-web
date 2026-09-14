@@ -229,6 +229,38 @@ export const VISUAL_TOKENS = {
     actionVerticalPadding: 9,
     actionTextSize: 10,
   },
+  navigation: {
+    bar: {
+      webHeight: 84,
+      mobileBaseHeight: 72,
+      topPadding: 6,
+      bottomPadding: 6,
+      horizontalPadding: 7,
+      itemMinHeight: 56,
+      itemPaddingVertical: 3,
+      elevation: 12,
+      topRailInset: 18,
+      topRailHeight: 1,
+    },
+    label: {
+      fontSize: 9,
+      letterSpacing: 1,
+    },
+    seal: {
+      width: 38,
+      height: 30,
+      radius: 4,
+      borderWidth: 1,
+      beaconSize: 4,
+      beaconRadius: 2,
+      beaconBottom: 3,
+    },
+    authLoading: {
+      gap: 14,
+      labelSize: 10,
+      labelTracking: 1.5,
+    },
+  },
   formation: {
     root: { radius: 18, padding: 14, gap: 10 },
     heading: { gap: 10 },
