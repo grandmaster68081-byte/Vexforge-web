@@ -1,3 +1,20 @@
+## 2026-09-13 — VE-MOB-11-ECONOMY — HONEST IDENTITY SIGNALS / IMPLEMENTED_UNVERIFIED
+
+- **BRANCH:** `main`.
+- **SCREEN / DOMAIN:** Economía / `LEGADO → ECONOMÍA`.
+- **BLOCK:** fidelidad de identidad en listados de mercado y referidos.
+- **WHAT CHANGED:** nombres de cartas, rarezas, identidades de referidos y códigos ausentes o vacíos ya no reciben etiquetas genéricas como si fueran datos oficiales; muestran señales explícitas de información no reportada. Los nombres y rarezas vivos se conservan.
+- **VISUAL DELTA:** el jugador diferencia una identidad confirmada de una fila cuyo contrato todavía no entregó esa señal, sin perder la acción de mercado ni inventar una entidad.
+- **DATA PRESERVED:** RPCs de cartera, ledger, mercado, tesorería, depósitos, retiros y referidos; identificadores, precios, operaciones, Auth, RLS, assets, navegación y web congelada.
+- **ASSETS USED:** ninguno nuevo; se mantienen los assets oficiales registrados.
+- **MOTION_ADDED:** ninguno.
+- **PERFORMANCE_NOTES:** normalización local de strings ya recibidos; sin red adicional ni animación.
+- **GATES:** `verify-mobile-economy` y `git diff --check` deben pasar. No se inicia APK, workflow Android ni release por instrucción del operador; no se declara QA visual/táctil, `PASS`, `OPERATIONAL` ni `TIER1_READY`.
+- **ESTADO HONESTO:** `IMPLEMENTED_UNVERIFIED`.
+- **VISUAL_DEBT_REMOVED:** `Carta sin nombre`, `Rareza no disponible`, `Jugador referido` y `Código no disponible` como sustitutos ambiguos de datos vivos ausentes.
+- **PERSISTENCIA:** pendiente de publicar en `main` mediante la API REST HTTPS oficial de GitHub con `[skip ci]`; no se generará release Android.
+- **SIGUIENTE BLOQUE:** continuar con otra mejora Android atómica verificable, sin tocar la web congelada ni iniciar compilación hasta autorización del operador.
+
 ## 2026-09-14 — VE-MOB-10-FUSION — HONEST POLICY SIGNALS / IMPLEMENTED_UNVERIFIED
 
 - **BRANCH:** `main`.

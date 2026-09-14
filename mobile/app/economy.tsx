@@ -73,6 +73,18 @@ function shortHash(value: string | null | undefined) {
   return value.length > 18 ? `${value.slice(0, 9)}…${value.slice(-7)}` : value;
 }
 
+function cardName(value: string | null | undefined) {
+  return value?.trim() || 'CARTA SIN IDENTIDAD REPORTADA';
+}
+
+function cardRarity(value: string | null | undefined) {
+  return value?.trim() || 'RAREZA NO REPORTADA';
+}
+
+function referralName(value: string | null | undefined) {
+  return value?.trim() || 'IDENTIDAD NO REPORTADA';
+}
+
 function statusColor(status: string, colors: Colors) {
   if (['approved', 'completed', 'fulfilled'].includes(status)) return colors.success;
   if (['rejected', 'failed', 'cancelled'].includes(status)) return colors.danger;
@@ -352,7 +364,7 @@ export default function EconomyScreen() {
 
   const buyListing = useCallback((listing: MarketListing) => {
     if (!session || !player) return;
-    Alert.alert('Comprar carta', `${listing.card_name ?? 'Carta'} por ${money(listing.price)} VEX`, [
+    Alert.alert('Comprar carta', `${cardName(listing.card_name)} por ${money(listing.price)} VEX`, [
       { text: 'Cancelar', style: 'cancel' },
       {
         text: 'Comprar',
@@ -366,7 +378,7 @@ export default function EconomyScreen() {
 
   const cancelListing = useCallback((listing: MarketListing) => {
     if (!session || !player) return;
-    Alert.alert('Cancelar listado', `${listing.card_name ?? 'Carta'} dejará el mercado.`, [
+    Alert.alert('Cancelar listado', `${cardName(listing.card_name)} dejará el mercado.`, [
       { text: 'Mantener', style: 'cancel' },
       {
         text: 'Cancelar listado',
@@ -475,12 +487,12 @@ export default function EconomyScreen() {
                       style={[styles.choice, { backgroundColor: selectedCardId === card.id ? `${colors.accent}18` : colors.card, borderColor: selectedCardId === card.id ? colors.accent : colors.border }]}
                     >
                       <Ionicons name="layers-outline" size={18} color={colors.accent} />
-                      <Text numberOfLines={1} style={[styles.choiceTitle, { color: colors.foreground }]}>{card.card_name ?? 'Carta sin nombre'}</Text>
-                      <Text style={[styles.meta, { color: colors.mutedForeground }]}>{card.card_rarity ?? 'Rareza no disponible'} · x{card.quantity}</Text>
+                      <Text numberOfLines={1} style={[styles.choiceTitle, { color: colors.foreground }]}>{cardName(card.card_name)}</Text>
+                      <Text style={[styles.meta, { color: colors.mutedForeground }]}>{cardRarity(card.card_rarity)} · x{card.quantity}</Text>
                     </Pressable>
                   ))}
                 </ScrollView>
-                <Field label={`Precio de ${selectedCard?.card_name ?? 'carta'}`} value={price} onChangeText={setPrice} placeholder="0 VEX" colors={colors} keyboardType="decimal-pad" testID="economy-listing-price" />
+                <Field label={`Precio de ${cardName(selectedCard?.card_name)}`} value={price} onChangeText={setPrice} placeholder="0 VEX" colors={colors} keyboardType="decimal-pad" testID="economy-listing-price" />
                 <ActionButton label={working === 'create-listing' ? 'CREANDO…' : 'PUBLICAR LISTADO'} icon="add-circle-outline" onPress={submitListing} colors={colors} disabled={working !== null} testID="economy-create-listing" />
               </>
             )}
@@ -492,8 +504,8 @@ export default function EconomyScreen() {
             <Panel key={listing.id} colors={colors} style={styles.listingPanel}>
               <View style={styles.rowBetween}>
                 <View style={{ flex: 1 }}>
-                  <Text style={[styles.cardTitle, { color: colors.foreground }]}>{listing.card_name ?? 'Carta sin nombre'}</Text>
-                  <Text style={[styles.meta, { color: colors.mutedForeground }]}>{listing.card_rarity ?? 'Rareza no disponible'} · {listing.player_id === player?.id ? 'Tu listado' : 'Oferta de jugador'}</Text>
+                  <Text style={[styles.cardTitle, { color: colors.foreground }]}>{cardName(listing.card_name)}</Text>
+                  <Text style={[styles.meta, { color: colors.mutedForeground }]}>{cardRarity(listing.card_rarity)} · {listing.player_id === player?.id ? 'Tu listado' : 'Oferta de jugador'}</Text>
                 </View>
                 <Text style={[styles.price, { color: colors.accent }]}>{money(listing.price)} VEX</Text>
               </View>
@@ -596,7 +608,7 @@ export default function EconomyScreen() {
         <SectionTitle eyebrow="REFERIDOS" title="Construye tu red" colors={colors} />
         <Panel colors={colors}>
           <Text style={[styles.cardLabel, { color: colors.mutedForeground }]}>TU CÓDIGO</Text>
-          <Text selectable style={[styles.referralCode, { color: colors.accent }]}>{referralSummary?.referral_code ?? 'Código no disponible'}</Text>
+          <Text selectable style={[styles.referralCode, { color: colors.accent }]}>{referralSummary?.referral_code?.trim() || 'CÓDIGO NO REPORTADO'}</Text>
           <Text style={[styles.body, { color: colors.mutedForeground }]}>Comparte el código desde tus canales habituales. Los estados y las recompensas se acreditan exclusivamente en Supabase.</Text>
           <View style={styles.statsGrid}>
             <StatValue label="Referidos" value={referralSummary?.total_referrals} colors={colors} />
@@ -611,7 +623,7 @@ export default function EconomyScreen() {
         ) : referrals.map((referral) => (
           <Panel key={referral.id} colors={colors} style={styles.historyRow}>
             <View style={{ flex: 1 }}>
-              <Text style={[styles.cardTitle, { color: colors.foreground }]}>{referral.referred_display_name ?? 'Jugador referido'}</Text>
+              <Text style={[styles.cardTitle, { color: colors.foreground }]}>{referralName(referral.referred_display_name)}</Text>
               <Text style={[styles.meta, { color: colors.mutedForeground }]}>{dateLabel(referral.created_at)} · {referral.first_pack_rewarded ? 'Primer pack registrado' : 'Sin primer pack registrado'}</Text>
             </View>
             <Text style={[styles.status, { color: statusColor(referral.status, colors) }]}>{referral.reward_granted ? 'ACREDITADO' : referral.status}</Text>
