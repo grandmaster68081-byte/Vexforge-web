@@ -1,3 +1,22 @@
+## 2026-09-14 — VE-MOB-9-PROFILE — HONEST IDENTITY SIGNALS / IMPLEMENTED_UNVERIFIED
+
+- **BRANCH:** `main`.
+- **SCREEN / DOMAIN:** Perfil / `META → IDENTIDAD DEL FORJADOR`.
+- **BLOCK:** lectura honesta de identidad, contacto y fecha de alta cuando la fuente no entrega la señal.
+- **WHAT CHANGED:** Perfil diferencia identidad no sincronizada de identidad no reportada; correo, usuario de Telegram y fecha ausentes ya no se presentan como `—`. Los valores confirmados se conservan.
+- **LIVE DATA CHECK:** se mantiene la lectura autenticada de `players`, `player_progress`, wallet, rango, estadísticas, logros y Social; no se ejecutaron mutaciones.
+- **DATA PRESERVED:** contratos de Perfil, RPCs de rango/estadísticas, progreso, cartera, historial, ranking, logros, Auth, navegación, assets y web congelada.
+- **ASSETS USED:** ninguno nuevo; se mantiene la escena canónica de Perfil.
+- **MOTION_ADDED:** ninguno; se conserva la interacción táctil existente.
+- **PERFORMANCE_NOTES:** normalización local sobre datos ya cargados; sin red adicional ni animación nueva.
+- **GATES:** `node scripts/verify-mobile-profile.mjs` y `git diff --check` deben pasar. El typecheck móvil no se ejecuta porque no hay `mobile/node_modules`; no se inicia APK, workflow Android ni release por instrucción del operador.
+- **CORE_SCORE:** pendiente de QA visual/táctil en dispositivo.
+- **VISUAL_DEBT_ADDED:** ninguna.
+- **VISUAL_DEBT_REMOVED:** guiones ambiguos para identidad, correo, Telegram y fecha de alta.
+- **STATUS:** `IMPLEMENTED_UNVERIFIED`.
+- **PERSISTENCIA:** código y continuidad quedan publicados en `main` mediante la API REST HTTPS oficial de GitHub con `[skip ci]`; no se generará release Android.
+- **NEXT_BLOCK:** continuar con otra unidad Android atómica del protocolo sin tocar la web congelada ni iniciar APK.
+
 ## 2026-09-14 — VE-MOB-14-META — HONEST CATALOG AND QUEUE SIGNALS / IMPLEMENTED_UNVERIFIED
 
 - **BRANCH:** `main`.

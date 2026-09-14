@@ -75,10 +75,24 @@ function rankLabel(rank: PlayerRank | null) {
   return rank?.tier?.toUpperCase() || 'SIN RANGO';
 }
 
+function identityLabel(player: { display_name: string | null } | null) {
+  const normalized = player?.display_name?.trim();
+  return normalized || (player ? 'IDENTIDAD NO REPORTADA' : 'IDENTIDAD NO SINCRONIZADA');
+}
+
+function handleLabel(player: { telegram_username?: string | null } | null) {
+  const normalized = player?.telegram_username?.trim();
+  return normalized ? `@${normalized.replace(/^@+/, '')}` : 'USUARIO TELEGRAM NO REPORTADO';
+}
+
+function emailLabel(player: { email: string | null } | null, sessionEmail: string | undefined) {
+  return player?.email?.trim() || sessionEmail?.trim() || 'CORREO NO REPORTADO';
+}
+
 function formatDate(value: string | null | undefined) {
-  if (!value) return '—';
+  if (!value) return 'FECHA NO REPORTADA';
   const date = new Date(value);
-  return Number.isNaN(date.getTime()) ? '—' : date.toLocaleDateString('es-ES', { month: 'short', year: 'numeric' }).replace('.', '').toUpperCase();
+  return Number.isNaN(date.getTime()) ? 'FECHA NO REPORTADA' : date.toLocaleDateString('es-ES', { month: 'short', year: 'numeric' }).replace('.', '').toUpperCase();
 }
 
 function getStreak(matches: MobileSocialSnapshot['matches'] | null, playerId: string) {
@@ -275,10 +289,9 @@ export default function ProfileScreen() {
     }
   }, [requestedSection]);
 
-  const displayName = player?.display_name?.trim() || '—';
-  const handle = player?.telegram_username?.trim() ? `@${player.telegram_username.trim().replace(/^@+/, '')}` : '—';
-  const playerEmail = player ? player.email : null;
-  const email = playerEmail || session?.user.email || '—';
+  const displayName = identityLabel(player);
+  const handle = handleLabel(player);
+  const email = emailLabel(player, session?.user.email);
   const xpPercent = progress && progress.xp_to_next > 0 ? Math.min(100, Math.round((progress.xp / progress.xp_to_next) * 100)) : 0;
   const currentRank = rankLabel(rank);
   const statValues = useMemo(() => [

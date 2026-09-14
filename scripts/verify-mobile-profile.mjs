@@ -16,7 +16,9 @@ const referenceHeight = referenceAsset.readUInt32BE(20);
 
 const assertions = [
   ['profile screen exists', contents.screen.includes('export default function ProfileScreen')],
-  ['profile reads authenticated identity', contents.screen.includes('player.email') && contents.supabase.includes('loadPlayerProfile')],
+  ['profile reads authenticated identity', contents.screen.includes('emailLabel') && contents.screen.includes('player?.email') && contents.supabase.includes('loadPlayerProfile')],
+  ['profile keeps missing identity signals explicit', contents.screen.includes('function identityLabel') && contents.screen.includes('IDENTIDAD NO REPORTADA') && contents.screen.includes('IDENTIDAD NO SINCRONIZADA') && contents.screen.includes('CORREO NO REPORTADO') && contents.screen.includes('USUARIO TELEGRAM NO REPORTADO') && !contents.screen.includes("player?.display_name?.trim() || '—'")],
+  ['profile keeps missing dates explicit', contents.screen.includes('FECHA NO REPORTADA') && !contents.screen.includes("if (!value) return '—'")],
   ['profile reads authoritative rank', contents.screen.includes('loadPlayerRank') && contents.supabase.includes("'get_player_rank'")],
   ['profile reads real achievements', contents.screen.includes('loadPlayerAchievements') && contents.supabase.includes('player_achievements')],
   ['profile displays progression and resources', contents.screen.includes('progress?.xp') && contents.screen.includes('wallet?.vex_ingame')],
@@ -31,7 +33,7 @@ const assertions = [
   ['profile quick titles opens titles panel', contents.screen.includes("id: 'quick-titles'") && contents.screen.includes("id: 'quick-titles', label: 'Títulos'") && contents.screen.includes("id: 'quick-titles', label: 'Títulos', left: '26%', top: '81%', width: '21%', height: '9%', action: 'titles'")],
   ['profile responds to achievements route params', contents.screen.includes("if (requestedSection === 'achievements')") && contents.screen.includes("setPanel('achievements')")],
   ['profile has account sign out', contents.screen.includes('profile-sign-out') && contents.screen.includes('signOut')],
-  ['profile uses the canonical username field', contents.screen.includes('player.telegram_username') && !contents.screen.includes('displayName.toLowerCase().replace')],
+  ['profile uses the canonical username field', contents.screen.includes('player?.telegram_username') && !contents.screen.includes('displayName.toLowerCase().replace')],
   ['profile does not repeat identity in achievement panels', !contents.screen.includes('modalFooter') && !contents.screen.includes('playerName} · {rankLabel(rank)')],
   ['profile places count and level in programmatic cards', contents.screen.includes('cartas registradas') && contents.screen.includes('Nivel {progress?.level')],
   ['profile preserves draw and pending history outcomes', contents.screen.includes("type MatchOutcome = 'victory' | 'defeat' | 'draw' | 'pending'") && contents.screen.includes("if (match.status.trim().toLowerCase() !== 'resolved') return 'pending'") && contents.screen.includes("outcome === 'draw' ? 'Empate'") && contents.screen.includes("outcome === 'draw' ? 'pause-circle-outline'") && contents.screen.includes(": 'Pendiente'")],
