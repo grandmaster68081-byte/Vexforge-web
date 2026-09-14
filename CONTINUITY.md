@@ -14,7 +14,7 @@
 - **VISUAL_DEBT_ADDED:** ninguna.
 - **VISUAL_DEBT_REMOVED:** `Unidad no disponible`, facción derivada del lado, rareza `REGISTRO OFICIAL`, daño `0` y guiones ambiguos para conteos ausentes.
 - **STATUS:** `IMPLEMENTED_UNVERIFIED`.
-- **PERSISTENCIA:** pendiente de publicar código y continuidad en `main` mediante la API REST HTTPS oficial de GitHub con `[skip ci]`; sin APK ni release Android nuevo.
+- **PERSISTENCIA:** código y continuidad publicados en `main` mediante la API REST HTTPS oficial de GitHub en `67e3cf5379f7416d1f146bb361b9fadfed3e0478` con `[skip ci]`; sin APK ni release Android nuevo.
 - **NEXT_BLOCK:** continuar con otra unidad Android atómica del protocolo sin tocar la web congelada ni iniciar APK.
 
 ## 2026-09-14 — VE-MOB-8-REWARDS — HONEST ENERGY SIGNAL / IMPLEMENTED_UNVERIFIED
