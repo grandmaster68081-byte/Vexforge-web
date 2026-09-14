@@ -1,3 +1,12 @@
+## 2026-09-13 — VE-MOB-7-BATTLE — MMR NEUTRALITY / IMPLEMENTED_UNVERIFIED
+
+- **QUÉ CAMBIÓ:** el resultado de Arena diferencia mejora, descenso, cambio neutral (`0`) y MMR ausente; el cero ya no se pinta como penalización y el dato ausente no se fabrica.
+- **FUENTE:** sólo `BattleResult.elo_change`; `client_ai_v1` mantiene `—` porque la práctica no modifica MMR.
+- **ARCHIVOS:** `mobile/app/(tabs)/battle.tsx`; `scripts/verify-mobile-battle.mjs`; `docs/VE-MOB-7-BATTLE-MMR-NEUTRALITY.md`.
+- **LÍMITES:** no se tocaron Supabase, RPCs, RLS, Auth, economía, combate, assets ni la web congelada. No se inició workflow Android, no se compiló APK y no se generó release.
+- **ESTADO HONESTO:** `IMPLEMENTED_UNVERIFIED`; la guarda local, el typecheck y la QA visual/táctil en APK siguen pendientes de registro/autorización.
+- **SIGUIENTE BLOQUE:** continuar sólo con otro delta Android atómico que mejore fidelidad de datos o identidad de Arena sin reabrir contratos.
+
 ## 2026-09-13 — VE-MOB-7-BATTLE — DRAW OUTCOME FIDELITY / IMPLEMENTED_UNVERIFIED
 
 - **QUÉ CAMBIÓ:** la Arena Android distingue victoria, derrota y empate usando únicamente `you_won` y `winner_id` de la resolución autoritativa; un empate ya no se presenta como derrota.

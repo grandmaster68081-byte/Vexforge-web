@@ -37,6 +37,7 @@ const assertions = [
   ['replay exposes authoritative turn progress', contents.screen.includes('testID="battle-replay-progress"') && contents.screen.includes('turnIndex={turnIndex}') && contents.screen.includes('totalTurns={turns.length}') && contents.screen.includes('replayProgressFill')],
   ['result preserves the authoritative final formation', contents.screen.includes('testID="battle-result-formation"') && contents.screen.includes('FORMACIÓN FINAL VERIFICADA') && contents.screen.includes('finalUnits={result.final_units ?? []}') && contents.screen.includes('outcome={outcome}')],
   ['result distinguishes an authoritative draw', contents.screen.includes("if (outcome === 'draw') return 'Empate confirmado'") && contents.screen.includes("outcome === 'draw'") && contents.battlefield.includes('EMPATE CONFIRMADO POR EL SERVIDOR')],
+  ['result preserves neutral and absent MMR states', contents.screen.includes('const mmrChange = typeof result.elo_change === \'number\' ? result.elo_change : null') && contents.screen.includes('mmrChange < 0 ? colors.danger : colors.accent') && contents.screen.includes("mmrChange === null ? '—'")],
 ];
 
 const failures = assertions.filter(([, passed]) => !passed).map(([name]) => name);

@@ -271,6 +271,9 @@ function ResultPanel({
   const isDraw = outcome === 'draw';
   const isTraining = result.engine === 'client_ai_v1';
   const outcomeColor = won ? colors.success : isDraw ? colors.accent : colors.danger;
+  const mmrChange = typeof result.elo_change === 'number' ? result.elo_change : null;
+  const mmrColor = isTraining || mmrChange === null ? colors.mutedForeground : mmrChange > 0 ? colors.success : mmrChange < 0 ? colors.danger : colors.accent;
+  const mmrLabel = isTraining || mmrChange === null ? '—' : `${mmrChange > 0 ? '+' : ''}${mmrChange}`;
   const finalTurn = result.turns?.[Math.max(0, (result.turns?.length ?? 1) - 1)] ?? null;
   const totalTurns = result.total_turns ?? result.turns?.length ?? 0;
   return (
@@ -285,7 +288,7 @@ function ResultPanel({
       {result.ok ? (
         <View style={styles.resultStats}>
           <View style={styles.resultStat}><Text style={[styles.resultValue, { color: colors.foreground }]}>{result.total_turns ?? result.turns?.length ?? 0}</Text><Text style={[styles.resultLabel, { color: colors.mutedForeground }]}>TURNOS</Text></View>
-           <View style={styles.resultStat}><Text style={[styles.resultValue, { color: isTraining ? colors.mutedForeground : result.elo_change && result.elo_change > 0 ? colors.success : colors.danger }]}>{isTraining ? '—' : `${result.elo_change && result.elo_change > 0 ? '+' : ''}${result.elo_change ?? 0}`}</Text><Text style={[styles.resultLabel, { color: colors.mutedForeground }]}>MMR</Text></View>
+           <View style={styles.resultStat}><Text style={[styles.resultValue, { color: mmrColor }]}>{mmrLabel}</Text><Text style={[styles.resultLabel, { color: colors.mutedForeground }]}>MMR</Text></View>
            <View style={styles.resultStat}><Text style={[styles.resultValue, { color: colors.accent }]}>{isTraining ? 'IA' : result.match_id ? result.match_id.slice(0, 8).toUpperCase() : '—'}</Text><Text style={[styles.resultLabel, { color: colors.mutedForeground }]}>{isTraining ? 'MODO' : 'MATCH'}</Text></View>
         </View>
       ) : null}
