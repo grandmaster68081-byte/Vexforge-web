@@ -3198,3 +3198,14 @@
 - Estado honesto: `IMPLEMENTED_UNVERIFIED`; la QA visual del ciclo PvP dentro del APK sigue pendiente. Detalle en `docs/VE-PVP-3-OPPONENT-ROSTER.md`.
 - Deuda vigente: `startBattle()` (camino legacy vía `start_pvp_match`, `service_role` únicamente) sigue muerto y debe eliminarse o endurecerse; falta la verificación visual del combate PvP completo en dispositivo.
 - Siguiente microbloque: retirar el camino legacy `startBattle`/`start_pvp_match` y verificar el ciclo PvP completo (resolución, ELO, recompensas) desde la interfaz con la cuenta QA.
+
+---
+## 2026-09-14 — VE-MOB-7-BATTLE — AI PRACTICE HAPTIC GATE / IMPLEMENTED_UNVERIFIED
+
+- Se añadió una señal háptica ligera al umbral explícito `BATALLA RÁPIDA VS IA` en `mobile/app/(tabs)/battle.tsx`. La señal ocurre antes de abrir el replay local de entrenamiento y no representa una respuesta del servidor.
+- Se mantuvieron intactos el bloqueo de formación mínima, el replay, la lectura de turnos, la resolución PvP oficial, MMR, recompensas, inventario, Supabase, Auth y la web congelada.
+- Guarda móvil: `node scripts/verify-mobile-battle.mjs` OK, 30/30 comprobaciones. `git diff --check` OK. El typecheck móvil no se ejecutó porque el snapshot oficial no incluye `mobile/node_modules`; no se instaló nada para evitar iniciar un proceso no autorizado.
+- Verificación viva de solo lectura con la cuenta QA contra Supabase oficial: autenticación correcta; `get_pvp_opponents` devolvió 2 oponentes elegibles. No se ejecutaron RPCs mutantes ni se inició una partida.
+- Commit publicado en `main`: `286c43a6663df5d6745f1a4b4a45e40942b704d9`. Se usó `[skip ci]` conforme a la instrucción de no compilar APK; no se inició workflow ni se publicó release nuevo.
+- Estado honesto: `IMPLEMENTED_UNVERIFIED`. La respuesta táctil requiere QA en dispositivo cuando el operador autorice una compilación Android.
+- Siguiente microbloque: continuar con una mejora Android atómica de fidelidad o interacción dentro de Battle, Deck, Profile o Home, sin tocar la web congelada ni iniciar APK sin autorización.
