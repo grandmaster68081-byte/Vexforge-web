@@ -37,6 +37,7 @@ const assertions = [
   ['profile preserves draw and pending history outcomes', contents.screen.includes("type MatchOutcome = 'victory' | 'defeat' | 'draw' | 'pending'") && contents.screen.includes("if (match.status.trim().toLowerCase() !== 'resolved') return 'pending'") && contents.screen.includes("outcome === 'draw' ? 'Empate'") && contents.screen.includes("outcome === 'draw' ? 'pause-circle-outline'") && contents.screen.includes(": 'Pendiente'")],
   ['profile preserves neutral history elo', contents.screen.includes('elo < 0 ? colors.danger : colors.accent') && contents.screen.includes('testID={`profile-history-${match.id}`}')],
   ['profile does not turn an unsynced social feed into a zero streak', contents.screen.includes("function getStreak(matches: MobileSocialSnapshot['matches'] | null") && contents.screen.includes('getStreak(social?.matches ?? null') && !contents.screen.includes('getStreak(social?.matches ?? [])')],
+  ['profile keeps social panels explicit before synchronization', contents.screen.includes('profile-history-pending') && contents.screen.includes('profile-ranking-pending') && contents.screen.includes('social === null ?')],
   ['no client profile simulation', !contents.screen.includes('Math.random') && !contents.screen.includes('mock')],
   ['no emoji characters in profile UI', !/[\u{1F000}-\u{1FAFF}]/u.test(contents.screen)],
 ];
