@@ -4435,3 +4435,15 @@
 - Publicación: código y esta continuidad se publicarán en `main` mediante la API REST HTTPS oficial de GitHub con `[skip ci]`, sin `git push`, para no disparar el workflow APK.
 - Commit remoto de implementación: `ed306a44d808a0837da5d18a12cdeb1637d95651`.
 - Siguiente microbloque: continuar con otra mejora Android atómica de fidelidad o interacción, sin tocar la web congelada ni iniciar APK sin autorización.
+
+---
+## 2026-09-14 — VE-MOB-10-PACKS-SHOP — HONEST STORE DATE SIGNALS / IMPLEMENTED_UNVERIFIED
+
+- Se corrigió `mobile/app/store.tsx`: las fechas de pedidos de packs y expiración de boosts ya no renderizan directamente timestamps inválidos, que podían terminar en una fecha engañosa o inconsistente.
+- La Tienda ahora comunica `FECHA NO REPORTADA` cuando falta el timestamp y `FECHA NO VÁLIDA` cuando Supabase entrega un valor no parseable; los timestamps válidos conservan el formato existente.
+- Se mantuvieron los catálogos reales, RPCs autoritativas de compra/apertura/pago/fusión/evolución, balance, inventario, tesorería, Auth, Supabase, navegación, accesibilidad, haptics, reduced-motion, estados loading/error/vacío y la web congelada.
+- Se reforzó `scripts/verify-mobile-store.mjs` con una guarda específica para las fechas de pedidos y boosts.
+- Evidencia local: `node scripts/verify-mobile-store.mjs` OK (20/20) y `git diff --check` OK. El typecheck Android queda diferido porque el snapshot oficial no incluye `mobile/node_modules`.
+- No se inicia workflow Android, no se compila APK ni se publica release por instrucción expresa del operador. Estado honesto: `IMPLEMENTED_UNVERIFIED`; requiere QA visual/táctil en dispositivo cuando el operador autorice una compilación.
+- Publicación: código y esta continuidad se publicarán juntos en `main` mediante la API REST HTTPS oficial de GitHub con `[skip ci]`, sin `git push`, para no disparar el workflow APK.
+- Siguiente microbloque: continuar con otra mejora Android atómica de fidelidad o interacción, sin tocar la web congelada ni iniciar APK sin autorización.

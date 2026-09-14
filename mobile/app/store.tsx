@@ -147,6 +147,13 @@ function storeText(value: string | null | undefined, missingLabel: string) {
   return typeof value === 'string' && value.trim() ? value : missingLabel;
 }
 
+function formatStoreDate(value: string | null | undefined) {
+  if (!value) return 'FECHA NO REPORTADA';
+  const timestamp = new Date(value).getTime();
+  if (!Number.isFinite(timestamp)) return 'FECHA NO VÁLIDA';
+  return new Date(timestamp).toLocaleDateString('es-ES');
+}
+
 function PackSection({ session, colors, onRefresh }: { session: NonNullable<ReturnType<typeof useGame>['session']>; colors: Palette; onRefresh: () => Promise<void> }) {
   const [packs, setPacks] = useState<MobilePack[]>([]);
   const [balance, setBalance] = useState<number | null>(null);
@@ -294,7 +301,7 @@ function PackSection({ session, colors, onRefresh }: { session: NonNullable<Retu
       <SectionTitle eyebrow="HISTORIAL VIVO" title="Últimos pedidos" colors={colors} />
       {history.length === 0 ? <Text style={[styles.bodyLeft, { color: colors.mutedForeground }]}>Aún no hay pedidos de packs registrados.</Text> : history.slice(0, 5).map((order) => (
         <View key={order.id} style={[styles.historyRow, { borderBottomColor: colors.border }]}>
-          <View style={{ flex: 1 }}><Text style={[styles.cardTitle, { color: colors.foreground }]}>{order.pack_key}</Text><Text style={[styles.meta, { color: colors.mutedForeground }]}>{new Date(order.created_at).toLocaleDateString('es-ES')}</Text></View>
+          <View style={{ flex: 1 }}><Text style={[styles.cardTitle, { color: colors.foreground }]}>{order.pack_key}</Text><Text style={[styles.meta, { color: colors.mutedForeground }]}>{formatStoreDate(order.created_at)}</Text></View>
           <Text style={[styles.meta, { color: order.status === 'fulfilled' ? colors.success : colors.accent }]}>{order.status}</Text>
         </View>
       ))}
@@ -345,7 +352,7 @@ function ShopSection({ session, colors, onRefresh }: { session: NonNullable<Retu
       <View style={[styles.activePanel, { backgroundColor: colors.panel, borderColor: colors.border }]}>
         <Text style={[styles.eyebrow, { color: colors.accent }]}>MIS ÍTEMS ACTIVOS</Text>
         {active.boosts.length === 0 && active.consumables.length === 0 ? <Text style={[styles.bodyLeft, { color: colors.mutedForeground }]}>No tienes boosts ni consumibles activos.</Text> : null}
-        {active.boosts.map((boost) => <View key={boost.id} style={styles.activeRow}><Ionicons name="flash-outline" size={17} color={colors.success} /><Text style={[styles.cardTitle, { color: colors.foreground, flex: 1 }]}>{boost.boost_type} ×{boost.multiplier}</Text><Text style={[styles.meta, { color: colors.success }]}>{new Date(boost.expires_at).toLocaleDateString('es-ES')}</Text></View>)}
+        {active.boosts.map((boost) => <View key={boost.id} style={styles.activeRow}><Ionicons name="flash-outline" size={17} color={colors.success} /><Text style={[styles.cardTitle, { color: colors.foreground, flex: 1 }]}>{boost.boost_type} ×{boost.multiplier}</Text><Text style={[styles.meta, { color: colors.success }]}>{formatStoreDate(boost.expires_at)}</Text></View>)}
         {active.consumables.map((item) => <View key={item.id} style={styles.activeRow}><Ionicons name="key-outline" size={17} color={colors.accent} /><Text style={[styles.cardTitle, { color: colors.foreground, flex: 1 }]}>{item.item_key}</Text><Text style={[styles.cardTitle, { color: colors.accent }]}>×{item.quantity}</Text></View>)}
       </View>
       {items.length === 0 ? <EmptyBlock icon="storefront-outline" title="Tienda sin productos" body="No hay productos activos en el catálogo oficial." colors={colors} /> : <View style={styles.stack}>{items.map((item) => {
