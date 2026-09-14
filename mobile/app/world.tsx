@@ -70,12 +70,24 @@ function formatDate(value: string | null | undefined) {
   return Number.isNaN(date.getTime()) ? 'Fecha no disponible' : date.toLocaleDateString('es-ES', { day: 'numeric', month: 'short' }).replace('.', '');
 }
 
+function rewardNumber(value: unknown) {
+  return typeof value === 'number' && Number.isFinite(value) ? value : null;
+}
+
 function rewardText(reward: Record<string, unknown> | undefined) {
   if (!reward) return 'RECOMPENSA NO REPORTADA';
   const parts: string[] = [];
-  if (Number(reward.vex_ingame ?? 0) > 0) parts.push(`${formatNumber(Number(reward.vex_ingame))} VEX`);
-  if (Number(reward.shards ?? 0) > 0) parts.push(`${formatNumber(Number(reward.shards))} fragmentos`);
-  if (reward.card_rarity) parts.push(`carta ${String(reward.card_rarity)}`);
+  const appendNumericReward = (key: string, label: string) => {
+    if (!(key in reward)) return;
+    const value = rewardNumber(reward[key]);
+    parts.push(value === null ? `${label} NO REPORTADO` : `${formatNumber(value)} ${label}`);
+  };
+  appendNumericReward('vex_ingame', 'VEX');
+  appendNumericReward('shards', 'FRAGMENTOS');
+  if ('card_rarity' in reward) {
+    const rarity = typeof reward.card_rarity === 'string' ? reward.card_rarity.trim() : '';
+    parts.push(rarity ? `CARTA ${rarity}` : 'CARTA NO REPORTADA');
+  }
   return parts.join(' · ') || 'RECOMPENSA SIN DETALLE';
 }
 

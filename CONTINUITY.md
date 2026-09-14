@@ -1,3 +1,22 @@
+## 2026-09-14 — VE-MOB-12-WORLD — HONEST REWARD SIGNALS / IMPLEMENTED_UNVERIFIED
+
+- **BRANCH:** `main`.
+- **SCREEN / DOMAIN:** Mundo / `MUNDO → BOSS + PASE`.
+- **BLOCK:** fidelidad de recompensas publicadas en Bosses y tiers de temporada.
+- **WHAT CHANGED:** `rewardText` conserva los ceros numéricos confirmados y distingue campos presentes pero ausentes o inválidos como `VEX NO REPORTADO`, `FRAGMENTOS NO REPORTADO` o `CARTA NO REPORTADA`; cuando no existe ninguna señal renderizable comunica `RECOMPENSA SIN DETALLE`.
+- **VISUAL DELTA:** el jugador ya no confunde una recompensa incompleta con una recompensa vacía o igual a cero.
+- **LIVE DATA CHECK:** Supabase vivo confirmó que `world_bosses.reward_pool` y `season_pass_tiers.reward_json` son los contratos actuales; no se añadieron campos ni datos.
+- **DATA PRESERVED:** bosses, raids, lore, temporada, tiers, claims, RPCs, RLS, Auth, economía, assets y navegación.
+- **ASSETS USED:** ninguno nuevo; se mantienen los assets oficiales registrados.
+- **MOTION_ADDED:** ninguno.
+- **PERFORMANCE_NOTES:** cambio de presentación pura con una lectura numérica finita; sin trabajo extra de red ni animación.
+- **HARD_GATES:** no se inicia APK, workflow Android ni release por instrucción del operador; no se declara QA visual/táctil, `PASS`, `OPERATIONAL` ni `TIER1_READY`.
+- **CORE_SCORE:** pendiente de QA visual/táctil en dispositivo.
+- **VISUAL_DEBT_ADDED:** ninguna.
+- **VISUAL_DEBT_REMOVED:** recompensas parciales que podían ocultar campos faltantes y convertirlos visualmente en ausencia de valor.
+- **STATUS:** `IMPLEMENTED_UNVERIFIED`.
+- **NEXT_BLOCK:** continuar con otra unidad Android atómica del protocolo sin tocar la web congelada ni iniciar APK.
+
 ## 2026-09-13 — VE-MOB-14-META — HONEST FORGE ADS SIGNALS / IMPLEMENTED_UNVERIFIED
 
 - **BRANCH:** `main`.
