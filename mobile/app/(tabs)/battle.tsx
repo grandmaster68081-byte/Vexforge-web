@@ -280,7 +280,12 @@ function ResultPanel({
   const mmrColor = isTraining || mmrChange === null ? colors.mutedForeground : mmrChange > 0 ? colors.success : mmrChange < 0 ? colors.danger : colors.accent;
   const mmrLabel = isTraining || mmrChange === null ? '—' : `${mmrChange > 0 ? '+' : ''}${mmrChange}`;
   const finalTurn = result.turns?.[Math.max(0, (result.turns?.length ?? 1) - 1)] ?? null;
-  const totalTurns = result.total_turns ?? result.turns?.length ?? 0;
+  const totalTurns = typeof result.total_turns === 'number' && Number.isFinite(result.total_turns)
+    ? result.total_turns
+    : Array.isArray(result.turns)
+      ? result.turns.length
+      : null;
+  const renderTotalTurns = totalTurns ?? 0;
   return (
     <View testID="battle-result" style={[styles.result, { backgroundColor: `${outcomeColor}10`, borderColor: outcomeColor }]}>
       <View style={[styles.resultSeal, { borderColor: outcomeColor }]}>
@@ -292,7 +297,7 @@ function ResultPanel({
       </Text>
       {result.ok ? (
         <View style={styles.resultStats}>
-          <View style={styles.resultStat}><Text style={[styles.resultValue, { color: colors.foreground }]}>{result.total_turns ?? result.turns?.length ?? 0}</Text><Text style={[styles.resultLabel, { color: colors.mutedForeground }]}>TURNOS</Text></View>
+            <View style={styles.resultStat}><Text style={[styles.resultValue, { color: colors.foreground }]}>{totalTurns === null ? '—' : totalTurns}</Text><Text style={[styles.resultLabel, { color: colors.mutedForeground }]}>TURNOS</Text></View>
            <View style={styles.resultStat}><Text style={[styles.resultValue, { color: mmrColor }]}>{mmrLabel}</Text><Text style={[styles.resultLabel, { color: colors.mutedForeground }]}>MMR</Text></View>
            <View style={styles.resultStat}><Text style={[styles.resultValue, { color: colors.accent }]}>{isTraining ? 'IA' : result.match_id ? result.match_id.slice(0, 8).toUpperCase() : '—'}</Text><Text style={[styles.resultLabel, { color: colors.mutedForeground }]}>{isTraining ? 'MODO' : 'MATCH'}</Text></View>
         </View>
@@ -303,8 +308,8 @@ function ResultPanel({
           <ForgeBattlefield
             finalUnits={result.final_units ?? []}
             currentTurn={finalTurn}
-            turnIndex={Math.max(0, totalTurns - 1)}
-            totalTurns={totalTurns}
+            turnIndex={Math.max(0, renderTotalTurns - 1)}
+            totalTurns={renderTotalTurns}
             reducedMotion={reducedMotion}
             outcome={outcome}
           />
@@ -425,7 +430,11 @@ export default function BattleScreen() {
     const outcome = battleResult.you_won ? 'victory' : battleResult.winner_id ? 'defeat' : 'draw';
     void emitTelemetry(session, 'combat_resolved', {
       outcome,
-      turns: battleResult.turns?.length ?? battleResult.total_turns ?? 0,
+      ...(typeof battleResult.turns?.length === 'number'
+        ? { turns: battleResult.turns.length }
+        : typeof battleResult.total_turns === 'number' && Number.isFinite(battleResult.total_turns)
+          ? { turns: battleResult.total_turns }
+          : {}),
     });
   }, [battleResult, session]);
 
@@ -436,10 +445,11 @@ export default function BattleScreen() {
   }, [phase, reducedMotion, turnIndex, turns.length]);
 
   const playerMmr = typeof rank?.mmr === 'number' ? rank.mmr : null;
-  const mmrReference = playerMmr ?? 1000;
   const sortedOpponents = useMemo(
-    () => [...opponents].sort((a, b) => Math.abs(a.mmr - mmrReference) - Math.abs(b.mmr - mmrReference)),
-    [mmrReference, opponents],
+    () => playerMmr === null
+      ? opponents
+      : [...opponents].sort((a, b) => Math.abs(a.mmr - playerMmr) - Math.abs(b.mmr - playerMmr)),
+    [playerMmr, opponents],
   );
   const arenaStatus = battleLoading
     ? 'PREPARANDO COMBATE'

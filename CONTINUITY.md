@@ -1,3 +1,15 @@
+## 2026-09-14 — VE-MOB-7-BATTLE — HONEST MISSING SIGNALS / IMPLEMENTED_UNVERIFIED
+
+- **TARGET:** superficie Android de Batalla en `mobile/app/(tabs)/battle.tsx`.
+- **QUÉ CAMBIÓ:** sin MMR confirmado se conserva el orden entregado por el servidor; no se usa `1000` como referencia inventada. Si el resultado no reporta turnos, la UI muestra `—` y la telemetría omite ese campo en vez de registrar `0`.
+- **FIDELIDAD:** cero confirmado continúa siendo cero y la resolución, el replay, la economía y el resultado siguen bajo autoridad del servidor.
+- **CONTRATOS PRESERVADOS:** búsqueda de rivales, RPC de resolución, entrenamiento IA, replay, recompensas, Auth, navegación y web congelada.
+- **ARCHIVOS:** `mobile/app/(tabs)/battle.tsx`; `scripts/verify-mobile-battle.mjs`; `docs/VE-MOB-7-BATTLE-HONEST-MISSING-SIGNALS.md`.
+- **GATES:** `verify-mobile-battle` pasa 33/33 y `git diff --check` queda limpio. El typecheck móvil no se ejecuta porque esta copia no incluye `mobile/node_modules`; no se compila APK ni se inicia workflow por la instrucción explícita del operador.
+- **ESTADO HONESTO:** `IMPLEMENTED_UNVERIFIED`; la QA visual/táctil queda pendiente de una APK autorizada.
+- **PERSISTENCIA:** pendiente de publicar en `main` mediante API REST HTTPS oficial de GitHub con `[skip ci]`; no se generará release Android.
+- **SIGUIENTE BLOQUE:** continuar con otra mejora Android atómica fuera de esta microiteración, sin reabrir contratos consolidados.
+
 ## 2026-09-14 — VE-MOB-4-COLLECTION — HONEST CARD SIGNALS / IMPLEMENTED_UNVERIFIED
 
 - **TARGET:** superficie Android de Archivo/Colección en `mobile/app/(tabs)/collection.tsx`.
