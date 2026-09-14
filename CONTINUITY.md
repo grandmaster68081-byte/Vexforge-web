@@ -1,3 +1,21 @@
+## 2026-09-14 — VE-MOB-T2V — ICON STROKE CONTROL TOKENS / IMPLEMENTED_UNVERIFIED
+
+- **BRANCH:** `main`.
+- **SCREEN / DOMAIN:** primitiva compartida de iconografía nativa Android.
+- **BLOCK:** tercera pieza ejecutable de `T2V — VISUAL SYSTEM TOKENS + SHARED SCENE PRIMITIVES`.
+- **WHAT CHANGED:** `ForgeIcon` consume `VISUAL_TOKENS.icon.defaultStroke` como trazo por defecto; los trazos explícitos existentes permanecen compatibles.
+- **DATA PRESERVED:** Supabase, RPCs, RLS, Auth, economía, combate, event log, settlement, navegación, datos vivos, assets oficiales y web congelada.
+- **ASSETS USED:** ninguno nuevo; no se introdujeron sustitutos genéricos.
+- **MOTION_ADDED:** ninguno; sólo se centralizó un valor visual estático.
+- **PERFORMANCE_NOTES:** el token se resuelve localmente; no añade solicitudes, listeners, estado ni renders de datos.
+- **GATES:** `node scripts/verify-mobile-visual-system.mjs`, `npm run typecheck` y `git diff --check`; workflow APK y QA visual/táctil quedan pendientes de autorización.
+- **VISUAL_DELTA:** la iconografía nativa comparte ahora el contrato de trazo T2V en lugar de conservar un literal aislado.
+- **VISUAL_DEBT_REMOVED:** literal de `strokeWidth` por defecto en la primitiva de iconos.
+- **VISUAL_DEBT_ADDED:** ninguna.
+- **STATUS:** `IMPLEMENTED_UNVERIFIED`.
+- **PERSISTENCIA:** publicar código, guarda, documento y continuidad juntos en `main` mediante la API REST HTTPS oficial de GitHub con `[skip ci]`; no compilar APK ni publicar release.
+- **NEXT_BLOCK:** continuar con otra pieza T2V explícita, sin tocar el motor de juego, la web congelada ni el tutorial.
+
 ## 2026-09-14 — VE-MOB-T2V — BUTTON/SEAL CONTROL TOKENS / IMPLEMENTED_UNVERIFIED
 
 - **BRANCH:** `main`.

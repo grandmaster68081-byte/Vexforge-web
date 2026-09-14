@@ -61,6 +61,14 @@ if (!button.includes('VISUAL_TOKENS.control.button')) {
   failures.push('ForgeButton does not consume control tokens');
 }
 
+const icon = source('mobile/components/ForgeIcon.tsx');
+if (!icon.includes("from '@/constants/experience'")) {
+  failures.push('ForgeIcon does not consume shared visual tokens');
+}
+if (!icon.includes('VISUAL_TOKENS.icon.defaultStroke')) {
+  failures.push('ForgeIcon does not consume the default stroke token');
+}
+
 if (failures.length > 0) {
   console.error('T2V visual system guard failed:');
   for (const failure of failures) console.error(` - ${failure}`);

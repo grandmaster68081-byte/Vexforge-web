@@ -23,6 +23,9 @@ la web congelada.
   datos, arte ni reglas de juego.
 - `ForgeButton` consume el bloque `control.button` para altura, radio, padding,
   gap y feedback de pressed/disabled sin cambiar su API ni sus acciones.
+- `ForgeIcon` consume `icon.defaultStroke` como trazo por defecto para que la
+  silueta nativa compartida mantenga una lectura consistente entre dominios;
+  los overrides existentes siguen siendo explícitos y compatibles.
 
 ## Límites
 

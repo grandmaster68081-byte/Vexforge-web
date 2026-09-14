@@ -1,5 +1,6 @@
 import type { StyleProp, ViewStyle } from 'react-native';
 import Svg, { Circle, Path, Rect } from 'react-native-svg';
+import { VISUAL_TOKENS } from '@/constants/experience';
 
 /**
  * Native rendering of the web ForgeIcon language.
@@ -377,7 +378,14 @@ function IconBody({ name, color, strokeWidth }: { name: string; color: string; s
   }
 }
 
-const VexIconBase = ({ name, size = 16, color, tintColor, strokeWidth = 1.7, style }: ForgeIconProps) => (
+const VexIconBase = ({
+  name,
+  size = 16,
+  color,
+  tintColor,
+  strokeWidth = VISUAL_TOKENS.icon.defaultStroke,
+  style,
+}: ForgeIconProps) => (
   <Svg width={size} height={size} viewBox="0 0 24 24" style={style} accessibilityElementsHidden>
     <IconBody name={name} color={color ?? tintColor ?? '#ffffff'} strokeWidth={strokeWidth} />
   </Svg>
