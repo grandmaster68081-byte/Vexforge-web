@@ -15,7 +15,7 @@
 - **VISUAL_DEBT_ADDED:** ninguna.
 - **VISUAL_DEBT_REMOVED:** fallback genérico `Forjador` para identidad ausente y estados ambiguos de correo/fecha.
 - **STATUS:** `IMPLEMENTED_UNVERIFIED`.
-- **PERSISTENCIA:** pendiente de publicar en `main` mediante la API REST HTTPS oficial de GitHub con `[skip ci]`; no se generará release Android.
+- **PERSISTENCIA:** código publicado en `main` mediante la API REST HTTPS oficial de GitHub en `8c6921d0e416a6c766b3332a88a6ccdfec2b81dc` con `[skip ci]`; no se generará release Android.
 - **NEXT_BLOCK:** continuar con otra mejora Android atómica del protocolo sin tocar la web congelada ni iniciar APK.
 
 ## 2026-09-14 — VE-MOB-7-BATTLE — HONEST OPPONENT SIGNALS / IMPLEMENTED_UNVERIFIED
