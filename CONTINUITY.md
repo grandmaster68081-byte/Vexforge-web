@@ -14,7 +14,7 @@
 - **VISUAL_DEBT_ADDED:** ninguna.
 - **VISUAL_DEBT_REMOVED:** guiones y estados provisionales para MMR, récord, rango y escudos.
 - **STATUS:** `IMPLEMENTED_UNVERIFIED`.
-- **PERSISTENCIA:** pendiente de publicar código y continuidad en `main` mediante la API REST HTTPS oficial de GitHub con `[skip ci]`; sin APK ni release Android nuevo.
+- **PERSISTENCIA:** código y continuidad publicados en `main` mediante la API REST HTTPS oficial de GitHub en `eaa66a9c233aa665f6e8e96b95d5179f7d0d80ff` con `[skip ci]`; sin APK ni release Android nuevo.
 - **NEXT_BLOCK:** continuar con otra unidad Android atómica del protocolo sin tocar la web congelada ni iniciar APK.
 
 ## 2026-09-14 — VE-MOB-7-BATTLE — HONEST RESULT SIGNALS / IMPLEMENTED_UNVERIFIED
