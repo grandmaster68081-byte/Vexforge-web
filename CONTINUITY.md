@@ -3282,3 +3282,14 @@
 - Commit Android publicado en `main`: `281e6eff8f38a206d79d26f435e6c97350355c8d`. Se usó `[skip ci]`; no se inició workflow, no se compiló APK ni se publicó release nuevo por la instrucción vigente.
 - Estado honesto: `IMPLEMENTED_UNVERIFIED`. La señal de temporada queda pendiente de QA en dispositivo cuando el operador autorice una compilación Android.
 - Siguiente microbloque: continuar con otra mejora Android atómica de fidelidad o interacción, sin tocar la web congelada ni iniciar APK sin autorización.
+
+---
+## 2026-09-13 — VE-MOB-7-BATTLE — HONEST ARENA RANK SIGNAL / IMPLEMENTED_UNVERIFIED
+
+- Se corrigió `mobile/app/(tabs)/battle.tsx`: el panel de rango ya no convierte victorias, derrotas o escudos ausentes en `0`. Ahora conserva cada dato confirmado y muestra `—` o `RÉCORD PENDIENTE` cuando el contrato todavía no entrega esa señal.
+- Se mantuvieron intactos el MMR autoritativo, la selección de oponentes reales, la resolución PvP, la formación, los resultados, Auth, Supabase, navegación, haptics, reduced-motion y la web congelada.
+- Se reforzó `scripts/verify-mobile-battle.mjs` con una guarda contra el fallback de escudos a cero y la pérdida del estado de récord pendiente.
+- Evidencia local: `node scripts/verify-mobile-battle.mjs` OK, 32/32 comprobaciones; comparación equivalente a `git diff --check` limpia. El typecheck móvil queda diferido porque el snapshot oficial no incluye `mobile/node_modules`.
+- Commit Android publicado en `main`: `6a036a3aa53050c223c626ffd12ea8f48e53014c`. Se usó `[skip ci]`; no se inició workflow, no se compiló APK ni se publicó release nuevo por la instrucción vigente.
+- Estado honesto: `IMPLEMENTED_UNVERIFIED`. La lectura del panel de Arena queda pendiente de QA en dispositivo cuando el operador autorice una compilación Android.
+- Siguiente microbloque: continuar con otra mejora Android atómica de fidelidad o interacción, sin tocar la web congelada ni iniciar APK sin autorización.
