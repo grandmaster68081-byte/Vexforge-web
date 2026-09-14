@@ -58,6 +58,14 @@ function worldBossIdentity(boss: MobileWorldBoss) {
   };
 }
 
+function worldRaidIdentity(raid: MobileRaidRun) {
+  const metadataName = typeof raid.metadata?.name === 'string' ? raid.metadata.name.trim() : '';
+  return {
+    code: raid.raid_code?.trim() || 'CÓDIGO DE RAID NO REPORTADO',
+    name: metadataName || 'NOMBRE DE RAID NO REPORTADO',
+  };
+}
+
 function difficultyTone(difficulty: string | undefined, colors: Colors) {
   if (difficulty === 'hard') return colors.rarityEpic;
   if (difficulty === 'easy') return colors.success;
@@ -211,14 +219,15 @@ function BossCard({ boss, encounters, onBattle, colors }: { boss: MobileWorldBos
 }
 
 function RaidCard({ raid, joined, busy, onJoin, onContribute, colors }: { raid: MobileRaidRun; joined: boolean; busy: boolean; onJoin: () => void; onContribute: () => void; colors: Colors }) {
+  const identity = worldRaidIdentity(raid);
   const difficulty = raid.metadata?.difficulty;
   const tone = difficultyTone(difficulty, colors);
   return (
     <View testID={`world-raid-${raid.id}`} style={[styles.raidCard, { backgroundColor: colors.panel, borderColor: colors.border }]}>
       <View style={[styles.raidStripe, { backgroundColor: tone }]} />
-       <View style={styles.raidHeader}><View style={styles.raidIcon}><Feather name="people" size={18} color={tone} /></View><View style={styles.raidCopy}><Text style={[styles.raidTitle, { color: colors.foreground }]} numberOfLines={2}>{raid.metadata?.name ?? raid.raid_code}</Text><Text style={[styles.metaText, { color: colors.mutedForeground }]}>{labelize(raid.region_id, 'REGIÓN NO REPORTADA')} · {worldStatusLabel(raid.status)}</Text></View><Text style={[styles.difficulty, { color: tone }]}>{difficulty ? difficulty.toUpperCase() : 'DIFICULTAD NO REPORTADA'}</Text></View>
+       <View style={styles.raidHeader}><View style={styles.raidIcon}><Feather name="people" size={18} color={tone} /></View><View style={styles.raidCopy}><Text style={[styles.raidTitle, { color: colors.foreground }]} numberOfLines={2}>{identity.name}</Text><Text style={[styles.metaText, { color: colors.mutedForeground }]}>{labelize(raid.region_id, 'REGIÓN NO REPORTADA')} · {worldStatusLabel(raid.status)}</Text></View><Text style={[styles.difficulty, { color: tone }]}>{difficulty ? difficulty.toUpperCase() : 'DIFICULTAD NO REPORTADA'}</Text></View>
        <View style={styles.raidStats}><Text style={[styles.metaText, { color: colors.mutedForeground }]}>{numberSignal(raid.metadata?.max_participants, 'LÍMITE')}</Text><Text style={[styles.metaText, { color: colors.accent }]}>{typeof raid.metadata?.reward_multiplier === 'number' ? `x${raid.metadata.reward_multiplier} recompensa` : 'MULTIPLICADOR NO REPORTADO'}</Text><Text style={[styles.metaText, { color: colors.mutedForeground }]}>{formatDate(raid.started_at ?? raid.created_at)}</Text></View>
-      <Text style={[styles.raidCode, { color: colors.mutedForeground }]}>{raid.raid_code}</Text>
+       <Text style={[styles.raidCode, { color: colors.mutedForeground }]}>{identity.code}</Text>
       <Pressable testID={`world-raid-action-${raid.id}`} accessibilityRole="button" disabled={busy} onPress={joined ? onContribute : onJoin} style={({ pressed }) => [styles.secondaryButton, { borderColor: tone, opacity: pressed ? 0.7 : busy ? 0.5 : 1 }]}>
         {busy ? <ActivityIndicator size="small" color={tone} /> : <Feather name={joined ? 'zap' : 'arrow-forward'} size={15} color={tone} />}
         <Text style={[styles.secondaryButtonText, { color: tone }]}>{busy ? 'SINCRONIZANDO' : joined ? 'CONTRIBUIR AL RAID' : 'UNIRSE AL RAID'}</Text>

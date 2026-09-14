@@ -1,3 +1,22 @@
+## 2026-09-14 — VE-MOB-12-WORLD — HONEST RAID IDENTITY / IMPLEMENTED_UNVERIFIED
+
+- **BRANCH:** `main`.
+- **SCREEN / DOMAIN:** World / `WORLD → RAIDS EN CURSO`.
+- **BLOCK:** evitar tarjetas sin nombre o código cuando el raid llega con identidad vacía.
+- **WHAT CHANGED:** nombres ausentes muestran `NOMBRE DE RAID NO REPORTADO`; códigos ausentes muestran `CÓDIGO DE RAID NO REPORTADO`; cada señal conserva su propio valor cuando existe.
+- **LIVE DATA CHECK:** `raid_runs` continúa accesible con la cuenta QA mediante lectura HTTPS; no se ejecutaron mutaciones.
+- **DATA PRESERVED:** raids, nombres, códigos, regiones, estados, dificultad, límites, multiplicadores, fechas, participantes, recompensas, RPCs oficiales, Auth, RLS, navegación, accesibilidad, reduced-motion y web congelada.
+- **ASSETS USED:** ninguno nuevo.
+- **MOTION_ADDED:** ninguno.
+- **PERFORMANCE_NOTES:** normalización local de identidad ya recibida; sin solicitudes de red, animaciones nuevas ni dependencias.
+- **GATES:** `node scripts/verify-mobile-world.mjs` OK; `git diff --check` limpio. No se inicia workflow Android, no se compila APK ni se publica release por instrucción del operador.
+- **CORE_SCORE:** pendiente de QA visual/táctil en dispositivo.
+- **VISUAL_DEBT_ADDED:** ninguna.
+- **VISUAL_DEBT_REMOVED:** nombre de raid vacío y código de raid vacío como identidad implícita.
+- **STATUS:** `IMPLEMENTED_UNVERIFIED`.
+- **PERSISTENCIA:** código, documento y continuidad se publicarán juntos en `main` mediante la API REST HTTPS oficial de GitHub con `[skip ci]`; sin APK ni release Android nuevo.
+- **NEXT_BLOCK:** continuar con otra unidad Android atómica del protocolo sin tocar la web congelada ni iniciar APK.
+
 ## 2026-09-14 — VE-MOB-12-WORLD — HONEST RANKING IDENTITY / IMPLEMENTED_UNVERIFIED
 
 - **BRANCH:** `main`.
