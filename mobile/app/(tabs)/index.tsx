@@ -76,8 +76,10 @@ function formatEventProgress(value: number | null | undefined) {
 }
 
 function formatEventTime(endsAt: string | null | undefined) {
-  if (!endsAt) return 'SIN FECHA';
-  const remaining = Math.max(0, new Date(endsAt).getTime() - Date.now());
+  if (!endsAt) return 'FECHA NO REPORTADA';
+  const endsAtMs = new Date(endsAt).getTime();
+  if (!Number.isFinite(endsAtMs)) return 'FECHA NO REPORTADA';
+  const remaining = Math.max(0, endsAtMs - Date.now());
   const hours = Math.floor(remaining / 3600000);
   const days = Math.floor(hours / 24);
   return days > 0 ? `${days}D ${hours % 24}H` : `${hours}H ${Math.floor((remaining % 3600000) / 60000)}M`;

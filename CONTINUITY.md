@@ -4367,6 +4367,17 @@
 - Siguiente microbloque: continuar con otra mejora Android atómica de fidelidad o interacción, sin tocar la web congelada ni iniciar APK sin autorización.
 
 ---
+## 2026-09-14 — VE-MOB-3-HOME — HONEST EVENT DATE SIGNAL / IMPLEMENTED_UNVERIFIED
+
+- Se corrigió `mobile/app/(tabs)/index.tsx`: el contador del evento del Home ya no convierte una fecha vacía o inválida en `NaNH NaNM`; ahora comunica `FECHA NO REPORTADA` hasta recibir una fecha autoritativa válida.
+- Se mantuvo el contrato vivo de `active_event`, sin fabricar fechas, duración, progreso, eventos ni reglas; no se modificaron rutas, RPCs, Auth, Supabase, artwork, navegación, haptics, reduced-motion, la web congelada ni el motor de combate.
+- Se reforzó `scripts/verify-mobile-home-official-assets.mjs` con una guarda explícita para la validación finita de la fecha del evento.
+- Evidencia local: `node scripts/verify-mobile-home-official-assets.mjs` OK (16/16) y `git diff --check` OK. El typecheck Android queda diferido porque el snapshot oficial no incluye `mobile/node_modules`.
+- No se inicia workflow Android, no se compila APK ni se publica release por instrucción expresa del operador. Estado honesto: `IMPLEMENTED_UNVERIFIED`; requiere QA visual/táctil en dispositivo cuando el operador autorice una compilación.
+- Publicación: código y esta continuidad se publicarán juntos en `main` mediante la API REST HTTPS oficial de GitHub con `[skip ci]`, sin `git push`, para no disparar el workflow APK.
+- Siguiente microbloque: continuar con otra mejora Android atómica de fidelidad o interacción, sin tocar la web congelada ni iniciar APK sin autorización.
+
+---
 ## 2026-09-13 — VE-MOB-3-HOME — HONEST SEASON SIGNAL / IMPLEMENTED_UNVERIFIED
 
 - Se eliminó en `mobile/app/(tabs)/index.tsx` el fallback fijo `SEASON 01 // FORGE OF LEGENDS` de la cabecera del Home. Si Supabase no entrega una temporada publicada, ahora se comunica `TEMPORADA NO SINCRONIZADA` junto al estado `TEMPORADA EN ESPERA`.
