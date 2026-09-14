@@ -8,7 +8,7 @@
 - **ARCHIVOS:** `mobile/app/(tabs)/profile.tsx`; `scripts/verify-mobile-profile.mjs`; `docs/VE-MOB-9-PROFILE-HISTORY-OUTCOME-FIDELITY.md`.
 - **GATES:** `verify-mobile-profile` pasa 23/23, `verify:motion` pasa 17/17 y el escaneo de whitespace queda limpio. La guarda global `verify-uxcx-domain-identity` sigue bloqueada por un contrato previo de `mobile/app/(tabs)/deck.tsx` sin `DomainHeader`/`domain="forja"`; no pertenece a este delta y no se modifica. No se compila APK ni se inicia workflow por instrucción explícita del operador.
 - **ESTADO HONESTO:** `IMPLEMENTED_UNVERIFIED`; no se declara `PASS`, `OPERATIONAL` ni `TIER1_READY`.
-- **PERSISTENCIA:** pendiente de publicar en `main` mediante API REST HTTPS oficial de GitHub con `[skip ci]`.
+- **PERSISTENCIA:** publicado en `main` mediante API REST HTTPS oficial de GitHub en el commit `d5902fc747554f450760429dfeabd0bab45540a1` con `[skip ci]`; no se inició workflow y no se generará release Android.
 - **SIGUIENTE BLOQUE:** continuar con otro delta Android verificable de Legado o avanzar a la siguiente unidad global sin reabrir contratos.
 
 ## 2026-09-13 — VE-MOB-7-BATTLE — REPLAY TURN DETAIL / IMPLEMENTED_UNVERIFIED
