@@ -149,9 +149,10 @@ function ArenaRankCard({
 }) {
   const mmr = typeof rank?.mmr === 'number' ? rank.mmr : null;
   const tier = rank?.tier?.trim().toUpperCase() || (mmr === null ? 'RANGO PENDIENTE' : rankName(mmr));
-  const wins = rank?.wins ?? stats?.pvp_wins ?? 0;
-  const losses = rank?.losses ?? stats?.pvp_losses ?? 0;
-  const shields = rank?.shields ?? 0;
+  const wins = typeof rank?.wins === 'number' ? rank.wins : typeof stats?.pvp_wins === 'number' ? stats.pvp_wins : null;
+  const losses = typeof rank?.losses === 'number' ? rank.losses : typeof stats?.pvp_losses === 'number' ? stats.pvp_losses : null;
+  const shields = typeof rank?.shields === 'number' ? rank.shields : null;
+  const recordLabel = wins === null && losses === null ? 'RÉCORD PENDIENTE' : `${wins ?? '—'}V / ${losses ?? '—'}D`;
 
   return (
     <View testID="battle-rank-card" style={[styles.rankCard, { backgroundColor: `${colors.panelStrong}E8`, borderColor: `${colors.danger}66` }]}>
@@ -162,11 +163,11 @@ function ArenaRankCard({
         <Text style={[styles.sectionLabel, { color: colors.danger }]}>TEMPORADA ACTIVA · RANGO PvP</Text>
         <Text style={[styles.rankTitle, { color: colors.foreground }]}>{loading ? 'SINCRONIZANDO' : tier}</Text>
         <Text style={[styles.rankMeta, { color: colors.mutedForeground }]}>
-          {mmr === null ? 'MMR pendiente' : `${mmr} MMR`} · {wins}V / {losses}D
+          {mmr === null ? 'MMR pendiente' : `${mmr} MMR`} · {recordLabel}
         </Text>
       </View>
       <View style={styles.rankScore}>
-        <Text style={[styles.rankScoreValue, { color: colors.accent }]}>{shields}</Text>
+        <Text style={[styles.rankScoreValue, { color: colors.accent }]}>{shields === null ? '—' : shields}</Text>
         <Text style={[styles.rankScoreLabel, { color: colors.mutedForeground }]}>ESCUDOS</Text>
       </View>
     </View>
@@ -776,4 +777,3 @@ const styles = StyleSheet.create({
   resultFormation: { width: '100%', gap: 8, marginTop: 18 },
   resultFormationLabel: { fontSize: 9, fontWeight: '900', letterSpacing: 1.1, textAlign: 'left' },
 });
-    
