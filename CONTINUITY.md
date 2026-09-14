@@ -3209,3 +3209,14 @@
 - Commit publicado en `main`: `286c43a6663df5d6745f1a4b4a45e40942b704d9`. Se usó `[skip ci]` conforme a la instrucción de no compilar APK; no se inició workflow ni se publicó release nuevo.
 - Estado honesto: `IMPLEMENTED_UNVERIFIED`. La respuesta táctil requiere QA en dispositivo cuando el operador autorice una compilación Android.
 - Siguiente microbloque: continuar con una mejora Android atómica de fidelidad o interacción dentro de Battle, Deck, Profile o Home, sin tocar la web congelada ni iniciar APK sin autorización.
+
+---
+## 2026-09-14 — VE-MOB-7-BATTLE — EXPLICIT FORMATION STATE / IMPLEMENTED_UNVERIFIED
+
+- Se corrigió `mobile/components/ForgeBattlefield.tsx`: la interfaz ya no asigna `side` por mitad del array ni asigna `slot` por índice cuando faltan datos del contrato autoritativo.
+- Los datos incompletos ahora permanecen visibles como `LADO NO REPORTADO` o `POSICIÓN NO REPORTADA`; las unidades con `slot: fallen` o `alive: false` se muestran como `CAÍDAS REPORTADAS` sin ocupar una posición inventada.
+- Los slots canónicos `champion`, `vanguard`, `sentinel` y `reserve` continúan representándose desde la respuesta viva del motor. No se modificaron RPCs, daño, turnos, resultado, MMR, recompensas, Supabase, Auth ni la web congelada.
+- Guarda móvil: `node scripts/verify-mobile-battle.mjs` OK, 31/31 comprobaciones. `git diff --check` OK. El typecheck no se ejecutó porque `mobile/node_modules` no está disponible.
+- Commit publicado en `main`: `70dd3dc00bb66897db0ea95c9dccf2c08eebf35f`. Se usó `[skip ci]`; no se inició workflow, no se compiló APK ni se publicó release nuevo.
+- Estado honesto: `IMPLEMENTED_UNVERIFIED`. La comprobación visual/táctil de estos estados queda pendiente para una APK autorizada.
+- Siguiente microbloque: continuar con otra mejora Android concreta de fidelidad o interacción, sin reintroducir inferencias ni tocar la web congelada.
