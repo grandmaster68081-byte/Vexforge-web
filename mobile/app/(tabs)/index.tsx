@@ -776,7 +776,7 @@ export default function ForgeScreen() {
                 <View style={[styles.syncLine, { borderColor: `${connectionColor}90` }]} testID="home-sync">
                   <View style={[styles.syncPulse, { backgroundColor: connectionColor }]} />
                   <Text style={[styles.syncText, { color: connectionColor }]}>{connectionLabel}</Text>
-                  <Text style={[styles.syncMeta, { color: `${colors.foreground}B0` }]}>{season?.name ?? 'SEASON 01 // FORGE OF LEGENDS'}</Text>
+                    <Text style={[styles.syncMeta, { color: `${colors.foreground}B0` }]}>{season?.name ?? 'TEMPORADA NO SINCRONIZADA'}</Text>
                 </View>
                  <View style={styles.heroEyebrowRow}>
                    <Text style={[styles.heroEyebrow, { color: colors.accent }]}>{season ? 'TEMPORADA ACTIVA' : 'TEMPORADA EN ESPERA'}</Text>
