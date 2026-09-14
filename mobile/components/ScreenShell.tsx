@@ -13,7 +13,7 @@ import { Image, Platform, StyleSheet, Text, View, type ViewProps } from 'react-n
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useColors } from '@/hooks/useColors';
 import { CANONICAL_BACKGROUNDS, OFFICIAL_ASSETS, type VisualSurface } from '@/constants/visual';
-import { MOTION } from '@/constants/experience';
+import { MOTION, VISUAL_TOKENS } from '@/constants/experience';
 import { DomainHeader } from '@/components/DomainHeader';
 
 export function ScreenShell({ surface = 'home', sceneMode = 'shell', children, style, ...props }: ViewProps & { surface?: VisualSurface; sceneMode?: 'shell' | 'hero' }) {
@@ -154,21 +154,39 @@ export function ScreenShell({ surface = 'home', sceneMode = 'shell', children, s
 const styles = StyleSheet.create({
   root: { flex: 1, overflow: 'hidden' },
   content: { flex: 1 },
-  backgroundImage: { opacity: 0.74 },
-  ambientGlow: { position: 'absolute', width: 300, height: 300, borderRadius: 150 },
-  ambientGlowLeft: { top: 96, left: -174 },
-  ambientGlowRight: { top: 300, right: -188 },
+  backgroundImage: { opacity: VISUAL_TOKENS.scene.backgroundOpacity },
+  ambientGlow: {
+    position: 'absolute',
+    width: VISUAL_TOKENS.scene.ambientGlow.size,
+    height: VISUAL_TOKENS.scene.ambientGlow.size,
+    borderRadius: VISUAL_TOKENS.scene.ambientGlow.radius,
+  },
+  ambientGlowLeft: {
+    top: VISUAL_TOKENS.scene.ambientGlow.leftTop,
+    left: VISUAL_TOKENS.scene.ambientGlow.leftOffset,
+  },
+  ambientGlowRight: {
+    top: VISUAL_TOKENS.scene.ambientGlow.rightTop,
+    right: VISUAL_TOKENS.scene.ambientGlow.rightOffset,
+  },
   orbit: {
     position: 'absolute',
-    width: 430,
-    height: 430,
-    borderWidth: 1,
-    borderRadius: 215,
-    top: 86,
-    right: -250,
-    transform: [{ rotate: '18deg' }],
+    width: VISUAL_TOKENS.scene.orbit.size,
+    height: VISUAL_TOKENS.scene.orbit.size,
+    borderWidth: VISUAL_TOKENS.scene.orbit.borderWidth,
+    borderRadius: VISUAL_TOKENS.scene.orbit.radius,
+    top: VISUAL_TOKENS.scene.orbit.top,
+    right: VISUAL_TOKENS.scene.orbit.right,
+    transform: [{ rotate: VISUAL_TOKENS.scene.orbit.rotation }],
   },
-  watermark: { position: 'absolute', width: 220, height: 220, top: 12, right: -54, opacity: 0.16 },
+  watermark: {
+    position: 'absolute',
+    width: VISUAL_TOKENS.scene.watermark.size,
+    height: VISUAL_TOKENS.scene.watermark.size,
+    top: VISUAL_TOKENS.scene.watermark.top,
+    right: VISUAL_TOKENS.scene.watermark.right,
+    opacity: VISUAL_TOKENS.scene.watermark.opacity,
+  },
   assetError: { position: 'absolute', left: 20, right: 20, top: '42%', alignItems: 'center' },
   assetErrorPanel: { borderWidth: 1, borderRadius: 14, paddingHorizontal: 16, paddingVertical: 12, alignItems: 'center' },
   assetErrorTitle: { fontFamily: 'Rajdhani_700Bold', fontSize: 10, letterSpacing: 1.4 },

@@ -30,6 +30,8 @@ la web congelada.
   porcentaje confirmado, el cero válido y la ausencia de datos sin inferencias.
 - `DomainHeader` consume `domainHeader` para la geometría compartida de sigil,
   regla y jerarquía de texto, manteniendo la identidad viva de cada dominio.
+- `ScreenShell` consume `scene` para la geometría y opacidad de la atmósfera
+  compartida, sin convertir esa capa visual en estado de juego.
 
 ## Límites
 

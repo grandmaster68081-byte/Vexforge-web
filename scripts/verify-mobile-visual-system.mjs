@@ -77,6 +77,14 @@ if (!domainHeader.includes('VISUAL_TOKENS.domainHeader')) {
   failures.push('DomainHeader does not consume header tokens');
 }
 
+const screenShell = source('mobile/components/ScreenShell.tsx');
+if (!screenShell.includes("from '@/constants/experience'")) {
+  failures.push('ScreenShell does not consume shared visual tokens');
+}
+if (!screenShell.includes('VISUAL_TOKENS.scene')) {
+  failures.push('ScreenShell does not consume scene tokens');
+}
+
 const icon = source('mobile/components/ForgeIcon.tsx');
 if (!icon.includes("from '@/constants/experience'")) {
   failures.push('ForgeIcon does not consume shared visual tokens');

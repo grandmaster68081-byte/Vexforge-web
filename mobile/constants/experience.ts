@@ -181,4 +181,29 @@ export const VISUAL_TOKENS = {
     purposeTop: 5,
     purposeLineHeight: 18,
   },
+  scene: {
+    backgroundOpacity: 0.74,
+    ambientGlow: {
+      size: 300,
+      radius: 150,
+      leftTop: 96,
+      leftOffset: -174,
+      rightTop: 300,
+      rightOffset: -188,
+    },
+    orbit: {
+      size: 430,
+      radius: 215,
+      borderWidth: 1,
+      top: 86,
+      right: -250,
+      rotation: '18deg',
+    },
+    watermark: {
+      size: 220,
+      top: 12,
+      right: -54,
+      opacity: 0.16,
+    },
+  },
 } as const;

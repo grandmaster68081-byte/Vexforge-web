@@ -1,3 +1,21 @@
+## 2026-09-14 — VE-MOB-T2V — SHARED SCENE ATMOSPHERE TOKENS / IMPLEMENTED_UNVERIFIED
+
+- **BRANCH:** `main`.
+- **SCREEN / DOMAIN:** escena compartida y atmósfera de superficies Android.
+- **BLOCK:** sexta pieza ejecutable de `T2V — VISUAL SYSTEM TOKENS + SHARED SCENE PRIMITIVES`.
+- **WHAT CHANGED:** `ScreenShell` consume `VISUAL_TOKENS.scene` para opacidad del fondo, geometría de glows, órbita y marca de agua; las escenas oficiales y sus rutas permanecen iguales.
+- **DATA PRESERVED:** Supabase, RPCs, RLS, Auth, economía, combate, event log, settlement, navegación, datos vivos, assets oficiales y web congelada.
+- **ASSETS USED:** se conservan únicamente los fondos y la marca oficiales ya existentes; no se introdujeron sustitutos genéricos.
+- **MOTION_ADDED:** ninguno; la animación ambiental existente y `reduced-motion` no cambian.
+- **PERFORMANCE_NOTES:** sólo se centralizaron literales visuales estáticos; no se añadieron solicitudes, listeners, estado ni renders de datos.
+- **GATES:** `node scripts/verify-mobile-visual-system.mjs`, `git diff --check`; el typecheck móvil requiere dependencias ausentes en el clon y el workflow APK/QA queda pendiente de autorización.
+- **VISUAL_DELTA:** la atmósfera compartida queda expresada por roles T2V consistentes en lugar de geometría aislada dentro de la escena.
+- **VISUAL_DEBT_REMOVED:** literales de fondo, glows, órbita y marca de agua duplicados en `ScreenShell`.
+- **VISUAL_DEBT_ADDED:** ninguna.
+- **STATUS:** `IMPLEMENTED_UNVERIFIED`.
+- **PERSISTENCIA:** publicar código, guarda, documento y continuidad juntos en `main` mediante la API REST HTTPS oficial de GitHub con `[skip ci]`; no compilar APK ni publicar release.
+- **NEXT_BLOCK:** continuar con otra pieza T2V explícita, sin tocar el motor de juego, la web congelada ni el tutorial.
+
 ## 2026-09-14 — VE-MOB-T2V — DOMAIN HEADER IDENTITY TOKENS / IMPLEMENTED_UNVERIFIED
 
 - **BRANCH:** `main`.
