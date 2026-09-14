@@ -1,3 +1,24 @@
+## 2026-09-13 — VE-MOB-13-SOCIAL — LEGADO PARENT IDENTITY / IMPLEMENTED_UNVERIFIED
+
+- **BRANCH:** `main`.
+- **COMMIT:** `cd1447d4eb73fc3c5182df3c13dc6a8b59c7e2f1`.
+- **SCREEN / DOMAIN:** Red de Forjadores / `LEGADO → SOCIAL`.
+- **BLOCK:** relación de dominio para la superficie social Android.
+- **WHAT CHANGED:** `ScreenShell` anuncia `LEGADO` antes de la red Social cuando la superficie viva es `clans`; `DomainHeader` admite el título y propósito locales sin perder la identidad del espacio padre. Se añadió `verify-mobile-social.mjs`.
+- **VISUAL DELTA:** Social deja de leerse como mini-app aislada: el jugador entra desde el Legado y conserva debajo amigos, clanes, desafíos, guerras y pulso PvP con su composición local.
+- **DATA PRESERVED:** snapshot de Social, nombres públicos, ranking, historial, clanes, roster, desafíos, mutaciones RPC, RLS, navegación a Battle Run y todos los estados existentes.
+- **ASSETS USED:** sólo la escena canónica ya configurada para `clans`; no se añadieron assets.
+- **CARD_IDS_USED:** ninguno.
+- **MOTION_ADDED:** no se añadió motion nuevo; se reutiliza la revelación existente de `DomainHeader` y el presupuesto compartido.
+- **PERFORMANCE_NOTES:** guarda estática `verify-mobile-social` 9/9 y whitespace limpio; no se ejecutó typecheck Expo porque el clon no incluye `mobile/node_modules`.
+- **HARD_GATES:** sin APK, workflow Android ni release por instrucción del operador; no se declara QA visual/táctil, `PASS`, `OPERATIONAL` ni `TIER1_READY`.
+- **CORE_SCORE:** pendiente de QA visual/táctil en dispositivo.
+- **VISUAL_DEBT_ADDED:** ninguna.
+- **VISUAL_DEBT_REMOVED:** Social desconectado del dominio padre / relación de mundo no declarada.
+- **STATUS:** `IMPLEMENTED_UNVERIFIED`.
+- **NEXT_BLOCK:** continuar con la siguiente unidad Android atómica del protocolo sin tocar la web congelada ni iniciar APK.
+- **ROLLBACK_POINT:** commit `cd1447d4eb73fc3c5182df3c13dc6a8b59c7e2f1`.
+
 ## 2026-09-13 — VE-MOB-12-WORLD — HONEST MISSING SIGNALS / IMPLEMENTED_UNVERIFIED
 
 - **TARGET:** superficie Android de Mundo en `mobile/app/world.tsx`.
