@@ -1,9 +1,8 @@
 import * as Haptics from 'expo-haptics';
-import Animated, { FadeIn, useReducedMotion } from 'react-native-reanimated';
 import { ActivityIndicator, Pressable, StyleSheet, Text, View } from 'react-native';
 import { useColors } from '@/hooks/useColors';
 import { ForgeIconName, VexIcon } from '@/components/ForgeIcon';
-import { MOTION } from '@/constants/experience';
+import { MaterialPanel } from '@/components/MaterialPanel';
 
 type DomainStateProps = {
   kind: 'loading' | 'empty' | 'error';
@@ -17,16 +16,16 @@ type DomainStateProps = {
 
 export function DomainState({ kind, title, message, icon, actionLabel, onAction, testID }: DomainStateProps) {
   const colors = useColors();
-  const reduceMotion = useReducedMotion();
   const accent = kind === 'error' ? colors.danger : kind === 'empty' ? colors.primary : colors.accent;
   const resolvedIcon = icon ?? (kind === 'error' ? 'warning' : kind === 'empty' ? 'collection' : 'resonance');
 
   return (
-    <Animated.View
-      entering={reduceMotion ? undefined : FadeIn.duration(MOTION.micro)}
+    <MaterialPanel
       testID={testID}
       accessibilityLiveRegion={kind === 'error' ? 'assertive' : 'polite'}
-      style={[styles.container, { backgroundColor: `${colors.panel}D9`, borderColor: `${accent}66` }]}
+      materialRole={kind === 'error' ? 'focus' : 'panel'}
+      tone={kind === 'error' ? 'danger' : kind === 'empty' ? 'primary' : 'accent'}
+      style={styles.container}
     >
       {kind === 'loading' ? (
         <>
@@ -54,15 +53,13 @@ export function DomainState({ kind, title, message, icon, actionLabel, onAction,
           <Text style={[styles.actionText, { color: accent }]}>{actionLabel}</Text>
         </Pressable>
       ) : null}
-    </Animated.View>
+    </MaterialPanel>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
-    borderWidth: 1,
-    borderRadius: 14,
     gap: 9,
     marginTop: 10,
     paddingHorizontal: 18,

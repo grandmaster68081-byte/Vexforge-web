@@ -981,7 +981,7 @@ export default function ForgeScreen() {
                     </View>
                     <View style={styles.eventProgressFinal}>
                       <Text style={[styles.eventProgressValueFinal, { color: eventAccent }]}>{activeEvent ? formatEventProgress(activeEvent.progress) : 'EVENTO EN ESPERA'}</Text>
-                      {eventProgressAvailable ? <ProgressRail value={activeEvent.progress} total={100} color={eventAccent} background={colors.border} /> : <View style={[styles.eventIdleRule, { backgroundColor: `${eventAccent}66` }]} />}
+                       {activeEvent && eventProgressAvailable ? <ProgressRail value={activeEvent.progress} total={100} color={eventAccent} background={colors.border} /> : <View style={[styles.eventIdleRule, { backgroundColor: `${eventAccent}66` }]} />}
                     </View>
                   </Pressable>
 

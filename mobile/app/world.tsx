@@ -273,10 +273,42 @@ function SeasonPanel({ snapshot, session, onChanged, colors }: { snapshot: Mobil
      <View style={[styles.seasonHero, { backgroundColor: colors.panelStrong, borderColor: colors.accent }]}><Text style={[styles.eyebrow, { color: colors.accent }]}>TEMPORADA {snapshot.season.season_number}</Text><Text style={[styles.seasonTitle, { color: colors.foreground }]}>{snapshot.season.name}</Text><Text style={[styles.copy, { color: colors.mutedForeground }]}>Disponible hasta {formatDate(snapshot.season.end_at)} · {passStatus}</Text><View style={styles.progressTop}><Text style={[styles.metaText, { color: colors.mutedForeground }]}>{numberSignal(xp, 'XP')}</Text><Text style={[styles.metaText, { color: colors.accent }]}>{numberSignal(currentTier, 'TIER')}</Text></View>{percent !== null ? <ProgressBar value={percent} color={colors.accent} /> : <Text style={[styles.integrityNote, { color: colors.accent }]}>PROGRESO DE TEMPORADA NO REPORTADO</Text>}</View>
     {!session ? <View style={[styles.notice, { borderColor: `${colors.accent}66`, backgroundColor: `${colors.accent}12` }]}><Feather name="lock" size={16} color={colors.accent} /><Text style={[styles.noticeText, { color: colors.mutedForeground }]}>Inicia sesión para sincronizar progreso y reclamar recompensas.</Text></View> : null}
     {notice ? <View style={[styles.notice, { borderColor: colors.border, backgroundColor: colors.panel }]}><Feather name="radio" size={16} color={colors.accent} /><Text style={[styles.noticeText, { color: colors.foreground }]}>{notice}</Text></View> : null}
-    {tiers.length === 0 ? <EmptyState icon="award" title="Sin tiers configurados" copy="La temporada está publicada, pero aún no tiene recompensas disponibles." colors={colors} /> : tiers.map((tier) => {
-      const canClaim = Boolean(session && tier.unlocked && !tier.claimed && !(tier.is_premium && !progress?.is_premium));
-      return <View key={`${tier.tier}-${tier.is_premium}`} style={[styles.tierRow, { backgroundColor: colors.panel, borderColor: tier.unlocked ? colors.accent : colors.border }]}><View style={[styles.tierNumber, { borderColor: tier.unlocked ? colors.accent : colors.border }]}><Text style={[styles.tierNumberText, { color: tier.unlocked ? colors.accent : colors.mutedForeground }]}>{tier.tier}</Text></View><View style={styles.tierCopy}><Text style={[styles.tierLabel, { color: colors.foreground }]}>{tier.is_premium ? 'PREMIUM' : 'GRATIS'} · {numberSignal(tier.xp_required, 'XP')}</Text><Text style={[styles.tierReward, { color: colors.mutedForeground }]}>{rewardText(tier.reward)}</Text></View>{tier.claimed ? <Feather name="check-circle" size={18} color={colors.success} /> : canClaim ? <Pressable testID={`world-season-claim-${tier.tier}`} accessibilityRole="button" disabled={claiming === tier.tier} onPress={() => { void handleClaim(tier); }} style={[styles.claimButton, { backgroundColor: colors.accent }]}>{claiming === tier.tier ? <ActivityIndicator size="small" color={colors.ink} /> : <Text style={[styles.claimText, { color: colors.ink }]}>RECLAMAR</Text></Pressable> : <Feather name={tier.is_premium && !progress?.is_premium ? 'lock' : 'clock'} size={16} color={colors.mutedForeground} />}</View>;
-    })}
+     {tiers.length === 0 ? <EmptyState icon="award" title="Sin tiers configurados" copy="La temporada está publicada, pero aún no tiene recompensas disponibles." colors={colors} /> : tiers.map((tier) => {
+       const canClaim = Boolean(session && tier.unlocked && !tier.claimed && !(tier.is_premium && !progress?.is_premium));
+       return (
+         <View
+           key={`${tier.tier}-${tier.is_premium}`}
+           style={[styles.tierRow, { backgroundColor: colors.panel, borderColor: tier.unlocked ? colors.accent : colors.border }]}
+         >
+           <View style={[styles.tierNumber, { borderColor: tier.unlocked ? colors.accent : colors.border }]}>
+             <Text style={[styles.tierNumberText, { color: tier.unlocked ? colors.accent : colors.mutedForeground }]}>{tier.tier}</Text>
+           </View>
+           <View style={styles.tierCopy}>
+             <Text style={[styles.tierLabel, { color: colors.foreground }]}>{tier.is_premium ? 'PREMIUM' : 'GRATIS'} · {numberSignal(tier.xp_required, 'XP')}</Text>
+             <Text style={[styles.tierReward, { color: colors.mutedForeground }]}>{rewardText(tier.reward)}</Text>
+           </View>
+           {tier.claimed ? (
+             <Feather name="check-circle" size={18} color={colors.success} />
+           ) : canClaim ? (
+             <Pressable
+               testID={`world-season-claim-${tier.tier}`}
+               accessibilityRole="button"
+               disabled={claiming === tier.tier}
+               onPress={() => { void handleClaim(tier); }}
+               style={[styles.claimButton, { backgroundColor: colors.accent }]}
+             >
+               {claiming === tier.tier ? (
+                 <ActivityIndicator size="small" color={colors.ink} />
+               ) : (
+                 <Text style={[styles.claimText, { color: colors.ink }]}>RECLAMAR</Text>
+               )}
+             </Pressable>
+           ) : (
+             <Feather name={tier.is_premium && !progress?.is_premium ? 'lock' : 'clock'} size={16} color={colors.mutedForeground} />
+           )}
+         </View>
+       );
+     })}
   </View>;
 }
 

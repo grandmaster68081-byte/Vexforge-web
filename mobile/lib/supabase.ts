@@ -869,8 +869,8 @@ export async function loadPlayerDeck(session: Session, playerId: string): Promis
     session,
   ) as Array<Record<string, unknown> & { cards?: PublicCard | PublicCard[] }>;
 
-  return rows
-    .map((row) => {
+   return rows
+      .map((row) => {
       const card = Array.isArray(row.cards) ? row.cards[0] : row.cards;
       return {
         slot_number: Number(row.slot_number ?? 0),
@@ -1803,7 +1803,7 @@ function finiteOpponentNumber(value: unknown) {
 export async function findOpponents(session: Session, playerId: string): Promise<Opponent[]> {
   const rows = await restRpc('get_pvp_opponents', { p_limit: 20 }, session) as any[];
   return (rows ?? [])
-    .map((row) => {
+    .map((row): Opponent | null => {
       const deckSize = finiteOpponentNumber(row.deck_size);
       if (row.player_id === playerId || row.has_deck !== true || deckSize === null || deckSize < 5) return null;
       const displayName = typeof row.display_name === 'string' && row.display_name.trim() !== '' ? row.display_name.trim() : null;

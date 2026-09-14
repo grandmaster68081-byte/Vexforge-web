@@ -121,7 +121,7 @@ function getStreak(matches: MobileSocialSnapshot['matches'] | null, playerId: st
 type MatchOutcome = 'victory' | 'defeat' | 'draw' | 'pending';
 
 function matchOutcome(match: MobileSocialSnapshot['matches'][number], playerId: string): MatchOutcome {
-  if (match.status.trim().toLowerCase() !== 'resolved') return 'pending';
+  if (match.status?.trim().toLowerCase() !== 'resolved') return 'pending';
   if (match.winner === playerId) return 'victory';
   if (match.winner) return 'defeat';
   return 'draw';

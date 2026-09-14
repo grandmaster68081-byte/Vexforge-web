@@ -29,6 +29,7 @@
     "verify:motion": "node scripts/verify-motion.mjs",
     "verify:combat-scene": "node scripts/verify-combat-scene.mjs",
     "verify:audio-flow": "node scripts/verify-audio-flow.mjs",
+    "verify:mobile-visual-system": "node scripts/verify-mobile-visual-system.mjs",
     "verify:telemetry": "node scripts/verify-telemetry.mjs",
     "verify:mobile-auth": "node scripts/verify-mobile-auth.mjs",
     "verify:mobile-deck": "node scripts/verify-mobile-deck.mjs",

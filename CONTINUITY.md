@@ -1,3 +1,22 @@
+## 2026-09-14 — VE-MOB-T2V — SHARED VISUAL TOKENS AND MATERIAL PANEL / IMPLEMENTED_UNVERIFIED
+
+- **BRANCH:** `main`.
+- **SCREEN / DOMAIN:** infraestructura visual compartida para Android; estados de dominio.
+- **BLOCK:** primera pieza ejecutable de `T2V — VISUAL SYSTEM TOKENS + SHARED SCENE PRIMITIVES`.
+- **WHAT CHANGED:** se centralizaron roles de material, color, tipografía, radios, bordes, sombras, iconos, espaciado, safe area, motion y tiers de calidad en `VISUAL_TOKENS`; se creó `MaterialPanel` y `DomainState` lo consume para carga, vacío y error.
+- **BASELINE BLOCKER FIXED:** se reescribió una expresión JSX comprimida en World y se ajustaron tres guardas de nulabilidad existentes en Home, Perfil y el adaptador de oponentes; no cambia contratos, reglas ni datos.
+- **DATA PRESERVED:** Supabase, RPCs, RLS, Auth, economía, combate, event log, settlement, navegación, datos vivos, assets oficiales y web congelada.
+- **ASSETS USED:** ninguno nuevo; no se introdujeron sustitutos genéricos.
+- **MOTION_ADDED:** sólo entrada compartida `MOTION.micro`, desactivada cuando `reduced-motion` está activo.
+- **PERFORMANCE_NOTES:** profundidad nativa con `elevation` y sombra semántica; los tiers de calidad sólo degradan efectos visuales y no alteran estado ni timing autoritativo.
+- **GATES:** `node scripts/verify-mobile-visual-system.mjs`, `npm run typecheck` y `git diff --check` pasan; workflow APK y QA visual/táctil quedan pendientes de autorización.
+- **VISUAL_DELTA:** los estados compartidos dejan de declarar su propio material y pasan a una primitiva común del Visual System.
+- **VISUAL_DEBT_REMOVED:** materiales, radios, bordes y profundidad duplicados en la superficie de estados.
+- **VISUAL_DEBT_ADDED:** ninguna.
+- **STATUS:** `IMPLEMENTED_UNVERIFIED`.
+- **PERSISTENCIA:** publicar código, guarda, documento y continuidad juntos en `main` mediante la API REST HTTPS oficial de GitHub con `[skip ci]`; no compilar APK ni publicar release.
+- **NEXT_BLOCK:** continuar con otra pieza T2V explícita, sin tocar el motor de juego, la web congelada ni el tutorial.
+
 ## 2026-09-14 — VE-MOB-11-ECONOMY — HONEST DATE AND HASH SIGNALS / IMPLEMENTED_UNVERIFIED
 
 - **BRANCH:** `main`.

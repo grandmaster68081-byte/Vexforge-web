@@ -77,3 +77,82 @@ export const DEPTH = {
   surface: 2,
   focus: 3,
 } as const;
+
+/**
+ * T2V shared visual-system contract.
+ *
+ * These values describe presentation roles only. They must not become a
+ * source of gameplay state, card data, combat timing, or reward logic.
+ * Screens consume the roles and resolve their actual colors through useColors.
+ */
+export const VISUAL_TOKENS = {
+  material: {
+    scene: { elevation: DEPTH.scene, opacity: 1 },
+    ambient: { elevation: DEPTH.ambient, opacity: 0.72 },
+    panel: { elevation: DEPTH.surface, opacity: 0.9 },
+    focus: { elevation: DEPTH.focus, opacity: 0.96 },
+  },
+  colorRoles: {
+    scene: 'background',
+    surface: 'panel',
+    surfaceStrong: 'panelStrong',
+    text: 'foreground',
+    secondaryText: 'mutedForeground',
+    divider: 'border',
+    focus: 'accent',
+    danger: 'danger',
+  },
+  typography: {
+    display: 'display',
+    title: 'title',
+    section: 'section',
+    body: 'body',
+    meta: 'meta',
+    label: 'label',
+  },
+  radius: {
+    compact: 10,
+    surface: 14,
+    modal: 18,
+    pill: 999,
+  },
+  border: {
+    hairline: 1,
+    standard: 1,
+    focus: 2,
+  },
+  shadow: {
+    ambient: { opacity: 0.12, radius: 8, elevation: 2 },
+    surface: { opacity: 0.22, radius: 12, elevation: 4 },
+    focus: { opacity: 0.3, radius: 16, elevation: 7 },
+  },
+  icon: {
+    defaultStroke: 1.7,
+    activeStroke: 2.1,
+    disabledOpacity: 0.46,
+  },
+  spacing: {
+    micro: 4,
+    compact: 8,
+    control: 12,
+    surface: 16,
+    section: 24,
+    scene: 32,
+  },
+  safeArea: {
+    horizontal: 16,
+    topContent: 18,
+    bottomNavigation: 108,
+  },
+  motion: {
+    micro: MOTION.micro,
+    reveal: MOTION.reveal,
+    navigation: MOTION.navigation,
+    ambient: MOTION.ambient,
+  },
+  qualityTiers: {
+    low: { ambient: false, particles: false, blur: false },
+    standard: { ambient: true, particles: false, blur: true },
+    high: { ambient: true, particles: true, blur: true },
+  },
+} as const;
