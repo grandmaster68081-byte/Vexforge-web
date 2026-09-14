@@ -6,7 +6,7 @@
 - **ARCHIVOS:** `mobile/app/store.tsx`; `scripts/verify-mobile-store.mjs`; `docs/VE-MOB-10-PACKS-SHOP-NEXUS-IDENTITY.md`.
 - **GATES:** `verify-mobile-store` pasa 14/14, `verify-motion` pasa 17/17, `verify-uxcx-domain-identity` pasa 5/5 y `git diff --check` queda limpio. El typecheck móvil queda diferido porque esta copia no incluye `mobile/node_modules`; no se compila APK ni se inicia workflow por instrucción explícita del operador.
 - **ESTADO HONESTO:** `IMPLEMENTED_UNVERIFIED`; no se declara `PASS`, `OPERATIONAL` ni `TIER1_READY`.
-- **PERSISTENCIA:** pendiente de publicación HTTPS en `main` con `[skip ci]`; no se compila APK ni se inicia workflow por instrucción explícita del operador.
+- **PERSISTENCIA:** código publicado en `main` mediante API REST HTTPS oficial de GitHub en `91a9941433e6375ac6367efb26ff57c79280b000` con `[skip ci]`; este registro documental se publicará a continuación sin iniciar el workflow Android.
 
 ## 2026-09-13 — VE-MOB-8-REWARDS — NEXUS IDENTITY / IMPLEMENTED_UNVERIFIED
 
