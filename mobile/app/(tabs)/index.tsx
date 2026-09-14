@@ -20,7 +20,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ScreenShell } from '@/components/ScreenShell';
 import { ForgeIconName, VexIcon } from '@/components/ForgeIcon';
 import { getCardIdentityVisual } from '@/constants/cardIdentity';
-import { DOMAIN_IDENTITY, DEPTH, MOTION } from '@/constants/experience';
+import { DOMAIN_IDENTITY, DEPTH, MOTION, VISUAL_TOKENS } from '@/constants/experience';
 import { useColors } from '@/hooks/useColors';
 import { useGame } from '@/context/GameContext';
 import {
@@ -222,7 +222,7 @@ function DomainNode({
         <View style={[styles.domainWorldHalo, { borderColor: `${portal.color}${portal.active ? '70' : '38'}`, backgroundColor: portal.active ? `${portal.color}0C` : `${colors.ink}1C` }]}>
           <View style={[styles.domainWorldSigil, { borderColor: `${portal.color}${portal.active ? 'B8' : '58'}`, backgroundColor: portal.active ? `${portal.color}18` : `${colors.ink}22` }]}>
             <View style={styles.domainWorldGlyph}>
-              <Icon name={portal.icon} color={portal.color} size={17} />
+              <Icon name={portal.icon} color={portal.color} size={VISUAL_TOKENS.domainPortal.iconSize} />
             </View>
           </View>
           <View style={[styles.domainWorldCore, { backgroundColor: portal.color, opacity: portal.active ? 1 : 0.42 }]} />
@@ -1310,17 +1310,71 @@ const styles = StyleSheet.create({
   constellationLink: { height: 1, marginHorizontal: 3, width: 12 },
   constellationSignal: { borderRadius: 3, height: 5, marginTop: -2, width: 5 },
     domainPulseWrapper: { width: '48%' },
-    domainWorldObject: { alignItems: 'center', minHeight: 137, paddingHorizontal: 4, paddingVertical: 8, width: '100%' },
+  domainWorldObject: {
+    alignItems: 'center',
+    minHeight: VISUAL_TOKENS.domainPortal.object.minHeight,
+    paddingHorizontal: VISUAL_TOKENS.domainPortal.object.paddingHorizontal,
+    paddingVertical: VISUAL_TOKENS.domainPortal.object.paddingVertical,
+    width: '100%',
+  },
    domainWorldObjectTop: { alignItems: 'center', height: 61, justifyContent: 'flex-start', position: 'relative', width: '100%' },
-   domainWorldHalo: { alignItems: 'center', borderRadius: 31, borderWidth: 1, height: 54, justifyContent: 'center', transform: [{ rotate: '45deg' }], width: 54 },
-   domainWorldSigil: { alignItems: 'center', borderWidth: 1, height: 34, justifyContent: 'center', transform: [{ rotate: '-45deg' }], width: 34 },
+  domainWorldHalo: {
+    alignItems: 'center',
+    borderRadius: VISUAL_TOKENS.domainPortal.halo.radius,
+    borderWidth: VISUAL_TOKENS.domainPortal.halo.borderWidth,
+    height: VISUAL_TOKENS.domainPortal.halo.size,
+    justifyContent: 'center',
+    transform: [{ rotate: VISUAL_TOKENS.domainPortal.halo.rotation }],
+    width: VISUAL_TOKENS.domainPortal.halo.size,
+  },
+  domainWorldSigil: {
+    alignItems: 'center',
+    borderWidth: VISUAL_TOKENS.domainPortal.sigil.borderWidth,
+    height: VISUAL_TOKENS.domainPortal.sigil.size,
+    justifyContent: 'center',
+    transform: [{ rotate: VISUAL_TOKENS.domainPortal.sigil.rotation }],
+    width: VISUAL_TOKENS.domainPortal.sigil.size,
+  },
    domainWorldGlyph: { alignItems: 'center', justifyContent: 'center' },
-   domainWorldCore: { borderRadius: 3, height: 6, position: 'absolute', right: 1, top: 1, width: 6 },
-   domainWorldTrace: { bottom: 0, height: 1, position: 'absolute', width: 34 },
-   domainWorldLabel: { fontFamily: 'Rajdhani_700Bold', fontSize: 8, letterSpacing: 1.35, marginTop: 4 },
-   domainWorldTitle: { fontFamily: 'Cinzel_600SemiBold', fontSize: 11.5, lineHeight: 15, marginTop: 3, textAlign: 'center' },
-   domainWorldStatusLine: { alignItems: 'center', flexDirection: 'row', gap: 5, marginTop: 4, maxWidth: '100%' },
-   domainWorldStatusMark: { borderRadius: 2, height: 4, width: 4 },
+  domainWorldCore: {
+    borderRadius: VISUAL_TOKENS.domainPortal.core.radius,
+    height: VISUAL_TOKENS.domainPortal.core.size,
+    position: 'absolute',
+    right: VISUAL_TOKENS.domainPortal.core.offset,
+    top: VISUAL_TOKENS.domainPortal.core.offset,
+    width: VISUAL_TOKENS.domainPortal.core.size,
+  },
+  domainWorldTrace: {
+    bottom: 0,
+    height: VISUAL_TOKENS.domainPortal.trace.height,
+    position: 'absolute',
+    width: VISUAL_TOKENS.domainPortal.trace.width,
+  },
+  domainWorldLabel: {
+    fontFamily: 'Rajdhani_700Bold',
+    fontSize: VISUAL_TOKENS.domainPortal.label.fontSize,
+    letterSpacing: VISUAL_TOKENS.domainPortal.label.letterSpacing,
+    marginTop: VISUAL_TOKENS.domainPortal.label.marginTop,
+  },
+  domainWorldTitle: {
+    fontFamily: 'Cinzel_600SemiBold',
+    fontSize: VISUAL_TOKENS.domainPortal.title.fontSize,
+    lineHeight: VISUAL_TOKENS.domainPortal.title.lineHeight,
+    marginTop: VISUAL_TOKENS.domainPortal.title.marginTop,
+    textAlign: 'center',
+  },
+  domainWorldStatusLine: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: VISUAL_TOKENS.domainPortal.status.gap,
+    marginTop: VISUAL_TOKENS.domainPortal.status.marginTop,
+    maxWidth: '100%',
+  },
+  domainWorldStatusMark: {
+    borderRadius: VISUAL_TOKENS.domainPortal.status.markRadius,
+    height: VISUAL_TOKENS.domainPortal.status.markSize,
+    width: VISUAL_TOKENS.domainPortal.status.markSize,
+  },
    domainWorldStatus: { flexShrink: 1, fontFamily: 'Rajdhani_600SemiBold', fontSize: 8, letterSpacing: 0.2, textAlign: 'center' },
   signalBand: { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between', marginTop: 8, paddingVertical: 12, rowGap: 13 },
   signalMetric: { alignItems: 'center', flexDirection: 'row', gap: 7, minWidth: '47%' },

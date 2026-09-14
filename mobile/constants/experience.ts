@@ -305,6 +305,17 @@ export const VISUAL_TOKENS = {
     },
     lane: { radius: 12, paddingVertical: 8, paddingHorizontal: 10, gap: 2 },
   },
+  domainPortal: {
+    object: { minHeight: 137, paddingHorizontal: 4, paddingVertical: 8 },
+    halo: { size: 54, radius: 31, borderWidth: 1, rotation: '45deg' },
+    sigil: { size: 34, borderWidth: 1, rotation: '-45deg' },
+    core: { size: 6, radius: 3, offset: 1 },
+    trace: { width: 34, height: 1 },
+    label: { fontSize: 8, letterSpacing: 1.35, marginTop: 4 },
+    title: { fontSize: 11.5, lineHeight: 15, marginTop: 3 },
+    status: { gap: 5, marginTop: 4, markSize: 4, markRadius: 2 },
+    iconSize: 17,
+  },
   formation: {
     root: { radius: 18, padding: 14, gap: 10 },
     heading: { gap: 10 },
