@@ -69,6 +69,14 @@ if (!progress.includes('VISUAL_TOKENS.control.progress')) {
   failures.push('ProgressBar does not consume progress control tokens');
 }
 
+const domainHeader = source('mobile/components/DomainHeader.tsx');
+if (!domainHeader.includes("from '@/constants/experience'")) {
+  failures.push('DomainHeader does not consume shared visual tokens');
+}
+if (!domainHeader.includes('VISUAL_TOKENS.domainHeader')) {
+  failures.push('DomainHeader does not consume header tokens');
+}
+
 const icon = source('mobile/components/ForgeIcon.tsx');
 if (!icon.includes("from '@/constants/experience'")) {
   failures.push('ForgeIcon does not consume shared visual tokens');

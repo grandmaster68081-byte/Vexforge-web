@@ -1,3 +1,21 @@
+## 2026-09-14 — VE-MOB-T2V — DOMAIN HEADER IDENTITY TOKENS / IMPLEMENTED_UNVERIFIED
+
+- **BRANCH:** `main`.
+- **SCREEN / DOMAIN:** cabecera compartida de identidad de dominios Android.
+- **BLOCK:** quinta pieza ejecutable de `T2V — VISUAL SYSTEM TOKENS + SHARED SCENE PRIMITIVES`.
+- **WHAT CHANGED:** `DomainHeader` consume `VISUAL_TOKENS.domainHeader` para geometría del sigil, regla y jerarquía de texto; los lugares FOJA, ARENA, ARCHIVO, FORJA y LEGADO conservan sus contratos.
+- **DATA PRESERVED:** Supabase, RPCs, RLS, Auth, economía, combate, event log, settlement, navegación, datos vivos, assets oficiales y web congelada.
+- **ASSETS USED:** ninguno nuevo; no se introdujeron sustitutos genéricos.
+- **MOTION_ADDED:** ninguno; se centralizaron dimensiones visuales estáticas de la cabecera.
+- **PERFORMANCE_NOTES:** los tokens se resuelven localmente; no añaden solicitudes, listeners, estado ni renders de datos.
+- **GATES:** `node scripts/verify-mobile-visual-system.mjs`, `git diff --check`; el typecheck móvil requiere dependencias ausentes en el clon y el workflow APK/QA queda pendiente de autorización.
+- **VISUAL_DELTA:** la identidad compartida de dominios deja de depender de geometría aislada y entra en el lenguaje T2V.
+- **VISUAL_DEBT_REMOVED:** literales geométricos duplicados en la cabecera de dominio.
+- **VISUAL_DEBT_ADDED:** ninguna.
+- **STATUS:** `IMPLEMENTED_UNVERIFIED`.
+- **PERSISTENCIA:** publicar código, guarda, documento y continuidad juntos en `main` mediante la API REST HTTPS oficial de GitHub con `[skip ci]`; no compilar APK ni publicar release.
+- **NEXT_BLOCK:** continuar con otra pieza T2V explícita, sin tocar el motor de juego, la web congelada ni el tutorial.
+
 ## 2026-09-14 — VE-MOB-T2V — PROGRESS CONTROL TOKENS / IMPLEMENTED_UNVERIFIED
 
 - **BRANCH:** `main`.

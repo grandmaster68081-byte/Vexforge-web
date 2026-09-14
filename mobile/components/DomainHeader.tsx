@@ -3,7 +3,7 @@ import { StyleSheet, Text, View } from 'react-native';
 import Animated, { FadeInDown, useReducedMotion } from 'react-native-reanimated';
 import { Feather } from '@/components/ForgeIcon';
 import { useColors } from '@/hooks/useColors';
-import { DOMAIN_IDENTITY, MOTION, type DomainKey } from '@/constants/experience';
+import { DOMAIN_IDENTITY, MOTION, VISUAL_TOKENS, type DomainKey } from '@/constants/experience';
 
 /**
  * Shared "place" header for the five VEXFORGE domains.
@@ -64,20 +64,29 @@ export function DomainHeader({
 const styles = StyleSheet.create({
   root: { paddingBottom: 16 },
   topRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
-  identity: { flexDirection: 'row', alignItems: 'center', gap: 10, flexShrink: 1 },
+  identity: { flexDirection: 'row', alignItems: 'center', gap: VISUAL_TOKENS.domainHeader.identityGap, flexShrink: 1 },
   sigil: {
-    width: 36,
-    height: 36,
-    borderRadius: 12,
-    borderWidth: 1,
+    width: VISUAL_TOKENS.domainHeader.sigilSize,
+    height: VISUAL_TOKENS.domainHeader.sigilSize,
+    borderRadius: VISUAL_TOKENS.domainHeader.sigilRadius,
+    borderWidth: VISUAL_TOKENS.domainHeader.sigilStroke,
     alignItems: 'center',
     justifyContent: 'center',
   },
   placeBlock: { flexShrink: 1 },
   place: { fontSize: 10, fontWeight: '900', letterSpacing: 2 },
-  rule: { height: 1, width: 54, marginTop: 5, borderRadius: 1 },
+  rule: {
+    height: VISUAL_TOKENS.border.hairline,
+    width: VISUAL_TOKENS.domainHeader.ruleWidth,
+    marginTop: VISUAL_TOKENS.domainHeader.ruleRadius + 4,
+    borderRadius: VISUAL_TOKENS.domainHeader.ruleRadius,
+  },
   trailing: { marginLeft: 12 },
-  title: { fontSize: 30, fontWeight: '800', letterSpacing: -0.7, marginTop: 14 },
-  purpose: { fontSize: 13, marginTop: 5, lineHeight: 18 },
+  title: { fontSize: 30, fontWeight: '800', letterSpacing: -0.7, marginTop: VISUAL_TOKENS.domainHeader.titleTop },
+  purpose: {
+    fontSize: 13,
+    marginTop: VISUAL_TOKENS.domainHeader.purposeTop,
+    lineHeight: VISUAL_TOKENS.domainHeader.purposeLineHeight,
+  },
   children: { marginTop: 12 },
 });

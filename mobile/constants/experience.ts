@@ -170,4 +170,15 @@ export const VISUAL_TOKENS = {
       radius: 4,
     },
   },
+  domainHeader: {
+    sigilSize: 36,
+    sigilRadius: 12,
+    sigilStroke: 1,
+    identityGap: 10,
+    ruleWidth: 54,
+    ruleRadius: 1,
+    titleTop: 14,
+    purposeTop: 5,
+    purposeLineHeight: 18,
+  },
 } as const;

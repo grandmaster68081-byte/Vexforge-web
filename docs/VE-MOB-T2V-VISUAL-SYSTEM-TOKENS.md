@@ -28,6 +28,8 @@ la web congelada.
   los overrides existentes siguen siendo explícitos y compatibles.
 - `ProgressBar` consume `control.progress` para altura y radio, preservando el
   porcentaje confirmado, el cero válido y la ausencia de datos sin inferencias.
+- `DomainHeader` consume `domainHeader` para la geometría compartida de sigil,
+  regla y jerarquía de texto, manteniendo la identidad viva de cada dominio.
 
 ## Límites
 
