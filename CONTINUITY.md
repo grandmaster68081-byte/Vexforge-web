@@ -1,3 +1,22 @@
+## 2026-09-14 — VE-MOB-8-REWARDS — HONEST MISSION SIGNALS / IMPLEMENTED_UNVERIFIED
+
+- **BRANCH:** `main`.
+- **SCREEN / DOMAIN:** Misiones y Recompensas / `NEXUS → FOJA → ACTIVIDAD`.
+- **BLOCK:** fidelidad de títulos, descripciones, estados, progreso, energía y recompensas cuando el contrato vivo no entrega una señal.
+- **WHAT CHANGED:** los campos ausentes o inválidos ahora muestran `NO REPORTADO`, `ESTADO NO REPORTADO` o `PROGRESO NO REPORTADO`; los ceros numéricos confirmados permanecen visibles. El resultado de una misión ya no convierte una recompensa ausente en `+0`.
+- **LIVE DATA CHECK:** se conserva `loadDailyQuests`, `loadMissions`, `execute_mission` y `claim_mission_reward`; no se añadieron campos, datos, RPCs ni simulaciones.
+- **DATA PRESERVED:** autenticación, RLS, misiones, quests, reclamaciones, cooldowns, energía, VEX, XP, T-VEX, telemetría, navegación, accesibilidad, reduced-motion, assets y web congelada.
+- **ASSETS USED:** ninguno nuevo; se mantienen los assets oficiales del almacén y la forja.
+- **MOTION_ADDED:** ninguno; se conserva la profundidad táctil existente.
+- **PERFORMANCE_NOTES:** validación local de valores ya recibidos; sin solicitudes, animaciones o dependencias nuevas.
+- **GATES:** `node scripts/verify-mobile-rewards.mjs` OK, 17/17; `git diff --check` limpio. El typecheck móvil queda diferido porque el clon oficial no incluye `mobile/node_modules`; no se compila APK, no se inicia workflow y no se publica release por instrucción del operador.
+- **CORE_SCORE:** pendiente de QA visual/táctil en dispositivo.
+- **VISUAL_DEBT_ADDED:** ninguna.
+- **VISUAL_DEBT_REMOVED:** defaults silenciosos de título, descripción, estado, objetivo, progreso, energía y recompensas.
+- **STATUS:** `IMPLEMENTED_UNVERIFIED`.
+- **PERSISTENCIA:** se publicará en `main` mediante la API REST HTTPS oficial de GitHub con `[skip ci]`; sin APK ni release Android nuevo.
+- **NEXT_BLOCK:** continuar con otra mejora Android atómica verificable sin tocar la web congelada ni iniciar APK.
+
 ## 2026-09-14 — VE-MOB-10-PACKS-SHOP — HONEST PACK AND INVENTORY SIGNALS / IMPLEMENTED_UNVERIFIED
 
 - **BRANCH:** `main`.

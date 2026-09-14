@@ -37,7 +37,27 @@ function missionColor(type: string | null, colors: ReturnType<typeof useColors>)
 function statusLabel(status: string) {
   if (status === 'claimed') return 'RECLAMADA';
   if (status === 'completed') return 'COMPLETA';
-  return 'ACTIVA';
+  if (status === 'active') return 'ACTIVA';
+  const normalized = typeof status === 'string' ? status.trim() : '';
+  return normalized ? `ESTADO: ${normalized.toUpperCase()}` : 'ESTADO NO REPORTADO';
+}
+
+function textSignal(value: string | null | undefined, fallback: string) {
+  const normalized = value?.trim();
+  return normalized || fallback;
+}
+
+function numberSignal(value: number | null | undefined, suffix: string) {
+  return typeof value === 'number' && Number.isFinite(value) ? `${value} ${suffix}` : `${suffix} NO REPORTADO`;
+}
+
+function progressSignal(progress: number | null | undefined, target: number | null | undefined) {
+  const hasProgress = typeof progress === 'number' && Number.isFinite(progress);
+  const hasTarget = typeof target === 'number' && Number.isFinite(target);
+  if (hasProgress && hasTarget) return `${progress}/${target}`;
+  if (hasProgress) return `${progress}/OBJETIVO NO REPORTADO`;
+  if (hasTarget) return `PROGRESO NO REPORTADO/${target}`;
+  return 'PROGRESO NO REPORTADO';
 }
 
 function QuestCard({
@@ -52,10 +72,13 @@ function QuestCard({
   onClaim: (id: string) => void;
 }) {
   const definition = quest.quest;
-  const target = definition?.target_count ?? 0;
-  const percent = target > 0 ? Math.min(100, (quest.progress / target) * 100) : 0;
+  const target = typeof definition?.target_count === 'number' && Number.isFinite(definition.target_count) ? definition.target_count : null;
+  const progress = typeof quest.progress === 'number' && Number.isFinite(quest.progress) ? quest.progress : null;
+  const percent = target !== null && target > 0 && progress !== null ? Math.min(100, (progress / target) * 100) : 0;
   const complete = quest.status === 'completed';
   const claimed = quest.status === 'claimed';
+  const title = textSignal(definition?.title, 'MISIÓN SIN TÍTULO REPORTADO');
+  const description = textSignal(definition?.description, 'DESCRIPCIÓN NO REPORTADA');
   return (
     <View
       testID={`mission-quest-${quest.id}`}
@@ -75,10 +98,10 @@ function QuestCard({
           </View>
           <View style={styles.copy}>
             <Text style={[styles.cardTitle, { color: colors.foreground }]} numberOfLines={1}>
-              {definition?.title ?? 'Misión diaria'}
+              {title}
             </Text>
             <Text style={[styles.cardBody, { color: colors.mutedForeground }]} numberOfLines={2}>
-              {definition?.description ?? 'Completa actividad para avanzar.'}
+              {description}
             </Text>
           </View>
         </View>
@@ -88,15 +111,15 @@ function QuestCard({
       </View>
       <View style={styles.rewardLine}>
         <Text style={[styles.reward, { color: colors.accent }]}>
-          <Ionicons name="flash-outline" size={13} color={colors.accent} /> {definition?.reward_vex_ingame ?? 0} VEX
+          <Ionicons name="flash-outline" size={13} color={colors.accent} /> {numberSignal(definition?.reward_vex_ingame, 'VEX')}
         </Text>
         <Text style={[styles.reward, { color: colors.rarityRare }]}>
-          <Ionicons name="sparkles-outline" size={13} color={colors.rarityRare} /> {definition?.reward_xp ?? 0} XP
+          <Ionicons name="sparkles-outline" size={13} color={colors.rarityRare} /> {numberSignal(definition?.reward_xp, 'XP')}
         </Text>
       </View>
       <View style={styles.progressMeta}>
         <Text style={[styles.progressLabel, { color: colors.mutedForeground }]}>PROGRESO</Text>
-        <Text style={[styles.progressLabel, { color: colors.foreground }]}>{quest.progress}/{target}</Text>
+        <Text style={[styles.progressLabel, { color: colors.foreground }]}>{progressSignal(progress, target)}</Text>
       </View>
       <View style={[styles.progressTrack, { backgroundColor: colors.muted }]}>
         <View style={[styles.progressFill, { backgroundColor: complete ? colors.success : colors.accent, width: `${percent}%` }]} />
@@ -105,7 +128,7 @@ function QuestCard({
         <Pressable
           testID={`mission-claim-${quest.id}`}
           accessibilityRole="button"
-          accessibilityLabel={`Reclamar recompensa de ${definition?.title ?? 'misión diaria'}`}
+          accessibilityLabel={`Reclamar recompensa de ${title}`}
           accessibilityState={{ disabled: claiming === quest.id }}
           disabled={claiming === quest.id}
           onPress={() => onClaim(quest.id)}
@@ -141,6 +164,9 @@ function MissionCard({
   const accent = missionColor(mission.mission_type, colors);
   const isBusy = executing === mission.id;
   const disabled = Boolean(executing) || cooldown > 0;
+  const title = textSignal(mission.name, 'MISIÓN SIN NOMBRE REPORTADO');
+  const difficulty = textSignal(mission.difficulty, 'DIFICULTAD NO REPORTADA').toUpperCase();
+  const missionType = textSignal(mission.mission_type, 'TIPO NO REPORTADO');
   return (
     <View testID={`mission-card-${mission.id}`} style={[styles.missionCard, { backgroundColor: colors.panel, borderColor: colors.border }]}>
       <View style={styles.cardHeader}>
@@ -149,25 +175,25 @@ function MissionCard({
             <Ionicons name="shield-checkmark-outline" size={19} color={accent} />
           </View>
           <View style={styles.copy}>
-            <Text style={[styles.cardTitle, { color: colors.foreground }]} numberOfLines={1}>{mission.name}</Text>
+            <Text style={[styles.cardTitle, { color: colors.foreground }]} numberOfLines={1}>{title}</Text>
             <Text style={[styles.cardBody, { color: colors.mutedForeground }]}>
-              {(mission.difficulty ?? 'NORMAL').toUpperCase()} · {mission.mission_type ?? 'Misión'}
+              {difficulty} · {missionType.toUpperCase()}
             </Text>
           </View>
         </View>
         <Text style={[styles.energy, { color: colors.rarityRare }]}>
-          <Ionicons name="flash" size={12} color={colors.rarityRare} /> {mission.energy_cost ?? 0}
+          <Ionicons name="flash" size={12} color={colors.rarityRare} /> {numberSignal(mission.energy_cost, 'ENERGÍA')}
         </Text>
       </View>
       <View style={styles.rewardLine}>
-        <Text style={[styles.reward, { color: colors.accent }]}>+{mission.reward_vex_ingame ?? 0} VEX</Text>
-        <Text style={[styles.reward, { color: colors.rarityRare }]}>+{mission.reward_xp ?? 0} XP</Text>
-        {(mission.reward_vex_tradeable ?? 0) > 0 ? <Text style={[styles.reward, { color: colors.rarityEpic }]}>+{mission.reward_vex_tradeable} T-VEX</Text> : null}
+        <Text style={[styles.reward, { color: colors.accent }]}>{numberSignal(mission.reward_vex_ingame, '+VEX')}</Text>
+        <Text style={[styles.reward, { color: colors.rarityRare }]}>{numberSignal(mission.reward_xp, '+XP')}</Text>
+        {typeof mission.reward_vex_tradeable === 'number' && Number.isFinite(mission.reward_vex_tradeable) && mission.reward_vex_tradeable > 0 ? <Text style={[styles.reward, { color: colors.rarityEpic }]}>+{mission.reward_vex_tradeable} T-VEX</Text> : null}
       </View>
       <Pressable
         testID={`mission-execute-${mission.id}`}
         accessibilityRole="button"
-        accessibilityLabel={`Comenzar misión ${mission.name}`}
+        accessibilityLabel={`Comenzar misión ${title}`}
         accessibilityState={{ disabled }}
         disabled={disabled}
         onPress={() => onExecute(mission)}
@@ -264,7 +290,7 @@ export default function MissionsScreen() {
     try {
       const reward: MissionReward = await executeMobileMission(session, player.id, mission.id);
       void emitTelemetry(session, 'reward_claimed', { source: 'mission' });
-      setActionMessage(`Misión completada: +${reward.xp_reward ?? 0} XP y +${reward.ingame_reward ?? 0} VEX.`);
+      setActionMessage(`Misión completada: ${numberSignal(reward.xp_reward, '+XP')} y ${numberSignal(reward.ingame_reward, '+VEX')}.`);
       if ((mission.cooldown_seconds ?? 0) > 0) {
         setCooldowns((current) => ({ ...current, [mission.id]: Date.now() + (mission.cooldown_seconds ?? 0) * 1000 }));
       }
