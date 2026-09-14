@@ -5,6 +5,7 @@ import { useColors } from '@/hooks/useColors';
 import type { BattleTurn, BattleUnit } from '@/lib/supabase';
 
 type Role = 'VANGUARDIA' | 'CAMPEÓN' | 'CENTINELA';
+type DisplayRole = Role | 'RESERVA' | 'CAÍDA' | 'SIN POSICIÓN';
 type Side = 'a' | 'b';
 type BattleOutcome = 'victory' | 'defeat' | 'draw';
 type Colors = ReturnType<typeof useColors>;
@@ -25,13 +26,15 @@ const ROLE_LABELS: Record<Role, string> = {
   CENTINELA: 'sentinel',
 };
 
-function roleForUnit(unit: BattleUnit, index: number): Role | 'RESERVA' {
+function roleForUnit(unit: BattleUnit): DisplayRole {
   const slot = String(unit.slot ?? '').toLowerCase();
   if (unit.is_champion || slot.includes('champ')) return 'CAMPEÓN';
   if (slot.includes('vanguard')) return 'VANGUARDIA';
   if (slot.includes('sentinel')) return 'CENTINELA';
   if (unit.in_reserve || slot.includes('reserve')) return 'RESERVA';
-  return index === 0 ? 'VANGUARDIA' : index === 1 ? 'CENTINELA' : 'RESERVA';
+  if (slot.includes('fallen')) return 'CAÍDA';
+  if (unit.alive === false) return 'CAÍDA';
+  return 'SIN POSICIÓN';
 }
 
 function factionColor(faction: string | undefined, colors: Colors) {
@@ -162,15 +165,47 @@ function ReserveRail({ units, colors, side }: { units: BattleUnit[]; colors: Col
   );
 }
 
+function StateRail({
+  units,
+  colors,
+  label,
+  accessibilityLabel,
+  testID,
+}: {
+  units: BattleUnit[];
+  colors: Colors;
+  label: string;
+  accessibilityLabel: string;
+  testID: string;
+}) {
+  return (
+    <View testID={testID} accessible accessibilityLabel={accessibilityLabel} style={styles.stateRail}>
+      <View style={styles.reserveHeader}>
+        <Feather name="alert-circle" size={13} color={colors.mutedForeground} />
+        <Text style={[styles.reserveTitle, { color: colors.mutedForeground }]}>{label}</Text>
+      </View>
+      <View style={styles.reserveItems}>
+        {units.map((unit, index) => (
+          <View key={`${unit.id ?? unit.name ?? 'state'}-${index}`} style={[styles.reserveItem, { borderColor: unit.alive === false ? colors.danger : colors.border }]}>
+            {unit.image_url ? <Image source={{ uri: unit.image_url }} resizeMode="cover" style={styles.reserveArt} /> : <Feather name="image" size={12} color={colors.mutedForeground} />}
+          </View>
+        ))}
+      </View>
+    </View>
+  );
+}
+
 export function ForgeBattlefield({ finalUnits, currentTurn, turnIndex, totalTurns, reducedMotion, youWon, outcome }: Props) {
   const colors = useColors();
   const resolvedOutcome = outcome ?? (typeof youWon === 'boolean' ? (youWon ? 'victory' : 'defeat') : undefined);
   const unitsBySide = useMemo(() => {
-    const explicit = finalUnits.some((unit) => unit.side === 'a' || unit.side === 'b');
-    const result: Record<Side, BattleUnit[]> = { a: [], b: [] };
-    finalUnits.forEach((unit, index) => {
-      const side: Side = unit.side === 'b' || (!explicit && index >= Math.ceil(finalUnits.length / 2)) ? 'b' : 'a';
-      result[side].push(unit);
+    const result: Record<Side, BattleUnit[]> & { unknown: BattleUnit[] } = { a: [], b: [], unknown: [] };
+    finalUnits.forEach((unit) => {
+      if (unit.side === 'a' || unit.side === 'b') {
+        result[unit.side].push(unit);
+      } else {
+        result.unknown.push(unit);
+      }
     });
     return result;
   }, [finalUnits]);
@@ -178,20 +213,25 @@ export function ForgeBattlefield({ finalUnits, currentTurn, turnIndex, totalTurn
   const activeName = currentTurn?.attacker?.name;
   const targetName = currentTurn?.defender?.name;
   const renderSide = (side: Side) => {
-    const classified = unitsBySide[side].map((unit, index) => ({ unit, role: roleForUnit(unit, index) }));
-    const activeUnits = classified.filter((entry) => entry.role !== 'RESERVA');
+    const classified = unitsBySide[side].map((unit) => ({ unit, role: roleForUnit(unit) }));
+    const activeUnits = classified.filter((entry) => entry.role === 'VANGUARDIA' || entry.role === 'CAMPEÓN' || entry.role === 'CENTINELA');
     const reserveUnits = classified.filter((entry) => entry.role === 'RESERVA').map((entry) => entry.unit);
+    const fallenUnits = classified.filter((entry) => entry.role === 'CAÍDA').map((entry) => entry.unit);
+    const unassignedUnits = classified.filter((entry) => entry.role === 'SIN POSICIÓN').map((entry) => entry.unit);
     const findRole = (role: Role) => activeUnits.find((entry) => entry.role === role)?.unit ?? null;
     return {
       vanguard: findRole('VANGUARDIA'),
       champion: findRole('CAMPEÓN'),
       sentinel: findRole('CENTINELA'),
       reserve: reserveUnits,
+      fallen: fallenUnits,
+      unassigned: unassignedUnits,
     };
   };
 
   const opponent = renderSide('b');
   const player = renderSide('a');
+  const unknownSideUnits = unitsBySide.unknown;
   const isActive = (unit: BattleUnit | null) => Boolean(unit && activeName && unit.name === activeName);
   const isTargeted = (unit: BattleUnit | null) => Boolean(unit && targetName && unit.name === targetName);
 
@@ -213,6 +253,24 @@ export function ForgeBattlefield({ finalUnits, currentTurn, turnIndex, totalTurn
         <UnitCard unit={units.sentinel} role="CENTINELA" active={isActive(units.sentinel)} targeted={isTargeted(units.sentinel)} reducedMotion={reducedMotion} colors={colors} side={side} />
       </View>
       <ReserveRail units={units.reserve} colors={colors} side={side} />
+      {units.fallen.length > 0 ? (
+        <StateRail
+          units={units.fallen}
+          colors={colors}
+          label="CAÍDAS REPORTADAS"
+          accessibilityLabel={`${side === 'a' ? 'Tu' : 'Rival'} unidades caídas reportadas por el servidor. ${units.fallen.length} cartas.`}
+          testID={`battlefield-${side}-fallen`}
+        />
+      ) : null}
+      {units.unassigned.length > 0 ? (
+        <StateRail
+          units={units.unassigned}
+          colors={colors}
+          label="POSICIÓN NO REPORTADA"
+          accessibilityLabel={`${side === 'a' ? 'Tu' : 'Rival'} unidades sin posición reportada por el servidor. ${units.unassigned.length} cartas.`}
+          testID={`battlefield-${side}-unassigned`}
+        />
+      ) : null}
     </View>
   );
 
@@ -238,6 +296,15 @@ export function ForgeBattlefield({ finalUnits, currentTurn, turnIndex, totalTurn
         {currentTurn && (currentTurn.damage ?? 0) > 0 ? <Text style={[styles.damageLabel, { color: currentTurn.is_crit ? colors.accent : colors.danger }]}>−{currentTurn.damage}{currentTurn.is_crit ? ' · CRÍTICO' : ' DAÑO'}</Text> : null}
       </View>
       {formation('a', player)}
+      {unknownSideUnits.length > 0 ? (
+        <StateRail
+          units={unknownSideUnits}
+          colors={colors}
+          label="LADO NO REPORTADO"
+          accessibilityLabel={`Unidades cuyo lado no fue reportado por el servidor. ${unknownSideUnits.length} cartas.`}
+          testID="battlefield-side-unassigned"
+        />
+      ) : null}
       {resolvedOutcome ? (
         <Text
           testID="battlefield-outcome"
@@ -259,6 +326,7 @@ const styles = StyleSheet.create({
   turnValue: { fontSize: 13, fontWeight: '900' },
   turnLabel: { fontSize: 7, fontWeight: '900', letterSpacing: 0.6, marginTop: 2 },
   sideBlock: { gap: 7 },
+  stateRail: { gap: 7, paddingTop: 2 },
   identityStrip: { flexDirection: 'row', alignItems: 'center', gap: 8, paddingHorizontal: 3 },
   identityMark: { width: 30, height: 30, borderWidth: 1, borderRadius: 10, alignItems: 'center', justifyContent: 'center' },
   identityCopy: { flex: 1 },
