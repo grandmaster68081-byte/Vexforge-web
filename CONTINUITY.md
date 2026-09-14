@@ -1,6 +1,7 @@
 ## 2026-09-14 — VE-MOB-12-WORLD — HONEST REWARD SIGNALS / IMPLEMENTED_UNVERIFIED
 
 - **BRANCH:** `main`.
+- **COMMIT:** `ab865dd97bdd25828a3ccb5fd3eab5721563caa6`.
 - **SCREEN / DOMAIN:** Mundo / `MUNDO → BOSS + PASE`.
 - **BLOCK:** fidelidad de recompensas publicadas en Bosses y tiers de temporada.
 - **WHAT CHANGED:** `rewardText` conserva los ceros numéricos confirmados y distingue campos presentes pero ausentes o inválidos como `VEX NO REPORTADO`, `FRAGMENTOS NO REPORTADO` o `CARTA NO REPORTADA`; cuando no existe ninguna señal renderizable comunica `RECOMPENSA SIN DETALLE`.
