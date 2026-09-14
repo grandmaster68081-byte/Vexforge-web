@@ -97,9 +97,9 @@ function rankingWinRate(wins: number | null | undefined, losses: number | null |
 }
 
 function formatDate(value: string | null | undefined) {
-  if (!value) return 'Fecha no disponible';
+  if (!value) return 'FECHA NO REPORTADA';
   const date = new Date(value);
-  return Number.isNaN(date.getTime()) ? 'Fecha no disponible' : date.toLocaleDateString('es-ES', { day: 'numeric', month: 'short' }).replace('.', '');
+  return Number.isNaN(date.getTime()) ? 'FECHA NO VÁLIDA' : date.toLocaleDateString('es-ES', { day: 'numeric', month: 'short' }).replace('.', '');
 }
 
 function rewardNumber(value: unknown) {

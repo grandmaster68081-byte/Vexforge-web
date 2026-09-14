@@ -27,9 +27,11 @@ const checks = [
   ['honest encounter damage', ['ownEncounters', 'ownDamage === null', 'TÚ DAÑO NO REPORTADO', 'TÚ ${formatNumber(ownDamage)}']],
   ['honest lore and raid identity signals', ['function worldStatusLabel', 'ESTADO NO REPORTADO', 'TÍTULO NO REPORTADO', 'CONTENIDO NO REPORTADO', 'REGIÓN NO REPORTADA', 'worldStatusLabel(raid.status)']],
   ['honest ranking metrics', ['function rankingMetric', 'function rankingWinRate', 'PUESTO NO REPORTADO', 'PORCENTAJE NO REPORTADO', 'SIN PARTIDAS']],
+  ['honest date signals', ['function formatDate', 'FECHA NO REPORTADA', 'FECHA NO VÁLIDA', 'toLocaleDateString']],
 ];
 for (const [label, needles] of checks) {
   const source = label === 'official world reads' || label === 'official actions' ? supabase : label === 'world background' ? visual : screen;
   for (const needle of needles) if (!source.includes(needle)) throw new Error(`WORLD gate failed: ${label} -> ${needle}`);
 }
+if (screen.includes('Fecha no disponible')) throw new Error('WORLD gate failed: generic date fallback remains');
 console.log('verify-mobile-world: ok');

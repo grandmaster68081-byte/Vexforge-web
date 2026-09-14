@@ -1,3 +1,22 @@
+## 2026-09-14 — VE-MOB-12-WORLD — HONEST DATE SIGNALS / IMPLEMENTED_UNVERIFIED
+
+- **BRANCH:** `main`.
+- **SCREEN / DOMAIN:** World / `WORLD → RAIDS · TEMPORADA`.
+- **BLOCK:** distinguir fechas ausentes de fechas inválidas sin usar `Fecha no disponible`.
+- **WHAT CHANGED:** fechas ausentes muestran `FECHA NO REPORTADA`; valores presentes pero ilegibles muestran `FECHA NO VÁLIDA`; fechas válidas conservan el formato localizado.
+- **LIVE DATA CHECK:** la cuenta QA conserva acceso autenticado de solo lectura a las tablas vivas de World; no se ejecutaron mutaciones.
+- **DATA PRESERVED:** jefes, raids, lore, temporada, rankings, recompensas, joins, contribuciones, RPCs oficiales, Auth, RLS, navegación, accesibilidad, reduced-motion y web congelada.
+- **ASSETS USED:** ninguno nuevo.
+- **MOTION_ADDED:** ninguno.
+- **PERFORMANCE_NOTES:** normalización local de fechas ya recibidas; sin solicitudes de red, animaciones nuevas ni dependencias.
+- **GATES:** `node scripts/verify-mobile-world.mjs` OK; `git diff --check` limpio. No se inicia workflow Android, no se compila APK ni se publica release por instrucción del operador.
+- **CORE_SCORE:** pendiente de QA visual/táctil en dispositivo.
+- **VISUAL_DEBT_ADDED:** ninguna.
+- **VISUAL_DEBT_REMOVED:** `Fecha no disponible` como sustituto ambiguo para señales ausentes o inválidas.
+- **STATUS:** `IMPLEMENTED_UNVERIFIED`.
+- **PERSISTENCIA:** código, documento y continuidad se publicarán juntos en `main` mediante la API REST HTTPS oficial de GitHub con `[skip ci]`; sin APK ni release Android nuevo.
+- **NEXT_BLOCK:** continuar con otra unidad Android atómica del protocolo sin tocar la web congelada ni iniciar APK.
+
 ## 2026-09-14 — VE-MOB-7-BATTLE — HONEST SEASON SIGNAL / IMPLEMENTED_UNVERIFIED
 
 - **BRANCH:** `main`.
