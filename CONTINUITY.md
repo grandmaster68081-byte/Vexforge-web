@@ -1,6 +1,7 @@
 ## 2026-09-14 — VE-MOB-10-FUSION — HONEST POLICY SIGNALS / IMPLEMENTED_UNVERIFIED
 
 - **BRANCH:** `main`.
+- **COMMIT:** `90b2e62a9651b02a020d3ac63b921b999166f868`.
 - **SCREEN / DOMAIN:** Sistemas del Legado / `LEGADO → FORJA → FUSIÓN`.
 - **BLOCK:** fidelidad de políticas de coste y destino de fusión.
 - **WHAT CHANGED:** costes ausentes o inválidos ya no se convierten en cero; una rareza sin fila de política deja de mostrar una carga infinita; la fusión queda bloqueada si la política no está completa.
