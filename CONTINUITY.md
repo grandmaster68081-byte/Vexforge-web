@@ -4266,3 +4266,14 @@
 - Publicación: código y esta continuidad se publicarán juntos en `main` mediante la API REST HTTPS oficial de GitHub con `[skip ci]`, sin `git push`, para no disparar el workflow APK.
 - Commit remoto de implementación: `26e2076b9ab32b0720f6eba5f41ca633bfc5a544`.
 - Siguiente microbloque: continuar con otra mejora Android atómica de fidelidad o interacción, sin tocar la web congelada ni iniciar APK sin autorización.
+
+---
+## 2026-09-14 — VE-MOB-4-COLLECTION — HONEST UNREPORTED STAT BARS / IMPLEMENTED_UNVERIFIED
+
+- Se corrigió `mobile/app/(tabs)/collection.tsx`: las estadísticas de carta ausentes ya no renderizan una barra vacía equivalente a cero. Conservan `—` y muestran una pista visual y accesible `NO REPORTADO`; los valores numéricos confirmados mantienen su barra proporcional.
+- Se reforzó `scripts/verify-mobile-collection-reference.mjs` para impedir que una estadística ausente vuelva a degradarse a una barra de cero confirmada.
+- Se conservaron el catálogo real, arte canónico, identidad, lore, filtros, paginación, rutas de colección, Supabase, navegación, accesibilidad, la web congelada y el resto de superficies Android.
+- Evidencia local: `npm run build` OK como preflight; `node scripts/verify-mobile-collection-reference.mjs` OK (15/15); `git diff --check` OK. El typecheck Android queda diferido porque el snapshot oficial no incluye `mobile/node_modules`.
+- No se inicia workflow Android, no se compila APK ni se publica release por instrucción expresa del operador. Estado honesto: `IMPLEMENTED_UNVERIFIED`; requiere QA visual/táctil en dispositivo cuando el operador autorice una compilación.
+- Publicación: código y esta continuidad se publicarán en `main` mediante la API REST HTTPS oficial de GitHub con `[skip ci]`, sin `git push`, para no disparar el workflow APK.
+- Siguiente microbloque: continuar con otra mejora Android atómica de fidelidad o interacción, sin tocar la web congelada ni iniciar APK sin autorización.

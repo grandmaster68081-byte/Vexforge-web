@@ -51,6 +51,7 @@ const checks = [
   ['achievements route is wired', collection.includes("router.push('/profile?section=achievements')")],
   ['archive controls expose diegetic press depth', collection.includes('styles.referenceTopTab') && collection.includes('opacity: pressed ? 0.76 : 1') && collection.includes('styles.referencePageButton') && collection.includes('opacity: pressed ? 0.72 : 1')],
   ['missing card statistics stay explicit', collection.includes("if (typeof value !== 'number' || !Number.isFinite(value)) return '—';") && collection.includes('PWR {numberLabel(card.power)}') && collection.includes('AFF {numberLabel(card.affinity)}') && collection.includes('numberLabel(card.supply)') && collection.includes('numberLabel(card.minted)') && !collection.includes('card.power ?? 0}')],
+  ['missing detail statistics do not render as confirmed zero bars', collection.includes('const statReady = safeValue !== null && max > 0;') && collection.includes('styles.statUnknownTrack') && collection.includes('estadística no reportada') && collection.includes('collection-stat-unreported-') && !collection.includes('value={safeValue !== null && max > 0 ? (safeValue / max) * 100 : 0}')],
   ['missing card identity and lore stay explicit', collection.includes("'RAREZA NO REPORTADA'") && collection.includes("'FACCION NO REPORTADA'") && collection.includes("'LORE NO REPORTADO'") && collection.includes("'IDENTIDAD NO REPORTADA'") && !collection.includes("'Sin facción'") && !collection.includes("'Sin rareza'")],
 ];
 

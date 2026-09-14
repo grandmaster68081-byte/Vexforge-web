@@ -200,13 +200,26 @@ function Stat({
   colors: ReturnType<typeof useColors>;
 }) {
   const safeValue = typeof value === 'number' && Number.isFinite(value) ? value : null;
+  const statReady = safeValue !== null && max > 0;
   return (
     <View style={styles.stat}>
       <View style={styles.statTop}>
         <Text style={[styles.statLabel, { color: colors.mutedForeground }]}>{label}</Text>
         <Text style={[styles.statValue, { color }]}>{numberLabel(value)}</Text>
       </View>
-      <ProgressBar value={safeValue !== null && max > 0 ? (safeValue / max) * 100 : 0} color={color} />
+      {statReady ? (
+        <ProgressBar value={(safeValue / max) * 100} color={color} />
+      ) : (
+        <View
+          testID={`collection-stat-unreported-${label.toLowerCase()}`}
+          accessible
+          accessibilityRole="text"
+          accessibilityLabel={`${label}: estadística no reportada`}
+          style={[styles.statUnknownTrack, { borderColor: colors.border, backgroundColor: colors.panel }]}
+        >
+          <Text style={[styles.statUnknownText, { color: colors.mutedForeground }]}>NO REPORTADO</Text>
+        </View>
+      )}
     </View>
   );
 }
@@ -1062,6 +1075,8 @@ const styles = StyleSheet.create({
   statTop: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 4 },
   statLabel: { fontSize: 10, fontWeight: '700', letterSpacing: 0.8 },
   statValue: { fontSize: 14, fontWeight: '800' },
+  statUnknownTrack: { height: 18, borderWidth: 1, borderStyle: 'dashed', borderRadius: 4, alignItems: 'center', justifyContent: 'center' },
+  statUnknownText: { fontSize: 7, fontWeight: '900', letterSpacing: 0.7 },
   ownership: { borderWidth: 1, borderRadius: 9, alignItems: 'center', padding: 8, marginTop: 8 },
   ownershipLabel: { fontSize: 11, fontWeight: '800' },
   ownershipMeta: { fontSize: 9, marginTop: 3 },
