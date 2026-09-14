@@ -14,7 +14,7 @@
 - **VISUAL_DEBT_ADDED:** ninguna.
 - **VISUAL_DEBT_REMOVED:** identificadores sintéticos y descripción genérica presentados como identidad oficial.
 - **STATUS:** `IMPLEMENTED_UNVERIFIED`.
-- **PERSISTENCIA:** se publicará en `main` mediante la API REST HTTPS oficial de GitHub con `[skip ci]`; sin APK ni release Android nuevo.
+- **PERSISTENCIA:** código y guarda publicados en `main` mediante la API REST HTTPS oficial de GitHub en `3ec3f949d6257212c97623090ab41b7f7172f541` con `[skip ci]`; sin APK ni release Android nuevo.
 - **NEXT_BLOCK:** continuar con otra mejora Android atómica verificable sin tocar la web congelada ni iniciar APK.
 
 ## 2026-09-14 — VE-MOB-8-REWARDS — HONEST MISSION SIGNALS / IMPLEMENTED_UNVERIFIED
