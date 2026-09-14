@@ -4,7 +4,9 @@
 - **QUÉ SE CONSERVÓ:** estados visuales de presión, selección, confirmación, carga, accesibilidad, reduced-motion, resolución autoritativa y replay.
 - **ARCHIVOS:** `mobile/app/(tabs)/battle.tsx`; `scripts/verify-mobile-battle.mjs`; `docs/VE-MOB-7-BATTLE-HAPTIC-GATES.md`.
 - **LÍMITES:** no se activan haptics en controles deshabilitados ni se simula respuesta del servidor. No se tocaron Supabase, RPCs, RLS, Auth, economía, combate, assets ni la web. No se inició workflow Android, no se compiló APK y no se generó release.
-- **ESTADO HONESTO:** `IMPLEMENTED_UNVERIFIED`; la guarda local, el typecheck y la QA táctil en APK siguen pendientes de registro/autorización.
+- **PERSISTENCIA:** cambio publicado en `main` mediante la API REST HTTPS de GitHub en el commit `b944250403f4987a1f92632faab1d8bb464df538` con `[skip ci]`, por lo que no se inició el workflow Android.
+- **EVIDENCIA LOCAL:** `verify:mobile-battle` pasa 27/27. El typecheck del clon sigue bloqueado porque faltan las dependencias Expo (`expo/tsconfig.base` y módulos nativos); no se presenta ese bloqueo del entorno como un fallo del delta.
+- **ESTADO HONESTO:** `IMPLEMENTED_UNVERIFIED`; la QA visual/táctil en APK y el release correlativo siguen pendientes de autorización.
 - **SIGUIENTE BLOQUE:** continuar sólo con otro delta Android atómico que mejore feedback o fidelidad sin reabrir contratos.
 
 ## 2026-09-13 — VE-MOB-7-BATTLE — MMR NEUTRALITY / IMPLEMENTED_UNVERIFIED
