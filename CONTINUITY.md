@@ -1,3 +1,22 @@
+## 2026-09-14 — VE-MOB-12-WORLD — HONEST NUMERIC SIGNALS / IMPLEMENTED_UNVERIFIED
+
+- **BRANCH:** `main`.
+- **SCREEN / DOMAIN:** World / `WORLD → JEFES · RAIDS · PASE`.
+- **BLOCK:** eliminar `—` como sustituto ambiguo de números ausentes.
+- **WHAT CHANGED:** poder, HP, límite de participantes, XP y tier muestran etiquetas explícitas `*_NO REPORTADO`; los números válidos, incluido cero, conservan su formato localizado.
+- **LIVE DATA CHECK:** las fuentes vivas de World continúan respondiendo con la cuenta QA por lectura HTTPS; no se ejecutaron mutaciones.
+- **DATA PRESERVED:** jefes, raids, lore, temporada, rankings, recompensas, joins, contribuciones, RPCs oficiales, Auth, RLS, navegación, accesibilidad, reduced-motion y web congelada.
+- **ASSETS USED:** ninguno nuevo.
+- **MOTION_ADDED:** ninguno.
+- **PERFORMANCE_NOTES:** normalización local de valores ya recibidos; sin solicitudes de red, cálculos de combate, animaciones nuevas ni dependencias.
+- **GATES:** `node scripts/verify-mobile-world.mjs` OK; `git diff --check` limpio. No se inicia workflow Android, no se compila APK ni se publica release por instrucción del operador.
+- **CORE_SCORE:** pendiente de QA visual/táctil en dispositivo.
+- **VISUAL_DEBT_ADDED:** ninguna.
+- **VISUAL_DEBT_REMOVED:** `—` en señales numéricas de World.
+- **STATUS:** `IMPLEMENTED_UNVERIFIED`.
+- **PERSISTENCIA:** código, documento y continuidad se publicarán juntos en `main` mediante la API REST HTTPS oficial de GitHub con `[skip ci]`; sin APK ni release Android nuevo.
+- **NEXT_BLOCK:** continuar con otra unidad Android atómica del protocolo sin tocar la web congelada ni iniciar APK.
+
 ## 2026-09-14 — VE-MOB-12-WORLD — HONEST DATE SIGNALS / IMPLEMENTED_UNVERIFIED
 
 - **BRANCH:** `main`.
