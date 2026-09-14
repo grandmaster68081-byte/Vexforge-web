@@ -61,15 +61,15 @@ function money(value: number | null | undefined) {
 }
 
 function dateLabel(value: string | null | undefined) {
-  if (!value) return 'Fecha no disponible';
+  if (!value?.trim()) return 'FECHA NO REPORTADA';
   const date = new Date(value);
   return Number.isNaN(date.getTime())
-    ? 'Fecha no disponible'
+    ? 'FECHA NO VÁLIDA'
     : date.toLocaleDateString('es-ES', { day: 'numeric', month: 'short', year: 'numeric' }).replace('.', '');
 }
 
 function shortHash(value: string | null | undefined) {
-  if (!value) return 'Sin hash';
+  if (!value?.trim()) return 'HASH NO REPORTADO';
   return value.length > 18 ? `${value.slice(0, 9)}…${value.slice(-7)}` : value;
 }
 

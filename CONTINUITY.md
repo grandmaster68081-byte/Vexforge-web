@@ -1,3 +1,22 @@
+## 2026-09-14 — VE-MOB-11-ECONOMY — HONEST DATE AND HASH SIGNALS / IMPLEMENTED_UNVERIFIED
+
+- **BRANCH:** `main`.
+- **SCREEN / DOMAIN:** Iron Treasury / `ECONOMÍA → DEPÓSITOS + RETIROS + LEDGER`.
+- **BLOCK:** evitar que fechas inválidas parezcan ausentes y que un hash de depósito ausente parezca texto genérico.
+- **WHAT CHANGED:** Economía muestra `FECHA NO REPORTADA` cuando no llega una fecha, `FECHA NO VÁLIDA` cuando llega un valor ilegible y `HASH NO REPORTADO` cuando falta el hash de transacción.
+- **LIVE DATA CHECK:** no se añadieron consultas ni mutaciones; el cambio sólo normaliza fechas y hashes ya entregados por los contratos vivos de Economía.
+- **DATA PRESERVED:** cartera, ledger, mercado, depósitos, retiros, referidos, balances, fórmulas informativas, RPCs, RLS, Auth, navegación, accesibilidad, reduced-motion, assets oficiales y web congelada.
+- **ASSETS USED:** ninguno nuevo.
+- **MOTION_ADDED:** ninguno.
+- **PERFORMANCE_NOTES:** validación local de señales ya cargadas; sin solicitudes nuevas, animaciones ni dependencias.
+- **GATES:** `node scripts/verify-mobile-economy.mjs` y `git diff --check`. No se inicia workflow Android, no se compila APK ni se publica release.
+- **CORE_SCORE:** pendiente de QA visual/táctil en dispositivo.
+- **VISUAL_DEBT_ADDED:** ninguna.
+- **VISUAL_DEBT_REMOVED:** `Fecha no disponible` y `Sin hash` como sustitutos ambiguos de señales ausentes o inválidas.
+- **STATUS:** `IMPLEMENTED_UNVERIFIED`.
+- **PERSISTENCIA:** código, documento y continuidad se publicarán juntos en `main` mediante la API REST HTTPS oficial de GitHub con `[skip ci]`; sin APK ni release Android nuevo.
+- **NEXT_BLOCK:** continuar con otra unidad Android atómica del protocolo sin tocar la web congelada ni iniciar APK.
+
 ## 2026-09-14 — VE-MOB-13-SOCIAL — HONEST DATE SIGNALS / IMPLEMENTED_UNVERIFIED
 
 - **BRANCH:** `main`.
