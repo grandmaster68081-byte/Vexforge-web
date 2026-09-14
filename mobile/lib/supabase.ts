@@ -543,10 +543,10 @@ export type MobileFusableCard = {
   quantity: number;
 };
 export type MobileFusionPolicy = {
-  neededCards: number;
-  requiredShards: number;
-  ingameCost: number;
-  targetRarity: string;
+  neededCards: number | null;
+  requiredShards: number | null;
+  ingameCost: number | null;
+  targetRarity: string | null;
 };
 export type MobileTargetCard = { id: string; name: string; rarity: string };
 export type MobileShardBalance = { rarity: string; quantity: number };
@@ -1704,10 +1704,10 @@ export async function loadMobileFusionPolicy(sourceRarity: string): Promise<Mobi
   const row = Array.isArray(result) ? result[0] : result;
   if (!row) return null;
   return {
-    neededCards: Number(row.needed_cards ?? 0),
-    requiredShards: Number(row.required_shards ?? 0),
-    ingameCost: Number(row.ingame_cost ?? 0),
-    targetRarity: String(row.target_rarity ?? ''),
+    neededCards: typeof row.needed_cards === 'number' && Number.isFinite(row.needed_cards) ? row.needed_cards : null,
+    requiredShards: typeof row.required_shards === 'number' && Number.isFinite(row.required_shards) ? row.required_shards : null,
+    ingameCost: typeof row.ingame_cost === 'number' && Number.isFinite(row.ingame_cost) ? row.ingame_cost : null,
+    targetRarity: typeof row.target_rarity === 'string' && row.target_rarity.trim() ? row.target_rarity.trim() : null,
   };
 }
 

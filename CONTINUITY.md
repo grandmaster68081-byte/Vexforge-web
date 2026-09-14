@@ -1,3 +1,22 @@
+## 2026-09-14 — VE-MOB-10-FUSION — HONEST POLICY SIGNALS / IMPLEMENTED_UNVERIFIED
+
+- **BRANCH:** `main`.
+- **SCREEN / DOMAIN:** Sistemas del Legado / `LEGADO → FORJA → FUSIÓN`.
+- **BLOCK:** fidelidad de políticas de coste y destino de fusión.
+- **WHAT CHANGED:** costes ausentes o inválidos ya no se convierten en cero; una rareza sin fila de política deja de mostrar una carga infinita; la fusión queda bloqueada si la política no está completa.
+- **VISUAL DELTA:** la cámara diferencia regla autoritativa, regla incompleta y ausencia de regla; la cantidad propia de shards tampoco se presenta como cero cuando no fue entregada.
+- **LIVE DATA CHECK:** Supabase vivo devolvió políticas para Common, Uncommon, Rare, Epic y Legendary, y ninguna para Mythic; no se añadieron campos ni datos.
+- **DATA PRESERVED:** RPCs `vexforge_fusion_policy` y `vexforge_apply_fusion`, cartas, shards, inventario, economía, Auth, RLS, assets y navegación.
+- **ASSETS USED:** ninguno nuevo; se mantienen los assets oficiales registrados.
+- **MOTION_ADDED:** ninguno.
+- **PERFORMANCE_NOTES:** una lectura de política y objetivos ya existente; sin red adicional fuera del flujo actual.
+- **HARD_GATES:** no se inicia APK, workflow Android ni release por instrucción del operador; no se declara QA visual/táctil, `PASS`, `OPERATIONAL` ni `TIER1_READY`.
+- **CORE_SCORE:** pendiente de QA visual/táctil en dispositivo.
+- **VISUAL_DEBT_ADDED:** ninguna.
+- **VISUAL_DEBT_REMOVED:** defaults silenciosos de coste, resultado, shards y estado de carga.
+- **STATUS:** `IMPLEMENTED_UNVERIFIED`.
+- **NEXT_BLOCK:** continuar con otra unidad Android atómica del protocolo sin tocar la web congelada ni iniciar APK.
+
 ## 2026-09-14 — VE-MOB-10-PACKS-SHOP — HONEST SHOP TERMS / IMPLEMENTED_UNVERIFIED
 
 - **BRANCH:** `main`.
