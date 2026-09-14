@@ -16,6 +16,7 @@ import { useGame } from '@/context/GameContext';
 import { emitTelemetry } from '@/lib/telemetry';
 import { ScreenShell } from '@/components/ScreenShell';
 import { DomainState } from '@/components/DomainState';
+import { DomainHeader } from '@/components/DomainHeader';
 import {
   claimDailyQuest,
   executeMobileMission,
@@ -230,6 +231,13 @@ export default function MissionsScreen() {
 
   const completedQuests = useMemo(() => quests.filter((quest) => quest.status === 'completed' || quest.status === 'claimed').length, [quests]);
   const cooldownRemaining = (missionId: string) => Math.max(0, Math.ceil(((cooldowns[missionId] ?? 0) - now) / 1000));
+  const activityStatus = loading
+    ? 'SINCRONIZANDO ACTIVIDAD'
+    : error
+      ? 'SIN SEÑAL · TOCA PARA REINTENTAR'
+      : quests.length > 0 || missions.length > 0
+        ? `${quests.length} OBJETIVOS · ${missions.length} MISIONES DISPONIBLES`
+        : 'ROTACIÓN EN ESPERA · SIN ACTIVIDAD ASIGNADA';
 
   const handleClaim = async (assignmentId: string) => {
     if (!session) return;
@@ -289,19 +297,27 @@ export default function MissionsScreen() {
         contentContainerStyle={[styles.content, { paddingBottom: insets.bottom + 32 }]}
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={() => load(true)} tintColor={colors.accent} />}
       >
-        <View style={styles.topBar}>
-          <Pressable accessibilityRole="button" accessibilityLabel="Volver" onPress={() => router.back()} style={styles.backButton}>
-            <Ionicons name="arrow-back" size={22} color={colors.foreground} />
-          </Pressable>
-          <View style={styles.heading}>
-            <Text style={[styles.eyebrow, { color: colors.accent }]}>CENTRO DE ACTIVIDAD</Text>
-            <Text style={[styles.title, { color: colors.foreground }]}>Misiones y recompensas</Text>
-          </View>
-          <View style={[styles.energyPill, { backgroundColor: colors.panel, borderColor: colors.border }]}>
+        <DomainHeader
+          domain="foja"
+          status={activityStatus}
+          trailing={(
+            <Pressable
+              testID="missions-back"
+              accessibilityRole="button"
+              accessibilityLabel="Volver al Nexus"
+              onPress={() => router.back()}
+              style={({ pressed }) => [styles.backButton, { opacity: pressed ? 0.65 : 1, transform: [{ translateY: pressed ? 1 : 0 }] }]}
+            >
+              <Ionicons name="arrow-back" size={22} color={colors.foreground} />
+            </Pressable>
+          )}
+        >
+          <View testID="missions-energy-signal" style={[styles.energyPill, { backgroundColor: colors.panel, borderColor: colors.border }]}>
             <Ionicons name="flash" size={14} color={colors.rarityRare} />
             <Text style={[styles.energyPillText, { color: colors.foreground }]}>{progress?.energy ?? '—'}</Text>
+            <Text style={[styles.energyPillLabel, { color: colors.mutedForeground }]}>ENERGÍA</Text>
           </View>
-        </View>
+        </DomainHeader>
 
         {actionMessage ? (
           <View accessibilityRole="alert" style={[styles.message, { backgroundColor: `${colors.success}16`, borderColor: `${colors.success}66` }]}>
@@ -364,16 +380,14 @@ export default function MissionsScreen() {
 const styles = StyleSheet.create({
   screen: { flex: 1 },
   content: { paddingHorizontal: 18, paddingTop: 14 },
-  topBar: { flexDirection: 'row', alignItems: 'center', gap: 12, marginBottom: 22 },
   backButton: { width: 38, height: 38, borderRadius: 19, alignItems: 'center', justifyContent: 'center' },
-  heading: { flex: 1 },
   eyebrow: { fontSize: 10, fontWeight: '700', letterSpacing: 1.5 },
-  title: { fontSize: 23, fontWeight: '700', marginTop: 4 },
   sectionHeading: { flexDirection: 'row', alignItems: 'flex-end', justifyContent: 'space-between', marginBottom: 11 },
   sectionTitle: { fontSize: 19, fontWeight: '700', marginTop: 4 },
   count: { fontSize: 10, fontWeight: '700', letterSpacing: 1 },
   energyPill: { flexDirection: 'row', alignItems: 'center', gap: 5, borderWidth: 1, borderRadius: 18, paddingHorizontal: 11, paddingVertical: 8 },
   energyPillText: { fontSize: 13, fontWeight: '700' },
+  energyPillLabel: { fontSize: 9, fontWeight: '800', letterSpacing: 0.8 },
   message: { flexDirection: 'row', alignItems: 'center', gap: 9, borderWidth: 1, borderRadius: 12, padding: 12, marginBottom: 18 },
   messageText: { flex: 1, fontSize: 12, lineHeight: 17 },
   questCard: { borderWidth: 1, borderRadius: 15, padding: 15, marginBottom: 11 },

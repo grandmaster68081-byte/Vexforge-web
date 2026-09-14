@@ -1,3 +1,14 @@
+## 2026-09-13 — VE-MOB-8-REWARDS — NEXUS IDENTITY / IMPLEMENTED_UNVERIFIED
+
+- **TARGET:** centro Android de Misiones y Recompensas en `mobile/app/missions.tsx`.
+- **QUÉ CAMBIÓ:** la pantalla se ancla al Nexus mediante `DomainHeader` con `domain="foja"`; el encabezado comunica sincronización, error, actividad real o rotación vacía usando sólo estados y conteos recibidos. Energía conserva `progress.energy`; el regreso al Nexus tiene profundidad táctil.
+- **CONTRATOS PRESERVADOS:** quests y misiones vivas, reclamación por `claim_daily_quest`, ejecución por `execute_mission`/`claim_mission_reward`, cooldowns, VEX, XP, T-VEX, estados, telemetría, accesibilidad y rutas. No se tocan Supabase, RLS, RPCs, Auth, economía ni assets.
+- **ARCHIVOS:** `mobile/app/missions.tsx`; `scripts/verify-mobile-rewards.mjs`; `docs/VE-MOB-8-REWARDS-NEXUS-IDENTITY.md`.
+- **GATES:** `verify-mobile-rewards` pasa 15/15, `verify-motion` pasa 17/17, `verify-uxcx-domain-identity` pasa 5/5 y `git diff --check` queda limpio. El typecheck móvil queda diferido porque esta copia no incluye `mobile/node_modules`; no se compila APK ni se inicia workflow por instrucción explícita del operador.
+- **ESTADO HONESTO:** `IMPLEMENTED_UNVERIFIED`; no se declara `PASS`, `OPERATIONAL` ni `TIER1_READY`.
+- **PERSISTENCIA:** pendiente de publicación HTTPS en `main` con `[skip ci]`; no se compila APK ni se inicia workflow por instrucción explícita del operador.
+- **SIGUIENTE BLOQUE:** continuar con la siguiente unidad Android verificable sin reabrir este contrato de actividad.
+
 ## 2026-09-13 — VE-MOB-2-AUTH — NEXUS GATE / IMPLEMENTED_UNVERIFIED
 
 - **TARGET:** puerta de acceso Android en `mobile/app/auth.tsx`, como siguiente unidad explícita del rollout global después de Legado.
