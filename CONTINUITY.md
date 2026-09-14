@@ -1,3 +1,22 @@
+## 2026-09-14 — VE-MOB-7-BATTLE — HONEST TURN DETAIL SIGNALS / IMPLEMENTED_UNVERIFIED
+
+- **BRANCH:** `main`.
+- **SCREEN / DOMAIN:** Arena / `ARENA → FORGEFORMATION → REPLAY DE TURNO`.
+- **BLOCK:** fidelidad de identidad, facción, rareza, HP, daño y unidades activas cuando el detalle del turno no entrega una señal.
+- **WHAT CHANGED:** el replay Android conserva los valores vivos; actor, facción, rareza, HP actual/máximo, daño y conteo de unidades ausentes muestran estados explícitos. El daño confirmado igual a cero permanece visible y los eventos desconocidos conservan su código recibido.
+- **LIVE DATA CHECK:** se conserva el detalle de turno entregado por `vexforge_battle_resolve`; no se añadieron datos, simulaciones, RPCs ni autoridad local.
+- **DATA PRESERVED:** ForgeFormation, Battle Run, event log, replay, settlement, MMR, recompensas, Auth, RLS, navegación, accesibilidad, reduced-motion, assets oficiales y web congelada.
+- **ASSETS USED:** ninguno nuevo.
+- **MOTION_ADDED:** ninguno; se conserva el pulso contextual y la protección de reduced-motion.
+- **PERFORMANCE_NOTES:** normalización local de señales ya cargadas; sin solicitudes de red, animaciones nuevas ni dependencias añadidas.
+- **GATES:** `node scripts/verify-mobile-battle.mjs` y `git diff --check` deben pasar. No se compila APK, no se inicia workflow Android ni se publica release por instrucción del operador.
+- **CORE_SCORE:** pendiente de QA visual/táctil en dispositivo.
+- **VISUAL_DEBT_ADDED:** ninguna.
+- **VISUAL_DEBT_REMOVED:** `Unidad no disponible`, facción derivada del lado, rareza `REGISTRO OFICIAL`, daño `0` y guiones ambiguos para conteos ausentes.
+- **STATUS:** `IMPLEMENTED_UNVERIFIED`.
+- **PERSISTENCIA:** pendiente de publicar código y continuidad en `main` mediante la API REST HTTPS oficial de GitHub con `[skip ci]`; sin APK ni release Android nuevo.
+- **NEXT_BLOCK:** continuar con otra unidad Android atómica del protocolo sin tocar la web congelada ni iniciar APK.
+
 ## 2026-09-14 — VE-MOB-8-REWARDS — HONEST ENERGY SIGNAL / IMPLEMENTED_UNVERIFIED
 
 - **BRANCH:** `main`.

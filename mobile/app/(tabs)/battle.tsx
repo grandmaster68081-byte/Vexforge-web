@@ -66,6 +66,15 @@ function hpPercent(hp: number | undefined, max: number | undefined) {
   return Math.max(0, Math.min(100, (hp / max) * 100));
 }
 
+function textSignal(value: string | null | undefined, fallback: string) {
+  const normalized = value?.trim();
+  return normalized || fallback;
+}
+
+function numberSignal(value: number | null | undefined, fallback: string) {
+  return typeof value === 'number' && Number.isFinite(value) ? String(value) : fallback;
+}
+
 function ReplayProgress({ turnIndex, totalTurns, colors }: { turnIndex: number; totalTurns: number; colors: ReturnType<typeof useColors> }) {
   const total = Math.max(totalTurns, 1);
   const current = Math.min(turnIndex + 1, total);
@@ -192,23 +201,30 @@ function BattleCard({
 }) {
   const accent = factionColor(actor?.faction, colors);
   const percent = hpPercent(actor?.hp, actor?.max_hp);
+  const name = textSignal(actor?.name, 'IDENTIDAD NO REPORTADA');
+  const faction = textSignal(actor?.faction, 'FACCIÓN NO REPORTADA');
+  const rarity = textSignal(actor?.rarity, 'RAREZA NO REPORTADA');
   return (
     <View style={[styles.unitCard, { backgroundColor: colors.panel, borderColor: actor ? accent : colors.border }]}>
       <View style={styles.unitHeader}>
         <Text style={[styles.unitSide, { color: colors.mutedForeground }]}>{label}</Text>
-        <Text style={[styles.unitFaction, { color: accent }]}>{actor?.faction ?? side}</Text>
+        <Text style={[styles.unitFaction, { color: accent }]}>{faction}</Text>
       </View>
       <View style={[styles.unitSeal, { borderColor: `${accent}88`, backgroundColor: `${accent}14` }]}>
         <Feather name={side === 'a' ? 'zap' : 'target'} size={19} color={accent} />
       </View>
-      <Text style={[styles.unitName, { color: colors.foreground }]} numberOfLines={2}>{actor?.name ?? 'Unidad no disponible'}</Text>
-      <Text style={[styles.unitRarity, { color: accent }]}>{actor?.rarity ?? 'REGISTRO OFICIAL'}</Text>
-      {percent !== null ? (
+      <Text style={[styles.unitName, { color: colors.foreground }]} numberOfLines={2}>{name}</Text>
+      <Text style={[styles.unitRarity, { color: accent }]}>{rarity}</Text>
+      {actor ? (
         <>
-          <View style={[styles.hpTrack, { backgroundColor: colors.muted }]}>
-            <View style={[styles.hpFill, { width: `${percent}%`, backgroundColor: percent > 35 ? colors.success : colors.danger }]} />
-          </View>
-          <Text style={[styles.hpText, { color: colors.mutedForeground }]}>{actor?.hp} / {actor?.max_hp} HP</Text>
+          {percent !== null ? (
+            <View style={[styles.hpTrack, { backgroundColor: colors.muted }]}>
+              <View style={[styles.hpFill, { width: `${percent}%`, backgroundColor: percent > 35 ? colors.success : colors.danger }]} />
+            </View>
+          ) : null}
+          <Text style={[styles.hpText, { color: colors.mutedForeground }]}>
+            {numberSignal(actor.hp, 'HP ACTUAL NO REPORTADO')} / {numberSignal(actor.max_hp, 'HP MÁXIMO NO REPORTADO')} HP
+          </Text>
         </>
       ) : null}
     </View>
@@ -227,14 +243,14 @@ function TurnView({
   colors: ReturnType<typeof useColors>;
 }) {
   const attackerSide = turn.atk_side === 'b' ? 'b' : 'a';
-  const damage = typeof turn.damage === 'number' ? turn.damage : 0;
+  const damage = typeof turn.damage === 'number' && Number.isFinite(turn.damage) ? turn.damage : null;
   const eventLabels = (turn.events ?? []).map((event) => {
     if (event.type === 'shield_block') return 'Barrera activada';
     if (event.type === 'poisoned' || event.type === 'poison_tick') return 'Veneno';
     if (event.type === 'lifesteal') return 'Drenaje';
     if (event.type === 'double_strike') return 'Doble golpe';
     if (event.type === 'poison_death') return 'Unidad derrotada';
-    return 'Efecto de carta';
+    return `EVENTO ${textSignal(event.type, 'NO REPORTADO').toUpperCase()}`;
   });
   return (
     <View testID="battle-turn-view" accessibilityLiveRegion="polite">
@@ -246,8 +262,12 @@ function TurnView({
         <BattleCard label={attackerSide === 'a' ? 'TU UNIDAD' : 'OPONENTE'} actor={turn.attacker} side={attackerSide} colors={colors} />
         <View style={styles.impact}>
           <Text style={[styles.impactLabel, { color: colors.mutedForeground }]}>IMPACTO</Text>
-          <Text style={[styles.damage, { color: turn.is_crit ? colors.accent : colors.danger }]}>{damage}</Text>
-          <Text style={[styles.impactType, { color: turn.is_kill ? colors.danger : colors.mutedForeground }]}>{turn.is_kill ? 'DERROTA' : turn.is_crit ? 'CRÍTICO' : 'DAÑO'}</Text>
+          <Text style={[styles.damage, { color: turn.is_crit ? colors.accent : damage === null ? colors.mutedForeground : colors.danger }]}>
+            {damage === null ? 'DAÑO NO REPORTADO' : damage}
+          </Text>
+          <Text style={[styles.impactType, { color: turn.is_kill ? colors.danger : turn.is_crit ? colors.accent : colors.mutedForeground }]}>
+            {turn.is_kill ? 'DERROTA' : turn.is_crit ? 'CRÍTICO' : damage === null ? 'SEÑAL PENDIENTE' : 'DAÑO'}
+          </Text>
         </View>
         <BattleCard label={attackerSide === 'a' ? 'OPONENTE' : 'TU UNIDAD'} actor={turn.defender} side={attackerSide === 'a' ? 'b' : 'a'} colors={colors} />
       </View>
@@ -259,7 +279,9 @@ function TurnView({
       ) : null}
       <View style={styles.aliveRow}>
         <Text style={[styles.aliveText, { color: colors.mutedForeground }]}>Unidades activas</Text>
-        <Text style={[styles.aliveText, { color: colors.foreground }]}>Tú {turn.alive_a ?? '—'} · Rival {turn.alive_b ?? '—'}</Text>
+        <Text style={[styles.aliveText, { color: colors.foreground }]}>
+          Tú {numberSignal(turn.alive_a, 'NO REPORTADO')} · Rival {numberSignal(turn.alive_b, 'NO REPORTADO')}
+        </Text>
       </View>
     </View>
   );
