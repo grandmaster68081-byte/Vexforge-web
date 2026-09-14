@@ -63,6 +63,7 @@ const assertions = [
   ['no emoji characters in deck UI', !/[\u{1F000}-\u{1FAFF}]/u.test(contents.screen)],
   ['missing art is explicit, not generic', contents.screen.includes('ARTE CANÓNICO PENDIENTE') && !contents.screen.includes('Feather name="layers"')],
   ['forge actions expose diegetic press depth', contents.screen.includes('testID="validate-deck"') && contents.screen.includes('opacity: pressed ? 0.78 : 1') && contents.screen.includes('testID="save-deck"') && contents.screen.includes('opacity: saving ? 0.7 : pressed ? 0.82 : 1')],
+  ['deck does not present zero metrics without an active formation', contents.screen.includes("hasSavedDeck ? savedSummary.cardCount : '—'") && contents.screen.includes("hasSavedDeck ? savedSummary.power : '—'") && contents.screen.includes("hasSavedDeck ? savedSummary.factionLabel : '—'") && !contents.screen.includes('summary?.cardCount ?? 0')],
 ];
 
 const failures = assertions.filter(([, passed]) => !passed).map(([name]) => name);

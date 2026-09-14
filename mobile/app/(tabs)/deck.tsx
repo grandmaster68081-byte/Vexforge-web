@@ -135,7 +135,7 @@ function DeckPreviewCard({
       ) : (
         <View style={styles.deckPreviewCopy}>
           <Text style={[styles.deckPreviewName, { color: colors.foreground }]} numberOfLines={1}>MAZO ACTIVO</Text>
-          <Text style={[styles.deckPreviewFaction, { color: accent }]}>{summary?.cardCount ?? 0} CARTAS · {summary?.factionLabel ?? '—'}</Text>
+          <Text style={[styles.deckPreviewFaction, { color: accent }]}>{summary?.cardCount ?? '—'} CARTAS · {summary?.factionLabel ?? '—'}</Text>
           <Feather name="more-horizontal" size={17} color={colors.foreground} />
         </View>
       )}
@@ -507,11 +507,11 @@ export default function DeckScreen() {
           <View style={styles.programmaticDeckRow}>
             <DeckPreviewCard slot={selectedPreview ?? undefined} summary={savedSummary} colors={colors} width={Math.max(132, frameWidth * 0.43)} active={hasSavedDeck} onPress={hasSavedDeck ? () => setEditing(true) : handleCreate} />
             <View style={styles.programmaticStats}>
-              <Text style={[styles.programmaticStatValue, { color: colors.foreground }]}>{savedSummary.cardCount}</Text>
+              <Text style={[styles.programmaticStatValue, { color: colors.foreground }]}>{hasSavedDeck ? savedSummary.cardCount : '—'}</Text>
               <Text style={[styles.programmaticStatLabel, { color: colors.mutedForeground }]}>CARTAS</Text>
-              <Text style={[styles.programmaticStatValue, { color: colors.foreground }]}>{savedSummary.power}</Text>
+              <Text style={[styles.programmaticStatValue, { color: colors.foreground }]}>{hasSavedDeck ? savedSummary.power : '—'}</Text>
               <Text style={[styles.programmaticStatLabel, { color: colors.mutedForeground }]}>PODER</Text>
-              <Text style={[styles.programmaticStatValue, { color: factionColor(savedSummary.primaryFaction ?? '', colors) }]}>{savedSummary.factionLabel}</Text>
+              <Text style={[styles.programmaticStatValue, { color: factionColor(savedSummary.primaryFaction ?? '', colors) }]}>{hasSavedDeck ? savedSummary.factionLabel : '—'}</Text>
               <Text style={[styles.programmaticStatLabel, { color: colors.mutedForeground }]}>FACCIONES</Text>
             </View>
           </View>
