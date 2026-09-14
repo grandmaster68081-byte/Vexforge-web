@@ -4,7 +4,9 @@
 - **FUENTE:** sólo `BattleResult.elo_change`; `client_ai_v1` mantiene `—` porque la práctica no modifica MMR.
 - **ARCHIVOS:** `mobile/app/(tabs)/battle.tsx`; `scripts/verify-mobile-battle.mjs`; `docs/VE-MOB-7-BATTLE-MMR-NEUTRALITY.md`.
 - **LÍMITES:** no se tocaron Supabase, RPCs, RLS, Auth, economía, combate, assets ni la web congelada. No se inició workflow Android, no se compiló APK y no se generó release.
-- **ESTADO HONESTO:** `IMPLEMENTED_UNVERIFIED`; la guarda local, el typecheck y la QA visual/táctil en APK siguen pendientes de registro/autorización.
+- **PERSISTENCIA:** cambio publicado en `main` mediante la API REST HTTPS de GitHub en el commit `97e1cbe4382e9a79930067daf96acbc772a45a20` con `[skip ci]`, por lo que no se inició el workflow Android.
+- **EVIDENCIA LOCAL:** `verify:mobile-battle` pasa 26/26. El typecheck del clon sigue bloqueado porque faltan las dependencias Expo (`expo/tsconfig.base` y módulos nativos); no se presenta ese bloqueo del entorno como un fallo del delta.
+- **ESTADO HONESTO:** `IMPLEMENTED_UNVERIFIED`; la QA visual/táctil en APK y el release correlativo siguen pendientes de autorización.
 - **SIGUIENTE BLOQUE:** continuar sólo con otro delta Android atómico que mejore fidelidad de datos o identidad de Arena sin reabrir contratos.
 
 ## 2026-09-13 — VE-MOB-7-BATTLE — DRAW OUTCOME FIDELITY / IMPLEMENTED_UNVERIFIED
