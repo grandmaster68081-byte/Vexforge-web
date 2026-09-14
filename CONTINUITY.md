@@ -1,3 +1,22 @@
+## 2026-09-14 — VE-MOB-8-REWARDS — HONEST ENERGY SIGNAL / IMPLEMENTED_UNVERIFIED
+
+- **BRANCH:** `main`.
+- **SCREEN / DOMAIN:** `FOJA → MISIONES Y RECOMPENSAS`.
+- **BLOCK:** no convertir energía ausente en un guion ambiguo en la cabecera de Misiones.
+- **WHAT CHANGED:** la píldora de energía usa `numberSignal`, conserva el cero confirmado y muestra `ENERGÍA NO REPORTADO` cuando el valor no está publicado.
+- **LIVE DATA CHECK:** sesión QA autenticada de solo lectura contra Supabase oficial; `players` y `player_progress` resolvieron 1 registro y energía/máxima energía presentes. No se ejecutaron mutaciones.
+- **DATA PRESERVED:** quests, misiones, progreso, recompensas, RPCs autoritativas, Auth, RLS, navegación, accesibilidad, reduced-motion, assets oficiales y web congelada.
+- **ASSETS USED:** ninguno nuevo.
+- **MOTION_ADDED:** ninguno.
+- **PERFORMANCE_NOTES:** sólo presentación de un valor ya cargado; sin solicitudes nuevas, animación ni dependencia añadida.
+- **GATES:** `node scripts/verify-mobile-rewards.mjs` OK, 17/17; `git diff --check` limpio. No se inicia workflow, no se compila APK y no se publica release Android por instrucción del operador.
+- **CORE_SCORE:** pendiente de QA visual/táctil en dispositivo.
+- **VISUAL_DEBT_ADDED:** ninguna.
+- **VISUAL_DEBT_REMOVED:** placeholder `—` para energía ausente.
+- **STATUS:** `IMPLEMENTED_UNVERIFIED`.
+- **PERSISTENCIA:** código y documentación publicados en `main` mediante la API REST HTTPS oficial de GitHub en `ae22e7d7ea2e3f21b70677c988c56a32b834f135` con `[skip ci]`; continuidad pendiente de su commit de registro.
+- **NEXT_BLOCK:** continuar con otra unidad Android atómica sólo después de registrar este bloque.
+
 ## 2026-09-14 — VE-MOB-13-SOCIAL — HONEST SOCIAL PARTICIPATION SIGNALS / IMPLEMENTED_UNVERIFIED
 
 - **BRANCH:** `main`.
