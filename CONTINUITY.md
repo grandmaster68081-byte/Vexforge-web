@@ -15,7 +15,7 @@
 - **VISUAL_DEBT_ADDED:** ninguna.
 - **VISUAL_DEBT_REMOVED:** `Forjador`, MMR `1000`, victorias/derrotas `0` y diferencias derivadas como sustitutos de señales no reportadas.
 - **STATUS:** `IMPLEMENTED_UNVERIFIED`.
-- **PERSISTENCIA:** pendiente de publicar en `main` mediante la API REST HTTPS oficial de GitHub con `[skip ci]`; no se generará release Android.
+- **PERSISTENCIA:** código publicado en `main` mediante la API REST HTTPS oficial de GitHub en `1989c44c775abe661ccd69e84514467239caf3f8` con `[skip ci]`; no se generará release Android.
 - **NEXT_BLOCK:** continuar con otra mejora Android atómica del protocolo sin tocar la web congelada ni iniciar APK.
 
 ## 2026-09-13 — VE-MOB-12-WORLD — HONEST RANKING METRICS / IMPLEMENTED_UNVERIFIED
