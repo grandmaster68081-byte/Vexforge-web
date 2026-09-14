@@ -1,3 +1,22 @@
+## 2026-09-14 — VE-MOB-13-SOCIAL — HONEST RANKING SIGNALS / IMPLEMENTED_UNVERIFIED
+
+- **BRANCH:** `main`.
+- **SCREEN / DOMAIN:** Red de Forjadores / `LEGADO → SOCIAL → ARENA`.
+- **BLOCK:** fidelidad de MMR, victorias, derrotas, empates y puesto cuando `get_public_pvp_rankings` no entrega una señal.
+- **WHAT CHANGED:** la lectura móvil conserva métricas y puesto como `null`; Social y Perfil muestran `NO REPORTADO` cuando faltan y preservan los ceros confirmados, incluido el porcentaje 0% de un récord confirmado sin victorias.
+- **LIVE DATA CHECK:** se conserva `loadSocialSnapshot`, `get_public_pvp_rankings`, el historial y las acciones RPC; no se añadieron campos, datos, contratos ni autoridad local.
+- **DATA PRESERVED:** amigos, solicitudes, desafíos, clanes, roster, guerras, ranking, combates, Auth, RLS, navegación, accesibilidad, reduced-motion, assets y web congelada.
+- **ASSETS USED:** ninguno nuevo; se mantienen los assets oficiales de Social/Legado.
+- **MOTION_ADDED:** ninguno; se conserva la interacción táctil existente.
+- **PERFORMANCE_NOTES:** validación finita local sobre la respuesta ya cargada; sin solicitudes, animaciones o dependencias nuevas.
+- **GATES:** `node scripts/verify-mobile-social.mjs` OK, 12/12; `git diff --check` limpio. El typecheck móvil queda diferido porque el clon oficial no incluye `mobile/node_modules`; no se compila APK, no se inicia workflow y no se publica release por instrucción del operador.
+- **CORE_SCORE:** pendiente de QA visual/táctil en dispositivo.
+- **VISUAL_DEBT_ADDED:** ninguna.
+- **VISUAL_DEBT_REMOVED:** MMR, récord, puesto y porcentaje `0` inventados para señales ausentes.
+- **STATUS:** `IMPLEMENTED_UNVERIFIED`.
+- **PERSISTENCIA:** se publicará en `main` mediante la API REST HTTPS oficial de GitHub con `[skip ci]`; sin APK ni release Android nuevo.
+- **NEXT_BLOCK:** continuar con otra mejora Android atómica verificable sin tocar la web congelada ni iniciar APK.
+
 ## 2026-09-14 — VE-MOB-7-BATTLE — HONEST BATTLEFIELD SIGNALS / IMPLEMENTED_UNVERIFIED
 
 - **BRANCH:** `main`.

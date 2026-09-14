@@ -21,6 +21,8 @@ const assertions = [
   ['domain header supports a local subject without losing identity', contents.header.includes('title ?? identity.title') && contents.header.includes('purpose ?? identity.purpose')],
   ['loading error empty and refresh states remain explicit', contents.screen.includes('social-loading') && contents.screen.includes('social-error') && contents.screen.includes('EmptyState') && contents.screen.includes('RefreshControl')],
   ['missing social identity stays explicit', contents.screen.includes('IDENTIDAD NO REPORTADA') && contents.screen.includes('DESCRIPCIÓN NO REPORTADA') && !contents.screen.includes('Forjador #')],
+  ['social ranking preserves absent metrics', contents.supabase.includes('mmr: number | null') && contents.supabase.includes('rank_position: number | null') && contents.supabase.includes('typeof row.mmr === \'number\'') && contents.screen.includes("rankingMetric(entry.mmr, 'MMR')") && contents.screen.includes('PUESTO NO REPORTADO') && contents.screen.includes('PORCENTAJE NO REPORTADO')],
+  ['social ranking preserves confirmed zero metrics', contents.screen.includes('rankingWinRate') && contents.screen.includes('total > 0 ?') && !contents.supabase.includes('mmr: Number(row.mmr ?? 0)')],
   ['social actions expose accessible controls', contents.screen.includes('accessibilityRole="button"') && contents.screen.includes('accessibilityRole="tab"') && contents.screen.includes('testID="social-screen"')],
   ['no client-side authority or emoji UI was added', !contents.screen.includes('Math.random') && !/[\u{1F000}-\u{1FAFF}]/u.test(contents.screen)],
 ];

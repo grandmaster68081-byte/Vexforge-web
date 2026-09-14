@@ -71,6 +71,10 @@ function number(value: number | null | undefined) {
   return typeof value === 'number' ? value.toLocaleString('es-ES') : '—';
 }
 
+function socialRankingValue(value: number | null | undefined, label: string) {
+  return typeof value === 'number' && Number.isFinite(value) ? value.toLocaleString('es-ES') : `${label} NO REPORTADO`;
+}
+
 function rankLabel(rank: PlayerRank | null) {
   return rank?.tier?.toUpperCase() || 'SIN RANGO';
 }
@@ -240,7 +244,7 @@ function PanelContent({
         })}</ScrollView> : <Text style={[styles.modalMuted, { color: colors.mutedForeground }]}>No hay combates registrados.</Text>
       ) : null}
       {panel === 'ranking' ? (
-        social === null ? <Text testID="profile-ranking-pending" style={[styles.modalMuted, { color: colors.mutedForeground }]}>RANKING EN ESPERA · SINCRONIZACIÓN NO CONFIRMADA</Text> : social.rankings.length ? <ScrollView style={styles.modalList}>{social.rankings.map((entry) => <View key={entry.player_id} style={[styles.modalRow, { borderColor: entry.player_id === playerId ? colors.accent : colors.border }]}><Text style={[styles.modalRank, { color: entry.player_id === playerId ? colors.accent : colors.mutedForeground }]}>#{entry.rank_position}</Text><View style={styles.modalRowCopy}><Text style={[styles.modalRowTitle, { color: colors.foreground }]}>{entry.display_name ?? '—'}{entry.player_id === playerId ? ' · TÚ' : ''}</Text><Text style={[styles.modalMuted, { color: colors.mutedForeground }]}>{entry.mmr} ELO · {entry.wins}V / {entry.losses}D</Text></View><Ionicons name="shield-outline" size={18} color={colors.accent} /></View>)}</ScrollView> : <Text style={[styles.modalMuted, { color: colors.mutedForeground }]}>El ranking de temporada todavía no está disponible.</Text>
+        social === null ? <Text testID="profile-ranking-pending" style={[styles.modalMuted, { color: colors.mutedForeground }]}>RANKING EN ESPERA · SINCRONIZACIÓN NO CONFIRMADA</Text> : social.rankings.length ? <ScrollView style={styles.modalList}>{social.rankings.map((entry) => <View key={entry.player_id} style={[styles.modalRow, { borderColor: entry.player_id === playerId ? colors.accent : colors.border }]}><Text style={[styles.modalRank, { color: entry.player_id === playerId ? colors.accent : colors.mutedForeground }]}>{typeof entry.rank_position === 'number' && Number.isFinite(entry.rank_position) ? `#${entry.rank_position}` : 'PUESTO NO REPORTADO'}</Text><View style={styles.modalRowCopy}><Text style={[styles.modalRowTitle, { color: colors.foreground }]}>{entry.display_name ?? 'NOMBRE NO RESUELTO'}{entry.player_id === playerId ? ' · TÚ' : ''}</Text><Text style={[styles.modalMuted, { color: colors.mutedForeground }]}>{socialRankingValue(entry.mmr, 'MMR')} ELO · {socialRankingValue(entry.wins, 'VICTORIAS')}V / {socialRankingValue(entry.losses, 'DERROTAS')}D</Text></View><Ionicons name="shield-outline" size={18} color={colors.accent} /></View>)}</ScrollView> : <Text style={[styles.modalMuted, { color: colors.mutedForeground }]}>El ranking de temporada todavía no está disponible.</Text>
       ) : null}
     </View>
   );
