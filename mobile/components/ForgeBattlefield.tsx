@@ -78,8 +78,8 @@ function eventLabel(turn: BattleTurn | null) {
 function hpPercent(unit: BattleUnit) {
   const hp = unit.hp;
   const max = unit.max_hp;
-  if (typeof hp !== 'number' || !Number.isFinite(hp) || typeof max !== 'number' || !Number.isFinite(max)) return 0;
-  return max > 0 ? Math.max(0, Math.min(100, (hp / max) * 100)) : 0;
+  if (typeof hp !== 'number' || !Number.isFinite(hp) || typeof max !== 'number' || !Number.isFinite(max) || max <= 0) return null;
+  return Math.max(0, Math.min(100, (hp / max) * 100));
 }
 
 function UnitCard({
@@ -101,7 +101,7 @@ function UnitCard({
 }) {
   const pulse = useRef(new Animated.Value(1)).current;
   const accent = unit ? factionColor(unit.faction, colors) : colors.border;
-  const percent = unit ? hpPercent(unit) : 0;
+  const percent = unit ? hpPercent(unit) : null;
   const name = unit ? textSignal(unit.name, 'IDENTIDAD NO REPORTADA') : 'POSICIÓN VACÍA';
   const faction = unit ? textSignal(unit.faction, 'FACCIÓN NO REPORTADA') : 'UNIDAD NO REPORTADA';
 
@@ -149,9 +149,11 @@ function UnitCard({
       <Text style={[styles.unitFaction, { color: accent }]} numberOfLines={1}>{faction}</Text>
       {unit ? (
         <>
-          <View style={[styles.hpTrack, { backgroundColor: colors.muted }]}>
-            <View style={[styles.hpFill, { width: `${percent}%`, backgroundColor: percent > 35 ? colors.success : colors.danger }]} />
-          </View>
+          {percent !== null ? (
+            <View style={[styles.hpTrack, { backgroundColor: colors.muted }]}>
+              <View style={[styles.hpFill, { width: `${percent}%`, backgroundColor: percent > 35 ? colors.success : colors.danger }]} />
+            </View>
+          ) : null}
           <Text style={[styles.hpText, { color: colors.mutedForeground }]}>{hpSignal(unit)}</Text>
           <View style={styles.keywordRow}>
             {(unit.keywords ?? []).slice(0, 2).map((keyword) => (
@@ -301,7 +303,7 @@ export function ForgeBattlefield({ finalUnits, currentTurn, turnIndex, totalTurn
           <Text style={[styles.title, { color: colors.foreground }]}>CAMPO DE BATALLA</Text>
         </View>
         <View style={[styles.turnBadge, { borderColor: colors.primary, backgroundColor: `${colors.primary}18` }]}>
-          <Text style={[styles.turnValue, { color: colors.primary }]}>{currentTurn ? `${turnIndex + 1}/${totalTurns}` : '—'}</Text>
+          <Text style={[styles.turnValue, { color: colors.primary }]}>{currentTurn && totalTurns > 0 ? `${turnIndex + 1}/${totalTurns}` : 'NO REPORTADO'}</Text>
           <Text style={[styles.turnLabel, { color: colors.mutedForeground }]}>TURNO</Text>
         </View>
       </View>

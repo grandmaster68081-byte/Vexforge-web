@@ -1,3 +1,22 @@
+## 2026-09-14 — VE-MOB-7-BATTLE — HONEST BATTLEFIELD HP AND TURN STATUS / IMPLEMENTED_UNVERIFIED
+
+- **BRANCH:** `main`.
+- **SCREEN / DOMAIN:** Arena / `ARENA → FORGEFORMATION → CAMPO DE BATALLA`.
+- **BLOCK:** evitar que HP ausente se vea como una barra vacía y que un turno ausente se vea como `—`.
+- **WHAT CHANGED:** la barra de HP sólo se dibuja con HP actual y máximo finitos y máximo positivo; el indicador de turno muestra `NO REPORTADO` sin turno autoritativo utilizable.
+- **LIVE DATA CHECK:** se conserva el contrato vivo de `BattleUnit` y `BattleTurn`; no se añadieron campos ni datos.
+- **DATA PRESERVED:** event log, turnos, HP, daño, formación, ganador, replay, RPC oficial, Auth, RLS, economía, accesibilidad, reduced-motion y web congelada.
+- **ASSETS USED:** ninguno nuevo; se mantienen arte y registros oficiales.
+- **MOTION_ADDED:** ninguno.
+- **PERFORMANCE_NOTES:** guardas locales sobre señales ya cargadas; sin solicitudes de red, animaciones nuevas ni dependencias.
+- **GATES:** `node scripts/verify-mobile-battle.mjs` y `git diff --check`; no se inicia workflow Android, no se compila APK ni se publica release por instrucción del operador.
+- **CORE_SCORE:** pendiente de QA visual/táctil en dispositivo.
+- **VISUAL_DEBT_ADDED:** ninguna.
+- **VISUAL_DEBT_REMOVED:** barra vacía para HP ausente y guion ambiguo para turno ausente.
+- **STATUS:** `IMPLEMENTED_UNVERIFIED`.
+- **PERSISTENCIA:** código, gate, documento y continuidad se publicarán juntos en `main` mediante la API REST HTTPS oficial de GitHub con `[skip ci]`; sin APK ni release Android nuevo.
+- **NEXT_BLOCK:** continuar con otra unidad Android atómica del protocolo sin tocar la web congelada ni iniciar APK.
+
 ## 2026-09-14 — VE-MOB-12-WORLD — HONEST RAID IDENTITY / IMPLEMENTED_UNVERIFIED
 
 - **BRANCH:** `main`.
