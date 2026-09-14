@@ -67,8 +67,16 @@ const PROFILE_HOTSPOTS: Array<{
   { id: 'nav-profile', label: 'Perfil', left: '80%', top: '91%', width: '20%', height: '9%', action: 'profile' },
 ];
 
-function number(value: number | null | undefined) {
-  return typeof value === 'number' ? value.toLocaleString('es-ES') : '—';
+function number(value: number | null | undefined, missingLabel = 'NO REPORTADO') {
+  return typeof value === 'number' && Number.isFinite(value) ? value.toLocaleString('es-ES') : missingLabel;
+}
+
+function textSignal(value: string | null | undefined, missingLabel: string) {
+  return typeof value === 'string' && value.trim().length > 0 ? value.trim() : missingLabel;
+}
+
+function levelLabel(value: number | null | undefined) {
+  return number(value, 'NIVEL NO REPORTADO');
 }
 
 function socialRankingValue(value: number | null | undefined, label: string) {
@@ -168,27 +176,27 @@ function PanelContent({
       </View>
       {panel === 'stats' ? (
         <View style={styles.modalGrid}>
-          <ModalMetric label="VICTORIAS" value={number(stats?.pvp_wins)} colors={colors} icon="trophy-outline" />
-          <ModalMetric label="DERROTAS" value={number(stats?.pvp_losses)} colors={colors} icon="close-circle-outline" />
-          <ModalMetric label="RACHA" value={number(getStreak(social?.matches ?? null, playerId))} colors={colors} icon="flame" />
-          <ModalMetric label="ELO" value={number(rank?.mmr)} colors={colors} icon="shield-outline" />
-          <ModalMetric label="CARTAS" value={number(collectionCount)} colors={colors} icon="cards" />
-          <ModalMetric label="VEX" value={number(wallet?.vex_ingame)} colors={colors} icon="coin" />
+          <ModalMetric label="VICTORIAS" value={number(stats?.pvp_wins, 'VICTORIAS NO REPORTADAS')} colors={colors} icon="trophy-outline" />
+          <ModalMetric label="DERROTAS" value={number(stats?.pvp_losses, 'DERROTAS NO REPORTADAS')} colors={colors} icon="close-circle-outline" />
+          <ModalMetric label="RACHA" value={number(getStreak(social?.matches ?? null, playerId), 'RACHA NO REPORTADA')} colors={colors} icon="flame" />
+          <ModalMetric label="ELO" value={number(rank?.mmr, 'MMR NO REPORTADO')} colors={colors} icon="shield-outline" />
+          <ModalMetric label="CARTAS" value={number(collectionCount, 'CARTAS NO REPORTADAS')} colors={colors} icon="cards" />
+          <ModalMetric label="VEX" value={number(wallet?.vex_ingame, 'VEX NO REPORTADO')} colors={colors} icon="coin" />
         </View>
       ) : null}
       {panel === 'season' ? (
         <View style={styles.modalCopy}>
           <Text style={[styles.modalBody, { color: colors.foreground }]}>Tu camino en VEXFORGE</Text>
-          <Text style={[styles.modalMuted, { color: colors.mutedForeground }]}>Nivel {progress?.level ?? '—'} · {number(progress?.xp)} / {number(progress?.xp_to_next)} XP</Text>
-          <Text style={[styles.modalMuted, { color: colors.mutedForeground }]}>Energía {number(progress?.energy)} / {number(progress?.max_energy)} · {social?.seasonName ?? 'TEMPORADA EN ESPERA'}</Text>
+          <Text style={[styles.modalMuted, { color: colors.mutedForeground }]}>{levelLabel(progress?.level)} · {number(progress?.xp, 'XP NO REPORTADO')} / {number(progress?.xp_to_next, 'XP OBJETIVO NO REPORTADO')} XP</Text>
+          <Text style={[styles.modalMuted, { color: colors.mutedForeground }]}>Energía {number(progress?.energy, 'ENERGÍA NO REPORTADA')} / {number(progress?.max_energy, 'ENERGÍA MÁXIMA NO REPORTADA')} · {social?.seasonName ?? 'TEMPORADA EN ESPERA'}</Text>
         </View>
       ) : null}
       {panel === 'progress' ? (
         <View style={styles.modalCopy}>
           <Text style={[styles.modalBody, { color: colors.foreground }]}>Tu camino en VEXFORGE</Text>
-          <Text style={[styles.modalMuted, { color: colors.mutedForeground }]}>Nivel {progress?.level ?? '—'} · {number(progress?.xp)} / {number(progress?.xp_to_next)} XP</Text>
-          <Text style={[styles.modalMuted, { color: colors.mutedForeground }]}>Energía {number(progress?.energy)} / {number(progress?.max_energy)}</Text>
-          <Text style={[styles.modalMuted, { color: colors.mutedForeground }]}>Región inicial: {progress?.starter_region ?? '—'}</Text>
+          <Text style={[styles.modalMuted, { color: colors.mutedForeground }]}>{levelLabel(progress?.level)} · {number(progress?.xp, 'XP NO REPORTADO')} / {number(progress?.xp_to_next, 'XP OBJETIVO NO REPORTADO')} XP</Text>
+          <Text style={[styles.modalMuted, { color: colors.mutedForeground }]}>Energía {number(progress?.energy, 'ENERGÍA NO REPORTADA')} / {number(progress?.max_energy, 'ENERGÍA MÁXIMA NO REPORTADA')}</Text>
+          <Text style={[styles.modalMuted, { color: colors.mutedForeground }]}>Región inicial: {textSignal(progress?.starter_region, 'REGIÓN INICIAL NO REPORTADA')}</Text>
         </View>
       ) : null}
       {panel === 'account' ? (
@@ -236,10 +244,10 @@ function PanelContent({
           return <View key={match.id} testID={`profile-history-${match.id}`} style={[styles.modalRow, { borderColor: colors.border }]}>
             <Ionicons name={outcomeIcon} size={18} color={outcomeColor} />
             <View style={styles.modalRowCopy}>
-              <Text style={[styles.modalRowTitle, { color: colors.foreground }]}>{outcomeLabel} · {match.opponent_name ?? '—'}</Text>
+              <Text style={[styles.modalRowTitle, { color: colors.foreground }]}>{outcomeLabel} · {textSignal(match.opponent_name, 'RIVAL NO REPORTADO')}</Text>
               <Text style={[styles.modalMuted, { color: colors.mutedForeground }]}>{formatDate(match.created_at)}</Text>
             </View>
-            <Text style={[styles.modalPoints, { color: eloColor }]}>{elo == null ? '—' : `${elo > 0 ? '+' : ''}${elo}`}</Text>
+            <Text style={[styles.modalPoints, { color: eloColor }]}>{number(elo, 'MMR NO REPORTADO')}</Text>
           </View>;
         })}</ScrollView> : <Text style={[styles.modalMuted, { color: colors.mutedForeground }]}>No hay combates registrados.</Text>
       ) : null}
@@ -299,10 +307,10 @@ export default function ProfileScreen() {
   const xpPercent = progress && progress.xp_to_next > 0 ? Math.min(100, Math.round((progress.xp / progress.xp_to_next) * 100)) : 0;
   const currentRank = rankLabel(rank);
   const statValues = useMemo(() => [
-    number(stats?.pvp_wins),
-    number(stats?.pvp_losses),
-    number(getStreak(social?.matches ?? null, player?.id ?? '')),
-    number(rank?.mmr),
+    number(stats?.pvp_wins, 'VICTORIAS NO REPORTADAS'),
+    number(stats?.pvp_losses, 'DERROTAS NO REPORTADAS'),
+    number(getStreak(social?.matches ?? null, player?.id ?? ''), 'RACHA NO REPORTADA'),
+    number(rank?.mmr, 'MMR NO REPORTADO'),
   ], [player?.id, rank?.mmr, social?.matches, stats?.pvp_losses, stats?.pvp_wins]);
 
   const handleRefresh = async () => {
@@ -394,9 +402,9 @@ export default function ProfileScreen() {
             <View style={styles.progressHeader}>
               <View>
                 <Text style={[styles.progressEyebrow, { color: colors.accent }]}>PROGRESO DEL NEXUS</Text>
-                <Text style={[styles.progressTitle, { color: colors.foreground }]}>Nivel {progress?.level ?? '—'}</Text>
+                <Text style={[styles.progressTitle, { color: colors.foreground }]}>{levelLabel(progress?.level)}</Text>
               </View>
-              <Text style={[styles.progressValue, { color: colors.foreground }]}>{number(progress?.xp)} / {number(progress?.xp_to_next)} XP</Text>
+              <Text style={[styles.progressValue, { color: colors.foreground }]}>{number(progress?.xp, 'XP NO REPORTADO')} / {number(progress?.xp_to_next, 'XP OBJETIVO NO REPORTADO')} XP</Text>
             </View>
             <View style={[styles.progressTrack, { backgroundColor: colors.muted }]}>
               <View style={[styles.progressFill, { width: `${xpPercent}%`, backgroundColor: colors.accent }]} />

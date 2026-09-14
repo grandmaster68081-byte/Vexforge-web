@@ -48,6 +48,11 @@ Estado de implementación: `IMPLEMENTED_UNVERIFIED`. La QA posterior requiere
 instalar el release y recorrer el perfil autenticado, la sincronización, los
 accesos rápidos y el cierre de sesión con una cuenta normal.
 
+Las señales de progreso, energía, región inicial, rival e impacto de MMR
+mantienen etiquetas explícitas cuando la fuente viva no entrega un valor
+utilizable. El perfil no convierte la ausencia en guiones, ceros ni copy
+inventado; los valores confirmados, incluido cero, permanecen visibles.
+
 Nivel Q: Q2 actual / Q3 objetivo.
 
 Referencia y composición: `mobile/assets/images/profile-reference-scene.png`

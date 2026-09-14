@@ -17,6 +17,25 @@
 - **PERSISTENCIA:** código, gate, documentación y continuidad se publicarán juntos en `main` mediante la API REST HTTPS oficial de GitHub con `[skip ci]`; sin APK ni release Android nuevo.
 - **NEXT_BLOCK:** continuar con otra unidad Android atómica del protocolo sin tocar la web congelada ni iniciar APK.
 
+## 2026-09-14 — VE-MOB-9-PROFILE — HONEST PROGRESSION AND HISTORY SIGNALS / IMPLEMENTED_UNVERIFIED
+
+- **BRANCH:** `main`.
+- **SCREEN / DOMAIN:** Legado / `PERFIL → PROGRESO, RECURSOS E HISTORIAL`.
+- **BLOCK:** eliminar guiones ambiguos en nivel, XP, energía, región inicial, rival y cambio de MMR cuando una respuesta viva es parcial.
+- **WHAT CHANGED:** el perfil muestra `NIVEL NO REPORTADO`, `XP NO REPORTADO`, `ENERGÍA NO REPORTADA`, `REGIÓN INICIAL NO REPORTADA`, `RIVAL NO REPORTADO` o `MMR NO REPORTADO` según la señal ausente; los valores reales y el cero confirmado se conservan.
+- **LIVE DATA CHECK:** se mantienen los contratos vivos de `player_progress`, estadísticas, rango, wallet e historial; no se añadieron datos, solicitudes ni mutaciones.
+- **DATA PRESERVED:** identidad, progreso, energía, VEX, rango, logros, historial, resultados, Auth, RLS, navegación, accesibilidad, reduced-motion y web congelada.
+- **ASSETS USED:** ninguno nuevo; se mantiene la composición oficial de Perfil.
+- **MOTION_ADDED:** ninguno.
+- **PERFORMANCE_NOTES:** normalización local de señales ya cargadas; sin solicitudes nuevas, animaciones ni dependencias.
+- **GATES:** `node scripts/verify-mobile-profile.mjs` OK; `git diff --check` limpio. No se inicia workflow Android, no se compila APK ni se publica release.
+- **CORE_SCORE:** pendiente de QA visual/táctil en dispositivo.
+- **VISUAL_DEBT_ADDED:** ninguna.
+- **VISUAL_DEBT_REMOVED:** guiones ambiguos en progreso e historial de Perfil.
+- **STATUS:** `IMPLEMENTED_UNVERIFIED`.
+- **PERSISTENCIA:** código, gate, documentación y continuidad se publicarán juntos en `main` mediante la API REST HTTPS oficial de GitHub con `[skip ci]`; sin APK ni release Android nuevo.
+- **NEXT_BLOCK:** continuar con otra unidad Android atómica del protocolo sin tocar la web congelada ni iniciar APK.
+
 ## 2026-09-14 — VE-MOB-3-HOME — HONEST NUMERIC ABSENCE SIGNALS / IMPLEMENTED_UNVERIFIED
 
 - **BRANCH:** `main`.
