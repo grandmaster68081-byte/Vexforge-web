@@ -17,6 +17,25 @@
 - **PERSISTENCIA:** código, documento y continuidad se publicarán juntos en `main` mediante la API REST HTTPS oficial de GitHub con `[skip ci]`; sin APK ni release Android nuevo.
 - **NEXT_BLOCK:** continuar con otra unidad Android atómica del protocolo sin tocar la web congelada ni iniciar APK.
 
+## 2026-09-14 — VE-MOB-12-WORLD — HONEST BOSS ART AND LORE SIGNALS / IMPLEMENTED_UNVERIFIED
+
+- **BRANCH:** `main`.
+- **SCREEN / DOMAIN:** World / `WORLD → JEFES MUNDIALES`.
+- **BLOCK:** evitar que arte ausente o lore vacío se conviertan en un bloque visual vacío o en una afirmación de sincronización no confirmada.
+- **WHAT CHANGED:** el arte oficial ausente muestra `ARTE DEL JEFE NO REPORTADO`; `image_url` se recorta antes de usarse; lore ausente o vacío muestra `LORE NO REPORTADO`; el lore vivo se conserva sin transformación.
+- **LIVE DATA CHECK:** lectura HTTPS de solo lectura contra Supabase oficial confirmó la fuente viva de `world_bosses`, `raid_runs`, `lore_codex` y `season_passes`; no se ejecutaron mutaciones ni se añadieron datos locales.
+- **DATA PRESERVED:** bosses, arte oficial, regiones, poder, HP, recompensas, encuentros, raids, lore, temporada, rankings, RPCs oficiales, Auth, RLS, navegación, accesibilidad, reduced-motion y web congelada.
+- **ASSETS USED:** ninguno nuevo; el arte continúa viniendo únicamente de `image_url` oficial.
+- **MOTION_ADDED:** ninguno.
+- **PERFORMANCE_NOTES:** normalización local de señales ya recibidas; no se añadieron solicitudes de red, animaciones ni dependencias.
+- **GATES:** `node scripts/verify-mobile-world.mjs` OK; `git diff --check` limpio. No se inicia workflow Android, no se compila APK ni se publica release por instrucción del operador.
+- **CORE_SCORE:** pendiente de QA visual/táctil en dispositivo.
+- **VISUAL_DEBT_ADDED:** ninguna.
+- **VISUAL_DEBT_REMOVED:** bloque de arte vacío y `LORE NO SINCRONIZADO` cuando la fuente no entrega lore.
+- **STATUS:** `IMPLEMENTED_UNVERIFIED`.
+- **PERSISTENCIA:** código, gate y continuidad se publican juntos en `main` mediante la API REST HTTPS oficial de GitHub; sin APK ni release Android nuevo.
+- **NEXT_BLOCK:** continuar con otra unidad Android atómica del protocolo sin tocar la web congelada ni iniciar APK.
+
 ## 2026-09-14 — VE-MOB-12-WORLD — HONEST RANKING IDENTITY / IMPLEMENTED_UNVERIFIED
 
 - **BRANCH:** `main`.
