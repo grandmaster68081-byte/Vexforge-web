@@ -131,10 +131,18 @@ if (!identityMark.includes('VISUAL_TOKENS.identityMark')) {
   failures.push('ForgeMark does not consume identity mark tokens');
 }
 
+const profile = source('mobile/app/(tabs)/profile.tsx');
+if (!profile.includes("from '@/constants/experience'")) {
+  failures.push('Profile does not consume shared visual tokens');
+}
+if (!profile.includes('VISUAL_TOKENS.metricPlaque')) {
+  failures.push('Profile does not consume metric plaque tokens');
+}
+
 if (failures.length > 0) {
   console.error('T2V visual system guard failed:');
   for (const failure of failures) console.error(` - ${failure}`);
   process.exit(1);
 }
 
-console.log('T2V visual system guard passed (shared tokens + identity mark + navigation shell + MaterialPanel + DomainState)');
+console.log('T2V visual system guard passed (shared tokens + metric plaque + identity mark + navigation shell + MaterialPanel + DomainState)');

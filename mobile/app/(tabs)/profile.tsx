@@ -26,6 +26,7 @@ import {
   type PlayerRank,
 } from '@/lib/supabase';
 import { typography } from '@/constants/typography';
+import { VISUAL_TOKENS } from '@/constants/experience';
 
 type Panel = 'stats' | 'achievements' | 'titles' | 'history' | 'ranking' | 'season' | 'progress' | 'account' | null;
 type ProfileAction = 'collection' | 'owned' | 'fusion' | 'achievements' | 'profile' | 'meta' | 'deck' | 'missions' | 'social' | 'home' | 'battle' | 'stats' | 'titles' | 'history' | 'ranking' | 'season' | 'progress';
@@ -259,7 +260,7 @@ function PanelContent({
 }
 
 function ModalMetric({ label, value, icon, colors }: { label: string; value: string; icon: string; colors: ReturnType<typeof useColors> }) {
-  return <View style={[styles.modalMetric, { borderColor: colors.border }]}><Ionicons name={icon} size={18} color={colors.accent} /><Text style={[styles.modalMetricValue, { color: colors.foreground }]}>{value}</Text><Text style={[styles.modalMetricLabel, { color: colors.mutedForeground }]}>{label}</Text></View>;
+  return <View style={[styles.modalMetric, { borderColor: colors.border }]}><Ionicons name={icon} size={VISUAL_TOKENS.metricPlaque.iconSize} color={colors.accent} /><Text style={[styles.modalMetricValue, { color: colors.foreground }]}>{value}</Text><Text style={[styles.modalMetricLabel, { color: colors.mutedForeground }]}>{label}</Text></View>;
 }
 
 export default function ProfileScreen() {
@@ -516,9 +517,21 @@ const styles = StyleSheet.create({
   modalTitle: { fontFamily: typography.display, fontSize: 22, marginTop: 4 },
   modalClose: { width: 36, height: 36, borderWidth: 1, borderRadius: 10, alignItems: 'center', justifyContent: 'center' },
   modalGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
-  modalMetric: { width: '31%', minHeight: 84, borderWidth: 1, borderRadius: 12, alignItems: 'center', justifyContent: 'center', gap: 4 },
-  modalMetricValue: { fontFamily: typography.display, fontSize: 18 },
-  modalMetricLabel: { fontFamily: typography.bodyBold, fontSize: 8, letterSpacing: 0.6 },
+  modalMetric: {
+    width: VISUAL_TOKENS.metricPlaque.width,
+    minHeight: VISUAL_TOKENS.metricPlaque.minHeight,
+    borderWidth: VISUAL_TOKENS.metricPlaque.borderWidth,
+    borderRadius: VISUAL_TOKENS.metricPlaque.radius,
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: VISUAL_TOKENS.metricPlaque.gap,
+  },
+  modalMetricValue: { fontFamily: typography.display, fontSize: VISUAL_TOKENS.metricPlaque.valueSize },
+  modalMetricLabel: {
+    fontFamily: typography.bodyBold,
+    fontSize: VISUAL_TOKENS.metricPlaque.labelSize,
+    letterSpacing: VISUAL_TOKENS.metricPlaque.labelTracking,
+  },
   modalCopy: { gap: 8 },
   modalBody: { fontFamily: typography.display, fontSize: 18 },
   modalMuted: { fontFamily: typography.body, fontSize: 12, lineHeight: 17 },

@@ -1,3 +1,22 @@
+## 2026-09-14 — VE-MOB-T2V — METRIC PLAQUE TOKENS / IMPLEMENTED_UNVERIFIED
+
+- **BRANCH:** `main`.
+- **SCREEN / DOMAIN:** Perfil / modal de estadísticas y señales métricas.
+- **BLOCK:** duodécima pieza ejecutable de `T2V — VISUAL SYSTEM TOKENS + SHARED SCENE PRIMITIVES`.
+- **WHAT CHANGED:** las placas métricas de Perfil consumen `VISUAL_TOKENS.metricPlaque` para ancho, altura mínima, borde, radio, separación, icono, valor y etiqueta.
+- **DATA PRESERVED:** estadísticas, rango, racha, cartas, VEX, señales `NO REPORTADA`, Supabase, RPCs, RLS, Auth, navegación, accesibilidad, reduced-motion, assets oficiales y web congelada.
+- **AUTHORITY:** no se alteran valores vivos, fórmulas, economía, combate, recompensas ni lógica de sesión; cero inferencias nuevas.
+- **ASSETS USED:** ninguno nuevo; los iconos continúan resolviéndose mediante la primitiva oficial `ForgeIcon`.
+- **MOTION_ADDED:** ninguno.
+- **PERFORMANCE_NOTES:** tokens estáticos resueltos localmente; sin solicitudes, listeners, estado ni renders de datos adicionales.
+- **GATES:** `node scripts/verify-mobile-visual-system.mjs`, `node --check scripts/verify-mobile-visual-system.mjs` y `git diff --check`; typecheck móvil, workflow APK y QA visual/táctil siguen pendientes y no se inician.
+- **VISUAL_DELTA:** las métricas del Perfil comparten ahora una placa T2V explícita sin cambiar la lectura ni la procedencia de los valores.
+- **VISUAL_DEBT_REMOVED:** literales geométricos y tipográficos duplicados en `ModalMetric`.
+- **VISUAL_DEBT_ADDED:** ninguna.
+- **STATUS:** `IMPLEMENTED_UNVERIFIED`.
+- **PERSISTENCIA:** publicar código, guarda de visual system y continuidad juntos en `main` mediante la API REST HTTPS oficial de GitHub con `[skip ci]`; no compilar APK ni publicar release.
+- **NEXT_BLOCK:** continuar con otra pieza T2V explícita sin tocar el motor, los contratos de Supabase, la web congelada ni el tutorial.
+
 ## 2026-09-14 — VE-MOB-T2V — HERALDIC IDENTITY MARK TOKENS / IMPLEMENTED_UNVERIFIED
 
 - **BRANCH:** `main`.

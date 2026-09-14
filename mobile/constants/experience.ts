@@ -277,6 +277,17 @@ export const VISUAL_TOKENS = {
       radius: 6,
     },
   },
+  metricPlaque: {
+    width: '31%',
+    minHeight: 84,
+    radius: 12,
+    gap: 4,
+    borderWidth: 1,
+    iconSize: 18,
+    valueSize: 18,
+    labelSize: 8,
+    labelTracking: 0.6,
+  },
   formation: {
     root: { radius: 18, padding: 14, gap: 10 },
     heading: { gap: 10 },
