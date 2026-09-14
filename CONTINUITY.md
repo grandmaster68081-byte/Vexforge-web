@@ -6,7 +6,7 @@
 - **ARCHIVOS:** `mobile/app/missions.tsx`; `scripts/verify-mobile-rewards.mjs`; `docs/VE-MOB-8-REWARDS-NEXUS-IDENTITY.md`.
 - **GATES:** `verify-mobile-rewards` pasa 15/15, `verify-motion` pasa 17/17, `verify-uxcx-domain-identity` pasa 5/5 y `git diff --check` queda limpio. El typecheck móvil queda diferido porque esta copia no incluye `mobile/node_modules`; no se compila APK ni se inicia workflow por instrucción explícita del operador.
 - **ESTADO HONESTO:** `IMPLEMENTED_UNVERIFIED`; no se declara `PASS`, `OPERATIONAL` ni `TIER1_READY`.
-- **PERSISTENCIA:** pendiente de publicación HTTPS en `main` con `[skip ci]`; no se compila APK ni se inicia workflow por instrucción explícita del operador.
+- **PERSISTENCIA:** código publicado en `main` mediante API REST HTTPS oficial de GitHub en `94122ed664bbeada0245435e3f9558c6643e0412` con `[skip ci]`; este registro documental se publicará a continuación sin iniciar el workflow Android.
 - **SIGUIENTE BLOQUE:** continuar con la siguiente unidad Android verificable sin reabrir este contrato de actividad.
 
 ## 2026-09-13 — VE-MOB-2-AUTH — NEXUS GATE / IMPLEMENTED_UNVERIFIED
