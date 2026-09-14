@@ -1,3 +1,15 @@
+## 2026-09-13 — VE-MOB-12-WORLD — HONEST MISSING SIGNALS / IMPLEMENTED_UNVERIFIED
+
+- **TARGET:** superficie Android de Mundo en `mobile/app/world.tsx`.
+- **QUÉ CAMBIÓ:** lore, dificultad, límite de participantes, multiplicador de raid, XP, tier, progreso de temporada, nombres públicos y porcentaje de victorias ya no reciben valores inventados cuando faltan en el snapshot vivo; muestran estados explícitos no confirmados.
+- **FIDELIDAD:** los ceros confirmados permanecen ceros. No se fabrican lore, nombres, progreso, porcentajes, dificultad ni recompensas; RPCs, RLS, resolución de combate, claims y acciones de raid continúan bajo autoridad de Supabase.
+- **PROTOCOLO VIVO:** se confirmó la fila `public.vexforge_official_documents.vexforge_home_world_system_protocol_v3`, `ACTIVE`, versión `V2.1 — GAME EXPERIENCE ARCHITECTURE + LIVING UI + FUNCTIONAL COMPLETENESS`. Aplican Android-only, Cero Genéricos, datos vivos, estados completos, accesibilidad y continuidad honesta.
+- **ARCHIVOS:** `mobile/app/world.tsx`; `scripts/verify-mobile-world.mjs`; `docs/VE-MOB-12-WORLD.md`; `docs/VE-MOB-12-WORLD-HONEST-SIGNALS.md`.
+- **GATES:** `verify-mobile-world` pasa; `git diff --check` queda limpio. El typecheck móvil queda diferido porque este clon no incluye `mobile/node_modules`; no se compila APK ni se inicia workflow por instrucción explícita del operador.
+- **ESTADO HONESTO:** `IMPLEMENTED_UNVERIFIED`; la QA visual/táctil en APK permanece pendiente y no se declara `PASS`, `OPERATIONAL` ni `TIER1_READY`.
+- **PERSISTENCIA:** código publicado en `main` mediante API REST HTTPS oficial de GitHub en `3a04dd5bbb07d19eab3f62131053d7a260d0584f` con `[skip ci]`; este registro se publica a continuación sin iniciar APK ni release.
+- **SIGUIENTE BLOQUE:** continuar con otra mejora Android atómica verificable, sin tocar la web congelada ni iniciar compilación hasta autorización del operador.
+
 ## 2026-09-13 — VE-MOB-6-TUTORIAL — HONEST PROGRESS SIGNAL / IMPLEMENTED_UNVERIFIED
 
 - **TARGET:** ruta Android de iniciación en `mobile/app/tutorial.tsx`.
