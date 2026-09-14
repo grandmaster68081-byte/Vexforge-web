@@ -1,5 +1,6 @@
 import { StyleSheet, View } from 'react-native';
 import { useColors } from '@/hooks/useColors';
+import { VISUAL_TOKENS } from '@/constants/experience';
 
 export function ProgressBar({ value, color }: { value: number; color?: string }) {
   const colors = useColors();
@@ -16,6 +17,13 @@ export function ProgressBar({ value, color }: { value: number; color?: string })
 }
 
 const styles = StyleSheet.create({
-  track: { height: 6, borderRadius: 4, overflow: 'hidden' },
-  fill: { height: '100%', borderRadius: 4 },
+  track: {
+    height: VISUAL_TOKENS.control.progress.height,
+    borderRadius: VISUAL_TOKENS.control.progress.radius,
+    overflow: 'hidden',
+  },
+  fill: {
+    height: '100%',
+    borderRadius: VISUAL_TOKENS.control.progress.radius,
+  },
 });

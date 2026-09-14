@@ -165,5 +165,9 @@ export const VISUAL_TOKENS = {
       pressedOpacity: 0.72,
       disabledOpacity: 0.45,
     },
+    progress: {
+      height: 6,
+      radius: 4,
+    },
   },
 } as const;

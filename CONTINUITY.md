@@ -1,3 +1,21 @@
+## 2026-09-14 — VE-MOB-T2V — PROGRESS CONTROL TOKENS / IMPLEMENTED_UNVERIFIED
+
+- **BRANCH:** `main`.
+- **SCREEN / DOMAIN:** primitiva compartida de progreso Android.
+- **BLOCK:** cuarta pieza ejecutable de `T2V — VISUAL SYSTEM TOKENS + SHARED SCENE PRIMITIVES`.
+- **WHAT CHANGED:** `ProgressBar` consume `VISUAL_TOKENS.control.progress` para altura y radio; conserva el porcentaje confirmado, el cero válido y la ausencia de datos sin inferencias.
+- **DATA PRESERVED:** Supabase, RPCs, RLS, Auth, economía, combate, event log, settlement, navegación, datos vivos, assets oficiales y web congelada.
+- **ASSETS USED:** ninguno nuevo; no se introdujeron sustitutos genéricos.
+- **MOTION_ADDED:** ninguno; sólo se centralizaron dimensiones visuales estáticas.
+- **PERFORMANCE_NOTES:** los tokens se resuelven localmente; no añaden solicitudes, listeners, estado ni renders de datos.
+- **GATES:** `node scripts/verify-mobile-visual-system.mjs`, `git diff --check`; el typecheck móvil requiere dependencias ausentes en el clon y el workflow APK/QA queda pendiente de autorización.
+- **VISUAL_DELTA:** las barras de progreso compartidas dejan de declarar altura y radio aislados y entran en el contrato de controles T2V.
+- **VISUAL_DEBT_REMOVED:** literales geométricos duplicados en la primitiva de progreso.
+- **VISUAL_DEBT_ADDED:** ninguna.
+- **STATUS:** `IMPLEMENTED_UNVERIFIED`.
+- **PERSISTENCIA:** publicar código, guarda, documento y continuidad juntos en `main` mediante la API REST HTTPS oficial de GitHub con `[skip ci]`; no compilar APK ni publicar release.
+- **NEXT_BLOCK:** continuar con otra pieza T2V explícita, sin tocar el motor de juego, la web congelada ni el tutorial.
+
 ## 2026-09-14 — VE-MOB-T2V — ICON STROKE CONTROL TOKENS / IMPLEMENTED_UNVERIFIED
 
 - **BRANCH:** `main`.

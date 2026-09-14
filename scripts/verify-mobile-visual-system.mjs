@@ -61,6 +61,14 @@ if (!button.includes('VISUAL_TOKENS.control.button')) {
   failures.push('ForgeButton does not consume control tokens');
 }
 
+const progress = source('mobile/components/ProgressBar.tsx');
+if (!progress.includes("from '@/constants/experience'")) {
+  failures.push('ProgressBar does not consume shared visual tokens');
+}
+if (!progress.includes('VISUAL_TOKENS.control.progress')) {
+  failures.push('ProgressBar does not consume progress control tokens');
+}
+
 const icon = source('mobile/components/ForgeIcon.tsx');
 if (!icon.includes("from '@/constants/experience'")) {
   failures.push('ForgeIcon does not consume shared visual tokens');

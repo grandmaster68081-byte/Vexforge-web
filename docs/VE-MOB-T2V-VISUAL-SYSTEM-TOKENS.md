@@ -26,6 +26,8 @@ la web congelada.
 - `ForgeIcon` consume `icon.defaultStroke` como trazo por defecto para que la
   silueta nativa compartida mantenga una lectura consistente entre dominios;
   los overrides existentes siguen siendo explícitos y compatibles.
+- `ProgressBar` consume `control.progress` para altura y radio, preservando el
+  porcentaje confirmado, el cero válido y la ausencia de datos sin inferencias.
 
 ## Límites
 
