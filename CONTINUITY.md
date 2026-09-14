@@ -3261,3 +3261,14 @@
 - Commit de código publicado en `main`: `43a46e58dfca3fec4b8be8ff96c81381defdc3df`. Se usó `[skip ci]`; no se inició workflow, no se compiló APK ni se publicó release nuevo.
 - Estado honesto: `IMPLEMENTED_UNVERIFIED`. La QA visual de los estados pendientes queda reservada para una APK autorizada.
 - Siguiente microbloque: continuar con otra mejora Android concreta de fidelidad o interacción, manteniendo la regla de no adivinar y sin tocar la web congelada.
+
+---
+## 2026-09-13 — VE-MOB-3-HOME — FEATURED LORE HONEST INTERACTION / IMPLEMENTED_UNVERIFIED
+
+- Se cerró un delta Android atómico en `mobile/app/(tabs)/index.tsx`: la carta de resonancia del Home sólo permite inspeccionar/ocultar lore cuando el registro canónico entrega `lore` real.
+- Cuando el lore no está sincronizado, el control queda deshabilitado, comunica `LORE NO SINCRONIZADO` y no promete una inspección que no puede abrir. Cuando existe, la pista distingue entre `TOCAR PARA INSPECCIONAR` y `TOCAR PARA CERRAR`.
+- Se conservaron el artwork y los datos de Supabase, navegación al Archivo, accesibilidad, `testID`, feedback táctil, reduced-motion, estados de error y la web congelada. No se añadieron datos, assets, RPCs, dependencias ni rutas.
+- Evidencia local: `node scripts/verify-mobile-home-official-assets.mjs` OK, 13/13 comprobaciones; comparación equivalente a `git diff --check` limpia. El typecheck móvil queda diferido porque el snapshot oficial no incluye `mobile/node_modules`.
+- Commit Android publicado en `main`: `db48595c36dccb062e941e9b408bd68863f2116b`. Se usó `[skip ci]` por la instrucción vigente; no se inició workflow, no se compiló APK ni se publicó release nuevo.
+- Estado honesto: `IMPLEMENTED_UNVERIFIED`. La interacción y el estado pendiente quedan sujetos a QA en dispositivo cuando el operador autorice una compilación Android.
+- Siguiente microbloque: continuar con otra mejora Android atómica de fidelidad o interacción, sin tocar la web congelada ni iniciar APK sin autorización.
