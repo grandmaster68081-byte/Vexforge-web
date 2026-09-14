@@ -26,6 +26,7 @@ import {
 } from '@/lib/supabase';
 import { ScreenShell } from '@/components/ScreenShell';
 import { useMeasuredCanonicalFrame } from '@/components/CanonicalFrame';
+import { DomainHeader } from '@/components/DomainHeader';
 
 const MAX_DECKS = 10;
 const MAX_DECK = 30;
@@ -478,6 +479,13 @@ export default function DeckScreen() {
     router.push(destination);
   };
   const selectedPreview = savedSlots[0] ?? null;
+  const domainStatus = collectionLoading || deckLoading
+    ? 'SINCRONIZANDO MAZOS'
+    : deckError || syncState === 'offline'
+      ? 'SIN SEÑAL · TOCA PARA REINTENTAR'
+      : hasSavedDeck
+        ? `${savedSummary.cardCount} CARTAS · ${savedSummary.factionLabel}`
+        : 'Construye una estrategia real con las cartas sincronizadas desde tu colección.';
 
   return (
     <ScreenShell sceneMode="hero">
@@ -487,16 +495,15 @@ export default function DeckScreen() {
       >
         <View style={[styles.referenceScene, { width: frameWidth, height: canvasHeight, marginTop: insets.top, alignSelf: 'center', backgroundColor: colors.background }]}>
         <View testID="deck-programmatic-surface" style={[styles.programmaticSurface, { backgroundColor: colors.background }]}>
-          <View style={styles.programmaticHeading}>
-            <View>
-              <Text style={[styles.programmaticEyebrow, { color: colors.accent }]}>FORJA DE MAZOS</Text>
-              <Text style={[styles.programmaticTitle, { color: colors.foreground }]}>Tu formación oficial</Text>
-              <Text style={[styles.programmaticCopy, { color: colors.mutedForeground }]}>Construye una estrategia real con las cartas sincronizadas desde tu colección.</Text>
-            </View>
-            <Pressable testID="deck-refresh-visible" accessibilityRole="button" accessibilityLabel="Actualizar mazos" onPress={onRefresh} style={[styles.programmaticRefresh, { borderColor: colors.border }]}>
-              <Feather name="refresh-cw" size={16} color={colors.accent} />
-            </Pressable>
-          </View>
+          <DomainHeader
+            domain="forja"
+            status={domainStatus}
+            trailing={(
+              <Pressable testID="deck-refresh-visible" accessibilityRole="button" accessibilityLabel="Actualizar mazos" onPress={onRefresh} style={[styles.programmaticRefresh, { borderColor: colors.border }]}>
+                <Feather name="refresh-cw" size={16} color={colors.accent} />
+              </Pressable>
+            )}
+          />
           <View style={styles.programmaticDeckRow}>
             <DeckPreviewCard slot={selectedPreview ?? undefined} summary={savedSummary} colors={colors} width={Math.max(132, frameWidth * 0.43)} active={hasSavedDeck} onPress={hasSavedDeck ? () => setEditing(true) : handleCreate} />
             <View style={styles.programmaticStats}>
