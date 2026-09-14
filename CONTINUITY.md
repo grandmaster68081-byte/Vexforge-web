@@ -1,3 +1,13 @@
+## 2026-09-13 — VE-MOB-7-BATTLE — DRAW OUTCOME FIDELITY / IMPLEMENTED_UNVERIFIED
+
+- **QUÉ CAMBIÓ:** la Arena Android distingue victoria, derrota y empate usando únicamente `you_won` y `winner_id` de la resolución autoritativa; un empate ya no se presenta como derrota.
+- **PRESENTACIÓN:** el resultado muestra `Empate confirmado` y el campo de batalla muestra `EMPATE CONFIRMADO POR EL SERVIDOR`; replay y formación final comparten el mismo estado.
+- **DATOS HONESTOS:** no se infiere ganador desde HP, turnos, orden local ni valores inventados. `client_ai_v1` conserva su contrato de práctica y no produce empate por esta ruta.
+- **ARCHIVOS:** `mobile/app/(tabs)/battle.tsx`; `mobile/components/ForgeBattlefield.tsx`; `scripts/verify-mobile-battle.mjs`; `docs/VE-MOB-7-BATTLE-DRAW-FIDELITY.md`.
+- **LÍMITES:** no se tocaron Supabase, RPCs, RLS, Auth, economía, motor de combate, assets ni la web congelada. No se inició workflow Android, no se compiló APK y no se generó release por instrucción explícita del operador.
+- **ESTADO HONESTO:** `IMPLEMENTED_UNVERIFIED`; la guarda local y el typecheck deben quedar registrados antes de cerrar este bloque. La QA visual/táctil en APK y el release correlativo siguen pendientes.
+- **SIGUIENTE BLOQUE:** continuar con otra mejora Android atómica sólo si aporta un delta verificable y conserva la autoridad de los datos.
+
 ## 2026-09-13 — VE-MOB-7-BATTLE — AUTHORITATIVE RESULT FORMATION / IMPLEMENTED_UNVERIFIED
 
 - **QUÉ CAMBIÓ VISUALMENTE:** el resultado de una batalla PvP oficial conserva la formación final devuelta por Supabase y la muestra como `FORMACIÓN FINAL VERIFICADA`, manteniendo Vanguardia, Campeón, Centinela, Reserva, arte disponible, HP y estado final dentro del campo de batalla de Arena.

@@ -35,7 +35,8 @@ const assertions = [
   ['no emoji characters in battle UI', !/[\u{1F000}-\u{1FAFF}]/u.test(contents.screen)],
   ['arena action gates expose diegetic press depth', contents.screen.includes('testID="battle-confirm"') && contents.screen.includes('opacity: battleLoading || formationSlots.length < 3 ? 0.7 : pressed ? 0.82 : 1') && contents.screen.includes('styles.cancelButton') && contents.screen.includes('opacity: pressed ? 0.72 : 1')],
   ['replay exposes authoritative turn progress', contents.screen.includes('testID="battle-replay-progress"') && contents.screen.includes('turnIndex={turnIndex}') && contents.screen.includes('totalTurns={turns.length}') && contents.screen.includes('replayProgressFill')],
-  ['result preserves the authoritative final formation', contents.screen.includes('testID="battle-result-formation"') && contents.screen.includes('FORMACIÓN FINAL VERIFICADA') && contents.screen.includes('finalUnits={result.final_units ?? []}') && contents.screen.includes('youWon={result.you_won}')],
+  ['result preserves the authoritative final formation', contents.screen.includes('testID="battle-result-formation"') && contents.screen.includes('FORMACIÓN FINAL VERIFICADA') && contents.screen.includes('finalUnits={result.final_units ?? []}') && contents.screen.includes('outcome={outcome}')],
+  ['result distinguishes an authoritative draw', contents.screen.includes("if (outcome === 'draw') return 'Empate confirmado'") && contents.screen.includes("outcome === 'draw'") && contents.battlefield.includes('EMPATE CONFIRMADO POR EL SERVIDOR')],
 ];
 
 const failures = assertions.filter(([, passed]) => !passed).map(([name]) => name);

@@ -24,6 +24,7 @@ import { ForgeFormationPreview } from '@/components/ForgeFormationPreview';
 import { ForgeBattlefield } from '@/components/ForgeBattlefield';
 
 type Phase = 'lobby' | 'confirm' | 'replay' | 'result';
+type BattleOutcome = 'victory' | 'defeat' | 'draw';
 
 function rankName(mmr: number) {
   if (mmr >= 3000) return 'MYTHIC';
@@ -46,8 +47,16 @@ function factionColor(faction: string | undefined, colors: ReturnType<typeof use
 
 function resultTitle(result: BattleResult) {
   if (!result.ok) return 'Resolución rechazada';
-  if (result.engine === 'client_ai_v1') return result.you_won ? 'Victoria contra la IA' : 'Derrota contra la IA';
-  return result.you_won ? 'Victoria confirmada' : 'Derrota registrada';
+  const outcome = resultOutcome(result);
+  if (result.engine === 'client_ai_v1') return outcome === 'victory' ? 'Victoria contra la IA' : 'Derrota contra la IA';
+  if (outcome === 'draw') return 'Empate confirmado';
+  return outcome === 'victory' ? 'Victoria confirmada' : 'Derrota registrada';
+}
+
+function resultOutcome(result: BattleResult): BattleOutcome {
+  if (result.you_won) return 'victory';
+  if (result.engine === 'client_ai_v1' || result.winner_id) return 'defeat';
+  return 'draw';
 }
 
 function hpPercent(hp: number | undefined, max: number | undefined) {
@@ -257,16 +266,19 @@ function ResultPanel({
   reducedMotion: boolean;
   onDismiss: () => void;
 }) {
-  const won = Boolean(result.ok && result.you_won);
+  const outcome = resultOutcome(result);
+  const won = outcome === 'victory';
+  const isDraw = outcome === 'draw';
   const isTraining = result.engine === 'client_ai_v1';
+  const outcomeColor = won ? colors.success : isDraw ? colors.accent : colors.danger;
   const finalTurn = result.turns?.[Math.max(0, (result.turns?.length ?? 1) - 1)] ?? null;
   const totalTurns = result.total_turns ?? result.turns?.length ?? 0;
   return (
-    <View testID="battle-result" style={[styles.result, { backgroundColor: won ? `${colors.success}10` : `${colors.danger}0E`, borderColor: won ? colors.success : colors.danger }]}>
-      <View style={[styles.resultSeal, { borderColor: won ? colors.success : colors.danger }]}>
-        <Feather name={won ? 'check' : 'x'} size={26} color={won ? colors.success : colors.danger} />
+    <View testID="battle-result" style={[styles.result, { backgroundColor: `${outcomeColor}10`, borderColor: outcomeColor }]}>
+      <View style={[styles.resultSeal, { borderColor: outcomeColor }]}>
+        <Feather name={won ? 'check' : isDraw ? 'pause' : 'x'} size={26} color={outcomeColor} />
       </View>
-      <Text style={[styles.resultTitle, { color: won ? colors.success : colors.danger }]}>{resultTitle(result)}</Text>
+      <Text style={[styles.resultTitle, { color: outcomeColor }]}>{resultTitle(result)}</Text>
       <Text style={[styles.resultCopy, { color: colors.mutedForeground }]}>
         {result.ok ? `${result.player_name ?? 'Tú'} contra ${result.opponent_name ?? 'Oponente'}` : result.error ?? result.reason ?? 'El servidor no completó el combate.'}
       </Text>
@@ -286,7 +298,7 @@ function ResultPanel({
             turnIndex={Math.max(0, totalTurns - 1)}
             totalTurns={totalTurns}
             reducedMotion={reducedMotion}
-            youWon={result.you_won}
+            outcome={outcome}
           />
         </View>
       ) : null}
@@ -516,7 +528,7 @@ export default function BattleScreen() {
             turnIndex={turnIndex}
             totalTurns={turns.length}
             reducedMotion={reducedMotion}
-            youWon={activeBattleResult.you_won}
+            outcome={resultOutcome(activeBattleResult)}
           />
            <ReplayProgress turnIndex={turnIndex} totalTurns={turns.length} colors={colors} />
           <Pressable

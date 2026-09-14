@@ -6,6 +6,7 @@ import type { BattleTurn, BattleUnit } from '@/lib/supabase';
 
 type Role = 'VANGUARDIA' | 'CAMPEÓN' | 'CENTINELA';
 type Side = 'a' | 'b';
+type BattleOutcome = 'victory' | 'defeat' | 'draw';
 type Colors = ReturnType<typeof useColors>;
 
 type Props = {
@@ -15,6 +16,7 @@ type Props = {
   totalTurns: number;
   reducedMotion: boolean;
   youWon?: boolean;
+  outcome?: BattleOutcome;
 };
 
 const ROLE_LABELS: Record<Role, string> = {
@@ -160,8 +162,9 @@ function ReserveRail({ units, colors, side }: { units: BattleUnit[]; colors: Col
   );
 }
 
-export function ForgeBattlefield({ finalUnits, currentTurn, turnIndex, totalTurns, reducedMotion, youWon }: Props) {
+export function ForgeBattlefield({ finalUnits, currentTurn, turnIndex, totalTurns, reducedMotion, youWon, outcome }: Props) {
   const colors = useColors();
+  const resolvedOutcome = outcome ?? (typeof youWon === 'boolean' ? (youWon ? 'victory' : 'defeat') : undefined);
   const unitsBySide = useMemo(() => {
     const explicit = finalUnits.some((unit) => unit.side === 'a' || unit.side === 'b');
     const result: Record<Side, BattleUnit[]> = { a: [], b: [] };
@@ -235,7 +238,14 @@ export function ForgeBattlefield({ finalUnits, currentTurn, turnIndex, totalTurn
         {currentTurn && (currentTurn.damage ?? 0) > 0 ? <Text style={[styles.damageLabel, { color: currentTurn.is_crit ? colors.accent : colors.danger }]}>−{currentTurn.damage}{currentTurn.is_crit ? ' · CRÍTICO' : ' DAÑO'}</Text> : null}
       </View>
       {formation('a', player)}
-      {typeof youWon === 'boolean' ? <Text testID="battlefield-outcome" style={[styles.outcome, { color: youWon ? colors.success : colors.danger }]}>{youWon ? 'VICTORIA CONFIRMADA POR EL SERVIDOR' : 'DERROTA CONFIRMADA POR EL SERVIDOR'}</Text> : null}
+      {resolvedOutcome ? (
+        <Text
+          testID="battlefield-outcome"
+          style={[styles.outcome, { color: resolvedOutcome === 'victory' ? colors.success : resolvedOutcome === 'draw' ? colors.accent : colors.danger }]}
+        >
+          {resolvedOutcome === 'victory' ? 'VICTORIA CONFIRMADA POR EL SERVIDOR' : resolvedOutcome === 'draw' ? 'EMPATE CONFIRMADO POR EL SERVIDOR' : 'DERROTA CONFIRMADA POR EL SERVIDOR'}
+        </Text>
+      ) : null}
     </View>
   );
 }
