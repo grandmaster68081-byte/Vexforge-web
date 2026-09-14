@@ -7,6 +7,7 @@
 - **ARCHIVOS:** `mobile/app/auth.tsx`; `scripts/verify-mobile-auth.mjs`; `docs/VE-MOB-2-AUTH-NEXUS-GATE.md`.
 - **GATES:** `verify-mobile-auth` pasa 16/16, `verify-motion` pasa 17/17, `verify-uxcx-domain-identity` pasa 5/5, `verify-auth-guard` pasa 4/4 y `git diff --check` queda limpio. El typecheck móvil queda diferido porque esta copia no incluye `mobile/node_modules`; no se compila APK ni se inicia workflow por instrucción explícita del operador.
 - **ESTADO HONESTO:** `IMPLEMENTED_UNVERIFIED`; no se declara `PASS`, `OPERATIONAL` ni `TIER1_READY`.
+- **PERSISTENCIA:** código publicado en `main` mediante API REST HTTPS oficial de GitHub en `74395b53ff5eb57265d850c71299b749a2dbf95b` con `[skip ci]`; este registro documental se publica a continuación con el workflow Android igualmente omitido.
 - **SIGUIENTE BLOQUE:** continuar con la siguiente unidad Android verificable sólo después de conservar esta frontera de Auth y sin abrir contratos consolidados.
 
 ## 2026-09-13 — VE-MOB-8-DECK — FORJA DOMAIN IDENTITY / IMPLEMENTED_UNVERIFIED
