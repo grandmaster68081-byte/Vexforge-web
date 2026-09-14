@@ -117,6 +117,7 @@ function PanelContent({
   wallet,
   achievements,
   social,
+  loading,
   collectionCount,
   onClose,
   onSignOut,
@@ -132,6 +133,7 @@ function PanelContent({
   wallet: ReturnType<typeof useGame>['wallet'];
   achievements: PlayerAchievement[];
   social: MobileSocialSnapshot | null;
+  loading: boolean;
   collectionCount: number;
   onClose: () => void;
   onSignOut: () => Promise<void>;
@@ -203,7 +205,7 @@ function PanelContent({
         </View>
       ) : null}
       {panel === 'achievements' || panel === 'titles' ? (
-        achievements.length ? <ScrollView style={styles.modalList}>{achievements.map((achievement) => <View key={achievement.id} style={[styles.modalRow, { borderColor: colors.border }]}><Ionicons name={panel === 'titles' ? 'crown' : 'trophy-outline'} size={18} color={colors.accent} /><View style={styles.modalRowCopy}><Text style={[styles.modalRowTitle, { color: colors.foreground }]}>{achievement.title}</Text><Text style={[styles.modalMuted, { color: colors.mutedForeground }]}>{achievement.description}</Text></View><Text style={[styles.modalPoints, { color: colors.accent }]}>{achievement.points}</Text></View>)}</ScrollView> : <Text testID="profile-empty-achievements" style={[styles.modalMuted, { color: colors.mutedForeground }]}>Todavía no hay registros disponibles.</Text>
+        loading ? <Text testID={`profile-${panel}-pending`} style={[styles.modalMuted, { color: colors.mutedForeground }]}>{panel === 'titles' ? 'TÍTULOS EN ESPERA · SINCRONIZACIÓN NO CONFIRMADA' : 'LOGROS EN ESPERA · SINCRONIZACIÓN NO CONFIRMADA'}</Text> : achievements.length ? <ScrollView style={styles.modalList}>{achievements.map((achievement) => <View key={achievement.id} style={[styles.modalRow, { borderColor: colors.border }]}><Ionicons name={panel === 'titles' ? 'crown' : 'trophy-outline'} size={18} color={colors.accent} /><View style={styles.modalRowCopy}><Text style={[styles.modalRowTitle, { color: colors.foreground }]}>{achievement.title}</Text><Text style={[styles.modalMuted, { color: colors.mutedForeground }]}>{achievement.description}</Text></View><Text style={[styles.modalPoints, { color: colors.accent }]}>{achievement.points}</Text></View>)}</ScrollView> : <Text testID="profile-empty-achievements" style={[styles.modalMuted, { color: colors.mutedForeground }]}>Todavía no hay registros disponibles.</Text>
       ) : null}
       {panel === 'history' ? (
         social === null ? <Text testID="profile-history-pending" style={[styles.modalMuted, { color: colors.mutedForeground }]}>HISTORIAL EN ESPERA · SINCRONIZACIÓN NO CONFIRMADA</Text> : social.matches.length ? <ScrollView style={styles.modalList}>{social.matches.map((match) => {
@@ -420,7 +422,7 @@ export default function ProfileScreen() {
         ) : null}
       </ScrollView>
       <Modal visible={panel !== null} animationType="slide" transparent onRequestClose={() => setPanel(null)}>
-        {panel ? <View style={styles.modalBackdrop}><PanelContent panel={panel} colors={colors} playerId={player.id} playerName={displayName} playerEmail={email} rank={rank} stats={stats} progress={progress} wallet={wallet} achievements={achievements} social={social} collectionCount={collection.length} onClose={() => setPanel(null)} onSignOut={async () => { await signOut(); setPanel(null); }} /></View> : null}
+         {panel ? <View style={styles.modalBackdrop}><PanelContent panel={panel} colors={colors} playerId={player.id} playerName={displayName} playerEmail={email} rank={rank} stats={stats} progress={progress} wallet={wallet} achievements={achievements} social={social} loading={loading} collectionCount={collection.length} onClose={() => setPanel(null)} onSignOut={async () => { await signOut(); setPanel(null); }} /></View> : null}
       </Modal>
     </ScreenShell>
   );
