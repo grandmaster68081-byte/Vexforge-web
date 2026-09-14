@@ -1,3 +1,22 @@
+## 2026-09-14 — VE-MOB-7-BATTLE — HONEST RANK SIGNALS / IMPLEMENTED_UNVERIFIED
+
+- **BRANCH:** `main`.
+- **SCREEN / DOMAIN:** Arena / `ARENA → RANGO PvP + OPONENTES`.
+- **BLOCK:** fidelidad de rango, MMR, récord y escudos cuando la fuente viva entrega métricas parciales o ausentes.
+- **WHAT CHANGED:** victorias y derrotas ausentes ya no se convierten en guiones; rango/MMR ausentes muestran `RANGO NO REPORTADO` y `MMR NO REPORTADO`; escudos ausentes muestran `NO REPORTADO`. El orden continúa tratando MMR desconocido como no ordenable.
+- **LIVE DATA CHECK:** se conserva la lectura de `loadPlayerRank` y `get_pvp_opponents`; no se añadieron datos, cálculos competitivos, RPCs ni autoridad local.
+- **DATA PRESERVED:** matchmaking, ForgeFormation, Battle Run, event log, replay, settlement, MMR, recompensas, Auth, RLS, navegación, accesibilidad, reduced-motion, assets oficiales y web congelada.
+- **ASSETS USED:** ninguno nuevo.
+- **MOTION_ADDED:** ninguno; se conserva la interacción táctil y la protección de reduced-motion.
+- **PERFORMANCE_NOTES:** normalización local de señales ya cargadas; sin solicitudes de red, animaciones nuevas ni dependencias añadidas.
+- **GATES:** `node scripts/verify-mobile-battle.mjs` y `git diff --check` deben pasar. No se compila APK, no se inicia workflow Android ni se publica release por instrucción del operador.
+- **CORE_SCORE:** pendiente de QA visual/táctil en dispositivo.
+- **VISUAL_DEBT_ADDED:** ninguna.
+- **VISUAL_DEBT_REMOVED:** guiones y estados provisionales para MMR, récord, rango y escudos.
+- **STATUS:** `IMPLEMENTED_UNVERIFIED`.
+- **PERSISTENCIA:** pendiente de publicar código y continuidad en `main` mediante la API REST HTTPS oficial de GitHub con `[skip ci]`; sin APK ni release Android nuevo.
+- **NEXT_BLOCK:** continuar con otra unidad Android atómica del protocolo sin tocar la web congelada ni iniciar APK.
+
 ## 2026-09-14 — VE-MOB-7-BATTLE — HONEST RESULT SIGNALS / IMPLEMENTED_UNVERIFIED
 
 - **BRANCH:** `main`.

@@ -115,7 +115,7 @@ function OpponentRow({
   const opponentName = opponent.display_name ?? 'IDENTIDAD NO RESUELTA';
   const record = opponent.wins === null && opponent.losses === null
     ? 'RÉCORD NO REPORTADO'
-    : `${opponent.wins ?? '—'}V / ${opponent.losses ?? '—'}D`;
+    : `${numberSignal(opponent.wins, 'VICTORIAS NO REPORTADAS')}V / ${numberSignal(opponent.losses, 'DERROTAS NO REPORTADAS')}D`;
   return (
     <Pressable
       testID={`battle-opponent-${opponent.player_id}`}
@@ -162,11 +162,14 @@ function ArenaRankCard({
   colors: ReturnType<typeof useColors>;
 }) {
   const mmr = typeof rank?.mmr === 'number' ? rank.mmr : null;
-  const tier = rank?.tier?.trim().toUpperCase() || (mmr === null ? 'RANGO PENDIENTE' : rankName(mmr));
+  const tier = rank?.tier?.trim().toUpperCase() || (mmr === null ? 'RANGO NO REPORTADO' : rankName(mmr));
   const wins = typeof rank?.wins === 'number' ? rank.wins : typeof stats?.pvp_wins === 'number' ? stats.pvp_wins : null;
   const losses = typeof rank?.losses === 'number' ? rank.losses : typeof stats?.pvp_losses === 'number' ? stats.pvp_losses : null;
   const shields = typeof rank?.shields === 'number' ? rank.shields : null;
-  const recordLabel = wins === null && losses === null ? 'RÉCORD PENDIENTE' : `${wins ?? '—'}V / ${losses ?? '—'}D`;
+  const recordLabel = wins === null && losses === null
+    ? 'RÉCORD NO REPORTADO'
+    : `${numberSignal(wins, 'VICTORIAS NO REPORTADAS')}V / ${numberSignal(losses, 'DERROTAS NO REPORTADAS')}D`;
+  const mmrLabel = mmr === null ? 'MMR NO REPORTADO' : `${mmr} MMR`;
 
   return (
     <View testID="battle-rank-card" style={[styles.rankCard, { backgroundColor: `${colors.panelStrong}E8`, borderColor: `${colors.danger}66` }]}>
@@ -177,11 +180,11 @@ function ArenaRankCard({
         <Text style={[styles.sectionLabel, { color: colors.danger }]}>TEMPORADA ACTIVA · RANGO PvP</Text>
         <Text style={[styles.rankTitle, { color: colors.foreground }]}>{loading ? 'SINCRONIZANDO' : tier}</Text>
         <Text style={[styles.rankMeta, { color: colors.mutedForeground }]}>
-          {mmr === null ? 'MMR pendiente' : `${mmr} MMR`} · {recordLabel}
+          {mmrLabel} · {recordLabel}
         </Text>
       </View>
       <View style={styles.rankScore}>
-        <Text style={[styles.rankScoreValue, { color: colors.accent }]}>{shields === null ? '—' : shields}</Text>
+        <Text style={[styles.rankScoreValue, { color: colors.accent }]}>{shields === null ? 'NO REPORTADO' : shields}</Text>
         <Text style={[styles.rankScoreLabel, { color: colors.mutedForeground }]}>ESCUDOS</Text>
       </View>
     </View>
