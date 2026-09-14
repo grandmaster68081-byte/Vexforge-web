@@ -60,7 +60,9 @@ function FormationCard({
           <Text style={[styles.power, { color: accent }]}>{slot.power} PODER</Text>
         </>
       ) : (
-        <Text style={[styles.emptyCard, { color: colors.mutedForeground }]}>Sin unidad</Text>
+        <Text style={[styles.emptyCard, { color: colors.mutedForeground }]}>
+          {role === 'RESERVA' ? 'RESERVA VACÍA' : 'POSICIÓN VACÍA'}
+        </Text>
       )}
     </View>
   );

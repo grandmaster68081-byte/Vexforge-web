@@ -1,3 +1,22 @@
+## 2026-09-14 — VE-MOB-7-FORMATION — HONEST EMPTY SLOT SIGNALS / IMPLEMENTED_UNVERIFIED
+
+- **BRANCH:** `main`.
+- **SCREEN / DOMAIN:** Arena / `ARENA → FORGEFORMATION → PREVIEW DE FORMACIÓN`.
+- **BLOCK:** distinguir posiciones vacías de reservas vacías sin inventar una unidad.
+- **WHAT CHANGED:** los slots activos ausentes muestran `POSICIÓN VACÍA`; una reserva sin cartas muestra `RESERVA VACÍA`. Se elimina el placeholder genérico `Sin unidad`.
+- **LIVE DATA CHECK:** la previsualización sigue consumiendo `loadPlayerDeck`; no se añadieron cartas, estadísticas, simulaciones, RPCs ni autoridad local.
+- **DATA PRESERVED:** ForgeFormation, Battle Run, event log, replay, settlement, MMR, recompensas, Auth, RLS, navegación, accesibilidad, reduced-motion, assets oficiales y web congelada.
+- **ASSETS USED:** ninguno nuevo.
+- **MOTION_ADDED:** ninguno.
+- **PERFORMANCE_NOTES:** sólo cambia la etiqueta local de un estado ya derivado; sin solicitudes de red, animaciones nuevas ni dependencias añadidas.
+- **GATES:** `node scripts/verify-mobile-battle.mjs` y `git diff --check` deben pasar. No se compila APK, no se inicia workflow Android ni se publica release por instrucción del operador.
+- **CORE_SCORE:** pendiente de QA visual/táctil en dispositivo.
+- **VISUAL_DEBT_ADDED:** ninguna.
+- **VISUAL_DEBT_REMOVED:** placeholder genérico `Sin unidad`.
+- **STATUS:** `IMPLEMENTED_UNVERIFIED`.
+- **PERSISTENCIA:** pendiente de publicar código y continuidad en `main` mediante la API REST HTTPS oficial de GitHub con `[skip ci]`; sin APK ni release Android nuevo.
+- **NEXT_BLOCK:** continuar con otra unidad Android atómica del protocolo sin tocar la web congelada ni iniciar APK.
+
 ## 2026-09-14 — VE-MOB-7-BATTLE — HONEST RANK SIGNALS / IMPLEMENTED_UNVERIFIED
 
 - **BRANCH:** `main`.
