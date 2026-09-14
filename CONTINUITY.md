@@ -1,3 +1,21 @@
+## 2026-09-14 — VE-MOB-T2V — BUTTON/SEAL CONTROL TOKENS / IMPLEMENTED_UNVERIFIED
+
+- **BRANCH:** `main`.
+- **SCREEN / DOMAIN:** primitive compartido de control Android; botones de acción/sello.
+- **BLOCK:** segunda pieza ejecutable de `T2V — VISUAL SYSTEM TOKENS + SHARED SCENE PRIMITIVES`.
+- **WHAT CHANGED:** `ForgeButton` consume `VISUAL_TOKENS.control.button` para altura mínima, radio, padding, icon size/gap y opacidades de pressed/disabled; su API, haptics, gradientes y acciones permanecen iguales.
+- **DATA PRESERVED:** Supabase, RPCs, RLS, Auth, economía, combate, event log, settlement, navegación, datos vivos, assets oficiales y web congelada.
+- **ASSETS USED:** ninguno nuevo; no se introdujeron sustitutos genéricos.
+- **MOTION_ADDED:** ninguno; el feedback existente continúa siendo opacity-only y no altera timing autoritativo.
+- **PERFORMANCE_NOTES:** sólo se sustituyeron literales visuales por tokens estáticos; no se añadieron solicitudes, listeners ni renders de datos.
+- **GATES:** `node scripts/verify-mobile-visual-system.mjs`, `npm run typecheck` y `git diff --check`; workflow APK y QA visual/táctil quedan pendientes de autorización.
+- **VISUAL_DELTA:** el botón/sello compartido ya pertenece al contrato de tokens T2V y mantiene una lectura consistente entre dominios.
+- **VISUAL_DEBT_REMOVED:** literales de control duplicados en la primitiva de botón compartida.
+- **VISUAL_DEBT_ADDED:** ninguna.
+- **STATUS:** `IMPLEMENTED_UNVERIFIED`.
+- **PERSISTENCIA:** publicar código, guarda, documento y continuidad juntos en `main` mediante la API REST HTTPS oficial de GitHub con `[skip ci]`; no compilar APK ni publicar release.
+- **NEXT_BLOCK:** continuar con otra pieza T2V explícita, sin tocar el motor de juego, la web congelada ni el tutorial.
+
 ## 2026-09-14 — VE-MOB-T2V — SHARED VISUAL TOKENS AND MATERIAL PANEL / IMPLEMENTED_UNVERIFIED
 
 - **BRANCH:** `main`.

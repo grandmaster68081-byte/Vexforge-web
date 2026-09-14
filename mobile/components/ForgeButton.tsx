@@ -4,6 +4,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { Pressable, StyleSheet, View } from 'react-native';
 import { useColors } from '@/hooks/useColors';
 import { ForgeText } from '@/components/ForgeText';
+import { VISUAL_TOKENS } from '@/constants/experience';
 
 type ForgeButtonProps = {
   label: string;
@@ -28,7 +29,16 @@ export function ForgeButton({ label, icon, onPress, secondary = false, disabled 
         void Haptics.selectionAsync();
         onPress();
       }}
-      style={({ pressed }) => [styles.pressable, { opacity: disabled ? 0.45 : pressed ? 0.72 : 1 }]}
+       style={({ pressed }) => [
+         styles.pressable,
+         {
+           opacity: disabled
+             ? VISUAL_TOKENS.control.button.disabledOpacity
+             : pressed
+               ? VISUAL_TOKENS.control.button.pressedOpacity
+               : 1,
+         },
+       ]}
     >
       {secondary ? (
         <View style={[styles.surface, { borderColor: colors.accent, backgroundColor: `${colors.ink}CC` }]}>
@@ -47,5 +57,14 @@ export function ForgeButton({ label, icon, onPress, secondary = false, disabled 
 
 const styles = StyleSheet.create({
   pressable: { flex: 1 },
-  surface: { minHeight: 46, borderWidth: 1, borderRadius: 12, paddingHorizontal: 14, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8 },
+  surface: {
+    minHeight: VISUAL_TOKENS.control.button.minHeight,
+    borderWidth: VISUAL_TOKENS.border.standard,
+    borderRadius: VISUAL_TOKENS.control.button.radius,
+    paddingHorizontal: VISUAL_TOKENS.control.button.paddingHorizontal,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: VISUAL_TOKENS.control.button.gap,
+  },
 });

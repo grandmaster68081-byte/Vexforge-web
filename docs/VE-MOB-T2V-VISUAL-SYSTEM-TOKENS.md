@@ -21,6 +21,8 @@ la web congelada.
 - `DomainState` usa `MaterialPanel` para carga, vacío y error; el estado
   continúa siendo el contrato vivo recibido por cada pantalla y no genera
   datos, arte ni reglas de juego.
+- `ForgeButton` consume el bloque `control.button` para altura, radio, padding,
+  gap y feedback de pressed/disabled sin cambiar su API ni sus acciones.
 
 ## Límites
 

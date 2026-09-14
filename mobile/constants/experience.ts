@@ -155,4 +155,15 @@ export const VISUAL_TOKENS = {
     standard: { ambient: true, particles: false, blur: true },
     high: { ambient: true, particles: true, blur: true },
   },
+  control: {
+    button: {
+      minHeight: 46,
+      radius: 12,
+      paddingHorizontal: 14,
+      iconSize: 16,
+      gap: 8,
+      pressedOpacity: 0.72,
+      disabledOpacity: 0.45,
+    },
+  },
 } as const;

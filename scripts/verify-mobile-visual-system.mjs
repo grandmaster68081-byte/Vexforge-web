@@ -32,6 +32,7 @@ for (const token of [
   'spacing:',
   'safeArea:',
   'qualityTiers:',
+  'control:',
 ]) {
   if (!tokens.includes(token)) failures.push(`shared visual token "${token}" is missing`);
 }
@@ -50,6 +51,14 @@ if (!state.includes('materialRole={kind ===')) {
 }
 if (!state.includes('tone={kind ===')) {
   failures.push('DomainState does not select a semantic tone');
+}
+
+const button = source('mobile/components/ForgeButton.tsx');
+if (!button.includes("from '@/constants/experience'")) {
+  failures.push('ForgeButton does not consume shared visual tokens');
+}
+if (!button.includes('VISUAL_TOKENS.control.button')) {
+  failures.push('ForgeButton does not consume control tokens');
 }
 
 if (failures.length > 0) {
