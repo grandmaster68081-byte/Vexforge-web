@@ -91,6 +91,15 @@ function getStreak(matches: MobileSocialSnapshot['matches'], playerId: string) {
   return streak;
 }
 
+type MatchOutcome = 'victory' | 'defeat' | 'draw' | 'pending';
+
+function matchOutcome(match: MobileSocialSnapshot['matches'][number], playerId: string): MatchOutcome {
+  if (match.status.trim().toLowerCase() !== 'resolved') return 'pending';
+  if (match.winner === playerId) return 'victory';
+  if (match.winner) return 'defeat';
+  return 'draw';
+}
+
 function DataText({ children, style }: { children: ReactNode; style?: object }) {
   return <Text pointerEvents="none" style={[styles.dataText, style]}>{children}</Text>;
 }
@@ -196,7 +205,22 @@ function PanelContent({
         achievements.length ? <ScrollView style={styles.modalList}>{achievements.map((achievement) => <View key={achievement.id} style={[styles.modalRow, { borderColor: colors.border }]}><Ionicons name={panel === 'titles' ? 'crown' : 'trophy-outline'} size={18} color={colors.accent} /><View style={styles.modalRowCopy}><Text style={[styles.modalRowTitle, { color: colors.foreground }]}>{achievement.title}</Text><Text style={[styles.modalMuted, { color: colors.mutedForeground }]}>{achievement.description}</Text></View><Text style={[styles.modalPoints, { color: colors.accent }]}>{achievement.points}</Text></View>)}</ScrollView> : <Text testID="profile-empty-achievements" style={[styles.modalMuted, { color: colors.mutedForeground }]}>Todavía no hay registros disponibles.</Text>
       ) : null}
       {panel === 'history' ? (
-        social?.matches.length ? <ScrollView style={styles.modalList}>{social.matches.map((match) => { const won = match.winner === playerId; const elo = match.player_a === playerId ? match.elo_change_a : match.elo_change_b; return <View key={match.id} style={[styles.modalRow, { borderColor: colors.border }]}><Ionicons name={won ? 'checkmark-circle' : 'close-circle-outline'} size={18} color={won ? colors.success : colors.danger} /><View style={styles.modalRowCopy}><Text style={[styles.modalRowTitle, { color: colors.foreground }]}>{won ? 'Victoria' : 'Derrota'} · {match.opponent_name ?? '—'}</Text><Text style={[styles.modalMuted, { color: colors.mutedForeground }]}>{formatDate(match.created_at)}</Text></View><Text style={[styles.modalPoints, { color: elo && elo > 0 ? colors.success : colors.danger }]}>{elo == null ? '—' : `${elo > 0 ? '+' : ''}${elo}`}</Text></View>; })}</ScrollView> : <Text style={[styles.modalMuted, { color: colors.mutedForeground }]}>No hay combates registrados.</Text>
+        social?.matches.length ? <ScrollView style={styles.modalList}>{social.matches.map((match) => {
+          const outcome = matchOutcome(match, playerId);
+          const elo = match.player_a === playerId ? match.elo_change_a : match.elo_change_b;
+          const outcomeColor = outcome === 'victory' ? colors.success : outcome === 'defeat' ? colors.danger : outcome === 'draw' ? colors.accent : colors.mutedForeground;
+          const outcomeIcon = outcome === 'victory' ? 'checkmark-circle' : outcome === 'defeat' ? 'close-circle-outline' : outcome === 'draw' ? 'pause-circle-outline' : 'time-outline';
+          const outcomeLabel = outcome === 'victory' ? 'Victoria' : outcome === 'defeat' ? 'Derrota' : outcome === 'draw' ? 'Empate' : 'Pendiente';
+          const eloColor = elo == null ? colors.mutedForeground : elo > 0 ? colors.success : elo < 0 ? colors.danger : colors.accent;
+          return <View key={match.id} testID={`profile-history-${match.id}`} style={[styles.modalRow, { borderColor: colors.border }]}>
+            <Ionicons name={outcomeIcon} size={18} color={outcomeColor} />
+            <View style={styles.modalRowCopy}>
+              <Text style={[styles.modalRowTitle, { color: colors.foreground }]}>{outcomeLabel} · {match.opponent_name ?? '—'}</Text>
+              <Text style={[styles.modalMuted, { color: colors.mutedForeground }]}>{formatDate(match.created_at)}</Text>
+            </View>
+            <Text style={[styles.modalPoints, { color: eloColor }]}>{elo == null ? '—' : `${elo > 0 ? '+' : ''}${elo}`}</Text>
+          </View>;
+        })}</ScrollView> : <Text style={[styles.modalMuted, { color: colors.mutedForeground }]}>No hay combates registrados.</Text>
       ) : null}
       {panel === 'ranking' ? (
         social?.rankings.length ? <ScrollView style={styles.modalList}>{social.rankings.map((entry) => <View key={entry.player_id} style={[styles.modalRow, { borderColor: entry.player_id === playerId ? colors.accent : colors.border }]}><Text style={[styles.modalRank, { color: entry.player_id === playerId ? colors.accent : colors.mutedForeground }]}>#{entry.rank_position}</Text><View style={styles.modalRowCopy}><Text style={[styles.modalRowTitle, { color: colors.foreground }]}>{entry.display_name ?? '—'}{entry.player_id === playerId ? ' · TÚ' : ''}</Text><Text style={[styles.modalMuted, { color: colors.mutedForeground }]}>{entry.mmr} ELO · {entry.wins}V / {entry.losses}D</Text></View><Ionicons name="shield-outline" size={18} color={colors.accent} /></View>)}</ScrollView> : <Text style={[styles.modalMuted, { color: colors.mutedForeground }]}>El ranking de temporada todavía no está disponible.</Text>

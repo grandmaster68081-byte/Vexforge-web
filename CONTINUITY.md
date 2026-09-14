@@ -1,3 +1,16 @@
+## 2026-09-13 — VE-MOB-9-PROFILE — HISTORY OUTCOME FIDELITY / IMPLEMENTED_UNVERIFIED
+
+- **TARGET:** panel Historial de Legado en `mobile/app/(tabs)/profile.tsx`.
+- **QUÉ CAMBIÓ:** el historial distingue `Victoria`, `Derrota`, `Empate` y `Pendiente` usando `pvp_matches.status` y `winner`; un cambio de ELO `0` queda neutral en vez de aparecer como penalización.
+- **VISUAL DELTA:** antes la ausencia de ganador se presentaba como derrota y el cero como pérdida; ahora la superficie conserva la incertidumbre y la neutralidad reales del registro.
+- **DATOS PRESERVADOS:** `status`, `winner`, `elo_change_a`, `elo_change_b`, `created_at` y el nombre vivo del rival. No se infieren resultados desde valores faltantes.
+- **ASSETS / MOTION:** no se añadieron assets ni motion; se conserva el panel, la navegación, la accesibilidad y los estados existentes.
+- **ARCHIVOS:** `mobile/app/(tabs)/profile.tsx`; `scripts/verify-mobile-profile.mjs`; `docs/VE-MOB-9-PROFILE-HISTORY-OUTCOME-FIDELITY.md`.
+- **GATES:** `verify-mobile-profile` pasa 23/23, `verify:motion` pasa 17/17 y el escaneo de whitespace queda limpio. La guarda global `verify-uxcx-domain-identity` sigue bloqueada por un contrato previo de `mobile/app/(tabs)/deck.tsx` sin `DomainHeader`/`domain="forja"`; no pertenece a este delta y no se modifica. No se compila APK ni se inicia workflow por instrucción explícita del operador.
+- **ESTADO HONESTO:** `IMPLEMENTED_UNVERIFIED`; no se declara `PASS`, `OPERATIONAL` ni `TIER1_READY`.
+- **PERSISTENCIA:** pendiente de publicar en `main` mediante API REST HTTPS oficial de GitHub con `[skip ci]`.
+- **SIGUIENTE BLOQUE:** continuar con otro delta Android verificable de Legado o avanzar a la siguiente unidad global sin reabrir contratos.
+
 ## 2026-09-13 — VE-MOB-7-BATTLE — REPLAY TURN DETAIL / IMPLEMENTED_UNVERIFIED
 
 - **TARGET:** Arena Android replay (`mobile/app/(tabs)/battle.tsx`), usando el `BattleTurn` autoritativo ya recibido.

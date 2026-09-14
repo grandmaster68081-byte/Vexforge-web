@@ -34,6 +34,8 @@ const assertions = [
   ['profile uses the canonical username field', contents.screen.includes('player.telegram_username') && !contents.screen.includes('displayName.toLowerCase().replace')],
   ['profile does not repeat identity in achievement panels', !contents.screen.includes('modalFooter') && !contents.screen.includes('playerName} · {rankLabel(rank)')],
   ['profile places count and level in programmatic cards', contents.screen.includes('cartas registradas') && contents.screen.includes('Nivel {progress?.level')],
+  ['profile preserves draw and pending history outcomes', contents.screen.includes("type MatchOutcome = 'victory' | 'defeat' | 'draw' | 'pending'") && contents.screen.includes("if (match.status.trim().toLowerCase() !== 'resolved') return 'pending'") && contents.screen.includes("outcome === 'draw' ? 'Empate'") && contents.screen.includes("outcome === 'draw' ? 'pause-circle-outline'") && contents.screen.includes(": 'Pendiente'")],
+  ['profile preserves neutral history elo', contents.screen.includes('elo < 0 ? colors.danger : colors.accent') && contents.screen.includes('testID={`profile-history-${match.id}`}')],
   ['no client profile simulation', !contents.screen.includes('Math.random') && !contents.screen.includes('mock')],
   ['no emoji characters in profile UI', !/[\u{1F000}-\u{1FAFF}]/u.test(contents.screen)],
 ];
