@@ -3220,3 +3220,13 @@
 - Commit publicado en `main`: `70dd3dc00bb66897db0ea95c9dccf2c08eebf35f`. Se usó `[skip ci]`; no se inició workflow, no se compiló APK ni se publicó release nuevo.
 - Estado honesto: `IMPLEMENTED_UNVERIFIED`. La comprobación visual/táctil de estos estados queda pendiente para una APK autorizada.
 - Siguiente microbloque: continuar con otra mejora Android concreta de fidelidad o interacción, sin reintroducir inferencias ni tocar la web congelada.
+
+---
+## 2026-09-14 — VE-MOB-9-PROFILE — HONEST STREAK SIGNAL / IMPLEMENTED_UNVERIFIED
+
+- Se corrigió `mobile/app/(tabs)/profile.tsx`: la racha ahora distingue entre una lista social realmente vacía (`0`) y una fuente social aún no sincronizada (`—`).
+- Se conservaron el cálculo de racha, victorias, derrotas, historial, ELO, progreso, navegación, Auth, Supabase y la web congelada. No se inventan combates ni resultados.
+- Guarda local: `node scripts/verify-mobile-profile.mjs` OK, 24/24 comprobaciones. `git diff --check` OK. El typecheck no se ejecutó porque `mobile/node_modules` no está disponible.
+- Commit de código publicado en `main`: `495cc493eaac2832b52b4cd3299a4b58e155d8c3`. Se usó `[skip ci]`; no se inició workflow, no se compiló APK ni se publicó release nuevo.
+- Estado honesto: `IMPLEMENTED_UNVERIFIED`. La diferencia visual entre señal ausente y racha confirmada queda pendiente de verificación en APK autorizada.
+- Siguiente microbloque: continuar con otra mejora Android concreta de fidelidad o interacción, manteniendo la regla de no adivinar y sin tocar la web congelada.
