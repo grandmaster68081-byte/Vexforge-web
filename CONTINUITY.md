@@ -1,3 +1,22 @@
+## 2026-09-14 — VE-MOB-14-META — HONEST CATALOG AND QUEUE SIGNALS / IMPLEMENTED_UNVERIFIED
+
+- **BRANCH:** `main`.
+- **SCREEN / DOMAIN:** Meta / `META → COSMÉTICOS + RELIQUIAS + NFT`.
+- **BLOCK:** fidelidad de señales ausentes en catálogos, efectos, contrato y cola de minteo.
+- **WHAT CHANGED:** cosméticos, reliquias y NFT ya no convierten nombre, rareza, tipo, descripción, efecto, fecha, contrato, símbolo, carta o estado ausente en una etiqueta genérica o una semántica inventada. Los estados NFT conocidos se muestran de forma legible y los desconocidos conservan su código.
+- **LIVE DATA CHECK:** lectura QA de solo lectura contra Supabase oficial; catálogo de cosméticos y reliquias reales, sin cosméticos propios, sin contrato NFT visible y estadísticas Forge Ads existentes. No se ejecutaron mutaciones.
+- **DATA PRESERVED:** contratos `cosmetics`, `player_cosmetics`, `relics`, `player_relics`, `vexforge_nft_contracts`, `vexforge_nft_wallet_links`, `vexforge_nft_mint_queue`, Forge Ads, RPCs, RLS, Auth, navegación y web congelada.
+- **ASSETS USED:** ninguno nuevo; se mantiene el catálogo y los assets oficiales.
+- **MOTION_ADDED:** ninguno; se conserva el feedback táctil existente.
+- **PERFORMANCE_NOTES:** normalización local de señales ya cargadas; sin solicitudes de red adicionales ni animación nueva.
+- **GATES:** `node scripts/verify-mobile-meta.mjs` pasa 19/19; `git diff --check` limpio. El typecheck móvil no se ejecutó porque el snapshot no incluye `mobile/node_modules`; no se inicia APK, workflow Android ni release por instrucción del operador.
+- **CORE_SCORE:** pendiente de QA visual/táctil en dispositivo.
+- **VISUAL_DEBT_ADDED:** ninguna.
+- **VISUAL_DEBT_REMOVED:** `Catálogo oficial`, `Sin descripción adicional.`, `Efecto de Forja`, `Contrato en preparación`, fechas genéricas y estados crudos de la cola como sustitutos de señales no reportadas.
+- **STATUS:** `IMPLEMENTED_UNVERIFIED`.
+- **PERSISTENCIA:** código y continuidad publicados en `main` mediante la API REST HTTPS oficial de GitHub con `[skip ci]`; no se generará release Android.
+- **NEXT_BLOCK:** continuar con otra unidad Android atómica del protocolo sin tocar la web congelada ni iniciar APK.
+
 ## 2026-09-14 — VE-MOB-14-META — HONEST ACCOUNT IDENTITY / IMPLEMENTED_UNVERIFIED
 
 - **BRANCH:** `main`.
