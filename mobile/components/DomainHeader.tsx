@@ -14,12 +14,16 @@ import { DOMAIN_IDENTITY, MOTION, type DomainKey } from '@/constants/experience'
  */
 export function DomainHeader({
   domain,
+  title,
+  purpose,
   status,
   trailing,
   children,
   style,
 }: {
   domain: DomainKey;
+  title?: string;
+  purpose?: string;
   status?: string | null;
   trailing?: ReactNode;
   children?: ReactNode;
@@ -48,9 +52,9 @@ export function DomainHeader({
         </View>
         {trailing ? <View style={styles.trailing}>{trailing}</View> : null}
       </View>
-      <Text style={[styles.title, { color: colors.foreground }]}>{identity.title}</Text>
+      <Text style={[styles.title, { color: colors.foreground }]}>{title ?? identity.title}</Text>
       <Text style={[styles.purpose, { color: colors.mutedForeground }]}>
-        {status ?? identity.purpose}
+        {status ?? purpose ?? identity.purpose}
       </Text>
       {children ? <View style={styles.children}>{children}</View> : null}
     </Animated.View>

@@ -14,6 +14,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useColors } from '@/hooks/useColors';
 import { CANONICAL_BACKGROUNDS, OFFICIAL_ASSETS, type VisualSurface } from '@/constants/visual';
 import { MOTION } from '@/constants/experience';
+import { DomainHeader } from '@/components/DomainHeader';
 
 export function ScreenShell({ surface = 'home', sceneMode = 'shell', children, style, ...props }: ViewProps & { surface?: VisualSurface; sceneMode?: 'shell' | 'hero' }) {
   const colors = useColors();
@@ -136,7 +137,16 @@ export function ScreenShell({ surface = 'home', sceneMode = 'shell', children, s
           </View>
         </View>
       ) : null}
-      <View style={[styles.content, { paddingBottom: Platform.OS === 'web' ? 34 : insets.bottom }]}>{children}</View>
+      <View style={[styles.content, { paddingBottom: Platform.OS === 'web' ? 34 : insets.bottom }]}>
+        {surface === 'clans' ? (
+          <DomainHeader
+            domain="legado"
+            title="Red de Forjadores"
+            purpose="La comunidad vive dentro del Legado, no como un panel separado."
+          />
+        ) : null}
+        {children}
+      </View>
     </View>
   );
 }
