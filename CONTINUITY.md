@@ -1,3 +1,20 @@
+## 2026-09-13 — VE-MOB-12-WORLD — HONEST CODEX AND RAID SIGNALS / IMPLEMENTED_UNVERIFIED
+
+- **BRANCH:** `main`.
+- **SCREEN / DOMAIN:** Mundo / `MUNDO → CODEX + RAIDS`.
+- **BLOCK:** identidad ausente del Codex y estados crudos de raids.
+- **WHAT CHANGED:** estados conocidos de raids ahora son legibles; valores desconocidos conservan su señal; regiones, categorías, títulos y contenido ausentes muestran estados explícitos sin sustituir datos canónicos.
+- **VISUAL DELTA:** el jugador diferencia un campo no reportado de una entrada identificada por código, y un raid activo de un código de backend no traducido.
+- **DATA PRESERVED:** world bosses, raids, lore, temporada, rankings, encounters, claims, RPCs, RLS, Auth, economía, assets, navegación y web congelada.
+- **ASSETS USED:** ninguno nuevo; se mantienen los assets oficiales registrados.
+- **MOTION_ADDED:** ninguno.
+- **PERFORMANCE_NOTES:** normalización y traducción local de strings ya recibidos; sin red adicional ni animación.
+- **GATES:** `verify-mobile-world` y `git diff --check` deben pasar. No se inicia APK, workflow Android ni release por instrucción del operador; no se declara QA visual/táctil, `PASS`, `OPERATIONAL` ni `TIER1_READY`.
+- **ESTADO HONESTO:** `IMPLEMENTED_UNVERIFIED`.
+- **VISUAL_DEBT_REMOVED:** `Entrada sin título`, contenido genérico de Codex y estados crudos de raids.
+- **PERSISTENCIA:** pendiente de publicar en `main` mediante la API Git Data HTTPS oficial de GitHub con `[skip ci]`; no se generará release Android.
+- **SIGUIENTE BLOQUE:** continuar con otra mejora Android atómica verificable, sin tocar la web congelada ni iniciar compilación hasta autorización del operador.
+
 ## 2026-09-13 — VE-MOB-11-ECONOMY — READABLE STATUS SIGNALS / IMPLEMENTED_UNVERIFIED
 
 - **BRANCH:** `main`.

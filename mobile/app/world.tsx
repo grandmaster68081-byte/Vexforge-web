@@ -56,8 +56,30 @@ function difficultyTone(difficulty: string | undefined, colors: Colors) {
   return colors.primary;
 }
 
-function labelize(value: string | null | undefined) {
-  return (value ?? 'sin clasificar').replace(/_/g, ' ').replace(/\b\w/g, (letter) => letter.toUpperCase());
+function labelize(value: string | null | undefined, missingLabel = 'DATO NO REPORTADO') {
+  const normalized = value?.trim();
+  return normalized ? normalized.replace(/_/g, ' ').replace(/\b\w/g, (letter) => letter.toUpperCase()) : missingLabel;
+}
+
+function worldStatusLabel(value: string | null | undefined) {
+  const normalized = value?.trim().toLowerCase();
+  if (normalized === 'pending') return 'PENDIENTE';
+  if (normalized === 'active') return 'ACTIVO';
+  if (normalized === 'completed') return 'COMPLETADO';
+  if (normalized === 'failed') return 'FALLIDO';
+  if (normalized === 'cancelled') return 'CANCELADO';
+  return normalized ? `ESTADO: ${normalized.toUpperCase()}` : 'ESTADO NO REPORTADO';
+}
+
+function loreTitle(entry: MobileLoreEntry) {
+  const title = entry.title?.trim();
+  if (title) return title;
+  const code = entry.entry_code?.trim();
+  return code ? `ENTRADA ${code}` : 'TÍTULO NO REPORTADO';
+}
+
+function loreContent(value: string | null | undefined) {
+  return value?.trim() || 'CONTENIDO NO REPORTADO';
 }
 
 function formatNumber(value: number | null | undefined) {
@@ -145,7 +167,7 @@ function BossCard({ boss, encounters, onBattle, colors }: { boss: MobileWorldBos
       </View>
       <View style={styles.bossBody}>
         <Text style={[styles.bossLore, { color: lore ? colors.mutedForeground : colors.accent }]} numberOfLines={2}>{lore ?? 'LORE NO SINCRONIZADO'}</Text>
-        <View style={styles.metaRow}><Text style={[styles.metaText, { color: colors.mutedForeground }]}>{labelize(boss.region_id)}</Text><Text style={[styles.metaText, { color: tone }]}>PWR {formatNumber(boss.power_level)}</Text></View>
+        <View style={styles.metaRow}><Text style={[styles.metaText, { color: colors.mutedForeground }]}>{labelize(boss.region_id, 'REGIÓN NO REPORTADA')}</Text><Text style={[styles.metaText, { color: tone }]}>PWR {formatNumber(boss.power_level)}</Text></View>
         <View style={styles.hpRow}><View style={[styles.hpTrack, { backgroundColor: colors.muted }]}><View style={[styles.hpFill, { width: '100%', backgroundColor: tone }]} /></View><Text style={[styles.hpText, { color: colors.foreground }]}>{formatNumber(boss.hp)} HP</Text></View>
         <View style={styles.rewardRow}><Text style={[styles.rewardText, { color: colors.accent }]}>{rewardText(boss.reward_pool)}</Text>{ownEncounters.length > 0 ? <Text style={[styles.damageText, { color: ownDamage === null ? colors.accent : colors.success }]}>{ownDamage === null ? 'TÚ DAÑO NO REPORTADO' : `TÚ ${formatNumber(ownDamage)}`}</Text> : null}</View>
         <Pressable testID={`world-boss-battle-${boss.id}`} accessibilityRole="button" onPress={onBattle} style={({ pressed }) => [styles.primaryButton, { backgroundColor: tone, opacity: pressed ? 0.72 : 1 }]}>
@@ -163,7 +185,7 @@ function RaidCard({ raid, joined, busy, onJoin, onContribute, colors }: { raid: 
   return (
     <View testID={`world-raid-${raid.id}`} style={[styles.raidCard, { backgroundColor: colors.panel, borderColor: colors.border }]}>
       <View style={[styles.raidStripe, { backgroundColor: tone }]} />
-       <View style={styles.raidHeader}><View style={styles.raidIcon}><Feather name="people" size={18} color={tone} /></View><View style={styles.raidCopy}><Text style={[styles.raidTitle, { color: colors.foreground }]} numberOfLines={2}>{raid.metadata?.name ?? raid.raid_code}</Text><Text style={[styles.metaText, { color: colors.mutedForeground }]}>{labelize(raid.region_id)} · {raid.status.toUpperCase()}</Text></View><Text style={[styles.difficulty, { color: tone }]}>{difficulty ? difficulty.toUpperCase() : 'DIFICULTAD NO REPORTADA'}</Text></View>
+       <View style={styles.raidHeader}><View style={styles.raidIcon}><Feather name="people" size={18} color={tone} /></View><View style={styles.raidCopy}><Text style={[styles.raidTitle, { color: colors.foreground }]} numberOfLines={2}>{raid.metadata?.name ?? raid.raid_code}</Text><Text style={[styles.metaText, { color: colors.mutedForeground }]}>{labelize(raid.region_id, 'REGIÓN NO REPORTADA')} · {worldStatusLabel(raid.status)}</Text></View><Text style={[styles.difficulty, { color: tone }]}>{difficulty ? difficulty.toUpperCase() : 'DIFICULTAD NO REPORTADA'}</Text></View>
        <View style={styles.raidStats}><Text style={[styles.metaText, { color: colors.mutedForeground }]}>Límite {formatNumber(raid.metadata?.max_participants)}</Text><Text style={[styles.metaText, { color: colors.accent }]}>{typeof raid.metadata?.reward_multiplier === 'number' ? `x${raid.metadata.reward_multiplier} recompensa` : 'MULTIPLICADOR NO REPORTADO'}</Text><Text style={[styles.metaText, { color: colors.mutedForeground }]}>{formatDate(raid.started_at ?? raid.created_at)}</Text></View>
       <Text style={[styles.raidCode, { color: colors.mutedForeground }]}>{raid.raid_code}</Text>
       <Pressable testID={`world-raid-action-${raid.id}`} accessibilityRole="button" disabled={busy} onPress={joined ? onContribute : onJoin} style={({ pressed }) => [styles.secondaryButton, { borderColor: tone, opacity: pressed ? 0.7 : busy ? 0.5 : 1 }]}>
@@ -178,8 +200,8 @@ function RaidCard({ raid, joined, busy, onJoin, onContribute, colors }: { raid: 
 function LoreCard({ entry, expanded, onToggle, colors }: { entry: MobileLoreEntry; expanded: boolean; onToggle: () => void; colors: Colors }) {
   return (
     <Pressable testID={`world-lore-${entry.id}`} accessibilityRole="button" onPress={onToggle} style={({ pressed }) => [styles.loreCard, { backgroundColor: colors.panel, borderColor: expanded ? colors.accent : colors.border, opacity: pressed ? 0.78 : 1 }]}>
-      <View style={styles.loreHeader}><View style={[styles.loreSeal, { borderColor: `${colors.accent}66`, backgroundColor: `${colors.accent}12` }]}><Feather name="lore" size={17} color={colors.accent} /></View><View style={styles.loreCopy}><Text style={[styles.loreCategory, { color: colors.accent }]}>{labelize(entry.category)}</Text><Text style={[styles.loreTitle, { color: colors.foreground }]} numberOfLines={expanded ? undefined : 2}>{entry.title ?? entry.entry_code ?? 'Entrada sin título'}</Text></View><Feather name={expanded ? 'arrow-up' : 'arrow-down'} size={17} color={colors.mutedForeground} /></View>
-      {expanded ? <><Text style={[styles.loreContent, { color: colors.mutedForeground }]}>{entry.content ?? 'Esta entrada aún no tiene texto.'}</Text>{entry.related_entity ? <Text style={[styles.loreRelated, { color: colors.accent }]}>VINCULADO · {entry.related_entity}</Text> : null}</> : <Text style={[styles.lorePreview, { color: colors.mutedForeground }]} numberOfLines={2}>{entry.content ?? 'Toca para abrir la entrada.'}</Text>}
+       <View style={styles.loreHeader}><View style={[styles.loreSeal, { borderColor: `${colors.accent}66`, backgroundColor: `${colors.accent}12` }]}><Feather name="lore" size={17} color={colors.accent} /></View><View style={styles.loreCopy}><Text style={[styles.loreCategory, { color: colors.accent }]}>{labelize(entry.category, 'CATEGORÍA NO REPORTADA')}</Text><Text style={[styles.loreTitle, { color: colors.foreground }]} numberOfLines={expanded ? undefined : 2}>{loreTitle(entry)}</Text></View><Feather name={expanded ? 'arrow-up' : 'arrow-down'} size={17} color={colors.mutedForeground} /></View>
+       {expanded ? <><Text style={[styles.loreContent, { color: colors.mutedForeground }]}>{loreContent(entry.content)}</Text>{entry.related_entity ? <Text style={[styles.loreRelated, { color: colors.accent }]}>VINCULADO · {entry.related_entity}</Text> : null}</> : <Text style={[styles.lorePreview, { color: colors.mutedForeground }]} numberOfLines={2}>{loreContent(entry.content)}</Text>}
     </Pressable>
   );
 }
