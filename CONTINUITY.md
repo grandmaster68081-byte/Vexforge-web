@@ -1,3 +1,22 @@
+## 2026-09-14 — VE-MOB-12-WORLD — HONEST RANKING IDENTITY / IMPLEMENTED_UNVERIFIED
+
+- **BRANCH:** `main`.
+- **SCREEN / DOMAIN:** World / `WORLD → RANKING`.
+- **BLOCK:** evitar filas sin nombre y encabezados de temporada vacíos.
+- **WHAT CHANGED:** el encabezado usa `NO CONFIRMADA` sin `season_key`; las filas usan `NOMBRE NO RESUELTO` sin nombre utilizable. Los nombres continúan resolviéndose mediante `get_public_player_names`.
+- **LIVE DATA CHECK:** lectura QA confirmó que `season_rankings` no tiene columna `display_name`; no se añadieron columnas, nombres ni datos locales, y no se ejecutaron mutaciones.
+- **DATA PRESERVED:** rankings, posiciones, MMR, victorias, derrotas, empates, temporada, RPC oficial de nombres, jefes, raids, lore, recompensas, Auth, RLS, navegación, accesibilidad, reduced-motion y web congelada.
+- **ASSETS USED:** ninguno nuevo.
+- **MOTION_ADDED:** ninguno.
+- **PERFORMANCE_NOTES:** normalización local de cadenas ya resueltas; sin solicitudes nuevas, animaciones ni dependencias.
+- **GATES:** `node scripts/verify-mobile-world.mjs` OK; `git diff --check` limpio. No se inicia workflow Android, no se compila APK ni se publica release por instrucción del operador.
+- **CORE_SCORE:** pendiente de QA visual/táctil en dispositivo.
+- **VISUAL_DEBT_ADDED:** ninguna.
+- **VISUAL_DEBT_REMOVED:** nombre vacío y temporada vacía como identidad implícita en el ranking.
+- **STATUS:** `IMPLEMENTED_UNVERIFIED`.
+- **PERSISTENCIA:** código, documento y continuidad se publicarán juntos en `main` mediante la API REST HTTPS oficial de GitHub con `[skip ci]`; sin APK ni release Android nuevo.
+- **NEXT_BLOCK:** continuar con otra unidad Android atómica del protocolo sin tocar la web congelada ni iniciar APK.
+
 ## 2026-09-14 — VE-MOB-12-WORLD — HONEST BOSS IDENTITY / IMPLEMENTED_UNVERIFIED
 
 - **BRANCH:** `main`.

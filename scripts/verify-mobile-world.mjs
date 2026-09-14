@@ -30,6 +30,7 @@ const checks = [
   ['honest date signals', ['function formatDate', 'FECHA NO REPORTADA', 'FECHA NO VÁLIDA', 'toLocaleDateString']],
   ['honest numeric signals', ['function numberSignal', "numberSignal(boss.power_level, 'PWR')", "numberSignal(boss.hp, 'HP')", "numberSignal(raid.metadata?.max_participants, 'LÍMITE')", "numberSignal(xp, 'XP')", "numberSignal(currentTier, 'TIER')", "numberSignal(tier.xp_required, 'XP')", 'formatNumber(value)', 'NO REPORTADO']],
   ['honest boss identity signals', ['function worldBossIdentity', 'CÓDIGO NO REPORTADO', 'NOMBRE DEL JEFE NO REPORTADO', 'TIER NO REPORTADO', 'worldBossIdentity(boss)', 'identity.code', 'identity.name', 'identity.tier']],
+  ['honest ranking identity signals', ['function rankingSeasonLabel', 'function rankingName', 'rankingSeasonLabel(rankings[0]?.season_key)', 'rankingName(entry.display_name)', 'NOMBRE NO RESUELTO', 'NO CONFIRMADA']],
 ];
 for (const [label, needles] of checks) {
   const source = label === 'official world reads' || label === 'official actions' ? supabase : label === 'world background' ? visual : screen;
@@ -38,4 +39,5 @@ for (const [label, needles] of checks) {
 if (screen.includes('Fecha no disponible')) throw new Error('WORLD gate failed: generic date fallback remains');
 if (screen.includes('>—<') || screen.includes('>— </Text>')) throw new Error('WORLD gate failed: generic numeric fallback remains');
 if (screen.includes('>{boss.name}</Text>') || screen.includes('>{boss.boss_code}</Text>') || screen.includes('>{boss.tier.toUpperCase()}</Text>')) throw new Error('WORLD gate failed: raw boss identity remains');
+if (screen.includes("rankings[0]?.season_key ?? 'NO CONFIRMADA'") || screen.includes("entry.display_name ?? 'NOMBRE NO RESUELTO'")) throw new Error('WORLD gate failed: raw ranking identity fallback remains');
 console.log('verify-mobile-world: ok');
