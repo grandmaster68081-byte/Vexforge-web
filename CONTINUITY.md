@@ -1,3 +1,21 @@
+## 2026-09-14 — VE-MOB-T2V — DOMAIN STATE TOKENS / IMPLEMENTED_UNVERIFIED
+
+- **BRANCH:** `main`.
+- **SCREEN / DOMAIN:** estados compartidos de carga, vacío y error Android.
+- **BLOCK:** séptima pieza ejecutable de `T2V — VISUAL SYSTEM TOKENS + SHARED SCENE PRIMITIVES`.
+- **WHAT CHANGED:** `DomainState` consume `VISUAL_TOKENS.state` y los bordes compartidos para su geometría; conserva mensajes, accesibilidad, haptics y acciones reales de recuperación.
+- **DATA PRESERVED:** Supabase, RPCs, RLS, Auth, economía, combate, event log, settlement, navegación, datos vivos, assets oficiales y web congelada.
+- **ASSETS USED:** ninguno nuevo; no se introdujeron sustitutos genéricos.
+- **MOTION_ADDED:** ninguno; se centralizaron dimensiones visuales estáticas de los estados.
+- **PERFORMANCE_NOTES:** los tokens se resuelven localmente; no añaden solicitudes, listeners, estado ni renders de datos.
+- **GATES:** `node scripts/verify-mobile-visual-system.mjs`, `git diff --check`; el typecheck móvil requiere dependencias ausentes en el clon y el workflow APK/QA queda pendiente de autorización.
+- **VISUAL_DELTA:** carga, vacío y error comparten ahora una geometría T2V explícita sin cambiar su semántica ni recuperación.
+- **VISUAL_DEBT_REMOVED:** literales geométricos duplicados en la primitiva de estados.
+- **VISUAL_DEBT_ADDED:** ninguna.
+- **STATUS:** `IMPLEMENTED_UNVERIFIED`.
+- **PERSISTENCIA:** publicar código, guarda, documento y continuidad juntos en `main` mediante la API REST HTTPS oficial de GitHub con `[skip ci]`; no compilar APK ni publicar release.
+- **NEXT_BLOCK:** continuar con otra pieza T2V explícita, sin tocar el motor de juego, la web congelada ni el tutorial.
+
 ## 2026-09-14 — VE-MOB-T2V — SHARED SCENE ATMOSPHERE TOKENS / IMPLEMENTED_UNVERIFIED
 
 - **BRANCH:** `main`.

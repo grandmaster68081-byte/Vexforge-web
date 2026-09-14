@@ -3,6 +3,7 @@ import { ActivityIndicator, Pressable, StyleSheet, Text, View } from 'react-nati
 import { useColors } from '@/hooks/useColors';
 import { ForgeIconName, VexIcon } from '@/components/ForgeIcon';
 import { MaterialPanel } from '@/components/MaterialPanel';
+import { VISUAL_TOKENS } from '@/constants/experience';
 
 type DomainStateProps = {
   kind: 'loading' | 'empty' | 'error';
@@ -60,17 +61,46 @@ export function DomainState({ kind, title, message, icon, actionLabel, onAction,
 const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
-    gap: 9,
-    marginTop: 10,
-    paddingHorizontal: 18,
-    paddingVertical: 22,
+    gap: VISUAL_TOKENS.state.gap,
+    marginTop: VISUAL_TOKENS.state.marginTop,
+    paddingHorizontal: VISUAL_TOKENS.state.paddingHorizontal,
+    paddingVertical: VISUAL_TOKENS.state.paddingVertical,
   },
-  skeleton: { width: '78%', gap: 6, marginTop: 2, marginBottom: 2 },
-  skeletonLine: { height: 7, width: '100%', borderRadius: 4 },
+  skeleton: {
+    width: VISUAL_TOKENS.state.skeletonWidth,
+    gap: VISUAL_TOKENS.state.skeletonGap,
+    marginTop: VISUAL_TOKENS.state.skeletonMargin,
+    marginBottom: VISUAL_TOKENS.state.skeletonMargin,
+  },
+  skeletonLine: {
+    height: VISUAL_TOKENS.state.skeletonHeight,
+    width: '100%',
+    borderRadius: VISUAL_TOKENS.state.skeletonRadius,
+  },
   skeletonLineLong: { width: '88%' },
   skeletonLineShort: { width: '62%' },
-  title: { fontSize: 15, fontWeight: '800', letterSpacing: 0.4, textAlign: 'center' },
-  message: { fontSize: 12, lineHeight: 18, maxWidth: 310, textAlign: 'center' },
-  action: { borderWidth: 1, borderRadius: 10, marginTop: 3, paddingHorizontal: 12, paddingVertical: 9 },
-  actionText: { fontSize: 10, fontWeight: '800', letterSpacing: 1 },
+  title: {
+    fontSize: VISUAL_TOKENS.state.titleSize,
+    fontWeight: '800',
+    letterSpacing: VISUAL_TOKENS.state.titleTracking,
+    textAlign: 'center',
+  },
+  message: {
+    fontSize: VISUAL_TOKENS.state.messageSize,
+    lineHeight: VISUAL_TOKENS.state.messageLineHeight,
+    maxWidth: VISUAL_TOKENS.state.messageMaxWidth,
+    textAlign: 'center',
+  },
+  action: {
+    borderWidth: VISUAL_TOKENS.border.hairline,
+    borderRadius: VISUAL_TOKENS.state.actionRadius,
+    marginTop: VISUAL_TOKENS.state.actionTop,
+    paddingHorizontal: VISUAL_TOKENS.state.actionHorizontalPadding,
+    paddingVertical: VISUAL_TOKENS.state.actionVerticalPadding,
+  },
+  actionText: {
+    fontSize: VISUAL_TOKENS.state.actionTextSize,
+    fontWeight: '800',
+    letterSpacing: 1,
+  },
 });
