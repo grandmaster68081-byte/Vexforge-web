@@ -1,3 +1,22 @@
+## 2026-09-14 — VE-MOB-13-SOCIAL — HONEST SOCIAL PARTICIPATION SIGNALS / IMPLEMENTED_UNVERIFIED
+
+- **BRANCH:** `main`.
+- **SCREEN / DOMAIN:** Red de Forjadores / `LEGADO → SOCIAL → AMIGOS + CLANES + ARENA`.
+- **BLOCK:** fidelidad de nivel, prestigio, contribución, rol, rival, estado y cambio de MMR cuando Supabase no entrega la señal.
+- **WHAT CHANGED:** la lectura Android conserva esos campos como `null`; Social muestra `NIVEL NO REPORTADO`, `PRESTIGIO NO REPORTADO`, `CONTRIBUCIÓN NO REPORTADA`, `ROL NO REPORTADO`, `CLAN RIVAL NO REPORTADO`, `ESTADO NO REPORTADO` o `MMR NO REPORTADO` en lugar de `1`, `0`, `Clan`, `Clan rival`, `unknown` o guiones ambiguos.
+- **LIVE DATA CHECK:** sesión QA autenticada de solo lectura contra Supabase oficial; `players` resolvió la cuenta, `clans` devolvió 1 registro con nombre/prestigio/contribución presentes, `clan_wars` devolvió 0 registros y `pvp_matches` devolvió 18 registros con 2 ganadores no reportados. No se ejecutaron mutaciones.
+- **DATA PRESERVED:** amistades, solicitudes, desafíos, clanes, roster, guerras, ranking, historial, acciones RPC, RLS, Auth, navegación, accesibilidad, reduced-motion, assets oficiales y web congelada.
+- **ASSETS USED:** ninguno nuevo; se mantienen los assets oficiales de Social/Legado.
+- **MOTION_ADDED:** ninguno; se conserva la interacción táctil existente.
+- **PERFORMANCE_NOTES:** normalización local de respuestas ya cargadas; sin solicitudes nuevas, simulación, animación ni dependencia añadida.
+- **GATES:** `node scripts/verify-mobile-social.mjs` OK, 15/15; `git diff --check` limpio. El typecheck móvil queda diferido porque el clon oficial no incluye `mobile/node_modules`; no se compila APK, no se inicia workflow y no se publica release por instrucción del operador.
+- **CORE_SCORE:** pendiente de QA visual/táctil en dispositivo.
+- **VISUAL_DEBT_ADDED:** ninguna.
+- **VISUAL_DEBT_REMOVED:** defaults sintéticos de nivel, métricas de clan, rival, estado social y cambio de MMR.
+- **STATUS:** `IMPLEMENTED_UNVERIFIED`.
+- **PERSISTENCIA:** código y documentación publicados en `main` mediante la API REST HTTPS oficial de GitHub en `0b57824ac996ed606a410c448bbeeee27df82e58` con `[skip ci]`; sin APK ni release Android nuevo.
+- **NEXT_BLOCK:** continuar con otra mejora Android atómica verificable sin tocar la web congelada ni iniciar APK.
+
 ## 2026-09-14 — VE-MOB-13-SOCIAL — HONEST RANKING SIGNALS / IMPLEMENTED_UNVERIFIED
 
 - **BRANCH:** `main`.
