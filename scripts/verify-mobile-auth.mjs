@@ -29,6 +29,8 @@ const assertions = [
   ["Google account selector is exposed", contents.auth.includes('testID="auth-google"') && contents.auth.includes("socialLogin('google')")],
   ["Supabase Google OAuth flow is present", contents.supabase.includes("provider=' + provider") && contents.supabase.includes("openAuthSessionAsync")],
   ["auth form uses keyboard-aware scrolling", contents.auth.includes("KeyboardAwareScrollViewCompat") && contents.auth.includes("bottomOffset={24}"),],
+  ["auth exposes a live Nexus gate state", contents.auth.includes('testID="auth-status-rail"') && contents.auth.includes("PUERTA DEL NEXUS") && contents.auth.includes("CONFIRMACIÓN PENDIENTE")],
+  ["auth actions expose press depth", contents.auth.includes("translateY: pressed ? 1 : 0") && contents.auth.includes("translateY: pressed ? 2 : 0")],
   ["auth stack header is hidden", contents.root.includes('<Stack.Screen name="auth" options={{ headerShown: false')],
   ["tab bar hides while keyboard is open", contents.tabs.includes("tabBarHideOnKeyboard: true")],
   ["no emoji characters in auth UI", !/[\u{1F000}-\u{1FAFF}]/u.test(contents.auth)],

@@ -11,6 +11,7 @@ import { Redirect } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { KeyboardAwareScrollViewCompat } from '@/components/KeyboardAwareScrollViewCompat';
+import { Feather } from '@/components/ForgeIcon';
 import { useColors } from '@/hooks/useColors';
 import { useGame } from '@/context/GameContext';
 import type { OAuthProvider } from '@/lib/supabase';
@@ -51,6 +52,13 @@ export default function AuthScreen() {
     () => localError ?? readableAuthError(authError),
     [authError, localError],
   );
+  const accessState = authLoading
+    ? { icon: 'loader', label: 'AUTENTICANDO', detail: 'Validando el acceso con Supabase.', tone: colors.accent }
+    : error
+      ? { icon: 'warning', label: 'ENLACE INTERRUMPIDO', detail: 'Revisa la señal del Nexus y vuelve a intentar.', tone: colors.danger }
+      : notice
+        ? { icon: 'mail', label: 'CONFIRMACIÓN PENDIENTE', detail: 'La identidad espera confirmación por correo.', tone: colors.success }
+        : { icon: 'shield', label: 'PUERTA DEL NEXUS', detail: 'Tu progreso se conserva en la sesión oficial.', tone: colors.accent };
 
   if (session) return <Redirect href="/(tabs)" />;
 
@@ -128,6 +136,19 @@ export default function AuthScreen() {
             <Text style={[styles.subtitle, { color: colors.mutedForeground }]}>
               {mode === 'signin' ? 'Retoma tu progreso y continúa la forja.' : 'Registra un Forjador para comenzar tu recorrido.'}
             </Text>
+            <View
+              testID="auth-status-rail"
+              accessibilityLabel={`${accessState.label}. ${accessState.detail}`}
+              style={[styles.statusRail, { borderColor: `${accessState.tone}55`, backgroundColor: `${accessState.tone}12` }]}
+            >
+              <View style={[styles.statusSeal, { borderColor: accessState.tone }]}>
+                <Feather name={accessState.icon} size={15} color={accessState.tone} />
+              </View>
+              <View style={styles.statusCopy}>
+                <Text style={[styles.statusLabel, { color: accessState.tone }]}>{accessState.label}</Text>
+                <Text style={[styles.statusDetail, { color: colors.mutedForeground }]}>{accessState.detail}</Text>
+              </View>
+            </View>
           </View>
 
           <View style={styles.form} accessibilityLabel="Acciones de acceso de VEXFORGE">
@@ -181,7 +202,7 @@ export default function AuthScreen() {
               accessibilityState={{ disabled: authLoading }}
               onPress={() => setShowPassword((visible) => !visible)}
               disabled={authLoading}
-              style={styles.passwordToggle}
+              style={({ pressed }) => [styles.passwordToggle, { transform: [{ translateY: pressed ? 1 : 0 }] }]}
             >
               <Text style={[styles.inlineAction, { color: colors.accent }]}>{showPassword ? 'OCULTAR' : 'VER'}</Text>
             </Pressable>
@@ -192,7 +213,7 @@ export default function AuthScreen() {
               accessibilityLabel="¿Olvidaste tu contraseña?"
               onPress={() => void recoverPassword()}
               disabled={authLoading}
-              style={styles.forgotPassword}
+              style={({ pressed }) => [styles.forgotPassword, { opacity: pressed ? 0.65 : 1, transform: [{ translateY: pressed ? 1 : 0 }] }]}
             >
               <Text style={[styles.inlineAction, { color: colors.accent }]}>¿OLVIDASTE TU CONTRASEÑA?</Text>
             </Pressable>
@@ -204,7 +225,7 @@ export default function AuthScreen() {
               accessibilityState={{ checked: rememberSession, disabled: authLoading }}
               onPress={() => setRememberSession((remember) => !remember)}
               disabled={authLoading}
-              style={styles.rememberToggle}
+              style={({ pressed }) => [styles.rememberToggle, { opacity: pressed ? 0.72 : 1, transform: [{ translateY: pressed ? 1 : 0 }] }]}
             >
               <View
                 pointerEvents="none"
@@ -231,7 +252,11 @@ export default function AuthScreen() {
               disabled={authLoading}
               style={({ pressed }) => [
                 styles.submit,
-                { backgroundColor: colors.accent, opacity: pressed || authLoading ? 0.55 : 1 },
+                {
+                  backgroundColor: colors.accent,
+                  opacity: pressed || authLoading ? 0.55 : 1,
+                  transform: [{ translateY: pressed ? 2 : 0 }],
+                },
               ]}
             >
               {authLoading ? <ActivityIndicator color={colors.accent} /> : null}
@@ -250,7 +275,7 @@ export default function AuthScreen() {
               accessibilityLabel="Continuar con Google"
               onPress={() => void socialLogin('google')}
               disabled={authLoading}
-              style={({ pressed }) => [{ borderColor: colors.border, opacity: pressed || authLoading ? 0.55 : 1 }, styles.socialButton]}
+              style={({ pressed }) => [{ borderColor: colors.border, opacity: pressed || authLoading ? 0.55 : 1, transform: [{ translateY: pressed ? 2 : 0 }] }, styles.socialButton]}
             >
               <Text style={[styles.socialText, { color: colors.foreground }]}>Google</Text>
             </Pressable>
@@ -260,7 +285,7 @@ export default function AuthScreen() {
               accessibilityLabel="Continuar con Discord"
               onPress={() => void socialLogin('discord')}
               disabled={authLoading}
-              style={({ pressed }) => [{ borderColor: colors.border, opacity: pressed || authLoading ? 0.55 : 1 }, styles.socialButton]}
+              style={({ pressed }) => [{ borderColor: colors.border, opacity: pressed || authLoading ? 0.55 : 1, transform: [{ translateY: pressed ? 2 : 0 }] }, styles.socialButton]}
             >
               <Text style={[styles.socialText, { color: colors.foreground }]}>Discord</Text>
             </Pressable>
@@ -270,7 +295,7 @@ export default function AuthScreen() {
               accessibilityLabel="Continuar con Apple"
               onPress={() => void socialLogin('apple')}
               disabled={authLoading}
-              style={({ pressed }) => [{ borderColor: colors.border, opacity: pressed || authLoading ? 0.55 : 1 }, styles.socialButton]}
+              style={({ pressed }) => [{ borderColor: colors.border, opacity: pressed || authLoading ? 0.55 : 1, transform: [{ translateY: pressed ? 2 : 0 }] }, styles.socialButton]}
             >
               <Text style={[styles.socialText, { color: colors.foreground }]}>Apple</Text>
             </Pressable>
@@ -286,7 +311,7 @@ export default function AuthScreen() {
                 setNotice(null);
               }}
               disabled={authLoading}
-              style={styles.createAccount}
+              style={({ pressed }) => [styles.createAccount, { opacity: pressed ? 0.65 : 1, transform: [{ translateY: pressed ? 1 : 0 }] }]}
             >
               <Text style={[styles.createAccountText, { color: colors.accent }]}>
                 {mode === 'signin' ? 'CREAR UNA CUENTA' : 'VOLVER A INICIAR SESIÓN'}
@@ -366,6 +391,38 @@ const styles = StyleSheet.create({
     marginTop: 8,
     maxWidth: 310,
     textAlign: 'center',
+  },
+  statusRail: {
+    alignSelf: 'stretch',
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    borderWidth: 1,
+    borderRadius: 12,
+    paddingHorizontal: 11,
+    paddingVertical: 10,
+    marginTop: 18,
+  },
+  statusSeal: {
+    width: 30,
+    height: 30,
+    borderWidth: 1,
+    borderRadius: 9,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  statusCopy: {
+    flex: 1,
+    gap: 2,
+  },
+  statusLabel: {
+    fontSize: 9,
+    fontWeight: '900',
+    letterSpacing: 1.1,
+  },
+  statusDetail: {
+    fontSize: 11,
+    lineHeight: 15,
   },
   form: {
     gap: 10,

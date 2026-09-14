@@ -1,3 +1,14 @@
+## 2026-09-13 — VE-MOB-2-AUTH — NEXUS GATE / IMPLEMENTED_UNVERIFIED
+
+- **TARGET:** puerta de acceso Android en `mobile/app/auth.tsx`, como siguiente unidad explícita del rollout global después de Legado.
+- **QUÉ CAMBIÓ:** la pantalla comunica `PUERTA DEL NEXUS`, `AUTENTICANDO`, `CONFIRMACIÓN PENDIENTE` o `ENLACE INTERRUMPIDO` desde estados Auth ya existentes; las acciones principales, recuperación, modo y recordar sesión tienen profundidad táctil breve.
+- **FIDELIDAD:** el rail deriva sólo de `authLoading`, error normalizado y notice; no inventa identidad, progreso, sesión ni datos de Supabase.
+- **CONTRATOS PRESERVADOS:** login, registro, recuperación, OAuth, `ensure_player_row`, barrera de rutas, keyboard-aware scroll, accesibilidad y web congelada. No se tocaron endpoints, RPCs, RLS, economía, combate ni assets.
+- **ARCHIVOS:** `mobile/app/auth.tsx`; `scripts/verify-mobile-auth.mjs`; `docs/VE-MOB-2-AUTH-NEXUS-GATE.md`.
+- **GATES:** `verify-mobile-auth` pasa 16/16, `verify-motion` pasa 17/17, `verify-uxcx-domain-identity` pasa 5/5, `verify-auth-guard` pasa 4/4 y `git diff --check` queda limpio. El typecheck móvil queda diferido porque esta copia no incluye `mobile/node_modules`; no se compila APK ni se inicia workflow por instrucción explícita del operador.
+- **ESTADO HONESTO:** `IMPLEMENTED_UNVERIFIED`; no se declara `PASS`, `OPERATIONAL` ni `TIER1_READY`.
+- **SIGUIENTE BLOQUE:** continuar con la siguiente unidad Android verificable sólo después de conservar esta frontera de Auth y sin abrir contratos consolidados.
+
 ## 2026-09-13 — VE-MOB-8-DECK — FORJA DOMAIN IDENTITY / IMPLEMENTED_UNVERIFIED
 
 - **TARGET:** superficie Android de Forja en `mobile/app/(tabs)/deck.tsx`.
