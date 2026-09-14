@@ -50,6 +50,7 @@ const checks = [
   ['fusion route is wired', collection.includes("router.push('/store?mode=fusion')")],
   ['achievements route is wired', collection.includes("router.push('/profile?section=achievements')")],
   ['archive controls expose diegetic press depth', collection.includes('styles.referenceTopTab') && collection.includes('opacity: pressed ? 0.76 : 1') && collection.includes('styles.referencePageButton') && collection.includes('opacity: pressed ? 0.72 : 1')],
+  ['missing card statistics stay explicit', collection.includes("if (typeof value !== 'number' || !Number.isFinite(value)) return '—';") && collection.includes('PWR {numberLabel(card.power)}') && collection.includes('AFF {numberLabel(card.affinity)}') && collection.includes('numberLabel(card.supply)') && collection.includes('numberLabel(card.minted)') && !collection.includes('card.power ?? 0}')],
 ];
 
 const failed = checks.filter(([, ok]) => !ok);

@@ -1,3 +1,15 @@
+## 2026-09-14 — VE-MOB-4-COLLECTION — HONEST CARD SIGNALS / IMPLEMENTED_UNVERIFIED
+
+- **TARGET:** superficie Android de Archivo/Colección en `mobile/app/(tabs)/collection.tsx`.
+- **QUÉ CAMBIÓ:** poder, afinidad, prestigio, carga, supply y minted ausentes muestran `—`; cero confirmado continúa siendo cero. El orden por poder deja los valores no confirmados al final.
+- **FIDELIDAD:** no se infieren estadísticas desde ausencia de datos y se conserva la identidad, el arte, la pertenencia y las rutas existentes.
+- **CONTRATOS PRESERVADOS:** consultas del catálogo, colección del jugador, fusión, logros, Auth, assets, navegación y web congelada.
+- **ARCHIVOS:** `mobile/app/(tabs)/collection.tsx`; `scripts/verify-mobile-collection-reference.mjs`; `docs/VE-MOB-4-COLLECTION-HONEST-CARD-SIGNALS.md`.
+- **GATES:** `verify-mobile-collection-reference` pasa 13/13 y `git diff --check` queda limpio. El typecheck móvil no se ejecuta porque esta copia no incluye `mobile/node_modules`; no se compila APK ni se inicia workflow por la instrucción explícita del operador.
+- **ESTADO HONESTO:** `IMPLEMENTED_UNVERIFIED`; la QA visual/táctil queda pendiente de una APK autorizada.
+- **PERSISTENCIA:** pendiente de publicar en `main` mediante API REST HTTPS oficial de GitHub con `[skip ci]`; no se generará release Android.
+- **SIGUIENTE BLOQUE:** continuar con otra mejora Android atómica fuera de esta microiteración, sin reabrir contratos consolidados.
+
 ## 2026-09-14 — VE-MOB-11-ECONOMY — HONEST BALANCE SIGNALS / IMPLEMENTED_UNVERIFIED
 
 - **TARGET:** superficie Android de Economía en `mobile/app/economy.tsx`.

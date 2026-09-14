@@ -30,6 +30,11 @@ const RARITIES = ['Common', 'Uncommon', 'Rare', 'Epic', 'Legendary', 'Mythic'] a
 const FACTIONS = ['Guerrero', 'Mago', 'Paladín', 'Pícaro'] as const;
 type Rarity = (typeof RARITIES)[number];
 
+function numberLabel(value: number | null | undefined) {
+  if (typeof value !== 'number' || !Number.isFinite(value)) return '—';
+  return value.toLocaleString('es-ES');
+}
+
 function rarityLabel(rarity: string | null | undefined) {
   return {
     Common: 'Común',
@@ -169,18 +174,19 @@ function Stat({
   colors,
 }: {
   label: string;
-  value: number;
+  value: number | null | undefined;
   max: number;
   color: string;
   colors: ReturnType<typeof useColors>;
 }) {
+  const safeValue = typeof value === 'number' && Number.isFinite(value) ? value : null;
   return (
     <View style={styles.stat}>
       <View style={styles.statTop}>
         <Text style={[styles.statLabel, { color: colors.mutedForeground }]}>{label}</Text>
-        <Text style={[styles.statValue, { color }]}>{value}</Text>
+        <Text style={[styles.statValue, { color }]}>{numberLabel(value)}</Text>
       </View>
-      <ProgressBar value={max > 0 ? (value / max) * 100 : 0} color={color} />
+      <ProgressBar value={safeValue !== null && max > 0 ? (safeValue / max) * 100 : 0} color={color} />
     </View>
   );
 }
@@ -221,8 +227,8 @@ function CardTile({
           ) : <Feather name="compass" size={11} color={colors.mutedForeground} />}
         </View>
         <View style={styles.tileStats}>
-          <Text style={[styles.tileStat, { color: colors.danger }]}>PWR {card.power ?? 0}</Text>
-          <Text style={[styles.tileStat, { color: colors.primary }]}>AFF {card.affinity ?? 0}</Text>
+          <Text style={[styles.tileStat, { color: colors.danger }]}>PWR {numberLabel(card.power)}</Text>
+          <Text style={[styles.tileStat, { color: colors.primary }]}>AFF {numberLabel(card.affinity)}</Text>
         </View>
       </View>
       {owned && (
@@ -275,7 +281,7 @@ function CardSpotlight({
         <Text style={[styles.spotlightKicker, { color: accent }]}>ARTEFACTO DESTACADO</Text>
         <Text style={[styles.spotlightTitle, { color: colors.foreground }]} numberOfLines={2}>{card.name}</Text>
         <Text style={[styles.spotlightMeta, { color: colors.mutedForeground }]}>
-          {rarityLabel(card.rarity)} · {card.faction ?? 'Sin facción'} · PWR {card.power ?? 0}
+          {rarityLabel(card.rarity)} · {card.faction ?? 'Sin facción'} · PWR {numberLabel(card.power)}
         </Text>
         <Text style={[styles.spotlightLore, { color: colors.mutedForeground }]} numberOfLines={3}>
           {card.lore ?? card.specialization ?? 'Una pieza registrada en el archivo oficial de VEXFORGE.'}
@@ -371,10 +377,10 @@ function CardDetail({
                 </View>
               </View>
               <View style={styles.statsColumn}>
-                <Stat label="Poder" value={card.power ?? 0} max={Math.max(card.power ?? 0, 80)} color={colors.danger} colors={colors} />
-                <Stat label="Afinidad" value={card.affinity ?? 0} max={Math.max(card.affinity ?? 0, 30)} color={colors.primary} colors={colors} />
-                <Stat label="Prestigio" value={card.prestige ?? 0} max={Math.max(card.prestige ?? 0, 15)} color={colors.accent} colors={colors} />
-                <Stat label="Carga" value={card.charge ?? 0} max={Math.max(card.charge ?? 0, 10)} color={colors.success} colors={colors} />
+                <Stat label="Poder" value={card.power} max={Math.max(card.power ?? 0, 80)} color={colors.danger} colors={colors} />
+                <Stat label="Afinidad" value={card.affinity} max={Math.max(card.affinity ?? 0, 30)} color={colors.primary} colors={colors} />
+                <Stat label="Prestigio" value={card.prestige} max={Math.max(card.prestige ?? 0, 15)} color={colors.accent} colors={colors} />
+                <Stat label="Carga" value={card.charge} max={Math.max(card.charge ?? 0, 10)} color={colors.success} colors={colors} />
               </View>
             </View>
             <View style={[styles.infoPanel, { borderColor: colors.border, backgroundColor: colors.panel }]}>
@@ -413,11 +419,11 @@ function CardDetail({
             )}
             <View style={styles.supplyRow}>
               <View>
-                <Text style={[styles.supplyValue, { color: colors.foreground }]}>{(card.supply ?? 0).toLocaleString()}</Text>
+                <Text style={[styles.supplyValue, { color: colors.foreground }]}>{numberLabel(card.supply)}</Text>
                 <Text style={[styles.sectionLabel, { color: colors.mutedForeground }]}>SUPPLY</Text>
               </View>
               <View>
-                <Text style={[styles.supplyValue, { color: colors.accent }]}>{(card.minted ?? 0).toLocaleString()}</Text>
+                <Text style={[styles.supplyValue, { color: colors.accent }]}>{numberLabel(card.minted)}</Text>
                 <Text style={[styles.sectionLabel, { color: colors.mutedForeground }]}>MINTED</Text>
               </View>
             </View>
@@ -503,7 +509,13 @@ export default function CollectionScreen() {
           return (Date.parse(b.created_at ?? '') || 0) - (Date.parse(a.created_at ?? '') || 0);
         }
         if (sort === 'name') return a.name.localeCompare(b.name);
-        if (sort === 'power') return (b.power ?? 0) - (a.power ?? 0);
+        if (sort === 'power') {
+          const aPower = typeof a.power === 'number' && Number.isFinite(a.power) ? a.power : null;
+          const bPower = typeof b.power === 'number' && Number.isFinite(b.power) ? b.power : null;
+          if (aPower === null) return bPower === null ? 0 : 1;
+          if (bPower === null) return -1;
+          return bPower - aPower;
+        }
         return (rarityOrder[a.rarity ?? 'Common'] ?? 0) - (rarityOrder[b.rarity ?? 'Common'] ?? 0) || a.name.localeCompare(b.name);
       });
   }, [featuredCards, faction, ownedById, rarity, scope, search, sort]);
