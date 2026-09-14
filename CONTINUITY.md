@@ -1,3 +1,15 @@
+## 2026-09-13 — VE-MOB-6-TUTORIAL — HONEST PROGRESS SIGNAL / IMPLEMENTED_UNVERIFIED
+
+- **TARGET:** ruta Android de iniciación en `mobile/app/tutorial.tsx`.
+- **QUÉ CAMBIÓ:** cuando la sesión existe pero `player_progress.tutorial_step` todavía no llega desde Supabase, la pantalla deja de interpretarlo como paso `0` y muestra `PROGRESO DE INICIACIÓN EN ESPERA` con reintento explícito.
+- **FIDELIDAD:** no se inventa el paso actual ni se abre una superficie falsa; el tutorial sólo continúa cuando el valor autoritativo es numérico. Se conservan los siete pasos, la mutación monotónica, la navegación Android y la autoridad de Supabase.
+- **PROTOCOLO VIVO:** se consultó `public.vexforge_official_documents.vexforge_home_world_system_protocol_v3`; estado `ACTIVE`, versión `V2.1 — GAME EXPERIENCE ARCHITECTURE + LIVING UI + FUNCTIONAL COMPLETENESS`. Aplican Android-only, Cero Genéricos, datos vivos, estados completos, accesibilidad y continuidad honesta.
+- **ARCHIVOS:** `mobile/app/tutorial.tsx`; `scripts/verify-mobile-tutorial.mjs`; `docs/VE-MOB-6-TUTORIAL.md`.
+- **GATES:** `verify-mobile-tutorial` pasa 16/16 y `git diff --check` queda limpio. El typecheck móvil no se ejecuta porque este clon no incluye `mobile/node_modules`; no se compila APK ni se inicia workflow por instrucción explícita del operador.
+- **ESTADO HONESTO:** `IMPLEMENTED_UNVERIFIED`; la QA visual/táctil en APK permanece pendiente y no se declara `PASS`, `OPERATIONAL` ni `TIER1_READY`.
+- **PERSISTENCIA:** código publicado en `main` mediante API REST HTTPS oficial de GitHub en `a3785787041e4d47ba75b25e50daeff49a9e94f1` con `[skip ci]`; este registro se publica a continuación sin iniciar APK ni release.
+- **SIGUIENTE BLOQUE:** continuar con otra mejora Android atómica verificable, sin tocar la web congelada ni iniciar una compilación hasta autorización del operador.
+
 ## 2026-09-14 — VE-MOB-7-BATTLE — HONEST MISSING SIGNALS / IMPLEMENTED_UNVERIFIED
 
 - **TARGET:** superficie Android de Batalla en `mobile/app/(tabs)/battle.tsx`.
