@@ -1,3 +1,15 @@
+## 2026-09-14 — VE-MOB-10-PACKS-SHOP — HONEST EVOLUTION REQUIREMENTS / IMPLEMENTED_UNVERIFIED
+
+- **TARGET:** cámara Android de Evolución en `mobile/app/store.tsx`.
+- **QUÉ CAMBIÓ:** los requisitos de copias, VEX y nivel se muestran sólo cuando la ruta viva los entrega; si faltan, se comunican como `COPIAS NO REPORTADAS`, `VEX NO REPORTADO` o `NIVEL NO REPORTADO`. Las victorias PvP se muestran cuando vienen del contrato.
+- **FIDELIDAD:** se eliminan los defaults inventados `2`, `0` y `1`; no se impone una regla nueva en el cliente y la operación sigue siendo autoritativa en Supabase.
+- **CONTRATOS PRESERVADOS:** caminos de evolución, cartas, RPC `vexforge_evolve_card`, inventario, Supabase, Auth, economía, assets, rutas y web congelada.
+- **ARCHIVOS:** `mobile/app/store.tsx`; `scripts/verify-mobile-store.mjs`; `docs/VE-MOB-10-PACKS-SHOP-HONEST-EVOLUTION-REQUIREMENTS.md`.
+- **GATES:** `verify-mobile-store` pasa 16/16 y `git diff --check` queda limpio. El typecheck móvil no se ejecuta porque esta copia no incluye `mobile/node_modules`; no se compila APK ni se inicia workflow por la instrucción explícita del operador.
+- **ESTADO HONESTO:** `IMPLEMENTED_UNVERIFIED`; la QA visual/táctil queda pendiente de una APK autorizada.
+- **PERSISTENCIA:** pendiente de publicar en `main` mediante API REST HTTPS oficial de GitHub con `[skip ci]`; no se generará release Android.
+- **SIGUIENTE BLOQUE:** continuar con otra mejora Android atómica de fidelidad o interacción sin reabrir contratos consolidados.
+
 ## 2026-09-14 — VE-MOB-10-PACKS-SHOP — HONEST BALANCE SIGNAL / IMPLEMENTED_UNVERIFIED
 
 - **TARGET:** cámara Android de Packs en `mobile/app/store.tsx`.
