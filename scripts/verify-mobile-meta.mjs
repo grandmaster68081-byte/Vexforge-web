@@ -16,6 +16,8 @@ const assertions = [
   ['meta route is registered', source['mobile/app/_layout.tsx'].includes('name="meta"')],
   ['profile links to meta', source['mobile/app/(tabs)/profile.tsx'].includes("router.push('/meta')")],
   ['account and settings surface', source['mobile/app/meta.tsx'].includes('Cuenta y ajustes') && source['mobile/lib/supabase.ts'].includes('loadMobileSettings')],
+  ['account identity never invents a player name', source['mobile/app/meta.tsx'].includes('function identityLabel') && source['mobile/app/meta.tsx'].includes('IDENTIDAD NO REPORTADA') && source['mobile/app/meta.tsx'].includes('IDENTIDAD NO SINCRONIZADA') && !source['mobile/app/meta.tsx'].includes("player?.display_name ?? 'Forjador'")],
+  ['account identity exposes absent email and registration states', source['mobile/app/meta.tsx'].includes('CORREO NO REPORTADO') && source['mobile/app/meta.tsx'].includes('FECHA DE REGISTRO NO REPORTADA')],
   ['settings read is scoped to authenticated player', source['mobile/lib/supabase.ts'].includes('player_settings?select=player_id%2Ctelegram_enabled%2Cnotifications_enabled%2Clanguage%2Ctimezone%2Cui_mode&player_id=eq.') && source['mobile/lib/supabase.ts'].includes('currentPlayerId(session)')],
   ['cosmetics surface uses official contracts', source['mobile/app/meta.tsx'].includes('Cosméticos equipados') && source['mobile/lib/supabase.ts'].includes('equip_cosmetic')],
   ['relics surface uses authoritative RPCs', source['mobile/app/meta.tsx'].includes('Reliquias') && source['mobile/lib/supabase.ts'].includes('grant_starter_relics')],

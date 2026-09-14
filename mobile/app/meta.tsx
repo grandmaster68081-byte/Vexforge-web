@@ -83,7 +83,17 @@ function formatDate(value: string | null | undefined) {
 }
 
 function initials(value: string | null | undefined) {
-  return (value ?? 'Vex Forge').split(/\s+/).filter(Boolean).slice(0, 2).map((part) => part[0]?.toUpperCase() ?? '').join('') || 'VF';
+  const normalized = value?.trim();
+  return normalized ? normalized.split(/\s+/).filter(Boolean).slice(0, 2).map((part) => part[0]?.toUpperCase() ?? '').join('') || 'IR' : 'IR';
+}
+
+function identityLabel(player: { display_name: string | null } | null) {
+  const normalized = player?.display_name?.trim();
+  return normalized || (player ? 'IDENTIDAD NO REPORTADA' : 'IDENTIDAD NO SINCRONIZADA');
+}
+
+function emailLabel(player: { email: string | null } | null, sessionEmail: string | undefined) {
+  return player?.email?.trim() || sessionEmail?.trim() || 'CORREO NO REPORTADO';
 }
 
 function PanelButton({ panel, active, colors, onPress }: { panel: typeof PANELS[number]; active: boolean; colors: Colors; onPress: () => void }) {
@@ -149,7 +159,7 @@ function AccountPanel({ colors, data, player, session, onReload }: { colors: Col
     <SectionTitle eyebrow="IDENTIDAD DEL NEXUS" title="Cuenta y ajustes" colors={colors} />
     <View style={[styles.identity, { backgroundColor: colors.panel, borderColor: colors.border }]}>
       <View style={[styles.avatar, { backgroundColor: colors.panelStrong, borderColor: colors.accent }]}><Text style={[styles.avatarText, { color: colors.accent }]}>{initials(player?.display_name)}</Text></View>
-      <View style={styles.flex}><Text style={[styles.identityName, { color: colors.foreground }]}>{player?.display_name ?? 'Forjador'}</Text><Text style={[styles.body, { color: colors.mutedForeground }]}>{player?.email ?? session.user.email ?? 'Correo no disponible'}</Text><Text style={[styles.meta, { color: colors.mutedForeground }]}>Miembro desde {formatDate(player?.created_at)}</Text></View>
+      <View style={styles.flex}><Text style={[styles.identityName, { color: colors.foreground }]}>{identityLabel(player)}</Text><Text style={[styles.body, { color: colors.mutedForeground }]}>{emailLabel(player, session.user.email)}</Text><Text style={[styles.meta, { color: colors.mutedForeground }]}>{player?.created_at ? `Miembro desde ${formatDate(player.created_at)}` : 'FECHA DE REGISTRO NO REPORTADA'}</Text></View>
     </View>
     <Text style={[styles.subheading, { color: colors.foreground }]}>Preferencias</Text>
     <ToggleRow label="Notificaciones globales" body="Misiones, eventos y recompensas pendientes." value={notifications} onChange={setNotifications} colors={colors} testID="meta-settings-notifications" />

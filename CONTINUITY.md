@@ -1,3 +1,23 @@
+## 2026-09-14 — VE-MOB-14-META — HONEST ACCOUNT IDENTITY / IMPLEMENTED_UNVERIFIED
+
+- **BRANCH:** `main`.
+- **SCREEN / DOMAIN:** Meta / `META → CUENTA Y AJUSTES`.
+- **BLOCK:** identidad de cuenta sin sustitutos genéricos.
+- **WHAT CHANGED:** el panel conserva el nombre vivo cuando existe y diferencia `IDENTIDAD NO REPORTADA` de `IDENTIDAD NO SINCRONIZADA`; correo y fecha ausentes tienen estados explícitos.
+- **VISUAL DELTA:** una cuenta sin nombre confirmado ya no aparece como `Forjador`; el avatar y la ficha comunican el estado de sincronización sin inventar identidad.
+- **LIVE DATA CHECK:** sesión QA de solo lectura contra Supabase oficial: Auth válido, un registro `players`, nombre, correo y fecha presentes.
+- **DATA PRESERVED:** Auth, registro `players`, ajustes, cosméticos, reliquias, NFT, Forge Ads, assets, RPCs, RLS, economía, navegación y web congelada.
+- **ASSETS USED:** ninguno nuevo; se mantienen assets y catálogo oficiales.
+- **MOTION_ADDED:** ninguno; se conserva la interacción existente de ajustes y cierre de sesión.
+- **PERFORMANCE_NOTES:** normalización local de strings ya cargados; sin red adicional ni animación.
+- **GATES:** `verify-mobile-meta` pasa 16/16; whitespace y conflictos limpios. El typecheck móvil queda diferido porque el snapshot no incluye `mobile/node_modules`; no se inicia APK, workflow Android ni release por instrucción del operador.
+- **CORE_SCORE:** pendiente de QA visual/táctil en dispositivo.
+- **VISUAL_DEBT_ADDED:** ninguna.
+- **VISUAL_DEBT_REMOVED:** fallback genérico `Forjador` para identidad ausente y estados ambiguos de correo/fecha.
+- **STATUS:** `IMPLEMENTED_UNVERIFIED`.
+- **PERSISTENCIA:** pendiente de publicar en `main` mediante la API REST HTTPS oficial de GitHub con `[skip ci]`; no se generará release Android.
+- **NEXT_BLOCK:** continuar con otra mejora Android atómica del protocolo sin tocar la web congelada ni iniciar APK.
+
 ## 2026-09-14 — VE-MOB-7-BATTLE — HONEST OPPONENT SIGNALS / IMPLEMENTED_UNVERIFIED
 
 - **BRANCH:** `main`.
