@@ -18,6 +18,7 @@ import { useGame } from '@/context/GameContext';
 import { emitTelemetry } from '@/lib/telemetry';
 import { ScreenShell } from '@/components/ScreenShell';
 import { DomainState } from '@/components/DomainState';
+import { DomainHeader } from '@/components/DomainHeader';
 import {
   applyMobileFusion,
   buyMobilePack,
@@ -108,7 +109,12 @@ function ActionButton({ label, onPress, colors, disabled = false, secondary = fa
       onPress={onPress}
       style={({ pressed }) => [
         styles.actionButton,
-        { backgroundColor: secondary ? colors.secondary : colors.accent, borderColor: secondary ? colors.border : colors.accent, opacity: disabled ? 0.45 : pressed ? 0.72 : 1 },
+         {
+           backgroundColor: secondary ? colors.secondary : colors.accent,
+           borderColor: secondary ? colors.border : colors.accent,
+           opacity: disabled ? 0.45 : pressed ? 0.72 : 1,
+           transform: [{ translateY: pressed ? 2 : 0 }],
+         },
       ]}
     >
       <Text style={[styles.actionButtonText, { color: secondary ? colors.foreground : colors.ink }]}>{label}</Text>
@@ -390,6 +396,7 @@ export default function StoreScreen() {
   const initialMode: StoreMode = modeParam === 'fusion' || modeParam === 'shop' || modeParam === 'evolution' || modeParam === 'inventory' ? modeParam : 'packs';
   const [mode, setMode] = useState<StoreMode>(initialMode);
   const [refreshing, setRefreshing] = useState(false);
+  const activeMode = MODES.find((item) => item.key === mode) ?? MODES[0];
   if (!session || !player) return <Redirect href="/auth" />;
 
   async function handleRefresh() {
@@ -405,12 +412,29 @@ export default function StoreScreen() {
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={() => void handleRefresh()} tintColor={colors.accent} />}
         contentContainerStyle={{ paddingTop: insets.top + 16, paddingBottom: insets.bottom + 42 }}
       >
-        <View style={styles.header}>
-          <View style={{ flex: 1 }}><Text style={[styles.eyebrow, { color: colors.accent }]}>NEXUS // PROGRESIÓN</Text><Text style={[styles.screenTitle, { color: colors.foreground }]}>Forja y recursos</Text><Text style={[styles.bodyLeft, { color: colors.mutedForeground }]}>Cinco cámaras conectadas al catálogo y las reglas vivas de VEXFORGE.</Text></View>
-          <Pressable accessibilityRole="button" accessibilityLabel="Volver al perfil" onPress={() => router.back()} style={[styles.iconButton, { borderColor: colors.border }]}><Ionicons name="arrow-back" size={20} color={colors.foreground} /></Pressable>
-        </View>
+        <DomainHeader
+          domain="foja"
+          status={`CÁMARA ACTIVA · ${activeMode.label.toUpperCase()}`}
+          trailing={(
+            <Pressable
+              testID="store-back"
+              accessibilityRole="button"
+              accessibilityLabel="Volver al perfil"
+              onPress={() => router.back()}
+              style={({ pressed }) => [styles.iconButton, { borderColor: colors.border, opacity: pressed ? 0.65 : 1, transform: [{ translateY: pressed ? 1 : 0 }] }]}
+            >
+              <Ionicons name="arrow-back" size={20} color={colors.foreground} />
+            </Pressable>
+          )}
+        >
+          <View testID="store-domain-status" style={[styles.chamberSignal, { backgroundColor: colors.panel, borderColor: colors.border }]}>
+            <Ionicons name={activeMode.icon} size={16} color={colors.accent} />
+            <Text style={[styles.chamberSignalText, { color: colors.foreground }]}>{activeMode.label.toUpperCase()}</Text>
+            <Text style={[styles.chamberSignalHint, { color: colors.mutedForeground }]}>CATÁLOGO VIVO</Text>
+          </View>
+        </DomainHeader>
         <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.modeRail}>
-          {MODES.map((item) => <Pressable key={item.key} accessibilityRole="tab" accessibilityState={{ selected: mode === item.key }} testID={`store-tab-${item.key}`} onPress={() => setMode(item.key)} style={[styles.modeButton, { backgroundColor: mode === item.key ? `${colors.accent}18` : colors.panel, borderColor: mode === item.key ? colors.accent : colors.border }]}><Ionicons name={item.icon} size={17} color={mode === item.key ? colors.accent : colors.mutedForeground} /><Text style={[styles.modeLabel, { color: mode === item.key ? colors.accent : colors.mutedForeground }]}>{item.label}</Text></Pressable>)}
+          {MODES.map((item) => <Pressable key={item.key} accessibilityRole="tab" accessibilityState={{ selected: mode === item.key }} testID={`store-tab-${item.key}`} onPress={() => setMode(item.key)} style={({ pressed }) => [styles.modeButton, { backgroundColor: mode === item.key ? `${colors.accent}18` : colors.panel, borderColor: mode === item.key ? colors.accent : colors.border, opacity: pressed ? 0.72 : 1, transform: [{ translateY: pressed ? 1 : 0 }] }]}><Ionicons name={item.icon} size={17} color={mode === item.key ? colors.accent : colors.mutedForeground} /><Text style={[styles.modeLabel, { color: mode === item.key ? colors.accent : colors.mutedForeground }]}>{item.label}</Text></Pressable>)}
         </ScrollView>
         {mode === 'packs' ? <PackSection session={session} colors={colors} onRefresh={refresh} /> : null}
         {mode === 'shop' ? <ShopSection session={session} colors={colors} onRefresh={refresh} /> : null}
@@ -425,10 +449,11 @@ export default function StoreScreen() {
 
 const styles = StyleSheet.create({
   screen: { flex: 1 },
-  header: { flexDirection: 'row', alignItems: 'flex-start', gap: 14, paddingHorizontal: 20, paddingBottom: 16 },
   eyebrow: { fontSize: 10, fontWeight: '700', letterSpacing: 1.35 },
-  screenTitle: { fontSize: 26, fontWeight: '800', marginTop: 5 },
   iconButton: { width: 42, height: 42, alignItems: 'center', justifyContent: 'center', borderWidth: 1, borderRadius: 21 },
+  chamberSignal: { flexDirection: 'row', alignItems: 'center', gap: 8, borderWidth: 1, borderRadius: 12, paddingHorizontal: 12, paddingVertical: 10 },
+  chamberSignalText: { fontSize: 10, fontWeight: '900', letterSpacing: 1 },
+  chamberSignalHint: { fontSize: 9, fontWeight: '700', letterSpacing: 0.7, marginLeft: 'auto' },
   modeRail: { gap: 8, paddingHorizontal: 20, paddingBottom: 20 },
   modeButton: { minWidth: 88, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 6, paddingHorizontal: 12, paddingVertical: 10, borderWidth: 1, borderRadius: 12 },
   modeLabel: { fontSize: 11, fontWeight: '700' },

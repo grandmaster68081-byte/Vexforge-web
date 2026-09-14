@@ -1,3 +1,13 @@
+## 2026-09-13 — VE-MOB-10-PACKS-SHOP — NEXUS IDENTITY / IMPLEMENTED_UNVERIFIED
+
+- **TARGET:** cámara Android de Packs/Tienda/Fusión/Evolución/Inventario en `mobile/app/store.tsx`.
+- **QUÉ CAMBIÓ:** la ruta se ancla al Nexus mediante `DomainHeader` con `domain="foja"`; el encabezado y la señal `CATÁLOGO VIVO` reflejan el modo activo real, y las acciones/rail de cámaras tienen profundidad táctil.
+- **CONTRATOS PRESERVADOS:** catálogos, balance, inventario, pedidos, pagos, apertura, fusión, evolución, RPCs autoritativas, estados, rutas y safe area. No se tocan Supabase, RLS, Auth, economía ni assets.
+- **ARCHIVOS:** `mobile/app/store.tsx`; `scripts/verify-mobile-store.mjs`; `docs/VE-MOB-10-PACKS-SHOP-NEXUS-IDENTITY.md`.
+- **GATES:** `verify-mobile-store` pasa 14/14, `verify-motion` pasa 17/17, `verify-uxcx-domain-identity` pasa 5/5 y `git diff --check` queda limpio. El typecheck móvil queda diferido porque esta copia no incluye `mobile/node_modules`; no se compila APK ni se inicia workflow por instrucción explícita del operador.
+- **ESTADO HONESTO:** `IMPLEMENTED_UNVERIFIED`; no se declara `PASS`, `OPERATIONAL` ni `TIER1_READY`.
+- **PERSISTENCIA:** pendiente de publicación HTTPS en `main` con `[skip ci]`; no se compila APK ni se inicia workflow por instrucción explícita del operador.
+
 ## 2026-09-13 — VE-MOB-8-REWARDS — NEXUS IDENTITY / IMPLEMENTED_UNVERIFIED
 
 - **TARGET:** centro Android de Misiones y Recompensas en `mobile/app/missions.tsx`.

@@ -22,6 +22,9 @@ const assertions = [
   ['real evolution paths and RPC are wired', contents.screen.includes('loadMobileEvolutionPaths') && contents.screen.includes('evolveMobileCard') && contents.supabase.includes("vexforge_evolve_card")],
   ['real inventory is rendered from GameContext collection', contents.screen.includes('collectionLoading') && contents.screen.includes('collection.filter') && contents.screen.includes('store-inventory-')],
   ['loading, error, and empty states are explicit', contents.screen.includes('store-loading') && contents.screen.includes('accessibilityRole="alert"') && contents.screen.includes('EmptyBlock')],
+  ['store is anchored to a living domain', contents.screen.includes('<DomainHeader') && contents.screen.includes('domain="foja"') && contents.screen.includes('CÁMARA ACTIVA')],
+  ['active chamber exposes live catalog identity', contents.screen.includes('testID="store-domain-status"') && contents.screen.includes('CATÁLOGO VIVO') && contents.screen.includes('activeMode')],
+  ['store actions expose press depth', contents.screen.includes('translateY: pressed ? 2 : 0') && contents.screen.includes('translateY: pressed ? 1 : 0')],
   ['mobile accessibility and safe area are present', contents.screen.includes('useSafeAreaInsets') && contents.screen.includes('accessibilityRole="tab"') && contents.screen.includes('RefreshControl')],
   ['no client-side authority, mocks, or emoji UI', !contents.screen.includes('Math.random') && !contents.screen.includes('mock') && !/[\u{1F000}-\u{1FAFF}]/u.test(contents.screen)],
 ];
