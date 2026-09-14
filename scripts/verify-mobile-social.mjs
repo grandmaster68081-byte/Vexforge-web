@@ -20,6 +20,7 @@ const assertions = [
   ['parent domain is explicit', contents.shell.includes('surface === \'clans\'') && contents.shell.includes('domain="legado"') && contents.shell.includes('Red de Forjadores')],
   ['domain header supports a local subject without losing identity', contents.header.includes('title ?? identity.title') && contents.header.includes('purpose ?? identity.purpose')],
   ['loading error empty and refresh states remain explicit', contents.screen.includes('social-loading') && contents.screen.includes('social-error') && contents.screen.includes('EmptyState') && contents.screen.includes('RefreshControl')],
+  ['missing social identity stays explicit', contents.screen.includes('IDENTIDAD NO REPORTADA') && contents.screen.includes('DESCRIPCIÓN NO REPORTADA') && !contents.screen.includes('Forjador #')],
   ['social actions expose accessible controls', contents.screen.includes('accessibilityRole="button"') && contents.screen.includes('accessibilityRole="tab"') && contents.screen.includes('testID="social-screen"')],
   ['no client-side authority or emoji UI was added', !contents.screen.includes('Math.random') && !/[\u{1F000}-\u{1FAFF}]/u.test(contents.screen)],
 ];

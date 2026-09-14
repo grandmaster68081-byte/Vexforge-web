@@ -1,3 +1,22 @@
+## 2026-09-14 — VE-MOB-13-SOCIAL — HONEST IDENTITY SIGNALS / IMPLEMENTED_UNVERIFIED
+
+- **BRANCH:** `main`.
+- **SCREEN / DOMAIN:** Red de Forjadores / `LEGADO → SOCIAL`.
+- **BLOCK:** identidad y descripción de comunidad cuando Supabase no entrega un nombre público.
+- **WHAT CHANGED:** se eliminó el fallback inventado `Forjador #...`; identidades ausentes muestran `IDENTIDAD NO REPORTADA`, iniciales ambiguas muestran `?` y descripciones de clan ausentes muestran `DESCRIPCIÓN NO REPORTADA`.
+- **LIVE DATA CHECK:** se conserva `loadSocialSnapshot`, el snapshot vivo, las mutaciones RPC, el ranking y el historial; no se añadieron nombres, datos ni contratos.
+- **DATA PRESERVED:** amigos, solicitudes, desafíos, clanes, roster, guerras, ranking, combates, Auth, RLS, navegación, accesibilidad, reduced-motion, assets y web congelada.
+- **ASSETS USED:** ninguno nuevo; se mantienen los assets oficiales de Social/Legado.
+- **MOTION_ADDED:** ninguno; se conserva la interacción táctil existente.
+- **PERFORMANCE_NOTES:** normalización local de strings ya recibidos; sin solicitudes, animaciones o dependencias nuevas.
+- **GATES:** `node scripts/verify-mobile-social.mjs` y `git diff --check` deben pasar. El typecheck móvil queda diferido porque el clon oficial no incluye `mobile/node_modules`; no se compila APK, no se inicia workflow y no se publica release por instrucción del operador.
+- **CORE_SCORE:** pendiente de QA visual/táctil en dispositivo.
+- **VISUAL_DEBT_ADDED:** ninguna.
+- **VISUAL_DEBT_REMOVED:** identificadores sintéticos y descripción genérica presentados como identidad oficial.
+- **STATUS:** `IMPLEMENTED_UNVERIFIED`.
+- **PERSISTENCIA:** se publicará en `main` mediante la API REST HTTPS oficial de GitHub con `[skip ci]`; sin APK ni release Android nuevo.
+- **NEXT_BLOCK:** continuar con otra mejora Android atómica verificable sin tocar la web congelada ni iniciar APK.
+
 ## 2026-09-14 — VE-MOB-8-REWARDS — HONEST MISSION SIGNALS / IMPLEMENTED_UNVERIFIED
 
 - **BRANCH:** `main`.
