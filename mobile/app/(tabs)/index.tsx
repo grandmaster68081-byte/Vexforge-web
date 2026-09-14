@@ -57,7 +57,8 @@ type RemoteHome = { stats: HomeStats | null; card: DailyCard | null; identityCar
 const INITIAL_HOME: RemoteHome = { stats: null, card: null, identityCard: null, missions: [], activity: [] };
 
 function formatNumber(value: number | null | undefined) {
-  return new Intl.NumberFormat('es-ES').format(Math.max(0, Math.round(value ?? 0)));
+  if (typeof value !== 'number' || !Number.isFinite(value)) return '—';
+  return new Intl.NumberFormat('es-ES').format(Math.max(0, Math.round(value)));
 }
 
 function formatEventTime(endsAt: string | null | undefined) {
@@ -595,12 +596,13 @@ export default function ForgeScreen() {
   const activeEvent = home.stats?.active_event ?? null;
   const eventAccent = activeEvent ? colors.rarityRare : colors.mutedForeground;
   const season = home.stats?.season ?? null;
-  const xp = progress?.xp ?? 0;
-  const xpToNext = progress?.xp_to_next ?? 0;
+  const xp = progress?.xp;
+  const xpToNext = progress?.xp_to_next;
+  const progression = typeof xp === 'number' && Number.isFinite(xp) && typeof xpToNext === 'number' && Number.isFinite(xpToNext) ? { xp, xpToNext } : null;
   const levelSignal = progress ? `NIVEL ${formatNumber(progress.level)}` : 'NIVEL EN ESPERA';
   const walletSignal = wallet ? `${formatNumber(wallet?.vex_ingame)} VEX` : 'VEX EN ESPERA';
   const winsSignal = playerStats ? `${formatNumber(playerStats?.pvp_wins)} VICTORIAS` : 'VICTORIAS EN ESPERA';
-  const progressionSignal = progress ? `${formatNumber(xp)} / ${formatNumber(xpToNext)}` : 'SEÑAL PENDIENTE';
+  const progressionSignal = progression ? `${formatNumber(progression.xp)} / ${formatNumber(progression.xpToNext)}` : 'PROGRESIÓN EN ESPERA';
   const connectionLabel = syncState === 'connected' ? 'NEXUS ONLINE' : syncState === 'offline' ? 'NEXUS OFFLINE' : 'SINCRONIZANDO';
   const connectionColor = syncState === 'connected' ? colors.success : syncState === 'offline' ? colors.danger : colors.accent;
   const viewportPadding = Math.max(18, Math.min(25, width * 0.06));
@@ -927,7 +929,7 @@ export default function ForgeScreen() {
                   </View>
                   <View style={styles.signalProgressFinal}>
                     <View style={styles.signalProgressLineFinal}><Text style={[styles.signalKickerFinal, { color: colors.mutedForeground }]}>PROGRESIÓN</Text><Text style={[styles.signalProgressValueFinal, { color: progress ? colors.accent : colors.mutedForeground }]}>{progressionSignal}</Text></View>
-                    {progress ? <ProgressRail value={xp} total={xpToNext} color={colors.accent} background={colors.border} /> : <View style={[styles.progressRail, { backgroundColor: `${colors.mutedForeground}44` }]} />}
+                    {progression ? <ProgressRail value={progression.xp} total={progression.xpToNext} color={colors.accent} background={colors.border} /> : <View style={[styles.progressRail, { backgroundColor: `${colors.mutedForeground}44` }]} />}
                   </View>
                 </Animated.View>
 

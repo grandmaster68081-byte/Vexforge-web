@@ -1,3 +1,15 @@
+## 2026-09-14 — VE-MOB-3-HOME — HONEST PROGRESSION SIGNAL / IMPLEMENTED_UNVERIFIED
+
+- **TARGET:** HUD de progresión del Home Android en `mobile/app/(tabs)/index.tsx`.
+- **QUÉ CAMBIÓ:** los valores numéricos ausentes ya no se convierten en `0`; muestran `—`. La vía de progreso sólo se dibuja cuando XP y XP siguiente son números finitos; de lo contrario comunica `PROGRESIÓN EN ESPERA`.
+- **FIDELIDAD:** se conserva la diferencia entre cero confirmado y señal aún no recibida. No se fabrican XP, nivel, energía, MMR, VEX ni victorias.
+- **CONTRATOS PRESERVADOS:** rutas, artwork, identidad de carta, loaders de Supabase, misiones, eventos, Auth, reduced-motion, accesibilidad y web congelada.
+- **ARCHIVOS:** `mobile/app/(tabs)/index.tsx`; `scripts/verify-mobile-home-official-assets.mjs`; `docs/VE-MOB-3-HOME-HONEST-PROGRESSION-SIGNAL.md`.
+- **GATES:** `verify-mobile-home-official-assets` pasa 14/14 y `git diff --check` queda limpio. El typecheck móvil no se ejecuta porque esta copia no incluye `mobile/node_modules`; no se compila APK ni se inicia workflow por la instrucción explícita del operador.
+- **ESTADO HONESTO:** `IMPLEMENTED_UNVERIFIED`; la QA visual/táctil queda pendiente de una APK autorizada.
+- **PERSISTENCIA:** pendiente de publicar en `main` mediante API REST HTTPS oficial de GitHub con `[skip ci]`; no se generará release Android.
+- **SIGUIENTE BLOQUE:** continuar con otra mejora Android atómica fuera de esta microiteración, sin reabrir contratos consolidados.
+
 ## 2026-09-14 — VE-MOB-10-PACKS-SHOP — HONEST EVOLUTION REQUIREMENTS / IMPLEMENTED_UNVERIFIED
 
 - **TARGET:** cámara Android de Evolución en `mobile/app/store.tsx`.
