@@ -474,6 +474,7 @@ export default function BattleScreen() {
       setLocalError('Necesitas una formación de al menos tres cartas para entrenar contra la IA.');
       return;
     }
+    void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch(() => undefined);
     clearBattleResult();
     setSelectedOpponent(null);
     setLocalError(null);
