@@ -3272,3 +3272,13 @@
 - Commit Android publicado en `main`: `db48595c36dccb062e941e9b408bd68863f2116b`. Se usó `[skip ci]` por la instrucción vigente; no se inició workflow, no se compiló APK ni se publicó release nuevo.
 - Estado honesto: `IMPLEMENTED_UNVERIFIED`. La interacción y el estado pendiente quedan sujetos a QA en dispositivo cuando el operador autorice una compilación Android.
 - Siguiente microbloque: continuar con otra mejora Android atómica de fidelidad o interacción, sin tocar la web congelada ni iniciar APK sin autorización.
+
+---
+## 2026-09-13 — VE-MOB-3-HOME — HONEST SEASON SIGNAL / IMPLEMENTED_UNVERIFIED
+
+- Se eliminó en `mobile/app/(tabs)/index.tsx` el fallback fijo `SEASON 01 // FORGE OF LEGENDS` de la cabecera del Home. Si Supabase no entrega una temporada publicada, ahora se comunica `TEMPORADA NO SINCRONIZADA` junto al estado `TEMPORADA EN ESPERA`.
+- No se inventan nombres de temporada ni se alteran datos, RPCs, Auth, navegación, artwork, accesibilidad, reduced-motion, dependencias ni la web congelada.
+- Evidencia local: `node scripts/verify-mobile-home-official-assets.mjs` OK, 13/13 comprobaciones; comparación equivalente a `git diff --check` limpia. El typecheck móvil queda diferido porque el snapshot oficial no incluye `mobile/node_modules`.
+- Commit Android publicado en `main`: `281e6eff8f38a206d79d26f435e6c97350355c8d`. Se usó `[skip ci]`; no se inició workflow, no se compiló APK ni se publicó release nuevo por la instrucción vigente.
+- Estado honesto: `IMPLEMENTED_UNVERIFIED`. La señal de temporada queda pendiente de QA en dispositivo cuando el operador autorice una compilación Android.
+- Siguiente microbloque: continuar con otra mejora Android atómica de fidelidad o interacción, sin tocar la web congelada ni iniciar APK sin autorización.
