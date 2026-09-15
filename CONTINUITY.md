@@ -1,14 +1,15 @@
-## 2026-09-15 — VE-MOB-5 DECK — PREMIUM VISUAL REFERENCE / CANDIDATE_FOR_REVIEW
+## 2026-09-15 — VE-MOB-5 DECK — OFFICIAL-DIMENSION VISUAL CANDIDATE / CANDIDATE_FOR_REVIEW
 
 - **ENTORNO ACTIVO:** aplicación Android en `mobile/**`; la web permanece congelada.
 - **AUTORIDAD:** fila ACTIVE `public.vexforge_official_documents / vexforge_home_world_system_protocol_v3`, V2.3, consultada por HTTPS.
 - **SCREEN / DOMAIN:** Deck Forge / constructor de mazos, superficie Android de formación y composición.
-- **REFERENCIA VISUAL:** se publicó `attached_assets/generated_images/vexforge_decks_screen_premium_reference.png`, imagen vertical 1024×1024 generada en alta calidad para dirección visual, SHA-256 `ca4ff620b2a1b1436874cfb4b18079037fdaa927acc9e1a4218a39b2e4226ecb`, 1767153 bytes.
-- **IDENTIDAD CONSERVADA:** citadel y forja central, obsidiana/piedra oscura, metal grabado, cyan arcano, oro/brasa y resonancia violeta; la composición mantiene Champion, Formation, Tactical y Reserve como lectura visual del contrato, sin inventar datos de jugador.
-- **ALCANCE:** referencia visual solamente; no se conectó a `mobile/**`, no se modificaron contratos, Supabase, RPCs, RLS, economía ni rutas, y los microtextos de la imagen no son fuente autoritativa.
+- **REFERENCIA VISUAL:** se publicó `attached_assets/generated_images/vexforge_decks_screen_official_1080x2340.png`, PNG RGB/sRGB de `1080×2340`, SHA-256 `6e9381a5f6a266c908d8760dfc14aae0280402d624b5f3d2f5ae34964b1f8fea`.
+- **ANÁLISIS PROTOCOLARIO:** la escena conserva la gramática de Home —citadel, forja central, obsidiana, metal, cyan arcano, oro/brasa y resonancia violeta— y expresa Deck como pedestal, Champion, siete ranuras de Formation, zona Tactical, Reserve y espacio de controles nativos.
+- **REGLA CERO GENÉRICOS:** el asset no contiene nombres, cifras, rarezas, recompensas, estados legales, copy de usuario ni controles autoritativos falsos; deja esas capas a la UI Android y a Supabase vivo.
+- **ALCANCE:** este asset reemplaza la referencia cuadrada anterior como candidato de dimensión oficial; no se conectó a `mobile/**`, no se modificaron contratos, Supabase, RPCs, RLS, economía ni rutas.
 - **RELEASE GATE:** no se inició workflow Android, no se compiló APK y no se publicó release, conforme a la instrucción vigente del operador.
-- **STATUS:** `CANDIDATE_FOR_REVIEW`; sólo puede promoverse a asset canónico después de revisión visual/táctil y registro de Screen Master Record.
-- **NEXT BLOCK:** revisión del operador; si se aprueba, integrar el asset en el registro Android y validar la superficie con la APK en una ejecución autorizada.
+- **STATUS:** `CANDIDATE_FOR_REVIEW`; sólo puede promoverse a asset canónico después de aprobación visual, Screen Master Record, registro de procedencia y validación táctil.
+- **NEXT BLOCK:** si el operador aprueba esta imagen, integrarla en el registro Android como referencia/escena Deck Forge y ejecutar la verificación de la unidad; la APK queda pendiente de autorización explícita.
 
 ## 2026-09-15 — VE-MOB-AUTH — NEXUS ACCESS VISUAL / IMPLEMENTED_UNVERIFIED
 
