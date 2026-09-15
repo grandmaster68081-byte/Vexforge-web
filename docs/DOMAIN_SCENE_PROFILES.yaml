@@ -1,0 +1,259 @@
+schema: v1
+name: VEXFORGE Android Domain Scene Profiles
+unit: T0 — DOMAIN_SCENE_PROFILES
+status: PREPARED / EVIDENCE_REQUIRED
+environment: Android in mobile/**
+baseline_commit: 347620eb9530523de73f561f53d15882feb8875c
+authority:
+  document: public.vexforge_official_documents / vexforge_home_world_system_protocol_v3
+  status: ACTIVE
+  version: V2.2
+  protocol_sha256: 828a077428987b2534e3733204ac721ef3073eb7dadf9530a6f46877dd63c503
+  source_documents:
+    - docs/VE-T0-ANDROID-ASSET-REGISTRY.json
+    - docs/VE-T0-ANDROID-VISUAL-STATE-MATRIX.md
+    - docs/VE-T0-ANDROID-DEVICE-EVIDENCE-REGISTER.md
+    - docs/ART_DIRECTION.md
+rules:
+  - Profiles describe composition and presentation constraints; they do not create gameplay, data, assets, routes, RPCs, or rewards.
+  - Asset paths are authorized only when their registry state and domain allow consumption.
+  - Missing, null, pending, unavailable, or unmeasured values remain explicit; they are never converted to zero or success.
+  - vfx_tier remains NOT_MEASURED until device evidence exists; reduced effects cannot alter outcome, hash, replay, legalidad, or settlement.
+  - Auth and Tutorial are cross-cutting layers, not additional product domains.
+profiles:
+  - id: DSP-01
+    domain: NEXUS_HOME
+    routes: ["/(tabs)/"]
+    subject: citadel, forge core, physical portals, and live activity
+    material: obsidian, stone, forged iron, gold, cyan arcane light
+    accent: cyan + gold
+    composition: world scene, hero identity, physical portals, live data plaques, navigation actions
+    depth_layers: [background, midground, foreground, diegetic_data, system_safe_area]
+    lighting: domain_accented
+    physical_result: NOT_MEASURED
+    vfx_tier: NOT_MEASURED
+    data_sources: [HomeStats, HomeMission, DailyCard, ActivityItem, PlayerProgress, Wallet, PlayerStats]
+    states: [loading, empty, partial, error, recovery]
+    interaction: [portal navigation, pull_to_refresh, retry]
+    authorized_asset_paths:
+      - mobile/assets/images/vexforge-home-hero.png
+      - mobile/assets/images/vexforge-hero-sentinel.png
+      - mobile/assets/images/vexforge-feature-card.png
+      - lobby/main.jpg
+      - logo/IMG_20260606_040509_906.jpg
+    prohibitions: [dashboard_grid, invented_activity, invented_progress, silent_asset_substitution]
+    acceptance: first_impression, hero_legibility, portal_navigation, safe_area, recovery, reduced_motion
+
+  - id: DSP-02
+    domain: ARENA_BATTLEFIELD
+    routes: ["/(tabs)/battle"]
+    subject: mirrored 1v1 forge battlefield with formations, Champion, hand, Command, Reserve, event, replay, and result
+    material: obsidian, forged iron, cyan energy, ember impact
+    accent: cyan vs ember
+    composition: central_axis, three_sockets_per_side, champion_priority, hand_dock, command_indicator, reserve_reveal_rail
+    depth_layers: [background, battlefield_sockets, units, event_telegraph, live_data, system_safe_area]
+    lighting: centered_axis_with_domain_contrast
+    physical_result: NOT_MEASURED
+    vfx_tier: NOT_MEASURED
+    data_sources: [Opponent, PlayerRank, BattleResult, BattleTurn, BattleUnit, Battle_Run, Event_Log]
+    states: [loading, empty, pending, error, locked, completed, recovery]
+    interaction: [legal_target_selection, action_input, replay, abandon_or_timeout, retry, back]
+    authorized_asset_paths:
+      - mobile/assets/images/battle-reference-scene.png
+      - backgrounds/bg_pvp.jpg
+      - backgrounds/bg_bosses.jpg
+    prohibitions: [local_combat_simulation, free_camera_in_ranked, rejected_target_telegraph, hidden_units, local_damage_calculation, local_outcome]
+    acceptance: target_hitbox, event_order, result_persistence, replay, 30_second_performance_capture, safe_area
+
+  - id: DSP-03
+    domain: ARCHIVE_COLLECTION
+    routes: ["/(tabs)/collection"]
+    subject: real card or unit on a pedestal or in a glass archive
+    material: dark wood, metal, glass, obsidian, silver
+    accent: violet + silver
+    composition: archive_scene, dominant_card, filters, diegetic_list, detail_panel
+    depth_layers: [archive_background, shelving_or_pedestal, card_art, live_stats, interaction, safe_area]
+    lighting: controlled_archive_highlight
+    physical_result: NOT_MEASURED
+    vfx_tier: NOT_MEASURED
+    data_sources: [PlayerCard, PublicCard, collection_loader]
+    states: [loading, empty, pending, error, recovery]
+    interaction: [filter, scroll, open_detail, back, retry]
+    authorized_asset_paths:
+      - mobile/assets/images/collection-archive-scene.jpg
+      - heroes/hero_assets.jpg
+      - factions/bg_guerrero.jpg
+      - factions/bg_mago.jpg
+      - factions/bg_paladin.jpg
+      - factions/bg_picaro.jpg
+    prohibitions: [invented_card_art, substitute_card, invented_rarity, invented_lore, absent_stat_as_zero]
+    acceptance: card_readability, filters, scroll, detail, provenance, art_loading_error
+
+  - id: DSP-04
+    domain: DECK_FORGE
+    routes: ["/(tabs)/deck"]
+    subject: forge table, pedestal, card composition, formation, and legal deck state
+    material: stone, forged iron, gold, violet arcane fire, tools
+    accent: gold + violet
+    composition: forge_table, slots, card_objects, validation_plate, save_action, recovery_state
+    depth_layers: [forge_scene, pedestal, card_slots, validation_data, action_layer, safe_area]
+    lighting: forge_fire_and_arcane_accent
+    physical_result: NOT_MEASURED
+    vfx_tier: NOT_MEASURED
+    data_sources: [DeckSlot, DeckValidation, SaveDeckResult, collection, formation_contract]
+    states: [loading, empty, pending, error, locked, completed, recovery]
+    interaction: [select_slot, edit, validate, save, retry, back]
+    authorized_asset_paths:
+      - mobile/assets/images/decks-reference-scene.png
+      - heroes/hero_fusion.jpg
+    restricted_asset_paths:
+      - mobile/assets/images/deck-forge-scene.jpg
+    prohibitions: [unconfirmed_legality, unconfirmed_save_success, hidden_validation_error, promoted_review_required_asset]
+    acceptance: slot_hitboxes, validation_feedback, persistence, accessibility, safe_return
+
+  - id: DSP-05
+    domain: MISSIONS_WORLD_OBJECTIVES
+    routes: [/missions]
+    subject: mission board, map, routes, nodes, objectives, constraints, and rewards
+    material: parchment, wood, metal, cyan markers, ember objectives
+    accent: cyan + ember
+    composition: mission_board, route_nodes, objective_plaques, progress_data, claim_action
+    depth_layers: [board_background, map_routes, nodes, live_objectives, action_layer, safe_area]
+    lighting: readable_board_focus
+    physical_result: NOT_MEASURED
+    vfx_tier: NOT_MEASURED
+    data_sources: [DailyQuest, MobileMission, MissionReward, MissionEngine]
+    states: [loading, empty, pending, error, locked, completed, recovery]
+    interaction: [open_mission, execute, claim, back, retry]
+    authorized_asset_paths:
+      - backgrounds/bg_missions.jpg
+    prohibitions: [lore_as_progress, unconfirmed_claim, invented_reward, invented_target, duplicate_claim]
+    acceptance: real_progress, idempotent_claim, locked_reason, pending_visibility, home_return
+
+  - id: DSP-06
+    domain: STORE_ECONOMY
+    routes: [/store, /economy]
+    subject: material chamber, wallet, offers, crafting, receipt, ledger, and transaction recovery
+    material: forged iron, gold, magenta value light, obsidian, glass containers
+    accent: gold + magenta
+    composition: material_chamber, offer_objects, wallet_plaque, ledger_list, receipt_state, recovery_action
+    depth_layers: [chamber_background, offer_objects, live_wallet, transaction_state, interaction, safe_area]
+    lighting: value_highlight_without_unconfirmed_success
+    physical_result: NOT_MEASURED
+    vfx_tier: NOT_MEASURED
+    data_sources: [Wallet, EconomyStats, EconomyLedgerEntry, MobilePack, MobilePackOrder, MobileShopItem, MobileShopOrder, DepositRecord, WithdrawalRequest]
+    states: [loading, empty, pending, error, locked, completed, recovery]
+    interaction: [list, buy, deposit, withdraw, paginate_ledger, retry, back]
+    authorized_asset_paths:
+      - backgrounds/bg_packs.jpg
+      - heroes/hero_market.jpg
+      - heroes/hero_fusion.jpg
+    prohibitions: [invented_price, invented_balance, invented_fee, invented_receipt, double_mutation, premature_reward]
+    acceptance: input_validation, receipt_pending, tx_trace, balance_before_after, payment_recovery
+
+  - id: DSP-07
+    domain: SOCIAL_GUILD
+    routes: [/social]
+    subject: alliance room, emblems, friends, chat, invitations, ranking, war, presence, moderation
+    material: deep blue, forged metal, gold heraldry, obsidian
+    accent: deep blue + gold
+    composition: alliance_room, relationship_panels, emblem_space, presence_state, action_rail
+    depth_layers: [room_background, emblems, live_roster, relationship_data, interaction, safe_area]
+    lighting: heraldic_focus
+    physical_result: NOT_MEASURED
+    vfx_tier: NOT_MEASURED
+    data_sources: [MobileSocialSnapshot, friends, requests, challenges, clan, wars, rankings, matches, seasonName]
+    states: [loading, empty, pending, error, locked, recovery]
+    interaction: [navigate_panels, accept, reject, challenge, create, join, leave, retry, back]
+    authorized_asset_paths:
+      - backgrounds/bg_clans.jpg
+      - backgrounds/bg_leaderboard.jpg
+      - factions/bg_guerrero.jpg
+      - factions/bg_mago.jpg
+      - factions/bg_paladin.jpg
+      - factions/bg_picaro.jpg
+    prohibitions: [invented_presence, invented_names, invented_mmr, invented_season, invented_timestamps, duplicate_action]
+    acceptance: connection_state, privacy, moderation, dates, panel_navigation, recovery
+
+  - id: DSP-08
+    domain: WORLD_ATLAS
+    routes: [/world]
+    subject: biomes, regions, bosses, raids, and narrative route
+    material: obsidian, stone, cyan arcane light, violet depth, ember threat
+    accent: cyan + violet + ember
+    composition: atlas_scene, biome_or_boss_identity, eligibility_state, damage_or_progress, claim_state
+    depth_layers: [world_background, region_layers, boss_or_raid_object, live_progress, interaction, safe_area]
+    lighting: atmospheric_domain_contrast
+    physical_result: NOT_MEASURED
+    vfx_tier: NOT_MEASURED
+    data_sources: [MobileWorldBoss, MobileBossEncounter, MobileRaidRun, MobileRaidParticipant]
+    states: [loading, empty, pending, error, locked, completed, recovery]
+    interaction: [open_identity, verify_eligibility, battle, claim, retry, back]
+    authorized_asset_paths:
+      - backgrounds/bg_bosses.jpg
+    prohibitions: [lore_as_eligibility, invented_damage, invented_reward, invented_region, unconfirmed_settlement]
+    acceptance: boss_identity, damage_readability, real_lock, claim_persistence, network_recovery
+
+  - id: DSP-09
+    domain: PROFILE_PROGRESSION
+    routes: ["/(tabs)/profile"]
+    subject: avatar, rank, mastery, achievements, identity, history, preferences, privacy
+    material: obsidian, forged metal, gold identity seal, blue context light
+    accent: gold + blue
+    composition: identity_header, progression_plaques, achievement_objects, history_panel, privacy_actions
+    depth_layers: [profile_scene, identity, progress_data, history_state, interaction, safe_area]
+    lighting: identity_seal_focus
+    physical_result: NOT_MEASURED
+    vfx_tier: NOT_MEASURED
+    data_sources: [PlayerProfile, PlayerProgress, PlayerStats, PlayerRank, PlayerAchievement, Wallet, MobileSocialSnapshot]
+    states: [loading, empty, pending, error, recovery]
+    interaction: [open_panel, refresh, sign_out, back, retry]
+    authorized_asset_paths:
+      - mobile/assets/images/profile-reference-scene.png
+    restricted_asset_paths:
+      - heroes/hero_profile.jpg
+    prohibitions: [history_absence_as_zero, streak_inference, draw_loss_conversion, pending_as_final, reserved_art_promotion]
+    acceptance: text_legibility, sign_out, panels, social_states, PROFILE_HISTORY_STATE_GAP_resolution
+
+  - id: DSP-10
+    domain: META_LIVE_OPERATIONS
+    routes: [/meta]
+    subject: player preferences and readable live operations, cosmetics, relics, and activity signals
+    material: obsidian, cyan system light, magenta live signal, restrained metal
+    accent: magenta + cyan
+    composition: preference_panels, toggle_controls, live_operation_objects, accessible_status, return_action
+    depth_layers: [meta_background, preference_panels, live_data, action_layer, safe_area]
+    lighting: restrained_system_accent
+    physical_result: NOT_MEASURED
+    vfx_tier: NOT_MEASURED
+    data_sources: [MobileSettings, MobileCosmetic, MobilePlayerCosmetic, MobileRelic, MobilePlayerRelic, MobileNft*, MobileAdStats]
+    states: [loading, empty, pending, error, locked, recovery]
+    interaction: [toggle, persist_preference, open_available_content, mute, reduced_motion, back, retry]
+    authorized_asset_paths: []
+    prohibitions: [technical_dashboard, invented_live_operation, invented_cosmetic, invented_nft, invented_ad_reward, silent_preference_failure]
+    acceptance: accessible_toggles, persistence, readable_signals, audio_mute, reduced_motion, return
+
+cross_cutting_layers:
+  - id: AUTH
+    routes: [/auth]
+    subject: secure threshold into Nexus
+    allowed_assets: registry-authorized Auth assets only
+    states: [loading, error, locked, recovery]
+    prohibitions: [unconfirmed_session, unsafe_error_copy, local_auth_success]
+  - id: TUTORIAL
+    routes: [/tutorial]
+    subject: contextual onboarding inside the same Nexus
+    allowed_assets: [tutorial/main.png]
+    states: [loading, locked, pending, error, recovery]
+    prohibitions: [local_gate_skip, local_step_completion, separate_product_identity]
+
+common_acceptance:
+  required: [asset_provenance, live_data, state_matrix, tap, back, retry, safe_area, reduced_motion, audio_mute, recovery, device_evidence]
+  performance:
+    target: 60 FPS in Battlefield and replay
+    p95_frame_time_ms: 16.7
+    p99_frame_time_ms: 25
+    capture_seconds: 30
+    result: NOT_MEASURED
+  release_gate: APK, authenticated QA, and physical evidence are not authorized in this unit
+  promotion_blockers: [missing_device_evidence, generic_fallback, unconfirmed_data, premature_success, crash_or_oom, unresolved_PROFILE_HISTORY_STATE_GAP]

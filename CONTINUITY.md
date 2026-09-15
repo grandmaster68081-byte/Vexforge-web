@@ -1,3 +1,18 @@
+## 2026-09-15 — VE-MOB-T0 — DOMAIN SCENE PROFILES / PREPARED
+
+- **ENTORNO ACTIVO:** aplicación Android en `mobile/**`; la web permanece congelada.
+- **AUTORIDAD:** fila ACTIVE `public.vexforge_official_documents / vexforge_home_world_system_protocol_v3`, V2.2, con SHA-256 `828a077428987b2534e3733204ac721ef3073eb7dadf9530a6f46877dd63c503`.
+- **BASELINE:** `main` en `347620eb9530523de73f561f53d15882feb8875c`.
+- **DOCUMENTO:** se añadió `docs/DOMAIN_SCENE_PROFILES.yaml` con diez perfiles Android, capas transversales Auth/Tutorial, composición, materialidad, acentos, fuentes vivas, assets autorizados, restricciones, VFX no medido y criterios de aceptación.
+- **REGLA DE AUTORIDAD:** los perfiles fijan sujeto, material, contraste y prohibiciones; no crean rutas, datos, assets, reglas, rewards ni resolución de combate.
+- **REGLA CERO GENÉRICOS:** `null`, loading, pending, error, locked, unavailable, assets reservados y resultados no confirmados permanecen explícitos; no se convierten en valores ficticios ni celebración.
+- **VALIDACIÓN:** YAML parseado con `yq`; se verificaron `schema=v1`, estado `PREPARED / EVIDENCE_REQUIRED`, diez perfiles y dos capas transversales.
+- **ALCANCE:** no se tocó `mobile/**`, Supabase, Auth, RLS, RPCs, economía, gameplay, assets físicos, rutas, workflows ni la web congelada.
+- **STATUS:** `PREPARED / EVIDENCE_REQUIRED`; T0 continúa abierto y `PROFILE_HISTORY_STATE_GAP` sigue `BLOCKED`.
+- **NO APK:** no se inició workflow Android, no se compiló APK, no se instaló build y no se publicó release; el commit documental usa `[skip ci]`.
+- **PERSISTENCIA:** perfiles y continuidad se publican juntos en `main` mediante GitHub REST/Data API sobre HTTPS, sin `git push` ni credenciales en URLs.
+- **NEXT BLOCK:** otra unidad documental independiente o, sólo con autorización explícita, el gate físico de APK/QA; no promover `VERIFIED`, `TIER1_READY`, `SUPPORTED` u `OPERATIONAL`.
+
 ## 2026-09-15 — VE-MOB-T0 — ART DIRECTION / PREPARED
 
 - **ENTORNO ACTIVO:** aplicación Android en `mobile/**`; la web permanece congelada.
