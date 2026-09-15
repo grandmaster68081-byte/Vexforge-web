@@ -46,6 +46,7 @@ consumo automático.
 | `docs/visual-assets/vexforge-collection-screen-premium-1080x2340.png` | Referencia visual Collection aprobada por el operador | `REVIEW_REQUIRED` | Collection | `docs/visual-assets/vexforge-collection-screen-premium-1080x2340.md`, registro T0 |
 | `mobile/assets/images/decks-reference-scene.png` | Escena de formación | `CANON_ACTIVE` | Deck | `VEXFORGE-ASSET-ATLAS.md` |
 | `mobile/assets/images/profile-reference-scene.png` | Escena de identidad | `CANON_ACTIVE` | Profile | `VEXFORGE-ASSET-ATLAS.md` |
+| `docs/visual-assets/vexforge-profile-screen-premium-1080x2340.png` | Referencia visual Profile aprobada por el operador | `REVIEW_REQUIRED` | Profile | `docs/visual-assets/vexforge-profile-screen-premium-1080x2340.md`, registro T0 |
 | `mobile/assets/images/home-reference-scene.png` | Escena de referencia visual y fondo del hero funcional | `CANON_ACTIVE` | Home | `mobile/app/(tabs)/index.tsx`, `mobile/constants/visual.ts`, `VEXFORGE-ASSET-ATLAS.md` |
 | `mobile/assets/images/vexforge-auth-nexus-final.png` | Referencia opcional de Auth/Nexus | `AVAILABLE_UNASSIGNED` | Auth | `VEXFORGE-ASSET-ATLAS.md` |
 | `mobile/assets/images/icon.jpg` | Referencia de estilo heredado | `AVAILABLE_UNASSIGNED` | Compartido | `VEXFORGE-ASSET-ATLAS.md` |

@@ -27,10 +27,10 @@
     "reserved_surface_paths": 11,
     "reserved_residual_paths": 34,
     "total_entries": 80,
-    "local_hashes_measured": 13,
+    "local_hashes_measured": 16,
     "storage_hashes_measured": 0,
     "pending_source_backgrounds": 0,
-    "approved_reference_entries": 2
+    "approved_reference_entries": 3
   },
   "entries": [
     {
@@ -39,11 +39,11 @@
       "origin": "repository",
       "path": "mobile/assets/images/auth-reference-scene.png",
       "dimensions": {
-        "width": 1080,
-        "height": 2340
+        "width": 1024,
+        "height": 1024
       },
       "format": "png",
-      "hash": "bc54341d4d841ad4e15fa0c05f04d8766029172bbfdc31fe26a729d2278d91a8",
+      "hash": "d6da089a845e7a4732f7e6097d5bd2fe99fe2cb62959ee9e6c8848d012116a43",
       "hash_algorithm": "sha256",
       "hash_status": "MEASURED",
       "provenance": [
@@ -55,7 +55,7 @@
         "Auth"
       ],
       "state": "CANON_ACTIVE",
-      "debt": "Escena local de Auth registrada en el atlas."
+      "debt": "Active Auth reference is square; dimension audit recorded. Full-frame Android replacement remains pending visual decision and QA."
     },
     {
       "asset_id": "android-local:battle-reference-scene.png",
@@ -195,7 +195,7 @@
         "Home"
       ],
       "state": "CANON_ACTIVE",
-      "debt": "Escena aprobada por el operador y consumida por el hero funcional de Home."
+      "debt": "Active Home hero reference is square and intentionally cropped by the responsive hero; full-frame equivalence remains pending product decision."
     },
     {
       "asset_id": "android-local:icon.jpg",
@@ -1669,6 +1669,34 @@
       ],
       "authorized_domains": [
         "Collection"
+      ],
+      "state": "REVIEW_REQUIRED",
+      "approval_status": "OPERATOR_APPROVED_REFERENCE",
+      "android_consumer": "PENDING_ANDROID_ACTIVATION",
+      "storage_status": "NOT_UPLOADED_CARDS_ONLY_POLICY",
+      "debt": "Reference approved and measured; Android consumer, physical QA and release remain pending."
+    },
+    {
+      "asset_id": "android-reference:profile-screen-premium-1080x2340.png",
+      "class": "approved_visual_reference",
+      "origin": "generated_image",
+      "path": "docs/visual-assets/vexforge-profile-screen-premium-1080x2340.png",
+      "dimensions": {
+        "width": 1080,
+        "height": 2340
+      },
+      "format": "png",
+      "hash": "1f1122a0a427943c0fad68162c776e866b23435749b2d82bfe67f322ce1e2b4e",
+      "hash_algorithm": "sha256",
+      "hash_status": "MEASURED",
+      "provenance": [
+        "operator-approved generation from the Home master reference",
+        "docs/visual-assets/vexforge-profile-screen-premium-1080x2340.md",
+        "docs/VE-MOB-VISUAL-DIMENSION-AUDIT-2026-09-15.md",
+        "CONTINUITY.md"
+      ],
+      "authorized_domains": [
+        "Profile"
       ],
       "state": "REVIEW_REQUIRED",
       "approval_status": "OPERATOR_APPROVED_REFERENCE",

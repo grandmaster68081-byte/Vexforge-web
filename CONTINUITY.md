@@ -5947,3 +5947,16 @@
 - **CARDS-ONLY STORAGE:** no se subió a Storage ni se habilitó una ruta visual no-carta; el arte real de cartas conserva su fuente viva en `cards.image_url`.
 - **NO APK / NO RELEASE:** no se tocó `mobile/**`, no se inició workflow Android, no se compiló APK y no se publicó release nuevo.
 - **NEXT:** la pantalla de Perfil generada en esta sesión queda como propuesta visual separada; requiere aprobación explícita antes de entrar en el registro oficial.
+
+
+---
+## 2026-09-15 — VE-MOB-VISUAL — PROFILE OFFICIAL REFERENCE + AUTH/HOME DIMENSION AUDIT
+
+- **ENTORNO ACTIVO:** aplicación Android en `mobile/**`; la web permanece congelada.
+- **PERFIL:** se guardó `docs/visual-assets/vexforge-profile-screen-premium-1080x2340.png` como referencia visual oficial aprobada, con ficha, hash y entrada T0. SHA-256: `1f1122a0a427943c0fad68162c776e866b23435749b2d82bfe67f322ce1e2b4e`.
+- **ESTADO DEL PERFIL:** `OPERATOR_APPROVED_REFERENCE / ANDROID_NOT_ACTIVATED`; no se activó `mobile/**`, no se subió a Storage y no se compiló APK.
+- **AUDIT AUTH:** el consumidor activo usa `mobile/assets/images/auth-reference-scene.png`, medido en `1024 × 1024`, aunque el registro anterior declaraba `1080 × 2340`; `resizeMode="cover"` lo fuerza a recorte en el viewport Android. Existe `vexforge-auth-nexus-final.png` en `1080 × 2340`, pero no está conectado a la ruta.
+- **AUDIT HOME:** el consumidor activo usa `home-reference-scene.png`, medido en `1024 × 1024`, dentro de un hero responsive de aproximadamente `570–640 px`, con `resizeMode="cover"`, escala `112%` y parallax. Es una composición nativa desplazable, no un fondo vertical full-frame.
+- **REGISTRO:** las dimensiones y hashes medidos de Auth/Home se corrigieron en `VE-T0-ANDROID-ASSET-REGISTRY.json`; el diagnóstico completo quedó en `docs/VE-MOB-VISUAL-DIMENSION-AUDIT-2026-09-15.md`.
+- **NO APK / NO RELEASE:** este audit no cambia consumidores, no inicia workflow Android, no sube fondos visuales y no publica release.
+- **NEXT:** decidir primero si Auth adopta el asset vertical existente y si Home conserva hero recortado o requiere una escena vertical; después ejecutar QA visual/táctil y workflow APK autorizado.
