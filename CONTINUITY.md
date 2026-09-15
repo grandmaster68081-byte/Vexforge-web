@@ -1,3 +1,16 @@
+## 2026-09-15 — VE-MOB-VISUAL — HOME VERTICAL REFERENCE / BLOCKED BY GENERATOR DIMENSION
+
+- **ENTORNO ACTIVO:** aplicación Android en `mobile/**`; la web permanece congelada.
+- **MEDICIÓN CONFIRMADA:** el consumidor actual continúa usando `mobile/assets/images/home-reference-scene.png`, PNG RGB/sRGB `1024×1024`, SHA-256 `191dbe5ddb04d9208b69811e5139ac0eaaa0b498e1717fafc21717a8dd9a64e1`.
+- **REGLA APLICADA:** no se editó, estiró ni recortó la escena cuadrada.
+- **GENERACIÓN:** el candidato nuevo generado para Home devolvió `1024×1024` pese a solicitar una composición vertical; se descartó y no se incorporó al repositorio.
+- **BÚSQUEDA DE ALTERNATIVA:** no existe otra escena Home/Nexus local medida en `1080×2340`; el manifiesto Supabase sólo ofrece fondos remotos que no están autorizados para sustituir esta referencia Android.
+- **RESULTADO:** Home permanece con su referencia cuadrada activa; no se modifica `CANONICAL_BACKGROUNDS.home`, el registro T0 ni el atlas hasta disponer de una imagen generada nativamente en `1080×2340`.
+- **SUPABASE:** revisión bajo la fila `ACTIVE` `public.vexforge_official_documents / vexforge_home_world_system_protocol_v3`, V2.3.
+- **RELEASE GATE:** no se compiló APK, no se inició workflow Android y no se publicó release.
+
+---
+
 ## 2026-09-15 — VE-MOB-VISUAL — AUTH OFFICIAL VERTICAL REFERENCE / IMPLEMENTED_UNVERIFIED
 
 - **ENTORNO ACTIVO:** aplicación Android en `mobile/**`; la web permanece congelada.
