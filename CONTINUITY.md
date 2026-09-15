@@ -1,3 +1,33 @@
+## 2026-09-15 — VE-MOB-T2V — PROFILE MODAL SHELL TOKENS / IMPLEMENTED_UNVERIFIED
+
+- **BRANCH:** `main`.
+- **SCREEN / DOMAIN:** `PROFILE` / armazón modal de paneles secundarios.
+- **BLOCK:** extraer overlay, superficie, encabezado, cierre y grid sin tocar
+  el contenido autoritativo de estadísticas, progreso, cuenta, logros, títulos,
+  historial, ranking o temporada.
+- **WHAT CHANGED:** `VISUAL_TOKENS.profileModal` define color del backdrop,
+  geometría del panel, separación del encabezado, control de cierre y gap del
+  grid; `profile.tsx` consume esos roles.
+- **BEHAVIOR PRESERVED:** mismas dimensiones efectivas, color `#000000B8`,
+  `animationType="slide"`, `onRequestClose`, `testID`, accesibilidad, copy,
+  navegación y datos de todos los paneles.
+- **DATA PRESERVED:** no se añadieron solicitudes, estado, rutas, perfil,
+  ranking, Supabase, Auth, RPCs, economía, gameplay, assets ni cambios en la
+  web.
+- **MOTION / PERFORMANCE:** no se añadió movimiento, listener, render de datos
+  ni timing; sólo se centralizaron valores estáticos del contenedor modal.
+- **GUARD:** `node scripts/verify-mobile-visual-system.mjs`,
+  `node --check scripts/verify-mobile-visual-system.mjs` y `git diff --check`
+  pasaron.
+- **RELEASE GATE:** no se inició workflow Android, no se compiló APK y no se
+  publicó release; la evidencia física queda bajo el control del operador.
+- **STATUS:** `IMPLEMENTED_UNVERIFIED`.
+- **PERSISTENCIA:** publicar código, guardia T2V y esta continuidad juntos en
+  `main` mediante la API REST HTTPS oficial de GitHub con `[skip ci]`, sin
+  `git push`.
+- **NEXT BLOCK:** continuar con otra pieza T2V explícita, sin tocar el motor de
+  juego, los contratos de Supabase, la web congelada ni el tutorial.
+
 ## 2026-09-15 — VE-MOB-T2V — PROFILE FEEDBACK TOKENS / IMPLEMENTED_UNVERIFIED
 
 - **BRANCH:** `main`.

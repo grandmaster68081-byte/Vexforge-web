@@ -396,6 +396,13 @@ export const VISUAL_TOKENS = {
     },
     loading: { gap: 10, labelSize: 10, labelTracking: 1.3 },
   },
+  profileModal: {
+    backdropColor: '#000000B8',
+    panel: { maxHeight: '78%', minHeight: 260, borderTopWidth: 1, radius: 20, padding: 18 },
+    header: { marginBottom: 16 },
+    close: { size: 36, borderWidth: 1, radius: 10, iconSize: 18 },
+    gridGap: 8,
+  },
   battlefield: {
     root: { radius: 22, padding: 12, gap: 10 },
     typography: {

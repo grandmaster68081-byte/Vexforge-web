@@ -306,6 +306,20 @@ for (const token of [
     failures.push(`Profile is missing feedback token "${token}"`);
   }
 }
+if (!profile.includes('VISUAL_TOKENS.profileModal')) {
+  failures.push('Profile does not consume modal shell tokens');
+}
+for (const token of [
+  'profileModal.backdropColor',
+  'profileModal.panel',
+  'profileModal.header',
+  'profileModal.close',
+  'profileModal.gridGap',
+]) {
+  if (!profile.includes(`VISUAL_TOKENS.${token}`)) {
+    failures.push(`Profile is missing modal token "${token}"`);
+  }
+}
 
 const battlefield = source('mobile/components/ForgeBattlefield.tsx');
 if (!battlefield.includes("from '@/constants/experience'")) {

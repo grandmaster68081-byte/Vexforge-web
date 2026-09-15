@@ -177,7 +177,7 @@ function PanelContent({
           <Text style={[styles.modalEyebrow, { color: colors.accent }]}>REGISTRO DEL FORJADOR</Text>
           <Text style={[styles.modalTitle, { color: colors.foreground }]}>{title}</Text>
         </View>
-        <Pressable testID="profile-panel-close" accessibilityRole="button" accessibilityLabel="Cerrar detalle" onPress={onClose} style={({ pressed }) => [styles.modalClose, { borderColor: colors.border, opacity: pressed ? 0.68 : 1, transform: [{ translateY: pressed ? 2 : 0 }] }]}><Ionicons name="close" size={18} color={colors.foreground} /></Pressable>
+        <Pressable testID="profile-panel-close" accessibilityRole="button" accessibilityLabel="Cerrar detalle" onPress={onClose} style={({ pressed }) => [styles.modalClose, { borderColor: colors.border, opacity: pressed ? 0.68 : 1, transform: [{ translateY: pressed ? 2 : 0 }] }]}><Ionicons name="close" size={VISUAL_TOKENS.profileModal.close.iconSize} color={colors.foreground} /></Pressable>
       </View>
       {panel === 'stats' ? (
         <View style={styles.modalGrid}>
@@ -639,13 +639,32 @@ const styles = StyleSheet.create({
     fontSize: VISUAL_TOKENS.profileFeedback.loading.labelSize,
     letterSpacing: VISUAL_TOKENS.profileFeedback.loading.labelTracking,
   },
-  modalBackdrop: { flex: 1, justifyContent: 'flex-end', backgroundColor: '#000000B8' },
-  modalPanel: { maxHeight: '78%', minHeight: 260, borderTopWidth: 1, borderTopLeftRadius: 20, borderTopRightRadius: 20, padding: 18 },
-  modalHeader: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 },
+  modalBackdrop: { flex: 1, justifyContent: 'flex-end', backgroundColor: VISUAL_TOKENS.profileModal.backdropColor },
+  modalPanel: {
+    maxHeight: VISUAL_TOKENS.profileModal.panel.maxHeight,
+    minHeight: VISUAL_TOKENS.profileModal.panel.minHeight,
+    borderTopWidth: VISUAL_TOKENS.profileModal.panel.borderTopWidth,
+    borderTopLeftRadius: VISUAL_TOKENS.profileModal.panel.radius,
+    borderTopRightRadius: VISUAL_TOKENS.profileModal.panel.radius,
+    padding: VISUAL_TOKENS.profileModal.panel.padding,
+  },
+  modalHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: VISUAL_TOKENS.profileModal.header.marginBottom,
+  },
   modalEyebrow: { fontFamily: typography.bodyBold, fontSize: 9, letterSpacing: 1 },
   modalTitle: { fontFamily: typography.display, fontSize: 22, marginTop: 4 },
-  modalClose: { width: 36, height: 36, borderWidth: 1, borderRadius: 10, alignItems: 'center', justifyContent: 'center' },
-  modalGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
+  modalClose: {
+    width: VISUAL_TOKENS.profileModal.close.size,
+    height: VISUAL_TOKENS.profileModal.close.size,
+    borderWidth: VISUAL_TOKENS.profileModal.close.borderWidth,
+    borderRadius: VISUAL_TOKENS.profileModal.close.radius,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  modalGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: VISUAL_TOKENS.profileModal.gridGap },
   modalMetric: {
     width: VISUAL_TOKENS.metricPlaque.width,
     minHeight: VISUAL_TOKENS.metricPlaque.minHeight,
