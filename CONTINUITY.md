@@ -1,16 +1,18 @@
-## 2026-09-15 — VE-MOB-5 DECK — OFFICIAL ASSET / CANONICAL_PENDING_IMPLEMENTATION
+## 2026-09-15 — VE-MOB-5/3/2 — OFFICIAL ASSETS + APK EVIDENCE / IMPLEMENTED_UNVERIFIED
 
 - **ENTORNO ACTIVO:** aplicación Android en `mobile/**`; la web permanece congelada.
-- **AUTORIDAD:** fila ACTIVE `public.vexforge_official_documents / vexforge_home_world_system_protocol_v3`, V2.3, consultada por HTTPS.
-- **SCREEN / DOMAIN:** Deck Forge / constructor de mazos, superficie Android de formación y composición.
-- **ASSET OFICIAL:** `mobile/assets/images/decks-reference-scene.png` queda reemplazado por el asset aprobado por el operador; PNG RGB/sRGB de `1080×2340`, SHA-256 `6e9381a5f6a266c908d8760dfc14aae0280402d624b5f3d2f5ae34964b1f8fea`.
-- **IDENTIDAD:** citadel y forja central de Home, obsidiana, metal grabado, cyan arcano, oro/brasa y resonancia violeta; la escena expresa pedestal de Champion, siete ranuras de Formation, Tactical, Reserve y espacio de controles nativos.
-- **REGLA CERO GENÉRICOS:** no contiene nombres, cifras, rarezas, recompensas, legalidad ni estados falsos; las capas dinámicas permanecen bajo Supabase y la UI Android real.
-- **CARDS-ONLY STORAGE:** el asset queda versionado localmente para Android; no se sube a Storage visual, conforme a la sección 72.9 del protocolo. El arte vivo de cartas continúa siendo la única familia de Storage.
-- **IMPLEMENTACIÓN:** la ruta oficial queda preparada para el siguiente consumidor Android; el Deck actual sigue siendo una superficie programática y no se declara activo en APK hasta integrar el asset sin sustituir controles ni datos.
-- **RELEASE GATE:** no se inició workflow Android ni se compiló una APK nueva. La verificación de Home/Auth se hará contra el último release existente.
-- **STATUS:** `CANONICAL_PENDING_IMPLEMENTATION`; dimensiones y procedencia aprobadas, integración y evidencia física pendientes.
-- **NEXT BLOCK:** verificar Home y Auth en código, métricas de asset y release APK; después integrar Deck y solicitar una compilación sólo si el operador la autoriza.
+- **AUTORIDAD:** fila ACTIVE `public.vexforge_official_documents / vexforge_home_world_system_protocol_v3`, V2.3, consultada por HTTPS; la sección 72.9 mantiene Storage activo únicamente para `cards/*` y exige verificar escenas en APK, Device Matrix y Visual State Matrix.
+- **DECK OFICIAL:** `mobile/assets/images/decks-reference-scene.png` quedó reemplazado por el asset aprobado por el operador. PNG RGB/sRGB `1080×2340`, SHA-256 `6e9381a5f6a266c908d8760dfc14aae0280402d624b5f3d2f5ae34964b1f8fea`. El blob del commit contiene la imagen nueva; el endpoint raw puede mantener caché anterior temporalmente.
+- **HOME OFICIAL:** `mobile/assets/images/home-reference-scene.png`, PNG RGB/sRGB `1024×1024`, SHA-256 `191dbe5ddb04d9208b69811e5139ac0eaaa0b498e1717fafc21717a8dd9a64e1`. Se consume como escena hero dentro de `ScreenShell` y viewport medido con `resizeMode="cover"`; no se usa como layout táctil estático.
+- **AUTH OFICIAL:** `mobile/assets/images/auth-reference-scene.png`, PNG RGB/sRGB `1024×1024`, SHA-256 `d6da089a845e7a4732f7e6097d5bd2fe99fe2cb62959ee9e6c8848d012116a43`. Se consume mediante `ScreenShell surface="auth"`; el formulario continúa siendo nativo y keyboard-aware.
+- **COHERENCIA DE MÉTRICAS:** las fuentes no comparten resolución de archivo —Home/Auth son escenas cuadradas y Deck es un frame vertical completo—, pero el runtime no usa esas medidas como viewport físico: ScreenShell y Home aplican cover sobre frames medidos/safe areas, y Deck calcula hotspots con `useMeasuredCanonicalFrame` y proporciones de `canvasHeight`. No se observó un estiramiento directo sin control.
+- **GUARDAS SOBRE `main`:** Auth `17/17` OK; Deck `26/26` OK; Home `18/18` OK. Las guardas confirman contratos vivos, rutas, estados explícitos, ausencia de genéricos, controles programáticos y límites responsive; no sustituyen QA táctil.
+- **APK EXISTENTE:** release `vexforge-android-build-243` con `app-release.apk` de `99,240,140` bytes, SHA-256 `57bf24911d36b220ca43dcbe7e82e65c738907516d56b3e34fc7c8fe8a9dc02a`, workflow run 243 `success`, commit de build `e318ab1dd542395d2178cd26e5c2f201a81713b0`. La inspección del bundle encontró marcadores de Auth, `validate_deck`, `save_deck`, `useMeasuredCanonicalFrame` y la superficie Deck programática.
+- **BLOCKER HONESTO:** no hay `adb` ni emulador/dispositivo disponible en este entorno; no es posible certificar login, OAuth, teclado, navegación, scroll, safe area, taps, carga de datos o estados visuales dentro de una APK instalada. Home/Auth permanecen `IMPLEMENTED_UNVERIFIED`; Deck queda `CANONICAL_PENDING_IMPLEMENTATION` hasta integrar el asset y generar un release autorizado.
+- **WORKFLOW 244:** el intento más reciente terminó `failure` en `npm run typecheck`, antes de prebuild, compilación o publicación. Fallos reportados: `mobile/app/(tabs)/collection.tsx(260,20)` TS2769 y `mobile/app/store.tsx(39,3)` importación inexistente `storageAsset`. No se modifica ese alcance porque esta sesión no recibió autorización para reparar ni compilar.
+- **RELEASE GATE:** no se generó APK nueva ni se publicó release; el commit de promoción del asset es `e66fa9b014731b0fe97c950de225c57bf3a0c970`.
+- **STATUS:** assets oficiales registrados y guardas estáticas aprobadas; evidencia física pendiente. No se declara `VERIFIED`, `PASS`, `TIER1_READY` u `OPERATIONAL`.
+- **NEXT BLOCK:** instalar el release existente en un dispositivo/emulador para QA física; después integrar el Deck oficial en su consumidor Android sin convertirlo en controles estáticos y solicitar compilación sólo con autorización explícita.
 
 ## 2026-09-15 — VE-MOB-AUTH — NEXUS ACCESS VISUAL / IMPLEMENTED_UNVERIFIED
 
