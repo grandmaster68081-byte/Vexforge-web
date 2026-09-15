@@ -163,7 +163,7 @@ export function ForgeFormationPreview({
 
 const styles = StyleSheet.create({
   root: {
-    borderWidth: 1,
+    borderWidth: VISUAL_TOKENS.border.standard,
     borderRadius: VISUAL_TOKENS.formation.root.radius,
     padding: VISUAL_TOKENS.formation.root.padding,
     gap: VISUAL_TOKENS.formation.root.gap,
@@ -176,7 +176,7 @@ const styles = StyleSheet.create({
   seal: {
     width: VISUAL_TOKENS.formation.seal.size,
     height: VISUAL_TOKENS.formation.seal.size,
-    borderWidth: 1,
+    borderWidth: VISUAL_TOKENS.border.standard,
     borderRadius: VISUAL_TOKENS.formation.seal.radius,
     alignItems: 'center',
     justifyContent: 'center',
@@ -212,7 +212,7 @@ const styles = StyleSheet.create({
   card: {
     flex: 1,
     minWidth: VISUAL_TOKENS.formation.card.minWidth,
-    borderWidth: 1,
+    borderWidth: VISUAL_TOKENS.border.standard,
     borderRadius: VISUAL_TOKENS.formation.card.radius,
     padding: VISUAL_TOKENS.formation.card.padding,
     gap: VISUAL_TOKENS.formation.card.gap,
@@ -257,7 +257,7 @@ const styles = StyleSheet.create({
   },
   feedback: {
     minHeight: VISUAL_TOKENS.formation.feedback.minHeight,
-    borderWidth: 1,
+    borderWidth: VISUAL_TOKENS.border.standard,
     borderColor: 'rgba(255,255,255,0.12)',
     borderRadius: VISUAL_TOKENS.formation.feedback.radius,
     padding: VISUAL_TOKENS.formation.feedback.padding,
@@ -273,7 +273,7 @@ const styles = StyleSheet.create({
     lineHeight: VISUAL_TOKENS.formation.feedbackText.lineHeight,
   },
   retry: {
-    borderWidth: 1,
+    borderWidth: VISUAL_TOKENS.border.standard,
     borderRadius: VISUAL_TOKENS.formation.retry.radius,
     paddingHorizontal: VISUAL_TOKENS.formation.retry.paddingHorizontal,
     paddingVertical: VISUAL_TOKENS.formation.retry.paddingVertical,

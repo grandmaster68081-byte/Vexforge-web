@@ -48,6 +48,9 @@ la web congelada.
 - `ForgeFormationPreview` consume `formation` para la geometría y escala de su
   lectura de Vanguardia, Campeón, Centinela y Reserva, preservando la formación
   derivada del servidor y sus estados de carga, vacío y error.
+- `ForgeFormationPreview` consume `border.standard` para el borde de la raíz,
+  sigil, tarjetas, feedback y retry, manteniendo una única regla de borde sin
+  cambiar colores, estados ni zonas de interacción.
 - `ForgeBattlefield` consume `battlefield.typography` para la jerarquía del
   campo, turno, formaciones, cartas, reserva, carril de confrontación y
   resultado, preservando los datos y estados confirmados por el servidor.

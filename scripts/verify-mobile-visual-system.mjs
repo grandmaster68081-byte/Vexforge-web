@@ -158,6 +158,12 @@ if (!formation.includes("from '@/constants/experience'")) {
 if (!formation.includes('VISUAL_TOKENS.formation')) {
   failures.push('ForgeFormationPreview does not consume formation tokens');
 }
+if ((formation.match(/borderWidth: 1/g) ?? []).length > 0) {
+  failures.push('ForgeFormationPreview contains an un-tokenized 1px border');
+}
+if ((formation.match(/VISUAL_TOKENS\.border\.standard/g) ?? []).length < 5) {
+  failures.push('ForgeFormationPreview does not apply the shared standard border token to all formation surfaces');
+}
 
 const navigation = source('mobile/app/(tabs)/_layout.tsx');
 if (!navigation.includes("from '@/constants/experience'")) {
