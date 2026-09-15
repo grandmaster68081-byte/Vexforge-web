@@ -5312,3 +5312,13 @@
 - **CONCLUSIÓN HONESTA:** el código Android sí está correlacionado con la APK 243, y la APK sí está conectada al Supabase oficial. Sin embargo, el trabajo documental del protocolo no cambia por sí mismo la aplicación instalada y las unidades posteriores al build 243 no entraron en una APK nueva. Por eso no se puede afirmar que la instalación del operador muestre esos cambios ni cerrar `VERIFIED` sin evidencia física del dispositivo.
 - **NO APK / NO RELEASE NUEVO:** se respetó la restricción del operador: no se inició workflow, no se compiló APK y no se publicó release nuevo. Esta entrada de continuidad es documental y se publica con `[skip ci]`.
 - **STATUS:** `VERIFICATION_COMPLETE / EVIDENCE_REQUIRED`; `TIER1_READY` y `OPERATIONAL` no se declaran.
+
+## 2026-09-15 — VE-QA-ACCOUNT-OFFICIAL
+
+- **CUENTA QA OFICIAL:** `cristiangalvez815@gmail.com` queda registrada como la cuenta QA canónica de VEXFORGE.
+- **ESTADO VIVO:** `public.players.is_qa=true`; la cuenta permanece activa y autenticada.
+- **PRIVILEGIOS PRESERVADOS:** se mantienen `role=owner`, `is_admin=true` y `is_super_admin=true`; la clasificación QA es aditiva y no es una degradación de permisos.
+- **DECISIÓN OFICIAL:** `SUPREME-LAW-OPERATOR-QA-HANDOFF` queda actualizado en Supabase para identificar esta cuenta mediante `auth.users + public.players` y exigir sesión normal, commit público verificable y resultado real.
+- **REPRODUCIBILIDAD:** se añadió `supabase/migrations/0048_qa_canonical_account_cristiangalvez.sql` y se aplicó el mismo cambio en el proyecto oficial mediante la Supabase Management API.
+- **SEGURIDAD:** no se modificaron roles, banderas administrativas, contraseña, tokens, economía ni datos de juego; no se compiló ni publicó una APK nueva.
+- **RELACIÓN CON EL HISTORIAL:** la referencia anterior a `pavilo20.qa@vexforge.test` pertenece a una decisión ya `superseded`; no es la cuenta QA oficial activa.
