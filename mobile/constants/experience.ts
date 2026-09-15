@@ -495,6 +495,8 @@ export const VISUAL_TOKENS = {
       title: { fontSize: 18, fontWeight: '900', letterSpacing: 0.4, marginTop: 3 },
       turnValue: { fontSize: 13, fontWeight: '900' },
       turnLabel: { fontSize: 7, fontWeight: '900', letterSpacing: 0.6, marginTop: 2 },
+      liveHudLabel: { fontSize: 7, fontWeight: '900', letterSpacing: 0.5 },
+      liveHudValue: { fontSize: 7, fontWeight: '800' },
       identityKicker: { fontSize: 8, fontWeight: '900', letterSpacing: 0.9 },
       identityName: { fontSize: 12, fontWeight: '800', marginTop: 2 },
       identityStatus: { fontSize: 8, fontWeight: '900', letterSpacing: 0.7 },

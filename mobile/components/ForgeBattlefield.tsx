@@ -1,9 +1,11 @@
 import { Feather } from '@/components/ForgeIcon';
 import { useEffect, useMemo, useRef } from 'react';
 import { Animated, Image, StyleSheet, Text, View } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 import { useColors } from '@/hooks/useColors';
 import type { BattleTurn, BattleUnit } from '@/lib/supabase';
 import { VISUAL_TOKENS } from '@/constants/experience';
+import { CANONICAL_BACKGROUNDS } from '@/constants/visual';
 
 type Role = 'VANGUARDIA' | 'CAMPEÓN' | 'CENTINELA';
 type DisplayRole = Role | 'RESERVA' | 'CAÍDA' | 'SIN POSICIÓN';
@@ -81,6 +83,76 @@ function hpPercent(unit: BattleUnit) {
   const max = unit.max_hp;
   if (typeof hp !== 'number' || !Number.isFinite(hp) || typeof max !== 'number' || !Number.isFinite(max) || max <= 0) return null;
   return Math.max(0, Math.min(100, (hp / max) * 100));
+}
+
+function BattlefieldScene({ reducedMotion, colors }: { reducedMotion: boolean; colors: Colors }) {
+  const drift = useRef(new Animated.Value(0)).current;
+  const pulse = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    if (reducedMotion) {
+      drift.stopAnimation();
+      pulse.stopAnimation();
+      drift.setValue(0);
+      pulse.setValue(0);
+      return;
+    }
+
+    const driftLoop = Animated.loop(
+      Animated.sequence([
+        Animated.timing(drift, { toValue: 1, duration: 4200, useNativeDriver: true }),
+        Animated.timing(drift, { toValue: 0, duration: 4200, useNativeDriver: true }),
+      ]),
+    );
+    const pulseLoop = Animated.loop(
+      Animated.sequence([
+        Animated.timing(pulse, { toValue: 1, duration: 1900, useNativeDriver: true }),
+        Animated.timing(pulse, { toValue: 0, duration: 1900, useNativeDriver: true }),
+      ]),
+    );
+    driftLoop.start();
+    pulseLoop.start();
+    return () => {
+      driftLoop.stop();
+      pulseLoop.stop();
+    };
+  }, [drift, pulse, reducedMotion]);
+
+  const sceneTransform = {
+    translateY: drift.interpolate({ inputRange: [0, 1], outputRange: [0, -5] }),
+    scale: drift.interpolate({ inputRange: [0, 1], outputRange: [1, 1.018] }),
+  };
+  const cyanGlowOpacity = pulse.interpolate({ inputRange: [0, 1], outputRange: [0.08, 0.22] });
+  const emberGlowOpacity = pulse.interpolate({ inputRange: [0, 1], outputRange: [0.06, 0.18] });
+
+  return (
+    <View pointerEvents="none" testID="battlefield-scene-viewport" style={styles.sceneBackdrop}>
+      <Animated.Image
+        source={CANONICAL_BACKGROUNDS.pvp}
+        resizeMode="cover"
+        accessibilityLabel="Escena oficial viva del Battlefield VEXFORGE"
+        style={[
+          StyleSheet.absoluteFillObject,
+          styles.sceneImage,
+          { transform: [{ translateY: sceneTransform.translateY }, { scale: sceneTransform.scale }] },
+        ]}
+      />
+      <LinearGradient
+        colors={['#020A16E8', '#071A2CA8', '#100B08DA']}
+        locations={[0, 0.48, 1]}
+        style={StyleSheet.absoluteFillObject}
+      />
+      <LinearGradient
+        colors={[`${colors.primary}30`, 'transparent', `${colors.danger}36`]}
+        start={{ x: 0.1, y: 0 }}
+        end={{ x: 0.9, y: 1 }}
+        style={StyleSheet.absoluteFillObject}
+      />
+      <Animated.View style={[styles.sceneGlow, styles.sceneGlowCyan, { backgroundColor: colors.primary, opacity: cyanGlowOpacity }]} />
+      <Animated.View style={[styles.sceneGlow, styles.sceneGlowEmber, { backgroundColor: colors.danger, opacity: emberGlowOpacity }]} />
+      <View style={[styles.sceneVignette, { borderColor: `${colors.accent}26` }]} />
+    </View>
+  );
 }
 
 function UnitCard({
@@ -297,15 +369,29 @@ export function ForgeBattlefield({ finalUnits, currentTurn, turnIndex, totalTurn
   );
 
   return (
-    <View testID="forge-battlefield" accessibilityRole="summary" accessibilityLabel="Campo de batalla VEXFORGE con Campeón, Vanguardia, Centinela y Reserva de ambos lados." style={[styles.root, { backgroundColor: colors.background, borderColor: colors.border }]}>
+    <View testID="forge-battlefield" accessibilityRole="summary" accessibilityLabel="Campo de batalla VEXFORGE con Campeón, Vanguardia, Centinela, Reserva y lectura viva del evento." style={[styles.root, { borderColor: `${colors.accent}55` }]}>
+      <BattlefieldScene reducedMotion={reducedMotion} colors={colors} />
+      <View style={styles.sceneContent}>
       <View style={styles.topBar}>
         <View>
           <Text style={[styles.eyebrow, { color: colors.accent }]}>ARENA · FORGEFORMATION</Text>
-          <Text style={[styles.title, { color: colors.foreground }]}>CAMPO DE BATALLA</Text>
+          <Text style={[styles.title, { color: colors.foreground }]}>UMBRAL DE COMBATE</Text>
         </View>
         <View style={[styles.turnBadge, { borderColor: colors.primary, backgroundColor: `${colors.primary}18` }]}>
           <Text style={[styles.turnValue, { color: colors.primary }]}>{currentTurn && totalTurns !== null && totalTurns > 0 ? `${turnIndex + 1}/${totalTurns}` : 'NO REPORTADO'}</Text>
           <Text style={[styles.turnLabel, { color: colors.mutedForeground }]}>TURNO</Text>
+        </View>
+      </View>
+      <View testID="battlefield-live-hud" style={styles.liveHud}>
+        <View style={[styles.liveHudSignal, { borderColor: `${colors.accent}66`, backgroundColor: `${colors.ink}88` }]}>
+          <Feather name="layers" size={VISUAL_TOKENS.battlefield.icons.reserveHeader} color={colors.accent} />
+          <Text style={[styles.liveHudLabel, { color: colors.mutedForeground }]}>MANO</Text>
+          <Text style={[styles.liveHudValue, { color: colors.foreground }]}>NO REPORTADO</Text>
+        </View>
+        <View style={[styles.liveHudSignal, { borderColor: `${colors.accent}66`, backgroundColor: `${colors.ink}88` }]}>
+          <Feather name="zap" size={VISUAL_TOKENS.battlefield.icons.identity} color={colors.accent} />
+          <Text style={[styles.liveHudLabel, { color: colors.mutedForeground }]}>COMMAND</Text>
+          <Text style={[styles.liveHudValue, { color: colors.foreground }]}>NO REPORTADO</Text>
         </View>
       </View>
       {formation('b', opponent)}
@@ -339,23 +425,81 @@ export function ForgeBattlefield({ finalUnits, currentTurn, turnIndex, totalTurn
           {resolvedOutcome === 'victory' ? 'VICTORIA CONFIRMADA POR EL SERVIDOR' : resolvedOutcome === 'draw' ? 'EMPATE CONFIRMADO POR EL SERVIDOR' : 'DERROTA CONFIRMADA POR EL SERVIDOR'}
         </Text>
       ) : null}
+      </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   root: {
+    position: 'relative',
     borderWidth: VISUAL_TOKENS.battlefield.controls.borderWidth,
     borderRadius: VISUAL_TOKENS.battlefield.root.radius,
+    padding: 0,
+    overflow: 'hidden',
+  },
+  sceneBackdrop: {
+    ...StyleSheet.absoluteFillObject,
+    overflow: 'hidden',
+  },
+  sceneImage: {
+    opacity: 0.96,
+  },
+  sceneGlow: {
+    position: 'absolute',
+    width: 240,
+    height: 240,
+    borderRadius: 120,
+  },
+  sceneGlowCyan: {
+    top: '18%',
+    left: -130,
+  },
+  sceneGlowEmber: {
+    bottom: '18%',
+    right: -130,
+  },
+  sceneVignette: {
+    ...StyleSheet.absoluteFillObject,
+    borderWidth: 1,
+    borderRadius: VISUAL_TOKENS.battlefield.root.radius,
+  },
+  sceneContent: {
+    position: 'relative',
     padding: VISUAL_TOKENS.battlefield.root.padding,
     gap: VISUAL_TOKENS.battlefield.root.gap,
-    overflow: 'hidden',
   },
   topBar: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingHorizontal: VISUAL_TOKENS.battlefield.controls.topBarPaddingHorizontal,
+  },
+  liveHud: {
+    flexDirection: 'row',
+    gap: 6,
+  },
+  liveHudSignal: {
+    flex: 1,
+    minHeight: 34,
+    borderWidth: 1,
+    borderRadius: 9,
+    paddingHorizontal: 8,
+    paddingVertical: 5,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 5,
+  },
+  liveHudLabel: {
+    fontSize: VISUAL_TOKENS.battlefield.typography.liveHudLabel.fontSize,
+    fontWeight: VISUAL_TOKENS.battlefield.typography.liveHudLabel.fontWeight,
+    letterSpacing: VISUAL_TOKENS.battlefield.typography.liveHudLabel.letterSpacing,
+  },
+  liveHudValue: {
+    flex: 1,
+    fontSize: VISUAL_TOKENS.battlefield.typography.liveHudValue.fontSize,
+    fontWeight: VISUAL_TOKENS.battlefield.typography.liveHudValue.fontWeight,
+    textAlign: 'right',
   },
   eyebrow: {
     fontSize: VISUAL_TOKENS.battlefield.typography.eyebrow.fontSize,

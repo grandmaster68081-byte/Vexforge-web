@@ -117,14 +117,18 @@ QA visual/táctil ni evidencia de APK de esta unidad.
 - **Ruta:** `/(tabs)/battle`; fuente primaria: `mobile/app/(tabs)/battle.tsx`.
 - **Sujeto:** formaciones, Champion, mano, Command, Reserve, target legal,
   evento y resultado.
-- **Assets:** `battle-reference-scene.png`, fondos oficiales de PvP/bosses y
-  arte de carta real; cualquier carta sin imagen debe conservar estado honesto.
+- **Assets:** `battle-reference-scene.png` es el arte aprobado de la escena
+  dentro del viewport nativo; no es una captura ni contiene UI de runtime.
+  El arte de carta real llega desde datos vivos; cualquier carta sin imagen debe
+  conservar estado honesto.
 - **Datos y acciones:** Battle Run / ForgeFormation, replay y settlement
   existentes; no se crea un motor paralelo.
 - **Estados mínimos:** `loading`, `empty`, `pending`, `error`, `locked`,
   `completed`, `recovery`.
-- **Aceptación:** touch de target y acción, turn/event stream, resultado
-  persistido, abandono/timeout, replay y objetivo de 60 FPS por medir.
+- **Aceptación:** escena reconocible antes que panel, formaciones/Champion/
+  Reserve/hand/Command legibles, parallax limitado, iluminación ambiental,
+  touch de target y acción, turn/event stream, resultado persistido,
+  abandono/timeout, replay y objetivo de 60 FPS por medir.
 
 ### SMR-04 — Collection / Archivo
 

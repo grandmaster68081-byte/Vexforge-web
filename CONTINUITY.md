@@ -6073,3 +6073,15 @@
 - **VERIFICACIÓN:** `git diff --check` limpio. El typecheck móvil no pudo ejecutarse porque el firewall de paquetes devolvió `404` al instalar `npm-package-arg@11.0.3`; no se generó APK ni se inició release, conforme a la instrucción del operador.
 - **ESTADO HONESTO:** `IMPLEMENTED_UNVERIFIED / NO APK / NO RELEASE`; queda pendiente la verificación física de la escena, touch, safe areas, rendimiento y legibilidad en Android.
 - **NEXT:** autorizar explícitamente APK/QA cuando se quiera cerrar la evidencia física; no iniciar compilación automáticamente.
+
+## 2026-09-15 — VE-MOB-BATTLEFIELD — OFFICIAL SCENE-INTEGRATED BATTLEFIELD / NO APK
+
+- **ENTORNO ACTIVO:** aplicación Android en `mobile/**`; la web permanece congelada.
+- **AUTORIDAD:** se respetó la fila `ACTIVE` de `public.vexforge_official_documents/vexforge_home_world_system_protocol_v3`, revisión V2.3 — `CARDS-ONLY STORAGE / VISUAL SOURCE RESET`.
+- **DECISIÓN VISUAL:** `mobile/assets/images/battle-reference-scene.png`, SHA-256 `784c01ad38ebbfccc101713bfb11d07b8bf5fd58cc238d34f1fe2a9a0753a1f1`, es arte aprobado de escena. No se usa como captura, no contiene la UI runtime y no se coloca un dashboard genérico encima.
+- **IMPLEMENTACIÓN:** `CANONICAL_BACKGROUNDS.pvp` ya alimenta un viewport vivo dentro de `ForgeBattlefield`: imagen de escena con drift/escala ambiental limitada, iluminación cyan/ember, viñeta, HUD nativo, formaciones reales, Campeón/Vanguardia/Centinela, Reserva, carril de evento, daño, resultado y señales honestas de Mano/Command.
+- **INTEGRIDAD:** se preservan Battle Run / ForgeFormation, Supabase, replay, settlement, estados explícitos, arte de cartas real, `reducedMotion`, fallback de arte y ausencia de inferencias cuando faltan lado, posición, HP, turnos, mano o Command. No se inventaron cartas, reglas, datos, RPCs, recompensas ni motor paralelo.
+- **REGISTRO:** el asset local y la referencia visual quedan `CANON_ACTIVE`; se actualizaron el registro T0, la matriz de assets, el master record de Battlefield y la ficha de procedencia de la escena.
+- **VERIFICACIÓN:** `scripts/verify-mobile-battle.mjs` pasa `49/49`; `scripts/verify-mobile-visual-system.mjs` pasa; el registro JSON y `git diff --check` pasan. El typecheck móvil no se ejecutó porque la copia oficial no tiene dependencias instaladas; no se instaló una APK ni se inició workflow de Android.
+- **ESTADO HONESTO:** `IMPLEMENTED_UNVERIFIED / NO APK / NO RELEASE`; queda pendiente la evidencia física de touch, safe area, legibilidad, rendimiento y parallax en Android.
+- **NEXT:** sólo con autorización explícita, ejecutar el workflow APK y QA física; no iniciar compilación ni release automáticamente.

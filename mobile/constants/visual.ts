@@ -27,7 +27,10 @@ export const CANONICAL_BACKGROUNDS = {
   // The reference's baked controls never become runtime UI; auth.tsx owns the
   // native gate, fields, states, OAuth actions and keyboard flow.
   auth: require('../assets/images/vexforge-auth-nexus-final.png'),
-  pvp: null,
+  // Battlefield uses approved scene art as a live viewport. The bitmap is
+  // never treated as a screenshot: ForgeBattlefield owns the native HUD,
+  // formations, event lane, states and replay presentation.
+  pvp: require('../assets/images/battle-reference-scene.png'),
   missions: null,
   packs: null,
   // The approved deck plate is scene art only. Deck rebuilds the portal,

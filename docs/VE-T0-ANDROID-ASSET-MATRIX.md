@@ -41,7 +41,7 @@ consumo automático.
 | `mobile/assets/images/vexforge-feature-card.png` | Carta destacada | `CANON_ACTIVE` | Home | `mobile/constants/visual.ts`, `VEXFORGE-ASSET-ATLAS.md` |
 | `mobile/assets/images/vexforge-auth-nexus-final.png` | Referencia vertical oficial de escena de acceso/Nexus (`1080×2340`); la UI runtime es nativa | `CANON_ACTIVE` | Auth | `mobile/constants/visual.ts`, `mobile/app/auth.tsx`, `VEXFORGE-ASSET-ATLAS.md` |
 | `mobile/assets/images/battle-reference-scene.png` | Escena de combate | `CANON_ACTIVE` | Battlefield | `VEXFORGE-ASSET-ATLAS.md` |
-| `docs/visual-assets/vexforge-battle-screen-premium-1080x2340.png` | Referencia visual Battlefield aprobada por el operador | `REVIEW_REQUIRED` | Battlefield | `docs/VE-MOB-VISUAL-BATTLE-SCREEN-PREMIUM.md`, registro T0 |
+| `docs/visual-assets/vexforge-battle-screen-premium-1080x2340.png` | Referencia visual Battlefield aprobada; promovida como arte de escena del viewport nativo | `CANON_ACTIVE` | Battlefield | `docs/visual-assets/vexforge-battle-screen-premium-1080x2340.md`, `mobile/constants/visual.ts`, registro T0 |
 | `mobile/assets/images/collection-archive-scene.jpg` | Escena de Archivo | `CANON_ACTIVE` | Collection | `VEXFORGE-ASSET-ATLAS.md` |
 | `docs/visual-assets/vexforge-collection-screen-premium-1080x2340.png` | Referencia visual Collection aprobada por el operador | `REVIEW_REQUIRED` | Collection | `docs/visual-assets/vexforge-collection-screen-premium-1080x2340.md`, registro T0 |
 | `mobile/assets/images/decks-reference-scene.png` | Escena de formación; arte de escena dentro del viewport nativo de Forja | `CANON_ACTIVE` | Deck | `mobile/constants/visual.ts`, `mobile/app/(tabs)/deck.tsx`, `VEXFORGE-ASSET-ATLAS.md` |
