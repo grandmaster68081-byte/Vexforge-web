@@ -1,3 +1,28 @@
+## 2026-09-14 — VE-MOB-T2V — FORMATION PREVIEW TYPOGRAPHY WEIGHTS / IMPLEMENTED_UNVERIFIED
+
+- **BRANCH:** `main`.
+- **SCREEN / DOMAIN:** `FORJA` / `ForgeFormationPreview`.
+- **BLOCK:** completar la jerarquía tipográfica compartida sin cambiar copy,
+  tamaño, datos de formación ni semántica.
+- **WHAT CHANGED:** kicker, título, contador, sección, rol, nombre, poder,
+  feedback y retry consumen pesos registrados en `VISUAL_TOKENS.formation`.
+- **BEHAVIOR PRESERVED:** mismos pesos efectivos `900` y `800`, tamaños,
+  interlineados, tracking, estados loading, empty, error, retry y accesibilidad.
+- **DATA PRESERVED:** no se añadieron solicitudes, estado, rutas, gameplay,
+  Supabase, Auth, RPCs, assets ni cambios en la web.
+- **MOTION / PERFORMANCE:** no se añadió movimiento, listener, render de datos
+  ni timing; sólo se centralizaron valores tipográficos existentes.
+- **GUARD:** `node scripts/verify-mobile-visual-system.mjs`,
+  `node --check scripts/verify-mobile-visual-system.mjs` y `git diff --check`.
+- **RELEASE GATE:** no se inició workflow Android, no se compiló APK y no se
+  publicó release; QA visual/táctil queda pendiente de autorización.
+- **STATUS:** `IMPLEMENTED_UNVERIFIED`.
+- **PERSISTENCIA:** publicar código, documento T2V y esta continuidad juntos
+  en `main` mediante la API REST HTTPS oficial de GitHub con `[skip ci]`, sin
+  `git push`.
+- **NEXT BLOCK:** continuar con otra pieza T2V explícita, sin tocar el motor de
+  juego, los contratos de Supabase, la web congelada ni el tutorial.
+
 ## 2026-09-14 — VE-MOB-T2V — FORMATION PREVIEW COLOR ROLES / IMPLEMENTED_UNVERIFIED
 
 - **BRANCH:** `main`.

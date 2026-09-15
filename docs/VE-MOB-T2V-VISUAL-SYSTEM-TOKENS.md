@@ -54,6 +54,9 @@ la web congelada.
 - `ForgeFormationPreview` consume roles de color para el placeholder de arte y
   el borde de feedback, manteniendo los mismos valores visuales sin literales
   aislados en el componente.
+- `ForgeFormationPreview` consume pesos tipográficos registrados para kicker,
+  título, contador, secciones, roles, nombres, poder, feedback y retry,
+  conservando la jerarquía existente sin pesos locales aislados.
 - `ForgeBattlefield` consume `battlefield.typography` para la jerarquía del
   campo, turno, formaciones, cartas, reserva, carril de confrontación y
   resultado, preservando los datos y estados confirmados por el servidor.

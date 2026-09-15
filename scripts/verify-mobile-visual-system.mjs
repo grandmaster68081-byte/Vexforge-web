@@ -167,6 +167,15 @@ if ((formation.match(/VISUAL_TOKENS\.border\.standard/g) ?? []).length < 5) {
 for (const token of [
   'formation.cardArt.placeholderBackground',
   'formation.feedback.borderColor',
+  'formation.kicker.fontWeight',
+  'formation.title.fontWeight',
+  'formation.count.fontWeight',
+  'formation.section.fontWeight',
+  'formation.role.fontWeight',
+  'formation.name.fontWeight',
+  'formation.power.fontWeight',
+  'formation.feedbackText.fontWeight',
+  'formation.retryText.fontWeight',
 ]) {
   if (!formation.includes(`VISUAL_TOKENS.${token}`)) {
     failures.push(`ForgeFormationPreview is missing visual token "${token}"`);
@@ -174,6 +183,9 @@ for (const token of [
 }
 if (formation.includes("backgroundColor: 'rgba(") || formation.includes("borderColor: 'rgba(")) {
   failures.push('ForgeFormationPreview contains an un-tokenized rgba presentation color');
+}
+if ((formation.match(/fontWeight: '[89]00'/g) ?? []).length > 0) {
+  failures.push('ForgeFormationPreview contains an un-tokenized font weight');
 }
 
 const navigation = source('mobile/app/(tabs)/_layout.tsx');

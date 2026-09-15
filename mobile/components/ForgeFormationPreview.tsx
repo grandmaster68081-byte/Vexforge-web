@@ -184,22 +184,25 @@ const styles = StyleSheet.create({
   headingCopy: { flex: 1 },
   kicker: {
     fontSize: VISUAL_TOKENS.formation.kicker.fontSize,
-    fontWeight: '900',
+    fontWeight: VISUAL_TOKENS.formation.kicker.fontWeight,
     letterSpacing: VISUAL_TOKENS.formation.kicker.letterSpacing,
   },
   title: {
     fontSize: VISUAL_TOKENS.formation.title.fontSize,
-    fontWeight: '900',
+    fontWeight: VISUAL_TOKENS.formation.title.fontWeight,
     marginTop: VISUAL_TOKENS.formation.title.marginTop,
   },
-  count: { fontSize: VISUAL_TOKENS.formation.count.fontSize, fontWeight: '800' },
+  count: {
+    fontSize: VISUAL_TOKENS.formation.count.fontSize,
+    fontWeight: VISUAL_TOKENS.formation.count.fontWeight,
+  },
   copy: {
     fontSize: VISUAL_TOKENS.formation.copy.fontSize,
     lineHeight: VISUAL_TOKENS.formation.copy.lineHeight,
   },
   section: {
     fontSize: VISUAL_TOKENS.formation.section.fontSize,
-    fontWeight: '900',
+    fontWeight: VISUAL_TOKENS.formation.section.fontWeight,
     letterSpacing: VISUAL_TOKENS.formation.section.letterSpacing,
     marginTop: VISUAL_TOKENS.formation.section.marginTop,
   },
@@ -232,13 +235,13 @@ const styles = StyleSheet.create({
   role: {
     flex: 1,
     fontSize: VISUAL_TOKENS.formation.role.fontSize,
-    fontWeight: '900',
+    fontWeight: VISUAL_TOKENS.formation.role.fontWeight,
     letterSpacing: VISUAL_TOKENS.formation.role.letterSpacing,
   },
   name: {
     fontSize: VISUAL_TOKENS.formation.name.fontSize,
     lineHeight: VISUAL_TOKENS.formation.name.lineHeight,
-    fontWeight: '800',
+    fontWeight: VISUAL_TOKENS.formation.name.fontWeight,
     minHeight: VISUAL_TOKENS.formation.name.minHeight,
   },
   meta: {
@@ -247,7 +250,7 @@ const styles = StyleSheet.create({
   },
   power: {
     fontSize: VISUAL_TOKENS.formation.power.fontSize,
-    fontWeight: '900',
+    fontWeight: VISUAL_TOKENS.formation.power.fontWeight,
     marginTop: VISUAL_TOKENS.formation.power.marginTop,
   },
   emptyCard: {
@@ -268,7 +271,7 @@ const styles = StyleSheet.create({
   feedbackText: {
     flex: 1,
     fontSize: VISUAL_TOKENS.formation.feedbackText.fontSize,
-    fontWeight: '900',
+    fontWeight: VISUAL_TOKENS.formation.feedbackText.fontWeight,
     letterSpacing: VISUAL_TOKENS.formation.feedbackText.letterSpacing,
     lineHeight: VISUAL_TOKENS.formation.feedbackText.lineHeight,
   },
@@ -280,7 +283,7 @@ const styles = StyleSheet.create({
   },
   retryText: {
     fontSize: VISUAL_TOKENS.formation.retryText.fontSize,
-    fontWeight: '900',
+    fontWeight: VISUAL_TOKENS.formation.retryText.fontWeight,
     letterSpacing: VISUAL_TOKENS.formation.retryText.letterSpacing,
   },
   footnote: {
