@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { LinearGradient } from 'expo-linear-gradient';
 import Animated, {
   cancelAnimation,
@@ -12,7 +12,7 @@ import Animated, {
 import { Image, Platform, StyleSheet, Text, View, type ViewProps } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useColors } from '@/hooks/useColors';
-import { CANONICAL_BACKGROUNDS, OFFICIAL_ASSETS, type VisualSurface } from '@/constants/visual';
+import { CANONICAL_BACKGROUNDS, type VisualSurface } from '@/constants/visual';
 import { VISUAL_TOKENS } from '@/constants/experience';
 import { DomainHeader } from '@/components/DomainHeader';
 
@@ -23,7 +23,7 @@ export function ScreenShell({ surface = 'home', sceneMode = 'shell', children, s
   const ownsScene = sceneMode === 'shell';
   const pulse = useSharedValue(0);
   const reduceMotion = useReducedMotion();
-  const [sceneState, setSceneState] = useState<'loading' | 'ready' | 'error'>('loading');
+  const backgroundAsset = CANONICAL_BACKGROUNDS[surface];
   const atmosphereKey: Record<VisualSurface, 'accent' | 'primary' | 'danger' | 'success' | 'rarityEpic' | 'rarityRare'> = {
     home: 'accent',
     auth: 'primary',
@@ -83,18 +83,14 @@ export function ScreenShell({ surface = 'home', sceneMode = 'shell', children, s
     <View {...props} style={[styles.root, { backgroundColor: colors.background, paddingTop: webTopInset }, style]}>
       {ownsScene ? (
         <>
-          <Image
-            source={
-              typeof CANONICAL_BACKGROUNDS[surface] === 'string'
-                ? { uri: CANONICAL_BACKGROUNDS[surface] }
-                : CANONICAL_BACKGROUNDS[surface]
-            }
-            style={[StyleSheet.absoluteFillObject, styles.backgroundImage]}
-            resizeMode="cover"
-            accessibilityLabel="Escena oficial del Nexus"
-            onLoad={() => setSceneState('ready')}
-            onError={() => setSceneState('error')}
-          />
+          {backgroundAsset ? (
+            <Image
+              source={{ uri: backgroundAsset }}
+              style={[StyleSheet.absoluteFillObject, styles.backgroundImage]}
+              resizeMode="cover"
+              accessibilityLabel="Escena oficial de VEXFORGE"
+            />
+          ) : null}
           <LinearGradient
             colors={[`${colors.ink}18`, `${colors.ink}38`, `${colors.background}C8`]}
             locations={[0, 0.48, 1]}
@@ -126,20 +122,13 @@ export function ScreenShell({ surface = 'home', sceneMode = 'shell', children, s
             pointerEvents="none"
             style={[styles.orbit, { borderColor: `${atmosphereColor}26` }]}
           />
-          <Image
-            source={{ uri: OFFICIAL_ASSETS.logo }}
-            style={styles.watermark}
-            resizeMode="contain"
-          />
+          {backgroundAsset ? null : (
+            <View pointerEvents="none" style={styles.pendingScene}>
+              <Text style={[styles.pendingSceneTitle, { color: colors.accent }]}>ARTE DE ESCENA PENDIENTE</Text>
+              <Text style={[styles.pendingSceneBody, { color: colors.mutedForeground }]}>Esta superficie espera un asset oficial aprobado.</Text>
+            </View>
+          )}
         </>
-      ) : null}
-      {ownsScene && sceneState === 'error' ? (
-        <View pointerEvents="none" style={styles.assetError}>
-          <View style={[styles.assetErrorPanel, { backgroundColor: `${colors.panelStrong}F2`, borderColor: `${colors.accent}66` }]}>
-            <Text style={[styles.assetErrorTitle, { color: colors.accent }]}>ESCENA DEL NEXUS</Text>
-            <Text style={[styles.assetErrorBody, { color: colors.mutedForeground }]}>El arte oficial no está disponible.</Text>
-          </View>
-        </View>
       ) : null}
       <View style={[styles.content, { paddingBottom: Platform.OS === 'web' ? VISUAL_TOKENS.safeArea.webBottomInset : insets.bottom }]}>
         {surface === 'clans' ? (
@@ -182,6 +171,29 @@ const styles = StyleSheet.create({
     top: VISUAL_TOKENS.scene.orbit.top,
     right: VISUAL_TOKENS.scene.orbit.right,
     transform: [{ rotate: VISUAL_TOKENS.scene.orbit.rotation }],
+  },
+  pendingScene: {
+    position: 'absolute',
+    left: 24,
+    right: 24,
+    top: 104,
+    alignItems: 'center',
+    paddingVertical: 14,
+    paddingHorizontal: 16,
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.12)',
+    borderRadius: 12,
+  },
+  pendingSceneTitle: {
+    fontFamily: 'Rajdhani_700Bold',
+    fontSize: 11,
+    letterSpacing: 1.4,
+  },
+  pendingSceneBody: {
+    fontFamily: 'Rajdhani_500Medium',
+    fontSize: 12,
+    marginTop: 5,
+    textAlign: 'center',
   },
   watermark: {
     position: 'absolute',

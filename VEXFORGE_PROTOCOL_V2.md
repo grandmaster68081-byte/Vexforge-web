@@ -1879,3 +1879,21 @@ Estos perfiles fijan sujeto, material, contraste y prohibiciones; no autorizan n
 
 `DEVICE_MATRIX`, `VISUAL_STATE_MATRIX` y `DOMAIN_SCENE_PROFILES` quedan en `PREPARED / EVIDENCE_REQUIRED`. El gate T0 continúa abierto por la ausencia de mediciones físicas, las respuestas 429 diferidas de Storage y el `PROFILE_HISTORY_STATE_GAP`. La preparación documental permite avanzar en unidades independientes, pero no permite marcar `VERIFIED`, `TIER1_READY` u `OPERATIONAL`.
 
+
+## 72.9 — CARDS-ONLY STORAGE / VISUAL SOURCE RESET — ACTIVE
+
+A partir de esta decisión operativa, `vexforge-assets` deja de ser una biblioteca visual obligatoria para todas las superficies. La única familia visual activa que consume Android desde Storage es `cards/*`, que conserva el arte oficial de las cartas. `cards.zip` se conserva como paquete de procedencia del arte de cartas. El bucket `vexforge-updates` contiene artefactos técnicos OTA y no es un bucket visual; queda fuera de cualquier limpieza de assets.
+
+Los fondos, logos, iconos, héroes, bosses, regiones, frames, tutorial, UI, rewards, wallet, lobby, market, boosts, chests, clans, events, founders, progression, sessions y demás objetos visuales de prueba fueron retirados del bucket visual y sus entradas de catálogo quedaron desactivadas. Las superficies Android que no sean cartas deben renderizar su estructura VEXFORGE sin pedir una imagen eliminada y deben comunicar `PENDING_SOURCE` de forma honesta cuando corresponda.
+
+Regla de producción visual futura:
+
+1. Definir el objetivo de la superficie y su Screen Master Record.
+2. Generar o incorporar el asset candidato aprobado por el operador.
+3. Registrar procedencia, versión, hash, semantic role, ruta y asset pack.
+4. Subirlo a Storage sólo después de la aprobación explícita.
+5. Activarlo en el manifiesto vivo y en el código Android que corresponda.
+6. Verificarlo en la APK, en la Device Matrix y en la Visual State Matrix.
+7. Registrar commit, release, evidencia y decisión en `CONTINUITY.md`.
+
+Ninguna sesión puede reactivar assets históricos ni introducir sustitutos genéricos para cerrar una pantalla. El arte de cartas sí es una dependencia viva; el resto de la identidad visual se construye progresivamente con assets nuevos y aprobados, no con el material eliminado.

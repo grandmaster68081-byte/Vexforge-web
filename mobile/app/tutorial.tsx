@@ -309,7 +309,14 @@ export default function TutorialScreen() {
       </View>
 
       <View style={[styles.card, { backgroundColor: `${colors.panel}E8`, borderColor: `${accent}66` }]}>
-        <Image source={{ uri: OFFICIAL_ASSETS.tutorialHero }} style={styles.heroArt} resizeMode="cover" accessibilityLabel="Arte oficial del tutorial de VEXFORGE" />
+        {OFFICIAL_ASSETS.tutorialHero ? (
+          <Image source={{ uri: OFFICIAL_ASSETS.tutorialHero }} style={styles.heroArt} resizeMode="cover" accessibilityLabel="Arte oficial del tutorial de VEXFORGE" />
+        ) : (
+          <View style={styles.heroPlaceholder}>
+            <Ionicons name="image-outline" size={28} color={accent} />
+            <Text style={[styles.heroPlaceholderText, { color: colors.mutedForeground }]}>ARTE DEL TUTORIAL PENDIENTE</Text>
+          </View>
+        )}
         <View style={[styles.iconFrame, { backgroundColor: `${accent}18`, borderColor: `${accent}66` }]}>
           <Ionicons name={step.icon} size={44} color={accent} />
         </View>
@@ -372,6 +379,8 @@ const styles = StyleSheet.create({
   progressFill: { height: '100%', borderRadius: 4 },
   card: { borderWidth: 1, borderRadius: 22, paddingHorizontal: 22, paddingVertical: 28, alignItems: 'center', minHeight: 370, overflow: 'hidden' },
   heroArt: { alignSelf: 'stretch', height: 112, marginTop: -28, marginBottom: 20, opacity: 0.72 },
+  heroPlaceholder: { alignSelf: 'stretch', height: 112, marginTop: -28, marginBottom: 20, alignItems: 'center', justifyContent: 'center', gap: 8 },
+  heroPlaceholderText: { fontSize: 10, fontWeight: '800', letterSpacing: 1.2 },
   iconFrame: { width: 92, height: 92, borderRadius: 46, borderWidth: 1, alignItems: 'center', justifyContent: 'center', marginBottom: 20 },
   stepLabel: { fontSize: 9, fontWeight: '800', letterSpacing: 1.4 },
   title: { fontSize: 25, lineHeight: 31, fontWeight: '800', textAlign: 'center', marginTop: 12 },

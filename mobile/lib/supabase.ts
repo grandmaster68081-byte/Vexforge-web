@@ -682,9 +682,6 @@ export type MobileWorldSnapshot = {
 export type MobileWorldAction = { ok: boolean; reason?: string };
 export type MobileAction = { ok: boolean; reason?: string };
 
-export const STORAGE_BASE = 'https://rscuzqnfccqvltkdcdny.supabase.co/storage/v1/object/public/vexforge-assets';
-export function storageAsset(path: string) { return `${STORAGE_BASE}/${path}`; }
-
 function headers(accessToken?: string, extra?: Record<string, string>) {
   return { apikey: SUPABASE_ANON_KEY, Authorization: 'Bearer ' + (accessToken ?? SUPABASE_ANON_KEY), Accept: 'application/json', 'Content-Type': 'application/json', ...extra };
 }

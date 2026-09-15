@@ -5862,3 +5862,15 @@
 - **BLOQUEOS CONSERVADOS:** falta evidencia física en dispositivo, el HEAD de Storage continúa diferido por `HTTP 429` y `PROFILE_HISTORY_STATE_GAP` permanece `BLOCKED`.
 - **NO APK / NO WEB:** no se tocó `mobile/**`, no se modificó la web, no se inició workflow Android, no se compiló APK y no se publicó release.
 - **SIGUIENTE PASO PERMITIDO:** continuar sólo con otra unidad documental independiente, o abrir el gate de evidencia física cuando exista autorización explícita y un dispositivo/instalación verificable.
+
+## 2026-09-15 — VE-MOB-ASSET-RESET — CARDS-ONLY STORAGE / CLEANUP APPLIED
+
+- **DECISIÓN DEL OPERADOR:** conservar únicamente el arte de cartas como consumo visual activo de Supabase Storage. Los assets generados de prueba de Home, fondos, bosses, logos, iconos, regiones, frames, tutorial, UI, rewards y demás familias no representan la calidad visual final y no deben seguir siendo autoridad.
+- **INVENTARIO PREVIO:** `vexforge-assets` contenía 245 objetos; 127 eran `cards/*`. `vexforge-updates` contenía 229 objetos técnicos OTA y no fue tocado.
+- **LIMPIEZA LIVE:** se eliminaron 116 objetos visuales no-carta mediante el Storage API oficial. Se conservaron los 127 objetos `cards/*` y `cards.zip`. No se eliminó ninguna imagen de carta ni ningún artefacto OTA.
+- **REFERENCIAS LIVE:** las 15 referencias de `public.world_bosses.image_url` a arte no-carta se limpiaron a `NULL`; los catálogos y manifiestos no-carta quedaron desactivados. Las 127 referencias de `public.cards.image_url` permanecen activas.
+- **POLÍTICA:** `vexforge-assets` permite borrado sólo a una cuenta VEXFORGE de control (`vexforge_is_control_admin()`) y únicamente para facilitar futuras limpiezas administrativas seguras; no se abrió acceso público de escritura o borrado.
+- **ANDROID:** la registración visual ya no consume fondos, logos, iconos, heroes ni tutoriales históricos desde Storage ni desde assets locales de prueba. Esas superficies quedan `PENDING_SOURCE`; el arte de cartas continúa llegando desde `cards.image_url`.
+- **PROTOCOLO:** se añadió la política `CARDS-ONLY STORAGE / VISUAL SOURCE RESET`. Todo asset futuro debe pasar por objetivo visual, procedencia, hash, manifiesto, aprobación, APK y evidencia de continuidad antes de activarse.
+- **NO APK / NO RELEASE:** no se modificó el código de combate ni se compiló una APK en esta sesión, respetando la instrucción vigente. El cambio Android requiere el workflow APK cuando el operador autorice una nueva compilación.
+- **STATUS:** `STORAGE_CLEANUP_COMPLETE / ANDROID_REQUIRES_APK_REBUILD_FOR_DELIVERY`; `TIER1_READY` y `OPERATIONAL` siguen sin declararse.
