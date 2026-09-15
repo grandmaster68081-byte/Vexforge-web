@@ -1,3 +1,26 @@
+## 2026-09-14 — VE-MOB-T2V — ERROR FALLBACK RECOVERY TOKENS / IMPLEMENTED_UNVERIFIED
+
+- **SCREEN / DOMAIN:** superficie transversal de recuperación de la aplicación.
+- **BLOCK:** centralizar la geometría del fallback global sin cambiar el
+  reinicio, el reseteo del error ni el diagnóstico de desarrollo.
+- **WHAT CHANGED:** `VISUAL_TOKENS.state.errorFallback` define superficie,
+  jerarquía de copy, botón de recuperación, modal y bloque de detalles;
+  `ErrorFallback` consume esos roles.
+- **BEHAVIOR PRESERVED:** `reloadAppAsync`, `resetError`, `Error.message`,
+  stack trace, `__DEV__`, accesibilidad, safe area y cierre del modal.
+- **DATA PRESERVED:** no se añadió fuente de datos, fallback de dominio,
+  asset, ruta, solicitud, listener ni regla de juego.
+- **GUARD:** `node scripts/verify-mobile-visual-system.mjs` y
+  `git diff --check`.
+- **RELEASE GATE:** no se inició workflow Android, no se compiló APK y no se
+  publicó release; QA visual/táctil queda pendiente de autorización.
+- **STATUS:** `IMPLEMENTED_UNVERIFIED`.
+- **PERSISTENCIA:** publicar código, guardia, documento T2V y continuidad juntos
+  en `main` mediante la API REST HTTPS oficial de GitHub con `[skip ci]`, sin
+  `git push`.
+- **NEXT BLOCK:** continuar con otra pieza T2V explícita, sin tocar el motor de
+  juego, la web congelada ni el tutorial.
+
 ## 2026-09-14 — VE-MOB-T2V — BATTLEFIELD CONTROL TOKENS / IMPLEMENTED_UNVERIFIED
 
 - **SCREEN / DOMAIN:** `ARENA` / `ForgeBattlefield`.

@@ -245,6 +245,21 @@ export const VISUAL_TOKENS = {
       bodySize: 12,
       bodyMarginTop: 4,
     },
+    errorFallback: {
+      containerPadding: 24,
+      contentGap: 16,
+      title: { fontSize: 28, lineHeight: 40 },
+      message: { fontSize: 16, lineHeight: 24 },
+      topButton: { inset: 16, size: 44, radius: 8 },
+      button: { paddingVertical: 16, radius: 8, paddingHorizontal: 24, minWidth: 200, elevation: 3 },
+      buttonTextSize: 16,
+      modal: { height: '90%', radius: 16 },
+      modalHeader: { paddingHorizontal: 16, paddingTop: 16, paddingBottom: 12, borderWidth: 1 },
+      modalTitleSize: 20,
+      closeButtonSize: 44,
+      errorContainer: { radius: 8, padding: 16 },
+      errorText: { fontSize: 12, lineHeight: 18 },
+    },
   },
   navigation: {
     bar: {

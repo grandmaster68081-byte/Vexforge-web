@@ -40,6 +40,9 @@ la web congelada.
 - `ScreenShell` consume `state.assetError` para la geometría compartida del
   fallo de arte oficial; el mensaje sigue declarando que el asset no está
   disponible y no crea un sustituto genérico.
+- `ErrorFallback` consume `state.errorFallback` para la superficie de
+  recuperación, botón y modal de detalles; conserva `reloadAppAsync`,
+  `resetError` y la exposición de diagnóstico sólo en desarrollo.
 - `ForgeText` consume `typography` para familia tipográfica, escala,
   interlineado y tracking, conservando las seis variantes y los tonos actuales.
 - `ForgeFormationPreview` consume `formation` para la geometría y escala de su

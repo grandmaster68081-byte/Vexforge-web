@@ -12,6 +12,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useColors } from '@/hooks/useColors';
 import { Feather } from '@/components/ForgeIcon';
 import { reloadAppAsync } from 'expo';
+import { VISUAL_TOKENS } from '@/constants/experience';
 
 export type ErrorFallbackProps = {
   error: Error;
@@ -174,42 +175,42 @@ const styles = StyleSheet.create({
     height: '100%',
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 24,
+    padding: VISUAL_TOKENS.state.errorFallback.containerPadding,
   },
   content: {
     alignItems: 'center',
     justifyContent: 'center',
-    gap: 16,
+    gap: VISUAL_TOKENS.state.errorFallback.contentGap,
     width: '100%',
     maxWidth: 600,
   },
   title: {
-    fontSize: 28,
+    fontSize: VISUAL_TOKENS.state.errorFallback.title.fontSize,
     fontWeight: '700',
     textAlign: 'center',
-    lineHeight: 40,
+    lineHeight: VISUAL_TOKENS.state.errorFallback.title.lineHeight,
   },
   message: {
-    fontSize: 16,
+    fontSize: VISUAL_TOKENS.state.errorFallback.message.fontSize,
     textAlign: 'center',
-    lineHeight: 24,
+    lineHeight: VISUAL_TOKENS.state.errorFallback.message.lineHeight,
   },
   topButton: {
     position: 'absolute',
-    right: 16,
-    width: 44,
-    height: 44,
-    borderRadius: 8,
+    right: VISUAL_TOKENS.state.errorFallback.topButton.inset,
+    width: VISUAL_TOKENS.state.errorFallback.topButton.size,
+    height: VISUAL_TOKENS.state.errorFallback.topButton.size,
+    borderRadius: VISUAL_TOKENS.state.errorFallback.topButton.radius,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
     zIndex: 10,
   },
   button: {
-    paddingVertical: 16,
-    borderRadius: 8,
-    paddingHorizontal: 24,
-    minWidth: 200,
+    paddingVertical: VISUAL_TOKENS.state.errorFallback.button.paddingVertical,
+    borderRadius: VISUAL_TOKENS.state.errorFallback.button.radius,
+    paddingHorizontal: VISUAL_TOKENS.state.errorFallback.button.paddingHorizontal,
+    minWidth: VISUAL_TOKENS.state.errorFallback.button.minWidth,
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
@@ -217,12 +218,12 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.1,
     shadowRadius: 4,
-    elevation: 3,
+    elevation: VISUAL_TOKENS.state.errorFallback.button.elevation,
   },
   buttonText: {
     fontWeight: '600',
     textAlign: 'center',
-    fontSize: 16,
+    fontSize: VISUAL_TOKENS.state.errorFallback.buttonTextSize,
   },
   modalOverlay: {
     flex: 1,
@@ -231,26 +232,26 @@ const styles = StyleSheet.create({
   },
   modalContainer: {
     width: '100%',
-    height: '90%',
-    borderTopLeftRadius: 16,
-    borderTopRightRadius: 16,
+    height: VISUAL_TOKENS.state.errorFallback.modal.height,
+    borderTopLeftRadius: VISUAL_TOKENS.state.errorFallback.modal.radius,
+    borderTopRightRadius: VISUAL_TOKENS.state.errorFallback.modal.radius,
   },
   modalHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingHorizontal: 16,
-    paddingTop: 16,
-    paddingBottom: 12,
-    borderBottomWidth: 1,
+     paddingHorizontal: VISUAL_TOKENS.state.errorFallback.modalHeader.paddingHorizontal,
+     paddingTop: VISUAL_TOKENS.state.errorFallback.modalHeader.paddingTop,
+     paddingBottom: VISUAL_TOKENS.state.errorFallback.modalHeader.paddingBottom,
+     borderBottomWidth: VISUAL_TOKENS.state.errorFallback.modalHeader.borderWidth,
   },
   modalTitle: {
-    fontSize: 20,
+    fontSize: VISUAL_TOKENS.state.errorFallback.modalTitleSize,
     fontWeight: '600',
   },
   closeButton: {
-    width: 44,
-    height: 44,
+    width: VISUAL_TOKENS.state.errorFallback.closeButtonSize,
+    height: VISUAL_TOKENS.state.errorFallback.closeButtonSize,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -258,17 +259,17 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   modalScrollContent: {
-    padding: 16,
+    padding: VISUAL_TOKENS.state.errorFallback.errorContainer.padding,
   },
   errorContainer: {
     width: '100%',
-    borderRadius: 8,
+    borderRadius: VISUAL_TOKENS.state.errorFallback.errorContainer.radius,
     overflow: 'hidden',
-    padding: 16,
+    padding: VISUAL_TOKENS.state.errorFallback.errorContainer.padding,
   },
   errorText: {
-    fontSize: 12,
-    lineHeight: 18,
+    fontSize: VISUAL_TOKENS.state.errorFallback.errorText.fontSize,
+    lineHeight: VISUAL_TOKENS.state.errorFallback.errorText.lineHeight,
     width: '100%',
   },
 });

@@ -108,6 +108,14 @@ if (!state.includes('VISUAL_TOKENS.state')) {
   failures.push('DomainState does not consume state tokens');
 }
 
+const errorFallback = source('mobile/components/ErrorFallback.tsx');
+if (!errorFallback.includes("from '@/constants/experience'")) {
+  failures.push('ErrorFallback does not consume shared visual tokens');
+}
+if (!errorFallback.includes('VISUAL_TOKENS.state.errorFallback')) {
+  failures.push('ErrorFallback does not consume recovery surface tokens');
+}
+
 const icon = source('mobile/components/ForgeIcon.tsx');
 if (!icon.includes("from '@/constants/experience'")) {
   failures.push('ForgeIcon does not consume shared visual tokens');
