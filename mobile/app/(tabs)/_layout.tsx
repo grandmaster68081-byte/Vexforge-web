@@ -154,7 +154,7 @@ const styles = StyleSheet.create({
   authLoading: { flex: 1, alignItems: 'center', justifyContent: 'center', gap: VISUAL_TOKENS.navigation.authLoading.gap },
   authLoadingText: {
     fontSize: VISUAL_TOKENS.navigation.authLoading.labelSize,
-    fontWeight: '700',
+    fontWeight: VISUAL_TOKENS.navigation.authLoading.labelWeight,
     letterSpacing: VISUAL_TOKENS.navigation.authLoading.labelTracking,
   },
   tabBarTopRail: {

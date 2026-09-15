@@ -76,7 +76,7 @@ const styles = StyleSheet.create({
   placeBlock: { flexShrink: 1 },
   place: {
     fontSize: VISUAL_TOKENS.domainHeader.place.fontSize,
-    fontWeight: '900',
+    fontWeight: VISUAL_TOKENS.domainHeader.place.fontWeight,
     letterSpacing: VISUAL_TOKENS.domainHeader.place.letterSpacing,
   },
   rule: {
@@ -88,7 +88,7 @@ const styles = StyleSheet.create({
   trailing: { marginLeft: VISUAL_TOKENS.domainHeader.trailingMargin },
   title: {
     fontSize: VISUAL_TOKENS.domainHeader.title.fontSize,
-    fontWeight: '800',
+    fontWeight: VISUAL_TOKENS.domainHeader.title.fontWeight,
     letterSpacing: VISUAL_TOKENS.domainHeader.title.letterSpacing,
     marginTop: VISUAL_TOKENS.domainHeader.titleTop,
   },

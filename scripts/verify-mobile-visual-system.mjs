@@ -97,12 +97,15 @@ if (!domainHeader.includes("from '@/constants/experience'")) {
 if (!domainHeader.includes('VISUAL_TOKENS.domainHeader')) {
   failures.push('DomainHeader does not consume header tokens');
 }
-for (const token of ['domainHeader.place', 'domainHeader.title', 'domainHeader.purpose']) {
+for (const token of [
+  'domainHeader.place.fontWeight',
+  'domainHeader.title.fontWeight',
+  'domainHeader.purpose',
+]) {
   if (!domainHeader.includes(`VISUAL_TOKENS.${token}`)) {
     failures.push(`DomainHeader is missing typography token "${token}"`);
   }
 }
-
 const forgeText = source('mobile/components/ForgeText.tsx');
 if (!forgeText.includes("from '@/constants/experience'")) {
   failures.push('ForgeText does not consume shared visual tokens');
@@ -217,6 +220,9 @@ if (!navigation.includes('VISUAL_TOKENS.navigation')) {
 }
 if (!navigation.includes('VISUAL_TOKENS.safeArea.webBottomInset')) {
   failures.push('TabLayout does not consume the shared web safe-area token');
+}
+if (!navigation.includes('VISUAL_TOKENS.navigation.authLoading.labelWeight')) {
+  failures.push('TabLayout is missing the auth-loading label weight token');
 }
 
 const identityMark = source('mobile/components/ForgeMark.tsx');
