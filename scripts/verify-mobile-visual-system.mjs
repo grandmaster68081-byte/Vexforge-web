@@ -152,6 +152,11 @@ for (const token of [
   'state.errorFallback.contentMaxWidth',
   'state.errorFallback.button.shadow',
   'state.errorFallback.modalOverlayOpacity',
+  'state.errorFallback.debugIconSize',
+  'state.errorFallback.closeIconSize',
+  'state.errorFallback.titleWeight',
+  'state.errorFallback.buttonTextWeight',
+  'state.errorFallback.modalTitleWeight',
 ]) {
   if (!errorFallback.includes(`VISUAL_TOKENS.${token}`)) {
     failures.push(`ErrorFallback is missing visual token "${token}"`);

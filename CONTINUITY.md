@@ -1,3 +1,32 @@
+## 2026-09-15 — VE-MOB-T2V — ERROR FALLBACK ICON AND TYPE WEIGHTS / IMPLEMENTED_UNVERIFIED
+
+- **BRANCH:** `main`.
+- **SCREEN / DOMAIN:** fallback global de recuperación de la aplicación Android.
+- **BLOCK:** completar los roles tipográficos e iconográficos restantes del
+  fallback sin cambiar reinicio, reseteo, diagnóstico ni modal.
+- **WHAT CHANGED:** `VISUAL_TOKENS.state.errorFallback` ahora define los
+  tamaños de los iconos de diagnóstico y cierre, además de los pesos del
+  título principal, botón de recuperación y título del modal; `ErrorFallback`
+  consume esos roles.
+- **BEHAVIOR PRESERVED:** mismos tamaños efectivos `20` y `24`, pesos `700`,
+  `600` y `600`, copy, `reloadAppAsync`, `resetError`, stack trace, `__DEV__`,
+  accesibilidad, safe area y cierre del modal.
+- **DATA PRESERVED:** no se añadieron solicitudes, listeners, estado de
+  dominio, rutas, gameplay, Supabase, Auth, RPCs, assets ni cambios en la web.
+- **MOTION / PERFORMANCE:** no se añadió movimiento, render de datos ni
+  timing; sólo se centralizaron valores estáticos de presentación.
+- **GUARD:** `node scripts/verify-mobile-visual-system.mjs`,
+  `node --check scripts/verify-mobile-visual-system.mjs` y `git diff --check`
+  pasaron.
+- **RELEASE GATE:** no se inició workflow Android, no se compiló APK y no se
+  publicó release; QA visual/táctil física queda pendiente.
+- **STATUS:** `IMPLEMENTED_UNVERIFIED`.
+- **PERSISTENCIA:** publicar código, guardia T2V y esta continuidad juntos en
+  `main` mediante la API REST HTTPS oficial de GitHub con `[skip ci]`, sin
+  `git push`.
+- **NEXT BLOCK:** continuar con otra pieza T2V explícita, sin tocar el motor de
+  juego, los contratos de Supabase, la web congelada ni el tutorial.
+
 ## 2026-09-15 — VE-MOB-T2V — DOMAIN STATE ICON AND ACTION WEIGHTS / IMPLEMENTED_UNVERIFIED
 
 - **BRANCH:** `main`.

@@ -64,7 +64,7 @@ export function ErrorFallback({ error, resetError }: ErrorFallbackProps) {
             },
           ]}
         >
-          <Feather name="alert-circle" size={20} color={colors.foreground} />
+          <Feather name="alert-circle" size={VISUAL_TOKENS.state.errorFallback.debugIconSize} color={colors.foreground} />
         </Pressable>
       ) : null}
 
@@ -128,7 +128,7 @@ export function ErrorFallback({ error, resetError }: ErrorFallbackProps) {
                     { opacity: pressed ? 0.6 : 1 },
                   ]}
                 >
-                  <Feather name="x" size={24} color={colors.foreground} />
+                  <Feather name="x" size={VISUAL_TOKENS.state.errorFallback.closeIconSize} color={colors.foreground} />
                 </Pressable>
               </View>
 
@@ -186,7 +186,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: VISUAL_TOKENS.state.errorFallback.title.fontSize,
-    fontWeight: '700',
+    fontWeight: VISUAL_TOKENS.state.errorFallback.titleWeight,
     textAlign: 'center',
     lineHeight: VISUAL_TOKENS.state.errorFallback.title.lineHeight,
   },
@@ -221,7 +221,7 @@ const styles = StyleSheet.create({
     elevation: VISUAL_TOKENS.state.errorFallback.button.elevation,
   },
   buttonText: {
-    fontWeight: '600',
+    fontWeight: VISUAL_TOKENS.state.errorFallback.buttonTextWeight,
     textAlign: 'center',
     fontSize: VISUAL_TOKENS.state.errorFallback.buttonTextSize,
   },
@@ -247,7 +247,7 @@ const styles = StyleSheet.create({
   },
   modalTitle: {
     fontSize: VISUAL_TOKENS.state.errorFallback.modalTitleSize,
-    fontWeight: '600',
+    fontWeight: VISUAL_TOKENS.state.errorFallback.modalTitleWeight,
   },
   closeButton: {
     width: VISUAL_TOKENS.state.errorFallback.closeButtonSize,
