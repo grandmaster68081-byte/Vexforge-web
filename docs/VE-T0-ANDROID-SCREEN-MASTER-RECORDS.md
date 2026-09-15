@@ -99,6 +99,11 @@ QA visual/táctil ni evidencia de APK de esta unidad.
   `vexforge-feature-card.png` siguen disponibles como assets canónicos
   complementarios; el logo y facciones usan Storage oficial cuando están
   disponibles.
+- **Calidad visual:** la escena se compone como viewport centrado con capas de
+  entorno, atmósfera, entidad y primer plano interactivo. El asset aprobado no
+  se monta sobre otra escena ni actúa como poster estático: respira con deriva
+  idle/parallax acotado, mientras la UI conserva materialidad VEXFORGE y no
+  inventa VFX ni datos.
 - **Datos y acciones:** `GameContext`, Supabase y las fuentes de Home existentes;
   portales y reintento sólo reflejan rutas y señales publicadas.
 - **Estados mínimos:** `loading`, `empty`, `partial`, `error`, `recovery`.

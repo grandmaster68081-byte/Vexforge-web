@@ -4,9 +4,11 @@
 - **AUTORIDAD:** fila ACTIVE `public.vexforge_official_documents / vexforge_home_world_system_protocol_v3`, V2.2, con SHA-256 `828a077428987b2534e3733204ac721ef3073eb7dadf9530a6f46877dd63c503`.
 - **DECISIÓN VISUAL:** la imagen proporcionada por el operador sustituyó `mobile/assets/images/home-reference-scene.png`; queda registrada como `CANON_ACTIVE` para Home, 1024×1024, SHA-256 `191dbe5ddb04d9208b69811e5139ac0eaaa0b498e1717fafc21717a8dd9a64e1`.
 - **IMPLEMENTACIÓN:** el Home consume la escena aprobada como base del hero mediante `CANONICAL_BACKGROUNDS.home`; conserva parallax acotado, gradientes de legibilidad, identidad canónica, carta viva, portales y UI interactiva.
+- **ANÁLISIS VISUAL RECONCILIADO:** el protocolo exige una entrada a un juego —citadel, núcleo de forja y portales—, no un dashboard; la escena debe pertenecer al mundo, usar profundidad por capas, color cyan + oro, estados honestos y motion en niveles ambient/entity/interaction/navigation sin vibración ni VFX inventados.
+- **AJUSTE DIEGÉTICO:** la escena ahora usa un viewport centrado con entorno, atmósfera y niebla animadas de baja intensidad; el asset tiene deriva idle y parallax acotado, y la identidad se presenta como entidad/estructura del Nexus en vez de otra pantalla superpuesta.
 - **FUNCIÓN PRESERVADA:** datos vivos de Supabase, navegación a Arena/Mundo/Misiones/Forja/Economía/Perfil, refresh, haptics, estados loading/partial/error, señales honestas y reduced-motion.
 - **NO INVENTADO:** no se añadieron datos, rutas, RPCs, RLS, economía, gameplay, assets de Storage ni cambios en la web congelada.
-- **GUARDAS:** `node scripts/verify-mobile-home-official-assets.mjs` OK, 17/17; `node --check scripts/verify-mobile-home-official-assets.mjs` OK; registro JSON válido; `git diff --check` OK. Typecheck móvil no se ejecutó porque `mobile/node_modules` no está disponible.
+- **GUARDAS:** `node scripts/verify-mobile-home-official-assets.mjs` OK, 18/18; `node --check scripts/verify-mobile-home-official-assets.mjs` OK; registro JSON válido; `git diff --check` OK. Typecheck móvil no se ejecutó porque `mobile/node_modules` no está disponible.
 - **RELEASE GATE:** no se inició workflow Android, no se compiló APK y no se publicó release, respetando la instrucción vigente del operador.
 - **STATUS:** `IMPLEMENTED_UNVERIFIED`; falta evidencia visual/táctil física en APK autorizada.
 - **PERSISTENCIA:** publicar código, asset, registro, guardia y esta continuidad juntos en `main` mediante la API REST HTTPS oficial de GitHub, sin `git push`.

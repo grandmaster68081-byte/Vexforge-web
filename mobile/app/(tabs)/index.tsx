@@ -554,12 +554,33 @@ export default function ForgeScreen() {
     // Keep the camera movement bounded so a long scroll cannot pull the hero
     // out of its authored composition before the next scene takes over.
     const cameraY = Math.min(Math.max(scrollY.value, 0), 720);
+    const phase = orbit.value * Math.PI * 2;
     return {
       transform: reduceMotion
         ? []
-        : [{ translateY: cameraY * 0.1 }, { scale: 1.04 + Math.min(cameraY / 2600, 0.07) }],
+        : [
+            { translateX: Math.sin(phase) * 1.8 },
+            { translateY: cameraY * 0.1 + Math.cos(phase) * 1.2 },
+            { scale: 1.04 + Math.min(cameraY / 2600, 0.07) },
+          ],
     };
   });
+  const sceneAtmosphereStyle = useAnimatedStyle(() => ({
+    opacity: reduceMotion ? 0.16 : 0.12 + pulse.value * 0.08,
+    transform: reduceMotion
+      ? []
+      : [
+          { translateX: Math.sin(orbit.value * Math.PI * 2) * 5 },
+          { translateY: Math.cos(orbit.value * Math.PI * 2) * 4 },
+          { scale: 1 + pulse.value * 0.05 },
+        ],
+  }));
+  const sceneMistStyle = useAnimatedStyle(() => ({
+    opacity: reduceMotion ? 0.14 : 0.1 + (1 - pulse.value) * 0.08,
+    transform: reduceMotion
+      ? []
+      : [{ translateY: (1 - pulse.value) * -10 }, { translateX: Math.sin(orbit.value * Math.PI * 2) * -3 }],
+  }));
   const sentinelParallaxStyle = useAnimatedStyle(() => {
     const cameraY = Math.min(Math.max(scrollY.value, 0), 720);
     return {
@@ -679,14 +700,29 @@ export default function ForgeScreen() {
           scrollEventThrottle={16}
         >
            <View style={[styles.heroStage, { backgroundColor: identityVisual?.overlay ?? colors.ink, height: heroHeight }]}>
-             {homeSceneSource ? (
-               <Animated.Image
-                 source={homeSceneSource}
-                 style={[styles.heroSceneReference, heroParallaxStyle]}
-                 resizeMode="cover"
-                 accessibilityLabel="Escena aprobada de referencia visual del Home"
-               />
-             ) : null}
+             <View pointerEvents="none" style={styles.heroSceneViewport}>
+               {homeSceneSource ? (
+                 <Animated.Image
+                   source={homeSceneSource}
+                   style={[styles.heroSceneReference, heroParallaxStyle]}
+                   resizeMode="cover"
+                   accessibilityLabel="Escena aprobada de referencia visual del Home"
+                 />
+               ) : null}
+               <Animated.View style={[styles.heroSceneAtmosphere, sceneAtmosphereStyle]}>
+                 <LinearGradient
+                   colors={[`${colors.accent}2C`, `${colors.accent}08`, 'transparent']}
+                   style={StyleSheet.absoluteFill}
+                 />
+               </Animated.View>
+               <Animated.View style={[styles.heroSceneMist, sceneMistStyle]}>
+                 <LinearGradient
+                   colors={['transparent', `${colors.primary}18`, `${colors.ink}44`]}
+                   locations={[0, 0.5, 1]}
+                   style={StyleSheet.absoluteFill}
+                 />
+               </Animated.View>
+             </View>
             <LinearGradient colors={[`${colors.ink}18`, `${colors.ink}42`, `${colors.ink}D4`, colors.background]} locations={[0, 0.25, 0.56, 1]} style={StyleSheet.absoluteFill} />
             <LinearGradient colors={[`${identityVisual?.accent ?? colors.rarityEpic}38`, 'transparent', `${colors.accent}24`]} style={StyleSheet.absoluteFill} />
             <View pointerEvents="none" style={styles.heroRuleFrame}>
@@ -1170,8 +1206,11 @@ const styles = StyleSheet.create({
   root: { flex: 1 },
   scrollContent: { gap: 0 },
   heroStage: { overflow: 'hidden', position: 'relative' },
-  heroSceneReference: { height: '108%', left: 0, position: 'absolute', top: '-4%', width: '100%' },
-  identityStage: { bottom: 36, borderBottomLeftRadius: 220, borderTopLeftRadius: 220, borderWidth: 1, height: 432, overflow: 'hidden', position: 'absolute', right: -36, width: 286, zIndex: 1 },
+  heroSceneViewport: { ...StyleSheet.absoluteFillObject, overflow: 'hidden' },
+  heroSceneReference: { height: '112%', left: '-6%', position: 'absolute', top: '-6%', width: '112%' },
+  heroSceneAtmosphere: { borderRadius: 220, height: 360, position: 'absolute', right: -154, top: 52, width: 360 },
+  heroSceneMist: { bottom: -80, height: 360, left: -80, position: 'absolute', width: '120%' },
+  identityStage: { bottom: 36, borderBottomLeftRadius: 148, borderTopLeftRadius: 148, borderWidth: 1, borderRightWidth: 0, height: 432, overflow: 'hidden', position: 'absolute', right: -36, width: 286, zIndex: 1 },
   identityArt: { height: '135%', left: -120, opacity: 0.96, position: 'absolute', top: -30, width: '205%' },
   identityAtmosphere: { borderRadius: 150, borderWidth: 1, height: 296, left: -36, position: 'absolute', top: 46, transform: [{ rotate: '18deg' }], width: 296 },
   identityAxis: { bottom: 52, position: 'absolute', right: 42, top: 52, width: 1 },

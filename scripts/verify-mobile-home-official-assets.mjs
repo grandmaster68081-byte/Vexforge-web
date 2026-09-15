@@ -6,7 +6,8 @@ const requiredTestIds = ['home-scene', 'home-sync', 'home-battle', 'home-event',
 
 const assertions = [
   ['Home owns its scene inside the shared shell', screen.includes('<ScreenShell surface="home" sceneMode="hero">') && screen.includes('Animated.ScrollView')],
-  ['Home consumes the approved visual reference as its authored scene', screen.includes('CANONICAL_BACKGROUNDS.home') && screen.includes('homeSceneSource') && screen.includes('styles.heroSceneReference')],
+  ['Home consumes the approved visual reference as its authored scene', screen.includes('CANONICAL_BACKGROUNDS.home') && screen.includes('homeSceneSource') && screen.includes('styles.heroSceneReference') && screen.includes('styles.heroSceneViewport')],
+  ['Home scene has bounded ambient life without invented gameplay', screen.includes('sceneAtmosphereStyle') && screen.includes('sceneMistStyle') && screen.includes('pointerEvents="none"') && screen.includes('resizeMode="cover"')],
   ['Home no longer mounts the legacy reference scene or hotspot overlay', !screen.includes('home-reference-scene.png') && !screen.includes('const HOTSPOTS') && !screen.includes('home-reference-')],
   ['Home consumes live Nexus data contracts', requiredDataLoaders.every((loader) => screen.includes(loader)) && screen.includes('Promise.allSettled')],
   ['Home uses the live canonical identity artwork contract', screen.includes('loadHomeIdentityCard') && screen.includes('identityCard?.image_url') && screen.includes('getCardIdentityVisual')],
