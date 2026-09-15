@@ -1,3 +1,16 @@
+## 2026-09-14 — PROTOCOL AUDIT — TIER 1 EVIDENCE CLOSURE / INTEGRATED_UNVERIFIED
+
+- **ENTORNO ACTIVO:** aplicación Android en `mobile/`; la web permanece congelada. Se leyó el protocolo ACTIVE desde `public.vexforge_official_documents` mediante Supabase Management API directa sobre HTTPS y se contrastó con el `main` actual `1038f31d84e42e1248cd15493577d374913284cd`.
+- **ANÁLISIS:** el protocolo ya define una base de producción sólida para un juego táctico Android premium: autoridad de gameplay, renderer/input/replay, datos vivos, dirección visual por dominios, estados, T0–T10, rendimiento, accesibilidad y gates de release. No garantiza por sí solo un juego AAA terminado: la implementación, los assets, las mediciones en dispositivos reales, la QA visual/táctil, el contenido, audio, red, economía y estabilidad todavía requieren evidencia.
+- **EVIDENCIA VIVA:** `public.vexforge_visual_tier1_objective` devuelve 45 criterios: 10 `MET`, 9 `PARTIAL`, 25 `NOT_STARTED` y 1 `BLOCKED`. El último release Android publicado sigue siendo `vexforge-android-build-238` con `app-release.apk`; no se generó APK nueva en esta sesión.
+- **FUGAS CERRADAS EN EL PROTOCOLO:** se integró dentro de la misma fila y del mismo documento la sección `72. AUDITORÍA DE CAPACIDAD TIER 1 Y CIERRE DE EVIDENCIA`, con veredicto explícito sobre el límite de una IA, fugas bloqueantes, vertical slice obligatoria, Screen Master Records medibles, matriz de dispositivos reales, umbrales observables de FPS, QA autenticada, evidencia de release y cierre fail-closed. No se creó otro protocolo, addendum, doc_key ni canal paralelo.
+- **RECONCILIACIÓN:** la copia operativa `VEXFORGE_PROTOCOL_V2.md` se alinea con el contenido ACTIVE actualizado; MD5 canónico `2df1ba49f75223644c817aaa9cee5592`.
+- **ALCANCE DE ESTA SESIÓN:** sólo documentación normativa y continuidad. No se tocó `mobile/**`, no se inició workflow Android, no se compiló APK y no se publicó release.
+- **STATUS:** `INTEGRATED_UNVERIFIED`; la conclusión correcta es base Tier 1/premium ejecutable, no AAA terminado.
+- **NEXT BLOCK:** continuar con T0: baseline Android, inventario/procedencia de assets, Screen Master Records, `VISUAL_STATE_MATRIX`, `DOMAIN_SCENE_PROFILES`, `DEVICE_MATRIX` y `VISUAL_ACCEPTANCE`, sin inventar datos ni reiniciar unidades cerradas.
+
+---
+
 ## 2026-09-14 — VE-MOB-T2V — DOMAIN PORTAL TOKENS / IMPLEMENTED_UNVERIFIED
 
 - **BRANCH:** `main`.
