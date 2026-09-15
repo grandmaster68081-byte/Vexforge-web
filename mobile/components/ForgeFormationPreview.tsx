@@ -45,7 +45,7 @@ function FormationCard({
         <Text style={[styles.role, { color: accent }]}>{role}</Text>
         <Feather
           name={role === 'CAMPEÓN' ? 'award' : role === 'RESERVA' ? 'layers' : 'shield'}
-          size={15}
+            size={VISUAL_TOKENS.formation.roleIconSize}
           color={accent}
         />
       </View>
@@ -103,7 +103,7 @@ export function ForgeFormationPreview({
             { backgroundColor: colors.primary, borderColor: colors.primary },
           ]}
         >
-          <Feather name="zap" size={17} color={colors.primaryForeground} />
+          <Feather name="zap" size={VISUAL_TOKENS.formation.seal.iconSize} color={colors.primaryForeground} />
         </View>
         <View style={styles.headingCopy}>
           <Text style={[styles.kicker, { color: colors.primary }]}>SISTEMA CENTRAL</Text>

@@ -190,6 +190,8 @@ if ((formation.match(/VISUAL_TOKENS\.border\.standard/g) ?? []).length < 5) {
 }
 for (const token of [
   'formation.cardArt.placeholderBackground',
+  'formation.roleIconSize',
+  'formation.seal.iconSize',
   'formation.feedback.borderColor',
   'formation.kicker.fontWeight',
   'formation.title.fontWeight',

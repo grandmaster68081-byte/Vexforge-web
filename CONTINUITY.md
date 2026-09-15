@@ -1,3 +1,19 @@
+## 2026-09-15 — VE-MOB-T2V — FORMATION PREVIEW ICON SIZES / IMPLEMENTED_UNVERIFIED
+
+- **ENTORNO ACTIVO:** aplicación Android en `mobile/**`; la web permanece congelada.
+- **AUTORIDAD:** fila ACTIVE `public.vexforge_official_documents / vexforge_home_world_system_protocol_v3`, V2.2, con SHA-256 `828a077428987b2534e3733204ac721ef3073eb7dadf9530a6f46877dd63c503`.
+- **SCREEN / DOMAIN:** preview de ForgeFormation en Arena, incluyendo sello y tarjetas de VANGUARDIA, CAMPEÓN, CENTINELA y RESERVA.
+- **BLOCK:** eliminar los tamaños locales de iconos sin alterar roles, cartas, estados loading/empty/error, orden derivado ni copy.
+- **WHAT CHANGED:** `VISUAL_TOKENS.formation.roleIconSize` y `VISUAL_TOKENS.formation.seal.iconSize` definen los tamaños compartidos; `ForgeFormationPreview` los consume.
+- **BEHAVIOR PRESERVED:** mismos tamaños efectivos `15` y `17`, iconografía, datos de Supabase, accesibilidad, retry y regla de no cálculo local.
+- **DATA PRESERVED:** no se añadieron solicitudes, estado, rutas, RPCs, RLS, economía, gameplay, assets ni cambios en la web.
+- **MOTION / PERFORMANCE:** no se añadió movimiento, listener, render de datos ni timing; sólo se centralizaron valores estáticos de presentación.
+- **GUARD:** `node scripts/verify-mobile-visual-system.mjs`, `node --check scripts/verify-mobile-visual-system.mjs` y `git diff --check` deben pasar.
+- **RELEASE GATE:** no se inicia workflow Android, no se compila APK y no se publica release; QA visual/táctil física queda pendiente.
+- **STATUS:** `IMPLEMENTED_UNVERIFIED`.
+- **PERSISTENCIA:** publicar código, guardia y esta continuidad juntos en `main` mediante la API REST HTTPS oficial de GitHub con `[skip ci]`, sin `git push`.
+- **NEXT BLOCK:** continuar con otra pieza T2V explícita, sin tocar el motor de juego, los contratos de Supabase, la web congelada ni el tutorial.
+
 ## 2026-09-15 — VE-MOB-T2V — DOMAIN HEADER SIGIL SIZE / IMPLEMENTED_UNVERIFIED
 
 - **ENTORNO ACTIVO:** aplicación Android en `mobile/**`; la web permanece congelada.

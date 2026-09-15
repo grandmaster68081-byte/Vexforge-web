@@ -550,7 +550,8 @@ export const VISUAL_TOKENS = {
   formation: {
     root: { radius: 18, padding: 14, gap: 10 },
     heading: { gap: 10 },
-    seal: { size: 36, radius: 12 },
+    seal: { size: 36, radius: 12, iconSize: 17 },
+    roleIconSize: 15,
     kicker: { fontSize: 9, fontWeight: '900', letterSpacing: 1.2 },
     title: { fontSize: 19, fontWeight: '900', marginTop: 2 },
     count: { fontSize: 11, fontWeight: '800' },
