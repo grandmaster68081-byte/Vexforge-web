@@ -37,7 +37,7 @@ export function DomainState({ kind, title, message, icon, actionLabel, onAction,
             <View style={[styles.skeletonLine, styles.skeletonLineShort, { backgroundColor: `${accent}1F` }]} />
           </View>
         </>
-      ) : <VexIcon name={resolvedIcon} size={34} color={accent} />}
+      ) : <VexIcon name={resolvedIcon} size={VISUAL_TOKENS.state.iconSize} color={accent} />}
       <Text style={[styles.title, { color: colors.foreground }]}>{title}</Text>
       <Text style={[styles.message, { color: colors.mutedForeground }]}>{message}</Text>
       {actionLabel && onAction ? (
@@ -81,7 +81,7 @@ const styles = StyleSheet.create({
   skeletonLineShort: { width: VISUAL_TOKENS.state.skeletonLineShortWidth },
   title: {
     fontSize: VISUAL_TOKENS.state.titleSize,
-    fontWeight: '800',
+    fontWeight: VISUAL_TOKENS.state.titleWeight,
     letterSpacing: VISUAL_TOKENS.state.titleTracking,
     textAlign: 'center',
   },
@@ -100,7 +100,7 @@ const styles = StyleSheet.create({
   },
   actionText: {
     fontSize: VISUAL_TOKENS.state.actionTextSize,
-    fontWeight: '800',
+    fontWeight: VISUAL_TOKENS.state.actionTextWeight,
     letterSpacing: VISUAL_TOKENS.state.actionTextTracking,
   },
 });

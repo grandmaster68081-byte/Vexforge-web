@@ -52,6 +52,15 @@ const state = source('mobile/components/DomainState.tsx');
 if (!state.includes("from '@/components/MaterialPanel'")) {
   failures.push('DomainState does not consume MaterialPanel');
 }
+for (const token of [
+  'state.iconSize',
+  'state.titleWeight',
+  'state.actionTextWeight',
+]) {
+  if (!state.includes(`VISUAL_TOKENS.${token}`)) {
+    failures.push(`DomainState is missing visual token "${token}"`);
+  }
+}
 if (!state.includes('materialRole={kind ===')) {
   failures.push('DomainState does not select a semantic material role');
 }

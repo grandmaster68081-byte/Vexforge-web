@@ -1,3 +1,30 @@
+## 2026-09-15 — VE-MOB-T2V — DOMAIN STATE ICON AND ACTION WEIGHTS / IMPLEMENTED_UNVERIFIED
+
+- **BRANCH:** `main`.
+- **SCREEN / DOMAIN:** estados compartidos de dominio / `DomainState`.
+- **BLOCK:** completar la extracción de roles visuales pendientes del estado
+  compartido sin cambiar la semántica de loading, empty, error o recovery.
+- **WHAT CHANGED:** `VISUAL_TOKENS.state` ahora define `iconSize`,
+  `titleWeight` y `actionTextWeight`; `DomainState` consume esos roles para
+  el icono y los textos de título y recuperación.
+- **BEHAVIOR PRESERVED:** mismo icono de 34, pesos efectivos `800`, copy,
+  acción, haptics, accesibilidad, MaterialPanel y estados existentes.
+- **DATA PRESERVED:** no se añadieron solicitudes, estado, rutas, gameplay,
+  Supabase, Auth, RPCs, assets ni cambios en la web.
+- **MOTION / PERFORMANCE:** no se añadió movimiento, listener, render de datos
+  ni timing; sólo se centralizaron valores estáticos existentes.
+- **GUARD:** `node scripts/verify-mobile-visual-system.mjs`,
+  `node --check scripts/verify-mobile-visual-system.mjs` y `git diff --check`
+  pasaron.
+- **RELEASE GATE:** no se inició workflow Android, no se compiló APK y no se
+  publicó release; QA visual/táctil física queda pendiente.
+- **STATUS:** `IMPLEMENTED_UNVERIFIED`.
+- **PERSISTENCIA:** publicar código, guardia T2V y esta continuidad juntos en
+  `main` mediante la API REST HTTPS oficial de GitHub con `[skip ci]`, sin
+  `git push`.
+- **NEXT BLOCK:** continuar con otra pieza T2V explícita, sin tocar el motor
+  de juego, los contratos de Supabase, la web congelada ni el tutorial.
+
 ## 2026-09-14 — VE-MOB — ANDROID APK BUILD 243 / APK_RELEASE_PUBLISHED
 
 - **BRANCH:** `main`.
