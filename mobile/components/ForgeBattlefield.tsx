@@ -19,6 +19,7 @@ type Props = {
   turnIndex: number;
   totalTurns: number | null;
   reducedMotion: boolean;
+  parallaxY?: Animated.Value;
   youWon?: boolean;
   outcome?: BattleOutcome;
 };
@@ -85,9 +86,11 @@ function hpPercent(unit: BattleUnit) {
   return Math.max(0, Math.min(100, (hp / max) * 100));
 }
 
-function BattlefieldScene({ reducedMotion, colors }: { reducedMotion: boolean; colors: Colors }) {
+function BattlefieldScene({ reducedMotion, colors, parallaxY }: { reducedMotion: boolean; colors: Colors; parallaxY?: Animated.Value }) {
   const drift = useRef(new Animated.Value(0)).current;
   const pulse = useRef(new Animated.Value(0)).current;
+  const localParallax = useRef(new Animated.Value(0)).current;
+  const scrollParallax = parallaxY ?? localParallax;
 
   useEffect(() => {
     if (reducedMotion) {
@@ -122,6 +125,13 @@ function BattlefieldScene({ reducedMotion, colors }: { reducedMotion: boolean; c
     translateY: drift.interpolate({ inputRange: [0, 1], outputRange: [0, -5] }),
     scale: drift.interpolate({ inputRange: [0, 1], outputRange: [1, 1.018] }),
   };
+  const parallaxTransform = reducedMotion
+    ? 0
+    : scrollParallax.interpolate({
+      inputRange: [0, 240],
+      outputRange: [0, -VISUAL_TOKENS.battlefield.performance.parallaxMaxTranslateY],
+      extrapolate: 'clamp',
+    });
   const cyanGlowOpacity = pulse.interpolate({ inputRange: [0, 1], outputRange: [0.08, 0.22] });
   const emberGlowOpacity = pulse.interpolate({ inputRange: [0, 1], outputRange: [0.06, 0.18] });
 
@@ -134,7 +144,13 @@ function BattlefieldScene({ reducedMotion, colors }: { reducedMotion: boolean; c
         style={[
           StyleSheet.absoluteFillObject,
           styles.sceneImage,
-          { transform: [{ translateY: sceneTransform.translateY }, { scale: sceneTransform.scale }] },
+          {
+            transform: [
+              { translateY: sceneTransform.translateY },
+              { translateY: parallaxTransform },
+              { scale: sceneTransform.scale },
+            ],
+          },
         ]}
       />
       <LinearGradient
@@ -148,8 +164,12 @@ function BattlefieldScene({ reducedMotion, colors }: { reducedMotion: boolean; c
         end={{ x: 0.9, y: 1 }}
         style={StyleSheet.absoluteFillObject}
       />
-      <Animated.View style={[styles.sceneGlow, styles.sceneGlowCyan, { backgroundColor: colors.primary, opacity: cyanGlowOpacity }]} />
-      <Animated.View style={[styles.sceneGlow, styles.sceneGlowEmber, { backgroundColor: colors.danger, opacity: emberGlowOpacity }]} />
+      {VISUAL_TOKENS.battlefield.performance.maxAnimatedSceneLayers >= 1 ? (
+        <Animated.View style={[styles.sceneGlow, styles.sceneGlowCyan, { backgroundColor: colors.primary, opacity: cyanGlowOpacity }]} />
+      ) : null}
+      {VISUAL_TOKENS.battlefield.performance.maxAnimatedSceneLayers >= 2 ? (
+        <Animated.View style={[styles.sceneGlow, styles.sceneGlowEmber, { backgroundColor: colors.danger, opacity: emberGlowOpacity }]} />
+      ) : null}
       <View style={[styles.sceneVignette, { borderColor: `${colors.accent}26` }]} />
     </View>
   );
@@ -370,7 +390,7 @@ export function ForgeBattlefield({ finalUnits, currentTurn, turnIndex, totalTurn
 
   return (
     <View testID="forge-battlefield" accessibilityRole="summary" accessibilityLabel="Campo de batalla VEXFORGE con Campeón, Vanguardia, Centinela, Reserva y lectura viva del evento." style={[styles.root, { borderColor: `${colors.accent}55` }]}>
-      <BattlefieldScene reducedMotion={reducedMotion} colors={colors} />
+      <BattlefieldScene reducedMotion={reducedMotion} colors={colors} parallaxY={parallaxY} />
       <View style={styles.sceneContent}>
       <View style={styles.topBar}>
         <View>

@@ -4,9 +4,9 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import {
   AccessibilityInfo,
   ActivityIndicator,
+  Animated,
   Pressable,
   RefreshControl,
-  ScrollView,
   StyleSheet,
   Text,
   View,
@@ -18,6 +18,7 @@ import { emitTelemetry } from '@/lib/telemetry';
 import { ScreenShell } from '@/components/ScreenShell';
 import { DomainHeader } from '@/components/DomainHeader';
 import { DomainState } from '@/components/DomainState';
+import { VISUAL_TOKENS } from '@/constants/experience';
 import { loadPlayerDeck } from '@/lib/supabase';
 import { loadPlayerRank, type BattleResult, type BattleTurn, type DeckSlot, type Opponent, type PlayerRank } from '@/lib/supabase';
 import { simulateQuickAIBattle } from '@/lib/aiBattle';
@@ -375,6 +376,7 @@ function ResultPanel({
 export default function BattleScreen() {
   const colors = useColors();
   const insets = useSafeAreaInsets();
+  const battlefieldScrollY = useRef(new Animated.Value(0)).current;
   const {
     session,
     player,
@@ -570,10 +572,22 @@ export default function BattleScreen() {
 
   return (
     <ScreenShell surface="pvp" sceneMode="hero">
-      <ScrollView
+      <Animated.ScrollView
       testID="battle-screen"
       style={{ backgroundColor: 'transparent' }}
-      contentContainerStyle={[styles.screen, { paddingTop: insets.top + 20, paddingBottom: insets.bottom + 108 }]}
+      contentContainerStyle={[
+        styles.screen,
+        {
+          paddingTop: insets.top + 20,
+          paddingBottom: insets.bottom + 108,
+          paddingLeft: Math.max(18, insets.left),
+          paddingRight: Math.max(18, insets.right),
+        },
+      ]}
+      contentInsetAdjustmentBehavior="never"
+      scrollIndicatorInsets={{ top: insets.top, bottom: insets.bottom + 108, left: insets.left, right: insets.right }}
+      onScroll={Animated.event([{ nativeEvent: { contentOffset: { y: battlefieldScrollY } } }], { useNativeDriver: true })}
+      scrollEventThrottle={VISUAL_TOKENS.battlefield.performance.scrollEventThrottle}
       refreshControl={<RefreshControl refreshing={searching} onRefresh={handleFind} tintColor={colors.primary} />}
       showsVerticalScrollIndicator={false}
     >
@@ -592,6 +606,7 @@ export default function BattleScreen() {
             turnIndex={turnIndex}
             totalTurns={turns.length}
             reducedMotion={reducedMotion}
+            parallaxY={battlefieldScrollY}
             outcome={resultOutcome(activeBattleResult)}
           />
            <ReplayProgress turnIndex={turnIndex} totalTurns={turns.length} colors={colors} />
@@ -741,7 +756,7 @@ export default function BattleScreen() {
           ) : null}
         </>
       )}
-      </ScrollView>
+    </Animated.ScrollView>
     </ScreenShell>
   );
 }

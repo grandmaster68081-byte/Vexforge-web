@@ -23,9 +23,11 @@ La referencia está activa como `CANONICAL_BACKGROUNDS.pvp` dentro de
 `ForgeBattlefield`. El runtime no monta la imagen como captura: añade sobre el
 arte una escena nativa con formaciones reales, Champion, Vanguard, Sentinel,
 Reserve, HUD de turno, señales honestas de Hand/Command, carril de evento,
-lectura de daño y resultado. La capa visual usa movimiento ambiental reducido,
-iluminación cyan/ember y viñeta; no crea gameplay, cartas, datos ni acciones
-fuera de los contratos vivos.
+lectura de daño y resultado. La ruta aplica safe area vertical y horizontal,
+contraste estratificado para legibilidad y un parallax de scroll nativo limitado
+a 8 dp; `reducedMotion` lo desactiva. La escena mantiene sólo dos capas de
+glow animadas y todas las animaciones usan el driver nativo para reducir trabajo
+en JS. No crea gameplay, cartas, datos ni acciones fuera de los contratos vivos.
 
 ## Gate de activación
 
