@@ -1785,3 +1785,48 @@ Todos los dominios comparten Auth, Tutorial, navegación, estados `loading/empty
 
 El protocolo sólo puede declararse llevado al 100 % cuando los diez paneles tienen implementación real, datos vivos, assets con procedencia, Screen Master Records, matrices de estados, interacción táctil, audio/motion, medición en la Device Matrix y evidencia de release. La lámina fija el destino visual; no permite marcar `MET`, `TIER1_READY` u `OPERATIONAL` por parecido estético. Mientras falte cualquiera de esos cierres, la referencia sigue siendo un objetivo de producción y la matriz viva conserva el estado honesto del gap.
 
+### 72.7 T0 — Baseline Android y registro de verdad ejecutado
+
+**Estado:** `INTEGRATED_UNVERIFIED`
+**Fuente de baseline:** `main` en commit `18a3e9e00f39b80446fb08cd11b5f21b96e7c5fc`
+**Alcance:** sólo Android en `mobile/**`; la web permanece congelada. Este registro no altera gameplay, contratos, Auth, RLS, RPCs, economía, Storage ni release.
+
+#### Hechos medidos
+
+- Existen **13 rutas Android de producto** y las rutas estructurales `_layout` y `+not-found`.
+- El mapa actual no tiene una ruta independiente de Rewards ni de Live Operations: esas experiencias se consumen dentro de Missions, Store, Economy, World y Meta. No se inventan rutas nuevas para completar una lista visual.
+- `mobile/assets/images/` contiene **13 imágenes locales**. Las superficies restantes resuelven arte mediante `mobile/constants/visual.ts`, `src/lib/assetManifest.ts` y Supabase Storage.
+- El manifiesto oficial verificó **224 assets inscritos**, **22 referencias de código** y **0 referencias rotas**; dos comprobaciones HEAD quedaron diferidas por HTTP 429 transitorio de Storage y deben reintentarse antes del gate de release.
+- La guarda de arte residual reportó **243 entradas de manifiesto**, con 38 objetos servibles, 4 consumidos y 34 en reserva declarada. El arte reservado no se presenta como contenido terminado.
+- Se ejecutaron 15 guardas directas: 14 pasaron. La única falla fue `scripts/verify-mobile-profile.mjs`, que reporta que Profile todavía no preserva correctamente los resultados `draw` y `pending` del historial. Queda como `PROFILE_HISTORY_STATE_GAP / BLOCKED`, no como `MET`.
+
+#### Registro mínimo de Screen Master Records
+
+| Ruta real | Dominio | Fuente de verdad | Referencia visual | Estado T0 |
+|---|---|---|---|---|
+| `mobile/app/auth.tsx` | Auth | Supabase Auth + Storage | Auth / entrada segura | `IMPLEMENTED_UNVERIFIED` |
+| `mobile/app/(tabs)/index.tsx` | Nexus / Home | `mobile/lib/supabase.ts` + datos vivos | Panel 1 / citadel de mando | `IMPLEMENTED_UNVERIFIED` |
+| `mobile/app/(tabs)/battle.tsx` | Arena / Battlefield | Battle Run, event log y replay autoritativos | Panel 2 / arena táctica | `IMPLEMENTED_UNVERIFIED` |
+| `mobile/app/(tabs)/collection.tsx` | Collection / Archivo | Supabase + manifiesto oficial | Panel 3 / vault de colección | `IMPLEMENTED_UNVERIFIED` |
+| `mobile/app/(tabs)/deck.tsx` | Deck / Forja | Supabase + reglas de formación | Panel 4 / taller de mazos | `IMPLEMENTED_UNVERIFIED` |
+| `mobile/app/tutorial.tsx` | Tutorial | Auth, estado de sesión y datos oficiales | Capa transversal / onboarding | `IMPLEMENTED_UNVERIFIED` |
+| `mobile/app/missions.tsx` | Missions | misiones, quests y recompensas autoritativas | Panel 5 / mapa de objetivos | `IMPLEMENTED_UNVERIFIED` |
+| `mobile/app/store.tsx` | Store | catálogo, wallet y compras autoritativas | Panel 6 / bazar | `IMPLEMENTED_UNVERIFIED` |
+| `mobile/app/economy.tsx` | Economy | economía, materiales y RPCs oficiales | Panel 6 / forja económica | `IMPLEMENTED_UNVERIFIED` |
+| `mobile/app/social.tsx` | Social / Guild | amigos, clanes, chat y leaderboard vivos | Panel 7 / sala de alianza | `IMPLEMENTED_UNVERIFIED` |
+| `mobile/app/world.tsx` | World Atlas | bosses, raids, lore, temporadas y rankings | Panel 8 / atlas | `IMPLEMENTED_UNVERIFIED` |
+| `mobile/app/(tabs)/profile.tsx` | Profile / Progression | perfil, logros, progreso e historial | Panel 9 / cámara de progresión | `IMPLEMENTED_UNVERIFIED + GAP` |
+| `mobile/app/meta.tsx` | Meta / Live Operations | cuenta, cosméticos, reliquias, eventos y señales vivas | Panel 10 / hub meta | `IMPLEMENTED_UNVERIFIED` |
+
+Cada registro anterior todavía debe recibir, antes de `VERIFIED`, su `VISUAL_STATE_MATRIX`, `DOMAIN_SCENE_PROFILE`, asset IDs con procedencia, mapa de hitboxes, reduced-motion, audio, rendimiento, Device Matrix y evidencia de APK. La existencia de la ruta o una guarda estática no cierra el record.
+
+#### Device Matrix y aceptación visual
+
+La `DEVICE_MATRIX` permanece **pendiente de nombres de dispositivos físicos y capturas de evidencia**. El baseline permite preparar los perfiles `LOW`, `REFERENCE` y `HIGH`, pero no permite afirmar FPS, memoria, temperatura, safe area o legibilidad sin medición real. Battlefield y replay conservan el objetivo de 60 FPS y los umbrales de `72.3`; si un dispositivo no llega, se reduce el tier de efectos sin modificar outcome, hash, replay ni legalidad.
+
+`VISUAL_ACCEPTANCE` permanece abierto hasta demostrar, por cada dominio crítico: primera impresión, identidad común, lectura de texto/cartas, touch/back/retry, estados honestos, reduced-motion, audio, recovery de red, ausencia de dashboard y estabilidad en el dispositivo soportado.
+
+#### Regla de cierre T0
+
+T0 no se declara cerrado por el conteo de rutas ni por las guardas que pasaron. Sólo se puede cambiar a `VERIFIED` cuando el gap de Profile se resuelva con una decisión de producto comprobable, se repitan las comprobaciones diferidas de Storage, se nombren dispositivos soportados y cada ruta tenga evidencia de Screen Master Record. Hasta entonces, las unidades posteriores pueden prepararse documentalmente, pero no pueden declarar `TIER1_READY` ni ampliar el polish como si el baseline estuviera cerrado.
+

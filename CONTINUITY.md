@@ -13,6 +13,19 @@
 
 ---
 
+## 2026-09-14 — T0 BASELINE — ANDROID TRUTH REGISTER / INTEGRATED_UNVERIFIED
+
+- **BASELINE:** `main` en `18a3e9e00f39b80446fb08cd11b5f21b96e7c5fc`; Android sigue siendo la superficie activa y la web está congelada.
+- **HECHOS:** 13 rutas Android de producto, 13 imágenes locales, 224 assets oficiales inscritos, 22 referencias de código verificadas y 0 referencias rotas; dos HEAD de Storage quedaron diferidos por HTTP 429 transitorio.
+- **GUARDAS:** 15 comprobaciones directas ejecutadas; 14 pasaron. `scripts/verify-mobile-profile.mjs` falla porque Profile todavía no preserva los resultados `draw` y `pending` del historial.
+- **GAP REGISTRADO:** `PROFILE_HISTORY_STATE_GAP / BLOCKED`. No se corrigió en esta unidad porque tocar `mobile/**` exigiría workflow Android, APK, release, hash, dispositivo y QA conforme al protocolo.
+- **REGISTRO INTEGRADO:** la sección `72.7 T0 — Baseline Android y registro de verdad ejecutado` incorpora el mapa de rutas, fuentes de verdad, panel visual, estados T0 y regla de cierre dentro del protocolo maestro. No se creó un protocolo paralelo.
+- **PENDIENTES HONESTOS:** Device Matrix aún necesita dispositivos físicos nombrados y evidencia; `VISUAL_STATE_MATRIX`, `DOMAIN_SCENE_PROFILES` y `VISUAL_ACCEPTANCE` siguen abiertos por ruta; el arte reservado no se presenta como terminado.
+- **ALCANCE:** documentación y reconciliación únicamente; no se tocó `mobile/**`, no se compiló APK, no se inició workflow Android y no se publicó release.
+- **NEXT BLOCK:** resolver el gap de Profile bajo el gate de release o continuar con la primera unidad independiente que no dependa de esa corrección, sin marcar T0 como `VERIFIED`.
+
+---
+
 ## 2026-09-14 — PROTOCOL AUDIT — TIER 1 EVIDENCE CLOSURE / INTEGRATED_UNVERIFIED
 
 - **ENTORNO ACTIVO:** aplicación Android en `mobile/`; la web permanece congelada. Se leyó el protocolo ACTIVE desde `public.vexforge_official_documents` mediante Supabase Management API directa sobre HTTPS y se contrastó con el `main` actual `1038f31d84e42e1248cd15493577d374913284cd`.
