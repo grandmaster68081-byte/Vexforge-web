@@ -1,13 +1,13 @@
 ## 2026-09-15 — VE-MOB-5 DECK — PREMIUM VISUAL REFERENCE / CANDIDATE_FOR_REVIEW
 
-- **ENTORNO ACTIVO:** aplicación Android en \; la web permanece congelada.
-- **AUTORIDAD:** fila ACTIVE \, V2.3, consultada por HTTPS.
+- **ENTORNO ACTIVO:** aplicación Android en `mobile/**`; la web permanece congelada.
+- **AUTORIDAD:** fila ACTIVE `public.vexforge_official_documents / vexforge_home_world_system_protocol_v3`, V2.3, consultada por HTTPS.
 - **SCREEN / DOMAIN:** Deck Forge / constructor de mazos, superficie Android de formación y composición.
-- **REFERENCIA VISUAL:** se publicó \, imagen vertical 1024×1024 generada en alta calidad para dirección visual, SHA-256 \, 1767153 bytes.
+- **REFERENCIA VISUAL:** se publicó `attached_assets/generated_images/vexforge_decks_screen_premium_reference.png`, imagen vertical 1024×1024 generada en alta calidad para dirección visual, SHA-256 `ca4ff620b2a1b1436874cfb4b18079037fdaa927acc9e1a4218a39b2e4226ecb`, 1767153 bytes.
 - **IDENTIDAD CONSERVADA:** citadel y forja central, obsidiana/piedra oscura, metal grabado, cyan arcano, oro/brasa y resonancia violeta; la composición mantiene Champion, Formation, Tactical y Reserve como lectura visual del contrato, sin inventar datos de jugador.
-- **ALCANCE:** referencia visual solamente; no se conectó a \, no se modificaron contratos, Supabase, RPCs, RLS, economía ni rutas, y los microtextos de la imagen no son fuente autoritativa.
+- **ALCANCE:** referencia visual solamente; no se conectó a `mobile/**`, no se modificaron contratos, Supabase, RPCs, RLS, economía ni rutas, y los microtextos de la imagen no son fuente autoritativa.
 - **RELEASE GATE:** no se inició workflow Android, no se compiló APK y no se publicó release, conforme a la instrucción vigente del operador.
-- **STATUS:** \; sólo puede promoverse a asset canónico después de revisión visual/táctil y registro de Screen Master Record.
+- **STATUS:** `CANDIDATE_FOR_REVIEW`; sólo puede promoverse a asset canónico después de revisión visual/táctil y registro de Screen Master Record.
 - **NEXT BLOCK:** revisión del operador; si se aprueba, integrar el asset en el registro Android y validar la superficie con la APK en una ejecución autorizada.
 
 ## 2026-09-15 — VE-MOB-AUTH — NEXUS ACCESS VISUAL / IMPLEMENTED_UNVERIFIED
