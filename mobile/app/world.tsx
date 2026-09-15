@@ -263,29 +263,55 @@ function BossCard({ boss, encounters, onBattle, colors }: { boss: MobileWorldBos
       }, 0);
   const lore = worldBossLore(boss);
   return (
-    <View testID={`world-boss-${boss.id}`} style={[styles.bossCard, { backgroundColor: colors.panel, borderColor: `${tone}88` }]}>
-      <View style={styles.bossArt}>
-        {bossArt ? <Image source={{ uri: bossArt }} style={StyleSheet.absoluteFill} resizeMode="cover" accessibilityLabel={`Arte oficial de ${identity.name}`} /> : <View style={[StyleSheet.absoluteFill, styles.missingBossArt, { borderColor: `${tone}55` }]}><Feather name="image" size={19} color={tone} /><Text style={[styles.missingBossArtText, { color: tone }]}>ARTE DEL JEFE NO REPORTADO</Text></View>}
+    <View testID={`world-boss-${boss.id}`} style={[worldBossStyles.card, { backgroundColor: colors.panel, borderColor: `${tone}88` }]}>
+      <View style={worldBossStyles.art}>
+        {bossArt ? <Image source={{ uri: bossArt }} style={StyleSheet.absoluteFill} resizeMode="cover" accessibilityLabel={`Arte oficial de ${identity.name}`} /> : <View style={[StyleSheet.absoluteFill, worldBossStyles.missingArt, { borderColor: `${tone}55` }]}><Feather name="image" size={19} color={tone} /><Text style={[worldBossStyles.missingArtText, { color: tone }]}>ARTE DEL JEFE NO REPORTADO</Text></View>}
         <View style={[StyleSheet.absoluteFill, { backgroundColor: colors.ink, opacity: bossArt ? 0.38 : 0.82 }]} />
-        <View style={[styles.bossArtCopy, { zIndex: 2 }]}>
-          <Text style={[styles.bossCode, { color: tone }]}>{identity.code}</Text>
-          <Text style={[styles.bossTitle, { color: colors.foreground }]} numberOfLines={2}>{identity.name}</Text>
+        <View style={[worldBossStyles.artCopy, { zIndex: 2 }]}>
+          <Text style={[worldBossStyles.code, { color: tone }]}>{identity.code}</Text>
+          <Text style={[worldBossStyles.title, { color: colors.foreground }]} numberOfLines={2}>{identity.name}</Text>
         </View>
-        <View style={[styles.tierPill, { backgroundColor: `${tone}22`, borderColor: `${tone}88` }]}><Text style={[styles.tierText, { color: tone }]}>{identity.tier}</Text></View>
+        <View style={[worldBossStyles.tier, { backgroundColor: `${tone}22`, borderColor: `${tone}88` }]}><Text style={[worldBossStyles.tierText, { color: tone }]}>{identity.tier}</Text></View>
       </View>
-      <View style={styles.bossBody}>
-        <Text style={[styles.bossLore, { color: lore === 'LORE NO REPORTADO' ? colors.accent : colors.mutedForeground }]} numberOfLines={2}>{lore}</Text>
-        <View style={styles.metaRow}><Text style={[styles.metaText, { color: colors.mutedForeground }]}>{labelize(boss.region_id, 'REGIÓN NO REPORTADA')}</Text><Text style={[styles.metaText, { color: tone }]}>{numberSignal(boss.power_level, 'PWR')}</Text></View>
-        <View style={styles.hpRow}><View style={[styles.hpTrack, { backgroundColor: colors.muted }]}><View style={[styles.hpFill, { width: '100%', backgroundColor: tone }]} /></View><Text style={[styles.hpText, { color: colors.foreground }]}>{numberSignal(boss.hp, 'HP')}</Text></View>
-        <View style={styles.rewardRow}><Text style={[styles.rewardText, { color: colors.accent }]}>{rewardText(boss.reward_pool)}</Text>{ownEncounters.length > 0 ? <Text style={[styles.damageText, { color: ownDamage === null ? colors.accent : colors.success }]}>{ownDamage === null ? 'TÚ DAÑO NO REPORTADO' : `TÚ ${formatNumber(ownDamage)}`}</Text> : null}</View>
-        <Pressable testID={`world-boss-battle-${boss.id}`} accessibilityRole="button" onPress={onBattle} style={({ pressed }) => [styles.primaryButton, { backgroundColor: tone, opacity: pressed ? 0.72 : 1 }]}>
-          <Feather name="crosshair" size={15} color={colors.ink} /><Text style={[styles.primaryButtonText, { color: colors.ink }]}>PREPARAR BATALLA</Text>
+      <View style={worldBossStyles.body}>
+        <Text style={[worldBossStyles.lore, { color: lore === 'LORE NO REPORTADO' ? colors.accent : colors.mutedForeground }]} numberOfLines={2}>{lore}</Text>
+        <View style={worldBossStyles.metaRow}><Text style={[worldBossStyles.metaText, { color: colors.mutedForeground }]}>{labelize(boss.region_id, 'REGIÓN NO REPORTADA')}</Text><Text style={[worldBossStyles.metaText, { color: tone }]}>{numberSignal(boss.power_level, 'PWR')}</Text></View>
+        <View style={worldBossStyles.hpRow}><View style={[worldBossStyles.hpTrack, { backgroundColor: colors.muted }]}><View style={[worldBossStyles.hpFill, { width: '100%', backgroundColor: tone }]} /></View><Text style={[worldBossStyles.hpText, { color: colors.foreground }]}>{numberSignal(boss.hp, 'HP')}</Text></View>
+        <View style={worldBossStyles.rewardRow}><Text style={[worldBossStyles.rewardText, { color: colors.accent }]}>{rewardText(boss.reward_pool)}</Text>{ownEncounters.length > 0 ? <Text style={[worldBossStyles.damageText, { color: ownDamage === null ? colors.accent : colors.success }]}>{ownDamage === null ? 'TÚ DAÑO NO REPORTADO' : `TÚ ${formatNumber(ownDamage)}`}</Text> : null}</View>
+        <Pressable testID={`world-boss-battle-${boss.id}`} accessibilityRole="button" onPress={onBattle} style={({ pressed }) => [worldBossStyles.primaryButton, { backgroundColor: tone, opacity: pressed ? 0.72 : 1 }]}>
+          <Feather name="crosshair" size={VISUAL_TOKENS.worldBoss.action.iconSize} color={colors.ink} /><Text style={[worldBossStyles.primaryButtonText, { color: colors.ink }]}>PREPARAR BATALLA</Text>
         </Pressable>
-        <Text style={[styles.integrityNote, { color: colors.mutedForeground }]}>Daño y recompensa sólo tras resolución oficial.</Text>
+        <Text style={[worldBossStyles.integrityNote, { color: colors.mutedForeground }]}>Daño y recompensa sólo tras resolución oficial.</Text>
       </View>
     </View>
   );
 }
+
+const worldBossStyles = StyleSheet.create({
+  card: { borderWidth: VISUAL_TOKENS.worldBoss.card.borderWidth, borderRadius: VISUAL_TOKENS.worldBoss.card.radius, overflow: 'hidden' },
+  art: { height: VISUAL_TOKENS.worldBoss.art.height, position: 'relative', justifyContent: 'flex-end', padding: VISUAL_TOKENS.worldBoss.art.padding },
+  missingArt: { alignItems: 'center', borderWidth: VISUAL_TOKENS.worldBoss.missingArt.borderWidth, justifyContent: 'center', gap: VISUAL_TOKENS.worldBoss.missingArt.gap, paddingHorizontal: VISUAL_TOKENS.worldBoss.missingArt.paddingHorizontal },
+  missingArtText: { fontSize: VISUAL_TOKENS.worldBoss.missingArtText.fontSize, fontWeight: VISUAL_TOKENS.worldBoss.missingArtText.fontWeight, letterSpacing: VISUAL_TOKENS.worldBoss.missingArtText.letterSpacing, textAlign: 'center' },
+  artCopy: { zIndex: 1, paddingRight: VISUAL_TOKENS.worldBoss.artCopy.paddingRight },
+  code: { fontSize: VISUAL_TOKENS.worldBoss.code.fontSize, fontWeight: VISUAL_TOKENS.worldBoss.code.fontWeight, letterSpacing: VISUAL_TOKENS.worldBoss.code.letterSpacing },
+  title: { fontSize: VISUAL_TOKENS.worldBoss.title.fontSize, fontWeight: VISUAL_TOKENS.worldBoss.title.fontWeight, marginTop: VISUAL_TOKENS.worldBoss.title.marginTop },
+  tier: { position: 'absolute', right: VISUAL_TOKENS.worldBoss.tier.right, top: VISUAL_TOKENS.worldBoss.tier.top, paddingHorizontal: VISUAL_TOKENS.worldBoss.tier.paddingHorizontal, paddingVertical: VISUAL_TOKENS.worldBoss.tier.paddingVertical, borderRadius: VISUAL_TOKENS.worldBoss.tier.radius, borderWidth: VISUAL_TOKENS.worldBoss.tier.borderWidth },
+  tierText: { fontSize: VISUAL_TOKENS.worldBoss.tierText.fontSize, fontWeight: VISUAL_TOKENS.worldBoss.tierText.fontWeight, letterSpacing: VISUAL_TOKENS.worldBoss.tierText.letterSpacing },
+  body: { padding: VISUAL_TOKENS.worldBoss.body.padding, gap: VISUAL_TOKENS.worldBoss.body.gap },
+  lore: { fontSize: VISUAL_TOKENS.worldBoss.lore.fontSize, lineHeight: VISUAL_TOKENS.worldBoss.lore.lineHeight },
+  metaRow: { flexDirection: 'row', justifyContent: 'space-between', gap: VISUAL_TOKENS.worldBoss.metaRow.gap },
+  metaText: { fontSize: VISUAL_TOKENS.worldBoss.metaText.fontSize, fontWeight: VISUAL_TOKENS.worldBoss.metaText.fontWeight, letterSpacing: VISUAL_TOKENS.worldBoss.metaText.letterSpacing },
+  hpRow: { flexDirection: 'row', alignItems: 'center', gap: VISUAL_TOKENS.worldBoss.hpRow.gap },
+  hpTrack: { flex: 1, height: VISUAL_TOKENS.worldBoss.hpTrack.height, borderRadius: VISUAL_TOKENS.worldBoss.hpTrack.radius, overflow: 'hidden' },
+  hpFill: { height: '100%', borderRadius: VISUAL_TOKENS.worldBoss.hpTrack.radius },
+  hpText: { fontSize: VISUAL_TOKENS.worldBoss.hpText.fontSize, fontWeight: VISUAL_TOKENS.worldBoss.hpText.fontWeight },
+  rewardRow: { flexDirection: 'row', justifyContent: 'space-between', gap: VISUAL_TOKENS.worldBoss.rewardRow.gap },
+  rewardText: { flex: 1, fontSize: VISUAL_TOKENS.worldBoss.rewardText.fontSize, fontWeight: VISUAL_TOKENS.worldBoss.rewardText.fontWeight },
+  damageText: { fontSize: VISUAL_TOKENS.worldBoss.damageText.fontSize, fontWeight: VISUAL_TOKENS.worldBoss.damageText.fontWeight },
+  primaryButton: { minHeight: VISUAL_TOKENS.worldBoss.action.minHeight, borderRadius: VISUAL_TOKENS.worldBoss.action.radius, paddingHorizontal: VISUAL_TOKENS.worldBoss.action.paddingHorizontal, alignItems: 'center', justifyContent: 'center', flexDirection: 'row', gap: VISUAL_TOKENS.worldBoss.action.gap },
+  primaryButtonText: { fontSize: VISUAL_TOKENS.worldBoss.actionText.fontSize, fontWeight: VISUAL_TOKENS.worldBoss.actionText.fontWeight, letterSpacing: VISUAL_TOKENS.worldBoss.actionText.letterSpacing },
+  integrityNote: { fontSize: VISUAL_TOKENS.worldBoss.integrityNote.fontSize, lineHeight: VISUAL_TOKENS.worldBoss.integrityNote.lineHeight, textAlign: 'center' },
+});
 
 function RaidCard({ raid, joined, busy, onJoin, onContribute, colors }: { raid: MobileRaidRun; joined: boolean; busy: boolean; onJoin: () => void; onContribute: () => void; colors: Colors }) {
   const identity = worldRaidIdentity(raid);

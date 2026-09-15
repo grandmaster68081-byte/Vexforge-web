@@ -402,6 +402,26 @@ for (const token of [
     failures.push(`World Atlas header is missing visual token "${token}"`);
   }
 }
+for (const token of [
+  'worldBoss.card',
+  'worldBoss.art',
+  'worldBoss.missingArt',
+  'worldBoss.code',
+  'worldBoss.title',
+  'worldBoss.tier',
+  'worldBoss.body',
+  'worldBoss.lore',
+  'worldBoss.metaText',
+  'worldBoss.hpTrack',
+  'worldBoss.rewardText',
+  'worldBoss.action',
+  'worldBoss.actionText',
+  'worldBoss.integrityNote',
+]) {
+  if (!world.includes(`VISUAL_TOKENS.${token}`)) {
+    failures.push(`World Boss card is missing visual token "${token}"`);
+  }
+}
 
 if (failures.length > 0) {
   console.error('T2V visual system guard failed:');
