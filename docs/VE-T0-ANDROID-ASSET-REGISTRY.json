@@ -29,7 +29,8 @@
     "total_entries": 80,
     "local_hashes_measured": 13,
     "storage_hashes_measured": 0,
-    "pending_source_backgrounds": 0
+    "pending_source_backgrounds": 0,
+    "approved_reference_entries": 1
   },
   "entries": [
     {
@@ -1620,6 +1621,33 @@
       "authorized_domains": [],
       "state": "RESERVED_RESIDUAL_ART",
       "debt": "Residual manifest entry without an authorized current consumer; do not promote by visual proximity."
+    },
+    {
+      "asset_id": "android-reference:battle-screen-premium-1080x2340.png",
+      "class": "approved_visual_reference",
+      "origin": "generated_image",
+      "path": "docs/visual-assets/vexforge-battle-screen-premium-1080x2340.png",
+      "dimensions": {
+        "width": 1080,
+        "height": 2340
+      },
+      "format": "png",
+      "hash": "784c01ad38ebbfccc101713bfb11d07b8bf5fd58cc238d34f1fe2a9a0753a1f1",
+      "hash_algorithm": "sha256",
+      "hash_status": "MEASURED",
+      "provenance": [
+        "operator-approved generation from the Home master reference",
+        "docs/visual-assets/vexforge-battle-screen-premium-1080x2340.md",
+        "CONTINUITY.md"
+      ],
+      "authorized_domains": [
+        "Battlefield"
+      ],
+      "state": "REVIEW_REQUIRED",
+      "approval_status": "OPERATOR_APPROVED_REFERENCE",
+      "android_consumer": "PENDING_ANDROID_ACTIVATION",
+      "storage_status": "NOT_UPLOADED_CARDS_ONLY_POLICY",
+      "debt": "Reference approved and measured; Android consumer, physical QA and release remain pending."
     }
   ]
 }

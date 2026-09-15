@@ -5921,3 +5921,16 @@
 - **PROTOCOLO:** se añadió la política `CARDS-ONLY STORAGE / VISUAL SOURCE RESET`. Todo asset futuro debe pasar por objetivo visual, procedencia, hash, manifiesto, aprobación, APK y evidencia de continuidad antes de activarse.
 - **NO APK / NO RELEASE:** no se modificó el código de combate ni se compiló una APK en esta sesión, respetando la instrucción vigente. El cambio Android requiere el workflow APK cuando el operador autorice una nueva compilación.
 - **STATUS:** `STORAGE_CLEANUP_COMPLETE / ANDROID_REQUIRES_APK_REBUILD_FOR_DELIVERY`; `TIER1_READY` y `OPERATIONAL` siguen sin declararse.
+
+
+---
+## 2026-09-15 — VE-MOB-VISUAL — BATTLE PREMIUM REFERENCE APPROVED / NO APK
+
+- **ENTORNO ACTIVO:** aplicación Android en `mobile/**`; la web permanece congelada.
+- **UNIDAD:** se guardó en `main` la referencia visual premium de Battlefield `docs/visual-assets/vexforge-battle-screen-premium-1080x2340.png` junto con su ficha de procedencia.
+- **IDENTIDAD:** deriva de `mobile/assets/images/home-reference-scene.png` y del perfil Arena / Battlefield del protocolo ACTIVE: cyan vs ember, formaciones, Champion, mano, Reserve y lectura de evento.
+- **MEDICIÓN:** `1080 × 2340`, PNG, SHA-256 `784c01ad38ebbfccc101713bfb11d07b8bf5fd58cc238d34f1fe2a9a0753a1f1`.
+- **ESTADO HONESTO:** `OPERATOR_APPROVED_REFERENCE / ANDROID_NOT_ACTIVATED`; queda registrado como `REVIEW_REQUIRED` hasta tener consumidor Android real, fallback, APK y evidencia física.
+- **CARDS-ONLY STORAGE:** no se subió a Storage ni se habilitó una ruta visual no-carta; no se reactivan fondos históricos ni assets eliminados.
+- **NO APK / NO RELEASE:** no se tocó `mobile/**`, no se inició workflow Android, no se compiló APK y no se publicó release nuevo.
+- **NEXT:** la pantalla de Cartas generada en esta sesión queda como propuesta visual separada; requiere aprobación explícita antes de entrar en el registro oficial.

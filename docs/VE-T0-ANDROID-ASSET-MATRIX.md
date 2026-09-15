@@ -41,6 +41,7 @@ consumo automático.
 | `mobile/assets/images/vexforge-feature-card.png` | Carta destacada | `CANON_ACTIVE` | Home | `mobile/constants/visual.ts`, `VEXFORGE-ASSET-ATLAS.md` |
 | `mobile/assets/images/auth-reference-scene.png` | Escena de acceso | `CANON_ACTIVE` | Auth | `VEXFORGE-ASSET-ATLAS.md` |
 | `mobile/assets/images/battle-reference-scene.png` | Escena de combate | `CANON_ACTIVE` | Battlefield | `VEXFORGE-ASSET-ATLAS.md` |
+| `docs/visual-assets/vexforge-battle-screen-premium-1080x2340.png` | Referencia visual Battlefield aprobada por el operador | `REVIEW_REQUIRED` | Battlefield | `docs/VE-MOB-VISUAL-BATTLE-SCREEN-PREMIUM.md`, registro T0 |
 | `mobile/assets/images/collection-archive-scene.jpg` | Escena de Archivo | `CANON_ACTIVE` | Collection | `VEXFORGE-ASSET-ATLAS.md` |
 | `mobile/assets/images/decks-reference-scene.png` | Escena de formación | `CANON_ACTIVE` | Deck | `VEXFORGE-ASSET-ATLAS.md` |
 | `mobile/assets/images/profile-reference-scene.png` | Escena de identidad | `CANON_ACTIVE` | Profile | `VEXFORGE-ASSET-ATLAS.md` |
