@@ -4,7 +4,7 @@
 **Unidad:** T0 — `DOMAIN_SCENE_PROFILES` ejecutables  
 **Estado:** `PREPARED / EVIDENCE_REQUIRED`  
 **Entorno activo:** aplicación Android en `mobile/**`  
-**Baseline observado:** `main` en `30ba51f0989e833ebc9829c106c817916ea6592f`  
+**Baseline observado:** `main` en `624007bb732b40c186495f0a3aab2d872ed86e0f`
 **Fuente activa:** `public.vexforge_official_documents /
 vexforge_home_world_system_protocol_v3` (`ACTIVE`, V2.2)  
 **Hash del protocolo leído:** `828a077428987b2534e3733204ac721ef3073eb7dadf9530a6f46877dd63c503`

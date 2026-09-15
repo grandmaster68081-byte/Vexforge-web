@@ -4,7 +4,7 @@
 **Unidad:** T0 — Screen Master Records and visual acceptance register
 **Estado:** `PREPARED / EVIDENCE_REQUIRED`
 **Entorno activo:** aplicación Android en `mobile/**`
-**Baseline observado:** `main` en `45a7ca5247a03a58cc28cdc75ae2821ff7ac5179`
+**Baseline observado:** `main` en `624007bb732b40c186495f0a3aab2d872ed86e0f`
 **Fuente activa reconciliada:** `public.vexforge_official_documents`
 (`vexforge_home_world_system_protocol_v3`, `ACTIVE`, V2.2)
 **Hash del protocolo leído:** `828a077428987b2534e3733204ac721ef3073eb7dadf9530a6f46877dd63c503`
@@ -299,8 +299,8 @@ continúan en `STATIC_ONLY`. La matriz de dispositivos permanece
 - `DOMAIN_SCENE_PROFILES`: preparados; no autorizan assets nuevos.
 - `VISUAL_ACCEPTANCE`: abierto.
 - `PROFILE_HISTORY_STATE_GAP`: `BLOCKED`.
-- Un HEAD de Storage: diferido por `HTTP 429` en la última ejecución; debe
-  reintentarse.
+- `verify:manifest` y `verify:assets`: revalidación completa de Storage,
+  224/224 HEAD del manifiesto y 22/22 objetos canónicos disponibles.
 - APK, release y QA de dispositivo: no ejecutados en esta unidad por la
   instrucción de no compilar.
 

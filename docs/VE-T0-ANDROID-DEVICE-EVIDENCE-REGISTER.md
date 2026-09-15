@@ -4,7 +4,7 @@
 **Unidad:** T0 — `DEVICE_MATRIX` + `VISUAL_ACCEPTANCE` evidence register  
 **Estado:** `PREPARED / EVIDENCE_REQUIRED`  
 **Entorno activo:** aplicación Android en `mobile/**`  
-**Baseline observado:** `main` en `feb2b60483584efb4fa2034ee447166642b31195`  
+**Baseline observado:** `main` en `624007bb732b40c186495f0a3aab2d872ed86e0f`
 **Fuente activa:** `public.vexforge_official_documents /
 vexforge_home_world_system_protocol_v3` (`ACTIVE`, V2.2)  
 **Hash del protocolo leído:** `828a077428987b2534e3733204ac721ef3073eb7dadf9530a6f46877dd63c503`
@@ -128,7 +128,7 @@ el evidence pack completo. Ninguno de los tres tiers tiene ese estado.
 - `VISUAL_ACCEPTANCE`: `PREPARED / EVIDENCE_REQUIRED`.
 - 39 celdas de ruta/tier permanecen `NOT_MEASURED`.
 - `PROFILE_HISTORY_STATE_GAP`: `BLOCKED`.
-- El HEAD de Storage diferido por `HTTP 429` continúa siendo deuda transitoria,
-  no asset ausente.
+- La última revalidación de Storage terminó con 224/224 HEAD del manifiesto y
+  22/22 objetos canónicos disponibles; esto no sustituye la evidencia física.
 - Este bloque no instala, compila ni publica una APK.
 - No se declara `VERIFIED`, `TIER1_READY`, `SUPPORTED` ni `OPERATIONAL`.

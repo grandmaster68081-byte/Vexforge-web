@@ -4,7 +4,7 @@
 **Unidad:** T0 — `VISUAL_STATE_MATRIX` ejecutable por ruta  
 **Estado:** `PREPARED / EVIDENCE_REQUIRED`  
 **Entorno activo:** aplicación Android en `mobile/**`  
-**Baseline observado:** `main` en `4f6b5e73df08a333c84d291e91951f274973496e`  
+**Baseline observado:** `main` en `624007bb732b40c186495f0a3aab2d872ed86e0f`
 **Fuente activa:** `public.vexforge_official_documents /
 vexforge_home_world_system_protocol_v3` (`ACTIVE`, V2.2)  
 **Hash del protocolo leído:** `828a077428987b2534e3733204ac721ef3073eb7dadf9530a6f46877dd63c503`

@@ -5224,3 +5224,30 @@
   sigue `BLOCKED` y el HEAD de Storage diferido por `HTTP 429` sigue abierto.
 - **NEXT BLOCK:** no ejecutar evidencia física ni release sin autorización
   explícita; continuar sólo con documentación T0 permitida por el protocolo.
+
+---
+## 2026-09-15 — VE-MOB-T0 — STORAGE REVALIDATION / EVIDENCE DEBT UPDATED
+
+- **ENTORNO ACTIVO:** aplicación Android en `mobile/**`; la web permanece
+  congelada.
+- **GUARDAS EJECUTADAS:** `npm run verify:manifest`,
+  `npm run verify:assets` y `npm run verify:residual-art`.
+- **RESULTADOS:** manifiesto con 224 archivos inscritos, 22 rutas de código,
+  0 referencias rotas, 224 HEAD y 0 diferidas; assets canónicos 22/22;
+  arte residual con 57 filas, 38 objetos servibles, 4 consumidos y 34 en
+  reserva, con manifiesto total 243.
+- **RECONCILIACIÓN:** se actualizaron los cinco registros T0 para usar el
+  baseline documental actual y retirar la deuda transitoria `HTTP 429`.
+  La disponibilidad de Storage no promueve assets reservados, no cambia
+  consumidores Android y no sustituye evidencia física.
+- **NO APK:** no se tocó `mobile/**`, no se inició workflow Android, no se
+  compiló APK y no se publicó release.
+- **STATUS:** `DEVICE_MATRIX`, `VISUAL_STATE_MATRIX`,
+  `DOMAIN_SCENE_PROFILES` y `VISUAL_ACCEPTANCE` continúan
+  `PREPARED / EVIDENCE_REQUIRED`; `PROFILE_HISTORY_STATE_GAP` sigue
+  `BLOCKED`.
+- **PERSISTENCIA:** los registros reconciliados y esta continuidad se
+  publicarán juntos en `main` mediante la API REST HTTPS oficial de GitHub con
+  `[skip ci]`, sin `git push`.
+- **NEXT BLOCK:** mantener el gate físico y de release cerrado; avanzar sólo
+  con una unidad T0 documental permitida hasta autorización explícita.

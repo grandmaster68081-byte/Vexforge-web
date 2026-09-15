@@ -4,7 +4,7 @@
 **Unidad:** T0 — asset registry and provenance
 **Estado:** `PREPARED / EVIDENCE_REQUIRED`
 **Entorno activo:** Android en `mobile/**`
-**Baseline observado:** `main` en `45a7ca5` (commit completo: `45a7ca5247a03a58cc28cdc75ae2821ff7ac5179`)
+**Baseline observado:** `main` en `624007bb732b40c186495f0a3aab2d872ed86e0f`
 **Fuente activa reconciliada:** `public.vexforge_official_documents`
 (`vexforge_home_world_system_protocol_v3`, `ACTIVE`, V2.2)
 **Hash del protocolo leído:** `828a077428987b2534e3733204ac721ef3073eb7dadf9530a6f46877dd63c503`
@@ -97,8 +97,8 @@ Estado del baseline:
 - 224 assets oficiales inscritos.
 - 22 referencias de código verificadas.
 - 0 referencias rotas en la guarda registrada.
-- 1 comprobación HEAD de Storage diferida por `HTTP 429` transitorio en la
-  última ejecución; `verify:assets` confirmó las 22 rutas declaradas.
+- 0 comprobaciones HEAD diferidas; las 224 comprobaciones de manifiesto
+  terminaron correctamente y `verify:assets` confirmó las 22 rutas declaradas.
 - No hay permiso para llamar `VERIFIED` a una superficie sólo por tener una
   referencia local o una URL construible.
 
@@ -109,15 +109,14 @@ abrir otra unidad visual:
 
 | Comprobación | Resultado | Lectura operativa |
 |---|---|---|
-| `npm run verify:manifest` | `PASS` | 224 filas, 22 rutas de código, 0 referencias rotas; 1 HEAD diferido por 429 |
+| `npm run verify:manifest` | `PASS` | 224 archivos inscritos, 22 rutas de código, 0 referencias rotas; 224 HEAD, 0 diferidas |
 | `npm run verify:assets` | `PASS` | 22/22 objetos canónicos disponibles |
-| `node scripts/verify-residual-art.mjs` | `PASS` | 243 filas, 38 objetos servibles, 4 consumidos, 34 en reserva |
-| Promoción T0 | `NO` | falta evidencia física; la respuesta 429 conserva el gate abierto |
+| `node scripts/verify-residual-art.mjs` | `PASS` | 57 filas residuales, 38 objetos servibles, 4 consumidos, 34 en reserva; manifiesto total 243 |
+| Promoción T0 | `NO` | falta evidencia física; la verificación de Storage no sustituye QA de dispositivo |
 
-La respuesta `429` se registra como deuda transitoria y no como asset ausente.
-No se promueve ningún elemento `AVAILABLE_UNASSIGNED` o `REVIEW_REQUIRED`, no se
-añaden imágenes de sustitución y no se modifica ningún consumidor Android en
-este bloque.
+La revalidación de Storage no promueve ningún elemento
+`AVAILABLE_UNASSIGNED` o `REVIEW_REQUIRED`, no añade imágenes de sustitución y
+no modifica ningún consumidor Android en este bloque.
 
 ## 6. Gate de promoción
 
