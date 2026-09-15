@@ -280,7 +280,9 @@ export default function EconomyScreen() {
   const withdrawalVex = parseInputNumber(withdrawalAmount);
   const withdrawalGross = withdrawalVex === null ? null : withdrawalVex / VEX_PER_USDT;
   const withdrawalFee = withdrawalGross === null ? null : withdrawalGross * WITHDRAWAL_FEE_RATE;
-  const withdrawalNet = withdrawalGross === null ? null : Math.max(0, withdrawalGross - withdrawalFee);
+  const withdrawalNet = withdrawalGross === null || withdrawalFee === null
+    ? null
+    : Math.max(0, withdrawalGross - withdrawalFee);
   const selectedCard = ownedCards.find((card) => card.id === selectedCardId) ?? null;
 
   const refreshEconomy = useCallback(async (mode: 'initial' | 'refresh' = 'initial') => {

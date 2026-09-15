@@ -4,7 +4,7 @@ import { StyleSheet, type StyleProp, type ViewProps, type ViewStyle } from 'reac
 import { useColors } from '@/hooks/useColors';
 import { MOTION, VISUAL_TOKENS, type DomainTone } from '@/constants/experience';
 
-type MaterialRole = keyof typeof VISUAL_TOKENS.material;
+type MaterialRole = Exclude<keyof typeof VISUAL_TOKENS.material, 'borderOpacity'>;
 
 type MaterialPanelProps = ViewProps & {
   children?: ReactNode;
