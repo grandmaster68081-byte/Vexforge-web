@@ -44,7 +44,7 @@ consumo automático.
 | `docs/visual-assets/vexforge-battle-screen-premium-1080x2340.png` | Referencia visual Battlefield aprobada por el operador | `REVIEW_REQUIRED` | Battlefield | `docs/VE-MOB-VISUAL-BATTLE-SCREEN-PREMIUM.md`, registro T0 |
 | `mobile/assets/images/collection-archive-scene.jpg` | Escena de Archivo | `CANON_ACTIVE` | Collection | `VEXFORGE-ASSET-ATLAS.md` |
 | `docs/visual-assets/vexforge-collection-screen-premium-1080x2340.png` | Referencia visual Collection aprobada por el operador | `REVIEW_REQUIRED` | Collection | `docs/visual-assets/vexforge-collection-screen-premium-1080x2340.md`, registro T0 |
-| `mobile/assets/images/decks-reference-scene.png` | Escena de formación | `CANON_ACTIVE` | Deck | `VEXFORGE-ASSET-ATLAS.md` |
+| `mobile/assets/images/decks-reference-scene.png` | Escena de formación; arte de escena dentro del viewport nativo de Forja | `CANON_ACTIVE` | Deck | `mobile/constants/visual.ts`, `mobile/app/(tabs)/deck.tsx`, `VEXFORGE-ASSET-ATLAS.md` |
 | `mobile/assets/images/profile-reference-scene.png` | Escena de identidad | `CANON_ACTIVE` | Profile | `VEXFORGE-ASSET-ATLAS.md` |
 | `docs/visual-assets/vexforge-profile-screen-premium-1080x2340.png` | Referencia visual Profile aprobada por el operador | `REVIEW_REQUIRED` | Profile | `docs/visual-assets/vexforge-profile-screen-premium-1080x2340.md`, registro T0 |
 | `mobile/assets/images/home-reference-scene.png` | Escena vertical oficial Home/Nexus (`1080×2340`) | `CANON_ACTIVE` | Home | `mobile/app/(tabs)/index.tsx`, `mobile/constants/visual.ts`, `docs/VE-MOB-3-HOME.md` |

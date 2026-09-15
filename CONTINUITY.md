@@ -1,3 +1,20 @@
+## 2026-09-15 — VE-MOB-5 — OFFICIAL FORGE SCENE / NATIVE DECK EXPERIENCE / IMPLEMENTED_UNVERIFIED
+
+- **ENTORNO ACTIVO:** aplicación Android en `mobile/**`; la web permanece congelada.
+- **AUTORIDAD:** fila `ACTIVE` `public.vexforge_official_documents / vexforge_home_world_system_protocol_v3`, versión V2.3; hash local consultado por API de gestión HTTPS de Supabase: `cd83250a5f63fe72b5be237bfdf1bb54a1f935927a5fea95136190b837a165ba`.
+- **REFERENCIA VISUAL OFICIAL:** `mobile/assets/images/decks-reference-scene.png`, PNG RGB `1080×2340`, SHA-256 `6e9381a5f6a266c908d8760dfc14aae0280402d624b5f3d2f5ae34964b1f8fea`; coincide con la imagen entregada por el operador.
+- **DECISIÓN VISUAL:** el PNG sólo aporta arte aprobado de la escena de la Forja. No se monta como captura ni se usa como skin; el runtime reconstruye nativamente el portal, el núcleo, la iluminación, las capas de profundidad, el encabezado, la formación, los filtros, el resumen, los estados y las acciones.
+- **IMPLEMENTACIÓN:** `CANONICAL_BACKGROUNDS.forge` consume la referencia dentro del frame canónico `1080×2340`; `deck.tsx` añade parallax limitado de escena, pulso de núcleo, barrido de luz, reduced-motion, slots vivos y navegación nativa. Los slots, potencia, facciones, campeón, carga, error, validación y guardado permanecen derivados de Supabase y de las RPC autoritativas.
+- **REGLA CERO GENÉRICOS:** no se añadieron cartas ficticias, nombres persistidos inventados, éxito local de guardado, endpoints, tablas, RPCs, RLS, economía, gameplay ni assets de Storage nuevos. La ausencia de carta/arte continúa explícita.
+- **VERIFICACIÓN:** `node scripts/verify-mobile-deck.mjs` pasa `28/28`; `node --check scripts/verify-mobile-deck.mjs` y `git diff --check` pasan. El typecheck móvil no pudo ejecutarse porque el firewall de paquetes devolvió `404` al instalar `npm-package-arg`; no se declara aprobado.
+- **QA HONESTA:** `IMPLEMENTED_UNVERIFIED`; no hay evidencia física de APK, dispositivo/emulador, safe area, taps, legibilidad o rendimiento.
+- **RELEASE GATE:** no se compiló APK, no se inició workflow Android y no se publicó release, conforme a la instrucción del operador.
+- **PERSISTENCIA:** publicar código, guardia, registro de asset, documentación y esta continuidad juntos en `main` mediante GitHub REST/Data API sobre HTTPS, sin `git push`.
+- **VISUAL DEBT:** queda pendiente la evidencia física de la escena en APK y validar que los overlays con datos vivos mantengan legibilidad y touch en la matriz de dispositivos.
+- **NEXT BLOCK:** QA física sólo cuando el operador autorice una nueva APK; después revisar el siguiente bloque Android independiente sin tocar el motor de juego ni la web congelada.
+
+---
+
 ## 2026-09-15 — VE-MOB-AUTH — OFFICIAL NEXUS SCENE / NATIVE ACCESS COMPOSITION / IMPLEMENTED_UNVERIFIED
 
 - **ENTORNO ACTIVO:** aplicación Android en `mobile/**`; la web permanece congelada.

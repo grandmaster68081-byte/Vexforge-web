@@ -146,7 +146,8 @@ QA visual/táctil ni evidencia de APK de esta unidad.
 - **Ruta:** `/(tabs)/deck`; fuente primaria:
   `mobile/app/(tabs)/deck.tsx`.
 - **Sujeto:** pedestal, cartas, composición, formación y legalidad del mazo.
-- **Assets:** `decks-reference-scene.png` está registrada como escena activa;
+- **Assets:** `decks-reference-scene.png` está registrada como escena activa y
+  ahora es consumida como arte de escena dentro de un viewport nativo;
   `deck-forge-scene.jpg` queda `REVIEW_REQUIRED` hasta decisión explícita.
   `heroes/hero_fusion.jpg` cubre Forge en Storage.
 - **Datos y acciones:** colección y legalidad entregadas por contratos vivos;
@@ -155,7 +156,8 @@ QA visual/táctil ni evidencia de APK de esta unidad.
 - **Estados mínimos:** `loading`, `empty`, `pending`, `error`, `locked`,
   `completed`, `recovery`.
 - **Aceptación:** touch de slots, confirmación, validación legal, estado de arte
-  pendiente y recuperación de guardado.
+  pendiente, recuperación de guardado y separación verificable entre arte de
+  escena y UI nativa.
 
 ### SMR-06 — Profile / Progression
 

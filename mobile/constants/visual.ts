@@ -30,7 +30,9 @@ export const CANONICAL_BACKGROUNDS = {
   pvp: null,
   missions: null,
   packs: null,
-  forge: null,
+  // The approved deck plate is scene art only. Deck rebuilds the portal,
+  // formation slots, labels, states and controls as live native elements.
+  forge: require('../assets/images/decks-reference-scene.png'),
   collection: null,
   economy: null,
   profile: null,

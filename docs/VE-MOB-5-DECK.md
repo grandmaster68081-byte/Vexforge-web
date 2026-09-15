@@ -45,7 +45,9 @@ Portar a la aplicación Android el constructor de mazos de VEXFORGE:
 - Estado de implementación: `IMPLEMENTED_UNVERIFIED` después del workflow APK; requiere recorrido del operador en dispositivo o emulador.
 - Nivel Q: Q2 actual / Q3 objetivo.
 - Datos autoritativos: no se cambiaron tablas, RPCs, RLS, Storage, economía ni resultados de combate.
-- Referencia y composición: `mobile/assets/images/decks-reference-scene.png` mide `1080×2340`, PNG RGB/sRGB, proporción `9:19.5`; la superficie usa el viewport completo y mantiene los hotspots sobre el mismo frame.
+- Referencia y composición: `mobile/assets/images/decks-reference-scene.png` mide `1080×2340`, PNG RGB/sRGB, proporción `9:19.5`; la superficie usa el viewport completo y mantiene los puntos de acceso nativos sobre el mismo frame.
+- Dirección visual aplicada: el PNG sólo aporta la escena aprobada. Portal, pulso de núcleo, iluminación, profundidad, encabezado, estados, slots de formación, filtros, resumen, acciones y navegación se reconstruyen como elementos nativos vivos.
+- La referencia no se trata como captura ni como skin: no hay controles horneados ni hotspots transparentes usados como sustituto de UI.
 
 ## Deuda y condición de reapertura
 
@@ -53,4 +55,4 @@ Reabrir si cambia el contrato de `player_deck`, `player_cards` o las RPCs; la pa
 
 ## Siguiente acción verificable
 
-Instalar el APK del commit de cierre y recorrer con una sesión normal: cargar el mazo, añadir/quitar copias, superar y romper límites, validar, guardar, recargar y comprobar el estado vacío de colección. No declarar `OPERATIONAL` hasta recibir esa evidencia.
+Instalar el APK del commit de cierre y recorrer con una sesión normal: cargar el mazo, añadir/quitar copias, superar y romper límites, validar, guardar, recargar y comprobar el estado vacío de colección. La compilación y el release quedan pendientes de autorización explícita del operador. No declarar `OPERATIONAL` hasta recibir esa evidencia.
