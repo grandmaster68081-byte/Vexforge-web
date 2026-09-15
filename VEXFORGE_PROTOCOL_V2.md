@@ -1753,3 +1753,35 @@ La continuidad debe seguir este orden sin reiniciar unidades ya cerradas: (a) re
 
 La conclusión correcta no es “el protocolo garantiza AAA”. La conclusión correcta es: **el protocolo puede conducir a una calidad Tier 1/premium si se ejecuta completo y supera sus gates; en su estado actual, mientras existan criterios abiertos o evidencia de dispositivo/release pendiente, sólo puede declararse una base de producción sólida, no un juego AAA terminado**. Esta regla prevalece sobre cualquier afirmación promocional, captura, build o resultado generado por IA.
 
+### 72.6 Referencia visual unificada del estado final
+
+Esta lámina es la referencia visual norte para el VEXFORGE terminado. Define continuidad de mundo, escala, contraste, materiales, jerarquía, densidad de información y relación entre escena y UI. No define texto, estadísticas, cartas, precios, resultados ni datos de juego: esos valores siempre vienen de los contratos vivos y Android sólo los renderiza.
+
+![VEXFORGE — referencia visual unificada de dominios y subdominios](attached_assets/generated_images/vexforge_final_world_reference.png)
+
+- **ASSET:** `attached_assets/generated_images/vexforge_final_world_reference.png`
+- **TIPO:** referencia conceptual integrada al protocolo maestro; no es evidencia de aceptación, captura de una APK ni sustituto de un Screen Master Record.
+- **PROCEDENCIA:** imagen generada específicamente para VEXFORGE dentro de este repositorio; no se importa arte externo ni se convierte la imagen en una fuente de gameplay.
+- **REGLA DE USO:** cada superficie final debe vincularse a uno o más paneles, conservar la dirección visual común y registrar sus diferencias de modo, estado, datos, interacción, assets, motion, audio y rendimiento. Si la implementación se aparta de la referencia, la diferencia debe ser intencional, documentada y aceptada; no se permite resolverla con un fallback genérico.
+
+#### Mapa de paneles, dominios y subdominios
+
+1. **Nexus / Home — citadel de mando:** portales de dominio, actividad viva, misiones diarias, pulso de perfil, notificaciones, recuperación de sesión, onboarding y entrada segura.
+2. **Arena / Battlefield:** PvP, PvE, Boss, Raid, Clan War y Event profiles; formación, mano, reserva, objetivos legales, iniciativa, estados de combate, eventos, replay, settlement y reentrada tras red.
+3. **Collection / Archivo:** unidades, campeones, artefactos, inventario, filtros, detalle, rareza, procedencia, mastery, progreso y lectura de estados loading/empty/error.
+4. **Deck / Forja:** creación y validación de mazos, mulligan, formación, reserva, presets, detalle de carta, legalidad, confirmación y preparación del Battle Run.
+5. **Missions / World objectives:** mapa, regiones, cadenas de quest, recompensas, checkpoints, tutorial missions, rutas narrativas, eventos temporales y estados pending/locked/completed.
+6. **Store / Economy:** tienda, monedas, materiales, crafting, ofertas, compra, receipt, wallet, límites, protección contra doble aplicación y recovery de transacción.
+7. **Social / Guild:** clanes, amigos, chat, invitaciones, leaderboard, Clan War, presencia, moderación, privacidad, reportes y estados de conexión.
+8. **World Atlas / Meta narrativa:** biomas, regiones, lore, world progression, temporadas, eventos globales, rutas de descubrimiento, hubs narrativos y continuidad de facciones.
+9. **Profile / Progression:** rango, niveles, mastery, achievements, estadísticas, historial, identidad, cuenta, preferencias, accesibilidad, reduced-motion, audio y privacidad.
+10. **Meta / Live Operations visible al jugador:** hub de temporadas, calendario de eventos, recompensas, objetivos globales, avisos, balance de actividades y señales de telemetría convertidas en experiencia legible, nunca en un dashboard técnico.
+
+#### Capa transversal obligatoria
+
+Todos los dominios comparten Auth, Tutorial, navegación, estados `loading/empty/error/pending`, retry, back, haptics, audio, reduced-motion, safe areas, performance tiers, accesibilidad y recovery de red. Estos subdominios no se pueden ocultar porque una lámina no los muestre: deben existir como estados verificables de cada Screen Master Record.
+
+#### Regla para declarar el protocolo y el juego finalizados
+
+El protocolo sólo puede declararse llevado al 100 % cuando los diez paneles tienen implementación real, datos vivos, assets con procedencia, Screen Master Records, matrices de estados, interacción táctil, audio/motion, medición en la Device Matrix y evidencia de release. La lámina fija el destino visual; no permite marcar `MET`, `TIER1_READY` u `OPERATIONAL` por parecido estético. Mientras falte cualquiera de esos cierres, la referencia sigue siendo un objetivo de producción y la matriz viva conserva el estado honesto del gap.
+

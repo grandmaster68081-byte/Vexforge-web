@@ -1,3 +1,17 @@
+## 2026-09-14 — PROTOCOL REFERENCE — UNIFIED FINAL WORLD VISUAL / INTEGRATED_UNVERIFIED
+
+- **RESPUESTA:** el protocolo está más cerca de la meta porque ahora expresa no sólo reglas y gates, sino también una dirección visual común para el producto completo. La posibilidad de alcanzar Tier 1/premium es real; no equivale todavía a declarar un juego AAA terminado.
+- **REFERENCIA INTEGRADA:** se añadió al mismo documento maestro la sección `72.6 Referencia visual unificada del estado final` y la lámina `attached_assets/generated_images/vexforge_final_world_reference.png`.
+- **CONTENIDO VISUAL:** la lámina reúne diez superficies objetivo: Nexus/Home, Arena/Battlefield, Collection/Archivo, Deck/Forja, Missions/World, Store/Economy, Social/Guild, World Atlas/Meta narrativa, Profile/Progression y Meta/Live Operations visible al jugador.
+- **SUBDOMINIOS PRESERVADOS:** Auth, Tutorial, recovery de red, loading/empty/error/pending, accesibilidad, reduced-motion, audio, safe areas, performance tiers, chat, leaderboard, mastery, crafting, receipt/wallet, replay, settlement, temporadas y eventos se mantienen como estados y recorridos verificables, no como decoración.
+- **REGLA DE AUTORIDAD:** la imagen es north-star visual, no fuente de texto, datos, estadísticas, precios, resultados, cartas ni gameplay. La autoridad continúa siendo la fila ACTIVE `vexforge_home_world_system_protocol_v3`, los contratos vivos y Android como renderer/input/replay.
+- **UNIFICACIÓN:** no se creó otro protocolo, doc_key, addendum ni versión normativa. La imagen vive en el repositorio oficial y se referencia desde el mismo protocolo maestro.
+- **ALCANCE:** sólo se añadió documentación y una referencia visual; no se tocó `mobile/**`, no se compiló APK, no se inició workflow Android y no se publicó release.
+- **STATUS:** `INTEGRATED_UNVERIFIED`; la referencia ayuda a cerrar ambigüedad visual, pero sólo la implementación, la evidencia de dispositivo y los gates pueden cerrar la matriz.
+- **NEXT BLOCK:** continuar con T0 y convertir cada panel en Screen Master Record, `VISUAL_STATE_MATRIX`, `DOMAIN_SCENE_PROFILES`, `DEVICE_MATRIX` y `VISUAL_ACCEPTANCE`, sin usar la imagen como sustituto de evidencia.
+
+---
+
 ## 2026-09-14 — PROTOCOL AUDIT — TIER 1 EVIDENCE CLOSURE / INTEGRATED_UNVERIFIED
 
 - **ENTORNO ACTIVO:** aplicación Android en `mobile/`; la web permanece congelada. Se leyó el protocolo ACTIVE desde `public.vexforge_official_documents` mediante Supabase Management API directa sobre HTTPS y se contrastó con el `main` actual `1038f31d84e42e1248cd15493577d374913284cd`.
