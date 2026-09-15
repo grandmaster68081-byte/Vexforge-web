@@ -155,6 +155,9 @@ if (!battlefield.includes("from '@/constants/experience'")) {
 if (!battlefield.includes('VISUAL_TOKENS.battlefield')) {
   failures.push('ForgeBattlefield does not consume battlefield tokens');
 }
+if (!battlefield.includes('VISUAL_TOKENS.battlefield.typography')) {
+  failures.push('ForgeBattlefield does not consume battlefield typography tokens');
+}
 
 const home = source('mobile/app/(tabs)/index.tsx');
 if (!home.includes("from '@/constants/experience'")) {

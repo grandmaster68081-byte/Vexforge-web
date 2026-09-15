@@ -1,3 +1,28 @@
+## 2026-09-14 — VE-MOB-T2V — BATTLEFIELD TYPOGRAPHY TOKENS / IMPLEMENTED_UNVERIFIED
+
+- **SCREEN / DOMAIN:** `ARENA` / `ForgeBattlefield`.
+- **BLOCK:** centralizar la jerarquía tipográfica del campo de batalla sin
+  alterar la semántica de combate ni los datos vivos.
+- **WHAT CHANGED:** `VISUAL_TOKENS.battlefield.typography` define tamaños,
+  interlineados, tracking y offsets de encabezado, turno, identidad, roles,
+  cartas, reserva, carril de confrontación y resultado; `ForgeBattlefield`
+  consume esos roles.
+- **DATA PRESERVED:** `BattleTurn`, `BattleUnit`, HP, daño, eventos, roles,
+  reservas, estados de caída, lado desconocido, resultado y labels honestos del
+  servidor.
+- **MOTION / PERFORMANCE:** no se añadió movimiento, solicitud, listener ni
+  render de datos; las animaciones y gates de reduced-motion permanecen iguales.
+- **GUARD:** `node scripts/verify-mobile-visual-system.mjs` y
+  `git diff --check`.
+- **RELEASE GATE:** no se inició workflow Android, no se compiló APK y no se
+  publicó release; QA visual/táctil queda pendiente de autorización.
+- **STATUS:** `IMPLEMENTED_UNVERIFIED`.
+- **PERSISTENCIA:** publicar código, guardia, documento T2V y continuidad juntos
+  en `main` mediante la API REST HTTPS oficial de GitHub con `[skip ci]`, sin
+  `git push`.
+- **NEXT BLOCK:** continuar con otra pieza T2V explícita, sin tocar el motor de
+  juego, la web congelada ni el tutorial.
+
 ## 2026-09-14 — VE-MOB-T2V — DOMAIN HEADER TYPOGRAPHY TOKENS / IMPLEMENTED_UNVERIFIED
 
 - **SCREEN / DOMAIN:** cabecera compartida de identidad de FOJA, ARENA,
