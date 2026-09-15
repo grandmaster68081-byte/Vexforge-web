@@ -1,10 +1,13 @@
 # VEXFORGE — T0 Android asset matrix
 
-**Fecha:** 2026-09-14
+**Fecha:** 2026-09-15
 **Unidad:** T0 — asset registry and provenance
 **Estado:** `PREPARED / EVIDENCE_REQUIRED`
 **Entorno activo:** Android en `mobile/**`
-**Baseline observado:** `main` en `6297f9b` (commit completo: `6297f9b900c4fdc0ac2f02f447d3cfa5bcfdeb6b`)
+**Baseline observado:** `main` en `45a7ca5` (commit completo: `45a7ca5247a03a58cc28cdc75ae2821ff7ac5179`)
+**Fuente activa reconciliada:** `public.vexforge_official_documents`
+(`vexforge_home_world_system_protocol_v3`, `ACTIVE`, V2.2)
+**Hash del protocolo leído:** `828a077428987b2534e3733204ac721ef3073eb7dadf9530a6f46877dd63c503`
 
 ## 1. Autoridad y regla de cero genéricos
 
@@ -53,7 +56,7 @@ procedencia y evidencia de consumidor.
 
 ## 3. Assets remotos verificados y superficies Android
 
-`src/lib/assetManifest.ts` registra 23 rutas de assets verificados en el
+`src/lib/assetManifest.ts` registra 22 rutas de assets verificados en el
 bucket oficial. El inventario operativo del baseline reporta 224 assets
 inscritos en el manifiesto vivo; las cifras no se mezclan: una ruta verificada
 es una entrada concreta del código y un asset inscrito puede pertenecer a un
@@ -94,11 +97,29 @@ Estado del baseline:
 - 224 assets oficiales inscritos.
 - 22 referencias de código verificadas.
 - 0 referencias rotas en la guarda registrada.
-- 2 comprobaciones HEAD de Storage diferidas por `HTTP 429` transitorio.
+- 1 comprobación HEAD de Storage diferida por `HTTP 429` transitorio en la
+  última ejecución; `verify:assets` confirmó las 22 rutas declaradas.
 - No hay permiso para llamar `VERIFIED` a una superficie sólo por tener una
   referencia local o una URL construible.
 
-## 5. Gate de promoción
+## 5. Reconciliación T0 ejecutada el 2026-09-15
+
+La matriz se contrastó con el `main` actual y con el protocolo ACTIVE antes de
+abrir otra unidad visual:
+
+| Comprobación | Resultado | Lectura operativa |
+|---|---|---|
+| `npm run verify:manifest` | `PASS` | 224 filas, 22 rutas de código, 0 referencias rotas; 1 HEAD diferido por 429 |
+| `npm run verify:assets` | `PASS` | 22/22 objetos canónicos disponibles |
+| `node scripts/verify-residual-art.mjs` | `PASS` | 243 filas, 38 objetos servibles, 4 consumidos, 34 en reserva |
+| Promoción T0 | `NO` | falta evidencia física; la respuesta 429 conserva el gate abierto |
+
+La respuesta `429` se registra como deuda transitoria y no como asset ausente.
+No se promueve ningún elemento `AVAILABLE_UNASSIGNED` o `REVIEW_REQUIRED`, no se
+añaden imágenes de sustitución y no se modifica ningún consumidor Android en
+este bloque.
+
+## 6. Gate de promoción
 
 Un asset pasa de `AVAILABLE_UNASSIGNED` o `REVIEW_REQUIRED` a consumo de
 producción sólo cuando se registran, en la misma unidad:

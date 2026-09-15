@@ -5096,3 +5096,37 @@
 - **PERSISTENCE:** actualización del documento ACTIVE en Supabase a doc_version V2.2; esta entrada se publica en main mediante API REST HTTPS oficial de GitHub con [skip ci].
 - **STATUS:** INTEGRATED_UNVERIFIED; la capa está definida y versionada, pero cada pantalla debe superar sus propios gates visuales, de datos, touch, performance y APK cuando se implemente.
 - **NEXT BLOCK:** producir la matriz de assets y Screen Master Records de T0 antes de ejecutar una nueva pantalla visual.
+
+---
+## 2026-09-15 — VE-MOB-T0 — ASSET MATRIX + SCREEN MASTER RECORDS RECONCILED / PREPARED
+
+- **ENTORNO ACTIVO:** aplicación Android en `mobile/**`; la web permanece
+  congelada.
+- **AUTORIDAD:** se leyó por HTTPS la fila ACTIVE
+  `public.vexforge_official_documents / vexforge_home_world_system_protocol_v3`,
+  versión V2.2. El snapshot usado para esta unidad tiene SHA-256
+  `828a077428987b2534e3733204ac721ef3073eb7dadf9530a6f46877dd63c503`.
+- **DOCUMENTOS:** se reconciliaron `docs/VE-T0-ANDROID-ASSET-MATRIX.md` y
+  `docs/VE-T0-ANDROID-SCREEN-MASTER-RECORDS.md` con `main` en
+  `45a7ca5247a03a58cc28cdc75ae2821ff7ac5179`, incluyendo criterios medibles de
+  device, safe area, touch, estados, motion/audio, rendimiento, persistencia y
+  release.
+- **EVIDENCIA:** `npm run verify:manifest` PASS — 224 assets inscritos, 22 rutas
+  de código, 0 referencias rotas y 1 HEAD diferido por `HTTP 429`;
+  `npm run verify:assets` PASS — 22/22; `node scripts/verify-residual-art.mjs`
+  PASS — 243 filas, 38 objetos servibles, 4 consumidos y 34 en reserva.
+- **REGLA CERO GENÉRICOS:** no se promovieron assets
+  `AVAILABLE_UNASSIGNED`/`REVIEW_REQUIRED`, no se inventaron consumidores, datos,
+  rutas ni fallback visual.
+- **NO APK:** no se tocó `mobile/**`, no se inició el workflow Android, no se
+  compiló APK y no se publicó release. El gate de dispositivo sigue
+  `PREPARED / EVIDENCE_REQUIRED`; `PROFILE_HISTORY_STATE_GAP` continúa
+  `BLOCKED`.
+- **PERSISTENCIA:** documentos y esta entrada se publican juntos en `main` por
+  la API REST HTTPS oficial de GitHub con `[skip ci]`, sin `git push`.
+- **STATUS:** `PREPARED / EVIDENCE_REQUIRED`; T0 no se declara `VERIFIED`,
+  `TIER1_READY` ni `OPERATIONAL`.
+- **NEXT BLOCK:** cerrar las matrices ejecutables y la evidencia física sólo
+  cuando se autorice QA/APK; hasta entonces continuar únicamente con una unidad
+  Android documental o de código que no toque `mobile/**` si el protocolo lo
+  permite.

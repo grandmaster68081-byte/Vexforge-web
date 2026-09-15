@@ -1,10 +1,13 @@
 # VEXFORGE — T0 Android Screen Master Records
 
-**Fecha:** 2026-09-14
+**Fecha:** 2026-09-15
 **Unidad:** T0 — Screen Master Records and visual acceptance register
 **Estado:** `PREPARED / EVIDENCE_REQUIRED`
 **Entorno activo:** aplicación Android en `mobile/**`
-**Baseline observado:** `main` en `6297f9b900c4fdc0ac2f02f447d3cfa5bcfdeb6`
+**Baseline observado:** `main` en `45a7ca5247a03a58cc28cdc75ae2821ff7ac5179`
+**Fuente activa reconciliada:** `public.vexforge_official_documents`
+(`vexforge_home_world_system_protocol_v3`, `ACTIVE`, V2.2)
+**Hash del protocolo leído:** `828a077428987b2534e3733204ac721ef3073eb7dadf9530a6f46877dd63c503`
 
 ## 1. Propósito
 
@@ -22,6 +25,10 @@ La autoridad de cada record se divide así:
   de assets;
 - evidencia de aceptación: dispositivo físico, captura, touch, estado,
   rendimiento y continuidad.
+
+Este registro refleja las secciones 72.3, 72.7 y 72.8 del protocolo activo. La
+existencia de una ruta, el typecheck, una guarda textual o una compilación no
+promueven un record a `VERIFIED`.
 
 ## 2. Inventario real de rutas
 
@@ -265,6 +272,26 @@ Los candidatos de la Device Matrix (`LOW`, `REFERENCE`, `HIGH`) siguen siendo
 candidatos: Samsung Galaxy A14 5G, Google Pixel 7a y Google Pixel 8 Pro no se
 declaran compatibles sin medición física.
 
+### 5.1 Campos medibles y criterio de bloqueo
+
+Cada evidence pack debe completar estos campos, incluso cuando el resultado sea
+`NOT_MEASURED`:
+
+| Campo | Umbral o valor requerido | Bloqueo |
+|---|---|---|
+| Dispositivo | modelo exacto, API, RAM, densidad, resolución, orientación | sin dispositivo físico nombrado → `EVIDENCE_REQUIRED` |
+| Safe area y legibilidad | insets observados, texto/cartas legibles, sin clipping | clipping o dato no comprobado → `BLOCKED` |
+| Interacción | tap, back, retry y hitboxes del record | acción duplicada, target inaccesible o no probado → `BLOCKED` |
+| Estados | `loading`, `empty`, `pending`, `error`, `locked`, `completed`, `recovery` según dominio | fallback genérico o estado omitido → `BLOCKED` |
+| Movimiento y audio | reduced-motion y mute comprobados; audio derivado del evento | comportamiento no medido → `EVIDENCE_REQUIRED` |
+| Rendimiento | sin crash/OOM; Battlefield/replay: captura de 30 s, frame time P95 ≤ 16,7 ms y P99 ≤ 25 ms | incumplimiento sin quality tier documentado → `BLOCKED` |
+| Persistencia | resultado, saldo, recompensa o settlement confirmado por fuente viva | éxito mostrado antes de persistir → `BLOCKED` |
+| Evidencia de release | APK, run, tag, SHA-256 y relación con el commit | ausencia de release cuando el cambio toque `mobile/**` → `EVIDENCE_REQUIRED` |
+
+El bloque actual no ejecuta APK ni altera `mobile/**`; por eso todos los records
+continúan en `STATIC_ONLY`. La matriz de dispositivos permanece
+`CANDIDATE / EVIDENCE_REQUIRED` y no se convierte en compatibilidad declarada.
+
 ## 6. Estado y bloqueos
 
 - `DEVICE_MATRIX`: `PREPARED / EVIDENCE_REQUIRED`.
@@ -272,7 +299,8 @@ declaran compatibles sin medición física.
 - `DOMAIN_SCENE_PROFILES`: preparados; no autorizan assets nuevos.
 - `VISUAL_ACCEPTANCE`: abierto.
 - `PROFILE_HISTORY_STATE_GAP`: `BLOCKED`.
-- Dos HEAD de Storage: diferidos por `HTTP 429`; deben reintentarse.
+- Un HEAD de Storage: diferido por `HTTP 429` en la última ejecución; debe
+  reintentarse.
 - APK, release y QA de dispositivo: no ejecutados en esta unidad por la
   instrucción de no compilar.
 
