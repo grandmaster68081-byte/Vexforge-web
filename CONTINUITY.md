@@ -1,3 +1,37 @@
+## 2026-09-15 — VE-MOB-T2V — PROFILE MODAL CONTENT TOKENS / IMPLEMENTED_UNVERIFIED
+
+- **BRANCH:** `main`.
+- **SCREEN / DOMAIN:** `PROFILE` / contenido de paneles modales, placas
+  métricas, filas de historial/ranking y cierre de sesión.
+- **BLOCK:** centralizar la presentación interna del modal después de cerrar su
+  armazón, sin tocar los datos autoritativos, estados, navegación ni acciones.
+- **WHAT CHANGED:** `VISUAL_TOKENS.profileModal.content` registra la
+  tipografía, separaciones, filas, ranking, altura de lista y cierre de sesión;
+  `profile.tsx` consume esos roles. La guardia visual exige su consumo.
+- **BEHAVIOR PRESERVED:** mismo copy, valores efectivos, `testID`,
+  accesibilidad, sesión, `signOut`, navegación, paneles, métricas vivas y
+  estados pending/empty/error.
+- **DATA PRESERVED:** no se añadieron solicitudes, estado, perfil, ranking,
+  historial, Supabase, Auth, RPCs, economía, gameplay, assets ni cambios en la
+  web congelada.
+- **MOTION / PERFORMANCE:** no se añadió movimiento, listener, render de
+  datos, timing ni trabajo en segundo plano; sólo se registraron roles
+  estáticos ya existentes.
+- **AUTHORITY:** fila ACTIVE de
+  `public.vexforge_official_documents / vexforge_home_world_system_protocol_v3`,
+  V2.2, consultada por HTTPS antes de la implementación.
+- **GUARD:** `node scripts/verify-mobile-visual-system.mjs`,
+  `node --check scripts/verify-mobile-visual-system.mjs` y `git diff --check`
+  pasaron.
+- **RELEASE GATE:** no se inició workflow Android, no se compiló APK y no se
+  publicó release; la evidencia física queda bajo el control del operador.
+- **STATUS:** `IMPLEMENTED_UNVERIFIED`.
+- **PERSISTENCIA:** publicar código, guardia, documento T2V y esta continuidad
+  juntos en `main` mediante la API REST HTTPS oficial de GitHub con `[skip ci]`,
+  sin `git push`.
+- **NEXT BLOCK:** continuar con otra pieza T2V explícita, sin tocar el motor de
+  juego, los contratos de Supabase, la web congelada ni el tutorial.
+
 ## 2026-09-15 — VE-MOB-T2V — PROFILE MODAL SHELL TOKENS / IMPLEMENTED_UNVERIFIED
 
 - **BRANCH:** `main`.

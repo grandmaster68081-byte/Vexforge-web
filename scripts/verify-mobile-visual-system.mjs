@@ -231,6 +231,17 @@ const profile = source('mobile/app/(tabs)/profile.tsx');
 if (!profile.includes("from '@/constants/experience'")) {
   failures.push('Profile does not consume shared visual tokens');
 }
+for (const token of [
+  'profileModal.content.eyebrow',
+  'profileModal.content.title',
+  'profileModal.content.muted',
+  'profileModal.content.row',
+  'profileModal.content.signOut',
+]) {
+  if (!profile.includes(`VISUAL_TOKENS.${token}`)) {
+    failures.push(`Profile modal is missing visual token "${token}"`);
+  }
+}
 if (!profile.includes('VISUAL_TOKENS.metricPlaque')) {
   failures.push('Profile does not consume metric plaque tokens');
 }
