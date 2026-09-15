@@ -295,6 +295,17 @@ for (const token of [
     failures.push(`Profile is missing action token "${token}"`);
   }
 }
+if (!profile.includes('VISUAL_TOKENS.profileFeedback')) {
+  failures.push('Profile does not consume feedback tokens');
+}
+for (const token of [
+  'profileFeedback.notice',
+  'profileFeedback.loading',
+]) {
+  if (!profile.includes(`VISUAL_TOKENS.${token}`)) {
+    failures.push(`Profile is missing feedback token "${token}"`);
+  }
+}
 
 const battlefield = source('mobile/components/ForgeBattlefield.tsx');
 if (!battlefield.includes("from '@/constants/experience'")) {

@@ -380,6 +380,22 @@ export const VISUAL_TOKENS = {
     iconSize: 18,
     labelSize: 11,
   },
+  profileFeedback: {
+    notice: {
+      horizontalInset: 18,
+      bottomInset: 14,
+      minHeight: 42,
+      borderWidth: 1,
+      radius: 12,
+      paddingHorizontal: 12,
+      paddingVertical: 8,
+      gap: 8,
+      iconSize: 16,
+      textSize: 11,
+      lineHeight: 15,
+    },
+    loading: { gap: 10, labelSize: 10, labelTracking: 1.3 },
+  },
   battlefield: {
     root: { radius: 22, padding: 12, gap: 10 },
     typography: {

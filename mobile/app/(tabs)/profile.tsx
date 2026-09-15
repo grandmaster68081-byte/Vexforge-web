@@ -446,7 +446,7 @@ export default function ProfileScreen() {
         </View>
         {syncError || detailsError ? (
           <View testID="profile-sync-error" accessibilityRole="alert" style={[styles.errorNotice, { backgroundColor: `${colors.danger}E8`, borderColor: colors.danger }]}>
-            <Ionicons name="alert-circle-outline" size={16} color={colors.foreground} />
+            <Ionicons name="alert-circle-outline" size={VISUAL_TOKENS.profileFeedback.notice.iconSize} color={colors.foreground} />
             <Text style={[styles.errorNoticeText, { color: colors.foreground }]}>{syncError ?? detailsError}</Text>
           </View>
         ) : null}
@@ -608,10 +608,37 @@ const styles = StyleSheet.create({
   xpValue: { right: '5%', top: '76.5%', width: '23%', textAlign: 'right', fontSize: 8, color: '#C8D0E9' },
   collectionValue: { left: '68%', top: '64.4%', width: '25%', textAlign: 'right', fontSize: 10, color: '#F0C050' },
   progressLevel: { left: '7%', top: '74.8%', width: '10%', textAlign: 'left', fontSize: 8, color: '#C8D0E9' },
-  errorNotice: { position: 'absolute', left: 18, right: 18, bottom: 14, minHeight: 42, borderWidth: 1, borderRadius: 12, paddingHorizontal: 12, paddingVertical: 8, flexDirection: 'row', alignItems: 'center', gap: 8 },
-  errorNoticeText: { flex: 1, fontFamily: typography.body, fontSize: 11, lineHeight: 15 },
-  loadingScreen: { flex: 1, alignItems: 'center', justifyContent: 'center', gap: 10 },
-  loadingText: { fontFamily: typography.bodyBold, fontSize: 10, letterSpacing: 1.3 },
+  errorNotice: {
+    position: 'absolute',
+    left: VISUAL_TOKENS.profileFeedback.notice.horizontalInset,
+    right: VISUAL_TOKENS.profileFeedback.notice.horizontalInset,
+    bottom: VISUAL_TOKENS.profileFeedback.notice.bottomInset,
+    minHeight: VISUAL_TOKENS.profileFeedback.notice.minHeight,
+    borderWidth: VISUAL_TOKENS.profileFeedback.notice.borderWidth,
+    borderRadius: VISUAL_TOKENS.profileFeedback.notice.radius,
+    paddingHorizontal: VISUAL_TOKENS.profileFeedback.notice.paddingHorizontal,
+    paddingVertical: VISUAL_TOKENS.profileFeedback.notice.paddingVertical,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: VISUAL_TOKENS.profileFeedback.notice.gap,
+  },
+  errorNoticeText: {
+    flex: 1,
+    fontFamily: typography.body,
+    fontSize: VISUAL_TOKENS.profileFeedback.notice.textSize,
+    lineHeight: VISUAL_TOKENS.profileFeedback.notice.lineHeight,
+  },
+  loadingScreen: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: VISUAL_TOKENS.profileFeedback.loading.gap,
+  },
+  loadingText: {
+    fontFamily: typography.bodyBold,
+    fontSize: VISUAL_TOKENS.profileFeedback.loading.labelSize,
+    letterSpacing: VISUAL_TOKENS.profileFeedback.loading.labelTracking,
+  },
   modalBackdrop: { flex: 1, justifyContent: 'flex-end', backgroundColor: '#000000B8' },
   modalPanel: { maxHeight: '78%', minHeight: 260, borderTopWidth: 1, borderTopLeftRadius: 20, borderTopRightRadius: 20, padding: 18 },
   modalHeader: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 },
