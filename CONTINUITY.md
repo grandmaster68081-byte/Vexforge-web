@@ -5162,3 +5162,35 @@
 - **NEXT BLOCK:** completar evidencia física sólo con autorización de APK; si
   continúa la restricción, avanzar únicamente con otra unidad documental que
   el protocolo permita sin tocar `mobile/**`.
+
+---
+## 2026-09-15 — VE-MOB-T0 — DOMAIN SCENE PROFILES / PREPARED
+
+- **ENTORNO ACTIVO:** aplicación Android en `mobile/**`; la web permanece
+  congelada.
+- **AUTORIDAD:** la fila ACTIVE de
+  `public.vexforge_official_documents/vexforge_home_world_system_protocol_v3`
+  sigue en V2.2, con SHA-256
+  `828a077428987b2534e3733204ac721ef3073eb7dadf9530a6f46877dd63c503`.
+- **DOCUMENTO:** se añadió
+  `docs/VE-T0-ANDROID-DOMAIN-SCENE-PROFILES.md`, con los diez perfiles
+  `DOMAIN_SCENE_PROFILES` de 72.8, sus rutas reales, sujetos visuales,
+  acentos, assets autorizados, datos vivos, estados, interacción y
+  prohibiciones.
+- **CAPAS TRANSVERSALES:** Auth y Tutorial quedan registrados como capas del
+  mismo sistema, no como rutas o paneles inventados. Safe areas, haptics,
+  audio, reduced-motion, retry, back y recovery permanecen obligatorios.
+- **FUENTE REAL:** los perfiles se derivaron de
+  `mobile/constants/visual.ts`, `src/lib/assetManifest.ts`,
+  `mobile/lib/supabase.ts`, los Screen Master Records y la matriz ejecutable
+  de estados. No se promovió ningún asset reservado o sin asignación.
+- **NO APK:** no se tocó `mobile/**`, no se inició workflow Android, no se
+  compiló APK y no se publicó release. Todos los perfiles permanecen
+  `PREPARED / EVIDENCE_REQUIRED`.
+- **PERSISTENCIA:** el documento y esta continuidad se publicarán juntos en
+  `main` mediante la API REST HTTPS oficial de GitHub con `[skip ci]`, sin
+  `git push`.
+- **STATUS:** T0 continúa abierto por evidencia física, el HEAD de Storage
+  diferido por `HTTP 429` y `PROFILE_HISTORY_STATE_GAP`.
+- **NEXT BLOCK:** mantener el trabajo dentro de unidades documentales
+  permitidas hasta que exista autorización explícita para APK y QA física.
