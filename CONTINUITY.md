@@ -6018,3 +6018,17 @@
 - **REGISTRO:** las dimensiones y hashes medidos de Auth/Home se corrigieron en `VE-T0-ANDROID-ASSET-REGISTRY.json`; el diagnóstico completo quedó en `docs/VE-MOB-VISUAL-DIMENSION-AUDIT-2026-09-15.md`.
 - **NO APK / NO RELEASE:** este audit no cambia consumidores, no inicia workflow Android, no sube fondos visuales y no publica release.
 - **NEXT:** decidir primero si Auth adopta el asset vertical existente y si Home conserva hero recortado o requiere una escena vertical; después ejecutar QA visual/táctil y workflow APK autorizado.
+
+---
+## 2026-09-15 — VE-MOB-3-HOME — OFFICIAL SCENE-INTEGRATED HOME / NO APK
+
+- **ENTORNO ACTIVO:** aplicación Android en `mobile/**`; la web permanece congelada.
+- **AUTORIDAD:** se leyó la fila `ACTIVE` de `public.vexforge_official_documents/vexforge_home_world_system_protocol_v3` mediante la API de gestión HTTPS de Supabase. La revisión viva es `V2.3 — CARDS-ONLY STORAGE / VISUAL SOURCE RESET`, actualizada el 2026-09-15.
+- **DECISIÓN VISUAL:** la imagen oficial entregada por el operador (`home-reference-scene.png`, SHA-256 `3bc35e53383164f0b25aafd2d04791522916e52e2cb07e202bbc15c77e2c3e8c`) se usa como la escena/estructura de FOJA: citadel, portales, núcleo, marco y cámara vertical. No se trata como una captura estática ni como un fondo con dashboard encima.
+- **IMPLEMENTACIÓN:** el Home integra sockets nativos dentro de la escena oficial para Arena, Forja, Archivo y Mundo; el pulso del núcleo, haz central, luz ambiental, parallax limitado y feedback háptico conviven con la composición. Los sockets navegan a las rutas Android reales y sus estados provienen de los datos cargados por Home.
+- **INTEGRIDAD:** se preservaron Supabase, Auth, RLS, RPCs, economía, combate, cartas, estados honestos, reduced-motion, safe area, refresh/retry, Tutorial, Misiones, Economía, Meta, Perfil y navegación inferior. No se inventaron datos, rutas, rewards ni arte de sustitución.
+- **DOCUMENTACIÓN:** se actualizó `docs/visual-assets/vexforge-home-screen-official.md` y se añadió el addendum de escena viva a `docs/VE-MOB-3-HOME.md`.
+- **PUBLICACIÓN:** implementación publicada en `main` mediante API REST HTTPS oficial de GitHub, sin `git push`, commit `229c010e582a940db5953dd86fe1e154b0263653`, con `[skip ci]`.
+- **VERIFICACIÓN:** `git diff --check` limpio. El typecheck móvil no pudo ejecutarse porque el firewall de paquetes devolvió `404` al instalar `npm-package-arg@11.0.3`; no se generó APK ni se inició release, conforme a la instrucción del operador.
+- **ESTADO HONESTO:** `IMPLEMENTED_UNVERIFIED / NO APK / NO RELEASE`; queda pendiente la verificación física de la escena, touch, safe areas, rendimiento y legibilidad en Android.
+- **NEXT:** autorizar explícitamente APK/QA cuando se quiera cerrar la evidencia física; no iniciar compilación automáticamente.
