@@ -48,6 +48,9 @@ la web congelada.
 - `ForgeBattlefield` consume `battlefield.typography` para la jerarquía del
   campo, turno, formaciones, cartas, reserva, carril de confrontación y
   resultado, preservando los datos y estados confirmados por el servidor.
+- `ForgeBattlefield` consume `battlefield.controls` para badge, rails,
+  tarjetas, HP, keywords, reserva y carril, manteniendo las mismas zonas de
+  interacción y lectura.
 
 ## Límites
 

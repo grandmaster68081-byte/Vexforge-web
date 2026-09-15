@@ -345,13 +345,18 @@ export function ForgeBattlefield({ finalUnits, currentTurn, turnIndex, totalTurn
 
 const styles = StyleSheet.create({
   root: {
-    borderWidth: 1,
+    borderWidth: VISUAL_TOKENS.battlefield.controls.borderWidth,
     borderRadius: VISUAL_TOKENS.battlefield.root.radius,
     padding: VISUAL_TOKENS.battlefield.root.padding,
     gap: VISUAL_TOKENS.battlefield.root.gap,
     overflow: 'hidden',
   },
-  topBar: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: 3 },
+  topBar: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: VISUAL_TOKENS.battlefield.controls.topBarPaddingHorizontal,
+  },
   eyebrow: {
     fontSize: VISUAL_TOKENS.battlefield.typography.eyebrow.fontSize,
     fontWeight: '900',
@@ -363,7 +368,13 @@ const styles = StyleSheet.create({
     letterSpacing: VISUAL_TOKENS.battlefield.typography.title.letterSpacing,
     marginTop: VISUAL_TOKENS.battlefield.typography.title.marginTop,
   },
-  turnBadge: { minWidth: 54, borderWidth: 1, borderRadius: 12, paddingVertical: 6, alignItems: 'center' },
+  turnBadge: {
+    minWidth: VISUAL_TOKENS.battlefield.controls.turnBadge.minWidth,
+    borderWidth: VISUAL_TOKENS.battlefield.controls.borderWidth,
+    borderRadius: VISUAL_TOKENS.battlefield.controls.turnBadge.radius,
+    paddingVertical: VISUAL_TOKENS.battlefield.controls.turnBadge.paddingVertical,
+    alignItems: 'center',
+  },
   turnValue: { fontSize: VISUAL_TOKENS.battlefield.typography.turnValue.fontSize, fontWeight: '900' },
   turnLabel: {
     fontSize: VISUAL_TOKENS.battlefield.typography.turnLabel.fontSize,
@@ -371,8 +382,11 @@ const styles = StyleSheet.create({
     letterSpacing: VISUAL_TOKENS.battlefield.typography.turnLabel.letterSpacing,
     marginTop: VISUAL_TOKENS.battlefield.typography.turnLabel.marginTop,
   },
-  sideBlock: { gap: 7 },
-  stateRail: { gap: 7, paddingTop: 2 },
+  sideBlock: { gap: VISUAL_TOKENS.battlefield.controls.sideBlockGap },
+  stateRail: {
+    gap: VISUAL_TOKENS.battlefield.controls.stateRail.gap,
+    paddingTop: VISUAL_TOKENS.battlefield.controls.stateRail.paddingTop,
+  },
   identityStrip: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -382,7 +396,7 @@ const styles = StyleSheet.create({
   identityMark: {
     width: VISUAL_TOKENS.battlefield.identity.markSize,
     height: VISUAL_TOKENS.battlefield.identity.markSize,
-    borderWidth: 1,
+    borderWidth: VISUAL_TOKENS.battlefield.controls.borderWidth,
     borderRadius: VISUAL_TOKENS.battlefield.identity.markRadius,
     alignItems: 'center',
     justifyContent: 'center',
@@ -408,13 +422,19 @@ const styles = StyleSheet.create({
   unitCard: {
     flex: 1,
     minWidth: 0,
-    borderWidth: 1,
+    borderWidth: VISUAL_TOKENS.battlefield.controls.borderWidth,
     borderRadius: VISUAL_TOKENS.battlefield.unitCard.radius,
     padding: VISUAL_TOKENS.battlefield.unitCard.padding,
     gap: VISUAL_TOKENS.battlefield.unitCard.gap,
   },
   championCard: { flex: 1.18 },
-  roleRow: { minHeight: 14, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 3 },
+  roleRow: {
+    minHeight: VISUAL_TOKENS.battlefield.controls.roleRow.minHeight,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    gap: VISUAL_TOKENS.battlefield.controls.roleRow.gap,
+  },
   roleText: {
     fontSize: VISUAL_TOKENS.battlefield.typography.roleText.fontSize,
     fontWeight: '900',
@@ -434,11 +454,11 @@ const styles = StyleSheet.create({
   championArt: { height: VISUAL_TOKENS.battlefield.championArtHeight },
   artMissing: {
     height: VISUAL_TOKENS.battlefield.unitArt.height,
-    borderWidth: 1,
+    borderWidth: VISUAL_TOKENS.battlefield.controls.artMissing.borderWidth,
     borderRadius: VISUAL_TOKENS.battlefield.unitArt.radius,
     alignItems: 'center',
     justifyContent: 'center',
-    gap: 3,
+    gap: VISUAL_TOKENS.battlefield.controls.artMissing.gap,
   },
   artMissingText: {
     fontSize: VISUAL_TOKENS.battlefield.typography.artMissing.fontSize,
@@ -456,11 +476,26 @@ const styles = StyleSheet.create({
     fontWeight: '900',
     letterSpacing: VISUAL_TOKENS.battlefield.typography.unitFaction.letterSpacing,
   },
-  hpTrack: { height: 5, borderRadius: 3, overflow: 'hidden', marginTop: 3 },
-  hpFill: { height: '100%', borderRadius: 3 },
+  hpTrack: {
+    height: VISUAL_TOKENS.battlefield.controls.hpTrack.height,
+    borderRadius: VISUAL_TOKENS.battlefield.controls.hpTrack.radius,
+    overflow: 'hidden',
+    marginTop: VISUAL_TOKENS.battlefield.controls.hpTrack.marginTop,
+  },
+  hpFill: { height: '100%', borderRadius: VISUAL_TOKENS.battlefield.controls.hpTrack.radius },
   hpText: { fontSize: VISUAL_TOKENS.battlefield.typography.hpText.fontSize, fontWeight: '700' },
-  keywordRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 3, minHeight: 13 },
-  keyword: { borderWidth: 1, borderRadius: 4, paddingHorizontal: 3, paddingVertical: 2 },
+  keywordRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: VISUAL_TOKENS.battlefield.controls.keywordRow.gap,
+    minHeight: VISUAL_TOKENS.battlefield.controls.keywordRow.minHeight,
+  },
+  keyword: {
+    borderWidth: VISUAL_TOKENS.battlefield.controls.keyword.borderWidth,
+    borderRadius: VISUAL_TOKENS.battlefield.controls.keyword.radius,
+    paddingHorizontal: VISUAL_TOKENS.battlefield.controls.keyword.paddingHorizontal,
+    paddingVertical: VISUAL_TOKENS.battlefield.controls.keyword.paddingVertical,
+  },
   keywordText: {
     fontSize: VISUAL_TOKENS.battlefield.typography.keyword.fontSize,
     fontWeight: '900',
@@ -473,17 +508,27 @@ const styles = StyleSheet.create({
     minHeight: VISUAL_TOKENS.battlefield.reserve.minHeight,
     paddingHorizontal: VISUAL_TOKENS.battlefield.reserve.paddingHorizontal,
   },
-  reserveHeader: { flexDirection: 'row', alignItems: 'center', gap: 4, minWidth: 62 },
+  reserveHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: VISUAL_TOKENS.battlefield.controls.reserveHeader.gap,
+    minWidth: VISUAL_TOKENS.battlefield.controls.reserveHeader.minWidth,
+  },
   reserveTitle: {
     fontSize: VISUAL_TOKENS.battlefield.typography.reserveTitle.fontSize,
     fontWeight: '900',
     letterSpacing: VISUAL_TOKENS.battlefield.typography.reserveTitle.letterSpacing,
   },
-  reserveItems: { flex: 1, flexDirection: 'row', flexWrap: 'wrap', gap: 4 },
+  reserveItems: {
+    flex: 1,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: VISUAL_TOKENS.battlefield.controls.reserveItemsGap,
+  },
   reserveItem: {
     width: VISUAL_TOKENS.battlefield.reserve.itemWidth,
     height: VISUAL_TOKENS.battlefield.reserve.itemHeight,
-    borderWidth: 1,
+    borderWidth: VISUAL_TOKENS.battlefield.controls.reserveBorderWidth,
     borderRadius: VISUAL_TOKENS.battlefield.reserve.itemRadius,
     overflow: 'hidden',
     alignItems: 'center',
@@ -492,14 +537,19 @@ const styles = StyleSheet.create({
   reserveArt: { width: '100%', height: '100%' },
   emptyReserve: { fontSize: VISUAL_TOKENS.battlefield.typography.emptyReserve.fontSize, fontWeight: '900' },
   lane: {
-    borderWidth: 1,
+    borderWidth: VISUAL_TOKENS.battlefield.controls.borderWidth,
     borderRadius: VISUAL_TOKENS.battlefield.lane.radius,
     paddingVertical: VISUAL_TOKENS.battlefield.lane.paddingVertical,
     paddingHorizontal: VISUAL_TOKENS.battlefield.lane.paddingHorizontal,
     alignItems: 'center',
     gap: VISUAL_TOKENS.battlefield.lane.gap,
   },
-  laneLine: { width: 34, height: 2, borderRadius: 1, marginBottom: 2 },
+  laneLine: {
+    width: VISUAL_TOKENS.battlefield.controls.laneLine.width,
+    height: VISUAL_TOKENS.battlefield.controls.laneLine.height,
+    borderRadius: VISUAL_TOKENS.battlefield.controls.laneLine.radius,
+    marginBottom: VISUAL_TOKENS.battlefield.controls.laneLine.marginBottom,
+  },
   laneLabel: {
     fontSize: VISUAL_TOKENS.battlefield.typography.laneLabel.fontSize,
     fontWeight: '900',

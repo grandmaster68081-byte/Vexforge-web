@@ -1,3 +1,26 @@
+## 2026-09-14 — VE-MOB-T2V — BATTLEFIELD CONTROL TOKENS / IMPLEMENTED_UNVERIFIED
+
+- **SCREEN / DOMAIN:** `ARENA` / `ForgeBattlefield`.
+- **BLOCK:** centralizar controles geométricos restantes del battlefield sin
+  alterar zonas funcionales, datos vivos ni semántica de combate.
+- **WHAT CHANGED:** `VISUAL_TOKENS.battlefield.controls` define borde, badge de
+  turno, rails, filas de rol, ausencia de arte, track HP, keywords, reserva y
+  línea del carril; `ForgeBattlefield` consume esos valores.
+- **DATA PRESERVED:** unidades, turnos, HP, eventos, roles, reservas, resultados,
+  labels de estado y cualquier valor confirmado por Supabase.
+- **MOTION / PERFORMANCE:** no se añadió movimiento, solicitud, listener,
+  inferencia ni render adicional de datos.
+- **GUARD:** `node scripts/verify-mobile-visual-system.mjs` y
+  `git diff --check`.
+- **RELEASE GATE:** no se inició workflow Android, no se compiló APK y no se
+  publicó release; QA visual/táctil queda pendiente de autorización.
+- **STATUS:** `IMPLEMENTED_UNVERIFIED`.
+- **PERSISTENCIA:** publicar código, guardia, documento T2V y continuidad juntos
+  en `main` mediante la API REST HTTPS oficial de GitHub con `[skip ci]`, sin
+  `git push`.
+- **NEXT BLOCK:** continuar con otra pieza T2V explícita, sin tocar el motor de
+  juego, la web congelada ni el tutorial.
+
 ## 2026-09-14 — VE-MOB-T2V — BATTLEFIELD TYPOGRAPHY TOKENS / IMPLEMENTED_UNVERIFIED
 
 - **SCREEN / DOMAIN:** `ARENA` / `ForgeBattlefield`.
