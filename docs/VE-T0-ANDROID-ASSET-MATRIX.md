@@ -43,6 +43,7 @@ consumo automático.
 | `mobile/assets/images/battle-reference-scene.png` | Escena de combate | `CANON_ACTIVE` | Battlefield | `VEXFORGE-ASSET-ATLAS.md` |
 | `docs/visual-assets/vexforge-battle-screen-premium-1080x2340.png` | Referencia visual Battlefield aprobada por el operador | `REVIEW_REQUIRED` | Battlefield | `docs/VE-MOB-VISUAL-BATTLE-SCREEN-PREMIUM.md`, registro T0 |
 | `mobile/assets/images/collection-archive-scene.jpg` | Escena de Archivo | `CANON_ACTIVE` | Collection | `VEXFORGE-ASSET-ATLAS.md` |
+| `docs/visual-assets/vexforge-collection-screen-premium-1080x2340.png` | Referencia visual Collection aprobada por el operador | `REVIEW_REQUIRED` | Collection | `docs/visual-assets/vexforge-collection-screen-premium-1080x2340.md`, registro T0 |
 | `mobile/assets/images/decks-reference-scene.png` | Escena de formación | `CANON_ACTIVE` | Deck | `VEXFORGE-ASSET-ATLAS.md` |
 | `mobile/assets/images/profile-reference-scene.png` | Escena de identidad | `CANON_ACTIVE` | Profile | `VEXFORGE-ASSET-ATLAS.md` |
 | `mobile/assets/images/home-reference-scene.png` | Escena de referencia visual y fondo del hero funcional | `CANON_ACTIVE` | Home | `mobile/app/(tabs)/index.tsx`, `mobile/constants/visual.ts`, `VEXFORGE-ASSET-ATLAS.md` |

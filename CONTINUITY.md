@@ -5934,3 +5934,16 @@
 - **CARDS-ONLY STORAGE:** no se subió a Storage ni se habilitó una ruta visual no-carta; no se reactivan fondos históricos ni assets eliminados.
 - **NO APK / NO RELEASE:** no se tocó `mobile/**`, no se inició workflow Android, no se compiló APK y no se publicó release nuevo.
 - **NEXT:** la pantalla de Cartas generada en esta sesión queda como propuesta visual separada; requiere aprobación explícita antes de entrar en el registro oficial.
+
+
+---
+## 2026-09-15 — VE-MOB-VISUAL — COLLECTION PREMIUM REFERENCE APPROVED / NO APK
+
+- **ENTORNO ACTIVO:** aplicación Android en `mobile/**`; la web permanece congelada.
+- **UNIDAD:** se guardó en `main` la referencia visual premium de Collection / Archivo `docs/visual-assets/vexforge-collection-screen-premium-1080x2340.png` junto con su ficha de procedencia.
+- **IDENTIDAD:** deriva de `mobile/assets/images/home-reference-scene.png` y del perfil Collection / Archivo del protocolo ACTIVE: violeta + plata, cartas, artefactos, rareza, facción, lore, procedencia y mastery.
+- **MEDICIÓN:** `1080 × 2340`, PNG, SHA-256 `232280411aa29614e58d324ae98799ec118317ed87a4303fc088e890cb268edd`.
+- **ESTADO HONESTO:** `OPERATOR_APPROVED_REFERENCE / ANDROID_NOT_ACTIVATED`; queda registrado como `REVIEW_REQUIRED` hasta tener consumidor Android real, fallback, APK y evidencia física.
+- **CARDS-ONLY STORAGE:** no se subió a Storage ni se habilitó una ruta visual no-carta; el arte real de cartas conserva su fuente viva en `cards.image_url`.
+- **NO APK / NO RELEASE:** no se tocó `mobile/**`, no se inició workflow Android, no se compiló APK y no se publicó release nuevo.
+- **NEXT:** la pantalla de Perfil generada en esta sesión queda como propuesta visual separada; requiere aprobación explícita antes de entrar en el registro oficial.
