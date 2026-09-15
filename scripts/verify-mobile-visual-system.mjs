@@ -358,6 +358,17 @@ if (!battlefield.includes('VISUAL_TOKENS.battlefield.controls')) {
   failures.push('ForgeBattlefield does not consume battlefield control tokens');
 }
 for (const token of [
+  'battlefield.icons.artMissing',
+  'battlefield.icons.reserveHeader',
+  'battlefield.icons.reserveFallback',
+  'battlefield.icons.stateHeader',
+  'battlefield.icons.identity',
+]) {
+  if (!battlefield.includes(`VISUAL_TOKENS.${token}`)) {
+    failures.push(`ForgeBattlefield is missing icon token "${token}"`);
+  }
+}
+for (const token of [
   'battlefield.typography.eyebrow.fontWeight',
   'battlefield.typography.title.fontWeight',
   'battlefield.typography.turnValue.fontWeight',

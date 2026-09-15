@@ -142,7 +142,7 @@ function UnitCard({
         <Image source={{ uri: unit.image_url }} resizeMode="cover" style={[styles.unitArt, role === 'CAMPEÓN' ? styles.championArt : null]} />
       ) : (
         <View style={[styles.artMissing, { borderColor: colors.border }]}>
-          <Feather name="image" size={18} color={colors.mutedForeground} />
+          <Feather name="image" size={VISUAL_TOKENS.battlefield.icons.artMissing} color={colors.mutedForeground} />
           <Text style={[styles.artMissingText, { color: colors.mutedForeground }]}>ARTE NO DISPONIBLE</Text>
         </View>
       )}
@@ -173,13 +173,13 @@ function ReserveRail({ units, colors, side }: { units: BattleUnit[]; colors: Col
   return (
     <View testID={`battlefield-${side}-reserve`} accessible accessibilityLabel={`${side === 'a' ? 'Tu' : 'Rival'} reserva. ${units.length} cartas.`} style={styles.reserveRail}>
       <View style={styles.reserveHeader}>
-        <Feather name="layers" size={13} color={colors.mutedForeground} />
+        <Feather name="layers" size={VISUAL_TOKENS.battlefield.icons.reserveHeader} color={colors.mutedForeground} />
         <Text style={[styles.reserveTitle, { color: colors.mutedForeground }]}>RESERVA</Text>
       </View>
       <View style={styles.reserveItems}>
         {units.length > 0 ? units.map((unit, index) => (
           <View key={`${unit.id ?? unit.name ?? 'reserve'}-${index}`} style={[styles.reserveItem, { borderColor: factionColor(unit.faction, colors) }]}>
-            {unit.image_url ? <Image source={{ uri: unit.image_url }} resizeMode="cover" style={styles.reserveArt} /> : <Feather name="image" size={12} color={colors.mutedForeground} />}
+            {unit.image_url ? <Image source={{ uri: unit.image_url }} resizeMode="cover" style={styles.reserveArt} /> : <Feather name="image" size={VISUAL_TOKENS.battlefield.icons.reserveFallback} color={colors.mutedForeground} />}
           </View>
         )) : <Text style={[styles.emptyReserve, { color: colors.mutedForeground }]}>RESERVA VACÍA</Text>}
       </View>
@@ -203,13 +203,13 @@ function StateRail({
   return (
     <View testID={testID} accessible accessibilityLabel={accessibilityLabel} style={styles.stateRail}>
       <View style={styles.reserveHeader}>
-        <Feather name="alert-circle" size={13} color={colors.mutedForeground} />
+        <Feather name="alert-circle" size={VISUAL_TOKENS.battlefield.icons.stateHeader} color={colors.mutedForeground} />
         <Text style={[styles.reserveTitle, { color: colors.mutedForeground }]}>{label}</Text>
       </View>
       <View style={styles.reserveItems}>
         {units.map((unit, index) => (
           <View key={`${unit.id ?? unit.name ?? 'state'}-${index}`} style={[styles.reserveItem, { borderColor: unit.alive === false ? colors.danger : colors.border }]}>
-            {unit.image_url ? <Image source={{ uri: unit.image_url }} resizeMode="cover" style={styles.reserveArt} /> : <Feather name="image" size={12} color={colors.mutedForeground} />}
+            {unit.image_url ? <Image source={{ uri: unit.image_url }} resizeMode="cover" style={styles.reserveArt} /> : <Feather name="image" size={VISUAL_TOKENS.battlefield.icons.reserveFallback} color={colors.mutedForeground} />}
           </View>
         ))}
       </View>
@@ -261,7 +261,7 @@ export function ForgeBattlefield({ finalUnits, currentTurn, turnIndex, totalTurn
     <View testID={`battlefield-${side}-formation`} style={styles.sideBlock}>
       <View style={styles.identityStrip}>
         <View style={[styles.identityMark, { borderColor: side === 'a' ? colors.primary : colors.danger }]}>
-          <Feather name={side === 'a' ? 'user' : 'shield'} size={14} color={side === 'a' ? colors.primary : colors.danger} />
+          <Feather name={side === 'a' ? 'user' : 'shield'} size={VISUAL_TOKENS.battlefield.icons.identity} color={side === 'a' ? colors.primary : colors.danger} />
         </View>
         <View style={styles.identityCopy}>
           <Text style={[styles.identityKicker, { color: side === 'a' ? colors.primary : colors.danger }]}>{side === 'a' ? 'TU FORMACIÓN' : 'FORMACIÓN RIVAL'}</Text>

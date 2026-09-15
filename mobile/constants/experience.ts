@@ -483,6 +483,13 @@ export const VISUAL_TOKENS = {
   },
   battlefield: {
     root: { radius: 22, padding: 12, gap: 10 },
+    icons: {
+      artMissing: 18,
+      reserveHeader: 13,
+      reserveFallback: 12,
+      stateHeader: 13,
+      identity: 14,
+    },
     typography: {
       eyebrow: { fontSize: 8, fontWeight: '900', letterSpacing: 1.2 },
       title: { fontSize: 18, fontWeight: '900', letterSpacing: 0.4, marginTop: 3 },
