@@ -22,41 +22,17 @@
     "La promoción requiere consumidor Android real, procedencia, fallback honesto, evidencia física y entrada en CONTINUITY.md."
   ],
   "coverage": {
-    "local_repository_entries": 13,
+    "local_repository_entries": 12,
     "verified_storage_paths": 22,
     "reserved_surface_paths": 11,
     "reserved_residual_paths": 34,
-    "total_entries": 80,
+    "total_entries": 79,
     "local_hashes_measured": 16,
     "storage_hashes_measured": 0,
     "pending_source_backgrounds": 0,
     "approved_reference_entries": 3
   },
   "entries": [
-    {
-      "asset_id": "android-local:auth-reference-scene.png",
-      "class": "local_scene_or_hero",
-      "origin": "repository",
-      "path": "mobile/assets/images/auth-reference-scene.png",
-      "dimensions": {
-        "width": 1024,
-        "height": 1024
-      },
-      "format": "png",
-      "hash": "d6da089a845e7a4732f7e6097d5bd2fe99fe2cb62959ee9e6c8848d012116a43",
-      "hash_algorithm": "sha256",
-      "hash_status": "MEASURED",
-      "provenance": [
-        "repository file",
-        "docs/VE-T0-ANDROID-ASSET-MATRIX.md",
-        "docs/VEXFORGE-ASSET-ATLAS.md"
-      ],
-      "authorized_domains": [
-        "Auth"
-      ],
-      "state": "CANON_ACTIVE",
-      "debt": "Active Auth reference is square; dimension audit recorded. Full-frame Android replacement remains pending visual decision and QA."
-    },
     {
       "asset_id": "android-local:battle-reference-scene.png",
       "class": "local_scene_or_hero",
@@ -264,8 +240,8 @@
         "Auth",
         "Nexus"
       ],
-      "state": "AVAILABLE_UNASSIGNED",
-      "debt": "Referencia opcional sin consumidor canónico activo asignado."
+      "state": "CANON_ACTIVE",
+      "debt": "Escena vertical Auth/Nexus 1080×2340 promovida como referencia oficial y consumida por CANONICAL_BACKGROUNDS.auth; QA física pendiente."
     },
     {
       "asset_id": "android-local:vexforge-feature-card.png",

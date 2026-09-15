@@ -15,7 +15,7 @@ Estos assets ya tienen un consumidor real en Android o forman parte del registro
 | `mobile/assets/images/home-reference-scene.png` | Home | Escena de referencia visual aprobada y base del hero funcional |
 | `mobile/assets/images/vexforge-hero-sentinel.png` | Home | Personaje/elemento de primer plano |
 | `mobile/assets/images/vexforge-feature-card.png` | Home | Carta destacada |
-| `mobile/assets/images/auth-reference-scene.png` | Auth | Escena de acceso |
+| `mobile/assets/images/vexforge-auth-nexus-final.png` | Auth / Nexus | Escena vertical oficial de acceso |
 | `mobile/assets/images/battle-reference-scene.png` | Batalla | Escena de combate |
 | `mobile/assets/images/collection-archive-scene.jpg` | Colección | Escena oficial de archivo |
 | `mobile/assets/images/decks-reference-scene.png` | Mazo | Escena de formación |
@@ -32,7 +32,6 @@ Estos assets quedan disponibles para selección, comparación, inspiración o re
 
 | Asset | Uso permitido |
 |---|---|
-| `mobile/assets/images/vexforge-auth-nexus-final.png` | Referencia opcional para futuras composiciones de Auth/Nexus |
 | `mobile/assets/images/icon.jpg` | Referencia de estilo heredado; no arte diegético obligatorio |
 
 Los assets de esta lista conservan el estado `AVAILABLE_UNASSIGNED` hasta que

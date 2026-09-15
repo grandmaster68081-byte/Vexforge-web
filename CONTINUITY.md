@@ -1,3 +1,16 @@
+## 2026-09-15 — VE-MOB-VISUAL — AUTH OFFICIAL VERTICAL REFERENCE / IMPLEMENTED_UNVERIFIED
+
+- **ENTORNO ACTIVO:** aplicación Android en `mobile/**`; la web permanece congelada.
+- **DECISIÓN DEL OPERADOR:** se retira de la referencia activa la escena cuadrada `mobile/assets/images/auth-reference-scene.png` (`1024×1024`) y no se edita ni se estira.
+- **REFERENCIA OFICIAL:** `mobile/assets/images/vexforge-auth-nexus-final.png`, PNG RGBA, `1080×2340`, SHA-256 `dc598706823ab41fd8ceabc162f4118fc2515da2f74d808e80910e7497e38c32`.
+- **CONSUMIDOR:** `CANONICAL_BACKGROUNDS.auth` pasa a usar la escena vertical oficial de Auth/Nexus; el asset cuadrado se elimina del árbol de assets Android y del registro canónico.
+- **GENERACIÓN:** el candidato generado durante esta sesión devolvió `1024×1024`; no se promovió, no se deformó y no se usó para reemplazar la escena oficial.
+- **SUPABASE:** la decisión se ejecutó bajo la fila `ACTIVE` `public.vexforge_official_documents / vexforge_home_world_system_protocol_v3`, V2.3.
+- **QA HONESTA:** queda `IMPLEMENTED_UNVERIFIED`; no hay dispositivo/emulador disponible para certificar teclado, safe area, legibilidad, navegación ni composición física.
+- **RELEASE GATE:** no se compiló APK, no se inició workflow Android y no se publicó release, conforme a la instrucción de no compilar sin autorización explícita.
+
+---
+
 ## 2026-09-15 — VE-MOB-5/3/2 — OFFICIAL ASSETS + APK EVIDENCE / IMPLEMENTED_UNVERIFIED
 
 - **ENTORNO ACTIVO:** aplicación Android en `mobile/**`; la web permanece congelada.

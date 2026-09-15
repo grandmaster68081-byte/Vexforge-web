@@ -20,7 +20,7 @@ export const OFFICIAL_ASSETS = {
 
 export const CANONICAL_BACKGROUNDS = {
   home: require('../assets/images/home-reference-scene.png'),
-  auth: require('../assets/images/auth-reference-scene.png'),
+  auth: require('../assets/images/vexforge-auth-nexus-final.png'),
   pvp: null,
   missions: null,
   packs: null,

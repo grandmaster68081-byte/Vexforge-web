@@ -29,7 +29,7 @@ genérica.
 
 ## 2. Inventario local de Android
 
-El baseline contiene 13 imágenes locales. La clasificación siguiente es
+El baseline contiene 12 imágenes locales. La clasificación siguiente es
 intencionalmente conservadora: `CANON_ACTIVE` sólo se usa cuando el atlas o el
 registro visual ya asignan un consumidor; `AVAILABLE_UNASSIGNED` no autoriza
 consumo automático.
@@ -39,7 +39,7 @@ consumo automático.
 | `mobile/assets/images/vexforge-home-hero.png` | Ancla de escena Nexus | `CANON_ACTIVE` | Home | `mobile/constants/visual.ts`, `VEXFORGE-ASSET-ATLAS.md` |
 | `mobile/assets/images/vexforge-hero-sentinel.png` | Elemento de primer plano | `CANON_ACTIVE` | Home | `mobile/constants/visual.ts`, `VEXFORGE-ASSET-ATLAS.md` |
 | `mobile/assets/images/vexforge-feature-card.png` | Carta destacada | `CANON_ACTIVE` | Home | `mobile/constants/visual.ts`, `VEXFORGE-ASSET-ATLAS.md` |
-| `mobile/assets/images/auth-reference-scene.png` | Escena de acceso | `CANON_ACTIVE` | Auth | `VEXFORGE-ASSET-ATLAS.md` |
+| `mobile/assets/images/vexforge-auth-nexus-final.png` | Escena vertical oficial de acceso/Nexus (`1080×2340`) | `CANON_ACTIVE` | Auth | `mobile/constants/visual.ts`, `VEXFORGE-ASSET-ATLAS.md` |
 | `mobile/assets/images/battle-reference-scene.png` | Escena de combate | `CANON_ACTIVE` | Battlefield | `VEXFORGE-ASSET-ATLAS.md` |
 | `docs/visual-assets/vexforge-battle-screen-premium-1080x2340.png` | Referencia visual Battlefield aprobada por el operador | `REVIEW_REQUIRED` | Battlefield | `docs/VE-MOB-VISUAL-BATTLE-SCREEN-PREMIUM.md`, registro T0 |
 | `mobile/assets/images/collection-archive-scene.jpg` | Escena de Archivo | `CANON_ACTIVE` | Collection | `VEXFORGE-ASSET-ATLAS.md` |
@@ -48,7 +48,6 @@ consumo automático.
 | `mobile/assets/images/profile-reference-scene.png` | Escena de identidad | `CANON_ACTIVE` | Profile | `VEXFORGE-ASSET-ATLAS.md` |
 | `docs/visual-assets/vexforge-profile-screen-premium-1080x2340.png` | Referencia visual Profile aprobada por el operador | `REVIEW_REQUIRED` | Profile | `docs/visual-assets/vexforge-profile-screen-premium-1080x2340.md`, registro T0 |
 | `mobile/assets/images/home-reference-scene.png` | Escena de referencia visual y fondo del hero funcional | `CANON_ACTIVE` | Home | `mobile/app/(tabs)/index.tsx`, `mobile/constants/visual.ts`, `VEXFORGE-ASSET-ATLAS.md` |
-| `mobile/assets/images/vexforge-auth-nexus-final.png` | Referencia opcional de Auth/Nexus | `AVAILABLE_UNASSIGNED` | Auth | `VEXFORGE-ASSET-ATLAS.md` |
 | `mobile/assets/images/icon.jpg` | Referencia de estilo heredado | `AVAILABLE_UNASSIGNED` | Compartido | `VEXFORGE-ASSET-ATLAS.md` |
 | `mobile/assets/images/collection-reference-scene.png` | Asset local sin asignación explícita en el atlas | `REVIEW_REQUIRED` | Collection | inventario de repositorio; requiere decisión de consumidor |
 | `mobile/assets/images/deck-forge-scene.jpg` | Asset local sin asignación explícita en el atlas | `REVIEW_REQUIRED` | Deck / Forge | inventario de repositorio; requiere decisión de consumidor |
