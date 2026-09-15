@@ -5272,3 +5272,16 @@
 - **PRESERVED:** victorias, derrotas, empates, posiciones, historial de partidas, cartas, saldos, nivel, progreso y permisos no fueron modificados.
 - **VERIFY:** todas las filas MMR consultadas reportan `min=1000`, `max=1000`, `non1000=0`; la vista `pvp_arena_players` muestra a la cuenta QA en `1000`.
 - **STATUS:** `COMPLETED`; las posiciones históricas se conservaron deliberadamente y no se recalcularon.
+
+---
+## 2026-09-15 — VE-MOB-T0 — VISUAL ACCEPTANCE CONTRACT / PREPARED
+
+- **ENTORNO ACTIVO:** aplicación Android en `mobile/**`; la web permanece congelada.
+- **UNIDAD:** se añadió `docs/VE-T0-ANDROID-VISUAL-ACCEPTANCE.md` como contrato explícito para `VISUAL_ACCEPTANCE`, derivado de la sección 72.8, los 13 Screen Master Records, la matriz de estados y el registro de dispositivos.
+- **ALCANCE:** define `NOT_MEASURED`, `EVIDENCE_CAPTURED`, `BLOCKED` y `VERIFIED`; gates de procedencia, estados honestos, interacción, safe area, motion/audio, recovery, persistencia, rendimiento y trazabilidad de release.
+- **COBERTURA:** 13 rutas × 3 tiers = 39 celdas; todas permanecen `NOT_MEASURED / EVIDENCE_REQUIRED`. Ningún candidato se promueve a `SUPPORTED`.
+- **REGLA CERO GENÉRICOS:** el contrato bloquea arte, datos, estados, resultados o compatibilidad inventados; typecheck, captura conceptual y HTTP 200 no sustituyen evidencia física.
+- **NO APK:** no se modificó `mobile/**`, no se inició workflow Android, no se compiló APK y no se publicó release.
+- **COMMIT:** documento publicado en `main` como `729eee816cd25bd7422c8cd29220031d82956f45` con `[skip ci]`.
+- **STATUS:** `PREPARED / EVIDENCE_REQUIRED`; `PROFILE_HISTORY_STATE_GAP` continúa `BLOCKED` y T0 no se declara `VERIFIED`, `TIER1_READY` ni `OPERATIONAL`.
+- **NEXT BLOCK:** mantener el gate físico cerrado y avanzar sólo con otra unidad T0 documental permitida hasta autorización explícita de APK/QA.
