@@ -347,6 +347,15 @@ export const VISUAL_TOKENS = {
     labelSize: 8,
     labelTracking: 0.6,
   },
+  profileIdentity: {
+    card: { borderWidth: 1, radius: 16, padding: 14, gap: 11 },
+    avatar: { size: 54, borderWidth: 1, radius: 17, textSize: 20, textWeight: '900' },
+    eyebrow: { fontSize: 8, letterSpacing: 1.1 },
+    name: { fontSize: 20, marginTop: 3 },
+    meta: { fontSize: 10, marginTop: 3 },
+    status: { fontSize: 9, marginTop: 5 },
+    action: { size: 36, borderWidth: 1, radius: 10, iconSize: 17 },
+  },
   battlefield: {
     root: { radius: 22, padding: 12, gap: 10 },
     typography: {

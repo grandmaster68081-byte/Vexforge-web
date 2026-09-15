@@ -386,7 +386,7 @@ export default function ProfileScreen() {
               <Text style={[styles.identityStatus, { color: syncState === 'connected' ? colors.success : colors.danger }]}>● {syncState === 'connected' ? 'En línea' : 'Sin conexión'} · {currentRank}</Text>
             </View>
             <Pressable testID="profile-edit" accessibilityRole="button" accessibilityLabel="Editar perfil" onPress={() => action('meta')} style={({ pressed }) => [styles.identityAction, { borderColor: colors.border, opacity: pressed ? 0.68 : 1, transform: [{ translateY: pressed ? 2 : 0 }] }]}>
-              <Ionicons name="create-outline" size={17} color={colors.accent} />
+              <Ionicons name="create-outline" size={VISUAL_TOKENS.profileIdentity.action.iconSize} color={colors.accent} />
             </Pressable>
           </View>
           <View style={styles.profileStatsGrid}>
@@ -466,15 +466,56 @@ const styles = StyleSheet.create({
   referenceImage: { width: '100%', height: '100%' },
   programmaticProfileContent: { flexGrow: 1, paddingHorizontal: 18, gap: 14 },
   programmaticProfileScene: { borderWidth: 1, borderRadius: 20, padding: 14, gap: 14 },
-  identityCard: { borderWidth: 1, borderRadius: 16, padding: 14, flexDirection: 'row', alignItems: 'center', gap: 11 },
-  avatar: { width: 54, height: 54, borderWidth: 1, borderRadius: 17, alignItems: 'center', justifyContent: 'center' },
-  avatarText: { fontFamily: typography.display, fontSize: 20, fontWeight: '900' },
+  identityCard: {
+    borderWidth: VISUAL_TOKENS.profileIdentity.card.borderWidth,
+    borderRadius: VISUAL_TOKENS.profileIdentity.card.radius,
+    padding: VISUAL_TOKENS.profileIdentity.card.padding,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: VISUAL_TOKENS.profileIdentity.card.gap,
+  },
+  avatar: {
+    width: VISUAL_TOKENS.profileIdentity.avatar.size,
+    height: VISUAL_TOKENS.profileIdentity.avatar.size,
+    borderWidth: VISUAL_TOKENS.profileIdentity.avatar.borderWidth,
+    borderRadius: VISUAL_TOKENS.profileIdentity.avatar.radius,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  avatarText: {
+    fontFamily: typography.display,
+    fontSize: VISUAL_TOKENS.profileIdentity.avatar.textSize,
+    fontWeight: VISUAL_TOKENS.profileIdentity.avatar.textWeight,
+  },
   identityCopy: { flex: 1, minWidth: 0 },
-  identityEyebrow: { fontFamily: typography.bodyBold, fontSize: 8, letterSpacing: 1.1 },
-  identityName: { fontFamily: typography.display, fontSize: 20, marginTop: 3 },
-  identityMeta: { fontFamily: typography.body, fontSize: 10, marginTop: 3 },
-  identityStatus: { fontFamily: typography.bodyBold, fontSize: 9, marginTop: 5 },
-  identityAction: { width: 36, height: 36, borderWidth: 1, borderRadius: 10, alignItems: 'center', justifyContent: 'center' },
+  identityEyebrow: {
+    fontFamily: typography.bodyBold,
+    fontSize: VISUAL_TOKENS.profileIdentity.eyebrow.fontSize,
+    letterSpacing: VISUAL_TOKENS.profileIdentity.eyebrow.letterSpacing,
+  },
+  identityName: {
+    fontFamily: typography.display,
+    fontSize: VISUAL_TOKENS.profileIdentity.name.fontSize,
+    marginTop: VISUAL_TOKENS.profileIdentity.name.marginTop,
+  },
+  identityMeta: {
+    fontFamily: typography.body,
+    fontSize: VISUAL_TOKENS.profileIdentity.meta.fontSize,
+    marginTop: VISUAL_TOKENS.profileIdentity.meta.marginTop,
+  },
+  identityStatus: {
+    fontFamily: typography.bodyBold,
+    fontSize: VISUAL_TOKENS.profileIdentity.status.fontSize,
+    marginTop: VISUAL_TOKENS.profileIdentity.status.marginTop,
+  },
+  identityAction: {
+    width: VISUAL_TOKENS.profileIdentity.action.size,
+    height: VISUAL_TOKENS.profileIdentity.action.size,
+    borderWidth: VISUAL_TOKENS.profileIdentity.action.borderWidth,
+    borderRadius: VISUAL_TOKENS.profileIdentity.action.radius,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   profileStatsGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
   profileStat: { width: '48%', minHeight: 82, borderWidth: 1, borderRadius: 13, padding: 10, justifyContent: 'center', gap: 4 },
   profileStatValue: { fontFamily: typography.display, fontSize: 20 },

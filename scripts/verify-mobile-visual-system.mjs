@@ -234,6 +234,22 @@ if (!profile.includes("from '@/constants/experience'")) {
 if (!profile.includes('VISUAL_TOKENS.metricPlaque')) {
   failures.push('Profile does not consume metric plaque tokens');
 }
+if (!profile.includes('VISUAL_TOKENS.profileIdentity')) {
+  failures.push('Profile does not consume profile identity tokens');
+}
+for (const token of [
+  'profileIdentity.card',
+  'profileIdentity.avatar',
+  'profileIdentity.eyebrow',
+  'profileIdentity.name',
+  'profileIdentity.meta',
+  'profileIdentity.status',
+  'profileIdentity.action',
+]) {
+  if (!profile.includes(`VISUAL_TOKENS.${token}`)) {
+    failures.push(`Profile is missing identity token "${token}"`);
+  }
+}
 
 const battlefield = source('mobile/components/ForgeBattlefield.tsx');
 if (!battlefield.includes("from '@/constants/experience'")) {

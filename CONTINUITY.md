@@ -1,3 +1,31 @@
+## 2026-09-15 — VE-MOB-T2V — PROFILE IDENTITY TOKENS / IMPLEMENTED_UNVERIFIED
+
+- **BRANCH:** `main`.
+- **SCREEN / DOMAIN:** `PROFILE` / tarjeta de identidad del forjador.
+- **BLOCK:** extraer la geometría, escala tipográfica y control de edición del
+  encabezado de identidad sin tocar datos de perfil, ranking o progreso.
+- **WHAT CHANGED:** `VISUAL_TOKENS.profileIdentity` define tarjeta, avatar,
+  eyebrow, nombre, metadata, estado y acción; `profile.tsx` consume esos roles
+  para la identidad visible y el icono de editar.
+- **BEHAVIOR PRESERVED:** mismos valores efectivos de borde, radio, padding,
+  gap, avatar `54`, texto `20/900`, copy, estado de conexión, acción `meta`,
+  accesibilidad y tamaños de icono.
+- **DATA PRESERVED:** perfil, sesión, ranking, estadísticas, logros,
+  historial, Supabase, Auth, RPCs, economía, gameplay, rutas y web congelada.
+- **MOTION / PERFORMANCE:** no se añadió movimiento, listener, solicitud,
+  estado ni render de datos; sólo se centralizaron valores estáticos.
+- **GUARD:** `node scripts/verify-mobile-visual-system.mjs`,
+  `node --check scripts/verify-mobile-visual-system.mjs` y `git diff --check`
+  pasaron.
+- **RELEASE GATE:** no se inició workflow Android, no se compiló APK y no se
+  publicó release; QA visual/táctil física queda pendiente.
+- **STATUS:** `IMPLEMENTED_UNVERIFIED`.
+- **PERSISTENCIA:** publicar código, guardia T2V y esta continuidad juntos en
+  `main` mediante la API REST HTTPS oficial de GitHub con `[skip ci]`, sin
+  `git push`.
+- **NEXT BLOCK:** continuar con otra pieza T2V explícita, sin tocar el motor de
+  juego, los contratos de Supabase, la web congelada ni el tutorial.
+
 ## 2026-09-15 — VE-MOB-T2V — ERROR FALLBACK ICON AND TYPE WEIGHTS / IMPLEMENTED_UNVERIFIED
 
 - **BRANCH:** `main`.
