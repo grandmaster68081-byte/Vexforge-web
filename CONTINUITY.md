@@ -1,3 +1,33 @@
+## 2026-09-14 — T0 MATRICES — ASSET REGISTER / SCREEN MASTER RECORDS / PREPARED
+
+- **ENTORNO ACTIVO:** Android en `mobile/**`; la web permanece congelada.
+- **BASELINE:** `main` observado en `6297f9b900c4fdc0ac2f02f447d3cfa5bcfdeb6b`.
+- **ASSET MATRIX:** se añadió `docs/VE-T0-ANDROID-ASSET-MATRIX.md` con los 13
+  assets locales, el reparto `CANON_ACTIVE` / `AVAILABLE_UNASSIGNED` /
+  `REVIEW_REQUIRED`, las superficies remotas verificadas y la regla de cero
+  genéricos. El manifiesto sigue siendo la fuente única de procedencia.
+- **SCREEN MASTER RECORDS:** se añadió
+  `docs/VE-T0-ANDROID-SCREEN-MASTER-RECORDS.md` para las 13 rutas Android de
+  producto reales, sus sujetos, contratos, assets, estados y gates de
+  aceptación. No se inventaron rutas separadas de Rewards o Live Operations.
+- **ESTADOS HONESTOS:** los records exigen `loading`, `empty`, `pending`,
+  `error`, `locked`, `completed` y `recovery` donde el contrato los permita;
+  los campos sin evidencia siguen pendientes.
+- **BLOQUEOS CONSERVADOS:** `PROFILE_HISTORY_STATE_GAP` permanece
+  `BLOCKED`; dos HEAD de Storage siguen diferidos por `HTTP 429`; los
+  dispositivos LOW/REFERENCE/HIGH siguen siendo candidatos sin soporte
+  declarado.
+- **ALCANCE:** sólo documentación y registro T0. No se tocó `mobile/**`, no se
+  inició workflow Android, no se compiló APK y no se publicó release.
+- **STATUS:** `PREPARED / EVIDENCE_REQUIRED`; no se declara `VERIFIED`,
+  `TIER1_READY` ni `OPERATIONAL`.
+- **PERSISTENCIA:** publicar los dos records y esta continuidad juntos en
+  `main` por la API REST HTTPS oficial de GitHub, sin `git push` y sin disparar
+  el workflow APK.
+- **NEXT BLOCK:** continuar con una unidad independiente del protocolo o
+  resolver `PROFILE_HISTORY_STATE_GAP` bajo el gate de release; ninguna opción
+  puede cerrar T0 sin evidencia física y de Storage.
+
 ## 2026-09-14 — PROTOCOL REFERENCE — UNIFIED FINAL WORLD VISUAL / INTEGRATED_UNVERIFIED
 
 - **RESPUESTA:** el protocolo está más cerca de la meta porque ahora expresa no sólo reglas y gates, sino también una dirección visual común para el producto completo. La posibilidad de alcanzar Tier 1/premium es real; no equivale todavía a declarar un juego AAA terminado.
