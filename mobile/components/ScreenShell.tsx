@@ -19,7 +19,7 @@ import { DomainHeader } from '@/components/DomainHeader';
 export function ScreenShell({ surface = 'home', sceneMode = 'shell', children, style, ...props }: ViewProps & { surface?: VisualSurface; sceneMode?: 'shell' | 'hero' }) {
   const colors = useColors();
   const insets = useSafeAreaInsets();
-  const webTopInset = Platform.OS === 'web' ? 67 : 0;
+  const webTopInset = Platform.OS === 'web' ? VISUAL_TOKENS.safeArea.webTopInset : 0;
   const ownsScene = sceneMode === 'shell';
   const pulse = useSharedValue(0);
   const reduceMotion = useReducedMotion();
@@ -137,7 +137,7 @@ export function ScreenShell({ surface = 'home', sceneMode = 'shell', children, s
           </View>
         </View>
       ) : null}
-      <View style={[styles.content, { paddingBottom: Platform.OS === 'web' ? 34 : insets.bottom }]}>
+      <View style={[styles.content, { paddingBottom: Platform.OS === 'web' ? VISUAL_TOKENS.safeArea.webBottomInset : insets.bottom }]}>
         {surface === 'clans' ? (
           <DomainHeader
             domain="legado"

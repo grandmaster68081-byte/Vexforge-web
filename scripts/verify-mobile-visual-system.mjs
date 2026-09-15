@@ -103,6 +103,11 @@ if (!screenShell.includes('VISUAL_TOKENS.scene')) {
 if (!screenShell.includes('VISUAL_TOKENS.state.assetError')) {
   failures.push('ScreenShell does not consume asset error state tokens');
 }
+for (const token of ['safeArea.webTopInset', 'safeArea.webBottomInset']) {
+  if (!screenShell.includes(`VISUAL_TOKENS.${token}`)) {
+    failures.push(`ScreenShell is missing safe-area token "${token}"`);
+  }
+}
 
 if (!state.includes('VISUAL_TOKENS.state')) {
   failures.push('DomainState does not consume state tokens');
@@ -152,6 +157,9 @@ if (!navigation.includes("from '@/constants/experience'")) {
 }
 if (!navigation.includes('VISUAL_TOKENS.navigation')) {
   failures.push('TabLayout does not consume navigation tokens');
+}
+if (!navigation.includes('VISUAL_TOKENS.safeArea.webBottomInset')) {
+  failures.push('TabLayout does not consume the shared web safe-area token');
 }
 
 const identityMark = source('mobile/components/ForgeMark.tsx');

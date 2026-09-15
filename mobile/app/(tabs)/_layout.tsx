@@ -65,7 +65,7 @@ function ClassicTabLayout() {
   const colors = useColors();
   const isWeb = Platform.OS === 'web';
   const insets = useSafeAreaInsets();
-  const bottomInset = isWeb ? 34 : insets.bottom;
+  const bottomInset = isWeb ? VISUAL_TOKENS.safeArea.webBottomInset : insets.bottom;
 
   return (
     <Tabs

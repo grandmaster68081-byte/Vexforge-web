@@ -145,6 +145,8 @@ export const VISUAL_TOKENS = {
     horizontal: 16,
     topContent: 18,
     bottomNavigation: 108,
+    webTopInset: 67,
+    webBottomInset: 34,
   },
   motion: {
     micro: MOTION.micro,

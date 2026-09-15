@@ -1,3 +1,28 @@
+## 2026-09-15 — VE-MOB-T2V — SHARED SAFE AREA TOKENS / IMPLEMENTED_UNVERIFIED
+
+- **BRANCH:** `main`.
+- **SCREEN / DOMAIN:** `ScreenShell` y navegación clásica de los cinco dominios
+  Android/Web compartidos.
+- **BLOCK:** activar el contrato visual `VISUAL_TOKENS.safeArea` para los offsets
+  compartidos del shell y la barra clásica sin alterar el layout resultante.
+- **WHAT CHANGED:** `safeArea` define `webTopInset` y `webBottomInset`;
+  `ScreenShell` y `ClassicTabLayout` consumen esos roles en lugar de los
+  literales equivalentes `67` y `34`.
+- **DATA PRESERVED:** rutas, tabs, safe areas nativas, Supabase, Auth, RPCs,
+  economía, combate, event log, settlement, assets oficiales y web congelada.
+- **MOTION / PERFORMANCE:** no se añadieron solicitudes, listeners, estado,
+  movimiento ni renders de datos; sólo se centralizaron valores estáticos.
+- **GUARD:** `node scripts/verify-mobile-visual-system.mjs`,
+  `node --check scripts/verify-mobile-visual-system.mjs` y `git diff --check`.
+- **RELEASE GATE:** no se inició workflow Android, no se compiló APK y no se
+  publicó release; QA visual/táctil queda pendiente de autorización.
+- **STATUS:** `IMPLEMENTED_UNVERIFIED`.
+- **PERSISTENCIA:** publicar código, guarda T2V y esta continuidad juntos en
+  `main` mediante la API REST HTTPS oficial de GitHub con `[skip ci]`, sin
+  `git push`.
+- **NEXT BLOCK:** continuar con otra pieza T2V explícita, sin tocar el motor de
+  juego, los contratos de Supabase, la web congelada ni el tutorial.
+
 ## 2026-09-15 — VE-MOB-T2V — ERROR FALLBACK DEPTH TOKENS / IMPLEMENTED_UNVERIFIED
 
 - **BRANCH:** `main`.
