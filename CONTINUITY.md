@@ -5299,3 +5299,16 @@
 - **COMMIT:** documento publicado en `main` como `7527a50bec8dc2e0b85fef395ec3aef97300b00c` con `[skip ci]`.
 - **STATUS:** `RULES_MATRIX`, `EVENT_MATRIX` y `SETTLEMENT_MATRIX` quedan `PREPARED / EVIDENCE_REQUIRED`; T0 no se declara `VERIFIED`, `TIER1_READY` ni `OPERATIONAL`.
 - **NEXT BLOCK:** mantener el gate físico y de release cerrado; la verificación posterior requiere simulator, replay, concurrencia y APK/QA sólo con autorización explícita.
+
+---
+## 2026-09-15 — VE-MOB-VERIFICATION — APK / CÓDIGO / SUPABASE CORRELATION / EVIDENCE_REQUIRED
+
+- **ENTORNO ACTIVO:** aplicación Android en `mobile/**`; la web permanece congelada. Esta unidad fue una verificación de solo lectura; no cambió código Android, backend, Auth, RLS, RPCs, datos ni Storage.
+- **AUTORIDAD CONSULTADA:** repositorio oficial `main`, fila ACTIVE `public.vexforge_official_documents / vexforge_home_world_system_protocol_v3` en Supabase, workflow oficial `Build VEXFORGE Android APK`, release y asset APK públicos.
+- **CORRELACIÓN DE CÓDIGO:** el último commit que tocó `mobile/**` es `e318ab1dd542395d2178cd26e5c2f201a81713b0` y el workflow Android run `243` terminó `success` sobre ese commit. El HEAD actual de `main` es `767ea71dbb1767e23f12b0beff22a7d4be522d93`; la comparación posterior contiene sólo `CONTINUITY.md` y documentos T0, sin cambios en `mobile/**`.
+- **RELEASE:** `vexforge-android-build-243` está publicado como prerelease con `app-release.apk`; el asset descargable respondió correctamente, mide `99,240,140` bytes, tiene SHA-256 `57bf24911d36b220ca43dcbe7e82e65c738907516d56b3e34fc7c8fe8a9dc02a` y contiene `assets/index.android.bundle`, por lo que es una APK standalone con el JavaScript embebido.
+- **SUPABASE VIVO / QA:** autenticación de solo lectura correcta para `cristiangalvez815@gmail.com`; la ruta de datos Android devuelve 127 cartas activas, una fila de progreso, estadísticas, rango y 2 oponentes PvP. La cuenta en vivo reporta `role=owner`, `is_admin=true` e `is_super_admin=true`; esto no coincide con una cuenta QA limitada y queda como discrepancia de permisos que no se modifica en esta verificación.
+- **PROTOCOLO:** el bloque ACTIVE exige que una unidad Android no se marque `VERIFIED` sólo por compilar; requiere evidencia física de APK/QA visual-táctil, estados, safe area, rendimiento, persistencia y release. `DEVICE_MATRIX`, `VISUAL_STATE_MATRIX`, `DOMAIN_SCENE_PROFILES` y `VISUAL_ACCEPTANCE` continúan `PREPARED / EVIDENCE_REQUIRED`; `PROFILE_HISTORY_STATE_GAP` sigue `BLOCKED`.
+- **CONCLUSIÓN HONESTA:** el código Android sí está correlacionado con la APK 243, y la APK sí está conectada al Supabase oficial. Sin embargo, el trabajo documental del protocolo no cambia por sí mismo la aplicación instalada y las unidades posteriores al build 243 no entraron en una APK nueva. Por eso no se puede afirmar que la instalación del operador muestre esos cambios ni cerrar `VERIFIED` sin evidencia física del dispositivo.
+- **NO APK / NO RELEASE NUEVO:** se respetó la restricción del operador: no se inició workflow, no se compiló APK y no se publicó release nuevo. Esta entrada de continuidad es documental y se publica con `[skip ci]`.
+- **STATUS:** `VERIFICATION_COMPLETE / EVIDENCE_REQUIRED`; `TIER1_READY` y `OPERATIONAL` no se declaran.
