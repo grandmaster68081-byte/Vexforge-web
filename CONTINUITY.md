@@ -1,3 +1,15 @@
+## 2026-09-14 — VE-MOB — ANDROID APK BUILD 243 / APK_RELEASE_PUBLISHED
+
+- **BRANCH:** `main`.
+- **SOURCE COMMIT:** `e318ab1dd542395d2178cd26e5c2f201a81713b0`, descendiente directo del último commit T2V `c7685aaf8204b3d89c1f7a04619f7b110693a863` y de toda la historia anterior de `main`.
+- **WORKFLOW:** `Build VEXFORGE Android APK`, run `34926222192`, terminó en `success`.
+- **GATES:** typecheck, telemetría, contratos móviles, `expo prebuild`, `assembleRelease`, verificación del bundle JS embebido y publicación del release terminaron correctamente.
+- **RELEASE:** `vexforge-android-build-243`.
+- **APK:** `app-release.apk`, SHA-256 `57bf24911d36b220ca43dcbe7e82e65c738907516d56b3e34fc7c8fe8a9dc02a`.
+- **DOWNLOAD:** `https://github.com/grandmaster68081-byte/Vexforge-web/releases/download/vexforge-android-build-243/app-release.apk`.
+- **STATUS:** `APK_RELEASE_PUBLISHED`; la verificación visual/táctil física con la cuenta QA designada queda pendiente y no se declara `VERIFIED` sólo por compilar.
+- **PERSISTENCIA:** esta evidencia de release y continuidad se publica en `main` mediante la API REST HTTPS oficial de GitHub, sin `git push`; no modifica `mobile/**`, por lo que no requiere una segunda APK.
+
 ## 2026-09-14 — VE-MOB-T2V — BATTLEFIELD TYPOGRAPHY WEIGHTS / IMPLEMENTED_UNVERIFIED
 
 - **BRANCH:** `main`.
