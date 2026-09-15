@@ -280,3 +280,11 @@ La Fase VISUAL no se declara cerrada sólo por compilar: debe alcanzar al menos 
 - Release publicado: `vexforge-android-build-186`, `app-release.apk`, `114535020` bytes, SHA-256 `331575d4e8bc284702d3502291338ea223819bdbfe93e3cf635425c7586c328e`.
 - Descarga oficial: https://github.com/grandmaster68081-byte/Vexforge-web/releases/download/vexforge-android-build-186/app-release.apk
 - Estado honesto: `IMPLEMENTED_UNVERIFIED`. La QA visual/táctil humana, el criterio vivo de primera impresión y la medición Android de accesibilidad/rendimiento siguen pendientes; compilar correctamente no permite declarar `TIER1_READY`.
+
+## Addendum 2026-09-15 — HOME VIVO DENTRO DE LA ESCENA OFICIAL
+
+- La referencia oficial entregada por el operador se conserva como `home-reference-scene.png` y sigue siendo la autoridad visual del Home: citadel, portales, núcleo, marco y cámara vertical.
+- El Home Android no convierte la referencia en una captura estática ni en un fondo con un dashboard encima. La escena monta sockets nativos dentro de la composición: Arena, Forja, Archivo y Mundo ocupan los portales visuales de la referencia y abren sus rutas Android reales.
+- El pulso del núcleo, el haz central, la luz ambiental, el parallax limitado, la respuesta háptica, los estados de sincronización y el contenido vivo de Supabase conviven en el mismo lienzo. La carta y la identidad se mantienen como arte vivo con sus propios estados de carga/error.
+- Se conserva el resto del recorrido funcional del Home: Misiones, Economía, Tutorial, Meta, Perfil, refresh, retry, reduced-motion, safe area y navegación inferior. No se crean datos, rutas ni lógica autoritativa paralela.
+- **Estado:** `IMPLEMENTED_UNVERIFIED / NO APK`; el workflow Android, el release y la QA física quedan expresamente diferidos hasta autorización del operador.

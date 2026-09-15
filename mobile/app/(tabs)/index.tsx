@@ -252,6 +252,56 @@ function SceneOrbitPoint({
   return <DomainNode portal={portal} signal={signal} onPress={onPress} />;
 }
 
+function NexusWorldScene({
+  portals,
+  pulseStyle,
+  onPortalPress,
+}: {
+  portals: Array<Parameters<typeof DomainNode>[0]['portal']>;
+  pulseStyle: StyleProp<ViewStyle>;
+  onPortalPress: (portal: Parameters<typeof DomainNode>[0]['portal']) => void;
+}) {
+  const colors = useColors();
+  const scenePortals = portals.filter((portal) => ['arena', 'forge', 'archive', 'world'].includes(portal.id));
+
+  return (
+    <View pointerEvents="box-none" style={styles.nexusWorldScene} testID="home-native-scene" accessibilityLabel="Escena viva del Nexus con citadel, núcleo y portales interactivos">
+      <View pointerEvents="none" style={styles.sceneLightColumns}>
+        <View style={[styles.sceneLightColumn, styles.sceneLightColumnLeft, { backgroundColor: `${colors.rarityRare}16` }]} />
+        <View style={[styles.sceneLightColumn, styles.sceneLightColumnCenter, { backgroundColor: `${colors.accent}24` }]} />
+        <View style={[styles.sceneLightColumn, styles.sceneLightColumnRight, { backgroundColor: `${colors.rarityEpic}18` }]} />
+      </View>
+      <View pointerEvents="none" style={styles.sceneBridge}>
+        <LinearGradient colors={['transparent', `${colors.ink}A8`, colors.ink]} style={StyleSheet.absoluteFill} />
+        <View style={[styles.sceneBridgeRail, { backgroundColor: `${colors.accent}B8` }]} />
+        <Animated.View style={[styles.sceneForgeCore, { backgroundColor: colors.accent }, pulseStyle]} />
+      </View>
+      {scenePortals.map((portal) => (
+        <Pressable
+          key={portal.id}
+          accessibilityRole="button"
+          accessibilityLabel={`Abrir ${portal.label}. ${portal.status}`}
+          testID={`home-scene-portal-${portal.id}`}
+          onPress={() => onPortalPress(portal)}
+          style={({ pressed }) => [
+            styles.scenePortalMarker,
+            portal.id === 'arena' || portal.id === 'archive' ? styles.scenePortalLeft : styles.scenePortalRight,
+            portal.id === 'arena' || portal.id === 'forge' ? styles.scenePortalHigh : styles.scenePortalLow,
+            { opacity: pressed ? 0.7 : portal.active ? 1 : 0.78 },
+          ]}
+        >
+          <View style={[styles.scenePortalRing, { borderColor: `${portal.color}${portal.active ? 'C8' : '78'}`, backgroundColor: `${portal.color}12` }]}>
+            <View style={[styles.scenePortalCore, { backgroundColor: portal.color, opacity: portal.active ? 1 : 0.55 }]} />
+            <Icon name={portal.icon} color={portal.color} size={15} />
+          </View>
+          <Text style={[styles.scenePortalLabel, { color: portal.color }]}>{portal.label}</Text>
+          <Text numberOfLines={1} style={[styles.scenePortalStatus, { color: `${colors.foreground}B8` }]}>{portal.active ? 'ACTIVO' : 'EN ESPERA'}</Text>
+        </Pressable>
+      ))}
+    </View>
+  );
+}
+
 function OperationGate({
   label,
   title,
@@ -700,17 +750,20 @@ export default function ForgeScreen() {
           scrollEventThrottle={16}
         >
            <View style={[styles.heroStage, { backgroundColor: identityVisual?.overlay ?? colors.ink, height: heroHeight }]}>
-             <View pointerEvents="none" style={styles.heroSceneViewport}>
+             <View pointerEvents="box-none" style={styles.heroSceneViewport}>
                {homeSceneSource ? (
                  <Animated.Image
                    source={homeSceneSource}
                    style={[styles.heroSceneReference, heroParallaxStyle]}
                    resizeMode="cover"
-                   accessibilityLabel="Escena oficial viva del Nexus Home"
+                   accessibilityLabel="Referencia oficial integrada como escena viva del Nexus Home"
                    onLoad={() => setHomeSceneState('ready')}
                    onError={() => setHomeSceneState('error')}
                  />
                ) : null}
+               <Animated.View style={[styles.sceneDepthLayer, heroParallaxStyle]}>
+                 <NexusWorldScene portals={domainPortals} pulseStyle={pulseStyle} onPortalPress={(portal) => navigate(portal.route)} />
+               </Animated.View>
                {identityCard?.image_url && identityAssetState !== 'error' ? (
                  <Animated.Image
                    source={{ uri: identityCard.image_url }}
@@ -738,7 +791,7 @@ export default function ForgeScreen() {
              {homeSceneState === 'error' ? (
                <View pointerEvents="none" testID="home-scene-state" style={[styles.heroAssetError, { borderColor: `${colors.accent}80` }]}>
                  <Text style={[styles.heroAssetErrorTitle, { color: colors.accent }]}>ESCENA DEL NEXUS NO DISPONIBLE</Text>
-                 <Text style={[styles.heroAssetErrorBody, { color: `${colors.foreground}CC` }]}>La referencia oficial no pudo cargarse.</Text>
+                 <Text style={[styles.heroAssetErrorBody, { color: `${colors.foreground}CC` }]}>La referencia visual no pudo cargarse.</Text>
                </View>
              ) : null}
             <LinearGradient colors={[`${colors.ink}18`, `${colors.ink}42`, `${colors.ink}D4`, colors.background]} locations={[0, 0.25, 0.56, 1]} style={StyleSheet.absoluteFill} />
@@ -1225,7 +1278,39 @@ const styles = StyleSheet.create({
   scrollContent: { gap: 0 },
   heroStage: { overflow: 'hidden', position: 'relative' },
   heroSceneViewport: { ...StyleSheet.absoluteFillObject, overflow: 'hidden' },
-  heroSceneReference: { height: '112%', left: '-6%', position: 'absolute', top: '-6%', width: '112%' },
+  sceneDepthLayer: { ...StyleSheet.absoluteFillObject },
+  nexusWorldScene: { ...StyleSheet.absoluteFillObject, overflow: 'hidden' },
+  sceneSkyVeil: { ...StyleSheet.absoluteFillObject },
+  sceneAurora: { borderRadius: 220, borderWidth: 1, height: 360, left: '18%', opacity: 0.72, position: 'absolute', top: -120, width: 360 },
+  sceneLightColumns: { ...StyleSheet.absoluteFillObject },
+  sceneLightColumn: { borderRadius: 90, height: '78%', opacity: 0.58, position: 'absolute', top: '-8%', transform: [{ skewX: '-14deg' }], width: 34 },
+  sceneLightColumnLeft: { left: '20%' },
+  sceneLightColumnCenter: { left: '48%', width: 46 },
+  sceneLightColumnRight: { right: '18%' },
+  sceneStars: { ...StyleSheet.absoluteFillObject },
+  sceneStar: { borderRadius: 3, height: 3, position: 'absolute', width: 3 },
+  sceneCitadel: { alignItems: 'center', height: 290, left: '50%', marginLeft: -105, position: 'absolute', top: 62, width: 210 },
+  sceneCitadelHalo: { borderRadius: 110, borderWidth: 1, height: 210, position: 'absolute', top: 2, width: 210 },
+  sceneCitadelCrown: { borderBottomWidth: 34, borderLeftWidth: 48, borderRightWidth: 48, borderStyle: 'solid', borderTopColor: 'transparent', height: 0, position: 'absolute', top: 28, width: 0 },
+  sceneCitadelTower: { alignItems: 'center', borderWidth: 1, height: 150, position: 'absolute', top: 58, width: 80 },
+  sceneCitadelWindow: { height: 84, opacity: 0.72, position: 'absolute', top: 34, width: 12 },
+  sceneCitadelWindowCore: { height: 18, opacity: 0.8, position: 'absolute', top: 67, width: 4 },
+  sceneCitadelSpire: { height: 68, position: 'absolute', top: 12, transform: [{ rotate: '45deg' }], width: 18 },
+  sceneCitadelWing: { borderWidth: 1, bottom: 28, height: 112, position: 'absolute', transform: [{ skewY: '-12deg' }], width: 44 },
+  sceneCitadelWingLeft: { left: 12 },
+  sceneCitadelWingRight: { right: 12, transform: [{ skewY: '12deg' }] },
+  sceneBridge: { bottom: 0, height: 230, left: 0, position: 'absolute', right: 0 },
+  sceneBridgeRail: { bottom: 70, height: 1, left: '17%', position: 'absolute', right: '17%' },
+  sceneForgeCore: { alignSelf: 'center', borderRadius: 22, bottom: 47, height: 44, opacity: 0.5, position: 'absolute', width: 44 },
+  scenePortalMarker: { alignItems: 'center', position: 'absolute', width: 82, zIndex: 3 },
+  scenePortalLeft: { left: '10%' },
+  scenePortalRight: { right: '10%' },
+  scenePortalHigh: { top: '31%' },
+  scenePortalLow: { top: '49%' },
+  scenePortalRing: { alignItems: 'center', borderRadius: 31, borderWidth: 1, height: 62, justifyContent: 'center', width: 62 },
+  scenePortalCore: { borderRadius: 18, height: 36, opacity: 0.34, position: 'absolute', width: 36 },
+  scenePortalLabel: { fontFamily: 'Rajdhani_700Bold', fontSize: 9, letterSpacing: 1.1, marginTop: 6 },
+  scenePortalStatus: { fontFamily: 'Rajdhani_600SemiBold', fontSize: 7, letterSpacing: 0.8, marginTop: 1 },
   heroIdentityBackdrop: { height: '124%', left: '-26%', opacity: 0.22, position: 'absolute', top: '-14%', width: '152%' },
   heroSceneAtmosphere: { borderRadius: 220, height: 360, position: 'absolute', right: -154, top: 52, width: 360 },
   heroSceneMist: { bottom: -80, height: 360, left: -80, position: 'absolute', width: '120%' },

@@ -19,8 +19,9 @@ export const OFFICIAL_ASSETS = {
 } as const;
 
 export const CANONICAL_BACKGROUNDS = {
-  // The official Home art is scene artwork, not a screenshot of UI. Native
-  // controls, live identity data and motion layers remain separate.
+  // The official reference is a scene plate, not a screenshot. Runtime adds
+  // live portal sockets, lighting, motion and Supabase-driven content inside
+  // its authored frame rather than placing a generic dashboard above it.
   home: require('../assets/images/home-reference-scene.png'),
   auth: require('../assets/images/vexforge-auth-nexus-final.png'),
   pvp: null,
