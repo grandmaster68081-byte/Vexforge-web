@@ -18,6 +18,7 @@ import { useGame } from '@/context/GameContext';
 import { ScreenShell } from '@/components/ScreenShell';
 import { DomainState } from '@/components/DomainState';
 import { ProgressBar } from '@/components/ProgressBar';
+import { VISUAL_TOKENS } from '@/constants/experience';
 import {
   claimWorldSeasonTier,
   contributeWorldRaid,
@@ -158,27 +159,27 @@ function rewardText(reward: Record<string, unknown> | undefined) {
 
 function WorldHeader({ panel, onPanelChange, onRefresh, refreshing, colors }: { panel: Panel; onPanelChange: (panel: Panel) => void; onRefresh: () => void; refreshing: boolean; colors: Colors }) {
   return (
-    <View style={styles.header}>
-      <View style={styles.headerTop}>
-        <View style={[styles.headerSeal, { backgroundColor: `${colors.accent}14`, borderColor: `${colors.accent}88` }]}>
-          <Feather name="globe" size={19} color={colors.accent} />
+    <View style={worldHeaderStyles.header}>
+      <View style={worldHeaderStyles.headerTop}>
+        <View style={[worldHeaderStyles.headerSeal, { backgroundColor: `${colors.accent}14`, borderColor: `${colors.accent}88` }]}>
+          <Feather name="globe" size={VISUAL_TOKENS.worldHeader.seal.iconSize} color={colors.accent} />
         </View>
-        <View style={styles.headerCopy}>
-          <Text style={[styles.eyebrow, { color: colors.accent }]}>VEXFORGE / WORLD</Text>
-          <Text style={[styles.title, { color: colors.foreground }]}>Mundo navegable</Text>
+        <View style={worldHeaderStyles.headerCopy}>
+          <Text style={[worldHeaderStyles.eyebrow, { color: colors.accent }]}>VEXFORGE / WORLD</Text>
+          <Text style={[worldHeaderStyles.title, { color: colors.foreground }]}>Mundo navegable</Text>
         </View>
-        <Pressable testID="world-refresh" accessibilityRole="button" accessibilityLabel="Actualizar mundo" onPress={onRefresh} style={({ pressed }) => [styles.refreshButton, { borderColor: colors.border, opacity: pressed ? 0.65 : 1 }]}>
-          {refreshing ? <ActivityIndicator size="small" color={colors.accent} /> : <Feather name="refresh" size={17} color={colors.foreground} />}
+        <Pressable testID="world-refresh" accessibilityRole="button" accessibilityLabel="Actualizar mundo" onPress={onRefresh} style={({ pressed }) => [worldHeaderStyles.refreshButton, { borderColor: colors.border, opacity: pressed ? 0.65 : 1 }]}>
+          {refreshing ? <ActivityIndicator size="small" color={colors.accent} /> : <Feather name="refresh" size={VISUAL_TOKENS.worldHeader.refresh.iconSize} color={colors.foreground} />}
         </Pressable>
       </View>
-      <Text style={[styles.copy, { color: colors.mutedForeground }]}>Explora los frentes vivos, las incursiones cooperativas, el Codex y el pulso competitivo de la temporada.</Text>
-      <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.tabs}>
+      <Text style={[worldHeaderStyles.copy, { color: colors.mutedForeground }]}>Explora los frentes vivos, las incursiones cooperativas, el Codex y el pulso competitivo de la temporada.</Text>
+      <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={worldHeaderStyles.tabs}>
         {PANELS.map((item) => {
           const active = item.id === panel;
           return (
-            <Pressable key={item.id} testID={`world-tab-${item.id}`} accessibilityRole="tab" accessibilityState={{ selected: active }} onPress={() => onPanelChange(item.id)} style={[styles.tab, { backgroundColor: active ? `${colors.accent}18` : colors.panel, borderColor: active ? colors.accent : colors.border }]}>
+            <Pressable key={item.id} testID={`world-tab-${item.id}`} accessibilityRole="tab" accessibilityState={{ selected: active }} onPress={() => onPanelChange(item.id)} style={[worldHeaderStyles.tab, { backgroundColor: active ? `${colors.accent}18` : colors.panel, borderColor: active ? colors.accent : colors.border }]}>
               <Feather name={item.icon} size={14} color={active ? colors.accent : colors.mutedForeground} />
-              <Text style={[styles.tabText, { color: active ? colors.accent : colors.mutedForeground }]}>{item.label}</Text>
+              <Text style={[worldHeaderStyles.tabText, { color: active ? colors.accent : colors.mutedForeground }]}>{item.label}</Text>
             </Pressable>
           );
         })}
@@ -186,6 +187,68 @@ function WorldHeader({ panel, onPanelChange, onRefresh, refreshing, colors }: { 
     </View>
   );
 }
+
+const worldHeaderStyles = StyleSheet.create({
+  header: {
+    paddingHorizontal: VISUAL_TOKENS.worldHeader.root.paddingHorizontal,
+    gap: VISUAL_TOKENS.worldHeader.root.gap,
+  },
+  headerTop: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: VISUAL_TOKENS.worldHeader.top.gap,
+  },
+  headerCopy: { flex: 1 },
+  headerSeal: {
+    width: VISUAL_TOKENS.worldHeader.seal.size,
+    height: VISUAL_TOKENS.worldHeader.seal.size,
+    borderRadius: VISUAL_TOKENS.worldHeader.seal.radius,
+    borderWidth: VISUAL_TOKENS.worldHeader.seal.borderWidth,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  refreshButton: {
+    width: VISUAL_TOKENS.worldHeader.refresh.size,
+    height: VISUAL_TOKENS.worldHeader.refresh.size,
+    borderRadius: VISUAL_TOKENS.worldHeader.refresh.radius,
+    borderWidth: VISUAL_TOKENS.worldHeader.refresh.borderWidth,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  eyebrow: {
+    fontSize: VISUAL_TOKENS.worldHeader.eyebrow.fontSize,
+    fontWeight: VISUAL_TOKENS.worldHeader.eyebrow.fontWeight,
+    letterSpacing: VISUAL_TOKENS.worldHeader.eyebrow.letterSpacing,
+  },
+  title: {
+    fontSize: VISUAL_TOKENS.worldHeader.title.fontSize,
+    fontWeight: VISUAL_TOKENS.worldHeader.title.fontWeight,
+    marginTop: VISUAL_TOKENS.worldHeader.title.marginTop,
+  },
+  copy: {
+    fontSize: VISUAL_TOKENS.worldHeader.copy.fontSize,
+    lineHeight: VISUAL_TOKENS.worldHeader.copy.lineHeight,
+  },
+  tabs: {
+    gap: VISUAL_TOKENS.worldHeader.tabs.gap,
+    paddingVertical: VISUAL_TOKENS.worldHeader.tabs.paddingVertical,
+    paddingRight: VISUAL_TOKENS.worldHeader.tabs.paddingRight,
+  },
+  tab: {
+    minHeight: VISUAL_TOKENS.worldHeader.tab.minHeight,
+    borderWidth: VISUAL_TOKENS.worldHeader.tab.borderWidth,
+    borderRadius: VISUAL_TOKENS.worldHeader.tab.radius,
+    paddingHorizontal: VISUAL_TOKENS.worldHeader.tab.paddingHorizontal,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: VISUAL_TOKENS.worldHeader.tab.gap,
+  },
+  tabText: {
+    fontSize: VISUAL_TOKENS.worldHeader.tabText.fontSize,
+    fontWeight: VISUAL_TOKENS.worldHeader.tabText.fontWeight,
+    letterSpacing: VISUAL_TOKENS.worldHeader.tabText.letterSpacing,
+  },
+});
 
 function BossCard({ boss, encounters, onBattle, colors }: { boss: MobileWorldBoss; encounters: MobileBossEncounter[]; onBattle: () => void; colors: Colors }) {
   const identity = worldBossIdentity(boss);

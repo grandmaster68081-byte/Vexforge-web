@@ -191,6 +191,18 @@ export const VISUAL_TOKENS = {
     purposeTop: 5,
     childrenTop: 12,
   },
+  worldHeader: {
+    root: { paddingHorizontal: 17, gap: 13 },
+    top: { gap: 12 },
+    seal: { size: 43, radius: 14, borderWidth: 1, iconSize: 19 },
+    refresh: { size: 40, radius: 13, borderWidth: 1, iconSize: 17 },
+    eyebrow: { fontSize: 10, fontWeight: '900', letterSpacing: 1.45 },
+    title: { fontSize: 27, fontWeight: '800', marginTop: 3 },
+    copy: { fontSize: 12, lineHeight: 18 },
+    tabs: { gap: 8, paddingVertical: 3, paddingRight: 12 },
+    tab: { minHeight: 38, borderWidth: 1, radius: 12, paddingHorizontal: 12, gap: 7 },
+    tabText: { fontSize: 10, fontWeight: '900', letterSpacing: 0.45 },
+  },
   scene: {
     backgroundOpacity: 0.74,
     ambientGlow: {

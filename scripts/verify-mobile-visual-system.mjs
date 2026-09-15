@@ -382,6 +382,27 @@ if (!home.includes('VISUAL_TOKENS.domainPortal')) {
   failures.push('Home does not consume domain portal tokens');
 }
 
+const world = source('mobile/app/world.tsx');
+if (!world.includes("from '@/constants/experience'")) {
+  failures.push('World Atlas does not consume shared visual tokens');
+}
+for (const token of [
+  'worldHeader.root',
+  'worldHeader.top',
+  'worldHeader.seal',
+  'worldHeader.refresh',
+  'worldHeader.eyebrow',
+  'worldHeader.title',
+  'worldHeader.copy',
+  'worldHeader.tabs',
+  'worldHeader.tab',
+  'worldHeader.tabText',
+]) {
+  if (!world.includes(`VISUAL_TOKENS.${token}`)) {
+    failures.push(`World Atlas header is missing visual token "${token}"`);
+  }
+}
+
 if (failures.length > 0) {
   console.error('T2V visual system guard failed:');
   for (const failure of failures) console.error(` - ${failure}`);
