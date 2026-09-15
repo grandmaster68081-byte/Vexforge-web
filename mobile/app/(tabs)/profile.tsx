@@ -438,7 +438,7 @@ export default function ProfileScreen() {
                   },
                 ]}
               >
-                <Ionicons name={item.icon} size={18} color={colors.accent} />
+                <Ionicons name={item.icon} size={VISUAL_TOKENS.profileActions.iconSize} color={colors.accent} />
                 <Text style={[styles.actionLabel, { color: colors.foreground }]}>{item.label}</Text>
               </Pressable>
             ))}
@@ -572,10 +572,24 @@ const styles = StyleSheet.create({
     gap: VISUAL_TOKENS.profileProgress.meta.gap,
   },
   progressMetaText: { fontFamily: typography.body, fontSize: VISUAL_TOKENS.profileProgress.metaTextSize },
-  actionsTitle: { fontFamily: typography.bodyBold, fontSize: 9, letterSpacing: 1.2, marginTop: 2 },
-  actionGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
-  actionCard: { width: '48%', minHeight: 58, borderWidth: 1, borderRadius: 12, paddingHorizontal: 11, flexDirection: 'row', alignItems: 'center', gap: 9 },
-  actionLabel: { fontFamily: typography.bodyBold, fontSize: 11 },
+  actionsTitle: {
+    fontFamily: typography.bodyBold,
+    fontSize: VISUAL_TOKENS.profileActions.title.fontSize,
+    letterSpacing: VISUAL_TOKENS.profileActions.title.letterSpacing,
+    marginTop: VISUAL_TOKENS.profileActions.title.marginTop,
+  },
+  actionGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: VISUAL_TOKENS.profileActions.gridGap },
+  actionCard: {
+    width: VISUAL_TOKENS.profileActions.card.width,
+    minHeight: VISUAL_TOKENS.profileActions.card.minHeight,
+    borderWidth: VISUAL_TOKENS.profileActions.card.borderWidth,
+    borderRadius: VISUAL_TOKENS.profileActions.card.radius,
+    paddingHorizontal: VISUAL_TOKENS.profileActions.card.paddingHorizontal,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: VISUAL_TOKENS.profileActions.card.gap,
+  },
+  actionLabel: { fontFamily: typography.bodyBold, fontSize: VISUAL_TOKENS.profileActions.labelSize },
   dataLayer: { ...StyleSheet.absoluteFillObject },
   hotspotLayer: { ...StyleSheet.absoluteFillObject },
   hotspot: { position: 'absolute' },

@@ -1,3 +1,30 @@
+## 2026-09-15 — VE-MOB-T2V — PROFILE QUICK ACTION TOKENS / IMPLEMENTED_UNVERIFIED
+
+- **BRANCH:** `main`.
+- **SCREEN / DOMAIN:** `PROFILE` / cuadrícula de accesos rápidos.
+- **BLOCK:** extraer la geometría, escala de iconos y tipografía de los accesos
+  sin cambiar las ocho acciones ni sus destinos.
+- **WHAT CHANGED:** `VISUAL_TOKENS.profileActions` define título, grid, tarjeta,
+  icono y etiqueta; `profile.tsx` consume esos roles.
+- **BEHAVIOR PRESERVED:** mismos accesos `stats`, `achievements`, `titles`,
+  `history`, `ranking`, `deck`, `cards` y `social`, labels, testIDs,
+  accesibilidad, feedback pressed y rutas de acción.
+- **DATA PRESERVED:** no se añadieron solicitudes, estado, perfil, ranking,
+  Supabase, Auth, RPCs, economía, gameplay, assets ni cambios en la web.
+- **MOTION / PERFORMANCE:** no se añadió movimiento, listener, render de datos
+  ni timing; sólo se centralizaron valores estáticos de presentación.
+- **GUARD:** `node scripts/verify-mobile-visual-system.mjs`,
+  `node --check scripts/verify-mobile-visual-system.mjs` y `git diff --check`
+  pasaron.
+- **RELEASE GATE:** no se inició workflow Android, no se compiló APK y no se
+  publicó release; QA visual/táctil física queda pendiente.
+- **STATUS:** `IMPLEMENTED_UNVERIFIED`.
+- **PERSISTENCIA:** publicar código, guardia T2V y esta continuidad juntos en
+  `main` mediante la API REST HTTPS oficial de GitHub con `[skip ci]`, sin
+  `git push`.
+- **NEXT BLOCK:** continuar con otra pieza T2V explícita, sin tocar el motor de
+  juego, los contratos de Supabase, la web congelada ni el tutorial.
+
 ## 2026-09-15 — VE-MOB-T2V — PROFILE PROGRESS TOKENS / IMPLEMENTED_UNVERIFIED
 
 - **BRANCH:** `main`.
