@@ -5130,3 +5130,35 @@
   cuando se autorice QA/APK; hasta entonces continuar únicamente con una unidad
   Android documental o de código que no toque `mobile/**` si el protocolo lo
   permite.
+
+---
+## 2026-09-15 — VE-MOB-T0 — EXECUTABLE VISUAL STATE MATRIX / PREPARED
+
+- **ENTORNO ACTIVO:** aplicación Android en `mobile/**`; la web permanece
+  congelada.
+- **AUTORIDAD:** la fila ACTIVE de
+  `public.vexforge_official_documents/vexforge_home_world_system_protocol_v3`
+  sigue en V2.2, con SHA-256
+  `828a077428987b2534e3733204ac721ef3073eb7dadf9530a6f46877dd63c503`.
+- **DOCUMENTO:** se añadió
+  `docs/VE-T0-ANDROID-VISUAL-STATE-MATRIX.md`, extendiendo la matriz común de
+  72.8 a las 13 rutas reales y vinculando señales, tipos, disponibilidad,
+  estados, acciones permitidas, bloqueos y evidencia requerida.
+- **FUENTE REAL:** la matriz se derivó de `mobile/lib/supabase.ts`,
+  `mobile/context/GameContext.tsx`, los loaders de cada ruta y
+  `VE-T0-ANDROID-SCREEN-MASTER-RECORDS.md`; no crea rutas, datos, reglas,
+  assets ni un motor paralelo.
+- **REGLA CERO GENÉRICOS:** valores ausentes, respuestas vacías, pending,
+  errores, bloqueos y recovery permanecen diferenciados; no se convierten en
+  cero, éxito, recompensa, fecha o contenido ficticio.
+- **NO APK:** no se tocó `mobile/**`, no se inició workflow Android, no se
+  compiló APK y no se publicó release. `VISUAL_STATE_MATRIX` queda
+  `PREPARED / EVIDENCE_REQUIRED`.
+- **PERSISTENCIA:** el documento y esta continuidad se publicarán juntos en
+  `main` mediante la API REST HTTPS oficial de GitHub con `[skip ci]`, sin
+  `git push`.
+- **STATUS:** T0 sigue abierto por evidencia física, el HEAD de Storage
+  diferido por `HTTP 429` y `PROFILE_HISTORY_STATE_GAP`.
+- **NEXT BLOCK:** completar evidencia física sólo con autorización de APK; si
+  continúa la restricción, avanzar únicamente con otra unidad documental que
+  el protocolo permita sin tocar `mobile/**`.
