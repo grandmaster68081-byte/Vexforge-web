@@ -1,3 +1,16 @@
+## 2026-09-15 — VE-MOB-T0 — EVENT PRESENTATION MAP / PREPARED
+
+- **ENTORNO ACTIVO:** aplicación Android en `mobile/**`; la web permanece congelada.
+- **AUTORIDAD:** se reconcilió la fila ACTIVE `public.vexforge_official_documents / vexforge_home_world_system_protocol_v3`, versión V2.2, con SHA-256 `828a077428987b2534e3733204ac721ef3073eb7dadf9530a6f46877dd63c503`.
+- **DOCUMENTO:** se añadió `docs/VE-T0-ANDROID-EVENT-PRESENTATION-MAP.md` para formalizar el mapping de eventos canónicos v6 a feedback visual/audio/háptico permitido, sin resolución local.
+- **CORRELACIÓN REAL:** el registro parte de `mobile/app/(tabs)/battle.tsx`, `mobile/components/ForgeBattlefield.tsx` y `VE-T0-RULES-EVENT-SETTLEMENT-MATRIX.md`; conserva la diferencia entre señales legacy de `BattleTurn.events` y el sobre canónico v6.
+- **REGLA CERO GENÉRICOS:** eventos desconocidos, payload ausente, settlement sin receipt y `ERROR_UNSETTLED` permanecen no reportados, pending o bloqueados; no se convierten en daño, outcome, reward o éxito ficticio.
+- **ALCANCE:** no se tocó `mobile/**`, Supabase, Auth, RLS, RPCs, economía, gameplay, assets, rutas ni la web congelada.
+- **NO APK:** no se inició workflow Android, no se compiló APK y no se publicó release; el commit usa `[skip ci]` porque el cambio es documental.
+- **STATUS:** `PREPARED / EVIDENCE_REQUIRED`; T0 continúa abierto y `PROFILE_HISTORY_STATE_GAP` sigue `BLOCKED`.
+- **PERSISTENCIA:** documento y esta continuidad se publican juntos en `main` mediante GitHub REST/Data API sobre HTTPS, sin `git push` ni credenciales en URLs.
+- **NEXT BLOCK:** continuar sólo con otra unidad documental independiente hasta autorización explícita de APK/QA; no promover `VERIFIED`, `TIER1_READY` u `OPERATIONAL`.
+
 ## 2026-09-15 — VE-MOB-T2V — WORLD CODEX CARD TOKENS / IMPLEMENTED_UNVERIFIED
 
 - **BRANCH:** `main`.
