@@ -26,6 +26,18 @@
 
 ---
 
+## 2026-09-14 — T0 MATRICES — DEVICE / STATE / SCENE PREPARATION / PREPARED
+
+- **MATRICES INTEGRADAS:** la sección `72.8` del protocolo maestro ahora contiene la `Device Matrix` provisional, la `VISUAL_STATE_MATRIX` común y los `DOMAIN_SCENE_PROFILES` de los diez dominios.
+- **DISPOSITIVOS CANDIDATOS:** Samsung Galaxy A14 5G (`LOW`), Google Pixel 7a (`REFERENCE`) y Google Pixel 8 Pro (`HIGH`). Son candidatos de medición, no dispositivos declarados compatibles.
+- **ESTADOS CUBIERTOS:** `loading`, `empty`, `pending`, `error`, `locked`, `completed` y `recovery`, con fuente de verdad, render permitido, acción obligatoria y fallback prohibido.
+- **PERFILES:** Nexus, Arena, Collection, Deck, Missions, Store/Economy, Social/Guild, World Atlas, Profile y Meta/Live Operations tienen sujeto visual, acento y restricción de continuidad explícitos.
+- **BLOQUEOS CONSERVADOS:** dos HEAD de Storage siguen diferidos por HTTP 429 transitorio; `PROFILE_HISTORY_STATE_GAP` permanece bloqueado; no se afirma soporte físico ni FPS.
+- **ALCANCE:** sólo documentación y verificación directa; no se tocó `mobile/**`, no se compiló APK, no se inició workflow Android y no se publicó release.
+- **STATUS:** `PREPARED / EVIDENCE_REQUIRED`; T0 sigue abierto hasta medir dispositivos físicos, repetir Storage y resolver o aceptar formalmente los gaps.
+
+---
+
 ## 2026-09-14 — PROTOCOL AUDIT — TIER 1 EVIDENCE CLOSURE / INTEGRATED_UNVERIFIED
 
 - **ENTORNO ACTIVO:** aplicación Android en `mobile/`; la web permanece congelada. Se leyó el protocolo ACTIVE desde `public.vexforge_official_documents` mediante Supabase Management API directa sobre HTTPS y se contrastó con el `main` actual `1038f31d84e42e1248cd15493577d374913284cd`.

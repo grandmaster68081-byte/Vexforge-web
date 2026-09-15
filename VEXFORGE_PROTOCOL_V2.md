@@ -1830,3 +1830,52 @@ La `DEVICE_MATRIX` permanece **pendiente de nombres de dispositivos físicos y c
 
 T0 no se declara cerrado por el conteo de rutas ni por las guardas que pasaron. Sólo se puede cambiar a `VERIFIED` cuando el gap de Profile se resuelva con una decisión de producto comprobable, se repitan las comprobaciones diferidas de Storage, se nombren dispositivos soportados y cada ruta tenga evidencia de Screen Master Record. Hasta entonces, las unidades posteriores pueden prepararse documentalmente, pero no pueden declarar `TIER1_READY` ni ampliar el polish como si el baseline estuviera cerrado.
 
+### 72.8 T0 — Matrices provisionales de dispositivo, estado y escena
+
+Estas matrices son la preparación ejecutable de T0. No son una declaración de compatibilidad ni sustituyen una prueba física. Un dispositivo sólo puede pasar de `CANDIDATE` a `SUPPORTED` con instalación de la APK, captura de rendimiento, prueba táctil, legibilidad, memoria, temperatura, safe area y recorrido autenticado.
+
+#### Device Matrix provisional
+
+| Tier | Dispositivo candidato | Uso previsto | Estado |
+|---|---|---|---|
+| `LOW` | Samsung Galaxy A14 5G | memoria y GPU limitadas; reduced-FX y estabilidad de scroll | `CANDIDATE / EVIDENCE_REQUIRED` |
+| `REFERENCE` | Google Pixel 7a | baseline de lectura, touch, animación y Battlefield | `CANDIDATE / EVIDENCE_REQUIRED` |
+| `HIGH` | Google Pixel 8 Pro | calidad máxima, VFX, replay y carga sostenida | `CANDIDATE / EVIDENCE_REQUIRED` |
+
+Para cada candidato se deben registrar modelo exacto, Android API, RAM, densidad, resolución, orientación, safe areas, temperatura inicial/final, memoria, frame time P95/P99, crash/OOM, touch y resultado de cada Screen Master Record. Un emulador puede servir para depuración, pero nunca cierra el gate de compatibilidad.
+
+#### VISUAL_STATE_MATRIX mínima común
+
+| Estado | Fuente de verdad | Render permitido | Acción obligatoria | Fallback prohibido |
+|---|---|---|---|---|
+| `loading` | solicitud viva sin respuesta | señal de carga contextual | esperar o cancelar si el contrato lo permite | inventar métricas, cartas o recompensas |
+| `empty` | respuesta válida con cero filas | estado vacío explícito del dominio | orientar a una acción real o informar que no hay contenido | convertir vacío en error o mostrar datos ficticios |
+| `pending` | operación autoritativa iniciada pero no resuelta | progreso y bloqueo de doble acción | reintentar sólo según contrato; consultar estado | declarar éxito, saldo o recompensa antes de settlement |
+| `error` | error de transporte o contrato | estado de error con causa segura | retry/back/recovery | ocultar error con una escena decorativa |
+| `locked` | elegibilidad, Auth o regla viva | bloqueo legible y motivo permitido | autenticar, cumplir requisito o volver | habilitar localmente una acción ilegal |
+| `completed` | resultado persistido y confirmado | resultado, recompensa e historial reales | continuar o volver al dominio | mostrar celebración sin persistencia |
+| `recovery` | reconexión o reanudación de sesión | contexto preservado sin falsear progreso | revalidar antes de mutar | duplicar compra, acción o settlement |
+
+Cada ruta del registro de `72.7` debe extender esta matriz con nombres de campos, tipos, unidades, disponibilidad, acción permitida, acción bloqueada y evidencia. Esta tabla común no permite cerrar una pantalla por sí sola.
+
+#### DOMAIN_SCENE_PROFILES provisionales
+
+| Dominio | Sujeto visual obligatorio | Acento dominante | Restricción de continuidad |
+|---|---|---|---|
+| Nexus / Home | citadel, núcleo de forja y portales | cyan + oro | debe leerse como entrada a un juego, no como dashboard |
+| Arena / Battlefield | formaciones, Champion, mano y Reserve | cyan vs ember | legalidad, evento y resultado deben ser visibles |
+| Collection / Archivo | unidades, cartas y artefactos | violet + plata | el arte debe conservar identidad y procedencia |
+| Deck / Forja | pedestal, cartas y composición | oro + violet | la edición no puede ocultar legalidad ni estado |
+| Missions / World | mapa, rutas y objetivos | cyan + ember | progreso y recompensa sólo desde datos vivos |
+| Store / Economy | cámara de materiales y wallet | oro + magenta | precios, saldo y receipt nunca se inventan |
+| Social / Guild | sala de alianza y emblemas | azul profundo + oro | presencia, chat y moderación conservan estados honestos |
+| World Atlas | biomas, facciones y ruta narrativa | cyan + violet + ember | el lore no sustituye objetivos ni progreso real |
+| Profile / Progression | avatar, rango, logros e historial | oro + azul | draw, pending y recovery deben conservarse |
+| Meta / Live Operations | temporada, eventos y recompensas | magenta + cyan | experiencia de jugador, nunca consola administrativa |
+
+Estos perfiles fijan sujeto, material, contraste y prohibiciones; no autorizan nuevos assets genéricos. Cualquier desviación necesita procedencia, razón de producto, Screen Master Record y evidencia.
+
+#### Estado de cierre
+
+`DEVICE_MATRIX`, `VISUAL_STATE_MATRIX` y `DOMAIN_SCENE_PROFILES` quedan en `PREPARED / EVIDENCE_REQUIRED`. El gate T0 continúa abierto por la ausencia de mediciones físicas, las respuestas 429 diferidas de Storage y el `PROFILE_HISTORY_STATE_GAP`. La preparación documental permite avanzar en unidades independientes, pero no permite marcar `VERIFIED`, `TIER1_READY` u `OPERATIONAL`.
+
