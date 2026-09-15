@@ -264,6 +264,23 @@ for (const token of [
     failures.push(`Profile is missing statistics token "${token}"`);
   }
 }
+if (!profile.includes('VISUAL_TOKENS.profileProgress')) {
+  failures.push('Profile does not consume profile progress tokens');
+}
+for (const token of [
+  'profileProgress.card',
+  'profileProgress.header',
+  'profileProgress.eyebrow',
+  'profileProgress.title',
+  'profileProgress.value',
+  'profileProgress.track',
+  'profileProgress.meta',
+  'profileProgress.metaTextSize',
+]) {
+  if (!profile.includes(`VISUAL_TOKENS.${token}`)) {
+    failures.push(`Profile is missing progress token "${token}"`);
+  }
+}
 
 const battlefield = source('mobile/components/ForgeBattlefield.tsx');
 if (!battlefield.includes("from '@/constants/experience'")) {

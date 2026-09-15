@@ -1,3 +1,30 @@
+## 2026-09-15 — VE-MOB-T2V — PROFILE PROGRESS TOKENS / IMPLEMENTED_UNVERIFIED
+
+- **BRANCH:** `main`.
+- **SCREEN / DOMAIN:** `PROFILE` / tarjeta de progreso del Nexus.
+- **BLOCK:** extraer geometría, escala tipográfica y rail visual de la tarjeta
+  de XP sin cambiar cálculos, valores vivos ni formato de ausencia.
+- **WHAT CHANGED:** `VISUAL_TOKENS.profileProgress` define tarjeta, encabezado,
+  eyebrow, título, valor, track y metadata; `profile.tsx` consume esos roles.
+- **BEHAVIOR PRESERVED:** mismo nivel, XP, objetivo, porcentaje calculado,
+  copy explícito `NO REPORTADO`, altura, radios, espaciado, colores y rail.
+- **DATA PRESERVED:** no se añadieron solicitudes, estado, rutas, ranking,
+  perfil, Supabase, Auth, RPCs, economía, gameplay, assets ni cambios en la
+  web.
+- **MOTION / PERFORMANCE:** no se añadió movimiento, listener, render de datos
+  ni timing; sólo se centralizaron valores estáticos de presentación.
+- **GUARD:** `node scripts/verify-mobile-visual-system.mjs`,
+  `node --check scripts/verify-mobile-visual-system.mjs` y `git diff --check`
+  pasaron.
+- **RELEASE GATE:** no se inició workflow Android, no se compiló APK y no se
+  publicó release; QA visual/táctil física queda pendiente.
+- **STATUS:** `IMPLEMENTED_UNVERIFIED`.
+- **PERSISTENCIA:** publicar código, guardia T2V y esta continuidad juntos en
+  `main` mediante la API REST HTTPS oficial de GitHub con `[skip ci]`, sin
+  `git push`.
+- **NEXT BLOCK:** continuar con otra pieza T2V explícita, sin tocar el motor de
+  juego, los contratos de Supabase, la web congelada ni el tutorial.
+
 ## 2026-09-15 — VE-MOB-T2V — PROFILE STATS TOKENS / IMPLEMENTED_UNVERIFIED
 
 - **BRANCH:** `main`.

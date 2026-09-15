@@ -363,6 +363,16 @@ export const VISUAL_TOKENS = {
     valueSize: 20,
     label: { fontSize: 8, letterSpacing: 0.8 },
   },
+  profileProgress: {
+    card: { borderWidth: 1, radius: 14, padding: 13 },
+    header: { gap: 8 },
+    eyebrow: { fontSize: 8, letterSpacing: 1 },
+    title: { fontSize: 18, marginTop: 4 },
+    value: { fontSize: 10, marginTop: 2 },
+    track: { height: 8, radius: 8, marginTop: 13 },
+    meta: { marginTop: 7, gap: 8 },
+    metaTextSize: 9,
+  },
   battlefield: {
     root: { radius: 22, padding: 12, gap: 10 },
     typography: {
