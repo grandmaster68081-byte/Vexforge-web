@@ -1,3 +1,29 @@
+## 2026-09-15 — VE-MOB-T2V — DOMAIN STATE DETAIL TOKENS / IMPLEMENTED_UNVERIFIED
+
+- **BRANCH:** `main`.
+- **SCREEN / DOMAIN:** estados compartidos de dominio usados por las superficies Android.
+- **BLOCK:** completar la extracción de geometría local del skeleton y de la
+  acción de recuperación de `DomainState` sin cambiar su semántica ni sus
+  estados autoritativos.
+- **WHAT CHANGED:** `VISUAL_TOKENS.state` ahora define los anchos de las líneas
+  larga/corta del skeleton y el tracking del texto de acción; `DomainState`
+  consume esos roles en lugar de literales locales.
+- **DATA PRESERVED:** `loading`, `empty`, `error`, mensajes, iconos, haptics,
+  accesibilidad, retry, `MaterialPanel`, Supabase, Auth, contratos, gameplay,
+  assets oficiales y la web congelada.
+- **MOTION / PERFORMANCE:** no se añadieron solicitudes, listeners, estado,
+  renders de datos ni movimiento; sólo se centralizaron valores estáticos.
+- **GUARD:** `node scripts/verify-mobile-visual-system.mjs` y
+  `git diff --check`.
+- **RELEASE GATE:** no se inició workflow Android, no se compiló APK y no se
+  publicó release; QA visual/táctil queda pendiente de autorización.
+- **STATUS:** `IMPLEMENTED_UNVERIFIED`.
+- **PERSISTENCIA:** publicar código, guarda T2V y esta continuidad juntos en
+  `main` mediante la API REST HTTPS oficial de GitHub con `[skip ci]`, sin
+  `git push`.
+- **NEXT BLOCK:** continuar con otra pieza T2V explícita, sin tocar el motor de
+  juego, los contratos de Supabase, la web congelada ni el tutorial.
+
 ## 2026-09-14 — VE-MOB-T2V — ERROR FALLBACK RECOVERY TOKENS / IMPLEMENTED_UNVERIFIED
 
 - **SCREEN / DOMAIN:** superficie transversal de recuperación de la aplicación.

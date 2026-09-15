@@ -77,8 +77,8 @@ const styles = StyleSheet.create({
     width: '100%',
     borderRadius: VISUAL_TOKENS.state.skeletonRadius,
   },
-  skeletonLineLong: { width: '88%' },
-  skeletonLineShort: { width: '62%' },
+  skeletonLineLong: { width: VISUAL_TOKENS.state.skeletonLineLongWidth },
+  skeletonLineShort: { width: VISUAL_TOKENS.state.skeletonLineShortWidth },
   title: {
     fontSize: VISUAL_TOKENS.state.titleSize,
     fontWeight: '800',
@@ -101,6 +101,6 @@ const styles = StyleSheet.create({
   actionText: {
     fontSize: VISUAL_TOKENS.state.actionTextSize,
     fontWeight: '800',
-    letterSpacing: 1,
+    letterSpacing: VISUAL_TOKENS.state.actionTextTracking,
   },
 });

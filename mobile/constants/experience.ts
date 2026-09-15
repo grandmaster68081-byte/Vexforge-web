@@ -223,6 +223,8 @@ export const VISUAL_TOKENS = {
     skeletonMargin: 2,
     skeletonHeight: 7,
     skeletonRadius: 4,
+    skeletonLineLongWidth: '88%',
+    skeletonLineShortWidth: '62%',
     titleSize: 15,
     titleTracking: 0.4,
     messageSize: 12,
@@ -233,6 +235,7 @@ export const VISUAL_TOKENS = {
     actionHorizontalPadding: 12,
     actionVerticalPadding: 9,
     actionTextSize: 10,
+    actionTextTracking: 1,
     assetError: {
       rootInset: 20,
       rootTop: '42%',

@@ -107,6 +107,11 @@ if (!screenShell.includes('VISUAL_TOKENS.state.assetError')) {
 if (!state.includes('VISUAL_TOKENS.state')) {
   failures.push('DomainState does not consume state tokens');
 }
+for (const token of ['state.skeletonLineLongWidth', 'state.skeletonLineShortWidth', 'state.actionTextTracking']) {
+  if (!state.includes(`VISUAL_TOKENS.${token}`)) {
+    failures.push(`DomainState is missing visual token "${token}"`);
+  }
+}
 
 const errorFallback = source('mobile/components/ErrorFallback.tsx');
 if (!errorFallback.includes("from '@/constants/experience'")) {
