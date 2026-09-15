@@ -1,3 +1,19 @@
+## 2026-09-15 — VE-MOB-3 HOME — OFFICIAL VERTICAL SCENE / IMPLEMENTED_UNVERIFIED
+
+- **ENTORNO ACTIVO:** aplicación Android en `mobile/**`; la web permanece congelada.
+- **AUTORIDAD:** fila `ACTIVE` `public.vexforge_official_documents / vexforge_home_world_system_protocol_v3`, versión V2.3.
+- **REFERENCIA OFICIAL HOME:** `mobile/assets/images/home-reference-scene.png` ahora contiene la imagen entregada por el operador, PNG RGB/sRGB `1080×2340`, SHA-256 `3bc35e53383164f0b25aafd2d04791522916e52e2cb07e202bbc15c77e2c3e8c`.
+- **LECTURA VISUAL:** la imagen fija la calidad general de VEXFORGE para Home/Nexus: citadel, núcleo central, portales cyan/violeta, marco de forja, profundidad atmosférica y composición vertical. Es arte de escena, no una captura de UI.
+- **IMPLEMENTACIÓN:** `CANONICAL_BACKGROUNDS.home` consume la escena oficial dentro del hero nativo. La escena recibe parallax limitado, atmósfera, niebla, órbita, pulso del núcleo, artwork vivo adicional de la identidad y fallback explícito de asset.
+- **INTERFAZ VIVA:** controles, datos, estados, haptics, refresh, reduced-motion y rutas permanecen fuera del bitmap y siguen siendo nativos. Se conservan Arena `/battle`, Forja `/deck`, Archivo `/collection`, Mundo `/world`, Misiones `/missions`, Economía `/economy`, Perfil, Tutorial y navegación inferior.
+- **REGLA CERO CAPTURA:** no se agregaron controles horneados ni hotspots transparentes. La imagen se usa como ambiente visual; cualquier acción visible pertenece a un `Pressable` real y a una ruta existente.
+- **REGISTRO:** Asset Registry, matriz, atlas, auditoría dimensional, master record, referencia visual y guardia Home fueron actualizados con la dimensión y hash nuevos.
+- **VERIFICACIÓN:** Auth `17/17`, Home `19/19`, sistema visual y JSON del registro pasan. Typecheck local sigue pendiente porque el snapshot no tiene dependencias instaladas.
+- **QA HONESTA:** `IMPLEMENTED_UNVERIFIED`; no se compiló APK ni se ejecutó QA física en dispositivo.
+- **PERSISTENCIA:** publicar este ajuste en `main` mediante GitHub REST/Data API sobre HTTPS con `[skip ci]`, sin iniciar el workflow Android.
+
+---
+
 ## 2026-09-15 — VE-MOB-AUTH + VE-MOB-3 HOME — OFFICIAL VISUAL SYNC / IMPLEMENTED_UNVERIFIED
 
 - **ENTORNO ACTIVO:** aplicación Android en `mobile/**`; la web permanece congelada.

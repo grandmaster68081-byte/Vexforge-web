@@ -12,7 +12,7 @@ Estos assets ya tienen un consumidor real en Android o forman parte del registro
 | Asset | Superficie | Rol |
 |---|---|---|
 | `mobile/assets/images/vexforge-home-hero.png` | Home | Ancla de escena |
-| `mobile/assets/images/home-reference-scene.png` | Home | Referencia visual aprobada; no se monta como fondo runtime |
+| `mobile/assets/images/home-reference-scene.png` | Home | Escena vertical oficial Home/Nexus; arte ambiental, no captura de UI |
 | `mobile/assets/images/vexforge-hero-sentinel.png` | Home | Personaje/elemento de primer plano |
 | `mobile/assets/images/vexforge-feature-card.png` | Home | Carta destacada |
 | `mobile/assets/images/vexforge-auth-nexus-final.png` | Auth / Nexus | Escena vertical oficial de acceso |
@@ -38,10 +38,10 @@ Los assets de esta lista conservan el estado `AVAILABLE_UNASSIGNED` hasta que
 una composición los seleccione. Sólo pasan a producción después de una decisión
 explícita, validación de procedencia y registro en el consumidor real. La
 disponibilidad en Storage no equivale a una obligación de consumo. La escena
-`home-reference-scene.png` se conserva como referencia visual aprobada para
-comparar el Home. El runtime Android no la monta como fondo; la composición
-viva usa datos reales, artwork de identidad autorizado y capas authored. La
-entrada no autoriza una sustitución estática ni hotspots.
+`home-reference-scene.png` es la escena visual oficial del Home y se monta como
+arte ambiental de la composición nativa. No contiene controles funcionales ni
+autoriza hotspots transparentes: datos, estados, controles y rutas siguen
+siendo programáticos y vivos.
 
 ## 2. Prioridad de selección para nuevas composiciones
 

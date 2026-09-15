@@ -12,7 +12,7 @@ Auth y Home están funcionando como rutas Android, pero sus assets locales de es
 | Superficie | Consumidor activo | Dimensión medida | Dimensión esperada | Resultado |
 |---|---|---:|---:|---|
 | Auth | `CANONICAL_BACKGROUNDS.auth` → `auth-reference-scene.png` → `ScreenShell` | `1024 × 1024` | `1080 × 2340` | **No conforme; recorte horizontal severo** |
-| Home | `index.tsx` native hero → live identity artwork + authored layers | variable Storage artwork | responsive native composition | **Conforme al protocolo; approved PNG retained as reference only** |
+| Home | `CANONICAL_BACKGROUNDS.home` → official scene art + native layers | `1080 × 2340` | `1080 × 2340` scene reference | **Conforme como arte ambiental; UI y estados siguen nativos** |
 | Auth alternativa | `vexforge-auth-nexus-final.png` | `1080 × 2340` | `1080 × 2340` | **Correcta en dimensión, no consumida** |
 
 ## Auth — causa exacta
@@ -25,15 +25,15 @@ Existe `mobile/assets/images/vexforge-auth-nexus-final.png` con `1080 × 2340`, 
 
 ## Home — causa exacta
 
-`mobile/app/(tabs)/index.tsx` ya no toma `CANONICAL_BACKGROUNDS.home` ni monta
-`home-reference-scene.png`. El hero calcula una altura responsive limitada a
-aproximadamente `570–640 px` y compone la escena con artwork vivo de la
-identidad, gradientes, trazos, atmósfera y parallax limitado.
+`mobile/app/(tabs)/index.tsx` toma `CANONICAL_BACKGROUNDS.home` como arte
+ambiental dentro del hero, con `resizeMode="cover"` y parallax limitado. La
+interfaz no está horneada en la escena: los controles, datos, estados y rutas
+se renderizan nativamente.
 
-`home-reference-scene.png` permanece registrado como referencia visual aprobada
-de `1024 × 1024`, pero no es una superficie runtime. Por eso no se corrige
-forzando una dimensión vertical ni se deforma la referencia para llenar el
-dispositivo.
+`home-reference-scene.png` mide `1080 × 2340` y conserva el lienzo vertical
+oficial. No se deforma para inventar una pantalla: el recorte visible pertenece
+al hero responsive, mientras el movimiento y la interacción quedan en capas
+nativas separadas.
 
 Home no es actualmente un fondo full-screen: es una composición nativa desplazable con hero, gradientes, portales, actividad y datos vivos. Por tanto, corregir sólo el tamaño del PNG no resolvería por sí solo la equivalencia visual; habría que decidir si el contrato sigue siendo hero recortado o si se promueve una escena vertical completa y se remaqueta el hero.
 

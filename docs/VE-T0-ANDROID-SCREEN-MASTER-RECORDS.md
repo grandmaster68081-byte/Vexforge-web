@@ -94,12 +94,13 @@ QA visual/táctil ni evidencia de APK de esta unidad.
 - **Ruta:** `/(tabs)/`; fuente primaria: `mobile/app/(tabs)/index.tsx`.
 - **Sujeto:** citadel, núcleo de forja, portales y actividad viva; debe leerse
   como entrada a un juego y no como dashboard.
-- **Assets:** `home-reference-scene.png` es la referencia visual aprobada, no un
-  fondo runtime; la escena funcional usa artwork canónico vivo de la identidad
-  desde Storage y capas authored de entorno. `vexforge-home-hero.png`,
-  `vexforge-hero-sentinel.png` y `vexforge-feature-card.png` no se consumen
-  automáticamente sin una decisión de consumidor; el logo y facciones usan
-  Storage oficial cuando están disponibles.
+- **Assets:** `home-reference-scene.png` es la escena vertical oficial de
+  `1080×2340`, usada como arte ambiental y no como captura de interfaz. La
+  escena funcional añade artwork canónico vivo de la identidad desde Storage y
+  capas authored de entorno. `vexforge-home-hero.png`, `vexforge-hero-sentinel.png`
+  y `vexforge-feature-card.png` no se consumen automáticamente sin una decisión
+  de consumidor; el logo y facciones usan Storage oficial cuando están
+  disponibles.
 - **Calidad visual:** la escena se compone como viewport centrado con capas de
   entorno, atmósfera, entidad y primer plano interactivo. El asset aprobado no
   se monta sobre otra escena ni actúa como poster estático: respira con deriva

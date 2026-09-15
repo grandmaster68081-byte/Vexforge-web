@@ -21,6 +21,7 @@ import { ScreenShell } from '@/components/ScreenShell';
 import { ForgeIconName, VexIcon } from '@/components/ForgeIcon';
 import { getCardIdentityVisual } from '@/constants/cardIdentity';
 import { DOMAIN_IDENTITY, DEPTH, MOTION, VISUAL_TOKENS } from '@/constants/experience';
+import { CANONICAL_BACKGROUNDS } from '@/constants/visual';
 import { useColors } from '@/hooks/useColors';
 import { useGame } from '@/context/GameContext';
 import {
@@ -500,6 +501,7 @@ export default function ForgeScreen() {
   const [homeState, setHomeState] = useState<HomeState>('loading');
   const [refreshing, setRefreshing] = useState(false);
   const [featuredExpanded, setFeaturedExpanded] = useState(false);
+  const [homeSceneState, setHomeSceneState] = useState<'loading' | 'ready' | 'error'>('loading');
   const [identityAssetState, setIdentityAssetState] = useState<'loading' | 'ready' | 'error'>('loading');
   const [featuredAssetState, setFeaturedAssetState] = useState<'loading' | 'ready' | 'error'>('loading');
   const pulse = useSharedValue(0);
@@ -664,6 +666,8 @@ export default function ForgeScreen() {
   const homeIdentity = DOMAIN_IDENTITY.foja;
   const orbitReveal = MOTION.reveal;
   const orbitDepth = DEPTH.surface;
+  const homeSceneAsset = CANONICAL_BACKGROUNDS.home;
+  const homeSceneSource = typeof homeSceneAsset === 'string' ? { uri: homeSceneAsset } : homeSceneAsset;
   const navigate = (route: HomeRoute) => {
     void Haptics.selectionAsync().catch(() => undefined);
     if (route === '/') router.replace('/');
@@ -697,6 +701,16 @@ export default function ForgeScreen() {
         >
            <View style={[styles.heroStage, { backgroundColor: identityVisual?.overlay ?? colors.ink, height: heroHeight }]}>
              <View pointerEvents="none" style={styles.heroSceneViewport}>
+               {homeSceneSource ? (
+                 <Animated.Image
+                   source={homeSceneSource}
+                   style={[styles.heroSceneReference, heroParallaxStyle]}
+                   resizeMode="cover"
+                   accessibilityLabel="Escena oficial viva del Nexus Home"
+                   onLoad={() => setHomeSceneState('ready')}
+                   onError={() => setHomeSceneState('error')}
+                 />
+               ) : null}
                {identityCard?.image_url && identityAssetState !== 'error' ? (
                  <Animated.Image
                    source={{ uri: identityCard.image_url }}
@@ -721,6 +735,12 @@ export default function ForgeScreen() {
                  />
                </Animated.View>
              </View>
+             {homeSceneState === 'error' ? (
+               <View pointerEvents="none" testID="home-scene-state" style={[styles.heroAssetError, { borderColor: `${colors.accent}80` }]}>
+                 <Text style={[styles.heroAssetErrorTitle, { color: colors.accent }]}>ESCENA DEL NEXUS NO DISPONIBLE</Text>
+                 <Text style={[styles.heroAssetErrorBody, { color: `${colors.foreground}CC` }]}>La referencia oficial no pudo cargarse.</Text>
+               </View>
+             ) : null}
             <LinearGradient colors={[`${colors.ink}18`, `${colors.ink}42`, `${colors.ink}D4`, colors.background]} locations={[0, 0.25, 0.56, 1]} style={StyleSheet.absoluteFill} />
             <LinearGradient colors={[`${identityVisual?.accent ?? colors.rarityEpic}38`, 'transparent', `${colors.accent}24`]} style={StyleSheet.absoluteFill} />
             <View pointerEvents="none" style={styles.heroRuleFrame}>
@@ -1205,7 +1225,8 @@ const styles = StyleSheet.create({
   scrollContent: { gap: 0 },
   heroStage: { overflow: 'hidden', position: 'relative' },
   heroSceneViewport: { ...StyleSheet.absoluteFillObject, overflow: 'hidden' },
-  heroIdentityBackdrop: { height: '124%', left: '-26%', opacity: 0.34, position: 'absolute', top: '-14%', width: '152%' },
+  heroSceneReference: { height: '112%', left: '-6%', position: 'absolute', top: '-6%', width: '112%' },
+  heroIdentityBackdrop: { height: '124%', left: '-26%', opacity: 0.22, position: 'absolute', top: '-14%', width: '152%' },
   heroSceneAtmosphere: { borderRadius: 220, height: 360, position: 'absolute', right: -154, top: 52, width: 360 },
   heroSceneMist: { bottom: -80, height: 360, left: -80, position: 'absolute', width: '120%' },
   identityStage: { bottom: 36, borderBottomLeftRadius: 148, borderTopLeftRadius: 148, borderWidth: 1, borderRightWidth: 0, height: 432, overflow: 'hidden', position: 'absolute', right: -36, width: 286, zIndex: 1 },

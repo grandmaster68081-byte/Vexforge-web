@@ -1,14 +1,17 @@
-Vigencia del contrato: desde el 2026-09-15, `home-reference-scene.png` queda
-como evidencia visual histórica y referencia aprobada del Home anterior. El
-consumidor Android vigente es una composición nativa en
-`mobile/app/(tabs)/index.tsx`; no monta el PNG ni usa hotspots transparentes.
-La escena se construye dentro del mismo lienzo del Home con gradientes, trazos,
-órbitas, atmósfera y el artwork canónico vivo de la identidad cargado desde
-Supabase Storage; los datos y contratos siguen viniendo de Supabase.
+Vigencia del contrato: desde el 2026-09-15, `home-reference-scene.png` es la
+escena vertical oficial de Home/Nexus. El consumidor Android vigente es una
+composición nativa en `mobile/app/(tabs)/index.tsx`; monta el arte ambiental,
+pero no monta una captura de interfaz ni usa hotspots transparentes. La escena
+se construye dentro del mismo lienzo del Home con parallax, gradientes, trazos,
+órbitas, atmósfera, núcleo pulsante y artwork canónico vivo de la identidad
+cargado desde Supabase Storage; los datos y contratos siguen viniendo de
+Supabase.
 
-Referencia visual aprobada: `mobile/assets/images/home-reference-scene.png`
-mide `1024×1024`, PNG RGB/sRGB. Se conserva para revisión visual y procedencia;
-no es un fondo runtime ni una superficie interactiva.
+Referencia visual oficial: `mobile/assets/images/home-reference-scene.png`
+mide `1080×2340`, PNG RGB/sRGB, SHA-256
+`3bc35e53383164f0b25aafd2d04791522916e52e2cb07e202bbc15c77e2c3e8c`. Es arte
+de escena, no una superficie interactiva: todos los controles, estados y flujos
+son nativos y programáticos.
 
 # VE-MOB-3 — HOME
 

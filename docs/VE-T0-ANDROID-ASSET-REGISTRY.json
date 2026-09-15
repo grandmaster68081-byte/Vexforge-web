@@ -154,24 +154,24 @@
       "origin": "repository",
       "path": "mobile/assets/images/home-reference-scene.png",
       "dimensions": {
-        "width": 1024,
-        "height": 1024
+        "width": 1080,
+        "height": 2340
       },
       "format": "png",
-      "hash": "191dbe5ddb04d9208b69811e5139ac0eaaa0b498e1717fafc21717a8dd9a64e1",
+      "hash": "3bc35e53383164f0b25aafd2d04791522916e52e2cb07e202bbc15c77e2c3e8c",
       "hash_algorithm": "sha256",
       "hash_status": "MEASURED",
       "provenance": [
         "repository file",
         "docs/VE-T0-ANDROID-ASSET-MATRIX.md",
         "docs/VEXFORGE-ASSET-ATLAS.md",
-        "operator-provided Home Tier 1 reference"
+        "operator-provided official Home scene attached in the visual sync"
       ],
       "authorized_domains": [
         "Home"
       ],
-      "state": "RESERVED_SURFACE_ART",
-      "debt": "Referencia visual Home aprobada y conservada para comparación; no se monta como fondo runtime porque el protocolo exige una composición nativa viva."
+      "state": "CANON_ACTIVE",
+      "debt": "Escena vertical oficial Home/Nexus consumida como arte de escena por el hero nativo; controles, datos y estados permanecen programmaticos."
     },
     {
       "asset_id": "android-local:icon.jpg",
