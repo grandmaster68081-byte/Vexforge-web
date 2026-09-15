@@ -5285,3 +5285,17 @@
 - **COMMIT:** documento publicado en `main` como `729eee816cd25bd7422c8cd29220031d82956f45` con `[skip ci]`.
 - **STATUS:** `PREPARED / EVIDENCE_REQUIRED`; `PROFILE_HISTORY_STATE_GAP` continúa `BLOCKED` y T0 no se declara `VERIFIED`, `TIER1_READY` ni `OPERATIONAL`.
 - **NEXT BLOCK:** mantener el gate físico cerrado y avanzar sólo con otra unidad T0 documental permitida hasta autorización explícita de APK/QA.
+
+---
+## 2026-09-15 — VE-MOB-T0 — RULES EVENT SETTLEMENT MATRIX / PREPARED
+
+- **ENTORNO ACTIVO:** aplicación Android en `mobile/**`; la web permanece congelada.
+- **UNIDAD:** se añadió `docs/VE-T0-RULES-EVENT-SETTLEMENT-MATRIX.md` para cerrar la casilla T0 de `Rules Matrix / Event Matrix / Settlement Matrix` del protocolo ACTIVE V2.2.
+- **RULES:** quedan vinculadas las reglas versionadas de Battle Run v6, formación, Champion, Command, ventanas, RNG server-side, daño, Reserve, Reaction, empate, modos y frontera de autoridad cliente-servidor.
+- **EVENTS:** queda registrado el sobre canónico, la secuencia append-only, los grupos de eventos, el replay, la corrección por evento adicional y el techo ranked de 2048 eventos.
+- **SETTLEMENT:** quedan diferenciados `WIN_A/B`, `DRAW`, abandonos, timeouts, `ERROR_UNSETTLED`, retry, refresh ACTIVE, concurrencia, receipt e idempotencia; no se autoriza reward prematuro ni doble aplicación.
+- **FRONTERA PRESERVADA:** el engine produce outcome; el ranking convierte outcome en MMR; `economic_elo` y `elo_change_a/b` históricos quedan fuera de esta operación.
+- **NO APK:** no se modificó `mobile/**`, no se inició workflow Android, no se compiló APK y no se publicó release.
+- **COMMIT:** documento publicado en `main` como `7527a50bec8dc2e0b85fef395ec3aef97300b00c` con `[skip ci]`.
+- **STATUS:** `RULES_MATRIX`, `EVENT_MATRIX` y `SETTLEMENT_MATRIX` quedan `PREPARED / EVIDENCE_REQUIRED`; T0 no se declara `VERIFIED`, `TIER1_READY` ni `OPERATIONAL`.
+- **NEXT BLOCK:** mantener el gate físico y de release cerrado; la verificación posterior requiere simulator, replay, concurrencia y APK/QA sólo con autorización explícita.
