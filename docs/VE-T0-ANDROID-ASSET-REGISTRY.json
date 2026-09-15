@@ -1,0 +1,1624 @@
+{
+  "schema": "v1",
+  "title": "VEXFORGE T0 Android Asset Registry",
+  "date": "2026-09-15",
+  "unit": "T0 — ASSET_REGISTRY",
+  "status": "PREPARED / EVIDENCE_REQUIRED",
+  "environment": "Android in mobile/**",
+  "baseline_commit": "d30704594477b4b05e2c5c95688ca4107e88c082",
+  "authority": {
+    "document": "public.vexforge_official_documents / vexforge_home_world_system_protocol_v3",
+    "status": "ACTIVE",
+    "version": "V2.2",
+    "protocol_sha256": "828a077428987b2534e3733204ac721ef3073eb7dadf9530a6f46877dd63c503",
+    "manifest_source": "src/lib/assetManifest.ts",
+    "local_atlas": "docs/VEXFORGE-ASSET-ATLAS.md"
+  },
+  "rules": [
+    "Un hash o dimensión no medidos permanecen null; no se inventan desde el nombre o la URL.",
+    "VERIFIED_ASSET significa ruta declarada y comprobada por el manifiesto, no evidencia física de legibilidad o rendimiento.",
+    "RESERVED_SURFACE_ART, RESERVED_RESIDUAL_ART, AVAILABLE_UNASSIGNED y REVIEW_REQUIRED no autorizan consumo nuevo.",
+    "La ausencia de asset propio conserva PENDING_SOURCE; nunca se sustituye silenciosamente por stock o arte de otra superficie.",
+    "La promoción requiere consumidor Android real, procedencia, fallback honesto, evidencia física y entrada en CONTINUITY.md."
+  ],
+  "coverage": {
+    "local_repository_entries": 13,
+    "verified_storage_paths": 22,
+    "reserved_surface_paths": 11,
+    "reserved_residual_paths": 34,
+    "total_entries": 80,
+    "local_hashes_measured": 13,
+    "storage_hashes_measured": 0,
+    "pending_source_backgrounds": 0
+  },
+  "entries": [
+    {
+      "asset_id": "android-local:auth-reference-scene.png",
+      "class": "local_scene_or_hero",
+      "origin": "repository",
+      "path": "mobile/assets/images/auth-reference-scene.png",
+      "dimensions": {
+        "width": 1080,
+        "height": 2340
+      },
+      "format": "png",
+      "hash": "bc54341d4d841ad4e15fa0c05f04d8766029172bbfdc31fe26a729d2278d91a8",
+      "hash_algorithm": "sha256",
+      "hash_status": "MEASURED",
+      "provenance": [
+        "repository file",
+        "docs/VE-T0-ANDROID-ASSET-MATRIX.md",
+        "docs/VEXFORGE-ASSET-ATLAS.md"
+      ],
+      "authorized_domains": [
+        "Auth"
+      ],
+      "state": "CANON_ACTIVE",
+      "debt": "Escena local de Auth registrada en el atlas."
+    },
+    {
+      "asset_id": "android-local:battle-reference-scene.png",
+      "class": "local_scene_or_hero",
+      "origin": "repository",
+      "path": "mobile/assets/images/battle-reference-scene.png",
+      "dimensions": {
+        "width": 1080,
+        "height": 2340
+      },
+      "format": "png",
+      "hash": "344ef2bc3fb5ad4b51fa8c86057452b2d652514734f29f7ad5cc7bf127efc244",
+      "hash_algorithm": "sha256",
+      "hash_status": "MEASURED",
+      "provenance": [
+        "repository file",
+        "docs/VE-T0-ANDROID-ASSET-MATRIX.md",
+        "docs/VEXFORGE-ASSET-ATLAS.md"
+      ],
+      "authorized_domains": [
+        "Battlefield"
+      ],
+      "state": "CANON_ACTIVE",
+      "debt": "Escena local de Battlefield registrada en el atlas."
+    },
+    {
+      "asset_id": "android-local:collection-archive-scene.jpg",
+      "class": "local_scene_or_hero",
+      "origin": "repository",
+      "path": "mobile/assets/images/collection-archive-scene.jpg",
+      "dimensions": null,
+      "format": "jpg",
+      "hash": "4b19ad505b4901a93fba524ec5f0ae7947fa7812e820d25217ad6e70d25ea5d2",
+      "hash_algorithm": "sha256",
+      "hash_status": "MEASURED",
+      "provenance": [
+        "repository file",
+        "docs/VE-T0-ANDROID-ASSET-MATRIX.md",
+        "docs/VEXFORGE-ASSET-ATLAS.md"
+      ],
+      "authorized_domains": [
+        "Collection"
+      ],
+      "state": "CANON_ACTIVE",
+      "debt": "Escena local de Collection registrada en el atlas."
+    },
+    {
+      "asset_id": "android-local:collection-reference-scene.png",
+      "class": "local_scene_or_hero",
+      "origin": "repository",
+      "path": "mobile/assets/images/collection-reference-scene.png",
+      "dimensions": {
+        "width": 1080,
+        "height": 2340
+      },
+      "format": "png",
+      "hash": "6a41d49743c9d0db0b6e3847d12d574c2d270c16876073982a64bc979021af36",
+      "hash_algorithm": "sha256",
+      "hash_status": "MEASURED",
+      "provenance": [
+        "repository file",
+        "docs/VE-T0-ANDROID-ASSET-MATRIX.md",
+        "docs/VEXFORGE-ASSET-ATLAS.md"
+      ],
+      "authorized_domains": [
+        "Collection"
+      ],
+      "state": "REVIEW_REQUIRED",
+      "debt": "Archivo local presente; requiere decisión explícita de consumidor."
+    },
+    {
+      "asset_id": "android-local:deck-forge-scene.jpg",
+      "class": "local_scene_or_hero",
+      "origin": "repository",
+      "path": "mobile/assets/images/deck-forge-scene.jpg",
+      "dimensions": null,
+      "format": "jpg",
+      "hash": "3733be132cfef149e5ee50097bd3e90af90b56a10f2b71964fdde68862dbf1e8",
+      "hash_algorithm": "sha256",
+      "hash_status": "MEASURED",
+      "provenance": [
+        "repository file",
+        "docs/VE-T0-ANDROID-ASSET-MATRIX.md",
+        "docs/VEXFORGE-ASSET-ATLAS.md"
+      ],
+      "authorized_domains": [
+        "Deck",
+        "Forge"
+      ],
+      "state": "REVIEW_REQUIRED",
+      "debt": "Archivo local presente; requiere decisión explícita de consumidor."
+    },
+    {
+      "asset_id": "android-local:decks-reference-scene.png",
+      "class": "local_scene_or_hero",
+      "origin": "repository",
+      "path": "mobile/assets/images/decks-reference-scene.png",
+      "dimensions": {
+        "width": 1080,
+        "height": 2340
+      },
+      "format": "png",
+      "hash": "9ea9c0cbdd56be17d8b42774917b5a764e1fd0961648a4ac9d37a8603bc6c2ee",
+      "hash_algorithm": "sha256",
+      "hash_status": "MEASURED",
+      "provenance": [
+        "repository file",
+        "docs/VE-T0-ANDROID-ASSET-MATRIX.md",
+        "docs/VEXFORGE-ASSET-ATLAS.md"
+      ],
+      "authorized_domains": [
+        "Deck"
+      ],
+      "state": "CANON_ACTIVE",
+      "debt": "Escena local de Deck registrada en el atlas."
+    },
+    {
+      "asset_id": "android-local:home-reference-scene.png",
+      "class": "local_scene_or_hero",
+      "origin": "repository",
+      "path": "mobile/assets/images/home-reference-scene.png",
+      "dimensions": {
+        "width": 1080,
+        "height": 2340
+      },
+      "format": "png",
+      "hash": "c2495ddd8182b817483924d3cc9e91e1e1d787e233849dddc9265cf019df2ff9",
+      "hash_algorithm": "sha256",
+      "hash_status": "MEASURED",
+      "provenance": [
+        "repository file",
+        "docs/VE-T0-ANDROID-ASSET-MATRIX.md",
+        "docs/VEXFORGE-ASSET-ATLAS.md"
+      ],
+      "authorized_domains": [
+        "Home"
+      ],
+      "state": "AVAILABLE_UNASSIGNED",
+      "debt": "Referencia local sin consumidor canónico activo asignado."
+    },
+    {
+      "asset_id": "android-local:icon.jpg",
+      "class": "local_scene_or_hero",
+      "origin": "repository",
+      "path": "mobile/assets/images/icon.jpg",
+      "dimensions": null,
+      "format": "jpg",
+      "hash": "1124e9e3838242423dbcac3b1ccb170ae3e0f4684e343e12da5862c2c4d0b460",
+      "hash_algorithm": "sha256",
+      "hash_status": "MEASURED",
+      "provenance": [
+        "repository file",
+        "docs/VE-T0-ANDROID-ASSET-MATRIX.md",
+        "docs/VEXFORGE-ASSET-ATLAS.md"
+      ],
+      "authorized_domains": [
+        "Shared"
+      ],
+      "state": "AVAILABLE_UNASSIGNED",
+      "debt": "Referencia heredada sin consumidor canónico activo asignado."
+    },
+    {
+      "asset_id": "android-local:profile-reference-scene.png",
+      "class": "local_scene_or_hero",
+      "origin": "repository",
+      "path": "mobile/assets/images/profile-reference-scene.png",
+      "dimensions": {
+        "width": 1080,
+        "height": 2340
+      },
+      "format": "png",
+      "hash": "6da6fe156af06fd996d74b03211835a93f769d125a3a1dbb0d5a7e57983e74d9",
+      "hash_algorithm": "sha256",
+      "hash_status": "MEASURED",
+      "provenance": [
+        "repository file",
+        "docs/VE-T0-ANDROID-ASSET-MATRIX.md",
+        "docs/VEXFORGE-ASSET-ATLAS.md"
+      ],
+      "authorized_domains": [
+        "Profile"
+      ],
+      "state": "CANON_ACTIVE",
+      "debt": "Escena local de Profile registrada en el atlas."
+    },
+    {
+      "asset_id": "android-local:vexforge-auth-nexus-final.png",
+      "class": "local_scene_or_hero",
+      "origin": "repository",
+      "path": "mobile/assets/images/vexforge-auth-nexus-final.png",
+      "dimensions": {
+        "width": 1080,
+        "height": 2340
+      },
+      "format": "png",
+      "hash": "dc598706823ab41fd8ceabc162f4118fc2515da2f74d808e80910e7497e38c32",
+      "hash_algorithm": "sha256",
+      "hash_status": "MEASURED",
+      "provenance": [
+        "repository file",
+        "docs/VE-T0-ANDROID-ASSET-MATRIX.md",
+        "docs/VEXFORGE-ASSET-ATLAS.md"
+      ],
+      "authorized_domains": [
+        "Auth",
+        "Nexus"
+      ],
+      "state": "AVAILABLE_UNASSIGNED",
+      "debt": "Referencia opcional sin consumidor canónico activo asignado."
+    },
+    {
+      "asset_id": "android-local:vexforge-feature-card.png",
+      "class": "local_scene_or_hero",
+      "origin": "repository",
+      "path": "mobile/assets/images/vexforge-feature-card.png",
+      "dimensions": {
+        "width": 1024,
+        "height": 1024
+      },
+      "format": "png",
+      "hash": "3fb6127bf79933d8a4cf8edd19a24a343bcdf780c356c84e4bd7696c6bf45b8f",
+      "hash_algorithm": "sha256",
+      "hash_status": "MEASURED",
+      "provenance": [
+        "repository file",
+        "docs/VE-T0-ANDROID-ASSET-MATRIX.md",
+        "docs/VEXFORGE-ASSET-ATLAS.md"
+      ],
+      "authorized_domains": [
+        "Home",
+        "Nexus"
+      ],
+      "state": "CANON_ACTIVE",
+      "debt": "Carta destacada inscrita en mobile/constants/visual.ts y atlas."
+    },
+    {
+      "asset_id": "android-local:vexforge-hero-sentinel.png",
+      "class": "local_scene_or_hero",
+      "origin": "repository",
+      "path": "mobile/assets/images/vexforge-hero-sentinel.png",
+      "dimensions": {
+        "width": 1024,
+        "height": 1024
+      },
+      "format": "png",
+      "hash": "399676adab25d5c120b49fdfe087b362379003455a5086f679a751d9fec7d708",
+      "hash_algorithm": "sha256",
+      "hash_status": "MEASURED",
+      "provenance": [
+        "repository file",
+        "docs/VE-T0-ANDROID-ASSET-MATRIX.md",
+        "docs/VEXFORGE-ASSET-ATLAS.md"
+      ],
+      "authorized_domains": [
+        "Home",
+        "Nexus"
+      ],
+      "state": "CANON_ACTIVE",
+      "debt": "Elemento de primer plano inscrito en mobile/constants/visual.ts y atlas."
+    },
+    {
+      "asset_id": "android-local:vexforge-home-hero.png",
+      "class": "local_scene_or_hero",
+      "origin": "repository",
+      "path": "mobile/assets/images/vexforge-home-hero.png",
+      "dimensions": {
+        "width": 1024,
+        "height": 1024
+      },
+      "format": "png",
+      "hash": "0b29eb84770d303ccad1bfa4432dc4b54a285bb8928d4d5100c1f00b17be5012",
+      "hash_algorithm": "sha256",
+      "hash_status": "MEASURED",
+      "provenance": [
+        "repository file",
+        "docs/VE-T0-ANDROID-ASSET-MATRIX.md",
+        "docs/VEXFORGE-ASSET-ATLAS.md"
+      ],
+      "authorized_domains": [
+        "Home",
+        "Nexus"
+      ],
+      "state": "CANON_ACTIVE",
+      "debt": "Hero de entrada inscrito en mobile/constants/visual.ts y atlas."
+    },
+    {
+      "asset_id": "supabase-storage:backgrounds/bg_achievements.jpg",
+      "class": "surface_background",
+      "origin": "supabase_storage:vexforge-assets",
+      "path": "backgrounds/bg_achievements.jpg",
+      "dimensions": null,
+      "format": "jpg",
+      "hash": null,
+      "hash_algorithm": "sha256",
+      "hash_status": "NOT_MEASURED",
+      "provenance": [
+        "src/lib/assetManifest.ts:VERIFIED_ASSETS",
+        "Storage existence guard recorded in repository"
+      ],
+      "authorized_domains": [
+        "Meta"
+      ],
+      "state": "VERIFIED_ASSET",
+      "debt": "Storage path is verified; dimensions and content hash require a reproducible asset evidence capture."
+    },
+    {
+      "asset_id": "supabase-storage:backgrounds/bg_bosses.jpg",
+      "class": "surface_background",
+      "origin": "supabase_storage:vexforge-assets",
+      "path": "backgrounds/bg_bosses.jpg",
+      "dimensions": null,
+      "format": "jpg",
+      "hash": null,
+      "hash_algorithm": "sha256",
+      "hash_status": "NOT_MEASURED",
+      "provenance": [
+        "src/lib/assetManifest.ts:VERIFIED_ASSETS",
+        "Storage existence guard recorded in repository"
+      ],
+      "authorized_domains": [
+        "World",
+        "Battlefield"
+      ],
+      "state": "VERIFIED_ASSET",
+      "debt": "Storage path is verified; dimensions and content hash require a reproducible asset evidence capture."
+    },
+    {
+      "asset_id": "supabase-storage:backgrounds/bg_clans.jpg",
+      "class": "surface_background",
+      "origin": "supabase_storage:vexforge-assets",
+      "path": "backgrounds/bg_clans.jpg",
+      "dimensions": null,
+      "format": "jpg",
+      "hash": null,
+      "hash_algorithm": "sha256",
+      "hash_status": "NOT_MEASURED",
+      "provenance": [
+        "src/lib/assetManifest.ts:VERIFIED_ASSETS",
+        "Storage existence guard recorded in repository"
+      ],
+      "authorized_domains": [
+        "Social"
+      ],
+      "state": "VERIFIED_ASSET",
+      "debt": "Storage path is verified; dimensions and content hash require a reproducible asset evidence capture."
+    },
+    {
+      "asset_id": "supabase-storage:backgrounds/bg_leaderboard.jpg",
+      "class": "surface_background",
+      "origin": "supabase_storage:vexforge-assets",
+      "path": "backgrounds/bg_leaderboard.jpg",
+      "dimensions": null,
+      "format": "jpg",
+      "hash": null,
+      "hash_algorithm": "sha256",
+      "hash_status": "NOT_MEASURED",
+      "provenance": [
+        "src/lib/assetManifest.ts:VERIFIED_ASSETS",
+        "Storage existence guard recorded in repository"
+      ],
+      "authorized_domains": [
+        "Social"
+      ],
+      "state": "VERIFIED_ASSET",
+      "debt": "Storage path is verified; dimensions and content hash require a reproducible asset evidence capture."
+    },
+    {
+      "asset_id": "supabase-storage:backgrounds/bg_missions.jpg",
+      "class": "surface_background",
+      "origin": "supabase_storage:vexforge-assets",
+      "path": "backgrounds/bg_missions.jpg",
+      "dimensions": null,
+      "format": "jpg",
+      "hash": null,
+      "hash_algorithm": "sha256",
+      "hash_status": "NOT_MEASURED",
+      "provenance": [
+        "src/lib/assetManifest.ts:VERIFIED_ASSETS",
+        "Storage existence guard recorded in repository"
+      ],
+      "authorized_domains": [
+        "Missions"
+      ],
+      "state": "VERIFIED_ASSET",
+      "debt": "Storage path is verified; dimensions and content hash require a reproducible asset evidence capture."
+    },
+    {
+      "asset_id": "supabase-storage:backgrounds/bg_packs.jpg",
+      "class": "surface_background",
+      "origin": "supabase_storage:vexforge-assets",
+      "path": "backgrounds/bg_packs.jpg",
+      "dimensions": null,
+      "format": "jpg",
+      "hash": null,
+      "hash_algorithm": "sha256",
+      "hash_status": "NOT_MEASURED",
+      "provenance": [
+        "src/lib/assetManifest.ts:VERIFIED_ASSETS",
+        "Storage existence guard recorded in repository"
+      ],
+      "authorized_domains": [
+        "Store"
+      ],
+      "state": "VERIFIED_ASSET",
+      "debt": "Storage path is verified; dimensions and content hash require a reproducible asset evidence capture."
+    },
+    {
+      "asset_id": "supabase-storage:backgrounds/bg_pvp.jpg",
+      "class": "surface_background",
+      "origin": "supabase_storage:vexforge-assets",
+      "path": "backgrounds/bg_pvp.jpg",
+      "dimensions": null,
+      "format": "jpg",
+      "hash": null,
+      "hash_algorithm": "sha256",
+      "hash_status": "NOT_MEASURED",
+      "provenance": [
+        "src/lib/assetManifest.ts:VERIFIED_ASSETS",
+        "Storage existence guard recorded in repository"
+      ],
+      "authorized_domains": [
+        "Battlefield"
+      ],
+      "state": "VERIFIED_ASSET",
+      "debt": "Storage path is verified; dimensions and content hash require a reproducible asset evidence capture."
+    },
+    {
+      "asset_id": "supabase-storage:boosts/IMG_20260606_040525_480.jpg",
+      "class": "residual_art",
+      "origin": "supabase_storage:vexforge-assets",
+      "path": "boosts/IMG_20260606_040525_480.jpg",
+      "dimensions": null,
+      "format": "jpg",
+      "hash": null,
+      "hash_algorithm": "sha256",
+      "hash_status": "NOT_MEASURED",
+      "provenance": [
+        "src/lib/assetManifest.ts:RESERVED_RESIDUAL_ART",
+        "VE-T0 asset matrix"
+      ],
+      "authorized_domains": [],
+      "state": "RESERVED_RESIDUAL_ART",
+      "debt": "Residual manifest entry without an authorized current consumer; do not promote by visual proximity."
+    },
+    {
+      "asset_id": "supabase-storage:boosts/IMG_20260606_040527_020.jpg",
+      "class": "residual_art",
+      "origin": "supabase_storage:vexforge-assets",
+      "path": "boosts/IMG_20260606_040527_020.jpg",
+      "dimensions": null,
+      "format": "jpg",
+      "hash": null,
+      "hash_algorithm": "sha256",
+      "hash_status": "NOT_MEASURED",
+      "provenance": [
+        "src/lib/assetManifest.ts:RESERVED_RESIDUAL_ART",
+        "VE-T0 asset matrix"
+      ],
+      "authorized_domains": [],
+      "state": "RESERVED_RESIDUAL_ART",
+      "debt": "Residual manifest entry without an authorized current consumer; do not promote by visual proximity."
+    },
+    {
+      "asset_id": "supabase-storage:boosts/IMG_20260606_040529_139.jpg",
+      "class": "residual_art",
+      "origin": "supabase_storage:vexforge-assets",
+      "path": "boosts/IMG_20260606_040529_139.jpg",
+      "dimensions": null,
+      "format": "jpg",
+      "hash": null,
+      "hash_algorithm": "sha256",
+      "hash_status": "NOT_MEASURED",
+      "provenance": [
+        "src/lib/assetManifest.ts:RESERVED_RESIDUAL_ART",
+        "VE-T0 asset matrix"
+      ],
+      "authorized_domains": [],
+      "state": "RESERVED_RESIDUAL_ART",
+      "debt": "Residual manifest entry without an authorized current consumer; do not promote by visual proximity."
+    },
+    {
+      "asset_id": "supabase-storage:boosts/IMG_20260606_040529_674.jpg",
+      "class": "residual_art",
+      "origin": "supabase_storage:vexforge-assets",
+      "path": "boosts/IMG_20260606_040529_674.jpg",
+      "dimensions": null,
+      "format": "jpg",
+      "hash": null,
+      "hash_algorithm": "sha256",
+      "hash_status": "NOT_MEASURED",
+      "provenance": [
+        "src/lib/assetManifest.ts:RESERVED_RESIDUAL_ART",
+        "VE-T0 asset matrix"
+      ],
+      "authorized_domains": [],
+      "state": "RESERVED_RESIDUAL_ART",
+      "debt": "Residual manifest entry without an authorized current consumer; do not promote by visual proximity."
+    },
+    {
+      "asset_id": "supabase-storage:chests/main.jpg",
+      "class": "residual_art",
+      "origin": "supabase_storage:vexforge-assets",
+      "path": "chests/main.jpg",
+      "dimensions": null,
+      "format": "jpg",
+      "hash": null,
+      "hash_algorithm": "sha256",
+      "hash_status": "NOT_MEASURED",
+      "provenance": [
+        "src/lib/assetManifest.ts:RESERVED_RESIDUAL_ART",
+        "VE-T0 asset matrix"
+      ],
+      "authorized_domains": [],
+      "state": "RESERVED_RESIDUAL_ART",
+      "debt": "Residual manifest entry without an authorized current consumer; do not promote by visual proximity."
+    },
+    {
+      "asset_id": "supabase-storage:cover/main.jpg",
+      "class": "auth_surface",
+      "origin": "supabase_storage:vexforge-assets",
+      "path": "cover/main.jpg",
+      "dimensions": null,
+      "format": "jpg",
+      "hash": null,
+      "hash_algorithm": "sha256",
+      "hash_status": "NOT_MEASURED",
+      "provenance": [
+        "src/lib/assetManifest.ts:VERIFIED_ASSETS",
+        "Storage existence guard recorded in repository"
+      ],
+      "authorized_domains": [
+        "Auth"
+      ],
+      "state": "VERIFIED_ASSET",
+      "debt": "Storage path is verified; dimensions and content hash require a reproducible asset evidence capture."
+    },
+    {
+      "asset_id": "supabase-storage:events/events_season_hero.jpg",
+      "class": "live_operation",
+      "origin": "supabase_storage:vexforge-assets",
+      "path": "events/events_season_hero.jpg",
+      "dimensions": null,
+      "format": "jpg",
+      "hash": null,
+      "hash_algorithm": "sha256",
+      "hash_status": "NOT_MEASURED",
+      "provenance": [
+        "src/lib/assetManifest.ts:RESERVED_SURFACE_ART",
+        "VE-T0 asset matrix"
+      ],
+      "authorized_domains": [],
+      "state": "RESERVED_SURFACE_ART",
+      "debt": "Reserved by the manifest; no authorized Android consumer promotion in this unit."
+    },
+    {
+      "asset_id": "supabase-storage:factions/bg_guerrero.jpg",
+      "class": "faction_background",
+      "origin": "supabase_storage:vexforge-assets",
+      "path": "factions/bg_guerrero.jpg",
+      "dimensions": null,
+      "format": "jpg",
+      "hash": null,
+      "hash_algorithm": "sha256",
+      "hash_status": "NOT_MEASURED",
+      "provenance": [
+        "src/lib/assetManifest.ts:VERIFIED_ASSETS",
+        "Storage existence guard recorded in repository"
+      ],
+      "authorized_domains": [
+        "Collection",
+        "Deck",
+        "Battlefield",
+        "World"
+      ],
+      "state": "VERIFIED_ASSET",
+      "debt": "Storage path is verified; dimensions and content hash require a reproducible asset evidence capture."
+    },
+    {
+      "asset_id": "supabase-storage:factions/bg_mago.jpg",
+      "class": "faction_background",
+      "origin": "supabase_storage:vexforge-assets",
+      "path": "factions/bg_mago.jpg",
+      "dimensions": null,
+      "format": "jpg",
+      "hash": null,
+      "hash_algorithm": "sha256",
+      "hash_status": "NOT_MEASURED",
+      "provenance": [
+        "src/lib/assetManifest.ts:VERIFIED_ASSETS",
+        "Storage existence guard recorded in repository"
+      ],
+      "authorized_domains": [
+        "Collection",
+        "Deck",
+        "Battlefield",
+        "World"
+      ],
+      "state": "VERIFIED_ASSET",
+      "debt": "Storage path is verified; dimensions and content hash require a reproducible asset evidence capture."
+    },
+    {
+      "asset_id": "supabase-storage:factions/bg_paladin.jpg",
+      "class": "faction_background",
+      "origin": "supabase_storage:vexforge-assets",
+      "path": "factions/bg_paladin.jpg",
+      "dimensions": null,
+      "format": "jpg",
+      "hash": null,
+      "hash_algorithm": "sha256",
+      "hash_status": "NOT_MEASURED",
+      "provenance": [
+        "src/lib/assetManifest.ts:VERIFIED_ASSETS",
+        "Storage existence guard recorded in repository"
+      ],
+      "authorized_domains": [
+        "Collection",
+        "Deck",
+        "Battlefield",
+        "World"
+      ],
+      "state": "VERIFIED_ASSET",
+      "debt": "Storage path is verified; dimensions and content hash require a reproducible asset evidence capture."
+    },
+    {
+      "asset_id": "supabase-storage:factions/bg_picaro.jpg",
+      "class": "faction_background",
+      "origin": "supabase_storage:vexforge-assets",
+      "path": "factions/bg_picaro.jpg",
+      "dimensions": null,
+      "format": "jpg",
+      "hash": null,
+      "hash_algorithm": "sha256",
+      "hash_status": "NOT_MEASURED",
+      "provenance": [
+        "src/lib/assetManifest.ts:VERIFIED_ASSETS",
+        "Storage existence guard recorded in repository"
+      ],
+      "authorized_domains": [
+        "Collection",
+        "Deck",
+        "Battlefield",
+        "World"
+      ],
+      "state": "VERIFIED_ASSET",
+      "debt": "Storage path is verified; dimensions and content hash require a reproducible asset evidence capture."
+    },
+    {
+      "asset_id": "supabase-storage:factions/icon_guerrero.png",
+      "class": "faction_icon",
+      "origin": "supabase_storage:vexforge-assets",
+      "path": "factions/icon_guerrero.png",
+      "dimensions": null,
+      "format": "png",
+      "hash": null,
+      "hash_algorithm": "sha256",
+      "hash_status": "NOT_MEASURED",
+      "provenance": [
+        "src/lib/assetManifest.ts:VERIFIED_ASSETS",
+        "Storage existence guard recorded in repository"
+      ],
+      "authorized_domains": [
+        "Collection",
+        "Deck",
+        "Battlefield",
+        "World"
+      ],
+      "state": "VERIFIED_ASSET",
+      "debt": "Storage path is verified; dimensions and content hash require a reproducible asset evidence capture."
+    },
+    {
+      "asset_id": "supabase-storage:factions/icon_mago.png",
+      "class": "faction_icon",
+      "origin": "supabase_storage:vexforge-assets",
+      "path": "factions/icon_mago.png",
+      "dimensions": null,
+      "format": "png",
+      "hash": null,
+      "hash_algorithm": "sha256",
+      "hash_status": "NOT_MEASURED",
+      "provenance": [
+        "src/lib/assetManifest.ts:VERIFIED_ASSETS",
+        "Storage existence guard recorded in repository"
+      ],
+      "authorized_domains": [
+        "Collection",
+        "Deck",
+        "Battlefield",
+        "World"
+      ],
+      "state": "VERIFIED_ASSET",
+      "debt": "Storage path is verified; dimensions and content hash require a reproducible asset evidence capture."
+    },
+    {
+      "asset_id": "supabase-storage:factions/icon_paladin.png",
+      "class": "faction_icon",
+      "origin": "supabase_storage:vexforge-assets",
+      "path": "factions/icon_paladin.png",
+      "dimensions": null,
+      "format": "png",
+      "hash": null,
+      "hash_algorithm": "sha256",
+      "hash_status": "NOT_MEASURED",
+      "provenance": [
+        "src/lib/assetManifest.ts:VERIFIED_ASSETS",
+        "Storage existence guard recorded in repository"
+      ],
+      "authorized_domains": [
+        "Collection",
+        "Deck",
+        "Battlefield",
+        "World"
+      ],
+      "state": "VERIFIED_ASSET",
+      "debt": "Storage path is verified; dimensions and content hash require a reproducible asset evidence capture."
+    },
+    {
+      "asset_id": "supabase-storage:factions/icon_picaro.png",
+      "class": "faction_icon",
+      "origin": "supabase_storage:vexforge-assets",
+      "path": "factions/icon_picaro.png",
+      "dimensions": null,
+      "format": "png",
+      "hash": null,
+      "hash_algorithm": "sha256",
+      "hash_status": "NOT_MEASURED",
+      "provenance": [
+        "src/lib/assetManifest.ts:VERIFIED_ASSETS",
+        "Storage existence guard recorded in repository"
+      ],
+      "authorized_domains": [
+        "Collection",
+        "Deck",
+        "Battlefield",
+        "World"
+      ],
+      "state": "VERIFIED_ASSET",
+      "debt": "Storage path is verified; dimensions and content hash require a reproducible asset evidence capture."
+    },
+    {
+      "asset_id": "supabase-storage:founders/IMG_20260619_113831.jpg",
+      "class": "residual_art",
+      "origin": "supabase_storage:vexforge-assets",
+      "path": "founders/IMG_20260619_113831.jpg",
+      "dimensions": null,
+      "format": "jpg",
+      "hash": null,
+      "hash_algorithm": "sha256",
+      "hash_status": "NOT_MEASURED",
+      "provenance": [
+        "src/lib/assetManifest.ts:RESERVED_RESIDUAL_ART",
+        "VE-T0 asset matrix"
+      ],
+      "authorized_domains": [],
+      "state": "RESERVED_RESIDUAL_ART",
+      "debt": "Residual manifest entry without an authorized current consumer; do not promote by visual proximity."
+    },
+    {
+      "asset_id": "supabase-storage:frames/IMG_20260606_040532_520.jpg",
+      "class": "residual_art",
+      "origin": "supabase_storage:vexforge-assets",
+      "path": "frames/IMG_20260606_040532_520.jpg",
+      "dimensions": null,
+      "format": "jpg",
+      "hash": null,
+      "hash_algorithm": "sha256",
+      "hash_status": "NOT_MEASURED",
+      "provenance": [
+        "src/lib/assetManifest.ts:RESERVED_RESIDUAL_ART",
+        "VE-T0 asset matrix"
+      ],
+      "authorized_domains": [],
+      "state": "RESERVED_RESIDUAL_ART",
+      "debt": "Residual manifest entry without an authorized current consumer; do not promote by visual proximity."
+    },
+    {
+      "asset_id": "supabase-storage:frames/IMG_20260606_040534_461.jpg",
+      "class": "residual_art",
+      "origin": "supabase_storage:vexforge-assets",
+      "path": "frames/IMG_20260606_040534_461.jpg",
+      "dimensions": null,
+      "format": "jpg",
+      "hash": null,
+      "hash_algorithm": "sha256",
+      "hash_status": "NOT_MEASURED",
+      "provenance": [
+        "src/lib/assetManifest.ts:RESERVED_RESIDUAL_ART",
+        "VE-T0 asset matrix"
+      ],
+      "authorized_domains": [],
+      "state": "RESERVED_RESIDUAL_ART",
+      "debt": "Residual manifest entry without an authorized current consumer; do not promote by visual proximity."
+    },
+    {
+      "asset_id": "supabase-storage:frames/IMG_20260606_040535_955.jpg",
+      "class": "residual_art",
+      "origin": "supabase_storage:vexforge-assets",
+      "path": "frames/IMG_20260606_040535_955.jpg",
+      "dimensions": null,
+      "format": "jpg",
+      "hash": null,
+      "hash_algorithm": "sha256",
+      "hash_status": "NOT_MEASURED",
+      "provenance": [
+        "src/lib/assetManifest.ts:RESERVED_RESIDUAL_ART",
+        "VE-T0 asset matrix"
+      ],
+      "authorized_domains": [],
+      "state": "RESERVED_RESIDUAL_ART",
+      "debt": "Residual manifest entry without an authorized current consumer; do not promote by visual proximity."
+    },
+    {
+      "asset_id": "supabase-storage:frames/IMG_20260606_040537_201.jpg",
+      "class": "residual_art",
+      "origin": "supabase_storage:vexforge-assets",
+      "path": "frames/IMG_20260606_040537_201.jpg",
+      "dimensions": null,
+      "format": "jpg",
+      "hash": null,
+      "hash_algorithm": "sha256",
+      "hash_status": "NOT_MEASURED",
+      "provenance": [
+        "src/lib/assetManifest.ts:RESERVED_RESIDUAL_ART",
+        "VE-T0 asset matrix"
+      ],
+      "authorized_domains": [],
+      "state": "RESERVED_RESIDUAL_ART",
+      "debt": "Residual manifest entry without an authorized current consumer; do not promote by visual proximity."
+    },
+    {
+      "asset_id": "supabase-storage:frames/IMG_20260606_040538_151.jpg",
+      "class": "residual_art",
+      "origin": "supabase_storage:vexforge-assets",
+      "path": "frames/IMG_20260606_040538_151.jpg",
+      "dimensions": null,
+      "format": "jpg",
+      "hash": null,
+      "hash_algorithm": "sha256",
+      "hash_status": "NOT_MEASURED",
+      "provenance": [
+        "src/lib/assetManifest.ts:RESERVED_RESIDUAL_ART",
+        "VE-T0 asset matrix"
+      ],
+      "authorized_domains": [],
+      "state": "RESERVED_RESIDUAL_ART",
+      "debt": "Residual manifest entry without an authorized current consumer; do not promote by visual proximity."
+    },
+    {
+      "asset_id": "supabase-storage:frames/IMG_20260606_040539_689.jpg",
+      "class": "residual_art",
+      "origin": "supabase_storage:vexforge-assets",
+      "path": "frames/IMG_20260606_040539_689.jpg",
+      "dimensions": null,
+      "format": "jpg",
+      "hash": null,
+      "hash_algorithm": "sha256",
+      "hash_status": "NOT_MEASURED",
+      "provenance": [
+        "src/lib/assetManifest.ts:RESERVED_RESIDUAL_ART",
+        "VE-T0 asset matrix"
+      ],
+      "authorized_domains": [],
+      "state": "RESERVED_RESIDUAL_ART",
+      "debt": "Residual manifest entry without an authorized current consumer; do not promote by visual proximity."
+    },
+    {
+      "asset_id": "supabase-storage:heroes/hero_assets.jpg",
+      "class": "hero_surface",
+      "origin": "supabase_storage:vexforge-assets",
+      "path": "heroes/hero_assets.jpg",
+      "dimensions": null,
+      "format": "jpg",
+      "hash": null,
+      "hash_algorithm": "sha256",
+      "hash_status": "NOT_MEASURED",
+      "provenance": [
+        "src/lib/assetManifest.ts:VERIFIED_ASSETS",
+        "Storage existence guard recorded in repository"
+      ],
+      "authorized_domains": [
+        "Collection"
+      ],
+      "state": "VERIFIED_ASSET",
+      "debt": "Storage path is verified; dimensions and content hash require a reproducible asset evidence capture."
+    },
+    {
+      "asset_id": "supabase-storage:heroes/hero_economy.jpg",
+      "class": "hero_surface",
+      "origin": "supabase_storage:vexforge-assets",
+      "path": "heroes/hero_economy.jpg",
+      "dimensions": null,
+      "format": "jpg",
+      "hash": null,
+      "hash_algorithm": "sha256",
+      "hash_status": "NOT_MEASURED",
+      "provenance": [
+        "src/lib/assetManifest.ts:RESERVED_SURFACE_ART",
+        "VE-T0 asset matrix"
+      ],
+      "authorized_domains": [],
+      "state": "RESERVED_SURFACE_ART",
+      "debt": "Reserved by the manifest; no authorized Android consumer promotion in this unit."
+    },
+    {
+      "asset_id": "supabase-storage:heroes/hero_fusion.jpg",
+      "class": "hero_surface",
+      "origin": "supabase_storage:vexforge-assets",
+      "path": "heroes/hero_fusion.jpg",
+      "dimensions": null,
+      "format": "jpg",
+      "hash": null,
+      "hash_algorithm": "sha256",
+      "hash_status": "NOT_MEASURED",
+      "provenance": [
+        "src/lib/assetManifest.ts:VERIFIED_ASSETS",
+        "Storage existence guard recorded in repository"
+      ],
+      "authorized_domains": [
+        "Deck",
+        "Forge"
+      ],
+      "state": "VERIFIED_ASSET",
+      "debt": "Storage path is verified; dimensions and content hash require a reproducible asset evidence capture."
+    },
+    {
+      "asset_id": "supabase-storage:heroes/hero_inventory_locked.jpg",
+      "class": "hero_surface",
+      "origin": "supabase_storage:vexforge-assets",
+      "path": "heroes/hero_inventory_locked.jpg",
+      "dimensions": null,
+      "format": "jpg",
+      "hash": null,
+      "hash_algorithm": "sha256",
+      "hash_status": "NOT_MEASURED",
+      "provenance": [
+        "src/lib/assetManifest.ts:RESERVED_SURFACE_ART",
+        "VE-T0 asset matrix"
+      ],
+      "authorized_domains": [],
+      "state": "RESERVED_SURFACE_ART",
+      "debt": "Reserved by the manifest; no authorized Android consumer promotion in this unit."
+    },
+    {
+      "asset_id": "supabase-storage:heroes/hero_market.jpg",
+      "class": "hero_surface",
+      "origin": "supabase_storage:vexforge-assets",
+      "path": "heroes/hero_market.jpg",
+      "dimensions": null,
+      "format": "jpg",
+      "hash": null,
+      "hash_algorithm": "sha256",
+      "hash_status": "NOT_MEASURED",
+      "provenance": [
+        "src/lib/assetManifest.ts:VERIFIED_ASSETS",
+        "Storage existence guard recorded in repository"
+      ],
+      "authorized_domains": [
+        "Store"
+      ],
+      "state": "VERIFIED_ASSET",
+      "debt": "Storage path is verified; dimensions and content hash require a reproducible asset evidence capture."
+    },
+    {
+      "asset_id": "supabase-storage:heroes/hero_profile.jpg",
+      "class": "hero_surface",
+      "origin": "supabase_storage:vexforge-assets",
+      "path": "heroes/hero_profile.jpg",
+      "dimensions": null,
+      "format": "jpg",
+      "hash": null,
+      "hash_algorithm": "sha256",
+      "hash_status": "NOT_MEASURED",
+      "provenance": [
+        "src/lib/assetManifest.ts:RESERVED_SURFACE_ART",
+        "VE-T0 asset matrix"
+      ],
+      "authorized_domains": [],
+      "state": "RESERVED_SURFACE_ART",
+      "debt": "Reserved by the manifest; no authorized Android consumer promotion in this unit."
+    },
+    {
+      "asset_id": "supabase-storage:heroes/hero_progress.jpg",
+      "class": "hero_surface",
+      "origin": "supabase_storage:vexforge-assets",
+      "path": "heroes/hero_progress.jpg",
+      "dimensions": null,
+      "format": "jpg",
+      "hash": null,
+      "hash_algorithm": "sha256",
+      "hash_status": "NOT_MEASURED",
+      "provenance": [
+        "src/lib/assetManifest.ts:RESERVED_SURFACE_ART",
+        "VE-T0 asset matrix"
+      ],
+      "authorized_domains": [],
+      "state": "RESERVED_SURFACE_ART",
+      "debt": "Reserved by the manifest; no authorized Android consumer promotion in this unit."
+    },
+    {
+      "asset_id": "supabase-storage:heroes/hero_settings.jpg",
+      "class": "hero_surface",
+      "origin": "supabase_storage:vexforge-assets",
+      "path": "heroes/hero_settings.jpg",
+      "dimensions": null,
+      "format": "jpg",
+      "hash": null,
+      "hash_algorithm": "sha256",
+      "hash_status": "NOT_MEASURED",
+      "provenance": [
+        "src/lib/assetManifest.ts:RESERVED_SURFACE_ART",
+        "VE-T0 asset matrix"
+      ],
+      "authorized_domains": [],
+      "state": "RESERVED_SURFACE_ART",
+      "debt": "Reserved by the manifest; no authorized Android consumer promotion in this unit."
+    },
+    {
+      "asset_id": "supabase-storage:icons/IMG_20260606_040505_192.jpg",
+      "class": "residual_art",
+      "origin": "supabase_storage:vexforge-assets",
+      "path": "icons/IMG_20260606_040505_192.jpg",
+      "dimensions": null,
+      "format": "jpg",
+      "hash": null,
+      "hash_algorithm": "sha256",
+      "hash_status": "NOT_MEASURED",
+      "provenance": [
+        "src/lib/assetManifest.ts:RESERVED_RESIDUAL_ART",
+        "VE-T0 asset matrix"
+      ],
+      "authorized_domains": [],
+      "state": "RESERVED_RESIDUAL_ART",
+      "debt": "Residual manifest entry without an authorized current consumer; do not promote by visual proximity."
+    },
+    {
+      "asset_id": "supabase-storage:icons/IMG_20260606_040506_475.jpg",
+      "class": "residual_art",
+      "origin": "supabase_storage:vexforge-assets",
+      "path": "icons/IMG_20260606_040506_475.jpg",
+      "dimensions": null,
+      "format": "jpg",
+      "hash": null,
+      "hash_algorithm": "sha256",
+      "hash_status": "NOT_MEASURED",
+      "provenance": [
+        "src/lib/assetManifest.ts:RESERVED_RESIDUAL_ART",
+        "VE-T0 asset matrix"
+      ],
+      "authorized_domains": [],
+      "state": "RESERVED_RESIDUAL_ART",
+      "debt": "Residual manifest entry without an authorized current consumer; do not promote by visual proximity."
+    },
+    {
+      "asset_id": "supabase-storage:icons/IMG_20260606_040508_371.jpg",
+      "class": "residual_art",
+      "origin": "supabase_storage:vexforge-assets",
+      "path": "icons/IMG_20260606_040508_371.jpg",
+      "dimensions": null,
+      "format": "jpg",
+      "hash": null,
+      "hash_algorithm": "sha256",
+      "hash_status": "NOT_MEASURED",
+      "provenance": [
+        "src/lib/assetManifest.ts:RESERVED_RESIDUAL_ART",
+        "VE-T0 asset matrix"
+      ],
+      "authorized_domains": [],
+      "state": "RESERVED_RESIDUAL_ART",
+      "debt": "Residual manifest entry without an authorized current consumer; do not promote by visual proximity."
+    },
+    {
+      "asset_id": "supabase-storage:icons/IMG_20260619_114322.jpg",
+      "class": "residual_art",
+      "origin": "supabase_storage:vexforge-assets",
+      "path": "icons/IMG_20260619_114322.jpg",
+      "dimensions": null,
+      "format": "jpg",
+      "hash": null,
+      "hash_algorithm": "sha256",
+      "hash_status": "NOT_MEASURED",
+      "provenance": [
+        "src/lib/assetManifest.ts:RESERVED_RESIDUAL_ART",
+        "VE-T0 asset matrix"
+      ],
+      "authorized_domains": [],
+      "state": "RESERVED_RESIDUAL_ART",
+      "debt": "Residual manifest entry without an authorized current consumer; do not promote by visual proximity."
+    },
+    {
+      "asset_id": "supabase-storage:icons/IMG_20260619_114717.jpg",
+      "class": "residual_art",
+      "origin": "supabase_storage:vexforge-assets",
+      "path": "icons/IMG_20260619_114717.jpg",
+      "dimensions": null,
+      "format": "jpg",
+      "hash": null,
+      "hash_algorithm": "sha256",
+      "hash_status": "NOT_MEASURED",
+      "provenance": [
+        "src/lib/assetManifest.ts:RESERVED_RESIDUAL_ART",
+        "VE-T0 asset matrix"
+      ],
+      "authorized_domains": [],
+      "state": "RESERVED_RESIDUAL_ART",
+      "debt": "Residual manifest entry without an authorized current consumer; do not promote by visual proximity."
+    },
+    {
+      "asset_id": "supabase-storage:icons/IMG_20260619_114852.jpg",
+      "class": "residual_art",
+      "origin": "supabase_storage:vexforge-assets",
+      "path": "icons/IMG_20260619_114852.jpg",
+      "dimensions": null,
+      "format": "jpg",
+      "hash": null,
+      "hash_algorithm": "sha256",
+      "hash_status": "NOT_MEASURED",
+      "provenance": [
+        "src/lib/assetManifest.ts:RESERVED_RESIDUAL_ART",
+        "VE-T0 asset matrix"
+      ],
+      "authorized_domains": [],
+      "state": "RESERVED_RESIDUAL_ART",
+      "debt": "Residual manifest entry without an authorized current consumer; do not promote by visual proximity."
+    },
+    {
+      "asset_id": "supabase-storage:icons/IMG_20260619_115309.jpg",
+      "class": "residual_art",
+      "origin": "supabase_storage:vexforge-assets",
+      "path": "icons/IMG_20260619_115309.jpg",
+      "dimensions": null,
+      "format": "jpg",
+      "hash": null,
+      "hash_algorithm": "sha256",
+      "hash_status": "NOT_MEASURED",
+      "provenance": [
+        "src/lib/assetManifest.ts:RESERVED_RESIDUAL_ART",
+        "VE-T0 asset matrix"
+      ],
+      "authorized_domains": [],
+      "state": "RESERVED_RESIDUAL_ART",
+      "debt": "Residual manifest entry without an authorized current consumer; do not promote by visual proximity."
+    },
+    {
+      "asset_id": "supabase-storage:lobby/main.jpg",
+      "class": "nexus_surface",
+      "origin": "supabase_storage:vexforge-assets",
+      "path": "lobby/main.jpg",
+      "dimensions": null,
+      "format": "jpg",
+      "hash": null,
+      "hash_algorithm": "sha256",
+      "hash_status": "NOT_MEASURED",
+      "provenance": [
+        "src/lib/assetManifest.ts:VERIFIED_ASSETS",
+        "Storage existence guard recorded in repository"
+      ],
+      "authorized_domains": [
+        "Home",
+        "Nexus"
+      ],
+      "state": "VERIFIED_ASSET",
+      "debt": "Storage path is verified; dimensions and content hash require a reproducible asset evidence capture."
+    },
+    {
+      "asset_id": "supabase-storage:logo/IMG_20260606_040509_906.jpg",
+      "class": "brand_mark",
+      "origin": "supabase_storage:vexforge-assets",
+      "path": "logo/IMG_20260606_040509_906.jpg",
+      "dimensions": null,
+      "format": "jpg",
+      "hash": null,
+      "hash_algorithm": "sha256",
+      "hash_status": "NOT_MEASURED",
+      "provenance": [
+        "src/lib/assetManifest.ts:VERIFIED_ASSETS",
+        "Storage existence guard recorded in repository"
+      ],
+      "authorized_domains": [
+        "Auth",
+        "Home",
+        "Shared"
+      ],
+      "state": "VERIFIED_ASSET",
+      "debt": "Storage path is verified; dimensions and content hash require a reproducible asset evidence capture."
+    },
+    {
+      "asset_id": "supabase-storage:logo/IMG_20260606_040542_755.jpg",
+      "class": "brand_mark",
+      "origin": "supabase_storage:vexforge-assets",
+      "path": "logo/IMG_20260606_040542_755.jpg",
+      "dimensions": null,
+      "format": "jpg",
+      "hash": null,
+      "hash_algorithm": "sha256",
+      "hash_status": "NOT_MEASURED",
+      "provenance": [
+        "src/lib/assetManifest.ts:RESERVED_RESIDUAL_ART",
+        "VE-T0 asset matrix"
+      ],
+      "authorized_domains": [],
+      "state": "RESERVED_RESIDUAL_ART",
+      "debt": "Residual manifest entry without an authorized current consumer; do not promote by visual proximity."
+    },
+    {
+      "asset_id": "supabase-storage:logo/IMG_20260606_040543_962.jpg",
+      "class": "brand_mark",
+      "origin": "supabase_storage:vexforge-assets",
+      "path": "logo/IMG_20260606_040543_962.jpg",
+      "dimensions": null,
+      "format": "jpg",
+      "hash": null,
+      "hash_algorithm": "sha256",
+      "hash_status": "NOT_MEASURED",
+      "provenance": [
+        "src/lib/assetManifest.ts:RESERVED_RESIDUAL_ART",
+        "VE-T0 asset matrix"
+      ],
+      "authorized_domains": [],
+      "state": "RESERVED_RESIDUAL_ART",
+      "debt": "Residual manifest entry without an authorized current consumer; do not promote by visual proximity."
+    },
+    {
+      "asset_id": "supabase-storage:logo/IMG_20260606_040544_619.jpg",
+      "class": "brand_mark",
+      "origin": "supabase_storage:vexforge-assets",
+      "path": "logo/IMG_20260606_040544_619.jpg",
+      "dimensions": null,
+      "format": "jpg",
+      "hash": null,
+      "hash_algorithm": "sha256",
+      "hash_status": "NOT_MEASURED",
+      "provenance": [
+        "src/lib/assetManifest.ts:RESERVED_RESIDUAL_ART",
+        "VE-T0 asset matrix"
+      ],
+      "authorized_domains": [],
+      "state": "RESERVED_RESIDUAL_ART",
+      "debt": "Residual manifest entry without an authorized current consumer; do not promote by visual proximity."
+    },
+    {
+      "asset_id": "supabase-storage:logo/IMG_20260606_040546_258.jpg",
+      "class": "brand_mark",
+      "origin": "supabase_storage:vexforge-assets",
+      "path": "logo/IMG_20260606_040546_258.jpg",
+      "dimensions": null,
+      "format": "jpg",
+      "hash": null,
+      "hash_algorithm": "sha256",
+      "hash_status": "NOT_MEASURED",
+      "provenance": [
+        "src/lib/assetManifest.ts:RESERVED_RESIDUAL_ART",
+        "VE-T0 asset matrix"
+      ],
+      "authorized_domains": [],
+      "state": "RESERVED_RESIDUAL_ART",
+      "debt": "Residual manifest entry without an authorized current consumer; do not promote by visual proximity."
+    },
+    {
+      "asset_id": "supabase-storage:market/main.jpg",
+      "class": "residual_art",
+      "origin": "supabase_storage:vexforge-assets",
+      "path": "market/main.jpg",
+      "dimensions": null,
+      "format": "jpg",
+      "hash": null,
+      "hash_algorithm": "sha256",
+      "hash_status": "NOT_MEASURED",
+      "provenance": [
+        "src/lib/assetManifest.ts:RESERVED_RESIDUAL_ART",
+        "VE-T0 asset matrix"
+      ],
+      "authorized_domains": [],
+      "state": "RESERVED_RESIDUAL_ART",
+      "debt": "Residual manifest entry without an authorized current consumer; do not promote by visual proximity."
+    },
+    {
+      "asset_id": "supabase-storage:misc/IMG_20260619_122016.jpg",
+      "class": "nexus_atmosphere",
+      "origin": "supabase_storage:vexforge-assets",
+      "path": "misc/IMG_20260619_122016.jpg",
+      "dimensions": null,
+      "format": "jpg",
+      "hash": null,
+      "hash_algorithm": "sha256",
+      "hash_status": "NOT_MEASURED",
+      "provenance": [
+        "src/lib/assetManifest.ts:RESERVED_RESIDUAL_ART",
+        "VE-T0 asset matrix"
+      ],
+      "authorized_domains": [],
+      "state": "RESERVED_RESIDUAL_ART",
+      "debt": "Residual manifest entry without an authorized current consumer; do not promote by visual proximity."
+    },
+    {
+      "asset_id": "supabase-storage:misc/IMG_20260619_122314.jpg",
+      "class": "nexus_atmosphere",
+      "origin": "supabase_storage:vexforge-assets",
+      "path": "misc/IMG_20260619_122314.jpg",
+      "dimensions": null,
+      "format": "jpg",
+      "hash": null,
+      "hash_algorithm": "sha256",
+      "hash_status": "NOT_MEASURED",
+      "provenance": [
+        "src/lib/assetManifest.ts:VERIFIED_ASSETS",
+        "Storage existence guard recorded in repository"
+      ],
+      "authorized_domains": [
+        "Home",
+        "Nexus"
+      ],
+      "state": "VERIFIED_ASSET",
+      "debt": "Storage path is verified; dimensions and content hash require a reproducible asset evidence capture."
+    },
+    {
+      "asset_id": "supabase-storage:progression/IMG_20260619_120425.jpg",
+      "class": "residual_art",
+      "origin": "supabase_storage:vexforge-assets",
+      "path": "progression/IMG_20260619_120425.jpg",
+      "dimensions": null,
+      "format": "jpg",
+      "hash": null,
+      "hash_algorithm": "sha256",
+      "hash_status": "NOT_MEASURED",
+      "provenance": [
+        "src/lib/assetManifest.ts:RESERVED_RESIDUAL_ART",
+        "VE-T0 asset matrix"
+      ],
+      "authorized_domains": [],
+      "state": "RESERVED_RESIDUAL_ART",
+      "debt": "Residual manifest entry without an authorized current consumer; do not promote by visual proximity."
+    },
+    {
+      "asset_id": "supabase-storage:progression/IMG_20260619_120838.jpg",
+      "class": "residual_art",
+      "origin": "supabase_storage:vexforge-assets",
+      "path": "progression/IMG_20260619_120838.jpg",
+      "dimensions": null,
+      "format": "jpg",
+      "hash": null,
+      "hash_algorithm": "sha256",
+      "hash_status": "NOT_MEASURED",
+      "provenance": [
+        "src/lib/assetManifest.ts:RESERVED_RESIDUAL_ART",
+        "VE-T0 asset matrix"
+      ],
+      "authorized_domains": [],
+      "state": "RESERVED_RESIDUAL_ART",
+      "debt": "Residual manifest entry without an authorized current consumer; do not promote by visual proximity."
+    },
+    {
+      "asset_id": "supabase-storage:progression/IMG_20260619_121047.jpg",
+      "class": "residual_art",
+      "origin": "supabase_storage:vexforge-assets",
+      "path": "progression/IMG_20260619_121047.jpg",
+      "dimensions": null,
+      "format": "jpg",
+      "hash": null,
+      "hash_algorithm": "sha256",
+      "hash_status": "NOT_MEASURED",
+      "provenance": [
+        "src/lib/assetManifest.ts:RESERVED_RESIDUAL_ART",
+        "VE-T0 asset matrix"
+      ],
+      "authorized_domains": [],
+      "state": "RESERVED_RESIDUAL_ART",
+      "debt": "Residual manifest entry without an authorized current consumer; do not promote by visual proximity."
+    },
+    {
+      "asset_id": "supabase-storage:regions/region_cinders_realm.jpg",
+      "class": "world_region",
+      "origin": "supabase_storage:vexforge-assets",
+      "path": "regions/region_cinders_realm.jpg",
+      "dimensions": null,
+      "format": "jpg",
+      "hash": null,
+      "hash_algorithm": "sha256",
+      "hash_status": "NOT_MEASURED",
+      "provenance": [
+        "src/lib/assetManifest.ts:RESERVED_SURFACE_ART",
+        "VE-T0 asset matrix"
+      ],
+      "authorized_domains": [],
+      "state": "RESERVED_SURFACE_ART",
+      "debt": "Reserved by the manifest; no authorized Android consumer promotion in this unit."
+    },
+    {
+      "asset_id": "supabase-storage:regions/region_forge_core.jpg",
+      "class": "world_region",
+      "origin": "supabase_storage:vexforge-assets",
+      "path": "regions/region_forge_core.jpg",
+      "dimensions": null,
+      "format": "jpg",
+      "hash": null,
+      "hash_algorithm": "sha256",
+      "hash_status": "NOT_MEASURED",
+      "provenance": [
+        "src/lib/assetManifest.ts:RESERVED_SURFACE_ART",
+        "VE-T0 asset matrix"
+      ],
+      "authorized_domains": [],
+      "state": "RESERVED_SURFACE_ART",
+      "debt": "Reserved by the manifest; no authorized Android consumer promotion in this unit."
+    },
+    {
+      "asset_id": "supabase-storage:regions/region_iron_veins.jpg",
+      "class": "world_region",
+      "origin": "supabase_storage:vexforge-assets",
+      "path": "regions/region_iron_veins.jpg",
+      "dimensions": null,
+      "format": "jpg",
+      "hash": null,
+      "hash_algorithm": "sha256",
+      "hash_status": "NOT_MEASURED",
+      "provenance": [
+        "src/lib/assetManifest.ts:RESERVED_SURFACE_ART",
+        "VE-T0 asset matrix"
+      ],
+      "authorized_domains": [],
+      "state": "RESERVED_SURFACE_ART",
+      "debt": "Reserved by the manifest; no authorized Android consumer promotion in this unit."
+    },
+    {
+      "asset_id": "supabase-storage:regions/region_shadow_fracture.jpg",
+      "class": "world_region",
+      "origin": "supabase_storage:vexforge-assets",
+      "path": "regions/region_shadow_fracture.jpg",
+      "dimensions": null,
+      "format": "jpg",
+      "hash": null,
+      "hash_algorithm": "sha256",
+      "hash_status": "NOT_MEASURED",
+      "provenance": [
+        "src/lib/assetManifest.ts:RESERVED_SURFACE_ART",
+        "VE-T0 asset matrix"
+      ],
+      "authorized_domains": [],
+      "state": "RESERVED_SURFACE_ART",
+      "debt": "Reserved by the manifest; no authorized Android consumer promotion in this unit."
+    },
+    {
+      "asset_id": "supabase-storage:regions/region_warbound_zone.jpg",
+      "class": "world_region",
+      "origin": "supabase_storage:vexforge-assets",
+      "path": "regions/region_warbound_zone.jpg",
+      "dimensions": null,
+      "format": "jpg",
+      "hash": null,
+      "hash_algorithm": "sha256",
+      "hash_status": "NOT_MEASURED",
+      "provenance": [
+        "src/lib/assetManifest.ts:RESERVED_SURFACE_ART",
+        "VE-T0 asset matrix"
+      ],
+      "authorized_domains": [],
+      "state": "RESERVED_SURFACE_ART",
+      "debt": "Reserved by the manifest; no authorized Android consumer promotion in this unit."
+    },
+    {
+      "asset_id": "supabase-storage:rewards/IMG_20260619_111433.jpg",
+      "class": "residual_art",
+      "origin": "supabase_storage:vexforge-assets",
+      "path": "rewards/IMG_20260619_111433.jpg",
+      "dimensions": null,
+      "format": "jpg",
+      "hash": null,
+      "hash_algorithm": "sha256",
+      "hash_status": "NOT_MEASURED",
+      "provenance": [
+        "src/lib/assetManifest.ts:RESERVED_RESIDUAL_ART",
+        "VE-T0 asset matrix"
+      ],
+      "authorized_domains": [],
+      "state": "RESERVED_RESIDUAL_ART",
+      "debt": "Residual manifest entry without an authorized current consumer; do not promote by visual proximity."
+    },
+    {
+      "asset_id": "supabase-storage:sessions/IMG_20260619_111025.jpg",
+      "class": "residual_art",
+      "origin": "supabase_storage:vexforge-assets",
+      "path": "sessions/IMG_20260619_111025.jpg",
+      "dimensions": null,
+      "format": "jpg",
+      "hash": null,
+      "hash_algorithm": "sha256",
+      "hash_status": "NOT_MEASURED",
+      "provenance": [
+        "src/lib/assetManifest.ts:RESERVED_RESIDUAL_ART",
+        "VE-T0 asset matrix"
+      ],
+      "authorized_domains": [],
+      "state": "RESERVED_RESIDUAL_ART",
+      "debt": "Residual manifest entry without an authorized current consumer; do not promote by visual proximity."
+    },
+    {
+      "asset_id": "supabase-storage:tutorial/main.png",
+      "class": "residual_art",
+      "origin": "supabase_storage:vexforge-assets",
+      "path": "tutorial/main.png",
+      "dimensions": null,
+      "format": "png",
+      "hash": null,
+      "hash_algorithm": "sha256",
+      "hash_status": "NOT_MEASURED",
+      "provenance": [
+        "src/lib/assetManifest.ts:RESERVED_RESIDUAL_ART",
+        "VE-T0 asset matrix"
+      ],
+      "authorized_domains": [],
+      "state": "RESERVED_RESIDUAL_ART",
+      "debt": "Residual manifest entry without an authorized current consumer; do not promote by visual proximity."
+    },
+    {
+      "asset_id": "supabase-storage:ui sistema/IMG_20260619_115844.jpg",
+      "class": "residual_art",
+      "origin": "supabase_storage:vexforge-assets",
+      "path": "ui sistema/IMG_20260619_115844.jpg",
+      "dimensions": null,
+      "format": "jpg",
+      "hash": null,
+      "hash_algorithm": "sha256",
+      "hash_status": "NOT_MEASURED",
+      "provenance": [
+        "src/lib/assetManifest.ts:RESERVED_RESIDUAL_ART",
+        "VE-T0 asset matrix"
+      ],
+      "authorized_domains": [],
+      "state": "RESERVED_RESIDUAL_ART",
+      "debt": "Residual manifest entry without an authorized current consumer; do not promote by visual proximity."
+    },
+    {
+      "asset_id": "supabase-storage:ui sistema/IMG_20260619_120107.jpg",
+      "class": "residual_art",
+      "origin": "supabase_storage:vexforge-assets",
+      "path": "ui sistema/IMG_20260619_120107.jpg",
+      "dimensions": null,
+      "format": "jpg",
+      "hash": null,
+      "hash_algorithm": "sha256",
+      "hash_status": "NOT_MEASURED",
+      "provenance": [
+        "src/lib/assetManifest.ts:RESERVED_RESIDUAL_ART",
+        "VE-T0 asset matrix"
+      ],
+      "authorized_domains": [],
+      "state": "RESERVED_RESIDUAL_ART",
+      "debt": "Residual manifest entry without an authorized current consumer; do not promote by visual proximity."
+    },
+    {
+      "asset_id": "supabase-storage:wallet/main.jpg",
+      "class": "residual_art",
+      "origin": "supabase_storage:vexforge-assets",
+      "path": "wallet/main.jpg",
+      "dimensions": null,
+      "format": "jpg",
+      "hash": null,
+      "hash_algorithm": "sha256",
+      "hash_status": "NOT_MEASURED",
+      "provenance": [
+        "src/lib/assetManifest.ts:RESERVED_RESIDUAL_ART",
+        "VE-T0 asset matrix"
+      ],
+      "authorized_domains": [],
+      "state": "RESERVED_RESIDUAL_ART",
+      "debt": "Residual manifest entry without an authorized current consumer; do not promote by visual proximity."
+    }
+  ]
+}
