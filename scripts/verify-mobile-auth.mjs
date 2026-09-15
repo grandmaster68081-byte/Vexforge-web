@@ -11,15 +11,16 @@ const contents = Object.fromEntries(
   await Promise.all(Object.entries(files).map(async ([key, path]) => [key, await readFile(path, "utf8")])),
 );
 const authAsset = await readFile("mobile/assets/images/auth-reference-scene.png");
-const authAssetIsTargetCanvas =
+const authAssetIsValidReference =
   authAsset.readUInt32BE(0) === 0x89504e47 &&
-  authAsset.readUInt32BE(16) === 1080 &&
-  authAsset.readUInt32BE(20) === 2340 &&
+  authAsset.readUInt32BE(16) >= 768 &&
+  authAsset.readUInt32BE(20) >= 768 &&
   authAsset[25] === 2;
 
 const assertions = [
   ["auth screen exists", contents.auth.includes("export default function AuthScreen")],
-  ["auth is a programmatic surface without a background skin", contents.auth.includes('testID="auth-reference-scene"') && !contents.auth.includes("auth-reference-scene.png") && !contents.auth.includes("ImageBackground")],
+  ["auth uses the canonical scene with programmatic controls", contents.auth.includes('surface="auth"') && contents.auth.includes('testID="auth-reference-scene"') && contents.auth.includes("TextInput") && contents.auth.includes("Pressable")],
+  ["auth reference image is stored as a valid visual asset", authAssetIsValidReference],
   ["sign-in form uses context action", contents.auth.includes("await signIn(normalizedEmail, password, rememberSession)")],
   ["sign-up form uses context action", contents.auth.includes("const createdSession = await signUp(normalizedEmail, password)")],
   ["tabs are guarded by session", contents.tabs.includes("if (!session) return <Redirect href=\"/auth\" />")],

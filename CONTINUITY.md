@@ -1,3 +1,18 @@
+## 2026-09-15 — VE-MOB-AUTH — NEXUS ACCESS VISUAL / IMPLEMENTED_UNVERIFIED
+
+- **ENTORNO ACTIVO:** aplicación Android en `mobile/**`; la web permanece congelada.
+- **AUTORIDAD:** fila ACTIVE `public.vexforge_official_documents / vexforge_home_world_system_protocol_v3`, V2.3, SHA-256 `90dbcc59a66d5ed4bd19eda4f95adc14c10d75faa3c1646a6df932549dfced91`, confirmada por HTTPS.
+- **SCREEN / DOMAIN:** Auth / Nexus Access, entrada segura al mundo de VEXFORGE.
+- **REFERENCIA VISUAL:** la imagen premium generada para Auth queda guardada como `mobile/assets/images/auth-reference-scene.png`, CANON_ACTIVE para esta superficie, SHA-256 `d6da089a845e7a4732f7e6097d5bd2fe99fe2cb62959ee9e6c8848d012116a43`.
+- **IMPLEMENTACIÓN:** Auth consume `CANONICAL_BACKGROUNDS.auth` mediante `ScreenShell`; el formulario sigue siendo React Native real, con inputs, botón de entrada, registro, recuperación, OAuth, recordar sesión, show/hide password, estado de enlace, feedback y navegación de sesión.
+- **IDENTIDAD:** la escena conserva citadel / forja, cyan + oro, profundidad por capas, panel diegético y lenguaje de juego; no se usa la imagen como control estático ni como sustituto del formulario.
+- **FUNCIÓN PRESERVADA:** Supabase Auth, sesión persistida, confirmación de correo, OAuth Google/Discord/Apple, recuperación de contraseña, estados loading/error/pending, teclado, safe area, reduced-motion del shell y accesibilidad.
+- **GUARDAS:** `node scripts/verify-mobile-auth.mjs` OK, `17/17`; `node --check scripts/verify-mobile-auth.mjs` OK; `git diff --check` OK. El typecheck móvil quedó bloqueado porque `npm ci --ignore-scripts` fue rechazado por el firewall al resolver `npm-package-arg@11.0.3`; no se modificaron dependencias.
+- **RELEASE GATE:** no se inició workflow Android, no se compiló APK y no se publicó release, conforme a la instrucción vigente del operador.
+- **STATUS:** `IMPLEMENTED_UNVERIFIED`; falta evidencia visual/táctil física en APK autorizada.
+- **PERSISTENCIA:** publicar código, asset, guardia y esta continuidad juntos en `main` mediante la API REST HTTPS oficial de GitHub con `[skip ci]`, sin `git push`.
+- **NEXT BLOCK:** QA física en APK sólo cuando el operador autorice una nueva compilación; no tocar el motor de juego ni la web congelada.
+
 ## 2026-09-15 — VE-MOB-3 HOME — TIER1 SCENE REFERENCE / IMPLEMENTED_UNVERIFIED
 
 - **ENTORNO ACTIVO:** aplicación Android en `mobile/**`; la web permanece congelada.

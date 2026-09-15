@@ -20,7 +20,7 @@ export const OFFICIAL_ASSETS = {
 
 export const CANONICAL_BACKGROUNDS = {
   home: require('../assets/images/home-reference-scene.png'),
-  auth: null,
+  auth: require('../assets/images/auth-reference-scene.png'),
   pvp: null,
   missions: null,
   packs: null,
