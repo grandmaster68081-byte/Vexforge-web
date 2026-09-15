@@ -5194,3 +5194,33 @@
   diferido por `HTTP 429` y `PROFILE_HISTORY_STATE_GAP`.
 - **NEXT BLOCK:** mantener el trabajo dentro de unidades documentales
   permitidas hasta que exista autorización explícita para APK y QA física.
+
+---
+## 2026-09-15 — VE-MOB-T0 — DEVICE EVIDENCE REGISTER / PREPARED
+
+- **ENTORNO ACTIVO:** aplicación Android en `mobile/**`; la web permanece
+  congelada.
+- **AUTORIDAD:** la fila ACTIVE de
+  `public.vexforge_official_documents/vexforge_home_world_system_protocol_v3`
+  sigue en V2.2, con SHA-256
+  `828a077428987b2534e3733204ac721ef3073eb7dadf9530a6f46877dd63c503`.
+- **DOCUMENTO:** se añadió
+  `docs/VE-T0-ANDROID-DEVICE-EVIDENCE-REGISTER.md`, que formaliza la
+  `DEVICE_MATRIX`, la `VISUAL_ACCEPTANCE` y los campos físicos, visuales,
+  táctiles, de estado, motion/audio, persistencia, rendimiento y release.
+- **COBERTURA:** se registraron los tres candidatos `LOW`,
+  `REFERENCE` y `HIGH`, las 13 rutas de producto y 39 celdas
+  `tier × Screen Master Record`, todas en `NOT_MEASURED /
+  EVIDENCE_REQUIRED`.
+- **UMBRAL CONSERVADO:** Battlefield/replay requiere captura de 30 segundos,
+  frame time P95 ≤ 16,7 ms, P99 ≤ 25 ms y ausencia de crash/OOM. Ningún
+  candidato se declara `SUPPORTED`.
+- **NO APK:** no se instaló ni compiló APK, no se ejecutó QA autenticada, no
+  se inició workflow Android y no se publicó release.
+- **PERSISTENCIA:** el documento y esta continuidad se publicarán juntos en
+  `main` mediante la API REST HTTPS oficial de GitHub con `[skip ci]`, sin
+  `git push`.
+- **STATUS:** T0 permanece `PREPARED / EVIDENCE_REQUIRED`; `PROFILE_HISTORY_STATE_GAP`
+  sigue `BLOCKED` y el HEAD de Storage diferido por `HTTP 429` sigue abierto.
+- **NEXT BLOCK:** no ejecutar evidencia física ni release sin autorización
+  explícita; continuar sólo con documentación T0 permitida por el protocolo.
