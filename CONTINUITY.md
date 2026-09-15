@@ -1,3 +1,37 @@
+## 2026-09-15 — VE-MOB-T2V — WORLD RAID CARD TOKENS / IMPLEMENTED_UNVERIFIED
+
+- **BRANCH:** `main`.
+- **SCREEN / DOMAIN:** `WORLD ATLAS` / tarjeta de World Raid.
+- **BLOCK:** centralizar la presentación del raid sin tocar participación,
+  sesión, RPCs, rewards, estado, datos vivos ni autoridad del servidor.
+- **WHAT CHANGED:** `VISUAL_TOKENS.worldRaid` registra shell, stripe, identidad,
+  dificultad, métricas, código y acción; `RaidCard` consume esos roles y la
+  guardia T2V exige su presencia.
+- **BEHAVIOR PRESERVED:** mismos `world-raid-*`, `onJoin`, `onContribute`,
+  `joined`, `busy`, acciones oficiales, mensajes de validación y controles de
+  accesibilidad.
+- **DATA PRESERVED:** no se añadieron solicitudes, estado, raids, rewards,
+  Supabase, Auth, RPCs, economía, gameplay, assets ni cambios en la web
+  congelada.
+- **MOTION / PERFORMANCE:** no se añadió movimiento, listener, render de
+  datos, timing ni trabajo en segundo plano; sólo se registraron roles
+  estáticos de presentación.
+- **AUTHORITY:** fila ACTIVE de
+  `public.vexforge_official_documents / vexforge_home_world_system_protocol_v3`,
+  confirmada por HTTPS antes de la implementación.
+- **GUARD:** `node scripts/verify-mobile-world.mjs`,
+  `node scripts/verify-mobile-visual-system.mjs`,
+  `node --check scripts/verify-mobile-visual-system.mjs` y `git diff --check`
+  deben pasar.
+- **RELEASE GATE:** no se inicia workflow Android, no se compila APK y no se
+  publica release; la evidencia física queda bajo el control del operador.
+- **STATUS:** `IMPLEMENTED_UNVERIFIED`.
+- **PERSISTENCIA:** publicar código, guardias, documento T2V y esta continuidad
+  juntos en `main` mediante la API REST HTTPS oficial de GitHub con `[skip ci]`,
+  sin `git push`.
+- **NEXT BLOCK:** continuar con otra pieza T2V explícita, sin tocar el motor de
+  juego, los contratos de Supabase, la web congelada ni el tutorial.
+
 ## 2026-09-15 — VE-MOB-T2V — WORLD BOSS CARD TOKENS / IMPLEMENTED_UNVERIFIED
 
 - **BRANCH:** `main`.

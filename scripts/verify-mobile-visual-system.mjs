@@ -422,6 +422,24 @@ for (const token of [
     failures.push(`World Boss card is missing visual token "${token}"`);
   }
 }
+for (const token of [
+  'worldRaid.card',
+  'worldRaid.stripe',
+  'worldRaid.header',
+  'worldRaid.icon',
+  'worldRaid.title',
+  'worldRaid.metaText',
+  'worldRaid.difficulty',
+  'worldRaid.stats',
+  'worldRaid.code',
+  'worldRaid.action',
+  'worldRaid.actionText',
+  'worldRaid.integrityNote',
+]) {
+  if (!world.includes(`VISUAL_TOKENS.${token}`)) {
+    failures.push(`World Raid card is missing visual token "${token}"`);
+  }
+}
 
 if (failures.length > 0) {
   console.error('T2V visual system guard failed:');

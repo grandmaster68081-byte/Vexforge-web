@@ -318,19 +318,35 @@ function RaidCard({ raid, joined, busy, onJoin, onContribute, colors }: { raid: 
   const difficulty = raid.metadata?.difficulty;
   const tone = difficultyTone(difficulty, colors);
   return (
-    <View testID={`world-raid-${raid.id}`} style={[styles.raidCard, { backgroundColor: colors.panel, borderColor: colors.border }]}>
-      <View style={[styles.raidStripe, { backgroundColor: tone }]} />
-       <View style={styles.raidHeader}><View style={styles.raidIcon}><Feather name="people" size={18} color={tone} /></View><View style={styles.raidCopy}><Text style={[styles.raidTitle, { color: colors.foreground }]} numberOfLines={2}>{identity.name}</Text><Text style={[styles.metaText, { color: colors.mutedForeground }]}>{labelize(raid.region_id, 'REGIÓN NO REPORTADA')} · {worldStatusLabel(raid.status)}</Text></View><Text style={[styles.difficulty, { color: tone }]}>{difficulty ? difficulty.toUpperCase() : 'DIFICULTAD NO REPORTADA'}</Text></View>
-       <View style={styles.raidStats}><Text style={[styles.metaText, { color: colors.mutedForeground }]}>{numberSignal(raid.metadata?.max_participants, 'LÍMITE')}</Text><Text style={[styles.metaText, { color: colors.accent }]}>{typeof raid.metadata?.reward_multiplier === 'number' ? `x${raid.metadata.reward_multiplier} recompensa` : 'MULTIPLICADOR NO REPORTADO'}</Text><Text style={[styles.metaText, { color: colors.mutedForeground }]}>{formatDate(raid.started_at ?? raid.created_at)}</Text></View>
-       <Text style={[styles.raidCode, { color: colors.mutedForeground }]}>{identity.code}</Text>
-      <Pressable testID={`world-raid-action-${raid.id}`} accessibilityRole="button" disabled={busy} onPress={joined ? onContribute : onJoin} style={({ pressed }) => [styles.secondaryButton, { borderColor: tone, opacity: pressed ? 0.7 : busy ? 0.5 : 1 }]}>
-        {busy ? <ActivityIndicator size="small" color={tone} /> : <Feather name={joined ? 'zap' : 'arrow-forward'} size={15} color={tone} />}
-        <Text style={[styles.secondaryButtonText, { color: tone }]}>{busy ? 'SINCRONIZANDO' : joined ? 'CONTRIBUIR AL RAID' : 'UNIRSE AL RAID'}</Text>
+    <View testID={`world-raid-${raid.id}`} style={[worldRaidStyles.card, { backgroundColor: colors.panel, borderColor: colors.border }]}>
+      <View style={[worldRaidStyles.stripe, { backgroundColor: tone }]} />
+       <View style={worldRaidStyles.header}><View style={worldRaidStyles.icon}><Feather name="people" size={VISUAL_TOKENS.worldRaid.icon.size} color={tone} /></View><View style={worldRaidStyles.copy}><Text style={[worldRaidStyles.title, { color: colors.foreground }]} numberOfLines={2}>{identity.name}</Text><Text style={[worldRaidStyles.metaText, { color: colors.mutedForeground }]}>{labelize(raid.region_id, 'REGIÓN NO REPORTADA')} · {worldStatusLabel(raid.status)}</Text></View><Text style={[worldRaidStyles.difficulty, { color: tone }]}>{difficulty ? difficulty.toUpperCase() : 'DIFICULTAD NO REPORTADA'}</Text></View>
+       <View style={worldRaidStyles.stats}><Text style={[worldRaidStyles.metaText, { color: colors.mutedForeground }]}>{numberSignal(raid.metadata?.max_participants, 'LÍMITE')}</Text><Text style={[worldRaidStyles.metaText, { color: colors.accent }]}>{typeof raid.metadata?.reward_multiplier === 'number' ? `x${raid.metadata.reward_multiplier} recompensa` : 'MULTIPLICADOR NO REPORTADO'}</Text><Text style={[worldRaidStyles.metaText, { color: colors.mutedForeground }]}>{formatDate(raid.started_at ?? raid.created_at)}</Text></View>
+       <Text style={[worldRaidStyles.code, { color: colors.mutedForeground }]}>{identity.code}</Text>
+      <Pressable testID={`world-raid-action-${raid.id}`} accessibilityRole="button" disabled={busy} onPress={joined ? onContribute : onJoin} style={({ pressed }) => [worldRaidStyles.action, { borderColor: tone, opacity: pressed ? 0.7 : busy ? 0.5 : 1 }]}>
+        {busy ? <ActivityIndicator size="small" color={tone} /> : <Feather name={joined ? 'zap' : 'arrow-forward'} size={VISUAL_TOKENS.worldRaid.action.iconSize} color={tone} />}
+        <Text style={[worldRaidStyles.actionText, { color: tone }]}>{busy ? 'SINCRONIZANDO' : joined ? 'CONTRIBUIR AL RAID' : 'UNIRSE AL RAID'}</Text>
       </Pressable>
-      <Text style={[styles.integrityNote, { color: colors.mutedForeground }]}>{joined ? 'Tu contribución será validada por el RPC oficial.' : 'La participación se registra con la sesión del Nexus.'}</Text>
+      <Text style={[worldRaidStyles.integrityNote, { color: colors.mutedForeground }]}>{joined ? 'Tu contribución será validada por el RPC oficial.' : 'La participación se registra con la sesión del Nexus.'}</Text>
     </View>
   );
 }
+
+const worldRaidStyles = StyleSheet.create({
+  card: { position: 'relative', overflow: 'hidden', borderWidth: VISUAL_TOKENS.worldRaid.card.borderWidth, borderRadius: VISUAL_TOKENS.worldRaid.card.radius, padding: VISUAL_TOKENS.worldRaid.card.padding, gap: VISUAL_TOKENS.worldRaid.card.gap },
+  stripe: { position: 'absolute', left: 0, right: 0, top: 0, height: VISUAL_TOKENS.worldRaid.stripe.height },
+  header: { flexDirection: 'row', alignItems: 'center', gap: VISUAL_TOKENS.worldRaid.header.gap },
+  icon: { width: VISUAL_TOKENS.worldRaid.icon.size, height: VISUAL_TOKENS.worldRaid.icon.size, borderRadius: VISUAL_TOKENS.worldRaid.icon.radius, borderWidth: VISUAL_TOKENS.worldRaid.icon.borderWidth, borderColor: VISUAL_TOKENS.worldRaid.icon.borderColor, alignItems: 'center', justifyContent: 'center' },
+  copy: { flex: 1 },
+  title: { fontSize: VISUAL_TOKENS.worldRaid.title.fontSize, fontWeight: VISUAL_TOKENS.worldRaid.title.fontWeight, lineHeight: VISUAL_TOKENS.worldRaid.title.lineHeight },
+  metaText: { fontSize: VISUAL_TOKENS.worldRaid.metaText.fontSize, fontWeight: VISUAL_TOKENS.worldRaid.metaText.fontWeight, letterSpacing: VISUAL_TOKENS.worldRaid.metaText.letterSpacing },
+  difficulty: { fontSize: VISUAL_TOKENS.worldRaid.difficulty.fontSize, fontWeight: VISUAL_TOKENS.worldRaid.difficulty.fontWeight, letterSpacing: VISUAL_TOKENS.worldRaid.difficulty.letterSpacing },
+  stats: { flexDirection: 'row', justifyContent: 'space-between', gap: VISUAL_TOKENS.worldRaid.stats.gap, flexWrap: 'wrap' },
+  code: { fontSize: VISUAL_TOKENS.worldRaid.code.fontSize, letterSpacing: VISUAL_TOKENS.worldRaid.code.letterSpacing },
+  action: { minHeight: VISUAL_TOKENS.worldRaid.action.minHeight, borderWidth: VISUAL_TOKENS.worldRaid.action.borderWidth, borderRadius: VISUAL_TOKENS.worldRaid.action.radius, alignItems: 'center', justifyContent: 'center', flexDirection: 'row', gap: VISUAL_TOKENS.worldRaid.action.gap },
+  actionText: { fontSize: VISUAL_TOKENS.worldRaid.actionText.fontSize, fontWeight: VISUAL_TOKENS.worldRaid.actionText.fontWeight, letterSpacing: VISUAL_TOKENS.worldRaid.actionText.letterSpacing },
+  integrityNote: { fontSize: VISUAL_TOKENS.worldRaid.integrityNote.fontSize, lineHeight: VISUAL_TOKENS.worldRaid.integrityNote.lineHeight, textAlign: 'center' },
+});
 
 function LoreCard({ entry, expanded, onToggle, colors }: { entry: MobileLoreEntry; expanded: boolean; onToggle: () => void; colors: Colors }) {
   return (

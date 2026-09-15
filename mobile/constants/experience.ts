@@ -227,6 +227,20 @@ export const VISUAL_TOKENS = {
     actionText: { fontSize: 10, fontWeight: '900', letterSpacing: 0.7 },
     integrityNote: { fontSize: 9, lineHeight: 14 },
   },
+  worldRaid: {
+    card: { borderWidth: 1, radius: 16, padding: 14, gap: 11 },
+    stripe: { height: 3 },
+    header: { gap: 10 },
+    icon: { size: 40, radius: 13, borderWidth: 1, borderColor: 'rgba(255,255,255,0.12)', iconSize: 18 },
+    title: { fontSize: 15, fontWeight: '800', lineHeight: 19 },
+    metaText: { fontSize: 10, fontWeight: '700', letterSpacing: 0.45 },
+    difficulty: { fontSize: 9, fontWeight: '900', letterSpacing: 0.7 },
+    stats: { gap: 5 },
+    code: { fontSize: 9, letterSpacing: 1 },
+    action: { minHeight: 43, radius: 11, borderWidth: 1, gap: 8, iconSize: 15 },
+    actionText: { fontSize: 10, fontWeight: '900', letterSpacing: 0.6 },
+    integrityNote: { fontSize: 9, lineHeight: 14 },
+  },
   scene: {
     backgroundOpacity: 0.74,
     ambientGlow: {
