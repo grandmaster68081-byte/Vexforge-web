@@ -5251,3 +5251,14 @@
   `[skip ci]`, sin `git push`.
 - **NEXT BLOCK:** mantener el gate físico y de release cerrado; avanzar sólo
   con una unidad T0 documental permitida hasta autorización explícita.
+
+---
+## 2026-09-15 — ACCOUNT BOOTSTRAP — PLAYER CARD INVENTORY
+
+- **SCOPE:** operación de datos en Supabase vivo; no se modificó `mobile/**`, no se compiló APK y no se publicó release.
+- **SOURCE:** cuenta origen verificada con 127 cartas distintas, 635 copias totales y cantidad 5 en cada carta del catálogo activo.
+- **TARGET:** nueva cuenta creada como jugador activo; el correo de confirmación fue enviado y queda pendiente de confirmación.
+- **INVENTORY:** 127/127 cartas activas asignadas, 5 copias por carta, 635 copias totales; 0 bloqueadas y 0 listadas.
+- **PERMISSIONS:** `role=player`, `is_admin=false`, `is_super_admin=false`, `is_qa=false`; no se copiaron privilegios administrativos, saldo ni datos privados de la cuenta origen.
+- **STATUS:** `COMPLETED / EMAIL_CONFIRMATION_PENDING`.
+- **NEXT:** confirmar el correo antes del inicio de sesión normal; no se requiere APK para esta operación.
