@@ -1,3 +1,13 @@
+## 2026-09-15 — VE-MOB-5 — VISUAL RECTIFICATION / SCENE-FIRST FORGE COMPOSITION
+
+- **REVISIÓN OBLIGATORIA:** una inspección contra la orden original mostró que la primera composición conservaba la referencia, pero todavía se leía como una barra de búsqueda, chips, resumen y acciones administrativas sobre una imagen.
+- **CORRECCIÓN:** se retiraron la toolbar, los chips y el sorter no funcional. La escena ahora reconstruye dos rieles de cartas nativas sobre los dos pedestales de la referencia, con fallback explícito para slots vacíos.
+- **PUNTOS DE ACCESO:** búsqueda vive en el receptáculo inferior izquierdo; `FORJAR/EDITAR` vive en el núcleo circular central; filtro de facción y detalle viven en el receptáculo inferior derecho. Son `TextInput`/`Pressable` reales, no hotspots transparentes.
+- **JERARQUÍA VISUAL:** el PNG conserva el mundo, el encuadre y la arquitectura; el runtime aporta datos, cartas, estados, interacción, pulso, barrido y lectura mínima de métricas sin cubrir la escena con un dashboard.
+- **VERIFICACIÓN:** `node scripts/verify-mobile-deck.mjs` pasa `31/31`; `git diff --check` y `node --check scripts/verify-mobile-deck.mjs` pasan. La verificación visual física sigue pendiente porque no se autorizó una APK.
+
+---
+
 ## 2026-09-15 — VE-MOB-5 — OFFICIAL FORGE SCENE / NATIVE DECK EXPERIENCE / IMPLEMENTED_UNVERIFIED
 
 - **ENTORNO ACTIVO:** aplicación Android en `mobile/**`; la web permanece congelada.

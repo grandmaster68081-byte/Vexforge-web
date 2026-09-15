@@ -46,7 +46,6 @@ const MAX_MYTHIC = 1;
 const MAX_LEGENDARY = 3;
 const FACTIONS = ['Guerrero', 'Mago', 'Paladín', 'Pícaro'] as const;
 type Faction = (typeof FACTIONS)[number];
-type SortMode = 'recent' | 'name' | 'power';
 
 function rarityColor(rarity: string, colors: ReturnType<typeof useColors>) {
   return {
@@ -320,7 +319,6 @@ export default function DeckScreen() {
   const [validation, setValidation] = useState<DeckValidation | null>(null);
   const [search, setSearch] = useState('');
   const [faction, setFaction] = useState<Faction | 'all'>('all');
-  const [sort, setSort] = useState<SortMode>('recent');
   const [detail, setDetail] = useState<DeckSlot | null>(null);
   const [editing, setEditing] = useState(false);
 
@@ -401,6 +399,7 @@ export default function DeckScreen() {
   }, [faction, hasSavedDeck, savedSlots, savedSummary, search]);
   const showSavedDeck = hasSavedDeck && visibleSavedDeck;
   const sceneSlots = showSavedDeck ? savedSlots : [];
+  const reserveSlots = showSavedDeck ? savedSlots.slice(7, 14) : [];
   const toggleCard = (card: PlayerCard) => {
     setMessage(null);
     setValidation(null);
@@ -559,64 +558,81 @@ export default function DeckScreen() {
               })}
             </View>
 
-            <View style={[styles.sceneTools, { top: canvasHeight * 0.59, left: frameWidth * 0.075, right: frameWidth * 0.075 }]}>
-              <View style={[styles.searchShell, { borderColor: `${colors.foreground}52`, backgroundColor: `${colors.ink}9C` }]}>
-                <Feather name="search" size={14} color={colors.mutedForeground} />
+            <View style={[styles.reserveRail, { top: canvasHeight * 0.605, left: frameWidth * 0.075, right: frameWidth * 0.075 }]}>
+              {Array.from({ length: 7 }).map((_, index) => {
+                const slot = reserveSlots[index];
+                const accent = slot ? factionColor(slot.faction, colors) : `${colors.foreground}4D`;
+                return (
+                  <Pressable
+                    key={`reserve-slot-${index}`}
+                    testID={`reserve-slot-${index + 1}`}
+                    accessibilityRole="button"
+                    accessibilityLabel={slot ? `Ver reserva ${slot.name}` : `Forjar reserva ${index + 1}`}
+                    onPress={() => slot ? setDetail(slot) : handleCreate()}
+                    style={({ pressed }) => [styles.reserveSlot, { borderColor: slot?.is_champion ? colors.accent : accent, opacity: pressed ? 0.72 : 1 }]}
+                  >
+                    {slot?.image_url ? <Image source={{ uri: slot.image_url }} style={styles.reserveArt} resizeMode="cover" /> : <View style={[styles.reserveFallback, { backgroundColor: `${colors.ink}B8` }]}><Feather name={slot ? 'shield' : 'plus'} size={10} color={accent} /><Text style={[styles.reserveLabel, { color: accent }]}>{slot ? slot.code : `R${index + 1}`}</Text></View>}
+                    {slot ? <Text style={[styles.reserveName, { color: colors.foreground }]} numberOfLines={1}>{slot.name}</Text> : null}
+                  </Pressable>
+                );
+              })}
+            </View>
+
+            <View testID="deck-summary-overlay" style={[styles.forgeReadout, { top: canvasHeight * 0.735, left: frameWidth * 0.09, right: frameWidth * 0.09 }]}>
+              <View style={styles.forgeReadoutStats}>
+                <View style={styles.forgeReadoutStat}><Text style={[styles.forgeReadoutValue, { color: colors.foreground }]}>{showSavedDeck ? savedSummary.cardCount : '—'}</Text><Text style={[styles.forgeReadoutLabel, { color: colors.mutedForeground }]}>CARTAS</Text></View>
+                <View style={styles.forgeReadoutStat}><Text style={[styles.forgeReadoutValue, { color: colors.foreground }]}>{showSavedDeck ? savedSummary.power : '—'}</Text><Text style={[styles.forgeReadoutLabel, { color: colors.mutedForeground }]}>PODER</Text></View>
+                <View style={[styles.forgeReadoutStat, { flex: 1 }]}><Text style={[styles.forgeReadoutValue, { color: showSavedDeck ? factionColor(savedSummary.primaryFaction ?? '', colors) : colors.mutedForeground }]} numberOfLines={1}>{showSavedDeck ? savedSummary.championName ?? 'CAMPEÓN NO REPORTADO' : hasSavedDeck ? 'SIN COINCIDENCIAS' : 'NÚCLEO EN ESPERA'}</Text><Text style={[styles.forgeReadoutLabel, { color: colors.mutedForeground }]}>{showSavedDeck ? savedSummary.factionLabel : faction === 'all' ? 'TODAS LAS FACCIONES' : faction.toUpperCase()}</Text></View>
+              </View>
+            </View>
+
+            <View style={[styles.bottomConsole, { top: canvasHeight * 0.785, left: frameWidth * 0.075, right: frameWidth * 0.075 }]}>
+              <View style={[styles.searchDock, { borderColor: `${colors.foreground}5C`, backgroundColor: `${colors.ink}B8` }]}>
+                <Feather name="search" size={13} color={colors.mutedForeground} />
                 <TextInput
                   testID="deck-search"
-                  accessibilityLabel="Buscar mazo por nombre"
+                  accessibilityLabel="Buscar carta o código"
                   value={search}
                   onChangeText={setSearch}
-                  placeholder="Buscar carta o código"
+                  placeholder="BUSCAR"
                   placeholderTextColor={`${colors.mutedForeground}CC`}
                   style={[styles.searchInput, { color: colors.foreground }]}
                   autoCorrect={false}
                 />
-                {search ? <Pressable testID="deck-clear-search" accessibilityRole="button" accessibilityLabel="Limpiar búsqueda" onPress={() => setSearch('')}><Feather name="x" size={14} color={colors.mutedForeground} /></Pressable> : null}
+                {search ? <Pressable testID="deck-clear-search" accessibilityRole="button" accessibilityLabel="Limpiar búsqueda" onPress={() => setSearch('')}><Feather name="x" size={13} color={colors.mutedForeground} /></Pressable> : null}
               </View>
               <Pressable
-                testID="deck-sort"
+                testID="edit-deck"
                 accessibilityRole="button"
-                accessibilityLabel={`Cambiar orden de mazos: ${sort === 'recent' ? 'Recientes' : sort === 'name' ? 'Nombre' : 'Poder'}`}
-                onPress={() => setSort(sort === 'recent' ? 'name' : sort === 'name' ? 'power' : 'recent')}
-                style={({ pressed }) => [styles.toolButton, { borderColor: `${colors.foreground}52`, backgroundColor: `${colors.ink}9C`, opacity: pressed ? 0.72 : 1 }]}
+                accessibilityLabel={hasSavedDeck ? 'Editar mazo' : 'Crear mazo'}
+                onPress={() => { setSelectedIds(savedSlots.map((slot) => slot.card_id)); setMessage(hasSavedDeck ? 'Mazo cargado para edición.' : 'Nuevo borrador listo para forjar.'); setEditing(true); }}
+                style={({ pressed }) => [styles.coreAction, { borderColor: colors.accent, backgroundColor: `${colors.ink}D9`, opacity: pressed ? 0.72 : 1, transform: [{ scale: pressed ? 0.96 : 1 }] }]}
               >
-                <Feather name="sliders" size={14} color={colors.accent} />
-                <Text style={[styles.toolButtonText, { color: colors.foreground }]}>{sort === 'recent' ? 'RECIENTES' : sort === 'name' ? 'NOMBRE' : 'PODER'}</Text>
+                <Feather name={hasSavedDeck ? 'edit-2' : 'plus'} size={17} color={colors.accent} />
+                <Text style={[styles.coreActionText, { color: colors.accent }]}>{hasSavedDeck ? 'EDITAR' : 'FORJAR'}</Text>
               </Pressable>
-              <Pressable
-                testID="deck-filter"
-                accessibilityRole="button"
-                accessibilityLabel="Restablecer filtros de mazos"
-                onPress={() => { setFaction('all'); setSearch(''); setSort('recent'); }}
-                style={({ pressed }) => [styles.toolButton, { borderColor: `${colors.foreground}52`, backgroundColor: `${colors.ink}9C`, opacity: pressed ? 0.72 : 1 }]}
-              >
-                <Feather name="rotate-ccw" size={14} color={colors.mutedForeground} />
-              </Pressable>
-            </View>
-            <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.factionRow} style={[styles.factionScroller, { top: canvasHeight * 0.65, left: frameWidth * 0.075, right: frameWidth * 0.075 }]}>
-              <Pressable testID="deck-faction-all" accessibilityRole="button" accessibilityLabel="Todos los mazos" onPress={() => setFaction('all')} style={[styles.factionChip, { borderColor: faction === 'all' ? colors.accent : `${colors.foreground}52`, backgroundColor: faction === 'all' ? `${colors.accent}22` : `${colors.ink}9C` }]}><Text style={[styles.factionChipText, { color: faction === 'all' ? colors.accent : colors.foreground }]}>TODAS</Text></Pressable>
-              {FACTIONS.map((value) => (
-                <Pressable key={value} testID={`deck-faction-${value}`} accessibilityRole="button" accessibilityLabel={`Filtrar mazos por ${value}`} onPress={() => setFaction(faction === value ? 'all' : value)} style={[styles.factionChip, { borderColor: faction === value ? factionColor(value, colors) : `${colors.foreground}52`, backgroundColor: faction === value ? `${factionColor(value, colors)}22` : `${colors.ink}9C` }]}><Text style={[styles.factionChipText, { color: faction === value ? factionColor(value, colors) : colors.foreground }]}>{value.toUpperCase()}</Text></Pressable>
-              ))}
-            </ScrollView>
-
-            <View testID="deck-summary-overlay" style={[styles.deckSummaryOverlay, { top: canvasHeight * 0.715, left: frameWidth * 0.12, right: frameWidth * 0.12, borderColor: `${colors.accent}66`, backgroundColor: `${colors.ink}D6` }]}>
-              <View style={styles.deckSummaryHeading}>
-                <View style={{ flex: 1 }}>
-                  <Text style={[styles.deckSummaryTitle, { color: colors.accent }]} numberOfLines={1}>{showSavedDeck ? 'MAZO ACTIVO' : hasSavedDeck ? 'SIN COINCIDENCIAS' : 'SLOT DE FORJA'}</Text>
-                  <Text style={[styles.deckSummaryFaction, { color: showSavedDeck ? factionColor(savedSummary.primaryFaction ?? '', colors) : colors.mutedForeground }]} numberOfLines={1}>{showSavedDeck ? savedSummary.factionLabel : hasSavedDeck ? 'Ajusta la búsqueda o el filtro de facción.' : 'Ningún mazo guardado'}</Text>
-                </View>
-                <Text style={[styles.deckSummaryState, { color: showSavedDeck ? colors.success : colors.mutedForeground }]}>{showSavedDeck ? 'SINCRONIZADO' : hasSavedDeck ? 'FILTRADO' : 'VACÍO'}</Text>
-              </View>
-              <View style={styles.deckSummaryStats}>
-                <View style={styles.deckSummaryStat}><Text style={[styles.deckSummaryValue, { color: colors.foreground }]}>{showSavedDeck ? savedSummary.cardCount : '—'}</Text><Text style={[styles.deckSummaryLabel, { color: colors.mutedForeground }]}>CARTAS</Text></View>
-                <View style={styles.deckSummaryStat}><Text style={[styles.deckSummaryValue, { color: colors.foreground }]}>{showSavedDeck ? savedSummary.power : '—'}</Text><Text style={[styles.deckSummaryLabel, { color: colors.mutedForeground }]}>PODER</Text></View>
-                <View style={[styles.deckSummaryStat, { flex: 1 }]}><Text style={[styles.deckSummaryValue, { color: colors.foreground }]} numberOfLines={1}>{savedSummary.championName ?? 'CAMPEÓN NO REPORTADO'}</Text><Text style={[styles.deckSummaryLabel, { color: colors.mutedForeground }]}>CAMPEÓN</Text></View>
-              </View>
-              <View style={styles.deckSummaryActions}>
-                <Pressable testID="edit-deck" accessibilityRole="button" accessibilityLabel="Editar mazo" onPress={() => { setSelectedIds(savedSlots.map((slot) => slot.card_id)); setMessage(hasSavedDeck ? 'Mazo cargado para edición.' : 'Nuevo borrador listo para forjar.'); setEditing(true); }} style={({ pressed }) => [styles.sceneAction, { borderColor: colors.accent, opacity: pressed ? 0.72 : 1 }]}><Feather name="edit-2" size={13} color={colors.accent} /><Text style={[styles.sceneActionText, { color: colors.accent }]}>FORJAR</Text></Pressable>
-                <Pressable testID="view-deck-detail" accessibilityRole="button" accessibilityLabel="Ver detalle del mazo" disabled={!hasSavedDeck} onPress={() => setDetail(selectedPreview)} style={({ pressed }) => [styles.sceneAction, { borderColor: hasSavedDeck ? `${colors.foreground}66` : `${colors.foreground}22`, opacity: pressed ? 0.72 : hasSavedDeck ? 1 : 0.45 }]}><Feather name="eye" size={13} color={hasSavedDeck ? colors.foreground : colors.mutedForeground} /><Text style={[styles.sceneActionText, { color: hasSavedDeck ? colors.foreground : colors.mutedForeground }]}>VER DETALLE</Text></Pressable>
+              <View style={styles.utilityDock}>
+                <Pressable
+                  testID="deck-filter"
+                  accessibilityRole="button"
+                  accessibilityLabel={`Cambiar filtro de facción: ${faction === 'all' ? 'todas' : faction}`}
+                  onPress={() => setFaction(faction === 'all' ? FACTIONS[0] : faction === FACTIONS[FACTIONS.length - 1] ? 'all' : FACTIONS[FACTIONS.indexOf(faction) + 1])}
+                  style={({ pressed }) => [styles.utilityButton, { borderColor: faction === 'all' ? `${colors.foreground}5C` : factionColor(faction, colors), opacity: pressed ? 0.72 : 1 }]}
+                >
+                  <Feather name="filter" size={13} color={faction === 'all' ? colors.mutedForeground : factionColor(faction, colors)} />
+                  <Text style={[styles.utilityLabel, { color: faction === 'all' ? colors.mutedForeground : factionColor(faction, colors) }]}>{faction === 'all' ? 'TODO' : faction.slice(0, 3).toUpperCase()}</Text>
+                </Pressable>
+                <Pressable
+                  testID="view-deck-detail"
+                  accessibilityRole="button"
+                  accessibilityLabel="Ver detalle del mazo"
+                  disabled={!hasSavedDeck}
+                  onPress={() => setDetail(selectedPreview)}
+                  style={({ pressed }) => [styles.utilityButton, { borderColor: hasSavedDeck ? `${colors.foreground}66` : `${colors.foreground}22`, opacity: pressed ? 0.72 : hasSavedDeck ? 1 : 0.45 }]}
+                >
+                  <Feather name="eye" size={13} color={hasSavedDeck ? colors.foreground : colors.mutedForeground} />
+                  <Text style={[styles.utilityLabel, { color: hasSavedDeck ? colors.foreground : colors.mutedForeground }]}>VER</Text>
+                </Pressable>
               </View>
             </View>
 
@@ -677,61 +693,26 @@ const styles = StyleSheet.create({
   formationFallback: { width: '100%', height: '100%', alignItems: 'center', justifyContent: 'center', gap: 3 },
   formationSlotLabel: { fontSize: 6, fontWeight: '900', letterSpacing: 0.3 },
   formationSlotName: { position: 'absolute', left: 3, right: 3, bottom: 3, fontSize: 5.5, fontWeight: '900', textAlign: 'center', textShadowColor: 'rgba(0,0,0,0.95)', textShadowRadius: 4 },
-  sceneTools: { position: 'absolute', height: 46, flexDirection: 'row', alignItems: 'center', gap: 5, zIndex: 7 },
-  searchShell: { flex: 1, height: 38, borderWidth: 1, borderRadius: 9, flexDirection: 'row', alignItems: 'center', paddingHorizontal: 9, gap: 6 },
+  reserveRail: { position: 'absolute', height: '13%', flexDirection: 'row', gap: 4, zIndex: 4 },
+  reserveSlot: { flex: 1, minWidth: 0, borderWidth: 1, borderRadius: 5, overflow: 'hidden', backgroundColor: 'rgba(7,12,18,0.68)' },
+  reserveArt: { width: '100%', height: '78%' },
+  reserveFallback: { width: '100%', height: '100%', alignItems: 'center', justifyContent: 'center', gap: 2 },
+  reserveLabel: { fontSize: 5.5, fontWeight: '900', letterSpacing: 0.25 },
+  reserveName: { position: 'absolute', left: 2, right: 2, bottom: 2, fontSize: 4.8, fontWeight: '900', textAlign: 'center', textShadowColor: 'rgba(0,0,0,0.95)', textShadowRadius: 4 },
+  forgeReadout: { position: 'absolute', minHeight: 45, justifyContent: 'center', zIndex: 6 },
+  forgeReadoutStats: { flexDirection: 'row', alignItems: 'center', gap: 12 },
+  forgeReadoutStat: { minWidth: 35 },
+  forgeReadoutValue: { fontSize: 9, fontWeight: '900', textShadowColor: 'rgba(0,0,0,0.9)', textShadowRadius: 5 },
+  forgeReadoutLabel: { fontSize: 5.5, fontWeight: '900', letterSpacing: 0.45, marginTop: 2 },
+  bottomConsole: { position: 'absolute', height: '10.5%', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', zIndex: 8 },
+  searchDock: { width: '30%', height: 52, borderWidth: 1, borderRadius: 9, flexDirection: 'row', alignItems: 'center', paddingHorizontal: 8, gap: 5 },
   searchInput: { flex: 1, minWidth: 0, paddingHorizontal: 0, paddingVertical: 0, fontSize: 9, fontWeight: '700' },
-  toolButton: { height: 38, minWidth: 38, borderWidth: 1, borderRadius: 9, alignItems: 'center', justifyContent: 'center', flexDirection: 'row', paddingHorizontal: 8, gap: 5 },
-  toolButtonText: { fontSize: 7, fontWeight: '900', letterSpacing: 0.45 },
-  factionScroller: { position: 'absolute', height: 34, zIndex: 7 },
-  factionRow: { flexDirection: 'row', alignItems: 'center', gap: 5, paddingRight: 8 },
-  factionChip: { height: 28, borderWidth: 1, borderRadius: 8, paddingHorizontal: 8, alignItems: 'center', justifyContent: 'center' },
-  factionChipText: { fontSize: 6.5, fontWeight: '900', letterSpacing: 0.35 },
-  deckSummaryOverlay: { position: 'absolute', minHeight: 138, borderWidth: 1, borderRadius: 12, paddingHorizontal: 11, paddingVertical: 9, zIndex: 6 },
-  deckSummaryHeading: { flexDirection: 'row', alignItems: 'flex-start', gap: 8 },
-  deckSummaryState: { fontSize: 6, fontWeight: '900', letterSpacing: 0.65, marginTop: 2 },
-  deckSummaryTitle: { fontSize: 10, fontWeight: '900', letterSpacing: 0.8 },
-  deckSummaryFaction: { fontSize: 7.5, fontWeight: '800', marginTop: 3 },
-  deckSummaryStats: { flexDirection: 'row', gap: 12, marginTop: 10 },
-  deckSummaryStat: { minWidth: 34 },
-  deckSummaryValue: { fontSize: 9, fontWeight: '900' },
-  deckSummaryLabel: { fontSize: 5.5, fontWeight: '900', letterSpacing: 0.45, marginTop: 2 },
-  deckSummaryActions: { flexDirection: 'row', gap: 6, marginTop: 9 },
-  sceneAction: { minHeight: 28, flex: 1, borderWidth: 1, borderRadius: 7, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 5 },
-  sceneActionText: { fontSize: 6.5, fontWeight: '900', letterSpacing: 0.5 },
-  programmaticSurface: { position: 'absolute', top: 18, left: 18, right: 18, padding: 16, borderWidth: 1, borderColor: 'rgba(255,255,255,0.08)', borderRadius: 18, zIndex: 2 },
-  programmaticHeading: { flexDirection: 'row', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12 },
-  programmaticEyebrow: { fontSize: 9, fontWeight: '900', letterSpacing: 1.3 },
-  programmaticTitle: { fontSize: 21, fontWeight: '900', marginTop: 5 },
-  programmaticCopy: { maxWidth: 240, fontSize: 11, lineHeight: 16, marginTop: 5 },
-  programmaticRefresh: { width: 38, height: 38, borderWidth: 1, borderRadius: 11, alignItems: 'center', justifyContent: 'center' },
-  programmaticDeckRow: { flexDirection: 'row', alignItems: 'stretch', gap: 12, marginTop: 18 },
-  programmaticStats: { flex: 1, justifyContent: 'center', gap: 2 },
-  programmaticStatValue: { fontSize: 16, fontWeight: '900', marginTop: 7 },
-  programmaticStatLabel: { fontSize: 8, fontWeight: '800', letterSpacing: 0.8 },
-  deckCounter: { position: 'absolute', alignItems: 'flex-end', zIndex: 4 },
-  deckCounterValue: { fontSize: 13, fontWeight: '900', letterSpacing: 0.7 },
-  deckCounterLabel: { fontSize: 6, fontWeight: '800', letterSpacing: 0.7, marginTop: 2 },
-  deckPreview: { height: 180, borderWidth: 1, borderRadius: 10, overflow: 'hidden', position: 'relative', justifyContent: 'flex-end' },
-  deckPreviewFallback: { alignItems: 'center', justifyContent: 'center', paddingHorizontal: 8 },
+  coreAction: { width: 72, height: 72, borderWidth: 1, borderRadius: 36, alignItems: 'center', justifyContent: 'center', gap: 3, shadowColor: '#000', shadowOpacity: 0.45, shadowRadius: 8, shadowOffset: { width: 0, height: 3 }, elevation: 4 },
+  coreActionText: { fontSize: 6.5, fontWeight: '900', letterSpacing: 0.65 },
+  utilityDock: { width: '30%', flexDirection: 'row', justifyContent: 'flex-end', gap: 5 },
+  utilityButton: { width: 42, height: 52, borderWidth: 1, borderRadius: 8, alignItems: 'center', justifyContent: 'center', gap: 3, backgroundColor: 'rgba(7,12,18,0.72)' },
+  utilityLabel: { fontSize: 5.5, fontWeight: '900', letterSpacing: 0.4 },
   missingArtText: { fontSize: 7, lineHeight: 9, fontWeight: '900', letterSpacing: 0.2, textAlign: 'center' },
-  deckPreviewShade: { ...StyleSheet.absoluteFillObject },
-  createDeckCopy: { padding: 8, minHeight: 63, justifyContent: 'flex-end' },
-  createDeckTitle: { fontSize: 8, fontWeight: '900', textAlign: 'center', letterSpacing: 0.3 },
-  createDeckText: { fontSize: 7, lineHeight: 10, textAlign: 'center', marginTop: 5 },
-  deckPreviewCopy: { minHeight: 49, paddingHorizontal: 7, paddingVertical: 6, justifyContent: 'flex-end' },
-  deckPreviewName: { fontSize: 7, fontWeight: '900' },
-  deckPreviewFaction: { fontSize: 8, fontWeight: '900', marginTop: 4 },
-  detailCard: { position: 'absolute', minHeight: 127, borderWidth: 1, borderRadius: 14, flexDirection: 'row', alignItems: 'center', padding: 10, zIndex: 6, gap: 8 },
-  detailSeal: { width: 57, height: 57, borderWidth: 1, borderRadius: 29, alignItems: 'center', justifyContent: 'center' },
-  detailCopyBlock: { flex: 1, minWidth: 0 },
-  detailDeckName: { fontSize: 11, fontWeight: '900' },
-  detailDeckFaction: { fontSize: 9, fontWeight: '900', marginTop: 4 },
-  detailMetrics: { flexDirection: 'row', gap: 9, marginTop: 13 },
-  metric: { fontSize: 8 },
-  detailActions: { width: '34%', gap: 8 },
-  editButton: { minHeight: 35, borderWidth: 1, borderRadius: 8, alignItems: 'center', justifyContent: 'center', flexDirection: 'row', gap: 5 },
-  viewButton: { minHeight: 35, borderWidth: 1, borderRadius: 8, alignItems: 'center', justifyContent: 'center', flexDirection: 'row', gap: 5 },
-  actionText: { fontSize: 7, fontWeight: '900', letterSpacing: 0.35 },
   syncError: { position: 'absolute', top: '47%', left: '10%', right: '10%', minHeight: 38, borderWidth: 1, borderRadius: 10, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8, zIndex: 12 },
   syncText: { fontSize: 9, fontWeight: '900', letterSpacing: 0.4, textAlign: 'center' },
   loadingState: { position: 'absolute', top: '48%', left: '25%', right: '25%', minHeight: 54, borderRadius: 10, alignItems: 'center', justifyContent: 'center', gap: 6, zIndex: 13 },

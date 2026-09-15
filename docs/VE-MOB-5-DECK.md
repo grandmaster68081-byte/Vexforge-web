@@ -46,8 +46,9 @@ Portar a la aplicación Android el constructor de mazos de VEXFORGE:
 - Nivel Q: Q2 actual / Q3 objetivo.
 - Datos autoritativos: no se cambiaron tablas, RPCs, RLS, Storage, economía ni resultados de combate.
 - Referencia y composición: `mobile/assets/images/decks-reference-scene.png` mide `1080×2340`, PNG RGB/sRGB, proporción `9:19.5`; la superficie usa el viewport completo y mantiene los puntos de acceso nativos sobre el mismo frame.
-- Dirección visual aplicada: el PNG sólo aporta la escena aprobada. Portal, pulso de núcleo, iluminación, profundidad, encabezado, estados, slots de formación, filtros, resumen, acciones y navegación se reconstruyen como elementos nativos vivos.
+- Dirección visual aplicada: el PNG sólo aporta la escena aprobada. Portal, pulso de núcleo, iluminación, profundidad, encabezado, estados, dos rieles de cartas, lectura mínima, filtros, acciones y navegación se reconstruyen como elementos nativos vivos dentro de los receptáculos de la escena.
 - La referencia no se trata como captura ni como skin: no hay controles horneados ni hotspots transparentes usados como sustituto de UI.
+- Rectificación visual: se eliminó la toolbar administrativa y el sorter no funcional. Búsqueda, forja/edición, filtro y detalle ocupan los sockets inferiores del frame; la pantalla debe leerse primero como cámara de forja y después como interfaz.
 
 ## Deuda y condición de reapertura
 
