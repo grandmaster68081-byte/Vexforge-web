@@ -250,6 +250,20 @@ for (const token of [
     failures.push(`Profile is missing identity token "${token}"`);
   }
 }
+if (!profile.includes('VISUAL_TOKENS.profileStats')) {
+  failures.push('Profile does not consume profile statistics tokens');
+}
+for (const token of [
+  'profileStats.gridGap',
+  'profileStats.card',
+  'profileStats.iconSize',
+  'profileStats.valueSize',
+  'profileStats.label',
+]) {
+  if (!profile.includes(`VISUAL_TOKENS.${token}`)) {
+    failures.push(`Profile is missing statistics token "${token}"`);
+  }
+}
 
 const battlefield = source('mobile/components/ForgeBattlefield.tsx');
 if (!battlefield.includes("from '@/constants/experience'")) {

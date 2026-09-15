@@ -397,7 +397,7 @@ export default function ProfileScreen() {
               ['ELO', statValues[3], 'shield-outline'],
             ].map(([label, value, icon]) => (
               <View key={label} style={[styles.profileStat, { backgroundColor: colors.panel, borderColor: colors.border }]}>
-                <Ionicons name={icon} size={16} color={colors.accent} />
+                <Ionicons name={icon} size={VISUAL_TOKENS.profileStats.iconSize} color={colors.accent} />
                 <Text style={[styles.profileStatValue, { color: colors.foreground }]}>{value}</Text>
                 <Text style={[styles.profileStatLabel, { color: colors.mutedForeground }]}>{label}</Text>
               </View>
@@ -516,10 +516,22 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  profileStatsGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
-  profileStat: { width: '48%', minHeight: 82, borderWidth: 1, borderRadius: 13, padding: 10, justifyContent: 'center', gap: 4 },
-  profileStatValue: { fontFamily: typography.display, fontSize: 20 },
-  profileStatLabel: { fontFamily: typography.bodyBold, fontSize: 8, letterSpacing: 0.8 },
+  profileStatsGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: VISUAL_TOKENS.profileStats.gridGap },
+  profileStat: {
+    width: VISUAL_TOKENS.profileStats.card.width,
+    minHeight: VISUAL_TOKENS.profileStats.card.minHeight,
+    borderWidth: VISUAL_TOKENS.profileStats.card.borderWidth,
+    borderRadius: VISUAL_TOKENS.profileStats.card.radius,
+    padding: VISUAL_TOKENS.profileStats.card.padding,
+    justifyContent: 'center',
+    gap: VISUAL_TOKENS.profileStats.card.gap,
+  },
+  profileStatValue: { fontFamily: typography.display, fontSize: VISUAL_TOKENS.profileStats.valueSize },
+  profileStatLabel: {
+    fontFamily: typography.bodyBold,
+    fontSize: VISUAL_TOKENS.profileStats.label.fontSize,
+    letterSpacing: VISUAL_TOKENS.profileStats.label.letterSpacing,
+  },
   progressCard: { borderWidth: 1, borderRadius: 14, padding: 13 },
   progressHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', gap: 8 },
   progressEyebrow: { fontFamily: typography.bodyBold, fontSize: 8, letterSpacing: 1 },

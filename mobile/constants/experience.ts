@@ -356,6 +356,13 @@ export const VISUAL_TOKENS = {
     status: { fontSize: 9, marginTop: 5 },
     action: { size: 36, borderWidth: 1, radius: 10, iconSize: 17 },
   },
+  profileStats: {
+    gridGap: 8,
+    card: { width: '48%', minHeight: 82, borderWidth: 1, radius: 13, padding: 10, gap: 4 },
+    iconSize: 16,
+    valueSize: 20,
+    label: { fontSize: 8, letterSpacing: 0.8 },
+  },
   battlefield: {
     root: { radius: 22, padding: 12, gap: 10 },
     typography: {

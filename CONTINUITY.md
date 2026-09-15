@@ -1,3 +1,30 @@
+## 2026-09-15 — VE-MOB-T2V — PROFILE STATS TOKENS / IMPLEMENTED_UNVERIFIED
+
+- **BRANCH:** `main`.
+- **SCREEN / DOMAIN:** `PROFILE` / tarjetas resumidas de estadísticas.
+- **BLOCK:** extraer la geometría, escala de iconos y tipografía de las tarjetas
+  de victorias, derrotas, racha y ELO sin cambiar sus valores ni origen.
+- **WHAT CHANGED:** `VISUAL_TOKENS.profileStats` define grid, tarjeta, icono,
+  valor y etiqueta; `profile.tsx` consume esos roles para las cuatro tarjetas.
+- **BEHAVIOR PRESERVED:** mismas etiquetas, valores, iconos, colores, ancho
+  `48%`, altura mínima, radios, espaciado, tamaños y tracking.
+- **DATA PRESERVED:** no se añadieron solicitudes, estado, rutas, ranking,
+  perfil, Supabase, Auth, RPCs, economía, gameplay, assets ni cambios en la
+  web.
+- **MOTION / PERFORMANCE:** no se añadió movimiento, listener, render de datos
+  ni timing; sólo se centralizaron valores estáticos de presentación.
+- **GUARD:** `node scripts/verify-mobile-visual-system.mjs`,
+  `node --check scripts/verify-mobile-visual-system.mjs` y `git diff --check`
+  pasaron.
+- **RELEASE GATE:** no se inició workflow Android, no se compiló APK y no se
+  publicó release; QA visual/táctil física queda pendiente.
+- **STATUS:** `IMPLEMENTED_UNVERIFIED`.
+- **PERSISTENCIA:** publicar código, guardia T2V y esta continuidad juntos en
+  `main` mediante la API REST HTTPS oficial de GitHub con `[skip ci]`, sin
+  `git push`.
+- **NEXT BLOCK:** continuar con otra pieza T2V explícita, sin tocar el motor de
+  juego, los contratos de Supabase, la web congelada ni el tutorial.
+
 ## 2026-09-15 — VE-MOB-T2V — PROFILE IDENTITY TOKENS / IMPLEMENTED_UNVERIFIED
 
 - **BRANCH:** `main`.
