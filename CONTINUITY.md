@@ -5322,3 +5322,13 @@
 - **REPRODUCIBILIDAD:** se añadió `supabase/migrations/0048_qa_canonical_account_cristiangalvez.sql` y se aplicó el mismo cambio en el proyecto oficial mediante la Supabase Management API.
 - **SEGURIDAD:** no se modificaron roles, banderas administrativas, contraseña, tokens, economía ni datos de juego; no se compiló ni publicó una APK nueva.
 - **RELACIÓN CON EL HISTORIAL:** la referencia anterior a `pavilo20.qa@vexforge.test` pertenece a una decisión ya `superseded`; no es la cuenta QA oficial activa.
+
+## 2026-09-15 — VE-MOB-T0 — DOCUMENTARY RECONCILIATION / PREPARED
+
+- **AUTORIDAD ACTIVE:** `vexforge_home_world_system_protocol_v3`, V2.2, estado `ACTIVE`, actualizado en Supabase el 2026-09-15 y SHA-256 `828a077428987b2534e3733204ac721ef3073eb7dadf9530a6f46877dd63c503` .
+- **RECONCILIACIÓN EN `main`:** están presentes los siete artefactos T0: `VE-T0-ANDROID-ASSET-MATRIX`, `VE-T0-ANDROID-SCREEN-MASTER-RECORDS`, `VE-T0-ANDROID-VISUAL-STATE-MATRIX`, `VE-T0-ANDROID-DOMAIN-SCENE-PROFILES`, `VE-T0-ANDROID-DEVICE-EVIDENCE-REGISTER`, `VE-T0-ANDROID-VISUAL-ACCEPTANCE` y `VE-T0-RULES-EVENT-SETTLEMENT-MATRIX`.
+- **ESTADO:** los siete documentos mantienen `PREPARED / EVIDENCE_REQUIRED`; ningún documento se promovió a `VERIFIED`, `TIER1_READY` ni `OPERATIONAL`.
+- **ALINEACIÓN:** las matrices y perfiles siguen limitados a rutas Android reales, datos vivos, estados honestos, assets con procedencia y contratos de touch/safe area/motion/audio/performance; no se añadieron rutas, datos ficticios ni motores paralelos.
+- **BLOQUEOS CONSERVADOS:** falta evidencia física en dispositivo, el HEAD de Storage continúa diferido por `HTTP 429` y `PROFILE_HISTORY_STATE_GAP` permanece `BLOCKED`.
+- **NO APK / NO WEB:** no se tocó `mobile/**`, no se modificó la web, no se inició workflow Android, no se compiló APK y no se publicó release.
+- **SIGUIENTE PASO PERMITIDO:** continuar sólo con otra unidad documental independiente, o abrir el gate de evidencia física cuando exista autorización explícita y un dispositivo/instalación verificable.
