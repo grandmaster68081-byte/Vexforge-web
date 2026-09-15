@@ -112,7 +112,7 @@ function getStreak(matches: MobileSocialSnapshot['matches'] | null, playerId: st
   if (!matches) return null;
   let streak = 0;
   for (const match of matches) {
-    if (match.status !== 'resolved') continue;
+    if (matchStatus(match) !== 'resolved') continue;
     if (match.winner === playerId) streak += 1;
     else break;
   }
@@ -121,8 +121,12 @@ function getStreak(matches: MobileSocialSnapshot['matches'] | null, playerId: st
 
 type MatchOutcome = 'victory' | 'defeat' | 'draw' | 'pending';
 
+function matchStatus(match: MobileSocialSnapshot['matches'][number]) {
+  return match.status?.trim().toLowerCase() === 'resolved' ? 'resolved' : 'pending';
+}
+
 function matchOutcome(match: MobileSocialSnapshot['matches'][number], playerId: string): MatchOutcome {
-  if (match.status?.trim().toLowerCase() !== 'resolved') return 'pending';
+  if (matchStatus(match) !== 'resolved') return 'pending';
   if (match.winner === playerId) return 'victory';
   if (match.winner) return 'defeat';
   return 'draw';

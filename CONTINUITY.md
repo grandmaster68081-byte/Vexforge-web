@@ -1,3 +1,28 @@
+## 2026-09-14 — VE-MOB-9-PROFILE — HISTORY OUTCOME NORMALIZATION / IMPLEMENTED_UNVERIFIED
+
+- **SCREEN / DOMAIN:** Profile / `LEGADO → PERFIL → HISTORIAL`.
+- **BLOCK:** conservar `victory`, `defeat`, `draw` y `pending` sin convertir
+  estados no resueltos en un resultado confirmado ni contaminar la racha.
+- **WHAT CHANGED:** `mobile/app/(tabs)/profile.tsx` centraliza la normalización
+  de estado de combate: sólo `resolved` permite decidir victoria, derrota o
+  empate; `null`, vacío, espacios o cualquier estado no resuelto permanece
+  `pending`. La racha usa la misma regla y no cuenta registros no resueltos.
+- **DATA PRESERVED:** historial, `draw`, `pending`, cambios ELO neutrales,
+  oponente, fecha, Supabase, Auth, RLS, navegación y estados sociales.
+- **GUARD:** `node scripts/verify-mobile-profile.mjs` OK, `29/29`.
+- **LOCAL INTEGRITY:** `git diff --check` OK. El typecheck Android queda
+  diferido porque el clon oficial no contiene `mobile/node_modules`.
+- **RELEASE GATE:** no se inició workflow Android, no se compiló APK y no se
+  publicó release; la evidencia física/táctil sigue pendiente.
+- **STATUS:** `IMPLEMENTED_UNVERIFIED`; el `PROFILE_HISTORY_STATE_GAP` queda
+  resuelto a nivel de código y guardia, pero T0 no se cierra sin dispositivo,
+  Storage y evidencia de release cuando corresponda.
+- **PERSISTENCIA:** publicar código, guardia y esta continuidad juntos en
+  `main` mediante la API REST HTTPS oficial de GitHub con `[skip ci]`, sin
+  `git push`.
+- **NEXT BLOCK:** continuar con otra unidad Android atómica del protocolo sin
+  tocar la web congelada ni iniciar APK sin autorización.
+
 ## 2026-09-14 — T0 MATRICES — ASSET REGISTER / SCREEN MASTER RECORDS / PREPARED
 
 - **ENTORNO ACTIVO:** Android en `mobile/**`; la web permanece congelada.
