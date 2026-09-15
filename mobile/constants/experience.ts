@@ -180,6 +180,7 @@ export const VISUAL_TOKENS = {
     sigilSize: 36,
     sigilRadius: 12,
     sigilStroke: 1,
+    sigilIconSize: 17,
     identityGap: 10,
     place: { fontSize: 10, fontWeight: '900', letterSpacing: 2 },
     ruleWidth: 54,

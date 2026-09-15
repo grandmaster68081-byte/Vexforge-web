@@ -100,6 +100,7 @@ if (!domainHeader.includes('VISUAL_TOKENS.domainHeader')) {
 for (const token of [
   'domainHeader.place.fontWeight',
   'domainHeader.title.fontWeight',
+  'domainHeader.sigilIconSize',
   'domainHeader.purpose',
 ]) {
   if (!domainHeader.includes(`VISUAL_TOKENS.${token}`)) {

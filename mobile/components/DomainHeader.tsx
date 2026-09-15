@@ -43,7 +43,7 @@ export function DomainHeader({
       <View style={styles.topRow}>
         <View style={styles.identity}>
           <View style={[styles.sigil, { borderColor: tone, backgroundColor: `${tone}14` }]}>
-            <Feather name={identity.sigil as never} size={17} color={tone} />
+            <Feather name={identity.sigil as never} size={VISUAL_TOKENS.domainHeader.sigilIconSize} color={tone} />
           </View>
           <View style={styles.placeBlock}>
             <Text style={[styles.place, { color: tone }]}>{identity.place}</Text>
