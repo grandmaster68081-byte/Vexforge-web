@@ -66,6 +66,12 @@ if (!button.includes("from '@/constants/experience'")) {
 if (!button.includes('VISUAL_TOKENS.control.button')) {
   failures.push('ForgeButton does not consume control tokens');
 }
+if ((button.match(/VISUAL_TOKENS\.control\.button\.iconSize/g) ?? []).length < 2) {
+  failures.push('ForgeButton does not consume the shared icon-size token for both button variants');
+}
+if (button.includes('size={16}')) {
+  failures.push('ForgeButton contains an un-tokenized icon size');
+}
 
 const progress = source('mobile/components/ProgressBar.tsx');
 if (!progress.includes("from '@/constants/experience'")) {

@@ -42,12 +42,12 @@ export function ForgeButton({ label, icon, onPress, secondary = false, disabled 
     >
       {secondary ? (
         <View style={[styles.surface, { borderColor: colors.accent, backgroundColor: `${colors.ink}CC` }]}>
-          {icon ? <Ionicons name={icon} size={16} color={colors.accent} /> : null}
+           {icon ? <Ionicons name={icon} size={VISUAL_TOKENS.control.button.iconSize} color={colors.accent} /> : null}
           <ForgeText variant="label" tone="accent">{label}</ForgeText>
         </View>
       ) : (
         <LinearGradient colors={[colors.accent, colors.primary]} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={styles.surface}>
-          {icon ? <Ionicons name={icon} size={16} color={colors.ink} /> : null}
+           {icon ? <Ionicons name={icon} size={VISUAL_TOKENS.control.button.iconSize} color={colors.ink} /> : null}
           <ForgeText variant="label" style={{ color: colors.ink }}>{label}</ForgeText>
         </LinearGradient>
       )}
