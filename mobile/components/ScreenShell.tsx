@@ -13,7 +13,7 @@ import { Image, Platform, StyleSheet, Text, View, type ViewProps } from 'react-n
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useColors } from '@/hooks/useColors';
 import { CANONICAL_BACKGROUNDS, OFFICIAL_ASSETS, type VisualSurface } from '@/constants/visual';
-import { MOTION, VISUAL_TOKENS } from '@/constants/experience';
+import { VISUAL_TOKENS } from '@/constants/experience';
 import { DomainHeader } from '@/components/DomainHeader';
 
 export function ScreenShell({ surface = 'home', sceneMode = 'shell', children, style, ...props }: ViewProps & { surface?: VisualSurface; sceneMode?: 'shell' | 'hero' }) {
@@ -51,8 +51,8 @@ export function ScreenShell({ surface = 'home', sceneMode = 'shell', children, s
     }
     pulse.value = withRepeat(
       withSequence(
-        withTiming(1, { duration: MOTION.ambient }),
-        withTiming(0, { duration: MOTION.ambient }),
+        withTiming(1, { duration: VISUAL_TOKENS.motion.ambient }),
+        withTiming(0, { duration: VISUAL_TOKENS.motion.ambient }),
       ),
       -1,
       false,
@@ -61,17 +61,21 @@ export function ScreenShell({ surface = 'home', sceneMode = 'shell', children, s
   }, [pulse, reduceMotion]);
 
   const leftGlowStyle = useAnimatedStyle(() => ({
-    opacity: 0.1 + pulse.value * 0.1,
+    opacity:
+      VISUAL_TOKENS.scene.ambientMotion.left.baseOpacity
+      + pulse.value * VISUAL_TOKENS.scene.ambientMotion.left.pulseOpacity,
     transform: [
-      { translateY: pulse.value * -16 },
-      { scale: 1 + pulse.value * 0.08 },
+      { translateY: pulse.value * VISUAL_TOKENS.scene.ambientMotion.left.translateY },
+      { scale: 1 + pulse.value * VISUAL_TOKENS.scene.ambientMotion.left.scale },
     ],
   }));
   const rightGlowStyle = useAnimatedStyle(() => ({
-    opacity: 0.08 + (1 - pulse.value) * 0.1,
+    opacity:
+      VISUAL_TOKENS.scene.ambientMotion.right.baseOpacity
+      + (1 - pulse.value) * VISUAL_TOKENS.scene.ambientMotion.right.pulseOpacity,
     transform: [
-      { translateY: (1 - pulse.value) * 14 },
-      { scale: 1 + (1 - pulse.value) * 0.06 },
+      { translateY: (1 - pulse.value) * VISUAL_TOKENS.scene.ambientMotion.right.translateY },
+      { scale: 1 + (1 - pulse.value) * VISUAL_TOKENS.scene.ambientMotion.right.scale },
     ],
   }));
 

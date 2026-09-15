@@ -1,3 +1,30 @@
+## 2026-09-15 — VE-MOB-T2V — SCENE AMBIENT MOTION TOKENS / IMPLEMENTED_UNVERIFIED
+
+- **BRANCH:** `main`.
+- **SCREEN / DOMAIN:** atmósfera compartida de `ScreenShell` para las superficies
+  Android/Web del mundo VEXFORGE.
+- **BLOCK:** eliminar literales locales de duración, opacidad, desplazamiento y
+  escala del pulso ambiental sin cambiar su ciclo ni su respuesta accesible.
+- **WHAT CHANGED:** `VISUAL_TOKENS.motion.ambient` controla la duración;
+  `VISUAL_TOKENS.scene.ambientMotion` controla los roles de ambos glows;
+  `ScreenShell` consume esos tokens.
+- **MOTION PRESERVED:** mismo ciclo alternado, amplitudes, dirección,
+  `reduced-motion`, cancelación de animación y ausencia de movimiento adicional.
+- **DATA PRESERVED:** escenas oficiales, assets, rutas, Supabase, Auth, RPCs,
+  economía, combate, event log, settlement y web congelada.
+- **PERFORMANCE:** no se añadieron listeners, solicitudes, estado ni renders de
+  datos; sólo se centralizaron valores estáticos ya existentes.
+- **GUARD:** `node scripts/verify-mobile-visual-system.mjs`,
+  `node --check scripts/verify-mobile-visual-system.mjs` y `git diff --check`.
+- **RELEASE GATE:** no se inició workflow Android, no se compiló APK y no se
+  publicó release; QA visual/táctil queda pendiente de autorización.
+- **STATUS:** `IMPLEMENTED_UNVERIFIED`.
+- **PERSISTENCIA:** publicar código, guarda T2V y esta continuidad juntos en
+  `main` mediante la API REST HTTPS oficial de GitHub con `[skip ci]`, sin
+  `git push`.
+- **NEXT BLOCK:** continuar con otra pieza T2V explícita, sin tocar el motor de
+  juego, los contratos de Supabase, la web congelada ni el tutorial.
+
 ## 2026-09-15 — VE-MOB-T2V — SHARED SAFE AREA TOKENS / IMPLEMENTED_UNVERIFIED
 
 - **BRANCH:** `main`.

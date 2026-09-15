@@ -100,6 +100,11 @@ if (!screenShell.includes("from '@/constants/experience'")) {
 if (!screenShell.includes('VISUAL_TOKENS.scene')) {
   failures.push('ScreenShell does not consume scene tokens');
 }
+for (const token of ['VISUAL_TOKENS.motion.ambient', 'VISUAL_TOKENS.scene.ambientMotion']) {
+  if (!screenShell.includes(token)) {
+    failures.push(`ScreenShell is missing motion token "${token}"`);
+  }
+}
 if (!screenShell.includes('VISUAL_TOKENS.state.assetError')) {
   failures.push('ScreenShell does not consume asset error state tokens');
 }

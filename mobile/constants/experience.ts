@@ -214,6 +214,10 @@ export const VISUAL_TOKENS = {
       right: -54,
       opacity: 0.16,
     },
+    ambientMotion: {
+      left: { baseOpacity: 0.1, pulseOpacity: 0.1, translateY: -16, scale: 0.08 },
+      right: { baseOpacity: 0.08, pulseOpacity: 0.1, translateY: 14, scale: 0.06 },
+    },
   },
   state: {
     gap: 9,
