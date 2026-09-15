@@ -359,12 +359,12 @@ const styles = StyleSheet.create({
   },
   eyebrow: {
     fontSize: VISUAL_TOKENS.battlefield.typography.eyebrow.fontSize,
-    fontWeight: '900',
+    fontWeight: VISUAL_TOKENS.battlefield.typography.eyebrow.fontWeight,
     letterSpacing: VISUAL_TOKENS.battlefield.typography.eyebrow.letterSpacing,
   },
   title: {
     fontSize: VISUAL_TOKENS.battlefield.typography.title.fontSize,
-    fontWeight: '900',
+    fontWeight: VISUAL_TOKENS.battlefield.typography.title.fontWeight,
     letterSpacing: VISUAL_TOKENS.battlefield.typography.title.letterSpacing,
     marginTop: VISUAL_TOKENS.battlefield.typography.title.marginTop,
   },
@@ -375,10 +375,13 @@ const styles = StyleSheet.create({
     paddingVertical: VISUAL_TOKENS.battlefield.controls.turnBadge.paddingVertical,
     alignItems: 'center',
   },
-  turnValue: { fontSize: VISUAL_TOKENS.battlefield.typography.turnValue.fontSize, fontWeight: '900' },
+  turnValue: {
+    fontSize: VISUAL_TOKENS.battlefield.typography.turnValue.fontSize,
+    fontWeight: VISUAL_TOKENS.battlefield.typography.turnValue.fontWeight,
+  },
   turnLabel: {
     fontSize: VISUAL_TOKENS.battlefield.typography.turnLabel.fontSize,
-    fontWeight: '900',
+    fontWeight: VISUAL_TOKENS.battlefield.typography.turnLabel.fontWeight,
     letterSpacing: VISUAL_TOKENS.battlefield.typography.turnLabel.letterSpacing,
     marginTop: VISUAL_TOKENS.battlefield.typography.turnLabel.marginTop,
   },
@@ -404,17 +407,17 @@ const styles = StyleSheet.create({
   identityCopy: { flex: 1 },
   identityKicker: {
     fontSize: VISUAL_TOKENS.battlefield.typography.identityKicker.fontSize,
-    fontWeight: '900',
+    fontWeight: VISUAL_TOKENS.battlefield.typography.identityKicker.fontWeight,
     letterSpacing: VISUAL_TOKENS.battlefield.typography.identityKicker.letterSpacing,
   },
   identityName: {
     fontSize: VISUAL_TOKENS.battlefield.typography.identityName.fontSize,
-    fontWeight: '800',
+    fontWeight: VISUAL_TOKENS.battlefield.typography.identityName.fontWeight,
     marginTop: VISUAL_TOKENS.battlefield.typography.identityName.marginTop,
   },
   identityStatus: {
     fontSize: VISUAL_TOKENS.battlefield.typography.identityStatus.fontSize,
-    fontWeight: '900',
+    fontWeight: VISUAL_TOKENS.battlefield.typography.identityStatus.fontWeight,
     letterSpacing: VISUAL_TOKENS.battlefield.typography.identityStatus.letterSpacing,
   },
   formationRow: { flexDirection: 'row', gap: VISUAL_TOKENS.battlefield.formation.gap, alignItems: 'stretch' },
@@ -437,12 +440,12 @@ const styles = StyleSheet.create({
   },
   roleText: {
     fontSize: VISUAL_TOKENS.battlefield.typography.roleText.fontSize,
-    fontWeight: '900',
+    fontWeight: VISUAL_TOKENS.battlefield.typography.roleText.fontWeight,
     letterSpacing: VISUAL_TOKENS.battlefield.typography.roleText.letterSpacing,
   },
   fallenText: {
     fontSize: VISUAL_TOKENS.battlefield.typography.fallenText.fontSize,
-    fontWeight: '900',
+    fontWeight: VISUAL_TOKENS.battlefield.typography.fallenText.fontWeight,
     letterSpacing: VISUAL_TOKENS.battlefield.typography.fallenText.letterSpacing,
   },
   unitArt: {
@@ -462,18 +465,18 @@ const styles = StyleSheet.create({
   },
   artMissingText: {
     fontSize: VISUAL_TOKENS.battlefield.typography.artMissing.fontSize,
-    fontWeight: '900',
+    fontWeight: VISUAL_TOKENS.battlefield.typography.artMissing.fontWeight,
     textAlign: 'center',
   },
   unitName: {
     fontSize: VISUAL_TOKENS.battlefield.typography.unitName.fontSize,
     lineHeight: VISUAL_TOKENS.battlefield.typography.unitName.lineHeight,
-    fontWeight: '800',
+    fontWeight: VISUAL_TOKENS.battlefield.typography.unitName.fontWeight,
     minHeight: VISUAL_TOKENS.battlefield.typography.unitName.minHeight,
   },
   unitFaction: {
     fontSize: VISUAL_TOKENS.battlefield.typography.unitFaction.fontSize,
-    fontWeight: '900',
+    fontWeight: VISUAL_TOKENS.battlefield.typography.unitFaction.fontWeight,
     letterSpacing: VISUAL_TOKENS.battlefield.typography.unitFaction.letterSpacing,
   },
   hpTrack: {
@@ -483,7 +486,10 @@ const styles = StyleSheet.create({
     marginTop: VISUAL_TOKENS.battlefield.controls.hpTrack.marginTop,
   },
   hpFill: { height: '100%', borderRadius: VISUAL_TOKENS.battlefield.controls.hpTrack.radius },
-  hpText: { fontSize: VISUAL_TOKENS.battlefield.typography.hpText.fontSize, fontWeight: '700' },
+  hpText: {
+    fontSize: VISUAL_TOKENS.battlefield.typography.hpText.fontSize,
+    fontWeight: VISUAL_TOKENS.battlefield.typography.hpText.fontWeight,
+  },
   keywordRow: {
     flexDirection: 'row',
     flexWrap: 'wrap',
@@ -498,7 +504,7 @@ const styles = StyleSheet.create({
   },
   keywordText: {
     fontSize: VISUAL_TOKENS.battlefield.typography.keyword.fontSize,
-    fontWeight: '900',
+    fontWeight: VISUAL_TOKENS.battlefield.typography.keyword.fontWeight,
     letterSpacing: VISUAL_TOKENS.battlefield.typography.keyword.letterSpacing,
   },
   reserveRail: {
@@ -516,7 +522,7 @@ const styles = StyleSheet.create({
   },
   reserveTitle: {
     fontSize: VISUAL_TOKENS.battlefield.typography.reserveTitle.fontSize,
-    fontWeight: '900',
+    fontWeight: VISUAL_TOKENS.battlefield.typography.reserveTitle.fontWeight,
     letterSpacing: VISUAL_TOKENS.battlefield.typography.reserveTitle.letterSpacing,
   },
   reserveItems: {
@@ -535,7 +541,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   reserveArt: { width: '100%', height: '100%' },
-  emptyReserve: { fontSize: VISUAL_TOKENS.battlefield.typography.emptyReserve.fontSize, fontWeight: '900' },
+  emptyReserve: {
+    fontSize: VISUAL_TOKENS.battlefield.typography.emptyReserve.fontSize,
+    fontWeight: VISUAL_TOKENS.battlefield.typography.emptyReserve.fontWeight,
+  },
   lane: {
     borderWidth: VISUAL_TOKENS.battlefield.controls.borderWidth,
     borderRadius: VISUAL_TOKENS.battlefield.lane.radius,
@@ -552,18 +561,18 @@ const styles = StyleSheet.create({
   },
   laneLabel: {
     fontSize: VISUAL_TOKENS.battlefield.typography.laneLabel.fontSize,
-    fontWeight: '900',
+    fontWeight: VISUAL_TOKENS.battlefield.typography.laneLabel.fontWeight,
     letterSpacing: VISUAL_TOKENS.battlefield.typography.laneLabel.letterSpacing,
   },
   laneCopy: { fontSize: VISUAL_TOKENS.battlefield.typography.laneCopy.fontSize, textAlign: 'center' },
   damageLabel: {
     fontSize: VISUAL_TOKENS.battlefield.typography.damageLabel.fontSize,
-    fontWeight: '900',
+    fontWeight: VISUAL_TOKENS.battlefield.typography.damageLabel.fontWeight,
     marginTop: VISUAL_TOKENS.battlefield.typography.damageLabel.marginTop,
   },
   outcome: {
     fontSize: VISUAL_TOKENS.battlefield.typography.outcome.fontSize,
-    fontWeight: '900',
+    fontWeight: VISUAL_TOKENS.battlefield.typography.outcome.fontWeight,
     letterSpacing: VISUAL_TOKENS.battlefield.typography.outcome.letterSpacing,
     textAlign: 'center',
     paddingVertical: VISUAL_TOKENS.battlefield.typography.outcome.paddingVertical,

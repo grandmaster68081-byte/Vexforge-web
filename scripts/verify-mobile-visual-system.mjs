@@ -234,6 +234,34 @@ if (!battlefield.includes('VISUAL_TOKENS.battlefield.typography')) {
 if (!battlefield.includes('VISUAL_TOKENS.battlefield.controls')) {
   failures.push('ForgeBattlefield does not consume battlefield control tokens');
 }
+for (const token of [
+  'battlefield.typography.eyebrow.fontWeight',
+  'battlefield.typography.title.fontWeight',
+  'battlefield.typography.turnValue.fontWeight',
+  'battlefield.typography.turnLabel.fontWeight',
+  'battlefield.typography.identityKicker.fontWeight',
+  'battlefield.typography.identityName.fontWeight',
+  'battlefield.typography.identityStatus.fontWeight',
+  'battlefield.typography.roleText.fontWeight',
+  'battlefield.typography.fallenText.fontWeight',
+  'battlefield.typography.artMissing.fontWeight',
+  'battlefield.typography.unitName.fontWeight',
+  'battlefield.typography.unitFaction.fontWeight',
+  'battlefield.typography.hpText.fontWeight',
+  'battlefield.typography.keyword.fontWeight',
+  'battlefield.typography.reserveTitle.fontWeight',
+  'battlefield.typography.emptyReserve.fontWeight',
+  'battlefield.typography.laneLabel.fontWeight',
+  'battlefield.typography.damageLabel.fontWeight',
+  'battlefield.typography.outcome.fontWeight',
+]) {
+  if (!battlefield.includes(`VISUAL_TOKENS.${token}`)) {
+    failures.push(`ForgeBattlefield is missing typography token "${token}"`);
+  }
+}
+if ((battlefield.match(/fontWeight: '[789]00'/g) ?? []).length > 0) {
+  failures.push('ForgeBattlefield contains an un-tokenized font weight');
+}
 
 const home = source('mobile/app/(tabs)/index.tsx');
 if (!home.includes("from '@/constants/experience'")) {

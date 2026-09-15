@@ -65,6 +65,9 @@ la web congelada.
 - `ForgeBattlefield` consume `battlefield.controls` para badge, rails,
   tarjetas, HP, keywords, reserva y carril, manteniendo las mismas zonas de
   interacción y lectura.
+- `ForgeBattlefield` consume pesos tipográficos registrados para eyebrow,
+  título, turno, identidad, unidades, reserva, carril y resultado, conservando
+  la jerarquía existente sin literales locales.
 
 ## Límites
 
