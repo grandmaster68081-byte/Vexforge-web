@@ -18,6 +18,8 @@
 - **RELEASE GATE:** no se inició workflow Android, no se compiló APK y no se
   publicó release; QA visual/táctil queda pendiente de autorización.
 - **STATUS:** `IMPLEMENTED_UNVERIFIED`.
+- **COMMIT:** `0881eba84f45890ed5e2b45dfc11e982680762a7` publicado en `main`;
+  no se generó workflow APK por `[skip ci]`.
 - **PERSISTENCIA:** publicar código, guarda T2V y esta continuidad juntos en
   `main` mediante la API REST HTTPS oficial de GitHub con `[skip ci]`, sin
   `git push`.
