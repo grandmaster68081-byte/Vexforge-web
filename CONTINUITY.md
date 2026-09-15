@@ -5262,3 +5262,13 @@
 - **PERMISSIONS:** `role=player`, `is_admin=false`, `is_super_admin=false`, `is_qa=false`; no se copiaron privilegios administrativos, saldo ni datos privados de la cuenta origen.
 - **STATUS:** `COMPLETED / EMAIL_CONFIRMATION_PENDING`.
 - **NEXT:** confirmar el correo antes del inicio de sesión normal; no se requiere APK para esta operación.
+
+---
+## 2026-09-15 — MMR RESET — GLOBAL FLOOR 1000
+
+- **SCOPE:** operación de datos en Supabase vivo; no se modificó `mobile/**`, no se compiló APK y no se publicó release.
+- **CHANGE:** `public.pvp_rankings.mmr`, `public.season_rankings.mmr` y cualquier fila existente de `public.pvp_matchmaking_queue.mmr` quedaron en `1000`.
+- **COVERAGE:** 11 filas PVP y 6 filas de temporada verificadas; la cola de matchmaking estaba vacía.
+- **PRESERVED:** victorias, derrotas, empates, posiciones, historial de partidas, cartas, saldos, nivel, progreso y permisos no fueron modificados.
+- **VERIFY:** todas las filas MMR consultadas reportan `min=1000`, `max=1000`, `non1000=0`; la vista `pvp_arena_players` muestra a la cuenta QA en `1000`.
+- **STATUS:** `COMPLETED`; las posiciones históricas se conservaron deliberadamente y no se recalcularon.
