@@ -1,2352 +1,1755 @@
-# VEXFORGE — Protocolo Maestro Universal v2
-**Última actualización:** 2026-09-11 — identidad compartida obligatoria y selección contextual de assets | **Mantenido por:** Replit Agent
-**Documento clave en Supabase:** `vexforge_master_protocol_v2`
-**Versión normativa activa:** `v2.16-shared-identity-contextual-assets-20260911`
+# VEXFORGE — AUTHORITY REPLACEMENT / FORGEFORMATION V6
+
+**Estado:** ACTIVE  
+**Autoridad:** documento maestro entregado por el operador  
+**Aplicación:** protocolo operativo VEXFORGE en Supabase  
+**Fecha de integración:** 2026-09-14
+
+## Declaración vinculante de reemplazo
+
+Este documento reemplaza el motor de combate y la planificación operativa anteriores. ForgeFormation v6.0.0, Battle Run v6, Event Contract v6, Settlement v6, Battlefield Layout v1.0.0 y Visual System v1.0.0 son ahora el sistema activo de VEXFORGE.
+
+Las implementaciones, RPCs, payloads y rutas anteriores se conservan únicamente como historial, auditoría o compatibilidad de migración. No son autoridad de ejecución, no pueden recibir nuevas partidas competitivas y no deben coexistir como un motor paralelo.
+
+La regla operativa es: un solo motor, una sola autoridad de reglas, un solo event log canónico, un solo settlement autoritativo y Android como renderer/input/replay del contrato vivo. Todo trabajo posterior debe seguir la secuencia T0–T10 de esta especificación.
+
+Las políticas operativas no conflictivas del Protocolo V2.1 —seguridad, RLS, transporte, datos oficiales, continuidad, releases y gates de Android— permanecen obligatorias y subordinan cualquier implementación a esta autoridad de gameplay.
+
+## Especificación maestra integrada
+
+
+VEXFORGE
+ForgeFormation v6 — Formal Rules, Battlefield & Visual Master Specification
+Battle Run • Event Log • Settlement • Missions • PvP • PvE • Boss • Raid • Clan War • Battlefield • Visual System
+Purpose: transformar el diseño conceptual v1.1 en una especificación operativa suficientemente precisa para que Supabase/Replit/Android implementen el mismo juego sin inventar reglas durante la ejecución.
+Authority: el Protocolo VEXFORGE V2.1 mantiene la autoridad operativa. Esta especificación define la autoridad de reglas de gameplay. Ninguna implementación puede contradecir el Protocolo, RLS, seguridad, releases o continuidad.
+Version target: forge_formation_v6.0.0 / battle_run_v6 / settlement_v6 / battlefield_layout_v1.0.0 / visual_system_v1.0.0. Las versiones t2/t5 anteriores se conservan como históricas y no se reescriben.
+Design thesis
+FORMATION = BOARDHAND = OPTIONSCOMMAND = ECONOMYRESERVE = FUTURECHAMPION = VICTORY CONDITIONBATTLE RUN = AUTHORITYEVENT LOG = REPLAYSETTLEMENT = ECONOMIC FINALITY
+Revision scope v1.1 — Battlefield System and implementation hardening
+This revision preserves ForgeFormation v6.0.0 as the gameplay rules target and adds a formal Battlefield System v1.0. The battlefield is a shared presentation/interaction contract with mode-specific visual profiles. It does not create a parallel combat engine, continuous movement system, or client-authoritative state.
+The battlefield geometry, slot semantics, event-to-visual mapping, camera policy, mode profiles, touch contract, replay behavior, performance budget, and Replit execution order are now explicit. Tutorial redesign is intentionally out of scope for this implementation block; tutorial work is deferred to the final onboarding phase after the complete game loop is validated.
+Importante: los números de esta especificación son el baseline competitivo v6.0.0. No son “verdades universales”; son valores explícitos que deben pasar por el Balance Harness. Cambiar un número en producción crea una nueva rules_version y nunca modifica retrospectivamente partidas ya resueltas.
+1. Resultado de la investigación y qué se toma de los referentes
+VEXFORGE no debe copiar a ningún TCG. Se toman mecanismos que resuelven problemas concretos: economía limitada, ventaja de cartas, ventanas de respuesta, banca/reserva, formatos, aprendizaje y control del metajuego. Magic publica explícitamente la tensión entre mana, tempo y card advantage; Pokémon utiliza Active/Bench y reglas de retirada/condiciones; Shadowverse combina recurso incremental, mulligan, evolución, formatos, práctica y puzzles; Flesh and Blood formaliza fases de combate y reaction windows; Yu-Gi-Oh! Master Duel conecta tutorial, Solo, deckbuilding, crafting, eventos y juego online; One Piece introduce un Leader y una economía de DON!!; y Digimon demuestra el valor de una Memory Gauge como economía visible. [R1–R7]
+Referencia
+Mecanismo estudiado
+Traducción a VEXFORGE
+Magic: The Gathering
+mana, priority, stack, tempo/card advantage
+Command, reaction layers, card advantage/tempo metrics
+Pokémon TCG
+Active + Bench, retreat, status, once-per-turn limits
+Champion + active formation + Reserve windows
+Shadowverse: Worlds Beyond
+play points, mulligan, evolve, formats, puzzles
+Command ramp, mulligan, mode profiles, mastery/puzzle layer
+Flesh and Blood
+combat chain, defend/reaction/damage
+Attack event → reaction → counter-reaction → damage
+Yu-Gi-Oh! Master Duel
+chains, huge deckbuilding space, Solo/tutorial/event ecosystem
+card legality, archetypes, Solo/missions, replayable competitive engine
+One Piece Card Game
+Leader, character field, DON!!, life
+Champion identity, formation, Command economy, victory pressure
+Digimon Card Game
+Memory Gauge and formal rule revisions
+explicit visible economy + versioned rules discipline
+GDC game design research
+economy simulation and decision-making
+Balance Harness + constraint-driven tuning
+Estas fuentes no justifican por sí mismas ningún número de VEXFORGE. Justifican las clases de problemas que conviene resolver. Los números exactos de v6 son decisiones de diseño de VEXFORGE y deben validarse mediante simulación y juego humano.
+1.1 Principios que sí deben sobrevivir a cualquier expansión
+La formación de tres unidades es la firma de VEXFORGE y permanece en todos los modos 1v1.
+Los modos no crean motores alternativos: cambian contexto, objetivos, límites y modificadores sobre el mismo motor.
+El cliente envía intención; el servidor valida, simula, registra y liquida.
+Toda fuente de aleatoriedad nace del seed del servidor y es reproducible.
+Cada amenaza relevante debe tener una respuesta, un coste, una condición o una ventana de timing.
+La complejidad debe vivir en la decisión, no en cientos de excepciones invisibles.
+La recompensa nunca puede ser una consecuencia de un resultado que el cliente pueda falsificar.
+2. Arquitectura canónica del juego
+PROTOCOL V2.1  ↓ operational authorityRULE PROFILE forge_formation_v6  ↓BATTLE RUN v6  ↓EVENT RESOLUTION  ↓EVENT LOG / FINAL SNAPSHOT  ↓SETTLEMENT v6  ↓MODE-SPECIFIC PROGRESSION / RANK / BOSS / RAID / QUEST
+2.1 One engine, many modes
+Modo
+Núcleo
+Qué cambia
+Qué nunca cambia
+RANKED_PVP
+ForgeFormation v6
+MMR, season, timer, reward profile, abandonment
+stats, phases, Command, formation, targeting, RNG, event order
+TRAINING
+ForgeFormation v6
+opponent AI, no competitive settlement
+combat resolution
+MISSION
+ForgeFormation v6
+enemy AI, energy, objectives, PvE reward profile
+combat rules
+ELITE_TRIAL
+ForgeFormation v6
+stronger encounter package, objectives
+combat rules
+WORLD_BOSS
+ForgeFormation v6
+boss profile, shared HP application, phase package
+combat rules
+RAID
+ForgeFormation v6
+group contribution aggregation, stages
+combat rules
+CLAN_WAR
+ForgeFormation v6
+series/orchestration, clan score, match schedule
+each duel remains a normal Battle Run
+EVENT
+ForgeFormation v6
+event ruleset modifier package, format restrictions
+core invariants and authority
+2.2 Rule modifier stack
+L0 HARD INVARIANTSL1 BASE RULESET forge_formation_v6L2 MODE PROFILEL3 ENCOUNTER / EVENT MODIFIERSL4 CARD / KEYWORD EFFECTSL5 DETERMINISTIC RNG RESULTS
+Lower layers may not violate higher-layer invariants. An event modifier can change max rounds or reward objectives, but cannot permit negative HP, duplicate rewards, invalid targeting, client-authored outcomes, or destruction of the Champion protection rule unless the modifier explicitly and versionedly changes the legal target rule.
+2.3 Three-layer truth model
+Layer
+Authority
+Examples
+Static rules
+rules_version
+formulas, enums, legal phases, invariant definitions
+Battle state
+server transaction
+HP, Command, hand, active slots, statuses, round, timers
+Player intent
+client request
+card id, doctrine, focus, reaction choice, reserve selection
+3. Standard deck, formation and zones
+3.1 Standard deck v6
+Component
+Count
+Visibility
+Purpose
+Champion
+1
+public
+identity + primary victory condition
+Formation Units
+7
+active public / reserve hidden until reveal
+Champion + 2 active + 5 reserve
+Tactical Cards
+22
+hand hidden / discard public
+resource-driven actions, answers, utility
+Total
+30
+—
+Standard deck size
+La estructura objetivo del v6 es 1 Champion + 7 Formation Units + 22 Tactical Cards. Esta es la regla del formato Standard futuro. Durante la migración, el sistema podrá ejecutar un profile LEGACY_COMPATIBILITY que traduzca decks existentes para pruebas; ese profile no puede recibir rango competitivo ni ser usado para validar el Standard final.
+3.2 Copy limit and faction legality
+MAX_COPIES_PER_CARD = 2CHAMPION_COPIES = 1DECK_FACTIONS = Champion faction + at most 1 secondary factionNeutral / Universal cards: allowed if the card record marks them as universal
+La restricción de dos facciones evita que la identidad de Guerrero/Mago/Paladín/Pícaro se convierta en una lista global de “mejores cartas”. El Champion define la facción primaria. Las cartas fuera de las dos facciones legales son rechazadas por deck validation.
+3.3 Battle setup
+1. Validate 30-card deck.2. Validate Champion.3. Player selects Champion + 7 unit formation package before match.4. First 8 unit identities are snapshotted into Formation.5. Tactical deck = 22 tactical cards.6. Shuffle tactical deck with battle seed.7. Active slots = Champion + Vanguard + Sentinel.8. Reserve = 5 units, hidden from opponent until Reserve Reveal.9. Draw 5 Tactical cards.10. Perform one Mulligan.11. Set Command = 1.12. Round = 1.
+3.4 Public vs hidden information
+Información
+Propietario
+Rival
+Champion identity
+visible
+visible
+Active V/S identities
+visible
+visible
+Reserve identities
+visible to owner
+hidden until reveal
+Reserve count
+visible
+visible
+Hand
+hidden
+hidden
+Command
+visible
+visible
+HP/status/Doctrine/Focus after commit
+visible as defined by event timing
+visible as defined by event timing
+Event log
+match-visible relevant events
+match-visible relevant events
+3.5 Hand
+INITIAL_HAND = 5HAND_LIMIT = 9DRAW = 1 at Round StartIf a draw would exceed 9: drawn card is placed in DISCARD instead and DRAW_OVERFLOW is logged.
+4. Formation v6
+4.1 Active formation
+CHAMPION      = victory unitVANGUARD       = front supportSENTINEL       = secondary supportRESERVE[1..5]  = future support units
+Exactly one Champion exists. At most three active units exist. Reserve units never attack, never defend directly and never count as active targets until deployed. A mode may use an encounter modifier for boss-specific rules, but it cannot create a fourth ordinary active slot without a distinct versioned ruleset.
+4.2 Champion protection
+protected := (Vanguard.alive OR Sentinel.alive)exposed := NOT protected
+A basic attack may not target a protected Champion. Effects with the BREACH flag may target a protected Champion only if the card contract explicitly grants BREACH. Champion-targeted effects must declare whether they respect or bypass protection.
+4.3 Pure Formation bonus
+If all 3 active units share the Champion faction:  Active HP max += 8%  Active ATK += 8%  Active DEF += 8%  Apply rounding after all additive modifiers.
+El 8% es un baseline deliberadamente menor al 15% legacy para que la pure faction identity sea relevante sin convertir la mezcla de facciones en una opción automáticamente inferior. El valor debe someterse al Matchup Matrix.
+4.4 Champion reserve pressure
+At Battle Start only:  Champion Max HP += 2% per reserve unit included in the 5-slot Reserve  Cap = +10%No ATK/DEF bonus from Reserve Count.
+Esto reemplaza el antiguo +5 HP/+1.2 ATK/+0.8 DEF por reserva, que escala de manera difícil de comparar entre distintos rangos de stats. El nuevo bono mantiene la idea de “la Reserva sostiene al Campeón” sin esconder gran parte del balance dentro de una fórmula secundaria.
+5. Derived combat statistics
+Las cuatro stats de carta siguen siendo Power, Affinity, Prestige y Charge. El motor v6 las transforma en stats de combate mediante fórmulas deterministas. Las fórmulas pueden versionarse, pero no pueden cambiar dentro de una partida.
+MAX_INT_SAFE = database-supported integer rangeHP_max     = 4 × Power + AffinityATK_base   = Power + floor(Affinity / 4)DEF_base   = 2 × Prestige + floor(Affinity / 8)SPD_base   = 4 × Charge + floor(Affinity / 10)
+Stat
+Función
+No determina por sí sola
+Power
+base ofensiva y escala de HP
+target, victory
+Affinity
+identity + HP/ATK/DEF scaling
+initiative
+Prestige
+defense scaling
+damage dealt
+Charge
+initiative scaling / card identity
+damage
+HP
+survival
+target priority
+ATK
+offensive pressure
+automatic victory
+DEF
+mitigation
+immunity
+SPD
+global activation priority
+damage / accuracy
+5.1 Modifier order
+1. Base derived stats2. Formation modifiers (Pure Formation, Champion reserve pressure)3. Temporary status modifiers4. Doctrine modifier5. Card effect modifier6. Clamp / round
+Todos los porcentajes se calculan en enteros racionales. No se usan floats en settlement-critical calculations.
+5.2 Rounding law
+floor(x) for offensive / stat additions unless explicitly defined otherwiseceil(x) for mitigation damage formularound-half-away-from-zero is forbiddenNo floating point in authoritative state
+6. Command — economía táctica
+INITIAL_COMMAND = 1COMMAND_MAX = 6COMMAND_GAIN_PER_ROUND = 1UNSPENT_COMMAND = retained, subject to COMMAND_MAXNo separate wallet/bank resource
+Se elimina el concepto ambiguo de “0–2 banked Command” como una segunda reserva. V6 usa una única piscina visible de 0–6. Esto simplifica la interfaz, la simulación y el análisis de tempo.
+6.1 Command costs
+Acción
+Coste
+Límite
+Main Tactical
+0–4
+máximo 1 por jugador por round
+Reaction
+0–3
+máximo 1 por response layer
+Doctrine
+0
+1 por round
+Focus
+0
+1 por round
+Basic Attack
+0
+automático, 1 vez por unidad viva elegible/round
+Reserve Selection
+0
+1 choice per reserve event
+6.2 Command invariants
+Command nunca puede ser negativo.
+El coste se descuenta solo cuando la acción es aceptada por el servidor.
+Una solicitud rechazada no consume Command.
+Un retry con la misma idempotency key no vuelve a consumir Command.
+La reserva de Command no se puede comprar, transferir ni generar por reward.
+En Ranked ambos lados siguen exactamente el mismo perfil de economía.
+6.3 Resource tension
+El diseño debe producir decisiones como: gastar 4 Command para una conversión de tempo ahora o guardar 3 para responder; usar una táctica que genera card advantage pero deja el Champion expuesto; gastar una reacción ahora o aceptar daño para conservar Command para el siguiente intercambio. Esto operacionaliza el principio de tempo/card advantage documentado por Magic. [R8]
+7. Mulligan y ciclo de cartas
+Initial hand = 5Mulligan = choose any subset 0..5 onceReplacement cards = draw same countMulliganed cards are shuffled into deck before replacement drawNo second mulligan
+7.1 Objective
+El mulligan no busca encontrar una carta obligatoria. El Balance Harness medirá bad-start rate, matchup consistency, interaction availability y win-rate por deck para evitar que Standard se convierta en “mulligan for X or lose”.
+7.2 Card zones
+DRAW_DECKHANDDISCARDFORMATION_ACTIVERESERVEEXILESECRETS (server-only metadata; never game state)
+Toda transición de zona genera un event log si afecta el gameplay. Un evento nunca puede mover una carta dos veces ni duplicar una referencia de carta en zonas incompatibles.
+7.3 Deck-out / Fatigue
+If draw requested and DRAW_DECK is empty:  fatigue += 1  true_damage_to_Champion = 2 + fatigue  if Champion reaches 0: player losesFatigue is not preventable by Veil, DEF, Guard, or Breach
+Fatigue es un seguro contra loops infinitos y una estrategia legítima de attrition. Sigue terminando por muerte del Champion, por lo que no crea una segunda condición de victoria.
+8. Ronda canónica y ventanas de decisión
+ROUND_START  ↓PLANNING  ↓COMMIT  ↓REACTION WINDOWS  ↓GLOBAL INITIATIVE RESOLUTION  ↓STATE-BASED CLEANUP  ↓RESERVE WINDOWS  ↓ROUND_END  ↓next round
+8.1 Round Start
+Incrementar Command en +1 hasta 6.
+Draw 1 card o aplicar Fatigue.
+Resolver efectos de inicio de ronda.
+Actualizar duraciones de estados.
+Emitir ROUND_START.
+8.2 Planning
+Los dos jugadores disponen simultáneamente de una ventana de planificación. Esto elimina el requisito de “jugador A siempre comienza con la prioridad del turno”. Cada jugador presenta una intención. Si un jugador no confirma antes del deadline, el servidor genera un AUTO_PASS. En Ranked, dos timeouts consecutivos producen ABANDONMENT según el profile competitivo; en PvE el profile puede auto-resolver.
+8.3 Commit schema
+{  round,  doctrine,  focus_target,  main_tactic: {card_id, target_ids[]}|null,  reserve_preference: optional,  idempotency_key}
+Commit no implica que el efecto esté aceptado. El servidor vuelve a validar legalidad, coste, timing, ownership y target durante resolución.
+8.4 Action limits
+1 Doctrine / round1 Focus / round1 Main Tactical / roundReaction cards only inside legal Reaction windowsBasic attacks are resolved by the engine, not manually spammed by the client
+9. Doctrine v6
+Doctrine
+Exact effect
+Strategic purpose
+ASSAULT
+First allied basic attack this round gains +10% final damage.
+trade tempo for aggression
+GUARD
+First non-Champion allied unit that would receive lethal damage this round survives at 1 HP instead.
+stabilize formation
+CONTROL
+First allied Reaction this round costs 1 less Command (minimum 0).
+reserve counter-resource
+RESERVE
+When a Reserve Window opens this round, reveal 4 candidates instead of 3.
+improve future planning
+Doctrine is a stance. It is selected once per round and does not stack. If the benefit never triggers, it simply expires. Doctrine does not grant permanent stats.
+9.1 Doctrine conflict
+If a card explicitly says “cannot be modified by Doctrine”, Doctrine does not apply. Otherwise Doctrine is evaluated after base stats and before card-specific final modifiers. Doctrine cannot revive a Champion or invalidate a hard rule.
+10. Focus y targeting
+Target legality precedence:1. Card-specific mandatory target2. Hard protection / immunity rules3. Guard priority4. Valid Focus target5. Lowest HP percentage6. Lowest current HP7. Slot order: Vanguard > Sentinel > Champion
+10.1 Focus
+Focus es una intención táctica gratuita. Si el target Focus es legal, los ataques básicos intentarán ese target. Focus no puede ignorar Guard ni Champion protection. Las cartas Breach/IgnoreGuard pueden declarar excepciones explícitas.
+10.2 Guard
+If one or more legal enemy units have Guard:  basic attack target set = Guarded legal units  among them apply Focus if compatible  otherwise lowest HP%
+Esto sustituye la fórmula opaca “primer Guard en el array”. La prioridad es ahora visible y auditable.
+10.3 Champion protection
+Basic Attack → protected Champion = illegalBreach Attack → protected Champion = legal if card contract says BreachDirect Tactical → protected Champion = illegal unless card contract says BypassProtection
+11. Global initiative
+V6 abandona el patrón “lado A ataca, luego lado B”. Cada unidad activa viva obtiene una activación básica por ronda. El engine ordena esas activaciones globalmente. Con ello SPD tiene una función real sin decidir automáticamente quién gana.
+initiative_score = SPD_finalTie-break key = SHA256(seed || round || event_type || unit_id)Sort descending by initiative_score; ties by tie-break key ascending
+11.1 Activation rules
+Cada unidad activa viva al iniciar Resolution recibe exactamente un activation token.
+La unidad consume su token cuando ejecuta su basic attack o cuando un estado le impide actuar.
+Una unidad muerta antes de su activation se elimina de la queue.
+Una unidad recién desplegada normalmente no obtiene activación en esa ronda.
+Una unidad con Rush puede obtener una activation adicional inmediata, una sola vez, al final del evento que produjo su entrada.
+11.2 Surge
+Surge → +20 initiative_score for the current round
+Surge ya no altera directamente daño. Solo modifica prioridad; esto refuerza la identidad de Charge/Speed sin duplicar poder ofensivo.
+12. Basic Attack y daño
+1. Determine attacker alive/eligible.2. Resolve target legality.3. Determine effective ATK.4. Apply critical if rolled.5. Apply Breach/other attack modifiers.6. Mitigate with DEF.7. Apply Veil if present.8. Apply final damage.9. Apply Drain.10. Emit damage events.11. Resolve lethal state immediately.12. Open Reserve Window if required.
+12.1 Critical
+CRIT_CHANCE = 15% baselineCRIT_MULTIPLIER = 1.50If RNG event value < 0.15:  effective_ATK = floor(ATK × 1.50)else:  effective_ATK = ATK
+El crítico ya no utiliza la fórmula pseudoaleatoria dependiente de round/power del RPC legacy. El seed del Battle Run genera una secuencia reproducible e independiente del cliente.
+12.2 Mitigation
+mitigated = ceil(effective_ATK × 100 / (100 + DEF))final_damage = max(1, mitigated)
+DEF reduce de forma no lineal y evita que una unidad defensiva convierta toda amenaza en daño cero sin necesitar una lista enorme de excepciones.
+12.3 Damage example
+ATK = 40DEF = 20normal = ceil(40×100/120) = 34critical ATK = floor(40×1.5) = 60critical damage = ceil(60×100/120) = 50
+13. Keyword Contract v6
+Keyword
+Formal definition
+Default duration / stacking
+Guard
+Makes unit highest-priority target among legal basic-attack targets.
+static keyword
+Veil
+The next incoming direct damage instance becomes 0; Veil is then removed.
+1 charge
+Drain
+Heals attacker for floor(25% of final damage dealt), capped at Max HP.
+static keyword
+Surge
+Adds +20 initiative score for current round.
+1 round
+Breach
+Attack may legally target a protected Champion.
+per attack flag
+Rush
+Newly deployed unit may perform one immediate basic attack after entry, with -20% final damage.
+1 entry
+Silence
+Unit cannot trigger activated or passive card abilities; basic attack and damage still function.
+1 full round
+Poison
+At Round End, deal 2 + floor(2% Max HP) true damage per Poison stack; max 3 stacks.
+stacks 1–3
+13.1 Status object
+{  status_id,  source_event_id,  source_card_id,  target_unit_id,  start_round,  end_round,  stacks,  magnitude,  flags}
+13.2 Silence priority
+Silence disables card abilities only. It does not erase basic stats, does not remove formation role, does not remove Champion protection and does not retroactively cancel an effect that has already resolved.
+13.3 Poison order
+At ROUND_END, resolve Poison simultaneously across all targets using the state at the beginning of the Poison step. Then run lethal checks. This avoids order-dependent poison kills.
+14. Reaction system — profundidad sin stack infinito
+La ventana de reacción toma la idea estructural de juegos como Flesh and Blood y Magic, pero se comprime para móvil: origen → reacción defensiva → contra-reacción del origen. No existe un stack abierto de profundidad arbitraria.
+EVENT E0 = attack declaration or tactical commitmentLayer 0 = originating actionLayer 1 = defending/targeted side may play 1 ReactionLayer 2 = originating side may play 1 Counter-ReactionResolve layers L2 → L1 → L0Then run Resolution + state checks
+14.1 Reaction eligibility
+Condition
+Allowed
+Reaction card matches trigger
+yes
+Player owns card and card is in legal zone
+yes
+Command >= cost
+yes
+Reaction after Layer 2
+no
+Reaction targeting illegal object
+no
+Reaction submitted after deadline
+no; auto-pass
+14.2 Reaction loop prevention
+Maximum depth = 2 response layers.
+No effect may create another reaction window against a reaction in the same event beyond Layer 2.
+A “counter-reaction” card cannot itself open a new counter-reaction.
+Global event chain length is capped at 4 external events per action before forced resolution; exceeding the cap is a server error that aborts the run safely before settlement.
+14.3 Why not unlimited stack
+Magic demonstrates the power of priority and stack interactions, while Flesh and Blood formalizes combat reactions. VEXFORGE borrows the strategic lesson but intentionally limits depth to preserve mobile readability and deterministic resolution time. [R1, R5]
+15. Reserve system — signature mechanic
+La Reserva debe producir skill expression. No se selecciona automáticamente por ATK o DEF.
+When Vanguard or Sentinel dies:1. Freeze further resolution.2. Recalculate exposed/protected.3. Reveal candidates from remaining Reserve.4. Candidate count = 3 normally, 4 with RESERVE Doctrine.5. Player selects exactly 1 candidate.6. If no selection before deadline, default = first candidate by stable server order.7. Candidate enters matching slot.8. Non-selected candidates return hidden to Reserve.9. Emit RESERVE_ACTIVATED.
+15.1 Candidate generation
+Los candidatos se seleccionan usando el seed del Battle Run, no el cliente. Se calcula un hash independiente para cada reserve_unit_id y se escogen los N menores entre las unidades elegibles. Esto evita que una consulta manipulada pueda pedir “la mejor de mis cartas”.
+15.2 Entry state
+On Reserve activation:  unit.alive = true  unit.slot = dead slot  unit.entered_round = current round  unit.has_acted_this_round = false  unit.Guard = inherited only if card contract says so  if Rush: immediate activation after current event
+15.3 Double death
+Si una misma resolución mata Vanguard y Sentinel, los reemplazos se procesan en orden canónico VANGUARD → SENTINEL. El Champion se verifica primero y, si ha muerto, la partida termina sin abrir ninguna Reserve Window.
+15.4 Reserve visibility
+Solo los candidatos revelados son públicos. Las cartas no seleccionadas permanecen ocultas. El evento log contiene exactamente qué candidatos fueron revelados y cuál fue elegido; no revela cartas que jamás fueron descubiertas en la partida.
+16. Champion exposure y Breach
+protected = V alive OR S aliveexposed = V dead AND S deadIf exposed:  basic attacks may target Champion  Focus may target Champion  Guard on remaining non-Champion is impossible because none exists
+16.1 Breach
+Breach attack against protected Champion:  target becomes legal  damage multiplier = 0.75  Guard does not redirect the attack  Veil may still prevent damage
+Breach tiene coste implícito: concede daño reducido para convertir la protección en una ventana atacable. Las cartas pueden aumentar/reducir ese multiplicador solo mediante un contrato versionado.
+16.2 No hidden bypass
+No keyword, passive or boss effect puede atacar al Champion protegido por sorpresa. Si una carta puede hacerlo, su Card Design Contract debe declarar BypassProtection=true y ese permiso debe aparecer en tooltips y event log.
+17. State-based actions y resolución de muertes
+After every atomic effect:1. Evaluate HP <= 0.2. Mark units dead.3. If Champion dead on either side → resolve victory immediately.4. Else process support deaths in VANGUARD → SENTINEL order.5. Open Reserve windows.6. Re-evaluate Champion protection.7. Continue event queue.
+17.1 Simultaneous Champion death
+Si una resolución produce la muerte de ambos Champions en el mismo atomic effect, el resultado es DRAW. No existe “challenger wins on >=”. Esto elimina el sesgo heredado del RPC actual.
+17.2 Healing after lethal
+Una unidad marcada como dead no puede ser curada por eventos posteriores de la misma cadena. Los eventos deben fallar de forma segura si su target ya no es eligible.
+17.3 Negative HP
+HP_state = max(0, raw_hp)
+El event log puede conservar raw damage y overkill, pero canonical HP nunca es negativo.
+18. Sudden Forge, draw y match length
+STANDARD_RANKED_MAX_ROUNDS = 12MISSION_DEFAULT_MAX_ROUNDS = 10ELITE_TRIAL_MAX_ROUNDS = 14BOSS_MAX_ROUNDS = 18RAID_MAX_ROUNDS = 20
+Estos perfiles son objetivos iniciales. El Balance Harness debe medir p50/p75/p90/p95. No se declara que una duración es correcta simplemente porque el número esté escrito en el documento.
+18.1 Sudden Forge
+At round > profile.max_rounds:  forge_pressure = round - max_rounds  final direct damage multiplier = 1 + 0.10 × forge_pressure  healing multiplier = max(0.25, 1 - 0.25 × forge_pressure)  sudden_round_limit = 3If Champion death occurs → normal winnerIf both Champions alive after 3 sudden rounds → DRAW
+18.2 Draw
+DRAW es un resultado real y auditable. Ranked define posteriormente cómo afecta MMR; el combat engine no “regala” victoria a un lado para evitar empates.
+19. Deterministic RNG
+El engine necesita aleatoriedad reproducible. No se usa Math.random, funciones locales ni RNG del cliente.
+battle_seed = 32-byte cryptographic random value created server-siderandom_u32(context) = first 4 bytes of SHA-256(battle_seed || context)unit_interval = random_u32 / 2^32context examples:  ROUND:round:CRIT:unit_id  ROUND:round:RESERVE:slot  ROUND:round:TIE:unit_id
+19.1 RNG rules
+Cada random event tiene un context string estable.
+No se permite consumir RNG implícito; todo RNG debe tener event_type.
+El evento registra rng_context y rng_output_summary, no el seed secreto si el producto aún no ha decidido hacerlo público.
+El replay usa el mismo seed + mismos commands + misma versión para regenerar el resultado.
+Una modificación en RNG algorithm exige nueva rules_version.
+20. Battle Run v6 contract
+BattleRun {  battle_run_id: UUID,  player_a_id: UUID,  player_b_id: UUID|null,  mode: enum,  rules_version: text,  card_rules_version: text,  reward_version: text,  mission_version: text|null,  battlefield_profile_id: text,  battlefield_layout_version: text,  seed: bytea,  initial_snapshot: jsonb,  formation_snapshot_a: jsonb,  formation_snapshot_b: jsonb,  command_log: jsonb,  event_log: jsonb,  final_snapshot: jsonb|null,  outcome: enum|null,  contribution: jsonb|null,  settlement_id: UUID|null,  status: enum,  started_at,  resolved_at,  settled_at}
+20.1 Status enum
+CREATEDREADYMULLIGANACTIVERESERVE_PENDINGRESOLVINGRESOLVEDSETTLEMENT_PENDINGSETTLEDABANDONEDEXPIREDFAILED
+20.2 Outcome enum
+WIN_AWIN_BDRAWABANDONED_AABANDONED_BTIMEOUT_ATIMEOUT_BERROR_UNSETTLED
+20.3 Client authority boundary
+ALLOWED FROM CLIENT:  intent, card_id, doctrine, focus, reaction choice, reserve choice, reference_idFORBIDDEN AS AUTHORITY:  p_won, final_hp, damage, final_snapshot, contribution, xp, reward, quest_progress
+21. Event Contract v6
+Event {  event_id: UUID,  battle_run_id: UUID,  seq: bigint,  round: int,  phase: enum,  event_type: enum,  side: A|B|SYSTEM,  source_unit_id: UUID|null,  source_card_id: UUID|null,  target_unit_id: UUID|null,  payload: jsonb,  rng_context: text|null,  rules_version: text}
+21.1 Canonical event types
+BATTLE_CREATEDBATTLEFIELD_PROFILE_SELECTEDMULLIGAN_STARTEDMULLIGAN_RESOLVEDROUND_STARTCOMMAND_GAINEDCARD_DRAWNDOCTRINE_COMMITTEDFOCUS_COMMITTEDTACTIC_COMMITTEDREACTION_COMMITTEDREACTION_RESOLVEDATTACK_DECLAREDTARGET_LOCKEDCRIT_ROLLEDDAMAGE_CALCULATEDDAMAGE_APPLIEDHEAL_APPLIEDSTATUS_APPLIEDSTATUS_REMOVEDUNIT_KILLEDRESERVE_REVEALEDRESERVE_SELECTEDRESERVE_ACTIVATEDCHAMPION_EXPOSEDCHAMPION_DEFEATEDFATIGUE_TRIGGEREDSUDDEN_FORGE_STARTEDROUND_ENDMATCH_ENDSETTLEMENT_STARTEDPHASE_CHANGEDSETTLEMENT_COMPLETED
+21.2 Event immutability
+Event log es append-only. Correcciones no editan eventos antiguos: se agrega un correction/reconciliation event con referencia al event_id problemático. El replay siempre usa la secuencia canonical marcada como valid.
+22. Card Design Contract v6
+CardDefinition {  card_id  card_type  faction  rarity  cost  timing  role_tags[]  target_rules  effect_definition  keywords[]  duration_rules  counterplay_rules  risk  archetype_tags[]  formation_compatibility  reserve_compatibility  champion_compatibility  max_copies  rules_version}
+22.1 Roles
+THREATRESPONSEPROTECTIONTEMPOCARD_ADVANTAGEDISRUPTIONCONVERSIONFINISHER
+22.2 Production gate
+Una carta no pasa al pool competitivo sin definición explícita de: qué hace, cuándo lo hace, qué targets puede usar, qué la detiene, cuánto cuesta, qué riesgo genera, con qué arquetipos coopera y contra qué arquetipos es débil. Esto traduce la teoría de card advantage/tempo en una disciplina de diseño, no en una etiqueta de marketing. [R8]
+23. Mission Engine v6
+COMBAT MISSION:OFFERED → STARTED → BATTLE_PENDING → BATTLE_RESOLVED → WON/LOST → SETTLEMENT_PENDING → SETTLEDINSTANT MISSION:OFFERED → STARTED → SETTLEMENT_PENDING → SETTLED
+23.1 Mission families
+Familia
+Función
+CHRONICLE
+narrativa + teaching
+BOUNTY
+PvE repetible con objetivos
+MASTERY
+dominio de mecánicas
+DAILY
+actividad diaria basada en eventos
+WEEKLY
+objetivos de sesión/progresión
+ELITE
+dificultad + restricciones
+TRIAL
+puzzle estratégico + combate
+DUNGEON
+cadena de encuentros
+EVENT
+reglas temporales versionadas
+23.2 Mission Master Record
+mission_idversionfamilyregionnarrative_definitionenemy_definitionformation_definitionrules_versionobjectivesecondary_objectives[]constraints[]modifiers[]energy_costcooldownxp_rewardreward_definitionquest_tags[]difficultyretry_policyexpiration
+23.3 Mission philosophy
+Una misión Tier 1 debe enseñar, probar, desafiar, recompensar o desbloquear una capacidad del jugador. El motor de combate no se falsifica para “hacer parecer” que una tarea de energía fue una batalla. Las misiones combativas deben recorrer el Battle Run; las misiones instantáneas deben declararse como instantáneas.
+24. PvE encounter architecture
+Encounter family
+Primary pressure
+Recommended design
+PRESSURE
+tempo
+fast enemy initiative + limited answers
+FORTIFICATION
+protection
+Guard / shield / slow break
+SWARM
+card/board overload
+many low-power effects
+EXECUTION
+finish
+punish low Champion HP / exposed state
+ATTRITION
+resource
+deck pressure + Poison + Command tension
+PUZZLE
+decision
+fixed initial snapshot + exact objective
+DECEPTION
+information
+reserve reveal and hidden plan
+PHASED BOSS
+adaptation
+ruleset modifier changes at HP thresholds
+La dificultad debe crecer primero mediante comportamiento, objetivos, ventanas y restricciones; solo después mediante stat inflation. El motor sigue siendo el mismo.
+24.1 Boss phases
+BossPhase {  phase_id,  min_hp_pct,  max_hp_pct,  modifier_set[],  AI_policy_id,  reward_context_id}
+Cambiar de fase produce PHASE_CHANGED en el event log. Un boss no obtiene un “motor secreto”; obtiene una configuración versionada de reglas que el mismo resolver conoce.
+25. World Boss
+START BATTLE RUN→ RESOLVE WITH ForgeFormation v6→ DERIVE VERIFIED DAMAGE→ ATOMICALLY APPLY TO SHARED BOSS HP→ CHECK PHASE→ CALCULATE PERSONAL CONTRIBUTION→ SETTLE REWARD
+25.1 Contribution
+verified_damage = sum(event DAMAGE_APPLIED against Boss target)final_verified_damage = min(verified_damage, remaining_boss_hp)no client-submitted damage accepted as authority
+25.2 Economic protections
+battle_run_id unique for contribution settlement
+boss encounter locked during atomic HP update
+same battle_run_id cannot apply contribution twice
+reward calculated from canonical verified contribution
+retries return the previous canonical settlement
+26. Raid
+JOIN RAID→ START RAID BATTLE RUN→ RESOLVE→ VALIDATED CONTRIBUTION→ RAID PROGRESS→ PERSONAL SCORE→ GROUP STATE→ SETTLEMENT
+26.1 Legacy shutdown
+El contrato legacy de contribución directa de dos parámetros no debe ser usado en producción. Debe quedar en una migration matrix con fecha de sustitución, consumer inventory y pruebas de regresión. Ninguna Raid Android puede incrementar contribution sin una Battle Run completada y validada.
+26.2 Raid orchestration
+Una Raid puede contener N Battle Runs independientes. El raid controller agrega sus resultados; no resuelve combate. Esto permite fases, rooms, scoreboards y rewards sin duplicar ForgeFormation.
+27. Clan War
+La Guerra de Clanes tampoco necesita un tercer motor. Debe ser una capa de competición que orquesta Battle Runs normales.
+CLAN WAR  ↓MATCH SCHEDULE  ↓DUEL PAIRING  ↓Battle Run v6 per duel  ↓Clan Score Aggregator  ↓War Settlement
+27.1 Initial clan format
+Recommended launch structure:  5 players per clan active roster  each participant plays 1 Battle Run  clan score = weighted match result + objective bonus  no direct stat bonuses for clan membership  same Standard legality rules as Ranked unless event profile says otherwise
+Los pesos exactos de score deben pertenecer al Clan War Profile, no al combat engine. Así el mismo combate puede alimentar Ranked, amistosos o Clan War sin forks.
+28. PvP ranked
+Battle Run v6 + MMR + Season + Abandonment + Timeout + Replay + Leaderboard Audit
+28.1 Competitive integrity
+No Command comprable.
+No RNG manipulable por cliente.
+No card ownership bypass.
+No outcome parameter accepted.
+No reward duplication.
+No legacy raid contribution path in ranked ecosystem.
+No reward settlement before canonical result.
+28.2 MMR
+El Elo/K-factor existente puede conservarse como starting implementation del Ranked layer, pero no forma parte de ForgeFormation. El combat engine devuelve WIN/LOSS/DRAW; el ranking service convierte ese outcome en rating change. Esto evita acoplar balance de combate con matemáticas de ladder.
+28.3 Reconnect and abandon
+Situación
+Combat result
+Settlement policy
+Network retry
+unchanged
+same idempotency result
+Refresh while ACTIVE
+unchanged
+resume canonical run
+Timeout first occurrence
+AUTO_PASS
+continues
+Repeated timeout
+TIMEOUT/ABANDON
+profile-specific penalty
+Intentional surrender
+LOSS / ABANDON
+recorded
+Server failure before resolution
+UNSETTLED
+safe retry, no reward
+29. Training, Solo y Puzzle
+Training no debe tener un motor local distinto. `client_ai_v1` pasa a ser un wrapper de AI y UI sobre ForgeFormation v6. Puede seleccionar intenciones automáticamente, pero el resolver sigue siendo el mismo.
+29.1 AI contract
+AI chooses:  doctrine  focus  tactic  reaction  reserve selectionAI does not calculate outcome separately from ForgeFormation v6.
+29.2 Puzzle
+Puzzle snapshot:  fixed seed  fixed formation  fixed hand  fixed Command  objective  solution validator
+Los puzzles son una herramienta estratégica: “save the Champion”, “find the Breach”, “win with 1 Command”, “best Reserve”, “survive attrition”. Shadowverse y Yu-Gi-Oh! muestran el valor de mezclar tutorial, solo y puzzles dentro del mismo universo de reglas. [R3, R4]
+30. Settlement v6
+LOCK RUN→ VALIDATE OWNER→ VALIDATE STATUS→ VALIDATE RULES VERSION→ VALIDATE FINAL RESULT→ DERIVE REWARD→ APPLY WALLET LEDGER→ APPLY XP→ RECALCULATE LEVEL→ UPDATE QUEST PROGRESS FROM EVENTS→ WRITE COMPLETION LOG→ MARK SETTLED→ RETURN CANONICAL RESULT
+30.1 Settlement idempotency
+UNIQUE(settlement_reference_id)UNIQUE(battle_run_id) for terminal settlementUNIQUE(pvp_matches.reference_id) when applicableAll concurrent claims use SELECT ... FOR UPDATE / equivalent transactional lock
+30.2 XP
+total_xp = current_total_xp + delta_xplevel = canonical_level(total_xp)xp_to_next = canonical_threshold(level + 1) - total_xplevel_rewards = all unreconciled thresholds crossed during settlement
+La progresión deja de depender de RPCs dispersos que “suman XP”. Existe una única función canónica.
+31. Quest event engine
+Authoritative events include:BATTLE_WONBATTLE_LOSTRESERVE_ACTIVATEDBREACH_USEDCHAMPION_SURVIVEDTACTIC_PLAYEDCRITICAL_TRIGGEREDMISSION_COMPLETEDBOSS_DAMAGE_DEALTRAID_CONTRIBUTION_CONFIRMED
+31.1 Quest progress rule
+El cliente nunca incrementa progreso. El Quest Engine consume eventos canonicalizados de Battle Run/Settlement. Un mismo event_id no puede contar dos veces para la misma quest assignment.
+31.2 Daily quest state
+ASSIGNED → ACTIVE → COMPLETED → CLAIMEDClaim only after authoritative completion.No direct wallet update from stale legacy table names.
+31.3 Mission reward
+Mission reward settlement y quest progress pueden compartir la misma transacción cuando sea técnicamente seguro; si se separan, el segundo paso debe ser idempotente y derivado del event log, no de una afirmación del cliente.
+32. Rules version matrix
+Artifact
+Version v6
+Versioning trigger
+Combat rules
+forge_formation_v6.0.0
+change to resolution logic
+Card rules
+card_rules_v6.0.0
+card effect/keyword semantic change
+Reward rules
+reward_v6.0.0
+economy/XP/reward formula change
+Mission rules
+mission_v6.0.0
+mission state/objective/encounter logic change
+Event profile
+event_profile_x.y
+temporary mode modifier change
+Replay schema
+replay_v6.0.0
+event contract change
+32.1 Historical compatibility
+forge_formation_t2 → historical / regression onlyforge_formation_t5 → historical / regression onlyforge_formation_v6 → current competitive engineNo silent replay migration
+33. Formal invariants
+ID
+Invariant
+Failure response
+INV-001
+Exactly 1 Champion per side
+reject formation
+INV-002
+Max 3 active units per side
+reject state transition
+INV-003
+Reserve count equals remaining formation units
+reject formation
+INV-004
+No negative canonical HP
+clamp + audit
+INV-005
+HP <= Max HP after settlement of each heal event
+clamp + audit
+INV-006
+Command in [0,6]
+reject invalid action
+INV-007
+No action without legal timing
+reject intent
+INV-008
+No target bypass without declared effect
+reject target
+INV-009
+Same seed + same commands + same versions = same result
+fatal replay mismatch
+INV-010
+No duplicate settlement per battle_run
+transaction reject / return prior
+INV-011
+No reward from non-settled run
+reject
+INV-012
+No client-authored outcome
+reject request field / ignore
+INV-013
+No Reserve activation from nonexistent candidate
+reject
+INV-014
+Champion protection holds unless explicit bypass
+reject illegal attack
+INV-015
+Event sequence is strictly increasing per Battle Run
+transaction reject
+INV-016
+One card exists in exactly one legal zone
+reject state
+INV-017
+No card can act twice per round without explicit Rush/ability
+reject
+INV-018
+No reaction depth beyond Layer 2
+force resolution
+INV-019
+Mission reward and quest progress derive from canonical events
+reject client increments
+INV-020
+Mode profile cannot override hard invariants
+reject profile load
+34. Conflict and priority matrix
+Conflict
+Resolution priority
+Champion dead vs Reserve activation
+Champion death wins; no reserve window
+Veil vs damage
+Veil converts first eligible direct damage to 0 before Drain
+Drain vs Veil
+Drain uses final damage after Veil; 0 damage = 0 heal
+Silence vs passive ability
+Silence blocks ability; basic stats remain
+Guard vs Focus
+Guard wins unless card explicitly IgnoreGuard
+Focus vs lowest HP
+Focus wins if target legal
+Breach vs Champion protection
+Breach wins only when card contract grants it
+Doctrine vs card modifier
+card wins only if contract explicitly supersedes doctrine; otherwise doctrine applies first
+Two lethal support deaths
+process VANGUARD then SENTINEL
+Simultaneous Champion deaths
+DRAW
+RNG tie vs fixed slot
+RNG tie-break wins; slot order is not used for randomness
+34.1 Error policy
+Si el motor encuentra un estado imposible (duplicated card zone, event sequence collision, illegal target generated internally), no se “arregla” inventando un resultado. El run pasa a ERROR_UNSETTLED, no se recompensa y queda disponible para operator reconciliation. La prioridad es integridad sobre continuidad visual.
+35. JSON examples
+35.1 Start Battle Run request
+POST /rpc/start_battle_run{  "mode":"pvp",  "deck_id":"...",  "reference_id":"uuid",  "rules_version":"forge_formation_v6.0.0"}
+35.2 Planning intent
+{  "battle_run_id":"...",  "round":4,  "doctrine":"CONTROL",  "focus_target":"unit-xyz",  "main_tactic": {    "card_id":"card-123",    "target_ids":["unit-xyz"]  },  "reference_id":"..."}
+35.3 Event example
+{  "event_id":"...",  "seq":87,  "round":4,  "phase":"RESOLUTION",  "event_type":"DAMAGE_APPLIED",  "side":"A",  "source_unit_id":"unit-a",  "target_unit_id":"unit-b",  "payload":{    "effective_atk":60,    "def":20,    "damage":50,    "critical":true,    "breach":false,    "veil_consumed":false  },  "rules_version":"forge_formation_v6.0.0"}
+36. Battle Run replay contract
+ReplayInput = {  rules_version,  card_rules_version,  battlefield_profile_id,  battlefield_layout_version,  seed,  initial_snapshot,  commands[]}ReplayOutput = {  event_hash,  final_snapshot_hash,  outcome,  settlement_hash}
+36.1 Determinism test
+for i in 1..N:  result_A = simulate(snapshot, commands, seed, versions)  result_B = simulate(snapshot, commands, seed, versions)  assert hash(result_A) == hash(result_B)
+36.2 Replay hash
+canonical_event_hash = SHA256(canonical_json(event_log))canonical_final_hash = SHA256(canonical_json(final_snapshot))The canonical serializer must sort object keys and normalize integers.
+37. Test Matrix — Combat
+ID
+Scenario
+Expected result
+C-001
+Champion + V + S valid
+PASS
+C-002
+No Champion
+REJECT
+C-003
+4 active units
+REJECT
+C-004
+V dies
+Reserve Window for V
+C-005
+S dies
+Reserve Window for S
+C-006
+V and S die same effect
+V then S windows
+C-007
+Champion dies same effect
+immediate match end
+C-008
+Both Champions die same effect
+DRAW
+C-009
+Guard + Focus different targets
+Guard constraint applies
+C-010
+Breach vs protected Champion
+legal if card contract grants Breach
+C-011
+Breach absent
+protected Champion illegal
+C-012
+Veil receives 50 damage
+0 damage, Veil removed
+C-013
+Drain deals 50
+heal 12
+C-014
+Poison 3 stacks
+tick = 2 + floor(2% maxHP) × 3
+C-015
+Silence active
+ability blocked, basic attack works
+C-016
+Rush replacement
+immediate attack once at -20% final damage
+C-017
+Surge
+initiative +20
+C-018
+Focus target dies before activation
+retarget via rules
+C-019
+12 rounds tied
+Sudden Forge starts
+C-020
+3 Sudden Forge rounds both survive
+DRAW
+38. Test Matrix — Security / economy / concurrency
+ID
+Scenario
+Expected result
+S-001
+Client sends p_won=true
+ignored/rejected
+S-002
+Client sends damage=999999
+ignored/rejected; derive server damage
+S-003
+Client sends final_snapshot
+ignored/rejected
+S-004
+Double start same reference
+same Battle Run returned
+S-005
+Double settlement same run
+one reward only
+S-006
+Concurrent quest claims
+one reward only
+S-007
+Concurrent boss contribution
+atomic cap
+S-008
+Concurrent raid contribution
+one canonical contribution
+S-009
+Refresh during settlement
+safe retry
+S-010
+Network loss after accepted tactic
+replayable; no double spend
+S-011
+Stale rules_version
+reject start/resolve according to migration policy
+S-012
+Foreign card_id
+reject
+S-013
+Invalid formation slot
+reject
+S-014
+Negative Command payload
+reject
+S-015
+Quest progress client +1
+rejected; event-only
+S-016
+Legacy raid contribution RPC called
+blocked in production profile
+S-017
+Wallet legacy table reference
+migration test fails before launch
+S-018
+XP applied twice
+idempotency prevents duplicate
+S-019
+Duplicate event_id
+reject / dedupe
+S-020
+Event sequence collision
+transaction abort
+39. Test Matrix — Missions / Boss / Raid / Clan War
+ID
+Scenario
+Expected result
+M-001
+Mission start valid
+ACTIVE Battle Run created
+M-002
+Mission start no energy
+reject, no run
+M-003
+Mission combat win
+battle resolved then settlement
+M-004
+Mission combat loss
+loss settlement, no win reward
+M-005
+Mission refresh
+same run resumes
+M-006
+Mission retry technical timeout
+no second energy charge for same run
+M-007
+Daily quest progresses from win event
++1 only once per event
+M-008
+Daily quest stale assignment
+not accepted as current
+B-001
+Boss battle valid
+verified damage created
+B-002
+Boss client overstates damage
+ignored / capped to event-derived
+B-003
+Boss phase threshold crossed
+phase event + new modifier package
+R-001
+Raid contribution without Battle Run
+reject
+R-002
+Raid contribution with valid run
+accepted
+R-003
+Two clients submit same run
+one contribution
+CW-001
+Clan duel
+normal Battle Run
+CW-002
+Clan score aggregation
+uses settled duel outcomes only
+CW-003
+Clan war retry
+no duplicate score
+CW-004
+Clan reward after unresolved duel
+blocked
+40. Balance Harness — production gate
+Ninguna carta, keyword, faction, Champion o doctrine entra al Standard final solamente porque “se siente bien”. Debe pasar por simulación y por QA humano. GDC destaca el valor de usar herramientas de simulación/hojas de cálculo para descubrir relaciones económicas y de diseño antes de llevarlas al producto; VEXFORGE debe convertir esto en un pipeline técnico reproducible. [R9]
+CARD / RULE CHANGE→ Static validation→ Unit tests→ Invariant tests→ Monte Carlo→ Matchup matrix→ Mirror analysis→ Human QA→ Canary / controlled release→ Production monitor
+40.1 Required metrics
+Metric
+Why
+Win rate by deck
+power level
+Win rate by Champion
+identity balance
+Archetype share
+meta diversity
+Card inclusion/share
+staple pressure
+Mulligan keep rate
+opening consistency
+Command efficiency
+resource design
+Reserve activation rate
+Reserve relevance
+Reserve choice entropy
+agency / predictability
+Breach usage
+Champion vulnerability
+Reaction usage
+counterplay health
+Average rounds
+match length
+p50/p75/p90/p95 duration
+mobile session fit
+Draw rate
+stall health
+Abandonment rate
+friction / runaway
+Decision density
+skill expression proxy
+40.2 Desired meta condition
+No numeric “50% exactly” target. The objective is multiple viable archetypes, Champions and formations, with enough counterplay that a top deck has exploitable weaknesses and enough skill that matchup edges are not pure card power.
+41. Competitive deck archetypes v6
+Archetype
+Plan
+Core tension
+TEMPO
+win initiative and exploit exposed lines
+Command now vs response later
+MIDRANGE
+build superior formation over time
+card quality vs flexibility
+CONTROL
+trade efficiently and win long games
+resource conservation vs tempo
+RESERVE / ATTRITION
+maximize future formation quality
+short-term board loss vs Reserve advantage
+Combo is deliberately deferred until the core has stable reaction, Command, Reserve and matchup statistics. Combo should be added only when the engine can express deterministic, testable interaction loops without creating unbounded resolution.
+41.1 Card advantage model
+CA_physical = cards accessibleCA_virtual = cards that meaningfully affect game stateTempo = board/output gained per unit of Command and turn opportunityResource advantage = Command + hand quality + Reserve quality + positional controlInformation advantage = revealed legal options / hidden option inference
+El engine no necesita mostrar estos valores al jugador durante el combate. Son métricas de diseño y analytics para balance y deckbuilding.
+42. Android Battle UX contract
+TOP: opponent identity + objective + match stateFIELD: mirrored Forge Battlefield with 3 active sockets per sideBOTTOM: own Champion + V/S formationRESERVE: contextual reveal rail / drawer (owner-visible)HAND: Tactical Cards, partially tucked when necessaryPRIMARY ECONOMY: CommandSTATE HUD: round / initiative cue / effect icons / timerOPTIONAL: Battle Log drawer
+42.1 UX priority
+1. What can I do?2. Why can I do it?3. What will it cost?4. What did opponent commit?5. What happened?
+42.2 Server replay rendering
+Android no simula. Reproduce el canonical event stream. Battlefield animation is driven by events such as ATTACK_DECLARED → TARGET_LOCKED → CRIT_ROLLED → DAMAGE_APPLIED → UNIT_KILLED → RESERVE_REVEALED/SELECTED/ACTIVATED. Camera focus, particles, hit-stop and audio are presentation effects only and cannot alter battle state. This keeps UX, replay, QA and server truth aligned.
+42.3 Battlefield System v1.0 — the canonical combat stage
+The Forge Battlefield is the single visual/interaction stage used by Ranked PvP, Training, Missions, Elite/Trial, World Boss, Raid, Clan War and Event duels. The stage is structurally shared, while each mode loads a versioned presentation profile. This prevents duplicated combat layouts while ensuring that PvP, PvE, Boss and Raid do not feel like the same background with different numbers.
+Core rule: battlefield presentation may change atmosphere, architecture, lighting, particles, music cues, objective framing, boss silhouette and reward/score overlays. It may not silently change targeting, slot count, initiative, range, damage, protection, movement or legal card actions. Any visual profile that changes legal gameplay must become a versioned rules/profile change and pass the normal rules gates.
+42.3.1 Canonical spatial geometry
+BATTLEFIELD = portrait-first, mirrored 1v1 stagePLAYER HALF  SENTINEL  = rear support / lateral node  CHAMPION  = rear core / protected victory node  VANGUARD  = forward engagement nodeFORGE AXIS  VANGUARD ↔ VANGUARD primary clash axisOPPONENT HALF = exact mirrored geometryRESERVE GATE = off-field reserve access; not an active slotHAND DOCK    = tactical-card presentation area; not part of combat geometry
+The three active units are represented as a formation triangle: Vanguard is the forward node on the engagement axis; Champion is the rear core node; Sentinel is the rear support flank. The opponent uses the exact mirrored layout. The geometry exists to communicate formation hierarchy and targeting clearly. In v6.0.0 it does not create movement, distance, lane ownership or adjacency rules.
+No unit may be dragged freely across the battlefield in v6.0.0. A unit occupies exactly one canonical formation slot. A future version may introduce movement or positional rules only through a new rules_version; the visual field must never imply mechanics that do not exist.
+42.3.2 Battlefield layers
+L0 SYSTEM / SAFE AREAL1 COMPETITIVE HUDL2 OPPONENT / PLAYER IDENTITYL3 ENVIRONMENT + ARCHITECTUREL4 FORGE AXIS + FORMATION SOCKETSL5 CARD / UNIT OBJECTSL6 TARGET / PRIORITY TELEGRAPHINGL7 IMPACT / STATUS / DEATH VFXL8 REPLAY / CINEMATIC CAMERA PRESENTATION
+L3–L8 are presentation layers. Only canonical game state controls whether a slot is occupied, exposed, targeted, damaged, dead or replaced. The visual system never invents a card, stat, target, status or combat event.
+42.3.3 Camera and composition contract
+CAMERA_MODE = fixed 3/4 tactical perspectiveFREE_CAMERA = forbidden in ranked v6.0.0CAMERA_STATES = IDLE / FOCUS / IMPACT / RESULTMAX_CINEMATIC_ZOOM = presentation-defined, must not hide legal targetsPRIMARY_RULE = combat readability > spectacle
+The battlefield camera is fixed enough that both players can learn a stable spatial language. Subtle parallax and event-driven camera focus are allowed. Continuous camera motion, large shakes, or cinematic cuts that hide the formation are forbidden in Ranked. PvE/Boss may use stronger presentation effects, but the same legal state must remain readable.
+42.3.4 Slot readability contract
+EVERY ACTIVE SLOT MUST ALWAYS EXPOSE:- role identity- card artwork identity- current HP / HP state- visible status icons- legal target state when selected- death / replacement state when applicable
+The Champion must remain visually identifiable as the victory node even when other UI is expanded. Vanguard and Sentinel must be visually distinct by role treatment, not by invented artwork. Status effects are shown as compact, persistent state markers; transient VFX may reinforce them but never replace their readable icon/state representation.
+42.3.5 Targeting and intent telegraphing
+Focus, Guard, Breach and reaction windows must be visually legible before resolution. Target lines originate at the actual source socket and terminate at the resolved target socket. The renderer may stylize the line, but it cannot show a target that the server rejected.
+FOCUS = persistent target reticle until invalidatedGUARD = defensive visual priority on legal guarded targetsBREACH = distinct bypass telegraph before damageCRITICAL = attack impact + event markerRESERVE WINDOW = field freeze + candidate presentationCHAMPION EXPOSED = persistent high-priority field state
+42.3.6 Command and hand integration
+Command is part of the battlefield decision language. It must be visible without opening a menu. Use a compact six-state Command indicator bound to the authoritative 0–6 value. The indicator may be diegetic (runes, seals, forge charges or equivalent VEXFORGE-specific geometry) but must remain numerically readable.
+The tactical hand is anchored to the lower interaction zone and may partially tuck when the battlefield needs additional visual space. A card must never become unavailable solely because of cosmetic camera motion. Touch zones and card previews remain stable across device sizes.
+42.3.7 Reserve presentation
+The Reserve is not permanently laid out as a visible second hand. The owner knows its contents; the opponent does not until a reveal event. On a Reserve Window, the battlefield pauses resolution, opens the candidate rail and reveals only the server-selected candidates. The field must visually distinguish revealed candidates from the hidden Reserve state.
+RESERVE CLOSED = compact Reserve indicatorRESERVE WINDOW = 3 candidates normally / 4 with RESERVE DoctrineSELECTION = one legal choiceTIMEOUT = stable server defaultACTIVATION = slot replacement + entry effect + event-driven VFX
+42.3.8 Mode-specific Battlefield Profiles
+All modes reuse the canonical geometry but load a profile that controls environment, material language, lighting, ambience, objective framing, music family, VFX intensity and non-mechanical overlays. This is the mechanism that makes the battlefield feel different without creating different combat systems.
+RANKED_PVP  restrained competitive arena  minimum distraction  strongest state readabilityTRAINING  readable practice arena  optional hints / non-ranked feedbackMISSION / ELITE / TRIAL  region-authored environment  encounter objective framing  puzzle / modifier cuesWORLD_BOSS  large boss silhouette / environmental scale  shared-boss state framing  no extra ordinary active slotRAID  cooperative environmental dressing  group-progress overlay outside combat geometryCLAN_WAR  ceremonial competitive dressing  duel result / clan score framingEVENT  versioned event art direction and restrictions
+Mode profiles are data-driven. Replit must reuse the current battle route/state architecture and add the battlefield renderer as a presentation layer; it must not create separate combat screens or separate simulation paths for each mode.
+42.3.9 Battlefield asset and material rules
+Primary identity assets must come from verified VEXFORGE artwork, faction symbols, frames, logos and project assets. Environment geometry may be procedural or project-authored. Generic stock fantasy art, invented card identities, fake stats and baked player data are forbidden. Dynamic player/match values are rendered by Android, never embedded into background images.
+The battlefield should read as a physical place in the VEXFORGE world: stone/metal/obsidian/arcane surfaces, controlled emissive elements, depth separation and mode-specific environmental storytelling. The field is not a decorative wallpaper behind a dashboard.
+42.3.10 Mobile interaction contract
+PRIMARY TAP = select / inspect / focus legal objectLONG PRESS = card/unit detailDRAG = only where an explicit drag interaction is definedSWIPE = hand browsing / optional camera-free panel navigationOUTSIDE HITBOX = no state mutationSYSTEM BACK = opens/uses safe battle exit policy; never silently forfeits
+All interactive hitboxes must be larger than the visible card art where necessary for touch reliability, but must not overlap neighboring legal actions. Touch feedback is visual/haptic only; the server remains authoritative.
+42.3.11 Battlefield replay contract
+Replay uses the same Battlefield Profile ID, layout version and canonical event stream that the live match used. Cosmetic timing may interpolate, but event order cannot change. If the original profile asset is unavailable, the replay must fall back to a deterministic compatibility renderer without altering game state or result; the missing asset is recorded as visual debt.
+42.3.12 Performance budget
+TARGET = 60 FPS on supported baseline device classBATTLEFIELD_RENDER = bounded, pooled, event-drivenPARTICLES = capped and quality-tieredCAMERA_EFFECTS = cappedNO_COMBAT_SIMULATION_ON_RENDER_THREADASSET_PRELOAD = read-only with respect to battle state
+The field must remain visually rich without becoming a thermal or memory bottleneck. Heavy VFX are optional presentation layers; disabling them must not change gameplay or replay hashes.
+42.3.13 Replit execution directive — Battlefield implementation
+01. Audit the existing Android Battle route, state container and replay/event renderer before creating files.02. Reuse the existing Battle surface; do not create a parallel battle route.03. Introduce Battlefield Layout v1.0 as a presentation contract with the canonical 3-slot-per-side geometry above.04. Implement the formation renderer from authoritative battle state; Champion/Vanguard/Sentinel slots are state-driven.05. Implement event-driven target, hit, death, exposure and Reserve animations from canonical Event Contract v6.06. Implement a data-driven Battlefield Profile layer so Ranked, Mission, Boss, Raid, Clan War and Event can use different visual profiles without different combat engines.07. Implement stable touch hitboxes bound to legal server actions; never infer legality locally.08. Bind Command, timer, initiative cue, status icons and hand rendering to the canonical Battle Run state.09. Implement replay rendering from event stream + battlefield profile; do not calculate combat on Android.10. Add reduced-FX quality tier and verify that disabling effects does not alter state.11. Run device-size regression, touch regression and 60-FPS replay checks before visual sign-off.12. Update Continuity with Battlefield Profile/Layout identifiers, assets used, commit evidence and performance notes.13. Do not redesign the Tutorial in this work package. Tutorial replacement is deferred until the complete game loop is operational.
+Implementation hard gate: if the current Android architecture cannot support the Battlefield contract without a parallel engine or route, stop and record the gap in the Rules/Architecture Gap Matrix. Do not invent a second combat implementation to make the screen appear complete.
+43. Performance and mobile determinism
+Target 60 FPS durante replay de combate; effects have quality tiers.
+Event log must be streamable and virtualizable.
+Heavy VFX are cosmetic and can be disabled without changing mechanics.
+Asset preloading must not mutate battle state.
+No client-side combat calculation is required to render the result.
+Battle state JSON must remain bounded by round/event caps.
+43.1 Hard cap
+MAX_EVENTS_PER_BATTLE = profile-defined, with ranked hard ceiling 2048 canonical events
+Si un loop de efectos intenta superar el ceiling, el engine debe abortar el resolution chain safely and classify the run as ERROR_UNSETTLED. Nunca debe truncar silenciosamente y luego inventar un resultado.
+44. Implementation order — direct work plan for Replit
+01 Freeze baseline02 Produce rules/version matrix03 Implement Battle Run v6 schema04 Implement pure ForgeFormation simulator05 Implement invariant tests06 Implement deck/formation validator07 Implement derived stats08 Implement Command09 Implement Doctrine10 Implement Focus/targeting11 Implement global initiative12 Implement Champion protection13 Implement damage/crit/RNG14 Implement keywords/statuses15 Implement Reserve windows16 Implement Reaction layers17 Implement event log18 Implement replay hash19 Implement simulation harness20 Convert client_ai_v1 to wrapper21 Build one mission vertical slice22 Build atomic settlement23 Build boss contribution24 Build raid contribution25 Migrate PvP resolution to v626 Repair daily/weekly event progress27 Remove legacy raid contribution from production28 Implement deck/meta legality29 Implement Clan War orchestration30 Implement Battlefield Layout v1.0 + mode profile contract31 Implement Android battle state UI against canonical Battlefield geometry32 Implement Android replay UI against canonical event stream33 Implement audiovisual event mapping34 Security + concurrency QA35 Monte Carlo + matchup matrix36 Performance + device-size + touch QA37 Battlefield visual/interaction acceptance38 Launch Gate
+44.1 No visual-first rule
+No reconstruir la UI completa de Battle/Missions antes de que el simulator + invariant tests + Battle Run contract estén aprobados. La pantalla debe representar el sistema real, no esconder sus huecos.
+45. Definition of Done — ForgeFormation v6
+Gate
+PASS condition
+RULES
+Every core rule is explicit and versioned
+SIMULATOR
+Same input produces same output across repeated runs
+INVARIANTS
+All mandatory invariants pass
+CARDS
+All competitive cards have Card Design Contract
+KEYWORDS
+All visible keywords are server-executable
+RESERVE
+Every replacement is deterministic and player-selectable within rules
+REACTION
+No reaction chain exceeds defined depth
+BATTLE RUN
+All modes create canonical runs
+SETTLEMENT
+No duplicate rewards under concurrency
+QUEST
+Progress derives from authoritative events
+BOSS
+Damage derives only from resolved events
+RAID
+Contribution is Battle Run-backed
+PVP
+No client-authoritative outcome remains
+REPLAY
+Event log recreates final snapshot
+BALANCE
+Card/rule changes pass simulation + human QA
+ANDROID
+Client renders event stream without local outcome calculation
+QA
+Regression/security/concurrency/performance gates pass
+46. What is explicitly rejected from legacy
+Legacy behavior
+v6 treatment
+A attacks then B attacks
+replaced by global initiative
+first array element wins speed ties
+replaced by seeded deterministic tie-break
+pseudo-random crit formula based on round/power
+replaced by server seed RNG
+reserve selected by stat formula
+replaced by reveal 3/4 → player choice
+client_ai_v1 different rules
+wrapper around v6
+p_won accepted by battle_run resolution
+forbidden
+client-declared boss damage
+forbidden
+legacy 2-argument raid contribution
+production-disabled
+mission immediate claim after execution
+only allowed for explicit instant missions
+legacy wallets table reference
+forbidden in canonical settlement
+XP increment without level recalculation
+forbidden
+draw resolves as challenger win
+removed
+keywords shown but not server-executed
+forbidden
+multiple combat engines
+one engine + profiles
+47. Design laws ratified by this specification
+• Una carta es poderosa por las líneas de juego que crea y las líneas rivales que puede negar, no solo por sus estadísticas.
+• La Reserva no es almacenamiento: es una segunda capa de decisión.
+• Cada punto de Command gastado representa una oportunidad de respuesta sacrificada.
+• El Campeón es condición de victoria e identidad estratégica.
+• La misión es una herramienta de aprendizaje o desafío, no un temporizador con premio.
+• El cliente solicita. El servidor decide. El cliente reproduce.
+• La historia de una partida está ligada a su rules_version y nunca se reescribe.
+• El mismo engine debe poder producir PvP, PvE, Boss, Raid, Clan War y Events.
+• La complejidad debe surgir de interacción y decisión, no de excepciones secretas.
+• La economía competitiva y el balance nunca deben depender del poder adquisitivo del jugador.
+47.1 Battlefield laws ratified by this specification
+• El Battlefield es parte de la identidad de VEXFORGE, pero no es un segundo motor de reglas.
+• La geometría funcional permanece estable; el mundo visual cambia por perfiles versionados.
+• Ningún efecto visual puede ocultar una decisión legal ni crear una decisión que el servidor no acepte.
+• La cámara puede enfatizar un evento, nunca cambiar la información necesaria para jugar correctamente.
+• Boss/Raid/Clan War pueden transformar el escenario visual sin añadir una cuarta unidad activa ordinaria.
+• El Tutorial queda explícitamente fuera del alcance de esta revisión y se reconstruirá al final del producto, usando el mismo motor ya validado.
+48. References — fuentes de diseño y reglas
+[R1] Wizards of the Coast — Magic: The Gathering Rules / How to Play / Comprehensive Rules. Referencias a phases, priority, stack y combat. https://magic.wizards.com/en/rules
+[R2] The Pokémon Company — Pokémon TCG Rulebook / Glossary. Referencias a Active, Bench, Retreat, Special Conditions y Sudden Death. https://assets.pokemon.com/assets/cms2/pdf/trading-card-game/rulebook/svi_rulebook_en.pdf
+[R3] Cygames — Shadowverse: Worlds Beyond, Battles. Referencias a 40-card deck, play points, redraw, evolution, turn timing, practice y guided puzzles. https://shadowverse-wb.com/en/system/cardbattle/battle/
+[R4] KONAMI — Yu-Gi-Oh! MASTER DUEL. Referencias a Solo Mode, tutorial, Duel Strategy, deck building, events y competitive online. https://www.konami.com/yugioh/masterduel/us/en/
+[R5] Legend Story Studios — Flesh and Blood Comprehensive Rules: Combat / Reaction Step. Referencias a combat chain, reaction windows y damage resolution. https://rules.fabtcg.com/en/cr/07-combat/
+[R6] Bandai — ONE PIECE CARD GAME Official Rule Manual. Referencias a Leader, Character area, DON!! economy y Life. https://en.onepiece-cardgame.com/pdf/rule_manual.pdf
+[R7] Bandai — DIGIMON CARD GAME Rules. Referencias a Memory Gauge y versiones formales de reglas. https://en.digimoncard.com/rule/
+[R8] Wizards of the Coast — The Basics of Card Advantage / Tempo & Card Advantage. Referencias a card advantage, virtual card advantage y resource tension. https://magic.wizards.com/en/news/feature/basics-card-advantage-2014-08-25
+[R9] GDC Vault — Spreadsheets Microtalks / Balancing the Economy for Albion Online. Referencias a simulación y constraint-driven balance. https://gdcvault.com/
+[R10] Blizzard — Hearthstone puzzle and balance material. Referencias a puzzle-style mastery and competitive balance iteration. https://hearthstone.blizzard.com/
+[R10] Wizards of the Coast — MTG Arena: State of the Game / mobile battlefield layout. Referencia para adaptar battlefield layout y touch UX a pantallas móviles sin reducir la profundidad del sistema. https://magic.wizards.com/en/news/mtg-arena/mtg-arena-state-game-january-2021-01-21
+[R11] Legend Story Studios — Flesh and Blood Comprehensive Rules, Combat. Referencia para separar ataque, defensa, reacción, daño y resolución en ventanas explícitas. https://rules.fabtcg.com/en/cr/07-combat/
+[R12] Cygames — Shadowverse: Worlds Beyond, Battles. Referencia para HUD compacto, economía visible, hand management, timing y lectura del battle screen en móvil. https://shadowverse-wb.com/en/system/cardbattle/battle/
+[R13] Bandai — ONE PIECE CARD GAME Official Rule Manual. Referencia para una arquitectura de campo explícita con zonas funcionales separadas sin convertirlas necesariamente en un segundo motor. https://en.onepiece-cardgame.com/pdf/rule_manual.pdf
+48.1 Evidence note
+Las fuentes anteriores se utilizan como referencias de diseño y documentación oficial de sistemas conocidos; no se presentan como evidencia de que los números exactos de VEXFORGE deban ser iguales. Los valores de VEXFORGE se convierten en reglas propias y deben ser validados por el Balance Harness.
+49. Ratification checklist
+[ ] T0 matrix actualizado con Rules Matrix / Event Matrix / Settlement Matrix.
+[ ] T1 Battle Run schema aprobado.
+[ ] T2 ForgeFormation v6 simulator aprobado.
+[ ] Derived stat formulas aprobadas tras muestreo de card ranges reales.
+[ ] Command / Doctrine / Reaction / Reserve values tested.
+[ ] Keyword contracts linked to real card IDs.
+[ ] All 127 real cards classified before Standard legality gate.
+[ ] Legacy decks can execute only under compatibility profile.
+[ ] Mission vertical slice runs end-to-end.
+[ ] Boss/Raid derive contribution from canonical events.
+[ ] PvP uses same engine.
+[ ] Clan War is orchestration, not a new combat engine.
+[ ] Event log replay matches final snapshot hash.
+[ ] Security + concurrency suite passes.
+[ ] No outstanding client-authoritative settlement path.
+[ ] Android Battle UX renders canonical events.
+[ ] Battlefield Layout v1.0 geometry approved.
+[ ] Mode-specific Battlefield Profiles defined without combat-rule forks.
+[ ] Battlefield assets have verified provenance or are marked asset-required.
+[ ] Battlefield replay/rendering uses canonical events and profile metadata.
+[ ] Touch/performance/device-size Battlefield QA passes.
+[ ] Tutorial redesign remains deferred to the final onboarding phase.
+[ ] Monte Carlo and matchup matrix baseline documented.
+[ ] Protocol continuity updated with exact commit/run evidence.
+49.1 Battlefield acceptance gate
+The Battlefield is accepted only when a player can understand, without opening a secondary menu: which three units are active, which Champion is protected/exposed, which target is selected, how much Command is available, whether a reaction window is open, which Reserve candidates are currently legal, and what canonical event just resolved.
+A beautiful environment is not acceptance. Acceptance requires mechanical truth, spatial consistency, touch reliability, replay consistency and performance on the supported Android target class.
+50. Final implementation directive
+DO NOT IMPLEMENT FROM MEMORY. IMPLEMENT FROM THIS SPECIFICATION + PROTOCOL V2.1 + TEST MATRIX + BATTLEFIELD CONTRACT.The implementation agent must not introduce new rules, new battlefield semantics, new tutorial behavior or hidden UI mechanics during programming. If a case is undefined, stop the affected transition, record the gap in the Rules/Architecture Gap Matrix, and continue only with independent work. Any new assumption must first become a specification revision and only then code.
+El agente de implementación no debe introducir reglas nuevas durante la programación. Si encuentra un caso no definido, debe detener la transición de estado afectada, registrar el gap en la Rules Gap Matrix y continuar únicamente con trabajo independiente. Un supuesto nuevo se convierte primero en una revisión de especificación y solo después en código.
+The target is not “a battle screen that works”. The target is a single coherent competitive game system whose battles can power PvP, PvE, Missions, Bosses, Raids, Clan Wars and Events without changing what the player is actually learning.
+
+51. Visual Master System v1.0 — identidad de producto
+Esta sección convierte la referencia visual del producto en un contrato de producción para Android/Replit. No crea nuevas reglas de gameplay. Define cómo el sistema real debe verse, sentirse y comportarse para que VEXFORGE deje de parecer una aplicación administrativa y se perciba como un TCG digital premium de fantasía medieval dimensional.
+IMPLEMENTATION NOTE: El tutorial queda fuera de este bloque. Se rediseñará al final, cuando el juego completo esté funcional y pueda enseñar la versión definitiva del sistema.
+51.1 Diagnóstico visual del estado observado
+El video proporcionado muestra una aplicación funcional con jerarquía de datos clara, navegación inferior, módulos por dominio, tarjetas de contenido, estados de carga, economía, mundo, forja y operaciones.
+El problema no es la legibilidad básica. El problema es la falta de una escena de juego persistente: la mayoría de las pantallas se perciben como superficies de aplicación con contenedores, pestañas y tarjetas, no como lugares dentro del universo VEXFORGE.
+El uso repetitivo de fondos planos/oscuros, bordes luminosos, cápsulas, tarjetas rectangulares y bloques de texto genera un lenguaje de dashboard. La nueva capa visual debe conservar funcionalidad, pero sustituir la composición administrativa por escenas, arquitectura, materiales y objetos diegéticos.
+Las referencias visuales generadas para este documento representan la dirección objetivo: fantasía medieval de escala monumental, estructuras flotantes, piedra/metal/obsidiana, dorado antiguo, luz arcana y composición cinematográfica, con UI integrada al mundo en lugar de UI flotando sobre un fondo vacío.
+51.2 Evidencia visual del estado actual
+
+Montaje de 12 puntos del video de referencia actual proporcionado por producción. Se usa únicamente como evidencia del estado base, no como referencia estética final.
+IMPLEMENTATION NOTE: La grabación observada no sustituye al contrato funcional. Cuando el video no demuestra una pantalla, una regla o un estado concreto, Replit debe consultar el protocolo, las rutas existentes y los datos reales de Supabase, no inventar comportamiento.
+52. Visual North Star — definición irrevocable de la experiencia
+VEXFORGE debe sentirse como un mundo de fantasía medieval que existe antes, durante y después de cada acción del jugador. La interfaz no debe parecer colocada encima del mundo: debe parecer construida dentro de él.
+Dimensión
+Contrato
+Género visual
+Fantasía medieval oscura/épica en una dimensión fragmentada; no futurismo, no cyberpunk, no interfaz sci-fi plana.
+Escala
+Monumental: fortalezas suspendidas, puentes, torres, santuarios, arenas y regiones con profundidad atmosférica.
+Materialidad
+Piedra tallada, obsidiana, acero oscuro, hierro envejecido, cuero, pergamino, vidrio arcano y oro antiguo.
+Luz
+Contraste cinematográfico; luz ambiental del mundo + acentos funcionales de UI.
+UI
+Discreta, elegante, integrada, con marcos y placas inspirados en heráldica/arquitectura medieval.
+Color
+Obsidiana, acero oscuro, azul arcano, rojo profundo, oro envejecido, violeta ritual y verde sombra.
+Profundidad
+Parallax ambiental, niebla, partículas ambientales y planos de distancia; nunca ruido permanente sobre datos.
+Lectura
+Primero gameplay/objetivo; después decoración. La espectacularidad nunca puede ocultar una decisión.
+53. Leyes visuales Tier 1
+NO backgrounds decorativos sin relación con el dominio.
+NO una única plantilla de tarjetas para todo el juego.
+NO cinco dominios con la misma composición.
+NO iconos neon flotando sobre vacío como identidad principal.
+NO texto o datos dinámicos incrustados en imágenes.
+NO arte genérico sustituyendo artwork oficial de cartas.
+NO copiar nombres, estadísticas, valores o contenido textual visibles en imágenes de referencia.
+NO animación permanente que compita con lectura o controles.
+NO degradar legibilidad para conseguir aspecto cinematográfico.
+SÍ escenas con profundidad; SÍ materiales; SÍ objetos físicos/diegéticos; SÍ feedback ligado a eventos reales; SÍ identidad propia por dominio.
+54. Design System Visual v1.0
+54.1 Paleta funcional
+Rol
+Color de referencia
+Uso
+Obsidiana
+negro carbón / azul-negro
+base, paneles profundos, overlays
+Acero
+gris azulado oscuro
+frames secundarios, separadores, placas
+Oro antiguo
+oro cálido desaturado
+acciones primarias, selección, rareza premium, heráldica
+Arcano
+azul frío luminoso
+información, jugador propio, energía/Command, interactivo
+Hostil
+rojo profundo
+enemigo, daño, peligro, estados negativos
+Violeta ritual
+violeta oscuro/luminoso
+misticismo, lore, Forge/rareza arcana, portales
+Sombra viva
+verde profundo
+éxito, vida, naturaleza, ciertos estados, sin convertirlo en color global
+IMPLEMENTATION NOTE: Los colores son roles semánticos. No se deben convertir en gradientes brillantes permanentes ni aplicarse a todos los componentes.
+54.2 Tipografía
+Display: serif/roman de alto contraste con presencia de inscripción medieval para títulos, nombres de dominios y resultados heroicos.
+UI: sans serif altamente legible para datos, números, estados, temporizadores y texto operativo.
+Microcopy: tracking moderado y mayúsculas solo para labels funcionales; nunca usar mayúsculas en bloques largos.
+Los tamaños deben escalar según safe area y densidad de pantalla; la legibilidad móvil tiene prioridad absoluta.
+54.3 Materiales y componentes
+Paneles primarios: obsidiana/metal oscurecido con relieve sutil y borde interior.
+Acciones primarias: placas/medallones dorados, no botones genéricos de app.
+Acciones secundarias: placas de acero oscuro con iluminación contextual.
+Controles de dominio: sellos, emblemas, estandartes, placas y marcos inspirados en heráldica.
+Cards: conservar artwork/frames reales; el sistema visual del producto nunca sustituye la identidad canónica de las cartas.
+Separadores: filigrana o líneas arquitectónicas muy sutiles, no grids de dashboard.
+55. Domain Visual Architecture
+Cada dominio debe tener una escena visual primaria y un vocabulario propio. Comparten el mismo ADN material, pero no la misma composición.
+Dominio
+Metáfora espacial
+Material predominante
+Acento
+Composición
+NEXUS / HOME
+fortaleza/hub suspendido
+piedra + oro + obsidiana
+azul arcano
+escena vertical viva con puntos de interés
+ARENA
+umbral/arena de combate
+piedra ritual + metal
+azul vs rojo
+campo protagonista; HUD periférico mínimo
+ARCHIVO
+archivo/santuario de cartas
+madera oscura + metal + vidrio
+oro/violeta
+álbum/estantería + inspección de carta
+FORJA
+forja/santuario de creación
+metal + piedra + fuego arcano
+ámbar/violeta
+objetos físicos, mesa de forja, cartas como materiales
+LEGADO
+salón de estandartes
+piedra + tapices + metal
+oro
+perfil como identidad, historial y logros
+MISSIONS
+mapa/tablón de encargos
+pergamino + madera + metal
+verde/ámbar
+rutas, nodos y recompensas como objetos
+WORLD
+mapa/atlas dimensional
+cristal + pergamino + obsidiana
+violeta/azul
+mapa espacial con regiones y actividad
+STORE
+cámara de mercader/tesoro
+metal + madera + tela
+oro
+productos como objetos exhibidos
+ECONOMY
+tesorería/ledger
+piedra + metal
+oro
+balances y movimientos integrados en una sala/archivo
+SOCIAL / CLAN
+war table / sala de alianza
+madera + metal + estandartes
+facción
+tablero de guerra, miembros y actividad
+META / SETTINGS
+cámara de control
+obsidiana + acero
+neutro
+mínimo y funcional; conserva identidad sin competir con juego
+AUTH
+puerta/portal de entrada
+obsidiana + arquitectura
+azul/violeta
+entrada diegética; no formulario de administración
+56. Arquitectura de escena para pantallas
+WORLD / SCENE    ↓IDENTITY / HERO ASSET    ↓DIEGETIC OBJECTS    ↓LIVE DATA    ↓INTERACTION    ↓MOTION / FEEDBACK    ↓SYSTEM / SAFE AREA
+Cada pantalla principal debe tener un sujeto visual dominante. Si el sujeto puede quitarse sin cambiar la pantalla, probablemente es decoración y debe revisarse.
+Los datos se colocan en superficies que parezcan pertenecer al mundo: placas, pergaminos, tablillas, vitrinas, tableros, medallones, libros, estandartes o instrumentos.
+Los overlays de sistema existen solo cuando son necesarios: loading, error, reward, confirmación, recuperación y accesibilidad.
+Los tabs se reservan para subdominios que realmente requieren navegación. No convertir cada grupo de contenido en una fila de pills.
+57. NEXUS / HOME — transformación obligatoria
+La grabación actual muestra un Home estructurado como feed de módulos: card destacada, seis rutas, operaciones y bottom navigation. La nueva versión conserva las rutas y los datos, pero cambia el modo de presentarlos.
+Actual
+Objetivo
+Bloques verticales simétricos
+Entorno vertical con plataformas/zonas conectadas
+Iconos circulares aislados
+Sellos/estructuras físicas que representan cada dominio
+Tarjetas genéricas
+Objetos del mundo + superficies de información
+Bottom nav dominante
+Barra secundaria, integrada y de bajo peso visual
+Fondo plano morado
+Escena con arquitectura, profundidad atmosférica y puntos de luz
+Contenido desconectado
+Ruta visual que conecta Nexus → Arena/Archivo/Forja/Mundo/Misiones/Economía
+IMPLEMENTATION NOTE: No eliminar navegación funcional existente sin equivalente. La transformación es de composición y materialidad, no de rutas ni datos.
+58. Battlefield Visual Presentation v1.0 — contrato gráfico
+El Battlefield es el principal escaparate de VEXFORGE. Debe ser inmediatamente reconocible y conservar la misma estructura funcional en todos los modos. El perfil visual puede variar; la geometría funcional no.
+              ENEMY / TOP       [VANGUARD] [CHAMPION] [SENTINEL]                 ↑ opponent           FORGE BATTLEFIELD        ─────────────────────           central combat plane        ─────────────────────                 ↓ player       [VANGUARD] [CHAMPION] [SENTINEL]              PLAYER / BOTTOM     RESERVE = contextual side reveal     HAND = lower edge / fan / tray     COMMAND = central-bottom focal economy
+Elemento
+Regla visual
+Campo
+Centro dominante, perspectiva ligera, tres sockets por lado, eje visual hacia Campeón.
+Champion
+Elemento más reconocible de cada formación; aura/silueta/medallón de rol, nunca un label diminuto.
+Vanguard/Sentinel
+Posiciones estables y físicamente diferenciadas; el jugador debe reconocerlas sin abrir detalles.
+Reserva
+Bandeja contextual que aparece al morir V/S; no ocupar permanentemente el campo.
+Mano
+Baja y colapsable; puede elevarse al planning/selection para ganar legibilidad.
+Command
+Indicador central inferior; semántica de recurso clara, sin parecer moneda de economía de cuenta.
+Estados
+Auras/placas/iconografía cerca de la unidad; texto solo cuando el usuario inspecciona.
+Targeting
+Línea/halo/telegraph físico breve y legible; no explosiones permanentes.
+Turn/Phase
+Indicador pequeño pero persistente; nunca cubrir unidades.
+Background
+Escenario dimensional específico del Battlefield Profile; profundidad real con foreground/midground/background.
+59. Battlefield Profiles por modo
+Profile
+Escena
+Color dominante
+Lectura
+RANKED
+fortaleza/arena central suspendida
+acero + oro + azul/rojo
+neutral, solemne, competitivo
+TRAINING
+arena clara de práctica
+azul acero + verde tenue
+máxima legibilidad, menos VFX
+MISSION
+región/encuentro narrativo
+según región
+amenaza y objetivo prioritarios
+ELITE_TRIAL
+arena ritual / ruinas
+violeta + obsidiana
+puzzle y dificultad
+WORLD_BOSS
+escala monumental del jefe
+rojo/ámbar/violeta según boss
+boss domina la escena sin tapar formación
+RAID
+fortaleza/incursión cooperativa
+facción/region
+cooperación, score y fases
+CLAN_WAR
+coliseo/war table dramatizado
+facción + oro
+rivalidad y resultado de serie
+EVENT
+perfil temporal versionado
+según evento
+identidad especial sin cambiar el motor
+IMPLEMENTATION NOTE: Cada perfil debe conservar el mismo socket map, touch map, event mapping y hierarchy contract. Solo varían environment, material, lighting, particles, music and cosmetic overlays.
+60. Motion, VFX y SFX — reglas de uso
+Entrada: movimiento de cámara corto/estable; no utilizar zoom dramático en cada navegación.
+Selection: iluminación del borde + micro-parallax/scale; duración corta.
+Commit: señal inequívoca de intención fijada.
+Attack: trayectoria clara; impacto visible; recuperación rápida.
+Crit: evento excepcional, audiovisual fuerte pero breve.
+Champion Exposed: cambio de luz/estado ambiental que pueda reconocerse periféricamente.
+Reserve Activation: entrada física desde la reserva hacia su socket.
+Victory/Defeat: lenguaje cinematográfico reservado para terminal state.
+No particle system debe generar información que no exista en el event log.
+Los efectos cosméticos pueden degradarse por quality tier sin cambiar la resolución ni el timing lógico.
+61. Mobile UX / Responsive contract
+Regla
+Implementación
+Safe area
+No HUD crítico detrás de notch/system bars.
+Touch target
+Controles de combate y navegación deben ser táctiles sin precisión de mouse.
+Landscape
+Battle puede operar en composición específica si el producto lo permite; no romper portrait navigation.
+Portrait
+Home/domains mantienen scroll vertical; battlefield usa composición dedicada, no una versión comprimida del Home.
+Hand
+Raise/expand on demand; collapse automatically after commit where safe.
+Reserve
+Contextual drawer/bottom sheet, not permanent full-width panel.
+Inspection
+Tap unit/card opens native overlay without leaving Battle context.
+Accessibility
+Text contrast, state redundancy, readable numbers, no color-only semantics.
+Low-end devices
+Reduced VFX preset; same geometry, state and feedback semantics.
+62. Asset Governance — referencia vs contenido canónico
+Las imágenes de referencia incluidas en este documento son un moodboard/target de dirección de arte y composición.
+No se debe copiar literalmente el texto, nombres de cartas, estadísticas, personajes, símbolos o logos inventados que puedan aparecer en ellas.
+Los artwork reales de cartas, marcos oficiales, facciones, rarezas, logos y símbolos canónicos deben salir del Storage/proyecto y de los registros reales de Supabase.
+Cuando una referencia muestra una carta ficticia o una cifra ficticia, Replit debe sustituirla por el registro real correspondiente o dejar el slot visual preparado sin inventar el dato.
+Un asset seleccionado sin procedencia canónica queda ASSET_REQUIRED y no puede disfrazarse de asset final.
+63. Reference Boards — dirección visual aprobada
+Las siguientes placas son referencias visuales de producción. Su función es fijar el lenguaje de VEXFORGE/BENFUEG: composición, escala, materiales, lighting, battlefield, navegación y relación entre mundo y UI. No son diseños de contenido canónico.
+
+Reference A — Battlefield + domains + formation. Fija el lenguaje del campo, la geometría, la escala y la relación entre escena y UI.
+
+Reference B — identidad global del producto. Fija la dirección de Home, dominios, Battlefield, cards, estados y mobile shell.
+
+Reference C — composición vertical del Nexus/Home. Fija el principio de mundo navegable en lugar de lista administrativa.
+
+Reference D — cobertura de dominios y subdominios. Se usa para verificar coherencia transversal, no para copiar texto/artefactos.
+64. Replit — Visual System Direct Implementation Directive
+Esta sección es ejecutable. Debe considerarse una orden de producción subordinada al Protocolo V2.1 y a las reglas ForgeFormation v6. No se permite crear una interpretación alternativa del visual system.
+Audit current Android-only routes, navigation, state containers and existing Battle/Domain components. Preserve working contracts and real Supabase data paths.
+Create a Visual Baseline Matrix for all current surfaces using the supplied video and this specification. For every screen record: route, domain, current component tree, data source, interaction, target visual scene, asset dependencies and status.
+Create visual primitives/components: world scene container, material panel, heraldic plate, seal button, metric plaque, card pedestal, domain portal, diegetic list, reward object, battlefield socket, status aura, event telegraph, modal overlay, bottom navigation shell.
+Implement the shared Visual System tokens: material roles, color roles, typography roles, corner/radius policy, border policy, shadows, icon treatment, spacing scale, safe-area policy, motion curves and quality tiers.
+Rebuild NEXUS/HOME composition around a living world scene. Keep all current real routes/actions/data. Replace generic module grid with diegetic domain anchors and meaningful visual depth.
+Implement Battlefield Layout v1.0 exactly as specified in Sections 42 and 58–59. Do not create movement-based gameplay or client-side combat rules. Battlefield rendering is driven by canonical event stream.
+Connect every battle event to visual feedback: commitment, targeting, attack, critical, damage, status, death, Champion exposure, Reserve reveal/selection/activation, round start/end and match end.
+Create mode-specific Battlefield Profiles without forks in gameplay logic. Profile changes may affect environment, lighting, VFX, audio and cosmetic overlays only.
+Rebuild Archive, Forge, Missions, World, Store/Economy, Legacy/Profile and Social/Clan using the same visual DNA but domain-specific scene metaphors. No duplicate dashboard layouts.
+Use only verified real card artwork, icons, faction symbols and data from the project/Supabase. Treat all reference-board names and sample card data as non-canonical.
+Replace generic loading/error/empty/reward states with authored states that belong to the current domain, while preserving existing state semantics and recovery behavior.
+Implement responsive portrait-first behavior for Android. Battle gets a dedicated composition; it is not a squeezed copy of the Home layout.
+Implement motion budgets and low-end fallback tiers. Visual quality may decrease; semantic feedback, state and functionality may not.
+Run visual regression against the current video baseline and the reference boards. Record Visual Delta, Visual Debt Removed/Added and Hard Gates in Continuity.
+Do not implement the tutorial in this block. Leave the tutorial route/contracts intact unless necessary for shared visual infrastructure; redesign it only in the final onboarding phase.
+If a visual requirement conflicts with a gameplay/protocol requirement, stop the affected change, record the gap, and follow the Protocol V2.1 + Rules Gap Matrix instead of inventing a compromise.
+65. Visual Acceptance Gate
+Gate
+PASS when
+WORLD
+Every main domain has an identifiable world/scene subject.
+IDENTITY
+The same product is recognizable across Home, Battle, Archive, Forge, Missions and Profile.
+BATTLEFIELD
+Player immediately distinguishes own formation, enemy formation, Champion protection/exposure, hand, Command and Reserve.
+DIEGETIC UI
+Primary interactions appear as part of the world instead of generic app cards.
+DATA
+All dynamic values render from real sources; reference boards never become data sources.
+ASSETS
+Canonical assets have provenance; missing assets are explicitly tracked.
+MOTION
+Animations correspond to real events and have a defined budget.
+MOBILE
+Touch, safe area, text and cards remain readable on supported Android devices.
+PERFORMANCE
+No unacceptable frame drops or memory spikes; reduced FX remains functional.
+REGRESSION
+Existing navigation and contracts continue to work.
+CONTINUITY
+Screen Master Records and Continuity capture target visual, evidence, assets and commit.
+NO DASHBOARD
+A screenshot of the finished surface should read as a game/world scene before it reads as an admin panel.
+66. Integrated Production Sequence — Protocol + Rules + Visual
+The visual system is not a parallel art project. It enters the same T0–T10 plan and is delivered in dependency order so Replit never has to build a decorative shell around unstable gameplay.
+T0  BASELINE + RULES MATRIX + VISUAL BASELINE MATRIXT1  BATTLE RUN AUTHORITY + SETTLEMENTT2  FORGEFORMATION v6 + BATTLEFIELD EVENT CONTRACTT2V VISUAL SYSTEM TOKENS + SHARED SCENE PRIMITIVEST3  FIRST PVE VERTICAL SLICE + BATTLEFIELD + MATCH RESULTT4  PVE COMPLETE + DOMAIN VISUALST5  WORLD BOSS / RAID + MODE BATTLEFIELD PROFILEST6  RANKED PVP + COMPETITIVE BATTLE UXT7  COLLECTION / DECK / META + ARCHIVE/FORGE VISUALST8  AUDIOVISUAL TIER 1 + MOTION/VFX/SFXT9  ONBOARDING / TUTORIAL (DEFERRED TO FINAL PHASE)T10 QA / REGRESSION / PERFORMANCE / LAUNCH GATE
+IMPLEMENTATION NOTE: El bloque T2V no cambia el orden de autoridad del protocolo. Es una subfase de producción visual dependiente de la arquitectura de T1/T2 y debe quedar trazada como VE-MOB-* en Continuity.
+67. Screen Master Record — campos obligatorios
+SCREEN_IDDOMAINROUTEWORLD_SUBJECTPRIMARY_IDENTITY_ASSETSECONDARY_ASSETSDATA_SOURCESPRIMARY_INTERACTIONDIEGETIC_OBJECTSVISUAL_PROFILEMOTION_PROFILEAUDIO_PROFILELOADING_STATEEMPTY_STATEERROR_STATEREWARD_STATETOUCH_MAPSAFE_AREAPERFORMANCE_BUDGETREFERENCE_BOARDSASSET_PROVENANCECURRENT_VISUAL_DELTAVISUAL_DEBT_REMOVEDVISUAL_DEBT_ADDEDHARD_GATESSTATUSCOMMITROLLBACK_POINT
+68. Final Visual Directive
+La calidad objetivo de VEXFORGE no consiste en añadir más glow, más partículas o más tarjetas. Consiste en que todas las decisiones funcionales del juego parezcan pertenecer al mismo mundo y que ese mundo sea inmediatamente reconocible. El jugador debe percibir un juego de cartas táctico dentro de una fantasía medieval dimensional, no una aplicación de gestión con una skin fantástica.
+REFERENCE BOARDS = VISUAL NORTH STARSUPABASE DATA = CANONICAL CONTENTFORGEFORMATION v6 = GAMEPLAY TRUTHBATTLEFIELD v1.0 = COMBAT STAGEANDROID = PRESENTATION / INPUT / REPLAY RENDERERPROTOCOL V2.1 = OPERATIONAL AUTHORITYNO INVENTED DATANO PARALLEL ROUTESNO PARALLEL ENGINESNO TUTORIAL REDESIGN IN THIS BLOCK
+69. Visual / UX Research References
+Magic: The Gathering Arena Mobile — State of the Game / mobile UX — Wizards of the CoastMobile adjustments preserve the full game while changing layout, touch interactions, avatar placement and visible battlefield information. https://magic.wizards.com/en/news/mtg-arena/mtg-arena-state-game-january-2021-01-21
+Shadowverse: Worlds Beyond — Battles — CygamesOfficial battle screen documentation separates leader, defense/resource areas, field, battle log and menu while keeping a compact mobile composition. https://shadowverse-wb.com/en/system/cardbattle/battle/
+Pokémon TCG Rules — The Pokémon CompanyActive/Bench geography demonstrates the value of persistent zones with immediate visual readability. https://assets.pokemon.com/assets/cms2/pdf/trading-card-game/rulebook/
+Flesh and Blood Comprehensive Rules — Combat — Legend Story StudiosFormal reaction windows demonstrate how reaction gameplay can be encoded as explicit states rather than ad hoc UI. https://rules.fabtcg.com/en/cr/07-combat/
+Yu-Gi-Oh! MASTER DUEL — KONAMIShows the importance of a coherent competitive ecosystem spanning duel presentation, Solo, deckbuilding and events. https://www.konami.com/yugioh/masterduel/us/en/
+70. Ratification Addendum
+[ ] Current Android video baseline archived in Continuity.
+[ ] Visual Baseline Matrix created for all observed current domains/subdomains.
+[ ] Visual System v1.0 accepted as product-level direction.
+[ ] Battlefield Layout v1.0 accepted as the combat stage.
+[ ] Reference boards attached to the production document.
+[ ] Real card/art asset provenance mapped before implementation.
+[ ] Replit direct visual directive added to implementation plan.
+[ ] Tutorial remains deferred to T9/final onboarding phase.
+[ ] Visual acceptance gates added to the protocol launch criteria.
+
+
+    ## 71. VISUAL FIDELITY PRODUCTION LAYER v1.0
+
+    **Estado:** ACTIVE  
+    **Autoridad:** extensión ejecutable subordinada al Protocolo V2.1, ForgeFormation v6, Battle Run v6, Battlefield Layout v1.0 y Visual System v1.0  
+    **Objetivo:** convertir la dirección visual de VEXFORGE en un paquete de producción reproducible, verificable y continuable por cualquier cuenta de Replit sin inventar datos, reglas, cartas, estados ni assets canónicos.
+
+    ### 71.1 Propósito y límite de autoridad
+
+    Esta capa define cómo se alcanza una calidad visual equivalente a las referencias conceptuales aprobadas para Nexus/Home, Battlefield, Archivo, Forja y Misiones. Las referencias son nortes visuales y no son fuentes de datos, nombres, cartas, estadísticas, recompensas, reglas ni assets canónicos.
+
+    La capa puede decidir composición, materialidad, profundidad, iluminación, jerarquía, motion, feedback, audio de presentación y forma de mostrar datos. No puede cambiar reglas de ForgeFormation v6, targeting, iniciativa, daño, protección del Champion, slot count, resultado, RPCs, contratos de Supabase, RLS, Auth, settlement, economía autoritativa, identidad de una carta, faction, rareza, coste, artwork, nombre, lore, rutas funcionales ni la separación entre Android renderer/input/replay y servidor autoritativo.
+
+    Regla vinculante: si una decisión visual necesita inventar un dato, una carta, una acción legal, una recompensa o un estado, se detiene y se registra como VISUAL_GAP. No se utiliza un placeholder diegético que pueda interpretarse como información real.
+
+    ### 71.2 Entradas obligatorias antes de construir una pantalla
+
+    Ninguna superficie entra en producción visual sin Screen Master Record y estas entradas comprobadas:
+
+    1. screen_id, dominio y ruta Android real.
+    2. Árbol de componentes actual y superficie que se conserva.
+    3. Fuente de cada dato: tabla, RPC, hook, snapshot, event stream o contrato documentado.
+    4. Estados posibles: loading, ready, empty, pending, error, unavailable, disabled, success y recovery.
+    5. Mapa de interacciones: tap, long press, swipe, back, retry y acciones de servidor.
+    6. Assets disponibles con procedencia y restricciones de uso.
+    7. Dispositivo de referencia, safe area, orientación y límite de rendimiento.
+    8. Perfil visual de dominio y perfil de motion/audio.
+    9. Criterios de aceptación y evidencia requerida.
+
+    Si falta uno de estos elementos, la superficie puede tener wireframe de investigación, pero no puede declararse IMPLEMENTED ni visualmente terminada.
+
+    ### 71.3 Paquete de producción reproducible
+
+    La implementación debe producir y mantener estos entregables versionados junto al trabajo Android:
+
+    - ART_DIRECTION.md: identidad del mundo, referencias aprobadas, materialidad, jerarquía, tono y prohibiciones.
+    - ASSET_REGISTRY.json: asset_id, clase, origen, ruta, dimensiones, formato, hash, procedencia, dominios autorizados, estado y deuda.
+    - SCREEN_MASTER_RECORDS.yaml: ruta, datos, estados, assets, interacción, motion, audio, safe area, performance budget y evidencia.
+    - VISUAL_STATE_MATRIX.md: fuente real a representación visual para cada estado, incluida ausencia de datos sin convertirla en cero.
+    - DOMAIN_SCENE_PROFILES.yaml: composición, material, acento, profundidad, iluminación, VFX tier y restricciones por dominio.
+    - EVENT_PRESENTATION_MAP.yaml: evento canónico a feedback visual/audio permitido, sin resolución local.
+    - DEVICE_MATRIX.md: tamaños, densidades, safe areas, memoria, FPS objetivo y tier de efectos.
+    - VISUAL_ACCEPTANCE.md: checklist de aceptación, regresión y captura de evidencia.
+
+    Estos archivos son entregables de producción, no fuentes alternativas de gameplay. El código continúa consumiendo contratos vivos.
+
+    ### 71.4 Clasificación obligatoria de assets
+
+    CANONICAL_CONTENT: artwork real de cartas, frames, logo oficial, facción, icono, nombre, lore y cualquier identidad proveniente del proyecto o Supabase. No se sustituye ni se redibuja para ocultar una ausencia.
+
+    WORLD_SCENE: fondos, arquitectura, piedra, metal, obsidiana, madera, vidrio, pergamino, tela, partículas ambientales, niebla, luz y capas de profundidad creadas para presentación. Puede ser procedural o project-authored, pero necesita asset_id, procedencia y revisión visual.
+
+    SYSTEM_UI: tipografías, iconografía funcional, placas, sellos, paneles, controles, safe-area treatment y componentes compartidos.
+
+    EVENT_FEEDBACK: VFX, hit-stop, telegraph, aura, sonido, vibración y transiciones ligadas a un evento real.
+
+    REFERENCE_ONLY: boards, imágenes conceptuales y referencias externas. Nunca se importan como datos del producto ni como identidad de carta.
+
+    VISUAL_DEBT: asset ausente, licencia pendiente, resolución insuficiente, variante no disponible, fallback temporal o elemento que requiere producción. Debe quedar visible en el registro y nunca se presenta como PASS.
+
+    Prohibiciones: stock fantasy genérico, cartas inventadas, nombres de referencia tratados como datos, estadísticas falsas, backgrounds que contienen valores dinámicos, texto de imagen que suplante una fuente viva y fallback silencioso.
+
+    ### 71.5 Dirección artística aprobada
+
+    Las cinco referencias conceptuales aprobadas quedan registradas como boards de dirección:
+
+    - VF-REF-NEXUS: hub vertical vivo; fortaleza suspendida, portales físicos, piedra, oro, obsidiana y luz arcana azul.
+    - VF-REF-BATTLEFIELD: escenario 1v1 espejado; tres sockets por lado, eje central, Champion reconocible, mano, Command y Reserve.
+    - VF-REF-ARCHIVE: santuario de colección; madera oscura, metal, vidrio, vitrinas y carta real como objeto dominante.
+    - VF-REF-FORGE: mesa de creación; metal, piedra, fuego arcano, herramientas, materiales, recetas y acción primaria como placa física.
+    - VF-REF-MISSIONS: tablero de encargos; pergamino, madera, metal, rutas, nodos, objetivos y recompensas como objetos.
+
+    Estas boards fijan nivel de detalle, profundidad, densidad y lenguaje material. No fijan datos concretos ni reemplazan el Asset Registry. La implementación conserva la intención visual aunque cambie el arte exacto por disponibilidad o rendimiento.
+
+    ### 71.6 Contrato de composición de escena
+
+    Toda pantalla principal se compone en este orden conceptual:
+
+    WORLD_SCENE → IDENTITY/HERO_ASSET → DIEGETIC_OBJECTS → LIVE_DATA → INTERACTION → MOTION/FEEDBACK → SYSTEM/SAFE_AREA
+
+    Requisitos: sujeto visual dominante; datos en placas, pergaminos, vitrinas, tableros, medallones, libros, estandartes o instrumentos del mundo; overlays solo para loading, error, reward, confirmación, recovery y accesibilidad; tabs solo para navegación real; la captura se lee primero como escena de juego y después como interfaz; la composición no oculta acciones legales, targets, HP, estados, Command, Reserve ni resultados; el modo reducido conserva identidad, legibilidad, estado y funcionalidad.
+
+    ### 71.7 Producción por dominio
+
+    #### 71.7.1 NEXUS / HOME
+
+    Sujeto: fortaleza o hub suspendido. Función: conectar Nexus, Arena, Archivo, Forja, Legado, World, Missions, Economy, Store y Social/Clan mediante anclas físicas. Datos: identidad del jugador, evento, progreso, actividad y rutas disponibles ya existentes. No se permite sustituir rutas por ilustración estática, inventar actividad, mostrar módulos que el contrato no entrega ni convertir la escena en cuadrícula de tarjetas. Entregables: escena vertical con foreground/midground/background, portales, estados de conexión, interacción de entrada, reduced-motion y fallback de baja memoria.
+
+    #### 71.7.2 ARENA / BATTLEFIELD
+
+    Sujeto: eje central del Forge Battlefield. Función: el mismo escenario funcional para Ranked, Training, Mission, Elite/Trial, World Boss, Raid, Clan War y Event. Datos: Battle Run, tres sockets por lado, artwork real, role, HP, status, target legality, Command, timer, phase, hand, Reserve, event stream y result. Entregables: renderer de sockets, target telegraph, Champion exposure, Reserve window, hand dock, Command indicator, event presentation map, replay renderer, perfiles de modo y tier reducido. No movimiento libre, cámara libre en Ranked, simulación local, target visual rechazado por servidor, VFX que oculte unidades ni background que parezca una regla nueva.
+
+    #### 71.7.3 ARCHIVE / COLLECTION
+
+    Sujeto: carta real en pedestal o vitrina. Función: inspeccionar colección, artwork, rareza, facción, lore y estados entregados por la fuente oficial. Entregables: estantería, filtros reales, detalle de carta, paginación, estados no sincronizados, lista vacía confirmada, error recuperable y navegación. Una estadística ausente se muestra como no reportada o pendiente; nunca como cero, barra vacía o valor derivado de una lista que todavía no llegó.
+
+    #### 71.7.4 FORGE
+
+    Sujeto: mesa de forja y objeto de creación. Función: mostrar materiales, recipes, costes, fusión, evolución, apertura o creación únicamente cuando exista acción autoritativa. Entregables: inputs, preview de resultado solo si está confirmado por contrato, placas de coste, restricciones, confirmación, error y recuperación. Una animación de creación nunca confirma un resultado antes del settlement real.
+
+    #### 71.7.5 MISSIONS / QUEST BOARD
+
+    Sujeto: mapa, tablón o pergamino de encargos. Función: representar OFFERED, STARTED, BATTLE_PENDING, BATTLE_RESOLVED, WON/LOST, SETTLEMENT_PENDING y SETTLED según Mission Engine v6. Entregables: rutas, nodos, objetivo primario, secundarios, constraints, energía, cooldown, dificultad, reward state y transición hacia Battle Run. Las misiones instantáneas se distinguen visualmente de las combativas.
+
+    #### 71.7.6 WORLD, STORE, ECONOMY, LEGACY Y SOCIAL/CLAN
+
+    Cada dominio debe tener metáfora espacial propia y el mismo ADN de materiales sin repetir layout de dashboard. La escena no cambia semántica: balances, compras, retiros, referrals, rankings, historial, miembros, actividad, regiones, bosses y raids permanecen gobernados por fuentes vivas.
+
+    ### 71.8 Matriz dato → estado → presentación
+
+    Cada campo debe tener una fila en VISUAL_STATE_MATRIX.md con fuente y campo exactos, tipo y unidad, disponibilidad, representación normal, pendiente, vacío confirmado, error, acción permitida, acción bloqueada, fallback permitido y evidencia.
+
+    Reglas: ausente no significa cero; lista no recibida no significa lista vacía; fecha inválida no significa fecha actual; lore no sincronizado no significa lore inventado; carta sin artwork no significa artwork generado dentro del producto; recompensa no confirmada no significa obtenida; combate no resuelto no significa derrota ni victoria; estado visual no anticipa settlement.
+
+    ### 71.9 Primitivas visuales obligatorias
+
+    WorldSceneContainer, MaterialPanel, HeraldicPlate, SealButton, MetricPlaque, CardPedestal, DomainPortal, DiegeticList, RewardObject, BattlefieldSocket, StatusAura, EventTelegraph, ReserveRevealRail, CommandIndicator, HandDock, ModalOverlay, BottomNavigationShell, LoadingState, EmptyState, PendingState y ErrorState de dominio.
+
+    Cada primitiva acepta tokens, safe area, reduced-motion, quality tier y accesibilidad. Ninguna contiene reglas de gameplay ni asume disponibilidad de datos.
+
+    ### 71.10 Motion, audio y feedback
+
+    Cada animación declara event_type, duración máxima, prioridad, cámara permitida, estado reforzado, tier de calidad y comportamiento reduced-motion. Se aceptan interpolaciones cosméticas; no se acepta cambiar el orden de eventos ni esconder información legal.
+
+    Tier 1 mínimo: entrada de escena; press/tap feedback; foco y targeting; ataque y daño; critical; status; death/replacement; Champion exposed; Reserve reveal/select/activate; round start/end; match result; reward/settlement confirmado. Audio deriva de eventos o estados reales y debe incluir mute, reduced-motion y fallback de bajo consumo.
+
+    ### 71.11 Rendimiento y dispositivos
+
+    Antes de terminar una escena se fija DEVICE_MATRIX con dispositivos Android soportados, densidad, safe area, memoria y FPS objetivo. Gates: 60 FPS objetivo en Battlefield y replay para el baseline; sin simulación de combate en render thread; partículas pooled y desactivables; camera effects limitados; preload de assets en solo lectura; event stream acotado; Reduced-FX sin alterar outcome, hash o replay; touch hitboxes estables; portrait-first y safe areas legibles.
+
+    ### 71.12 Secuencia integrada T0–T10
+
+    T0 — Baseline y verdad de assets: congelar baseline Android, inventariar assets, registrar fuentes, crear Screen Master Records, DEVICE_MATRIX y VISUAL_STATE_MATRIX.
+
+    T1 — Autoridad y settlement: mapear cada dato a Battle Run, Event Log, Mission Engine, economy, collection, profile y settlement. Ningún feedback de éxito antes de confirmación.
+
+    T2 — Gameplay contract y Battlefield: cerrar geometría, sockets, event types, target legality, hand, Command, Reserve, Champion exposure y replay.
+
+    T2V — Sistema visual: cerrar tokens, materiales, tipografía, placas, sellos, portales, pedestales, escenas, motion curves, safe area y quality tiers.
+
+    T3 — Primera vertical slice: implementar una misión PvE completa desde Nexus/Missions hasta Battlefield, resolución, replay y settlement, con escena final y datos reales.
+
+    T4 — PvE y dominios: completar Mission, Elite/Trial, Archive, Forge, World y estados de recovery.
+
+    T5 — Boss/Raid profiles: añadir escala visual, perfiles de boss, raid y progreso cooperativo sin alterar geometría legal ni crear motores paralelos.
+
+    T6 — Ranked/PvP: aplicar Battlefield competitivo, lectura mínima de distracción, target readability, replay, match result y abandono/timeout.
+
+    T7 — Collection/Deck/Meta: completar Archivo y Forja con cartas y restricciones reales, legalidad, colección, formación y ausencia honesta.
+
+    T8 — Audiovisual: aplicar motion, VFX y SFX por evento, tiers de calidad, reduced-motion, mute y performance profiling.
+
+    T9 — Onboarding: solo después de validar el loop completo, producir tutorial y onboarding con las mismas primitivas y datos honestos.
+
+    T10 — Launch Gate: ejecutar regresión visual, touch, device-size, replay, performance, security/concurrency, asset provenance, APK workflow, release evidence y revisión de Continuity.
+
+    ### 71.13 Plantilla de unidad ejecutable
+
+    Cada unidad declara UNIT_ID y dominio, pantalla/ruta, objetivo, datos y contratos, assets canónicos y de escena, cambios de código, estados, eventos, tests/guards, device/performance evidence, visual debt removed/added, rollback point, commit, release requerido y status PLANNED, IMPLEMENTED_UNVERIFIED, VERIFIED, PASS, BLOCKED u OPERATIONAL.
+
+    Una unidad no puede marcarse VERIFIED solo porque el código compila. Si toca mobile, debe incluir evidencia del workflow APK y QA visual/táctil cuando corresponda.
+
+    ### 71.14 Gates de aceptación visual
+
+    WORLD: cada dominio tiene sujeto y escena reconocibles. IDENTITY: Nexus, Battlefield, Archive, Forge, Missions y Profile se perciben como el mismo producto. DIEGETIC UI: acciones primarias pertenecen al mundo. DATA: todos los valores vienen de fuentes reales y los pendientes son honestos. ASSETS: cada asset tiene procedencia, identificador y estado. BATTLE: el usuario distingue formations, Champion, hand, Command, Reserve, legal target y result. MOTION: cada movimiento refuerza un evento real. MOBILE: touch, safe area, texto, cartas y modals son legibles. PERFORMANCE: no hay frame drops o memory spikes inaceptables; reduced-FX mantiene funcionalidad. REGRESSION: navegación, contratos, Auth, Supabase, RPCs, RLS y web congelada permanecen intactos. NO DASHBOARD: una captura se lee como juego/mundo antes que panel. CONTINUITY: records, assets, delta, deuda, evidencia y commit quedan registrados.
+
+    ### 71.15 Definition of Done
+
+    La capa llega al 100% solo cuando todas las superficies tienen Screen Master Record; todos los assets y datos tienen procedencia; todas las escenas tienen world subject y perfil; todos los estados son honestos; Battlefield y replay comparten geometría, perfil y event stream; no existen rutas o motores paralelos; motion/VFX/audio respetan eventos, reduced-motion y quality tiers; la matriz de dispositivos pasa touch, legibilidad y FPS; la regresión conserva contratos; workflow APK y release tienen evidencia cuando aplica; Launch Gate y Continuity están actualizados; y la deuda visual restante está explícita.
+
+    ### 71.16 Política de bloqueos y gaps
+
+    Si falta asset, contrato, dato, permiso, fuente, dispositivo o evidencia, el trabajo no se completa con intuición. Se mantiene la superficie sin falsificar información, se registra VISUAL_GAP o VISUAL_DEBT, se identifica owner y evidencia, se continúan unidades independientes y no se declara PASS ni Launch Ready hasta resolver o aceptar formalmente el gap.
+
+    Si una exigencia visual entra en conflicto con gameplay, seguridad, economía o autoridad de servidor, prevalece el protocolo y se abre Rules/Architecture Gap Matrix.
+
+    ### 71.17 Continuity obligatorio
+
+    Cada entrega registra referencia visual o Screen Master Record, escena y perfil, assets y procedencia, datos y contratos preservados, estados, motion/VFX/audio, performance notes, gates ejecutados y pendientes, VISUAL_DELTA, VISUAL_DEBT_REMOVED, VISUAL_DEBT_ADDED, commit, workflow/release si tocó mobile, status honesto y siguiente unidad.
+
+    ### 71.18 Integración con el plan maestro
+
+    Esta capa no es un proyecto artístico paralelo. Se integra dentro de T0–T10 como contrato de presentación y producción. El protocolo solo está completo cuando gameplay truth, live data, Android rendering, asset provenance, visual fidelity y launch evidence están alineados.
+
+    Resultado objetivo: VEXFORGE debe parecer un juego táctico de cartas dentro de una fantasía medieval dimensional, con escenas creadas específicamente para sus dominios y cartas reales como identidad canónica. Nunca debe parecer una aplicación administrativa con una skin fantástica.
+
+    Referencia de cierre: VF-REF-NEXUS, VF-REF-BATTLEFIELD, VF-REF-ARCHIVE, VF-REF-FORGE y VF-REF-MISSIONS son dirección visual aprobada; Supabase continúa siendo el contenido canónico; ForgeFormation v6 continúa siendo la verdad de gameplay; Android continúa siendo renderer/input/replay.
+
+## 72. AUDITORÍA DE CAPACIDAD TIER 1 Y CIERRE DE EVIDENCIA
+
+**Estado:** ACTIVE — integración dentro del mismo protocolo maestro
+**Propósito:** impedir que una especificación visual o un build correcto se confundan con un juego terminado de calidad premium.
+
+### 72.1 Veredicto de capacidad
+
+Este protocolo es suficientemente detallado para gobernar la producción de VEXFORGE como juego táctico de cartas Android de alta calidad: fija la autoridad de gameplay, la separación servidor/renderer, el consumo de datos vivos, la dirección visual, la producción por dominios, los estados, la accesibilidad, el rendimiento, T0–T10 y los gates de lanzamiento. Sin embargo, el protocolo no puede garantizar por sí solo un resultado AAA, porque una norma no sustituye la implementación completa, los assets producidos, la medición en dispositivos reales, la QA táctil/visual ni la validación de contenido, audio, red, economía y release.
+
+La etiqueta **AAA / premium / Tier 1** sólo puede describir un resultado cuando existe evidencia reproducible de todas las capas. La IA puede implementar código, verificadores y arte de producción autorizado; no puede auto-certificar la sensación de calidad, el rendimiento térmico, la legibilidad en un dispositivo físico, la diversión, el balance competitivo ni la estabilidad de una release sin evidencia externa.
+
+### 72.2 Fugas que bloquean la conclusión de calidad
+
+Las siguientes fugas se consideran bloqueantes para `PASS`, `TIER1_READY`, `OPERATIONAL` o `Launch Ready` aunque la aplicación compile:
+
+1. **Fuga de fuente:** la fila ACTIVE de este documento en Supabase y la copia de `main` deben ser byte a byte equivalentes después de cada integración. Si difieren, se detiene el trabajo dependiente y se reconcilia de forma aditiva; no se mantiene una interpretación paralela.
+2. **Fuga de evidencia:** `MET` en una matriz estática, un test textual, un typecheck o un build no demuestra touch, legibilidad, FPS, memoria, temperatura, recovery, audio, red ni percepción visual en la APK.
+3. **Fuga de pantalla:** una escena sólo está terminada cuando su Screen Master Record, perfil de dominio, matriz de estados, assets con procedencia, mapa de interacción y evidencia de dispositivo están completos. Los tokens compartidos no sustituyen la escena ni el contenido.
+4. **Fuga de juego:** una interfaz con aspecto de juego no prueba una vertical slice completa desde entrada, decisión, Battle Run, eventos, replay, settlement y recompensa confirmada usando contratos reales.
+5. **Fuga de producción:** referencias conceptuales, assets temporales, VFX cosmético, audio genérico o contenido insuficiente no se presentan como calidad final. Cada deuda debe conservar owner, estado, procedencia y criterio de cierre.
+6. **Fuga de plataforma:** una build Android no demuestra funcionamiento en la matriz soportada ni justifica un release si faltan workflow exitoso, APK, hash, instalación, navegación autenticada y recorrido QA.
+7. **Fuga de cierre:** ninguna cuenta de IA puede promover una unidad por inferencia. Si falta una medición, permiso, dispositivo, asset, dato o revisión, el estado permanece `PARTIAL`, `IMPLEMENTED_UNVERIFIED` o `BLOCKED`.
+
+### 72.3 Refuerzos obligatorios de producción
+
+1. **Reconciliación única:** esta fila `vexforge_home_world_system_protocol_v3` es el único protocolo activo. No se crea un addendum, copia normativa, versión paralela ni plan alternativo. La copia de `main` sólo es un espejo operativo del contenido ACTIVE.
+2. **Vertical slice antes de decoración masiva:** antes de extender VFX, motion o polish a todas las superficies, T3 debe demostrar una misión PvE completa con datos reales y recorrido verificable Nexus/Missions → Battlefield → eventos → replay → settlement. El polish que no cierre ese recorrido es deuda, no progreso de lanzamiento.
+3. **Screen Master Record verificable:** cada record debe incluir valores medibles de aceptación, evidencia esperada y criterio de bloqueo, no sólo una descripción visual. Una superficie no puede pasar por tener tokens o una captura estática.
+4. **Device Matrix ejecutable:** la matriz debe nombrar dispositivos Android reales de gama baja, referencia y alta que estén soportados, con densidad, memoria, versión, orientación, safe area y tier de efectos. Cada escena crítica se mide en esos dispositivos, no en un emulador único.
+5. **Performance con umbral observable:** Battlefield y replay deben sostener el objetivo de 60 FPS durante una captura de 30 segundos en cada tier soportado; el evidence pack debe registrar frame time P95 ≤ 16,7 ms, P99 ≤ 25 ms, ausencia de crash/OOM y touch sin bloqueo durante la escena. Si un dispositivo no puede cumplirlo, se reduce el quality tier sin cambiar outcome, replay, hash ni legalidad y se registra la excepción.
+6. **QA de recorrido real:** la APK debe probarse con la cuenta QA designada sin guardar su contraseña ni datos sensibles en el repositorio. La evidencia debe cubrir login, navegación, estados loading/empty/error/pending, tap/back/retry, una acción autoritativa, Battle Run, settlement y reentrada después de un fallo de red.
+7. **Evidencia de release:** cualquier cambio en `mobile/**` requiere workflow Android exitoso, release oficial con `app-release.apk`, commit, run, tag, SHA-256 del APK, dispositivo probado y estado de QA. `[skip ci]` sólo se permite cuando la sesión no toca `mobile/**` y esa decisión queda registrada.
+8. **Contenido y presentación:** la aceptación visual debe incluir revisión de primera impresión, coherencia entre dominios, legibilidad de textos y cartas, feedback de evento, audio derivado de eventos, reduced-motion, mute, estados de recovery y ausencia de lenguaje de dashboard. Un asset bonito aislado no satisface este gate.
+9. **Cierre por matriz viva:** ningún criterio de `public.vexforge_visual_tier1_objective` se promueve por antigüedad o por apariencia. Sólo se marca `MET` con evidencia reproducible, fecha, commit y fuente; cualquier `PARTIAL`, `NOT_STARTED` o `BLOCKED` mantiene el Launch Gate cerrado cuando afecte la experiencia final.
+
+### 72.4 Orden de ejecución después de esta auditoría
+
+La continuidad debe seguir este orden sin reiniciar unidades ya cerradas: (a) reconciliar esta fuente ACTIVE con su espejo de `main`; (b) cerrar T0 con inventario, Screen Master Records, matrices, assets y dispositivos; (c) ejecutar T1–T3 y validar la vertical slice real; (d) completar dominios y gameplay T4–T7; (e) cerrar audiovisual, rendimiento y accesibilidad en T8; (f) cerrar onboarding en T9; (g) ejecutar T10 y sólo entonces evaluar `TIER1_READY` o `OPERATIONAL`. Una unidad independiente puede avanzar en estado honesto, pero no puede convertir un gap de lanzamiento en un fallback silencioso.
+
+### 72.5 Regla final de conclusión
+
+La conclusión correcta no es “el protocolo garantiza AAA”. La conclusión correcta es: **el protocolo puede conducir a una calidad Tier 1/premium si se ejecuta completo y supera sus gates; en su estado actual, mientras existan criterios abiertos o evidencia de dispositivo/release pendiente, sólo puede declararse una base de producción sólida, no un juego AAA terminado**. Esta regla prevalece sobre cualquier afirmación promocional, captura, build o resultado generado por IA.
 
----
-
-## LEY SUPREMA — EJECUCIÓN EXCLUSIVA ANDROID Y CONGELACIÓN WEB
-
-**Entrada en vigor:** 2026-08-31
-**Decisión explícita del operador:** el único producto activo para el trabajo restante es la aplicación Android oficial en mobile/.
-**Prioridad:** esta ley prevalece sobre cualquier texto histórico que describa la web como superficie de mantenimiento o como destino del roadmap.
-
-1. **Superficie única de implementación:** todas las unidades pendientes, mejoras, correcciones, verificaciones funcionales y entregas del roadmap se ejecutan exclusivamente sobre Android en mobile/, siguiendo el inventario VE-MOB-0 y sus gates.
-2. **Web congelada:** src/, public/, dist/, las rutas web, componentes web, estilos web, telemetría web, pruebas web y cualquier otro consumidor web son solo referencia de lectura. Ninguna IA puede modificarlos, refactorizarlos, corregirlos, instrumentarlos, añadirles features, generarles assets ni abrir unidades nuevas para ellos.
-3. **Uso permitido de la web:** se puede leer el código y la documentación web únicamente para portar a Android comportamiento, contratos, textos, diseño y reglas ya existentes. El port debe producir cambios en mobile/; no se devuelve el cambio a la web.
-4. **Supabase compartido:** solo se permiten cambios de Supabase cuando sean estrictamente necesarios para una capacidad Android del inventario y estén trazados a esa unidad. Queda prohibido cualquier trabajo de backend, datos, Storage o RPC destinado únicamente a la web.
-5. **Entrega y validación:** la entrega del producto restante se hace con cambios Android, el workflow oficial .github/workflows/vexforge-android-apk.yml, su release y el APK correlativo. El deploy web no es un objetivo de implementación de esta fase.
-6. **Guarda de selección:** antes de editar, la IA debe comprobar que el objetivo es Android. Si la tarea apunta a la web o no tiene una unidad VE-MOB-*/Android explícita, debe detener la implementación, registrarla como no elegible y seleccionar la siguiente unidad Android del inventario. Las actualizaciones de este protocolo y de CONTINUITY.md para registrar decisiones o evidencia sí están permitidas y no cuentan como trabajo de producto web.
-7. **Levantamiento:** esta congelación solo puede levantarse mediante una nueva decisión explícita del operador registrada como oficial en Supabase y sincronizada en GitHub. Ninguna IA puede inferir una excepción a partir de documentos históricos.
-
----
-
-## LEY DE TRANSICIÓN VIGENTE — ENTORNO ACTIVO = APLICACIÓN ANDROID
-
-**Decisión del operador registrada:** 2026-08-25.
-
-Esta ley no crea un plan paralelo ni elimina los gates del Protocolo Maestro. Define el orden de ejecución del producto mientras el port oficial permanezca incompleto:
-
-1. El producto activo es la aplicación Android en `mobile/` del repositorio oficial, con Expo 54, React Native 0.81 y expo-router.
-2. La web en `src/` queda congelada como referencia de lectura para el port Android; no es superficie de mantenimiento ni destino de implementación. No se abren unidades web.
-3. La FASE PORT es prioritaria: se trasladan a Android las superficies y flujos existentes, con datos reales de Supabase, assets del manifiesto oficial, audio, motion y estados de carga/vacío/error. Cada superficie o flujo es una unidad `VE-MOB-*` con criterios y evidencia propios.
-4. El orden de la FASE PORT es el inventario oficial `docs/VE-MOB-0-PORT-INVENTORY.md`; durante esta fase la siguiente unidad se determina por el siguiente elemento no completado del inventario, no por reabrir una tarea histórica ni por saltar a una unidad web.
-5. La app usa el mismo Supabase oficial, las mismas RPCs, RLS y datos autoritativos. El cliente Android presenta y consume contratos; no duplica lógica de combate, recompensas, inventario, progreso, economía o autenticación.
-6. La entrega Android sólo ocurre por push a `main` con cambios en `mobile/**`, el workflow oficial `.github/workflows/vexforge-android-apk.yml`, el release correlativo y el APK `app-release.apk`. No se autorizan EAS, builds manuales, releases manuales ni canales paralelos.
-7. Cada unidad Android conserva todos los gates del protocolo: análisis integral, datos reales, cero genéricos, accesibilidad, reduced-motion, rendimiento, verificación proporcional, correspondencia commit/run/release y continuidad. La QA humana del operador es una validación post-entrega y no bloquea la continuidad del trabajo: su ausencia deja la unidad en `IMPLEMENTED_UNVERIFIED`, permite seleccionar y ejecutar la siguiente unidad elegible, y se conserva como evidencia pendiente. El agente no debe declarar `OPERATIONAL`, `TIER1_READY`, `PASS` ni cerrar la QA en nombre del operador.
-8. Una vez completado el port, la FASE CONTINUIDAD retoma el roadmap Tier 1/T0-T10 y sus criterios sobre la app, sin perder la evidencia ni las protecciones acumuladas.
-
-## LEY OBLIGATORIA — IDENTIDAD COMPARTIDA, SELECCIÓN VISUAL OFICIAL Y COBERTURA SIN SUSTITUTOS
-
-**Fecha de entrada en vigor:** 2026-08-30  
-**Estado:** OBLIGATORIA — aplica a toda unidad existente, nueva o reabierta, en web, Android y cualquier otro cliente oficial.
-
-Esta ley conecta la regla **Cero Genéricos** con la Directiva de **Análisis Integral y Ejecución Autónoma**. La identidad compartida de VEXFORGE, la procedencia de los elementos seleccionados y la ausencia de sustitutos genéricos son obligatorias. El uso de un asset disponible no lo es por el solo hecho de existir en Storage o en el manifiesto: cada composición se decide según su escena, datos reales, jerarquía y función.
-
-**Regla de selección:** un asset sólo adquiere obligación de consumo cuando la composición lo selecciona como elemento activo, cuando el dato vivo lo exige como representación o cuando la sesión registra explícitamente ese rol. Los assets disponibles que todavía no tienen consumidor seleccionado permanecen como reserva, referencia o material de inspiración; no se convierten en una lista de tareas obligatoria ni en fallback automático. Cuando exista una carta real con arte y datos canónicos adecuados, la carta es la primera opción para dar vida a la composición.
-
-1. **Inventario antes de renderizar.** Antes de implementar una pantalla, estado, carta, criatura, objeto, decoración, efecto, icono, animación o sonido, el agente debe definir el elemento visual que la composición necesita, su rol semántico y su fuente candidata. No se permite introducir una referencia visual sin procedencia. No es necesario consumir todos los assets disponibles.
-2. **Si el elemento seleccionado ya existe, se consume el oficial.** La implementación debe enlazar el asset seleccionado del manifiesto oficial y del bucket canónico `vexforge-assets`, a través del registro visual del cliente (`src/lib/assetManifest.ts`, `mobile/constants/visual.ts` o el equivalente oficial). No se copian versiones paralelas ni se inventan sustitutos locales. Para cartas, se priorizan la imagen y los datos reales de la carta antes que un arte nuevo.
-3. **Si el elemento seleccionado no existe, se produce o genera.** La Directiva de Ejecución Autónoma autoriza a diseñar o generar el recurso faltante siguiendo la identidad VEXFORGE, los criterios Tier 1 y la composición vigente. Después debe subirse al Storage oficial cuando corresponda, inscribirse en `public.vexforge_official_asset_manifest`, asignársele un rol semántico y enlazarse desde el consumidor real. Crear el archivo sin registrarlo y consumirlo directamente no cumple esta ley.
-4. **Cero sustitutos diegéticos.** Quedan prohibidos para representar elementos del universo VEXFORGE: palitos, matas, criaturas, armas, cartas, edificios, fondos, adornos, iconos de acción, emojis, Unicode, imágenes stock, placeholders visibles, dibujos temporales, gradientes o formas CSS que pretendan ser el arte final. Las formas CSS sí pueden usarse para geometría de interfaz, separadores, barras de progreso y feedback no diegético; nunca para simular un objeto del mundo que requiere arte propio.
-5. **No hay fallback silencioso.** Si el asset seleccionado no carga, la pantalla debe mostrar un estado de error o vacío explícito, accesible y con identidad VEXFORGE, sin sustituirlo por otra imagen, emoji, icono genérico o recurso de demostración.
-6. **La continuidad no se bloquea; el cierre visual sí.** Si falta arte para un elemento seleccionado, el agente debe abrir inmediatamente la pista de producción/enlace del asset y continuar las partes independientes del plan. La unidad se conserva como incompleta visualmente (`ASSET_REQUIRED`, `ASSET_IN_PROGRESS` o `IMPLEMENTED_UNVERIFIED`, según corresponda) hasta que el recurso esté creado, registrado, enlazado y comprobado.
-7. **Gate obligatorio de cobertura seleccionada.** Cada unidad debe conservar una matriz `elemento seleccionado → rol semántico → ruta Storage → registro → consumidor → evidencia`. El cierre requiere que no existan referencias visuales seleccionadas sin registro, registros utilizados sin objeto en Storage, consumidores con fallback genérico ni elementos nuevos sin decisión de procedencia. Una fila disponible sin consumidor seleccionado no bloquea por sí sola.
-8. **Evidencia proporcional.** El agente debe ejecutar la guarda de manifiesto disponible (`npm run verify:manifest`, `npm run verify:assets` o su equivalente móvil), comprobar el consumidor real y actualizar `CONTINUITY.md`. La QA humana posterior puede quedar pendiente según la ley de continuidad, pero no puede inventarse ni sustituirse por una afirmación del agente.
-9. **Precedencia y conexión.** Esta ley prevalece sobre documentos históricos que permitan placeholders y se aplica junto con la ley de transición Android, la regla de continuidad sin bloqueo por QA humana, la regla Cero Genéricos y la Directiva de Ejecución Autónoma. La autonomía permite producir lo que falta; no permite declarar oficial un recurso seleccionado que aún no fue inscrito y consumido por el producto.
-
-**Definición operativa:** una superficie está **VISUALMENTE CUBIERTA** sólo cuando todos sus elementos de mundo e identidad seleccionados para la composición tienen procedencia oficial comprobable y sus consumidores apuntan a esa procedencia. Un asset disponible sin rol seleccionado no es una brecha. Un estado explícito de carga, vacío o error no cuenta como sustituto genérico; un placeholder que intenta parecer el elemento final sí cuenta como violación.
-
-## REGLA DE CONTINUIDAD SIN BLOQUEO POR QA HUMANA
-
-1. La QA manual del owner, operador o usuario real es una validación post-entrega y pertenece a la evidencia de uso real; no es una condición para que la IA continúe con la siguiente unidad elegible.
-2. Cuando el código, los datos, los contratos, los gates técnicos y la verificación proporcional están completos, la IA debe integrar y documentar la unidad como `IMPLEMENTED_UNVERIFIED` si todavía falta la QA humana, y continuar según el orden oficial.
-3. La ausencia de QA humana no permite inventar resultados, simular una sesión, modificar datos para fabricar evidencia ni declarar `OPERATIONAL`, `TIER1_READY`, `PASS` o launch gate.
-4. El owner puede validar posteriormente el APK, dispositivo, navegador o flujo real. Un hallazgo suyo reabre la unidad afectada con su historial intacto; no invalida ni bloquea las demás unidades ya elegibles.
-5. Sólo un bloqueo técnico, contractual, de datos, fuente, asset, herramienta o verificación necesaria para implementar/comprobar el paquete puede detener la ejecución, y debe registrarse con causa y alternativa intentada.
-
-## REGLA DE RECONCILIACIÓN ENTRE FUENTES
-
-1. La fila activa `vexforge_master_protocol_v2` en `public.vexforge_official_documents`, leída completa desde Supabase Management API, es la autoridad normativa del protocolo.
-2. GitHub `main`, `CONTINUITY.md`, el inventario Android, Supabase vivo, el release y el deploy son fuentes de estado operativo y evidencia; no sustituyen el texto normativo del protocolo.
-3. Si la copia del protocolo en `main` difiere de la fila activa de Supabase, el trabajo dependiente queda detenido hasta reconciliar. La reparación conserva el contenido vivo completo, incorpora sólo decisiones oficiales ya registradas y vuelve a sincronizar ambas copias; nunca se elige una fuente por suposición ni se borra historia.
-4. El plan `vexforge_forge_formation_engine_v1` está marcado `superseded`: se consulta para historial y checkpoints compatibles, pero no puede reabrir ni reemplazar el plan vigente.
-5. Mientras la FASE PORT esté incompleta, su orden de inventario gobierna la selección de la unidad Android. Los criterios Tier 1, el roadmap T0-T10 y los gates técnicos de calidad siguen siendo obligatorios y se mapean a cada unidad; la falta de QA humana no se considera criterio bloqueante de continuidad. Al completar el port, vuelve a aplicarse la priorización por fase abierta más baja y criterio bloqueante.
-
----
-
-# LEY PRIORITARIA — TRANSPORTE HTTPS DE CREDENCIALES Y ACCESO OFICIAL
-
-**Fecha de entrada en vigor:** 2026-08-28  
-**Estado:** OBLIGATORIA — prevalece sobre cualquier instrucción histórica de transporte.
-
-Esta ley fija el método único para operar sobre las fuentes oficiales. La palabra “HTTPS” aquí significa solicitudes HTTPS directas a las APIs oficiales; no significa usar Git Smart HTTP como vehículo para un secreto.
-
-1. Las credenciales sólo se solicitan y almacenan mediante el mecanismo seguro de secretos de la plataforma. Nunca se imprimen, se escriben en archivos, se incluyen en URLs, se pasan como argumentos visibles, se guardan en remotos Git ni se registran en logs.
-2. GitHub se consulta, descarga y modifica mediante su API REST oficial sobre HTTPS (`https://api.github.com`) usando el PAT únicamente en el header `Authorization: Bearer ...`. Para leer el repositorio se usa la API de contenidos o el endpoint oficial de archive; para escribir se usan los endpoints REST oficiales de contenidos o Git Data API. Queda prohibido usar `git clone`, `git fetch`, `git pull`, `git push`, Git Smart HTTP, una URL con el PAT incrustado o cualquier remoto autenticado como método de transporte del secreto.
-3. Supabase se consulta y modifica mediante Management API, PostgREST o Storage API sobre HTTPS. El `SUPABASE_PAT` se envía sólo como bearer header a Management API; las claves derivadas se envían sólo en headers HTTPS de la API correspondiente. Nunca se colocan secretos en query strings, cuerpos de documentación, commits o logs.
-4. Un fallo de transporte, endpoint, header, formato, permisos, alcance, rate limit o redirect no autoriza a declarar que una credencial es incorrecta. El agente debe diagnosticar el canal y registrar el código HTTP y el mensaje no sensible. Sólo se clasifica una credencial como inválida cuando el proveedor lo confirma explícitamente después de verificar que se usó el endpoint, método y header correctos.
-5. Si una herramienta sólo ofrece transporte Git o intenta incrustar secretos en una URL, no se adapta el protocolo para usarla: se cambia al endpoint HTTPS oficial equivalente o se registra un bloqueo técnico exacto sin exponer la credencial.
-6. Esta ley tiene precedencia sobre las instrucciones históricas de clonado, commit o push que aparezcan más abajo. Toda continuidad nueva debe indicar que el acceso se hizo por HTTPS directo y separar claramente el transporte de la credencial del mecanismo de versionado.
-
----
-
-## REGLA ABSOLUTA DE CONTINUIDAD
-
-Antes de tocar cualquier archivo, sigue este orden estricto:
-
-1. Obtén la fuente oficial mediante la API REST HTTPS de GitHub (`https://api.github.com`); no uses `git clone` ni incrustes el PAT en una URL.
-2. Lee este documento completo
-3. Lee `CONTINUITY.md` en la raíz del repo
-4. Lee `vexforge_forge_formation_engine_v1` en Supabase (plan activo)
-5. Confirma qué está implementado mirando el código real — no asumas
-6. Continúa EXACTAMENTE desde donde quedó la última sesión
-7. Nunca reinicies trabajo ya hecho
-8. Nunca inventes tablas, rutas, columnas ni lógica que no existan
-
----
-
-## DIRECTIVA DE ANÁLISIS INTEGRAL Y EJECUCIÓN AUTÓNOMA
-
-Esta es una orden operativa permanente del Protocolo Maestro. Cada vez que aparezca un trabajo nuevo, una mejora, un bloqueo o una discrepancia entre documentación, código y datos, el agente debe comprender primero el sistema completo y después ejecutar la solución completa sin solicitar autorización intermedia para decisiones técnicas.
-
-### Antes de implementar cualquier trabajo
-
-1. **Analizar el proyecto completo:** producto, rutas, componentes, dominios, repositorios, estado de autenticación, contratos, esquema real de Supabase, RPCs, RLS, triggers, Storage, assets y despliegue.
-2. **Entender la lógica y los números:** reglas de combate, economía, estadísticas, escalados, límites, probabilidades, cooldowns, recompensas, fórmulas, estados y relaciones entre datos. No modificar una fórmula sin comprender sus entradas, salidas y efectos secundarios.
-3. **Comparar fuentes:** verificar el código real y el esquema vivo contra este protocolo, el plan activo y los documentos oficiales relacionados. La fuente oficial y el estado real prevalecen sobre suposiciones o resúmenes antiguos.
-4. **Trazar el impacto:** identificar dependencias frontend/backend/datos, rutas afectadas, compatibilidad móvil, rendimiento, seguridad, economía, migraciones y despliegue.
-5. **Elegir el enfoque completo:** decidir por cuenta propia la solución más segura y de mayor calidad, incluyendo los cambios auxiliares necesarios para que la funcionalidad quede terminada y no solo parcialmente conectada.
-
-### Ejecución autónoma obligatoria
-
-- No pedir aprobación intermedia para crear, ajustar, refactorizar o completar código, componentes, rutas, estilos, assets, documentación, consultas, funciones, migraciones, tablas, columnas, relaciones, RPCs, políticas RLS o triggers cuando sean necesarios para cumplir una tarea aprobada del protocolo o del plan activo.
-- La ausencia de una pieza previa no es un bloqueo automático. Si el análisis integral demuestra que una pieza es necesaria, el agente debe diseñarla e implementarla autónomamente dentro del código fuente oficial, incluyendo contratos, migraciones, consumidores, controles y verificaciones.
-- No dejar deliberadamente trabajo a medio hacer ni trasladar al owner decisiones técnicas que el análisis permita resolver. Si una tarea pertenece al alcance, implementarla de extremo a extremo, integrarla, verificarla y actualizar todas sus dependencias.
-- No reiniciar trabajo ya hecho. Reutilizar lo existente y mejorar un paso más, manteniendo compatibilidad con la arquitectura, las fórmulas y los datos reales.
-- Crear infraestructura técnica nueva está permitido cuando sea la solución necesaria y justificable: tablas, columnas, relaciones, migraciones, RPCs, políticas RLS, triggers, rutas, servicios, componentes, efectos, assets y contratos frontend/backend. Debe incluir trazabilidad, autenticación, límites, manejo de errores, integridad referencial, compatibilidad, rendimiento, seguridad y reversibilidad cuando corresponda.
-- Diseñar lógica nueva de producto o de flujo también está permitido cuando el objetivo esté dentro del plan y el análisis general permita derivarla de las reglas, datos, economía, experiencia y arquitectura existentes. La lógica debe documentarse, integrarse completamente y validarse contra los efectos cascada antes de cerrarse.
-- **No inventar hechos oficiales del juego sin base.** Está prohibido falsificar atributos canónicos, balances, recompensas, permisos, resultados, lore, datos de producción o reglas oficiales y presentarlos como si ya existieran. Diseñar una implementación técnica o una lógica nueva para materializar una capacidad aprobada no equivale a falsificar un hecho.
-- Si existe un bloqueo externo real, intentar resolverlo con las fuentes oficiales disponibles y una alternativa compatible. Solo si no existe solución válida después del análisis completo se documentará el bloqueo exacto; la falta de una tabla, RPC, relación o contrato previo no es por sí sola motivo para detener el trabajo.
-- Verificar el resultado con build, comprobaciones de tipos, consultas de seguridad/datos, pruebas funcionales, rendimiento y deploy antes de cerrar. Actualizar continuidad, plan activo y artefactos generados.
-
-### Límites que siguen vigentes
-
-La autonomía no autoriza a exponer secretos, desactivar RLS sin reemplazo seguro, romper triggers, falsificar datos oficiales, alterar arbitrariamente la economía, ejecutar acciones destructivas irreversibles sin las salvaguardas exigidas por la plataforma o declarar como existente algo que no se verificó. Sí autoriza a crear toda infraestructura y lógica nueva necesaria para una tarea aprobada cuando el análisis integral demuestre que encaja y las verificaciones confirmen que no rompe el sistema. No se requiere autorización intermedia del owner para decisiones técnicas dentro del alcance.
----
-
-## IDENTIDAD DEL PROYECTO
-
-**VEXFORGE** es un DCCG (Digital Collectible Card Game) premium de categoría tier 1.
-Cada decisión técnica, visual y de audio debe estar a la altura de los mejores juegos del género (Hearthstone, Legends of Runeterra, Marvel Snap). No se aceptan soluciones genéricas.
-
-**Stack tecnológico:**
-- Frontend: React 18 + TypeScript + Vite
-- Backend: Supabase (PostgreSQL + RLS + RPCs + Storage)
-- Deploy: Cloudflare Pages (dist/ committido al repo, auto-deploy desde main)
-- Build: `npm run build` → `vite build` (~3s, 65 chunks)
-- Publicación oficial: build → preparar el cambio → actualizar `main` mediante la API REST HTTPS de GitHub; no transportar el PAT mediante Git, remotos ni URLs.
-
-**Fuentes oficiales:**
-- Supabase: https://rscuzqnfccqvltkdcdny.supabase.co
-- GitHub: https://github.com/grandmaster68081-byte/Vexforge-web.git
-- Deploy live: https://vexforge-web.pages.dev
-
----
-
-## CREDENCIALES Y ACCESO
-
-Solicita ÚNICAMENTE estas dos claves secretas mediante el mecanismo seguro de la plataforma (Add Secret / requestSecrets):
-- `GITHUB_PAT` — Personal Access Token de GitHub para la API REST oficial sobre HTTPS (lectura/escritura)
-- `SUPABASE_PAT` — Management API token de Supabase
-
-Con el SUPABASE_PAT obtienes el service_role key así:
-```
-GET https://api.supabase.com/v1/projects/rscuzqnfccqvltkdcdny/api-keys
-Authorization: Bearer $SUPABASE_PAT
-```
-Usa el service_role key para todas las operaciones de base de datos.
-Columna de contenido en vexforge_official_documents: `content_markdown`
-
----
-
-## ARQUITECTURA — REGLAS QUE NUNCA SE ROMPEN
-
-1. **Economía del juego intacta** — No alterar tablas de VEX, shards, packs, fusión ni rewards
-2. **RLS y triggers** — No desactivar Row Level Security ni modificar triggers existentes sin análisis completo
-3. **dist/ siempre committido** — Cloudflare Pages lee del repo, no hace build propio
-4. **No entornos paralelos** — Todo cambio va directo al código fuente oficial. Sin copias locales separadas
-5. **Sistema de cartas intacto** — Las 24 cartas fundadoras tienen imagen_url oficial; no inventar nuevas sin arte
-6. **ForgeFormation como núcleo de combate** — Todas las batallas (PvP, Raids, Jefes) deben usar ForgeFormationBoard
-7. **Performance** — Efectos y animaciones deben mantener 60fps en móvil; optimizar antes de añadir más partículas
-8. **Logging** — Nunca console.log en producción; usar el sistema de errores silenciosos existente (try/catch)
-9. **Cobertura visual oficial** — Todo elemento diegético nuevo debe existir en Storage oficial, estar registrado en el manifiesto y ser consumido por su registro visual; si falta, se produce y enlaza antes del cierre.
-
----
-
-## SISTEMA FORGE FORMATION — REGLAS DE JUEGO (INMUTABLES)
-
-- Mazo: hasta 30 cartas por jugador
-- Una carta es el Campeón (condición principal de victoria)
-- Pre-batalla: seleccionar 2 cartas de apoyo (Vanguardia + Centinela)
-- Formación inicial: Vanguardia | Campeón | Centinela
-- Si el Campeón muere → partida terminada inmediatamente
-- El Campeón NO puede ser atacado si existe una carta defensiva válida protegiéndolo
-- Las cartas restantes del mazo (reserva) aumentan el poder del Campeón (Champion Deck Bonus)
-- Cuando una carta de formación muere → activar reserva para reemplazo
-- Cada decisión (qué mantener, qué sacrificar, cómo usar la reserva) debe tener peso estratégico real
-
----
-
-## ESTADO COMPLETO DEL PLAN — LO QUE ESTÁ HECHO
-
-### FASE 1 — Reparación y estabilización ✅ COMPLETA
-
-| ID | Descripción | Estado |
-|----|-------------|--------|
-| A1 | Discrepancia conteo cartas en header de /cards | ✅ done |
-| A2 | Bots eliminados del leaderboard | ✅ done |
-| A3 | Misiones con system_locked/production_ready filtradas correctamente | ✅ done |
-| A4 | Flujo execute_mission funciona (energía + cooldown + claim reward) | ✅ done |
-| A5 | Leaderboard muestra champion_card + avg_dps_score | ✅ done |
-| A6 | Filtro de facción en leaderboard renderiza correctamente | ✅ done |
-| PvP | get_leaderboard type mismatch corregido | ✅ done |
-| PvP | Selector de dificultad IA presente | ✅ done |
-| SQL | inventory GRANT, fuse_cards RPC, create_clan RPC, market RPCs | ✅ done |
-| SQL | ensure_player_row RPC + AuthProvider | ✅ done |
-| RewardsIA | Anti-farm VEX para batallas IA (sistema de recompensas escalonado) | ✅ done |
-
-### FASE 2 — Forge Formation Engine ✅ COMPLETO
-
-| ID | Descripción | Estado |
-|----|-------------|--------|
-| FFE | forgeFormation.ts — motor completo (FormationState, buildFormation, computeChampionBonus, isChampionProtected, getNextReserveUnit, simulateFormationBattle) | ✅ done |
-| FFE | FormationSelector.tsx — UI pre-batalla 3 slots, preview bonus Campeón | ✅ done |
-| FFE | ForgeFormationBoard.tsx — tablero de batalla 3 posiciones completo (2514 líneas) | ✅ done |
-| FFE | KeywordActivationFX.tsx — 15+ keywords con animaciones únicas | ✅ done |
-| FFE | WinStreakDisplay.tsx — racha de victorias con niveles (spark/blaze/inferno) | ✅ done |
-
-### FASE 2 — Mejoras visuales y audio ✅ COMPLETAS
-
-| ID | Descripción | Estado |
-|----|-------------|--------|
-| B1 | Cinemáticas únicas por carta (UnitSummonCinematic + ChampionSummonCinematic) | ✅ done |
-| B2 | Efectos de tablero mejorados (hex tiles, fog dinámico, terrain particles) | ✅ done |
-| B3 | Holographic shimmer v3 por rareza (Common→Mythic con intensidad escalada) | ✅ done |
-| B4 | Micro-interacciones globales (hover lift, glow de rareza, transiciones) | ✅ done |
-| C1 | Audio contextual por sección/ruta | ✅ done |
-| C2 | SFX de invocación por facción (Guerrero/Mago/Paladín/Pícaro) | ✅ done |
-| D1 | Tutorial mejorado Forge Formation | ✅ done |
-| D2 | Onboarding nuevos jugadores | ✅ done |
-| G1 | KEYWORD_SUMMON_FX + getCardMotto() — 15 keywords con color/emoji/overlay | ✅ done |
-| G2 | Cinemática Unidad: motto per-carta, keyword badges, rings tintados | ✅ done |
-| G3 | Cinemática Campeón: image_url, keyword overlay, badges, motto per-keyword | ✅ done |
-| H1 | Shield Arc visual mejorado (pulse, doble arco, badge GUARD ACTIVO) | ✅ done |
-| H2 | Target Lock UI (border pulsante, scan-line, corner brackets, badge OBJETIVO) | ✅ done chat113 |
-| H3 | Terrain particles ricos por facción (9 partículas, orb/spark/wisp) | ✅ done chat113 |
-| H4 | Post-battle scoreboard ForgeFormation (stats, daño, kills, supervivencia) | ✅ done chat113 |
-| I1 | Battle cards responsive < 480px | ✅ done |
-| I2 | Nav hamburger + BottomNav mobile (≤ 768px) | ✅ done |
-| Assets | Faction icons: Guerrero, Mago, Paladín, Pícaro (Storage) | ✅ done |
-| Assets | Route backgrounds: PvP, Missions, Packs, Clans (Storage) | ✅ done |
-| Assets | Region art: Forge Core, Iron Veins, Shadow Fracture, Cinders Realm, Warbound Zone | ✅ done |
-
----
-
-## TAREAS PENDIENTES — IMPLEMENTAR PRIMERO, MEJORAR DESPUÉS
-
-### PRIORIDAD ALTA — Implementar (no existe aún)
-
-#### P1 — Identidad audiovisual completa por carta (elemento, tipo de criatura, poder, personalidad)
-**Qué falta:** Las cinemáticas diferencian por facción y rareza, pero el protocolo exige efectos únicos basados en 4 ejes adicionales que aún no están implementados:
-- **Elemento** (fuego, agua, tierra, aire, arcano, sombra, luz, vacío) → color de partículas, overlay y sfx distintos
-- **Tipo de criatura** (Guerrero, Bestia, Elemental, Dragón, Espectro, Golem, etc.) → forma de entrada y animación de ataque distintas
-- **Poder del personaje** (power_score de la carta) → escala de la cinematic, intensidad del impacto
-- **Personalidad** (agresiva, defensiva, arcana, caída, etc.) → motto y comportamiento en tablero
-**Archivos clave:** `src/components/battle/ForgeFormationBoard.tsx` (UnitSummonCinematic ~línea 408-900), `src/lib/forgeFormation.ts`
-**Regla:** Usar los datos que ya existen en la tabla `cards` (element, creature_type, power, personality) — no inventar campos nuevos
-
-#### P2 — Raids con combate ForgeFormation real
-**Qué falta:** RaidsRoute.tsx (246 líneas) muestra raids activas y el botón "Contribuir" existe, pero no lanza un combate ForgeFormation real. El resultado de la raid debe depender del outcome del combate.
-**Archivos clave:** `src/routes/RaidsRoute.tsx`, `src/domains/raids/repository.ts`, `src/components/battle/ForgeFormationBoard.tsx`
-**Integración esperada:** Botón Contribuir → FormationSelector → ForgeFormationBoard (dificultad según raid) → si ganas: contribute_to_raid RPC → actualizar progreso raid
-
-#### P3 — Jefes del Mundo con combate ForgeFormation real
-**Qué falta:** WorldBossesRoute.tsx (226 líneas) muestra los jefes con arte regional pero el botón ATACAR no lanza combate. Los jefes deben tener HP compartido entre jugadores.
-**Archivos clave:** `src/routes/WorldBossesRoute.tsx`, `src/domains/bosses/repository.ts`
-**Arte disponible en Storage:** region_forge_core.jpg, region_iron_veins.jpg, region_shadow_fracture.jpg, region_cinders_realm.jpg, region_warbound_zone.jpg
-
-#### P4 — Reliquias con efectos reales sobre el Campeón
-**Qué falta:** RelicsRoute.tsx tiene solo 105 líneas. Las reliquias deben mostrar su efecto real (buff de ATK/DEF/HP al Campeón), permitir equipar/desequipar y reflejarse en el ForgeFormationBoard durante el combate.
-**Archivos clave:** `src/routes/RelicsRoute.tsx`, tabla `relics` en Supabase
-
-#### P5 — Animación cinematográfica de reserva al entrar al campo
-**Qué falta:** Cuando una carta de formación muere, el reemplazo de reserva aparece de forma abrupta. Debe tener una cinematic compacta propia ("RESERVA ACTIVADA") con overlay y sfx diferenciados del invoke inicial.
-**Archivos clave:** `src/components/battle/ForgeFormationBoard.tsx` — lógica de reserva en fases (~línea 1680-1850), keyframes existentes: `formation-enter-board`, `reserve-card-draw`
-
-#### P6 — Rutas públicas sin login obligatorio
-**Qué falta:** /cards, /lore y /leaderboard piden login incluso para contenido que debería ser público. Un visitante nuevo debe poder explorar el juego antes de registrarse.
-**Archivos clave:** `src/routes/CardsRoute.tsx` (~línea 470), `src/routes/LoreRoute.tsx`, `src/routes/LeaderboardRoute.tsx`
-
-### PRIORIDAD MEDIA — Mejorar lo que ya existe
-
-#### M1 — Iconos propios en toda la interfaz (eliminar emojis genéricos)
-**Protocolo dice:** "cada icono debe estar diseñado para su función, no puede haber elementos genéricos"
-**Qué hay:** El menú usa emojis del sistema (🏠🃏📦⚔️🏆📋📜🐉🌟🏅📖◇💰🛒🏪🔮✨📥💸🛡️🤝📊🏅)
-**Qué se necesita:** SVG icons diseñados para VEXFORGE, coherentes con la estética dark-fantasy forge. Pueden generarse con código o con assets. Los faction icons ya existen en Storage.
-**Archivos clave:** `src/App.tsx` (SIDEBAR_GROUPS y BOTTOM_ITEMS ~línea 68-130)
-
-#### M2 — Cinemáticas de batalla al siguiente nivel
-**Base ya implementada:** UnitSummonCinematic, ChampionSummonCinematic, terrain particles, Target Lock, Shield Arc
-**Mejorar:**
-- Efectos de cámara más dramáticos en el impacto del ataque (shake + zoom momentáneo)
-- Partículas de muerte más espectaculares (explosión de fragmentos de carta por rareza)
-- Transición entre fases (intro → battle → scoreboard) más cinematográfica
-- El tablero debe "respirar" con tensión creciente conforme el Campeón pierde HP
-
-#### M3 — PvP mejorado (experiencia jugador vs jugador)
-**Base:** PvPRoute.tsx (155KB) con ForgeFormation integrado, leaderboard real, win streak
-**Mejorar:**
-- Sala de espera de PvP con avatar de rival, stats de su campeón y formación (sin revelar)
-- Countdown cinematic antes del combate
-- Replay del último turno ganador
-- Sistema de revanchas más prominente con rivalidad persistente
-
-#### M4 — Scoreboard post-batalla más épico
-**Base:** ForgeFormationScoreboard ya implementado
-**Mejorar:**
-- Animación de "carta MVP" (la que más daño hizo o la que sobrevivió)
-- Bonus de XP desglosado (kills, crits, supervivencia de Campeón, cartas de reserva usadas)
-- Compartir resultado (screenshot visual del scoreboard)
-
-#### M5 — PackOpenSequence cinematográfico al tier 1
-**Base:** PackOpenSequence.tsx (784 líneas) ya existe con pity timer
-**Mejorar:**
-- Cada rareza de carta revelada debe tener su propia explosión visual
-- Mythic debe congelar la pantalla con efecto void antes de revelarse
-- Legendary debe tener destello dorado y vibración del dispositivo (en móvil)
-- Sonido de rareza escalado en impacto
-
-### BLOQUEADO EN EL OWNER (no puede resolver la IA)
-
-#### BLOQUEO-1 — Visual assets zip bundles
-**Qué falta:** Desempaquetar en Supabase Storage estas carpetas (solo existen como .zip):
-- `founders_badge` — cosmética de fundadores
-- `misc` — assets misceláneos
-- `sessions` — assets de sesión
-- `ui_system` — elementos de interfaz del sistema
-**Acción del owner:** Descomprimir cada zip y hacer upload de los archivos individuales en la carpeta correspondiente de Supabase Storage (bucket: `vexforge-assets`)
-
----
-
-## ORDEN DE EJECUCIÓN OBLIGATORIO
-
-Cuando una IA retoma el trabajo, debe seguir este orden:
-
-```
-1. LEER → CONTINUITY.md (estado real del repo)
-2. LEER → vexforge_forge_formation_engine_v1 (plan activo con último estado)
-3. VERIFICAR → npm run build (debe ser 0 errores antes de tocar nada)
-4. INVENTARIAR → Cada elemento visual nuevo: procedencia, rol, Storage, manifiesto y consumidor
-5. IMPLEMENTAR → Primero tareas P (Pendientes: P1, P2, P3, P4, P5, P6 en ese orden), con su pista visual paralela
-6. MEJORAR → Después tareas M (Mejoras: M1, M2, M3, M4, M5), sin sustitutos visuales
-7. CONFIRMAR → build limpio, cobertura del manifiesto y guarda específica después de cada lote
-8. PUBLICAR → actualizar `main` mediante la API REST HTTPS de GitHub, sin `git push` ni PAT en URLs/remotos
-9. ACTUALIZAR → este bloque operativo en el protocolo maestro y CONTINUITY.md con estado real
-10. REPORTAR → Reporte claro de lo implementado, la cobertura visual y cualquier asset aún en producción
-```
-
----
-
-## ESTÁNDARES DE CALIDAD (NO NEGOCIABLES)
-
-- **Tier 1:** Cada feature debe compararse mentalmente con Hearthstone/Legends of Runeterra. Si se vería amateur en ese contexto, mejorar.
-- **Sin genéricos:** Ninguna animación, icono, efecto o sonido puede ser igual para todas las cartas.
-- **Performance:** Probar en pantallas < 480px. Los efectos no deben causar lag visible.
-- **Continuidad:** Siempre hacer push al final. Nunca dejar trabajo solo local.
-- **Reportar:** Siempre dejar un CONTINUITY.md actualizado y un PATCH al documento activo en Supabase.
-- **No romper:** Economía, RLS, triggers, arquitectura de rutas, sistema de combate ForgeFormation.
-
----
-
-## DOCUMENTOS ÚTILES EN SUPABASE
-
-Consultar con SELECT content_markdown FROM vexforge_official_documents WHERE doc_key = '...':
-
-| doc_key | Contenido |
-|---------|-----------|
-| `vexforge_master_protocol_v2` | **ESTE DOCUMENTO — Protocolo Maestro Universal** |
-| `vexforge_forge_formation_engine_v1` | Plan histórico superseded; sólo contexto y checkpoints compatibles |
-| `vexforge_combat_core_detailed` | Reglas detalladas del sistema de combate |
-| `vexforge_cards_core` | Estructura de cartas, atributos, rareza |
-| `vexforge_economy_core` | Econom��a del juego (VEX, shards, packs) |
-| `vexforge_factions_foundation` | Las 4 facciones y su identidad visual/lore |
-| `vexforge_founder_cards_catalog` | Las 24 cartas fundadoras con sus atributos |
-| `vexforge_pvp_system` | Sistema PvP, rankings y temporadas |
-| `vexforge_rewards_catalog` | Catálogo de recompensas y drops |
-| `vexforge_screen_manifest` | Mapa de rutas y pantallas de la app |
-| `vexforge_player_journey` | Flujo completo del jugador (onboarding→endgame) |
-
----
-
-
-
----
-
-## PROTOCOLO TÉCNICO DE BUILD Y DEPLOY — CLOUDFLARE PAGES (REGLAS PERMANENTES)
-
-> **Este bloque surgió de 3 deploys fallidos en producción (2026-08-01). Nunca omitir.**
-
-### ⚠️ REGLA 1 — NUNCA commitear un package-lock.json generado en Replit sin verificar
-
-Replit inyecta automáticamente su proxy interno (`http://package-firewall.replit.local/npm/`) como registry de npm. Cuando `package-lock.json` se genera en este entorno, **todas las URLs `resolved` apuntan a ese host privado**. Cloudflare Pages no puede acceder a ese host → npm cuelga ~70 segundos → crash fatal.
-
-**Síntoma reconocible en el log de Cloudflare:**
-```
-npm error Exit handler never called!
-npm error This is an error with npm itself.
-```
-Ocurre en el step `Installing project dependencies: npm clean-install`, siempre en ~60-75 segundos. **No es error de versión de Node — es la URL privada inaccesible.**
-
-**Verificación obligatoria antes de cualquier commit de lockfile:**
-```bash
-grep -c "package-firewall.replit.local" package-lock.json
-# Debe devolver 0. Si devuelve > 0 → lockfile INVÁLIDO para producción.
-```
-
-**Procedimiento correcto para regenerar package-lock.json desde Replit:**
-```bash
-rm -f package-lock.json
-npm install --registry=https://registry.npmjs.org
-grep -c "package-firewall.replit.local" package-lock.json   # debe ser 0
-# Si aún quedan URLs internas (por config del entorno Replit):
-sed -i 's|http://package-firewall.replit.local/npm/|https://registry.npmjs.org/|g' package-lock.json
-grep -c "package-firewall.replit.local" package-lock.json   # 0 ahora sí
-```
-
-**Protección permanente instalada:** el repo tiene `.npmrc` con `registry=https://registry.npmjs.org/` en raíz. Si en el futuro el lockfile vuelve a tener URLs de Replit, repetir el sed.
-
----
-
-### ⚠️ REGLA 2 — .nvmrc DEBE estar en la RAÍZ del repo
-
-Cloudflare Pages **solo lee `.nvmrc` de la raíz del repositorio**. Cualquier `.nvmrc` en un subdirectorio (`vexforge/.nvmrc`, `src/.nvmrc`, etc.) es completamente ignorado.
-
-- Versión correcta: `22` (`@supabase/supabase-js` y sub-dependencias requieren `node >= 22`)
-- Ubicación correcta: `/.nvmrc` (mismo nivel que `package.json` y `wrangler.toml`)
-- Verificar: `cat .nvmrc` desde la raíz clonada debe devolver `22`
-
----
-
-### ⚠️ REGLA 3 — wrangler NO debe estar en devDependencies
-
-`wrangler` en devDependencies trae `iceberg-js` y decenas de binarios nativos que complican el install. Cloudflare Pages tiene wrangler propio — no necesita el del proyecto. Para uso en local: `npx wrangler` o `npm install -g wrangler`. No añadirlo de vuelta a `package.json`.
-
----
-
-### Variables de entorno — Cloudflare Pages Dashboard
-
-Las variables `VITE_*` son leídas por Vite en tiempo de build y compiladas dentro del bundle JS. Deben estar configuradas en:
-**Cloudflare Dashboard → Pages → vexforge-web → Settings → Environment variables (Production + Preview)**
-
-| Variable | Valor |
-|---|---|
-| `VITE_SUPABASE_URL` | `https://rscuzqnfccqvltkdcdny.supabase.co` |
-| `VITE_SUPABASE_ANON_KEY` | clave anon pública del proyecto Supabase |
-
-Sin estas variables el build compila pero el app no conecta a Supabase.
-
----
-
-### Checklist de Deploy — Antes de Reportar Trabajo como Completado
-
-```
-[ ] npm run build → 0 errores TypeScript, dist/ generado
-[ ] grep -c "package-firewall.replit.local" package-lock.json → 0
-[ ] cat .nvmrc desde raíz del repo → 22
-[ ] publicar el cambio en `main` mediante la API REST HTTPS de GitHub, sin transportar secretos por Git
-[ ] Cloudflare Pages build exitoso (sin "Exit handler never called")
-[ ] https://vexforge-web.pages.dev carga y conecta a Supabase
-[ ] Rutas modificadas en esta sesión funcionan en el deploy live
-```
-
-
-## REGLA ABSOLUTA DE PROPAGACIÓN AL FRONT Y DEPLOY LIVE
-
-Toda orden, cambio, actualización, corrección o mejora definida en este Protocolo Maestro o en el plan activo es una obligación del producto oficial y debe verse reflejada en el front real y en el deploy oficial. El trabajo no se considera terminado, válido ni reportable si existe únicamente en un entorno local, una copia temporal, un build no publicado o una rama que no sea main.
-
-Flujo obligatorio para cada lote:
-
-1. Implementar en el repositorio oficial de GitHub: grandmaster68081-byte/Vexforge-web.
-2. Ejecutar las verificaciones de calidad y build exigidas por este protocolo.
-3. Generar y dejar dist/ actualizado y commiteado cuando la arquitectura del proyecto lo requiera.
-4. Hacer commit y push a origin main; nunca dejar el resultado solo local.
-5. Verificar el deploy oficial declarado aquí: https://vexforge-web.pages.dev.
-6. Confirmar que el front live responde correctamente y que el cambio implementado está realmente servido allí; un HTTP 200 por sí solo no basta cuando el lote modifica comportamiento o contenido visible.
-7. Si el deploy no refleja el commit, investigar y resolver el desfase de build, publicación, caché o routing antes de reportar el trabajo como completado.
-8. Actualizar CONTINUITY.md en el repositorio oficial y aplicar el PATCH correspondiente al plan activo en Supabase con el estado real.
-
-Los archivos locales sólo pueden usarse como espacio de trabajo temporal para preparar la implementación. No son una fuente oficial, no sustituyen al repositorio remoto ni al deploy, y no deben presentarse como entrega final. Esta regla obliga a publicar el resultado en la cadena oficial; no impide crear infraestructura o lógica técnica nueva dentro del repositorio y Supabase cuando una tarea aprobada## DIRECTIVA DE PRESERVACIÓN ESTRUCTURAL Y EJECUCIÓN CON CONTEXTO COMPLETO — Actualización 2026-08-01
-
-    El Protocolo Maestro preserva la integridad del producto, pero no congela su arquitectura. Su función es permitir que cualquier IA complete el plan entero con autonomía técnica y contexto completo. La autoridad del agente incluye crear la infraestructura y la lógica necesarias cuando una tarea aprobada las requiere; no incluye falsificar hechos del juego ni alterar reglas sin fundamento.
-
-    ### Regla principal: comprender, diseñar, encajar y completar
-
-    Cuando una tarea aprobada requiera crear, ajustar o validar algo, el agente debe:
-
-    1. Comprender primero el contexto completo: protocolo, plan activo, código real, esquema vivo de Supabase, relaciones, RPCs, RLS, triggers, Auth, Storage, contratos, consumidores frontend/backend, economía, despliegue, assets, rendimiento y continuidad.
-    2. Comparar las fuentes oficiales entre sí y confirmar qué existe realmente. La documentación, el código y el esquema vivo prevalecen sobre suposiciones, nombres plausibles o patrones genéricos.
-    3. Reutilizar las tablas, columnas, RPCs, funciones, políticas, tipos, componentes y flujos existentes siempre que resuelvan la necesidad.
-    4. Si falta una pieza técnica necesaria, diseñarla y crearla autónomamente. Esto incluye tablas, columnas, relaciones, migraciones, RPCs, políticas RLS, triggers, rutas, servicios, componentes, efectos, assets y contratos frontend/backend.
-    5. Si falta una decisión de flujo o lógica de producto, diseñarla autónomamente a partir del objetivo aprobado, las reglas existentes, los datos, la economía, la experiencia del jugador y el estándar Tier 1. La decisión debe ser coherente, trazable y validada; no se puede detener el trabajo sólo porque el detalle no estuviera escrito literalmente en un documento anterior.
-    6. Trazar entradas, salidas, propietarios, autenticación, límites, estados de error, integridad referencial, compatibilidad móvil, rendimiento, seguridad, economía, migración y consumidores antes de escribir.
-    7. Mantener la economía, la seguridad, los triggers, las fórmulas y las reglas canónicas intactas salvo que la tarea aprobada exija explícitamente modificarlas. Si se necesita una extensión, implementarla de forma mínima, coherente, trazable y compatible.
-    8. Diferenciar infraestructura o lógica nueva de hechos inventados: se permite crear la solución técnica o de flujo que no existía; no se permite inventar atributos oficiales, balances, recompensas, resultados, permisos, lore, datos canónicos ni reglas oficiales sin fundamento.
-    9. No detenerse por una ausencia técnica que el análisis pueda resolver. Sólo documentar un bloqueo cuando sea externo, real e irresoluble mediante una alternativa compatible; nunca usar la falta de una tabla, RPC, relación o contrato como excusa automática para abandonar una tarea aprobada.
-
-    ### Ejecución autónoma responsable
-
-    El agente debe ejecutar sin pedir aprobación intermedia todas las decisiones técnicas dentro del alcance: seleccionar el diseño, crear la infraestructura faltante, definir la lógica de flujo necesaria, integrarla en frontend/backend/datos, verificarla, publicarla y actualizar continuidad y plan activo. No debe reiniciar trabajo completado, dejar capacidades deliberadamente a medias ni presentar como terminado algo que no esté conectado y comprobado. El owner no necesita aprobar tablas, RPCs, migraciones, rutas, componentes, efectos o decisiones de arquitectura cuando el análisis integral demuestre que son necesarias y seguras.
-
-    ### Estándar universal de calidad Tier 1
-
-    VEXFORGE debe aspirar siempre a la calidad de los mejores juegos del mundo. Cada bloque debe elevar la experiencia, no sólo hacerla funcionar: identidad audiovisual propia por carta y contenido, cinemáticas, animaciones, motion, audio, iconografía, assets, estados vacíos, feedback, responsive y micro-interacciones deliberadas. No se aceptan placeholders genéricos, iconos de sistema, imágenes de relleno ni efectos repetidos cuando el contexto permite una identidad propia. La calidad visual y funcional se evalúa como producto Tier 1, con atención especial a móvil, claridad, rendimiento y emoción.
-
-    ### Cadencia obligatoria de bloque y checkpoint
-
-    1. Analizar el contexto y el impacto completo antes de escribir.
-    2. Diseñar e implementar un bloque completo, creando autónomamente las piezas técnicas y de flujo faltantes que sean necesarias.
-    3. Crear el checkpoint: commit del bloque, CONTINUITY.md actualizado y PATCH del documento del plan activo con el estado real.
-    4. Ejecutar después del checkpoint build, typecheck, comprobaciones funcionales, datos, seguridad, rendimiento y deploy que correspondan; corregir cualquier fallo antes de avanzar.
-    5. Hacer push a main y regenerar o commitear dist/ cuando la arquitectura lo requiera.
-    6. Verificar que Cloudflare Pages sirve el commit y el comportamiento nuevo, no solamente un HTTP 200. Si existe desfase, investigar y resolver build, publicación, caché o routing antes de reportar.
-    7. La mesa de trabajo oficial es una sola cadena: repositorio GitHub main como fuente de código, Supabase como fuente viva de datos, esquema, RPC, RLS y documentos, dist/ como salida publicada cuando corresponda y Cloudflare Pages como deploy que debe reflejar el commit. Los entornos locales y copias temporales sirven únicamente para preparar cambios y nunca son una entrega.
-
-    Esta directiva es universal para cualquier IA que retome el proyecto. Debe comprender, decidir, crear, integrar, verificar y publicar sin trasladar decisiones técnicas al owner ni detener tareas aprobadas por ausencia de infraestructura previa.
-
----
-## DIRECTIVA UNIVERSAL DE AUTONOMÍA TÉCNICA, LÓGICA Y CALIDAD TIER 1 — Actualización 2026-08-01
-
-La interpretación correcta de este protocolo es: comprender primero y ejecutar después. Cuando el plan aprobado requiere una capacidad que todavía no tiene tablas, RPCs, columnas, relaciones, rutas, componentes, efectos, assets o una decisión de flujo escrita literalmente, la IA debe diseñarla y crearla autónomamente si puede derivarla del contexto integral y verificar que encaja sin efectos cascada. La IA no debe detenerse por falta de autorización intermedia ni pedir al owner decisiones técnicas que están dentro de su responsabilidad.
-
-La autorización para crear infraestructura y lógica nuevas no autoriza a falsificar hechos oficiales del juego. Los datos canónicos, balances, recompensas, permisos, resultados, lore y reglas oficiales deben permanecer basados en fuentes verificables o en el objetivo aprobado; la IA puede definir la implementación y los flujos necesarios para materializar ese objetivo, documentando sus supuestos y comprobando sus efectos.
-
-El objetivo de calidad es Tier 1 mundial: toda implementación debe buscar una experiencia competitiva con los mejores juegos del género, con identidad audiovisual propia, assets no genéricos, cinemáticas, animaciones, audio, iconografía y micro-interacciones específicas del producto.
-
-La mesa de trabajo es GitHub main + Supabase + dist/ + Cloudflare Pages. Nada se considera terminado si no está en el repositorio oficial, sincronizado con las fuentes de datos oficiales cuando aplica, generado en dist/ cuando corresponde y verificado en el deploy live.
-
----
-
-## DIRECTIVA MAESTRA DE UNIFICACIÓN TIER 1 — PLAN OFICIAL PRE-LANZAMIENTO
-
-**Revisión:** 2026-08-01 · **Estado:** PLAN OFICIAL ACTIVO · **Alcance:** pre-lanzamiento cerrado
-**Autoridad:** esta sección es la directiva de ejecución que prevalece sobre cualquier lista histórica de pendientes anterior dentro de este documento.
-
-### 1. Propósito y estado real del producto
-
-VEXFORGE se encuentra en desarrollo y pruebas internas. No está oficialmente abierto al público, no tiene jugadores reales y no debe describirse como open beta ni como producto lanzado.
-
-Las cuentas y registros actuales pertenecen al owner, a administradores o a pruebas internas. La cuenta administrativa con un volumen elevado de victorias y posición superior en leaderboard es una cuenta de test del owner. Sus estadísticas son telemetría de validación y no representan retención, balance competitivo, actividad de usuarios ni salud de producción.
-
-Reglas de interpretación:
-
-- No usar rankings, victorias, derrotas, wallets, colecciones ni runs actuales como evidencia de comportamiento de jugadores reales.
-- No borrar ni resetear datos de prueba durante este plan sin una estrategia de lanzamiento, backup, migración y verificación separada.
-- Antes del lanzamiento se preparará una separación explícita entre datos administrativos, fixtures de QA y universo limpio de producción.
-- El estado de lanzamiento canónico es **PRE-LAUNCH INTERNAL QA**. La etiqueta histórica **OPEN BETA READY** queda subordinada a esta declaración y no autoriza abrir el producto.
-
-### 2. Jerarquía de autoridad y reconciliación documental
-
-La antigüedad de un documento no puede superar al sistema actualmente implementado. La fecha, el estado de continuidad y la verificación del código determinan qué texto sigue vigente.
-
-Orden obligatorio de autoridad:
-
-1. Código real en GitHub `main` y la entrada más reciente de `CONTINUITY.md`.
-2. Esquema vivo de Supabase, funciones RPC, RLS, triggers, Storage y contratos reales.
-3. Esta directiva maestra dentro de `vexforge_master_protocol_v2`.
-4. El plan activo de ForgeFormation como registro de ejecución y checkpoints.
-5. Documentos anteriores, resúmenes de sesiones y especificaciones históricas.
-
-Normas de reconciliación:
-
-- Si una sección antigua dice P1, P2, P3, P4, P5, P6, M1 o J1 pendiente, pero `CONTINUITY.md` y el código reciente verifican su implementación, se considera historial superseded, no trabajo pendiente.
-- Las listas antiguas no se borran: se conservan para trazabilidad y se subordinan a esta sección.
-- Ningún agente puede reabrir una tarea completada sólo porque aparezca pendiente en una tabla vieja.
-- Una capacidad se considera implementada únicamente cuando existe en código, está conectada a sus datos reales, pasa build y tiene continuidad verificable.
-- Una capacidad visual no se considera un sistema de juego completo si no tiene resultado, persistencia, seguridad e idempotencia correspondientes.
-- Toda discrepancia debe registrarse como decisión de autoridad antes de modificar datos o fórmulas.
-
-### 3. Alcance de este plan
-
-Este plan cubre exclusivamente la preparación del juego como experiencia TCG/DCCG Tier 1:
-
-- Combate ForgeFormation.
-- PvE: misiones, expediciones, dungeons, eventos, jefes y raids.
-- PvP, matchmaking, temporadas, rankings y replays.
-- Cartas, mazos, reserva, Campeón, reliquias, keywords y progresión.
-- Narrativa, regiones, facciones, enemigos y contenido de combate.
-- Cinemáticas, animaciones, VFX, SFX, música, feedback y accesibilidad.
-- Seguridad, persistencia, RLS, RPCs, integridad de resultados, rendimiento y deploy.
-- Economía interna ya existente, únicamente en lo necesario para que las recompensas sean consistentes, trazables y equilibradas.
-
-Quedan expresamente fuera del plan de ejecución:
-
-- Pagos, monetización, suscripciones, checkout y proveedores comerciales.
-- Licencias comerciales o de distribución.
-- Blockchain, contratos, NFTs, wallets externas y enlaces on-chain.
-- Cualquier infraestructura externa de valor real.
-
-Los bloques históricos relacionados con esos temas se conservan por continuidad, pero no se ejecutan ni se consideran requisitos para declarar terminado este plan de gameplay Tier 1.
-
-### 4. Estado canónico que debe preservarse
-
-El sistema actual es la base; no se reemplaza por un sistema paralelo.
-
-- ForgeFormation es el núcleo obligatorio del combate.
-- El mazo tiene hasta 30 cartas.
-- Existe un Campeón como condición principal de victoria.
-- La formación inicial utiliza Vanguardia, Campeón y Centinela.
-- El Campeón termina la partida al morir.
-- La protección del Campeón depende de defensas válidas vivas.
-- Las cartas restantes forman la reserva y contribuyen al poder del Campeón.
-- La muerte de una unidad activa puede activar un reemplazo desde la reserva.
-- Las fórmulas, keywords, reliquias, cartas, facciones, regiones y relaciones existentes se reutilizan antes de crear extensiones.
-- Las implementaciones recientes verificadas, incluidas P1-P6, M1 y J1 según `CONTINUITY.md`, permanecen completadas.
-- El sistema real observado de datos es la referencia actual; las cantidades históricas de documentos no se convierten automáticamente en nuevos registros.
-
-### 5. Objetivo de salida Tier 1
-
-El plan termina cuando VEXFORGE pueda abrirse oficialmente como un juego completo, coherente y pulido, no cuando sólo existan pantallas o componentes visuales.
-
-La experiencia final debe conseguir que:
-
-- El jugador entienda el valor estratégico de su Campeón, apoyos y reserva.
-- Cada actividad PvE relevante implique un combate ForgeFormation real.
-- PvP y PvE compartan reglas, feedback y calidad de presentación.
-- Cada carta tenga identidad audiovisual derivada de sus atributos reales.
-- Cada victoria, derrota, abandono y recompensa sea verificable y persistida.
-- Bosses y raids tengan progreso cooperativo real y no sólo botones de contribución.
-- El contenido tenga variedad de patrones, fases, modificadores y decisiones.
-- La experiencia funcione con claridad y rendimiento en móvil y escritorio.
-- El jugador pueda completar sesiones satisfactorias de 5 a 20 minutos.
-- El juego pueda entrar en lanzamiento sin documentación contradictoria, datos de prueba confundidos con producción o tareas antiguas reabiertas accidentalmente.
-
-### 6. Arquitectura objetivo: Combat Content Layer
-
-Todos los modos deben adaptarse a un contrato común de **Battle Run**. El cliente presenta el combate; la autoridad del resultado debe estar protegida por el backend y por un registro verificable.
-
-Cada Battle Run debe definir, como mínimo:
-
-- Identificador único e idempotente.
-- Jugador y modo: misión, dungeon, evento, boss, raid o PvP.
-- Encuentro, región, dificultad y versión de reglas.
-- Snapshot del mazo, Campeón, Vanguardia, Centinela, reserva y reliquias.
-- Semilla determinista o mecanismo equivalente de reproducibilidad.
-- Reglas del oponente, IA, fases y modificadores.
-- Estados: created, started, completed, defeated, abandoned, expired o rejected.
-- Turnos, eventos de combate, daño, curaciones, keywords, sustituciones y supervivencia.
-- Resultado final, causa de terminación y estado del Campeón.
-- Resultado de recompensa y estado de liquidación.
-- Referencia de ledger cuando se aplique economía interna.
-- Protección contra reintentos, duplicados, manipulación de parámetros y doble reclamación.
-
-El servidor debe validar identidad, cartas, formación, reliquias, energía, cooldowns, semilla, resultado, daño y recompensa. El cliente puede controlar animaciones, cámara, audio, partículas, timeline y presentación del replay, pero no debe ser la única autoridad de una victoria o recompensa.
-
-### 7. Plan de trabajo oficial por fases
-
-#### FASE T0 — Reconciliación y baseline de pre-lanzamiento
-
-**Objetivo:** congelar la verdad operativa antes de añadir sistemas.
-
-- Auditar GitHub `main`, `CONTINUITY.md`, build, deploy y documentos.
-- Clasificar documentos como vigente, superseded, histórico o pendiente real.
-- Inventariar RPCs, firmas, tablas, columnas, RLS, triggers, Storage y consumidores.
-- Clasificar cuentas actuales como owner, admin, QA o fixture; nunca interpretar sus métricas como producción.
-- Confirmar cantidades vivas de cartas, regiones, facciones, misiones, bosses, raids, reliquias y jugadores de prueba.
-- Registrar discrepancias sin borrar datos ni reescribir historia.
-- Definir la versión de reglas que identifica cada nuevo Battle Run.
-
-**Salida:** baseline en continuidad y matriz de autoridad documental.
-
-#### FASE T1 — Contrato Battle Run y resolución autoritativa
-
-**Objetivo:** eliminar caminos divergentes entre combate visual, RPC y recompensa.
-
-- Diseñar el contrato común de inicio, ejecución, resultado y liquidación.
-- Reutilizar RPCs existentes cuando sus firmas y garantías sean suficientes.
-- Crear sólo las extensiones mínimas de esquema, RPC, RLS o tipos que falten.
-- Hacer idempotente el settlement de recompensas.
-- Persistir resultado, daño, causa de derrota, abandono y referencias de actividad.
-- Hacer que cada contribución de boss o raid corresponda a un Battle Run válido.
-- Separar telemetría de pruebas administrativas de datos competitivos de lanzamiento.
-- Cubrir doble click, refresh, reintentos, errores de red y timeouts.
-
-**Salida:** una sola autoridad de resultado reutilizable por todos los modos.
-
-#### FASE T2 — ForgeFormation completo como motor de reglas
-
-**Objetivo:** convertir todas las reglas declaradas en comportamiento jugable real.
-
-- Verificar protección del Campeón en todos los estados y simultaneidades.
-- Hacer efectiva la reserva durante la simulación y el tablero, no sólo en helpers.
-- Formalizar selección u orden de reemplazo y reglas de entrada.
-- Persistir o reproducir correctamente las sustituciones.
-- Resolver turnos, velocidad, prioridades, estados, daño, escudos, curación, control y empates.
-- Definir límites de turno y causas de finalización.
-- Mantener Champion Deck Bonus, Formación Pura y reliquias compatibles con el código vigente.
-- Crear pruebas de invariantes para Campeón, protección, reserva y formación inválida.
-
-**Salida:** motor ForgeFormation verificable, reproducible y listo para todos los modos.
-
-#### FASE T3 — Vertical slice PvE: una misión completa
-
-**Objetivo:** demostrar el nuevo gameloop sin multiplicar deuda.
-
-Flujo obligatorio:
-
-1. Selección de misión.
-2. Briefing narrativo y enemigo.
-3. Formación enemiga y modificadores.
-4. Selección de Campeón, Vanguardia y Centinela.
-5. Previsualización de reserva y reliquias.
-6. Cinemática de entrada.
-7. Combate ForgeFormation.
-8. Resultado detallado.
-9. Settlement único de energía, progreso y recompensas.
-10. Notificación, siguiente nodo o revancha.
-
-La misión de referencia debe cubrir victoria, derrota, Campeón caído, abandono, error de red, cooldown, energía insuficiente y doble reclamación.
-
-**Salida:** una misión normal jugable con datos reales y aceptación móvil/escritorio.
-
-#### FASE T4 — Sistema PvE completo
-
-**Objetivo:** extender la vertical slice a todo el contenido PvE.
-
-- Convertir misiones normales, elite, expediciones, dungeons y eventos en encuentros reales.
-- Añadir patrones de enemigos, fases, modificadores regionales y condiciones de victoria.
-- Crear cadenas de nodos con decisiones de peso estratégico.
-- Diferenciar dificultad mediante comportamiento y mecánicas, no sólo estadísticas.
-- Mantener energía, cooldowns, progreso, quests y recompensas conectados al resultado real.
-- Definir estados bloqueados, vacíos, retry y recuperación de sesión.
-
-**Salida:** PvE consistente, variado y completo.
-
-#### FASE T5 — World Bosses y Raids cooperativos
-
-**Objetivo:** hacer que la cooperación dependa de combates y progreso persistidos.
-
-World Bosses:
-
-- HP compartido y actualización transaccional.
-- Fases, vulnerabilidades, patrones y cambios de comportamiento.
-- Encuentros individuales persistidos.
-- Daño validado desde Battle Run.
-- Recompensa individual y global sin duplicación.
-- Historial, ranking de contribución y expiración.
-
-Raids:
-
-- Join, participación, combate, contribución y completion conectados.
-- Progreso de grupo y score individual.
-- Fases o salas con identidad propia.
-- Recompensas proporcionales a participación válida.
-- Derrota, expiración, reintentos y resolución idempotente.
-- Nunca registrar una contribución fija cuando el combate produzca otro resultado.
-
-**Salida:** bosses y raids operativos como sistemas cooperativos reales.
-
-#### FASE T6 — PvP competitivo y paridad de reglas
-
-**Objetivo:** llevar PvP al mismo estándar de integridad y presentación que PvE.
-
-- Snapshot de ambos mazos y formaciones.
-- Validación estricta de Campeón y mazo.
-- Battle Run PvP con resultado verificable.
-- Matchmaking, MMR, temporada, abandono y desconexión.
-- Replay del último turno o combate cuando la arquitectura lo permita.
-- Revancha y rivalidad sin afectar la integridad del ranking.
-- Auditoría de rankings y separación de fixtures de QA.
-- Leaderboard público con contexto correcto durante pre-lanzamiento.
-
-**Salida:** PvP competitivo confiable y coherente con ForgeFormation.
-
-#### FASE T7 — Cartas, colección y profundidad estratégica
-
-**Objetivo:** asegurar que la colección tenga decisiones reales y no sólo volumen.
-
-- Reconciliar el catálogo vivo con documentos históricos sin crear cartas ficticias.
-- Validar atributos, rarezas, facciones, regiones, keywords y comerciabilidad actuales.
-- Diseñar identidad de carta a partir de datos existentes: elemento, criatura, poder, personalidad, rareza y facción.
-- Confirmar que Deck Builder, colección, fusión, evolución, inventario, packs y reliquias consumen contratos compatibles.
-- Crear sinergias de formación, reserva, facción y arquetipo con counterplay.
-- Probar mazos de inicio, progresión y endgame con la colección real.
-
-**Salida:** colección legible, estratégica y coherente con el combate.
-
-#### FASE T8 — Capa audiovisual Tier 1
-
-**Objetivo:** convertir cada resultado de combate en una experiencia memorable sin sacrificar rendimiento.
-
-- Cinemáticas diferenciadas para entrada, Campeón, reserva, boss, victoria, derrota y muerte del Campeón.
-- VFX por facción, elemento, rareza, keyword, criatura y personalidad cuando los datos existan.
-- Impacto de ataque, números de daño, escudos, críticos, estados, muerte y último aliento.
-- HUD de turnos, HP segmentado, telemetría comprensible y scoreboard MVP.
-- Música de combate por fase y región con transición suave.
-- SFX de keywords, rarezas, cartas, reserva, bosses y resultados.
-- Fallback para dispositivos con efectos reducidos.
-- Precarga controlada, atlas, límites de partículas y pruebas de 60 FPS en móvil.
-
-**Salida:** identidad audiovisual propia y competitiva.
-
-#### FASE T9 — Onboarding, narrativa y retención de sesión
-
-**Objetivo:** que un jugador nuevo comprenda y desee continuar desde los primeros minutos.
-
-- Tutorial basado en una batalla real guiada.
-- Explicación progresiva de Campeón, apoyos, reserva, keywords y resultado.
-- Briefings narrativos por región y enemigo.
-- Misiones y eventos que enseñen mecánicas, no sólo entreguen recompensas.
-- Revancha, siguiente nodo, resumen de sesión y objetivos claros.
-- Navegación pública de cartas, lore y leaderboard sin confundir contenido público con funciones autenticadas.
-- Estados de carga, error, vacío y recuperación con calidad visual consistente.
-
-**Salida:** primer recorrido completo desde visitante hasta jugador activo.
-
-#### FASE T10 — QA integral y launch gate
-
-**Objetivo:** declarar el producto listo sólo después de verificar todo el sistema.
-
-- Build limpio y typecheck sin errores.
-- Tests de invariantes ForgeFormation.
-- Tests de Battle Run y settlement idempotente.
-- Auditoría de RLS, RPCs, triggers y permisos.
-- Validación de energía, cooldowns, progresión y economía interna.
-- Pruebas de doble click, refresh, abandono, timeout y reconexión.
-- Verificación de datos de prueba frente al universo de lanzamiento.
-- Pruebas de rendimiento en móvil y escritorio.
-- Auditoría de rutas, assets, audio, cinemáticas y accesibilidad.
-- Verificación de `dist/`, GitHub `main` y Cloudflare Pages.
-- Revisión documental: ninguna tarea completada aparece como pendiente activa sin etiqueta histórica clara.
-- `CONTINUITY.md` actualizado con el último checkpoint real.
-
-**Salida:** decisión de lanzamiento basada en evidencia, no en HTTP 200 ni en la existencia de pantallas.
-
-### 8. Orden obligatorio de ejecución
-
-Ningún agente debe saltar directamente a VFX, audio, nuevos bosses o expansión de cartas si T0, T1 y T2 no están validados.
-
-1. Leer este protocolo completo.
-2. Leer `CONTINUITY.md` y tomar la entrada más reciente como estado del código.
-3. Leer el plan activo sólo como registro de ejecución.
-4. Verificar esquema vivo, RPCs, RLS, triggers y datos necesarios.
-5. Ejecutar baseline build y comprobaciones del repositorio.
-6. Completar T0.
-7. Completar T1.
-8. Completar T2.
-9. Completar T3 como vertical slice.
-10. Generalizar a T4, T5 y T6.
-11. Completar T7.
-12. Ejecutar T8 y T9 en lotes verificables.
-13. Completar T10 y declarar launch gate sólo con evidencia.
-14. En cada fase: código, datos, seguridad, build, continuidad, plan activo y deploy cuando corresponda.
-
-### 9. Regla de bloques completos y checkpoints
-
-Cada bloque debe partir del estado real más reciente, reutilizar contratos existentes, crear sólo piezas faltantes justificadas, conectar frontend/backend/datos/RLS/errores/estados/verificación y no declarar terminado un componente visual si su flujo funcional está incompleto.
-
-Cada checkpoint debe incluir commit, `CONTINUITY.md`, actualización del documento activo, build, comprobaciones de datos y seguridad, rendimiento y deploy cuando corresponda. Esta directiva se actualiza sólo con estado comprobado, nunca con intención futura.
-
-### 10. Criterios de no-regresión
-
-Nunca romper las reglas inmutables de ForgeFormation, cartas y assets oficiales, fórmulas de poder sin análisis de cascada, RLS, triggers, Auth, ledger, responsive, integridad de recompensas, límites internos, historial documental o cadena de deploy.
-
-Si una mejora requiere cambiar una regla canónica, primero debe existir una decisión de diseño fechada con motivo, impacto y fuentes dependientes. No se cambia una regla por conveniencia de implementación.
-
-### 11. Definición final de terminado
-
-VEXFORGE se considera Tier 1 listo para lanzamiento únicamente cuando T0-T10 tienen estado verificable, el flujo completo de combate funciona en PvE y PvP, las recompensas son persistentes e idempotentes, el contenido ofrece profundidad, la presentación audiovisual es propia y el sistema distingue claramente pruebas internas de jugadores reales.
-
-La existencia de una tabla, RPC, ruta, asset o componente aislado no satisface esta definición. El criterio es producto completo, conectado, verificable y coherente.
-
-### 12. Registro de esta actualización
-
-- Se reconoce oficialmente que el leaderboard y las estadísticas actuales corresponden a cuentas owner/admin/QA en un entorno cerrado.
-- Se establece **PRE-LAUNCH INTERNAL QA** como estado real.
-- Se crea el plan T0-T10 como hoja de ruta oficial de unificación Tier 1.
-- Se establece Combat Content Layer y Battle Run como arquitectura objetivo.
-- Se mantienen los textos históricos sin borrarlos, pero quedan subordinados por fecha, continuidad y esta directiva.
-- Se excluyen expresamente del alcance de ejecución pagos, monetización, licencias, blockchain, NFTs y enlaces on-chain.
-
----
-
-# ADDENDUM AUTORITATIVO — VEXFORGE VISUAL EXCELLENCE PROGRAM v1
-**Fecha:** 2026-08-09  
-**Naturaleza:** directiva permanente de evolución visual, sonora, tutorial, cinemática y de presentación  
-**Precedencia:** este addendum desarrolla el Protocolo Maestro; no sustituye reglas de seguridad, economía, RLS, combate autoritativo, T10 ni la fuente de verdad del código y del esquema vivo.
-
-## 1. Propósito y definición de terminado
-
-VEXFORGE debe evolucionar desde una interfaz funcional hacia una experiencia DCCG medieval premium, reconocible y viva. El objetivo no es añadir decoración genérica: cada pantalla, carta, animación, efecto, sonido, voz, tutorial y pieza de lore debe comunicar la identidad propia de VEXFORGE y ayudar al jugador a entender qué ocurre.
-
-El trabajo visual no se considera terminado porque una pantalla "ya funcione". Un elemento sólo puede llamarse **OPERATIVO** cuando cumple su quality gate correspondiente y existe evidencia. Todo elemento puede volver a entrar en revisión si aparecen mejores recursos, nuevas necesidades de contexto, problemas de claridad, inconsistencias de identidad o mejoras de rendimiento. `COMPLETADO` significa "cumple el nivel aprobado actual", nunca "no puede mejorarse".
-
-El alcance cubre:
-
-- entrada al juego, autenticación, onboarding y primer minuto;
-- navegación y todos los dominios/rutas que existan en el código real;
-- cartas, colección, packs, deck builder, inspectores y vistas de arte;
-- batalla ForgeFormation, turnos, unidades, campeones, reliquias, reserva y resultado;
-- misiones, raids, jefes, PvP, rankings, temporada y recompensas;
-- lore, regiones, modo historia y transiciones narrativas;
-- audio ambiental, música, SFX, voces y feedback de interacción;
-- responsive móvil/escritorio, accesibilidad, legibilidad y rendimiento.
-
-Quedan fuera de esta directiva salvo aprobación expresa y análisis independiente: cambios de economía, balances, recompensas, blockchain/NFT, pagos, contratos, RPCs, RLS y datos canónicos. Si una mejora visual necesita datos nuevos, primero se debe demostrar que los datos ya existen o documentar un contrato mínimo sin inventar valores.
-
-## 2. Fuentes y orden de decisión
-
-1. Código real de GitHub `main` y esquema vivo de Supabase.
-2. Este Protocolo Maestro.
-3. Este addendum visual.
-4. El bloque operativo canónico VE-UI-TIER1-ANDROID-01 de este protocolo.
-5. Documentos oficiales de dominio y continuidad.
-6. `vexforge_forge_formation_engine_v1` sólo como historial superseded.
-6. El recurso generado o la propuesta estética sólo puede entrar en producción si respeta las fuentes anteriores.
-
-Nunca se usan placeholders, emojis, iconos de sistema, arte de stock sin identidad, sonidos genéricos o texto inventado para ocultar una carencia. Si falta un recurso, el estado es `BLOCKED` o `DRAFT`, con la carencia documentada.
-
-## 3. Unidad universal de trabajo y estados reabribles
-
-Cada mejora se registra como una unidad atómica con un ID estable. Ejemplos de formato: `VE-CARD-<canonical-card-id>`, `VE-ROUTE-<route-key>`, `VE-TUTORIAL-<step>`, `VE-AUDIO-<context>`, `VE-CINE-<scene>` y `VE-ASSET-<asset-key>`.
-
-Cada unidad debe contener:
-
-- fuente canónica y estado baseline;
-- objetivo de experiencia y problema que resuelve;
-- dependencias de datos, código, Storage, audio o narrativa;
-- propuesta de identidad visual y reglas de uso;
-- prompts, variantes, negative prompts y procedencia de cada asset generado;
-- implementación prevista y superficies afectadas;
-- estados vacíos, error, carga, responsive y accesibilidad;
-- presupuesto de peso, memoria, tiempo de carga y objetivo de 60 FPS cuando aplique;
-- evidencia de verificación y criterio de aceptación;
-- nivel actual, deuda restante y próxima fecha/condición de revisión.
-
-Estados válidos:
-
-- `NOT_STARTED`: no iniciado.
-- `DRAFT`: propuesta o asset no integrado.
-- `IN_PROGRESS`: en ejecución.
-- `BLOCKED`: requiere una fuente, sesión, asset, dato o verificación técnica necesaria que no existe o no puede sustituirse con una alternativa compatible. La falta de QA manual del owner no entra en este estado si la unidad ya está integrada y sus gates técnicos pasan.
-- `IMPLEMENTED_UNVERIFIED`: integrado pero sin gate completo o sin QA humana posterior; puede continuar la siguiente unidad elegible mientras queda pendiente la validación del owner.
-- `OPERATIONAL`: pasa el gate del nivel actual.
-- `CANDIDATE_FOR_REVIEW`: operativo, pero con una oportunidad concreta de mejora.
-- `REFINED`: supera una revisión posterior documentada.
-- `DEFERRED`: aplazado con motivo explícito.
-
-No se permite borrar el historial de una unidad ni convertir `BLOCKED` en `OPERATIONAL` sin evidencia. La ausencia de QA humana no bloquea la implementación ni el avance a la siguiente unidad: sólo impide declarar esa unidad `OPERATIONAL` hasta que el owner aporte la validación correspondiente. Una unidad `OPERATIONAL` o `REFINED` puede reabrirse con `CANDIDATE_FOR_REVIEW` cuando cambie el contexto, aparezca un asset mejor o el criterio de calidad suba.
-
-## 4. Escala universal de calidad
-
-- **Q0 — Contrato:** identidad, fuente canónica, alcance y dependencias definidos.
-- **Q1 — Legible:** el jugador entiende la acción, estado y resultado sin explicación externa.
-- **Q2 — Coherente:** tipografía, iconografía, color, movimiento, audio y tono pertenecen al mismo mundo.
-- **Q3 — Identitario:** la carta, ruta, facción, región o momento tiene rasgos propios; no es una plantilla intercambiable.
-- **Q4 — Premium:** timing, composición, capas, sonido, cámara, transiciones, narrativa y microinteracciones están pulidos; no hay placeholders ni arte genérico.
-- **Q5 — Tier 1 candidate:** rendimiento, responsive, accesibilidad, consistencia global, claridad y revisión de calidad superan una matriz documentada. Requiere validación interna y posteriormente usuarios reales; no equivale a una garantía comercial.
-
-El plan debe indicar siempre `nivel_actual -> nivel_objetivo`. Una unidad puede ser válida en Q2 y seguir abierta para Q3/Q4/Q5.
-
-## 5. Dossier obligatorio de cada carta
-
-Cada carta canónica debe tener una unidad `VE-CARD` propia. Se reutilizan componentes y motores, pero nunca se confunde reutilización técnica con identidad genérica. El dossier se construye usando únicamente los campos existentes en `cards` y documentos oficiales:
-
-### 5.1 Identidad
-
-- ID canónico, nombre, imagen existente y URL de Storage;
-- facción, elemento, tipo de criatura, rareza, poder, personalidad y keywords existentes;
-- región, relación de lore y rol de combate cuando consten en fuentes oficiales;
-- motivo visual, silueta, material, símbolo, iluminación y paleta derivados de esos datos;
-- tono de texto, motto y voz sólo si están respaldados por lore oficial.
-
-### 5.2 Superficies que se deben diseñar y verificar
-
-1. tile/lista y estado bloqueado/desbloqueado;
-2. hover, focus, selección, arrastre y confirmación;
-3. inspector ampliado y arte a pantalla completa;
-4. entrada al tablero e invocación;
-5. idle vivo y respuesta a la presencia del jugador;
-6. ataque, habilidad, keyword, impacto, daño, curación y muerte;
-7. interacción con campeón, reserva, reliquia y terreno;
-8. victoria, derrota, retirada y replay cuando corresponda;
-9. pack/recompensa, evolución y colección;
-10. lore, relaciones y presentación narrativa.
-
-Cada superficie debe declarar si es `APLICA`, `NO_APLICA` o `PENDIENTE_DE_FUENTE`; nunca se inventa una animación sólo para llenar una lista.
-
-### 5.3 Animación y VFX por carta
-
-La implementación debe combinar parámetros comunes del motor con authored data por carta: forma de entrada, ritmo, dirección, cámara, partículas, material, trail, impacto, color, audio motif y respuesta de la UI. El elemento, criatura, poder y personalidad son ejes mínimos de P1. La rareza y facción pueden modularlos, pero no reemplazarlos.
-
-Las animaciones deben tener intención: anticipación, acción, impacto, recuperación y lectura del resultado. El exceso de partículas que reduzca claridad o rendimiento se considera un defecto, no una mejora.
-
-### 5.4 Audio y voz por carta
-
-Cada carta debe tener un perfil de audio propio cuando la superficie lo requiera: motif de invocación, interacción, ataque/habilidad, impacto y salida. Las voces deben existir sólo para líneas narrativas definidas, con personalidad y pronunciación consistentes. Toda música, SFX o voz generada debe guardar prompt/brief, versión, proveedor o método de generación, licencia/permiso de uso, archivo final y fallback accesible. No se copia un mismo sonido como sustituto de identidad salvo que el dossier justifique que es un lenguaje compartido.
-
-### 5.5 Asset pack y prompts
-
-Cada asset generado requiere: prompt principal, negative prompt, relación de aspecto/resolución, variantes consideradas, selección final, retoque aplicado, transparencia cuando aplique, nombre de archivo estable, hash/versionado y ubicación prevista. Los prompts describen el mundo VEXFORGE, la carta y la función del asset; no dicen sólo "fantasy card art". Se evita imitar literalmente artistas, personajes, logos o franquicias existentes.
-
-## 6. Dossier obligatorio de cada ruta o dominio
-
-Primero se audita el inventario real de rutas; no se fija aquí un número supuesto. Cada `VE-ROUTE` debe registrar: objetivo del dominio, entrada y salida, jerarquía, CTA principal, estados de carga/error/vacío, datos que consume, navegación relacionada, fondo/ambiente, audio, motion budget, mobile layout y criterio de comprensión en cinco segundos.
-
-La auditoría agrupa las rutas reales en: entrada/onboarding; home y progresión; cartas/colección/packs/decks; combate; misiones/raids/bosses/PvP; lore/regiones; social/clanes/rankings; economía/cuenta/ajustes; y administración. Cada grupo recibe un lenguaje ambiental propio, pero todos comparten una gramática VEXFORGE.
-
-Una ruta no se considera visualmente terminada si sólo tiene un fondo. Debe tener estructura, profundidad, estados vivos, relación clara entre acciones y resultados, transiciones con propósito y una identidad que no compita con la legibilidad.
-
-## 7. Roadmap por fases
-
-### VE-0 — Baseline visual y auditoría de evidencia
-**Objetivo:** inventariar código, rutas, assets, cartas, audio, tutorial, dominios y deuda visual real.  
-**Salida:** matriz de cobertura; lista de placeholders/genéricos; mapa de dependencias; baseline de rendimiento; ranking de impacto.  
-**Gate:** cada hallazgo tiene fuente, captura/evidencia, ID y estado. No se declara calidad por opinión aislada.
-
-### VE-1 — Biblia visual y lenguaje de movimiento
-**Objetivo:** definir identidad medieval propia: materiales, iluminación, marcos, facciones, regiones, estados, iconografía, tipografía, motion grammar, cámara, partículas y reglas de contraste.  
-**Salida:** tokens/documentación reutilizable, ejemplos aprobados y reglas de cuándo no usar un efecto.  
-**Gate:** una carta, una batalla, una ruta y un tutorial pueden convivir sin parecer productos distintos.
-
-### VE-2 — Pipeline de assets originales
-**Objetivo:** crear pipeline reproducible de generación, revisión, recorte, optimización, Storage y versionado para iconos, fondos, marcos, overlays, partículas, ilustraciones de apoyo, UI art, música, SFX y voces.  
-**Salida:** catálogo de assets con prompts, procedencia, licencia, dimensiones, formato, peso y consumidores.  
-**Gate:** ningún asset integrado queda sin origen, nombre estable o responsable de revisión.
-
-### VE-3 — Motor de identidad audiovisual por carta (P1 + M1 refinado)
-**Objetivo:** extender el motor existente para que la presentación dependa de datos canónicos y authored data por carta.  
-**Orden:** modelo de identidad; reglas por eje; presets no intercambiables; invocación; idle; ataque/habilidad; impacto/muerte; inspector; audio; pruebas con cartas representativas.  
-**Gate:** cada carta soportada tiene dossier; no se inventan campos ni se rompe el contrato de combate; el cliente sólo presenta y el backend sigue siendo autoridad.
-
-### VE-4 — ForgeFormation cinematográfico
-**Objetivo:** convertir el combate en una secuencia legible y dramática: intro, formación, turnos, cámara, targeting, reserva, reliquias, keywords, daño, estados, final y scoreboard.  
-**Salida:** timeline modular, cancelación segura, reduced motion, eventos tardíos y replay/presentación coherente con Battle Run.  
-**Gate:** cada evento autoritativo tiene una representación visual; ningún efecto puede cambiar el resultado real.
-
-### VE-5 — Tutorial vivo y onboarding contextual
-**Objetivo:** reemplazar el tutorial intrusivo por aprendizaje dentro de la experiencia real. El jugador ve el dominio que se explica, ejecuta una acción guiada, recibe feedback y entiende por qué importa.  
-**Bloques:** bienvenida narrativa; navegación; colección; carta; formación; turno; ataque; keyword; defensa/reserva; recompensa; siguiente objetivo. La secuencia debe usar datos oficiales, cartas del jugador o una fixture explícita y segura, sin disfrazar estados faltantes.  
-**Gate:** cada paso tiene objetivo, acción, feedback, salida, recuperación de error, skip/replay, accesibilidad y evidencia; el fondo nunca se oscurece hasta ocultar la interfaz que se está enseñando.
-
-### VE-6 — Rediseño de rutas y dominios
-**Objetivo:** trabajar cada `VE-ROUTE` desde el inventario real, priorizando primer minuto, home, cartas, colección, deck builder, combate, misiones, PvP, raids, bosses, packs y lore.  
-**Método:** lote pequeño por grupo; una ruta baseline, un lenguaje ambiental, estados completos, responsive, transiciones y revisión cruzada.  
-**Gate:** navegación comprensible, sin pantallas huérfanas, sin fondos decorativos que oculten controles, y con un sistema consistente de estados.
-
-### VE-7 — Audio, música y voces identitarias
-**Objetivo:** diseñar el paisaje sonoro de VEXFORGE por ruta, facción, región, combate, rareza, evento y carta.  
-**Salida:** mapa de cues, mezclas, prioridades, loops, ducking, mute/volumen, subtítulos de voz, fallback y catálogo de procedencia.  
-**Gate:** audio no repetitivo sin intención, no impide leer ni jugar, funciona con mute y no usa material sin autorización.
-
-### VE-8 — Lore, modo historia y cinemáticas
-**Objetivo:** convertir el lore oficial en escenas, transiciones y momentos jugables que amplíen el contexto sin inventar canon.  
-**Salida:** guion visual por escena, storyboard, assets, voz, música, duración, skip/replay y conexión con la pantalla siguiente.  
-**Gate:** cada escena tiene función narrativa y no bloquea innecesariamente al jugador.
-
-### VE-9 — Rendimiento, accesibilidad y compatibilidad
-**Objetivo:** preservar 60 FPS objetivo en móvil cuando sea viable, controlar memoria, peso de assets, carga progresiva, lazy loading, WebGL/CSS fallback, reduced motion, contraste, foco, teclado, texto y audio.  
-**Gate:** matriz por móvil/escritorio y por dispositivo representativo; problemas se corrigen antes de añadir más capas visuales.
-
-### VE-10 — Revisión de calidad y pulido continuo
-**Objetivo:** reevaluar cada unidad contra Q0-Q5, detectar incoherencias y subir el siguiente nivel.  
-**Salida:** lista de mejoras priorizada por impacto, riesgo y dependencia; comparativa baseline/actual; deuda visual explícita.  
-**Gate:** revisión cruzada de cartas, rutas, tutorial, combate y audio; nada se marca como perfecto o definitivo.
-
-### VE-11 — Validación cerrada y preparación de lanzamiento
-**Objetivo:** combinar gates técnicos del Protocolo/T10 con validación manual del owner, QA y después jugadores reales. La validación manual es posterior a la implementación y documenta el estado de uso real; no bloquea la ejecución de la siguiente unidad.  
-**Regla:** T10 sigue `NO-GO` hasta la sesión autenticada documentada. El trabajo visual y de producto puede avanzar como track controlado, pero no convierte por sí solo el proyecto en lanzamiento público ni permite declarar `OPERATIONAL` una unidad sin la evidencia aplicable.
-
-## 8. Priorización y paquetes para cualquier sesión
-
-Cada sesión debe tomar el primer paquete elegible según: (1) bloqueo crítico, (2) impacto en comprensión y retención, (3) dependencia que desbloquea otras unidades, (4) riesgo técnico, (5) valor visual. Un paquete pequeño debe poder ejecutarse y documentarse sin abarcar el juego entero.
-
-El tamaño recomendado es: una carta representativa; una familia de cartas con el mismo lenguaje; una ruta; un paso de tutorial; una escena; o un conjunto de audio de un contexto. Después de cada paquete se actualiza su unidad y no se declara completada toda la fase por haber completado un ejemplo.
-
-## 9. Evidencia y continuidad
-
-Al cerrar una unidad o paquete, el agente debe registrar: archivos y superficies afectadas, assets y versiones, fuente canónica consultada, estado anterior/nuevo, quality level, verificaciones ejecutadas, limitaciones, bloqueos, deuda y próximo criterio de reentrada. Debe actualizar `CONTINUITY.md` y este plan activo sin reescribir la historia.
-
-No se ejecutan builds o validaciones irrelevantes sólo por rutina; sí se ejecuta la verificación mínima que corresponda al riesgo del paquete. Nunca se inventan resultados. Si la sesión no puede acceder a una fuente, asset externo o verificación técnica necesaria para implementar o comprobar razonablemente el paquete, se marca `BLOCKED` y se explica qué falta. Si lo único pendiente es navegador autenticado, usuario real, dispositivo o QA manual del owner después de que los gates técnicos pasan, se marca `IMPLEMENTED_UNVERIFIED`, se registra la evidencia pendiente y se continúa con la siguiente unidad elegible.
-
-## 10. Estado inicial de este addendum
-
-- T10: `BLOCKED / PRE-LAUNCH INTERNAL QA`; falta sign-off autenticado del owner según la continuidad vigente. Este estado limita el launch gate, pero no detiene la implementación ni la preparación de las siguientes unidades.
-- Fase visual histórica B1-B4, C1-C2, D1-D2, G1-G3, H1-H4, I1-I2 y assets listados: conservar como `OPERATIONAL` sólo en el nivel documentado; quedan abiertas a reevaluación Q3-Q5.
-- P1: `NOT_STARTED` como identidad audiovisual completa por carta; los efectos actuales por facción/rareza no satisfacen por sí solos los cuatro ejes de identidad.
-- Tutorial: existe una base guiada, pero la revolución contextual VE-5/TU.0-TU.1 sigue abierta hasta demostrar aprendizaje dentro de la interfaz real.
-- VE-0: `NOT_STARTED`; es el primer paquete visual recomendado, sin repetir la auditoría T0/T10 de backend.
-- Las tareas P2-P6 y M2-M5 conservan su estado canónico del plan activo y no se reabren salvo evidencia nueva.
-
-Este addendum queda diseñado para seguir siendo válido cuando el trabajo continúe con límites de uso distintos, otra sesión o un agente diferente. La unidad de continuidad es el estado verificable de cada paquete, no la memoria de una conversación.
-
-
----
-
-# REVISIÓN DE SOLIDEZ 2 — IDENTIDAD, AUTORIDAD CREATIVA Y MEJORA CONTINUA
-**Fecha:** 2026-08-09  
-**Aplicación:** permanente para toda IA o equipo que continúe VEXFORGE
-
-Esta revisión aclara y endurece el programa visual anterior. En caso de contradicción, esta sección prevalece sobre cualquier texto histórico más permisivo.
-
-## R2.1 — Regla absoluta de cero genéricos
-
-En el producto final no se permite ningún emoji, icono genérico, icono del sistema, símbolo Unicode usado como sustituto visual, placeholder, arte de stock sin identidad, sonido de biblioteca sin tratamiento propio, voz genérica, fondo intercambiable ni recurso de plantilla que delate una implementación incompleta. Esto incluye navegación, botones, badges, estados, tutorial, cartas, combate, lore, recompensas, packs, errores, carga y administración.
-
-Todo recurso visual, sonoro o vocal debe ser creado o transformado específicamente para VEXFORGE mediante un brief/prompt contextual y quedar registrado en su ficha de procedencia. Un componente técnico reutilizable sí está permitido; su apariencia no puede convertirse en una identidad genérica compartida cuando el contexto exige diferenciación.
-
-Si el agente encuentra un recurso genérico que todavía no puede sustituir, debe registrarlo como `BLOCKED` o `DRAFT`, conservar su ubicación documentada y crear el siguiente trabajo de sustitución. Nunca debe presentarlo como terminado ni esconderlo detrás de otro placeholder.
-
-## R2.2 — Autoridad creativa acotada por contexto
-
-La IA tiene autoridad para diseñar y generar prompts, variantes y tratamientos de imagen, animación, VFX, audio, música, voz, iconografía, fondos y cinemáticas cuando sean necesarios para cumplir el roadmap. Esa autoridad es creativa, no canónica ni autoritativa sobre el juego.
-
-Antes de crear cualquier recurso, la IA debe reunir el contexto oficial disponible: carta, imagen existente, elemento, criatura, poder, personalidad, facción, rareza, keywords, región, lore, función de gameplay, ruta, momento y reglas de presentación. Debe producir una justificación trazable `dato oficial -> decisión artística -> recurso -> superficie`.
-
-La IA no puede inventar lore, nombres, estadísticas, metadata, habilidades, keywords, resultados de batalla, recompensas, estados, relaciones, diálogos canónicos ni desenlaces narrativos o de gameplay. Si el contexto no permite una decisión segura, el recurso queda `PENDING_SOURCE`/`BLOCKED`; puede proponerse un concepto abstracto sin integrarlo como canon.
-
-La capa visual nunca puede decidir una victoria, derrota, daño, recompensa, settlement, evolución, economía o estado de cuenta. El cliente sólo presenta hechos ya autorizados por los contratos y datos oficiales.
-
-## R2.3 — Pasaporte de identidad por carta
-
-La unidad `VE-CARD` es obligatoria para cada carta canónica, incluso cuando reutilice un motor común. El pasaporte debe enlazar:
-
-1. datos canónicos y fuente consultada;
-2. lectura de identidad de la carta;
-3. imagen actual y diagnóstico de mejora;
-4. prompt, negative prompt, variantes, selección, retoque y versión del nuevo arte;
-5. silueta, material, iluminación, paleta, cámara y lenguaje de movimiento;
-6. reveal, inspector, entrada, idle, ataque, habilidad, impacto, daño, muerte y resultado aplicables;
-7. SFX, música, motif y voz propios cuando la carta tenga voz o sonido;
-8. superficies de UI, lore, colección, pack y combate;
-9. responsive, reduced motion, accesibilidad y presupuesto de rendimiento;
-10. comparación contra su baseline, otras cartas y el estándar Tier 1;
-11. deuda y condición exacta para reabrirla.
-
-La imagen de una carta puede mejorarse o regenerarse, pero no se sustituye automáticamente. Cada versión debe preservar la identidad y los datos oficiales, registrar el motivo del cambio, permitir volver a la versión anterior y demostrar que funciona en las superficies reales del juego.
-
-## R2.4 — Voz y audio con identidad propia
-
-Cuando una carta, personaje, región, evento o sistema tenga voz, debe tener un perfil propio: identidad vocal, intención, dicción, emoción, límites de actuación, líneas autorizadas, mezcla, prioridades y referencia de continuidad. No se acepta clonar un único tono para toda la colección.
-
-La voz sólo puede decir texto autorizado por lore o guion oficial. Si no existe una línea aprobada, se deja voz en `PENDING_SOURCE` y se usa, si procede, un motif no verbal propio. Todo audio generado incluye prompt/brief, versión, procedencia, licencia de uso, archivo, consumidor, fallback y controles de mute/volumen.
-
-## R2.5 — Gate de comparación Tier 1 después de completar
-
-`OPERATIONAL`, `REFINED` y `Q5` no son estados terminales. Al iniciar cada nueva sesión, la IA debe:
-
-- leer protocolo, plan activo, continuidad y fuentes oficiales;
-- comparar el estado actual contra la matriz Q0-Q5 y referentes Tier 1 sin copiar su identidad;
-- identificar explícitamente qué todavía está por debajo del objetivo: imagen, composición, timing, cámara, VFX, audio, voz, tutorial, claridad, consistencia, responsive o rendimiento;
-- registrar nuevas brechas como `CANDIDATE_FOR_REVIEW` con prioridad y evidencia;
-- mejorar primero la brecha de mayor impacto y menor riesgo, sin reabrir trabajo por opinión vaga;
-- conservar el historial de versiones y la evidencia anterior.
-
-El resultado de una sesión nunca puede ser simplemente “apartado visual completado”. Debe decir qué subunidades cumplen qué nivel, qué deuda queda y cuál es el siguiente nivel posible. Si una IA nueva detecta una carencia demostrable, puede reabrir la unidad aunque antes estuviera marcada `COMPLETED`.
-
-## R2.6 — Auditoría de fugas de identidad
-
-Antes de cerrar una fase se ejecuta una matriz de consistencia que comprueba, como mínimo: carta frente a imagen; imagen frente a animación; animación frente a sonido/voz; sonido frente a facción/región; lore frente a cinemática; tutorial frente a interfaz real; UI frente a iconografía; escritorio frente a móvil; y todos los estados de carga/error/victoria/derrota frente a datos reales.
-
-Una fuga es cualquier contradicción, repetición injustificada, recurso genérico, texto inventado, transición sin causa, efecto que oculta información, audio que no corresponde, imagen que no refleja la carta o tratamiento que cambia el significado de un dato oficial. Una sola fuga relevante impide el gate de la unidad afectada.
-
-
-## ENMIENDA PERMANENTE — REVISIÓN PÚBLICA DE CLOUDFLARE PAGES
-
-**Vigencia:** 2026-08-10 · se incorpora al Protocolo Maestro activo.
-
-- La URL pública oficial de VEXFORGE, https://vexforge-web.pages.dev, puede abrirse y revisarse directamente sin token, API key, integración de Cloudflare ni acceso administrativo.
-- La revisión pública incluye comprobaciones HTTP, captura visual, rutas públicas, headers, bundle servido, assets públicos y comparación con el código de main disponible en GitHub.
-- El hecho de que Cloudflare Pages compile desde GitHub no demuestra por sí solo que el bundle servido corresponda al commit actual: debe compararse el hash, nombre o contenido de los artefactos cuando sea posible.
-- Los tokens, integraciones o accesos administrativos de Cloudflare sólo son necesarios para acciones de administración, configuración, consulta de metadatos no públicos o publicación manual. No deben solicitarse para una revisión pública.
-- La revisión pública y la publicación son acciones distintas: una URL pública puede auditarse sin credenciales, pero no se debe declarar que un nuevo commit está publicado sin evidencia del bundle live.
-- Esta regla no autoriza deploy, push, cambios de configuración ni cambios en Cloudflare; cualquier publicación sigue requiriendo autorización explícita y el canal oficial disponible.
-
-
-## ENMIENDA PERMANENTE - CADENA CANÓNICA DE EJECUCIÓN Y DESPLIEGUE (2026-08-11)
-
-Esta enmienda prevalece sobre cualquier instrucción anterior que describa un flujo local, replicado o de publicación manual.
-
-- GitHub es el único código fuente oficial: grandmaster68081-byte/Vexforge-web, rama main. Todo cambio de frontend se realiza directamente en ese código fuente; no se trabaja sobre una copia local, réplica, mockup, preview, checkout paralelo ni otro entorno como fuente de verdad.
-- Cloudflare Pages es el frontend publicado y está vinculado a GitHub. Despliega automáticamente los cambios de main. No se hace deploy manual, wrangler deploy, publicación directa ni edición de código en Cloudflare. Para reflejar un cambio: actualizar GitHub, hacer commit y push a main, esperar la propagación automática y revisar la URL pública.
-- Supabase es backend, base de datos y Storage: PostgreSQL, RLS, RPCs, Auth, Storage y contratos autoritativos viven en el proyecto oficial rscuzqnfccqvltkdcdny.
-- El entorno local o de Replit no es un entorno de trabajo del producto: no crear ni modificar implementaciones paralelas ni usar artefactos locales como fuente de verdad. Las operaciones del agente se limitan a inspeccionar fuentes oficiales y escribir directamente mediante sus canales oficiales.
-- Después de un cambio en GitHub se verifica el commit de main, la propagación automática de Cloudflare y el estado vivo de Supabase. Si Cloudflare aún no refleja main, se registra PENDING_SOURCE o BLOCKED por propagación; nunca se inicia un deploy alternativo ni se corrige el frontend fuera de GitHub.
-- Cualquier documento que indique deploy manual de Cloudflare, uso de wrangler para publicar, trabajo local como fuente del producto o una réplica como entorno equivalente queda SUPERSEDED por esta enmienda.
-
----
-
-# ADDENDUM AUTORITATIVO — VEXFORGE GAME-FIRST EXPERIENCE LAYER v1
-**Fecha de incorporación:** 2026-08-26  
-**Documento fuente:** `vexforge_visual_benchmark_fates_extension_v1`  
-**Estado:** OFICIAL — INTEGRADO EN EL PROTOCOLO MAESTRO  
-**Naturaleza:** capa de experiencia Tier 1 sobre el plan existente; no sustituye el protocolo, ForgeFormation, la autoridad de Supabase, las reglas de Android, la economía, la seguridad, RLS, RPCs, Storage ni los gates de entrega.
-
-## LEY DIARIA DE CONTEXTO COMPLETO Y CONTINUIDAD
-
-Al comenzar cada día de trabajo y cada nueva sesión operativa, antes de ejecutar cualquier trabajo, la IA debe leer, comprender y analizar el protocolo completo vigente en Supabase. Esta obligación se mantiene aunque `CONTINUITY.md` describa con exactitud la tarea, aunque exista una instrucción aparentemente inequívoca o aunque la IA crea recordar el método de trabajo.
-
-El orden obligatorio de preflight es:
-
-1. Leer el documento completo `vexforge_master_protocol_v2` desde Supabase, sin sustituirlo por un resumen, una memoria, una copia cacheada o una sola sección.
-2. Leer la entrada completa más reciente de `CONTINUITY.md` y el resto de la continuidad necesaria para entender el estado y la deuda.
-3. Leer el plan oficial aplicable y, cuando el trabajo sea Android, `docs/VE-MOB-0-PORT-INVENTORY.md`.
-4. Reconciliar lo leído con GitHub `main`, el esquema vivo de Supabase, RPCs, RLS, triggers, Auth, Storage, assets, contratos, release y deploy que correspondan.
-5. Confirmar el método de trabajo, las fuentes de autoridad, la unidad concreta, los límites y los gates antes de escribir, ejecutar SQL, crear assets, modificar código, hacer commit o publicar.
-
-La continuidad nunca concede una excepción a esta ley: indica desde dónde continuar, pero no reemplaza la comprensión del protocolo completo. La finalidad es evitar incompatibilidades de contexto —no colocar una losa de granito sobre un piso de mármol— y preservar decisiones, secuencias, salvaguardas y estándares acumulados.
-
-Si no es posible leer el protocolo completo o reconciliar las fuentes críticas, el trabajo dependiente queda `BLOCKED`; no se adivina, no se ejecuta parcialmente y no se presenta una suposición como autoridad. Cada sesión que ejecute trabajo debe registrar en la continuidad que el preflight fue realizado, qué fuentes fueron reconciliadas y qué unidad/gate se eligió.
-
-## 1. ALCANCE DE LA CAPA DE EXPERIENCIA
-
-La extensión oficial de referente visual y de producto se integra como `TIER 1 EXPERIENCE LAYER`. No crea un plan paralelo. Cada trabajo visual debe vincularse simultáneamente a:
-
-- una fase T0-T10;
-- una unidad `VE-MOB-*` cuando afecte Android;
-- uno o más criterios existentes de `public.vexforge_visual_tier1_objective`;
-- una superficie, asset o componente identificable;
-- evidencia reproducible y una condición de reapertura.
-
-La meta es que VEXFORGE funcione y se sienta como un videojuego de cartas premium: mundo, identidad, Campeón, ForgeFormation, Reserva, Reliquias, regiones, progresión, economía justa, autoridad backend, claridad, feedback, motion, audio, rendimiento y accesibilidad.
-
-## 2. LEY GAME FIRST
-
-Las superficies se diseñan como escenas y momentos jugables, no como formularios o paneles administrativos. La carta es un objeto de deseo y conserva el protagonismo; la presentación no debe ocultar datos ni convertir el cliente en autoridad. Cada superficie debe expresar contexto de juego, objeto, acción y feedback, incluidos sus estados de carga, vacío, error, victoria y derrota.
-
-Se prohíben placeholders, emojis, iconos de sistema, arte de stock sin identidad, sonidos genéricos, texto inventado y controles intercambiables cuando falte una fuente oficial. La ausencia de un recurso se registra como `BLOCKED` o `DRAFT`, nunca se oculta con un sustituto genérico.
-
-## 3. LEY DE REFERENTES SIN COPIA
-
-Might & Magic Fates Heroes TCG se usa como benchmark de presentación, jerarquía, claridad, atmósfera, UX móvil, combate, colección y progresión; nunca como plantilla. Se permiten principios UX y patrones conceptuales, pero no se copian identidad visual, arte, iconografía, personajes, textos, assets, composiciones literales, layout ni mecánicas específicas. VEXFORGE debe conservar y superar con identidad propia sus pilares canónicos.
-
-## 4. DESIGN QA Y RÚBRICA
-
-Cada superficie principal pasa, cuando corresponda, por FUNCTIONAL, DATA, VISUAL, MOTION, AUDIO, MOBILE, ACCESSIBILITY, PERFORMANCE, IDENTITY y BENCHMARK. La superficie no se considera `TIER1_READY` hasta completar los pases aplicables y registrar evidencia.
-
-La evaluación visual usa escala 0-5: 0 inexistente, 1 funcional, 2 coherente, 3 identidad propia, 4 premium y 5 Tier 1. El objetivo es al menos 4 en superficies principales y 3.5 en secundarias, sin sacrificar claridad, accesibilidad, rendimiento ni autoridad. El Anti-Mockup Gate rechaza una pantalla que pueda pertenecer a cualquier app, parezca administración, dependa de controles genéricos o no tenga escena, contexto, feedback y personalidad. El Anti-Empty-Screen Gate exige `SCENE + OBJECT + ACTION + FEEDBACK`.
-
-## 5. ORDEN DE IMPLEMENTACIÓN VISUAL
-
-La primera demostración transversal será un vertical slice trazable: HOME → CHAMPION → COLLECTION → CARD DETAIL → DECK/FORGE → FORMATION → BATTLE → RESULT → REWARD → HOME. La refactorización visual es reversible y se realiza por capas: tokens, iconografía, tipografía, fondos, cartas, botones, paneles, motion, audio, composición de escena y reconstrucción por superficie.
-
-La aplicación Android se prioriza desde touch, pantalla pequeña, alcance del pulgar, legibilidad, FPS, memoria, accesibilidad y `reduced-motion`. El espectáculo nunca puede bloquear el input ni ocultar el estado autoritativo.
-
-## 6. SUPABASE, TELEMETRÍA Y NO REGRESIÓN
-
-Esta capa sólo consume datos reales y contratos existentes. No autoriza mocks, datos inventados, lógica local autoritativa, settlements locales ni economía local. El estado local sólo controla presentación y nunca resuelve combate, recompensas, inventario, progreso o autenticación.
-
-La telemetría visual —cuando el contrato canónico la soporte— puede observar entradas/salidas de superficies, inspección de cartas, deck/formation, batalla, resultados, recompensas, tienda y nodos del mundo para medir tiempo, abandono, interacción, errores y rendimiento; no es una fuente de verdad del juego.
-
-Todo cambio conserva la arquitectura oficial: GitHub `main` como fuente de código, Supabase como autoridad de datos/esquema/RPC/RLS/Auth/Storage, releases Android como canal móvil y Cloudflare Pages como deploy web de mantenimiento. Ninguna mejora visual puede degradar economía, seguridad, integridad competitiva, rendimiento, accesibilidad, build, workflow, release o evidencia.
-
-## 7. REGLA DE CIERRE
-
-No declarar Tier 1, `OPERATIONAL` ni una superficie terminada sólo porque compile o funcione. Deben existir evidencia, gates aplicables, estado Q, deuda, condición de reapertura y continuidad actualizada. La QA humana pendiente no detiene la siguiente implementación, pero sí conserva la unidad como `IMPLEMENTED_UNVERIFIED` y evita una declaración operativa prematura. Una superficie `OPERATIONAL`, `REFINED` o `Q5` puede reabrirse cuando cambie el contexto o aparezca una brecha demostrable.
-
-La extensión queda integrada formalmente como directiva permanente. Durante la FASE PORT, la siguiente implementación se selecciona por el orden del inventario Android y el siguiente elemento no completado; cada unidad debe mapearse a los criterios Tier 1/T0-T10 y superar sus gates técnicos aplicables. La QA humana pendiente no impide seleccionar ni ejecutar la siguiente unidad, y cualquier hallazgo posterior puede reabrir la unidad correspondiente sin borrar su historial. Una vez completado el port, vuelve a regir la selección por fase abierta más baja y criterio bloqueante, después del preflight exigido por la Ley Diaria de Contexto Completo.
----
-# ENMIENDA PERMANENTE — LEY DE CREACIÓN AUTÓNOMA POR CONTEXTO INCOMPLETO
-**Fecha de entrada en vigor:** 2026-08-28  
-**Estado:** OFICIAL — INTEGRADA EN EL PROTOCOLO MAESTRO  
-**Precedencia:** esta enmienda prevalece sobre cualquier texto histórico o regla anterior que trate la falta de documentación, contexto, teoría, tabla, RPC, ruta, asset, decisión de flujo o conocimiento como un bloqueo automático.
-
-## 1. Propósito de la ley
-
-VEXFORGE no debe detener su evolución por una pieza de información que pueda ser razonablemente deducida, diseñada o creada a partir del análisis completo del producto. Cuando falte una especificación, el agente tiene autorización para inventar y materializar la solución que mejor encaje con el rompecabezas de VEXFORGE, su visión de calidad Tier 1, su arquitectura, su experiencia de jugador y sus reglas de integridad.
-
-“Inventar” en esta ley significa crear una decisión de diseño, flujo, contrato, infraestructura, regla provisional, contenido de soporte, tratamiento visual, asset, componente o implementación que todavía no existía. No significa falsificar una evidencia, fingir que una decisión ya era canónica, fabricar una sesión humana ni ocultar una suposición.
-
-## 2. Análisis integral obligatorio antes de crear
-
-Antes de resolver una ausencia por cuenta propia, el agente debe analizar el proyecto como un sistema completo, no sólo el archivo donde aparezca el hueco. Debe revisar, según corresponda:
-
-- la visión Tier 1 y el estado real de pre-lanzamiento;
-- GitHub main, CONTINUITY.md, rutas, componentes, dominios y contratos existentes;
-- Supabase vivo: esquema, columnas, RPCs, RLS, triggers, Auth, Storage y datos relevantes;
-- ForgeFormation, Battle Run, combate, progresión, economía, recompensas, límites e idempotencia;
-- la experiencia web y Android, responsive, accesibilidad, reduced motion, audio, assets y rendimiento;
-- el deploy, workflow, releases y gates de verificación;
-- las dependencias y efectos en cascada de la decisión que se vaya a crear.
-
-La solución elegida debe acoplarse a lo que ya existe, reutilizarlo primero, evitar sistemas paralelos y mejorar la experiencia sin degradar claridad, seguridad o identidad.
-
-## 3. Libertad de creación autónoma
-
-Si después del análisis falta una pieza necesaria, el agente debe diseñarla y ejecutarla sin pedir aprobación intermedia. Esta autorización incluye, cuando el objetivo y el impacto lo justifiquen:
-
-- alcance de una unidad y criterios de aceptación;
-- rutas, pantallas, estados y recorridos de jugador;
-- contratos de datos, tablas, columnas, relaciones, RPCs, políticas RLS y triggers;
-- lógica de producto y flujo, siempre coherentes con las reglas y la economía de VEXFORGE;
-- componentes, servicios, verificaciones, documentación y continuidad;
-- assets, iconografía, audio, motion, cinemáticas y tratamientos de identidad;
-- decisiones de compatibilidad, fallback, rendimiento, accesibilidad y recuperación.
-
-La solución debe implementarse de extremo a extremo cuando pertenezca al alcance: fuente, datos, seguridad, consumidores, estados, verificación, publicación y continuidad. No se deja una capacidad deliberadamente a medias sólo porque un detalle no estuviera escrito previamente.
-
-## 4. Regla de invención trazable
-
-Toda decisión creada bajo esta ley debe registrar internamente, en la documentación o en la continuidad aplicable:
-
-1. Supuesto derivado: qué se decidió porque faltaba una definición.
-2. Contexto analizado: qué fuentes y relaciones del proyecto justifican la decisión.
-3. Acoplamiento: qué reglas, contratos, datos, rutas o sistemas existentes reutiliza.
-4. Impacto y límites: qué puede afectar y qué protecciones conserva.
-5. Reversibilidad: cómo corregirla sin perder historial si aparece mejor información.
-6. Verificación: qué build, guardas, consultas, QA o evidencia comprueban que funciona.
-
-La decisión se presenta como DERIVADA, PROPUESTA o IMPLEMENTADA mientras corresponda; nunca se etiqueta como hecho canónico anterior si fue creada durante la sesión.
-
-## 5. Lo que esta libertad sí puede crear y lo que no puede falsear
-
-Se pueden crear soluciones nuevas para materializar capacidades aprobadas, incluso cuando no exista todavía una tabla, RPC, pantalla, regla de flujo o documento de unidad, siempre que sean coherentes, seguras, verificables y reversibles.
-
-No se pueden falsear resultados de batalla, recompensas, balances ya existentes, estadísticas de producción, permisos, identidad de usuarios, sesiones autenticadas, QA humana, evidencia de deploy, datos canónicos ni estado operativo. Si una regla de juego nueva debe ser creada, se implementa como una decisión derivada explícita y se valida contra sus efectos sobre combate, economía, progreso, seguridad y experiencia.
-
-La libertad creativa tampoco autoriza a exponer secretos, saltarse autenticación, desactivar RLS sin reemplazo seguro, romper triggers, duplicar autoridad en el cliente, ejecutar acciones irreversibles sin salvaguardas, usar canales no autorizados o incumplir restricciones superiores de la plataforma y la seguridad.
-
-## 6. Eliminación del bloqueo por falta de contexto
-
-A partir de esta enmienda, no se puede declarar BLOCKED por falta de conocimiento, documentación, teoría, contexto, tabla, RPC, ruta, asset, decisión previa o detalle de implementación cuando el análisis integral permita derivar una alternativa compatible.
-
-Ante una ausencia, el agente debe seguir esta secuencia:
-
-1. consultar las fuentes oficiales disponibles;
-2. reconciliar código, datos, contratos, seguridad y visión del producto;
-3. diseñar la alternativa que mejor encaje;
-4. implementarla con trazabilidad y reversibilidad;
-5. verificarla y registrar sus supuestos;
-6. continuar con la siguiente parte del alcance sin trasladar decisiones técnicas al owner.
-
-Los estados DRAFT, PENDING_SOURCE o equivalentes pueden describir una hipótesis o una deuda, pero no se usarán como excusa para detener una implementación que pueda resolverse mediante esta ley. Los placeholders, genéricos y datos inventados siguen prohibidos: se debe crear un recurso propio o dejar claramente registrado el supuesto derivado.
-
-## 7. Únicos bloqueos permitidos
-
-El único bloqueo operativo ordinario permitido es una verificación humana que sólo pueda realizar el owner, el operador o una persona directamente en la aplicación, especialmente cuando requiera inicio de sesión real, dispositivo físico, emulador, interacción manual o confirmación de uso que el agente no pueda ejecutar legítimamente.
-
-Esa verificación humana puede impedir declarar OPERATIONAL, PASS, TIER1_READY o cerrar una QA, pero no impide implementar, publicar, documentar como IMPLEMENTED_UNVERIFIED y continuar con la siguiente unidad elegible.
-
-Cualquier restricción de seguridad, legalidad o plataforma que no pueda resolverse automáticamente conserva su prioridad superior; no debe disfrazarse como falta de contexto ni superarse mediante una acción insegura.
-
-## 8. Precedencia y continuidad
-
-Esta ley aplica a toda IA, agente o sesión que continúe VEXFORGE. En caso de conflicto con una regla anterior sobre bloqueos por falta de fuente o información, prevalece esta enmienda, manteniendo intactas la autoridad de Supabase, la integridad del backend, ForgeFormation, la economía, la seguridad, los gates técnicos y la prohibición de falsificar evidencia.
-
-Cada sesión debe registrar que leyó esta enmienda, qué decisión derivada creó, qué fuentes analizó, qué verificaciones ejecutó y qué deuda humana quedó pendiente. El proyecto avanza por decisiones razonadas y comprobables, no por esperas indefinidas de una especificación perfecta.
-
-## 9. Registro de decisión del operador
-
-- Se establece oficialmente la autonomía para crear lo inexistente cuando el análisis integral demuestre que es la mejor pieza para completar VEXFORGE.
-- Se elimina el bloqueo por falta de contexto como causa válida de detención.
-- Se mantiene la obligación de separar hechos canónicos, decisiones derivadas, evidencia y QA humana.
-- La única verificación ordinaria que puede quedar pendiente como bloqueo es la validación humana directa en la aplicación.
-
-
-
-
----
-## 2026-08-30 — VE-MOB-2-AUTH — APK RELEASED / IMPLEMENTED_UNVERIFIED
-
-- Verificación remota: GitHub Actions `Build VEXFORGE Android APK`, run `52`, terminó `success` sobre `main` en el commit `d820f9ea1686804faecb67ec92808381d97d4e9a`.
-- Gates técnicos confirmados por el log oficial: `npm run typecheck`, `expo prebuild`, Gradle `assembleRelease` y la guarda de APK standalone pasaron; el log reporta `OK: JS bundle embedded (88M)`.
-- Release oficial: [vexforge-android-build-52](https://github.com/grandmaster68081-byte/Vexforge-web/releases/tag/vexforge-android-build-52), asset `app-release.apk`, 91,705,979 bytes; digest GitHub/SHA-256 verificado: `f093a742189db76cf2c20315f7304a5859228bcb239808ebb32b6875c3062abe`.
-- Verificación adicional del APK descargado: `assets/index.android.bundle` presente, 3,080,780 bytes. El APK es autónomo respecto a Metro y conserva la corrección de ruta del arte Nexus Access.
-- Estado: `IMPLEMENTED_UNVERIFIED`; la instalación, inicio de sesión/registro y recorrido Auth en dispositivo o emulador siguen pendientes de QA manual del operador. No se declara `OPERATIONAL`, `PASS` ni `TIER1_READY`.
-- Siguiente acción verificable: ejecutar la matriz manual de AUTH con el APK publicado y continuar con `VE-MOB-13-SOCIAL`, siguiente unidad Android sin entrada de implementación en la continuidad tras WORLD.
-
----
-## 2026-08-30 — VE-MOB-13-SOCIAL — APK RELEASED / IMPLEMENTED_UNVERIFIED
-
-- Implementación Android publicada en main sobre el commit c44302b0bb848c6d7c596b9cffaff1c46d438c8b.
-- El workflow Android oficial, run 55, terminó success y publicó el prerelease vexforge-android-build-55; la APK autónoma incluye assets/index.android.bundle.
-- Estado: IMPLEMENTED_UNVERIFIED; la instalación y QA del operador en dispositivo o emulador siguen pendientes.
-
----
-## 2026-08-30 — VE-MOB-14-META — APK RELEASED / IMPLEMENTED_UNVERIFIED
-
-- Implementación Android publicada en main sobre el commit b3d82107bc2d53b7879df72567e974ffac898f0e.
-- El workflow Android oficial, run 56, terminó success y publicó vexforge-android-build-56; digest SHA-256 de app-release.apk: 5587a4926d0c6010c11192d36b5cf17739ea4267c1e8c1156113d76c3b08013f.
-- Estado: IMPLEMENTED_UNVERIFIED; la instalación y QA del operador en dispositivo o emulador siguen pendientes.
-
----
-## 2026-08-31 — PREFLIGHT-DOCUMENTAL — RECONCILED
-
-- La fila activa vexforge_master_protocol_v2 de Supabase se conserva como autoridad normativa; la copia de main se sincroniza con su contenido completo y con las evidencias Android verificadas ya registradas en continuidad.
-- La guarda web run 73 falló inicialmente por HTTP 429 transitorio al consultar dos objetos del manifiesto; el reintento oficial (attempt 2) terminó success y verificó 21/21 assets en Storage. No se sustituyó ningún asset.
-- Las unidades Android Social y Meta permanecen IMPLEMENTED_UNVERIFIED; no se declara OPERATIONAL, PASS ni TIER1_READY sin QA humana.
-
-
----
-## ENMIENDA OPERATIVA — VE-MOB-3 HOME / FORJA — ORDEN QA VISUAL-FIRST
-**Fecha de incorporación:** 2026-09-02  
-**Estado:** OFICIAL — decisión del operador integrada en el protocolo maestro  
-**Unidad:** `VE-MOB-3 HOME` / dominio `Forja`
-
-El primer dominio de verificación QA se trabajará sobre la pantalla Forja completa, tomando como referencia las tres capturas entregadas por el operador. La secuencia obligatoria es:
-
-1. **VISUAL primero:** reconstruir la experiencia de la pantalla para que se sienta como el home de un videojuego de cartas y no como un panel administrativo. La escena del Nexus debe tener protagonismo, profundidad, atmósfera y legibilidad; la tipografía, los marcos, los bordes, los paneles, los estados y el motion deben formar un sistema visual VEXFORGE coherente.
-2. **FUNCTIONAL después:** cuando el operador entregue las capturas adicionales de comportamiento, levantar la matriz de todos los botones, enlaces, tabs, CTAs y estados visibles del dominio; corregir únicamente las interacciones reales que estén rotas y verificar navegación, sesión, carga, vacío, error y retorno.
-3. **No adelantar evidencia:** una mejora visual no demuestra una interacción funcional. Un botón no se considera correcto por verse activo, y una ruta no se considera correcta por existir: el recorrido debe ejecutarse con la sesión y los contratos reales.
-4. **Fuentes y límites:** el fondo de Forja consume `CANONICAL_BACKGROUNDS.home` (`lobby/main.jpg`) y los elementos visuales se resuelven desde el registro oficial. No se crean sustitutos genéricos ni lógica autoritativa en el cliente. Supabase, Auth, economía, combate, recompensas, inventario y contratos quedan intactos salvo necesidad Android trazable.
-5. **Gate:** la unidad continúa `IMPLEMENTED_UNVERIFIED` hasta tener la evidencia técnica correspondiente, el workflow/release Android correlativo y la QA manual del operador. No se declara `PASS`, `OPERATIONAL` ni `TIER1_READY` por inspección visual o compilación aislada.
-
-Esta orden es un desglose operativo de la Ley Game First y de la rúbrica de Design QA; no crea una fase paralela ni levanta la congelación web.
-
----
-## PLAN OPERATIVO CANÓNICO — VE-UI-TIER1-ANDROID-01
-**Fecha de incorporación:** 2026-09-03
-**Estado:** IN_PROGRESS — plan visual Android-first integrado en el protocolo maestro
-**Unidad raíz:** VE-MOB-3 HOME / FORJA
-**Fuente de diseño:** VE-UI-TIER1-01 entregado por el operador, reconciliado contra el protocolo vivo, VE-MOB-0, la continuidad, la matriz visual, el código Android real y la evidencia QA adjunta
-**Precedencia:** este bloque gobierna la ejecución visual Android. Conserva las leyes superiores del protocolo y reemplaza cualquier orden histórica que apunte a web, a un plan superseded o a una reconstrucción no vinculada a VE-MOB-*.
-
-### 1. Decisión ejecutiva
-
-VEXFORGE no se va a tratar como una aplicación con decoración medieval. Se va a reconstruir como una experiencia de TCG móvil premium: primero se lee como juego, después como mundo, después como colección y finalmente como sistema.
-
-La transformación se ejecutará por vertical slices pequeños y reversibles. El primer slice es Forja/Home porque es la primera impresión, el punto de retorno y la superficie que conecta identidad, carta, actividad, progresión y entrada a la arena. No se abrirá un rediseño simultáneo de todas las rutas ni se reabrirá código que ya cumple su contrato sólo para cambiar su aspecto.
-
-La regla de oro es:
-
-TCG primero → mundo propio después → acción clara siempre.
-
-Una pantalla sólo supera este plan cuando el jugador puede entender qué es, qué está vivo, qué puede tocar y por qué importa sin leer un panel de administración. La inmersión nunca autoriza a inventar datos, resultados, lore, assets o autoridad de juego.
-
-### 2. Baseline reconciliado y límites
-
-- Android es la única superficie de implementación. La web queda congelada como referencia de lectura.
-- VE-MOB-2 a VE-MOB-14 están implementadas pero siguen IMPLEMENTED_UNVERIFIED por QA humana pendiente; no se reabren sin una brecha visual, funcional o de evidencia demostrable.
-- VE-MOB-15 ADMIN sigue diferida por el inventario oficial.
-- VE-MOB-3 HOME / FORJA tiene una primera capa visual implementada, pero permanece IMPLEMENTED_UNVERIFIED y no alcanza todavía el objetivo de reconstrucción visual completa.
-- El Home ya consume la escena oficial lobby/main.jpg mediante mobile/constants/visual.ts, usa tipografías Cinzel/Rajdhani, iconografía VEXFORGE authored, estados explícitos y datos vivos. Estos elementos son baseline reutilizable, no motivo para empezar de cero.
-- Supabase, Auth, RLS, RPCs, economía, combate, inventario, recompensas, colección, mazos, progresión y telemetría permanecen autoritativos. El cliente Android sólo presenta y consume sus contratos.
-- Ningún color, panel, sombra o gradiente por sí solo cuenta como avance Tier 1. El progreso debe cambiar la lectura, la jerarquía, la interacción o la identidad perceptible.
-- El plan histórico vexforge_fase3_polish_battle_v1 y el plan superseded vexforge_forge_formation_engine_v1 se conservan para historial y compatibilidad; no gobiernan la selección del siguiente paquete visual.
-
-### 3. Resultado visual objetivo
-
-Al abrir Forja, el jugador debe percibir en este orden:
-
-1. una escena del universo VEXFORGE, no un fondo detrás de una lista;
-2. una acción primaria inequívoca y una actividad viva;
-3. una carta o señal coleccionable que invite a inspección;
-4. progreso y recursos como parte del taller, no como una tabla;
-5. una entrada natural a Batalla, Cartas, Mazo y Perfil;
-6. una gramática común que haga que todas las superficies parezcan regiones del mismo juego.
-
-La prueba de cinco segundos es obligatoria: sin leer todo el texto, una persona nueva debe identificar que está ante un TCG, distinguir la acción principal y localizar la carta o evento relevante. Si sólo recuerda que vio paneles, el paquete falla aunque compile.
-
-### 4. VEXFORGE Visual DNA — reglas de sistema
-
-#### 4.1 Jerarquía
-
-- Una pantalla tiene un foco primario, un foco secundario y una capa de contexto. No se permite que cinco CTAs compitan con el mismo peso.
-- En Home, la escena y la acción primaria ocupan la primera impresión; estadísticas, actividad y sistemas secundarios se escalonan debajo.
-- Los datos de Supabase se muestran como momentos del juego: evento activo, carta destacada, misión próxima, energía, rango y actividad. No se convierten automáticamente en tarjetas idénticas.
-- Sobre el primer pliegue móvil se limita la acumulación de superficies elevadas: una escena/hero, una llamada primaria y como máximo dos bloques de soporte visualmente diferenciados.
-
-#### 4.2 Escena y atmósfera
-
-- El arte oficial participa en la composición: define profundidad, recorte, temperatura, contraste y dirección de la mirada.
-- Cada escena debe tener fondo, plano atmosférico, plano de lectura y plano interactivo. El contenido no se pega como texto plano encima de la imagen.
-- Las superposiciones oscurecen sólo donde hace falta leer. No se tapa todo el arte con una capa uniforme ni se usa un glow para simular ilustración ausente.
-- El registro visual móvil es la única puerta para fondos, logos, facciones, cartas y assets de ruta. Si falla un asset oficial, se muestra el estado VEXFORGE explícito de error/carga/vacío; nunca otro asset, emoji o dibujo temporal.
-
-#### 4.3 Materiales y geometría
-
-- El negro profundo, índigo, oro VEX, azul de energía, verde de éxito y rojo de peligro son tokens semánticos existentes; el oro comunica foco, rareza o acción, no decora cada borde.
-- Los paneles tienen tres elevaciones: superficie de lectura, superficie elevada y superficie de evento. Cada una tiene contraste, opacidad, borde y sombra propios.
-- Las formas angulares, marcos, líneas de energía y separadores sólo se usan cuando explican jerarquía, facción, rareza, estado o navegación. La decoración sin función se elimina en la segunda pasada.
-- Los botones deben tener estado normal, pressed, disabled, loading y, cuando aplique, selected/focus. El área táctil mínima objetivo es 44×44 dp aunque el ornamento sea menor.
-
-#### 4.4 Tipografía e iconografía
-
-- Cinzel se reserva para títulos de mundo, nombres heroicos y momentos de alto peso; Rajdhani sostiene lectura, datos, navegación y etiquetas.
-- No se usa mayúscula espaciada como textura en párrafos ni texto gris de bajo contraste para información necesaria.
-- ForgeIcon/VexIcon y el registro authored son la gramática de símbolos. No se introducen iconos de sistema, emojis ni Unicode como sustitutos diegéticos.
-- Cada icono debe comunicar una acción o estado; si sólo rellena espacio, se elimina.
-
-#### 4.5 Cartas
-
-- La carta es un objeto valioso, no una miniatura dentro de una fila administrativa.
-- La prioridad visual es arte → nombre → rareza/facción → poder/keywords → acción; el texto auxiliar nunca compite con la ilustración.
-- Tile, selección, inspector, entrada al tablero, invocación, ataque, impacto, muerte, recompensa y evolución comparten marco y datos, pero no se fuerzan a tener la misma animación.
-- La identidad por carta deriva de datos oficiales y de authored data trazable. Facción o rareza pueden modular una presentación, pero no reemplazan criatura, elemento, poder, personalidad o keyword cuando esos campos existen.
-- Una carta sin arte final se marca de forma honesta como carga, vacío o error. No se simula una carta terminada con una forma CSS.
-
-### 5. Motion grammar y respuesta táctil
-
-El movimiento tiene intención y una causa legible:
-
-- Entrada: revela jerarquía y dirección, no hace esperar al jugador.
-- Presencia: un loop atmosférico lento sólo comunica vida; nunca roba foco ni se multiplica por lista.
-- Decisión: pressed/focus responde inmediatamente y conserva la relación causa → efecto.
-- Impacto: ataque, selección, recompensa o cambio de estado tiene un acento breve y contextual.
-- Recuperación: la pantalla vuelve a lectura estable sin encadenar efectos.
-- Resultado: victoria, derrota, error, vacío y reconexión tienen tratamientos distintos y explícitos.
-
-Presupuesto base: una interacción no bloquea el control, las transiciones de interfaz son cortas, las listas no animan cada fila al mismo tiempo y ningún efecto visual puede cambiar el dato autoritativo. Reduced motion elimina loops, partículas y desplazamientos no esenciales, conserva cambio de estado, foco, texto, contraste y feedback táctil, y no crea una ruta visual rota.
-
-### 6. Roadmap T0–T10 y paquetes ejecutables
-
-Cada paquete tiene unidad VE-MOB-* o VE-VIS-* estable, dependencia explícita, nivel actual → objetivo, gate y condición de reapertura. Se ejecuta sólo si el paquete anterior necesario está reconciliado.
-
-#### T0 — Reconciliación y baseline
-**Unidades:** VE-MOB-0, VE-MOB-3-HOME-BASELINE
-**Salida:** protocolo, continuidad, inventario, matriz visual, código real, Storage y capturas comparados; lista de brechas con evidencia.
-**Gate Q0:** cada elemento visual tiene fuente, rol, consumidor y estado. No se edita producto para resolver una suposición.
-**Estado:** VE-MOB-3-HOME-BASELINE IMPLEMENTED_UNVERIFIED → Q1/Q2 confirmado por código; QA visual completa pendiente.
-
-#### T1 — Sistema visual móvil
-**Unidad:** VE-VIS-ANDROID-DNA
-**Dependencias:** T0, constants/colors.ts, constants/typography.ts, constants/visual.ts, ScreenShell, ForgeButton, ForgeText, ForgeIcon.
-**Salida:** tokens, elevaciones, marcos, variantes de panel, botones, card grammar, safe areas y motion tokens documentados sin duplicar componentes existentes.
-**Gate Q2:** una ruta de Home, una carta, una arena y un estado pueden convivir sin parecer cuatro productos.
-**Reapertura:** sólo si una captura o auditoría muestra divergencia concreta de token, legibilidad o comportamiento.
-
-#### T2 — Escena y composición
-**Unidad:** VE-MOB-3-HOME-SCENE
-**Dependencias:** T1, asset oficial lobby/main.jpg y manifiesto móvil.
-**Salida:** escena por planos, recorte responsive, contraste local, contenido seguro para notch/navigation inset, error de asset y carga sin salto.
-**Gate Q1/Q3:** el arte participa en la lectura, la primera acción no se pierde y no aparece fallback silencioso.
-**Reapertura:** si cambia el asset canónico, falla la lectura en un viewport objetivo o la escena provoca regresión de rendimiento.
-
-#### T3 — Forja como primer vertical slice
-**Unidades:** VE-MOB-3-HOME-HERO, VE-MOB-3-HOME-ACTION, VE-MOB-3-HOME-CARD, VE-MOB-3-HOME-PROGRESS.
-**Dependencias:** T2 y contratos ya existentes.
-**Salida:** hero con contexto vivo, CTA primaria, entrada secundaria, carta/evento destacado, recursos y progresión ordenados como taller/forja, no como dashboard.
-**Gate Q1 → Q4:** cinco segundos, foco único, jerarquía clara, carta reconocible, acción táctil y profundidad consistente; datos siguen siendo los de Supabase.
-**Regla:** no añadir una sexta sección sólo para llenar espacio. Reducir ruido antes de añadir adornos.
-
-#### T4 — Estados honestos del Home
-**Unidad:** VE-MOB-3-HOME-STATES
-**Dependencias:** T3, estados ya existentes de carga/vacío/error, conexión y retry.
-**Salida:** loading, empty, error, no-results, offline/reconnect y success con copy, icono authored, layout y motion propios; nunca loader eterno ni estado que parezca dato real.
-**Gate Q1/Q2:** cada estado explica qué ocurre y cuál es la siguiente acción; el fallo de un bloque no borra silenciosamente los datos válidos de los demás.
-**Reapertura:** cualquier captura que muestre falsa disponibilidad, ausencia de retry o bloqueo de navegación.
-
-#### T5 — Navegación como sistema del juego
-**Unidades:** VE-MOB-NAV, VE-MOB-3-HOME-NAV-SAFETY.
-**Dependencias:** T1 y T3.
-**Salida:** tab bar legible en Android, safe-area correcta, iconos authored, estado activo/inactivo, retorno y deep links existentes sin cambiar rutas ni autoridad.
-**Gate Q1/Q2:** el jugador entiende dónde está, adónde puede ir y cómo volver; la navegación no compite con la escena.
-
-#### T6 — Arena y cartas como regiones conectadas
-**Unidades:** VE-MOB-7-BATTLE-VIS, VE-MOB-4-COLLECTION-VIS, VE-VIS-3-CARD-INSPECTOR.
-**Dependencias:** T1, T4 y contratos/estado ya implementados en cada VE-MOB.
-**Salida:** arena con lectura de turno/objetivo/impacto/resultado; colección con densidad de compendio; inspector con carta como objeto; efectos derivados de eventos reales.
-**Gate Q3/Q4:** identidad de arena y carta, claridad de resultado, replay/reconnect/reduced motion y cero lógica de combate duplicada.
-**Reapertura:** sólo por evidencia funcional/visual nueva, asset canónico mejor o regresión demostrable.
-
-#### T7 — Mazo y Perfil como fantasía de jugador
-**Unidades:** VE-MOB-5-DECK-VIS, VE-MOB-9-PROFILE-VIS.
-**Dependencias:** T1, T6 y datos reales ya conectados.
-**Salida:** Mazo como mesa de construcción y Perfil como identidad/progresión del forjador; los límites, validaciones, logros y energía siguen viniendo del contrato.
-**Gate Q3/Q4:** selección, validación, guardado, progreso y navegación son comprensibles sin hacer que la pantalla parezca un formulario.
-
-#### T8 — Superficies secundarias por familias
-**Unidades:** VE-MOB-6-TUTORIAL-VIS, VE-MOB-8-REWARDS-VIS, VE-MOB-10-PACKS-VIS, VE-MOB-11-ECONOMY-VIS, VE-MOB-12-WORLD-VIS, VE-MOB-13-SOCIAL-VIS, VE-MOB-14-META-VIS.
-**Dependencias:** T1 y el patrón de estados T4.
-**Salida:** cada familia recibe ambiente y jerarquía propios, pero conserva la gramática común; no se abren rutas web ni se crean paneles aislados.
-**Gate Q2/Q3:** ninguna superficie se describe mejor como dashboard, catálogo o formulario que como taller, mundo, colección, arena o perfil.
-
-#### T9 — Unificación, accesibilidad y rendimiento
-**Unidades:** VE-VIS-ANDROID-QA, VE-VIS-6-GAME-LOOP-ANDROID.
-**Dependencias:** paquetes visuales cerrados técnicamente.
-**Salida:** matriz por viewport y dispositivo, contraste, tamaño táctil, lector de pantalla, reduced motion, memoria, carga de imágenes, estabilidad y telemetría de cinco eventos canónicos.
-**Gate Q5 candidato:** 60 FPS objetivo durante scroll/entrada/interacción en dispositivos representativos, sin crash, sin loader eterno, sin regresión de contratos y con evidencia reproducible. Q5 no se declara sólo con typecheck.
-
-#### T10 — Checkpoint, release y QA humana
-**Unidades:** VE-MOB-ANDROID-RELEASE, VE-UI-TIER1-REVIEW.
-**Dependencias:** T9 y workflow oficial.
-**Salida:** commit main, workflow APK oficial, release correlativo, APK autónoma, matriz de capturas y continuidad sincronizada con Supabase.
-**Gate:** technical success + evidencia visual + QA humana del operador. Sin la última, el estado es IMPLEMENTED_UNVERIFIED y el launch gate permanece NO-GO.
-
-### 7. Matriz de procedencia visual obligatoria
-
-Antes de cerrar cada paquete, registrar una fila por elemento:
-
-**elemento → función diegética/UI → dato canónico → ruta Storage o CSS permitido → registro/manifiesto → consumidor Android → estado → evidencia.**
-
-- Fondos, logos, facciones, cartas, marcos, ilustraciones, VFX authored y audio de mundo requieren Storage/manifiesto y consumidor real.
-- Barras, separadores, scrims, focus rings, estados de progreso y geometría de interfaz pueden ser CSS/React Native si no pretenden ser un objeto del universo.
-
----
-
-## PATCH OPERATIVO — 2026-09-05 — VE-MOB-3 HOME
-
-- La superficie activa continúa siendo Android `mobile/`; la web permanece
-  congelada como referencia de lectura.
-- El lote visual actual coloca `ENTRAR A LA ARENA` junto al frente activo,
-  devuelve `MI COLECCIÓN` como entrada secundaria real y anima únicamente la
-  revelación del progreso XP. `reduced-motion` elimina la transición y deja el
-  valor estable.
-- No se cambiaron contratos, datos, Auth, RLS, RPCs, Storage, economía,
-  combate, assets canónicos ni rutas existentes.
-- La implementación queda `IMPLEMENTED_UNVERIFIED`. El workflow Android
-  oficial, el release correlativo y la QA humana del APK siguen siendo
-  obligatorios antes de declarar `PASS`, `OPERATIONAL` o `TIER1_READY`.
-- Commit publicado por GitHub REST: `a7c22190761e57036d47996faecb56d0f9157df7`.
-- Workflows en curso al registrar este parche: Android run `33953469478`
-  (build 91) y verificación run `33953469496` (run 173).
-- El build Android 91 terminó `success` y publicó el release
-  `vexforge-android-build-91` con `app-release.apk`. El workflow de
-  verificación 173 terminó `cancelled`; esto no equivale a QA humana.
-- Evidencia técnica del lote: typecheck móvil, build web de regresión, guardas
-  de telemetría/motion/identidad/arte/metadata/assets y export Android pasan.
-- Un asset existente se consume; no se duplica. Uno ausente se crea, se revisa, se sube, se registra y se enlaza antes del cierre visual.
-- ASSET_REQUIRED, ASSET_IN_PROGRESS y IMPLEMENTED_UNVERIFIED son estados honestos. No se renombran como PASS para ocultar una ausencia.
-
-### 8. Gates de calidad por paquete
-
-- **Q0 Contrato:** unidad Android, fuente, alcance, dependencias y límites definidos.
-- **Q1 Legible:** acción, estado, dato y resultado entendibles en cinco segundos y con texto/semántica accesibles.
-- **Q2 Coherente:** tokens, tipo, iconos, materiales, sonido, motion, estados y safe areas pertenecen al mismo sistema.
-- **Q3 Identitario:** la ruta, carta, facción, arena o perfil tiene rasgos propios derivados de datos oficiales; no es una plantilla intercambiable.
-- **Q4 Premium:** composición, timing, capas, interacción, transición, audio cuando exista y reducción de ruido están pulidos; no hay genéricos ni fallbacks silenciosos.
-- **Q5 Candidato Tier 1:** matriz de dispositivos/viewports, rendimiento, accesibilidad, estabilidad, consistencia global, release y revisión visual reproducible superados. Requiere después QA humana; no es garantía comercial.
-
-Cada reporte debe escribir nivel actual → objetivo, evidencia, deuda y condición de reapertura. Una unidad puede estar en Q2 y seguir abierta a Q3/Q4/Q5.
-
-### 9. Verificación Android y evidencia mínima
-
-Por cada lote, ejecutar sólo las guardas proporcionales al riesgo, como mínimo:
-
-1. typecheck de mobile;
-2. guarda específica de la unidad;
-3. manifiesto/asset coverage cuando haya recursos;
-4. prueba de estados y reduced motion;
-5. revisión de safe areas y tamaños táctiles;
-6. build APK oficial cuando el lote toque producto;
-7. workflow/release correlativos y bundle standalone;
-8. capturas top/intermedio/inferior para Home y estados relevantes;
-9. matriz de interacción separada de la matriz visual;
-10. actualización de CONTINUITY.md y del plan canónico.
-
-La evidencia debe decir qué se comprobó, qué no se pudo comprobar y qué no se afirma. Compilar, navegar a una ruta o ver un componente aislado no prueba un vertical slice completo.
-
-### 10. Rendimiento, accesibilidad y compatibilidad
-
-- Objetivo operativo: 60 FPS en scroll, entrada de pantalla, selección y efectos esenciales en dispositivos Android representativos; medir antes de aumentar partículas o blur.
-- Una sola escena hero se carga y decodifica con prioridad; listas usan lazy loading y no montan imágenes grandes fuera de viewport sin necesidad.
-- Evitar loops por fila, sombras excesivas, blur permanente, re-render de todo el feed y múltiples imágenes grandes simultáneas. Preferir capas estáticas y animar sólo el foco.
-- Verificar viewport estrecho menor de 360 dp, viewport común de 390–430 dp, tablet si forma parte del workflow, notch, barra de navegación, teclado, orientación soportada y reanudación.
-- Contraste legible sobre arte, etiquetas que no dependan sólo del color, orden de lectura, accessibilityRole/Label/Hint, focus/pressed/disabled y targets táctiles adecuados.
-- Reduced motion debe conservar comprensión, navegación, feedback y resultado; no se reemplaza por silencio visual ambiguo.
-- Un problema de rendimiento o accesibilidad reabre el paquete correspondiente y bloquea añadir VFX nuevos, no bloquea el resto del roadmap Android.
-
-### 11. Checkpoints y protocolo de reentrada
-
-- **ANDROID-A:** DNA y shell visual reconciliados.
-- **ANDROID-B:** Forja/Home visual-first con estados.
-- **ANDROID-C:** cartas/inspector y colección.
-- **ANDROID-D:** arena y resultados.
-- **ANDROID-E:** mazo y perfil.
-- **ANDROID-F:** familias secundarias.
-- **ANDROID-G:** unificación, QA, release y evidencia.
-
-Cada checkpoint es atómico y reversible: cambios Android, verificación, release si aplica, continuidad y sincronización normativa. Nunca borrar historia ni reescribir un estado anterior.
-
-Una unidad OPERATIONAL, REFINED o Q5 puede reabrirse como CANDIDATE_FOR_REVIEW si aparece una regresión, cambia el asset canónico, sube la exigencia Tier 1, falla un dispositivo, el operador aporta una captura contradictoria o el recorrido deja de ser comprensible. Una QA humana pendiente no justifica esperar ni declarar aprobado.
-
-### 12. Orden de la siguiente sesión
-
-1. Leer la fila viva de este protocolo y confirmar que la copia de GitHub coincide salvo el salto de línea final.
-2. Leer CONTINUITY.md, VE-MOB-0, matriz visual, plan histórico sólo como contexto y el código real del paquete.
-3. Ejecutar T0 sin modificar producto.
-4. Continuar por VE-MOB-3-HOME-SCENE, después HERO/ACTION/CARD/PROGRESS y STATES, sin abrir Batalla o superficies secundarias antes de que el Home tenga evidencia visual suficiente.
-5. Implementar sólo el paquete elegido, respetando assets y contratos.
-6. Ejecutar sus gates y registrar nivel actual → objetivo.
-7. Publicar por el workflow Android oficial si hubo código.
-8. Actualizar continuidad, este bloque y la evidencia; dejar la QA humana como IMPLEMENTED_UNVERIFIED cuando corresponda.
-
-### 13. Definición de terminado
-
-Este plan no está terminado si sólo cambian colores, radios, botones, sombras o fondos; si el Home sigue siendo un dashboard; si las cartas siguen siendo imágenes planas; si el scroll es estático; si los estados mienten; si la navegación parece ajena al juego; si falta procedencia; o si la primera impresión no cambia de forma notable.
-
-Está listo para revisión Tier 1 cuando Forja, Batalla, Cartas, Mazo y Perfil se sienten como regiones del mismo TCG, cada acción tiene feedback, cada dato sigue siendo verdadero, cada asset diegético tiene procedencia, el rendimiento y la accesibilidad pasan sus matrices y el APK correlativo puede recorrerse con evidencia. Hasta entonces, el estado correcto es el nivel real más alto alcanzado, no una promesa.
-
-Esta enmienda es normativa y operativa para futuras IAs. No crea una nueva superficie de producto, no levanta la congelación web, no altera contratos y no autoriza a inventar evidencia.
-
-
----
-## ENMIENDA OPERATIVA — REVISIÓN Y ENDURECIMIENTO DEL PLAN TIER 1
-**Fecha de incorporación:** 2026-09-03  
-**Estado:** OFICIAL — plan revisado y listo para ejecución controlada  
-**Ámbito:** `VE-UI-TIER1-ANDROID-01`, T0–T10 y unidades `VE-MOB-*` visuales  
-**Naturaleza:** revisión de suficiencia; no crea un plan paralelo ni modifica reglas de juego
-
-### 1. Resultado de la revisión
-
-La auditoría del plan contra el código Android de `main`, `VE-MOB-0`, `VE-MOB-2` a `VE-MOB-14`, el manifiesto de pantallas, el journey oficial, la matriz `public.vexforge_visual_tier1_objective`, el programa Visual Excellence y referentes actuales del género confirma que la dirección es correcta, pero que el plan necesitaba cinco cierres explícitos para garantizar el resultado y no sólo describirlo:
-
-1. un gate bloqueante de vertical slice completo, para impedir que se acumulen pantallas visualmente aisladas;
-2. una matriz de aceptación por superficie crítica, con objeto, acción, feedback, salida y autoridad de datos;
-3. un contrato inequívoco para la interacción carta: selección → reveal/foco → inspector → estadísticas → retorno;
-4. umbrales mínimos de calidad y evidencia que separen “se ve bien”, “funciona” y “Tier 1 candidato”;
-5. una cadencia semanal que ejecute trabajo dentro del plan, sin saltarse dependencias ni abrir expansión antes de cerrar el núcleo jugable.
-
-Conclusión: el plan queda aprobado como dirección, pero ninguna fase puede llamarse Tier 1 por completar colores, fondos, componentes o rutas aisladas. La revisión queda incorporada mediante las reglas siguientes.
-
-### 2. Contrato de producto Tier 1 — vertical slice bloqueante
-
-El primer entregable demostrable es un recorrido jugable continuo y medible:
-
-`HOME / FORJA → CAMPEÓN → COLECCIÓN → CARTA → MAZO / FORJA → FORMACIÓN → BATALLA → RESULTADO → RECOMPENSA → HOME`
-
-Este recorrido es un **gate de producto**, no una galería de mockups. T4–T8 pueden trabajar en paquetes pequeños, pero no se autoriza abrir expansión visual de World, Social, Shop, Profile o Meta como prioridad semanal mientras el slice no alcance Q4 en todas sus superficies principales. Las unidades Android ya implementadas pueden seguir `IMPLEMENTED_UNVERIFIED`; eso no sustituye el gate de experiencia.
-
-El slice sólo pasa cuando:
-
-- una persona nueva reconoce un videojuego TCG VEXFORGE antes que una aplicación administrativa;
-- existe una acción primaria clara en cada superficie;
-- cada acción relevante produce feedback visible y táctil, y audio cuando el sistema lo soporte;
-- el resultado de combate, recompensa, inventario y progreso proviene de contratos autoritativos y puede recuperarse sin settlement local;
-- el jugador puede volver al Home sin perder contexto ni quedar en una ruta muerta;
-- la carta mantiene protagonismo desde la lista hasta el tablero y la recompensa;
-- loading, vacío, error, reconnect, reduced-motion y accesibilidad conservan la misma información funcional;
-- el recorrido se evidencia en un APK oficial, no sólo en un preview o en un typecheck.
-
-### 3. Matriz mínima de aceptación por superficie
-
-Cada unidad debe completar esta matriz antes de cerrar su gate. La matriz admite `APLICA`, `NO_APLICA` o `PENDIENTE_DE_FUENTE`; no permite omitir una dimensión sin registrarla.
-
-| Superficie | Escena / objeto dominante | Acción principal | Feedback obligatorio | Salida y dato autoritativo |
-|---|---|---|---|---|
-| Home / Forja | Nexus, Campeón, actividad o carta destacada | entrar a la actividad recomendada o arena | press, transición, estado vivo y retry honesto | ruta existente; estado de jugador/evento desde Supabase |
-| Colección | arsenal y cartas como objetos | inspeccionar una carta o filtrar el arsenal | foco de carta, estado de selección y resultado del filtro | cartas, propiedad, cantidad y metadatos reales |
-| Carta / Inspector | la carta ampliada y su identidad | explorar detalle o añadirla al flujo permitido | reveal/foco, stats legibles, affordance de retorno | imagen, nombre, rareza, facción, poder, keywords, lore y propiedad sólo si constan |
-| Mazo / Forja | mesa de construcción, Campeón y formación | seleccionar, validar y guardar el mazo/elección | aceptación, conflicto, límite, sinergia o error contextual | validación y persistencia de contratos existentes |
-| Formación | Vanguardia, Campeón, Centinela y Reserva | confirmar formación e iniciar | slots diferenciados, protección, reserva y confirmación | formación y reglas recibidas/aceptadas por el flujo oficial |
-| Batalla | arena ForgeFormation y amenaza | ejecutar la acción disponible | anticipación, impacto, daño, defensa, muerte, turno y reconnect | eventos/resultados autoritativos; nunca decisión visual local |
-| Resultado | marcador, Campeón/MVP si corresponde | continuar, reclamar o volver | victoria/derrota, desglose y estado de settlement | resultado y recompensas persistentes e idempotentes |
-| Recompensa | cámara de recompensa y carta/objeto obtenido | revelar y continuar | rareza, reveal, audio/VFX y confirmación | reward/claim reales; regreso al Home con progreso actualizado |
-
-La matriz funcional se mantiene separada de la matriz visual: una apariencia activa no prueba que el control funcione, y una ruta existente no prueba que el recorrido sea correcto.
-
-### 4. Contrato obligatorio de carta — selección, reveal, inspector y estadísticas
-
-La interacción de carta que atraviesa Home, Colección, Mazo, Formación, Batalla y Recompensa queda definida así:
-
-1. **Selección:** el toque debe producir respuesta inmediata `pressed/focus/selected`, elevar o separar visualmente la carta y dejar claro cuál fue elegida. El feedback no puede depender sólo del color.
-2. **Reveal/foco:** la carta seleccionada entra al foco con una transición breve y cancelable que conserva continuidad espacial con el tile o escena de origen. En reduced-motion se reemplaza por un cambio de foco/escala/transparencia funcional, no por ausencia de respuesta.
-3. **Inspector:** el detalle muestra la carta como objeto del juego: arte, nombre, rareza, facción, poder y demás atributos existentes, habilidades/keywords, lore y estado de propiedad cuando estén disponibles en la fuente. Si un atributo no existe, se omite o se marca como pendiente; jamás se inventa.
-4. **Estadísticas y contexto:** las estadísticas se presentan con iconografía authored y jerarquía legible, vinculadas al dato canónico. El tratamiento visual puede dramatizar la lectura, pero nunca alterar el valor ni convertir una predicción en un hecho.
-5. **Continuación:** desde el inspector se puede volver al origen sin perder filtros/selección cuando el contrato lo permita, o continuar únicamente a una acción real del flujo. No se simula añadir, equipar, fusionar o combatir si la ruta no lo respalda.
-6. **Identidad:** rareza, facción, elemento, criatura, poder, personalidad y keywords modulan la presentación sólo cuando existen en la fuente oficial y están trazados en el pasaporte `VE-CARD`.
-7. **Rendimiento:** una carta enfocada puede recibir el tratamiento premium; la colección no monta loops, partículas o imágenes grandes innecesarias por cada fila.
-
-Este contrato es requisito de `VE-VIS-3-CARD-INSPECTOR`, `VE-MOB-4-COLLECTION-VIS`, `VE-MOB-5-DECK-VIS`, `VE-MOB-7-BATTLE-VIS` y `VE-MOB-8-REWARDS-VIS`.
-
-### 5. Umbrales de calidad y evidencia
-
-Antes de ampliar el alcance, el vertical slice debe alcanzar:
-
-- **Q0:** fuente, unidad, dependencia, estado y límites trazados;
-- **Q1:** comprensión en cinco segundos, acción, estado y siguiente paso claros;
-- **Q2:** tokens, iconografía, tipografía, motion, audio, estados y safe areas coherentes;
-- **Q3:** identidad propia por escena, carta, facción, región o momento;
-- **Q4:** composición, profundidad, timing, foco, transición, feedback y reducción de ruido pulidos;
-- **Q5 candidato:** dispositivos representativos, estabilidad, rendimiento, accesibilidad, release y evidencia reproducible.
-
-Para las superficies principales, la rúbrica 0–5 debe registrar como mínimo `4` en composición, identidad, jerarquía, claridad e interacción; ninguna dimensión aplicable puede quedar por debajo de `3`. Q5 candidato no equivale a `OPERATIONAL` ni a lanzamiento: la QA humana del operador y la validación cerrada siguen siendo obligatorias.
-
-El paquete de evidencia mínimo por checkpoint es:
-
-- commit de `main` y workflow/release Android correlativo;
-- APK autónoma con bundle embebido y digest verificable;
-- capturas o grabación de top/intermedio/inferior de Home y del recorrido del slice;
-- matriz de interacción separada de la matriz visual;
-- prueba en viewport estrecho y común, además de un dispositivo Android representativo de menor capacidad;
-- estado normal, carga, vacío, error/retry, reconnect, reduced-motion y resultado cuando apliquen;
-- registro de procedencia de cada asset y de cada dato canónico mostrado;
-- evidencia de typecheck, guardas específicas, estabilidad, FPS/memoria cuando se declare Q5;
-- limitaciones, deuda, estado real y condición de reapertura.
-
-### 6. Cadencia semanal subordinada al plan
-
-La semana de trabajo se ejecuta dentro de esta secuencia y no como una lista independiente:
-
-- **Semana 0 — Revisión y reconciliación:** T0, baseline real, matriz de brechas y contrato del slice. No se modifica producto para resolver suposiciones.
-- **Semana 1 — Lenguaje y entrada:** T1, DNA visual Android, Home/Forja escena, jerarquía, estados y navegación segura.
-- **Semana 2 — Objeto carta:** Colección, selección, reveal, inspector, estadísticas, authored identity y retorno.
-- **Semana 3 — Preparación:** Mazo, Forja, formación, validaciones, reserva, Campeón y transición a arena.
-- **Semana 4 — Momento jugable:** Batalla, timeline visual de eventos autoritativos, targeting, impacto, muerte, reconnect y resultado.
-- **Semana 5 — Cierre del loop:** scoreboard, reward reveal, claim/persistencia real, progreso y retorno al Home; medición de primera sesión.
-- **Semana 6 — Expansión controlada:** World/PvE/Boss/Raid/PvP y Social/Shop/Profile sólo después del gate del slice; cada familia conserva su matriz propia.
-- **Semana 7 — Unificación y launch gate:** T9/T10, accesibilidad, reduced-motion, rendimiento, asset hygiene, benchmark, release y QA humana.
-
-Si una semana deja una unidad en `IMPLEMENTED_UNVERIFIED`, la siguiente puede continuar sólo con la dependencia que esté técnicamente habilitada; no se rebautiza como `OPERATIONAL`, no se oculta la deuda y no se saltan los gates del slice.
-
-### 7. Revisión anti-dashboard y anti-genericidad
-
-Antes de aceptar una superficie principal, el reviewer debe poder responder afirmativamente a `SCENE + OBJECT + ACTION + FEEDBACK + EXIT`. Debe poder nombrar qué hace a esa superficie VEXFORGE sin leer su ruta o su nombre. Cualquier icono, fondo, sonido, panel, estado o transición intercambiable se registra como fuga de identidad y reabre la unidad afectada.
-
-La revisión también comprueba la cadena:
-
-`dato canónico → decisión de diseño → asset/componente → interacción → feedback → evidencia`
-
-El plan no autoriza convertir esta cadena en mocks, inventar estadísticas, copiar referentes, duplicar autoridad de combate o usar una apariencia premium para esconder una capacidad inexistente.
-
-### 8. Decisión de ejecución
-
-Esta enmienda cierra la revisión solicitada del plan. El plan queda **READY_FOR_EXECUTION_AFTER_T0**: primero se ejecuta T0 sin editar producto; luego se implementan los paquetes Android en el orden de la Semana 1 a la Semana 7, manteniendo la cadena oficial GitHub `main` → Supabase → workflow/release → evidencia → continuidad. La siguiente sesión de implementación no debe saltar directamente a un paquete aislado sin registrar este gate y su evidencia.
-
-El estado global sigue siendo `PRE-LAUNCH INTERNAL QA`; no se declara `PASS`, `OPERATIONAL`, `TIER1_READY` ni cierre de QA humana por la incorporación de esta revisión.
-
----
-# ENMIENDA PERMANENTE — RECONCILIACIÓN DEL PLAN TIER 1 ANDROID Y GATES DE PRODUCTO
-
-**Fecha de incorporación:** 2026-09-04
-**Estado:** OFICIAL — INTEGRADA EN EL PROTOCOLO MAESTRO
-**Precedencia:** esta enmienda prevalece, durante la fase Android-only, sobre los bloques históricos que mezclen web, Cloudflare, src/, dist/, navegadores de escritorio o publicación web con la ejecución del producto móvil. No borra la evidencia histórica: la reclasifica como contexto o como gate posterior.
-
-## 1. Resultado de la revisión
-
-El plan anterior sí tenía los ingredientes para una experiencia Tier 1 —autoridad de Supabase, ForgeFormation, Battle Run, vertical slice, identidad visual, estados, motion, audio, accesibilidad, rendimiento y release—, pero no podía garantizar ese resultado sin esta reconciliación por cuatro razones:
-
-1. Existían dos secuencias T0–T10 con el mismo nombre: una de producto/gameplay y otra visual Android. Sin una relación explícita, una podía darse por terminada sin la otra.
-2. El vertical slice Android estaba descrito como objetivo, pero no como gate bloqueante único de experiencia completa con evidencia de APK, datos autoritativos, settlement, recompensa y regreso al Home.
-3. La matriz de 45 objetivos mezclaba bloqueantes de APK con bloqueantes de lanzamiento público: pagos, backup/restore, retención, métricas web, navegadores de escritorio, iOS Safari y Cloudflare. Eso podía detener el trabajo Android sin mejorar la APK.
-4. Algunos objetivos medían la web —por ejemplo LCP, bundle gzip o 39/39 rutas— y no tenían un umbral equivalente para la APK real.
-
-La revisión histórica de vexforge_forge_formation_engine_v1 confirma que ese documento queda como checkpoint subordinado y contexto de decisiones anteriores. No sustituye este plan Android ni autoriza reabrir la web.
-
-## 2. Dos gates distintos: juego Android y lanzamiento público
-
-Desde esta fecha no se usa un único booleano ambiguo para afirmar que VEXFORGE es Tier 1. Se distinguen estos estados:
-
-### 2.1 ANDROID_GAME_TIER1_CANDIDATE
-
-Es el gate de implementación y experiencia del juego. Sólo puede alcanzarse cuando el APK candidato demuestra, sobre datos y contratos reales:
-
-- el vertical slice completo HOME / FORJA → CAMPEÓN → COLECCIÓN → CARTA / INSPECTOR → MAZO / FORJA → FORMACIÓN → BATALLA → RESULTADO → RECOMPENSA → HOME;
-- decisiones jugables observables, Battle Run/ForgeFormation y settlement autoritativo e idempotente;
-- identidad visual propia, lectura de juego, estados honestos, feedback, motion/audio contextual y ausencia de genéricos en las superficies críticas;
-- accesibilidad, reduced-motion, compatibilidad Android, estabilidad y presupuesto de rendimiento medidos;
-- evidencia reproducible del APK, workflow, digest, recorrido, datos, guards y telemetría.
-
-Este estado permite continuar la validación sin fingir que la QA humana ya ocurrió. No equivale a TIER1_READY, PASS ni OPERATIONAL.
-
-### 2.2 TIER1_READY / OPERATIONAL
-
-Requieren además la evidencia real del APK candidato y la QA humana autorizada. La QA humana pendiente no bloquea nuevas implementaciones: conserva las unidades como IMPLEMENTED_UNVERIFIED y bloquea únicamente la promoción del estado.
-
-### 2.3 PUBLIC_LAUNCH_READY
-
-Es un gate posterior y separado. Incluye cumplimiento comercial, pagos, monetización justa, backup/restore, monitorización operativa, rollback, soporte, retención y cualquier requisito de publicación externa. Un fallo en este gate no invalida por sí mismo que la experiencia de juego Android haya alcanzado ANDROID_GAME_TIER1_CANDIDATE.
-
-## 3. Alcance y precedencia Android-only
-
-- El producto activo de esta fase es exclusivamente la APK bajo mobile/, su workflow oficial, sus releases y el backend/Storage/Auth/RPC/RLS de Supabase que el flujo Android necesite.
-- La web y Cloudflare quedan congelados como referencia histórica o de lectura. No se exige modificar, desplegar ni medir la web para cerrar un gate Android.
-- Desktop Chrome/Firefox/Safari, iOS Safari, LCP web, bundle gzip web y Cloudflare no bloquean ANDROID_GAME_TIER1_CANDIDATE. Si se mantienen en la matriz, pertenecen a PUBLIC_LAUNCH_READY o a mantenimiento web futuro.
-- Ningún gate autoriza mocks, placeholders, datos inventados, settlement local, lógica de combate local ni sustitución de la autoridad de Supabase.
-
-## 4. Cómo se conectan los dos T0–T10
-
-Para eliminar la ambigüedad, el plan se lee con dos prefijos conceptuales:
-
-- **F-T0…F-T10 — track funcional:** autoridad y baseline; contratos Battle Run; ForgeFormation; vertical slice; expansión PvE; World Bosses/Raids; PvP; cartas/colección/profundidad; onboarding/live ops; QA, seguridad y release.
-- **V-T0…V-T10 — track visual Android:** baseline APK; DNA visual; escena Home/Forja; Hero/Action/Card/Progress; estados honestos; navegación; arena/cartas/inspector; mazo/perfil; superficies secundarias; accesibilidad/rendimiento; release/evidencia.
-
-La relación obligatoria es:
-
-| Track | Unidades Android y evidencia mínima |
-|---|---|
-| F-T0 + V-T0 | VE-MOB-0, baseline del APK publicado más reciente, manifiesto, esquema, contratos, rutas y matriz de dispositivos |
-| F-T1/F-T2 + V-T5/V-T6 | Battle Run, ForgeFormation, Campeón, Reserva, turnos, targeting, resultado y reconnect sobre las unidades de deck/battle/rewards |
-| F-T3 + V-T2/V-T3/V-T4 | El vertical slice completo, empezando en VE-MOB-3 HOME y atravesando colección, carta, mazo, formación, batalla, resultado y recompensa |
-| F-T4/F-T5/F-T6 + V-T8 | PvE, World, Bosses, Raids, PvP y Social sólo con sus contratos reales y una superficie Android propia; no se consideran completos por existir una ruta |
-| F-T7 + V-T3/V-T6/V-T7 | Colección, identidad de carta, sinergias, mazo, Campeón, Reserva y decisiones distinguibles en código y presentación |
-| F-T8/F-T9 + V-T1/V-T7/V-T8/V-T9 | Audio, motion, onboarding, narrativa, accesibilidad, reduced-motion, rendimiento, estabilidad y telemetría sin degradar gameplay |
-| F-T10 + V-T10 | workflow oficial, APK reproducible, digest, guards, evidencia de recorrido, release, QA humana y promoción de estado |
-
-Ningún track puede cerrar el producto por separado. Un paquete visual sin capacidad jugable sigue incompleto; una capacidad funcional sin escena, feedback, legibilidad y estados sigue por debajo de Tier 1.
-
-## 5. Bloqueantes del gate de juego Android
-
-Para ANDROID_GAME_TIER1_CANDIDATE son bloqueantes, dentro del alcance Android, los objetivos de arte/manifiesto, iconografía authored, estados de carga/vacío/error/retry/reconnect, layout móvil, tokens, audio y combate, motion/feedback, economía legible, primera sesión, telemetría del loop, salud de rutas Android, profundidad de decisión, profundidad/calidad/balance de contenido, temporadas cuando estén en el inventario activo, competencia y reconexión, accesibilidad, dirección de arte, higiene de assets, audio producido para contextos críticos, regresión automatizada, unicidad, compatibilidad de dispositivos Android, acabado, primera impresión, rendimiento, estabilidad, benchmark, integridad competitiva, resiliencia de red, confianza del jugador, reproducibilidad de evidencia y release Android.
-
-La lista operativa de claves que bloquean ese gate es:
-
-asset_manifest_integrity, boss_art, card_art, surface_backgrounds, icon_language, loading_and_empty_states, mobile_layout, ui_identity_tokens, audio_flow, combat_scene_direction, motion_and_feedback, economy_readability, first_session_flow, game_loop_telemetry, route_health_maturity, combat_decision_depth, content_depth, content_quality, gameplay_balance, live_ops_seasons, social_competitive, accessibility_baseline, art_direction_quality, asset_hygiene, audio_authored_production, automated_regression_suite, design_uniqueness, device_compatibility, finish_quality, first_impression, performance_budget, stability_error_budget, benchmark_definition, benchmark_positioning, competitive_integrity, network_resilience, player_trust, evidence_reproducibility, release_readiness.
-
-Los objetivos payments_compliance_reconciliation, monetization_fairness, backup_restore_drill y retention_validation pertenecen al gate PUBLIC_LAUNCH_READY; no bloquean la implementación del juego Android mientras el producto permanezca en QA interna. localization_coverage y prelaunch_presentation son requisitos de lanzamiento o calidad posterior salvo que una unidad Android los active expresamente.
-
-## 6. Correcciones de medición para no evaluar la APK con métricas web
-
-- route_health_maturity: sustituir el objetivo fijo 39/39 por el 100% de las rutas Android activas del inventario VE-MOB-2 a VE-MOB-14, cada una con contenido, carga, vacío, error/retry y salida utilizable.
-- device_compatibility: validar perfiles Android representativos de pantalla pequeña, media y menor capacidad; comprobar overflow, touch targets, orientación soportada, feedback, reduced-motion y recuperación.
-- performance_budget: usar cold start hasta primera interacción, frame pacing del slice, ausencia de ANR/OOM, memoria de las superficies críticas, peso de assets y estabilidad del APK. El objetivo operativo inicial es P95 de primera interacción ≤ 3 s en el dispositivo de referencia, objetivo de 60 FPS y ≤ 1% de frames con bloqueo > 50 ms durante el slice, sin ANR/OOM; cualquier excepción debe quedar medida y explicada.
-- stability_error_budget: sustituir errores de consola web por cero crashes/ANR y cero errores no recuperados en el recorrido Android, con retry/reconnect verificables y sin doble settlement.
-- benchmark_definition y benchmark_positioning: comparar juegos móviles de cartas/estrategia y alternativas de la misma experiencia táctil, no páginas web; la matriz debe evaluar identidad, claridad, profundidad, feedback, onboarding y rendimiento Android.
-- first_session_flow, art_direction_quality, finish_quality y first_impression: la evidencia debe provenir de la APK y de las superficies reales, no sólo del código ni de una maqueta.
-
-## 7. Gate bloqueante del vertical slice Android
-
-El slice es el gate de producto que une los tracks. No pasa por tener las pantallas individualmente hechas. Debe demostrar, con una cuenta de prueba normal y datos oficiales:
-
-1. entrada al Home/Forja y lectura del siguiente objetivo;
-2. selección de Campeón y carta desde Colección/Inspector;
-3. construcción o elección de Mazo/Forja y validación de límites/sinergia;
-4. Formación con Vanguardia, Campeón, Centinela y Reserva cuando el contrato aplique;
-5. batalla real con decisiones, turnos y feedback de cada evento autoritativo;
-6. resultado de servidor, settlement idempotente y recuperación ante refresh, timeout o reconnect;
-7. recompensa real, claim persistente y retorno al Home con progreso/economía actualizados.
-
-El gate falla si hay una ruta muerta, un botón sin feedback, un estado ambiguo, una recompensa fabricada en cliente, una acción no respaldada por contrato, un arte genérico, un loader eterno, una pérdida de selección, una duplicación de settlement o una pantalla que parezca un dashboard intercambiable. El recorrido debe emitirse mediante los cinco eventos canónicos cuando corresponda y conservar trazabilidad de datos.
-
-En visual, Home, Colección/Inspector, Mazo/Forja/Formación, Batalla y Resultado/Recompensa deben alcanzar al menos Q4 en composición, identidad, jerarquía, claridad e interacción; ninguna dimensión aplicable puede quedar por debajo de 3. Las superficies secundarias deben alcanzar al menos Q3 antes de ampliar el alcance. Q5 exige además evidencia de dispositivo, accesibilidad, reduced-motion, rendimiento, estabilidad y consistencia.
-
-## 8. Evidencia y estados de promoción
-
-Cada checkpoint del gate Android debe incluir: commit de main, run del workflow oficial, release y digest del APK, bundle JS embebido, captura/grabación de todas las etapas del slice, matriz de controles, datos y RPCs consultados, estados normal/carga/vacío/error/retry/reconnect, reduced-motion, guardas, telemetría, dispositivos probados, mediciones de FPS/memoria/arranque y deuda explícita.
-
-- IMPLEMENTED_UNVERIFIED: implementación y verificaciones técnicas disponibles; QA humana pendiente.
-- ANDROID_GAME_TIER1_CANDIDATE: bloqueantes Android y vertical slice demostrados, pero aún no se promociona a TIER1_READY sin QA humana.
-- TIER1_READY: evidencia Android completa más QA humana autorizada, sin gates críticos omitidos.
-- OPERATIONAL: además, release/operación pública aprobados según el gate aplicable.
-
-La ausencia temporal de QA humana nunca autoriza a fabricar evidencia ni detiene la ejecución de unidades independientes. Sí impide declarar cualquiera de los estados promocionados.
-
-## 9. Decisión oficial
-
-El plan queda corregido como READY_FOR_EXECUTION_AFTER_T0. La siguiente ejecución debe comenzar por el T0 de reconciliación Android y producir la matriz de evidencia del APK actual antes de ampliar escenas o volumen de assets. Después se ejecutan los tracks F y V en paralelo sólo donde sus dependencias estén habilitadas, convergiendo siempre en el gate del vertical slice. El APK publicado más reciente se usa como baseline de medición, no como prueba de Tier 1.
-
-Se mantiene el estado global PRE-LAUNCH INTERNAL QA. Esta enmienda no declara PASS, TIER1_READY ni OPERATIONAL.
-
----
-# ENMIENDA PERMANENTE — COMPATIBILIDAD GOOGLE PLAY Y ACTUALIZACIONES POR SECCIÓN
-
-**Fecha de incorporación:** 2026-09-04  
-**Estado:** OFICIAL — INTEGRADA EN EL PROTOCOLO MAESTRO  
-**Precedencia:** esta enmienda prevalece sobre cualquier flujo que trate un APK standalone como artefacto de producción, use firma debug para Play, cambie el package ID, distribuya parches no verificables o descargue código remoto fuera del protocolo de actualizaciones.
-
-## 1. Objetivo de distribución
-
-El destino final de VEXFORGE Android es Google Play. El APK standalone deja de ser el formato de producción: se conserva únicamente como artefacto de QA interna, instalación directa y diagnóstico.
-
-El artefacto de publicación para Google Play será un Android App Bundle (`.aab`) firmado con una clave de subida válida y entregado a Play App Signing. Google Play genera los APK optimizados por dispositivo y gestiona su distribución diferencial. El workflow del proyecto debe producir y verificar el AAB; nunca debe presentar el APK debug como release de tienda.
-
-La política vigente de Google Play consultada el 2026-09-04 exige para nuevas aplicaciones y actualizaciones un target API 35 o superior desde el 31 de agosto de 2026. Este umbral se debe volver a consultar en cada preparación de lanzamiento porque la política puede subir anualmente.
-
-Fuentes de referencia que deben revisarse antes de un release:
-
-- https://developer.android.com/google/play/requirements/target-sdk
-- https://developer.android.com/guide/app-bundle
-- https://support.google.com/googleplay/android-developer/answer/9842756?hl=en
-- https://docs.expo.dev/technical-specs/expo-updates-1
-
-## 2. Diagnóstico actual y brechas de Play
-
-La configuración reconciliada de main demuestra estas brechas, que no deben ocultarse:
-
-- El workflow actual ejecuta `assembleRelease`, publica un `.apk` y documenta que la plantilla usa debug keystore para mantenerlo instalable por sideload.
-- No se genera `.aab`.
-- `mobile/app.json` conserva el package estable `com.vexforge.android`, lo cual debe preservarse.
-- `mobile/app.json` usa `versionCode: 3`; el número de build del workflow no puede sustituirlo automáticamente sin una política de versionado monotónica y verificable.
-- `expo-updates` está instalado y configurado para `runtimeVersion: 1.0.0`, canal `production`, comprobación `ON_LOAD` y fallback embebido; cualquier cambio a ese contrato requiere una nueva validación nativa.
-- El plugin `withEmbeddedJsBundle` y el fallback standalone deben conservarse sólo si las pruebas demuestran que no interfieren con Expo Updates.
-- No existe todavía evidencia de clave de subida, Play App Signing, target API mínimo validado, bundletool, track interno ni rollback OTA.
-
-Por tanto, el APK publicado más reciente no es `PLAY_COMPATIBLE_CANDIDATE`; es `QA_APK_BASELINE`.
-
-## 3. Dos canales de entrega, sin confundirlos
-
-Cada sección de trabajo debe clasificarse antes de implementarse como `OTA_UPDATE` o `NATIVE_PLAY_RELEASE`.
-
-### 3.1 `OTA_UPDATE` — actualización por sección sin APK completo
-
-Se permite cuando la sección cambia únicamente JavaScript/TypeScript, navegación, estilos, copy, lógica de presentación o assets compatibles con el runtime nativo instalado. La aplicación consulta un manifiesto OTA por HTTPS, valida la compatibilidad y descarga sólo el bundle/assets que no tenga en caché. El usuario no debe descargar manualmente un archivo de parche.
-
-La unidad descargable es un release OTA firmado/identificado por hash, no un APK parcial. La sección se publica con canal, runtime, versión mínima, rollout, fecha, changelog, assets, migraciones y rollback. El cliente aplica la actualización de forma segura y vuelve a la versión anterior si el arranque o la validación fallan.
-
-OTA no puede:
-
-- cambiar permisos Android, package ID, SDK, manifest, Gradle o configuración nativa;
-- agregar/quitar módulos nativos o cambiar la interfaz JS-nativa;
-- cambiar Expo/React Native o cualquier dependencia que requiera recompilación;
-- introducir un esquema de datos incompatible sin migración autoritativa;
-- resolver combate, economía, recompensas, settlement o autenticación fuera de Supabase;
-- descargar y ejecutar código desde una URL arbitraria o fuera del manifiesto oficial.
-
-### 3.2 `NATIVE_PLAY_RELEASE` — actualización que requiere AAB
-
-Cualquier cambio nativo, de permisos, SDK, plugin, dependencia nativa, app config, runtime compatible, firma, assets nativos o comportamiento que no sea compatible con el runtime instalado exige un nuevo AAB con `versionCode` mayor. El APK de QA puede generarse además, pero nunca reemplaza al AAB de Play.
-
-Google Play puede entregar al usuario sólo los módulos/diferencias necesarios, pero el proyecto debe subir un AAB completo. No se debe prometer al usuario un “APK parcial” ni construir un parche binario propio.
-
-## 4. Contrato de runtime y versionado
-
-- `com.vexforge.android` es inmutable después del primer registro en Play.
-- `versionCode` es entero, monotónico y único para cada AAB. No se reutiliza, no se reduce y no depende sólo de un número de workflow si puede colisionar.
-- `version` es la versión visible para el jugador y se actualiza según la política de release.
-- `runtimeVersion` identifica la compatibilidad entre un binario nativo y sus actualizaciones OTA. Todo cambio de interfaz nativa obliga a crear un runtime nuevo y publicar AAB antes de enviar OTA.
-- Cada OTA declara explícitamente el runtime compatible, la versión mínima de aplicación, el canal, el hash del bundle/manifiesto y la estrategia de rollback.
-- La app debe arrancar con el bundle embebido conocido si no puede validar o descargar una OTA. Nunca debe quedar en loader eterno ni ejecutar una actualización parcialmente descargada.
-- Las migraciones de datos se hacen antes de liberar una OTA/AAB incompatible y deben ser reversibles o tener reparación documentada.
-
-## 5. Firma, secretos y Play App Signing
-
-Google Play App Signing es el modelo oficial recomendado. La clave de firma de aplicación queda protegida por Google; el workflow usa una clave de subida separada y protegida.
-
-- La clave de subida, contraseña, alias, service account de Play y cualquier token son secretos de GitHub/Replit/Google, nunca contenido de Supabase, documentación, APK, logs o continuidad.
-- Ningún agente debe pedir al usuario que pegue una clave privada en chat.
-- El workflow de producción falla si intenta firmar el AAB con debug keystore, clave efímera o credencial no verificable.
-- Antes de la primera subida se registra el package ID, huella de certificado, propietario de Play App Signing, procedimiento de recuperación y responsable de la cuenta.
-- El artefacto de QA puede usar una firma separada para sideload, pero se etiqueta como QA y nunca se sube al track de producción.
-
-## 6. Sistema de trabajo por secciones
-
-Cada sección completada genera un registro de release con esta información mínima:
-
-```text
-SECTION_ID:
-SECTION_SCOPE:
-DELIVERY_TYPE: OTA_UPDATE | NATIVE_PLAY_RELEASE
-RUNTIME_VERSION:
-APP_VERSION:
-VERSION_CODE:
-CHANNEL: development | internal | closed | production
-SOURCE_COMMIT:
-SUPABASE_SCHEMA_OR_RPC_IMPACT:
-ASSET_MANIFEST:
-BUNDLE_OR_AAB_DIGEST:
-MINIMUM_APP_VERSION:
-ROLLOUT:
-ROLLBACK_TARGET:
-VALIDATION:
-KNOWN_LIMITATIONS:
-STATUS:
-```
-
-Secuencia obligatoria por sección:
-
-1. reconciliar protocolo, continuidad, main, Supabase y el runtime Android actual;
-2. clasificar la sección como OTA o AAB antes de editar;
-3. implementar la sección completa sin autoridad local ni mocks;
-4. ejecutar typecheck, guards, validaciones de contratos, seguridad y build que correspondan;
-5. publicar el artefacto de sección: manifiesto OTA o AAB/QA APK;
-6. validar instalación, arranque, rollback y recorrido afectado;
-7. registrar digest, evidencia, límites y estado en continuidad;
-8. dejar el canal anterior disponible hasta confirmar recuperación.
-
-El usuario recibirá una actualización OTA sólo cuando la sección sea OTA-compatible. Si la sección requiere código nativo, recibirá una actualización a través del track de Play; durante QA interna podrá descargarse el APK de esa compilación, pero no se presentará como actualización parcial.
-
-## 7. Autoridad de Supabase para el sistema de releases
-
-Supabase es la autoridad de metadatos de releases, canales, compatibilidad, hashes, estado, rollback y evidencia; no es un almacén de claves privadas ni sustituye a Google Play.
-
-El sistema que se implemente debe mantener un registro autoritativo de, como mínimo:
-
-- release y sección;
-- tipo OTA/AAB;
-- runtime y versión mínima;
-- canal y rollout;
-- bundle/manifiesto/AAB digest;
-- estado `DRAFT`, `VALIDATED`, `PUBLISHED`, `ROLLED_BACK` o `BLOCKED`;
-- release anterior de rollback;
-- checks ejecutados y evidencia;
-- fecha, commit y responsable técnico.
-
-La entrega OTA debe usar HTTPS y un endpoint/manifiesto compatible con el protocolo Expo Updates. Storage puede alojar bundles/assets públicos versionados; la publicación debe estar gobernada por el registro y no por URLs mutables improvisadas. RLS, Auth y permisos deben impedir que un cliente modifique el release publicado o el canal de producción.
-
-La telemetría de actualización debe distinguir consulta, descarga, instalación, arranque exitoso, rollback, error de compatibilidad y abandono. Nunca debe incluir secretos.
-
-## 8. Gates de compatibilidad
-
-### `PLAY_COMPATIBLE_CANDIDATE`
-
-Requiere todos estos puntos:
-
-- AAB generado y verificable;
-- package `com.vexforge.android` sin cambios;
-- `versionCode` mayor que el último AAB aceptado;
-- target API mínimo vigente de Google Play, actualmente 35 o superior;
-- AAB firmado con upload key válida, no debug key;
-- Play App Signing preparado o activo;
-- manifest, permisos, icono, splash, política de privacidad, Data Safety, clasificación de contenido y acceso de revisión documentados;
-- instalación/validación en track interno o cerrado;
-- workflow reproducible, digest, logs y rollback documentados;
-- no hay crash, ANR, loader eterno ni regresión crítica en el vertical slice Android.
-
-### `SECTION_UPDATE_READY`
-
-Requiere además:
-
-- clasificación OTA/AAB explícita;
-- runtime compatible;
-- manifiesto y hashes verificables;
-- fallback embebido funcional;
-- descarga reanudable y rollback;
-- prueba de una OTA compatible y rechazo seguro de una OTA incompatible;
-- evidencia de que la sección no altera autoridad de Supabase ni datos del jugador.
-
-### `PLAY_STORE_READY`
-
-No se declara hasta completar los gates anteriores, la revisión de políticas vigente, la QA humana autorizada, el recorrido de primera sesión, estabilidad, accesibilidad, rendimiento, privacidad, contenido y el track de publicación elegido.
-
-## 9. Regla de no regresión y precedencia
-
-La APK completa sigue siendo necesaria para cada cambio nativo y para el primer binario de un runtime. La OTA sólo reduce descargas cuando el cambio es compatible; no elimina los builds nativos ni permite saltarse Play.
-
-No se permite:
-
-- publicar un APK debug como producción;
-- guardar signing keys o credenciales en Supabase;
-- usar `versionCode` repetido o decreciente;
-- enviar OTA a un runtime incompatible;
-- mutar el canal de producción desde el cliente;
-- declarar Play compatible por tener un APK instalable;
-- ejecutar comandos de publicación no registrados ni usar un servicio paralelo como fuente de verdad;
-- declarar `PLAY_STORE_READY`, `TIER1_READY` u `OPERATIONAL` sin evidencia real y QA humana.
-
-La fase Android-only permanece activa. La web congelada no se modifica para resolver Play ni OTA Android. La siguiente ejecución elegible es el T0 de release Android: auditoría de target API, versionado, firma, AAB, runtime y contrato de releases antes de tocar una feature.
-
-## 10. NORMA PERMANENTE — ENTREGA POR SECCIÓN Y COMPATIBILIDAD PLAY
-
-**Entrada en vigor:** 2026-09-04  
-**Estado:** OBLIGATORIA para toda ejecución Android futura.
-
-1. Antes de editar una sección, la IA debe asignar exactamente un `DELIVERY_TYPE`: `OTA_UPDATE` o `NATIVE_PLAY_RELEASE`, registrar el `SECTION_ID`, el `RUNTIME_VERSION`, el `APP_VERSION`, el `VERSION_CODE` y el canal previsto.
-2. `OTA_UPDATE` sólo puede usarse para JavaScript/TypeScript, navegación, estilos, copy y assets compatibles con el runtime nativo ya instalado. La entrega debe pasar por un manifiesto HTTPS compatible con Expo Updates, con hash, fallback embebido, rollback y rechazo seguro de runtime incompatible.
-3. `NATIVE_PLAY_RELEASE` es obligatorio para permisos, SDK, plugins, dependencias nativas, app config, runtime, firma, assets nativos o cualquier cambio que requiera recompilación. La salida oficial es un AAB firmado para Google Play con `versionCode` monotónico; el APK asociado es únicamente QA/sideload.
-4. Nunca se construyen, publican ni prometen APK parciales. Google Play recibe AAB completo y decide la optimización diferencial; una OTA reduce la descarga sólo cuando el cambio es compatible con el runtime.
-5. Cada sección completada debe registrarse en `public.vexforge_android_release_registry` con digest SHA-256, commit, canal, rollout, estado, validaciones, limitaciones y objetivo de rollback. El cliente sólo puede leer registros publicados; no puede cambiar releases ni canales.
-6. Una sección no puede declararse `SECTION_UPDATE_READY` si no existe evidencia de compatibilidad, manifiesto/hash, fallback, rollback y prueba de rechazo de incompatibles. Una sección no puede declararse `PLAY_COMPATIBLE_CANDIDATE` si el AAB no está firmado con upload key válida y validado en un track interno o cerrado.
-7. Si el endpoint Expo Updates, la firma Play o el track de validación no están disponibles, la IA debe registrar el bloqueo exacto y mantener la sección en `BLOCKED` o `DRAFT`; está prohibido activar una configuración falsa, descargar código desde una URL arbitraria o simular una publicación.
-8. La autoridad de las reglas es este protocolo activo en Supabase. GitHub `main`, los workflows, los manifiestos y los releases son evidencia operativa y deben mantenerse sincronizados mediante APIs HTTPS oficiales.
-
-## 11. IMPLEMENTACIÓN DEL CICLO AUTOMÁTICO — OTA Y BASE ANDROID
-
-**Entrada en vigor:** 2026-09-04  
-**Estado:** IMPLEMENTED — BASE OTA PUBLICADA Y VALIDADA.
-
-- La Edge Function pública `vexforge-updates` responde al protocolo Expo Updates, filtra por plataforma Android, `runtimeVersion`, canal y releases `PUBLISHED`, y sólo acepta manifiestos alojados en el bucket oficial `vexforge-updates`.
-- La APK base oficial usa `expo-updates`, `runtimeVersion: 1.0.0`, comprobación `ON_LOAD`, fallback embebido inmediato y canal `production`.
-- La base Android quedó publicada como release `vexforge-android-build-78`, construida desde el commit `6de1af807c4a1546cc3d0f0b4dd5afe256d22d0b`, con `app_version: 1.0.0`, `versionCode: 3` y artefacto `app-release.apk`.
-- La descarga directa validada de la base es `https://github.com/grandmaster68081-byte/Vexforge-web/releases/download/vexforge-android-build-78/app-release.apk`. El archivo mide `95296812` bytes y su SHA-256 es `a386f0793928f17e3d9aee7ccbfce7a2d26c6001afa77d3d7c08d39e0947ac65`.
-- La APK contiene `assets/index.android.bundle` de `3176784` bytes, por lo que es standalone y no depende de Metro. Esta APK es la base oficial QA/sideload para recibir las futuras OTA del runtime `1.0.0`; no es una declaración de `PLAY_STORE_READY`.
-- El registro canónico de esta base está en `public.vexforge_android_release_registry` con `SECTION_ID=VE-MOB-BASE-OTA`, `DELIVERY_TYPE=NATIVE_PLAY_RELEASE`, `status=PUBLISHED`, `channel=production`, rollout `100%`, validaciones de descarga/bundle y limitaciones de APK QA/sideload.
-- La APK 72 queda fuera del ciclo porque no contenía `expo-updates`; no se debe publicar una OTA dirigida a la APK 72.
-- Para cada sección futura, la IA debe asignar primero `DELIVERY_TYPE`: `OTA_UPDATE` para JavaScript/TypeScript, navegación, estilos, copy y assets compatibles con el runtime `1.0.0`; `NATIVE_PLAY_RELEASE` para permisos, SDK, plugins, dependencias nativas, app config, runtime, firma o cualquier cambio que requiera recompilación.
-- Una sección compatible debe seguir `commit en main → dispatch por sección → workflow OTA → manifiesto HTTPS firmado/hash → registro PUBLISHED en Supabase → rollout/rollback`. No se debe construir ni descargar otra APK completa para una sección compatible.
-- Si el cambio es nativo, el flujo correcto es el workflow AAB firmado con `versionCode` monotónico; el APK asociado sólo sirve para QA/sideload. Nunca se publican APK parciales ni se simula una OTA si faltan manifiesto, hash, fallback, rollback o rechazo seguro de runtime incompatible.
-- La orden operativa de una sección compatible es `node mobile/scripts/dispatch-section-release.mjs --section-id ... --delivery-type OTA_UPDATE ...`; para impacto nativo se debe usar `NATIVE_PLAY_RELEASE`.
-- El flujo normal queda: commit en `main` → clasificación de sección → workflow correcto → digest y validaciones → publicación y registro en Supabase → URL del manifiesto/artefacto en el resumen del workflow.
-
-
-
----
-# ENMIENDA PERMANENTE — UMBRAL DE CALIDAD VISUAL DEL HOME / FORJA
-
-**Fecha de incorporación:** 2026-09-04  
-**Estado:** OFICIAL — BLOQUEANTE PARA `VE-MOB-3-HOME-SCENE`  
-**Referencia:** `HOME_GAME_SCENE_QUALITY_V1`  
-**Precedencia:** esta enmienda concreta los criterios visuales de `VE-UI-TIER1-ANDROID-01`, V-T1, V-T2 y `VE-MOB-3-HOME-SCENE`. No cambia la autoridad funcional, no reabre la web congelada y no autoriza a copiar assets o propiedad intelectual de un referente externo.
-
-## 1. Motivo y lectura de la referencia
-
-El owner aportó una captura de un Home de videojuego como referencia de calidad visual. La captura debe evaluarse por la calidad de la escena que contiene, no por el marco de la fotografía, el espacio alrededor del teléfono ni por la orientación aparente de la captura. El estándar que debe conservarse en la APK es el siguiente:
-
-- se reconoce primero un **mundo de juego** y no un dashboard administrativo;
-- existe un foco protagonista —campeón, héroe, Nexus, carta o actividad viva— con una composición intencional;
-- el fondo tiene ambiente, escala y capas suficientes para dar sensación de lugar, no sólo un color o una imagen plana detrás de paneles;
-- navegación, recursos y acciones están integrados en una lectura de HUD coherente con el juego;
-- la paleta, la luz, los marcos, la iconografía y la tipografía pertenecen al mismo universo visual;
-- la pantalla comunica una actividad jugable y una próxima acción sin necesitar explicación externa;
-- la versión real añade vida a la composición mediante idle del protagonista, ambiente, transiciones, respuesta táctil y actualización honesta de estados. La captura es estática, pero el estándar no lo es.
-
-La referencia no exige reproducir el mismo género, ilustración, layout exacto o cantidad de elementos. Exige alcanzar una **densidad de intención visual semejante**: escena authored, foco, atmósfera, HUD, acción y movimiento trabajando como una sola experiencia.
-
-## 2. Corrección del plan
-
-El plan anterior tenía los conceptos necesarios —DNA visual, escena Home, identidad, profundidad, motion, estados y anti-dashboard—, pero no convertía la referencia en un gate suficientemente observable. Desde esta enmienda, `VE-MOB-3-HOME-SCENE` no se puede cerrar por:
-
-- cambiar colores, radios, sombras, fondos o tipografía sin cambiar la lectura de la escena;
-- montar tarjetas, botones o iconos genéricos sobre una imagen de fondo;
-- presentar una captura estática o un mockup sin demostrar el comportamiento en la APK;
-- declarar motion porque existe una transición de navegación, sin idle, ambiente y feedback de interacción;
-- usar datos ficticios, arte placeholder o una acción que no tenga contrato real;
-- extender el mismo tratamiento de Home a todas las pantallas sin una dirección propia por superficie.
-
-La nueva regla de ejecución es: **T0 de reconciliación → DNA visual Android → Home/Forja como vertical slice visual → evidencia en movimiento → sólo entonces expansión a Cartas, Mazo, Batalla y superficies secundarias**. El Home sigue siendo el primer juez de calidad del producto.
-
-## 3. Contrato visual obligatorio del Home
-
-Para entrar en `Q4`, el Home debe demostrar todos estos componentes, con datos y rutas reales cuando correspondan:
-
-| Dimensión | Mínimo exigible |
-|---|---|
-| Escena | fondo authored con profundidad perceptible, punto de entrada claro y composición que sobreviva a estados de carga, vacío y error |
-| Foco | protagonista u objeto dominante con silueta, escala, iluminación y contraste suficientes para atraer la mirada sin tapar la acción |
-| Atmósfera | relación coherente entre fondo, medio, foreground, color, luz y espacio; no una colección de paneles flotantes sin mundo |
-| HUD | recursos, navegación y estado del jugador agrupados con jerarquía consistente, iconografía legible y superficies que parezcan parte del juego |
-| Acción | una acción primaria reconocible en cinco segundos y acciones secundarias subordinadas; cada una debe llevar a una ruta existente |
-| Movimiento | idle o respiración del foco, al menos un loop ambiental sutil y transiciones de entrada/foco/salida; reduced-motion conserva feedback funcional sin animación excesiva |
-| Interacción | pressed, focus, selected, loading, retry y confirmación visibles; tocar no puede producir silencio visual |
-| Identidad | recursos visuales propios de VEXFORGE: tratamiento de cartas, marcos, iconos, lettering, color y lenguaje de escena con procedencia registrada |
-| Veracidad | progreso, recursos, actividad y CTA vienen de contratos autorizados; los estados vacíos y no disponibles no se disfrazan de contenido vivo |
-| Rendimiento | la escena conserva estabilidad, touch targets y lectura en los dispositivos definidos; no se compra espectacularidad con loader eterno, ANR, OOM o caída de frames no medida |
-
-La composición puede variar entre Home, Forja, Nexus o actividad destacada, pero no puede convertirse en un dashboard intercambiable. Debe existir una razón visual para que el jugador quiera permanecer en la escena y continuar.
-
-## 4. Rúbrica de aceptación `HOME_GAME_SCENE_QUALITY_V1`
-
-La revisión de `VE-MOB-3-HOME-SCENE` registra una puntuación de 0 a 5 para cada dimensión aplicable:
-
-1. escena y atmósfera;
-2. foco protagonista y lectura de profundidad;
-3. identidad VEXFORGE y coherencia de assets;
-4. jerarquía de HUD y acción primaria;
-5. movimiento, liveness y transición;
-6. feedback táctil y claridad de estados;
-7. legibilidad en el dispositivo real;
-8. cohesión y acabado de producción.
-
-El Home sólo alcanza `Q4` si obtiene `4` o más en cada dimensión aplicable y ninguna queda por debajo de `3`. Una imagen atractiva sin movimiento, una escena con movimiento pero sin acción real, o un HUD funcional sin identidad visual no pasan el gate. `Q5` añade evidencia de rendimiento, accesibilidad, reduced-motion, estabilidad, procedencia de assets y QA humana según las reglas generales.
-
-## 5. Evidencia mínima para cerrar el Home
-
-Cada intento de cierre debe conservar en la evidencia del release:
-
-- un vídeo de 10–15 segundos en la APK instalada mostrando entrada, estado normal, idle/ambiente y una interacción real con su transición;
-- capturas de la misma escena en el viewport Android pequeño y en el dispositivo de referencia, sin usar un mockup como sustituto del APK;
-- una toma del estado de carga y del estado vacío/error/retry cuando la superficie los soporte;
-- la rúbrica `HOME_GAME_SCENE_QUALITY_V1` con puntuación, observaciones y deuda explícita;
-- procedencia de los assets principales y relación entre cada dato mostrado y su contrato autoritativo;
-- evidencia de FPS/frame pacing, memoria, arranque y ausencia de ANR/OOM cuando se declare Q4 o superior;
-- verificación de que el Home puede regresar al flujo oficial y no es una pantalla de demostración aislada.
-
-Si falta movimiento, interacción, procedencia, ruta real o evidencia en APK, el estado correcto es `IMPLEMENTED_UNVERIFIED` y la unidad se reabre; no se promociona a `Q4`, `ANDROID_GAME_TIER1_CANDIDATE` ni `TIER1_READY`.
-
-## 6. Decisión normativa
-
-La referencia aportada sí representa el nivel visual que el plan debe perseguir: **una pantalla que se siente como un juego vivo, con escena, protagonista, atmósfera, HUD y acción integrada**. Esta enmienda convierte esa opinión visual en una obligación de diseño y validación para el Home. No garantiza el resultado por sí sola: el resultado sólo existe cuando la APK implementada supera la rúbrica, el recorrido real, el rendimiento y la evidencia exigida.
-
-
-
-
----
-
-## ADDENDUM OFICIAL — VEXFORGE TIER-1 FUNCTIONALITY + EXPERIENCE PACKAGE 2026
-
-**Estado:** INTEGRADO COMO CAPA ADITIVA — no reemplaza el Protocolo Maestro, los contratos de Supabase, el inventario Android ni los planes históricos.
-**Fuente:** paquete aportado por el operador `VEXFORGE_TCG_TIER1_2026_REPLIT_DIRECTIVE_ENHANCED`.
-**Archivo fuente SHA-256:** c386172478f9e2c271c3967df68574e47974f74f60b8dc3f6e24434723ca2875.
-**Documento oficial enlazado:** `vexforge_tier1_replit_directive_enhanced_2026`.
-**Superficie:** Android `mobile/` durante la Ley de Transición; la web continúa congelada.
-
-### 1. Propósito y límite
-
-Esta capa fusiona la transformación visual Tier 1 con una pista funcional verificable: boot, autenticación, navegación, interacción, datos, integración de dominios, motion, rendimiento, regresión y handoff humano. Su regla de cierre es `EXPERIENCE → FUNCTION → VERIFICATION`.
-
-El paquete guía el método de ejecución y la evidencia; no inventa tablas, columnas, RPCs, reglas de combate, economía, recompensas, permisos, assets canónicos ni resultados de QA. Supabase, Auth, RLS, RPCs, Storage, el inventario `VE-MOB-*`, el código real de `main` y los releases siguen siendo la autoridad de producto y datos.
-
-### 2. Precedencia para futuras IA
-
-1. Fila activa `vexforge_master_protocol_v2` en Supabase y su copia sincronizada en `main`.
-2. Contratos vivos de Supabase: Auth, RLS, RPCs, Storage, datos y reglas autoritativas.
-3. Inventario Android `docs/VE-MOB-0-PORT-INVENTORY.md` y código/release real de `main`.
-4. Continuidad más reciente y evidencia de workflows/releases.
-5. Este addendum y sus documentos fuente bajo `docs/VE-TIER1-REPLIT-DIRECTIVE-2026/`.
-6. Capturas, tablero y referencias visuales del ZIP: contexto de diseño únicamente; nunca evidencia de runtime ni assets oficiales.
-
-Si hay conflicto, se conserva la fuente de precedencia superior, se documenta la discrepancia y no se modifica una regla autoritativa por inferencia visual.
-
-### 3. Orden integrado de ejecución
-
-**Preflight:** leer el protocolo completo desde Supabase, continuidad, inventario, plan aplicable, código real, esquema/RPC/RLS/Auth/Storage y release. Confirmar unidad, límites, método HTTPS y gates antes de editar.
-
-**Gates funcionales y de calidad:**
-
-- Gate 0 — Boot Integrity: cold start, router, assets y estados recuperables.
-- Gate 1 — Auth Integrity: login, registro si existe en contrato, restauración, expiración, logout, rutas protegidas y recuperación.
-- Gate 2 — Navigation Integrity: rutas reales, deep links, back behavior, retorno y estado seleccionado.
-- Gate 3 — Core Interaction Integrity: CTAs, filtros, búsqueda, selección, tutorial y acciones seguras.
-- Gate 4 — Data Integrity: loading, vacío, error, retry, stale state, identidad del usuario y confirmación de mutaciones.
-- Gate 5 — Domain Integration: FOJA → ARENA → ARCHIVO → FORJA → BATALLA → PERFIL y sistemas satélite con datos canónicos.
-- Gate 6 — Visual Architecture: identidad VEXFORGE, escena, jerarquía y assets con procedencia.
-- Gate 7 — Motion/Game Feel: feedback, transiciones, haptics/audio soportados y reduced-motion.
-- Gate 8 — Performance: arranque, touch targets, scroll, memoria, FPS/jank, coste de assets y tamaño del APK.
-- Gate 9 — Regression: matriz completa después de cambios compartidos y guardas específicas por unidad.
-- Gate 10 — Human Validation Packet: pasos reproducibles, evidencia del operador y límites no verificables por la IA.
-
-La falta de QA humana no bloquea la continuidad: deja la unidad en `IMPLEMENTED_UNVERIFIED`. Nunca se convierte una captura, compilación o preview en QA de dispositivo.
-
-### 4. Fases Tier 1 enlazadas al inventario Android
-
-- Iteración 0 — reconocimiento y mapa de riesgos.
-- Iteración 1 — shell compartido, tokens y lenguaje de interacción.
-- Iteración 2 — FOJA / Living Hub.
-- Iteración 3 — ARENA / entrada competitiva.
-- Iteración 4 — ARCHIVO / cartas.
-- Iteración 5 — FORJA / mazo.
-- Iteración 6 — LEGADO / perfil.
-- Iteración 7 — pulido de sistema: estados compartidos, skeleton, empty/error narrativos, navegación, optimización.
-- Iteración 8 — QA real Android.
-
-La selección de cada siguiente unidad continúa gobernada por el inventario `VE-MOB-*` y por el siguiente criterio no completado; el addendum no autoriza saltar fases ni reabrir unidades sin evidencia nueva.
-
-### 5. Scorecard y regresión
-
-Se puntúan únicamente resultados con evidencia, de 0 a 5, en funcionalidad, navegación, identidad visual, motion, colección, deckbuilding, entrada a batalla, perfil e integridad. El orden mínimo es `FUNCTION ≥ 3 → INTEGRATION ≥ 3 → VISUAL ≥ 3 → MOTION ≥ 3 → polish`; no se persigue una puntuación estética alta mientras una función núcleo sea frágil.
-
-La matriz de regresión cubre Boot, Auth, Route, Data, Interaction, Visual, Motion y Return para FOJA, ARENA, CARTAS, FORJA/MAZO, PERFIL y sistemas secundarios. Un cambio compartido exige repetir Home, Collection, Deck, Battle, Profile y entrada/salida de Auth.
-
-### 6. Reparación autónoma y límites
-
-La IA puede ejecutar el ciclo `INSPECT → PLAN → IMPLEMENT → RUN → TEST → OBSERVE → DIAGNOSE → REPAIR → RETEST → REGRESSION CHECK → CHECKPOINT` con la corrección mínima y reversible. Debe detenerse y dejar handoff para cambios de balances, propiedad, recompensas, transferencias, migraciones destructivas, ampliación de Auth, debilitamiento de RLS, rotación de credenciales o cambios públicos de contrato.
-
-Todo secreto permanece en Replit Secrets. Nunca se escribe una contraseña, PAT, service-role key, token o credencial en código, documentación, capturas, logs, URLs, commits o Storage.
-
-### 7. Uso de subagentes
-
-Cuando existan pistas independientes, la sesión debe usar uno o dos subagentes en paralelo para auditorías separadas (autoridad/compatibilidad y ejecución/QA). El agente principal conserva la integración, verifica los resultados y debe esperar o cancelar todos los trabajos antes de cerrar. Los subagentes no pueden elevar estados, declarar QA humana, modificar contratos autoritativos ni publicar por su cuenta.
-
-### 8. Cierre obligatorio y handoff
-
-Cada unidad registra: alcance, archivos/superficies, fuente canónica, estado anterior/nuevo, gate, scorecard, guardas, workflow, commit, release, assets y limitaciones. El handoff humano debe enumerar dispositivo, sesión, pasos, resultado esperado y cualquier revisión visual subjetiva o acción externa que la IA no pueda probar.
-
-
----
-## PATCH OPERATIVO — 2026-09-07 — PROCEDENCIA DE BUNDLES VISUALES
-
-- La directiva de cero genéricos y el plan de Storage se ejecutaron sobre los cuatro ZIP oficiales que ya estaban registrados en el bucket: `founders.zip`, `misc.zip`, `sessions.zip` y `ui sistema.zip`.
-- Se publicaron sus seis archivos internos como objetos individuales y se inscribieron en `public.vexforge_official_asset_manifest` con `official=true`, `enabled=true` y su ruta de origen.
-- Los seis objetos quedaron en reserva declarada: la inscripción no autoriza un consumidor ni sustituye un asset de una superficie existente.
-- Esta evidencia es documental y de procedencia; no altera contratos de combate, economía, Auth, RLS, RPCs, datos de jugador ni el alcance Android.
-- Guarda: `node scripts/verify-residual-art.mjs` pasa con 57 filas residuales, 38 objetos, 35 reservas y 19 prefijos.
-- Estado: `ASSET_PROVENANCE_RESOLVED`; sigue vigente `PRE-LAUNCH INTERNAL QA` y ninguna unidad se promociona a `PASS`, `TIER1_READY` u `OPERATIONAL`.
-
----
-## PATCH OPERATIVO — 2026-09-07 — CONSUMIDOR ANDROID AUTORIZADO
-
-- `misc/IMG_20260619_122314.jpg` queda promovido desde reserva residual a consumidor Android explícito de `VE-MOB-3-HOME`.
-- El registro `OFFICIAL_ASSETS.homeNexusBurst` lo usa como atmósfera estática del escenario central, detrás de la carta destacada; el fondo canónico `lobby/main.jpg` no se sustituye.
-- El consumidor tiene estados de carga y error accesibles, conserva el comportamiento `reduced-motion` y no introduce sustitutos genéricos.
-- Los otros cinco archivos extraídos del lote permanecen en reserva declarada y sin consumidor autorizado.
-- La guarda proporcional nueva es `verify:mobile-home-official-assets`; también deben pasar `verify:residual-art`, `verify:manifest`, typecheck y el workflow APK oficial.
-- Estado de `VE-MOB-3-HOME`: `IMPLEMENTED_UNVERIFIED`; no se declara `PASS`, `Q4`, `TIER1_READY` u `OPERATIONAL` por esta implementación.
-
-
----
-## PATCH 2026-09-11 — VE-MOB-3-HOME — PREMIUM TCG HOME PASS
-
-- Android Home actualizado en main con un pase integral de calidad TCG premium: escena de entrada, HUD del jugador, accesos de dominios, señal de temporada, evento, misiones, carta destacada, economía, actividad y ranking.
-- Se conservaron datos autoritativos de Supabase, rutas, testIDs, accesibilidad, safe-area, reduced-motion, iconografía y assets oficiales; no se añadió arte genérico ni se modificó la web congelada.
-- Commit de GitHub: fe8f69756a1613f7f14314a351ab24c24e973c3b.
-- Verificación: typecheck Android OK; guardas Home oficial, motion, assets, manifest y telemetry OK. El manifiesto dejó tres HEAD diferidos por HTTP 429 transitorio, sin referencias rotas. No se compiló APK.
-- Estado honesto: IMPLEMENTED_UNVERIFIED; queda pendiente QA visual/táctil humana y futura compilación Android.
