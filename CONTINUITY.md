@@ -1,3 +1,17 @@
+## 2026-09-15 — VE-MOB-T0 — ART DIRECTION / PREPARED
+
+- **ENTORNO ACTIVO:** aplicación Android en `mobile/**`; la web permanece congelada.
+- **AUTORIDAD:** fila ACTIVE `public.vexforge_official_documents / vexforge_home_world_system_protocol_v3`, V2.2, con SHA-256 `828a077428987b2534e3733204ac721ef3073eb7dadf9530a6f46877dd63c503`.
+- **BASELINE:** `main` en `0223a6212d39e164514fea60060241ee3cb0a7b8`.
+- **DOCUMENTO:** se añadió `docs/ART_DIRECTION.md` como contrato Android de identidad del mundo, boards aprobadas, materialidad, jerarquía, dirección por dominio, motion/audio, safe area, rendimiento y prohibiciones.
+- **REGLA DE AUTORIDAD:** las boards fijan composición y lenguaje material, no crean datos, assets, nombres, cartas, reglas ni resultados; el Asset Registry y las fuentes vivas continúan siendo la autoridad.
+- **REGLA CERO GENÉRICOS:** `null`, `loading`, `pending`, `error`, `locked`, `unavailable` y assets no promovidos conservan estado explícito; no se convierten en éxito, derrota, reward ni sustituto visual silencioso.
+- **ALCANCE:** no se tocó `mobile/**`, Supabase, Auth, RLS, RPCs, economía, gameplay, assets físicos, rutas, workflows ni la web congelada.
+- **STATUS:** `PREPARED / EVIDENCE_REQUIRED`; T0 continúa abierto y `PROFILE_HISTORY_STATE_GAP` sigue `BLOCKED`.
+- **NO APK:** no se inició workflow Android, no se compiló APK, no se instaló build y no se publicó release; el commit documental usa `[skip ci]`.
+- **PERSISTENCIA:** dirección artística y continuidad se publican juntas en `main` mediante GitHub REST/Data API sobre HTTPS, sin `git push` ni credenciales en URLs.
+- **NEXT BLOCK:** otra unidad documental independiente o, sólo con autorización explícita, el gate físico de APK/QA; no promover `VERIFIED`, `TIER1_READY`, `SUPPORTED` u `OPERATIONAL`.
+
 ## 2026-09-15 — VE-MOB-T0 — ASSET REGISTRY / PREPARED
 
 - **ENTORNO ACTIVO:** aplicación Android en `mobile/**`; la web permanece congelada.
