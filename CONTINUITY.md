@@ -1,3 +1,17 @@
+## 2026-09-15 — VE-MOB-3 HOME — TIER1 SCENE REFERENCE / IMPLEMENTED_UNVERIFIED
+
+- **ENTORNO ACTIVO:** aplicación Android en `mobile/**`; la web permanece congelada.
+- **AUTORIDAD:** fila ACTIVE `public.vexforge_official_documents / vexforge_home_world_system_protocol_v3`, V2.2, con SHA-256 `828a077428987b2534e3733204ac721ef3073eb7dadf9530a6f46877dd63c503`.
+- **DECISIÓN VISUAL:** la imagen proporcionada por el operador sustituyó `mobile/assets/images/home-reference-scene.png`; queda registrada como `CANON_ACTIVE` para Home, 1024×1024, SHA-256 `191dbe5ddb04d9208b69811e5139ac0eaaa0b498e1717fafc21717a8dd9a64e1`.
+- **IMPLEMENTACIÓN:** el Home consume la escena aprobada como base del hero mediante `CANONICAL_BACKGROUNDS.home`; conserva parallax acotado, gradientes de legibilidad, identidad canónica, carta viva, portales y UI interactiva.
+- **FUNCIÓN PRESERVADA:** datos vivos de Supabase, navegación a Arena/Mundo/Misiones/Forja/Economía/Perfil, refresh, haptics, estados loading/partial/error, señales honestas y reduced-motion.
+- **NO INVENTADO:** no se añadieron datos, rutas, RPCs, RLS, economía, gameplay, assets de Storage ni cambios en la web congelada.
+- **GUARDAS:** `node scripts/verify-mobile-home-official-assets.mjs` OK, 17/17; `node --check scripts/verify-mobile-home-official-assets.mjs` OK; registro JSON válido; `git diff --check` OK. Typecheck móvil no se ejecutó porque `mobile/node_modules` no está disponible.
+- **RELEASE GATE:** no se inició workflow Android, no se compiló APK y no se publicó release, respetando la instrucción vigente del operador.
+- **STATUS:** `IMPLEMENTED_UNVERIFIED`; falta evidencia visual/táctil física en APK autorizada.
+- **PERSISTENCIA:** publicar código, asset, registro, guardia y esta continuidad juntos en `main` mediante la API REST HTTPS oficial de GitHub, sin `git push`.
+- **NEXT BLOCK:** QA física sólo cuando el operador autorice una nueva APK; mientras tanto, continuar con otra unidad Android explícita sin tocar el motor de juego ni la web congelada.
+
 ## 2026-09-15 — VE-MOB-T2V — BATTLEFIELD ICON ROLES / IMPLEMENTED_UNVERIFIED
 
 - **ENTORNO ACTIVO:** aplicación Android en `mobile/**`; la web permanece congelada.

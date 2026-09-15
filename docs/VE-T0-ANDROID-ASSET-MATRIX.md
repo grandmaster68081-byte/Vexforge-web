@@ -44,7 +44,7 @@ consumo automático.
 | `mobile/assets/images/collection-archive-scene.jpg` | Escena de Archivo | `CANON_ACTIVE` | Collection | `VEXFORGE-ASSET-ATLAS.md` |
 | `mobile/assets/images/decks-reference-scene.png` | Escena de formación | `CANON_ACTIVE` | Deck | `VEXFORGE-ASSET-ATLAS.md` |
 | `mobile/assets/images/profile-reference-scene.png` | Escena de identidad | `CANON_ACTIVE` | Profile | `VEXFORGE-ASSET-ATLAS.md` |
-| `mobile/assets/images/home-reference-scene.png` | Referencia de composición | `AVAILABLE_UNASSIGNED` | Home | `VEXFORGE-ASSET-ATLAS.md` |
+| `mobile/assets/images/home-reference-scene.png` | Escena de referencia visual y fondo del hero funcional | `CANON_ACTIVE` | Home | `mobile/app/(tabs)/index.tsx`, `mobile/constants/visual.ts`, `VEXFORGE-ASSET-ATLAS.md` |
 | `mobile/assets/images/vexforge-auth-nexus-final.png` | Referencia opcional de Auth/Nexus | `AVAILABLE_UNASSIGNED` | Auth | `VEXFORGE-ASSET-ATLAS.md` |
 | `mobile/assets/images/icon.jpg` | Referencia de estilo heredado | `AVAILABLE_UNASSIGNED` | Compartido | `VEXFORGE-ASSET-ATLAS.md` |
 | `mobile/assets/images/collection-reference-scene.png` | Asset local sin asignación explícita en el atlas | `REVIEW_REQUIRED` | Collection | inventario de repositorio; requiere decisión de consumidor |

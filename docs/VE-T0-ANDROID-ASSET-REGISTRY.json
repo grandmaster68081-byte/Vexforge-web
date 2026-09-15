@@ -177,23 +177,24 @@
       "origin": "repository",
       "path": "mobile/assets/images/home-reference-scene.png",
       "dimensions": {
-        "width": 1080,
-        "height": 2340
+        "width": 1024,
+        "height": 1024
       },
       "format": "png",
-      "hash": "c2495ddd8182b817483924d3cc9e91e1e1d787e233849dddc9265cf019df2ff9",
+      "hash": "191dbe5ddb04d9208b69811e5139ac0eaaa0b498e1717fafc21717a8dd9a64e1",
       "hash_algorithm": "sha256",
       "hash_status": "MEASURED",
       "provenance": [
         "repository file",
         "docs/VE-T0-ANDROID-ASSET-MATRIX.md",
-        "docs/VEXFORGE-ASSET-ATLAS.md"
+        "docs/VEXFORGE-ASSET-ATLAS.md",
+        "operator-provided Home Tier 1 reference"
       ],
       "authorized_domains": [
         "Home"
       ],
-      "state": "AVAILABLE_UNASSIGNED",
-      "debt": "Referencia local sin consumidor canónico activo asignado."
+      "state": "CANON_ACTIVE",
+      "debt": "Escena aprobada por el operador y consumida por el hero funcional de Home."
     },
     {
       "asset_id": "android-local:icon.jpg",

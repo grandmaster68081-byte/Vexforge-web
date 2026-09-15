@@ -21,6 +21,7 @@ import { ScreenShell } from '@/components/ScreenShell';
 import { ForgeIconName, VexIcon } from '@/components/ForgeIcon';
 import { getCardIdentityVisual } from '@/constants/cardIdentity';
 import { DOMAIN_IDENTITY, DEPTH, MOTION, VISUAL_TOKENS } from '@/constants/experience';
+import { CANONICAL_BACKGROUNDS } from '@/constants/visual';
 import { useColors } from '@/hooks/useColors';
 import { useGame } from '@/context/GameContext';
 import {
@@ -643,6 +644,8 @@ export default function ForgeScreen() {
   const homeIdentity = DOMAIN_IDENTITY.foja;
   const orbitReveal = MOTION.reveal;
   const orbitDepth = DEPTH.surface;
+  const homeSceneAsset = CANONICAL_BACKGROUNDS.home;
+  const homeSceneSource = typeof homeSceneAsset === 'string' ? { uri: homeSceneAsset } : homeSceneAsset;
 
   const navigate = (route: HomeRoute) => {
     void Haptics.selectionAsync().catch(() => undefined);
@@ -676,16 +679,14 @@ export default function ForgeScreen() {
           scrollEventThrottle={16}
         >
            <View style={[styles.heroStage, { backgroundColor: identityVisual?.overlay ?? colors.ink, height: heroHeight }]}>
-            {identityCard?.image_url ? (
-              <Animated.Image
-                source={{ uri: identityCard.image_url }}
-                style={[styles.heroArt, heroParallaxStyle]}
-                resizeMode="cover"
-                accessibilityLabel="Artwork oficial de la identidad canónica del Home"
-                onLoad={() => setIdentityAssetState('ready')}
-                onError={() => setIdentityAssetState('error')}
-              />
-            ) : null}
+             {homeSceneSource ? (
+               <Animated.Image
+                 source={homeSceneSource}
+                 style={[styles.heroSceneReference, heroParallaxStyle]}
+                 resizeMode="cover"
+                 accessibilityLabel="Escena aprobada de referencia visual del Home"
+               />
+             ) : null}
             <LinearGradient colors={[`${colors.ink}18`, `${colors.ink}42`, `${colors.ink}D4`, colors.background]} locations={[0, 0.25, 0.56, 1]} style={StyleSheet.absoluteFill} />
             <LinearGradient colors={[`${identityVisual?.accent ?? colors.rarityEpic}38`, 'transparent', `${colors.accent}24`]} style={StyleSheet.absoluteFill} />
             <View pointerEvents="none" style={styles.heroRuleFrame}>
@@ -1169,7 +1170,7 @@ const styles = StyleSheet.create({
   root: { flex: 1 },
   scrollContent: { gap: 0 },
   heroStage: { overflow: 'hidden', position: 'relative' },
-  heroArt: { height: '100%', left: 0, position: 'absolute', top: 0, width: '100%' },
+  heroSceneReference: { height: '108%', left: 0, position: 'absolute', top: '-4%', width: '100%' },
   identityStage: { bottom: 36, borderBottomLeftRadius: 220, borderTopLeftRadius: 220, borderWidth: 1, height: 432, overflow: 'hidden', position: 'absolute', right: -36, width: 286, zIndex: 1 },
   identityArt: { height: '135%', left: -120, opacity: 0.96, position: 'absolute', top: -30, width: '205%' },
   identityAtmosphere: { borderRadius: 150, borderWidth: 1, height: 296, left: -36, position: 'absolute', top: 46, transform: [{ rotate: '18deg' }], width: 296 },

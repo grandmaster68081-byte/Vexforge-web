@@ -94,9 +94,11 @@ QA visual/táctil ni evidencia de APK de esta unidad.
 - **Ruta:** `/(tabs)/`; fuente primaria: `mobile/app/(tabs)/index.tsx`.
 - **Sujeto:** citadel, núcleo de forja, portales y actividad viva; debe leerse
   como entrada a un juego y no como dashboard.
-- **Assets:** `vexforge-home-hero.png`, `vexforge-hero-sentinel.png` y
-  `vexforge-feature-card.png` son el ancla local; el logo y facciones usan
-  Storage oficial.
+- **Assets:** `home-reference-scene.png` es la escena visual aprobada y base del
+  hero funcional; `vexforge-home-hero.png`, `vexforge-hero-sentinel.png` y
+  `vexforge-feature-card.png` siguen disponibles como assets canónicos
+  complementarios; el logo y facciones usan Storage oficial cuando están
+  disponibles.
 - **Datos y acciones:** `GameContext`, Supabase y las fuentes de Home existentes;
   portales y reintento sólo reflejan rutas y señales publicadas.
 - **Estados mínimos:** `loading`, `empty`, `partial`, `error`, `recovery`.

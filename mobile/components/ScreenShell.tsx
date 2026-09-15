@@ -42,6 +42,7 @@ export function ScreenShell({ surface = 'home', sceneMode = 'shell', children, s
     tutorial: 'accent',
   };
   const atmosphereColor = colors[atmosphereKey[surface]];
+  const backgroundSource = typeof backgroundAsset === 'string' ? { uri: backgroundAsset } : backgroundAsset;
 
   useEffect(() => {
     if (reduceMotion) {
@@ -83,9 +84,9 @@ export function ScreenShell({ surface = 'home', sceneMode = 'shell', children, s
     <View {...props} style={[styles.root, { backgroundColor: colors.background, paddingTop: webTopInset }, style]}>
       {ownsScene ? (
         <>
-          {backgroundAsset ? (
+          {backgroundSource ? (
             <Image
-              source={{ uri: backgroundAsset }}
+              source={backgroundSource}
               style={[StyleSheet.absoluteFillObject, styles.backgroundImage]}
               resizeMode="cover"
               accessibilityLabel="Escena oficial de VEXFORGE"

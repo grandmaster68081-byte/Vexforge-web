@@ -12,6 +12,7 @@ Estos assets ya tienen un consumidor real en Android o forman parte del registro
 | Asset | Superficie | Rol |
 |---|---|---|
 | `mobile/assets/images/vexforge-home-hero.png` | Home | Ancla de escena |
+| `mobile/assets/images/home-reference-scene.png` | Home | Escena de referencia visual aprobada y base del hero funcional |
 | `mobile/assets/images/vexforge-hero-sentinel.png` | Home | Personaje/elemento de primer plano |
 | `mobile/assets/images/vexforge-feature-card.png` | Home | Carta destacada |
 | `mobile/assets/images/auth-reference-scene.png` | Auth | Escena de acceso |
@@ -31,14 +32,15 @@ Estos assets quedan disponibles para selección, comparación, inspiración o re
 
 | Asset | Uso permitido |
 |---|---|
-| `mobile/assets/images/home-reference-scene.png` | Referencia de composición del Home |
 | `mobile/assets/images/vexforge-auth-nexus-final.png` | Referencia opcional para futuras composiciones de Auth/Nexus |
 | `mobile/assets/images/icon.jpg` | Referencia de estilo heredado; no arte diegético obligatorio |
 
-Un asset de esta lista conserva el estado `AVAILABLE_UNASSIGNED` hasta que una
-composición lo seleccione. Sólo pasa a producción después de una decisión
+Los assets de esta lista conservan el estado `AVAILABLE_UNASSIGNED` hasta que
+una composición los seleccione. Sólo pasan a producción después de una decisión
 explícita, validación de procedencia y registro en el consumidor real. La
-disponibilidad en Storage no equivale a una obligación de consumo.
+disponibilidad en Storage no equivale a una obligación de consumo. La escena
+`home-reference-scene.png` dejó esta lista al ser aprobada como la base visual
+del Home y registrada como `CANON_ACTIVE`.
 
 ## 2. Prioridad de selección para nuevas composiciones
 

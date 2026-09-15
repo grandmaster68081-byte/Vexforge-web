@@ -1,9 +1,9 @@
 /**
- * VEXFORGE cards-only visual asset policy.
+ * VEXFORGE visual asset policy.
  *
- * Card art is the only visual asset currently consumed from Supabase Storage.
- * All other visual surfaces intentionally remain PENDING_SOURCE until a new
- * asset is generated, approved, provenance-recorded and released.
+ * Card art remains the only visual asset consumed from Supabase Storage.
+ * Approved scene artwork is versioned locally when it has an explicit
+ * operator decision, provenance record and real Android consumer.
  */
 export const OFFICIAL_ASSETS = {
   logo: null,
@@ -19,7 +19,7 @@ export const OFFICIAL_ASSETS = {
 } as const;
 
 export const CANONICAL_BACKGROUNDS = {
-  home: null,
+  home: require('../assets/images/home-reference-scene.png'),
   auth: null,
   pvp: null,
   missions: null,
