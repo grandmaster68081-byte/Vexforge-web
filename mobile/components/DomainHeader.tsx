@@ -62,7 +62,7 @@ export function DomainHeader({
 }
 
 const styles = StyleSheet.create({
-  root: { paddingBottom: 16 },
+  root: { paddingBottom: VISUAL_TOKENS.domainHeader.rootPaddingBottom },
   topRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
   identity: { flexDirection: 'row', alignItems: 'center', gap: VISUAL_TOKENS.domainHeader.identityGap, flexShrink: 1 },
   sigil: {
@@ -74,19 +74,28 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   placeBlock: { flexShrink: 1 },
-  place: { fontSize: 10, fontWeight: '900', letterSpacing: 2 },
+  place: {
+    fontSize: VISUAL_TOKENS.domainHeader.place.fontSize,
+    fontWeight: '900',
+    letterSpacing: VISUAL_TOKENS.domainHeader.place.letterSpacing,
+  },
   rule: {
     height: VISUAL_TOKENS.border.hairline,
     width: VISUAL_TOKENS.domainHeader.ruleWidth,
     marginTop: VISUAL_TOKENS.domainHeader.ruleRadius + 4,
     borderRadius: VISUAL_TOKENS.domainHeader.ruleRadius,
   },
-  trailing: { marginLeft: 12 },
-  title: { fontSize: 30, fontWeight: '800', letterSpacing: -0.7, marginTop: VISUAL_TOKENS.domainHeader.titleTop },
-  purpose: {
-    fontSize: 13,
-    marginTop: VISUAL_TOKENS.domainHeader.purposeTop,
-    lineHeight: VISUAL_TOKENS.domainHeader.purposeLineHeight,
+  trailing: { marginLeft: VISUAL_TOKENS.domainHeader.trailingMargin },
+  title: {
+    fontSize: VISUAL_TOKENS.domainHeader.title.fontSize,
+    fontWeight: '800',
+    letterSpacing: VISUAL_TOKENS.domainHeader.title.letterSpacing,
+    marginTop: VISUAL_TOKENS.domainHeader.titleTop,
   },
-  children: { marginTop: 12 },
+  purpose: {
+    fontSize: VISUAL_TOKENS.domainHeader.purpose.fontSize,
+    marginTop: VISUAL_TOKENS.domainHeader.purposeTop,
+    lineHeight: VISUAL_TOKENS.domainHeader.purpose.lineHeight,
+  },
+  children: { marginTop: VISUAL_TOKENS.domainHeader.childrenTop },
 });

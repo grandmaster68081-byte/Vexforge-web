@@ -79,6 +79,11 @@ if (!domainHeader.includes("from '@/constants/experience'")) {
 if (!domainHeader.includes('VISUAL_TOKENS.domainHeader')) {
   failures.push('DomainHeader does not consume header tokens');
 }
+for (const token of ['domainHeader.place', 'domainHeader.title', 'domainHeader.purpose']) {
+  if (!domainHeader.includes(`VISUAL_TOKENS.${token}`)) {
+    failures.push(`DomainHeader is missing typography token "${token}"`);
+  }
+}
 
 const forgeText = source('mobile/components/ForgeText.tsx');
 if (!forgeText.includes("from '@/constants/experience'")) {

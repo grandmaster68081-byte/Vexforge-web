@@ -1,3 +1,27 @@
+## 2026-09-14 — VE-MOB-T2V — DOMAIN HEADER TYPOGRAPHY TOKENS / IMPLEMENTED_UNVERIFIED
+
+- **SCREEN / DOMAIN:** cabecera compartida de identidad de FOJA, ARENA,
+  ARCHIVO, FORJA y LEGADO.
+- **BLOCK:** eliminar geometría tipográfica aislada de `DomainHeader` sin
+  cambiar identidad, copy, iconografía ni navegación.
+- **WHAT CHANGED:** `VISUAL_TOKENS.domainHeader` ahora contiene padding raíz,
+  escala y tracking del lugar, título y propósito, margen trailing y separación
+  de contenido; `DomainHeader` consume esos roles.
+- **DATA PRESERVED:** `DOMAIN_IDENTITY`, status vivo, propósito, sigilos,
+  rutas, Auth, Supabase, RPCs, RLS, contratos de juego y web congelada.
+- **MOTION / PERFORMANCE:** no se añadió movimiento, solicitud, listener ni
+  render de datos; sólo se centralizaron valores estáticos.
+- **GUARD:** `node scripts/verify-mobile-visual-system.mjs` y
+  `git diff --check`.
+- **RELEASE GATE:** no se inició workflow Android, no se compiló APK y no se
+  publicó release; QA visual/táctil queda pendiente de autorización.
+- **STATUS:** `IMPLEMENTED_UNVERIFIED`.
+- **PERSISTENCIA:** publicar código, guardia, documento T2V y continuidad juntos
+  en `main` mediante la API REST HTTPS oficial de GitHub con `[skip ci]`, sin
+  `git push`.
+- **NEXT BLOCK:** continuar con otra pieza T2V explícita, sin tocar el motor de
+  juego, la web congelada ni el tutorial.
+
 ## 2026-09-14 — VE-MOB-T2V — ASSET ERROR STATE TOKENS / IMPLEMENTED_UNVERIFIED
 
 - **SCREEN / DOMAIN:** estado transversal de asset no disponible en

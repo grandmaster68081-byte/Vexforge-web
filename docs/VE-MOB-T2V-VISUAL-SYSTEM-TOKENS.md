@@ -30,6 +30,9 @@ la web congelada.
   porcentaje confirmado, el cero válido y la ausencia de datos sin inferencias.
 - `DomainHeader` consume `domainHeader` para la geometría compartida de sigil,
   regla y jerarquía de texto, manteniendo la identidad viva de cada dominio.
+- La jerarquía tipográfica restante de `DomainHeader` —lugar, título,
+  propósito, trailing y espaciado de contenido— también consume
+  `domainHeader`, sin cambiar el copy ni el dominio activo.
 - `ScreenShell` consume `scene` para la geometría y opacidad de la atmósfera
   compartida, sin convertir esa capa visual en estado de juego.
 - `DomainState` consume `state` para la geometría de carga, vacío y error,
