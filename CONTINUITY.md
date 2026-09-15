@@ -1,15 +1,16 @@
-## 2026-09-15 — VE-MOB-5 DECK — OFFICIAL-DIMENSION VISUAL CANDIDATE / CANDIDATE_FOR_REVIEW
+## 2026-09-15 — VE-MOB-5 DECK — OFFICIAL ASSET / CANONICAL_PENDING_IMPLEMENTATION
 
 - **ENTORNO ACTIVO:** aplicación Android en `mobile/**`; la web permanece congelada.
 - **AUTORIDAD:** fila ACTIVE `public.vexforge_official_documents / vexforge_home_world_system_protocol_v3`, V2.3, consultada por HTTPS.
 - **SCREEN / DOMAIN:** Deck Forge / constructor de mazos, superficie Android de formación y composición.
-- **REFERENCIA VISUAL:** se publicó `attached_assets/generated_images/vexforge_decks_screen_official_1080x2340.png`, PNG RGB/sRGB de `1080×2340`, SHA-256 `6e9381a5f6a266c908d8760dfc14aae0280402d624b5f3d2f5ae34964b1f8fea`.
-- **ANÁLISIS PROTOCOLARIO:** la escena conserva la gramática de Home —citadel, forja central, obsidiana, metal, cyan arcano, oro/brasa y resonancia violeta— y expresa Deck como pedestal, Champion, siete ranuras de Formation, zona Tactical, Reserve y espacio de controles nativos.
-- **REGLA CERO GENÉRICOS:** el asset no contiene nombres, cifras, rarezas, recompensas, estados legales, copy de usuario ni controles autoritativos falsos; deja esas capas a la UI Android y a Supabase vivo.
-- **ALCANCE:** este asset reemplaza la referencia cuadrada anterior como candidato de dimensión oficial; no se conectó a `mobile/**`, no se modificaron contratos, Supabase, RPCs, RLS, economía ni rutas.
-- **RELEASE GATE:** no se inició workflow Android, no se compiló APK y no se publicó release, conforme a la instrucción vigente del operador.
-- **STATUS:** `CANDIDATE_FOR_REVIEW`; sólo puede promoverse a asset canónico después de aprobación visual, Screen Master Record, registro de procedencia y validación táctil.
-- **NEXT BLOCK:** si el operador aprueba esta imagen, integrarla en el registro Android como referencia/escena Deck Forge y ejecutar la verificación de la unidad; la APK queda pendiente de autorización explícita.
+- **ASSET OFICIAL:** `mobile/assets/images/decks-reference-scene.png` queda reemplazado por el asset aprobado por el operador; PNG RGB/sRGB de `1080×2340`, SHA-256 `6e9381a5f6a266c908d8760dfc14aae0280402d624b5f3d2f5ae34964b1f8fea`.
+- **IDENTIDAD:** citadel y forja central de Home, obsidiana, metal grabado, cyan arcano, oro/brasa y resonancia violeta; la escena expresa pedestal de Champion, siete ranuras de Formation, Tactical, Reserve y espacio de controles nativos.
+- **REGLA CERO GENÉRICOS:** no contiene nombres, cifras, rarezas, recompensas, legalidad ni estados falsos; las capas dinámicas permanecen bajo Supabase y la UI Android real.
+- **CARDS-ONLY STORAGE:** el asset queda versionado localmente para Android; no se sube a Storage visual, conforme a la sección 72.9 del protocolo. El arte vivo de cartas continúa siendo la única familia de Storage.
+- **IMPLEMENTACIÓN:** la ruta oficial queda preparada para el siguiente consumidor Android; el Deck actual sigue siendo una superficie programática y no se declara activo en APK hasta integrar el asset sin sustituir controles ni datos.
+- **RELEASE GATE:** no se inició workflow Android ni se compiló una APK nueva. La verificación de Home/Auth se hará contra el último release existente.
+- **STATUS:** `CANONICAL_PENDING_IMPLEMENTATION`; dimensiones y procedencia aprobadas, integración y evidencia física pendientes.
+- **NEXT BLOCK:** verificar Home y Auth en código, métricas de asset y release APK; después integrar Deck y solicitar una compilación sólo si el operador la autoriza.
 
 ## 2026-09-15 — VE-MOB-AUTH — NEXUS ACCESS VISUAL / IMPLEMENTED_UNVERIFIED
 
