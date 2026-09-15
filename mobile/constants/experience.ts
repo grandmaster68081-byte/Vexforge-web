@@ -93,6 +93,7 @@ export const VISUAL_TOKENS = {
     ambient: { elevation: DEPTH.ambient, opacity: 0.72 },
     panel: { elevation: DEPTH.surface, opacity: 0.9 },
     focus: { elevation: DEPTH.focus, opacity: 0.96 },
+    borderOpacity: { toned: 0.58, neutral: 0.78 },
   },
   colorRoles: {
     scene: 'background',

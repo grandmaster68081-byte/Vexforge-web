@@ -44,6 +44,9 @@ const panel = source('mobile/components/MaterialPanel.tsx');
 for (const token of ['VISUAL_TOKENS', 'useReducedMotion', 'shadowOpacity', 'elevation']) {
   if (!panel.includes(token)) failures.push(`MaterialPanel is missing "${token}"`);
 }
+if (!panel.includes('VISUAL_TOKENS.material.borderOpacity')) {
+  failures.push('MaterialPanel does not consume material border opacity tokens');
+}
 
 const state = source('mobile/components/DomainState.tsx');
 if (!state.includes("from '@/components/MaterialPanel'")) {

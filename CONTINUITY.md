@@ -1,3 +1,29 @@
+## 2026-09-15 — VE-MOB-T2V — MATERIAL PANEL BORDER OPACITY TOKENS / IMPLEMENTED_UNVERIFIED
+
+- **BRANCH:** `main`.
+- **SCREEN / DOMAIN:** superficie compartida `MaterialPanel` usada por los
+  dominios Android.
+- **BLOCK:** extraer las opacidades visuales de borde del panel sin cambiar sus
+  roles de material, colores de dominio, sombra ni entrada animada.
+- **WHAT CHANGED:** `VISUAL_TOKENS.material.borderOpacity` define los roles
+  `toned` y `neutral`; `MaterialPanel` consume ambos en `withAlpha`.
+- **BEHAVIOR PRESERVED:** mismo color base, alpha de borde, border width,
+  elevación, sombra, `materialRole`, tone, `reduced-motion` y children.
+- **DATA PRESERVED:** no se añadieron solicitudes, listeners, estado de dominio,
+  rutas, gameplay, Supabase, Auth, RPCs, assets ni cambios en la web.
+- **MOTION / PERFORMANCE:** no se añadió movimiento ni render de datos; sólo se
+  centralizaron dos valores estáticos de presentación.
+- **GUARD:** `node scripts/verify-mobile-visual-system.mjs`,
+  `node --check scripts/verify-mobile-visual-system.mjs` y `git diff --check`.
+- **RELEASE GATE:** no se inició workflow Android, no se compiló APK y no se
+  publicó release; QA visual/táctil queda pendiente de autorización.
+- **STATUS:** `IMPLEMENTED_UNVERIFIED`.
+- **PERSISTENCIA:** publicar código, guarda T2V y esta continuidad juntos en
+  `main` mediante la API REST HTTPS oficial de GitHub con `[skip ci]`, sin
+  `git push`.
+- **NEXT BLOCK:** continuar con otra pieza T2V explícita, sin tocar el motor de
+  juego, los contratos de Supabase, la web congelada ni el tutorial.
+
 ## 2026-09-15 — VE-MOB-T2V — SCENE AMBIENT MOTION TOKENS / IMPLEMENTED_UNVERIFIED
 
 - **BRANCH:** `main`.

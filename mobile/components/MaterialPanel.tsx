@@ -58,7 +58,12 @@ export function MaterialPanel({
         styles.base,
         {
           backgroundColor: withAlpha(colors.panel, material.opacity),
-          borderColor: withAlpha(borderColor, tone ? 0.58 : 0.78),
+          borderColor: withAlpha(
+            borderColor,
+            tone
+              ? VISUAL_TOKENS.material.borderOpacity.toned
+              : VISUAL_TOKENS.material.borderOpacity.neutral,
+          ),
           borderWidth: tone ? VISUAL_TOKENS.border.standard : VISUAL_TOKENS.border.hairline,
           shadowColor: accent,
           shadowOpacity: shadow.opacity,
