@@ -34,6 +34,9 @@ la web congelada.
   compartida, sin convertir esa capa visual en estado de juego.
 - `DomainState` consume `state` para la geometría de carga, vacío y error,
   preservando mensajes, accesibilidad y acciones de recuperación.
+- `ScreenShell` consume `state.assetError` para la geometría compartida del
+  fallo de arte oficial; el mensaje sigue declarando que el asset no está
+  disponible y no crea un sustituto genérico.
 - `ForgeText` consume `typography` para familia tipográfica, escala,
   interlineado y tracking, conservando las seis variantes y los tonos actuales.
 - `ForgeFormationPreview` consume `formation` para la geometría y escala de su

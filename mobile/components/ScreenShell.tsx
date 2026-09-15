@@ -187,8 +187,28 @@ const styles = StyleSheet.create({
     right: VISUAL_TOKENS.scene.watermark.right,
     opacity: VISUAL_TOKENS.scene.watermark.opacity,
   },
-  assetError: { position: 'absolute', left: 20, right: 20, top: '42%', alignItems: 'center' },
-  assetErrorPanel: { borderWidth: 1, borderRadius: 14, paddingHorizontal: 16, paddingVertical: 12, alignItems: 'center' },
-  assetErrorTitle: { fontFamily: 'Rajdhani_700Bold', fontSize: 10, letterSpacing: 1.4 },
-  assetErrorBody: { fontFamily: 'Rajdhani_500Medium', fontSize: 12, marginTop: 4 },
+  assetError: {
+    position: 'absolute',
+    left: VISUAL_TOKENS.state.assetError.rootInset,
+    right: VISUAL_TOKENS.state.assetError.rootInset,
+    top: VISUAL_TOKENS.state.assetError.rootTop,
+    alignItems: 'center',
+  },
+  assetErrorPanel: {
+    borderWidth: VISUAL_TOKENS.state.assetError.panelBorderWidth,
+    borderRadius: VISUAL_TOKENS.state.assetError.panelRadius,
+    paddingHorizontal: VISUAL_TOKENS.state.assetError.panelPaddingHorizontal,
+    paddingVertical: VISUAL_TOKENS.state.assetError.panelPaddingVertical,
+    alignItems: 'center',
+  },
+  assetErrorTitle: {
+    fontFamily: 'Rajdhani_700Bold',
+    fontSize: VISUAL_TOKENS.state.assetError.titleSize,
+    letterSpacing: VISUAL_TOKENS.state.assetError.titleTracking,
+  },
+  assetErrorBody: {
+    fontFamily: 'Rajdhani_500Medium',
+    fontSize: VISUAL_TOKENS.state.assetError.bodySize,
+    marginTop: VISUAL_TOKENS.state.assetError.bodyMarginTop,
+  },
 });

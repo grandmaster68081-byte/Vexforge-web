@@ -228,6 +228,18 @@ export const VISUAL_TOKENS = {
     actionHorizontalPadding: 12,
     actionVerticalPadding: 9,
     actionTextSize: 10,
+    assetError: {
+      rootInset: 20,
+      rootTop: '42%',
+      panelBorderWidth: 1,
+      panelRadius: 14,
+      panelPaddingHorizontal: 16,
+      panelPaddingVertical: 12,
+      titleSize: 10,
+      titleTracking: 1.4,
+      bodySize: 12,
+      bodyMarginTop: 4,
+    },
   },
   navigation: {
     bar: {

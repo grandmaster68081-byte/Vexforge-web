@@ -1,3 +1,28 @@
+## 2026-09-14 — VE-MOB-T2V — ASSET ERROR STATE TOKENS / IMPLEMENTED_UNVERIFIED
+
+- **SCREEN / DOMAIN:** estado transversal de asset no disponible en
+  `ScreenShell`.
+- **BLOCK:** centralizar la geometría del error de arte oficial sin ocultar el
+  fallo ni sustituirlo por una imagen genérica.
+- **WHAT CHANGED:** `VISUAL_TOKENS.state.assetError` define inset, posición,
+  borde, radio, padding y jerarquía tipográfica; `ScreenShell` consume esos
+  valores para el panel que declara que el arte oficial no está disponible.
+- **DATA PRESERVED:** `CANONICAL_BACKGROUNDS`, `OFFICIAL_ASSETS`, carga/error de
+  `Image`, rutas, Supabase, Auth, contratos de juego y web congelada.
+- **MOTION / PERFORMANCE:** no se añadió movimiento, solicitud, listener ni
+  render de datos; el estado de error continúa siendo el resultado real de la
+  carga del asset.
+- **GUARD:** `node scripts/verify-mobile-visual-system.mjs` y
+  `git diff --check`.
+- **RELEASE GATE:** no se inició workflow Android, no se compiló APK y no se
+  publicó release; QA visual/táctil queda pendiente de autorización.
+- **STATUS:** `IMPLEMENTED_UNVERIFIED`.
+- **PERSISTENCIA:** publicar código, guardia, documento T2V y continuidad juntos
+  en `main` mediante la API REST HTTPS oficial de GitHub con `[skip ci]`, sin
+  `git push`.
+- **NEXT BLOCK:** continuar con otra pieza T2V explícita, sin tocar el motor de
+  juego, la web congelada ni el tutorial.
+
 ## 2026-09-14 — VE-MOB-9-PROFILE — HISTORY OUTCOME NORMALIZATION / IMPLEMENTED_UNVERIFIED
 
 - **SCREEN / DOMAIN:** Profile / `LEGADO → PERFIL → HISTORIAL`.

@@ -35,6 +35,7 @@ for (const token of [
   'control:',
   'navigation:',
   'formation:',
+  'assetError:',
 ]) {
   if (!tokens.includes(token)) failures.push(`shared visual token "${token}" is missing`);
 }
@@ -93,6 +94,9 @@ if (!screenShell.includes("from '@/constants/experience'")) {
 }
 if (!screenShell.includes('VISUAL_TOKENS.scene')) {
   failures.push('ScreenShell does not consume scene tokens');
+}
+if (!screenShell.includes('VISUAL_TOKENS.state.assetError')) {
+  failures.push('ScreenShell does not consume asset error state tokens');
 }
 
 if (!state.includes('VISUAL_TOKENS.state')) {
