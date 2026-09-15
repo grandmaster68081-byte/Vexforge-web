@@ -164,6 +164,17 @@ if ((formation.match(/borderWidth: 1/g) ?? []).length > 0) {
 if ((formation.match(/VISUAL_TOKENS\.border\.standard/g) ?? []).length < 5) {
   failures.push('ForgeFormationPreview does not apply the shared standard border token to all formation surfaces');
 }
+for (const token of [
+  'formation.cardArt.placeholderBackground',
+  'formation.feedback.borderColor',
+]) {
+  if (!formation.includes(`VISUAL_TOKENS.${token}`)) {
+    failures.push(`ForgeFormationPreview is missing visual token "${token}"`);
+  }
+}
+if (formation.includes("backgroundColor: 'rgba(") || formation.includes("borderColor: 'rgba(")) {
+  failures.push('ForgeFormationPreview contains an un-tokenized rgba presentation color');
+}
 
 const navigation = source('mobile/app/(tabs)/_layout.tsx');
 if (!navigation.includes("from '@/constants/experience'")) {

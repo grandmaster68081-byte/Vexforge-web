@@ -51,6 +51,9 @@ la web congelada.
 - `ForgeFormationPreview` consume `border.standard` para el borde de la raíz,
   sigil, tarjetas, feedback y retry, manteniendo una única regla de borde sin
   cambiar colores, estados ni zonas de interacción.
+- `ForgeFormationPreview` consume roles de color para el placeholder de arte y
+  el borde de feedback, manteniendo los mismos valores visuales sin literales
+  aislados en el componente.
 - `ForgeBattlefield` consume `battlefield.typography` para la jerarquía del
   campo, turno, formaciones, cartas, reserva, carril de confrontación y
   resultado, preservando los datos y estados confirmados por el servidor.

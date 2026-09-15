@@ -227,7 +227,7 @@ const styles = StyleSheet.create({
     width: '100%',
     height: VISUAL_TOKENS.formation.cardArt.height,
     borderRadius: VISUAL_TOKENS.formation.cardArt.radius,
-    backgroundColor: 'rgba(0,0,0,0.2)',
+    backgroundColor: VISUAL_TOKENS.formation.cardArt.placeholderBackground,
   },
   role: {
     flex: 1,
@@ -258,7 +258,7 @@ const styles = StyleSheet.create({
   feedback: {
     minHeight: VISUAL_TOKENS.formation.feedback.minHeight,
     borderWidth: VISUAL_TOKENS.border.standard,
-    borderColor: 'rgba(255,255,255,0.12)',
+    borderColor: VISUAL_TOKENS.formation.feedback.borderColor,
     borderRadius: VISUAL_TOKENS.formation.feedback.radius,
     padding: VISUAL_TOKENS.formation.feedback.padding,
     flexDirection: 'row',
