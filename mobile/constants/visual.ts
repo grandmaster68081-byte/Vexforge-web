@@ -19,7 +19,9 @@ export const OFFICIAL_ASSETS = {
 } as const;
 
 export const CANONICAL_BACKGROUNDS = {
-  home: require('../assets/images/home-reference-scene.png'),
+  // Home is a native scene. Its approved reference remains in the registry,
+  // while the runtime uses live identity artwork plus authored depth layers.
+  home: null,
   auth: require('../assets/images/vexforge-auth-nexus-final.png'),
   pvp: null,
   missions: null,

@@ -12,7 +12,7 @@ Auth y Home están funcionando como rutas Android, pero sus assets locales de es
 | Superficie | Consumidor activo | Dimensión medida | Dimensión esperada | Resultado |
 |---|---|---:|---:|---|
 | Auth | `CANONICAL_BACKGROUNDS.auth` → `auth-reference-scene.png` → `ScreenShell` | `1024 × 1024` | `1080 × 2340` | **No conforme; recorte horizontal severo** |
-| Home | `CANONICAL_BACKGROUNDS.home` → `home-reference-scene.png` → `index.tsx` hero | `1024 × 1024` | referencia `1080 × 2340`; hero actual responsive | **No conforme como escena full-frame; recorte intencional de hero** |
+| Home | `index.tsx` native hero → live identity artwork + authored layers | variable Storage artwork | responsive native composition | **Conforme al protocolo; approved PNG retained as reference only** |
 | Auth alternativa | `vexforge-auth-nexus-final.png` | `1080 × 2340` | `1080 × 2340` | **Correcta en dimensión, no consumida** |
 
 ## Auth — causa exacta
@@ -25,9 +25,15 @@ Existe `mobile/assets/images/vexforge-auth-nexus-final.png` con `1080 × 2340`, 
 
 ## Home — causa exacta
 
-`mobile/app/(tabs)/index.tsx` toma `CANONICAL_BACKGROUNDS.home` y monta el asset en `Animated.Image` dentro de `heroSceneViewport`, con `resizeMode="cover"`. El hero calcula una altura responsive limitada a aproximadamente `570–640 px` y aplica un estilo de escena de `112%` con desplazamiento/parallax.
+`mobile/app/(tabs)/index.tsx` ya no toma `CANONICAL_BACKGROUNDS.home` ni monta
+`home-reference-scene.png`. El hero calcula una altura responsive limitada a
+aproximadamente `570–640 px` y compone la escena con artwork vivo de la
+identidad, gradientes, trazos, atmósfera y parallax limitado.
 
-El archivo activo `home-reference-scene.png` es cuadrado (`1024 × 1024`). En el hero, `cover` conserva el alto del viewport y recorta lateralmente; el `112%` amplía aún más el recorte. Esto explica por qué la pantalla puede funcionar y verse llena, pero no coincide con una escena Android completa de `1080 × 2340`.
+`home-reference-scene.png` permanece registrado como referencia visual aprobada
+de `1024 × 1024`, pero no es una superficie runtime. Por eso no se corrige
+forzando una dimensión vertical ni se deforma la referencia para llenar el
+dispositivo.
 
 Home no es actualmente un fondo full-screen: es una composición nativa desplazable con hero, gradientes, portales, actividad y datos vivos. Por tanto, corregir sólo el tamaño del PNG no resolvería por sí solo la equivalencia visual; habría que decidir si el contrato sigue siendo hero recortado o si se promueve una escena vertical completa y se remaqueta el hero.
 

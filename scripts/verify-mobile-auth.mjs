@@ -10,7 +10,7 @@ const files = {
 const contents = Object.fromEntries(
   await Promise.all(Object.entries(files).map(async ([key, path]) => [key, await readFile(path, "utf8")])),
 );
-const authAsset = await readFile("mobile/assets/images/auth-reference-scene.png");
+const authAsset = await readFile("mobile/assets/images/vexforge-auth-nexus-final.png");
 const authAssetIsValidReference =
   authAsset.readUInt32BE(0) === 0x89504e47 &&
   authAsset.readUInt32BE(16) >= 768 &&

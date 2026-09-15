@@ -1,10 +1,14 @@
-Vigencia del contrato: desde el 2026-09-13, la referencia PNG descrita abajo queda como evidencia histórica del Home anterior. El consumidor Android vigente es una composición nativa en `mobile/app/(tabs)/index.tsx`; no monta el PNG ni usa hotspots transparentes. La escena se construye dentro del mismo lienzo del Home con gradientes, trazos y el artwork canónico de la identidad cargado desde Supabase Storage; los datos y contratos siguen viniendo de Supabase.
+Vigencia del contrato: desde el 2026-09-15, `home-reference-scene.png` queda
+como evidencia visual histórica y referencia aprobada del Home anterior. El
+consumidor Android vigente es una composición nativa en
+`mobile/app/(tabs)/index.tsx`; no monta el PNG ni usa hotspots transparentes.
+La escena se construye dentro del mismo lienzo del Home con gradientes, trazos,
+órbitas, atmósfera y el artwork canónico vivo de la identidad cargado desde
+Supabase Storage; los datos y contratos siguen viniendo de Supabase.
 
-Referencia visual vigente: `mobile/assets/images/home-reference-scene.png`
-mide `1080×2340`, PNG RGB/sRGB, proporción `9:19.5`. La imagen se muestra
-como composición completa del Inicio; los recursos superiores no se pintan
-como una segunda capa y sólo quedan hotspots transparentes sobre las acciones
-visibles de la referencia.
+Referencia visual aprobada: `mobile/assets/images/home-reference-scene.png`
+mide `1024×1024`, PNG RGB/sRGB. Se conserva para revisión visual y procedencia;
+no es un fondo runtime ni una superficie interactiva.
 
 # VE-MOB-3 — HOME
 

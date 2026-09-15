@@ -9,8 +9,8 @@
   "authority": {
     "document": "public.vexforge_official_documents / vexforge_home_world_system_protocol_v3",
     "status": "ACTIVE",
-    "version": "V2.2",
-    "protocol_sha256": "828a077428987b2534e3733204ac721ef3073eb7dadf9530a6f46877dd63c503",
+    "version": "V2.3",
+    "protocol_sha256": "cd83250a5f63fe72b5be237bfdf1bb54a1f935927a5fea95136190b837a165ba",
     "manifest_source": "src/lib/assetManifest.ts",
     "local_atlas": "docs/VEXFORGE-ASSET-ATLAS.md"
   },
@@ -170,8 +170,8 @@
       "authorized_domains": [
         "Home"
       ],
-      "state": "CANON_ACTIVE",
-      "debt": "Active Home hero reference is square and intentionally cropped by the responsive hero; full-frame equivalence remains pending product decision."
+      "state": "RESERVED_SURFACE_ART",
+      "debt": "Referencia visual Home aprobada y conservada para comparación; no se monta como fondo runtime porque el protocolo exige una composición nativa viva."
     },
     {
       "asset_id": "android-local:icon.jpg",
@@ -228,20 +228,21 @@
         "height": 2340
       },
       "format": "png",
-      "hash": "dc598706823ab41fd8ceabc162f4118fc2515da2f74d808e80910e7497e38c32",
+        "hash": "b1df068490baf40ca40dc7ca5149a3d98fc3a85a043a6209c3b977f1f05f9ba3",
       "hash_algorithm": "sha256",
       "hash_status": "MEASURED",
       "provenance": [
         "repository file",
         "docs/VE-T0-ANDROID-ASSET-MATRIX.md",
-        "docs/VEXFORGE-ASSET-ATLAS.md"
+        "docs/VEXFORGE-ASSET-ATLAS.md",
+        "operator-provided Auth reference attached in the current visual sync"
       ],
       "authorized_domains": [
         "Auth",
         "Nexus"
       ],
       "state": "CANON_ACTIVE",
-      "debt": "Escena vertical Auth/Nexus 1080×2340 promovida como referencia oficial y consumida por CANONICAL_BACKGROUNDS.auth; QA física pendiente."
+      "debt": "Escena vertical Auth/Nexus 1080×2340 promovida como referencia oficial y consumida por CANONICAL_BACKGROUNDS.auth; la QA física sigue pendiente."
     },
     {
       "asset_id": "android-local:vexforge-feature-card.png",

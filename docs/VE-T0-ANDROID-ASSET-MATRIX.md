@@ -6,8 +6,8 @@
 **Entorno activo:** Android en `mobile/**`
 **Baseline observado:** `main` en `624007bb732b40c186495f0a3aab2d872ed86e0f`
 **Fuente activa reconciliada:** `public.vexforge_official_documents`
-(`vexforge_home_world_system_protocol_v3`, `ACTIVE`, V2.2)
-**Hash del protocolo leído:** `828a077428987b2534e3733204ac721ef3073eb7dadf9530a6f46877dd63c503`
+(`vexforge_home_world_system_protocol_v3`, `ACTIVE`, V2.3)
+**Hash del protocolo leído:** `cd83250a5f63fe72b5be237bfdf1bb54a1f935927a5fea95136190b837a165ba`
 
 ## 1. Autoridad y regla de cero genéricos
 
@@ -47,7 +47,7 @@ consumo automático.
 | `mobile/assets/images/decks-reference-scene.png` | Escena de formación | `CANON_ACTIVE` | Deck | `VEXFORGE-ASSET-ATLAS.md` |
 | `mobile/assets/images/profile-reference-scene.png` | Escena de identidad | `CANON_ACTIVE` | Profile | `VEXFORGE-ASSET-ATLAS.md` |
 | `docs/visual-assets/vexforge-profile-screen-premium-1080x2340.png` | Referencia visual Profile aprobada por el operador | `REVIEW_REQUIRED` | Profile | `docs/visual-assets/vexforge-profile-screen-premium-1080x2340.md`, registro T0 |
-| `mobile/assets/images/home-reference-scene.png` | Escena de referencia visual y fondo del hero funcional | `CANON_ACTIVE` | Home | `mobile/app/(tabs)/index.tsx`, `mobile/constants/visual.ts`, `VEXFORGE-ASSET-ATLAS.md` |
+| `mobile/assets/images/home-reference-scene.png` | Referencia visual aprobada; no se monta como fondo runtime | `RESERVED_SURFACE_ART` | Home | `docs/VE-MOB-3-HOME.md`, `docs/visual-assets/vexforge-home-screen-official.md` |
 | `mobile/assets/images/icon.jpg` | Referencia de estilo heredado | `AVAILABLE_UNASSIGNED` | Compartido | `VEXFORGE-ASSET-ATLAS.md` |
 | `mobile/assets/images/collection-reference-scene.png` | Asset local sin asignación explícita en el atlas | `REVIEW_REQUIRED` | Collection | inventario de repositorio; requiere decisión de consumidor |
 | `mobile/assets/images/deck-forge-scene.jpg` | Asset local sin asignación explícita en el atlas | `REVIEW_REQUIRED` | Deck / Forge | inventario de repositorio; requiere decisión de consumidor |

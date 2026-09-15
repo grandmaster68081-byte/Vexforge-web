@@ -155,12 +155,12 @@ export default function AuthScreen() {
                   <Text style={[styles.brandCode, { color: colors.accent }]}>NEXUS / ACCESS</Text>
                 </View>
               </View>
-              <Text style={[styles.eyebrow, { color: colors.accent }]}>SECURE ENTRY / AUTH</Text>
+              <Text style={[styles.eyebrow, { color: colors.accent }]}>NEXUS GATEWAY / SECURE IDENTITY</Text>
               <Text style={[styles.title, { color: colors.foreground }]}>
-                {mode === 'signin' ? 'Regresa al Nexus.' : 'Forja tu identidad.'}
+                {mode === 'signin' ? 'Despierta tu leyenda.' : 'Forja tu identidad.'}
               </Text>
               <Text style={[styles.subtitle, { color: colors.mutedForeground }]}>
-                {mode === 'signin' ? 'Tu colección y tu progreso esperan al otro lado.' : 'Registra un Forjador para comenzar tu recorrido.'}
+                {mode === 'signin' ? 'El Nexus reconoce a quienes cruzan el umbral.' : 'Registra un Forjador para comenzar tu recorrido.'}
               </Text>
               <View
                 testID="auth-status-rail"
@@ -178,7 +178,7 @@ export default function AuthScreen() {
             </View>
 
             <View style={styles.form} accessibilityLabel="Acciones de acceso de VEXFORGE">
-              <Text style={[styles.fieldLabel, { color: colors.mutedForeground }]}>CORREO ELECTRÓNICO</Text>
+               <Text style={[styles.fieldLabel, { color: colors.mutedForeground }]}>CORREO DEL FORJADOR</Text>
               <TextInput
                 testID="auth-email"
                 accessibilityLabel="Correo electrónico"
@@ -191,7 +191,7 @@ export default function AuthScreen() {
                 autoCorrect={false}
                 keyboardType="email-address"
                 textContentType="emailAddress"
-                placeholder="forjador@ejemplo.com"
+                 placeholder="Escribe tu correo de acceso"
                 placeholderTextColor={`${colors.mutedForeground}99`}
                 style={[styles.emailInput, { color: colors.foreground, backgroundColor: `${colors.panelStrong}F2`, borderColor: `${colors.accent}42` }]}
                 editable={!authLoading}
@@ -199,7 +199,7 @@ export default function AuthScreen() {
                 selectionColor={colors.accent}
               />
 
-              <Text style={[styles.fieldLabel, { color: colors.mutedForeground }]}>CONTRASEÑA</Text>
+               <Text style={[styles.fieldLabel, { color: colors.mutedForeground }]}>CLAVE DEL NEXUS</Text>
               <TextInput
                 testID="auth-password"
                 accessibilityLabel="Contraseña"
@@ -212,7 +212,7 @@ export default function AuthScreen() {
                 autoCorrect={false}
                 secureTextEntry={!showPassword}
                 textContentType="password"
-                placeholder="Mínimo 6 caracteres"
+                 placeholder="Introduce tu clave segura"
                 placeholderTextColor={`${colors.mutedForeground}99`}
                 style={[styles.passwordInput, { color: colors.foreground, backgroundColor: `${colors.panelStrong}F2`, borderColor: `${colors.accent}42` }]}
                 editable={!authLoading}

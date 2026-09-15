@@ -1,3 +1,19 @@
+## 2026-09-15 — VE-MOB-AUTH + VE-MOB-3 HOME — OFFICIAL VISUAL SYNC / IMPLEMENTED_UNVERIFIED
+
+- **ENTORNO ACTIVO:** aplicación Android en `mobile/**`; la web permanece congelada.
+- **AUTORIDAD:** fila `ACTIVE` `public.vexforge_official_documents / vexforge_home_world_system_protocol_v3`, versión V2.3, consultada por HTTPS; hash de contenido registrado en el Asset Registry.
+- **AUTH OFICIAL:** la referencia proporcionada por el operador quedó promovida en `mobile/assets/images/vexforge-auth-nexus-final.png`, PNG RGB `1080×2340`, SHA-256 `b1df068490baf40ca40dc7ca5149a3d98fc3a85a043a6209c3b977f1f05f9ba3`.
+- **AUTH IMPLEMENTACIÓN:** `CANONICAL_BACKGROUNDS.auth` continúa conectado al runtime y `auth.tsx` conserva controles nativos reales: Supabase Auth, registro, recuperación, OAuth, recordar sesión, show/hide password, feedback, teclado, safe area y navegación. El copy visible se alineó con la referencia aprobada sin convertirla en un control estático.
+- **HOME OFICIAL:** `mobile/assets/images/home-reference-scene.png` permanece como referencia visual aprobada, PNG RGB `1024×1024`, SHA-256 `191dbe5ddb04d9208b69811e5139ac0eaaa0b498e1717fafc21717a8dd9a64e1`; no se monta como fondo runtime.
+- **HOME IMPLEMENTACIÓN:** Home ahora sigue literalmente la ley del protocolo: escena nativa viva con `Animated.Image` del artwork canónico de la identidad cargado desde Supabase Storage, parallax limitado, atmósfera, niebla, órbita, pulso, identidad/carta vivas y controles nativos conectados a datos de Supabase y rutas reales. No hay captura estática ni hotspots transparentes.
+- **REGLA CERO GENÉRICOS:** no se añadieron métricas, rutas, cartas, rewards, RPCs, fondos remotos ni resultados ficticios. Los estados no reportados permanecen explícitos.
+- **REGISTRO:** se actualizaron `docs/VE-T0-ANDROID-ASSET-REGISTRY.json`, `docs/visual-assets/vexforge-auth-screen-legendary-1080x2340.md` y `docs/visual-assets/vexforge-home-screen-official.md`; `CANONICAL_BACKGROUNDS.home` queda nulo para impedir el montaje accidental de la referencia.
+- **QA HONESTA:** `IMPLEMENTED_UNVERIFIED`; no hay evidencia física nueva de APK, dispositivo/emulador, teclado, safe area, taps, navegación o rendimiento.
+- **RELEASE GATE:** no se compiló APK, no se inició el workflow Android y no se publicó release, conforme a la instrucción del operador.
+- **PERSISTENCIA:** el cambio se publicará en `main` como un commit mediante GitHub REST/Data API sobre HTTPS, sin credenciales en URLs ni `git push`.
+
+---
+
 ## 2026-09-15 — VE-MOB-VISUAL — HOME VERTICAL REFERENCE / BLOCKED BY GENERATOR DIMENSION
 
 - **ENTORNO ACTIVO:** aplicación Android en `mobile/**`; la web permanece congelada.
