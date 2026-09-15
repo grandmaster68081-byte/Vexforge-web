@@ -440,6 +440,20 @@ for (const token of [
     failures.push(`World Raid card is missing visual token "${token}"`);
   }
 }
+for (const token of [
+  'worldLore.card',
+  'worldLore.header',
+  'worldLore.seal',
+  'worldLore.category',
+  'worldLore.title',
+  'worldLore.preview',
+  'worldLore.content',
+  'worldLore.related',
+]) {
+  if (!world.includes(`VISUAL_TOKENS.${token}`)) {
+    failures.push(`World Codex card is missing visual token "${token}"`);
+  }
+}
 
 if (failures.length > 0) {
   console.error('T2V visual system guard failed:');

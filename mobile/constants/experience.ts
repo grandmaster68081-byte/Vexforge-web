@@ -241,6 +241,17 @@ export const VISUAL_TOKENS = {
     actionText: { fontSize: 10, fontWeight: '900', letterSpacing: 0.6 },
     integrityNote: { fontSize: 9, lineHeight: 14 },
   },
+  worldLore: {
+    card: { borderWidth: 1, radius: 15, padding: 13, gap: 10 },
+    header: { gap: 10 },
+    seal: { size: 38, radius: 12, borderWidth: 1 },
+    iconSize: 17,
+    category: { fontSize: 9, fontWeight: '900', letterSpacing: 0.8 },
+    title: { fontSize: 15, fontWeight: '800', marginTop: 3 },
+    preview: { fontSize: 11, lineHeight: 17 },
+    content: { fontSize: 12, lineHeight: 19 },
+    related: { fontSize: 9, fontWeight: '900', letterSpacing: 0.8 },
+  },
   scene: {
     backgroundOpacity: 0.74,
     ambientGlow: {

@@ -350,12 +350,24 @@ const worldRaidStyles = StyleSheet.create({
 
 function LoreCard({ entry, expanded, onToggle, colors }: { entry: MobileLoreEntry; expanded: boolean; onToggle: () => void; colors: Colors }) {
   return (
-    <Pressable testID={`world-lore-${entry.id}`} accessibilityRole="button" onPress={onToggle} style={({ pressed }) => [styles.loreCard, { backgroundColor: colors.panel, borderColor: expanded ? colors.accent : colors.border, opacity: pressed ? 0.78 : 1 }]}>
-       <View style={styles.loreHeader}><View style={[styles.loreSeal, { borderColor: `${colors.accent}66`, backgroundColor: `${colors.accent}12` }]}><Feather name="lore" size={17} color={colors.accent} /></View><View style={styles.loreCopy}><Text style={[styles.loreCategory, { color: colors.accent }]}>{labelize(entry.category, 'CATEGORÍA NO REPORTADA')}</Text><Text style={[styles.loreTitle, { color: colors.foreground }]} numberOfLines={expanded ? undefined : 2}>{loreTitle(entry)}</Text></View><Feather name={expanded ? 'arrow-up' : 'arrow-down'} size={17} color={colors.mutedForeground} /></View>
-       {expanded ? <><Text style={[styles.loreContent, { color: colors.mutedForeground }]}>{loreContent(entry.content)}</Text>{entry.related_entity ? <Text style={[styles.loreRelated, { color: colors.accent }]}>VINCULADO · {entry.related_entity}</Text> : null}</> : <Text style={[styles.lorePreview, { color: colors.mutedForeground }]} numberOfLines={2}>{loreContent(entry.content)}</Text>}
+    <Pressable testID={`world-lore-${entry.id}`} accessibilityRole="button" onPress={onToggle} style={({ pressed }) => [worldLoreStyles.card, { backgroundColor: colors.panel, borderColor: expanded ? colors.accent : colors.border, opacity: pressed ? 0.78 : 1 }]}>
+       <View style={worldLoreStyles.header}><View style={[worldLoreStyles.seal, { borderColor: `${colors.accent}66`, backgroundColor: `${colors.accent}12` }]}><Feather name="lore" size={VISUAL_TOKENS.worldLore.iconSize} color={colors.accent} /></View><View style={worldLoreStyles.copy}><Text style={[worldLoreStyles.category, { color: colors.accent }]}>{labelize(entry.category, 'CATEGORÍA NO REPORTADA')}</Text><Text style={[worldLoreStyles.title, { color: colors.foreground }]} numberOfLines={expanded ? undefined : 2}>{loreTitle(entry)}</Text></View><Feather name={expanded ? 'arrow-up' : 'arrow-down'} size={VISUAL_TOKENS.worldLore.iconSize} color={colors.mutedForeground} /></View>
+       {expanded ? <><Text style={[worldLoreStyles.content, { color: colors.mutedForeground }]}>{loreContent(entry.content)}</Text>{entry.related_entity ? <Text style={[worldLoreStyles.related, { color: colors.accent }]}>VINCULADO · {entry.related_entity}</Text> : null}</> : <Text style={[worldLoreStyles.preview, { color: colors.mutedForeground }]} numberOfLines={2}>{loreContent(entry.content)}</Text>}
     </Pressable>
   );
 }
+
+const worldLoreStyles = StyleSheet.create({
+  card: { borderWidth: VISUAL_TOKENS.worldLore.card.borderWidth, borderRadius: VISUAL_TOKENS.worldLore.card.radius, padding: VISUAL_TOKENS.worldLore.card.padding, gap: VISUAL_TOKENS.worldLore.card.gap },
+  header: { flexDirection: 'row', alignItems: 'center', gap: VISUAL_TOKENS.worldLore.header.gap },
+  seal: { width: VISUAL_TOKENS.worldLore.seal.size, height: VISUAL_TOKENS.worldLore.seal.size, borderRadius: VISUAL_TOKENS.worldLore.seal.radius, borderWidth: VISUAL_TOKENS.worldLore.seal.borderWidth, alignItems: 'center', justifyContent: 'center' },
+  copy: { flex: 1 },
+  category: { fontSize: VISUAL_TOKENS.worldLore.category.fontSize, fontWeight: VISUAL_TOKENS.worldLore.category.fontWeight, letterSpacing: VISUAL_TOKENS.worldLore.category.letterSpacing },
+  title: { fontSize: VISUAL_TOKENS.worldLore.title.fontSize, fontWeight: VISUAL_TOKENS.worldLore.title.fontWeight, marginTop: VISUAL_TOKENS.worldLore.title.marginTop },
+  preview: { fontSize: VISUAL_TOKENS.worldLore.preview.fontSize, lineHeight: VISUAL_TOKENS.worldLore.preview.lineHeight },
+  content: { fontSize: VISUAL_TOKENS.worldLore.content.fontSize, lineHeight: VISUAL_TOKENS.worldLore.content.lineHeight },
+  related: { fontSize: VISUAL_TOKENS.worldLore.related.fontSize, fontWeight: VISUAL_TOKENS.worldLore.related.fontWeight, letterSpacing: VISUAL_TOKENS.worldLore.related.letterSpacing },
+});
 
 function SeasonPanel({ snapshot, session, onChanged, colors }: { snapshot: MobileWorldSnapshot; session: ReturnType<typeof useGame>['session']; onChanged: () => void; colors: Colors }) {
   const [claiming, setClaiming] = useState<number | null>(null);
