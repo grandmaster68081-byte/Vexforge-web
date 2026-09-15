@@ -120,6 +120,15 @@ if (!errorFallback.includes("from '@/constants/experience'")) {
 if (!errorFallback.includes('VISUAL_TOKENS.state.errorFallback')) {
   failures.push('ErrorFallback does not consume recovery surface tokens');
 }
+for (const token of [
+  'state.errorFallback.contentMaxWidth',
+  'state.errorFallback.button.shadow',
+  'state.errorFallback.modalOverlayOpacity',
+]) {
+  if (!errorFallback.includes(`VISUAL_TOKENS.${token}`)) {
+    failures.push(`ErrorFallback is missing visual token "${token}"`);
+  }
+}
 
 const icon = source('mobile/components/ForgeIcon.tsx');
 if (!icon.includes("from '@/constants/experience'")) {

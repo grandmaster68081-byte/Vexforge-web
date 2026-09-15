@@ -1,3 +1,29 @@
+## 2026-09-15 — VE-MOB-T2V — ERROR FALLBACK DEPTH TOKENS / IMPLEMENTED_UNVERIFIED
+
+- **BRANCH:** `main`.
+- **SCREEN / DOMAIN:** fallback global de recuperación de la aplicación Android.
+- **BLOCK:** completar la extracción de profundidad, overlay y ancho de contenido
+  sin cambiar el reinicio, el reseteo del error ni el diagnóstico de desarrollo.
+- **WHAT CHANGED:** `VISUAL_TOKENS.state.errorFallback` ahora define el ancho
+  máximo del contenido, la sombra del botón de recuperación y la opacidad del
+  overlay modal; `ErrorFallback` consume esos roles.
+- **BEHAVIOR PRESERVED:** `reloadAppAsync`, `resetError`, `Error.message`,
+  stack trace, `__DEV__`, accesibilidad, safe area, cierre del modal y copy.
+- **DATA PRESERVED:** no se añadió fuente de datos, fallback de dominio, asset,
+  ruta, solicitud, listener ni regla de juego.
+- **MOTION / PERFORMANCE:** no se añadió movimiento ni render de datos; sólo se
+  centralizaron valores estáticos de presentación.
+- **GUARD:** `node scripts/verify-mobile-visual-system.mjs`,
+  `node --check scripts/verify-mobile-visual-system.mjs` y `git diff --check`.
+- **RELEASE GATE:** no se inició workflow Android, no se compiló APK y no se
+  publicó release; QA visual/táctil queda pendiente de autorización.
+- **STATUS:** `IMPLEMENTED_UNVERIFIED`.
+- **PERSISTENCIA:** publicar código, guarda T2V y esta continuidad juntos en
+  `main` mediante la API REST HTTPS oficial de GitHub con `[skip ci]`, sin
+  `git push`.
+- **NEXT BLOCK:** continuar con otra pieza T2V explícita, sin tocar el motor de
+  juego, los contratos de Supabase, la web congelada ni el tutorial.
+
 ## 2026-09-15 — VE-MOB-T2V — DOMAIN STATE DETAIL TOKENS / IMPLEMENTED_UNVERIFIED
 
 - **BRANCH:** `main`.

@@ -182,7 +182,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     gap: VISUAL_TOKENS.state.errorFallback.contentGap,
     width: '100%',
-    maxWidth: 600,
+    maxWidth: VISUAL_TOKENS.state.errorFallback.contentMaxWidth,
   },
   title: {
     fontSize: VISUAL_TOKENS.state.errorFallback.title.fontSize,
@@ -213,11 +213,11 @@ const styles = StyleSheet.create({
     minWidth: VISUAL_TOKENS.state.errorFallback.button.minWidth,
     shadowColor: '#000',
     shadowOffset: {
-      width: 0,
-      height: 2,
+      width: VISUAL_TOKENS.state.errorFallback.button.shadow.offsetWidth,
+      height: VISUAL_TOKENS.state.errorFallback.button.shadow.offsetHeight,
     },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
+    shadowOpacity: VISUAL_TOKENS.state.errorFallback.button.shadow.opacity,
+    shadowRadius: VISUAL_TOKENS.state.errorFallback.button.shadow.radius,
     elevation: VISUAL_TOKENS.state.errorFallback.button.elevation,
   },
   buttonText: {
@@ -227,7 +227,7 @@ const styles = StyleSheet.create({
   },
   modalOverlay: {
     flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    backgroundColor: `rgba(0, 0, 0, ${VISUAL_TOKENS.state.errorFallback.modalOverlayOpacity})`,
     justifyContent: 'flex-end',
   },
   modalContainer: {
