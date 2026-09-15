@@ -83,6 +83,8 @@ const GLYPH_MAP = {
   ellipse: 1,
   'ellipse-outline': 1,
   energy: 1,
+  eye: 1,
+  'eye-off': 1,
   evolution: 1,
   flame: 1,
   flash: 1,
@@ -323,6 +325,10 @@ function IconBody({ name, color, strokeWidth }: { name: string; color: string; s
       return <Path {...pathProps} d="M20 11a8 8 0 0 0-14.8-3L3 11M4 5v6h6M4 13a8 8 0 0 0 14.8 3L21 13M20 19v-6h-6" />;
     case 'lock':
       return <><Rect {...pathProps} x="5" y="10" width="14" height="11" rx="2" /><Path {...pathProps} d="M8 10V7a4 4 0 0 1 8 0v3M12 14v3" /></>;
+    case 'eye':
+      return <><Path {...pathProps} d="M2.8 12s3.4-5.1 9.2-5.1S21.2 12 21.2 12s-3.4 5.1-9.2 5.1S2.8 12 2.8 12z" /><Circle {...pathProps} cx="12" cy="12" r="2.2" /></>;
+    case 'eye-off':
+      return <><Path {...pathProps} d="m3.2 3.2 17.6 17.6M10.1 6.9A9.8 9.8 0 0 1 12 6.7c5.8 0 9.2 5.3 9.2 5.3a16.5 16.5 0 0 1-3.1 3.5M6.5 6.8C4.1 8.2 2.8 12 2.8 12s3.4 5.3 9.2 5.3c.8 0 1.6-.1 2.3-.3" /></>;
     case 'trophy':
     case 'achievements':
       return <><Path {...pathProps} d="M7 4h10v5.5c0 3.2-2.1 5.5-5 6.4-2.9-.9-5-3.2-5-6.4z" /><Path {...pathProps} d="M7 6H4v2c0 2.2 1.2 3.8 3.3 4.4M17 6h3v2c0 2.2-1.2 3.8-3.3 4.4M12 16v4M8.5 21h7" /></>;

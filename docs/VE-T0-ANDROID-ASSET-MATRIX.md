@@ -39,7 +39,7 @@ consumo automático.
 | `mobile/assets/images/vexforge-home-hero.png` | Ancla de escena Nexus | `CANON_ACTIVE` | Home | `mobile/constants/visual.ts`, `VEXFORGE-ASSET-ATLAS.md` |
 | `mobile/assets/images/vexforge-hero-sentinel.png` | Elemento de primer plano | `CANON_ACTIVE` | Home | `mobile/constants/visual.ts`, `VEXFORGE-ASSET-ATLAS.md` |
 | `mobile/assets/images/vexforge-feature-card.png` | Carta destacada | `CANON_ACTIVE` | Home | `mobile/constants/visual.ts`, `VEXFORGE-ASSET-ATLAS.md` |
-| `mobile/assets/images/vexforge-auth-nexus-final.png` | Escena vertical oficial de acceso/Nexus (`1080×2340`) | `CANON_ACTIVE` | Auth | `mobile/constants/visual.ts`, `VEXFORGE-ASSET-ATLAS.md` |
+| `mobile/assets/images/vexforge-auth-nexus-final.png` | Referencia vertical oficial de escena de acceso/Nexus (`1080×2340`); la UI runtime es nativa | `CANON_ACTIVE` | Auth | `mobile/constants/visual.ts`, `mobile/app/auth.tsx`, `VEXFORGE-ASSET-ATLAS.md` |
 | `mobile/assets/images/battle-reference-scene.png` | Escena de combate | `CANON_ACTIVE` | Battlefield | `VEXFORGE-ASSET-ATLAS.md` |
 | `docs/visual-assets/vexforge-battle-screen-premium-1080x2340.png` | Referencia visual Battlefield aprobada por el operador | `REVIEW_REQUIRED` | Battlefield | `docs/VE-MOB-VISUAL-BATTLE-SCREEN-PREMIUM.md`, registro T0 |
 | `mobile/assets/images/collection-archive-scene.jpg` | Escena de Archivo | `CANON_ACTIVE` | Collection | `VEXFORGE-ASSET-ATLAS.md` |

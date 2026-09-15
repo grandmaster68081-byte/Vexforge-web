@@ -23,6 +23,9 @@ export const CANONICAL_BACKGROUNDS = {
   // live portal sockets, lighting, motion and Supabase-driven content inside
   // its authored frame rather than placing a generic dashboard above it.
   home: require('../assets/images/home-reference-scene.png'),
+  // Auth consumes the approved vertical reference as a clipped scene viewport.
+  // The reference's baked controls never become runtime UI; auth.tsx owns the
+  // native gate, fields, states, OAuth actions and keyboard flow.
   auth: require('../assets/images/vexforge-auth-nexus-final.png'),
   pvp: null,
   missions: null,

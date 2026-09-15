@@ -1,3 +1,17 @@
+## 2026-09-15 — VE-MOB-AUTH — OFFICIAL NEXUS SCENE / NATIVE ACCESS COMPOSITION / IMPLEMENTED_UNVERIFIED
+
+- **ENTORNO ACTIVO:** aplicación Android en `mobile/**`; la web permanece congelada.
+- **AUTORIDAD:** fila `ACTIVE` `public.vexforge_official_documents / vexforge_home_world_system_protocol_v3`, versión V2.3; contenido consultado por API de gestión HTTPS de Supabase. Hash local del protocolo: `cd83250a5f63fe72b5be237bfdf1bb54a1f935927a5fea95136190b837a165ba`.
+- **REFERENCIA VISUAL OFICIAL:** `mobile/assets/images/vexforge-auth-nexus-final.png`, PNG RGB `1080×2340`, SHA-256 `b1df068490baf40ca40dc7ca5149a3d98fc3a85a043a6209c3b977f1f05f9ba3`; coincide con la imagen entregada por el operador.
+- **DECISIÓN VISUAL:** la imagen es autoridad de escena y composición, no una captura de pantalla montada. El runtime usa sólo su región escénica dentro de un viewport y reconstruye nativamente logo, copy, marco, campos, botón, estados y acciones.
+- **IMPLEMENTACIÓN:** `mobile/app/auth.tsx` conserva Supabase Auth y añade escena viva con parallax limitado ligado al scroll, pulso del núcleo, haz de luz, órbita, viñeta, estados honestos, reduced-motion, safe area, teclado, login, registro, recuperación, recordar sesión y OAuth Google/Discord/Apple.
+- **REGLA CERO CAPTURA / CERO GENÉRICOS:** no se añadieron hotspots transparentes, controles horneados, datos ficticios, endpoints nuevos ni dashboard sobre la escena. Todas las acciones visibles son `Pressable` reales y todos los estados derivan de Auth/Supabase.
+- **VERIFICACIÓN:** `npm run verify:mobile-auth` pasa `17/17`; `npm run verify:assets` pasa `22/22`; `npm run verify:mobile-visual-system` pasa. El typecheck móvil no pudo ejecutarse porque el snapshot no tiene las dependencias Expo y `expo/tsconfig.base` no está disponible localmente.
+- **QA HONESTA:** `IMPLEMENTED_UNVERIFIED`; no se compiló APK, no se inició workflow Android y no se publicó release, conforme a la instrucción del operador.
+- **PERSISTENCIA:** publicar en `main` mediante GitHub REST/Data API sobre HTTPS con `[skip ci]`, sin iniciar el workflow Android.
+
+---
+
 ## 2026-09-15 — VE-MOB-3 HOME — OFFICIAL VERTICAL SCENE / IMPLEMENTED_UNVERIFIED
 
 - **ENTORNO ACTIVO:** aplicación Android en `mobile/**`; la web permanece congelada.

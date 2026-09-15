@@ -16,6 +16,8 @@ oficial y la RPC `ensure_player_row`.
 - `mobile/lib/supabase.ts`: respuestas de Auth convertidas a sesiones completas,
   persistencia en AsyncStorage, renovación por refresh token y provisión no
   autoritativa mediante `ensure_player_row`.
+- `mobile/constants/visual.ts`: referencia vertical canónica conservada como
+  arte de escena; no se consume como una captura completa.
 - `mobile/package-lock.json`: lock reproducible para el `npm ci` del workflow APK.
 
 ## Criterios de aceptación
@@ -68,3 +70,15 @@ almacenamiento de sesión o la barrera de rutas.
   del flujo Auth/RPC oficial, sin inventar una identidad local.
 - Estado: `IMPLEMENTED_UNVERIFIED`; el workflow APK y la QA humana permanecen
   pendientes.
+
+## Addendum 2026-09-15 — escena nativa del umbral
+
+- La referencia oficial `vexforge-auth-nexus-final.png` queda como autoridad
+  visual de la escena, no como pantalla estática ni como superficie de UI.
+- `mobile/app/auth.tsx` compone el acceso con controles nativos reales dentro
+  de un marco diegético: sesión, registro, recuperación, OAuth, recordar
+  sesión, estados de enlace, teclado y safe area siguen siendo funcionales.
+- La escena recibe parallax limitado ligado al scroll, pulso ambiental, haz
+  central, órbita y viñeta; reduced-motion desactiva el pulso.
+- Estado honesto: `IMPLEMENTED_UNVERIFIED / NO APK / NO RELEASE`. La evidencia
+  física queda pendiente de una APK autorizada y de recorrido QA en Android.
