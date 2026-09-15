@@ -366,6 +366,7 @@ export const VISUAL_TOKENS = {
       fontSize: 9,
       letterSpacing: 1,
     },
+    iconSize: 21,
     seal: {
       width: 38,
       height: 30,

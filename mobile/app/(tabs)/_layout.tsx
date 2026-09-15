@@ -111,13 +111,13 @@ function ClassicTabLayout() {
         name="index"
         options={{
           title: 'Nexus',
-          tabBarIcon: ({ color, focused }) => <WorldTabIcon name={focused ? 'home' : 'home-outline'} color={color} focused={focused} size={21} />,
+           tabBarIcon: ({ color, focused }) => <WorldTabIcon name={focused ? 'home' : 'home-outline'} color={color} focused={focused} size={VISUAL_TOKENS.navigation.iconSize} />,
         }}
       />
-      <Tabs.Screen name="battle" options={{ title: 'Arena', tabBarIcon: ({ color, focused }) => <WorldTabIcon name={focused ? 'arena' : 'target'} size={21} color={color} focused={focused} /> }} />
-      <Tabs.Screen name="collection" options={{ title: 'Archivo', tabBarIcon: ({ color, focused }) => <WorldTabIcon name={focused ? 'cards' : 'collection'} size={21} color={color} focused={focused} /> }} />
-      <Tabs.Screen name="deck" options={{ title: 'Forja', tabBarIcon: ({ color, focused }) => <WorldTabIcon name={focused ? 'deck' : 'layers'} size={21} color={color} focused={focused} /> }} />
-      <Tabs.Screen name="profile" options={{ title: 'Legado', tabBarIcon: ({ color, focused }) => <WorldTabIcon name={focused ? 'profile' : 'account'} size={21} color={color} focused={focused} /> }} />
+      <Tabs.Screen name="battle" options={{ title: 'Arena', tabBarIcon: ({ color, focused }) => <WorldTabIcon name={focused ? 'arena' : 'target'} size={VISUAL_TOKENS.navigation.iconSize} color={color} focused={focused} /> }} />
+      <Tabs.Screen name="collection" options={{ title: 'Archivo', tabBarIcon: ({ color, focused }) => <WorldTabIcon name={focused ? 'cards' : 'collection'} size={VISUAL_TOKENS.navigation.iconSize} color={color} focused={focused} /> }} />
+      <Tabs.Screen name="deck" options={{ title: 'Forja', tabBarIcon: ({ color, focused }) => <WorldTabIcon name={focused ? 'deck' : 'layers'} size={VISUAL_TOKENS.navigation.iconSize} color={color} focused={focused} /> }} />
+      <Tabs.Screen name="profile" options={{ title: 'Legado', tabBarIcon: ({ color, focused }) => <WorldTabIcon name={focused ? 'profile' : 'account'} size={VISUAL_TOKENS.navigation.iconSize} color={color} focused={focused} /> }} />
     </Tabs>
   );
 }

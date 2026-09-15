@@ -224,6 +224,9 @@ if (!navigation.includes('VISUAL_TOKENS.safeArea.webBottomInset')) {
 if (!navigation.includes('VISUAL_TOKENS.navigation.authLoading.labelWeight')) {
   failures.push('TabLayout is missing the auth-loading label weight token');
 }
+if ((navigation.match(/VISUAL_TOKENS\.navigation\.iconSize/g) ?? []).length < 5) {
+  failures.push('TabLayout does not consume the shared navigation icon-size token for all five Android tabs');
+}
 
 const identityMark = source('mobile/components/ForgeMark.tsx');
 if (!identityMark.includes("from '@/constants/experience'")) {

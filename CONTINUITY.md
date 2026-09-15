@@ -1,3 +1,19 @@
+## 2026-09-15 — VE-MOB-T2V — NAVIGATION ICON SIZE / IMPLEMENTED_UNVERIFIED
+
+- **ENTORNO ACTIVO:** aplicación Android en `mobile/**`; la web permanece congelada.
+- **AUTORIDAD:** fila ACTIVE `public.vexforge_official_documents / vexforge_home_world_system_protocol_v3`, V2.2, con SHA-256 `828a077428987b2534e3733204ac721ef3073eb7dadf9530a6f46877dd63c503`.
+- **SCREEN / DOMAIN:** shell de navegación inferior Android para Nexus, Arena, Archivo, Forja y Legado.
+- **BLOCK:** eliminar la repetición del tamaño de icono de las cinco tabs sin modificar iconos, rutas, labels, foco, color, touch ni la variante NativeTabs de iOS.
+- **WHAT CHANGED:** `VISUAL_TOKENS.navigation.iconSize` define el tamaño compartido; las cinco entradas de `ClassicTabLayout` lo consumen.
+- **BEHAVIOR PRESERVED:** mismo tamaño efectivo `21`, iconos oficiales, estados focused/unfocused, navegación, accesibilidad y safe area.
+- **DATA PRESERVED:** no se añadieron solicitudes, estado, rutas, RPCs, RLS, economía, gameplay, assets ni cambios en la web.
+- **MOTION / PERFORMANCE:** no se añadió movimiento, listener, render de datos ni timing; sólo se centralizó un valor estático de presentación.
+- **GUARD:** `node scripts/verify-mobile-visual-system.mjs`, `node --check scripts/verify-mobile-visual-system.mjs` y `git diff --check` deben pasar.
+- **RELEASE GATE:** no se inicia workflow Android, no se compila APK y no se publica release; QA visual/táctil física queda pendiente.
+- **STATUS:** `IMPLEMENTED_UNVERIFIED`.
+- **PERSISTENCIA:** publicar código, guardia y esta continuidad juntos en `main` mediante la API REST HTTPS oficial de GitHub con `[skip ci]`, sin `git push`.
+- **NEXT BLOCK:** continuar con otra pieza T2V explícita, sin tocar el motor de juego, los contratos de Supabase, la web congelada ni el tutorial.
+
 ## 2026-09-15 — VE-MOB-T2V — DOMAIN HEADER AND AUTH LOADING WEIGHTS / IMPLEMENTED_UNVERIFIED
 
 - **ENTORNO ACTIVO:** aplicación Android en `mobile/**`; la web permanece congelada.
