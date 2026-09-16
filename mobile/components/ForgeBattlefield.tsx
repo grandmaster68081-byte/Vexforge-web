@@ -309,7 +309,7 @@ function StateRail({
   );
 }
 
-export function ForgeBattlefield({ finalUnits, currentTurn, turnIndex, totalTurns, reducedMotion, youWon, outcome }: Props) {
+export function ForgeBattlefield({ finalUnits, currentTurn, turnIndex, totalTurns, reducedMotion, parallaxY, youWon, outcome }: Props) {
   const colors = useColors();
   const resolvedOutcome = outcome ?? (typeof youWon === 'boolean' ? (youWon ? 'victory' : 'defeat') : undefined);
   const unitsBySide = useMemo(() => {

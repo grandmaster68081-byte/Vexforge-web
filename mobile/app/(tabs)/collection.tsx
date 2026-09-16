@@ -182,6 +182,7 @@ function CardTile({
 }) {
   const accent = rarityColor(card.rarity, colors);
   const faction = hasText(card.faction) ? card.faction.trim() : null;
+  const factionIcon = FACTION_ICONS[faction ?? ''];
   return (
     <Pressable
       testID={`card-${card.code}`}
@@ -201,8 +202,8 @@ function CardTile({
         <View style={styles.tileMeta}>
           <Text style={[styles.rarity, { color: accent }]}>{rarityLabel(card.rarity)}</Text>
           <Text style={[styles.dot, { color: colors.border }]}>·</Text>
-          {FACTION_ICONS[faction ?? ''] ? (
-            <Image source={{ uri: FACTION_ICONS[faction ?? ''] }} style={styles.factionIconMeta} resizeMode="contain" accessibilityLabel={`Emblema oficial de ${factionLabel(card.faction)}`} />
+          {factionIcon ? (
+            <Image source={{ uri: factionIcon }} style={styles.factionIconMeta} resizeMode="contain" accessibilityLabel={`Emblema oficial de ${factionLabel(card.faction)}`} />
           ) : <Feather name="compass" size={11} color={colors.mutedForeground} />}
         </View>
         <View style={styles.tileStats}>
@@ -562,6 +563,7 @@ const styles = StyleSheet.create({
   chipRow: { gap: 7 },
   resultLine: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', gap: 10 },
   resultText: { flex: 1, fontSize: 9, fontWeight: '800', letterSpacing: 0.55 },
+  pageText: { fontSize: 11, fontWeight: '800', letterSpacing: 1 },
   pagination: { minHeight: 48, borderWidth: 1, borderRadius: 13, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 14, marginBottom: 10, paddingHorizontal: 12 },
   pageButton: { width: 38, height: 38, alignItems: 'center', justifyContent: 'center' },
   syncError: { minHeight: 44, borderWidth: 1, borderRadius: 12, paddingHorizontal: 12, flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: 12 },
@@ -612,7 +614,6 @@ const styles = StyleSheet.create({
   eyebrow: { fontSize: 10, fontWeight: '800', letterSpacing: 1.6 },
   title: { fontSize: 32, fontWeight: '800', letterSpacing: -0.8, marginTop: 14 },
   subtitle: { fontSize: 13, marginTop: 5, marginBottom: 12 },
-  searchBox: { minHeight: 48, borderWidth: 1, borderRadius: 12, flexDirection: 'row', alignItems: 'center', paddingHorizontal: 14, gap: 10 },
   searchInput: { flex: 1, fontSize: 14, paddingVertical: 12 },
   chips: { gap: 8, paddingVertical: 12 },
   chip: { borderWidth: 1, borderRadius: 18, paddingHorizontal: 12, paddingVertical: 7 },
@@ -620,7 +621,6 @@ const styles = StyleSheet.create({
   resultsBar: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', minHeight: 34, gap: 10 },
   results: { fontSize: 12, fontWeight: '600' },
   sorts: { gap: 14 },
-  sortText: { fontSize: 11, fontWeight: '700' },
   spotlight: { flexDirection: 'row', gap: 14, borderWidth: 1, borderRadius: 18, padding: 12, marginBottom: 4, overflow: 'hidden' },
   spotlightArt: { width: '36%', borderWidth: 1, borderRadius: 14, overflow: 'hidden', alignSelf: 'flex-start' },
   spotlightCopy: { flex: 1, minWidth: 0, justifyContent: 'center' },

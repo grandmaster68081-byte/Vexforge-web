@@ -37,7 +37,6 @@ import {
   loadMobileShopOrders,
   loadMobileShards,
   openMobilePack,
-  storageAsset,
   submitMobileShopPayment,
   type MobileActiveBoost,
   type MobileConsumable,

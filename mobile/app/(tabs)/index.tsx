@@ -1278,6 +1278,7 @@ const styles = StyleSheet.create({
   scrollContent: { gap: 0 },
   heroStage: { overflow: 'hidden', position: 'relative' },
   heroSceneViewport: { ...StyleSheet.absoluteFillObject, overflow: 'hidden' },
+  heroSceneReference: { ...StyleSheet.absoluteFillObject, opacity: 0.2 },
   sceneDepthLayer: { ...StyleSheet.absoluteFillObject },
   nexusWorldScene: { ...StyleSheet.absoluteFillObject, overflow: 'hidden' },
   sceneSkyVeil: { ...StyleSheet.absoluteFillObject },
