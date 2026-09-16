@@ -1,3 +1,19 @@
+## 2026-09-16 — VE-MOB-T2V — ECONOMY CHAMBER TOKENS / IMPLEMENTED_UNVERIFIED
+
+- **ENTORNO ACTIVO:** aplicación Android en `mobile/**`; la web permanece congelada.
+- **AUTORIDAD:** fila `ACTIVE` de `public.vexforge_official_documents / vexforge_home_world_system_protocol_v3`, V2.3, SHA-256 `cd83250a5f63fe72b5be237bfdf1bb54a1f935927a5fea95136190b837a165ba`.
+- **SCREEN / DOMAIN:** `ECONOMY` / Iron Treasury; encabezado y selector táctil de Cartera, Mercado, Depósitos, Retiros y Referidos.
+- **BLOCK:** centralizar geometría, escala, tipografía y presión ya existentes sin cambiar balances, fórmulas, datos, RPCs, acciones ni estados honestos.
+- **WHAT CHANGED:** `VISUAL_TOKENS.economy` define shell, encabezado, regreso, rail y sección; `economy.tsx` los consume.
+- **BEHAVIOR PRESERVED:** mismas cinco secciones, rutas, `testID`, accesibilidad, refresh, selección y opacidad de presión `0.72`.
+- **DATA PRESERVED:** no se añadieron saldos, precios, rewards, contratos, solicitudes, RPCs, RLS, economía, gameplay, assets ni cambios en la web congelada.
+- **MOTION / PERFORMANCE:** no se añadió movimiento, listener ni trabajo en segundo plano; sólo se registraron roles estáticos existentes.
+- **GUARD:** `node scripts/verify-mobile-economy.mjs`, `node scripts/verify-mobile-visual-system.mjs`, ambos `node --check` y `git diff --check`.
+- **RELEASE GATE:** no se inicia workflow Android, no se compila APK y no se publica release; QA visual/táctil física queda pendiente.
+- **STATUS:** `IMPLEMENTED_UNVERIFIED`.
+- **PERSISTENCIA:** publicar código, guardia, documento T2V y esta continuidad juntos en `main` mediante la API REST HTTPS oficial de GitHub con `[skip ci]`, sin `git push`.
+- **NEXT BLOCK:** continuar con otra pieza T2V explícita, sin tocar el motor de juego, los contratos de Supabase, la web congelada ni el tutorial.
+
 ## 2026-09-16 — VE-MOB-T2V — STORE CHAMBER TOKENS / IMPLEMENTED_UNVERIFIED
 
 - **ENTORNO ACTIVO:** aplicación Android en `mobile/**`; la web permanece congelada.

@@ -47,6 +47,13 @@ for (const token of [
 ]) {
   if (!tokens.includes(token)) failures.push(`store visual token "${token}" is missing`);
 }
+for (const token of [
+  'economy:',
+  'sectionRail:',
+  'section: {',
+]) {
+  if (!tokens.includes(token)) failures.push(`economy visual token "${token}" is missing`);
+}
 
 const panel = source('mobile/components/MaterialPanel.tsx');
 for (const token of ['VISUAL_TOKENS', 'useReducedMotion', 'shadowOpacity', 'elevation']) {
@@ -499,6 +506,22 @@ for (const token of [
 ]) {
   if (!store.includes(`VISUAL_TOKENS.${token}`)) {
     failures.push(`Store is missing visual token "${token}"`);
+  }
+}
+
+const economy = source('mobile/app/economy.tsx');
+if (!economy.includes("from '@/constants/experience'")) {
+  failures.push('Economy does not consume shared visual tokens');
+}
+for (const token of [
+  'economy.shell',
+  'economy.header',
+  'economy.back',
+  'economy.sectionRail',
+  'economy.section',
+]) {
+  if (!economy.includes(`VISUAL_TOKENS.${token}`)) {
+    failures.push(`Economy is missing visual token "${token}"`);
   }
 }
 

@@ -608,6 +608,42 @@ export const VISUAL_TOKENS = {
       pressedTranslateY: 1,
     },
   },
+  economy: {
+    shell: {
+      contentTop: 18,
+      contentBottom: 28,
+    },
+    header: {
+      horizontalPadding: 16,
+      bottomPadding: 18,
+      copyGap: 11,
+      titleSize: 25,
+      titleWeight: '700',
+      titleMarginTop: 3,
+    },
+    back: {
+      size: 40,
+      radius: 20,
+      borderWidth: 1,
+      iconSize: 18,
+    },
+    sectionRail: {
+      horizontalPadding: 16,
+      gap: 8,
+      bottomPadding: 24,
+    },
+    section: {
+      gap: 7,
+      paddingHorizontal: 12,
+      paddingVertical: 10,
+      radius: 20,
+      borderWidth: 1,
+      iconSize: 16,
+      labelSize: 11,
+      labelWeight: '700',
+      pressedOpacity: 0.72,
+    },
+  },
   domainPortal: {
     object: { minHeight: 137, paddingHorizontal: 4, paddingVertical: 8 },
     halo: { size: 54, radius: 31, borderWidth: 1, rotation: '45deg' },

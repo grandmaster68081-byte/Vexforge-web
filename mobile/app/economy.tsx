@@ -17,6 +17,7 @@ import { useGame } from '@/context/GameContext';
 import { KeyboardAwareScrollViewCompat } from '@/components/KeyboardAwareScrollViewCompat';
 import { ScreenShell } from '@/components/ScreenShell';
 import { DomainState } from '@/components/DomainState';
+import { VISUAL_TOKENS } from '@/constants/experience';
 import {
   buyMarketListing,
   cancelMarketListing,
@@ -138,11 +139,11 @@ function SectionButton({
         {
           backgroundColor: selected ? colors.primary : colors.panel,
           borderColor: selected ? colors.primary : colors.border,
-          opacity: pressed ? 0.72 : 1,
+          opacity: pressed ? VISUAL_TOKENS.economy.section.pressedOpacity : 1,
         },
       ]}
     >
-      <Ionicons name={icon} size={16} color={selected ? colors.primaryForeground : colors.accent} />
+      <Ionicons name={icon} size={VISUAL_TOKENS.economy.section.iconSize} color={selected ? colors.primaryForeground : colors.accent} />
       <Text style={[styles.sectionButtonText, { color: selected ? colors.primaryForeground : colors.foreground }]}>{label}</Text>
     </Pressable>
   );
@@ -697,14 +698,14 @@ export default function EconomyScreen() {
     <ScreenShell surface="economy">
       <View style={[styles.screen, { backgroundColor: 'transparent' }]}>
       <KeyboardAwareScrollViewCompat
-        contentContainerStyle={{ paddingTop: insets.top + 18, paddingBottom: insets.bottom + 28 }}
+        contentContainerStyle={{ paddingTop: insets.top + VISUAL_TOKENS.economy.shell.contentTop, paddingBottom: insets.bottom + VISUAL_TOKENS.economy.shell.contentBottom }}
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={() => void refreshEconomy('refresh')} tintColor={colors.accent} />}
         keyboardShouldPersistTaps="handled"
       >
         <View style={styles.header}>
           <View style={styles.headerCopy}>
             <Pressable accessibilityRole="button" accessibilityLabel="Volver" testID="economy-back" onPress={() => router.back()} style={[styles.backButton, { borderColor: colors.border }]}>
-              <Ionicons name="arrow-back" size={18} color={colors.foreground} />
+              <Ionicons name="arrow-back" size={VISUAL_TOKENS.economy.back.iconSize} color={colors.foreground} />
             </Pressable>
             <View>
               <Text style={[styles.eyebrow, { color: colors.accent }]}>VEXFORGE // IRON TREASURY</Text>
@@ -712,7 +713,7 @@ export default function EconomyScreen() {
             </View>
           </View>
           <Pressable accessibilityRole="button" accessibilityLabel="Actualizar economía" testID="economy-refresh" onPress={() => void refreshEconomy('refresh')} style={[styles.backButton, { borderColor: colors.border }]}>
-            <Ionicons name="refresh-outline" size={18} color={colors.accent} />
+            <Ionicons name="refresh-outline" size={VISUAL_TOKENS.economy.back.iconSize} color={colors.accent} />
           </Pressable>
         </View>
         {error ? <ErrorNotice message={error} onRetry={() => void refreshEconomy('refresh')} colors={colors} /> : null}
@@ -794,13 +795,13 @@ const styles = StyleSheet.create({
   screen: { flex: 1 },
   center: { flex: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 24, gap: 12 },
   loadingText: { fontSize: 10, fontWeight: '700', letterSpacing: 1.2 },
-  header: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 16, paddingBottom: 18 },
-  headerCopy: { flexDirection: 'row', alignItems: 'center', gap: 11 },
-  headerTitle: { fontSize: 25, fontWeight: '700', marginTop: 3 },
-  backButton: { width: 40, height: 40, borderRadius: 20, borderWidth: 1, alignItems: 'center', justifyContent: 'center' },
-  sectionRow: { paddingHorizontal: 16, gap: 8, paddingBottom: 24 },
-  sectionButton: { flexDirection: 'row', alignItems: 'center', gap: 7, paddingHorizontal: 12, paddingVertical: 10, borderRadius: 20, borderWidth: 1 },
-  sectionButtonText: { fontSize: 11, fontWeight: '700' },
+  header: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: VISUAL_TOKENS.economy.header.horizontalPadding, paddingBottom: VISUAL_TOKENS.economy.header.bottomPadding },
+  headerCopy: { flexDirection: 'row', alignItems: 'center', gap: VISUAL_TOKENS.economy.header.copyGap },
+  headerTitle: { fontSize: VISUAL_TOKENS.economy.header.titleSize, fontWeight: VISUAL_TOKENS.economy.header.titleWeight, marginTop: VISUAL_TOKENS.economy.header.titleMarginTop },
+  backButton: { width: VISUAL_TOKENS.economy.back.size, height: VISUAL_TOKENS.economy.back.size, borderRadius: VISUAL_TOKENS.economy.back.radius, borderWidth: VISUAL_TOKENS.economy.back.borderWidth, alignItems: 'center', justifyContent: 'center' },
+  sectionRow: { paddingHorizontal: VISUAL_TOKENS.economy.sectionRail.horizontalPadding, gap: VISUAL_TOKENS.economy.sectionRail.gap, paddingBottom: VISUAL_TOKENS.economy.sectionRail.bottomPadding },
+  sectionButton: { flexDirection: 'row', alignItems: 'center', gap: VISUAL_TOKENS.economy.section.gap, paddingHorizontal: VISUAL_TOKENS.economy.section.paddingHorizontal, paddingVertical: VISUAL_TOKENS.economy.section.paddingVertical, borderRadius: VISUAL_TOKENS.economy.section.radius, borderWidth: VISUAL_TOKENS.economy.section.borderWidth },
+  sectionButtonText: { fontSize: VISUAL_TOKENS.economy.section.labelSize, fontWeight: VISUAL_TOKENS.economy.section.labelWeight },
   sectionTitle: { marginHorizontal: 16, marginBottom: 11, marginTop: 5 },
   eyebrow: { fontSize: 10, fontWeight: '700', letterSpacing: 1.3 },
   title: { fontSize: 21, fontWeight: '700', marginTop: 4 },
