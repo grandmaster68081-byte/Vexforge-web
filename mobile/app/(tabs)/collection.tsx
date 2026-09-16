@@ -306,22 +306,18 @@ function CardDetail({
                 </View>
               </View>
             )}
-            {(card.fusion_enabled || card.marketable || card.lore) && (
-              <View style={styles.detailRows}>
-                <View style={[styles.detailRow, { borderBottomColor: colors.border }]}>
-                  <Text style={[styles.sectionLabel, { color: colors.mutedForeground }]}>SISTEMAS</Text>
-                  <Text style={[styles.infoText, { color: colors.foreground }]}>
-                    {[card.fusion_enabled ? 'Fusión' : null, card.marketable ? 'Mercado' : null].filter(Boolean).join(' · ') || 'Compendio'}
-                  </Text>
-                </View>
-                {card.lore && (
-                  <View style={styles.lore}>
-                    <Text style={[styles.sectionLabel, { color: colors.mutedForeground }]}>LORE</Text>
-                    <Text style={[styles.loreText, { color: colors.mutedForeground }]}>{card.lore}</Text>
-                  </View>
-                )}
+            <View style={styles.detailRows}>
+              <View style={[styles.detailRow, { borderBottomColor: colors.border }]}>
+                <Text style={[styles.sectionLabel, { color: colors.mutedForeground }]}>SISTEMAS</Text>
+                <Text style={[styles.infoText, { color: colors.foreground }]}>
+                  {[card.fusion_enabled ? 'Fusión' : null, card.marketable ? 'Mercado' : null].filter(Boolean).join(' · ') || 'Compendio'}
+                </Text>
               </View>
-            )}
+              <View style={styles.lore}>
+                <Text style={[styles.sectionLabel, { color: colors.mutedForeground }]}>LORE</Text>
+                <Text style={[styles.loreText, { color: colors.mutedForeground }]}>{card.lore?.trim() || 'LORE NO REPORTADO'}</Text>
+              </View>
+            </View>
             <View style={styles.supplyRow}>
               <View>
                 <Text style={[styles.supplyValue, { color: colors.foreground }]}>{numberLabel(card.supply)}</Text>

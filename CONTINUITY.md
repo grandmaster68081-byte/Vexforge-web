@@ -1,3 +1,18 @@
+## 2026-09-16 — APK BUILD — WORLD CONTRACT GUARD ALIGNED / BUILD REQUESTED
+
+- **BLOCKER:** el guardia World exigía `storageAsset`, aunque el entorno actual declara el fondo World como `null` y el símbolo no existe en `supabase.ts`.
+- **RECTIFICACIÓN:** el guardia ahora valida el estado canónico `world: null`; no se cambió la pantalla World ni se inventó arte remoto.
+- **STATUS:** `CONTRACT_GUARDS_ALIGNED / BUILD_REQUESTED`.
+
+## 2026-09-16 — APK BUILD — COLLECTION CONTRACT RECONCILED / BUILD REQUESTED
+
+- **SOURCE:** `main` en `7b5151106341494c9c40cd09ce63f098080be614`; TypeScript, Expo prebuild y verificaciones base ya pasaron.
+- **BLOCKER:** el guardia de Collection todavía exigía una escena JPEG y un layout medido de una implementación retirada.
+- **RECTIFICACIÓN:** el guardia ahora valida la escena PNG canónica, `ForgeArchiveScene`, el grid nativo actual, paginación, controles y estados honestos. El detalle de carta muestra `LORE NO REPORTADO` cuando Supabase no publica lore.
+- **DATA PRESERVED:** no se añadieron cartas, nombres, balances, rewards, RPCs, RLS, gameplay, assets nuevos ni cambios en la web congelada.
+- **RELEASE GATE:** queda pendiente publicar esta rectificación en `main`, ejecutar el workflow APK y verificar/publicar el release instalable.
+- **STATUS:** `CONTRACT_GUARD_RECONCILED / BUILD_REQUESTED`.
+
 ## 2026-09-16 — VE-MOB-T2V — DECK ACTION RAIL TOKENS / IMPLEMENTED_UNVERIFIED
 
 - **ENTORNO ACTIVO:** aplicación Android en `mobile/**`; la web permanece congelada.

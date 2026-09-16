@@ -20,7 +20,7 @@ const checks = [
   ['five world panels', ['bosses', 'raids', 'lore', 'season', 'rankings']],
   ['official world reads', ['world_bosses', 'raid_runs', 'lore_codex', 'season_passes', 'season_rankings']],
   ['official actions', ['vexforge_join_raid', 'vexforge_contribute_raid', 'claim_season_pass_reward']],
-  ['world background', ['world: storageAsset']],
+  ['world background', ['world: null']],
   ['explicit states', ['Abriendo rutas del mundo', 'REINTENTAR SINCRONIZACIÓN', 'Sin jefes activos']],
   ['honest missing signals', ['LORE NO REPORTADO', 'ARTE DEL JEFE NO REPORTADO', 'DIFICULTAD NO REPORTADA', 'MULTIPLICADOR NO REPORTADO', 'PROGRESO DE TEMPORADA NO REPORTADO', 'NOMBRE NO RESUELTO']],
   ['honest reward signals', ["function rewardNumber", "appendNumericReward('vex_ingame', 'VEX')", "appendNumericReward('shards', 'FRAGMENTOS')", 'value === null ? `${label} NO REPORTADO`', 'CARTA NO REPORTADA', 'RECOMPENSA SIN DETALLE']],
