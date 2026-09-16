@@ -54,6 +54,17 @@ for (const token of [
 ]) {
   if (!tokens.includes(token)) failures.push(`economy visual token "${token}" is missing`);
 }
+for (const token of [
+  'deck:',
+  'sceneHeader:',
+  'actionRail:',
+  'searchDock:',
+  'coreAction:',
+  'utilityRail:',
+  'utility: {',
+]) {
+  if (!tokens.includes(token)) failures.push(`deck visual token "${token}" is missing`);
+}
 
 const panel = source('mobile/components/MaterialPanel.tsx');
 for (const token of ['VISUAL_TOKENS', 'useReducedMotion', 'shadowOpacity', 'elevation']) {
@@ -522,6 +533,24 @@ for (const token of [
 ]) {
   if (!economy.includes(`VISUAL_TOKENS.${token}`)) {
     failures.push(`Economy is missing visual token "${token}"`);
+  }
+}
+
+const deck = source('mobile/app/(tabs)/deck.tsx');
+if (!deck.includes("from '@/constants/experience'")) {
+  failures.push('Deck does not consume shared visual tokens');
+}
+for (const token of [
+  'deck.sceneHeader',
+  'deck.refresh',
+  'deck.actionRail',
+  'deck.searchDock',
+  'deck.coreAction',
+  'deck.utilityRail',
+  'deck.utility',
+]) {
+  if (!deck.includes(`VISUAL_TOKENS.${token}`)) {
+    failures.push(`Deck is missing visual token "${token}"`);
   }
 }
 

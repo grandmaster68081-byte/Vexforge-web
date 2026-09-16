@@ -38,6 +38,7 @@ import { ScreenShell } from '@/components/ScreenShell';
 import { useMeasuredCanonicalFrame } from '@/components/CanonicalFrame';
 import { DomainHeader } from '@/components/DomainHeader';
 import { CANONICAL_BACKGROUNDS } from '@/constants/visual';
+import { VISUAL_TOKENS } from '@/constants/experience';
 
 const MAX_DECKS = 10;
 const MAX_DECK = 30;
@@ -509,9 +510,9 @@ export default function DeckScreen() {
                   accessibilityRole="button"
                   accessibilityLabel="Actualizar mazos"
                   onPress={onRefresh}
-                  style={({ pressed }) => [styles.sceneRefresh, { borderColor: `${colors.accent}AA`, opacity: pressed ? 0.72 : 1 }]}
+                   style={({ pressed }) => [styles.sceneRefresh, { borderColor: `${colors.accent}AA`, opacity: pressed ? VISUAL_TOKENS.deck.refresh.pressedOpacity : 1 }]}
                 >
-                  <Feather name="refresh-cw" size={16} color={colors.accent} />
+                   <Feather name="refresh-cw" size={VISUAL_TOKENS.deck.refresh.iconSize} color={colors.accent} />
                 </Pressable>
               )}
             />
@@ -586,9 +587,9 @@ export default function DeckScreen() {
               </View>
             </View>
 
-            <View style={[styles.bottomConsole, { top: canvasHeight * 0.785, left: frameWidth * 0.075, right: frameWidth * 0.075 }]}>
+             <View style={[styles.bottomConsole, { top: canvasHeight * VISUAL_TOKENS.deck.actionRail.topRatio, left: frameWidth * VISUAL_TOKENS.deck.actionRail.horizontalRatio, right: frameWidth * VISUAL_TOKENS.deck.actionRail.horizontalRatio }]}>
               <View style={[styles.searchDock, { borderColor: `${colors.foreground}5C`, backgroundColor: `${colors.ink}B8` }]}>
-                <Feather name="search" size={13} color={colors.mutedForeground} />
+                 <Feather name="search" size={VISUAL_TOKENS.deck.searchDock.iconSize} color={colors.mutedForeground} />
                 <TextInput
                   testID="deck-search"
                   accessibilityLabel="Buscar carta o código"
@@ -599,27 +600,27 @@ export default function DeckScreen() {
                   style={[styles.searchInput, { color: colors.foreground }]}
                   autoCorrect={false}
                 />
-                {search ? <Pressable testID="deck-clear-search" accessibilityRole="button" accessibilityLabel="Limpiar búsqueda" onPress={() => setSearch('')}><Feather name="x" size={13} color={colors.mutedForeground} /></Pressable> : null}
+                 {search ? <Pressable testID="deck-clear-search" accessibilityRole="button" accessibilityLabel="Limpiar búsqueda" onPress={() => setSearch('')}><Feather name="x" size={VISUAL_TOKENS.deck.searchDock.iconSize} color={colors.mutedForeground} /></Pressable> : null}
               </View>
               <Pressable
                 testID="edit-deck"
                 accessibilityRole="button"
                 accessibilityLabel={hasSavedDeck ? 'Editar mazo' : 'Crear mazo'}
                 onPress={() => { setSelectedIds(savedSlots.map((slot) => slot.card_id)); setMessage(hasSavedDeck ? 'Mazo cargado para edición.' : 'Nuevo borrador listo para forjar.'); setEditing(true); }}
-                style={({ pressed }) => [styles.coreAction, { borderColor: colors.accent, backgroundColor: `${colors.ink}D9`, opacity: pressed ? 0.72 : 1, transform: [{ scale: pressed ? 0.96 : 1 }] }]}
+                 style={({ pressed }) => [styles.coreAction, { borderColor: colors.accent, backgroundColor: `${colors.ink}D9`, opacity: pressed ? VISUAL_TOKENS.deck.coreAction.pressedOpacity : 1, transform: [{ scale: pressed ? VISUAL_TOKENS.deck.coreAction.pressedScale : 1 }] }]}
               >
-                <Feather name={hasSavedDeck ? 'edit-2' : 'plus'} size={17} color={colors.accent} />
+                 <Feather name={hasSavedDeck ? 'edit-2' : 'plus'} size={VISUAL_TOKENS.deck.coreAction.iconSize} color={colors.accent} />
                 <Text style={[styles.coreActionText, { color: colors.accent }]}>{hasSavedDeck ? 'EDITAR' : 'FORJAR'}</Text>
               </Pressable>
               <View style={styles.utilityDock}>
-                <Pressable
+                 <Pressable
                   testID="deck-filter"
                   accessibilityRole="button"
                   accessibilityLabel={`Cambiar filtro de facción: ${faction === 'all' ? 'todas' : faction}`}
                   onPress={() => setFaction(faction === 'all' ? FACTIONS[0] : faction === FACTIONS[FACTIONS.length - 1] ? 'all' : FACTIONS[FACTIONS.indexOf(faction) + 1])}
-                  style={({ pressed }) => [styles.utilityButton, { borderColor: faction === 'all' ? `${colors.foreground}5C` : factionColor(faction, colors), opacity: pressed ? 0.72 : 1 }]}
+                   style={({ pressed }) => [styles.utilityButton, { borderColor: faction === 'all' ? `${colors.foreground}5C` : factionColor(faction, colors), opacity: pressed ? VISUAL_TOKENS.deck.utility.pressedOpacity : 1 }]}
                 >
-                  <Feather name="filter" size={13} color={faction === 'all' ? colors.mutedForeground : factionColor(faction, colors)} />
+                   <Feather name="filter" size={VISUAL_TOKENS.deck.utility.iconSize} color={faction === 'all' ? colors.mutedForeground : factionColor(faction, colors)} />
                   <Text style={[styles.utilityLabel, { color: faction === 'all' ? colors.mutedForeground : factionColor(faction, colors) }]}>{faction === 'all' ? 'TODO' : faction.slice(0, 3).toUpperCase()}</Text>
                 </Pressable>
                 <Pressable
@@ -628,9 +629,9 @@ export default function DeckScreen() {
                   accessibilityLabel="Ver detalle del mazo"
                   disabled={!hasSavedDeck}
                   onPress={() => setDetail(selectedPreview)}
-                  style={({ pressed }) => [styles.utilityButton, { borderColor: hasSavedDeck ? `${colors.foreground}66` : `${colors.foreground}22`, opacity: pressed ? 0.72 : hasSavedDeck ? 1 : 0.45 }]}
+                   style={({ pressed }) => [styles.utilityButton, { borderColor: hasSavedDeck ? `${colors.foreground}66` : `${colors.foreground}22`, opacity: pressed ? VISUAL_TOKENS.deck.utility.pressedOpacity : hasSavedDeck ? 1 : 0.45 }]}
                 >
-                  <Feather name="eye" size={13} color={hasSavedDeck ? colors.foreground : colors.mutedForeground} />
+                   <Feather name="eye" size={VISUAL_TOKENS.deck.utility.iconSize} color={hasSavedDeck ? colors.foreground : colors.mutedForeground} />
                   <Text style={[styles.utilityLabel, { color: hasSavedDeck ? colors.foreground : colors.mutedForeground }]}>VER</Text>
                 </Pressable>
               </View>
@@ -676,8 +677,8 @@ const styles = StyleSheet.create({
   referenceScene: { overflow: 'hidden' },
   sceneArt: { opacity: 0.96 },
   sceneUi: { ...StyleSheet.absoluteFillObject, zIndex: 2 },
-  sceneHeader: { position: 'absolute', top: 18, left: 22, right: 22, paddingBottom: 0 },
-  sceneRefresh: { width: 36, height: 36, borderWidth: 1, borderRadius: 12, alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(8,12,18,0.54)' },
+  sceneHeader: { position: 'absolute', top: VISUAL_TOKENS.deck.sceneHeader.top, left: VISUAL_TOKENS.deck.sceneHeader.horizontalInset, right: VISUAL_TOKENS.deck.sceneHeader.horizontalInset, paddingBottom: 0 },
+  sceneRefresh: { width: VISUAL_TOKENS.deck.refresh.size, height: VISUAL_TOKENS.deck.refresh.size, borderWidth: VISUAL_TOKENS.deck.refresh.borderWidth, borderRadius: VISUAL_TOKENS.deck.refresh.radius, alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(8,12,18,0.54)' },
   forgeCoreGlow: { position: 'absolute', width: 180, height: 180, borderRadius: 90, top: '24%', left: '50%', marginLeft: -90 },
   lightSweep: { position: 'absolute', width: '120%', height: 90, top: '31%', left: '-10%', transform: [{ rotate: '-8deg' }] },
   portalReadout: { position: 'absolute', top: '17.5%', left: '14%', right: '14%', alignItems: 'center' },
@@ -705,13 +706,13 @@ const styles = StyleSheet.create({
   forgeReadoutValue: { fontSize: 9, fontWeight: '900', textShadowColor: 'rgba(0,0,0,0.9)', textShadowRadius: 5 },
   forgeReadoutLabel: { fontSize: 5.5, fontWeight: '900', letterSpacing: 0.45, marginTop: 2 },
   bottomConsole: { position: 'absolute', height: '10.5%', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', zIndex: 8 },
-  searchDock: { width: '30%', height: 52, borderWidth: 1, borderRadius: 9, flexDirection: 'row', alignItems: 'center', paddingHorizontal: 8, gap: 5 },
-  searchInput: { flex: 1, minWidth: 0, paddingHorizontal: 0, paddingVertical: 0, fontSize: 9, fontWeight: '700' },
-  coreAction: { width: 72, height: 72, borderWidth: 1, borderRadius: 36, alignItems: 'center', justifyContent: 'center', gap: 3, shadowColor: '#000', shadowOpacity: 0.45, shadowRadius: 8, shadowOffset: { width: 0, height: 3 }, elevation: 4 },
+  searchDock: { width: `${VISUAL_TOKENS.deck.searchDock.widthRatio * 100}%`, height: VISUAL_TOKENS.deck.searchDock.height, borderWidth: VISUAL_TOKENS.deck.searchDock.borderWidth, borderRadius: VISUAL_TOKENS.deck.searchDock.radius, flexDirection: 'row', alignItems: 'center', paddingHorizontal: VISUAL_TOKENS.deck.searchDock.paddingHorizontal, gap: VISUAL_TOKENS.deck.searchDock.gap },
+  searchInput: { flex: 1, minWidth: 0, paddingHorizontal: 0, paddingVertical: 0, fontSize: VISUAL_TOKENS.deck.searchDock.inputSize, fontWeight: VISUAL_TOKENS.deck.searchDock.inputWeight },
+  coreAction: { width: VISUAL_TOKENS.deck.coreAction.size, height: VISUAL_TOKENS.deck.coreAction.size, borderWidth: VISUAL_TOKENS.deck.coreAction.borderWidth, borderRadius: VISUAL_TOKENS.deck.coreAction.radius, alignItems: 'center', justifyContent: 'center', gap: VISUAL_TOKENS.deck.coreAction.gap, shadowColor: '#000', shadowOpacity: 0.45, shadowRadius: 8, shadowOffset: { width: 0, height: 3 }, elevation: 4 },
   coreActionText: { fontSize: 6.5, fontWeight: '900', letterSpacing: 0.65 },
-  utilityDock: { width: '30%', flexDirection: 'row', justifyContent: 'flex-end', gap: 5 },
-  utilityButton: { width: 42, height: 52, borderWidth: 1, borderRadius: 8, alignItems: 'center', justifyContent: 'center', gap: 3, backgroundColor: 'rgba(7,12,18,0.72)' },
-  utilityLabel: { fontSize: 5.5, fontWeight: '900', letterSpacing: 0.4 },
+  utilityDock: { width: `${VISUAL_TOKENS.deck.utilityRail.widthRatio * 100}%`, flexDirection: 'row', justifyContent: 'flex-end', gap: VISUAL_TOKENS.deck.utilityRail.gap },
+  utilityButton: { width: VISUAL_TOKENS.deck.utility.width, height: VISUAL_TOKENS.deck.utility.height, borderWidth: VISUAL_TOKENS.deck.utility.borderWidth, borderRadius: VISUAL_TOKENS.deck.utility.radius, alignItems: 'center', justifyContent: 'center', gap: VISUAL_TOKENS.deck.utility.gap, backgroundColor: 'rgba(7,12,18,0.72)' },
+  utilityLabel: { fontSize: VISUAL_TOKENS.deck.utility.labelSize, fontWeight: VISUAL_TOKENS.deck.utility.labelWeight, letterSpacing: VISUAL_TOKENS.deck.utility.labelTracking },
   missingArtText: { fontSize: 7, lineHeight: 9, fontWeight: '900', letterSpacing: 0.2, textAlign: 'center' },
   syncError: { position: 'absolute', top: '47%', left: '10%', right: '10%', minHeight: 38, borderWidth: 1, borderRadius: 10, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8, zIndex: 12 },
   syncText: { fontSize: 9, fontWeight: '900', letterSpacing: 0.4, textAlign: 'center' },
