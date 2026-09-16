@@ -1,3 +1,13 @@
+## 2026-09-16 — APK BUILD — RELEASE PUBLICADO / VERIFICADO
+
+- **SOURCE:** `main` en `8ccb6f0fa2ec5fcd1a68b8bc7532fb67312c2690`.
+- **WORKFLOW:** `vexforge-android-apk.yml`, run `35122882007`, terminó `success`.
+- **GATES:** typecheck, telemetry, todos los contratos móviles, Expo prebuild, Gradle, verificación standalone y publicación pasaron correctamente.
+- **RELEASE:** [vexforge-android-build-248](https://github.com/grandmaster68081-byte/Vexforge-web/releases/tag/vexforge-android-build-248).
+- **APK:** `app-release.apk`, 106188716 bytes; SHA-256 `a581f02ba6fd46fb4c88d4970f20b19e919967bd88c2968ef33cb5da505dc245`.
+- **VERIFICATION:** el APK descargado es Android package válido, contiene `AndroidManifest.xml` y DEX, y su prueba ZIP pasa.
+- **STATUS:** `RELEASE_PUBLISHED / APK_VERIFIED`.
+
 ## 2026-09-16 — APK BUILD — WORLD CONTRACT GUARD ALIGNED / BUILD REQUESTED
 
 - **BLOCKER:** el guardia World exigía `storageAsset`, aunque el entorno actual declara el fondo World como `null` y el símbolo no existe en `supabase.ts`.
