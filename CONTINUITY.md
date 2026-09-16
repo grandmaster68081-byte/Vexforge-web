@@ -1,3 +1,19 @@
+## 2026-09-16 — VE-MOB-T2V — STORE CHAMBER TOKENS / IMPLEMENTED_UNVERIFIED
+
+- **ENTORNO ACTIVO:** aplicación Android en `mobile/**`; la web permanece congelada.
+- **AUTORIDAD:** fila `ACTIVE` de `public.vexforge_official_documents / vexforge_home_world_system_protocol_v3`, V2.3, SHA-256 `cd83250a5f63fe72b5be237bfdf1bb54a1f935927a5fea95136190b837a165ba`.
+- **SCREEN / DOMAIN:** `STORE` / Nexus de la Forja; encabezado de cámara activa y rail táctil de Packs, Tienda, Fusión, Evolución e Inventario.
+- **BLOCK:** centralizar geometría, escala, pesos tipográficos y feedback de presión sin cambiar acciones, catálogos, pagos, fusión, evolución, inventario ni estados honestos.
+- **WHAT CHANGED:** `VISUAL_TOKENS.store` define los roles de shell, regreso, señal de cámara, rail y modo; `store.tsx` los consume.
+- **BEHAVIOR PRESERVED:** mismos cinco modos, selección, rutas, `testID`, accesibilidad, copy, haptics y valores visuales efectivos.
+- **DATA PRESERVED:** no se añadieron solicitudes, datos, precios, rewards, RPCs, RLS, economía, gameplay, assets ni cambios en la web congelada.
+- **MOTION / PERFORMANCE:** no se añadió movimiento; el feedback táctil conserva la misma opacidad y traslación.
+- **GUARD:** `node scripts/verify-mobile-store.mjs`, `node scripts/verify-mobile-visual-system.mjs`, `node --check scripts/verify-mobile-visual-system.mjs` y `git diff --check`.
+- **RELEASE GATE:** no se inicia workflow Android, no se compila APK y no se publica release; QA visual/táctil física queda pendiente.
+- **STATUS:** `IMPLEMENTED_UNVERIFIED`.
+- **PERSISTENCIA:** publicar código, guardia, documento T2V y esta continuidad juntos en `main` mediante la API REST HTTPS oficial de GitHub con `[skip ci]`, sin `git push`.
+- **NEXT BLOCK:** continuar con otra pieza T2V explícita, sin tocar el motor de juego, los contratos de Supabase, la web congelada ni el tutorial.
+
 ## 2026-09-16 — VE-MOB-CARDS — OFFICIAL ARCHIVE SCENE / IMPLEMENTED_UNVERIFIED
 
 - **ALCANCE:** se activó la pantalla Android oficial `/(tabs)/collection` con la referencia visual entregada para Cartas. La web permanece congelada.

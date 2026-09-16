@@ -19,6 +19,7 @@ import { emitTelemetry } from '@/lib/telemetry';
 import { ScreenShell } from '@/components/ScreenShell';
 import { DomainState } from '@/components/DomainState';
 import { DomainHeader } from '@/components/DomainHeader';
+import { VISUAL_TOKENS } from '@/constants/experience';
 import {
   applyMobileFusion,
   buyMobilePack,
@@ -459,7 +460,7 @@ export default function StoreScreen() {
       <ScrollView
         showsVerticalScrollIndicator={false}
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={() => void handleRefresh()} tintColor={colors.accent} />}
-        contentContainerStyle={{ paddingTop: insets.top + 16, paddingBottom: insets.bottom + 42 }}
+        contentContainerStyle={{ paddingTop: insets.top + VISUAL_TOKENS.store.shell.contentTop, paddingBottom: insets.bottom + VISUAL_TOKENS.store.shell.contentBottom }}
       >
         <DomainHeader
           domain="foja"
@@ -470,20 +471,20 @@ export default function StoreScreen() {
               accessibilityRole="button"
               accessibilityLabel="Volver al perfil"
               onPress={() => router.back()}
-              style={({ pressed }) => [styles.iconButton, { borderColor: colors.border, opacity: pressed ? 0.65 : 1, transform: [{ translateY: pressed ? 1 : 0 }] }]}
+              style={({ pressed }) => [styles.iconButton, { borderColor: colors.border, opacity: pressed ? VISUAL_TOKENS.store.back.pressedOpacity : 1, transform: [{ translateY: pressed ? VISUAL_TOKENS.store.back.pressedTranslateY : 0 }] }]}
             >
-              <Ionicons name="arrow-back" size={20} color={colors.foreground} />
+              <Ionicons name="arrow-back" size={VISUAL_TOKENS.store.back.iconSize} color={colors.foreground} />
             </Pressable>
           )}
         >
           <View testID="store-domain-status" style={[styles.chamberSignal, { backgroundColor: colors.panel, borderColor: colors.border }]}>
-            <Ionicons name={activeMode.icon} size={16} color={colors.accent} />
+            <Ionicons name={activeMode.icon} size={VISUAL_TOKENS.store.chamberSignal.iconSize} color={colors.accent} />
             <Text style={[styles.chamberSignalText, { color: colors.foreground }]}>{activeMode.label.toUpperCase()}</Text>
             <Text style={[styles.chamberSignalHint, { color: colors.mutedForeground }]}>CATÁLOGO VIVO</Text>
           </View>
         </DomainHeader>
         <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.modeRail}>
-          {MODES.map((item) => <Pressable key={item.key} accessibilityRole="tab" accessibilityState={{ selected: mode === item.key }} testID={`store-tab-${item.key}`} onPress={() => setMode(item.key)} style={({ pressed }) => [styles.modeButton, { backgroundColor: mode === item.key ? `${colors.accent}18` : colors.panel, borderColor: mode === item.key ? colors.accent : colors.border, opacity: pressed ? 0.72 : 1, transform: [{ translateY: pressed ? 1 : 0 }] }]}><Ionicons name={item.icon} size={17} color={mode === item.key ? colors.accent : colors.mutedForeground} /><Text style={[styles.modeLabel, { color: mode === item.key ? colors.accent : colors.mutedForeground }]}>{item.label}</Text></Pressable>)}
+          {MODES.map((item) => <Pressable key={item.key} accessibilityRole="tab" accessibilityState={{ selected: mode === item.key }} testID={`store-tab-${item.key}`} onPress={() => setMode(item.key)} style={({ pressed }) => [styles.modeButton, { backgroundColor: mode === item.key ? `${colors.accent}18` : colors.panel, borderColor: mode === item.key ? colors.accent : colors.border, opacity: pressed ? VISUAL_TOKENS.store.mode.pressedOpacity : 1, transform: [{ translateY: pressed ? VISUAL_TOKENS.store.mode.pressedTranslateY : 0 }] }]}><Ionicons name={item.icon} size={VISUAL_TOKENS.store.mode.iconSize} color={mode === item.key ? colors.accent : colors.mutedForeground} /><Text style={[styles.modeLabel, { color: mode === item.key ? colors.accent : colors.mutedForeground }]}>{item.label}</Text></Pressable>)}
         </ScrollView>
         {mode === 'packs' ? <PackSection session={session} colors={colors} onRefresh={refresh} /> : null}
         {mode === 'shop' ? <ShopSection session={session} colors={colors} onRefresh={refresh} /> : null}
@@ -499,13 +500,13 @@ export default function StoreScreen() {
 const styles = StyleSheet.create({
   screen: { flex: 1 },
   eyebrow: { fontSize: 10, fontWeight: '700', letterSpacing: 1.35 },
-  iconButton: { width: 42, height: 42, alignItems: 'center', justifyContent: 'center', borderWidth: 1, borderRadius: 21 },
-  chamberSignal: { flexDirection: 'row', alignItems: 'center', gap: 8, borderWidth: 1, borderRadius: 12, paddingHorizontal: 12, paddingVertical: 10 },
-  chamberSignalText: { fontSize: 10, fontWeight: '900', letterSpacing: 1 },
-  chamberSignalHint: { fontSize: 9, fontWeight: '700', letterSpacing: 0.7, marginLeft: 'auto' },
-  modeRail: { gap: 8, paddingHorizontal: 20, paddingBottom: 20 },
-  modeButton: { minWidth: 88, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 6, paddingHorizontal: 12, paddingVertical: 10, borderWidth: 1, borderRadius: 12 },
-  modeLabel: { fontSize: 11, fontWeight: '700' },
+  iconButton: { width: VISUAL_TOKENS.store.back.size, height: VISUAL_TOKENS.store.back.size, alignItems: 'center', justifyContent: 'center', borderWidth: VISUAL_TOKENS.store.back.borderWidth, borderRadius: VISUAL_TOKENS.store.back.radius },
+  chamberSignal: { flexDirection: 'row', alignItems: 'center', gap: VISUAL_TOKENS.store.chamberSignal.gap, borderWidth: VISUAL_TOKENS.store.chamberSignal.borderWidth, borderRadius: VISUAL_TOKENS.store.chamberSignal.radius, paddingHorizontal: VISUAL_TOKENS.store.chamberSignal.paddingHorizontal, paddingVertical: VISUAL_TOKENS.store.chamberSignal.paddingVertical },
+  chamberSignalText: { fontSize: VISUAL_TOKENS.store.chamberSignal.textSize, fontWeight: VISUAL_TOKENS.store.chamberSignal.textWeight, letterSpacing: VISUAL_TOKENS.store.chamberSignal.textTracking },
+  chamberSignalHint: { fontSize: VISUAL_TOKENS.store.chamberSignal.hintSize, fontWeight: VISUAL_TOKENS.store.chamberSignal.hintWeight, letterSpacing: VISUAL_TOKENS.store.chamberSignal.hintTracking, marginLeft: 'auto' },
+  modeRail: { gap: VISUAL_TOKENS.store.modeRail.gap, paddingHorizontal: VISUAL_TOKENS.store.modeRail.paddingHorizontal, paddingBottom: VISUAL_TOKENS.store.modeRail.paddingBottom },
+  modeButton: { minWidth: VISUAL_TOKENS.store.mode.minWidth, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: VISUAL_TOKENS.store.mode.gap, paddingHorizontal: VISUAL_TOKENS.store.mode.paddingHorizontal, paddingVertical: VISUAL_TOKENS.store.mode.paddingVertical, borderWidth: VISUAL_TOKENS.store.mode.borderWidth, borderRadius: VISUAL_TOKENS.store.mode.radius },
+  modeLabel: { fontSize: VISUAL_TOKENS.store.mode.labelSize, fontWeight: VISUAL_TOKENS.store.mode.labelWeight },
   sectionHeading: { marginHorizontal: 20, marginTop: 25, marginBottom: 10 },
   sectionTitle: { fontSize: 21, fontWeight: '700', marginTop: 3 },
   bodyLeft: { fontSize: 12, lineHeight: 18 },

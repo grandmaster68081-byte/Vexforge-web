@@ -39,6 +39,14 @@ for (const token of [
 ]) {
   if (!tokens.includes(token)) failures.push(`shared visual token "${token}" is missing`);
 }
+for (const token of [
+  'store:',
+  'chamberSignal:',
+  'modeRail:',
+  'mode: {',
+]) {
+  if (!tokens.includes(token)) failures.push(`store visual token "${token}" is missing`);
+}
 
 const panel = source('mobile/components/MaterialPanel.tsx');
 for (const token of ['VISUAL_TOKENS', 'useReducedMotion', 'shadowOpacity', 'elevation']) {
@@ -475,6 +483,22 @@ for (const token of [
 ]) {
   if (!world.includes(`VISUAL_TOKENS.${token}`)) {
     failures.push(`World Codex card is missing visual token "${token}"`);
+  }
+}
+
+const store = source('mobile/app/store.tsx');
+if (!store.includes("from '@/constants/experience'")) {
+  failures.push('Store does not consume shared visual tokens');
+}
+for (const token of [
+  'store.shell',
+  'store.back',
+  'store.chamberSignal',
+  'store.modeRail',
+  'store.mode',
+]) {
+  if (!store.includes(`VISUAL_TOKENS.${token}`)) {
+    failures.push(`Store is missing visual token "${token}"`);
   }
 }
 
