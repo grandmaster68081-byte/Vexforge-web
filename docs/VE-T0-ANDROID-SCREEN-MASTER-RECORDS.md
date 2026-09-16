@@ -136,14 +136,17 @@ QA visual/táctil ni evidencia de APK de esta unidad.
   `mobile/app/(tabs)/collection.tsx`.
 - **Sujeto:** unidades, cartas, artefactos, rareza, facción, lore, procedencia
   y mastery.
-- **Assets:** `collection-archive-scene.jpg` es la escena local registrada;
-  `heroes/hero_assets.jpg` es el fondo remoto canónico; arte de carta viene de
-  registros vivos.
-- **Datos y acciones:** colección, filtros y detalle con señales reales;
+- **Assets:** `collection-reference-scene.png` es la referencia vertical oficial
+  de escena dentro de `ForgeArchiveScene`; el arte de carta viene de registros
+  vivos. La imagen no contiene UI runtime.
+- **Datos y acciones:** colección, búsqueda, filtros, orden, paginación, portal,
+  detalle, refresh, fusión, logros y navegación usan señales y rutas reales;
   ausencia de imagen, rareza o lore se muestra como pendiente/no reportado.
-- **Estados mínimos:** `loading`, `empty`, `error`, `pending`, `recovery`.
-- **Aceptación:** filtros, detalle, scroll, lectura de cartas, fallback
-  explícito y ausencia de sustitución genérica.
+- **Estados mínimos:** `loading`, `empty`, `error`, `offline`, `pending`,
+  `recovery`, `reducedMotion`.
+- **Aceptación:** la escena precede al catálogo, el portal y las capas son
+  nativos, existe parallax limitado, y filtros/detalle/scroll/fallback
+  permanecen funcionales sin sustituir datos por placeholders.
 
 ### SMR-05 — Deck / Forja
 

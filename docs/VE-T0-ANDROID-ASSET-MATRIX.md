@@ -42,14 +42,14 @@ consumo automático.
 | `mobile/assets/images/vexforge-auth-nexus-final.png` | Referencia vertical oficial de escena de acceso/Nexus (`1080×2340`); la UI runtime es nativa | `CANON_ACTIVE` | Auth | `mobile/constants/visual.ts`, `mobile/app/auth.tsx`, `VEXFORGE-ASSET-ATLAS.md` |
 | `mobile/assets/images/battle-reference-scene.png` | Escena de combate | `CANON_ACTIVE` | Battlefield | `VEXFORGE-ASSET-ATLAS.md` |
 | `docs/visual-assets/vexforge-battle-screen-premium-1080x2340.png` | Referencia visual Battlefield aprobada; promovida como arte de escena del viewport nativo | `CANON_ACTIVE` | Battlefield | `docs/visual-assets/vexforge-battle-screen-premium-1080x2340.md`, `mobile/constants/visual.ts`, registro T0 |
-| `mobile/assets/images/collection-archive-scene.jpg` | Escena de Archivo | `CANON_ACTIVE` | Collection | `VEXFORGE-ASSET-ATLAS.md` |
+| `mobile/assets/images/collection-archive-scene.jpg` | Variante residual de escena de Archivo | `AVAILABLE_UNASSIGNED` | Collection | reemplazada por `collection-reference-scene.png` como referencia aprobada |
 | `docs/visual-assets/vexforge-collection-screen-premium-1080x2340.png` | Referencia visual Collection aprobada por el operador | `REVIEW_REQUIRED` | Collection | `docs/visual-assets/vexforge-collection-screen-premium-1080x2340.md`, registro T0 |
 | `mobile/assets/images/decks-reference-scene.png` | Escena de formación; arte de escena dentro del viewport nativo de Forja | `CANON_ACTIVE` | Deck | `mobile/constants/visual.ts`, `mobile/app/(tabs)/deck.tsx`, `VEXFORGE-ASSET-ATLAS.md` |
 | `mobile/assets/images/profile-reference-scene.png` | Escena de identidad | `CANON_ACTIVE` | Profile | `VEXFORGE-ASSET-ATLAS.md` |
 | `docs/visual-assets/vexforge-profile-screen-premium-1080x2340.png` | Referencia visual Profile aprobada por el operador | `REVIEW_REQUIRED` | Profile | `docs/visual-assets/vexforge-profile-screen-premium-1080x2340.md`, registro T0 |
 | `mobile/assets/images/home-reference-scene.png` | Escena vertical oficial Home/Nexus (`1080×2340`) | `CANON_ACTIVE` | Home | `mobile/app/(tabs)/index.tsx`, `mobile/constants/visual.ts`, `docs/VE-MOB-3-HOME.md` |
 | `mobile/assets/images/icon.jpg` | Referencia de estilo heredado | `AVAILABLE_UNASSIGNED` | Compartido | `VEXFORGE-ASSET-ATLAS.md` |
-| `mobile/assets/images/collection-reference-scene.png` | Asset local sin asignación explícita en el atlas | `REVIEW_REQUIRED` | Collection | inventario de repositorio; requiere decisión de consumidor |
+| `mobile/assets/images/collection-reference-scene.png` | Referencia vertical oficial de Archivo; arte de escena dentro del viewport nativo | `CANON_ACTIVE` | Collection | `mobile/constants/visual.ts`, `mobile/components/ForgeArchiveScene.tsx`, guardia Collection |
 | `mobile/assets/images/deck-forge-scene.jpg` | Asset local sin asignación explícita en el atlas | `REVIEW_REQUIRED` | Deck / Forge | inventario de repositorio; requiere decisión de consumidor |
 
 `REVIEW_REQUIRED` no significa que el archivo sea inválido. Significa que no

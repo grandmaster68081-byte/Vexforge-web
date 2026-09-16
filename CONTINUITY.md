@@ -1,3 +1,17 @@
+## 2026-09-16 — VE-MOB-CARDS — OFFICIAL ARCHIVE SCENE / IMPLEMENTED_UNVERIFIED
+
+- **ALCANCE:** se activó la pantalla Android oficial `/(tabs)/collection` con la referencia visual entregada para Cartas. La web permanece congelada.
+- **REFERENCIA VISUAL OFICIAL:** `mobile/assets/images/collection-reference-scene.png`, PNG RGB `1080×2340`, SHA-256 `232280411aa29614e58d324ae98799ec118317ed87a4303fc088e890cb268edd`; coincide byte a byte con el asset adjunto.
+- **DECISIÓN VISUAL:** la imagen sólo aporta arte de escena dentro de un viewport. No se monta como captura, skin ni dashboard; el runtime reconstruye nativamente el portal, núcleo, iluminación, profundidad, copy, controles, cartas, estados y acciones.
+- **IMPLEMENTACIÓN:** `ForgeArchiveScene` añade iluminación violeta/cyan, pulso ambiental limitado, parallax de scroll acotado a 8 dp, `reducedMotion`, safe area y métrica viva. `collection.tsx` usa un `Animated.FlatList` nativo con búsqueda, filtros de facción/rareza, orden, paginación, detalle de carta y ownership.
+- **FLUJOS REALES:** catálogo y cartas del jugador continúan llegando de `featuredCards`/`collection` desde Supabase; refresh, offline/error, fusión, logros, detalle y navegación conservan rutas y acciones existentes.
+- **ESTADOS HONESTOS:** ausencia de catálogo, carta destacada, arte, ownership o estadísticas se muestra como espera/no reportado; no se añadieron cartas, nombres, cantidades ni rewards ficticios.
+- **VERIFICACIÓN:** `node scripts/verify-mobile-collection.mjs` pasa `14/14`; Battlefield `53/53`; guardia visual T2V, JSON del registro, parseo TS/TSX con Prettier y `git diff --check` pasan.
+- **QA HONESTA:** `IMPLEMENTED_UNVERIFIED / NO APK / NO RELEASE`; queda pendiente únicamente la medición física de touch, safe area, legibilidad y rendimiento en Android. No se compila APK sin autorización explícita.
+- **PERSISTENCIA:** publicar código, asset, guardia, ficha visual y continuidad juntos en `main` mediante GitHub REST/Data API sobre HTTPS con `[skip ci]`, sin iniciar workflow Android.
+
+---
+
 ## 2026-09-15 — VE-MOB-5 — VISUAL RECTIFICATION / SCENE-FIRST FORGE COMPOSITION
 
 - **REVISIÓN OBLIGATORIA:** una inspección contra la orden original mostró que la primera composición conservaba la referencia, pero todavía se leía como una barra de búsqueda, chips, resumen y acciones administrativas sobre una imagen.

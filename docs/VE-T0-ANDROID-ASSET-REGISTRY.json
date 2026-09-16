@@ -76,8 +76,8 @@
       "authorized_domains": [
         "Collection"
       ],
-      "state": "CANON_ACTIVE",
-      "debt": "Escena local de Collection registrada en el atlas."
+      "state": "AVAILABLE_UNASSIGNED",
+      "debt": "Residual scene variant superseded by the operator-approved collection-reference-scene.png."
     },
     {
       "asset_id": "android-local:collection-reference-scene.png",
@@ -89,11 +89,14 @@
         "height": 2340
       },
       "format": "png",
-      "hash": "6a41d49743c9d0db0b6e3847d12d574c2d270c16876073982a64bc979021af36",
+      "hash": "232280411aa29614e58d324ae98799ec118317ed87a4303fc088e890cb268edd",
       "hash_algorithm": "sha256",
       "hash_status": "MEASURED",
       "provenance": [
+        "operator-provided attached reference",
         "repository file",
+        "mobile/constants/visual.ts",
+        "mobile/components/ForgeArchiveScene.tsx",
         "docs/VE-T0-ANDROID-ASSET-MATRIX.md",
         "docs/VEXFORGE-ASSET-ATLAS.md"
       ],
@@ -101,7 +104,7 @@
         "Collection"
       ],
       "state": "CANON_ACTIVE",
-      "debt": "Archivo local presente; requiere decisión explícita de consumidor."
+      "debt": "Scene art is active in the native Archive viewport; physical APK evidence remains pending."
     },
     {
       "asset_id": "android-local:deck-forge-scene.jpg",

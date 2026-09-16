@@ -1,6 +1,8 @@
 import { Feather } from '@/components/ForgeIcon';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import {
+  AccessibilityInfo,
+  Animated,
   FlatList,
   Image,
   Modal,
@@ -11,7 +13,6 @@ import {
   Text,
   TextInput,
   View,
-  useWindowDimensions,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useLocalSearchParams, useRouter } from 'expo-router';
@@ -19,9 +20,10 @@ import { useColors } from '@/hooks/useColors';
 import { ProgressBar } from '@/components/ProgressBar';
 import { useGame } from '@/context/GameContext';
 import { ScreenShell } from '@/components/ScreenShell';
-import { useMeasuredCanonicalFrame } from '@/components/CanonicalFrame';
 import { DomainState } from '@/components/DomainState';
 import { DomainHeader } from '@/components/DomainHeader';
+import { ForgeArchiveScene } from '@/components/ForgeArchiveScene';
+import { VISUAL_TOKENS } from '@/constants/experience';
 import type { PlayerCard, PublicCard } from '@/lib/supabase';
 import { FACTION_ICONS } from '@/constants/visual';
 import { getCardPilotIdentity } from '@/constants/cardPilot';
@@ -52,12 +54,6 @@ function rarityLabel(rarity: string | null | undefined) {
 
 function factionLabel(faction: string | null | undefined) {
   return hasText(faction) ? faction.trim() : 'FACCION NO REPORTADA';
-}
-
-function loreLabel(card: PublicCard) {
-  if (hasText(card.lore)) return card.lore.trim();
-  if (hasText(card.specialization)) return card.specialization.trim();
-  return 'LORE NO REPORTADO';
 }
 
 function identityLabel(card: PublicCard) {
@@ -132,57 +128,6 @@ function CardArt({
       ) : null}
       <View style={[styles.artRule, { backgroundColor: accent }]} />
     </View>
-  );
-}
-
-function ReferenceCardSlot({
-  card,
-  owned,
-  colors,
-  onPress,
-}: {
-  card?: PublicCard;
-  owned?: PlayerCard;
-  colors: ReturnType<typeof useColors>;
-  onPress: () => void;
-}) {
-  if (!card) {
-    return (
-      <View
-        testID="collection-empty-slot"
-        accessible
-        accessibilityRole="image"
-        accessibilityLabel="Ranura de carta vacía"
-        style={[styles.referenceCardSlot, styles.referenceEmptySlot, { borderColor: `${colors.border}CC` }]}
-      >
-        <Feather name="cards" size={18} color={`${colors.mutedForeground}88`} />
-      </View>
-    );
-  }
-
-  const accent = rarityColor(card.rarity, colors);
-  return (
-    <Pressable
-      testID={`reference-card-${card.code}`}
-      accessibilityRole="button"
-      accessibilityLabel={`Ver detalles de ${card.name}`}
-      onPress={onPress}
-      style={({ pressed }) => [
-        styles.referenceCardSlot,
-        {
-          borderColor: accent,
-          opacity: pressed ? 0.72 : 1,
-          transform: [{ translateY: pressed ? 2 : 0 }],
-        },
-      ]}
-    >
-      <CardArt card={card} colors={colors} compact />
-      {owned ? (
-        <View style={[styles.referenceOwned, { backgroundColor: `${colors.ink}E8`, borderColor: accent }]}>
-          <Text style={[styles.referenceOwnedText, { color: colors.foreground }]}>x{owned.quantity}</Text>
-        </View>
-      ) : null}
-    </Pressable>
   );
 }
 
@@ -277,81 +222,6 @@ function CardTile({
         </View>
       )}
     </Pressable>
-  );
-}
-
-function CardSpotlight({
-  card,
-  owned,
-  colors,
-  onPress,
-  onOpenForge,
-}: {
-  card: PublicCard;
-  owned?: PlayerCard;
-  colors: ReturnType<typeof useColors>;
-  onPress: () => void;
-  onOpenForge: () => void;
-}) {
-  const accent = rarityColor(card.rarity, colors);
-  return (
-    <View testID="cards-spotlight" style={[styles.spotlight, { backgroundColor: `${colors.panelStrong}EE`, borderColor: `${accent}88` }]}>
-      <Pressable
-        accessibilityRole="button"
-        accessibilityLabel={`Inspeccionar artefacto destacado ${card.name}`}
-        onPress={onPress}
-        style={({ pressed }) => [
-          styles.spotlightArt,
-          {
-            borderColor: accent,
-            opacity: pressed ? 0.82 : 1,
-            transform: [{ translateY: pressed ? 2 : 0 }],
-          },
-        ]}
-      >
-        <CardArt card={card} colors={colors} detail />
-      </Pressable>
-      <View style={styles.spotlightCopy}>
-        <Text style={[styles.spotlightKicker, { color: accent }]}>ARTEFACTO DESTACADO</Text>
-        <Text style={[styles.spotlightTitle, { color: colors.foreground }]} numberOfLines={2}>{card.name}</Text>
-        <Text style={[styles.spotlightMeta, { color: colors.mutedForeground }]}>
-          {rarityLabel(card.rarity)} · {factionLabel(card.faction)} · PWR {numberLabel(card.power)}
-        </Text>
-        <Text style={[styles.spotlightLore, { color: colors.mutedForeground }]} numberOfLines={3}>
-          {loreLabel(card)}
-        </Text>
-        <View style={styles.spotlightActions}>
-          <Pressable
-            testID="cards-spotlight-inspect"
-            accessibilityRole="button"
-            accessibilityLabel={`Inspeccionar ${card.name}`}
-            onPress={onPress}
-            style={({ pressed }) => [
-              styles.spotlightInspect,
-              { borderColor: accent, opacity: pressed ? 0.78 : 1, transform: [{ translateY: pressed ? 2 : 0 }] },
-            ]}
-          >
-            <Text style={[styles.spotlightInspectText, { color: accent }]}>INSPECCIONAR</Text>
-          </Pressable>
-          <Pressable
-            testID="cards-open-forge"
-            accessibilityRole="button"
-            accessibilityLabel="Abrir la Forja de mazos"
-            onPress={onOpenForge}
-            style={({ pressed }) => [
-              styles.spotlightForge,
-              { backgroundColor: colors.primary, opacity: pressed ? 0.82 : 1, transform: [{ translateY: pressed ? 2 : 0 }] },
-            ]}
-          >
-            <Feather name="columns" size={13} color={colors.primaryForeground} />
-            <Text style={[styles.spotlightForgeText, { color: colors.primaryForeground }]}>FORJAR</Text>
-          </Pressable>
-        </View>
-        <Text style={[styles.spotlightOwnership, { color: owned ? colors.accent : colors.mutedForeground }]}>
-          {owned ? `En tu archivo · x${owned.quantity}` : 'Aún no forma parte de tu archivo'}
-        </Text>
-      </View>
-    </View>
   );
 }
 
@@ -468,54 +338,11 @@ function CardDetail({
   );
 }
 
-function ArchiveBottomItem({
-  testID,
-  label,
-  icon,
-  active = false,
-  onPress,
-  colors,
-}: {
-  testID: string;
-  label: string;
-  icon: string;
-  active?: boolean;
-  onPress: () => void;
-  colors: ReturnType<typeof useColors>;
-}) {
-  return (
-    <Pressable
-      testID={testID}
-      accessibilityRole="button"
-      accessibilityLabel={label}
-      onPress={onPress}
-      style={({ pressed }) => [
-        styles.referenceBottomHit,
-        { opacity: pressed ? 0.72 : 1, transform: [{ translateY: pressed ? 2 : 0 }] },
-      ]}
-    >
-      <Feather name={icon} size={18} color={active ? colors.accent : colors.foreground} />
-      <Text style={[styles.referenceBottomLabel, { color: active ? colors.accent : colors.foreground }]}>{label}</Text>
-    </Pressable>
-  );
-}
-
 export default function CollectionScreen() {
   const colors = useColors();
   const insets = useSafeAreaInsets();
   const router = useRouter();
   const { scope: scopeParam } = useLocalSearchParams<{ scope?: string }>();
-  const { width: viewportWidth, height: viewportHeight } = useWindowDimensions();
-  const {
-    width: frameWidth,
-    height: canvasHeight,
-    onLayout: onReferenceRootLayout,
-  } = useMeasuredCanonicalFrame(
-    viewportWidth,
-    viewportHeight,
-    insets.top,
-    insets.bottom,
-  );
   const { featuredCards, cardsTotal, collection, collectionLoading, syncState, syncError, refresh } = useGame();
   const [search, setSearch] = useState('');
   const [rarity, setRarity] = useState<Rarity | 'all'>('all');
@@ -524,9 +351,13 @@ export default function CollectionScreen() {
   const [scope, setScope] = useState<'all' | 'owned'>(scopeParam === 'owned' ? 'owned' : 'all');
   const [selected, setSelected] = useState<PublicCard | null>(null);
   const [pageIndex, setPageIndex] = useState(0);
-  const pagerRef = useRef<FlatList<PublicCard[]>>(null);
+  const [reducedMotion, setReducedMotion] = useState(false);
+  const scrollY = useRef(new Animated.Value(0)).current;
   const ownedById = useMemo(() => new Map(collection.map((card) => [card.card_id, card])), [collection]);
-  const completion = cardsTotal > 0 ? Math.round((ownedById.size / cardsTotal) * 100) : 0;
+
+  useEffect(() => {
+    AccessibilityInfo.isReduceMotionEnabled().then(setReducedMotion).catch(() => undefined);
+  }, []);
 
   const filtered = useMemo(() => {
     const rarityOrder = Object.fromEntries(RARITIES.map((name, index) => [name, index]));
@@ -539,9 +370,7 @@ export default function CollectionScreen() {
         return !query || card.name.toLowerCase().includes(query) || card.code.toLowerCase().includes(query);
       })
       .sort((a, b) => {
-        if (sort === 'recent') {
-          return (Date.parse(b.created_at ?? '') || 0) - (Date.parse(a.created_at ?? '') || 0);
-        }
+        if (sort === 'recent') return (Date.parse(b.created_at ?? '') || 0) - (Date.parse(a.created_at ?? '') || 0);
         if (sort === 'name') return a.name.localeCompare(b.name);
         if (sort === 'power') {
           const aPower = typeof a.power === 'number' && Number.isFinite(a.power) ? a.power : null;
@@ -556,392 +385,132 @@ export default function CollectionScreen() {
 
   const pages = useMemo(() => {
     const result: PublicCard[][] = [];
-    for (let index = 0; index < filtered.length; index += 12) {
-      result.push(filtered.slice(index, index + 12));
-    }
+    for (let index = 0; index < filtered.length; index += 12) result.push(filtered.slice(index, index + 12));
     return result.length > 0 ? result : [[]];
   }, [filtered]);
+  const visibleCards = pages[pageIndex] ?? [];
+  const featuredCard = filtered[0] ?? featuredCards[0] ?? null;
+  const hasFilters = Boolean(search || rarity !== 'all' || faction !== 'all' || scope !== 'all');
 
   useEffect(() => {
     setPageIndex(0);
-    pagerRef.current?.scrollToOffset({ offset: 0, animated: false });
   }, [faction, rarity, scope, search, sort]);
 
-  const changePage = (delta: number) => {
-    const nextPage = Math.min(Math.max(pageIndex + delta, 0), pages.length - 1);
-    if (nextPage === pageIndex) return;
-    setPageIndex(nextPage);
-    pagerRef.current?.scrollToIndex({ index: nextPage, animated: true });
+  const cycleSort = () => {
+    setSort(sort === 'recent' ? 'name' : sort === 'name' ? 'power' : sort === 'power' ? 'rarity' : 'recent');
   };
+  const sortLabel = sort === 'recent' ? 'RECIENTES' : sort === 'name' ? 'NOMBRE' : sort === 'power' ? 'PODER' : 'RAREZA';
 
-  const navigateFromReference = (destination: '/' | '/battle' | '/deck' | '/profile' | '/collection') => {
-    if (destination === '/') {
-      router.replace('/');
-      return;
-    }
-    router.push(destination);
-  };
-
-  const renderPage = useCallback(
-    ({ item, index }: { item: PublicCard[]; index: number }) => {
-      const slots = Array.from({ length: 12 }, (_, slotIndex) => item[slotIndex]);
-      return (
-        <View style={[styles.referencePage, { width: frameWidth }]}>
-          <View style={styles.referenceGrid}>
-            {slots.map((card, slotIndex) => (
-              <ReferenceCardSlot
-                key={card?.id ?? `empty-${index}-${slotIndex}`}
-                card={card}
-                owned={card ? ownedById.get(card.id) : undefined}
-                colors={colors}
-                onPress={() => card && setSelected(card)}
-              />
-            ))}
+  const listHeader = (
+    <View>
+      <DomainHeader domain="archivo" />
+      <ForgeArchiveScene
+        scrollY={scrollY}
+        reducedMotion={reducedMotion}
+        featuredCard={featuredCard}
+        ownedCount={ownedById.size}
+        totalCount={cardsTotal}
+        onInspect={() => { if (featuredCard) setSelected(featuredCard); }}
+        onRefresh={() => { void refresh(); }}
+      />
+      <View testID="cards-native-controls" style={[styles.controlSurface, { backgroundColor: `${colors.panelStrong}F2`, borderColor: `${colors.rarityRare}55` }]}>
+        <View style={styles.controlHeader}>
+          <View style={styles.controlTitleBlock}>
+            <Text style={[styles.sectionLabel, { color: colors.rarityRare }]}>PUERTA DEL ARCHIVO</Text>
+            <Text style={[styles.controlTitle, { color: colors.foreground }]}>Explora lo forjado</Text>
           </View>
-        </View>
-      );
-    },
-    [colors, frameWidth, ownedById],
-  );
-
-  const hasFilters = Boolean(search || rarity !== 'all' || faction !== 'all' || scope !== 'all');
-  return (
-    <ScreenShell sceneMode="hero">
-      <View pointerEvents="none" style={{ position: 'absolute', left: 18, right: 18, top: insets.top + 14, zIndex: 5 }}>
-        <DomainHeader domain="archivo" />
-      </View>
-      <View
-        onLayout={onReferenceRootLayout}
-        style={[styles.referenceRoot, { marginBottom: -insets.bottom }]}
-      >
-        <View style={[styles.referenceScene, { width: frameWidth, height: canvasHeight, marginTop: insets.top, alignSelf: 'center', backgroundColor: colors.background }]}>
-        <View pointerEvents="none" style={[styles.referenceShade, { backgroundColor: `${colors.background}FF` }]} />
-
-           <View pointerEvents="box-none" style={StyleSheet.absoluteFillObject}>
-           <View style={[styles.referenceCounter, { top: canvasHeight * 0.185, right: frameWidth * 0.115 }]}>
-            <Text style={[styles.referenceCounterValue, { color: colors.foreground }]}>{ownedById.size} / {cardsTotal || filtered.length}</Text>
-            <Text style={[styles.referenceCounterLabel, { color: colors.mutedForeground }]}>CARTAS TOTALES</Text>
-          </View>
-
-          <Pressable
-            testID="collection-refresh"
-            accessibilityRole="button"
-            accessibilityLabel="Actualizar colección"
-            onPress={refresh}
-             style={[styles.referenceRefreshHotspot, { top: canvasHeight * 0.185, right: frameWidth * 0.04 }]}
-          />
-
-          <Pressable
-            testID="collection-tab"
-            accessibilityRole="button"
-            accessibilityLabel="Colección"
-           accessibilityState={{ selected: scope === 'all' }}
-            onPress={() => { setScope('all'); setPageIndex(0); }}
-             style={({ pressed }) => [
-               styles.referenceTopHotspot,
-               styles.referenceTopTab,
-               {
-                 left: frameWidth * 0.05,
-                 top: canvasHeight * 0.108,
-                 width: frameWidth * 0.26,
-                 borderColor: scope === 'all' ? `${colors.accent}CC` : `${colors.foreground}38`,
-                 backgroundColor: scope === 'all' ? `${colors.accent}24` : `${colors.ink}B8`,
-                 opacity: pressed ? 0.76 : 1,
-                 transform: [{ translateY: pressed ? 2 : 0 }],
-               },
-             ]}
-          >
-            <Feather name="cards" size={14} color={scope === 'all' ? colors.accent : colors.foreground} />
-            <Text style={[styles.referenceTopTabText, { color: scope === 'all' ? colors.accent : colors.foreground }]}>COLECCIÓN</Text>
-          </Pressable>
-          <Pressable
-            testID="owned-tab"
-            accessibilityRole="button"
-            accessibilityLabel="Tus cartas"
-            accessibilityState={{ selected: scope === 'owned' }}
-            onPress={() => { setScope('owned'); setPageIndex(0); }}
-             style={({ pressed }) => [
-               styles.referenceTopHotspot,
-               styles.referenceTopTab,
-               {
-                 left: frameWidth * 0.31,
-                 top: canvasHeight * 0.108,
-                 width: frameWidth * 0.21,
-                 borderColor: scope === 'owned' ? `${colors.accent}CC` : `${colors.foreground}38`,
-                 backgroundColor: scope === 'owned' ? `${colors.accent}24` : `${colors.ink}B8`,
-                 opacity: pressed ? 0.76 : 1,
-                 transform: [{ translateY: pressed ? 2 : 0 }],
-               },
-             ]}
-          >
-            <Feather name="collection" size={14} color={scope === 'owned' ? colors.accent : colors.foreground} />
-            <Text style={[styles.referenceTopTabText, { color: scope === 'owned' ? colors.accent : colors.foreground }]}>TUS CARTAS</Text>
-          </Pressable>
-          <Pressable
-            testID="fusion-tab"
-            accessibilityRole="button"
-            accessibilityLabel="Abrir fusión y forja"
-            onPress={() => router.push('/store?mode=fusion')}
-             style={({ pressed }) => [
-               styles.referenceTopHotspot,
-               styles.referenceTopTab,
-               styles.referenceTopTabPassive,
-               {
-                 left: frameWidth * 0.53,
-                 top: canvasHeight * 0.108,
-                 width: frameWidth * 0.19,
-                 opacity: pressed ? 0.76 : 1,
-                 transform: [{ translateY: pressed ? 2 : 0 }],
-               },
-             ]}
-          >
-            <Feather name="fusion" size={14} color={colors.foreground} />
-            <Text style={[styles.referenceTopTabText, { color: colors.foreground }]}>FUSIÓN</Text>
-          </Pressable>
-          <Pressable
-            testID="achievements-tab"
-            accessibilityRole="button"
-            accessibilityLabel="Abrir logros"
-            onPress={() => router.push('/profile?section=achievements')}
-             style={({ pressed }) => [
-               styles.referenceTopHotspot,
-               styles.referenceTopTab,
-               styles.referenceTopTabPassive,
-               {
-                 right: frameWidth * 0.05,
-                 top: canvasHeight * 0.108,
-                 width: frameWidth * 0.18,
-                 opacity: pressed ? 0.76 : 1,
-                 transform: [{ translateY: pressed ? 2 : 0 }],
-               },
-             ]}
-          >
-            <Feather name="trophy" size={14} color={colors.foreground} />
-            <Text style={[styles.referenceTopTabText, { color: colors.foreground }]}>LOGROS</Text>
-          </Pressable>
-
-           <View style={[styles.referenceSearch, { left: frameWidth * 0.075, top: canvasHeight * 0.332, width: frameWidth * 0.56 }]}>
-             <Feather name="search" size={Math.max(14, frameWidth * 0.04)} color={colors.mutedForeground} />
-            <TextInputCompat value={search} onChangeText={setSearch} colors={colors} />
-            {search ? (
-              <Pressable testID="clear-search" accessibilityRole="button" accessibilityLabel="Limpiar búsqueda" onPress={() => setSearch('')}>
-                <Feather name="x-circle" size={15} color={colors.mutedForeground} />
-              </Pressable>
-            ) : null}
-          </View>
-
           <Pressable
             testID="sort-toggle"
             accessibilityRole="button"
-            accessibilityLabel={`Cambiar orden de las cartas. Orden actual: ${sort === 'recent' ? 'recientes' : sort === 'name' ? 'nombre' : sort === 'power' ? 'poder' : 'rareza'}`}
-            onPress={() => setSort(sort === 'recent' ? 'name' : sort === 'name' ? 'power' : sort === 'power' ? 'rarity' : 'recent')}
-             style={({ pressed }) => [
-               styles.referenceSortHotspot,
-               {
-                 right: frameWidth * 0.075,
-                 top: canvasHeight * 0.332,
-                 width: frameWidth * 0.24,
-                 opacity: pressed ? 0.76 : 1,
-                 transform: [{ translateY: pressed ? 2 : 0 }],
-               },
-             ]}
+            accessibilityLabel={`Cambiar orden de las cartas. Orden actual: ${sortLabel.toLowerCase()}`}
+            onPress={cycleSort}
+            style={({ pressed }) => [styles.sortButton, { borderColor: colors.border, opacity: pressed ? 0.76 : 1 }]}
           >
-            <Text style={[styles.referenceSortText, { color: colors.foreground }]}>
-              {sort === 'recent' ? 'RECIENTES' : sort === 'name' ? 'NOMBRE' : sort === 'power' ? 'PODER' : 'RAREZA'}
-            </Text>
-            <Feather name="chevron-down-outline" size={12} color={colors.accent} />
+            <Text style={[styles.sortText, { color: colors.foreground }]}>{sortLabel}</Text>
+            <Feather name="chevron-down-outline" size={13} color={colors.rarityRare} />
           </Pressable>
-
-           <View style={[styles.referenceFilterRow, { top: canvasHeight * 0.278, left: frameWidth * 0.05, right: frameWidth * 0.05 }]}>
-            <Pressable
-              testID="faction-all"
-              accessibilityRole="button"
-              accessibilityLabel="Todas las facciones"
-              accessibilityState={{ selected: faction === 'all' }}
-              onPress={() => setFaction('all')}
-                style={({ pressed }) => [
-                  styles.referenceFilterHit,
-                  styles.referenceChoice,
-                  {
-                    borderColor: faction === 'all' ? colors.accent : `${colors.foreground}38`,
-                    backgroundColor: faction === 'all' ? `${colors.accent}28` : `${colors.ink}B8`,
-                    opacity: pressed ? 0.76 : 1,
-                    transform: [{ translateY: pressed ? 2 : 0 }],
-                  },
-                ]}
-             >
-               <Feather name="compass" size={11} color={faction === 'all' ? colors.accent : colors.foreground} />
-               <Text style={[styles.referenceChoiceText, { color: faction === 'all' ? colors.accent : colors.foreground }]}>TODAS</Text>
-             </Pressable>
-            {FACTIONS.map((value, index) => (
-              <Pressable
-                key={value}
-                testID={`faction-${value}`}
-                accessibilityRole="button"
-                accessibilityLabel={`Filtrar por ${value}`}
-                accessibilityState={{ selected: faction === value }}
-                onPress={() => setFaction(faction === value ? 'all' : value)}
-                  style={({ pressed }) => [
-                    styles.referenceFilterHit,
-                    styles.referenceChoice,
-                    {
-                      left: `${20 * (index + 1)}%`,
-                      borderColor: faction === value ? colors.accent : `${colors.foreground}38`,
-                      backgroundColor: faction === value ? `${colors.accent}28` : `${colors.ink}B8`,
-                      opacity: pressed ? 0.76 : 1,
-                      transform: [{ translateY: pressed ? 2 : 0 }],
-                    },
-                  ]}
-               >
-                 <Text style={[styles.referenceChoiceText, { color: faction === value ? colors.accent : colors.foreground }]}>
-                   {value.toUpperCase()}
-                 </Text>
-               </Pressable>
-            ))}
-          </View>
-
-           <View style={[styles.referenceRarityRow, { top: canvasHeight * 0.372, left: frameWidth * 0.045, right: frameWidth * 0.045 }]}>
-            <Pressable
-              testID="rarity-all"
-              accessibilityRole="button"
-              accessibilityLabel="Todas las rarezas"
-              accessibilityState={{ selected: rarity === 'all' }}
-              onPress={() => setRarity('all')}
-                style={({ pressed }) => [
-                  styles.referenceRarityHit,
-                  styles.referenceChoice,
-                  {
-                    borderColor: rarity === 'all' ? colors.accent : `${colors.foreground}38`,
-                    backgroundColor: rarity === 'all' ? `${colors.accent}28` : `${colors.ink}B8`,
-                    opacity: pressed ? 0.76 : 1,
-                    transform: [{ translateY: pressed ? 2 : 0 }],
-                  },
-                ]}
-             >
-               <Text style={[styles.referenceChoiceText, { color: rarity === 'all' ? colors.accent : colors.foreground }]}>TODAS</Text>
-             </Pressable>
-            {RARITIES.map((value, index) => (
-              <Pressable
-                key={value}
-                testID={`rarity-${value}`}
-                accessibilityRole="button"
-                accessibilityLabel={`Filtrar por rareza ${rarityLabel(value)}`}
-                accessibilityState={{ selected: rarity === value }}
-                onPress={() => setRarity(rarity === value ? 'all' : value)}
-                  style={({ pressed }) => [
-                    styles.referenceRarityHit,
-                    styles.referenceChoice,
-                    {
-                      left: `${14.25 * (index + 1)}%`,
-                      borderColor: rarity === value ? rarityColor(value, colors) : `${colors.foreground}38`,
-                      backgroundColor: rarity === value ? `${rarityColor(value, colors)}28` : `${colors.ink}B8`,
-                      opacity: pressed ? 0.76 : 1,
-                      transform: [{ translateY: pressed ? 2 : 0 }],
-                    },
-                  ]}
-               >
-                 <Text
-                   numberOfLines={1}
-                   style={[styles.referenceChoiceText, { color: rarity === value ? rarityColor(value, colors) : colors.foreground }]}
-                 >
-                   {(value === 'Uncommon' ? 'POCO COMÚN' : rarityLabel(value)).toUpperCase()}
-                 </Text>
-               </Pressable>
-            ))}
-          </View>
-
-          <FlatList
-            ref={pagerRef}
-            data={pages}
-            keyExtractor={(_, index) => `collection-page-${index}`}
-            horizontal
-            pagingEnabled
-            bounces={false}
-            showsHorizontalScrollIndicator={false}
-            scrollEnabled={pages.length > 1}
-            renderItem={renderPage}
-             style={[styles.referencePager, { top: canvasHeight * 0.392, height: canvasHeight * 0.43 }]}
-            onMomentumScrollEnd={(event) => setPageIndex(Math.round(event.nativeEvent.contentOffset.x / Math.max(frameWidth, 1)))}
-            getItemLayout={(_, index) => ({ length: frameWidth, offset: frameWidth * index, index })}
-          />
-
-          {filtered.length === 0 ? (
-            <View style={[styles.referenceEmptyMessage, { top: canvasHeight * 0.54, left: frameWidth * 0.16, right: frameWidth * 0.16, backgroundColor: `${colors.ink}D9`, borderColor: `${colors.accent}99` }]}>
-              <Feather name="cards" size={20} color={colors.accent} />
-              <Text style={[styles.referenceEmptyTitle, { color: colors.foreground }]}>
-                {hasFilters ? 'SIN COINCIDENCIAS' : 'EL COMPENDIO ESTÁ EN SILENCIO'}
-              </Text>
-              <Text style={[styles.referenceEmptyText, { color: colors.mutedForeground }]}>
-                {hasFilters ? 'Prueba con otra búsqueda o filtro.' : 'No hay cartas activas disponibles.'}
-              </Text>
-            </View>
-          ) : null}
-
-          {syncState === 'offline' ? (
-            <Pressable
-              testID="collection-sync-error"
-              accessibilityRole="button"
-              accessibilityLabel="Reintentar sincronización de colección"
-              onPress={refresh}
-              style={({ pressed }) => [
-                styles.referenceSyncError,
-                {
-                  backgroundColor: `${colors.ink}E8`,
-                  borderColor: `${colors.danger}AA`,
-                  opacity: pressed ? 0.78 : 1,
-                  transform: [{ translateY: pressed ? 2 : 0 }],
-                },
-              ]}
-            >
-              <Feather name="warning" size={16} color={colors.danger} />
-              <Text style={[styles.referenceSyncText, { color: colors.foreground }]}>SIN SEÑAL · TOCA PARA REINTENTAR</Text>
+        </View>
+        <View style={[styles.searchBox, { borderColor: colors.border, backgroundColor: `${colors.ink}66` }]}>
+          <Feather name="search" size={17} color={colors.mutedForeground} />
+          <TextInputCompat value={search} onChangeText={setSearch} colors={colors} />
+          {search ? (
+            <Pressable testID="clear-search" accessibilityRole="button" accessibilityLabel="Limpiar búsqueda" onPress={() => setSearch('')}>
+              <Feather name="x-circle" size={16} color={colors.mutedForeground} />
             </Pressable>
           ) : null}
-
-          <View style={[styles.referencePagination, { bottom: canvasHeight * 0.106, left: frameWidth * 0.28, right: frameWidth * 0.28 }]}>
-            <Pressable
-              testID="collection-page-previous"
-              accessibilityRole="button"
-              accessibilityLabel="Página anterior de cartas"
-              disabled={pageIndex === 0}
-              onPress={() => changePage(-1)}
-               style={({ pressed }) => [
-                 styles.referencePageButton,
-                 { opacity: pressed ? 0.72 : 1, transform: [{ translateY: pressed ? 2 : 0 }] },
-               ]}
-            >
-              <Feather name="chevron-left" size={18} color={pageIndex === 0 ? `${colors.mutedForeground}66` : colors.accent} />
-            </Pressable>
-            <Text testID="collection-page-indicator" style={[styles.referencePageText, { color: colors.foreground }]}>
-              {pageIndex + 1} / {pages.length}
-            </Text>
-            <Pressable
-              testID="collection-page-next"
-              accessibilityRole="button"
-              accessibilityLabel="Página siguiente de cartas"
-              disabled={pageIndex === pages.length - 1}
-              onPress={() => changePage(1)}
-               style={({ pressed }) => [
-                 styles.referencePageButton,
-                 { opacity: pressed ? 0.72 : 1, transform: [{ translateY: pressed ? 2 : 0 }] },
-               ]}
-            >
-              <Feather name="chevron-right" size={18} color={pageIndex === pages.length - 1 ? `${colors.mutedForeground}66` : colors.accent} />
-            </Pressable>
-          </View>
-
-           <View style={[styles.referenceBottomNavigation, { borderTopColor: `${colors.accent}66`, backgroundColor: `${colors.ink}D9` }]}>
-             <ArchiveBottomItem testID="reference-home" label="Inicio" icon="home-outline" onPress={() => navigateFromReference('/')} colors={colors} />
-             <ArchiveBottomItem testID="reference-battle" label="Batalla" icon="arena" onPress={() => navigateFromReference('/battle')} colors={colors} />
-             <ArchiveBottomItem testID="reference-cards" label="Cartas" icon="cards" onPress={() => navigateFromReference('/collection')} colors={colors} active />
-             <ArchiveBottomItem testID="reference-deck" label="Mazo" icon="deck" onPress={() => navigateFromReference('/deck')} colors={colors} />
-             <ArchiveBottomItem testID="reference-profile" label="Perfil" icon="profile" onPress={() => navigateFromReference('/profile')} colors={colors} />
-          </View>
         </View>
-
+        <View style={styles.scopeRow}>
+          <Chip testID="collection-tab" label="COLECCIÓN" active={scope === 'all'} onPress={() => setScope('all')} colors={colors} accent={colors.rarityRare} icon="cards" />
+          <Chip testID="owned-tab" label="TUS CARTAS" active={scope === 'owned'} onPress={() => setScope('owned')} colors={colors} accent={colors.accent} icon="collection" />
+          <Pressable testID="fusion-tab" accessibilityRole="button" accessibilityLabel="Abrir fusión y forja" onPress={() => router.push('/store?mode=fusion')} style={[styles.utilityButton, { borderColor: colors.border }]}>
+            <Feather name="fusion" size={14} color={colors.foreground} />
+            <Text style={[styles.utilityText, { color: colors.foreground }]}>FUSIÓN</Text>
+          </Pressable>
+          <Pressable testID="achievements-tab" accessibilityRole="button" accessibilityLabel="Abrir logros" onPress={() => router.push('/profile?section=achievements')} style={[styles.utilityButton, { borderColor: colors.border }]}>
+            <Feather name="trophy" size={14} color={colors.foreground} />
+            <Text style={[styles.utilityText, { color: colors.foreground }]}>LOGROS</Text>
+          </Pressable>
         </View>
-        {selected && <CardDetail card={selected} owned={ownedById.get(selected.id)} colors={colors} onClose={() => setSelected(null)} />}
+        <Text style={[styles.filterLabel, { color: colors.mutedForeground }]}>FILTRO DE FACCIÓN</Text>
+        <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.chipRow}>
+          <Chip label="TODAS" active={faction === 'all'} onPress={() => setFaction('all')} colors={colors} accent={colors.rarityRare} />
+          {FACTIONS.map((value) => <Chip key={value} testID={`faction-${value}`} label={value.toUpperCase()} active={faction === value} onPress={() => setFaction(faction === value ? 'all' : value)} colors={colors} />)}
+        </ScrollView>
+        <Text style={[styles.filterLabel, { color: colors.mutedForeground }]}>FILTRO DE RAREZA</Text>
+        <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.chipRow}>
+          <Chip label="TODAS" active={rarity === 'all'} onPress={() => setRarity('all')} colors={colors} accent={colors.rarityRare} />
+          {RARITIES.map((value) => <Chip key={value} testID={`rarity-${value}`} label={rarityLabel(value).toUpperCase()} active={rarity === value} onPress={() => setRarity(rarity === value ? 'all' : value)} colors={colors} accent={rarityColor(value, colors)} />)}
+        </ScrollView>
+        <View style={styles.resultLine}>
+          <Text style={[styles.resultText, { color: colors.mutedForeground }]}>{filtered.length} SEÑALES · {scope === 'owned' ? 'TU ARCHIVO' : 'CATÁLOGO VIVO'}</Text>
+          <Text style={[styles.pageText, { color: colors.rarityRare }]}>{pageIndex + 1} / {pages.length}</Text>
+        </View>
       </View>
+      {syncState === 'offline' ? (
+        <Pressable testID="collection-sync-error" accessibilityRole="button" accessibilityLabel="Reintentar sincronización de colección" onPress={() => { void refresh(); }} style={[styles.syncError, { borderColor: colors.danger, backgroundColor: `${colors.danger}12` }]}>
+          <Feather name="warning" size={16} color={colors.danger} />
+          <Text style={[styles.syncText, { color: colors.foreground }]}>{syncError ?? 'SIN SEÑAL · TOCA PARA REINTENTAR'}</Text>
+        </Pressable>
+      ) : null}
+    </View>
+  );
+
+  return (
+    <ScreenShell surface="collection" sceneMode="hero">
+      <Animated.FlatList
+        testID="collection-screen"
+        data={visibleCards}
+        keyExtractor={(item) => item.id}
+        numColumns={2}
+        renderItem={({ item }) => (
+          <CardTile card={item} owned={ownedById.get(item.id)} onPress={() => setSelected(item)} colors={colors} />
+        )}
+        ListHeaderComponent={listHeader}
+        ListEmptyComponent={collectionLoading ? (
+          <DomainState kind="loading" title="Abriendo el Archivo" message="Sincronizando cartas reales y sus identidades." testID="collection-loading" />
+        ) : (
+          <DomainState kind="empty" title={hasFilters ? 'Sin coincidencias' : 'El Archivo está en espera'} message={hasFilters ? 'Prueba otra búsqueda, facción o rareza.' : 'No hay cartas activas reportadas por el catálogo.'} icon="cards" testID="collection-empty" />
+        )}
+        ListFooterComponent={(
+          <View style={[styles.pagination, { borderColor: colors.border, backgroundColor: `${colors.panel}E8` }]}>
+            <Pressable testID="collection-page-previous" accessibilityRole="button" accessibilityLabel="Página anterior de cartas" disabled={pageIndex === 0} onPress={() => setPageIndex((current) => Math.max(0, current - 1))} style={styles.pageButton}>
+              <Feather name="chevron-left" size={18} color={pageIndex === 0 ? `${colors.mutedForeground}66` : colors.rarityRare} />
+            </Pressable>
+            <Text testID="collection-page-indicator" style={[styles.pageText, { color: colors.foreground }]}>{pageIndex + 1} / {pages.length}</Text>
+            <Pressable testID="collection-page-next" accessibilityRole="button" accessibilityLabel="Página siguiente de cartas" disabled={pageIndex === pages.length - 1} onPress={() => setPageIndex((current) => Math.min(pages.length - 1, current + 1))} style={styles.pageButton}>
+              <Feather name="chevron-right" size={18} color={pageIndex === pages.length - 1 ? `${colors.mutedForeground}66` : colors.rarityRare} />
+            </Pressable>
+          </View>
+        )}
+        columnWrapperStyle={styles.gridRow}
+        contentContainerStyle={[styles.listContent, { paddingTop: insets.top + 18, paddingBottom: insets.bottom + 108, paddingHorizontal: 16 }]}
+        showsVerticalScrollIndicator={false}
+        contentInsetAdjustmentBehavior="never"
+        scrollEventThrottle={VISUAL_TOKENS.archive.performance.scrollEventThrottle}
+        onScroll={Animated.event([{ nativeEvent: { contentOffset: { y: scrollY } } }], { useNativeDriver: true })}
+        refreshControl={<RefreshControl refreshing={syncState === 'loading'} onRefresh={() => { void refresh(); }} tintColor={colors.rarityRare} />}
+      />
+      {selected ? <CardDetail card={selected} owned={ownedById.get(selected.id)} colors={colors} onClose={() => setSelected(null)} /> : null}
     </ScreenShell>
   );
 }
@@ -950,10 +519,27 @@ function TextInputCompat({ value, onChangeText, colors }: { value: string; onCha
   return <TextInput testID="cards-search" accessibilityLabel="Buscar carta por nombre o código" value={value} onChangeText={onChangeText} placeholder="Buscar nombre o código" placeholderTextColor={colors.mutedForeground} style={[styles.searchInput, { color: colors.foreground }]} autoCorrect={false} />;
 }
 
-function Chip({ label, active, onPress, colors, accent }: { label: string; active: boolean; onPress: () => void; colors: ReturnType<typeof useColors>; accent?: string }) {
+function Chip({
+  testID,
+  label,
+  active,
+  onPress,
+  colors,
+  accent,
+  icon,
+}: {
+  testID?: string;
+  label: string;
+  active: boolean;
+  onPress: () => void;
+  colors: ReturnType<typeof useColors>;
+  accent?: string;
+  icon?: string;
+}) {
   const color = accent ?? colors.primary;
   return (
-    <Pressable accessibilityRole="button" accessibilityLabel={label} accessibilityState={{ selected: active }} onPress={onPress} style={[styles.chip, { borderColor: active ? color : colors.border, backgroundColor: active ? `${color}1C` : colors.panel }]}>
+    <Pressable testID={testID} accessibilityRole="button" accessibilityLabel={label} accessibilityState={{ selected: active }} onPress={onPress} style={[styles.chip, { borderColor: active ? color : colors.border, backgroundColor: active ? `${color}1C` : colors.panel }]}>
+      {icon ? <Feather name={icon} size={13} color={active ? color : colors.mutedForeground} /> : null}
       <Text style={[styles.chipText, { color: active ? color : colors.mutedForeground }]}>{label}</Text>
     </Pressable>
   );
@@ -961,6 +547,25 @@ function Chip({ label, active, onPress, colors, accent }: { label: string; activ
 
 const styles = StyleSheet.create({
   root: { flex: 1 },
+  listContent: { flexGrow: 1 },
+  controlSurface: { borderWidth: 1, borderRadius: 18, padding: 14, gap: 11, marginBottom: 12 },
+  controlHeader: { flexDirection: 'row', alignItems: 'center', gap: 10 },
+  controlTitleBlock: { flex: 1 },
+  controlTitle: { fontSize: 19, fontWeight: '900', marginTop: 3 },
+  searchBox: { minHeight: 46, borderWidth: 1, borderRadius: 13, flexDirection: 'row', alignItems: 'center', paddingHorizontal: 12, gap: 8 },
+  scopeRow: { flexDirection: 'row', gap: 7, alignItems: 'center' },
+  utilityButton: { minHeight: 35, borderWidth: 1, borderRadius: 10, paddingHorizontal: 8, flexDirection: 'row', alignItems: 'center', gap: 4 },
+  utilityText: { fontSize: 8, fontWeight: '900', letterSpacing: 0.35 },
+  sortButton: { minHeight: 35, borderWidth: 1, borderRadius: 10, paddingHorizontal: 9, flexDirection: 'row', alignItems: 'center', gap: 5 },
+  sortText: { fontSize: 8, fontWeight: '900', letterSpacing: 0.55 },
+  filterLabel: { fontSize: 8, fontWeight: '900', letterSpacing: 1, marginTop: 2 },
+  chipRow: { gap: 7 },
+  resultLine: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', gap: 10 },
+  resultText: { flex: 1, fontSize: 9, fontWeight: '800', letterSpacing: 0.55 },
+  pagination: { minHeight: 48, borderWidth: 1, borderRadius: 13, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 14, marginBottom: 10, paddingHorizontal: 12 },
+  pageButton: { width: 38, height: 38, alignItems: 'center', justifyContent: 'center' },
+  syncError: { minHeight: 44, borderWidth: 1, borderRadius: 12, paddingHorizontal: 12, flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: 12 },
+  syncText: { flex: 1, fontSize: 10, fontWeight: '800', lineHeight: 15 },
   referenceRoot: { flex: 1, width: '100%', overflow: 'hidden' },
   referenceScene: { overflow: 'hidden' },
   referenceImage: { width: '100%', height: '100%' },

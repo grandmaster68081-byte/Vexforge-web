@@ -36,7 +36,9 @@ export const CANONICAL_BACKGROUNDS = {
   // The approved deck plate is scene art only. Deck rebuilds the portal,
   // formation slots, labels, states and controls as live native elements.
   forge: require('../assets/images/decks-reference-scene.png'),
-  collection: null,
+  // Archive consumes the approved vertical plate as scene art only. The
+  // runtime rebuilds the portal, controls, card grid and data states natively.
+  collection: require('../assets/images/collection-reference-scene.png'),
   economy: null,
   profile: null,
   clans: null,

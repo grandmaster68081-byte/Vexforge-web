@@ -550,6 +550,18 @@ export const VISUAL_TOKENS = {
     },
     lane: { radius: 12, paddingVertical: 8, paddingHorizontal: 10, gap: 2 },
   },
+  archive: {
+    performance: {
+      parallaxMaxTranslateY: 8,
+      scrollEventThrottle: 16,
+      maxAnimatedSceneLayers: 2,
+    },
+    scene: {
+      height: 470,
+      radius: 24,
+      borderWidth: 1,
+    },
+  },
   domainPortal: {
     object: { minHeight: 137, paddingHorizontal: 4, paddingVertical: 8 },
     halo: { size: 54, radius: 31, borderWidth: 1, rotation: '45deg' },
