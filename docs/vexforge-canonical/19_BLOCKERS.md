@@ -57,8 +57,8 @@
 ## B-007 — Third-party license conversion
 
 - AREA: Ruta 6.
-- STATUS: READY_TO_RUN
-- OBSERVED EVIDENCE: existe una herramienta pública fijada en `unity-license-activate@0.3.9`; no se almacena `.alf`, `.ulf` ni credenciales en el repositorio.
+- STATUS: BLOCKED_TOOL_LOGIN_SELECTOR
+- OBSERVED EVIDENCE: el `.alf` se generó; `unity-license-activate@0.3.9` falló con `TimeoutError` esperando `#new_conversations_create_session_form #conversations_create_session_form_password` en `https://license.unity3d.com/manual`.
 - DEPENDENCY: Unity debe aceptar las credenciales y devolver un `.ulf` válido para `6000.3.24f1`.
-- WHY BLOCKED: las Rutas 3 y 5 no produjeron una licencia utilizable para compilar.
-- UNBLOCK CONDITION: conversión `.alf` → `.ulf`, importación en el runner y APK verificable; si falla, conservar logs y no cambiar de editor sin evidencia.
+- WHY BLOCKED: el automatizador de terceros no es compatible con el formulario de login actual; no hay `.ulf` válido para importar.
+- UNBLOCK CONDITION: una herramienta de activación actualizada y auditable devuelve `.ulf`, o el usuario completa la activación manual legítima. No cambiar de editor por este error.

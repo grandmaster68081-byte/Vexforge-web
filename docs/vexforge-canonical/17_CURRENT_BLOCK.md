@@ -22,7 +22,8 @@ Ejecutar la matriz de rutas de build de Etapa 1 en orden. Cada ruta conserva su 
 | 3 — Unity CLI experimental | FAILED_EXIT_198 | run `35282835432`; no APK |
 | 4 — GameCI + UNITY_LICENSE | BLOCKED_BY_PERSONAL_LICENSE | no existe `.ulf` válido disponible |
 | 5 — GameCI direct Personal | FAILED_INVALID_UNITY_VERSION | run `35283163416`; GameCI rechazó `6000.3.24f1` |
-| 6 — activación automatizada de terceros | READY_TO_RUN | workflow aislado con `unity-license-activate@0.3.9` |
+| 6 — activación automatizada de terceros | FAILED_LOGIN_SELECTOR | run `35283278298`; `unity-license-activate@0.3.9` no encontró el selector de contraseña |
+| 7 — cambio de editor | NOT_JUSTIFIED | los errores observados son de autenticación/tooling, no del editor, SDK, IL2CPP o proyecto |
 
 ### No tocar
 
