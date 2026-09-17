@@ -10,8 +10,9 @@
 - `INFERIDO`: clasificación de algunos objetos como legacy/quarantine basada en nombres; requiere confirmar definición y uso live.
 - `EVIDENCE_REQUIRED`: settlement y rewards de partidas competitivas en dispositivo real.
 
-- `NO_VERIFICADO`: package/applicationId final que usará Unity; el actual `com.vexforge.android` pertenece al cliente Expo/React Native.
-- `NO_VERIFICADO`: proveedor CI Unity definitivo (Unity Build Automation o GitHub Actions + GameCI).
+- `VERIFICADO_EN_CODIGO_NO_EN_APK`: Unity package/applicationId `com.vexforge.android`, versión `1.0.2`, versionCode `5`, ARM64 e IL2CPP.
+- `NO_VERIFICADO`: APK Unity real del commit actual y su instalación física.
+- `NO_VERIFICADO`: proveedor CI Unity definitivo; Unity Build Automation requiere Dashboard y las rutas GitHub Actions siguen en prueba.
 - `NO_VERIFICADO`: versión exacta de paquetes del cliente C# de Supabase y estrategia de transporte compatible con contratos existentes.
-- `NO_VERIFICADO`: ubicación final del proyecto Unity y estrategia de Addressables para assets grandes/dinámicos.
+- `VERIFICADO_EN_REPOSITORIO`: ubicación Foundation `unity/`; estrategia de Addressables para assets grandes/dinámicos no está decidida.
 - `NO_VERIFICADO`: paridad de Auth, refresh, datos mínimos, runtimeVersion, OTA y rollback entre legado y Unity.

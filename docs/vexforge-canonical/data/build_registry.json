@@ -1,5 +1,5 @@
 {
-  "current_source_commit": "f43159ecee63b610bb71c295238327ecea3feeb6",
+  "current_source_commit": "55b724e8f20fbc22abd1f6606d7c4dd617ee3270",
   "latest_recorded_android_release": {
     "release": "vexforge-android-build-249",
     "workflow": "vexforge-android-apk.yml",
@@ -8,9 +8,9 @@
     "status": "success / embedded bundle verified"
   },
   "apk_command": "./gradlew assembleRelease --no-daemon --stacktrace --console=plain --max-workers=2 -x lintVitalAnalyzeRelease -x lintVitalReportRelease -x lintVitalRelease",
-  "current_task_build": "NOT_RUN",
+  "current_task_build": "FOUNDATION_ROUTE_MATRIX_IN_PROGRESS",
   "target_runtime": "Unity 6.3 LTS + URP + C#",
   "current_runtime": "Expo/React Native",
-  "unity_build": "NOT_RUN",
-  "migration_status": "TARGET_DECIDED_NOT_IMPLEMENTED"
+  "unity_build": "ROUTES_1_2_EXTERNAL_DASHBOARD_BLOCKED_ROUTES_3_5_READY",
+  "migration_status": "FOUNDATION_IMPLEMENTED_UNVERIFIED"
 }

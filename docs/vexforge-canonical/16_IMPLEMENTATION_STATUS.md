@@ -19,7 +19,7 @@ Estados permitidos usados aquí: `PLANNED`, `IMPLEMENTED`, `IMPLEMENTED_UNVERIFI
 
 | Área | Estado actual | Status | Evidence | Blocker / next |
 |---|---|---|---|---|
-| Unity 6.3 LTS / URP project | No existe árbol Unity en el commit auditado | PLANNED | decisión de motor 2026-09-17 | paquete Foundation único |
+| Unity 6.3 LTS / URP project | `unity/` existe con editor `6000.3.24f1` y URP | IMPLEMENTED_UNVERIFIED | `unity/ProjectSettings/ProjectVersion.txt`, `unity/Packages/manifest.json` | Foundation APK |
 | React Native/Expo client | Cliente Android real y releaseable, pero legado para nueva dirección | FROZEN | `mobile/**`, `05_ANDROID_RUNTIME_AND_BUILD.md` | rollback hasta Unity Foundation |
-| Unity Foundation | No iniciado | BLOCKED | faltan proyecto, identidad, Auth, sesión, datos y APK Unity | autorización y paquete operativo |
-| Unity final Android active | No alcanzado | UNKNOWN | depende de gates Foundation | no avanzar automáticamente |
+| Unity Foundation | proyecto y build method existen; APK no verificado | IMPLEMENTED_UNVERIFIED | `unity/Assets/VexForge/**`, workflows Unity aislados | ejecutar matriz de rutas |
+| Unity final Android active | No alcanzado | BLOCKED | no existe APK Foundation verificable en el commit actual | no avanzar a Etapa 2 |

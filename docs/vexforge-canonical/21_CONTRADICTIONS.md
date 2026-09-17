@@ -9,10 +9,10 @@ STATUS: `RESUELTO`: Android active; web historical/frozen.
 
 ## C-002 — Snapshot vs current repo
 
-SNAPSHOT: auditoría extraída de `main` en `f43159ecee63b610bb71c295238327ecea3feeb6`.
-CURRENT REPO: consulta de `main` devuelve el mismo SHA.
-CURRENT EVIDENCE: commit API GitHub del 2026-09-17.
-STATUS: `RESUELTO / MATCH`.
+SNAPSHOT: documentación histórica que referencia `f43159ecee63b610bb71c295238327ecea3feeb6`.
+CURRENT REPO: `main` actual es `55b724e8f20fbc22abd1f6606d7c4dd617ee3270`.
+CURRENT EVIDENCE: el repositorio contiene ahora `unity/` y workflows Foundation.
+STATUS: `RESUELTO / DOCUMENTACIÓN HISTÓRICA IDENTIFICADA`.
 
 ## C-003 — Backend documentado vs catálogo live
 
@@ -38,9 +38,9 @@ STATUS: `NO_RESUELTO / EVIDENCE_REQUIRED` para afirmar que una instalación coin
 ## C-006 — Expo actual vs Unity objetivo
 
 SOURCE A: código actual en `mobile/**`, `mobile/app.json` y workflow Expo/Gradle.
-SOURCE B: decisión `VEXFORGE_ENGINE_DECISION_AND_WORKFLOW_1789670634346.md`, que fija Unity 6.3 LTS + URP como runtime final.
-CURRENT EVIDENCE: el código Expo existe; no existe proyecto Unity en el commit auditado.
-STATUS: `RESUELTO POR FASE`: Expo/React Native es implementación actual y legado protegido; Unity es target `PLANNED / NOT_IMPLEMENTED` hasta superar Foundation.
+SOURCE B: `unity/` y workflows Unity del commit actual, con Unity 6.3 LTS + URP como runtime objetivo.
+CURRENT EVIDENCE: Expo/React Native sigue protegido como legado; Unity Foundation existe, pero no hay APK verificado.
+STATUS: `RESUELTO POR FASE`: Expo/React Native es legado protegido; Unity está en `IMPLEMENTED_UNVERIFIED` hasta superar Foundation.
 
 ## C-007 — Foundation antiguo vs Foundation Unity
 
