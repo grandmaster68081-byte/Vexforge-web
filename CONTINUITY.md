@@ -6207,3 +6207,14 @@ Estado de esta persistencia: documentación canónica generada contra `main` en 
 - **VERIFICACIÓN:** `scripts/verify-mobile-battle.mjs` pasa `49/49`; `scripts/verify-mobile-visual-system.mjs` pasa; el registro JSON y `git diff --check` pasan. El typecheck móvil no se ejecutó porque la copia oficial no tiene dependencias instaladas; no se instaló una APK ni se inició workflow de Android.
 - **ESTADO HONESTO:** `IMPLEMENTED_UNVERIFIED / NO APK / NO RELEASE`; safe area, legibilidad, rendimiento y parallax quedan implementados en código y cubiertos por guardas locales. Sólo queda pendiente la medición física en Android, no la implementación; no se compila APK sin autorización explícita.
 - **NEXT:** sólo con autorización explícita, ejecutar el workflow APK y QA física; no iniciar compilación ni release automáticamente.
+
+
+## 2026-09-17 — UNITY CI LICENSE BLOCKER / ALF CLOUD GENERATED
+
+- WORKFLOW UNITY: .github/workflows/vexforge-unity-android.yml
+- WORKFLOW ACTIVATION: .github/workflows/vexforge-unity-activation-request.yml
+- CAMBIOS: se añadió un workflow manual que usa el contenedor mantenido unityci/editor:ubuntu-6000.3.24f1-android-3 y el comando oficial de Unity -createManualActivationFile; publica el archivo .alf como artifact. El build Android ahora verifica UNITY_LICENSE, UNITY_EMAIL y UNITY_PASSWORD antes de iniciar Unity.
+- RESULTADO ALF: Unity generó correctamente el archivo de solicitud en la ejecución https://github.com/grandmaster68081-byte/Vexforge-web/actions/runs/35271940863.
+- RESULTADO BUILD REAL: la ejecución https://github.com/grandmaster68081-byte/Vexforge-web/actions/runs/35272239350 terminó con fallo honesto en la precomprobación porque los tres secretos de Unity aún no existen. No se generó APK ni release.
+- INTERVENCIÓN MANUAL PENDIENTE: descargar el artifact VEXFORGE-Unity-Activation-Request-3 desde la ejecución de activación, subir el .alf en https://license.unity3d.com, elegir Unity Personal y descargar el .ulf. Después crear en GitHub, en Settings → Secrets and variables → Actions, los secretos UNITY_LICENSE (contenido completo del .ulf), UNITY_EMAIL (correo de Unity) y UNITY_PASSWORD (contraseña de Unity). No introducir esos valores en el repositorio ni en el chat.
+- ESTADO HONESTO: infraestructura CI preparada; activación Personal pendiente de la intervención manual descrita; APK todavía no generado.
