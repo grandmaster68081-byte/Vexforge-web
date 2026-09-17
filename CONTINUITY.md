@@ -8,6 +8,21 @@ Estado de esta persistencia: documentación canónica generada contra `main` en 
 
 ---
 
+## 2026-09-17 — ETAPA 1 FOUNDATION UNITY — IMPLEMENTED_UNVERIFIED / CI BLOCKED
+
+- **AUTHORIZATION:** se anuló explícitamente la parada del SHA histórico y se autorizó trabajar sobre `main` actual `513b7c4ce5e52d212e84bdfe9f21f3efc2ddc685`.
+- **RECONCILIATION:** Android continúa activo, web congelada, Supabase continúa como autoridad y `mobile/**`/`supabase/**` permanecen intactos; `unity/**` no existía antes de esta unidad.
+- **IMPLEMENTATION:** se publicó `unity/**` con Unity 6.3 LTS, URP 17.3.0, Android ARM64/IL2CPP, identidad `com.vexforge.android`, Auth password/signup, sesión persistente con Android Keystore, refresh, `ensure_player_row`, player/progress/cards reales, GameShell, metadata SHA-256 y workflow Unity.
+- **SOURCE:** commit `4d9366645309c56f28cb7934167cb107d004bd6b`.
+- **STATIC GATES:** scans de `service_role`, backend extranjero, identidad Unity, Supabase URL, icono oficial byte-identical y workflow requerido pasaron; `unity-editor` no está instalado localmente.
+- **CI:** workflow `Build VEXFORGE Unity Android`, run `35263678098`, terminó `failure` antes de importar Unity por ausencia de los secretos GitHub `UNITY_LICENSE`, `UNITY_EMAIL` y `UNITY_PASSWORD`. No se generó APK, metadata, artifact ni prerelease.
+- **VERIFY:** workflow `verify`, run `35263678115`, terminó `failure` por el guard existente `verify-boss-art.mjs` y arte de jefes fuera de la decisión canónica; no se alteró ese dominio para forzar verde.
+- **DATA PRESERVED:** no se cambiaron Supabase, tablas, RPCs, RLS, Edge Functions, datos, `mobile/**`, `src/**`, gameplay, rewards, assets históricos ni releases previos.
+- **STATUS:** `IMPLEMENTED_UNVERIFIED / CI_BLOCKED`.
+- **NEXT BLOCK:** proporcionar/configurar los secretos oficiales de Unity en GitHub y relanzar el workflow; después verificar APK real, publicar prerelease y actualizar la continuidad con evidencia. No iniciar Etapa 2.
+
+---
+
 ## 2026-09-17 — APK QA — LEGACY ARTIFACT MISMATCH / REBUILD REQUESTED
 
 - **EVIDENCE:** el vídeo QA muestra `SOMBRA DEL FIN`, pero esa cadena no existe en el `main` actual ni en el bundle de `vexforge-android-build-248`; el bundle nuevo contiene `Referencia oficial integrada`, `ARCHIVO VIVO` y `Santuario de cartas`.
