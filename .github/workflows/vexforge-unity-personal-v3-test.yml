@@ -26,6 +26,14 @@ jobs:
           test -n "$UNITY_PASSWORD" || { echo "Missing GitHub Actions secret: UNITY_PASSWORD" >&2; exit 1; }
           echo "Unity Personal credentials are present; values are not printed."
 
+      - name: Expose the Unity project to the GameCI CLI detector
+        shell: bash
+        run: |
+          set -euo pipefail
+          ln -s unity/Assets Assets
+          ln -s unity/Packages Packages
+          ln -s unity/ProjectSettings ProjectSettings
+
       - name: Activate Unity Personal license with current GameCI CLI
         uses: game-ci/unity-activate@v3.0.0-beta.1
         env:
