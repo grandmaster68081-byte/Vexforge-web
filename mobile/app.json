@@ -2,7 +2,7 @@
   "expo": {
     "name": "VEXFORGE",
     "slug": "vexforge",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "orientation": "portrait",
     "icon": "./assets/images/icon.jpg",
     "scheme": "vexforge-android",
@@ -18,7 +18,7 @@
     },
     "android": {
       "package": "com.vexforge.android",
-      "versionCode": 3,
+      "versionCode": 4,
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/icon.jpg",
         "backgroundColor": "#05050D"

@@ -7,6 +7,7 @@ WebBrowser.maybeCompleteAuthSession();
 
 const SUPABASE_URL = process.env.EXPO_PUBLIC_SUPABASE_URL ?? 'https://rscuzqnfccqvltkdcdny.supabase.co';
 const SUPABASE_ANON_KEY = process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY ?? 'sb_publishable_3eGRSpvxptO09eQQzpxysQ_Imq8zi58';
+const REST_REQUEST_TIMEOUT_MS = 15000;
 const SESSION_KEY = 'vexforge.supabase.session';
 const ACTIVE_PVP_BATTLE_KEY_PREFIX = 'vexforge.active-pvp-battle.v1';
 const pendingPvpBattleKeys = new Map<string, Promise<string>>();
@@ -803,8 +804,23 @@ export async function loadSession(): Promise<Session | null> {
 }
 
 async function rest(path: string, session?: Session, init?: RequestInit) {
-  const response = await fetch(SUPABASE_URL + '/rest/v1/' + path, { ...init, headers: { ...headers(session?.access_token), ...(init?.headers as Record<string, string> | undefined) } });
-  return parse(response);
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), REST_REQUEST_TIMEOUT_MS);
+  try {
+    const response = await fetch(SUPABASE_URL + '/rest/v1/' + path, {
+      ...init,
+      signal: controller.signal,
+      headers: { ...headers(session?.access_token), ...(init?.headers as Record<string, string> | undefined) },
+    });
+    return parse(response);
+  } catch (error) {
+    if (error instanceof Error && error.name === 'AbortError') {
+      throw new Error('Supabase agotó el tiempo de respuesta. Toca reintentar la sincronización.');
+    }
+    throw error;
+  } finally {
+    clearTimeout(timeout);
+  }
 }
 
 export async function insertTelemetryEvent(
@@ -1755,8 +1771,24 @@ export async function evolveMobileCard(session: Session, playerId: string, cardI
 }
 
 async function restRpc(name: string, body: Json = {}, session?: Session) {
-  const response = await fetch(SUPABASE_URL + '/rest/v1/rpc/' + name, { method: 'POST', headers: headers(session?.access_token), body: JSON.stringify(body) });
-  return parse(response);
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), REST_REQUEST_TIMEOUT_MS);
+  try {
+    const response = await fetch(SUPABASE_URL + '/rest/v1/rpc/' + name, {
+      method: 'POST',
+      signal: controller.signal,
+      headers: headers(session?.access_token),
+      body: JSON.stringify(body),
+    });
+    return parse(response);
+  } catch (error) {
+    if (error instanceof Error && error.name === 'AbortError') {
+      throw new Error('Supabase agotó el tiempo de respuesta. Toca reintentar la sincronización.');
+    }
+    throw error;
+  } finally {
+    clearTimeout(timeout);
+  }
 }
 
 function pvpBattleStorageKey(playerId: string, opponentId: string) {
