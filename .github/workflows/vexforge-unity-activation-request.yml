@@ -23,15 +23,20 @@ jobs:
 
       - name: Generate Unity manual activation request
         id: unity-activation
-        continue-on-error: true
-        uses: game-ci/unity-builder@v4
-        with:
-          projectPath: unity
-          unityVersion: ${{ inputs.unity_version }}
-          targetPlatform: Android
-          customParameters: -createManualActivationFile
-          skipActivation: true
-          allowDirtyBuild: true
+        shell: bash
+        run: |
+          set -uo pipefail
+          mkdir -p "$RUNNER_TEMP/unity-home"
+          UNITY_EXIT=0
+          docker run --rm \
+            --env HOME=/tmp/unity-home \
+            --volume "$RUNNER_TEMP/unity-home:/tmp/unity-home" \
+            --volume "$GITHUB_WORKSPACE:/workspace" \
+            --workdir /workspace \
+            unityci/editor:ubuntu-${{ inputs.unity_version }}-android-3 \
+            bash -lc 'unity-editor -batchmode -nographics -quit -projectPath /workspace/unity -createManualActivationFile -logFile /dev/stdout' || UNITY_EXIT=$?
+          echo "Unity CLI exit code while creating the request: $UNITY_EXIT"
+          find "$RUNNER_TEMP/unity-home" "$GITHUB_WORKSPACE" -type f -name '*.alf' -print || true
 
       - name: Locate activation request
         shell: bash
