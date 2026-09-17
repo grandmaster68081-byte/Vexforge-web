@@ -4,8 +4,8 @@
 - **DIAGNOSIS:** la instalación observada corresponde a un APK anterior, no al artefacto generado desde `8ccb6f0fa2ec5fcd1a68b8bc7532fb67312c2690`.
 - **RECTIFICATION:** `mobile/app.json` sube la app a `version 1.0.1 / android.versionCode 4` para distinguir la instalación actualizada; las consultas REST/RPC de Supabase ahora tienen timeout de 15 s y error accionable para impedir que Forja quede en `SINCRONIZANDO MAZOS` indefinidamente.
 - **DATA PRESERVED:** no se agregaron cartas, nombres, balances, rewards, RPCs, RLS, gameplay, assets ni resultados ficticios.
-- **RELEASE GATE:** publicar este ajuste, compilar el APK nuevo y verificar el bundle antes de cerrar QA.
-- **STATUS:** `LEGACY_ARTIFACT_IDENTIFIED / REBUILD_REQUESTED`.
+- **RELEASE GATE:** commit `ded78720d1d3f97280d5702166d44e18415beb8f` compilado por workflow `35238357900`; terminó `success`, publicó `vexforge-android-build-249` y el APK contiene `assets/index.android.bundle`.
+- **STATUS:** `LEGACY_ARTIFACT_IDENTIFIED / APK_RELEASE_PUBLISHED / BUNDLE_VERIFIED`.
 
 ## 2026-09-16 — APK BUILD — RELEASE PUBLICADO / VERIFICADO
 
