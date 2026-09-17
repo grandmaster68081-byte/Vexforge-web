@@ -39,3 +39,7 @@ Supabase REST/RPC/Auth/Storage
 - ACTIVE: `mobile/**`, Expo Router, Supabase client, mobile assets y workflows Android.
 - LEGACY/HISTORICAL: `src/**`, parte de `backend/**` y documentación que trata la web como cliente oficial.
 - UNKNOWN: cualquier objeto live no conectado explícitamente a un consumer móvil.
+
+## Estado de migración de motor
+
+El mapa anterior describe el sistema **actual**: Expo Router, React Native y `mobile/**`. Ese cliente queda `LEGACY / FROZEN FOR NEW PRODUCT WORK` durante la migración controlada. El sistema Unity objetivo todavía no existe en el repositorio auditado; su arquitectura prevista es Unity 6.3 LTS + URP + C# → cliente C# + contratos existentes → Supabase.

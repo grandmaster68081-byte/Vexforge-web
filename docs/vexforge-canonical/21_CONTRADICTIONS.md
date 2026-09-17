@@ -34,3 +34,17 @@ SOURCE A: continuidad registra release 249 desde `ded78720...`.
 SOURCE B: `main` actual es `f43159e...`.
 CURRENT EVIDENCE: el commit actual registra el release, pero no existe un nuevo APK de esta tarea.
 STATUS: `NO_RESUELTO / EVIDENCE_REQUIRED` para afirmar que una instalación coincide con el commit actual.
+
+## C-006 — Expo actual vs Unity objetivo
+
+SOURCE A: código actual en `mobile/**`, `mobile/app.json` y workflow Expo/Gradle.
+SOURCE B: decisión `VEXFORGE_ENGINE_DECISION_AND_WORKFLOW_1789670634346.md`, que fija Unity 6.3 LTS + URP como runtime final.
+CURRENT EVIDENCE: el código Expo existe; no existe proyecto Unity en el commit auditado.
+STATUS: `RESUELTO POR FASE`: Expo/React Native es implementación actual y legado protegido; Unity es target `PLANNED / NOT_IMPLEMENTED` hasta superar Foundation.
+
+## C-007 — Foundation antiguo vs Foundation Unity
+
+SOURCE A: cualquier paquete anterior diseñado para React Native.
+SOURCE B: orden operativa nueva, que prohíbe ejecutar el antiguo Foundation y exige un paquete único específico de Unity.
+CURRENT EVIDENCE: no se ejecutó ningún paquete de migración.
+STATUS: `SUPERSEDED`: el siguiente paquete debe ser Unity Foundation, no React Native Foundation.

@@ -19,3 +19,7 @@
 The workflow installs mobile dependencies, runs typecheck and guards, runs Expo prebuild, runs Gradle assembleRelease, checks `assets/index.android.bundle` and uploads `app-release.apk` to the GitHub release. OTA uses `expo export --platform android --output-dir dist` and `mobile/scripts/publish-ota.mjs`.
 
 No APK or deployment was produced by the canonical documentation commit.
+
+## Unity migration history
+
+No existe todavía commit de proyecto Unity, build Unity, APK Unity, release Unity ni hash Unity. El release Android 249 pertenece al cliente Expo/React Native legado y no prueba Foundation Unity.

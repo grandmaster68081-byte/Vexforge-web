@@ -18,10 +18,30 @@
     "reactNative": "0.81.5",
     "runtimeVersion": "1.0.0"
   },
-  "current_block": "CANONICAL-CONTINUITY-PERSISTENCE",
-  "overall_status": "DOCUMENTATION_PERSISTED",
-  "known_blockers": ["physical Android evidence", "release/source correspondence", "live backend reconciliation"],
-  "known_unknowns": ["installed APK exact source", "OTA runtime outcome", "per-object live routine/policy status"],
-  "supabase_snapshot": {"public_tables_and_views": 318, "public_routines": 345, "public_policies": 275},
-  "security_scan": {"dependency_critical": 0, "dependency_high": 0, "sast_findings": 0, "hounddog_findings": 0}
+  "current_block": "ENGINE-DECISION-CANONICALIZATION",
+  "overall_status": "ENGINE_DECISION_PERSISTED",
+  "known_blockers": [
+    "physical Android evidence",
+    "release/source correspondence",
+    "live backend reconciliation"
+  ],
+  "known_unknowns": [
+    "installed APK exact source",
+    "OTA runtime outcome",
+    "per-object live routine/policy status"
+  ],
+  "supabase_snapshot": {
+    "public_tables_and_views": 318,
+    "public_routines": 345,
+    "public_policies": 275
+  },
+  "security_scan": {
+    "dependency_critical": 0,
+    "dependency_high": 0,
+    "sast_findings": 0,
+    "hounddog_findings": 0
+  },
+  "target_runtime": "unity_6_3_lts_urp_csharp",
+  "current_runtime": "expo_react_native",
+  "migration_status": "TARGET_DECIDED_NOT_IMPLEMENTED"
 }

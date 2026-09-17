@@ -14,3 +14,12 @@
 | Canonical continuity | this folder + context | IMPLEMENTED | current commit | keep updated per block |
 
 Estados permitidos usados aquí: `PLANNED`, `IMPLEMENTED`, `IMPLEMENTED_UNVERIFIED`, `VERIFIED`, `BLOCKED`, `EVIDENCE_REQUIRED`, `HISTORICAL`, `FROZEN`, `UNKNOWN`.
+
+## Migración de motor
+
+| Área | Estado actual | Status | Evidence | Blocker / next |
+|---|---|---|---|---|
+| Unity 6.3 LTS / URP project | No existe árbol Unity en el commit auditado | PLANNED | decisión de motor 2026-09-17 | paquete Foundation único |
+| React Native/Expo client | Cliente Android real y releaseable, pero legado para nueva dirección | FROZEN | `mobile/**`, `05_ANDROID_RUNTIME_AND_BUILD.md` | rollback hasta Unity Foundation |
+| Unity Foundation | No iniciado | BLOCKED | faltan proyecto, identidad, Auth, sesión, datos y APK Unity | autorización y paquete operativo |
+| Unity final Android active | No alcanzado | UNKNOWN | depende de gates Foundation | no avanzar automáticamente |

@@ -26,3 +26,12 @@
 - DEPENDENCY: auditoría por dominio y ejecución autenticada.
 - WHY BLOCKED: no toda rutina live es necesariamente activa ni consumida por Android.
 - UNBLOCK CONDITION: matriz RPC/table/policy por dominio con evidencia.
+
+## B-004 — Unity Foundation no iniciado
+
+- AREA: Unity 6.3 LTS / URP / Android Foundation.
+- STATUS: BLOCKED
+- OBSERVED EVIDENCE: no existe estructura Unity (`Assets/`, `ProjectSettings/`, `Packages/`) en el commit auditado; solo existe el cliente Expo/React Native actual.
+- DEPENDENCY: paquete operativo único de Foundation y entorno Unity/CI válido.
+- WHY BLOCKED: la decisión define el destino, pero no entrega aún archivos ni autoriza avanzar por inferencia.
+- UNBLOCK CONDITION: ejecutar un paquete Foundation autorizado con APK standalone, Auth/sesión/datos reales, gates y rollback verificables.

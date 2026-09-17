@@ -8,5 +8,9 @@
     "status": "success / embedded bundle verified"
   },
   "apk_command": "./gradlew assembleRelease --no-daemon --stacktrace --console=plain --max-workers=2 -x lintVitalAnalyzeRelease -x lintVitalReportRelease -x lintVitalRelease",
-  "current_task_build": "NOT_RUN"
+  "current_task_build": "NOT_RUN",
+  "target_runtime": "Unity 6.3 LTS + URP + C#",
+  "current_runtime": "Expo/React Native",
+  "unity_build": "NOT_RUN",
+  "migration_status": "TARGET_DECIDED_NOT_IMPLEMENTED"
 }

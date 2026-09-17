@@ -46,7 +46,7 @@ La capa canónica está documentada en `docs/vexforge-canonical/`. La implementa
 
 ## Siguiente bloque
 
-El bloque actual de esta sesión es persistencia documental canónica. El siguiente bloque del producto debe ser un bloque de evidencia Android/T0 con autorización explícita, no una implementación improvisada. Consultar `docs/vexforge-canonical/17_CURRENT_BLOCK.md`.
+La decisión de runtime está persistida. El siguiente bloque del producto es `ETAPA 1 — FOUNDATION / UNITY MIGRATION`, entregado como un único paquete operativo y con autorización explícita. Consultar `docs/vexforge-canonical/17_CURRENT_BLOCK.md` y `docs/vexforge-canonical/26_UNITY_ENGINE_MIGRATION.md`.
 
 ## Mapa de lectura
 
@@ -57,3 +57,11 @@ El bloque actual de esta sesión es persistencia documental canónica. El siguie
 5. `docs/vexforge-canonical/20_KNOWN_UNKNOWNS.md`
 6. `docs/vexforge-canonical/21_CONTRADICTIONS.md`
 7. El documento de dominio enlazado antes de modificar cualquier área.
+
+## Decisión de runtime registrada el 2026-09-17
+
+La dirección final del cliente Android es **Unity 6.3 LTS + URP + C#**. Esto es una decisión de migración, no una afirmación de implementación: `mobile/**` sigue siendo el cliente actual ejecutable y queda como legado protegido hasta que Unity supere Foundation, tenga APK standalone, Auth/sesión/datos reales, trazabilidad commit → build → APK y una ruta de rollback.
+
+Supabase no cambia de autoridad. No se introduce otra base de datos ni otro backend. El siguiente paquete operativo, cuando se autorice, debe ser un único paquete de `ETAPA 1 — FOUNDATION / UNITY MIGRATION`; Replit no debe simular Unity Editor ni avanzar automáticamente a etapas posteriores.
+
+Detailed runtime migration record: `docs/vexforge-canonical/26_UNITY_ENGINE_MIGRATION.md`.

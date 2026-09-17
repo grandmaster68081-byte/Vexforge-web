@@ -9,3 +9,9 @@
 - `REFERENCIADO_PERO_NO_ENCONTRADO`: cualquier asset o RPC citado solo por documentación histórica sin consumer actual.
 - `INFERIDO`: clasificación de algunos objetos como legacy/quarantine basada en nombres; requiere confirmar definición y uso live.
 - `EVIDENCE_REQUIRED`: settlement y rewards de partidas competitivas en dispositivo real.
+
+- `NO_VERIFICADO`: package/applicationId final que usará Unity; el actual `com.vexforge.android` pertenece al cliente Expo/React Native.
+- `NO_VERIFICADO`: proveedor CI Unity definitivo (Unity Build Automation o GitHub Actions + GameCI).
+- `NO_VERIFICADO`: versión exacta de paquetes del cliente C# de Supabase y estrategia de transporte compatible con contratos existentes.
+- `NO_VERIFICADO`: ubicación final del proyecto Unity y estrategia de Addressables para assets grandes/dinámicos.
+- `NO_VERIFICADO`: paridad de Auth, refresh, datos mínimos, runtimeVersion, OTA y rollback entre legado y Unity.

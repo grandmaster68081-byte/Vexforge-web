@@ -41,3 +41,9 @@ Los comandos anteriores son inspección/verificación del estado existente. No s
 ## Registrar el siguiente bloque
 
 Actualizar `17_CURRENT_BLOCK.md`, `16_IMPLEMENTATION_STATUS.md`, `18_DECISIONS.md`, `19_BLOCKERS.md`, `20_KNOWN_UNKNOWNS.md` y `25_CONTINUITY_CHANGELOG.md`. Si afecta Android, registrar commit → workflow → artefacto → QA.
+
+## Decisión nueva de motor
+
+La dirección objetivo es Unity 6.3 LTS + URP + C#. No asumir que existe un proyecto Unity: el commit auditado no contiene `Assets/`, `ProjectSettings/` ni `Packages/` de Unity. El cliente real actual continúa en `mobile/**` y debe conservarse intacto durante la migración.
+
+Antes de crear código Unity debe existir un único paquete operativo de Foundation con árbol exacto, archivos completos/parches, comandos, verificadores, criterios de APK, aceptación en dispositivo, manejo de errores y prohibición explícita de avanzar.

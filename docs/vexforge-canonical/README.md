@@ -19,3 +19,7 @@ Esta carpeta es la memoria técnica estructurada del proyecto. No duplica los 16
 ## Datos legibles por máquina
 
 Los registros de `data/` son resúmenes derivados de evidencia observada. No sustituyen consultas live ni el código.
+
+## Runtime migration decision
+
+La decisión nueva es Unity 6.3 LTS + URP + C# como runtime final del cliente Android. El cliente Expo/React Native actual no se elimina: permanece legado durante una migración reversible y solo deja de ser activo después de superar Foundation y sus gates de APK, instalación, backend y rollback.

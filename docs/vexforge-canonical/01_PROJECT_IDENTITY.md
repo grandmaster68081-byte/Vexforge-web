@@ -18,3 +18,9 @@
 | Estado | IMPLEMENTED_UNVERIFIED en varias superficies; evidencia física pendiente |
 
 El ownership de la regla backend no reside en el cliente: Android presenta, captura input y consume contratos; Supabase conserva la autoridad live.
+
+## Runtime decision
+
+- Current runtime: Expo/React Native in `mobile/**`.
+- Target runtime: Unity 6.3 LTS + URP + C#.
+- Migration status: target decided, Unity not implemented.

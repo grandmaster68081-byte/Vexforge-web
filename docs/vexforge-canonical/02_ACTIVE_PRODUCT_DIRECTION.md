@@ -17,3 +17,13 @@ La dirección aprobada es un TCG digital premium con identidad propia VEXFORGE, 
 - `CURRENT IMPLEMENTATION`: lo que existe en código y puede señalarse por ruta.
 - `TARGET PRODUCT DIRECTION`: lo aprobado como dirección futura.
 - `EVIDENCE_REQUIRED`: lo que necesita APK/dispositivo/release o consulta live antes de declararse verificado.
+
+## Decisión de runtime
+
+- Runtime final objetivo: **Unity 6.3 LTS + URP + C#**.
+- Plataforma activa: Android.
+- Backend: Supabase existente, sin sustitución.
+- Cliente actual: Expo/React Native en `mobile/**`, legado durante la migración.
+- Web: congelada/no activa.
+
+La decisión expresa el destino técnico del juego, no el estado actual del código. Unity debe comenzar en una ubicación separada; `mobile/**` no se elimina ni se reemplaza hasta que Foundation tenga un APK standalone validado, Auth/sesión/datos reales, trazabilidad de build y rollback.

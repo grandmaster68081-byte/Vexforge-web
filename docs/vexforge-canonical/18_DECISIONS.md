@@ -37,3 +37,15 @@
 - WHY: build/release/QA son gates independientes.
 - EVIDENCE: continuidad y orden canónica.
 - STATUS: ACTIVE
+
+## D-005
+
+- DATE: 2026-09-17
+- DECISION: el runtime final Android será Unity 6.3 LTS + URP + C#; React Native/Expo queda como cliente legado durante migración reversible.
+- SCOPE: runtime, arquitectura de cliente, pipeline futuro y orden de etapas.
+- WHY: VEXFORGE se declara TCG premium con battlefield, cartas animadas, cámara, Timeline/Animator, VFX, audio y experiencia de juego en un runtime único.
+- EVIDENCE: `attached_assets/VEXFORGE_ENGINE_DECISION_AND_WORKFLOW_1789670634346.md` y ausencia de árbol Unity en `main` auditado.
+- AFFECTED_FILES: futura ubicación Unity separada; `mobile/**` protegido durante migración.
+- AFFECTED_SYSTEMS: cliente Android y CI; Supabase permanece sin cambio.
+- STATUS: ACTIVE / TARGET_NOT_IMPLEMENTED
+- SUPERSEDES: la dirección anterior que trataba Expo/React Native como runtime final; no supersede la descripción histórica del código actual.

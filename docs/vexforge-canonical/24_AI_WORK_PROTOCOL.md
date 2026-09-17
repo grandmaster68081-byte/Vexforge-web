@@ -20,3 +20,13 @@ No inventar. No duplicar lógica autoritativa. No tomar documentos viejos como a
 ## Después de cada bloque
 
 Actualizar current block, implementation status, decisions, blockers, unknowns, contradictions y continuity changelog. Si afecta Android, registrar source commit, workflow run, release, APK hash y QA física. No compilar ni publicar automáticamente.
+
+## Si el trabajo afecta la migración Unity
+
+- No crear el proyecto Unity desde una inferencia breve.
+- Exigir un único paquete operativo de Foundation.
+- Mantener `mobile/**` intacto como rollback.
+- No mover autoridad backend ni crear Firebase/PlayFab/Photon u otra base de datos.
+- No declarar Unity activo hasta que compile, tenga APK, instalación, Auth/sesión/datos reales, QA y rollback.
+- Replit prepara archivos, scripts y análisis; Unity Editor/CI Unity procesa y construye el player.
+- No avanzar de etapa porque compile: cada etapa requiere gates funcionales, visuales, de backend y evidencia del usuario.

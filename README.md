@@ -38,3 +38,7 @@ Every future coding session should start by reading, in order:
 The authoritative copy of all of this also lives in Supabase
 (`vexforge_project_documents`, `vexforge_web_registry`, etc.) — if this folder
 and Supabase ever disagree, Supabase wins.
+
+## Runtime target decision
+
+The current Android implementation remains in `mobile/**` while the approved target runtime is Unity 6.3 LTS + URP. React Native/Expo is legacy during a controlled, reversible migration; no Unity project or migration implementation is present yet. See `docs/vexforge-canonical/26_UNITY_ENGINE_MIGRATION.md`.

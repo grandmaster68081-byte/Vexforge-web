@@ -14,3 +14,9 @@
 - STATUS: `RESUELTO` para orientación futura: Android activo; la afirmación web queda histórica/frozen.
 
 No se eliminan fuentes antiguas: se clasifican y se enlazan.
+
+## Runtime actual versus runtime objetivo
+
+- Código `main` actual: autoridad para describir la implementación Expo/React Native existente.
+- Decisión de producto/runtime: Unity 6.3 LTS + URP es el objetivo aprobado, pero está `PLANNED`, no implementado.
+- Durante la migración, no se debe describir Unity como cliente activo ni tratar el cliente legado como eliminado.
