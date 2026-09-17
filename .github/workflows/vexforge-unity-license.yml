@@ -1,0 +1,56 @@
+name: Convert VEXFORGE Unity ALF to ULF
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  activate-license:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install Unity license converter
+        run: npm install --global unity-license-activate@0.3.9
+
+      - name: Write activation request outside the repository
+        env:
+          UNITY_ALF: ${{ secrets.UNITY_ALF }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/vexforge-activation"
+          printf '%s' "$UNITY_ALF" > "$RUNNER_TEMP/vexforge-activation/Unity_v6000.3.24f1.alf"
+          test -s "$RUNNER_TEMP/vexforge-activation/Unity_v6000.3.24f1.alf"
+
+      - name: Convert ALF to ULF with Unity account
+        env:
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/vexforge-activation/output"
+          cd "$RUNNER_TEMP/vexforge-activation/output"
+          unity-license-activate "$UNITY_EMAIL" "$UNITY_PASSWORD" "$RUNNER_TEMP/vexforge-activation/Unity_v6000.3.24f1.alf"
+          ULF="$(find "$RUNNER_TEMP/vexforge-activation" -type f -name '*.ulf' -print -quit)"
+          if [ -z "$ULF" ]; then
+            echo "Unity did not return a .ulf license file." >&2
+            exit 1
+          fi
+          cp "$ULF" "$RUNNER_TEMP/vexforge-activation/Unity_v6000.3.24f1.ulf"
+          test -s "$RUNNER_TEMP/vexforge-activation/Unity_v6000.3.24f1.ulf"
+
+      - name: Upload ULF for secure repository configuration
+        uses: actions/upload-artifact@v4
+        with:
+          name: VEXFORGE-Unity-License-ULF-${{ github.run_number }}
+          path: ${{ runner.temp }}/vexforge-activation/Unity_v6000.3.24f1.ulf
+          if-no-files-found: error
+          retention-days: 1
