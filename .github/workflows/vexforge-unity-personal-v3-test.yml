@@ -1,0 +1,48 @@
+name: Test VEXFORGE Unity Personal Activation (GameCI v3)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  activate-and-validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Verify Unity Personal credentials are configured
+        env:
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "$UNITY_EMAIL" || { echo "Missing GitHub Actions secret: UNITY_EMAIL" >&2; exit 1; }
+          test -n "$UNITY_PASSWORD" || { echo "Missing GitHub Actions secret: UNITY_PASSWORD" >&2; exit 1; }
+          echo "Unity Personal credentials are present; values are not printed."
+
+      - name: Activate Unity Personal license with current GameCI CLI
+        uses: game-ci/unity-activate@v3.0.0-beta.1
+        env:
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+          UNITY_LICENSING_METHOD: personal
+        with:
+          cliVersion: v0.1.68
+
+      - name: Validate that the Unity Editor detects an active license
+        shell: bash
+        run: |
+          set -euo pipefail
+          docker run --rm \
+            --env HOME=/github/home \
+            --volume "/home/runner/work/_temp/_github_home:/github/home" \
+            --volume "$GITHUB_WORKSPACE:/github/workspace" \
+            --workdir /github/workspace \
+            unityci/editor:ubuntu-6000.3.24f1-android-3 \
+            bash -lc 'unity-editor -batchmode -nographics -quit -projectPath /github/workspace/unity -logFile /dev/stdout'
