@@ -8,9 +8,9 @@
     "status": "success / embedded bundle verified"
   },
   "apk_command": "./gradlew assembleRelease --no-daemon --stacktrace --console=plain --max-workers=2 -x lintVitalAnalyzeRelease -x lintVitalReportRelease -x lintVitalRelease",
-  "current_task_build": "FOUNDATION_ROUTE_MATRIX_IN_PROGRESS",
-  "target_runtime": "Unity 6.3 LTS + URP + C#",
+  "current_task_build": "EXPO_GAME_RUNTIME_FOUNDATION",
+  "target_runtime": "Expo / React Native",
   "current_runtime": "Expo/React Native",
-  "unity_build": "ROUTES_1_2_EXTERNAL_DASHBOARD_BLOCKED_ROUTE3_EXIT_198_ROUTE5_INVALID_VERSION_ROUTE6_LOGIN_SELECTOR_BLOCKED_ROUTE7_NOT_JUSTIFIED",
+  "unity_build": "RETIRED_HISTORICAL",
   "migration_status": "FOUNDATION_IMPLEMENTED_UNVERIFIED"
 }

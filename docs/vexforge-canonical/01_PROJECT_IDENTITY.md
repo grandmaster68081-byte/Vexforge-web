@@ -22,5 +22,6 @@ El ownership de la regla backend no reside en el cliente: Android presenta, capt
 ## Runtime decision
 
 - Current runtime: Expo/React Native in `mobile/**`.
-- Target runtime: Unity 6.3 LTS + URP + C#.
-- Migration status: target decided, Unity not implemented.
+- Active runtime: Expo / React Native in `mobile/**`.
+- Migration status: Unity retired / historical; Game Runtime Foundation
+  implemented but APK evidence pending.

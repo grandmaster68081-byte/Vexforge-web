@@ -36,8 +36,13 @@ Workflow: `.github/workflows/vexforge-android-apk.yml`; Node 22; Java Temurin 17
 
 Última evidencia en continuidad: release `vexforge-android-build-249`, run `35238357900`, status success, bundle embebido; el APK observado corresponde al commit `ded78720...`, no se presume equivalencia automática con cualquier commit posterior.
 
-## Pipeline Unity objetivo
+## Estado del pipeline
 
-El pipeline Expo/Metro/Gradle anterior es el pipeline actual legado y no debe reutilizarse como si fuera Unity. La migración objetivo será `Unity 6.3 LTS → URP → C# player Android → CI reproducible → APK → instalación → QA → rollback`, con Unity Editor o CI Unity real procesando el proyecto. Replit puede preparar archivos y verificadores, pero no debe simular Unity Editor.
+El pipeline Expo/Metro/Gradle es la ruta Android de producto activa. Unity queda
+`RETIRED / HISTORICAL`; no existe un pipeline Unity activo ni se reutiliza su
+configuración.
 
-Estado: `PLANNED / NOT_IMPLEMENTED`. No hay proyecto Unity, APK Unity, runtime Unity ni hash de artefacto Unity en este commit.
+El workflow APK debe verificar el bundle embebido, package
+`com.vexforge.android`, versión `1.0.1`, versionCode `4`, artifact descargable
+y SHA-256. EAS queda documentado solamente como fallback futuro si esta ruta
+deja de ser viable.

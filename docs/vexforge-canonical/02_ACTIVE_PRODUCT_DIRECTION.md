@@ -20,10 +20,14 @@ La dirección aprobada es un TCG digital premium con identidad propia VEXFORGE, 
 
 ## Decisión de runtime
 
-- Runtime final objetivo: **Unity 6.3 LTS + URP + C#**.
+- Runtime Android activo: **Expo / React Native**.
 - Plataforma activa: Android.
 - Backend: Supabase existente, sin sustitución.
-- Cliente actual: Expo/React Native en `mobile/**`, legado durante la migración.
+- Cliente canónico: Expo/React Native en `mobile/**`.
 - Web: congelada/no activa.
+- Unity: retirado/histórico, sin runtime ni build activo.
 
-La decisión expresa el destino técnico del juego, no el estado actual del código. Unity debe comenzar en una ubicación separada; `mobile/**` no se elimina ni se reemplaza hasta que Foundation tenga un APK standalone validado, Auth/sesión/datos reales, trazabilidad de build y rollback.
+La Foundation actual agrega la frontera `GameRuntime` sin destruir los
+componentes funcionales existentes. El APK standalone, artifact, metadatos y
+QA física siguen siendo evidencia requerida; Foundation no se marca como
+`VERIFIED` todavía.

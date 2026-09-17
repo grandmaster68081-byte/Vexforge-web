@@ -17,8 +17,8 @@
     },
     {
       "id": "B-004",
-      "area": "Unity Foundation not started",
-      "status": "BLOCKED"
+      "area": "Android Foundation release APK not verified",
+      "status": "EVIDENCE_REQUIRED"
     }
   ]
 }

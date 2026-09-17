@@ -1,29 +1,32 @@
-# VEXFORGE — CANONICAL CONTEXT
+# VEXFORGE — ANDROID GAME RUNTIME
 
 Start here:
 - `VEXFORGE_CONTEXT.md`
 - `docs/vexforge-canonical/00_START_HERE.md`
 
-**Producto activo:** aplicación TCG para Android en `mobile/**`.
-**Web:** `FROZEN / NON-ACTIVE PRODUCT CLIENT`.
-**Backend vivo:** Supabase; sus tablas, policies, RPCs, functions, triggers, storage y auth deben verificarse en el proyecto live.
-**Código:** el estado real implementado se describe desde `main`, no desde documentación histórica.
+**ANDROID PRODUCT:** `mobile/**`
+**ACTIVE RUNTIME:** Expo / React Native
+**BACKEND AUTHORITY:** Supabase
+**WEB:** `FROZEN / NON-PRODUCT`
+**UNITY:** `RETIRED / HISTORICAL`
+
+El estado real implementado se describe desde `main`, no desde documentación histórica.
 
 La documentación histórica existente se conserva. La capa canónica resume, indexa, reconcilia y enlaza; no sustituye al código ni a Supabase.
 
 ---
 
-# VEXFORGE — Official Web Frontend
+# VEXFORGE — Official Android Product
 
-This is the official, single live frontend project for VEXFORGE, replacing the
-old ZIP-based workflow. Supabase is the only source of truth; see
+This repository contains the official Android game client for VEXFORGE.
+Supabase is the only source of truth for backend data and rules; see
 `backend/architecture/data-source.md`.
 
 ## Quick start
 ```bash
-npm install
-cp .env.example .env   # already pre-filled with real public/RLS-safe values
-npm run dev
+cd mobile
+npm ci
+npm run typecheck
 ```
 
 ## Continuity
@@ -39,6 +42,9 @@ The authoritative copy of all of this also lives in Supabase
 (`vexforge_project_documents`, `vexforge_web_registry`, etc.) — if this folder
 and Supabase ever disagree, Supabase wins.
 
-## Runtime target decision
+## Runtime status
 
-The current Android implementation remains in `mobile/**` while the approved target runtime is Unity 6.3 LTS + URP. React Native/Expo is legacy during a controlled, reversible migration; no Unity project or migration implementation is present yet. See `docs/vexforge-canonical/26_UNITY_ENGINE_MIGRATION.md`.
+Expo / React Native is the active Android runtime and `mobile/**` is the
+canonical Android product. The web client in `src/**` and `public/**` is
+frozen and non-product. Unity material is retained only as historical
+documentation; it is not an active runtime or build path.

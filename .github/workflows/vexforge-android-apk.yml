@@ -65,6 +65,34 @@ jobs:
           unzip -l "$APK" | grep -q 'assets/index.android.bundle' \
             || { echo "FAIL: JS bundle not embedded — the app would crash on launch"; exit 1; }
           echo "OK: JS bundle embedded ($(du -h "$APK" | cut -f1))"
+      - name: Verify APK identity and record digest
+        working-directory: mobile/android
+        run: |
+          set -euo pipefail
+          APK=app/build/outputs/apk/release/app-release.apk
+          AAPT="$(find "$ANDROID_HOME/build-tools" -type f -name aapt | sort -V | tail -n 1)"
+          test -x "$AAPT" || { echo "aapt not found"; exit 1; }
+          BADGING="$("$AAPT" dump badging "$APK")"
+          printf '%s\n' "$BADGING" | grep -F "package: name='com.vexforge.android' versionCode='4' versionName='1.0.1'"
+          SHA256="$(sha256sum "$APK" | awk '{print $1}')"
+          {
+            echo "source_commit=${GITHUB_SHA}"
+            echo "workflow=${GITHUB_WORKFLOW}"
+            echo "run=${GITHUB_RUN_ID}"
+            echo "apk=app-release.apk"
+            echo "package=com.vexforge.android"
+            echo "version=1.0.1"
+            echo "versionCode=4"
+            echo "sha256=${SHA256}"
+          } | tee "$GITHUB_WORKSPACE/vexforge-android-build-info.txt" >> "$GITHUB_STEP_SUMMARY"
+      - name: Upload verified APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: vexforge-android-apk-${{ github.run_number }}
+          path: |
+            mobile/android/app/build/outputs/apk/release/app-release.apk
+            vexforge-android-build-info.txt
+          if-no-files-found: error
       - name: Publish APK release
         uses: softprops/action-gh-release@v2
         with:

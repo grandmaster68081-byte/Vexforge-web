@@ -42,8 +42,12 @@ Los comandos anteriores son inspección/verificación del estado existente. No s
 
 Actualizar `17_CURRENT_BLOCK.md`, `16_IMPLEMENTATION_STATUS.md`, `18_DECISIONS.md`, `19_BLOCKERS.md`, `20_KNOWN_UNKNOWNS.md` y `25_CONTINUITY_CHANGELOG.md`. Si afecta Android, registrar commit → workflow → artefacto → QA.
 
-## Decisión nueva de motor
+## Decisión actual de runtime
 
-La dirección objetivo es Unity 6.3 LTS + URP + C#. No asumir que existe un proyecto Unity: el commit auditado no contiene `Assets/`, `ProjectSettings/` ni `Packages/` de Unity. El cliente real actual continúa en `mobile/**` y debe conservarse intacto durante la migración.
+Expo / React Native es el runtime Android activo. React Native es la capa de
+aplicación/UI; Reanimated, Worklets y Gesture Handler son la capa de
+movimiento/interacción; Skia queda reservada para una futura capa de rendering
+2D/2.5D. Supabase conserva toda autoridad de datos y reglas.
 
-Antes de crear código Unity debe existir un único paquete operativo de Foundation con árbol exacto, archivos completos/parches, comandos, verificadores, criterios de APK, aceptación en dispositivo, manejo de errores y prohibición explícita de avanzar.
+Unity es `RETIRED / HISTORICAL`: no es runtime activo, no tiene ruta de build
+activa y no debe volver a introducirse en esta etapa.

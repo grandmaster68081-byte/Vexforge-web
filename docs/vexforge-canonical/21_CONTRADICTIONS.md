@@ -35,16 +35,21 @@ SOURCE B: `main` actual es `f43159e...`.
 CURRENT EVIDENCE: el commit actual registra el release, pero no existe un nuevo APK de esta tarea.
 STATUS: `NO_RESUELTO / EVIDENCE_REQUIRED` para afirmar que una instalación coincide con el commit actual.
 
-## C-006 — Expo actual vs Unity objetivo
+## C-006 — Expo activo vs Unity histórico
 
 SOURCE A: código actual en `mobile/**`, `mobile/app.json` y workflow Expo/Gradle.
-SOURCE B: `unity/` y workflows Unity del commit actual, con Unity 6.3 LTS + URP como runtime objetivo.
-CURRENT EVIDENCE: Expo/React Native sigue protegido como legado; Unity Foundation existe, pero no hay APK verificado.
-STATUS: `RESUELTO POR FASE`: Expo/React Native es legado protegido; Unity está en `IMPLEMENTED_UNVERIFIED` hasta superar Foundation.
+SOURCE B: documentación y workflows históricos de Unity.
+CURRENT EVIDENCE: Expo/React Native es el runtime activo; el árbol Unity y sus
+workflows activos fueron retirados.
+STATUS: `RESUELTO`: Unity es `RETIRED / HISTORICAL`.
 
-## C-007 — Foundation antiguo vs Foundation Unity
+## C-007 — Foundation antiguo vs Game Runtime Foundation
 
 SOURCE A: cualquier paquete anterior diseñado para React Native.
-SOURCE B: orden operativa nueva, que prohíbe ejecutar el antiguo Foundation y exige un paquete único específico de Unity.
-CURRENT EVIDENCE: no se ejecutó ningún paquete de migración.
-STATUS: `SUPERSEDED`: el siguiente paquete debe ser Unity Foundation, no React Native Foundation.
+SOURCE B: orden operativa nueva, que exige la Foundation sobre Expo / React
+Native sin destruir componentes funcionales existentes.
+CURRENT EVIDENCE: `mobile/game/**` existe y el shell consume la sesión y
+sincronización reales.
+STATUS: `RESUELTO POR FASE`: la Foundation activa es Game Runtime Foundation;
+World, Cards, Deck, Battle, Missions, Economy y Profile quedan fuera de esta
+etapa.

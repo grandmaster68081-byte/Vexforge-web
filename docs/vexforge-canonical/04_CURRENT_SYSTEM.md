@@ -40,6 +40,9 @@ Supabase REST/RPC/Auth/Storage
 - LEGACY/HISTORICAL: `src/**`, parte de `backend/**` y documentación que trata la web como cliente oficial.
 - UNKNOWN: cualquier objeto live no conectado explícitamente a un consumer móvil.
 
-## Estado de migración de motor
+## Estado del runtime
 
-El mapa anterior describe el sistema **actual**: Expo Router, React Native y `mobile/**`. Ese cliente queda `LEGACY / FROZEN FOR NEW PRODUCT WORK` durante la migración controlada. El sistema Unity objetivo todavía no existe en el repositorio auditado; su arquitectura prevista es Unity 6.3 LTS + URP + C# → cliente C# + contratos existentes → Supabase.
+El mapa anterior describe el sistema **activo**: Expo Router, React Native,
+`GameRuntime` y `mobile/**`. La Game Runtime Foundation mantiene la autoridad
+de sesión y datos en `GameContext`/Supabase. Unity queda
+`RETIRED / HISTORICAL` y no existe como ruta activa de producto.

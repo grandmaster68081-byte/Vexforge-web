@@ -27,38 +27,13 @@
 - WHY BLOCKED: no toda rutina live es necesariamente activa ni consumida por Android.
 - UNBLOCK CONDITION: matriz RPC/table/policy por dominio con evidencia.
 
-## B-004 — Unity Foundation no verificado
+## B-004 — Android Foundation release no verificado
 
-- AREA: Unity 6.3 LTS / URP / Android Foundation.
-- STATUS: IMPLEMENTED_UNVERIFIED
-- OBSERVED EVIDENCE: `unity/Assets/`, `unity/ProjectSettings/`, `unity/Packages/` y `VexForgeBuild.BuildAndroid` existen en el commit actual.
-- DEPENDENCY: entorno Unity/CI válido y licencia Personal.
-- WHY BLOCKED: no existe todavía un APK standalone verificable del commit actual.
-- UNBLOCK CONDITION: APK real con package, versión, versionCode, SHA-256 y artifact descargable.
-
-## B-005 — Unity Build Automation Dashboard
-
-- AREA: Rutas 1 y 2.
-- STATUS: BLOCKED_EXTERNAL_DASHBOARD
-- OBSERVED EVIDENCE: el repositorio no contiene la configuración de organización/proyecto de Unity Build Automation ni acceso al Unity Dashboard.
-- DEPENDENCY: configuración externa de Unity Build Automation, rama `main`, subdirectorio `unity/` y patch disponible.
-- WHY BLOCKED: esa configuración se realiza en Unity Dashboard; no puede ejecutarse ni verificarse únicamente desde GitHub.
-- UNBLOCK CONDITION: un run de Build Automation accesible que produzca el APK y sus logs.
-
-## B-006 — Unity Personal activation in CI
-
-- AREA: Rutas 3, 4 y 5.
-- STATUS: BLOCKED_IN_PROGRESS
-- OBSERVED EVIDENCE: Ruta 3 terminó con exit code `198`; Ruta 5 falló con `Invalid version "6000.3.24f1"` en `game-ci/unity-activate@v2`; ninguna llegó a compilación.
-- DEPENDENCY: activación Personal compatible con Unity 6000.3.24f1 o un `.ulf` válido.
-- WHY BLOCKED: las credenciales por sí solas no han producido una licencia utilizable en el runner.
-- UNBLOCK CONDITION: una ruta aislada completa la compilación y entrega APK verificable, o logs que permitan pasar a la siguiente ruta.
-
-## B-007 — Third-party license conversion
-
-- AREA: Ruta 6.
-- STATUS: BLOCKED_TOOL_LOGIN_SELECTOR
-- OBSERVED EVIDENCE: el `.alf` se generó; `unity-license-activate@0.3.9` falló con `TimeoutError` esperando `#new_conversations_create_session_form #conversations_create_session_form_password` en `https://license.unity3d.com/manual`.
-- DEPENDENCY: Unity debe aceptar las credenciales y devolver un `.ulf` válido para `6000.3.24f1`.
-- WHY BLOCKED: el automatizador de terceros no es compatible con el formulario de login actual; no hay `.ulf` válido para importar.
-- UNBLOCK CONDITION: una herramienta de activación actualizada y auditable devuelve `.ulf`, o el usuario completa la activación manual legítima. No cambiar de editor por este error.
+- AREA: Expo / React Native Android Foundation.
+- STATUS: EVIDENCE_REQUIRED
+- OBSERVED EVIDENCE: `mobile/game/**`, `mobile/app.json` y el workflow APK
+  existen en el commit actual.
+- DEPENDENCY: runner Android con instalación limpia y artifact release.
+- WHY BLOCKED: todavía no existe un APK verificable de este commit.
+- UNBLOCK CONDITION: APK real con package, versión, versionCode, SHA-256 y
+  artifact descargable.

@@ -18,8 +18,8 @@
     "reactNative": "0.81.5",
     "runtimeVersion": "1.0.0"
   },
-  "current_block": "ENGINE-DECISION-CANONICALIZATION",
-  "overall_status": "ENGINE_DECISION_PERSISTED",
+  "current_block": "EXPO_GAME_RUNTIME_FOUNDATION",
+  "overall_status": "FOUNDATION_IMPLEMENTED_UNVERIFIED",
   "known_blockers": [
     "physical Android evidence",
     "release/source correspondence",
@@ -41,7 +41,7 @@
     "sast_findings": 0,
     "hounddog_findings": 0
   },
-  "target_runtime": "unity_6_3_lts_urp_csharp",
+  "target_runtime": "expo_react_native",
   "current_runtime": "expo_react_native",
-  "migration_status": "TARGET_DECIDED_NOT_IMPLEMENTED"
+  "migration_status": "ACTIVE_RUNTIME_RECONCILED"
 }

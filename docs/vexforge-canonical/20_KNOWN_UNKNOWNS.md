@@ -10,9 +10,11 @@
 - `INFERIDO`: clasificación de algunos objetos como legacy/quarantine basada en nombres; requiere confirmar definición y uso live.
 - `EVIDENCE_REQUIRED`: settlement y rewards de partidas competitivas en dispositivo real.
 
-- `VERIFICADO_EN_CODIGO_NO_EN_APK`: Unity package/applicationId `com.vexforge.android`, versión `1.0.2`, versionCode `5`, ARM64 e IL2CPP.
-- `NO_VERIFICADO`: APK Unity real del commit actual y su instalación física.
-- `NO_VERIFICADO`: proveedor CI Unity definitivo; Unity Build Automation requiere Dashboard y las rutas GitHub Actions siguen en prueba.
-- `NO_VERIFICADO`: versión exacta de paquetes del cliente C# de Supabase y estrategia de transporte compatible con contratos existentes.
-- `VERIFICADO_EN_REPOSITORIO`: ubicación Foundation `unity/`; estrategia de Addressables para assets grandes/dinámicos no está decidida.
-- `NO_VERIFICADO`: paridad de Auth, refresh, datos mínimos, runtimeVersion, OTA y rollback entre legado y Unity.
+- `VERIFICADO_EN_CODIGO_NO_EN_APK`: package Android `com.vexforge.android`,
+  versión `1.0.1`, versionCode `4`, Expo `~54.0.27`, React Native `0.81.5`.
+- `NO_VERIFICADO`: APK Android real del commit actual y su instalación física.
+- `NO_VERIFICADO`: comprobación del artifact release, package, versión,
+  versionCode y SHA-256 del build de esta Foundation.
+- `VERIFICADO_EN_REPOSITORIO`: ubicación de la Foundation
+  `mobile/game/**`; Skia queda fuera de esta etapa.
+- `NO_VERIFICADO`: cobertura física de la transición BootScene → Game Shell.

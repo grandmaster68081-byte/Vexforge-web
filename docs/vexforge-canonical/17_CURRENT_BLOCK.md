@@ -2,33 +2,44 @@
 
 ## CURRENT ACTIVE BLOCK
 
-`UNITY_FOUNDATION_BUILD_ROUTES`
+`EXPO_GAME_RUNTIME_FOUNDATION`
 
 ### Objetivo
-Persistir la decisión de migrar el runtime final Android de Expo/React Native a Unity 6.3 LTS + URP + C#, manteniendo `mobile/**` intacto como cliente legado y rollback.
+Retirar Unity del runtime activo y estabilizar `mobile/**` como el único
+cliente Android de producto sobre Expo / React Native. Añadir la Foundation del
+Game Runtime sin reemplazar los componentes funcionales existentes.
 
 ### Estado
 
-El proyecto Unity Foundation existe en `unity/` con `6000.3.24f1`, `com.vexforge.android`, versión `1.0.2`, `versionCode 5`, ARM64 e IL2CPP. El APK aún no está verificado.
+La Foundation del Game Runtime existe en `mobile/game/**`: runtime/context,
+BootScene, superficie de render nativa y utilidades de movimiento. El shell
+consume la sesión y el estado de sincronización reales del `GameContext`.
+La versión de Expo/React Native instalada se conserva y no se instala Skia en
+esta etapa.
 
 ### Siguiente bloque
 
-Ejecutar la matriz de rutas de build de Etapa 1 en orden. Cada ruta conserva su evidencia y solo una APK real con package, versión, versionCode y SHA-256 válidos permite cerrar Foundation.
+Ejecutar los checks estáticos, la instalación limpia y la única ruta de build
+Android Expo existente. Solo un APK real con package, versión, versionCode y
+SHA-256 válidos permite cerrar Foundation.
 
-| Ruta | Estado | Evidencia / bloqueo |
+| Gate | Estado | Evidencia / bloqueo |
 |---|---|---|
-| 1 — Unity Build Automation | BLOCKED_EXTERNAL_DASHBOARD | requiere configuración en Unity Dashboard no disponible desde este repositorio |
-| 2 — otro patch 6000.3 | BLOCKED_EXTERNAL_DASHBOARD | requiere consultar patches disponibles en Build Automation |
-| 3 — Unity CLI experimental | FAILED_EXIT_198 | run `35282835432`; no APK |
-| 4 — GameCI + UNITY_LICENSE | BLOCKED_BY_PERSONAL_LICENSE | no existe `.ulf` válido disponible |
-| 5 — GameCI direct Personal | FAILED_INVALID_UNITY_VERSION | run `35283163416`; GameCI rechazó `6000.3.24f1` |
-| 6 — activación automatizada de terceros | FAILED_LOGIN_SELECTOR | run `35283278298`; `unity-license-activate@0.3.9` no encontró el selector de contraseña |
-| 7 — cambio de editor | NOT_JUSTIFIED | los errores observados son de autenticación/tooling, no del editor, SDK, IL2CPP o proyecto |
+| Runtime Foundation | IMPLEMENTED_UNVERIFIED | `mobile/game/**`; falta APK y QA física |
+| Expo dependency baseline | PRESERVED | `mobile/package.json`, `mobile/package-lock.json` |
+| Product Android build | CONFIGURED | `.github/workflows/vexforge-android-apk.yml` |
+| Release APK | EVIDENCE_REQUIRED | debe comprobarse artifact, package, versión, versionCode y SHA-256 |
 
 ### No tocar
 
-`mobile/**`, `src/**`, `supabase/**`, `contracts/**`, `scripts/**`, assets, dependencias, build Expo existente y releases previos. No eliminar React Native hasta un APK Unity validado y rollback disponible.
+`supabase/**`, `contracts/**`, backend, assets oficiales, dependencias
+existentes y contratos de datos. No instalar Skia, no actualizar Expo y no
+iniciar World, Cards, Deck, Battle, Missions, Economy o Profile como nuevas
+etapas.
 
 ### Criterios de cierre de Foundation
 
-Unity 6.3 LTS funcional; Android reproducible; package/applicationId canónico; Supabase real; Auth y sesión persistente; GameShell; datos mínimos reales; CI reproducible; APK standalone; trazabilidad commit → build → APK; instalación y rollback del cliente legado.
+Expo Android reproducible; package/applicationId canónico; Supabase real; Auth
+y sesión persistente; Game Runtime Shell; datos mínimos reales; CI
+reproducible; APK standalone; trazabilidad commit → build → APK; instalación y
+QA posterior del cliente.

@@ -37,14 +37,14 @@
       "kind": "OTA_publish_path"
     },
     {
-      "from": "Unity 6.3 LTS + URP",
-      "to": "Supabase existing contracts",
-      "kind": "target_client_backend"
+      "from": "mobile/game/runtime/GameRuntime.tsx",
+      "to": "mobile/context/GameContext.tsx",
+      "kind": "presentation_session_boundary"
     },
     {
-      "from": "mobile/**",
-      "to": "Unity Foundation",
-      "kind": "protected_legacy_rollback"
+      "from": "mobile/game/render/GameRenderSurface.tsx",
+      "to": "React Native native views",
+      "kind": "current_renderer_boundary"
     }
   ]
 }

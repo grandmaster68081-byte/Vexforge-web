@@ -22,8 +22,13 @@
     },
     {
       "id": "D-005",
-      "status": "ACTIVE_TARGET_NOT_IMPLEMENTED",
-      "decision": "Unity 6.3 LTS + URP + C# is the final Android runtime; Expo/React Native remains protected legacy during migration"
+      "status": "SUPERSEDED_HISTORICAL",
+      "decision": "Unity 6.3 LTS + URP + C# was a historical migration target; it is not an active runtime"
+    },
+    {
+      "id": "D-006",
+      "status": "ACTIVE_FOUNDATION_UNVERIFIED",
+      "decision": "Expo / React Native is the active Android runtime; Supabase remains authoritative"
     }
   ]
 }

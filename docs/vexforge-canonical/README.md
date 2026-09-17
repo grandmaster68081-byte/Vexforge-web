@@ -20,6 +20,10 @@ Esta carpeta es la memoria técnica estructurada del proyecto. No duplica los 16
 
 Los registros de `data/` son resúmenes derivados de evidencia observada. No sustituyen consultas live ni el código.
 
-## Runtime migration decision
+## Runtime decision
 
-La decisión nueva es Unity 6.3 LTS + URP + C# como runtime final del cliente Android. El cliente Expo/React Native actual no se elimina: permanece legado durante una migración reversible y solo deja de ser activo después de superar Foundation y sus gates de APK, instalación, backend y rollback.
+Expo / React Native es el runtime Android activo. React Native es la capa de
+aplicación/UI; Reanimated + Worklets + Gesture Handler cubren movimiento e
+interacción; Skia queda reservada para una futura capa de rendering 2D/2.5D.
+Supabase conserva toda autoridad de datos y reglas. Unity es
+`RETIRED / HISTORICAL` y no forma parte del runtime ni del build activo.

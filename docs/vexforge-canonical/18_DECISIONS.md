@@ -47,5 +47,24 @@
 - EVIDENCE: `attached_assets/VEXFORGE_ENGINE_DECISION_AND_WORKFLOW_1789670634346.md` y ausencia de árbol Unity en `main` auditado.
 - AFFECTED_FILES: futura ubicación Unity separada; `mobile/**` protegido durante migración.
 - AFFECTED_SYSTEMS: cliente Android y CI; Supabase permanece sin cambio.
-- STATUS: ACTIVE / TARGET_NOT_IMPLEMENTED
+- STATUS: SUPERSEDED / HISTORICAL
 - SUPERSEDES: la dirección anterior que trataba Expo/React Native como runtime final; no supersede la descripción histórica del código actual.
+
+## D-006
+
+- DATE: 2026-09-17
+- DECISION: Expo / React Native es el runtime Android activo de VEXFORGE.
+- SCOPE: runtime, aplicación/UI, movimiento, rendering futuro, datos y build.
+- WHY: el cliente Expo existente es la única base Android ejecutable y verificable
+  disponible para esta Foundation; Unity no alcanzó un APK verificable y queda
+  retirado del runtime.
+- EVIDENCE: `mobile/**`, `mobile/app.json`,
+  `.github/workflows/vexforge-android-apk.yml`.
+- AFFECTED_FILES: `mobile/game/**`, entrada Android, documentación canónica y
+  workflows Unity retirados.
+- AFFECTED_SYSTEMS: cliente Android y CI; Supabase permanece sin cambio.
+- STATUS: ACTIVE / FOUNDATION_IMPLEMENTED_UNVERIFIED
+- RULES: React Native es la capa de aplicación/UI; Reanimated + Worklets +
+  Gesture Handler son la capa de movimiento/interacción; Skia queda reservada
+  para una futura capa de rendering 2D/2.5D; Supabase mantiene autoridad de
+  datos y reglas.

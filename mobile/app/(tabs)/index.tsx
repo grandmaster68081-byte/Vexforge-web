@@ -24,6 +24,7 @@ import { DOMAIN_IDENTITY, DEPTH, MOTION, VISUAL_TOKENS } from '@/constants/exper
 import { CANONICAL_BACKGROUNDS } from '@/constants/visual';
 import { useColors } from '@/hooks/useColors';
 import { useGame } from '@/context/GameContext';
+import { GameRuntime } from '@/game/runtime/GameRuntime';
 import {
   loadDailyFeaturedCard,
   loadHomeIdentityCard,
@@ -546,7 +547,7 @@ export default function ForgeScreen() {
   const insets = useSafeAreaInsets();
   const { width } = useWindowDimensions();
   const reduceMotion = useReducedMotion();
-  const { player, progress, wallet, stats: playerStats, cardsTotal, featuredCards, syncState, syncError, refresh } = useGame();
+  const { session, player, progress, wallet, stats: playerStats, cardsTotal, featuredCards, syncState, syncError, refresh } = useGame();
   const [home, setHome] = useState<RemoteHome>(INITIAL_HOME);
   const [homeState, setHomeState] = useState<HomeState>('loading');
   const [refreshing, setRefreshing] = useState(false);
@@ -739,7 +740,8 @@ export default function ForgeScreen() {
   };
 
   return (
-    <ScreenShell surface="home" sceneMode="hero">
+    <GameRuntime session={session} authLoading={false} syncState={syncState} onRetry={refresh}>
+      <ScreenShell surface="home" sceneMode="hero">
       <View style={styles.root} testID="home-scene">
         <Animated.ScrollView
           contentContainerStyle={[styles.scrollContent, { paddingBottom: Math.max(112, insets.bottom + 100) }]}
@@ -1269,7 +1271,8 @@ export default function ForgeScreen() {
           </View>
         </Animated.ScrollView>
       </View>
-    </ScreenShell>
+      </ScreenShell>
+    </GameRuntime>
   );
 }
 

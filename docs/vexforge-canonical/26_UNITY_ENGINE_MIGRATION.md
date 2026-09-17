@@ -1,27 +1,31 @@
-# 26 — UNITY ENGINE MIGRATION
+# 26 — UNITY ENGINE MIGRATION (HISTORICAL)
 
 ## Decisión
 
-El cliente final Android de VEXFORGE migrará a **Unity 6.3 LTS**, **URP** y **C#**. Android permanece como plataforma activa; Supabase permanece como backend autoritativo; la web permanece congelada.
+Este documento conserva la decisión histórica de migrar el cliente Android a
+Unity. Esa decisión fue reemplazada por D-006: Expo / React Native es el
+runtime Android activo. Unity no es runtime activo ni ruta de build.
 
 ## Estado actual versus objetivo
 
 | Capa | Estado |
 |---|---|
-| Cliente Expo/React Native | Implementación Android actual; legado protegido durante migración |
-| Proyecto Unity | No existe en el commit auditado |
-| Unity Foundation | PLANNED / BLOCKED hasta paquete operativo |
+| Cliente Expo/React Native | Runtime Android activo y canónico |
+| Proyecto Unity | Retirado del árbol activo |
+| Unity Foundation | SUPERSEDED / HISTORICAL |
 | Supabase | Autoridad sin cambio |
 | APK Unity | No existe |
 | Cliente Unity activo | No alcanzado |
 
-## Responsabilidades Unity
+## Responsabilidades históricas de Unity
 
 Presentación, UI, navegación, animación, VFX, audio, cámara, input, Timeline, renderizado de cartas, battlefield, feedback, caché no autoritativa y reproducción de snapshots/eventos del backend.
 
 ## Prohibiciones
 
-No duplicar reglas backend en C#. No introducir otra base de datos o backend. No inventar datos, assets, estadísticas, rewards, estados o reglas. No eliminar `mobile/**`. No iniciar Etapa 2 antes de cerrar Foundation.
+No duplicar reglas backend en C#. No introducir otra base de datos o backend.
+No inventar datos, assets, estadísticas, rewards, estados o reglas. Este
+documento no autoriza trabajo Unity ni nuevas etapas.
 
 ## Cinco etapas
 

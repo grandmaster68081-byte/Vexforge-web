@@ -46,7 +46,10 @@ La capa canónica está documentada en `docs/vexforge-canonical/`. La implementa
 
 ## Siguiente bloque
 
-La decisión de runtime está persistida. El siguiente bloque del producto es `ETAPA 1 — FOUNDATION / UNITY MIGRATION`, entregado como un único paquete operativo y con autorización explícita. Consultar `docs/vexforge-canonical/17_CURRENT_BLOCK.md` y `docs/vexforge-canonical/26_UNITY_ENGINE_MIGRATION.md`.
+La decisión de runtime está reconciliada. El bloque activo es `ETAPA 1 —
+FOUNDATION / EXPO GAME RUNTIME`, entregado como un único paquete operativo.
+Consultar `docs/vexforge-canonical/17_CURRENT_BLOCK.md` y
+`docs/vexforge-canonical/27_EXPO_GAME_RUNTIME.md`.
 
 ## Mapa de lectura
 
@@ -60,8 +63,12 @@ La decisión de runtime está persistida. El siguiente bloque del producto es `E
 
 ## Decisión de runtime registrada el 2026-09-17
 
-La dirección final del cliente Android es **Unity 6.3 LTS + URP + C#**. Esto es una decisión de migración, no una afirmación de implementación: `mobile/**` sigue siendo el cliente actual ejecutable y queda como legado protegido hasta que Unity supere Foundation, tenga APK standalone, Auth/sesión/datos reales, trazabilidad commit → build → APK y una ruta de rollback.
+Expo / React Native es el runtime Android activo y `mobile/**` es la fuente
+canónica del producto Android. React Native es la capa de aplicación y UI;
+Reanimated, Worklets y Gesture Handler cubren movimiento e interacción; Skia
+queda preparada como futura capa de rendering 2D/2.5D, pero no se instala en
+esta etapa.
 
-Supabase no cambia de autoridad. No se introduce otra base de datos ni otro backend. El siguiente paquete operativo, cuando se autorice, debe ser un único paquete de `ETAPA 1 — FOUNDATION / UNITY MIGRATION`; Replit no debe simular Unity Editor ni avanzar automáticamente a etapas posteriores.
-
-Detailed runtime migration record: `docs/vexforge-canonical/26_UNITY_ENGINE_MIGRATION.md`.
+Supabase mantiene toda autoridad de datos, reglas, autenticación y settlement.
+La web queda congelada como código no-producto. Unity queda retirado e
+histórico y no es un runtime ni una ruta de build activa.
