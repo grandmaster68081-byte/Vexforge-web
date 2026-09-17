@@ -49,7 +49,16 @@
 
 - AREA: Rutas 3, 4 y 5.
 - STATUS: BLOCKED_IN_PROGRESS
-- OBSERVED EVIDENCE: el workflow oficial falló en activación; anotó `/usr/bin/docker` exit code 1 y el input inválido `cliVersion`; no llegó a compilación.
+- OBSERVED EVIDENCE: Ruta 3 terminó con exit code `198`; Ruta 5 falló con `Invalid version "6000.3.24f1"` en `game-ci/unity-activate@v2`; ninguna llegó a compilación.
 - DEPENDENCY: activación Personal compatible con Unity 6000.3.24f1 o un `.ulf` válido.
 - WHY BLOCKED: las credenciales por sí solas no han producido una licencia utilizable en el runner.
 - UNBLOCK CONDITION: una ruta aislada completa la compilación y entrega APK verificable, o logs que permitan pasar a la siguiente ruta.
+
+## B-007 — Third-party license conversion
+
+- AREA: Ruta 6.
+- STATUS: READY_TO_RUN
+- OBSERVED EVIDENCE: existe una herramienta pública fijada en `unity-license-activate@0.3.9`; no se almacena `.alf`, `.ulf` ni credenciales en el repositorio.
+- DEPENDENCY: Unity debe aceptar las credenciales y devolver un `.ulf` válido para `6000.3.24f1`.
+- WHY BLOCKED: las Rutas 3 y 5 no produjeron una licencia utilizable para compilar.
+- UNBLOCK CONDITION: conversión `.alf` → `.ulf`, importación en el runner y APK verificable; si falla, conservar logs y no cambiar de editor sin evidencia.

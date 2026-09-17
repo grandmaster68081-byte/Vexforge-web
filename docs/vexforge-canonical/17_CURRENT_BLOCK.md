@@ -19,10 +19,10 @@ Ejecutar la matriz de rutas de build de Etapa 1 en orden. Cada ruta conserva su 
 |---|---|---|
 | 1 — Unity Build Automation | BLOCKED_EXTERNAL_DASHBOARD | requiere configuración en Unity Dashboard no disponible desde este repositorio |
 | 2 — otro patch 6000.3 | BLOCKED_EXTERNAL_DASHBOARD | requiere consultar patches disponibles en Build Automation |
-| 3 — Unity CLI experimental | READY_TO_RUN | workflow aislado `vexforge-unity-cli-experimental.yml` |
+| 3 — Unity CLI experimental | FAILED_EXIT_198 | run `35282835432`; no APK |
 | 4 — GameCI + UNITY_LICENSE | BLOCKED_BY_PERSONAL_LICENSE | no existe `.ulf` válido disponible |
-| 5 — GameCI direct Personal | READY_TO_RUN | workflow aislado sin `cliVersion` |
-| 6 — activación automatizada de terceros | NOT_STARTED | solo si la Ruta 5 falla |
+| 5 — GameCI direct Personal | FAILED_INVALID_UNITY_VERSION | run `35283163416`; GameCI rechazó `6000.3.24f1` |
+| 6 — activación automatizada de terceros | READY_TO_RUN | workflow aislado con `unity-license-activate@0.3.9` |
 
 ### No tocar
 

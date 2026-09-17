@@ -1,0 +1,182 @@
+name: VEXFORGE Unity Third-Party License Foundation
+
+on:
+  workflow_dispatch:
+    inputs:
+      unity_version:
+        description: "Unity editor version from unity/ProjectSettings/ProjectVersion.txt"
+        required: true
+        default: "6000.3.24f1"
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  third-party-license-build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 75
+    env:
+      UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+      UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+
+    steps:
+      - name: Verify Unity credentials are configured
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "$UNITY_EMAIL" || { echo "Missing GitHub Actions secret: UNITY_EMAIL" >&2; exit 1; }
+          test -n "$UNITY_PASSWORD" || { echo "Missing GitHub Actions secret: UNITY_PASSWORD" >&2; exit 1; }
+          echo "Unity credentials are present; values are not printed."
+
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Generate Unity manual activation request
+        id: activation-request
+        shell: bash
+        run: |
+          set -uo pipefail
+          mkdir -p "$RUNNER_TEMP/unity-home" route6
+          UNITY_EXIT=0
+          docker run --rm \
+            --env HOME=/tmp/unity-home \
+            --volume "$RUNNER_TEMP/unity-home:/tmp/unity-home" \
+            --volume "$GITHUB_WORKSPACE:/workspace" \
+            --workdir /workspace \
+            "unityci/editor:ubuntu-${{ inputs.unity_version }}-android-3" \
+            bash -lc 'unity-editor \
+              -batchmode \
+              -nographics \
+              -quit \
+              -projectPath /workspace/unity \
+              -createManualActivationFile \
+              -logFile /workspace/route6/activation-request.log' || UNITY_EXIT=$?
+          echo "Unity manual activation request exit code: $UNITY_EXIT"
+          ALF="$(find . -type f -name '*.alf' -print -quit || true)"
+          if [ -z "$ALF" ]; then
+            echo "Unity did not produce a .alf activation request." >&2
+            exit "$UNITY_EXIT"
+          fi
+          cp "$ALF" route6/Unity_v${{ inputs.unity_version }}.alf
+          test -s route6/Unity_v${{ inputs.unity_version }}.alf
+
+      - name: Install pinned Unity license conversion tool
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Convert ALF to ULF with unity-license-activate 0.3.9
+        id: license-conversion
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm install --global unity-license-activate@0.3.9 --no-audit --no-fund
+          mkdir -p route6/license-output
+          unity-license-activate \
+            "$UNITY_EMAIL" \
+            "$UNITY_PASSWORD" \
+            "route6/Unity_v${{ inputs.unity_version }}.alf" \
+            > route6/license-conversion.log 2>&1
+          ULF="$(find route6 -type f -name '*.ulf' -print -quit || true)"
+          if [ -z "$ULF" ]; then
+            echo "The pinned converter did not return a .ulf license file." >&2
+            exit 1
+          fi
+          cp "$ULF" route6/Unity_v${{ inputs.unity_version }}.ulf
+          test -s route6/Unity_v${{ inputs.unity_version }}.ulf
+
+      - name: Import ULF and run Unity Android build
+        id: unity-build
+        shell: bash
+        run: |
+          set -uo pipefail
+          mkdir -p "$RUNNER_TEMP/unity-home"
+          UNITY_EXIT=0
+          docker run --rm \
+            --env HOME=/tmp/unity-home \
+            --volume "$RUNNER_TEMP/unity-home:/tmp/unity-home" \
+            --volume "$GITHUB_WORKSPACE:/workspace" \
+            --workdir /workspace \
+            "unityci/editor:ubuntu-${{ inputs.unity_version }}-android-3" \
+            bash -lc 'set -uo pipefail
+              unity-editor \
+                -batchmode \
+                -nographics \
+                -quit \
+                -manualLicenseFile /workspace/route6/Unity_v${{ inputs.unity_version }}.ulf \
+                -logFile /workspace/route6/license-import.log
+              unity-editor \
+                -batchmode \
+                -nographics \
+                -quit \
+                -projectPath /workspace/unity \
+                -buildTarget Android \
+                -executeMethod VexForge.Editor.VexForgeBuild.BuildAndroid \
+                -logFile /workspace/route6/unity-editor.log' || UNITY_EXIT=$?
+          echo "Unity build exit code: $UNITY_EXIT"
+          exit "$UNITY_EXIT"
+
+      - name: Verify APK and Foundation metadata
+        if: success()
+        shell: bash
+        run: |
+          set -euo pipefail
+          APK="$(find unity/Builds build -type f -name '*.apk' -print -quit 2>/dev/null || true)"
+          test -n "$APK" || { echo "No APK produced."; exit 1; }
+          METADATA="$(find unity/Builds build -type f -name 'vexforge-foundation-build-info.json' -print -quit 2>/dev/null || true)"
+          test -n "$METADATA" || { echo "Foundation metadata was not produced."; exit 1; }
+          test -s "$APK"
+          test "$(stat -c%s "$APK")" -gt 1000000
+          grep -F '"applicationId": "com.vexforge.android"' "$METADATA"
+          grep -F '"version": "1.0.2"' "$METADATA"
+          grep -F '"versionCode": 5' "$METADATA"
+          SHA="$(sha256sum "$APK" | awk '{print $1}')"
+          SIZE="$(stat -c%s "$APK")"
+          mkdir -p build/foundation-metadata
+          cp "$METADATA" build/foundation-metadata/vexforge-foundation-build-info.json
+          {
+            echo "product=VEXFORGE"
+            echo "runtime=Unity 6.3 LTS"
+            echo "editor=${{ inputs.unity_version }}"
+            echo "branch=${GITHUB_REF_NAME}"
+            echo "commit=${GITHUB_SHA}"
+            echo "run_id=${GITHUB_RUN_ID}"
+            echo "apk=${APK}"
+            echo "apk_size_bytes=${SIZE}"
+            echo "apk_sha256=${SHA}"
+          } | tee build/foundation-metadata/vexforge-ci-build-info.txt
+          cp "$APK" build/foundation-metadata/
+
+      - name: Upload Route 6 evidence and APK
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: VEXFORGE-Unity-Third-Party-License-${{ github.run_number }}
+          path: |
+            route6/**
+            unity/Builds/**/*.apk
+            build/foundation-metadata/*
+          if-no-files-found: warn
+          retention-days: 14
+
+      - name: Publish prerelease
+        if: success()
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: vexforge-unity-third-party-license-${{ github.run_number }}
+          name: VEXFORGE Unity Third-Party License ${{ github.run_number }}
+          prerelease: true
+          body: |
+            VEXFORGE Unity Foundation
+            Route 6 — pinned third-party license conversion
+            unity-license-activate 0.3.9
+            Unity ${{ inputs.unity_version }}
+            Android ARM64
+            IL2CPP
+            Foundation only
+          files: |
+            unity/Builds/**/*.apk
+            build/foundation-metadata/*
