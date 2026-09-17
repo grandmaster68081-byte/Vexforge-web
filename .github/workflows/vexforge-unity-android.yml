@@ -35,6 +35,15 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Activate Unity Personal license
+        uses: game-ci/unity-activate@v2
+        env:
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+          UNITY_LICENSING_METHOD: personal
+        with:
+          cliVersion: latest
+
       - name: Copy canonical VEXFORGE icon into Unity
         run: |
           set -euo pipefail
@@ -79,6 +88,7 @@ jobs:
           buildsPath: build
           versioning: None
           allowDirtyBuild: true
+          skipActivation: true
 
       - name: Locate APK
         id: apk
