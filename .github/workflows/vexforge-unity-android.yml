@@ -17,6 +17,19 @@ jobs:
     timeout-minutes: 60
 
     steps:
+      - name: Verify Unity license secrets are configured
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "$UNITY_LICENSE" || { echo "Missing GitHub Actions secret: UNITY_LICENSE" >&2; exit 1; }
+          test -n "$UNITY_EMAIL" || { echo "Missing GitHub Actions secret: UNITY_EMAIL" >&2; exit 1; }
+          test -n "$UNITY_PASSWORD" || { echo "Missing GitHub Actions secret: UNITY_PASSWORD" >&2; exit 1; }
+          echo "Unity license secrets are present; values are not printed."
+
       - name: Checkout
         uses: actions/checkout@v4
         with:
