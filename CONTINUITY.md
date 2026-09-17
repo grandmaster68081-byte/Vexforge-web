@@ -8,6 +8,19 @@ Estado de esta persistencia: documentación canónica generada contra `main` en 
 
 ---
 
+## 2026-09-17 — UNITY PERSONAL CI ACTIVATION — BLOCKED BY UNITY AUTHENTICATION
+
+- **WORKFLOW REAL:** `vexforge-unity-android.yml`; Unity `6000.3.24f1`; Android ARM64/IL2CPP.
+- **RUTA V2:** `game-ci/unity-activate@v2` recibió las credenciales configuradas, pero `UNITY_LICENSE` no existe y la acción terminó antes de abrir Unity con `License activation strategy could not be determined`. No hubo APK ni artifact.
+- **RUTA V3 AISLADA:** `game-ci/unity-activate@v3.0.0-beta.1` con GameCI CLI `v0.1.68` detectó el proyecto Unity real y llegó al servidor de activación Personal.
+- **RESULTADO V3:** Unity respondió HTTP `401`, `Invalid Credential`, código `143.002`; la validación del Editor se omitió porque la activación no terminó. No hubo APK ni artifact.
+- **UNITY_LICENSE:** ausente. `UNITY_ALF` existe como secreto previo, pero no se convirtió a `.ulf`; el CLI actual rechaza `.alf` para Personal porque la activación offline está restringida a Enterprise/Industry.
+- **CREDENCIALES:** `UNITY_EMAIL` y `UNITY_PASSWORD` fueron actualizados en GitHub Secrets sin imprimir sus valores; el mismo `401 Invalid Credential` persistió.
+- **STATUS:** `CI_BLOCKED / UNITY_ACCOUNT_AUTH_REQUIRED`.
+- **BLOQUEO RESTANTE:** Unity está rechazando el inicio no interactivo; GameCI indica como causas posibles login social sin contraseña, 2FA o verificación de dispositivo/IP nuevo. Desde Android, la intervención mínima es entrar en la cuenta Unity con un Unity ID de correo+contraseña, completar cualquier confirmación de dispositivo pendiente y confirmar que la cuenta no depende de Google/Apple/Facebook. Si la cuenta exige 2FA, se necesita una cuenta CI dedicada compatible con activación headless; no se debe subir una licencia ni una credencial al repositorio.
+
+---
+
 ## 2026-09-17 — ETAPA 1 FOUNDATION UNITY — IMPLEMENTED_UNVERIFIED / CI BLOCKED
 
 - **AUTHORIZATION:** se anuló explícitamente la parada del SHA histórico y se autorizó trabajar sobre `main` actual `513b7c4ce5e52d212e84bdfe9f21f3efc2ddc685`.
