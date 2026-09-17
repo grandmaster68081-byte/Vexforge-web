@@ -1,0 +1,55 @@
+name: Prepare VEXFORGE Unity Personal Activation
+
+on:
+  workflow_dispatch:
+    inputs:
+      unity_version:
+        description: 'Unity editor version from unity/ProjectSettings/ProjectVersion.txt'
+        required: true
+        default: '6000.3.24f1'
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  request-activation:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Generate Unity manual activation request
+        id: unity-activation
+        continue-on-error: true
+        uses: game-ci/unity-builder@v4
+        with:
+          projectPath: unity
+          unityVersion: ${{ inputs.unity_version }}
+          targetPlatform: Android
+          customParameters: -createManualActivationFile
+          allowDirtyBuild: true
+
+      - name: Locate activation request
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p activation
+          ALF="$(find . -type f -name '*.alf' -print -quit)"
+          if [ -z "$ALF" ]; then
+            echo "Unity did not produce a .alf activation request." >&2
+            echo "The Unity step outcome was: ${{ steps.unity-activation.outcome }}" >&2
+            exit 1
+          fi
+          cp "$ALF" "activation/Unity_v${{ inputs.unity_version }}.alf"
+          test -s "activation/Unity_v${{ inputs.unity_version }}.alf"
+
+      - name: Upload activation request artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: VEXFORGE-Unity-Activation-Request-${{ github.run_number }}
+          path: activation/*.alf
+          if-no-files-found: error
+          retention-days: 7
