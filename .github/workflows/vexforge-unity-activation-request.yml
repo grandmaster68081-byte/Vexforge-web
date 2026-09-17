@@ -30,6 +30,7 @@ jobs:
           unityVersion: ${{ inputs.unity_version }}
           targetPlatform: Android
           customParameters: -createManualActivationFile
+          skipActivation: true
           allowDirtyBuild: true
 
       - name: Locate activation request
