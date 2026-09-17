@@ -1,0 +1,144 @@
+name: Build VEXFORGE Unity Android
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'unity/**'
+      - '.github/workflows/vexforge-unity-android.yml'
+      - 'mobile/assets/images/icon.jpg'
+
+permissions:
+  contents: write
+
+jobs:
+  build-unity-android:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Copy canonical VEXFORGE icon into Unity
+        run: |
+          set -euo pipefail
+
+          test -f mobile/assets/images/icon.jpg
+          mkdir -p unity/Assets/VexForge/Brand
+          cp mobile/assets/images/icon.jpg unity/Assets/VexForge/Brand/icon.jpg
+
+      - name: Cache Unity Library
+        uses: actions/cache@v4
+        with:
+          path: unity/Library
+          key: VEXFORGE-Unity-Library-Android-6000.3.24f1-${{ hashFiles('unity/Packages/manifest.json', 'unity/ProjectSettings/ProjectVersion.txt') }}
+          restore-keys: |
+            VEXFORGE-Unity-Library-Android-6000.3.24f1-
+            VEXFORGE-Unity-Library-Android-
+
+      - name: Free disk space
+        uses: jlumbroso/free-disk-space@v1.3.1
+        with:
+          tool-cache: true
+          android: false
+          dotnet: true
+          haskell: true
+          large-packages: true
+          docker-images: true
+          swap-storage: true
+
+      - name: Build Unity Android APK
+        uses: game-ci/unity-builder@v4
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+        with:
+          projectPath: unity
+          unityVersion: auto
+          targetPlatform: Android
+          buildMethod: VexForge.Editor.VexForgeBuild.BuildAndroid
+          androidExportType: androidPackage
+          buildName: VEXFORGE-Foundation
+          buildsPath: build
+          versioning: None
+          allowDirtyBuild: true
+
+      - name: Locate APK
+        id: apk
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          APK="$(find build -type f -name '*.apk' | head -n 1)"
+
+          if [ -z "$APK" ]; then
+            echo "No APK produced."
+            find build -maxdepth 5 -type f -print || true
+            exit 1
+          fi
+
+          echo "apk=$APK" >> "$GITHUB_OUTPUT"
+
+      - name: Verify artifact
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          APK="${{ steps.apk.outputs.apk }}"
+
+          test -f "$APK"
+
+          SIZE="$(stat -c%s "$APK")"
+          SHA="$(sha256sum "$APK" | awk '{print $1}')"
+
+          test "$SIZE" -gt 1000000
+
+          mkdir -p build/foundation-metadata
+
+          cat > build/foundation-metadata/vexforge-ci-build-info.txt <<EOF
+          product=VEXFORGE
+          runtime=Unity 6.3 LTS
+          editor=6000.3.24f1
+          branch=${GITHUB_REF_NAME}
+          commit=${GITHUB_SHA}
+          run_id=${GITHUB_RUN_ID}
+          run_number=${GITHUB_RUN_NUMBER}
+          apk=${APK}
+          apk_size_bytes=${SIZE}
+          apk_sha256=${SHA}
+          EOF
+
+          echo "APK: $APK"
+          echo "Size: $SIZE"
+          echo "SHA256: $SHA"
+
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: VEXFORGE-Unity-Foundation-${{ github.run_number }}
+          path: |
+            build/**/*.apk
+            build/foundation-metadata/vexforge-ci-build-info.txt
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Publish prerelease
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: vexforge-unity-foundation-${{ github.run_number }}
+          name: VEXFORGE Unity Foundation ${{ github.run_number }}
+          prerelease: true
+          body: |
+            VEXFORGE Unity Foundation
+            Unity 6.3 LTS
+            Editor 6000.3.24f1
+            Android ARM64
+            Supabase LIVE
+            Foundation only
+          files: |
+            build/**/*.apk
+            build/foundation-metadata/vexforge-ci-build-info.txt

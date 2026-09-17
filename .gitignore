@@ -37,3 +37,14 @@ pnpm-debug.log*
 # Wrangler
 .wrangler/
 .dev.vars
+
+# Unity generated files
+unity/Library/
+unity/Temp/
+unity/Obj/
+unity/Builds/
+unity/UserSettings/
+unity/Logs/
+unity/MemoryCaptures/
+unity/.vs/
+unity/*.userprefs
