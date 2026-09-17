@@ -1,0 +1,27 @@
+{
+  "project": "VEXFORGE",
+  "active_client": "android",
+  "web_status": "frozen",
+  "backend_authority": "supabase",
+  "repository": {
+    "name": "grandmaster68081-byte/Vexforge-web",
+    "branch": "main",
+    "commit": "f43159ecee63b610bb71c295238327ecea3feeb6",
+    "snapshot_date": "2026-09-17"
+  },
+  "android": {
+    "package": "com.vexforge.android",
+    "version": "1.0.1",
+    "versionCode": 4,
+    "expo": "~54.0.27",
+    "expo_lockfile": "54.0.37",
+    "reactNative": "0.81.5",
+    "runtimeVersion": "1.0.0"
+  },
+  "current_block": "CANONICAL-CONTINUITY-PERSISTENCE",
+  "overall_status": "DOCUMENTATION_PERSISTED",
+  "known_blockers": ["physical Android evidence", "release/source correspondence", "live backend reconciliation"],
+  "known_unknowns": ["installed APK exact source", "OTA runtime outcome", "per-object live routine/policy status"],
+  "supabase_snapshot": {"public_tables_and_views": 318, "public_routines": 345, "public_policies": 275},
+  "security_scan": {"dependency_critical": 0, "dependency_high": 0, "sast_findings": 0, "hounddog_findings": 0}
+}

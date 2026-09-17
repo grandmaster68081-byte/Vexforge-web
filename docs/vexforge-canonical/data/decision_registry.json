@@ -1,0 +1,8 @@
+{
+  "decisions": [
+    {"id":"D-001","status":"ACTIVE","decision":"Android active; web frozen"},
+    {"id":"D-002","status":"ACTIVE","decision":"Supabase live authority for backend; main authority for implementation"},
+    {"id":"D-003","status":"ACTIVE","decision":"No invented data/assets/rewards and no generic silent fallback"},
+    {"id":"D-004","status":"ACTIVE","decision":"No APK/build/deploy by initiative"}
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "source_commit": "f43159ecee63b610bb71c295238327ecea3feeb6",
+  "root": "mobile/assets",
+  "assets": [
+    {"path":"mobile/assets/images/icon.jpg","class":"CANONICAL_CONTENT_OR_APP_ICON","status":"FOUND"},
+    {"path":"mobile/assets/images/battle-reference-scene.png","class":"VISUAL_REFERENCE","status":"FOUND"},
+    {"path":"mobile/assets/images/collection-reference-scene.png","class":"VISUAL_REFERENCE","status":"FOUND"},
+    {"path":"mobile/assets/images/collection-archive-scene.jpg","class":"VISUAL_REFERENCE","status":"FOUND"},
+    {"path":"mobile/assets/images/deck-forge-scene.jpg","class":"VISUAL_REFERENCE","status":"FOUND"},
+    {"path":"mobile/assets/images/decks-reference-scene.png","class":"VISUAL_REFERENCE","status":"FOUND"},
+    {"path":"mobile/assets/images/home-reference-scene.png","class":"VISUAL_REFERENCE","status":"FOUND"},
+    {"path":"mobile/assets/images/profile-reference-scene.png","class":"VISUAL_REFERENCE","status":"FOUND"},
+    {"path":"mobile/assets/images/vexforge-auth-nexus-final.png","class":"VISUAL_REFERENCE","status":"FOUND"},
+    {"path":"mobile/assets/images/vexforge-feature-card.png","class":"VISUAL_REFERENCE","status":"FOUND"},
+    {"path":"mobile/assets/images/vexforge-hero-sentinel.png","class":"VISUAL_REFERENCE","status":"FOUND"},
+    {"path":"mobile/assets/images/vexforge-home-hero.png","class":"VISUAL_REFERENCE","status":"FOUND"}
+  ],
+  "rule": "NO_GENERIC_FALLBACK / NO_SILENT_SUBSTITUTION"
+}

@@ -1,0 +1,12 @@
+{
+  "source_commit": "f43159ecee63b610bb71c295238327ecea3feeb6",
+  "edges": [
+    {"from":"mobile/app/_layout.tsx","to":"mobile/context/GameContext.tsx","kind":"provider"},
+    {"from":"mobile/context/GameContext.tsx","to":"mobile/lib/supabase.ts","kind":"session_and_data"},
+    {"from":"mobile/app/(tabs)/_layout.tsx","to":"mobile/app/(tabs)/*","kind":"navigation_guard"},
+    {"from":"mobile/app/(tabs)/battle.tsx","to":"mobile/components/ForgeBattlefield.tsx","kind":"renderer"},
+    {"from":"mobile/app/(tabs)/deck.tsx","to":"mobile/components/ForgeFormationPreview.tsx","kind":"renderer"},
+    {"from":"mobile/lib/supabase.ts","to":"Supabase REST/RPC/Auth","kind":"backend_transport"},
+    {"from":"mobile/scripts/publish-ota.mjs","to":"supabase/functions/vexforge-updates/index.ts","kind":"OTA_publish_path"}
+  ]
+}

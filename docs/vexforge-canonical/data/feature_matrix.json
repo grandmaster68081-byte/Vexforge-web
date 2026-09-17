@@ -1,0 +1,13 @@
+{
+  "source_commit": "f43159ecee63b610bb71c295238327ecea3feeb6",
+  "features": [
+    {"id":"auth","android":"mobile/app/auth.tsx","supabase":"Auth/players/sessions","status":"IMPLEMENTED_UNVERIFIED"},
+    {"id":"collection","android":"mobile/app/(tabs)/collection.tsx","supabase":"cards/player_cards/catalog","status":"IMPLEMENTED_UNVERIFIED"},
+    {"id":"deck_formation","android":"mobile/app/(tabs)/deck.tsx","supabase":"player_deck/formation","status":"IMPLEMENTED_UNVERIFIED"},
+    {"id":"battle","android":"mobile/app/(tabs)/battle.tsx","supabase":"battle/pvp/combat","status":"PARTIAL"},
+    {"id":"missions","android":"mobile/app/missions.tsx","supabase":"missions/runs/rewards","status":"IMPLEMENTED_UNVERIFIED"},
+    {"id":"economy","android":"mobile/app/economy.tsx","supabase":"wallet/ledger/treasury","status":"EVIDENCE_REQUIRED"},
+    {"id":"social","android":"mobile/app/social.tsx","supabase":"friends/challenges/clans","status":"IMPLEMENTED_UNVERIFIED"},
+    {"id":"ota","android":"mobile/app.json + supabase function","supabase":"vexforge-updates/release registry","status":"EVIDENCE_REQUIRED"}
+  ]
+}

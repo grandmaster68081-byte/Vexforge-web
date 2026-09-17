@@ -1,3 +1,13 @@
+# CURRENT CANONICAL CONTEXT
+
+La entrada principal para una nueva sesión es [`VEXFORGE_CONTEXT.md`](VEXFORGE_CONTEXT.md), seguida de [`docs/vexforge-canonical/00_START_HERE.md`](docs/vexforge-canonical/00_START_HERE.md).
+
+`CONTINUITY.md` conserva el historial operativo anterior y no se elimina. La capa `docs/vexforge-canonical/` es ahora la referencia de orientación y reconciliación para nuevas sesiones; el código de `main` sigue siendo la evidencia de implementación y Supabase live sigue siendo la autoridad de datos, seguridad y lógica backend.
+
+Estado de esta persistencia: documentación canónica generada contra `main` en `f43159ecee63b610bb71c295238327ecea3feeb6`. No se modificó código funcional, Supabase, assets, dependencias, build ni APK.
+
+---
+
 ## 2026-09-17 — APK QA — LEGACY ARTIFACT MISMATCH / REBUILD REQUESTED
 
 - **EVIDENCE:** el vídeo QA muestra `SOMBRA DEL FIN`, pero esa cadena no existe en el `main` actual ni en el bundle de `vexforge-android-build-248`; el bundle nuevo contiene `Referencia oficial integrada`, `ARCHIVO VIVO` y `Santuario de cartas`.

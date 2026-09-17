@@ -1,0 +1,12 @@
+{
+  "current_source_commit": "f43159ecee63b610bb71c295238327ecea3feeb6",
+  "latest_recorded_android_release": {
+    "release": "vexforge-android-build-249",
+    "workflow": "vexforge-android-apk.yml",
+    "run": "35238357900",
+    "source_commit": "ded78720d1d3f97280d5702166d44e18415beb8f",
+    "status": "success / embedded bundle verified"
+  },
+  "apk_command": "./gradlew assembleRelease --no-daemon --stacktrace --console=plain --max-workers=2 -x lintVitalAnalyzeRelease -x lintVitalReportRelease -x lintVitalRelease",
+  "current_task_build": "NOT_RUN"
+}

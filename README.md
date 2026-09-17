@@ -1,3 +1,18 @@
+# VEXFORGE — CANONICAL CONTEXT
+
+Start here:
+- `VEXFORGE_CONTEXT.md`
+- `docs/vexforge-canonical/00_START_HERE.md`
+
+**Producto activo:** aplicación TCG para Android en `mobile/**`.
+**Web:** `FROZEN / NON-ACTIVE PRODUCT CLIENT`.
+**Backend vivo:** Supabase; sus tablas, policies, RPCs, functions, triggers, storage y auth deben verificarse en el proyecto live.
+**Código:** el estado real implementado se describe desde `main`, no desde documentación histórica.
+
+La documentación histórica existente se conserva. La capa canónica resume, indexa, reconcilia y enlaza; no sustituye al código ni a Supabase.
+
+---
+
 # VEXFORGE — Official Web Frontend
 
 This is the official, single live frontend project for VEXFORGE, replacing the

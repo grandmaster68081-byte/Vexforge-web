@@ -1,0 +1,7 @@
+{
+  "blockers": [
+    {"id":"B-001","area":"physical Android evidence","status":"EVIDENCE_REQUIRED"},
+    {"id":"B-002","area":"release/source correspondence","status":"PARTIALLY_VERIFIED"},
+    {"id":"B-003","area":"live backend reconciliation","status":"EVIDENCE_REQUIRED"}
+  ]
+}
