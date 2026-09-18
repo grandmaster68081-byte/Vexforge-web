@@ -2,9 +2,12 @@ using UnityEngine;
 
 namespace Vexforge.Presentation
 {
+    /// <summary>
+    /// Empty marker reserved for structural development fallback only.
+    /// Production Nexus presentation is owned by NexusPresentationRoot.
+    /// </summary>
     public sealed class NexusDevelopmentFallback : MonoBehaviour
     {
-        // Reserved for structural development only. Production presentation is
-        // owned by NexusPresentationRoot and never depends on this component.
+        // Intentionally empty. It must never become the production navigation/world path.
     }
 }

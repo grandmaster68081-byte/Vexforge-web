@@ -5,7 +5,7 @@ READ THIS FIRST
 ## Identidad
 
 VEXFORGE es un juego digital TCG en desarrollo. El único runtime activo de
-producto Android es Unity bajo `unity/**`. La aplicación Expo/React Native
+producto Android es Unity bajo `unity/**`. La aplicación Unity Android (Expo/React Native is legacy)
 ubicada en `mobile/**` se conserva intacta únicamente como legado/historial,
 respaldo y referencia de contratos; no es un runtime activo. La web en
 `src/**` se conserva como código histórico, evidencia y fuente reutilizable,
@@ -38,7 +38,7 @@ producto pertenecen a `unity/**`; `mobile/**` no debe recibir trabajo nuevo.
 
 ## Producto y reglas activas
 
-- Unity activo para desarrollo Android; Expo/React Native congelado como legado
+- Unity activo para desarrollo Android; Unity Android (Expo/React Native is legacy) congelado como legado
   histórico; web congelada.
 - Supabase live > copia documental para backend.
 - Código actual de `main` > documentación para implementación.
@@ -79,7 +79,7 @@ backend y sin ejecutar builds. Consultar
 ## Decisión de runtime registrada el 2026-09-18
 
 Unity es el runtime Android principal de desarrollo y `unity/**` es la nueva
-superficie de juego. Expo / React Native permanece intacto en `mobile/**` como
+superficie de juego. Unity Android (Expo/React Native is legacy) permanece intacto en `mobile/**` como
 legado histórico, respaldo, rollback y referencia de contratos. Unity no
 depende de Expo.
 

@@ -4,15 +4,19 @@ using UnityEngine;
 
 namespace Vexforge.Presentation
 {
+    /// <summary>
+    /// Byte-bounded LRU cache for runtime card textures. An active lease pins an entry.
+    /// The cache owns texture lifetime and never destroys a leased texture.
+    /// </summary>
     public sealed class VexforgeTextureLruCache : IDisposable
     {
         private sealed class Entry
         {
-            public string key;
-            public Texture2D texture;
-            public int bytes;
-            public int leases;
-            public LinkedListNode<string> node;
+            public string Key;
+            public Texture2D Texture;
+            public long Bytes;
+            public int Leases;
+            public LinkedListNode<string> Node;
         }
 
         public sealed class TextureLease : IDisposable
@@ -31,155 +35,246 @@ namespace Vexforge.Presentation
 
             public void Dispose()
             {
-                if (owner == null) return;
-                owner.Release(key);
+                var currentOwner = owner;
+                if (currentOwner == null) return;
                 owner = null;
                 Texture = null;
+                currentOwner.ReleaseLease(key);
             }
         }
 
-        private readonly Dictionary<string, Entry> entries = new Dictionary<string, Entry>();
+        private readonly Dictionary<string, Entry> entries = new Dictionary<string, Entry>(StringComparer.Ordinal);
         private readonly LinkedList<string> lru = new LinkedList<string>();
+        private readonly object gate = new object();
+        private long budgetBytes;
+        private long residentBytes;
         private bool disposed;
 
-        public VexforgeTextureLruCache(int budgetBytes)
+        public VexforgeTextureLruCache(long budgetBytes)
         {
-            if (budgetBytes <= 0) throw new ArgumentOutOfRangeException("budgetBytes");
-            BudgetBytes = budgetBytes;
-            Application.lowMemory += HandleLowMemory;
+            if (budgetBytes <= 0L) throw new ArgumentOutOfRangeException(nameof(budgetBytes));
+            this.budgetBytes = budgetBytes;
+            Application.lowMemory += OnLowMemory;
         }
 
-        public int BudgetBytes { get; private set; }
-        public int ResidentBytes { get; private set; }
+        public long BudgetBytes
+        {
+            get { lock (gate) return budgetBytes; }
+        }
+
+        public long ResidentBytes
+        {
+            get { lock (gate) return residentBytes; }
+        }
+
+        public int Count
+        {
+            get { lock (gate) return entries.Count; }
+        }
 
         public TextureLease TryAcquire(string key)
         {
-            if (disposed || string.IsNullOrWhiteSpace(key)) return null;
-            Entry entry;
-            if (!entries.TryGetValue(key, out entry)) return null;
-            entry.leases++;
-            Touch(entry);
-            return new TextureLease(this, key, entry.texture);
+            if (string.IsNullOrWhiteSpace(key)) return null;
+            lock (gate)
+            {
+                if (disposed) return null;
+
+                Entry entry;
+                if (!entries.TryGetValue(key, out entry) || entry.Texture == null)
+                {
+                    return null;
+                }
+
+                entry.Leases++;
+                TouchUnsafe(entry);
+                return new TextureLease(this, key, entry.Texture);
+            }
         }
 
-        public TextureLease Add(string key, Texture2D texture)
+        public bool Store(string key, Texture2D texture)
         {
-            if (disposed || texture == null || string.IsNullOrWhiteSpace(key))
-            {
-                DestroyTexture(texture);
-                return null;
-            }
-
-            var existing = TryAcquire(key);
-            if (existing != null)
-            {
-                DestroyTexture(texture);
-                return existing;
-            }
+            if (string.IsNullOrWhiteSpace(key) || texture == null) return false;
 
             var bytes = EstimateBytes(texture);
-            if (bytes > BudgetBytes || !EvictUntilFits(bytes))
+            lock (gate)
             {
-                DestroyTexture(texture);
-                return null;
-            }
+                if (disposed) return false;
+                if (bytes <= 0L) bytes = 1L;
+                if (bytes > budgetBytes) return false;
 
-            var node = lru.AddLast(key);
-            var entry = new Entry
+                Entry existing;
+                if (entries.TryGetValue(key, out existing))
+                {
+                    if (ReferenceEquals(existing.Texture, texture))
+                    {
+                        TouchUnsafe(existing);
+                        return true;
+                    }
+
+                    // Never replace a leased entry. A shared in-flight request must not
+                    // destroy content that another presentation instance is using.
+                    if (existing.Leases > 0) return false;
+
+                    entries.Remove(key);
+                    if (existing.Node != null) lru.Remove(existing.Node);
+                    residentBytes -= existing.Bytes;
+                    DestroyTexture(existing.Texture);
+                }
+
+                while (residentBytes + bytes > budgetBytes)
+                {
+                    if (!EvictOldestUnleasedUnsafe()) break;
+                }
+
+                if (residentBytes + bytes > budgetBytes) return false;
+
+                var node = lru.AddFirst(key);
+                entries[key] = new Entry
+                {
+                    Key = key,
+                    Texture = texture,
+                    Bytes = bytes,
+                    Leases = 0,
+                    Node = node
+                };
+                residentBytes += bytes;
+                return true;
+            }
+        }
+
+        public void SetBudget(long newBudgetBytes)
+        {
+            if (newBudgetBytes <= 0L) throw new ArgumentOutOfRangeException(nameof(newBudgetBytes));
+            lock (gate)
             {
-                key = key,
-                texture = texture,
-                bytes = bytes,
-                leases = 1,
-                node = node
-            };
-            entries.Add(key, entry);
-            ResidentBytes += bytes;
-            return new TextureLease(this, key, texture);
+                budgetBytes = newBudgetBytes;
+                TrimUnsafe();
+            }
+        }
+
+        public void Clear(bool preserveLeasedEntries)
+        {
+            lock (gate)
+            {
+                var node = lru.Last;
+                while (node != null)
+                {
+                    var previous = node.Previous;
+                    Entry entry;
+                    if (entries.TryGetValue(node.Value, out entry) &&
+                        (!preserveLeasedEntries || entry.Leases == 0))
+                    {
+                        RemoveEntryUnsafe(entry);
+                    }
+                    node = previous;
+                }
+            }
         }
 
         public void Dispose()
         {
-            if (disposed) return;
-            disposed = true;
-            Application.lowMemory -= HandleLowMemory;
-
-            var snapshot = new List<Entry>(entries.Values);
-            for (var i = 0; i < snapshot.Count; i++)
+            lock (gate)
             {
-                if (snapshot[i].leases == 0) DestroyEntry(snapshot[i]);
-            }
-        }
+                if (disposed) return;
+                disposed = true;
+                Application.lowMemory -= OnLowMemory;
 
-        private void Release(string key)
-        {
-            Entry entry;
-            if (!entries.TryGetValue(key, out entry)) return;
-            entry.leases = Mathf.Max(0, entry.leases - 1);
-            if (disposed && entry.leases == 0) DestroyEntry(entry);
-        }
-
-        private bool EvictUntilFits(int incomingBytes)
-        {
-            while (ResidentBytes + incomingBytes > BudgetBytes)
-            {
                 var node = lru.First;
                 while (node != null)
                 {
-                    Entry candidate;
-                    if (entries.TryGetValue(node.Value, out candidate) && candidate.leases == 0)
+                    var next = node.Next;
+                    Entry entry;
+                    if (entries.TryGetValue(node.Value, out entry))
                     {
-                        DestroyEntry(candidate);
-                        break;
+                        // At shutdown there should be no consumers. Destroying here is
+                        // intentional; runtime CardView releases its leases before disposal.
+                        DestroyTexture(entry.Texture);
                     }
-                    node = node.Next;
+                    node = next;
                 }
 
-                if (node == null && ResidentBytes + incomingBytes > BudgetBytes) return false;
+                entries.Clear();
+                lru.Clear();
+                residentBytes = 0L;
             }
-            return true;
         }
 
-        private void HandleLowMemory()
+        private void ReleaseLease(string key)
         {
-            var target = BudgetBytes / 2;
-            var node = lru.First;
-            while (node != null && ResidentBytes > target)
+            lock (gate)
             {
-                var next = node.Next;
+                if (disposed) return;
+
                 Entry entry;
-                if (entries.TryGetValue(node.Value, out entry) && entry.leases == 0)
-                {
-                    DestroyEntry(entry);
-                }
-                node = next;
+                if (!entries.TryGetValue(key, out entry)) return;
+
+                if (entry.Leases > 0) entry.Leases--;
+                TouchUnsafe(entry);
+                TrimUnsafe();
             }
         }
 
-        private void Touch(Entry entry)
+        private void TrimUnsafe()
         {
-            if (entry.node.List != null) lru.Remove(entry.node);
-            entry.node = lru.AddLast(entry.key);
+            while (residentBytes > budgetBytes)
+            {
+                if (!EvictOldestUnleasedUnsafe()) break;
+            }
         }
 
-        private void DestroyEntry(Entry entry)
+        private bool EvictOldestUnleasedUnsafe()
         {
-            entries.Remove(entry.key);
-            if (entry.node.List != null) lru.Remove(entry.node);
-            ResidentBytes = Mathf.Max(0, ResidentBytes - entry.bytes);
-            DestroyTexture(entry.texture);
+            var node = lru.Last;
+            while (node != null)
+            {
+                Entry entry;
+                if (entries.TryGetValue(node.Value, out entry))
+                {
+                    if (entry.Leases == 0)
+                    {
+                        RemoveEntryUnsafe(entry);
+                        return true;
+                    }
+                }
+                node = node.Previous;
+            }
+            return false;
         }
 
-        private static int EstimateBytes(Texture2D texture)
+        private void TouchUnsafe(Entry entry)
         {
-            return Mathf.Max(1, texture.width) * Mathf.Max(1, texture.height) * 4;
+            if (entry.Node == null) return;
+            lru.Remove(entry.Node);
+            entry.Node = lru.AddFirst(entry.Key);
+        }
+
+        private void RemoveEntryUnsafe(Entry entry)
+        {
+            entries.Remove(entry.Key);
+            if (entry.Node != null) lru.Remove(entry.Node);
+            residentBytes -= entry.Bytes;
+            DestroyTexture(entry.Texture);
+        }
+
+        private void OnLowMemory()
+        {
+            Clear(true);
+        }
+
+        private static long EstimateBytes(Texture2D texture)
+        {
+            if (texture == null) return 0L;
+            // Conservative runtime accounting for Android presentation. The Unity
+            // runtime texture memory footprint can exceed this estimate depending
+            // on format/mipmap allocation, therefore the budget is deliberately bounded.
+            var mipCount = Mathf.Max(1, texture.mipmapCount);
+            var baseBytes = (long)texture.width * texture.height * 4L;
+            return baseBytes + (baseBytes / 3L) * Mathf.Max(0, mipCount - 1);
         }
 
         private static void DestroyTexture(Texture2D texture)
         {
-            if (texture == null) return;
-            if (Application.isPlaying) UnityEngine.Object.Destroy(texture);
-            else UnityEngine.Object.DestroyImmediate(texture);
+            if (texture != null) UnityEngine.Object.Destroy(texture);
         }
     }
 }

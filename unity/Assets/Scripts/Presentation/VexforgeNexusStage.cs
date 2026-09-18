@@ -3,34 +3,49 @@ using Vexforge.Core;
 
 namespace Vexforge.Presentation
 {
+    /// <summary>
+    /// Owns the single active Nexus presentation root and its shared diegetic input seam.
+    /// </summary>
     public sealed class VexforgeNexusStage : MonoBehaviour
     {
-        private GameObject presentationObject;
-        private NexusPresentationRoot presentationRoot;
-        private VexforgeDiegeticInputRouter inputRouter;
+        private VexforgeNexusStageState state = VexforgeNexusStageState.Uninitialized;
+
+        public VexforgeDiegeticInputRouter InputRouter { get; private set; }
+        public NexusPresentationRoot PresentationRoot { get; private set; }
 
         public void Initialize(VexforgeApp app)
         {
-            if (presentationRoot != null || app == null) return;
+            if (state != VexforgeNexusStageState.Uninitialized) return;
+            if (app == null) throw new System.ArgumentNullException(nameof(app));
 
-            presentationObject = new GameObject("NexusPresentationRoot");
-            presentationObject.transform.SetParent(transform, false);
-            presentationRoot = presentationObject.AddComponent<NexusPresentationRoot>();
-            presentationRoot.Initialize(app.Navigation);
+            var world = new GameObject("NexusPresentationRoot");
+            world.transform.SetParent(transform, false);
 
-            var fallback = new GameObject("NexusDevelopmentFallback");
-            fallback.transform.SetParent(transform, false);
-            fallback.AddComponent<NexusDevelopmentFallback>();
-            fallback.SetActive(false);
+            PresentationRoot = world.AddComponent<NexusPresentationRoot>();
+            PresentationRoot.Initialize(app.Navigation);
 
-            inputRouter = gameObject.AddComponent<VexforgeDiegeticInputRouter>();
-            inputRouter.Initialize(Camera.main);
+            InputRouter = world.AddComponent<VexforgeDiegeticInputRouter>();
+            InputRouter.Initialize(Camera.main);
+
+            state = VexforgeNexusStageState.Ready;
         }
 
         public void SetNexusVisible(bool visible)
         {
-            if (presentationObject != null) presentationObject.SetActive(visible);
-            if (inputRouter != null) inputRouter.enabled = visible;
+            if (state == VexforgeNexusStageState.Uninitialized) return;
+
+            gameObject.SetActive(visible);
+
+            if (InputRouter != null)
+            {
+                InputRouter.enabled = visible;
+            }
+        }
+
+        private enum VexforgeNexusStageState
+        {
+            Uninitialized,
+            Ready
         }
     }
 }

@@ -1,3 +1,4 @@
+using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
 using Vexforge.Backend;
@@ -10,65 +11,150 @@ namespace Vexforge.Presentation
         IllustrationOnly
     }
 
+    /// <summary>
+    /// Reusable world-space card. Presentation mode is explicit and never inferred from gameplay fields.
+    /// </summary>
     public sealed class VexforgeCardView : MonoBehaviour
     {
         private Renderer bodyRenderer;
         private Renderer artRenderer;
         private Renderer frameRenderer;
-        private TextMesh titleText;
-        private TextMesh stateText;
-        private MaterialPropertyBlock bodyBlock;
-        private MaterialPropertyBlock artBlock;
-        private MaterialPropertyBlock frameBlock;
+        private Mesh frameMesh;
+        private Material artMaterialInstance;
         private VexforgeCardArtResolver resolver;
         private VexforgeTextureLruCache.TextureLease lease;
+        private CancellationTokenSource bindCancellation;
         private int bindGeneration;
+        private CardArtMode artMode = CardArtMode.FullCardArtwork;
+        private bool initialized;
+
+        private static readonly Vector2 CardSize = new Vector2(1.65f, 2.30f);
+        private static readonly Vector2 IllustrationSize = new Vector2(1.50f, 1.72f);
 
         public static VexforgeCardView CreateRuntime(Transform parent)
         {
             var root = GameObject.CreatePrimitive(PrimitiveType.Cube);
             root.name = "VexforgeCardView";
             root.transform.SetParent(parent, false);
-            root.transform.localScale = new Vector3(1.8f, 2.5f, 0.12f);
+            root.transform.localScale = new Vector3(CardSize.x, CardSize.y, 0.08f);
+
+            var rootCollider = root.GetComponent<Collider>();
+            if (rootCollider != null) Object.Destroy(rootCollider);
+
             var view = root.AddComponent<VexforgeCardView>();
             view.InitializeVisuals();
             return view;
         }
 
-        public static string ValueOr(string value, string fallback)
+        public void SetArtMode(CardArtMode mode)
         {
-            return string.IsNullOrWhiteSpace(value) ? fallback : value;
+            artMode = mode;
+
+            if (artRenderer != null)
+            {
+                var target = mode == CardArtMode.FullCardArtwork ? CardSize : IllustrationSize;
+                var y = mode == CardArtMode.FullCardArtwork ? 0f : 0.18f;
+                artRenderer.transform.localPosition = new Vector3(0f, y, -0.061f);
+                artRenderer.transform.localScale = new Vector3(target.x, target.y, 1f);
+            }
+
+            if (frameRenderer != null)
+            {
+                frameRenderer.gameObject.SetActive(mode == CardArtMode.IllustrationOnly);
+            }
         }
 
         public void Bind(
             CardRecord card,
             PlayerCardRecord ownership,
             bool selected,
-            bool active,
+            bool activeInBattle,
             bool locked,
-            VexforgeCardArtResolver artResolver)
+            VexforgeCardArtResolver artResolver,
+            CardArtMode presentationMode,
+            CancellationToken externalCancellation = default(CancellationToken))
         {
+            if (!initialized) InitializeVisuals();
+
             resolver = artResolver;
+            artMode = presentationMode;
             var generation = ++bindGeneration;
+
+            CancelBind();
             ReleaseLease();
-            ApplyCardMetadata(card, ownership, selected, active, locked);
-            _ = BindArtAsync(card, generation);
+
+            ApplyTexture(null);
+            SetArtMode(presentationMode);
+
+            if (card != null && resolver != null)
+            {
+                _ = BindArtAsync(card, generation, externalCancellation);
+            }
+        }
+
+        public void Bind(
+            CardRecord card,
+            PlayerCardRecord ownership,
+            bool selected,
+            bool activeInBattle,
+            bool locked,
+            VexforgeCardArtResolver artResolver,
+            CancellationToken externalCancellation = default(CancellationToken))
+        {
+            Bind(
+                card,
+                ownership,
+                selected,
+                activeInBattle,
+                locked,
+                artResolver,
+                CardArtMode.FullCardArtwork,
+                externalCancellation);
         }
 
         public void ResetForPool()
         {
             bindGeneration++;
+            CancelBind();
             ReleaseLease();
+            resolver = null;
             ApplyTexture(null);
-            if (titleText != null) titleText.text = string.Empty;
-            if (stateText != null) stateText.text = string.Empty;
+            SetArtMode(CardArtMode.FullCardArtwork);
             gameObject.SetActive(false);
         }
 
-        private async Task BindArtAsync(CardRecord card, int generation)
+        private async Task BindArtAsync(
+            CardRecord card,
+            int generation,
+            CancellationToken externalCancellation)
         {
-            if (resolver == null || card == null) return;
-            var nextLease = await resolver.AcquireAsync(card);
+            VexforgeTextureLruCache.TextureLease nextLease = null;
+            CancellationTokenSource localCancellation = null;
+
+            try
+            {
+                localCancellation = CancellationTokenSource.CreateLinkedTokenSource(externalCancellation);
+                bindCancellation = localCancellation;
+
+                nextLease = await resolver.AcquireAsync(card, localCancellation.Token);
+            }
+            catch
+            {
+                nextLease = null;
+            }
+            finally
+            {
+                if (ReferenceEquals(bindCancellation, localCancellation))
+                {
+                    bindCancellation = null;
+                }
+
+                if (localCancellation != null)
+                {
+                    localCancellation.Dispose();
+                }
+            }
+
             if (generation != bindGeneration || !isActiveAndEnabled)
             {
                 if (nextLease != null) nextLease.Dispose();
@@ -81,78 +167,63 @@ namespace Vexforge.Presentation
 
         private void InitializeVisuals()
         {
+            if (initialized) return;
+            initialized = true;
+
             bodyRenderer = GetComponent<Renderer>();
-            bodyBlock = new MaterialPropertyBlock();
-            artBlock = new MaterialPropertyBlock();
-            frameBlock = new MaterialPropertyBlock();
 
-            var art = GameObject.CreatePrimitive(PrimitiveType.Quad);
-            art.name = "OfficialCardArt";
-            art.transform.SetParent(transform, false);
-            art.transform.localPosition = new Vector3(0f, 0.18f, -0.071f);
-            art.transform.localRotation = Quaternion.Euler(0f, 180f, 0f);
-            art.transform.localScale = new Vector3(1.46f, 1.48f, 1f);
-            artRenderer = art.GetComponent<Renderer>();
-            RemoveCollider(art);
+            var artObject = GameObject.CreatePrimitive(PrimitiveType.Quad);
+            artObject.name = "OfficialCardArt";
+            artObject.transform.SetParent(transform, false);
+            artObject.transform.localRotation = Quaternion.Euler(0f, 180f, 0f);
+            artRenderer = artObject.GetComponent<Renderer>();
+            RemoveCollider(artObject);
 
-            var frame = GameObject.CreatePrimitive(PrimitiveType.Quad);
-            frame.name = "IllustrationFrame";
-            frame.transform.SetParent(transform, false);
-            frame.transform.localPosition = new Vector3(0f, 0.18f, -0.074f);
-            frame.transform.localRotation = Quaternion.Euler(0f, 180f, 0f);
-            frame.transform.localScale = new Vector3(1.58f, 1.6f, 1f);
-            frameRenderer = frame.GetComponent<Renderer>();
-            RemoveCollider(frame);
+            var frameObject = new GameObject("IllustrationFrame");
+            frameObject.transform.SetParent(transform, false);
+            frameRenderer = frameObject.AddComponent<MeshRenderer>();
+            var meshFilter = frameObject.AddComponent<MeshFilter>();
+            frameMesh = BuildFrameMesh();
+            meshFilter.sharedMesh = frameMesh;
 
-            titleText = CreateText("CardTitle", new Vector3(0f, -0.76f, -0.09f), 0.07f);
-            stateText = CreateText("CardState", new Vector3(0f, -1.03f, -0.09f), 0.045f);
-            bodyBlock.SetColor("_Color", new Color(0.11f, 0.075f, 0.055f, 1f));
-            bodyRenderer.SetPropertyBlock(bodyBlock);
-            frameBlock.SetColor("_Color", new Color(0.72f, 0.48f, 0.12f, 1f));
-            frameRenderer.SetPropertyBlock(frameBlock);
-            ApplyTexture(null);
-        }
-
-        private void ApplyCardMetadata(CardRecord card, PlayerCardRecord ownership, bool selected, bool active, bool locked)
-        {
-            if (card == null) return;
-            if (titleText != null) titleText.text = ValueOr(card.name, "NOMBRE NO REPORTADO");
-            if (stateText != null)
+            var resources = VexforgePresentationResources.LoadRuntime();
+            if (resources == null ||
+                resources.CardBodyMaterial == null ||
+                resources.CardArtMaterial == null ||
+                resources.CardFrameMaterial == null)
             {
-                stateText.text = locked || (ownership != null && ownership.locked)
-                    ? "BLOQUEADA"
-                    : active ? "ACTIVA" : selected ? "SELECCIONADA" : ownership == null ? "CATALOGO" : "POSESION " + ownership.quantity;
+                Debug.LogError(
+                    "VEXFORGE Presentation resources are missing. Run VEXFORGE/Presentation/Ensure R5 Assets.",
+                    this);
+                return;
             }
 
-            var mode = string.IsNullOrWhiteSpace(card.card_tier) ||
-                !card.card_tier.ToLowerInvariant().Contains("illustration")
-                ? CardArtMode.FullCardArtwork
-                : CardArtMode.IllustrationOnly;
-            if (frameRenderer != null) frameRenderer.gameObject.SetActive(mode == CardArtMode.IllustrationOnly);
+            bodyRenderer.sharedMaterial = resources.CardBodyMaterial;
+            artMaterialInstance = new Material(resources.CardArtMaterial);
+            artRenderer.sharedMaterial = artMaterialInstance;
+            frameRenderer.sharedMaterial = resources.CardFrameMaterial;
+
+            ApplyTexture(null);
+            SetArtMode(artMode);
         }
 
         private void ApplyTexture(Texture2D texture)
         {
-            if (artRenderer == null) return;
-            artRenderer.GetPropertyBlock(artBlock);
-            artBlock.SetTexture("_MainTex", texture);
-            artBlock.SetColor("_Color", texture == null ? new Color(0.06f, 0.06f, 0.07f, 1f) : Color.white);
-            artRenderer.SetPropertyBlock(artBlock);
-        }
+            if (artMaterialInstance == null) return;
 
-        private TextMesh CreateText(string name, Vector3 position, float characterSize)
-        {
-            var textObject = new GameObject(name);
-            textObject.transform.SetParent(transform, false);
-            textObject.transform.localPosition = position;
-            textObject.transform.localRotation = Quaternion.Euler(0f, 180f, 0f);
-            var text = textObject.AddComponent<TextMesh>();
-            text.anchor = TextAnchor.MiddleCenter;
-            text.alignment = TextAlignment.Center;
-            text.characterSize = characterSize;
-            text.fontSize = 48;
-            text.color = new Color(0.9f, 0.84f, 0.72f, 1f);
-            return text;
+            if (artMaterialInstance.HasProperty("_BaseMap"))
+            {
+                artMaterialInstance.SetTexture("_BaseMap", texture);
+            }
+
+            if (artMaterialInstance.HasProperty("_BaseColor"))
+            {
+                artMaterialInstance.SetColor(
+                    "_BaseColor",
+                    texture == null
+                        ? new Color(0.04f, 0.04f, 0.05f, 1f)
+                        : Color.white);
+            }
         }
 
         private void ReleaseLease()
@@ -162,15 +233,92 @@ namespace Vexforge.Presentation
             lease = null;
         }
 
+        private void CancelBind()
+        {
+            var current = bindCancellation;
+            bindCancellation = null;
+            if (current == null) return;
+            current.Cancel();
+            current.Dispose();
+        }
+
         private static void RemoveCollider(GameObject target)
         {
             var collider = target.GetComponent<Collider>();
-            if (collider != null) Destroy(collider);
+            if (collider != null) Object.Destroy(collider);
+        }
+
+        private static Mesh BuildFrameMesh()
+        {
+            const float outerHalfX = 0.79f;
+            const float outerHalfY = 0.90f;
+            const float innerHalfX = 0.72f;
+            const float innerHalfY = 0.82f;
+            const float z = -0.064f;
+
+            var mesh = new Mesh();
+            mesh.name = "VexforgeIllustrationFrame";
+
+            var vertices = new Vector3[16];
+            var triangles = new int[24];
+
+            AddStrip(vertices, triangles, 0,
+                new Vector2(-outerHalfX, innerHalfY),
+                new Vector2(outerHalfX, outerHalfY), z, 0);      // top
+            AddStrip(vertices, triangles, 4,
+                new Vector2(-outerHalfX, -outerHalfY),
+                new Vector2(outerHalfX, -innerHalfY), z, 6);    // bottom
+            AddStrip(vertices, triangles, 8,
+                new Vector2(-outerHalfX, -innerHalfY),
+                new Vector2(-innerHalfX, innerHalfY), z, 12);   // left
+            AddStrip(vertices, triangles, 12,
+                new Vector2(innerHalfX, -innerHalfY),
+                new Vector2(outerHalfX, innerHalfY), z, 18);    // right
+
+            mesh.vertices = vertices;
+            mesh.triangles = triangles;
+            mesh.RecalculateNormals();
+            mesh.RecalculateBounds();
+            return mesh;
+        }
+
+        private static void AddStrip(
+            Vector3[] vertices,
+            int[] triangles,
+            int vertexOffset,
+            Vector2 min,
+            Vector2 max,
+            float z,
+            int triangleOffset)
+        {
+            vertices[vertexOffset + 0] = new Vector3(min.x, min.y, z);
+            vertices[vertexOffset + 1] = new Vector3(max.x, min.y, z);
+            vertices[vertexOffset + 2] = new Vector3(max.x, max.y, z);
+            vertices[vertexOffset + 3] = new Vector3(min.x, max.y, z);
+
+            // Front face normal points toward the camera (-Z).
+            triangles[triangleOffset + 0] = vertexOffset + 0;
+            triangles[triangleOffset + 1] = vertexOffset + 2;
+            triangles[triangleOffset + 2] = vertexOffset + 1;
+            triangles[triangleOffset + 3] = vertexOffset + 0;
+            triangles[triangleOffset + 4] = vertexOffset + 3;
+            triangles[triangleOffset + 5] = vertexOffset + 2;
         }
 
         private void OnDestroy()
         {
+            CancelBind();
             ReleaseLease();
+
+            if (artMaterialInstance != null)
+            {
+                Object.Destroy(artMaterialInstance);
+            }
+
+            if (frameMesh != null)
+            {
+                Object.Destroy(frameMesh);
+            }
         }
     }
 }

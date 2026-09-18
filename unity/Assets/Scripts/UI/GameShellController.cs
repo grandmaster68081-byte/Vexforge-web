@@ -1,8 +1,10 @@
 using System;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.Events;
 using UnityEngine.UI;
+using UnityEngine.InputSystem.UI;
 using Vexforge.Backend;
 using Vexforge.Core;
 using Vexforge.GameState;
@@ -10,311 +12,700 @@ using Vexforge.Presentation;
 
 namespace Vexforge.UI
 {
+    /// <summary>
+    /// Canonical Unity shell. Canvas is restricted to contextual UI; world presentation owns
+    /// Nexus and card presentation. Backend remains authoritative.
+    /// </summary>
     public sealed class GameShellController : MonoBehaviour
     {
         private VexforgeApp app;
+
         private Canvas canvas;
         private RectTransform content;
-        private Text status;
         private InputField emailInput;
         private InputField passwordInput;
+
         private BattlePresentationDirector battleDirector;
+
+        private GameObject presentationHost;
         private VexforgeNexusStage nexusStage;
-        private VexforgeCardArtResolver cardArtResolver;
+        private VexforgeTextureLruCache textureCache;
+        private VexforgeCardArtResolver artResolver;
         private VexforgeCardPool cardPool;
-        private Transform cardWorldRoot;
+        private VexforgeVirtualizedCardGallery gallery;
+
         private bool built;
+        private bool subscribed;
 
         private void Start()
         {
             app = VexforgeApp.Instance;
             if (app == null) return;
 
-            nexusStage = GetComponent<VexforgeNexusStage>();
-            if (nexusStage == null) nexusStage = gameObject.AddComponent<VexforgeNexusStage>();
-            nexusStage.Initialize(app);
-
             battleDirector = GetComponent<BattlePresentationDirector>();
-            if (battleDirector == null) battleDirector = gameObject.AddComponent<BattlePresentationDirector>();
+            if (battleDirector == null)
+            {
+                battleDirector = gameObject.AddComponent<BattlePresentationDirector>();
+            }
+
             battleDirector.EventPresented += PresentBattleEvent;
 
-            cardWorldRoot = new GameObject("CardPresentationWorld").transform;
-            cardWorldRoot.SetParent(transform, false);
-            cardWorldRoot.localPosition = new Vector3(0f, 0.8f, 6f);
-            cardArtResolver = new VexforgeCardArtResolver(new VexforgeTextureLruCache(128 * 1024 * 1024));
+            BuildPresentation();
+            BuildCanvas();
+            Subscribe();
+
+            Render();
+        }
+
+        private void BuildPresentation()
+        {
+            if (presentationHost != null) return;
+
+            presentationHost = new GameObject("VexforgePresentationRuntime");
+            presentationHost.transform.SetParent(transform, false);
+
+            nexusStage = presentationHost.AddComponent<VexforgeNexusStage>();
+            nexusStage.Initialize(app);
+
+            var cardWorldRootObject = new GameObject("WorldCardPresentation");
+            cardWorldRootObject.transform.SetParent(presentationHost.transform, false);
+
+            var camera = Camera.main;
+            if (camera == null)
+            {
+                throw new InvalidOperationException("VEXFORGE requires a MainCamera from NexusPresentationRoot.");
+            }
+
+            cardWorldRootObject.transform.position = new Vector3(0f, 3.15f, 5.4f);
+            cardWorldRootObject.transform.rotation = camera.transform.rotation;
+
+            textureCache = new VexforgeTextureLruCache(32L * 1024L * 1024L);
+            artResolver = new VexforgeCardArtResolver(textureCache, 3, 20, 8L * 1024L * 1024L, 4096);
+
             cardPool = new VexforgeCardPool(
-                cardWorldRoot,
-                () => VexforgeCardView.CreateRuntime(cardWorldRoot),
+                cardWorldRootObject.transform,
+                () => VexforgeCardView.CreateRuntime(cardWorldRootObject.transform),
                 24,
                 12);
 
-            BuildCanvas();
-            app.Session.StateChanged += _ => Render();
-            app.GameState.SyncStateChanged += _ => Render();
-            app.Navigation.RouteChanged += HandleRouteChanged;
-            Render();
+            var galleryObject = new GameObject("WorldCardGallery");
+            galleryObject.transform.SetParent(presentationHost.transform, false);
+            galleryObject.transform.position = new Vector3(0f, 3.15f, 5.4f);
+            galleryObject.transform.rotation = camera.transform.rotation;
+
+            gallery = galleryObject.AddComponent<VexforgeVirtualizedCardGallery>();
+            gallery.Initialize(
+                camera,
+                cardPool,
+                artResolver,
+                nexusStage.InputRouter);
+
+            galleryObject.SetActive(false);
+
+            built = true;
         }
 
         private void BuildCanvas()
         {
-            var canvasObject = new GameObject("VexforgeContextCanvas", typeof(RectTransform), typeof(Canvas), typeof(CanvasScaler), typeof(GraphicRaycaster));
+            if (canvas != null) return;
+
+            var mainCamera = Camera.main;
+            if (mainCamera == null)
+            {
+                throw new InvalidOperationException("VEXFORGE cannot create UI without MainCamera.");
+            }
+
+            EnsureEventSystem();
+
+            var canvasObject = new GameObject(
+                "VexforgeCanvas",
+                typeof(RectTransform),
+                typeof(Canvas),
+                typeof(CanvasScaler),
+                typeof(GraphicRaycaster));
+
             canvasObject.transform.SetParent(transform, false);
+
             canvas = canvasObject.GetComponent<Canvas>();
             canvas.renderMode = RenderMode.ScreenSpaceCamera;
-            canvas.worldCamera = Camera.main;
-            canvas.planeDistance = 7f;
-            canvasObject.GetComponent<CanvasScaler>().uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
-            canvasObject.GetComponent<CanvasScaler>().referenceResolution = new Vector2(1080f, 1920f);
-            canvasObject.GetComponent<CanvasScaler>().matchWidthOrHeight = 0.45f;
-            built = true;
+            canvas.worldCamera = mainCamera;
+            canvas.planeDistance = 5f;
+
+            var scaler = canvasObject.GetComponent<CanvasScaler>();
+            scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
+            scaler.referenceResolution = new Vector2(1080f, 1920f);
+            scaler.matchWidthOrHeight = 0.45f;
         }
 
-        private void HandleRouteChanged(GameRoute route)
+        private void EnsureEventSystem()
         {
-            if (nexusStage != null)
+            var eventSystem = EventSystem.current;
+
+            if (eventSystem == null)
             {
-                nexusStage.SetNexusVisible(app != null && app.Session.IsAuthenticated && route == GameRoute.Nexus);
+                var eventSystemObject = new GameObject(
+                    "VexforgeEventSystem",
+                    typeof(EventSystem),
+                    typeof(InputSystemUIInputModule));
+                eventSystem = eventSystemObject.GetComponent<EventSystem>();
+                eventSystemObject.transform.SetParent(transform, false);
+                return;
             }
+
+            var legacyModule = eventSystem.GetComponent<StandaloneInputModule>();
+            if (legacyModule != null)
+            {
+                legacyModule.enabled = false;
+            }
+
+            if (eventSystem.GetComponent<InputSystemUIInputModule>() == null)
+            {
+                eventSystem.gameObject.AddComponent<InputSystemUIInputModule>();
+            }
+        }
+
+        private void Subscribe()
+        {
+            if (subscribed) return;
+
+            app.Session.StateChanged += HandleSessionChanged;
+            app.GameState.SyncStateChanged += HandleSyncChanged;
+            app.Navigation.RouteChanged += HandleRouteChanged;
+            subscribed = true;
+        }
+
+        private void Unsubscribe()
+        {
+            if (!subscribed || app == null) return;
+
+            app.Session.StateChanged -= HandleSessionChanged;
+            app.GameState.SyncStateChanged -= HandleSyncChanged;
+            app.Navigation.RouteChanged -= HandleRouteChanged;
+            subscribed = false;
+        }
+
+        private void HandleSessionChanged(bool _)
+        {
+            Render();
+        }
+
+        private void HandleSyncChanged(SyncState _)
+        {
+            Render();
+        }
+
+        private void HandleRouteChanged(GameRoute _)
+        {
             Render();
         }
 
         private void Render()
         {
-            if (!built || app == null) return;
-            ClearCanvas();
-            if (cardPool != null) cardPool.ReturnAll();
+            if (!built || app == null || canvas == null) return;
 
             if (!app.Session.IsAuthenticated)
             {
-                if (nexusStage != null) nexusStage.SetNexusVisible(false);
+                HideWorldPresentation();
+                ClearCanvas();
                 RenderSignIn();
                 return;
             }
 
-            if (app.Navigation.CurrentRoute == GameRoute.Nexus)
-            {
-                if (nexusStage != null) nexusStage.SetNexusVisible(true);
-                RenderNexusContext();
-                return;
-            }
-
-            if (nexusStage != null) nexusStage.SetNexusVisible(false);
+            PrepareWorldPresentation();
+            ClearCanvas();
             RenderShell();
+        }
+
+        private void PrepareWorldPresentation()
+        {
+            var route = app.Navigation.CurrentRoute;
+
+            var showNexus = route == GameRoute.Nexus;
+            var showGallery = route == GameRoute.Collection || route == GameRoute.Deck;
+
+            nexusStage.SetNexusVisible(showNexus);
+
+            if (!showGallery)
+            {
+                gallery.Hide();
+                cardPool.ReturnAll();
+            }
+            else
+            {
+                gallery.gameObject.SetActive(true);
+                gallery.Hide();
+                gallery.gameObject.SetActive(true);
+            }
+        }
+
+        private void HideWorldPresentation()
+        {
+            if (nexusStage != null) nexusStage.SetNexusVisible(false);
+            if (gallery != null) gallery.Hide();
+            if (cardPool != null) cardPool.ReturnAll();
         }
 
         private void RenderSignIn()
         {
             var panel = UiFactory.PanelObject(canvas.transform, "NexusSeal", UiFactory.PanelGlass);
-            UiFactory.Anchor(panel.GetComponent<RectTransform>(), new Vector2(0.1f, 0.27f), new Vector2(0.9f, 0.75f), Vector2.zero, Vector2.zero);
+            UiFactory.Anchor(panel.GetComponent<RectTransform>(),
+                new Vector2(0.1f, 0.27f),
+                new Vector2(0.9f, 0.75f),
+                Vector2.zero,
+                Vector2.zero);
+
             var outline = panel.AddComponent<Outline>();
             outline.effectColor = UiFactory.GoldDim;
             outline.effectDistance = new Vector2(2f, 2f);
-            var title = UiFactory.Label(panel.transform, "NEXUS SEAL", 42, UiFactory.Gold, TextAnchor.MiddleCenter);
-            UiFactory.Anchor(title.rectTransform, new Vector2(0.05f, 0.72f), new Vector2(0.95f, 0.9f), Vector2.zero, Vector2.zero);
-            var subtitle = UiFactory.Label(panel.transform, "Autenticación real · Supabase authority", 17, UiFactory.Muted, TextAnchor.MiddleCenter);
-            UiFactory.Anchor(subtitle.rectTransform, new Vector2(0.08f, 0.64f), new Vector2(0.92f, 0.72f), Vector2.zero, Vector2.zero);
-            emailInput = UiFactory.Input(panel.transform, "Email", false);
-            UiFactory.Anchor(emailInput.GetComponent<RectTransform>(), new Vector2(0.1f, 0.46f), new Vector2(0.9f, 0.57f), Vector2.zero, Vector2.zero);
-            passwordInput = UiFactory.Input(panel.transform, "Contraseña", true);
-            UiFactory.Anchor(passwordInput.GetComponent<RectTransform>(), new Vector2(0.1f, 0.31f), new Vector2(0.9f, 0.42f), Vector2.zero, Vector2.zero);
-            var signIn = UiFactory.Button(panel.transform, "ENTRAR AL NEXUS", SignInClicked);
-            UiFactory.Anchor(signIn.GetComponent<RectTransform>(), new Vector2(0.1f, 0.14f), new Vector2(0.9f, 0.26f), Vector2.zero, Vector2.zero);
-            var message = app.InitializationError ?? app.Session.LastError ?? "Inicia sesión para cargar datos reales del jugador.";
-            status = UiFactory.Label(panel.transform, message, 14, UiFactory.Muted, TextAnchor.MiddleCenter);
-            UiFactory.Anchor(status.rectTransform, new Vector2(0.08f, 0.02f), new Vector2(0.92f, 0.11f), Vector2.zero, Vector2.zero);
-        }
 
-        private void RenderNexusContext()
-        {
-            var context = UiFactory.PanelObject(canvas.transform, "NexusContext", new Color(0.015f, 0.012f, 0.01f, 0.66f));
-            UiFactory.Anchor(context.GetComponent<RectTransform>(), new Vector2(0.04f, 0.84f), new Vector2(0.96f, 0.98f), Vector2.zero, Vector2.zero);
-            var profileName = app.GameState.Profile != null && !string.IsNullOrWhiteSpace(app.GameState.Profile.display_name)
-                ? app.GameState.Profile.display_name
-                : "Jugador autenticado";
-            var heading = UiFactory.Label(context.transform, "VEXFORGE  /  " + profileName, 20, UiFactory.Gold);
-            UiFactory.Anchor(heading.rectTransform, new Vector2(0.04f, 0.22f), new Vector2(0.58f, 0.78f), Vector2.zero, Vector2.zero);
-            var syncText = app.GameState.SyncState == SyncState.Connected ? "SUPABASE · CONNECTED" : app.GameState.SyncState.ToString().ToUpperInvariant();
-            var sync = UiFactory.Label(context.transform, syncText, 12,
-                app.GameState.SyncState == SyncState.Connected ? UiFactory.Arcane : UiFactory.Muted, TextAnchor.MiddleRight);
-            UiFactory.Anchor(sync.rectTransform, new Vector2(0.58f, 0.22f), new Vector2(0.96f, 0.78f), Vector2.zero, Vector2.zero);
+            var title = UiFactory.Label(panel.transform, "NEXUS SEAL", 42, UiFactory.Gold, TextAnchor.MiddleCenter);
+            UiFactory.Anchor(title.rectTransform,
+                new Vector2(0.05f, 0.72f),
+                new Vector2(0.95f, 0.9f),
+                Vector2.zero,
+                Vector2.zero);
+
+            var subtitle = UiFactory.Label(
+                panel.transform,
+                "Autenticación real · Supabase authority",
+                17,
+                UiFactory.Muted,
+                TextAnchor.MiddleCenter);
+
+            UiFactory.Anchor(subtitle.rectTransform,
+                new Vector2(0.08f, 0.64f),
+                new Vector2(0.92f, 0.72f),
+                Vector2.zero,
+                Vector2.zero);
+
+            emailInput = UiFactory.Input(panel.transform, "Email", false);
+            UiFactory.Anchor(
+                emailInput.GetComponent<RectTransform>(),
+                new Vector2(0.1f, 0.46f),
+                new Vector2(0.9f, 0.57f),
+                Vector2.zero,
+                Vector2.zero);
+
+            passwordInput = UiFactory.Input(panel.transform, "Contraseña", true);
+            UiFactory.Anchor(
+                passwordInput.GetComponent<RectTransform>(),
+                new Vector2(0.1f, 0.31f),
+                new Vector2(0.9f, 0.42f),
+                Vector2.zero,
+                Vector2.zero);
+
+            var signIn = UiFactory.Button(panel.transform, "ENTRAR AL NEXUS", SignInClicked);
+            UiFactory.Anchor(
+                signIn.GetComponent<RectTransform>(),
+                new Vector2(0.1f, 0.14f),
+                new Vector2(0.9f, 0.26f),
+                Vector2.zero,
+                Vector2.zero);
+
+            var message = app.InitializationError ??
+                          app.Session.LastError ??
+                          "Inicia sesión para cargar datos reales del jugador.";
+
+            var status = UiFactory.Label(
+                panel.transform,
+                message,
+                14,
+                UiFactory.Muted,
+                TextAnchor.MiddleCenter);
+
+            UiFactory.Anchor(
+                status.rectTransform,
+                new Vector2(0.08f, 0.02f),
+                new Vector2(0.92f, 0.11f),
+                Vector2.zero,
+                Vector2.zero);
         }
 
         private void RenderShell()
         {
-            var background = UiFactory.PanelObject(canvas.transform, "ContextSurface", UiFactory.Background);
-            UiFactory.Stretch(background.GetComponent<RectTransform>(), 0, 0, 0, 0);
-            background.GetComponent<Image>().color = new Color(UiFactory.Background.r, UiFactory.Background.g, UiFactory.Background.b, 0.52f);
-            var header = UiFactory.PanelObject(background.transform, "Header", new Color(0.03f, 0.02f, 0.018f, 0.78f));
-            UiFactory.Anchor(header.GetComponent<RectTransform>(), new Vector2(0f, 0.89f), new Vector2(1f, 1f), Vector2.zero, Vector2.zero);
-            var profileName = app.GameState.Profile != null && !string.IsNullOrWhiteSpace(app.GameState.Profile.display_name)
-                ? app.GameState.Profile.display_name
-                : "Jugador autenticado";
-            var heading = UiFactory.Label(header.transform, "VEXFORGE  /  " + profileName, 20, UiFactory.Gold);
-            UiFactory.Anchor(heading.rectTransform, new Vector2(0.05f, 0.32f), new Vector2(0.72f, 0.78f), Vector2.zero, Vector2.zero);
-            var syncText = app.GameState.SyncState == SyncState.Connected ? "SUPABASE · CONNECTED" : app.GameState.SyncState.ToString().ToUpperInvariant();
-            var sync = UiFactory.Label(header.transform, syncText, 12,
-                app.GameState.SyncState == SyncState.Connected ? UiFactory.Arcane : UiFactory.Muted, TextAnchor.MiddleRight);
-            UiFactory.Anchor(sync.rectTransform, new Vector2(0.63f, 0.32f), new Vector2(0.95f, 0.78f), Vector2.zero, Vector2.zero);
+            var background = UiFactory.PanelObject(
+                canvas.transform,
+                "ContextUI",
+                UiFactory.Background);
 
-            var contentObject = UiFactory.PanelObject(background.transform, "RouteContext", new Color(0f, 0f, 0f, 0f));
-            UiFactory.Anchor(contentObject.GetComponent<RectTransform>(), new Vector2(0.04f, 0.08f), new Vector2(0.96f, 0.89f), Vector2.zero, Vector2.zero);
+            UiFactory.Stretch(
+                background.GetComponent<RectTransform>(),
+                0,
+                0,
+                0,
+                0);
+
+            background.GetComponent<Image>().color =
+                new Color(UiFactory.Background.r,
+                          UiFactory.Background.g,
+                          UiFactory.Background.b,
+                          0.22f);
+
+            var header = UiFactory.PanelObject(
+                background.transform,
+                "ContextHeader",
+                new Color(0.03f, 0.02f, 0.018f, 0.58f));
+
+            UiFactory.Anchor(
+                header.GetComponent<RectTransform>(),
+                new Vector2(0f, 0.91f),
+                new Vector2(1f, 1f),
+                Vector2.zero,
+                Vector2.zero);
+
+            var profileName =
+                app.GameState.Profile != null &&
+                !string.IsNullOrWhiteSpace(app.GameState.Profile.display_name)
+                    ? app.GameState.Profile.display_name
+                    : "Jugador autenticado";
+
+            var heading = UiFactory.Label(
+                header.transform,
+                "VEXFORGE  /  " + profileName,
+                20,
+                UiFactory.Gold);
+
+            UiFactory.Anchor(
+                heading.rectTransform,
+                new Vector2(0.05f, 0.32f),
+                new Vector2(0.72f, 0.78f),
+                Vector2.zero,
+                Vector2.zero);
+
+            var syncText =
+                app.GameState.SyncState == SyncState.Connected
+                    ? "SUPABASE · CONNECTED"
+                    : app.GameState.SyncState.ToString().ToUpperInvariant();
+
+            var sync = UiFactory.Label(
+                header.transform,
+                syncText,
+                12,
+                app.GameState.SyncState == SyncState.Connected
+                    ? UiFactory.Arcane
+                    : UiFactory.Muted,
+                TextAnchor.MiddleRight);
+
+            UiFactory.Anchor(
+                sync.rectTransform,
+                new Vector2(0.63f, 0.32f),
+                new Vector2(0.95f, 0.78f),
+                Vector2.zero,
+                Vector2.zero);
+
+            var contentObject = UiFactory.PanelObject(
+                background.transform,
+                "RouteContext",
+                new Color(0f, 0f, 0f, 0f));
+
+            UiFactory.Anchor(
+                contentObject.GetComponent<RectTransform>(),
+                new Vector2(0.04f, 0.07f),
+                new Vector2(0.96f, 0.91f),
+                Vector2.zero,
+                Vector2.zero);
+
             content = contentObject.GetComponent<RectTransform>();
             RenderRoute();
         }
 
         private void RenderRoute()
         {
-            if (content == null) return;
             switch (app.Navigation.CurrentRoute)
             {
-                case GameRoute.Archive: BuildCollection(); break;
-                case GameRoute.Forge: BuildDeck(); break;
-                case GameRoute.Battlefield: BuildBattle(); break;
-                case GameRoute.Missions: BuildMissions(); break;
-                case GameRoute.Economy: BuildEconomy(); break;
-                case GameRoute.Profile: BuildProfile(); break;
-                default: BuildNexus(); break;
+                case GameRoute.Collection:
+                    BuildCollection();
+                    break;
+
+                case GameRoute.Deck:
+                    BuildDeck();
+                    break;
+
+                case GameRoute.Battle:
+                    BuildBattle();
+                    break;
+
+                case GameRoute.Missions:
+                    BuildMissions();
+                    break;
+
+                case GameRoute.Economy:
+                    BuildEconomy();
+                    break;
+
+                case GameRoute.Profile:
+                    BuildProfile();
+                    break;
+
+                default:
+                    BuildNexus();
+                    break;
             }
         }
 
         private void BuildNexus()
         {
-            Title("THE NEXUS", "La ciudadela permanece en el mundo; usa sus gateways para navegar.");
-            Message("El Canvas sólo muestra contexto. La navegación principal vive en los objetos del Nexus.");
+            Title("THE NEXUS", "Citadel hub · entra en un dominio del mundo");
+
+            if (app.GameState.SyncState != SyncState.Connected)
+            {
+                Message("El Nexus espera una sincronización válida de Supabase.\nNo se muestran datos inventados.");
+                return;
+            }
+
+            var progress = app.GameState.Progress;
+            var profile = app.GameState.Profile;
+
+            Message(
+                "Sello: " + (profile == null ? "NO REPORTADO" : ValueOr(profile.display_name, "NO REPORTADO")) +
+                "\nNivel: " + (progress == null ? "NO REPORTADO" : progress.level.ToString()) +
+                "\nEnergía: " + (progress == null ? "NO REPORTADA" : progress.energy + " / " + progress.max_energy) +
+                "\nLos dominios se recorren mediante objetos del Nexus.");
         }
 
         private void BuildCollection()
         {
             Title("ARCHIVE", "Santuario de cartas · catálogo y ownership desde Supabase");
             AddReturnRune();
+
             var catalog = app.GameState.Catalog ?? new CardRecord[0];
+            gallery.SetData(catalog, app.GameState.Collection);
+            gallery.Show();
+
             if (catalog.Length == 0)
             {
-                MessageAt("SIN CONTENIDO DISPONIBLE", 0.56f);
+                MessageAt("SIN CONTENIDO DISPONIBLE", 0.16f);
                 return;
             }
 
-            for (var i = 0; i < catalog.Length; i++)
-            {
-                var card = catalog[i];
-                var view = cardPool.Rent(
-                    card,
-                    FindOwnership(card == null ? null : card.id),
-                    false,
-                    false,
-                    FindOwnership(card == null ? null : card.id) != null && FindOwnership(card.id).locked,
-                    cardArtResolver);
-                if (view == null) continue;
-                PositionCard(view.transform, i, 6);
-            }
-
-            MessageAt("El archivo carga arte oficial bajo demanda y respeta el presupuesto de memoria de la presentación.", 0.2f);
+            MessageAt(
+                "CATÁLOGO " + catalog.Length +
+                " · arrastra para recorrer el archivo completo",
+                0.02f);
         }
 
         private void BuildDeck()
         {
-            Title("FORGE", "Mesa de forja · validación y persistencia server-authoritative");
+            Title("FORGE", "Mesa de forja · slots recibidos y persistidos por Supabase");
             AddReturnRune();
-            var ids = new string[app.GameState.Deck.Length];
-            for (var i = 0; i < app.GameState.Deck.Length; i++)
+
+            var deckSlots = app.GameState.Deck ?? new DeckSlot[0];
+            var deckCards = new CardRecord[deckSlots.Length];
+
+            for (var i = 0; i < deckSlots.Length; i++)
             {
-                var slot = app.GameState.Deck[i];
-                ids[i] = slot.card_id;
-                var card = FindCard(slot.card_id);
-                var view = cardPool.Rent(card, null, false, slot.is_champion, false, cardArtResolver);
-                if (view != null) PositionCard(view.transform, i, 3);
+                deckCards[i] = FindCard(deckSlots[i].card_id);
             }
-            MessageAt(app.GameState.Deck.Length == 0 ? "FORJA VACIA · SIN SLOTS REPORTADOS" : "La mesa muestra únicamente cartas devueltas por Supabase.", 0.2f);
-            ActionButton("VALIDAR EN EL ALTAR", GameRoute.Forge, 0.08f, () => ValidateDeck(ids));
-            ActionButton("SELLAR DECK", GameRoute.Forge, 0.0f, () => SaveDeck(ids));
+
+            gallery.SetData(deckCards, app.GameState.Collection);
+            gallery.Show();
+
+            MessageAt(
+                deckSlots.Length == 0
+                    ? "FORJA VACÍA · SIN SLOTS REPORTADOS"
+                    : "La mesa muestra todos los slots reportados por Supabase.",
+                0.02f);
+
+            var ids = new string[deckSlots.Length];
+            for (var i = 0; i < deckSlots.Length; i++)
+            {
+                ids[i] = deckSlots[i].card_id;
+            }
+
+            ActionButton("VALIDAR EN EL ALTAR", GameRoute.Deck, 0.08f, () => ValidateDeck(ids));
+            ActionButton("SELLAR DECK", GameRoute.Deck, 0.0f, () => SaveDeck(ids));
         }
 
         private void BuildBattle()
         {
             Title("BATTLEFIELD", "Arena de eventos · Supabase resuelve el combate");
             AddReturnRune();
-            var board = UiFactory.PanelObject(content, "BattlefieldContext", new Color(0.04f, 0.025f, 0.03f, 0.88f));
-            UiFactory.Anchor(board.GetComponent<RectTransform>(), new Vector2(0.05f, 0.38f), new Vector2(0.95f, 0.76f), Vector2.zero, Vector2.zero);
-            var boardText = UiFactory.Label(board.transform, "ARENA EN ESPERA\n\nZONA DEL JUGADOR\n\n— NÚCLEO DE BATALLA —\n\nZONA DEL OPONENTE", 18, UiFactory.Text, TextAnchor.MiddleCenter);
+
+            var board = UiFactory.PanelObject(
+                content,
+                "BattlefieldContext",
+                new Color(0.04f, 0.025f, 0.03f, 0.66f));
+
+            UiFactory.Anchor(
+                board.GetComponent<RectTransform>(),
+                new Vector2(0.05f, 0.38f),
+                new Vector2(0.95f, 0.76f),
+                Vector2.zero,
+                Vector2.zero);
+
+            var boardText = UiFactory.Label(
+                board.transform,
+                "ARENA EN ESPERA\n\nZONA DEL JUGADOR\n\n— NÚCLEO DE BATALLA —\n\nZONA DEL OPONENTE",
+                18,
+                UiFactory.Text,
+                TextAnchor.MiddleCenter);
+
             UiFactory.Stretch(boardText.rectTransform, 10f, 10f, 10f, 10f);
-            MessageAt("Unity sólo envía intención y presenta eventos. No se crea un rival local ni se calcula un resultado.", 0.3f);
+
+            MessageAt(
+                "Unity sólo envía intención y presenta eventos. No se crea un rival local ni se calcula un resultado.",
+                0.30f);
+
             var opponentInput = UiFactory.Input(content, "UUID del oponente", false);
-            UiFactory.Anchor(opponentInput.GetComponent<RectTransform>(), new Vector2(0.08f, 0.17f), new Vector2(0.92f, 0.25f), Vector2.zero, Vector2.zero);
-            ActionButton("ABRIR DESAFIO", GameRoute.Battlefield, 0.06f, () => ResolveBattle(opponentInput.text));
+            UiFactory.Anchor(
+                opponentInput.GetComponent<RectTransform>(),
+                new Vector2(0.08f, 0.17f),
+                new Vector2(0.92f, 0.25f),
+                Vector2.zero,
+                Vector2.zero);
+
+            ActionButton(
+                "ABRIR DESAFÍO",
+                GameRoute.Battle,
+                0.06f,
+                () => ResolveBattle(opponentInput.text));
         }
 
         private void BuildMissions()
         {
             Title("MISSIONS", "Cámara de contratos · actividad publicada por Supabase");
             AddReturnRune();
+
             var missions = app.GameState.Missions ?? new MissionRecord[0];
+
             if (missions.Length == 0)
             {
                 MessageAt("SIN CONTENIDO DISPONIBLE", 0.55f);
                 return;
             }
+
             for (var i = 0; i < missions.Length; i++)
             {
-                if (i >= 5) break;
                 var mission = missions[i];
-                var contract = UiFactory.PanelObject(content, "Contract_" + i, UiFactory.PanelGlass);
-                UiFactory.Anchor(contract.GetComponent<RectTransform>(), new Vector2(0.08f, 0.54f - i * 0.09f), new Vector2(0.92f, 0.61f - i * 0.09f), Vector2.zero, Vector2.zero);
-                var text = UiFactory.Label(contract.transform,
-                    VexforgeCardView.ValueOr(mission.name, "CONTRATO NO REPORTADO") + "  ·  " +
-                    VexforgeCardView.ValueOr(mission.difficulty, "DIFICULTAD NO REPORTADA") +
-                    "\nXP REPORTADO: " + mission.reward_xp, 14, UiFactory.Text);
+
+                var contract = UiFactory.PanelObject(
+                    content,
+                    "Contract_" + i,
+                    UiFactory.PanelGlass);
+
+                UiFactory.Anchor(
+                    contract.GetComponent<RectTransform>(),
+                    new Vector2(0.08f, 0.54f - i * 0.09f),
+                    new Vector2(0.92f, 0.61f - i * 0.09f),
+                    Vector2.zero,
+                    Vector2.zero);
+
+                var text = UiFactory.Label(
+                    contract.transform,
+                    ValueOr(mission == null ? null : mission.name, "CONTRATO NO REPORTADO") +
+                    "  ·  " +
+                    ValueOr(mission == null ? null : mission.difficulty, "DIFICULTAD NO REPORTADA") +
+                    "\nXP REPORTADO: " +
+                    (mission == null ? "NO REPORTADO" : mission.reward_xp.ToString()),
+                    14,
+                    UiFactory.Text);
+
                 UiFactory.Stretch(text.rectTransform, 12f, 4f, 12f, 4f);
             }
         }
 
         private void BuildEconomy()
         {
-            Title("TREASURY", "Balances de solo lectura · sin funciones financieras ficticias");
+            Title("TREASURY", "Balances de solo lectura · autoridad Supabase");
+
+            AddReturnRune();
+
             var wallet = app.GameState.Wallet;
-            Message(wallet == null
-                ? "La cartera no está disponible desde la sesión actual."
-                : "VEX in-game: " + wallet.vex_ingame + "\nVEX tradeable: " + wallet.vex_tradeable +
-                  "\nReservado in-game: " + wallet.reserved_ingame + "\nReservado tradeable: " + wallet.reserved_tradeable);
+
+            Message(
+                wallet == null
+                    ? "La cartera no está disponible desde la sesión actual."
+                    : "VEX in-game: " + wallet.vex_ingame +
+                      "\nVEX tradeable: " + wallet.vex_tradeable +
+                      "\nReservado in-game: " + wallet.reserved_ingame +
+                      "\nReservado tradeable: " + wallet.reserved_tradeable);
         }
 
         private void BuildProfile()
         {
-            Title("LEGADO", "Identidad, estadísticas y progreso autorizados");
+            Title("PROFILE", "Identidad, estadísticas y progreso autorizados");
+
+            AddReturnRune();
+
             var profile = app.GameState.Profile;
             var progress = app.GameState.Progress;
-            Message(profile == null
-                ? "El perfil no está disponible."
-                : "Nombre: " + profile.display_name + "\nRol: " + profile.role + "\nEstado: " + profile.status +
-                  "\nNivel: " + (progress == null ? "no disponible" : progress.level.ToString()));
-            ActionButton("CERRAR SESIÓN", GameRoute.Profile, 0.2f, () => app.SignOut());
-        }
 
-        private void PositionCard(Transform card, int index, int columns)
-        {
-            var column = index % columns;
-            var row = index / columns;
-            card.localPosition = new Vector3((column - (columns - 1) * 0.5f) * 2.05f, -row * 2.9f, 0f);
-            card.localRotation = Quaternion.identity;
+            Message(
+                profile == null
+                    ? "El perfil no está disponible."
+                    : "Nombre: " + ValueOr(profile.display_name, "NO REPORTADO") +
+                      "\nRol: " + ValueOr(profile.role, "NO REPORTADO") +
+                      "\nEstado: " + ValueOr(profile.status, "NO REPORTADO") +
+                      "\nNivel: " + (progress == null ? "NO REPORTADO" : progress.level.ToString()));
+
+            ActionButton(
+                "CERRAR SESIÓN",
+                GameRoute.Profile,
+                0.20f,
+                () => app.SignOut());
         }
 
         private void AddReturnRune()
         {
-            var button = UiFactory.Button(content, "VOLVER AL NEXUS", () => app.Navigation.Navigate(GameRoute.Nexus));
-            UiFactory.Anchor(button.GetComponent<RectTransform>(), new Vector2(0.68f, 0.88f), new Vector2(0.98f, 0.98f), Vector2.zero, Vector2.zero);
+            var button = UiFactory.Button(
+                content,
+                "VOLVER AL NEXUS",
+                () => app.Navigation.Navigate(GameRoute.Nexus));
+
+            UiFactory.Anchor(
+                button.GetComponent<RectTransform>(),
+                new Vector2(0.68f, 0.89f),
+                new Vector2(0.98f, 0.98f),
+                Vector2.zero,
+                Vector2.zero);
         }
 
-        private void ActionButton(string text, GameRoute route, float y, UnityAction onClick = null)
+        private void ActionButton(
+            string text,
+            GameRoute route,
+            float y,
+            UnityAction onClick = null)
         {
-            var button = UiFactory.Button(content, text, onClick ?? (() => app.Navigation.Navigate(route)));
-            UiFactory.Anchor(button.GetComponent<RectTransform>(), new Vector2(0.08f, y), new Vector2(0.92f, y + 0.1f), Vector2.zero, Vector2.zero);
+            var button = UiFactory.Button(
+                content,
+                text,
+                onClick ?? (() => app.Navigation.Navigate(route)));
+
+            UiFactory.Anchor(
+                button.GetComponent<RectTransform>(),
+                new Vector2(0.08f, y),
+                new Vector2(0.92f, y + 0.1f),
+                Vector2.zero,
+                Vector2.zero);
         }
 
         private void Title(string title, string subtitle)
         {
-            var heading = UiFactory.Label(content, title, 30, UiFactory.Gold);
-            UiFactory.Anchor(heading.rectTransform, new Vector2(0.04f, 0.87f), new Vector2(0.96f, 0.98f), Vector2.zero, Vector2.zero);
-            var sub = UiFactory.Label(content, subtitle, 14, UiFactory.Muted);
-            UiFactory.Anchor(sub.rectTransform, new Vector2(0.04f, 0.79f), new Vector2(0.96f, 0.87f), Vector2.zero, Vector2.zero);
+            var heading = UiFactory.Label(
+                content,
+                title,
+                30,
+                UiFactory.Gold);
+
+            UiFactory.Anchor(
+                heading.rectTransform,
+                new Vector2(0.04f, 0.87f),
+                new Vector2(0.96f, 0.98f),
+                Vector2.zero,
+                Vector2.zero);
+
+            var sub = UiFactory.Label(
+                content,
+                subtitle,
+                14,
+                UiFactory.Muted);
+
+            UiFactory.Anchor(
+                sub.rectTransform,
+                new Vector2(0.04f, 0.79f),
+                new Vector2(0.96f, 0.87f),
+                Vector2.zero,
+                Vector2.zero);
         }
 
         private void Message(string text)
@@ -324,87 +715,151 @@ namespace Vexforge.UI
 
         private void MessageAt(string text, float y)
         {
-            var message = UiFactory.Label(content, text, 16, UiFactory.Text);
-            UiFactory.Anchor(message.rectTransform, new Vector2(0.06f, y), new Vector2(0.94f, y + 0.08f), Vector2.zero, Vector2.zero);
+            var message = UiFactory.Label(
+                content,
+                text,
+                16,
+                UiFactory.Text);
+
+            UiFactory.Anchor(
+                message.rectTransform,
+                new Vector2(0.06f, y),
+                new Vector2(0.94f, y + 0.08f),
+                Vector2.zero,
+                Vector2.zero);
         }
 
         private async void SignInClicked()
         {
             if (emailInput == null || passwordInput == null) return;
-            await app.SignInAndSyncAsync(emailInput.text.Trim(), passwordInput.text);
+            await app.SignInAndSyncAsync(
+                emailInput.text.Trim(),
+                passwordInput.text);
         }
 
         private async void ValidateDeck(string[] ids)
         {
             var result = await app.Repository.ValidateDeckAsync(ids);
-            MessageAt(result == null ? "El backend no devolvió validación." : (result.valid ? "DECK VÁLIDO" : string.Join("\n", result.errors ?? new string[0])), 0.3f);
+
+            MessageAt(
+                result == null
+                    ? "EL BACKEND NO DEVOLVIÓ VALIDACIÓN."
+                    : result.valid
+                        ? "DECK VÁLIDO"
+                        : string.Join("\n", result.errors ?? new string[0]),
+                0.30f);
         }
 
         private async void SaveDeck(string[] ids)
         {
             var result = await app.Repository.SaveDeckAsync(ids);
-            MessageAt(result == null ? "El backend no devolvió confirmación." : (result.ok ? "DECK GUARDADO" : result.reason), 0.3f);
+
+            MessageAt(
+                result == null
+                    ? "EL BACKEND NO DEVOLVIÓ CONFIRMACIÓN."
+                    : result.ok
+                        ? "DECK GUARDADO"
+                        : ValueOr(result.reason, "OPERACIÓN NO CONFIRMADA"),
+                0.30f);
         }
 
         private async void ResolveBattle(string opponentId)
         {
-            if (string.IsNullOrWhiteSpace(opponentId) || app.Session.Current == null) return;
-            var result = await app.Repository.ResolveBattleAsync(app.GameState.PlayerId, opponentId.Trim(), Guid.NewGuid().ToString("N"));
+            if (string.IsNullOrWhiteSpace(opponentId) ||
+                app.Session.Current == null)
+            {
+                return;
+            }
+
+            var result = await app.Repository.ResolveBattleAsync(
+                app.GameState.PlayerId,
+                opponentId.Trim(),
+                Guid.NewGuid().ToString("N"));
+
             if (result == null)
             {
-                MessageAt("EL BACKEND NO DEVOLVIO RESULTADO", 0.22f);
+                MessageAt("EL BACKEND NO DEVOLVIÓ RESULTADO", 0.22f);
                 return;
             }
+
             if (!result.ok)
             {
-                MessageAt(VexforgeCardView.ValueOr(result.error, "BATALLA NO DISPONIBLE"), 0.22f);
+                MessageAt(
+                    ValueOr(result.error, "BATALLA NO DISPONIBLE"),
+                    0.22f);
                 return;
             }
-            MessageAt("RESULTADO RECIBIDO · " + VexforgeCardView.ValueOr(result.status, "ESTADO NO REPORTADO"), 0.22f);
+
+            MessageAt(
+                "RESULTADO RECIBIDO · " +
+                ValueOr(result.status, "ESTADO NO REPORTADO"),
+                0.22f);
+
             battleDirector.Play(result.events);
-        }
-
-        private void ClearCanvas()
-        {
-            for (var i = canvas.transform.childCount - 1; i >= 0; i--) Destroy(canvas.transform.GetChild(i).gameObject);
-            content = null;
-        }
-
-        private PlayerCardRecord FindOwnership(string cardId)
-        {
-            if (string.IsNullOrWhiteSpace(cardId) || app.GameState.Collection == null) return null;
-            for (var i = 0; i < app.GameState.Collection.Length; i++)
-            {
-                var ownership = app.GameState.Collection[i];
-                if (ownership != null && ownership.card_id == cardId) return ownership;
-            }
-            return null;
-        }
-
-        private CardRecord FindCard(string cardId)
-        {
-            if (string.IsNullOrWhiteSpace(cardId) || app.GameState.Catalog == null) return null;
-            for (var i = 0; i < app.GameState.Catalog.Length; i++)
-            {
-                var card = app.GameState.Catalog[i];
-                if (card != null && card.id == cardId) return card;
-            }
-            return null;
         }
 
         private void PresentBattleEvent(BattleEvent battleEvent)
         {
             if (battleEvent == null || content == null) return;
-            var eventText = VexforgeCardView.ValueOr(battleEvent.event_type, "EVENTO NO REPORTADO") +
-                "  ·  " + VexforgeCardView.ValueOr(battleEvent.actor_id, "ACTOR NO REPORTADO");
+
+            var eventText =
+                ValueOr(battleEvent.event_type, "EVENTO NO REPORTADO") +
+                " · " +
+                ValueOr(battleEvent.actor_id, "ACTOR NO REPORTADO");
+
             MessageAt(eventText, 0.34f);
+        }
+
+        private CardRecord FindCard(string cardId)
+        {
+            if (string.IsNullOrWhiteSpace(cardId) ||
+                app.GameState.Catalog == null)
+            {
+                return null;
+            }
+
+            for (var i = 0; i < app.GameState.Catalog.Length; i++)
+            {
+                var card = app.GameState.Catalog[i];
+                if (card != null && card.id == cardId)
+                {
+                    return card;
+                }
+            }
+
+            return null;
+        }
+
+        private static string ValueOr(string value, string fallback)
+        {
+            return string.IsNullOrWhiteSpace(value) ? fallback : value;
+        }
+
+        private void ClearCanvas()
+        {
+            for (var i = canvas.transform.childCount - 1; i >= 0; i--)
+            {
+                Destroy(canvas.transform.GetChild(i).gameObject);
+            }
+
+            content = null;
+            emailInput = null;
+            passwordInput = null;
         }
 
         private void OnDestroy()
         {
-            if (battleDirector != null) battleDirector.EventPresented -= PresentBattleEvent;
+            Unsubscribe();
+
+            if (battleDirector != null)
+            {
+                battleDirector.EventPresented -= PresentBattleEvent;
+            }
+
+            if (gallery != null) gallery.Hide();
             if (cardPool != null) cardPool.Dispose();
-            if (cardArtResolver != null) cardArtResolver.Dispose();
+            if (artResolver != null) artResolver.Dispose();
+            if (textureCache != null) textureCache.Dispose();
         }
     }
 }

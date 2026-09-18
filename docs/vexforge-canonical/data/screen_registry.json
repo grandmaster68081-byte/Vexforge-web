@@ -1,18 +1,70 @@
 {
   "source_commit": "f43159ecee63b610bb71c295238327ecea3feeb6",
   "legacy_mobile_routes": [
-    {"route":"/auth","file":"mobile/app/auth.tsx","auth_required":false},
-    {"route":"/tutorial","file":"mobile/app/tutorial.tsx","auth_required":true},
-    {"route":"/(tabs)/","file":"mobile/app/(tabs)/index.tsx","auth_required":true},
-    {"route":"/(tabs)/battle","file":"mobile/app/(tabs)/battle.tsx","auth_required":true},
-    {"route":"/(tabs)/collection","file":"mobile/app/(tabs)/collection.tsx","auth_required":true},
-    {"route":"/(tabs)/deck","file":"mobile/app/(tabs)/deck.tsx","auth_required":true},
-    {"route":"/(tabs)/profile","file":"mobile/app/(tabs)/profile.tsx","auth_required":true},
-    {"route":"/world","file":"mobile/app/world.tsx","auth_required":true},
-    {"route":"/missions","file":"mobile/app/missions.tsx","auth_required":true},
-    {"route":"/economy","file":"mobile/app/economy.tsx","auth_required":true},
-    {"route":"/store","file":"mobile/app/store.tsx","auth_required":true},
-    {"route":"/social","file":"mobile/app/social.tsx","auth_required":true},
-    {"route":"/meta","file":"mobile/app/meta.tsx","auth_required":true}
+    {
+      "route": "/auth",
+      "file": "mobile/app/auth.tsx",
+      "auth_required": false
+    },
+    {
+      "route": "/tutorial",
+      "file": "mobile/app/tutorial.tsx",
+      "auth_required": true
+    },
+    {
+      "route": "/(tabs)/",
+      "file": "mobile/app/(tabs)/index.tsx",
+      "auth_required": true
+    },
+    {
+      "route": "/(tabs)/battle",
+      "file": "mobile/app/(tabs)/battle.tsx",
+      "auth_required": true
+    },
+    {
+      "route": "/(tabs)/collection",
+      "file": "mobile/app/(tabs)/collection.tsx",
+      "auth_required": true
+    },
+    {
+      "route": "/(tabs)/deck",
+      "file": "mobile/app/(tabs)/deck.tsx",
+      "auth_required": true
+    },
+    {
+      "route": "/(tabs)/profile",
+      "file": "mobile/app/(tabs)/profile.tsx",
+      "auth_required": true
+    },
+    {
+      "route": "/world",
+      "file": "mobile/app/world.tsx",
+      "auth_required": true
+    },
+    {
+      "route": "/missions",
+      "file": "mobile/app/missions.tsx",
+      "auth_required": true
+    },
+    {
+      "route": "/economy",
+      "file": "mobile/app/economy.tsx",
+      "auth_required": true
+    },
+    {
+      "route": "/store",
+      "file": "mobile/app/store.tsx",
+      "auth_required": true
+    },
+    {
+      "route": "/social",
+      "file": "mobile/app/social.tsx",
+      "auth_required": true
+    },
+    {
+      "route": "/meta",
+      "file": "mobile/app/meta.tsx",
+      "auth_required": true
+    }
   ]
 }

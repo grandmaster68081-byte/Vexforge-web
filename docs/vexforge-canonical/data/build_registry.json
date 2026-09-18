@@ -1,5 +1,5 @@
 {
-  "current_source_commit": "201ee0330529c8e085afd1143cf066e18de3bc8a",
+  "current_source_commit": "af4787a0c2788dd8b3b406e42e0e82f9267d092e",
   "latest_recorded_android_release": {
     "release": "vexforge-android-build-250",
     "workflow": "vexforge-android-apk.yml",
@@ -16,7 +16,7 @@
   "current_task_build": "UNITY_PRESENTATION_KERNEL_RECONCILIATION",
   "target_runtime": "Unity Android",
   "current_runtime": "Unity Android",
-  "legacy_runtime": "Expo / React Native",
+  "legacy_runtime": "Unity Android",
   "unity_build": "BLOCKED_NO_BUILD_GATE",
   "migration_status": "UNITY_IMPLEMENTED_UNVERIFIED"
 }
