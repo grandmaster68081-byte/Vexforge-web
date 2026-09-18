@@ -76,10 +76,11 @@ backend y sin ejecutar builds. Consultar
 ## Decisión de runtime registrada el 2026-09-18
 
 Unity es el runtime Android principal de desarrollo y `unity/**` es la nueva
-superficie de juego. Expo / React Native permanece intacto como runtime
-secundario, respaldo y referencia de contratos. Unity no depende de Expo.
+superficie de juego. Expo / React Native permanece intacto en `mobile/**` como
+respaldo, rollback y referencia de contratos. Unity no depende de Expo.
 
 Supabase mantiene toda autoridad de datos, reglas, autenticación y settlement.
 La web queda congelada como código no-producto. Unity presenta datos y
 resultados autorizados; no resuelve competitividad ni inventa economía,
-cartas, rewards o progreso.
+cartas, rewards o progreso. El estado Unity de este bloque es
+`IMPLEMENTED_UNVERIFIED`: no se declara APK ni QA física.

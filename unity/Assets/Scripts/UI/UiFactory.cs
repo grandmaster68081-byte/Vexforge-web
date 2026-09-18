@@ -8,7 +8,12 @@ namespace Vexforge.UI
         public static readonly Color Background = new Color(0.025f, 0.017f, 0.016f, 1f);
         public static readonly Color Panel = new Color(0.09f, 0.06f, 0.055f, 0.97f);
         public static readonly Color PanelLight = new Color(0.16f, 0.105f, 0.08f, 0.98f);
+        public static readonly Color PanelGlass = new Color(0.035f, 0.027f, 0.025f, 0.88f);
+        public static readonly Color Card = new Color(0.075f, 0.055f, 0.05f, 0.98f);
+        public static readonly Color CardSelected = new Color(0.14f, 0.085f, 0.045f, 0.99f);
+        public static readonly Color CardArtUnknown = new Color(0.035f, 0.04f, 0.05f, 1f);
         public static readonly Color Gold = new Color(0.79f, 0.57f, 0.14f, 1f);
+        public static readonly Color GoldDim = new Color(0.36f, 0.25f, 0.09f, 1f);
         public static readonly Color Crimson = new Color(0.42f, 0.055f, 0.07f, 1f);
         public static readonly Color Arcane = new Color(0.12f, 0.48f, 0.7f, 1f);
         public static readonly Color Text = new Color(0.9f, 0.84f, 0.72f, 1f);

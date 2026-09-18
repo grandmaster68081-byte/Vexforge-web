@@ -6,6 +6,7 @@ using UnityEngine.UI;
 using Vexforge.Backend;
 using Vexforge.Core;
 using Vexforge.GameState;
+using Vexforge.Presentation;
 using Vexforge.World;
 
 namespace Vexforge.UI
@@ -18,6 +19,7 @@ namespace Vexforge.UI
         private Text status;
         private InputField emailInput;
         private InputField passwordInput;
+        private BattlePresentationDirector battleDirector;
         private bool built;
 
         private void Start()
@@ -25,6 +27,9 @@ namespace Vexforge.UI
             app = VexforgeApp.Instance;
             if (app == null) return;
             if (GetComponent<NexusWorldController>() == null) gameObject.AddComponent<NexusWorldController>();
+            battleDirector = GetComponent<BattlePresentationDirector>();
+            if (battleDirector == null) battleDirector = gameObject.AddComponent<BattlePresentationDirector>();
+            battleDirector.EventPresented += PresentBattleEvent;
             BuildCanvas();
             app.Session.StateChanged += _ => Render();
             app.GameState.SyncStateChanged += _ => Render();
@@ -59,13 +64,14 @@ namespace Vexforge.UI
 
         private void RenderSignIn()
         {
-            var background = UiFactory.PanelObject(canvas.transform, "AuthGate", UiFactory.Background);
-            UiFactory.Stretch(background.GetComponent<RectTransform>(), 0, 0, 0, 0);
-            var panel = UiFactory.PanelObject(background.transform, "AuthPanel", UiFactory.Panel);
-            UiFactory.Anchor(panel.GetComponent<RectTransform>(), new Vector2(0.08f, 0.31f), new Vector2(0.92f, 0.7f), Vector2.zero, Vector2.zero);
-            var title = UiFactory.Label(panel.transform, "VEXFORGE", 42, UiFactory.Gold, TextAnchor.MiddleCenter);
+            var panel = UiFactory.PanelObject(canvas.transform, "NexusSeal", UiFactory.PanelGlass);
+            UiFactory.Anchor(panel.GetComponent<RectTransform>(), new Vector2(0.1f, 0.27f), new Vector2(0.9f, 0.75f), Vector2.zero, Vector2.zero);
+            var outline = panel.AddComponent<Outline>();
+            outline.effectColor = UiFactory.GoldDim;
+            outline.effectDistance = new Vector2(2f, 2f);
+            var title = UiFactory.Label(panel.transform, "NEXUS SEAL", 42, UiFactory.Gold, TextAnchor.MiddleCenter);
             UiFactory.Anchor(title.rectTransform, new Vector2(0.05f, 0.72f), new Vector2(0.95f, 0.9f), Vector2.zero, Vector2.zero);
-            var subtitle = UiFactory.Label(panel.transform, "Nexus de desarrollo Unity · Supabase authority", 17, UiFactory.Muted, TextAnchor.MiddleCenter);
+            var subtitle = UiFactory.Label(panel.transform, "Autenticación real · Supabase authority", 17, UiFactory.Muted, TextAnchor.MiddleCenter);
             UiFactory.Anchor(subtitle.rectTransform, new Vector2(0.08f, 0.64f), new Vector2(0.92f, 0.72f), Vector2.zero, Vector2.zero);
             emailInput = UiFactory.Input(panel.transform, "Email", false);
             UiFactory.Anchor(emailInput.GetComponent<RectTransform>(), new Vector2(0.1f, 0.46f), new Vector2(0.9f, 0.57f), Vector2.zero, Vector2.zero);
@@ -82,29 +88,22 @@ namespace Vexforge.UI
         {
             var background = UiFactory.PanelObject(canvas.transform, "GameShell", UiFactory.Background);
             UiFactory.Stretch(background.GetComponent<RectTransform>(), 0, 0, 0, 0);
-            var header = UiFactory.PanelObject(background.transform, "Header", UiFactory.Panel);
+            background.GetComponent<Image>().color = new Color(UiFactory.Background.r, UiFactory.Background.g, UiFactory.Background.b, 0.52f);
+            var header = UiFactory.PanelObject(background.transform, "Header", new Color(0.03f, 0.02f, 0.018f, 0.78f));
             UiFactory.Anchor(header.GetComponent<RectTransform>(), new Vector2(0f, 0.89f), new Vector2(1f, 1f), Vector2.zero, Vector2.zero);
             var profileName = app.GameState.Profile != null && !string.IsNullOrWhiteSpace(app.GameState.Profile.display_name)
                 ? app.GameState.Profile.display_name
                 : "Jugador autenticado";
-            var heading = UiFactory.Label(header.transform, "NEXUS  /  " + profileName, 20, UiFactory.Gold);
+            var heading = UiFactory.Label(header.transform, "VEXFORGE  /  " + profileName, 20, UiFactory.Gold);
             UiFactory.Anchor(heading.rectTransform, new Vector2(0.05f, 0.32f), new Vector2(0.72f, 0.78f), Vector2.zero, Vector2.zero);
             var syncText = app.GameState.SyncState == SyncState.Connected ? "SUPABASE · CONNECTED" : app.GameState.SyncState.ToString().ToUpperInvariant();
             var sync = UiFactory.Label(header.transform, syncText, 12, app.GameState.SyncState == SyncState.Connected ? UiFactory.Arcane : UiFactory.Muted, TextAnchor.MiddleRight);
             UiFactory.Anchor(sync.rectTransform, new Vector2(0.63f, 0.32f), new Vector2(0.95f, 0.78f), Vector2.zero, Vector2.zero);
 
             var contentObject = UiFactory.PanelObject(background.transform, "RouteContent", new Color(0f, 0f, 0f, 0f));
-            UiFactory.Anchor(contentObject.GetComponent<RectTransform>(), new Vector2(0.04f, 0.13f), new Vector2(0.96f, 0.87f), Vector2.zero, Vector2.zero);
+            UiFactory.Anchor(contentObject.GetComponent<RectTransform>(), new Vector2(0.04f, 0.08f), new Vector2(0.96f, 0.89f), Vector2.zero, Vector2.zero);
             content = contentObject.GetComponent<RectTransform>();
             RenderRoute();
-
-            var nav = UiFactory.PanelObject(background.transform, "Navigation", UiFactory.Panel);
-            UiFactory.Anchor(nav.GetComponent<RectTransform>(), new Vector2(0f, 0f), new Vector2(1f, 0.11f), Vector2.zero, Vector2.zero);
-            AddNavButton(nav.transform, "NEXUS", GameRoute.Nexus, 0);
-            AddNavButton(nav.transform, "ARCHIVE", GameRoute.Collection, 1);
-            AddNavButton(nav.transform, "FORGE", GameRoute.Deck, 2);
-            AddNavButton(nav.transform, "ARENA", GameRoute.Battle, 3);
-            AddNavButton(nav.transform, "LEGADO", GameRoute.Profile, 4);
         }
 
         private void RenderRoute()
@@ -124,76 +123,103 @@ namespace Vexforge.UI
 
         private void BuildNexus()
         {
-            Title("THE NEXUS", "Mundo principal · navegación por dominios reales");
+            Title("THE NEXUS", "Citadel hub · elige un dominio en el mundo");
             if (app.GameState.SyncState != SyncState.Connected)
             {
-                Message("El Nexus espera una sincronización válida de Supabase. No se muestran datos inventados.");
+                Message("El Nexus espera una sincronización válida de Supabase.\nNo se muestran datos inventados.");
                 return;
             }
 
             var progress = app.GameState.Progress;
             var profile = app.GameState.Profile;
-            Message("Sesión: " + (profile == null ? "identidad no disponible" : profile.display_name) +
-                    "\nNivel: " + (progress == null ? "no disponible" : progress.level.ToString()) +
-                    "\nEnergía: " + (progress == null ? "no disponible" : progress.energy + " / " + progress.max_energy));
-            ActionButton("ARCHIVO DE CARTAS", GameRoute.Collection, 0.7f);
-            ActionButton("FORJA DE DECK", GameRoute.Deck, 0.54f);
-            ActionButton("ARENA", GameRoute.Battle, 0.38f);
-            ActionButton("MISIONES", GameRoute.Missions, 0.22f);
+            Message("Sello: " + (profile == null ? "IDENTIDAD NO REPORTADA" : profile.display_name) +
+                    "\nNivel: " + (progress == null ? "NO REPORTADO" : progress.level.ToString()) +
+                    "\nEnergía: " + (progress == null ? "NO REPORTADA" : progress.energy + " / " + progress.max_energy) +
+                    "\nUsa los pedestales del Nexus para entrar a cada dominio.");
         }
 
         private void BuildCollection()
         {
-            Title("ARCHIVE", "Catálogo y colección cargados desde Supabase");
-            Message("Catálogo: " + app.GameState.Catalog.Length + " · Colección: " + app.GameState.Collection.Length);
-            var y = 0.7f;
-            foreach (var card in app.GameState.Collection)
+            Title("ARCHIVE", "Santuario de cartas · catálogo y ownership desde Supabase");
+            AddReturnRune();
+            var catalog = app.GameState.Catalog ?? new CardRecord[0];
+            if (catalog.Length == 0)
             {
-                if (card == null || card.card == null) continue;
-                MessageAt(card.card.name + "  ·  " + card.card.rarity + "  ·  " + card.quantity + "x", y);
-                y -= 0.075f;
-                if (y < 0.08f) break;
+                MessageAt("SIN CONTENIDO DISPONIBLE", 0.56f);
+                return;
             }
-            if (app.GameState.Collection.Length == 0) MessageAt("La colección está vacía o no fue autorizada por el backend.", 0.62f);
+            var count = Mathf.Min(catalog.Length, 8);
+            for (var i = 0; i < count; i++)
+            {
+                var card = catalog[i];
+                var ownership = FindOwnership(card == null ? null : card.id);
+                var cardObject = CardRenderer.CreateCard(content, card, ownership, false, false, ownership != null && ownership.locked);
+                var column = i % 4;
+                var row = i / 4;
+                UiFactory.Anchor(cardObject.GetComponent<RectTransform>(),
+                    new Vector2(0.02f + column * 0.245f, 0.13f + (1 - row) * 0.31f),
+                    new Vector2(0.24f + column * 0.245f, 0.42f + (1 - row) * 0.31f), Vector2.zero, Vector2.zero);
+            }
         }
 
         private void BuildDeck()
         {
-            Title("FORGE", "Deck actual · las reglas permanecen en RPCs del servidor");
-            Message("Slots cargados: " + app.GameState.Deck.Length);
-            var y = 0.7f;
+            Title("FORGE", "Mesa de forja · validación y persistencia server-authoritative");
+            AddReturnRune();
             var ids = new string[app.GameState.Deck.Length];
+            var count = Mathf.Min(app.GameState.Deck.Length, 6);
             for (var i = 0; i < app.GameState.Deck.Length; i++)
             {
                 var slot = app.GameState.Deck[i];
                 ids[i] = slot.card_id;
-                MessageAt((slot.is_champion ? "CHAMPION · " : "SLOT " + slot.slot_number + " · ") + slot.name, y);
-                y -= 0.07f;
+                if (i >= count) continue;
+                var card = FindCard(slot.card_id);
+                var cardObject = CardRenderer.CreateCard(content, card, null, false, slot.is_champion, false);
+                var column = i % 3;
+                var row = i / 3;
+                UiFactory.Anchor(cardObject.GetComponent<RectTransform>(),
+                    new Vector2(0.04f + column * 0.31f, 0.28f + (1 - row) * 0.27f),
+                    new Vector2(0.29f + column * 0.31f, 0.52f + (1 - row) * 0.27f), Vector2.zero, Vector2.zero);
             }
-            ActionButton("VALIDAR CON BACKEND", GameRoute.Deck, 0.18f, () => ValidateDeck(ids));
-            ActionButton("GUARDAR DECK", GameRoute.Deck, 0.06f, () => SaveDeck(ids));
+            MessageAt(app.GameState.Deck.Length == 0 ? "FORJA VACIA · SIN SLOTS REPORTADOS" : "La mesa muestra únicamente cartas devueltas por Supabase.", 0.2f);
+            ActionButton("VALIDAR EN EL ALTAR", GameRoute.Deck, 0.08f, () => ValidateDeck(ids));
+            ActionButton("SELLAR DECK", GameRoute.Deck, 0.0f, () => SaveDeck(ids));
         }
 
         private void BuildBattle()
         {
-            Title("ARENA", "Resolución competitiva autoritativa");
-            Message("Unity solo envía intención. Supabase resuelve el combate y devuelve eventos/resultados.");
+            Title("BATTLEFIELD", "Arena de eventos · Supabase resuelve el combate");
+            AddReturnRune();
+            var board = UiFactory.PanelObject(content, "BattlefieldBoard", new Color(0.04f, 0.025f, 0.03f, 0.88f));
+            UiFactory.Anchor(board.GetComponent<RectTransform>(), new Vector2(0.05f, 0.38f), new Vector2(0.95f, 0.76f), Vector2.zero, Vector2.zero);
+            var boardText = UiFactory.Label(board.transform, "ARENA EN ESPERA\n\nZONA DEL JUGADOR\n\n— NÚCLEO DE BATALLA —\n\nZONA DEL OPONENTE", 18, UiFactory.Text, TextAnchor.MiddleCenter);
+            UiFactory.Stretch(boardText.rectTransform, 10f, 10f, 10f, 10f);
+            MessageAt("Unity sólo envía intención y presenta eventos. No se crea un rival local ni se calcula un resultado.", 0.3f);
             var opponentInput = UiFactory.Input(content, "UUID del oponente", false);
-            UiFactory.Anchor(opponentInput.GetComponent<RectTransform>(), new Vector2(0.08f, 0.51f), new Vector2(0.92f, 0.61f), Vector2.zero, Vector2.zero);
-            ActionButton("RESOLVER BATALLA", GameRoute.Battle, 0.31f, () => ResolveBattle(opponentInput.text));
-            MessageAt("No se crea un rival local ni se calcula un resultado en Unity.", 0.14f);
+            UiFactory.Anchor(opponentInput.GetComponent<RectTransform>(), new Vector2(0.08f, 0.17f), new Vector2(0.92f, 0.25f), Vector2.zero, Vector2.zero);
+            ActionButton("ABRIR DESAFIO", GameRoute.Battle, 0.06f, () => ResolveBattle(opponentInput.text));
         }
 
         private void BuildMissions()
         {
-            Title("MISSIONS", "Progreso y recompensas provenientes del backend");
-            if (app.GameState.Missions.Length == 0) Message("No hay misiones autorizadas disponibles.");
-            var y = 0.7f;
-            foreach (var mission in app.GameState.Missions)
+            Title("MISSIONS", "Cámara de contratos · actividad publicada por Supabase");
+            AddReturnRune();
+            var missions = app.GameState.Missions ?? new MissionRecord[0];
+            if (missions.Length == 0)
             {
-                MessageAt(mission.name + "  ·  " + mission.difficulty + "  ·  reward XP " + mission.reward_xp, y);
-                y -= 0.075f;
-                if (y < 0.08f) break;
+                MessageAt("SIN CONTENIDO DISPONIBLE", 0.55f);
+                return;
+            }
+            for (var i = 0; i < Mathf.Min(missions.Length, 5); i++)
+            {
+                var mission = missions[i];
+                var contract = UiFactory.PanelObject(content, "Contract_" + i, UiFactory.PanelGlass);
+                UiFactory.Anchor(contract.GetComponent<RectTransform>(), new Vector2(0.08f, 0.54f - i * 0.09f), new Vector2(0.92f, 0.61f - i * 0.09f), Vector2.zero, Vector2.zero);
+                var text = UiFactory.Label(contract.transform,
+                    CardRenderer.ValueOr(mission.name, "CONTRATO NO REPORTADO") + "  ·  " +
+                    CardRenderer.ValueOr(mission.difficulty, "DIFICULTAD NO REPORTADA") +
+                    "\nXP REPORTADO: " + mission.reward_xp, 14, UiFactory.Text);
+                UiFactory.Stretch(text.rectTransform, 12f, 4f, 12f, 4f);
             }
         }
 
@@ -219,11 +245,10 @@ namespace Vexforge.UI
             ActionButton("CERRAR SESIÓN", GameRoute.Profile, 0.2f, () => app.SignOut());
         }
 
-        private void AddNavButton(Transform parent, string text, GameRoute route, int index)
+        private void AddReturnRune()
         {
-            var button = UiFactory.Button(parent, text, () => app.Navigation.Navigate(route));
-            var rect = button.GetComponent<RectTransform>();
-            UiFactory.Anchor(rect, new Vector2(index / 5f, 0.08f), new Vector2((index + 1) / 5f, 0.92f), Vector2.zero, Vector2.zero);
+            var button = UiFactory.Button(content, "VOLVER AL NEXUS", () => app.Navigation.Navigate(GameRoute.Nexus));
+            UiFactory.Anchor(button.GetComponent<RectTransform>(), new Vector2(0.68f, 0.88f), new Vector2(0.98f, 0.98f), Vector2.zero, Vector2.zero);
         }
 
         private void ActionButton(string text, GameRoute route, float y, UnityAction onClick = null)
@@ -273,13 +298,54 @@ namespace Vexforge.UI
         {
             if (string.IsNullOrWhiteSpace(opponentId) || app.Session.Current == null) return;
             var result = await app.Repository.ResolveBattleAsync(app.GameState.PlayerId, opponentId.Trim(), Guid.NewGuid().ToString("N"));
-            MessageAt(result == null ? "El backend no devolvió resultado." : (result.ok ? "RESULTADO RECIBIDO · " + result.status : result.error), 0.22f);
+            if (result == null)
+            {
+                MessageAt("EL BACKEND NO DEVOLVIO RESULTADO", 0.22f);
+                return;
+            }
+            if (!result.ok)
+            {
+                MessageAt(CardRenderer.ValueOr(result.error, "BATALLA NO DISPONIBLE"), 0.22f);
+                return;
+            }
+            MessageAt("RESULTADO RECIBIDO · " + CardRenderer.ValueOr(result.status, "ESTADO NO REPORTADO"), 0.22f);
+            battleDirector.Play(result.events);
         }
 
         private void ClearCanvas()
         {
             for (var i = canvas.transform.childCount - 1; i >= 0; i--) Destroy(canvas.transform.GetChild(i).gameObject);
             content = null;
+        }
+
+        private PlayerCardRecord FindOwnership(string cardId)
+        {
+            if (string.IsNullOrWhiteSpace(cardId) || app.GameState.Collection == null) return null;
+            for (var i = 0; i < app.GameState.Collection.Length; i++)
+            {
+                var ownership = app.GameState.Collection[i];
+                if (ownership != null && ownership.card_id == cardId) return ownership;
+            }
+            return null;
+        }
+
+        private CardRecord FindCard(string cardId)
+        {
+            if (string.IsNullOrWhiteSpace(cardId) || app.GameState.Catalog == null) return null;
+            for (var i = 0; i < app.GameState.Catalog.Length; i++)
+            {
+                var card = app.GameState.Catalog[i];
+                if (card != null && card.id == cardId) return card;
+            }
+            return null;
+        }
+
+        private void PresentBattleEvent(BattleEvent battleEvent)
+        {
+            if (battleEvent == null || content == null) return;
+            var eventText = CardRenderer.ValueOr(battleEvent.event_type, "EVENTO NO REPORTADO") +
+                "  ·  " + CardRenderer.ValueOr(battleEvent.actor_id, "ACTOR NO REPORTADO");
+            MessageAt(eventText, 0.34f);
         }
     }
 }

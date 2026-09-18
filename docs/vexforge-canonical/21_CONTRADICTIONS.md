@@ -35,13 +35,13 @@ SOURCE B: `main` actual es `f43159e...`.
 CURRENT EVIDENCE: el commit actual registra el release, pero no existe un nuevo APK de esta tarea.
 STATUS: `NO_RESUELTO / EVIDENCE_REQUIRED` para afirmar que una instalación coincide con el commit actual.
 
-## C-006 — Expo activo vs Unity histórico
+## C-006 — Expo fallback vs Unity principal de desarrollo
 
 SOURCE A: código actual en `mobile/**`, `mobile/app.json` y workflow Expo/Gradle.
-SOURCE B: documentación y workflows históricos de Unity.
-CURRENT EVIDENCE: Expo/React Native es el runtime activo; el árbol Unity y sus
-workflows activos fueron retirados.
-STATUS: `RESUELTO`: Unity es `RETIRED / HISTORICAL`.
+SOURCE B: `unity/**`, `ProjectVersion.txt` y la escena bootstrap actual.
+CURRENT EVIDENCE: Unity es el runtime principal de desarrollo; mobile queda
+íntegro como fallback/rollback/referencia.
+STATUS: `RESUELTO`: Unity `IMPLEMENTED_UNVERIFIED`, mobile `PRESERVED`.
 
 ## C-007 — Foundation antiguo vs Game Runtime Foundation
 
@@ -50,6 +50,6 @@ SOURCE B: orden operativa nueva, que exige la Foundation sobre Expo / React
 Native sin destruir componentes funcionales existentes.
 CURRENT EVIDENCE: `mobile/game/**` existe y el shell consume la sesión y
 sincronización reales.
-STATUS: `RESUELTO POR FASE`: la Foundation activa es Game Runtime Foundation;
-World, Cards, Deck, Battle, Missions, Economy y Profile quedan fuera de esta
-etapa.
+STATUS: `RESUELTO POR FASE`: la Foundation operativa continúa en Unity;
+World, Cards, Deck, Battle y Missions se completan por bloques sin cambiar la
+autoridad de Supabase.

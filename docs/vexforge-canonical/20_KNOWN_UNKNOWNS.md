@@ -9,6 +9,12 @@
 - `REFERENCIADO_PERO_NO_ENCONTRADO`: cualquier asset o RPC citado solo por documentación histórica sin consumer actual.
 - `INFERIDO`: clasificación de algunos objetos como legacy/quarantine basada en nombres; requiere confirmar definición y uso live.
 - `EVIDENCE_REQUIRED`: settlement y rewards de partidas competitivas en dispositivo real.
+- `NO_VERIFICADO`: apertura de `unity/**` en el editor `6000.3.0f1`, instalación
+  Android, rendimiento y lectura táctil del Nexus.
+- `NO_VERIFICADO`: resolución de assets oficiales, audio y VFX de producción;
+  mientras tanto Unity usa geometría y estados honestos.
+- `VERIFICADO_EN_CODIGO`: Unity mantiene Supabase como autoridad y no crea
+  settlement, cartas, balances, rewards o resultados locales.
 
 - `VERIFICADO_EN_CODIGO_NO_EN_APK`: package Android `com.vexforge.android`,
   versión `1.0.1`, versionCode `4`, Expo `~54.0.27`, React Native `0.81.5`.

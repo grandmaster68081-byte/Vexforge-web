@@ -44,10 +44,11 @@ Actualizar `17_CURRENT_BLOCK.md`, `16_IMPLEMENTATION_STATUS.md`, `18_DECISIONS.m
 
 ## Decisión actual de runtime
 
-Expo / React Native es el runtime Android activo. React Native es la capa de
-aplicación/UI; Reanimated, Worklets y Gesture Handler son la capa de
-movimiento/interacción; Skia queda reservada para una futura capa de rendering
-2D/2.5D. Supabase conserva toda autoridad de datos y reglas.
+Unity es el runtime Android principal de desarrollo y `unity/**` contiene la
+implementación Unity que debe continuarse. Expo / React Native permanece
+íntegro en `mobile/**` como respaldo, rollback y referencia funcional.
+Supabase conserva toda autoridad de datos y reglas.
 
-Unity es `RETIRED / HISTORICAL`: no es runtime activo, no tiene ruta de build
-activa y no debe volver a introducirse en esta etapa.
+Unity está en `IMPLEMENTED_UNVERIFIED`: se continúa el código sin fabricar
+APK, sin afirmar instalación y sin convertir el bloqueo de build/licencia en
+un bloqueo del desarrollo.

@@ -11,7 +11,7 @@
 7. Leer `21_CONTRADICTIONS.md`.
 8. Inspeccionar el código actual relevante.
 9. Consultar Supabase live si la afirmación depende del backend.
-10. Planificar y obtener autorización del bloque antes de implementar.
+10. Confirmar que el bloque activo ya autoriza implementar sobre Unity actual.
 
 ## Prohibiciones
 
@@ -21,12 +21,14 @@ No inventar. No duplicar lógica autoritativa. No tomar documentos viejos como a
 
 Actualizar current block, implementation status, decisions, blockers, unknowns, contradictions y continuity changelog. Si afecta Android, registrar source commit, workflow run, release, APK hash y QA física. No compilar ni publicar automáticamente.
 
-## Si el trabajo afecta la migración Unity
+## Si el trabajo afecta Unity
 
-- No crear el proyecto Unity desde una inferencia breve.
-- Exigir un único paquete operativo de Foundation.
+- No crear un proyecto Unity paralelo ni copiar una Foundation histórica.
+- Continuar el único paquete operativo existente en `unity/**`.
 - Mantener `mobile/**` intacto como rollback.
 - No mover autoridad backend ni crear Firebase/PlayFab/Photon u otra base de datos.
-- No declarar Unity activo hasta que compile, tenga APK, instalación, Auth/sesión/datos reales, QA y rollback.
+- Mantener el estado `IMPLEMENTED_UNVERIFIED` hasta que compile, tenga APK,
+  instalación, Auth/sesión/datos reales, QA y rollback. Eso no detiene el
+  desarrollo del código Unity.
 - Replit prepara archivos, scripts y análisis; Unity Editor/CI Unity procesa y construye el player.
 - No avanzar de etapa porque compile: cada etapa requiere gates funcionales, visuales, de backend y evidencia del usuario.

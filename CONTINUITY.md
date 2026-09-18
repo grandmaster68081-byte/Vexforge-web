@@ -1,10 +1,32 @@
+## 2026-09-18 — UNITY RUNTIME — NEXUS / CARD SURFACES / DOCUMENTATION RECONCILED
+
+- **SOURCE:** `main`, Unity target `6000.3.0f1`.
+- **WHAT CHANGED:** se continuó el Unity existente sin crear una segunda
+  Foundation; el bootstrap presenta una citadel Nexus con cinco accesos
+  diegéticos, Archive usa un renderer reutilizable de cartas, Forge muestra
+  slots físicos de cartas, Battlefield tiene una arena de presentación y
+  Missions usa contratos provenientes del estado sincronizado.
+- **DATA PRESERVED:** Supabase sigue siendo autoridad; no se añadieron cartas,
+  jugadores, balances, rewards, resultados, RPCs o tablas ficticias. `mobile/**`
+  permanece intacto.
+- **DOCUMENTATION:** README, contexto y documentos canónicos ahora describen
+  Unity como runtime principal de desarrollo y mobile como fallback/rollback.
+- **STATUS:** `IMPLEMENTED_UNVERIFIED`.
+- **BLOCKER:** no se ejecutó build, no se fabricó APK y no se afirma QA física.
+- **NEXT BLOCK:** abrir en editor, corregir cualquier error de importación,
+  verificar los contratos con datos reales y preparar el gate de build sin
+  alterar la autoridad backend.
+
 # CURRENT CANONICAL CONTEXT
 
 La entrada principal para una nueva sesión es [`VEXFORGE_CONTEXT.md`](VEXFORGE_CONTEXT.md), seguida de [`docs/vexforge-canonical/00_START_HERE.md`](docs/vexforge-canonical/00_START_HERE.md).
 
 `CONTINUITY.md` conserva el historial operativo anterior y no se elimina. La capa `docs/vexforge-canonical/` es ahora la referencia de orientación y reconciliación para nuevas sesiones; el código de `main` sigue siendo la evidencia de implementación y Supabase live sigue siendo la autoridad de datos, seguridad y lógica backend.
 
-Estado de esta persistencia: documentación canónica generada contra `main` en `f43159ecee63b610bb71c295238327ecea3feeb6`. No se modificó código funcional, Supabase, assets, dependencias, build ni APK.
+La entrada histórica siguiente describe la persistencia previa generada contra
+`main` en `f43159ecee63b610bb71c295238327ecea3feeb6`; no debe leerse como el
+estado del bloque actual. En el bloque actual no se modificó Supabase ni se
+generó build o APK.
 
 ---
 

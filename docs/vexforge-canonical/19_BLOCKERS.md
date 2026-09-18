@@ -30,7 +30,19 @@
 - WHY BLOCKED: no toda rutina live es necesariamente activa ni consumida por Android.
 - UNBLOCK CONDITION: matriz RPC/table/policy por dominio con evidencia.
 
-## B-004 — Android Foundation release no verificado
+## B-004 — Unity editor/build gate no verificado
+
+- AREA: apertura en editor, compilación, instalación y QA física Unity.
+- STATUS: BLOCKED
+- OBSERVED EVIDENCE: `unity/ProjectSettings/ProjectVersion.txt`,
+  `unity/Assets/Scenes/VexforgeBootstrap.unity` y código Unity actual.
+- DEPENDENCY: editor `6000.3.0f1`, licencia y mecanismo oficial de build.
+- WHY BLOCKED: este bloque prohíbe fabricar APK, Player, Gradle o evidencia de
+  instalación; el bloqueo no detiene el desarrollo de código.
+- UNBLOCK CONDITION: build autorizado, artefacto identificable, instalación y
+  recorrido QA documentados.
+
+## B-005 — Android Foundation release no verificado
 
 - AREA: Expo / React Native Android Foundation.
 - STATUS: EVIDENCE_REQUIRED

@@ -52,19 +52,28 @@
 
 ## D-006
 
-- DATE: 2026-09-17
-- DECISION: Expo / React Native es el runtime Android activo de VEXFORGE.
-- SCOPE: runtime, aplicación/UI, movimiento, rendering futuro, datos y build.
-- WHY: el cliente Expo existente es la única base Android ejecutable y verificable
-  disponible para esta Foundation; Unity no alcanzó un APK verificable y queda
-  retirado del runtime.
-- EVIDENCE: `mobile/**`, `mobile/app.json`,
-  `.github/workflows/vexforge-android-apk.yml`.
-- AFFECTED_FILES: `mobile/game/**`, entrada Android, documentación canónica y
-  workflows Unity retirados.
-- AFFECTED_SYSTEMS: cliente Android y CI; Supabase permanece sin cambio.
-- STATUS: ACTIVE / FOUNDATION_IMPLEMENTED_UNVERIFIED
-- RULES: React Native es la capa de aplicación/UI; Reanimated + Worklets +
-  Gesture Handler son la capa de movimiento/interacción; Skia queda reservada
-  para una futura capa de rendering 2D/2.5D; Supabase mantiene autoridad de
-  datos y reglas.
+- DATE: 2026-09-18
+- DECISION: Unity es el runtime Android principal de desarrollo de VEXFORGE.
+- SCOPE: `unity/**`, presentación del juego, integración de sesión y datos.
+- WHY: la dirección de producto exige un runtime TCG con mundo, cartas,
+  cámara, battlefield, VFX y audio hooks sin convertir el producto en un
+  dashboard.
+- EVIDENCE: `unity/ProjectSettings/ProjectVersion.txt`,
+  `unity/Assets/Scenes/VexforgeBootstrap.unity` y `unity/Assets/Scripts/**`.
+- AFFECTED_FILES: Unity y documentación canónica; `mobile/**` queda protegido.
+- AFFECTED_SYSTEMS: cliente Android; Supabase permanece sin cambio.
+- STATUS: ACTIVE / IMPLEMENTED_UNVERIFIED
+- RULES: mobile es fallback/rollback/referencia; Supabase mantiene autoridad;
+  no se declara APK ni QA física sin evidencia.
+
+## D-007
+
+- DATE: 2026-09-18
+- DECISION: Las superficies Unity se presentan como mundo TCG y no como
+  dashboard administrativo.
+- SCOPE: Nexus, Archive, Forge, Battlefield y Missions.
+- WHY: la carta, el pedestal, la arena y el contrato son la unidad visual del
+  producto; los estados ausentes deben seguir siendo honestos.
+- EVIDENCE: `unity/Assets/Scripts/World/NexusWorldController.cs`,
+  `unity/Assets/Scripts/UI/CardRenderer.cs`.
+- STATUS: ACTIVE

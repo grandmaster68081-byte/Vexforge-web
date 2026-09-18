@@ -12,15 +12,15 @@ ejecución de Unity.
 | Capa | Estado |
 |---|---|
 | Proyecto Unity | IMPLEMENTED_UNVERIFIED |
-| Unity target | `6000.3.0f1`, declarado como objetivo porque no existía `ProjectVersion.txt` |
+| Unity target | `6000.3.0f1`, declarado y presente en `ProjectSettings/ProjectVersion.txt` |
 | Android identity | `com.vexforge.android`, version `0.1.0`, versionCode `4` |
 | Foundation | IMPLEMENTED_UNVERIFIED |
 | Supabase REST/RPC client | IMPLEMENTED_UNVERIFIED |
 | Auth/session | PARTIALLY_IMPLEMENTED; secure device token storage is pending |
-| Nexus / World | IMPLEMENTED_UNVERIFIED; development geometry only |
-| Archive / Collection | IMPLEMENTED_UNVERIFIED; data-driven surface |
-| Forge / Deck | IMPLEMENTED_UNVERIFIED; validation and save remain server RPCs |
-| Arena / Battle | PARTIALLY_IMPLEMENTED; resolve path is server-authoritative |
+| Nexus / World | IMPLEMENTED_UNVERIFIED; citadel geometry and diegetic portals |
+| Archive / Collection | IMPLEMENTED_UNVERIFIED; reusable card renderer and real ownership |
+| Forge / Deck | IMPLEMENTED_UNVERIFIED; physical slots, validation and save remain server RPCs |
+| Arena / Battle | PARTIALLY_IMPLEMENTED; battlefield surface and server-authoritative resolve |
 | Missions / Economy / Profile | IMPLEMENTED_UNVERIFIED read surfaces |
 | Expo fallback | PRESERVED |
 | APK / Android Player | BLOCKED by explicit no-build gate |
@@ -61,8 +61,8 @@ compilación.
 
 ## Blockers
 
-1. No existía un proyecto Unity previo ni `ProjectVersion.txt`; el target
-   `6000.3.0f1` queda declarado, no verificado por apertura en editor.
+1. El editor `6000.3.0f1` aún no se ha abierto en este entorno; el archivo de
+   versión sí existe y el estado permanece `IMPLEMENTED_UNVERIFIED`.
 2. La sesión se mantiene en memoria hasta implementar un almacén seguro
    específico de Android. No se persisten tokens en Git ni en PlayerPrefs.
 3. Los modelos anidados de algunas respuestas PostgREST deben validarse en
