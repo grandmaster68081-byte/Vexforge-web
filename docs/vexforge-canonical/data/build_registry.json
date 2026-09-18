@@ -1,5 +1,5 @@
 {
-  "current_source_commit": "af4787a0c2788dd8b3b406e42e0e82f9267d092e",
+  "current_source_commit": "12f043c682dda43a0517a706a836f83256b055b7",
   "latest_recorded_android_release": {
     "release": "vexforge-android-build-250",
     "workflow": "vexforge-android-apk.yml",
@@ -13,7 +13,7 @@
     "sha256": "082cdd1bf8ec143770febdca05a985fd978257518a5bd962ae7bcd860bd0d428"
   },
   "apk_command": "./gradlew assembleRelease --no-daemon --stacktrace --console=plain --max-workers=2 -x lintVitalAnalyzeRelease -x lintVitalReportRelease -x lintVitalRelease",
-  "current_task_build": "UNITY_PRESENTATION_KERNEL_RECONCILIATION",
+  "current_task_build": "UNITY_CANONICAL_RUNTIME_CLOSURE_R5",
   "target_runtime": "Unity Android",
   "current_runtime": "Unity Android",
   "legacy_runtime": "Expo / React Native",

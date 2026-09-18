@@ -15,7 +15,7 @@ pero está congelada como cliente de producto.
 
 - Repositorio: `grandmaster68081-byte/Vexforge-web`
 - Rama: `main`
-- Commit auditado: `201ee0330529c8e085afd1143cf066e18de3bc8a`
+- Commit base auditado: `201ee0330529c8e085afd1143cf066e18de3bc8a`
 - Snapshot: 2026-09-17
 - Android package: `com.vexforge.android`
 - App version: `1.0.1`

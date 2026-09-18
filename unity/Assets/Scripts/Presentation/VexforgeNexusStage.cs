@@ -34,11 +34,13 @@ namespace Vexforge.Presentation
         {
             if (state == VexforgeNexusStageState.Uninitialized) return;
 
-            gameObject.SetActive(visible);
-
-            if (InputRouter != null)
+            // The stage owns the shared input seam used by both the Nexus hotspots
+            // and the world-space Archive/Forge gallery. Only the Nexus world root
+            // is toggled here; disabling the whole stage would also disable input
+            // for Collection/Deck routes.
+            if (PresentationRoot != null)
             {
-                InputRouter.enabled = visible;
+                PresentationRoot.gameObject.SetActive(visible);
             }
         }
 

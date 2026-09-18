@@ -155,16 +155,6 @@ namespace Vexforge.Presentation
                     request.timeout = timeoutSeconds;
                     request.SetRequestHeader("Accept", "image/*");
 
-                    var contentLength = request.GetRequestHeader("Content-Length");
-                    if (!string.IsNullOrWhiteSpace(contentLength))
-                    {
-                        long declaredLength;
-                        if (long.TryParse(contentLength, out declaredLength) && declaredLength > maxDownloadBytes)
-                        {
-                            return null;
-                        }
-                    }
-
                     var operation = request.SendWebRequest();
                     while (!operation.isDone)
                     {

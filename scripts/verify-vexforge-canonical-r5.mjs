@@ -118,7 +118,7 @@ for (const route of ['Collection', 'Deck', 'Battle', 'Missions', 'Economy']) {
 let changedFiles = [];
 try {
   const outputs = [
-    execFileSync('git', ['diff', '--name-only', 'af4787a0c2788dd8b3b406e42e0e82f9267d092e..HEAD'], { encoding: 'utf8' }),
+    execFileSync('git', ['diff', '--name-only', '12f043c682dda43a0517a706a836f83256b055b7..HEAD'], { encoding: 'utf8' }),
     execFileSync('git', ['diff', '--name-only'], { encoding: 'utf8' }),
     execFileSync('git', ['diff', '--cached', '--name-only'], { encoding: 'utf8' }),
     execFileSync('git', ['status', '--porcelain'], { encoding: 'utf8' })
@@ -144,11 +144,24 @@ for (const file of changedFiles) {
 const legacyMarkers = [
   ['README.md', /ANDROID PRODUCT:\s*mobile\/\*\*\s*ACTIVE RUNTIME:\s*Expo/i],
   ['README.md', /cd mobile\s*\r?\nnpm ci\s*\r?\nnpm run typecheck/i],
-  ['VEXFORGE_CONTEXT.md', /Commit auditado:\s*(?!af4787a0c2788dd8b3b406e42e0e82f9267d092e)[0-9a-f]{40}/i]
+  ['VEXFORGE_CONTEXT.md', /Commit auditado:\s*(?!12f043c682dda43a0517a706a836f83256b055b7)[0-9a-f]{40}/i]
 ];
 
 for (const [file, pattern] of legacyMarkers) {
   if (pattern.test(read(file))) failures.push(`${file}: stale canonical marker`);
+}
+
+
+const buildRegistry = read('docs/vexforge-canonical/data/build_registry.json');
+if (!/\"target_runtime\"\s*:\s*\"Unity Android\"/.test(buildRegistry)) failures.push('build_registry target_runtime is not Unity Android');
+if (!/\"current_runtime\"\s*:\s*\"Unity Android\"/.test(buildRegistry)) failures.push('build_registry current_runtime is not Unity Android');
+if (!/\"legacy_runtime\"\s*:\s*\"Expo \/ React Native\"/.test(buildRegistry)) failures.push('build_registry legacy_runtime must remain Expo / React Native');
+const currentState = read('docs/vexforge-canonical/data/current_state.json');
+if (!/\"current_runtime\"\s*:\s*\"unity_android\"/.test(currentState)) failures.push('current_state current_runtime is not unity_android');
+if (!/\"legacy_runtime\"\s*:\s*\"expo_react_native\"/.test(currentState)) failures.push('current_state legacy_runtime must remain expo_react_native');
+const navigationSource = read('unity/Assets/Scripts/Core/NavigationService.cs');
+for (const route of ['Collection', 'Deck', 'Battle', 'Missions', 'Economy', 'Profile']) {
+  if (!new RegExp(`\\b${route}\\b`).test(navigationSource)) failures.push(`NavigationService missing ${route}`);
 }
 
 if (failures.length > 0) {

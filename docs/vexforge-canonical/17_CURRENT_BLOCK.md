@@ -2,11 +2,11 @@
 
 ## CURRENT ACTIVE BLOCK
 
-`UNITY_RUNTIME_REACTIVATION`
+`UNITY_CANONICAL_RUNTIME_CLOSURE_R5`
 
 ### Objetivo
 
-Continuar Unity como único runtime activo del producto Android sin destruir el
+Cerrar la consolidación de Unity como único runtime activo del producto Android sin destruir el
 legado histórico `mobile/**`. Completar la Presentation Foundation, Nexus,
 Archive, Forge, Battlefield y Missions usando Supabase como autoridad y sin
 ejecutar ningún build.
@@ -30,7 +30,7 @@ geometry y superficies data-driven para los dominios principales.
 | Deck / Formation | PARTIALLY_IMPLEMENTED | physical card slots, RPC validation/save wired; formation editor pendiente |
 | Battle | PARTIALLY_IMPLEMENTED | battlefield presentation and resolve RPC; event replay pendiente |
 | Missions / Economy / Profile | IMPLEMENTED_UNVERIFIED | read surfaces wired to Supabase |
-| Unity Android (legacy source only) legacy | PRESERVED | `mobile/**` sin eliminación ni trabajo nuevo |
+| Expo / React Native legacy | PRESERVED | `mobile/**` sin eliminación ni trabajo nuevo |
 | First Unity build | BLOCKED | explícitamente prohibido en esta fase; no implica detener código |
 
 ### No tocar

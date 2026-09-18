@@ -6,19 +6,23 @@
   "repository": {
     "name": "grandmaster68081-byte/Vexforge-web",
     "branch": "main",
-    "commit": "201ee0330529c8e085afd1143cf066e18de3bc8a",
-    "snapshot_date": "2026-09-17"
+    "commit": "12f043c682dda43a0517a706a836f83256b055b7",
+    "snapshot_date": "2026-09-18"
   },
   "android": {
     "package": "com.vexforge.android",
     "version": "1.0.1",
     "versionCode": 4,
-    "expo": "~54.0.27",
-    "expo_lockfile": "54.0.37",
-    "reactNative": "0.81.5",
-    "runtimeVersion": "1.0.0"
+    "runtime": "unity_android",
+    "unity_editor": "6000.3.0f1",
+    "legacy_expo": {
+      "expo": "~54.0.27",
+      "expo_lockfile": "54.0.37",
+      "reactNative": "0.81.5",
+      "runtimeVersion": "1.0.0"
+    }
   },
-  "current_block": "UNITY_PRESENTATION_KERNEL_RECONCILIATION",
+  "current_block": "UNITY_CANONICAL_RUNTIME_CLOSURE_R5",
   "overall_status": "UNITY_IMPLEMENTED_UNVERIFIED",
   "known_blockers": [
     "physical Android evidence",

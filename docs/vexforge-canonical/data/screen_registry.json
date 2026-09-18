@@ -1,5 +1,5 @@
 {
-  "source_commit": "f43159ecee63b610bb71c295238327ecea3feeb6",
+  "source_commit": "12f043c682dda43a0517a706a836f83256b055b7",
   "legacy_mobile_routes": [
     {
       "route": "/auth",
@@ -65,6 +65,43 @@
       "route": "/meta",
       "file": "mobile/app/meta.tsx",
       "auth_required": true
+    }
+  ],
+  "unity_runtime_routes": [
+    {
+      "route": "NEXUS",
+      "internal_route": "Nexus",
+      "presentation": "VexforgeNexusStage / NexusPresentationRoot"
+    },
+    {
+      "route": "ARCHIVE",
+      "internal_route": "Collection",
+      "presentation": "VexforgeVirtualizedCardGallery"
+    },
+    {
+      "route": "FORGE",
+      "internal_route": "Deck",
+      "presentation": "VexforgeVirtualizedCardGallery"
+    },
+    {
+      "route": "BATTLEFIELD",
+      "internal_route": "Battle",
+      "presentation": "BattlePresentationDirector"
+    },
+    {
+      "route": "MISSIONS",
+      "internal_route": "Missions",
+      "presentation": "GameShell contextual surface"
+    },
+    {
+      "route": "ECONOMY",
+      "internal_route": "Economy",
+      "presentation": "GameShell contextual surface"
+    },
+    {
+      "route": "PROFILE",
+      "internal_route": "Profile",
+      "presentation": "GameShell contextual surface"
     }
   ]
 }

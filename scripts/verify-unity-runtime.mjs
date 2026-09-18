@@ -73,8 +73,15 @@ for (const prohibited of ["ScreenSpaceOverlay", "Shader.Find(", "ARTE DISPONIBLE
 }
 
 const nexusSource = fs.readFileSync(path.join(presentationRoot, "NexusPresentationRoot.cs"), "utf8");
-for (const route of ["GameRoute.Nexus", "GameRoute.Archive", "GameRoute.Forge", "GameRoute.Battlefield", "GameRoute.Missions", "GameRoute.Economy"]) {
-  if (!nexusSource.includes(route)) fail(`canonical Nexus route is missing: ${route}`);
+const gameShellSource = fs.readFileSync(path.join(unity, "Assets/Scripts/UI/GameShellController.cs"), "utf8");
+for (const route of ["GameRoute.Collection", "GameRoute.Deck", "GameRoute.Battle", "GameRoute.Missions", "GameRoute.Economy"]) {
+  if (!nexusSource.includes(route)) fail(`canonical Nexus gateway route is missing: ${route}`);
+}
+for (const route of ["GameRoute.Nexus", "GameRoute.Collection", "GameRoute.Deck", "GameRoute.Battle", "GameRoute.Missions", "GameRoute.Economy", "GameRoute.Profile"]) {
+  if (!gameShellSource.includes(route)) fail(`canonical GameShell route is missing: ${route}`);
+}
+for (const alias of ["GameRoute.Archive", "GameRoute.Forge", "GameRoute.Battlefield"]) {
+  if (nexusSource.includes(alias) || gameShellSource.includes(alias)) fail(`forbidden route alias remains: ${alias}`);
 }
 
-if (!process.exitCode) console.log("UNITY VERIFY PASSED: scaffold, authority boundaries, legacy mobile tree and no-build gate are present.");
+if (!process.exitCode) console.log("UNITY VERIFY PASSED: canonical routes, scaffold, authority boundaries, legacy mobile tree and no-build gate are present.");
