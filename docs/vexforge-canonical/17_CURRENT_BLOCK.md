@@ -2,44 +2,39 @@
 
 ## CURRENT ACTIVE BLOCK
 
-`EXPO_GAME_RUNTIME_FOUNDATION`
+`UNITY_RUNTIME_REACTIVATION`
 
 ### Objetivo
-Retirar Unity del runtime activo y estabilizar `mobile/**` como el único
-cliente Android de producto sobre Expo / React Native. Añadir la Foundation del
-Game Runtime sin reemplazar los componentes funcionales existentes.
+
+Reactivar Unity como runtime principal de desarrollo sin destruir Expo /
+React Native. Completar la mayor cantidad posible de Foundation, Nexus,
+Archive, Forge, Arena, Missions, Economy y Profile usando Supabase como
+autoridad y sin ejecutar ningún build.
 
 ### Estado
 
-La Foundation del Game Runtime existe en `mobile/game/**`: runtime/context,
-BootScene, superficie de render nativa y utilidades de movimiento. El shell
-consume la sesión y el estado de sincronización reales del `GameContext`.
-La versión de Expo/React Native instalada se conserva y no se instala Skia en
-esta etapa.
+El proyecto Unity ya tiene una escena de entrada, configuración Android,
+bootstrap, logging, navegación, estado persistente no sensible, cliente
+Supabase REST/RPC, auth en memoria, GameState derivado, Nexus development
+geometry y superficies data-driven para los dominios principales.
 
-### Siguiente bloque
-
-Ejecutar los checks estáticos, la instalación limpia y la única ruta de build
-Android Expo existente. Solo un APK real con package, versión, versionCode y
-SHA-256 válidos permite cerrar Foundation.
+### Gates
 
 | Gate | Estado | Evidencia / bloqueo |
 |---|---|---|
-| Runtime Foundation | IMPLEMENTED_UNVERIFIED | `mobile/game/**`; falta APK y QA física |
-| Expo dependency baseline | PRESERVED | `mobile/package.json`, `mobile/package-lock.json` |
-| Product Android build | CONFIGURED | `.github/workflows/vexforge-android-apk.yml` |
-| Release APK | EVIDENCE_REQUIRED | debe comprobarse artifact, package, versión, versionCode y SHA-256 |
+| Unity project scaffold | IMPLEMENTED_UNVERIFIED | `unity/**`; falta abrir con editor objetivo |
+| Supabase client | IMPLEMENTED_UNVERIFIED | `unity/Assets/Scripts/Backend/**` |
+| Auth/session | PARTIALLY_IMPLEMENTED | secure Android token store pendiente |
+| Nexus / World | IMPLEMENTED_UNVERIFIED | development geometry; assets oficiales pendientes |
+| Cards / Collection | IMPLEMENTED_UNVERIFIED | contratos REST deben verificarse en editor |
+| Deck / Formation | PARTIALLY_IMPLEMENTED | RPC validation/save wired; formation editor pendiente |
+| Battle | PARTIALLY_IMPLEMENTED | resolve RPC wired; event presentation pendiente |
+| Missions / Economy / Profile | IMPLEMENTED_UNVERIFIED | read surfaces wired to Supabase |
+| Expo fallback | PRESERVED | `mobile/**` sin eliminación |
+| First Unity build | BLOCKED | explícitamente prohibido en esta fase |
 
 ### No tocar
 
-`supabase/**`, `contracts/**`, backend, assets oficiales, dependencias
-existentes y contratos de datos. No instalar Skia, no actualizar Expo y no
-iniciar World, Cards, Deck, Battle, Missions, Economy o Profile como nuevas
-etapas.
-
-### Criterios de cierre de Foundation
-
-Expo Android reproducible; package/applicationId canónico; Supabase real; Auth
-y sesión persistente; Game Runtime Shell; datos mínimos reales; CI
-reproducible; APK standalone; trazabilidad commit → build → APK; instalación y
-QA posterior del cliente.
+No borrar `mobile/**`. No introducir claves privadas, service role keys,
+licencias, `.ulf`, APK, AAB, Player, Gradle o workflows de compilación.
+No modificar Supabase para compensar una carencia de Unity.

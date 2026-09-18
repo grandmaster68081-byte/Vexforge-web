@@ -1,0 +1,106 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!129 &1
+PlayerSettings:
+  serializedVersion: 27
+  productGUID: 00000000000000000000000000000000
+  AndroidProfiler: 0
+  AndroidFilterTouchesWhenObscured: 0
+  AndroidEnableSustainedPerformanceMode: 0
+  defaultScreenOrientation: 1
+  useOSAutorotation: 1
+  allowedAutorotateToPortrait: 1
+  allowedAutorotateToPortraitUpsideDown: 0
+  allowedAutorotateToLandscapeRight: 0
+  allowedAutorotateToLandscapeLeft: 0
+  companyName: Vexforge
+  productName: VEXFORGE
+  defaultCursor: {fileID: 0}
+  cursorHotspot: {x: 0, y: 0}
+  m_SplashScreenBackgroundColor: {r: 0.035, g: 0.024, b: 0.02, a: 1}
+  m_ShowUnitySplashScreen: 0
+  m_ShowUnitySplashLogo: 1
+  m_SplashScreenOverlayOpacity: 1
+  m_SplashScreenAnimation: 1
+  m_SplashScreenLogoStyle: 1
+  m_SplashScreenDrawMode: 0
+  m_SplashScreenBackgroundAnimationZoom: 1
+  m_SplashScreenLogoAnimationZoom: 1
+  m_SplashScreenBackgroundLandscapeAspect: 1
+  m_SplashScreenBackgroundPortraitAspect: 1
+  m_SplashScreenBackgroundLandscapeUvs: {serializedVersion: 2, x: 0, y: 0, width: 1, height: 1}
+  m_SplashScreenBackgroundPortraitUvs: {serializedVersion: 2, x: 0, y: 0, width: 1, height: 1}
+  m_SplashScreenLogos: []
+  m_VirtualRealitySplashScreen: {fileID: 0}
+  m_HolographicTrackingLossScreen: {fileID: 0}
+  defaultScreenWidth: 1080
+  defaultScreenHeight: 1920
+  targetDevice: 2
+  useOnDemandResources: 0
+  accelerometerFrequency: 60
+  companyGuid: 2f7ea6e7f50b44b7a05c7c78c2e1f0a1
+  AndroidBundleVersionCode: 4
+  AndroidMinSdkVersion: 26
+  AndroidTargetSdkVersion: 35
+  AndroidPreferredInstallLocation: 1
+  bundleVersion: 0.1.0
+  applicationIdentifier:
+    Standalone: com.vexforge.desktop
+    Android: com.vexforge.android
+  AndroidTargetArchitectures: 1
+  AndroidPreferredSplashScreenWidth: 1080
+  AndroidPreferredSplashScreenHeight: 1920
+  scriptingBackend:
+    Standalone: 1
+    Android: 1
+  il2cppCompilerConfiguration: {}
+  managedStrippingLevel:
+    EmbeddedLinux: 1
+    GameCoreScarlett: 1
+    GameCoreXboxOne: 1
+    Nintendo Switch: 1
+    PS4: 1
+    PS5: 1
+    QNX: 1
+    Stadia: 1
+    Standalone: 4
+    VisionOS: 1
+    WebGL: 1
+    Windows Store Apps: 1
+    XboxOne: 1
+    Android: 1
+  activeInputHandler: 0
+  AndroidApplicationEntry: 0
+  AndroidGamepadSupportLevel: 0
+  AndroidIsGamepadEnabled: 0
+  AndroidEnableArmv9SecurityFeatures: 0
+  AndroidBuildApkPerCpuArchitecture: 0
+  AndroidTVCompatibility: 0
+  AndroidIsGamepadEnabled: 0
+  AndroidResizableWindow: 0
+  AndroidDefaultWindowWidth: 1080
+  AndroidDefaultWindowHeight: 1920
+  AndroidMinifyRelease: 0
+  AndroidMinifyDebug: 0
+  AndroidValidateAppBundleSize: 1
+  AndroidAppBundleSizeToValidate: 150
+  AndroidApplicationEntry: 0
+  metroPackageName: com.vexforge.android
+  webGLInitialMemorySize: 32
+  webGLMaximumMemorySize: 2048
+  webGLMemoryGrowthMode: 2
+  webGLMemoryLinearGrowthStep: 16
+  webGLMemoryGeometricGrowthStep: 0.2
+  webGLMemoryGeometricGrowthCap: 96
+  webGLPowerPreference: 2
+  xboxOneDisableKinectGpuReservation: 1
+  xboxOneEnable7thCore: 1
+  xboxOneEnable8thCore: 1
+  xboxOneEnable9thCore: 1
+  xboxOneEnable10thCore: 1
+  xboxOneEnable11thCore: 1
+  xboxOneEnable12thCore: 1
+  xboxOneEnable13thCore: 1
+  xboxOneEnable14thCore: 1
+  xboxOneEnable15thCore: 1
+  xboxOneEnable16thCore: 1

@@ -4,11 +4,11 @@ Start here:
 - `VEXFORGE_CONTEXT.md`
 - `docs/vexforge-canonical/00_START_HERE.md`
 
-**ANDROID PRODUCT:** `mobile/**`
-**ACTIVE RUNTIME:** Expo / React Native
+**ANDROID PRODUCT:** `unity/**`
+**ACTIVE RUNTIME:** Unity 6.3 LTS target
 **BACKEND AUTHORITY:** Supabase
+**EXPO:** `LEGACY / FALLBACK / FROZEN`
 **WEB:** `FROZEN / NON-PRODUCT`
-**UNITY:** `RETIRED / HISTORICAL`
 
 El estado real implementado se describe desde `main`, no desde documentación histórica.
 
@@ -18,7 +18,9 @@ La documentación histórica existente se conserva. La capa canónica resume, in
 
 # VEXFORGE — Official Android Product
 
-This repository contains the official Android game client for VEXFORGE.
+This repository contains the official Android game clients for VEXFORGE.
+Unity is the active development runtime. Expo/React Native is preserved as the
+legacy fallback and is not removed or used as a dependency of Unity.
 Supabase is the only source of truth for backend data and rules; see
 `backend/architecture/data-source.md`.
 
@@ -44,7 +46,9 @@ and Supabase ever disagree, Supabase wins.
 
 ## Runtime status
 
-Expo / React Native is the active Android runtime and `mobile/**` is the
-canonical Android product. The web client in `src/**` and `public/**` is
-frozen and non-product. Unity material is retained only as historical
-documentation; it is not an active runtime or build path.
+Unity is the active Android development runtime under `unity/**`. The Expo /
+React Native client in `mobile/**` remains intact as a frozen fallback. The web
+client in `src/**` and `public/**` is frozen and non-product.
+
+Unity work must not produce an APK, Android Player, Gradle build, or CI build
+until the Unity Personal license and the official build mechanism are reviewed.

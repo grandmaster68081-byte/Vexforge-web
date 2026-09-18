@@ -10,8 +10,9 @@ Juego de cartas coleccionables (TCG) web: 127 cartas únicas, 4 facciones, econo
 
 ## Run & Operate
 
-- **Frontend local:** `/home/runner/workspace/Vexforge-web/`
-- **Build:** `cd /home/runner/workspace/Vexforge-web && npm run build` (= `vite build`)
+- **Unity project:** `/home/runner/workspace/Vexforge-web/unity/`
+- **Unity target:** `6000.3.0f1` (target declarado; falta validación con el editor exacto)
+- **Expo fallback:** `/home/runner/workspace/Vexforge-web/mobile/`
 - **Typecheck:** `cd /home/runner/workspace/Vexforge-web && npx tsc --noEmit -p tsconfig.app.json`
 - **ZIP descargable:** `/home/runner/workspace/vexforge-web.zip` → `GET /api/download/vexforge`
 - **API Server (este Replit):** `pnpm --filter @workspace/api-server run dev`
@@ -43,6 +44,9 @@ Juego de cartas coleccionables (TCG) web: 127 cartas únicas, 4 facciones, econo
 - **RPCs para toda escritura de negocio:** `execute_mission`, `fuse_cards`, `start_pvp_match`, etc. No INSERT/UPDATE directo desde el cliente.
 - **Domain-driven frontend:** Cada dominio tiene su `repository.ts` + `use<Domain>.ts` + ruta asociada.
 - **TypeScript:** El build de Vite no ejecuta TypeScript; siempre validar con `npx tsc --noEmit -p tsconfig.app.json`.
+- **Runtime principal:** Unity bajo `unity/**`; Expo se conserva intacto como fallback.
+- **Autoridad de gameplay:** Unity envía intención a Supabase; el servidor devuelve eventos y settlement.
+- **Regla de build:** no generar APK, Player, Gradle, GameCI ni workflows de compilación durante esta fase.
 
 ---
 

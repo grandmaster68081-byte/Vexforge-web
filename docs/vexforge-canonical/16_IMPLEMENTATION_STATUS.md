@@ -23,3 +23,4 @@ Estados permitidos usados aquí: `PLANNED`, `IMPLEMENTED`, `IMPLEMENTED_UNVERIFI
 | Game Runtime Foundation | runtime, boot scene, render boundary y motion utilities existen | IMPLEMENTED_UNVERIFIED | `mobile/game/**` | release APK y QA física |
 | Supabase authority | auth, datos y settlement permanecen en backend | ACTIVE | `mobile/lib/supabase.ts`, `mobile/context/GameContext.tsx` | no cambiar contratos |
 | Unity | retirado del árbol activo | HISTORICAL | documentación histórica clasificada | no reactivar |
+| Unity runtime | proyecto creado para reactivación | IMPLEMENTED_UNVERIFIED | `unity/**`, `26_UNITY_ENGINE_MIGRATION.md` | editor exacto, secure session store, QA y build gate |

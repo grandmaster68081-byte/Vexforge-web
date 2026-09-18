@@ -4,7 +4,11 @@ READ THIS FIRST
 
 ## Identidad
 
-VEXFORGE es un juego digital TCG en desarrollo. El producto activo es la aplicación Android Expo/React Native ubicada en `mobile/**`. La web en `src/**` se conserva como código histórico, evidencia y fuente reutilizable, pero está congelada como cliente de producto.
+VEXFORGE es un juego digital TCG en desarrollo. El runtime principal de
+desarrollo Android es Unity bajo `unity/**`. La aplicación Expo/React Native
+ubicada en `mobile/**` se conserva intacta como runtime secundario, respaldo y
+referencia de contratos. La web en `src/**` se conserva como código histórico,
+evidencia y fuente reutilizable, pero está congelada como cliente de producto.
 
 ## Estado de fuente
 
@@ -31,25 +35,33 @@ Supabase project reference: `rscuzqnfccqvltkdcdny`. Supabase live es la autorida
 
 ## Producto y reglas activas
 
-- Android activo; web congelada.
+- Unity activo para desarrollo Android; Expo/React Native congelado como
+  fallback; web congelada.
 - Supabase live > copia documental para backend.
 - Código actual de `main` > documentación para implementación.
 - No inventar cartas, nombres, balances, rewards, reglas, assets ni resultados.
 - No duplicar lógica autoritativa de servidor en el cliente.
 - No usar sustituciones genéricas silenciosas.
 - No cambiar Supabase ni funcionalidad sin autorización específica.
-- No compilar APK por iniciativa propia.
+- No compilar APK, Android Player, Gradle, GameCI ni workflows de compilación
+  durante la reactivación Unity.
 
 ## Estado de trabajo
 
-La capa canónica está documentada en `docs/vexforge-canonical/`. La implementación Android contiene superficies reales y guardas de contrato, pero la evidencia física de dispositivo, la correspondencia exacta entre instalación y release, y la reconciliación exhaustiva de todos los objetos live de Supabase siguen siendo `EVIDENCE_REQUIRED` o `NO_VERIFICADO` según el registro correspondiente.
+La capa canónica está documentada en `docs/vexforge-canonical/`. Unity ya tiene
+un proyecto de desarrollo, bootstrap, conexión Supabase, sesión, shell,
+Nexus/World y superficies iniciales para Archive, Forge, Arena, Missions,
+Treasury y Legado. La primera compilación, la licencia, la QA física y la
+reconciliación exhaustiva de todos los objetos live de Supabase siguen siendo
+`EVIDENCE_REQUIRED` o `BLOCKED`.
 
 ## Siguiente bloque
 
-La decisión de runtime está reconciliada. El bloque activo es `ETAPA 1 —
-FOUNDATION / EXPO GAME RUNTIME`, entregado como un único paquete operativo.
-Consultar `docs/vexforge-canonical/17_CURRENT_BLOCK.md` y
-`docs/vexforge-canonical/27_EXPO_GAME_RUNTIME.md`.
+El bloque activo es `UNITY_RUNTIME_REACTIVATION`: continuar la implementación
+data-driven en Unity sin borrar `mobile/**`, sin duplicar autoridad del
+backend y sin ejecutar builds. Consultar
+`docs/vexforge-canonical/17_CURRENT_BLOCK.md` y
+`docs/vexforge-canonical/26_UNITY_ENGINE_MIGRATION.md`.
 
 ## Mapa de lectura
 
@@ -61,14 +73,13 @@ Consultar `docs/vexforge-canonical/17_CURRENT_BLOCK.md` y
 6. `docs/vexforge-canonical/21_CONTRADICTIONS.md`
 7. El documento de dominio enlazado antes de modificar cualquier área.
 
-## Decisión de runtime registrada el 2026-09-17
+## Decisión de runtime registrada el 2026-09-18
 
-Expo / React Native es el runtime Android activo y `mobile/**` es la fuente
-canónica del producto Android. React Native es la capa de aplicación y UI;
-Reanimated, Worklets y Gesture Handler cubren movimiento e interacción; Skia
-queda preparada como futura capa de rendering 2D/2.5D, pero no se instala en
-esta etapa.
+Unity es el runtime Android principal de desarrollo y `unity/**` es la nueva
+superficie de juego. Expo / React Native permanece intacto como runtime
+secundario, respaldo y referencia de contratos. Unity no depende de Expo.
 
 Supabase mantiene toda autoridad de datos, reglas, autenticación y settlement.
-La web queda congelada como código no-producto. Unity queda retirado e
-histórico y no es un runtime ni una ruta de build activa.
+La web queda congelada como código no-producto. Unity presenta datos y
+resultados autorizados; no resuelve competitividad ni inventa economía,
+cartas, rewards o progreso.
