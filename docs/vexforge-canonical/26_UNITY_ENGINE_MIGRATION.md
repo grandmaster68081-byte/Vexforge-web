@@ -2,10 +2,10 @@
 
 ## Decisión activa
 
-Unity es el runtime principal de desarrollo Android para VEXFORGE. Expo /
-React Native (`mobile/**`) se conserva completo como runtime secundario,
-respaldo y referencia de comportamiento; no se elimina ni se mezcla con la
-ejecución de Unity.
+Unity es el único runtime activo de producto Android para VEXFORGE. Expo /
+React Native (`mobile/**`) se conserva completo como legado histórico, respaldo
+y referencia de comportamiento; no se elimina, no recibe trabajo nuevo y no
+se trata como una arquitectura equivalente a Unity.
 
 ## Estado de implementación
 
@@ -18,11 +18,11 @@ ejecución de Unity.
 | Supabase REST/RPC client | IMPLEMENTED_UNVERIFIED |
 | Auth/session | PARTIALLY_IMPLEMENTED; secure device token storage is pending |
 | Nexus / World | IMPLEMENTED_UNVERIFIED; citadel geometry and diegetic portals |
-| Archive / Collection | IMPLEMENTED_UNVERIFIED; reusable card renderer and real ownership |
+| Archive / Collection | IMPLEMENTED_UNVERIFIED; reusable world card view, bounded pool and official art resolver |
 | Forge / Deck | IMPLEMENTED_UNVERIFIED; physical slots, validation and save remain server RPCs |
 | Arena / Battle | PARTIALLY_IMPLEMENTED; battlefield surface and server-authoritative resolve |
 | Missions / Economy / Profile | IMPLEMENTED_UNVERIFIED read surfaces |
-| Expo fallback | PRESERVED |
+| Expo / React Native legacy | PRESERVED |
 | APK / Android Player | BLOCKED by explicit no-build gate |
 
 ## Autoridad
@@ -55,8 +55,10 @@ compilación.
 - `unity/Assets/Scripts/Session/` — sesión autenticada en memoria y estados de auth.
 - `unity/Assets/Scripts/Backend/` — REST/RPC Supabase y contratos mínimos.
 - `unity/Assets/Scripts/GameState/` — estado local derivado de respuestas autorizadas.
-- `unity/Assets/Scripts/World/` — geometría de desarrollo del Nexus.
-- `unity/Assets/Scripts/UI/` — shell y superficies de dominio.
+- `unity/Assets/Scripts/Presentation/` — Presentation Foundation, world stage,
+  hotspots, input, cards, resolver, cache y pools.
+- `unity/Assets/Scripts/UI/` — Canvas contextual secundario y contratos de
+  sesión/acciones; no es la presentación principal del Nexus.
 - `unity/Assets/Scenes/VexforgeBootstrap.unity` — escena de entrada.
 
 ## Blockers

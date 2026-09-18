@@ -6,12 +6,15 @@ namespace Vexforge.Core
     {
         Boot,
         Nexus,
-        Collection,
-        Deck,
-        Battle,
+        Archive,
+        Forge,
+        Battlefield,
         Missions,
         Economy,
-        Profile
+        Profile,
+        Collection = Archive,
+        Deck = Forge,
+        Battle = Battlefield
     }
 
     public sealed class NavigationService

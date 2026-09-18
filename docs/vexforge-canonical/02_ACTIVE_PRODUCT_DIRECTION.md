@@ -2,7 +2,9 @@
 
 ## Android como producto activo
 
-`mobile/**` es el cliente activo del producto. La navegación, pantallas, assets y verificadores móviles son la superficie que debe recibir trabajo de producto.
+`unity/**` es el cliente activo del producto. La navegación, presentación,
+assets y runtime Android que deben recibir trabajo de producto pertenecen a
+Unity.
 
 ## Web congelada
 
@@ -20,12 +22,13 @@ La dirección aprobada es un TCG digital premium con identidad propia VEXFORGE, 
 
 ## Decisión de runtime
 
-- Runtime Android activo: **Expo / React Native**.
+- Runtime Android activo: **Unity**.
 - Plataforma activa: Android.
 - Backend: Supabase existente, sin sustitución.
-- Cliente canónico: Expo/React Native en `mobile/**`.
+- Cliente canónico: Unity en `unity/**`.
 - Web: congelada/no activa.
-- Unity: retirado/histórico, sin runtime ni build activo.
+- Expo/React Native: legado/histórico preservado en `mobile/**`, sin trabajo
+  nuevo ni equivalencia arquitectónica.
 
 La Foundation actual agrega la frontera `GameRuntime` sin destruir los
 componentes funcionales existentes. El APK standalone, artifact, metadatos y

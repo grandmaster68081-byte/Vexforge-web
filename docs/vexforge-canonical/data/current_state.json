@@ -6,7 +6,7 @@
   "repository": {
     "name": "grandmaster68081-byte/Vexforge-web",
     "branch": "main",
-    "commit": "890dc19693e1b5c429d3599175937e2c3bbdd985",
+    "commit": "201ee0330529c8e085afd1143cf066e18de3bc8a",
     "snapshot_date": "2026-09-17"
   },
   "android": {
@@ -18,8 +18,8 @@
     "reactNative": "0.81.5",
     "runtimeVersion": "1.0.0"
   },
-  "current_block": "EXPO_GAME_RUNTIME_FOUNDATION_QA_PENDING",
-  "overall_status": "FOUNDATION_IMPLEMENTED_UNVERIFIED",
+  "current_block": "UNITY_PRESENTATION_KERNEL_RECONCILIATION",
+  "overall_status": "UNITY_IMPLEMENTED_UNVERIFIED",
   "known_blockers": [
     "physical Android evidence",
     "release/source correspondence",
@@ -41,7 +41,8 @@
     "sast_findings": 0,
     "hounddog_findings": 0
   },
-  "target_runtime": "expo_react_native",
-  "current_runtime": "expo_react_native",
-  "migration_status": "ACTIVE_RUNTIME_RECONCILED"
+  "target_runtime": "unity_android",
+  "current_runtime": "unity_android",
+  "legacy_runtime": "expo_react_native",
+  "migration_status": "UNITY_CANONICAL_RUNTIME"
 }

@@ -1,12 +1,12 @@
-# 27 — EXPO GAME RUNTIME FALLBACK
+# 27 — EXPO / REACT NATIVE LEGACY RECORD
 
 ## Estado
 
-`mobile/**` permanece intacto como runtime alternativo y respaldo. No se
-eliminan sus pantallas, componentes, dependencias, workflows ni contratos.
+`mobile/**` permanece intacto como legado histórico y material de respaldo. No
+se eliminan sus pantallas, componentes, dependencias, workflows ni contratos.
 Unity no depende de Expo para ejecutar gameplay.
 
-La implementación Expo sigue siendo una referencia útil para contratos de
+La implementación histórica Expo sigue siendo una referencia útil para contratos de
 Supabase, estados de sesión y nombres de RPC, pero no es el runtime principal
 durante la reactivación Unity.
 

@@ -1,6 +1,6 @@
 {
   "source_commit": "f43159ecee63b610bb71c295238327ecea3feeb6",
-  "active_android_routes": [
+  "legacy_mobile_routes": [
     {"route":"/auth","file":"mobile/app/auth.tsx","auth_required":false},
     {"route":"/tutorial","file":"mobile/app/tutorial.tsx","auth_required":true},
     {"route":"/(tabs)/","file":"mobile/app/(tabs)/index.tsx","auth_required":true},

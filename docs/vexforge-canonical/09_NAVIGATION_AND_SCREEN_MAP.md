@@ -1,6 +1,21 @@
 # 09 — NAVIGATION AND SCREEN MAP
 
-## Android active
+## Unity Android active
+
+La navegación activa pertenece a Unity y pasa por `VexforgeDiegeticInputRouter`
+y `NavigationService`. Los gateways del Nexus conectan explícitamente con
+`NEXUS`, `ARCHIVE`, `FORGE`, `BATTLEFIELD`, `MISSIONS` y `ECONOMY`.
+
+| Route | Unity surface | Auth | Status |
+|---|---|---|---|
+| `NEXUS` | `NexusPresentationRoot` | yes | IMPLEMENTED_UNVERIFIED |
+| `ARCHIVE` | `GameShellController` + `VexforgeCardPool` | yes | IMPLEMENTED_UNVERIFIED |
+| `FORGE` | `GameShellController` + server validation | yes | IMPLEMENTED_UNVERIFIED |
+| `BATTLEFIELD` | `GameShellController` + server resolve | yes | IMPLEMENTED_UNVERIFIED |
+| `MISSIONS` | `GameShellController` | yes | IMPLEMENTED_UNVERIFIED |
+| `ECONOMY` | `GameShellController` | yes | IMPLEMENTED_UNVERIFIED |
+
+## Legacy / historical mobile record
 
 | Route | File | Parent/entry | Auth | Data/acciones | Status |
 |---|---|---|---|---|---|
@@ -22,4 +37,6 @@
 
 ## Web / shared / unknown
 
-`src/**` contiene rutas web históricas y no debe considerarse cliente activo. Las rutas documentadas sin archivo actual son `REFERENCIADO_PERO_NO_ENCONTRADO`. La navegación efectiva Android debe derivarse de Expo Router, no de documentos antiguos.
+Las rutas siguientes describen únicamente el legado `mobile/**`; no son
+superficies activas ni una arquitectura paralela. `src/**` contiene rutas web
+históricas y no debe considerarse cliente activo.

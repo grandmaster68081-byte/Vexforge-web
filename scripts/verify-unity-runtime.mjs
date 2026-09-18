@@ -16,6 +16,15 @@ const requiredFiles = [
   "Assets/Scripts/Backend/VexforgeRepository.cs",
   "Assets/Scripts/GameState/GameStateStore.cs",
   "Assets/Scripts/UI/GameShellController.cs",
+  "Assets/Scripts/Presentation/VexforgeCardArtResolver.cs",
+  "Assets/Scripts/Presentation/VexforgeTextureLruCache.cs",
+  "Assets/Scripts/Presentation/VexforgeCardView.cs",
+  "Assets/Scripts/Presentation/VexforgeCardPool.cs",
+  "Assets/Scripts/Presentation/VexforgeWorldHotspot.cs",
+  "Assets/Scripts/Presentation/VexforgeDiegeticInputRouter.cs",
+  "Assets/Scripts/Presentation/VexforgeNexusStage.cs",
+  "Assets/Scripts/Presentation/NexusPresentationRoot.cs",
+  "Assets/Scripts/Presentation/NexusDevelopmentFallback.cs",
 ];
 
 const fail = (message) => {
@@ -53,4 +62,19 @@ const scan = (directory) => {
 scan(root);
 if (prohibitedArtifacts.length) fail(`build artifact present: ${prohibitedArtifacts.join(", ")}`);
 
-if (!process.exitCode) console.log("UNITY VERIFY PASSED: scaffold, authority boundaries, Expo fallback and no-build gate are present.");
+const presentationRoot = path.join(unity, "Assets/Scripts/Presentation");
+const presentationSources = fs
+  .readdirSync(presentationRoot)
+  .filter((entry) => entry.endsWith(".cs"))
+  .map((entry) => fs.readFileSync(path.join(presentationRoot, entry), "utf8"))
+  .join("\n");
+for (const prohibited of ["ScreenSpaceOverlay", "Shader.Find(", "ARTE DISPONIBLE", "Mathf.Min(catalog.Length, 8)"]) {
+  if (presentationSources.includes(prohibited)) fail(`prohibited Presentation Foundation marker: ${prohibited}`);
+}
+
+const nexusSource = fs.readFileSync(path.join(presentationRoot, "NexusPresentationRoot.cs"), "utf8");
+for (const route of ["GameRoute.Nexus", "GameRoute.Archive", "GameRoute.Forge", "GameRoute.Battlefield", "GameRoute.Missions", "GameRoute.Economy"]) {
+  if (!nexusSource.includes(route)) fail(`canonical Nexus route is missing: ${route}`);
+}
+
+if (!process.exitCode) console.log("UNITY VERIFY PASSED: scaffold, authority boundaries, legacy mobile tree and no-build gate are present.");

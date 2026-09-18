@@ -9,16 +9,18 @@
 ## Resolución de la discrepancia web/Android
 
 - SOURCE A: `README.md` original llama a la web “Official Web Frontend”.
-- SOURCE B: decisión activa y `mobile/**` declaran Android como producto activo.
-- CURRENT EVIDENCE: Expo Router, `mobile/app.json`, rutas móviles, workflows APK y continuidad reciente.
+- SOURCE B: decisión activa y `unity/**` declaran Android como producto activo.
+- CURRENT EVIDENCE: Unity project settings, bootstrap scene, Presentation
+  Foundation and current Unity runtime.
 - STATUS: `RESUELTO` para orientación futura: Android activo; la afirmación web queda histórica/frozen.
 
 No se eliminan fuentes antiguas: se clasifican y se enlazan.
 
 ## Runtime actual
 
-- Código `main` actual: autoridad para describir la implementación Expo/React Native existente.
-- Decisión de producto/runtime: Expo / React Native es el runtime Android
-  activo y `mobile/**` es la fuente canónica.
-- Unity es `RETIRED / HISTORICAL`; no se describe como cliente activo ni se
-  reutiliza su configuración.
+- Código `main` actual: autoridad para describir la implementación Unity
+  existente.
+- Decisión de producto/runtime: Unity es el runtime Android activo y `unity/**`
+  es la fuente canónica.
+- Expo / React Native en `mobile/**` es `LEGACY / HISTORICAL`; no se describe
+  como runtime activo ni se le añade trabajo nuevo.

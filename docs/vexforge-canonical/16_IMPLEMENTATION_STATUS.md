@@ -2,13 +2,13 @@
 
 | Área | Estado actual | Status | Evidence | Blocker / next |
 |---|---|---|---|---|
-| Android shell/navigation | Expo Router y tabs existen | IMPLEMENTED_UNVERIFIED | `mobile/app/**` | device matrix |
-| Auth/session | loaders, forms, guards y persistence existen | IMPLEMENTED_UNVERIFIED | `auth.tsx`, `supabase.ts` | QA autenticada |
-| Home/collection/deck/profile | screens y consumers reales | IMPLEMENTED_UNVERIFIED | routes + verifiers | APK/device |
-| Battle/formation | renderer, formation y battle consumers | PARTIAL | `battle.tsx`, components, protocol | live contract + physical QA |
-| Missions/rewards/world | screens/actions/loaders reales | IMPLEMENTED_UNVERIFIED | routes + verifiers | live/QA |
-| Economy/withdrawals | UI y consumers, backend amplio | EVIDENCE_REQUIRED | `economy.tsx`, live catalog | authenticated QA |
-| Visual system | tokens, scenes, states y guards | IMPLEMENTED_UNVERIFIED | constants/components/verifiers | device readability/performance |
+| Android runtime/navigation | Unity bootstrap, world navigation y presentation stage existen | IMPLEMENTED_UNVERIFIED | `unity/Assets/Scripts/**` | Unity Editor y dispositivo |
+| Auth/session | cliente Unity y sesión en memoria existen | PARTIAL | `unity/Assets/Scripts/Session/**`, `Backend/**` | secure Android storage + QA |
+| Home/collection/deck/profile | Nexus world-first y superficies Unity existen | IMPLEMENTED_UNVERIFIED | `unity/Assets/Scripts/Presentation/**`, `UI/**` | editor/device |
+| Battle/formation | presentation and server-authoritative consumers | PARTIAL | `unity/Assets/Scripts/Presentation/**`, `Backend/**` | live contract + physical QA |
+| Missions/rewards/world | read surfaces and Nexus hotspots exist | IMPLEMENTED_UNVERIFIED | `unity/Assets/Scripts/**` | live/QA |
+| Economy/withdrawals | Unity read surface, backend authority preserved | EVIDENCE_REQUIRED | `unity/Assets/Scripts/UI/**`, live catalog | authenticated QA |
+| Visual system | world-first foundation, states and bounded resources | IMPLEMENTED_UNVERIFIED | `unity/Assets/Scripts/Presentation/**` | device readability/performance |
 | OTA | config/function/workflow presentes | EVIDENCE_REQUIRED | app.json, function, workflow | live publish/update evidence |
 | Latest APK | release 249 recorded | VERIFIED_FOR_RECORDED_GATES | `CONTINUITY.md` | does not prove current commit install |
 | Canonical continuity | this folder + context | IMPLEMENTED | current commit | keep updated per block |
@@ -20,6 +20,6 @@ Estados permitidos usados aquí: `PLANNED`, `IMPLEMENTED`, `IMPLEMENTED_UNVERIFI
 | Área | Estado actual | Status | Evidence | Blocker / next |
 |---|---|---|---|---|
 | Unity runtime | cliente Android canónico de desarrollo | IMPLEMENTED_UNVERIFIED | `unity/**`, `26_UNITY_ENGINE_MIGRATION.md` | editor, build gate y QA física |
-| Game Runtime Foundation | runtime, boot scene, render boundary y motion utilities existen | IMPLEMENTED_UNVERIFIED | `mobile/game/**` | release APK y QA física |
-| Supabase authority | auth, datos y settlement permanecen en backend | ACTIVE | `mobile/lib/supabase.ts`, `mobile/context/GameContext.tsx` | no cambiar contratos |
-| Expo/React Native fallback | respaldo, rollback y referencia funcional | PRESERVED | `mobile/**`, `mobile/app.json` | no eliminar ni mezclar runtimes |
+| Presentation Foundation | runtime, boot scene, render boundary y motion utilities existen | IMPLEMENTED_UNVERIFIED | `unity/Assets/Scripts/Presentation/**` | Unity Editor y QA física |
+| Supabase authority | auth, datos y settlement permanecen en backend | ACTIVE | `unity/Assets/Scripts/Backend/**` | no cambiar contratos |
+| Expo/React Native legacy | legado, rollback y referencia histórica | PRESERVED | `mobile/**`, `mobile/app.json` | no eliminar ni mezclar runtimes |

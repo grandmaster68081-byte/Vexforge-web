@@ -23,9 +23,9 @@
 ## 2026-09-17 — EXPO GAME RUNTIME FOUNDATION
 
 - BLOCK: `EXPO_GAME_RUNTIME_FOUNDATION`
-- CHANGE: Unity quedó retirado/histórico; Expo / React Native es el runtime
-  Android activo; se añadió `mobile/game/**` y el Game Runtime Shell conserva
-  sesión y sincronización reales.
+- CHANGE: este registro histórico documenta un estado anterior en el que Expo /
+  React Native era el runtime Android activo; Unity es ahora el runtime
+  canónico y `mobile/**` queda como legado histórico.
 - COMMIT: `890dc19693e1b5c429d3599175937e2c3bbdd985`.
 - WORKFLOW: `vexforge-android-apk.yml`; run `35288617678`; release
   `vexforge-android-build-250`; artifact `vexforge-android-apk-250`.

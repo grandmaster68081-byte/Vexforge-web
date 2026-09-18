@@ -4,17 +4,18 @@ READ THIS FIRST
 
 ## Identidad
 
-VEXFORGE es un juego digital TCG en desarrollo. El runtime principal de
-desarrollo Android es Unity bajo `unity/**`. La aplicación Expo/React Native
-ubicada en `mobile/**` se conserva intacta como runtime secundario, respaldo y
-referencia de contratos. La web en `src/**` se conserva como código histórico,
-evidencia y fuente reutilizable, pero está congelada como cliente de producto.
+VEXFORGE es un juego digital TCG en desarrollo. El único runtime activo de
+producto Android es Unity bajo `unity/**`. La aplicación Expo/React Native
+ubicada en `mobile/**` se conserva intacta únicamente como legado/historial,
+respaldo y referencia de contratos; no es un runtime activo. La web en
+`src/**` se conserva como código histórico, evidencia y fuente reutilizable,
+pero está congelada como cliente de producto.
 
 ## Estado de fuente
 
 - Repositorio: `grandmaster68081-byte/Vexforge-web`
 - Rama: `main`
-- Commit auditado: `f43159ecee63b610bb71c295238327ecea3feeb6`
+- Commit auditado: `201ee0330529c8e085afd1143cf066e18de3bc8a`
 - Snapshot: 2026-09-17
 - Android package: `com.vexforge.android`
 - App version: `1.0.1`
@@ -31,12 +32,14 @@ Supabase project reference: `rscuzqnfccqvltkdcdny`. Supabase live es la autorida
 
 ## Arquitectura actual
 
-`mobile/app/_layout.tsx` registra `GameProvider` y el stack Expo Router. `mobile/app/(tabs)/_layout.tsx` protege sesión, tutorial y navegación inferior: Nexus, Arena, Archivo, Forja y Legado. Las pantallas adicionales cubren auth, tutorial, world, missions, economy, store, social y meta. `mobile/lib/supabase.ts` concentra auth, REST/RPC, consultas y tipos del cliente; `mobile/context/GameContext.tsx` mantiene sesión, progreso y sincronización; `mobile/constants/**` concentra identidad, experiencia, colores y tokens visuales; `mobile/components/**` contiene el renderer reusable.
+El código de `mobile/**` conserva referencias históricas de sesión, contratos y
+superficies anteriores. La ejecución activa, presentación y navegación del
+producto pertenecen a `unity/**`; `mobile/**` no debe recibir trabajo nuevo.
 
 ## Producto y reglas activas
 
-- Unity activo para desarrollo Android; Expo/React Native congelado como
-  fallback; web congelada.
+- Unity activo para desarrollo Android; Expo/React Native congelado como legado
+  histórico; web congelada.
 - Supabase live > copia documental para backend.
 - Código actual de `main` > documentación para implementación.
 - No inventar cartas, nombres, balances, rewards, reglas, assets ni resultados.
@@ -77,7 +80,8 @@ backend y sin ejecutar builds. Consultar
 
 Unity es el runtime Android principal de desarrollo y `unity/**` es la nueva
 superficie de juego. Expo / React Native permanece intacto en `mobile/**` como
-respaldo, rollback y referencia de contratos. Unity no depende de Expo.
+legado histórico, respaldo, rollback y referencia de contratos. Unity no
+depende de Expo.
 
 Supabase mantiene toda autoridad de datos, reglas, autenticación y settlement.
 La web queda congelada como código no-producto. Unity presenta datos y

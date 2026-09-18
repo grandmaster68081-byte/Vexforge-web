@@ -7,7 +7,6 @@ using Vexforge.Backend;
 using Vexforge.Core;
 using Vexforge.GameState;
 using Vexforge.Presentation;
-using Vexforge.World;
 
 namespace Vexforge.UI
 {
@@ -20,45 +19,86 @@ namespace Vexforge.UI
         private InputField emailInput;
         private InputField passwordInput;
         private BattlePresentationDirector battleDirector;
+        private VexforgeNexusStage nexusStage;
+        private VexforgeCardArtResolver cardArtResolver;
+        private VexforgeCardPool cardPool;
+        private Transform cardWorldRoot;
         private bool built;
 
         private void Start()
         {
             app = VexforgeApp.Instance;
             if (app == null) return;
-            if (GetComponent<NexusWorldController>() == null) gameObject.AddComponent<NexusWorldController>();
+
+            nexusStage = GetComponent<VexforgeNexusStage>();
+            if (nexusStage == null) nexusStage = gameObject.AddComponent<VexforgeNexusStage>();
+            nexusStage.Initialize(app);
+
             battleDirector = GetComponent<BattlePresentationDirector>();
             if (battleDirector == null) battleDirector = gameObject.AddComponent<BattlePresentationDirector>();
             battleDirector.EventPresented += PresentBattleEvent;
+
+            cardWorldRoot = new GameObject("CardPresentationWorld").transform;
+            cardWorldRoot.SetParent(transform, false);
+            cardWorldRoot.localPosition = new Vector3(0f, 0.8f, 6f);
+            cardArtResolver = new VexforgeCardArtResolver(new VexforgeTextureLruCache(128 * 1024 * 1024));
+            cardPool = new VexforgeCardPool(
+                cardWorldRoot,
+                () => VexforgeCardView.CreateRuntime(cardWorldRoot),
+                24,
+                12);
+
             BuildCanvas();
             app.Session.StateChanged += _ => Render();
             app.GameState.SyncStateChanged += _ => Render();
-            app.Navigation.RouteChanged += _ => Render();
+            app.Navigation.RouteChanged += HandleRouteChanged;
             Render();
         }
 
         private void BuildCanvas()
         {
-            var canvasObject = new GameObject("VexforgeCanvas", typeof(RectTransform), typeof(Canvas), typeof(CanvasScaler), typeof(GraphicRaycaster));
+            var canvasObject = new GameObject("VexforgeContextCanvas", typeof(RectTransform), typeof(Canvas), typeof(CanvasScaler), typeof(GraphicRaycaster));
             canvasObject.transform.SetParent(transform, false);
             canvas = canvasObject.GetComponent<Canvas>();
-            canvas.renderMode = RenderMode.ScreenSpaceOverlay;
+            canvas.renderMode = RenderMode.ScreenSpaceCamera;
+            canvas.worldCamera = Camera.main;
+            canvas.planeDistance = 7f;
             canvasObject.GetComponent<CanvasScaler>().uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
             canvasObject.GetComponent<CanvasScaler>().referenceResolution = new Vector2(1080f, 1920f);
             canvasObject.GetComponent<CanvasScaler>().matchWidthOrHeight = 0.45f;
             built = true;
         }
 
+        private void HandleRouteChanged(GameRoute route)
+        {
+            if (nexusStage != null)
+            {
+                nexusStage.SetNexusVisible(app != null && app.Session.IsAuthenticated && route == GameRoute.Nexus);
+            }
+            Render();
+        }
+
         private void Render()
         {
             if (!built || app == null) return;
             ClearCanvas();
+            if (cardPool != null) cardPool.ReturnAll();
+
             if (!app.Session.IsAuthenticated)
             {
+                if (nexusStage != null) nexusStage.SetNexusVisible(false);
                 RenderSignIn();
                 return;
             }
 
+            if (app.Navigation.CurrentRoute == GameRoute.Nexus)
+            {
+                if (nexusStage != null) nexusStage.SetNexusVisible(true);
+                RenderNexusContext();
+                return;
+            }
+
+            if (nexusStage != null) nexusStage.SetNexusVisible(false);
             RenderShell();
         }
 
@@ -84,9 +124,24 @@ namespace Vexforge.UI
             UiFactory.Anchor(status.rectTransform, new Vector2(0.08f, 0.02f), new Vector2(0.92f, 0.11f), Vector2.zero, Vector2.zero);
         }
 
+        private void RenderNexusContext()
+        {
+            var context = UiFactory.PanelObject(canvas.transform, "NexusContext", new Color(0.015f, 0.012f, 0.01f, 0.66f));
+            UiFactory.Anchor(context.GetComponent<RectTransform>(), new Vector2(0.04f, 0.84f), new Vector2(0.96f, 0.98f), Vector2.zero, Vector2.zero);
+            var profileName = app.GameState.Profile != null && !string.IsNullOrWhiteSpace(app.GameState.Profile.display_name)
+                ? app.GameState.Profile.display_name
+                : "Jugador autenticado";
+            var heading = UiFactory.Label(context.transform, "VEXFORGE  /  " + profileName, 20, UiFactory.Gold);
+            UiFactory.Anchor(heading.rectTransform, new Vector2(0.04f, 0.22f), new Vector2(0.58f, 0.78f), Vector2.zero, Vector2.zero);
+            var syncText = app.GameState.SyncState == SyncState.Connected ? "SUPABASE · CONNECTED" : app.GameState.SyncState.ToString().ToUpperInvariant();
+            var sync = UiFactory.Label(context.transform, syncText, 12,
+                app.GameState.SyncState == SyncState.Connected ? UiFactory.Arcane : UiFactory.Muted, TextAnchor.MiddleRight);
+            UiFactory.Anchor(sync.rectTransform, new Vector2(0.58f, 0.22f), new Vector2(0.96f, 0.78f), Vector2.zero, Vector2.zero);
+        }
+
         private void RenderShell()
         {
-            var background = UiFactory.PanelObject(canvas.transform, "GameShell", UiFactory.Background);
+            var background = UiFactory.PanelObject(canvas.transform, "ContextSurface", UiFactory.Background);
             UiFactory.Stretch(background.GetComponent<RectTransform>(), 0, 0, 0, 0);
             background.GetComponent<Image>().color = new Color(UiFactory.Background.r, UiFactory.Background.g, UiFactory.Background.b, 0.52f);
             var header = UiFactory.PanelObject(background.transform, "Header", new Color(0.03f, 0.02f, 0.018f, 0.78f));
@@ -97,10 +152,11 @@ namespace Vexforge.UI
             var heading = UiFactory.Label(header.transform, "VEXFORGE  /  " + profileName, 20, UiFactory.Gold);
             UiFactory.Anchor(heading.rectTransform, new Vector2(0.05f, 0.32f), new Vector2(0.72f, 0.78f), Vector2.zero, Vector2.zero);
             var syncText = app.GameState.SyncState == SyncState.Connected ? "SUPABASE · CONNECTED" : app.GameState.SyncState.ToString().ToUpperInvariant();
-            var sync = UiFactory.Label(header.transform, syncText, 12, app.GameState.SyncState == SyncState.Connected ? UiFactory.Arcane : UiFactory.Muted, TextAnchor.MiddleRight);
+            var sync = UiFactory.Label(header.transform, syncText, 12,
+                app.GameState.SyncState == SyncState.Connected ? UiFactory.Arcane : UiFactory.Muted, TextAnchor.MiddleRight);
             UiFactory.Anchor(sync.rectTransform, new Vector2(0.63f, 0.32f), new Vector2(0.95f, 0.78f), Vector2.zero, Vector2.zero);
 
-            var contentObject = UiFactory.PanelObject(background.transform, "RouteContent", new Color(0f, 0f, 0f, 0f));
+            var contentObject = UiFactory.PanelObject(background.transform, "RouteContext", new Color(0f, 0f, 0f, 0f));
             UiFactory.Anchor(contentObject.GetComponent<RectTransform>(), new Vector2(0.04f, 0.08f), new Vector2(0.96f, 0.89f), Vector2.zero, Vector2.zero);
             content = contentObject.GetComponent<RectTransform>();
             RenderRoute();
@@ -111,9 +167,9 @@ namespace Vexforge.UI
             if (content == null) return;
             switch (app.Navigation.CurrentRoute)
             {
-                case GameRoute.Collection: BuildCollection(); break;
-                case GameRoute.Deck: BuildDeck(); break;
-                case GameRoute.Battle: BuildBattle(); break;
+                case GameRoute.Archive: BuildCollection(); break;
+                case GameRoute.Forge: BuildDeck(); break;
+                case GameRoute.Battlefield: BuildBattle(); break;
                 case GameRoute.Missions: BuildMissions(); break;
                 case GameRoute.Economy: BuildEconomy(); break;
                 case GameRoute.Profile: BuildProfile(); break;
@@ -123,19 +179,8 @@ namespace Vexforge.UI
 
         private void BuildNexus()
         {
-            Title("THE NEXUS", "Citadel hub · elige un dominio en el mundo");
-            if (app.GameState.SyncState != SyncState.Connected)
-            {
-                Message("El Nexus espera una sincronización válida de Supabase.\nNo se muestran datos inventados.");
-                return;
-            }
-
-            var progress = app.GameState.Progress;
-            var profile = app.GameState.Profile;
-            Message("Sello: " + (profile == null ? "IDENTIDAD NO REPORTADA" : profile.display_name) +
-                    "\nNivel: " + (progress == null ? "NO REPORTADO" : progress.level.ToString()) +
-                    "\nEnergía: " + (progress == null ? "NO REPORTADA" : progress.energy + " / " + progress.max_energy) +
-                    "\nUsa los pedestales del Nexus para entrar a cada dominio.");
+            Title("THE NEXUS", "La ciudadela permanece en el mundo; usa sus gateways para navegar.");
+            Message("El Canvas sólo muestra contexto. La navegación principal vive en los objetos del Nexus.");
         }
 
         private void BuildCollection()
@@ -148,18 +193,22 @@ namespace Vexforge.UI
                 MessageAt("SIN CONTENIDO DISPONIBLE", 0.56f);
                 return;
             }
-            var count = Mathf.Min(catalog.Length, 8);
-            for (var i = 0; i < count; i++)
+
+            for (var i = 0; i < catalog.Length; i++)
             {
                 var card = catalog[i];
-                var ownership = FindOwnership(card == null ? null : card.id);
-                var cardObject = CardRenderer.CreateCard(content, card, ownership, false, false, ownership != null && ownership.locked);
-                var column = i % 4;
-                var row = i / 4;
-                UiFactory.Anchor(cardObject.GetComponent<RectTransform>(),
-                    new Vector2(0.02f + column * 0.245f, 0.13f + (1 - row) * 0.31f),
-                    new Vector2(0.24f + column * 0.245f, 0.42f + (1 - row) * 0.31f), Vector2.zero, Vector2.zero);
+                var view = cardPool.Rent(
+                    card,
+                    FindOwnership(card == null ? null : card.id),
+                    false,
+                    false,
+                    FindOwnership(card == null ? null : card.id) != null && FindOwnership(card.id).locked,
+                    cardArtResolver);
+                if (view == null) continue;
+                PositionCard(view.transform, i, 6);
             }
+
+            MessageAt("El archivo carga arte oficial bajo demanda y respeta el presupuesto de memoria de la presentación.", 0.2f);
         }
 
         private void BuildDeck()
@@ -167,37 +216,31 @@ namespace Vexforge.UI
             Title("FORGE", "Mesa de forja · validación y persistencia server-authoritative");
             AddReturnRune();
             var ids = new string[app.GameState.Deck.Length];
-            var count = Mathf.Min(app.GameState.Deck.Length, 6);
             for (var i = 0; i < app.GameState.Deck.Length; i++)
             {
                 var slot = app.GameState.Deck[i];
                 ids[i] = slot.card_id;
-                if (i >= count) continue;
                 var card = FindCard(slot.card_id);
-                var cardObject = CardRenderer.CreateCard(content, card, null, false, slot.is_champion, false);
-                var column = i % 3;
-                var row = i / 3;
-                UiFactory.Anchor(cardObject.GetComponent<RectTransform>(),
-                    new Vector2(0.04f + column * 0.31f, 0.28f + (1 - row) * 0.27f),
-                    new Vector2(0.29f + column * 0.31f, 0.52f + (1 - row) * 0.27f), Vector2.zero, Vector2.zero);
+                var view = cardPool.Rent(card, null, false, slot.is_champion, false, cardArtResolver);
+                if (view != null) PositionCard(view.transform, i, 3);
             }
             MessageAt(app.GameState.Deck.Length == 0 ? "FORJA VACIA · SIN SLOTS REPORTADOS" : "La mesa muestra únicamente cartas devueltas por Supabase.", 0.2f);
-            ActionButton("VALIDAR EN EL ALTAR", GameRoute.Deck, 0.08f, () => ValidateDeck(ids));
-            ActionButton("SELLAR DECK", GameRoute.Deck, 0.0f, () => SaveDeck(ids));
+            ActionButton("VALIDAR EN EL ALTAR", GameRoute.Forge, 0.08f, () => ValidateDeck(ids));
+            ActionButton("SELLAR DECK", GameRoute.Forge, 0.0f, () => SaveDeck(ids));
         }
 
         private void BuildBattle()
         {
             Title("BATTLEFIELD", "Arena de eventos · Supabase resuelve el combate");
             AddReturnRune();
-            var board = UiFactory.PanelObject(content, "BattlefieldBoard", new Color(0.04f, 0.025f, 0.03f, 0.88f));
+            var board = UiFactory.PanelObject(content, "BattlefieldContext", new Color(0.04f, 0.025f, 0.03f, 0.88f));
             UiFactory.Anchor(board.GetComponent<RectTransform>(), new Vector2(0.05f, 0.38f), new Vector2(0.95f, 0.76f), Vector2.zero, Vector2.zero);
             var boardText = UiFactory.Label(board.transform, "ARENA EN ESPERA\n\nZONA DEL JUGADOR\n\n— NÚCLEO DE BATALLA —\n\nZONA DEL OPONENTE", 18, UiFactory.Text, TextAnchor.MiddleCenter);
             UiFactory.Stretch(boardText.rectTransform, 10f, 10f, 10f, 10f);
             MessageAt("Unity sólo envía intención y presenta eventos. No se crea un rival local ni se calcula un resultado.", 0.3f);
             var opponentInput = UiFactory.Input(content, "UUID del oponente", false);
             UiFactory.Anchor(opponentInput.GetComponent<RectTransform>(), new Vector2(0.08f, 0.17f), new Vector2(0.92f, 0.25f), Vector2.zero, Vector2.zero);
-            ActionButton("ABRIR DESAFIO", GameRoute.Battle, 0.06f, () => ResolveBattle(opponentInput.text));
+            ActionButton("ABRIR DESAFIO", GameRoute.Battlefield, 0.06f, () => ResolveBattle(opponentInput.text));
         }
 
         private void BuildMissions()
@@ -210,14 +253,15 @@ namespace Vexforge.UI
                 MessageAt("SIN CONTENIDO DISPONIBLE", 0.55f);
                 return;
             }
-            for (var i = 0; i < Mathf.Min(missions.Length, 5); i++)
+            for (var i = 0; i < missions.Length; i++)
             {
+                if (i >= 5) break;
                 var mission = missions[i];
                 var contract = UiFactory.PanelObject(content, "Contract_" + i, UiFactory.PanelGlass);
                 UiFactory.Anchor(contract.GetComponent<RectTransform>(), new Vector2(0.08f, 0.54f - i * 0.09f), new Vector2(0.92f, 0.61f - i * 0.09f), Vector2.zero, Vector2.zero);
                 var text = UiFactory.Label(contract.transform,
-                    CardRenderer.ValueOr(mission.name, "CONTRATO NO REPORTADO") + "  ·  " +
-                    CardRenderer.ValueOr(mission.difficulty, "DIFICULTAD NO REPORTADA") +
+                    VexforgeCardView.ValueOr(mission.name, "CONTRATO NO REPORTADO") + "  ·  " +
+                    VexforgeCardView.ValueOr(mission.difficulty, "DIFICULTAD NO REPORTADA") +
                     "\nXP REPORTADO: " + mission.reward_xp, 14, UiFactory.Text);
                 UiFactory.Stretch(text.rectTransform, 12f, 4f, 12f, 4f);
             }
@@ -243,6 +287,14 @@ namespace Vexforge.UI
                 : "Nombre: " + profile.display_name + "\nRol: " + profile.role + "\nEstado: " + profile.status +
                   "\nNivel: " + (progress == null ? "no disponible" : progress.level.ToString()));
             ActionButton("CERRAR SESIÓN", GameRoute.Profile, 0.2f, () => app.SignOut());
+        }
+
+        private void PositionCard(Transform card, int index, int columns)
+        {
+            var column = index % columns;
+            var row = index / columns;
+            card.localPosition = new Vector3((column - (columns - 1) * 0.5f) * 2.05f, -row * 2.9f, 0f);
+            card.localRotation = Quaternion.identity;
         }
 
         private void AddReturnRune()
@@ -305,10 +357,10 @@ namespace Vexforge.UI
             }
             if (!result.ok)
             {
-                MessageAt(CardRenderer.ValueOr(result.error, "BATALLA NO DISPONIBLE"), 0.22f);
+                MessageAt(VexforgeCardView.ValueOr(result.error, "BATALLA NO DISPONIBLE"), 0.22f);
                 return;
             }
-            MessageAt("RESULTADO RECIBIDO · " + CardRenderer.ValueOr(result.status, "ESTADO NO REPORTADO"), 0.22f);
+            MessageAt("RESULTADO RECIBIDO · " + VexforgeCardView.ValueOr(result.status, "ESTADO NO REPORTADO"), 0.22f);
             battleDirector.Play(result.events);
         }
 
@@ -343,9 +395,16 @@ namespace Vexforge.UI
         private void PresentBattleEvent(BattleEvent battleEvent)
         {
             if (battleEvent == null || content == null) return;
-            var eventText = CardRenderer.ValueOr(battleEvent.event_type, "EVENTO NO REPORTADO") +
-                "  ·  " + CardRenderer.ValueOr(battleEvent.actor_id, "ACTOR NO REPORTADO");
+            var eventText = VexforgeCardView.ValueOr(battleEvent.event_type, "EVENTO NO REPORTADO") +
+                "  ·  " + VexforgeCardView.ValueOr(battleEvent.actor_id, "ACTOR NO REPORTADO");
             MessageAt(eventText, 0.34f);
+        }
+
+        private void OnDestroy()
+        {
+            if (battleDirector != null) battleDirector.EventPresented -= PresentBattleEvent;
+            if (cardPool != null) cardPool.Dispose();
+            if (cardArtResolver != null) cardArtResolver.Dispose();
         }
     }
 }

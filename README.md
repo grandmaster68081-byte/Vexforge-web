@@ -29,12 +29,14 @@ The current Unity block is `IMPLEMENTED_UNVERIFIED`: code work may continue,
 but no APK, Android Player, installation or physical QA is claimed until the
 separate build gate has evidence.
 
-## Quick start
+## Unity development
 ```bash
-cd mobile
-npm ci
-npm run typecheck
+open unity/ in Unity 6000.3.0f1
 ```
+
+The active product runtime is Unity Android. The `mobile/**` tree is retained
+only as legacy/historical reference and rollback material; it is not an active
+runtime or a recommended implementation path.
 
 ## Continuity
 Every future coding session should start by reading, in order:
@@ -52,8 +54,8 @@ and Supabase ever disagree, Supabase wins.
 ## Runtime status
 
 Unity is the active Android development runtime under `unity/**`. The Expo /
-React Native client in `mobile/**` remains intact as fallback, rollback and
-reference. The web
+React Native client in `mobile/**` remains intact only as legacy/historical
+reference and rollback material. The web
 client in `src/**` and `public/**` is frozen and non-product.
 
 Unity work must not produce an APK, Android Player, Gradle build, or CI build

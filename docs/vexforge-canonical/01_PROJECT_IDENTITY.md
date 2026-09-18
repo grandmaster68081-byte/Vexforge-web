@@ -4,12 +4,12 @@
 |---|---|
 | Nombre | VEXFORGE |
 | Producto activo | Juego digital TCG para Android |
-| Cliente | `mobile/**` |
+| Cliente | `unity/**` |
 | Web | `src/**`, congelada/no activa como cliente |
 | Repositorio | `grandmaster68081-byte/Vexforge-web` |
 | Branch | `main` |
-| Commit auditado | `f43159ecee63b610bb71c295238327ecea3feeb6` |
-| Plataforma | Android; Expo SDK 54 / React Native 0.81.5 |
+| Commit auditado | `201ee0330529c8e085afd1143cf066e18de3bc8a` |
+| Plataforma | Android; Unity 6.3 LTS (`6000.3.0f1`) |
 | Android package | `com.vexforge.android` |
 | App version / versionCode | `1.0.1` / `4` |
 | Backend | Supabase project reference `rscuzqnfccqvltkdcdny` |
@@ -21,7 +21,9 @@ El ownership de la regla backend no reside en el cliente: Android presenta, capt
 
 ## Runtime decision
 
-- Current runtime: Expo/React Native in `mobile/**`.
-- Active runtime: Expo / React Native in `mobile/**`.
-- Migration status: Unity retired / historical; Game Runtime Foundation
-  implemented but APK evidence pending.
+- Current runtime: Unity Android in `unity/**`.
+- Active runtime: Unity Android in `unity/**`.
+- Legacy: Expo / React Native in `mobile/**`, preserved as historical reference
+  and rollback material only.
+- Migration status: Unity Presentation Foundation implemented but Editor,
+  Android build and device evidence remain pending.
