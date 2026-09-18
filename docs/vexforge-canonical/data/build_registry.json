@@ -1,11 +1,16 @@
 {
-  "current_source_commit": "55b724e8f20fbc22abd1f6606d7c4dd617ee3270",
+  "current_source_commit": "890dc19693e1b5c429d3599175937e2c3bbdd985",
   "latest_recorded_android_release": {
-    "release": "vexforge-android-build-249",
+    "release": "vexforge-android-build-250",
     "workflow": "vexforge-android-apk.yml",
-    "run": "35238357900",
-    "source_commit": "ded78720d1d3f97280d5702166d44e18415beb8f",
-    "status": "success / embedded bundle verified"
+    "run": "35288617678",
+    "source_commit": "890dc19693e1b5c429d3599175937e2c3bbdd985",
+    "status": "success / embedded bundle, identity, artifact and digest verified",
+    "artifact": "vexforge-android-apk-250",
+    "package": "com.vexforge.android",
+    "version": "1.0.1",
+    "versionCode": 4,
+    "sha256": "082cdd1bf8ec143770febdca05a985fd978257518a5bd962ae7bcd860bd0d428"
   },
   "apk_command": "./gradlew assembleRelease --no-daemon --stacktrace --console=plain --max-workers=2 -x lintVitalAnalyzeRelease -x lintVitalReportRelease -x lintVitalRelease",
   "current_task_build": "EXPO_GAME_RUNTIME_FOUNDATION",

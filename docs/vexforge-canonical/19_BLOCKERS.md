@@ -13,10 +13,13 @@
 
 - AREA: build → artifact → installed app.
 - STATUS: PARTIALLY_VERIFIED
-- OBSERVED EVIDENCE: release 249 fue compilado desde `ded78720...`; `main` actual es `f43159e...`.
+- OBSERVED EVIDENCE: release 250 fue compilado desde
+  `890dc19693e1b5c429d3599175937e2c3bbdd985`; el artifact y SHA-256 están
+  registrados.
 - DEPENDENCY: nuevo build explícitamente autorizado o evidencia del artefacto instalado.
-- WHY BLOCKED: un release anterior no prueba el commit actual.
-- UNBLOCK CONDITION: mapping completo y APK SHA-256 comprobado.
+- WHY BLOCKED: el APK no ha sido instalado y recorrido todavía en un
+  dispositivo físico.
+- UNBLOCK CONDITION: instalación del release 250 y recorrido QA documentado.
 
 ## B-003 — Live backend reconciliation
 
