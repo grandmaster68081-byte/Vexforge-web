@@ -1,3 +1,4 @@
+- [Android build environment](android-build-environment.md) — mobile CI must use the public npm registry; local prebuild is not an APK build without Java/Android SDK.
 - [GitHub transport authentication](github-transport.md) — use temporary GIT_ASKPASS for HTTPS pushes when the valid workspace PAT is rejected by default credential handling.
 - [Reference data zones](reference-data-zones.md) — fixed Android PNGs stay intact; real data belongs only in proportional overlays matching each functional zone.
 - [GitHub REST large-file commits](github-rest-large-files.md) — stream base64 JSON for large blobs; passing file content as a jq argument exceeds the shell argument limit.
