@@ -9,6 +9,7 @@ using Vexforge.Backend;
 using Vexforge.Core;
 using Vexforge.GameState;
 using Vexforge.Presentation;
+using Vexforge.Session;
 
 namespace Vexforge.UI
 {
@@ -184,7 +185,7 @@ namespace Vexforge.UI
             subscribed = false;
         }
 
-        private void HandleSessionChanged(bool _)
+        private void HandleSessionChanged(AuthState _)
         {
             Render();
         }
