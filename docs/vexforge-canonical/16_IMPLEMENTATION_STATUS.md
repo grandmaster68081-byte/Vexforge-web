@@ -21,5 +21,7 @@ Estados permitidos usados aquí: `PLANNED`, `IMPLEMENTED`, `IMPLEMENTED_UNVERIFI
 |---|---|---|---|---|
 | Unity runtime | cliente Android canónico de desarrollo | IMPLEMENTED_UNVERIFIED | `unity/**`, `26_UNITY_ENGINE_MIGRATION.md` | editor, build gate y QA física |
 | Presentation Foundation | runtime, boot scene, render boundary y motion utilities existen | IMPLEMENTED_UNVERIFIED | `unity/Assets/Scripts/Presentation/**` | Unity Editor y QA física |
+| Unity Cloud Build infrastructure | proyecto y target Android externos existentes, documentados sin recreación | IMPLEMENTED | `docs/vexforge-canonical/UNITY_CLOUD_BUILD.md` | dashboard y hook externos |
+| R5 Cloud Editor execution | bridge Pre-Export preparado; ejecución externa aún no observada | EVIDENCE_REQUIRED | `unity/Assets/Editor/VexforgeR5CloudBuildGate.cs` | run manual del target existente |
 | Supabase authority | auth, datos y settlement permanecen en backend | ACTIVE | `unity/Assets/Scripts/Backend/**` | no cambiar contratos |
 | Expo/React Native legacy | legado, rollback y referencia histórica | PRESERVED | `mobile/**`, `mobile/app.json` | no eliminar ni mezclar runtimes |

@@ -1,3 +1,37 @@
+## 2026-09-19 — R5.3.2 — UNITY CLOUD EDITOR CONTINUITY
+
+- **SOURCE:** `main`, base canónica `593aaf00ab258643a6a1d1cc485d6a6c1a8dfe04`,
+  padre `9011c7709301724c9e799f6bbf796fd68a8b266f`.
+- **INFRASTRUCTURE:** ya existe un proyecto Unity Cloud en la organización
+  `2476049544959`, proyecto `2906c165-f463-4253-bd53-731be7d136a0`, con un
+  target externo existente de Unity Cloud Build Automation para Android.
+- **PROJECT:** repositorio `grandmaster68081-byte/Vexforge-web`, rama `main`,
+  proyecto Unity `unity/`, Unity `6000.3.0f1`, Android,
+  package `com.vexforge.android`.
+- **PURPOSE:** el target externo es el runner remoto previsto para importar el
+  proyecto, compilar el Editor y ejecutar la verificación Foundation R5.
+- **R5 GATE:** `Vexforge.Presentation.Editor.VexforgeR5FoundationGate.ExecuteBatch`.
+- **CLOUD ADAPTER:** `Vexforge.Presentation.Editor.VexforgeR5CloudBuildGate.PreExport`.
+  El método esperado para Pre-Export es evidencia requerida hasta observarlo
+  directamente en el dashboard.
+- **EVIDENCE:** la presencia del bridge y de la documentación prueba estado del
+  repositorio, no prueba configuración del dashboard ni ejecución del Editor.
+- **POLICY:** se reutiliza la infraestructura existente; no se creó proyecto
+  Cloud ni target nuevo, no se reconectó GitHub, Auto-build permanece OFF y
+  Schedule permanece OFF.
+- **STATUS:** `IMPLEMENTED_UNVERIFIED / DOCUMENTED / EVIDENCE_REQUIRED`.
+- **NEXT BLOCK:** ejecutar el target Android existente y capturar logs reales de
+  Unity Cloud; no promover `EDITOR_VERIFIED`, `BUILD_VERIFIED` o
+  `DEVICE_VERIFIED` sin su evidencia.
+- **DOCUMENTATION:** [`docs/vexforge-canonical/UNITY_CLOUD_BUILD.md`](docs/vexforge-canonical/UNITY_CLOUD_BUILD.md).
+
+En una sesión anterior ya se había configurado y dejado existente el Unity
+Cloud Build Android target. Esa infraestructura no era una tarea pendiente.
+La omisión que se corrige aquí es documental y de integración: la continuidad
+del repositorio no dejaba explícita la relación entre ese target existente y
+la verificación R5 del Unity Editor. Desde este bloque, esa relación queda
+persistida y descubrible para futuras IA/sesiones.
+
 ## 2026-09-18 — UNITY RUNTIME — NEXUS / CARD SURFACES / DOCUMENTATION RECONCILED
 
 - **SOURCE:** `main`, Unity target `6000.3.0f1`.

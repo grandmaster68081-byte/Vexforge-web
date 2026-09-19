@@ -30,17 +30,23 @@
 - WHY BLOCKED: no toda rutina live es necesariamente activa ni consumida por Android.
 - UNBLOCK CONDITION: matriz RPC/table/policy por dominio con evidencia.
 
-## B-004 — Unity editor/build gate no verificado
+## B-004 — Unity Cloud R5 Editor verification
 
-- AREA: apertura en editor, compilación, instalación y QA física Unity.
-- STATUS: BLOCKED
-- OBSERVED EVIDENCE: `unity/ProjectSettings/ProjectVersion.txt`,
-  `unity/Assets/Scenes/VexforgeBootstrap.unity` y código Unity actual.
-- DEPENDENCY: editor `6000.3.0f1`, licencia y mecanismo oficial de build.
-- WHY BLOCKED: este bloque prohíbe fabricar APK, Player, Gradle o evidencia de
-  instalación; el bloqueo no detiene el desarrollo de código.
-- UNBLOCK CONDITION: build autorizado, artefacto identificable, instalación y
-  recorrido QA documentados.
+- AREA: importación, compilación del Editor y ejecución del R5 Foundation Gate.
+- STATUS: EVIDENCE_REQUIRED
+- OBSERVED EVIDENCE: proyecto Unity `6000.3.0f1`, target Android Cloud externo
+  existente y bridge documental en `UNITY_CLOUD_BUILD.md`.
+- DEPENDENCY: run real del `EXISTING VEXFORGE ANDROID BUILD AUTOMATION TARGET`
+  con logs del Editor.
+- WHY BLOCKED: la ausencia del ejecutable Unity dentro de Replit no significa
+  que falte un entorno Unity; todavía no existe evidencia capturada del run
+  remoto ni del hook externo configurado.
+- UNBLOCK CONDITION: importación y compilación reales, ejecución de
+  `VexforgeR5FoundationGate.ExecuteBatch()` y log con
+  `VEXFORGE R5.3 FOUNDATION GATE: PASS`.
+
+La verificación de instalación, artifact Android y QA física continúa siendo
+un gate separado y no queda resuelta por la documentación Cloud.
 
 ## B-005 — Android Foundation release no verificado
 

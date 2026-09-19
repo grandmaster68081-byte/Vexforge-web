@@ -1,5 +1,22 @@
 # 25 — CONTINUITY CHANGELOG
 
+## 2026-09-19 — UNITY CLOUD R5 EDITOR CONTINUITY
+
+- BLOCK: `UNITY_CLOUD_R5_EDITOR_CONTINUITY`
+- CHANGE: la infraestructura Unity Cloud Build Android externa existente queda
+  enlazada explícitamente en la continuidad canónica con el proyecto Unity y
+  el R5 Editor gate.
+- FILES: `unity/Assets/Editor/VexforgeR5CloudBuildGate.cs` y su `.meta`,
+  `docs/vexforge-canonical/UNITY_CLOUD_BUILD.md` y documentación canónica.
+- STATUS: `DOCUMENTED / EVIDENCE_REQUIRED`.
+- EVIDENCE: estado del repositorio, versión del proyecto Unity e información
+  existente del proyecto/target Cloud; la ejecución real aún requiere logs
+  externos.
+- RULES: no se creó un nuevo proyecto Cloud, no se creó un nuevo target, no se
+  reconectó GitHub, Auto-build permanece OFF y Schedule permanece OFF.
+- NEXT: ejecutar manualmente el EXISTING VEXFORGE ANDROID BUILD AUTOMATION
+  TARGET y capturar evidencia real del Editor R5.
+
 ## 2026-09-17
 
 - BLOCK: `CANONICAL-CONTINUITY-PERSISTENCE`

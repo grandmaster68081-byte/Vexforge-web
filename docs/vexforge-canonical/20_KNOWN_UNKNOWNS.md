@@ -1,5 +1,16 @@
 # 20 — KNOWN UNKNOWNS
 
+- `NO_VERIFICADO`: configuración actual del target Unity Cloud observada desde
+  un dashboard/API autenticado.
+- `NO_VERIFICADO`: valor actual del método Pre-Export en el target externo,
+  salvo que se observe directamente en Unity Cloud.
+- `NO_VERIFICADO`: ejecución Cloud real de
+  `VexforgeR5FoundationGate.ExecuteBatch()`.
+- `VERIFICADO_EN_REPOSITORIO`: existe la infraestructura externa documentada y
+  el bridge mínimo `VexforgeR5CloudBuildGate.PreExport`; esto no prueba el
+  estado del dashboard.
+- `EVIDENCE_REQUIRED`: logs reales de Unity Cloud con compilación del Editor,
+  ejecución del bridge y resultado PASS del gate R5.
 - `NO_VERIFICADO`: qué instalación física corresponde exactamente a `main` en `f43159e`.
 - `NO_VERIFICADO`: resultado de un update OTA real para runtime `1.0.0` en un dispositivo limpio.
 - `NO_VERIFICADO`: cobertura física de safe areas, legibilidad, haptics, audio, VFX y rendimiento.

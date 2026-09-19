@@ -31,6 +31,8 @@ geometry y superficies data-driven para los dominios principales.
 | Battle | PARTIALLY_IMPLEMENTED | battlefield presentation and resolve RPC; event replay pendiente |
 | Missions / Economy / Profile | IMPLEMENTED_UNVERIFIED | read surfaces wired to Supabase |
 | Expo / React Native legacy | PRESERVED | `mobile/**` sin eliminación ni trabajo nuevo |
+| Unity Cloud infrastructure | EXISTING_EXTERNAL_INFRASTRUCTURE / DOCUMENTED | proyecto y target Android existentes; no recrear |
+| R5 Cloud Editor execution | EVIDENCE_REQUIRED | falta un run real del target existente con logs de Unity |
 | First Unity build | BLOCKED | explícitamente prohibido en esta fase; no implica detener código |
 
 ### No tocar
@@ -41,3 +43,15 @@ No modificar Supabase para compensar una carencia de Unity.
 
 El resultado de este bloque debe registrarse como `IMPLEMENTED_UNVERIFIED`
 hasta que exista evidencia independiente de editor, build, instalación y QA.
+
+### Condición precisa del cierre R5
+
+El proyecto Unity canónico existe, la versión objetivo es `6000.3.0f1` y
+existe un target externo de Unity Cloud Build Automation para Android. La
+ausencia del ejecutable local dentro de Replit no significa que falte un
+entorno Unity. La dependencia restante para R5 es evidencia de ejecución real
+en ese entorno: importación, compilación del Editor, ejecución del bridge y
+resultado `VEXFORGE R5.3 FOUNDATION GATE: PASS`.
+
+No se declara `EDITOR_VERIFIED`, `BUILD_VERIFIED` ni `DEVICE_VERIFIED` sin la
+evidencia correspondiente.

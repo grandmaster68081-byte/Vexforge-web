@@ -3,15 +3,16 @@
 Una IA nueva debe leer en este orden:
 
 1. `VEXFORGE_CONTEXT.md`
-2. este archivo
-3. `16_IMPLEMENTATION_STATUS.md`
-4. `17_CURRENT_BLOCK.md`
-5. `19_BLOCKERS.md`
-6. `20_KNOWN_UNKNOWNS.md`
-7. `21_CONTRADICTIONS.md`
-8. el documento de dominio relevante
-9. el código actual relevante
-10. Supabase live si la afirmación depende del backend
+2. `docs/vexforge-canonical/UNITY_CLOUD_BUILD.md`
+3. este archivo
+4. `16_IMPLEMENTATION_STATUS.md`
+5. `17_CURRENT_BLOCK.md`
+6. `19_BLOCKERS.md`
+7. `20_KNOWN_UNKNOWNS.md`
+8. `21_CONTRADICTIONS.md`
+9. el documento de dominio relevante
+10. el código actual relevante
+11. Supabase live si la afirmación depende del backend
 
 ## No asumir
 

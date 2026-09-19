@@ -77,3 +77,20 @@
 - EVIDENCE: `unity/Assets/Scripts/World/NexusWorldController.cs`,
   `unity/Assets/Scripts/UI/CardRenderer.cs`.
 - STATUS: ACTIVE
+
+## D-008
+
+- DATE: 2026-09-19
+- DECISION: Unity Cloud Build Automation es la infraestructura remota existente
+  para ejecutar el Editor del proyecto Android canónico y verificar el gate R5.
+- SCOPE: continuidad Unity, configuración externa existente y documentación
+  canónica; no crea un segundo target ni reemplaza el runtime.
+- WHY: el proyecto Unity y su target Android Cloud ya existen; la continuidad
+  debe preservar esa relación para futuras sesiones.
+- EVIDENCE: `unity/ProjectSettings/ProjectVersion.txt`,
+  `docs/vexforge-canonical/UNITY_CLOUD_BUILD.md` y el bridge
+  `unity/Assets/Editor/VexforgeR5CloudBuildGate.cs`.
+- RULES: reutilizar la infraestructura existente; no crear targets duplicados;
+  no sustituir Unity; exigir ejecución Cloud real para verificar R5; distinguir
+  evidencia del repositorio de evidencia del dashboard.
+- STATUS: ACTIVE / EVIDENCE_REQUIRED
