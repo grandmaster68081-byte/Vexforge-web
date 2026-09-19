@@ -2,19 +2,22 @@ using System;
 
 namespace Vexforge.Core
 {
+    /// <summary>
+    /// Canonical internal navigation routes.
+    /// Product-facing labels such as ARCHIVE, FORGE and BATTLEFIELD remain presentation labels only.
+    /// Numeric values are intentionally preserved from the previous enum layout so serialized values
+    /// remain stable: Boot=0, Nexus=1, Collection=2, Deck=3, Battle=4, Missions=5, Economy=6, Profile=7.
+    /// </summary>
     public enum GameRoute
     {
-        Boot,
-        Nexus,
-        Archive,
-        Forge,
-        Battlefield,
-        Missions,
-        Economy,
-        Profile,
-        Collection = Archive,
-        Deck = Forge,
-        Battle = Battlefield
+        Boot = 0,
+        Nexus = 1,
+        Collection = 2,
+        Deck = 3,
+        Battle = 4,
+        Missions = 5,
+        Economy = 6,
+        Profile = 7
     }
 
     public sealed class NavigationService
