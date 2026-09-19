@@ -1,0 +1,2516 @@
+82c7fc29 feat(unity): apply VEXFORGE R5 canonical runtime reconciliation rev2
+ docs/vexforge-canonical/17_CURRENT_BLOCK.md        |  6 ++--
+ .../29_UNITY_R5_CANONICAL_RECONCILIATION.md        |  2 +-
+ docs/vexforge-canonical/data/build_registry.json   |  4 +--
+ docs/vexforge-canonical/data/current_state.json    | 18 ++++++----
+ docs/vexforge-canonical/data/screen_registry.json  | 39 +++++++++++++++++++++-
+ .../Presentation/VexforgeCardArtResolver.cs        | 10 ------
+ .../Scripts/Presentation/VexforgeNexusStage.cs     | 10 +++---
+ 7 files changed, 61 insertions(+), 28 deletions(-)
+12f043c6 fix(docs): preserve Expo as legacy runtime
+ docs/vexforge-canonical/data/build_registry.json | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+673bddbf feat(unity): apply VEXFORGE R5 canonical runtime reconciliation
+ docs/vexforge-canonical/17_CURRENT_BLOCK.md        |   2 +-
+ docs/vexforge-canonical/27_EXPO_GAME_RUNTIME.md    |   2 +
+ .../29_UNITY_R5_CANONICAL_RECONCILIATION.md        |  78 ++
+ docs/vexforge-canonical/data/build_registry.json   |   4 +-
+ docs/vexforge-canonical/data/screen_registry.json  |  78 +-
+ .../Presentation/Editor/VexforgeR5ProjectSetup.cs  | 249 ++++++
+ .../Presentation/NexusDevelopmentFallback.cs       |   9 +-
+ .../Scripts/Presentation/NexusPresentationRoot.cs  | 332 ++++++--
+ .../Presentation/VexforgeCardArtResolver.cs        | 261 ++++++-
+ .../Scripts/Presentation/VexforgeCardPool.cs       |  35 +-
+ .../Scripts/Presentation/VexforgeCardView.cs       | 310 ++++++--
+ .../Presentation/VexforgeDiegeticInputRouter.cs    | 196 ++++-
+ .../Scripts/Presentation/VexforgeNexusStage.cs     |  49 +-
+ .../Presentation/VexforgePresentationResources.cs  |  40 +
+ .../Presentation/VexforgeRenderBootstrap.cs        |  41 +
+ .../Presentation/VexforgeTextureLruCache.cs        | 277 ++++---
+ .../Presentation/VexforgeVirtualizedCardGallery.cs | 347 +++++++++
+ .../Scripts/Presentation/VexforgeWorldHotspot.cs   |  59 +-
+ unity/Assets/Scripts/UI/GameShellController.cs     | 833 ++++++++++++++++-----
+ unity/Packages/manifest.json                       |   2 +
+ unity/ProjectSettings/ProjectSettings.asset        |   2 +-
+ 21 files changed, 2663 insertions(+), 543 deletions(-)
+af4787a0 feat(unity): make Unity the canonical Android runtime and reconcile presentation kernel
+ docs/vexforge-canonical/01_PROJECT_IDENTITY.md     |  16 +-
+ .../02_ACTIVE_PRODUCT_DIRECTION.md                 |  11 +-
+ docs/vexforge-canonical/03_CANONICAL_HIERARCHY.md  |  16 +-
+ .../09_NAVIGATION_AND_SCREEN_MAP.md                |  21 ++-
+ .../vexforge-canonical/16_IMPLEMENTATION_STATUS.md |  20 +--
+ docs/vexforge-canonical/17_CURRENT_BLOCK.md        |  14 +-
+ docs/vexforge-canonical/25_CONTINUITY_CHANGELOG.md |   6 +-
+ .../26_UNITY_ENGINE_MIGRATION.md                   |  18 +-
+ docs/vexforge-canonical/27_EXPO_GAME_RUNTIME.md    |   8 +-
+ docs/vexforge-canonical/data/build_registry.json   |  13 +-
+ docs/vexforge-canonical/data/current_state.json    |  13 +-
+ docs/vexforge-canonical/data/screen_registry.json  |   2 +-
+ unity/Assets/Scripts/Core/NavigationService.cs     |  11 +-
+ .../Presentation/NexusDevelopmentFallback.cs       |  10 ++
+ .../Scripts/Presentation/NexusPresentationRoot.cs  | 141 ++++++++++++++++
+ .../Presentation/VexforgeCardArtResolver.cs        |  46 +++++
+ .../Scripts/Presentation/VexforgeCardPool.cs       |  88 ++++++++++
+ .../Scripts/Presentation/VexforgeCardView.cs       | 176 ++++++++++++++++++++
+ .../Presentation/VexforgeDiegeticInputRouter.cs    |  97 +++++++++++
+ .../Scripts/Presentation/VexforgeNexusStage.cs     |  36 ++++
+ .../Presentation/VexforgeTextureLruCache.cs        | 185 +++++++++++++++++++++
+ .../Scripts/Presentation/VexforgeWorldHotspot.cs   |  46 +++++
+ unity/Assets/Scripts/UI/CardRenderer.cs            |  89 ----------
+ unity/Assets/Scripts/UI/GameShellController.cs     | 163 ++++++++++++------
+ unity/Assets/Scripts/World/NexusWorldController.cs | 113 -------------
+ 25 files changed, 1036 insertions(+), 323 deletions(-)
+6d9933d8 feat(unity): continue nexus game shell and card surfaces
+ docs/vexforge-canonical/00_START_HERE.md           |  15 +-
+ .../vexforge-canonical/16_IMPLEMENTATION_STATUS.md |   5 +-
+ docs/vexforge-canonical/17_CURRENT_BLOCK.md        |  23 +--
+ docs/vexforge-canonical/18_DECISIONS.md            |  41 +++--
+ docs/vexforge-canonical/19_BLOCKERS.md             |  14 +-
+ docs/vexforge-canonical/20_KNOWN_UNKNOWNS.md       |   6 +
+ docs/vexforge-canonical/21_CONTRADICTIONS.md       |  16 +-
+ docs/vexforge-canonical/24_AI_WORK_PROTOCOL.md     |  12 +-
+ .../26_UNITY_ENGINE_MIGRATION.md                   |  14 +-
+ unity/Assets/Scripts/UI/CardRenderer.cs            |  89 ++++++++++
+ unity/Assets/Scripts/UI/GameShellController.cs     | 184 ++++++++++++++-------
+ unity/Assets/Scripts/UI/UiFactory.cs               |   5 +
+ unity/Assets/Scripts/World/NexusWorldController.cs |  81 +++++++--
+ 13 files changed, 375 insertions(+), 130 deletions(-)
+10793c7d feat: reactivate Unity runtime foundation
+ .../vexforge-canonical/16_IMPLEMENTATION_STATUS.md |   1 +
+ docs/vexforge-canonical/17_CURRENT_BLOCK.md        |  53 ++--
+ .../26_UNITY_ENGINE_MIGRATION.md                   | 111 ++++----
+ docs/vexforge-canonical/27_EXPO_GAME_RUNTIME.md    |  90 ++-----
+ unity/.gitignore                                   |  13 +
+ unity/Assets/Resources/VexforgeEnvironment.json    |   7 +
+ .../Assets/Resources/VexforgeEnvironment.json.meta |   8 +
+ unity/Assets/Scenes/VexforgeBootstrap.unity        |  72 ++++++
+ unity/Assets/Scenes/VexforgeBootstrap.unity.meta   |   7 +
+ unity/Assets/Scripts/Backend/ApiContracts.cs       | 206 +++++++++++++++
+ unity/Assets/Scripts/Backend/JsonArrayUtility.cs   |  20 ++
+ .../Assets/Scripts/Backend/SupabaseAuthService.cs  |  75 ++++++
+ unity/Assets/Scripts/Backend/SupabaseClient.cs     |  81 ++++++
+ .../Assets/Scripts/Backend/UnityWebRequestAsync.cs |  16 ++
+ unity/Assets/Scripts/Backend/VexforgeRepository.cs | 167 ++++++++++++
+ unity/Assets/Scripts/Core/AppLogger.cs             |  24 ++
+ unity/Assets/Scripts/Core/NavigationService.cs     |  29 +++
+ .../Assets/Scripts/Core/PersistentRuntimeState.cs  |  30 +++
+ unity/Assets/Scripts/Core/RuntimeEnvironment.cs    |  50 ++++
+ unity/Assets/Scripts/Core/ServiceRegistry.cs       |  21 ++
+ unity/Assets/Scripts/Core/VexforgeApp.cs           |  93 +++++++
+ unity/Assets/Scripts/Core/VexforgeApp.cs.meta      |  11 +
+ unity/Assets/Scripts/GameState/GameStateStore.cs   |  97 +++++++
+ .../Presentation/BattlePresentationDirector.cs     |  43 ++++
+ .../Presentation/SceneTransitionDirector.cs        |  14 +
+ unity/Assets/Scripts/Session/SessionService.cs     |  55 ++++
+ unity/Assets/Scripts/UI/GameShellController.cs     | 285 +++++++++++++++++++++
+ unity/Assets/Scripts/UI/UiFactory.cs               |  91 +++++++
+ unity/Assets/Scripts/World/NexusWorldController.cs |  60 +++++
+ unity/Packages/manifest.json                       |  37 +++
+ unity/Packages/packages-lock.json                  | 136 ++++++++++
+ unity/ProjectSettings/EditorBuildSettings.asset    |  12 +
+ unity/ProjectSettings/ProjectSettings.asset        | 106 ++++++++
+ unity/ProjectSettings/ProjectVersion.txt           |   2 +
+ 34 files changed, 1973 insertions(+), 150 deletions(-)
+0f49962a docs: record Expo foundation Android build evidence
+ docs/vexforge-canonical/19_BLOCKERS.md             |  9 ++++++---
+ docs/vexforge-canonical/25_CONTINUITY_CHANGELOG.md | 15 +++++++++++++++
+ docs/vexforge-canonical/data/build_registry.json   | 15 ++++++++++-----
+ docs/vexforge-canonical/data/current_state.json    |  4 ++--
+ 4 files changed, 33 insertions(+), 10 deletions(-)
+890dc196 foundation: reset Android runtime to Expo game shell
+ docs/vexforge-canonical/00_START_HERE.md           |  10 +-
+ docs/vexforge-canonical/01_PROJECT_IDENTITY.md     |   5 +-
+ .../02_ACTIVE_PRODUCT_DIRECTION.md                 |  10 +-
+ docs/vexforge-canonical/03_CANONICAL_HIERARCHY.md  |   8 +-
+ docs/vexforge-canonical/04_CURRENT_SYSTEM.md       |   7 +-
+ .../05_ANDROID_RUNTIME_AND_BUILD.md                |  11 +-
+ .../vexforge-canonical/16_IMPLEMENTATION_STATUS.md |  10 +-
+ docs/vexforge-canonical/17_CURRENT_BLOCK.md        |  39 +-
+ docs/vexforge-canonical/18_DECISIONS.md            |  21 +-
+ docs/vexforge-canonical/19_BLOCKERS.md             |  43 +-
+ docs/vexforge-canonical/20_KNOWN_UNKNOWNS.md       |  14 +-
+ docs/vexforge-canonical/21_CONTRADICTIONS.md       |  21 +-
+ .../26_UNITY_ENGINE_MIGRATION.md                   |  18 +-
+ docs/vexforge-canonical/27_EXPO_GAME_RUNTIME.md    |  80 ++++
+ docs/vexforge-canonical/README.md                  |   8 +-
+ docs/vexforge-canonical/data/blocker_registry.json |   4 +-
+ docs/vexforge-canonical/data/build_registry.json   |   6 +-
+ docs/vexforge-canonical/data/current_state.json    |   8 +-
+ .../vexforge-canonical/data/decision_registry.json |   9 +-
+ docs/vexforge-canonical/data/dependency_graph.json |  12 +-
+ mobile/app/(tabs)/index.tsx                        |   9 +-
+ mobile/game/motion/GameMotion.ts                   |  28 ++
+ mobile/game/render/GameRenderSurface.tsx           |  25 ++
+ mobile/game/runtime/GameRuntime.tsx                |  37 ++
+ mobile/game/runtime/GameRuntimeContext.tsx         |  26 ++
+ mobile/game/scenes/BootScene.tsx                   | 131 +++++++
+ unity/Assets/VexForge/Brand/icon.jpg               | Bin 419595 -> 0 bytes
+ unity/Assets/VexForge/Editor/VexForgeBuild.cs      | 266 -------------
+ .../Runtime/Foundation/VexForgeGameShell.cs        | 434 ---------------------
+ .../VexForge/Runtime/Foundation/VexForgeSession.cs |  24 --
+ .../Runtime/Foundation/VexForgeSessionStore.cs     | 150 -------
+ .../Runtime/Foundation/VexForgeSupabaseClient.cs   | 358 -----------------
+ .../Runtime/Shared/VexForgeFoundationModels.cs     | 118 ------
+ .../Tests/Editor/VexForgeFoundationTests.cs        |  25 --
+ unity/Packages/manifest.json                       |  44 ---
+ unity/ProjectSettings/ProjectVersion.txt           |   2 -
+ unity/README.md                                    |  35 --
+ 37 files changed, 487 insertions(+), 1569 deletions(-)
+7b35d4ae docs: registra matriz final de rutas Unity Foundation
+ docs/vexforge-canonical/17_CURRENT_BLOCK.md      | 3 ++-
+ docs/vexforge-canonical/19_BLOCKERS.md           | 8 ++++----
+ docs/vexforge-canonical/data/build_registry.json | 2 +-
+ 3 files changed, 7 insertions(+), 6 deletions(-)
+79645383 ci: añade ruta de licencia Unity Foundation
+ docs/vexforge-canonical/17_CURRENT_BLOCK.md      |  6 +++---
+ docs/vexforge-canonical/19_BLOCKERS.md           | 11 ++++++++++-
+ docs/vexforge-canonical/data/build_registry.json |  2 +-
+ 3 files changed, 14 insertions(+), 5 deletions(-)
+b7907365 ci: añade rutas aisladas de Unity Foundation
+ .../vexforge-canonical/16_IMPLEMENTATION_STATUS.md |  6 ++---
+ docs/vexforge-canonical/17_CURRENT_BLOCK.md        | 15 ++++++++---
+ docs/vexforge-canonical/19_BLOCKERS.md             | 30 +++++++++++++++++-----
+ docs/vexforge-canonical/20_KNOWN_UNKNOWNS.md       |  7 ++---
+ docs/vexforge-canonical/21_CONTRADICTIONS.md       | 14 +++++-----
+ docs/vexforge-canonical/data/build_registry.json   |  8 +++---
+ 6 files changed, 54 insertions(+), 26 deletions(-)
+4d936664 feat(android): establish unity foundation runtime
+ unity/Assets/VexForge/Brand/icon.jpg               | Bin 0 -> 419595 bytes
+ unity/Assets/VexForge/Editor/VexForgeBuild.cs      | 266 +++++++++++++
+ .../Runtime/Foundation/VexForgeGameShell.cs        | 434 +++++++++++++++++++++
+ .../VexForge/Runtime/Foundation/VexForgeSession.cs |  24 ++
+ .../Runtime/Foundation/VexForgeSessionStore.cs     | 150 +++++++
+ .../Runtime/Foundation/VexForgeSupabaseClient.cs   | 358 +++++++++++++++++
+ .../Runtime/Shared/VexForgeFoundationModels.cs     | 118 ++++++
+ .../Tests/Editor/VexForgeFoundationTests.cs        |  25 ++
+ unity/Packages/manifest.json                       |  44 +++
+ unity/ProjectSettings/ProjectVersion.txt           |   2 +
+ unity/README.md                                    |  35 ++
+ 11 files changed, 1456 insertions(+)
+513b7c4c docs: record Unity engine migration decision
+ docs/vexforge-canonical/00_START_HERE.md           |  6 +++
+ docs/vexforge-canonical/01_PROJECT_IDENTITY.md     |  6 +++
+ .../02_ACTIVE_PRODUCT_DIRECTION.md                 | 10 +++++
+ docs/vexforge-canonical/03_CANONICAL_HIERARCHY.md  |  6 +++
+ docs/vexforge-canonical/04_CURRENT_SYSTEM.md       |  4 ++
+ .../05_ANDROID_RUNTIME_AND_BUILD.md                |  6 +++
+ docs/vexforge-canonical/15_VISUAL_SYSTEM.md        |  4 ++
+ .../vexforge-canonical/16_IMPLEMENTATION_STATUS.md |  9 ++++
+ docs/vexforge-canonical/17_CURRENT_BLOCK.md        | 23 +++++-----
+ docs/vexforge-canonical/18_DECISIONS.md            | 12 +++++
+ docs/vexforge-canonical/19_BLOCKERS.md             |  9 ++++
+ docs/vexforge-canonical/20_KNOWN_UNKNOWNS.md       |  6 +++
+ docs/vexforge-canonical/21_CONTRADICTIONS.md       | 14 ++++++
+ .../23_GIT_AND_RELEASE_HISTORY.md                  |  4 ++
+ docs/vexforge-canonical/24_AI_WORK_PROTOCOL.md     | 10 +++++
+ docs/vexforge-canonical/25_CONTINUITY_CHANGELOG.md | 10 +++++
+ .../26_UNITY_ENGINE_MIGRATION.md                   | 48 ++++++++++++++++++++
+ docs/vexforge-canonical/README.md                  |  4 ++
+ docs/vexforge-canonical/data/blocker_registry.json | 23 ++++++++--
+ docs/vexforge-canonical/data/build_registry.json   |  6 ++-
+ docs/vexforge-canonical/data/current_state.json    | 32 ++++++++++---
+ .../vexforge-canonical/data/decision_registry.json | 29 ++++++++++--
+ docs/vexforge-canonical/data/dependency_graph.json | 52 +++++++++++++++++++---
+ 23 files changed, 299 insertions(+), 34 deletions(-)
+1f20bc49 docs: establish canonical VEXFORGE project continuity
+ docs/vexforge-canonical/00_START_HERE.md           | 43 ++++++++++++++++++++++
+ docs/vexforge-canonical/01_PROJECT_IDENTITY.md     | 20 ++++++++++
+ .../02_ACTIVE_PRODUCT_DIRECTION.md                 | 19 ++++++++++
+ docs/vexforge-canonical/03_CANONICAL_HIERARCHY.md  | 16 ++++++++
+ docs/vexforge-canonical/04_CURRENT_SYSTEM.md       | 41 +++++++++++++++++++++
+ .../05_ANDROID_RUNTIME_AND_BUILD.md                | 37 +++++++++++++++++++
+ docs/vexforge-canonical/06_SUPABASE_BACKEND_MAP.md | 26 +++++++++++++
+ docs/vexforge-canonical/07_DATA_CONTRACTS.md       | 23 ++++++++++++
+ docs/vexforge-canonical/08_FEATURE_MATRIX.md       | 16 ++++++++
+ .../09_NAVIGATION_AND_SCREEN_MAP.md                | 25 +++++++++++++
+ docs/vexforge-canonical/10_ASSET_SYSTEM.md         | 22 +++++++++++
+ .../11_CARD_DECK_FORMATION_SYSTEM.md               | 27 ++++++++++++++
+ docs/vexforge-canonical/12_BATTLE_SYSTEM.md        | 22 +++++++++++
+ .../13_MISSIONS_REWARDS_ECONOMY.md                 | 26 +++++++++++++
+ .../14_AUTH_PROFILE_SOCIAL_META.md                 | 19 ++++++++++
+ docs/vexforge-canonical/15_VISUAL_SYSTEM.md        | 17 +++++++++
+ .../vexforge-canonical/16_IMPLEMENTATION_STATUS.md | 16 ++++++++
+ docs/vexforge-canonical/17_CURRENT_BLOCK.md        | 27 ++++++++++++++
+ docs/vexforge-canonical/18_DECISIONS.md            | 39 ++++++++++++++++++++
+ docs/vexforge-canonical/19_BLOCKERS.md             | 28 ++++++++++++++
+ docs/vexforge-canonical/20_KNOWN_UNKNOWNS.md       | 11 ++++++
+ docs/vexforge-canonical/21_CONTRADICTIONS.md       | 36 ++++++++++++++++++
+ .../22_HISTORICAL_DOCUMENT_INDEX.md                | 17 +++++++++
+ .../23_GIT_AND_RELEASE_HISTORY.md                  | 21 +++++++++++
+ docs/vexforge-canonical/24_AI_WORK_PROTOCOL.md     | 22 +++++++++++
+ docs/vexforge-canonical/25_CONTINUITY_CHANGELOG.md | 11 ++++++
+ docs/vexforge-canonical/README.md                  | 21 +++++++++++
+ docs/vexforge-canonical/data/asset_registry.json   | 19 ++++++++++
+ docs/vexforge-canonical/data/blocker_registry.json |  7 ++++
+ docs/vexforge-canonical/data/build_registry.json   | 12 ++++++
+ docs/vexforge-canonical/data/current_state.json    | 27 ++++++++++++++
+ .../vexforge-canonical/data/decision_registry.json |  8 ++++
+ docs/vexforge-canonical/data/dependency_graph.json | 12 ++++++
+ docs/vexforge-canonical/data/feature_matrix.json   | 13 +++++++
+ docs/vexforge-canonical/data/screen_registry.json  | 18 +++++++++
+ 35 files changed, 764 insertions(+)
+ded78720 [skip ci] Force current Android QA artifact and bound sync timeouts
+ mobile/app.json        |  4 ++--
+ mobile/lib/supabase.ts | 40 ++++++++++++++++++++++++++++++++++++----
+ 2 files changed, 38 insertions(+), 6 deletions(-)
+8ccb6f0f [skip ci] Align Android contract guards before APK build
+ mobile/app/(tabs)/collection.tsx | 26 +++++++++++---------------
+ 1 file changed, 11 insertions(+), 15 deletions(-)
+7b515110 [skip ci] Rectify Android typecheck blockers before APK build
+ mobile/app/(tabs)/collection.tsx       | 8 ++++----
+ mobile/app/(tabs)/index.tsx            | 1 +
+ mobile/app/store.tsx                   | 1 -
+ mobile/components/ForgeBattlefield.tsx | 2 +-
+ 4 files changed, 6 insertions(+), 6 deletions(-)
+d8bc4782 [skip ci] Centralize deck action rail visual roles
+ docs/VE-MOB-T2V-DECK-ACTION-RAIL-TOKENS.md | 49 +++++++++++++++++++++++++++
+ mobile/app/(tabs)/deck.tsx                 | 41 ++++++++++++-----------
+ mobile/constants/experience.ts             | 53 ++++++++++++++++++++++++++++++
+ 3 files changed, 123 insertions(+), 20 deletions(-)
+f9549730 [skip ci] Centralize economy chamber visual roles
+ docs/VE-MOB-T2V-ECONOMY-CHAMBER-TOKENS.md | 46 +++++++++++++++++++++++++++++++
+ mobile/app/economy.tsx                    | 25 +++++++++--------
+ mobile/constants/experience.ts            | 36 ++++++++++++++++++++++++
+ 3 files changed, 95 insertions(+), 12 deletions(-)
+6951fb2c [skip ci] Centralize store chamber visual roles
+ docs/VE-MOB-T2V-STORE-CHAMBER-TOKENS.md | 45 ++++++++++++++++++++++++++++++++
+ mobile/app/store.tsx                    | 25 +++++++++---------
+ mobile/constants/experience.ts          | 46 +++++++++++++++++++++++++++++++++
+ 3 files changed, 104 insertions(+), 12 deletions(-)
+27282512 [skip ci] Activate official live Cards archive scene
+ docs/VE-T0-ANDROID-ASSET-MATRIX.md                 |   4 +-
+ docs/VE-T0-ANDROID-ASSET-REGISTRY.json             |  11 +-
+ docs/VE-T0-ANDROID-SCREEN-MASTER-RECORDS.md        |  17 +-
+ docs/VEXFORGE-ASSET-ATLAS.md                       |   2 +-
+ ...vexforge-collection-screen-premium-1080x2340.md |  10 +-
+ mobile/app/(tabs)/collection.tsx                   | 705 +++++----------------
+ .../assets/images/collection-reference-scene.png   | Bin 2903315 -> 2644210 bytes
+ mobile/components/ForgeArchiveScene.tsx            | 279 ++++++++
+ mobile/constants/experience.ts                     |  12 +
+ mobile/constants/visual.ts                         |   4 +-
+ 10 files changed, 475 insertions(+), 569 deletions(-)
+e7231b2e [skip ci] Complete Battlefield safe area motion and readability
+ .../vexforge-battle-screen-premium-1080x2340.md    |  8 +++---
+ mobile/app/(tabs)/battle.tsx                       | 23 ++++++++++++++---
+ mobile/components/ForgeBattlefield.tsx             | 30 ++++++++++++++++++----
+ mobile/constants/experience.ts                     | 25 ++++++++++--------
+ 4 files changed, 64 insertions(+), 22 deletions(-)
+403af02a [skip ci] Activate native Battlefield scene viewport
+ docs/VE-T0-ANDROID-ASSET-MATRIX.md                 |   2 +-
+ docs/VE-T0-ANDROID-ASSET-REGISTRY.json             |  11 +-
+ docs/VE-T0-ANDROID-SCREEN-MASTER-RECORDS.md        |  12 +-
+ .../vexforge-battle-screen-premium-1080x2340.md    |  20 ++-
+ mobile/assets/images/battle-reference-scene.png    | Bin 3777103 -> 2596239 bytes
+ mobile/components/ForgeBattlefield.tsx             | 150 ++++++++++++++++++++-
+ mobile/constants/experience.ts                     |   2 +
+ mobile/constants/visual.ts                         |   5 +-
+ 8 files changed, 185 insertions(+), 17 deletions(-)
+c4dd5427 [skip ci] fix(android): make Forge scene first
+ docs/VE-MOB-5-DECK.md      |   3 +-
+ mobile/app/(tabs)/deck.tsx | 181 ++++++++++++++++++++-------------------------
+ 2 files changed, 83 insertions(+), 101 deletions(-)
+42f9febe [skip ci] feat(android): implement native Forge deck scene
+ docs/VE-MOB-5-DECK.md                       |   6 +-
+ docs/VE-T0-ANDROID-ASSET-MATRIX.md          |   2 +-
+ docs/VE-T0-ANDROID-ASSET-REGISTRY.json      |   2 +-
+ docs/VE-T0-ANDROID-SCREEN-MASTER-RECORDS.md |   6 +-
+ mobile/app/(tabs)/deck.tsx                  | 410 ++++++++++++++++------------
+ mobile/constants/visual.ts                  |   4 +-
+ 6 files changed, 244 insertions(+), 186 deletions(-)
+61ae9684 [skip ci] feat(android): implement native Nexus auth scene
+ docs/VE-MOB-2-AUTH.md                              |  16 +-
+ docs/VE-T0-ANDROID-ASSET-MATRIX.md                 |   2 +-
+ .../vexforge-auth-screen-legendary-1080x2340.md    |   7 +-
+ mobile/app/auth.tsx                                | 877 ++++++++++++++-------
+ mobile/components/ForgeIcon.tsx                    |   6 +
+ mobile/constants/visual.ts                         |   3 +
+ 6 files changed, 638 insertions(+), 273 deletions(-)
+229c010e feat(mobile): make the official Home reference a live scene [skip ci]
+ docs/VE-MOB-3-HOME.md                              |  8 ++
+ .../visual-assets/vexforge-home-screen-official.md |  2 +-
+ mobile/app/(tabs)/index.tsx                        | 93 +++++++++++++++++++++-
+ mobile/constants/visual.ts                         |  5 +-
+ 4 files changed, 101 insertions(+), 7 deletions(-)
+d03543de [skip ci] VEXFORGE official Home scene implementation
+ docs/VE-MOB-3-HOME.md                              |  25 ++++++++++++---------
+ docs/VE-MOB-VISUAL-DIMENSION-AUDIT-2026-09-15.md   |  18 +++++++--------
+ docs/VE-T0-ANDROID-ASSET-MATRIX.md                 |   2 +-
+ docs/VE-T0-ANDROID-ASSET-REGISTRY.json             |  12 +++++-----
+ docs/VE-T0-ANDROID-SCREEN-MASTER-RECORDS.md        |  13 ++++++-----
+ docs/VEXFORGE-ASSET-ATLAS.md                       |  10 ++++-----
+ .../visual-assets/vexforge-home-screen-official.md |  12 +++++-----
+ mobile/app/(tabs)/index.tsx                        |  23 ++++++++++++++++++-
+ mobile/assets/images/home-reference-scene.png      | Bin 1830901 -> 2056246 bytes
+ mobile/constants/visual.ts                         |   6 ++---
+ 10 files changed, 73 insertions(+), 48 deletions(-)
+9d41d124 [skip ci] VEXFORGE native Home scene and official Auth visual sync
+ docs/VE-MOB-3-HOME.md                              |  18 +++++++++++-------
+ docs/VE-MOB-VISUAL-DIMENSION-AUDIT-2026-09-15.md   |  12 +++++++++---
+ docs/VE-T0-ANDROID-ASSET-MATRIX.md                 |   6 +++---
+ docs/VE-T0-ANDROID-ASSET-REGISTRY.json             |  15 ++++++++-------
+ docs/VE-T0-ANDROID-SCREEN-MASTER-RECORDS.md        |  11 ++++++-----
+ docs/VEXFORGE-ASSET-ATLAS.md                       |   8 +++++---
+ .../vexforge-auth-screen-legendary-1080x2340.md    |  14 ++++++++++++++
+ .../visual-assets/vexforge-home-screen-official.md |  13 +++++++++++++
+ mobile/app/(tabs)/index.tsx                        |  16 +++++++---------
+ mobile/app/auth.tsx                                |  14 +++++++-------
+ mobile/assets/images/vexforge-auth-nexus-final.png | Bin 1109371 -> 1644451 bytes
+ mobile/constants/visual.ts                         |   4 +++-
+ 12 files changed, 86 insertions(+), 45 deletions(-)
+22cf3f2f Promote official Auth reference to 1080x2340
+ docs/VE-T0-ANDROID-ASSET-MATRIX.md            |   5 ++--
+ docs/VE-T0-ANDROID-ASSET-REGISTRY.json        |  32 ++++----------------------
+ docs/VEXFORGE-ASSET-ATLAS.md                  |   3 +--
+ mobile/assets/images/auth-reference-scene.png | Bin 1693481 -> 0 bytes
+ mobile/constants/visual.ts                    |   2 +-
+ 5 files changed, 8 insertions(+), 34 deletions(-)
+32867173 Register official Profile reference and audit Auth Home dimensions [skip ci]
+ docs/VE-MOB-VISUAL-DIMENSION-AUDIT-2026-09-15.md   |  45 +++++++++++++++++++++
+ docs/VE-T0-ANDROID-ASSET-MATRIX.md                 |   1 +
+ docs/VE-T0-ANDROID-ASSET-REGISTRY.json             |  42 +++++++++++++++----
+ .../vexforge-profile-screen-premium-1080x2340.md   |  22 ++++++++++
+ .../vexforge-profile-screen-premium-1080x2340.png  | Bin 0 -> 2831006 bytes
+ 5 files changed, 103 insertions(+), 7 deletions(-)
+23da7ae1 Register approved Collection visual reference [skip ci]
+ docs/VE-T0-ANDROID-ASSET-MATRIX.md                 |   1 +
+ docs/VE-T0-ANDROID-ASSET-REGISTRY.json             |  29 ++++++++++++++++++++-
+ ...vexforge-collection-screen-premium-1080x2340.md |  22 ++++++++++++++++
+ ...exforge-collection-screen-premium-1080x2340.png | Bin 0 -> 2644210 bytes
+ 4 files changed, 51 insertions(+), 1 deletion(-)
+5ddcfcb4 Register approved Battlefield visual reference [skip ci]
+ docs/VE-T0-ANDROID-ASSET-MATRIX.md                 |   1 +
+ docs/VE-T0-ANDROID-ASSET-REGISTRY.json             |  30 ++++++++++++++++++++-
+ .../vexforge-battle-screen-premium-1080x2340.md    |  22 +++++++++++++++
+ .../vexforge-battle-screen-premium-1080x2340.png   | Bin 0 -> 2596239 bytes
+ 4 files changed, 52 insertions(+), 1 deletion(-)
+e66fa9b0 Promote Deck Forge asset to official Android path [skip ci]
+ mobile/assets/images/decks-reference-scene.png | Bin 2707000 -> 2993466 bytes
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+249b5276 [skip ci] VE-MOB-AUTH: Nexus Access visual scene and functional controls
+ mobile/app/auth.tsx                           | 475 +++++++++++++++-----------
+ mobile/assets/images/auth-reference-scene.png | Bin 3508169 -> 1693481 bytes
+ mobile/constants/visual.ts                    |   2 +-
+ 3 files changed, 278 insertions(+), 199 deletions(-)
+fdca420f feat(android): align Home with diegetic visual contract [skip ci]
+ docs/VE-T0-ANDROID-SCREEN-MASTER-RECORDS.md |  5 +++
+ mobile/app/(tabs)/index.tsx                 | 61 +++++++++++++++++++++++------
+ 2 files changed, 55 insertions(+), 11 deletions(-)
+eb47d841 feat(android): anchor approved Home scene [skip ci]
+ docs/VE-T0-ANDROID-ASSET-MATRIX.md            |   2 +-
+ docs/VE-T0-ANDROID-ASSET-REGISTRY.json        |  13 +++++++------
+ docs/VE-T0-ANDROID-SCREEN-MASTER-RECORDS.md   |   8 +++++---
+ docs/VEXFORGE-ASSET-ATLAS.md                  |  10 ++++++----
+ mobile/app/(tabs)/index.tsx                   |  23 ++++++++++++-----------
+ mobile/assets/images/home-reference-scene.png | Bin 4038556 -> 1830901 bytes
+ mobile/components/ScreenShell.tsx             |   5 +++--
+ mobile/constants/visual.ts                    |  10 +++++-----
+ 8 files changed, 39 insertions(+), 32 deletions(-)
+70dc79ab chore: reset visual storage to cards-only policy
+ mobile/app/tutorial.tsx           | 11 ++++-
+ mobile/components/ForgeMark.tsx   | 15 +++++--
+ mobile/components/ScreenShell.tsx | 68 +++++++++++++++++------------
+ mobile/constants/visual.ts        | 90 ++++++++++++++++++---------------------
+ mobile/lib/supabase.ts            |  3 --
+ 5 files changed, 104 insertions(+), 83 deletions(-)
+4d8f910d docs: centralize Battlefield icon roles [skip ci]
+ mobile/components/ForgeBattlefield.tsx | 12 ++++++------
+ mobile/constants/experience.ts         |  7 +++++++
+ 2 files changed, 13 insertions(+), 6 deletions(-)
+d08b63f1 docs: centralize ForgeFormation icon sizing [skip ci]
+ mobile/components/ForgeFormationPreview.tsx | 4 ++--
+ mobile/constants/experience.ts              | 3 ++-
+ 2 files changed, 4 insertions(+), 3 deletions(-)
+c5d25ea8 docs: centralize domain header sigil sizing [skip ci]
+ mobile/components/DomainHeader.tsx | 2 +-
+ mobile/constants/experience.ts     | 1 +
+ 2 files changed, 2 insertions(+), 1 deletion(-)
+52a19673 docs: centralize Android navigation icon sizing [skip ci]
+ mobile/app/(tabs)/_layout.tsx  | 10 +++++-----
+ mobile/constants/experience.ts |  1 +
+ 2 files changed, 6 insertions(+), 5 deletions(-)
+b3f5fb6e docs: centralize shared Android typography weights [skip ci]
+ mobile/app/(tabs)/_layout.tsx      | 2 +-
+ mobile/components/DomainHeader.tsx | 4 ++--
+ mobile/constants/experience.ts     | 5 +++--
+ 3 files changed, 6 insertions(+), 5 deletions(-)
+2ad9264f docs: add Android domain scene profiles [skip ci]
+ docs/DOMAIN_SCENE_PROFILES.yaml | 259 ++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 259 insertions(+)
+347620eb docs: add Android art direction [skip ci]
+ docs/ART_DIRECTION.md | 228 ++++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 228 insertions(+)
+0223a621 docs: add Android asset registry [skip ci]
+ docs/VE-T0-ANDROID-ASSET-REGISTRY.json | 1624 ++++++++++++++++++++++++++++++++
+ 1 file changed, 1624 insertions(+)
+d3070459 docs: add Android event presentation map [skip ci]
+ docs/VE-T0-ANDROID-EVENT-PRESENTATION-MAP.md | 137 +++++++++++++++++++++++++++
+ 1 file changed, 137 insertions(+)
+deb68a0c [skip ci] VE-MOB-T2V: World Codex card tokens
+ docs/VE-MOB-T2V-WORLD-CODEX-CARD-TOKENS.md | 39 ++++++++++++++++++++++++++++++
+ mobile/app/world.tsx                       | 18 +++++++++++---
+ mobile/constants/experience.ts             | 11 +++++++++
+ 3 files changed, 65 insertions(+), 3 deletions(-)
+fec7960f [skip ci] VE-MOB-T2V: World Raid card tokens
+ docs/VE-MOB-T2V-WORLD-RAID-CARD-TOKENS.md | 41 +++++++++++++++++++++++++++++++
+ mobile/app/world.tsx                      | 34 ++++++++++++++++++-------
+ mobile/constants/experience.ts            | 14 +++++++++++
+ 3 files changed, 80 insertions(+), 9 deletions(-)
+fe4f3ee7 [skip ci] VE-MOB-T2V: World Boss card tokens
+ docs/VE-MOB-T2V-WORLD-BOSS-CARD-TOKENS.md | 40 ++++++++++++++++++++++
+ mobile/app/world.tsx                      | 56 ++++++++++++++++++++++---------
+ mobile/constants/experience.ts            | 24 +++++++++++++
+ 3 files changed, 105 insertions(+), 15 deletions(-)
+3ae543bb [skip ci] VE-MOB-T2V: World Atlas header and tabs
+ docs/VE-MOB-T2V-WORLD-HEADER-TABS.md | 41 +++++++++++++++++
+ mobile/app/world.tsx                 | 89 ++++++++++++++++++++++++++++++------
+ mobile/constants/experience.ts       | 12 +++++
+ 3 files changed, 129 insertions(+), 13 deletions(-)
+a4a68d06 [skip ci] VE-MOB-T2V: profile modal content tokens
+ docs/VE-MOB-T2V-PROFILE-MODAL-CONTENT-TOKENS.md | 40 +++++++++++++++++++++++++
+ mobile/app/(tabs)/profile.tsx                   | 24 +++++++--------
+ mobile/constants/experience.ts                  | 14 +++++++++
+ 3 files changed, 66 insertions(+), 12 deletions(-)
+e4423193 [skip ci] VE-MOB-T2V: centralize Profile modal shell tokens
+ mobile/app/(tabs)/profile.tsx  | 31 +++++++++++++++++++++++++------
+ mobile/constants/experience.ts |  7 +++++++
+ 2 files changed, 32 insertions(+), 6 deletions(-)
+dddc9eba [skip ci] VE-MOB-T2V: centralize Profile feedback tokens
+ mobile/app/(tabs)/profile.tsx  | 37 ++++++++++++++++++++++++++++++++-----
+ mobile/constants/experience.ts | 16 ++++++++++++++++
+ 2 files changed, 48 insertions(+), 5 deletions(-)
+5befa16b [skip ci] VE-MOB-T2V: centralize Profile quick action tokens
+ mobile/app/(tabs)/profile.tsx  | 24 +++++++++++++++++++-----
+ mobile/constants/experience.ts |  7 +++++++
+ 2 files changed, 26 insertions(+), 5 deletions(-)
+6c3177ba [skip ci] VE-MOB-T2V: centralize Profile progress tokens
+ mobile/app/(tabs)/profile.tsx  | 47 +++++++++++++++++++++++++++++++++++-------
+ mobile/constants/experience.ts | 10 +++++++++
+ 2 files changed, 49 insertions(+), 8 deletions(-)
+2d9b4711 [skip ci] VE-MOB-T2V: centralize Profile stats tokens
+ mobile/app/(tabs)/profile.tsx  | 22 +++++++++++++++++-----
+ mobile/constants/experience.ts |  7 +++++++
+ 2 files changed, 24 insertions(+), 5 deletions(-)
+090e5aba [skip ci] VE-MOB-T2V: centralize Profile identity tokens
+ mobile/app/(tabs)/profile.tsx  | 59 +++++++++++++++++++++++++++++++++++-------
+ mobile/constants/experience.ts |  9 +++++++
+ 2 files changed, 59 insertions(+), 9 deletions(-)
+577a7595 [skip ci] VE-MOB-T2V: centralize ErrorFallback icon and type weights
+ mobile/components/ErrorFallback.tsx | 10 +++++-----
+ mobile/constants/experience.ts      |  5 +++++
+ 2 files changed, 10 insertions(+), 5 deletions(-)
+527382df [skip ci] VE-MOB-T2V: centralize DomainState icon and action weights
+ mobile/components/DomainState.tsx | 6 +++---
+ mobile/constants/experience.ts    | 3 +++
+ 2 files changed, 6 insertions(+), 3 deletions(-)
+7527a50b docs: add T0 rules event settlement matrix [skip ci]
+ docs/VE-T0-RULES-EVENT-SETTLEMENT-MATRIX.md | 149 ++++++++++++++++++++++++++++
+ 1 file changed, 149 insertions(+)
+729eee81 docs: add Android visual acceptance contract [skip ci]
+ docs/VE-T0-ANDROID-VISUAL-ACCEPTANCE.md | 121 ++++++++++++++++++++++++++++++++
+ 1 file changed, 121 insertions(+)
+de5e6fbd [skip ci] VE-MOB-T0: reconcile storage evidence
+ docs/VE-T0-ANDROID-ASSET-MATRIX.md             | 19 +++++++++----------
+ docs/VE-T0-ANDROID-DEVICE-EVIDENCE-REGISTER.md |  6 +++---
+ docs/VE-T0-ANDROID-DOMAIN-SCENE-PROFILES.md    |  2 +-
+ docs/VE-T0-ANDROID-SCREEN-MASTER-RECORDS.md    |  6 +++---
+ docs/VE-T0-ANDROID-VISUAL-STATE-MATRIX.md      |  2 +-
+ 5 files changed, 17 insertions(+), 18 deletions(-)
+624007bb [skip ci] VE-MOB-T0: add device evidence register
+ docs/VE-T0-ANDROID-DEVICE-EVIDENCE-REGISTER.md | 134 +++++++++++++++++++++++++
+ 1 file changed, 134 insertions(+)
+feb2b604 [skip ci] VE-MOB-T0: add domain scene profiles
+ docs/VE-T0-ANDROID-DOMAIN-SCENE-PROFILES.md | 260 ++++++++++++++++++++++++++++
+ 1 file changed, 260 insertions(+)
+30ba51f0 [skip ci] VE-MOB-T0: add executable visual state matrix
+ docs/VE-T0-ANDROID-VISUAL-STATE-MATRIX.md | 89 +++++++++++++++++++++++++++++++
+ 1 file changed, 89 insertions(+)
+4f6b5e73 [skip ci] VE-MOB-T0: reconcile asset matrix and screen master records
+ docs/VE-T0-ANDROID-ASSET-MATRIX.md          | 31 +++++++++++++++++++++-----
+ docs/VE-T0-ANDROID-SCREEN-MASTER-RECORDS.md | 34 ++++++++++++++++++++++++++---
+ 2 files changed, 57 insertions(+), 8 deletions(-)
+e318ab1d fix: restore Android typecheck on latest T2V commit
+ mobile/app/economy.tsx              | 4 +++-
+ mobile/components/MaterialPanel.tsx | 2 +-
+ 2 files changed, 4 insertions(+), 2 deletions(-)
+c7685aaf [skip ci] VE-MOB-T2V: extract battlefield typography weights
+ docs/VE-MOB-T2V-BATTLEFIELD-TYPOGRAPHY-WEIGHTS.md | 39 +++++++++++++++++++
+ docs/VE-MOB-T2V-VISUAL-SYSTEM-TOKENS.md           |  3 ++
+ mobile/components/ForgeBattlefield.tsx            | 47 ++++++++++++++---------
+ mobile/constants/experience.ts                    | 38 +++++++++---------
+ 4 files changed, 89 insertions(+), 38 deletions(-)
+af5a824b [skip ci] VE-MOB-T2V: centralize ForgeButton icon size
+ docs/VE-MOB-T2V-FORGE-BUTTON-ICON-SIZE.md | 37 +++++++++++++++++++++++++++++++
+ docs/VE-MOB-T2V-VISUAL-SYSTEM-TOKENS.md   |  2 ++
+ mobile/components/ForgeButton.tsx         |  4 ++--
+ 3 files changed, 41 insertions(+), 2 deletions(-)
+7085481b [skip ci] VE-MOB-T2V: extract formation typography weights
+ docs/VE-MOB-T2V-FORMATION-TYPOGRAPHY-WEIGHTS.md | 39 +++++++++++++++++++++++++
+ docs/VE-MOB-T2V-VISUAL-SYSTEM-TOKENS.md         |  3 ++
+ mobile/components/ForgeFormationPreview.tsx     | 21 +++++++------
+ mobile/constants/experience.ts                  | 18 ++++++------
+ 4 files changed, 63 insertions(+), 18 deletions(-)
+ebf16086 [skip ci] VE-MOB-T2V: centralize formation preview color roles
+ docs/VE-MOB-T2V-FORMATION-COLOR-ROLES.md    | 38 +++++++++++++++++++++++++++++
+ docs/VE-MOB-T2V-VISUAL-SYSTEM-TOKENS.md     |  3 +++
+ mobile/components/ForgeFormationPreview.tsx |  4 +--
+ mobile/constants/experience.ts              | 10 ++++++--
+ 4 files changed, 51 insertions(+), 4 deletions(-)
+66b12ec4 [skip ci] VE-MOB-T2V: standardize formation preview borders
+ docs/VE-MOB-T2V-FORMATION-BORDER-TOKENS.md  | 39 +++++++++++++++++++++++++++++
+ docs/VE-MOB-T2V-VISUAL-SYSTEM-TOKENS.md     |  3 +++
+ mobile/components/ForgeFormationPreview.tsx | 10 ++++----
+ 3 files changed, 47 insertions(+), 5 deletions(-)
+9a8493b0 [skip ci] VE-MOB-T2V: centralize material panel border opacity
+ mobile/components/MaterialPanel.tsx | 7 ++++++-
+ mobile/constants/experience.ts      | 1 +
+ 2 files changed, 7 insertions(+), 1 deletion(-)
+31e23517 [skip ci] VE-MOB-T2V: centralize scene ambient motion tokens
+ mobile/components/ScreenShell.tsx | 22 +++++++++++++---------
+ mobile/constants/experience.ts    |  4 ++++
+ 2 files changed, 17 insertions(+), 9 deletions(-)
+3ed3fc0c [skip ci] VE-MOB-T2V: centralize shared safe area tokens
+ mobile/app/(tabs)/_layout.tsx     | 2 +-
+ mobile/components/ScreenShell.tsx | 4 ++--
+ mobile/constants/experience.ts    | 2 ++
+ 3 files changed, 5 insertions(+), 3 deletions(-)
+0881eba8 [skip ci] VE-MOB-T2V: centralize error fallback depth tokens
+ mobile/components/ErrorFallback.tsx | 12 ++++++------
+ mobile/constants/experience.ts      | 11 ++++++++++-
+ 2 files changed, 16 insertions(+), 7 deletions(-)
+e2ac5292 [skip ci] VE-MOB-T2V: centralize domain state detail tokens
+ mobile/components/DomainState.tsx | 6 +++---
+ mobile/constants/experience.ts    | 3 +++
+ 2 files changed, 6 insertions(+), 3 deletions(-)
+23d122cf feat: centralize error fallback recovery tokens [skip ci]
+ docs/VE-MOB-T2V-VISUAL-SYSTEM-TOKENS.md |  3 ++
+ mobile/components/ErrorFallback.tsx     | 63 +++++++++++++++++----------------
+ mobile/constants/experience.ts          | 15 ++++++++
+ 3 files changed, 50 insertions(+), 31 deletions(-)
+2fd0541e feat: centralize battlefield control tokens [skip ci]
+ docs/VE-MOB-T2V-VISUAL-SYSTEM-TOKENS.md |  3 ++
+ mobile/components/ForgeBattlefield.tsx  | 88 ++++++++++++++++++++++++++-------
+ mobile/constants/experience.ts          | 16 ++++++
+ 3 files changed, 88 insertions(+), 19 deletions(-)
+e09510e5 feat: centralize battlefield typography tokens [skip ci]
+ docs/VE-MOB-T2V-VISUAL-SYSTEM-TOKENS.md |   3 +
+ mobile/components/ForgeBattlefield.tsx  | 109 ++++++++++++++++++++++++++------
+ mobile/constants/experience.ts          |  22 +++++++
+ 3 files changed, 114 insertions(+), 20 deletions(-)
+bbc37d9b feat: centralize domain header typography tokens [skip ci]
+ docs/VE-MOB-T2V-VISUAL-SYSTEM-TOKENS.md |  3 +++
+ mobile/components/DomainHeader.tsx      | 23 ++++++++++++++++-------
+ mobile/constants/experience.ts          |  7 ++++++-
+ 3 files changed, 25 insertions(+), 8 deletions(-)
+787330b3 feat: centralize asset error state tokens [skip ci]
+ docs/VE-MOB-T2V-VISUAL-SYSTEM-TOKENS.md |  3 +++
+ mobile/components/ScreenShell.tsx       | 28 ++++++++++++++++++++++++----
+ mobile/constants/experience.ts          | 12 ++++++++++++
+ 3 files changed, 39 insertions(+), 4 deletions(-)
+420adb1e fix: preserve profile pending and draw outcomes [skip ci]
+ mobile/app/(tabs)/profile.tsx | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+1404f39f docs: register T0 Android assets and screen records [skip ci]
+ docs/VE-T0-ANDROID-ASSET-MATRIX.md          | 114 +++++++++++
+ docs/VE-T0-ANDROID-SCREEN-MASTER-RECORDS.md | 280 ++++++++++++++++++++++++++++
+ 2 files changed, 394 insertions(+)
+d4da929f [skip ci] VE-MOB-T2V domain portal tokens
+ mobile/app/(tabs)/index.tsx    | 76 ++++++++++++++++++++++++++++++++++++------
+ mobile/constants/experience.ts | 11 ++++++
+ 2 files changed, 76 insertions(+), 11 deletions(-)
+b7e1528f [skip ci] VE-MOB-T2V battlefield socket tokens
+ mobile/components/ForgeBattlefield.tsx | 81 +++++++++++++++++++++++++++++-----
+ mobile/constants/experience.ts         | 17 +++++++
+ 2 files changed, 87 insertions(+), 11 deletions(-)
+c6b5bb9b [skip ci] VE-MOB-T2V metric plaque tokens
+ mobile/app/(tabs)/profile.tsx  | 21 +++++++++++++++++----
+ mobile/constants/experience.ts | 11 +++++++++++
+ 2 files changed, 28 insertions(+), 4 deletions(-)
+9e9bc995 [skip ci] VE-MOB-T2V heraldic identity mark tokens
+ mobile/components/ForgeMark.tsx | 23 ++++++++++++-----------
+ mobile/constants/experience.ts  | 16 ++++++++++++++++
+ 2 files changed, 28 insertions(+), 11 deletions(-)
+00ea2563 [skip ci] VE-MOB-T2V navigation shell tokens
+ mobile/app/(tabs)/_layout.tsx  | 57 ++++++++++++++++++++++++++++++++----------
+ mobile/constants/experience.ts | 32 ++++++++++++++++++++++++
+ 2 files changed, 76 insertions(+), 13 deletions(-)
+177d850d feat(android): centralize formation visual tokens [skip ci]
+ docs/VE-MOB-T2V-VISUAL-SYSTEM-TOKENS.md     |   3 +
+ mobile/components/ForgeFormationPreview.tsx | 142 ++++++++++++++++++++++------
+ mobile/constants/experience.ts              |  24 +++++
+ 3 files changed, 141 insertions(+), 28 deletions(-)
+5bc35ee5 fix(android): keep withdrawal input signals honest [skip ci]
+ mobile/app/economy.tsx | 19 +++++++++++++------
+ 1 file changed, 13 insertions(+), 6 deletions(-)
+f058fa95 fix(android): keep Store date signals honest [skip ci]
+ mobile/app/store.tsx | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
+3f498966 fix(android): keep Home event date signal honest [skip ci]
+ mobile/app/(tabs)/index.tsx | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+c6b2188a feat(android): apply T2V typography tokens [skip ci]
+ docs/VE-MOB-T2V-VISUAL-SYSTEM-TOKENS.md |  2 ++
+ mobile/components/ForgeText.tsx         | 15 +++------------
+ mobile/constants/experience.ts          | 14 ++++++++------
+ 3 files changed, 13 insertions(+), 18 deletions(-)
+27e1aba0 feat(android): apply T2V domain state tokens [skip ci]
+ docs/VE-MOB-T2V-VISUAL-SYSTEM-TOKENS.md |  2 ++
+ mobile/components/DomainState.tsx       | 50 ++++++++++++++++++++++++++-------
+ mobile/constants/experience.ts          | 21 ++++++++++++++
+ 3 files changed, 63 insertions(+), 10 deletions(-)
+4c9f5401 feat(android): apply T2V shared scene tokens [skip ci]
+ docs/VE-MOB-T2V-VISUAL-SYSTEM-TOKENS.md |  2 ++
+ mobile/components/ScreenShell.tsx       | 44 +++++++++++++++++++++++----------
+ mobile/constants/experience.ts          | 25 +++++++++++++++++++
+ 3 files changed, 58 insertions(+), 13 deletions(-)
+f5817792 feat(android): apply T2V domain header tokens [skip ci]
+ docs/VE-MOB-T2V-VISUAL-SYSTEM-TOKENS.md |  2 ++
+ mobile/components/DomainHeader.tsx      | 27 ++++++++++++++++++---------
+ mobile/constants/experience.ts          | 11 +++++++++++
+ 3 files changed, 31 insertions(+), 9 deletions(-)
+34f7cc37 feat(android): apply T2V progress control tokens [skip ci]
+ docs/VE-MOB-T2V-VISUAL-SYSTEM-TOKENS.md |  2 ++
+ mobile/components/ProgressBar.tsx       | 12 ++++++++++--
+ mobile/constants/experience.ts          |  4 ++++
+ 3 files changed, 16 insertions(+), 2 deletions(-)
+8e0654ee feat(android): apply T2V icon stroke tokens [skip ci]
+ docs/VE-MOB-T2V-VISUAL-SYSTEM-TOKENS.md |  3 +++
+ mobile/components/ForgeIcon.tsx         | 10 +++++++++-
+ 2 files changed, 12 insertions(+), 1 deletion(-)
+c4c39fcd Android T2V button control tokens [skip ci]
+ docs/VE-MOB-T2V-VISUAL-SYSTEM-TOKENS.md |  2 ++
+ mobile/components/ForgeButton.tsx       | 23 +++++++++++++++++++++--
+ mobile/constants/experience.ts          | 11 +++++++++++
+ 3 files changed, 34 insertions(+), 2 deletions(-)
+d7b9a749 Android T2V shared visual system primitives [skip ci]
+ docs/VE-MOB-T2V-VISUAL-SYSTEM-TOKENS.md | 44 ++++++++++++++++++
+ mobile/app/(tabs)/index.tsx             |  2 +-
+ mobile/app/(tabs)/profile.tsx           |  2 +-
+ mobile/app/world.tsx                    | 40 ++++++++++++++--
+ mobile/components/DomainState.tsx       | 15 +++---
+ mobile/components/MaterialPanel.tsx     | 81 +++++++++++++++++++++++++++++++++
+ mobile/constants/experience.ts          | 79 ++++++++++++++++++++++++++++++++
+ mobile/lib/supabase.ts                  |  6 +--
+ 8 files changed, 251 insertions(+), 18 deletions(-)
+ed306a44 fix(mobile): preserve unreported collection stats [skip ci]
+ mobile/app/(tabs)/collection.tsx | 17 ++++++++++++++++-
+ 1 file changed, 16 insertions(+), 1 deletion(-)
+26e2076b fix(mobile): preserve absent battle turn counts [skip ci]
+ mobile/app/(tabs)/battle.tsx           | 6 +++---
+ mobile/components/ForgeBattlefield.tsx | 4 ++--
+ 2 files changed, 5 insertions(+), 5 deletions(-)
+9e6959e5 fix(mobile): report social win rate honestly [skip ci]
+ mobile/app/social.tsx | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
+253bdf5c fix(mobile): clarify economy date and hash signals [skip ci]
+ docs/VE-MOB-11-ECONOMY-HONEST-DATE-HASH-SIGNALS.md | 25 ++++++++++++++++++++++
+ mobile/app/economy.tsx                             |  6 +++---
+ 2 files changed, 28 insertions(+), 3 deletions(-)
+d0b75302 fix(mobile): distinguish social date signals [skip ci]
+ docs/VE-MOB-13-SOCIAL-HONEST-DATE-SIGNALS.md | 25 +++++++++++++++++++++++++
+ mobile/app/social.tsx                        |  6 +++++-
+ 2 files changed, 30 insertions(+), 1 deletion(-)
+6360be64 feat(mobile): clarify profile progression signals [skip ci]
+ docs/VE-MOB-9-PROFILE.md      |  5 +++++
+ mobile/app/(tabs)/profile.tsx | 50 +++++++++++++++++++++++++------------------
+ 2 files changed, 34 insertions(+), 21 deletions(-)
+d76307bf feat(mobile): make archive identity signals explicit [skip ci]
+ docs/VE-MOB-4-COLLECTION-HONEST-CARD-SIGNALS.md |  4 +--
+ mobile/app/(tabs)/collection.tsx                | 35 ++++++++++++++++++++-----
+ 2 files changed, 30 insertions(+), 9 deletions(-)
+efbe05e5 VE-MOB-3-HOME: preserve honest numeric signals [skip ci]
+ mobile/app/(tabs)/index.tsx | 53 ++++++++++++++++++++++++++++++---------------
+ 1 file changed, 35 insertions(+), 18 deletions(-)
+02ead4c1 VE-MOB-8-DECK: preserve honest summary signals [skip ci]
+ mobile/app/(tabs)/deck.tsx | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
+b0d5cbc4 VE-MOB-7-BATTLE: preserve explicit poison event labels [skip ci]
+ mobile/app/(tabs)/battle.tsx | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+db4fffda VE-MOB-7-BATTLE: keep missing battlefield status explicit [skip ci]
+ docs/VE-MOB-7-BATTLEFIELD-HONEST-STATUS.md | 31 ++++++++++++++++++++++++++++++
+ mobile/components/ForgeBattlefield.tsx     | 16 ++++++++-------
+ 2 files changed, 40 insertions(+), 7 deletions(-)
+dceef760 VE-MOB-12-WORLD: align honest signal contract [skip ci]
+ docs/VE-MOB-12-WORLD-HONEST-SIGNALS.md | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+2dc3b1f6 VE-MOB-12-WORLD: make missing boss art and lore explicit [skip ci]
+ mobile/app/world.tsx | 18 ++++++++++++------
+ 1 file changed, 12 insertions(+), 6 deletions(-)
+ae9587a1 VE-MOB-12-WORLD: preserve honest raid identity [skip ci]
+ docs/VE-MOB-12-WORLD-HONEST-RAID-IDENTITY.md | 28 ++++++++++++++++++++++++++++
+ mobile/app/world.tsx                         | 13 +++++++++++--
+ 2 files changed, 39 insertions(+), 2 deletions(-)
+b8c5d5ac VE-MOB-12-WORLD: preserve honest ranking identity [skip ci]
+ docs/VE-MOB-12-WORLD-HONEST-RANKING-IDENTITY.md | 31 +++++++++++++++++++++++++
+ mobile/app/world.tsx                            | 10 +++++++-
+ 2 files changed, 40 insertions(+), 1 deletion(-)
+9a0d5b44 VE-MOB-12-WORLD: preserve honest boss identity [skip ci]
+ docs/VE-MOB-12-WORLD-HONEST-BOSS-IDENTITY.md | 31 ++++++++++++++++++++++++++++
+ mobile/app/world.tsx                         | 19 ++++++++++++-----
+ 2 files changed, 45 insertions(+), 5 deletions(-)
+43132008 VE-MOB-12-WORLD: preserve honest numeric signals [skip ci]
+ docs/VE-MOB-12-WORLD-HONEST-NUMERIC-SIGNALS.md | 31 ++++++++++++++++++++++++++
+ mobile/app/world.tsx                           | 18 +++++++++------
+ 2 files changed, 42 insertions(+), 7 deletions(-)
+8f95f008 VE-MOB-12-WORLD: preserve honest date signals [skip ci]
+ docs/VE-MOB-12-WORLD-HONEST-DATE-SIGNALS.md | 29 +++++++++++++++++++++++++++++
+ mobile/app/world.tsx                        |  4 ++--
+ 2 files changed, 31 insertions(+), 2 deletions(-)
+54b42566 VE-MOB-7-BATTLE: preserve honest season signal [skip ci]
+ docs/VE-MOB-7-BATTLE-HONEST-SEASON-SIGNAL.md | 30 ++++++++++++++++++++++++++++
+ mobile/app/(tabs)/battle.tsx                 |  7 ++++++-
+ 2 files changed, 36 insertions(+), 1 deletion(-)
+9ed5796e VE-MOB-7-BATTLE: preserve honest turn event signals [skip ci]
+ docs/VE-MOB-7-BATTLE-HONEST-EVENT-SIGNALS.md | 33 ++++++++++++++++++++++++++++
+ mobile/app/(tabs)/battle.tsx                 |  2 +-
+ mobile/components/ForgeBattlefield.tsx       |  5 +++--
+ 3 files changed, 37 insertions(+), 3 deletions(-)
+0256ee01 VE-MOB-7-BATTLE: honest empty position and reserve signals [skip ci]
+ docs/VE-MOB-7-BATTLE-HONEST-EMPTY-SIGNALS.md | 34 ++++++++++++++++++++++++++++
+ mobile/components/ForgeBattlefield.tsx       |  8 +++----
+ 2 files changed, 38 insertions(+), 4 deletions(-)
+29e7d194 VE-MOB-7-FORMATION: preserve honest empty slot signals [skip ci]
+ docs/VE-MOB-7-FORMATION-HONEST-EMPTY-SLOTS.md | 22 ++++++++++++++++++++++
+ mobile/components/ForgeFormationPreview.tsx   |  4 +++-
+ 2 files changed, 25 insertions(+), 1 deletion(-)
+eaa66a9c VE-MOB-7-BATTLE: preserve honest rank signals [skip ci]
+ docs/VE-MOB-7-BATTLE-HONEST-RANK-SIGNALS.md | 22 ++++++++++++++++++++++
+ mobile/app/(tabs)/battle.tsx                | 13 ++++++++-----
+ 2 files changed, 30 insertions(+), 5 deletions(-)
+24fe1ed8 VE-MOB-7-BATTLE: preserve honest result signals [skip ci]
+ docs/VE-MOB-7-BATTLE-HONEST-RESULT-SIGNALS.md | 23 +++++++++++++++++++++++
+ mobile/app/(tabs)/battle.tsx                  | 13 ++++++++-----
+ 2 files changed, 31 insertions(+), 5 deletions(-)
+67e3cf53 VE-MOB-7-BATTLE: preserve honest replay turn signals [skip ci]
+ docs/VE-MOB-7-BATTLE-HONEST-TURN-DETAIL.md | 24 +++++++++++++++
+ mobile/app/(tabs)/battle.tsx               | 48 ++++++++++++++++++++++--------
+ 2 files changed, 59 insertions(+), 13 deletions(-)
+ae22e7d7 [skip ci] VE-MOB-8 honest energy signal
+ docs/VE-MOB-8-REWARDS.md | 6 ++++++
+ mobile/app/missions.tsx  | 2 +-
+ 2 files changed, 7 insertions(+), 1 deletion(-)
+0b57824a [skip ci] VE-MOB-13 social signal fidelity
+ docs/VE-MOB-13-SOCIAL.md |  7 +++++++
+ mobile/app/social.tsx    | 17 ++++++++++-------
+ mobile/lib/supabase.ts   | 24 +++++++++++++-----------
+ 3 files changed, 30 insertions(+), 18 deletions(-)
+24543fa9 [skip ci] VE-MOB-13-SOCIAL: honest ranking signals
+ mobile/app/(tabs)/profile.tsx | 6 +++++-
+ mobile/app/social.tsx         | 8 +++++---
+ mobile/lib/supabase.ts        | 4 ++--
+ 3 files changed, 12 insertions(+), 6 deletions(-)
+416dd865 [skip ci] VE-MOB-7-BATTLE: honest battlefield signals
+ mobile/components/ForgeBattlefield.tsx | 38 +++++++++++++++++++++++++++-------
+ 1 file changed, 30 insertions(+), 8 deletions(-)
+3ec3f949 [skip ci] VE-MOB-13-SOCIAL: honest identity signals
+ mobile/app/social.tsx | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+e4475c19 [skip ci] VE-MOB-8-REWARDS: honest mission signals
+ mobile/app/missions.tsx | 60 +++++++++++++++++++++++++++++++++++--------------
+ 1 file changed, 43 insertions(+), 17 deletions(-)
+575bf07c [skip ci] VE-MOB-10 Store honest pack and inventory signals
+ mobile/app/store.tsx | 16 ++++++++++------
+ 1 file changed, 10 insertions(+), 6 deletions(-)
+c76a8267 [skip ci] VE-MOB-3 Home honest card code signal
+ mobile/app/(tabs)/index.tsx | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+3f50374e [skip ci] VE-MOB-9 Profile honest identity signals
+ mobile/app/(tabs)/profile.tsx | 25 +++++++++++++++++++------
+ 1 file changed, 19 insertions(+), 6 deletions(-)
+dcc0f423 [skip ci] VE-MOB-14 Meta honest catalog and queue signals
+ mobile/app/meta.tsx | 45 ++++++++++++++++++++++++++++++++++++++++-----
+ 1 file changed, 40 insertions(+), 5 deletions(-)
+8c6921d0 [skip ci] VE-MOB-14: honest account identity
+ docs/VE-MOB-14-META-HONEST-ACCOUNT-IDENTITY.md | 28 ++++++++++++++++++++++++++
+ mobile/app/meta.tsx                            | 14 +++++++++++--
+ 2 files changed, 40 insertions(+), 2 deletions(-)
+1989c44c [skip ci] VE-MOB-7: honest opponent signals
+ docs/VE-MOB-7-BATTLE-HONEST-OPPONENT-SIGNALS.md | 27 +++++++++++++++++
+ mobile/app/(tabs)/battle.tsx                    | 29 +++++++++++++-----
+ mobile/lib/supabase.ts                          | 40 +++++++++++++++++--------
+ 3 files changed, 75 insertions(+), 21 deletions(-)
+3da65103 [skip ci] VE-MOB-12: honest ranking metrics
+ docs/VE-MOB-12-WORLD-HONEST-RANKING-SIGNALS.md | 24 ++++++++++++++++++++++++
+ mobile/app/world.tsx                           | 12 +++++++++++-
+ 2 files changed, 35 insertions(+), 1 deletion(-)
+6da558cf [skip ci] VE-MOB-12: honest Codex and raid signals
+ docs/VE-MOB-12-WORLD-HONEST-IDENTITY-STATUS.md | 27 ++++++++++++++++++++
+ mobile/app/world.tsx                           | 34 +++++++++++++++++++++-----
+ 2 files changed, 55 insertions(+), 6 deletions(-)
+73a8af5e [skip ci] VE-MOB-11: readable economy status signals
+ docs/VE-MOB-11-ECONOMY-HONEST-STATUS-LABELS.md | 24 ++++++++++++++++++++++++
+ mobile/app/economy.tsx                         | 26 ++++++++++++++++++++------
+ 2 files changed, 44 insertions(+), 6 deletions(-)
+a40be599 [skip ci] VE-MOB-11: honest economy identity signals
+ docs/VE-MOB-11-ECONOMY-HONEST-IDENTITY-SIGNALS.md | 26 ++++++++++++++++++++
+ mobile/app/economy.tsx                            | 30 ++++++++++++++++-------
+ 2 files changed, 47 insertions(+), 9 deletions(-)
+90b2e62a [skip ci] VE-MOB-10 Fusion honest policy
+ docs/VE-MOB-10-FUSION-HONEST-POLICY.md | 31 +++++++++++++++++++++++++++++++
+ mobile/app/store.tsx                   | 23 ++++++++++++++++++++---
+ mobile/lib/supabase.ts                 | 16 ++++++++--------
+ 3 files changed, 59 insertions(+), 11 deletions(-)
+956e1bc0 [skip ci] VE-MOB-10 Shop honest terms
+ docs/VE-MOB-10-PACKS-SHOP-HONEST-SHOP-TERMS.md | 30 ++++++++++++++++++++++++++
+ mobile/app/store.tsx                           | 10 ++++++---
+ 2 files changed, 37 insertions(+), 3 deletions(-)
+2efe2bda [skip ci] VE-MOB-12 World honest encounter damage
+ docs/VE-MOB-12-WORLD-HONEST-ENCOUNTER-DAMAGE.md | 27 +++++++++++++++++++++++++
+ mobile/app/world.tsx                            | 10 +++++++--
+ 2 files changed, 35 insertions(+), 2 deletions(-)
+ab865dd9 [skip ci] VE-MOB-12 World honest reward signals
+ docs/VE-MOB-12-WORLD-HONEST-REWARDS.md | 30 ++++++++++++++++++++++++++++++
+ mobile/app/world.tsx                   | 18 +++++++++++++++---
+ 2 files changed, 45 insertions(+), 3 deletions(-)
+b8e87e83 [skip ci] VE-MOB-14 META honest Forge Ads signals
+ docs/VE-MOB-14-META-HONEST-AD-STATS.md | 29 +++++++++++++++++++++++++++++
+ mobile/app/meta.tsx                    | 12 ++++++++----
+ mobile/lib/supabase.ts                 | 10 +++++-----
+ 3 files changed, 42 insertions(+), 9 deletions(-)
+cd1447d4 [skip ci] VE-MOB-13 SOCIAL LEGADO IDENTITY
+ docs/VE-MOB-13-SOCIAL-LEGADO-IDENTITY.md | 27 +++++++++++++++++++++++++++
+ mobile/components/DomainHeader.tsx       |  8 ++++++--
+ mobile/components/ScreenShell.tsx        | 12 +++++++++++-
+ 3 files changed, 44 insertions(+), 3 deletions(-)
+3a04dd5b fix(mobile): keep world signals honest [skip ci]
+ docs/VE-MOB-12-WORLD-HONEST-SIGNALS.md | 31 +++++++++++++++++++++++++++++++
+ docs/VE-MOB-12-WORLD.md                |  1 +
+ mobile/app/world.tsx                   | 29 +++++++++++++++--------------
+ 3 files changed, 47 insertions(+), 14 deletions(-)
+a3785787 fix(mobile): keep tutorial progress signals honest [skip ci]
+ docs/VE-MOB-6-TUTORIAL.md |  1 +
+ mobile/app/tutorial.tsx   | 45 ++++++++++++++++++++++++++++++++++++++++++++-
+ 2 files changed, 45 insertions(+), 1 deletion(-)
+722ef63b [skip ci] docs(android): record honest battle signal continuity
+ docs/VE-MOB-7-BATTLE-HONEST-MISSING-SIGNALS.md | 22 ++++++++++++++++++++++
+ mobile/app/(tabs)/battle.tsx                   | 26 ++++++++++++++++++--------
+ 2 files changed, 40 insertions(+), 8 deletions(-)
+0328de4b [skip ci] docs(android): record honest collection signals continuity
+ docs/VE-MOB-4-COLLECTION-HONEST-CARD-SIGNALS.md | 20 +++++++++++++
+ mobile/app/(tabs)/collection.tsx                | 38 ++++++++++++++++---------
+ 2 files changed, 45 insertions(+), 13 deletions(-)
+58ed64df [skip ci] docs(android): record honest economy balance continuity
+ docs/VE-MOB-11-ECONOMY-HONEST-BALANCE-SIGNALS.md | 22 ++++++++++++
+ mobile/app/economy.tsx                           | 43 ++++++++++++------------
+ 2 files changed, 44 insertions(+), 21 deletions(-)
+847529c9 [skip ci] docs(android): record honest Home progression continuity
+ docs/VE-MOB-3-HOME-HONEST-PROGRESSION-SIGNAL.md | 22 ++++++++++++++++++++++
+ mobile/app/(tabs)/index.tsx                     | 12 +++++++-----
+ 2 files changed, 29 insertions(+), 5 deletions(-)
+f9d9684d [skip ci] docs(android): record honest evolution requirements continuity
+ ...OB-10-PACKS-SHOP-HONEST-EVOLUTION-REQUIREMENTS.md | 20 ++++++++++++++++++++
+ mobile/app/store.tsx                                 |  2 +-
+ 2 files changed, 21 insertions(+), 1 deletion(-)
+57f720da [skip ci] docs(android): record honest pack balance continuity
+ docs/VE-MOB-10-PACKS-SHOP-HONEST-BALANCE-SIGNAL.md | 22 +++++++++++++++++++++
+ mobile/app/store.tsx                               | 23 +++++++++++++++++++---
+ 2 files changed, 42 insertions(+), 3 deletions(-)
+91a99414 [skip ci] feat(android): anchor store in Nexus
+ docs/VE-MOB-10-PACKS-SHOP-NEXUS-IDENTITY.md | 25 ++++++++++++++++++
+ mobile/app/store.tsx                        | 41 +++++++++++++++++++++++------
+ 2 files changed, 58 insertions(+), 8 deletions(-)
+94122ed6 [skip ci] feat(android): anchor rewards in Nexus
+ docs/VE-MOB-8-REWARDS-NEXUS-IDENTITY.md | 27 ++++++++++++++++++++++
+ mobile/app/missions.tsx                 | 40 ++++++++++++++++++++++-----------
+ 2 files changed, 54 insertions(+), 13 deletions(-)
+74395b53 [skip ci] feat(android): reinforce Nexus auth gate
+ docs/VE-MOB-2-AUTH-NEXUS-GATE.md | 31 +++++++++++++++++
+ mobile/app/auth.tsx              | 73 +++++++++++++++++++++++++++++++++++-----
+ 2 files changed, 96 insertions(+), 8 deletions(-)
+6a036a3a [skip ci] fix(android): keep absent arena stats honest
+ mobile/app/(tabs)/battle.tsx | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
+281e6eff [skip ci] fix(android): avoid invented season signal
+ mobile/app/(tabs)/index.tsx | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+db48595c [skip ci] chore(android): keep featured lore state honest
+ mobile/app/(tabs)/index.tsx | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+f00bfc06 fix(mobile): keep empty deck metrics honest [skip ci]
+ docs/VE-MOB-5-DECK-HONEST-EMPTY-SUMMARY.md | 19 +++++++++++++++++++
+ mobile/app/(tabs)/deck.tsx                 |  8 ++++----
+ 2 files changed, 23 insertions(+), 4 deletions(-)
+eedf0d47 fix(mobile): show pending achievement states honestly [skip ci]
+ .../VE-MOB-9-PROFILE-ACHIEVEMENT-PENDING-STATES.md | 24 ++++++++++++++++++++++
+ mobile/app/(tabs)/profile.tsx                      |  6 ++++--
+ 2 files changed, 28 insertions(+), 2 deletions(-)
+43a46e58 fix(mobile): show pending social profile states honestly [skip ci]
+ docs/VE-MOB-9-PROFILE-SOCIAL-PENDING-STATES.md | 23 +++++++++++++++++++++++
+ mobile/app/(tabs)/profile.tsx                  |  4 ++--
+ 2 files changed, 25 insertions(+), 2 deletions(-)
+495cc493 fix(mobile): keep unsynced profile streak honest [skip ci]
+ docs/VE-MOB-9-PROFILE-HONEST-STREAK-SIGNAL.md | 18 ++++++++++++++++++
+ mobile/app/(tabs)/profile.tsx                 |  7 ++++---
+ 2 files changed, 22 insertions(+), 3 deletions(-)
+70dd3dc0 fix(mobile): preserve explicit battle formation states [skip ci]
+ docs/VE-MOB-7-BATTLE-STATE-INTEGRITY.md | 26 ++++++++++
+ mobile/components/ForgeBattlefield.tsx  | 86 +++++++++++++++++++++++++++++----
+ 2 files changed, 103 insertions(+), 9 deletions(-)
+286c43a6 fix(mobile): add haptic cue to AI practice gate [skip ci]
+ docs/VE-MOB-7-BATTLE-AI-PRACTICE-HAPTIC.md | 20 ++++++++++++++++++++
+ mobile/app/(tabs)/battle.tsx               |  1 +
+ 2 files changed, 21 insertions(+)
+bcda6708 fix(mobile): restore shared forge identity header [skip ci]
+ docs/VE-MOB-8-DECK-DOMAIN-IDENTITY.md | 31 +++++++++++++++++++++++++++++++
+ mobile/app/(tabs)/deck.tsx            | 27 +++++++++++++++++----------
+ 2 files changed, 48 insertions(+), 10 deletions(-)
+d5902fc7 fix(mobile): preserve profile history outcomes [skip ci]
+ docs/VE-MOB-9-PROFILE-HISTORY-OUTCOME-FIDELITY.md | 30 +++++++++++++++++++++++
+ mobile/app/(tabs)/profile.tsx                     | 26 +++++++++++++++++++-
+ 2 files changed, 55 insertions(+), 1 deletion(-)
+dc94e1ad feat(mobile): expose authoritative replay turn detail [skip ci]
+ docs/VE-MOB-7-BATTLE-REPLAY-TURN-DETAIL.md | 28 ++++++++++++++++++++++++++++
+ mobile/app/(tabs)/battle.tsx               |  1 +
+ 2 files changed, 29 insertions(+)
+8e792016 feat(mobile): add arena replay haptic feedback [skip ci]
+ docs/VE-MOB-7-BATTLE-REPLAY-HAPTICS.md | 25 +++++++++++++++++++++++++
+ mobile/app/(tabs)/battle.tsx           |  6 +++++-
+ 2 files changed, 30 insertions(+), 1 deletion(-)
+b9442504 feat(mobile): add arena haptic decision feedback [skip ci]
+ docs/VE-MOB-7-BATTLE-HAPTIC-GATES.md | 26 ++++++++++++++++++++++++++
+ mobile/app/(tabs)/battle.tsx         | 16 +++++++++++++---
+ 2 files changed, 39 insertions(+), 3 deletions(-)
+97e1cbe4 feat(mobile): preserve neutral arena mmr state [skip ci]
+ docs/VE-MOB-7-BATTLE-MMR-NEUTRALITY.md | 29 +++++++++++++++++++++++++++++
+ mobile/app/(tabs)/battle.tsx           |  5 ++++-
+ 2 files changed, 33 insertions(+), 1 deletion(-)
+c092ef6e feat(mobile): preserve authoritative arena draw outcome [skip ci]
+ docs/VE-MOB-7-BATTLE-DRAW-FIDELITY.md  | 29 +++++++++++++++++++++++++++++
+ mobile/app/(tabs)/battle.tsx           | 30 +++++++++++++++++++++---------
+ mobile/components/ForgeBattlefield.tsx | 14 ++++++++++++--
+ 3 files changed, 62 insertions(+), 11 deletions(-)
+4bf65ee5 feat(mobile): preserve authoritative arena result formation [skip ci]
+ docs/VE-MOB-7-BATTLE-RESULT-FORMATION.md | 45 ++++++++++++++++++++++++++++++++
+ mobile/app/(tabs)/battle.tsx             | 21 ++++++++++++++-
+ 2 files changed, 65 insertions(+), 1 deletion(-)
+f6d80d2a docs(pvp): VE-PVP-4-LEGACY-START-RETIRED [skip ci]
+ docs/VE-PVP-4-LEGACY-START-RETIRED.md | 53 +++++++++++++++++++++++++++++++++++
+ 1 file changed, 53 insertions(+)
+f0c69c1e VE-PVP-3-OPPONENT-ROSTER: docs/VE-PVP-3-OPPONENT-ROSTER.md
+ docs/VE-PVP-3-OPPONENT-ROSTER.md | 53 ++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 53 insertions(+)
+ba6fcb48 feat(mobile): add arena action press depth [skip ci]
+ mobile/app/(tabs)/battle.tsx | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+662c71b6 fix(mobile): honest profile season signal [skip ci]
+ mobile/app/(tabs)/profile.tsx | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+1da0b09b feat(mobile): add profile identity press depth [skip ci]
+ mobile/app/(tabs)/profile.tsx | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+225b08e3 feat(mobile): add arena action press depth [skip ci]
+ mobile/app/(tabs)/battle.tsx | 30 ++++++++++++++++++++++++++++++
+ 1 file changed, 30 insertions(+)
+25aafdff feat(mobile): add arena action press depth [skip ci]
+ mobile/app/(tabs)/battle.tsx | 34 +++++++++++++++++++++++++++++++---
+ 1 file changed, 31 insertions(+), 3 deletions(-)
+e63a1c57 feat(mobile): add forge action press depth [skip ci]
+ mobile/app/(tabs)/deck.tsx | 74 ++++++++++++++++++++++++++++++++++++++++++----
+ 1 file changed, 69 insertions(+), 5 deletions(-)
+35bdec41 feat(mobile): add archive control press depth [skip ci]
+ mobile/app/(tabs)/collection.tsx | 191 ++++++++++++++++++++++++---------------
+ 1 file changed, 119 insertions(+), 72 deletions(-)
+ae5c9e4a feat(android): add profile action press depth [skip ci]
+ mobile/app/(tabs)/profile.tsx | 20 ++++++++++++++++++--
+ 1 file changed, 18 insertions(+), 2 deletions(-)
+1d1643fc feat(android): add reward action press depth [skip ci]
+ mobile/app/missions.tsx | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
+4e0211fc feat(android): add arena opponent press depth [skip ci]
+ mobile/app/(tabs)/battle.tsx | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
+fb62ef8a feat(android): add forge card press depth [skip ci]
+ mobile/app/(tabs)/deck.tsx | 17 +++++++++++++++--
+ 1 file changed, 15 insertions(+), 2 deletions(-)
+78bdac43 feat(android): expose archive filter selection [skip ci]
+ mobile/app/(tabs)/collection.tsx | 6 ++++++
+ 1 file changed, 6 insertions(+)
+bedc5f8c feat(android): add archive inspection press depth
+ mobile/app/(tabs)/collection.tsx | 30 +++++++++++++++++++++++++-----
+ 1 file changed, 25 insertions(+), 5 deletions(-)
+6bb769e7 feat(android): route featured Home card to Archive
+ mobile/app/(tabs)/index.tsx | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
+c35b7910 feat(mobile): replace Android scene skins with programmatic surfaces
+ mobile/app/(tabs)/battle.tsx     |   2 +-
+ mobile/app/(tabs)/collection.tsx |  16 +---
+ mobile/app/(tabs)/deck.tsx       |  42 ++++++++--
+ mobile/app/(tabs)/profile.tsx    | 171 ++++++++++++++++++++++++---------------
+ 4 files changed, 145 insertions(+), 86 deletions(-)
+6b79f5a7 battle(ui): remove background skin from real lobby
+ mobile/app/(tabs)/battle.tsx | 147 -------------------------------------------
+ 1 file changed, 147 deletions(-)
+a2860eaa auth(ui): remove background skin and expose real form
+ mobile/app/auth.tsx | 311 +++++++++++++++++++++++++++++++---------------------
+ 1 file changed, 187 insertions(+), 124 deletions(-)
+2ec97362 home(navigation): use waypoint seals for section markers
+ mobile/app/(tabs)/index.tsx | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
+0b36c41c home(ranking): make prestige monument a touch gate
+ mobile/app/(tabs)/index.tsx | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
+5e631b65 home(domains): animate active world signals
+ mobile/app/(tabs)/index.tsx | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
+ce92c7e1 home(activity): shape live activity as chronicle seals
+ mobile/app/(tabs)/index.tsx | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
+a38a14cb home(ranking): add prestige monument to live circuit
+ mobile/app/(tabs)/index.tsx | 33 ++++++++++++++++++++++++++++++++-
+ 1 file changed, 32 insertions(+), 1 deletion(-)
+f0ed8a40 home(camera): deepen secondary signal transition
+ mobile/app/(tabs)/index.tsx | 14 ++++++++++++--
+ 1 file changed, 12 insertions(+), 2 deletions(-)
+51b6cc59 home(interaction): make retry signal tactile
+ mobile/app/(tabs)/index.tsx | 16 +++++++++++++++-
+ 1 file changed, 15 insertions(+), 1 deletion(-)
+41be2de9 home(interaction): make command seals tactile
+ mobile/app/(tabs)/index.tsx | 24 +++++++++++++++++++++---
+ 1 file changed, 21 insertions(+), 3 deletions(-)
+4b25160c home(interaction): give navigation landmarks press depth
+ mobile/app/(tabs)/index.tsx | 23 ++++++++++++++++++++---
+ 1 file changed, 20 insertions(+), 3 deletions(-)
+8f1b62a2 home(interaction): add secondary signal press depth
+ mobile/app/(tabs)/index.tsx | 22 +++++++++++++++++++---
+ 1 file changed, 19 insertions(+), 3 deletions(-)
+a55cbfc3 home(copy): make hero signal state honest
+ mobile/app/(tabs)/index.tsx | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+aa3e5c43 home(sync): make retry state explicit
+ mobile/app/(tabs)/index.tsx | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
+4bd3edd7 home(card): make inspection state honest
+ mobile/app/(tabs)/index.tsx | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
+589da343 home(interaction): add front object press depth
+ mobile/app/(tabs)/index.tsx | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
+34d688f6 home(interaction): add world object press depth
+ mobile/app/(tabs)/index.tsx | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
+799808a4 home(continuum): expose live signal states
+ mobile/app/(tabs)/index.tsx | 15 ++++++++++++---
+ 1 file changed, 12 insertions(+), 3 deletions(-)
+1223d13f home(world): distinguish active domain signals
+ mobile/app/(tabs)/index.tsx | 32 ++++++++++++++++----------------
+ 1 file changed, 16 insertions(+), 16 deletions(-)
+f911d9f1 home(camera): bound authored parallax range
+ mobile/app/(tabs)/index.tsx | 72 +++++++++++++++++++++++++++------------------
+ 1 file changed, 43 insertions(+), 29 deletions(-)
+255c1ce3 home(identity): make player availability explicit
+ mobile/app/(tabs)/index.tsx | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+6f709f37 home(signals): make partial player data explicit
+ mobile/app/(tabs)/index.tsx | 24 ++++++++++++++----------
+ 1 file changed, 14 insertions(+), 10 deletions(-)
+2b5653cb home(front): distinguish active and idle world signals
+ mobile/app/(tabs)/index.tsx | 18 ++++++++++--------
+ 1 file changed, 10 insertions(+), 8 deletions(-)
+93402c5e home(motion): honor reduced-motion in parallax layers
+ mobile/app/(tabs)/index.tsx | 20 +++++++++++++-------
+ 1 file changed, 13 insertions(+), 7 deletions(-)
+a3dfa0b5 home: give Android navigation a world seal [skip ci]
+ mobile/app/(tabs)/_layout.tsx | 55 +++++++++++++++++++++++++++++++------------
+ 1 file changed, 40 insertions(+), 15 deletions(-)
+938789ed home: connect ranking circuit to world [skip ci]
+ mobile/app/(tabs)/index.tsx | 14 ++++++++++----
+ 1 file changed, 10 insertions(+), 4 deletions(-)
+8d5e2d4e home: make public activity trace navigable [skip ci]
+ mobile/app/(tabs)/index.tsx | 14 ++++++++++----
+ 1 file changed, 10 insertions(+), 4 deletions(-)
+a4c7fbb5 home: connect forge chamber to living continuum [skip ci]
+ mobile/app/(tabs)/index.tsx | 94 +++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 94 insertions(+)
+94590291 home(operations): turn links into world gates [skip ci]
+ mobile/app/(tabs)/index.tsx | 116 +++++++++++++++++++++++++++++++++++++-------
+ 1 file changed, 98 insertions(+), 18 deletions(-)
+662858eb home(signals): map secondary surfaces to world traces [skip ci]
+ mobile/app/(tabs)/index.tsx | 123 +++++++++++++++++++++++++++++++++-----------
+ 1 file changed, 93 insertions(+), 30 deletions(-)
+6d7e9610 home(domains): turn Nexus routes into world objects
+ mobile/app/(tabs)/index.tsx | 46 ++++++++++++++++++++++++++++-----------------
+ 1 file changed, 29 insertions(+), 17 deletions(-)
+b91a7d6e feat(android): turn home lower flow into living card continuum
+ mobile/app/(tabs)/index.tsx | 100 +++++++++++++++++++++++++++++++-------------
+ 1 file changed, 72 insertions(+), 28 deletions(-)
+e6d2ab21 fix(mobile): make home identity artwork canonical
+ docs/VE-MOB-3-HOME.md       |  16 +++----
+ mobile/app/(tabs)/index.tsx | 103 ++++++++++++++++++++++----------------------
+ 2 files changed, 60 insertions(+), 59 deletions(-)
+9ad0fac4 feat(mobile): bring home card identity into scene
+ mobile/app/(tabs)/index.tsx | 52 +++++++++++++++++++++++++++++++--------------
+ 1 file changed, 36 insertions(+), 16 deletions(-)
+9f3c9a09 feat(mobile): polish Home identity motion and responsive crop [skip ci]
+ mobile/app/(tabs)/index.tsx | 24 +++++++++++++++++++-----
+ 1 file changed, 19 insertions(+), 5 deletions(-)
+6cae9034 feat(mobile): add restrained domain parallax on Home [skip ci]
+ mobile/app/(tabs)/index.tsx | 7 +++++++
+ 1 file changed, 7 insertions(+)
+fa4bbc95 feat(mobile): extend diegetic Home treatment to domains [skip ci]
+ mobile/app/(tabs)/index.tsx | 27 +++++++++++++++++++++++----
+ 1 file changed, 23 insertions(+), 4 deletions(-)
+23f0a7bb feat(mobile): connect Home ledger to canonical identity [skip ci]
+ mobile/app/(tabs)/index.tsx | 21 ++++++++++++++++++++-
+ 1 file changed, 20 insertions(+), 1 deletion(-)
+f524d41f feat(mobile): add canonical card identity to Home [skip ci]
+ mobile/app/(tabs)/index.tsx      | 70 +++++++++++++++++++++++++++-------------
+ mobile/constants/cardIdentity.ts | 27 ++++++++++++++++
+ mobile/lib/supabase.ts           | 10 ++++++
+ 3 files changed, 85 insertions(+), 22 deletions(-)
+67ece963 Replace collection scene with archive artwork
+ docs/VE-MOB-4-COLLECTION.md                       |   2 +-
+ docs/VEXFORGE-ASSET-ATLAS.md                      |   2 +-
+ mobile/app/(tabs)/collection.tsx                  | 184 ++++++++++++++++++----
+ mobile/assets/images/collection-archive-scene.jpg | Bin 0 -> 364454 bytes
+ 4 files changed, 159 insertions(+), 29 deletions(-)
+f7434d66 Integrate forge scene pilot for mobile deck
+ mobile/app/(tabs)/deck.tsx                |  46 ++++++++++++++----------------
+ mobile/assets/images/deck-forge-scene.jpg | Bin 0 -> 457418 bytes
+ 2 files changed, 21 insertions(+), 25 deletions(-)
+3265bab7 docs(VE-AUDIT-02): catalogo funcion por funcion, duplicaciones y mapa jerarquico de mobile/lib/supabase.ts
+ docs/VE-AUDIT-LIB-SUPABASE-CATALOG.md | 510 ++++++++++++++++++++++++++++++++++
+ 1 file changed, 510 insertions(+)
+8d3138ac fix(mobile): restore full source tree with Home selector cleanup
+ docs/CI_ACTIVATION.md                              |    48 +
+ docs/DEPLOY_GUIDE.md                               |    34 +
+ docs/README.md                                     |    11 +
+ docs/VE-0-R2-BASELINE.md                           |   101 +
+ docs/VE-1-VISUAL-BIBLE.md                          |   227 +
+ docs/VE-15-ICON-LANGUAGE-CONSUMER-CLOSURE.md       |    86 +
+ docs/VE-3-PILOT.md                                 |   263 +
+ docs/VE-4-CANONICAL-BACKGROUNDS.md                 |    74 +
+ docs/VE-5-ASSET-MANIFEST-DATA.md                   |   103 +
+ docs/VE-ASSET-ZIP-EXTRACTION-2026-09-07.md         |    44 +
+ docs/VE-MOB-0-PORT-INVENTORY.md                    |    44 +
+ docs/VE-MOB-10-PACKS-SHOP.md                       |    33 +
+ docs/VE-MOB-11-ECONOMY.md                          |    71 +
+ docs/VE-MOB-12-WORLD.md                            |    55 +
+ docs/VE-MOB-13-SOCIAL.md                           |    41 +
+ docs/VE-MOB-14-META.md                             |    36 +
+ docs/VE-MOB-2-AUTH.md                              |    70 +
+ docs/VE-MOB-3-HOME.md                              |   275 +
+ docs/VE-MOB-4-COLLECTION.md                        |    56 +
+ docs/VE-MOB-5-DECK.md                              |    56 +
+ docs/VE-MOB-6-TUTORIAL.md                          |    28 +
+ docs/VE-MOB-7-BATTLE.md                            |    89 +
+ docs/VE-MOB-8-REWARDS.md                           |    55 +
+ docs/VE-MOB-9-PROFILE.md                           |    62 +
+ docs/VE-P0-VERTICAL-BATTLE-SLICE.md                |    84 +
+ docs/VE-PVP-02-P0-ROOT-CAUSE-WHERE-TRUE.md         |   102 +
+ docs/VE-PVP-1-BATTLE-RESOLVE-BROKEN.md             |   132 +
+ docs/VE-PVP-4-BATTLEFIELD-VERTICAL.md              |    26 +
+ docs/VE-RELEASE-PLAY-OTA-01.md                     |    67 +
+ .../00_TIER1_FUNCTIONALITY_MASTER_ADDENDUM.md      |   643 ++
+ .../01_REPLIT_IMPLEMENTATION_DIRECTIVE.md          |  1343 +++
+ .../02_BENCHMARK_2026.md                           |    92 +
+ .../03_DOMAIN_ARCHITECTURE.md                      |    62 +
+ .../04_REFERENCE_INDEX.md                          |    68 +
+ .../05_CURRENT_STATE_ANALYSIS.md                   |    31 +
+ .../06_PHASED_EXECUTION_PLAN.md                    |    74 +
+ .../07_ACCEPTANCE_CHECKLIST.md                     |    57 +
+ .../08_AUTONOMOUS_QA_AND_REPAIR_PLAYBOOK.md        |   114 +
+ .../09_REPLIT_CURRENT_CAPABILITIES_AND_LIMITS.md   |    65 +
+ .../10_QA_SECRETS_AND_CUA_CONFIGURATION.md         |    63 +
+ .../11_TIER1_REPAIR_ORDER.md                       |    46 +
+ .../12_TIER1_SCORECARD.md                          |    94 +
+ .../13_REGRESSION_MATRIX.md                        |    34 +
+ .../14_HUMAN_HANDOFF_AND_UNVERIFIED.md             |    35 +
+ .../15_PACKAGE_MANIFEST.md                         |    27 +
+ docs/VE-TIER1-REPLIT-DIRECTIVE-2026/INTEGRATION.md |    87 +
+ .../PACKAGE_SHA256.txt                             |     1 +
+ .../README_FIRST.txt                               |    52 +
+ .../REFERENCE_BOARD.html                           |    10 +
+ docs/VE-UI-TIER1-ANDROID-02-T0-APK72-BASELINE.md   |    76 +
+ docs/VE-UI-TIER1-T0-RECONCILIATION.md              |    95 +
+ .../00_LOVABLE_MASTER_DIRECTIVE.md                 |   573 +
+ .../01_BASE_IMPLEMENTATION_DIRECTIVE.md            |  1341 +++
+ docs/VE-UXCX-TIER1-2026/02_BENCHMARK_2026.md       |    92 +
+ docs/VE-UXCX-TIER1-2026/03_DOMAIN_ARCHITECTURE.md  |    62 +
+ docs/VE-UXCX-TIER1-2026/04_REFERENCE_INDEX.md      |    68 +
+ .../05_CURRENT_STATE_ANALYSIS.md                   |    31 +
+ .../VE-UXCX-TIER1-2026/06_PHASED_EXECUTION_PLAN.md |    74 +
+ docs/VE-UXCX-TIER1-2026/07_ACCEPTANCE_CHECKLIST.md |    57 +
+ docs/VE-UXCX-TIER1-2026/08_LOVABLE_WORKFLOW.md     |    30 +
+ .../09_2026_BENCHMARK_SOURCES.md                   |    23 +
+ docs/VE-UXCX-TIER1-2026/MASTER.md                  |   573 +
+ docs/VE-VIS-1-TIER1-VISUAL-OBJECTIVE.md            |    63 +
+ docs/VE-VIS-3-EMPTY-STATE-ART.md                   |    29 +
+ docs/VE-VIS-3-ICON-LANGUAGE-RESIDUAL-CLOSURE.md    |    51 +
+ docs/VE-VIS-3-MOTION-SYSTEM.md                     |    48 +
+ docs/VE-VIS-3-OFFICIAL-VISUAL-CONSUMPTION-LAW.md   |   140 +
+ docs/VE-VIS-4-COMBAT-SCENE-DIRECTION.md            |    57 +
+ docs/VE-VIS-5-AUDIO-FLOW.md                        |    59 +
+ docs/VE-VIS-6-GAME-LOOP-TELEMETRY.md               |   193 +
+ docs/VEXFORGE-ASSET-ATLAS.md                       |    84 +
+ ...VEXFORGE-VISUAL-BENCHMARK-FATES-EXTENSION-V1.md |  2774 +++++
+ mobile/app.json                                    |    58 +
+ mobile/app/(tabs)/_layout.tsx                      |   127 +
+ mobile/app/(tabs)/battle.tsx                       |   808 ++
+ mobile/app/(tabs)/collection.tsx                   |   857 ++
+ mobile/app/(tabs)/deck.tsx                         |   621 ++
+ mobile/app/(tabs)/profile.tsx                      |   420 +
+ mobile/app/+not-found.tsx                          |    24 +
+ mobile/app/_layout.tsx                             |    92 +
+ mobile/app/auth.tsx                                |   433 +
+ mobile/app/economy.tsx                             |   815 ++
+ mobile/app/meta.tsx                                |   320 +
+ mobile/app/missions.tsx                            |   397 +
+ mobile/app/social.tsx                              |    50 +
+ mobile/app/store.tsx                               |   480 +
+ mobile/app/tutorial.tsx                            |   353 +
+ mobile/app/world.tsx                               |   251 +
+ mobile/assets/images/auth-reference-scene.png      |   Bin 0 -> 3508169 bytes
+ mobile/assets/images/battle-reference-scene.png    |   Bin 0 -> 3777103 bytes
+ .../assets/images/collection-reference-scene.png   |   Bin 0 -> 2903315 bytes
+ mobile/assets/images/decks-reference-scene.png     |   Bin 0 -> 2707000 bytes
+ mobile/assets/images/home-reference-scene.png      |   Bin 0 -> 4038556 bytes
+ mobile/assets/images/icon.jpg                      |   Bin 0 -> 419595 bytes
+ mobile/assets/images/profile-reference-scene.png   |   Bin 0 -> 2741928 bytes
+ mobile/assets/images/vexforge-auth-nexus-final.png |   Bin 0 -> 1109371 bytes
+ mobile/assets/images/vexforge-feature-card.png     |   Bin 0 -> 2028379 bytes
+ mobile/assets/images/vexforge-hero-sentinel.png    |   Bin 0 -> 1504871 bytes
+ mobile/assets/images/vexforge-home-hero.png        |   Bin 0 -> 1940270 bytes
+ mobile/babel.config.js                             |     6 +
+ mobile/components/CanonicalFrame.ts                |    76 +
+ mobile/components/DomainHeader.tsx                 |    79 +
+ mobile/components/DomainState.tsx                  |    79 +
+ mobile/components/ErrorBoundary.tsx                |    53 +
+ mobile/components/ErrorFallback.tsx                |   274 +
+ mobile/components/ForgeBattlefield.tsx             |   290 +
+ mobile/components/ForgeButton.tsx                  |    51 +
+ mobile/components/ForgeFormationPreview.tsx        |   202 +
+ mobile/components/ForgeIcon.tsx                    |   392 +
+ mobile/components/ForgeMark.tsx                    |    34 +
+ mobile/components/ForgeText.tsx                    |    34 +
+ .../components/KeyboardAwareScrollViewCompat.tsx   |    32 +
+ mobile/components/ProgressBar.tsx                  |    21 +
+ mobile/components/ScreenShell.tsx                  |   166 +
+ mobile/constants/cardPilot.ts                      |    43 +
+ mobile/constants/colors.ts                         |   104 +
+ mobile/constants/experience.ts                     |    79 +
+ mobile/constants/typography.ts                     |    18 +
+ mobile/constants/visual.ts                         |    59 +
+ mobile/context/GameContext.tsx                     |   115 +
+ mobile/hooks/useColors.ts                          |    20 +
+ mobile/lib/aiBattle.ts                             |   112 +
+ mobile/lib/supabase.ts                             |  1808 ++++
+ mobile/lib/telemetry.ts                            |    68 +
+ mobile/metro.config.js                             |     3 +
+ mobile/package-lock.json                           | 10355 +++++++++++++++++++
+ mobile/package.json                                |    48 +
+ mobile/plugins/withEmbeddedJsBundle.js             |    22 +
+ mobile/scripts/apply-play-signing.mjs              |    37 +
+ mobile/scripts/dispatch-section-release.mjs        |    19 +
+ mobile/scripts/publish-ota.mjs                     |   140 +
+ mobile/scripts/verify-telemetry.mjs                |    23 +
+ mobile/tsconfig.json                               |    17 +
+ 133 files changed, 32949 insertions(+)
+219d5351 fix(mobile): make Home review selectors unique
+ docs/CI_ACTIVATION.md                              |    48 -
+ docs/DEPLOY_GUIDE.md                               |    34 -
+ docs/README.md                                     |    11 -
+ docs/VE-0-R2-BASELINE.md                           |   101 -
+ docs/VE-1-VISUAL-BIBLE.md                          |   227 -
+ docs/VE-15-ICON-LANGUAGE-CONSUMER-CLOSURE.md       |    86 -
+ docs/VE-3-PILOT.md                                 |   263 -
+ docs/VE-4-CANONICAL-BACKGROUNDS.md                 |    74 -
+ docs/VE-5-ASSET-MANIFEST-DATA.md                   |   103 -
+ docs/VE-ASSET-ZIP-EXTRACTION-2026-09-07.md         |    44 -
+ docs/VE-MOB-0-PORT-INVENTORY.md                    |    44 -
+ docs/VE-MOB-10-PACKS-SHOP.md                       |    33 -
+ docs/VE-MOB-11-ECONOMY.md                          |    71 -
+ docs/VE-MOB-12-WORLD.md                            |    55 -
+ docs/VE-MOB-13-SOCIAL.md                           |    41 -
+ docs/VE-MOB-14-META.md                             |    36 -
+ docs/VE-MOB-2-AUTH.md                              |    70 -
+ docs/VE-MOB-3-HOME.md                              |   275 -
+ docs/VE-MOB-4-COLLECTION.md                        |    56 -
+ docs/VE-MOB-5-DECK.md                              |    56 -
+ docs/VE-MOB-6-TUTORIAL.md                          |    28 -
+ docs/VE-MOB-7-BATTLE.md                            |    89 -
+ docs/VE-MOB-8-REWARDS.md                           |    55 -
+ docs/VE-MOB-9-PROFILE.md                           |    62 -
+ docs/VE-P0-VERTICAL-BATTLE-SLICE.md                |    84 -
+ docs/VE-PVP-02-P0-ROOT-CAUSE-WHERE-TRUE.md         |   102 -
+ docs/VE-PVP-1-BATTLE-RESOLVE-BROKEN.md             |   132 -
+ docs/VE-PVP-4-BATTLEFIELD-VERTICAL.md              |    26 -
+ docs/VE-RELEASE-PLAY-OTA-01.md                     |    67 -
+ .../00_TIER1_FUNCTIONALITY_MASTER_ADDENDUM.md      |   643 --
+ .../01_REPLIT_IMPLEMENTATION_DIRECTIVE.md          |  1343 ---
+ .../02_BENCHMARK_2026.md                           |    92 -
+ .../03_DOMAIN_ARCHITECTURE.md                      |    62 -
+ .../04_REFERENCE_INDEX.md                          |    68 -
+ .../05_CURRENT_STATE_ANALYSIS.md                   |    31 -
+ .../06_PHASED_EXECUTION_PLAN.md                    |    74 -
+ .../07_ACCEPTANCE_CHECKLIST.md                     |    57 -
+ .../08_AUTONOMOUS_QA_AND_REPAIR_PLAYBOOK.md        |   114 -
+ .../09_REPLIT_CURRENT_CAPABILITIES_AND_LIMITS.md   |    65 -
+ .../10_QA_SECRETS_AND_CUA_CONFIGURATION.md         |    63 -
+ .../11_TIER1_REPAIR_ORDER.md                       |    46 -
+ .../12_TIER1_SCORECARD.md                          |    94 -
+ .../13_REGRESSION_MATRIX.md                        |    34 -
+ .../14_HUMAN_HANDOFF_AND_UNVERIFIED.md             |    35 -
+ .../15_PACKAGE_MANIFEST.md                         |    27 -
+ docs/VE-TIER1-REPLIT-DIRECTIVE-2026/INTEGRATION.md |    87 -
+ .../PACKAGE_SHA256.txt                             |     1 -
+ .../README_FIRST.txt                               |    52 -
+ .../REFERENCE_BOARD.html                           |    10 -
+ docs/VE-UI-TIER1-ANDROID-02-T0-APK72-BASELINE.md   |    76 -
+ docs/VE-UI-TIER1-T0-RECONCILIATION.md              |    95 -
+ .../00_LOVABLE_MASTER_DIRECTIVE.md                 |   573 -
+ .../01_BASE_IMPLEMENTATION_DIRECTIVE.md            |  1341 ---
+ docs/VE-UXCX-TIER1-2026/02_BENCHMARK_2026.md       |    92 -
+ docs/VE-UXCX-TIER1-2026/03_DOMAIN_ARCHITECTURE.md  |    62 -
+ docs/VE-UXCX-TIER1-2026/04_REFERENCE_INDEX.md      |    68 -
+ .../05_CURRENT_STATE_ANALYSIS.md                   |    31 -
+ .../VE-UXCX-TIER1-2026/06_PHASED_EXECUTION_PLAN.md |    74 -
+ docs/VE-UXCX-TIER1-2026/07_ACCEPTANCE_CHECKLIST.md |    57 -
+ docs/VE-UXCX-TIER1-2026/08_LOVABLE_WORKFLOW.md     |    30 -
+ .../09_2026_BENCHMARK_SOURCES.md                   |    23 -
+ docs/VE-UXCX-TIER1-2026/MASTER.md                  |   573 -
+ docs/VE-VIS-1-TIER1-VISUAL-OBJECTIVE.md            |    63 -
+ docs/VE-VIS-3-EMPTY-STATE-ART.md                   |    29 -
+ docs/VE-VIS-3-ICON-LANGUAGE-RESIDUAL-CLOSURE.md    |    51 -
+ docs/VE-VIS-3-MOTION-SYSTEM.md                     |    48 -
+ docs/VE-VIS-3-OFFICIAL-VISUAL-CONSUMPTION-LAW.md   |   140 -
+ docs/VE-VIS-4-COMBAT-SCENE-DIRECTION.md            |    57 -
+ docs/VE-VIS-5-AUDIO-FLOW.md                        |    59 -
+ docs/VE-VIS-6-GAME-LOOP-TELEMETRY.md               |   193 -
+ docs/VEXFORGE-ASSET-ATLAS.md                       |    84 -
+ ...VEXFORGE-VISUAL-BENCHMARK-FATES-EXTENSION-V1.md |  2774 -----
+ mobile/app.json                                    |    58 -
+ mobile/app/(tabs)/_layout.tsx                      |   127 -
+ mobile/app/(tabs)/battle.tsx                       |   808 --
+ mobile/app/(tabs)/collection.tsx                   |   857 --
+ mobile/app/(tabs)/deck.tsx                         |   621 --
+ mobile/app/(tabs)/index.tsx                        |     6 +-
+ mobile/app/(tabs)/profile.tsx                      |   420 -
+ mobile/app/+not-found.tsx                          |    24 -
+ mobile/app/_layout.tsx                             |    92 -
+ mobile/app/auth.tsx                                |   433 -
+ mobile/app/economy.tsx                             |   815 --
+ mobile/app/meta.tsx                                |   320 -
+ mobile/app/missions.tsx                            |   397 -
+ mobile/app/social.tsx                              |    50 -
+ mobile/app/store.tsx                               |   480 -
+ mobile/app/tutorial.tsx                            |   353 -
+ mobile/app/world.tsx                               |   251 -
+ mobile/assets/images/auth-reference-scene.png      |   Bin 3508169 -> 0 bytes
+ mobile/assets/images/battle-reference-scene.png    |   Bin 3777103 -> 0 bytes
+ .../assets/images/collection-reference-scene.png   |   Bin 2903315 -> 0 bytes
+ mobile/assets/images/decks-reference-scene.png     |   Bin 2707000 -> 0 bytes
+ mobile/assets/images/home-reference-scene.png      |   Bin 4038556 -> 0 bytes
+ mobile/assets/images/icon.jpg                      |   Bin 419595 -> 0 bytes
+ mobile/assets/images/profile-reference-scene.png   |   Bin 2741928 -> 0 bytes
+ mobile/assets/images/vexforge-auth-nexus-final.png |   Bin 1109371 -> 0 bytes
+ mobile/assets/images/vexforge-feature-card.png     |   Bin 2028379 -> 0 bytes
+ mobile/assets/images/vexforge-hero-sentinel.png    |   Bin 1504871 -> 0 bytes
+ mobile/assets/images/vexforge-home-hero.png        |   Bin 1940270 -> 0 bytes
+ mobile/babel.config.js                             |     6 -
+ mobile/components/CanonicalFrame.ts                |    76 -
+ mobile/components/DomainHeader.tsx                 |    79 -
+ mobile/components/DomainState.tsx                  |    79 -
+ mobile/components/ErrorBoundary.tsx                |    53 -
+ mobile/components/ErrorFallback.tsx                |   274 -
+ mobile/components/ForgeBattlefield.tsx             |   290 -
+ mobile/components/ForgeButton.tsx                  |    51 -
+ mobile/components/ForgeFormationPreview.tsx        |   202 -
+ mobile/components/ForgeIcon.tsx                    |   392 -
+ mobile/components/ForgeMark.tsx                    |    34 -
+ mobile/components/ForgeText.tsx                    |    34 -
+ .../components/KeyboardAwareScrollViewCompat.tsx   |    32 -
+ mobile/components/ProgressBar.tsx                  |    21 -
+ mobile/components/ScreenShell.tsx                  |   166 -
+ mobile/constants/cardPilot.ts                      |    43 -
+ mobile/constants/colors.ts                         |   104 -
+ mobile/constants/experience.ts                     |    79 -
+ mobile/constants/typography.ts                     |    18 -
+ mobile/constants/visual.ts                         |    59 -
+ mobile/context/GameContext.tsx                     |   115 -
+ mobile/hooks/useColors.ts                          |    20 -
+ mobile/lib/aiBattle.ts                             |   112 -
+ mobile/lib/supabase.ts                             |  1808 ----
+ mobile/lib/telemetry.ts                            |    68 -
+ mobile/metro.config.js                             |     3 -
+ mobile/package-lock.json                           | 10355 -------------------
+ mobile/package.json                                |    48 -
+ mobile/plugins/withEmbeddedJsBundle.js             |    22 -
+ mobile/scripts/apply-play-signing.mjs              |    37 -
+ mobile/scripts/dispatch-section-release.mjs        |    19 -
+ mobile/scripts/publish-ota.mjs                     |   140 -
+ mobile/scripts/verify-telemetry.mjs                |    23 -
+ mobile/tsconfig.json                               |    17 -
+ 134 files changed, 3 insertions(+), 32952 deletions(-)
+2d46c0fa refactor(mobile): use shared motion tokens on home
+ mobile/app/(tabs)/index.tsx | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
+88cd23f2 fix(mobile): restore live home experience contracts
+ mobile/app/(tabs)/index.tsx | 30 +++++++++++++++++++++++++-----
+ 1 file changed, 25 insertions(+), 5 deletions(-)
+02d1bcc8 fix(mobile): keep domain headers non-interactive
+ mobile/app/(tabs)/collection.tsx | 4 +++-
+ mobile/app/(tabs)/deck.tsx       | 4 +++-
+ mobile/app/(tabs)/profile.tsx    | 4 +++-
+ 3 files changed, 9 insertions(+), 3 deletions(-)
+808d9f42 fix(mobile): restore shared domain identity headers
+ mobile/app/(tabs)/collection.tsx | 1 +
+ mobile/app/(tabs)/deck.tsx       | 2 ++
+ mobile/app/(tabs)/profile.tsx    | 2 ++
+ 3 files changed, 5 insertions(+)
+bc16ed22 fix(mobile): align home composition with review contracts
+ mobile/app/(tabs)/index.tsx | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+eec2c406 feat(mobile): consolidate VEXFORGE home as premium TCG scene
+ mobile/app/(tabs)/index.tsx | 297 +++++++++++++++++++++++++-------------------
+ 1 file changed, 170 insertions(+), 127 deletions(-)
+af46f619 fix(home): remove invented card fallback data
+ mobile/app/(tabs)/index.tsx | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
+243cc334 feat(android): compose Home as a premium TCG scene
+ mobile/app/(tabs)/index.tsx | 38 +++++++++++++++++++-------------------
+ 1 file changed, 19 insertions(+), 19 deletions(-)
+94e80616 fix(home): surface partial Nexus sync failures
+ mobile/app/(tabs)/index.tsx | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
+55c3c191 docs(protocol): label unassigned visual assets explicitly
+ docs/VEXFORGE-ASSET-ATLAS.md | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+639cac0f docs(protocol): make asset selection contextual and card-first
+ docs/VE-5-ASSET-MANIFEST-DATA.md                 |  7 +++-
+ docs/VE-VIS-3-OFFICIAL-VISUAL-CONSUMPTION-LAW.md | 49 ++++++++++++++++++++----
+ docs/VEXFORGE-ASSET-ATLAS.md                     | 22 +++++++++--
+ 3 files changed, 64 insertions(+), 14 deletions(-)
+8547974a feat(android): shape Home as the VEXFORGE TCG Nexus scene
+ mobile/app/(tabs)/_layout.tsx |  22 ++--
+ mobile/app/(tabs)/index.tsx   | 230 +++++++++++++++++++++++-------------------
+ 2 files changed, 135 insertions(+), 117 deletions(-)
+57996799 docs: add VEXFORGE asset selection atlas
+ docs/VEXFORGE-ASSET-ATLAS.md | 67 ++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 67 insertions(+)
+f0f9344e VE-MOB-3 HOME: second TCG scene composition
+ mobile/app/(tabs)/index.tsx | 236 ++++++++++++++++++++++++++++----------------
+ 1 file changed, 152 insertions(+), 84 deletions(-)
+e37c6f25 VE-MOB-3 HOME: establish VEXFORGE visual language
+ mobile/app/(tabs)/index.tsx | 870 +++++++++++++++++++++-----------------------
+ 1 file changed, 411 insertions(+), 459 deletions(-)
+93e4ccae VE-MOB-3 HOME: complete in-scene navigation architecture
+ mobile/app/(tabs)/index.tsx | 47 +++++++++++++++++++++++++++------------------
+ 1 file changed, 28 insertions(+), 19 deletions(-)
+5b8147ed VE-MOB-3 HOME: integrate in-scene navigation gateways
+ mobile/app/(tabs)/index.tsx | 91 +++++++++++++++++++++++++++++++++++----------
+ 1 file changed, 71 insertions(+), 20 deletions(-)
+9f95b2c3 Document APK 186 delivery and reconcile live protocol
+ docs/VE-MOB-3-HOME.md | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+c8f85ab7 Refine Android Home depth and responsive hero
+ mobile/app/(tabs)/index.tsx | 29 ++++++++++++++++++++++++++---
+ 1 file changed, 26 insertions(+), 3 deletions(-)
+fe8f6975 Polish Android Home into a premium TCG command center
+ mobile/app/(tabs)/index.tsx | 211 +++++++++++++++++++++++++++++---------------
+ 1 file changed, 142 insertions(+), 69 deletions(-)
+0b043b25 refine mobile home nexus typography
+ mobile/app/(tabs)/index.tsx | 107 ++++++++++++++++++++++++--------------------
+ 1 file changed, 58 insertions(+), 49 deletions(-)
+0f8c3387 feat(android-home): refine nexus constellation navigation
+ docs/VE-MOB-3-HOME.md         |  9 +++++
+ mobile/app/(tabs)/_layout.tsx | 12 +++----
+ mobile/app/(tabs)/index.tsx   | 82 ++++++++++++++++++++++++++-----------------
+ 3 files changed, 63 insertions(+), 40 deletions(-)
+97790fbd polish(android-home): animate Nexus domain signals
+ mobile/app/(tabs)/index.tsx | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
+ea1b2205 fix(android-home): remove unused Nexus portal prop
+ mobile/app/(tabs)/index.tsx | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+345200ab docs(android-home): document Nexus domain rail
+ docs/VE-MOB-3-HOME.md | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+477351d5 feat(android-home): connect Nexus domain portals
+ mobile/app/(tabs)/index.tsx | 51 +++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 51 insertions(+)
+b09bd1e2 Fix Android Home typecheck blocker before APK build
+ mobile/app/(tabs)/index.tsx | 1 -
+ 1 file changed, 1 deletion(-)
+2ff6adbe Make Android Home a living cinematic Nexus scene
+ docs/VE-MOB-3-HOME.md                           |   3 +-
+ mobile/app/(tabs)/index.tsx                     |  96 +++++++++++++++++++++---
+ mobile/assets/images/vexforge-hero-sentinel.png | Bin 0 -> 1504871 bytes
+ mobile/components/ScreenShell.tsx               |   6 +-
+ mobile/constants/visual.ts                      |  16 +++-
+ 5 files changed, 105 insertions(+), 16 deletions(-)
+891f887b Rebuild Android Home as cinematic VEXFORGE experience
+ docs/VE-MOB-3-HOME.md                          |  11 +-
+ mobile/app/(tabs)/index.tsx                    | 427 +++++++++++++------------
+ mobile/assets/images/vexforge-feature-card.png | Bin 0 -> 2028379 bytes
+ mobile/assets/images/vexforge-home-hero.png    | Bin 0 -> 1940270 bytes
+ 4 files changed, 220 insertions(+), 218 deletions(-)
+10128d28 Rebuild Android Home as native Nexus experience
+ docs/VE-MOB-3-HOME.md       |  11 +
+ mobile/app/(tabs)/index.tsx | 602 +++++++++++++++++++++++++++++++++-----------
+ 2 files changed, 464 insertions(+), 149 deletions(-)
+7873a9d3 fix(mobile): restore missions hotspot contract
+ mobile/app/(tabs)/index.tsx | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+b2e9dabe feat(mobile): replace VEXFORGE home reference and tap feedback
+ docs/VE-MOB-3-HOME.md                         |  11 ++
+ mobile/app/(tabs)/index.tsx                   | 138 ++++++++++++++++++--------
+ mobile/assets/images/home-reference-scene.png | Bin 4110933 -> 4038556 bytes
+ 3 files changed, 110 insertions(+), 39 deletions(-)
+6f93a9fb Connect Android reference data to canonical zones
+ mobile/app/(tabs)/deck.tsx    | 105 +++++++++++++++++++++++++++++++-----------
+ mobile/app/(tabs)/profile.tsx |  23 ++++-----
+ mobile/lib/supabase.ts        |   6 +--
+ 3 files changed, 91 insertions(+), 43 deletions(-)
+3e747a7d Fix Android canonical frame measurement for mobile surfaces
+ mobile/app/(tabs)/collection.tsx    | 17 +++++++++++++----
+ mobile/app/(tabs)/deck.tsx          | 26 ++++++++++++++++++--------
+ mobile/app/(tabs)/profile.tsx       | 18 ++++++++++++++----
+ mobile/components/CanonicalFrame.ts | 17 ++++++++++-------
+ 4 files changed, 55 insertions(+), 23 deletions(-)
+9498c53b fix(android): match working canonical frame structure [skip ci]
+ mobile/app/(tabs)/collection.tsx | 55 ++++++++++++++++++++--------------------
+ mobile/app/(tabs)/deck.tsx       | 19 +++++++-------
+ mobile/app/(tabs)/profile.tsx    | 22 +++++++---------
+ 3 files changed, 45 insertions(+), 51 deletions(-)
+46c2c061 fix(android): measure canonical frame for reference screens
+ mobile/app/(tabs)/collection.tsx    | 12 ++++++----
+ mobile/app/(tabs)/deck.tsx          | 12 ++++++----
+ mobile/app/(tabs)/profile.tsx       | 12 ++++++----
+ mobile/components/CanonicalFrame.ts | 46 ++++++++++++++++++++++++++++++++++++-
+ 4 files changed, 66 insertions(+), 16 deletions(-)
+98e940e1 VE-MOB: repair profile reference flows and request APK build
+ mobile/app/(tabs)/profile.tsx | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
+96b15c3d VE-MOB-5: align deck reference rendering
+ mobile/app/(tabs)/deck.tsx | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+e98d115d VE-MOB-5: preserve canonical deck composition
+ mobile/app/(tabs)/deck.tsx | 131 ++++++++++++++++++++++-----------------------
+ 1 file changed, 63 insertions(+), 68 deletions(-)
+841ea5dd VE-MOB: enforce final reference frame and mobile gates
+ mobile/app/(tabs)/battle.tsx  | 2 +-
+ mobile/app/(tabs)/index.tsx   | 2 +-
+ mobile/app/(tabs)/profile.tsx | 2 +-
+ mobile/app/auth.tsx           | 2 +-
+ 4 files changed, 4 insertions(+), 4 deletions(-)
+55e21a21 VE-MOB: align deck reference flows and home navigation
+ mobile/app/(tabs)/collection.tsx |  8 ++++++--
+ mobile/app/(tabs)/deck.tsx       | 18 ++++++++++++------
+ 2 files changed, 18 insertions(+), 8 deletions(-)
+cd816d63 VE-MOB: align collection cards to canonical reference grid
+ mobile/app/(tabs)/collection.tsx | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
+38c01898 VE-MOB: preserve canonical 1080x2340 screen frames
+ mobile/app/(tabs)/battle.tsx        | 10 +++++++---
+ mobile/app/(tabs)/collection.tsx    | 12 ++++++++----
+ mobile/app/(tabs)/deck.tsx          | 15 ++++++++-------
+ mobile/app/(tabs)/index.tsx         | 10 +++++++---
+ mobile/app/(tabs)/profile.tsx       | 20 +++++++++++---------
+ mobile/app/auth.tsx                 | 18 ++++++++----------
+ mobile/components/CanonicalFrame.ts | 29 +++++++++++++++++++++++++++++
+ 7 files changed, 78 insertions(+), 36 deletions(-)
+e4f619d5 VE-MOB: replace Android reference scenes and align fullscreen touch maps
+ docs/VE-MOB-3-HOME.md                         |   6 ++
+ mobile/app/(tabs)/index.tsx                   |  82 ++++----------------------
+ mobile/assets/images/home-reference-scene.png | Bin 3065911 -> 4110933 bytes
+ 3 files changed, 18 insertions(+), 70 deletions(-)
+81265e01 VE-MOB-4-5-9: align Android reference canvases to fullscreen
+ docs/VE-MOB-5-DECK.md                            |   1 +
+ docs/VE-MOB-9-PROFILE.md                         |   4 ++++
+ mobile/app/(tabs)/collection.tsx                 |   7 +++++--
+ mobile/app/(tabs)/deck.tsx                       |   7 +++++--
+ mobile/app/(tabs)/profile.tsx                    |   9 ++++++---
+ mobile/assets/images/decks-reference-scene.png   | Bin 2179811 -> 2707000 bytes
+ mobile/assets/images/profile-reference-scene.png | Bin 2171718 -> 2741928 bytes
+ 7 files changed, 21 insertions(+), 7 deletions(-)
+d9fdc3c8 VE-MOB-2: apply operator auth reference
+ mobile/app/auth.tsx                           |  89 +++++++++++++-------------
+ mobile/assets/images/auth-reference-scene.png | Bin 2639873 -> 3508169 bytes
+ 2 files changed, 44 insertions(+), 45 deletions(-)
+cddc154c VE-MOB-7: apply operator battle reference
+ mobile/app/(tabs)/battle.tsx                    |  52 ++++--------------------
+ mobile/assets/images/battle-reference-scene.png | Bin 2641390 -> 3777103 bytes
+ 2 files changed, 9 insertions(+), 43 deletions(-)
+9c9511cf VE-MOB-4: update collection reference and interactions
+ docs/VE-MOB-4-COLLECTION.md                        |   7 ++--
+ mobile/app/(tabs)/collection.tsx                   |  37 ++++++++++-----------
+ .../assets/images/collection-reference-scene.png   | Bin 2070359 -> 2903315 bytes
+ mobile/lib/supabase.ts                             |   3 +-
+ 4 files changed, 24 insertions(+), 23 deletions(-)
+a6145de8 fix(mobile): align profile reference canvas
+ mobile/app/(tabs)/profile.tsx | 9 +++------
+ 1 file changed, 3 insertions(+), 6 deletions(-)
+0020df97 feat(mobile): connect home reference flows
+ mobile/app/(tabs)/index.tsx | 81 +++++++++------------------------------------
+ 1 file changed, 16 insertions(+), 65 deletions(-)
+21884511 fix(mobile): connect battle reference flows
+ mobile/app/(tabs)/battle.tsx | 22 +++++-----------------
+ 1 file changed, 5 insertions(+), 17 deletions(-)
+83faf11f VE-MOB-4: route collection fusion action correctly
+ mobile/app/(tabs)/collection.tsx | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+521c9333 VE-MOB-5: make missing deck art explicit
+ mobile/app/(tabs)/deck.tsx | 12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
+97b0773f VE-MOB-9: preserve the official 2:3 profile composition
+ mobile/app/(tabs)/profile.tsx | 164 +++++++++++++++++++++++++++++++-----------
+ 1 file changed, 124 insertions(+), 40 deletions(-)
+a12ce7d7 feat(mobile): replace VEXFORGE auth experience
+ mobile/app/auth.tsx                           |  92 ++++++++++++++------------
+ mobile/assets/images/auth-reference-scene.png | Bin 2469085 -> 2639873 bytes
+ 2 files changed, 49 insertions(+), 43 deletions(-)
+3861c75a fix(android): normalize all reference screen canvases
+ mobile/app/(tabs)/battle.tsx  | 6 +++---
+ mobile/app/(tabs)/index.tsx   | 4 ++--
+ mobile/app/(tabs)/profile.tsx | 6 +++---
+ mobile/app/auth.tsx           | 4 ++--
+ 4 files changed, 10 insertions(+), 10 deletions(-)
+0b4de78f fix(android): align reference canvases with viewport
+ mobile/app/(tabs)/collection.tsx | 7 +++++--
+ mobile/app/(tabs)/deck.tsx       | 7 +++++--
+ 2 files changed, 10 insertions(+), 4 deletions(-)
+736001a1 Fix profile dynamic text typing
+ mobile/app/(tabs)/profile.tsx | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+8c27291a Rebuild Android reference scenes and profile flow
+ mobile/app/(tabs)/battle.tsx                     |  23 +-
+ mobile/app/(tabs)/collection.tsx                 |  31 +-
+ mobile/app/(tabs)/deck.tsx                       |  29 +-
+ mobile/app/(tabs)/index.tsx                      |  19 +-
+ mobile/app/(tabs)/profile.tsx                    | 773 +++++++----------------
+ mobile/app/auth.tsx                              |   5 +-
+ mobile/assets/images/profile-reference-scene.png | Bin 0 -> 2171718 bytes
+ 7 files changed, 272 insertions(+), 608 deletions(-)
+12da4246 fix(mobile): satisfy profile typecheck
+ mobile/app/(tabs)/profile.tsx | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+aa2c2085 feat(mobile): rebuild profile screen from reference
+ mobile/app/(tabs)/_layout.tsx |   2 +-
+ mobile/app/(tabs)/profile.tsx | 855 +++++++++++++++++++++++++-----------------
+ 2 files changed, 509 insertions(+), 348 deletions(-)
+f8a6f4af feat(mobile): replace deck screen with reference composition
+ mobile/app/(tabs)/_layout.tsx                  |   2 +-
+ mobile/app/(tabs)/collection.tsx               |   5 +-
+ mobile/app/(tabs)/deck.tsx                     | 869 +++++++++++--------------
+ mobile/app/store.tsx                           |   6 +-
+ mobile/assets/images/decks-reference-scene.png | Bin 0 -> 2179811 bytes
+ 5 files changed, 372 insertions(+), 510 deletions(-)
+7a52365d feat(mobile): replace collection with reference pager
+ mobile/app/(tabs)/_layout.tsx                      |   2 +-
+ mobile/app/(tabs)/collection.tsx                   | 444 +++++++++++++++------
+ .../assets/images/collection-reference-scene.png   | Bin 0 -> 2070359 bytes
+ 3 files changed, 320 insertions(+), 126 deletions(-)
+d5486965 VE-MOB-4-BATTLE: use operator reference as functional battle lobby
+ mobile/app/(tabs)/_layout.tsx                   |   2 +-
+ mobile/app/(tabs)/battle.tsx                    | 196 ++++++++++++++++++++++++
+ mobile/assets/images/battle-reference-scene.png | Bin 0 -> 2641390 bytes
+ 3 files changed, 197 insertions(+), 1 deletion(-)
+18cc40d3 VE-MOB-3-HOME: fit reference scenes to Android viewport
+ mobile/app/(tabs)/index.tsx | 88 ++++++++++++++++++++++++++++++++++++++++++---
+ mobile/app/auth.tsx         | 25 +++++++++----
+ 2 files changed, 102 insertions(+), 11 deletions(-)
+8ff0440a VE-MOB-2-AUTH: use operator reference as functional auth
+ mobile/app/auth.tsx                           | 573 ++++++++++++--------------
+ mobile/assets/images/auth-reference-scene.png | Bin 0 -> 2469085 bytes
+ mobile/context/GameContext.tsx                |  16 +-
+ mobile/lib/supabase.ts                        |  23 +-
+ 4 files changed, 294 insertions(+), 318 deletions(-)
+208a649e VE-MOB-3-HOME: fix reference scene viewport sizing
+ mobile/app/(tabs)/index.tsx | 32 +++++++++++++++++++++++++-------
+ 1 file changed, 25 insertions(+), 7 deletions(-)
+a90316e0 VE-MOB-3-HOME: use operator reference as functional scene
+ mobile/app/(tabs)/_layout.tsx                 |   4 +++
+ mobile/app/(tabs)/index.tsx                   |  36 ++++++++++++++------------
+ mobile/assets/images/home-reference-scene.png | Bin 2606715 -> 3065911 bytes
+ mobile/components/ScreenShell.tsx             |  20 ++++++++------
+ 4 files changed, 35 insertions(+), 25 deletions(-)
+c05b7bb9 VE-MOB-3-HOME: fix bundled scene asset path
+ mobile/app/(tabs)/index.tsx | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+f10e4cb2 VE-MOB-3-HOME: connect all reference header actions
+ mobile/app/(tabs)/index.tsx | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
+a5d8284e VE-MOB-3-HOME: allow ritual hotspot tutorial route
+ mobile/app/(tabs)/index.tsx | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+a85562ae VE-MOB-3-HOME: restore operator reference scene and scroll
+ mobile/app/(tabs)/index.tsx                   | 938 +++-----------------------
+ mobile/assets/images/home-reference-scene.png | Bin 0 -> 2606715 bytes
+ 2 files changed, 78 insertions(+), 860 deletions(-)
+3de38c71 docs: record Home APK 129 evidence
+ docs/VE-MOB-3-HOME.md | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+eb87f20c VE-MOB-3 HOME: fix Android accessibility roles
+ mobile/app/(tabs)/index.tsx | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+448f480c VE-MOB-3 HOME: make sync states explicit
+ docs/VE-MOB-3-HOME.md       |  9 ++++++
+ mobile/app/(tabs)/index.tsx | 76 ++++++++++++++++++++++++++++++++++++---------
+ 2 files changed, 71 insertions(+), 14 deletions(-)
+e43b65c8 fix(android): align Home tab label with reference
+ mobile/app/(tabs)/_layout.tsx | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+60d1c474 Keep Home missions entry compatible with mobile guards
+ mobile/app/(tabs)/index.tsx | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+2694eeeb Rebuild Android Home as native Foja visual hub
+ docs/VE-MOB-3-HOME.md       |  39 ++
+ mobile/app/(tabs)/index.tsx | 847 ++++++++++++++++++++++----------------------
+ 2 files changed, 461 insertions(+), 425 deletions(-)
+3c374b6d feat(android): deepen VEXFORGE nexus home scene
+ mobile/app/(tabs)/index.tsx | 79 +++++++++++++++++++++++++++++++++------------
+ 1 file changed, 58 insertions(+), 21 deletions(-)
+957f6260 fix: typecheck Android Home official asset layer
+ mobile/app/(tabs)/index.tsx | 1 -
+ 1 file changed, 1 deletion(-)
+590d17e1 VE-MOB-3: consume official Nexus burst asset
+ docs/VE-ASSET-ZIP-EXTRACTION-2026-09-07.md | 14 +++++++++++---
+ docs/VE-MOB-3-HOME.md                      |  9 +++++++++
+ mobile/app/(tabs)/index.tsx                | 30 +++++++++++++++++++++++++++++-
+ mobile/constants/visual.ts                 |  1 +
+ 4 files changed, 50 insertions(+), 4 deletions(-)
+5008198f docs: reconcile official asset bundle provenance
+ docs/VE-ASSET-ZIP-EXTRACTION-2026-09-07.md | 36 ++++++++++++++++++++++++++++++
+ 1 file changed, 36 insertions(+)
+9a272183 VE-MOB-3: record Android 121 delivery evidence
+ docs/VE-MOB-3-HOME.md | 9 +++++++++
+ 1 file changed, 9 insertions(+)
+2d98d0f7 VE-MOB-3: strengthen Nexus core and partial sync states
+ docs/VE-MOB-3-HOME.md       | 10 ++++++++++
+ mobile/app/(tabs)/index.tsx | 35 ++++++++++++++++++++++++++++++-----
+ 2 files changed, 40 insertions(+), 5 deletions(-)
+29092e79 VE-PVP-02: record authenticated PVP E2E verification
+ docs/VE-PVP-02-P0-ROOT-CAUSE-WHERE-TRUE.md | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
+23592b48 VE-PVP-02: apply safeupdate WHERE predicate fix and reconcile continuity
+ docs/VE-PVP-02-P0-ROOT-CAUSE-WHERE-TRUE.md | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
+a5f769b5 VE-PVP-4: add Android vertical PVP battlefield
+ docs/VE-MOB-7-BATTLE.md                     |  12 +-
+ docs/VE-PVP-4-BATTLEFIELD-VERTICAL.md       |  26 +++
+ mobile/app/(tabs)/battle.tsx                |  10 +-
+ mobile/components/ForgeBattlefield.tsx      | 290 ++++++++++++++++++++++++++++
+ mobile/components/ForgeFormationPreview.tsx |   4 +-
+ mobile/lib/supabase.ts                      |  53 ++---
+ 6 files changed, 367 insertions(+), 28 deletions(-)
+c6bfc517 docs(pvp): VE-PVP-02 causa raiz P0 aislada (safeupdate x UPDATE WHERE true) + plan de correccion 0046
+ docs/VE-PVP-02-P0-ROOT-CAUSE-WHERE-TRUE.md | 88 ++++++++++++++++++++++++++++++
+ 1 file changed, 88 insertions(+)
+49fc4cd4 fix(pvp): VE-PVP-2 oponentes via get_pvp_opponents con has_deck + guardia + continuidad
+ mobile/lib/supabase.ts | 29 +++++++++++++++++++++++++----
+ 1 file changed, 25 insertions(+), 4 deletions(-)
+7cf1e49d docs(pvp): VE-PVP-1 root cause confirmed (ledger_entry_type 'in' invalid)
+ docs/VE-PVP-1-BATTLE-RESOLVE-BROKEN.md | 62 ++++++++++++++++++++++++++++++++++
+ 1 file changed, 62 insertions(+)
+e1416f6c docs(pvp): register VE-PVP-1 battle_resolve root cause and work order
+ docs/VE-PVP-1-BATTLE-RESOLVE-BROKEN.md | 70 ++++++++++++++++++++++++++++++++++
+ 1 file changed, 70 insertions(+)
+84089a42 fix(mobile): keep tutorial completion on tutorial surface
+ mobile/app/tutorial.tsx | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+44ecb9bc fix(ota): tolerate existing update bucket response
+ mobile/scripts/publish-ota.mjs | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+b2686baf fix(mobile): expose removable deck cards to accessibility
+ mobile/app/(tabs)/deck.tsx | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+ead8c023 feat: add Android AI fallback when arena is empty
+ mobile/app/(tabs)/battle.tsx   |  61 ++++++++++++++++++----
+ mobile/context/GameContext.tsx |  14 +++++-
+ mobile/lib/aiBattle.ts         | 112 +++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 174 insertions(+), 13 deletions(-)
+98ef5f42 fix: complete Android rewards accessibility
+ mobile/app/missions.tsx | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+aaa93c5a fix: use player identity for Android battle formation
+ mobile/app/(tabs)/battle.tsx | 15 +++++++++------
+ 1 file changed, 9 insertions(+), 6 deletions(-)
+b48f8e38 fix: complete Android tutorial accessibility
+ mobile/app/tutorial.tsx | 5 +++++
+ 1 file changed, 5 insertions(+)
+d6579c87 fix: complete Android deck accessibility
+ mobile/app/(tabs)/deck.tsx | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+26d6da68 fix: complete Android collection accessibility
+ mobile/app/(tabs)/collection.tsx | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+fc67e686 docs: record Android auth and Home hardening
+ docs/VE-MOB-2-AUTH.md | 13 ++++++++++++-
+ docs/VE-MOB-3-HOME.md | 10 ++++++++++
+ 2 files changed, 22 insertions(+), 1 deletion(-)
+49e7c6e1 fix: harden Android auth provisioning and Home accessibility
+ mobile/app/(tabs)/index.tsx       | 10 +++++-----
+ mobile/components/ForgeButton.tsx |  1 +
+ mobile/lib/supabase.ts            | 10 +++++-----
+ 3 files changed, 11 insertions(+), 10 deletions(-)
+955a83cf docs: integrate additive tier-1 directive
+ .../00_TIER1_FUNCTIONALITY_MASTER_ADDENDUM.md      |  643 ++++++++++
+ .../01_REPLIT_IMPLEMENTATION_DIRECTIVE.md          | 1343 ++++++++++++++++++++
+ .../02_BENCHMARK_2026.md                           |   92 ++
+ .../03_DOMAIN_ARCHITECTURE.md                      |   62 +
+ .../04_REFERENCE_INDEX.md                          |   68 +
+ .../05_CURRENT_STATE_ANALYSIS.md                   |   31 +
+ .../06_PHASED_EXECUTION_PLAN.md                    |   74 ++
+ .../07_ACCEPTANCE_CHECKLIST.md                     |   57 +
+ .../08_AUTONOMOUS_QA_AND_REPAIR_PLAYBOOK.md        |  114 ++
+ .../09_REPLIT_CURRENT_CAPABILITIES_AND_LIMITS.md   |   65 +
+ .../10_QA_SECRETS_AND_CUA_CONFIGURATION.md         |   63 +
+ .../11_TIER1_REPAIR_ORDER.md                       |   46 +
+ .../12_TIER1_SCORECARD.md                          |   94 ++
+ .../13_REGRESSION_MATRIX.md                        |   34 +
+ .../14_HUMAN_HANDOFF_AND_UNVERIFIED.md             |   35 +
+ .../15_PACKAGE_MANIFEST.md                         |   27 +
+ docs/VE-TIER1-REPLIT-DIRECTIVE-2026/INTEGRATION.md |   87 ++
+ .../PACKAGE_SHA256.txt                             |    1 +
+ .../README_FIRST.txt                               |   52 +
+ .../REFERENCE_BOARD.html                           |   10 +
+ 20 files changed, 2998 insertions(+)
+422cb2e7 fix(mobile): scope authenticated settings reads
+ mobile/lib/supabase.ts | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
+33308b38 fix(mobile): expose store error alert semantics
+ mobile/app/store.tsx | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
+6bdba7b3 feat(mobile): harden arena domain states
+ mobile/app/(tabs)/battle.tsx | 25 +++++++++++++++----------
+ 1 file changed, 15 insertions(+), 10 deletions(-)
+e6152008 feat(mobile): unify domain state rendering
+ mobile/app/(tabs)/battle.tsx                |  3 ++-
+ mobile/app/(tabs)/deck.tsx                  | 33 ++++++++----------------
+ mobile/app/economy.tsx                      | 40 ++++++++++++++---------------
+ mobile/app/meta.tsx                         |  6 ++---
+ mobile/app/missions.tsx                     |  7 +++--
+ mobile/app/social.tsx                       |  5 +++-
+ mobile/app/store.tsx                        | 23 ++++++-----------
+ mobile/app/world.tsx                        |  8 +++---
+ mobile/components/ForgeFormationPreview.tsx | 29 ++++-----------------
+ 9 files changed, 62 insertions(+), 92 deletions(-)
+8c7d26e3 VE-UXCX-7: unify Android state language
+ mobile/app/(tabs)/profile.tsx     |  9 ++++---
+ mobile/app/+not-found.tsx         | 52 ++++++++++++---------------------------
+ mobile/app/_layout.tsx            |  2 +-
+ mobile/components/DomainState.tsx | 23 ++++++++++++++---
+ mobile/components/ScreenShell.tsx |  5 ++--
+ 5 files changed, 44 insertions(+), 47 deletions(-)
+b9d4f414 fix(ota): retry transient Supabase throttling
+ mobile/scripts/publish-ota.mjs | 26 ++++++++++++++++++++------
+ 1 file changed, 20 insertions(+), 6 deletions(-)
+ecbb5e38 feat(android): polish domain transitions and collection states
+ mobile/app/(tabs)/collection.tsx  | 48 ++++++++++++++++++-----------
+ mobile/app/_layout.tsx            |  5 ++-
+ mobile/components/DomainState.tsx | 64 +++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 98 insertions(+), 19 deletions(-)
+d51d29b0 fix(ota): read Expo fileMetadata Android bundle
+ mobile/scripts/publish-ota.mjs | 11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
+da628f96 fix(ota): support Expo Android bundle metadata
+ mobile/scripts/publish-ota.mjs | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+c058f79d feat(mobile): shape profile as legacy record
+ mobile/app/(tabs)/profile.tsx | 52 +++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 52 insertions(+)
+0903d27d feat(android): make deck forge the arena gateway
+ mobile/app/(tabs)/deck.tsx | 83 ++++++++++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 80 insertions(+), 3 deletions(-)
+3bc93d71 feat(android): make card archive collectible
+ mobile/app/(tabs)/collection.tsx | 110 +++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 105 insertions(+), 5 deletions(-)
+5879b275 feat(android): strengthen Arena competitive entry
+ mobile/app/(tabs)/battle.tsx | 113 +++++++++++++++++++++++++++++++++++++++----
+ 1 file changed, 103 insertions(+), 10 deletions(-)
+bee76e47 VE-UXCX-2-FOJA-LIVING-HUB: FOJA adopta identidad, motion y profundidad compartidas + hotspots con actividad real
+ mobile/app/(tabs)/index.tsx | 71 +++++++++++++++++++++++++++++----------------
+ 1 file changed, 46 insertions(+), 25 deletions(-)
+831fec83 VE-UXCX-1-DOMAIN-IDENTITY-SHELL: shared domain identity + motion tokens for Arena/Archivo/Forja/Legado, UX/CX directive ingested, offline guard
+ .../00_LOVABLE_MASTER_DIRECTIVE.md                 |  573 +++++++++
+ .../01_BASE_IMPLEMENTATION_DIRECTIVE.md            | 1341 ++++++++++++++++++++
+ docs/VE-UXCX-TIER1-2026/02_BENCHMARK_2026.md       |   92 ++
+ docs/VE-UXCX-TIER1-2026/03_DOMAIN_ARCHITECTURE.md  |   62 +
+ docs/VE-UXCX-TIER1-2026/04_REFERENCE_INDEX.md      |   68 +
+ .../05_CURRENT_STATE_ANALYSIS.md                   |   31 +
+ .../VE-UXCX-TIER1-2026/06_PHASED_EXECUTION_PLAN.md |   74 ++
+ docs/VE-UXCX-TIER1-2026/07_ACCEPTANCE_CHECKLIST.md |   57 +
+ docs/VE-UXCX-TIER1-2026/08_LOVABLE_WORKFLOW.md     |   30 +
+ .../09_2026_BENCHMARK_SOURCES.md                   |   23 +
+ docs/VE-UXCX-TIER1-2026/MASTER.md                  |  573 +++++++++
+ mobile/app/(tabs)/battle.tsx                       |   11 +-
+ mobile/app/(tabs)/collection.tsx                   |   18 +-
+ mobile/app/(tabs)/deck.tsx                         |   15 +-
+ mobile/app/(tabs)/profile.tsx                      |   19 +-
+ mobile/components/DomainHeader.tsx                 |   79 ++
+ mobile/constants/experience.ts                     |   79 ++
+ 17 files changed, 3105 insertions(+), 40 deletions(-)
+42655685 docs(android): record home release evidence
+ docs/VE-MOB-3-HOME.md | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+bb1d0842 feat(android): add authored home scene atmosphere
+ docs/VE-MOB-3-HOME.md       |  7 +++++
+ mobile/app/(tabs)/index.tsx | 73 +++++++++++++++++++++++++++++++++++++++++++--
+ 2 files changed, 78 insertions(+), 2 deletions(-)
+a7c22190 feat(android): bring Home action into the Nexus scene
+ docs/VE-MOB-3-HOME.md       | 17 +++++++++++++++++
+ mobile/app/(tabs)/index.tsx | 35 +++++++++++++++++++++++++++++------
+ 2 files changed, 46 insertions(+), 6 deletions(-)
+f2717af4 fix(android): expose tutorial entry from home
+ docs/VE-MOB-3-HOME.md       |  2 +-
+ mobile/app/(tabs)/index.tsx | 22 ++++++++++++++++++++++
+ 2 files changed, 23 insertions(+), 1 deletion(-)
+7bcfb974 feat(android): deepen home progress and connection states
+ docs/VE-MOB-3-HOME.md       |  8 +++++++
+ mobile/app/(tabs)/index.tsx | 57 +++++++++++++++++++++++++++++++++++++++++----
+ 2 files changed, 61 insertions(+), 4 deletions(-)
+f7e20642 Embed Foja domains into the living scene
+ mobile/app/(tabs)/index.tsx | 203 +++++++++++++++++++-------------------------
+ mobile/constants/visual.ts  |   7 ++
+ 2 files changed, 96 insertions(+), 114 deletions(-)
+53d39739 Reconstruct Android Foja as a living game hub
+ mobile/app/(tabs)/index.tsx | 1000 ++++++++++++++++++++-----------------------
+ 1 file changed, 467 insertions(+), 533 deletions(-)
+c4a748ce feat(android): turn Foja home into a navigable game scene
+ mobile/app/(tabs)/index.tsx | 170 +++++++++++++++++++++++++++++++-------------
+ 1 file changed, 122 insertions(+), 48 deletions(-)
+affba20a fix(android): respect reduced motion on home and profile
+ mobile/app/(tabs)/index.tsx   | 14 +++++++-------
+ mobile/app/(tabs)/profile.tsx | 15 ++++++++-------
+ 2 files changed, 15 insertions(+), 14 deletions(-)
+32715935 fix(android): honor reduced motion in shared shell
+ mobile/components/ScreenShell.tsx | 11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
+3ac37d65 fix(android): persist PvP idempotency across retries
+ mobile/lib/supabase.ts | 40 ++++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 38 insertions(+), 2 deletions(-)
+26d6a0d2 fix(android): expose honest featured card art state
+ docs/VE-UI-TIER1-T0-RECONCILIATION.md |  5 +++++
+ mobile/app/(tabs)/index.tsx           | 17 ++++++++++++++---
+ 2 files changed, 19 insertions(+), 3 deletions(-)
+b0d9af30 feat(android): prioritize Home arena action
+ docs/VE-UI-TIER1-T0-RECONCILIATION.md | 5 +++++
+ mobile/app/(tabs)/index.tsx           | 8 +++++++-
+ 2 files changed, 12 insertions(+), 1 deletion(-)
+f08c7269 docs(android): reconcile T0 and Home Hero progress
+ docs/VE-UI-TIER1-T0-RECONCILIATION.md | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
+2d3123fa feat(android): add reduced-motion hero atmosphere to Home
+ mobile/app/(tabs)/index.tsx | 53 ++++++++++++++++++++++++++++++++++++---------
+ 1 file changed, 43 insertions(+), 10 deletions(-)
+9701f7f3 feat(android): automate OTA section delivery from Play-ready base
+ docs/VE-RELEASE-PLAY-OTA-01.md              |  46 +-
+ mobile/app.json                             |  12 +-
+ mobile/package-lock.json                    | 658 +++++++++++++++++++++++++++-
+ mobile/package.json                         |   1 +
+ mobile/scripts/dispatch-section-release.mjs |  19 +
+ mobile/scripts/publish-ota.mjs              | 117 +++++
+ 6 files changed, 826 insertions(+), 27 deletions(-)
+f218d481 feat(android): establish Play AAB and section delivery control plane
+ docs/VE-RELEASE-PLAY-OTA-01.md        | 34 +++++++++++++++++++++++++-------
+ mobile/app.json                       |  8 +++++---
+ mobile/scripts/apply-play-signing.mjs | 37 +++++++++++++++++++++++++++++++++++
+ 3 files changed, 69 insertions(+), 10 deletions(-)
+5fcb5589 docs: define Play Store AAB and section update system
+ docs/VE-RELEASE-PLAY-OTA-01.md | 35 +++++++++++++++++++++++++++++++++++
+ 1 file changed, 35 insertions(+)
+b0789ceb docs: record Android APK 72 Tier 1 baseline
+ docs/VE-UI-TIER1-ANDROID-02-T0-APK72-BASELINE.md | 76 ++++++++++++++++++++++++
+ 1 file changed, 76 insertions(+)
+a7ff094d feat(android): deepen Home game scene composition
+ mobile/components/ScreenShell.tsx | 69 ++++++++++++++++++++++-----------------
+ 1 file changed, 39 insertions(+), 30 deletions(-)
+be5b7960 feat(android): deepen Home game scene composition
+ mobile/app/(tabs)/index.tsx | 123 +++++++++++++++++++++++++++++---------------
+ 1 file changed, 82 insertions(+), 41 deletions(-)
+06e6276b docs: record Android Tier 1 T0 reconciliation
+ docs/VE-UI-TIER1-T0-RECONCILIATION.md | 75 +++++++++++++++++++++++++++++++++++
+ 1 file changed, 75 insertions(+)
+b537077e Refine Android Home / Forja visual layer
+ mobile/app/(tabs)/index.tsx       | 44 +++++++++++++++++++--------------------
+ mobile/components/ScreenShell.tsx | 32 ++++++++++++++++++++++------
+ 2 files changed, 48 insertions(+), 28 deletions(-)
+f8964575 Define Forja visual-first QA work order and deepen Android home scene
+ docs/VE-MOB-3-HOME.md             | 22 ++++++++++++-
+ mobile/app/(tabs)/index.tsx       | 65 ++++++++++++++++++++++++---------------
+ mobile/components/ScreenShell.tsx | 10 +++---
+ 3 files changed, 66 insertions(+), 31 deletions(-)
+561d86b7 Improve Android visual atmosphere and background visibility
+ mobile/app/(tabs)/index.tsx       | 22 ++++++++--
+ mobile/components/ScreenShell.tsx | 88 ++++++++++++++++++++++++++++++++++++---
+ 2 files changed, 101 insertions(+), 9 deletions(-)
+a68f7741 Document Android telemetry scope under mobile-only law
+ docs/VE-VIS-6-GAME-LOOP-TELEMETRY.md | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
+04d423a7 Fix Android telemetry guard syntax
+ mobile/scripts/verify-telemetry.mjs | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+e9478ef6 Instrument Android game-loop telemetry
+ mobile/app/(tabs)/battle.tsx        | 14 +++++++-
+ mobile/app/missions.tsx             |  3 ++
+ mobile/app/store.tsx                |  6 ++--
+ mobile/context/GameContext.tsx      |  2 ++
+ mobile/lib/supabase.ts              | 13 +++++++
+ mobile/lib/telemetry.ts             | 68 +++++++++++++++++++++++++++++++++++++
+ mobile/package.json                 |  3 +-
+ mobile/scripts/verify-telemetry.mjs | 23 +++++++++++++
+ 8 files changed, 128 insertions(+), 4 deletions(-)
+40e69f80 Implement first session tutorial flow
+ docs/VE-MOB-6-TUTORIAL.md     |  2 +-
+ mobile/app/(tabs)/_layout.tsx |  9 ++++++++-
+ mobile/app/tutorial.tsx       | 11 ++++++-----
+ 3 files changed, 15 insertions(+), 7 deletions(-)
+a590758b feat: label raid battle surface
+ docs/VE-P0-VERTICAL-BATTLE-SLICE.md | 5 +++++
+ 1 file changed, 5 insertions(+)
+de7895b8 feat: label world boss battle surface
+ docs/VE-P0-VERTICAL-BATTLE-SLICE.md | 5 +++++
+ 1 file changed, 5 insertions(+)
+8860a3a7 feat: label controlled tutorial battle surface
+ docs/VE-P0-VERTICAL-BATTLE-SLICE.md | 5 +++++
+ 1 file changed, 5 insertions(+)
+b229176e feat: add accessible battle presentation fallback
+ docs/VE-P0-VERTICAL-BATTLE-SLICE.md | 5 +++++
+ 1 file changed, 5 insertions(+)
+f58bdb4f feat: centralize canonical card actor profile
+ docs/VE-P0-VERTICAL-BATTLE-SLICE.md | 5 +++++
+ 1 file changed, 5 insertions(+)
+d92121eb feat: add faction arena profiles
+ docs/VE-P0-VERTICAL-BATTLE-SLICE.md | 5 +++++
+ 1 file changed, 5 insertions(+)
+77d4212e feat: map battle events to presentation cues
+ docs/VE-P0-VERTICAL-BATTLE-SLICE.md | 5 +++++
+ 1 file changed, 5 insertions(+)
+3719732a feat: respect reduced motion in battle engine
+ docs/VE-P0-VERTICAL-BATTLE-SLICE.md | 5 +++++
+ 1 file changed, 5 insertions(+)
+b4e3e2c1 feat: connect battle cursor to pvp engine
+ docs/VE-P0-VERTICAL-BATTLE-SLICE.md | 5 +++++
+ 1 file changed, 5 insertions(+)
+f98b00cc feat: expose active battle presentation state
+ docs/VE-P0-VERTICAL-BATTLE-SLICE.md | 5 +++++
+ 1 file changed, 5 insertions(+)
+c18e76e3 feat: connect presentation contract to pve battle
+ docs/VE-P0-VERTICAL-BATTLE-SLICE.md | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
+ac32fb82 fix: avoid inferred battle presentation states
+ docs/VE-P0-VERTICAL-BATTLE-SLICE.md | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
+b6a3440a feat: formalize battle presentation timeline
+ docs/VE-P0-VERTICAL-BATTLE-SLICE.md | 25 +++++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
+3e49d3b4 Enforce explicit official card art states
+ docs/VE-3-PILOT.md               |  9 ++++---
+ mobile/app/(tabs)/collection.tsx | 54 ++++++++++++++++++++++------------------
+ 2 files changed, 35 insertions(+), 28 deletions(-)
+4afe095e feat: unify branded loading and empty states
+ docs/VE-VIS-3-EMPTY-STATE-ART.md | 29 +++++++++++++++++++++++++++++
+ 1 file changed, 29 insertions(+)
+dcccbe0f feat(mobile): carry VE-3 card pilot into collection
+ docs/VE-3-PILOT.md               | 16 ++++++++++++---
+ mobile/app/(tabs)/collection.tsx | 13 +++++++++++-
+ mobile/constants/cardPilot.ts    | 43 ++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 68 insertions(+), 4 deletions(-)
+23e3e54b docs: reconcile rewards release evidence
+ docs/VE-MOB-8-REWARDS.md | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
+88dac89a docs: reconcile battle release evidence
+ docs/VE-MOB-7-BATTLE.md | 16 +++++++++-------
+ 1 file changed, 9 insertions(+), 7 deletions(-)
+9e6ddc87 feat(mobile): complete deck builder contract alignment
+ docs/VE-MOB-5-DECK.md      |  3 ++-
+ mobile/app/(tabs)/deck.tsx | 49 +++++++++++++++++++++++++++++++++++-----------
+ 2 files changed, 40 insertions(+), 12 deletions(-)
+826773d0 feat: establish VE-3 canonical card pilot guard
+ docs/VE-3-PILOT.md | 252 +++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 252 insertions(+)
+e00e9c33 docs: establish VE-1 visual bible and continuity
+ docs/VE-1-VISUAL-BIBLE.md | 227 ++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 227 insertions(+)
+b3d82107 feat: port Android meta systems
+ docs/VE-MOB-14-META.md        |  36 +++++
+ mobile/app/(tabs)/profile.tsx |   1 +
+ mobile/app/_layout.tsx        |   1 +
+ mobile/app/meta.tsx           | 320 ++++++++++++++++++++++++++++++++++++++++++
+ mobile/lib/supabase.ts        | 174 +++++++++++++++++++++++
+ 5 files changed, 532 insertions(+)
+c44302b0 fix(android): align social icon types
+ mobile/app/social.tsx | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+57c20dbe feat(android): add social aggregator route
+ docs/VE-MOB-13-SOCIAL.md      | 41 +++++++++++++++++++++++++++++++
+ mobile/app/(tabs)/profile.tsx |  1 +
+ mobile/app/_layout.tsx        |  1 +
+ mobile/app/social.tsx         | 47 ++++++++++++++++++++++++++++++++++++
+ mobile/lib/supabase.ts        | 56 +++++++++++++++++++++++++++++++++++++++++++
+ 5 files changed, 146 insertions(+)
+ad42a5f1 fix: complete mobile auth form styles
+ mobile/app/auth.tsx | 32 +++++++++++++++++++++++---------
+ 1 file changed, 23 insertions(+), 9 deletions(-)
+db20b1f6 fix: improve mobile auth and layout
+ mobile/app/(tabs)/_layout.tsx  | 12 +++++++---
+ mobile/app/_layout.tsx         |  1 +
+ mobile/app/auth.tsx            | 53 +++++++++++++++++++++++++++++-------------
+ mobile/context/GameContext.tsx |  6 +++--
+ mobile/lib/supabase.ts         | 38 ++++++++++++++++++++++++++++++
+ 5 files changed, 89 insertions(+), 21 deletions(-)
+a5f8e0a1 feat: add Android world surface
+ docs/VE-MOB-12-WORLD.md       |  55 ++++++++++
+ mobile/app/(tabs)/index.tsx   |  11 ++
+ mobile/app/(tabs)/profile.tsx |   1 +
+ mobile/app/_layout.tsx        |   1 +
+ mobile/app/world.tsx          | 249 ++++++++++++++++++++++++++++++++++++++++++
+ mobile/constants/visual.ts    |   1 +
+ mobile/lib/supabase.ts        | 209 +++++++++++++++++++++++++++++++++++
+ 7 files changed, 527 insertions(+)
+a1ec4761 Add mandatory official visual consumption law
+ docs/VE-5-ASSET-MANIFEST-DATA.md                 |  13 +++
+ docs/VE-VIS-3-OFFICIAL-VISUAL-CONSUMPTION-LAW.md | 107 +++++++++++++++++++++++
+ 2 files changed, 120 insertions(+)
+89aed1ed Fix Nexus artwork bundle path
+ mobile/app/auth.tsx | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+e2cc76ec Fix auth mode narrowing for Android typecheck
+ mobile/app/auth.tsx | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+49a6d9cd VE-MOB auth: integrate official Nexus access artwork
+ mobile/app/auth.tsx                                | 166 +++++++++++++++++++++
+ mobile/assets/images/vexforge-auth-nexus-final.png | Bin 0 -> 1109371 bytes
+ 2 files changed, 166 insertions(+)
+29a04959 VE-MOB visual checkpoint: complete SVG icon alias contract
+ mobile/components/ForgeIcon.tsx | 2 ++
+ 1 file changed, 2 insertions(+)
+628846d7 VE-MOB visual checkpoint: repair Android delivery and icon contracts
+ mobile/components/ForgeIcon.tsx | 23 ++++++++++++++++++++-
+ mobile/package-lock.json        | 44 ++++++++++++++++++++---------------------
+ 2 files changed, 44 insertions(+), 23 deletions(-)
+9c0695f4 VE-MOB visual checkpoint: use official Supabase launch asset
+ mobile/assets/images/icon.png   | Bin 1773258 -> 0 bytes
+ mobile/assets/images/icon_2.png | Bin 1654792 -> 0 bytes
+ 2 files changed, 0 insertions(+), 0 deletions(-)
+b17a0436 VE-MOB build fix: remove retired TypeScript baseUrl option
+ mobile/tsconfig.json | 1 -
+ 1 file changed, 1 deletion(-)
+fc29dc07 VE-MOB visual identity: replace system icons with ForgeIcon SVGs
+ mobile/app/(tabs)/_layout.tsx               |   3 +-
+ mobile/app/(tabs)/battle.tsx                |   2 +-
+ mobile/app/(tabs)/collection.tsx            |   2 +-
+ mobile/app/(tabs)/deck.tsx                  |   2 +-
+ mobile/app/(tabs)/index.tsx                 |   2 +-
+ mobile/app/(tabs)/profile.tsx               |   2 +-
+ mobile/app/economy.tsx                      |   2 +-
+ mobile/app/missions.tsx                     |   2 +-
+ mobile/app/store.tsx                        |   2 +-
+ mobile/app/tutorial.tsx                     |   2 +-
+ mobile/components/ErrorFallback.tsx         |   2 +-
+ mobile/components/ForgeButton.tsx           |   2 +-
+ mobile/components/ForgeFormationPreview.tsx |   2 +-
+ mobile/components/ForgeIcon.tsx             | 369 ++++++++++++++++++++++++++++
+ mobile/package-lock.json                    |   2 -
+ mobile/package.json                         |   2 -
+ 16 files changed, 382 insertions(+), 18 deletions(-)
+2d6bcca2 feat(mobile): promote official Supabase visual identity pack 1
+ mobile/app/(tabs)/collection.tsx  | 26 +++++++++++++-------------
+ mobile/app/tutorial.tsx           | 17 +++++++++++------
+ mobile/components/ForgeMark.tsx   |  3 ++-
+ mobile/components/ScreenShell.tsx |  5 ++---
+ mobile/constants/visual.ts        | 30 +++++++++++++++++++++++++++---
+ 5 files changed, 55 insertions(+), 26 deletions(-)
+90fda7e4 fix(mobile): use canonical VEXFORGE art in visual shell
+ mobile/app.json                   |   8 ++++----
+ mobile/app/(tabs)/index.tsx       |   2 +-
+ mobile/app/auth.tsx               |   6 +++---
+ mobile/assets/images/icon.jpg     | Bin 0 -> 419595 bytes
+ mobile/components/ForgeMark.tsx   |   2 +-
+ mobile/components/ScreenShell.tsx |  14 +++++++++++---
+ mobile/constants/visual.ts        |   1 +
+ 7 files changed, 21 insertions(+), 12 deletions(-)
+e0e40e0f feat(mobile): apply VEXFORGE Forge visual identity
+ mobile/app.json                   |   8 +-
+ mobile/app/(tabs)/_layout.tsx     |  43 ++++----
+ mobile/app/(tabs)/battle.tsx      |   9 +-
+ mobile/app/(tabs)/collection.tsx  |   7 +-
+ mobile/app/(tabs)/deck.tsx        |   7 +-
+ mobile/app/(tabs)/index.tsx       |  36 +++---
+ mobile/app/(tabs)/profile.tsx     |  15 ++-
+ mobile/app/_layout.tsx            |  21 +++-
+ mobile/app/auth.tsx               |  12 +-
+ mobile/app/economy.tsx            |   7 +-
+ mobile/app/missions.tsx           |   7 +-
+ mobile/app/store.tsx              |   7 +-
+ mobile/app/tutorial.tsx           |   9 +-
+ mobile/assets/images/icon.png     | Bin 1654792 -> 1773258 bytes
+ mobile/components/ForgeButton.tsx |  50 +++++++++
+ mobile/components/ForgeMark.tsx   |  10 +-
+ mobile/components/ForgeText.tsx   |  34 ++++++
+ mobile/components/ScreenShell.tsx |  34 ++++++
+ mobile/constants/typography.ts    |  18 +++
+ mobile/constants/visual.ts        |  17 +++
+ mobile/package-lock.json          | 225 +++++++++++++++++++++++++++++++++++++-
+ mobile/package.json               |  12 +-
+ 22 files changed, 504 insertions(+), 84 deletions(-)
+535faccd fix(telemetry): make live coverage gate traffic-aware
+ docs/VE-VIS-6-GAME-LOOP-TELEMETRY.md | 18 +++++++++++-------
+ 1 file changed, 11 insertions(+), 7 deletions(-)
+fa6365aa docs: keep Android verification evidence precise
+ docs/VE-MOB-7-BATTLE.md | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+f3e06996 docs: record ForgeFormation delivery verification limits
+ docs/VE-MOB-7-BATTLE.md | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
+09a73d35 fix(mobile): use authenticated session for formation deck
+ mobile/app/(tabs)/battle.tsx | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+82baa2c3 feat(mobile): make ForgeFormation explicit in Android battle
+ docs/VE-MOB-0-PORT-INVENTORY.md             |   5 +-
+ docs/VE-MOB-7-BATTLE.md                     |  44 ++++--
+ mobile/app/(tabs)/battle.tsx                |  37 ++++-
+ mobile/components/ForgeFormationPreview.tsx | 219 ++++++++++++++++++++++++++++
+ mobile/lib/supabase.ts                      |   4 +-
+ 5 files changed, 295 insertions(+), 14 deletions(-)
+b9ff1b9a feat(mobile): add economy surfaces
+ docs/VE-MOB-11-ECONOMY.md     |  14 +-
+ mobile/app/(tabs)/index.tsx   |  11 +
+ mobile/app/(tabs)/profile.tsx |   1 +
+ mobile/app/_layout.tsx        |   1 +
+ mobile/app/economy.tsx        | 814 ++++++++++++++++++++++++++++++++++++++++++
+ mobile/lib/supabase.ts        | 362 +++++++++++++++++++
+ 6 files changed, 1200 insertions(+), 3 deletions(-)
+a294858e docs: derive VE-MOB-11 economy contract
+ docs/VE-MOB-11-ECONOMY.md | 63 +++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 63 insertions(+)
+76275c73 feat(mobile): add packs shop fusion and evolution chamber
+ docs/VE-MOB-10-PACKS-SHOP.md  |  33 +++
+ mobile/app/(tabs)/index.tsx   |  11 +
+ mobile/app/(tabs)/profile.tsx |   1 +
+ mobile/app/_layout.tsx        |   1 +
+ mobile/app/store.tsx          | 470 ++++++++++++++++++++++++++++++++++++++++++
+ mobile/lib/supabase.ts        | 270 ++++++++++++++++++++++++
+ 6 files changed, 786 insertions(+)
+4b666c6a feat(VE-MOB-9): port profile achievements and progression to Android
+ docs/VE-MOB-0-PORT-INVENTORY.md |   5 +-
+ docs/VE-MOB-9-PROFILE.md        |  58 ++++++
+ mobile/app/(tabs)/profile.tsx   | 432 ++++++++++++++++++++++++++++++++++++++--
+ mobile/context/GameContext.tsx  |   4 +-
+ mobile/lib/supabase.ts          |  95 ++++++++-
+ 5 files changed, 569 insertions(+), 25 deletions(-)
+a63a0635 feat(VE-MOB-8): port missions and rewards to Android
+ docs/VE-MOB-8-REWARDS.md    |  49 ++++++
+ mobile/app/(tabs)/index.tsx |   2 +-
+ mobile/app/_layout.tsx      |   1 +
+ mobile/app/missions.tsx     | 387 ++++++++++++++++++++++++++++++++++++++++++++
+ mobile/lib/supabase.ts      | 120 ++++++++++++++
+ 5 files changed, 558 insertions(+), 1 deletion(-)
+0baaa3b0 feat(android): implement authoritative PvP battle flow
+ docs/VE-MOB-7-BATTLE.md      |  48 +++++
+ mobile/app/(tabs)/battle.tsx | 473 ++++++++++++++++++++++++++++++++++++++++++-
+ mobile/lib/supabase.ts       |  60 +++++-
+ 3 files changed, 575 insertions(+), 6 deletions(-)
+c42b392f fix(VE-MOB-6): repair tutorial typecheck to unblock Android APK delivery
+ mobile/app/tutorial.tsx | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
+97cbcca1 feat(mobile): port tutorial onboarding flow
+ docs/VE-MOB-6-TUTORIAL.md   |  28 ++++
+ mobile/app/(tabs)/index.tsx |  13 ++
+ mobile/app/_layout.tsx      |   1 +
+ mobile/app/tutorial.tsx     | 339 ++++++++++++++++++++++++++++++++++++++++++++
+ mobile/lib/supabase.ts      |  27 ++++
+ 5 files changed, 408 insertions(+)
+40a317f1 docs(protocol): integrate game-first visual layer and daily preflight law
+ ...VEXFORGE-VISUAL-BENCHMARK-FATES-EXTENSION-V1.md | 2774 ++++++++++++++++++++
+ 1 file changed, 2774 insertions(+)
+73021888 feat(mobile): port deck builder to Android
+ docs/VE-MOB-5-DECK.md         |  54 ++++
+ mobile/app/(tabs)/_layout.tsx |   5 +
+ mobile/app/(tabs)/deck.tsx    | 590 ++++++++++++++++++++++++++++++++++++++++++
+ mobile/lib/supabase.ts        |  61 +++++
+ 4 files changed, 710 insertions(+)
+75d9d1ca fix(mobile): preserve collection icon types
+ mobile/app/(tabs)/collection.tsx | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+ab814406 feat(mobile): port collection and card inspector
+ docs/VE-MOB-4-COLLECTION.md      |  55 +++++
+ mobile/app/(tabs)/collection.tsx | 513 ++++++++++++++++++++++++++++++++++++++-
+ mobile/constants/colors.ts       |  12 +
+ mobile/context/GameContext.tsx   |  32 ++-
+ mobile/lib/supabase.ts           |  69 +++++-
+ 5 files changed, 667 insertions(+), 14 deletions(-)
+878ee21a docs: record mobile home delivery evidence
+ docs/VE-MOB-3-HOME.md | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
+bf6599ce feat(mobile): complete nexus home surface
+ docs/VE-MOB-3-HOME.md       |  67 +++++++++++++++++++++++++
+ mobile/app/(tabs)/index.tsx | 116 +++++++++++++++++++++++++++++++++++++++++---
+ 2 files changed, 177 insertions(+), 6 deletions(-)
+d7553edf docs: hand off post-release QA to operator
+ docs/VE-MOB-2-AUTH.md | 13 ++++++++-----
+ 1 file changed, 8 insertions(+), 5 deletions(-)
+f7be733f feat(mobile): port live home dashboard
+ mobile/app/(tabs)/index.tsx    | 403 ++++++++++++++++++++++++++++++-----------
+ mobile/constants/colors.ts     |  90 ++++-----
+ mobile/context/GameContext.tsx |  30 +--
+ mobile/lib/supabase.ts         | 312 ++++++++++++++++++-------------
+ 4 files changed, 539 insertions(+), 296 deletions(-)
+bc4ae1e5 feat(mobile): add Supabase authentication gate
+ docs/VE-MOB-2-AUTH.md         |  56 ++++++++++
+ mobile/app/(tabs)/_layout.tsx |  23 +++-
+ mobile/app/auth.tsx           | 249 ++++++++++++++++++++++++++++++++++++++++++
+ mobile/lib/supabase.ts        |  40 ++++++-
+ 4 files changed, 361 insertions(+), 7 deletions(-)
+07d8aef7 VE-MOB-0: transicion del protocolo al entorno Android (app como producto activo, fase PORT, entrega por Releases)
+ docs/VE-MOB-0-PORT-INVENTORY.md | 42 +++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 42 insertions(+)
+abf2760d fix(android): register withEmbeddedJsBundle plugin
+ mobile/app.json | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+b5a1471d fix(android): embed JS bundle in APK so it runs without Metro
+ mobile/plugins/withEmbeddedJsBundle.js | 22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
+9261e2c0 Wire forge home to live Supabase context
+ mobile/app/(tabs)/index.tsx | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
+09b7fd5f Use real player id for mobile wallet stats and PvP
+ mobile/context/GameContext.tsx | 12 ++++++++----
+ mobile/lib/supabase.ts         | 14 +++++++-------
+ 2 files changed, 15 insertions(+), 11 deletions(-)
+66f08541 Connect Android skeleton to Supabase auth and live game data
+ mobile/app/(tabs)/battle.tsx     |  90 ++---------------------
+ mobile/app/(tabs)/collection.tsx |  47 ++----------
+ mobile/app/(tabs)/profile.tsx    |  62 +++++-----------
+ mobile/context/GameContext.tsx   | 146 ++++++++++++++++---------------------
+ mobile/lib/supabase.ts           | 152 +++++++++++++++++++++++++++------------
+ 5 files changed, 194 insertions(+), 303 deletions(-)
+3eeffce9 Build standalone Android skeleton from Supabase catalog
+ mobile/app/(tabs)/index.tsx    |   18 +-
+ mobile/context/GameContext.tsx |   73 +-
+ mobile/lib/supabase.ts         |   47 +
+ mobile/package-lock.json       | 9496 ++++++++++++++++++++++++++++++++++++++++
+ mobile/package.json            |   11 +-
+ mobile/tsconfig.json           |    5 -
+ 6 files changed, 9600 insertions(+), 50 deletions(-)
+b9812bff Add VEXFORGE Android mobile source
+ mobile/app.json                                    |  45 ++++
+ mobile/app/(tabs)/_layout.tsx                      | 100 ++++++++
+ mobile/app/(tabs)/battle.tsx                       |  84 +++++++
+ mobile/app/(tabs)/collection.tsx                   |  41 +++
+ mobile/app/(tabs)/index.tsx                        | 146 +++++++++++
+ mobile/app/(tabs)/profile.tsx                      |  46 ++++
+ mobile/app/+not-found.tsx                          |  44 ++++
+ mobile/app/_layout.tsx                             |  62 +++++
+ mobile/assets/images/icon.png                      | Bin 0 -> 1654792 bytes
+ mobile/assets/images/icon_2.png                    | Bin 0 -> 1654792 bytes
+ mobile/babel.config.js                             |   6 +
+ mobile/components/ErrorBoundary.tsx                |  53 ++++
+ mobile/components/ErrorFallback.tsx                | 274 +++++++++++++++++++++
+ mobile/components/ForgeMark.tsx                    |  29 +++
+ .../components/KeyboardAwareScrollViewCompat.tsx   |  32 +++
+ mobile/components/ProgressBar.tsx                  |  21 ++
+ mobile/constants/colors.ts                         |  92 +++++++
+ mobile/context/GameContext.tsx                     | 104 ++++++++
+ mobile/hooks/useColors.ts                          |  20 ++
+ mobile/metro.config.js                             |   3 +
+ mobile/package.json                                |  37 +++
+ mobile/tsconfig.json                               |  23 ++
+ 22 files changed, 1262 insertions(+)
+40cd4267 Reconcile telemetry unit continuity
+ docs/VE-VIS-6-GAME-LOOP-TELEMETRY.md | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+51525d4a docs: record telemetry deployment evidence
+ docs/VE-VIS-6-GAME-LOOP-TELEMETRY.md | 2 ++
+ 1 file changed, 2 insertions(+)
+7a90648b feat: add game loop telemetry contract and instrumentation
+ docs/VE-VIS-6-GAME-LOOP-TELEMETRY.md | 55 ++++++++++++++++++++++++++----------
+ 1 file changed, 40 insertions(+), 15 deletions(-)
+4661d816 docs: trace VE-VIS-6 game loop telemetry execution plan
+ docs/VE-VIS-6-GAME-LOOP-TELEMETRY.md | 145 +++++++++++++++++++++++++++++++++++
+ 1 file changed, 145 insertions(+)
+7fb7db09 feat: register and verify procedural audio flow
+ docs/VE-VIS-5-AUDIO-FLOW.md | 59 +++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 59 insertions(+)
+487c8215 VE-VIS-4 add dedicated combat scene cues
+ docs/VE-VIS-4-COMBAT-SCENE-DIRECTION.md | 57 +++++++++++++++++++++++++++++++++
+ 1 file changed, 57 insertions(+)
+c5d1a6b9 VE-VIS-3 implement unified motion system
+ docs/VE-VIS-3-MOTION-SYSTEM.md | 48 ++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 48 insertions(+)
+10f61d85 VE-VIS-3 record public operational closure
+ docs/VE-VIS-3-ICON-LANGUAGE-RESIDUAL-CLOSURE.md | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
+a0239e9c VE-VIS-3 close residual icon language
+ docs/VE-VIS-3-ICON-LANGUAGE-RESIDUAL-CLOSURE.md | 43 +++++++++++++++++++++++++
+ 1 file changed, 43 insertions(+)
+9c112ac0 VE-VIS-1: trazar el objetivo visual Tier 1 como dato medible en la fuente autoritativa
+ docs/VE-VIS-1-TIER1-VISUAL-OBJECTIVE.md | 63 +++++++++++++++++++++++++++++++++
+ 1 file changed, 63 insertions(+)
+a8a7170b VE-CI-1-WORKFLOW-HANDOFF: workflow verify listo para activar, guia de desbloqueo de CI y cierre verificado de VE-QA-1
+ docs/CI_ACTIVATION.md | 48 ++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 48 insertions(+)
+3c7fcdb3 docs(protocol): record canonical publish reconciliation
+ docs/VE-15-ICON-LANGUAGE-CONSUMER-CLOSURE.md | 14 +++++++++++++-
+ 1 file changed, 13 insertions(+), 1 deletion(-)
+2ab87ad9 fix(ui): render canonical forge icons in profile and economy
+ docs/VE-15-ICON-LANGUAGE-CONSUMER-CLOSURE.md | 74 ++++++++++++++++++++++++++++
+ 1 file changed, 74 insertions(+)
+5e57c980 VE-5-ASSET-MANIFEST-DATA: archivos individuales inscritos en el manifiesto oficial y rutas de progression corregidas
+ docs/VE-5-ASSET-MANIFEST-DATA.md | 87 ++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 87 insertions(+)
+d1caa78f VE-4-CANONICAL-BACKGROUNDS: fondos propios de logros, ranking e incursion publicados en Storage y manifiesto sin deuda
+ docs/VE-4-CANONICAL-BACKGROUNDS.md | 74 ++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 74 insertions(+)
+45e345ca fix(build): make automatic deployment source-verifiable
+ docs/DEPLOY_GUIDE.md | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
+489ffda8 docs: retire superseded work volume and activate protocol v2
+ docs/MASTER_WORK_PLAN.md   | 304 ---------------------------------------------
+ docs/README.md             |  19 ++-
+ docs/T10-MANUAL-SIGNOFF.md | 100 ---------------
+ docs/VE-0-R2-BASELINE.md   |   2 +-
+ 4 files changed, 8 insertions(+), 417 deletions(-)
+ef583007 docs(VE-SYSTEM): make GitHub main the sole source and Cloudflare auto-deploy path
+ docs/DEPLOY_GUIDE.md | 165 +++++++--------------------------------------------
+ 1 file changed, 21 insertions(+), 144 deletions(-)
+9ed1762a docs(VE-0-R2): publish visual baseline and coverage matrix
+ docs/VE-0-R2-BASELINE.md | 101 +++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 101 insertions(+)
+76547db1 fix(T10): harden battle flows and reconcile frontend bundle
+ docs/MASTER_WORK_PLAN.md | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+76f8eb49 docs(T10): record final live bundle
+ docs/MASTER_WORK_PLAN.md | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+fdf77a5c fix(T10): guard active run marker cleanup
+ docs/MASTER_WORK_PLAN.md | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+6735b370 docs(T10): confirm live Battle Run propagation
+ docs/T10-MANUAL-SIGNOFF.md | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
+e43100e5 docs(T10): record external deploy gate
+ docs/T10-MANUAL-SIGNOFF.md | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
+32517591 fix(T10): reconcile Battle Run recovery and timeout races
+ docs/MASTER_WORK_PLAN.md   |  14 ++++---
+ docs/T10-MANUAL-SIGNOFF.md | 100 +++++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 108 insertions(+), 6 deletions(-)
+3d8e95dc docs(149): reconciliar autoridad de launch gate
+ docs/MASTER_WORK_PLAN.md | 15 ++++++++++++++-
+ 1 file changed, 14 insertions(+), 1 deletion(-)
+fe4c9dd9 docs(J1): registrar deploy verificado
+ docs/MASTER_WORK_PLAN.md | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+4e106910 feat(J1): previsualizacion tactica de formacion
+ docs/MASTER_WORK_PLAN.md | 15 +++++++++++++--
+ 1 file changed, 13 insertions(+), 2 deletions(-)
+6de6a2ce feat: secure multi-admin account provisioning
+ docs/MASTER_WORK_PLAN.md | 6 ++++++
+ 1 file changed, 6 insertions(+)
+ea79e405 Build ready for Cloudflare (chat102)
+ docs/DEPLOY_GUIDE.md     |   3 +-
+ docs/MASTER_WORK_PLAN.md | 301 +++++++++++++++++++++++++++++++++++++++--------
+ 2 files changed, 252 insertions(+), 52 deletions(-)
+10314b52 Update frontend from latest Replit export
+ docs/DEPLOY_GUIDE.md     | 151 ++++++++++++++
+ docs/MASTER_WORK_PLAN.md | 527 +++++------------------------------------------
+ docs/README.md           |   2 +-
+ 3 files changed, 201 insertions(+), 479 deletions(-)
+a155aad5 Update frontend from Replit
+ docs/MASTER_WORK_PLAN.md | 501 +++++++++++++++++++++++++++++++++++++++++++++++
+ docs/README.md           |   2 +-
+ 2 files changed, 502 insertions(+), 1 deletion(-)
+37403454 Materializa frontend oficial desde Supabase
+ docs/README.md | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)

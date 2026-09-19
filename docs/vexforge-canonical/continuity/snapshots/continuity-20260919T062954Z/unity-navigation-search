@@ -1,0 +1,48 @@
+unity/Assets/Scripts/Core/NavigationService.cs:5:    public enum GameRoute
+unity/Assets/Scripts/Core/NavigationService.cs:9:        Archive,
+unity/Assets/Scripts/Core/NavigationService.cs:10:        Forge,
+unity/Assets/Scripts/Core/NavigationService.cs:11:        Battlefield,
+unity/Assets/Scripts/Core/NavigationService.cs:15:        Collection = Archive,
+unity/Assets/Scripts/Core/NavigationService.cs:16:        Deck = Forge,
+unity/Assets/Scripts/Core/NavigationService.cs:17:        Battle = Battlefield
+unity/Assets/Scripts/Core/NavigationService.cs:22:        public event Action<GameRoute> RouteChanged;
+unity/Assets/Scripts/Core/NavigationService.cs:23:        public GameRoute CurrentRoute { get; private set; } = GameRoute.Boot;
+unity/Assets/Scripts/Core/NavigationService.cs:25:        public void Navigate(GameRoute route)
+unity/Assets/Scripts/Core/VexforgeApp.cs:37:            DontDestroyOnLoad(gameObject);
+unity/Assets/Scripts/Core/VexforgeApp.cs:73:            Navigation.Navigate(GameRoute.Nexus);
+unity/Assets/Scripts/Core/VexforgeApp.cs:90:            Navigation.Navigate(GameRoute.Nexus);
+unity/Assets/Scripts/Presentation/NexusPresentationRoot.cs:58:                "NexusForgeCore",
+unity/Assets/Scripts/Presentation/NexusPresentationRoot.cs:73:                new PortalDefinition("ArchiveSanctum", "ARCHIVE", "Cards · collection", new Vector3(-6f, 0.25f, 4.5f), new Color(0.08f, 0.30f, 0.42f, 1f), GameRoute.Collection),
+unity/Assets/Scripts/Presentation/NexusPresentationRoot.cs:74:                new PortalDefinition("ForgeAltar", "FORGE", "Deck · formation", new Vector3(-3f, 0.25f, 8.4f), new Color(0.46f, 0.18f, 0.055f, 1f), GameRoute.Deck),
+unity/Assets/Scripts/Presentation/NexusPresentationRoot.cs:75:                new PortalDefinition("BattlefieldGate", "BATTLEFIELD", "Arena · events", new Vector3(6f, 0.25f, 4.5f), new Color(0.25f, 0.08f, 0.22f, 1f), GameRoute.Battle),
+unity/Assets/Scripts/Presentation/NexusPresentationRoot.cs:76:                new PortalDefinition("MissionsChamber", "MISSIONS", "Contracts · activity", new Vector3(3f, 0.25f, 8.4f), new Color(0.28f, 0.24f, 0.08f, 1f), GameRoute.Missions),
+unity/Assets/Scripts/Presentation/NexusPresentationRoot.cs:77:                new PortalDefinition("EconomyVault", "ECONOMY", "Treasury · balances", new Vector3(6f, 0.25f, 8.4f), new Color(0.12f, 0.34f, 0.23f, 1f), GameRoute.Economy)
+unity/Assets/Scripts/Presentation/NexusPresentationRoot.cs:103:                "NexusForgeLight",
+unity/Assets/Scripts/Presentation/NexusPresentationRoot.cs:110:                "NexusArchiveLight",
+unity/Assets/Scripts/Presentation/NexusPresentationRoot.cs:177:        private void HandleRouteRequested(GameRoute route)
+unity/Assets/Scripts/Presentation/NexusPresentationRoot.cs:296:            public readonly GameRoute Route;
+unity/Assets/Scripts/Presentation/NexusPresentationRoot.cs:304:                GameRoute route)
+unity/Assets/Scripts/Presentation/VexforgeNexusStage.cs:38:            // and the world-space Archive/Forge gallery. Only the Nexus world root
+unity/Assets/Scripts/Presentation/VexforgeVirtualizedCardGallery.cs:54:                Debug.LogError("VEXFORGE Archive gallery requires a CardPool.", this);
+unity/Assets/Scripts/Presentation/VexforgeVirtualizedCardGallery.cs:56:                Debug.LogError("VEXFORGE Archive gallery requires the shared DiegeticInputRouter.", this);
+unity/Assets/Scripts/Presentation/VexforgeWorldHotspot.cs:16:        public event Action<GameRoute> RouteRequested;
+unity/Assets/Scripts/Presentation/VexforgeWorldHotspot.cs:17:        public GameRoute Route { get; private set; }
+unity/Assets/Scripts/Presentation/VexforgeWorldHotspot.cs:19:        public void Configure(GameRoute route, Color accent)
+unity/Assets/Scripts/Presentation/VexforgeWorldHotspot.cs:37:        public void Configure(GameRoute route, Transform visualTarget)
+unity/Assets/Scripts/Presentation/VexforgeWorldHotspot.cs:50:        public void Configure(GameRoute route, Transform visualTarget, Color accent)
+unity/Assets/Scripts/UI/GameShellController.cs:197:        private void HandleRouteChanged(GameRoute _)
+unity/Assets/Scripts/UI/GameShellController.cs:223:            var showNexus = route == GameRoute.Nexus;
+unity/Assets/Scripts/UI/GameShellController.cs:224:            var showGallery = route == GameRoute.Collection || route == GameRoute.Deck;
+unity/Assets/Scripts/UI/GameShellController.cs:416:                case GameRoute.Collection:
+unity/Assets/Scripts/UI/GameShellController.cs:420:                case GameRoute.Deck:
+unity/Assets/Scripts/UI/GameShellController.cs:424:                case GameRoute.Battle:
+unity/Assets/Scripts/UI/GameShellController.cs:428:                case GameRoute.Missions:
+unity/Assets/Scripts/UI/GameShellController.cs:432:                case GameRoute.Economy:
+unity/Assets/Scripts/UI/GameShellController.cs:436:                case GameRoute.Profile:
+unity/Assets/Scripts/UI/GameShellController.cs:515:            ActionButton("VALIDAR EN EL ALTAR", GameRoute.Deck, 0.08f, () => ValidateDeck(ids));
+unity/Assets/Scripts/UI/GameShellController.cs:516:            ActionButton("SELLAR DECK", GameRoute.Deck, 0.0f, () => SaveDeck(ids));
+unity/Assets/Scripts/UI/GameShellController.cs:526:                "BattlefieldContext",
+unity/Assets/Scripts/UI/GameShellController.cs:559:                GameRoute.Battle,
+unity/Assets/Scripts/UI/GameShellController.cs:643:                GameRoute.Profile,
+unity/Assets/Scripts/UI/GameShellController.cs:653:                () => app.Navigation.Navigate(GameRoute.Nexus));
+unity/Assets/Scripts/UI/GameShellController.cs:665:            GameRoute route,

@@ -1,0 +1,31 @@
+unity/Assets/Scripts/Presentation/VexforgeCardPool.cs:11:    public sealed class VexforgeCardPool : IDisposable
+unity/Assets/Scripts/Presentation/VexforgeCardPool.cs:14:        private readonly Func<VexforgeCardView> factory;
+unity/Assets/Scripts/Presentation/VexforgeCardPool.cs:15:        private readonly Queue<VexforgeCardView> inactive = new Queue<VexforgeCardView>();
+unity/Assets/Scripts/Presentation/VexforgeCardPool.cs:16:        private readonly List<VexforgeCardView> active = new List<VexforgeCardView>();
+unity/Assets/Scripts/Presentation/VexforgeCardPool.cs:19:        public VexforgeCardPool(
+unity/Assets/Scripts/Presentation/VexforgeCardPool.cs:21:            Func<VexforgeCardView> factory,
+unity/Assets/Scripts/Presentation/VexforgeCardPool.cs:41:        public VexforgeCardView Rent(
+unity/Assets/Scripts/Presentation/VexforgeCardPool.cs:57:        public VexforgeCardView Rent()
+unity/Assets/Scripts/Presentation/VexforgeCardPool.cs:61:            VexforgeCardView view = inactive.Count > 0 ? inactive.Dequeue() : factory();
+unity/Assets/Scripts/Presentation/VexforgeCardPool.cs:70:        public void Return(VexforgeCardView view)
+unity/Assets/Scripts/Presentation/VexforgeCardView.cs:17:    public sealed class VexforgeCardView : MonoBehaviour
+unity/Assets/Scripts/Presentation/VexforgeCardView.cs:34:        public static VexforgeCardView CreateRuntime(Transform parent)
+unity/Assets/Scripts/Presentation/VexforgeCardView.cs:37:            root.name = "VexforgeCardView";
+unity/Assets/Scripts/Presentation/VexforgeCardView.cs:44:            var view = root.AddComponent<VexforgeCardView>();
+unity/Assets/Scripts/Presentation/VexforgeTextureLruCache.cs:190:                        // intentional; runtime CardView releases its leases before disposal.
+unity/Assets/Scripts/Presentation/VexforgeVirtualizedCardGallery.cs:9:    /// while only the visible/preload window consumes pooled CardView instances.
+unity/Assets/Scripts/Presentation/VexforgeVirtualizedCardGallery.cs:11:    public sealed class VexforgeVirtualizedCardGallery : MonoBehaviour
+unity/Assets/Scripts/Presentation/VexforgeVirtualizedCardGallery.cs:13:        private readonly Dictionary<int, VexforgeCardView> visible =
+unity/Assets/Scripts/Presentation/VexforgeVirtualizedCardGallery.cs:14:            new Dictionary<int, VexforgeCardView>();
+unity/Assets/Scripts/Presentation/VexforgeVirtualizedCardGallery.cs:19:        private VexforgeCardPool pool;
+unity/Assets/Scripts/Presentation/VexforgeVirtualizedCardGallery.cs:44:            VexforgeCardPool cardPool,
+unity/Assets/Scripts/Presentation/VexforgeVirtualizedCardGallery.cs:54:                Debug.LogError("VEXFORGE Archive gallery requires a CardPool.", this);
+unity/Assets/Scripts/Presentation/VexforgeVirtualizedCardGallery.cs:230:                VexforgeCardView existing;
+unity/Assets/Scripts/Presentation/VexforgeVirtualizedCardGallery.cs:285:            VexforgeCardView view;
+unity/Assets/Scripts/UI/GameShellController.cs:34:        private VexforgeCardPool cardPool;
+unity/Assets/Scripts/UI/GameShellController.cs:35:        private VexforgeVirtualizedCardGallery gallery;
+unity/Assets/Scripts/UI/GameShellController.cs:70:            var cardWorldRootObject = new GameObject("WorldCardPresentation");
+unity/Assets/Scripts/UI/GameShellController.cs:85:            cardPool = new VexforgeCardPool(
+unity/Assets/Scripts/UI/GameShellController.cs:87:                () => VexforgeCardView.CreateRuntime(cardWorldRootObject.transform),
+unity/Assets/Scripts/UI/GameShellController.cs:91:            var galleryObject = new GameObject("WorldCardGallery");
+unity/Assets/Scripts/UI/GameShellController.cs:96:            gallery = galleryObject.AddComponent<VexforgeVirtualizedCardGallery>();

@@ -1,0 +1,12 @@
+# SUPABASE STORAGE
+
+- `SUPABASE_LIVE` Storage inventory was read through read-only Management API SQL metadata queries.
+- `SUPABASE_LIVE` buckets:
+- `SUPABASE_LIVE` bucket `vexforge-assets`; public `True`; object count `245`; size limit `None`
+- `SUPABASE_LIVE` bucket `vexforge-updates`; public `True`; object count `229`; size limit `None`
+- `SUPABASE_LIVE` relevant card/art asset records matched by name: `127` within the capped read-only inventory query.
+- `SUPABASE_LIVE` relevant asset name sample: `cards/common_aclito_del_juicio.jpg`, `cards/common_aprendiz_de_sombras.jpg`, `cards/common_archivista_de_runas.jpg`, `cards/common_berserker_de_la_pradera.jpg`, `cards/common_defensor_del_bastin.jpg`, `cards/common_devoto_de_la_luz.jpg`, `cards/common_duelista_de_la_calle.jpg`, `cards/common_embaucador_menor.jpg`, `cards/common_escudero_del_templo.jpg`, `cards/common_espadachn_novato.jpg`, `cards/common_estudiante_arcano.jpg`, `cards/common_guardabosques_del_alba.jpg`, `cards/common_guerrero_del_orden.jpg`, `cards/common_heraldo_menor.jpg`, `cards/common_infiltrador_novel.jpg`, `cards/common_invocador_de_chispas.jpg`, `cards/common_jinete_del_acero.jpg`, `cards/common_ladrn_de_secretos.jpg`, `cards/common_ladrn_de_sombras.jpg`, `cards/common_lancero_de_la_vanguardia.jpg`, `cards/common_lanzador_de_llamas.jpg`, `cards/common_lector_del_ter.jpg`, `cards/common_maestro_de_lanzas.jpg`, `cards/common_mensajero_oscuro.jpg`, `cards/common_necrforo_aprendiz.jpg`, `cards/common_novicio_de_la_virtud.jpg`, `cards/common_portador_del_martillo.jpg`, `cards/common_portaescudo_sagrado.jpg`, `cards/common_rastreador_del_bosque.jpg`, `cards/common_saboteador_novato.jpg`, `cards/common_soldado_de_la_forja.jpg`, `cards/common_tejedor_de_hielo.jpg`, `cards/common_vidente_de_la_forja.jpg`, `cards/common_viga_de_hierro.jpg`, `cards/common_viga_del_amanecer.jpg`, `cards/common_vigilante_nocturno.jpg`, `cards/epic_archimago_del_caos.jpg`, `cards/epic_berserker_sempiterno.jpg`, `cards/epic_conquistador_de_reinos.jpg`, `cards/epic_gran_cruzado_del_alba.jpg`
+- `BLOCKED` direct Storage REST request with the supplied service-role key returned HTTP `401`; no fallback write operation was attempted.
+- `SUPABASE_LIVE` no bulk download, upload or delete was executed.
+
+Evidence: `snapshots/continuity-20260919T062954Z/remote_storage_buckets.json`, `remote_storage_counts.json`, `remote_public_assets.json`, and `storage-inventory.txt`.

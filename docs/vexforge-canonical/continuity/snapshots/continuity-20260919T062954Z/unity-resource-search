@@ -1,0 +1,47 @@
+unity/Assets/Scripts/Core/RuntimeEnvironment.cs:25:                    var asset = Resources.Load<TextAsset>("VexforgeEnvironment");
+unity/Assets/Scripts/Core/VexforgeApp.cs:32:                Destroy(gameObject);
+unity/Assets/Scripts/Core/VexforgeApp.cs:37:            DontDestroyOnLoad(gameObject);
+unity/Assets/Scripts/Presentation/NexusPresentationRoot.cs:28:            resources = VexforgePresentationResources.LoadRuntime();
+unity/Assets/Scripts/Presentation/NexusPresentationRoot.cs:204:                Destroy(collider);
+unity/Assets/Scripts/Presentation/NexusPresentationRoot.cs:274:        private void OnDestroy()
+unity/Assets/Scripts/Presentation/NexusPresentationRoot.cs:278:                if (runtimeMaterials[i] != null) Destroy(runtimeMaterials[i]);
+unity/Assets/Scripts/Presentation/VexforgeCardArtResolver.cs:205:                        if (texture != null) UnityEngine.Object.Destroy(texture);
+unity/Assets/Scripts/Presentation/VexforgeCardArtResolver.cs:215:                        UnityEngine.Object.Destroy(texture);
+unity/Assets/Scripts/Presentation/VexforgeCardArtResolver.cs:224:                concurrency.Release();
+unity/Assets/Scripts/Presentation/VexforgeCardPool.cs:78:                UnityEngine.Object.Destroy(view.gameObject);
+unity/Assets/Scripts/Presentation/VexforgeCardPool.cs:103:                if (view != null) UnityEngine.Object.Destroy(view.gameObject);
+unity/Assets/Scripts/Presentation/VexforgeCardView.cs:42:            if (rootCollider != null) Object.Destroy(rootCollider);
+unity/Assets/Scripts/Presentation/VexforgeCardView.cs:84:            ReleaseLease();
+unity/Assets/Scripts/Presentation/VexforgeCardView.cs:119:            ReleaseLease();
+unity/Assets/Scripts/Presentation/VexforgeCardView.cs:189:            var resources = VexforgePresentationResources.LoadRuntime();
+unity/Assets/Scripts/Presentation/VexforgeCardView.cs:229:        private void ReleaseLease()
+unity/Assets/Scripts/Presentation/VexforgeCardView.cs:248:            if (collider != null) Object.Destroy(collider);
+unity/Assets/Scripts/Presentation/VexforgeCardView.cs:308:        private void OnDestroy()
+unity/Assets/Scripts/Presentation/VexforgeCardView.cs:311:            ReleaseLease();
+unity/Assets/Scripts/Presentation/VexforgeCardView.cs:315:                Object.Destroy(artMaterialInstance);
+unity/Assets/Scripts/Presentation/VexforgeCardView.cs:320:                Object.Destroy(frameMesh);
+unity/Assets/Scripts/Presentation/VexforgeDiegeticInputRouter.cs:33:        public event Action<Vector2> PointerReleased;
+unity/Assets/Scripts/Presentation/VexforgeDiegeticInputRouter.cs:66:                 touch.primaryTouch.press.wasReleasedThisFrame))
+unity/Assets/Scripts/Presentation/VexforgeDiegeticInputRouter.cs:89:            if (touch.press.wasReleasedThisFrame)
+unity/Assets/Scripts/Presentation/VexforgeDiegeticInputRouter.cs:113:            if (mouse.leftButton.wasReleasedThisFrame)
+unity/Assets/Scripts/Presentation/VexforgeDiegeticInputRouter.cs:146:            PointerReleased?.Invoke(position);
+unity/Assets/Scripts/Presentation/VexforgePresentationResources.cs:34:        public static VexforgePresentationResources LoadRuntime()
+unity/Assets/Scripts/Presentation/VexforgePresentationResources.cs:36:            return Resources.Load<VexforgePresentationResources>(
+unity/Assets/Scripts/Presentation/VexforgeRenderBootstrap.cs:14:            var asset = Resources.Load<UniversalRenderPipelineAsset>(RuntimeUrpResource);
+unity/Assets/Scripts/Presentation/VexforgeTextureLruCache.cs:42:                currentOwner.ReleaseLease(key);
+unity/Assets/Scripts/Presentation/VexforgeTextureLruCache.cs:121:                    DestroyTexture(existing.Texture);
+unity/Assets/Scripts/Presentation/VexforgeTextureLruCache.cs:189:                        // At shutdown there should be no consumers. Destroying here is
+unity/Assets/Scripts/Presentation/VexforgeTextureLruCache.cs:191:                        DestroyTexture(entry.Texture);
+unity/Assets/Scripts/Presentation/VexforgeTextureLruCache.cs:202:        private void ReleaseLease(string key)
+unity/Assets/Scripts/Presentation/VexforgeTextureLruCache.cs:256:            DestroyTexture(entry.Texture);
+unity/Assets/Scripts/Presentation/VexforgeTextureLruCache.cs:275:        private static void DestroyTexture(Texture2D texture)
+unity/Assets/Scripts/Presentation/VexforgeTextureLruCache.cs:277:            if (texture != null) UnityEngine.Object.Destroy(texture);
+unity/Assets/Scripts/Presentation/VexforgeVirtualizedCardGallery.cs:62:                inputRouter.PointerReleased += OnPointerReleased;
+unity/Assets/Scripts/Presentation/VexforgeVirtualizedCardGallery.cs:181:        private void OnPointerReleased(Vector2 screenPosition)
+unity/Assets/Scripts/Presentation/VexforgeVirtualizedCardGallery.cs:226:            TemporaryList<int>.Release(toReturn);
+unity/Assets/Scripts/Presentation/VexforgeVirtualizedCardGallery.cs:280:            TemporaryList<int>.Release(indices);
+unity/Assets/Scripts/Presentation/VexforgeVirtualizedCardGallery.cs:318:        private void OnDestroy()
+unity/Assets/Scripts/Presentation/VexforgeVirtualizedCardGallery.cs:324:                inputRouter.PointerReleased -= OnPointerReleased;
+unity/Assets/Scripts/Presentation/VexforgeVirtualizedCardGallery.cs:340:            public static void Release(List<T> value)
+unity/Assets/Scripts/UI/GameShellController.cs:842:                Destroy(canvas.transform.GetChild(i).gameObject);
+unity/Assets/Scripts/UI/GameShellController.cs:850:        private void OnDestroy()

@@ -1,0 +1,14 @@
+HTTP_STATUS=200
+{
+  "id": "d7e33726-019f-4557-b020-439577c87921",
+  "slug": "vexforge-updates",
+  "name": "vexforge-updates",
+  "status": "ACTIVE",
+  "version": 1,
+  "created_at": 1788508253076,
+  "updated_at": 1788508253076,
+  "verify_jwt": false,
+  "import_map": false,
+  "entrypoint_path": "file:///tmp/user_fn_rscuzqnfccqvltkdcdny_d7e33726-019f-4557-b020-439577c87921_1/source/supabase/functions/vexforge-updates/index.ts",
+  "ezbr_sha256": "f513e565aca6603bfc1f591a54dd31b641bc564e8749d6f146cd239d99a4c18c"
+}

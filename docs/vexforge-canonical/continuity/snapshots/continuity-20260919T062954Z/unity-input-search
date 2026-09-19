@@ -1,0 +1,6 @@
+unity/Assets/Scripts/Presentation/VexforgeDiegeticInputRouter.cs:3:using UnityEngine.InputSystem;
+unity/Assets/Scripts/Presentation/VexforgeDiegeticInputRouter.cs:75:        private void ProcessTouch(UnityEngine.InputSystem.Controls.TouchControl touch)
+unity/Assets/Scripts/UI/GameShellController.cs:7:using UnityEngine.InputSystem.UI;
+unity/Assets/Scripts/UI/GameShellController.cs:149:                    typeof(InputSystemUIInputModule));
+unity/Assets/Scripts/UI/GameShellController.cs:161:            if (eventSystem.GetComponent<InputSystemUIInputModule>() == null)
+unity/Assets/Scripts/UI/GameShellController.cs:163:                eventSystem.gameObject.AddComponent<InputSystemUIInputModule>();

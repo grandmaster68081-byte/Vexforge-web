@@ -1,0 +1,1029 @@
+mobile/app.json:49:      "url": "https://rscuzqnfccqvltkdcdny.supabase.co/functions/v1/vexforge-updates",
+mobile/app/(tabs)/battle.tsx:22:import { loadPlayerDeck } from '@/lib/supabase';
+mobile/app/(tabs)/battle.tsx:23:import { loadPlayerRank, type BattleResult, type BattleTurn, type DeckSlot, type Opponent, type PlayerRank } from '@/lib/supabase';
+mobile/app/(tabs)/collection.tsx:27:import type { PlayerCard, PublicCard } from '@/lib/supabase';
+mobile/app/(tabs)/deck.tsx:36:} from '@/lib/supabase';
+mobile/app/(tabs)/deck.tsx:536:              {Array.from({ length: 7 }).map((_, index) => {
+mobile/app/(tabs)/deck.tsx:563:              {Array.from({ length: 7 }).map((_, index) => {
+mobile/app/(tabs)/index.tsx:38:} from '@/lib/supabase';
+mobile/app/(tabs)/profile.tsx:27:} from '@/lib/supabase';
+mobile/app/auth.tsx:29:import type { OAuthProvider } from '@/lib/supabase';
+mobile/app/economy.tsx:50:} from '@/lib/supabase';
+mobile/app/meta.tsx:43:} from '@/lib/supabase';
+mobile/app/missions.tsx:28:} from '@/lib/supabase';
+mobile/app/social.tsx:10:import { acceptMobileFriendRequest, declineMobileFriendRequest, joinMobileClan, leaveMobileClan, loadSocialSnapshot, respondToMobileChallenge, sendMobileChallenge, sendMobileFriendRequest, startMobileGuildWar, createMobileClan, type MobileClan, type MobileClanMember, type MobileDirectChallenge, type MobilePvpRanking, type MobileSocialFriend, type MobileSocialSnapshot } from '@/lib/supabase';
+mobile/app/store.tsx:53:} from '@/lib/supabase';
+mobile/app/tutorial.tsx:10:import { advanceTutorialStep, skipTutorial, TUTORIAL_DONE_STEP, TUTORIAL_TOTAL_STEPS } from '@/lib/supabase';
+mobile/app/world.tsx:33:} from '@/lib/supabase';
+mobile/components/ErrorFallback.tsx:45:  const monoFont = Platform.select({
+mobile/components/ForgeArchiveScene.tsx:14:import type { PublicCard } from '@/lib/supabase';
+mobile/components/ForgeBattlefield.tsx:6:import type { BattleTurn, BattleUnit } from '@/lib/supabase';
+mobile/components/ForgeFormationPreview.tsx:4:import type { DeckSlot } from '@/lib/supabase';
+mobile/context/GameContext.tsx:3:import { findOpponents, loadCatalogSnapshot, loadPlayerCollection, loadPlayerProfile, loadProgress, loadSession, loadStats, loadWallet, resetPassword as resetPasswordRemote, signIn as signInRemote, signInWithGoogle as signInWithGoogleRemote, signInWithProvider as signInWithProviderRemote, signOut as signOutRemote, signUp as signUpRemote, startBattle as startBattleRemote, type BattleResult, type OAuthProvider, type Opponent, type PlayerCard, type PlayerProfile, type PlayerProgress, type PlayerStats, type PublicCard, type Session, type Wallet } from '@/lib/supabase';
+mobile/game/runtime/GameRuntime.tsx:2:import type { Session } from '@/lib/supabase';
+mobile/lib/aiBattle.ts:1:import type { BattleActor, BattleResult, BattleTurn, DeckSlot } from './supabase';
+mobile/lib/supabase.ts:8:const SUPABASE_URL = process.env.EXPO_PUBLIC_SUPABASE_URL ?? 'https://rscuzqnfccqvltkdcdny.supabase.co';
+mobile/lib/supabase.ts:11:const SESSION_KEY = 'vexforge.supabase.session';
+mobile/lib/supabase.ts:1777:    const response = await fetch(SUPABASE_URL + '/rest/v1/rpc/' + name, {
+mobile/lib/supabase.ts:1815:    pendingPvpBattleKeys.delete(storageKey);
+mobile/lib/telemetry.ts:2:import { insertTelemetryEvent, type Session } from '@/lib/supabase';
+mobile/scripts/publish-ota.mjs:9:const supabaseUrl = process.env.SUPABASE_URL.replace(/\/$/, '');
+mobile/scripts/publish-ota.mjs:57:  stream.on('data', (chunk) => hash.update(chunk));
+mobile/scripts/publish-ota.mjs:62:  const response = await fetchWithTransientRetry(`${supabaseUrl}/storage/v1/object/${bucket}/${objectPath}`, {
+mobile/scripts/publish-ota.mjs:69:const bucketResponse = await fetchWithTransientRetry(`${supabaseUrl}/storage/v1/bucket`, {
+mobile/scripts/publish-ota.mjs:87:const publicUrl = (path) => `${supabaseUrl}/storage/v1/object/public/${bucket}/${path}`;
+mobile/scripts/publish-ota.mjs:100:const manifestBytes = Buffer.from(JSON.stringify(manifest));
+mobile/scripts/publish-ota.mjs:103:const manifestDigest = createHash('sha256').update(manifestBytes).digest('hex');
+mobile/scripts/publish-ota.mjs:113:  supabase_schema_or_rpc_impact: 'NONE',
+mobile/scripts/publish-ota.mjs:126:const registryResponse = await fetchWithTransientRetry(`${supabaseUrl}/rest/v1/vexforge_android_release_registry?on_conflict=section_id,channel,delivery_type,source_commit`, {
+mobile/scripts/publish-ota.mjs:130:const updateUrl = `${supabaseUrl}/functions/v1/vexforge-updates`;
+mobile/scripts/verify-telemetry.mjs:7:  ['lib/supabase.ts', ['insertTelemetryEvent', 'vexforge_telemetry_events']],
+---DOMAIN---
+mobile/app/(tabs)/_layout.tsx:30:      <NativeTabs.Trigger name="collection">
+mobile/app/(tabs)/_layout.tsx:34:      <NativeTabs.Trigger name="deck">
+mobile/app/(tabs)/_layout.tsx:38:      <NativeTabs.Trigger name="profile">
+mobile/app/(tabs)/_layout.tsx:118:      <Tabs.Screen name="collection" options={{ title: 'Archivo', tabBarIcon: ({ color, focused }) => <WorldTabIcon name={focused ? 'cards' : 'collection'} size={VISUAL_TOKENS.navigation.iconSize} color={color} focused={focused} /> }} />
+mobile/app/(tabs)/_layout.tsx:119:      <Tabs.Screen name="deck" options={{ title: 'Forja', tabBarIcon: ({ color, focused }) => <WorldTabIcon name={focused ? 'deck' : 'layers'} size={VISUAL_TOKENS.navigation.iconSize} color={color} focused={focused} /> }} />
+mobile/app/(tabs)/_layout.tsx:120:      <Tabs.Screen name="profile" options={{ title: 'Legado', tabBarIcon: ({ color, focused }) => <WorldTabIcon name={focused ? 'profile' : 'account'} size={VISUAL_TOKENS.navigation.iconSize} color={color} focused={focused} /> }} />
+mobile/app/(tabs)/_layout.tsx:127:  const { session, authLoading, progress, syncState } = useGame();
+mobile/app/(tabs)/_layout.tsx:129:  if (authLoading) {
+mobile/app/(tabs)/_layout.tsx:131:      <View style={[styles.authLoading, { backgroundColor: colors.background }]}>
+mobile/app/(tabs)/_layout.tsx:133:        <Text style={[styles.authLoadingText, { color: colors.mutedForeground }]}>CONECTANDO CON NEXUS</Text>
+mobile/app/(tabs)/_layout.tsx:138:  if (!session) return <Redirect href="/auth" />;
+mobile/app/(tabs)/_layout.tsx:154:  authLoading: { flex: 1, alignItems: 'center', justifyContent: 'center', gap: VISUAL_TOKENS.navigation.authLoading.gap },
+mobile/app/(tabs)/_layout.tsx:155:  authLoadingText: {
+mobile/app/(tabs)/_layout.tsx:156:    fontSize: VISUAL_TOKENS.navigation.authLoading.labelSize,
+mobile/app/(tabs)/_layout.tsx:157:    fontWeight: VISUAL_TOKENS.navigation.authLoading.labelWeight,
+mobile/app/(tabs)/_layout.tsx:158:    letterSpacing: VISUAL_TOKENS.navigation.authLoading.labelTracking,
+mobile/app/(tabs)/battle.tsx:181:    <View testID="battle-rank-card" style={[styles.rankCard, { backgroundColor: `${colors.panelStrong}E8`, borderColor: `${colors.danger}66` }]}>
+mobile/app/(tabs)/battle.tsx:389:    authError,
+mobile/app/(tabs)/battle.tsx:747:          {(localError || authError) ? (
+mobile/app/(tabs)/battle.tsx:751:              message={localError ?? authError ?? 'No se pudo consultar la Arena.'}
+mobile/app/(tabs)/collection.tsx:29:import { getCardPilotIdentity } from '@/constants/cardPilot';
+mobile/app/(tabs)/collection.tsx:59:function identityLabel(card: PublicCard) {
+mobile/app/(tabs)/collection.tsx:60:  if (hasText(card.specialization)) return card.specialization.trim();
+mobile/app/(tabs)/collection.tsx:61:  if (hasText(card.card_domain)) return card.card_domain.trim();
+mobile/app/(tabs)/collection.tsx:77:  card,
+mobile/app/(tabs)/collection.tsx:82:  card: PublicCard;
+mobile/app/(tabs)/collection.tsx:87:  const accent = rarityColor(card.rarity, colors);
+mobile/app/(tabs)/collection.tsx:88:  const identity = getCardPilotIdentity(card.code);
+mobile/app/(tabs)/collection.tsx:90:    card.image_url ? 'loading' : 'error',
+mobile/app/(tabs)/collection.tsx:94:    setArtState(card.image_url ? 'loading' : 'error');
+mobile/app/(tabs)/collection.tsx:95:  }, [card.image_url]);
+mobile/app/(tabs)/collection.tsx:99:      {card.image_url && artState !== 'error' ? (
+mobile/app/(tabs)/collection.tsx:101:          source={{ uri: card.image_url }}
+mobile/app/(tabs)/collection.tsx:104:          accessibilityLabel={`Arte oficial de ${card.name}`}
+mobile/app/(tabs)/collection.tsx:111:          <Feather name="cards" size={detail ? 30 : 22} color={colors.mutedForeground} />
+mobile/app/(tabs)/collection.tsx:116:        <View style={styles.artStatus} accessibilityRole="image" accessibilityLabel={`Arte oficial no disponible para ${card.name}`}>
+mobile/app/(tabs)/collection.tsx:123:        <View pointerEvents="none" testID={`card-pilot-${card.code}`} style={[styles.pilotOverlay, { backgroundColor: identity.overlay }]}>
+mobile/app/(tabs)/collection.tsx:159:          testID={`collection-stat-unreported-${label.toLowerCase()}`}
+mobile/app/(tabs)/collection.tsx:173:  card,
+mobile/app/(tabs)/collection.tsx:178:  card: PublicCard;
+mobile/app/(tabs)/collection.tsx:183:  const accent = rarityColor(card.rarity, colors);
+mobile/app/(tabs)/collection.tsx:184:  const faction = hasText(card.faction) ? card.faction.trim() : null;
+mobile/app/(tabs)/collection.tsx:188:      testID={`card-${card.code}`}
+mobile/app/(tabs)/collection.tsx:190:      accessibilityLabel={`Ver detalles de ${card.name}`}
+mobile/app/(tabs)/collection.tsx:197:      <CardArt card={card} colors={colors} />
+mobile/app/(tabs)/collection.tsx:200:          {card.name}
+mobile/app/(tabs)/collection.tsx:203:          <Text style={[styles.rarity, { color: accent }]}>{rarityLabel(card.rarity)}</Text>
+mobile/app/(tabs)/collection.tsx:206:            <Image source={{ uri: factionIcon }} style={styles.factionIconMeta} resizeMode="contain" accessibilityLabel={`Emblema oficial de ${factionLabel(card.faction)}`} />
+mobile/app/(tabs)/collection.tsx:210:          <Text style={[styles.tileStat, { color: colors.danger }]}>PWR {numberLabel(card.power)}</Text>
+mobile/app/(tabs)/collection.tsx:211:          <Text style={[styles.tileStat, { color: colors.primary }]}>AFF {numberLabel(card.affinity)}</Text>
+mobile/app/(tabs)/collection.tsx:220:      {card.is_founder && (
+mobile/app/(tabs)/collection.tsx:230:  card,
+mobile/app/(tabs)/collection.tsx:235:  card: PublicCard;
+mobile/app/(tabs)/collection.tsx:240:  const accent = rarityColor(card.rarity, colors);
+mobile/app/(tabs)/collection.tsx:241:  const keywords = Array.isArray(card.synergy_json?.keywords)
+mobile/app/(tabs)/collection.tsx:242:    ? card.synergy_json.keywords.filter((keyword): keyword is string => typeof keyword === 'string')
+mobile/app/(tabs)/collection.tsx:251:                {rarityLabel(card.rarity)} · {factionLabel(card.faction)}
+mobile/app/(tabs)/collection.tsx:253:              <Text style={[styles.detailTitle, { color: colors.foreground }]}>{card.name}</Text>
+mobile/app/(tabs)/collection.tsx:255:                {card.code}{card.card_tier ? ` · T${card.card_tier}` : ''}
+mobile/app/(tabs)/collection.tsx:259:              testID="close-card-detail"
+mobile/app/(tabs)/collection.tsx:272:                <CardArt card={card} colors={colors} detail />
+mobile/app/(tabs)/collection.tsx:285:                <Stat label="Poder" value={card.power} max={Math.max(card.power ?? 0, 80)} color={colors.danger} colors={colors} />
+mobile/app/(tabs)/collection.tsx:286:                <Stat label="Afinidad" value={card.affinity} max={Math.max(card.affinity ?? 0, 30)} color={colors.primary} colors={colors} />
+mobile/app/(tabs)/collection.tsx:287:                <Stat label="Prestigio" value={card.prestige} max={Math.max(card.prestige ?? 0, 15)} color={colors.accent} colors={colors} />
+mobile/app/(tabs)/collection.tsx:288:                <Stat label="Carga" value={card.charge} max={Math.max(card.charge ?? 0, 10)} color={colors.success} colors={colors} />
+mobile/app/(tabs)/collection.tsx:294:                {identityLabel(card)}
+mobile/app/(tabs)/collection.tsx:313:                  {[card.fusion_enabled ? 'Fusión' : null, card.marketable ? 'Mercado' : null].filter(Boolean).join(' · ') || 'Compendio'}
+mobile/app/(tabs)/collection.tsx:318:                <Text style={[styles.loreText, { color: colors.mutedForeground }]}>{card.lore?.trim() || 'LORE NO REPORTADO'}</Text>
+mobile/app/(tabs)/collection.tsx:323:                <Text style={[styles.supplyValue, { color: colors.foreground }]}>{numberLabel(card.supply)}</Text>
+mobile/app/(tabs)/collection.tsx:327:                <Text style={[styles.supplyValue, { color: colors.accent }]}>{numberLabel(card.minted)}</Text>
+mobile/app/(tabs)/collection.tsx:343:  const { featuredCards, cardsTotal, collection, collectionLoading, syncState, syncError, refresh } = useGame();
+mobile/app/(tabs)/collection.tsx:353:  const ownedById = useMemo(() => new Map(collection.map((card) => [card.card_id, card])), [collection]);
+mobile/app/(tabs)/collection.tsx:363:      .filter((card) => {
+mobile/app/(tabs)/collection.tsx:364:        if (scope === 'owned' && !ownedById.has(card.id)) return false;
+mobile/app/(tabs)/collection.tsx:365:        if (rarity !== 'all' && card.rarity !== rarity) return false;
+mobile/app/(tabs)/collection.tsx:366:        if (faction !== 'all' && card.faction !== faction) return false;
+mobile/app/(tabs)/collection.tsx:367:        return !query || card.name.toLowerCase().includes(query) || card.code.toLowerCase().includes(query);
+mobile/app/(tabs)/collection.tsx:409:        totalCount={cardsTotal}
+mobile/app/(tabs)/collection.tsx:413:      <View testID="cards-native-controls" style={[styles.controlSurface, { backgroundColor: `${colors.panelStrong}F2`, borderColor: `${colors.rarityRare}55` }]}>
+mobile/app/(tabs)/collection.tsx:440:          <Chip testID="collection-tab" label="COLECCIÓN" active={scope === 'all'} onPress={() => setScope('all')} colors={colors} accent={colors.rarityRare} icon="cards" />
+mobile/app/(tabs)/collection.tsx:441:          <Chip testID="owned-tab" label="TUS CARTAS" active={scope === 'owned'} onPress={() => setScope('owned')} colors={colors} accent={colors.accent} icon="collection" />
+mobile/app/(tabs)/collection.tsx:446:          <Pressable testID="achievements-tab" accessibilityRole="button" accessibilityLabel="Abrir logros" onPress={() => router.push('/profile?section=achievements')} style={[styles.utilityButton, { borderColor: colors.border }]}>
+mobile/app/(tabs)/collection.tsx:467:        <Pressable testID="collection-sync-error" accessibilityRole="button" accessibilityLabel="Reintentar sincronización de colección" onPress={() => { void refresh(); }} style={[styles.syncError, { borderColor: colors.danger, backgroundColor: `${colors.danger}12` }]}>
+mobile/app/(tabs)/collection.tsx:476:    <ScreenShell surface="collection" sceneMode="hero">
+mobile/app/(tabs)/collection.tsx:478:        testID="collection-screen"
+mobile/app/(tabs)/collection.tsx:483:          <CardTile card={item} owned={ownedById.get(item.id)} onPress={() => setSelected(item)} colors={colors} />
+mobile/app/(tabs)/collection.tsx:486:        ListEmptyComponent={collectionLoading ? (
+mobile/app/(tabs)/collection.tsx:487:          <DomainState kind="loading" title="Abriendo el Archivo" message="Sincronizando cartas reales y sus identidades." testID="collection-loading" />
+mobile/app/(tabs)/collection.tsx:489:          <DomainState kind="empty" title={hasFilters ? 'Sin coincidencias' : 'El Archivo está en espera'} message={hasFilters ? 'Prueba otra búsqueda, facción o rareza.' : 'No hay cartas activas reportadas por el catálogo.'} icon="cards" testID="collection-empty" />
+mobile/app/(tabs)/collection.tsx:493:            <Pressable testID="collection-page-previous" accessibilityRole="button" accessibilityLabel="Página anterior de cartas" disabled={pageIndex === 0} onPress={() => setPageIndex((current) => Math.max(0, current - 1))} style={styles.pageButton}>
+mobile/app/(tabs)/collection.tsx:496:            <Text testID="collection-page-indicator" style={[styles.pageText, { color: colors.foreground }]}>{pageIndex + 1} / {pages.length}</Text>
+mobile/app/(tabs)/collection.tsx:497:            <Pressable testID="collection-page-next" accessibilityRole="button" accessibilityLabel="Página siguiente de cartas" disabled={pageIndex === pages.length - 1} onPress={() => setPageIndex((current) => Math.min(pages.length - 1, current + 1))} style={styles.pageButton}>
+mobile/app/(tabs)/collection.tsx:510:      {selected ? <CardDetail card={selected} owned={ownedById.get(selected.id)} colors={colors} onClose={() => setSelected(null)} /> : null}
+mobile/app/(tabs)/collection.tsx:516:  return <TextInput testID="cards-search" accessibilityLabel="Buscar carta por nombre o código" value={value} onChangeText={onChangeText} placeholder="Buscar nombre o código" placeholderTextColor={colors.mutedForeground} style={[styles.searchInput, { color: colors.foreground }]} autoCorrect={false} />;
+mobile/app/(tabs)/deck.tsx:71:function maxCopiesFor(card: PlayerCard) {
+mobile/app/(tabs)/deck.tsx:72:  return card.rarity === 'Legendary' || card.rarity === 'Mythic' ? 1 : 2;
+mobile/app/(tabs)/deck.tsx:76:  cardCount: number;
+mobile/app/(tabs)/deck.tsx:92:    cardCount: slots.length,
+mobile/app/(tabs)/deck.tsx:123:              testID="close-deck-detail"
+mobile/app/(tabs)/deck.tsx:138:            <Text style={[styles.detailCopy, { color: colors.mutedForeground }]}>{summary.cardCount} cartas sincronizadas desde tu formación oficial. {summary.championName ? `Campeón: ${summary.championName}.` : 'Campeón no reportado.'}</Text>
+mobile/app/(tabs)/deck.tsx:153:  collection,
+mobile/app/(tabs)/deck.tsx:155:  deckReady,
+mobile/app/(tabs)/deck.tsx:167:  collection: PlayerCard[];
+mobile/app/(tabs)/deck.tsx:169:  deckReady: boolean;
+mobile/app/(tabs)/deck.tsx:173:  onToggle: (card: PlayerCard) => void;
+mobile/app/(tabs)/deck.tsx:190:              testID="close-deck-editor"
+mobile/app/(tabs)/deck.tsx:203:            {collection.length === 0 ? (
+mobile/app/(tabs)/deck.tsx:205:            ) : collection.map((card) => {
+mobile/app/(tabs)/deck.tsx:206:              const count = selectedIds.filter((id) => id === card.card_id).length;
+mobile/app/(tabs)/deck.tsx:207:              const accent = rarityColor(card.rarity ?? 'Common', colors);
+mobile/app/(tabs)/deck.tsx:210:                  key={card.card_id}
+mobile/app/(tabs)/deck.tsx:211:                  testID={`editor-card-${card.code}`}
+mobile/app/(tabs)/deck.tsx:213:                  accessibilityLabel={`${count ? 'Quitar' : 'Añadir'} ${card.name}`}
+mobile/app/(tabs)/deck.tsx:215:                  onPress={() => onToggle(card)}
+mobile/app/(tabs)/deck.tsx:226:                  {card.image_url ? <Image source={{ uri: card.image_url }} style={styles.editorArt} resizeMode="cover" /> : <View style={[styles.editorArtFallback, { backgroundColor: `${accent}18`, borderColor: `${accent}88` }]}><Text style={[styles.missingArtText, { color: accent }]}>ARTE CANÓNICO PENDIENTE</Text></View>}
+mobile/app/(tabs)/deck.tsx:228:                    <Text style={[styles.editorCardName, { color: colors.foreground }]} numberOfLines={1}>{card.name}</Text>
+mobile/app/(tabs)/deck.tsx:229:                    <Text style={[styles.editorCardMeta, { color: accent }]}>{card.rarity || '—'} · {card.faction?.trim() || '—'} · disponibles ×{card.quantity}</Text>
+mobile/app/(tabs)/deck.tsx:240:              testID="validate-deck"
+mobile/app/(tabs)/deck.tsx:253:              testID="save-deck"
+mobile/app/(tabs)/deck.tsx:261:                  backgroundColor: deckReady ? colors.primary : colors.muted,
+mobile/app/(tabs)/deck.tsx:267:              {saving ? <ActivityIndicator color={colors.primaryForeground} size="small" /> : <Feather name="save" size={15} color={deckReady ? colors.primaryForeground : colors.mutedForeground} />}
+mobile/app/(tabs)/deck.tsx:268:              <Text style={[styles.editorActionText, { color: deckReady ? colors.primaryForeground : colors.mutedForeground }]}>{saving ? 'GUARDANDO' : 'GUARDAR'}</Text>
+mobile/app/(tabs)/deck.tsx:280:                borderColor: deckReady ? `${colors.accent}AA` : colors.border,
+mobile/app/(tabs)/deck.tsx:286:            <Feather name="zap" size={15} color={deckReady ? colors.accent : colors.mutedForeground} />
+mobile/app/(tabs)/deck.tsx:287:            <Text style={[styles.editorActionText, { color: deckReady ? colors.accent : colors.mutedForeground }]}>GUARDAR Y PROBAR EN ARENA</Text>
+mobile/app/(tabs)/deck.tsx:313:  const { session, player, collection, collectionLoading, syncState, syncError, refresh } = useGame();
+mobile/app/(tabs)/deck.tsx:316:  const [deckLoading, setDeckLoading] = useState(true);
+mobile/app/(tabs)/deck.tsx:317:  const [deckError, setDeckError] = useState<string | null>(null);
+mobile/app/(tabs)/deck.tsx:368:      setSelectedIds(slots.map((slot) => slot.card_id));
+mobile/app/(tabs)/deck.tsx:378:  const selectedCards = useMemo(() => selectedIds.map((id) => collection.find((card) => card.card_id === id)).filter((card): card is PlayerCard => Boolean(card)), [collection, selectedIds]);
+mobile/app/(tabs)/deck.tsx:379:  const factionCounts = useMemo(() => selectedCards.reduce<Record<string, number>>((result, card) => {
+mobile/app/(tabs)/deck.tsx:380:    const name = card.faction?.trim();
+mobile/app/(tabs)/deck.tsx:385:  const mythicCount = selectedCards.filter((card) => card.rarity === 'Mythic').length;
+mobile/app/(tabs)/deck.tsx:386:  const legendaryCount = selectedCards.filter((card) => card.rarity === 'Legendary').length;
+mobile/app/(tabs)/deck.tsx:387:  const deckReady = selectedIds.length >= MIN_DECK && selectedIds.length <= MAX_DECK && factionsInDraft.length <= 2 && mythicCount <= MAX_MYTHIC && legendaryCount <= MAX_LEGENDARY;
+mobile/app/(tabs)/deck.tsx:404:  const toggleCard = (card: PlayerCard) => {
+mobile/app/(tabs)/deck.tsx:408:      const count = current.filter((id) => id === card.card_id).length;
+mobile/app/(tabs)/deck.tsx:409:      if (count >= maxCopiesFor(card)) return current.filter((id) => id !== card.card_id);
+mobile/app/(tabs)/deck.tsx:410:      if (current.length >= MAX_DECK || count >= card.quantity) return current;
+mobile/app/(tabs)/deck.tsx:411:      if (card.rarity === 'Mythic' && mythicCount >= MAX_MYTHIC) return current;
+mobile/app/(tabs)/deck.tsx:412:      if (card.rarity === 'Legendary' && legendaryCount >= MAX_LEGENDARY) return current;
+mobile/app/(tabs)/deck.tsx:413:      return [...current, card.card_id];
+mobile/app/(tabs)/deck.tsx:429:      setValidation({ valid: false, errors: [error instanceof Error ? error.message : 'No se pudo validar el mazo.'], card_count: selectedIds.length, mythic_count: mythicCount, legendary_count: legendaryCount });
+mobile/app/(tabs)/deck.tsx:435:    if (!deckReady) {
+mobile/app/(tabs)/deck.tsx:464:  const navigate = (destination: '/' | '/battle' | '/collection' | '/deck' | '/profile') => {
+mobile/app/(tabs)/deck.tsx:472:  const domainStatus = collectionLoading || deckLoading
+mobile/app/(tabs)/deck.tsx:474:    : deckError || syncState === 'offline'
+mobile/app/(tabs)/deck.tsx:477:        ? `${savedSummary.cardCount} CARTAS · ${savedSummary.factionLabel}`
+mobile/app/(tabs)/deck.tsx:488:            testID="deck-scene-art"
+mobile/app/(tabs)/deck.tsx:502:          <View testID="deck-programmatic-surface" style={styles.sceneUi}>
+mobile/app/(tabs)/deck.tsx:509:                  testID="deck-refresh-visible"
+mobile/app/(tabs)/deck.tsx:513:                   style={({ pressed }) => [styles.sceneRefresh, { borderColor: `${colors.accent}AA`, opacity: pressed ? VISUAL_TOKENS.deck.refresh.pressedOpacity : 1 }]}
+mobile/app/(tabs)/deck.tsx:515:                   <Feather name="refresh-cw" size={VISUAL_TOKENS.deck.refresh.iconSize} color={colors.accent} />
+mobile/app/(tabs)/deck.tsx:525:                {showSavedDeck ? `${savedSummary.cardCount} cartas · ${savedSummary.factionLabel}` : hasSavedDeck ? 'Ajusta la búsqueda o el filtro de facción.' : 'Elige cartas reales para encender tu formación.'}
+mobile/app/(tabs)/deck.tsx:582:            <View testID="deck-summary-overlay" style={[styles.forgeReadout, { top: canvasHeight * 0.735, left: frameWidth * 0.09, right: frameWidth * 0.09 }]}>
+mobile/app/(tabs)/deck.tsx:584:                <View style={styles.forgeReadoutStat}><Text style={[styles.forgeReadoutValue, { color: colors.foreground }]}>{showSavedDeck ? savedSummary.cardCount : '—'}</Text><Text style={[styles.forgeReadoutLabel, { color: colors.mutedForeground }]}>CARTAS</Text></View>
+mobile/app/(tabs)/deck.tsx:590:             <View style={[styles.bottomConsole, { top: canvasHeight * VISUAL_TOKENS.deck.actionRail.topRatio, left: frameWidth * VISUAL_TOKENS.deck.actionRail.horizontalRatio, right: frameWidth * VISUAL_TOKENS.deck.actionRail.horizontalRatio }]}>
+mobile/app/(tabs)/deck.tsx:592:                 <Feather name="search" size={VISUAL_TOKENS.deck.searchDock.iconSize} color={colors.mutedForeground} />
+mobile/app/(tabs)/deck.tsx:594:                  testID="deck-search"
+mobile/app/(tabs)/deck.tsx:603:                 {search ? <Pressable testID="deck-clear-search" accessibilityRole="button" accessibilityLabel="Limpiar búsqueda" onPress={() => setSearch('')}><Feather name="x" size={VISUAL_TOKENS.deck.searchDock.iconSize} color={colors.mutedForeground} /></Pressable> : null}
+mobile/app/(tabs)/deck.tsx:606:                testID="edit-deck"
+mobile/app/(tabs)/deck.tsx:609:                onPress={() => { setSelectedIds(savedSlots.map((slot) => slot.card_id)); setMessage(hasSavedDeck ? 'Mazo cargado para edición.' : 'Nuevo borrador listo para forjar.'); setEditing(true); }}
+mobile/app/(tabs)/deck.tsx:610:                 style={({ pressed }) => [styles.coreAction, { borderColor: colors.accent, backgroundColor: `${colors.ink}D9`, opacity: pressed ? VISUAL_TOKENS.deck.coreAction.pressedOpacity : 1, transform: [{ scale: pressed ? VISUAL_TOKENS.deck.coreAction.pressedScale : 1 }] }]}
+mobile/app/(tabs)/deck.tsx:612:                 <Feather name={hasSavedDeck ? 'edit-2' : 'plus'} size={VISUAL_TOKENS.deck.coreAction.iconSize} color={colors.accent} />
+mobile/app/(tabs)/deck.tsx:617:                  testID="deck-filter"
+mobile/app/(tabs)/deck.tsx:621:                   style={({ pressed }) => [styles.utilityButton, { borderColor: faction === 'all' ? `${colors.foreground}5C` : factionColor(faction, colors), opacity: pressed ? VISUAL_TOKENS.deck.utility.pressedOpacity : 1 }]}
+mobile/app/(tabs)/deck.tsx:623:                   <Feather name="filter" size={VISUAL_TOKENS.deck.utility.iconSize} color={faction === 'all' ? colors.mutedForeground : factionColor(faction, colors)} />
+mobile/app/(tabs)/deck.tsx:627:                  testID="view-deck-detail"
+mobile/app/(tabs)/deck.tsx:632:                   style={({ pressed }) => [styles.utilityButton, { borderColor: hasSavedDeck ? `${colors.foreground}66` : `${colors.foreground}22`, opacity: pressed ? VISUAL_TOKENS.deck.utility.pressedOpacity : hasSavedDeck ? 1 : 0.45 }]}
+mobile/app/(tabs)/deck.tsx:634:                   <Feather name="eye" size={VISUAL_TOKENS.deck.utility.iconSize} color={hasSavedDeck ? colors.foreground : colors.mutedForeground} />
+mobile/app/(tabs)/deck.tsx:640:            {deckError || syncState === 'offline' ? <Pressable testID="deck-sync-error" accessibilityRole="button" accessibilityLabel="Reintentar sincronización de mazos" onPress={onRefresh} style={[styles.syncError, { backgroundColor: `${colors.ink}EE`, borderColor: `${colors.danger}AA` }]}><Feather name="alert-triangle" size={15} color={colors.danger} /><Text style={[styles.syncText, { color: colors.foreground }]}>{deckError ?? syncError ?? 'SIN SEÑAL · TOCA PARA REINTENTAR'}</Text></Pressable> : null}
+mobile/app/(tabs)/deck.tsx:641:            {collectionLoading || deckLoading ? <View style={[styles.loadingState, { backgroundColor: `${colors.ink}D9`, borderColor: `${colors.accent}66` }]}><ActivityIndicator color={colors.accent} /><Text style={[styles.loadingText, { color: colors.foreground }]}>SINCRONIZANDO MAZOS</Text></View> : null}
+mobile/app/(tabs)/deck.tsx:643:            {validation ? <Pressable testID="deck-validation" accessibilityRole="alert" onPress={() => setValidation(null)} style={[styles.validation, { borderColor: validation.valid ? colors.success : colors.danger, backgroundColor: `${colors.ink}EE` }]}><Feather name={validation.valid ? 'check-circle' : 'alert-circle'} size={15} color={validation.valid ? colors.success : colors.danger} /><Text style={[styles.validationText, { color: colors.foreground }]}>{validation.valid ? 'MAZO VÁLIDO' : validation.errors.join(' ')}</Text></Pressable> : null}
+mobile/app/(tabs)/deck.tsx:648:              <Pressable testID="reference-cards" accessibilityRole="button" accessibilityLabel="Cartas" onPress={() => navigate('/collection')} style={styles.bottomHit}><Feather name="layers" size={16} color={colors.mutedForeground} /><Text style={[styles.bottomLabel, { color: colors.mutedForeground }]}>ARCHIVO</Text></Pressable>
+mobile/app/(tabs)/deck.tsx:649:              <Pressable testID="reference-deck" accessibilityRole="button" accessibilityLabel="Mazo" onPress={() => navigate('/deck')} style={[styles.bottomHit, styles.bottomHitActive, { borderColor: colors.accent }]}><Feather name="columns" size={16} color={colors.accent} /><Text style={[styles.bottomLabel, { color: colors.accent }]}>FORJA</Text></Pressable>
+mobile/app/(tabs)/deck.tsx:650:              <Pressable testID="reference-profile" accessibilityRole="button" accessibilityLabel="Perfil" onPress={() => navigate('/profile')} style={styles.bottomHit}><Feather name="award" size={16} color={colors.mutedForeground} /><Text style={[styles.bottomLabel, { color: colors.mutedForeground }]}>LEGADO</Text></Pressable>
+mobile/app/(tabs)/deck.tsx:658:          collection={collection}
+mobile/app/(tabs)/deck.tsx:660:          deckReady={deckReady}
+mobile/app/(tabs)/deck.tsx:680:  sceneHeader: { position: 'absolute', top: VISUAL_TOKENS.deck.sceneHeader.top, left: VISUAL_TOKENS.deck.sceneHeader.horizontalInset, right: VISUAL_TOKENS.deck.sceneHeader.horizontalInset, paddingBottom: 0 },
+mobile/app/(tabs)/deck.tsx:681:  sceneRefresh: { width: VISUAL_TOKENS.deck.refresh.size, height: VISUAL_TOKENS.deck.refresh.size, borderWidth: VISUAL_TOKENS.deck.refresh.borderWidth, borderRadius: VISUAL_TOKENS.deck.refresh.radius, alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(8,12,18,0.54)' },
+mobile/app/(tabs)/deck.tsx:709:  searchDock: { width: `${VISUAL_TOKENS.deck.searchDock.widthRatio * 100}%`, height: VISUAL_TOKENS.deck.searchDock.height, borderWidth: VISUAL_TOKENS.deck.searchDock.borderWidth, borderRadius: VISUAL_TOKENS.deck.searchDock.radius, flexDirection: 'row', alignItems: 'center', paddingHorizontal: VISUAL_TOKENS.deck.searchDock.paddingHorizontal, gap: VISUAL_TOKENS.deck.searchDock.gap },
+mobile/app/(tabs)/deck.tsx:710:  searchInput: { flex: 1, minWidth: 0, paddingHorizontal: 0, paddingVertical: 0, fontSize: VISUAL_TOKENS.deck.searchDock.inputSize, fontWeight: VISUAL_TOKENS.deck.searchDock.inputWeight },
+mobile/app/(tabs)/deck.tsx:711:  coreAction: { width: VISUAL_TOKENS.deck.coreAction.size, height: VISUAL_TOKENS.deck.coreAction.size, borderWidth: VISUAL_TOKENS.deck.coreAction.borderWidth, borderRadius: VISUAL_TOKENS.deck.coreAction.radius, alignItems: 'center', justifyContent: 'center', gap: VISUAL_TOKENS.deck.coreAction.gap, shadowColor: '#000', shadowOpacity: 0.45, shadowRadius: 8, shadowOffset: { width: 0, height: 3 }, elevation: 4 },
+mobile/app/(tabs)/deck.tsx:713:  utilityDock: { width: `${VISUAL_TOKENS.deck.utilityRail.widthRatio * 100}%`, flexDirection: 'row', justifyContent: 'flex-end', gap: VISUAL_TOKENS.deck.utilityRail.gap },
+mobile/app/(tabs)/deck.tsx:714:  utilityButton: { width: VISUAL_TOKENS.deck.utility.width, height: VISUAL_TOKENS.deck.utility.height, borderWidth: VISUAL_TOKENS.deck.utility.borderWidth, borderRadius: VISUAL_TOKENS.deck.utility.radius, alignItems: 'center', justifyContent: 'center', gap: VISUAL_TOKENS.deck.utility.gap, backgroundColor: 'rgba(7,12,18,0.72)' },
+mobile/app/(tabs)/deck.tsx:715:  utilityLabel: { fontSize: VISUAL_TOKENS.deck.utility.labelSize, fontWeight: VISUAL_TOKENS.deck.utility.labelWeight, letterSpacing: VISUAL_TOKENS.deck.utility.labelTracking },
+mobile/app/(tabs)/index.tsx:22:import { getCardIdentityVisual } from '@/constants/cardIdentity';
+mobile/app/(tabs)/index.tsx:44:  | '/collection'
+mobile/app/(tabs)/index.tsx:45:  | '/deck'
+mobile/app/(tabs)/index.tsx:46:  | '/missions'
+mobile/app/(tabs)/index.tsx:47:  | '/profile'
+mobile/app/(tabs)/index.tsx:51:  | '/economy'
+mobile/app/(tabs)/index.tsx:57:type RemoteHome = { stats: HomeStats | null; card: DailyCard | null; identityCard: DailyCard | null; missions: HomeMission[]; activity: ActivityItem[] };
+mobile/app/(tabs)/index.tsx:59:const INITIAL_HOME: RemoteHome = { stats: null, card: null, identityCard: null, missions: [], activity: [] };
+mobile/app/(tabs)/index.tsx:96:function cardCodeLabel(value: string | null | undefined) {
+mobile/app/(tabs)/index.tsx:445:function MissionSignal({ mission, index, onPress }: { mission: HomeMission; index: number; onPress: () => void }) {
+mobile/app/(tabs)/index.tsx:450:      accessibilityLabel={`Abrir misión ${mission.name}`}
+mobile/app/(tabs)/index.tsx:451:      testID={`home-mission-${mission.id}`}
+mobile/app/(tabs)/index.tsx:454:        styles.missionSignal,
+mobile/app/(tabs)/index.tsx:463:      <View style={styles.missionSignalBeacon}>
+mobile/app/(tabs)/index.tsx:464:        <View style={[styles.missionSignalOrbit, { borderColor: `${colors.success}A8`, backgroundColor: `${colors.success}12` }]}>
+mobile/app/(tabs)/index.tsx:465:          <Text style={[styles.missionSignalIndex, { color: colors.success }]}>{String(index + 1).padStart(2, '0')}</Text>
+mobile/app/(tabs)/index.tsx:467:        <View style={[styles.missionSignalAxis, { backgroundColor: `${colors.success}70` }]} />
+mobile/app/(tabs)/index.tsx:469:      <View style={styles.missionSignalCopy}>
+mobile/app/(tabs)/index.tsx:470:        <Text numberOfLines={1} style={[styles.missionSignalName, { color: colors.foreground }]}>{mission.name}</Text>
+mobile/app/(tabs)/index.tsx:471:        <View style={styles.missionSignalMeta}>
+mobile/app/(tabs)/index.tsx:472:          <Text style={[styles.missionSignalDifficulty, { color: colors.success }]}>{capitalize(mission.difficulty, 'RITO')}</Text>
+mobile/app/(tabs)/index.tsx:473:          <View style={[styles.missionSignalDivider, { backgroundColor: `${colors.success}70` }]} />
+mobile/app/(tabs)/index.tsx:474:          <Text numberOfLines={1} style={[styles.missionSignalReward, { color: colors.mutedForeground }]}>{formatMetric(mission.reward_xp, 'XP', 'XP NO REPORTADO')} · {formatMetric(mission.reward_vex_ingame, 'VEX', 'VEX NO REPORTADO')}</Text>
+mobile/app/(tabs)/index.tsx:477:      <View style={styles.missionSignalPulse}>
+mobile/app/(tabs)/index.tsx:478:        <View style={[styles.missionSignalPulseMark, { backgroundColor: colors.success }]} />
+mobile/app/(tabs)/index.tsx:479:        <Text style={[styles.missionSignalPulseText, { color: colors.success }]}>ACTIVA</Text>
+mobile/app/(tabs)/index.tsx:550:  const { session, player, progress, wallet, stats: playerStats, cardsTotal, featuredCards, syncState, syncError, refresh } = useGame();
+mobile/app/(tabs)/index.tsx:565:    const [statsResult, cardResult, missionResult, activityResult, identityResult] = results;
+mobile/app/(tabs)/index.tsx:568:      card: cardResult.status === 'fulfilled' ? cardResult.value : current.card,
+mobile/app/(tabs)/index.tsx:569:      missions: missionResult.status === 'fulfilled' ? missionResult.value : current.missions,
+mobile/app/(tabs)/index.tsx:607:    // out of its authored composition before the next scene takes over.
+mobile/app/(tabs)/index.tsx:684:  const activeCard = home.card ?? featuredCards[0] ?? null;
+mobile/app/(tabs)/index.tsx:710:    { id: 'forge', label: 'FORJA', title: 'Traza tu formación', status: `${levelSignal} · MAZO ACTIVO`, icon: 'deck', route: '/deck', color: colors.rarityEpic, active: Boolean(progress) },
+mobile/app/(tabs)/index.tsx:711:    { id: 'archive', label: 'ARCHIVO', title: 'Revela tu colección', status: formatMetric(cardsTotal, 'CARTAS REGISTRADAS', 'CARTAS NO REPORTADAS'), icon: 'collection', route: '/collection', color: colors.rarityLegendary, active: cardsTotal > 0 },
+mobile/app/(tabs)/index.tsx:713:    { id: 'missions', label: 'MISIONES', title: 'Cumple el rito', status: formatMetric(home.missions.length, 'ÓRDENES ACTIVAS', 'ÓRDENES NO REPORTADAS'), icon: 'missions', route: '/missions', color: colors.success, active: home.missions.length > 0 },
+mobile/app/(tabs)/index.tsx:714:    { id: 'economy', label: 'ECONOMÍA', title: 'Mueve el VEX', status: wallet ? `${walletSignal} DISPONIBLES` : walletSignal, icon: 'economy', route: '/economy', color: colors.accent, active: Boolean(wallet) },
+mobile/app/(tabs)/index.tsx:743:    <GameRuntime session={session} authLoading={false} syncState={syncState} onRetry={refresh}>
+mobile/app/(tabs)/index.tsx:881:                  testID="home-profile"
+mobile/app/(tabs)/index.tsx:882:                  onPress={() => navigate('/profile')}
+mobile/app/(tabs)/index.tsx:891:                  onPress={() => navigate('/missions')}
+mobile/app/(tabs)/index.tsx:895:                  {home.missions.length > 0 ? <View style={[styles.notificationDot, { backgroundColor: colors.accent }]} /> : null}
+mobile/app/(tabs)/index.tsx:946:              testID="home-featured-card"
+mobile/app/(tabs)/index.tsx:948:              onPress={() => navigate('/collection')}
+mobile/app/(tabs)/index.tsx:967:                 <Text style={[styles.heroCardCode, { color: `${colors.foreground}B8` }]}>{cardCodeLabel(activeCard?.code)}</Text>
+mobile/app/(tabs)/index.tsx:1048:                       <Icon name="profile" color={colors.accent} size={18} />
+mobile/app/(tabs)/index.tsx:1100:                    <Pressable accessibilityRole="button" accessibilityLabel={featuredCanExpand ? (featuredExpanded ? 'Ocultar lore de la carta destacada' : 'Inspeccionar lore de la carta destacada') : 'Carta destacada sin lore sincronizado'} accessibilityState={{ disabled: !featuredCanExpand, expanded: featuredCanExpand && featuredExpanded }} disabled={!featuredCanExpand} testID="home-featured-card-detail" onPress={openFeatured} style={({ pressed }) => [styles.artifactFeatureFinal, { opacity: !featuredCanExpand ? 0.62 : pressed ? 0.78 : 1, transform: [{ translateY: pressed && featuredCanExpand ? 2 : 0 }] }]}>
+mobile/app/(tabs)/index.tsx:1105:                      <Text style={[styles.artifactCodeFinal, { color: colors.foreground }]}>{cardCodeLabel(activeCard?.code)}</Text>
+mobile/app/(tabs)/index.tsx:1154:                    <OperationGate label="FORJA" title="Construye tu línea" detail={`${levelSignal} · MAZO ACTIVO`} icon="deck" color={colors.rarityEpic} testID="home-forge" accessibilityLabel="Abrir Forja" onPress={() => navigate('/deck')} />
+mobile/app/(tabs)/index.tsx:1155:                    <OperationGate label="ECONOMÍA" title="Mueve el VEX" detail={wallet ? `${walletSignal} DISPONIBLES` : walletSignal} icon="trending-up-outline" color={colors.accent} testID="home-economy" accessibilityLabel="Abrir economía" onPress={() => navigate('/economy')} />
+mobile/app/(tabs)/index.tsx:1192:                      icon="deck"
+mobile/app/(tabs)/index.tsx:1196:                      onPress={() => navigate('/deck')}
+mobile/app/(tabs)/index.tsx:1200:                      value={formatMetric(home.missions.length, 'ACTIVAS', 'ÓRDENES NO REPORTADAS')}
+mobile/app/(tabs)/index.tsx:1201:                      detail={home.missions[0]?.name ?? 'SIN FRENTE PUBLICADO'}
+mobile/app/(tabs)/index.tsx:1202:                      icon="missions"
+mobile/app/(tabs)/index.tsx:1204:                      active={home.missions.length > 0}
+mobile/app/(tabs)/index.tsx:1205:                      testID="home-continuum-missions"
+mobile/app/(tabs)/index.tsx:1206:                      onPress={() => navigate('/missions')}
+mobile/app/(tabs)/index.tsx:1227:                    <SectionMarker eyebrow={home.missions.length === 1 ? 'ORDEN ACTIVA' : 'ÓRDENES ACTIVAS'} title="El rito continúa" action="ABRIR" onAction={() => navigate('/missions')} accent={colors.success} />
+mobile/app/(tabs)/index.tsx:1228:                    {home.missions.length > 0 ? <View testID="home-missions" style={styles.missionSignals}>{home.missions.slice(0, 3).map((mission, index) => <MissionSignal key={mission.id} mission={mission} index={index} onPress={() => navigate('/missions')} />)}</View> : <View style={[styles.emptyState, { borderColor: colors.border }]}><Icon name="compass" color={colors.mutedForeground} size={21} /><Text style={[styles.emptyTitle, { color: colors.foreground }]}>SIN FRENTE ACTIVO</Text><Text style={[styles.emptyBody, { color: colors.mutedForeground }]}>Las próximas misiones aparecerán cuando el Nexus publique el siguiente ciclo.</Text></View>}
+mobile/app/(tabs)/index.tsx:1558:  missionSignals: { gap: 8, marginTop: 7 },
+mobile/app/(tabs)/index.tsx:1559:  missionSignal: { alignItems: 'center', borderLeftWidth: 2, borderWidth: 1, flexDirection: 'row', gap: 9, minHeight: 74, paddingHorizontal: 9, paddingVertical: 8 },
+mobile/app/(tabs)/index.tsx:1560:  missionSignalBeacon: { alignItems: 'center', height: 56, justifyContent: 'center', width: 43 },
+mobile/app/(tabs)/index.tsx:1561:  missionSignalOrbit: { alignItems: 'center', borderRadius: 17, borderWidth: 1, height: 34, justifyContent: 'center', transform: [{ rotate: '45deg' }], width: 34 },
+mobile/app/(tabs)/index.tsx:1562:  missionSignalIndex: { fontFamily: 'Rajdhani_700Bold', fontSize: 10, transform: [{ rotate: '-45deg' }] },
+mobile/app/(tabs)/index.tsx:1563:  missionSignalAxis: { bottom: 0, height: 10, position: 'absolute', width: 1 },
+mobile/app/(tabs)/index.tsx:1564:  missionSignalCopy: { flex: 1, gap: 6, minWidth: 0 },
+mobile/app/(tabs)/index.tsx:1565:  missionSignalName: { fontFamily: 'Rajdhani_700Bold', fontSize: 14, letterSpacing: 0.3 },
+mobile/app/(tabs)/index.tsx:1566:  missionSignalMeta: { alignItems: 'center', flexDirection: 'row', gap: 6, minWidth: 0 },
+mobile/app/(tabs)/index.tsx:1567:  missionSignalDifficulty: { fontFamily: 'Rajdhani_700Bold', fontSize: 9, letterSpacing: 0.8 },
+mobile/app/(tabs)/index.tsx:1568:  missionSignalDivider: { height: 1, width: 12 },
+mobile/app/(tabs)/index.tsx:1569:  missionSignalReward: { flexShrink: 1, fontFamily: 'Rajdhani_500Medium', fontSize: 9, letterSpacing: 0.3 },
+mobile/app/(tabs)/index.tsx:1570:  missionSignalPulse: { alignItems: 'flex-end', gap: 5, justifyContent: 'center', minWidth: 39 },
+mobile/app/(tabs)/index.tsx:1571:  missionSignalPulseMark: { borderRadius: 3, height: 6, width: 6 },
+mobile/app/(tabs)/index.tsx:1572:  missionSignalPulseText: { fontFamily: 'Rajdhani_700Bold', fontSize: 7, letterSpacing: 0.65 },
+mobile/app/(tabs)/profile.tsx:32:type ProfileAction = 'collection' | 'owned' | 'fusion' | 'achievements' | 'profile' | 'meta' | 'deck' | 'missions' | 'social' | 'home' | 'battle' | 'stats' | 'titles' | 'history' | 'ranking' | 'season' | 'progress';
+mobile/app/(tabs)/profile.tsx:43:  { id: 'collection', label: 'Abrir colección', left: '3%', top: '11%', width: '18%', height: '7%', action: 'collection' },
+mobile/app/(tabs)/profile.tsx:47:  { id: 'profile-top', label: 'Perfil', left: '80%', top: '11%', width: '17%', height: '7%', action: 'profile' },
+mobile/app/(tabs)/profile.tsx:49:  { id: 'notifications', label: 'Abrir misiones y avisos', left: '92%', top: '3%', width: '7%', height: '7%', action: 'missions' },
+mobile/app/(tabs)/profile.tsx:50:  { id: 'edit-profile', label: 'Editar perfil', left: '75%', top: '21%', width: '20%', height: '7%', action: 'meta' },
+mobile/app/(tabs)/profile.tsx:57:  { id: 'decks', label: 'Abrir mis mazos', left: '4%', top: '62%', width: '29%', height: '11%', action: 'deck' },
+mobile/app/(tabs)/profile.tsx:58:  { id: 'cards', label: 'Abrir cartas obtenidas', left: '35%', top: '62%', width: '30%', height: '11%', action: 'owned' },
+mobile/app/(tabs)/profile.tsx:62:  { id: 'quick-rewards', label: 'Recompensas', left: '50%', top: '81%', width: '21%', height: '9%', action: 'missions' },
+mobile/app/(tabs)/profile.tsx:66:  { id: 'nav-cards', label: 'Cartas', left: '40%', top: '91%', width: '20%', height: '9%', action: 'collection' },
+mobile/app/(tabs)/profile.tsx:67:  { id: 'nav-deck', label: 'Mazo', left: '60%', top: '91%', width: '20%', height: '9%', action: 'deck' },
+mobile/app/(tabs)/profile.tsx:68:  { id: 'nav-profile', label: 'Perfil', left: '80%', top: '91%', width: '20%', height: '9%', action: 'profile' },
+mobile/app/(tabs)/profile.tsx:152:  collectionCount,
+mobile/app/(tabs)/profile.tsx:168:  collectionCount: number;
+mobile/app/(tabs)/profile.tsx:180:        <Pressable testID="profile-panel-close" accessibilityRole="button" accessibilityLabel="Cerrar detalle" onPress={onClose} style={({ pressed }) => [styles.modalClose, { borderColor: colors.border, opacity: pressed ? 0.68 : 1, transform: [{ translateY: pressed ? 2 : 0 }] }]}><Ionicons name="close" size={VISUAL_TOKENS.profileModal.close.iconSize} color={colors.foreground} /></Pressable>
+mobile/app/(tabs)/profile.tsx:188:          <ModalMetric label="CARTAS" value={number(collectionCount, 'CARTAS NO REPORTADAS')} colors={colors} icon="cards" />
+mobile/app/(tabs)/profile.tsx:214:            testID="profile-sign-out"
+mobile/app/(tabs)/profile.tsx:239:        loading ? <Text testID={`profile-${panel}-pending`} style={[styles.modalMuted, { color: colors.mutedForeground }]}>{panel === 'titles' ? 'TÍTULOS EN ESPERA · SINCRONIZACIÓN NO CONFIRMADA' : 'LOGROS EN ESPERA · SINCRONIZACIÓN NO CONFIRMADA'}</Text> : achievements.length ? <ScrollView style={styles.modalList}>{achievements.map((achievement) => <View key={achievement.id} style={[styles.modalRow, { borderColor: colors.border }]}><Ionicons name={panel === 'titles' ? 'crown' : 'trophy-outline'} size={18} color={colors.accent} /><View style={styles.modalRowCopy}><Text style={[styles.modalRowTitle, { color: colors.foreground }]}>{achievement.title}</Text><Text style={[styles.modalMuted, { color: colors.mutedForeground }]}>{achievement.description}</Text></View><Text style={[styles.modalPoints, { color: colors.accent }]}>{achievement.points}</Text></View>)}</ScrollView> : <Text testID="profile-empty-achievements" style={[styles.modalMuted, { color: colors.mutedForeground }]}>Todavía no hay registros disponibles.</Text>
+mobile/app/(tabs)/profile.tsx:242:        social === null ? <Text testID="profile-history-pending" style={[styles.modalMuted, { color: colors.mutedForeground }]}>HISTORIAL EN ESPERA · SINCRONIZACIÓN NO CONFIRMADA</Text> : social.matches.length ? <ScrollView style={styles.modalList}>{social.matches.map((match) => {
+mobile/app/(tabs)/profile.tsx:249:          return <View key={match.id} testID={`profile-history-${match.id}`} style={[styles.modalRow, { borderColor: colors.border }]}>
+mobile/app/(tabs)/profile.tsx:260:        social === null ? <Text testID="profile-ranking-pending" style={[styles.modalMuted, { color: colors.mutedForeground }]}>RANKING EN ESPERA · SINCRONIZACIÓN NO CONFIRMADA</Text> : social.rankings.length ? <ScrollView style={styles.modalList}>{social.rankings.map((entry) => <View key={entry.player_id} style={[styles.modalRow, { borderColor: entry.player_id === playerId ? colors.accent : colors.border }]}><Text style={[styles.modalRank, { color: entry.player_id === playerId ? colors.accent : colors.mutedForeground }]}>{typeof entry.rank_position === 'number' && Number.isFinite(entry.rank_position) ? `#${entry.rank_position}` : 'PUESTO NO REPORTADO'}</Text><View style={styles.modalRowCopy}><Text style={[styles.modalRowTitle, { color: colors.foreground }]}>{entry.display_name ?? 'NOMBRE NO RESUELTO'}{entry.player_id === playerId ? ' · TÚ' : ''}</Text><Text style={[styles.modalMuted, { color: colors.mutedForeground }]}>{socialRankingValue(entry.mmr, 'MMR')} ELO · {socialRankingValue(entry.wins, 'VICTORIAS')}V / {socialRankingValue(entry.losses, 'DERROTAS')}D</Text></View><Ionicons name="shield-outline" size={18} color={colors.accent} /></View>)}</ScrollView> : <Text style={[styles.modalMuted, { color: colors.mutedForeground }]}>El ranking de temporada todavía no está disponible.</Text>
+mobile/app/(tabs)/profile.tsx:275:  const { session, player, progress, wallet, stats, collection, syncState, syncError, signOut } = useGame();
+mobile/app/(tabs)/profile.tsx:331:    if (kind === 'collection') return router.push('/collection');
+mobile/app/(tabs)/profile.tsx:332:    if (kind === 'owned') return router.push('/collection?scope=owned');
+mobile/app/(tabs)/profile.tsx:335:    if (kind === 'deck') return router.push('/deck');
+mobile/app/(tabs)/profile.tsx:336:    if (kind === 'missions') return router.push('/missions');
+mobile/app/(tabs)/profile.tsx:347:    if (kind === 'profile') return setPanel('account');
+mobile/app/(tabs)/profile.tsx:356:    { id: 'deck', label: 'Mazos', icon: 'layers-outline', action: 'deck' },
+mobile/app/(tabs)/profile.tsx:357:    { id: 'cards', label: 'Cartas', icon: 'cards', action: 'owned' },
+mobile/app/(tabs)/profile.tsx:362:    return <ScreenShell surface="profile" sceneMode="hero"><View testID="profile-loading" style={styles.loadingScreen}><ActivityIndicator color={colors.accent} /><Text style={[styles.loadingText, { color: colors.foreground }]}>CARGANDO PERFIL DEL NEXUS</Text></View></ScreenShell>;
+mobile/app/(tabs)/profile.tsx:366:    <ScreenShell surface="profile" sceneMode="hero">
+mobile/app/(tabs)/profile.tsx:371:        testID="profile-screen"
+mobile/app/(tabs)/profile.tsx:372:        style={styles.profileScroll}
+mobile/app/(tabs)/profile.tsx:377:        <View testID="profile-reference-scene" style={[styles.programmaticProfileScene, { backgroundColor: colors.background, borderColor: colors.border }]}>
+mobile/app/(tabs)/profile.tsx:388:            <Pressable testID="profile-edit" accessibilityRole="button" accessibilityLabel="Editar perfil" onPress={() => action('meta')} style={({ pressed }) => [styles.identityAction, { borderColor: colors.border, opacity: pressed ? 0.68 : 1, transform: [{ translateY: pressed ? 2 : 0 }] }]}>
+mobile/app/(tabs)/profile.tsx:389:              <Ionicons name="create-outline" size={VISUAL_TOKENS.profileIdentity.action.iconSize} color={colors.accent} />
+mobile/app/(tabs)/profile.tsx:392:          <View style={styles.profileStatsGrid}>
+mobile/app/(tabs)/profile.tsx:399:              <View key={label} style={[styles.profileStat, { backgroundColor: colors.panel, borderColor: colors.border }]}>
+mobile/app/(tabs)/profile.tsx:400:                <Ionicons name={icon} size={VISUAL_TOKENS.profileStats.iconSize} color={colors.accent} />
+mobile/app/(tabs)/profile.tsx:401:                <Text style={[styles.profileStatValue, { color: colors.foreground }]}>{value}</Text>
+mobile/app/(tabs)/profile.tsx:402:                <Text style={[styles.profileStatLabel, { color: colors.mutedForeground }]}>{label}</Text>
+mobile/app/(tabs)/profile.tsx:418:              <Text style={[styles.progressMetaText, { color: colors.mutedForeground }]}>{collection.length} cartas registradas</Text>
+mobile/app/(tabs)/profile.tsx:427:                testID={`profile-reference-${item.id}`}
+mobile/app/(tabs)/profile.tsx:441:                <Ionicons name={item.icon} size={VISUAL_TOKENS.profileActions.iconSize} color={colors.accent} />
+mobile/app/(tabs)/profile.tsx:448:          <View testID="profile-sync-error" accessibilityRole="alert" style={[styles.errorNotice, { backgroundColor: `${colors.danger}E8`, borderColor: colors.danger }]}>
+mobile/app/(tabs)/profile.tsx:449:            <Ionicons name="alert-circle-outline" size={VISUAL_TOKENS.profileFeedback.notice.iconSize} color={colors.foreground} />
+mobile/app/(tabs)/profile.tsx:455:         {panel ? <View style={styles.modalBackdrop}><PanelContent panel={panel} colors={colors} playerId={player.id} playerName={displayName} playerEmail={email} rank={rank} stats={stats} progress={progress} wallet={wallet} achievements={achievements} social={social} loading={loading} collectionCount={collection.length} onClose={() => setPanel(null)} onSignOut={async () => { await signOut(); setPanel(null); }} /></View> : null}
+mobile/app/(tabs)/profile.tsx:463:  profileScroll: { flex: 1 },
+mobile/app/(tabs)/profile.tsx:464:  profileScrollContent: { flexGrow: 1 },
+mobile/app/(tabs)/profile.tsx:470:    borderWidth: VISUAL_TOKENS.profileIdentity.card.borderWidth,
+mobile/app/(tabs)/profile.tsx:471:    borderRadius: VISUAL_TOKENS.profileIdentity.card.radius,
+mobile/app/(tabs)/profile.tsx:472:    padding: VISUAL_TOKENS.profileIdentity.card.padding,
+mobile/app/(tabs)/profile.tsx:475:    gap: VISUAL_TOKENS.profileIdentity.card.gap,
+mobile/app/(tabs)/profile.tsx:478:    width: VISUAL_TOKENS.profileIdentity.avatar.size,
+mobile/app/(tabs)/profile.tsx:479:    height: VISUAL_TOKENS.profileIdentity.avatar.size,
+mobile/app/(tabs)/profile.tsx:480:    borderWidth: VISUAL_TOKENS.profileIdentity.avatar.borderWidth,
+mobile/app/(tabs)/profile.tsx:481:    borderRadius: VISUAL_TOKENS.profileIdentity.avatar.radius,
+mobile/app/(tabs)/profile.tsx:487:    fontSize: VISUAL_TOKENS.profileIdentity.avatar.textSize,
+mobile/app/(tabs)/profile.tsx:488:    fontWeight: VISUAL_TOKENS.profileIdentity.avatar.textWeight,
+mobile/app/(tabs)/profile.tsx:493:    fontSize: VISUAL_TOKENS.profileIdentity.eyebrow.fontSize,
+mobile/app/(tabs)/profile.tsx:494:    letterSpacing: VISUAL_TOKENS.profileIdentity.eyebrow.letterSpacing,
+mobile/app/(tabs)/profile.tsx:498:    fontSize: VISUAL_TOKENS.profileIdentity.name.fontSize,
+mobile/app/(tabs)/profile.tsx:499:    marginTop: VISUAL_TOKENS.profileIdentity.name.marginTop,
+mobile/app/(tabs)/profile.tsx:503:    fontSize: VISUAL_TOKENS.profileIdentity.meta.fontSize,
+mobile/app/(tabs)/profile.tsx:504:    marginTop: VISUAL_TOKENS.profileIdentity.meta.marginTop,
+mobile/app/(tabs)/profile.tsx:508:    fontSize: VISUAL_TOKENS.profileIdentity.status.fontSize,
+mobile/app/(tabs)/profile.tsx:509:    marginTop: VISUAL_TOKENS.profileIdentity.status.marginTop,
+mobile/app/(tabs)/profile.tsx:512:    width: VISUAL_TOKENS.profileIdentity.action.size,
+mobile/app/(tabs)/profile.tsx:513:    height: VISUAL_TOKENS.profileIdentity.action.size,
+mobile/app/(tabs)/profile.tsx:514:    borderWidth: VISUAL_TOKENS.profileIdentity.action.borderWidth,
+mobile/app/(tabs)/profile.tsx:515:    borderRadius: VISUAL_TOKENS.profileIdentity.action.radius,
+mobile/app/(tabs)/profile.tsx:519:  profileStatsGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: VISUAL_TOKENS.profileStats.gridGap },
+mobile/app/(tabs)/profile.tsx:520:  profileStat: {
+mobile/app/(tabs)/profile.tsx:521:    width: VISUAL_TOKENS.profileStats.card.width,
+mobile/app/(tabs)/profile.tsx:522:    minHeight: VISUAL_TOKENS.profileStats.card.minHeight,
+mobile/app/(tabs)/profile.tsx:523:    borderWidth: VISUAL_TOKENS.profileStats.card.borderWidth,
+mobile/app/(tabs)/profile.tsx:524:    borderRadius: VISUAL_TOKENS.profileStats.card.radius,
+mobile/app/(tabs)/profile.tsx:525:    padding: VISUAL_TOKENS.profileStats.card.padding,
+mobile/app/(tabs)/profile.tsx:527:    gap: VISUAL_TOKENS.profileStats.card.gap,
+mobile/app/(tabs)/profile.tsx:529:  profileStatValue: { fontFamily: typography.display, fontSize: VISUAL_TOKENS.profileStats.valueSize },
+mobile/app/(tabs)/profile.tsx:530:  profileStatLabel: {
+mobile/app/(tabs)/profile.tsx:532:    fontSize: VISUAL_TOKENS.profileStats.label.fontSize,
+mobile/app/(tabs)/profile.tsx:533:    letterSpacing: VISUAL_TOKENS.profileStats.label.letterSpacing,
+mobile/app/(tabs)/profile.tsx:536:    borderWidth: VISUAL_TOKENS.profileProgress.card.borderWidth,
+mobile/app/(tabs)/profile.tsx:537:    borderRadius: VISUAL_TOKENS.profileProgress.card.radius,
+mobile/app/(tabs)/profile.tsx:538:    padding: VISUAL_TOKENS.profileProgress.card.padding,
+mobile/app/(tabs)/profile.tsx:544:    gap: VISUAL_TOKENS.profileProgress.header.gap,
+mobile/app/(tabs)/profile.tsx:548:    fontSize: VISUAL_TOKENS.profileProgress.eyebrow.fontSize,
+mobile/app/(tabs)/profile.tsx:549:    letterSpacing: VISUAL_TOKENS.profileProgress.eyebrow.letterSpacing,
+mobile/app/(tabs)/profile.tsx:553:    fontSize: VISUAL_TOKENS.profileProgress.title.fontSize,
+mobile/app/(tabs)/profile.tsx:554:    marginTop: VISUAL_TOKENS.profileProgress.title.marginTop,
+mobile/app/(tabs)/profile.tsx:558:    fontSize: VISUAL_TOKENS.profileProgress.value.fontSize,
+mobile/app/(tabs)/profile.tsx:559:    marginTop: VISUAL_TOKENS.profileProgress.value.marginTop,
+mobile/app/(tabs)/profile.tsx:562:    height: VISUAL_TOKENS.profileProgress.track.height,
+mobile/app/(tabs)/profile.tsx:563:    borderRadius: VISUAL_TOKENS.profileProgress.track.radius,
+mobile/app/(tabs)/profile.tsx:565:    marginTop: VISUAL_TOKENS.profileProgress.track.marginTop,
+mobile/app/(tabs)/profile.tsx:571:    marginTop: VISUAL_TOKENS.profileProgress.meta.marginTop,
+mobile/app/(tabs)/profile.tsx:572:    gap: VISUAL_TOKENS.profileProgress.meta.gap,
+mobile/app/(tabs)/profile.tsx:574:  progressMetaText: { fontFamily: typography.body, fontSize: VISUAL_TOKENS.profileProgress.metaTextSize },
+mobile/app/(tabs)/profile.tsx:577:    fontSize: VISUAL_TOKENS.profileActions.title.fontSize,
+mobile/app/(tabs)/profile.tsx:578:    letterSpacing: VISUAL_TOKENS.profileActions.title.letterSpacing,
+mobile/app/(tabs)/profile.tsx:579:    marginTop: VISUAL_TOKENS.profileActions.title.marginTop,
+mobile/app/(tabs)/profile.tsx:581:  actionGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: VISUAL_TOKENS.profileActions.gridGap },
+mobile/app/(tabs)/profile.tsx:583:    width: VISUAL_TOKENS.profileActions.card.width,
+mobile/app/(tabs)/profile.tsx:584:    minHeight: VISUAL_TOKENS.profileActions.card.minHeight,
+mobile/app/(tabs)/profile.tsx:585:    borderWidth: VISUAL_TOKENS.profileActions.card.borderWidth,
+mobile/app/(tabs)/profile.tsx:586:    borderRadius: VISUAL_TOKENS.profileActions.card.radius,
+mobile/app/(tabs)/profile.tsx:587:    paddingHorizontal: VISUAL_TOKENS.profileActions.card.paddingHorizontal,
+mobile/app/(tabs)/profile.tsx:590:    gap: VISUAL_TOKENS.profileActions.card.gap,
+mobile/app/(tabs)/profile.tsx:592:  actionLabel: { fontFamily: typography.bodyBold, fontSize: VISUAL_TOKENS.profileActions.labelSize },
+mobile/app/(tabs)/profile.tsx:609:  collectionValue: { left: '68%', top: '64.4%', width: '25%', textAlign: 'right', fontSize: 10, color: '#F0C050' },
+mobile/app/(tabs)/profile.tsx:613:    left: VISUAL_TOKENS.profileFeedback.notice.horizontalInset,
+mobile/app/(tabs)/profile.tsx:614:    right: VISUAL_TOKENS.profileFeedback.notice.horizontalInset,
+mobile/app/(tabs)/profile.tsx:615:    bottom: VISUAL_TOKENS.profileFeedback.notice.bottomInset,
+mobile/app/(tabs)/profile.tsx:616:    minHeight: VISUAL_TOKENS.profileFeedback.notice.minHeight,
+mobile/app/(tabs)/profile.tsx:617:    borderWidth: VISUAL_TOKENS.profileFeedback.notice.borderWidth,
+mobile/app/(tabs)/profile.tsx:618:    borderRadius: VISUAL_TOKENS.profileFeedback.notice.radius,
+mobile/app/(tabs)/profile.tsx:619:    paddingHorizontal: VISUAL_TOKENS.profileFeedback.notice.paddingHorizontal,
+mobile/app/(tabs)/profile.tsx:620:    paddingVertical: VISUAL_TOKENS.profileFeedback.notice.paddingVertical,
+mobile/app/(tabs)/profile.tsx:623:    gap: VISUAL_TOKENS.profileFeedback.notice.gap,
+mobile/app/(tabs)/profile.tsx:628:    fontSize: VISUAL_TOKENS.profileFeedback.notice.textSize,
+mobile/app/(tabs)/profile.tsx:629:    lineHeight: VISUAL_TOKENS.profileFeedback.notice.lineHeight,
+mobile/app/(tabs)/profile.tsx:635:    gap: VISUAL_TOKENS.profileFeedback.loading.gap,
+mobile/app/(tabs)/profile.tsx:639:    fontSize: VISUAL_TOKENS.profileFeedback.loading.labelSize,
+mobile/app/(tabs)/profile.tsx:640:    letterSpacing: VISUAL_TOKENS.profileFeedback.loading.labelTracking,
+mobile/app/(tabs)/profile.tsx:642:  modalBackdrop: { flex: 1, justifyContent: 'flex-end', backgroundColor: VISUAL_TOKENS.profileModal.backdropColor },
+mobile/app/(tabs)/profile.tsx:644:    maxHeight: VISUAL_TOKENS.profileModal.panel.maxHeight,
+mobile/app/(tabs)/profile.tsx:645:    minHeight: VISUAL_TOKENS.profileModal.panel.minHeight,
+mobile/app/(tabs)/profile.tsx:646:    borderTopWidth: VISUAL_TOKENS.profileModal.panel.borderTopWidth,
+mobile/app/(tabs)/profile.tsx:647:    borderTopLeftRadius: VISUAL_TOKENS.profileModal.panel.radius,
+mobile/app/(tabs)/profile.tsx:648:    borderTopRightRadius: VISUAL_TOKENS.profileModal.panel.radius,
+mobile/app/(tabs)/profile.tsx:649:    padding: VISUAL_TOKENS.profileModal.panel.padding,
+mobile/app/(tabs)/profile.tsx:655:    marginBottom: VISUAL_TOKENS.profileModal.header.marginBottom,
+mobile/app/(tabs)/profile.tsx:657:  modalEyebrow: { fontFamily: typography.bodyBold, fontSize: VISUAL_TOKENS.profileModal.content.eyebrow.fontSize, letterSpacing: VISUAL_TOKENS.profileModal.content.eyebrow.letterSpacing },
+mobile/app/(tabs)/profile.tsx:658:  modalTitle: { fontFamily: typography.display, fontSize: VISUAL_TOKENS.profileModal.content.title.fontSize, marginTop: VISUAL_TOKENS.profileModal.content.title.marginTop },
+mobile/app/(tabs)/profile.tsx:660:    width: VISUAL_TOKENS.profileModal.close.size,
+mobile/app/(tabs)/profile.tsx:661:    height: VISUAL_TOKENS.profileModal.close.size,
+mobile/app/(tabs)/profile.tsx:662:    borderWidth: VISUAL_TOKENS.profileModal.close.borderWidth,
+mobile/app/(tabs)/profile.tsx:663:    borderRadius: VISUAL_TOKENS.profileModal.close.radius,
+mobile/app/(tabs)/profile.tsx:667:  modalGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: VISUAL_TOKENS.profileModal.gridGap },
+mobile/app/(tabs)/profile.tsx:683:  modalCopy: { gap: VISUAL_TOKENS.profileModal.content.copyGap },
+mobile/app/(tabs)/profile.tsx:684:  modalBody: { fontFamily: typography.display, fontSize: VISUAL_TOKENS.profileModal.content.body.fontSize },
+mobile/app/(tabs)/profile.tsx:685:  modalMuted: { fontFamily: typography.body, fontSize: VISUAL_TOKENS.profileModal.content.muted.fontSize, lineHeight: VISUAL_TOKENS.profileModal.content.muted.lineHeight },
+mobile/app/(tabs)/profile.tsx:686:  modalList: { maxHeight: VISUAL_TOKENS.profileModal.content.listMaxHeight },
+mobile/app/(tabs)/profile.tsx:687:  modalRow: { minHeight: VISUAL_TOKENS.profileModal.content.row.minHeight, borderWidth: VISUAL_TOKENS.profileModal.content.row.borderWidth, borderRadius: VISUAL_TOKENS.profileModal.content.row.radius, padding: VISUAL_TOKENS.profileModal.content.row.padding, marginBottom: VISUAL_TOKENS.profileModal.content.row.marginBottom, flexDirection: 'row', alignItems: 'center', gap: VISUAL_TOKENS.profileModal.content.row.gap },
+mobile/app/(tabs)/profile.tsx:689:  modalRowTitle: { fontFamily: typography.bodyBold, fontSize: VISUAL_TOKENS.profileModal.content.rowTitle.fontSize },
+mobile/app/(tabs)/profile.tsx:690:  modalPoints: { fontFamily: typography.bodyBold, fontSize: VISUAL_TOKENS.profileModal.content.points.fontSize },
+mobile/app/(tabs)/profile.tsx:691:  modalRank: { width: VISUAL_TOKENS.profileModal.content.rank.width, fontFamily: typography.display, fontSize: VISUAL_TOKENS.profileModal.content.rank.fontSize },
+mobile/app/(tabs)/profile.tsx:692:  signOutButton: { minHeight: VISUAL_TOKENS.profileModal.content.signOut.minHeight, borderWidth: VISUAL_TOKENS.profileModal.content.signOut.borderWidth, borderRadius: VISUAL_TOKENS.profileModal.content.signOut.radius, paddingHorizontal: VISUAL_TOKENS.profileModal.content.signOut.paddingHorizontal, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: VISUAL_TOKENS.profileModal.content.signOut.gap, marginTop: VISUAL_TOKENS.profileModal.content.signOut.marginTop },
+mobile/app/(tabs)/profile.tsx:693:  signOutText: { fontFamily: typography.bodyBold, fontSize: VISUAL_TOKENS.profileModal.content.signOutText.fontSize, letterSpacing: VISUAL_TOKENS.profileModal.content.signOutText.letterSpacing },
+mobile/app/_layout.tsx:41:      <Stack.Screen name="auth" options={{ headerShown: false, gestureEnabled: false }} />
+mobile/app/_layout.tsx:43:      <Stack.Screen name="missions" options={{ headerShown: false }} />
+mobile/app/_layout.tsx:45:      <Stack.Screen name="economy" options={{ headerShown: false }} />
+mobile/app/auth.tsx:70:    authLoading,
+mobile/app/auth.tsx:71:    authError,
+mobile/app/auth.tsx:88:    () => localError ?? readableAuthError(authError),
+mobile/app/auth.tsx:89:    [authError, localError],
+mobile/app/auth.tsx:91:  const accessState = authLoading
+mobile/app/auth.tsx:192:    <ScreenShell surface="auth" sceneMode="hero" style={styles.root}>
+mobile/app/auth.tsx:197:          source={CANONICAL_BACKGROUNDS.auth}
+mobile/app/auth.tsx:307:          testID="auth-reference-scene"
+mobile/app/auth.tsx:337:            testID="auth-status-rail"
+mobile/app/auth.tsx:358:                testID="auth-email"
+mobile/app/auth.tsx:372:                editable={!authLoading}
+mobile/app/auth.tsx:382:                testID="auth-password"
+mobile/app/auth.tsx:396:                editable={!authLoading}
+mobile/app/auth.tsx:402:                testID="auth-toggle-password"
+mobile/app/auth.tsx:405:                accessibilityState={{ disabled: authLoading }}
+mobile/app/auth.tsx:407:                disabled={authLoading}
+mobile/app/auth.tsx:417:                testID="auth-remember"
+mobile/app/auth.tsx:420:                accessibilityState={{ checked: rememberSession, disabled: authLoading }}
+mobile/app/auth.tsx:422:                disabled={authLoading}
+mobile/app/auth.tsx:431:                testID="auth-forgot-password"
+mobile/app/auth.tsx:435:                disabled={authLoading}
+mobile/app/auth.tsx:443:              testID="auth-submit"
+mobile/app/auth.tsx:447:              disabled={authLoading}
+mobile/app/auth.tsx:451:                  opacity: pressed || authLoading ? 0.58 : 1,
+mobile/app/auth.tsx:463:                {authLoading ? <ActivityIndicator color={colors.background} /> : null}
+mobile/app/auth.tsx:464:                {!authLoading ? (
+mobile/app/auth.tsx:480:                testID="auth-google"
+mobile/app/auth.tsx:484:                disabled={authLoading}
+mobile/app/auth.tsx:489:                    opacity: pressed || authLoading ? 0.55 : 1,
+mobile/app/auth.tsx:497:                testID="auth-discord"
+mobile/app/auth.tsx:501:                disabled={authLoading}
+mobile/app/auth.tsx:506:                    opacity: pressed || authLoading ? 0.55 : 1,
+mobile/app/auth.tsx:514:                testID="auth-apple"
+mobile/app/auth.tsx:518:                disabled={authLoading}
+mobile/app/auth.tsx:523:                    opacity: pressed || authLoading ? 0.55 : 1,
+mobile/app/auth.tsx:539:            testID="auth-toggle-mode"
+mobile/app/auth.tsx:542:            accessibilityState={{ disabled: authLoading }}
+mobile/app/auth.tsx:548:            disabled={authLoading}
+mobile/app/auth.tsx:573:            testID="auth-feedback"
+mobile/app/economy.tsx:84:function cardName(value: string | null | undefined) {
+mobile/app/economy.tsx:88:function cardRarity(value: string | null | undefined) {
+mobile/app/economy.tsx:142:          opacity: pressed ? VISUAL_TOKENS.economy.section.pressedOpacity : 1,
+mobile/app/economy.tsx:146:      <Ionicons name={icon} size={VISUAL_TOKENS.economy.section.iconSize} color={selected ? colors.primaryForeground : colors.accent} />
+mobile/app/economy.tsx:232:        style={[styles.input, { backgroundColor: colors.card, borderColor: colors.border, color: colors.foreground }]}
+mobile/app/economy.tsx:240:  return <DomainState kind="empty" title={title} message={body} testID={`economy-empty-${String(icon)}`} />;
+mobile/app/economy.tsx:244:  return <DomainState kind="error" title="Operación económica no disponible" message={message} actionLabel="REINTENTAR" onAction={onRetry} testID="economy-operation-error" />;
+mobile/app/economy.tsx:251:  const { session, player, authLoading } = useGame();
+mobile/app/economy.tsx:287:  const selectedCard = ownedCards.find((card) => card.id === selectedCardId) ?? null;
+mobile/app/economy.tsx:323:      setSelectedCardId((current) => current && nextOwnedCards.some((card) => card.id === current) ? current : nextOwnedCards[0]?.id ?? '');
+mobile/app/economy.tsx:339:    if (!authLoading && session && player) void refreshEconomy();
+mobile/app/economy.tsx:340:  }, [authLoading, player, refreshEconomy, session]);
+mobile/app/economy.tsx:391:    Alert.alert('Comprar carta', `${cardName(listing.card_name)} por ${money(listing.price)} VEX`, [
+mobile/app/economy.tsx:405:    Alert.alert('Cancelar listado', `${cardName(listing.card_name)} dejará el mercado.`, [
+mobile/app/economy.tsx:459:                <Text style={[styles.cardLabel, { color: colors.mutedForeground }]}>VEX TOTAL IN-GAME</Text>
+mobile/app/economy.tsx:470:            <Text style={[styles.cardTitle, { color: colors.foreground }]}>Resumen registrado</Text>
+mobile/app/economy.tsx:485:                <ActionButton label={loadingMore ? 'CARGANDO…' : 'CARGAR MÁS'} icon="chevron-down-outline" onPress={() => void loadMoreLedger()} colors={colors} secondary disabled={loadingMore} testID="economy-ledger-more" />
+mobile/app/economy.tsx:497:            <Text style={[styles.cardTitle, { color: colors.foreground }]}>Crear listado</Text>
+mobile/app/economy.tsx:504:                  {ownedCards.map((card) => (
+mobile/app/economy.tsx:506:                      key={card.id}
+mobile/app/economy.tsx:508:                      accessibilityState={{ selected: selectedCardId === card.id }}
+mobile/app/economy.tsx:509:                      testID={`economy-card-${card.id}`}
+mobile/app/economy.tsx:510:                      onPress={() => setSelectedCardId(card.id)}
+mobile/app/economy.tsx:511:                      style={[styles.choice, { backgroundColor: selectedCardId === card.id ? `${colors.accent}18` : colors.card, borderColor: selectedCardId === card.id ? colors.accent : colors.border }]}
+mobile/app/economy.tsx:514:                      <Text numberOfLines={1} style={[styles.choiceTitle, { color: colors.foreground }]}>{cardName(card.card_name)}</Text>
+mobile/app/economy.tsx:515:                      <Text style={[styles.meta, { color: colors.mutedForeground }]}>{cardRarity(card.card_rarity)} · x{card.quantity}</Text>
+mobile/app/economy.tsx:519:                <Field label={`Precio de ${cardName(selectedCard?.card_name)}`} value={price} onChangeText={setPrice} placeholder="0 VEX" colors={colors} keyboardType="decimal-pad" testID="economy-listing-price" />
+mobile/app/economy.tsx:520:                <ActionButton label={working === 'create-listing' ? 'CREANDO…' : 'PUBLICAR LISTADO'} icon="add-circle-outline" onPress={submitListing} colors={colors} disabled={working !== null} testID="economy-create-listing" />
+mobile/app/economy.tsx:531:                  <Text style={[styles.cardTitle, { color: colors.foreground }]}>{cardName(listing.card_name)}</Text>
+mobile/app/economy.tsx:532:                  <Text style={[styles.meta, { color: colors.mutedForeground }]}>{cardRarity(listing.card_rarity)} · {listing.player_id === player?.id ? 'Tu listado' : 'Oferta de jugador'}</Text>
+mobile/app/economy.tsx:537:                <ActionButton label={working === `cancel-${listing.id}` ? 'CANCELANDO…' : 'CANCELAR LISTADO'} icon="close-circle-outline" onPress={() => cancelListing(listing)} colors={colors} secondary disabled={working !== null} testID={`economy-cancel-${listing.id}`} />
+mobile/app/economy.tsx:539:                <ActionButton label={working === `buy-${listing.id}` ? 'COMPRANDO…' : 'COMPRAR'} icon="cart-outline" onPress={() => buyListing(listing)} colors={colors} disabled={working !== null} testID={`economy-buy-${listing.id}`} />
+mobile/app/economy.tsx:551:            <Text style={[styles.cardTitle, { color: colors.foreground }]}>Wallets oficiales</Text>
+mobile/app/economy.tsx:559:                    <Pressable key={`${item.chain}-${item.wallet_address}`} accessibilityRole="button" accessibilityState={{ selected: (treasury[depositWalletIndex] ?? treasury[0]) === item }} onPress={() => setDepositWalletIndex(index)} style={[styles.chainChoice, { backgroundColor: (treasury[depositWalletIndex] ?? treasury[0]) === item ? `${colors.accent}18` : colors.card, borderColor: (treasury[depositWalletIndex] ?? treasury[0]) === item ? colors.accent : colors.border }]}>
+mobile/app/economy.tsx:566:                <View style={[styles.addressBox, { backgroundColor: colors.card, borderColor: colors.border }]}>
+mobile/app/economy.tsx:567:                  <Text style={[styles.cardLabel, { color: colors.mutedForeground }]}>DIRECCIÓN DE DEPÓSITO</Text>
+mobile/app/economy.tsx:570:                <Field label="Monto USDT" value={depositAmount} onChangeText={setDepositAmount} placeholder="0.00" colors={colors} keyboardType="decimal-pad" testID="economy-deposit-amount" />
+mobile/app/economy.tsx:571:                <Field label="Hash de transacción" value={depositTxHash} onChangeText={setDepositTxHash} placeholder="0x…" colors={colors} keyboardType="url" testID="economy-deposit-tx" />
+mobile/app/economy.tsx:572:                <Field label="Tu dirección de origen" value={payerWallet} onChangeText={setPayerWallet} placeholder="Dirección de la wallet pagadora" colors={colors} keyboardType="url" testID="economy-deposit-payer" />
+mobile/app/economy.tsx:573:                <ActionButton label={working === 'submit-deposit' ? 'ENVIANDO…' : 'ENVIAR DEPÓSITO'} icon="arrow-up-circle-outline" onPress={submitDeposit} colors={colors} disabled={working !== null} testID="economy-submit-deposit" />
+mobile/app/economy.tsx:584:                <Text style={[styles.cardTitle, { color: colors.foreground }]}>{money(deposit.amount_usdt)} {deposit.token_symbol || 'USDT'}</Text>
+mobile/app/economy.tsx:605:            <Field label="Cantidad VEX tradeable" value={withdrawalAmount} onChangeText={setWithdrawalAmount} placeholder={`Mínimo ${MIN_WITHDRAWAL_VEX.toLocaleString('es-ES')} VEX`} colors={colors} keyboardType="decimal-pad" testID="economy-withdrawal-amount" />
+mobile/app/economy.tsx:606:            <View style={[styles.calculation, { backgroundColor: colors.card, borderColor: colors.border }]}>
+mobile/app/economy.tsx:612:            <ActionButton label={working === 'request-withdrawal' ? 'SOLICITANDO…' : 'SOLICITAR RETIRO'} icon="arrow-down-circle-outline" onPress={submitWithdrawal} colors={colors} disabled={!withdrawalValid || working !== null} testID="economy-submit-withdrawal" />
+mobile/app/economy.tsx:621:                <Text style={[styles.cardTitle, { color: colors.foreground }]}>{money(withdrawal.tradeable_amount)} VEX · {money(withdrawal.usdt_net)} USDT netos</Text>
+mobile/app/economy.tsx:634:          <Text style={[styles.cardLabel, { color: colors.mutedForeground }]}>TU CÓDIGO</Text>
+mobile/app/economy.tsx:641:            <StatValue label="Acreditados" value={referralSummary?.rewards_granted} colors={colors} />
+mobile/app/economy.tsx:650:              <Text style={[styles.cardTitle, { color: colors.foreground }]}>{referralName(referral.referred_display_name)}</Text>
+mobile/app/economy.tsx:651:              <Text style={[styles.meta, { color: colors.mutedForeground }]}>{dateLabel(referral.created_at)} · {referral.first_pack_rewarded ? 'Primer pack registrado' : 'Sin primer pack registrado'}</Text>
+mobile/app/economy.tsx:653:            <Text style={[styles.status, { color: statusColor(referral.status, colors) }]}>{referral.reward_granted ? 'ACREDITADO' : statusLabel(referral.status)}</Text>
+mobile/app/economy.tsx:666:  if (authLoading || loading) {
+mobile/app/economy.tsx:668:      <ScreenShell surface="economy">
+mobile/app/economy.tsx:670:          <DomainState kind="loading" title="Sincronizando economía" message="El Nexus está consultando cartera, ledger y mercado oficiales." testID="economy-loading" />
+mobile/app/economy.tsx:682:        <ActionButton label="IR A PERFIL" icon="person-outline" onPress={() => router.push('/profile')} colors={colors} testID="economy-auth-profile" />
+mobile/app/economy.tsx:689:      <ScreenShell surface="economy">
+mobile/app/economy.tsx:691:          <DomainState kind="error" title="Economía no disponible" message={error} actionLabel="REINTENTAR SINCRONIZACIÓN" onAction={() => { void refreshEconomy('refresh'); }} testID="economy-error" />
+mobile/app/economy.tsx:698:    <ScreenShell surface="economy">
+mobile/app/economy.tsx:701:        contentContainerStyle={{ paddingTop: insets.top + VISUAL_TOKENS.economy.shell.contentTop, paddingBottom: insets.bottom + VISUAL_TOKENS.economy.shell.contentBottom }}
+mobile/app/economy.tsx:707:            <Pressable accessibilityRole="button" accessibilityLabel="Volver" testID="economy-back" onPress={() => router.back()} style={[styles.backButton, { borderColor: colors.border }]}>
+mobile/app/economy.tsx:708:              <Ionicons name="arrow-back" size={VISUAL_TOKENS.economy.back.iconSize} color={colors.foreground} />
+mobile/app/economy.tsx:715:          <Pressable accessibilityRole="button" accessibilityLabel="Actualizar economía" testID="economy-refresh" onPress={() => void refreshEconomy('refresh')} style={[styles.backButton, { borderColor: colors.border }]}>
+mobile/app/economy.tsx:716:            <Ionicons name="refresh-outline" size={VISUAL_TOKENS.economy.back.iconSize} color={colors.accent} />
+mobile/app/economy.tsx:722:          <SectionButton label="Cartera" icon="wallet-outline" selected={section === 'wallet'} onPress={() => setSection('wallet')} colors={colors} testID="economy-tab-wallet" />
+mobile/app/economy.tsx:723:          <SectionButton label="Mercado" icon="storefront-outline" selected={section === 'market'} onPress={() => setSection('market')} colors={colors} testID="economy-tab-market" />
+mobile/app/economy.tsx:724:          <SectionButton label="Depósitos" icon="arrow-up-circle-outline" selected={section === 'deposits'} onPress={() => setSection('deposits')} colors={colors} testID="economy-tab-deposits" />
+mobile/app/economy.tsx:725:          <SectionButton label="Retiros" icon="arrow-down-circle-outline" selected={section === 'withdrawals'} onPress={() => setSection('withdrawals')} colors={colors} testID="economy-tab-withdrawals" />
+mobile/app/economy.tsx:726:          <SectionButton label="Referidos" icon="people-outline" selected={section === 'referrals'} onPress={() => setSection('referrals')} colors={colors} testID="economy-tab-referrals" />
+mobile/app/economy.tsx:738:      <Text style={[styles.cardLabel, { color: colors.mutedForeground }]}>{label.toUpperCase()}</Text>
+mobile/app/economy.tsx:762:        <Text style={[styles.cardTitle, { color: colors.foreground }]}>{entry.entry_type || 'Movimiento económico'}</Text>
+mobile/app/economy.tsx:774:      <Text style={[strong ? styles.cardTitle : styles.meta, { color: strong ? colors.accent : colors.foreground }]}>{value}</Text>
+mobile/app/economy.tsx:798:  header: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: VISUAL_TOKENS.economy.header.horizontalPadding, paddingBottom: VISUAL_TOKENS.economy.header.bottomPadding },
+mobile/app/economy.tsx:799:  headerCopy: { flexDirection: 'row', alignItems: 'center', gap: VISUAL_TOKENS.economy.header.copyGap },
+mobile/app/economy.tsx:800:  headerTitle: { fontSize: VISUAL_TOKENS.economy.header.titleSize, fontWeight: VISUAL_TOKENS.economy.header.titleWeight, marginTop: VISUAL_TOKENS.economy.header.titleMarginTop },
+mobile/app/economy.tsx:801:  backButton: { width: VISUAL_TOKENS.economy.back.size, height: VISUAL_TOKENS.economy.back.size, borderRadius: VISUAL_TOKENS.economy.back.radius, borderWidth: VISUAL_TOKENS.economy.back.borderWidth, alignItems: 'center', justifyContent: 'center' },
+mobile/app/economy.tsx:802:  sectionRow: { paddingHorizontal: VISUAL_TOKENS.economy.sectionRail.horizontalPadding, gap: VISUAL_TOKENS.economy.sectionRail.gap, paddingBottom: VISUAL_TOKENS.economy.sectionRail.bottomPadding },
+mobile/app/economy.tsx:803:  sectionButton: { flexDirection: 'row', alignItems: 'center', gap: VISUAL_TOKENS.economy.section.gap, paddingHorizontal: VISUAL_TOKENS.economy.section.paddingHorizontal, paddingVertical: VISUAL_TOKENS.economy.section.paddingVertical, borderRadius: VISUAL_TOKENS.economy.section.radius, borderWidth: VISUAL_TOKENS.economy.section.borderWidth },
+mobile/app/economy.tsx:804:  sectionButtonText: { fontSize: VISUAL_TOKENS.economy.section.labelSize, fontWeight: VISUAL_TOKENS.economy.section.labelWeight },
+mobile/app/economy.tsx:811:  cardLabel: { fontSize: 9, fontWeight: '700', letterSpacing: 0.8 },
+mobile/app/economy.tsx:820:  cardTitle: { fontSize: 14, fontWeight: '700' },
+mobile/app/meta.tsx:238:  return <View style={styles.stack}><SectionTitle eyebrow="POLYGON / VEXFORGE" title="Estado NFT" colors={colors} /><View style={[styles.infoCard, { backgroundColor: colors.panel, borderColor: colors.border }]}><Feather name="nft" size={22} color={colors.accent} /><View style={styles.flex}><Text style={[styles.rowTitle, { color: colors.foreground }]}>{signalLabel(contract?.name, 'CONTRATO NO REPORTADO')}</Text><Text style={[styles.body, { color: colors.mutedForeground }]}>{contract ? `${signalLabel(contract.symbol, 'SÍMBOLO NO REPORTADO')} · Red ${Number.isFinite(contract.chain_id) ? contract.chain_id : 'NO REPORTADA'} · ${nftStatusLabel(contract.status)}` : 'CONTRATO NO REPORTADO EN LA FUENTE OFICIAL'}</Text>{contract?.contract_address ? <Text selectable style={[styles.mono, { color: colors.accent }]}>{contract.contract_address}</Text> : null}</View></View><Text style={[styles.subheading, { color: colors.foreground }]}>Wallet vinculada</Text><TextInput value={address} onChangeText={setAddress} autoCapitalize="none" autoCorrect={false} placeholder="0x…" placeholderTextColor={colors.mutedForeground} style={[styles.input, { backgroundColor: colors.panel, borderColor: colors.border, color: colors.foreground }]} testID="meta-nft-wallet-input" /><ActionButton label={saving ? 'Guardando…' : data.nft.wallet ? 'Actualizar wallet' : 'Vincular wallet'} icon="chain" onPress={() => { void saveWallet(); }} colors={colors} disabled={saving} testID="meta-nft-wallet-save" />{message ? <Text accessibilityRole="alert" style={[styles.notice, { color: message.includes('vinculada') ? colors.success : colors.danger }]}>{message}</Text> : null}<Text style={[styles.subheading, { color: colors.foreground }]}>Cola de minteo</Text>{data.nft.queue.length === 0 ? <StateMessage icon="inbox" title="Sin solicitudes" body="Las solicitudes de mint de cartas aparecerán aquí cuando exista una wallet vinculada." colors={colors} /> : data.nft.queue.map((item) => <View key={item.id} style={[styles.queueRow, { backgroundColor: colors.panel, borderColor: colors.border }]}><View style={styles.flex}><Text style={[styles.rowTitle, { color: colors.foreground }]}>{nftCardLabel(item.card_id)}</Text><Text style={[styles.meta, { color: colors.mutedForeground }]}>{nftStatusLabel(item.status)} · {formatDate(item.requested_at)}</Text></View><Feather name={item.status === 'confirmed' ? 'check-circle' : 'time-outline'} size={18} color={item.status === 'confirmed' ? colors.success : colors.accent} /></View>)}</View>;
+mobile/app/meta.tsx:300:  if (!session) return <ScreenShell surface="profile"><View style={[styles.center, { paddingTop: insets.top }]}><StateMessage icon="lock" title="Sesión requerida" body="Inicia sesión para gestionar tu cuenta y sistemas." colors={colors} /><ActionButton label="Ir a acceso" icon="arrow-right" onPress={() => router.replace('/auth')} colors={colors} testID="meta-go-auth" /></View></ScreenShell>;
+mobile/app/meta.tsx:301:  if (!data && !error) return <ScreenShell surface="profile"><View style={[styles.center, { paddingTop: insets.top }]}><DomainState kind="loading" title="Sincronizando sistemas" message="El Nexus está cargando tu configuración oficial." testID="meta-loading" /></View></ScreenShell>;
+mobile/app/meta.tsx:312:  return <ScreenShell surface="profile"><KeyboardAwareScrollViewCompat contentContainerStyle={{ paddingTop: insets.top + 18, paddingBottom: insets.bottom + 108 }} refreshControl={<RefreshControl refreshing={refreshing} onRefresh={() => { void load(true); }} tintColor={colors.accent} />} showsVerticalScrollIndicator={false}>
+mobile/app/missions.tsx:30:function missionColor(type: string | null, colors: ReturnType<typeof useColors>) {
+mobile/app/missions.tsx:84:      testID={`mission-quest-${quest.id}`}
+mobile/app/missions.tsx:88:          backgroundColor: colors.card,
+mobile/app/missions.tsx:94:      <View style={styles.cardHeader}>
+mobile/app/missions.tsx:95:        <View style={styles.cardTitleWrap}>
+mobile/app/missions.tsx:100:            <Text style={[styles.cardTitle, { color: colors.foreground }]} numberOfLines={1}>
+mobile/app/missions.tsx:103:            <Text style={[styles.cardBody, { color: colors.mutedForeground }]} numberOfLines={2}>
+mobile/app/missions.tsx:112:      <View style={styles.rewardLine}>
+mobile/app/missions.tsx:113:        <Text style={[styles.reward, { color: colors.accent }]}>
+mobile/app/missions.tsx:114:          <Ionicons name="flash-outline" size={13} color={colors.accent} /> {numberSignal(definition?.reward_vex_ingame, 'VEX')}
+mobile/app/missions.tsx:116:        <Text style={[styles.reward, { color: colors.rarityRare }]}>
+mobile/app/missions.tsx:117:          <Ionicons name="sparkles-outline" size={13} color={colors.rarityRare} /> {numberSignal(definition?.reward_xp, 'XP')}
+mobile/app/missions.tsx:129:          testID={`mission-claim-${quest.id}`}
+mobile/app/missions.tsx:152:  mission,
+mobile/app/missions.tsx:158:  mission: MobileMission;
+mobile/app/missions.tsx:162:  onExecute: (mission: MobileMission) => void;
+mobile/app/missions.tsx:164:  const accent = missionColor(mission.mission_type, colors);
+mobile/app/missions.tsx:165:  const isBusy = executing === mission.id;
+mobile/app/missions.tsx:167:  const title = textSignal(mission.name, 'MISIÓN SIN NOMBRE REPORTADO');
+mobile/app/missions.tsx:168:  const difficulty = textSignal(mission.difficulty, 'DIFICULTAD NO REPORTADA').toUpperCase();
+mobile/app/missions.tsx:169:  const missionType = textSignal(mission.mission_type, 'TIPO NO REPORTADO');
+mobile/app/missions.tsx:171:    <View testID={`mission-card-${mission.id}`} style={[styles.missionCard, { backgroundColor: colors.panel, borderColor: colors.border }]}>
+mobile/app/missions.tsx:172:      <View style={styles.cardHeader}>
+mobile/app/missions.tsx:173:        <View style={styles.cardTitleWrap}>
+mobile/app/missions.tsx:174:          <View style={[styles.missionIcon, { backgroundColor: `${accent}18`, borderColor: `${accent}55` }]}>
+mobile/app/missions.tsx:178:            <Text style={[styles.cardTitle, { color: colors.foreground }]} numberOfLines={1}>{title}</Text>
+mobile/app/missions.tsx:179:            <Text style={[styles.cardBody, { color: colors.mutedForeground }]}>
+mobile/app/missions.tsx:180:              {difficulty} · {missionType.toUpperCase()}
+mobile/app/missions.tsx:185:          <Ionicons name="flash" size={12} color={colors.rarityRare} /> {numberSignal(mission.energy_cost, 'ENERGÍA')}
+mobile/app/missions.tsx:188:      <View style={styles.rewardLine}>
+mobile/app/missions.tsx:189:        <Text style={[styles.reward, { color: colors.accent }]}>{numberSignal(mission.reward_vex_ingame, '+VEX')}</Text>
+mobile/app/missions.tsx:190:        <Text style={[styles.reward, { color: colors.rarityRare }]}>{numberSignal(mission.reward_xp, '+XP')}</Text>
+mobile/app/missions.tsx:191:        {typeof mission.reward_vex_tradeable === 'number' && Number.isFinite(mission.reward_vex_tradeable) && mission.reward_vex_tradeable > 0 ? <Text style={[styles.reward, { color: colors.rarityEpic }]}>+{mission.reward_vex_tradeable} T-VEX</Text> : null}
+mobile/app/missions.tsx:194:        testID={`mission-execute-${mission.id}`}
+mobile/app/missions.tsx:199:        onPress={() => onExecute(mission)}
+mobile/app/missions.tsx:221:  const [missions, setMissions] = useState<MobileMission[]>([]);
+mobile/app/missions.tsx:259:  const cooldownRemaining = (missionId: string) => Math.max(0, Math.ceil(((cooldowns[missionId] ?? 0) - now) / 1000));
+mobile/app/missions.tsx:264:      : quests.length > 0 || missions.length > 0
+mobile/app/missions.tsx:265:        ? `${quests.length} OBJETIVOS · ${missions.length} MISIONES DISPONIBLES`
+mobile/app/missions.tsx:275:      void emitTelemetry(session, 'reward_claimed', { source: 'daily_quest' });
+mobile/app/missions.tsx:286:  const handleExecute = async (mission: MobileMission) => {
+mobile/app/missions.tsx:287:    if (!session || !player || executing || cooldownRemaining(mission.id) > 0) return;
+mobile/app/missions.tsx:288:    setExecuting(mission.id);
+mobile/app/missions.tsx:291:      const reward: MissionReward = await executeMobileMission(session, player.id, mission.id);
+mobile/app/missions.tsx:292:      void emitTelemetry(session, 'reward_claimed', { source: 'mission' });
+mobile/app/missions.tsx:293:      setActionMessage(`Misión completada: ${numberSignal(reward.xp_reward, '+XP')} y ${numberSignal(reward.ingame_reward, '+VEX')}.`);
+mobile/app/missions.tsx:294:      if ((mission.cooldown_seconds ?? 0) > 0) {
+mobile/app/missions.tsx:295:        setCooldowns((current) => ({ ...current, [mission.id]: Date.now() + (mission.cooldown_seconds ?? 0) * 1000 }));
+mobile/app/missions.tsx:299:    } catch (missionError) {
+mobile/app/missions.tsx:300:      setActionMessage(missionError instanceof Error ? missionError.message : 'La misión no pudo completarse.');
+mobile/app/missions.tsx:311:        <Text style={[styles.cardBody, { color: colors.mutedForeground }]}>Tus misiones y recompensas pertenecen a tu cuenta de forjador.</Text>
+mobile/app/missions.tsx:312:        <Pressable accessibilityRole="button" accessibilityLabel="Ir a inicio de sesión" onPress={() => router.replace('/auth')} style={[styles.primaryButton, { backgroundColor: colors.accent }]}>
+mobile/app/missions.tsx:320:    <ScreenShell surface="missions">
+mobile/app/missions.tsx:331:              testID="missions-back"
+mobile/app/missions.tsx:341:          <View testID="missions-energy-signal" style={[styles.energyPill, { backgroundColor: colors.panel, borderColor: colors.border }]}>
+mobile/app/missions.tsx:354:        {error && quests.length === 0 && missions.length === 0 ? (
+mobile/app/missions.tsx:355:          <DomainState kind="error" title="Misiones no disponibles" message={error} actionLabel="REINTENTAR SINCRONIZACIÓN" onAction={() => { void load(); }} testID="missions-error" />
+mobile/app/missions.tsx:364:          <DomainState kind="loading" title="Sincronizando actividad" message="El Nexus está consultando misiones y recompensas reales." testID="missions-loading" />
+mobile/app/missions.tsx:375:              <View testID="missions-empty-quests" style={[styles.emptyCard, { backgroundColor: colors.panel, borderColor: colors.border }]}>
+mobile/app/missions.tsx:378:                <Text style={[styles.cardBody, { color: colors.mutedForeground }]}>Vuelve a sincronizar cuando se abra la próxima rotación diaria.</Text>
+mobile/app/missions.tsx:387:              <Text style={[styles.count, { color: colors.mutedForeground }]}>{missions.length} ACTIVAS</Text>
+mobile/app/missions.tsx:389:            {missions.length > 0 ? missions.map((mission) => (
+mobile/app/missions.tsx:390:              <MissionCard key={mission.id} mission={mission} colors={colors} executing={executing} cooldown={cooldownRemaining(mission.id)} onExecute={handleExecute} />
+mobile/app/missions.tsx:392:              <View testID="missions-empty" style={[styles.emptyCard, { backgroundColor: colors.panel, borderColor: colors.border }]}>
+mobile/app/missions.tsx:395:                <Text style={[styles.cardBody, { color: colors.mutedForeground }]}>El servidor no tiene actividad lista para esta cuenta.</Text>
+mobile/app/missions.tsx:420:  missionCard: { borderWidth: 1, borderRadius: 15, padding: 15, marginBottom: 11 },
+mobile/app/missions.tsx:421:  cardHeader: { flexDirection: 'row', alignItems: 'flex-start', justifyContent: 'space-between', gap: 10 },
+mobile/app/missions.tsx:422:  cardTitleWrap: { flex: 1, flexDirection: 'row', alignItems: 'center', gap: 11 },
+mobile/app/missions.tsx:424:  missionIcon: { width: 38, height: 38, borderRadius: 12, borderWidth: 1, alignItems: 'center', justifyContent: 'center' },
+mobile/app/missions.tsx:426:  cardTitle: { fontSize: 15, fontWeight: '700' },
+mobile/app/missions.tsx:427:  cardBody: { fontSize: 12, lineHeight: 18, marginTop: 3 },
+mobile/app/missions.tsx:430:  rewardLine: { flexDirection: 'row', flexWrap: 'wrap', gap: 13, marginTop: 14, marginBottom: 12 },
+mobile/app/missions.tsx:431:  reward: { fontSize: 11, fontWeight: '700' },
+mobile/app/store.tsx:209:      if (!result.ok || !result.cards) throw new Error(result.reason ?? 'El servidor no pudo abrir el pack.');
+mobile/app/store.tsx:211:      setOpenedCards(result.cards);
+mobile/app/store.tsx:239:            <Text style={[styles.cardTitle, { color: colors.foreground }]}>Pack listo para revelar</Text>
+mobile/app/store.tsx:253:              <View key={pack.pack_key} testID={`store-pack-${pack.pack_key}`} style={[styles.productCard, { backgroundColor: colors.card, borderColor: colors.border }]}>
+mobile/app/store.tsx:257:                    <Text style={[styles.cardTitle, { color: colors.foreground }]}>{storeText(pack.pack_name, 'PACK NO REPORTADO')}</Text>
+mobile/app/store.tsx:258:                    <Text style={[styles.meta, { color: colors.mutedForeground }]}>{pack.card_count} cartas · {storeText(pack.pack_key, 'CLAVE DE PACK NO REPORTADA')}</Text>
+mobile/app/store.tsx:287:            <View><Text style={[styles.eyebrow, { color: colors.accent }]}>REVELACIÓN COMPLETA</Text><Text style={[styles.cardTitle, { color: colors.foreground }]}>Cartas recibidas</Text></View>
+mobile/app/store.tsx:291:            {openedCards.map((card, index) => (
+mobile/app/store.tsx:292:              <View key={`${card.id}-${index}`} style={[styles.revealedCard, { backgroundColor: colors.card, borderColor: RARITY_COLORS[card.rarity] ?? colors.border }]}>
+mobile/app/store.tsx:293:                {card.image_url ? <Image source={{ uri: card.image_url }} style={styles.revealedImage} resizeMode="cover" /> : <View style={styles.imageFallback}><Ionicons name="layers-outline" size={24} color={colors.mutedForeground} /></View>}
+mobile/app/store.tsx:294:                <Text numberOfLines={2} style={[styles.revealedName, { color: colors.foreground }]}>{storeText(card.name, 'NOMBRE DE CARTA NO REPORTADO')}</Text>
+mobile/app/store.tsx:295:                <Text style={[styles.meta, { color: RARITY_COLORS[card.rarity] ?? colors.mutedForeground }]}>{storeText(card.rarity, 'RAREZA NO REPORTADA')}</Text>
+mobile/app/store.tsx:304:          <View style={{ flex: 1 }}><Text style={[styles.cardTitle, { color: colors.foreground }]}>{order.pack_key}</Text><Text style={[styles.meta, { color: colors.mutedForeground }]}>{formatStoreDate(order.created_at)}</Text></View>
+mobile/app/store.tsx:355:        {active.boosts.map((boost) => <View key={boost.id} style={styles.activeRow}><Ionicons name="flash-outline" size={17} color={colors.success} /><Text style={[styles.cardTitle, { color: colors.foreground, flex: 1 }]}>{boost.boost_type} ×{boost.multiplier}</Text><Text style={[styles.meta, { color: colors.success }]}>{formatStoreDate(boost.expires_at)}</Text></View>)}
+mobile/app/store.tsx:356:        {active.consumables.map((item) => <View key={item.id} style={styles.activeRow}><Ionicons name="key-outline" size={17} color={colors.accent} /><Text style={[styles.cardTitle, { color: colors.foreground, flex: 1 }]}>{item.item_key}</Text><Text style={[styles.cardTitle, { color: colors.accent }]}>×{item.quantity}</Text></View>)}
+mobile/app/store.tsx:360:        return <View key={item.id} testID={`store-item-${item.item_key}`} style={[styles.productCard, { backgroundColor: colors.card, borderColor: colors.border }]}>
+mobile/app/store.tsx:361:          <View style={styles.productHeader}><View style={[styles.productIcon, { backgroundColor: `${colors.accent}16`, borderColor: `${colors.accent}55` }]}><Ionicons name={icon} size={24} color={colors.accent} /></View><View style={{ flex: 1 }}><Text style={[styles.cardTitle, { color: colors.foreground }]}>{item.name}</Text><Text style={[styles.meta, { color: colors.mutedForeground }]}>{item.category}</Text></View></View>
+mobile/app/store.tsx:366:      {orders.length > 0 ? <><SectionTitle eyebrow="HISTORIAL VIVO" title="Mis órdenes" colors={colors} />{orders.map((order) => <View key={order.id ?? order.order_id} style={[styles.historyRow, { borderBottomColor: colors.border }]}><View style={{ flex: 1 }}><Text style={[styles.cardTitle, { color: colors.foreground }]}>{order.item_name ?? order.item_key}</Text><Text style={[styles.meta, { color: colors.mutedForeground }]}>{formatUsd(order.price_usdt)}</Text></View><Text style={[styles.meta, { color: order.status === 'approved' ? colors.success : colors.accent }]}>{order.status}</Text></View>)}</> : null}
+mobile/app/store.tsx:367:      {selectedOrder ? <View style={[styles.paymentCard, { backgroundColor: colors.panelStrong, borderColor: colors.accent }]}><View style={styles.revealHeader}><View style={{ flex: 1 }}><Text style={[styles.eyebrow, { color: colors.accent }]}>ORDEN DE PAGO</Text><Text style={[styles.cardTitle, { color: colors.foreground }]}>{selectedOrder.item_name ?? selectedOrder.item_key}</Text></View><Pressable accessibilityRole="button" onPress={() => setSelectedOrder(null)}><Ionicons name="close-circle-outline" size={24} color={colors.mutedForeground} /></Pressable></View><Text style={[styles.bodyLeft, { color: colors.mutedForeground }]}>Tesorería · {selectedOrder.chain?.trim() || 'CADENA NO REPORTADA'} · {selectedOrder.token_symbol?.trim() || 'TOKEN NO REPORTADO'} · {selectedOrder.token_standard?.trim() || 'ESTÁNDAR NO REPORTADO'}</Text><Text selectable style={[styles.walletText, { color: colors.foreground }]}>{selectedOrder.treasury_wallet_address?.trim() || 'TESORERÍA NO REPORTADA'}</Text><TextInput editable={!selectedOrder.payment_submitted} value={payerWallet} onChangeText={setPayerWallet} placeholder="Wallet desde la que pagaste" placeholderTextColor={colors.mutedForeground} autoCapitalize="none" style={[styles.input, { backgroundColor: colors.card, borderColor: colors.border, color: colors.foreground }]} /><TextInput editable={!selectedOrder.payment_submitted} value={txHash} onChangeText={setTxHash} placeholder={`TX hash de la transferencia ${selectedOrder.token_symbol?.trim() || 'TOKEN NO REPORTADO'}`} placeholderTextColor={colors.mutedForeground} autoCapitalize="none" style={[styles.input, { backgroundColor: colors.card, borderColor: colors.border, color: colors.foreground }]} /><ActionButton label={selectedOrder.payment_submitted ? 'PAGO REGISTRADO · PENDIENTE' : busy ? 'REGISTRANDO…' : 'REGISTRAR PAGO'} onPress={() => void submitPayment()} colors={colors} disabled={busy || selectedOrder.payment_submitted || !payerWallet.trim() || !txHash.trim()} /></View> : null}
+mobile/app/store.tsx:373:  const [cards, setCards] = useState<MobileFusableCard[]>([]);
+mobile/app/store.tsx:390:  async function chooseSource(card: MobileFusableCard) {
+mobile/app/store.tsx:391:    setSource(card); setPolicy(null); setTargets([]); setTargetId(''); setError(null); setPolicyLoading(true);
+mobile/app/store.tsx:393:      const nextPolicy = await loadMobileFusionPolicy(card.rarity);
+mobile/app/store.tsx:405:    try { const result = await applyMobileFusion(session, playerId, source.card_id, targetId); if (!result.ok) throw new Error(result.reason ?? 'La fusión fue rechazada por el servidor.'); void emitTelemetry(session, 'forge_action', { action: 'fusion' }); await load(); await onRefresh(); setSource(null); setPolicy(null); setTargets([]); setTargetId(''); } catch (err) { setError(err instanceof Error ? err.message : 'No se pudo completar la fusión.'); } finally { setBusy(false); }
+mobile/app/store.tsx:408:  return <View><SectionTitle eyebrow="CRUCIBLE" title="Fusión de cartas" colors={colors} /><Text style={[styles.bodyLeft, { color: colors.mutedForeground }]}>El servidor valida cartas, shards, VEX y liquidación como una sola operación.</Text>{error ? <ErrorBanner message={error} colors={colors} /> : null}<View style={[styles.activePanel, { backgroundColor: colors.panel, borderColor: colors.border }]}><Text style={[styles.eyebrow, { color: colors.accent }]}>SHARDS DISPONIBLES</Text>{shards.length ? <View style={styles.chipRow}>{shards.map((shard) => <View key={shard.rarity} style={[styles.chip, { borderColor: RARITY_COLORS[shard.rarity] ?? colors.border }]}><Text style={[styles.meta, { color: RARITY_COLORS[shard.rarity] ?? colors.foreground }]}>{shard.rarity} · {fusionNumber(shard.quantity, 'CANTIDAD NO REPORTADA')}</Text></View>)}</View> : <Text style={[styles.bodyLeft, { color: colors.mutedForeground }]}>No hay shards registrados.</Text>}</View><SectionTitle eyebrow="PASO 1" title="Elige la carta fuente" colors={colors} />{cards.length ? <View style={styles.stack}>{cards.map((card) => <Pressable key={card.player_card_id} testID={`store-fusion-source-${card.player_card_id}`} accessibilityRole="button" accessibilityState={{ selected: source?.player_card_id === card.player_card_id }} onPress={() => void chooseSource(card)} style={[styles.selectRow, { backgroundColor: source?.player_card_id === card.player_card_id ? colors.secondary : colors.card, borderColor: source?.player_card_id === card.player_card_id ? colors.accent : colors.border }]}><View style={{ flex: 1 }}><Text style={[styles.cardTitle, { color: colors.foreground }]}>{card.name}</Text><Text style={[styles.meta, { color: RARITY_COLORS[card.rarity] ?? colors.mutedForeground }]}>{card.rarity} · disponibles ×{fusionNumber(card.quantity, 'CANTIDAD NO REPORTADA')}</Text></View><Ionicons name={source?.player_card_id === card.player_card_id ? 'checkmark-circle' : 'chevron-forward'} size={20} color={source?.player_card_id === card.player_card_id ? colors.accent : colors.mutedForeground} /></Pressable>)}</View> : <EmptyBlock icon="git-merge-outline" title="Sin cartas fusionables" body="Consigue cartas no bloqueadas con fusión habilitada para abrir un camino." colors={colors} />}{source ? <><SectionTitle eyebrow="REGLA AUTORITATIVA" title="Coste y destino" colors={colors} />{policyLoading ? <LoadingBlock colors={colors} label="Calculando coste..." /> : policy ? <View style={[styles.policyCard, { backgroundColor: colors.panelStrong, borderColor: colors.accent }]}><ValueRow label="Cartas requeridas" value={fusionNumber(policy.neededCards, 'CARTAS NO REPORTADAS')} colors={colors} /><ValueRow label="Shards requeridos" value={`${fusionNumber(policy.requiredShards, 'SHARDS NO REPORTADOS')} · tienes ${fusionNumber(shards.find((item) => item.rarity === source.rarity)?.quantity ?? null, 'CANTIDAD NO REPORTADA')}`} colors={colors} /><ValueRow label="Coste VEX" value={fusionNumber(policy.ingameCost, 'VEX NO REPORTADO')} colors={colors} /><ValueRow label="Resultado" value={fusionText(policy.targetRarity, 'RESULTADO NO REPORTADO')} colors={colors} /></View> : <EmptyBlock icon="git-merge-outline" title="Regla de fusión no reportada" body="Supabase no entregó una política activa para esta rareza." colors={colors} />}{policy?.targetRarity ? <><SectionTitle eyebrow="PASO 2" title="Elige la carta objetivo" colors={colors} />{targets.length ? <View style={styles.stack}>{targets.map((target) => <Pressable key={target.id} testID={`store-fusion-target-${target.id}`} accessibilityRole="button" accessibilityState={{ selected: targetId === target.id }} onPress={() => setTargetId(target.id)} style={[styles.selectRow, { backgroundColor: targetId === target.id ? colors.secondary : colors.card, borderColor: targetId === target.id ? colors.accent : colors.border }]}><View style={{ flex: 1 }}><Text style={[styles.cardTitle, { color: colors.foreground }]}>{target.name}</Text><Text style={[styles.meta, { color: RARITY_COLORS[target.rarity] ?? colors.mutedForeground }]}>{target.rarity}</Text></View><Ionicons name={targetId === target.id ? 'checkmark-circle' : 'radio-button-off-outline'} size={20} color={targetId === target.id ? colors.accent : colors.mutedForeground} /></Pressable>)}</View> : <EmptyBlock icon="arrow-forward-circle-outline" title="Sin objetivos configurados" body="La política oficial no tiene cartas objetivo activas para esta rareza." colors={colors} />}<ActionButton label={busy ? 'FUSIONANDO…' : 'FUSIONAR'} onPress={() => void fuse()} colors={colors} disabled={busy || !targetId || !policy || policy.neededCards === null || policy.requiredShards === null || policy.ingameCost === null || !policy.targetRarity} testID="store-fusion-submit" /></> : null}</> : null}</View>;
+mobile/app/store.tsx:418:  async function evolve(path: MobileEvolutionPath) { setBusy(path.id); setError(null); try { const result = await evolveMobileCard(session, playerId, path.card_id); if (!result.ok) throw new Error(result.message ?? 'El servidor rechazó la evolución.'); void emitTelemetry(session, 'forge_action', { action: 'evolution' }); await onRefresh(); await load(); } catch (err) { setError(err instanceof Error ? err.message : 'No se pudo evolucionar la carta.'); } finally { setBusy(null); } }
+mobile/app/store.tsx:420:  return <View><SectionTitle eyebrow="PROGRESIÓN" title="Evolución de cartas" colors={colors} /><Text style={[styles.bodyLeft, { color: colors.mutedForeground }]}>Los requisitos y la transformación vienen de los caminos oficiales; la operación se liquida en Supabase.</Text>{error ? <ErrorBanner message={error} colors={colors} /> : null}{paths.length ? <View style={styles.stack}>{paths.map((path) => { const fromColor = RARITY_COLORS[path.from_rarity] ?? colors.mutedForeground; const toColor = RARITY_COLORS[path.to_rarity] ?? colors.accent; const copiesRequired = path.cost_json?.copies_required; const vexIngame = path.cost_json?.vex_ingame; const levelRequired = path.requirements_json?.level_required; const pvpWins = path.requirements_json?.pvp_wins; return <View key={path.id} testID={`store-evolution-${path.id}`} style={[styles.productCard, { backgroundColor: colors.card, borderColor: `${fromColor}66` }]}><View style={styles.evolutionPair}><View style={{ flex: 1 }}><Text style={[styles.meta, { color: fromColor }]}>{path.from_rarity}</Text><Text style={[styles.cardTitle, { color: colors.foreground }]}>{path.from_name}</Text></View><Ionicons name="arrow-forward" size={20} color={colors.accent} /><View style={{ flex: 1 }}><Text style={[styles.meta, { color: toColor }]}>{path.to_rarity}</Text><Text style={[styles.cardTitle, { color: colors.foreground }]}>{path.to_name}</Text></View></View><View style={styles.chipRow}><View style={[styles.chip, { borderColor: colors.border }]}><Text style={[styles.meta, { color: colors.mutedForeground }]}>{typeof copiesRequired === 'number' && Number.isFinite(copiesRequired) ? `${copiesRequired} copias` : 'COPIAS NO REPORTADAS'}</Text></View><View style={[styles.chip, { borderColor: colors.border }]}><Text style={[styles.meta, { color: colors.mutedForeground }]}>{typeof vexIngame === 'number' && Number.isFinite(vexIngame) ? `${vexIngame} VEX` : 'VEX NO REPORTADO'}</Text></View><View style={[styles.chip, { borderColor: colors.border }]}><Text style={[styles.meta, { color: colors.mutedForeground }]}>{typeof levelRequired === 'number' && Number.isFinite(levelRequired) ? `Nivel ${levelRequired}+` : 'NIVEL NO REPORTADO'}</Text></View></View>{typeof pvpWins === 'number' && Number.isFinite(pvpWins) ? <Text style={[styles.meta, { color: colors.mutedForeground }]}>Victorias PvP requeridas: {pvpWins}</Text> : null}{path.requirements_json?.description ? <Text style={[styles.bodyLeft, { color: colors.mutedForeground }]}>{path.requirements_json.description}</Text> : null}<ActionButton label={busy === path.id ? 'EVOLUCIONANDO…' : 'EVOLUCIONAR'} onPress={() => void evolve(path)} colors={colors} disabled={busy !== null} testID={`store-evolution-submit-${path.id}`} /></View>; })}</View> : <EmptyBlock icon="arrow-up-circle-outline" title="Sin caminos de evolución" body="No hay transformaciones configuradas en el catálogo oficial." colors={colors} />}</View>;
+mobile/app/store.tsx:424:  const { collection, collectionLoading } = useGame();
+mobile/app/store.tsx:426:  const filtered = useMemo(() => collection.filter((card) => card.name.toLowerCase().includes(search.trim().toLowerCase()) || (card.code ?? '').toLowerCase().includes(search.trim().toLowerCase())), [collection, search]);
+mobile/app/store.tsx:427:  if (collectionLoading) return <LoadingBlock colors={colors} label="Sincronizando inventario..." />;
+mobile/app/store.tsx:428:  return <View><SectionTitle eyebrow="ALMACÉN DEL NEXUS" title="Inventario de cartas" colors={colors} /><TextInput value={search} onChangeText={setSearch} placeholder="Buscar por nombre o código" placeholderTextColor={colors.mutedForeground} style={[styles.input, { backgroundColor: colors.card, borderColor: colors.border, color: colors.foreground }]} />{filtered.length === 0 ? <EmptyBlock icon="layers-outline" title={collection.length ? 'Sin coincidencias' : 'Inventario vacío'} body={collection.length ? 'Prueba con otro nombre o código.' : 'Abre un pack para registrar tus primeras cartas.'} colors={colors} /> : <View style={styles.inventoryGrid}>{filtered.map((card) => <View key={card.player_card_id} testID={`store-inventory-${card.player_card_id}`} style={[styles.inventoryCard, { backgroundColor: colors.card, borderColor: RARITY_COLORS[card.rarity ?? ''] ?? colors.border }]}>{card.image_url ? <Image source={{ uri: card.image_url }} style={styles.inventoryImage} resizeMode="cover" /> : <View style={styles.imageFallback}><Ionicons name="layers-outline" size={24} color={colors.mutedForeground} /></View>}<Text numberOfLines={2} style={[styles.revealedName, { color: colors.foreground }]}>{storeText(card.name, 'NOMBRE DE CARTA NO REPORTADO')}</Text><Text style={[styles.meta, { color: RARITY_COLORS[card.rarity ?? ''] ?? colors.mutedForeground }]}>{storeText(card.rarity, 'RAREZA NO REPORTADA')}</Text><Text style={[styles.quantity, { color: colors.accent }]}>×{card.quantity}</Text></View>)}</View>}</View>;
+mobile/app/store.tsx:437:  return <View style={styles.valueRow}><Text style={[styles.bodyLeft, { color: colors.mutedForeground }]}>{label}</Text><Text style={[styles.cardTitle, { color: colors.foreground }]}>{value}</Text></View>;
+mobile/app/store.tsx:449:  if (!session || !player) return <Redirect href="/auth" />;
+mobile/app/store.tsx:519:  cardTitle: { fontSize: 13, fontWeight: '700' },
+mobile/app/tutorial.tsx:12:type TutorialRoute = '/collection' | '/battle' | '/deck' | '/store';
+mobile/app/tutorial.tsx:41:    route: '/collection',
+mobile/app/tutorial.tsx:76:    route: '/deck',
+mobile/app/tutorial.tsx:204:  const { session, player, progress, syncState, syncError, authLoading, refresh } = useGame();
+mobile/app/tutorial.tsx:209:  if (authLoading) return <LoadingState colors={colors} />;
+mobile/app/tutorial.tsx:210:  if (!session) return <Redirect href="/auth" />;
+mobile/app/tutorial.tsx:311:      <View style={[styles.card, { backgroundColor: `${colors.panel}E8`, borderColor: `${accent}66` }]}>
+mobile/app/tutorial.tsx:380:  card: { borderWidth: 1, borderRadius: 22, paddingHorizontal: 22, paddingVertical: 28, alignItems: 'center', minHeight: 370, overflow: 'hidden' },
+mobile/app/world.tsx:139:function rewardNumber(value: unknown) {
+mobile/app/world.tsx:143:function rewardText(reward: Record<string, unknown> | undefined) {
+mobile/app/world.tsx:144:  if (!reward) return 'RECOMPENSA NO REPORTADA';
+mobile/app/world.tsx:147:    if (!(key in reward)) return;
+mobile/app/world.tsx:148:    const value = rewardNumber(reward[key]);
+mobile/app/world.tsx:153:  if ('card_rarity' in reward) {
+mobile/app/world.tsx:154:    const rarity = typeof reward.card_rarity === 'string' ? reward.card_rarity.trim() : '';
+mobile/app/world.tsx:261:        const damage = rewardNumber(entry.damage);
+mobile/app/world.tsx:266:    <View testID={`world-boss-${boss.id}`} style={[worldBossStyles.card, { backgroundColor: colors.panel, borderColor: `${tone}88` }]}>
+mobile/app/world.tsx:280:        <View style={worldBossStyles.rewardRow}><Text style={[worldBossStyles.rewardText, { color: colors.accent }]}>{rewardText(boss.reward_pool)}</Text>{ownEncounters.length > 0 ? <Text style={[worldBossStyles.damageText, { color: ownDamage === null ? colors.accent : colors.success }]}>{ownDamage === null ? 'TÚ DAÑO NO REPORTADO' : `TÚ ${formatNumber(ownDamage)}`}</Text> : null}</View>
+mobile/app/world.tsx:291:  card: { borderWidth: VISUAL_TOKENS.worldBoss.card.borderWidth, borderRadius: VISUAL_TOKENS.worldBoss.card.radius, overflow: 'hidden' },
+mobile/app/world.tsx:308:  rewardRow: { flexDirection: 'row', justifyContent: 'space-between', gap: VISUAL_TOKENS.worldBoss.rewardRow.gap },
+mobile/app/world.tsx:309:  rewardText: { flex: 1, fontSize: VISUAL_TOKENS.worldBoss.rewardText.fontSize, fontWeight: VISUAL_TOKENS.worldBoss.rewardText.fontWeight },
+mobile/app/world.tsx:321:    <View testID={`world-raid-${raid.id}`} style={[worldRaidStyles.card, { backgroundColor: colors.panel, borderColor: colors.border }]}>
+mobile/app/world.tsx:324:       <View style={worldRaidStyles.stats}><Text style={[worldRaidStyles.metaText, { color: colors.mutedForeground }]}>{numberSignal(raid.metadata?.max_participants, 'LÍMITE')}</Text><Text style={[worldRaidStyles.metaText, { color: colors.accent }]}>{typeof raid.metadata?.reward_multiplier === 'number' ? `x${raid.metadata.reward_multiplier} recompensa` : 'MULTIPLICADOR NO REPORTADO'}</Text><Text style={[worldRaidStyles.metaText, { color: colors.mutedForeground }]}>{formatDate(raid.started_at ?? raid.created_at)}</Text></View>
+mobile/app/world.tsx:336:  card: { position: 'relative', overflow: 'hidden', borderWidth: VISUAL_TOKENS.worldRaid.card.borderWidth, borderRadius: VISUAL_TOKENS.worldRaid.card.radius, padding: VISUAL_TOKENS.worldRaid.card.padding, gap: VISUAL_TOKENS.worldRaid.card.gap },
+mobile/app/world.tsx:353:    <Pressable testID={`world-lore-${entry.id}`} accessibilityRole="button" onPress={onToggle} style={({ pressed }) => [worldLoreStyles.card, { backgroundColor: colors.panel, borderColor: expanded ? colors.accent : colors.border, opacity: pressed ? 0.78 : 1 }]}>
+mobile/app/world.tsx:361:  card: { borderWidth: VISUAL_TOKENS.worldLore.card.borderWidth, borderRadius: VISUAL_TOKENS.worldLore.card.radius, padding: VISUAL_TOKENS.worldLore.card.padding, gap: VISUAL_TOKENS.worldLore.card.gap },
+mobile/app/world.tsx:405:             <Text style={[styles.tierReward, { color: colors.mutedForeground }]}>{rewardText(tier.reward)}</Text>
+mobile/app/world.tsx:486:  screen: { flex: 1 }, content: { paddingHorizontal: 17, gap: 13 }, header: { paddingHorizontal: 17, gap: 13 }, headerTop: { flexDirection: 'row', alignItems: 'center', gap: 12 }, headerCopy: { flex: 1 }, headerSeal: { width: 43, height: 43, borderRadius: 14, borderWidth: 1, alignItems: 'center', justifyContent: 'center' }, refreshButton: { width: 40, height: 40, borderRadius: 13, borderWidth: 1, alignItems: 'center', justifyContent: 'center' }, eyebrow: { fontSize: 10, fontWeight: '900', letterSpacing: 1.45 }, title: { fontSize: 27, fontWeight: '800', marginTop: 3 }, sectionTitle: { fontSize: 21, fontWeight: '800', marginTop: 4 }, copy: { fontSize: 12, lineHeight: 18 }, tabs: { gap: 8, paddingVertical: 3, paddingRight: 12 }, tab: { minHeight: 38, borderWidth: 1, borderRadius: 12, paddingHorizontal: 12, flexDirection: 'row', alignItems: 'center', gap: 7 }, tabText: { fontSize: 10, fontWeight: '900', letterSpacing: 0.45 }, tabOverlay: { position: 'absolute', top: 110, left: 17, right: 17, height: 39, flexDirection: 'row', gap: 8, zIndex: -1 }, hiddenTabAction: { flex: 1 }, panelStack: { gap: 12 }, sectionHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-end' }, counter: { fontSize: 9, fontWeight: '900', letterSpacing: 0.9 }, loading: { minHeight: 250, alignItems: 'center', justifyContent: 'center', gap: 14 }, error: { borderWidth: 1, borderRadius: 13, padding: 13, flexDirection: 'row', gap: 9, alignItems: 'center' }, errorText: { flex: 1, fontSize: 12, lineHeight: 18 }, bossCard: { borderWidth: 1, borderRadius: 17, overflow: 'hidden' }, bossArt: { height: 148, position: 'relative', justifyContent: 'flex-end', padding: 14 }, missingBossArt: { alignItems: 'center', borderWidth: 1, justifyContent: 'center', gap: 7, paddingHorizontal: 18 }, missingBossArtText: { fontSize: 9, fontWeight: '900', letterSpacing: 0.7, textAlign: 'center' }, bossArtCopy: { zIndex: 1, paddingRight: 76 }, bossCode: { fontSize: 9, fontWeight: '900', letterSpacing: 1.1 }, bossTitle: { fontSize: 20, fontWeight: '900', marginTop: 5 }, tierPill: { position: 'absolute', right: 13, top: 13, paddingHorizontal: 9, paddingVertical: 5, borderRadius: 8, borderWidth: 1 }, tierText: { fontSize: 9, fontWeight: '900', letterSpacing: 0.7 }, bossBody: { padding: 14, gap: 10 }, bossLore: { fontSize: 12, lineHeight: 18 }, metaRow: { flexDirection: 'row', justifyContent: 'space-between', gap: 8 }, metaText: { fontSize: 10, fontWeight: '700', letterSpacing: 0.45 }, hpRow: { flexDirection: 'row', alignItems: 'center', gap: 9 }, hpTrack: { flex: 1, height: 6, borderRadius: 4, overflow: 'hidden' }, hpFill: { height: '100%', borderRadius: 4 }, hpText: { fontSize: 10, fontWeight: '800' }, rewardRow: { flexDirection: 'row', justifyContent: 'space-between', gap: 8 }, rewardText: { flex: 1, fontSize: 10, fontWeight: '800' }, damageText: { fontSize: 10, fontWeight: '800' }, primaryButton: { minHeight: 45, borderRadius: 11, paddingHorizontal: 14, alignItems: 'center', justifyContent: 'center', flexDirection: 'row', gap: 8 }, primaryButtonText: { fontSize: 10, fontWeight: '900', letterSpacing: 0.7 }, integrityNote: { fontSize: 9, lineHeight: 14, textAlign: 'center' }, raidCard: { position: 'relative', overflow: 'hidden', borderWidth: 1, borderRadius: 16, padding: 14, gap: 11 }, raidStripe: { position: 'absolute', left: 0, right: 0, top: 0, height: 3 }, raidHeader: { flexDirection: 'row', alignItems: 'center', gap: 10 }, raidIcon: { width: 40, height: 40, borderRadius: 13, borderWidth: 1, borderColor: 'rgba(255,255,255,0.12)', alignItems: 'center', justifyContent: 'center' }, raidCopy: { flex: 1 }, raidTitle: { fontSize: 15, fontWeight: '800', lineHeight: 19 }, difficulty: { fontSize: 9, fontWeight: '900', letterSpacing: 0.7 }, raidStats: { flexDirection: 'row', justifyContent: 'space-between', gap: 5, flexWrap: 'wrap' }, raidCode: { fontSize: 9, letterSpacing: 1 }, secondaryButton: { minHeight: 43, borderWidth: 1, borderRadius: 11, alignItems: 'center', justifyContent: 'center', flexDirection: 'row', gap: 8 }, secondaryButtonText: { fontSize: 10, fontWeight: '900', letterSpacing: 0.6 }, loreCard: { borderWidth: 1, borderRadius: 15, padding: 13, gap: 10 }, loreHeader: { flexDirection: 'row', alignItems: 'center', gap: 10 }, loreSeal: { width: 38, height: 38, borderRadius: 12, borderWidth: 1, alignItems: 'center', justifyContent: 'center' }, loreCopy: { flex: 1 }, loreCategory: { fontSize: 9, fontWeight: '900', letterSpacing: 0.8 }, loreTitle: { fontSize: 15, fontWeight: '800', marginTop: 3 }, lorePreview: { fontSize: 11, lineHeight: 17 }, loreContent: { fontSize: 12, lineHeight: 19 }, loreRelated: { fontSize: 9, fontWeight: '900', letterSpacing: 0.8 }, searchBox: { borderWidth: 1, borderRadius: 12, minHeight: 44, paddingHorizontal: 12, flexDirection: 'row', alignItems: 'center', gap: 9 }, searchInput: { flex: 1, fontSize: 12, paddingVertical: 9 }, seasonHero: { borderWidth: 1, borderRadius: 17, padding: 16, gap: 9 }, seasonTitle: { fontSize: 21, lineHeight: 27, fontWeight: '800' }, progressTop: { flexDirection: 'row', justifyContent: 'space-between', marginTop: 5 }, notice: { borderWidth: 1, borderRadius: 12, padding: 12, flexDirection: 'row', gap: 9, alignItems: 'center' }, noticeText: { flex: 1, fontSize: 11, lineHeight: 17 }, tierRow: { minHeight: 66, borderWidth: 1, borderRadius: 14, padding: 11, flexDirection: 'row', alignItems: 'center', gap: 10 }, tierNumber: { width: 37, height: 37, borderRadius: 12, borderWidth: 1, alignItems: 'center', justifyContent: 'center' }, tierNumberText: { fontSize: 14, fontWeight: '900' }, tierCopy: { flex: 1 }, tierLabel: { fontSize: 10, fontWeight: '900', letterSpacing: 0.6 }, tierReward: { fontSize: 11, marginTop: 4 }, claimButton: { minHeight: 31, borderRadius: 8, paddingHorizontal: 9, alignItems: 'center', justifyContent: 'center' }, claimText: { fontSize: 8, fontWeight: '900', letterSpacing: 0.5 }, rankRow: { minHeight: 64, borderWidth: 1, borderRadius: 14, padding: 12, flexDirection: 'row', alignItems: 'center', gap: 11 }, rankNumber: { width: 34, fontSize: 15, fontWeight: '900' }, rankCopy: { flex: 1 }, rankName: { fontSize: 13, fontWeight: '800' }, winRate: { fontSize: 13, fontWeight: '900' }, empty: { borderWidth: 1, borderRadius: 15, padding: 26, alignItems: 'center', gap: 9 }, emptyTitle: { fontSize: 17, fontWeight: '800', textAlign: 'center' }, emptyCopy: { fontSize: 12, lineHeight: 18, textAlign: 'center' },
+mobile/components/CanonicalFrame.ts:15: * Fits the authored 1080×2340 composition inside the available viewport
+mobile/components/CanonicalFrame.ts:68:  // the authored frame cannot be mounted at the wrong coordinate scale.
+mobile/components/DomainState.tsx:21:  const resolvedIcon = icon ?? (kind === 'error' ? 'warning' : kind === 'empty' ? 'collection' : 'resonance');
+mobile/components/ErrorFallback.tsx:62:              backgroundColor: colors.card,
+mobile/components/ErrorFallback.tsx:146:                    { backgroundColor: colors.card },
+mobile/components/ForgeArchiveScene.tsx:62:  const sceneSource = CANONICAL_BACKGROUNDS.collection;
+mobile/components/ForgeArchiveScene.tsx:67:    <View testID="cards-scene-viewport" style={styles.scene}>
+mobile/components/ForgeArchiveScene.tsx:125:          testID="collection-refresh"
+mobile/components/ForgeArchiveScene.tsx:144:          testID="cards-featured-portal"
+mobile/components/ForgeFormationPreview.tsx:40:        styles.card,
+mobile/components/ForgeFormationPreview.tsx:44:      <View style={styles.cardHeader}>
+mobile/components/ForgeFormationPreview.tsx:54:          {slot.image_url ? <Image source={{ uri: slot.image_url }} resizeMode="cover" style={styles.cardArt} /> : null}
+mobile/components/ForgeFormationPreview.tsx:87:    ? ordered.filter((slot) => slot.card_id !== champion.card_id)
+mobile/components/ForgeFormationPreview.tsx:148:                <FormationCard key={slot.card_id} slot={slot} role="RESERVA" colors={colors} />
+mobile/components/ForgeFormationPreview.tsx:215:  card: {
+mobile/components/ForgeFormationPreview.tsx:217:    minWidth: VISUAL_TOKENS.formation.card.minWidth,
+mobile/components/ForgeFormationPreview.tsx:219:    borderRadius: VISUAL_TOKENS.formation.card.radius,
+mobile/components/ForgeFormationPreview.tsx:220:    padding: VISUAL_TOKENS.formation.card.padding,
+mobile/components/ForgeFormationPreview.tsx:221:    gap: VISUAL_TOKENS.formation.card.gap,
+mobile/components/ForgeFormationPreview.tsx:223:  cardHeader: {
+mobile/components/ForgeFormationPreview.tsx:227:    gap: VISUAL_TOKENS.formation.cardHeader.gap,
+mobile/components/ForgeFormationPreview.tsx:229:  cardArt: {
+mobile/components/ForgeFormationPreview.tsx:231:    height: VISUAL_TOKENS.formation.cardArt.height,
+mobile/components/ForgeFormationPreview.tsx:232:    borderRadius: VISUAL_TOKENS.formation.cardArt.radius,
+mobile/components/ForgeFormationPreview.tsx:233:    backgroundColor: VISUAL_TOKENS.formation.cardArt.placeholderBackground,
+mobile/components/ForgeIcon.tsx:11: * existing screen contracts intact while rendering the same authored
+mobile/components/ForgeIcon.tsx:51:  card: 1,
+mobile/components/ForgeIcon.tsx:53:  cards: 1,
+mobile/components/ForgeIcon.tsx:69:  collection: 1,
+mobile/components/ForgeIcon.tsx:78:  deck: 1,
+mobile/components/ForgeIcon.tsx:82:  economy: 1,
+mobile/components/ForgeIcon.tsx:126:  missions: 1,
+mobile/components/ForgeIcon.tsx:139:  profile: 1,
+mobile/components/ForgeIcon.tsx:197:  'albums-outline': 'collection',
+mobile/components/ForgeIcon.tsx:217:  columns: 'deck',
+mobile/components/ForgeIcon.tsx:232:  'grid-outline': 'collection',
+mobile/components/ForgeIcon.tsx:236:  inbox: 'collection',
+mobile/components/ForgeIcon.tsx:239:  layers: 'collection',
+mobile/components/ForgeIcon.tsx:240:  'layers-outline': 'collection',
+mobile/components/ForgeIcon.tsx:250:  person: 'profile',
+mobile/components/ForgeIcon.tsx:251:  'person-outline': 'profile',
+mobile/components/ForgeIcon.tsx:252:  people: 'profile',
+mobile/components/ForgeIcon.tsx:253:  'people-outline': 'profile',
+mobile/components/ForgeIcon.tsx:275:  user: 'profile',
+mobile/components/ForgeIcon.tsx:347:    case 'cards':
+mobile/components/ForgeIcon.tsx:349:    case 'collection':
+mobile/components/ForgeIcon.tsx:351:    case 'missions':
+mobile/components/ForgeIcon.tsx:356:    case 'deck':
+mobile/components/ForgeIcon.tsx:366:    case 'profile':
+mobile/components/ForgeIcon.tsx:378:    case 'card':
+mobile/components/ScreenShell.tsx:29:    auth: 'primary',
+mobile/components/ScreenShell.tsx:31:    missions: 'success',
+mobile/components/ScreenShell.tsx:34:    collection: 'rarityRare',
+mobile/components/ScreenShell.tsx:35:    economy: 'accent',
+mobile/components/ScreenShell.tsx:36:    profile: 'rarityEpic',
+mobile/constants/cardIdentity.ts:2: * Stable card identity registry for scene-level presentation.
+mobile/constants/cardIdentity.ts:5: * faction and artwork remain live values from the canonical cards table.
+mobile/constants/cardIdentity.ts:25:export function getCardIdentityVisual(cardId: string | null | undefined): CardIdentityVisual | null {
+mobile/constants/cardIdentity.ts:26:  return cardId ? CARD_IDENTITY_REGISTRY[cardId] ?? null : null;
+mobile/constants/cardPilot.ts:4: * VE-3-PILOT authored presentation for the Android collection.
+mobile/constants/cardPilot.ts:6: * The map is keyed only by canonical card code. Its visual parameters are
+mobile/constants/cardPilot.ts:7: * presentation-only and do not enter card stats, combat, rewards, or storage.
+mobile/constants/colors.ts:26:    card: '#141428',
+mobile/constants/colors.ts:27:    cardForeground: '#EDF0F7',
+mobile/constants/colors.ts:71:    card: '#141428',
+mobile/constants/colors.ts:72:    cardForeground: '#EDF0F7',
+mobile/constants/colors.ts:100:  // CSS variable. This value applies to cards, buttons, inputs, and modals.
+mobile/constants/experience.ts:87: * source of gameplay state, card data, combat timing, or reward logic.
+mobile/constants/experience.ts:208:    card: { borderWidth: 1, radius: 17 },
+mobile/constants/experience.ts:224:    rewardRow: { gap: 8 },
+mobile/constants/experience.ts:225:    rewardText: { fontSize: 10, fontWeight: '800' },
+mobile/constants/experience.ts:232:    card: { borderWidth: 1, radius: 16, padding: 14, gap: 11 },
+mobile/constants/experience.ts:246:    card: { borderWidth: 1, radius: 15, padding: 13, gap: 10 },
+mobile/constants/experience.ts:380:    authLoading: {
+mobile/constants/experience.ts:414:  profileIdentity: {
+mobile/constants/experience.ts:415:    card: { borderWidth: 1, radius: 16, padding: 14, gap: 11 },
+mobile/constants/experience.ts:423:  profileStats: {
+mobile/constants/experience.ts:425:    card: { width: '48%', minHeight: 82, borderWidth: 1, radius: 13, padding: 10, gap: 4 },
+mobile/constants/experience.ts:430:  profileProgress: {
+mobile/constants/experience.ts:431:    card: { borderWidth: 1, radius: 14, padding: 13 },
+mobile/constants/experience.ts:440:  profileActions: {
+mobile/constants/experience.ts:443:    card: { width: '48%', minHeight: 58, borderWidth: 1, radius: 12, paddingHorizontal: 11, gap: 9 },
+mobile/constants/experience.ts:447:  profileFeedback: {
+mobile/constants/experience.ts:463:  profileModal: {
+mobile/constants/experience.ts:611:  economy: {
+mobile/constants/experience.ts:647:  deck: {
+mobile/constants/experience.ts:722:    card: { minWidth: 92, radius: 12, padding: 8, gap: 4 },
+mobile/constants/experience.ts:723:    cardHeader: { gap: 4 },
+mobile/constants/experience.ts:724:    cardArt: { height: 64, radius: 8, placeholderBackground: 'rgba(0,0,0,0.2)' },
+mobile/constants/visual.ts:24:  // its authored frame rather than placing a generic dashboard above it.
+mobile/constants/visual.ts:27:  // The reference's baked controls never become runtime UI; auth.tsx owns the
+mobile/constants/visual.ts:29:  auth: require('../assets/images/vexforge-auth-nexus-final.png'),
+mobile/constants/visual.ts:34:  missions: null,
+mobile/constants/visual.ts:36:  // The approved deck plate is scene art only. Deck rebuilds the portal,
+mobile/constants/visual.ts:38:  forge: require('../assets/images/decks-reference-scene.png'),
+mobile/constants/visual.ts:40:  // runtime rebuilds the portal, controls, card grid and data states natively.
+mobile/constants/visual.ts:41:  collection: require('../assets/images/collection-reference-scene.png'),
+mobile/constants/visual.ts:42:  economy: null,
+mobile/constants/visual.ts:43:  profile: null,
+mobile/context/GameContext.tsx:12:    cardsTotal: number;
+mobile/context/GameContext.tsx:14:    collection: PlayerCard[];
+mobile/context/GameContext.tsx:15:    collectionLoading: boolean;
+mobile/context/GameContext.tsx:18:    authLoading: boolean;
+mobile/context/GameContext.tsx:19:    authError: string | null;
+mobile/context/GameContext.tsx:43:    const [cardsTotal, setCardsTotal] = useState(0);
+mobile/context/GameContext.tsx:45:    const [collection, setCollection] = useState<PlayerCard[]>([]);
+mobile/context/GameContext.tsx:46:    const [collectionLoading, setCollectionLoading] = useState(false);
+mobile/context/GameContext.tsx:49:    const [authLoading, setAuthLoading] = useState(true);
+mobile/context/GameContext.tsx:50:    const [authError, setAuthError] = useState<string | null>(null);
+mobile/context/GameContext.tsx:64:        setCardsTotal(catalog.cardsTotal);
+mobile/context/GameContext.tsx:89:    useEffect(() => { if (!authLoading) void refresh(); }, [authLoading, session]);
+mobile/context/GameContext.tsx:110:    const value = useMemo(() => ({ session, player, progress, wallet, stats, cardsTotal, featuredCards, collection, collectionLoading, syncState, syncError, authLoading, authError, signIn, signInWithProvider, signInWithGoogle, signUp, resetPassword, signOut, refresh, opponents, battleLoading, battleResult, findOpponents: find, startBattle: battle, clearBattleResult: () => setBattleResult(null) }), [session, player, progress, wallet, stats, cardsTotal, featuredCards, collection, collectionLoading, syncState, syncError, authLoading, authError, opponents, battleLoading, battleResult]);
+mobile/game/render/GameRenderSurface.tsx:11: * moving data authority or game rules into the presentation layer.
+mobile/game/runtime/GameRuntime.tsx:10:  authLoading: boolean;
+mobile/game/runtime/GameRuntime.tsx:16:function RuntimeScene({ session, authLoading, syncState, onRetry, children }: GameRuntimeProps) {
+mobile/game/runtime/GameRuntime.tsx:18:  const readyForShell = Boolean(session) && !authLoading && syncState === 'connected';
+mobile/game/runtime/GameRuntime.tsx:25:    return <BootScene authLoading={authLoading} syncState={syncState} onRetry={onRetry} />;
+mobile/game/scenes/BootScene.tsx:13:  authLoading: boolean;
+mobile/game/scenes/BootScene.tsx:18:export function BootScene({ authLoading, syncState, onRetry }: BootSceneProps) {
+mobile/game/scenes/BootScene.tsx:32:  const title = authLoading
+mobile/game/scenes/BootScene.tsx:37:  const body = authLoading
+mobile/lib/aiBattle.ts:62: * training only. It never changes MMR, inventory, rewards, or server matches.
+mobile/lib/supabase.ts:4:import { HOME_PILOT_CARD_ID } from '@/constants/cardIdentity';
+mobile/lib/supabase.ts:37:  card_tier?: string | null;
+mobile/lib/supabase.ts:38:  card_domain?: string | null;
+mobile/lib/supabase.ts:45:  player_card_id: string;
+mobile/lib/supabase.ts:46:  card_id: string;
+mobile/lib/supabase.ts:56:  card_id: string;
+mobile/lib/supabase.ts:67:  card_count: number;
+mobile/lib/supabase.ts:87:  missions_completed?: number;
+mobile/lib/supabase.ts:88:  cards_owned?: number;
+mobile/lib/supabase.ts:141:  player_card_id: string;
+mobile/lib/supabase.ts:147:  card_name: string | null;
+mobile/lib/supabase.ts:148:  card_rarity: string | null;
+mobile/lib/supabase.ts:152:  card_id: string;
+mobile/lib/supabase.ts:153:  card_name: string | null;
+mobile/lib/supabase.ts:154:  card_rarity: string | null;
+mobile/lib/supabase.ts:207:  reward_granted: boolean;
+mobile/lib/supabase.ts:208:  first_pack_rewarded: boolean;
+mobile/lib/supabase.ts:216:  rewards_granted: number;
+mobile/lib/supabase.ts:218:export type Opponent = { player_id: string; display_name: string | null; mmr: number | null; wins: number | null; losses: number | null; deck_size: number | null; has_deck: boolean };
+mobile/lib/supabase.ts:288:  card_id: string;
+mobile/lib/supabase.ts:384:  p_card?: string;
+mobile/lib/supabase.ts:385:  o_card?: string;
+mobile/lib/supabase.ts:427:  total_cards: number;
+mobile/lib/supabase.ts:435:export type HomeMission = { id: string; name: string; energy_cost: number | null; reward_xp: number | null; reward_vex_ingame: number | null; difficulty: string | null; mission_type: string | null };
+mobile/lib/supabase.ts:451:    reward_vex_ingame: number;
+mobile/lib/supabase.ts:452:    reward_xp: number;
+mobile/lib/supabase.ts:466:  mission_type: string | null;
+mobile/lib/supabase.ts:468:  reward_xp: number | null;
+mobile/lib/supabase.ts:469:  reward_vex_ingame: number | null;
+mobile/lib/supabase.ts:470:  reward_vex_tradeable: number | null;
+mobile/lib/supabase.ts:473:  mission_group: string | null;
+mobile/lib/supabase.ts:478:  xp_reward?: number;
+mobile/lib/supabase.ts:479:  ingame_reward?: number;
+mobile/lib/supabase.ts:480:  tradeable_reward?: number;
+mobile/lib/supabase.ts:490:  card_count: number;
+mobile/lib/supabase.ts:508:  cards_received?: MobileOpenedCard[];
+mobile/lib/supabase.ts:542:  player_card_id: string;
+mobile/lib/supabase.ts:543:  card_id: string;
+mobile/lib/supabase.ts:558:  card_id: string;
+mobile/lib/supabase.ts:559:  evolves_to_card_id: string;
+mobile/lib/supabase.ts:577:  reward_pool: Record<string, unknown>;
+mobile/lib/supabase.ts:589:  reward_json: Record<string, unknown>;
+mobile/lib/supabase.ts:605:    reward_multiplier?: number;
+mobile/lib/supabase.ts:643:  reward: Record<string, unknown>;
+mobile/lib/supabase.ts:700:async function authRequest(path: string, body: Json) {
+mobile/lib/supabase.ts:701:  const response = await fetch(SUPABASE_URL + '/auth/v1/' + path, { method: 'POST', headers: headers(), body: JSON.stringify(body) });
+mobile/lib/supabase.ts:723:  const session = requireSession(await authRequest('token?grant_type=password', { email: email.trim(), password }));
+mobile/lib/supabase.ts:738:  const redirectTo = Linking.createURL('auth-callback');
+mobile/lib/supabase.ts:739:  const authorizeUrl = SUPABASE_URL + '/auth/v1/authorize?provider=' + provider + '&flow_type=implicit&prompt=select_account&redirect_to=' + encodeURIComponent(redirectTo);
+mobile/lib/supabase.ts:740:  const result = await WebBrowser.openAuthSessionAsync(authorizeUrl, redirectTo);
+mobile/lib/supabase.ts:751:  const userResponse = await fetch(SUPABASE_URL + '/auth/v1/user', { headers: headers(accessToken) });
+mobile/lib/supabase.ts:769:  await authRequest('recover', { email: email.trim() });
+mobile/lib/supabase.ts:773:  const response = await authRequest('signup', { email: email.trim(), password });
+mobile/lib/supabase.ts:800:    const refreshed = requireSession(await authRequest('token?grant_type=refresh_token', { refresh_token: saved.refresh_token }));
+mobile/lib/supabase.ts:840:  const cards = await rest(
+mobile/lib/supabase.ts:841:    'cards?select=id%2Ccode%2Cname%2Ccreated_at%2Cfaction%2Crarity%2Cspecialization%2Cpower%2Caffinity%2Cprestige%2Ccharge%2Clore%2Cimage_url%2Csupply%2Cminted%2Cis_founder%2Cis_legendary%2Ccard_tier%2Ccard_domain%2Cmarketable%2Cfusion_enabled%2Crelease_status%2Csynergy_json&active=eq.true&order=name.asc&limit=1000',
+mobile/lib/supabase.ts:844:  return { cardsTotal: cards.length, featuredCards: cards };
+mobile/lib/supabase.ts:849:    'players?select=id&auth_user_id=eq.' + encodeURIComponent(session.user.id) + '&limit=1',
+mobile/lib/supabase.ts:856:    'player_cards?select=id%2Ccard_id%2Cquantity%2Clocked%2Clisted%2Csource_tracking%2Ccreated_at%2Ccards!inner(id%2Ccode%2Cname%2Cfaction%2Crarity%2Cspecialization%2Cpower%2Caffinity%2Cprestige%2Ccharge%2Clore%2Cimage_url%2Csupply%2Cminted%2Cis_founder%2Cis_legendary%2Ccard_tier%2Ccard_domain%2Cmarketable%2Cfusion_enabled%2Crelease_status%2Csynergy_json)&player_id=eq.' +
+mobile/lib/supabase.ts:858:      '&quantity=gt.0&order=card_id.asc',
+mobile/lib/supabase.ts:860:  ) as Array<Record<string, unknown> & { cards?: PublicCard | PublicCard[] }>;
+mobile/lib/supabase.ts:863:    const card = Array.isArray(row.cards) ? row.cards[0] : row.cards;
+mobile/lib/supabase.ts:865:      ...(card ?? {}),
+mobile/lib/supabase.ts:866:      player_card_id: String(row.id ?? ''),
+mobile/lib/supabase.ts:867:      card_id: String(row.card_id ?? card?.id ?? ''),
+mobile/lib/supabase.ts:879:    'player_deck?select=slot_number%2Ccard_id%2Cis_champion%2Ccards!inner(code%2Cname%2Crarity%2Cfaction%2Cpower%2Cimage_url)&player_id=eq.' +
+mobile/lib/supabase.ts:883:  ) as Array<Record<string, unknown> & { cards?: PublicCard | PublicCard[] }>;
+mobile/lib/supabase.ts:887:      const card = Array.isArray(row.cards) ? row.cards[0] : row.cards;
+mobile/lib/supabase.ts:891:        card_id: String(row.card_id ?? card?.id ?? ''),
+mobile/lib/supabase.ts:892:        code: String(card?.code ?? ''),
+mobile/lib/supabase.ts:893:        name: typeof card?.name === 'string' ? card.name : '',
+mobile/lib/supabase.ts:894:        rarity: typeof card?.rarity === 'string' ? card.rarity : '',
+mobile/lib/supabase.ts:895:        faction: typeof card?.faction === 'string' ? card.faction : '',
+mobile/lib/supabase.ts:896:        power: Number(card?.power ?? 0),
+mobile/lib/supabase.ts:897:        image_url: typeof card?.image_url === 'string' ? card.image_url : null,
+mobile/lib/supabase.ts:900:    .filter((slot) => slot.card_id && slot.name);
+mobile/lib/supabase.ts:903:export async function validateDeck(cardIds: string[], session: Session): Promise<DeckValidation> {
+mobile/lib/supabase.ts:904:  const result = await restRpc('validate_deck', { p_card_ids: cardIds }, session) as Partial<DeckValidation> | null;
+mobile/lib/supabase.ts:908:    card_count: Number(result?.card_count ?? cardIds.length),
+mobile/lib/supabase.ts:914:export async function saveDeck(cardIds: string[], session: Session): Promise<SaveDeckResult> {
+mobile/lib/supabase.ts:915:  const result = await restRpc('save_deck', { p_card_ids: cardIds }, session) as SaveDeckResult | null;
+mobile/lib/supabase.ts:930:    'players?select=id&auth_user_id=eq.' + encodeURIComponent(session.user.id) + '&limit=1',
+mobile/lib/supabase.ts:941:    reward: (row.reward ?? row.reward_json ?? {}) as Record<string, unknown>,
+mobile/lib/supabase.ts:949:    rest('world_bosses?select=id%2Cboss_code%2Cname%2Cregion_id%2Ctier%2Cpower_level%2Chp%2Creward_pool%2Cactive%2Cmetadata%2Ccreated_at%2Cimage_url&active=eq.true&order=tier.asc%2Cname.asc&limit=50', session),
+mobile/lib/supabase.ts:959:      ? rest('season_pass_tiers?select=id%2Cseason_pass_id%2Ctier_level%2Cxp_required%2Cis_premium%2Creward_json&season_pass_id=eq.' + encodeURIComponent(season.id) + '&order=tier_level.asc&limit=200', session)
+mobile/lib/supabase.ts:962:      ? rest('world_boss_encounters?select=id%2Cworld_boss_id%2Cplayer_id%2Cdamage%2Creward_json%2Cstatus%2Ccreated_at&player_id=eq.' + encodeURIComponent(playerId) + '&order=created_at.desc&limit=50', session)
+mobile/lib/supabase.ts:1016:  const result = await restRpc('claim_season_pass_reward', { p_player_id: await loadWorldPlayerId(session), p_tier: tier }, session) as MobileWorldAction | null;
+mobile/lib/supabase.ts:1021:  const cards = await rest('cards?select=id%2Ccode%2Cname%2Crarity%2Cfaction%2Cpower%2Clore%2Cimage_url&active=eq.true&rarity=in.(Legendary,Mythic)&order=id.asc&limit=1000') as DailyCard[];
+mobile/lib/supabase.ts:1022:  if (!cards || cards.length === 0) return null;
+mobile/lib/supabase.ts:1025:  return cards[dayOfYear % cards.length] ?? null;
+mobile/lib/supabase.ts:1029:  const cards = await rest(
+mobile/lib/supabase.ts:1030:    'cards?select=id%2Ccode%2Cname%2Crarity%2Cfaction%2Cpower%2Clore%2Cimage_url&active=eq.true&id=eq.' +
+mobile/lib/supabase.ts:1034:  return cards[0] ?? null;
+mobile/lib/supabase.ts:1038:  const rows = await rest(`mission_runs?select=id%2Cupdated_at%2Cplayer_id%2Cmissions(name)&status=eq.claimed&order=updated_at.desc&limit=${limit}`) as Array<{ id: string; updated_at: string; player_id: string; missions?: { name?: string } | Array<{ name?: string }> | null }>;
+mobile/lib/supabase.ts:1046:    const mission = Array.isArray(row.missions) ? row.missions[0] : row.missions;
+mobile/lib/supabase.ts:1049:      text: `${nameMap[row.player_id] ?? 'Un forjador'} completó "${mission?.name ?? 'una misión'}"`,
+mobile/lib/supabase.ts:1056:  return rest('missions?select=id%2Cname%2Cenergy_cost%2Creward_xp%2Creward_vex_ingame%2Cdifficulty%2Cmission_type&active=eq.true&production_ready=eq.true&order=mission_order.asc&limit=3', session) as Promise<HomeMission[]>;
+mobile/lib/supabase.ts:1061:    'players?select=id&auth_user_id=eq.' + encodeURIComponent(session.user.id) + '&limit=1',
+mobile/lib/supabase.ts:1071:    'player_daily_quests?select=id%2Cquest_id%2Cassigned_date%2Cstatus%2Cprogress%2Ccompleted_at%2Cclaimed_at%2Cdaily_quests%28id%2Cquest_key%2Ctitle%2Cdescription%2Cquest_type%2Ctarget_count%2Creward_vex_ingame%2Creward_xp%29&player_id=eq.' +
+mobile/lib/supabase.ts:1104:    'missions?select=id%2Ccode%2Cname%2Cmission_type%2Cenergy_cost%2Creward_xp%2Creward_vex_ingame%2Creward_vex_tradeable%2Ccooldown_seconds%2Cdifficulty%2Cmission_group&active=eq.true&system_locked=eq.false&production_ready=eq.true&order=mission_order.asc',
+mobile/lib/supabase.ts:1112:  missionId: string,
+mobile/lib/supabase.ts:1114:  const execution = await restRpc('execute_mission', { p_player: playerId, p_mission: missionId }, session) as MissionReward | null;
+mobile/lib/supabase.ts:1120:  const claim = await restRpc('claim_mission_reward', {
+mobile/lib/supabase.ts:1121:    p_mission_run_id: execution.run_id,
+mobile/lib/supabase.ts:1123:    p_reference_id: `mission:${execution.run_id}`,
+mobile/lib/supabase.ts:1132:  const rows = await rest('players?select=id%2Cdisplay_name%2Cemail%2Crole%2Cstatus%2Ccreated_at%2Cis_admin%2Cis_super_admin%2Ctelegram_username&auth_user_id=eq.' + encodeURIComponent(session.user.id) + '&limit=1', session) as PlayerProfile[];
+mobile/lib/supabase.ts:1149:  const playerRows = await rest('players?select=id&auth_user_id=eq.' + encodeURIComponent(session.user.id) + '&limit=1', session) as Array<{ id: string }>;
+mobile/lib/supabase.ts:1206:    rest('vexforge_nft_mint_queue?select=id%2Ccard_id%2Cwallet_address%2Cstatus%2Ctx_hash%2Ctoken_id%2Cerror_message%2Crequested_at%2Cprocessed_at&order=requested_at.desc&limit=20', session) as Promise<MobileNftMint[]>,
+mobile/lib/supabase.ts:1212:  const playerRows = await rest('players?select=id&auth_user_id=eq.' + encodeURIComponent(session.user.id) + '&limit=1', session) as Array<{ id: string }>;
+mobile/lib/supabase.ts:1226:    rest('vexforge_ad_views?select=id%2Cvex_awarded%2Ccreated_at&player_auth_id=eq.' + encodeURIComponent(session.user.id) + '&created_at=gte.' + encodeURIComponent(day) + '&order=created_at.desc', session) as Promise<Array<{ id: string; vex_awarded: number; created_at: string }> | null>,
+mobile/lib/supabase.ts:1227:    rest('vexforge_ad_views?select=vex_awarded&player_auth_id=eq.' + encodeURIComponent(session.user.id), session) as Promise<Array<{ vex_awarded: number }> | null>,
+mobile/lib/supabase.ts:1236:    body: JSON.stringify({ player_auth_id: session.user.id, ad_network: 'organic', completed: true, vex_awarded: 20, watched_pct: 100 }),
+mobile/lib/supabase.ts:1246:const economyNumber = (value: unknown) => Number(value ?? 0);
+mobile/lib/supabase.ts:1249:  const result = await restRpc('vexforge_get_my_economy_stats', {}, session) as Partial<EconomyStats> & { reason?: string } | null;
+mobile/lib/supabase.ts:1253:    entry_count: economyNumber(result.entry_count),
+mobile/lib/supabase.ts:1254:    total_credited: economyNumber(result.total_credited),
+mobile/lib/supabase.ts:1255:    total_debited: economyNumber(result.total_debited),
+mobile/lib/supabase.ts:1256:    net_ingame: economyNumber(result.net_ingame),
+mobile/lib/supabase.ts:1257:    net_tradeable: economyNumber(result.net_tradeable),
+mobile/lib/supabase.ts:1258:    largest_credit: economyNumber(result.largest_credit),
+mobile/lib/supabase.ts:1263:          count: economyNumber(item.count),
+mobile/lib/supabase.ts:1264:          total_amount: economyNumber(item.total_amount),
+mobile/lib/supabase.ts:1274:    'economy_ledger?select=id%2Centry_type%2Ccurrency%2Camount%2Cbalance_before%2Cbalance_after%2Csource_table%2Cmetadata%2Ccreated_at&order=created_at.desc&limit=' +
+mobile/lib/supabase.ts:1282:    amount: economyNumber(row.amount),
+mobile/lib/supabase.ts:1283:    balance_before: row.balance_before == null ? null : economyNumber(row.balance_before),
+mobile/lib/supabase.ts:1284:    balance_after: row.balance_after == null ? null : economyNumber(row.balance_after),
+mobile/lib/supabase.ts:1298:    'market_listings?select=id%2Creference_id%2Cplayer_id%2Cplayer_card_id%2Cprice%2Cfee%2Cstatus%2Cexpires_at%2Clocked%2Cplayer_cards%21player_card_id%28cards%21card_id%28name%2Crarity%29%29&status=eq.active&order=price.asc',
+mobile/lib/supabase.ts:1302:    const playerCard = nestedRow(row.player_cards);
+mobile/lib/supabase.ts:1303:    const card = nestedRow(playerCard?.cards);
+mobile/lib/supabase.ts:1308:      player_card_id: String(row.player_card_id ?? ''),
+mobile/lib/supabase.ts:1309:      price: economyNumber(row.price),
+mobile/lib/supabase.ts:1310:      fee: economyNumber(row.fee),
+mobile/lib/supabase.ts:1314:      card_name: card?.name == null ? null : String(card.name),
+mobile/lib/supabase.ts:1315:      card_rarity: card?.rarity == null ? null : String(card.rarity),
+mobile/lib/supabase.ts:1322:    'player_cards?select=id%2Ccard_id%2Cquantity%2Clocked%2Clisted%2Ccards%21card_id%28name%2Crarity%29&player_id=eq.' +
+mobile/lib/supabase.ts:1327:    const card = nestedRow(row.cards);
+mobile/lib/supabase.ts:1330:      card_id: String(row.card_id ?? ''),
+mobile/lib/supabase.ts:1331:      card_name: card?.name == null ? null : String(card.name),
+mobile/lib/supabase.ts:1332:      card_rarity: card?.rarity == null ? null : String(card.rarity),
+mobile/lib/supabase.ts:1333:      quantity: economyNumber(row.quantity),
+mobile/lib/supabase.ts:1353:    p_player_card_id: playerCardId,
+mobile/lib/supabase.ts:1408:      amount_usdt: economyNumber(item.amount_usdt),
+mobile/lib/supabase.ts:1409:      vex_credited: economyNumber(item.vex_credited),
+mobile/lib/supabase.ts:1439:    'player_economy_state?select=trade_balance%2Ctrade_balance_locked%2Cwithdrawal_pending&player_id=eq.' +
+mobile/lib/supabase.ts:1445:    balance: economyNumber(row.trade_balance),
+mobile/lib/supabase.ts:1446:    locked: economyNumber(row.trade_balance_locked),
+mobile/lib/supabase.ts:1460:    tradeable_amount: economyNumber(row.tradeable_amount),
+mobile/lib/supabase.ts:1461:    usdt_gross: economyNumber(row.usdt_gross),
+mobile/lib/supabase.ts:1462:    fee_usdt: economyNumber(row.fee_usdt),
+mobile/lib/supabase.ts:1463:    usdt_net: economyNumber(row.usdt_net),
+mobile/lib/supabase.ts:1486:    'players?select=referral_code&auth_user_id=eq.' + encodeURIComponent(session.user.id) + '&limit=1',
+mobile/lib/supabase.ts:1490:    'vexforge_referrals?select=id%2Creferred_display_name%2Cstatus%2Creward_granted%2Cfirst_pack_rewarded%2Ccreated_at&referrer_auth_id=eq.' +
+mobile/lib/supabase.ts:1500:      rewards_granted: referrals.filter((item) => item.reward_granted).length,
+mobile/lib/supabase.ts:1589:    'vexforge_pack_catalog?select=pack_key%2Cpack_name%2Cprice_vex%2Cprice_usdt%2Ccard_count%2Cnotes%2Cmetadata&active=eq.true&order=price_vex.asc',
+mobile/lib/supabase.ts:1598:      card_count: Number(row.card_count ?? 0),
+mobile/lib/supabase.ts:1629:    cards_received: ((row.metadata as { cards?: MobileOpenedCard[] } | null)?.cards),
+mobile/lib/supabase.ts:1639:export async function openMobilePack(session: Session, orderId: string): Promise<{ ok: boolean; cards?: MobileOpenedCard[]; reason?: string }> {
+mobile/lib/supabase.ts:1640:  const result = await restRpc('vexforge_open_pack', { p_order_id: orderId }, session) as { ok?: boolean; cards?: Array<MobileOpenedCard & { card_id?: string }>; reason?: string } | null;
+mobile/lib/supabase.ts:1643:    cards: result?.cards?.map((card) => ({ ...card, id: card.id || card.card_id || '' })),
+mobile/lib/supabase.ts:1700:    'player_cards?select=id%2Ccard_id%2Cquantity%2Clocked%2Clisted&player_id=eq.' + encodeURIComponent(playerId) +
+mobile/lib/supabase.ts:1703:  ) as Array<{ id: string; card_id: string; quantity: number }>;
+mobile/lib/supabase.ts:1705:  const ids = owned.map((card) => card.card_id).join(',');
+mobile/lib/supabase.ts:1707:    'cards?select=id%2Cname%2Crarity%2Cfusion_enabled&id=in.(' + encodeURIComponent(ids) + ')&fusion_enabled=eq.true&active=eq.true',
+mobile/lib/supabase.ts:1710:  const byId = new Map(definitions.map((card) => [card.id, card]));
+mobile/lib/supabase.ts:1711:  return owned.filter((card) => byId.has(card.card_id)).map((card) => {
+mobile/lib/supabase.ts:1712:    const definition = byId.get(card.card_id)!;
+mobile/lib/supabase.ts:1713:    return { player_card_id: card.id, card_id: card.card_id, name: definition.name, rarity: definition.rarity, quantity: Number(card.quantity) };
+mobile/lib/supabase.ts:1722:    neededCards: typeof row.needed_cards === 'number' && Number.isFinite(row.needed_cards) ? row.needed_cards : null,
+mobile/lib/supabase.ts:1731:    'cards?select=id%2Cname%2Crarity&rarity=eq.' + encodeURIComponent(targetRarity) + '&fusion_enabled=eq.true&active=eq.true&order=name.asc',
+mobile/lib/supabase.ts:1743:    p_source_card_id: sourceCardId,
+mobile/lib/supabase.ts:1744:    p_target_card_id: targetCardId,
+mobile/lib/supabase.ts:1751:    'card_evolution_paths?select=id%2Ccard_id%2Cevolves_to_card_id%2Ccost_json%2Crequirements_json%2Cfrom_card%3Acards!card_id(name%2Crarity%2Cfaction)%2Cto_card%3Acards!evolves_to_card_id(name%2Crarity)&order=created_at.asc',
+mobile/lib/supabase.ts:1752:  ) as Array<Record<string, unknown> & { from_card?: Record<string, string>; to_card?: Record<string, string> }>;
+mobile/lib/supabase.ts:1755:    card_id: String(row.card_id ?? ''),
+mobile/lib/supabase.ts:1756:    evolves_to_card_id: String(row.evolves_to_card_id ?? ''),
+mobile/lib/supabase.ts:1759:    from_name: row.from_card?.name ?? '',
+mobile/lib/supabase.ts:1760:    from_rarity: row.from_card?.rarity ?? '',
+mobile/lib/supabase.ts:1761:    from_faction: row.from_card?.faction ?? '',
+mobile/lib/supabase.ts:1762:    to_name: row.to_card?.name ?? '',
+mobile/lib/supabase.ts:1763:    to_rarity: row.to_card?.rarity ?? '',
+mobile/lib/supabase.ts:1764:  })).filter((path) => path.id && path.card_id && path.from_name && path.to_name);
+mobile/lib/supabase.ts:1767:export async function evolveMobileCard(session: Session, playerId: string, cardId: string): Promise<{ ok: boolean; message?: string }> {
+mobile/lib/supabase.ts:1768:  const result = await restRpc('vexforge_evolve_card', { p_card_id: cardId, p_player_id: playerId }, session) as { ok?: boolean; message?: string; reason?: string } | null;
+mobile/lib/supabase.ts:1836:      const deckSize = finiteOpponentNumber(row.deck_size);
+mobile/lib/supabase.ts:1837:      if (row.player_id === playerId || row.has_deck !== true || deckSize === null || deckSize < 5) return null;
+mobile/lib/supabase.ts:1845:        deck_size: deckSize,
+mobile/lib/supabase.ts:1846:        has_deck: true,
+mobile/lib/telemetry.ts:8:  'reward_claimed',
+mobile/lib/telemetry.ts:56:        await emitTelemetry(session, 'session_start', { entry: 'authenticated' });
+mobile/lib/telemetry.ts:63:      // Storage and auth availability must never block the app.
+mobile/package-lock.json:2544:    "node_modules/@radix-ui/react-collection": {
+mobile/package-lock.json:2546:      "resolved": "https://registry.npmjs.org/@radix-ui/react-collection/-/react-collection-1.1.15.tgz",
+mobile/package-lock.json:2570:    "node_modules/@radix-ui/react-collection/node_modules/@radix-ui/react-compose-refs": {
+mobile/package-lock.json:2585:    "node_modules/@radix-ui/react-collection/node_modules/@radix-ui/react-slot": {
+mobile/package-lock.json:2943:        "@radix-ui/react-collection": "1.1.15",
+mobile/scripts/verify-telemetry.mjs:6:  ['lib/telemetry.ts', ['session_start', 'forge_action', 'combat_resolved', 'reward_claimed', 'return_visit', 'trackSessionEntry']],
+mobile/scripts/verify-telemetry.mjs:10:  ['app/missions.tsx', ["emitTelemetry(session, 'reward_claimed'"]],

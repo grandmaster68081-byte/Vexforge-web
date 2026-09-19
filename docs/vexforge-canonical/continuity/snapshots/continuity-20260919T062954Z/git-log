@@ -1,0 +1,200 @@
+* 82c7fc29 (HEAD -> main, origin/main) feat(unity): apply VEXFORGE R5 canonical runtime reconciliation rev2
+* 12f043c6 fix(docs): preserve Expo as legacy runtime
+* 673bddbf feat(unity): apply VEXFORGE R5 canonical runtime reconciliation
+* af4787a0 feat(unity): make Unity the canonical Android runtime and reconcile presentation kernel
+* 6d9933d8 feat(unity): continue nexus game shell and card surfaces
+* 10793c7d feat: reactivate Unity runtime foundation
+* 29d038e7 docs: preserve Android build environment guidance
+* 0f49962a docs: record Expo foundation Android build evidence
+* 890dc196 (tag: vexforge-android-build-250) foundation: reset Android runtime to Expo game shell
+* 7b35d4ae docs: registra matriz final de rutas Unity Foundation
+* 79645383 ci: añade ruta de licencia Unity Foundation
+* b7907365 ci: añade rutas aisladas de Unity Foundation
+* 55b724e8 ci: remove temporary Unity activation test
+* 16c37022 docs: record Unity CI activation blocker
+* e7f122d4 ci: fix isolated GameCI project detection
+* 8df912f7 ci: add isolated GameCI v3 Unity Personal activation test
+* d3ec9f27 ci: allow supported Unity Personal credential activation
+* 6d59e1d2 ci: activate Unity Personal account before Android build
+* c0680980 ci: add automated Unity ALF to ULF conversion
+* 1767da24 docs: record Unity license blocker and ALF activation result
+* 9325a9d0 ci: generate Unity ALF with direct editor CLI
+* f9351216 ci: allow Unity to generate manual activation request
+* 726198b5 ci: fail clearly when Unity license secrets are missing
+* 9b38668e ci: add Unity Personal activation request workflow
+* 2f6e37f3 docs: record unity foundation ci blocker
+* 4d936664 feat(android): establish unity foundation runtime
+* 513b7c4c docs: record Unity engine migration decision
+* 1f20bc49 docs: establish canonical VEXFORGE project continuity
+* f43159ec (tag: vexforge-audit-f43159e) [skip ci] Record verified Android build 249 release
+* ded78720 (tag: vexforge-android-build-249) [skip ci] Force current Android QA artifact and bound sync timeouts
+* e5673053 [skip ci] Record verified Android APK release
+* 8ccb6f0f (tag: vexforge-android-build-248) [skip ci] Align Android contract guards before APK build
+* 7b515110 [skip ci] Rectify Android typecheck blockers before APK build
+* d8bc4782 [skip ci] Centralize deck action rail visual roles
+* f9549730 [skip ci] Centralize economy chamber visual roles
+* 6951fb2c [skip ci] Centralize store chamber visual roles
+* 27282512 [skip ci] Activate official live Cards archive scene
+* e7231b2e [skip ci] Complete Battlefield safe area motion and readability
+* 403af02a [skip ci] Activate native Battlefield scene viewport
+* c4dd5427 [skip ci] fix(android): make Forge scene first
+* 42f9febe [skip ci] feat(android): implement native Forge deck scene
+* 61ae9684 [skip ci] feat(android): implement native Nexus auth scene
+* d4ffe390 docs: record live Home scene implementation [skip ci]
+* 229c010e feat(mobile): make the official Home reference a live scene [skip ci]
+* d03543de [skip ci] VEXFORGE official Home scene implementation
+* 9d41d124 [skip ci] VEXFORGE native Home scene and official Auth visual sync
+* 6f196987 Record Home vertical asset generation blocker
+* 22cf3f2f Promote official Auth reference to 1080x2340
+* 32867173 Register official Profile reference and audit Auth Home dimensions [skip ci]
+* 23da7ae1 Register approved Collection visual reference [skip ci]
+* 5ddcfcb4 Register approved Battlefield visual reference [skip ci]
+* 1a640241 Record official visual asset metrics and APK evidence [skip ci]
+* e66fa9b0 Promote Deck Forge asset to official Android path [skip ci]
+* 43b373f3 Replace Deck Forge reference with official-dimension visual candidate [skip ci]
+* bea45a5f Fix Deck Forge continuity record formatting [skip ci]
+* 1b346c88 Add premium Deck Forge visual reference [skip ci]
+* 249b5276 [skip ci] VE-MOB-AUTH: Nexus Access visual scene and functional controls
+* fdca420f feat(android): align Home with diegetic visual contract [skip ci]
+* eb47d841 feat(android): anchor approved Home scene [skip ci]
+* 70dc79ab chore: reset visual storage to cards-only policy
+* 4d8f910d docs: centralize Battlefield icon roles [skip ci]
+* d08b63f1 docs: centralize ForgeFormation icon sizing [skip ci]
+* c5d25ea8 docs: centralize domain header sigil sizing [skip ci]
+* 52a19673 docs: centralize Android navigation icon sizing [skip ci]
+* b3f5fb6e docs: centralize shared Android typography weights [skip ci]
+* 2ad9264f docs: add Android domain scene profiles [skip ci]
+* 347620eb docs: add Android art direction [skip ci]
+* 0223a621 docs: add Android asset registry [skip ci]
+* d3070459 docs: add Android event presentation map [skip ci]
+* deb68a0c [skip ci] VE-MOB-T2V: World Codex card tokens
+* fec7960f [skip ci] VE-MOB-T2V: World Raid card tokens
+* fe4f3ee7 [skip ci] VE-MOB-T2V: World Boss card tokens
+* 3ae543bb [skip ci] VE-MOB-T2V: World Atlas header and tabs
+* a4a68d06 [skip ci] VE-MOB-T2V: profile modal content tokens
+* e4423193 [skip ci] VE-MOB-T2V: centralize Profile modal shell tokens
+* dddc9eba [skip ci] VE-MOB-T2V: centralize Profile feedback tokens
+* 5befa16b [skip ci] VE-MOB-T2V: centralize Profile quick action tokens
+* 6c3177ba [skip ci] VE-MOB-T2V: centralize Profile progress tokens
+* 2d9b4711 [skip ci] VE-MOB-T2V: centralize Profile stats tokens
+* 090e5aba [skip ci] VE-MOB-T2V: centralize Profile identity tokens
+* 577a7595 [skip ci] VE-MOB-T2V: centralize ErrorFallback icon and type weights
+* 527382df [skip ci] VE-MOB-T2V: centralize DomainState icon and action weights
+* 1f88a9e7 docs: reconcile T0 artifacts with active protocol [skip ci]
+* 8a322a3f docs: register canonical QA account and preserved privileges [skip ci]
+* 10af50d1 data: make Cristiangalvez account canonical QA identity [skip ci]
+* f37b90ed docs: record Android APK/code/Supabase verification [skip ci]
+* 767ea71d docs: record rules event settlement matrix [skip ci]
+* 7527a50b docs: add T0 rules event settlement matrix [skip ci]
+* 0458a1a7 docs: record visual acceptance contract [skip ci]
+* 729eee81 docs: add Android visual acceptance contract [skip ci]
+* fa67f6a8 ops: reset global MMR floor to 1000 [skip ci]
+* bdc7bcb6 docs: record player account bootstrap [skip ci]
+* de5e6fbd [skip ci] VE-MOB-T0: reconcile storage evidence
+* 624007bb [skip ci] VE-MOB-T0: add device evidence register
+* feb2b604 [skip ci] VE-MOB-T0: add domain scene profiles
+* 30ba51f0 [skip ci] VE-MOB-T0: add executable visual state matrix
+* 4f6b5e73 [skip ci] VE-MOB-T0: reconcile asset matrix and screen master records
+* 45a7ca52 docs: record Android build 243 release evidence
+* e318ab1d (tag: vexforge-android-build-243) fix: restore Android typecheck on latest T2V commit
+* c7685aaf [skip ci] VE-MOB-T2V: extract battlefield typography weights
+* af5a824b [skip ci] VE-MOB-T2V: centralize ForgeButton icon size
+* 7085481b [skip ci] VE-MOB-T2V: extract formation typography weights
+* ebf16086 [skip ci] VE-MOB-T2V: centralize formation preview color roles
+* 66b12ec4 [skip ci] VE-MOB-T2V: standardize formation preview borders
+* 9a8493b0 [skip ci] VE-MOB-T2V: centralize material panel border opacity
+* db5f034d [skip ci] docs: record ambient motion T2V continuity commit
+* 31e23517 [skip ci] VE-MOB-T2V: centralize scene ambient motion tokens
+* 85fda066 [skip ci] docs: record shared safe area T2V continuity commit
+* 3ed3fc0c [skip ci] VE-MOB-T2V: centralize shared safe area tokens
+* ee5b0dcd [skip ci] docs: record error fallback T2V continuity commit
+* 0881eba8 [skip ci] VE-MOB-T2V: centralize error fallback depth tokens
+* 5bc7ca76 [skip ci] docs: record T2V continuity commit
+* e2ac5292 [skip ci] VE-MOB-T2V: centralize domain state detail tokens
+* 23d122cf feat: centralize error fallback recovery tokens [skip ci]
+* 2fd0541e feat: centralize battlefield control tokens [skip ci]
+* e09510e5 feat: centralize battlefield typography tokens [skip ci]
+* bbc37d9b feat: centralize domain header typography tokens [skip ci]
+* 787330b3 feat: centralize asset error state tokens [skip ci]
+* 420adb1e fix: preserve profile pending and draw outcomes [skip ci]
+* 1404f39f docs: register T0 Android assets and screen records [skip ci]
+* 6297f9b9 docs: prepare T0 device state and scene matrices [skip ci]
+* f8e7301e docs: reconcile T0 Android baseline into master protocol [skip ci]
+* 18a3e9e0 docs: record visual reference publication evidence [skip ci]
+* 7343cc87 docs: add unified final world visual reference [skip ci]
+* 2ef4bc03 docs: record Tier 1 protocol audit and reconciliation [skip ci]
+* 171cd992 docs: integrate Tier 1 evidence audit into active protocol [skip ci]
+* 1038f31d docs: integrate visual fidelity production layer [skip ci]
+* d4da929f [skip ci] VE-MOB-T2V domain portal tokens
+* b7e1528f [skip ci] VE-MOB-T2V battlefield socket tokens
+* c6b5bb9b [skip ci] VE-MOB-T2V metric plaque tokens
+* 9e9bc995 [skip ci] VE-MOB-T2V heraldic identity mark tokens
+* 00ea2563 [skip ci] VE-MOB-T2V navigation shell tokens
+* 177d850d feat(android): centralize formation visual tokens [skip ci]
+* db4528b7 docs: record Economy continuity commit [skip ci]
+* 5bc35ee5 fix(android): keep withdrawal input signals honest [skip ci]
+* b5dd188e docs: record Store continuity commit [skip ci]
+* f058fa95 fix(android): keep Store date signals honest [skip ci]
+* c4e9dcf1 docs: record Android continuity commit [skip ci]
+* 3f498966 fix(android): keep Home event date signal honest [skip ci]
+* c6b2188a feat(android): apply T2V typography tokens [skip ci]
+* 27e1aba0 feat(android): apply T2V domain state tokens [skip ci]
+* 4c9f5401 feat(android): apply T2V shared scene tokens [skip ci]
+* f5817792 feat(android): apply T2V domain header tokens [skip ci]
+* 34f7cc37 feat(android): apply T2V progress control tokens [skip ci]
+* 8e0654ee feat(android): apply T2V icon stroke tokens [skip ci]
+* c4c39fcd Android T2V button control tokens [skip ci]
+* d7b9a749 Android T2V shared visual system primitives [skip ci]
+* 121bd244 docs(mobile): record collection publication evidence [skip ci]
+* ed306a44 fix(mobile): preserve unreported collection stats [skip ci]
+* fe064515 docs(mobile): record battle publication evidence [skip ci]
+* 26e2076b fix(mobile): preserve absent battle turn counts [skip ci]
+* 70dc9827 chore: document GitHub REST endpoint separation [skip ci]
+* 28cf01ab docs(mobile): record social publication evidence [skip ci]
+* 9e6959e5 fix(mobile): report social win rate honestly [skip ci]
+* 253bdf5c fix(mobile): clarify economy date and hash signals [skip ci]
+* d0b75302 fix(mobile): distinguish social date signals [skip ci]
+* 6360be64 feat(mobile): clarify profile progression signals [skip ci]
+* d76307bf feat(mobile): make archive identity signals explicit [skip ci]
+* efbe05e5 VE-MOB-3-HOME: preserve honest numeric signals [skip ci]
+* 02ead4c1 VE-MOB-8-DECK: preserve honest summary signals [skip ci]
+* b0d5cbc4 VE-MOB-7-BATTLE: preserve explicit poison event labels [skip ci]
+* db4fffda VE-MOB-7-BATTLE: keep missing battlefield status explicit [skip ci]
+* dceef760 VE-MOB-12-WORLD: align honest signal contract [skip ci]
+* 2dc3b1f6 VE-MOB-12-WORLD: make missing boss art and lore explicit [skip ci]
+* ae9587a1 VE-MOB-12-WORLD: preserve honest raid identity [skip ci]
+* b8c5d5ac VE-MOB-12-WORLD: preserve honest ranking identity [skip ci]
+* 9a0d5b44 VE-MOB-12-WORLD: preserve honest boss identity [skip ci]
+* 43132008 VE-MOB-12-WORLD: preserve honest numeric signals [skip ci]
+* 8f95f008 VE-MOB-12-WORLD: preserve honest date signals [skip ci]
+* 54b42566 VE-MOB-7-BATTLE: preserve honest season signal [skip ci]
+* 9ed5796e VE-MOB-7-BATTLE: preserve honest turn event signals [skip ci]
+* 0256ee01 VE-MOB-7-BATTLE: honest empty position and reserve signals [skip ci]
+* 7ab1a5b8 docs: register honest formation continuity block [skip ci]
+* 29e7d194 VE-MOB-7-FORMATION: preserve honest empty slot signals [skip ci]
+* 9b1f9e6f docs: register honest rank continuity block [skip ci]
+* eaa66a9c VE-MOB-7-BATTLE: preserve honest rank signals [skip ci]
+* f6063159 docs: register honest result continuity block [skip ci]
+* 24fe1ed8 VE-MOB-7-BATTLE: preserve honest result signals [skip ci]
+* a656328c docs: register published Android continuity block [skip ci]
+* 67e3cf53 VE-MOB-7-BATTLE: preserve honest replay turn signals [skip ci]
+* df0308f9 [skip ci] Record workspace configuration side effect
+* 31112277 [skip ci] Record VE-MOB-8 honest energy continuity
+* ae22e7d7 [skip ci] VE-MOB-8 honest energy signal
+* 0ac6bffd [skip ci] Record VE-MOB-13 social participation continuity
+* 0b57824a [skip ci] VE-MOB-13 social signal fidelity
+* 377ce7ae [skip ci] Record VE-MOB-13 social ranking continuity commit
+* 24543fa9 [skip ci] VE-MOB-13-SOCIAL: honest ranking signals
+* 58fa7a08 [skip ci] Record VE-MOB-7 battlefield continuity commit
+* 416dd865 [skip ci] VE-MOB-7-BATTLE: honest battlefield signals
+* ee18a64f [skip ci] Record VE-MOB-13 social continuity commit
+* 3ec3f949 [skip ci] VE-MOB-13-SOCIAL: honest identity signals
+* 3b7ebdaa [skip ci] Record VE-MOB-8 rewards continuity commit
+* e4475c19 [skip ci] VE-MOB-8-REWARDS: honest mission signals
+* 575bf07c [skip ci] VE-MOB-10 Store honest pack and inventory signals
+* c76a8267 [skip ci] VE-MOB-3 Home honest card code signal
+* 3f50374e [skip ci] VE-MOB-9 Profile honest identity signals
+* dcc0f423 [skip ci] VE-MOB-14 Meta honest catalog and queue signals
+* a61c5ce6 [skip ci] Record VE-MOB-14 account identity publication
+* 8c6921d0 [skip ci] VE-MOB-14: honest account identity
+* 6c6f2063 [skip ci] Record VE-MOB-7 opponent signal publication

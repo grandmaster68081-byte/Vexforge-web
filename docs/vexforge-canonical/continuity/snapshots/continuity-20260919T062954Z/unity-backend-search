@@ -1,0 +1,27 @@
+unity/Assets/Scripts/Backend/ApiContracts.cs:8:        public string access_token;
+unity/Assets/Scripts/Backend/SupabaseAuthService.cs:17:        private readonly SupabaseClient client;
+unity/Assets/Scripts/Backend/SupabaseAuthService.cs:20:        public SupabaseAuthService(SupabaseClient client)
+unity/Assets/Scripts/Backend/SupabaseAuthService.cs:29:                "{\"email\":" + SupabaseClient.Quote(email) + ",\"password\":" + SupabaseClient.Quote(password) + "}",
+unity/Assets/Scripts/Backend/SupabaseAuthService.cs:38:                "{\"refresh_token\":" + SupabaseClient.Quote(refreshToken) + "}",
+unity/Assets/Scripts/Backend/SupabaseAuthService.cs:58:            if (payload == null || string.IsNullOrWhiteSpace(payload.access_token))
+unity/Assets/Scripts/Backend/SupabaseAuthService.cs:66:                accessToken = payload.access_token,
+unity/Assets/Scripts/Backend/SupabaseClient.cs:17:    public sealed class SupabaseClient
+unity/Assets/Scripts/Backend/SupabaseClient.cs:22:        public SupabaseClient(RuntimeEnvironmentData environment)
+unity/Assets/Scripts/Backend/SupabaseClient.cs:48:        public async Task<SupabaseResponse> RpcAsync(string functionName, string json, bool authenticated = true)
+unity/Assets/Scripts/Backend/SupabaseClient.cs:56:            request.SetRequestHeader("apikey", environment.supabaseAnonKey);
+unity/Assets/Scripts/Backend/SupabaseClient.cs:59:                request.SetRequestHeader("Authorization", "Bearer " + accessToken);
+unity/Assets/Scripts/Backend/VexforgeRepository.cs:9:        private readonly SupabaseClient client;
+unity/Assets/Scripts/Backend/VexforgeRepository.cs:11:        public VexforgeRepository(SupabaseClient client)
+unity/Assets/Scripts/Backend/VexforgeRepository.cs:74:            var response = await client.RpcAsync("validate_deck", "{\"p_card_ids\":" + JsonArray(cardIds) + "}");
+unity/Assets/Scripts/Backend/VexforgeRepository.cs:80:            var response = await client.RpcAsync("save_deck", "{\"p_card_ids\":" + JsonArray(cardIds) + "}");
+unity/Assets/Scripts/Backend/VexforgeRepository.cs:86:            var json = "{\"p_challenger_id\":" + SupabaseClient.Quote(challengerId) +
+unity/Assets/Scripts/Backend/VexforgeRepository.cs:87:                       ",\"p_opponent_id\":" + SupabaseClient.Quote(opponentId) +
+unity/Assets/Scripts/Backend/VexforgeRepository.cs:88:                       ",\"p_idempotency_key\":" + SupabaseClient.Quote(idempotencyKey) + "}";
+unity/Assets/Scripts/Backend/VexforgeRepository.cs:89:            var response = await client.RpcAsync("vexforge_battle_resolve", json);
+unity/Assets/Scripts/Backend/VexforgeRepository.cs:95:            var json = "{\"p_match_id\":" + SupabaseClient.Quote(matchId) +
+unity/Assets/Scripts/Backend/VexforgeRepository.cs:97:            var response = await client.RpcAsync("vexforge_pvp_store_formation", json);
+unity/Assets/Scripts/Backend/VexforgeRepository.cs:103:            var json = "{\"p_opponent_id\":" + SupabaseClient.Quote(opponentId) +
+unity/Assets/Scripts/Backend/VexforgeRepository.cs:104:                       ",\"p_idempotency_key\":" + SupabaseClient.Quote(idempotencyKey) + "}";
+unity/Assets/Scripts/Backend/VexforgeRepository.cs:105:            var response = await client.RpcAsync("vexforge_pvp_forfeit", json);
+unity/Assets/Scripts/Backend/VexforgeRepository.cs:138:                result += SupabaseClient.Quote(values[i]);
+unity/Assets/Scripts/Core/VexforgeApp.cs:42:            var client = new SupabaseClient(RuntimeEnvironment.Current);

@@ -1,0 +1,7 @@
+# UNITY PRESENTATION FACTS
+
+- `REPO_CURRENT` presentation file count: 15.
+- `REPO_CURRENT` presentation source inventory: `unity/Assets/Scripts/Presentation/BattlePresentationDirector.cs`, `unity/Assets/Scripts/Presentation/Editor/VexforgeR5ProjectSetup.cs`, `unity/Assets/Scripts/Presentation/NexusDevelopmentFallback.cs`, `unity/Assets/Scripts/Presentation/NexusPresentationRoot.cs`, `unity/Assets/Scripts/Presentation/SceneTransitionDirector.cs`, `unity/Assets/Scripts/Presentation/VexforgeCardArtResolver.cs`, `unity/Assets/Scripts/Presentation/VexforgeCardPool.cs`, `unity/Assets/Scripts/Presentation/VexforgeCardView.cs`, `unity/Assets/Scripts/Presentation/VexforgeDiegeticInputRouter.cs`, `unity/Assets/Scripts/Presentation/VexforgeNexusStage.cs`, `unity/Assets/Scripts/Presentation/VexforgePresentationResources.cs`, `unity/Assets/Scripts/Presentation/VexforgeRenderBootstrap.cs`, `unity/Assets/Scripts/Presentation/VexforgeTextureLruCache.cs`, `unity/Assets/Scripts/Presentation/VexforgeVirtualizedCardGallery.cs`, `unity/Assets/Scripts/Presentation/VexforgeWorldHotspot.cs`
+- `REPO_CURRENT` related search evidence: `snapshots/continuity-20260919T062954Z/unity-card-search`, `unity-navigation-search`, `unity-resource-search`, and `unity-backend-search`.
+- `REPO_CURRENT` presentation scene linkage search: `snapshots/continuity-20260919T062954Z/unity-scenes`.
+- `HUMAN_DIRECTIVE` Unity is presentation/runtime surface and not a second authority.

@@ -1,0 +1,6 @@
+# UNITY SCENE FACTS
+
+- `REPO_CURRENT` scene files found: `unity/Assets/Scenes/VexforgeBootstrap.unity`, `unity/Assets/Scenes/VexforgeBootstrap.unity`, `unity/Assets/Scenes/VexforgeBootstrap.unity:41:  m_Name: VexforgeBootstrap`, `unity/Assets/Scripts/Presentation/NexusDevelopmentFallback.cs:7:    /// Production Nexus presentation is owned by NexusPresentationRoot.`, `unity/Assets/Scripts/Presentation/NexusPresentationRoot.cs:12:    public sealed class NexusPresentationRoot : MonoBehaviour`, `unity/Assets/Scripts/Presentation/VexforgeNexusStage.cs:14:        public NexusPresentationRoot PresentationRoot { get; private set; }`, `unity/Assets/Scripts/Presentation/VexforgeNexusStage.cs:21:            var world = new GameObject("NexusPresentationRoot");`, `unity/Assets/Scripts/Presentation/VexforgeNexusStage.cs:24:            PresentationRoot = world.AddComponent<NexusPresentationRoot>();`, `unity/Assets/Scripts/UI/GameShellController.cs:76:                throw new InvalidOperationException("VEXFORGE requires a MainCamera from NexusPresentationRoot.");`.
+- `REPO_CURRENT` bootstrap scene evidence: `unity/Assets/Scenes/VexforgeBootstrap.unity`.
+- `REPO_CURRENT` bootstrap/presentation search evidence is in `snapshots/continuity-20260919T062954Z/unity-scenes`.
+- `REPO_CURRENT` no claim is made here about runtime scene execution; this is a source inventory.

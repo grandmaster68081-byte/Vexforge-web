@@ -1,0 +1,7 @@
+# UNITY CARD FACTS
+
+- `REPO_CURRENT` Unity card/presentation-related source files: `unity/Assets/Scripts/Presentation/BattlePresentationDirector.cs`, `unity/Assets/Scripts/Presentation/Editor/VexforgeR5ProjectSetup.cs`, `unity/Assets/Scripts/Presentation/NexusDevelopmentFallback.cs`, `unity/Assets/Scripts/Presentation/NexusPresentationRoot.cs`, `unity/Assets/Scripts/Presentation/SceneTransitionDirector.cs`, `unity/Assets/Scripts/Presentation/VexforgeCardArtResolver.cs`, `unity/Assets/Scripts/Presentation/VexforgeCardPool.cs`, `unity/Assets/Scripts/Presentation/VexforgeCardView.cs`, `unity/Assets/Scripts/Presentation/VexforgeDiegeticInputRouter.cs`, `unity/Assets/Scripts/Presentation/VexforgeNexusStage.cs`, `unity/Assets/Scripts/Presentation/VexforgePresentationResources.cs`, `unity/Assets/Scripts/Presentation/VexforgeRenderBootstrap.cs`, `unity/Assets/Scripts/Presentation/VexforgeTextureLruCache.cs`, `unity/Assets/Scripts/Presentation/VexforgeVirtualizedCardGallery.cs`, `unity/Assets/Scripts/Presentation/VexforgeWorldHotspot.cs`
+- `REPO_CURRENT` prescribed card search evidence: `snapshots/continuity-20260919T062954Z/unity-card-search`.
+- `REPO_CURRENT` Unity image asset count from the prescribed asset inventory: 0.
+- `UNKNOWN` no Unity card record count was inferred from class/file names.
+- `HUMAN_DIRECTIVE` card presentation must account for virtualization, pooling, on-demand loading, cache, release, memory, VFX and Android performance.

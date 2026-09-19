@@ -1,0 +1,3 @@
+STATUS: BLOCKED
+REASON: Storage read-only API request failed.
+curl: (22) The requested URL returned error: 400
