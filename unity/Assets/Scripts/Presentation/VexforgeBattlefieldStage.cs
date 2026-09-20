@@ -95,6 +95,14 @@ namespace Vexforge.Presentation
             var actorId = battleEvent.actor_id;
             var targetId = ReadString(battleEvent, "target_id", "targetId", "victim_id", "victimId");
             var cardId = ReadString(battleEvent, "card_id", "cardId", "source_card_id", "sourceCardId");
+            var bossId = ReadString(battleEvent, "boss_id", "bossId", "encounter_id", "encounterId");
+
+            if (ContainsAny(type, "boss_start", "boss_spawn", "raid_start", "dungeon_start", "encounter_start", "phase_start"))
+            {
+                yield return PresentBossArrival(bossId);
+                yield break;
+            }
+
             if (ContainsAny(type, "victory", "win", "match_end", "battle_end", "complete"))
             {
                 yield return PresentVictory(type);
@@ -377,6 +385,34 @@ namespace Vexforge.Presentation
             DestroyTransientObject(flash);
         }
 
+
+        private IEnumerator PresentBossArrival(string bossId)
+        {
+            var spawn = new Vector3(0f, 0.45f, 5.0f);
+            var boss = CreatePrimitive("BossManifestation", PrimitiveType.Capsule, spawn, new Vector3(1.8f, 2.9f, 1.8f), hostileMaterial, arenaRoot);
+            transientObjects.Add(boss);
+            var ring = CreateRing("BossArrivalRing", spawn, 3.1f, 0.16f, neutralMaterial, arenaRoot);
+            transientObjects.Add(ring.gameObject);
+
+            var t = 0f;
+            while (t < 1f)
+            {
+                t += Time.unscaledDeltaTime / 0.78f;
+                var n = Mathf.Clamp01(t);
+                var eased = EaseOutCubic(n);
+                boss.transform.localScale = Vector3.one * Mathf.Lerp(0.18f, 1.0f, eased);
+                boss.transform.position = spawn + Vector3.up * Mathf.Sin(eased * Mathf.PI);
+                ring.localScale = Vector3.one * (0.35f + eased * 1.45f);
+                ring.Rotate(0f, 140f * Time.unscaledDeltaTime, 0f, Space.Self);
+                yield return null;
+            }
+
+            yield return CameraImpulse(0.34f, 0.14f);
+            yield return PresentPulse(false);
+            yield return new WaitForSecondsRealtime(0.42f);
+            DestroyTransientObject(boss);
+            DestroyTransientObject(ring.gameObject);
+        }
 
         private IEnumerator PresentVictory(string eventType)
         {
