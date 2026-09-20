@@ -22,7 +22,7 @@ namespace Vexforge.UI
         private void Build()
         {
             if (buttonObject != null || canvas == null) return;
-            buttonObject = UiFactory.Button(canvas.transform, "WORLD CHAT", Open);
+            buttonObject = UiFactory.Button(canvas.transform, "WORLD CHAT", Open).gameObject;
             UiFactory.Anchor(buttonObject.GetComponent<RectTransform>(), new Vector2(0.68f, 0.035f), new Vector2(0.96f, 0.09f), Vector2.zero, Vector2.zero);
         }
 

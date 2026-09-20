@@ -33,6 +33,8 @@ namespace Vexforge.UI
         private RectTransform contentRoot;
         private InputField searchInput;
         private InputField composerInput;
+        private InputField clanNameInput;
+        private InputField clanDescriptionInput;
         private Text statusLabel;
         private SocialTab activeTab;
         private string selectedConversationId;
@@ -476,7 +478,7 @@ namespace Vexforge.UI
                     var label = UiFactory.Label(row.transform, presence + ValueOr(player.display_name, "Guerrero") + " · " + ValueOr(player.friend_state, "none"), 11, player.is_online ? UiFactory.Arcane : UiFactory.Text);
                     UiFactory.Anchor(label.rectTransform, new Vector2(0.03f, 0.12f), new Vector2(0.62f, 0.88f), Vector2.zero, Vector2.zero);
                     var playerId = player.id;
-                    Action action = null;
+                    UnityEngine.Events.UnityAction action = null;
                     string actionLabel = "AÑADIR";
                     if (player.friend_state == "friends")
                     {
@@ -621,11 +623,11 @@ namespace Vexforge.UI
                 var clans = clanData.available_clans ?? new SocialClanDiscovery[0];
                 for (var i = 0; i < clans.Length; i++)
                 {
-                    var clan = clans[i];
+                    var discoveryClan = clans[i];
                     var row = CreateRow(list.content, 58f);
-                    var label = UiFactory.Label(row.transform, ValueOr(clan.name, "Clan") + "  ·  " + clan.prestige + " prestigio · " + clan.member_count + " miembros", 11, UiFactory.Text);
+                    var label = UiFactory.Label(row.transform, ValueOr(discoveryClan.name, "Clan") + "  ·  " + discoveryClan.prestige + " prestigio · " + discoveryClan.member_count + " miembros", 11, UiFactory.Text);
                     UiFactory.Anchor(label.rectTransform, new Vector2(0.03f, 0.12f), new Vector2(0.70f, 0.86f), Vector2.zero, Vector2.zero);
-                    var clanId = clan.id;
+                    var clanId = discoveryClan.id;
                     var join = UiFactory.Button(row.transform, "UNIRSE", () => _ = JoinClanAsync(clanId));
                     UiFactory.Anchor(join.GetComponent<RectTransform>(), new Vector2(0.73f, 0.12f), new Vector2(0.96f, 0.86f), Vector2.zero, Vector2.zero);
                 }
@@ -677,7 +679,7 @@ namespace Vexforge.UI
             UiFactory.Anchor(leave.GetComponent<RectTransform>(), new Vector2(0.04f, 0.965f), new Vector2(0.30f, 0.995f), Vector2.zero, Vector2.zero);
         }
 
-        private void BuildComposer(string placeholder, float y, Action send)
+        private void BuildComposer(string placeholder, float y, UnityEngine.Events.UnityAction send)
         {
             composerInput = UiFactory.Input(contentRoot, placeholder, false);
             UiFactory.Anchor(composerInput.GetComponent<RectTransform>(), new Vector2(0.04f, y), new Vector2(0.72f, y + 0.075f), Vector2.zero, Vector2.zero);
