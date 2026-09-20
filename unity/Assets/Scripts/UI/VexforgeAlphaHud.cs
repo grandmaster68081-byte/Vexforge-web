@@ -5,6 +5,7 @@ using Vexforge.Backend;
 using Vexforge.Core;
 using Vexforge.GameState;
 using Vexforge.Presentation;
+using Vexforge.Session;
 
 namespace Vexforge.UI
 {
@@ -19,6 +20,8 @@ namespace Vexforge.UI
         private VexforgeVirtualizedCardGallery gallery;
         private BattlePresentationDirector battleDirector;
         private VexforgeAlphaWorldDirector world;
+        private VexforgeSocialHub socialHub;
+        private VexforgeGlobalChatDock globalChatDock;
         private Transform root;
         private Text eventRibbon;
         private InputField opponentInput;
@@ -43,6 +46,21 @@ namespace Vexforge.UI
             gallery = cardGallery;
             battleDirector = director;
             world = worldDirector;
+            if (canvas != null)
+            {
+                socialHub = canvas.gameObject.GetComponent<VexforgeSocialHub>();
+                if (socialHub == null)
+                    socialHub = canvas.gameObject.AddComponent<VexforgeSocialHub>();
+                socialHub.Initialize(app, canvas);
+
+                globalChatDock = canvas.gameObject.GetComponent<VexforgeGlobalChatDock>();
+                if (globalChatDock == null)
+                    globalChatDock = canvas.gameObject.AddComponent<VexforgeGlobalChatDock>();
+                globalChatDock.Initialize(canvas, socialHub);
+                globalChatDock.SetVisible(app.Session != null && app.Session.IsAuthenticated);
+            }
+            if (app.Session != null)
+                app.Session.StateChanged += HandleSessionChanged;
             if (battleDirector != null)
             {
                 battleDirector.EventPresented += HandleBattleEvent;
@@ -55,6 +73,9 @@ namespace Vexforge.UI
         {
             if (!initialized || app == null || canvas == null)
                 return;
+
+            if (globalChatDock != null)
+                globalChatDock.SetVisible(app.Session != null && app.Session.IsAuthenticated);
 
             renderVersion++;
             if (route != GameRoute.Battle && battleDirector != null)
@@ -237,7 +258,28 @@ namespace Vexforge.UI
                       "\nESTADO  " + ValueOr(profile.status, "NO REPORTADO") +
                       "\nNIVEL  " + (progress == null ? "—" : progress.level.ToString()),
                 0.47f);
-            AddAction("CERRAR SESIÓN", 0.18f, () => app.SignOut());
+            AddAction("HALL DE ALIADOS", 0.20f, OpenSocialHub);
+            AddAction("CERRAR SESIÓN", 0.105f, () => app.SignOut());
+        }
+
+        private void OpenSocialHub()
+        {
+            if (socialHub != null)
+                socialHub.OpenFriends();
+        }
+
+        private void HandleSessionChanged(AuthState _)
+        {
+            if (app == null || app.Session == null || app.Session.IsAuthenticated) return;
+            if (socialHub != null) socialHub.Close();
+            if (globalChatDock != null) globalChatDock.SetVisible(false);
+        }
+
+        public void HideForSignedOut()
+        {
+            renderVersion++;
+            if (socialHub != null) socialHub.Close();
+            if (globalChatDock != null) globalChatDock.SetVisible(false);
         }
 
         private void AddRibbon(string value, float y)
@@ -494,6 +536,9 @@ namespace Vexforge.UI
             initialized = false;
             renderVersion++;
             requestInFlight = false;
+            if (app != null && app.Session != null)
+                app.Session.StateChanged -= HandleSessionChanged;
+            if (socialHub != null) socialHub.Close();
             if (battleDirector != null)
             {
                 battleDirector.EventPresented -= HandleBattleEvent;
