@@ -114,6 +114,8 @@ namespace Vexforge.Presentation
         {
             presentationToken++;
             StopAllCoroutines();
+            if (battlefield != null)
+                battlefield.SetVisible(false);
             if (State == PresentationState.Playing)
                 State = PresentationState.Idle;
         }
