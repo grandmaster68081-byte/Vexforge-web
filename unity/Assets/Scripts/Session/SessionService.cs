@@ -39,6 +39,15 @@ namespace Vexforge.Session
             return ok;
         }
 
+        public async Task<bool> RestoreAsync()
+        {
+            SetState(AuthState.SigningIn);
+            var ok = await auth.RestoreAsync();
+            lastError = string.Empty;
+            SetState(ok ? AuthState.Authenticated : AuthState.SignedOut);
+            return ok;
+        }
+
         public void SignOut()
         {
             auth.SignOut();

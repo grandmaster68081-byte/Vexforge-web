@@ -1,6 +1,7 @@
 using System.Threading.Tasks;
 using UnityEngine;
 using Vexforge.Core;
+using Vexforge.Session;
 
 namespace Vexforge.Backend
 {
@@ -15,11 +16,13 @@ namespace Vexforge.Backend
     public sealed class SupabaseAuthService
     {
         private readonly SupabaseClient client;
+        private readonly ISessionStore sessionStore;
         public SessionSnapshot Current { get; private set; }
 
-        public SupabaseAuthService(SupabaseClient client)
+        public SupabaseAuthService(SupabaseClient client, ISessionStore sessionStore)
         {
             this.client = client;
+            this.sessionStore = sessionStore;
         }
 
         public async Task<bool> SignInAsync(string email, string password)
@@ -29,6 +32,18 @@ namespace Vexforge.Backend
                 "{\"email\":" + SupabaseClient.Quote(email) + ",\"password\":" + SupabaseClient.Quote(password) + "}",
                 false);
             return ApplyAuthResponse(response);
+        }
+
+        public async Task<bool> RestoreAsync()
+        {
+            var persisted = sessionStore.Load();
+            if (persisted == null || string.IsNullOrWhiteSpace(persisted.refreshToken))
+                return false;
+
+            var restored = await RefreshAsync(persisted.refreshToken);
+            if (!restored)
+                sessionStore.Clear();
+            return restored;
         }
 
         public async Task<bool> RefreshAsync(string refreshToken)
@@ -44,6 +59,7 @@ namespace Vexforge.Backend
         {
             Current = null;
             client.AccessToken = null;
+            sessionStore.Clear();
         }
 
         private bool ApplyAuthResponse(SupabaseResponse response)
@@ -69,6 +85,7 @@ namespace Vexforge.Backend
                 email = payload.user != null ? payload.user.email : string.Empty
             };
             client.AccessToken = Current.accessToken;
+            sessionStore.Save(Current);
             return true;
         }
     }

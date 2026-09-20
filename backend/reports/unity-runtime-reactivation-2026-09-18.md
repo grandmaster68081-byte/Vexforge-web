@@ -17,8 +17,9 @@
 
 ## Partially implemented
 
-- Device-secure token persistence is not yet implemented; the first session is
-  memory-only.
+- Device-secure token persistence is implemented in
+  `Assets/Scripts/Session/SecureSessionStore.cs` with Android Keystore and
+  AES-GCM; Editor/device validation remains pending.
 - Formation editing and battle event rendering need the exact live payload
   shapes and Unity Editor validation.
 - Official art, audio, particles, camera choreography and tactile feedback

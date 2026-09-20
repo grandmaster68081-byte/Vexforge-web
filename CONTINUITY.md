@@ -6287,3 +6287,22 @@ generó build o APK.
 - RESULTADO BUILD REAL: la ejecución https://github.com/grandmaster68081-byte/Vexforge-web/actions/runs/35272239350 terminó con fallo honesto en la precomprobación porque los tres secretos de Unity aún no existen. No se generó APK ni release.
 - INTERVENCIÓN MANUAL PENDIENTE: descargar el artifact VEXFORGE-Unity-Activation-Request-3 desde la ejecución de activación, subir el .alf en https://license.unity3d.com, elegir Unity Personal y descargar el .ulf. Después crear en GitHub, en Settings → Secrets and variables → Actions, los secretos UNITY_LICENSE (contenido completo del .ulf), UNITY_EMAIL (correo de Unity) y UNITY_PASSWORD (contraseña de Unity). No introducir esos valores en el repositorio ni en el chat.
 - ESTADO HONESTO: infraestructura CI preparada; activación Personal pendiente de la intervención manual descrita; APK todavía no generado.
+
+## 2026-09-20 — UNITY TIER-1 — SECURE SESSION PERSISTENCE / NO BUILD
+
+- **UNIDAD:** se implementó la persistencia segura de sesión de Supabase para
+  el runtime Android en `unity/Assets/Scripts/Session/`.
+- **IMPLEMENTACIÓN:** `SecureSessionStore` genera la clave AES en Android
+  Keystore, cifra el snapshot con AES-GCM y persiste sólo el envelope cifrado
+  en `PlayerPrefs`; el refresh token se usa para restaurar la sesión al
+  arrancar y `SignOut` elimina el envelope.
+- **INTEGRIDAD:** no se modificaron economía, RLS, RPCs, reglas de combate ni
+  contratos de backend. Los tokens nunca se escriben en logs ni en texto claro.
+- **VERIFICACIÓN:** `git diff --check`, referencias de constructor y flujo
+  `async` revisados estáticamente. No se ejecutó Unity Editor, APK, Player,
+  Gradle, CI ni Build Automation.
+- **ESTADO HONESTO:** `IMPLEMENTED_UNVERIFIED / NO BUILD`; queda pendiente
+  validar Keystore, cold start, refresh, sign-out y reinstalación en un
+  dispositivo Android con el Editor declarado.
+- **NEXT:** validar en Editor/dispositivo cuando se autorice QA; no iniciar
+  compilación automáticamente.

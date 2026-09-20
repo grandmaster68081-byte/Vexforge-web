@@ -42,7 +42,7 @@ namespace Vexforge.Core
             PersistentState = new PersistentRuntimeState();
 
             var client = new SupabaseClient(RuntimeEnvironment.Current);
-            var auth = new SupabaseAuthService(client);
+            var auth = new SupabaseAuthService(client, new SecureSessionStore());
             Session = new SessionService(auth);
             Repository = new VexforgeRepository(client);
             GameState = new GameStateStore(Repository, Session);
@@ -69,20 +69,20 @@ namespace Vexforge.Core
             return initializationTask;
         }
 
-        private Task InitializeCore()
+        private async Task InitializeCore()
         {
             if (!RuntimeEnvironment.IsConfigured)
             {
                 InitializationError = "La configuración de Supabase no está disponible.";
                 IsInitialized = true;
                 AppLogger.Warning(InitializationError);
-                return Task.CompletedTask;
+                return;
             }
 
+            await Session.RestoreAsync();
             Navigation.Navigate(GameRoute.Nexus);
             IsInitialized = true;
             AppLogger.Info("Foundation inicializada; esperando sesión autenticada.");
-            return Task.CompletedTask;
         }
 
         public async Task<bool> SignInAndSyncAsync(string email, string password)
