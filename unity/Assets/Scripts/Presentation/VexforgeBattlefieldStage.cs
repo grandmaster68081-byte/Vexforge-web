@@ -22,6 +22,8 @@ namespace Vexforge.Presentation
         private Transform opponentZone;
         private Transform impactCore;
         private Light atmosphereLight;
+        private Color baseAtmosphereColor = new Color(0.20f, 0.42f, 0.68f, 1f);
+        private float baseAtmosphereIntensity = 2.2f;
         private Camera targetCamera;
         private VexforgeCardArtResolver artResolver;
         private Func<string, CardRecord> cardLookup;
@@ -33,6 +35,7 @@ namespace Vexforge.Presentation
         private Material neutralMaterial;
         private Vector3 cameraHomePosition;
         private Quaternion cameraHomeRotation;
+        private Coroutine atmosphereReturn;
         private MaterialPropertyBlock pulseBlock;
 
         public void Initialize(
@@ -74,6 +77,7 @@ namespace Vexforge.Presentation
             if (!visible)
             {
                 StopAllCoroutines();
+                atmosphereReturn = null;
                 ResetTransientPresentation();
                 if (gameObject.activeSelf)
                     gameObject.SetActive(false);
@@ -105,36 +109,42 @@ namespace Vexforge.Presentation
 
             if (ContainsAny(type, "victory", "win", "match_end", "battle_end", "complete"))
             {
+                SetAtmosphere(new Color(0.95f, 0.72f, 0.28f, 1f), 6.0f);
                 yield return PresentVictory(type);
                 yield break;
             }
 
             if (ContainsAny(type, "play", "cast", "summon", "deploy", "invoke"))
             {
+                SetAtmosphere(new Color(0.25f, 0.55f, 0.90f, 1f), 5.0f);
                 yield return PresentCardEntry(cardId, actorId);
                 yield break;
             }
 
             if (ContainsAny(type, "attack", "strike", "hit", "damage", "deal_damage"))
             {
+                SetAtmosphere(new Color(0.95f, 0.22f, 0.16f, 1f), 6.5f);
                 yield return PresentImpact(actorId, targetId, true);
                 yield break;
             }
 
             if (ContainsAny(type, "guard", "defend", "shield", "sentinel"))
             {
+                SetAtmosphere(new Color(0.92f, 0.67f, 0.28f, 1f), 5.5f);
                 yield return PresentShield(actorId);
                 yield break;
             }
 
             if (ContainsAny(type, "heal", "restore", "regenerate"))
             {
+                SetAtmosphere(new Color(0.25f, 0.86f, 0.72f, 1f), 5.0f);
                 yield return PresentPulse(true);
                 yield break;
             }
 
             if (ContainsAny(type, "death", "destroy", "remove", "defeat"))
             {
+                SetAtmosphere(new Color(0.75f, 0.12f, 0.18f, 1f), 7.0f);
                 yield return PresentDefeat(targetId, actorId);
                 yield break;
             }
@@ -198,6 +208,28 @@ namespace Vexforge.Presentation
             ownedMaterials.Add(markerMaterial);
             CreatePrimitive(name + "Marker", PrimitiveType.Cube, position, new Vector3(width, 0.06f, 1.9f), markerMaterial, arenaRoot);
             return zone;
+        }
+
+        private void SetAtmosphere(Color color, float intensity)
+        {
+            if (atmosphereLight == null) return;
+            if (atmosphereReturn != null)
+                StopCoroutine(atmosphereReturn);
+            atmosphereReturn = null;
+            atmosphereLight.color = color;
+            atmosphereLight.intensity = intensity;
+            atmosphereReturn = StartCoroutine(RestoreAtmosphereAfterDelay(0.95f));
+        }
+
+        private IEnumerator RestoreAtmosphereAfterDelay(float delay)
+        {
+            yield return new WaitForSecondsRealtime(delay);
+            if (atmosphereLight != null)
+            {
+                atmosphereLight.color = baseAtmosphereColor;
+                atmosphereLight.intensity = baseAtmosphereIntensity;
+            }
+            atmosphereReturn = null;
         }
 
         private IEnumerator PresentCardEntry(string cardId, string actorId)
@@ -384,7 +416,6 @@ namespace Vexforge.Presentation
             yield return CameraImpulse(0.20f, 0.10f);
             DestroyTransientObject(flash);
         }
-
 
         private IEnumerator PresentBossArrival(string bossId)
         {
@@ -701,6 +732,7 @@ namespace Vexforge.Presentation
         private void OnDestroy()
         {
             StopAllCoroutines();
+            atmosphereReturn = null;
             ResetTransientPresentation();
             if (impactCore != null)
             {
