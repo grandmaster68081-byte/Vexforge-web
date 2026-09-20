@@ -34,6 +34,9 @@ namespace Vexforge.UI
         private VexforgeCardArtResolver artResolver;
         private VexforgeCardPool cardPool;
         private VexforgeVirtualizedCardGallery gallery;
+        private VexforgeAlphaWorldDirector alphaWorld;
+        private VexforgeAlphaHud alphaHud;
+        private VexforgeDiegeticInputRouter alphaInput;
 
         private bool built;
         private bool subscribed;
@@ -43,19 +46,30 @@ namespace Vexforge.UI
             app = VexforgeApp.Instance;
             if (app == null) return;
 
-            battleDirector = GetComponent<BattlePresentationDirector>();
-            if (battleDirector == null)
-            {
-                battleDirector = gameObject.AddComponent<BattlePresentationDirector>();
-            }
-
-            battleDirector.EventPresented += PresentBattleEvent;
-
             BuildPresentation();
+            BuildBattlePresentationHost();
             BuildCanvas();
+            alphaHud = GetComponent<VexforgeAlphaHud>();
+            if (alphaHud == null)
+                alphaHud = gameObject.AddComponent<VexforgeAlphaHud>();
+            alphaHud.Initialize(app, canvas, gallery, battleDirector, alphaWorld);
             Subscribe();
 
             Render();
+        }
+
+        private void BuildBattlePresentationHost()
+        {
+            if (battleDirector != null) return;
+
+            var legacyDirector = GetComponent<BattlePresentationDirector>();
+            if (legacyDirector != null)
+                legacyDirector.enabled = false;
+
+            var host = new GameObject("BattlePresentationHost");
+            host.transform.SetParent(presentationHost.transform, false);
+            battleDirector = host.AddComponent<BattlePresentationDirector>();
+            host.AddComponent<VexforgeBattlefieldStage>();
         }
 
         private void BuildPresentation()
@@ -67,6 +81,7 @@ namespace Vexforge.UI
 
             nexusStage = presentationHost.AddComponent<VexforgeNexusStage>();
             nexusStage.Initialize(app);
+            nexusStage.SetNexusVisible(false);
 
             var cardWorldRootObject = new GameObject("WorldCardPresentation");
             cardWorldRootObject.transform.SetParent(presentationHost.transform, false);
@@ -94,14 +109,21 @@ namespace Vexforge.UI
             galleryObject.transform.position = new Vector3(0f, 3.15f, 5.4f);
             galleryObject.transform.rotation = camera.transform.rotation;
 
+            alphaInput = presentationHost.AddComponent<VexforgeDiegeticInputRouter>();
+            alphaInput.Initialize(camera);
+
             gallery = galleryObject.AddComponent<VexforgeVirtualizedCardGallery>();
             gallery.Initialize(
                 camera,
                 cardPool,
                 artResolver,
-                nexusStage.InputRouter);
+                alphaInput);
 
             galleryObject.SetActive(false);
+
+            alphaWorld = presentationHost.AddComponent<VexforgeAlphaWorldDirector>();
+            alphaWorld.Initialize(app.Navigation, camera);
+            alphaWorld.BindGalleryRoot(galleryObject.transform);
 
             built = true;
         }
@@ -219,29 +241,16 @@ namespace Vexforge.UI
 
         private void PrepareWorldPresentation()
         {
-            var route = app.Navigation.CurrentRoute;
-
-            var showNexus = route == GameRoute.Nexus;
-            var showGallery = route == GameRoute.Collection || route == GameRoute.Deck;
-
-            nexusStage.SetNexusVisible(showNexus);
-
-            if (!showGallery)
-            {
-                gallery.Hide();
-                cardPool.ReturnAll();
-            }
-            else
-            {
-                gallery.gameObject.SetActive(true);
-                gallery.Hide();
-                gallery.gameObject.SetActive(true);
-            }
+            nexusStage.SetNexusVisible(false);
+            if (alphaWorld != null)
+                alphaWorld.SetVisible(true);
         }
 
         private void HideWorldPresentation()
         {
+            if (battleDirector != null) battleDirector.StopAndHide();
             if (nexusStage != null) nexusStage.SetNexusVisible(false);
+            if (alphaWorld != null) alphaWorld.SetVisible(false);
             if (gallery != null) gallery.Hide();
             if (cardPool != null) cardPool.ReturnAll();
         }
@@ -324,90 +333,8 @@ namespace Vexforge.UI
 
         private void RenderShell()
         {
-            var background = UiFactory.PanelObject(
-                canvas.transform,
-                "ContextUI",
-                UiFactory.Background);
-
-            UiFactory.Stretch(
-                background.GetComponent<RectTransform>(),
-                0,
-                0,
-                0,
-                0);
-
-            background.GetComponent<Image>().color =
-                new Color(UiFactory.Background.r,
-                          UiFactory.Background.g,
-                          UiFactory.Background.b,
-                          0.22f);
-
-            var header = UiFactory.PanelObject(
-                background.transform,
-                "ContextHeader",
-                new Color(0.03f, 0.02f, 0.018f, 0.58f));
-
-            UiFactory.Anchor(
-                header.GetComponent<RectTransform>(),
-                new Vector2(0f, 0.91f),
-                new Vector2(1f, 1f),
-                Vector2.zero,
-                Vector2.zero);
-
-            var profileName =
-                app.GameState.Profile != null &&
-                !string.IsNullOrWhiteSpace(app.GameState.Profile.display_name)
-                    ? app.GameState.Profile.display_name
-                    : "Jugador autenticado";
-
-            var heading = UiFactory.Label(
-                header.transform,
-                "VEXFORGE  /  " + profileName,
-                20,
-                UiFactory.Gold);
-
-            UiFactory.Anchor(
-                heading.rectTransform,
-                new Vector2(0.05f, 0.32f),
-                new Vector2(0.72f, 0.78f),
-                Vector2.zero,
-                Vector2.zero);
-
-            var syncText =
-                app.GameState.SyncState == SyncState.Connected
-                    ? "SUPABASE · CONNECTED"
-                    : app.GameState.SyncState.ToString().ToUpperInvariant();
-
-            var sync = UiFactory.Label(
-                header.transform,
-                syncText,
-                12,
-                app.GameState.SyncState == SyncState.Connected
-                    ? UiFactory.Arcane
-                    : UiFactory.Muted,
-                TextAnchor.MiddleRight);
-
-            UiFactory.Anchor(
-                sync.rectTransform,
-                new Vector2(0.63f, 0.32f),
-                new Vector2(0.95f, 0.78f),
-                Vector2.zero,
-                Vector2.zero);
-
-            var contentObject = UiFactory.PanelObject(
-                background.transform,
-                "RouteContext",
-                new Color(0f, 0f, 0f, 0f));
-
-            UiFactory.Anchor(
-                contentObject.GetComponent<RectTransform>(),
-                new Vector2(0.04f, 0.07f),
-                new Vector2(0.96f, 0.91f),
-                Vector2.zero,
-                Vector2.zero);
-
-            content = contentObject.GetComponent<RectTransform>();
-            RenderRoute();
+            if (alphaHud == null) return;
+            alphaHud.RenderRoute(app.Navigation.CurrentRoute);
         }
 
         private void RenderRoute()
