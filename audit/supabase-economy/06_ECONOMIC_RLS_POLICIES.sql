@@ -1,0 +1,2597 @@
+-- VEXFORGE ECONOMIC RLS / POLICY MATRIX
+-- Live project: rscuzqnfccqvltkdcdny
+-- Extracted from pg_catalog / information_schema over HTTPS.
+-- Evidence report only; do not execute as a migration.
+
+-- RLS relation status
+-- Columns: schema, table, rls_enabled, force_rls
+-- public.admin_actions | rls_enabled=true | force_rls=false
+-- public.admin_economy_overview | rls_enabled=false | force_rls=false
+-- public.admin_economy_view | rls_enabled=false | force_rls=false
+-- public.admin_logs | rls_enabled=true | force_rls=false
+-- public.admin_market_overview | rls_enabled=false | force_rls=false
+-- public.admin_market_queue_view | rls_enabled=false | force_rls=false
+-- public.admin_players_overview | rls_enabled=false | force_rls=false
+-- public.admin_players_view | rls_enabled=false | force_rls=false
+-- public.admin_withdrawal_queue_view | rls_enabled=false | force_rls=false
+-- public.admin_withdrawals | rls_enabled=false | force_rls=false
+-- public.canon_economy_state | rls_enabled=false | force_rls=false
+-- public.cards | rls_enabled=true | force_rls=false
+-- public.econ_market_guard_complete | rls_enabled=false | force_rls=false
+-- public.economy_absorption_ratio_view | rls_enabled=false | force_rls=false
+-- public.economy_alerts | rls_enabled=true | force_rls=false
+-- public.economy_ast_nodes | rls_enabled=true | force_rls=false
+-- public.economy_balance_state | rls_enabled=true | force_rls=false
+-- public.economy_compiled_modules | rls_enabled=true | force_rls=false
+-- public.economy_dynamic_rules | rls_enabled=true | force_rls=false
+-- public.economy_emergent_rules | rls_enabled=true | force_rls=false
+-- public.economy_flow_events | rls_enabled=true | force_rls=false
+-- public.economy_global_metrics | rls_enabled=true | force_rls=false
+-- public.economy_global_state | rls_enabled=false | force_rls=false
+-- public.economy_kernel_state | rls_enabled=true | force_rls=false
+-- public.economy_ledger | rls_enabled=true | force_rls=false
+-- public.economy_lock_state_machine | rls_enabled=true | force_rls=false
+-- public.economy_loop_events | rls_enabled=true | force_rls=false
+-- public.economy_meta_evolution | rls_enabled=true | force_rls=false
+-- public.economy_processes | rls_enabled=true | force_rls=false
+-- public.economy_reconciliation_log | rls_enabled=true | force_rls=false
+-- public.economy_rule_history | rls_enabled=true | force_rls=false
+-- public.economy_safety_flags | rls_enabled=true | force_rls=false
+-- public.economy_sinks | rls_enabled=true | force_rls=false
+-- public.economy_sources | rls_enabled=true | force_rls=false
+-- public.economy_state | rls_enabled=true | force_rls=false
+-- public.economy_state_machine | rls_enabled=true | force_rls=false
+-- public.economy_system_state | rls_enabled=true | force_rls=false
+-- public.kernel_economy_lock | rls_enabled=true | force_rls=false
+-- public.kernel_market_guard | rls_enabled=true | force_rls=false
+-- public.kernel_wallet_sync | rls_enabled=true | force_rls=false
+-- public.market_dynamic_state | rls_enabled=true | force_rls=false
+-- public.market_guard_final | rls_enabled=false | force_rls=false
+-- public.market_items | rls_enabled=true | force_rls=false
+-- public.market_listings | rls_enabled=true | force_rls=false
+-- public.market_loop_events | rls_enabled=true | force_rls=false
+-- public.mission_rewards | rls_enabled=true | force_rls=false
+-- public.player_cards | rls_enabled=true | force_rls=false
+-- public.player_economy_state | rls_enabled=true | force_rls=false
+-- public.player_wallet | rls_enabled=true | force_rls=false
+-- public.players | rls_enabled=true | force_rls=false
+-- public.pvp_rewards | rls_enabled=true | force_rls=false
+-- public.raid_rewards | rls_enabled=true | force_rls=false
+-- public.reward_rules | rls_enabled=true | force_rls=false
+-- public.rewards | rls_enabled=true | force_rls=false
+-- public.social_private_reads | rls_enabled=true | force_rls=false
+-- public.telegram_ad_events | rls_enabled=true | force_rls=false
+-- public.telegram_ads | rls_enabled=true | force_rls=false
+-- public.telegram_referrals | rls_enabled=true | force_rls=false
+-- public.telegram_rewards_log | rls_enabled=true | force_rls=false
+-- public.tg_canon_readiness | rls_enabled=false | force_rls=false
+-- public.tg_economy_policy | rls_enabled=false | force_rls=false
+-- public.tg_economy_state_machine | rls_enabled=false | force_rls=false
+-- public.tg_leaderboard | rls_enabled=false | force_rls=false
+-- public.tg_leaderboards | rls_enabled=false | force_rls=false
+-- public.tg_referrals | rls_enabled=false | force_rls=false
+-- public.tg_rewards | rls_enabled=false | force_rls=false
+-- public.tg_wallet | rls_enabled=false | force_rls=false
+-- public.v_economy_sinks | rls_enabled=false | force_rls=false
+-- public.v_market_health | rls_enabled=false | force_rls=false
+-- public.vex_canon_registry | rls_enabled=true | force_rls=false
+-- public.vexforge_ad_views | rls_enabled=true | force_rls=false
+-- public.vexforge_android_release_registry | rls_enabled=true | force_rls=false
+-- public.vexforge_asset_files | rls_enabled=true | force_rls=false
+-- public.vexforge_asset_manifest | rls_enabled=true | force_rls=false
+-- public.vexforge_asset_manifest_view | rls_enabled=false | force_rls=false
+-- public.vexforge_asset_packs | rls_enabled=true | force_rls=false
+-- public.vexforge_branch_registry | rls_enabled=true | force_rls=false
+-- public.vexforge_bridge_balance | rls_enabled=false | force_rls=false
+-- public.vexforge_bridge_cards | rls_enabled=false | force_rls=false
+-- public.vexforge_bridge_combat | rls_enabled=false | force_rls=false
+-- public.vexforge_bridge_content | rls_enabled=false | force_rls=false
+-- public.vexforge_bridge_market | rls_enabled=false | force_rls=false
+-- public.vexforge_bridge_progress | rls_enabled=false | force_rls=false
+-- public.vexforge_bridge_telegram_monetization | rls_enabled=false | force_rls=false
+-- public.vexforge_canonical_governance | rls_enabled=false | force_rls=false
+-- public.vexforge_card_fusion_log | rls_enabled=true | force_rls=false
+-- public.vexforge_card_fusion_policy | rls_enabled=true | force_rls=false
+-- public.vexforge_card_supply_official | rls_enabled=false | force_rls=false
+-- public.vexforge_card_supply_policy | rls_enabled=true | force_rls=false
+-- public.vexforge_card_supply_summary | rls_enabled=false | force_rls=false
+-- public.vexforge_chat_branch_registry | rls_enabled=true | force_rls=false
+-- public.vexforge_commercial_dashboard | rls_enabled=false | force_rls=false
+-- public.vexforge_commercial_overview | rls_enabled=false | force_rls=false
+-- public.vexforge_commercial_policy | rls_enabled=true | force_rls=false
+-- public.vexforge_core_registry | rls_enabled=true | force_rls=false
+-- public.vexforge_deprecation_registry | rls_enabled=true | force_rls=false
+-- public.vexforge_economy_live_overview | rls_enabled=false | force_rls=false
+-- public.vexforge_economy_policy | rls_enabled=true | force_rls=false
+-- public.vexforge_final_gap_report | rls_enabled=true | force_rls=false
+-- public.vexforge_final_handoff_status | rls_enabled=true | force_rls=false
+-- public.vexforge_frontend_source_files | rls_enabled=true | force_rls=false
+-- public.vexforge_function_consolidation_registry | rls_enabled=true | force_rls=false
+-- public.vexforge_fusion_policy_official | rls_enabled=false | force_rls=false
+-- public.vexforge_fusion_summary | rls_enabled=false | force_rls=false
+-- public.vexforge_game_loop_telemetry | rls_enabled=true | force_rls=false
+-- public.vexforge_icon_legacy | rls_enabled=true | force_rls=false
+-- public.vexforge_implementation_manifest | rls_enabled=true | force_rls=false
+-- public.vexforge_knowledge_base | rls_enabled=false | force_rls=false
+-- public.vexforge_market_activity | rls_enabled=false | force_rls=false
+-- public.vexforge_market_fee_summary | rls_enabled=false | force_rls=false
+-- public.vexforge_market_official_listings | rls_enabled=false | force_rls=false
+-- public.vexforge_market_policy | rls_enabled=true | force_rls=false
+-- public.vexforge_marketable_cards | rls_enabled=false | force_rls=false
+-- public.vexforge_mission_reward_policy | rls_enabled=true | force_rls=false
+-- public.vexforge_mission_type_audit | rls_enabled=false | force_rls=false
+-- public.vexforge_mission_type_raw_audit | rls_enabled=false | force_rls=false
+-- public.vexforge_module_map | rls_enabled=false | force_rls=false
+-- public.vexforge_nft_contracts | rls_enabled=true | force_rls=false
+-- public.vexforge_nft_metadata | rls_enabled=true | force_rls=false
+-- public.vexforge_nft_mint_queue | rls_enabled=true | force_rls=false
+-- public.vexforge_nft_wallet_links | rls_enabled=true | force_rls=false
+-- public.vexforge_object_action_map | rls_enabled=true | force_rls=false
+-- public.vexforge_official_asset_manifest | rls_enabled=true | force_rls=false
+-- public.vexforge_official_cards_bridge | rls_enabled=false | force_rls=false
+-- public.vexforge_official_documents | rls_enabled=true | force_rls=false
+-- public.vexforge_official_missions | rls_enabled=false | force_rls=false
+-- public.vexforge_official_missions_bridge | rls_enabled=false | force_rls=false
+-- public.vexforge_official_module_specs | rls_enabled=true | force_rls=false
+-- public.vexforge_official_modules | rls_enabled=true | force_rls=false
+-- public.vexforge_official_seed_log | rls_enabled=true | force_rls=false
+-- public.vexforge_official_seed_manifest | rls_enabled=true | force_rls=false
+-- public.vexforge_pack_catalog | rls_enabled=true | force_rls=false
+-- public.vexforge_pack_contents | rls_enabled=true | force_rls=false
+-- public.vexforge_pack_orders | rls_enabled=true | force_rls=false
+-- public.vexforge_player_economy_official | rls_enabled=false | force_rls=false
+-- public.vexforge_player_fusion_status | rls_enabled=false | force_rls=false
+-- public.vexforge_player_shards | rls_enabled=true | force_rls=false
+-- public.vexforge_project_audit | rls_enabled=true | force_rls=false
+-- public.vexforge_project_chat_registry | rls_enabled=true | force_rls=false
+-- public.vexforge_project_decisions | rls_enabled=true | force_rls=false
+-- public.vexforge_project_deposits | rls_enabled=true | force_rls=false
+-- public.vexforge_project_documents | rls_enabled=true | force_rls=false
+-- public.vexforge_project_memory | rls_enabled=true | force_rls=false
+-- public.vexforge_project_modules | rls_enabled=true | force_rls=false
+-- public.vexforge_project_versions | rls_enabled=true | force_rls=false
+-- public.vexforge_referrals | rls_enabled=true | force_rls=false
+-- public.vexforge_replit_cards | rls_enabled=false | force_rls=false
+-- public.vexforge_replit_economy_overview | rls_enabled=false | force_rls=false
+-- public.vexforge_replit_handoff_summary | rls_enabled=false | force_rls=false
+-- public.vexforge_replit_missions | rls_enabled=false | force_rls=false
+-- public.vexforge_replit_packs | rls_enabled=false | force_rls=false
+-- public.vexforge_replit_player_snapshot | rls_enabled=false | force_rls=false
+-- public.vexforge_schema_audit | rls_enabled=true | force_rls=false
+-- public.vexforge_schema_freeze_status | rls_enabled=true | force_rls=false
+-- public.vexforge_shop_catalog | rls_enabled=true | force_rls=false
+-- public.vexforge_shop_orders | rls_enabled=true | force_rls=false
+-- public.vexforge_support_registry | rls_enabled=true | force_rls=false
+-- public.vexforge_surface_registry | rls_enabled=true | force_rls=false
+-- public.vexforge_system_config | rls_enabled=true | force_rls=false
+-- public.vexforge_telemetry_event_catalog | rls_enabled=true | force_rls=false
+-- public.vexforge_telemetry_events | rls_enabled=true | force_rls=false
+-- public.vexforge_tier1_dimensions | rls_enabled=true | force_rls=false
+-- public.vexforge_tier1_phase_state | rls_enabled=false | force_rls=false
+-- public.vexforge_tier1_phases | rls_enabled=true | force_rls=false
+-- public.vexforge_tier1_score | rls_enabled=false | force_rls=false
+-- public.vexforge_treasury | rls_enabled=true | force_rls=false
+-- public.vexforge_treasury_overview | rls_enabled=false | force_rls=false
+-- public.vexforge_visual_tier1_objective | rls_enabled=true | force_rls=false
+-- public.vexforge_web_registry | rls_enabled=true | force_rls=false
+-- public.vexforge_withdrawal_requests_official | rls_enabled=true | force_rls=false
+-- public.wallet_transactions | rls_enabled=true | force_rls=false
+-- public.withdrawal_controls | rls_enabled=true | force_rls=false
+-- public.withdrawal_profile | rls_enabled=true | force_rls=false
+-- public.withdrawal_queue | rls_enabled=true | force_rls=false
+-- public.withdrawal_requests | rls_enabled=true | force_rls=false
+
+-- Policies
+-- Columns: schema, table, policy, command, roles, USING, WITH CHECK
+-- public.admin_actions | policy=read_all | command=SELECT | roles=public | USING=true | WITH_CHECK=
+-- public.admin_logs | policy=service_role_full_admin_logs | command=ALL | roles=service_role | USING=true | WITH_CHECK=true
+-- public.cards | policy=cards_no_write | command=ALL | roles=public | USING=false | WITH_CHECK=false
+-- public.cards | policy=cards_public | command=SELECT | roles=public | USING=true | WITH_CHECK=
+-- public.economy_alerts | policy=service_role_full_economy_alerts | command=ALL | roles=service_role | USING=true | WITH_CHECK=true
+-- public.economy_ast_nodes | policy=service_role_full_economy_ast_nodes | command=ALL | roles=service_role | USING=true | WITH_CHECK=true
+-- public.economy_balance_state | policy=service_role_full_economy_balance_state | command=ALL | roles=service_role | USING=true | WITH_CHECK=true
+-- public.economy_compiled_modules | policy=service_role_full_economy_compiled_modules | command=ALL | roles=service_role | USING=true | WITH_CHECK=true
+-- public.economy_dynamic_rules | policy=service_role_full_economy_dynamic_rules | command=ALL | roles=service_role | USING=true | WITH_CHECK=true
+-- public.economy_emergent_rules | policy=service_role_full_economy_emergent_rules | command=ALL | roles=service_role | USING=true | WITH_CHECK=true
+-- public.economy_flow_events | policy=service_role_full_economy_flow_events | command=ALL | roles=service_role | USING=true | WITH_CHECK=true
+-- public.economy_global_metrics | policy=read_all | command=SELECT | roles=public | USING=true | WITH_CHECK=
+-- public.economy_kernel_state | policy=service_role_full_economy_kernel_state | command=ALL | roles=service_role | USING=true | WITH_CHECK=true
+-- public.economy_ledger | policy=admin_full_access_ledger | command=ALL | roles=authenticated | USING=is_owner() | WITH_CHECK=is_owner()
+-- public.economy_ledger | policy=ledger_no_write | command=ALL | roles=public | USING=false | WITH_CHECK=false
+-- public.economy_ledger | policy=player_read_own_ledger | command=SELECT | roles=authenticated | USING=(player_id IN ( SELECT players.id    FROM players   WHERE (players.auth_user_id = auth.uid()))) | WITH_CHECK=
+-- public.economy_lock_state_machine | policy=service_role_full_economy_lock_state_machine | command=ALL | roles=service_role | USING=true | WITH_CHECK=true
+-- public.economy_loop_events | policy=service_role_full_economy_loop_events | command=ALL | roles=service_role | USING=true | WITH_CHECK=true
+-- public.economy_meta_evolution | policy=service_role_full_economy_meta_evolution | command=ALL | roles=service_role | USING=true | WITH_CHECK=true
+-- public.economy_processes | policy=service_role_full_economy_processes | command=ALL | roles=service_role | USING=true | WITH_CHECK=true
+-- public.economy_reconciliation_log | policy=service_role_full_economy_reconciliation_log | command=ALL | roles=service_role | USING=true | WITH_CHECK=true
+-- public.economy_rule_history | policy=service_role_full_economy_rule_history | command=ALL | roles=service_role | USING=true | WITH_CHECK=true
+-- public.economy_safety_flags | policy=service_role_full_economy_safety_flags | command=ALL | roles=service_role | USING=true | WITH_CHECK=true
+-- public.economy_sinks | policy=read_all | command=SELECT | roles=public | USING=true | WITH_CHECK=
+-- public.economy_sources | policy=read_all | command=SELECT | roles=public | USING=true | WITH_CHECK=
+-- public.economy_state | policy=admin_full_access_economy | command=ALL | roles=authenticated | USING=is_owner() | WITH_CHECK=is_owner()
+-- public.economy_state | policy=economy_state_select_authenticated | command=SELECT | roles=authenticated | USING=true | WITH_CHECK=
+-- public.economy_state_machine | policy=service_role_full_economy_state_machine | command=ALL | roles=service_role | USING=true | WITH_CHECK=true
+-- public.economy_system_state | policy=service_role_full_economy_system_state | command=ALL | roles=service_role | USING=true | WITH_CHECK=true
+-- public.kernel_economy_lock | policy=service_role_full_kernel_economy_lock | command=ALL | roles=service_role | USING=true | WITH_CHECK=true
+-- public.kernel_market_guard | policy=service_role_full_kernel_market_guard | command=ALL | roles=service_role | USING=true | WITH_CHECK=true
+-- public.kernel_wallet_sync | policy=service_role_full_kernel_wallet_sync | command=ALL | roles=service_role | USING=true | WITH_CHECK=true
+-- public.market_dynamic_state | policy=read_all | command=SELECT | roles=public | USING=true | WITH_CHECK=
+-- public.market_items | policy=read_all | command=SELECT | roles=public | USING=true | WITH_CHECK=
+-- public.market_listings | policy=market_no_write | command=ALL | roles=public | USING=false | WITH_CHECK=false
+-- public.market_listings | policy=market_public | command=SELECT | roles=public | USING=true | WITH_CHECK=
+-- public.market_loop_events | policy=service_role_full_market_loop_events | command=ALL | roles=service_role | USING=true | WITH_CHECK=true
+-- public.mission_rewards | policy=public_read_mission_rewards | command=SELECT | roles=anon,authenticated | USING=true | WITH_CHECK=
+-- public.player_cards | policy=player_cards_own_write | command=ALL | roles=authenticated | USING=(player_id IN ( SELECT players.id    FROM players   WHERE (players.auth_user_id = auth.uid()))) | WITH_CHECK=(player_id IN ( SELECT players.id    FROM players   WHERE (players.auth_user_id = auth.uid())))
+-- public.player_cards | policy=read_all | command=SELECT | roles=public | USING=true | WITH_CHECK=
+-- public.player_economy_state | policy=player_own_economy_state | command=ALL | roles=authenticated | USING=(player_id IN ( SELECT players.id    FROM players   WHERE (players.auth_user_id = auth.uid()))) | WITH_CHECK=(player_id IN ( SELECT players.id    FROM players   WHERE (players.auth_user_id = auth.uid())))
+-- public.player_wallet | policy=admin_full_access_wallet | command=ALL | roles=authenticated | USING=is_owner() | WITH_CHECK=is_owner()
+-- public.player_wallet | policy=wallet_no_write | command=ALL | roles=public | USING=false | WITH_CHECK=false
+-- public.player_wallet | policy=wallet_self | command=SELECT | roles=public | USING=(EXISTS ( SELECT 1    FROM players p   WHERE ((p.id = player_wallet.player_id) AND (p.auth_user_id = auth.uid())))) | WITH_CHECK=
+-- public.players | policy=admin_full_access_players | command=ALL | roles=authenticated | USING=is_owner() | WITH_CHECK=is_owner()
+-- public.players | policy=players_no_delete | command=DELETE | roles=public | USING=false | WITH_CHECK=
+-- public.players | policy=players_no_insert | command=INSERT | roles=public | USING= | WITH_CHECK=false
+-- public.players | policy=players_no_update | command=UPDATE | roles=public | USING=false | WITH_CHECK=
+-- public.players | policy=players_self | command=SELECT | roles=public | USING=(auth.uid() = auth_user_id) | WITH_CHECK=
+-- public.pvp_rewards | policy=public_read_pvp_rewards | command=SELECT | roles=anon,authenticated | USING=true | WITH_CHECK=
+-- public.raid_rewards | policy=player_read_own_raid_rewards | command=SELECT | roles=public | USING=(player_id = ( SELECT players.id    FROM players   WHERE (players.auth_user_id = auth.uid()))) | WITH_CHECK=
+-- public.raid_rewards | policy=service_role_full_raid_rewards | command=ALL | roles=public | USING=true | WITH_CHECK=
+-- public.raid_rewards | policy=svc_legacy_raid_rewards | command=ALL | roles=service_role | USING=true | WITH_CHECK=true
+-- public.reward_rules | policy=public_read_reward_rules | command=SELECT | roles=anon,authenticated | USING=true | WITH_CHECK=
+-- public.rewards | policy=read_all | command=SELECT | roles=public | USING=true | WITH_CHECK=
+-- public.telegram_ad_events | policy=service_role_full_telegram_ad_events | command=ALL | roles=service_role | USING=true | WITH_CHECK=true
+-- public.telegram_ads | policy=public_read_telegram_ads | command=SELECT | roles=public | USING=(active = true) | WITH_CHECK=
+-- public.telegram_ads | policy=service_role_full_telegram_ads | command=ALL | roles=service_role | USING=true | WITH_CHECK=true
+-- public.telegram_referrals | policy=service_role_full_telegram_referrals | command=ALL | roles=service_role | USING=true | WITH_CHECK=true
+-- public.telegram_rewards_log | policy=service_role_full_telegram_rewards_log | command=ALL | roles=service_role | USING=true | WITH_CHECK=true
+-- public.vex_canon_registry | policy=service_role_full_vex_canon_registry | command=ALL | roles=service_role | USING=true | WITH_CHECK=true
+-- public.vexforge_ad_views | policy=Players insert own ad views | command=INSERT | roles=public | USING= | WITH_CHECK=(auth.uid() = player_auth_id)
+-- public.vexforge_ad_views | policy=Players select own ad views | command=SELECT | roles=public | USING=(auth.uid() = player_auth_id) | WITH_CHECK=
+-- public.vexforge_android_release_registry | policy=vexforge_android_release_public_read | command=SELECT | roles=anon,authenticated | USING=(status = 'PUBLISHED'::text) | WITH_CHECK=
+-- public.vexforge_asset_files | policy=service_role_full_vexforge_asset_files | command=ALL | roles=service_role | USING=true | WITH_CHECK=true
+-- public.vexforge_asset_manifest | policy=service_role_full_vexforge_asset_manifest | command=ALL | roles=service_role | USING=true | WITH_CHECK=true
+-- public.vexforge_asset_packs | policy=service_role_full_vexforge_asset_packs | command=ALL | roles=service_role | USING=true | WITH_CHECK=true
+-- public.vexforge_branch_registry | policy=service_role_full_vexforge_branch_registry | command=ALL | roles=service_role | USING=true | WITH_CHECK=true
+-- public.vexforge_card_fusion_log | policy=service_role_full_vexforge_card_fusion_log | command=ALL | roles=service_role | USING=true | WITH_CHECK=true
+-- public.vexforge_card_fusion_policy | policy=service_role_full_vexforge_card_fusion_policy | command=ALL | roles=service_role | USING=true | WITH_CHECK=true
+-- public.vexforge_card_supply_policy | policy=service_role_full_vexforge_card_supply_policy | command=ALL | roles=service_role | USING=true | WITH_CHECK=true
+-- public.vexforge_chat_branch_registry | policy=meta_service_role_only | command=ALL | roles=anon,authenticated | USING=false | WITH_CHECK=false
+-- public.vexforge_commercial_policy | policy=service_role_full_vexforge_commercial_policy | command=ALL | roles=service_role | USING=true | WITH_CHECK=true
+-- public.vexforge_core_registry | policy=meta_service_role_only | command=ALL | roles=anon,authenticated | USING=false | WITH_CHECK=false
+-- public.vexforge_deprecation_registry | policy=meta_service_role_only | command=ALL | roles=anon,authenticated | USING=false | WITH_CHECK=false
+-- public.vexforge_economy_policy | policy=service_role_full_vexforge_economy_policy | command=ALL | roles=service_role | USING=true | WITH_CHECK=true
+-- public.vexforge_final_gap_report | policy=meta_service_role_only | command=ALL | roles=anon,authenticated | USING=false | WITH_CHECK=false
+-- public.vexforge_final_handoff_status | policy=meta_service_role_only | command=ALL | roles=anon,authenticated | USING=false | WITH_CHECK=false
+-- public.vexforge_frontend_source_files | policy=frontend_source_no_public_write | command=ALL | roles=public | USING=false | WITH_CHECK=false
+-- public.vexforge_frontend_source_files | policy=frontend_source_public_read | command=SELECT | roles=public | USING=true | WITH_CHECK=
+-- public.vexforge_function_consolidation_registry | policy=service_role_full_vexforge_function_consolidation_registry | command=ALL | roles=service_role | USING=true | WITH_CHECK=true
+-- public.vexforge_game_loop_telemetry | policy=telemetry_owner_read | command=SELECT | roles=authenticated | USING=(player_id = auth.uid()) | WITH_CHECK=
+-- public.vexforge_implementation_manifest | policy=meta_service_role_only | command=ALL | roles=anon,authenticated | USING=false | WITH_CHECK=false
+-- public.vexforge_market_policy | policy=service_role_full_vexforge_market_policy | command=ALL | roles=service_role | USING=true | WITH_CHECK=true
+-- public.vexforge_mission_reward_policy | policy=service_role_full_vexforge_mission_reward_policy | command=ALL | roles=service_role | USING=true | WITH_CHECK=true
+-- public.vexforge_nft_contracts | policy=nft_contracts_public_read | command=SELECT | roles=public | USING=true | WITH_CHECK=
+-- public.vexforge_nft_metadata | policy=nft_metadata_public_read | command=SELECT | roles=public | USING=true | WITH_CHECK=
+-- public.vexforge_nft_mint_queue | policy=nft_mint_queue_own_insert | command=INSERT | roles=public | USING= | WITH_CHECK=(player_id IN ( SELECT players.id    FROM players   WHERE (players.auth_user_id = auth.uid())))
+-- public.vexforge_nft_mint_queue | policy=nft_mint_queue_own_read | command=SELECT | roles=public | USING=(player_id IN ( SELECT players.id    FROM players   WHERE (players.auth_user_id = auth.uid()))) | WITH_CHECK=
+-- public.vexforge_nft_wallet_links | policy=nft_wallet_own_insert | command=INSERT | roles=public | USING= | WITH_CHECK=(player_id IN ( SELECT players.id    FROM players   WHERE (players.auth_user_id = auth.uid())))
+-- public.vexforge_nft_wallet_links | policy=nft_wallet_own_read | command=SELECT | roles=public | USING=(player_id IN ( SELECT players.id    FROM players   WHERE (players.auth_user_id = auth.uid()))) | WITH_CHECK=
+-- public.vexforge_object_action_map | policy=meta_service_role_only | command=ALL | roles=anon,authenticated | USING=false | WITH_CHECK=false
+-- public.vexforge_official_asset_manifest | policy=read_all | command=SELECT | roles=public | USING=true | WITH_CHECK=
+-- public.vexforge_official_documents | policy=meta_service_role_only | command=ALL | roles=anon,authenticated | USING=false | WITH_CHECK=false
+-- public.vexforge_official_module_specs | policy=meta_service_role_only | command=ALL | roles=anon,authenticated | USING=false | WITH_CHECK=false
+-- public.vexforge_official_modules | policy=meta_service_role_only | command=ALL | roles=anon,authenticated | USING=false | WITH_CHECK=false
+-- public.vexforge_official_seed_log | policy=meta_service_role_only | command=ALL | roles=anon,authenticated | USING=false | WITH_CHECK=false
+-- public.vexforge_official_seed_manifest | policy=meta_service_role_only | command=ALL | roles=anon,authenticated | USING=false | WITH_CHECK=false
+-- public.vexforge_pack_catalog | policy=read_all | command=SELECT | roles=public | USING=true | WITH_CHECK=
+-- public.vexforge_pack_contents | policy=read_all | command=SELECT | roles=public | USING=true | WITH_CHECK=
+-- public.vexforge_pack_orders | policy=player_read_own_orders | command=SELECT | roles=authenticated | USING=(EXISTS ( SELECT 1    FROM players p   WHERE ((p.id = vexforge_pack_orders.player_id) AND (p.auth_user_id = auth.uid())))) | WITH_CHECK=
+-- public.vexforge_pack_orders | policy=service_role_full_vexforge_pack_orders | command=ALL | roles=service_role | USING=true | WITH_CHECK=true
+-- public.vexforge_player_shards | policy=player_own_shards | command=SELECT | roles=authenticated | USING=(player_id IN ( SELECT players.id    FROM players   WHERE (players.auth_user_id = auth.uid()))) | WITH_CHECK=
+-- public.vexforge_player_shards | policy=players_read_own_shards | command=SELECT | roles=authenticated | USING=(player_id = ( SELECT players.id    FROM players   WHERE (players.auth_user_id = auth.uid())  LIMIT 1)) | WITH_CHECK=
+-- public.vexforge_player_shards | policy=players_upsert_own_shards | command=ALL | roles=authenticated | USING=(player_id = ( SELECT players.id    FROM players   WHERE (players.auth_user_id = auth.uid())  LIMIT 1)) | WITH_CHECK=(player_id = ( SELECT players.id    FROM players   WHERE (players.auth_user_id = auth.uid())  LIMIT 1))
+-- public.vexforge_player_shards | policy=service_role_full_vexforge_player_shards | command=ALL | roles=service_role | USING=true | WITH_CHECK=true
+-- public.vexforge_project_audit | policy=admin_read_only | command=SELECT | roles=authenticated | USING=(EXISTS ( SELECT 1    FROM players   WHERE ((players.auth_user_id = auth.uid()) AND ((players.is_admin = true) OR (players.role = 'owner'::text))))) | WITH_CHECK=
+-- public.vexforge_project_chat_registry | policy=meta_service_role_only | command=ALL | roles=anon,authenticated | USING=false | WITH_CHECK=false
+-- public.vexforge_project_decisions | policy=meta_service_role_only | command=ALL | roles=anon,authenticated | USING=false | WITH_CHECK=false
+-- public.vexforge_project_deposits | policy=admin_read_only | command=SELECT | roles=authenticated | USING=(EXISTS ( SELECT 1    FROM players   WHERE ((players.auth_user_id = auth.uid()) AND ((players.is_admin = true) OR (players.role = 'owner'::text))))) | WITH_CHECK=
+-- public.vexforge_project_documents | policy=meta_service_role_only | command=ALL | roles=anon,authenticated | USING=false | WITH_CHECK=false
+-- public.vexforge_project_memory | policy=meta_service_role_only | command=ALL | roles=anon,authenticated | USING=false | WITH_CHECK=false
+-- public.vexforge_project_modules | policy=meta_service_role_only | command=ALL | roles=anon,authenticated | USING=false | WITH_CHECK=false
+-- public.vexforge_project_versions | policy=meta_service_role_only | command=ALL | roles=anon,authenticated | USING=false | WITH_CHECK=false
+-- public.vexforge_referrals | policy=Players insert referrals | command=INSERT | roles=public | USING= | WITH_CHECK=(auth.uid() = referrer_auth_id)
+-- public.vexforge_referrals | policy=Players see own referrals | command=SELECT | roles=public | USING=(auth.uid() = referrer_auth_id) | WITH_CHECK=
+-- public.vexforge_schema_audit | policy=meta_service_role_only | command=ALL | roles=anon,authenticated | USING=false | WITH_CHECK=false
+-- public.vexforge_schema_freeze_status | policy=meta_service_role_only | command=ALL | roles=anon,authenticated | USING=false | WITH_CHECK=false
+-- public.vexforge_shop_catalog | policy=Anyone can view shop catalog | command=SELECT | roles=public | USING=(active = true) | WITH_CHECK=
+-- public.vexforge_shop_orders | policy=shop_orders_player_read_own | command=SELECT | roles=authenticated | USING=(EXISTS ( SELECT 1    FROM players p   WHERE ((p.id = vexforge_shop_orders.player_id) AND (p.auth_user_id = auth.uid())))) | WITH_CHECK=
+-- public.vexforge_support_registry | policy=meta_service_role_only | command=ALL | roles=anon,authenticated | USING=false | WITH_CHECK=false
+-- public.vexforge_surface_registry | policy=meta_service_role_only | command=ALL | roles=anon,authenticated | USING=false | WITH_CHECK=false
+-- public.vexforge_telemetry_event_catalog | policy=telemetry_catalog_select_public | command=SELECT | roles=anon,authenticated | USING=true | WITH_CHECK=
+-- public.vexforge_telemetry_events | policy=telemetry_events_insert_own | command=INSERT | roles=authenticated | USING= | WITH_CHECK=(auth.uid() = user_id)
+-- public.vexforge_telemetry_events | policy=telemetry_events_select_own | command=SELECT | roles=authenticated | USING=(auth.uid() = user_id) | WITH_CHECK=
+-- public.vexforge_tier1_dimensions | policy=public_read_tier1_dimensions | command=SELECT | roles=anon,authenticated | USING=true | WITH_CHECK=
+-- public.vexforge_tier1_phases | policy=public_read_tier1_phases | command=SELECT | roles=anon,authenticated | USING=true | WITH_CHECK=
+-- public.vexforge_treasury | policy=authenticated_read_active_project_treasury | command=SELECT | roles=authenticated | USING=((active = true) AND (purpose = 'project_treasury'::text)) | WITH_CHECK=
+-- public.vexforge_treasury | policy=service_role_full_vexforge_treasury | command=ALL | roles=service_role | USING=true | WITH_CHECK=true
+-- public.vexforge_visual_tier1_objective | policy=public_read_visual_tier1_objective | command=SELECT | roles=anon,authenticated | USING=true | WITH_CHECK=
+-- public.vexforge_web_registry | policy=meta_service_role_only | command=ALL | roles=anon,authenticated | USING=false | WITH_CHECK=false
+-- public.vexforge_withdrawal_requests_official | policy=service_role_full_vexforge_withdrawal_requests_official | command=ALL | roles=service_role | USING=true | WITH_CHECK=true
+-- public.wallet_transactions | policy=read_all | command=SELECT | roles=public | USING=true | WITH_CHECK=
+-- public.wallet_transactions | policy=wallet_tx_no_write | command=ALL | roles=public | USING=false | WITH_CHECK=false
+-- public.withdrawal_controls | policy=read_all | command=SELECT | roles=public | USING=true | WITH_CHECK=
+-- public.withdrawal_profile | policy=service_role_full_withdrawal_profile | command=ALL | roles=service_role | USING=true | WITH_CHECK=true
+-- public.withdrawal_queue | policy=admin_only_withdraw | command=UPDATE | roles=public | USING=(auth.role() = 'authenticated'::text) | WITH_CHECK=false
+-- public.withdrawal_queue | policy=withdrawal_queue_select_self | command=SELECT | roles=public | USING=(player_id IN ( SELECT players.id    FROM players   WHERE (players.auth_user_id = auth.uid()))) | WITH_CHECK=
+-- public.withdrawal_requests | policy=admin_full_access_withdrawals | command=ALL | roles=authenticated | USING=is_owner() | WITH_CHECK=is_owner()
+-- public.withdrawal_requests | policy=withdraw_request_insert | command=INSERT | roles=public | USING= | WITH_CHECK=(player_id IN ( SELECT players.id    FROM players   WHERE (players.auth_user_id = auth.uid())))
+-- public.withdrawal_requests | policy=withdraw_request_select_self | command=SELECT | roles=public | USING=(player_id IN ( SELECT players.id    FROM players   WHERE (players.auth_user_id = auth.uid()))) | WITH_CHECK=
+
+-- Table grants
+-- Columns: schema, table, grantee, privilege_type, is_grantable
+-- public.admin_actions | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.admin_actions | grantee=anon | privilege=SELECT | grantable=NO
+-- public.admin_actions | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.admin_actions | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.admin_actions | grantee=authenticated | privilege=SELECT | grantable=NO
+-- public.admin_actions | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.admin_actions | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.admin_actions | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.admin_actions | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.admin_actions | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.admin_actions | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.admin_actions | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.admin_actions | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.admin_economy_overview | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.admin_economy_overview | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.admin_economy_overview | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.admin_economy_overview | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.admin_economy_overview | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.admin_economy_overview | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.admin_economy_overview | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.admin_economy_overview | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.admin_economy_overview | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.admin_economy_overview | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.admin_economy_overview | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.admin_economy_view | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.admin_economy_view | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.admin_economy_view | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.admin_economy_view | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.admin_economy_view | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.admin_economy_view | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.admin_economy_view | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.admin_economy_view | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.admin_economy_view | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.admin_economy_view | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.admin_economy_view | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.admin_logs | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.admin_logs | grantee=anon | privilege=SELECT | grantable=NO
+-- public.admin_logs | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.admin_logs | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.admin_logs | grantee=authenticated | privilege=SELECT | grantable=NO
+-- public.admin_logs | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.admin_logs | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.admin_logs | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.admin_logs | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.admin_logs | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.admin_logs | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.admin_logs | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.admin_logs | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.admin_market_overview | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.admin_market_overview | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.admin_market_overview | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.admin_market_overview | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.admin_market_overview | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.admin_market_overview | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.admin_market_overview | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.admin_market_overview | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.admin_market_overview | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.admin_market_overview | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.admin_market_overview | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.admin_market_queue_view | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.admin_market_queue_view | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.admin_market_queue_view | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.admin_market_queue_view | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.admin_market_queue_view | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.admin_market_queue_view | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.admin_market_queue_view | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.admin_market_queue_view | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.admin_market_queue_view | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.admin_market_queue_view | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.admin_market_queue_view | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.admin_players_overview | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.admin_players_overview | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.admin_players_overview | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.admin_players_overview | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.admin_players_overview | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.admin_players_overview | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.admin_players_overview | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.admin_players_overview | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.admin_players_overview | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.admin_players_overview | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.admin_players_overview | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.admin_players_view | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.admin_players_view | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.admin_players_view | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.admin_players_view | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.admin_players_view | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.admin_players_view | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.admin_players_view | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.admin_players_view | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.admin_players_view | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.admin_players_view | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.admin_players_view | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.admin_withdrawal_queue_view | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.admin_withdrawal_queue_view | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.admin_withdrawal_queue_view | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.admin_withdrawal_queue_view | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.admin_withdrawal_queue_view | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.admin_withdrawal_queue_view | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.admin_withdrawal_queue_view | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.admin_withdrawal_queue_view | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.admin_withdrawal_queue_view | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.admin_withdrawal_queue_view | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.admin_withdrawal_queue_view | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.admin_withdrawals | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.admin_withdrawals | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.admin_withdrawals | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.admin_withdrawals | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.admin_withdrawals | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.admin_withdrawals | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.admin_withdrawals | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.admin_withdrawals | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.admin_withdrawals | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.admin_withdrawals | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.admin_withdrawals | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.canon_economy_state | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.canon_economy_state | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.canon_economy_state | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.canon_economy_state | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.canon_economy_state | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.canon_economy_state | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.canon_economy_state | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.canon_economy_state | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.canon_economy_state | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.canon_economy_state | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.canon_economy_state | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.cards | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.cards | grantee=anon | privilege=SELECT | grantable=NO
+-- public.cards | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.cards | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.cards | grantee=authenticated | privilege=SELECT | grantable=NO
+-- public.cards | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.cards | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.cards | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.cards | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.cards | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.cards | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.cards | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.cards | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.econ_market_guard_complete | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.econ_market_guard_complete | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.econ_market_guard_complete | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.econ_market_guard_complete | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.econ_market_guard_complete | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.econ_market_guard_complete | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.econ_market_guard_complete | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.econ_market_guard_complete | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.econ_market_guard_complete | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.econ_market_guard_complete | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.econ_market_guard_complete | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.economy_absorption_ratio_view | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.economy_absorption_ratio_view | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.economy_absorption_ratio_view | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.economy_absorption_ratio_view | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.economy_absorption_ratio_view | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.economy_absorption_ratio_view | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.economy_absorption_ratio_view | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.economy_absorption_ratio_view | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.economy_absorption_ratio_view | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.economy_absorption_ratio_view | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.economy_absorption_ratio_view | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.economy_alerts | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.economy_alerts | grantee=anon | privilege=SELECT | grantable=NO
+-- public.economy_alerts | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.economy_alerts | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.economy_alerts | grantee=authenticated | privilege=SELECT | grantable=NO
+-- public.economy_alerts | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.economy_alerts | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.economy_alerts | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.economy_alerts | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.economy_alerts | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.economy_alerts | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.economy_alerts | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.economy_alerts | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.economy_ast_nodes | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.economy_ast_nodes | grantee=anon | privilege=SELECT | grantable=NO
+-- public.economy_ast_nodes | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.economy_ast_nodes | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.economy_ast_nodes | grantee=authenticated | privilege=SELECT | grantable=NO
+-- public.economy_ast_nodes | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.economy_ast_nodes | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.economy_ast_nodes | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.economy_ast_nodes | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.economy_ast_nodes | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.economy_ast_nodes | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.economy_ast_nodes | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.economy_ast_nodes | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.economy_balance_state | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.economy_balance_state | grantee=anon | privilege=SELECT | grantable=NO
+-- public.economy_balance_state | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.economy_balance_state | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.economy_balance_state | grantee=authenticated | privilege=SELECT | grantable=NO
+-- public.economy_balance_state | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.economy_balance_state | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.economy_balance_state | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.economy_balance_state | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.economy_balance_state | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.economy_balance_state | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.economy_balance_state | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.economy_balance_state | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.economy_compiled_modules | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.economy_compiled_modules | grantee=anon | privilege=SELECT | grantable=NO
+-- public.economy_compiled_modules | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.economy_compiled_modules | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.economy_compiled_modules | grantee=authenticated | privilege=SELECT | grantable=NO
+-- public.economy_compiled_modules | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.economy_compiled_modules | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.economy_compiled_modules | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.economy_compiled_modules | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.economy_compiled_modules | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.economy_compiled_modules | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.economy_compiled_modules | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.economy_compiled_modules | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.economy_dynamic_rules | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.economy_dynamic_rules | grantee=anon | privilege=SELECT | grantable=NO
+-- public.economy_dynamic_rules | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.economy_dynamic_rules | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.economy_dynamic_rules | grantee=authenticated | privilege=SELECT | grantable=NO
+-- public.economy_dynamic_rules | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.economy_dynamic_rules | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.economy_dynamic_rules | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.economy_dynamic_rules | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.economy_dynamic_rules | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.economy_dynamic_rules | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.economy_dynamic_rules | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.economy_dynamic_rules | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.economy_emergent_rules | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.economy_emergent_rules | grantee=anon | privilege=SELECT | grantable=NO
+-- public.economy_emergent_rules | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.economy_emergent_rules | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.economy_emergent_rules | grantee=authenticated | privilege=SELECT | grantable=NO
+-- public.economy_emergent_rules | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.economy_emergent_rules | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.economy_emergent_rules | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.economy_emergent_rules | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.economy_emergent_rules | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.economy_emergent_rules | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.economy_emergent_rules | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.economy_emergent_rules | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.economy_flow_events | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.economy_flow_events | grantee=anon | privilege=SELECT | grantable=NO
+-- public.economy_flow_events | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.economy_flow_events | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.economy_flow_events | grantee=authenticated | privilege=SELECT | grantable=NO
+-- public.economy_flow_events | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.economy_flow_events | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.economy_flow_events | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.economy_flow_events | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.economy_flow_events | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.economy_flow_events | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.economy_flow_events | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.economy_flow_events | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.economy_global_metrics | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.economy_global_metrics | grantee=anon | privilege=SELECT | grantable=NO
+-- public.economy_global_metrics | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.economy_global_metrics | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.economy_global_metrics | grantee=authenticated | privilege=SELECT | grantable=NO
+-- public.economy_global_metrics | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.economy_global_metrics | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.economy_global_metrics | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.economy_global_metrics | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.economy_global_metrics | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.economy_global_metrics | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.economy_global_metrics | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.economy_global_metrics | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.economy_global_state | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.economy_global_state | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.economy_global_state | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.economy_global_state | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.economy_global_state | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.economy_global_state | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.economy_global_state | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.economy_global_state | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.economy_global_state | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.economy_global_state | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.economy_global_state | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.economy_kernel_state | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.economy_kernel_state | grantee=anon | privilege=SELECT | grantable=NO
+-- public.economy_kernel_state | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.economy_kernel_state | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.economy_kernel_state | grantee=authenticated | privilege=SELECT | grantable=NO
+-- public.economy_kernel_state | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.economy_kernel_state | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.economy_kernel_state | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.economy_kernel_state | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.economy_kernel_state | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.economy_kernel_state | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.economy_kernel_state | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.economy_kernel_state | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.economy_ledger | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.economy_ledger | grantee=authenticated | privilege=SELECT | grantable=NO
+-- public.economy_ledger | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.economy_ledger | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.economy_ledger | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.economy_ledger | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.economy_ledger | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.economy_ledger | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.economy_ledger | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.economy_lock_state_machine | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.economy_lock_state_machine | grantee=anon | privilege=SELECT | grantable=NO
+-- public.economy_lock_state_machine | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.economy_lock_state_machine | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.economy_lock_state_machine | grantee=authenticated | privilege=SELECT | grantable=NO
+-- public.economy_lock_state_machine | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.economy_lock_state_machine | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.economy_lock_state_machine | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.economy_lock_state_machine | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.economy_lock_state_machine | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.economy_lock_state_machine | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.economy_lock_state_machine | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.economy_lock_state_machine | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.economy_loop_events | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.economy_loop_events | grantee=anon | privilege=SELECT | grantable=NO
+-- public.economy_loop_events | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.economy_loop_events | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.economy_loop_events | grantee=authenticated | privilege=SELECT | grantable=NO
+-- public.economy_loop_events | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.economy_loop_events | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.economy_loop_events | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.economy_loop_events | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.economy_loop_events | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.economy_loop_events | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.economy_loop_events | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.economy_loop_events | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.economy_meta_evolution | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.economy_meta_evolution | grantee=anon | privilege=SELECT | grantable=NO
+-- public.economy_meta_evolution | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.economy_meta_evolution | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.economy_meta_evolution | grantee=authenticated | privilege=SELECT | grantable=NO
+-- public.economy_meta_evolution | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.economy_meta_evolution | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.economy_meta_evolution | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.economy_meta_evolution | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.economy_meta_evolution | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.economy_meta_evolution | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.economy_meta_evolution | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.economy_meta_evolution | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.economy_processes | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.economy_processes | grantee=anon | privilege=SELECT | grantable=NO
+-- public.economy_processes | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.economy_processes | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.economy_processes | grantee=authenticated | privilege=SELECT | grantable=NO
+-- public.economy_processes | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.economy_processes | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.economy_processes | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.economy_processes | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.economy_processes | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.economy_processes | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.economy_processes | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.economy_processes | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.economy_reconciliation_log | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.economy_reconciliation_log | grantee=anon | privilege=SELECT | grantable=NO
+-- public.economy_reconciliation_log | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.economy_reconciliation_log | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.economy_reconciliation_log | grantee=authenticated | privilege=SELECT | grantable=NO
+-- public.economy_reconciliation_log | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.economy_reconciliation_log | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.economy_reconciliation_log | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.economy_reconciliation_log | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.economy_reconciliation_log | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.economy_reconciliation_log | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.economy_reconciliation_log | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.economy_reconciliation_log | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.economy_rule_history | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.economy_rule_history | grantee=anon | privilege=SELECT | grantable=NO
+-- public.economy_rule_history | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.economy_rule_history | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.economy_rule_history | grantee=authenticated | privilege=SELECT | grantable=NO
+-- public.economy_rule_history | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.economy_rule_history | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.economy_rule_history | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.economy_rule_history | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.economy_rule_history | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.economy_rule_history | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.economy_rule_history | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.economy_rule_history | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.economy_safety_flags | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.economy_safety_flags | grantee=anon | privilege=SELECT | grantable=NO
+-- public.economy_safety_flags | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.economy_safety_flags | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.economy_safety_flags | grantee=authenticated | privilege=SELECT | grantable=NO
+-- public.economy_safety_flags | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.economy_safety_flags | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.economy_safety_flags | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.economy_safety_flags | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.economy_safety_flags | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.economy_safety_flags | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.economy_safety_flags | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.economy_safety_flags | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.economy_sinks | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.economy_sinks | grantee=anon | privilege=SELECT | grantable=NO
+-- public.economy_sinks | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.economy_sinks | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.economy_sinks | grantee=authenticated | privilege=SELECT | grantable=NO
+-- public.economy_sinks | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.economy_sinks | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.economy_sinks | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.economy_sinks | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.economy_sinks | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.economy_sinks | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.economy_sinks | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.economy_sinks | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.economy_sources | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.economy_sources | grantee=anon | privilege=SELECT | grantable=NO
+-- public.economy_sources | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.economy_sources | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.economy_sources | grantee=authenticated | privilege=SELECT | grantable=NO
+-- public.economy_sources | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.economy_sources | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.economy_sources | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.economy_sources | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.economy_sources | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.economy_sources | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.economy_sources | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.economy_sources | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.economy_state | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.economy_state | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.economy_state | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.economy_state | grantee=authenticated | privilege=SELECT | grantable=NO
+-- public.economy_state | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.economy_state | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.economy_state | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.economy_state | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.economy_state | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.economy_state | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.economy_state | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.economy_state | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.economy_state_machine | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.economy_state_machine | grantee=anon | privilege=SELECT | grantable=NO
+-- public.economy_state_machine | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.economy_state_machine | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.economy_state_machine | grantee=authenticated | privilege=SELECT | grantable=NO
+-- public.economy_state_machine | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.economy_state_machine | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.economy_state_machine | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.economy_state_machine | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.economy_state_machine | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.economy_state_machine | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.economy_state_machine | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.economy_state_machine | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.economy_system_state | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.economy_system_state | grantee=anon | privilege=SELECT | grantable=NO
+-- public.economy_system_state | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.economy_system_state | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.economy_system_state | grantee=authenticated | privilege=SELECT | grantable=NO
+-- public.economy_system_state | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.economy_system_state | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.economy_system_state | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.economy_system_state | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.economy_system_state | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.economy_system_state | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.economy_system_state | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.economy_system_state | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.kernel_economy_lock | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.kernel_economy_lock | grantee=anon | privilege=SELECT | grantable=NO
+-- public.kernel_economy_lock | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.kernel_economy_lock | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.kernel_economy_lock | grantee=authenticated | privilege=SELECT | grantable=NO
+-- public.kernel_economy_lock | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.kernel_economy_lock | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.kernel_economy_lock | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.kernel_economy_lock | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.kernel_economy_lock | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.kernel_economy_lock | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.kernel_economy_lock | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.kernel_economy_lock | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.kernel_market_guard | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.kernel_market_guard | grantee=anon | privilege=SELECT | grantable=NO
+-- public.kernel_market_guard | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.kernel_market_guard | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.kernel_market_guard | grantee=authenticated | privilege=SELECT | grantable=NO
+-- public.kernel_market_guard | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.kernel_market_guard | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.kernel_market_guard | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.kernel_market_guard | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.kernel_market_guard | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.kernel_market_guard | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.kernel_market_guard | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.kernel_market_guard | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.kernel_wallet_sync | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.kernel_wallet_sync | grantee=anon | privilege=SELECT | grantable=NO
+-- public.kernel_wallet_sync | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.kernel_wallet_sync | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.kernel_wallet_sync | grantee=authenticated | privilege=SELECT | grantable=NO
+-- public.kernel_wallet_sync | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.kernel_wallet_sync | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.kernel_wallet_sync | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.kernel_wallet_sync | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.kernel_wallet_sync | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.kernel_wallet_sync | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.kernel_wallet_sync | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.kernel_wallet_sync | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.market_dynamic_state | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.market_dynamic_state | grantee=anon | privilege=SELECT | grantable=NO
+-- public.market_dynamic_state | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.market_dynamic_state | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.market_dynamic_state | grantee=authenticated | privilege=SELECT | grantable=NO
+-- public.market_dynamic_state | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.market_dynamic_state | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.market_dynamic_state | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.market_dynamic_state | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.market_dynamic_state | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.market_dynamic_state | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.market_dynamic_state | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.market_dynamic_state | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.market_guard_final | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.market_guard_final | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.market_guard_final | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.market_guard_final | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.market_guard_final | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.market_guard_final | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.market_guard_final | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.market_guard_final | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.market_guard_final | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.market_guard_final | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.market_guard_final | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.market_items | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.market_items | grantee=anon | privilege=SELECT | grantable=NO
+-- public.market_items | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.market_items | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.market_items | grantee=authenticated | privilege=SELECT | grantable=NO
+-- public.market_items | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.market_items | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.market_items | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.market_items | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.market_items | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.market_items | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.market_items | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.market_items | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.market_listings | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.market_listings | grantee=anon | privilege=SELECT | grantable=NO
+-- public.market_listings | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.market_listings | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.market_listings | grantee=authenticated | privilege=SELECT | grantable=NO
+-- public.market_listings | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.market_listings | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.market_listings | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.market_listings | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.market_listings | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.market_listings | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.market_listings | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.market_listings | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.market_loop_events | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.market_loop_events | grantee=anon | privilege=SELECT | grantable=NO
+-- public.market_loop_events | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.market_loop_events | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.market_loop_events | grantee=authenticated | privilege=SELECT | grantable=NO
+-- public.market_loop_events | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.market_loop_events | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.market_loop_events | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.market_loop_events | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.market_loop_events | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.market_loop_events | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.market_loop_events | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.market_loop_events | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.mission_rewards | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.mission_rewards | grantee=anon | privilege=SELECT | grantable=NO
+-- public.mission_rewards | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.mission_rewards | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.mission_rewards | grantee=authenticated | privilege=SELECT | grantable=NO
+-- public.mission_rewards | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.mission_rewards | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.mission_rewards | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.mission_rewards | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.mission_rewards | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.mission_rewards | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.mission_rewards | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.mission_rewards | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.player_cards | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.player_cards | grantee=anon | privilege=SELECT | grantable=NO
+-- public.player_cards | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.player_cards | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.player_cards | grantee=authenticated | privilege=SELECT | grantable=NO
+-- public.player_cards | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.player_cards | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.player_cards | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.player_cards | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.player_cards | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.player_cards | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.player_cards | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.player_cards | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.player_economy_state | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.player_economy_state | grantee=anon | privilege=SELECT | grantable=NO
+-- public.player_economy_state | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.player_economy_state | grantee=authenticated | privilege=DELETE | grantable=NO
+-- public.player_economy_state | grantee=authenticated | privilege=INSERT | grantable=NO
+-- public.player_economy_state | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.player_economy_state | grantee=authenticated | privilege=SELECT | grantable=NO
+-- public.player_economy_state | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.player_economy_state | grantee=authenticated | privilege=UPDATE | grantable=NO
+-- public.player_economy_state | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.player_economy_state | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.player_economy_state | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.player_economy_state | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.player_economy_state | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.player_economy_state | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.player_economy_state | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.player_wallet | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.player_wallet | grantee=authenticated | privilege=SELECT | grantable=NO
+-- public.player_wallet | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.player_wallet | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.player_wallet | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.player_wallet | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.player_wallet | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.player_wallet | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.player_wallet | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.players | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.players | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.players | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.players | grantee=authenticated | privilege=SELECT | grantable=NO
+-- public.players | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.players | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.players | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.players | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.players | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.players | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.players | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.players | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.pvp_rewards | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.pvp_rewards | grantee=anon | privilege=SELECT | grantable=NO
+-- public.pvp_rewards | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.pvp_rewards | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.pvp_rewards | grantee=authenticated | privilege=SELECT | grantable=NO
+-- public.pvp_rewards | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.pvp_rewards | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.pvp_rewards | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.pvp_rewards | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.pvp_rewards | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.pvp_rewards | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.pvp_rewards | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.pvp_rewards | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.raid_rewards | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.raid_rewards | grantee=anon | privilege=SELECT | grantable=NO
+-- public.raid_rewards | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.raid_rewards | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.raid_rewards | grantee=authenticated | privilege=SELECT | grantable=NO
+-- public.raid_rewards | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.raid_rewards | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.raid_rewards | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.raid_rewards | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.raid_rewards | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.raid_rewards | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.raid_rewards | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.raid_rewards | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.reward_rules | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.reward_rules | grantee=anon | privilege=SELECT | grantable=NO
+-- public.reward_rules | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.reward_rules | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.reward_rules | grantee=authenticated | privilege=SELECT | grantable=NO
+-- public.reward_rules | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.reward_rules | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.reward_rules | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.reward_rules | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.reward_rules | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.reward_rules | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.reward_rules | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.reward_rules | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.rewards | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.rewards | grantee=anon | privilege=SELECT | grantable=NO
+-- public.rewards | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.rewards | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.rewards | grantee=authenticated | privilege=SELECT | grantable=NO
+-- public.rewards | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.rewards | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.rewards | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.rewards | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.rewards | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.rewards | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.rewards | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.rewards | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.social_private_reads | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.social_private_reads | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.social_private_reads | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.social_private_reads | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.social_private_reads | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.social_private_reads | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.social_private_reads | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.telegram_ad_events | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.telegram_ad_events | grantee=anon | privilege=SELECT | grantable=NO
+-- public.telegram_ad_events | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.telegram_ad_events | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.telegram_ad_events | grantee=authenticated | privilege=SELECT | grantable=NO
+-- public.telegram_ad_events | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.telegram_ad_events | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.telegram_ad_events | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.telegram_ad_events | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.telegram_ad_events | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.telegram_ad_events | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.telegram_ad_events | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.telegram_ad_events | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.telegram_ads | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.telegram_ads | grantee=anon | privilege=SELECT | grantable=NO
+-- public.telegram_ads | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.telegram_ads | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.telegram_ads | grantee=authenticated | privilege=SELECT | grantable=NO
+-- public.telegram_ads | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.telegram_ads | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.telegram_ads | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.telegram_ads | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.telegram_ads | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.telegram_ads | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.telegram_ads | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.telegram_ads | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.telegram_referrals | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.telegram_referrals | grantee=anon | privilege=SELECT | grantable=NO
+-- public.telegram_referrals | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.telegram_referrals | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.telegram_referrals | grantee=authenticated | privilege=SELECT | grantable=NO
+-- public.telegram_referrals | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.telegram_referrals | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.telegram_referrals | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.telegram_referrals | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.telegram_referrals | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.telegram_referrals | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.telegram_referrals | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.telegram_referrals | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.telegram_rewards_log | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.telegram_rewards_log | grantee=anon | privilege=SELECT | grantable=NO
+-- public.telegram_rewards_log | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.telegram_rewards_log | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.telegram_rewards_log | grantee=authenticated | privilege=SELECT | grantable=NO
+-- public.telegram_rewards_log | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.telegram_rewards_log | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.telegram_rewards_log | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.telegram_rewards_log | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.telegram_rewards_log | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.telegram_rewards_log | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.telegram_rewards_log | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.telegram_rewards_log | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.tg_canon_readiness | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.tg_canon_readiness | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.tg_canon_readiness | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.tg_canon_readiness | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.tg_canon_readiness | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.tg_canon_readiness | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.tg_canon_readiness | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.tg_canon_readiness | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.tg_canon_readiness | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.tg_canon_readiness | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.tg_canon_readiness | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.tg_economy_policy | grantee=anon | privilege=DELETE | grantable=NO
+-- public.tg_economy_policy | grantee=anon | privilege=INSERT | grantable=NO
+-- public.tg_economy_policy | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.tg_economy_policy | grantee=anon | privilege=SELECT | grantable=NO
+-- public.tg_economy_policy | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.tg_economy_policy | grantee=anon | privilege=TRUNCATE | grantable=NO
+-- public.tg_economy_policy | grantee=anon | privilege=UPDATE | grantable=NO
+-- public.tg_economy_policy | grantee=authenticated | privilege=DELETE | grantable=NO
+-- public.tg_economy_policy | grantee=authenticated | privilege=INSERT | grantable=NO
+-- public.tg_economy_policy | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.tg_economy_policy | grantee=authenticated | privilege=SELECT | grantable=NO
+-- public.tg_economy_policy | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.tg_economy_policy | grantee=authenticated | privilege=TRUNCATE | grantable=NO
+-- public.tg_economy_policy | grantee=authenticated | privilege=UPDATE | grantable=NO
+-- public.tg_economy_policy | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.tg_economy_policy | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.tg_economy_policy | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.tg_economy_policy | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.tg_economy_policy | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.tg_economy_policy | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.tg_economy_policy | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.tg_economy_state_machine | grantee=anon | privilege=DELETE | grantable=NO
+-- public.tg_economy_state_machine | grantee=anon | privilege=INSERT | grantable=NO
+-- public.tg_economy_state_machine | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.tg_economy_state_machine | grantee=anon | privilege=SELECT | grantable=NO
+-- public.tg_economy_state_machine | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.tg_economy_state_machine | grantee=anon | privilege=TRUNCATE | grantable=NO
+-- public.tg_economy_state_machine | grantee=anon | privilege=UPDATE | grantable=NO
+-- public.tg_economy_state_machine | grantee=authenticated | privilege=DELETE | grantable=NO
+-- public.tg_economy_state_machine | grantee=authenticated | privilege=INSERT | grantable=NO
+-- public.tg_economy_state_machine | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.tg_economy_state_machine | grantee=authenticated | privilege=SELECT | grantable=NO
+-- public.tg_economy_state_machine | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.tg_economy_state_machine | grantee=authenticated | privilege=TRUNCATE | grantable=NO
+-- public.tg_economy_state_machine | grantee=authenticated | privilege=UPDATE | grantable=NO
+-- public.tg_economy_state_machine | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.tg_economy_state_machine | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.tg_economy_state_machine | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.tg_economy_state_machine | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.tg_economy_state_machine | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.tg_economy_state_machine | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.tg_economy_state_machine | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.tg_leaderboard | grantee=anon | privilege=DELETE | grantable=NO
+-- public.tg_leaderboard | grantee=anon | privilege=INSERT | grantable=NO
+-- public.tg_leaderboard | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.tg_leaderboard | grantee=anon | privilege=SELECT | grantable=NO
+-- public.tg_leaderboard | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.tg_leaderboard | grantee=anon | privilege=TRUNCATE | grantable=NO
+-- public.tg_leaderboard | grantee=anon | privilege=UPDATE | grantable=NO
+-- public.tg_leaderboard | grantee=authenticated | privilege=DELETE | grantable=NO
+-- public.tg_leaderboard | grantee=authenticated | privilege=INSERT | grantable=NO
+-- public.tg_leaderboard | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.tg_leaderboard | grantee=authenticated | privilege=SELECT | grantable=NO
+-- public.tg_leaderboard | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.tg_leaderboard | grantee=authenticated | privilege=TRUNCATE | grantable=NO
+-- public.tg_leaderboard | grantee=authenticated | privilege=UPDATE | grantable=NO
+-- public.tg_leaderboard | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.tg_leaderboard | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.tg_leaderboard | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.tg_leaderboard | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.tg_leaderboard | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.tg_leaderboard | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.tg_leaderboard | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.tg_leaderboards | grantee=anon | privilege=DELETE | grantable=NO
+-- public.tg_leaderboards | grantee=anon | privilege=INSERT | grantable=NO
+-- public.tg_leaderboards | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.tg_leaderboards | grantee=anon | privilege=SELECT | grantable=NO
+-- public.tg_leaderboards | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.tg_leaderboards | grantee=anon | privilege=TRUNCATE | grantable=NO
+-- public.tg_leaderboards | grantee=anon | privilege=UPDATE | grantable=NO
+-- public.tg_leaderboards | grantee=authenticated | privilege=DELETE | grantable=NO
+-- public.tg_leaderboards | grantee=authenticated | privilege=INSERT | grantable=NO
+-- public.tg_leaderboards | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.tg_leaderboards | grantee=authenticated | privilege=SELECT | grantable=NO
+-- public.tg_leaderboards | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.tg_leaderboards | grantee=authenticated | privilege=TRUNCATE | grantable=NO
+-- public.tg_leaderboards | grantee=authenticated | privilege=UPDATE | grantable=NO
+-- public.tg_leaderboards | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.tg_leaderboards | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.tg_leaderboards | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.tg_leaderboards | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.tg_leaderboards | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.tg_leaderboards | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.tg_leaderboards | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.tg_referrals | grantee=anon | privilege=DELETE | grantable=NO
+-- public.tg_referrals | grantee=anon | privilege=INSERT | grantable=NO
+-- public.tg_referrals | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.tg_referrals | grantee=anon | privilege=SELECT | grantable=NO
+-- public.tg_referrals | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.tg_referrals | grantee=anon | privilege=TRUNCATE | grantable=NO
+-- public.tg_referrals | grantee=anon | privilege=UPDATE | grantable=NO
+-- public.tg_referrals | grantee=authenticated | privilege=DELETE | grantable=NO
+-- public.tg_referrals | grantee=authenticated | privilege=INSERT | grantable=NO
+-- public.tg_referrals | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.tg_referrals | grantee=authenticated | privilege=SELECT | grantable=NO
+-- public.tg_referrals | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.tg_referrals | grantee=authenticated | privilege=TRUNCATE | grantable=NO
+-- public.tg_referrals | grantee=authenticated | privilege=UPDATE | grantable=NO
+-- public.tg_referrals | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.tg_referrals | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.tg_referrals | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.tg_referrals | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.tg_referrals | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.tg_referrals | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.tg_referrals | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.tg_rewards | grantee=anon | privilege=DELETE | grantable=NO
+-- public.tg_rewards | grantee=anon | privilege=INSERT | grantable=NO
+-- public.tg_rewards | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.tg_rewards | grantee=anon | privilege=SELECT | grantable=NO
+-- public.tg_rewards | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.tg_rewards | grantee=anon | privilege=TRUNCATE | grantable=NO
+-- public.tg_rewards | grantee=anon | privilege=UPDATE | grantable=NO
+-- public.tg_rewards | grantee=authenticated | privilege=DELETE | grantable=NO
+-- public.tg_rewards | grantee=authenticated | privilege=INSERT | grantable=NO
+-- public.tg_rewards | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.tg_rewards | grantee=authenticated | privilege=SELECT | grantable=NO
+-- public.tg_rewards | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.tg_rewards | grantee=authenticated | privilege=TRUNCATE | grantable=NO
+-- public.tg_rewards | grantee=authenticated | privilege=UPDATE | grantable=NO
+-- public.tg_rewards | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.tg_rewards | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.tg_rewards | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.tg_rewards | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.tg_rewards | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.tg_rewards | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.tg_rewards | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.tg_wallet | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.tg_wallet | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.tg_wallet | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.tg_wallet | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.tg_wallet | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.tg_wallet | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.tg_wallet | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.tg_wallet | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.tg_wallet | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.tg_wallet | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.tg_wallet | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.v_economy_sinks | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.v_economy_sinks | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.v_economy_sinks | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.v_economy_sinks | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.v_economy_sinks | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.v_economy_sinks | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.v_economy_sinks | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.v_economy_sinks | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.v_economy_sinks | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.v_economy_sinks | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.v_economy_sinks | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.v_market_health | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.v_market_health | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.v_market_health | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.v_market_health | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.v_market_health | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.v_market_health | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.v_market_health | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.v_market_health | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.v_market_health | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.v_market_health | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.v_market_health | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.vex_canon_registry | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.vex_canon_registry | grantee=anon | privilege=SELECT | grantable=NO
+-- public.vex_canon_registry | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.vex_canon_registry | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.vex_canon_registry | grantee=authenticated | privilege=SELECT | grantable=NO
+-- public.vex_canon_registry | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.vex_canon_registry | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.vex_canon_registry | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.vex_canon_registry | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.vex_canon_registry | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.vex_canon_registry | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.vex_canon_registry | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.vex_canon_registry | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.vexforge_ad_views | grantee=anon | privilege=DELETE | grantable=NO
+-- public.vexforge_ad_views | grantee=anon | privilege=INSERT | grantable=NO
+-- public.vexforge_ad_views | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.vexforge_ad_views | grantee=anon | privilege=SELECT | grantable=NO
+-- public.vexforge_ad_views | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.vexforge_ad_views | grantee=anon | privilege=TRUNCATE | grantable=NO
+-- public.vexforge_ad_views | grantee=anon | privilege=UPDATE | grantable=NO
+-- public.vexforge_ad_views | grantee=authenticated | privilege=DELETE | grantable=NO
+-- public.vexforge_ad_views | grantee=authenticated | privilege=INSERT | grantable=NO
+-- public.vexforge_ad_views | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.vexforge_ad_views | grantee=authenticated | privilege=SELECT | grantable=NO
+-- public.vexforge_ad_views | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.vexforge_ad_views | grantee=authenticated | privilege=TRUNCATE | grantable=NO
+-- public.vexforge_ad_views | grantee=authenticated | privilege=UPDATE | grantable=NO
+-- public.vexforge_ad_views | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.vexforge_ad_views | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.vexforge_ad_views | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.vexforge_ad_views | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.vexforge_ad_views | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.vexforge_ad_views | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.vexforge_ad_views | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.vexforge_android_release_registry | grantee=anon | privilege=SELECT | grantable=NO
+-- public.vexforge_android_release_registry | grantee=authenticated | privilege=SELECT | grantable=NO
+-- public.vexforge_android_release_registry | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.vexforge_android_release_registry | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.vexforge_android_release_registry | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.vexforge_android_release_registry | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.vexforge_android_release_registry | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.vexforge_android_release_registry | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.vexforge_android_release_registry | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.vexforge_asset_files | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.vexforge_asset_files | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.vexforge_asset_files | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.vexforge_asset_files | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.vexforge_asset_files | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.vexforge_asset_files | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.vexforge_asset_files | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.vexforge_asset_manifest | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.vexforge_asset_manifest | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.vexforge_asset_manifest | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.vexforge_asset_manifest | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.vexforge_asset_manifest | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.vexforge_asset_manifest | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.vexforge_asset_manifest | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.vexforge_asset_manifest_view | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.vexforge_asset_manifest_view | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.vexforge_asset_manifest_view | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.vexforge_asset_manifest_view | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.vexforge_asset_manifest_view | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.vexforge_asset_manifest_view | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.vexforge_asset_manifest_view | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.vexforge_asset_manifest_view | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.vexforge_asset_manifest_view | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.vexforge_asset_manifest_view | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.vexforge_asset_manifest_view | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.vexforge_asset_packs | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.vexforge_asset_packs | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.vexforge_asset_packs | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.vexforge_asset_packs | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.vexforge_asset_packs | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.vexforge_asset_packs | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.vexforge_asset_packs | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.vexforge_branch_registry | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.vexforge_branch_registry | grantee=anon | privilege=SELECT | grantable=NO
+-- public.vexforge_branch_registry | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.vexforge_branch_registry | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.vexforge_branch_registry | grantee=authenticated | privilege=SELECT | grantable=NO
+-- public.vexforge_branch_registry | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.vexforge_branch_registry | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.vexforge_branch_registry | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.vexforge_branch_registry | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.vexforge_branch_registry | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.vexforge_branch_registry | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.vexforge_branch_registry | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.vexforge_branch_registry | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.vexforge_bridge_balance | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.vexforge_bridge_balance | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.vexforge_bridge_balance | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.vexforge_bridge_balance | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.vexforge_bridge_balance | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.vexforge_bridge_balance | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.vexforge_bridge_balance | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.vexforge_bridge_balance | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.vexforge_bridge_balance | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.vexforge_bridge_balance | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.vexforge_bridge_balance | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.vexforge_bridge_cards | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.vexforge_bridge_cards | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.vexforge_bridge_cards | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.vexforge_bridge_cards | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.vexforge_bridge_cards | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.vexforge_bridge_cards | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.vexforge_bridge_cards | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.vexforge_bridge_cards | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.vexforge_bridge_cards | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.vexforge_bridge_cards | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.vexforge_bridge_cards | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.vexforge_bridge_combat | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.vexforge_bridge_combat | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.vexforge_bridge_combat | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.vexforge_bridge_combat | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.vexforge_bridge_combat | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.vexforge_bridge_combat | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.vexforge_bridge_combat | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.vexforge_bridge_combat | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.vexforge_bridge_combat | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.vexforge_bridge_combat | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.vexforge_bridge_combat | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.vexforge_bridge_content | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.vexforge_bridge_content | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.vexforge_bridge_content | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.vexforge_bridge_content | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.vexforge_bridge_content | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.vexforge_bridge_content | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.vexforge_bridge_content | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.vexforge_bridge_content | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.vexforge_bridge_content | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.vexforge_bridge_content | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.vexforge_bridge_content | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.vexforge_bridge_market | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.vexforge_bridge_market | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.vexforge_bridge_market | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.vexforge_bridge_market | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.vexforge_bridge_market | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.vexforge_bridge_market | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.vexforge_bridge_market | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.vexforge_bridge_market | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.vexforge_bridge_market | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.vexforge_bridge_market | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.vexforge_bridge_market | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.vexforge_bridge_progress | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.vexforge_bridge_progress | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.vexforge_bridge_progress | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.vexforge_bridge_progress | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.vexforge_bridge_progress | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.vexforge_bridge_progress | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.vexforge_bridge_progress | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.vexforge_bridge_progress | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.vexforge_bridge_progress | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.vexforge_bridge_progress | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.vexforge_bridge_progress | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.vexforge_bridge_telegram_monetization | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.vexforge_bridge_telegram_monetization | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.vexforge_bridge_telegram_monetization | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.vexforge_bridge_telegram_monetization | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.vexforge_bridge_telegram_monetization | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.vexforge_bridge_telegram_monetization | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.vexforge_bridge_telegram_monetization | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.vexforge_bridge_telegram_monetization | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.vexforge_bridge_telegram_monetization | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.vexforge_bridge_telegram_monetization | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.vexforge_bridge_telegram_monetization | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.vexforge_canonical_governance | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.vexforge_canonical_governance | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.vexforge_canonical_governance | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.vexforge_canonical_governance | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.vexforge_canonical_governance | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.vexforge_canonical_governance | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.vexforge_canonical_governance | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.vexforge_canonical_governance | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.vexforge_canonical_governance | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.vexforge_canonical_governance | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.vexforge_canonical_governance | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.vexforge_card_fusion_log | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.vexforge_card_fusion_log | grantee=anon | privilege=SELECT | grantable=NO
+-- public.vexforge_card_fusion_log | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.vexforge_card_fusion_log | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.vexforge_card_fusion_log | grantee=authenticated | privilege=SELECT | grantable=NO
+-- public.vexforge_card_fusion_log | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.vexforge_card_fusion_log | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.vexforge_card_fusion_log | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.vexforge_card_fusion_log | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.vexforge_card_fusion_log | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.vexforge_card_fusion_log | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.vexforge_card_fusion_log | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.vexforge_card_fusion_log | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.vexforge_card_fusion_policy | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.vexforge_card_fusion_policy | grantee=anon | privilege=SELECT | grantable=NO
+-- public.vexforge_card_fusion_policy | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.vexforge_card_fusion_policy | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.vexforge_card_fusion_policy | grantee=authenticated | privilege=SELECT | grantable=NO
+-- public.vexforge_card_fusion_policy | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.vexforge_card_fusion_policy | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.vexforge_card_fusion_policy | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.vexforge_card_fusion_policy | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.vexforge_card_fusion_policy | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.vexforge_card_fusion_policy | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.vexforge_card_fusion_policy | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.vexforge_card_fusion_policy | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.vexforge_card_supply_official | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.vexforge_card_supply_official | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.vexforge_card_supply_official | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.vexforge_card_supply_official | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.vexforge_card_supply_official | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.vexforge_card_supply_official | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.vexforge_card_supply_official | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.vexforge_card_supply_official | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.vexforge_card_supply_official | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.vexforge_card_supply_official | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.vexforge_card_supply_official | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.vexforge_card_supply_policy | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.vexforge_card_supply_policy | grantee=anon | privilege=SELECT | grantable=NO
+-- public.vexforge_card_supply_policy | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.vexforge_card_supply_policy | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.vexforge_card_supply_policy | grantee=authenticated | privilege=SELECT | grantable=NO
+-- public.vexforge_card_supply_policy | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.vexforge_card_supply_policy | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.vexforge_card_supply_policy | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.vexforge_card_supply_policy | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.vexforge_card_supply_policy | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.vexforge_card_supply_policy | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.vexforge_card_supply_policy | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.vexforge_card_supply_policy | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.vexforge_card_supply_summary | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.vexforge_card_supply_summary | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.vexforge_card_supply_summary | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.vexforge_card_supply_summary | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.vexforge_card_supply_summary | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.vexforge_card_supply_summary | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.vexforge_card_supply_summary | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.vexforge_card_supply_summary | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.vexforge_card_supply_summary | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.vexforge_card_supply_summary | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.vexforge_card_supply_summary | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.vexforge_chat_branch_registry | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.vexforge_chat_branch_registry | grantee=anon | privilege=SELECT | grantable=NO
+-- public.vexforge_chat_branch_registry | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.vexforge_chat_branch_registry | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.vexforge_chat_branch_registry | grantee=authenticated | privilege=SELECT | grantable=NO
+-- public.vexforge_chat_branch_registry | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.vexforge_chat_branch_registry | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.vexforge_chat_branch_registry | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.vexforge_chat_branch_registry | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.vexforge_chat_branch_registry | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.vexforge_chat_branch_registry | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.vexforge_chat_branch_registry | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.vexforge_chat_branch_registry | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.vexforge_commercial_dashboard | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.vexforge_commercial_dashboard | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.vexforge_commercial_dashboard | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.vexforge_commercial_dashboard | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.vexforge_commercial_dashboard | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.vexforge_commercial_dashboard | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.vexforge_commercial_dashboard | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.vexforge_commercial_dashboard | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.vexforge_commercial_dashboard | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.vexforge_commercial_dashboard | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.vexforge_commercial_dashboard | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.vexforge_commercial_overview | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.vexforge_commercial_overview | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.vexforge_commercial_overview | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.vexforge_commercial_overview | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.vexforge_commercial_overview | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.vexforge_commercial_overview | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.vexforge_commercial_overview | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.vexforge_commercial_overview | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.vexforge_commercial_overview | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.vexforge_commercial_overview | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.vexforge_commercial_overview | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.vexforge_commercial_policy | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.vexforge_commercial_policy | grantee=anon | privilege=SELECT | grantable=NO
+-- public.vexforge_commercial_policy | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.vexforge_commercial_policy | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.vexforge_commercial_policy | grantee=authenticated | privilege=SELECT | grantable=NO
+-- public.vexforge_commercial_policy | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.vexforge_commercial_policy | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.vexforge_commercial_policy | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.vexforge_commercial_policy | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.vexforge_commercial_policy | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.vexforge_commercial_policy | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.vexforge_commercial_policy | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.vexforge_commercial_policy | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.vexforge_core_registry | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.vexforge_core_registry | grantee=anon | privilege=SELECT | grantable=NO
+-- public.vexforge_core_registry | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.vexforge_core_registry | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.vexforge_core_registry | grantee=authenticated | privilege=SELECT | grantable=NO
+-- public.vexforge_core_registry | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.vexforge_core_registry | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.vexforge_core_registry | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.vexforge_core_registry | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.vexforge_core_registry | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.vexforge_core_registry | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.vexforge_core_registry | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.vexforge_core_registry | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.vexforge_deprecation_registry | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.vexforge_deprecation_registry | grantee=anon | privilege=SELECT | grantable=NO
+-- public.vexforge_deprecation_registry | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.vexforge_deprecation_registry | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.vexforge_deprecation_registry | grantee=authenticated | privilege=SELECT | grantable=NO
+-- public.vexforge_deprecation_registry | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.vexforge_deprecation_registry | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.vexforge_deprecation_registry | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.vexforge_deprecation_registry | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.vexforge_deprecation_registry | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.vexforge_deprecation_registry | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.vexforge_deprecation_registry | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.vexforge_deprecation_registry | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.vexforge_economy_live_overview | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.vexforge_economy_live_overview | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.vexforge_economy_live_overview | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.vexforge_economy_live_overview | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.vexforge_economy_live_overview | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.vexforge_economy_live_overview | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.vexforge_economy_live_overview | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.vexforge_economy_live_overview | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.vexforge_economy_live_overview | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.vexforge_economy_live_overview | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.vexforge_economy_live_overview | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.vexforge_economy_policy | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.vexforge_economy_policy | grantee=anon | privilege=SELECT | grantable=NO
+-- public.vexforge_economy_policy | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.vexforge_economy_policy | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.vexforge_economy_policy | grantee=authenticated | privilege=SELECT | grantable=NO
+-- public.vexforge_economy_policy | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.vexforge_economy_policy | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.vexforge_economy_policy | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.vexforge_economy_policy | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.vexforge_economy_policy | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.vexforge_economy_policy | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.vexforge_economy_policy | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.vexforge_economy_policy | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.vexforge_final_gap_report | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.vexforge_final_gap_report | grantee=anon | privilege=SELECT | grantable=NO
+-- public.vexforge_final_gap_report | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.vexforge_final_gap_report | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.vexforge_final_gap_report | grantee=authenticated | privilege=SELECT | grantable=NO
+-- public.vexforge_final_gap_report | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.vexforge_final_gap_report | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.vexforge_final_gap_report | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.vexforge_final_gap_report | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.vexforge_final_gap_report | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.vexforge_final_gap_report | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.vexforge_final_gap_report | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.vexforge_final_gap_report | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.vexforge_final_handoff_status | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.vexforge_final_handoff_status | grantee=anon | privilege=SELECT | grantable=NO
+-- public.vexforge_final_handoff_status | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.vexforge_final_handoff_status | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.vexforge_final_handoff_status | grantee=authenticated | privilege=SELECT | grantable=NO
+-- public.vexforge_final_handoff_status | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.vexforge_final_handoff_status | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.vexforge_final_handoff_status | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.vexforge_final_handoff_status | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.vexforge_final_handoff_status | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.vexforge_final_handoff_status | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.vexforge_final_handoff_status | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.vexforge_final_handoff_status | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.vexforge_frontend_source_files | grantee=anon | privilege=DELETE | grantable=NO
+-- public.vexforge_frontend_source_files | grantee=anon | privilege=INSERT | grantable=NO
+-- public.vexforge_frontend_source_files | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.vexforge_frontend_source_files | grantee=anon | privilege=SELECT | grantable=NO
+-- public.vexforge_frontend_source_files | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.vexforge_frontend_source_files | grantee=anon | privilege=TRUNCATE | grantable=NO
+-- public.vexforge_frontend_source_files | grantee=anon | privilege=UPDATE | grantable=NO
+-- public.vexforge_frontend_source_files | grantee=authenticated | privilege=DELETE | grantable=NO
+-- public.vexforge_frontend_source_files | grantee=authenticated | privilege=INSERT | grantable=NO
+-- public.vexforge_frontend_source_files | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.vexforge_frontend_source_files | grantee=authenticated | privilege=SELECT | grantable=NO
+-- public.vexforge_frontend_source_files | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.vexforge_frontend_source_files | grantee=authenticated | privilege=TRUNCATE | grantable=NO
+-- public.vexforge_frontend_source_files | grantee=authenticated | privilege=UPDATE | grantable=NO
+-- public.vexforge_frontend_source_files | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.vexforge_frontend_source_files | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.vexforge_frontend_source_files | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.vexforge_frontend_source_files | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.vexforge_frontend_source_files | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.vexforge_frontend_source_files | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.vexforge_frontend_source_files | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.vexforge_function_consolidation_registry | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.vexforge_function_consolidation_registry | grantee=anon | privilege=SELECT | grantable=NO
+-- public.vexforge_function_consolidation_registry | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.vexforge_function_consolidation_registry | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.vexforge_function_consolidation_registry | grantee=authenticated | privilege=SELECT | grantable=NO
+-- public.vexforge_function_consolidation_registry | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.vexforge_function_consolidation_registry | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.vexforge_function_consolidation_registry | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.vexforge_function_consolidation_registry | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.vexforge_function_consolidation_registry | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.vexforge_function_consolidation_registry | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.vexforge_function_consolidation_registry | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.vexforge_function_consolidation_registry | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.vexforge_fusion_policy_official | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.vexforge_fusion_policy_official | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.vexforge_fusion_policy_official | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.vexforge_fusion_policy_official | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.vexforge_fusion_policy_official | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.vexforge_fusion_policy_official | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.vexforge_fusion_policy_official | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.vexforge_fusion_policy_official | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.vexforge_fusion_policy_official | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.vexforge_fusion_policy_official | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.vexforge_fusion_policy_official | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.vexforge_fusion_summary | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.vexforge_fusion_summary | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.vexforge_fusion_summary | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.vexforge_fusion_summary | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.vexforge_fusion_summary | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.vexforge_fusion_summary | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.vexforge_fusion_summary | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.vexforge_fusion_summary | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.vexforge_fusion_summary | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.vexforge_fusion_summary | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.vexforge_fusion_summary | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.vexforge_game_loop_telemetry | grantee=authenticated | privilege=SELECT | grantable=NO
+-- public.vexforge_game_loop_telemetry | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.vexforge_game_loop_telemetry | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.vexforge_game_loop_telemetry | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.vexforge_game_loop_telemetry | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.vexforge_game_loop_telemetry | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.vexforge_game_loop_telemetry | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.vexforge_game_loop_telemetry | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.vexforge_icon_legacy | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.vexforge_icon_legacy | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.vexforge_icon_legacy | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.vexforge_icon_legacy | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.vexforge_icon_legacy | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.vexforge_icon_legacy | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.vexforge_icon_legacy | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.vexforge_implementation_manifest | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.vexforge_implementation_manifest | grantee=anon | privilege=SELECT | grantable=NO
+-- public.vexforge_implementation_manifest | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.vexforge_implementation_manifest | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.vexforge_implementation_manifest | grantee=authenticated | privilege=SELECT | grantable=NO
+-- public.vexforge_implementation_manifest | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.vexforge_implementation_manifest | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.vexforge_implementation_manifest | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.vexforge_implementation_manifest | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.vexforge_implementation_manifest | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.vexforge_implementation_manifest | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.vexforge_implementation_manifest | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.vexforge_implementation_manifest | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.vexforge_knowledge_base | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.vexforge_knowledge_base | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.vexforge_knowledge_base | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.vexforge_knowledge_base | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.vexforge_knowledge_base | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.vexforge_knowledge_base | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.vexforge_knowledge_base | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.vexforge_knowledge_base | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.vexforge_knowledge_base | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.vexforge_knowledge_base | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.vexforge_knowledge_base | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.vexforge_market_activity | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.vexforge_market_activity | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.vexforge_market_activity | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.vexforge_market_activity | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.vexforge_market_activity | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.vexforge_market_activity | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.vexforge_market_activity | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.vexforge_market_activity | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.vexforge_market_activity | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.vexforge_market_activity | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.vexforge_market_activity | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.vexforge_market_fee_summary | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.vexforge_market_fee_summary | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.vexforge_market_fee_summary | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.vexforge_market_fee_summary | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.vexforge_market_fee_summary | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.vexforge_market_fee_summary | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.vexforge_market_fee_summary | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.vexforge_market_fee_summary | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.vexforge_market_fee_summary | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.vexforge_market_fee_summary | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.vexforge_market_fee_summary | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.vexforge_market_official_listings | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.vexforge_market_official_listings | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.vexforge_market_official_listings | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.vexforge_market_official_listings | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.vexforge_market_official_listings | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.vexforge_market_official_listings | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.vexforge_market_official_listings | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.vexforge_market_official_listings | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.vexforge_market_official_listings | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.vexforge_market_official_listings | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.vexforge_market_official_listings | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.vexforge_market_policy | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.vexforge_market_policy | grantee=anon | privilege=SELECT | grantable=NO
+-- public.vexforge_market_policy | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.vexforge_market_policy | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.vexforge_market_policy | grantee=authenticated | privilege=SELECT | grantable=NO
+-- public.vexforge_market_policy | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.vexforge_market_policy | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.vexforge_market_policy | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.vexforge_market_policy | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.vexforge_market_policy | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.vexforge_market_policy | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.vexforge_market_policy | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.vexforge_market_policy | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.vexforge_marketable_cards | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.vexforge_marketable_cards | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.vexforge_marketable_cards | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.vexforge_marketable_cards | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.vexforge_marketable_cards | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.vexforge_marketable_cards | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.vexforge_marketable_cards | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.vexforge_marketable_cards | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.vexforge_marketable_cards | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.vexforge_marketable_cards | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.vexforge_marketable_cards | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.vexforge_mission_reward_policy | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.vexforge_mission_reward_policy | grantee=anon | privilege=SELECT | grantable=NO
+-- public.vexforge_mission_reward_policy | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.vexforge_mission_reward_policy | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.vexforge_mission_reward_policy | grantee=authenticated | privilege=SELECT | grantable=NO
+-- public.vexforge_mission_reward_policy | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.vexforge_mission_reward_policy | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.vexforge_mission_reward_policy | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.vexforge_mission_reward_policy | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.vexforge_mission_reward_policy | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.vexforge_mission_reward_policy | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.vexforge_mission_reward_policy | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.vexforge_mission_reward_policy | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.vexforge_mission_type_audit | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.vexforge_mission_type_audit | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.vexforge_mission_type_audit | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.vexforge_mission_type_audit | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.vexforge_mission_type_audit | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.vexforge_mission_type_audit | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.vexforge_mission_type_audit | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.vexforge_mission_type_audit | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.vexforge_mission_type_audit | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.vexforge_mission_type_audit | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.vexforge_mission_type_audit | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.vexforge_mission_type_raw_audit | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.vexforge_mission_type_raw_audit | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.vexforge_mission_type_raw_audit | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.vexforge_mission_type_raw_audit | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.vexforge_mission_type_raw_audit | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.vexforge_mission_type_raw_audit | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.vexforge_mission_type_raw_audit | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.vexforge_mission_type_raw_audit | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.vexforge_mission_type_raw_audit | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.vexforge_mission_type_raw_audit | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.vexforge_mission_type_raw_audit | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.vexforge_module_map | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.vexforge_module_map | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.vexforge_module_map | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.vexforge_module_map | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.vexforge_module_map | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.vexforge_module_map | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.vexforge_module_map | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.vexforge_module_map | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.vexforge_module_map | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.vexforge_module_map | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.vexforge_module_map | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.vexforge_nft_contracts | grantee=anon | privilege=DELETE | grantable=NO
+-- public.vexforge_nft_contracts | grantee=anon | privilege=INSERT | grantable=NO
+-- public.vexforge_nft_contracts | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.vexforge_nft_contracts | grantee=anon | privilege=SELECT | grantable=NO
+-- public.vexforge_nft_contracts | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.vexforge_nft_contracts | grantee=anon | privilege=TRUNCATE | grantable=NO
+-- public.vexforge_nft_contracts | grantee=anon | privilege=UPDATE | grantable=NO
+-- public.vexforge_nft_contracts | grantee=authenticated | privilege=DELETE | grantable=NO
+-- public.vexforge_nft_contracts | grantee=authenticated | privilege=INSERT | grantable=NO
+-- public.vexforge_nft_contracts | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.vexforge_nft_contracts | grantee=authenticated | privilege=SELECT | grantable=NO
+-- public.vexforge_nft_contracts | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.vexforge_nft_contracts | grantee=authenticated | privilege=TRUNCATE | grantable=NO
+-- public.vexforge_nft_contracts | grantee=authenticated | privilege=UPDATE | grantable=NO
+-- public.vexforge_nft_contracts | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.vexforge_nft_contracts | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.vexforge_nft_contracts | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.vexforge_nft_contracts | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.vexforge_nft_contracts | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.vexforge_nft_contracts | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.vexforge_nft_contracts | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.vexforge_nft_metadata | grantee=anon | privilege=DELETE | grantable=NO
+-- public.vexforge_nft_metadata | grantee=anon | privilege=INSERT | grantable=NO
+-- public.vexforge_nft_metadata | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.vexforge_nft_metadata | grantee=anon | privilege=SELECT | grantable=NO
+-- public.vexforge_nft_metadata | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.vexforge_nft_metadata | grantee=anon | privilege=TRUNCATE | grantable=NO
+-- public.vexforge_nft_metadata | grantee=anon | privilege=UPDATE | grantable=NO
+-- public.vexforge_nft_metadata | grantee=authenticated | privilege=DELETE | grantable=NO
+-- public.vexforge_nft_metadata | grantee=authenticated | privilege=INSERT | grantable=NO
+-- public.vexforge_nft_metadata | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.vexforge_nft_metadata | grantee=authenticated | privilege=SELECT | grantable=NO
+-- public.vexforge_nft_metadata | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.vexforge_nft_metadata | grantee=authenticated | privilege=TRUNCATE | grantable=NO
+-- public.vexforge_nft_metadata | grantee=authenticated | privilege=UPDATE | grantable=NO
+-- public.vexforge_nft_metadata | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.vexforge_nft_metadata | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.vexforge_nft_metadata | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.vexforge_nft_metadata | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.vexforge_nft_metadata | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.vexforge_nft_metadata | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.vexforge_nft_metadata | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.vexforge_nft_mint_queue | grantee=anon | privilege=DELETE | grantable=NO
+-- public.vexforge_nft_mint_queue | grantee=anon | privilege=INSERT | grantable=NO
+-- public.vexforge_nft_mint_queue | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.vexforge_nft_mint_queue | grantee=anon | privilege=SELECT | grantable=NO
+-- public.vexforge_nft_mint_queue | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.vexforge_nft_mint_queue | grantee=anon | privilege=TRUNCATE | grantable=NO
+-- public.vexforge_nft_mint_queue | grantee=anon | privilege=UPDATE | grantable=NO
+-- public.vexforge_nft_mint_queue | grantee=authenticated | privilege=DELETE | grantable=NO
+-- public.vexforge_nft_mint_queue | grantee=authenticated | privilege=INSERT | grantable=NO
+-- public.vexforge_nft_mint_queue | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.vexforge_nft_mint_queue | grantee=authenticated | privilege=SELECT | grantable=NO
+-- public.vexforge_nft_mint_queue | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.vexforge_nft_mint_queue | grantee=authenticated | privilege=TRUNCATE | grantable=NO
+-- public.vexforge_nft_mint_queue | grantee=authenticated | privilege=UPDATE | grantable=NO
+-- public.vexforge_nft_mint_queue | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.vexforge_nft_mint_queue | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.vexforge_nft_mint_queue | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.vexforge_nft_mint_queue | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.vexforge_nft_mint_queue | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.vexforge_nft_mint_queue | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.vexforge_nft_mint_queue | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.vexforge_nft_wallet_links | grantee=anon | privilege=DELETE | grantable=NO
+-- public.vexforge_nft_wallet_links | grantee=anon | privilege=INSERT | grantable=NO
+-- public.vexforge_nft_wallet_links | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.vexforge_nft_wallet_links | grantee=anon | privilege=SELECT | grantable=NO
+-- public.vexforge_nft_wallet_links | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.vexforge_nft_wallet_links | grantee=anon | privilege=TRUNCATE | grantable=NO
+-- public.vexforge_nft_wallet_links | grantee=anon | privilege=UPDATE | grantable=NO
+-- public.vexforge_nft_wallet_links | grantee=authenticated | privilege=DELETE | grantable=NO
+-- public.vexforge_nft_wallet_links | grantee=authenticated | privilege=INSERT | grantable=NO
+-- public.vexforge_nft_wallet_links | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.vexforge_nft_wallet_links | grantee=authenticated | privilege=SELECT | grantable=NO
+-- public.vexforge_nft_wallet_links | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.vexforge_nft_wallet_links | grantee=authenticated | privilege=TRUNCATE | grantable=NO
+-- public.vexforge_nft_wallet_links | grantee=authenticated | privilege=UPDATE | grantable=NO
+-- public.vexforge_nft_wallet_links | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.vexforge_nft_wallet_links | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.vexforge_nft_wallet_links | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.vexforge_nft_wallet_links | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.vexforge_nft_wallet_links | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.vexforge_nft_wallet_links | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.vexforge_nft_wallet_links | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.vexforge_object_action_map | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.vexforge_object_action_map | grantee=anon | privilege=SELECT | grantable=NO
+-- public.vexforge_object_action_map | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.vexforge_object_action_map | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.vexforge_object_action_map | grantee=authenticated | privilege=SELECT | grantable=NO
+-- public.vexforge_object_action_map | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.vexforge_object_action_map | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.vexforge_object_action_map | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.vexforge_object_action_map | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.vexforge_object_action_map | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.vexforge_object_action_map | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.vexforge_object_action_map | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.vexforge_object_action_map | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.vexforge_official_asset_manifest | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.vexforge_official_asset_manifest | grantee=anon | privilege=SELECT | grantable=NO
+-- public.vexforge_official_asset_manifest | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.vexforge_official_asset_manifest | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.vexforge_official_asset_manifest | grantee=authenticated | privilege=SELECT | grantable=NO
+-- public.vexforge_official_asset_manifest | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.vexforge_official_asset_manifest | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.vexforge_official_asset_manifest | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.vexforge_official_asset_manifest | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.vexforge_official_asset_manifest | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.vexforge_official_asset_manifest | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.vexforge_official_asset_manifest | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.vexforge_official_asset_manifest | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.vexforge_official_cards_bridge | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.vexforge_official_cards_bridge | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.vexforge_official_cards_bridge | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.vexforge_official_cards_bridge | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.vexforge_official_cards_bridge | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.vexforge_official_cards_bridge | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.vexforge_official_cards_bridge | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.vexforge_official_cards_bridge | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.vexforge_official_cards_bridge | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.vexforge_official_cards_bridge | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.vexforge_official_cards_bridge | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.vexforge_official_documents | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.vexforge_official_documents | grantee=anon | privilege=SELECT | grantable=NO
+-- public.vexforge_official_documents | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.vexforge_official_documents | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.vexforge_official_documents | grantee=authenticated | privilege=SELECT | grantable=NO
+-- public.vexforge_official_documents | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.vexforge_official_documents | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.vexforge_official_documents | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.vexforge_official_documents | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.vexforge_official_documents | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.vexforge_official_documents | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.vexforge_official_documents | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.vexforge_official_documents | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.vexforge_official_missions | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.vexforge_official_missions | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.vexforge_official_missions | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.vexforge_official_missions | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.vexforge_official_missions | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.vexforge_official_missions | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.vexforge_official_missions | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.vexforge_official_missions | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.vexforge_official_missions | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.vexforge_official_missions | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.vexforge_official_missions | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.vexforge_official_missions_bridge | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.vexforge_official_missions_bridge | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.vexforge_official_missions_bridge | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.vexforge_official_missions_bridge | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.vexforge_official_missions_bridge | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.vexforge_official_missions_bridge | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.vexforge_official_missions_bridge | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.vexforge_official_missions_bridge | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.vexforge_official_missions_bridge | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.vexforge_official_missions_bridge | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.vexforge_official_missions_bridge | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.vexforge_official_module_specs | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.vexforge_official_module_specs | grantee=anon | privilege=SELECT | grantable=NO
+-- public.vexforge_official_module_specs | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.vexforge_official_module_specs | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.vexforge_official_module_specs | grantee=authenticated | privilege=SELECT | grantable=NO
+-- public.vexforge_official_module_specs | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.vexforge_official_module_specs | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.vexforge_official_module_specs | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.vexforge_official_module_specs | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.vexforge_official_module_specs | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.vexforge_official_module_specs | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.vexforge_official_module_specs | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.vexforge_official_module_specs | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.vexforge_official_modules | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.vexforge_official_modules | grantee=anon | privilege=SELECT | grantable=NO
+-- public.vexforge_official_modules | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.vexforge_official_modules | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.vexforge_official_modules | grantee=authenticated | privilege=SELECT | grantable=NO
+-- public.vexforge_official_modules | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.vexforge_official_modules | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.vexforge_official_modules | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.vexforge_official_modules | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.vexforge_official_modules | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.vexforge_official_modules | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.vexforge_official_modules | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.vexforge_official_modules | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.vexforge_official_seed_log | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.vexforge_official_seed_log | grantee=anon | privilege=SELECT | grantable=NO
+-- public.vexforge_official_seed_log | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.vexforge_official_seed_log | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.vexforge_official_seed_log | grantee=authenticated | privilege=SELECT | grantable=NO
+-- public.vexforge_official_seed_log | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.vexforge_official_seed_log | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.vexforge_official_seed_log | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.vexforge_official_seed_log | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.vexforge_official_seed_log | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.vexforge_official_seed_log | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.vexforge_official_seed_log | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.vexforge_official_seed_log | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.vexforge_official_seed_manifest | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.vexforge_official_seed_manifest | grantee=anon | privilege=SELECT | grantable=NO
+-- public.vexforge_official_seed_manifest | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.vexforge_official_seed_manifest | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.vexforge_official_seed_manifest | grantee=authenticated | privilege=SELECT | grantable=NO
+-- public.vexforge_official_seed_manifest | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.vexforge_official_seed_manifest | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.vexforge_official_seed_manifest | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.vexforge_official_seed_manifest | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.vexforge_official_seed_manifest | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.vexforge_official_seed_manifest | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.vexforge_official_seed_manifest | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.vexforge_official_seed_manifest | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.vexforge_pack_catalog | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.vexforge_pack_catalog | grantee=anon | privilege=SELECT | grantable=NO
+-- public.vexforge_pack_catalog | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.vexforge_pack_catalog | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.vexforge_pack_catalog | grantee=authenticated | privilege=SELECT | grantable=NO
+-- public.vexforge_pack_catalog | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.vexforge_pack_catalog | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.vexforge_pack_catalog | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.vexforge_pack_catalog | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.vexforge_pack_catalog | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.vexforge_pack_catalog | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.vexforge_pack_catalog | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.vexforge_pack_catalog | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.vexforge_pack_contents | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.vexforge_pack_contents | grantee=anon | privilege=SELECT | grantable=NO
+-- public.vexforge_pack_contents | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.vexforge_pack_contents | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.vexforge_pack_contents | grantee=authenticated | privilege=SELECT | grantable=NO
+-- public.vexforge_pack_contents | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.vexforge_pack_contents | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.vexforge_pack_contents | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.vexforge_pack_contents | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.vexforge_pack_contents | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.vexforge_pack_contents | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.vexforge_pack_contents | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.vexforge_pack_contents | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.vexforge_pack_orders | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.vexforge_pack_orders | grantee=anon | privilege=SELECT | grantable=NO
+-- public.vexforge_pack_orders | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.vexforge_pack_orders | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.vexforge_pack_orders | grantee=authenticated | privilege=SELECT | grantable=NO
+-- public.vexforge_pack_orders | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.vexforge_pack_orders | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.vexforge_pack_orders | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.vexforge_pack_orders | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.vexforge_pack_orders | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.vexforge_pack_orders | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.vexforge_pack_orders | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.vexforge_pack_orders | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.vexforge_player_economy_official | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.vexforge_player_economy_official | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.vexforge_player_economy_official | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.vexforge_player_economy_official | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.vexforge_player_economy_official | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.vexforge_player_economy_official | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.vexforge_player_economy_official | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.vexforge_player_economy_official | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.vexforge_player_economy_official | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.vexforge_player_economy_official | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.vexforge_player_economy_official | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.vexforge_player_fusion_status | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.vexforge_player_fusion_status | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.vexforge_player_fusion_status | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.vexforge_player_fusion_status | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.vexforge_player_fusion_status | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.vexforge_player_fusion_status | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.vexforge_player_fusion_status | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.vexforge_player_fusion_status | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.vexforge_player_fusion_status | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.vexforge_player_fusion_status | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.vexforge_player_fusion_status | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.vexforge_player_shards | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.vexforge_player_shards | grantee=anon | privilege=SELECT | grantable=NO
+-- public.vexforge_player_shards | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.vexforge_player_shards | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.vexforge_player_shards | grantee=authenticated | privilege=SELECT | grantable=NO
+-- public.vexforge_player_shards | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.vexforge_player_shards | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.vexforge_player_shards | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.vexforge_player_shards | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.vexforge_player_shards | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.vexforge_player_shards | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.vexforge_player_shards | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.vexforge_player_shards | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.vexforge_project_audit | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.vexforge_project_audit | grantee=anon | privilege=SELECT | grantable=NO
+-- public.vexforge_project_audit | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.vexforge_project_audit | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.vexforge_project_audit | grantee=authenticated | privilege=SELECT | grantable=NO
+-- public.vexforge_project_audit | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.vexforge_project_audit | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.vexforge_project_audit | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.vexforge_project_audit | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.vexforge_project_audit | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.vexforge_project_audit | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.vexforge_project_audit | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.vexforge_project_audit | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.vexforge_project_chat_registry | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.vexforge_project_chat_registry | grantee=anon | privilege=SELECT | grantable=NO
+-- public.vexforge_project_chat_registry | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.vexforge_project_chat_registry | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.vexforge_project_chat_registry | grantee=authenticated | privilege=SELECT | grantable=NO
+-- public.vexforge_project_chat_registry | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.vexforge_project_chat_registry | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.vexforge_project_chat_registry | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.vexforge_project_chat_registry | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.vexforge_project_chat_registry | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.vexforge_project_chat_registry | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.vexforge_project_chat_registry | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.vexforge_project_chat_registry | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.vexforge_project_decisions | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.vexforge_project_decisions | grantee=anon | privilege=SELECT | grantable=NO
+-- public.vexforge_project_decisions | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.vexforge_project_decisions | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.vexforge_project_decisions | grantee=authenticated | privilege=SELECT | grantable=NO
+-- public.vexforge_project_decisions | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.vexforge_project_decisions | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.vexforge_project_decisions | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.vexforge_project_decisions | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.vexforge_project_decisions | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.vexforge_project_decisions | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.vexforge_project_decisions | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.vexforge_project_decisions | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.vexforge_project_deposits | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.vexforge_project_deposits | grantee=anon | privilege=SELECT | grantable=NO
+-- public.vexforge_project_deposits | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.vexforge_project_deposits | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.vexforge_project_deposits | grantee=authenticated | privilege=SELECT | grantable=NO
+-- public.vexforge_project_deposits | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.vexforge_project_deposits | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.vexforge_project_deposits | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.vexforge_project_deposits | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.vexforge_project_deposits | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.vexforge_project_deposits | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.vexforge_project_deposits | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.vexforge_project_deposits | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.vexforge_project_documents | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.vexforge_project_documents | grantee=anon | privilege=SELECT | grantable=NO
+-- public.vexforge_project_documents | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.vexforge_project_documents | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.vexforge_project_documents | grantee=authenticated | privilege=SELECT | grantable=NO
+-- public.vexforge_project_documents | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.vexforge_project_documents | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.vexforge_project_documents | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.vexforge_project_documents | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.vexforge_project_documents | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.vexforge_project_documents | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.vexforge_project_documents | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.vexforge_project_documents | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.vexforge_project_memory | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.vexforge_project_memory | grantee=anon | privilege=SELECT | grantable=NO
+-- public.vexforge_project_memory | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.vexforge_project_memory | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.vexforge_project_memory | grantee=authenticated | privilege=SELECT | grantable=NO
+-- public.vexforge_project_memory | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.vexforge_project_memory | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.vexforge_project_memory | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.vexforge_project_memory | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.vexforge_project_memory | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.vexforge_project_memory | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.vexforge_project_memory | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.vexforge_project_memory | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.vexforge_project_modules | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.vexforge_project_modules | grantee=anon | privilege=SELECT | grantable=NO
+-- public.vexforge_project_modules | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.vexforge_project_modules | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.vexforge_project_modules | grantee=authenticated | privilege=SELECT | grantable=NO
+-- public.vexforge_project_modules | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.vexforge_project_modules | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.vexforge_project_modules | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.vexforge_project_modules | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.vexforge_project_modules | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.vexforge_project_modules | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.vexforge_project_modules | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.vexforge_project_modules | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.vexforge_project_versions | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.vexforge_project_versions | grantee=anon | privilege=SELECT | grantable=NO
+-- public.vexforge_project_versions | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.vexforge_project_versions | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.vexforge_project_versions | grantee=authenticated | privilege=SELECT | grantable=NO
+-- public.vexforge_project_versions | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.vexforge_project_versions | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.vexforge_project_versions | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.vexforge_project_versions | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.vexforge_project_versions | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.vexforge_project_versions | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.vexforge_project_versions | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.vexforge_project_versions | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.vexforge_referrals | grantee=anon | privilege=DELETE | grantable=NO
+-- public.vexforge_referrals | grantee=anon | privilege=INSERT | grantable=NO
+-- public.vexforge_referrals | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.vexforge_referrals | grantee=anon | privilege=SELECT | grantable=NO
+-- public.vexforge_referrals | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.vexforge_referrals | grantee=anon | privilege=TRUNCATE | grantable=NO
+-- public.vexforge_referrals | grantee=anon | privilege=UPDATE | grantable=NO
+-- public.vexforge_referrals | grantee=authenticated | privilege=DELETE | grantable=NO
+-- public.vexforge_referrals | grantee=authenticated | privilege=INSERT | grantable=NO
+-- public.vexforge_referrals | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.vexforge_referrals | grantee=authenticated | privilege=SELECT | grantable=NO
+-- public.vexforge_referrals | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.vexforge_referrals | grantee=authenticated | privilege=TRUNCATE | grantable=NO
+-- public.vexforge_referrals | grantee=authenticated | privilege=UPDATE | grantable=NO
+-- public.vexforge_referrals | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.vexforge_referrals | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.vexforge_referrals | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.vexforge_referrals | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.vexforge_referrals | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.vexforge_referrals | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.vexforge_referrals | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.vexforge_replit_cards | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.vexforge_replit_cards | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.vexforge_replit_cards | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.vexforge_replit_cards | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.vexforge_replit_cards | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.vexforge_replit_cards | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.vexforge_replit_cards | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.vexforge_replit_cards | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.vexforge_replit_cards | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.vexforge_replit_cards | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.vexforge_replit_cards | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.vexforge_replit_economy_overview | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.vexforge_replit_economy_overview | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.vexforge_replit_economy_overview | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.vexforge_replit_economy_overview | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.vexforge_replit_economy_overview | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.vexforge_replit_economy_overview | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.vexforge_replit_economy_overview | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.vexforge_replit_economy_overview | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.vexforge_replit_economy_overview | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.vexforge_replit_economy_overview | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.vexforge_replit_economy_overview | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.vexforge_replit_handoff_summary | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.vexforge_replit_handoff_summary | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.vexforge_replit_handoff_summary | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.vexforge_replit_handoff_summary | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.vexforge_replit_handoff_summary | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.vexforge_replit_handoff_summary | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.vexforge_replit_handoff_summary | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.vexforge_replit_handoff_summary | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.vexforge_replit_handoff_summary | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.vexforge_replit_handoff_summary | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.vexforge_replit_handoff_summary | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.vexforge_replit_missions | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.vexforge_replit_missions | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.vexforge_replit_missions | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.vexforge_replit_missions | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.vexforge_replit_missions | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.vexforge_replit_missions | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.vexforge_replit_missions | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.vexforge_replit_missions | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.vexforge_replit_missions | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.vexforge_replit_missions | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.vexforge_replit_missions | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.vexforge_replit_packs | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.vexforge_replit_packs | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.vexforge_replit_packs | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.vexforge_replit_packs | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.vexforge_replit_packs | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.vexforge_replit_packs | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.vexforge_replit_packs | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.vexforge_replit_packs | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.vexforge_replit_packs | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.vexforge_replit_packs | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.vexforge_replit_packs | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.vexforge_replit_player_snapshot | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.vexforge_replit_player_snapshot | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.vexforge_replit_player_snapshot | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.vexforge_replit_player_snapshot | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.vexforge_replit_player_snapshot | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.vexforge_replit_player_snapshot | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.vexforge_replit_player_snapshot | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.vexforge_replit_player_snapshot | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.vexforge_replit_player_snapshot | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.vexforge_replit_player_snapshot | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.vexforge_replit_player_snapshot | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.vexforge_schema_audit | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.vexforge_schema_audit | grantee=anon | privilege=SELECT | grantable=NO
+-- public.vexforge_schema_audit | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.vexforge_schema_audit | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.vexforge_schema_audit | grantee=authenticated | privilege=SELECT | grantable=NO
+-- public.vexforge_schema_audit | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.vexforge_schema_audit | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.vexforge_schema_audit | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.vexforge_schema_audit | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.vexforge_schema_audit | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.vexforge_schema_audit | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.vexforge_schema_audit | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.vexforge_schema_audit | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.vexforge_schema_freeze_status | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.vexforge_schema_freeze_status | grantee=anon | privilege=SELECT | grantable=NO
+-- public.vexforge_schema_freeze_status | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.vexforge_schema_freeze_status | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.vexforge_schema_freeze_status | grantee=authenticated | privilege=SELECT | grantable=NO
+-- public.vexforge_schema_freeze_status | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.vexforge_schema_freeze_status | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.vexforge_schema_freeze_status | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.vexforge_schema_freeze_status | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.vexforge_schema_freeze_status | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.vexforge_schema_freeze_status | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.vexforge_schema_freeze_status | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.vexforge_schema_freeze_status | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.vexforge_shop_catalog | grantee=anon | privilege=DELETE | grantable=NO
+-- public.vexforge_shop_catalog | grantee=anon | privilege=INSERT | grantable=NO
+-- public.vexforge_shop_catalog | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.vexforge_shop_catalog | grantee=anon | privilege=SELECT | grantable=NO
+-- public.vexforge_shop_catalog | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.vexforge_shop_catalog | grantee=anon | privilege=TRUNCATE | grantable=NO
+-- public.vexforge_shop_catalog | grantee=anon | privilege=UPDATE | grantable=NO
+-- public.vexforge_shop_catalog | grantee=authenticated | privilege=DELETE | grantable=NO
+-- public.vexforge_shop_catalog | grantee=authenticated | privilege=INSERT | grantable=NO
+-- public.vexforge_shop_catalog | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.vexforge_shop_catalog | grantee=authenticated | privilege=SELECT | grantable=NO
+-- public.vexforge_shop_catalog | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.vexforge_shop_catalog | grantee=authenticated | privilege=TRUNCATE | grantable=NO
+-- public.vexforge_shop_catalog | grantee=authenticated | privilege=UPDATE | grantable=NO
+-- public.vexforge_shop_catalog | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.vexforge_shop_catalog | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.vexforge_shop_catalog | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.vexforge_shop_catalog | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.vexforge_shop_catalog | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.vexforge_shop_catalog | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.vexforge_shop_catalog | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.vexforge_shop_orders | grantee=anon | privilege=DELETE | grantable=NO
+-- public.vexforge_shop_orders | grantee=anon | privilege=INSERT | grantable=NO
+-- public.vexforge_shop_orders | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.vexforge_shop_orders | grantee=anon | privilege=SELECT | grantable=NO
+-- public.vexforge_shop_orders | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.vexforge_shop_orders | grantee=anon | privilege=TRUNCATE | grantable=NO
+-- public.vexforge_shop_orders | grantee=anon | privilege=UPDATE | grantable=NO
+-- public.vexforge_shop_orders | grantee=authenticated | privilege=DELETE | grantable=NO
+-- public.vexforge_shop_orders | grantee=authenticated | privilege=INSERT | grantable=NO
+-- public.vexforge_shop_orders | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.vexforge_shop_orders | grantee=authenticated | privilege=SELECT | grantable=NO
+-- public.vexforge_shop_orders | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.vexforge_shop_orders | grantee=authenticated | privilege=TRUNCATE | grantable=NO
+-- public.vexforge_shop_orders | grantee=authenticated | privilege=UPDATE | grantable=NO
+-- public.vexforge_shop_orders | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.vexforge_shop_orders | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.vexforge_shop_orders | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.vexforge_shop_orders | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.vexforge_shop_orders | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.vexforge_shop_orders | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.vexforge_shop_orders | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.vexforge_support_registry | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.vexforge_support_registry | grantee=anon | privilege=SELECT | grantable=NO
+-- public.vexforge_support_registry | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.vexforge_support_registry | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.vexforge_support_registry | grantee=authenticated | privilege=SELECT | grantable=NO
+-- public.vexforge_support_registry | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.vexforge_support_registry | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.vexforge_support_registry | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.vexforge_support_registry | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.vexforge_support_registry | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.vexforge_support_registry | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.vexforge_support_registry | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.vexforge_support_registry | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.vexforge_surface_registry | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.vexforge_surface_registry | grantee=anon | privilege=SELECT | grantable=NO
+-- public.vexforge_surface_registry | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.vexforge_surface_registry | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.vexforge_surface_registry | grantee=authenticated | privilege=SELECT | grantable=NO
+-- public.vexforge_surface_registry | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.vexforge_surface_registry | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.vexforge_surface_registry | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.vexforge_surface_registry | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.vexforge_surface_registry | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.vexforge_surface_registry | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.vexforge_surface_registry | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.vexforge_surface_registry | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.vexforge_system_config | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.vexforge_system_config | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.vexforge_system_config | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.vexforge_system_config | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.vexforge_system_config | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.vexforge_system_config | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.vexforge_system_config | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.vexforge_telemetry_event_catalog | grantee=anon | privilege=SELECT | grantable=NO
+-- public.vexforge_telemetry_event_catalog | grantee=authenticated | privilege=SELECT | grantable=NO
+-- public.vexforge_telemetry_event_catalog | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.vexforge_telemetry_event_catalog | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.vexforge_telemetry_event_catalog | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.vexforge_telemetry_event_catalog | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.vexforge_telemetry_event_catalog | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.vexforge_telemetry_event_catalog | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.vexforge_telemetry_event_catalog | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.vexforge_telemetry_events | grantee=authenticated | privilege=INSERT | grantable=NO
+-- public.vexforge_telemetry_events | grantee=authenticated | privilege=SELECT | grantable=NO
+-- public.vexforge_telemetry_events | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.vexforge_telemetry_events | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.vexforge_telemetry_events | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.vexforge_telemetry_events | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.vexforge_telemetry_events | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.vexforge_telemetry_events | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.vexforge_telemetry_events | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.vexforge_tier1_dimensions | grantee=anon | privilege=DELETE | grantable=NO
+-- public.vexforge_tier1_dimensions | grantee=anon | privilege=INSERT | grantable=NO
+-- public.vexforge_tier1_dimensions | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.vexforge_tier1_dimensions | grantee=anon | privilege=SELECT | grantable=NO
+-- public.vexforge_tier1_dimensions | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.vexforge_tier1_dimensions | grantee=anon | privilege=TRUNCATE | grantable=NO
+-- public.vexforge_tier1_dimensions | grantee=anon | privilege=UPDATE | grantable=NO
+-- public.vexforge_tier1_dimensions | grantee=authenticated | privilege=DELETE | grantable=NO
+-- public.vexforge_tier1_dimensions | grantee=authenticated | privilege=INSERT | grantable=NO
+-- public.vexforge_tier1_dimensions | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.vexforge_tier1_dimensions | grantee=authenticated | privilege=SELECT | grantable=NO
+-- public.vexforge_tier1_dimensions | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.vexforge_tier1_dimensions | grantee=authenticated | privilege=TRUNCATE | grantable=NO
+-- public.vexforge_tier1_dimensions | grantee=authenticated | privilege=UPDATE | grantable=NO
+-- public.vexforge_tier1_dimensions | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.vexforge_tier1_dimensions | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.vexforge_tier1_dimensions | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.vexforge_tier1_dimensions | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.vexforge_tier1_dimensions | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.vexforge_tier1_dimensions | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.vexforge_tier1_dimensions | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.vexforge_tier1_phase_state | grantee=anon | privilege=DELETE | grantable=NO
+-- public.vexforge_tier1_phase_state | grantee=anon | privilege=INSERT | grantable=NO
+-- public.vexforge_tier1_phase_state | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.vexforge_tier1_phase_state | grantee=anon | privilege=SELECT | grantable=NO
+-- public.vexforge_tier1_phase_state | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.vexforge_tier1_phase_state | grantee=anon | privilege=TRUNCATE | grantable=NO
+-- public.vexforge_tier1_phase_state | grantee=anon | privilege=UPDATE | grantable=NO
+-- public.vexforge_tier1_phase_state | grantee=authenticated | privilege=DELETE | grantable=NO
+-- public.vexforge_tier1_phase_state | grantee=authenticated | privilege=INSERT | grantable=NO
+-- public.vexforge_tier1_phase_state | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.vexforge_tier1_phase_state | grantee=authenticated | privilege=SELECT | grantable=NO
+-- public.vexforge_tier1_phase_state | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.vexforge_tier1_phase_state | grantee=authenticated | privilege=TRUNCATE | grantable=NO
+-- public.vexforge_tier1_phase_state | grantee=authenticated | privilege=UPDATE | grantable=NO
+-- public.vexforge_tier1_phase_state | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.vexforge_tier1_phase_state | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.vexforge_tier1_phase_state | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.vexforge_tier1_phase_state | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.vexforge_tier1_phase_state | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.vexforge_tier1_phase_state | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.vexforge_tier1_phase_state | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.vexforge_tier1_phases | grantee=anon | privilege=DELETE | grantable=NO
+-- public.vexforge_tier1_phases | grantee=anon | privilege=INSERT | grantable=NO
+-- public.vexforge_tier1_phases | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.vexforge_tier1_phases | grantee=anon | privilege=SELECT | grantable=NO
+-- public.vexforge_tier1_phases | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.vexforge_tier1_phases | grantee=anon | privilege=TRUNCATE | grantable=NO
+-- public.vexforge_tier1_phases | grantee=anon | privilege=UPDATE | grantable=NO
+-- public.vexforge_tier1_phases | grantee=authenticated | privilege=DELETE | grantable=NO
+-- public.vexforge_tier1_phases | grantee=authenticated | privilege=INSERT | grantable=NO
+-- public.vexforge_tier1_phases | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.vexforge_tier1_phases | grantee=authenticated | privilege=SELECT | grantable=NO
+-- public.vexforge_tier1_phases | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.vexforge_tier1_phases | grantee=authenticated | privilege=TRUNCATE | grantable=NO
+-- public.vexforge_tier1_phases | grantee=authenticated | privilege=UPDATE | grantable=NO
+-- public.vexforge_tier1_phases | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.vexforge_tier1_phases | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.vexforge_tier1_phases | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.vexforge_tier1_phases | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.vexforge_tier1_phases | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.vexforge_tier1_phases | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.vexforge_tier1_phases | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.vexforge_tier1_score | grantee=anon | privilege=DELETE | grantable=NO
+-- public.vexforge_tier1_score | grantee=anon | privilege=INSERT | grantable=NO
+-- public.vexforge_tier1_score | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.vexforge_tier1_score | grantee=anon | privilege=SELECT | grantable=NO
+-- public.vexforge_tier1_score | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.vexforge_tier1_score | grantee=anon | privilege=TRUNCATE | grantable=NO
+-- public.vexforge_tier1_score | grantee=anon | privilege=UPDATE | grantable=NO
+-- public.vexforge_tier1_score | grantee=authenticated | privilege=DELETE | grantable=NO
+-- public.vexforge_tier1_score | grantee=authenticated | privilege=INSERT | grantable=NO
+-- public.vexforge_tier1_score | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.vexforge_tier1_score | grantee=authenticated | privilege=SELECT | grantable=NO
+-- public.vexforge_tier1_score | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.vexforge_tier1_score | grantee=authenticated | privilege=TRUNCATE | grantable=NO
+-- public.vexforge_tier1_score | grantee=authenticated | privilege=UPDATE | grantable=NO
+-- public.vexforge_tier1_score | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.vexforge_tier1_score | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.vexforge_tier1_score | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.vexforge_tier1_score | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.vexforge_tier1_score | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.vexforge_tier1_score | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.vexforge_tier1_score | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.vexforge_treasury | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.vexforge_treasury | grantee=anon | privilege=SELECT | grantable=NO
+-- public.vexforge_treasury | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.vexforge_treasury | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.vexforge_treasury | grantee=authenticated | privilege=SELECT | grantable=NO
+-- public.vexforge_treasury | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.vexforge_treasury | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.vexforge_treasury | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.vexforge_treasury | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.vexforge_treasury | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.vexforge_treasury | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.vexforge_treasury | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.vexforge_treasury | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.vexforge_treasury_overview | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.vexforge_treasury_overview | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.vexforge_treasury_overview | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.vexforge_treasury_overview | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.vexforge_treasury_overview | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.vexforge_treasury_overview | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.vexforge_treasury_overview | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.vexforge_treasury_overview | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.vexforge_treasury_overview | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.vexforge_treasury_overview | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.vexforge_treasury_overview | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.vexforge_visual_tier1_objective | grantee=anon | privilege=DELETE | grantable=NO
+-- public.vexforge_visual_tier1_objective | grantee=anon | privilege=INSERT | grantable=NO
+-- public.vexforge_visual_tier1_objective | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.vexforge_visual_tier1_objective | grantee=anon | privilege=SELECT | grantable=NO
+-- public.vexforge_visual_tier1_objective | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.vexforge_visual_tier1_objective | grantee=anon | privilege=TRUNCATE | grantable=NO
+-- public.vexforge_visual_tier1_objective | grantee=anon | privilege=UPDATE | grantable=NO
+-- public.vexforge_visual_tier1_objective | grantee=authenticated | privilege=DELETE | grantable=NO
+-- public.vexforge_visual_tier1_objective | grantee=authenticated | privilege=INSERT | grantable=NO
+-- public.vexforge_visual_tier1_objective | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.vexforge_visual_tier1_objective | grantee=authenticated | privilege=SELECT | grantable=NO
+-- public.vexforge_visual_tier1_objective | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.vexforge_visual_tier1_objective | grantee=authenticated | privilege=TRUNCATE | grantable=NO
+-- public.vexforge_visual_tier1_objective | grantee=authenticated | privilege=UPDATE | grantable=NO
+-- public.vexforge_visual_tier1_objective | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.vexforge_visual_tier1_objective | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.vexforge_visual_tier1_objective | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.vexforge_visual_tier1_objective | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.vexforge_visual_tier1_objective | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.vexforge_visual_tier1_objective | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.vexforge_visual_tier1_objective | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.vexforge_web_registry | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.vexforge_web_registry | grantee=anon | privilege=SELECT | grantable=NO
+-- public.vexforge_web_registry | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.vexforge_web_registry | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.vexforge_web_registry | grantee=authenticated | privilege=SELECT | grantable=NO
+-- public.vexforge_web_registry | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.vexforge_web_registry | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.vexforge_web_registry | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.vexforge_web_registry | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.vexforge_web_registry | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.vexforge_web_registry | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.vexforge_web_registry | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.vexforge_web_registry | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.vexforge_withdrawal_requests_official | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.vexforge_withdrawal_requests_official | grantee=anon | privilege=SELECT | grantable=NO
+-- public.vexforge_withdrawal_requests_official | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.vexforge_withdrawal_requests_official | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.vexforge_withdrawal_requests_official | grantee=authenticated | privilege=SELECT | grantable=NO
+-- public.vexforge_withdrawal_requests_official | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.vexforge_withdrawal_requests_official | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.vexforge_withdrawal_requests_official | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.vexforge_withdrawal_requests_official | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.vexforge_withdrawal_requests_official | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.vexforge_withdrawal_requests_official | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.vexforge_withdrawal_requests_official | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.vexforge_withdrawal_requests_official | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.wallet_transactions | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.wallet_transactions | grantee=anon | privilege=SELECT | grantable=NO
+-- public.wallet_transactions | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.wallet_transactions | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.wallet_transactions | grantee=authenticated | privilege=SELECT | grantable=NO
+-- public.wallet_transactions | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.wallet_transactions | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.wallet_transactions | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.wallet_transactions | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.wallet_transactions | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.wallet_transactions | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.wallet_transactions | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.wallet_transactions | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.withdrawal_controls | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.withdrawal_controls | grantee=anon | privilege=SELECT | grantable=NO
+-- public.withdrawal_controls | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.withdrawal_controls | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.withdrawal_controls | grantee=authenticated | privilege=SELECT | grantable=NO
+-- public.withdrawal_controls | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.withdrawal_controls | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.withdrawal_controls | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.withdrawal_controls | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.withdrawal_controls | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.withdrawal_controls | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.withdrawal_controls | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.withdrawal_controls | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.withdrawal_profile | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.withdrawal_profile | grantee=anon | privilege=SELECT | grantable=NO
+-- public.withdrawal_profile | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.withdrawal_profile | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.withdrawal_profile | grantee=authenticated | privilege=SELECT | grantable=NO
+-- public.withdrawal_profile | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.withdrawal_profile | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.withdrawal_profile | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.withdrawal_profile | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.withdrawal_profile | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.withdrawal_profile | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.withdrawal_profile | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.withdrawal_profile | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.withdrawal_queue | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.withdrawal_queue | grantee=anon | privilege=SELECT | grantable=NO
+-- public.withdrawal_queue | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.withdrawal_queue | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.withdrawal_queue | grantee=authenticated | privilege=SELECT | grantable=NO
+-- public.withdrawal_queue | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.withdrawal_queue | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.withdrawal_queue | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.withdrawal_queue | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.withdrawal_queue | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.withdrawal_queue | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.withdrawal_queue | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.withdrawal_queue | grantee=service_role | privilege=UPDATE | grantable=NO
+-- public.withdrawal_requests | grantee=anon | privilege=REFERENCES | grantable=NO
+-- public.withdrawal_requests | grantee=anon | privilege=TRIGGER | grantable=NO
+-- public.withdrawal_requests | grantee=authenticated | privilege=REFERENCES | grantable=NO
+-- public.withdrawal_requests | grantee=authenticated | privilege=SELECT | grantable=NO
+-- public.withdrawal_requests | grantee=authenticated | privilege=TRIGGER | grantable=NO
+-- public.withdrawal_requests | grantee=service_role | privilege=DELETE | grantable=NO
+-- public.withdrawal_requests | grantee=service_role | privilege=INSERT | grantable=NO
+-- public.withdrawal_requests | grantee=service_role | privilege=REFERENCES | grantable=NO
+-- public.withdrawal_requests | grantee=service_role | privilege=SELECT | grantable=NO
+-- public.withdrawal_requests | grantee=service_role | privilege=TRIGGER | grantable=NO
+-- public.withdrawal_requests | grantee=service_role | privilege=TRUNCATE | grantable=NO
+-- public.withdrawal_requests | grantee=service_role | privilege=UPDATE | grantable=NO

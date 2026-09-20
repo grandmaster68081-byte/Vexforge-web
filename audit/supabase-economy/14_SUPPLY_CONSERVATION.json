@@ -1,0 +1,174 @@
+{
+  "extraction": {
+    "extracted_at_utc": "2026-09-20T13:37:53.575Z",
+    "mode": "READ_ONLY",
+    "no_player_rows_exported": true
+  },
+  "aggregates": {
+    "wallet_totals": {
+      "rows": 16,
+      "vex_ingame_available": 10008555,
+      "vex_tradeable_available": 1000023,
+      "vex_ingame_reserved": 0,
+      "vex_tradeable_reserved": 0,
+      "negative_rows": 0
+    },
+    "state_totals": {
+      "rows": 12,
+      "vex_ingame_state": 10000000,
+      "vex_tradeable_state": 1000000,
+      "tradeable_locked": 0,
+      "total_usdt_deposited": 50000,
+      "daily_ingame_minted": 0,
+      "daily_tradeable_minted": 0,
+      "daily_market_volume": 0,
+      "daily_fusion_burn": 0,
+      "negative_rows": 0
+    },
+    "wallet_state_join": {
+      "joined_players": 16,
+      "balance_mismatch_rows": 9,
+      "state_without_wallet": 0,
+      "wallet_without_state": 4
+    },
+    "ledger_by_currency_type": [
+      {
+        "currency": "vex_ingame",
+        "entry_type": "credit",
+        "rows": 8,
+        "total_amount": 277,
+        "negative_amount_rows": 0
+      },
+      {
+        "currency": "vex_ingame",
+        "entry_type": "debit",
+        "rows": 1,
+        "total_amount": 10,
+        "negative_amount_rows": 0
+      },
+      {
+        "currency": "vex_ingame",
+        "entry_type": "reward",
+        "rows": 1,
+        "total_amount": 100,
+        "negative_amount_rows": 0
+      },
+      {
+        "currency": "vex_ingame",
+        "entry_type": "combat_reward",
+        "rows": 34,
+        "total_amount": 935,
+        "negative_amount_rows": 0
+      },
+      {
+        "currency": "vex_tradeable",
+        "entry_type": "credit",
+        "rows": 1,
+        "total_amount": 23,
+        "negative_amount_rows": 0
+      },
+      {
+        "currency": "vex_tradeable",
+        "entry_type": "debit",
+        "rows": 1,
+        "total_amount": 25,
+        "negative_amount_rows": 0
+      },
+      {
+        "currency": "vex_tradeable",
+        "entry_type": "fee",
+        "rows": 1,
+        "total_amount": 2,
+        "negative_amount_rows": 0
+      }
+    ],
+    "market_by_status": [
+      {
+        "status": "cancelled",
+        "rows": 1,
+        "total_price": 8,
+        "total_fee": 0,
+        "locked_rows": 0
+      },
+      {
+        "status": "sold",
+        "rows": 2,
+        "total_price": 35,
+        "total_fee": 3,
+        "locked_rows": 2
+      }
+    ],
+    "deposits_by_status": [],
+    "withdrawals_by_status": [],
+    "rewards": {
+      "rewards_table": {
+        "rows": 0,
+        "amount_total": 0
+      },
+      "mission_rewards": {
+        "rows": 0,
+        "amount_total": 0
+      },
+      "raid_rewards": {
+        "rows": 0,
+        "amount_total": 0
+      },
+      "telegram_rewards_log": {
+        "rows": 0,
+        "amount_total": 0
+      }
+    },
+    "ads": {
+      "rows": 2,
+      "completed_rows": 2,
+      "watched_pct_total": 200,
+      "vex_awarded_total": 40,
+      "awarded_rows": 2
+    },
+    "referrals": {
+      "rows": 0,
+      "reward_granted_rows": 0,
+      "first_pack_rewarded_rows": 0
+    },
+    "nft": {
+      "contracts": null,
+      "wallet_links": {
+        "rows": 0,
+        "verified_rows": 0
+      },
+      "mint_queue": null
+    },
+    "packs": null,
+    "cards": {
+      "card_rows": 127,
+      "declared_supply": 2944100,
+      "minted": 0,
+      "marketable_rows": 127
+    },
+    "supply_anomalies": {
+      "negative_wallet_rows": 0,
+      "negative_state_rows": 0,
+      "duplicate_ledger_reference_ids": 0,
+      "duplicate_deposit_tx_hashes": 0,
+      "duplicate_withdrawal_payout_hashes": 0,
+      "orphan_active_listings": 0,
+      "orphan_locked_cards": 6
+    }
+  },
+  "conservation_checks": {
+    "negative_balances": true,
+    "wallet_state_mismatch_rows": 9,
+    "wallet_without_state": 4,
+    "state_without_wallet": 0,
+    "duplicate_ledger_reference_ids": 0,
+    "duplicate_deposit_tx_hashes": 0,
+    "duplicate_withdrawal_payout_hashes": 0,
+    "orphan_active_listings": 0,
+    "orphan_locked_cards": 6
+  },
+  "interpretation": [
+    "No negative wallet/state rows were observed.",
+    "Nine wallet/state balance mismatches and four wallet rows without a matching state were observed in aggregate-only join.",
+    "Six locked player-card rows had no active listing in aggregate-only check."
+  ]
+}

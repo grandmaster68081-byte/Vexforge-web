@@ -1,0 +1,65 @@
+{
+  "extraction": {
+    "extracted_at_utc": "2026-09-20T13:37:53.575Z",
+    "repository_commit": "93b0077975da0f8773e7304d411e0abea083e17b",
+    "mode": "READ_ONLY"
+  },
+  "rows": [
+    {
+      "domain": "economy",
+      "live": "wallet + ledger + stats RPC",
+      "legacy": "src/domains/economy repository uses same names",
+      "unity": "wallet read only; no ledger/stats consumer",
+      "status": "PARTIAL"
+    },
+    {
+      "domain": "market",
+      "live": "8% policy + RPCs",
+      "legacy": "RPC integration exists; 5% legacy reference requested by protocol not confirmed in current source search",
+      "unity": "missing",
+      "status": "CONTRADICTION"
+    },
+    {
+      "domain": "packs",
+      "live": "5 catalog rows; price ratios 100; column card_count=5",
+      "legacy": "reads catalog and calls buy/open RPC",
+      "unity": "missing",
+      "status": "PARTIAL"
+    },
+    {
+      "domain": "deposit",
+      "live": "BSC/USDT policy plus configured treasury chains; no live rows",
+      "legacy": "submit/get RPC integration",
+      "unity": "missing",
+      "status": "PARTIAL"
+    },
+    {
+      "domain": "withdrawal",
+      "live": "100 tradeable/USDT, 8%, minimum 2500, 72h, manual review",
+      "legacy": "UI hard-codes 100 and 8%; repository calls live RPC",
+      "unity": "missing",
+      "status": "PARTIAL"
+    },
+    {
+      "domain": "ads",
+      "live": "client insert can supply reward fields",
+      "legacy": "ad UI/data references",
+      "unity": "missing",
+      "status": "DANGEROUS"
+    },
+    {
+      "domain": "NFT",
+      "live": "wallet link/mint queue tables with permissive own-insert fields",
+      "legacy": "src/domains/nft repository",
+      "unity": "missing",
+      "status": "DANGEROUS"
+    },
+    {
+      "domain": "battle",
+      "live": "vexforge_battle_resolve plus reward-related routines",
+      "legacy": "battle routes and battleRuns",
+      "unity": "resolve RPC connected; reward schema absent from Unity DTO",
+      "status": "PARTIAL"
+    }
+  ]
+}

@@ -1,0 +1,138 @@
+{
+  "extraction": {
+    "extracted_at_utc": "2026-09-20T13:37:53.575Z",
+    "mode": "READ_ONLY"
+  },
+  "official_exchange_rate_vex_per_usdt": 100,
+  "rows": [
+    {
+      "pack_key": "expedition_pack",
+      "pack_name": "Expedition Pack",
+      "price_usdt": 9.99,
+      "active": true,
+      "notes": "Garantiza al menos una Rara. Pack recomendado.",
+      "metadata": {
+        "card_count": 7,
+        "rarity_weights": {
+          "Epic": 0.06,
+          "Rare": 0.18,
+          "Common": 0.4,
+          "Mythic": 0,
+          "Uncommon": 0.35,
+          "Legendary": 0.01
+        }
+      },
+      "created_at": "2026-06-23T13:49:32.750091+00:00",
+      "updated_at": "2026-07-19T14:51:33.055058+00:00",
+      "price_vex": 999,
+      "card_count": 5,
+      "official_exchange_ratio": 100,
+      "ratio_matches_official_100": true,
+      "metadata_card_count_matches_column": false
+    },
+    {
+      "pack_key": "forge_pack",
+      "pack_name": "Forge Pack",
+      "price_usdt": 24.99,
+      "active": true,
+      "notes": "Épicas garantizadas. Para forjadores serios.",
+      "metadata": {
+        "card_count": 8,
+        "rarity_weights": {
+          "Epic": 0.15,
+          "Rare": 0.35,
+          "Common": 0.15,
+          "Mythic": 0.01,
+          "Uncommon": 0.3,
+          "Legendary": 0.04
+        }
+      },
+      "created_at": "2026-06-23T13:49:32.750091+00:00",
+      "updated_at": "2026-07-19T14:51:33.055058+00:00",
+      "price_vex": 2499,
+      "card_count": 5,
+      "official_exchange_ratio": 100,
+      "ratio_matches_official_100": true,
+      "metadata_card_count_matches_column": false
+    },
+    {
+      "pack_key": "founder_pack",
+      "pack_name": "Founder Pack",
+      "price_usdt": 49.99,
+      "active": true,
+      "notes": "Acceso anticipado. Legendaria garantizada + cosmético exclusivo.",
+      "metadata": {
+        "card_count": 10,
+        "rarity_weights": {
+          "Epic": 0.35,
+          "Rare": 0.3,
+          "Common": 0,
+          "Mythic": 0.05,
+          "Uncommon": 0.1,
+          "Legendary": 0.2
+        }
+      },
+      "created_at": "2026-06-23T13:49:32.750091+00:00",
+      "updated_at": "2026-07-19T14:51:33.055058+00:00",
+      "price_vex": 4999,
+      "card_count": 5,
+      "official_exchange_ratio": 100,
+      "ratio_matches_official_100": true,
+      "metadata_card_count_matches_column": false
+    },
+    {
+      "pack_key": "scout_pack",
+      "pack_name": "Scout Pack",
+      "price_usdt": 4.99,
+      "active": true,
+      "notes": "Mayor chance de raras. Para exploradores.",
+      "metadata": {
+        "card_count": 5,
+        "rarity_weights": {
+          "Epic": 0.02,
+          "Rare": 0.08,
+          "Common": 0.65,
+          "Mythic": 0,
+          "Uncommon": 0.25,
+          "Legendary": 0
+        }
+      },
+      "created_at": "2026-06-23T13:49:32.750091+00:00",
+      "updated_at": "2026-07-19T14:51:33.055058+00:00",
+      "price_vex": 499,
+      "card_count": 5,
+      "official_exchange_ratio": 100,
+      "ratio_matches_official_100": true,
+      "metadata_card_count_matches_column": true
+    },
+    {
+      "pack_key": "seed_pack",
+      "pack_name": "Seed Pack",
+      "price_usdt": 1.99,
+      "active": true,
+      "notes": "Pack básico. Comunes y uncommons. Perfecto para comenzar.",
+      "metadata": {
+        "card_count": 3,
+        "rarity_weights": {
+          "Epic": 0,
+          "Rare": 0.03,
+          "Common": 0.85,
+          "Mythic": 0,
+          "Uncommon": 0.12,
+          "Legendary": 0
+        }
+      },
+      "created_at": "2026-06-23T13:49:32.750091+00:00",
+      "updated_at": "2026-07-19T14:51:33.055058+00:00",
+      "price_vex": 199,
+      "card_count": 5,
+      "official_exchange_ratio": 100,
+      "ratio_matches_official_100": true,
+      "metadata_card_count_matches_column": false
+    }
+  ],
+  "findings": [
+    "All price_vex/price_usdt ratios were checked against 100.",
+    "The live card_count column is 5 for the observed catalog rows while metadata.card_count varies; vexforge_open_pack reads the card_count column."
+  ]
+}

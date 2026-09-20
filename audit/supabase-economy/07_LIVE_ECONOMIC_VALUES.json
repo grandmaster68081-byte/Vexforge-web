@@ -1,0 +1,2995 @@
+{
+  "extraction": {
+    "extracted_at_utc": "2026-09-20T13:37:53.575Z",
+    "source": "live Supabase configuration/catalog tables",
+    "mode": "READ_ONLY",
+    "redaction": "wallet/address values redacted; no player rows exported"
+  },
+  "exact_current_value_count": 82,
+  "values": [
+    {
+      "source_table_or_catalog": "system_config",
+      "key": "stripe_config",
+      "current_value": {
+        "config_key": "stripe_config",
+        "config_value": {
+          "status": "pending_integration",
+          "enabled": false,
+          "fee_pct": 2.9,
+          "fee_fixed": 0.3,
+          "max_deposit_usd": 500,
+          "min_deposit_usd": 1.99
+        },
+        "description": "Configuración Stripe para onramp fiat. Habilitado cuando clave API esté configurada.",
+        "updated_at": "2026-07-19T14:51:33.375509+00:00"
+      },
+      "status": "CONFIGURED"
+    },
+    {
+      "source_table_or_catalog": "system_config",
+      "key": "treasury_config",
+      "current_value": {
+        "config_key": "treasury_config",
+        "config_value": {
+          "chains": {
+            "BSC": {
+              "token": "USDT",
+              "address": "[REDACTED_PRIVATE_OR_WALLET_VALUE]",
+              "network": "BEP-20",
+              "explorer": "https://bscscan.com"
+            },
+            "ETH": {
+              "token": "USDT",
+              "address": "[REDACTED_PRIVATE_OR_WALLET_VALUE]",
+              "network": "ERC-20",
+              "explorer": "https://etherscan.io"
+            },
+            "SOL": {
+              "token": "USDT",
+              "address": "[REDACTED_PRIVATE_OR_WALLET_VALUE]",
+              "network": "SPL",
+              "explorer": "https://solscan.io"
+            },
+            "TRON": {
+              "token": "USDT",
+              "address": "[REDACTED_PRIVATE_OR_WALLET_VALUE]",
+              "network": "TRC-20",
+              "explorer": "https://tronscan.org"
+            }
+          },
+          "configured_at": "2026-07-19T15:13:10.464Z",
+          "min_deposit_usdt": 1.99,
+          "exchange_rate_usdt_to_vex": 100
+        },
+        "description": "Treasury wallet addresses configured — Chat 48, Bloque 4.3",
+        "updated_at": "2026-07-19T15:13:10.464+00:00"
+      },
+      "status": "CONFIGURED"
+    },
+    {
+      "source_table_or_catalog": "system_config",
+      "key": "vex_exchange_rate",
+      "current_value": {
+        "config_key": "vex_exchange_rate",
+        "config_value": {
+          "currency": "USDT",
+          "decimals": 2,
+          "usdt_to_vex": 100,
+          "vex_to_usdt": 0.01
+        },
+        "description": "Tasa de cambio oficial VEX/USDT. 1 USDT = 100 VEX Tradeable. Revisable por admin.",
+        "updated_at": "2026-07-19T14:51:33.375509+00:00"
+      },
+      "status": "CONFIGURED"
+    },
+    {
+      "source_table_or_catalog": "economy_policy",
+      "key": "boss_attack_min_reward",
+      "current_value": {
+        "policy_key": "boss_attack_min_reward",
+        "policy_value_numeric": 1,
+        "policy_value_text": null,
+        "policy_value_json": {},
+        "updated_at": "2026-07-19T06:48:07.10603+00:00"
+      },
+      "status": "CONFIGURED"
+    },
+    {
+      "source_table_or_catalog": "economy_policy",
+      "key": "channel_join_reward",
+      "current_value": {
+        "policy_key": "channel_join_reward",
+        "policy_value_numeric": 25,
+        "policy_value_text": null,
+        "policy_value_json": {},
+        "updated_at": "2026-07-19T06:48:07.10603+00:00"
+      },
+      "status": "CONFIGURED"
+    },
+    {
+      "source_table_or_catalog": "economy_policy",
+      "key": "daily_ingame_cap_casual",
+      "current_value": {
+        "policy_key": "daily_ingame_cap_casual",
+        "policy_value_numeric": 220,
+        "policy_value_text": "Casual ingame cap per day",
+        "policy_value_json": {},
+        "updated_at": "2026-06-23T19:39:36.730222+00:00"
+      },
+      "status": "CONFIGURED"
+    },
+    {
+      "source_table_or_catalog": "economy_policy",
+      "key": "daily_ingame_cap_competitive",
+      "current_value": {
+        "policy_key": "daily_ingame_cap_competitive",
+        "policy_value_numeric": 320,
+        "policy_value_text": "Competitive ingame cap per day",
+        "policy_value_json": {},
+        "updated_at": "2026-06-23T19:39:36.730222+00:00"
+      },
+      "status": "CONFIGURED"
+    },
+    {
+      "source_table_or_catalog": "economy_policy",
+      "key": "daily_ingame_cap_f2p",
+      "current_value": {
+        "policy_key": "daily_ingame_cap_f2p",
+        "policy_value_numeric": 120,
+        "policy_value_text": "F2P ingame cap per day",
+        "policy_value_json": {},
+        "updated_at": "2026-06-23T19:39:36.730222+00:00"
+      },
+      "status": "CONFIGURED"
+    },
+    {
+      "source_table_or_catalog": "economy_policy",
+      "key": "daily_ingame_cap_payer",
+      "current_value": {
+        "policy_key": "daily_ingame_cap_payer",
+        "policy_value_numeric": 420,
+        "policy_value_text": "Payer ingame cap per day",
+        "policy_value_json": {},
+        "updated_at": "2026-06-23T19:39:36.730222+00:00"
+      },
+      "status": "CONFIGURED"
+    },
+    {
+      "source_table_or_catalog": "economy_policy",
+      "key": "daily_tradeable_cap_casual",
+      "current_value": {
+        "policy_key": "daily_tradeable_cap_casual",
+        "policy_value_numeric": 0,
+        "policy_value_text": "Casual tradeable cap = 0",
+        "policy_value_json": {},
+        "updated_at": "2026-06-23T19:39:36.730222+00:00"
+      },
+      "status": "CONFIGURED"
+    },
+    {
+      "source_table_or_catalog": "economy_policy",
+      "key": "daily_tradeable_cap_competitive",
+      "current_value": {
+        "policy_key": "daily_tradeable_cap_competitive",
+        "policy_value_numeric": 0.35,
+        "policy_value_text": "Competitive tradeable from missions limited",
+        "policy_value_json": {},
+        "updated_at": "2026-06-23T19:39:36.730222+00:00"
+      },
+      "status": "CONFIGURED"
+    },
+    {
+      "source_table_or_catalog": "economy_policy",
+      "key": "daily_tradeable_cap_f2p",
+      "current_value": {
+        "policy_key": "daily_tradeable_cap_f2p",
+        "policy_value_numeric": 0,
+        "policy_value_text": "F2P tradeable cap = 0",
+        "policy_value_json": {},
+        "updated_at": "2026-06-23T19:39:36.730222+00:00"
+      },
+      "status": "CONFIGURED"
+    },
+    {
+      "source_table_or_catalog": "economy_policy",
+      "key": "daily_tradeable_cap_payer",
+      "current_value": {
+        "policy_key": "daily_tradeable_cap_payer",
+        "policy_value_numeric": 0.5,
+        "policy_value_text": "Payer tradeable from missions limited",
+        "policy_value_json": {},
+        "updated_at": "2026-06-23T19:39:36.730222+00:00"
+      },
+      "status": "CONFIGURED"
+    },
+    {
+      "source_table_or_catalog": "economy_policy",
+      "key": "economy_layers",
+      "current_value": {
+        "policy_key": "economy_layers",
+        "policy_value_numeric": null,
+        "policy_value_text": "Migrado desde tg_economy_policy (unificacion 2026-07-04)",
+        "policy_value_json": {
+          "vex_in": "internal non-withdrawable fuel",
+          "vex_trade": "market value layer",
+          "vex_withdraw": "external extraction layer"
+        },
+        "updated_at": "2026-07-04T21:44:08.697003+00:00"
+      },
+      "status": "CONFIGURED"
+    },
+    {
+      "source_table_or_catalog": "economy_policy",
+      "key": "f2p_eelo_cap",
+      "current_value": {
+        "policy_key": "f2p_eelo_cap",
+        "policy_value_numeric": 1199,
+        "policy_value_text": "Free-to-play E-ELO cap",
+        "policy_value_json": {},
+        "updated_at": "2026-06-23T19:39:36.730222+00:00"
+      },
+      "status": "CONFIGURED"
+    },
+    {
+      "source_table_or_catalog": "economy_policy",
+      "key": "fusion_common_cards",
+      "current_value": {
+        "policy_key": "fusion_common_cards",
+        "policy_value_numeric": 4,
+        "policy_value_text": "Common fusion needs 4 cards",
+        "policy_value_json": {},
+        "updated_at": "2026-06-23T19:39:36.730222+00:00"
+      },
+      "status": "CONFIGURED"
+    },
+    {
+      "source_table_or_catalog": "economy_policy",
+      "key": "fusion_common_ingame_cost",
+      "current_value": {
+        "policy_key": "fusion_common_ingame_cost",
+        "policy_value_numeric": 35,
+        "policy_value_text": "Common to Uncommon cost",
+        "policy_value_json": {},
+        "updated_at": "2026-06-23T19:39:36.730222+00:00"
+      },
+      "status": "CONFIGURED"
+    },
+    {
+      "source_table_or_catalog": "economy_policy",
+      "key": "fusion_epic_cards",
+      "current_value": {
+        "policy_key": "fusion_epic_cards",
+        "policy_value_numeric": 5,
+        "policy_value_text": "Epic fusion needs 5 cards",
+        "policy_value_json": {},
+        "updated_at": "2026-06-23T19:39:36.730222+00:00"
+      },
+      "status": "CONFIGURED"
+    },
+    {
+      "source_table_or_catalog": "economy_policy",
+      "key": "fusion_epic_ingame_cost",
+      "current_value": {
+        "policy_key": "fusion_epic_ingame_cost",
+        "policy_value_numeric": 280,
+        "policy_value_text": "Epic to Legendary cost",
+        "policy_value_json": {},
+        "updated_at": "2026-06-23T19:39:36.730222+00:00"
+      },
+      "status": "CONFIGURED"
+    },
+    {
+      "source_table_or_catalog": "economy_policy",
+      "key": "fusion_rare_cards",
+      "current_value": {
+        "policy_key": "fusion_rare_cards",
+        "policy_value_numeric": 5,
+        "policy_value_text": "Rare fusion needs 5 cards",
+        "policy_value_json": {},
+        "updated_at": "2026-06-23T19:39:36.730222+00:00"
+      },
+      "status": "CONFIGURED"
+    },
+    {
+      "source_table_or_catalog": "economy_policy",
+      "key": "fusion_rare_ingame_cost",
+      "current_value": {
+        "policy_key": "fusion_rare_ingame_cost",
+        "policy_value_numeric": 140,
+        "policy_value_text": "Rare to Epic cost",
+        "policy_value_json": {},
+        "updated_at": "2026-06-23T19:39:36.730222+00:00"
+      },
+      "status": "CONFIGURED"
+    },
+    {
+      "source_table_or_catalog": "economy_policy",
+      "key": "fusion_rules",
+      "current_value": {
+        "policy_key": "fusion_rules",
+        "policy_value_numeric": null,
+        "policy_value_text": "Migrado desde tg_economy_policy (unificacion 2026-07-04)",
+        "policy_value_json": {
+          "ratio": "3_to_1",
+          "burn_inputs": true,
+          "cost_currency": "vex_in",
+          "diminishing_returns": true
+        },
+        "updated_at": "2026-07-04T21:44:08.697003+00:00"
+      },
+      "status": "CONFIGURED"
+    },
+    {
+      "source_table_or_catalog": "economy_policy",
+      "key": "fusion_uncommon_cards",
+      "current_value": {
+        "policy_key": "fusion_uncommon_cards",
+        "policy_value_numeric": 4,
+        "policy_value_text": "Uncommon fusion needs 4 cards",
+        "policy_value_json": {},
+        "updated_at": "2026-06-23T19:39:36.730222+00:00"
+      },
+      "status": "CONFIGURED"
+    },
+    {
+      "source_table_or_catalog": "economy_policy",
+      "key": "fusion_uncommon_ingame_cost",
+      "current_value": {
+        "policy_key": "fusion_uncommon_ingame_cost",
+        "policy_value_numeric": 70,
+        "policy_value_text": "Uncommon to Rare cost",
+        "policy_value_json": {},
+        "updated_at": "2026-06-23T19:39:36.730222+00:00"
+      },
+      "status": "CONFIGURED"
+    },
+    {
+      "source_table_or_catalog": "economy_policy",
+      "key": "market_fee_pct",
+      "current_value": {
+        "policy_key": "market_fee_pct",
+        "policy_value_numeric": 0.08,
+        "policy_value_text": "Official market fee = 8%",
+        "policy_value_json": {},
+        "updated_at": "2026-06-23T19:39:36.730222+00:00"
+      },
+      "status": "CONFIGURED"
+    },
+    {
+      "source_table_or_catalog": "economy_policy",
+      "key": "market_rules",
+      "current_value": {
+        "policy_key": "market_rules",
+        "policy_value_numeric": null,
+        "policy_value_text": "Migrado desde tg_economy_policy (unificacion 2026-07-04)",
+        "policy_value_json": {
+          "anti_dumping": true,
+          "dynamic_floor": true,
+          "fee_range_pct": [
+            5,
+            12
+          ],
+          "listing_cooldown_hours": 12
+        },
+        "updated_at": "2026-07-04T21:44:08.697003+00:00"
+      },
+      "status": "CONFIGURED"
+    },
+    {
+      "source_table_or_catalog": "economy_policy",
+      "key": "mission_mult_dungeon",
+      "current_value": {
+        "policy_key": "mission_mult_dungeon",
+        "policy_value_numeric": 0.55,
+        "policy_value_text": "Dungeon missions are medium emission",
+        "policy_value_json": {},
+        "updated_at": "2026-06-23T19:39:36.730222+00:00"
+      },
+      "status": "CONFIGURED"
+    },
+    {
+      "source_table_or_catalog": "economy_policy",
+      "key": "mission_mult_event",
+      "current_value": {
+        "policy_key": "mission_mult_event",
+        "policy_value_numeric": 0.8,
+        "policy_value_text": "Event missions are premium controlled emission",
+        "policy_value_json": {},
+        "updated_at": "2026-06-23T19:39:36.730222+00:00"
+      },
+      "status": "CONFIGURED"
+    },
+    {
+      "source_table_or_catalog": "economy_policy",
+      "key": "mission_mult_expedition",
+      "current_value": {
+        "policy_key": "mission_mult_expedition",
+        "policy_value_numeric": 0.7,
+        "policy_value_text": "Expedition missions are controlled emission",
+        "policy_value_json": {},
+        "updated_at": "2026-06-23T19:39:36.730222+00:00"
+      },
+      "status": "CONFIGURED"
+    },
+    {
+      "source_table_or_catalog": "economy_policy",
+      "key": "mission_mult_pvp",
+      "current_value": {
+        "policy_key": "mission_mult_pvp",
+        "policy_value_numeric": 0.75,
+        "policy_value_text": "PvP missions are controlled emission",
+        "policy_value_json": {},
+        "updated_at": "2026-06-23T19:39:36.730222+00:00"
+      },
+      "status": "CONFIGURED"
+    },
+    {
+      "source_table_or_catalog": "economy_policy",
+      "key": "mission_mult_tutorial",
+      "current_value": {
+        "policy_key": "mission_mult_tutorial",
+        "policy_value_numeric": 0.3,
+        "policy_value_text": "Tutorial missions are low emission",
+        "policy_value_json": {},
+        "updated_at": "2026-06-23T19:39:36.730222+00:00"
+      },
+      "status": "CONFIGURED"
+    },
+    {
+      "source_table_or_catalog": "economy_policy",
+      "key": "mission_tradeable_dungeon",
+      "current_value": {
+        "policy_key": "mission_tradeable_dungeon",
+        "policy_value_numeric": 0,
+        "policy_value_text": "Dungeon tradeable locked off",
+        "policy_value_json": {},
+        "updated_at": "2026-06-23T19:39:36.730222+00:00"
+      },
+      "status": "CONFIGURED"
+    },
+    {
+      "source_table_or_catalog": "economy_policy",
+      "key": "mission_tradeable_event",
+      "current_value": {
+        "policy_key": "mission_tradeable_event",
+        "policy_value_numeric": 0.05,
+        "policy_value_text": "Event tradeable very limited",
+        "policy_value_json": {},
+        "updated_at": "2026-06-23T19:39:36.730222+00:00"
+      },
+      "status": "CONFIGURED"
+    },
+    {
+      "source_table_or_catalog": "economy_policy",
+      "key": "mission_tradeable_expedition",
+      "current_value": {
+        "policy_key": "mission_tradeable_expedition",
+        "policy_value_numeric": 0,
+        "policy_value_text": "Expedition tradeable locked off",
+        "policy_value_json": {},
+        "updated_at": "2026-06-23T19:39:36.730222+00:00"
+      },
+      "status": "CONFIGURED"
+    },
+    {
+      "source_table_or_catalog": "economy_policy",
+      "key": "mission_tradeable_pvp",
+      "current_value": {
+        "policy_key": "mission_tradeable_pvp",
+        "policy_value_numeric": 0.08,
+        "policy_value_text": "PvP tradeable limited and premium-gated",
+        "policy_value_json": {},
+        "updated_at": "2026-06-23T19:39:36.730222+00:00"
+      },
+      "status": "CONFIGURED"
+    },
+    {
+      "source_table_or_catalog": "economy_policy",
+      "key": "mission_tradeable_tutorial",
+      "current_value": {
+        "policy_key": "mission_tradeable_tutorial",
+        "policy_value_numeric": 0,
+        "policy_value_text": "Tutorial tradeable locked off",
+        "policy_value_json": {},
+        "updated_at": "2026-06-23T19:39:36.730222+00:00"
+      },
+      "status": "CONFIGURED"
+    },
+    {
+      "source_table_or_catalog": "economy_policy",
+      "key": "player_tiers",
+      "current_value": {
+        "policy_key": "player_tiers",
+        "policy_value_numeric": null,
+        "policy_value_text": "Migrado desde tg_economy_policy (unificacion 2026-07-04)",
+        "policy_value_json": {
+          "f2p": {
+            "market": "limited",
+            "withdraw": false
+          },
+          "p2p": {
+            "caps": "dynamic",
+            "market": "full",
+            "withdraw": true
+          },
+          "elite": {
+            "caps": "dynamic",
+            "market": "priority",
+            "withdraw": true
+          }
+        },
+        "updated_at": "2026-07-04T21:44:08.697003+00:00"
+      },
+      "status": "CONFIGURED"
+    },
+    {
+      "source_table_or_catalog": "economy_policy",
+      "key": "raid_completion_vex_reward",
+      "current_value": {
+        "policy_key": "raid_completion_vex_reward",
+        "policy_value_numeric": 100,
+        "policy_value_text": null,
+        "policy_value_json": {},
+        "updated_at": "2026-07-19T06:48:07.10603+00:00"
+      },
+      "status": "CONFIGURED"
+    },
+    {
+      "source_table_or_catalog": "economy_policy",
+      "key": "raid_completion_xp_reward",
+      "current_value": {
+        "policy_key": "raid_completion_xp_reward",
+        "policy_value_numeric": 50,
+        "policy_value_text": null,
+        "policy_value_json": {},
+        "updated_at": "2026-07-19T06:48:07.10603+00:00"
+      },
+      "status": "CONFIGURED"
+    },
+    {
+      "source_table_or_catalog": "economy_policy",
+      "key": "raid_max_participants",
+      "current_value": {
+        "policy_key": "raid_max_participants",
+        "policy_value_numeric": 20,
+        "policy_value_text": null,
+        "policy_value_json": {},
+        "updated_at": "2026-07-19T06:48:07.10603+00:00"
+      },
+      "status": "CONFIGURED"
+    },
+    {
+      "source_table_or_catalog": "economy_policy",
+      "key": "referral_reward",
+      "current_value": {
+        "policy_key": "referral_reward",
+        "policy_value_numeric": 50,
+        "policy_value_text": null,
+        "policy_value_json": {},
+        "updated_at": "2026-07-19T06:48:07.10603+00:00"
+      },
+      "status": "CONFIGURED"
+    },
+    {
+      "source_table_or_catalog": "economy_policy",
+      "key": "telegram_action_base_reward",
+      "current_value": {
+        "policy_key": "telegram_action_base_reward",
+        "policy_value_numeric": 5,
+        "policy_value_text": null,
+        "policy_value_json": {},
+        "updated_at": "2026-07-19T06:48:07.10603+00:00"
+      },
+      "status": "CONFIGURED"
+    },
+    {
+      "source_table_or_catalog": "economy_policy",
+      "key": "tier1_daily_tradeable_cap",
+      "current_value": {
+        "policy_key": "tier1_daily_tradeable_cap",
+        "policy_value_numeric": 1,
+        "policy_value_text": "Tier 1 daily tradeable cap",
+        "policy_value_json": {},
+        "updated_at": "2026-06-23T19:39:36.730222+00:00"
+      },
+      "status": "CONFIGURED"
+    },
+    {
+      "source_table_or_catalog": "economy_policy",
+      "key": "tier2_daily_tradeable_cap",
+      "current_value": {
+        "policy_key": "tier2_daily_tradeable_cap",
+        "policy_value_numeric": 4,
+        "policy_value_text": "Tier 2 daily tradeable cap",
+        "policy_value_json": {},
+        "updated_at": "2026-06-23T19:39:36.730222+00:00"
+      },
+      "status": "CONFIGURED"
+    },
+    {
+      "source_table_or_catalog": "economy_policy",
+      "key": "tier3_daily_tradeable_cap",
+      "current_value": {
+        "policy_key": "tier3_daily_tradeable_cap",
+        "policy_value_numeric": 10,
+        "policy_value_text": "Tier 3 daily tradeable cap",
+        "policy_value_json": {},
+        "updated_at": "2026-06-23T19:39:36.730222+00:00"
+      },
+      "status": "CONFIGURED"
+    },
+    {
+      "source_table_or_catalog": "economy_policy",
+      "key": "tradeable_unlock_eelo",
+      "current_value": {
+        "policy_key": "tradeable_unlock_eelo",
+        "policy_value_numeric": 1200,
+        "policy_value_text": "Minimum E-ELO to start tradeable rewards",
+        "policy_value_json": {},
+        "updated_at": "2026-06-23T19:39:36.730222+00:00"
+      },
+      "status": "CONFIGURED"
+    },
+    {
+      "source_table_or_catalog": "economy_policy",
+      "key": "tradeable_usdt_rate",
+      "current_value": {
+        "policy_key": "tradeable_usdt_rate",
+        "policy_value_numeric": 100,
+        "policy_value_text": "100 VEX Tradeable = 1 USDT",
+        "policy_value_json": {},
+        "updated_at": "2026-06-23T19:39:36.730222+00:00"
+      },
+      "status": "CONFIGURED"
+    },
+    {
+      "source_table_or_catalog": "economy_policy",
+      "key": "withdraw_rules",
+      "current_value": {
+        "policy_key": "withdraw_rules",
+        "policy_value_numeric": null,
+        "policy_value_text": "Migrado desde tg_economy_policy (unificacion 2026-07-04)",
+        "policy_value_json": {
+          "min_active_days": 0,
+          "min_engagement_score": 0,
+          "requires_meta_approval": true,
+          "weekly_withdraw_range_pct": [
+            5,
+            20
+          ]
+        },
+        "updated_at": "2026-07-04T21:44:08.697003+00:00"
+      },
+      "status": "CONFIGURED"
+    },
+    {
+      "source_table_or_catalog": "economy_policy",
+      "key": "withdrawal_fee_pct",
+      "current_value": {
+        "policy_key": "withdrawal_fee_pct",
+        "policy_value_numeric": 0.08,
+        "policy_value_text": "Withdrawal fee = 8%",
+        "policy_value_json": {},
+        "updated_at": "2026-06-23T19:39:36.730222+00:00"
+      },
+      "status": "CONFIGURED"
+    },
+    {
+      "source_table_or_catalog": "economy_policy",
+      "key": "withdrawal_min_tradeable",
+      "current_value": {
+        "policy_key": "withdrawal_min_tradeable",
+        "policy_value_numeric": 2500,
+        "policy_value_text": "Minimum withdrawal = 25 USDT",
+        "policy_value_json": {},
+        "updated_at": "2026-06-23T19:39:36.730222+00:00"
+      },
+      "status": "CONFIGURED"
+    },
+    {
+      "source_table_or_catalog": "economy_policy",
+      "key": "withdrawal_rate_tradeable_to_usdt",
+      "current_value": {
+        "policy_key": "withdrawal_rate_tradeable_to_usdt",
+        "policy_value_numeric": 100,
+        "policy_value_text": "100 VEX Tradeable = 1 USDT",
+        "policy_value_json": {},
+        "updated_at": "2026-06-23T19:39:36.730222+00:00"
+      },
+      "status": "CONFIGURED"
+    },
+    {
+      "source_table_or_catalog": "market_policy",
+      "key": "market_fee_pct",
+      "current_value": {
+        "policy_key": "market_fee_pct",
+        "policy_value_numeric": 0.08,
+        "policy_value_text": "8 percent fee on successful sale",
+        "policy_value_json": {},
+        "updated_at": "2026-06-23T13:18:58.036227+00:00"
+      },
+      "status": "CONFIGURED"
+    },
+    {
+      "source_table_or_catalog": "market_policy",
+      "key": "market_listing_hours",
+      "current_value": {
+        "policy_key": "market_listing_hours",
+        "policy_value_numeric": 72,
+        "policy_value_text": "Default listing duration in hours",
+        "policy_value_json": {},
+        "updated_at": "2026-06-23T13:18:58.036227+00:00"
+      },
+      "status": "CONFIGURED"
+    },
+    {
+      "source_table_or_catalog": "market_policy",
+      "key": "market_max_listing_hours",
+      "current_value": {
+        "policy_key": "market_max_listing_hours",
+        "policy_value_numeric": 168,
+        "policy_value_text": "Maximum listing duration in hours",
+        "policy_value_json": {},
+        "updated_at": "2026-06-23T13:18:58.036227+00:00"
+      },
+      "status": "CONFIGURED"
+    },
+    {
+      "source_table_or_catalog": "market_policy",
+      "key": "market_min_price",
+      "current_value": {
+        "policy_key": "market_min_price",
+        "policy_value_numeric": 1,
+        "policy_value_text": "Minimum listing price",
+        "policy_value_json": {},
+        "updated_at": "2026-06-23T13:18:58.036227+00:00"
+      },
+      "status": "CONFIGURED"
+    },
+    {
+      "source_table_or_catalog": "commercial_policy",
+      "key": "deposit_chain",
+      "current_value": {
+        "policy_key": "deposit_chain",
+        "policy_value_numeric": null,
+        "policy_value_text": "BSC",
+        "policy_value_json": {},
+        "updated_at": "2026-06-23T14:07:22.291644+00:00"
+      },
+      "status": "CONFIGURED"
+    },
+    {
+      "source_table_or_catalog": "commercial_policy",
+      "key": "deposit_token",
+      "current_value": {
+        "policy_key": "deposit_token",
+        "policy_value_numeric": null,
+        "policy_value_text": "USDT",
+        "policy_value_json": {},
+        "updated_at": "2026-06-23T14:07:22.291644+00:00"
+      },
+      "status": "CONFIGURED"
+    },
+    {
+      "source_table_or_catalog": "commercial_policy",
+      "key": "usdt_to_tradeable_rate",
+      "current_value": {
+        "policy_key": "usdt_to_tradeable_rate",
+        "policy_value_numeric": 100,
+        "policy_value_text": "100 VEX Tradeable = 1 USDT",
+        "policy_value_json": {},
+        "updated_at": "2026-06-23T14:07:22.291644+00:00"
+      },
+      "status": "CONFIGURED"
+    },
+    {
+      "source_table_or_catalog": "commercial_policy",
+      "key": "withdrawal_cooldown_hours",
+      "current_value": {
+        "policy_key": "withdrawal_cooldown_hours",
+        "policy_value_numeric": 72,
+        "policy_value_text": "Withdrawal cooldown in hours",
+        "policy_value_json": {},
+        "updated_at": "2026-06-23T14:07:22.291644+00:00"
+      },
+      "status": "CONFIGURED"
+    },
+    {
+      "source_table_or_catalog": "commercial_policy",
+      "key": "withdrawal_fee_pct",
+      "current_value": {
+        "policy_key": "withdrawal_fee_pct",
+        "policy_value_numeric": 0.08,
+        "policy_value_text": "8 percent fee",
+        "policy_value_json": {},
+        "updated_at": "2026-06-23T14:07:22.291644+00:00"
+      },
+      "status": "CONFIGURED"
+    },
+    {
+      "source_table_or_catalog": "commercial_policy",
+      "key": "withdrawal_manual_review",
+      "current_value": {
+        "policy_key": "withdrawal_manual_review",
+        "policy_value_numeric": 1,
+        "policy_value_text": "Manual review required",
+        "policy_value_json": {},
+        "updated_at": "2026-06-23T14:07:22.291644+00:00"
+      },
+      "status": "CONFIGURED"
+    },
+    {
+      "source_table_or_catalog": "commercial_policy",
+      "key": "withdrawal_min_tradeable",
+      "current_value": {
+        "policy_key": "withdrawal_min_tradeable",
+        "policy_value_numeric": 2500,
+        "policy_value_text": "Minimum withdrawal = 25 USDT",
+        "policy_value_json": {},
+        "updated_at": "2026-06-23T14:07:22.291644+00:00"
+      },
+      "status": "CONFIGURED"
+    },
+    {
+      "source_table_or_catalog": "mission_reward_policy",
+      "key": "Clan",
+      "current_value": {
+        "mission_type": "Clan",
+        "reward_xp_floor": 90,
+        "reward_vex_ingame_floor": 12,
+        "max_tradeable_per_claim": 0,
+        "elo_required": 1000,
+        "notes": "Clan progression: no tradeable",
+        "active": true,
+        "updated_at": "2026-06-23T13:04:19.188617+00:00"
+      },
+      "status": "CONFIGURED"
+    },
+    {
+      "source_table_or_catalog": "mission_reward_policy",
+      "key": "Dungeon",
+      "current_value": {
+        "mission_type": "Dungeon",
+        "reward_xp_floor": 80,
+        "reward_vex_ingame_floor": 12,
+        "max_tradeable_per_claim": 0,
+        "elo_required": 1000,
+        "notes": "Progression missions: no tradeable",
+        "active": true,
+        "updated_at": "2026-06-23T13:04:19.188617+00:00"
+      },
+      "status": "CONFIGURED"
+    },
+    {
+      "source_table_or_catalog": "mission_reward_policy",
+      "key": "Event",
+      "current_value": {
+        "mission_type": "Event",
+        "reward_xp_floor": 150,
+        "reward_vex_ingame_floor": 20,
+        "max_tradeable_per_claim": 0.5,
+        "elo_required": 1200,
+        "notes": "Event missions: limited tradeable",
+        "active": true,
+        "updated_at": "2026-06-23T13:04:19.188617+00:00"
+      },
+      "status": "CONFIGURED"
+    },
+    {
+      "source_table_or_catalog": "mission_reward_policy",
+      "key": "Expedition",
+      "current_value": {
+        "mission_type": "Expedition",
+        "reward_xp_floor": 120,
+        "reward_vex_ingame_floor": 15,
+        "max_tradeable_per_claim": 0.25,
+        "elo_required": 1200,
+        "notes": "Limited tradeable after investment",
+        "active": true,
+        "updated_at": "2026-06-23T13:04:19.188617+00:00"
+      },
+      "status": "CONFIGURED"
+    },
+    {
+      "source_table_or_catalog": "mission_reward_policy",
+      "key": "Tutorial",
+      "current_value": {
+        "mission_type": "Tutorial",
+        "reward_xp_floor": 40,
+        "reward_vex_ingame_floor": 8,
+        "max_tradeable_per_claim": 0,
+        "elo_required": 0,
+        "notes": "Onboarding missions: no tradeable",
+        "active": true,
+        "updated_at": "2026-06-23T13:04:19.188617+00:00"
+      },
+      "status": "CONFIGURED"
+    },
+    {
+      "source_table_or_catalog": "pack_catalog",
+      "key": "expedition_pack",
+      "current_value": {
+        "pack_key": "expedition_pack",
+        "pack_name": "Expedition Pack",
+        "price_usdt": 9.99,
+        "active": true,
+        "notes": "Garantiza al menos una Rara. Pack recomendado.",
+        "metadata": {
+          "card_count": 7,
+          "rarity_weights": {
+            "Epic": 0.06,
+            "Rare": 0.18,
+            "Common": 0.4,
+            "Mythic": 0,
+            "Uncommon": 0.35,
+            "Legendary": 0.01
+          }
+        },
+        "created_at": "2026-06-23T13:49:32.750091+00:00",
+        "updated_at": "2026-07-19T14:51:33.055058+00:00",
+        "price_vex": 999,
+        "card_count": 5
+      },
+      "status": "CONFIGURED"
+    },
+    {
+      "source_table_or_catalog": "pack_catalog",
+      "key": "forge_pack",
+      "current_value": {
+        "pack_key": "forge_pack",
+        "pack_name": "Forge Pack",
+        "price_usdt": 24.99,
+        "active": true,
+        "notes": "Épicas garantizadas. Para forjadores serios.",
+        "metadata": {
+          "card_count": 8,
+          "rarity_weights": {
+            "Epic": 0.15,
+            "Rare": 0.35,
+            "Common": 0.15,
+            "Mythic": 0.01,
+            "Uncommon": 0.3,
+            "Legendary": 0.04
+          }
+        },
+        "created_at": "2026-06-23T13:49:32.750091+00:00",
+        "updated_at": "2026-07-19T14:51:33.055058+00:00",
+        "price_vex": 2499,
+        "card_count": 5
+      },
+      "status": "CONFIGURED"
+    },
+    {
+      "source_table_or_catalog": "pack_catalog",
+      "key": "founder_pack",
+      "current_value": {
+        "pack_key": "founder_pack",
+        "pack_name": "Founder Pack",
+        "price_usdt": 49.99,
+        "active": true,
+        "notes": "Acceso anticipado. Legendaria garantizada + cosmético exclusivo.",
+        "metadata": {
+          "card_count": 10,
+          "rarity_weights": {
+            "Epic": 0.35,
+            "Rare": 0.3,
+            "Common": 0,
+            "Mythic": 0.05,
+            "Uncommon": 0.1,
+            "Legendary": 0.2
+          }
+        },
+        "created_at": "2026-06-23T13:49:32.750091+00:00",
+        "updated_at": "2026-07-19T14:51:33.055058+00:00",
+        "price_vex": 4999,
+        "card_count": 5
+      },
+      "status": "CONFIGURED"
+    },
+    {
+      "source_table_or_catalog": "pack_catalog",
+      "key": "scout_pack",
+      "current_value": {
+        "pack_key": "scout_pack",
+        "pack_name": "Scout Pack",
+        "price_usdt": 4.99,
+        "active": true,
+        "notes": "Mayor chance de raras. Para exploradores.",
+        "metadata": {
+          "card_count": 5,
+          "rarity_weights": {
+            "Epic": 0.02,
+            "Rare": 0.08,
+            "Common": 0.65,
+            "Mythic": 0,
+            "Uncommon": 0.25,
+            "Legendary": 0
+          }
+        },
+        "created_at": "2026-06-23T13:49:32.750091+00:00",
+        "updated_at": "2026-07-19T14:51:33.055058+00:00",
+        "price_vex": 499,
+        "card_count": 5
+      },
+      "status": "CONFIGURED"
+    },
+    {
+      "source_table_or_catalog": "pack_catalog",
+      "key": "seed_pack",
+      "current_value": {
+        "pack_key": "seed_pack",
+        "pack_name": "Seed Pack",
+        "price_usdt": 1.99,
+        "active": true,
+        "notes": "Pack básico. Comunes y uncommons. Perfecto para comenzar.",
+        "metadata": {
+          "card_count": 3,
+          "rarity_weights": {
+            "Epic": 0,
+            "Rare": 0.03,
+            "Common": 0.85,
+            "Mythic": 0,
+            "Uncommon": 0.12,
+            "Legendary": 0
+          }
+        },
+        "created_at": "2026-06-23T13:49:32.750091+00:00",
+        "updated_at": "2026-07-19T14:51:33.055058+00:00",
+        "price_vex": 199,
+        "card_count": 5
+      },
+      "status": "CONFIGURED"
+    },
+    {
+      "source_table_or_catalog": "card_supply_policy",
+      "key": "Common",
+      "current_value": {
+        "rarity": "Common",
+        "founder_cards": 4,
+        "supply_per_card": 5000,
+        "total_supply": 20000,
+        "marketable": true,
+        "fusion_enabled": true,
+        "notes": "Founder common pool",
+        "active": true,
+        "pack_pct": 45,
+        "mission_pct": 25,
+        "chest_pct": 20,
+        "referral_pct": 10,
+        "max_supply_per_card": 20000,
+        "initial_mint_per_card": 3000,
+        "updated_at": "2026-06-23T13:09:56.612293+00:00"
+      },
+      "status": "CONFIGURED"
+    },
+    {
+      "source_table_or_catalog": "card_supply_policy",
+      "key": "Epic",
+      "current_value": {
+        "rarity": "Epic",
+        "founder_cards": 4,
+        "supply_per_card": 500,
+        "total_supply": 2000,
+        "marketable": true,
+        "fusion_enabled": true,
+        "notes": "Founder epic pool",
+        "active": true,
+        "pack_pct": 30,
+        "mission_pct": 10,
+        "chest_pct": 55,
+        "referral_pct": 5,
+        "max_supply_per_card": 500,
+        "initial_mint_per_card": 60,
+        "updated_at": "2026-06-23T13:09:56.612293+00:00"
+      },
+      "status": "CONFIGURED"
+    },
+    {
+      "source_table_or_catalog": "card_supply_policy",
+      "key": "Legendary",
+      "current_value": {
+        "rarity": "Legendary",
+        "founder_cards": 4,
+        "supply_per_card": 250,
+        "total_supply": 1000,
+        "marketable": true,
+        "fusion_enabled": true,
+        "notes": "Founder legendary pool",
+        "active": true,
+        "pack_pct": 20,
+        "mission_pct": 5,
+        "chest_pct": 70,
+        "referral_pct": 5,
+        "max_supply_per_card": 80,
+        "initial_mint_per_card": 8,
+        "updated_at": "2026-06-23T13:09:56.612293+00:00"
+      },
+      "status": "CONFIGURED"
+    },
+    {
+      "source_table_or_catalog": "card_supply_policy",
+      "key": "Mythic",
+      "current_value": {
+        "rarity": "Mythic",
+        "founder_cards": 4,
+        "supply_per_card": 100,
+        "total_supply": 400,
+        "marketable": true,
+        "fusion_enabled": true,
+        "notes": "Founder mythic pool",
+        "active": true,
+        "pack_pct": 10,
+        "mission_pct": 0,
+        "chest_pct": 85,
+        "referral_pct": 5,
+        "max_supply_per_card": 12,
+        "initial_mint_per_card": 1,
+        "updated_at": "2026-06-23T13:09:56.612293+00:00"
+      },
+      "status": "CONFIGURED"
+    },
+    {
+      "source_table_or_catalog": "card_supply_policy",
+      "key": "Rare",
+      "current_value": {
+        "rarity": "Rare",
+        "founder_cards": 4,
+        "supply_per_card": 1000,
+        "total_supply": 4000,
+        "marketable": true,
+        "fusion_enabled": true,
+        "notes": "Founder rare pool",
+        "active": true,
+        "pack_pct": 35,
+        "mission_pct": 25,
+        "chest_pct": 35,
+        "referral_pct": 5,
+        "max_supply_per_card": 2500,
+        "initial_mint_per_card": 375,
+        "updated_at": "2026-06-23T13:09:56.612293+00:00"
+      },
+      "status": "CONFIGURED"
+    },
+    {
+      "source_table_or_catalog": "card_supply_policy",
+      "key": "Uncommon",
+      "current_value": {
+        "rarity": "Uncommon",
+        "founder_cards": 4,
+        "supply_per_card": 2500,
+        "total_supply": 10000,
+        "marketable": true,
+        "fusion_enabled": true,
+        "notes": "Founder uncommon pool",
+        "active": true,
+        "pack_pct": 40,
+        "mission_pct": 25,
+        "chest_pct": 25,
+        "referral_pct": 10,
+        "max_supply_per_card": 8000,
+        "initial_mint_per_card": 1200,
+        "updated_at": "2026-06-23T13:09:56.612293+00:00"
+      },
+      "status": "CONFIGURED"
+    },
+    {
+      "source_table_or_function": "vexforge_system_config.treasury_config",
+      "column_or_expression": "config_value.exchange_rate_usdt_to_vex",
+      "current_value": 100,
+      "status": "CONFIGURED"
+    },
+    {
+      "source_table_or_function": "vexforge_pack_catalog",
+      "column_or_expression": "price_vex / price_usdt",
+      "current_value": [
+        {
+          "pack_key": "expedition_pack",
+          "ratio": 100
+        },
+        {
+          "pack_key": "forge_pack",
+          "ratio": 100
+        },
+        {
+          "pack_key": "founder_pack",
+          "ratio": 100
+        },
+        {
+          "pack_key": "scout_pack",
+          "ratio": 100
+        },
+        {
+          "pack_key": "seed_pack",
+          "ratio": 100
+        }
+      ],
+      "status": "DERIVED"
+    },
+    {
+      "source_table_or_function": "vexforge_market_policy",
+      "column_or_expression": "policy_key='market_fee_pct'",
+      "current_value": 0.08,
+      "status": "CONFIGURED"
+    },
+    {
+      "source_table_or_function": "vexforge_commercial_policy",
+      "column_or_expression": "policy_key='withdrawal_fee_pct'",
+      "current_value": 0.08,
+      "status": "CONFIGURED"
+    }
+  ],
+  "aggregate_totals": {
+    "wallet_totals": {
+      "rows": 16,
+      "vex_ingame_available": 10008555,
+      "vex_tradeable_available": 1000023,
+      "vex_ingame_reserved": 0,
+      "vex_tradeable_reserved": 0,
+      "negative_rows": 0
+    },
+    "state_totals": {
+      "rows": 12,
+      "vex_ingame_state": 10000000,
+      "vex_tradeable_state": 1000000,
+      "tradeable_locked": 0,
+      "total_usdt_deposited": 50000,
+      "daily_ingame_minted": 0,
+      "daily_tradeable_minted": 0,
+      "daily_market_volume": 0,
+      "daily_fusion_burn": 0,
+      "negative_rows": 0
+    },
+    "wallet_state_join": {
+      "joined_players": 16,
+      "balance_mismatch_rows": 9,
+      "state_without_wallet": 0,
+      "wallet_without_state": 4
+    },
+    "ledger_by_currency_type": [
+      {
+        "currency": "vex_ingame",
+        "entry_type": "credit",
+        "rows": 8,
+        "total_amount": 277,
+        "negative_amount_rows": 0
+      },
+      {
+        "currency": "vex_ingame",
+        "entry_type": "debit",
+        "rows": 1,
+        "total_amount": 10,
+        "negative_amount_rows": 0
+      },
+      {
+        "currency": "vex_ingame",
+        "entry_type": "reward",
+        "rows": 1,
+        "total_amount": 100,
+        "negative_amount_rows": 0
+      },
+      {
+        "currency": "vex_ingame",
+        "entry_type": "combat_reward",
+        "rows": 34,
+        "total_amount": 935,
+        "negative_amount_rows": 0
+      },
+      {
+        "currency": "vex_tradeable",
+        "entry_type": "credit",
+        "rows": 1,
+        "total_amount": 23,
+        "negative_amount_rows": 0
+      },
+      {
+        "currency": "vex_tradeable",
+        "entry_type": "debit",
+        "rows": 1,
+        "total_amount": 25,
+        "negative_amount_rows": 0
+      },
+      {
+        "currency": "vex_tradeable",
+        "entry_type": "fee",
+        "rows": 1,
+        "total_amount": 2,
+        "negative_amount_rows": 0
+      }
+    ],
+    "market_by_status": [
+      {
+        "status": "cancelled",
+        "rows": 1,
+        "total_price": 8,
+        "total_fee": 0,
+        "locked_rows": 0
+      },
+      {
+        "status": "sold",
+        "rows": 2,
+        "total_price": 35,
+        "total_fee": 3,
+        "locked_rows": 2
+      }
+    ],
+    "deposits_by_status": [],
+    "withdrawals_by_status": [],
+    "rewards": {
+      "rewards_table": {
+        "rows": 0,
+        "amount_total": 0
+      },
+      "mission_rewards": {
+        "rows": 0,
+        "amount_total": 0
+      },
+      "raid_rewards": {
+        "rows": 0,
+        "amount_total": 0
+      },
+      "telegram_rewards_log": {
+        "rows": 0,
+        "amount_total": 0
+      }
+    },
+    "ads": {
+      "rows": 2,
+      "completed_rows": 2,
+      "watched_pct_total": 200,
+      "vex_awarded_total": 40,
+      "awarded_rows": 2
+    },
+    "referrals": {
+      "rows": 0,
+      "reward_granted_rows": 0,
+      "first_pack_rewarded_rows": 0
+    },
+    "nft": {
+      "contracts": null,
+      "wallet_links": {
+        "rows": 0,
+        "verified_rows": 0
+      },
+      "mint_queue": null
+    },
+    "packs": null,
+    "cards": {
+      "card_rows": 127,
+      "declared_supply": 2944100,
+      "minted": 0,
+      "marketable_rows": 127
+    },
+    "supply_anomalies": {
+      "negative_wallet_rows": 0,
+      "negative_state_rows": 0,
+      "duplicate_ledger_reference_ids": 0,
+      "duplicate_deposit_tx_hashes": 0,
+      "duplicate_withdrawal_payout_hashes": 0,
+      "orphan_active_listings": 0,
+      "orphan_locked_cards": 6
+    }
+  },
+  "unknown_or_not_found": [
+    "No active rows were present in reward_rules at extraction time.",
+    "No deposit, withdrawal, referral, pack order, NFT contract, or NFT mint queue rows were present in aggregate extraction where applicable.",
+    "Battle reward amount and anti-fraud thresholds are not represented by a single verified configuration row in this extraction."
+  ],
+  "raw_configuration_rows": {
+    "system_config": [
+      {
+        "config_key": "stripe_config",
+        "config_value": {
+          "status": "pending_integration",
+          "enabled": false,
+          "fee_pct": 2.9,
+          "fee_fixed": 0.3,
+          "max_deposit_usd": 500,
+          "min_deposit_usd": 1.99
+        },
+        "description": "Configuración Stripe para onramp fiat. Habilitado cuando clave API esté configurada.",
+        "updated_at": "2026-07-19T14:51:33.375509+00:00"
+      },
+      {
+        "config_key": "treasury_config",
+        "config_value": {
+          "chains": {
+            "BSC": {
+              "token": "USDT",
+              "address": "0x29b2907d6e10beb2becb9ba82f2b6af04815c403",
+              "network": "BEP-20",
+              "explorer": "https://bscscan.com"
+            },
+            "ETH": {
+              "token": "USDT",
+              "address": "0x29b2907d6e10beb2becb9ba82f2b6af04815c403",
+              "network": "ERC-20",
+              "explorer": "https://etherscan.io"
+            },
+            "SOL": {
+              "token": "USDT",
+              "address": "6m9unXdipitegac8skEgvy6MHMgLqG7XNSAQnAiacEMb",
+              "network": "SPL",
+              "explorer": "https://solscan.io"
+            },
+            "TRON": {
+              "token": "USDT",
+              "address": "TLAujgYmQAtFW6BZg4fVs1pUHx6vyX5SJD",
+              "network": "TRC-20",
+              "explorer": "https://tronscan.org"
+            }
+          },
+          "configured_at": "2026-07-19T15:13:10.464Z",
+          "min_deposit_usdt": 1.99,
+          "exchange_rate_usdt_to_vex": 100
+        },
+        "description": "Treasury wallet addresses configured — Chat 48, Bloque 4.3",
+        "updated_at": "2026-07-19T15:13:10.464+00:00"
+      },
+      {
+        "config_key": "vex_exchange_rate",
+        "config_value": {
+          "currency": "USDT",
+          "decimals": 2,
+          "usdt_to_vex": 100,
+          "vex_to_usdt": 0.01
+        },
+        "description": "Tasa de cambio oficial VEX/USDT. 1 USDT = 100 VEX Tradeable. Revisable por admin.",
+        "updated_at": "2026-07-19T14:51:33.375509+00:00"
+      }
+    ],
+    "economy_policy": [
+      {
+        "policy_key": "boss_attack_min_reward",
+        "policy_value_numeric": 1,
+        "policy_value_text": null,
+        "policy_value_json": {},
+        "updated_at": "2026-07-19T06:48:07.10603+00:00"
+      },
+      {
+        "policy_key": "channel_join_reward",
+        "policy_value_numeric": 25,
+        "policy_value_text": null,
+        "policy_value_json": {},
+        "updated_at": "2026-07-19T06:48:07.10603+00:00"
+      },
+      {
+        "policy_key": "daily_ingame_cap_casual",
+        "policy_value_numeric": 220,
+        "policy_value_text": "Casual ingame cap per day",
+        "policy_value_json": {},
+        "updated_at": "2026-06-23T19:39:36.730222+00:00"
+      },
+      {
+        "policy_key": "daily_ingame_cap_competitive",
+        "policy_value_numeric": 320,
+        "policy_value_text": "Competitive ingame cap per day",
+        "policy_value_json": {},
+        "updated_at": "2026-06-23T19:39:36.730222+00:00"
+      },
+      {
+        "policy_key": "daily_ingame_cap_f2p",
+        "policy_value_numeric": 120,
+        "policy_value_text": "F2P ingame cap per day",
+        "policy_value_json": {},
+        "updated_at": "2026-06-23T19:39:36.730222+00:00"
+      },
+      {
+        "policy_key": "daily_ingame_cap_payer",
+        "policy_value_numeric": 420,
+        "policy_value_text": "Payer ingame cap per day",
+        "policy_value_json": {},
+        "updated_at": "2026-06-23T19:39:36.730222+00:00"
+      },
+      {
+        "policy_key": "daily_tradeable_cap_casual",
+        "policy_value_numeric": 0,
+        "policy_value_text": "Casual tradeable cap = 0",
+        "policy_value_json": {},
+        "updated_at": "2026-06-23T19:39:36.730222+00:00"
+      },
+      {
+        "policy_key": "daily_tradeable_cap_competitive",
+        "policy_value_numeric": 0.35,
+        "policy_value_text": "Competitive tradeable from missions limited",
+        "policy_value_json": {},
+        "updated_at": "2026-06-23T19:39:36.730222+00:00"
+      },
+      {
+        "policy_key": "daily_tradeable_cap_f2p",
+        "policy_value_numeric": 0,
+        "policy_value_text": "F2P tradeable cap = 0",
+        "policy_value_json": {},
+        "updated_at": "2026-06-23T19:39:36.730222+00:00"
+      },
+      {
+        "policy_key": "daily_tradeable_cap_payer",
+        "policy_value_numeric": 0.5,
+        "policy_value_text": "Payer tradeable from missions limited",
+        "policy_value_json": {},
+        "updated_at": "2026-06-23T19:39:36.730222+00:00"
+      },
+      {
+        "policy_key": "economy_layers",
+        "policy_value_numeric": null,
+        "policy_value_text": "Migrado desde tg_economy_policy (unificacion 2026-07-04)",
+        "policy_value_json": {
+          "vex_in": "internal non-withdrawable fuel",
+          "vex_trade": "market value layer",
+          "vex_withdraw": "external extraction layer"
+        },
+        "updated_at": "2026-07-04T21:44:08.697003+00:00"
+      },
+      {
+        "policy_key": "f2p_eelo_cap",
+        "policy_value_numeric": 1199,
+        "policy_value_text": "Free-to-play E-ELO cap",
+        "policy_value_json": {},
+        "updated_at": "2026-06-23T19:39:36.730222+00:00"
+      },
+      {
+        "policy_key": "fusion_common_cards",
+        "policy_value_numeric": 4,
+        "policy_value_text": "Common fusion needs 4 cards",
+        "policy_value_json": {},
+        "updated_at": "2026-06-23T19:39:36.730222+00:00"
+      },
+      {
+        "policy_key": "fusion_common_ingame_cost",
+        "policy_value_numeric": 35,
+        "policy_value_text": "Common to Uncommon cost",
+        "policy_value_json": {},
+        "updated_at": "2026-06-23T19:39:36.730222+00:00"
+      },
+      {
+        "policy_key": "fusion_epic_cards",
+        "policy_value_numeric": 5,
+        "policy_value_text": "Epic fusion needs 5 cards",
+        "policy_value_json": {},
+        "updated_at": "2026-06-23T19:39:36.730222+00:00"
+      },
+      {
+        "policy_key": "fusion_epic_ingame_cost",
+        "policy_value_numeric": 280,
+        "policy_value_text": "Epic to Legendary cost",
+        "policy_value_json": {},
+        "updated_at": "2026-06-23T19:39:36.730222+00:00"
+      },
+      {
+        "policy_key": "fusion_rare_cards",
+        "policy_value_numeric": 5,
+        "policy_value_text": "Rare fusion needs 5 cards",
+        "policy_value_json": {},
+        "updated_at": "2026-06-23T19:39:36.730222+00:00"
+      },
+      {
+        "policy_key": "fusion_rare_ingame_cost",
+        "policy_value_numeric": 140,
+        "policy_value_text": "Rare to Epic cost",
+        "policy_value_json": {},
+        "updated_at": "2026-06-23T19:39:36.730222+00:00"
+      },
+      {
+        "policy_key": "fusion_rules",
+        "policy_value_numeric": null,
+        "policy_value_text": "Migrado desde tg_economy_policy (unificacion 2026-07-04)",
+        "policy_value_json": {
+          "ratio": "3_to_1",
+          "burn_inputs": true,
+          "cost_currency": "vex_in",
+          "diminishing_returns": true
+        },
+        "updated_at": "2026-07-04T21:44:08.697003+00:00"
+      },
+      {
+        "policy_key": "fusion_uncommon_cards",
+        "policy_value_numeric": 4,
+        "policy_value_text": "Uncommon fusion needs 4 cards",
+        "policy_value_json": {},
+        "updated_at": "2026-06-23T19:39:36.730222+00:00"
+      },
+      {
+        "policy_key": "fusion_uncommon_ingame_cost",
+        "policy_value_numeric": 70,
+        "policy_value_text": "Uncommon to Rare cost",
+        "policy_value_json": {},
+        "updated_at": "2026-06-23T19:39:36.730222+00:00"
+      },
+      {
+        "policy_key": "market_fee_pct",
+        "policy_value_numeric": 0.08,
+        "policy_value_text": "Official market fee = 8%",
+        "policy_value_json": {},
+        "updated_at": "2026-06-23T19:39:36.730222+00:00"
+      },
+      {
+        "policy_key": "market_rules",
+        "policy_value_numeric": null,
+        "policy_value_text": "Migrado desde tg_economy_policy (unificacion 2026-07-04)",
+        "policy_value_json": {
+          "anti_dumping": true,
+          "dynamic_floor": true,
+          "fee_range_pct": [
+            5,
+            12
+          ],
+          "listing_cooldown_hours": 12
+        },
+        "updated_at": "2026-07-04T21:44:08.697003+00:00"
+      },
+      {
+        "policy_key": "mission_mult_dungeon",
+        "policy_value_numeric": 0.55,
+        "policy_value_text": "Dungeon missions are medium emission",
+        "policy_value_json": {},
+        "updated_at": "2026-06-23T19:39:36.730222+00:00"
+      },
+      {
+        "policy_key": "mission_mult_event",
+        "policy_value_numeric": 0.8,
+        "policy_value_text": "Event missions are premium controlled emission",
+        "policy_value_json": {},
+        "updated_at": "2026-06-23T19:39:36.730222+00:00"
+      },
+      {
+        "policy_key": "mission_mult_expedition",
+        "policy_value_numeric": 0.7,
+        "policy_value_text": "Expedition missions are controlled emission",
+        "policy_value_json": {},
+        "updated_at": "2026-06-23T19:39:36.730222+00:00"
+      },
+      {
+        "policy_key": "mission_mult_pvp",
+        "policy_value_numeric": 0.75,
+        "policy_value_text": "PvP missions are controlled emission",
+        "policy_value_json": {},
+        "updated_at": "2026-06-23T19:39:36.730222+00:00"
+      },
+      {
+        "policy_key": "mission_mult_tutorial",
+        "policy_value_numeric": 0.3,
+        "policy_value_text": "Tutorial missions are low emission",
+        "policy_value_json": {},
+        "updated_at": "2026-06-23T19:39:36.730222+00:00"
+      },
+      {
+        "policy_key": "mission_tradeable_dungeon",
+        "policy_value_numeric": 0,
+        "policy_value_text": "Dungeon tradeable locked off",
+        "policy_value_json": {},
+        "updated_at": "2026-06-23T19:39:36.730222+00:00"
+      },
+      {
+        "policy_key": "mission_tradeable_event",
+        "policy_value_numeric": 0.05,
+        "policy_value_text": "Event tradeable very limited",
+        "policy_value_json": {},
+        "updated_at": "2026-06-23T19:39:36.730222+00:00"
+      },
+      {
+        "policy_key": "mission_tradeable_expedition",
+        "policy_value_numeric": 0,
+        "policy_value_text": "Expedition tradeable locked off",
+        "policy_value_json": {},
+        "updated_at": "2026-06-23T19:39:36.730222+00:00"
+      },
+      {
+        "policy_key": "mission_tradeable_pvp",
+        "policy_value_numeric": 0.08,
+        "policy_value_text": "PvP tradeable limited and premium-gated",
+        "policy_value_json": {},
+        "updated_at": "2026-06-23T19:39:36.730222+00:00"
+      },
+      {
+        "policy_key": "mission_tradeable_tutorial",
+        "policy_value_numeric": 0,
+        "policy_value_text": "Tutorial tradeable locked off",
+        "policy_value_json": {},
+        "updated_at": "2026-06-23T19:39:36.730222+00:00"
+      },
+      {
+        "policy_key": "player_tiers",
+        "policy_value_numeric": null,
+        "policy_value_text": "Migrado desde tg_economy_policy (unificacion 2026-07-04)",
+        "policy_value_json": {
+          "f2p": {
+            "market": "limited",
+            "withdraw": false
+          },
+          "p2p": {
+            "caps": "dynamic",
+            "market": "full",
+            "withdraw": true
+          },
+          "elite": {
+            "caps": "dynamic",
+            "market": "priority",
+            "withdraw": true
+          }
+        },
+        "updated_at": "2026-07-04T21:44:08.697003+00:00"
+      },
+      {
+        "policy_key": "raid_completion_vex_reward",
+        "policy_value_numeric": 100,
+        "policy_value_text": null,
+        "policy_value_json": {},
+        "updated_at": "2026-07-19T06:48:07.10603+00:00"
+      },
+      {
+        "policy_key": "raid_completion_xp_reward",
+        "policy_value_numeric": 50,
+        "policy_value_text": null,
+        "policy_value_json": {},
+        "updated_at": "2026-07-19T06:48:07.10603+00:00"
+      },
+      {
+        "policy_key": "raid_max_participants",
+        "policy_value_numeric": 20,
+        "policy_value_text": null,
+        "policy_value_json": {},
+        "updated_at": "2026-07-19T06:48:07.10603+00:00"
+      },
+      {
+        "policy_key": "referral_reward",
+        "policy_value_numeric": 50,
+        "policy_value_text": null,
+        "policy_value_json": {},
+        "updated_at": "2026-07-19T06:48:07.10603+00:00"
+      },
+      {
+        "policy_key": "telegram_action_base_reward",
+        "policy_value_numeric": 5,
+        "policy_value_text": null,
+        "policy_value_json": {},
+        "updated_at": "2026-07-19T06:48:07.10603+00:00"
+      },
+      {
+        "policy_key": "tier1_daily_tradeable_cap",
+        "policy_value_numeric": 1,
+        "policy_value_text": "Tier 1 daily tradeable cap",
+        "policy_value_json": {},
+        "updated_at": "2026-06-23T19:39:36.730222+00:00"
+      },
+      {
+        "policy_key": "tier2_daily_tradeable_cap",
+        "policy_value_numeric": 4,
+        "policy_value_text": "Tier 2 daily tradeable cap",
+        "policy_value_json": {},
+        "updated_at": "2026-06-23T19:39:36.730222+00:00"
+      },
+      {
+        "policy_key": "tier3_daily_tradeable_cap",
+        "policy_value_numeric": 10,
+        "policy_value_text": "Tier 3 daily tradeable cap",
+        "policy_value_json": {},
+        "updated_at": "2026-06-23T19:39:36.730222+00:00"
+      },
+      {
+        "policy_key": "tradeable_unlock_eelo",
+        "policy_value_numeric": 1200,
+        "policy_value_text": "Minimum E-ELO to start tradeable rewards",
+        "policy_value_json": {},
+        "updated_at": "2026-06-23T19:39:36.730222+00:00"
+      },
+      {
+        "policy_key": "tradeable_usdt_rate",
+        "policy_value_numeric": 100,
+        "policy_value_text": "100 VEX Tradeable = 1 USDT",
+        "policy_value_json": {},
+        "updated_at": "2026-06-23T19:39:36.730222+00:00"
+      },
+      {
+        "policy_key": "withdraw_rules",
+        "policy_value_numeric": null,
+        "policy_value_text": "Migrado desde tg_economy_policy (unificacion 2026-07-04)",
+        "policy_value_json": {
+          "min_active_days": 0,
+          "min_engagement_score": 0,
+          "requires_meta_approval": true,
+          "weekly_withdraw_range_pct": [
+            5,
+            20
+          ]
+        },
+        "updated_at": "2026-07-04T21:44:08.697003+00:00"
+      },
+      {
+        "policy_key": "withdrawal_fee_pct",
+        "policy_value_numeric": 0.08,
+        "policy_value_text": "Withdrawal fee = 8%",
+        "policy_value_json": {},
+        "updated_at": "2026-06-23T19:39:36.730222+00:00"
+      },
+      {
+        "policy_key": "withdrawal_min_tradeable",
+        "policy_value_numeric": 2500,
+        "policy_value_text": "Minimum withdrawal = 25 USDT",
+        "policy_value_json": {},
+        "updated_at": "2026-06-23T19:39:36.730222+00:00"
+      },
+      {
+        "policy_key": "withdrawal_rate_tradeable_to_usdt",
+        "policy_value_numeric": 100,
+        "policy_value_text": "100 VEX Tradeable = 1 USDT",
+        "policy_value_json": {},
+        "updated_at": "2026-06-23T19:39:36.730222+00:00"
+      }
+    ],
+    "market_policy": [
+      {
+        "policy_key": "market_fee_pct",
+        "policy_value_numeric": 0.08,
+        "policy_value_text": "8 percent fee on successful sale",
+        "policy_value_json": {},
+        "updated_at": "2026-06-23T13:18:58.036227+00:00"
+      },
+      {
+        "policy_key": "market_listing_hours",
+        "policy_value_numeric": 72,
+        "policy_value_text": "Default listing duration in hours",
+        "policy_value_json": {},
+        "updated_at": "2026-06-23T13:18:58.036227+00:00"
+      },
+      {
+        "policy_key": "market_max_listing_hours",
+        "policy_value_numeric": 168,
+        "policy_value_text": "Maximum listing duration in hours",
+        "policy_value_json": {},
+        "updated_at": "2026-06-23T13:18:58.036227+00:00"
+      },
+      {
+        "policy_key": "market_min_price",
+        "policy_value_numeric": 1,
+        "policy_value_text": "Minimum listing price",
+        "policy_value_json": {},
+        "updated_at": "2026-06-23T13:18:58.036227+00:00"
+      }
+    ],
+    "commercial_policy": [
+      {
+        "policy_key": "deposit_chain",
+        "policy_value_numeric": null,
+        "policy_value_text": "BSC",
+        "policy_value_json": {},
+        "updated_at": "2026-06-23T14:07:22.291644+00:00"
+      },
+      {
+        "policy_key": "deposit_token",
+        "policy_value_numeric": null,
+        "policy_value_text": "USDT",
+        "policy_value_json": {},
+        "updated_at": "2026-06-23T14:07:22.291644+00:00"
+      },
+      {
+        "policy_key": "usdt_to_tradeable_rate",
+        "policy_value_numeric": 100,
+        "policy_value_text": "100 VEX Tradeable = 1 USDT",
+        "policy_value_json": {},
+        "updated_at": "2026-06-23T14:07:22.291644+00:00"
+      },
+      {
+        "policy_key": "withdrawal_cooldown_hours",
+        "policy_value_numeric": 72,
+        "policy_value_text": "Withdrawal cooldown in hours",
+        "policy_value_json": {},
+        "updated_at": "2026-06-23T14:07:22.291644+00:00"
+      },
+      {
+        "policy_key": "withdrawal_fee_pct",
+        "policy_value_numeric": 0.08,
+        "policy_value_text": "8 percent fee",
+        "policy_value_json": {},
+        "updated_at": "2026-06-23T14:07:22.291644+00:00"
+      },
+      {
+        "policy_key": "withdrawal_manual_review",
+        "policy_value_numeric": 1,
+        "policy_value_text": "Manual review required",
+        "policy_value_json": {},
+        "updated_at": "2026-06-23T14:07:22.291644+00:00"
+      },
+      {
+        "policy_key": "withdrawal_min_tradeable",
+        "policy_value_numeric": 2500,
+        "policy_value_text": "Minimum withdrawal = 25 USDT",
+        "policy_value_json": {},
+        "updated_at": "2026-06-23T14:07:22.291644+00:00"
+      }
+    ],
+    "mission_reward_policy": [
+      {
+        "mission_type": "Clan",
+        "reward_xp_floor": 90,
+        "reward_vex_ingame_floor": 12,
+        "max_tradeable_per_claim": 0,
+        "elo_required": 1000,
+        "notes": "Clan progression: no tradeable",
+        "active": true,
+        "updated_at": "2026-06-23T13:04:19.188617+00:00"
+      },
+      {
+        "mission_type": "Dungeon",
+        "reward_xp_floor": 80,
+        "reward_vex_ingame_floor": 12,
+        "max_tradeable_per_claim": 0,
+        "elo_required": 1000,
+        "notes": "Progression missions: no tradeable",
+        "active": true,
+        "updated_at": "2026-06-23T13:04:19.188617+00:00"
+      },
+      {
+        "mission_type": "Event",
+        "reward_xp_floor": 150,
+        "reward_vex_ingame_floor": 20,
+        "max_tradeable_per_claim": 0.5,
+        "elo_required": 1200,
+        "notes": "Event missions: limited tradeable",
+        "active": true,
+        "updated_at": "2026-06-23T13:04:19.188617+00:00"
+      },
+      {
+        "mission_type": "Expedition",
+        "reward_xp_floor": 120,
+        "reward_vex_ingame_floor": 15,
+        "max_tradeable_per_claim": 0.25,
+        "elo_required": 1200,
+        "notes": "Limited tradeable after investment",
+        "active": true,
+        "updated_at": "2026-06-23T13:04:19.188617+00:00"
+      },
+      {
+        "mission_type": "Tutorial",
+        "reward_xp_floor": 40,
+        "reward_vex_ingame_floor": 8,
+        "max_tradeable_per_claim": 0,
+        "elo_required": 0,
+        "notes": "Onboarding missions: no tradeable",
+        "active": true,
+        "updated_at": "2026-06-23T13:04:19.188617+00:00"
+      }
+    ],
+    "reward_rules": [],
+    "pack_catalog": [
+      {
+        "pack_key": "expedition_pack",
+        "pack_name": "Expedition Pack",
+        "price_usdt": 9.99,
+        "active": true,
+        "notes": "Garantiza al menos una Rara. Pack recomendado.",
+        "metadata": {
+          "card_count": 7,
+          "rarity_weights": {
+            "Epic": 0.06,
+            "Rare": 0.18,
+            "Common": 0.4,
+            "Mythic": 0,
+            "Uncommon": 0.35,
+            "Legendary": 0.01
+          }
+        },
+        "created_at": "2026-06-23T13:49:32.750091+00:00",
+        "updated_at": "2026-07-19T14:51:33.055058+00:00",
+        "price_vex": 999,
+        "card_count": 5
+      },
+      {
+        "pack_key": "forge_pack",
+        "pack_name": "Forge Pack",
+        "price_usdt": 24.99,
+        "active": true,
+        "notes": "Épicas garantizadas. Para forjadores serios.",
+        "metadata": {
+          "card_count": 8,
+          "rarity_weights": {
+            "Epic": 0.15,
+            "Rare": 0.35,
+            "Common": 0.15,
+            "Mythic": 0.01,
+            "Uncommon": 0.3,
+            "Legendary": 0.04
+          }
+        },
+        "created_at": "2026-06-23T13:49:32.750091+00:00",
+        "updated_at": "2026-07-19T14:51:33.055058+00:00",
+        "price_vex": 2499,
+        "card_count": 5
+      },
+      {
+        "pack_key": "founder_pack",
+        "pack_name": "Founder Pack",
+        "price_usdt": 49.99,
+        "active": true,
+        "notes": "Acceso anticipado. Legendaria garantizada + cosmético exclusivo.",
+        "metadata": {
+          "card_count": 10,
+          "rarity_weights": {
+            "Epic": 0.35,
+            "Rare": 0.3,
+            "Common": 0,
+            "Mythic": 0.05,
+            "Uncommon": 0.1,
+            "Legendary": 0.2
+          }
+        },
+        "created_at": "2026-06-23T13:49:32.750091+00:00",
+        "updated_at": "2026-07-19T14:51:33.055058+00:00",
+        "price_vex": 4999,
+        "card_count": 5
+      },
+      {
+        "pack_key": "scout_pack",
+        "pack_name": "Scout Pack",
+        "price_usdt": 4.99,
+        "active": true,
+        "notes": "Mayor chance de raras. Para exploradores.",
+        "metadata": {
+          "card_count": 5,
+          "rarity_weights": {
+            "Epic": 0.02,
+            "Rare": 0.08,
+            "Common": 0.65,
+            "Mythic": 0,
+            "Uncommon": 0.25,
+            "Legendary": 0
+          }
+        },
+        "created_at": "2026-06-23T13:49:32.750091+00:00",
+        "updated_at": "2026-07-19T14:51:33.055058+00:00",
+        "price_vex": 499,
+        "card_count": 5
+      },
+      {
+        "pack_key": "seed_pack",
+        "pack_name": "Seed Pack",
+        "price_usdt": 1.99,
+        "active": true,
+        "notes": "Pack básico. Comunes y uncommons. Perfecto para comenzar.",
+        "metadata": {
+          "card_count": 3,
+          "rarity_weights": {
+            "Epic": 0,
+            "Rare": 0.03,
+            "Common": 0.85,
+            "Mythic": 0,
+            "Uncommon": 0.12,
+            "Legendary": 0
+          }
+        },
+        "created_at": "2026-06-23T13:49:32.750091+00:00",
+        "updated_at": "2026-07-19T14:51:33.055058+00:00",
+        "price_vex": 199,
+        "card_count": 5
+      }
+    ],
+    "card_supply_policy": [
+      {
+        "rarity": "Common",
+        "founder_cards": 4,
+        "supply_per_card": 5000,
+        "total_supply": 20000,
+        "marketable": true,
+        "fusion_enabled": true,
+        "notes": "Founder common pool",
+        "active": true,
+        "pack_pct": 45,
+        "mission_pct": 25,
+        "chest_pct": 20,
+        "referral_pct": 10,
+        "max_supply_per_card": 20000,
+        "initial_mint_per_card": 3000,
+        "updated_at": "2026-06-23T13:09:56.612293+00:00"
+      },
+      {
+        "rarity": "Epic",
+        "founder_cards": 4,
+        "supply_per_card": 500,
+        "total_supply": 2000,
+        "marketable": true,
+        "fusion_enabled": true,
+        "notes": "Founder epic pool",
+        "active": true,
+        "pack_pct": 30,
+        "mission_pct": 10,
+        "chest_pct": 55,
+        "referral_pct": 5,
+        "max_supply_per_card": 500,
+        "initial_mint_per_card": 60,
+        "updated_at": "2026-06-23T13:09:56.612293+00:00"
+      },
+      {
+        "rarity": "Legendary",
+        "founder_cards": 4,
+        "supply_per_card": 250,
+        "total_supply": 1000,
+        "marketable": true,
+        "fusion_enabled": true,
+        "notes": "Founder legendary pool",
+        "active": true,
+        "pack_pct": 20,
+        "mission_pct": 5,
+        "chest_pct": 70,
+        "referral_pct": 5,
+        "max_supply_per_card": 80,
+        "initial_mint_per_card": 8,
+        "updated_at": "2026-06-23T13:09:56.612293+00:00"
+      },
+      {
+        "rarity": "Mythic",
+        "founder_cards": 4,
+        "supply_per_card": 100,
+        "total_supply": 400,
+        "marketable": true,
+        "fusion_enabled": true,
+        "notes": "Founder mythic pool",
+        "active": true,
+        "pack_pct": 10,
+        "mission_pct": 0,
+        "chest_pct": 85,
+        "referral_pct": 5,
+        "max_supply_per_card": 12,
+        "initial_mint_per_card": 1,
+        "updated_at": "2026-06-23T13:09:56.612293+00:00"
+      },
+      {
+        "rarity": "Rare",
+        "founder_cards": 4,
+        "supply_per_card": 1000,
+        "total_supply": 4000,
+        "marketable": true,
+        "fusion_enabled": true,
+        "notes": "Founder rare pool",
+        "active": true,
+        "pack_pct": 35,
+        "mission_pct": 25,
+        "chest_pct": 35,
+        "referral_pct": 5,
+        "max_supply_per_card": 2500,
+        "initial_mint_per_card": 375,
+        "updated_at": "2026-06-23T13:09:56.612293+00:00"
+      },
+      {
+        "rarity": "Uncommon",
+        "founder_cards": 4,
+        "supply_per_card": 2500,
+        "total_supply": 10000,
+        "marketable": true,
+        "fusion_enabled": true,
+        "notes": "Founder uncommon pool",
+        "active": true,
+        "pack_pct": 40,
+        "mission_pct": 25,
+        "chest_pct": 25,
+        "referral_pct": 10,
+        "max_supply_per_card": 8000,
+        "initial_mint_per_card": 1200,
+        "updated_at": "2026-06-23T13:09:56.612293+00:00"
+      }
+    ],
+    "withdrawal_controls": []
+  },
+  "exact_configuration_rows_by_source": {
+    "system_config": [
+      {
+        "config_key": "stripe_config",
+        "config_value": {
+          "status": "pending_integration",
+          "enabled": false,
+          "fee_pct": 2.9,
+          "fee_fixed": 0.3,
+          "max_deposit_usd": 500,
+          "min_deposit_usd": 1.99
+        },
+        "description": "Configuración Stripe para onramp fiat. Habilitado cuando clave API esté configurada.",
+        "updated_at": "2026-07-19T14:51:33.375509+00:00"
+      },
+      {
+        "config_key": "treasury_config",
+        "config_value": {
+          "chains": {
+            "BSC": {
+              "token": "USDT",
+              "address": "0x29b2907d6e10beb2becb9ba82f2b6af04815c403",
+              "network": "BEP-20",
+              "explorer": "https://bscscan.com"
+            },
+            "ETH": {
+              "token": "USDT",
+              "address": "0x29b2907d6e10beb2becb9ba82f2b6af04815c403",
+              "network": "ERC-20",
+              "explorer": "https://etherscan.io"
+            },
+            "SOL": {
+              "token": "USDT",
+              "address": "6m9unXdipitegac8skEgvy6MHMgLqG7XNSAQnAiacEMb",
+              "network": "SPL",
+              "explorer": "https://solscan.io"
+            },
+            "TRON": {
+              "token": "USDT",
+              "address": "TLAujgYmQAtFW6BZg4fVs1pUHx6vyX5SJD",
+              "network": "TRC-20",
+              "explorer": "https://tronscan.org"
+            }
+          },
+          "configured_at": "2026-07-19T15:13:10.464Z",
+          "min_deposit_usdt": 1.99,
+          "exchange_rate_usdt_to_vex": 100
+        },
+        "description": "Treasury wallet addresses configured — Chat 48, Bloque 4.3",
+        "updated_at": "2026-07-19T15:13:10.464+00:00"
+      },
+      {
+        "config_key": "vex_exchange_rate",
+        "config_value": {
+          "currency": "USDT",
+          "decimals": 2,
+          "usdt_to_vex": 100,
+          "vex_to_usdt": 0.01
+        },
+        "description": "Tasa de cambio oficial VEX/USDT. 1 USDT = 100 VEX Tradeable. Revisable por admin.",
+        "updated_at": "2026-07-19T14:51:33.375509+00:00"
+      }
+    ],
+    "economy_policy": [
+      {
+        "policy_key": "boss_attack_min_reward",
+        "policy_value_numeric": 1,
+        "policy_value_text": null,
+        "policy_value_json": {},
+        "updated_at": "2026-07-19T06:48:07.10603+00:00"
+      },
+      {
+        "policy_key": "channel_join_reward",
+        "policy_value_numeric": 25,
+        "policy_value_text": null,
+        "policy_value_json": {},
+        "updated_at": "2026-07-19T06:48:07.10603+00:00"
+      },
+      {
+        "policy_key": "daily_ingame_cap_casual",
+        "policy_value_numeric": 220,
+        "policy_value_text": "Casual ingame cap per day",
+        "policy_value_json": {},
+        "updated_at": "2026-06-23T19:39:36.730222+00:00"
+      },
+      {
+        "policy_key": "daily_ingame_cap_competitive",
+        "policy_value_numeric": 320,
+        "policy_value_text": "Competitive ingame cap per day",
+        "policy_value_json": {},
+        "updated_at": "2026-06-23T19:39:36.730222+00:00"
+      },
+      {
+        "policy_key": "daily_ingame_cap_f2p",
+        "policy_value_numeric": 120,
+        "policy_value_text": "F2P ingame cap per day",
+        "policy_value_json": {},
+        "updated_at": "2026-06-23T19:39:36.730222+00:00"
+      },
+      {
+        "policy_key": "daily_ingame_cap_payer",
+        "policy_value_numeric": 420,
+        "policy_value_text": "Payer ingame cap per day",
+        "policy_value_json": {},
+        "updated_at": "2026-06-23T19:39:36.730222+00:00"
+      },
+      {
+        "policy_key": "daily_tradeable_cap_casual",
+        "policy_value_numeric": 0,
+        "policy_value_text": "Casual tradeable cap = 0",
+        "policy_value_json": {},
+        "updated_at": "2026-06-23T19:39:36.730222+00:00"
+      },
+      {
+        "policy_key": "daily_tradeable_cap_competitive",
+        "policy_value_numeric": 0.35,
+        "policy_value_text": "Competitive tradeable from missions limited",
+        "policy_value_json": {},
+        "updated_at": "2026-06-23T19:39:36.730222+00:00"
+      },
+      {
+        "policy_key": "daily_tradeable_cap_f2p",
+        "policy_value_numeric": 0,
+        "policy_value_text": "F2P tradeable cap = 0",
+        "policy_value_json": {},
+        "updated_at": "2026-06-23T19:39:36.730222+00:00"
+      },
+      {
+        "policy_key": "daily_tradeable_cap_payer",
+        "policy_value_numeric": 0.5,
+        "policy_value_text": "Payer tradeable from missions limited",
+        "policy_value_json": {},
+        "updated_at": "2026-06-23T19:39:36.730222+00:00"
+      },
+      {
+        "policy_key": "economy_layers",
+        "policy_value_numeric": null,
+        "policy_value_text": "Migrado desde tg_economy_policy (unificacion 2026-07-04)",
+        "policy_value_json": {
+          "vex_in": "internal non-withdrawable fuel",
+          "vex_trade": "market value layer",
+          "vex_withdraw": "external extraction layer"
+        },
+        "updated_at": "2026-07-04T21:44:08.697003+00:00"
+      },
+      {
+        "policy_key": "f2p_eelo_cap",
+        "policy_value_numeric": 1199,
+        "policy_value_text": "Free-to-play E-ELO cap",
+        "policy_value_json": {},
+        "updated_at": "2026-06-23T19:39:36.730222+00:00"
+      },
+      {
+        "policy_key": "fusion_common_cards",
+        "policy_value_numeric": 4,
+        "policy_value_text": "Common fusion needs 4 cards",
+        "policy_value_json": {},
+        "updated_at": "2026-06-23T19:39:36.730222+00:00"
+      },
+      {
+        "policy_key": "fusion_common_ingame_cost",
+        "policy_value_numeric": 35,
+        "policy_value_text": "Common to Uncommon cost",
+        "policy_value_json": {},
+        "updated_at": "2026-06-23T19:39:36.730222+00:00"
+      },
+      {
+        "policy_key": "fusion_epic_cards",
+        "policy_value_numeric": 5,
+        "policy_value_text": "Epic fusion needs 5 cards",
+        "policy_value_json": {},
+        "updated_at": "2026-06-23T19:39:36.730222+00:00"
+      },
+      {
+        "policy_key": "fusion_epic_ingame_cost",
+        "policy_value_numeric": 280,
+        "policy_value_text": "Epic to Legendary cost",
+        "policy_value_json": {},
+        "updated_at": "2026-06-23T19:39:36.730222+00:00"
+      },
+      {
+        "policy_key": "fusion_rare_cards",
+        "policy_value_numeric": 5,
+        "policy_value_text": "Rare fusion needs 5 cards",
+        "policy_value_json": {},
+        "updated_at": "2026-06-23T19:39:36.730222+00:00"
+      },
+      {
+        "policy_key": "fusion_rare_ingame_cost",
+        "policy_value_numeric": 140,
+        "policy_value_text": "Rare to Epic cost",
+        "policy_value_json": {},
+        "updated_at": "2026-06-23T19:39:36.730222+00:00"
+      },
+      {
+        "policy_key": "fusion_rules",
+        "policy_value_numeric": null,
+        "policy_value_text": "Migrado desde tg_economy_policy (unificacion 2026-07-04)",
+        "policy_value_json": {
+          "ratio": "3_to_1",
+          "burn_inputs": true,
+          "cost_currency": "vex_in",
+          "diminishing_returns": true
+        },
+        "updated_at": "2026-07-04T21:44:08.697003+00:00"
+      },
+      {
+        "policy_key": "fusion_uncommon_cards",
+        "policy_value_numeric": 4,
+        "policy_value_text": "Uncommon fusion needs 4 cards",
+        "policy_value_json": {},
+        "updated_at": "2026-06-23T19:39:36.730222+00:00"
+      },
+      {
+        "policy_key": "fusion_uncommon_ingame_cost",
+        "policy_value_numeric": 70,
+        "policy_value_text": "Uncommon to Rare cost",
+        "policy_value_json": {},
+        "updated_at": "2026-06-23T19:39:36.730222+00:00"
+      },
+      {
+        "policy_key": "market_fee_pct",
+        "policy_value_numeric": 0.08,
+        "policy_value_text": "Official market fee = 8%",
+        "policy_value_json": {},
+        "updated_at": "2026-06-23T19:39:36.730222+00:00"
+      },
+      {
+        "policy_key": "market_rules",
+        "policy_value_numeric": null,
+        "policy_value_text": "Migrado desde tg_economy_policy (unificacion 2026-07-04)",
+        "policy_value_json": {
+          "anti_dumping": true,
+          "dynamic_floor": true,
+          "fee_range_pct": [
+            5,
+            12
+          ],
+          "listing_cooldown_hours": 12
+        },
+        "updated_at": "2026-07-04T21:44:08.697003+00:00"
+      },
+      {
+        "policy_key": "mission_mult_dungeon",
+        "policy_value_numeric": 0.55,
+        "policy_value_text": "Dungeon missions are medium emission",
+        "policy_value_json": {},
+        "updated_at": "2026-06-23T19:39:36.730222+00:00"
+      },
+      {
+        "policy_key": "mission_mult_event",
+        "policy_value_numeric": 0.8,
+        "policy_value_text": "Event missions are premium controlled emission",
+        "policy_value_json": {},
+        "updated_at": "2026-06-23T19:39:36.730222+00:00"
+      },
+      {
+        "policy_key": "mission_mult_expedition",
+        "policy_value_numeric": 0.7,
+        "policy_value_text": "Expedition missions are controlled emission",
+        "policy_value_json": {},
+        "updated_at": "2026-06-23T19:39:36.730222+00:00"
+      },
+      {
+        "policy_key": "mission_mult_pvp",
+        "policy_value_numeric": 0.75,
+        "policy_value_text": "PvP missions are controlled emission",
+        "policy_value_json": {},
+        "updated_at": "2026-06-23T19:39:36.730222+00:00"
+      },
+      {
+        "policy_key": "mission_mult_tutorial",
+        "policy_value_numeric": 0.3,
+        "policy_value_text": "Tutorial missions are low emission",
+        "policy_value_json": {},
+        "updated_at": "2026-06-23T19:39:36.730222+00:00"
+      },
+      {
+        "policy_key": "mission_tradeable_dungeon",
+        "policy_value_numeric": 0,
+        "policy_value_text": "Dungeon tradeable locked off",
+        "policy_value_json": {},
+        "updated_at": "2026-06-23T19:39:36.730222+00:00"
+      },
+      {
+        "policy_key": "mission_tradeable_event",
+        "policy_value_numeric": 0.05,
+        "policy_value_text": "Event tradeable very limited",
+        "policy_value_json": {},
+        "updated_at": "2026-06-23T19:39:36.730222+00:00"
+      },
+      {
+        "policy_key": "mission_tradeable_expedition",
+        "policy_value_numeric": 0,
+        "policy_value_text": "Expedition tradeable locked off",
+        "policy_value_json": {},
+        "updated_at": "2026-06-23T19:39:36.730222+00:00"
+      },
+      {
+        "policy_key": "mission_tradeable_pvp",
+        "policy_value_numeric": 0.08,
+        "policy_value_text": "PvP tradeable limited and premium-gated",
+        "policy_value_json": {},
+        "updated_at": "2026-06-23T19:39:36.730222+00:00"
+      },
+      {
+        "policy_key": "mission_tradeable_tutorial",
+        "policy_value_numeric": 0,
+        "policy_value_text": "Tutorial tradeable locked off",
+        "policy_value_json": {},
+        "updated_at": "2026-06-23T19:39:36.730222+00:00"
+      },
+      {
+        "policy_key": "player_tiers",
+        "policy_value_numeric": null,
+        "policy_value_text": "Migrado desde tg_economy_policy (unificacion 2026-07-04)",
+        "policy_value_json": {
+          "f2p": {
+            "market": "limited",
+            "withdraw": false
+          },
+          "p2p": {
+            "caps": "dynamic",
+            "market": "full",
+            "withdraw": true
+          },
+          "elite": {
+            "caps": "dynamic",
+            "market": "priority",
+            "withdraw": true
+          }
+        },
+        "updated_at": "2026-07-04T21:44:08.697003+00:00"
+      },
+      {
+        "policy_key": "raid_completion_vex_reward",
+        "policy_value_numeric": 100,
+        "policy_value_text": null,
+        "policy_value_json": {},
+        "updated_at": "2026-07-19T06:48:07.10603+00:00"
+      },
+      {
+        "policy_key": "raid_completion_xp_reward",
+        "policy_value_numeric": 50,
+        "policy_value_text": null,
+        "policy_value_json": {},
+        "updated_at": "2026-07-19T06:48:07.10603+00:00"
+      },
+      {
+        "policy_key": "raid_max_participants",
+        "policy_value_numeric": 20,
+        "policy_value_text": null,
+        "policy_value_json": {},
+        "updated_at": "2026-07-19T06:48:07.10603+00:00"
+      },
+      {
+        "policy_key": "referral_reward",
+        "policy_value_numeric": 50,
+        "policy_value_text": null,
+        "policy_value_json": {},
+        "updated_at": "2026-07-19T06:48:07.10603+00:00"
+      },
+      {
+        "policy_key": "telegram_action_base_reward",
+        "policy_value_numeric": 5,
+        "policy_value_text": null,
+        "policy_value_json": {},
+        "updated_at": "2026-07-19T06:48:07.10603+00:00"
+      },
+      {
+        "policy_key": "tier1_daily_tradeable_cap",
+        "policy_value_numeric": 1,
+        "policy_value_text": "Tier 1 daily tradeable cap",
+        "policy_value_json": {},
+        "updated_at": "2026-06-23T19:39:36.730222+00:00"
+      },
+      {
+        "policy_key": "tier2_daily_tradeable_cap",
+        "policy_value_numeric": 4,
+        "policy_value_text": "Tier 2 daily tradeable cap",
+        "policy_value_json": {},
+        "updated_at": "2026-06-23T19:39:36.730222+00:00"
+      },
+      {
+        "policy_key": "tier3_daily_tradeable_cap",
+        "policy_value_numeric": 10,
+        "policy_value_text": "Tier 3 daily tradeable cap",
+        "policy_value_json": {},
+        "updated_at": "2026-06-23T19:39:36.730222+00:00"
+      },
+      {
+        "policy_key": "tradeable_unlock_eelo",
+        "policy_value_numeric": 1200,
+        "policy_value_text": "Minimum E-ELO to start tradeable rewards",
+        "policy_value_json": {},
+        "updated_at": "2026-06-23T19:39:36.730222+00:00"
+      },
+      {
+        "policy_key": "tradeable_usdt_rate",
+        "policy_value_numeric": 100,
+        "policy_value_text": "100 VEX Tradeable = 1 USDT",
+        "policy_value_json": {},
+        "updated_at": "2026-06-23T19:39:36.730222+00:00"
+      },
+      {
+        "policy_key": "withdraw_rules",
+        "policy_value_numeric": null,
+        "policy_value_text": "Migrado desde tg_economy_policy (unificacion 2026-07-04)",
+        "policy_value_json": {
+          "min_active_days": 0,
+          "min_engagement_score": 0,
+          "requires_meta_approval": true,
+          "weekly_withdraw_range_pct": [
+            5,
+            20
+          ]
+        },
+        "updated_at": "2026-07-04T21:44:08.697003+00:00"
+      },
+      {
+        "policy_key": "withdrawal_fee_pct",
+        "policy_value_numeric": 0.08,
+        "policy_value_text": "Withdrawal fee = 8%",
+        "policy_value_json": {},
+        "updated_at": "2026-06-23T19:39:36.730222+00:00"
+      },
+      {
+        "policy_key": "withdrawal_min_tradeable",
+        "policy_value_numeric": 2500,
+        "policy_value_text": "Minimum withdrawal = 25 USDT",
+        "policy_value_json": {},
+        "updated_at": "2026-06-23T19:39:36.730222+00:00"
+      },
+      {
+        "policy_key": "withdrawal_rate_tradeable_to_usdt",
+        "policy_value_numeric": 100,
+        "policy_value_text": "100 VEX Tradeable = 1 USDT",
+        "policy_value_json": {},
+        "updated_at": "2026-06-23T19:39:36.730222+00:00"
+      }
+    ],
+    "market_policy": [
+      {
+        "policy_key": "market_fee_pct",
+        "policy_value_numeric": 0.08,
+        "policy_value_text": "8 percent fee on successful sale",
+        "policy_value_json": {},
+        "updated_at": "2026-06-23T13:18:58.036227+00:00"
+      },
+      {
+        "policy_key": "market_listing_hours",
+        "policy_value_numeric": 72,
+        "policy_value_text": "Default listing duration in hours",
+        "policy_value_json": {},
+        "updated_at": "2026-06-23T13:18:58.036227+00:00"
+      },
+      {
+        "policy_key": "market_max_listing_hours",
+        "policy_value_numeric": 168,
+        "policy_value_text": "Maximum listing duration in hours",
+        "policy_value_json": {},
+        "updated_at": "2026-06-23T13:18:58.036227+00:00"
+      },
+      {
+        "policy_key": "market_min_price",
+        "policy_value_numeric": 1,
+        "policy_value_text": "Minimum listing price",
+        "policy_value_json": {},
+        "updated_at": "2026-06-23T13:18:58.036227+00:00"
+      }
+    ],
+    "commercial_policy": [
+      {
+        "policy_key": "deposit_chain",
+        "policy_value_numeric": null,
+        "policy_value_text": "BSC",
+        "policy_value_json": {},
+        "updated_at": "2026-06-23T14:07:22.291644+00:00"
+      },
+      {
+        "policy_key": "deposit_token",
+        "policy_value_numeric": null,
+        "policy_value_text": "USDT",
+        "policy_value_json": {},
+        "updated_at": "2026-06-23T14:07:22.291644+00:00"
+      },
+      {
+        "policy_key": "usdt_to_tradeable_rate",
+        "policy_value_numeric": 100,
+        "policy_value_text": "100 VEX Tradeable = 1 USDT",
+        "policy_value_json": {},
+        "updated_at": "2026-06-23T14:07:22.291644+00:00"
+      },
+      {
+        "policy_key": "withdrawal_cooldown_hours",
+        "policy_value_numeric": 72,
+        "policy_value_text": "Withdrawal cooldown in hours",
+        "policy_value_json": {},
+        "updated_at": "2026-06-23T14:07:22.291644+00:00"
+      },
+      {
+        "policy_key": "withdrawal_fee_pct",
+        "policy_value_numeric": 0.08,
+        "policy_value_text": "8 percent fee",
+        "policy_value_json": {},
+        "updated_at": "2026-06-23T14:07:22.291644+00:00"
+      },
+      {
+        "policy_key": "withdrawal_manual_review",
+        "policy_value_numeric": 1,
+        "policy_value_text": "Manual review required",
+        "policy_value_json": {},
+        "updated_at": "2026-06-23T14:07:22.291644+00:00"
+      },
+      {
+        "policy_key": "withdrawal_min_tradeable",
+        "policy_value_numeric": 2500,
+        "policy_value_text": "Minimum withdrawal = 25 USDT",
+        "policy_value_json": {},
+        "updated_at": "2026-06-23T14:07:22.291644+00:00"
+      }
+    ],
+    "mission_reward_policy": [
+      {
+        "mission_type": "Clan",
+        "reward_xp_floor": 90,
+        "reward_vex_ingame_floor": 12,
+        "max_tradeable_per_claim": 0,
+        "elo_required": 1000,
+        "notes": "Clan progression: no tradeable",
+        "active": true,
+        "updated_at": "2026-06-23T13:04:19.188617+00:00"
+      },
+      {
+        "mission_type": "Dungeon",
+        "reward_xp_floor": 80,
+        "reward_vex_ingame_floor": 12,
+        "max_tradeable_per_claim": 0,
+        "elo_required": 1000,
+        "notes": "Progression missions: no tradeable",
+        "active": true,
+        "updated_at": "2026-06-23T13:04:19.188617+00:00"
+      },
+      {
+        "mission_type": "Event",
+        "reward_xp_floor": 150,
+        "reward_vex_ingame_floor": 20,
+        "max_tradeable_per_claim": 0.5,
+        "elo_required": 1200,
+        "notes": "Event missions: limited tradeable",
+        "active": true,
+        "updated_at": "2026-06-23T13:04:19.188617+00:00"
+      },
+      {
+        "mission_type": "Expedition",
+        "reward_xp_floor": 120,
+        "reward_vex_ingame_floor": 15,
+        "max_tradeable_per_claim": 0.25,
+        "elo_required": 1200,
+        "notes": "Limited tradeable after investment",
+        "active": true,
+        "updated_at": "2026-06-23T13:04:19.188617+00:00"
+      },
+      {
+        "mission_type": "Tutorial",
+        "reward_xp_floor": 40,
+        "reward_vex_ingame_floor": 8,
+        "max_tradeable_per_claim": 0,
+        "elo_required": 0,
+        "notes": "Onboarding missions: no tradeable",
+        "active": true,
+        "updated_at": "2026-06-23T13:04:19.188617+00:00"
+      }
+    ],
+    "reward_rules": [],
+    "pack_catalog": [
+      {
+        "pack_key": "expedition_pack",
+        "pack_name": "Expedition Pack",
+        "price_usdt": 9.99,
+        "active": true,
+        "notes": "Garantiza al menos una Rara. Pack recomendado.",
+        "metadata": {
+          "card_count": 7,
+          "rarity_weights": {
+            "Epic": 0.06,
+            "Rare": 0.18,
+            "Common": 0.4,
+            "Mythic": 0,
+            "Uncommon": 0.35,
+            "Legendary": 0.01
+          }
+        },
+        "created_at": "2026-06-23T13:49:32.750091+00:00",
+        "updated_at": "2026-07-19T14:51:33.055058+00:00",
+        "price_vex": 999,
+        "card_count": 5
+      },
+      {
+        "pack_key": "forge_pack",
+        "pack_name": "Forge Pack",
+        "price_usdt": 24.99,
+        "active": true,
+        "notes": "Épicas garantizadas. Para forjadores serios.",
+        "metadata": {
+          "card_count": 8,
+          "rarity_weights": {
+            "Epic": 0.15,
+            "Rare": 0.35,
+            "Common": 0.15,
+            "Mythic": 0.01,
+            "Uncommon": 0.3,
+            "Legendary": 0.04
+          }
+        },
+        "created_at": "2026-06-23T13:49:32.750091+00:00",
+        "updated_at": "2026-07-19T14:51:33.055058+00:00",
+        "price_vex": 2499,
+        "card_count": 5
+      },
+      {
+        "pack_key": "founder_pack",
+        "pack_name": "Founder Pack",
+        "price_usdt": 49.99,
+        "active": true,
+        "notes": "Acceso anticipado. Legendaria garantizada + cosmético exclusivo.",
+        "metadata": {
+          "card_count": 10,
+          "rarity_weights": {
+            "Epic": 0.35,
+            "Rare": 0.3,
+            "Common": 0,
+            "Mythic": 0.05,
+            "Uncommon": 0.1,
+            "Legendary": 0.2
+          }
+        },
+        "created_at": "2026-06-23T13:49:32.750091+00:00",
+        "updated_at": "2026-07-19T14:51:33.055058+00:00",
+        "price_vex": 4999,
+        "card_count": 5
+      },
+      {
+        "pack_key": "scout_pack",
+        "pack_name": "Scout Pack",
+        "price_usdt": 4.99,
+        "active": true,
+        "notes": "Mayor chance de raras. Para exploradores.",
+        "metadata": {
+          "card_count": 5,
+          "rarity_weights": {
+            "Epic": 0.02,
+            "Rare": 0.08,
+            "Common": 0.65,
+            "Mythic": 0,
+            "Uncommon": 0.25,
+            "Legendary": 0
+          }
+        },
+        "created_at": "2026-06-23T13:49:32.750091+00:00",
+        "updated_at": "2026-07-19T14:51:33.055058+00:00",
+        "price_vex": 499,
+        "card_count": 5
+      },
+      {
+        "pack_key": "seed_pack",
+        "pack_name": "Seed Pack",
+        "price_usdt": 1.99,
+        "active": true,
+        "notes": "Pack básico. Comunes y uncommons. Perfecto para comenzar.",
+        "metadata": {
+          "card_count": 3,
+          "rarity_weights": {
+            "Epic": 0,
+            "Rare": 0.03,
+            "Common": 0.85,
+            "Mythic": 0,
+            "Uncommon": 0.12,
+            "Legendary": 0
+          }
+        },
+        "created_at": "2026-06-23T13:49:32.750091+00:00",
+        "updated_at": "2026-07-19T14:51:33.055058+00:00",
+        "price_vex": 199,
+        "card_count": 5
+      }
+    ],
+    "card_supply_policy": [
+      {
+        "rarity": "Common",
+        "founder_cards": 4,
+        "supply_per_card": 5000,
+        "total_supply": 20000,
+        "marketable": true,
+        "fusion_enabled": true,
+        "notes": "Founder common pool",
+        "active": true,
+        "pack_pct": 45,
+        "mission_pct": 25,
+        "chest_pct": 20,
+        "referral_pct": 10,
+        "max_supply_per_card": 20000,
+        "initial_mint_per_card": 3000,
+        "updated_at": "2026-06-23T13:09:56.612293+00:00"
+      },
+      {
+        "rarity": "Epic",
+        "founder_cards": 4,
+        "supply_per_card": 500,
+        "total_supply": 2000,
+        "marketable": true,
+        "fusion_enabled": true,
+        "notes": "Founder epic pool",
+        "active": true,
+        "pack_pct": 30,
+        "mission_pct": 10,
+        "chest_pct": 55,
+        "referral_pct": 5,
+        "max_supply_per_card": 500,
+        "initial_mint_per_card": 60,
+        "updated_at": "2026-06-23T13:09:56.612293+00:00"
+      },
+      {
+        "rarity": "Legendary",
+        "founder_cards": 4,
+        "supply_per_card": 250,
+        "total_supply": 1000,
+        "marketable": true,
+        "fusion_enabled": true,
+        "notes": "Founder legendary pool",
+        "active": true,
+        "pack_pct": 20,
+        "mission_pct": 5,
+        "chest_pct": 70,
+        "referral_pct": 5,
+        "max_supply_per_card": 80,
+        "initial_mint_per_card": 8,
+        "updated_at": "2026-06-23T13:09:56.612293+00:00"
+      },
+      {
+        "rarity": "Mythic",
+        "founder_cards": 4,
+        "supply_per_card": 100,
+        "total_supply": 400,
+        "marketable": true,
+        "fusion_enabled": true,
+        "notes": "Founder mythic pool",
+        "active": true,
+        "pack_pct": 10,
+        "mission_pct": 0,
+        "chest_pct": 85,
+        "referral_pct": 5,
+        "max_supply_per_card": 12,
+        "initial_mint_per_card": 1,
+        "updated_at": "2026-06-23T13:09:56.612293+00:00"
+      },
+      {
+        "rarity": "Rare",
+        "founder_cards": 4,
+        "supply_per_card": 1000,
+        "total_supply": 4000,
+        "marketable": true,
+        "fusion_enabled": true,
+        "notes": "Founder rare pool",
+        "active": true,
+        "pack_pct": 35,
+        "mission_pct": 25,
+        "chest_pct": 35,
+        "referral_pct": 5,
+        "max_supply_per_card": 2500,
+        "initial_mint_per_card": 375,
+        "updated_at": "2026-06-23T13:09:56.612293+00:00"
+      },
+      {
+        "rarity": "Uncommon",
+        "founder_cards": 4,
+        "supply_per_card": 2500,
+        "total_supply": 10000,
+        "marketable": true,
+        "fusion_enabled": true,
+        "notes": "Founder uncommon pool",
+        "active": true,
+        "pack_pct": 40,
+        "mission_pct": 25,
+        "chest_pct": 25,
+        "referral_pct": 10,
+        "max_supply_per_card": 8000,
+        "initial_mint_per_card": 1200,
+        "updated_at": "2026-06-23T13:09:56.612293+00:00"
+      }
+    ],
+    "withdrawal_controls": []
+  },
+  "public_treasury_configuration": {
+    "chains": {
+      "BSC": {
+        "token": "USDT",
+        "address": "0x29b2907d6e10beb2becb9ba82f2b6af04815c403",
+        "network": "BEP-20",
+        "explorer": "https://bscscan.com"
+      },
+      "ETH": {
+        "token": "USDT",
+        "address": "0x29b2907d6e10beb2becb9ba82f2b6af04815c403",
+        "network": "ERC-20",
+        "explorer": "https://etherscan.io"
+      },
+      "SOL": {
+        "token": "USDT",
+        "address": "6m9unXdipitegac8skEgvy6MHMgLqG7XNSAQnAiacEMb",
+        "network": "SPL",
+        "explorer": "https://solscan.io"
+      },
+      "TRON": {
+        "token": "USDT",
+        "address": "TLAujgYmQAtFW6BZg4fVs1pUHx6vyX5SJD",
+        "network": "TRC-20",
+        "explorer": "https://tronscan.org"
+      }
+    },
+    "configured_at": "2026-07-19T15:13:10.464Z",
+    "min_deposit_usdt": 1.99,
+    "exchange_rate_usdt_to_vex": 100
+  },
+  "note": "Configuration rows are current live rows. Public treasury destinations are included as configured receiving endpoints; player-owned/private wallet values remain redacted."
+}

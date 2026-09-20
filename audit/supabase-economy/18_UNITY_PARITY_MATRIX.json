@@ -1,0 +1,5044 @@
+{
+  "extraction": {
+    "extracted_at_utc": "2026-09-20T13:37:53.575Z",
+    "source_commit": "93b0077975da0f8773e7304d411e0abea083e17b",
+    "repository": "grandmaster68081-byte/Vexforge-web",
+    "branch": "main",
+    "mode": "READ_ONLY"
+  },
+  "unity_file_count": 63,
+  "keyword_hit_files": [
+    {
+      "path": "unity/Assets/Editor/VexforgeR5CloudBuildGate.cs",
+      "keyword_line_count": 6,
+      "keywords_observed": [
+        "v"
+      ]
+    },
+    {
+      "path": "unity/Assets/Scenes/VexforgeBootstrap.unity",
+      "keyword_line_count": 1,
+      "keywords_observed": [
+        "v"
+      ]
+    },
+    {
+      "path": "unity/Assets/Scripts/Backend/ApiContracts.cs",
+      "keyword_line_count": 14,
+      "keywords_observed": [
+        "v",
+        "a",
+        "m",
+        "r",
+        "w"
+      ]
+    },
+    {
+      "path": "unity/Assets/Scripts/Backend/JsonArrayUtility.cs",
+      "keyword_line_count": 1,
+      "keywords_observed": [
+        "v"
+      ]
+    },
+    {
+      "path": "unity/Assets/Scripts/Backend/SupabaseAuthService.cs",
+      "keyword_line_count": 10,
+      "keywords_observed": [
+        "a",
+        "v"
+      ]
+    },
+    {
+      "path": "unity/Assets/Scripts/Backend/SupabaseClient.cs",
+      "keyword_line_count": 10,
+      "keywords_observed": [
+        "a",
+        "v"
+      ]
+    },
+    {
+      "path": "unity/Assets/Scripts/Backend/UnityWebRequestAsync.cs",
+      "keyword_line_count": 2,
+      "keywords_observed": [
+        "a",
+        "v"
+      ]
+    },
+    {
+      "path": "unity/Assets/Scripts/Backend/VexforgeRepository.cs",
+      "keyword_line_count": 14,
+      "keywords_observed": [
+        "a",
+        "v",
+        "m",
+        "r",
+        "w"
+      ]
+    },
+    {
+      "path": "unity/Assets/Scripts/Backend/VexforgeSocialRepository.cs",
+      "keyword_line_count": 8,
+      "keywords_observed": [
+        "a",
+        "v"
+      ]
+    },
+    {
+      "path": "unity/Assets/Scripts/Core/AppLogger.cs",
+      "keyword_line_count": 2,
+      "keywords_observed": [
+        "v"
+      ]
+    },
+    {
+      "path": "unity/Assets/Scripts/Core/NavigationService.cs",
+      "keyword_line_count": 4,
+      "keywords_observed": [
+        "v",
+        "r",
+        "e"
+      ]
+    },
+    {
+      "path": "unity/Assets/Scripts/Core/PersistentRuntimeState.cs",
+      "keyword_line_count": 3,
+      "keywords_observed": [
+        "v"
+      ]
+    },
+    {
+      "path": "unity/Assets/Scripts/Core/RuntimeEnvironment.cs",
+      "keyword_line_count": 2,
+      "keywords_observed": [
+        "v",
+        "a"
+      ]
+    },
+    {
+      "path": "unity/Assets/Scripts/Core/ServiceRegistry.cs",
+      "keyword_line_count": 2,
+      "keywords_observed": [
+        "v",
+        "a"
+      ]
+    },
+    {
+      "path": "unity/Assets/Scripts/Core/VexforgeApp.cs",
+      "keyword_line_count": 13,
+      "keywords_observed": [
+        "a",
+        "v"
+      ]
+    },
+    {
+      "path": "unity/Assets/Scripts/GameState/GameStateStore.cs",
+      "keyword_line_count": 14,
+      "keywords_observed": [
+        "a",
+        "v",
+        "w"
+      ]
+    },
+    {
+      "path": "unity/Assets/Scripts/Presentation/BattlePresentationDirector.cs",
+      "keyword_line_count": 7,
+      "keywords_observed": [
+        "v",
+        "a"
+      ]
+    },
+    {
+      "path": "unity/Assets/Scripts/Presentation/Editor/VexforgeR5FoundationGate.cs",
+      "keyword_line_count": 44,
+      "keywords_observed": [
+        "v",
+        "a",
+        "e"
+      ]
+    },
+    {
+      "path": "unity/Assets/Scripts/Presentation/Editor/VexforgeR5ProjectSetup.cs",
+      "keyword_line_count": 30,
+      "keywords_observed": [
+        "v",
+        "a"
+      ]
+    },
+    {
+      "path": "unity/Assets/Scripts/Presentation/NexusDevelopmentFallback.cs",
+      "keyword_line_count": 2,
+      "keywords_observed": [
+        "v",
+        "r"
+      ]
+    },
+    {
+      "path": "unity/Assets/Scripts/Presentation/NexusPresentationRoot.cs",
+      "keyword_line_count": 19,
+      "keywords_observed": [
+        "v",
+        "a",
+        "e"
+      ]
+    },
+    {
+      "path": "unity/Assets/Scripts/Presentation/SceneTransitionDirector.cs",
+      "keyword_line_count": 2,
+      "keywords_observed": [
+        "v",
+        "a"
+      ]
+    },
+    {
+      "path": "unity/Assets/Scripts/Presentation/VexforgeAlphaWorldDirector.cs",
+      "keyword_line_count": 53,
+      "keywords_observed": [
+        "v",
+        "a",
+        "e",
+        "t"
+      ]
+    },
+    {
+      "path": "unity/Assets/Scripts/Presentation/VexforgeBattlefieldStage.cs",
+      "keyword_line_count": 47,
+      "keywords_observed": [
+        "v",
+        "a"
+      ]
+    },
+    {
+      "path": "unity/Assets/Scripts/Presentation/VexforgeCardArtResolver.cs",
+      "keyword_line_count": 33,
+      "keywords_observed": [
+        "a",
+        "v"
+      ]
+    },
+    {
+      "path": "unity/Assets/Scripts/Presentation/VexforgeCardInspectionStage.cs",
+      "keyword_line_count": 11,
+      "keywords_observed": [
+        "v",
+        "a"
+      ]
+    },
+    {
+      "path": "unity/Assets/Scripts/Presentation/VexforgeCardPool.cs",
+      "keyword_line_count": 15,
+      "keywords_observed": [
+        "v",
+        "a"
+      ]
+    },
+    {
+      "path": "unity/Assets/Scripts/Presentation/VexforgeCardView.cs",
+      "keyword_line_count": 27,
+      "keywords_observed": [
+        "a",
+        "v"
+      ]
+    },
+    {
+      "path": "unity/Assets/Scripts/Presentation/VexforgeDiegeticInputRouter.cs",
+      "keyword_line_count": 16,
+      "keywords_observed": [
+        "v",
+        "a"
+      ]
+    },
+    {
+      "path": "unity/Assets/Scripts/Presentation/VexforgeNexusStage.cs",
+      "keyword_line_count": 13,
+      "keywords_observed": [
+        "v",
+        "a"
+      ]
+    },
+    {
+      "path": "unity/Assets/Scripts/Presentation/VexforgePortalPulse.cs",
+      "keyword_line_count": 2,
+      "keywords_observed": [
+        "v"
+      ]
+    },
+    {
+      "path": "unity/Assets/Scripts/Presentation/VexforgePresentationResources.cs",
+      "keyword_line_count": 7,
+      "keywords_observed": [
+        "v",
+        "a"
+      ]
+    },
+    {
+      "path": "unity/Assets/Scripts/Presentation/VexforgeRenderBootstrap.cs",
+      "keyword_line_count": 8,
+      "keywords_observed": [
+        "v",
+        "a"
+      ]
+    },
+    {
+      "path": "unity/Assets/Scripts/Presentation/VexforgeTextureLruCache.cs",
+      "keyword_line_count": 13,
+      "keywords_observed": [
+        "v",
+        "a",
+        "r"
+      ]
+    },
+    {
+      "path": "unity/Assets/Scripts/Presentation/VexforgeVirtualizedCardGallery.cs",
+      "keyword_line_count": 29,
+      "keywords_observed": [
+        "v",
+        "a"
+      ]
+    },
+    {
+      "path": "unity/Assets/Scripts/Presentation/VexforgeWorldHotspot.cs",
+      "keyword_line_count": 4,
+      "keywords_observed": [
+        "v"
+      ]
+    },
+    {
+      "path": "unity/Assets/Scripts/Session/SessionService.cs",
+      "keyword_line_count": 5,
+      "keywords_observed": [
+        "a",
+        "v"
+      ]
+    },
+    {
+      "path": "unity/Assets/Scripts/UI/GameShellController.cs",
+      "keyword_line_count": 87,
+      "keywords_observed": [
+        "a",
+        "v",
+        "e",
+        "t",
+        "w"
+      ]
+    },
+    {
+      "path": "unity/Assets/Scripts/UI/UiFactory.cs",
+      "keyword_line_count": 17,
+      "keywords_observed": [
+        "v",
+        "a"
+      ]
+    },
+    {
+      "path": "unity/Assets/Scripts/UI/VexforgeAlphaHud.cs",
+      "keyword_line_count": 81,
+      "keywords_observed": [
+        "v",
+        "a",
+        "e",
+        "w"
+      ]
+    },
+    {
+      "path": "unity/Assets/Scripts/UI/VexforgeGlobalChatDock.cs",
+      "keyword_line_count": 4,
+      "keywords_observed": [
+        "v"
+      ]
+    },
+    {
+      "path": "unity/Assets/Scripts/UI/VexforgeSocialHub.cs",
+      "keyword_line_count": 65,
+      "keywords_observed": [
+        "a",
+        "v"
+      ]
+    },
+    {
+      "path": "unity/ProjectSettings/EditorBuildSettings.asset",
+      "keyword_line_count": 1,
+      "keywords_observed": [
+        "v"
+      ]
+    },
+    {
+      "path": "unity/ProjectSettings/ProjectSettings.asset",
+      "keyword_line_count": 9,
+      "keywords_observed": [
+        "v",
+        "a",
+        "p"
+      ]
+    }
+  ],
+  "parity": [
+    {
+      "contract": "Supabase HTTPS/auth client",
+      "supabase_live": "Project ACTIVE_HEALTHY; public REST/RPC objects present",
+      "unity_consumer": "SupabaseClient + SupabaseAuthService + environment URL; authenticated Bearer token",
+      "legacy_mobile_web": "Supabase JS client in mobile/src",
+      "status": "CONNECTED"
+    },
+    {
+      "contract": "player profile/progress/catalog/collection/deck/missions",
+      "supabase_live": "Tables/RPCs exist",
+      "unity_consumer": "VexforgeRepository reads players, player_progress, cards, player_cards, player_deck, missions",
+      "legacy_mobile_web": "Repositories/routes exist",
+      "status": "PARTIAL"
+    },
+    {
+      "contract": "player_wallet",
+      "supabase_live": "wallet fields and RLS present",
+      "unity_consumer": "GetWalletAsync read only",
+      "legacy_mobile_web": "economy repository read path",
+      "status": "PARTIAL"
+    },
+    {
+      "contract": "economy_ledger and economy stats RPC",
+      "supabase_live": "ledger and vexforge_get_my_economy_stats exist",
+      "unity_consumer": "No Unity contract/method found",
+      "legacy_mobile_web": "economy repository calls stats RPC and reads ledger",
+      "status": "MISSING"
+    },
+    {
+      "contract": "battle resolve",
+      "supabase_live": "vexforge_battle_resolve exists",
+      "unity_consumer": "ResolveBattleAsync with idempotency key; presentation route exists",
+      "legacy_mobile_web": "battleRuns and battle routes exist",
+      "status": "CONNECTED"
+    },
+    {
+      "contract": "battle reward parity",
+      "supabase_live": "reward details require function graph",
+      "unity_consumer": "BattleResult has no explicit reward/economy fields",
+      "legacy_mobile_web": "battle result/reward UI references exist",
+      "status": "PARTIAL"
+    },
+    {
+      "contract": "marketplace create/buy/cancel",
+      "supabase_live": "create_listing/buy_listing/cancel_listing exist",
+      "unity_consumer": "No Unity marketplace methods/UI found",
+      "legacy_mobile_web": "market repository and market routes call RPCs",
+      "status": "MISSING"
+    },
+    {
+      "contract": "packs/catalog/open",
+      "supabase_live": "catalog + buy/open RPCs exist",
+      "unity_consumer": "No Unity pack methods/UI found",
+      "legacy_mobile_web": "packs repository calls catalog/buy/open",
+      "status": "MISSING"
+    },
+    {
+      "contract": "deposits",
+      "supabase_live": "submit/get RPCs exist",
+      "unity_consumer": "No Unity deposit methods/UI found",
+      "legacy_mobile_web": "deposit repository/UI exists",
+      "status": "MISSING"
+    },
+    {
+      "contract": "withdrawals",
+      "supabase_live": "request RPC + official request table exist",
+      "unity_consumer": "No Unity withdrawal methods/UI found",
+      "legacy_mobile_web": "withdrawal repository/UI exists",
+      "status": "MISSING"
+    },
+    {
+      "contract": "ads/rewards",
+      "supabase_live": "vexforge_ad_views exists with client insert policy",
+      "unity_consumer": "No Unity ad reward consumer found",
+      "legacy_mobile_web": "web/mobile ad references exist",
+      "status": "DANGEROUS"
+    },
+    {
+      "contract": "referrals",
+      "supabase_live": "vexforge_referrals and pack trigger exist",
+      "unity_consumer": "No Unity referral consumer found",
+      "legacy_mobile_web": "legacy referral references exist",
+      "status": "MISSING"
+    },
+    {
+      "contract": "NFT wallet/mint",
+      "supabase_live": "contract/link/mint queue tables exist",
+      "unity_consumer": "No Unity NFT consumer found",
+      "legacy_mobile_web": "src/domains/nft exists",
+      "status": "MISSING"
+    },
+    {
+      "contract": "social",
+      "supabase_live": "social routines/tables exist",
+      "unity_consumer": "VexforgeSocialRepository + SocialHub",
+      "legacy_mobile_web": "social domain/routes exist",
+      "status": "CONNECTED"
+    }
+  ],
+  "missing_requested_canonical_docs": [
+    "16_IMPLEMENTATION_STATUS.md",
+    "17_CURRENT_BLOCK.md",
+    "18_DECISIONS.md",
+    "19_BLOCKERS.md",
+    "20_KNOWN_UNKNOWNS.md",
+    "21_CONTRADICTIONS.md",
+    "26_UNITY_ENGINE_MIGRATION.md"
+  ],
+  "note": "The canonical versions are under docs/vexforge-canonical/.",
+  "all_unity_files": [
+    "unity/.gitignore",
+    "unity/Assets/Editor/VexforgeR5CloudBuildGate.cs",
+    "unity/Assets/Editor/VexforgeR5CloudBuildGate.cs.meta",
+    "unity/Assets/Resources/VexforgeEnvironment.json",
+    "unity/Assets/Resources/VexforgeEnvironment.json.meta",
+    "unity/Assets/Scenes/VexforgeBootstrap.unity",
+    "unity/Assets/Scenes/VexforgeBootstrap.unity.meta",
+    "unity/Assets/Scripts/Backend/ApiContracts.cs",
+    "unity/Assets/Scripts/Backend/JsonArrayUtility.cs",
+    "unity/Assets/Scripts/Backend/SupabaseAuthService.cs",
+    "unity/Assets/Scripts/Backend/SupabaseClient.cs",
+    "unity/Assets/Scripts/Backend/UnityWebRequestAsync.cs",
+    "unity/Assets/Scripts/Backend/VexforgeRepository.cs",
+    "unity/Assets/Scripts/Backend/VexforgeSocialRepository.cs",
+    "unity/Assets/Scripts/Backend/VexforgeSocialRepository.cs.meta",
+    "unity/Assets/Scripts/Core/AppLogger.cs",
+    "unity/Assets/Scripts/Core/NavigationService.cs",
+    "unity/Assets/Scripts/Core/PersistentRuntimeState.cs",
+    "unity/Assets/Scripts/Core/RuntimeEnvironment.cs",
+    "unity/Assets/Scripts/Core/ServiceRegistry.cs",
+    "unity/Assets/Scripts/Core/VexforgeApp.cs",
+    "unity/Assets/Scripts/Core/VexforgeApp.cs.meta",
+    "unity/Assets/Scripts/GameState/GameStateStore.cs",
+    "unity/Assets/Scripts/Presentation/BattlePresentationDirector.cs",
+    "unity/Assets/Scripts/Presentation/BattlePresentationDirector.cs.meta",
+    "unity/Assets/Scripts/Presentation/Editor/VexforgeR5FoundationGate.cs",
+    "unity/Assets/Scripts/Presentation/Editor/VexforgeR5FoundationGate.cs.meta",
+    "unity/Assets/Scripts/Presentation/Editor/VexforgeR5ProjectSetup.cs",
+    "unity/Assets/Scripts/Presentation/NexusDevelopmentFallback.cs",
+    "unity/Assets/Scripts/Presentation/NexusPresentationRoot.cs",
+    "unity/Assets/Scripts/Presentation/SceneTransitionDirector.cs",
+    "unity/Assets/Scripts/Presentation/VexforgeAlphaWorldDirector.cs",
+    "unity/Assets/Scripts/Presentation/VexforgeAlphaWorldDirector.cs.meta",
+    "unity/Assets/Scripts/Presentation/VexforgeBattlefieldStage.cs",
+    "unity/Assets/Scripts/Presentation/VexforgeBattlefieldStage.cs.meta",
+    "unity/Assets/Scripts/Presentation/VexforgeCardArtResolver.cs",
+    "unity/Assets/Scripts/Presentation/VexforgeCardInspectionStage.cs",
+    "unity/Assets/Scripts/Presentation/VexforgeCardInspectionStage.cs.meta",
+    "unity/Assets/Scripts/Presentation/VexforgeCardPool.cs",
+    "unity/Assets/Scripts/Presentation/VexforgeCardView.cs",
+    "unity/Assets/Scripts/Presentation/VexforgeDiegeticInputRouter.cs",
+    "unity/Assets/Scripts/Presentation/VexforgeNexusStage.cs",
+    "unity/Assets/Scripts/Presentation/VexforgePortalPulse.cs",
+    "unity/Assets/Scripts/Presentation/VexforgePortalPulse.cs.meta",
+    "unity/Assets/Scripts/Presentation/VexforgePresentationResources.cs",
+    "unity/Assets/Scripts/Presentation/VexforgeRenderBootstrap.cs",
+    "unity/Assets/Scripts/Presentation/VexforgeTextureLruCache.cs",
+    "unity/Assets/Scripts/Presentation/VexforgeVirtualizedCardGallery.cs",
+    "unity/Assets/Scripts/Presentation/VexforgeWorldHotspot.cs",
+    "unity/Assets/Scripts/Session/SessionService.cs",
+    "unity/Assets/Scripts/UI/GameShellController.cs",
+    "unity/Assets/Scripts/UI/UiFactory.cs",
+    "unity/Assets/Scripts/UI/VexforgeAlphaHud.cs",
+    "unity/Assets/Scripts/UI/VexforgeAlphaHud.cs.meta",
+    "unity/Assets/Scripts/UI/VexforgeGlobalChatDock.cs",
+    "unity/Assets/Scripts/UI/VexforgeGlobalChatDock.cs.meta",
+    "unity/Assets/Scripts/UI/VexforgeSocialHub.cs",
+    "unity/Assets/Scripts/UI/VexforgeSocialHub.cs.meta",
+    "unity/Packages/manifest.json",
+    "unity/Packages/packages-lock.json",
+    "unity/ProjectSettings/EditorBuildSettings.asset",
+    "unity/ProjectSettings/ProjectSettings.asset",
+    "unity/ProjectSettings/ProjectVersion.txt"
+  ],
+  "exact_keyword_references": [
+    {
+      "path": "unity/Assets/Resources/VexforgeEnvironment.json",
+      "matches": [
+        {
+          "line": 2,
+          "text": "\"supabaseUrl\": \"[HTTPS_URL_REDACTED]\","
+        },
+        {
+          "line": 3,
+          "text": "\"supabaseAnonKey\": \"sb_publishable_3eGRSpvxptO09eQQzpxysQ_Imq8zi58\","
+        }
+      ]
+    },
+    {
+      "path": "unity/Assets/Scripts/Backend/ApiContracts.cs",
+      "matches": [
+        {
+          "line": 23,
+          "text": "public sealed class PlayerProfile"
+        },
+        {
+          "line": 31,
+          "text": "public bool is_admin;"
+        },
+        {
+          "line": 32,
+          "text": "public bool is_super_admin;"
+        },
+        {
+          "line": 36,
+          "text": "public sealed class PlayerProgress"
+        },
+        {
+          "line": 48,
+          "text": "public sealed class CardRecord"
+        },
+        {
+          "line": 62,
+          "text": "public string card_tier;"
+        },
+        {
+          "line": 63,
+          "text": "public string card_domain;"
+        },
+        {
+          "line": 64,
+          "text": "public bool marketable;"
+        },
+        {
+          "line": 69,
+          "text": "public sealed class PlayerCardRecord"
+        },
+        {
+          "line": 72,
+          "text": "public string card_id;"
+        },
+        {
+          "line": 76,
+          "text": "public CardRecord card;"
+        },
+        {
+          "line": 84,
+          "text": "public string card_id;"
+        },
+        {
+          "line": 98,
+          "text": "public int card_count;"
+        },
+        {
+          "line": 112,
+          "text": "public sealed class MissionRecord"
+        },
+        {
+          "line": 117,
+          "text": "public string mission_type;"
+        },
+        {
+          "line": 119,
+          "text": "public int reward_xp;"
+        },
+        {
+          "line": 120,
+          "text": "public int reward_vex_ingame;"
+        },
+        {
+          "line": 121,
+          "text": "public int reward_vex_tradeable;"
+        },
+        {
+          "line": 124,
+          "text": "public string mission_group;"
+        },
+        {
+          "line": 128,
+          "text": "public sealed class WalletRecord"
+        },
+        {
+          "line": 130,
+          "text": "public decimal vex_ingame;"
+        },
+        {
+          "line": 131,
+          "text": "public decimal vex_tradeable;"
+        },
+        {
+          "line": 132,
+          "text": "public decimal reserved_ingame;"
+        },
+        {
+          "line": 133,
+          "text": "public decimal reserved_tradeable;"
+        },
+        {
+          "line": 137,
+          "text": "public sealed class BattleResult"
+        },
+        {
+          "line": 145,
+          "text": "public BattleEvent[] events;"
+        },
+        {
+          "line": 147,
+          "text": "public BattleTurn[] turns;"
+        },
+        {
+          "line": 148,
+          "text": "public BattleUnitState[] final_units;"
+        },
+        {
+          "line": 153,
+          "text": "public sealed class BattleTurn"
+        },
+        {
+          "line": 163,
+          "text": "public sealed class BattleUnitState"
+        },
+        {
+          "line": 188,
+          "text": "public sealed class BattleEvent"
+        },
+        {
+          "line": 195,
+          "text": "public string payload;"
+        }
+      ]
+    },
+    {
+      "path": "unity/Assets/Scripts/Backend/SupabaseAuthService.cs",
+      "matches": [
+        {
+          "line": 1,
+          "text": "using System.Threading.Tasks;"
+        },
+        {
+          "line": 15,
+          "text": "public sealed class SupabaseAuthService"
+        },
+        {
+          "line": 17,
+          "text": "private readonly SupabaseClient client;"
+        },
+        {
+          "line": 20,
+          "text": "public SupabaseAuthService(SupabaseClient client)"
+        },
+        {
+          "line": 29,
+          "text": "\"{\\\"email\\\":\" + SupabaseClient.Quote(email) + \",\\\"password\\\":\" + SupabaseClient.Quote(password) + \"}\","
+        },
+        {
+          "line": 38,
+          "text": "\"{\\\"refresh_token\\\":\" + SupabaseClient.Quote(refreshToken) + \"}\","
+        },
+        {
+          "line": 49,
+          "text": "private bool ApplyAuthResponse(SupabaseResponse response)"
+        },
+        {
+          "line": 53,
+          "text": "AppLogger.Warning(\"Supabase auth unavailable: \" + response.StatusCode);"
+        },
+        {
+          "line": 57,
+          "text": "var payload = JsonUtility.FromJson<AuthResponse>(response.Body);"
+        },
+        {
+          "line": 58,
+          "text": "if (payload == null || string.IsNullOrWhiteSpace(payload.access_token))"
+        },
+        {
+          "line": 60,
+          "text": "AppLogger.Warning(\"Supabase auth response did not contain a session.\");"
+        },
+        {
+          "line": 68,
+          "text": "userId = payload.user != null ? payload.user.id : payload.user_id,"
+        },
+        {
+          "line": 69,
+          "text": "email = payload.user != null ? payload.user.email : string.Empty"
+        }
+      ]
+    },
+    {
+      "path": "unity/Assets/Scripts/Backend/SupabaseClient.cs",
+      "matches": [
+        {
+          "line": 3,
+          "text": "using System.Threading.Tasks;"
+        },
+        {
+          "line": 9,
+          "text": "public sealed class SupabaseResponse"
+        },
+        {
+          "line": 17,
+          "text": "public sealed class SupabaseClient"
+        },
+        {
+          "line": 19,
+          "text": "private readonly RuntimeEnvironmentData environment;"
+        },
+        {
+          "line": 22,
+          "text": "public SupabaseClient(RuntimeEnvironmentData environment)"
+        },
+        {
+          "line": 33,
+          "text": "public async Task<SupabaseResponse> GetAsync(string path, bool authenticated = true)"
+        },
+        {
+          "line": 35,
+          "text": "var request = UnityWebRequest.Get(environment.supabaseUrl.TrimEnd('/') + \"/\" + path.TrimStart('/'));"
+        },
+        {
+          "line": 39,
+          "text": "public async Task<SupabaseResponse> PostAsync(string path, string json, bool authenticated = true)"
+        },
+        {
+          "line": 41,
+          "text": "var request = new UnityWebRequest(environment.supabaseUrl.TrimEnd('/') + \"/\" + path.TrimStart('/'), \"POST\");"
+        },
+        {
+          "line": 42,
+          "text": "request.uploadHandler = new UploadHandlerRaw(Encoding.UTF8.GetBytes(json ?? \"{}\"));"
+        },
+        {
+          "line": 43,
+          "text": "request.downloadHandler = new DownloadHandlerBuffer();"
+        },
+        {
+          "line": 44,
+          "text": "request.SetRequestHeader(\"Content-Type\", \"application/json\");"
+        },
+        {
+          "line": 48,
+          "text": "public async Task<SupabaseResponse> RpcAsync(string functionName, string json, bool authenticated = true)"
+        },
+        {
+          "line": 53,
+          "text": "private async Task<SupabaseResponse> SendAsync(UnityWebRequest request, bool authenticated)"
+        },
+        {
+          "line": 56,
+          "text": "request.SetRequestHeader(\"apikey\", environment.supabaseAnonKey);"
+        },
+        {
+          "line": 59,
+          "text": "request.SetRequestHeader(\"Authorization\", \"Bearer \" + accessToken);"
+        },
+        {
+          "line": 63,
+          "text": "var body = completed.downloadHandler == null ? string.Empty : completed.downloadHandler.text;"
+        },
+        {
+          "line": 65,
+          "text": "var response = new SupabaseResponse"
+        }
+      ]
+    },
+    {
+      "path": "unity/Assets/Scripts/Backend/UnityWebRequestAsync.cs",
+      "matches": [
+        {
+          "line": 1,
+          "text": "using System.Threading.Tasks;"
+        }
+      ]
+    },
+    {
+      "path": "unity/Assets/Scripts/Backend/VexforgeRepository.cs",
+      "matches": [
+        {
+          "line": 2,
+          "text": "using System.Threading.Tasks;"
+        },
+        {
+          "line": 9,
+          "text": "private readonly SupabaseClient client;"
+        },
+        {
+          "line": 11,
+          "text": "public VexforgeRepository(SupabaseClient client)"
+        },
+        {
+          "line": 16,
+          "text": "public async Task<string> GetCurrentPlayerIdAsync(string authUserId)"
+        },
+        {
+          "line": 18,
+          "text": "var response = await client.GetAsync(\"rest/v1/players?select=id&auth_user_id=eq.\" + Uri.EscapeDataString(authUserId) + \"&limit=1\");"
+        },
+        {
+          "line": 19,
+          "text": "var players = Array<PlayerIdRecord>(response);"
+        },
+        {
+          "line": 20,
+          "text": "return players.Length > 0 ? players[0].id : null;"
+        },
+        {
+          "line": 23,
+          "text": "public async Task<PlayerProfile> GetPlayerProfileAsync(string authUserId)"
+        },
+        {
+          "line": 25,
+          "text": "var response = await client.GetAsync(\"rest/v1/players?select=id,display_name,email,role,status,created_at,is_admin,is_super_admin&auth_user_id=eq.\" + Uri.EscapeDataString(authUserId) + \"&limit=1\");"
+        },
+        {
+          "line": 26,
+          "text": "return First<PlayerProfile>(response);"
+        },
+        {
+          "line": 29,
+          "text": "public async Task<PlayerProgress> GetPlayerProgressAsync(string playerId)"
+        },
+        {
+          "line": 31,
+          "text": "var response = await client.GetAsync(\"rest/v1/player_progress?select=level,xp,xp_to_next,energy,max_energy,tutorial_step,starter_region&player_id=eq.\" + Uri.EscapeDataString(playerId) + \"&limit=1\");"
+        },
+        {
+          "line": 32,
+          "text": "return First<PlayerProgress>(response);"
+        },
+        {
+          "line": 35,
+          "text": "public async Task<CardRecord[]> GetCatalogAsync()"
+        },
+        {
+          "line": 37,
+          "text": "var response = await client.GetAsync(\"rest/v1/cards?select=id,code,name,faction,rarity,specialization,power,affinity,prestige,charge,lore,image_url,card_tier,card_domain,marketable,fusion_enabled&active=eq.true&order=name.asc&limit=1000\");"
+        },
+        {
+          "line": 38,
+          "text": "return Array<CardRecord>(response);"
+        },
+        {
+          "line": 41,
+          "text": "public async Task<PlayerCardRecord[]> GetCollectionAsync(string playerId)"
+        },
+        {
+          "line": 43,
+          "text": "var response = await client.GetAsync(\"rest/v1/player_cards?select=id,card_id,quantity,locked,listed&player_id=eq.\" + Uri.EscapeDataString(playerId));"
+        },
+        {
+          "line": 44,
+          "text": "var rows = Array<PlayerCardRecord>(response);"
+        },
+        {
+          "line": 48,
+          "text": "rows[i].card = FindCard(catalog, rows[i].card_id);"
+        },
+        {
+          "line": 53,
+          "text": "public async Task<DeckSlot[]> GetDeckAsync(string playerId)"
+        },
+        {
+          "line": 55,
+          "text": "var response = await client.GetAsync(\"rest/v1/player_deck?select=slot_number,card_id,is_champion&player_id=eq.\" + Uri.EscapeDataString(playerId) + \"&order=slot_number.asc\");"
+        },
+        {
+          "line": 60,
+          "text": "var card = FindCard(catalog, rows[i].card_id);"
+        },
+        {
+          "line": 61,
+          "text": "if (card == null) continue;"
+        },
+        {
+          "line": 62,
+          "text": "rows[i].code = card.code;"
+        },
+        {
+          "line": 63,
+          "text": "rows[i].name = card.name;"
+        },
+        {
+          "line": 64,
+          "text": "rows[i].rarity = card.rarity;"
+        },
+        {
+          "line": 65,
+          "text": "rows[i].faction = card.faction;"
+        },
+        {
+          "line": 66,
+          "text": "rows[i].power = card.power;"
+        },
+        {
+          "line": 67,
+          "text": "rows[i].image_url = card.image_url;"
+        },
+        {
+          "line": 72,
+          "text": "public async Task<DeckValidation> ValidateDeckAsync(string[] cardIds)"
+        },
+        {
+          "line": 74,
+          "text": "var response = await client.RpcAsync(\"validate_deck\", \"{\\\"p_card_ids\\\":\" + JsonArray(cardIds) + \"}\");"
+        },
+        {
+          "line": 78,
+          "text": "public async Task<SaveDeckResult> SaveDeckAsync(string[] cardIds)"
+        },
+        {
+          "line": 80,
+          "text": "var response = await client.RpcAsync(\"save_deck\", \"{\\\"p_card_ids\\\":\" + JsonArray(cardIds) + \"}\");"
+        },
+        {
+          "line": 84,
+          "text": "public async Task<BattleResult> ResolveBattleAsync(string challengerId, string opponentId, string idempotencyKey)"
+        },
+        {
+          "line": 86,
+          "text": "var json = \"{\\\"p_challenger_id\\\":\" + SupabaseClient.Quote(challengerId) +"
+        },
+        {
+          "line": 87,
+          "text": "\",\\\"p_opponent_id\\\":\" + SupabaseClient.Quote(opponentId) +"
+        },
+        {
+          "line": 88,
+          "text": "\",\\\"p_idempotency_key\\\":\" + SupabaseClient.Quote(idempotencyKey) + \"}\";"
+        },
+        {
+          "line": 89,
+          "text": "var response = await client.RpcAsync(\"vexforge_battle_resolve\", json);"
+        },
+        {
+          "line": 90,
+          "text": "return Json<BattleResult>(response);"
+        },
+        {
+          "line": 95,
+          "text": "var json = \"{\\\"p_match_id\\\":\" + SupabaseClient.Quote(matchId) +"
+        },
+        {
+          "line": 101,
+          "text": "public async Task<FormationWriteResult> ForfeitBattleAsync(string opponentId, string idempotencyKey)"
+        },
+        {
+          "line": 103,
+          "text": "var json = \"{\\\"p_opponent_id\\\":\" + SupabaseClient.Quote(opponentId) +"
+        },
+        {
+          "line": 104,
+          "text": "\",\\\"p_idempotency_key\\\":\" + SupabaseClient.Quote(idempotencyKey) + \"}\";"
+        },
+        {
+          "line": 109,
+          "text": "public async Task<MissionRecord[]> GetMissionsAsync()"
+        },
+        {
+          "line": 111,
+          "text": "var response = await client.GetAsync(\"rest/v1/missions?select=id,code,name,mission_type,energy_cost,reward_xp,reward_vex_ingame,reward_vex_tradeable,cooldown_seconds,difficulty,mission_group&active=eq.true&system_locked=eq.false&production_ready=eq.true&order=mission_order.asc\");"
+        },
+        {
+          "line": 112,
+          "text": "return Array<MissionRecord>(response);"
+        },
+        {
+          "line": 115,
+          "text": "public async Task<WalletRecord> GetWalletAsync(string playerId)"
+        },
+        {
+          "line": 117,
+          "text": "var response = await client.GetAsync(\"rest/v1/player_wallet?select=vex_ingame,vex_tradeable,reserved_ingame,reserved_tradeable&player_id=eq.\" + Uri.EscapeDataString(playerId) + \"&limit=1\");"
+        },
+        {
+          "line": 118,
+          "text": "return First<WalletRecord>(response);"
+        },
+        {
+          "line": 121,
+          "text": "private static CardRecord FindCard(CardRecord[] catalog, string id)"
+        },
+        {
+          "line": 138,
+          "text": "result += SupabaseClient.Quote(values[i]);"
+        },
+        {
+          "line": 143,
+          "text": "private static T Json<T>(SupabaseResponse response) where T : class"
+        },
+        {
+          "line": 149,
+          "text": "private static T First<T>(SupabaseResponse response) where T : class"
+        },
+        {
+          "line": 155,
+          "text": "private static T[] Array<T>(SupabaseResponse response) where T : class"
+        },
+        {
+          "line": 162,
+          "text": "private sealed class PlayerIdRecord"
+        }
+      ]
+    },
+    {
+      "path": "unity/Assets/Scripts/Backend/VexforgeSocialRepository.cs",
+      "matches": [
+        {
+          "line": 2,
+          "text": "using System.Threading.Tasks;"
+        },
+        {
+          "line": 32,
+          "text": "public string player_id;"
+        },
+        {
+          "line": 38,
+          "text": "public sealed class SocialSearchPlayer"
+        },
+        {
+          "line": 63,
+          "text": "public SocialSearchPlayer[] players;"
+        },
+        {
+          "line": 70,
+          "text": "public string other_player_id;"
+        },
+        {
+          "line": 74,
+          "text": "public int unread_count;"
+        },
+        {
+          "line": 89,
+          "text": "public string sender_player_id;"
+        },
+        {
+          "line": 107,
+          "text": "public string player_id;"
+        },
+        {
+          "line": 166,
+          "text": "private readonly SupabaseClient client;"
+        },
+        {
+          "line": 168,
+          "text": "public VexforgeSocialRepository(SupabaseClient client)"
+        },
+        {
+          "line": 178,
+          "text": "public Task<SocialSearchData> SearchPlayersAsync(string query, int limit = 20)"
+        },
+        {
+          "line": 181,
+          "text": "\"social_search_players\","
+        },
+        {
+          "line": 182,
+          "text": "\"{\\\"p_query\\\":\" + SupabaseClient.Quote(query ?? string.Empty) + \",\\\"p_limit\\\":\" + limit + \"}\");"
+        },
+        {
+          "line": 185,
+          "text": "public Task<SocialActionResult> SendFriendRequestAsync(string playerId)"
+        },
+        {
+          "line": 189,
+          "text": "\"{\\\"p_target_player_id\\\":\" + SupabaseClient.Quote(playerId) + \"}\");"
+        },
+        {
+          "line": 196,
+          "text": "\"{\\\"p_request_id\\\":\" + SupabaseClient.Quote(requestId) + \",\\\"p_accept\\\":\" + (accept ? \"true\" : \"false\") + \"}\");"
+        },
+        {
+          "line": 203,
+          "text": "\"{\\\"p_request_id\\\":\" + SupabaseClient.Quote(requestId) + \"}\");"
+        },
+        {
+          "line": 206,
+          "text": "public Task<SocialActionResult> RemoveFriendAsync(string playerId)"
+        },
+        {
+          "line": 210,
+          "text": "\"{\\\"p_friend_player_id\\\":\" + SupabaseClient.Quote(playerId) + \"}\");"
+        },
+        {
+          "line": 213,
+          "text": "public Task<SocialActionResult> BlockPlayerAsync(string playerId)"
+        },
+        {
+          "line": 216,
+          "text": "\"social_block_player\","
+        },
+        {
+          "line": 217,
+          "text": "\"{\\\"p_target_player_id\\\":\" + SupabaseClient.Quote(playerId) + \"}\");"
+        },
+        {
+          "line": 220,
+          "text": "public Task<SocialActionResult> UnblockPlayerAsync(string playerId)"
+        },
+        {
+          "line": 223,
+          "text": "\"social_unblock_player\","
+        },
+        {
+          "line": 224,
+          "text": "\"{\\\"p_target_player_id\\\":\" + SupabaseClient.Quote(playerId) + \"}\");"
+        },
+        {
+          "line": 232,
+          "text": "public Task<SocialActionResult> GetOrCreateConversationAsync(string friendPlayerId)"
+        },
+        {
+          "line": 236,
+          "text": "\"{\\\"p_friend_player_id\\\":\" + SupabaseClient.Quote(friendPlayerId) + \"}\");"
+        },
+        {
+          "line": 243,
+          "text": "\"{\\\"p_conversation_id\\\":\" + SupabaseClient.Quote(conversationId) + \",\\\"p_limit\\\":\" + limit + \"}\");"
+        },
+        {
+          "line": 246,
+          "text": "public Task<SocialActionResult> MarkPrivateReadAsync(string conversationId)"
+        },
+        {
+          "line": 249,
+          "text": "\"social_mark_private_read\","
+        },
+        {
+          "line": 250,
+          "text": "\"{\\\"p_conversation_id\\\":\" + SupabaseClient.Quote(conversationId) + \"}\");"
+        },
+        {
+          "line": 257,
+          "text": "\"{\\\"p_conversation_id\\\":\" + SupabaseClient.Quote(conversationId) + \",\\\"p_body\\\":\" + SupabaseClient.Quote(body) + \"}\");"
+        },
+        {
+          "line": 271,
+          "text": "\"{\\\"p_body\\\":\" + SupabaseClient.Quote(body) + \"}\");"
+        },
+        {
+          "line": 283,
+          "text": "\"{\\\"p_name\\\":\" + SupabaseClient.Quote(name) + \",\\\"p_description\\\":\" + SupabaseClient.Quote(description) + \"}\");"
+        },
+        {
+          "line": 290,
+          "text": "\"{\\\"p_clan_id\\\":\" + SupabaseClient.Quote(clanId) + \"}\");"
+        },
+        {
+          "line": 309,
+          "text": "\"{\\\"p_body\\\":\" + SupabaseClient.Quote(body) + \"}\");"
+        },
+        {
+          "line": 321,
+          "text": "\"{\\\"p_scope\\\":\" + SupabaseClient.Quote(scope) + \",\\\"p_message_id\\\":\" + SupabaseClient.Quote(messageId) + \",\\\"p_reason\\\":\" + SupabaseClient.Quote(reason) + \"}\");"
+        }
+      ]
+    },
+    {
+      "path": "unity/Assets/Scripts/Core/NavigationService.cs",
+      "matches": [
+        {
+          "line": 7,
+          "text": "/// Product-facing labels such as ARCHIVE, FORGE and BATTLEFIELD remain presentation labels only."
+        },
+        {
+          "line": 9,
+          "text": "/// remain stable: Boot=0, Nexus=1, Collection=2, Deck=3, Battle=4, Missions=5, Economy=6, Profile=7."
+        },
+        {
+          "line": 17,
+          "text": "Battle = 4,"
+        },
+        {
+          "line": 18,
+          "text": "Missions = 5,"
+        },
+        {
+          "line": 19,
+          "text": "Economy = 6,"
+        }
+      ]
+    },
+    {
+      "path": "unity/Assets/Scripts/Core/PersistentRuntimeState.cs",
+      "matches": [
+        {
+          "line": 12,
+          "text": "get { return PlayerPrefs.GetInt(ReducedMotionKey, 0) == 1; }"
+        },
+        {
+          "line": 15,
+          "text": "PlayerPrefs.SetInt(ReducedMotionKey, value ? 1 : 0);"
+        },
+        {
+          "line": 16,
+          "text": "PlayerPrefs.Save();"
+        },
+        {
+          "line": 22,
+          "text": "get { return PlayerPrefs.GetString(LastRouteKey, \"nexus\"); }"
+        },
+        {
+          "line": 25,
+          "text": "PlayerPrefs.SetString(LastRouteKey, value ?? \"nexus\");"
+        },
+        {
+          "line": 26,
+          "text": "PlayerPrefs.Save();"
+        }
+      ]
+    },
+    {
+      "path": "unity/Assets/Scripts/Core/RuntimeEnvironment.cs",
+      "matches": [
+        {
+          "line": 8,
+          "text": "public string supabaseUrl;"
+        },
+        {
+          "line": 9,
+          "text": "public string supabaseAnonKey;"
+        },
+        {
+          "line": 25,
+          "text": "var asset = Resources.Load<TextAsset>(\"VexforgeEnvironment\");"
+        },
+        {
+          "line": 45,
+          "text": "!string.IsNullOrWhiteSpace(data.supabaseUrl) &&"
+        },
+        {
+          "line": 46,
+          "text": "!string.IsNullOrWhiteSpace(data.supabaseAnonKey);"
+        }
+      ]
+    },
+    {
+      "path": "unity/Assets/Scripts/Core/ServiceRegistry.cs",
+      "matches": [
+        {
+          "line": 8,
+          "text": "private readonly Dictionary<Type, object> services = new Dictionary<Type, object>();"
+        }
+      ]
+    },
+    {
+      "path": "unity/Assets/Scripts/Core/VexforgeApp.cs",
+      "matches": [
+        {
+          "line": 1,
+          "text": "using System.Threading.Tasks;"
+        },
+        {
+          "line": 39,
+          "text": "DontDestroyOnLoad(gameObject);"
+        },
+        {
+          "line": 44,
+          "text": "var client = new SupabaseClient(RuntimeEnvironment.Current);"
+        },
+        {
+          "line": 45,
+          "text": "var auth = new SupabaseAuthService(client);"
+        },
+        {
+          "line": 59,
+          "text": "gameObject.AddComponent<GameShellController>();"
+        },
+        {
+          "line": 76,
+          "text": "InitializationError = \"La configuración de Supabase no está disponible.\";"
+        },
+        {
+          "line": 84,
+          "text": "AppLogger.Info(\"Foundation inicializada; esperando sesión autenticada.\");"
+        }
+      ]
+    },
+    {
+      "path": "unity/Assets/Scripts/GameState/GameStateStore.cs",
+      "matches": [
+        {
+          "line": 2,
+          "text": "using System.Threading.Tasks;"
+        },
+        {
+          "line": 11,
+          "text": "Loading,"
+        },
+        {
+          "line": 19,
+          "text": "private readonly VexforgeRepository repository;"
+        },
+        {
+          "line": 20,
+          "text": "private readonly SessionService session;"
+        },
+        {
+          "line": 30,
+          "text": "public PlayerProfile Profile { get; private set; }"
+        },
+        {
+          "line": 31,
+          "text": "public string PlayerId { get; private set; }"
+        },
+        {
+          "line": 32,
+          "text": "public PlayerProgress Progress { get; private set; }"
+        },
+        {
+          "line": 33,
+          "text": "public CardRecord[] Catalog { get; private set; } = new CardRecord[0];"
+        },
+        {
+          "line": 34,
+          "text": "public PlayerCardRecord[] Collection { get; private set; } = new PlayerCardRecord[0];"
+        },
+        {
+          "line": 36,
+          "text": "public MissionRecord[] Missions { get; private set; } = new MissionRecord[0];"
+        },
+        {
+          "line": 37,
+          "text": "public WalletRecord Wallet { get; private set; }"
+        },
+        {
+          "line": 45,
+          "text": "LastError = \"La sesión autenticada es necesaria para cargar el estado del jugador.\";"
+        },
+        {
+          "line": 49,
+          "text": "SetSync(SyncState.Loading);"
+        },
+        {
+          "line": 53,
+          "text": "var playerId = await repository.GetCurrentPlayerIdAsync(session.Current.userId);"
+        },
+        {
+          "line": 54,
+          "text": "if (string.IsNullOrWhiteSpace(playerId))"
+        },
+        {
+          "line": 56,
+          "text": "LastError = \"Supabase no devolvió un jugador para la sesión autenticada.\";"
+        },
+        {
+          "line": 60,
+          "text": "PlayerId = playerId;"
+        },
+        {
+          "line": 61,
+          "text": "Profile = await repository.GetPlayerProfileAsync(session.Current.userId);"
+        },
+        {
+          "line": 62,
+          "text": "Progress = await repository.GetPlayerProgressAsync(playerId);"
+        },
+        {
+          "line": 64,
+          "text": "Collection = await repository.GetCollectionAsync(playerId);"
+        },
+        {
+          "line": 65,
+          "text": "Deck = await repository.GetDeckAsync(playerId);"
+        },
+        {
+          "line": 66,
+          "text": "Missions = await repository.GetMissionsAsync();"
+        },
+        {
+          "line": 67,
+          "text": "Wallet = await repository.GetWalletAsync(playerId);"
+        },
+        {
+          "line": 80,
+          "text": "PlayerId = null;"
+        },
+        {
+          "line": 82,
+          "text": "Catalog = new CardRecord[0];"
+        },
+        {
+          "line": 83,
+          "text": "Collection = new PlayerCardRecord[0];"
+        },
+        {
+          "line": 85,
+          "text": "Missions = new MissionRecord[0];"
+        },
+        {
+          "line": 86,
+          "text": "Wallet = null;"
+        }
+      ]
+    },
+    {
+      "path": "unity/Assets/Scripts/Presentation/BattlePresentationDirector.cs",
+      "matches": [
+        {
+          "line": 17,
+          "text": "/// Converts authoritative backend BattleEvent objects into a visual sequence."
+        },
+        {
+          "line": 20,
+          "text": "public sealed class BattlePresentationDirector : MonoBehaviour"
+        },
+        {
+          "line": 24,
+          "text": "public event Action<BattleEvent> EventPresented;"
+        },
+        {
+          "line": 27,
+          "text": "private VexforgeBattlefieldStage battlefield;"
+        },
+        {
+          "line": 33,
+          "text": "VexforgeCardArtResolver resolver,"
+        },
+        {
+          "line": 34,
+          "text": "Func<string, CardRecord> cardLookup,"
+        },
+        {
+          "line": 35,
+          "text": "string localPlayerId)"
+        },
+        {
+          "line": 40,
+          "text": "var stages = GetComponentsInChildren<VexforgeBattlefieldStage>(true);"
+        },
+        {
+          "line": 45,
+          "text": "battlefield = stages[i];"
+        },
+        {
+          "line": 50,
+          "text": "if (battlefield == null)"
+        },
+        {
+          "line": 52,
+          "text": "var battlefieldObject = new GameObject(\"BattlefieldStage\");"
+        },
+        {
+          "line": 53,
+          "text": "battlefieldObject.transform.SetParent(transform, false);"
+        },
+        {
+          "line": 54,
+          "text": "battlefield = battlefieldObject.AddComponent<VexforgeBattlefieldStage>();"
+        },
+        {
+          "line": 57,
+          "text": "battlefield.Initialize(camera, resolver, cardLookup, localPlayerId);"
+        },
+        {
+          "line": 61,
+          "text": "public void SetLocalPlayerId(string playerId)"
+        },
+        {
+          "line": 63,
+          "text": "if (battlefield != null)"
+        },
+        {
+          "line": 64,
+          "text": "battlefield.SetLocalPlayerId(playerId);"
+        },
+        {
+          "line": 76,
+          "text": "if (battlefield != null)"
+        },
+        {
+          "line": 77,
+          "text": "battlefield.SetVisible(visible);"
+        },
+        {
+          "line": 84,
+          "text": "if (battlefield != null)"
+        },
+        {
+          "line": 85,
+          "text": "battlefield.SetVisible(false);"
+        },
+        {
+          "line": 89,
+          "text": "public void Play(BattleEvent[] events)"
+        },
+        {
+          "line": 94,
+          "text": "Debug.LogError(\"VEXFORGE BattlePresentationDirector.Play() requires Initialize() first.\", this);"
+        },
+        {
+          "line": 101,
+          "text": "StartCoroutine(PlaySequence(events ?? new BattleEvent[0], token));"
+        },
+        {
+          "line": 104,
+          "text": "private IEnumerator PlaySequence(BattleEvent[] events, int token)"
+        },
+        {
+          "line": 113,
+          "text": "battlefield.SetVisible(true);"
+        },
+        {
+          "line": 115,
+          "text": "foreach (var battleEvent in events)"
+        },
+        {
+          "line": 119,
+          "text": "if (battleEvent == null)"
+        },
+        {
+          "line": 122,
+          "text": "yield return battlefield.PresentEvent(battleEvent);"
+        },
+        {
+          "line": 125,
+          "text": "EventPresented?.Invoke(battleEvent);"
+        },
+        {
+          "line": 138,
+          "text": "if (battlefield != null)"
+        },
+        {
+          "line": 139,
+          "text": "battlefield.SetVisible(false);"
+        }
+      ]
+    },
+    {
+      "path": "unity/Assets/Scripts/Presentation/Editor/VexforgeR5FoundationGate.cs",
+      "matches": [
+        {
+          "line": 16,
+          "text": "/// VexforgeR5ProjectSetup. Validate mode performs read-only verification."
+        },
+        {
+          "line": 29,
+          "text": "private static readonly string[] RequiredMaterialNames ="
+        },
+        {
+          "line": 31,
+          "text": "\"CardBody\","
+        },
+        {
+          "line": 32,
+          "text": "\"CardArt\","
+        },
+        {
+          "line": 33,
+          "text": "\"CardFrame\","
+        },
+        {
+          "line": 52,
+          "text": "/// Headless/batch entry point. Run with Unity's -executeMethod switch."
+        },
+        {
+          "line": 90,
+          "text": "\"Battle\","
+        },
+        {
+          "line": 91,
+          "text": "\"Missions\","
+        },
+        {
+          "line": 92,
+          "text": "\"Economy\","
+        },
+        {
+          "line": 99,
+          "text": "failures.Add("
+        },
+        {
+          "line": 109,
+          "text": "failures.Add("
+        },
+        {
+          "line": 117,
+          "text": "failures.Add("
+        },
+        {
+          "line": 126,
+          "text": "if (AssetDatabase.LoadAssetAtPath<UniversalRenderPipelineAsset>(PipelinePath) == null)"
+        },
+        {
+          "line": 128,
+          "text": "failures.Add(\"PRESENTATION_RESOURCES_NOT_MATERIALIZED: missing \" + PipelinePath);"
+        },
+        {
+          "line": 139,
+          "text": "if (AssetDatabase.LoadAssetAtPath<Material>(path) == null)"
+        },
+        {
+          "line": 141,
+          "text": "failures.Add(\"PRESENTATION_RESOURCES_NOT_MATERIALIZED: missing \" + path);"
+        },
+        {
+          "line": 149,
+          "text": "if (AssetDatabase.LoadAssetAtPath<VexforgePresentationResources>(ResourcesPath) == null)"
+        },
+        {
+          "line": 151,
+          "text": "failures.Add(\"PRESENTATION_RESOURCES_NOT_MATERIALIZED: missing \" + ResourcesPath);"
+        },
+        {
+          "line": 164,
+          "text": "failures.Add(\"ASSET_GUID_MISSING: \" + assetPath);"
+        },
+        {
+          "line": 170,
+          "text": "var resources = AssetDatabase.LoadAssetAtPath<VexforgePresentationResources>(ResourcesPath);"
+        },
+        {
+          "line": 178,
+          "text": "failures.Add(\"PRESENTATION_RESOURCES_INCOMPLETE: VexforgePresentationResources.IsComplete is false.\");"
+        },
+        {
+          "line": 184,
+          "text": "resources.CardBodyMaterial,"
+        },
+        {
+          "line": 185,
+          "text": "MaterialsRoot + \"/CardBody.mat\","
+        },
+        {
+          "line": 186,
+          "text": "\"CardBodyMaterial\");"
+        },
+        {
+          "line": 189,
+          "text": "resources.CardArtMaterial,"
+        },
+        {
+          "line": 190,
+          "text": "MaterialsRoot + \"/CardArt.mat\","
+        },
+        {
+          "line": 191,
+          "text": "\"CardArtMaterial\");"
+        },
+        {
+          "line": 194,
+          "text": "resources.CardFrameMaterial,"
+        },
+        {
+          "line": 195,
+          "text": "MaterialsRoot + \"/CardFrame.mat\","
+        },
+        {
+          "line": 196,
+          "text": "\"CardFrameMaterial\");"
+        },
+        {
+          "line": 217,
+          "text": "failures.Add(\"PRESENTATION_RESOURCE_REFERENCE_NULL: \" + fieldName + \".\");"
+        },
+        {
+          "line": 224,
+          "text": "failures.Add("
+        },
+        {
+          "line": 232,
+          "text": "var expected = AssetDatabase.LoadAssetAtPath<UniversalRenderPipelineAsset>(PipelinePath);"
+        },
+        {
+          "line": 240,
+          "text": "failures.Add(\"URP_DEFAULT_PIPELINE_MISMATCH: GraphicsSettings.defaultRenderPipeline is not VexforgeUrp.asset.\");"
+        },
+        {
+          "line": 245,
+          "text": "failures.Add(\"URP_QUALITY_PIPELINE_MISMATCH: QualitySettings.renderPipeline is not VexforgeUrp.asset.\");"
+        },
+        {
+          "line": 250,
+          "text": "failures.Add(\"URP_ACTIVE_PIPELINE_MISMATCH: GraphicsSettings.currentRenderPipeline is not VexforgeUrp.asset.\");"
+        },
+        {
+          "line": 255,
+          "text": "failures.Add(\"URP_RENDERER_MISSING: VexforgeUrp.asset has no usable renderer at index 0.\");"
+        },
+        {
+          "line": 261,
+          "text": "var tagManager = AssetDatabase.LoadAllAssetsAtPath(\"ProjectSettings/TagManager.asset\");"
+        },
+        {
+          "line": 264,
+          "text": "failures.Add(\"HOTSPOT_LAYER_UNVERIFIED: ProjectSettings/TagManager.asset unavailable.\");"
+        },
+        {
+          "line": 272,
+          "text": "failures.Add(\"HOTSPOT_LAYER_UNVERIFIED: TagManager layers property unavailable.\");"
+        },
+        {
+          "line": 289,
+          "text": "failures.Add(\"HOTSPOT_LAYER_MISSING: expected Unity layer '\" + HotspotLayer + \"'.\");"
+        },
+        {
+          "line": 295,
+          "text": "if (AssetDatabase.LoadAssetAtPath<SceneAsset>(BootstrapScenePath) == null)"
+        },
+        {
+          "line": 297,
+          "text": "failures.Add(\"BOOTSTRAP_SCENE_MISSING: \" + BootstrapScenePath);"
+        },
+        {
+          "line": 302,
+          "text": "failures.Add(\"ENVIRONMENT_CONFIG_MISSING: \" + EnvironmentPath);"
+        }
+      ]
+    },
+    {
+      "path": "unity/Assets/Scripts/Presentation/Editor/VexforgeR5ProjectSetup.cs",
+      "matches": [
+        {
+          "line": 10,
+          "text": "/// Editor-only deterministic setup. Shader.Find is intentionally confined to editor"
+        },
+        {
+          "line": 56,
+          "text": "AssetDatabase.LoadAssetAtPath<UniversalRenderPipelineAsset>("
+        },
+        {
+          "line": 64,
+          "text": "asset.LoadBuiltinRendererData();"
+        },
+        {
+          "line": 79,
+          "text": "AssetDatabase.LoadAllAssetsAtPath("
+        },
+        {
+          "line": 121,
+          "text": "MaterialPath(\"CardBody\"),"
+        },
+        {
+          "line": 128,
+          "text": "MaterialPath(\"CardArt\"),"
+        },
+        {
+          "line": 135,
+          "text": "MaterialPath(\"CardFrame\"),"
+        },
+        {
+          "line": 159,
+          "text": "AssetDatabase.LoadAssetAtPath<VexforgePresentationResources>("
+        },
+        {
+          "line": 172,
+          "text": "so.FindProperty(\"cardBodyMaterial\").objectReferenceValue ="
+        },
+        {
+          "line": 173,
+          "text": "AssetDatabase.LoadAssetAtPath<Material>("
+        },
+        {
+          "line": 174,
+          "text": "MaterialPath(\"CardBody\"));"
+        },
+        {
+          "line": 176,
+          "text": "so.FindProperty(\"cardArtMaterial\").objectReferenceValue ="
+        },
+        {
+          "line": 177,
+          "text": "AssetDatabase.LoadAssetAtPath<Material>("
+        },
+        {
+          "line": 178,
+          "text": "MaterialPath(\"CardArt\"));"
+        },
+        {
+          "line": 180,
+          "text": "so.FindProperty(\"cardFrameMaterial\").objectReferenceValue ="
+        },
+        {
+          "line": 181,
+          "text": "AssetDatabase.LoadAssetAtPath<Material>("
+        },
+        {
+          "line": 182,
+          "text": "MaterialPath(\"CardFrame\"));"
+        },
+        {
+          "line": 185,
+          "text": "AssetDatabase.LoadAssetAtPath<Material>("
+        },
+        {
+          "line": 189,
+          "text": "AssetDatabase.LoadAssetAtPath<Material>("
+        },
+        {
+          "line": 199,
+          "text": "string shaderName,"
+        },
+        {
+          "line": 205,
+          "text": "AssetDatabase.LoadAssetAtPath<Material>(path);"
+        },
+        {
+          "line": 210,
+          "text": "var shader = Shader.Find(shaderName);"
+        },
+        {
+          "line": 212,
+          "text": "if (shader == null)"
+        },
+        {
+          "line": 214,
+          "text": "\"Required URP shader not found: \" + shaderName);"
+        },
+        {
+          "line": 216,
+          "text": "material = new Material(shader);"
+        }
+      ]
+    },
+    {
+      "path": "unity/Assets/Scripts/Presentation/NexusPresentationRoot.cs",
+      "matches": [
+        {
+          "line": 16,
+          "text": "private readonly List<Material> runtimeMaterials = new List<Material>();"
+        },
+        {
+          "line": 28,
+          "text": "resources = VexforgePresentationResources.LoadRuntime();"
+        },
+        {
+          "line": 55,
+          "text": "resources == null ? null : resources.CardBodyMaterial);"
+        },
+        {
+          "line": 73,
+          "text": "new PortalDefinition(\"ArchiveSanctum\", \"ARCHIVE\", \"Cards · collection\", new Vector3(-6f, 0.25f, 4.5f), new Color(0.08f, 0.30f, 0.42f, 1f), GameRoute.Collection),"
+        },
+        {
+          "line": 75,
+          "text": "new PortalDefinition(\"BattlefieldGate\", \"BATTLEFIELD\", \"Arena · events\", new Vector3(6f, 0.25f, 4.5f), new Color(0.25f, 0.08f, 0.22f, 1f), GameRoute.Battle),"
+        },
+        {
+          "line": 76,
+          "text": "new PortalDefinition(\"MissionsChamber\", \"MISSIONS\", \"Contracts · activity\", new Vector3(3f, 0.25f, 8.4f), new Color(0.28f, 0.24f, 0.08f, 1f), GameRoute.Missions),"
+        },
+        {
+          "line": 77,
+          "text": "new PortalDefinition(\"EconomyVault\", \"ECONOMY\", \"Treasury · balances\", new Vector3(6f, 0.25f, 8.4f), new Color(0.12f, 0.34f, 0.23f, 1f), GameRoute.Economy)"
+        },
+        {
+          "line": 96,
+          "text": "var light = key.AddComponent<Light>();"
+        },
+        {
+          "line": 100,
+          "text": "light.shadows = LightShadows.Soft;"
+        },
+        {
+          "line": 123,
+          "text": "var hotspot = root.AddComponent<VexforgeWorldHotspot>();"
+        },
+        {
+          "line": 168,
+          "text": "var label = labelObject.AddComponent<TextMesh>();"
+        },
+        {
+          "line": 225,
+          "text": "runtimeMaterials.Add(instance);"
+        },
+        {
+          "line": 240,
+          "text": "var light = lightObject.AddComponent<Light>();"
+        },
+        {
+          "line": 254,
+          "text": "var camera = cameraObject.AddComponent<Camera>();"
+        },
+        {
+          "line": 291,
+          "text": "public readonly string Name;"
+        },
+        {
+          "line": 292,
+          "text": "public readonly string Title;"
+        },
+        {
+          "line": 293,
+          "text": "public readonly string Subtitle;"
+        },
+        {
+          "line": 294,
+          "text": "public readonly Vector3 Position;"
+        },
+        {
+          "line": 295,
+          "text": "public readonly Color Accent;"
+        },
+        {
+          "line": 296,
+          "text": "public readonly GameRoute Route;"
+        }
+      ]
+    },
+    {
+      "path": "unity/Assets/Scripts/Presentation/SceneTransitionDirector.cs",
+      "matches": [
+        {
+          "line": 8,
+          "text": "public IEnumerator FadeAndRun(float duration, System.Action action)"
+        }
+      ]
+    },
+    {
+      "path": "unity/Assets/Scripts/Presentation/VexforgeAlphaWorldDirector.cs",
+      "matches": [
+        {
+          "line": 15,
+          "text": "private readonly List<Material> materials = new List<Material>();"
+        },
+        {
+          "line": 16,
+          "text": "private readonly List<Mesh> meshes = new List<Mesh>();"
+        },
+        {
+          "line": 22,
+          "text": "private readonly Dictionary<GameRoute, Transform> cameraAnchors = new Dictionary<GameRoute, Transform>();"
+        },
+        {
+          "line": 25,
+          "text": "private Transform missionStage;"
+        },
+        {
+          "line": 26,
+          "text": "private Transform economyStage;"
+        },
+        {
+          "line": 28,
+          "text": "private VexforgeBattlefieldStage battleStage;"
+        },
+        {
+          "line": 55,
+          "text": "public void BindBattlefield(VexforgeBattlefieldStage battlefield)"
+        },
+        {
+          "line": 57,
+          "text": "battleStage = battlefield;"
+        },
+        {
+          "line": 81,
+          "text": "if (battleStage != null)"
+        },
+        {
+          "line": 82,
+          "text": "battleStage.SetVisible(false);"
+        },
+        {
+          "line": 96,
+          "text": "SetActive(chamberRoot, nextRoute != GameRoute.Nexus && nextRoute != GameRoute.Battle);"
+        },
+        {
+          "line": 100,
+          "text": "SetActive(missionStage, nextRoute == GameRoute.Missions);"
+        },
+        {
+          "line": 101,
+          "text": "SetActive(economyStage, nextRoute == GameRoute.Economy);"
+        },
+        {
+          "line": 103,
+          "text": "if (battleStage != null)"
+        },
+        {
+          "line": 104,
+          "text": "battleStage.SetVisible(nextRoute == GameRoute.Battle);"
+        },
+        {
+          "line": 139,
+          "text": "missionStage = BuildMissionStage();"
+        },
+        {
+          "line": 140,
+          "text": "economyStage = BuildEconomyStage();"
+        },
+        {
+          "line": 162,
+          "text": "new PortalSpec(GameRoute.Battle, \"BATTLEFIELD\", \"6.6 0.1 4.4\", new Color(0.73f, 0.16f, 0.23f, 1f)),"
+        },
+        {
+          "line": 163,
+          "text": "new PortalSpec(GameRoute.Missions, \"MISSIONS\", \"3.3 0.1 9.0\", new Color(0.72f, 0.56f, 0.16f, 1f)),"
+        },
+        {
+          "line": 164,
+          "text": "new PortalSpec(GameRoute.Economy, \"TREASURY\", \"7.0 0.1 9.0\", new Color(0.20f, 0.70f, 0.43f, 1f)),"
+        },
+        {
+          "line": 173,
+          "text": "var particle = mist.AddComponent<ParticleSystem>();"
+        },
+        {
+          "line": 181,
+          "text": "var emission = particle.emission;"
+        },
+        {
+          "line": 182,
+          "text": "emission.rateOverTime = 12f;"
+        },
+        {
+          "line": 207,
+          "text": "private Transform BuildMissionStage()"
+        },
+        {
+          "line": 209,
+          "text": "var stage = CreateChamber(\"MissionHall\", new Vector3(0f, -0.75f, 8.6f), GetMaterial(5));"
+        },
+        {
+          "line": 219,
+          "text": "private Transform BuildEconomyStage()"
+        },
+        {
+          "line": 221,
+          "text": "var stage = CreateChamber(\"TreasuryHall\", new Vector3(0f, -0.75f, 8.6f), GetMaterial(6));"
+        },
+        {
+          "line": 222,
+          "text": "CreatePrimitive(\"TreasuryVault\", PrimitiveType.Cylinder, new Vector3(0f, 0.0f, 0f), new Vector3(3.0f, 1.4f, 3.0f), GetMaterial(6), stage);"
+        },
+        {
+          "line": 223,
+          "text": "CreateRing(\"TreasuryRing\", new Vector3(0f, 1.4f, 0f), 2.1f, 0.10f, GetMaterial(4), stage);"
+        },
+        {
+          "line": 258,
+          "text": "var hotspot = root.AddComponent<VexforgeWorldHotspot>();"
+        },
+        {
+          "line": 268,
+          "text": "materials.Add(portalMaterial);"
+        },
+        {
+          "line": 272,
+          "text": "var pulse = root.AddComponent<VexforgePortalPulse>();"
+        },
+        {
+          "line": 279,
+          "text": "var text = textObject.AddComponent<TextMesh>();"
+        },
+        {
+          "line": 293,
+          "text": "CreateCameraAnchor(GameRoute.Battle, new Vector3(0f, 10.3f, -9.4f), Quaternion.Euler(48f, 0f, 0f));"
+        },
+        {
+          "line": 294,
+          "text": "CreateCameraAnchor(GameRoute.Missions, new Vector3(0f, 5.0f, -8.5f), Quaternion.Euler(24f, 0f, 0f));"
+        },
+        {
+          "line": 295,
+          "text": "CreateCameraAnchor(GameRoute.Economy, new Vector3(0f, 5.0f, -8.5f), Quaternion.Euler(24f, 0f, 0f));"
+        },
+        {
+          "line": 352,
+          "text": "var light = go.AddComponent<Light>();"
+        },
+        {
+          "line": 361,
+          "text": "materials.Add(CreateMaterial(new Color(0.032f, 0.025f, 0.041f, 1f), false));"
+        },
+        {
+          "line": 362,
+          "text": "materials.Add(CreateMaterial(new Color(0.26f, 0.13f, 0.065f, 1f), true));"
+        },
+        {
+          "line": 363,
+          "text": "materials.Add(CreateMaterial(new Color(0.22f, 0.42f, 0.58f, 1f), true));"
+        },
+        {
+          "line": 364,
+          "text": "materials.Add(CreateMaterial(new Color(0.08f, 0.10f, 0.13f, 1f), false));"
+        },
+        {
+          "line": 365,
+          "text": "materials.Add(CreateMaterial(new Color(0.74f, 0.56f, 0.26f, 1f), true));"
+        },
+        {
+          "line": 366,
+          "text": "materials.Add(CreateMaterial(new Color(0.36f, 0.23f, 0.10f, 1f), true));"
+        },
+        {
+          "line": 367,
+          "text": "materials.Add(CreateMaterial(new Color(0.12f, 0.32f, 0.20f, 1f), true));"
+        },
+        {
+          "line": 368,
+          "text": "materials.Add(CreateMaterial(new Color(0.25f, 0.18f, 0.42f, 1f), true));"
+        },
+        {
+          "line": 376,
+          "text": "private static Material CreateMaterial(Color color, bool emission)"
+        },
+        {
+          "line": 378,
+          "text": "var shader = Shader.Find(\"Universal Render Pipeline/Lit\");"
+        },
+        {
+          "line": 379,
+          "text": "if (shader == null)"
+        },
+        {
+          "line": 380,
+          "text": "shader = Shader.Find(\"Standard\");"
+        },
+        {
+          "line": 381,
+          "text": "if (shader == null)"
+        },
+        {
+          "line": 383,
+          "text": "var material = new Material(shader);"
+        },
+        {
+          "line": 386,
+          "text": "if (emission && material.HasProperty(\"_EmissionColor\"))"
+        },
+        {
+          "line": 388,
+          "text": "material.EnableKeyword(\"_EMISSION\");"
+        },
+        {
+          "line": 389,
+          "text": "material.SetColor(\"_EmissionColor\", color * 1.6f);"
+        },
+        {
+          "line": 417,
+          "text": "float radius,"
+        },
+        {
+          "line": 425,
+          "text": "var filter = go.AddComponent<MeshFilter>();"
+        },
+        {
+          "line": 426,
+          "text": "var renderer = go.AddComponent<MeshRenderer>();"
+        },
+        {
+          "line": 427,
+          "text": "var mesh = BuildRingMesh(radius, thickness, 72);"
+        },
+        {
+          "line": 429,
+          "text": "meshes.Add(mesh);"
+        },
+        {
+          "line": 434,
+          "text": "private static Mesh BuildRingMesh(float radius, float thickness, int segments)"
+        },
+        {
+          "line": 439,
+          "text": "var inner = Mathf.Max(0.01f, radius - thickness);"
+        },
+        {
+          "line": 445,
+          "text": "vertices[i * 2 + 1] = dir * radius;"
+        },
+        {
+          "line": 492,
+          "text": "private readonly struct PortalSpec"
+        },
+        {
+          "line": 494,
+          "text": "public readonly GameRoute Route;"
+        },
+        {
+          "line": 495,
+          "text": "public readonly string Label;"
+        },
+        {
+          "line": 496,
+          "text": "public readonly string Position;"
+        },
+        {
+          "line": 497,
+          "text": "public readonly Color Accent;"
+        }
+      ]
+    },
+    {
+      "path": "unity/Assets/Scripts/Presentation/VexforgeBattlefieldStage.cs",
+      "matches": [
+        {
+          "line": 11,
+          "text": "/// Presentation-only battlefield. It never decides combat rules or outcomes."
+        },
+        {
+          "line": 12,
+          "text": "/// Backend BattleEvent payloads are interpreted only for visual presentation."
+        },
+        {
+          "line": 13,
+          "text": "/// Unknown events fall back to a safe impact pulse instead of being discarded."
+        },
+        {
+          "line": 15,
+          "text": "public sealed class VexforgeBattlefieldStage : MonoBehaviour"
+        },
+        {
+          "line": 17,
+          "text": "private readonly List<GameObject> transientObjects = new List<GameObject>();"
+        },
+        {
+          "line": 18,
+          "text": "private readonly List<Material> ownedMaterials = new List<Material>();"
+        },
+        {
+          "line": 19,
+          "text": "private readonly List<Mesh> ownedMeshes = new List<Mesh>();"
+        },
+        {
+          "line": 21,
+          "text": "private Transform playerZone;"
+        },
+        {
+          "line": 28,
+          "text": "private VexforgeCardArtResolver artResolver;"
+        },
+        {
+          "line": 29,
+          "text": "private Func<string, CardRecord> cardLookup;"
+        },
+        {
+          "line": 30,
+          "text": "private string localPlayerId;"
+        },
+        {
+          "line": 43,
+          "text": "VexforgeCardArtResolver resolver,"
+        },
+        {
+          "line": 44,
+          "text": "Func<string, CardRecord> lookup,"
+        },
+        {
+          "line": 45,
+          "text": "string playerId)"
+        },
+        {
+          "line": 52,
+          "text": "cardLookup = lookup;"
+        },
+        {
+          "line": 53,
+          "text": "localPlayerId = playerId;"
+        },
+        {
+          "line": 67,
+          "text": "public void SetLocalPlayerId(string playerId)"
+        },
+        {
+          "line": 69,
+          "text": "localPlayerId = playerId;"
+        },
+        {
+          "line": 91,
+          "text": "public IEnumerator PresentEvent(BattleEvent battleEvent)"
+        },
+        {
+          "line": 93,
+          "text": "if (!initialized || battleEvent == null)"
+        },
+        {
+          "line": 96,
+          "text": "// These fields are already part of the verified BattleEvent contract and are used by the existing shell."
+        },
+        {
+          "line": 97,
+          "text": "// Optional encounter/card target fields stay reflective so this presentation layer never invents a compile-time contract."
+        },
+        {
+          "line": 98,
+          "text": "var type = battleEvent.event_type;"
+        },
+        {
+          "line": 99,
+          "text": "var actorId = battleEvent.actor_id;"
+        },
+        {
+          "line": 100,
+          "text": "var targetId = ReadString(battleEvent, \"target_id\", \"targetId\", \"victim_id\", \"victimId\");"
+        },
+        {
+          "line": 101,
+          "text": "var cardId = ReadString(battleEvent, \"card_id\", \"cardId\", \"source_card_id\", \"sourceCardId\");"
+        },
+        {
+          "line": 102,
+          "text": "var bossId = ReadString(battleEvent, \"boss_id\", \"bossId\", \"encounter_id\", \"encounterId\");"
+        },
+        {
+          "line": 110,
+          "text": "if (ContainsAny(type, \"victory\", \"win\", \"match_end\", \"battle_end\", \"complete\"))"
+        },
+        {
+          "line": 120,
+          "text": "yield return PresentCardEntry(cardId, actorId);"
+        },
+        {
+          "line": 157,
+          "text": "arenaRoot = new GameObject(\"BattlefieldArena\").transform;"
+        },
+        {
+          "line": 171,
+          "text": "playerZone = CreateZone(\"PlayerZone\", new Vector3(0f, -0.18f, 2.15f), 5.8f, new Color(0.10f, 0.34f, 0.44f, 1f));"
+        },
+        {
+          "line": 174,
+          "text": "var lightObject = new GameObject(\"BattleAtmosphereLight\");"
+        },
+        {
+          "line": 177,
+          "text": "atmosphereLight = lightObject.AddComponent<Light>();"
+        },
+        {
+          "line": 184,
+          "text": "\"BattleCore\","
+        },
+        {
+          "line": 205,
+          "text": "ownedMaterials.Add(ringMaterial);"
+        },
+        {
+          "line": 208,
+          "text": "ownedMaterials.Add(markerMaterial);"
+        },
+        {
+          "line": 235,
+          "text": "private IEnumerator PresentCardEntry(string cardId, string actorId)"
+        },
+        {
+          "line": 238,
+          "text": "var destination = localSide ? playerZone.position : opponentZone.position;"
+        },
+        {
+          "line": 240,
+          "text": "var card = ResolveCard(cardId);"
+        },
+        {
+          "line": 242,
+          "text": "VexforgeCardView view = null;"
+        },
+        {
+          "line": 245,
+          "text": "if (card != null)"
+        },
+        {
+          "line": 247,
+          "text": "view = VexforgeCardView.CreateRuntime(arenaRoot);"
+        },
+        {
+          "line": 248,
+          "text": "transientObjects.Add(view.gameObject);"
+        },
+        {
+          "line": 249,
+          "text": "view.SetArtMode(CardArtMode.FullCardArtwork);"
+        },
+        {
+          "line": 250,
+          "text": "view.Bind(card, null, false, true, false, artResolver, CardArtMode.FullCardArtwork);"
+        },
+        {
+          "line": 258,
+          "text": "\"BattleEntryFallback\","
+        },
+        {
+          "line": 264,
+          "text": "transientObjects.Add(fallback);"
+        },
+        {
+          "line": 304,
+          "text": "\"CardManifestationRing\","
+        },
+        {
+          "line": 310,
+          "text": "transientObjects.Add(ring.gameObject);"
+        },
+        {
+          "line": 343,
+          "text": "var source = sourceLocal ? playerZone.position : opponentZone.position;"
+        },
+        {
+          "line": 344,
+          "text": "var target = targetLocal ? playerZone.position : opponentZone.position;"
+        },
+        {
+          "line": 355,
+          "text": "transientObjects.Add(bolt);"
+        },
+        {
+          "line": 375,
+          "text": "var position = (local ? playerZone : opponentZone).position + Vector3.up * 0.35f;"
+        },
+        {
+          "line": 377,
+          "text": "transientObjects.Add(shield.gameObject);"
+        },
+        {
+          "line": 396,
+          "text": "var zone = local ? playerZone : opponentZone;"
+        },
+        {
+          "line": 404,
+          "text": "transientObjects.Add(flash);"
+        },
+        {
+          "line": 424,
+          "text": "transientObjects.Add(boss);"
+        },
+        {
+          "line": 426,
+          "text": "transientObjects.Add(ring.gameObject);"
+        },
+        {
+          "line": 494,
+          "text": "if (material.HasProperty(\"_EmissionColor\"))"
+        },
+        {
+          "line": 495,
+          "text": "pulseBlock.SetColor(\"_EmissionColor\", pulseColor * (1.2f + envelope * 2.0f));"
+        },
+        {
+          "line": 529,
+          "text": "private CardRecord ResolveCard(string cardId)"
+        },
+        {
+          "line": 531,
+          "text": "if (string.IsNullOrWhiteSpace(cardId) || cardLookup == null)"
+        },
+        {
+          "line": 533,
+          "text": "return cardLookup(cardId);"
+        },
+        {
+          "line": 539,
+          "text": "!string.IsNullOrWhiteSpace(localPlayerId) &&"
+        },
+        {
+          "line": 540,
+          "text": "string.Equals(actorId, localPlayerId, StringComparison.OrdinalIgnoreCase);"
+        },
+        {
+          "line": 587,
+          "text": "ownedMaterials.Add(boardMaterial);"
+        },
+        {
+          "line": 588,
+          "text": "ownedMaterials.Add(accentMaterial);"
+        },
+        {
+          "line": 589,
+          "text": "ownedMaterials.Add(hostileMaterial);"
+        },
+        {
+          "line": 590,
+          "text": "ownedMaterials.Add(neutralMaterial);"
+        },
+        {
+          "line": 593,
+          "text": "private static Material CreateMaterial(Color color, bool emission)"
+        },
+        {
+          "line": 595,
+          "text": "var shader = Shader.Find(\"Universal Render Pipeline/Lit\");"
+        },
+        {
+          "line": 596,
+          "text": "if (shader == null)"
+        },
+        {
+          "line": 597,
+          "text": "shader = Shader.Find(\"Standard\");"
+        },
+        {
+          "line": 598,
+          "text": "if (shader == null)"
+        },
+        {
+          "line": 601,
+          "text": "var material = new Material(shader)"
+        },
+        {
+          "line": 603,
+          "text": "name = \"VexforgeRuntimeBattleMaterial\""
+        },
+        {
+          "line": 609,
+          "text": "if (emission)"
+        },
+        {
+          "line": 611,
+          "text": "if (material.HasProperty(\"_EmissionColor\"))"
+        },
+        {
+          "line": 612,
+          "text": "material.SetColor(\"_EmissionColor\", color * 1.8f);"
+        },
+        {
+          "line": 613,
+          "text": "material.EnableKeyword(\"_EMISSION\");"
+        },
+        {
+          "line": 643,
+          "text": "float radius,"
+        },
+        {
+          "line": 651,
+          "text": "var filter = go.AddComponent<MeshFilter>();"
+        },
+        {
+          "line": 652,
+          "text": "var renderer = go.AddComponent<MeshRenderer>();"
+        },
+        {
+          "line": 653,
+          "text": "var mesh = BuildRingMesh(radius, thickness, 64);"
+        },
+        {
+          "line": 655,
+          "text": "ownedMeshes.Add(mesh);"
+        },
+        {
+          "line": 660,
+          "text": "private static Mesh BuildRingMesh(float radius, float thickness, int segments)"
+        },
+        {
+          "line": 665,
+          "text": "var inner = Mathf.Max(0.01f, radius - thickness);"
+        },
+        {
+          "line": 671,
+          "text": "vertices[i * 2 + 1] = dir * radius;"
+        },
+        {
+          "line": 688,
+          "text": "private static string ReadString(object source, params string[] names)"
+        }
+      ]
+    },
+    {
+      "path": "unity/Assets/Scripts/Presentation/VexforgeCardArtResolver.cs",
+      "matches": [
+        {
+          "line": 3,
+          "text": "using System.Threading;"
+        },
+        {
+          "line": 4,
+          "text": "using System.Threading.Tasks;"
+        },
+        {
+          "line": 12,
+          "text": "/// Bounded loader for official VEXFORGE card art."
+        },
+        {
+          "line": 13,
+          "text": "/// Only the canonical Supabase host/bucket path is accepted."
+        },
+        {
+          "line": 16,
+          "text": "public sealed class VexforgeCardArtResolver : IDisposable"
+        },
+        {
+          "line": 18,
+          "text": "private const string AllowedHost = \"rscuzqnfccqvltkdcdny.supabase.co\";"
+        },
+        {
+          "line": 19,
+          "text": "private const string PublicCardsPrefix = \"/storage/v1/object/public/vexforge-assets/cards/\";"
+        },
+        {
+          "line": 20,
+          "text": "private const string SignedCardsPrefix = \"/storage/v1/object/sign/vexforge-assets/cards/\";"
+        },
+        {
+          "line": 22,
+          "text": "private readonly VexforgeTextureLruCache cache;"
+        },
+        {
+          "line": 23,
+          "text": "private readonly SemaphoreSlim concurrency;"
+        },
+        {
+          "line": 24,
+          "text": "private readonly Dictionary<string, Task<Texture2D>> inFlight ="
+        },
+        {
+          "line": 26,
+          "text": "private readonly object inFlightGate = new object();"
+        },
+        {
+          "line": 27,
+          "text": "private readonly int timeoutSeconds;"
+        },
+        {
+          "line": 28,
+          "text": "private readonly long maxDownloadBytes;"
+        },
+        {
+          "line": 29,
+          "text": "private readonly int maxDimension;"
+        },
+        {
+          "line": 32,
+          "text": "public VexforgeCardArtResolver("
+        },
+        {
+          "line": 36,
+          "text": "long maxDownloadBytes = 8L * 1024L * 1024L,"
+        },
+        {
+          "line": 42,
+          "text": "if (maxDownloadBytes <= 0L) throw new ArgumentOutOfRangeException(nameof(maxDownloadBytes));"
+        },
+        {
+          "line": 48,
+          "text": "this.maxDownloadBytes = maxDownloadBytes;"
+        },
+        {
+          "line": 53,
+          "text": "CardRecord card,"
+        },
+        {
+          "line": 56,
+          "text": "if (disposed || card == null || string.IsNullOrWhiteSpace(card.image_url)) return null;"
+        },
+        {
+          "line": 59,
+          "text": "var normalizedUrl = card.image_url.Trim();"
+        },
+        {
+          "line": 60,
+          "text": "if (!TryValidateOfficialCardUrl(normalizedUrl, out cacheKey)) return null;"
+        },
+        {
+          "line": 71,
+          "text": "shared = LoadAndCacheAsync(cacheKey, normalizedUrl);"
+        },
+        {
+          "line": 72,
+          "text": "inFlight.Add(cacheKey, shared);"
+        },
+        {
+          "line": 93,
+          "text": "Debug.LogWarning(\"VEXFORGE card-art load failed: \" + ex.Message);"
+        },
+        {
+          "line": 146,
+          "text": "private async Task<Texture2D> LoadAndCacheAsync(string cacheKey, string requestUrl)"
+        },
+        {
+          "line": 156,
+          "text": "request.SetRequestHeader(\"Accept\", \"image/*\");"
+        },
+        {
+          "line": 161,
+          "text": "if (request.downloadedBytes > (ulong)maxDownloadBytes)"
+        },
+        {
+          "line": 175,
+          "text": "if (request.downloadedBytes > (ulong)maxDownloadBytes)"
+        },
+        {
+          "line": 180,
+          "text": "var responseLength = request.GetResponseHeader(\"Content-Length\");"
+        },
+        {
+          "line": 185,
+          "text": "declaredLength > maxDownloadBytes)"
+        },
+        {
+          "line": 191,
+          "text": "var contentType = request.GetResponseHeader(\"Content-Type\");"
+        },
+        {
+          "line": 198,
+          "text": "var texture = DownloadHandlerTexture.GetContent(request);"
+        },
+        {
+          "line": 228,
+          "text": "private static bool TryValidateOfficialCardUrl(string url, out string cacheKey)"
+        },
+        {
+          "line": 240,
+          "text": "var publicMatch = parsed.AbsolutePath.StartsWith(PublicCardsPrefix, StringComparison.OrdinalIgnoreCase);"
+        },
+        {
+          "line": 241,
+          "text": "var signedMatch = parsed.AbsolutePath.StartsWith(SignedCardsPrefix, StringComparison.OrdinalIgnoreCase);"
+        },
+        {
+          "line": 244,
+          "text": "var prefixLength = publicMatch ? PublicCardsPrefix.Length : SignedCardsPrefix.Length;"
+        },
+        {
+          "line": 254,
+          "text": "cacheKey = \"vexforge-card-art:\" + decodedPath;"
+        }
+      ]
+    },
+    {
+      "path": "unity/Assets/Scripts/Presentation/VexforgeCardInspectionStage.cs",
+      "matches": [
+        {
+          "line": 9,
+          "text": "/// Featured-card inspection stage. It turns the existing card view into an interactive world object."
+        },
+        {
+          "line": 11,
+          "text": "public sealed class VexforgeCardInspectionStage : MonoBehaviour"
+        },
+        {
+          "line": 14,
+          "text": "private VexforgeCardArtResolver artResolver;"
+        },
+        {
+          "line": 15,
+          "text": "private VexforgeCardView view;"
+        },
+        {
+          "line": 19,
+          "text": "private readonly RaycastHit[] hitBuffer = new RaycastHit[16];"
+        },
+        {
+          "line": 32,
+          "text": "VexforgeCardArtResolver resolver)"
+        },
+        {
+          "line": 48,
+          "text": "public void Show(CardRecord card, PlayerCardRecord ownership)"
+        },
+        {
+          "line": 50,
+          "text": "if (card == null || artResolver == null)"
+        },
+        {
+          "line": 64,
+          "text": "view = VexforgeCardView.CreateRuntime(transform);"
+        },
+        {
+          "line": 65,
+          "text": "view.Bind(card, ownership, false, false, ownership != null && ownership.locked, artResolver, CardArtMode.FullCardArtwork);"
+        },
+        {
+          "line": 139,
+          "text": "if (!HitCard(position))"
+        },
+        {
+          "line": 166,
+          "text": "// A tap toggles the featured card out of the way, returning to the gallery/world."
+        },
+        {
+          "line": 190,
+          "text": "private bool HitCard(Vector2 screenPosition)"
+        },
+        {
+          "line": 198,
+          "text": "var cardView = collider == null ? null : collider.GetComponentInParent<VexforgeCardView>();"
+        },
+        {
+          "line": 199,
+          "text": "if (cardView != view) continue;"
+        }
+      ]
+    },
+    {
+      "path": "unity/Assets/Scripts/Presentation/VexforgeCardPool.cs",
+      "matches": [
+        {
+          "line": 11,
+          "text": "public sealed class VexforgeCardPool : IDisposable"
+        },
+        {
+          "line": 13,
+          "text": "private readonly Transform parent;"
+        },
+        {
+          "line": 14,
+          "text": "private readonly Func<VexforgeCardView> factory;"
+        },
+        {
+          "line": 15,
+          "text": "private readonly Queue<VexforgeCardView> inactive = new Queue<VexforgeCardView>();"
+        },
+        {
+          "line": 16,
+          "text": "private readonly List<VexforgeCardView> active = new List<VexforgeCardView>();"
+        },
+        {
+          "line": 19,
+          "text": "public VexforgeCardPool("
+        },
+        {
+          "line": 21,
+          "text": "Func<VexforgeCardView> factory,"
+        },
+        {
+          "line": 41,
+          "text": "public VexforgeCardView Rent("
+        },
+        {
+          "line": 42,
+          "text": "CardRecord card,"
+        },
+        {
+          "line": 43,
+          "text": "PlayerCardRecord ownership,"
+        },
+        {
+          "line": 45,
+          "text": "bool activeInBattle,"
+        },
+        {
+          "line": 47,
+          "text": "VexforgeCardArtResolver resolver,"
+        },
+        {
+          "line": 48,
+          "text": "CardArtMode artMode = CardArtMode.FullCardArtwork)"
+        },
+        {
+          "line": 53,
+          "text": "view.Bind(card, ownership, selected, activeInBattle, locked, resolver, artMode);"
+        },
+        {
+          "line": 57,
+          "text": "public VexforgeCardView Rent()"
+        },
+        {
+          "line": 61,
+          "text": "VexforgeCardView view = inactive.Count > 0 ? inactive.Dequeue() : factory();"
+        },
+        {
+          "line": 66,
+          "text": "active.Add(view);"
+        },
+        {
+          "line": 70,
+          "text": "public void Return(VexforgeCardView view)"
+        }
+      ]
+    },
+    {
+      "path": "unity/Assets/Scripts/Presentation/VexforgeCardView.cs",
+      "matches": [
+        {
+          "line": 1,
+          "text": "using System.Threading;"
+        },
+        {
+          "line": 2,
+          "text": "using System.Threading.Tasks;"
+        },
+        {
+          "line": 8,
+          "text": "public enum CardArtMode"
+        },
+        {
+          "line": 10,
+          "text": "FullCardArtwork,"
+        },
+        {
+          "line": 15,
+          "text": "/// Reusable world-space card. Presentation mode is explicit and never inferred from gameplay fields."
+        },
+        {
+          "line": 17,
+          "text": "public sealed class VexforgeCardView : MonoBehaviour"
+        },
+        {
+          "line": 24,
+          "text": "private VexforgeCardArtResolver resolver;"
+        },
+        {
+          "line": 28,
+          "text": "private CardArtMode artMode = CardArtMode.FullCardArtwork;"
+        },
+        {
+          "line": 31,
+          "text": "private static readonly Vector2 CardSize = new Vector2(1.65f, 2.30f);"
+        },
+        {
+          "line": 32,
+          "text": "private static readonly Vector2 IllustrationSize = new Vector2(1.50f, 1.72f);"
+        },
+        {
+          "line": 34,
+          "text": "public static VexforgeCardView CreateRuntime(Transform parent)"
+        },
+        {
+          "line": 37,
+          "text": "root.name = \"VexforgeCardView\";"
+        },
+        {
+          "line": 39,
+          "text": "root.transform.localScale = new Vector3(CardSize.x, CardSize.y, 0.08f);"
+        },
+        {
+          "line": 41,
+          "text": "if (rootCollider == null) rootCollider = root.AddComponent<BoxCollider>();"
+        },
+        {
+          "line": 44,
+          "text": "var view = root.AddComponent<VexforgeCardView>();"
+        },
+        {
+          "line": 49,
+          "text": "public void SetArtMode(CardArtMode mode)"
+        },
+        {
+          "line": 55,
+          "text": "var target = mode == CardArtMode.FullCardArtwork ? CardSize : IllustrationSize;"
+        },
+        {
+          "line": 56,
+          "text": "var y = mode == CardArtMode.FullCardArtwork ? 0f : 0.18f;"
+        },
+        {
+          "line": 63,
+          "text": "frameRenderer.gameObject.SetActive(mode == CardArtMode.IllustrationOnly);"
+        },
+        {
+          "line": 67,
+          "text": "public CardRecord BoundCard { get; private set; }"
+        },
+        {
+          "line": 70,
+          "text": "CardRecord card,"
+        },
+        {
+          "line": 71,
+          "text": "PlayerCardRecord ownership,"
+        },
+        {
+          "line": 73,
+          "text": "bool activeInBattle,"
+        },
+        {
+          "line": 75,
+          "text": "VexforgeCardArtResolver artResolver,"
+        },
+        {
+          "line": 76,
+          "text": "CardArtMode presentationMode,"
+        },
+        {
+          "line": 81,
+          "text": "BoundCard = card;"
+        },
+        {
+          "line": 91,
+          "text": "if (card != null && resolver != null)"
+        },
+        {
+          "line": 93,
+          "text": "_ = BindArtAsync(card, generation, externalCancellation);"
+        },
+        {
+          "line": 98,
+          "text": "CardRecord card,"
+        },
+        {
+          "line": 99,
+          "text": "PlayerCardRecord ownership,"
+        },
+        {
+          "line": 101,
+          "text": "bool activeInBattle,"
+        },
+        {
+          "line": 103,
+          "text": "VexforgeCardArtResolver artResolver,"
+        },
+        {
+          "line": 107,
+          "text": "card,"
+        },
+        {
+          "line": 110,
+          "text": "activeInBattle,"
+        },
+        {
+          "line": 113,
+          "text": "CardArtMode.FullCardArtwork,"
+        },
+        {
+          "line": 123,
+          "text": "BoundCard = null;"
+        },
+        {
+          "line": 125,
+          "text": "SetArtMode(CardArtMode.FullCardArtwork);"
+        },
+        {
+          "line": 130,
+          "text": "CardRecord card,"
+        },
+        {
+          "line": 142,
+          "text": "nextLease = await resolver.AcquireAsync(card, localCancellation.Token);"
+        },
+        {
+          "line": 178,
+          "text": "var artObject = GameObject.CreatePrimitive(PrimitiveType.Quad);"
+        },
+        {
+          "line": 179,
+          "text": "artObject.name = \"OfficialCardArt\";"
+        },
+        {
+          "line": 187,
+          "text": "frameRenderer = frameObject.AddComponent<MeshRenderer>();"
+        },
+        {
+          "line": 188,
+          "text": "var meshFilter = frameObject.AddComponent<MeshFilter>();"
+        },
+        {
+          "line": 192,
+          "text": "var resources = VexforgePresentationResources.LoadRuntime();"
+        },
+        {
+          "line": 194,
+          "text": "resources.CardBodyMaterial == null ||"
+        },
+        {
+          "line": 195,
+          "text": "resources.CardArtMaterial == null ||"
+        },
+        {
+          "line": 196,
+          "text": "resources.CardFrameMaterial == null)"
+        },
+        {
+          "line": 204,
+          "text": "bodyRenderer.sharedMaterial = resources.CardBodyMaterial;"
+        },
+        {
+          "line": 205,
+          "text": "artMaterialInstance = new Material(resources.CardArtMaterial);"
+        },
+        {
+          "line": 207,
+          "text": "frameRenderer.sharedMaterial = resources.CardFrameMaterial;"
+        },
+        {
+          "line": 268,
+          "text": "AddStrip(vertices, triangles, 0,"
+        },
+        {
+          "line": 271,
+          "text": "AddStrip(vertices, triangles, 4,"
+        },
+        {
+          "line": 274,
+          "text": "AddStrip(vertices, triangles, 8,"
+        },
+        {
+          "line": 277,
+          "text": "AddStrip(vertices, triangles, 12,"
+        },
+        {
+          "line": 288,
+          "text": "private static void AddStrip("
+        }
+      ]
+    },
+    {
+      "path": "unity/Assets/Scripts/Presentation/VexforgeDiegeticInputRouter.cs",
+      "matches": [
+        {
+          "line": 22,
+          "text": "private readonly RaycastHit[] fallbackHits = new RaycastHit[FallbackHitCapacity];"
+        },
+        {
+          "line": 77,
+          "text": "var position = touch.position.ReadValue();"
+        },
+        {
+          "line": 100,
+          "text": "var position = mouse.position.ReadValue();"
+        },
+        {
+          "line": 118,
+          "text": "var scroll = mouse.scroll.ReadValue().y;"
+        }
+      ]
+    },
+    {
+      "path": "unity/Assets/Scripts/Presentation/VexforgeNexusStage.cs",
+      "matches": [
+        {
+          "line": 24,
+          "text": "PresentationRoot = world.AddComponent<NexusPresentationRoot>();"
+        },
+        {
+          "line": 27,
+          "text": "InputRouter = world.AddComponent<VexforgeDiegeticInputRouter>();"
+        },
+        {
+          "line": 30,
+          "text": "state = VexforgeNexusStageState.Ready;"
+        },
+        {
+          "line": 50,
+          "text": "Ready"
+        }
+      ]
+    },
+    {
+      "path": "unity/Assets/Scripts/Presentation/VexforgePresentationResources.cs",
+      "matches": [
+        {
+          "line": 10,
+          "text": "[SerializeField] private Material cardBodyMaterial;"
+        },
+        {
+          "line": 11,
+          "text": "[SerializeField] private Material cardArtMaterial;"
+        },
+        {
+          "line": 12,
+          "text": "[SerializeField] private Material cardFrameMaterial;"
+        },
+        {
+          "line": 16,
+          "text": "public Material CardBodyMaterial { get { return cardBodyMaterial; } }"
+        },
+        {
+          "line": 17,
+          "text": "public Material CardArtMaterial { get { return cardArtMaterial; } }"
+        },
+        {
+          "line": 18,
+          "text": "public Material CardFrameMaterial { get { return cardFrameMaterial; } }"
+        },
+        {
+          "line": 26,
+          "text": "return cardBodyMaterial != null &&"
+        },
+        {
+          "line": 27,
+          "text": "cardArtMaterial != null &&"
+        },
+        {
+          "line": 28,
+          "text": "cardFrameMaterial != null &&"
+        },
+        {
+          "line": 34,
+          "text": "public static VexforgePresentationResources LoadRuntime()"
+        },
+        {
+          "line": 36,
+          "text": "return Resources.Load<VexforgePresentationResources>("
+        }
+      ]
+    },
+    {
+      "path": "unity/Assets/Scripts/Presentation/VexforgeRenderBootstrap.cs",
+      "matches": [
+        {
+          "line": 11,
+          "text": "[RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]"
+        },
+        {
+          "line": 14,
+          "text": "var asset = Resources.Load<UniversalRenderPipelineAsset>(RuntimeUrpResource);"
+        }
+      ]
+    },
+    {
+      "path": "unity/Assets/Scripts/Presentation/VexforgeTextureLruCache.cs",
+      "matches": [
+        {
+          "line": 8,
+          "text": "/// Byte-bounded LRU cache for runtime card textures. An active lease pins an entry."
+        },
+        {
+          "line": 25,
+          "text": "private readonly string key;"
+        },
+        {
+          "line": 46,
+          "text": "private readonly Dictionary<string, Entry> entries = new Dictionary<string, Entry>(StringComparer.Ordinal);"
+        },
+        {
+          "line": 47,
+          "text": "private readonly LinkedList<string> lru = new LinkedList<string>();"
+        },
+        {
+          "line": 48,
+          "text": "private readonly object gate = new object();"
+        },
+        {
+          "line": 131,
+          "text": "var node = lru.AddFirst(key);"
+        },
+        {
+          "line": 190,
+          "text": "// intentional; runtime CardView releases its leases before disposal."
+        },
+        {
+          "line": 248,
+          "text": "entry.Node = lru.AddFirst(entry.Key);"
+        }
+      ]
+    },
+    {
+      "path": "unity/Assets/Scripts/Presentation/VexforgeVirtualizedCardGallery.cs",
+      "matches": [
+        {
+          "line": 9,
+          "text": "/// while only the visible/preload window consumes pooled CardView instances."
+        },
+        {
+          "line": 11,
+          "text": "public sealed class VexforgeVirtualizedCardGallery : MonoBehaviour"
+        },
+        {
+          "line": 13,
+          "text": "private readonly Dictionary<int, VexforgeCardView> visible ="
+        },
+        {
+          "line": 14,
+          "text": "new Dictionary<int, VexforgeCardView>();"
+        },
+        {
+          "line": 15,
+          "text": "private readonly Dictionary<string, PlayerCardRecord> ownership ="
+        },
+        {
+          "line": 16,
+          "text": "new Dictionary<string, PlayerCardRecord>(System.StringComparer.Ordinal);"
+        },
+        {
+          "line": 17,
+          "text": "private readonly Vector3[] viewportCorners = new Vector3[4];"
+        },
+        {
+          "line": 19,
+          "text": "private VexforgeCardPool pool;"
+        },
+        {
+          "line": 20,
+          "text": "private VexforgeCardArtResolver resolver;"
+        },
+        {
+          "line": 22,
+          "text": "private CardRecord[] catalog = new CardRecord[0];"
+        },
+        {
+          "line": 30,
+          "text": "private readonly RaycastHit[] selectionHits = new RaycastHit[24];"
+        },
+        {
+          "line": 34,
+          "text": "[SerializeField] private int preloadRows = 1;"
+        },
+        {
+          "line": 41,
+          "text": "public int ActiveCardCount { get { return visible.Count; } }"
+        },
+        {
+          "line": 43,
+          "text": "public event System.Action<CardRecord> CardSelected;"
+        },
+        {
+          "line": 47,
+          "text": "VexforgeCardPool cardPool,"
+        },
+        {
+          "line": 48,
+          "text": "VexforgeCardArtResolver artResolver,"
+        },
+        {
+          "line": 52,
+          "text": "pool = cardPool;"
+        },
+        {
+          "line": 57,
+          "text": "Debug.LogError(\"VEXFORGE Archive gallery requires a CardPool.\", this);"
+        },
+        {
+          "line": 74,
+          "text": "public void SetData(CardRecord[] records, PlayerCardRecord[] playerCollection)"
+        },
+        {
+          "line": 81,
+          "text": "catalog = records ?? new CardRecord[0];"
+        },
+        {
+          "line": 85,
+          "text": "if (playerCollection != null)"
+        },
+        {
+          "line": 87,
+          "text": "for (var i = 0; i < playerCollection.Length; i++)"
+        },
+        {
+          "line": 89,
+          "text": "var item = playerCollection[i];"
+        },
+        {
+          "line": 90,
+          "text": "if (item == null || string.IsNullOrWhiteSpace(item.card_id)) continue;"
+        },
+        {
+          "line": 91,
+          "text": "ownership[item.card_id] = item;"
+        },
+        {
+          "line": 151,
+          "text": "private int EffectivePreloadRows"
+        },
+        {
+          "line": 157,
+          "text": "var requested = Mathf.Max(0, preloadRows);"
+        },
+        {
+          "line": 190,
+          "text": "TrySelectCard(screenPosition);"
+        },
+        {
+          "line": 194,
+          "text": "private void TrySelectCard(Vector2 screenPosition)"
+        },
+        {
+          "line": 205,
+          "text": "CardRecord selected = null;"
+        },
+        {
+          "line": 209,
+          "text": "var view = collider == null ? null : collider.GetComponentInParent<VexforgeCardView>();"
+        },
+        {
+          "line": 210,
+          "text": "if (view == null || view.BoundCard == null) continue;"
+        },
+        {
+          "line": 214,
+          "text": "selected = view.BoundCard;"
+        },
+        {
+          "line": 218,
+          "text": "CardSelected?.Invoke(selected);"
+        },
+        {
+          "line": 238,
+          "text": "var preload = EffectivePreloadRows;"
+        },
+        {
+          "line": 240,
+          "text": "var startRow = Mathf.Max(0, centerRow - preload);"
+        },
+        {
+          "line": 243,
+          "text": "startRow + EffectiveViewportRows + preload * 2 - 1);"
+        },
+        {
+          "line": 255,
+          "text": "toReturn.Add(pair.Key);"
+        },
+        {
+          "line": 265,
+          "text": "VexforgeCardView existing;"
+        },
+        {
+          "line": 272,
+          "text": "var card = catalog[index];"
+        },
+        {
+          "line": 273,
+          "text": "if (card == null) continue;"
+        },
+        {
+          "line": 275,
+          "text": "PlayerCardRecord playerCard;"
+        },
+        {
+          "line": 276,
+          "text": "ownership.TryGetValue(card.id, out playerCard);"
+        },
+        {
+          "line": 279,
+          "text": "card,"
+        },
+        {
+          "line": 280,
+          "text": "playerCard,"
+        },
+        {
+          "line": 283,
+          "text": "playerCard != null && playerCard.locked,"
+        },
+        {
+          "line": 285,
+          "text": "CardArtMode.FullCardArtwork);"
+        },
+        {
+          "line": 294,
+          "text": "private void Position(int index, Transform card)"
+        },
+        {
+          "line": 301,
+          "text": "card.localPosition = new Vector3(x, y, 0f);"
+        },
+        {
+          "line": 302,
+          "text": "card.localRotation = Quaternion.identity;"
+        },
+        {
+          "line": 310,
+          "text": "foreach (var pair in visible) indices.Add(pair.Key);"
+        },
+        {
+          "line": 320,
+          "text": "VexforgeCardView view;"
+        },
+        {
+          "line": 368,
+          "text": "private static readonly Stack<List<T>> cache = new Stack<List<T>>();"
+        }
+      ]
+    },
+    {
+      "path": "unity/Assets/Scripts/Session/SessionService.cs",
+      "matches": [
+        {
+          "line": 2,
+          "text": "using System.Threading.Tasks;"
+        },
+        {
+          "line": 18,
+          "text": "private readonly SupabaseAuthService auth;"
+        },
+        {
+          "line": 21,
+          "text": "public SessionService(SupabaseAuthService auth)"
+        },
+        {
+          "line": 37,
+          "text": "lastError = ok ? string.Empty : \"No fue posible iniciar sesión con Supabase.\";"
+        }
+      ]
+    },
+    {
+      "path": "unity/Assets/Scripts/UI/GameShellController.cs",
+      "matches": [
+        {
+          "line": 2,
+          "text": "using System.Threading.Tasks;"
+        },
+        {
+          "line": 18,
+          "text": "/// Nexus and card presentation. Backend remains authoritative."
+        },
+        {
+          "line": 29,
+          "text": "private BattlePresentationDirector battleDirector;"
+        },
+        {
+          "line": 34,
+          "text": "private VexforgeCardArtResolver artResolver;"
+        },
+        {
+          "line": 35,
+          "text": "private VexforgeCardPool cardPool;"
+        },
+        {
+          "line": 36,
+          "text": "private VexforgeVirtualizedCardGallery gallery;"
+        },
+        {
+          "line": 39,
+          "text": "private VexforgeCardInspectionStage cardInspection;"
+        },
+        {
+          "line": 46,
+          "text": "private bool battlePresentationInitialized;"
+        },
+        {
+          "line": 58,
+          "text": "BuildBattlePresentationHost();"
+        },
+        {
+          "line": 59,
+          "text": "InitializeBattlePresentation();"
+        },
+        {
+          "line": 63,
+          "text": "alphaHud = gameObject.AddComponent<VexforgeAlphaHud>();"
+        },
+        {
+          "line": 64,
+          "text": "alphaHud.Initialize(app, canvas, gallery, battleDirector, alphaWorld);"
+        },
+        {
+          "line": 70,
+          "text": "private void BuildBattlePresentationHost()"
+        },
+        {
+          "line": 72,
+          "text": "if (battleDirector != null) return;"
+        },
+        {
+          "line": 74,
+          "text": "var legacyDirector = GetComponent<BattlePresentationDirector>();"
+        },
+        {
+          "line": 78,
+          "text": "var host = new GameObject(\"BattlePresentationHost\");"
+        },
+        {
+          "line": 80,
+          "text": "battleDirector = host.AddComponent<BattlePresentationDirector>();"
+        },
+        {
+          "line": 82,
+          "text": "var battlefieldObject = new GameObject(\"BattlefieldStage\");"
+        },
+        {
+          "line": 83,
+          "text": "battlefieldObject.transform.SetParent(host.transform, false);"
+        },
+        {
+          "line": 84,
+          "text": "battlefieldObject.AddComponent<VexforgeBattlefieldStage>();"
+        },
+        {
+          "line": 87,
+          "text": "private void InitializeBattlePresentation()"
+        },
+        {
+          "line": 89,
+          "text": "if (battlePresentationInitialized || battleDirector == null || presentationCamera == null)"
+        },
+        {
+          "line": 92,
+          "text": "battleDirector.Initialize(presentationCamera, artResolver, FindCard, app.GameState.PlayerId);"
+        },
+        {
+          "line": 93,
+          "text": "var battlefield = battleDirector.GetComponentInChildren<VexforgeBattlefieldStage>(true);"
+        },
+        {
+          "line": 94,
+          "text": "if (battlefield == null)"
+        },
+        {
+          "line": 95,
+          "text": "throw new InvalidOperationException(\"VEXFORGE requires a BattlefieldStage under BattlePresentationHost.\");"
+        },
+        {
+          "line": 96,
+          "text": "alphaWorld.BindBattlefield(battlefield);"
+        },
+        {
+          "line": 97,
+          "text": "battlePresentationInitialized = true;"
+        },
+        {
+          "line": 107,
+          "text": "nexusStage = presentationHost.AddComponent<VexforgeNexusStage>();"
+        },
+        {
+          "line": 111,
+          "text": "var cardWorldRootObject = new GameObject(\"WorldCardPresentation\");"
+        },
+        {
+          "line": 112,
+          "text": "cardWorldRootObject.transform.SetParent(presentationHost.transform, false);"
+        },
+        {
+          "line": 120,
+          "text": "cardWorldRootObject.transform.position = new Vector3(0f, 3.15f, 5.4f);"
+        },
+        {
+          "line": 121,
+          "text": "cardWorldRootObject.transform.rotation = presentationCamera.transform.rotation;"
+        },
+        {
+          "line": 124,
+          "text": "artResolver = new VexforgeCardArtResolver(textureCache, 3, 20, 8L * 1024L * 1024L, 4096);"
+        },
+        {
+          "line": 126,
+          "text": "cardPool = new VexforgeCardPool("
+        },
+        {
+          "line": 127,
+          "text": "cardWorldRootObject.transform,"
+        },
+        {
+          "line": 128,
+          "text": "() => VexforgeCardView.CreateRuntime(cardWorldRootObject.transform),"
+        },
+        {
+          "line": 132,
+          "text": "var galleryObject = new GameObject(\"WorldCardGallery\");"
+        },
+        {
+          "line": 137,
+          "text": "alphaInput = presentationHost.AddComponent<VexforgeDiegeticInputRouter>();"
+        },
+        {
+          "line": 140,
+          "text": "gallery = galleryObject.AddComponent<VexforgeVirtualizedCardGallery>();"
+        },
+        {
+          "line": 143,
+          "text": "cardPool,"
+        },
+        {
+          "line": 149,
+          "text": "alphaWorld = presentationHost.AddComponent<VexforgeAlphaWorldDirector>();"
+        },
+        {
+          "line": 153,
+          "text": "var cardInspectionObject = new GameObject(\"CardInspectionStage\");"
+        },
+        {
+          "line": 154,
+          "text": "cardInspectionObject.transform.SetParent(presentationHost.transform, false);"
+        },
+        {
+          "line": 155,
+          "text": "cardInspection = cardInspectionObject.AddComponent<VexforgeCardInspectionStage>();"
+        },
+        {
+          "line": 156,
+          "text": "cardInspection.Initialize(presentationCamera, alphaInput, artResolver);"
+        },
+        {
+          "line": 157,
+          "text": "cardInspection.Closed += HandleCardInspectionClosed;"
+        },
+        {
+          "line": 158,
+          "text": "gallery.CardSelected += HandleCardSelected;"
+        },
+        {
+          "line": 218,
+          "text": "eventSystem.gameObject.AddComponent<InputSystemUIInputModule>();"
+        },
+        {
+          "line": 254,
+          "text": "if (cardInspection != null && cardInspection.IsVisible)"
+        },
+        {
+          "line": 255,
+          "text": "cardInspection.Hide(false);"
+        },
+        {
+          "line": 287,
+          "text": "if (battleDirector != null) battleDirector.StopAndHide();"
+        },
+        {
+          "line": 288,
+          "text": "if (cardInspection != null && cardInspection.IsVisible) cardInspection.Hide(false);"
+        },
+        {
+          "line": 292,
+          "text": "if (cardPool != null) cardPool.ReturnAll();"
+        },
+        {
+          "line": 305,
+          "text": "var outline = panel.AddComponent<Outline>();"
+        },
+        {
+          "line": 318,
+          "text": "\"Autenticación real · Supabase authority\","
+        },
+        {
+          "line": 355,
+          "text": "\"Inicia sesión para cargar datos reales del jugador.\";"
+        },
+        {
+          "line": 390,
+          "text": "case GameRoute.Battle:"
+        },
+        {
+          "line": 391,
+          "text": "BuildBattle();"
+        },
+        {
+          "line": 394,
+          "text": "case GameRoute.Missions:"
+        },
+        {
+          "line": 395,
+          "text": "BuildMissions();"
+        },
+        {
+          "line": 398,
+          "text": "case GameRoute.Economy:"
+        },
+        {
+          "line": 399,
+          "text": "BuildEconomy();"
+        },
+        {
+          "line": 414,
+          "text": "Title(\"THE NEXUS\", \"Citadel hub · entra en un dominio del mundo\");"
+        },
+        {
+          "line": 418,
+          "text": "Message(\"El Nexus espera una sincronización válida de Supabase.\\nNo se muestran datos inventados.\");"
+        },
+        {
+          "line": 426,
+          "text": "\"Sello: \" + (profile == null ? \"NO REPORTADO\" : ValueOr(profile.display_name, \"NO REPORTADO\")) +"
+        },
+        {
+          "line": 427,
+          "text": "\"\\nNivel: \" + (progress == null ? \"NO REPORTADO\" : progress.level.ToString()) +"
+        },
+        {
+          "line": 428,
+          "text": "\"\\nEnergía: \" + (progress == null ? \"NO REPORTADA\" : progress.energy + \" / \" + progress.max_energy) +"
+        },
+        {
+          "line": 434,
+          "text": "Title(\"ARCHIVE\", \"Santuario de cartas · catálogo y ownership desde Supabase\");"
+        },
+        {
+          "line": 435,
+          "text": "AddReturnRune();"
+        },
+        {
+          "line": 437,
+          "text": "var catalog = app.GameState.Catalog ?? new CardRecord[0];"
+        },
+        {
+          "line": 455,
+          "text": "Title(\"FORGE\", \"Mesa de forja · slots recibidos y persistidos por Supabase\");"
+        },
+        {
+          "line": 456,
+          "text": "AddReturnRune();"
+        },
+        {
+          "line": 459,
+          "text": "var deckCards = new CardRecord[deckSlots.Length];"
+        },
+        {
+          "line": 463,
+          "text": "deckCards[i] = FindCard(deckSlots[i].card_id);"
+        },
+        {
+          "line": 466,
+          "text": "gallery.SetData(deckCards, app.GameState.Collection);"
+        },
+        {
+          "line": 471,
+          "text": "? \"FORJA VACÍA · SIN SLOTS REPORTADOS\""
+        },
+        {
+          "line": 472,
+          "text": ": \"La mesa muestra todos los slots reportados por Supabase.\","
+        },
+        {
+          "line": 478,
+          "text": "ids[i] = deckSlots[i].card_id;"
+        },
+        {
+          "line": 485,
+          "text": "private void BuildBattle()"
+        },
+        {
+          "line": 487,
+          "text": "Title(\"BATTLEFIELD\", \"Arena de eventos · Supabase resuelve el combate\");"
+        },
+        {
+          "line": 488,
+          "text": "AddReturnRune();"
+        },
+        {
+          "line": 492,
+          "text": "\"BattlefieldContext\","
+        },
+        {
+          "line": 504,
+          "text": "\"ARENA EN ESPERA\\n\\nZONA DEL JUGADOR\\n\\n— NÚCLEO DE BATALLA —\\n\\nZONA DEL OPONENTE\","
+        },
+        {
+          "line": 512,
+          "text": "\"Unity sólo envía intención y presenta eventos. No se crea un rival local ni se calcula un resultado.\","
+        },
+        {
+          "line": 525,
+          "text": "GameRoute.Battle,"
+        },
+        {
+          "line": 527,
+          "text": "() => ResolveBattle(opponentInput.text));"
+        },
+        {
+          "line": 530,
+          "text": "private void BuildMissions()"
+        },
+        {
+          "line": 532,
+          "text": "Title(\"MISSIONS\", \"Cámara de contratos · actividad publicada por Supabase\");"
+        },
+        {
+          "line": 533,
+          "text": "AddReturnRune();"
+        },
+        {
+          "line": 535,
+          "text": "var missions = app.GameState.Missions ?? new MissionRecord[0];"
+        },
+        {
+          "line": 537,
+          "text": "if (missions.Length == 0)"
+        },
+        {
+          "line": 543,
+          "text": "for (var i = 0; i < missions.Length; i++)"
+        },
+        {
+          "line": 545,
+          "text": "var mission = missions[i];"
+        },
+        {
+          "line": 561,
+          "text": "ValueOr(mission == null ? null : mission.name, \"CONTRATO NO REPORTADO\") +"
+        },
+        {
+          "line": 563,
+          "text": "ValueOr(mission == null ? null : mission.difficulty, \"DIFICULTAD NO REPORTADA\") +"
+        },
+        {
+          "line": 564,
+          "text": "\"\\nXP REPORTADO: \" +"
+        },
+        {
+          "line": 565,
+          "text": "(mission == null ? \"NO REPORTADO\" : mission.reward_xp.ToString()),"
+        },
+        {
+          "line": 573,
+          "text": "private void BuildEconomy()"
+        },
+        {
+          "line": 575,
+          "text": "Title(\"TREASURY\", \"Balances de solo lectura · autoridad Supabase\");"
+        },
+        {
+          "line": 577,
+          "text": "AddReturnRune();"
+        },
+        {
+          "line": 579,
+          "text": "var wallet = app.GameState.Wallet;"
+        },
+        {
+          "line": 582,
+          "text": "wallet == null"
+        },
+        {
+          "line": 584,
+          "text": ": \"VEX in-game: \" + wallet.vex_ingame +"
+        },
+        {
+          "line": 585,
+          "text": "\"\\nVEX tradeable: \" + wallet.vex_tradeable +"
+        },
+        {
+          "line": 586,
+          "text": "\"\\nReservado in-game: \" + wallet.reserved_ingame +"
+        },
+        {
+          "line": 587,
+          "text": "\"\\nReservado tradeable: \" + wallet.reserved_tradeable);"
+        },
+        {
+          "line": 592,
+          "text": "Title(\"PROFILE\", \"Identidad, estadísticas y progreso autorizados\");"
+        },
+        {
+          "line": 594,
+          "text": "AddReturnRune();"
+        },
+        {
+          "line": 602,
+          "text": ": \"Nombre: \" + ValueOr(profile.display_name, \"NO REPORTADO\") +"
+        },
+        {
+          "line": 603,
+          "text": "\"\\nRol: \" + ValueOr(profile.role, \"NO REPORTADO\") +"
+        },
+        {
+          "line": 604,
+          "text": "\"\\nEstado: \" + ValueOr(profile.status, \"NO REPORTADO\") +"
+        },
+        {
+          "line": 605,
+          "text": "\"\\nNivel: \" + (progress == null ? \"NO REPORTADO\" : progress.level.ToString()));"
+        },
+        {
+          "line": 614,
+          "text": "private void AddReturnRune()"
+        },
+        {
+          "line": 650,
+          "text": "var heading = UiFactory.Label("
+        },
+        {
+          "line": 657,
+          "text": "heading.rectTransform,"
+        },
+        {
+          "line": 727,
+          "text": "? \"DECK GUARDADO\""
+        },
+        {
+          "line": 728,
+          "text": ": ValueOr(result.reason, \"OPERACIÓN NO CONFIRMADA\"),"
+        },
+        {
+          "line": 732,
+          "text": "private async void ResolveBattle(string opponentId)"
+        },
+        {
+          "line": 740,
+          "text": "var result = await app.Repository.ResolveBattleAsync("
+        },
+        {
+          "line": 741,
+          "text": "app.GameState.PlayerId,"
+        },
+        {
+          "line": 747,
+          "text": "MessageAt(\"EL BACKEND NO DEVOLVIÓ RESULTADO\", 0.22f);"
+        },
+        {
+          "line": 760,
+          "text": "\"RESULTADO RECIBIDO · \" +"
+        },
+        {
+          "line": 761,
+          "text": "ValueOr(result.status, \"ESTADO NO REPORTADO\"),"
+        },
+        {
+          "line": 764,
+          "text": "if (battleDirector == null || !battleDirector.IsInitialized)"
+        },
+        {
+          "line": 766,
+          "text": "MessageAt(\"PRESENTACIÓN DE BATALLA NO INICIALIZADA\", 0.22f);"
+        },
+        {
+          "line": 770,
+          "text": "battleDirector.Play(result.events);"
+        },
+        {
+          "line": 773,
+          "text": "private void PresentBattleEvent(BattleEvent battleEvent)"
+        },
+        {
+          "line": 775,
+          "text": "if (battleEvent == null || content == null) return;"
+        },
+        {
+          "line": 778,
+          "text": "ValueOr(battleEvent.event_type, \"EVENTO NO REPORTADO\") +"
+        },
+        {
+          "line": 780,
+          "text": "ValueOr(battleEvent.actor_id, \"ACTOR NO REPORTADO\");"
+        },
+        {
+          "line": 785,
+          "text": "private void HandleCardSelected(CardRecord card)"
+        },
+        {
+          "line": 787,
+          "text": "if (cardInspection == null || card == null) return;"
+        },
+        {
+          "line": 789,
+          "text": "if (cardPool != null) cardPool.ReturnAll();"
+        },
+        {
+          "line": 791,
+          "text": "cardInspection.Show(card, FindOwnership(card.id));"
+        },
+        {
+          "line": 794,
+          "text": "private void HandleCardInspectionClosed()"
+        },
+        {
+          "line": 802,
+          "text": "private PlayerCardRecord FindOwnership(string cardId)"
+        },
+        {
+          "line": 804,
+          "text": "if (string.IsNullOrWhiteSpace(cardId) || app.GameState.Collection == null)"
+        },
+        {
+          "line": 809,
+          "text": "if (owned != null && owned.card_id == cardId)"
+        },
+        {
+          "line": 815,
+          "text": "private CardRecord FindCard(string cardId)"
+        },
+        {
+          "line": 817,
+          "text": "if (string.IsNullOrWhiteSpace(cardId) ||"
+        },
+        {
+          "line": 825,
+          "text": "var card = app.GameState.Catalog[i];"
+        },
+        {
+          "line": 826,
+          "text": "if (card != null && card.id == cardId)"
+        },
+        {
+          "line": 828,
+          "text": "return card;"
+        },
+        {
+          "line": 857,
+          "text": "if (battleDirector != null)"
+        },
+        {
+          "line": 859,
+          "text": "battleDirector.EventPresented -= PresentBattleEvent;"
+        },
+        {
+          "line": 864,
+          "text": "gallery.CardSelected -= HandleCardSelected;"
+        },
+        {
+          "line": 867,
+          "text": "if (cardInspection != null)"
+        },
+        {
+          "line": 869,
+          "text": "cardInspection.Closed -= HandleCardInspectionClosed;"
+        },
+        {
+          "line": 870,
+          "text": "cardInspection.Hide(false);"
+        }
+      ]
+    },
+    {
+      "path": "unity/Assets/Scripts/UI/UiFactory.cs",
+      "matches": [
+        {
+          "line": 8,
+          "text": "public static readonly Color Background = new Color(0.025f, 0.017f, 0.016f, 1f);"
+        },
+        {
+          "line": 9,
+          "text": "public static readonly Color Panel = new Color(0.09f, 0.06f, 0.055f, 0.97f);"
+        },
+        {
+          "line": 10,
+          "text": "public static readonly Color PanelLight = new Color(0.16f, 0.105f, 0.08f, 0.98f);"
+        },
+        {
+          "line": 11,
+          "text": "public static readonly Color PanelGlass = new Color(0.035f, 0.027f, 0.025f, 0.88f);"
+        },
+        {
+          "line": 12,
+          "text": "public static readonly Color Card = new Color(0.075f, 0.055f, 0.05f, 0.98f);"
+        },
+        {
+          "line": 13,
+          "text": "public static readonly Color CardSelected = new Color(0.14f, 0.085f, 0.045f, 0.99f);"
+        },
+        {
+          "line": 14,
+          "text": "public static readonly Color CardArtUnknown = new Color(0.035f, 0.04f, 0.05f, 1f);"
+        },
+        {
+          "line": 15,
+          "text": "public static readonly Color Gold = new Color(0.79f, 0.57f, 0.14f, 1f);"
+        },
+        {
+          "line": 16,
+          "text": "public static readonly Color GoldDim = new Color(0.36f, 0.25f, 0.09f, 1f);"
+        },
+        {
+          "line": 17,
+          "text": "public static readonly Color Crimson = new Color(0.42f, 0.055f, 0.07f, 1f);"
+        },
+        {
+          "line": 18,
+          "text": "public static readonly Color Arcane = new Color(0.12f, 0.48f, 0.7f, 1f);"
+        },
+        {
+          "line": 19,
+          "text": "public static readonly Color Text = new Color(0.9f, 0.84f, 0.72f, 1f);"
+        },
+        {
+          "line": 20,
+          "text": "public static readonly Color Muted = new Color(0.58f, 0.52f, 0.45f, 1f);"
+        },
+        {
+          "line": 59,
+          "text": "var button = objectRoot.AddComponent<Button>();"
+        },
+        {
+          "line": 62,
+          "text": "button.onClick.AddListener(onClick);"
+        },
+        {
+          "line": 69,
+          "text": "var input = objectRoot.AddComponent<InputField>();"
+        }
+      ]
+    },
+    {
+      "path": "unity/Assets/Scripts/UI/VexforgeAlphaHud.cs",
+      "matches": [
+        {
+          "line": 20,
+          "text": "private VexforgeVirtualizedCardGallery gallery;"
+        },
+        {
+          "line": 21,
+          "text": "private BattlePresentationDirector battleDirector;"
+        },
+        {
+          "line": 28,
+          "text": "private CardRecord[] lastCatalog;"
+        },
+        {
+          "line": 29,
+          "text": "private PlayerCardRecord[] lastCollection;"
+        },
+        {
+          "line": 37,
+          "text": "VexforgeVirtualizedCardGallery cardGallery,"
+        },
+        {
+          "line": 38,
+          "text": "BattlePresentationDirector director,"
+        },
+        {
+          "line": 46,
+          "text": "gallery = cardGallery;"
+        },
+        {
+          "line": 47,
+          "text": "battleDirector = director;"
+        },
+        {
+          "line": 53,
+          "text": "socialHub = canvas.gameObject.AddComponent<VexforgeSocialHub>();"
+        },
+        {
+          "line": 58,
+          "text": "globalChatDock = canvas.gameObject.AddComponent<VexforgeGlobalChatDock>();"
+        },
+        {
+          "line": 64,
+          "text": "if (battleDirector != null)"
+        },
+        {
+          "line": 66,
+          "text": "battleDirector.EventPresented += HandleBattleEvent;"
+        },
+        {
+          "line": 67,
+          "text": "battleDirector.PresentationCompleted += HandleBattleCompleted;"
+        },
+        {
+          "line": 81,
+          "text": "if (route != GameRoute.Battle && battleDirector != null)"
+        },
+        {
+          "line": 82,
+          "text": "battleDirector.StopAndHide();"
+        },
+        {
+          "line": 98,
+          "text": ": ResolveDeckCards(),"
+        },
+        {
+          "line": 124,
+          "text": "case GameRoute.Battle:"
+        },
+        {
+          "line": 125,
+          "text": "BuildBattleHud();"
+        },
+        {
+          "line": 127,
+          "text": "case GameRoute.Missions:"
+        },
+        {
+          "line": 128,
+          "text": "BuildMissionHud();"
+        },
+        {
+          "line": 130,
+          "text": "case GameRoute.Economy:"
+        },
+        {
+          "line": 131,
+          "text": "BuildEconomyHud();"
+        },
+        {
+          "line": 154,
+          "text": "var player = UiFactory.Label(root, profileName.ToUpperInvariant(), 12, UiFactory.Muted, TextAnchor.MiddleRight);"
+        },
+        {
+          "line": 155,
+          "text": "UiFactory.Anchor(player.rectTransform, new Vector2(0.70f, 0.93f), new Vector2(0.94f, 0.972f), Vector2.zero, Vector2.zero);"
+        },
+        {
+          "line": 164,
+          "text": "AddRibbon(message, 0.075f);"
+        },
+        {
+          "line": 165,
+          "text": "AddHint(\"TOCA UN DOMINIO DEL NEXUS PARA ENTRAR\", 0.035f);"
+        },
+        {
+          "line": 171,
+          "text": "AddRibbon(\"ARCHIVE  ·  \" + count + \" CARTAS DISPONIBLES\", 0.075f);"
+        },
+        {
+          "line": 172,
+          "text": "AddHint(\"DESLIZA PARA RECORRER · TOCA UNA CARTA PARA INSPECCIONAR\", 0.035f);"
+        },
+        {
+          "line": 173,
+          "text": "AddBackButton(0.055f);"
+        },
+        {
+          "line": 179,
+          "text": "AddRibbon(\"FORGE  ·  \" + slots + \" SLOTS REPORTADOS\", 0.075f);"
+        },
+        {
+          "line": 180,
+          "text": "AddHint(\"LA VALIDACIÓN Y EL SELLADO SON AUTORIZADOS POR SUPABASE\", 0.035f);"
+        },
+        {
+          "line": 181,
+          "text": "AddAction(\"VALIDAR EN EL ALTAR\", 0.16f, ValidateDeck);"
+        },
+        {
+          "line": 182,
+          "text": "AddAction(\"SELLAR DECK\", 0.065f, SaveDeck);"
+        },
+        {
+          "line": 183,
+          "text": "AddBackButton(0.27f);"
+        },
+        {
+          "line": 186,
+          "text": "private void BuildBattleHud()"
+        },
+        {
+          "line": 188,
+          "text": "AddRibbon(\"BATTLEFIELD  ·  ESTADO AUTORIZADO POR EL SERVIDOR\", 0.075f);"
+        },
+        {
+          "line": 189,
+          "text": "AddHint(\"INTRODUCE EL OPONENTE Y ABRE EL DESAFÍO\", 0.035f);"
+        },
+        {
+          "line": 194,
+          "text": "AddAction(\"ABRIR DESAFÍO\", 0.075f, ResolveBattle);"
+        },
+        {
+          "line": 195,
+          "text": "AddBackButton(0.28f);"
+        },
+        {
+          "line": 201,
+          "text": "private void BuildMissionHud()"
+        },
+        {
+          "line": 203,
+          "text": "var missions = app.GameState.Missions;"
+        },
+        {
+          "line": 204,
+          "text": "AddRibbon(\"MISSIONS  ·  ACTIVIDAD DEL MUNDO\", 0.075f);"
+        },
+        {
+          "line": 205,
+          "text": "AddHint(\"LOS CONTRATOS DEBEN LLEVAR AL JUGADOR HACIA LA ACCIÓN\", 0.035f);"
+        },
+        {
+          "line": 206,
+          "text": "AddBackButton(0.055f);"
+        },
+        {
+          "line": 208,
+          "text": "if (missions == null || missions.Length == 0)"
+        },
+        {
+          "line": 210,
+          "text": "AddInfo(\"NO HAY CONTRATOS DISPONIBLES EN LA SESIÓN ACTUAL.\", 0.52f);"
+        },
+        {
+          "line": 215,
+          "text": "var step = Mathf.Min(0.105f, 0.46f / Mathf.Max(1, missions.Length));"
+        },
+        {
+          "line": 216,
+          "text": "for (var i = 0; i < missions.Length; i++)"
+        },
+        {
+          "line": 218,
+          "text": "var mission = missions[i];"
+        },
+        {
+          "line": 219,
+          "text": "if (mission == null) continue;"
+        },
+        {
+          "line": 220,
+          "text": "var panel = UiFactory.PanelObject(root, \"Mission_\" + i, UiFactory.PanelGlass);"
+        },
+        {
+          "line": 224,
+          "text": "ValueOr(mission.name, \"CONTRATO\") + \"  ·  \" + ValueOr(mission.difficulty, \"DIFICULTAD\") + \"  ·  XP \" + mission.reward_xp,"
+        },
+        {
+          "line": 232,
+          "text": "private void BuildEconomyHud()"
+        },
+        {
+          "line": 234,
+          "text": "AddRibbon(\"TREASURY  ·  ESTADO ECONÓMICO REPORTADO\", 0.075f);"
+        },
+        {
+          "line": 235,
+          "text": "AddBackButton(0.055f);"
+        },
+        {
+          "line": 236,
+          "text": "var wallet = app.GameState.Wallet;"
+        },
+        {
+          "line": 237,
+          "text": "AddInfo("
+        },
+        {
+          "line": 238,
+          "text": "wallet == null"
+        },
+        {
+          "line": 239,
+          "text": "? \"CARTERA NO REPORTADA POR LA SESIÓN ACTUAL.\""
+        },
+        {
+          "line": 240,
+          "text": ": \"VEX IN-GAME  \" + wallet.vex_ingame +"
+        },
+        {
+          "line": 241,
+          "text": "\"\\nVEX TRADEABLE  \" + wallet.vex_tradeable +"
+        },
+        {
+          "line": 242,
+          "text": "\"\\nRESERVADO IN-GAME  \" + wallet.reserved_ingame +"
+        },
+        {
+          "line": 243,
+          "text": "\"\\nRESERVADO TRADEABLE  \" + wallet.reserved_tradeable,"
+        },
+        {
+          "line": 249,
+          "text": "AddRibbon(\"HALL  ·  TU IDENTIDAD EN VEXFORGE\", 0.075f);"
+        },
+        {
+          "line": 250,
+          "text": "AddBackButton(0.055f);"
+        },
+        {
+          "line": 253,
+          "text": "AddInfo("
+        },
+        {
+          "line": 255,
+          "text": "? \"PERFIL NO REPORTADO.\""
+        },
+        {
+          "line": 257,
+          "text": "\"\\nROL  \" + ValueOr(profile.role, \"NO REPORTADO\") +"
+        },
+        {
+          "line": 258,
+          "text": "\"\\nESTADO  \" + ValueOr(profile.status, \"NO REPORTADO\") +"
+        },
+        {
+          "line": 261,
+          "text": "AddAction(\"HALL DE ALIADOS\", 0.20f, OpenSocialHub);"
+        },
+        {
+          "line": 262,
+          "text": "AddAction(\"CERRAR SESIÓN\", 0.105f, () => app.SignOut());"
+        },
+        {
+          "line": 287,
+          "text": "private void AddRibbon(string value, float y)"
+        },
+        {
+          "line": 295,
+          "text": "private void AddHint(string value, float y)"
+        },
+        {
+          "line": 301,
+          "text": "private void AddInfo(string value, float y)"
+        },
+        {
+          "line": 309,
+          "text": "private void AddBackButton(float y)"
+        },
+        {
+          "line": 311,
+          "text": "AddAction(\"VOLVER AL NEXUS\", y, () => app.Navigation.Navigate(GameRoute.Nexus));"
+        },
+        {
+          "line": 314,
+          "text": "private void AddAction(string label, float y, Action action)"
+        },
+        {
+          "line": 331,
+          "text": "AddTransientMessage("
+        },
+        {
+          "line": 333,
+          "text": "? \"VALIDACIÓN NO REPORTADA\""
+        },
+        {
+          "line": 334,
+          "text": ": result.valid ? \"DECK VALIDADO POR EL SERVIDOR\" : string.Join(\"\\n\", result.errors ?? new string[0]));"
+        },
+        {
+          "line": 340,
+          "text": "AddTransientMessage(\"VALIDACIÓN INTERRUMPIDA · \" + ex.GetType().Name);"
+        },
+        {
+          "line": 359,
+          "text": "AddTransientMessage("
+        },
+        {
+          "line": 361,
+          "text": "? \"GUARDADO NO REPORTADO\""
+        },
+        {
+          "line": 362,
+          "text": ": result.ok ? \"DECK SELLADO\" : ValueOr(result.reason, \"OPERACIÓN NO CONFIRMADA\"));"
+        },
+        {
+          "line": 368,
+          "text": "AddTransientMessage(\"SELLADO INTERRUMPIDO · \" + ex.GetType().Name);"
+        },
+        {
+          "line": 376,
+          "text": "private async void ResolveBattle()"
+        },
+        {
+          "line": 379,
+          "text": "(battleDirector != null && battleDirector.State == PresentationState.Playing) ||"
+        },
+        {
+          "line": 391,
+          "text": "var result = await app.Repository.ResolveBattleAsync("
+        },
+        {
+          "line": 392,
+          "text": "app.GameState.PlayerId,"
+        },
+        {
+          "line": 399,
+          "text": "AddTransientMessage(\"EL SERVIDOR NO DEVOLVIÓ RESULTADO\");"
+        },
+        {
+          "line": 405,
+          "text": "AddTransientMessage(ValueOr(result.error, \"BATALLA NO DISPONIBLE\"));"
+        },
+        {
+          "line": 409,
+          "text": "if (battleDirector == null || !battleDirector.IsInitialized)"
+        },
+        {
+          "line": 411,
+          "text": "AddTransientMessage(\"PRESENTACIÓN DE BATALLA NO INICIALIZADA\");"
+        },
+        {
+          "line": 415,
+          "text": "if (battleDirector != null)"
+        },
+        {
+          "line": 417,
+          "text": "battleDirector.SetLocalPlayerId(app.GameState.PlayerId);"
+        },
+        {
+          "line": 418,
+          "text": "battleDirector.Play(result.events);"
+        },
+        {
+          "line": 425,
+          "text": "AddTransientMessage(\"BATALLA INTERRUMPIDA · \" + ex.GetType().Name);"
+        },
+        {
+          "line": 439,
+          "text": "private void HandleBattleEvent(BattleEvent _)"
+        },
+        {
+          "line": 445,
+          "text": "private async void HandleBattleCompleted()"
+        },
+        {
+          "line": 462,
+          "text": "AddTransientMessage(\"SINCRONIZACIÓN POST-COMBATE INTERRUMPIDA · \" + ex.GetType().Name);"
+        },
+        {
+          "line": 466,
+          "text": "private void AddTransientMessage(string text)"
+        },
+        {
+          "line": 475,
+          "text": "private CardRecord[] ResolveDeckCards()"
+        },
+        {
+          "line": 479,
+          "text": "return new CardRecord[0];"
+        },
+        {
+          "line": 480,
+          "text": "var cards = new CardRecord[slots.Length];"
+        },
+        {
+          "line": 483,
+          "text": "cards[i] = FindCard(slots[i].card_id);"
+        },
+        {
+          "line": 485,
+          "text": "return cards;"
+        },
+        {
+          "line": 495,
+          "text": "ids[i] = slots[i].card_id;"
+        },
+        {
+          "line": 499,
+          "text": "private CardRecord FindCard(string cardId)"
+        },
+        {
+          "line": 501,
+          "text": "if (string.IsNullOrWhiteSpace(cardId) || app.GameState.Catalog == null)"
+        },
+        {
+          "line": 505,
+          "text": "var card = app.GameState.Catalog[i];"
+        },
+        {
+          "line": 506,
+          "text": "if (card != null && card.id == cardId)"
+        },
+        {
+          "line": 507,
+          "text": "return card;"
+        },
+        {
+          "line": 519,
+          "text": "case GameRoute.Battle: return \"BATTLEFIELD\";"
+        },
+        {
+          "line": 520,
+          "text": "case GameRoute.Missions: return \"MISSIONS\";"
+        },
+        {
+          "line": 521,
+          "text": "case GameRoute.Economy: return \"TREASURY\";"
+        },
+        {
+          "line": 550,
+          "text": "if (battleDirector != null)"
+        },
+        {
+          "line": 552,
+          "text": "battleDirector.EventPresented -= HandleBattleEvent;"
+        },
+        {
+          "line": 553,
+          "text": "battleDirector.PresentationCompleted -= HandleBattleCompleted;"
+        }
+      ]
+    },
+    {
+      "path": "unity/Assets/Scripts/UI/VexforgeSocialHub.cs",
+      "matches": [
+        {
+          "line": 3,
+          "text": "using System.Threading.Tasks;"
+        },
+        {
+          "line": 15,
+          "text": "/// is HTTP-only; the backend contract is ready for a later Realtime transport without changing"
+        },
+        {
+          "line": 44,
+          "text": "private SocialSearchPlayer[] searchResults;"
+        },
+        {
+          "line": 64,
+          "text": "var client = app != null && app.Services != null ? app.Services.Resolve<SupabaseClient>() : null;"
+        },
+        {
+          "line": 128,
+          "text": "SetStatus(\"NO SE PUDO ABRIR EL CANAL PRIVADO\");"
+        },
+        {
+          "line": 138,
+          "text": "if (IsCurrent(generation)) SetStatus(\"CANAL PRIVADO NO DISPONIBLE\");"
+        },
+        {
+          "line": 247,
+          "text": "await repository.MarkPrivateReadAsync(selectedConversationId);"
+        },
+        {
+          "line": 337,
+          "text": "hash = hash * 31 + (values[i] == null ? 0 : values[i].unread_count);"
+        },
+        {
+          "line": 415,
+          "text": "var title = activeTab == SocialTab.Friends ? \"HALL DE ALIADOS\" :"
+        },
+        {
+          "line": 424,
+          "text": "AddTabs();"
+        },
+        {
+          "line": 434,
+          "text": "private void AddTabs()"
+        },
+        {
+          "line": 436,
+          "text": "var labels = new[] { \"ALIADOS\", \"DM\", \"WORLD\", \"CLAN\" };"
+        },
+        {
+          "line": 464,
+          "text": "var searchButton = UiFactory.Button(contentRoot, \"BUSCAR\", () => _ = SearchPlayersAsync(search.text));"
+        },
+        {
+          "line": 469,
+          "text": "AddSectionLabel(contentRoot, \"RESULTADOS · \" + ValueOr(searchQuery, \"BÚSQUEDA\"), 0.84f);"
+        },
+        {
+          "line": 470,
+          "text": "var clear = UiFactory.Button(contentRoot, \"CERRAR RESULTADOS\", ClearSearchResults);"
+        },
+        {
+          "line": 475,
+          "text": "var player = searchResults[i];"
+        },
+        {
+          "line": 477,
+          "text": "var presence = player.is_online ? \"● \" : \"○ \";"
+        },
+        {
+          "line": 478,
+          "text": "var label = UiFactory.Label(row.transform, presence + ValueOr(player.display_name, \"Guerrero\") + \" · \" + ValueOr(player.friend_state, \"none\"), 11, player.is_online ? UiFactory.Arcane : UiFactory.Text);"
+        },
+        {
+          "line": 480,
+          "text": "var playerId = player.id;"
+        },
+        {
+          "line": 482,
+          "text": "string actionLabel = \"AÑADIR\";"
+        },
+        {
+          "line": 483,
+          "text": "if (player.friend_state == \"friends\")"
+        },
+        {
+          "line": 487,
+          "text": "else if (player.friend_state == \"pending_incoming\" && !string.IsNullOrWhiteSpace(player.request_id))"
+        },
+        {
+          "line": 490,
+          "text": "var incomingId = player.request_id;"
+        },
+        {
+          "line": 493,
+          "text": "else if (player.friend_state == \"pending_outgoing\" && !string.IsNullOrWhiteSpace(player.request_id))"
+        },
+        {
+          "line": 496,
+          "text": "var outgoingId = player.request_id;"
+        },
+        {
+          "line": 501,
+          "text": "action = () => _ = SendFriendRequestAsync(playerId);"
+        },
+        {
+          "line": 503,
+          "text": "var block = UiFactory.Button(row.transform, \"BLOQUEAR\", () => _ = BlockPlayerAsync(playerId));"
+        },
+        {
+          "line": 510,
+          "text": "if (searchResults.Length == 0) AddListMessage(results.content, \"No hay guerreros que coincidan.\");"
+        },
+        {
+          "line": 516,
+          "text": "AddStatus(\"CARGANDO RELACIONES...\");"
+        },
+        {
+          "line": 520,
+          "text": "AddSectionLabel(contentRoot, \"AMIGOS · \" + LengthOf(friendData.friends), 0.83f);"
+        },
+        {
+          "line": 532,
+          "text": "var block = UiFactory.Button(row.transform, \"BLOQ\", () => _ = BlockPlayerAsync(id));"
+        },
+        {
+          "line": 537,
+          "text": "if (friends.Length == 0) AddListMessage(friendList.content, \"Aún no tienes aliados.\");"
+        },
+        {
+          "line": 539,
+          "text": "AddSectionLabel(contentRoot, \"SOLICITUDES\", 0.50f);"
+        },
+        {
+          "line": 554,
+          "text": "if (incoming.Length == 0) AddListMessage(requestList.content, \"No hay solicitudes entrantes.\");"
+        },
+        {
+          "line": 556,
+          "text": "AddSectionLabel(contentRoot, \"SOLICITUDES ENVIADAS\", 0.18f);"
+        },
+        {
+          "line": 569,
+          "text": "if (outgoing.Length == 0) AddListMessage(outgoingList.content, \"No hay solicitudes enviadas.\");"
+        },
+        {
+          "line": 586,
+          "text": "var otherId = conversation.other_player_id;"
+        },
+        {
+          "line": 588,
+          "text": "var open = UiFactory.Button(row.transform, conversation.unread_count > 0 ? (\"(\" + conversation.unread_count + \") ABRIR\") : \"ABRIR\", () => OpenConversationById(id, otherId, otherName));"
+        },
+        {
+          "line": 592,
+          "text": "AddListMessage(conversationList.content, \"Agrega un aliado desde HALL DE ALIADOS para iniciar un canal.\");"
+        },
+        {
+          "line": 596,
+          "text": "AddSectionLabel(contentRoot, \"CANAL · \" + ValueOr(selectedFriendName, \"ALIADO\"), 0.55f);"
+        },
+        {
+          "line": 605,
+          "text": "AddSectionLabel(contentRoot, \"COMUNICACIÓN GLOBAL · TODOS LOS VASALLOS\", 0.94f);"
+        },
+        {
+          "line": 615,
+          "text": "AddStatus(\"CARGANDO CLAN...\");"
+        },
+        {
+          "line": 621,
+          "text": "AddSectionLabel(contentRoot, \"DESCUBRIR CLAN\", 0.92f);"
+        },
+        {
+          "line": 634,
+          "text": "if (clans.Length == 0) AddListMessage(list.content, \"No hay Clanes visibles.\");"
+        },
+        {
+          "line": 636,
+          "text": "AddSectionLabel(contentRoot, \"FORJA TU CLAN\", 0.54f);"
+        },
+        {
+          "line": 674,
+          "text": "AddSectionLabel(contentRoot, \"CLAN CHAT\", 0.54f);"
+        },
+        {
+          "line": 695,
+          "text": "AddListMessage(parent, \"Aún no hay mensajes en este canal.\");"
+        },
+        {
+          "line": 712,
+          "text": "private async Task SearchPlayersAsync(string query)"
+        },
+        {
+          "line": 718,
+          "text": "var data = await repository.SearchPlayersAsync(query.Trim());"
+        },
+        {
+          "line": 721,
+          "text": "searchResults = data == null ? new SocialSearchPlayer[0] : (data.players ?? new SocialSearchPlayer[0]);"
+        },
+        {
+          "line": 744,
+          "text": "private async Task SendFriendRequestAsync(string playerId)"
+        },
+        {
+          "line": 747,
+          "text": "var result = await repository.SendFriendRequestAsync(playerId);"
+        },
+        {
+          "line": 749,
+          "text": "SetStatus(result != null && result.ok ? \"SOLICITUD ENVIADA\" : SocialReason(result));"
+        },
+        {
+          "line": 758,
+          "text": "SetStatus(result != null && result.ok ? \"SOLICITUD CANCELADA\" : SocialReason(result));"
+        },
+        {
+          "line": 767,
+          "text": "SetStatus(result != null && result.ok ? (accept ? \"ALIADO AÑADIDO\" : \"SOLICITUD RECHAZADA\") : SocialReason(result));"
+        },
+        {
+          "line": 776,
+          "text": "SetStatus(result != null && result.ok ? \"VÍNCULO ELIMINADO\" : SocialReason(result));"
+        },
+        {
+          "line": 780,
+          "text": "private async Task BlockPlayerAsync(string playerId)"
+        },
+        {
+          "line": 782,
+          "text": "if (string.IsNullOrWhiteSpace(playerId)) return;"
+        },
+        {
+          "line": 784,
+          "text": "var result = await repository.BlockPlayerAsync(playerId);"
+        },
+        {
+          "line": 786,
+          "text": "SetStatus(result != null && result.ok ? \"GUERRERO BLOQUEADO\" : SocialReason(result));"
+        },
+        {
+          "line": 787,
+          "text": "if (result != null && result.ok && selectedFriendId == playerId)"
+        },
+        {
+          "line": 801,
+          "text": "SetStatus(result != null && result.ok ? \"REPORTE ENVIADO\" : SocialReason(result));"
+        },
+        {
+          "line": 850,
+          "text": "SetStatus(result != null && result.ok ? (global || clan ? \"MENSAJE ENVIADO\" : \"SUSURRO ENVIADO\") : SocialReason(result));"
+        },
+        {
+          "line": 870,
+          "text": "SetStatus(result != null && result.ok ? \"CLAN CREADO\" : SocialReason(result));"
+        },
+        {
+          "line": 902,
+          "text": "case \"RATE_LIMIT\": return \"DEMASIADO RÁPIDO · ESPERA UN MOMENTO\";"
+        },
+        {
+          "line": 903,
+          "text": "case \"BLOCKED\": return \"ESTE VÍNCULO ESTÁ BLOQUEADO\";"
+        },
+        {
+          "line": 904,
+          "text": "case \"NOT_FRIENDS\": return \"EL CANAL REQUIERE AMISTAD\";"
+        },
+        {
+          "line": 906,
+          "text": "case \"PLAYER_NOT_FOUND\": return \"GUERRERO NO ENCONTRADO\";"
+        },
+        {
+          "line": 907,
+          "text": "case \"REQUEST_ALREADY_PENDING\": return \"SOLICITUD YA PENDIENTE\";"
+        },
+        {
+          "line": 908,
+          "text": "case \"ALREADY_FRIENDS\": return \"YA SOIS ALIADOS\";"
+        },
+        {
+          "line": 910,
+          "text": "case \"CLAN_NOT_FOUND\": return \"CLAN NO ENCONTRADO\";"
+        },
+        {
+          "line": 912,
+          "text": "case \"CLAN_ALREADY_EXISTS\": return \"EL NOMBRE DEL CLAN YA EXISTE\";"
+        },
+        {
+          "line": 914,
+          "text": "case \"ALREADY_IN_CLAN\": return \"YA PERTENECES A UN CLAN\";"
+        },
+        {
+          "line": 916,
+          "text": "case \"REQUEST_NOT_FOUND\": return \"SOLICITUD NO ENCONTRADA\";"
+        },
+        {
+          "line": 918,
+          "text": "default: return ValueOr(result.reason, \"OPERACIÓN NO CONFIRMADA\");"
+        },
+        {
+          "line": 936,
+          "text": "private void AddStatus(string value)"
+        },
+        {
+          "line": 941,
+          "text": "private void AddSectionLabel(Transform parent, string text, float y)"
+        },
+        {
+          "line": 960,
+          "text": "layout.padding = new RectOffset(6, 6, 6, 6);"
+        },
+        {
+          "line": 979,
+          "text": "var le = row.AddComponent<LayoutElement>();"
+        },
+        {
+          "line": 985,
+          "text": "private void AddListMessage(Transform parent, string text)"
+        },
+        {
+          "line": 1042,
+          "text": "public readonly RectTransform content;"
+        }
+      ]
+    },
+    {
+      "path": "unity/ProjectSettings/ProjectSettings.asset",
+      "matches": [
+        {
+          "line": 4,
+          "text": "PlayerSettings:"
+        },
+        {
+          "line": 65,
+          "text": "Stadia: 1"
+        },
+        {
+          "line": 74,
+          "text": "AndroidGamepadSupportLevel: 0"
+        },
+        {
+          "line": 75,
+          "text": "AndroidIsGamepadEnabled: 0"
+        },
+        {
+          "line": 79,
+          "text": "AndroidIsGamepadEnabled: 0"
+        },
+        {
+          "line": 88,
+          "text": "metroPackageName: com.vexforge.android"
+        }
+      ]
+    }
+  ],
+  "repository_contract_documents": {
+    "economy_mobile_plan": {
+      "path": "docs/VE-MOB-11-ECONOMY.md",
+      "status": "IMPLEMENTED_UNVERIFIED",
+      "authority": "Supabase official RPCs; Android presentation only"
+    },
+    "unity_migration": {
+      "path": "docs/vexforge-canonical/26_UNITY_ENGINE_MIGRATION.md",
+      "unity_target": "6000.3.0f1",
+      "android_identity": "com.vexforge.android",
+      "version": "0.1.0",
+      "version_code": 4,
+      "build_status": "BLOCKED_BY_NO_BUILD_GATE"
+    },
+    "current_block": {
+      "path": "docs/vexforge-canonical/17_CURRENT_BLOCK.md",
+      "block": "UNITY_CANONICAL_RUNTIME_CLOSURE_R5",
+      "status": "IMPLEMENTED_UNVERIFIED"
+    },
+    "battle_authority": "PLAYER INTENT -> SUPABASE AUTHENTICATED REST/RPC -> AUTHORITATIVE RESULT/EVENTS -> UNITY GAME STATE/PRESENTATION"
+  }
+}

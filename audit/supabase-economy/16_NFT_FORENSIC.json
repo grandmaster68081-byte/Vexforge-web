@@ -1,0 +1,746 @@
+{
+  "extraction": {
+    "extracted_at_utc": "2026-09-20T13:37:53.575Z",
+    "mode": "READ_ONLY"
+  },
+  "tables": [
+    "vexforge_nft_contracts",
+    "vexforge_nft_wallet_links",
+    "vexforge_nft_mint_queue"
+  ],
+  "current_aggregate": {
+    "contracts": null,
+    "wallet_links": {
+      "rows": 0,
+      "verified_rows": 0
+    },
+    "mint_queue": null
+  },
+  "rls_observed": [
+    {
+      "schemaname": "public",
+      "tablename": "vexforge_nft_contracts",
+      "policyname": "nft_contracts_public_read",
+      "permissive": "PERMISSIVE",
+      "roles": [
+        "public"
+      ],
+      "cmd": "SELECT",
+      "qual": "true",
+      "with_check": null
+    },
+    {
+      "schemaname": "public",
+      "tablename": "vexforge_nft_mint_queue",
+      "policyname": "nft_mint_queue_own_insert",
+      "permissive": "PERMISSIVE",
+      "roles": [
+        "public"
+      ],
+      "cmd": "INSERT",
+      "qual": null,
+      "with_check": "(player_id IN ( SELECT players.id\n   FROM players\n  WHERE (players.auth_user_id = auth.uid())))"
+    },
+    {
+      "schemaname": "public",
+      "tablename": "vexforge_nft_mint_queue",
+      "policyname": "nft_mint_queue_own_read",
+      "permissive": "PERMISSIVE",
+      "roles": [
+        "public"
+      ],
+      "cmd": "SELECT",
+      "qual": "(player_id IN ( SELECT players.id\n   FROM players\n  WHERE (players.auth_user_id = auth.uid())))",
+      "with_check": null
+    },
+    {
+      "schemaname": "public",
+      "tablename": "vexforge_nft_wallet_links",
+      "policyname": "nft_wallet_own_insert",
+      "permissive": "PERMISSIVE",
+      "roles": [
+        "public"
+      ],
+      "cmd": "INSERT",
+      "qual": null,
+      "with_check": "(player_id IN ( SELECT players.id\n   FROM players\n  WHERE (players.auth_user_id = auth.uid())))"
+    },
+    {
+      "schemaname": "public",
+      "tablename": "vexforge_nft_wallet_links",
+      "policyname": "nft_wallet_own_read",
+      "permissive": "PERMISSIVE",
+      "roles": [
+        "public"
+      ],
+      "cmd": "SELECT",
+      "qual": "(player_id IN ( SELECT players.id\n   FROM players\n  WHERE (players.auth_user_id = auth.uid())))",
+      "with_check": null
+    }
+  ],
+  "client_assertion_check": {
+    "wallet_link_verified": "CRITICAL: own INSERT policy WITH CHECK constrains player_id but not verified.",
+    "mint_queue_status": "CRITICAL: own INSERT policy constrains player_id but does not constrain status, tx_hash, token_id, or processed_at."
+  },
+  "unknowns": [
+    "No live contract/mint queue rows were present for settlement evidence.",
+    "Ownership verification, mint execution, card locking/burning, and fee settlement require operational function evidence."
+  ],
+  "related_live_function_signatures": [
+    {
+      "routine_schema": "public",
+      "routine_name": "vexforge_apply_official_mission_reward_quarantine_shadow_econom",
+      "identity_arguments": "p_player_id uuid, p_archetype text, p_mission_code text",
+      "security_type": "INVOKER",
+      "return_signature": "jsonb",
+      "language": "plpgsql"
+    },
+    {
+      "routine_schema": "public",
+      "routine_name": "vexforge_enforce_card_supply_guard",
+      "identity_arguments": "",
+      "security_type": "INVOKER",
+      "return_signature": "trigger",
+      "language": "plpgsql"
+    },
+    {
+      "routine_schema": "public",
+      "routine_name": "vexforge_fuse_cards",
+      "identity_arguments": "p_player_id uuid, p_source_card_id uuid, p_target_card_id uuid",
+      "security_type": "INVOKER",
+      "return_signature": "jsonb",
+      "language": "plpgsql"
+    },
+    {
+      "routine_schema": "public",
+      "routine_name": "vexforge_reset_daily_economy",
+      "identity_arguments": "",
+      "security_type": "INVOKER",
+      "return_signature": "void",
+      "language": "plpgsql"
+    }
+  ],
+  "exact_source_columns": {
+    "public.vexforge_nft_contracts": [
+      {
+        "table_schema": "public",
+        "table_name": "vexforge_nft_contracts",
+        "table_type": "BASE TABLE",
+        "ordinal_position": 1,
+        "column_name": "id",
+        "data_type": "uuid",
+        "udt_schema": "pg_catalog",
+        "udt_name": "uuid",
+        "is_nullable": "NO",
+        "column_default": "gen_random_uuid()",
+        "character_maximum_length": null,
+        "numeric_precision": null,
+        "numeric_scale": null,
+        "datetime_precision": null
+      },
+      {
+        "table_schema": "public",
+        "table_name": "vexforge_nft_contracts",
+        "table_type": "BASE TABLE",
+        "ordinal_position": 2,
+        "column_name": "chain_id",
+        "data_type": "integer",
+        "udt_schema": "pg_catalog",
+        "udt_name": "int4",
+        "is_nullable": "NO",
+        "column_default": "137",
+        "character_maximum_length": null,
+        "numeric_precision": 32,
+        "numeric_scale": 0,
+        "datetime_precision": null
+      },
+      {
+        "table_schema": "public",
+        "table_name": "vexforge_nft_contracts",
+        "table_type": "BASE TABLE",
+        "ordinal_position": 3,
+        "column_name": "contract_address",
+        "data_type": "text",
+        "udt_schema": "pg_catalog",
+        "udt_name": "text",
+        "is_nullable": "NO",
+        "column_default": null,
+        "character_maximum_length": null,
+        "numeric_precision": null,
+        "numeric_scale": null,
+        "datetime_precision": null
+      },
+      {
+        "table_schema": "public",
+        "table_name": "vexforge_nft_contracts",
+        "table_type": "BASE TABLE",
+        "ordinal_position": 4,
+        "column_name": "name",
+        "data_type": "text",
+        "udt_schema": "pg_catalog",
+        "udt_name": "text",
+        "is_nullable": "NO",
+        "column_default": "'VexforgeCards'::text",
+        "character_maximum_length": null,
+        "numeric_precision": null,
+        "numeric_scale": null,
+        "datetime_precision": null
+      },
+      {
+        "table_schema": "public",
+        "table_name": "vexforge_nft_contracts",
+        "table_type": "BASE TABLE",
+        "ordinal_position": 5,
+        "column_name": "symbol",
+        "data_type": "text",
+        "udt_schema": "pg_catalog",
+        "udt_name": "text",
+        "is_nullable": "NO",
+        "column_default": "'VFC'::text",
+        "character_maximum_length": null,
+        "numeric_precision": null,
+        "numeric_scale": null,
+        "datetime_precision": null
+      },
+      {
+        "table_schema": "public",
+        "table_name": "vexforge_nft_contracts",
+        "table_type": "BASE TABLE",
+        "ordinal_position": 6,
+        "column_name": "max_supply",
+        "data_type": "integer",
+        "udt_schema": "pg_catalog",
+        "udt_name": "int4",
+        "is_nullable": "NO",
+        "column_default": "999999",
+        "character_maximum_length": null,
+        "numeric_precision": 32,
+        "numeric_scale": 0,
+        "datetime_precision": null
+      },
+      {
+        "table_schema": "public",
+        "table_name": "vexforge_nft_contracts",
+        "table_type": "BASE TABLE",
+        "ordinal_position": 7,
+        "column_name": "status",
+        "data_type": "text",
+        "udt_schema": "pg_catalog",
+        "udt_name": "text",
+        "is_nullable": "NO",
+        "column_default": "'pending'::text",
+        "character_maximum_length": null,
+        "numeric_precision": null,
+        "numeric_scale": null,
+        "datetime_precision": null
+      },
+      {
+        "table_schema": "public",
+        "table_name": "vexforge_nft_contracts",
+        "table_type": "BASE TABLE",
+        "ordinal_position": 8,
+        "column_name": "deployed_at",
+        "data_type": "timestamp with time zone",
+        "udt_schema": "pg_catalog",
+        "udt_name": "timestamptz",
+        "is_nullable": "YES",
+        "column_default": null,
+        "character_maximum_length": null,
+        "numeric_precision": null,
+        "numeric_scale": null,
+        "datetime_precision": 6
+      },
+      {
+        "table_schema": "public",
+        "table_name": "vexforge_nft_contracts",
+        "table_type": "BASE TABLE",
+        "ordinal_position": 9,
+        "column_name": "created_at",
+        "data_type": "timestamp with time zone",
+        "udt_schema": "pg_catalog",
+        "udt_name": "timestamptz",
+        "is_nullable": "NO",
+        "column_default": "now()",
+        "character_maximum_length": null,
+        "numeric_precision": null,
+        "numeric_scale": null,
+        "datetime_precision": 6
+      }
+    ],
+    "public.vexforge_nft_metadata": [
+      {
+        "table_schema": "public",
+        "table_name": "vexforge_nft_metadata",
+        "table_type": "BASE TABLE",
+        "ordinal_position": 1,
+        "column_name": "id",
+        "data_type": "uuid",
+        "udt_schema": "pg_catalog",
+        "udt_name": "uuid",
+        "is_nullable": "NO",
+        "column_default": "gen_random_uuid()",
+        "character_maximum_length": null,
+        "numeric_precision": null,
+        "numeric_scale": null,
+        "datetime_precision": null
+      },
+      {
+        "table_schema": "public",
+        "table_name": "vexforge_nft_metadata",
+        "table_type": "BASE TABLE",
+        "ordinal_position": 2,
+        "column_name": "card_id",
+        "data_type": "uuid",
+        "udt_schema": "pg_catalog",
+        "udt_name": "uuid",
+        "is_nullable": "NO",
+        "column_default": null,
+        "character_maximum_length": null,
+        "numeric_precision": null,
+        "numeric_scale": null,
+        "datetime_precision": null
+      },
+      {
+        "table_schema": "public",
+        "table_name": "vexforge_nft_metadata",
+        "table_type": "BASE TABLE",
+        "ordinal_position": 3,
+        "column_name": "contract_id",
+        "data_type": "uuid",
+        "udt_schema": "pg_catalog",
+        "udt_name": "uuid",
+        "is_nullable": "YES",
+        "column_default": null,
+        "character_maximum_length": null,
+        "numeric_precision": null,
+        "numeric_scale": null,
+        "datetime_precision": null
+      },
+      {
+        "table_schema": "public",
+        "table_name": "vexforge_nft_metadata",
+        "table_type": "BASE TABLE",
+        "ordinal_position": 4,
+        "column_name": "token_id",
+        "data_type": "integer",
+        "udt_schema": "pg_catalog",
+        "udt_name": "int4",
+        "is_nullable": "YES",
+        "column_default": null,
+        "character_maximum_length": null,
+        "numeric_precision": 32,
+        "numeric_scale": 0,
+        "datetime_precision": null
+      },
+      {
+        "table_schema": "public",
+        "table_name": "vexforge_nft_metadata",
+        "table_type": "BASE TABLE",
+        "ordinal_position": 5,
+        "column_name": "metadata_json",
+        "data_type": "jsonb",
+        "udt_schema": "pg_catalog",
+        "udt_name": "jsonb",
+        "is_nullable": "NO",
+        "column_default": "'{}'::jsonb",
+        "character_maximum_length": null,
+        "numeric_precision": null,
+        "numeric_scale": null,
+        "datetime_precision": null
+      },
+      {
+        "table_schema": "public",
+        "table_name": "vexforge_nft_metadata",
+        "table_type": "BASE TABLE",
+        "ordinal_position": 6,
+        "column_name": "image_url",
+        "data_type": "text",
+        "udt_schema": "pg_catalog",
+        "udt_name": "text",
+        "is_nullable": "YES",
+        "column_default": null,
+        "character_maximum_length": null,
+        "numeric_precision": null,
+        "numeric_scale": null,
+        "datetime_precision": null
+      },
+      {
+        "table_schema": "public",
+        "table_name": "vexforge_nft_metadata",
+        "table_type": "BASE TABLE",
+        "ordinal_position": 7,
+        "column_name": "created_at",
+        "data_type": "timestamp with time zone",
+        "udt_schema": "pg_catalog",
+        "udt_name": "timestamptz",
+        "is_nullable": "NO",
+        "column_default": "now()",
+        "character_maximum_length": null,
+        "numeric_precision": null,
+        "numeric_scale": null,
+        "datetime_precision": 6
+      }
+    ],
+    "public.vexforge_nft_mint_queue": [
+      {
+        "table_schema": "public",
+        "table_name": "vexforge_nft_mint_queue",
+        "table_type": "BASE TABLE",
+        "ordinal_position": 1,
+        "column_name": "id",
+        "data_type": "uuid",
+        "udt_schema": "pg_catalog",
+        "udt_name": "uuid",
+        "is_nullable": "NO",
+        "column_default": "gen_random_uuid()",
+        "character_maximum_length": null,
+        "numeric_precision": null,
+        "numeric_scale": null,
+        "datetime_precision": null
+      },
+      {
+        "table_schema": "public",
+        "table_name": "vexforge_nft_mint_queue",
+        "table_type": "BASE TABLE",
+        "ordinal_position": 2,
+        "column_name": "player_id",
+        "data_type": "uuid",
+        "udt_schema": "pg_catalog",
+        "udt_name": "uuid",
+        "is_nullable": "NO",
+        "column_default": null,
+        "character_maximum_length": null,
+        "numeric_precision": null,
+        "numeric_scale": null,
+        "datetime_precision": null
+      },
+      {
+        "table_schema": "public",
+        "table_name": "vexforge_nft_mint_queue",
+        "table_type": "BASE TABLE",
+        "ordinal_position": 3,
+        "column_name": "card_id",
+        "data_type": "uuid",
+        "udt_schema": "pg_catalog",
+        "udt_name": "uuid",
+        "is_nullable": "NO",
+        "column_default": null,
+        "character_maximum_length": null,
+        "numeric_precision": null,
+        "numeric_scale": null,
+        "datetime_precision": null
+      },
+      {
+        "table_schema": "public",
+        "table_name": "vexforge_nft_mint_queue",
+        "table_type": "BASE TABLE",
+        "ordinal_position": 4,
+        "column_name": "wallet_address",
+        "data_type": "text",
+        "udt_schema": "pg_catalog",
+        "udt_name": "text",
+        "is_nullable": "NO",
+        "column_default": null,
+        "character_maximum_length": null,
+        "numeric_precision": null,
+        "numeric_scale": null,
+        "datetime_precision": null
+      },
+      {
+        "table_schema": "public",
+        "table_name": "vexforge_nft_mint_queue",
+        "table_type": "BASE TABLE",
+        "ordinal_position": 5,
+        "column_name": "status",
+        "data_type": "text",
+        "udt_schema": "pg_catalog",
+        "udt_name": "text",
+        "is_nullable": "NO",
+        "column_default": "'pending'::text",
+        "character_maximum_length": null,
+        "numeric_precision": null,
+        "numeric_scale": null,
+        "datetime_precision": null
+      },
+      {
+        "table_schema": "public",
+        "table_name": "vexforge_nft_mint_queue",
+        "table_type": "BASE TABLE",
+        "ordinal_position": 6,
+        "column_name": "tx_hash",
+        "data_type": "text",
+        "udt_schema": "pg_catalog",
+        "udt_name": "text",
+        "is_nullable": "YES",
+        "column_default": null,
+        "character_maximum_length": null,
+        "numeric_precision": null,
+        "numeric_scale": null,
+        "datetime_precision": null
+      },
+      {
+        "table_schema": "public",
+        "table_name": "vexforge_nft_mint_queue",
+        "table_type": "BASE TABLE",
+        "ordinal_position": 7,
+        "column_name": "token_id",
+        "data_type": "integer",
+        "udt_schema": "pg_catalog",
+        "udt_name": "int4",
+        "is_nullable": "YES",
+        "column_default": null,
+        "character_maximum_length": null,
+        "numeric_precision": 32,
+        "numeric_scale": 0,
+        "datetime_precision": null
+      },
+      {
+        "table_schema": "public",
+        "table_name": "vexforge_nft_mint_queue",
+        "table_type": "BASE TABLE",
+        "ordinal_position": 8,
+        "column_name": "error_message",
+        "data_type": "text",
+        "udt_schema": "pg_catalog",
+        "udt_name": "text",
+        "is_nullable": "YES",
+        "column_default": null,
+        "character_maximum_length": null,
+        "numeric_precision": null,
+        "numeric_scale": null,
+        "datetime_precision": null
+      },
+      {
+        "table_schema": "public",
+        "table_name": "vexforge_nft_mint_queue",
+        "table_type": "BASE TABLE",
+        "ordinal_position": 9,
+        "column_name": "requested_at",
+        "data_type": "timestamp with time zone",
+        "udt_schema": "pg_catalog",
+        "udt_name": "timestamptz",
+        "is_nullable": "NO",
+        "column_default": "now()",
+        "character_maximum_length": null,
+        "numeric_precision": null,
+        "numeric_scale": null,
+        "datetime_precision": 6
+      },
+      {
+        "table_schema": "public",
+        "table_name": "vexforge_nft_mint_queue",
+        "table_type": "BASE TABLE",
+        "ordinal_position": 10,
+        "column_name": "processed_at",
+        "data_type": "timestamp with time zone",
+        "udt_schema": "pg_catalog",
+        "udt_name": "timestamptz",
+        "is_nullable": "YES",
+        "column_default": null,
+        "character_maximum_length": null,
+        "numeric_precision": null,
+        "numeric_scale": null,
+        "datetime_precision": 6
+      }
+    ],
+    "public.vexforge_nft_wallet_links": [
+      {
+        "table_schema": "public",
+        "table_name": "vexforge_nft_wallet_links",
+        "table_type": "BASE TABLE",
+        "ordinal_position": 1,
+        "column_name": "id",
+        "data_type": "uuid",
+        "udt_schema": "pg_catalog",
+        "udt_name": "uuid",
+        "is_nullable": "NO",
+        "column_default": "gen_random_uuid()",
+        "character_maximum_length": null,
+        "numeric_precision": null,
+        "numeric_scale": null,
+        "datetime_precision": null
+      },
+      {
+        "table_schema": "public",
+        "table_name": "vexforge_nft_wallet_links",
+        "table_type": "BASE TABLE",
+        "ordinal_position": 2,
+        "column_name": "player_id",
+        "data_type": "uuid",
+        "udt_schema": "pg_catalog",
+        "udt_name": "uuid",
+        "is_nullable": "NO",
+        "column_default": null,
+        "character_maximum_length": null,
+        "numeric_precision": null,
+        "numeric_scale": null,
+        "datetime_precision": null
+      },
+      {
+        "table_schema": "public",
+        "table_name": "vexforge_nft_wallet_links",
+        "table_type": "BASE TABLE",
+        "ordinal_position": 3,
+        "column_name": "wallet_address",
+        "data_type": "text",
+        "udt_schema": "pg_catalog",
+        "udt_name": "text",
+        "is_nullable": "NO",
+        "column_default": null,
+        "character_maximum_length": null,
+        "numeric_precision": null,
+        "numeric_scale": null,
+        "datetime_precision": null
+      },
+      {
+        "table_schema": "public",
+        "table_name": "vexforge_nft_wallet_links",
+        "table_type": "BASE TABLE",
+        "ordinal_position": 4,
+        "column_name": "chain_id",
+        "data_type": "integer",
+        "udt_schema": "pg_catalog",
+        "udt_name": "int4",
+        "is_nullable": "NO",
+        "column_default": "137",
+        "character_maximum_length": null,
+        "numeric_precision": 32,
+        "numeric_scale": 0,
+        "datetime_precision": null
+      },
+      {
+        "table_schema": "public",
+        "table_name": "vexforge_nft_wallet_links",
+        "table_type": "BASE TABLE",
+        "ordinal_position": 5,
+        "column_name": "verified",
+        "data_type": "boolean",
+        "udt_schema": "pg_catalog",
+        "udt_name": "bool",
+        "is_nullable": "NO",
+        "column_default": "false",
+        "character_maximum_length": null,
+        "numeric_precision": null,
+        "numeric_scale": null,
+        "datetime_precision": null
+      },
+      {
+        "table_schema": "public",
+        "table_name": "vexforge_nft_wallet_links",
+        "table_type": "BASE TABLE",
+        "ordinal_position": 6,
+        "column_name": "linked_at",
+        "data_type": "timestamp with time zone",
+        "udt_schema": "pg_catalog",
+        "udt_name": "timestamptz",
+        "is_nullable": "NO",
+        "column_default": "now()",
+        "character_maximum_length": null,
+        "numeric_precision": null,
+        "numeric_scale": null,
+        "datetime_precision": 6
+      }
+    ]
+  },
+  "exact_source_constraints": {
+    "public.vexforge_nft_contracts": [
+      {
+        "table_schema": "public",
+        "table_name": "vexforge_nft_contracts",
+        "constraint_name": "vexforge_nft_contracts_address_chain_key",
+        "constraint_type": "UNIQUE",
+        "definition": "UNIQUE (contract_address, chain_id)"
+      },
+      {
+        "table_schema": "public",
+        "table_name": "vexforge_nft_contracts",
+        "constraint_name": "vexforge_nft_contracts_pkey",
+        "constraint_type": "PRIMARY KEY",
+        "definition": "PRIMARY KEY (id)"
+      }
+    ],
+    "public.vexforge_nft_metadata": [
+      {
+        "table_schema": "public",
+        "table_name": "vexforge_nft_metadata",
+        "constraint_name": "vexforge_nft_metadata_card_contract_key",
+        "constraint_type": "UNIQUE",
+        "definition": "UNIQUE (card_id, contract_id)"
+      },
+      {
+        "table_schema": "public",
+        "table_name": "vexforge_nft_metadata",
+        "constraint_name": "vexforge_nft_metadata_card_id_fkey",
+        "constraint_type": "FOREIGN KEY",
+        "definition": "FOREIGN KEY (card_id) REFERENCES cards(id) ON DELETE CASCADE"
+      },
+      {
+        "table_schema": "public",
+        "table_name": "vexforge_nft_metadata",
+        "constraint_name": "vexforge_nft_metadata_contract_id_fkey",
+        "constraint_type": "FOREIGN KEY",
+        "definition": "FOREIGN KEY (contract_id) REFERENCES vexforge_nft_contracts(id)"
+      },
+      {
+        "table_schema": "public",
+        "table_name": "vexforge_nft_metadata",
+        "constraint_name": "vexforge_nft_metadata_pkey",
+        "constraint_type": "PRIMARY KEY",
+        "definition": "PRIMARY KEY (id)"
+      }
+    ],
+    "public.vexforge_nft_mint_queue": [
+      {
+        "table_schema": "public",
+        "table_name": "vexforge_nft_mint_queue",
+        "constraint_name": "vexforge_nft_mint_queue_card_id_fkey",
+        "constraint_type": "FOREIGN KEY",
+        "definition": "FOREIGN KEY (card_id) REFERENCES cards(id)"
+      },
+      {
+        "table_schema": "public",
+        "table_name": "vexforge_nft_mint_queue",
+        "constraint_name": "vexforge_nft_mint_queue_pkey",
+        "constraint_type": "PRIMARY KEY",
+        "definition": "PRIMARY KEY (id)"
+      },
+      {
+        "table_schema": "public",
+        "table_name": "vexforge_nft_mint_queue",
+        "constraint_name": "vexforge_nft_mint_queue_player_id_fkey",
+        "constraint_type": "FOREIGN KEY",
+        "definition": "FOREIGN KEY (player_id) REFERENCES players(id) ON DELETE CASCADE"
+      },
+      {
+        "table_schema": "public",
+        "table_name": "vexforge_nft_mint_queue",
+        "constraint_name": "vexforge_nft_mint_queue_status_check",
+        "constraint_type": "CHECK",
+        "definition": "CHECK (status = ANY (ARRAY['pending'::text, 'processing'::text, 'confirmed'::text, 'failed'::text]))"
+      }
+    ],
+    "public.vexforge_nft_wallet_links": [
+      {
+        "table_schema": "public",
+        "table_name": "vexforge_nft_wallet_links",
+        "constraint_name": "vexforge_nft_wallet_links_pkey",
+        "constraint_type": "PRIMARY KEY",
+        "definition": "PRIMARY KEY (id)"
+      },
+      {
+        "table_schema": "public",
+        "table_name": "vexforge_nft_wallet_links",
+        "constraint_name": "vexforge_nft_wallet_links_player_id_fkey",
+        "constraint_type": "FOREIGN KEY",
+        "definition": "FOREIGN KEY (player_id) REFERENCES players(id) ON DELETE CASCADE"
+      },
+      {
+        "table_schema": "public",
+        "table_name": "vexforge_nft_wallet_links",
+        "constraint_name": "vexforge_nft_wallet_links_player_wallet_key",
+        "constraint_type": "UNIQUE",
+        "definition": "UNIQUE (player_id, wallet_address)"
+      }
+    ]
+  }
+}
