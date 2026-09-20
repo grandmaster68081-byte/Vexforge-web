@@ -132,6 +132,9 @@ namespace Vexforge.UI
             cardInspection.Closed += HandleCardInspectionClosed;
             gallery.CardSelected += HandleCardSelected;
 
+            battleDirector.Initialize(camera, artResolver, FindCard, app.GameState.PlayerId);
+            alphaWorld.BindBattlefield(battleDirector.GetComponent<VexforgeBattlefieldStage>());
+
             built = true;
         }
 

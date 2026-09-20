@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using UnityEngine;
 using Vexforge.Backend;
-using Vexforge.Core;
 
 namespace Vexforge.Presentation
 {
@@ -14,30 +13,109 @@ namespace Vexforge.Presentation
         Error
     }
 
+    /// <summary>
+    /// Converts authoritative backend BattleEvent objects into a visual sequence.
+    /// This class never resolves rules locally.
+    /// </summary>
     public sealed class BattlePresentationDirector : MonoBehaviour
     {
         public PresentationState State { get; private set; } = PresentationState.Idle;
         public event Action<BattleEvent> EventPresented;
         public event Action PresentationCompleted;
 
-        public void Play(BattleEvent[] events)
+        private VexforgeBattlefieldStage battlefield;
+        private bool initialized;
+        private int presentationToken;
+
+        public void Initialize(
+            Camera camera,
+            VexforgeCardArtResolver resolver,
+            Func<string, CardRecord> cardLookup,
+            string localPlayerId)
         {
-            StopAllCoroutines();
-            StartCoroutine(PlaySequence(events ?? new BattleEvent[0]));
+            if (initialized)
+                return;
+
+            battlefield = GetComponent<VexforgeBattlefieldStage>();
+            if (battlefield == null)
+                battlefield = gameObject.AddComponent<VexforgeBattlefieldStage>();
+
+            battlefield.Initialize(camera, resolver, cardLookup, localPlayerId);
+            initialized = true;
         }
 
-        private IEnumerator PlaySequence(BattleEvent[] events)
+        public void SetLocalPlayerId(string playerId)
         {
-            State = PresentationState.Playing;
-            foreach (var battleEvent in events)
+            if (battlefield != null)
+                battlefield.SetLocalPlayerId(playerId);
+        }
+
+        public void SetVisible(bool visible)
+        {
+            if (!visible)
             {
-                if (battleEvent == null) continue;
-                EventPresented?.Invoke(battleEvent);
-                yield return new WaitForSeconds(0.18f);
+                presentationToken++;
+                StopAllCoroutines();
+                if (State == PresentationState.Playing)
+                    State = PresentationState.Idle;
+            }
+            if (battlefield != null)
+                battlefield.SetVisible(visible);
+        }
+
+        public void StopAndHide()
+        {
+            presentationToken++;
+            StopAllCoroutines();
+            if (battlefield != null)
+                battlefield.SetVisible(false);
+            State = PresentationState.Idle;
+        }
+
+        public void Play(BattleEvent[] events)
+        {
+            presentationToken++;
+            var token = presentationToken;
+            StopAllCoroutines();
+            StartCoroutine(PlaySequence(events ?? new BattleEvent[0], token));
+        }
+
+        private IEnumerator PlaySequence(BattleEvent[] events, int token)
+        {
+            if (!initialized)
+            {
+                State = PresentationState.Error;
+                yield break;
             }
 
+            State = PresentationState.Playing;
+            battlefield.SetVisible(true);
+
+            foreach (var battleEvent in events)
+            {
+                if (token != presentationToken)
+                    yield break;
+                if (battleEvent == null)
+                    continue;
+
+                yield return battlefield.PresentEvent(battleEvent);
+                if (token != presentationToken)
+                    yield break;
+                EventPresented?.Invoke(battleEvent);
+            }
+
+            if (token != presentationToken)
+                yield break;
             State = PresentationState.Completed;
             PresentationCompleted?.Invoke();
+        }
+
+        private void OnDisable()
+        {
+            presentationToken++;
+            StopAllCoroutines();
+            if (State == PresentationState.Playing)
+                State = PresentationState.Idle;
         }
     }
 }
