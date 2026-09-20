@@ -269,6 +269,9 @@ namespace Vexforge.Presentation
             var rune = CreateRing(spec.Label + "Rune", new Vector3(0f, 0.42f, 0f), 1.35f, 0.10f, portalMaterial, root.transform);
             var monolith = CreatePrimitive(spec.Label + "Monolith", PrimitiveType.Cube, new Vector3(0f, 1.55f, 0f), new Vector3(0.55f, 2.25f, 0.55f), portalMaterial, root.transform);
             monolith.transform.localRotation = Quaternion.Euler(0f, 45f, 0f);
+            var pulse = root.AddComponent<VexforgePortalPulse>();
+            pulse.Configure(rune, monolith.transform);
+
             var textObject = new GameObject(spec.Label + "Label");
             textObject.transform.SetParent(root.transform, false);
             textObject.transform.localPosition = new Vector3(0f, 3.05f, 0f);
