@@ -144,7 +144,9 @@ namespace Vexforge.UI
             alphaWorld.Initialize(app.Navigation, presentationCamera);
             alphaWorld.BindGalleryRoot(galleryObject.transform);
 
-            cardInspection = presentationHost.AddComponent<VexforgeCardInspectionStage>();
+            var cardInspectionObject = new GameObject("CardInspectionStage");
+            cardInspectionObject.transform.SetParent(presentationHost.transform, false);
+            cardInspection = cardInspectionObject.AddComponent<VexforgeCardInspectionStage>();
             cardInspection.Initialize(presentationCamera, alphaInput, artResolver);
             cardInspection.Closed += HandleCardInspectionClosed;
             gallery.CardSelected += HandleCardSelected;
