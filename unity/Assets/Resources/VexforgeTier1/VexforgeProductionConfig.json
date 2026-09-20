@@ -1,0 +1,46 @@
+{
+  "schema_version": "3.0",
+  "product": "VEXFORGE",
+  "runtime": {
+    "engine": "Unity",
+    "unity_editor": "6000.3.0f1",
+    "android_application_id": "com.vexforge.android",
+    "backend_authority": "supabase"
+  },
+  "treasury": {
+    "network": "BSC",
+    "asset": "USDT",
+    "standard": "BEP20",
+    "address": "0x29B2907d6E10BeB2becb9bA82f2b6af04815c403",
+    "enabled": false,
+    "activation_requires_manual_verification": true,
+    "operator_note": "Address supplied by operator. Do not infer ownership or on-chain status from this configuration."
+  },
+  "official_card_art": {
+    "count": 127,
+    "source": "supabase:vexforge-assets/cards",
+    "resolver": "VexforgeCardArtResolver",
+    "copy_to_client_repo": false,
+    "regeneration_forbidden": true
+  },
+  "battle": {
+    "authority": "supabase:vexforge_battle_resolve",
+    "presentation": "Vexforge.Presentation.BattlePresentationDirector",
+    "replay_role": "event_consumer_only",
+    "navigation_after_result": "PresentationCompleted_only",
+    "local_rule_resolution": false
+  },
+  "ads": {
+    "provider_architecture": "Unity LevelPlay mediation",
+    "rewarded_primary": true,
+    "interstitial_in_battle": false,
+    "app_key": "",
+    "placements": []
+  },
+  "store": {
+    "platform_billing_required_when_applicable": true,
+    "server_entitlement_authority": true,
+    "pack_result_authority": "server",
+    "client_roll_forbidden": true
+  }
+}

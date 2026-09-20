@@ -1,0 +1,50 @@
+{
+  "schema_version": "14.0",
+  "repository": "grandmaster68081-byte/Vexforge-web",
+  "branch": "main",
+  "unity": "6000.3.0f1",
+  "android_package": "com.vexforge.android",
+  "authority": "supabase",
+  "known_canonical_contracts": {
+    "opponent_discovery": "get_pvp_opponents",
+    "battle_resolve": "vexforge_battle_resolve",
+    "battle_result_presentation": "BattlePresentationDirector",
+    "battle_completion_gate": "PresentationCompleted",
+    "card_art_resolver": "VexforgeCardArtResolver",
+    "vertical_collection": "VexforgeVirtualizedCardGallery"
+  },
+  "forbidden_client_truth": [
+    "combat_rules",
+    "rng",
+    "reward_calculation",
+    "ownership",
+    "mmr_changes",
+    "market_settlement",
+    "token_balances",
+    "withdrawal_authority",
+    "pack_rolls"
+  ],
+  "official_cards": {
+    "count": 127,
+    "remote_bucket": "vexforge-assets/cards",
+    "local_copy": false
+  },
+  "treasury": {
+    "network": "BSC",
+    "asset": "USDT",
+    "standard": "BEP20",
+    "address": "0x29B2907d6E10BeB2becb9bA82f2b6af04815c403",
+    "enabled": false
+  },
+  "unresolved_environment_gate": {
+    "operator_cloud_org": "2476052138227",
+    "operator_cloud_project": "0bde4b64-3816-4b75-b2c1-bbdacff93352",
+    "repo_documented_cloud_org": "2476049544959",
+    "repo_documented_cloud_project": "2906c165-f463-4253-bd53-731be7d136a0"
+  },
+  "unimplemented_by_design_without_authoritative_contract": [
+    "store_write_surface",
+    "raid_write_surface",
+    "clan_war_write_surface"
+  ]
+}

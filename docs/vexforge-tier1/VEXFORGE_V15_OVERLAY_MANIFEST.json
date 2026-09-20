@@ -1,0 +1,102 @@
+{
+  "manifest_version": "V15.0-FINAL-HARDENED",
+  "target_repo": "grandmaster68081-byte/Vexforge-web",
+  "target_branch": "main",
+  "target_commit_observed_2026_09_20": "55b724e8f20fbc22abd1f6606d7c4dd617ee3270",
+  "runtime": "Unity",
+  "target_editor": "6000.3.0f1",
+  "target_package": "com.vexforge.android",
+  "backend_authority": "Supabase",
+  "apply_mode": "additive-overlay-with-canonical-contract-gates",
+  "canonical_files_modified_by_payload": [],
+  "canonical_files_consumed_as_contract": [
+    "unity/Assets/Scripts/Core/VexforgeApp.cs",
+    "unity/Assets/Scripts/UI/GameShellController.cs",
+    "unity/Assets/Scripts/UI/VexforgeAlphaHud.cs",
+    "unity/Assets/Scripts/Backend/VexforgeRepository.cs",
+    "unity/Assets/Scripts/Presentation/BattlePresentationDirector.cs",
+    "unity/Assets/Scripts/Presentation/VexforgeBattlefieldStage.cs",
+    "unity/Assets/Scripts/Presentation/VexforgeVirtualizedCardGallery.cs",
+    "unity/Assets/Scripts/Presentation/VexforgeCardArtResolver.cs",
+    "unity/ProjectSettings/ProjectVersion.txt"
+  ],
+  "official_card_art": {
+    "count": 127,
+    "remote_bucket": "vexforge-assets/cards",
+    "resolver": "VexforgeCardArtResolver",
+    "copy_to_client": false,
+    "regenerate_official_art": false,
+    "presentation_upgrade": "frame-depth-lighting-event-emphasis"
+  },
+  "battle": {
+    "authority": "VexforgeRepository.ResolveBattleAsync -> vexforge_battle_resolve",
+    "presentation": "BattlePresentationDirector",
+    "result_gate": "PresentationCompleted",
+    "navigation_lock_during_resolution": true,
+    "opponent_discovery": "get_pvp_opponents",
+    "local_rules_engine": false,
+    "local_rng": false
+  },
+  "treasury": {
+    "network": "BSC",
+    "asset": "USDT",
+    "standard": "BEP20",
+    "address": "0x29B2907d6E10BeB2becb9bA82f2b6af04815c403",
+    "enabled": false,
+    "reason": "manual verification required"
+  },
+  "visual": {
+    "mobile_target_resolution": "1080x2340",
+    "support_assets_in_payload": true,
+    "dynamic_urp_grade": true,
+    "mode_specific_battle_dressing": true,
+    "procedural_missing_visual_guard": true,
+    "legacy_dashboard_chrome_suppressed": true,
+    "vertical_gallery_existing_in_main": true
+  },
+  "release_truth": {
+    "static_verified": true,
+    "unity_editor_compile_verified": false,
+    "unity_cloud_build_verified": false,
+    "physical_android_verified": false,
+    "live_supabase_reconciled": false,
+    "store_submission_verified": false
+  },
+  "known_external_reconciliation": {
+    "operator_unity_cloud_url": "https://cloud.unity.com/organizations/2476052138227/projects/0bde4b64-3816-4b75-b2c1-bbdacff93352/cloud-build/setup/buildTarget/vexforge",
+    "repo_documented_unity_cloud_org_project": "2476049544959 / 2906c165-f463-4253-bd53-731be7d136a0",
+    "status": "MUST_BE_MANUALLY_RECONCILED_BEFORE_BUILD_GATE"
+  },
+  "hardening": {
+    "account_scoped_idempotency": true,
+    "tutorial_account_scoped_state": true,
+    "tutorial_battle_completion_correlated": true,
+    "duplicate_navigation_blocked_while_battle_active": true,
+    "legacy_functional_route_bodies_preserved": true,
+    "no_remote_card_duplication": true,
+    "no_new_unverified_backend_contracts": true,
+    "static_collision_scan": true,
+    "image_integrity_scan": true,
+    "account_identity_hash_scope": true,
+    "room_ornament_lifecycle": true,
+    "encounter_stage_binding": true,
+    "no_white_battle_fallback": true
+  },
+  "runtime_contract": {
+    "unity_routes": [
+      "Boot",
+      "Nexus",
+      "Collection",
+      "Deck",
+      "Battle",
+      "Missions",
+      "Economy",
+      "Profile"
+    ],
+    "canonical_vertical_gallery": true,
+    "store_route_observed": false,
+    "market_route_observed": false,
+    "world_route_observed": false,
+    "meta_route_observed": false
+  }
+}
