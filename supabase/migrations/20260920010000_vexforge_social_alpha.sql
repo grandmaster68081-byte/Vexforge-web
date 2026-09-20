@@ -781,6 +781,7 @@ begin
     values (v_player, p_scope, p_message_id, v_reason)
     on conflict do nothing;
     return jsonb_build_object('ok', true);
+end;
 $$;
 
 alter table public.social_friend_requests enable row level security;
