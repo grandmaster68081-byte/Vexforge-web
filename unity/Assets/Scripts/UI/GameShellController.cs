@@ -36,6 +36,8 @@ namespace Vexforge.UI
         private VexforgeVirtualizedCardGallery gallery;
         private VexforgeAlphaWorldDirector alphaWorld;
         private VexforgeAlphaHud alphaHud;
+        private VexforgeCardInspectionStage cardInspection;
+        private GameRoute inspectionRoute;
         private VexforgeDiegeticInputRouter alphaInput;
 
         private bool built;
@@ -124,6 +126,11 @@ namespace Vexforge.UI
             alphaWorld = presentationHost.AddComponent<VexforgeAlphaWorldDirector>();
             alphaWorld.Initialize(app.Navigation, camera);
             alphaWorld.BindGalleryRoot(galleryObject.transform);
+
+            cardInspection = presentationHost.AddComponent<VexforgeCardInspectionStage>();
+            cardInspection.Initialize(camera, alphaInput, artResolver);
+            cardInspection.Closed += HandleCardInspectionClosed;
+            gallery.CardSelected += HandleCardSelected;
 
             built = true;
         }
@@ -219,6 +226,8 @@ namespace Vexforge.UI
 
         private void HandleRouteChanged(GameRoute _)
         {
+            if (cardInspection != null && cardInspection.IsVisible)
+                cardInspection.Hide(false);
             Render();
         }
 
@@ -249,6 +258,7 @@ namespace Vexforge.UI
         private void HideWorldPresentation()
         {
             if (battleDirector != null) battleDirector.StopAndHide();
+            if (cardInspection != null && cardInspection.IsVisible) cardInspection.Hide(false);
             if (nexusStage != null) nexusStage.SetNexusVisible(false);
             if (alphaWorld != null) alphaWorld.SetVisible(false);
             if (gallery != null) gallery.Hide();
@@ -738,6 +748,36 @@ namespace Vexforge.UI
             MessageAt(eventText, 0.34f);
         }
 
+        private void HandleCardSelected(CardRecord card)
+        {
+            if (cardInspection == null || card == null) return;
+            if (gallery != null) gallery.Hide();
+            if (cardPool != null) cardPool.ReturnAll();
+            inspectionRoute = app.Navigation.CurrentRoute;
+            cardInspection.Show(card, FindOwnership(card.id));
+        }
+
+        private void HandleCardInspectionClosed()
+        {
+            if (app == null || !app.Session.IsAuthenticated || alphaHud == null) return;
+            var route = app.Navigation.CurrentRoute;
+            if (route == inspectionRoute && (route == GameRoute.Collection || route == GameRoute.Deck))
+                alphaHud.RenderRoute(route);
+        }
+
+        private PlayerCardRecord FindOwnership(string cardId)
+        {
+            if (string.IsNullOrWhiteSpace(cardId) || app.GameState.Collection == null)
+                return null;
+            for (var i = 0; i < app.GameState.Collection.Length; i++)
+            {
+                var owned = app.GameState.Collection[i];
+                if (owned != null && owned.card_id == cardId)
+                    return owned;
+            }
+            return null;
+        }
+
         private CardRecord FindCard(string cardId)
         {
             if (string.IsNullOrWhiteSpace(cardId) ||
@@ -784,8 +824,16 @@ namespace Vexforge.UI
                 battleDirector.EventPresented -= PresentBattleEvent;
             }
 
-            if (gallery != null) gallery.Hide();
-            if (cardPool != null) cardPool.Dispose();
+            if (gallery != null)
+            {
+                gallery.CardSelected -= HandleCardSelected;
+                gallery.Hide();
+            }
+            if (cardInspection != null)
+            {
+                cardInspection.Closed -= HandleCardInspectionClosed;
+                cardInspection.Hide(false);
+            }
             if (artResolver != null) artResolver.Dispose();
             if (textureCache != null) textureCache.Dispose();
         }

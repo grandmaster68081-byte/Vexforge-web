@@ -25,7 +25,9 @@ namespace Vexforge.Presentation
         private bool shown;
         private float scrollRows;
         private bool pointerTracking;
+        private bool pointerMoved;
         private Vector2 pointerPrevious;
+        private readonly RaycastHit[] selectionHits = new RaycastHit[24];
 
         [SerializeField] private int columns = 4;
         [SerializeField] private int viewportRows = 3;
@@ -38,6 +40,7 @@ namespace Vexforge.Presentation
         public int CatalogCount { get { return catalog == null ? 0 : catalog.Length; } }
         public int ActiveCardCount { get { return visible.Count; } }
         public bool IsShown { get { return shown; } }
+        public event System.Action<CardRecord> CardSelected;
 
         public void Initialize(
             Camera camera,
@@ -167,6 +170,7 @@ namespace Vexforge.Presentation
             if (!shown || !InsideViewport(screenPosition)) return;
 
             pointerTracking = true;
+            pointerMoved = false;
             pointerPrevious = screenPosition;
         }
 
@@ -174,13 +178,44 @@ namespace Vexforge.Presentation
         {
             if (!shown || !pointerTracking) return;
 
+            if (delta.sqrMagnitude > 25f)
+                pointerMoved = true;
             ScrollByRows(-delta.y / Mathf.Max(1f, pixelsPerRow));
             pointerPrevious = screenPosition;
         }
 
         private void OnPointerReleased(Vector2 screenPosition)
         {
+            if (shown && pointerTracking && !pointerMoved)
+                TrySelectCard(screenPosition);
             pointerTracking = false;
+        }
+
+        private void TrySelectCard(Vector2 screenPosition)
+        {
+            if (targetCamera == null) return;
+            var ray = targetCamera.ScreenPointToRay(screenPosition);
+            var count = Physics.RaycastNonAlloc(
+                ray,
+                selectionHits,
+                250f,
+                Physics.DefaultRaycastLayers,
+                QueryTriggerInteraction.Ignore);
+            var bestDistance = float.PositiveInfinity;
+            CardRecord selected = null;
+            for (var i = 0; i < count; i++)
+            {
+                var collider = selectionHits[i].collider;
+                var view = collider == null ? null : collider.GetComponentInParent<VexforgeCardView>();
+                if (view == null || view.BoundCard == null) continue;
+                if (selectionHits[i].distance < bestDistance)
+                {
+                    bestDistance = selectionHits[i].distance;
+                    selected = view.BoundCard;
+                }
+            }
+            if (selected != null)
+                CardSelected?.Invoke(selected);
         }
 
         private void OnPointerScrolled(Vector2 screenPosition, float delta)

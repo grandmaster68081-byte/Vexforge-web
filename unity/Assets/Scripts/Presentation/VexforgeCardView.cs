@@ -37,9 +37,9 @@ namespace Vexforge.Presentation
             root.name = "VexforgeCardView";
             root.transform.SetParent(parent, false);
             root.transform.localScale = new Vector3(CardSize.x, CardSize.y, 0.08f);
-
             var rootCollider = root.GetComponent<Collider>();
-            if (rootCollider != null) Object.Destroy(rootCollider);
+            if (rootCollider == null) rootCollider = root.AddComponent<BoxCollider>();
+            rootCollider.isTrigger = false;
 
             var view = root.AddComponent<VexforgeCardView>();
             view.InitializeVisuals();
@@ -64,6 +64,8 @@ namespace Vexforge.Presentation
             }
         }
 
+        public CardRecord BoundCard { get; private set; }
+
         public void Bind(
             CardRecord card,
             PlayerCardRecord ownership,
@@ -75,8 +77,8 @@ namespace Vexforge.Presentation
             CancellationToken externalCancellation = default(CancellationToken))
         {
             if (!initialized) InitializeVisuals();
-
             resolver = artResolver;
+            BoundCard = card;
             artMode = presentationMode;
             var generation = ++bindGeneration;
 
@@ -118,6 +120,7 @@ namespace Vexforge.Presentation
             CancelBind();
             ReleaseLease();
             resolver = null;
+            BoundCard = null;
             ApplyTexture(null);
             SetArtMode(CardArtMode.FullCardArtwork);
             gameObject.SetActive(false);
