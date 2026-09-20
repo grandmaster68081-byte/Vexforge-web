@@ -12,9 +12,9 @@ target `vexforge-android-qa` remain unchanged.
 
 - `GameShellController` now waits for the idempotent `VexforgeApp`
   initialization task before constructing the active runtime.
-- The battle host is created before `BattlePresentationDirector.Initialize`,
-  and every active `Play` path is protected by an explicit initialization
-  check.
+- The battle host keeps `BattlePresentationDirector` active while its
+  self-hiding `VexforgeBattlefieldStage` lives in a child object; initialization
+  happens before any active `Play` path, and the legacy path has the same guard.
 - The active shell no longer destroys the persistent social overlay and world
   chat dock when changing route or switching between signed-out and signed-in
   views.
@@ -29,6 +29,7 @@ target `vexforge-android-qa` remain unchanged.
 All of the following completed with `PASS` on the repaired tree:
 
 - `git diff --check`
+- `python3 verification/build5_runtime_integration_gate.py`
 - `python3 verification/alpha_final_audit.py`
 - `python3 verification/social_contract_audit.py`
 - v1.2 package `package_audit.py`

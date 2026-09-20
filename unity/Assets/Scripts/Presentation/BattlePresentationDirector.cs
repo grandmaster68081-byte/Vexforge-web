@@ -37,9 +37,22 @@ namespace Vexforge.Presentation
             if (initialized)
                 return;
 
-            battlefield = GetComponent<VexforgeBattlefieldStage>();
+            var stages = GetComponentsInChildren<VexforgeBattlefieldStage>(true);
+            for (var i = 0; i < stages.Length; i++)
+            {
+                if (stages[i].gameObject != gameObject)
+                {
+                    battlefield = stages[i];
+                    break;
+                }
+            }
+
             if (battlefield == null)
-                battlefield = gameObject.AddComponent<VexforgeBattlefieldStage>();
+            {
+                var battlefieldObject = new GameObject("BattlefieldStage");
+                battlefieldObject.transform.SetParent(transform, false);
+                battlefield = battlefieldObject.AddComponent<VexforgeBattlefieldStage>();
+            }
 
             battlefield.Initialize(camera, resolver, cardLookup, localPlayerId);
             initialized = true;

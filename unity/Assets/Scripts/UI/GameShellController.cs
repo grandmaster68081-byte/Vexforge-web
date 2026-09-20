@@ -78,7 +78,10 @@ namespace Vexforge.UI
             var host = new GameObject("BattlePresentationHost");
             host.transform.SetParent(presentationHost.transform, false);
             battleDirector = host.AddComponent<BattlePresentationDirector>();
-            host.AddComponent<VexforgeBattlefieldStage>();
+
+            var battlefieldObject = new GameObject("BattlefieldStage");
+            battlefieldObject.transform.SetParent(host.transform, false);
+            battlefieldObject.AddComponent<VexforgeBattlefieldStage>();
         }
 
         private void InitializeBattlePresentation()
@@ -87,7 +90,10 @@ namespace Vexforge.UI
                 return;
 
             battleDirector.Initialize(presentationCamera, artResolver, FindCard, app.GameState.PlayerId);
-            alphaWorld.BindBattlefield(battleDirector.GetComponent<VexforgeBattlefieldStage>());
+            var battlefield = battleDirector.GetComponentInChildren<VexforgeBattlefieldStage>(true);
+            if (battlefield == null)
+                throw new InvalidOperationException("VEXFORGE requires a BattlefieldStage under BattlePresentationHost.");
+            alphaWorld.BindBattlefield(battlefield);
             battlePresentationInitialized = true;
         }
 
@@ -754,6 +760,12 @@ namespace Vexforge.UI
                 "RESULTADO RECIBIDO · " +
                 ValueOr(result.status, "ESTADO NO REPORTADO"),
                 0.22f);
+
+            if (battleDirector == null || !battleDirector.IsInitialized)
+            {
+                MessageAt("PRESENTACIÓN DE BATALLA NO INICIALIZADA", 0.22f);
+                return;
+            }
 
             battleDirector.Play(result.events);
         }
