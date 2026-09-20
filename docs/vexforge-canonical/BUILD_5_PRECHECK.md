@@ -32,11 +32,10 @@ All of the following completed with `PASS` on the repaired tree:
 - `python3 verification/build5_runtime_integration_gate.py`
 - `python3 verification/alpha_final_audit.py`
 - `python3 verification/social_contract_audit.py`
-- v1.2 package `package_audit.py`
-- v1.2 package `static_audit.py`
-- v1.2 package `contract_audit.py`
-- v1.2 package `social_contract_audit.py`
-- Python compilation of every v1.2 stage and verification script
+- `python3 verification/package_audit.py`
+- `python3 verification/static_audit.py`
+- `python3 verification/contract_audit.py`
+- Python compilation of every public-main verification script
 
 The repository history contains the published Stage 01–12 checkpoints. Stage
 13 is the deliberate Cloud Build milestone, not a source-file stage; its
