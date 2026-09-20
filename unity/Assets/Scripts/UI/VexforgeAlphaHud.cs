@@ -278,8 +278,10 @@ namespace Vexforge.UI
         public void HideForSignedOut()
         {
             renderVersion++;
+            requestInFlight = false;
             if (socialHub != null) socialHub.Close();
             if (globalChatDock != null) globalChatDock.SetVisible(false);
+            Clear();
         }
 
         private void AddRibbon(string value, float y)
@@ -401,6 +403,12 @@ namespace Vexforge.UI
                 if (!result.ok)
                 {
                     AddTransientMessage(ValueOr(result.error, "BATALLA NO DISPONIBLE"));
+                    return;
+                }
+
+                if (battleDirector == null || !battleDirector.IsInitialized)
+                {
+                    AddTransientMessage("PRESENTACIÓN DE BATALLA NO INICIALIZADA");
                     return;
                 }
 

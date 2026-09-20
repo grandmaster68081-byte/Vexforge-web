@@ -39,17 +39,24 @@ namespace Vexforge.UI
         private VexforgeCardInspectionStage cardInspection;
         private GameRoute inspectionRoute;
         private VexforgeDiegeticInputRouter alphaInput;
+        private Camera presentationCamera;
+        private GameObject signInRoot;
 
         private bool built;
+        private bool battlePresentationInitialized;
         private bool subscribed;
 
-        private void Start()
+        private async void Start()
         {
             app = VexforgeApp.Instance;
             if (app == null) return;
 
+            await app.InitializeAsync();
+            if (this == null || app == null) return;
+
             BuildPresentation();
             BuildBattlePresentationHost();
+            InitializeBattlePresentation();
             BuildCanvas();
             alphaHud = GetComponent<VexforgeAlphaHud>();
             if (alphaHud == null)
@@ -74,6 +81,16 @@ namespace Vexforge.UI
             host.AddComponent<VexforgeBattlefieldStage>();
         }
 
+        private void InitializeBattlePresentation()
+        {
+            if (battlePresentationInitialized || battleDirector == null || presentationCamera == null)
+                return;
+
+            battleDirector.Initialize(presentationCamera, artResolver, FindCard, app.GameState.PlayerId);
+            alphaWorld.BindBattlefield(battleDirector.GetComponent<VexforgeBattlefieldStage>());
+            battlePresentationInitialized = true;
+        }
+
         private void BuildPresentation()
         {
             if (presentationHost != null) return;
@@ -88,14 +105,14 @@ namespace Vexforge.UI
             var cardWorldRootObject = new GameObject("WorldCardPresentation");
             cardWorldRootObject.transform.SetParent(presentationHost.transform, false);
 
-            var camera = Camera.main;
-            if (camera == null)
+            presentationCamera = Camera.main;
+            if (presentationCamera == null)
             {
                 throw new InvalidOperationException("VEXFORGE requires a MainCamera from NexusPresentationRoot.");
             }
 
             cardWorldRootObject.transform.position = new Vector3(0f, 3.15f, 5.4f);
-            cardWorldRootObject.transform.rotation = camera.transform.rotation;
+            cardWorldRootObject.transform.rotation = presentationCamera.transform.rotation;
 
             textureCache = new VexforgeTextureLruCache(32L * 1024L * 1024L);
             artResolver = new VexforgeCardArtResolver(textureCache, 3, 20, 8L * 1024L * 1024L, 4096);
@@ -109,14 +126,14 @@ namespace Vexforge.UI
             var galleryObject = new GameObject("WorldCardGallery");
             galleryObject.transform.SetParent(presentationHost.transform, false);
             galleryObject.transform.position = new Vector3(0f, 3.15f, 5.4f);
-            galleryObject.transform.rotation = camera.transform.rotation;
+            galleryObject.transform.rotation = presentationCamera.transform.rotation;
 
             alphaInput = presentationHost.AddComponent<VexforgeDiegeticInputRouter>();
-            alphaInput.Initialize(camera);
+            alphaInput.Initialize(presentationCamera);
 
             gallery = galleryObject.AddComponent<VexforgeVirtualizedCardGallery>();
             gallery.Initialize(
-                camera,
+                presentationCamera,
                 cardPool,
                 artResolver,
                 alphaInput);
@@ -124,16 +141,13 @@ namespace Vexforge.UI
             galleryObject.SetActive(false);
 
             alphaWorld = presentationHost.AddComponent<VexforgeAlphaWorldDirector>();
-            alphaWorld.Initialize(app.Navigation, camera);
+            alphaWorld.Initialize(app.Navigation, presentationCamera);
             alphaWorld.BindGalleryRoot(galleryObject.transform);
 
             cardInspection = presentationHost.AddComponent<VexforgeCardInspectionStage>();
-            cardInspection.Initialize(camera, alphaInput, artResolver);
+            cardInspection.Initialize(presentationCamera, alphaInput, artResolver);
             cardInspection.Closed += HandleCardInspectionClosed;
             gallery.CardSelected += HandleCardSelected;
-
-            battleDirector.Initialize(camera, artResolver, FindCard, app.GameState.PlayerId);
-            alphaWorld.BindBattlefield(battleDirector.GetComponent<VexforgeBattlefieldStage>());
 
             built = true;
         }
@@ -241,6 +255,8 @@ namespace Vexforge.UI
             if (!app.Session.IsAuthenticated)
             {
                 HideWorldPresentation();
+                if (alphaHud != null)
+                    alphaHud.HideForSignedOut();
                 ClearCanvas();
                 RenderSignIn();
                 return;
@@ -271,6 +287,7 @@ namespace Vexforge.UI
         private void RenderSignIn()
         {
             var panel = UiFactory.PanelObject(canvas.transform, "NexusSeal", UiFactory.PanelGlass);
+            signInRoot = panel;
             UiFactory.Anchor(panel.GetComponent<RectTransform>(),
                 new Vector2(0.1f, 0.27f),
                 new Vector2(0.9f, 0.75f),
@@ -808,12 +825,13 @@ namespace Vexforge.UI
 
         private void ClearCanvas()
         {
-            for (var i = canvas.transform.childCount - 1; i >= 0; i--)
-            {
-                Destroy(canvas.transform.GetChild(i).gameObject);
-            }
+            if (content != null)
+                Destroy(content.gameObject);
+            if (signInRoot != null)
+                Destroy(signInRoot);
 
             content = null;
+            signInRoot = null;
             emailInput = null;
             passwordInput = null;
         }

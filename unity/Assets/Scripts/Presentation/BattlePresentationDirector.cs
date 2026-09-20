@@ -20,6 +20,7 @@ namespace Vexforge.Presentation
     public sealed class BattlePresentationDirector : MonoBehaviour
     {
         public PresentationState State { get; private set; } = PresentationState.Idle;
+        public bool IsInitialized { get { return initialized; } }
         public event Action<BattleEvent> EventPresented;
         public event Action PresentationCompleted;
 
@@ -74,6 +75,13 @@ namespace Vexforge.Presentation
 
         public void Play(BattleEvent[] events)
         {
+            if (!initialized)
+            {
+                State = PresentationState.Error;
+                Debug.LogError("VEXFORGE BattlePresentationDirector.Play() requires Initialize() first.", this);
+                return;
+            }
+
             presentationToken++;
             var token = presentationToken;
             StopAllCoroutines();

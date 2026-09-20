@@ -20,9 +20,11 @@ namespace Vexforge.Core
         public bool IsInitialized { get; private set; }
         public string InitializationError { get; private set; }
 
-        private async void Start()
+        private Task initializationTask;
+
+        private void Start()
         {
-            await InitializeAsync();
+            _ = InitializeAsync();
         }
 
         private void Awake()
@@ -58,21 +60,29 @@ namespace Vexforge.Core
             }
         }
 
-        public async Task InitializeAsync()
+        public Task InitializeAsync()
         {
-            if (IsInitialized) return;
+            if (initializationTask != null)
+                return initializationTask;
+
+            initializationTask = InitializeCore();
+            return initializationTask;
+        }
+
+        private Task InitializeCore()
+        {
             if (!RuntimeEnvironment.IsConfigured)
             {
                 InitializationError = "La configuración de Supabase no está disponible.";
                 IsInitialized = true;
                 AppLogger.Warning(InitializationError);
-                return;
+                return Task.CompletedTask;
             }
 
-            IsInitialized = true;
             Navigation.Navigate(GameRoute.Nexus);
+            IsInitialized = true;
             AppLogger.Info("Foundation inicializada; esperando sesión autenticada.");
-            await Task.CompletedTask;
+            return Task.CompletedTask;
         }
 
         public async Task<bool> SignInAndSyncAsync(string email, string password)

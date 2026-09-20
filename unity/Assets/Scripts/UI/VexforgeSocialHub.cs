@@ -498,9 +498,12 @@ namespace Vexforge.UI
                     {
                         action = () => _ = SendFriendRequestAsync(playerId);
                     }
+                    var block = UiFactory.Button(row.transform, "BLOQUEAR", () => _ = BlockPlayerAsync(playerId));
+                    UiFactory.Anchor(block.GetComponent<RectTransform>(), new Vector2(0.59f, 0.12f), new Vector2(0.76f, 0.88f), Vector2.zero, Vector2.zero);
+
                     var actionButton = UiFactory.Button(row.transform, actionLabel, action ?? (() => { }));
                     actionButton.GetComponent<Button>().interactable = action != null;
-                    UiFactory.Anchor(actionButton.GetComponent<RectTransform>(), new Vector2(0.65f, 0.12f), new Vector2(0.96f, 0.88f), Vector2.zero, Vector2.zero);
+                    UiFactory.Anchor(actionButton.GetComponent<RectTransform>(), new Vector2(0.78f, 0.12f), new Vector2(0.96f, 0.88f), Vector2.zero, Vector2.zero);
                 }
                 if (searchResults.Length == 0) AddListMessage(results.content, "No hay guerreros que coincidan.");
                 return;
@@ -523,9 +526,11 @@ namespace Vexforge.UI
                 UiFactory.Anchor(name.rectTransform, new Vector2(0.03f, 0.1f), new Vector2(0.58f, 0.9f), Vector2.zero, Vector2.zero);
                 var id = friend.id;
                 var chat = UiFactory.Button(row.transform, "CHAT", () => OpenConversation(id, friend.display_name));
-                UiFactory.Anchor(chat.GetComponent<RectTransform>(), new Vector2(0.60f, 0.12f), new Vector2(0.76f, 0.88f), Vector2.zero, Vector2.zero);
+                UiFactory.Anchor(chat.GetComponent<RectTransform>(), new Vector2(0.45f, 0.12f), new Vector2(0.61f, 0.88f), Vector2.zero, Vector2.zero);
+                var block = UiFactory.Button(row.transform, "BLOQ", () => _ = BlockPlayerAsync(id));
+                UiFactory.Anchor(block.GetComponent<RectTransform>(), new Vector2(0.63f, 0.12f), new Vector2(0.78f, 0.88f), Vector2.zero, Vector2.zero);
                 var remove = UiFactory.Button(row.transform, "-", () => _ = RemoveFriendAsync(id));
-                UiFactory.Anchor(remove.GetComponent<RectTransform>(), new Vector2(0.79f, 0.12f), new Vector2(0.96f, 0.88f), Vector2.zero, Vector2.zero);
+                UiFactory.Anchor(remove.GetComponent<RectTransform>(), new Vector2(0.80f, 0.12f), new Vector2(0.96f, 0.88f), Vector2.zero, Vector2.zero);
             }
             if (friends.Length == 0) AddListMessage(friendList.content, "Aún no tienes aliados.");
 
@@ -588,7 +593,7 @@ namespace Vexforge.UI
             {
                 AddSectionLabel(contentRoot, "CANAL · " + ValueOr(selectedFriendName, "ALIADO"), 0.55f);
                 var messages = CreateScrollList(contentRoot, "DirectMessages", 0.18f, 0.53f);
-                RenderMessages(messages.content, messageData == null ? null : messageData.messages);
+                RenderMessages(messages.content, messageData == null ? null : messageData.messages, "private");
                 BuildComposer("ESCRIBE UN SUSURRO...", 0.06f, SendPrivateMessage);
             }
         }
@@ -597,7 +602,7 @@ namespace Vexforge.UI
         {
             AddSectionLabel(contentRoot, "COMUNICACIÓN GLOBAL · TODOS LOS VASALLOS", 0.94f);
             var messages = CreateScrollList(contentRoot, "GlobalMessages", 0.17f, 0.92f);
-            RenderMessages(messages.content, messageData == null ? null : messageData.messages);
+            RenderMessages(messages.content, messageData == null ? null : messageData.messages, "global");
             BuildComposer("ESCRIBE AL MUNDO...", 0.05f, SendGlobalMessage);
         }
 
@@ -666,7 +671,7 @@ namespace Vexforge.UI
 
             AddSectionLabel(contentRoot, "CLAN CHAT", 0.54f);
             var messages = CreateScrollList(contentRoot, "ClanMessages", 0.19f, 0.51f);
-            RenderMessages(messages.content, messageData == null ? null : messageData.messages);
+            RenderMessages(messages.content, messageData == null ? null : messageData.messages, "clan");
             BuildComposer("ESCRIBE AL CLAN...", 0.05f, SendClanMessage);
             var leave = UiFactory.Button(contentRoot, "SALIR DEL CLAN", () => _ = LeaveClanAsync());
             UiFactory.Anchor(leave.GetComponent<RectTransform>(), new Vector2(0.04f, 0.965f), new Vector2(0.30f, 0.995f), Vector2.zero, Vector2.zero);
@@ -681,7 +686,7 @@ namespace Vexforge.UI
             UiFactory.Anchor(sendButton.GetComponent<RectTransform>(), new Vector2(0.74f, y), new Vector2(0.96f, y + 0.075f), Vector2.zero, Vector2.zero);
         }
 
-        private void RenderMessages(Transform parent, SocialMessage[] messages)
+        private void RenderMessages(Transform parent, SocialMessage[] messages, string scope)
         {
             if (messages == null || messages.Length == 0)
             {
@@ -694,7 +699,11 @@ namespace Vexforge.UI
                 var row = CreateRow(parent, 58f);
                 var prefix = message.is_mine ? "TÚ" : ValueOr(message.sender_display_name, "GUERRERO");
                 var label = UiFactory.Label(row.transform, prefix + "  ·  " + FormatClock(message.created_at) + "\n" + message.body, 10, message.is_mine ? UiFactory.Gold : UiFactory.Text);
-                UiFactory.Stretch(label.rectTransform, 8f, 4f, 8f, 4f);
+                UiFactory.Anchor(label.rectTransform, new Vector2(0.03f, 0.08f), new Vector2(0.76f, 0.92f), Vector2.zero, Vector2.zero);
+                var messageId = message.id;
+                var report = UiFactory.Button(row.transform, "REPORTAR", () => _ = ReportMessageAsync(scope, messageId));
+                report.GetComponent<Button>().interactable = !message.is_mine && !string.IsNullOrWhiteSpace(messageId);
+                UiFactory.Anchor(report.GetComponent<RectTransform>(), new Vector2(0.79f, 0.20f), new Vector2(0.97f, 0.80f), Vector2.zero, Vector2.zero);
             }
         }
 
@@ -764,6 +773,30 @@ namespace Vexforge.UI
             if (!IsCurrent(generation)) return;
             SetStatus(result != null && result.ok ? "VÍNCULO ELIMINADO" : SocialReason(result));
             _ = RefreshActiveAsync(generation, true);
+        }
+
+        private async Task BlockPlayerAsync(string playerId)
+        {
+            if (string.IsNullOrWhiteSpace(playerId)) return;
+            var generation = lifecycleGeneration;
+            var result = await repository.BlockPlayerAsync(playerId);
+            if (!IsCurrent(generation)) return;
+            SetStatus(result != null && result.ok ? "GUERRERO BLOQUEADO" : SocialReason(result));
+            if (result != null && result.ok && selectedFriendId == playerId)
+            {
+                selectedFriendId = null;
+                selectedConversationId = null;
+            }
+            _ = RefreshActiveAsync(generation, true);
+        }
+
+        private async Task ReportMessageAsync(string scope, string messageId)
+        {
+            if (string.IsNullOrWhiteSpace(scope) || string.IsNullOrWhiteSpace(messageId)) return;
+            var generation = lifecycleGeneration;
+            var result = await repository.ReportMessageAsync(scope, messageId, "USER_REPORTED_MESSAGE");
+            if (!IsCurrent(generation)) return;
+            SetStatus(result != null && result.ok ? "REPORTE ENVIADO" : SocialReason(result));
         }
 
         private void OpenConversationById(string conversationId, string friendId, string friendName)
