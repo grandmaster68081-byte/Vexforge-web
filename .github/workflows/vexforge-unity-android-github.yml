@@ -55,6 +55,7 @@ jobs:
       - name: Install Unity CLI
         shell: bash
         env:
+          UNITY_VERSION: ${{ steps.unity-version.outputs.version }}
           UNITY_CLI_HOME: ${{ runner.temp }}/unity-cli
         run: |
           set -euo pipefail
