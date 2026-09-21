@@ -84,9 +84,9 @@ namespace Vexforge.UI
                 var existingStage = battleDirector.GetComponentInChildren<VexforgeBattlefieldStage>(true);
                 if (existingStage == null)
                 {
-                    var battlefieldObject = new GameObject("BattlefieldStage");
-                    battlefieldObject.transform.SetParent(battleDirector.transform, false);
-                    battlefieldObject.AddComponent<VexforgeBattlefieldStage>();
+                    var existingBattlefieldObject = new GameObject("BattlefieldStage");
+                    existingBattlefieldObject.transform.SetParent(battleDirector.transform, false);
+                    existingBattlefieldObject.AddComponent<VexforgeBattlefieldStage>();
                 }
                 return;
             }
