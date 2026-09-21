@@ -52,29 +52,20 @@ jobs:
         with:
           node-version: "22"
 
-      - name: Install Unity Hub
-        shell: bash
-        run: |
-          set -euo pipefail
-          sudo install -d /etc/apt/keyrings
-          curl -fsSL https://hub.unity3d.com/linux/keys/public | sudo gpg --dearmor --yes -o /etc/apt/keyrings/unityhub.gpg
-          echo "deb [arch=amd64 signed-by=/etc/apt/keyrings/unityhub.gpg] https://hub.unity3d.com/linux/repos/deb stable main" | sudo tee /etc/apt/sources.list.d/unityhub.list
-          sudo apt-get update
-          sudo apt-get install -y unityhub
-
-      - name: Install Unity Editor with Android module
+      - name: Install Unity CLI
         shell: bash
         env:
-          UNITY_VERSION: ${{ steps.unity-version.outputs.version }}
+          UNITY_CLI_HOME: ${{ runner.temp }}/unity-cli
         run: |
           set -euo pipefail
           export HOME="$RUNNER_TEMP/unity-home"
           export XDG_CONFIG_HOME="$RUNNER_TEMP/unity-config"
           export XDG_RUNTIME_DIR="$RUNNER_TEMP/unity-runtime"
-          mkdir -p "$HOME" "$XDG_CONFIG_HOME" "$XDG_RUNTIME_DIR"
-          /usr/lib/unityhub/unityhub --headless install \
-            --version "$UNITY_VERSION" \
-            --module android android-sdk-ndk-tools android-open-jdk
+          mkdir -p "$HOME" "$XDG_CONFIG_HOME" "$XDG_RUNTIME_DIR" "$UNITY_CLI_HOME"
+          curl -fsSL https://unity.com/install.sh | UNITY_CLI_CHANNEL=beta UNITY_CLI_HOME="$UNITY_CLI_HOME" bash
+          export PATH="$UNITY_CLI_HOME/bin:$PATH"
+          unity --version
+          unity install "$UNITY_VERSION" -m android --cm
           editor="$(find "$HOME/Unity/Hub/Editor" -type f -path "*/Editor/Unity" -print -quit 2>/dev/null || true)"
           test -x "$editor"
           echo "UNITY_EDITOR_PATH=$editor" >> "$GITHUB_ENV"
