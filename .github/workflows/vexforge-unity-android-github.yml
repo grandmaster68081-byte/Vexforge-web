@@ -49,38 +49,21 @@ jobs:
         with:
           node-version: "22"
 
-      - name: Install Unity license converter
-        run: npm install --global unity-license-activate@0.3.9 --no-audit --no-fund
-
-      - name: Convert Unity activation request to license
+      - name: Prepare shared Unity home
         shell: bash
-        env:
-          UNITY_VERSION: ${{ steps.unity-version.outputs.version }}
         run: |
           set -euo pipefail
-          license_dir="$RUNNER_TEMP/vexforge-license"
-          mkdir -p "$license_dir"
-          printf '%s' "$UNITY_ALF" > "$license_dir/Unity_v${UNITY_VERSION}.alf"
-          test -s "$license_dir/Unity_v${UNITY_VERSION}.alf"
-          set +e
-          unity-license-activate \
-            "$UNITY_EMAIL" \
-            "$UNITY_PASSWORD" \
-            "$license_dir/Unity_v${UNITY_VERSION}.alf" \
-            > "$license_dir/conversion.log" 2>&1
-          activation_exit=$?
-          set -e
-          if [ "$activation_exit" -ne 0 ]; then
-            echo "Unity license conversion failed with exit code $activation_exit."
-            echo "Sanitized converter diagnostics:"
-            grep -Eiv 'password|token|secret|serial|authorization' "$license_dir/conversion.log" | sed -E 's/[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}/[redacted-email]/g' | tail -n 80 || true
-            exit "$activation_exit"
-          fi
-          ulf="$(find "$license_dir" -type f -name '*.ulf' -print -quit)"
-          test -n "$ulf"
-          cp "$ulf" "$license_dir/Unity_v${UNITY_VERSION}.ulf"
-          test -s "$license_dir/Unity_v${UNITY_VERSION}.ulf"
-          echo "Unity license conversion completed without printing credentials."
+          mkdir -p "$RUNNER_TEMP/unity-home"
+
+      - name: Activate Unity license
+        uses: buildalon/activate-unity-license@v2
+        env:
+          HOME: ${{ runner.temp }}/unity-home
+        with:
+          license: personal
+          username: ${{ secrets.UNITY_EMAIL }}
+          password: ${{ secrets.UNITY_PASSWORD }}
+          license-version: 6.x
 
       - name: Build Unity Android APK
         shell: bash
