@@ -1,7 +1,7 @@
 name: Build VEXFORGE Unity Android on GitHub
 
 on:
-  workflow_dispatch:
+  workflow_dispatch: {}
   push:
     paths:
       - "unity/**"
