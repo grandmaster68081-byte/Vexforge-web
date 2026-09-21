@@ -17,17 +17,20 @@ jobs:
     env:
       UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
       UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
-      UNITY_ALF: ${{ secrets.UNITY_ALF }}
+      UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
 
     steps:
       - name: Verify Unity license inputs
         shell: bash
         run: |
           set -euo pipefail
-          test -n "$UNITY_EMAIL" || { echo "Missing GitHub Actions secret: UNITY_EMAIL" >&2; exit 1; }
-          test -n "$UNITY_PASSWORD" || { echo "Missing GitHub Actions secret: UNITY_PASSWORD" >&2; exit 1; }
-          test -n "$UNITY_ALF" || { echo "Missing GitHub Actions secret: UNITY_ALF" >&2; exit 1; }
-          echo "Unity license inputs are present; values are not printed."
+          if [ -n "${UNITY_LICENSE:-}" ]; then
+            echo "A complete Unity ULF license secret is available; online activation will be skipped."
+          else
+            test -n "$UNITY_EMAIL" || { echo "Missing GitHub Actions secret: UNITY_EMAIL" >&2; exit 1; }
+            test -n "$UNITY_PASSWORD" || { echo "Missing GitHub Actions secret: UNITY_PASSWORD" >&2; exit 1; }
+            echo "Unity online activation inputs are present; values are not printed."
+          fi
 
       - name: Checkout
         uses: actions/checkout@v4
@@ -65,7 +68,19 @@ jobs:
           set -euo pipefail
           mkdir -p "$RUNNER_TEMP/unity-home" "$RUNNER_TEMP/vexforge-license"
 
+      - name: Install stored Unity license
+        if: env.UNITY_LICENSE != ''
+        shell: bash
+        env:
+          UNITY_VERSION: ${{ steps.unity-version.outputs.version }}
+        run: |
+          set -euo pipefail
+          printf '%s' "$UNITY_LICENSE" > "$RUNNER_TEMP/vexforge-license/Unity_v${UNITY_VERSION}.ulf"
+          test -s "$RUNNER_TEMP/vexforge-license/Unity_v${UNITY_VERSION}.ulf"
+          echo "Stored Unity ULF license materialized without printing its value."
+
       - name: Activate Unity license
+        if: env.UNITY_LICENSE == ''
         uses: buildalon/activate-unity-license@v2
         env:
           HOME: ${{ runner.temp }}/unity-home
@@ -83,9 +98,8 @@ jobs:
           UNITY_VERSION: ${{ steps.unity-version.outputs.version }}
         run: |
           set -euo pipefail
-          test -s "$RUNNER_TEMP/vexforge-license/Unity_lic.ulf"
-          cp "$RUNNER_TEMP/vexforge-license/Unity_lic.ulf" "$RUNNER_TEMP/vexforge-license/Unity_v${UNITY_VERSION}.ulf"
-          echo "Unity generated a signed license file; value is not printed."
+          test -s "$RUNNER_TEMP/vexforge-license/Unity_v${UNITY_VERSION}.ulf"
+          echo "Unity license is ready for the Editor; value is not printed."
 
       - name: Build Unity Android APK
         shell: bash
