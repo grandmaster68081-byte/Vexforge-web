@@ -66,7 +66,7 @@ jobs:
           curl -fsSL https://unity.com/install.sh | UNITY_CLI_CHANNEL=beta UNITY_CLI_HOME="$UNITY_CLI_HOME" bash
           export PATH="$UNITY_CLI_HOME/bin:$PATH"
           unity --version
-          unity install "$UNITY_VERSION" -m android --cm
+          unity install "$UNITY_VERSION" -m android --cm --accept-eula
           editor="$(find "$HOME/Unity/Hub/Editor" -type f -path "*/Editor/Unity" -print -quit 2>/dev/null || true)"
           test -x "$editor"
           echo "UNITY_EDITOR_PATH=$editor" >> "$GITHUB_ENV"
