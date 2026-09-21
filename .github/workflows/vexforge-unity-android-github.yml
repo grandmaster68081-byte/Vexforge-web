@@ -147,14 +147,33 @@ jobs:
           set -euo pipefail
           mkdir -p build-artifacts
           test -x "$UNITY_EDITOR_PATH"
-          "$UNITY_EDITOR_PATH" \
+          editor_log="$GITHUB_WORKSPACE/build-artifacts/unity-editor.log"
+          started_at=$(date +%s)
+          set +e
+          timeout --signal=TERM --kill-after=60s 180m \
+            "$UNITY_EDITOR_PATH" \
             -batchmode \
             -nographics \
             -quit \
+            -accept-apiupdate \
             -projectPath "$GITHUB_WORKSPACE/unity" \
             -buildTarget Android \
             -executeMethod Vexforge.Editor.VexforgeGitHubBuild.BuildAndroid \
-            -logFile "$GITHUB_WORKSPACE/build-artifacts/unity-editor.log"
+            -logFile "$editor_log"
+          editor_status=$?
+          set -e
+          elapsed=$(( $(date +%s) - started_at ))
+          echo "Unity Editor exit code=$editor_status elapsed_seconds=$elapsed"
+          if [ -f "$editor_log" ]; then
+            echo '--- tail of unity-editor.log ---'
+            tail -n 160 "$editor_log"
+            echo '--- end tail of unity-editor.log ---'
+          fi
+          if [ "$editor_status" -eq 124 ] || [ "$editor_status" -eq 137 ]; then
+            echo 'Unity Editor build exceeded the 180-minute step limit.' >&2
+            exit 124
+          fi
+          test "$editor_status" -eq 0
 
       - name: Verify APK
         if: success()
