@@ -92,7 +92,7 @@ jobs:
         run: |
           set -euo pipefail
           printf '%s' "$UNITY_LICENSE" > "$RUNNER_TEMP/vexforge-license/Unity_v${UNITY_VERSION}.ulf"
-          test -s "$RUNNER_TEMP/vexforge-license/Unity_v${UNITY_VERSION}.ulf"
+          test -s "$RUNNER_TEMP/vexforge-license/Unity_lic.ulf"
           echo "Stored Unity ULF license materialized without printing its value."
 
       - name: Activate Unity license
@@ -139,7 +139,7 @@ jobs:
                 -batchmode \
                 -nographics \
                 -quit \
-                -manualLicenseFile "/license/Unity_v${UNITY_VERSION}.ulf" \
+                -manualLicenseFile "/license/Unity_lic.ulf" \
                 -logFile /workspace/build-artifacts/license-import.log
               unity-editor \
                 -batchmode \
