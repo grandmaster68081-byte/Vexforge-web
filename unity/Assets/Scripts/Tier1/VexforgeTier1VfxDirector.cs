@@ -49,7 +49,7 @@ namespace Vexforge.Tier1
             var ps = go.AddComponent<ParticleSystem>();
             var main = ps.main; main.loop=false; main.playOnAwake=false; main.duration=lifetime; main.startLifetime=new ParticleSystem.MinMaxCurve(lifetime*.35f,lifetime); main.startSpeed=new ParticleSystem.MinMaxCurve(.35f,1.45f); main.startSize=new ParticleSystem.MinMaxCurve(.02f,.06f); main.startColor=color; main.maxParticles=32;
             var emission=ps.emission; emission.enabled=true; emission.SetBursts(new[]{new ParticleSystem.Burst(0f,(short)Mathf.Min(24,count))});
-            var shape=ps.shape; shape.shape=ParticleSystemShapeType.Sphere; shape.radius=.26f;
+            var shape=ps.shape; shape.shapeType=ParticleSystemShapeType.Sphere; shape.radius=.26f;
             var renderer=ps.GetComponent<ParticleSystemRenderer>(); renderer.material=particleMaterial; renderer.renderMode=ParticleSystemRenderMode.Billboard;
             ps.Emit(Mathf.Min(24,count)); ps.Play(); StartCoroutine(DestroyAfter(go,lifetime+.18f));
         }
