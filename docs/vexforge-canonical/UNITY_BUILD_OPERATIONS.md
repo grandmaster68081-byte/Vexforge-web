@@ -75,6 +75,9 @@ The generated license is checked only for readiness. Its contents are never echo
 
 The workflow invokes the installed Editor directly:
 
+The invocation is wrapped in a 180-minute step timeout. At exit it records the Editor exit code and elapsed seconds and prints the tail of `unity-editor.log`, so compiler, Gradle, and timeout failures remain visible in the GitHub job log as well as the uploaded artifact. The Editor is also run with `-accept-apiupdate` to avoid an interactive API-update prompt in batch mode.
+
+
     Unity -batchmode -nographics -quit
       -projectPath <runner>/unity
       -buildTarget Android
