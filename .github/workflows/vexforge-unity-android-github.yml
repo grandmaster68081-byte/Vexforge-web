@@ -62,11 +62,20 @@ jobs:
           mkdir -p "$license_dir"
           printf '%s' "$UNITY_ALF" > "$license_dir/Unity_v${UNITY_VERSION}.alf"
           test -s "$license_dir/Unity_v${UNITY_VERSION}.alf"
+          set +e
           unity-license-activate \
             "$UNITY_EMAIL" \
             "$UNITY_PASSWORD" \
             "$license_dir/Unity_v${UNITY_VERSION}.alf" \
             > "$license_dir/conversion.log" 2>&1
+          activation_exit=$?
+          set -e
+          if [ "$activation_exit" -ne 0 ]; then
+            echo "Unity license conversion failed with exit code $activation_exit."
+            echo "Sanitized converter diagnostics:"
+            grep -Eiv 'password|token|secret|serial|authorization' "$license_dir/conversion.log" | sed -E 's/[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}/[redacted-email]/g' | tail -n 80 || true
+            exit "$activation_exit"
+          fi
           ulf="$(find "$license_dir" -type f -name '*.ulf' -print -quit)"
           test -n "$ulf"
           cp "$ulf" "$license_dir/Unity_v${UNITY_VERSION}.ulf"
