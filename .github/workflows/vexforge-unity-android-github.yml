@@ -1,0 +1,158 @@
+name: Build VEXFORGE Unity Android on GitHub
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "unity/**"
+      - ".github/workflows/vexforge-unity-android-github.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  build-unity-android:
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+    env:
+      UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+      UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+      UNITY_ALF: ${{ secrets.UNITY_ALF }}
+
+    steps:
+      - name: Verify Unity license inputs
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "$UNITY_EMAIL" || { echo "Missing GitHub Actions secret: UNITY_EMAIL" >&2; exit 1; }
+          test -n "$UNITY_PASSWORD" || { echo "Missing GitHub Actions secret: UNITY_PASSWORD" >&2; exit 1; }
+          test -n "$UNITY_ALF" || { echo "Missing GitHub Actions secret: UNITY_ALF" >&2; exit 1; }
+          echo "Unity license inputs are present; values are not printed."
+
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Read Unity editor version
+        id: unity-version
+        shell: bash
+        run: |
+          set -euo pipefail
+          version="$(sed -n 's/^m_EditorVersion: //p' unity/ProjectSettings/ProjectVersion.txt)"
+          test -n "$version"
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          echo "Using Unity editor $version"
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install Unity license converter
+        run: npm install --global unity-license-activate@0.3.9 --no-audit --no-fund
+
+      - name: Convert Unity activation request to license
+        shell: bash
+        env:
+          UNITY_VERSION: ${{ steps.unity-version.outputs.version }}
+        run: |
+          set -euo pipefail
+          license_dir="$RUNNER_TEMP/vexforge-license"
+          mkdir -p "$license_dir"
+          printf '%s' "$UNITY_ALF" > "$license_dir/Unity_v${UNITY_VERSION}.alf"
+          test -s "$license_dir/Unity_v${UNITY_VERSION}.alf"
+          unity-license-activate \
+            "$UNITY_EMAIL" \
+            "$UNITY_PASSWORD" \
+            "$license_dir/Unity_v${UNITY_VERSION}.alf" \
+            > "$license_dir/conversion.log" 2>&1
+          ulf="$(find "$license_dir" -type f -name '*.ulf' -print -quit)"
+          test -n "$ulf"
+          cp "$ulf" "$license_dir/Unity_v${UNITY_VERSION}.ulf"
+          test -s "$license_dir/Unity_v${UNITY_VERSION}.ulf"
+          echo "Unity license conversion completed without printing credentials."
+
+      - name: Build Unity Android APK
+        shell: bash
+        env:
+          UNITY_VERSION: ${{ steps.unity-version.outputs.version }}
+        run: |
+          set -uo pipefail
+          mkdir -p "$RUNNER_TEMP/unity-home" build-artifacts
+          unity_exit=0
+          docker run --rm \
+            --env HOME=/tmp/unity-home \
+            --env UNITY_VERSION \
+            --volume "$RUNNER_TEMP/unity-home:/tmp/unity-home" \
+            --volume "$RUNNER_TEMP/vexforge-license:/license:ro" \
+            --volume "$GITHUB_WORKSPACE:/workspace" \
+            --workdir /workspace \
+            "unityci/editor:ubuntu-${UNITY_VERSION}-android-3" \
+            bash -lc '
+              set -euo pipefail
+              unity-editor \
+                -batchmode \
+                -nographics \
+                -quit \
+                -manualLicenseFile "/license/Unity_v${UNITY_VERSION}.ulf" \
+                -logFile /workspace/build-artifacts/license-import.log
+              unity-editor \
+                -batchmode \
+                -nographics \
+                -quit \
+                -projectPath /workspace/unity \
+                -buildTarget Android \
+                -executeMethod Vexforge.Editor.VexforgeGitHubBuild.BuildAndroid \
+                -logFile /workspace/build-artifacts/unity-editor.log
+            ' || unity_exit=$?
+          echo "Unity build exit code: $unity_exit"
+          exit "$unity_exit"
+
+      - name: Verify APK
+        if: success()
+        shell: bash
+        run: |
+          set -euo pipefail
+          apk="$(find unity/Builds -type f -name '*.apk' -print -quit)"
+          test -n "$apk"
+          test -s "$apk"
+          size="$(stat -c%s "$apk")"
+          sha="$(sha256sum "$apk" | awk '{print $1}')"
+          test "$size" -gt 1000000
+          {
+            echo "product=VEXFORGE"
+            echo "runtime=Unity"
+            echo "editor=$(sed -n 's/^m_EditorVersion: //p' unity/ProjectSettings/ProjectVersion.txt)"
+            echo "branch=${GITHUB_REF_NAME}"
+            echo "commit=${GITHUB_SHA}"
+            echo "run_id=${GITHUB_RUN_ID}"
+            echo "apk=$apk"
+            echo "apk_size_bytes=$size"
+            echo "apk_sha256=$sha"
+          } | tee build-artifacts/vexforge-build-info.txt >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload Unity APK artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: VEXFORGE-Unity-Android-${{ github.run_number }}
+          path: |
+            unity/Builds/**/*.apk
+            build-artifacts/**
+          if-no-files-found: warn
+          retention-days: 14
+
+      - name: Publish APK release
+        if: success()
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: vexforge-unity-github-${{ github.run_number }}
+          name: VEXFORGE Unity Android ${{ github.run_number }}
+          prerelease: true
+          body: |
+            VEXFORGE Unity Android build compiled directly on GitHub Actions.
+            Unity editor version is read from unity/ProjectSettings/ProjectVersion.txt.
+          files: |
+            unity/Builds/**/*.apk
+            build-artifacts/vexforge-build-info.txt
