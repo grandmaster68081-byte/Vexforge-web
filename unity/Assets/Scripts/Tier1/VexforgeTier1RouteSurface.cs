@@ -56,9 +56,9 @@ namespace Vexforge.Tier1
             {
                 if(canonicalBattle==null)
                 {
-                    var directors=FindObjectsByType<BattlePresentationDirector>(FindObjectsInactive.Include,FindObjectsSortMode.None);
+                    var directors=FindObjectsByType<BattlePresentationDirector>(FindObjectsInactive.Exclude,FindObjectsSortMode.None);
                     for(var d=0;d<directors.Length;d++)
-                        if(directors[d]!=null&&directors[d].IsInitialized){canonicalBattle=directors[d];break;}
+                        if(directors[d]!=null&&directors[d].isActiveAndEnabled&&directors[d].IsInitialized){canonicalBattle=directors[d];break;}
                 }
                 if(canonicalBattle!=null&&canonicalBattle.IsInitialized)break;
                 yield return null;

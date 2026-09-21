@@ -48,6 +48,7 @@ namespace Vexforge.UI
         private bool subscribed;
 
         internal VexforgeCardArtResolver CanonicalArtResolver => artResolver;
+        internal BattlePresentationDirector CanonicalBattlePresentation => battleDirector;
 
         private async void Start()
         {
@@ -74,14 +75,25 @@ namespace Vexforge.UI
         {
             if (battleDirector != null) return;
 
-            var legacyDirector = GetComponent<BattlePresentationDirector>();
-            if (legacyDirector != null)
-                legacyDirector.enabled = false;
+            // Reuse the canonical director already attached to the shell when present.
+            // This prevents startup races from creating two competing presentation authorities.
+            var existingDirector = GetComponent<BattlePresentationDirector>();
+            if (existingDirector != null)
+            {
+                battleDirector = existingDirector;
+                var existingStage = battleDirector.GetComponentInChildren<VexforgeBattlefieldStage>(true);
+                if (existingStage == null)
+                {
+                    var battlefieldObject = new GameObject("BattlefieldStage");
+                    battlefieldObject.transform.SetParent(battleDirector.transform, false);
+                    battlefieldObject.AddComponent<VexforgeBattlefieldStage>();
+                }
+                return;
+            }
 
             var host = new GameObject("BattlePresentationHost");
             host.transform.SetParent(presentationHost.transform, false);
             battleDirector = host.AddComponent<BattlePresentationDirector>();
-
             var battlefieldObject = new GameObject("BattlefieldStage");
             battlefieldObject.transform.SetParent(host.transform, false);
             battlefieldObject.AddComponent<VexforgeBattlefieldStage>();

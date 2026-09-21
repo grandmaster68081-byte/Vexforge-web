@@ -62,12 +62,24 @@ namespace Vexforge.Tier1
             VexforgeBattlefieldStage stage=null;
             for(var i=0;i<600;i++)
             {
-                var directors=FindObjectsByType<BattlePresentationDirector>(FindObjectsInactive.Include,FindObjectsSortMode.None);
-                for(var j=0;j<directors.Length;j++)
+                var shells=FindObjectsByType<GameShellController>(FindObjectsInactive.Include,FindObjectsSortMode.None);
+                for(var j=0;j<shells.Length;j++)
                 {
-                    if(directors[j]==null||!directors[j].IsInitialized)continue;
-                    var candidateStage=directors[j].GetComponentInChildren<VexforgeBattlefieldStage>(true);
-                    if(candidateStage!=null){director=directors[j];stage=candidateStage;break;}
+                    if(shells[j]==null)continue;
+                    var candidate=shells[j].CanonicalBattlePresentation;
+                    if(candidate==null||!candidate.isActiveAndEnabled||!candidate.IsInitialized)continue;
+                    var candidateStage=candidate.GetComponentInChildren<VexforgeBattlefieldStage>(true);
+                    if(candidateStage!=null){director=candidate;stage=candidateStage;break;}
+                }
+                if(director==null)
+                {
+                    var directors=FindObjectsByType<BattlePresentationDirector>(FindObjectsInactive.Exclude,FindObjectsSortMode.None);
+                    for(var j=0;j<directors.Length;j++)
+                    {
+                        if(directors[j]==null||!directors[j].isActiveAndEnabled||!directors[j].IsInitialized)continue;
+                        var candidateStage=directors[j].GetComponentInChildren<VexforgeBattlefieldStage>(true);
+                        if(candidateStage!=null){director=directors[j];stage=candidateStage;break;}
+                    }
                 }
                 if(director!=null&&stage!=null)break;
                 yield return null;
