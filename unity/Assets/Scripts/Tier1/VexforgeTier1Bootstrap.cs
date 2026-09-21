@@ -87,7 +87,7 @@ namespace Vexforge.Tier1
             if(director==null||stage==null)
             {
                 Debug.LogWarning("VEXFORGE Tier1: canonical battle presentation was not discoverable within the startup window. No substitute combat engine is created.");
-                return;
+                yield break;
             }
             canonicalBattle=director;
             if(gate!=null)gate.BindCanonicalBattle(director);
