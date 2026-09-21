@@ -68,13 +68,14 @@ jobs:
           UNITY_VERSION: ${{ steps.unity-version.outputs.version }}
         run: |
           set -euo pipefail
-          editor_root="$RUNNER_TEMP/unity-editors"
-          mkdir -p "$editor_root"
-          /usr/lib/unityhub/unityhub --headless install-path -s "$editor_root"
+          export HOME="$RUNNER_TEMP/unity-home"
+          export XDG_CONFIG_HOME="$RUNNER_TEMP/unity-config"
+          export XDG_RUNTIME_DIR="$RUNNER_TEMP/unity-runtime"
+          mkdir -p "$HOME" "$XDG_CONFIG_HOME" "$XDG_RUNTIME_DIR"
           /usr/lib/unityhub/unityhub --headless install \
             --version "$UNITY_VERSION" \
             --module android android-sdk-ndk-tools android-open-jdk
-          editor="$(find "$editor_root" -type f -path "*/Editor/Unity" -print -quit)"
+          editor="$(find "$HOME/Unity/Hub/Editor" -type f -path "*/Editor/Unity" -print -quit 2>/dev/null || true)"
           test -x "$editor"
           echo "UNITY_EDITOR_PATH=$editor" >> "$GITHUB_ENV"
           echo "Unity Editor installed at $editor"
