@@ -8,7 +8,7 @@ Start here:
 **ACTIVE RUNTIME:** Unity 6.3 LTS target (`6000.3.0f1`)
 **BACKEND AUTHORITY:** Supabase
 **EXPO:** `FALLBACK / REFERENCE / PRESERVED`
-**WEB:** `FROZEN / NON-PRODUCT`
+**WEB:** `OFFICIAL PUBLIC PORTAL`
 
 El estado real implementado se describe desde `main`, no desde documentación histórica.
 
@@ -58,5 +58,4 @@ React Native client in `mobile/**` remains intact only as legacy/historical
 reference and rollback material. The web
 client in `src/**` and `public/**` is frozen and non-product.
 
-Unity work must not produce an APK, Android Player, Gradle build, or CI build
-until the Unity Personal license and the official build mechanism are reviewed.
+Unity work and the public portal are maintained as separate product surfaces.
