@@ -75,7 +75,7 @@ The generated license is checked only for readiness. Its contents are never echo
 
 The workflow invokes the installed Editor directly:
 
-The invocation is wrapped in a 180-minute step timeout. At exit it records the Editor exit code and elapsed seconds and prints the tail of `unity-editor.log`, so compiler, Gradle, and timeout failures remain visible in the GitHub job log as well as the uploaded artifact. The Editor is also run with `-accept-apiupdate` to avoid an interactive API-update prompt in batch mode.
+The invocation has no additional agent-imposed step timeout. It is allowed to run until Unity completes or returns an error, subject only to the workflow job's existing 360-minute maximum. At exit it records the Editor exit code and elapsed seconds and prints the tail of `unity-editor.log`, so compiler and Gradle failures remain visible in the GitHub job log as well as the uploaded artifact. The Editor is also run with `-accept-apiupdate` to avoid an interactive API-update prompt in batch mode.
 
 
     Unity -batchmode -nographics -quit
@@ -148,4 +148,5 @@ Those source corrections are now on `main`. Any future failure should first be c
 - Do not import the same ULF manually after the Licensing Client has already activated the runner.
 - Do not diagnose a compiler failure as a license failure when the activation step is green.
 - Keep the Editor version derived from `ProjectVersion.txt`; do not hardcode a different version in the workflow.
+- Do not cancel a long Unity build based only on elapsed time; wait for Unity to complete or return an error. The existing six-hour GitHub job limit remains the outer safety boundary.
 - Require the APK artifact and its digest before declaring the build complete.
