@@ -25,7 +25,7 @@ namespace Vexforge.Tier1
             var authenticated=app.Session!=null&&app.Session.IsAuthenticated;
             if(!authenticated){root.gameObject.SetActive(true);return;}
             var route=app.Navigation.CurrentRoute;
-            var tier1OwnsSurface=route==GameRoute.Nexus||route==GameRoute.Battle||route==GameRoute.Missions||route==GameRoute.Economy;
+            var tier1OwnsSurface=VexforgeTier1RouteOwnership.Owns(route);
             root.gameObject.SetActive(true);
             if(tier1OwnsSurface){root.gameObject.SetActive(false);return;}
             SuppressChromeOnly(root);

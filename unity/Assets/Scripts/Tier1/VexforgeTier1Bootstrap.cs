@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Reflection;
 using UnityEngine;
 using Vexforge.Core;
 using Vexforge.Presentation;
@@ -96,11 +95,9 @@ namespace Vexforge.Tier1
         private static VexforgeCardArtResolver FindCanonicalArtResolver()
         {
             var shells=FindObjectsByType<GameShellController>(FindObjectsInactive.Include,FindObjectsSortMode.None);
-            var field=typeof(GameShellController).GetField("artResolver",BindingFlags.Instance|BindingFlags.NonPublic);
-            if(field==null)return null;
             for(var i=0;i<shells.Length;i++)
             {
-                var value=field.GetValue(shells[i]) as VexforgeCardArtResolver;
+                var value=shells[i].CanonicalArtResolver;
                 if(value!=null)return value;
             }
             return null;

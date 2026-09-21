@@ -6,6 +6,7 @@ using Vexforge.Core;
 using Vexforge.GameState;
 using Vexforge.Presentation;
 using Vexforge.Session;
+using Vexforge.Tier1;
 
 namespace Vexforge.UI
 {
@@ -73,6 +74,17 @@ namespace Vexforge.UI
         {
             if (!initialized || app == null || canvas == null)
                 return;
+
+            if (VexforgeTier1RouteOwnership.Owns(route))
+            {
+                renderVersion++;
+                if (globalChatDock != null) globalChatDock.SetVisible(false);
+                if (route != GameRoute.Battle && battleDirector != null) battleDirector.StopAndHide();
+                if (world != null) world.SetRoute(route);
+                if (gallery != null) gallery.Hide();
+                Clear();
+                return;
+            }
 
             if (globalChatDock != null)
                 globalChatDock.SetVisible(app.Session != null && app.Session.IsAuthenticated);
@@ -185,17 +197,7 @@ namespace Vexforge.UI
 
         private void BuildBattleHud()
         {
-            AddRibbon("BATTLEFIELD  ·  ESTADO AUTORIZADO POR EL SERVIDOR", 0.075f);
-            AddHint("INTRODUCE EL OPONENTE Y ABRE EL DESAFÍO", 0.035f);
-
-            opponentInput = UiFactory.Input(root, "UUID DEL OPONENTE", false);
-            UiFactory.Anchor(opponentInput.GetComponent<RectTransform>(), new Vector2(0.10f, 0.15f), new Vector2(0.90f, 0.215f), Vector2.zero, Vector2.zero);
-
-            AddAction("ABRIR DESAFÍO", 0.075f, ResolveBattle);
-            AddBackButton(0.28f);
-
-            eventRibbon = UiFactory.Label(root, "", 13, UiFactory.Muted, TextAnchor.MiddleCenter);
-            UiFactory.Anchor(eventRibbon.rectTransform, new Vector2(0.17f, 0.875f), new Vector2(0.83f, 0.905f), Vector2.zero, Vector2.zero);
+            // Tier-1 BattleGate owns the battle entry surface. Legacy controls are intentionally absent.
         }
 
         private void BuildMissionHud()
@@ -373,61 +375,11 @@ namespace Vexforge.UI
             }
         }
 
-        private async void ResolveBattle()
+        [System.Obsolete("Legacy battle entry disabled. VexforgeTier1BattleGate owns Battle entry.")]
+        private void ResolveBattle()
         {
-            if (requestInFlight ||
-                (battleDirector != null && battleDirector.State == PresentationState.Playing) ||
-                opponentInput == null ||
-                string.IsNullOrWhiteSpace(opponentInput.text) ||
-                app.Session.Current == null)
-                return;
-
-            requestInFlight = true;
-            var version = renderVersion;
-            var route = app.Navigation.CurrentRoute;
-            var opponentId = opponentInput.text.Trim();
-            try
-            {
-                var result = await app.Repository.ResolveBattleAsync(
-                    app.GameState.PlayerId,
-                    opponentId,
-                    Guid.NewGuid().ToString("N"));
-
-                if (!IsCurrentRequest(version, route)) return;
-                if (result == null)
-                {
-                    AddTransientMessage("EL SERVIDOR NO DEVOLVIÓ RESULTADO");
-                    return;
-                }
-
-                if (!result.ok)
-                {
-                    AddTransientMessage(ValueOr(result.error, "BATALLA NO DISPONIBLE"));
-                    return;
-                }
-
-                if (battleDirector == null || !battleDirector.IsInitialized)
-                {
-                    AddTransientMessage("PRESENTACIÓN DE BATALLA NO INICIALIZADA");
-                    return;
-                }
-
-                if (battleDirector != null)
-                {
-                    battleDirector.SetLocalPlayerId(app.GameState.PlayerId);
-                    battleDirector.Play(result.events);
-                }
-            }
-            catch (Exception ex)
-            {
-                Debug.LogException(ex, this);
-                if (IsCurrentRequest(version, route))
-                    AddTransientMessage("BATALLA INTERRUMPIDA · " + ex.GetType().Name);
-            }
-            finally
-            {
-                requestInFlight = false;
-            }
+            var gate = FindFirstObjectByType<VexforgeTier1BattleGate>(FindObjectsInactive.Include);
+            if (gate != null) gate.Show();
         }
 
         private bool IsCurrentRequest(int version, GameRoute route)

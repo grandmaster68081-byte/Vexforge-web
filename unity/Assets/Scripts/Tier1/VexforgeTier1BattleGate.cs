@@ -9,16 +9,6 @@ using Vexforge.Presentation;
 
 namespace Vexforge.Tier1
 {
-    [Serializable]
-    internal sealed class Tier1PvpOpponentRecord
-    {
-        public string id;
-        public string player_id;
-        public string display_name;
-        public int mmr;
-        public int deck_size;
-    }
-
     public sealed class VexforgeTier1BattleGate : MonoBehaviour
     {
         private VexforgeApp app;
@@ -191,12 +181,8 @@ namespace Vexforge.Tier1
             if (canonicalBattle == null || !canonicalBattle.IsInitialized) { SetStatus("CAMPO DE BATALLA AÚN NO LISTO"); return; }
             try
             {
-                var client = app.Services.Resolve<SupabaseClient>();
-                if (client == null) { SetStatus("AUTORIDAD SUPABASE NO DISPONIBLE"); return; }
-                var response = await client.RpcAsync("get_pvp_opponents", "{\"p_limit\":8}");
+                var rows = await app.Repository.GetPvpOpponentsAsync(8);
                 if (!shown) return;
-                if (response == null || !response.Ok) { SetStatus("LA ARENA NO DEVOLVIÓ RIVALES"); return; }
-                var rows = JsonArrayUtility.FromJson<Tier1PvpOpponentRecord>(response.Body);
                 if (rows == null || rows.Length == 0) { SetStatus("NO HAY RIVALES REPORTADOS POR EL SERVIDOR"); return; }
                 Render(rows);
             }
@@ -207,7 +193,7 @@ namespace Vexforge.Tier1
             }
         }
 
-        private void Render(Tier1PvpOpponentRecord[] rows)
+        private void Render(PvpOpponentRecord[] rows)
         {
             ClearList();
             SetStatus("ELIGE UN RIVAL · DESPUÉS CONFIRMA EL DESAFÍO");

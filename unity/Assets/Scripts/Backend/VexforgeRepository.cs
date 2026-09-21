@@ -81,6 +81,13 @@ namespace Vexforge.Backend
             return Json<SaveDeckResult>(response);
         }
 
+        public async Task<PvpOpponentRecord[]> GetPvpOpponentsAsync(int limit = 8)
+        {
+            limit = Math.Max(1, Math.Min(limit, 16));
+            var response = await client.RpcAsync("get_pvp_opponents", "{\"p_limit\":" + limit + "}");
+            return Array<PvpOpponentRecord>(response);
+        }
+
         public async Task<BattleResult> ResolveBattleAsync(string challengerId, string opponentId, string idempotencyKey)
         {
             var json = "{\"p_challenger_id\":" + SupabaseClient.Quote(challengerId) +

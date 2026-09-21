@@ -10,6 +10,7 @@ using Vexforge.Core;
 using Vexforge.GameState;
 using Vexforge.Presentation;
 using Vexforge.Session;
+using Vexforge.Tier1;
 
 namespace Vexforge.UI
 {
@@ -45,6 +46,8 @@ namespace Vexforge.UI
         private bool built;
         private bool battlePresentationInitialized;
         private bool subscribed;
+
+        internal VexforgeCardArtResolver CanonicalArtResolver => artResolver;
 
         private async void Start()
         {
@@ -484,47 +487,8 @@ namespace Vexforge.UI
 
         private void BuildBattle()
         {
-            Title("BATTLEFIELD", "Arena de eventos · Supabase resuelve el combate");
-            AddReturnRune();
-
-            var board = UiFactory.PanelObject(
-                content,
-                "BattlefieldContext",
-                new Color(0.04f, 0.025f, 0.03f, 0.66f));
-
-            UiFactory.Anchor(
-                board.GetComponent<RectTransform>(),
-                new Vector2(0.05f, 0.38f),
-                new Vector2(0.95f, 0.76f),
-                Vector2.zero,
-                Vector2.zero);
-
-            var boardText = UiFactory.Label(
-                board.transform,
-                "ARENA EN ESPERA\n\nZONA DEL JUGADOR\n\n— NÚCLEO DE BATALLA —\n\nZONA DEL OPONENTE",
-                18,
-                UiFactory.Text,
-                TextAnchor.MiddleCenter);
-
-            UiFactory.Stretch(boardText.rectTransform, 10f, 10f, 10f, 10f);
-
-            MessageAt(
-                "Unity sólo envía intención y presenta eventos. No se crea un rival local ni se calcula un resultado.",
-                0.30f);
-
-            var opponentInput = UiFactory.Input(content, "UUID del oponente", false);
-            UiFactory.Anchor(
-                opponentInput.GetComponent<RectTransform>(),
-                new Vector2(0.08f, 0.17f),
-                new Vector2(0.92f, 0.25f),
-                Vector2.zero,
-                Vector2.zero);
-
-            ActionButton(
-                "ABRIR DESAFÍO",
-                GameRoute.Battle,
-                0.06f,
-                () => ResolveBattle(opponentInput.text));
+            var gate = FindFirstObjectByType<VexforgeTier1BattleGate>(FindObjectsInactive.Include);
+            if (gate != null) gate.Show();
         }
 
         private void BuildMissions()
@@ -729,45 +693,11 @@ namespace Vexforge.UI
                 0.30f);
         }
 
-        private async void ResolveBattle(string opponentId)
+        [System.Obsolete("Legacy battle entry disabled. VexforgeTier1BattleGate owns Battle entry.")]
+        private void ResolveBattle(string opponentId)
         {
-            if (string.IsNullOrWhiteSpace(opponentId) ||
-                app.Session.Current == null)
-            {
-                return;
-            }
-
-            var result = await app.Repository.ResolveBattleAsync(
-                app.GameState.PlayerId,
-                opponentId.Trim(),
-                Guid.NewGuid().ToString("N"));
-
-            if (result == null)
-            {
-                MessageAt("EL BACKEND NO DEVOLVIÓ RESULTADO", 0.22f);
-                return;
-            }
-
-            if (!result.ok)
-            {
-                MessageAt(
-                    ValueOr(result.error, "BATALLA NO DISPONIBLE"),
-                    0.22f);
-                return;
-            }
-
-            MessageAt(
-                "RESULTADO RECIBIDO · " +
-                ValueOr(result.status, "ESTADO NO REPORTADO"),
-                0.22f);
-
-            if (battleDirector == null || !battleDirector.IsInitialized)
-            {
-                MessageAt("PRESENTACIÓN DE BATALLA NO INICIALIZADA", 0.22f);
-                return;
-            }
-
-            battleDirector.Play(result.events);
+            var gate = FindFirstObjectByType<VexforgeTier1BattleGate>(FindObjectsInactive.Include);
+            if (gate != null) gate.Show();
         }
 
         private void PresentBattleEvent(BattleEvent battleEvent)
