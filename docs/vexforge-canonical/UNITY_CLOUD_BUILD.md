@@ -67,3 +67,8 @@ Automation policy:
 Auto-build OFF.
 Schedule OFF.
 Builds remain MANUAL.
+## Current executable path
+
+The current executable Unity Android path is the direct GitHub Actions workflow documented in [UNITY_BUILD_OPERATIONS.md](UNITY_BUILD_OPERATIONS.md). It installs the Editor with Unity CLI, keeps Unity Hub for licensing only, supports stored ULF or online Personal activation, invokes `Vexforge.Editor.VexforgeGitHubBuild.BuildAndroid`, verifies the APK, uploads evidence, and publishes a prerelease.
+
+Unity Cloud Build / Build Automation remains existing external infrastructure and is not called by that GitHub workflow. The existing project and Android target remain manual and must be reused, never recreated.
