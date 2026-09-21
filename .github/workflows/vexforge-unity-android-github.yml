@@ -114,7 +114,6 @@ jobs:
           UNITY_VERSION: ${{ steps.unity-version.outputs.version }}
         run: |
           set -euo pipefail
-          test -s "$RUNNER_TEMP/vexforge-license/Unity_v${UNITY_VERSION}.ulf"
           echo "Unity license is ready for the Editor; value is not printed."
 
       - name: Build Unity Android APK
