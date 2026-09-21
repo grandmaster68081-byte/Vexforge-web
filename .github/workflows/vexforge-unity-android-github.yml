@@ -49,16 +49,43 @@ jobs:
         with:
           node-version: "22"
 
-      - name: Prepare manual Unity license
+      - name: Install Unity Hub
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo install -d /etc/apt/keyrings
+          curl -fsSL https://hub.unity3d.com/linux/keys/public | sudo gpg --dearmor --yes -o /etc/apt/keyrings/unityhub.gpg
+          echo "deb [arch=amd64 signed-by=/etc/apt/keyrings/unityhub.gpg] https://hub.unity3d.com/linux/repos/deb stable main" | sudo tee /etc/apt/sources.list.d/unityhub.list
+          sudo apt-get update
+          sudo apt-get install -y unityhub
+
+      - name: Prepare Unity license directory
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/unity-home" "$RUNNER_TEMP/vexforge-license"
+
+      - name: Activate Unity license
+        uses: buildalon/activate-unity-license@v2
+        env:
+          HOME: ${{ runner.temp }}/unity-home
+          UNITY_HUB_PATH: /usr/lib/unityhub/unityhub
+          UNITY_COMMON_DIR: ${{ runner.temp }}/vexforge-license
+        with:
+          license: personal
+          username: ${{ secrets.UNITY_EMAIL }}
+          password: ${{ secrets.UNITY_PASSWORD }}
+          license-version: 6.x
+
+      - name: Verify generated Unity license
         shell: bash
         env:
           UNITY_VERSION: ${{ steps.unity-version.outputs.version }}
         run: |
           set -euo pipefail
-          mkdir -p "$RUNNER_TEMP/vexforge-license"
-          printf '%s' "$UNITY_ALF" > "$RUNNER_TEMP/vexforge-license/Unity_v${UNITY_VERSION}.ulf"
-          test -s "$RUNNER_TEMP/vexforge-license/Unity_v${UNITY_VERSION}.ulf"
-          echo "Prepared manual Unity license file; value is not printed."
+          test -s "$RUNNER_TEMP/vexforge-license/Unity_lic.ulf"
+          cp "$RUNNER_TEMP/vexforge-license/Unity_lic.ulf" "$RUNNER_TEMP/vexforge-license/Unity_v${UNITY_VERSION}.ulf"
+          echo "Unity generated a signed license file; value is not printed."
 
       - name: Build Unity Android APK
         shell: bash
