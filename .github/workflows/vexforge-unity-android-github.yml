@@ -63,23 +63,23 @@ jobs:
           sudo apt-get install -y unityhub
 
       - name: Install Unity Editor with Android module
-          shell: bash
-          env:
-            UNITY_VERSION: ${{ steps.unity-version.outputs.version }}
-          run: |
-            set -euo pipefail
-            editor_root="$RUNNER_TEMP/unity-editors"
-            mkdir -p "$editor_root"
-            /usr/lib/unityhub/unityhub --headless install-path -s "$editor_root"
-            /usr/lib/unityhub/unityhub --headless install \
-              --version "$UNITY_VERSION" \
-              --module android android-sdk-ndk-tools android-open-jdk
-            editor="$(find "$editor_root" -type f -path "*/Editor/Unity" -print -quit)"
-            test -x "$editor"
-            echo "UNITY_EDITOR_PATH=$editor" >> "$GITHUB_ENV"
-            echo "Unity Editor installed at $editor"
+        shell: bash
+        env:
+          UNITY_VERSION: ${{ steps.unity-version.outputs.version }}
+        run: |
+          set -euo pipefail
+          editor_root="$RUNNER_TEMP/unity-editors"
+          mkdir -p "$editor_root"
+          /usr/lib/unityhub/unityhub --headless install-path -s "$editor_root"
+          /usr/lib/unityhub/unityhub --headless install \
+            --version "$UNITY_VERSION" \
+            --module android android-sdk-ndk-tools android-open-jdk
+          editor="$(find "$editor_root" -type f -path "*/Editor/Unity" -print -quit)"
+          test -x "$editor"
+          echo "UNITY_EDITOR_PATH=$editor" >> "$GITHUB_ENV"
+          echo "Unity Editor installed at $editor"
 
-          - name: Prepare Unity license directory
+      - name: Prepare Unity license directory
         shell: bash
         run: |
           set -euo pipefail
@@ -108,7 +108,7 @@ jobs:
           UNITY_VERSION: ${{ steps.unity-version.outputs.version }}
         run: |
           set -euo pipefail
-          printf '%s' "$UNITY_LICENSE" > "$RUNNER_TEMP/vexforge-license/Unity_v${UNITY_VERSION}.ulf"
+          printf '%s' "$UNITY_LICENSE" > "$RUNNER_TEMP/vexforge-license/Unity_lic.ulf"
           test -s "$RUNNER_TEMP/vexforge-license/Unity_lic.ulf"
           echo "Stored Unity ULF license materialized without printing its value."
 
@@ -134,31 +134,31 @@ jobs:
           echo "Unity license is ready for the Editor; value is not printed."
 
       - name: Build Unity Android APK
-          shell: bash
-          env:
-            UNITY_VERSION: ${{ steps.unity-version.outputs.version }}
-            HOME: ${{ runner.temp }}/unity-home
-            UNITY_COMMON_DIR: ${{ runner.temp }}/vexforge-license
-          run: |
-            set -euo pipefail
-            mkdir -p build-artifacts
-            test -x "$UNITY_EDITOR_PATH"
-            "$UNITY_EDITOR_PATH" \
-              -batchmode \
-              -nographics \
-              -quit \
-              -manualLicenseFile "$RUNNER_TEMP/vexforge-license/Unity_lic.ulf" \
-              -logFile "$GITHUB_WORKSPACE/build-artifacts/license-import.log"
-            "$UNITY_EDITOR_PATH" \
-              -batchmode \
-              -nographics \
-              -quit \
-              -projectPath "$GITHUB_WORKSPACE/unity" \
-              -buildTarget Android \
-              -executeMethod Vexforge.Editor.VexforgeGitHubBuild.BuildAndroid \
-              -logFile "$GITHUB_WORKSPACE/build-artifacts/unity-editor.log"
+        shell: bash
+        env:
+          UNITY_VERSION: ${{ steps.unity-version.outputs.version }}
+          HOME: ${{ runner.temp }}/unity-home
+          UNITY_COMMON_DIR: ${{ runner.temp }}/vexforge-license
+        run: |
+          set -euo pipefail
+          mkdir -p build-artifacts
+          test -x "$UNITY_EDITOR_PATH"
+          "$UNITY_EDITOR_PATH" \
+            -batchmode \
+            -nographics \
+            -quit \
+            -manualLicenseFile "$RUNNER_TEMP/vexforge-license/Unity_lic.ulf" \
+            -logFile "$GITHUB_WORKSPACE/build-artifacts/license-import.log"
+          "$UNITY_EDITOR_PATH" \
+            -batchmode \
+            -nographics \
+            -quit \
+            -projectPath "$GITHUB_WORKSPACE/unity" \
+            -buildTarget Android \
+            -executeMethod Vexforge.Editor.VexforgeGitHubBuild.BuildAndroid \
+            -logFile "$GITHUB_WORKSPACE/build-artifacts/unity-editor.log"
 
-          - name: Verify APK
+      - name: Verify APK
         if: success()
         shell: bash
         run: |
