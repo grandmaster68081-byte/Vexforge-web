@@ -68,6 +68,22 @@ jobs:
           set -euo pipefail
           mkdir -p "$RUNNER_TEMP/unity-home" "$RUNNER_TEMP/vexforge-license"
 
+      - name: Normalize Unity ID email
+        shell: bash
+        run: |
+          set -euo pipefail
+          email="$(printf '%s' "$UNITY_EMAIL" | tr -d '\r\n')"
+          email="${email#\"}"
+          email="${email%\"}"
+          email="${email#\'}"
+          email="${email%\'}"
+          if [[ "$email" != *@*.* || "$email" == *[[:space:]]* ]]; then
+            echo "UNITY_EMAIL must be the Unity ID email address, without quotes or spaces." >&2
+            exit 1
+          fi
+          echo "::add-mask::$email"
+          printf 'UNITY_EMAIL_CLEAN=%s\n' "$email" >> "$GITHUB_ENV"
+
       - name: Install stored Unity license
         if: env.UNITY_LICENSE != ''
         shell: bash
@@ -88,7 +104,7 @@ jobs:
           UNITY_COMMON_DIR: ${{ runner.temp }}/vexforge-license
         with:
           license: personal
-          username: ${{ secrets.UNITY_EMAIL }}
+          username: ${{ env.UNITY_EMAIL_CLEAN }}
           password: ${{ secrets.UNITY_PASSWORD }}
           license-version: 6.x
 
