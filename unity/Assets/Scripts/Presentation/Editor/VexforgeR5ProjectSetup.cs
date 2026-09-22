@@ -42,6 +42,8 @@ namespace Vexforge.Presentation.Editor
                 EditorUtility.SetDirty(pipeline);
             }
 
+            Vexforge.Editor.VexforgeShaderStrippingSettings.ApplyForAndroid();
+
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
 
