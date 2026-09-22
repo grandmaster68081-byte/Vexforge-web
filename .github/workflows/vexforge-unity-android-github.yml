@@ -11,6 +11,7 @@ on:
         options:
           - normal
           - diagnostic
+          - baseline
           - inventory
           - shard
           - final
@@ -71,7 +72,7 @@ jobs:
         run: |
           set -euo pipefail
           case "$VEXFORGE_MODE" in
-            normal|diagnostic|inventory|shard|final) ;;
+            normal|diagnostic|baseline|inventory|shard|final) ;;
             *) echo "Unsupported VEXFORGE_MODE=$VEXFORGE_MODE" >&2; exit 1 ;;
           esac
           [[ "$SHARD_COUNT" =~ ^[0-9]+$ ]]
@@ -255,6 +256,11 @@ jobs:
           mkdir -p build-artifacts
           test -x "$UNITY_EDITOR_PATH"
           case "$VEXFORGE_MODE" in
+            baseline)
+              method="Vexforge.Editor.VexforgeShaderShardBuild.InventoryBaselineShaders"
+              editor_log="$GITHUB_WORKSPACE/build-artifacts/unity-baseline-editor.log"
+              export VEXFORGE_SHADER_PROFILE=baseline
+              ;;
             inventory)
               method="Vexforge.Editor.VexforgeShaderShardBuild.InventoryShaders"
               editor_log="$GITHUB_WORKSPACE/build-artifacts/unity-inventory-editor.log"
@@ -325,7 +331,7 @@ jobs:
           } | tee build-artifacts/shader-cache-observations.txt
 
       - name: Validate inventory evidence
-        if: ${{ inputs.mode == 'inventory' || inputs.mode == 'diagnostic' }}
+        if: ${{ inputs.mode == 'baseline' || inputs.mode == 'inventory' || inputs.mode == 'diagnostic' }}
         shell: bash
         run: |
           set -euo pipefail

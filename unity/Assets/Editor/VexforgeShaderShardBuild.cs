@@ -177,6 +177,11 @@ namespace Vexforge.Editor
             RunInventory("diagnostic");
         }
 
+        public static void InventoryBaselineShaders()
+        {
+            RunInventory("baseline");
+        }
+
         public static void WarmShaderShard()
         {
             var configuration = ReadConfiguration();

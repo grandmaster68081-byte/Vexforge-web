@@ -20,8 +20,22 @@ namespace Vexforge.Editor
         private const string GlobalSettingsTypeName =
             "UnityEngine.Rendering.Universal.UniversalRenderPipelineGlobalSettings";
 
+        public static bool IsBaselineProfile =>
+            string.Equals(
+                Environment.GetEnvironmentVariable("VEXFORGE_SHADER_PROFILE"),
+                "baseline",
+                StringComparison.OrdinalIgnoreCase);
+
         public static void ApplyForAndroid()
         {
+            if (IsBaselineProfile)
+            {
+                Debug.Log(
+                    "VEXFORGE shader stripping: baseline profile selected; " +
+                    "safe optimization settings are not applied.");
+                return;
+            }
+
             if (EditorUserBuildSettings.activeBuildTarget != BuildTarget.Android)
             {
                 Debug.Log(
