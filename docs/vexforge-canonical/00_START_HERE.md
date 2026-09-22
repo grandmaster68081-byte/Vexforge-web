@@ -4,6 +4,7 @@ Una IA nueva debe leer en este orden:
 
 1. `VEXFORGE_CONTEXT.md`
 2. `docs/vexforge-canonical/UNITY_CLOUD_BUILD.md`
+3. `docs/vexforge-canonical/UNITY_INCREMENTAL_VARIANT_BATCHES.md` — canonical 2% batch policy and safety gates
 3. este archivo
 4. `16_IMPLEMENTATION_STATUS.md`
 5. `17_CURRENT_BLOCK.md`
