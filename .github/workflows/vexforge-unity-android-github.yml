@@ -24,6 +24,16 @@ on:
         required: true
         default: "0"
         type: string
+      range_start_bps:
+        description: "Inclusive shader hash range start in basis points of the 0-10000 hash space"
+        required: true
+        default: "0"
+        type: string
+      range_end_bps:
+        description: "Exclusive shader hash range end in basis points of the 0-10000 hash space"
+        required: true
+        default: "200"
+        type: string
       checkpoint_run_id:
         description: "Previous canonical workflow run id to restore"
         required: false
@@ -50,6 +60,8 @@ jobs:
       VEXFORGE_MODE: ${{ inputs.mode }}
       SHARD_COUNT: ${{ inputs.shard_count }}
       SHARD_INDEX: ${{ inputs.shard_index }}
+      RANGE_START_BPS: ${{ inputs.range_start_bps }}
+      RANGE_END_BPS: ${{ inputs.range_end_bps }}
       CHECKPOINT_RUN_ID: ${{ inputs.checkpoint_run_id }}
       CHECKPOINT_ARTIFACT_ID: ${{ inputs.checkpoint_artifact_id }}
 
@@ -64,9 +76,14 @@ jobs:
           esac
           [[ "$SHARD_COUNT" =~ ^[0-9]+$ ]]
           [[ "$SHARD_INDEX" =~ ^[0-9]+$ ]]
+          [[ "$RANGE_START_BPS" =~ ^[0-9]+$ ]]
+          [[ "$RANGE_END_BPS" =~ ^[0-9]+$ ]]
           test "$SHARD_COUNT" -ge 2
           test "$SHARD_COUNT" -le 100
           test "$SHARD_INDEX" -lt "$SHARD_COUNT"
+          test "$RANGE_START_BPS" -ge 0
+          test "$RANGE_END_BPS" -le 10000
+          test "$RANGE_START_BPS" -lt "$RANGE_END_BPS"
           if [ -n "$CHECKPOINT_RUN_ID" ] || [ -n "$CHECKPOINT_ARTIFACT_ID" ]; then
             test -n "$CHECKPOINT_RUN_ID" || { echo "checkpoint_run_id is required with checkpoint_artifact_id" >&2; exit 1; }
             test -n "$CHECKPOINT_ARTIFACT_ID" || { echo "checkpoint_artifact_id is required with checkpoint_run_id" >&2; exit 1; }
@@ -74,9 +91,15 @@ jobs:
             [[ "$CHECKPOINT_ARTIFACT_ID" =~ ^[0-9]+$ ]]
           fi
           if [ "$VEXFORGE_MODE" = shard ] || [ "$VEXFORGE_MODE" = final ]; then
-            echo "Operation $VEXFORGE_MODE uses shard_count=$SHARD_COUNT shard_index=$SHARD_INDEX."
+            expected_start=$(( SHARD_INDEX * 10000 / SHARD_COUNT ))
+            expected_end=$(( (SHARD_INDEX + 1) * 10000 / SHARD_COUNT ))
+            if [ "$VEXFORGE_MODE" = shard ]; then
+              test "$RANGE_START_BPS" -eq "$expected_start"
+              test "$RANGE_END_BPS" -eq "$expected_end"
+            fi
+            echo "Operation $VEXFORGE_MODE uses shard_count=$SHARD_COUNT shard_index=$SHARD_INDEX range=${RANGE_START_BPS}-${RANGE_END_BPS}bps."
           else
-            echo "Operation $VEXFORGE_MODE does not filter shader variants."
+            echo "Operation $VEXFORGE_MODE does not filter shader variants; range=${RANGE_START_BPS}-${RANGE_END_BPS}bps is recorded only."
           fi
 
       - name: Verify Unity license inputs
@@ -246,6 +269,8 @@ jobs:
               export VEXFORGE_SHADER_SHARD_MODE=warm
               export VEXFORGE_SHADER_SHARD_INDEX="$SHARD_INDEX"
               export VEXFORGE_SHADER_SHARD_COUNT="$SHARD_COUNT"
+              export VEXFORGE_SHADER_RANGE_START_BPS="$RANGE_START_BPS"
+              export VEXFORGE_SHADER_RANGE_END_BPS="$RANGE_END_BPS"
               ;;
             normal|final)
               method="Vexforge.Editor.VexforgeShaderShardBuild.BuildAndroid"
@@ -282,6 +307,8 @@ jobs:
           mkdir -p build-artifacts
           {
             echo "mode=$VEXFORGE_MODE"
+            echo "range_start_bps=$RANGE_START_BPS"
+            echo "range_end_bps=$RANGE_END_BPS"
             echo "shader_cache_directory=unity/Library/ShaderCache"
             if [ -d unity/Library/ShaderCache ]; then
               echo "cache_files=$(find unity/Library/ShaderCache -type f | wc -l | tr -d ' ')"
@@ -319,6 +346,8 @@ jobs:
           test -s "$summary"
           test -s "$manifest"
           grep -qE '"buildResult"[[:space:]]*:[[:space:]]*"Succeeded"' "$summary"
+          grep -qE '"rangeStartBps"[[:space:]]*:[[:space:]]*'"$RANGE_START_BPS" "$summary"
+          grep -qE '"rangeEndBps"[[:space:]]*:[[:space:]]*'"$RANGE_END_BPS" "$summary"
           entries="$(find unity/Builds/ShaderShardWarmup/checkpoints/variants -type f -name '*.tsv' -print0 | xargs -0 awk 'NR > 1 {print $1}' | wc -l | tr -d ' ')"
           unique="$(find unity/Builds/ShaderShardWarmup/checkpoints/variants -type f -name '*.tsv' -print0 | xargs -0 awk 'NR > 1 {print $1}' | sort -u | wc -l | tr -d ' ')"
           test "$entries" -eq "$unique"
@@ -384,7 +413,7 @@ jobs:
         if: ${{ inputs.mode == 'shard' && success() }}
         uses: actions/upload-artifact@v4
         with:
-          name: vexforge-shader-checkpoint-${{ github.sha }}-${{ inputs.shard_count }}-${{ inputs.shard_index }}
+          name: vexforge-shader-checkpoint-${{ github.sha }}-${{ inputs.range_start_bps }}-${{ inputs.range_end_bps }}
           path: build-artifacts/checkpoint-upload/**
           if-no-files-found: error
           retention-days: 14

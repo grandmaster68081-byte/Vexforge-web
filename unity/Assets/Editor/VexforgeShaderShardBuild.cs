@@ -22,6 +22,8 @@ namespace Vexforge.Editor
         internal static bool InventoryOnly { get; private set; }
         internal static int ShardIndex { get; private set; }
         internal static int ShardCount { get; private set; }
+        internal static int RangeStartBps { get; private set; }
+        internal static int RangeEndBps { get; private set; }
 
         internal static long SeenVariants { get; private set; }
         internal static long SelectedVariants { get; private set; }
@@ -29,12 +31,18 @@ namespace Vexforge.Editor
         internal static long ProcessedSnippets { get; private set; }
         internal static IReadOnlyCollection<string> Fingerprints => FingerprintEntries;
 
-        internal static void EnableShard(int shardIndex, int shardCount)
+        internal static void EnableShard(
+            int shardIndex,
+            int shardCount,
+            int rangeStartBps,
+            int rangeEndBps)
         {
             Enabled = true;
             InventoryOnly = false;
             ShardIndex = shardIndex;
             ShardCount = shardCount;
+            RangeStartBps = rangeStartBps;
+            RangeEndBps = rangeEndBps;
             ResetCounters();
         }
 
@@ -44,6 +52,8 @@ namespace Vexforge.Editor
             InventoryOnly = true;
             ShardIndex = -1;
             ShardCount = 0;
+            RangeStartBps = 0;
+            RangeEndBps = VexforgeShaderShardBuild.HashSpaceBps;
             ResetCounters();
         }
 
@@ -51,6 +61,8 @@ namespace Vexforge.Editor
         {
             Enabled = false;
             InventoryOnly = false;
+            RangeStartBps = 0;
+            RangeEndBps = 0;
             FingerprintEntries.Clear();
         }
 
@@ -106,15 +118,21 @@ namespace Vexforge.Editor
                     VexforgeShaderShardContext.InventoryOnly
                         ? VexforgeShaderShardBuild.InventoryShardCount
                         : VexforgeShaderShardContext.ShardCount);
+                var hashBucket = VexforgeShaderShardBuild.GetHashBucket(key);
 
                 VexforgeShaderShardContext.RecordVariant(
                     VexforgeShaderShardBuild.CreateVariantFingerprint(key),
-                    assignedShard);
+                    VexforgeShaderShardContext.InventoryOnly
+                        ? assignedShard
+                        : hashBucket);
 
                 if (VexforgeShaderShardContext.InventoryOnly)
                     continue;
 
-                if (assignedShard == VexforgeShaderShardContext.ShardIndex)
+                if (VexforgeShaderShardBuild.IsInRange(
+                    hashBucket,
+                    VexforgeShaderShardContext.RangeStartBps,
+                    VexforgeShaderShardContext.RangeEndBps))
                 {
                     selected++;
                 }
@@ -143,6 +161,7 @@ namespace Vexforge.Editor
     {
         private const string WarmupMode = "warm";
         private const int MaxShardCount = 100;
+        internal const int HashSpaceBps = 10000;
 
         // Inventory uses a fixed partition only to make the manifest useful for
         // planning. Inventory itself never strips a variant from the manifest.
@@ -179,7 +198,9 @@ namespace Vexforge.Editor
 
             VexforgeShaderShardContext.EnableShard(
                 configuration.ShardIndex,
-                configuration.ShardCount);
+                configuration.ShardCount,
+                configuration.RangeStartBps,
+                configuration.RangeEndBps);
 
             BuildReport report = null;
             Exception failure = null;
@@ -213,6 +234,7 @@ namespace Vexforge.Editor
             Debug.Log(
                 $"VEXFORGE shader shard PASS " +
                 $"index={configuration.ShardIndex} count={configuration.ShardCount} " +
+                    $"range={configuration.RangeStartBps}-{configuration.RangeEndBps}bps " +
                 $"seen={VexforgeShaderShardContext.SeenVariants} " +
                 $"selected={VexforgeShaderShardContext.SelectedVariants} " +
                 $"removed={VexforgeShaderShardContext.RemovedVariants}");
@@ -301,6 +323,27 @@ namespace Vexforge.Editor
                     | hash[3];
                 return (int)(unsigned % (uint)shardCount);
             }
+        }
+
+        internal static int GetHashBucket(string variantKey)
+        {
+            using (var sha256 = SHA256.Create())
+            {
+                var hash = sha256.ComputeHash(Encoding.UTF8.GetBytes(variantKey));
+                var unsigned = ((uint)hash[0] << 24)
+                    | ((uint)hash[1] << 16)
+                    | ((uint)hash[2] << 8)
+                    | hash[3];
+                return (int)(unsigned % HashSpaceBps);
+            }
+        }
+
+        internal static bool IsInRange(
+            int hashBucket,
+            int rangeStartBps,
+            int rangeEndBps)
+        {
+            return hashBucket >= rangeStartBps && hashBucket < rangeEndBps;
         }
 
         private static void RunInventory(string analysisMode)
@@ -418,6 +461,8 @@ namespace Vexforge.Editor
                 analysisMode = analysisMode,
                 shardIndex = -1,
                 shardCount = InventoryShardCount,
+                rangeStartBps = 0,
+                rangeEndBps = HashSpaceBps,
                 editorVersion = Application.unityVersion,
                 buildTarget = EditorUserBuildSettings.activeBuildTarget.ToString(),
                 outputPath = outputPath,
@@ -447,6 +492,8 @@ namespace Vexforge.Editor
                 analysisMode = WarmupMode,
                 shardIndex = configuration.ShardIndex,
                 shardCount = configuration.ShardCount,
+                rangeStartBps = configuration.RangeStartBps,
+                rangeEndBps = configuration.RangeEndBps,
                 editorVersion = Application.unityVersion,
                 buildTarget = EditorUserBuildSettings.activeBuildTarget.ToString(),
                 outputPath = outputPath,
@@ -498,7 +545,7 @@ namespace Vexforge.Editor
             var manifestPath = Path.Combine(manifestDirectory, fileName);
             var lines = new List<string>
             {
-                "fingerprint\tassigned_shard\tunity_version\tbuild_target"
+                "fingerprint\tassigned_partition\tunity_version\tbuild_target"
             };
 
             lines.AddRange(
@@ -514,12 +561,16 @@ namespace Vexforge.Editor
         {
             internal readonly int ShardIndex;
             internal readonly int ShardCount;
+            internal readonly int RangeStartBps;
+            internal readonly int RangeEndBps;
             internal readonly string Mode;
 
             internal ShaderShardConfiguration(int shardIndex, int shardCount, string mode)
             {
                 ShardIndex = shardIndex;
                 ShardCount = shardCount;
+                RangeStartBps = ReadInt("VEXFORGE_SHADER_RANGE_START_BPS", -1);
+                RangeEndBps = ReadInt("VEXFORGE_SHADER_RANGE_END_BPS", -1);
                 Mode = mode;
             }
 
@@ -543,6 +594,24 @@ namespace Vexforge.Editor
                     throw new InvalidOperationException(
                         $"VEXFORGE shader shard index {ShardIndex} is outside 0..{ShardCount - 1}.");
                 }
+
+                if (RangeStartBps < 0
+                    || RangeEndBps > HashSpaceBps
+                    || RangeStartBps >= RangeEndBps)
+                {
+                    throw new InvalidOperationException(
+                        $"VEXFORGE shader range must satisfy 0 <= start < end <= {HashSpaceBps}.");
+                }
+
+                var expectedStart = ShardIndex * HashSpaceBps / ShardCount;
+                var expectedEnd = (ShardIndex + 1) * HashSpaceBps / ShardCount;
+                if (RangeStartBps != expectedStart || RangeEndBps != expectedEnd)
+                {
+                    throw new InvalidOperationException(
+                        $"VEXFORGE shader range {RangeStartBps}-{RangeEndBps}bps " +
+                        $"does not match shard {ShardIndex}/{ShardCount}; " +
+                        $"expected {expectedStart}-{expectedEnd}bps.");
+                }
             }
         }
 
@@ -552,6 +621,8 @@ namespace Vexforge.Editor
             public string analysisMode;
             public int shardIndex;
             public int shardCount;
+            public int rangeStartBps;
+            public int rangeEndBps;
             public string editorVersion;
             public string buildTarget;
             public string outputPath;
