@@ -15,7 +15,11 @@ namespace Vexforge.Editor
 {
     internal static class VexforgeShaderShardContext
     {
+        private static readonly HashSet<string> FingerprintEntries = new HashSet<string>(
+            StringComparer.Ordinal);
+
         internal static bool Enabled { get; private set; }
+        internal static bool InventoryOnly { get; private set; }
         internal static int ShardIndex { get; private set; }
         internal static int ShardCount { get; private set; }
 
@@ -23,21 +27,39 @@ namespace Vexforge.Editor
         internal static long SelectedVariants { get; private set; }
         internal static long RemovedVariants { get; private set; }
         internal static long ProcessedSnippets { get; private set; }
+        internal static IReadOnlyCollection<string> Fingerprints => FingerprintEntries;
 
-        internal static void Enable(int shardIndex, int shardCount)
+        internal static void EnableShard(int shardIndex, int shardCount)
         {
             Enabled = true;
+            InventoryOnly = false;
             ShardIndex = shardIndex;
             ShardCount = shardCount;
-            SeenVariants = 0;
-            SelectedVariants = 0;
-            RemovedVariants = 0;
-            ProcessedSnippets = 0;
+            ResetCounters();
+        }
+
+        internal static void EnableInventory()
+        {
+            Enabled = true;
+            InventoryOnly = true;
+            ShardIndex = -1;
+            ShardCount = 0;
+            ResetCounters();
         }
 
         internal static void Disable()
         {
             Enabled = false;
+            InventoryOnly = false;
+            FingerprintEntries.Clear();
+        }
+
+        internal static void RecordVariant(
+            string fingerprint,
+            int assignedShard)
+        {
+            if (InventoryOnly || assignedShard == ShardIndex)
+                FingerprintEntries.Add($"{fingerprint}\t{assignedShard}");
         }
 
         internal static void Record(int seen, int selected, int removed)
@@ -46,6 +68,15 @@ namespace Vexforge.Editor
             SeenVariants += seen;
             SelectedVariants += selected;
             RemovedVariants += removed;
+        }
+
+        private static void ResetCounters()
+        {
+            SeenVariants = 0;
+            SelectedVariants = 0;
+            RemovedVariants = 0;
+            ProcessedSnippets = 0;
+            FingerprintEntries.Clear();
         }
     }
 
@@ -70,9 +101,20 @@ namespace Vexforge.Editor
                     shader,
                     snippet,
                     data[index]);
+                var assignedShard = VexforgeShaderShardBuild.GetShardIndex(
+                    key,
+                    VexforgeShaderShardContext.InventoryOnly
+                        ? VexforgeShaderShardBuild.InventoryShardCount
+                        : VexforgeShaderShardContext.ShardCount);
 
-                if (VexforgeShaderShardBuild.GetShardIndex(key, VexforgeShaderShardContext.ShardCount)
-                    == VexforgeShaderShardContext.ShardIndex)
+                VexforgeShaderShardContext.RecordVariant(
+                    VexforgeShaderShardBuild.CreateVariantFingerprint(key),
+                    assignedShard);
+
+                if (VexforgeShaderShardContext.InventoryOnly)
+                    continue;
+
+                if (assignedShard == VexforgeShaderShardContext.ShardIndex)
                 {
                     selected++;
                 }
@@ -82,10 +124,18 @@ namespace Vexforge.Editor
                 }
             }
 
-            VexforgeShaderShardContext.Record(
-                seen,
-                selected,
-                seen - selected);
+            if (VexforgeShaderShardContext.InventoryOnly)
+            {
+                data.Clear();
+                VexforgeShaderShardContext.Record(seen, 0, seen);
+            }
+            else
+            {
+                VexforgeShaderShardContext.Record(
+                    seen,
+                    selected,
+                    seen - selected);
+            }
         }
     }
 
@@ -93,6 +143,20 @@ namespace Vexforge.Editor
     {
         private const string WarmupMode = "warm";
         private const int MaxShardCount = 100;
+
+        // Inventory uses a fixed partition only to make the manifest useful for
+        // planning. Inventory itself never strips a variant from the manifest.
+        internal const int InventoryShardCount = 100;
+
+        public static void InventoryShaders()
+        {
+            RunInventory("inventory");
+        }
+
+        public static void DiagnoseShaders()
+        {
+            RunInventory("diagnostic");
+        }
 
         public static void WarmShaderShard()
         {
@@ -113,7 +177,7 @@ namespace Vexforge.Editor
             if (File.Exists(outputPath))
                 File.Delete(outputPath);
 
-            VexforgeShaderShardContext.Enable(
+            VexforgeShaderShardContext.EnableShard(
                 configuration.ShardIndex,
                 configuration.ShardCount);
 
@@ -130,6 +194,9 @@ namespace Vexforge.Editor
             finally
             {
                 WriteSummary(projectRoot, configuration, outputPath, report, failure);
+                WriteVariantManifest(
+                    projectRoot,
+                    $"shard-{configuration.ShardIndex:D3}-of-{configuration.ShardCount:D3}.tsv");
                 VexforgeShaderShardContext.Disable();
             }
 
@@ -146,6 +213,7 @@ namespace Vexforge.Editor
             Debug.Log(
                 $"VEXFORGE shader shard PASS " +
                 $"index={configuration.ShardIndex} count={configuration.ShardCount} " +
+                $"seen={VexforgeShaderShardContext.SeenVariants} " +
                 $"selected={VexforgeShaderShardContext.SelectedVariants} " +
                 $"removed={VexforgeShaderShardContext.RemovedVariants}");
         }
@@ -199,11 +267,27 @@ namespace Vexforge.Editor
 
             return string.Join(
                 "|",
+                Application.unityVersion,
+                EditorUserBuildSettings.activeBuildTarget,
                 shader.name,
                 snippet.shaderType,
                 snippet.passType,
                 snippet.passName ?? string.Empty,
+                compilerData.shaderCompilerPlatform,
+                compilerData.graphicsTier,
+                compilerData.shaderRequirements,
                 string.Join(",", keywords));
+        }
+
+        internal static string CreateVariantFingerprint(string variantKey)
+        {
+            using (var sha256 = SHA256.Create())
+            {
+                var hash = sha256.ComputeHash(Encoding.UTF8.GetBytes(variantKey));
+                return BitConverter.ToString(hash)
+                    .Replace("-", string.Empty)
+                    .ToLowerInvariant();
+            }
         }
 
         internal static int GetShardIndex(string variantKey, int shardCount)
@@ -211,9 +295,71 @@ namespace Vexforge.Editor
             using (var sha256 = SHA256.Create())
             {
                 var hash = sha256.ComputeHash(Encoding.UTF8.GetBytes(variantKey));
-                var unsigned = BitConverter.ToUInt32(hash, 0);
+                var unsigned = ((uint)hash[0] << 24)
+                    | ((uint)hash[1] << 16)
+                    | ((uint)hash[2] << 8)
+                    | hash[3];
                 return (int)(unsigned % (uint)shardCount);
             }
+        }
+
+        private static void RunInventory(string analysisMode)
+        {
+            var projectRoot = Directory.GetParent(Application.dataPath).FullName;
+            var outputDirectory = Path.Combine(
+                projectRoot,
+                "Builds",
+                "ShaderShardWarmup",
+                "inventory");
+            var outputPath = Path.Combine(
+                outputDirectory,
+                $"VEXFORGE-{analysisMode}.apk");
+
+            Directory.CreateDirectory(outputDirectory);
+            if (File.Exists(outputPath))
+                File.Delete(outputPath);
+
+            VexforgeShaderShardContext.EnableInventory();
+
+            BuildReport report = null;
+            Exception failure = null;
+            long seenVariants = 0;
+            int uniqueFingerprints = 0;
+            try
+            {
+                report = BuildAndroidInternal(outputPath);
+            }
+            catch (Exception exception)
+            {
+                failure = exception;
+            }
+            finally
+            {
+                WriteAnalysisSummary(
+                    projectRoot,
+                    analysisMode,
+                    outputPath,
+                    report,
+                    failure);
+                WriteVariantManifest(projectRoot, $"{analysisMode}.tsv");
+
+                seenVariants = VexforgeShaderShardContext.SeenVariants;
+                uniqueFingerprints = VexforgeShaderShardContext.Fingerprints.Count;
+                VexforgeShaderShardContext.Disable();
+
+                if (seenVariants == 0 && failure != null)
+                    throw failure;
+                if (seenVariants == 0)
+                {
+                    throw new InvalidOperationException(
+                        $"VEXFORGE {analysisMode} did not observe any shader variants.");
+                }
+            }
+
+            Debug.Log(
+                $"VEXFORGE shader {analysisMode} PASS " +
+                $"seen={seenVariants} " +
+                $"unique={uniqueFingerprints}");
         }
 
         private static BuildReport BuildAndroidInternal(string outputPath)
@@ -260,6 +406,35 @@ namespace Vexforge.Editor
             return int.TryParse(value, out var parsed) ? parsed : fallback;
         }
 
+        private static void WriteAnalysisSummary(
+            string projectRoot,
+            string analysisMode,
+            string outputPath,
+            BuildReport report,
+            Exception failure)
+        {
+            var summary = new ShaderShardSummary
+            {
+                analysisMode = analysisMode,
+                shardIndex = -1,
+                shardCount = InventoryShardCount,
+                editorVersion = Application.unityVersion,
+                buildTarget = EditorUserBuildSettings.activeBuildTarget.ToString(),
+                outputPath = outputPath,
+                buildResult = report?.summary.result.ToString() ?? "Exception",
+                warnings = report?.summary.totalWarnings ?? 0,
+                errors = report?.summary.totalErrors ?? 0,
+                seenVariants = VexforgeShaderShardContext.SeenVariants,
+                selectedVariants = VexforgeShaderShardContext.SelectedVariants,
+                removedVariants = VexforgeShaderShardContext.RemovedVariants,
+                processedSnippets = VexforgeShaderShardContext.ProcessedSnippets,
+                uniqueFingerprints = VexforgeShaderShardContext.Fingerprints.Count,
+                failure = failure?.GetBaseException().Message ?? string.Empty
+            };
+
+            WriteSummaryFile(projectRoot, $"{analysisMode}.json", summary);
+        }
+
         private static void WriteSummary(
             string projectRoot,
             ShaderShardConfiguration configuration,
@@ -269,6 +444,7 @@ namespace Vexforge.Editor
         {
             var summary = new ShaderShardSummary
             {
+                analysisMode = WarmupMode,
                 shardIndex = configuration.ShardIndex,
                 shardCount = configuration.ShardCount,
                 editorVersion = Application.unityVersion,
@@ -281,9 +457,21 @@ namespace Vexforge.Editor
                 selectedVariants = VexforgeShaderShardContext.SelectedVariants,
                 removedVariants = VexforgeShaderShardContext.RemovedVariants,
                 processedSnippets = VexforgeShaderShardContext.ProcessedSnippets,
+                uniqueFingerprints = VexforgeShaderShardContext.Fingerprints.Count,
                 failure = failure?.GetBaseException().Message ?? string.Empty
             };
 
+            WriteSummaryFile(
+                projectRoot,
+                $"vexforge-shader-shard-{configuration.ShardIndex:D3}-of-{configuration.ShardCount:D3}.json",
+                summary);
+        }
+
+        private static void WriteSummaryFile(
+            string projectRoot,
+            string fileName,
+            ShaderShardSummary summary)
+        {
             var summaryDirectory = Path.Combine(
                 projectRoot,
                 "Builds",
@@ -291,10 +479,35 @@ namespace Vexforge.Editor
                 "checkpoints");
             Directory.CreateDirectory(summaryDirectory);
 
-            var summaryPath = Path.Combine(
-                summaryDirectory,
-                $"vexforge-shader-shard-{configuration.ShardIndex:D3}-of-{configuration.ShardCount:D3}.json");
+            var summaryPath = Path.Combine(summaryDirectory, fileName);
             File.WriteAllText(summaryPath, JsonUtility.ToJson(summary, true));
+        }
+
+        private static void WriteVariantManifest(
+            string projectRoot,
+            string fileName)
+        {
+            var manifestDirectory = Path.Combine(
+                projectRoot,
+                "Builds",
+                "ShaderShardWarmup",
+                "checkpoints",
+                "variants");
+            Directory.CreateDirectory(manifestDirectory);
+
+            var manifestPath = Path.Combine(manifestDirectory, fileName);
+            var lines = new List<string>
+            {
+                "fingerprint\tassigned_shard\tunity_version\tbuild_target"
+            };
+
+            lines.AddRange(
+                VexforgeShaderShardContext.Fingerprints
+                    .OrderBy(entry => entry, StringComparer.Ordinal)
+                    .Select(entry =>
+                        $"{entry}\t{Application.unityVersion}\t" +
+                        $"{EditorUserBuildSettings.activeBuildTarget}"));
+            File.WriteAllLines(manifestPath, lines);
         }
 
         private sealed class ShaderShardConfiguration
@@ -336,6 +549,7 @@ namespace Vexforge.Editor
         [Serializable]
         private sealed class ShaderShardSummary
         {
+            public string analysisMode;
             public int shardIndex;
             public int shardCount;
             public string editorVersion;
@@ -348,6 +562,7 @@ namespace Vexforge.Editor
             public long selectedVariants;
             public long removedVariants;
             public long processedSnippets;
+            public int uniqueFingerprints;
             public string failure;
         }
     }

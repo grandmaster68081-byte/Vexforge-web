@@ -1,13 +1,42 @@
 name: Build VEXFORGE Unity Android on GitHub
 
 on:
-  workflow_dispatch: {}
-  push:
-    paths:
-      - "unity/**"
-      - ".github/workflows/vexforge-unity-android-github.yml"
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "Canonical Unity operation"
+        required: true
+        default: normal
+        type: choice
+        options:
+          - normal
+          - diagnostic
+          - inventory
+          - shard
+          - final
+      shard_count:
+        description: "Deterministic shard count for shard mode"
+        required: true
+        default: "50"
+        type: string
+      shard_index:
+        description: "Zero-based shard index for shard mode"
+        required: true
+        default: "0"
+        type: string
+      checkpoint_run_id:
+        description: "Previous canonical workflow run id to restore"
+        required: false
+        default: ""
+        type: string
+      checkpoint_artifact_id:
+        description: "Artifact id containing the previous shader checkpoint"
+        required: false
+        default: ""
+        type: string
 
 permissions:
+  actions: read
   contents: write
 
 jobs:
@@ -18,8 +47,38 @@ jobs:
       UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
       UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
       UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+      VEXFORGE_MODE: ${{ inputs.mode }}
+      SHARD_COUNT: ${{ inputs.shard_count }}
+      SHARD_INDEX: ${{ inputs.shard_index }}
+      CHECKPOINT_RUN_ID: ${{ inputs.checkpoint_run_id }}
+      CHECKPOINT_ARTIFACT_ID: ${{ inputs.checkpoint_artifact_id }}
 
     steps:
+      - name: Validate operation inputs
+        shell: bash
+        run: |
+          set -euo pipefail
+          case "$VEXFORGE_MODE" in
+            normal|diagnostic|inventory|shard|final) ;;
+            *) echo "Unsupported VEXFORGE_MODE=$VEXFORGE_MODE" >&2; exit 1 ;;
+          esac
+          [[ "$SHARD_COUNT" =~ ^[0-9]+$ ]]
+          [[ "$SHARD_INDEX" =~ ^[0-9]+$ ]]
+          test "$SHARD_COUNT" -ge 2
+          test "$SHARD_COUNT" -le 100
+          test "$SHARD_INDEX" -lt "$SHARD_COUNT"
+          if [ -n "$CHECKPOINT_RUN_ID" ] || [ -n "$CHECKPOINT_ARTIFACT_ID" ]; then
+            test -n "$CHECKPOINT_RUN_ID" || { echo "checkpoint_run_id is required with checkpoint_artifact_id" >&2; exit 1; }
+            test -n "$CHECKPOINT_ARTIFACT_ID" || { echo "checkpoint_artifact_id is required with checkpoint_run_id" >&2; exit 1; }
+            [[ "$CHECKPOINT_RUN_ID" =~ ^[0-9]+$ ]]
+            [[ "$CHECKPOINT_ARTIFACT_ID" =~ ^[0-9]+$ ]]
+          fi
+          if [ "$VEXFORGE_MODE" = shard ] || [ "$VEXFORGE_MODE" = final ]; then
+            echo "Operation $VEXFORGE_MODE uses shard_count=$SHARD_COUNT shard_index=$SHARD_INDEX."
+          else
+            echo "Operation $VEXFORGE_MODE does not filter shader variants."
+          fi
+
       - name: Verify Unity license inputs
         shell: bash
         run: |
@@ -137,7 +196,32 @@ jobs:
           set -euo pipefail
           echo "Unity license is ready for the Editor; value is not printed."
 
-      - name: Build Unity Android APK
+      - name: Restore shader checkpoint
+        if: ${{ (inputs.mode == 'shard' || inputs.mode == 'final') && inputs.checkpoint_run_id != '' }}
+        uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: ${{ inputs.checkpoint_run_id }}
+          artifact-ids: ${{ inputs.checkpoint_artifact_id }}
+          path: build-artifacts/checkpoint-download
+
+      - name: Materialize shader checkpoint
+        if: ${{ (inputs.mode == 'shard' || inputs.mode == 'final') && inputs.checkpoint_run_id != '' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          checkpoint_dir="$GITHUB_WORKSPACE/build-artifacts/checkpoint-download"
+          archive="$(find "$checkpoint_dir" -type f -name 'shader-cache.tar' -print -quit)"
+          test -n "$archive" || { echo "Checkpoint artifact did not contain shader-cache.tar" >&2; exit 1; }
+          tar -xf "$archive" -C "$GITHUB_WORKSPACE"
+          if [ -d "$checkpoint_dir/variants" ]; then
+            mkdir -p unity/Builds/ShaderShardWarmup/checkpoints
+            cp -R "$checkpoint_dir/variants" unity/Builds/ShaderShardWarmup/checkpoints/
+          fi
+          echo "Restored the explicit shader checkpoint; no other Library data was merged."
+
+      - name: Run canonical Unity operation
         shell: bash
         env:
           UNITY_VERSION: ${{ steps.unity-version.outputs.version }}
@@ -147,7 +231,27 @@ jobs:
           set -euo pipefail
           mkdir -p build-artifacts
           test -x "$UNITY_EDITOR_PATH"
-          editor_log="$GITHUB_WORKSPACE/build-artifacts/unity-editor.log"
+          case "$VEXFORGE_MODE" in
+            inventory)
+              method="Vexforge.Editor.VexforgeShaderShardBuild.InventoryShaders"
+              editor_log="$GITHUB_WORKSPACE/build-artifacts/unity-inventory-editor.log"
+              ;;
+            diagnostic)
+              method="Vexforge.Editor.VexforgeShaderShardBuild.DiagnoseShaders"
+              editor_log="$GITHUB_WORKSPACE/build-artifacts/unity-diagnostic-editor.log"
+              ;;
+            shard)
+              method="Vexforge.Editor.VexforgeShaderShardBuild.WarmShaderShard"
+              editor_log="$GITHUB_WORKSPACE/build-artifacts/unity-shard-${SHARD_INDEX}.log"
+              export VEXFORGE_SHADER_SHARD_MODE=warm
+              export VEXFORGE_SHADER_SHARD_INDEX="$SHARD_INDEX"
+              export VEXFORGE_SHADER_SHARD_COUNT="$SHARD_COUNT"
+              ;;
+            normal|final)
+              method="Vexforge.Editor.VexforgeShaderShardBuild.BuildAndroid"
+              editor_log="$GITHUB_WORKSPACE/build-artifacts/unity-final-editor.log"
+              ;;
+          esac
           started_at=$(date +%s)
           set +e
           "$UNITY_EDITOR_PATH" \
@@ -157,25 +261,95 @@ jobs:
             -accept-apiupdate \
             -projectPath "$GITHUB_WORKSPACE/unity" \
             -buildTarget Android \
-            -executeMethod Vexforge.Editor.VexforgeGitHubBuild.BuildAndroid \
+            -executeMethod "$method" \
             -logFile "$editor_log"
           editor_status=$?
           set -e
           elapsed=$(( $(date +%s) - started_at ))
-          echo "Unity Editor exit code=$editor_status elapsed_seconds=$elapsed"
+          echo "Unity Editor mode=$VEXFORGE_MODE exit code=$editor_status elapsed_seconds=$elapsed"
           if [ -f "$editor_log" ]; then
             echo '--- tail of unity-editor.log ---'
-            tail -n 160 "$editor_log"
+            tail -n 200 "$editor_log"
             echo '--- end tail of unity-editor.log ---'
           fi
           test "$editor_status" -eq 0
 
-      - name: Verify APK
-        if: success()
+      - name: Record shader cache observations
+        if: ${{ inputs.mode == 'shard' || inputs.mode == 'final' || inputs.mode == 'normal' }}
         shell: bash
         run: |
           set -euo pipefail
-          apk="$(find unity/Builds -type f -name '*.apk' -print -quit)"
+          mkdir -p build-artifacts
+          {
+            echo "mode=$VEXFORGE_MODE"
+            echo "shader_cache_directory=unity/Library/ShaderCache"
+            if [ -d unity/Library/ShaderCache ]; then
+              echo "cache_files=$(find unity/Library/ShaderCache -type f | wc -l | tr -d ' ')"
+              echo "cache_bytes=$(du -sb unity/Library/ShaderCache | awk '{print $1}')"
+            else
+              echo "cache_files=0"
+              echo "cache_bytes=0"
+            fi
+            echo "--- Unity log cache-related lines ---"
+            log="$(find build-artifacts -maxdepth 1 -type f -name 'unity-*.log' -print -quit)"
+            if [ -n "$log" ]; then
+              rg -i 'shader.?cache|cache.?hit|cached' "$log" || true
+            fi
+          } | tee build-artifacts/shader-cache-observations.txt
+
+      - name: Validate inventory evidence
+        if: ${{ inputs.mode == 'inventory' || inputs.mode == 'diagnostic' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          summary="unity/Builds/ShaderShardWarmup/checkpoints/${VEXFORGE_MODE}.json"
+          manifest="unity/Builds/ShaderShardWarmup/checkpoints/variants/${VEXFORGE_MODE}.tsv"
+          test -s "$summary"
+          test -s "$manifest"
+          rg -q '"seenVariants"[[:space:]]*:[[:space:]]*[1-9]' "$summary"
+          echo "Shader ${VEXFORGE_MODE} evidence contains observed variants and fingerprints."
+
+      - name: Validate shard evidence
+        if: ${{ inputs.mode == 'shard' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          summary="unity/Builds/ShaderShardWarmup/checkpoints/vexforge-shader-shard-$(printf '%03d' "$SHARD_INDEX")-of-$(printf '%03d' "$SHARD_COUNT").json"
+          manifest="unity/Builds/ShaderShardWarmup/checkpoints/variants/shard-$(printf '%03d' "$SHARD_INDEX")-of-$(printf '%03d' "$SHARD_COUNT").tsv"
+          test -s "$summary"
+          test -s "$manifest"
+          rg -q '"buildResult"[[:space:]]*:[[:space:]]*"Succeeded"' "$summary"
+          entries="$(find unity/Builds/ShaderShardWarmup/checkpoints/variants -type f -name '*.tsv' -print0 | xargs -0 awk 'NR > 1 {print $1}' | wc -l | tr -d ' ')"
+          unique="$(find unity/Builds/ShaderShardWarmup/checkpoints/variants -type f -name '*.tsv' -print0 | xargs -0 awk 'NR > 1 {print $1}' | sort -u | wc -l | tr -d ' ')"
+          test "$entries" -eq "$unique"
+          echo "Shard manifests contain $entries unique fingerprints with no overlap."
+
+      - name: Create shader checkpoint
+        if: ${{ inputs.mode == 'shard' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          checkpoint_dir="build-artifacts/checkpoint-upload"
+          rm -rf "$checkpoint_dir"
+          mkdir -p "$checkpoint_dir"
+          if [ -d unity/Library/ShaderCache ]; then
+            tar -cf "$checkpoint_dir/shader-cache.tar" -C "$GITHUB_WORKSPACE" unity/Library/ShaderCache
+          else
+            echo "Unity did not produce Library/ShaderCache; refusing to claim a cache checkpoint." >&2
+            exit 1
+          fi
+          if [ -d unity/Builds/ShaderShardWarmup/checkpoints/variants ]; then
+            cp -R unity/Builds/ShaderShardWarmup/checkpoints/variants "$checkpoint_dir/"
+          fi
+          cp build-artifacts/shader-cache-observations.txt "$checkpoint_dir/"
+          find "$checkpoint_dir" -maxdepth 2 -type f -printf '%p %s bytes\n'
+
+      - name: Verify APK
+        if: ${{ inputs.mode == 'normal' || inputs.mode == 'final' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          apk="$(find unity/Builds -maxdepth 1 -type f -name '*.apk' -print -quit)"
           test -n "$apk"
           test -s "$apk"
           size="$(stat -c%s "$apk")"
@@ -188,24 +362,35 @@ jobs:
             echo "branch=${GITHUB_REF_NAME}"
             echo "commit=${GITHUB_SHA}"
             echo "run_id=${GITHUB_RUN_ID}"
+            echo "mode=${VEXFORGE_MODE}"
             echo "apk=$apk"
             echo "apk_size_bytes=$size"
             echo "apk_sha256=$sha"
           } | tee build-artifacts/vexforge-build-info.txt >> "$GITHUB_STEP_SUMMARY"
 
-      - name: Upload Unity APK artifact
+      - name: Upload canonical evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: VEXFORGE-Unity-Android-${{ github.run_number }}
+          name: VEXFORGE-Unity-Android-${{ github.run_number }}-${{ inputs.mode }}
           path: |
             unity/Builds/**/*.apk
+            unity/Builds/ShaderShardWarmup/checkpoints/**
             build-artifacts/**
           if-no-files-found: warn
           retention-days: 14
 
+      - name: Upload shader checkpoint
+        if: ${{ inputs.mode == 'shard' && success() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: vexforge-shader-checkpoint-${{ github.sha }}-${{ inputs.shard_count }}-${{ inputs.shard_index }}
+          path: build-artifacts/checkpoint-upload/**
+          if-no-files-found: error
+          retention-days: 14
+
       - name: Publish APK release
-        if: success()
+        if: ${{ (inputs.mode == 'normal' || inputs.mode == 'final') && success() }}
         uses: softprops/action-gh-release@v2
         with:
           tag_name: vexforge-unity-github-${{ github.run_number }}
