@@ -35,6 +35,11 @@ on:
         required: true
         default: "200"
         type: string
+      confirmed_variant_count:
+        description: "Confirmed optimized shader variant count; Android builds require a value below 35000"
+        required: true
+        default: "0"
+        type: string
       checkpoint_run_id:
         description: "Previous canonical workflow run id to restore"
         required: false
@@ -63,6 +68,7 @@ jobs:
       SHARD_INDEX: ${{ inputs.shard_index }}
       RANGE_START_BPS: ${{ inputs.range_start_bps }}
       RANGE_END_BPS: ${{ inputs.range_end_bps }}
+      CONFIRMED_VARIANT_COUNT: ${{ inputs.confirmed_variant_count }}
       CHECKPOINT_RUN_ID: ${{ inputs.checkpoint_run_id }}
       CHECKPOINT_ARTIFACT_ID: ${{ inputs.checkpoint_artifact_id }}
 
@@ -79,12 +85,24 @@ jobs:
           [[ "$SHARD_INDEX" =~ ^[0-9]+$ ]]
           [[ "$RANGE_START_BPS" =~ ^[0-9]+$ ]]
           [[ "$RANGE_END_BPS" =~ ^[0-9]+$ ]]
+          [[ "$CONFIRMED_VARIANT_COUNT" =~ ^[0-9]+$ ]]
           test "$SHARD_COUNT" -ge 2
           test "$SHARD_COUNT" -le 100
           test "$SHARD_INDEX" -lt "$SHARD_COUNT"
           test "$RANGE_START_BPS" -ge 0
           test "$RANGE_END_BPS" -le 10000
           test "$RANGE_START_BPS" -lt "$RANGE_END_BPS"
+          if [ "$VEXFORGE_MODE" = normal ] || [ "$VEXFORGE_MODE" = shard ] || [ "$VEXFORGE_MODE" = final ]; then
+            test "$CONFIRMED_VARIANT_COUNT" -gt 0 || {
+              echo "Refusing Android compilation: confirmed_variant_count is required." >&2
+              exit 1
+            }
+            test "$CONFIRMED_VARIANT_COUNT" -lt 35000 || {
+              echo "Refusing Android compilation: confirmed shader variant count must be below 35000." >&2
+              exit 1
+            }
+            echo "Confirmed optimized shader variants=$CONFIRMED_VARIANT_COUNT; Android compilation gate passed."
+          fi
           if [ -n "$CHECKPOINT_RUN_ID" ] || [ -n "$CHECKPOINT_ARTIFACT_ID" ]; then
             test -n "$CHECKPOINT_RUN_ID" || { echo "checkpoint_run_id is required with checkpoint_artifact_id" >&2; exit 1; }
             test -n "$CHECKPOINT_ARTIFACT_ID" || { echo "checkpoint_artifact_id is required with checkpoint_run_id" >&2; exit 1; }
