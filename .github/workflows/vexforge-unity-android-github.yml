@@ -293,7 +293,7 @@ jobs:
             echo "--- Unity log cache-related lines ---"
             log="$(find build-artifacts -maxdepth 1 -type f -name 'unity-*.log' -print -quit)"
             if [ -n "$log" ]; then
-              rg -i 'shader.?cache|cache.?hit|cached' "$log" || true
+              grep -E -i 'shader.?cache|cache.?hit|cached' "$log" || true
             fi
           } | tee build-artifacts/shader-cache-observations.txt
 
@@ -306,7 +306,7 @@ jobs:
           manifest="unity/Builds/ShaderShardWarmup/checkpoints/variants/${VEXFORGE_MODE}.tsv"
           test -s "$summary"
           test -s "$manifest"
-          rg -q '"seenVariants"[[:space:]]*:[[:space:]]*[1-9]' "$summary"
+          grep -qE '"seenVariants"[[:space:]]*:[[:space:]]*[1-9]' "$summary"
           echo "Shader ${VEXFORGE_MODE} evidence contains observed variants and fingerprints."
 
       - name: Validate shard evidence
@@ -318,7 +318,7 @@ jobs:
           manifest="unity/Builds/ShaderShardWarmup/checkpoints/variants/shard-$(printf '%03d' "$SHARD_INDEX")-of-$(printf '%03d' "$SHARD_COUNT").tsv"
           test -s "$summary"
           test -s "$manifest"
-          rg -q '"buildResult"[[:space:]]*:[[:space:]]*"Succeeded"' "$summary"
+          grep -qE '"buildResult"[[:space:]]*:[[:space:]]*"Succeeded"' "$summary"
           entries="$(find unity/Builds/ShaderShardWarmup/checkpoints/variants -type f -name '*.tsv' -print0 | xargs -0 awk 'NR > 1 {print $1}' | wc -l | tr -d ' ')"
           unique="$(find unity/Builds/ShaderShardWarmup/checkpoints/variants -type f -name '*.tsv' -print0 | xargs -0 awk 'NR > 1 {print $1}' | sort -u | wc -l | tr -d ' ')"
           test "$entries" -eq "$unique"
