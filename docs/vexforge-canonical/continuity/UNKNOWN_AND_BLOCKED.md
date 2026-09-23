@@ -39,11 +39,11 @@ STATUS: BLOCKED
 ## Entry 5
 
 ITEM: Unity Editor, Android build and device verification
-SOURCE: WORKSPACE_CURRENT
-WHAT WAS CHECKED: source/configuration inventory only
-WHAT WAS NOT AVAILABLE: Unity Editor, build output and physical device evidence
-EXACT ERROR / OUTPUT: no build was started by this audit
-STATUS: NOT VERIFIED
+SOURCE: GITHUB_ACTIONS / WORKSPACE_CURRENT
+WHAT WAS CHECKED: canonical run 34 inventory evidence and canonical run 37 cancellation
+WHAT WAS NOT AVAILABLE: a current optimized inventory accepted for the `<35000` Android gate, a final APK and physical device evidence
+EXACT ERROR / OUTPUT: run 34 was historical inventory; run 37 (`35857542570`) ended `completed / cancelled`
+STATUS: CURRENT VARIANT COUNT PENDING
 
 ## Entry 6
 
@@ -53,3 +53,12 @@ WHAT WAS CHECKED: prescribed file inventory and source searches
 WHAT WAS NOT AVAILABLE: source-independent structured record count
 EXACT ERROR / OUTPUT: no authoritative local structured count identified by the prescribed inventory
 STATUS: UNKNOWN
+
+## Entry 7
+
+ITEM: Remote preservation of run 34 inventory evidence
+SOURCE: GITHUB_ACTIONS
+WHAT WAS CHECKED: run `35738958946` and artifact `10698924155` after the inventory report
+WHAT WAS NOT AVAILABLE: the original GitHub run and artifact after deletion
+EXACT ERROR / OUTPUT: HTTP `404` for both remote resources
+STATUS: HISTORICAL COUNTS RETAINED IN CONTINUITY; REMOTE ARTIFACT UNAVAILABLE

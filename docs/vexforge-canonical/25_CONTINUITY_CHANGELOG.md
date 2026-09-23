@@ -1,5 +1,25 @@
 # 25 — CONTINUITY CHANGELOG
 
+## 2026-09-23 — CANONICAL UNITY INVENTORY GATE
+
+- BLOCK: `CANONICAL_UNITY_VARIANT_COUNT`
+- CHANGE: la continuidad se actualizó para reflejar que Unity bajo `unity/` es el
+  runtime Android canónico y que el único workflow operativo es
+  `.github/workflows/vexforge-unity-android-github.yml`.
+- EVIDENCE: el run 34 (`35738958946`) terminó `success` en modo `inventory` con
+  `285367` variantes observadas y `285279` fingerprints únicos; el run 37
+  (`35857542570`) fue cancelado antes de producir evidencia válida.
+- GATE: las operaciones Android `normal`, `shard` y `final` requieren un conteo
+  optimizado confirmado estrictamente menor que `35000`.
+- INTERPRETATION: el run 34 es inventario histórico anterior al stripping seguro;
+  no autoriza una APK final ni sustituye un inventario nuevo.
+- INCIDENT: el run 34 y el artefacto `10698924155` fueron eliminados durante la
+  auditoría anterior y actualmente devuelven HTTP `404`; no se declara que sean
+  restaurables.
+- NEXT: publicar esta actualización en `main` y ejecutar un nuevo `inventory`
+  manual del workflow canónico para obtener el conteo actual antes de decidir
+  si se conserva o cancela una compilación Android.
+
 ## 2026-09-19 — UNITY CLOUD R5 EDITOR CONTINUITY
 
 - BLOCK: `UNITY_CLOUD_R5_EDITOR_CONTINUITY`

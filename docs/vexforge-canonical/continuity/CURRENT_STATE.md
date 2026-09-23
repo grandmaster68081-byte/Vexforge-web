@@ -6,11 +6,11 @@ Audit entry point for continuity. All facts are tagged by source class.
 
 - `REPO_CURRENT / repository:` github.com/grandmaster68081-byte/Vexforge-web
 - `REPO_CURRENT / branch:` `main`
-- `REPO_CURRENT / audit ID:` `continuity-20260919T062954Z`
-- `REPO_CURRENT / current audited SHA:` `82c7fc29d82c3a52dfd8dca557439618c5807807`
-- `REPO_CURRENT / UTC:` `2026-09-19T06:29:54Z`
-- `REPO_CURRENT / origin/main at intake:` `82c7fc29d82c3a52dfd8dca557439618c5807807`
-- `REPO_CURRENT / worktree:` clean at intake
+- `REPO_CURRENT / audit ID:` `continuity-20260923T000000Z`
+- `REPO_CURRENT / current audited SHA:` recorded by the continuity publication commit
+- `REPO_CURRENT / UTC:` `2026-09-23`
+- `REPO_CURRENT / origin/main at intake:` `6343c3634a0cf4c64a7a830cdf9f0a23cf429d6e`
+- `REPO_CURRENT / worktree:` clean before this continuity update
 
 ## Runtime
 
@@ -39,19 +39,30 @@ Audit entry point for continuity. All facts are tagged by source class.
 - `SUPABASE_LIVE / schema and security:` VERIFIED structurally through read-only Management API metadata queries
 - `SUPABASE_LIVE / Storage:` VERIFIED through read-only Management API SQL inventory; direct Storage REST key path returned 401
 - `SUPABASE_LIVE / Edge Functions:` VERIFIED inventory; source download unavailable in this audit
-- `UNKNOWN / build automation:` repository evidence only; no build started
-- `UNKNOWN / device:` not verified; no APK/AAB generated
+- `REPO_CURRENT / Unity inventory evidence:` historical run 34 completed successfully in `inventory` mode; it is not a release build
+- `REPO_CURRENT / current diagnostic evidence:` run 37 (`35857542570`) was cancelled before producing valid diagnostic evidence
+- `UNKNOWN / current release build:` no current `normal` or `final` APK has been accepted
+- `UNKNOWN / device:` not verified; no device evidence exists
 
-## Experimental shader-cache build flow
+## Canonical shader-variant build flow
 
-- `REPO_CURRENT / shader-cache experiment:` EXPERIMENTAL — implementation exists, but no successful shard evidence has been accepted yet
-- `REPO_CURRENT / experiment purpose:` warm deterministic partitions of the total shader-variant set sequentially, then run one unfiltered Android build using the same Unity `Library` continuity
-- `REPO_CURRENT / experiment execution:` one sequential GitHub Actions job; do not use a parallel matrix because concurrent Unity writers must not share `Library`
-- `REPO_CURRENT / shard contract:` `VEXFORGE_SHADER_SHARD_INDEX` and `VEXFORGE_SHADER_SHARD_COUNT` select a stable variant partition through the Editor shader preprocessor
-- `REPO_CURRENT / final-build contract:` the final APK build disables shard filtering and is the only build artifact considered for APK evidence
-- `REPO_CURRENT / validation threshold:` the first two shard runs must finish successfully, with checkpoint summaries proving the first and second 2% stages completed against the same chain; this is the minimum evidence for a provisional 4% continuity claim
-- `REPO_CURRENT / production status:` not verified; cache size, source inspection, or a successful intermediate warmup alone must not be reported as a complete build
-- `REPO_CURRENT / safety rule:` never create a replacement Unity project, Build Automation target, GitHub connection, or parallel `Library` writer for this experiment
+- `REPO_CURRENT / implementation:` the canonical workflow and Unity editor entry points support `normal`, `diagnostic`, `baseline`, `inventory`, `shard` and `final`
+- `REPO_CURRENT / inventory purpose:` measure the complete observed shader-variant set without treating the inventory APK as a product release
+- `REPO_CURRENT / Android gate:` `normal`, `shard` and `final` require a confirmed optimized variant count greater than zero and strictly below `35000`
+- `REPO_CURRENT / stripping baseline:` baseline evidence is kept separate from optimized evidence; safe stripping preserves runtime-created post-processing variants
+- `REPO_CURRENT / shard execution:` one sequential GitHub Actions job; do not use a parallel matrix because concurrent Unity writers must not share `Library`
+- `REPO_CURRENT / final-build contract:` final APK compilation disables shard filtering and is the only build artifact eligible for APK evidence
+- `REPO_CURRENT / safety rule:` never create a replacement Unity project, Build Automation target, GitHub connection, or parallel `Library` writer
+
+## 2026-09-23 continuity update
+
+- `REPO_CURRENT / canonical branch:` only `main` exists; `unity/` is the canonical Unity project directory, not a separate branch
+- `REPO_CURRENT / previous inventory run:` run `34`, ID `35738958946`, commit `9b2583ca...`, completed `success` in `inventory` mode
+- `REPO_CURRENT / run 34 inventory:` `seenVariants=285367`, `uniqueFingerprints=285279`, `processedSnippets=351`, `selectedVariants=0`, `removedVariants=285367`, Unity `6000.3.0f1`, Android, warnings `3`, errors `1`, failure empty
+- `REPO_CURRENT / run 34 artifact:` contained the Unity log, `inventory.json`, `inventory.tsv` with `285279` data rows, and `VEXFORGE-inventory.apk` of `46594995` bytes
+- `REPO_CURRENT / run 34 evidence status:` the remote run `35738958946` and artifact `10698924155` were deleted during the prior audit and now return HTTP `404`; the counts remain historical notes, not current approval evidence
+- `REPO_CURRENT / run 37:` diagnostic run `35857542570` was explicitly cancelled and produced no accepted variant count
+- `REPO_CURRENT / interpretation rule:` the run 34 count predates the current safe-stripping and `<35000` gate commits; a new canonical inventory is required before any Android build decision
 
 ## Historical context
 
