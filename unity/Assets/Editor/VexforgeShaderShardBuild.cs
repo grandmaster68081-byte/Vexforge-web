@@ -149,11 +149,15 @@ namespace Vexforge.Editor
                     shader,
                     snippet,
                     data[index]);
-                var assignedShard = VexforgeShaderShardBuild.GetShardIndex(
-                    key,
-                    VexforgeShaderShardContext.InventoryOnly
-                        ? VexforgeShaderShardBuild.InventoryShardCount
-                        : VexforgeShaderShardContext.ShardCount);
+                var assignedShard = VexforgeShaderShardContext.InventoryOnly
+                    ? VexforgeShaderShardBuild.GetShardIndex(
+                        key,
+                        VexforgeShaderShardBuild.InventoryShardCount)
+                    : VexforgeShaderShardContext.FullBuildLimited
+                        ? -1
+                        : VexforgeShaderShardBuild.GetShardIndex(
+                            key,
+                            VexforgeShaderShardContext.ShardCount);
                 var hashBucket = VexforgeShaderShardBuild.GetHashBucket(key);
 
                 var fingerprint = VexforgeShaderShardBuild.CreateVariantFingerprint(key);
