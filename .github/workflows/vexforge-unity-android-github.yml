@@ -40,6 +40,11 @@ on:
         required: true
         default: "0"
         type: string
+      full_build_variant_limit:
+        description: "Hard cap for shader variants compiled by normal and final Android builds"
+        required: true
+        default: "35000"
+        type: string
       checkpoint_run_id:
         description: "Previous canonical workflow run id to restore"
         required: false
@@ -69,6 +74,7 @@ jobs:
       RANGE_START_BPS: ${{ inputs.range_start_bps }}
       RANGE_END_BPS: ${{ inputs.range_end_bps }}
       CONFIRMED_VARIANT_COUNT: ${{ inputs.confirmed_variant_count }}
+      FULL_BUILD_VARIANT_LIMIT: ${{ inputs.full_build_variant_limit }}
       CHECKPOINT_RUN_ID: ${{ inputs.checkpoint_run_id }}
       CHECKPOINT_ARTIFACT_ID: ${{ inputs.checkpoint_artifact_id }}
 
@@ -86,6 +92,9 @@ jobs:
           [[ "$RANGE_START_BPS" =~ ^[0-9]+$ ]]
           [[ "$RANGE_END_BPS" =~ ^[0-9]+$ ]]
           [[ "$CONFIRMED_VARIANT_COUNT" =~ ^[0-9]+$ ]]
+          [[ "$FULL_BUILD_VARIANT_LIMIT" =~ ^[0-9]+$ ]]
+          test "$FULL_BUILD_VARIANT_LIMIT" -ge 1
+          test "$FULL_BUILD_VARIANT_LIMIT" -le 35000
           test "$SHARD_COUNT" -ge 2
           test "$SHARD_COUNT" -le 100
           test "$SHARD_INDEX" -lt "$SHARD_COUNT"
@@ -299,6 +308,8 @@ jobs:
             normal|final)
               method="Vexforge.Editor.VexforgeShaderShardBuild.BuildAndroid"
               editor_log="$GITHUB_WORKSPACE/build-artifacts/unity-final-editor.log"
+              export VEXFORGE_FULL_BUILD_FILTER=limit
+              export VEXFORGE_FULL_BUILD_VARIANT_LIMIT="$FULL_BUILD_VARIANT_LIMIT"
               ;;
           esac
           started_at=$(date +%s)
@@ -322,6 +333,22 @@ jobs:
             echo '--- end tail of unity-editor.log ---'
           fi
           test "$editor_status" -eq 0
+
+      - name: Validate full-build shader filter
+        if: ${{ (inputs.mode == 'normal' || inputs.mode == 'final') && success() }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          summary="unity/Builds/ShaderShardWarmup/checkpoints/full-build.json"
+          test -s "$summary"
+          grep -qE '"filterMode"[[:space:]]*:[[:space:]]*"hard-cap"' "$summary"
+          grep -qE '"filterEnabled"[[:space:]]*:[[:space:]]*true' "$summary"
+          limit="$(sed -n 's/.*"variantLimit"[[:space:]]*:[[:space:]]*\([0-9][0-9]*\).*/\1/p' "$summary" | head -n 1)"
+          selected="$(sed -n 's/.*"selectedVariants"[[:space:]]*:[[:space:]]*\([0-9][0-9]*\).*/\1/p' "$summary" | head -n 1)"
+          test "$limit" -eq "$FULL_BUILD_VARIANT_LIMIT"
+          test "$selected" -gt 0
+          test "$selected" -le "$limit"
+          echo "Full-build shader filter PASS selected=$selected limit=$limit."
 
       - name: Record shader cache observations
         if: ${{ inputs.mode == 'shard' || inputs.mode == 'final' || inputs.mode == 'normal' }}

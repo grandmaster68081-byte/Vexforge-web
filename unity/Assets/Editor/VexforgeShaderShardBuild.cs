@@ -20,6 +20,9 @@ namespace Vexforge.Editor
 
         internal static bool Enabled { get; private set; }
         internal static bool InventoryOnly { get; private set; }
+        internal static bool FullBuildLimited { get; private set; }
+        internal static int FullBuildVariantLimit { get; private set; }
+        internal static long FullBuildSelectedVariants { get; private set; }
         internal static int ShardIndex { get; private set; }
         internal static int ShardCount { get; private set; }
         internal static int RangeStartBps { get; private set; }
@@ -39,6 +42,8 @@ namespace Vexforge.Editor
         {
             Enabled = true;
             InventoryOnly = false;
+            FullBuildLimited = false;
+            FullBuildVariantLimit = 0;
             ShardIndex = shardIndex;
             ShardCount = shardCount;
             RangeStartBps = rangeStartBps;
@@ -50,6 +55,8 @@ namespace Vexforge.Editor
         {
             Enabled = true;
             InventoryOnly = true;
+            FullBuildLimited = false;
+            FullBuildVariantLimit = 0;
             ShardIndex = -1;
             ShardCount = 0;
             RangeStartBps = 0;
@@ -57,13 +64,41 @@ namespace Vexforge.Editor
             ResetCounters();
         }
 
+        internal static void EnableFullBuildFilter(int variantLimit)
+        {
+            if (variantLimit < 1)
+                throw new ArgumentOutOfRangeException(nameof(variantLimit));
+
+            Enabled = true;
+            InventoryOnly = false;
+            FullBuildLimited = true;
+            FullBuildVariantLimit = variantLimit;
+            ShardIndex = -1;
+            ShardCount = 0;
+            RangeStartBps = 0;
+            RangeEndBps = VexforgeShaderShardBuild.HashSpaceBps;
+            ResetCounters();
+        }
+
+        internal static bool TrySelectFullBuildVariant()
+        {
+            if (!FullBuildLimited || FullBuildSelectedVariants >= FullBuildVariantLimit)
+                return false;
+
+            FullBuildSelectedVariants++;
+            return true;
+        }
+
         internal static void Disable()
         {
             Enabled = false;
             InventoryOnly = false;
+            FullBuildLimited = false;
+            FullBuildVariantLimit = 0;
             RangeStartBps = 0;
             RangeEndBps = 0;
             FingerprintEntries.Clear();
+            FullBuildSelectedVariants = 0;
         }
 
         internal static void RecordVariant(
@@ -88,6 +123,7 @@ namespace Vexforge.Editor
             SelectedVariants = 0;
             RemovedVariants = 0;
             ProcessedSnippets = 0;
+            FullBuildSelectedVariants = 0;
             FingerprintEntries.Clear();
         }
     }
@@ -120,14 +156,25 @@ namespace Vexforge.Editor
                         : VexforgeShaderShardContext.ShardCount);
                 var hashBucket = VexforgeShaderShardBuild.GetHashBucket(key);
 
+                var fingerprint = VexforgeShaderShardBuild.CreateVariantFingerprint(key);
                 VexforgeShaderShardContext.RecordVariant(
-                    VexforgeShaderShardBuild.CreateVariantFingerprint(key),
+                    fingerprint,
                     VexforgeShaderShardContext.InventoryOnly
                         ? assignedShard
                         : hashBucket);
 
                 if (VexforgeShaderShardContext.InventoryOnly)
                     continue;
+
+                if (VexforgeShaderShardContext.FullBuildLimited)
+                {
+                    if (VexforgeShaderShardContext.TrySelectFullBuildVariant())
+                        selected++;
+                    else
+                        data.RemoveAt(index);
+
+                    continue;
+                }
 
                 if (VexforgeShaderShardBuild.IsInRange(
                     hashBucket,
@@ -256,7 +303,21 @@ namespace Vexforge.Editor
                     "VEXFORGE final Android build cannot run with shader shard filtering enabled.");
             }
 
-            VexforgeShaderShardContext.Disable();
+            var filterMode = Environment.GetEnvironmentVariable("VEXFORGE_FULL_BUILD_FILTER");
+            var variantLimit = ReadInt("VEXFORGE_FULL_BUILD_VARIANT_LIMIT", 0);
+            if (!string.Equals(filterMode, "limit", StringComparison.OrdinalIgnoreCase))
+            {
+                throw new InvalidOperationException(
+                    "VEXFORGE full Android build requires VEXFORGE_FULL_BUILD_FILTER=limit.");
+            }
+
+            if (variantLimit < 1 || variantLimit > 35000)
+            {
+                throw new InvalidOperationException(
+                    $"VEXFORGE full-build variant limit must be between 1 and 35000, got {variantLimit}.");
+            }
+
+            VexforgeShaderShardContext.EnableFullBuildFilter(variantLimit);
 
             var projectRoot = Directory.GetParent(Application.dataPath).FullName;
             var buildDirectory = Path.Combine(projectRoot, "Builds");
@@ -266,19 +327,37 @@ namespace Vexforge.Editor
             if (File.Exists(outputPath))
                 File.Delete(outputPath);
 
-            var report = BuildAndroidInternal(outputPath);
-            var summary = report.summary;
+            BuildReport report = null;
+            Exception failure = null;
+            try
+            {
+                report = BuildAndroidInternal(outputPath);
+            }
+            catch (Exception exception)
+            {
+                failure = exception;
+            }
+            finally
+            {
+                WriteFullBuildSummary(projectRoot, outputPath, report, failure, variantLimit);
+                VexforgeShaderShardContext.Disable();
+            }
 
-            Debug.Log(
-                $"VEXFORGE GitHub Android build result={summary.result} " +
-                $"warnings={summary.totalWarnings} errors={summary.totalErrors} " +
-                $"size={summary.totalSize} bytes output={outputPath}");
+            if (failure != null)
+                throw failure;
 
-            if (summary.result != BuildResult.Succeeded)
+            if (report == null || report.summary.result != BuildResult.Succeeded)
             {
                 throw new InvalidOperationException(
-                    $"VEXFORGE GitHub Android build failed with result {summary.result}.");
+                    $"VEXFORGE GitHub Android build failed with result {report?.summary.result.ToString() ?? "NoReport"}.");
             }
+
+            Debug.Log(
+                $"VEXFORGE GitHub Android build result={report.summary.result} " +
+                $"warnings={report.summary.totalWarnings} errors={report.summary.totalErrors} " +
+                $"selectedVariants={VexforgeShaderShardContext.SelectedVariants} " +
+                $"removedVariants={VexforgeShaderShardContext.RemovedVariants} " +
+                $"variantLimit={variantLimit} size={report.summary.totalSize} bytes output={outputPath}");
         }
 
         internal static string CreateVariantKey(
@@ -454,6 +533,40 @@ namespace Vexforge.Editor
             return int.TryParse(value, out var parsed) ? parsed : fallback;
         }
 
+        private static void WriteFullBuildSummary(
+            string projectRoot,
+            string outputPath,
+            BuildReport report,
+            Exception failure,
+            int variantLimit)
+        {
+            var summary = new ShaderShardSummary
+            {
+                analysisMode = "full-build",
+                filterMode = "hard-cap",
+                filterEnabled = true,
+                variantLimit = variantLimit,
+                shardIndex = -1,
+                shardCount = 0,
+                rangeStartBps = 0,
+                rangeEndBps = HashSpaceBps,
+                editorVersion = Application.unityVersion,
+                buildTarget = EditorUserBuildSettings.activeBuildTarget.ToString(),
+                outputPath = outputPath,
+                buildResult = report?.summary.result.ToString() ?? "Exception",
+                warnings = report?.summary.totalWarnings ?? 0,
+                errors = report?.summary.totalErrors ?? 0,
+                seenVariants = VexforgeShaderShardContext.SeenVariants,
+                selectedVariants = VexforgeShaderShardContext.SelectedVariants,
+                removedVariants = VexforgeShaderShardContext.RemovedVariants,
+                processedSnippets = VexforgeShaderShardContext.ProcessedSnippets,
+                uniqueFingerprints = VexforgeShaderShardContext.Fingerprints.Count,
+                failure = failure?.GetBaseException().Message ?? string.Empty
+            };
+
+            WriteSummaryFile(projectRoot, "full-build.json", summary);
+        }
+
         private static void WriteAnalysisSummary(
             string projectRoot,
             string analysisMode,
@@ -624,6 +737,9 @@ namespace Vexforge.Editor
         private sealed class ShaderShardSummary
         {
             public string analysisMode;
+            public string filterMode;
+            public bool filterEnabled;
+            public int variantLimit;
             public int shardIndex;
             public int shardCount;
             public int rangeStartBps;
