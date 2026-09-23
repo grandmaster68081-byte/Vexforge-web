@@ -16,9 +16,9 @@ on:
           - shard
           - final
       shard_count:
-        description: "Deterministic shard count for shard mode"
+        description: "Deterministic shard count; 12 partitions the approximately 287000-variant inventory below the 35000 cap with headroom"
         required: true
-        default: "50"
+        default: "12"
         type: string
       shard_index:
         description: "Zero-based shard index for shard mode"
@@ -33,7 +33,7 @@ on:
       range_end_bps:
         description: "Exclusive shader hash range end in basis points of the 0-10000 hash space"
         required: true
-        default: "200"
+        default: "833"
         type: string
       confirmed_variant_count:
         description: "Confirmed optimized shader variant count; Android builds require a value below 35000"
@@ -42,6 +42,11 @@ on:
         type: string
       full_build_variant_limit:
         description: "Hard cap for shader variants compiled by normal and final Android builds"
+        required: true
+        default: "35000"
+        type: string
+      shard_variant_limit:
+        description: "Hard cap for variants selected by each shader shard"
         required: true
         default: "35000"
         type: string
@@ -60,6 +65,12 @@ permissions:
   actions: read
   contents: write
 
+concurrency:
+  # Shards form a checkpoint chain. Serialize that chain, while allowing
+  # unrelated normal/diagnostic runs to keep their own run-specific group.
+  group: vexforge-unity-${{ github.ref }}-${{ inputs.mode == 'shard' && 'shader-chain' || github.run_id }}
+  cancel-in-progress: false
+
 jobs:
   build-unity-android:
     runs-on: ubuntu-latest
@@ -75,6 +86,7 @@ jobs:
       RANGE_END_BPS: ${{ inputs.range_end_bps }}
       CONFIRMED_VARIANT_COUNT: ${{ inputs.confirmed_variant_count }}
       FULL_BUILD_VARIANT_LIMIT: ${{ inputs.full_build_variant_limit }}
+      SHARD_VARIANT_LIMIT: ${{ inputs.shard_variant_limit }}
       CHECKPOINT_RUN_ID: ${{ inputs.checkpoint_run_id }}
       CHECKPOINT_ARTIFACT_ID: ${{ inputs.checkpoint_artifact_id }}
 
@@ -93,15 +105,18 @@ jobs:
           [[ "$RANGE_END_BPS" =~ ^[0-9]+$ ]]
           [[ "$CONFIRMED_VARIANT_COUNT" =~ ^[0-9]+$ ]]
           [[ "$FULL_BUILD_VARIANT_LIMIT" =~ ^[0-9]+$ ]]
+          [[ "$SHARD_VARIANT_LIMIT" =~ ^[0-9]+$ ]]
           test "$FULL_BUILD_VARIANT_LIMIT" -ge 1
           test "$FULL_BUILD_VARIANT_LIMIT" -le 35000
+          test "$SHARD_VARIANT_LIMIT" -ge 1
+          test "$SHARD_VARIANT_LIMIT" -le 35000
           test "$SHARD_COUNT" -ge 2
           test "$SHARD_COUNT" -le 100
           test "$SHARD_INDEX" -lt "$SHARD_COUNT"
           test "$RANGE_START_BPS" -ge 0
           test "$RANGE_END_BPS" -le 10000
           test "$RANGE_START_BPS" -lt "$RANGE_END_BPS"
-          if [ "$VEXFORGE_MODE" = normal ] || [ "$VEXFORGE_MODE" = shard ] || [ "$VEXFORGE_MODE" = final ]; then
+          if [ "$VEXFORGE_MODE" = normal ] || [ "$VEXFORGE_MODE" = final ]; then
             test "$CONFIRMED_VARIANT_COUNT" -gt 0 || {
               echo "Refusing Android compilation: confirmed_variant_count is required." >&2
               exit 1
@@ -112,11 +127,25 @@ jobs:
             }
             echo "Confirmed optimized shader variants=$CONFIRMED_VARIANT_COUNT; Android compilation gate passed."
           fi
+          if [ "$VEXFORGE_MODE" = shard ]; then
+            echo "Shard variant hard cap=$SHARD_VARIANT_LIMIT; the Unity operation will fail if the selected range exceeds this cap."
+          fi
           if [ -n "$CHECKPOINT_RUN_ID" ] || [ -n "$CHECKPOINT_ARTIFACT_ID" ]; then
             test -n "$CHECKPOINT_RUN_ID" || { echo "checkpoint_run_id is required with checkpoint_artifact_id" >&2; exit 1; }
             test -n "$CHECKPOINT_ARTIFACT_ID" || { echo "checkpoint_artifact_id is required with checkpoint_run_id" >&2; exit 1; }
             [[ "$CHECKPOINT_RUN_ID" =~ ^[0-9]+$ ]]
             [[ "$CHECKPOINT_ARTIFACT_ID" =~ ^[0-9]+$ ]]
+          fi
+          if [ "$VEXFORGE_MODE" = shard ] && [ "$SHARD_INDEX" -gt 0 ]; then
+            test -n "$CHECKPOINT_RUN_ID" || {
+              echo "Shard $SHARD_INDEX requires checkpoint_run_id from the previous shard." >&2
+              exit 1
+            }
+            test -n "$CHECKPOINT_ARTIFACT_ID" || {
+              echo "Shard $SHARD_INDEX requires checkpoint_artifact_id from the previous shard." >&2
+              exit 1
+            }
+            echo "Progressive shard checkpoint chain enabled for shard_index=$SHARD_INDEX."
           fi
           if [ "$VEXFORGE_MODE" = shard ] || [ "$VEXFORGE_MODE" = final ]; then
             expected_start=$(( SHARD_INDEX * 10000 / SHARD_COUNT ))
@@ -304,6 +333,7 @@ jobs:
               export VEXFORGE_SHADER_SHARD_COUNT="$SHARD_COUNT"
               export VEXFORGE_SHADER_RANGE_START_BPS="$RANGE_START_BPS"
               export VEXFORGE_SHADER_RANGE_END_BPS="$RANGE_END_BPS"
+              export VEXFORGE_SHADER_VARIANT_LIMIT="$SHARD_VARIANT_LIMIT"
               ;;
             normal|final)
               method="Vexforge.Editor.VexforgeShaderShardBuild.BuildAndroid"
@@ -399,6 +429,11 @@ jobs:
           grep -qE '"buildResult"[[:space:]]*:[[:space:]]*"Succeeded"' "$summary"
           grep -qE '"rangeStartBps"[[:space:]]*:[[:space:]]*'"$RANGE_START_BPS" "$summary"
           grep -qE '"rangeEndBps"[[:space:]]*:[[:space:]]*'"$RANGE_END_BPS" "$summary"
+          limit="$(sed -n 's/.*"variantLimit"[[:space:]]*:[[:space:]]*\([0-9][0-9]*\).*/\1/p' "$summary" | head -n 1)"
+          selected="$(sed -n 's/.*"selectedVariants"[[:space:]]*:[[:space:]]*\([0-9][0-9]*\).*/\1/p' "$summary" | head -n 1)"
+          test "$limit" -eq "$SHARD_VARIANT_LIMIT"
+          test "$selected" -gt 0
+          test "$selected" -le "$SHARD_VARIANT_LIMIT"
           entries="$(find unity/Builds/ShaderShardWarmup/checkpoints/variants -type f -name '*.tsv' -print0 | xargs -0 awk 'NR > 1 {print $1}' | wc -l | tr -d ' ')"
           unique="$(find unity/Builds/ShaderShardWarmup/checkpoints/variants -type f -name '*.tsv' -print0 | xargs -0 awk 'NR > 1 {print $1}' | sort -u | wc -l | tr -d ' ')"
           test "$entries" -eq "$unique"

@@ -23,6 +23,9 @@ namespace Vexforge.Editor
         internal static bool FullBuildLimited { get; private set; }
         internal static int FullBuildVariantLimit { get; private set; }
         internal static long FullBuildSelectedVariants { get; private set; }
+        internal static int ShardVariantLimit { get; private set; }
+        internal static long ShardSelectedVariants { get; private set; }
+        internal static bool ShardLimitExceeded { get; private set; }
         internal static int ShardIndex { get; private set; }
         internal static int ShardCount { get; private set; }
         internal static int RangeStartBps { get; private set; }
@@ -38,12 +41,14 @@ namespace Vexforge.Editor
             int shardIndex,
             int shardCount,
             int rangeStartBps,
-            int rangeEndBps)
+            int rangeEndBps,
+            int variantLimit)
         {
             Enabled = true;
             InventoryOnly = false;
             FullBuildLimited = false;
             FullBuildVariantLimit = 0;
+            ShardVariantLimit = variantLimit;
             ShardIndex = shardIndex;
             ShardCount = shardCount;
             RangeStartBps = rangeStartBps;
@@ -57,6 +62,7 @@ namespace Vexforge.Editor
             InventoryOnly = true;
             FullBuildLimited = false;
             FullBuildVariantLimit = 0;
+            ShardVariantLimit = 0;
             ShardIndex = -1;
             ShardCount = 0;
             RangeStartBps = 0;
@@ -73,6 +79,7 @@ namespace Vexforge.Editor
             InventoryOnly = false;
             FullBuildLimited = true;
             FullBuildVariantLimit = variantLimit;
+            ShardVariantLimit = 0;
             ShardIndex = -1;
             ShardCount = 0;
             RangeStartBps = 0;
@@ -89,24 +96,46 @@ namespace Vexforge.Editor
             return true;
         }
 
+        internal static bool TrySelectShardVariant()
+        {
+            if (ShardSelectedVariants >= ShardVariantLimit)
+            {
+                ShardLimitExceeded = true;
+                return false;
+            }
+
+            ShardSelectedVariants++;
+            return true;
+        }
+
         internal static void Disable()
         {
             Enabled = false;
             InventoryOnly = false;
             FullBuildLimited = false;
             FullBuildVariantLimit = 0;
+            ShardVariantLimit = 0;
             RangeStartBps = 0;
             RangeEndBps = 0;
             FingerprintEntries.Clear();
             FullBuildSelectedVariants = 0;
+            ShardSelectedVariants = 0;
+            ShardLimitExceeded = false;
         }
 
         internal static void RecordVariant(
             string fingerprint,
-            int assignedShard)
+            int hashBucket)
         {
-            if (InventoryOnly || assignedShard == ShardIndex)
-                FingerprintEntries.Add($"{fingerprint}\t{assignedShard}");
+            if (InventoryOnly
+                || (!FullBuildLimited
+                    && VexforgeShaderShardBuild.IsInRange(
+                        hashBucket,
+                        RangeStartBps,
+                        RangeEndBps)))
+            {
+                FingerprintEntries.Add($"{fingerprint}\t{hashBucket}");
+            }
         }
 
         internal static void Record(int seen, int selected, int removed)
@@ -124,6 +153,8 @@ namespace Vexforge.Editor
             RemovedVariants = 0;
             ProcessedSnippets = 0;
             FullBuildSelectedVariants = 0;
+            ShardSelectedVariants = 0;
+            ShardLimitExceeded = false;
             FingerprintEntries.Clear();
         }
     }
@@ -185,7 +216,14 @@ namespace Vexforge.Editor
                     VexforgeShaderShardContext.RangeStartBps,
                     VexforgeShaderShardContext.RangeEndBps))
                 {
-                    selected++;
+                    if (VexforgeShaderShardContext.TrySelectShardVariant())
+                    {
+                        selected++;
+                    }
+                    else
+                    {
+                        data.RemoveAt(index);
+                    }
                 }
                 else
                 {
@@ -256,13 +294,21 @@ namespace Vexforge.Editor
                 configuration.ShardIndex,
                 configuration.ShardCount,
                 configuration.RangeStartBps,
-                configuration.RangeEndBps);
+                configuration.RangeEndBps,
+                configuration.VariantLimit);
 
             BuildReport report = null;
             Exception failure = null;
             try
             {
                 report = BuildAndroidInternal(outputPath);
+                if (VexforgeShaderShardContext.ShardLimitExceeded)
+                {
+                    throw new InvalidOperationException(
+                        $"VEXFORGE shader shard selected more than " +
+                        $"{configuration.VariantLimit} variants. Increase shard_count " +
+                        "before continuing the checkpoint chain.");
+                }
             }
             catch (Exception exception)
             {
@@ -616,6 +662,7 @@ namespace Vexforge.Editor
                 shardCount = configuration.ShardCount,
                 rangeStartBps = configuration.RangeStartBps,
                 rangeEndBps = configuration.RangeEndBps,
+                variantLimit = configuration.VariantLimit,
                 editorVersion = Application.unityVersion,
                 buildTarget = EditorUserBuildSettings.activeBuildTarget.ToString(),
                 outputPath = outputPath,
@@ -685,6 +732,7 @@ namespace Vexforge.Editor
             internal readonly int ShardCount;
             internal readonly int RangeStartBps;
             internal readonly int RangeEndBps;
+            internal readonly int VariantLimit;
             internal readonly string Mode;
 
             internal ShaderShardConfiguration(int shardIndex, int shardCount, string mode)
@@ -693,6 +741,7 @@ namespace Vexforge.Editor
                 ShardCount = shardCount;
                 RangeStartBps = ReadInt("VEXFORGE_SHADER_RANGE_START_BPS", -1);
                 RangeEndBps = ReadInt("VEXFORGE_SHADER_RANGE_END_BPS", -1);
+                VariantLimit = ReadInt("VEXFORGE_SHADER_VARIANT_LIMIT", 0);
                 Mode = mode;
             }
 
@@ -733,6 +782,12 @@ namespace Vexforge.Editor
                         $"VEXFORGE shader range {RangeStartBps}-{RangeEndBps}bps " +
                         $"does not match shard {ShardIndex}/{ShardCount}; " +
                         $"expected {expectedStart}-{expectedEnd}bps.");
+                }
+
+                if (VariantLimit < 1 || VariantLimit > 35000)
+                {
+                    throw new InvalidOperationException(
+                        $"VEXFORGE shader variant limit must be between 1 and 35000, got {VariantLimit}.");
                 }
             }
         }
