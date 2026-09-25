@@ -33,7 +33,7 @@ export function CardShowcase({ card, featured = false }: { card: PortalCard; fea
   };
   return <article ref={ref} onPointerMove={onMove} onPointerLeave={reset} className={`cardShowcase cardShowcase--${meta.tone} ${featured ? "cardShowcase--featured" : ""}`} style={{ "--card-glow": meta.tone === "violet" ? "122, 86, 224" : "215, 164, 58" } as CSSProperties}>
     <div className="cardShowcase__art">
-      {card.image_url ? <img src={card.image_url} alt={`${card.name} — ${meta.label.toLowerCase()}`} loading={featured ? "eager" : "lazy"} decoding="async" fetchPriority={featured ? "high" : "auto"} className={ready ? "is-ready" : ""} onLoad={() => setReady(true)} /> : <div className="cardShowcase__missing"><span>VEXFORGE</span><b>ARTE NO DISPONIBLE</b></div>}
+      {card.image_url ? <img src={card.image_url} alt={`${card.name} — ${meta.label.toLowerCase()}`} loading={featured ? "eager" : "lazy"} decoding="async" fetchPriority={featured ? "high" : "auto"} className={ready ? "is-ready" : ""} onLoad={() => setReady(true)} /> : <div className="cardShowcase__missing"><span>VEXFORGE</span></div>}
       <div className="cardShowcase__frame" aria-hidden="true" />
       <div className="cardShowcase__shine" aria-hidden="true" />
       <span className="cardShowcase__rarity">{meta.label}</span>

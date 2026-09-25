@@ -3,27 +3,26 @@ export const PRIMARY_NAV = [
   { to: "/cards", label: "Cartas" },
   { to: "/world", label: "Mundo" },
   { to: "/news", label: "Noticias" },
-  { to: "/media", label: "Media" },
 ];
 
 export const PILLARS = [
-  { kicker: "COLECCIÓN", title: "Construye", copy: "Una colección con identidad. Un mazo con intención." },
-  { kicker: "ESTRATEGIA", title: "Lee", copy: "Mira el campo, mide la línea y espera el momento." },
-  { kicker: "BATALLA", title: "Decide", copy: "Cada turno abre una posibilidad y cierra otra." },
+  { kicker: "COLECCIÓN", title: "Construye", copy: "Reúne cartas con identidad y crea un mazo a tu manera." },
+  { kicker: "ESTRATEGIA", title: "Adapta", copy: "Lee el campo, anticipa el siguiente movimiento y cambia de plan." },
+  { kicker: "BATALLA", title: "Decide", copy: "Juega tu turno con intención y convierte cada oportunidad en ventaja." },
 ];
 
 export const GAME_AREAS = [
-  { number: "01", title: "NEXUS", meta: "ENTRADA", copy: "La puerta al universo VEXFORGE." },
-  { number: "02", title: "BATALLA", meta: "COMBATE", copy: "Donde la colección se convierte en decisión." },
-  { number: "03", title: "FORJA", meta: "PREPARACIÓN", copy: "Construye, afina y vuelve a intentarlo." },
-  { number: "04", title: "MISIONES", meta: "RECORRIDO", copy: "Objetivos que dan ritmo a tu camino." },
+  { number: "01", title: "NEXUS", meta: "MUNDO", copy: "El punto de partida para conocer la Forja." },
+  { number: "02", title: "BATALLA", meta: "COMBATE", copy: "Donde el mazo se convierte en decisión." },
+  { number: "03", title: "FORJA", meta: "PREPARACIÓN", copy: "Ajusta tu colección y prepara tu siguiente partida." },
+  { number: "04", title: "MISIONES", meta: "AVANCE", copy: "Objetivos que amplían tu recorrido por VEXFORGE." },
 ];
 
 export const FAQ = [
-  { q: "¿Dónde se jugará VEXFORGE?", a: "La primera edición está prevista para Android. La puerta oficial aparecerá aquí cuando esté disponible." },
-  { q: "¿Cuándo estará disponible?", a: "La fecha de llegada y la descarga aparecerán aquí cuando sea el momento." },
-  { q: "¿La web sustituye al juego?", a: "No. Este portal te presenta VEXFORGE; la partida vive dentro del juego." },
-  { q: "¿Dónde aparecerán los anuncios?", a: "Las novedades oficiales aparecerán en Noticias." },
+  { q: "¿Dónde se podrá jugar VEXFORGE?", a: "La primera edición está prevista para Android. Los accesos oficiales aparecerán en la sección de descarga." },
+  { q: "¿Cuándo estará disponible?", a: "La fecha de lanzamiento se anunciará oficialmente en Noticias y en la sección de descarga." },
+  { q: "¿Dónde aparecerán las novedades?", a: "Los anuncios, actualizaciones y noticias oficiales estarán reunidos en la sección Noticias." },
+  { q: "¿Dónde puedo conocer las cartas?", a: "La sección Cartas reúne la selección pública de cartas de VEXFORGE cuando esté disponible." },
 ];
 
 export const WORLD_REGIONS = [

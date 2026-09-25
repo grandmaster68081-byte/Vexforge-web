@@ -1,73 +1,64 @@
-# VEXFORGE — Replit implementation contract / Tier 1 Gold Master
+# VEXFORGE — Replit implementation contract / Tier 1 Master V5
 
-## Purpose
+## Mission
 
-Replace the current VEXFORGE web application surface with the supplied official public portal.
+Replace the current VEXFORGE public website with the supplied V5.1 official game portal. This package is an implementation package, not a visual suggestion.
 
-The Unity Android project is out of scope and must not be edited by this package.
+The website must read as a finished game property: artwork first, clear player pathways, strong TCG presentation, and no engineering or build-system language in the public experience.
 
-## What Replit must do
+The Unity Android project is out of scope. Do not edit `unity/`.
+
+## Required execution rules
 
 1. Work on the canonical `main` branch only.
 2. Back up/tag the current web state before replacement.
-3. Replace the website source with the contents of this package's `src`, `public`, root config and scripts.
-4. Remove the old web-client routes/components/providers that belong to the former dashboard application.
-5. Do not redesign the supplied UI. The package is the design specification, including spacing, responsive breakpoints, motion amplitude, hero composition, card hierarchy and disabled-download behavior.
-6. Do not invent images, copy, metrics, download links, social links or database tables.
-7. Do not add authentication to the portal.
-8. Do not touch `unity/`.
+3. Treat this package directory as the web source of truth.
+4. Replace the existing public website source/config with these package files.
+5. Remove the former dashboard UI/routes/providers from the public website.
+6. Do not reintroduce development/status panels, technical copy, fake metrics, placeholder URLs, or fake product facts.
+7. Do not redesign the supplied V5.1 composition during execution. Treat this package as the visual source of truth.
+8. Do not invent artwork, fake screenshots, release dates, player counts, social accounts, card facts, or store URLs.
+9. Do not add authentication to the public portal.
+10. Do not create new data tables or mutate the existing database schema.
+11. Do not touch `unity/`.
 
-## Required public routes
+## Public routes
 
 `/` `/game` `/cards` `/world` `/news` `/media` `/download` `/download/android` `/support` `/privacy` `/terms` plus SPA fallback.
 
-The `/download` and `/download/android` routes are informational until official distribution links exist. `DOWNLOAD_TARGETS.googlePlay` and `DOWNLOAD_TARGETS.directAndroid` must remain empty.
+## Download state
 
-## Supabase
+`DOWNLOAD_TARGETS.googlePlay` and `DOWNLOAD_TARGETS.directAndroid` must remain empty until real official URLs exist. The download surfaces may show a clear pre-release state, but empty targets must never behave like links.
 
-Do not create tables.
+## Player-facing boundary
 
-The portal may perform one public, read-only card query against the existing `cards` endpoint. It must expose only the fields actually required by this portal: `id, name, rarity, faction, image_url, power`, filter `active = true`, restrict rarity to Mythic/Legendary, and accept artwork only from the canonical VEXFORGE card-art path.
+Public pages may discuss the game, collection, battles, world, factions, news, media, support, and official availability. They must not expose Unity, Supabase, REST/API implementation, database structure, backend architecture, build systems, deployment details, runtime details, internal asset IDs, environment variables, repository details, or implementation status.
 
-No player session, wallet, inventory, marketplace, PvP, admin or economic state belongs in this website.
+## Visual acceptance
 
-The client fallback configuration is a publishable client key, never a secret, service-role or administrative key.
+### Mobile — 720 × 1640 reference
 
-## Assets
+- The hero is edge-to-edge and artwork-led.
+- The artwork uses the available viewport rather than sitting inside a desktop-style card.
+- Player-facing copy stays inside a 14px side gutter.
+- Primary actions become a clean vertical stack.
+- Card art preserves a true 2:3 TCG relationship.
+- Faction and discovery imagery remains dominant.
+- No debug/status/engineering language is visible.
 
-Use the supplied `src/lib/assets.ts` URLs as the canonical public asset map. Do not copy these remote images into the repository. If an asset is unavailable, preserve the code fallback; do not substitute stock or generated art.
+### Desktop — 1440 × 900 reference
 
-## Visual requirements
-
-Treat the supplied CSS as final design direction:
-
-- full-bleed cinematic hero
-- deep night background
-- gold/ember hierarchy
-- controlled violet/blue atmosphere
-- Cinzel/Cinzel Decorative display type
-- Rajdhani and IBM Plex Mono utility type
-- angular precision framing
-- asymmetric editorial composition
-- high-rarity card presentation
-- faction and world visual rails
-- restrained micro-scenes
-- no generic SaaS card layout
-- no particle field
-- no fake statistics
-- no excessive glassmorphism
-
-## Performance
-
-Keep the direct public REST card query bounded and timed out.
-Keep eager image loading limited to the first visual priority.
-Use lazy loading for secondary media.
-Respect `prefers-reduced-motion`.
-Do not add an animation framework.
+- Navigation stays secondary to the game art.
+- Hero occupies most of the opening frame.
+- Discovery uses one lead visual and supporting visuals.
+- Card presentation uses a featured lead plus supporting cards.
+- Factions are image-led editorial panels rather than SaaS cards.
+- World is a full-width cinematic scene.
+- Download is a controlled release gate until URLs exist.
 
 ## Verification
 
-Run from the new web root:
+From the supplied web root run:
 
 ```bash
 npm install
@@ -77,10 +68,4 @@ npm run build
 npm run verify:build
 ```
 
-`npm run verify` includes the literal internal-route audit (`verify:links`) in addition to portal, syntax, copy, Supabase public-contract, and quality checks.
-
-All commands must pass before the merge.
-
-## Definition of done
-
-The deployed website must present only the public VEXFORGE portal and no former dashboard functionality. The visible download CTA must remain non-interactive while the official URLs are empty; only populate the configured targets when real official URLs exist. The visual hierarchy must match the supplied Tier 1 specification without Replit inventing substitute UI or artwork.
+All commands must pass before merge.

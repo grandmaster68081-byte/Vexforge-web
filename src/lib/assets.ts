@@ -34,5 +34,11 @@ export const SOCIAL_TARGETS = {
 
 export function readyLink(url: string): string | null {
   const value = url.trim();
-  return value.length ? value : null;
+  if (!value) return null;
+  try {
+    const parsed = new URL(value);
+    return parsed.protocol === "https:" ? parsed.toString() : null;
+  } catch {
+    return null;
+  }
 }

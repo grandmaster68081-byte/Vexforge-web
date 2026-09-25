@@ -1,13 +1,11 @@
-# Portal Architecture
+# Portal Architecture — V5
 
-`src/pages` contains only public editorial routes.
+`src/pages` contains the public editorial routes.
 
-`src/components` contains reusable cinematic, card, navigation, reveal and publication-gate components.
+`src/components` contains shared navigation, typography, visual sections, card presentation, reveal motion and the release gate.
 
-`src/lib/assets.ts` is the canonical public asset map.
+`src/lib/assets.ts` is the canonical public art map.
 
-`src/lib/cards.ts` uses the public Supabase REST endpoint directly rather than the Supabase SDK. This keeps the public portal smaller and avoids exposing authentication capabilities it does not need.
+`src/lib/cards.ts` performs one bounded, read-only public card catalog request and validates the returned display fields and canonical card-art prefix.
 
-No new database tables are required.
-
-The portal never owns player state. Unity remains the playable client and Supabase remains authoritative for game state.
+No new database tables are required. The public portal does not own player state.

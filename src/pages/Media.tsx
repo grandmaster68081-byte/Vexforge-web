@@ -14,7 +14,7 @@ const mediaItems = [
 
 export function Media() {
   return <>
-    <section className="pageHero pageHero--media"><div className="pageHero__image"/><div className="pageHero__veil"/><div className="shell pageHero__inner"><Reveal><span className="eyebrow eyebrow--light"><i/>MEDIA</span><h1>El mundo<br/><em>sin marco.</em></h1><p>Una selección visual del universo VEXFORGE.</p></Reveal></div></section>
-    <section className="mediaSection"><div className="shell"><Reveal><SectionHeading kicker="ARCHIVO VISUAL" title={<>Una identidad<br/><em>reconocible.</em></>} copy="Lugares, atmósferas y superficies que construyen el lenguaje visual de VEXFORGE." /></Reveal><div className="mediaMosaic">{mediaItems.map((item, i) => <Reveal key={item.label} delay={i * 40} className={`mediaTile ${item.className}`}><RemoteImage src={item.image} alt={`${item.label} — VEXFORGE`}/><div className="mediaTile__veil"/><div className="mediaTile__caption"><span>0{i + 1}</span><strong>{item.label}</strong></div></Reveal>)}</div></div></section>
+    <section className="pageHero pageHero--media"><div className="pageHero__image"/><div className="pageHero__veil"/><div className="shell pageHero__inner"><Reveal><span className="eyebrow eyebrow--light"><i/>MEDIA</span><h1>El mundo<br/><em>sin marco.</em></h1><p>Arte, lugares y atmósferas del universo VEXFORGE.</p></Reveal></div></section>
+    <section className="mediaSection"><div className="shell"><Reveal><SectionHeading kicker="GALERÍA" title={<>Una identidad<br/><em>reconocible.</em></>} copy="Una selección visual para conocer la identidad de VEXFORGE." /></Reveal><div className="mediaMosaic">{mediaItems.map((item, i) => <Reveal key={item.label} delay={i * 40} className={`mediaTile ${item.className}`}><RemoteImage src={item.image} alt={`${item.label} — VEXFORGE`}/><div className="mediaTile__veil"/><div className="mediaTile__caption"><span>0{i + 1}</span><strong>{item.label}</strong></div></Reveal>)}</div></div></section>
   </>;
 }

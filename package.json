@@ -1,7 +1,7 @@
 {
-  "name": "vexforge-official-portal-v3-tier1-gold",
+  "name": "vexforge-official-portal-v5-1-tier1-master",
   "private": true,
-  "version": "3.7.0",
+  "version": "5.1.0",
   "type": "module",
   "engines": {
     "node": ">=18.0.0"
@@ -15,10 +15,12 @@
     "verify:portal": "node scripts/verify-portal.mjs",
     "verify:build": "npm run build && node scripts/verify-build.mjs",
     "verify:copy": "node scripts/verify-copy.mjs",
+    "verify:public-surface": "node scripts/verify-public-surface.mjs",
     "verify:supabase": "node scripts/verify-supabase-public-contract.mjs",
     "verify:quality": "node scripts/verify-quality.mjs",
-    "verify": "npm run verify:syntax && npm run verify:portal && npm run verify:links && npm run verify:copy && npm run verify:supabase && npm run verify:quality",
-    "verify:links": "node scripts/verify-links.mjs"
+    "verify": "npm run verify:syntax && npm run verify:portal && npm run verify:links && npm run verify:copy && npm run verify:public-surface && npm run verify:supabase && npm run verify:responsive && npm run verify:quality",
+    "verify:links": "node scripts/verify-links.mjs",
+    "verify:responsive": "node scripts/verify-responsive-contract.mjs"
   },
   "dependencies": {
     "react": "18.3.1",

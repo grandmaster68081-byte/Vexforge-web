@@ -1,12 +1,29 @@
-# VEXFORGE Visual Direction — Gold Master
+# VEXFORGE Visual Direction — V5.1 Tier 1 Master
 
-The portal is designed as an official game publication site: strong key art above the fold, a compact navigation system, editorial rhythm, high-rarity card presentation, visual world/faction rails, a restrained newsroom, media archive and a real publication gate for Android.
+VEXFORGE should read as an official game property before it reads as a website. The artwork establishes the world; the interface frames it.
 
-The visual language is deliberately authored rather than generic: large Cinzel display type, Rajdhani utility text, IBM Plex Mono metadata, hard angular cuts, fine gold rails, controlled atmospheric gradients and limited motion.
+## Above the fold
 
-The site does not attempt to reproduce any other brand. The reference is architectural: the way established game portals let the artwork carry the first impression while the UI stays quiet.
+The homepage begins with a full-bleed official VEXFORGE image, compact navigation, a strong wordmark/title treatment and two clear entry actions. The artwork must remain visible across the first viewport, including the 720×1640 mobile reference frame.
 
+## Editorial rhythm
 
-## Hard visual constraint
+The page alternates between image-led discovery panels, a premium card showcase, faction art, a cinematic world teaser and a restrained Android release gate. Section compositions should not collapse into a repeated 3-column dashboard pattern.
 
-Do not add decorative particle systems, star fields, floating dots, animated noise, fake HUD readouts, or generic AI-looking ambient effects. The atmosphere comes from the official VEXFORGE artwork plus controlled CSS lighting, cropping, rails, framing, and micro-motion.
+## Typography
+
+Display: Cinzel / Cinzel Decorative.
+Utility: Rajdhani.
+Metadata: IBM Plex Mono.
+
+## Color
+
+Night black and blue as the field. Warm gold/ember for hierarchy. Violet and cold blue only as atmospheric accents inherited from the artwork.
+
+## Motion
+
+Use only subtle transform/opacity motion. Pointer parallax is capped to single-digit pixels. Reduced-motion removes decorative movement.
+
+## Prohibited visual shortcuts
+
+No particles, star fields, floating dots, fake HUD readouts, fake metrics, rainbow gradients, neon outlines, generic SaaS cards, or excessive glass surfaces.

@@ -1,85 +1,118 @@
 import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { Link } from "react-router-dom";
 import { ASSETS } from "../lib/assets";
-import { PILLARS } from "../data/content";
 import { loadFeaturedCards, type PortalCard } from "../lib/cards";
+import { PILLARS } from "../data/content";
 import { Reveal } from "../components/Reveal";
 import { SectionHeading } from "../components/SectionHeading";
 import { Icon } from "../components/Icon";
-import { CinematicScene } from "../components/CinematicScene";
 import { CardShowcase } from "../components/CardShowcase";
 import { DownloadGate } from "../components/DownloadGate";
-import { ForgeGlyph } from "../components/ForgeGlyph";
+
+const discovery = [
+  { kicker: "EL JUEGO", title: "Aprende. Construye. Compite.", copy: "Una experiencia de cartas donde cada decisión cambia el siguiente turno.", image: ASSETS.lobby, to: "/game" },
+  { kicker: "EL MUNDO", title: "Entra en la Forja.", copy: "Descubre regiones, facciones y lugares que dan forma a VEXFORGE.", image: ASSETS.nexus, to: "/world" },
+  { kicker: "LA COLECCIÓN", title: "Encuentra tu carta.", copy: "Explora las rarezas y las cartas que definen cada estilo de juego.", image: ASSETS.regions.shadowFracture, to: "/cards" },
+];
 
 export function Home() {
   const heroRef = useRef<HTMLElement>(null);
   const [cards, setCards] = useState<PortalCard[]>([]);
-  useEffect(() => { let live = true; loadFeaturedCards(4).then((items) => live && setCards(items)); return () => { live = false; }; }, []);
+
+  useEffect(() => {
+    let live = true;
+    loadFeaturedCards(4).then((items) => live && setCards(items));
+    return () => { live = false; };
+  }, []);
+
   useEffect(() => {
     const node = heroRef.current;
     if (!node || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     const onMove = (event: PointerEvent) => {
+      if (event.pointerType !== "mouse") return;
       const rect = node.getBoundingClientRect();
-      node.style.setProperty("--hero-x", `${((event.clientX - rect.left) / rect.width - .5) * 10}px`);
-      node.style.setProperty("--hero-y", `${((event.clientY - rect.top) / rect.height - .5) * 6}px`);
+      const x = (event.clientX - rect.left) / rect.width - 0.5;
+      const y = (event.clientY - rect.top) / rect.height - 0.5;
+      node.style.setProperty("--hero-x", `${x * 5}px`);
+      node.style.setProperty("--hero-y", `${y * 4}px`);
     };
     const reset = () => { node.style.setProperty("--hero-x", "0px"); node.style.setProperty("--hero-y", "0px"); };
-    node.addEventListener("pointermove", onMove); node.addEventListener("pointerleave", reset);
+    node.addEventListener("pointermove", onMove);
+    node.addEventListener("pointerleave", reset);
     return () => { node.removeEventListener("pointermove", onMove); node.removeEventListener("pointerleave", reset); };
   }, []);
+
   return <>
-    <section className="homeHero" ref={heroRef}>
-      <div className="homeHero__image" aria-hidden="true" />
-      <div className="homeHero__veil" aria-hidden="true" />
-      <div className="homeHero__sigil" aria-hidden="true"><ForgeGlyph variant="core"/></div>
-      {cards[0] && <Link className="homeHero__cardLink" to="/cards" aria-label={`Ver la carta ${cards[0].name}`}>
-        <div className={`homeHero__card homeHero__card--${cards[0].rarity === "Mythic" ? "mythic" : "legendary"}`}>
-          <div className="homeHero__cardArt"><img src={cards[0].image_url || ""} alt="" loading="eager" decoding="async" fetchPriority="high" /></div>
-          <div className="homeHero__cardFrame" aria-hidden="true" />
-          <div className="homeHero__cardGlow" aria-hidden="true" />
-          <div className="homeHero__cardMeta"><span>{cards[0].rarity === "Mythic" ? "MÍTICA" : "LEGENDARIA"}</span><strong>{cards[0].name}</strong></div>
-        </div>
-      </Link>}
-      <div className="shell homeHero__inner">
-        <div className="homeHero__copy">
-          <Reveal>
-            <span className="eyebrow eyebrow--light"><i/>EL JUEGO DE CARTAS DE VEXFORGE</span>
-            <div className="homeHero__wordmark" aria-label="VEXFORGE"><span>VEX</span><em>FORGE</em></div>
-            <h1>La Forja<br/><em>te espera.</em></h1>
-            <p>Construye tu colección. Lee el campo. Elige cuándo avanzar.</p>
-            <div className="homeHero__actions"><Link className="portalButton portalButton--gold" to="/game">Descubrir el juego <Icon name="arrow" size={17}/></Link><Link className="portalButton portalButton--outline" to="/cards">Ver cartas <Icon name="arrow" size={17}/></Link></div>
-          </Reveal>
-        </div>
-        <div className="homeHero__monolith" aria-hidden="true">
-          <div className="homeHero__monolithLine"/><span>01</span><b>NEXUS</b><small>DONDE COMIENZA EL VIAJE</small>
-        </div>
+    <section className="v5Hero" ref={heroRef} aria-labelledby="home-title">
+      <div className="v5Hero__image" aria-hidden="true" />
+      <div className="v5Hero__veil" aria-hidden="true" />
+      <div className="v5Hero__content shell">
+        <Reveal>
+          <span className="eyebrow eyebrow--light"><i/>JUEGO DE CARTAS COLECCIONABLE</span>
+          <div className="v5Hero__wordmark" aria-label="VEXFORGE"><span>VEX</span><em>FORGE</em></div>
+          <h1 id="home-title">La Forja<br/><em>despierta.</em></h1>
+          <p>Construye tu mazo. Domina el campo. Forja tu camino.</p>
+          <div className="v5Hero__actions">
+            <Link className="portalButton portalButton--gold" to="/game">Descubre el juego <Icon name="arrow" size={17}/></Link>
+            <Link className="portalButton portalButton--outline" to="/cards">Explora las cartas <Icon name="card" size={17}/></Link>
+          </div>
+        </Reveal>
       </div>
-      <div className="homeHero__bottom shell"><span>COLECCIÓN · ESTRATEGIA · BATALLA</span><i/><span>SCROLL</span></div>
+      <div className="v5Hero__scroll" aria-hidden="true"><span/>DESPLAZA</div>
     </section>
 
-    <section className="manifestoSection">
-      <div className="shell manifestoGrid">
-        <Reveal><SectionHeading kicker="LA IDEA" title={<>No se trata de tener más.<br/><em>Se trata de decidir mejor.</em></>} copy="VEXFORGE une colección, lectura del campo y el instante exacto de tomar una decisión." /></Reveal>
-        <div className="manifestoNumbers">{PILLARS.map((item, i) => <Reveal key={item.kicker} delay={i * 70}><article className="manifestoNumber"><span>0{i + 1}</span><div><small>{item.kicker}</small><h3>{item.title}</h3><p>{item.copy}</p></div></article></Reveal>)}</div>
-      </div>
-    </section>
-
-    <CinematicScene image={ASSETS.nexus} eyebrow="NEXUS" title="Un mundo que no necesita explicarse para sentirse enorme." copy="La primera mirada a VEXFORGE empieza aquí: arquitectura, distancia y una puerta hacia lo que viene." index="02" variant="nexus" to="/world" action="Entrar al mundo" align="right" />
-
-    <section className="featuredCardsSection">
+    <section className="v5Intro">
       <div className="shell">
-        <div className="sectionSplit"><Reveal><SectionHeading kicker="COLECCIÓN / ALTA RAREZA" title={<>Lo más raro<br/><em>merece su vitrina.</em></>} copy="Míticas y Legendarias ocupan el primer plano de la colección." /></Reveal><Link className="inlineAction" to="/cards">Abrir archivo <Icon name="arrow" size={15}/></Link></div>
-        {cards.length ? <div className="featuredCards">{cards.map((card, index) => <Reveal key={card.id} delay={index * 75}><CardShowcase card={card} featured={index === 0}/></Reveal>)}</div> : <div className="cardFallback"><div className="cardFallback__seal"><ForgeGlyph variant="core"/></div><div><span className="eyebrow"><i/>ARCHIVO</span><h3>La vitrina está esperando el catálogo.</h3><p>Las cartas de mayor rareza aparecerán aquí cuando la colección esté abierta.</p></div></div>}
+        <div className="v5Intro__lead">
+          <Reveal><SectionHeading kicker="VEXFORGE" title={<>Una batalla de cartas<br/><em>con identidad.</em></>} copy="Construye un mazo, lee el campo y decide cuándo cambiar la partida." /></Reveal>
+          <Reveal delay={80}><div className="v5Intro__image"><img src={ASSETS.lobby} alt="Escena de VEXFORGE" loading="lazy" decoding="async" onError={(event) => { event.currentTarget.style.display = "none"; }} /></div></Reveal>
+        </div>
+        <div className="v5Pillars" aria-label="Pilares de juego">
+          {PILLARS.map((pillar, index) => <Reveal key={pillar.kicker} delay={index * 55}><article className="v5Pillar"><span>{pillar.kicker}</span><strong>{pillar.title}</strong><p>{pillar.copy}</p></article></Reveal>)}
+        </div>
       </div>
     </section>
 
-    <section className="factionBand" id="factions">
-      <div className="shell factionBand__intro"><Reveal><span className="eyebrow"><i/>CUATRO SENDAS</span><h2>Elige una identidad.<br/><em>Hazla tuya.</em></h2><Link className="inlineAction" to="/game#factions">Ver facciones <Icon name="arrow" size={15}/></Link></Reveal></div>
-      <div className="factionBand__rail">{Object.entries(ASSETS.factions).map(([name, item], i) => <Link key={name} to="/game#factions" className={`factionCard factionCard--${item.tone}`}><div className="factionCard__image" style={{ "--faction-image": `url(${item.background})` } as CSSProperties}/><div className="factionCard__shade"/><img src={item.icon} alt=""/><div className="factionCard__copy"><span>0{i + 1}</span><small>FACCIONES</small><h3>{name}</h3></div><Icon name="arrow" size={16}/></Link>)}</div>
+    <section className="v5Discover">
+      <div className="shell">
+        <div className="v5SectionHead"><Reveal><SectionHeading kicker="DESCUBRE VEXFORGE" title={<>Entra donde<br/><em>comienza la aventura.</em></>} /></Reveal><Reveal delay={80}><Link className="inlineAction" to="/game">Conoce el juego <Icon name="arrow" size={15}/></Link></Reveal></div>
+        <div className="v5Discover__grid">
+          {discovery.map((item, index) => <Reveal key={item.kicker} delay={index * 60}><Link to={item.to} className={`v5DiscoverCard v5DiscoverCard--${index === 0 ? "lead" : "support"}`}>
+            <img src={item.image} alt="" loading="lazy" decoding="async" onError={(event) => { event.currentTarget.style.display = "none"; }} />
+            <div className="v5DiscoverCard__veil" />
+            <div className="v5DiscoverCard__copy"><span>{item.kicker}</span><h3>{item.title}</h3><p>{item.copy}</p><b>Explorar <Icon name="arrow" size={15}/></b></div>
+          </Link></Reveal>)}
+        </div>
+      </div>
     </section>
 
-    <CinematicScene image={ASSETS.lobby} eyebrow="BATALLA" title="La colección encuentra su sentido cuando llega el momento." copy="Antes del turno, existe el silencio. Después, solo queda la decisión." index="04" variant="battle" to="/game" action="Conocer el juego" />
+    <section className="v5Cards">
+      <div className="shell">
+        <div className="v5SectionHead"><Reveal><SectionHeading kicker="COLECCIÓN" title={<>Cartas que<br/><em>definen la partida.</em></>} copy="Descubre las rarezas que destacan dentro del universo VEXFORGE." /></Reveal><Reveal delay={80}><Link className="inlineAction" to="/cards">Ver la colección <Icon name="arrow" size={15}/></Link></Reveal></div>
+        {cards.length ? <div className="v5Cards__grid">{cards.map((card, index) => <Reveal key={card.id} delay={index * 55}><CardShowcase card={card} featured={index === 0}/></Reveal>)}</div> : <Link className="v5CardsFallback" to="/cards"><img src={ASSETS.cover} alt="Arte de VEXFORGE" loading="lazy" decoding="async" onError={(event) => { event.currentTarget.style.display = "none"; }} /><div><span className="eyebrow"><i/>COLECCIÓN</span><h3>Descubre VEXFORGE.</h3><p>Conoce las cartas y las rarezas que dan identidad a cada estilo de juego.</p><b>Explorar cartas <Icon name="arrow" size={15}/></b></div></Link>}
+      </div>
+    </section>
 
-    <section className="portalClose"><div className="shell portalClose__grid"><Reveal><span className="eyebrow"><i/>VEXFORGE</span><h2>Cuando se abra la puerta,<br/><em>estarás listo.</em></h2></Reveal><Reveal delay={100}><DownloadGate/></Reveal></div></section>
+    <section className="v5Factions">
+      <div className="shell">
+        <div className="v5SectionHead"><Reveal><SectionHeading kicker="CUATRO SENDAS" title={<>Elige cómo<br/><em>jugarás.</em></>} copy="Guerrero, Mago, Paladín y Pícaro. Cuatro formas de entrar en la Forja." /></Reveal><Reveal delay={80}><Link className="inlineAction" to="/game#factions">Conoce las facciones <Icon name="arrow" size={15}/></Link></Reveal></div>
+        <div className="v5Factions__grid">{Object.entries(ASSETS.factions).map(([name, item], index) => <Link key={name} to="/game#factions" className="v5FactionCard">
+          <img src={item.background} alt="" loading="lazy" decoding="async" onError={(event) => { event.currentTarget.style.display = "none"; }} />
+          <div className="v5FactionCard__veil" />
+          <img className="v5FactionCard__icon" src={item.icon} alt="" loading="lazy" decoding="async" onError={(event) => { event.currentTarget.style.display = "none"; }} />
+          <div className="v5FactionCard__copy"><span>0{index + 1}</span><h3>{name}</h3></div>
+        </Link>)}</div>
+      </div>
+    </section>
+
+    <section className="v5World">
+      <img src={ASSETS.nexus} alt="" loading="lazy" decoding="async" onError={(event) => { event.currentTarget.style.display = "none"; }} />
+      <div className="v5World__veil" aria-hidden="true" />
+      <div className="shell v5World__content"><Reveal><span className="eyebrow eyebrow--light"><i/>EL MUNDO</span><h2>Más allá de la batalla,<br/><em>existe la Forja.</em></h2><p>Explora regiones y atmósferas que convierten VEXFORGE en un universo propio.</p><Link className="portalButton portalButton--gold" to="/world">Explorar el mundo <Icon name="arrow" size={17}/></Link></Reveal></div>
+    </section>
+
+    <section className="v5Download">
+      <div className="shell v5Download__grid"><Reveal><span className="eyebrow"><i/>ANDROID</span><h2>La batalla<br/><em>te espera.</em></h2><p>VEXFORGE llegará a Android. Aquí encontrarás el acceso oficial.</p></Reveal><Reveal delay={90}><DownloadGate/></Reveal></div>
+    </section>
   </>;
 }

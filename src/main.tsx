@@ -24,8 +24,8 @@ const meta: Record<string, { title: string; description: string }> = {
   "/download": { title: "VEXFORGE — Descarga", description: "Canales oficiales de descarga de VEXFORGE." },
   "/download/android": { title: "VEXFORGE — Android", description: "Estado de publicación de VEXFORGE para Android." },
   "/support": { title: "VEXFORGE — Soporte", description: "Ayuda y preguntas frecuentes de VEXFORGE." },
-  "/privacy": { title: "VEXFORGE — Privacidad", description: "Política de privacidad de VEXFORGE." },
-  "/terms": { title: "VEXFORGE — Términos", description: "Términos oficiales de VEXFORGE." },
+  "/privacy": { title: "VEXFORGE — Privacidad", description: "Información de privacidad del portal oficial de VEXFORGE." },
+  "/terms": { title: "VEXFORGE — Términos", description: "Condiciones de uso del portal oficial de VEXFORGE." },
 };
 
 function PageMeta() {
@@ -38,10 +38,10 @@ function PageMeta() {
     description.content = entry.description;
     let canonical = document.querySelector<HTMLLinkElement>('link[rel="canonical"]');
     if (!canonical) { canonical = document.createElement("link"); canonical.rel = "canonical"; document.head.appendChild(canonical); }
-    canonical.href = `${window.location.origin}${location.pathname}`;
+    canonical.href = `https://vexforge-web.pages.dev${location.pathname}`;
     let robots = document.querySelector<HTMLMetaElement>('meta[name="robots"]');
     if (!robots) { robots = document.createElement("meta"); robots.name = "robots"; document.head.appendChild(robots); }
-    robots.content = meta[location.pathname] ? "index,follow" : "noindex,nofollow";
+    robots.content = (meta[location.pathname] && !["/privacy", "/terms", "/download/android"].includes(location.pathname)) ? "index,follow" : "noindex,nofollow";
     const hash = decodeURIComponent(location.hash.replace("#", ""));
     requestAnimationFrame(() => {
       if (hash) document.getElementById(hash)?.scrollIntoView({ behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "start" });

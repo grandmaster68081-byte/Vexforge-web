@@ -1,62 +1,47 @@
-# VEXFORGE — Official Portal V3 Tier 1 / Implementation Specification
+# VEXFORGE — Official Portal V5 Tier 1 / Implementation Specification
 
-## 1. Producto
+## 1. Product role
 
-La web es un portal editorial y de distribución. No es una segunda implementación del juego.
+The website is the public game portal for VEXFORGE. It is not a second game client and it is not a dashboard.
 
-La referencia estructural son los portales oficiales de videojuegos: una portada con identidad fuerte, navegación corta, contenido visual, archivo de cartas, mundo, noticias/media, soporte y una puerta de descarga. La referencia visual no se copia: se traduce al lenguaje VEXFORGE.
+## 2. Visual system
 
-## 2. Dirección visual
+V5 is artwork-first. The first viewport must communicate the game through official art, typography, composition and clear entry points before explanatory copy.
 
-El portal debe sentirse como una pieza editorial de un videojuego premium:
+Core characteristics:
 
-- negro profundo y azul nocturno como campo base;
-- oro/ember como señal de jerarquía;
-- violeta arcano y azul frío solo como iluminación ambiental;
-- tipografía de display `Cinzel`/`Cinzel Decorative` y texto funcional `Rajdhani`/`IBM Plex Mono`;
-- imágenes a sangre, recortes angulares, líneas de precisión, jerarquía asimétrica y espacios de respiración;
-- profundidad mediante gradientes, viñetas, máscaras, capas y desplazamientos muy sutiles;
-- nada de grids de SaaS, glassmorphism indiscriminado, partículas decorativas, métricas falsas, iconografía juguetona o exceso de componentes.
+- full-bleed cinematic hero;
+- dark night palette with warm gold hierarchy;
+- restrained violet/blue atmosphere;
+- Cinzel / Cinzel Decorative for display, Rajdhani for utility, IBM Plex Mono for metadata;
+- angular precision lines without turning the page into a HUD;
+- large image-led discovery, faction and world modules;
+- high-rarity cards presented at the native TCG 2:3 relationship;
+- no generic SaaS dashboard cards;
+- no fake metrics, technical-status panels, particles or excessive glassmorphism.
 
-## 3. Rutas
+## 3. Mobile composition
 
-`/` `/game` `/cards` `/world` `/news` `/media` `/download` `/download/android` `/support` `/privacy` `/terms` y fallback 404.
+Reference mobile viewport: 720 × 1640.
 
-## 4. Descarga
+The hero is full bleed. Text is placed over the artwork with a 14px outer gutter; artwork is not boxed inside a narrow desktop shell. Discovery, factions, world and release surfaces each have a distinct vertical rhythm. The layout collapses intentionally at 820px and 560px.
 
-`DOWNLOAD_TARGETS.googlePlay` y `DOWNLOAD_TARGETS.directAndroid` deben permanecer vacíos hasta disponer de URLs reales.
+## 4. Routes
 
-El UI debe comunicar `PRÓXIMAMENTE`. No abrir enlaces falsos ni iniciar descargas automáticas.
+`/` `/game` `/cards` `/world` `/news` `/media` `/download` `/download/android` `/support` `/privacy` `/terms` and SPA fallback.
 
-## 5. Assets
+## 5. Download
 
-Usar las rutas existentes de Supabase Storage documentadas en `src/lib/assets.ts`.
+`DOWNLOAD_TARGETS.googlePlay` and `DOWNLOAD_TARGETS.directAndroid` remain empty until official URLs exist. The visual release gate is non-interactive while empty.
 
-No convertir la galería web en una copia local de los assets. Esto mantiene el repositorio pequeño y respeta la fuente canónica de arte.
+## 6. Assets and cards
 
-## 6. Cartas
+Use the canonical asset URLs in `src/lib/assets.ts`. Public cards are read-only and limited to active Mythic/Legendary entries and the required display fields. Only artwork beginning with the canonical public VEXFORGE card-art prefix is accepted.
 
-La consulta pública de `cards` solo recupera los campos necesarios para la vitrina. Solo se usa `image_url` cuando empieza por la ruta pública oficial de `vexforge-assets/cards/`.
+## 7. Player-facing copy boundary
 
-## 7. Limpieza de la web antigua
+Player-facing files must never mention Unity, Supabase, REST, API, database, backend, runtime, deployment, build systems, implementation status, or internal asset IDs.
 
-La implementación nueva no debe conservar rutas o superficies del antiguo dashboard. No existe `AuthProvider`, `ProtectedAdminRoute`, ni llamadas de sesión. No se crean páginas informativas que reintroduzcan operaciones antiguas como mercado, depósitos, inventario o administración.
+## 8. Verification
 
-La retirada de objetos exclusivos de la aplicación anterior en Supabase se gestiona por auditoría y no por borrado automático.
-
-## 8. Performance
-
-- `loading=eager` únicamente para la hero principal cuando aporta valor;
-- el resto de imágenes usa `lazy` + `decoding=async`;
-- animaciones solo con `transform`/`opacity` en elementos revelados;
-- no dependencias de animación de terceros;
-- `prefers-reduced-motion` respetado;
-- no se descarga un segundo sistema de imágenes locales.
-
-## 9. Responsive
-
-El diseño está pensado primero para pantallas móviles estrechas y después escala a desktop. La navegación móvil conserva la misma jerarquía visual del desktop sin crear un menú genérico distinto.
-
-## 10. Definición de acabado
-
-El criterio de aceptación no es “hay muchas cosas”. Debe sentirse como una web oficial de videojuego: fuerte en la portada, editorial en los interiores, visualmente controlada y breve.
+Run `npm install`, then `npm run verify`, `npm run typecheck`, `npm run build`, and `npm run verify:build`. The supplied static verification suite includes a responsive composition contract.
