@@ -1,13 +1,9 @@
 import { Link } from "react-router-dom";
-import { ASSETS } from "../lib/assets";
+import { ForgeGlyph } from "./ForgeGlyph";
 
-export function BrandMark({ compact = false }: { compact?: boolean }) {
-  return (
-    <Link className={`brand ${compact ? "brand--compact" : ""}`} to="/" aria-label="VEXFORGE — inicio">
-      <span className="brand__sigil" aria-hidden="true">V</span>
-      <span className="brand__logoWrap">
-        <img src={ASSETS.logo} alt="VEXFORGE" className="brand__logo" />
-      </span>
-    </Link>
-  );
+export function BrandMark() {
+  return <Link className="brandMark" to="/" aria-label="VEXFORGE — inicio">
+    <span className="brandMark__crest" aria-hidden="true"><ForgeGlyph variant="core" /></span>
+    <span className="brandMark__type"><strong>VEXFORGE</strong><small>LA FORJA TE ESPERA</small></span>
+  </Link>;
 }

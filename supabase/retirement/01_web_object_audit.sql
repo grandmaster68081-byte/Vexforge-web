@@ -1,43 +1,26 @@
--- VEXFORGE web retirement audit — NON-DESTRUCTIVE.
--- Run this in Supabase SQL Editor or psql before dropping anything.
--- The purpose is to identify objects whose names suggest historical web-only usage.
--- DO NOT execute DROP statements based on this report alone.
-
-select table_schema, table_name
-from information_schema.tables
-where table_schema = 'public'
+-- Non-destructive inventory only. Run in Supabase SQL editor before retiring old web objects.
+-- Do not execute DROP statements from an automated deployment.
+select n.nspname as schema_name, p.proname as function_name
+from pg_proc p
+join pg_namespace n on n.oid = p.pronamespace
+where n.nspname = 'public'
   and (
-    table_name ilike '%shop%'
-    or table_name ilike '%order%'
-    or table_name ilike '%withdraw%'
-    or table_name ilike '%deposit%'
-    or table_name ilike '%referral%'
-    or table_name ilike '%clan%'
-    or table_name ilike '%friend%'
-    or table_name ilike '%nft%'
+    lower(p.proname) like '%shop%'
+    or lower(p.proname) like '%deposit%'
+    or lower(p.proname) like '%withdraw%'
+    or lower(p.proname) like '%admin%'
+    or lower(p.proname) like '%nft%'
   )
-order by table_name;
+order by 1,2;
 
-select routine_schema, routine_name, routine_type
-from information_schema.routines
-where routine_schema = 'public'
+select schemaname, tablename
+from pg_tables
+where schemaname = 'public'
   and (
-    routine_name ilike '%shop%'
-    or routine_name ilike '%order%'
-    or routine_name ilike '%withdraw%'
-    or routine_name ilike '%deposit%'
-    or routine_name ilike '%referral%'
-    or routine_name ilike '%admin%'
-    or routine_name ilike '%nft%'
+    lower(tablename) like '%shop%'
+    or lower(tablename) like '%order%'
+    or lower(tablename) like '%deposit%'
+    or lower(tablename) like '%withdraw%'
+    or lower(tablename) like '%nft%'
   )
-order by routine_name;
-
-select table_schema, table_name, column_name
-from information_schema.columns
-where table_schema = 'public'
-  and (
-    column_name ilike '%wallet%'
-    or column_name ilike '%tx_hash%'
-    or column_name ilike '%payment%'
-  )
-order by table_name, column_name;
+order by 1,2;

@@ -1,14 +1,15 @@
+import { useState } from "react";
 import { ASSETS } from "../lib/assets";
+import { FAQ } from "../data/content";
 import { Reveal } from "../components/Reveal";
 import { SectionHeading } from "../components/SectionHeading";
-
-const faqs = [
-  ["¿Dónde se juega VEXFORGE?", "El producto activo es una aplicación Android desarrollada en Unity."],
-  ["¿La web necesita una cuenta?", "No. El portal es público y no replica el cliente autenticado del juego."],
-  ["¿Cuándo estará disponible la descarga?", "Cuando exista una distribución oficial confirmada, la ruta de descarga se activará sin rediseñar esta página."],
-  ["¿Dónde llegan las novedades?", "En esta sección de Noticias, además de los canales oficiales que se incorporen en el futuro."],
-];
+import { Icon } from "../components/Icon";
+import { RemoteImage } from "../components/RemoteImage";
 
 export function Support() {
-  return <><section className="pageHero pageHero--support"><div className="pageHero__media" style={{ backgroundImage: `url(${ASSETS.nexusAtmosphere})` }} /><div className="pageHero__veil" /><div className="shell pageHero__content"><div className="kicker">SUPPORT / HELP</div><h1>Directo al punto.</h1><p>Información esencial, sin convertir el portal en un segundo juego.</p></div></section><section className="section"><div className="shell supportGrid"><Reveal><SectionHeading kicker="FAQ" title="Preguntas frecuentes" /></Reveal><div className="faqList">{faqs.map(([q,a]) => <Reveal key={q} className="faq"><button type="button" onClick={e => { const node = e.currentTarget.nextElementSibling as HTMLElement | null; if (node) node.toggleAttribute("hidden"); }}>{q}<span>+</span></button><p hidden>{a}</p></Reveal>)}</div></div></section></>;
+  const [open, setOpen] = useState(0);
+  return <>
+    <section className="pageHero pageHero--support"><div className="pageHero__image"/><div className="pageHero__veil"/><div className="shell pageHero__inner"><Reveal><span className="eyebrow eyebrow--light"><i/>VEXFORGE / SOPORTE</span><h1>Ayuda<br/><em>sin rodeos.</em></h1><p>Las respuestas que necesitas, sin rodeos.</p></Reveal></div></section>
+    <section className="supportSection"><div className="shell supportLayout"><Reveal><div className="supportVisual"><RemoteImage src={ASSETS.regions.ironVeins} alt="Nexus de VEXFORGE"/><div className="supportVisual__caption"><span>NEXUS / 01</span><strong>LA PUERTA</strong></div></div></Reveal><Reveal delay={90}><div><SectionHeading kicker="FAQ" title={<>Preguntas<br/><em>frecuentes.</em></>} copy="Lo esencial, en un solo lugar." /><div className="faqList">{FAQ.map((item, i) => <div className={`faqItem ${open === i ? "is-open" : ""}`} key={item.q}><button type="button" aria-expanded={open === i} onClick={() => setOpen(open === i ? -1 : i)}><span>{String(i + 1).padStart(2, "0")}</span><strong>{item.q}</strong><Icon name={open === i ? "minus" : "plus"} size={16}/></button>{open === i && <p>{item.a}</p>}</div>)}</div></div></Reveal></div></section>
+  </>;
 }

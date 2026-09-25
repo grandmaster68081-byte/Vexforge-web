@@ -1,21 +1,20 @@
-import { ASSETS } from "../lib/assets";
 import { useEffect, useMemo, useState } from "react";
-import { loadFeaturedCards, PortalCard } from "../lib/cards";
-import { FeaturedCard } from "../components/FeaturedCard";
+import { ASSETS } from "../lib/assets";
+import { loadFeaturedCards, type PortalCard } from "../lib/cards";
 import { Reveal } from "../components/Reveal";
 import { SectionHeading } from "../components/SectionHeading";
+import { CardShowcase } from "../components/CardShowcase";
+import { RemoteImage } from "../components/RemoteImage";
 
 export function Cards() {
   const [cards, setCards] = useState<PortalCard[]>([]);
-  const [filter, setFilter] = useState<"all" | "Mythic" | "Legendary">("all");
-  useEffect(() => { let live = true; loadFeaturedCards().then(data => { if (live) setCards(data); }); return () => { live = false; }; }, []);
-  const filtered = useMemo(() => filter === "all" ? cards : cards.filter(card => card.rarity === filter), [cards, filter]);
+  const [filter, setFilter] = useState<"ALL" | "Mythic" | "Legendary">("ALL");
+  useEffect(() => { let live = true; loadFeaturedCards(10).then((items) => live && setCards(items)); return () => { live = false; }; }, []);
+  const filtered = useMemo(() => filter === "ALL" ? cards : cards.filter((card) => card.rarity === filter), [cards, filter]);
   return <>
-    <section className="pageHero pageHero--cards"><div className="pageHero__media" style={{ backgroundImage: `url(${ASSETS.cover})` }} /><div className="pageHero__veil" /><div className="shell pageHero__content"><div className="kicker">ARCHIVO / CARTAS</div><h1>Lo más raro merece su propia vitrina.</h1><p>Una selección pública de las rarezas más altas del catálogo.</p></div></section>
-    <section className="section"><div className="shell"><Reveal><SectionHeading kicker="MÍTICAS / LEGENDARIAS" title="Colección destacada" copy="Las cartas se consultan desde el catálogo público y su arte solo se muestra cuando la URL pertenece al almacenamiento oficial de VEXFORGE." /></Reveal>
-      <div className="filterBar"><button className={filter === "all" ? "active" : ""} onClick={() => setFilter("all")}>Todas</button><button className={filter === "Mythic" ? "active" : ""} onClick={() => setFilter("Mythic")}>Míticas</button><button className={filter === "Legendary" ? "active" : ""} onClick={() => setFilter("Legendary")}>Legendarias</button></div>
-      <div className="featuredCardsGrid featuredCardsGrid--page">{filtered.map(card => <FeaturedCard key={card.id} card={card} />)}</div>
-      {!cards.length && <div className="emptyArchive"><span>CATÁLOGO PÚBLICO</span><strong>Aún no se han recibido cartas de alta rareza desde el endpoint público.</strong><p>La página queda preparada para poblarse automáticamente sin almacenar una segunda copia de las cartas.</p></div>}
+    <section className="pageHero pageHero--cards"><div className="pageHero__image"/><div className="pageHero__veil"/><div className="shell pageHero__inner"><Reveal><span className="eyebrow eyebrow--light"><i/>COLECCIÓN</span><h1>Lo más raro<br/><em>merece su vitrina.</em></h1><p>Míticas y Legendarias ocupan el primer plano de la colección.</p></Reveal></div></section>
+    <section className="cardArchiveSection"><div className="shell"><div className="archiveTop"><Reveal><SectionHeading kicker="MÍTICAS / LEGENDARIAS" title={<>La colección<br/><em>en primer plano.</em></>} copy="Una selección de las rarezas más altas de VEXFORGE." /></Reveal><div className="archiveFilters" role="group" aria-label="Filtrar por rareza"><button className={filter === "ALL" ? "is-active" : ""} type="button" onClick={() => setFilter("ALL")} >Todas</button><button className={filter === "Mythic" ? "is-active" : ""} type="button" onClick={() => setFilter("Mythic")} >Míticas</button><button className={filter === "Legendary" ? "is-active" : ""} type="button" onClick={() => setFilter("Legendary")} >Legendarias</button></div></div>
+      {filtered.length ? <div className="cardArchiveGrid">{filtered.map((card, i) => <Reveal key={card.id} delay={i * 45}><CardShowcase card={card} featured={i === 0}/></Reveal>)}</div> : <div className="archiveEmpty"><RemoteImage src={ASSETS.cover} alt="Universo VEXFORGE"/><div><span className="eyebrow"><i/>ARCHIVO</span><h3>La vitrina está esperando el archivo.</h3><p>Las cartas de mayor rareza aparecerán aquí cuando la colección esté abierta.</p></div></div>}
     </div></section>
   </>;
 }

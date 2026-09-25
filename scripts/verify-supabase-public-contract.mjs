@@ -1,0 +1,16 @@
+import fs from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+const here = path.dirname(fileURLToPath(import.meta.url));
+const root = path.resolve(here, "..");
+const cards = fs.readFileSync(path.join(root, 'src/lib/cards.ts'),'utf8');
+const assets = fs.readFileSync(path.join(root, 'src/lib/assets.ts'),'utf8');
+const failures=[];
+if (!cards.includes('/rest/v1/cards?')) failures.push('public cards REST query missing');
+if (!cards.includes('SUPABASE_PUBLISHABLE_KEY')) failures.push('publishable key variable missing');
+if (!cards.includes('sb_publishable_')) failures.push('publishable key format missing');
+if (!cards.includes('active: "eq.true"')) failures.push('active card filter missing');
+if (!cards.includes('OFFICIAL_PUBLIC_PREFIX')) failures.push('official image allowlist missing');
+if (!assets.includes('vexforge-assets')) failures.push('canonical public asset bucket missing');
+if (cards.includes('service_role') || cards.includes('Authorization: Bearer') || cards.includes('SUPABASE_ANON_KEY')) failures.push('private/legacy credential logic found');
+if (failures.length){console.error('SUPABASE PUBLIC CONTRACT FAILED'); failures.forEach(x=>console.error('- '+x)); process.exit(1);} console.log('SUPABASE PUBLIC CONTRACT PASS.');

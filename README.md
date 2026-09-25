@@ -55,7 +55,9 @@ and Supabase ever disagree, Supabase wins.
 
 Unity is the active Android development runtime under `unity/**`. The Expo /
 React Native client in `mobile/**` remains intact only as legacy/historical
-reference and rollback material. The web
-client in `src/**` and `public/**` is frozen and non-product.
+reference and rollback material. The public VEXFORGE portal in `src/**` and
+`public/**` is an active editorial product surface, separate from the Unity
+runtime and without player state, authentication, inventory, market, PvP,
+wallet or economic controls.
 
 Unity work and the public portal are maintained as separate product surfaces.

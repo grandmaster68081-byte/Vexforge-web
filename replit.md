@@ -45,6 +45,7 @@ Juego de cartas coleccionables (TCG) web: 127 cartas únicas, 4 facciones, econo
 - **Domain-driven frontend:** Cada dominio tiene su `repository.ts` + `use<Domain>.ts` + ruta asociada.
 - **TypeScript:** El build de Vite no ejecuta TypeScript; siempre validar con `npx tsc --noEmit -p tsconfig.app.json`.
 - **Runtime principal:** Unity bajo `unity/**`; Expo se conserva intacto como fallback.
+- **Portal público:** `src/**` y `public/**` contienen el portal editorial VEXFORGE Tier 1 Gold; no es un cliente web del juego.
 - **Autoridad de gameplay:** Unity envía intención a Supabase; el servidor devuelve eventos y settlement.
 - **Regla de build:** no generar APK, Player, Gradle, GameCI ni workflows de compilación durante esta fase.
 

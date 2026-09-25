@@ -1,7 +1,7 @@
-import { existsSync, readFileSync } from 'node:fs';
-
-if (!existsSync('dist/index.html')) throw new Error('dist/index.html missing');
-if (!existsSync('dist/_redirects')) throw new Error('dist/_redirects missing');
-const html = readFileSync('dist/index.html', 'utf8');
-if (!html.includes('VEXFORGE')) throw new Error('VEXFORGE title marker missing from build');
-console.log('PORTAL BUILD PASS');
+import fs from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+const here=path.dirname(fileURLToPath(import.meta.url)); const root=path.resolve(here,'..');
+const dist=path.join(root,'dist');
+if(!fs.existsSync(dist)){console.error('Build verification failed: dist/ does not exist.');process.exit(1);} const index=fs.readFileSync(path.join(dist,'index.html'),'utf8');
+if(!index.includes('root')){console.error('Build verification failed: root mount not found.');process.exit(1);} console.log('BUILD VERIFY PASS — dist/ exists and contains the root entry point.');

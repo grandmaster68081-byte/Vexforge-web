@@ -1,65 +1,53 @@
-import { ReactNode, useEffect, useState } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { Link, NavLink, useLocation } from "react-router-dom";
 import { BrandMark } from "./BrandMark";
-import { NAV_ITEMS } from "../data/content";
+import { Icon } from "./Icon";
+import { PRIMARY_NAV } from "../data/content";
+import { SOCIAL_TARGETS, readyLink } from "../lib/assets";
 
 export function PortalShell({ children }: { children: ReactNode }) {
   const [open, setOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const location = useLocation();
   useEffect(() => setOpen(false), [location.pathname]);
-
-  return (
-    <div className="portal">
-      <header className="portalHeader">
-        <div className="shell portalHeader__inner">
-          <BrandMark compact />
-          <nav className="desktopNav" aria-label="Navegación principal">
-            <NavLink to="/game" className="navLink">Juego</NavLink>
-            <NavLink to="/cards" className="navLink">Cartas</NavLink>
-            <NavLink to="/world" className="navLink">Mundo</NavLink>
-            <NavLink to="/news" className="navLink">Noticias</NavLink>
-            <NavLink to="/media" className="navLink">Media</NavLink>
-          </nav>
-          <div className="portalHeader__actions">
-            <Link className="headerDownload" to="/download">Descargar</Link>
-            <button className="menuButton" type="button" onClick={() => setOpen(v => !v)} aria-expanded={open} aria-label={open ? "Cerrar menú" : "Abrir menú"}>
-              <span /> <span /> <span />
-            </button>
-          </div>
+  useEffect(() => {
+    const previous = document.body.style.overflow;
+    if (open && window.matchMedia("(max-width: 820px)").matches) document.body.style.overflow = "hidden";
+    return () => { document.body.style.overflow = previous; };
+  }, [open]);
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 18);
+    onScroll(); window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+  return <div className="portalRoot">
+    <a className="skipLink" href="#content">Saltar al contenido</a>
+    <header className={`portalHeader ${scrolled ? "portalHeader--scrolled" : ""}`}>
+      <div className="portalHeader__rail" aria-hidden="true" />
+      <div className="shell portalHeader__inner">
+        <BrandMark />
+        <nav className="desktopNav" aria-label="Principal">
+          {PRIMARY_NAV.map((item) => <NavLink key={item.to} to={item.to} className={({ isActive }: { isActive: boolean }) => `navLink ${isActive ? "is-active" : ""}`}>{item.label}</NavLink>)}
+        </nav>
+        <div className="portalHeader__actions">
+          <span className="language"><Icon name="globe" size={14}/> ES</span>
+          <span className="headerDownload headerDownload--disabled" aria-disabled="true"><span>Próximamente</span><Icon name="download" size={15}/></span>
+          <button className="menuButton" type="button" onClick={() => setOpen((v) => !v)} aria-expanded={open} aria-controls="mobile-navigation" aria-label={open ? "Cerrar menú" : "Abrir menú"}><Icon name={open ? "close" : "menu"} size={22}/></button>
         </div>
-        {open && (
-          <div className="mobileNavPanel">
-            <div className="shell mobileNavPanel__inner">
-              {NAV_ITEMS.map(item => <NavLink key={item.to} to={item.to} className="mobileNavLink">{item.label}</NavLink>)}
-              <Link to="/download" className="mobileNavLink mobileNavLink--download">Descargar VEXFORGE</Link>
-              <Link to="/support" className="mobileNavLink">Soporte</Link>
-            </div>
-          </div>
-        )}
-      </header>
-
-      <main>{children}</main>
-
-      <footer className="portalFooter">
-        <div className="shell portalFooter__grid">
-          <div>
-            <BrandMark compact />
-            <p className="footerNote">Portal oficial de VEXFORGE. El juego activo se desarrolla para Android en Unity.</p>
-          </div>
-          <div className="footerLinks">
-            <Link to="/game">Juego</Link>
-            <Link to="/cards">Cartas</Link>
-            <Link to="/world">Mundo</Link>
-            <Link to="/news">Noticias</Link>
-            <Link to="/media">Media</Link>
-            <Link to="/download">Descarga</Link>
-            <Link to="/support">Soporte</Link>
-            <Link to="/privacy">Privacidad</Link>
-            <Link to="/terms">Términos</Link>
-          </div>
+      </div>
+      {open && <nav id="mobile-navigation" className="mobileNav" aria-label="Navegación móvil"><div className="shell mobileNav__inner">{PRIMARY_NAV.map((item, i) => <NavLink key={item.to} to={item.to} className="mobileNav__link"><span>{String(i + 1).padStart(2, "0")}</span><b>{item.label}</b><Icon name="arrow" size={15}/></NavLink>)}<NavLink to="/download" className="mobileNav__link mobileNav__link--download"><span>06</span><b>Descarga</b><Icon name="download" size={16}/></NavLink></div></nav>}
+    </header>
+    <main id="content">{children}</main>
+    <footer className="portalFooter">
+      <div className="portalFooter__top shell">
+        <div className="footerBrand"><BrandMark /><p>Portal oficial de VEXFORGE.</p></div>
+        <div className="footerNav">
+          <div><span>EXPLORAR</span>{PRIMARY_NAV.map((item) => <Link key={item.to} to={item.to}>{item.label}</Link>)}</div>
+          <div><span>AYUDA</span><Link to="/download">Descarga</Link><Link to="/support">Soporte</Link><Link to="/privacy">Privacidad</Link><Link to="/terms">Términos</Link></div>
+          {Object.entries(SOCIAL_TARGETS).some(([, url]) => readyLink(url)) && <div><span>SEGUIR</span>{Object.entries(SOCIAL_TARGETS).map(([name, value]) => { const url = readyLink(value); return url ? <a key={name} href={url} target="_blank" rel="noreferrer">{name}</a> : null; })}</div>}
         </div>
-        <div className="shell footerBase"><span>VEXFORGE</span><span>© {new Date().getFullYear()}</span></div>
-      </footer>
-    </div>
-  );
+      </div>
+      <div className="portalFooter__base shell"><span>VEXFORGE</span><span>© {new Date().getFullYear()} VEXFORGE</span></div>
+    </footer>
+  </div>;
 }

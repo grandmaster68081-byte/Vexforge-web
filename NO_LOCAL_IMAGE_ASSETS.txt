@@ -1,0 +1,1 @@
+This package intentionally ships no raster image assets. Visual artwork is consumed from the existing official VEXFORGE public storage paths defined in src/lib/assets.ts and from the existing public card-art path.

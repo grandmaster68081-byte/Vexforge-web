@@ -1,22 +1,15 @@
 import type { CSSProperties } from "react";
-import { Link } from "react-router-dom";
 import { ASSETS } from "../lib/assets";
+import { WORLD_REGIONS } from "../data/content";
 import { Reveal } from "../components/Reveal";
 import { SectionHeading } from "../components/SectionHeading";
-
-const regions = [
-  ["NEXUS CORE", ASSETS.regions.forgeCore],
-  ["IRON VEINS", ASSETS.regions.ironVeins],
-  ["SHADOW FRACTURE", ASSETS.regions.shadowFracture],
-  ["CINDERS REALM", ASSETS.regions.cindersRealm],
-  ["WARBOUND ZONE", ASSETS.regions.warboundZone],
-];
+import { CinematicScene } from "../components/CinematicScene";
 
 export function World() {
   return <>
-    <section className="pageHero pageHero--world"><div className="pageHero__media" style={{ backgroundImage: `url(${ASSETS.regions.shadowFracture})` }} /><div className="pageHero__veil" /><div className="shell pageHero__content"><div className="kicker">ARCHIVO / MUNDO</div><h1>Un mundo que se descubre por capas.</h1><p>Regiones, codex y jefes mundiales forman parte del vocabulario público de VEXFORGE.</p></div></section>
-    <section className="section"><div className="shell"><Reveal><SectionHeading kicker="REGIONES" title="Geografías del archivo." copy="Estas imágenes están registradas en el almacenamiento oficial del proyecto y sirven como base visual para el portal." /></Reveal><div className="regionGrid">{regions.map(([name, image], i) => <Reveal key={name} className="regionCard"><div className="regionCard__image" style={{ backgroundImage: `url(${image})` }} /><div className="regionCard__meta"><span>0{i + 1}</span><h3>{name}</h3><b>↗</b></div></Reveal>)}</div></div></section>
-    <section className="scene scene--boss"><div className="scene__media" style={{ backgroundImage: `url(${ASSETS.factions.Paladín.background})` }} /><div className="scene__veil" /><div className="shell scene__content"><Reveal><div className="sceneTag">WORLD BOSSES</div><h2>El mundo también tiene amenazas.</h2><p>La estructura pública conserva un espacio para jefes mundiales y encuentros de alto impacto.</p><Link to="/news" className="textLink">Ver novedades <span>→</span></Link></Reveal></div></section>
-    <section className="section"><div className="shell centeredCta"><span className="kicker">CODEX</span><h2>El archivo completo pertenece al juego.</h2><p>La web muestra solo lo necesario. El resto se descubre dentro de VEXFORGE.</p><Link to="/download" className="button button--primary">Ver descarga</Link></div></section>
+    <section className="pageHero pageHero--world"><div className="pageHero__image"/><div className="pageHero__veil"/><div className="shell pageHero__inner"><Reveal><span className="eyebrow eyebrow--light"><i/>MUNDO</span><h1>Un mundo que<br/><em>se descubre por capas.</em></h1><p>Regiones y atmósferas que dan escala al universo VEXFORGE.</p></Reveal></div></section>
+    <section className="worldSection"><div className="shell"><Reveal><SectionHeading kicker="REGIONES" title={<>La geografía<br/><em>también cuenta.</em></>} copy="Cinco lugares visuales para comenzar a reconocer el mundo de VEXFORGE." /></Reveal><div className="worldRail">{WORLD_REGIONS.map((region, i) => { const image = ASSETS.regions[region.key as keyof typeof ASSETS.regions]; return <article key={region.name} className="worldCard"><div className="worldCard__image" style={{ "--image": `url(${image})` } as CSSProperties}/><div className="worldCard__veil"/><div className="worldCard__copy"><span>{region.number}</span><small>REGIÓN</small><h3>{region.name}</h3><p>{region.caption}</p></div></article>; })}</div></div></section>
+    <CinematicScene image={ASSETS.cover} eyebrow="HORIZONTE" title="La escala también cuenta." copy="VEXFORGE no necesita explicarlo todo de una vez. El mundo puede abrirse poco a poco." index="03" variant="nexus" />
+    <section className="worldNote"><div className="shell worldNote__grid"><Reveal><span className="eyebrow"><i/>EL CODEX</span><h2>Más mundo.<br/><em>Cuando sea real.</em></h2></Reveal><Reveal delay={100}><p>El mundo de VEXFORGE todavía tiene espacio para crecer.</p></Reveal></div></section>
   </>;
 }

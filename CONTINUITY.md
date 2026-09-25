@@ -1,3 +1,31 @@
+## 2026-09-25 — OFFICIAL PORTAL TIER 1 GOLD — IMPORTED / NO UNITY BUILD
+
+- **SOURCE:** `main` del repositorio `grandmaster68081-byte/Vexforge-web`; el
+  estado web previo se respaldó en la etiqueta
+  `vexforge-web-pre-gold-20260925` antes del reemplazo.
+- **WEB:** se importó el paquete `VEXFORGE_OFFICIAL_PORTAL_V3_TIER1_GOLD_MASTER`
+  sobre `src/**`, `public/**`, configuración Vite/TypeScript, verificadores y
+  documentación. Se retiraron las rutas y componentes del antiguo dashboard.
+- **BOUNDARY:** el portal conserva sólo las rutas públicas editoriales
+  `/`, `/game`, `/cards`, `/world`, `/news`, `/media`, `/download`,
+  `/download/android`, `/support`, `/privacy` y `/terms`; las descargas siguen
+  cerradas hasta disponer de URLs oficiales.
+- **DATA:** las cartas usan únicamente la consulta pública de solo lectura con
+  campos mínimos y allowlist de arte oficial. No se crearon tablas ni se
+  modificó Supabase.
+- **VERIFY:** typecheck, sintaxis, aislamiento del portal, enlaces, copy,
+  contrato público de Supabase, calidad y `git diff --check` pasan. No se
+  ejecutó `npm run build`, no se inició Unity y no se despachó ningún workflow
+  nuevo.
+- **UNITY:** `unity/**`, Unity `6000.3.0f1`, sus paquetes y
+  `.github/workflows/vexforge-unity-android-github.yml` permanecen sin cambios.
+- **ACTIONS:** la ejecución canónica `36094450654` ya estaba `in_progress` sobre
+  el HEAD anterior; esta sesión no la inició, canceló ni duplicó.
+- **NEXT:** publicar el cambio web en `main` y, cuando el operador lo autorice,
+  verificar el portal publicado. Mantener cerrado el gate de compilación Unity.
+
+---
+
 ## 2026-09-25 — CANONICAL ACCESS RECONCILIATION
 
 - **SOURCE:** `main` del repositorio `grandmaster68081-byte/Vexforge-web`; se sincronizó contra `origin/main` antes de inspeccionar o modificar.

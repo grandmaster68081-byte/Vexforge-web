@@ -1,2 +1,4 @@
 import { Link } from "react-router-dom";
-export function NotFound() { return <section className="section notFound"><div className="shell"><span className="kicker">404 / NEXUS</span><h1>No hay una ruta aquí.</h1><p>La puerta que buscas no forma parte del portal oficial.</p><Link to="/" className="button button--primary">Volver al inicio</Link></div></section>; }
+import { Icon } from "../components/Icon";
+
+export function NotFound() { return <section className="notFound"><div className="shell"><span className="eyebrow"><i/>VEXFORGE / 404</span><h1>404</h1><p>Esta dirección ya no existe.</p><Link to="/" className="portalButton portalButton--gold">Volver al inicio <Icon name="arrow" size={16}/></Link></div></section>; }

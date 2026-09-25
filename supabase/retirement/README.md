@@ -1,9 +1,13 @@
-# Web retirement / database cleanup
+# Supabase web-surface retirement
 
-This folder is deliberately non-destructive.
+The old VEXFORGE web application contained client-side surfaces that are no longer part of the product: login/dashboard, PvP views, marketplace, inventory, economy, admin and other operational screens.
 
-The portal remaster removes the old web client from the application layer, but it must not drop database tables/RPCs blindly: VEXFORGE Unity may share backend objects with the retired web application.
+This package intentionally does **not** issue destructive SQL against Supabase because some of those objects may be shared with the Unity runtime. Before deleting any table/view/RPC/function/policy, verify:
 
-Use `01_web_object_audit.sql` to identify candidates. A candidate is only safe to remove after a repository-wide and Unity consumer audit proves that no active Unity feature, RPC, job, policy, edge function or production process uses it.
+1. no `unity/` code calls it;
+2. no server function depends on it;
+3. no current production client depends on it;
+4. backups/export exist;
+5. the object is explicitly marked `WEB_LEGACY_ONLY`.
 
-No new portal tables are introduced by this remaster.
+Only then should a separate maintenance migration remove it.
