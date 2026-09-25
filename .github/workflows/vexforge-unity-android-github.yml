@@ -67,7 +67,7 @@ on:
         type: boolean
 
 permissions:
-  actions: read
+  actions: write
   contents: write
 
 concurrency:
@@ -697,8 +697,11 @@ jobs:
             unity/Builds/**/*.apk
             unity/Builds/ShaderShardWarmup/checkpoints/**
             build-artifacts/**
+            !build-artifacts/checkpoint-download/**
+            !build-artifacts/checkpoint-upload/**
+            !build-artifacts/inventory-download/**
           if-no-files-found: warn
-          retention-days: 14
+          retention-days: 7
 
       - name: Upload shader checkpoint
         if: ${{ inputs.mode == 'shard' && success() }}
@@ -707,7 +710,48 @@ jobs:
           name: vexforge-shader-checkpoint-${{ github.sha }}-${{ inputs.range_start_bps }}-${{ inputs.range_end_bps }}
           path: build-artifacts/checkpoint-upload/**
           if-no-files-found: error
-          retention-days: 14
+          retention-days: 7
+
+      - name: Retire consumed shader checkpoint
+        if: ${{ success() && (inputs.mode == 'shard' || inputs.mode == 'final') && inputs.checkpoint_artifact_id != '' }}
+        shell: bash
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          artifact_id="$CHECKPOINT_ARTIFACT_ID"
+          artifact_response="$(mktemp)"
+          artifact_status="$(curl -sS -o "$artifact_response" -w '%{http_code}' \
+            -H "Authorization: Bearer $GITHUB_TOKEN" \
+            -H 'Accept: application/vnd.github+json' \
+            "https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/artifacts/${artifact_id}")"
+          if [ "$artifact_status" = 404 ]; then
+            echo "Consumed shader checkpoint artifact $artifact_id is already retired."
+            exit 0
+          fi
+          test "$artifact_status" = 200 || {
+            echo "::warning::Could not inspect consumed shader checkpoint artifact $artifact_id (HTTP $artifact_status)."
+            exit 0
+          }
+          artifact_name="$(jq -r '.name // empty' "$artifact_response")"
+          rm -f "$artifact_response"
+          case "$artifact_name" in
+            vexforge-shader-checkpoint-*) ;;
+            *)
+              echo "::warning::Refusing to retire unexpected artifact '$artifact_name'."
+              exit 0
+              ;;
+          esac
+          delete_status="$(curl -sS -o /dev/null -w '%{http_code}' -X DELETE \
+            -H "Authorization: Bearer $GITHUB_TOKEN" \
+            -H 'Accept: application/vnd.github+json' \
+            "https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/artifacts/${artifact_id}")"
+          if [ "$delete_status" = 204 ] || [ "$delete_status" = 404 ]; then
+            echo "Retired consumed shader checkpoint artifact $artifact_id ($artifact_name)."
+          else
+            echo "::warning::Could not retire consumed shader checkpoint artifact $artifact_id (HTTP $delete_status)."
+          fi
+          echo "Checkpoint cleanup keeps only the current chain head; failed shards retain their predecessor for retry." >> "$GITHUB_STEP_SUMMARY"
 
       - name: Publish APK release
         if: ${{ inputs.mode == 'final' && success() }}
