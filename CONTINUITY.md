@@ -6349,3 +6349,24 @@ generó build o APK.
   dispositivo Android con el Editor declarado.
 - **NEXT:** validar en Editor/dispositivo cuando se autorice QA; no iniciar
   compilación automáticamente.
+
+## 2026-09-25 — WEB PORTAL V5.1 — CLOUDFLARE PAGES VERIFIED / NO UNITY BUILD
+
+- **EXCEPCIÓN AUTORIZADA:** se reabrió únicamente la publicación del Portal web
+  V5.1; no se reactivó el trabajo Android ni el pipeline Unity.
+- **CAUSAS DEL DESFASE:** el commit web V5.1 anterior llevaba `[skip ci]`, por lo
+  que Cloudflare Pages no desplegó. Además, 36 entradas del lockfile apuntaban al
+  firewall npm interno de Replit, haciendo fallar `npm ci` en CI externo.
+- **CORRECCIÓN:** el lockfile ahora utiliza `https://registry.npmjs.org/` para
+  sus 132 paquetes resueltos. `docs/DEPLOY_GUIDE.md` prohíbe marcas de omisión
+  en commits web publicables y exige verificar el SHA y los assets en Pages.
+- **VALIDACIÓN LOCAL:** instalación limpia `npm ci`, `npm run typecheck`,
+  `npm run verify` y `npm run verify:build` finalizaron correctamente.
+- **PUBLICACIÓN:** commit web `6a44e156fb5ea7cabb3079f406f3499584de2e77`.
+  GitHub `verify` (run `36165590439`) y el check `Cloudflare Pages` terminaron
+  correctamente para ese SHA. El HTML público apunta a los mismos hashes de JS
+  y CSS que la build local; ambos recursos coinciden byte por byte.
+- **NO UNITY BUILD:** no se inició workflow Unity, Unity Cloud Build ni
+  compilación APK.
+- **ESTADO:** `VEXFORGE PORTAL V5.1 PUBLICADO Y VERIFICADO EN
+  https://vexforge-web.pages.dev/`; excepción limitada al portal autorizado.
