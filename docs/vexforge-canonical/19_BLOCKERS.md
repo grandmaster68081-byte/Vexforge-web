@@ -1,3 +1,10 @@
+## CURRENT RECONCILIATION — 2026-09-25
+
+- Unity GitHub Actions es el método canónico actual de compilación.
+- El antiguo B-004 de verificación por Unity Cloud queda como referencia histórica, no como dependencia del pipeline activo.
+- El antiguo B-005 de Expo/React Native queda como legado histórico; no bloquea el runtime Unity.
+- No se inició una nueva compilación ni se elevó ningún gate de evidencia.
+
 # 19 — BLOCKERS
 
 ## B-001 — Physical Android evidence

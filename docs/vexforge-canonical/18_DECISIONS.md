@@ -94,3 +94,15 @@
   no sustituir Unity; exigir ejecución Cloud real para verificar R5; distinguir
   evidencia del repositorio de evidencia del dashboard.
 - STATUS: ACTIVE / EVIDENCE_REQUIRED
+
+
+## D-009
+
+- DATE: 2026-09-25
+- DECISION: GitHub Actions directo es el único método activo de compilación Android; Unity Cloud Build / Build Automation queda como referencia externa y Expo / React Native como legado.
+- SCOPE: `unity/**`, `.github/workflows/vexforge-unity-android-github.yml` y continuidad operativa.
+- WHY: la instrucción canónica exige una sola fuente de build, sin cuota Cloud, sin workflows paralelos y sin compilación automática.
+- EVIDENCE: workflow `workflow_dispatch` único, Unity `6000.3.0f1` en `ProjectVersion.txt`, Supabase Management API saludable y último run existente consultado sin lanzar uno nuevo.
+- STATUS: ACTIVE / CONFIGURED_UNVERIFIED
+- RULES: mantener los modos dentro del workflow canónico; no crear otro workflow de build; no dispatch sin autorización explícita; no guardar credenciales en el repositorio.
+- SUPERSEDES: la afirmación anterior de Unity Cloud Build como infraestructura operativa activa.

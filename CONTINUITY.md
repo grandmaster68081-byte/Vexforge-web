@@ -1,3 +1,17 @@
+## 2026-09-25 — CANONICAL ACCESS RECONCILIATION
+
+- **SOURCE:** `main` del repositorio `grandmaster68081-byte/Vexforge-web`; se sincronizó contra `origin/main` antes de inspeccionar o modificar.
+- **RUNTIME:** Unity Android en `unity/**` es el único runtime activo. Expo/React Native en `mobile/**` queda preservado como legado, respaldo y referencia; no se usa como runtime activo.
+- **UNITY:** la versión se obtiene de `unity/ProjectSettings/ProjectVersion.txt`; el árbol actual declara `6000.3.0f1`. Paquetes fuente: `unity/Packages/manifest.json` y `unity/Packages/packages-lock.json`.
+- **BUILD:** el único workflow de compilación es `.github/workflows/vexforge-unity-android-github.yml`, con `workflow_dispatch` y modos internos para normal, diagnóstico, inventory, shard, checkpoint y final. No se lanzó ningún workflow en esta sesión.
+- **EXTERNAL:** Unity Cloud Build / Build Automation no es el método actual; no se usó, no se creó infraestructura, no se gastó cuota y no se despachó una compilación.
+- **BACKEND:** Supabase reference `rscuzqnfccqvltkdcdny` respondió `ACTIVE_HEALTHY` mediante una consulta de Management API de solo lectura. No se modificaron schema, datos, auth, RLS, RPCs, storage ni funciones.
+- **WORKFLOWS RETIRED:** los workflows de compilación/publicación Expo fueron retirados del directorio activo de GitHub Actions. `verify.yml` permanece solo como verificación de código y no compila Android.
+- **STATUS:** control plane establecido en `main`; build, APK, release, instalación y QA física siguen sin verificarse.
+- **SECRET BOUNDARY:** las credenciales de control se usaron solo por transporte seguro; no se imprimieron, guardaron, registraron ni copiaron al repositorio.
+
+---
+
 ## 2026-09-19 — R5.3.2 — UNITY CLOUD EDITOR CONTINUITY
 
 - **SOURCE:** `main`, base canónica `593aaf00ab258643a6a1d1cc485d6a6c1a8dfe04`,

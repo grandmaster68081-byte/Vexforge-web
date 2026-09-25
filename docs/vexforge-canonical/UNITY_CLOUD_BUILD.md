@@ -1,74 +1,27 @@
-# VEXFORGE — Existing Unity Cloud Build Infrastructure
+# VEXFORGE — Unity Cloud reference boundary
 
-STATUS:
-EXISTING_EXTERNAL_INFRASTRUCTURE
+STATUS: REFERENCE ONLY / NOT THE ACTIVE BUILD METHOD
 
-Organization:
-2476049544959
+VEXFORGE now compiles the canonical Android project through the direct GitHub
+Actions workflow:
 
-Project:
-2906c165-f463-4253-bd53-731be7d136a0
+`.github/workflows/vexforge-unity-android-github.yml`
 
-Dashboard:
-https://cloud.unity.com/organizations/2476049544959/projects/2906c165-f463-4253-bd53-731be7d136a0/cloud-build/config
+Unity Cloud Build / Build Automation must not be dispatched for this pipeline.
+Do not spend quota, buy minutes, create targets, reconnect GitHub, or move the
+build to Unity Cloud. The existing external project information below is
+retained only so historical references are not mistaken for the active path.
 
-Repository:
-grandmaster68081-byte/Vexforge-web
+- Organization reference: `2476049544959`
+- Project reference: `2906c165-f463-4253-bd53-731be7d136a0`
+- Repository: `grandmaster68081-byte/Vexforge-web`
+- Branch: `main`
+- Unity project: `unity/`
+- Unity version source: `unity/ProjectSettings/ProjectVersion.txt`
+- Platform: Android
+- Package: `com.vexforge.android`
 
-Branch:
-main
-
-Unity project:
-unity/
-
-Unity version:
-6000.3.0f1
-
-Platform:
-Android
-
-Package:
-com.vexforge.android
-
-Cloud target:
-EXISTING VEXFORGE ANDROID BUILD AUTOMATION TARGET
-
-Exact target display name:
-EXTERNAL STATE — DO NOT INVENT
-
-Purpose:
-Remote Unity Editor / Build Automation execution for the canonical Unity
-Android project.
-
-R5 underlying gate:
-Vexforge.Presentation.Editor.VexforgeR5FoundationGate.ExecuteBatch
-
-R5 Cloud adapter, when present:
-Vexforge.Presentation.Editor.VexforgeR5CloudBuildGate.PreExport
-
-Critical continuity rule:
-The Unity Cloud project and Android Build Automation target already existed
-before this block and must be reused rather than recreated.
-
-Critical evidence rule:
-Repository presence of the bridge does not prove the Cloud dashboard hook
-is configured.
-
-Critical execution rule:
-EDITOR_VERIFIED requires an actual Unity Cloud run with real Editor logs.
-
-Critical build rule:
-BUILD_VERIFIED requires an actual Android artifact.
-
-Critical device rule:
-DEVICE_VERIFIED requires actual physical/device evidence.
-
-Automation policy:
-Auto-build OFF.
-Schedule OFF.
-Builds remain MANUAL.
-## Current executable path
-
-The current executable Unity Android path is the direct GitHub Actions workflow documented in [UNITY_BUILD_OPERATIONS.md](UNITY_BUILD_OPERATIONS.md). It installs the Editor with Unity CLI, keeps Unity Hub for licensing only, supports stored ULF or online Personal activation, invokes `Vexforge.Editor.VexforgeGitHubBuild.BuildAndroid`, verifies the APK, uploads evidence, and publishes a prerelease.
-
-Unity Cloud Build / Build Automation remains existing external infrastructure and is not called by that GitHub workflow. The existing project and Android target remain manual and must be reused, never recreated.
+No current claim of Cloud Editor verification, Cloud build verification or
+physical-device verification is made. Any future change to this boundary
+requires explicit owner authorization and must be recorded in the canonical
+workflow and continuity documents first.

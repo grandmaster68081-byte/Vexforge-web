@@ -1,48 +1,65 @@
 # 05 — ANDROID RUNTIME AND BUILD
 
-## Cadena observada
+## Estado canónico
+
+Unity bajo `unity/**` es el único runtime Android activo de VEXFORGE. Expo /
+React Native bajo `mobile/**` se conserva como legado, respaldo y referencia
+histórica; no recibe trabajo nuevo ni compila el producto activo.
+
+La compilación Android canónica es manual y vive únicamente en:
+
+`.github/workflows/vexforge-unity-android-github.yml`
+
+No se crean workflows alternos para GameCI, CLI directo, fallback, pruebas de
+shaders, builds Expo o variantes Android paralelas. `verify.yml` es un CI de
+verificación de código, no un pipeline de compilación Android.
+
+## Cadena canónica
 
 ```text
-mobile/** → Expo SDK 54 → Metro → bundle JS → expo prebuild → Gradle Android → APK release → instalación → runtime → expo-updates
+workflow_dispatch
+→ GitHub Actions
+→ Unity Editor leído desde ProjectVersion.txt
+→ Unity Personal / Android Build Support
+→ VexforgeGitHubBuild.BuildAndroid
+→ BuildPipeline
+→ Gradle
+→ IL2CPP
+→ ARM64
+→ APK
 ```
 
-## Versiones
+La raíz Unity es `unity/`; nunca `/` ni `mobile/`. La versión se obtiene de
+`unity/ProjectSettings/ProjectVersion.txt`; en el árbol actual es `6000.3.0f1`.
+Los paquetes se leen de `unity/Packages/manifest.json` y
+`unity/Packages/packages-lock.json`.
 
-- Expo declarado `~54.0.27`; lockfile `54.0.37`.
-- React `19.1.0`; React Native `0.81.5`.
-- Expo Router `~6.0.17`; Reanimated `~4.1.1`; Gesture Handler `~2.28.0`.
-- Package `com.vexforge.android`, app `1.0.1`, versionCode `4`, target SDK `35`.
-- `newArchEnabled: true`, typed routes y React Compiler activos.
+## Control de ejecución
 
-## Plugins y bundle
+- El workflow canónico se activa solo con `workflow_dispatch`.
+- Los modos permitidos viven dentro de ese workflow: `normal`, `diagnostic`,
+  `baseline`, `inventory`, `shard` y `final`.
+- Los shards, checkpoints, límites de variantes y diagnóstico son modos del
+  mismo workflow, no workflows separados.
+- No se inicia un build sin autorización explícita del propietario.
+- No se declara `EDITOR_VERIFIED`, `BUILD_VERIFIED` o `DEVICE_VERIFIED` sin
+  evidencia real correspondiente.
 
-Plugins: `expo-router`, `expo-font`, `expo-web-browser`, `expo-updates` y `./plugins/withEmbeddedJsBundle`. El workflow APK ejecuta `npx expo prebuild --platform android --no-install --non-interactive` y verifica que el APK contenga `assets/index.android.bundle`.
+## Frontera de secretos
 
-## Updates
+Las credenciales de control usadas por Replit no se copian al repositorio ni se
+reenvían automáticamente a GitHub Actions. El workflow usa únicamente los
+secretos de GitHub necesarios para activar Unity (`UNITY_LICENSE` o la ruta
+Personal con `UNITY_EMAIL` y `UNITY_PASSWORD`). Ningún token, licencia o clave
+privada pertenece a este documento, a un commit, a un artifact o a un log.
 
-- URL: `https://rscuzqnfccqvltkdcdny.supabase.co/functions/v1/vexforge-updates`.
-- `enabled: true`, `checkAutomatically: ON_LOAD`, `fallbackToCacheTimeout: 0`.
-- Canal: `production`; runtimeVersion: `1.0.0`.
+## Backend
 
-Una instalación puede ejecutar un update remoto compatible con el runtime, por lo que el APK embebido y el bundle OTA deben distinguirse en evidencia.
+Supabase live, referencia `rscuzqnfccqvltkdcdny`, es la autoridad para datos,
+auth, RLS, policies, RPCs, economía, progreso, recompensas y settlement. La
+migración del runtime no sustituye Supabase ni crea una autoridad local.
 
-## Workflow y comando
+## Estado actual
 
-Workflow: `.github/workflows/vexforge-android-apk.yml`; Node 22; Java Temurin 17; trigger manual o cambios en `mobile/**`.
-
-```text
-./gradlew assembleRelease --no-daemon --stacktrace --console=plain --max-workers=2 -x lintVitalAnalyzeRelease -x lintVitalReportRelease -x lintVitalRelease
-```
-
-Última evidencia en continuidad: release `vexforge-android-build-249`, run `35238357900`, status success, bundle embebido; el APK observado corresponde al commit `ded78720...`, no se presume equivalencia automática con cualquier commit posterior.
-
-## Estado del pipeline
-
-El pipeline Expo/Metro/Gradle es la ruta Android de producto activa. Unity queda
-`RETIRED / HISTORICAL`; no existe un pipeline Unity activo ni se reutiliza su
-configuración.
-
-El workflow APK debe verificar el bundle embebido, package
-`com.vexforge.android`, versión `1.0.1`, versionCode `4`, artifact descargable
-y SHA-256. EAS queda documentado solamente como fallback futuro si esta ruta
-deja de ser viable.
+La configuración canónica quedó establecida en `main` sin lanzar compilación,
+crear APK, publicar release, modificar Supabase ni usar Unity Cloud Build.

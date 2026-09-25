@@ -58,28 +58,24 @@ Treasury y Legado. La primera compilación, la licencia, la QA física y la
 reconciliación exhaustiva de todos los objetos live de Supabase siguen siendo
 `EVIDENCE_REQUIRED` o `BLOCKED`.
 
-## EXISTING UNITY CLOUD BUILD INFRASTRUCTURE
+## BUILD CONTROL PLANE
 
-- Organization ID: `2476049544959`
-- Project ID: `2906c165-f463-4253-bd53-731be7d136a0`
-- Dashboard: <https://cloud.unity.com/organizations/2476049544959/projects/2906c165-f463-4253-bd53-731be7d136a0/cloud-build/config>
-- Repository: `grandmaster68081-byte/Vexforge-web`
-- Branch: `main`
-- Unity project path: `unity/`
-- Unity version: `6000.3.0f1`
-- Platform: Android
-- Package: `com.vexforge.android`
-- Cloud target: existing Android Build Automation target; its exact display name is external state and is not invented here.
-- Remote runner purpose: execute the canonical Unity Editor and Android Build Automation flow.
-- Continuity record: `docs/vexforge-canonical/UNITY_CLOUD_BUILD.md`
+- Canonical workflow: `.github/workflows/vexforge-unity-android-github.yml`.
+- Trigger: `workflow_dispatch` only; no automatic Android compilation is enabled.
+- Unity project root: `unity/`.
+- Unity editor version: always read from `unity/ProjectSettings/ProjectVersion.txt` (`6000.3.0f1` on the current tree).
+- Build entry point: `Vexforge.Editor.VexforgeGitHubBuild.BuildAndroid`.
+- Build path: GitHub Actions → Unity Editor → Unity Personal / Android Build Support → BuildPipeline → Gradle → IL2CPP → ARM64 → APK.
+- Supabase project reference: `rscuzqnfccqvltkdcdny`; Supabase remains the backend/data authority.
 
-Unity Cloud Build/Build Automation ya existe como infraestructura externa
-preexistente de VEXFORGE; no debe recrearse ni reinterpretarse como
-infraestructura pendiente.
+Expo/React Native under `mobile/**` is preserved as legacy/reference only and
+must not be used as the active Android runtime. Unity Cloud Build / Build
+Automation is external reference infrastructure only and is not the active
+compilation method; do not spend quota, create targets, or dispatch Cloud
+builds. The direct GitHub workflow is the only authorized Android build path.
 
-Un Unity Editor no instalado dentro de Replit no significa que falte un
-entorno Unity; la verificación remota debe utilizar el target existente de
-Unity Cloud Build.
+The current state remains `IMPLEMENTED_UNVERIFIED`: no new build, APK, release,
+installation, or physical QA is claimed by this continuity update.
 
 ## Siguiente bloque
 

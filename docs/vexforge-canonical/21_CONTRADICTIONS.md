@@ -1,3 +1,10 @@
+## CURRENT RECONCILIATION — 2026-09-25
+
+La documentación histórica que describe Expo/React Native o Unity Cloud Build\como runtime o método activo queda supersedida por el estado observable de
+`main`: Unity en `unity/**` y GitHub Actions en
+`.github/workflows/vexforge-unity-android-github.yml`. `mobile/**` se conserva
+como legado y la infraestructura Cloud queda como referencia externa.
+
 # 21 — CONTRADICTIONS
 
 ## C-001 — Web oficial vs Android activo
