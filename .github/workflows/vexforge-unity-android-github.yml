@@ -336,7 +336,7 @@ jobs:
               export VEXFORGE_SHADER_VARIANT_LIMIT="$SHARD_VARIANT_LIMIT"
               ;;
             normal|final)
-              method="Vexforge.Editor.VexforgeShaderShardBuild.BuildAndroid"
+              method="Vexforge.Editor.VexforgeGitHubBuild.BuildAndroid"
               editor_log="$GITHUB_WORKSPACE/build-artifacts/unity-final-editor.log"
               export VEXFORGE_FULL_BUILD_FILTER=limit
               export VEXFORGE_FULL_BUILD_VARIANT_LIMIT="$FULL_BUILD_VARIANT_LIMIT"
