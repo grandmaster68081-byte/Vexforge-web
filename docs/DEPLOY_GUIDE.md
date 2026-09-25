@@ -17,9 +17,21 @@
 3. Crear un commit descriptivo y hacer push a main.
 4. Dejar que Cloudflare Pages despliegue automáticamente.
 5. Ejecutar `npm run verify:build` antes del push y, tras la propagación,
-   comprobar `/build-manifest.json`, `index.html` y los hashes públicos contra el
-   commit de main.
+   comprobar el estado de Cloudflare Pages para el SHA exacto de `main`, además
+   de `index.html` y los hashes de los recursos públicos.
 6. Registrar estado, evidencia, deuda y siguiente acción en CONTINUITY.md y Supabase.
+
+### Reglas que evitan despliegues desfasados
+
+- No incluir `[CI Skip]`, `[Skip CI]`, `[CI-Skip]`, `[Skip-CI]` ni
+  `[CF-Pages-Skip]` en el prefijo del mensaje de un commit web que deba publicarse.
+  Cloudflare Pages interpreta esas marcas como una orden para omitir el despliegue.
+- Mantener todos los `resolved` de `package-lock.json` en el registro público
+  `https://registry.npmjs.org/`. Las URLs internas de Replit no son accesibles
+  desde GitHub Actions ni desde el builder de Cloudflare.
+- Un commit presente en `main` no demuestra que esté publicado. Confirmar el
+  check/deploy de Pages asociado a ese mismo SHA y comparar el `index.html` y
+  los recursos con fingerprint que sirve el dominio público.
 
 ## Lo que no se hace
 
