@@ -694,13 +694,21 @@ jobs:
         with:
           name: VEXFORGE-Unity-Android-${{ github.run_number }}-${{ inputs.mode }}
           path: |
-            unity/Builds/**/*.apk
             unity/Builds/ShaderShardWarmup/checkpoints/**
             build-artifacts/**
             !build-artifacts/checkpoint-download/**
             !build-artifacts/checkpoint-upload/**
             !build-artifacts/inventory-download/**
           if-no-files-found: warn
+          retention-days: 7
+
+      - name: Upload APK for direct download
+        if: ${{ success() && (inputs.mode == 'shard' || inputs.mode == 'normal' || inputs.mode == 'final') }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: VEXFORGE-APK-${{ github.run_number }}-${{ inputs.mode }}
+          path: unity/Builds/**/*.apk
+          if-no-files-found: error
           retention-days: 7
 
       - name: Upload shader checkpoint
