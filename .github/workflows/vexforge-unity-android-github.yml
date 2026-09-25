@@ -585,8 +585,8 @@ jobs:
           test "$limit" -eq "$SHARD_VARIANT_LIMIT"
           test "$selected" -gt 0
           test "$selected" -le "$SHARD_VARIANT_LIMIT"
-          entries="$(find unity/Builds/ShaderShardWarmup/checkpoints/variants -type f -name '*.tsv' -print0 | xargs -0 awk 'NR > 1 {print $1}' | wc -l | tr -d ' ')"
-          unique="$(find unity/Builds/ShaderShardWarmup/checkpoints/variants -type f -name '*.tsv' -print0 | xargs -0 awk 'NR > 1 {print $1}' | sort -u | wc -l | tr -d ' ')"
+          entries="$(find unity/Builds/ShaderShardWarmup/checkpoints/variants -type f -name '*.tsv' -print0 | xargs -0 awk 'FNR > 1 {print $1}' | wc -l | tr -d ' ')"
+          unique="$(find unity/Builds/ShaderShardWarmup/checkpoints/variants -type f -name '*.tsv' -print0 | xargs -0 awk 'FNR > 1 {print $1}' | sort -u | wc -l | tr -d ' ')"
           test "$entries" -eq "$unique"
           echo "Shard manifests contain $entries unique fingerprints with no overlap."
 
