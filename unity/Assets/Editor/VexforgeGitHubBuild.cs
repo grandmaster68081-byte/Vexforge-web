@@ -12,6 +12,14 @@ namespace Vexforge.Editor
     {
         public static void BuildAndroid()
         {
+            var requestedFilter = Environment.GetEnvironmentVariable("VEXFORGE_FULL_BUILD_FILTER");
+            if (!string.IsNullOrWhiteSpace(requestedFilter)
+                && !string.Equals(requestedFilter, "disabled", StringComparison.OrdinalIgnoreCase))
+            {
+                throw new InvalidOperationException(
+                    $"VEXFORGE final Android build requires shader filtering disabled, got {requestedFilter}.");
+            }
+
             var projectRoot = Directory.GetParent(Application.dataPath).FullName;
             var buildDirectory = Path.Combine(projectRoot, "Builds");
             var outputPath = Path.Combine(buildDirectory, "VEXFORGE-GitHub.apk");
@@ -48,6 +56,7 @@ namespace Vexforge.Editor
             var summary = report.summary;
             Debug.Log(
                 $"VEXFORGE GitHub Android build result={summary.result} " +
+                $"shader_filter=disabled " +
                 $"warnings={summary.totalWarnings} errors={summary.totalErrors} " +
                 $"size={summary.totalSize} bytes output={outputPath}");
 

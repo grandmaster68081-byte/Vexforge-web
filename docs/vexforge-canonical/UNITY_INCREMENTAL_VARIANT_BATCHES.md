@@ -1,1 +1,85 @@
-# VEXFORGE — Incremental variant batch continuity\n\nStatus: ANALYZED — NOT READY TO LAUNCH\n\n## Canonical workflow\n\nThe only authorized Unity Android build workflow for this process is:\n\n- .github/workflows/vexforge-unity-android-github.yml\n- Workflow name: Build VEXFORGE Unity Android on GitHub\n- Runtime: Unity 6000.3.0f1\n- Project path: unity/\n- Build entry point: Vexforge.Editor.VexforgeGitHubBuild.BuildAndroid\n\nDo not create another workflow, use the shader experiment workflow as a selector, or use Unity Cloud Build for this GitHub Actions flow. GitHub Actions run 32 was the incorrect full-build execution and was cancelled. No run 33 is authorized until the selector contract below is implemented and verified.\n\n## What Unity can actually filter\n\nUnity exposes build-time shader variant filtering through UnityEditor.Rendering.IPreprocessShaders.OnProcessShader. The repository already contains unity/Assets/Editor/VexforgeShaderShardBuild.cs, which uses a stable SHA-256 key over shader, pass, shader type, pass type, and enabled keywords, then removes non-selected ShaderCompilerData entries. This is a real shader-variant filter, not a label or percentage comment.\n\nThe current implementation is still experimental:\n\n- It selects one modulo shard at a time, not a cumulative interval.\n- It writes temporary warmup APKs, not public release APKs.\n- The final experiment build explicitly disables filtering and calls the normal full BuildAndroid path.\n- The observed selected count is instrumentation; it is not an exact percentage of every variant in the complete game.\n- Shader variants are not the same as gameplay/content variants, Addressables groups, scenes, or a public player rollout.\n\nUnity's shader compiler documentation also describes this facility as build-time stripping. A partially stripped APK cannot be treated as a safe public increment that can be merged with another APK.\n\n## Required cumulative-batch contract\n\nIf the intended unit is shader variants, the safe deterministic model is a disjoint range over one fixed hash space:\n\n- Batch 1 at 2% selects bucket range [0%, 2%).\n- Batch 2 at 2% selects [2%, 4%).\n- Batch 3 at 2% selects [4%, 6%).\n- Continue until the final range reaches 100%.\n\nThe range must be derived from the same commit, Unity version, build target, graphics settings, and stable variant key. A later batch must never use the first batch's range again. The workflow must receive explicit batch inputs and reject invalid ranges; a push event must never silently fall back to a full build.\n\nThis produces non-overlapping shader-compilation evidence. It does not, by itself, produce a public game rollout or guarantee an exact count-based 2%. Exact count percentages require a stable, persisted inventory of all variants and a deterministic ranking before selection.\n\nIf the intended unit is gameplay/content variants, the current repository has no verified Unity selector for that unit. It requires an explicit variant manifest and a build/runtime loading contract; shader preprocessing must not be presented as that system.\n\n## Continuity and operational rules\n\n1. Work only in the canonical GitHub Actions workflow above.\n2. Keep all non-canonical build environments out of this process; do not dispatch the existing experimental selector workflow.\n3. Do not create another workflow, Unity project, Build Target, or GitHub connection.\n4. Do not launch run 33 until the official workflow has explicit cumulative-batch inputs and the Editor entry point applies the same range.\n5. Do not publish a partial APK as a public rollout artifact. Upload it only as clearly labelled batch evidence until runtime completeness is proven.\n6. Record commit, batch number, batch size, range, selected count, removed count, Unity version, build target, and artifact digest for every batch.\n7. A 100% final build and device/runtime verification remain separate gates.\n\n## Current decision\n\nThe capability is verified for deterministic shader-variant filtering, but the requested cumulative public 2% flow is not yet configured. The next implementation step is to extend the existing Editor filter and the canonical workflow with explicit cumulative range inputs and evidence-only artifacts, then validate one batch before any subsequent batch is dispatched.
+# VEXFORGE — Incremental variant batch continuity
+
+Status: CONFIGURED — NOT LAUNCHED
+
+## Canonical workflow
+
+The only authorized Unity Android build workflow for this process is:
+
+- `.github/workflows/vexforge-unity-android-github.yml`
+- Workflow name: `Build VEXFORGE Unity Android on GitHub`
+- Runtime: Unity `6000.3.0f1`
+- Project path: `unity/`
+- Build entry point: `Vexforge.Editor.VexforgeGitHubBuild.BuildAndroid`
+
+The workflow remains manual-only through `workflow_dispatch`. No push event,
+Expo workflow, Unity Cloud Build job, or second Unity workflow can start this
+process.
+
+## Required execution order
+
+1. Start from the existing inventory and a checkpoint created by shard `0`.
+2. Run shards `1` through `11` sequentially. Each shard requires the previous
+   shard's checkpoint run and artifact, uses the next deterministic hash range,
+   and must finish successfully before the next shard is started.
+3. Each checkpoint must contain both `Library/ShaderCache` and
+   `Library/PlayerDataCache`, including `ScriptsOnlyCache.yaml` and
+   `DataBuildDirtyInfo.json`. The workflow stores a SHA-256 manifest of those
+   files and refuses a shader-only or otherwise incomplete checkpoint.
+4. The workflow verifies that the checkpoint's Unity project tree matches the
+   current `unity/` tree before restoring it. Documentation/workflow-only
+   changes do not invalidate the Unity build state; Unity project changes do.
+5. The final operation must use shard index `11`, restore the last checkpoint,
+   prove complete manifest coverage against `inventory.tsv` with no duplicates,
+   gaps, or extras, and only then build one APK.
+
+The old checkpoint artifact that contains only `ShaderCache` is intentionally
+not sufficient for this contract. It must not be presented as a complete
+incremental checkpoint.
+
+## Final APK contract
+
+The final APK is a single unfiltered Android build. It is not assembled from
+partial shard APKs, and shard APKs remain evidence-only artifacts.
+
+- `Vexforge.Editor.VexforgeGitHubBuild.BuildAndroid` calls Unity
+  `BuildPipeline.BuildPlayer`.
+- Android uses Gradle, IL2CPP, and ARM64.
+- `VEXFORGE_FULL_BUILD_FILTER=disabled` is required.
+- The Editor logs `shader_filter=disabled`; the workflow rejects logs that show
+  a hard cap, selected/removed variant filtering, or a variant limit.
+- APK validation still requires a non-empty APK and the successful Unity build
+  result.
+
+The final operation does not use the shader-shard `BuildAndroid` method and
+does not apply the former 35,000-variant limit.
+
+## Evidence gates
+
+Every shard records its commit, shard range, selected/removed counts, Unity
+version, build target, APK digest, cache observations, and manifest. For
+shards after `0` and for `final`, the workflow requires cache reuse evidence
+from the Unity Editor log; counting restored files is not accepted as proof.
+
+The final coverage gate compares the union of all shard fingerprints against
+the inventory:
+
+- every inventory fingerprint must appear;
+- no fingerprint may appear in more than one shard;
+- no shard may contain a fingerprint outside the inventory;
+- exactly `SHARD_COUNT` shard manifests must be present.
+
+This establishes shader-compilation continuity. It does not claim gameplay or
+content-variant coverage, public rollout completeness, device QA, or a release
+until those separate gates are verified.
+
+## Operational rules
+
+1. Work only in the canonical GitHub Actions workflow above.
+2. Do not create another workflow, Unity project, build target, or GitHub
+   connection.
+3. Do not dispatch any shard, final build, APK release, or device validation
+   without explicit authorization.
+4. Do not publish a partial APK as a public rollout artifact.
+5. Keep Supabase as the backend authority; this build flow does not alter
+   schema, data, auth, RLS, RPCs, storage, or functions.
