@@ -384,6 +384,7 @@ jobs:
           checkpoint_dir="$GITHUB_WORKSPACE/build-artifacts/checkpoint-download"
           archive="$(find "$checkpoint_dir" -type f -name 'unity-build-cache.tar' -print -quit)"
           if [ -n "$archive" ]; then
+            checkpoint_payload_dir="$(dirname "$archive")"
             tar -xf "$archive" -C "$GITHUB_WORKSPACE"
           elif [ "$ALLOW_LEGACY_SHADER_CHECKPOINT" = true ]; then
             archive="$(find "$checkpoint_dir" -type f -name 'shader-cache.tar' -print -quit)"
@@ -391,6 +392,7 @@ jobs:
               echo "The validated legacy checkpoint does not contain shader-cache.tar." >&2
               exit 1
             }
+            checkpoint_payload_dir="$(dirname "$archive")"
             tar -xf "$archive" -C "$GITHUB_WORKSPACE"
             echo "Using the validated shard-0 ShaderCache-only seed; shard 1 must create a complete checkpoint."
           else
@@ -407,10 +409,10 @@ jobs:
             dirty_info="$(find unity/Library/PlayerDataCache -type f -name 'DataBuildDirtyInfo.json' -print -quit)"
             test -n "$scripts_cache" || { echo "PlayerDataCache is missing ScriptsOnlyCache.yaml" >&2; exit 1; }
             test -n "$dirty_info" || { echo "PlayerDataCache is missing DataBuildDirtyInfo.json" >&2; exit 1; }
-            manifest="$checkpoint_dir/cache-manifest.sha256"
+            manifest="$checkpoint_payload_dir/cache-manifest.sha256"
             test -s "$manifest" || { echo "Checkpoint cache manifest is missing." >&2; exit 1; }
             sha256sum -c "$manifest"
-            metadata="$checkpoint_dir/checkpoint-metadata.txt"
+            metadata="$checkpoint_payload_dir/checkpoint-metadata.txt"
             test -s "$metadata" || { echo "Checkpoint metadata is missing." >&2; exit 1; }
             checkpoint_shard_index="$(sed -n 's/^shard_index=//p' "$metadata")"
             checkpoint_shard_count="$(sed -n 's/^shard_count=//p' "$metadata")"
@@ -427,9 +429,9 @@ jobs:
               exit 1
             }
           fi
-          if [ -d "$checkpoint_dir/variants" ]; then
+          if [ -d "$checkpoint_payload_dir/variants" ]; then
             mkdir -p unity/Builds/ShaderShardWarmup/checkpoints/variants
-            cp -R "$checkpoint_dir/variants/." unity/Builds/ShaderShardWarmup/checkpoints/variants/
+            cp -R "$checkpoint_payload_dir/variants/." unity/Builds/ShaderShardWarmup/checkpoints/variants/
           fi
           echo "Restored and verified ShaderCache plus PlayerDataCache; no other Library data was merged."
 
