@@ -60,6 +60,11 @@ on:
         required: false
         default: ""
         type: string
+      allow_legacy_shader_checkpoint:
+        description: "Allow the validated shard-0 ShaderCache-only checkpoint for shard 1"
+        required: false
+        default: false
+        type: boolean
 
 permissions:
   actions: read
@@ -89,6 +94,7 @@ jobs:
       CHECKPOINT_ARTIFACT_ID: ${{ inputs.checkpoint_artifact_id }}
       INVENTORY_RUN_ID: ${{ inputs.inventory_run_id }}
       INVENTORY_ARTIFACT_ID: ${{ inputs.inventory_artifact_id }}
+      ALLOW_LEGACY_SHADER_CHECKPOINT: ${{ inputs.allow_legacy_shader_checkpoint }}
 
     steps:
       - name: Validate operation inputs
@@ -150,6 +156,16 @@ jobs:
               exit 1
             }
             echo "Progressive shard checkpoint chain enabled for shard_index=$SHARD_INDEX."
+          fi
+          if [ "$ALLOW_LEGACY_SHADER_CHECKPOINT" = true ]; then
+            test "$VEXFORGE_MODE" = shard
+            test "$SHARD_INDEX" -eq 1 || {
+              echo "The legacy ShaderCache-only checkpoint is permitted only for shard 1." >&2
+              exit 1
+            }
+            test -n "$CHECKPOINT_RUN_ID"
+            test -n "$CHECKPOINT_ARTIFACT_ID"
+            echo "Legacy validated shard-0 checkpoint compatibility is explicitly enabled for shard 1."
           fi
           if [ "$VEXFORGE_MODE" = final ]; then
             test "$SHARD_INDEX" -eq "$(( SHARD_COUNT - 1 ))" || {
@@ -343,10 +359,20 @@ jobs:
           test -n "$checkpoint_sha" && test "$checkpoint_sha" != null
           current_unity_tree="$(git rev-parse 'HEAD:unity')"
           checkpoint_unity_tree="$(git rev-parse "$checkpoint_sha:unity")"
-          test "$current_unity_tree" = "$checkpoint_unity_tree" || {
-            echo "Checkpoint was created from a different Unity project tree; refusing to mix build state." >&2
-            exit 1
-          }
+          if [ "$ALLOW_LEGACY_SHADER_CHECKPOINT" = true ]; then
+            current_shader_tree="$(git rev-parse 'HEAD:unity/Assets/Editor/VexforgeShaderShardBuild.cs')"
+            checkpoint_shader_tree="$(git rev-parse "$checkpoint_sha:unity/Assets/Editor/VexforgeShaderShardBuild.cs")"
+            test "$current_shader_tree" = "$checkpoint_shader_tree" || {
+              echo "Legacy checkpoint shader selector does not match the current Unity source." >&2
+              exit 1
+            }
+            echo "Legacy checkpoint accepted because the shard selector source is unchanged."
+          else
+            test "$current_unity_tree" = "$checkpoint_unity_tree" || {
+              echo "Checkpoint was created from a different Unity project tree; refusing to mix build state." >&2
+              exit 1
+            }
+          fi
           echo "checkpoint_source_commit=$checkpoint_sha" >> "$GITHUB_ENV"
           echo "Checkpoint source commit has the same unity/ tree; build state remains compatible."
 
@@ -357,36 +383,50 @@ jobs:
           set -euo pipefail
           checkpoint_dir="$GITHUB_WORKSPACE/build-artifacts/checkpoint-download"
           archive="$(find "$checkpoint_dir" -type f -name 'unity-build-cache.tar' -print -quit)"
-          test -n "$archive" || {
+          if [ -n "$archive" ]; then
+            tar -xf "$archive" -C "$GITHUB_WORKSPACE"
+          elif [ "$ALLOW_LEGACY_SHADER_CHECKPOINT" = true ]; then
+            archive="$(find "$checkpoint_dir" -type f -name 'shader-cache.tar' -print -quit)"
+            test -n "$archive" || {
+              echo "The validated legacy checkpoint does not contain shader-cache.tar." >&2
+              exit 1
+            }
+            tar -xf "$archive" -C "$GITHUB_WORKSPACE"
+            echo "Using the validated shard-0 ShaderCache-only seed; shard 1 must create a complete checkpoint."
+          else
             echo "Checkpoint is legacy or incomplete: unity-build-cache.tar is required; ShaderCache alone is not enough." >&2
             exit 1
-          }
-          tar -xf "$archive" -C "$GITHUB_WORKSPACE"
-          test -d unity/Library/ShaderCache
-          test -d unity/Library/PlayerDataCache
-          scripts_cache="$(find unity/Library/PlayerDataCache -type f -name 'ScriptsOnlyCache.yaml' -print -quit)"
-          dirty_info="$(find unity/Library/PlayerDataCache -type f -name 'DataBuildDirtyInfo.json' -print -quit)"
-          test -n "$scripts_cache" || { echo "PlayerDataCache is missing ScriptsOnlyCache.yaml" >&2; exit 1; }
-          test -n "$dirty_info" || { echo "PlayerDataCache is missing DataBuildDirtyInfo.json" >&2; exit 1; }
-          manifest="$checkpoint_dir/cache-manifest.sha256"
-          test -s "$manifest" || { echo "Checkpoint cache manifest is missing." >&2; exit 1; }
-          sha256sum -c "$manifest"
-          metadata="$checkpoint_dir/checkpoint-metadata.txt"
-          test -s "$metadata" || { echo "Checkpoint metadata is missing." >&2; exit 1; }
-          checkpoint_shard_index="$(sed -n 's/^shard_index=//p' "$metadata")"
-          checkpoint_shard_count="$(sed -n 's/^shard_count=//p' "$metadata")"
-          expected_checkpoint_index="$SHARD_INDEX"
-          if [ "$VEXFORGE_MODE" = shard ]; then
-            expected_checkpoint_index=$(( SHARD_INDEX - 1 ))
           fi
-          test "$checkpoint_shard_index" -eq "$expected_checkpoint_index" || {
-            echo "Checkpoint shard index $checkpoint_shard_index does not match expected $expected_checkpoint_index." >&2
-            exit 1
-          }
-          test "$checkpoint_shard_count" -eq "$SHARD_COUNT" || {
-            echo "Checkpoint shard count $checkpoint_shard_count does not match current $SHARD_COUNT." >&2
-            exit 1
-          }
+          test -d unity/Library/ShaderCache
+          if [ "$ALLOW_LEGACY_SHADER_CHECKPOINT" = true ]; then
+            test "$VEXFORGE_MODE" = shard
+            test "$SHARD_INDEX" -eq 1
+          else
+            test -d unity/Library/PlayerDataCache
+            scripts_cache="$(find unity/Library/PlayerDataCache -type f -name 'ScriptsOnlyCache.yaml' -print -quit)"
+            dirty_info="$(find unity/Library/PlayerDataCache -type f -name 'DataBuildDirtyInfo.json' -print -quit)"
+            test -n "$scripts_cache" || { echo "PlayerDataCache is missing ScriptsOnlyCache.yaml" >&2; exit 1; }
+            test -n "$dirty_info" || { echo "PlayerDataCache is missing DataBuildDirtyInfo.json" >&2; exit 1; }
+            manifest="$checkpoint_dir/cache-manifest.sha256"
+            test -s "$manifest" || { echo "Checkpoint cache manifest is missing." >&2; exit 1; }
+            sha256sum -c "$manifest"
+            metadata="$checkpoint_dir/checkpoint-metadata.txt"
+            test -s "$metadata" || { echo "Checkpoint metadata is missing." >&2; exit 1; }
+            checkpoint_shard_index="$(sed -n 's/^shard_index=//p' "$metadata")"
+            checkpoint_shard_count="$(sed -n 's/^shard_count=//p' "$metadata")"
+            expected_checkpoint_index="$SHARD_INDEX"
+            if [ "$VEXFORGE_MODE" = shard ]; then
+              expected_checkpoint_index=$(( SHARD_INDEX - 1 ))
+            fi
+            test "$checkpoint_shard_index" -eq "$expected_checkpoint_index" || {
+              echo "Checkpoint shard index $checkpoint_shard_index does not match expected $expected_checkpoint_index." >&2
+              exit 1
+            }
+            test "$checkpoint_shard_count" -eq "$SHARD_COUNT" || {
+              echo "Checkpoint shard count $checkpoint_shard_count does not match current $SHARD_COUNT." >&2
+              exit 1
+            }
+          fi
           if [ -d "$checkpoint_dir/variants" ]; then
             mkdir -p unity/Builds/ShaderShardWarmup/checkpoints/variants
             cp -R "$checkpoint_dir/variants/." unity/Builds/ShaderShardWarmup/checkpoints/variants/

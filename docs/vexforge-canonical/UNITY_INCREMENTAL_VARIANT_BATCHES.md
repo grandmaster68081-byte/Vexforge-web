@@ -33,9 +33,12 @@ process.
    prove complete manifest coverage against `inventory.tsv` with no duplicates,
    gaps, or extras, and only then build one APK.
 
-The old checkpoint artifact that contains only `ShaderCache` is intentionally
-not sufficient for this contract. It must not be presented as a complete
-incremental checkpoint.
+The old checkpoint artifact from the validated shard `0` contains only
+`ShaderCache`. It is not a complete incremental checkpoint, but the workflow
+has an explicit one-time compatibility gate for using it as the seed of shard
+`1` when `allow_legacy_shader_checkpoint=true`. Shard `1` must then produce
+the first complete checkpoint with `PlayerDataCache`; later shards and the
+final operation reject shader-only checkpoints.
 
 ## Final APK contract
 
