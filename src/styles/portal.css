@@ -1004,3 +1004,124 @@ body{background:linear-gradient(180deg,#0b151c 0%,#10232c 38%,#0d1b23 100%)}
 @keyframes vexforgeCardFloat{0%,100%{transform:perspective(1300px) rotateY(-9deg) rotateX(2deg) translate3d(0,0,0)}50%{transform:perspective(1300px) rotateY(-7deg) rotateX(1deg) translate3d(-3px,-10px,0)}}
 @keyframes vexforgeCardAura{0%,100%{opacity:.55}50%{opacity:.92}}
 @keyframes vexforgeCardShine{0%,70%,100%{transform:translateX(-120%)}84%{transform:translateX(120%)}}
+
+/* =====================================================================
+   MOBILE ART SURFACE
+   The mobile composition is full-bleed: artwork owns the viewport and
+   copy keeps the shell inset. Decorative frames stay inside the artwork;
+   the old card edge and slate section bands do not.
+   ===================================================================== */
+@media(max-width:820px){
+  html{background:#071015}
+  body{background:#071015}
+  .portalRoot{background:transparent}
+
+  /* Let the local scene layers carry the visual continuity instead of
+     painting a separate blue-gray slab behind every section. */
+  .v53Prologue,.v53Gateways,.v53Vault,.v53Factions,.v53Download,
+  .v53InteriorIntro,.v53ChapterGrid,.v53CardArchive,.v53WorldAtlas,
+  .v53NewsChamber,.v53MediaVault,.v53DownloadPage,.v53SupportChamber,
+  .v53WorldNote,.factionFeature,.gameQuote{
+    background-color:transparent;
+    background-image:none;
+  }
+
+  /* Break only image-led blocks out of the text shell. */
+  .v53Prologue__artWrap,
+  .v53InteriorIntro__art,
+  .v53NewsChamber__visual,
+  .v53SupportChamber .supportVisual,
+  .v53DownloadPage__panel{
+    width:100vw;
+    margin-left:calc((100% - 100vw) / 2);
+    margin-right:calc((100% - 100vw) / 2);
+  }
+
+  .v53Prologue__artWrap{margin-top:0}
+  .v53Prologue__art,
+  .v53InteriorIntro__art,
+  .v53NewsChamber__visual,
+  .v53SupportChamber .supportVisual,
+  .v53DownloadPage__panel{
+    border-left:0!important;
+    border-right:0!important;
+    box-shadow:none;
+  }
+
+  /* Horizontal scene rails become viewport-wide scenes rather than
+     narrow cards with the next card and scrollbar exposed at the edge. */
+  .v53GatewayGrid,
+  .v53CardShelf,
+  .v53FactionRail,
+  .v53WorldAtlas__rail,
+  .v53CardArchive__grid,
+  .v54WorldStrip__rail{
+    width:100vw;
+    margin-left:calc((100% - 100vw) / 2);
+    margin-right:calc((100% - 100vw) / 2);
+    padding-left:0;
+    padding-right:0;
+  }
+  .v53GatewayGrid,.v53CardShelf,.v53FactionRail,
+  .v53WorldAtlas__rail,.v53CardArchive__grid,.v54WorldStrip__rail{
+    gap:0;
+  }
+  .v53Gateway,.v53Gateway--lead,
+  .v53Faction,.v53RegionCard{
+    flex-basis:100vw;
+    border-left:0!important;
+    border-right:0!important;
+    box-shadow:none;
+  }
+  .v53Gateway__link{border-left:0!important;border-right:0!important}
+  .v53CardShelf .reveal,.v53CardArchive__grid .reveal{
+    flex-basis:100vw!important;
+    padding-inline:0;
+  }
+  .v54WorldStrip__item{
+    flex-basis:100vw;
+    border-left:0;
+    border-right:0;
+  }
+
+  /* Keep the useful bronze/white artwork frames, remove only the outer
+     slate card boundary that read as a gray border in the recording. */
+  .v53Gateway__link,.v53Faction,.v53RegionCard,
+  .v53ChapterCard__link,.v53NewsLane,.v53SupportPath,.mediaTile,
+  .v53NewsChamber__visual,.v53SupportChamber .supportVisual,
+  .v53DownloadPage__panel{
+    border-color:transparent!important;
+    background-color:transparent;
+  }
+
+  .v53Prologue__art{background:transparent}
+  .v53Prologue__art,.v53Prologue__art img{min-height:clamp(470px,112vw,620px)}
+  .v53Prologue__artFrame{inset:18px}
+  .v53ChapterCard__link{border-left:0;border-right:0}
+
+  /* The first scene should start at the viewport edge too; the header and
+     typography remain safely inset through their own shell. */
+  .v53Hero__frame{inset:15px}
+  .pageHero,.downloadHero,.cinematicScene{
+    border-left:0;
+    border-right:0;
+  }
+}
+
+@media(max-width:560px){
+  .v53Gateway,.v53Gateway--lead,
+  .v53Faction,.v53RegionCard{flex-basis:100vw}
+  .v53Gateway__link,.v53Gateway--lead .v53Gateway__link{
+    min-height:clamp(520px,125vw,680px);
+  }
+  .v53Faction{min-height:clamp(430px,112vw,560px)}
+  .v53RegionCard{min-height:clamp(470px,126vw,590px)}
+  .v53ChapterCard__link{min-height:clamp(360px,92vw,500px)}
+  .v53MediaVault .mediaTile,
+  .v53MediaVault .mediaTile--hero,
+  .v53MediaVault .mediaTile--wide{
+    min-height:clamp(430px,112vw,620px);
+    border-left:0!important;
+    border-right:0!important;
+  }
+}
