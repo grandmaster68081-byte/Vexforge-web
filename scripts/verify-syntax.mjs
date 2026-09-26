@@ -1,10 +1,18 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-let ts;
-try { ts = await import('typescript'); } catch { ts = await import('/usr/local/slides_js/node_modules/typescript/lib/typescript.js'); }
 const here = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(here, '..');
+let ts;
+try {
+  ts = await import('typescript');
+} catch {
+  try {
+    ts = await import(path.join(root, 'node_modules/typescript/lib/typescript.js'));
+  } catch {
+    ts = await import('/usr/local/slides_js/node_modules/typescript/lib/typescript.js');
+  }
+}
 const files=[];
 function walk(dir){for(const entry of fs.readdirSync(dir,{withFileTypes:true})){const p=path.join(dir,entry.name);if(entry.isDirectory())walk(p);else if(/\.(ts|tsx)$/.test(entry.name))files.push(p);}}
 walk(path.join(root,'src')); const failures=[];

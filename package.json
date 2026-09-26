@@ -1,10 +1,10 @@
 {
-  "name": "vexforge-official-portal-v5-1-tier1-master",
+  "name": "vexforge-official-portal-v5-6-worldclass-art-directed-final",
   "private": true,
-  "version": "5.1.0",
+  "version": "5.6.0",
   "type": "module",
   "engines": {
-    "node": ">=20.0.0"
+    "node": ">=18.0.0"
   },
   "scripts": {
     "dev": "vite",
@@ -18,20 +18,23 @@
     "verify:public-surface": "node scripts/verify-public-surface.mjs",
     "verify:supabase": "node scripts/verify-supabase-public-contract.mjs",
     "verify:quality": "node scripts/verify-quality.mjs",
-    "verify": "npm run verify:syntax && npm run verify:portal && npm run verify:links && npm run verify:copy && npm run verify:public-surface && npm run verify:supabase && npm run verify:responsive && npm run verify:quality",
+    "verify": "npm run verify:syntax && npm run verify:portal && npm run verify:links && npm run verify:copy && npm run verify:public-surface && npm run verify:supabase && npm run verify:responsive && npm run verify:visual-residency && npm run verify:surface-lighting && npm run verify:visual-assets && npm run verify:quality",
     "verify:links": "node scripts/verify-links.mjs",
-    "verify:responsive": "node scripts/verify-responsive-contract.mjs"
+    "verify:responsive": "node scripts/verify-responsive-contract.mjs",
+    "verify:visual-residency": "node scripts/verify-visual-residency.mjs",
+    "verify:surface-lighting": "node scripts/verify-surface-lighting.mjs",
+    "verify:visual-assets": "node scripts/verify-visual-assets.mjs"
   },
   "dependencies": {
     "react": "18.3.1",
     "react-dom": "18.3.1",
-    "react-router-dom": "7.18.4"
+    "react-router-dom": "6.30.1"
   },
   "devDependencies": {
     "@types/react": "18.3.18",
     "@types/react-dom": "18.3.5",
     "@vitejs/plugin-react": "4.7.0",
     "typescript": "5.8.3",
-    "vite": "6.4.3"
+    "vite": "6.1.0"
   }
 }

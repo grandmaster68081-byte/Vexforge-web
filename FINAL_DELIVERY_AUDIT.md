@@ -1,31 +1,33 @@
-# VEXFORGE Official Portal V5.1 — Delivery Audit
+# VEXFORGE V5.6 — FINAL DELIVERY AUDIT
 
-## Why V5.1 exists
+## Delivered
+- 14 local visual scene slots.
+- 3 supplied high-quality generated visual references bundled.
+- 1 current-portal QA contact sheet bundled.
+- 4 local faction glyphs.
+- Local platform-art source map.
+- Supabase Storage card-only contract retained.
+- New art-generation bible for Replit.
+- New source-of-truth and handoff documents.
+- Animated atmospheric/motion layer.
+- Mobile visual density rules.
+- Regression verifier for non-card Supabase Storage references.
 
-A review of the previous mobile presentation showed a layout that read like a constrained product dashboard and exposed implementation/status details. V5.1 removes those patterns from the public experience.
+## Static validation passed
+- SYNTAX PASS — 25 TS/TSX files parsed.
+- VISUAL ASSET CONTRACT PASS — 22 required local visual files present; Supabase storage references remain card-only.
+- SUPABASE PUBLIC CONTRACT PASS — official card Storage contract isolated to cards.ts.
+- QUALITY VERIFY PASS — V5.6 visual/source contract passed.
+- SURFACE LIGHTING VERIFY PASS — V5.6 art-directed surfaces and motion layer present.
+- PORTAL VERIFY PASS.
+- LINK VERIFY PASS.
+- PUBLIC COPY VERIFY PASS.
+- PUBLIC SURFACE VERIFY PASS.
+- RESPONSIVE CONTRACT PASS.
+- VISUAL RESIDENCY VERIFY PASS.
 
-## V5.1 public experience
+## Environment limitation
+`npm install --ignore-scripts --no-audit --no-fund` timed out in the execution environment. Therefore `npm run typecheck` and the real Vite production build were not claimed as executed here. Replit must run them after dependencies are installed.
 
-- Full-bleed game-art hero at the first viewport.
-- Compact navigation with a dedicated download route.
-- Clear player pathways into game, cards, world, news and media.
-- Large image-led discovery modules.
-- TCG card presentation with 2:3 artwork relationship.
-- Four image-led faction panels.
-- Full-width world scene.
-- Controlled Android release gate with empty store targets until official URLs exist.
-- No fake news, fake metrics, fake dates, fake store links, or technical status panels.
-
-## Static validation executed in this environment
-
-- TypeScript/TSX syntax parser: PASS.
-- Portal isolation: PASS.
-- Internal link audit: PASS.
-- Public-copy audit: PASS.
-- Public card contract: PASS.
-- Responsive composition contract: PASS.
-- Quality/public-surface audit: PASS.
-
-## Build boundary
-
-A production npm build could not be executed in this environment because the dependency registry was unreachable from the container. Replit/CI must run the complete install, verify, typecheck, build, and build-verification sequence before merge. The package deliberately fails closed on several public-surface checks so a build cannot be considered complete without those validations.
+## Acceptance condition
+The final portal must visually read as a premium VEXFORGE game property, not as a generic dark landing page. All principal sections require authored visual residency, spatial depth, material variation and intentional motion.

@@ -1,6 +1,6 @@
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
 
-export function Reveal({ children, className = "", delay = 0 }: { children: ReactNode; className?: string; delay?: number }) {
+export function Reveal({ children, className = "", delay = 0, style }: { children: ReactNode; className?: string; delay?: number; style?: CSSProperties }) {
   const ref = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(false);
   useEffect(() => {
@@ -16,5 +16,5 @@ export function Reveal({ children, className = "", delay = 0 }: { children: Reac
     observer.observe(node);
     return () => observer.disconnect();
   }, []);
-  return <div ref={ref} className={`reveal ${visible ? "is-visible" : ""} ${className}`} style={{ transitionDelay: `${delay}ms` }}>{children}</div>;
+  return <div ref={ref} className={`reveal ${visible ? "is-visible" : ""} ${className}`} style={{ transitionDelay: `${delay}ms`, ...style }}>{children}</div>;
 }

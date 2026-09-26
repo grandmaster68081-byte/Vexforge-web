@@ -1,0 +1,27 @@
+{
+  "version": "5.6.0",
+  "rule": "Supabase Storage is reserved for official VEXFORGE card artwork only.",
+  "references": [
+    "public/art/references/REF_A_SWEeping_CITADEL.png",
+    "public/art/references/REF_B_ARENA_CITADEL.png",
+    "public/art/references/REF_C_FORGE_CATHEDRAL.png",
+    "public/art/references/REF_CURRENT_PORTAL_QA_CONTACT_SHEET.jpg"
+  ],
+  "platform_art_slots": [
+    "01-home-citadel-dawn.jpg",
+    "02-game-forge-cathedral.jpg",
+    "03-battle-arena.jpg",
+    "04-world-atlas.jpg",
+    "05-news-courtyard.jpg",
+    "06-media-citadel.jpg",
+    "07-download-forge.jpg",
+    "08-support-sanctum.jpg",
+    "09-faction-warrior.jpg",
+    "10-faction-mage.jpg",
+    "11-faction-paladin.jpg",
+    "12-faction-rogue.jpg",
+    "13-footer-great-gate.jpg",
+    "14-mobile-chamber.jpg"
+  ],
+  "replacement_policy": "Each platform slot is a bespoke generated VEXFORGE scene. Preserve the stable filename and component URL when improving a scene; never move official card artwork into this directory."
+}

@@ -1,19 +1,12 @@
-# Replit execution order — VEXFORGE Portal V5.1
+# VEXFORGE V5.6 — EXECUTION ORDER
 
-1. Checkout/confirm canonical `main`.
-2. Back up/tag the current web state before replacement.
-3. Copy this package into the public website root.
-4. Replace the existing public source/config with the package files.
-5. Remove all legacy dashboard routes/components/providers from the public site.
-6. Preserve the canonical public asset map and existing approved card-data contract.
-7. Do not edit `unity/`.
-8. Run `npm install`.
-9. Run `npm run verify`.
-10. Run `npm run typecheck`.
-11. Run `npm run build`.
-12. Run `npm run verify:build`.
-13. Inspect the built site at 720×1640 and 1440×900 before merge.
-14. Confirm no player-facing engineering/status text is present.
-15. Only after all checks pass, commit and push the web replacement to `main`.
-
-Do not create an alternate web app, alternate route set, alternate build workflow, or second source of truth.
+1. Read `CURRENT_SOURCE_OF_TRUTH.md`.
+2. Read `VEXFORGE_V5_6_VISUAL_FINAL.md`.
+3. Read `docs/ART_GENERATION_BIBLE.md`.
+4. Inspect the supplied reference pack.
+5. Generate/replace platform art slots locally.
+6. Never pull non-card imagery from Supabase Storage.
+7. Preserve official cards from Supabase Storage.
+8. Run static verification.
+9. Run typecheck/build in a dependency-ready environment.
+10. Only then merge/deploy.

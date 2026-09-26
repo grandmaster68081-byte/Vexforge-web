@@ -1,58 +1,26 @@
-CHANGELOG_V3_TIER1_GOLD_FINAL.md
-FINAL_DELIVERY_AUDIT.md
-IMPLEMENTATION_SPEC.md
-NO_LOCAL_IMAGE_ASSETS.txt
-PACKAGE_MANIFEST.txt
-README.md
-REPLIT_IMPLEMENTATION.md
-docs/CONTENT_MAP.md
-docs/PORTAL_ARCHITECTURE.md
-docs/REFERENCE_RESEARCH.md
-docs/VISUAL_ASSEMBLY_SPEC.md
-docs/VISUAL_DIRECTION.md
-index.html
-package.json
-public/_headers
-public/_redirects
-public/favicon.svg
-public/robots.txt
-public/sitemap.xml
-scripts/verify-build.mjs
-scripts/verify-copy.mjs
-scripts/verify-links.mjs
-scripts/verify-portal.mjs
-scripts/verify-quality.mjs
-scripts/verify-supabase-public-contract.mjs
-scripts/verify-syntax.mjs
-src/components/BrandMark.tsx
-src/components/CardShowcase.tsx
-src/components/CinematicScene.tsx
-src/components/DownloadGate.tsx
-src/components/ForgeGlyph.tsx
-src/components/Icon.tsx
-src/components/PortalShell.tsx
-src/components/RemoteImage.tsx
-src/components/Reveal.tsx
-src/components/SectionHeading.tsx
-src/data/content.ts
-src/lib/assets.ts
-src/lib/cards.ts
-src/main.tsx
-src/pages/Cards.tsx
-src/pages/Download.tsx
-src/pages/Game.tsx
-src/pages/Home.tsx
-src/pages/Legal.tsx
-src/pages/Media.tsx
-src/pages/News.tsx
-src/pages/NotFound.tsx
-src/pages/Support.tsx
-src/pages/World.tsx
-src/styles/portal.css
-src/vite-env.d.ts
-supabase/retirement/01_web_object_audit.sql
-supabase/retirement/README.md
-tsconfig.app.json
-tsconfig.json
-tsconfig.node.json
-vite.config.ts
+VEXFORGE OFFICIAL PORTAL V5.6 — WORLD-CLASS ART-DIRECTED PREMIUM FINAL
+
+Package purpose: single-file Replit visual/product handoff with bundled reference art and stable local art slots.
+
+Core assets:
+- public/art/references/ : supplied visual references + current portal QA contact sheet
+- public/art/portal/ : 14 stable local platform art slots
+- public/art/factions/ : 4 local faction glyphs
+
+Core docs:
+- REPLIT_HANDOFF.md
+- CURRENT_SOURCE_OF_TRUTH.md
+- VEXFORGE_V5_6_VISUAL_FINAL.md
+- docs/ART_GENERATION_BIBLE.md
+- docs/REFERENCE_RESEARCH.md
+- DESIGN_ACCEPTANCE_CHECKLIST.md
+- VISUAL_QA_MATRIX.md
+- FINAL_DELIVERY_AUDIT.md
+
+Source boundaries:
+- Supabase Storage is card-art-only in the portal.
+- Platform/environment artwork is local/generated.
+
+Build note:
+- Static validation is runnable without npm dependencies.
+- npm install timed out in the delivery environment; Replit must run typecheck/build after dependencies are installed.

@@ -1,29 +1,25 @@
-# VEXFORGE Visual Direction — V5.1 Tier 1 Master
+# VEXFORGE Visual Direction — V5.4 Art-Directed Premium Tier-1
 
-VEXFORGE should read as an official game property before it reads as a website. The artwork establishes the world; the interface frames it.
+VEXFORGE should read as an official game property before it reads as a website. The artwork establishes the world; the interface frames and navigates it.
 
-## Above the fold
+## North star
+**Scene first. Object second. Copy third.**
 
-The homepage begins with a full-bleed official VEXFORGE image, compact navigation, a strong wordmark/title treatment and two clear entry actions. The artwork must remain visible across the first viewport, including the 720×1640 mobile reference frame.
+The visitor should move through a continuous visual world: cover scene, lobby, collection, factions, regions and the Forge. Sections should feel like adjacent rooms/chambers of one universe, not independent website blocks.
 
-## Editorial rhythm
-
-The page alternates between image-led discovery panels, a premium card showcase, faction art, a cinematic world teaser and a restrained Android release gate. Section compositions should not collapse into a repeated 3-column dashboard pattern.
+## Visual depth
+Use approved VEXFORGE artwork at multiple scales: full-bleed environmental scenes, large framed panels, collectible card objects, faction portraits/icons and atmospheric backgrounds. Dark space is still part of the fantasy, but it must be supported by stone/steel midtones, light fields, gold seams and visible artwork.
 
 ## Typography
-
 Display: Cinzel / Cinzel Decorative.
 Utility: Rajdhani.
 Metadata: IBM Plex Mono.
 
-## Color
+## Palette
+Obsidian, blue-steel, stone and aged gold form the structural palette. Arcane blue and faction-specific crimson/sapphire/emerald/gold may appear only as controlled atmospheric accents.
 
-Night black and blue as the field. Warm gold/ember for hierarchy. Violet and cold blue only as atmospheric accents inherited from the artwork.
+## Prohibited shortcuts
+No generic SaaS cards, no fake dashboards, no black void sections, no fabricated news/metrics/dates, no fake store links, no rainbow gradients, no cyberpunk neon, no decorative particle fields.
 
-## Motion
-
-Use only subtle transform/opacity motion. Pointer parallax is capped to single-digit pixels. Reduced-motion removes decorative movement.
-
-## Prohibited visual shortcuts
-
-No particles, star fields, floating dots, fake HUD readouts, fake metrics, rainbow gradients, neon outlines, generic SaaS cards, or excessive glass surfaces.
+## Mobile
+Mobile is a deliberate visual browsing mode. Horizontal snap rails are used where necessary so artwork remains present and the page does not degrade into a long vertical stack of empty panels.

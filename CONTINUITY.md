@@ -6370,3 +6370,29 @@ generó build o APK.
   compilación APK.
 - **ESTADO:** `VEXFORGE PORTAL V5.1 PUBLICADO Y VERIFICADO EN
   https://vexforge-web.pages.dev/`; excepción limitada al portal autorizado.
+
+## 2026-09-26 — WEB PORTAL V5.6 — ORIGINAL LOCAL ART / NO UNITY BUILD
+
+- **ALCANCE:** se integró en el portal web la evolución V5.6 art-directed del ZIP
+  oficial, conservando las rutas editoriales, la navegación, la galería de
+  cartas y los contratos públicos existentes.
+- **ARTE:** las 14 ranuras estables de `public/art/portal/` fueron reemplazadas
+  una por una con escenas originales generadas para VEXFORGE: citadel,
+  catedral de forja, arena, atlas, noticias, media, descarga, soporte, cuatro
+  entornos de facción, gran puerta y cámara móvil. Las referencias visuales y
+  los cuatro sigilos SVG de facción permanecen locales.
+- **FRONTERA DE IDENTIDAD:** `src/lib/assets.ts` consume sólo arte de plataforma
+  local. El único arte remoto permitido continúa siendo el arte oficial de
+  cartas validado por `src/lib/cards.ts`; no se usó arte no-carta de Supabase.
+- **INTEGRIDAD:** no se modificaron `unity/**`, workflows, migraciones,
+  contratos backend, Auth, economía, lógica de jugador ni rutas Unity.
+- **VERIFICACIÓN:** pasaron las guardas de portal, enlaces, copy, superficie
+  pública, contrato Supabase, responsive, residencia visual, iluminación,
+  assets visuales, calidad y parser TS/TSX (25 archivos). `git diff --check`
+  quedó limpio.
+- **NO BUILD:** no se ejecutó `npm run build`, no se generó `dist`, no se inició
+  GitHub Actions, Unity, APK, release ni Unity Cloud Build, de acuerdo con la
+  instrucción del operador.
+- **ESTADO HONESTO:** `IMPLEMENTED_UNVERIFIED / NO UNITY BUILD`; queda pendiente
+  la inspección visual del portal publicado en desktop y móvil después de la
+  publicación normal de `main`.

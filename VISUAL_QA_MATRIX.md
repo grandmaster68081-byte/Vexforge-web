@@ -1,12 +1,15 @@
-# VEXFORGE V5.1 visual QA matrix
+# VEXFORGE V5.6 — VISUAL QA MATRIX
 
-| Reference | Required behavior | Failure condition |
-| --- | --- | --- |
-| 720×1640 | Edge-to-edge hero artwork | Boxed desktop shell, clipped composition, horizontal overflow |
-| 720×1640 | 14px content gutter | Text touches viewport edge or becomes cramped |
-| 720×1640 | Stacked primary actions | Buttons become tiny inline controls |
-| 720×1640 | 2:3 card ratio | Cards become square or overly panoramic |
-| 1440×900 | Hero dominates first viewport | Navigation/content outweighs artwork |
-| 1440×900 | Editorial image modules | Repeated dashboard/SaaS grid |
-| All | Player-only copy | Engineering/status language visible |
-| All | Real links only | Placeholder/fake store destination behaves as live |
+| Surface | Art source | Visual requirement | Motion | Fallback |
+|---|---|---|---|---|
+| Home hero | Local 01 | Monumental establishing environment | pointer drift / slow atmosphere | local art |
+| Game | Local 02/03 | Forge + battle depth | scene drift | local art |
+| World | Local 04/05 | Atlas + cinematic scale | slow crop movement | local art |
+| Cards | Supabase `/cards/` | Official card identity | physical card lift | neutral card frame |
+| Factions | Local 09–12 + local glyphs | distinct visual identities | hover depth | local art |
+| News | Local 05 | complete editorial chamber even empty | light breathing | local art |
+| Media | Local 06 | gallery density | image movement | local art |
+| Download | Local 07 | ceremonial access scene | portal glow | local art |
+| Support | Local 08 | quiet but materially rich | subtle ambient movement | local art |
+| Footer | Local 13 | visual end-cap | slow atmosphere | local art |
+| Mobile | Local 14 | compact cinematic chamber | reduced | local art |

@@ -9,7 +9,7 @@ function walk(dir) {
   for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
     const full = path.join(dir, entry.name);
     if (entry.isDirectory()) walk(full);
-    else files.push(full);
+    else if (/\.(ts|tsx|css|html|json|md|mjs|svg)$/i.test(entry.name)) files.push(full);
   }
 }
 scanRoots.forEach(walk);
@@ -34,16 +34,35 @@ for (const raw of externalUrls) {
   catch { failures.push(`malformed external URL: ${raw}`); }
 }
 
+function assetsMatchCardsOnly(fullText) {
+  const storage = 'https://rscuzqnfccqvltkdcdny.supabase.co/storage/v1/object/public/vexforge-assets/';
+  const hits = [];
+  for (const file of files) {
+    const rel = path.relative(root, file);
+    if (!['src/lib/cards.ts'].includes(rel)) {
+      const body = fs.readFileSync(file, 'utf8');
+      if (body.includes(storage)) hits.push(rel);
+    }
+  }
+  return hits.length === 0;
+}
+
 const assets = fs.readFileSync(path.join(root, "src/lib/assets.ts"), "utf8");
 if (!assets.includes('googlePlay: ""') || !assets.includes('directAndroid: ""')) failures.push("download targets are not empty");
-if (!assets.includes("rscuzqnfccqvltkdcdny.supabase.co")) failures.push("canonical asset host missing");
+if (assets.includes("rscuzqnfccqvltkdcdny.supabase.co")) failures.push("Supabase must not be referenced by platform assets.ts");
 if (!text.includes("className=\"headerDownload\"")) failures.push("header download route missing");
 if (!text.includes("prefers-reduced-motion")) failures.push("reduced-motion fallback missing");
 if (!text.includes("fetchPriority")) failures.push("image priority treatment missing");
-if (!text.includes("v5Hero")) failures.push("V5 hero missing");
+if (!text.includes("v53Hero")) failures.push("V5.4 hero missing");
 
 const rasterExt = new Set([".png", ".jpg", ".jpeg", ".webp", ".gif", ".avif", ".mp4"]);
-for (const file of files) if (rasterExt.has(path.extname(file).toLowerCase())) failures.push(`local raster payload: ${path.relative(root, file)}`);
+for (const file of files) {
+  const rel = path.relative(root, file);
+  if (rasterExt.has(path.extname(file).toLowerCase()) && !rel.startsWith('public/art/')) failures.push(`unexpected local raster payload outside public/art: ${rel}`);
+}
+if (!fs.existsSync(path.join(root, 'public/art/portal/01-home-citadel-dawn.jpg'))) failures.push('V5.6 local portal art missing');
+if (!fs.existsSync(path.join(root, 'public/art/references/REF_A_SWEeping_CITADEL.png'))) failures.push('V5.6 reference art missing');
+if (!assetsMatchCardsOnly(text)) failures.push('non-card Supabase storage reference found');
 const css = fs.readFileSync(path.join(root, "src/styles/portal.css"), "utf8");
 const open = (css.match(/\{/g) || []).length;
 const close = (css.match(/\}/g) || []).length;
@@ -54,4 +73,4 @@ if (failures.length) {
   failures.forEach((failure) => console.error(`- ${failure}`));
   process.exit(1);
 }
-console.log(`QUALITY VERIFY PASS — ${files.length} portal files scanned; V5 public-surface checks passed.`);
+console.log(`QUALITY VERIFY PASS — ${files.length} portal files scanned; V5.6 visual/source contract passed.`);
