@@ -1,3 +1,14 @@
+## 2026-09-26 — V5.6 WEB DEPLOY RECONCILIATION — LOCKFILE ALIGNED / CLOUDFLARE RETRY
+
+- **SOURCE:** `main` was reconciled at `3c2bc5fdb56a4fcfd5c981a321131f99f5579dac`; the V5.6 portal implementation and local platform art are present.
+- **LIVE CHECK BEFORE FIX:** `https://vexforge-web.pages.dev/` responded `HTTP 200` through Cloudflare and served portal scene assets `01`, `07` and `14` with `HTTP 200`.
+- **BLOCKER:** the `verify` and Cloudflare Pages checks for the current source failed during `npm ci` because `package-lock.json` still described the previous V5.1 package identity and dependency versions.
+- **FIX:** `package-lock.json` now matches the V5.6 `package.json` (`react-router-dom` 6.30.1, Vite 6.1.0, Node >=18) and all resolved package URLs use `https://registry.npmjs.org/`; `npm ci --dry-run` and `git diff --check` pass.
+- **BOUNDARY:** no Unity files, Unity workflows, Supabase schema/data/auth contracts, or Android build operations were changed or started.
+- **NEXT:** Cloudflare Pages must complete its automatic deployment for the corrective web commit; verify the exact commit SHA, public `index.html`, fingerprinted resources and portal scenes after propagation.
+
+---
+
 ## 2026-09-25 — OFFICIAL PORTAL TIER 1 GOLD — IMPORTED / NO UNITY BUILD
 
 - **SOURCE:** `main` del repositorio `grandmaster68081-byte/Vexforge-web`; el
