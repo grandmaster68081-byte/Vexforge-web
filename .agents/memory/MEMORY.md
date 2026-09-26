@@ -4,5 +4,6 @@
 - [Reference data zones](reference-data-zones.md) — fixed Android PNGs stay intact; real data belongs only in proportional overlays matching each functional zone.
 - [GitHub REST large-file commits](github-rest-large-files.md) — stream base64 JSON for large blobs; passing file content as a jq argument exceeds the shell argument limit.
 - [Replit config Python side effect](replit-config-python-side-effect.md) — Python shell tooling can add python-base to `.replit`; validate and restore before publishing.
+- [Portable TypeScript verification](typescript-verification.md) — syntax checks must resolve project-local TypeScript before environment-specific global paths.
 - [Canonical runtime continuity](canonical-runtime-continuity.md) — when continuity documents lag, reconcile historical notes against current main and the canonical Unity workflow.
 - [GitHub Actions checkpoint storage](github-actions-checkpoint-storage.md) — retain only the live shader-chain head; exclude downloaded/uploaded payloads from evidence and retire consumed predecessors.
