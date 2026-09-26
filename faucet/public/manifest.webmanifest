@@ -1,0 +1,10 @@
+{
+  "name": "Kivora",
+  "short_name": "Kivora",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#070914",
+  "theme_color": "#070914",
+  "description": "Kivora — verified rewards and crypto cashout.",
+  "icons": [{"src":"/kivora-mark.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}]
+}

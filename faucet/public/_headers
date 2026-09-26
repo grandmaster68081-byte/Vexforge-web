@@ -1,0 +1,10 @@
+/*
+  Cache-Control: no-store
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: DENY
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=()
+  Cross-Origin-Resource-Policy: same-origin
+  Cross-Origin-Opener-Policy: same-origin
+  Strict-Transport-Security: max-age=31536000
+  Content-Security-Policy: default-src 'self'; base-uri 'none'; form-action 'self' https://bitcotasks.com; frame-ancestors 'none'; object-src 'none'; img-src 'self' data: https://bitcotasks.com; connect-src 'self' https://bitcotasks.com; script-src 'self' https://bitcotasks.com; frame-src https://bitcotasks.com; style-src 'self' 'unsafe-inline'; font-src 'self'; manifest-src 'self'

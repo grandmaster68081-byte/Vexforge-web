@@ -1,0 +1,31 @@
+name: Kivora quality
+
+on:
+  pull_request:
+    paths:
+      - 'faucet/**'
+      - 'supabase/migrations/*kivora*.sql'
+      - '.github/workflows/kivora-quality.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'faucet/**'
+      - 'supabase/migrations/*kivora*.sql'
+      - '.github/workflows/kivora-quality.yml'
+
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: faucet
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: faucet/package.json
+      - run: npm install --no-audit --no-fund
+      - run: npm run typecheck
+      - run: npm run build

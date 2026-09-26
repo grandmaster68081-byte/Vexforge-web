@@ -1,0 +1,1 @@
+import type {Env} from './_lib/env';import {json} from './_lib/response';import {currentAccount} from './_lib/auth';export const onRequestGet=async({request,env}:{request:Request;env:Env})=>{const account=await currentAccount(request,env);if(!account)return json({apiKey:''},401);return json({apiKey:env.BITCOTASKS_API_KEY,subId:account.account.public_id});};
