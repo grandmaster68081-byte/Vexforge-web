@@ -5,7 +5,7 @@
 - `faucet/**` — the complete Kivora app and documentation
 - `supabase/migrations/202609260001_kivora_core.sql`
 - `supabase/migrations/202609260002_kivora_hardening.sql`
-- `supabase/migrations/202609270001_kivora_signup_and_boundary_fixes.sql`
+- `supabase/migrations/202609270000_kivora_signup_and_boundary_fixes.sql`
 - `.github/workflows/kivora-quality.yml`
 
 ## Does not replace

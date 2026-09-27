@@ -7,7 +7,7 @@ Replit is the implementation executor for this package. Do not redesign the arch
 - `faucet/**` → repository root `/faucet/**`
 - `supabase/migrations/202609260001_kivora_core.sql` → repository root `/supabase/migrations/202609260001_kivora_core.sql`
 - `supabase/migrations/202609260002_kivora_hardening.sql` → repository root `/supabase/migrations/202609260002_kivora_hardening.sql`
-- `supabase/migrations/202609270001_kivora_signup_and_boundary_fixes.sql` → repository root `/supabase/migrations/202609270001_kivora_signup_and_boundary_fixes.sql`
+- `supabase/migrations/202609270000_kivora_signup_and_boundary_fixes.sql` → repository root `/supabase/migrations/202609270000_kivora_signup_and_boundary_fixes.sql`
 - `.github/workflows/kivora-quality.yml` → repository root `/.github/workflows/kivora-quality.yml`
 - Kivora documentation is already included under `faucet/docs/**`; do not copy these files over unrelated repository documentation.
 
