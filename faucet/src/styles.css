@@ -156,3 +156,73 @@ button,input{font:inherit}
 .kv5-scene,.kv5-landing-hero{box-shadow:0 34px 120px rgba(0,0,0,.38)}
 .kv5-environment:after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.08),rgba(0,0,0,.18) 48%,rgba(0,0,0,.52));pointer-events:none}
 .kv5-hero-engine img{object-fit:cover;border:1px solid rgba(103,244,255,.18);border-radius:24px;mix-blend-mode:screen;opacity:.92}
+
+/* Kivora identity direction: warm celestial night, precise console type, and asset-led scene composition. */
+:root{
+  --font-display:"Space Grotesk",ui-sans-serif,system-ui,sans-serif !important;
+  --font-body:"DM Sans",ui-sans-serif,system-ui,sans-serif !important;
+  --bg:#071017 !important;
+  --panel:#0c1720 !important;
+  --panel-2:#10212a !important;
+  --panel-3:#162b34 !important;
+  --text:#eef9f7 !important;
+  --soft:#c2d6d6 !important;
+  --muted:#789298 !important;
+  --cyan:#73e4e1 !important;
+  --cyan-2:#b8fff2 !important;
+  --violet:#a88bdb !important;
+  --violet-2:#d2bdff !important;
+  --green:#79ddb2 !important;
+  --amber:#e9bc75 !important;
+  --danger:#ef8999 !important;
+  --kv5-bg:#071017 !important;
+  --kv5-panel:rgba(7,20,27,.72) !important;
+  --kv5-panel-strong:rgba(4,13,19,.92) !important;
+  --kv5-line:rgba(184,255,242,.14) !important;
+  --kv5-text:#eef9f7 !important;
+  --kv5-muted:#789298 !important;
+  --kv5-cyan:#73e4e1 !important;
+  --kv5-violet:#a88bdb !important;
+  --kv5-gold:#e9bc75 !important;
+  --kv5-green:#79ddb2 !important;
+  --kv5-danger:#ef8999 !important;
+  --line:rgba(184,255,242,.13) !important;
+  --line-strong:rgba(184,255,242,.24) !important;
+  --shadow:0 28px 90px rgba(0,5,8,.48) !important;
+}
+body{font-family:var(--font-body);background:radial-gradient(900px 560px at 16% -10%,rgba(51,151,159,.16),transparent 62%),radial-gradient(800px 620px at 95% 18%,rgba(106,78,151,.16),transparent 60%),#071017}
+.kv5-world,.kv5-landing,.kv5-auth,.legal-shell{font-family:var(--font-body)}
+.kv5-brand b,.kv5-console-kicker,.kv5-kicker,.kv5-provider,.kv5-balance-pill,.kv5-rail-btn small,.kv5-context-stats,.kv5-deck-footer,.kv5-hero-proof,.kv5-section-head .kv5-console-kicker{font-family:var(--font-display)}
+.kv5-environment{filter:saturate(1.08) brightness(.52) contrast(1.08)}
+.kv5-world:after{content:"";position:fixed;inset:0;pointer-events:none;z-index:4;opacity:.09;background-image:url('/noise.svg');mix-blend-mode:soft-light}
+.kv5-scene{border-color:rgba(184,255,242,.16);background:linear-gradient(145deg,rgba(5,16,23,.58),rgba(4,10,16,.72))}
+.kv5-engine-pedestal{overflow:hidden;border:1px solid rgba(115,228,225,.13);background:radial-gradient(ellipse at center,rgba(115,228,225,.12),transparent 54%),rgba(2,9,14,.17)}
+.kv5-engine-pedestal:before{content:"";position:absolute;inset:0;background:url('/kivora/identity/engine-environment.webp') center/cover no-repeat;opacity:.38;mix-blend-mode:screen;mask-image:linear-gradient(180deg,transparent 0%,#000 18%,#000 80%,transparent 100%)}
+.kv5-engine-pedestal img{width:min(310px,42vw);filter:drop-shadow(0 30px 44px rgba(0,0,0,.58)) drop-shadow(0 0 38px rgba(115,228,225,.34))}
+.kv5-engine-pedestal .kv5-engine-backplate{position:absolute;z-index:1;inset:0;width:100%;height:100%;max-height:none;object-fit:cover;opacity:.26;mix-blend-mode:screen;filter:saturate(1.15) contrast(1.05);mask-image:linear-gradient(180deg,transparent 0%,#000 17%,#000 82%,transparent 100%);animation:none}
+.kv5-engine-pedestal>.kv5-engine-ring{z-index:2}
+.kv5-deck .kv5-engine-readout{background:linear-gradient(180deg,transparent,rgba(3,10,14,.72));padding:8px 24px 3px}
+.kv5-landing-bg{background:linear-gradient(180deg,rgba(1,5,8,.12),rgba(1,5,8,.25) 45%,#02060a 94%),url('/kivora/identity/hero-environment.webp') center/cover no-repeat}
+.kv5-landing-nav{font-family:var(--font-display)}
+.kv5-landing-hero{min-height:clamp(650px,calc(100vh - 74px),900px)}
+.kv5-hero-scene{isolation:isolate}
+.kv5-identity-atlas{position:absolute;z-index:1;inset:7% 1% auto;display:block;width:98%;aspect-ratio:16/9;border:1px solid rgba(184,255,242,.18);background:rgba(3,10,15,.5);box-shadow:0 24px 70px rgba(0,0,0,.35);overflow:hidden;opacity:.78;transform:perspective(900px) rotateY(-3deg)}
+.kv5-identity-atlas img{display:block;width:100%;height:100%;object-fit:cover;object-position:center;filter:saturate(1.08) contrast(1.04)}
+.kv5-hero-scene .kv5-hero-ring,.kv5-hero-scene .kv5-hero-engine,.kv5-hero-scene .kv5-hero-readout{z-index:3}
+.kv5-hero-scene .kv5-hero-engine{margin-top:17%;width:min(330px,34vw)}
+.kv5-hero-scene .kv5-hero-engine img{width:62%;opacity:.95}
+.kv5-space-item{background:rgba(3,12,18,.72)}
+.kv5-space-image{filter:saturate(1.1) brightness(.7)}
+.kv5-command{font-family:var(--font-display);letter-spacing:.11em}
+.kv5-toast{font-family:var(--font-body);border-color:rgba(115,228,225,.3);background:rgba(6,20,26,.95)}
+
+@media (max-width:720px){
+  .kv5-landing-hero{min-height:auto;padding-top:34px}
+  .kv5-identity-atlas{inset:2% 0 auto;width:100%;aspect-ratio:900/266;opacity:.8;transform:none}
+  .kv5-identity-atlas img{object-fit:contain}
+  .kv5-hero-scene .kv5-hero-engine{margin-top:22%;width:76vw}
+  .kv5-hero-scene .kv5-hero-engine img{width:56%}
+  .kv5-engine-pedestal{min-height:50vh}
+  .kv5-engine-pedestal:before{opacity:.48}
+  .kv5-engine-pedestal img{width:68vw}
+}

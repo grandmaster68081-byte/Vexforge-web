@@ -27,7 +27,7 @@ type Props = {
 type SceneDef = { label: string; caption: string; icon: LucideIcon; accent: string; environment: string };
 
 const sceneDefs: Record<Scene, SceneDef> = {
-  deck: { label: 'Command Deck', caption: 'La estación está despierta.', icon: Compass, accent: '#6cf4ff', environment: '/kivora/identity/hero-environment.webp' },
+  deck: { label: 'Command Deck', caption: 'La estación está despierta.', icon: Compass, accent: '#6cf4ff', environment: '/kivora/identity/engine-environment.webp' },
   field: { label: 'Opportunity Field', caption: 'Las señales están esperando.', icon: Crosshair, accent: '#a97cff', environment: '/kivora/identity/field-environment.webp' },
   vault: { label: 'Kivora Vault', caption: 'Tu valor, seguro y disponible.', icon: LockKeyhole, accent: '#ffbf62', environment: '/kivora/identity/vault-environment.webp' },
   chronicle: { label: 'Chronicle', caption: 'La memoria de tu trayectoria.', icon: History, accent: '#74ffca', environment: '/kivora/identity/chronicle-environment.webp' },
@@ -180,6 +180,7 @@ function DeckScene({ user, wallet, config, recommended, dailyTarget, completion,
     <section className="kv5-scene kv5-deck">
       <div className="kv5-deck-lens" aria-hidden="true" />
       <div className="kv5-engine-pedestal">
+        <img className="kv5-engine-backplate" src="/kivora/identity/engine-environment.webp" alt="Kivora Engine environment" />
         <div className="kv5-engine-ring ring-a" />
         <div className="kv5-engine-ring ring-b" />
         <div className="kv5-engine-ring ring-c" />
@@ -349,6 +350,10 @@ export function KivoraLanding({ onLogin, onRegister }: { onLogin: () => void; on
             <div className="kv5-hero-proof"><span><Radio size={14}/> OPORTUNIDADES</span><span><ShieldCheck size={14}/> VERIFICACIÓN</span><span><Coins size={14}/> RECOMPENSAS</span><span><LockKeyhole size={14}/> SETTLEMENT</span></div>
           </div>
           <div className="kv5-hero-scene">
+            <picture className="kv5-identity-atlas">
+              <source media="(max-width: 720px)" srcSet="/kivora/identity/mobile-atlas.webp" />
+              <img src="/kivora/identity/identity-master.webp" alt="Kivora station overview with its five spaces" />
+            </picture>
             <div className="kv5-hero-ring ring-a"/><div className="kv5-hero-ring ring-b"/>
             <div className="kv5-hero-engine"><img src="/kivora/ui/kivora-core.svg" alt="Kivora Engine"/></div>
             <div className="kv5-hero-readout"><span>STATION STATUS</span><b>READY</b><small>5 spaces · 1 reward loop</small></div>
@@ -358,8 +363,8 @@ export function KivoraLanding({ onLogin, onRegister }: { onLogin: () => void; on
         <section className="kv5-space-section">
           <div className="kv5-section-head"><span className="kv5-console-kicker">ONE STATION · FIVE SPACES</span><h2>No es un dashboard. Es tu estación.</h2><p>La navegación y la economía comparten el mismo mundo: cada espacio responde a un estado real del sistema.</p></div>
           <div className="kv5-space-strip">
-            {spaces.map(key => { const def = sceneDefs[key]; const Icon = def.icon; return (
-              <button key={key} className={`kv5-space-item ${space === key ? 'active' : ''}`} onClick={() => setSpace(key)} style={{ '--space-image': `url(${def.environment})`, '--space-accent': def.accent } as CSSProperties}>
+             {spaces.map(key => { const def = sceneDefs[key]; const Icon = def.icon; const spaceImage = key === 'deck' ? '/kivora/identity/hero-environment.webp' : def.environment; return (
+               <button key={key} className={`kv5-space-item ${space === key ? 'active' : ''}`} onClick={() => setSpace(key)} style={{ '--space-image': `url(${spaceImage})`, '--space-accent': def.accent } as CSSProperties}>
                 <div className="kv5-space-image"/><div className="kv5-space-glow"/><Icon size={18}/><b>{def.label}</b><small>{def.caption}</small>
               </button>
             );})}
