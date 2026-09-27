@@ -3,10 +3,10 @@ import type { User } from '../lib/types';
 import { Logo } from './Logo';
 
 const items = [
-  ['/','Overview',Sparkles],
-  ['/earn','Earn',Gift],
-  ['/wallet','Wallet',WalletCards],
-  ['/activity','Activity',History]
+  ['/','Command Deck',Sparkles],
+  ['/earn','Opportunity Field',Gift],
+  ['/wallet','Vault',WalletCards],
+  ['/activity','Chronicle',History]
 ] as const;
 
 export function Sidebar({ user, path, onNavigate, onLogout, open, onClose }:{user:User;path:string;onNavigate:(p:string)=>void;onLogout:()=>void;open:boolean;onClose:()=>void}){
@@ -16,7 +16,7 @@ export function Sidebar({ user, path, onNavigate, onLogout, open, onClose }:{use
      <div className="sidebar-head"><Logo compact/><button className="icon-button mobile-close" onClick={onClose} aria-label="Close navigation"><X size={18}/></button></div>
      <nav className="side-nav" aria-label="Main navigation">
        {items.map(([href,label,Icon])=><button key={href} className={path===href?'active':''} onClick={()=>onNavigate(href)}><Icon size={17}/><span>{label}</span>{href==='/earn' && <span className="nav-live">LIVE</span>}</button>)}
-       {user.role==='admin' && <button className={path==='/admin'?'active':''} onClick={()=>onNavigate('/admin')}><ShieldCheck size={17}/><span>Operations</span></button>}
+        {user.role==='admin' && <button className={path==='/admin'?'active':''} onClick={()=>onNavigate('/admin')}><ShieldCheck size={17}/><span>Treasury Control</span></button>}
      </nav>
      <div className="sidebar-promo">
        <div className="promo-mark"><BarChart3 size={17}/></div>

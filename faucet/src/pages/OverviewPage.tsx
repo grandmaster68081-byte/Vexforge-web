@@ -1,22 +1,100 @@
-import { ArrowRight, BadgeDollarSign, CalendarDays, ChevronRight, CircleDollarSign, Flame, Gift, ShieldCheck, Sparkles, Trophy, WalletCards } from 'lucide-react';
+import { ArrowRight, CheckCircle2, ChevronRight, Clock3, Flame, Gift, ShieldCheck, Sparkles, Target, WalletCards, Zap } from 'lucide-react';
 import type { EarnItem, PlatformConfig, User, Wallet, LedgerEntry } from '../lib/types';
-import { points, usdFromPoints } from '../lib/format';
-import { StatCard } from '../components/StatCard';
-import { OfferCard } from '../components/OfferCard';
-import { ActivityFeed } from '../components/ActivityFeed';
+import { points, usdFromPoints, shortDate } from '../lib/format';
 
-function metrics(entries:LedgerEntry[]){
- const today=new Date(); const days=new Set(entries.filter(e=>e.type==='reward'&&e.pointsDelta>0).map(e=>new Date(e.createdAt).toISOString().slice(0,10)));
- let streak=0; const d=new Date(today); for(let i=0;i<30;i++){const key=d.toISOString().slice(0,10);if(days.has(key)){streak++;d.setDate(d.getDate()-1)}else break}
- const todayRewards=entries.filter(e=>e.type==='reward'&&new Date(e.createdAt).toDateString()===today.toDateString()).length; return {streak,todayRewards};
+function metrics(entries: LedgerEntry[]) {
+  const today = new Date();
+  const todayEntries = entries.filter((entry) => new Date(entry.createdAt).toDateString() === today.toDateString());
+  const days = new Set(entries.filter((entry) => entry.type === 'reward' && entry.pointsDelta > 0).map((entry) => new Date(entry.createdAt).toISOString().slice(0, 10)));
+  let streak = 0;
+  const cursor = new Date(today);
+  for (let i = 0; i < 30; i += 1) {
+    const key = cursor.toISOString().slice(0, 10);
+    if (!days.has(key)) break;
+    streak += 1;
+    cursor.setDate(cursor.getDate() - 1);
+  }
+  return {
+    streak,
+    todayRewards: todayEntries.filter((entry) => entry.type === 'reward' && entry.pointsDelta > 0).length,
+    todayPoints: todayEntries.filter((entry) => entry.type === 'reward' && entry.pointsDelta > 0).reduce((sum, entry) => sum + entry.pointsDelta, 0),
+  };
 }
-function level(pointsEarned:number){const levels=[0,1000,5000,15000,40000,100000];let idx=0;for(let i=0;i<levels.length;i++)if(pointsEarned>=levels[i])idx=i;const current=levels[idx],next=levels[idx+1]??current;const progress=next===current?100:Math.min(100,((pointsEarned-current)/(next-current))*100);return {name:['Newcomer','Spark','Momentum','Orbit','Pulse','Nova'][idx],next,progress}}
-export function OverviewPage({user,wallet,offers,config,entries,onNavigate}:{user:User;wallet:Wallet;offers:EarnItem[];config:PlatformConfig;entries:LedgerEntry[];onNavigate:(p:string)=>void}){
- const m=metrics(entries), l=level(wallet.lifetimeEarnedPoints), top=[...offers].sort((a,b)=>b.reward-a.reward).slice(0,3);
- return <div className="page-stack">
-  <section className="dashboard-hero"><div className="hero-glow"/><div className="hero-copy"><span className="kicker"><Sparkles size={12}/> GOOD TO SEE YOU, {user.username.toUpperCase()}</span><h1>Keep your <em>momentum.</em></h1><p>There are {offers.length||0} live opportunities in your current inventory. Pick a rhythm and keep building your balance.</p><div className="hero-actions"><button className="primary-button" onClick={()=>onNavigate('/earn')}>Open Earn Hub <ArrowRight size={16}/></button><button className="secondary-button" onClick={()=>onNavigate('/wallet')}>View wallet</button></div></div><div className="hero-balance"><span>AVAILABLE</span><strong>{points(wallet.availablePoints)}</strong><small>KIVORA POINTS</small><div className="hero-usd">≈ ${usdFromPoints(wallet.availablePoints,config.pointsPerUsdDisplay).toFixed(2)} display reference</div><div className="balance-track"><i style={{width:`${Math.min(100,Math.max(5,wallet.availablePoints/config.withdrawalMinPoints*100))}%`}}/></div><div className="balance-foot"><span>Min. payout {points(config.withdrawalMinPoints)} pts</span><button onClick={()=>onNavigate('/withdraw')}>Cash out <ChevronRight size={14}/></button></div></div></section>
-  <div className="stats-grid"><StatCard label="Lifetime earned" value={`${points(wallet.lifetimeEarnedPoints)} pts`} hint="Confirmed provider rewards" icon={<BadgeDollarSign size={18}/>} tone="cyan"/><StatCard label="Daily rhythm" value={`${m.todayRewards} actions`} hint={`${m.streak}-day streak`} icon={<Flame size={18}/>} tone="amber"/><StatCard label="Pending" value={`${points(wallet.pendingPoints)} pts`} hint="Awaiting settlement" icon={<CircleDollarSign size={18}/>} tone="violet"/><StatCard label="Level" value={l.name} hint={l.next?`${points(l.next-wallet.lifetimeEarnedPoints)} pts to next level`:'Top tier'} icon={<Trophy size={18}/>} tone="green"/></div>
-  <section className="dashboard-columns"><div className="main-column"><div className="section-heading"><div><span className="kicker">RECOMMENDED</span><h2>Start with these</h2><p>Sorted by the currently displayed provider reward.</p></div><button className="text-button" onClick={()=>onNavigate('/earn')}>See all <ChevronRight size={15}/></button></div><div className="offer-grid">{top.map(o=><OfferCard key={`${o.category}-${o.id}`} item={o} onOpen={()=>onNavigate('/earn')}/>) }{!top.length&&<div className="empty-state"><Gift size={26}/><h3>Your live inventory is loading</h3><p>Once BitcoTasks approves Kivora, available opportunities will appear here.</p></div>}</div></div><aside className="side-column"><div className="side-panel level-panel"><div className="panel-top"><div><span className="kicker">PROGRESS</span><h3>{l.name} level</h3></div><div className="level-badge">{l.name.slice(0,1)}</div></div><div className="level-track"><i style={{width:`${l.progress}%`}}/></div><div className="level-foot"><span>{points(wallet.lifetimeEarnedPoints)} pts earned</span><span>{l.next?points(l.next)+' next':'MAX'}</span></div></div><div className="side-panel"><div className="panel-top"><div><span className="kicker">RECENT ACTIVITY</span><h3>Your ledger</h3></div><button className="text-button" onClick={()=>onNavigate('/activity')}>View <ChevronRight size={14}/></button></div><ActivityFeed entries={entries}/></div><div className="side-panel goal-panel"><div className="goal-art"><CalendarDays size={18}/></div><div><span className="kicker">DAILY GOAL</span><h3>{Math.min(3,m.todayRewards)} of 3 verified actions</h3><p>Keep your rhythm today. Goals are progress signals, not guaranteed bonus payouts.</p></div></div></aside></section>
-  <section className="trust-strip"><div><ShieldCheck size={17}/><strong>Reward integrity</strong><span>Credits are accepted only after provider verification.</span></div><div><WalletCards size={17}/><strong>Controlled cashout</strong><span>Withdrawals pass through a manual review queue.</span></div><div><Gift size={17}/><strong>Points first</strong><span>Blockchain payouts happen only after your request.</span></div></section>
- </div>;
+
+function level(pointsEarned: number) {
+  const levels = [0, 1000, 5000, 15000, 40000, 100000];
+  let index = 0;
+  for (let i = 0; i < levels.length; i += 1) if (pointsEarned >= levels[i]) index = i;
+  const current = levels[index];
+  const next = levels[index + 1] ?? current;
+  return {
+    name: ['Newcomer', 'Spark', 'Momentum', 'Orbit', 'Pulse', 'Nova'][index],
+    next,
+    progress: next === current ? 100 : Math.min(100, ((pointsEarned - current) / (next - current)) * 100),
+  };
+}
+
+const laneNames = ['QUICK', 'CORE', 'HIGH YIELD'];
+
+export function OverviewPage({ user, wallet, offers, config, entries, onNavigate }: { user: User; wallet: Wallet; offers: EarnItem[]; config: PlatformConfig; entries: LedgerEntry[]; onNavigate: (p: string) => void }) {
+  const m = metrics(entries);
+  const l = level(wallet.lifetimeEarnedPoints);
+  const opportunities = [...offers].sort((a, b) => b.reward - a.reward).slice(0, 3);
+  const recent = entries.slice(0, 4);
+
+  return (
+    <div className="page-stack scene-page command-deck">
+      <section className="scene-hero command-hero">
+        <div className="scene-hero-copy">
+          <span className="scene-eyebrow"><Sparkles size={12} /> KIVORA · DAILY EARNING WORKSPACE</span>
+          <h1>Turn attention into <em>value.</em></h1>
+          <p>A focused operating rhythm for verified opportunities. Choose your next move, keep the ledger visible, and let provider evidence decide when rewards settle.</p>
+          <div className="scene-actions">
+            <button className="primary-button" onClick={() => onNavigate('/earn')}>Open Opportunity Field <ArrowRight size={16} /></button>
+            <button className="secondary-button" onClick={() => onNavigate('/wallet')}>View Kivora balance <WalletCards size={15} /></button>
+          </div>
+          <div className="scene-proof"><span><CheckCircle2 size={13} /> Provider verification first</span><span><ShieldCheck size={13} /> Manual USDT/TRC20 settlement</span></div>
+        </div>
+        <div className="command-run-card">
+          <div className="scene-card-top"><span>TODAY'S RUN</span><span className="scene-live-dot" />{m.todayRewards} / 3 complete</div>
+          <strong className="run-score">{m.todayRewards}<small>/3</small></strong>
+          <p>A focused session, not a promise of earnings.</p>
+          <div className="scene-progress"><i style={{ width: `${Math.min(100, (m.todayRewards / 3) * 100)}%` }} /></div>
+          <div className="run-metrics"><div><small>STREAK</small><strong>{m.streak} day{m.streak === 1 ? '' : 's'}</strong></div><div><small>KP TODAY</small><strong>{points(m.todayPoints)}</strong></div><div><small>LIVE INVENTORY</small><strong>{offers.length}</strong></div></div>
+        </div>
+      </section>
+
+      <section className="scene-panel opportunity-field-panel">
+        <div className="scene-section-heading"><div><span className="scene-eyebrow"><Target size={12} /> OPPORTUNITY FIELD</span><h2>Choose your next move.</h2><p>Quick, Core and High Yield are deterministic lanes built from current provider inventory.</p></div><button className="text-button" onClick={() => onNavigate('/earn')}>See all opportunities <ChevronRight size={15} /></button></div>
+        <div className="opportunity-lanes">
+          {opportunities.map((offer, index) => (
+            <button className="opportunity-lane" key={`${offer.category}-${offer.id}`} onClick={() => onNavigate('/earn')}>
+              <span className="lane-label">{laneNames[index] ?? 'LIVE'}</span>
+              <strong>{offer.title}</strong>
+              <span className="lane-detail">{offer.category.toUpperCase()} · {offer.durationSeconds ? `${Math.ceil(offer.durationSeconds / 60)} min` : 'duration supplied by provider'}</span>
+              <b>+{points(offer.reward)} {offer.currencyName}</b>
+            </button>
+          ))}
+          {!opportunities.length && <div className="scene-empty"><Gift size={22} /><strong>Provider inventory is not available yet.</strong><span>Live opportunities will appear here when BitcoTasks returns eligible campaigns.</span></div>}
+        </div>
+      </section>
+
+      <section className="scene-split-grid">
+        <div className="scene-panel vault-snapshot">
+          <div className="scene-section-heading"><div><span className="scene-eyebrow"><WalletCards size={12} /> VAULT</span><h2>{points(wallet.availablePoints)} KP</h2><p>${usdFromPoints(wallet.availablePoints, config.pointsPerUsdDisplay).toFixed(2)} display reference · internal ledger</p></div><button className="text-button" onClick={() => onNavigate('/wallet')}>Open vault <ChevronRight size={15} /></button></div>
+          <div className="vault-stats"><div><small>AVAILABLE</small><strong>{points(wallet.availablePoints)}</strong></div><div><small>PENDING</small><strong>{points(wallet.pendingPoints)}</strong></div><div><small>RESERVED</small><strong>{points(wallet.withdrawalReservedPoints)}</strong></div><div><small>NEXT LEVEL</small><strong>{l.next ? points(l.next) : 'MAX'}</strong></div></div>
+          <div className="scene-progress"><i style={{ width: `${l.progress}%` }} /></div>
+          <small className="progress-note">{l.name} · {l.next ? `${points(Math.max(0, l.next - wallet.lifetimeEarnedPoints))} KP to next level` : 'Top tier reached'}</small>
+        </div>
+        <div className="scene-panel chronicle-snapshot">
+          <div className="scene-section-heading"><div><span className="scene-eyebrow"><Clock3 size={12} /> CHRONICLE</span><h2>Your earning evidence.</h2></div><button className="text-button" onClick={() => onNavigate('/activity')}>Open chronicle <ChevronRight size={15} /></button></div>
+          <div className="scene-timeline">
+            {recent.length ? recent.map((entry) => <div className="scene-event" key={entry.id}><span className={`event-marker ${entry.pointsDelta >= 0 ? 'positive' : 'negative'}`}>{entry.pointsDelta >= 0 ? '+' : '−'}</span><div><strong>{entry.source}</strong><span>{shortDate(entry.createdAt)} · {entry.status}</span></div><b className={entry.pointsDelta >= 0 ? 'positive' : 'negative'}>{entry.pointsDelta >= 0 ? '+' : ''}{points(entry.pointsDelta)}</b></div>) : <div className="scene-empty compact"><Clock3 size={18} /><span>Your verified activity will appear here.</span></div>}
+          </div>
+        </div>
+      </section>
+
+      <section className="scene-trust-grid"><div><Zap size={16} /><strong>Reward integrity</strong><span>Credits arrive after provider verification.</span></div><div><ShieldCheck size={16} /><strong>Settlement boundary</strong><span>USDT is sent only after manual review.</span></div><div><Flame size={16} /><strong>Daily rhythm</strong><span>Progress signals do not promise bonus payouts.</span></div></section>
+    </div>
+  );
 }
