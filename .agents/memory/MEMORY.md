@@ -1,3 +1,4 @@
+- [GitHub workflow dispatch](github-workflow-dispatch.md) — use the numeric workflow ID when filename-based dispatch returns 404 despite valid repository access.
 - [Android build environment](android-build-environment.md) — mobile CI must use the public npm registry; local prebuild is not an APK build without Java/Android SDK.
 - [GitHub transport authentication](github-transport.md) — use temporary GIT_ASKPASS for HTTPS pushes when the valid workspace PAT is rejected by default credential handling.
 - [GitHub Actions runner tooling](github-actions-runner.md) — canonical workflow checks must use tools guaranteed on hosted runners or install dependencies explicitly.
