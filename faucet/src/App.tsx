@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Search, Sparkles } from 'lucide-react';
 import { api } from './lib/api';
-import type { EarnItem, LedgerEntry, PlatformConfig, User, Wallet, Withdrawal, TreasurySummary } from './lib/types';
+import type { EarnItem, LedgerEntry, PlatformConfig, ProviderHealth, User, Wallet, Withdrawal, TreasurySummary } from './lib/types';
 import { BrandBackground } from './components/BrandBackground';
 import { Sidebar } from './components/Sidebar';
 import { Topbar } from './components/Topbar';
@@ -18,37 +18,74 @@ import { PublicStatusPage } from './pages/PublicStatusPage';
 function getPath(){return window.location.pathname||'/'}
 function go(path:string){window.history.pushState({},'',path);window.dispatchEvent(new PopStateEvent('popstate'))}
 export function App(){
-  const [user,setUser]=useState<User|null>(null),[wallet,setWallet]=useState<Wallet|null>(null),[config,setConfig]=useState<PlatformConfig>({currencyName:'Kivora Points',pointsPerUsdDisplay:1000,targetUserShareBps:3500,bitcotasksExchangeRate:350,withdrawalMinPoints:10000,withdrawalMinUsd:10,payoutAsset:'USDT',payoutNetwork:'TRC20',supportedPayouts:[{asset:'USDT',network:'TRC20'}]}),[offers,setOffers]=useState<EarnItem[]>([]),[withdrawals,setWithdrawals]=useState<Withdrawal[]>([]),[ledger,setLedger]=useState<LedgerEntry[]>([]),[adminSummary,setAdminSummary]=useState<any>(null),[adminWithdrawals,setAdminWithdrawals]=useState<Withdrawal[]>([]),[treasury,setTreasury]=useState<TreasurySummary|null>(null),[path,setPath]=useState(getPath),[authMode,setAuthMode]=useState<'login'|'signup'>(getPath()==='/register'?'signup':'login'),[loading,setLoading]=useState(getPath()!=='/transparency'),[mobileNav,setMobileNav]=useState(false),[toast,setToast]=useState<{m:string;t:'info'|'success'|'error'}|null>(null),[searchOpen,setSearchOpen]=useState(false);
- useEffect(()=>{const h=()=>setPath(getPath());window.addEventListener('popstate',h);return()=>window.removeEventListener('popstate',h)},[]);
- const toastIt=useCallback((m:string,t:'info'|'success'|'error'='info')=>{setToast({m,t});window.setTimeout(()=>setToast(null),3600)},[]);
- const refreshMe=useCallback(async()=>{const r=await api.me();setUser(r.user);setWallet(r.wallet);setLoading(false)},[]);
- const refreshFallbackOffers=useCallback(async()=>{try{const r=await api.offers();setOffers(r.offers)}catch{setOffers([])}},[]);
- const refreshWallet=useCallback(async()=>{try{const r=await api.wallet();setWallet(r.wallet);setWithdrawals(r.withdrawals)}catch{}},[]);
- const refreshActivity=useCallback(async()=>{try{const r=await api.activity();setLedger(r.ledger)}catch{}},[]);
- const refreshAdmin=useCallback(async()=>{const [s,w,t]=await Promise.allSettled([api.adminSummary(),api.adminWithdrawals(),api.treasury()]);if(s.status==='fulfilled')setAdminSummary(s.value);if(w.status==='fulfilled')setAdminWithdrawals(w.value.withdrawals);if(t.status==='fulfilled')setTreasury(t.value)},[]);
-  useEffect(()=>{if(getPath()==='/transparency'){setLoading(false);return}void api.config().then(setConfig).catch(()=>{});refreshMe().catch(()=>setLoading(false));void refreshFallbackOffers()},[refreshMe,refreshFallbackOffers]);
- useEffect(()=>{if(!user)return;void refreshWallet();void refreshActivity()},[user,refreshWallet,refreshActivity]);
- useEffect(()=>{if(!user)return;if(path==='/admin'&&user.role==='admin')void refreshAdmin()},[path,user,refreshAdmin]);
- const authSubmit=async(payload:any)=>{const r=authMode==='login'?await api.login(payload):await api.signup(payload);setUser(r.user);const me=await api.me();setWallet(me.wallet);go('/')};
- const logout=async()=>{await api.logout().catch(()=>{});setUser(null);setWallet(null);go('/login')};
- const withdraw=async(payload:any)=>{await api.withdraw(payload);await refreshWallet();toastIt('Withdrawal request created and points reserved.','success');go('/wallet')};
- const adminAction=async(id:string,act:'approve'|'reject'|'paid',note?:string)=>{let tx='';let cryptoAmount='';if(act==='paid'){tx=window.prompt('Transaction hash (required)')?.trim()??'';cryptoAmount=window.prompt('USDT amount sent (required)')?.trim()??'';if(!tx||!(Number(cryptoAmount)>0)){toastIt('Transaction hash and USDT amount are required before marking a payout paid.','error');return}}await api.adminSetWithdrawal(id,{action:act,note,txHash:tx||undefined,cryptoAmount:cryptoAmount?Number(cryptoAmount):undefined,paymentRateUsd:1,paymentRateSource:'manual USDT/USD reference'});await refreshAdmin();await refreshWallet();toastIt(`Withdrawal ${act}.`,act==='reject'?'info':'success')};
- const content=useMemo(()=>{
-   if(!user||!wallet)return null;
-   switch(path){
-     case '/earn': return <EarnPage fallbackOffers={offers} onToast={toastIt}/>;
-     case '/wallet': return <WalletPage wallet={wallet} withdrawals={withdrawals} config={config} onNavigate={go}/>;
-     case '/withdraw': return <WithdrawPage wallet={wallet} config={config} onSubmit={withdraw} onNavigate={go}/>;
-     case '/activity': return <ActivityPage ledger={ledger}/>;
-     case '/admin': return user.role==='admin'
-       ? <AdminPage summary={adminSummary} treasury={treasury} withdrawals={adminWithdrawals} onAction={adminAction}/>
-       : <OverviewPage user={user} wallet={wallet} offers={offers} config={config} entries={ledger} onNavigate={go}/>;
-     default: return <OverviewPage user={user} wallet={wallet} offers={offers} config={config} entries={ledger} onNavigate={go}/>;
-   }
- },[adminSummary,adminWithdrawals,adminAction,config,ledger,offers,path,toastIt,user,wallet,withdrawals,treasury]);
+  const [user,setUser]=useState<User|null>(null),[wallet,setWallet]=useState<Wallet|null>(null),[providerHealth,setProviderHealth]=useState<ProviderHealth>('not_configured'),[config,setConfig]=useState<PlatformConfig>({currencyName:'Kivora Points',pointsPerUsdDisplay:1000,targetUserShareBps:3500,bitcotasksExchangeRate:350,withdrawalMinPoints:10000,withdrawalMinUsd:10,payoutAsset:'USDT',payoutNetwork:'TRC20',supportedPayouts:[{asset:'USDT',network:'TRC20'}]}),[offers,setOffers]=useState<EarnItem[]>([]),[withdrawals,setWithdrawals]=useState<Withdrawal[]>([]),[ledger,setLedger]=useState<LedgerEntry[]>([]),[adminSummary,setAdminSummary]=useState<any>(null),[adminWithdrawals,setAdminWithdrawals]=useState<Withdrawal[]>([]),[treasury,setTreasury]=useState<TreasurySummary|null>(null),[path,setPath]=useState(getPath),[authMode,setAuthMode]=useState<'login'|'signup'>(getPath()==='/register'?'signup':'login'),[loading,setLoading]=useState(getPath()!=='/transparency'),[mobileNav,setMobileNav]=useState(false),[toast,setToast]=useState<{m:string;t:'info'|'success'|'error'}|null>(null),[searchOpen,setSearchOpen]=useState(false);
+  useEffect(()=>{const h=()=>setPath(getPath());window.addEventListener('popstate',h);return()=>window.removeEventListener('popstate',h)},[]);
+  const toastIt=useCallback((m:string,t:'info'|'success'|'error'='info')=>{setToast({m,t});window.setTimeout(()=>setToast(null),3600)},[]);
+  const refreshMe=useCallback(async()=>{const r=await api.me();setUser(r.user);setWallet(r.wallet);setLoading(false)},[]);
+  const refreshFallbackOffers=useCallback(async()=>{try{const r=await api.offers();setOffers(r.offers)}catch{setOffers([])}},[]);
+  const refreshWallet=useCallback(async()=>{try{const r=await api.wallet();setWallet(r.wallet);setWithdrawals(r.withdrawals)}catch{}},[]);
+  const refreshActivity=useCallback(async()=>{try{const r=await api.activity();setLedger(r.ledger)}catch{}},[]);
+  const refreshAdmin=useCallback(async()=>{const [s,w,t]=await Promise.allSettled([api.adminSummary(),api.adminWithdrawals(),api.treasury()]);if(s.status==='fulfilled')setAdminSummary(s.value);if(w.status==='fulfilled')setAdminWithdrawals(w.value.withdrawals);if(t.status==='fulfilled')setTreasury(t.value)},[]);
+   useEffect(()=>{if(getPath()==='/transparency'){setLoading(false);return}void api.config().then(setConfig).catch(()=>{});refreshMe().catch(()=>setLoading(false));void refreshFallbackOffers()},[refreshMe,refreshFallbackOffers]);
+  useEffect(()=>{if(!user)return;void api.providerHealth().then(({status})=>setProviderHealth(status)).catch(()=>setProviderHealth('unavailable'))},[user]);
+  useEffect(()=>{if(!user)return;void refreshWallet();void refreshActivity()},[user,refreshWallet,refreshActivity]);
+  useEffect(()=>{if(!user)return;if(path==='/admin'&&user.role==='admin')void refreshAdmin()},[path,user,refreshAdmin]);
+  const authSubmit=async(payload:any)=>{const r=authMode==='login'?await api.login(payload):await api.signup(payload);setUser(r.user);const me=await api.me();setWallet(me.wallet);go('/')};
+  const logout=async()=>{await api.logout().catch(()=>{});setUser(null);setWallet(null);setProviderHealth('not_configured');go('/login')};
+  const withdraw=async(payload:any)=>{await api.withdraw(payload);await refreshWallet();toastIt('Withdrawal request created and points reserved.','success');go('/wallet')};
+  const adminAction=async(id:string,act:'approve'|'reject'|'paid',note?:string)=>{let tx='';let cryptoAmount='';if(act==='paid'){tx=window.prompt('Transaction hash (required)')?.trim()??'';cryptoAmount=window.prompt('USDT amount sent (required)')?.trim()??'';if(!tx||!(Number(cryptoAmount)>0)){toastIt('Transaction hash and USDT amount are required before marking a payout paid.','error');return}}await api.adminSetWithdrawal(id,{action:act,note,txHash:tx||undefined,cryptoAmount:cryptoAmount?Number(cryptoAmount):undefined,paymentRateUsd:1,paymentRateSource:'manual USDT/USD reference'});await refreshAdmin();await refreshWallet();toastIt(`Withdrawal ${act}.`,act==='reject'?'info':'success')};
+  const content=useMemo(()=>{
+    if(!user||!wallet)return null;
+    switch(path){
+      case '/earn': return <EarnPage fallbackOffers={offers} providerHealth={providerHealth} onToast={toastIt}/>;
+      case '/wallet': return <WalletPage wallet={wallet} withdrawals={withdrawals} config={config} onNavigate={go}/>;
+      case '/withdraw': return <WithdrawPage wallet={wallet} config={config} onSubmit={withdraw} onNavigate={go}/>;
+      case '/activity': return <ActivityPage ledger={ledger}/>;
+      case '/admin': return user.role==='admin'
+        ? <AdminPage summary={adminSummary} treasury={treasury} withdrawals={adminWithdrawals} onAction={adminAction}/>
+        : <OverviewPage user={user} wallet={wallet} offers={offers} config={config} entries={ledger} onNavigate={go}/>;
+      default: return <OverviewPage user={user} wallet={wallet} offers={offers} config={config} entries={ledger} onNavigate={go}/>;
+    }
+  },[adminSummary,adminWithdrawals,adminAction,config,ledger,offers,path,providerHealth,toastIt,user,wallet,withdrawals,treasury]);
 
-  if(loading)return <><BrandBackground/><div className="loading-shell"><img src="/kivora-mark.svg" alt=""/><strong>KIVORA</strong><span>Preparing your rewards workspace…</span></div></>;
-  if(path==='/transparency')return <><BrandBackground/><PublicStatusPage onBack={()=>go('/')}/></>;
-  if(!user){if(path==='/terms'||path==='/privacy')return <><BrandBackground/><LegalPage kind={path==='/terms'?'terms':'privacy'} onBack={()=>go('/')}/></>;if(path==='/login'||path==='/register')return <><BrandBackground/><AuthPage mode={authMode} onSubmit={authSubmit} onSwitch={m=>{setAuthMode(m);go(m==='signup'?'/register':'/login')}}/></>;return <><BrandBackground/><LandingPage onLogin={()=>{setAuthMode('login');go('/login')}} onRegister={()=>{setAuthMode('signup');go('/register')}} onLegal={go} onTransparency={()=>go('/transparency')} onShowDemo={()=>document.getElementById('how')?.scrollIntoView({behavior:'smooth'})}/></>}
- return <><BrandBackground/><div className="app-shell"><Sidebar user={user} path={path} open={mobileNav} onClose={()=>setMobileNav(false)} onNavigate={p=>{setMobileNav(false);go(p)}} onLogout={logout}/><div className="main-shell"><Topbar user={user} wallet={wallet} onMenu={()=>setMobileNav(v=>!v)} onSearch={()=>{setSearchOpen(true);setTimeout(()=>document.getElementById('global-search')?.focus(),50)}}/><main className="content"><div className={`mobile-search-drawer ${searchOpen?'show':''}`}><input id="global-search" placeholder="Search opportunities" onKeyDown={e=>{if(e.key==='Enter'){setSearchOpen(false);go('/earn')}}}/><button onClick={()=>setSearchOpen(false)}>×</button></div>{content}</main></div></div>{toast&&<div className={`toast ${toast.t}`} role="status"><span>{toast.t==='success'?<Sparkles size={15}/>:<Search size={15}/>}</span>{toast.m}</div>}{searchOpen&&<button className="search-overlay" aria-label="Close search" onClick={()=>setSearchOpen(false)}/>}</>;
+  if (loading) return (
+    <>
+      <BrandBackground />
+      <div className="loading-shell">
+        <img src="/kivora-mark.svg" alt="" />
+        <strong>KIVORA</strong>
+        <span>Preparing your rewards workspace…</span>
+      </div>
+    </>
+  );
+  if (path === '/transparency') return <><BrandBackground /><PublicStatusPage onBack={() => go('/')} /></>;
+  if (!user) {
+    if (path === '/terms' || path === '/privacy') {
+      return <><BrandBackground /><LegalPage kind={path === '/terms' ? 'terms' : 'privacy'} onBack={() => go('/')} /></>;
+    }
+    if (path === '/login' || path === '/register') {
+      return <><BrandBackground /><AuthPage mode={authMode} onSubmit={authSubmit} onSwitch={m => { setAuthMode(m); go(m === 'signup' ? '/register' : '/login'); }} /></>;
+    }
+    return <><BrandBackground /><LandingPage onLogin={() => { setAuthMode('login'); go('/login'); }} onRegister={() => { setAuthMode('signup'); go('/register'); }} onLegal={go} onTransparency={() => go('/transparency')} onShowDemo={() => document.getElementById('how')?.scrollIntoView({ behavior: 'smooth' })} /></>;
+  }
+  return (
+    <>
+      <BrandBackground />
+      <div className="app-shell">
+        <Sidebar user={user} path={path} open={mobileNav} onClose={() => setMobileNav(false)} onNavigate={p => { setMobileNav(false); go(p); }} onLogout={logout} />
+        <div className="main-shell">
+          <Topbar user={user} wallet={wallet} providerHealth={providerHealth} onMenu={() => setMobileNav(v => !v)} onSearch={() => { setSearchOpen(true); setTimeout(() => document.getElementById('global-search')?.focus(), 50); }} />
+          <main className="content">
+            <div className={`mobile-search-drawer ${searchOpen ? 'show' : ''}`}>
+              <input id="global-search" placeholder="Search opportunities" onKeyDown={e => { if (e.key === 'Enter') { setSearchOpen(false); go('/earn'); } }} />
+              <button onClick={() => setSearchOpen(false)}>×</button>
+            </div>
+            {content}
+          </main>
+        </div>
+      </div>
+      {toast && <div className={`toast ${toast.t}`} role="status"><span>{toast.t === 'success' ? <Sparkles size={15} /> : <Search size={15} />}</span>{toast.m}</div>}
+      {searchOpen && <button className="search-overlay" aria-label="Close search" onClick={() => setSearchOpen(false)} />}
+    </>
+  );
 }

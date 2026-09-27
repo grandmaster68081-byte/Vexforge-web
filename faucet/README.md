@@ -1,6 +1,8 @@
-# Kivora v1.3.0
+# Kivora v2.1.0
 
 A standalone, advertiser-funded rewards platform living inside the same VEXFORGE GitHub repository and Supabase project, while remaining isolated from the VEXFORGE application.
+
+The v2.1 contract uses Kivora Points, a 10,000-point withdrawal minimum, and USDT/TRC20 as the only initial payout rail. Payouts are manual and treasury opening balance is zero.
 
 ## Product boundary
 

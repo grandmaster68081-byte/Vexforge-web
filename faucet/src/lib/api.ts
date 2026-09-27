@@ -1,10 +1,10 @@
-import type { LedgerEntry, EarnItem, PlatformConfig, User, Wallet, Withdrawal, TreasurySummary } from './types';
+import type { LedgerEntry, EarnItem, PlatformConfig, ProviderHealth, User, Wallet, Withdrawal, TreasurySummary } from './types';
 function csrf() { return document.cookie.split('; ').find((x) => x.startsWith('kivora_csrf='))?.slice('kivora_csrf='.length) || ''; }
 async function request<T>(path: string, init: RequestInit = {}): Promise<T> { const headers: Record<string, string> = { 'Content-Type': 'application/json', ...(init.headers as Record<string, string> | undefined) }; if (init.method && init.method !== 'GET' && csrf()) headers['x-csrf-token'] = csrf(); const res = await fetch(`/api${path}`, { credentials: 'include', headers, ...init }); const body = await res.json().catch(() => ({})) as { ok?: boolean; error?: string; data?: T }; if (!res.ok || body.ok === false) throw new Error(body.error ?? `Request failed (${res.status})`); return body.data as T; }
 export const api = {
   config: () => request<PlatformConfig>('/config'),
   publicConfig: () => request<{ apiKey: string; subId: string }>('/public-config'),
-  providerHealth: () => request<{ provider: string; status: string; checkedAt: string }>('/provider-health'),
+  providerHealth: () => request<{ provider: string; status: ProviderHealth; checkedAt: string }>('/provider-health'),
   me: () => request<{ user: User | null; wallet: Wallet | null }>('/account/me'),
   signup: (p: { username: string; email: string; password: string }) => request<{ user: User }>('/auth/signup', { method: 'POST', body: JSON.stringify(p) }),
   login: (p: { email: string; password: string }) => request<{ user: User }>('/auth/login', { method: 'POST', body: JSON.stringify(p) }),
