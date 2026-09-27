@@ -25,7 +25,8 @@ jobs:
         with:
           node-version: 22
           cache: npm
-          cache-dependency-path: faucet/package.json
-      - run: npm install --no-audit --no-fund
+          cache-dependency-path: faucet/package-lock.json
+      - run: npm ci --no-audit --no-fund
       - run: npm run typecheck
+      - run: npm test
       - run: npm run build
