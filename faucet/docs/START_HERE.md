@@ -8,7 +8,7 @@ This revision adds local cinematic brand artwork, removes fabricated public metr
 
 ## Safe overlay
 
-Replit should overlay only the `faucet/**` app, the two Kivora migration files under `supabase/migrations/`, and `.github/workflows/kivora-quality.yml`. The documents under `faucet/docs/**` are implementation references and should not replace unrelated VEXFORGE root documents.
+Replit should overlay only the `faucet/**` app, the three Kivora migration files under `supabase/migrations/`, and `.github/workflows/kivora-quality.yml`. The documents under `faucet/docs/**` are implementation references and should not replace unrelated VEXFORGE root documents.
 
 ## What is already built
 
@@ -21,7 +21,7 @@ Replit should overlay only the `faucet/**` app, the two Kivora migration files u
 - Idempotent reward/chargeback ledger
 - Manual withdrawal request flow with reserved balance
 - Admin review queue: approve / reject / paid
-- Optional transaction-hash recording
+- Required transaction-hash recording before an admin can mark a payout paid
 - Same-origin Cloudflare Pages Functions API
 - Isolated `faucet` schema in the existing Supabase project
 - Kivora-native SVG brand mark, ambient background and noise texture
@@ -32,7 +32,7 @@ Replit should overlay only the `faucet/**` app, the two Kivora migration files u
 ## What remains manual by design
 
 1. Merge this package into the existing VEXFORGE repository at the exact paths documented in `IMPLEMENTATION_FOR_REPLIT.md`.
-2. Run both Kivora SQL migrations against the existing VEXFORGE Supabase project, in filename order.
+2. Run all three Kivora SQL migrations against the existing VEXFORGE Supabase project, in filename order. The third migration is required for atomic account + wallet creation and the hardened provider/admin boundaries.
 3. Add the `faucet` schema to Supabase API exposed schemas only if required by the deployed server-side client; keep browser roles denied as defined in the migration.
 4. Create the first Kivora user and promote that account to `admin` with the one SQL statement in the runbook.
 5. Register/approve the Kivora site in BitcoTasks from `https://bitcotasks.com/pub/dashboard` → **My Apps** → **Edit**, then copy its API Key, Bearer Token and Secret Key into Cloudflare encrypted environment variables.

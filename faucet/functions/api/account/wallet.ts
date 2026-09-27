@@ -6,7 +6,11 @@ import {error,json} from '../_lib/response';
 export const onRequestGet=async({request,env}:{request:Request;env:Env})=>{
   const current=await currentAccount(request,env);
   if(!current)return error('Authentication required.',401);
-  await db(env).rpc('settle_due_rewards',{p_account_id:current.account.id});
+  const {error:settlementError}=await db(env).rpc('settle_due_rewards',{p_account_id:current.account.id});
+  if(settlementError){
+    console.error('Kivora wallet settlement failed', settlementError);
+    return error('Rewards are temporarily unavailable. Please try again later.',503);
+  }
   const client=db(env);
   const [{data:wallet},{data:withdrawals}]=await Promise.all([
     client.from('wallets').select('available_points,pending_points,lifetime_earned_points,lifetime_withdrawn_points,debt_points').eq('account_id',current.account.id).single(),

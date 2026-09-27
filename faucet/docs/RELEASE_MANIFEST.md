@@ -5,6 +5,7 @@
 - `faucet/**` — the complete Kivora app and documentation
 - `supabase/migrations/202609260001_kivora_core.sql`
 - `supabase/migrations/202609260002_kivora_hardening.sql`
+- `supabase/migrations/202609270001_kivora_signup_and_boundary_fixes.sql`
 - `.github/workflows/kivora-quality.yml`
 
 ## Does not replace
@@ -20,4 +21,4 @@ Kivora is a separate Pages project connected to the same GitHub repository, root
 
 ## Provider secrets
 
-No production credentials are included. Replit/Cloudflare must supply the configured BitcoTasks and existing Supabase secrets through encrypted environment variables.
+No production credentials are included. Replit/Cloudflare must supply the configured BitcoTasks and existing Supabase secrets through encrypted environment variables. The signup/boundary follow-up migration must be applied after the two base migrations before production account creation is enabled.

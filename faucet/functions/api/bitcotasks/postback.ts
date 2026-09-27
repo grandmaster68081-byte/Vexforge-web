@@ -11,14 +11,20 @@ async function handle(request:Request,env:Env){
   const allowedIp=env.BITCOTASKS_POSTBACK_IP??'45.14.135.48';
   if(sourceIp!==allowedIp) return error('Unauthorized provider source.',403);
 
-  const p=request.method==='POST'?await readBody(request):Object.fromEntries(new URL(request.url).searchParams.entries());
+  let p:Record<string,unknown>;
+  try {
+    p=request.method==='POST'?await readBody(request):Object.fromEntries(new URL(request.url).searchParams.entries());
+  } catch (cause) {
+    console.error('Kivora provider payload could not be parsed', cause);
+    return error('Invalid provider payload.',400);
+  }
   const subId=String(p.subId??'').trim();
   const transId=String(p.transId??'').trim();
   const rewardRaw=String(p.reward??'').trim();
   const status=Number(p.status??0);
   const signature=String(p.signature??'').trim().toLowerCase();
   const reward=Number(rewardRaw);
-  if(!subId||!transId||!rewardRaw||!signature||!Number.isFinite(reward)||reward<=0) return error('Missing or invalid required postback fields.',400);
+  if(!subId||!transId||!signature||!/^\d+(?:\.\d+)?$/.test(rewardRaw)||!Number.isFinite(reward)||reward<=0) return error('Missing or invalid required postback fields.',400);
 
   const expected=MD5(`${subId}${transId}${rewardRaw}${env.BITCOTASKS_SECRET_KEY}`).toString().toLowerCase();
   if(!timingSafeEqual(expected,signature)) return error("Signature doesn't match.",403);
@@ -28,7 +34,10 @@ async function handle(request:Request,env:Env){
   if(!accountResult.data) return error('Unknown user.',404);
 
   const {errorMessage}=await apply(accountResult.data.id,p,env);
-  if(errorMessage) return error(errorMessage,422);
+  if(errorMessage){
+    console.error('Kivora provider postback was not recorded', errorMessage);
+    return error('Provider reward could not be recorded.',422);
+  }
 
   // BitcoTasks expects a plain success acknowledgement.
   return new Response('ok',{status:200,headers:{'Content-Type':'text/plain; charset=utf-8','Cache-Control':'no-store'}});

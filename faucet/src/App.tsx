@@ -31,7 +31,7 @@ export function App(){
  const authSubmit=async(payload:any)=>{const r=authMode==='login'?await api.login(payload):await api.signup(payload);setUser(r.user);const me=await api.me();setWallet(me.wallet);go('/')};
  const logout=async()=>{await api.logout().catch(()=>{});setUser(null);setWallet(null);go('/login')};
  const withdraw=async(payload:any)=>{await api.withdraw(payload);await refreshWallet();toastIt('Withdrawal request created and points reserved.','success');go('/wallet')};
- const adminAction=async(id:string,act:'approve'|'reject'|'paid',note?:string)=>{let tx='';if(act==='paid'){tx=window.prompt('Transaction hash (optional)')??''}await api.adminSetWithdrawal(id,{action:act,note,txHash:tx||undefined});await refreshAdmin();await refreshWallet();toastIt(`Withdrawal ${act}.`,act==='reject'?'info':'success')};
+ const adminAction=async(id:string,act:'approve'|'reject'|'paid',note?:string)=>{let tx='';if(act==='paid'){tx=window.prompt('Transaction hash (required)')?.trim()??'';if(!tx){toastIt('A transaction hash is required before marking a payout paid.','error');return}}await api.adminSetWithdrawal(id,{action:act,note,txHash:tx||undefined});await refreshAdmin();await refreshWallet();toastIt(`Withdrawal ${act}.`,act==='reject'?'info':'success')};
  const content=useMemo(()=>{
    if(!user||!wallet)return null;
    switch(path){
