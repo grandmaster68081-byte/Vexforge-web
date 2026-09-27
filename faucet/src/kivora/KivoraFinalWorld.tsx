@@ -328,56 +328,40 @@ function SettlementScene({ wallet, config, destination, setDestination, onSubmit
 }
 
 export function KivoraLanding({ onLogin, onRegister }: { onLogin: () => void; onRegister: () => void }) {
-  const [space, setSpace] = useState<Scene>('deck');
-  const spaces = (Object.keys(sceneDefs) as Scene[]);
   return (
-    <div className="kv5-landing">
+    <div className="kv5-landing kv5-landing-station">
       <div className="kv5-landing-bg" aria-hidden="true" />
       <header className="kv5-landing-nav">
         <div className="kv5-brand"><img src="/kivora/ui/kivora-sigil.svg" alt=""/><span><b>KIVORA</b><small>PLAY · EARN · GROW</small></span></div>
-        <nav><button onClick={() => setSpace('deck')}>Station</button><button onClick={() => setSpace('field')}>Opportunities</button><button onClick={() => setSpace('vault')}>Vault</button><button onClick={() => setSpace('chronicle')}>Chronicle</button></nav>
+        <div className="kv5-provider is-idle"><span className="kv5-led" />STATION READY · PROVIDER NOT CONFIGURED</div>
         <div className="kv5-landing-actions"><button className="kv5-quiet" onClick={onLogin}>Log in</button><button className="kv5-command compact" onClick={onRegister}>ENTER THE STATION <ArrowRight size={14}/></button></div>
       </header>
 
-      <main>
-        <section className="kv5-landing-hero">
-          <div className="kv5-hero-copy">
-            <span className="kv5-console-kicker">LIVING REWARD STATION</span>
-            <h1>Tu atención<br /><em>tiene valor.</em></h1>
-            <p>Kivora convierte tu tiempo y tus acciones en un recorrido de oportunidades verificadas. Entra, explora, completa y guarda tus recompensas.</p>
-            <div className="kv5-hero-actions"><button className="kv5-command big" onClick={onRegister}>ENTER THE STATION <ArrowRight size={17}/></button><button className="kv5-quiet" onClick={onLogin}>Ya tengo cuenta</button></div>
-            <div className="kv5-hero-proof"><span><Radio size={14}/> OPORTUNIDADES</span><span><ShieldCheck size={14}/> VERIFICACIÓN</span><span><Coins size={14}/> RECOMPENSAS</span><span><LockKeyhole size={14}/> SETTLEMENT</span></div>
+      <aside className="kv5-preview-rail" aria-label="Kivora spaces">
+        <button className="active"><Compass size={16}/><small>DECK</small></button>
+        <button onClick={onRegister}><Crosshair size={16}/><small>FIELD</small></button>
+        <button onClick={onRegister}><LockKeyhole size={16}/><small>VAULT</small></button>
+        <button onClick={onRegister}><History size={16}/><small>CHRONICLE</small></button>
+        <button onClick={onRegister}><Coins size={16}/><small>SETTLEMENT</small></button>
+      </aside>
+
+      <main className="kv5-preview-stage">
+        <div className="kv5-preview-chrome">
+          <div><span className="kv5-console-kicker">COMMAND DECK</span><h1>La estación está despierta.</h1></div>
+          <div className="kv5-preview-stats"><span>STATION READY</span><span>5 SPACES</span><span>USDT · TRC20</span></div>
+        </div>
+        <section className="kv5-preview-scene">
+          <div className="kv5-preview-engine">
+            <div className="kv5-engine-ring ring-a"/><div className="kv5-engine-ring ring-b"/>
+            <img src="/kivora/ui/kivora-core.svg" alt="Kivora Engine"/>
+            <div className="kv5-preview-readout"><span>KIVORA ENGINE</span><b>READY</b><span>ENTER TO SEE YOUR BALANCE</span></div>
           </div>
-          <div className="kv5-hero-scene">
-            <div className="kv5-hero-ring ring-a"/><div className="kv5-hero-ring ring-b"/>
-            <div className="kv5-hero-engine"><img src="/kivora/ui/kivora-core.svg" alt="Kivora Engine"/></div>
-            <div className="kv5-hero-readout"><span>STATION STATUS</span><b>READY</b><small>5 spaces · 1 reward loop</small></div>
+          <div className="kv5-preview-console">
+            <div className="kv5-console-block"><span className="kv5-console-kicker">DAILY RUN</span><strong>Explore the field</strong><small>Verified opportunities, provider checks and points tracked in your station.</small><button className="kv5-command" onClick={onRegister}>ENTER THE FIELD <ArrowRight size={14}/></button></div>
+            <div className="kv5-console-block"><span className="kv5-console-kicker">REWARD LOOP</span><strong>Signal → Verify → Reward</strong><small>Your available KP and activity appear after you enter the station.</small><button className="kv5-command" onClick={onLogin}>OPEN STATION <ArrowRight size={14}/></button></div>
+            <div className="kv5-console-block"><span className="kv5-console-kicker">SETTLEMENT</span><strong>10,000 KP minimum</strong><small>USDT · TRC20 · manual settlement review.</small><button className="kv5-command" onClick={onRegister}>OPEN VAULT <ArrowRight size={14}/></button></div>
           </div>
         </section>
-
-        <section className="kv5-space-section">
-          <div className="kv5-section-head"><span className="kv5-console-kicker">ONE STATION · FIVE SPACES</span><h2>No es un dashboard. Es tu estación.</h2><p>La navegación y la economía comparten el mismo mundo: cada espacio responde a un estado real del sistema.</p></div>
-          <div className="kv5-space-strip">
-            {spaces.map(key => { const def = sceneDefs[key]; const Icon = def.icon; return (
-              <button key={key} className={`kv5-space-item ${space === key ? 'active' : ''}`} onClick={() => setSpace(key)} style={{ '--space-image': `url(${def.environment})`, '--space-accent': def.accent } as CSSProperties}>
-                <div className="kv5-space-image"/><div className="kv5-space-glow"/><Icon size={18}/><b>{def.label}</b><small>{def.caption}</small>
-              </button>
-            );})}
-          </div>
-        </section>
-
-        <section className="kv5-loop-section">
-          <div className="kv5-loop-graphic">
-            <div className="kv5-loop-node first"><span>01</span><b>SIGNAL</b><small>Oportunidad detectada</small></div>
-            <div className="kv5-loop-node"><span>02</span><b>VERIFY</b><small>Provider confirma</small></div>
-            <div className="kv5-loop-node"><span>03</span><b>REWARD</b><small>El valor llega</small></div>
-            <div className="kv5-loop-node"><span>04</span><b>VAULT</b><small>Tu saldo se actualiza</small></div>
-            <div className="kv5-loop-node"><span>05</span><b>SETTLE</b><small>USDT · TRC20</small></div>
-          </div>
-          <div className="kv5-section-head centered"><span className="kv5-console-kicker">THE REWARD LOOP</span><h2>La economía es parte de la experiencia.</h2><p>No añadimos adornos a una lista de ofertas. La interfaz hace visible el recorrido real de una recompensa.</p></div>
-        </section>
-
-        <section className="kv5-close-section"><span className="kv5-console-kicker">KIVORA</span><h2>Entra. Explora. Gana.</h2><button className="kv5-command big" onClick={onRegister}>ENTER THE STATION <ArrowRight size={17}/></button></section>
       </main>
     </div>
   );
