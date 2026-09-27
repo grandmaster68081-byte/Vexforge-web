@@ -156,3 +156,48 @@ button,input{font:inherit}
 .kv5-scene,.kv5-landing-hero{box-shadow:0 34px 120px rgba(0,0,0,.38)}
 .kv5-environment:after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.08),rgba(0,0,0,.18) 48%,rgba(0,0,0,.52));pointer-events:none}
 .kv5-hero-engine img{object-fit:cover;border:1px solid rgba(103,244,255,.18);border-radius:24px;mix-blend-mode:screen;opacity:.92}
+
+/* Public entry: one station composition, not a generic landing page with scenes appended below. */
+.kv5-landing-station{background:#03070b;overflow:hidden}
+.kv5-landing-station .kv5-landing-bg{z-index:0;filter:saturate(.92) brightness(.48) contrast(1.08)}
+.kv5-landing-station .kv5-landing-nav{grid-template-columns:1fr auto 1fr}
+.kv5-preview-rail{position:absolute;z-index:6;left:0;top:74px;bottom:0;width:86px;background:rgba(2,8,13,.74);backdrop-filter:blur(20px);border-right:1px solid rgba(255,255,255,.06);display:flex;flex-direction:column;align-items:center;gap:12px;padding:18px 7px}
+.kv5-preview-rail button{width:66px;height:54px;border:1px solid transparent;background:none;color:#71869b;display:grid;place-items:center;gap:5px;font-size:6px;letter-spacing:.06em}
+.kv5-preview-rail button.active,.kv5-preview-rail button:hover{color:#eaffff;border-color:rgba(103,244,255,.2);background:rgba(103,244,255,.05)}
+.kv5-preview-rail button small{font-size:6px;letter-spacing:.08em}
+.kv5-preview-stage{position:relative;z-index:4;margin-left:86px;min-height:calc(100vh - 74px);padding:22px}
+.kv5-preview-chrome{display:flex;justify-content:space-between;align-items:end;gap:20px;position:relative;z-index:4}
+.kv5-preview-chrome h1{font-size:22px;margin:5px 0}
+.kv5-preview-stats{display:flex;gap:8px;flex-wrap:wrap}
+.kv5-preview-stats span{padding:7px 9px;border:1px solid rgba(255,255,255,.08);background:rgba(3,10,15,.32);font-size:7px;color:#8ea4b7;letter-spacing:.08em}
+.kv5-preview-scene{position:relative;min-height:calc(100vh - 158px);margin-top:12px;border:1px solid rgba(255,255,255,.1);background:rgba(3,10,15,.22);overflow:hidden}
+.kv5-preview-scene:after{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(circle at 50% 38%,rgba(103,244,255,.08),transparent 28%),linear-gradient(180deg,rgba(2,8,13,.03),rgba(2,8,13,.38))}
+.kv5-preview-engine{position:absolute;left:34%;top:18%;width:36%;aspect-ratio:1;display:grid;place-items:center}
+.kv5-preview-engine img{position:relative;z-index:2;width:60%;filter:drop-shadow(0 0 38px rgba(103,244,255,.22));animation:kv5Float 5s ease-in-out infinite}
+.kv5-preview-readout{position:absolute;z-index:3;top:77%;width:100%;text-align:center;display:grid;gap:4px}
+.kv5-preview-readout span{display:block;font-size:7px;color:#7890a6;letter-spacing:.25em}
+.kv5-preview-readout b{display:block;font-size:30px;letter-spacing:.1em}
+.kv5-preview-console{position:absolute;z-index:5;right:18px;top:18px;width:min(340px,31%);bottom:18px;display:flex;flex-direction:column;justify-content:center;gap:9px}
+.kv5-preview-console .kv5-console-block{background:rgba(3,9,14,.72);backdrop-filter:blur(18px)}
+.kv5-preview-console .kv5-command{margin-top:12px}
+
+@media(max-width:900px){
+  .kv5-landing-station .kv5-provider{display:none}
+  .kv5-preview-rail{display:none}
+  .kv5-preview-stage{margin-left:0;padding:12px}
+  .kv5-preview-scene{min-height:calc(100vh - 132px)}
+  .kv5-preview-console{width:42%;right:10px}
+  .kv5-preview-engine{left:15%;width:62%}
+}
+
+@media(max-width:650px){
+  .kv5-landing-station .kv5-landing-nav{grid-template-columns:1fr auto;min-height:64px;padding:10px 12px}
+  .kv5-landing-station .kv5-landing-actions .kv5-quiet{display:none}
+  .kv5-preview-chrome{display:block}
+  .kv5-preview-stats{margin-top:8px}
+  .kv5-preview-scene{min-height:calc(100vh - 162px)}
+  .kv5-preview-engine{left:7%;top:15%;width:86%}
+  .kv5-preview-console{left:10px;right:10px;width:auto;top:auto;height:42%;bottom:10px;justify-content:end}
+  .kv5-preview-console .kv5-console-block{padding:9px}
+  .kv5-preview-console .kv5-console-block small{display:none}
+}
