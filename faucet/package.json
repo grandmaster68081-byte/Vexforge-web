@@ -1,15 +1,17 @@
 {
   "name": "kivora-rewards",
   "private": true,
-  "version": "2.1.0",
+  "version": "5.2.1",
   "type": "module",
   "scripts": {
     "dev": "vite --host 0.0.0.0",
     "build": "vite build",
     "preview": "vite preview --host 0.0.0.0",
     "typecheck": "tsc --noEmit",
-    "check": "npm run typecheck && npm run test && npm run build",
-    "test": "node --test tests/*.test.mjs"
+    "check": "npm run typecheck && npm run build",
+    "test": "node scripts/test-kivora.mjs",
+    "verify": "node scripts/verify-production.mjs",
+    "verify:identity": "node scripts/verify-identity-assets.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.57.0",
@@ -24,8 +26,12 @@
     "@types/react": "^19.1.8",
     "@types/react-dom": "^19.1.7",
     "@vitejs/plugin-react": "^5.0.2",
-    "lightningcss": "^1.33.0",
     "typescript": "^5.9.2",
-    "vite": "^7.1.7"
+    "vite": "^7.1.7",
+    "lightningcss": "^1.29.2"
+  },
+  "engines": {
+    "node": ">=20.0.0",
+    "npm": ">=10.0.0"
   }
 }

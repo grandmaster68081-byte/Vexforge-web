@@ -2,20 +2,20 @@ import { currentAccount } from '../_lib/auth';
 import type { Env } from '../_lib/env';
 import { db } from '../_lib/supabase';
 import { error, json } from '../_lib/response';
-import { mapWallet } from './me';
 
 export const onRequestGet = async ({ request, env }: { request: Request; env: Env }) => {
   const current = await currentAccount(request, env);
   if (!current) return error('Authentication required.', 401);
-  const { error: settlementError } = await db(env).rpc('settle_due_rewards_v2', { p_account_id: current.account.id });
-  if (settlementError) { console.error('Kivora wallet settlement failed', settlementError); return error('Rewards are temporarily unavailable. Please try again later.', 503); }
   const client = db(env);
+  await client.rpc('settle_due_rewards_v2', { p_account_id: current.account.id });
   const [{ data: wallet }, { data: withdrawals }] = await Promise.all([
-    client.from('wallets').select('available_points,pending_points,reward_pending_points,withdrawal_reserved_points,lifetime_earned_points,lifetime_withdrawn_points,debt_points').eq('account_id', current.account.id).single(),
-    client.from('withdrawals').select('id,amount_points,amount_usd_reference,asset,network,destination,status,tx_hash,crypto_amount,payment_rate_usd,admin_note,created_at').eq('account_id', current.account.id).order('created_at', { ascending: false }).limit(30),
+    client.from('wallets').select('available_points,pending_points,withdrawal_reserved_points,lifetime_earned_points,lifetime_withdrawn_points,debt_points').eq('account_id', current.account.id).single(),
+    client.from('withdrawals').select('id,amount_points,asset,network,destination,status,tx_hash,admin_note,created_at').eq('account_id', current.account.id).order('created_at', { ascending: false }).limit(30),
   ]);
   if (!wallet) return error('Wallet unavailable.', 500);
-  return json({ wallet: mapWallet(wallet), withdrawals: (withdrawals ?? []).map(mapWithdrawal) });
+  return json({
+    wallet: { availablePoints: Number(wallet.available_points), pendingPoints: Number(wallet.pending_points), withdrawalReservedPoints: Number(wallet.withdrawal_reserved_points ?? 0), lifetimeEarnedPoints: Number(wallet.lifetime_earned_points), lifetimeWithdrawnPoints: Number(wallet.lifetime_withdrawn_points), debtPoints: Number(wallet.debt_points ?? 0) },
+    withdrawals: (withdrawals ?? []).map(mapWithdrawal),
+  });
 };
-
-function mapWithdrawal(x: any) { return { id: x.id, amountPoints: Number(x.amount_points), amountUsdReference: Number(x.amount_usd_reference ?? 0), asset: x.asset, network: x.network, destination: x.destination, status: x.status, txHash: x.tx_hash, cryptoAmount: x.crypto_amount == null ? null : Number(x.crypto_amount), paymentRateUsd: x.payment_rate_usd == null ? null : Number(x.payment_rate_usd), adminNote: x.admin_note, createdAt: x.created_at }; }
+function mapWithdrawal(value: any) { return { id: value.id, amountPoints: Number(value.amount_points), asset: value.asset, network: value.network, destination: value.destination, status: value.status, txHash: value.tx_hash, adminNote: value.admin_note, createdAt: value.created_at }; }

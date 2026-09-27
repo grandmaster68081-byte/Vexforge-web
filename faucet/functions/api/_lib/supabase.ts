@@ -1,5 +1,4 @@
-import { createClient } from '@supabase/supabase-js';
-import type { SupabaseClient } from '@supabase/supabase-js';
+import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import type { Env } from './env';
 
 type FaucetClient = ReturnType<SupabaseClient['schema']>;
