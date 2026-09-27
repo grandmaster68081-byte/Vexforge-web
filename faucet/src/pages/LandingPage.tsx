@@ -1,7 +1,7 @@
 import { ArrowRight, BadgeCheck, CircleDollarSign, ChevronRight, Gift, Layers3, ShieldCheck, Sparkles, Timer, WalletCards, Zap, CheckCircle2 } from 'lucide-react';
 import { Logo } from '../components/Logo';
 
-export function LandingPage({onLogin,onRegister,onLegal,onShowDemo}:{onLogin:()=>void;onRegister:()=>void;onLegal:(p:string)=>void;onShowDemo:()=>void}){
+export function LandingPage({onLogin,onRegister,onLegal,onTransparency,onShowDemo}:{onLogin:()=>void;onRegister:()=>void;onLegal:(p:string)=>void;onTransparency:()=>void;onShowDemo:()=>void}){
  return <div className="landing-shell">
   <nav className="landing-nav"><Logo/><div className="landing-links"><a href="#how">How it works</a><a href="#earn">Ways to earn</a><a href="#payouts">Cashout</a></div><div className="landing-nav-actions"><button className="text-button" onClick={onLogin}>Sign in</button><button className="primary-button compact" onClick={onRegister}>Join Kivora <ArrowRight size={15}/></button></div></nav>
   <main>
@@ -22,6 +22,6 @@ export function LandingPage({onLogin,onRegister,onLegal,onShowDemo}:{onLogin:()=
    <section className="landing-section payout-section" id="payouts"><div className="payout-card"><div><span className="kicker">KIVORA WALLET</span><h2>Your points stay internal until you choose to withdraw.</h2><p>The platform does not store blockchain private keys. Withdrawal requests reserve points immediately, then pass through manual review before an external crypto transfer is recorded.</p></div><div className="payout-options"><span>USDC · BASE</span><span>USDC · SOLANA</span><span>BTC · BITCOIN</span><span>LTC · LITECOIN</span></div></div></section>
    <section className="final-cta"><span className="kicker"><Sparkles size={13}/> KIVORA</span><h2>Your next reward starts with one action.</h2><button className="primary-button hero-button" onClick={onRegister}>Create your Kivora account <ArrowRight size={17}/></button></section>
   </main>
-  <footer className="landing-footer"><span>© 2026 Kivora · A VEXFORGE ecosystem product</span><div><button onClick={()=>onLegal('/terms')}>Terms</button><button onClick={()=>onLegal('/privacy')}>Privacy</button></div></footer>
+   <footer className="landing-footer"><span>© 2026 Kivora · A VEXFORGE ecosystem product</span><div><button onClick={()=>onLegal('/terms')}>Terms</button><button onClick={()=>onLegal('/privacy')}>Privacy</button><a href="/transparency" onClick={event=>{event.preventDefault();onTransparency()}} data-testid="link-transparency">Transparency</a></div></footer>
  </div>;
 }
