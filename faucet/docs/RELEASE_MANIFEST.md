@@ -21,4 +21,4 @@ Kivora is a separate Pages project connected to the same GitHub repository, root
 
 ## Provider secrets
 
-No production credentials are included. Replit/Cloudflare must supply the configured BitcoTasks and existing Supabase secrets through encrypted environment variables. The signup/boundary follow-up migration must be applied after the two base migrations before production account creation is enabled.
+ No production credentials are included. The Kivora Pages **Production** environment must supply `SUPABASE_URL`, `SUPABASE_SECRET_KEY`, and the configured BitcoTasks secrets through encrypted environment variables; Replit secrets are not inherited by Cloudflare Pages. After changing these values, trigger a new Pages deployment before validating account creation. The signup/boundary follow-up migration must be applied after the two base migrations before production account creation is enabled.
