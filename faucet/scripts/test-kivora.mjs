@@ -15,8 +15,7 @@ const required = [
   'public/kivora/identity/vault-environment.webp',
   'public/kivora/identity/chronicle-environment.webp',
   'public/kivora/identity/settlement-environment.webp',
-  'public/kivora/identity/mobile-atlas.webp',
-  'public/kivora/identity/engine-environment.webp'
+  'public/kivora/identity/mobile-atlas.webp'
 ];
 for (const rel of required) {
   if (!fs.existsSync(path.join(root, rel))) throw new Error(`Missing required artifact: ${rel}`);

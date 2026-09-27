@@ -2,10 +2,6 @@ import type { Env } from './env';
 
 export type ProviderOffer = Record<string, unknown>;
 
-export function bitcoTasksConfigured(env: Env) {
-  return Boolean(env.BITCOTASKS_API_KEY && env.BITCOTASKS_BEARER_TOKEN && env.BITCOTASKS_SECRET_KEY);
-}
-
 function providerCredentials(env: Env) {
   if (!env.BITCOTASKS_API_KEY || !env.BITCOTASKS_BEARER_TOKEN) throw new Error('BITCOTASKS_NOT_CONFIGURED');
   return { apiKey: env.BITCOTASKS_API_KEY, bearer: env.BITCOTASKS_BEARER_TOKEN };

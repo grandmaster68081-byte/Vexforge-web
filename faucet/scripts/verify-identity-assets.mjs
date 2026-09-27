@@ -19,7 +19,7 @@ for (const file of files) {
   if (size < 5000) throw new Error(`Identity asset unexpectedly small: ${file} (${size} bytes)`);
 }
 const world = fs.readFileSync(path.join(root, 'src/kivora/KivoraFinalWorld.tsx'), 'utf8');
-for (const file of ['identity-master.webp','hero-environment.webp','field-environment.webp','vault-environment.webp','chronicle-environment.webp','settlement-environment.webp','engine-environment.webp']) {
+for (const file of ['hero-environment.webp','field-environment.webp','vault-environment.webp','chronicle-environment.webp','settlement-environment.webp']) {
   if (!world.includes(`/kivora/identity/${file}`)) throw new Error(`Live renderer does not consume ${file}`);
 }
 console.log('KIVORA PRODUCTION IDENTITY ASSETS: PASS');

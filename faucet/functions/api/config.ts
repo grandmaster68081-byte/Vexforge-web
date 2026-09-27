@@ -7,7 +7,7 @@ export const onRequestGet = async ({ env }: { env: Env }) => {
     const { data, error: dbError } = await db(env)
       .from('settings')
       .select('key,value')
-      .in('key', ['currency_name','points_per_usd_display','withdrawal_min_points','withdrawal_min_usd','target_user_share_bps','bitcotasks_exchange_rate','payout_asset','payout_network','supported_payouts','treasury_asset','treasury_network','treasury_address']);
+      .in('key', ['currency_name','points_per_usd_display','withdrawal_min_points','target_user_share_bps','supported_payouts','treasury_asset','treasury_network','treasury_address']);
     if (dbError) return error(dbError.message, 500);
     const map = Object.fromEntries((data ?? []).map((item: any) => [item.key, item.value]));
     const supported = Array.isArray(map.supported_payouts) && map.supported_payouts.length
@@ -18,12 +18,8 @@ export const onRequestGet = async ({ env }: { env: Env }) => {
       currencyName: String(map.currency_name ?? 'Kivora Points').replace(/^"|"$/g, ''),
       pointsPerUsdDisplay: Number(map.points_per_usd_display ?? 1000),
       withdrawalMinPoints: Number(map.withdrawal_min_points ?? 10000),
-      withdrawalMinUsd: Number(map.withdrawal_min_usd ?? 10),
       targetUserShareBps: Number(map.target_user_share_bps ?? 3500),
-      bitcotasksExchangeRate: Number(map.bitcotasks_exchange_rate ?? 350),
       supportedPayouts: supported,
-      payoutAsset: String(map.payout_asset ?? 'USDT'),
-      payoutNetwork: String(map.payout_network ?? 'TRC20'),
       providerConfigured,
       treasuryAsset: String(map.treasury_asset ?? 'USDT'),
       treasuryNetwork: String(map.treasury_network ?? 'TRC20'),
