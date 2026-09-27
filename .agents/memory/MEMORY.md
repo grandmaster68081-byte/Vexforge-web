@@ -7,3 +7,4 @@
 - [Portable TypeScript verification](typescript-verification.md) — syntax checks must resolve project-local TypeScript before environment-specific global paths.
 - [Canonical runtime continuity](canonical-runtime-continuity.md) — when continuity documents lag, reconcile historical notes against current main and the canonical Unity workflow.
 - [GitHub Actions checkpoint storage](github-actions-checkpoint-storage.md) — retain only the live shader-chain head; exclude downloaded/uploaded payloads from evidence and retire consumed predecessors.
+- [Kivora migration sequencing](kivora-migration-sequencing.md) — every Supabase migration filename needs a unique, dependency-ordered timestamp.
