@@ -16,7 +16,7 @@ This package intentionally contains placeholders only.
 
 ## Authentication
 
-The faucet uses independent account/session tables. Passwords are never stored plaintext; passwords are derived with PBKDF2-HMAC-SHA-256 using a per-account random salt and 210,000 iterations. Session tokens are random and stored only as SHA-256 hashes.
+The faucet uses independent account/session tables. Passwords are never stored plaintext; passwords are derived with PBKDF2-HMAC-SHA-256 using a per-account random salt and 100,000 iterations, the maximum supported by the Cloudflare Pages runtime. Session tokens are random and stored only as SHA-256 hashes.
 
 ## Postback integrity
 
