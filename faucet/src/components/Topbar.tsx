@@ -13,8 +13,8 @@ export function Topbar({user,wallet,providerHealth,onMenu,onSearch}:{user:User;w
    <button className="top-search" onClick={onSearch}><Search size={15}/><span>Search opportunities</span><kbd>/</kbd></button>
    <div className="topbar-spacer"/>
    <div className={`top-status provider-health-${providerHealth}`}><i/>{providerLabels[providerHealth]}</div>
-    <button className="top-wallet" aria-label="Wallet balance"><WalletCards size={15}/><span>{wallet ? `${points(wallet.availablePoints)} pts` : '— pts'}</span></button>
-   <button className="icon-button top-notify" aria-label="Notifications"><Bell size={17}/><i/></button>
+    <div className="top-wallet" aria-label="Wallet balance"><WalletCards size={15}/><span>{wallet ? `${points(wallet.availablePoints)} pts` : '— pts'}</span></div>
+    <div className="icon-button top-notify" aria-label="Notifications"><Bell size={17}/><i/></div>
    <div className="top-avatar">{user.username.slice(0,2).toUpperCase()}</div>
  </header>;
 }

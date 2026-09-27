@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600">
+<defs><radialGradient id="a"><stop stop-color="#fff"/><stop offset=".22" stop-color="#68f4ff"/><stop offset=".55" stop-color="#497cff"/><stop offset=".78" stop-color="#875bff" stop-opacity=".8"/><stop offset="1" stop-color="#000" stop-opacity="0"/></radialGradient><linearGradient id="b" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#fff"/><stop offset=".35" stop-color="#68f4ff"/><stop offset=".72" stop-color="#7b66ff"/><stop offset="1" stop-color="#96ff5b"/></linearGradient></defs>
+<circle cx="300" cy="300" r="260" fill="url(#a)" opacity=".25"/>
+<g fill="none" stroke-linecap="round"><ellipse cx="300" cy="300" rx="228" ry="112" stroke="#18e5ff" stroke-width="3" opacity=".6"/><ellipse cx="300" cy="300" rx="116" ry="228" stroke="#7b66ff" stroke-width="2" opacity=".55" transform="rotate(26 300 300)"/><ellipse cx="300" cy="300" rx="205" ry="78" stroke="#96ff5b" stroke-width="2" opacity=".35" transform="rotate(-18 300 300)"/></g>
+<polygon points="300,88 392,188 358,432 300,506 242,432 208,188" fill="url(#b)" opacity=".88"/>
+<polygon points="300,132 354,194 334,356 300,418 266,356 246,194" fill="#071323" opacity=".9"/>
+<circle cx="300" cy="280" r="24" fill="#fff"/>
+</svg>

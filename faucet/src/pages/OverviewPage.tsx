@@ -1,6 +1,7 @@
 import { ArrowRight, CheckCircle2, ChevronRight, Clock3, Flame, Gift, ShieldCheck, Sparkles, Target, WalletCards, Zap } from 'lucide-react';
-import type { EarnItem, PlatformConfig, User, Wallet, LedgerEntry } from '../lib/types';
-import { points, usdFromPoints, shortDate } from '../lib/format';
+import type { EarnItem, LedgerEntry, PlatformConfig, User, Wallet } from '../lib/types';
+import { points, shortDate, usdFromPoints } from '../lib/format';
+import { KivoraCore, OpportunityGate } from '../kivora-v4';
 
 function metrics(entries: LedgerEntry[]) {
   const today = new Date();
@@ -35,6 +36,7 @@ function level(pointsEarned: number) {
 }
 
 const laneNames = ['QUICK', 'CORE', 'HIGH YIELD'];
+const fieldArt = ['/assets/kivora-v4/opportunity_field.webp', '/assets/kivora-v4/opportunity_field_scene.webp', '/assets/kivora-v4/reward_flow.webp'];
 
 export function OverviewPage({ user, wallet, offers, config, entries, onNavigate }: { user: User; wallet: Wallet; offers: EarnItem[]; config: PlatformConfig; entries: LedgerEntry[]; onNavigate: (p: string) => void }) {
   const m = metrics(entries);
@@ -46,36 +48,44 @@ export function OverviewPage({ user, wallet, offers, config, entries, onNavigate
     <div className="page-stack scene-page command-deck">
       <section className="scene-hero command-hero">
         <div className="scene-hero-copy">
-          <span className="scene-eyebrow"><Sparkles size={12} /> KIVORA · DAILY EARNING WORKSPACE</span>
-          <h1>Turn attention into <em>value.</em></h1>
-          <p>A focused operating rhythm for verified opportunities. Choose your next move, keep the ledger visible, and let provider evidence decide when rewards settle.</p>
+          <span className="scene-eyebrow"><Sparkles size={12} /> COMMAND DECK · DAILY RUN</span>
+          <h1>Keep the signal. <em>Choose your move.</em></h1>
+          <p>Kivora is your operating station for verified opportunities. Read the signal, enter a gate, and let provider evidence move value into the ledger.</p>
           <div className="scene-actions">
-            <button className="primary-button" onClick={() => onNavigate('/earn')}>Open Opportunity Field <ArrowRight size={16} /></button>
-            <button className="secondary-button" onClick={() => onNavigate('/wallet')}>View Kivora balance <WalletCards size={15} /></button>
+            <button className="primary-button" onClick={() => onNavigate('/earn')}>Enter Opportunity Field <ArrowRight size={16} /></button>
+            <button className="secondary-button" onClick={() => onNavigate('/wallet')}>Open Vault <WalletCards size={15} /></button>
           </div>
           <div className="scene-proof"><span><CheckCircle2 size={13} /> Provider verification first</span><span><ShieldCheck size={13} /> Manual USDT/TRC20 settlement</span></div>
+          <div className="command-run-card command-run-card-inline">
+            <div className="scene-card-top"><span>TODAY'S RUN</span><span className="scene-live-dot" />{m.todayRewards} / 3 complete</div>
+            <strong className="run-score">{m.todayRewards}<small>/3</small></strong>
+            <p>A focused session, not a promise of earnings.</p>
+            <div className="scene-progress"><i style={{ width: `${Math.min(100, (m.todayRewards / 3) * 100)}%` }} /></div>
+            <div className="run-metrics"><div><small>STREAK</small><strong>{m.streak} day{m.streak === 1 ? '' : 's'}</strong></div><div><small>KP TODAY</small><strong>{points(m.todayPoints)}</strong></div><div><small>LIVE INVENTORY</small><strong>{offers.length}</strong></div></div>
+          </div>
         </div>
-        <div className="command-run-card">
-          <div className="scene-card-top"><span>TODAY'S RUN</span><span className="scene-live-dot" />{m.todayRewards} / 3 complete</div>
-          <strong className="run-score">{m.todayRewards}<small>/3</small></strong>
-          <p>A focused session, not a promise of earnings.</p>
-          <div className="scene-progress"><i style={{ width: `${Math.min(100, (m.todayRewards / 3) * 100)}%` }} /></div>
-          <div className="run-metrics"><div><small>STREAK</small><strong>{m.streak} day{m.streak === 1 ? '' : 's'}</strong></div><div><small>KP TODAY</small><strong>{points(m.todayPoints)}</strong></div><div><small>LIVE INVENTORY</small><strong>{offers.length}</strong></div></div>
+        <div className="command-core-stage">
+          <KivoraCore availablePoints={wallet.availablePoints} />
+          <div className="command-core-caption"><span>CORE READOUT</span><strong>{points(wallet.availablePoints)} KP AVAILABLE</strong></div>
         </div>
       </section>
 
       <section className="scene-panel opportunity-field-panel">
-        <div className="scene-section-heading"><div><span className="scene-eyebrow"><Target size={12} /> OPPORTUNITY FIELD</span><h2>Choose your next move.</h2><p>Quick, Core and High Yield are deterministic lanes built from current provider inventory.</p></div><button className="text-button" onClick={() => onNavigate('/earn')}>See all opportunities <ChevronRight size={15} /></button></div>
+        <div className="scene-section-heading"><div><span className="scene-eyebrow"><Target size={12} /> OPPORTUNITY FIELD</span><h2>Signals ready for entry.</h2><p>Current provider inventory is routed into distinct station lanes. The reward stays visible before you begin.</p></div><button className="text-button" onClick={() => onNavigate('/earn')}>See all opportunities <ChevronRight size={15} /></button></div>
         <div className="opportunity-lanes">
           {opportunities.map((offer, index) => (
-            <button className="opportunity-lane" key={`${offer.category}-${offer.id}`} onClick={() => onNavigate('/earn')}>
-              <span className="lane-label">{laneNames[index] ?? 'LIVE'}</span>
-              <strong>{offer.title}</strong>
-              <span className="lane-detail">{offer.category.toUpperCase()} · {offer.durationSeconds ? `${Math.ceil(offer.durationSeconds / 60)} min` : 'duration supplied by provider'}</span>
-              <b>+{points(offer.reward)} {offer.currencyName}</b>
-            </button>
+            <OpportunityGate
+              key={`${offer.category}-${offer.id}`}
+              title={offer.title}
+              category={`${laneNames[index] ?? 'LIVE'} · ${offer.category}`}
+              rewardPoints={offer.reward}
+              imageUrl={offer.image || fieldArt[index % fieldArt.length]}
+              meta={offer.durationSeconds ? `${Math.ceil(offer.durationSeconds / 60)} min · ${offer.source}` : `${offer.source} · requirements visible inside`}
+              accent={index === 0 ? 'cyan' : index === 1 ? 'violet' : 'gold'}
+              onOpen={() => onNavigate('/earn')}
+            />
           ))}
-          {!opportunities.length && <div className="scene-empty"><Gift size={22} /><strong>Provider inventory is not available yet.</strong><span>Live opportunities will appear here when BitcoTasks returns eligible campaigns.</span></div>}
+          {!opportunities.length && <div className="scene-empty"><Gift size={22} /><strong>Provider inventory is not available yet.</strong><span>Live opportunities will appear here when eligible campaigns return.</span></div>}
         </div>
       </section>
 
@@ -87,7 +97,7 @@ export function OverviewPage({ user, wallet, offers, config, entries, onNavigate
           <small className="progress-note">{l.name} · {l.next ? `${points(Math.max(0, l.next - wallet.lifetimeEarnedPoints))} KP to next level` : 'Top tier reached'}</small>
         </div>
         <div className="scene-panel chronicle-snapshot">
-          <div className="scene-section-heading"><div><span className="scene-eyebrow"><Clock3 size={12} /> CHRONICLE</span><h2>Your earning evidence.</h2></div><button className="text-button" onClick={() => onNavigate('/activity')}>Open chronicle <ChevronRight size={15} /></button></div>
+          <div className="scene-section-heading"><div><span className="scene-eyebrow"><Clock3 size={12} /> CHRONICLE</span><h2>Evidence arriving.</h2></div><button className="text-button" onClick={() => onNavigate('/activity')}>Open chronicle <ChevronRight size={15} /></button></div>
           <div className="scene-timeline">
             {recent.length ? recent.map((entry) => <div className="scene-event" key={entry.id}><span className={`event-marker ${entry.pointsDelta >= 0 ? 'positive' : 'negative'}`}>{entry.pointsDelta >= 0 ? '+' : '−'}</span><div><strong>{entry.source}</strong><span>{shortDate(entry.createdAt)} · {entry.status}</span></div><b className={entry.pointsDelta >= 0 ? 'positive' : 'negative'}>{entry.pointsDelta >= 0 ? '+' : ''}{points(entry.pointsDelta)}</b></div>) : <div className="scene-empty compact"><Clock3 size={18} /><span>Your verified activity will appear here.</span></div>}
           </div>
@@ -95,6 +105,7 @@ export function OverviewPage({ user, wallet, offers, config, entries, onNavigate
       </section>
 
       <section className="scene-trust-grid"><div><Zap size={16} /><strong>Reward integrity</strong><span>Credits arrive after provider verification.</span></div><div><ShieldCheck size={16} /><strong>Settlement boundary</strong><span>USDT is sent only after manual review.</span></div><div><Flame size={16} /><strong>Daily rhythm</strong><span>Progress signals do not promise bonus payouts.</span></div></section>
+      <span className="sr-only">{user.username}</span>
     </div>
   );
 }

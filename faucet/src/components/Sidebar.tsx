@@ -1,4 +1,4 @@
-import { BarChart3, Gift, History, LogOut, Sparkles, WalletCards, X, ShieldCheck } from 'lucide-react';
+import { ArrowDownToLine, BarChart3, Gift, History, LogOut, Sparkles, WalletCards, X, ShieldCheck } from 'lucide-react';
 import type { User } from '../lib/types';
 import { Logo } from './Logo';
 
@@ -6,7 +6,8 @@ const items = [
   ['/','Command Deck',Sparkles],
   ['/earn','Opportunity Field',Gift],
   ['/wallet','Vault',WalletCards],
-  ['/activity','Chronicle',History]
+  ['/activity','Chronicle',History],
+  ['/withdraw','Settlement Terminal',ArrowDownToLine]
 ] as const;
 
 export function Sidebar({ user, path, onNavigate, onLogout, open, onClose }:{user:User;path:string;onNavigate:(p:string)=>void;onLogout:()=>void;open:boolean;onClose:()=>void}){
