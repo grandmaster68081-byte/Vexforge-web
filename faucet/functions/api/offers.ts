@@ -1,4 +1,5 @@
 import { allowRate, currentAccount, rateKey } from './_lib/auth';
+import { bitcoTasksConfigured } from './_lib/bitcotasks';
 import type { Env } from './_lib/env';
 import { createBitcoTasksAdapter } from './_lib/providers/bitcotasks';
 import { error, json } from './_lib/response';
@@ -6,6 +7,7 @@ import { error, json } from './_lib/response';
 export const onRequestGet = async ({ request, env }: { request: Request; env: Env }) => {
   const current = await currentAccount(request, env);
   if (!current) return error('Authentication required.', 401);
+  if (!bitcoTasksConfigured(env)) return error('NOT_CONFIGURED', 503);
   if (!(await allowRate(env, `offers:${current.account.id}:${await rateKey(request)}`, 18, 300))) return error('Opportunity refresh is temporarily rate-limited. Please wait a moment.', 429);
   try {
     const provider = createBitcoTasksAdapter(env, request);

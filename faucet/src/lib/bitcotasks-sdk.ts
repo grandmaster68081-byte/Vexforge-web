@@ -4,8 +4,9 @@ const CATEGORIES:Exclude<EarnCategory,'all'>[]=['surveys','offers','ptc','video'
 let wallPromise:Promise<any>|null=null;
 async function publicConfig(){
  const r=await fetch('/api/public-config',{credentials:'include',cache:'no-store'});
- const body=await r.json().catch(()=>null) as {ok?:boolean;error?:string;data?:{apiKey?:string;subId?:string}}|null;
- if(!r.ok||body?.ok===false||!body?.data?.apiKey||!body.data.subId)throw new Error(body?.error??'Provider configuration unavailable');
+  const body=await r.json().catch(()=>null) as {ok?:boolean;error?:string;data?:{apiKey?:string;subId?:string;providerConfigured?:boolean;status?:string}}|null;
+  if (r.ok && body?.data?.providerConfigured === false) throw new Error('NOT_CONFIGURED');
+  if(!r.ok||body?.ok===false||!body?.data?.apiKey||!body.data.subId)throw new Error(body?.error??'Provider configuration unavailable');
  return {apiKey:body.data.apiKey,subId:body.data.subId};
 }
 function loadScript(){if(window.BitcoTasksOfferwall)return Promise.resolve();if(document.querySelector('script[data-kivora-bitcotasks-sdk]'))return wallPromise??Promise.resolve();if(wallPromise)return wallPromise;wallPromise=new Promise<void>((resolve,reject)=>{const s=document.createElement('script');s.src='https://bitcotasks.com/sdk/bitcotasks-offerwall-sdk-v1.js';s.async=true;s.dataset.kivoraBitcotasksSdk='true';s.onload=()=>resolve();s.onerror=()=>reject(new Error('BitcoTasks SDK could not be loaded'));document.head.appendChild(s)});return wallPromise;}

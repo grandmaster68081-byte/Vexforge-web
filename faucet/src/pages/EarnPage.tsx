@@ -14,8 +14,17 @@ const providerLabels: Record<ProviderHealth, string> = {
 };
 export function EarnPage({fallbackOffers,providerHealth,onToast}:{fallbackOffers:EarnItem[];providerHealth:ProviderHealth;onToast:(m:string,t?:'info'|'success'|'error')=>void}){
  const [category,setCategory]=useState<EarnCategory>('all'); const [items,setItems]=useState<EarnItem[]>(fallbackOffers); const [query,setQuery]=useState(''); const [sort,setSort]=useState<'reward'|'quick'>('reward'); const [loading,setLoading]=useState(true); const [selected,setSelected]=useState<EarnItem|null>(null); const [sdkReady,setSdkReady]=useState(false);
- const load=async(force=false)=>{setLoading(true);try{const wall=await getBitcoTasksWall();setSdkReady(true);const types=category==='all'?categories.slice(1).map(x=>x[0] as Exclude<EarnCategory,'all'>):[category as Exclude<EarnCategory,'all'>];const rs=await Promise.allSettled(types.map(t=>wall.getOffers(t,{forceRefresh:force,page:1})));const next=rs.flatMap((r)=>r.status==='fulfilled'?r.value:[]);setItems(next.length?next:fallbackOffers);if(!next.length)onToast('No live provider inventory matched your current profile.','info')}catch{setSdkReady(false);setItems(fallbackOffers);if(!fallbackOffers.length)onToast('BitcoTasks inventory is unavailable right now.','error')}finally{setLoading(false)}};
- useEffect(()=>{void load(false)},[category]);
+  const load=async(force=false)=>{
+    if(providerHealth==='not_configured'){
+      setSdkReady(false);
+      setItems(fallbackOffers);
+      setLoading(false);
+      return;
+    }
+    setLoading(true);
+    try{const wall=await getBitcoTasksWall();setSdkReady(true);const types=category==='all'?categories.slice(1).map(x=>x[0] as Exclude<EarnCategory,'all'>):[category as Exclude<EarnCategory,'all'>];const rs=await Promise.allSettled(types.map(t=>wall.getOffers(t,{forceRefresh:force,page:1})));const next=rs.flatMap((r)=>r.status==='fulfilled'?r.value:[]);setItems(next.length?next:fallbackOffers);if(!next.length)onToast('No live provider inventory matched your current profile.','info')}catch{setSdkReady(false);setItems(fallbackOffers);if(!fallbackOffers.length)onToast('BitcoTasks inventory is unavailable right now.','error')}finally{setLoading(false)}
+  };
+  useEffect(()=>{void load(false)},[category,providerHealth]);
  const filtered=useMemo(()=>{let r=items.filter(i=>!query||`${i.title} ${i.description} ${i.category}`.toLowerCase().includes(query.toLowerCase()));r.sort((a,b)=>sort==='reward'?b.reward-a.reward:(a.durationSeconds??999999)-(b.durationSeconds??999999));return r},[items,query,sort]);
  const open=async(item:EarnItem)=>{if(!sdkReady){window.open(item.url,'_blank','noopener,noreferrer');return}setSelected(item)};
  const action=async(item:EarnItem,data?:{proof?:string;taskImage?:File;completeVideo?:boolean})=>{const wall=await getBitcoTasksWall();if(item.category==='offers'||item.category==='surveys')return wall.openOffer(item);if(item.category==='article')return wall.openArticle(item);if(item.category==='faucet')return wall.claimFaucet(item);if(item.category==='shortlinks')return wall.openShortlink(item);if(item.category==='ptc')return wall.startPTC(item);if(item.category==='video')return data?.completeVideo?wall.completeVideo(item):wall.startVideo(item);if(item.category==='tasks')return wall.submitTask(item,{proof:data?.proof??'',taskImage:data?.taskImage});};

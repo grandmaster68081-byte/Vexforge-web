@@ -1,9 +1,9 @@
 import type { Env } from '../../env';
-import { loadOffers } from '../../bitcotasks';
+import { bitcoTasksConfigured, loadOffers } from '../../bitcotasks';
 import type { EarnItem, ProviderContext, ProviderHealth, RewardsProviderAdapter } from '../types';
 
 export function createBitcoTasksAdapter(env: Env, request: Request): RewardsProviderAdapter {
-  const configured = Boolean(env.BITCOTASKS_API_KEY && env.BITCOTASKS_BEARER_TOKEN && env.BITCOTASKS_SECRET_KEY);
+  const configured = bitcoTasksConfigured(env);
   return {
     id: 'bitcotasks',
     async getHealth(): Promise<ProviderHealth> {
@@ -20,7 +20,7 @@ export function createBitcoTasksAdapter(env: Env, request: Request): RewardsProv
       return category ? all.filter((item: any) => item.category === category) : all;
     },
     async getClientConfig(ctx: ProviderContext) {
-      return { apiKey: env.BITCOTASKS_API_KEY, subId: ctx.subId };
+      return { apiKey: env.BITCOTASKS_API_KEY ?? '', subId: ctx.subId };
     },
     validateProviderUrl(url: string) {
       try { return new URL(url).hostname === 'bitcotasks.com' || new URL(url).hostname.endsWith('.bitcotasks.com'); } catch { return false; }

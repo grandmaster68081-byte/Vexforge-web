@@ -1,4 +1,5 @@
 import type { Env } from './_lib/env';
+import { bitcoTasksConfigured } from './_lib/bitcotasks';
 import { db } from './_lib/supabase';
 import { error, json } from './_lib/response';
 
@@ -39,7 +40,7 @@ export const onRequestGet = async ({ env }: { env: Env }) => {
       payoutNetwork,
       supportedPayouts: [{ asset: payoutAsset, network: payoutNetwork }],
       provider: 'bitcotasks',
-      providerConfigured: Boolean(env.BITCOTASKS_API_KEY && env.BITCOTASKS_BEARER_TOKEN && env.BITCOTASKS_SECRET_KEY),
+      providerConfigured: bitcoTasksConfigured(env),
     });
   } catch (cause) {
     console.error('Kivora settings request failed', cause);

@@ -1,4 +1,5 @@
 import MD5 from 'crypto-js/md5';
+import { bitcoTasksConfigured } from '../_lib/bitcotasks';
 import type { Env } from '../_lib/env';
 import { db } from '../_lib/supabase';
 import { error } from '../_lib/response';
@@ -7,6 +8,7 @@ export const onRequestPost = async ({ request, env }: { request: Request; env: E
 export const onRequestGet = async ({ request, env }: { request: Request; env: Env }) => handle(request, env);
 
 async function handle(request: Request, env: Env) {
+  if (!bitcoTasksConfigured(env)) return error('NOT_CONFIGURED', 503);
   const sourceIp = request.headers.get('CF-Connecting-IP') ?? request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ?? '';
   if (sourceIp !== (env.BITCOTASKS_POSTBACK_IP ?? '45.14.135.48')) return error('Unauthorized provider source.', 403);
   let payload: Record<string, unknown>;

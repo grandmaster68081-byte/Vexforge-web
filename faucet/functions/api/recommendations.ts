@@ -1,4 +1,5 @@
 import { allowRate, currentAccount, rateKey } from './_lib/auth';
+import { bitcoTasksConfigured } from './_lib/bitcotasks';
 import type { Env } from './_lib/env';
 import { createBitcoTasksAdapter } from './_lib/providers/bitcotasks';
 import { laneFor, rankOpportunities, rewardPerMinute } from '../../src/lib/recommendations';
@@ -7,6 +8,7 @@ import { error, json } from './_lib/response';
 export const onRequestGet = async ({ request, env }: { request: Request; env: Env }) => {
   const current = await currentAccount(request, env);
   if (!current) return error('Authentication required.', 401);
+  if (!bitcoTasksConfigured(env)) return json({ provider: 'bitcotasks', status: 'not_configured', recommendations: [] });
   if (!(await allowRate(env, `recommendations:${current.account.id}:${await rateKey(request)}`, 12, 300))) {
     return error('Recommendations are temporarily rate-limited.', 429);
   }
