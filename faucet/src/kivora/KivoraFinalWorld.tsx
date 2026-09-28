@@ -183,7 +183,7 @@ function DeckScene({ user, wallet, config, recommended, dailyTarget, completion,
         <div className="kv5-engine-ring ring-a" />
         <div className="kv5-engine-ring ring-b" />
         <div className="kv5-engine-ring ring-c" />
-        <img src="/kivora/ui/kivora-core.svg" alt="Kivora Engine" />
+        <img className="kv5-engine-object" src="/kivora/identity/engine-environment.webp" alt="Kivora Engine" />
         <div className="kv5-engine-readout">
           <span>KIVORA ENGINE</span>
           <strong>{points(wallet.availablePoints)}</strong>
@@ -272,7 +272,7 @@ function VaultScene({ wallet, config, withdrawals, onSettlement }: { wallet: Wal
   const usd = usdFromPoints(wallet.availablePoints, config.pointsPerUsdDisplay);
   return (
     <section className="kv5-scene kv5-vault">
-      <div className="kv5-vault-portal"><div className="kv5-vault-ring ring-a"/><div className="kv5-vault-ring ring-b"/><img src="/kivora/ui/kivora-core.svg" alt=""/><span>VAULT</span></div>
+      <div className="kv5-vault-portal"><div className="kv5-vault-ring ring-a"/><div className="kv5-vault-ring ring-b"/><img className="kv5-vault-object" src="/kivora/identity/vault-environment.webp" alt="Kivora Vault"/><span>VAULT</span></div>
       <div className="kv5-vault-readout">
         <span className="kv5-console-kicker">KIVORA VAULT</span>
         <h2>{points(wallet.availablePoints)} <small>KP</small></h2>
@@ -311,7 +311,7 @@ function ChronicleScene({ ledger }: { ledger: LedgerEntry[] }) {
 function SettlementScene({ wallet, config, destination, setDestination, onSubmit, busy, notice }: { wallet: Wallet; config: PlatformConfig; destination: string; setDestination: (v: string) => void; onSubmit: () => void; busy: boolean; notice: string }) {
   return (
     <section className="kv5-scene kv5-settlement">
-      <div className="kv5-terminal-core"><div className="kv5-terminal-ring"/><img src="/kivora/ui/settlement-beacon.svg" alt="Settlement Beacon"/><span>TRC20</span></div>
+      <div className="kv5-terminal-core"><div className="kv5-terminal-ring"/><img className="kv5-terminal-environment" src="/kivora/identity/settlement-environment.webp" alt="Settlement Terminal"/><img className="kv5-terminal-beacon" src="/kivora/ui/settlement-beacon.svg" alt="" /><span>TRC20</span></div>
       <div className="kv5-settlement-panel">
         <span className="kv5-console-kicker">SETTLEMENT TERMINAL</span>
         <h2>{points(config.withdrawalMinPoints)} KP <small>≈ ${usdFromPoints(config.withdrawalMinPoints, config.pointsPerUsdDisplay).toFixed(2)}</small></h2>
@@ -350,7 +350,7 @@ export function KivoraLanding({ onLogin, onRegister }: { onLogin: () => void; on
           </div>
           <div className="kv5-hero-scene">
             <div className="kv5-hero-ring ring-a"/><div className="kv5-hero-ring ring-b"/>
-            <div className="kv5-hero-engine"><img src="/kivora/ui/kivora-core.svg" alt="Kivora Engine"/></div>
+            <div className="kv5-hero-engine"><img src="/kivora/identity/engine-environment.webp" alt="Kivora Engine"/></div>
             <div className="kv5-hero-readout"><span>STATION STATUS</span><b>READY</b><small>5 spaces · 1 reward loop</small></div>
           </div>
         </section>
