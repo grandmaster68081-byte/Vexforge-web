@@ -74,10 +74,10 @@ export function App() {
     setUser(response.user); await refreshAll(); go('/');
   };
 
-  if (loading) return <div className="kv5-boot"><img src="/kivora/ui/kivora-sigil.svg" alt=""/><span>BOOTING STATION</span><b>KIVORA</b></div>;
+  if (loading) return <div className="kg-boot"><img src="/kivora/ui/kivora-sigil.svg" alt=""/><span>BOOTING STATION</span><b>KIVORA</b></div>;
   if (!user) {
     if (currentPath === '/terms' || currentPath === '/privacy') return <LegalPage kind={currentPath === '/terms' ? 'terms' : 'privacy'} onBack={() => go('/')} />;
-    if (currentPath === '/login' || currentPath === '/register') return <div className="kv5-auth"><AuthPage mode={authMode} onSubmit={authSubmit} onSwitch={mode => { setAuthMode(mode); go(mode === 'signup' ? '/register' : '/login'); }} /></div>;
+    if (currentPath === '/login' || currentPath === '/register') return <div className="kg-auth"><AuthPage mode={authMode} onSubmit={authSubmit} onSwitch={mode => { setAuthMode(mode); go(mode === 'signup' ? '/register' : '/login'); }} /></div>;
     return <KivoraLanding onLogin={() => { setAuthMode('login'); go('/login'); }} onRegister={() => { setAuthMode('signup'); go('/register'); }} />;
   }
 
@@ -85,10 +85,10 @@ export function App() {
     return <AdminPage summary={adminSummary} withdrawals={adminWithdrawals} onAction={async (id, action, note) => { await api.adminSetWithdrawal(id, { action, note, txHash: action === 'paid' ? window.prompt('Transaction hash') || undefined : undefined }); toastIt(`Withdrawal ${action}`); await refreshAll(); }} />;
   }
 
-  if (!wallet) return <div className="kv5-boot"><img src="/kivora/ui/kivora-sigil.svg" alt=""/><span>RESTORING VAULT</span></div>;
+  if (!wallet) return <div className="kg-boot"><img src="/kivora/ui/kivora-sigil.svg" alt=""/><span>RESTORING VAULT</span></div>;
 
   return <>
     <KivoraFinalWorld user={user} wallet={wallet} config={config} offers={offers} ledger={ledger} withdrawals={withdrawals} providerConfigured={providerConfigured} onRefresh={() => void refreshAll()} onLogout={logout} />
-    {toast && <div className="kv5-toast"><Sparkles size={15} />{toast}</div>}
+    {toast && <div className="kg-toast"><Sparkles size={15} />{toast}</div>}
   </>;
 }

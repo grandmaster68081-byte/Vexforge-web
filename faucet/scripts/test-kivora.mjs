@@ -5,6 +5,8 @@ const world = fs.readFileSync(path.join(root,'src/kivora/KivoraFinalWorld.tsx'),
 for (const token of ['Command Deck','Opportunity Field','Kivora Vault','Chronicle','Settlement Terminal','USDT','TRC20','DAILY RUN','KIVORA ENGINE']) {
   if (!world.includes(token)) throw new Error(`Missing product contract: ${token}`);
 }
+if (!world.includes('<div className="kg-world">')) throw new Error('Golden world shell missing');
+if (/\bkv5?[-_]/.test(fs.readFileSync(path.join(root,'src/App.tsx'),'utf8'))) throw new Error('Legacy visual shell selector remains in App.tsx');
 const config = fs.readFileSync(path.join(root,'functions/api/config.ts'),'utf8');
 if (!config.includes('withdrawalMinPoints: Number(map.withdrawal_min_points ?? 10000)')) throw new Error('10,000 KP minimum contract missing');
 const withdraw = fs.readFileSync(path.join(root,'functions/api/withdraw.ts'),'utf8');
