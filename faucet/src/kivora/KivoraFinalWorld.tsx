@@ -68,7 +68,6 @@ export function KivoraFinalWorld({ user, wallet, config, offers, ledger, withdra
   }, [offers, query]);
 
   const recommended = sortedOffers[0];
-  const dailyTarget = sortedOffers.slice(0, 3).reduce((sum, item) => sum + item.reward, 0);
   const todayKey = new Date().toLocaleDateString('en-CA');
   const todayPositiveRewards = ledger.filter(item => item.pointsDelta > 0 && new Date(item.createdAt).toLocaleDateString('en-CA') === todayKey);
   const completion = sortedOffers.length ? clampPercent((Math.min(3, todayPositiveRewards.length) / 3) * 100) : 0;
@@ -327,7 +326,16 @@ export function KivoraLanding({ onLogin, onRegister }: { onLogin: () => void; on
   const spaces = (Object.keys(sceneDefs) as Scene[]);
   return (
     <div className="kv5-landing">
-      <div className="kv5-landing-bg" aria-hidden="true" />
+      <div
+        className="kv5-landing-bg"
+        style={{
+          backgroundImage: 'url(/kivora/identity/hero-environment.webp)',
+          backgroundPosition: 'center',
+          backgroundSize: 'cover',
+          backgroundRepeat: 'no-repeat'
+        }}
+        aria-hidden="true"
+      />
       <header className="kv5-landing-nav">
         <div className="kv5-brand"><img src="/kivora/ui/kivora-sigil.svg" alt=""/><span><b>KIVORA</b><small>PLAY · EARN · GROW</small></span></div>
         <nav><button onClick={() => setSpace('deck')}>Station</button><button onClick={() => setSpace('field')}>Opportunities</button><button onClick={() => setSpace('vault')}>Vault</button><button onClick={() => setSpace('chronicle')}>Chronicle</button></nav>
