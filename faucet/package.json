@@ -1,7 +1,7 @@
 {
   "name": "kivora-rewards",
   "private": true,
-  "version": "5.2.1",
+  "version": "6.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite --host 0.0.0.0",
@@ -11,7 +11,8 @@
     "check": "npm run typecheck && npm run build",
     "test": "node scripts/test-kivora.mjs",
     "verify": "node scripts/verify-production.mjs",
-    "verify:identity": "node scripts/verify-identity-assets.mjs"
+    "verify:identity": "node scripts/verify-identity-assets.mjs",
+    "verify:golden": "npm run verify && npm run verify:identity && npm test && npm run typecheck && npm run build"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.57.0",
