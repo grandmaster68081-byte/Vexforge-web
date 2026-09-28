@@ -27,7 +27,7 @@ type Props = {
 type SceneDef = { label: string; caption: string; icon: LucideIcon; accent: string; environment: string };
 
 const sceneDefs: Record<Scene, SceneDef> = {
-  deck: { label: 'Command Deck', caption: 'La estación está despierta.', icon: Compass, accent: '#6cf4ff', environment: '/kivora/identity/hero-environment.webp' },
+  deck: { label: 'Command Deck', caption: 'La estación está despierta.', icon: Compass, accent: '#6cf4ff', environment: '/kivora/identity/engine-environment.webp' },
   field: { label: 'Opportunity Field', caption: 'Las señales están esperando.', icon: Crosshair, accent: '#a97cff', environment: '/kivora/identity/field-environment.webp' },
   vault: { label: 'Kivora Vault', caption: 'Tu valor, seguro y disponible.', icon: LockKeyhole, accent: '#ffbf62', environment: '/kivora/identity/vault-environment.webp' },
   chronicle: { label: 'Chronicle', caption: 'La memoria de tu trayectoria.', icon: History, accent: '#74ffca', environment: '/kivora/identity/chronicle-environment.webp' },
@@ -154,7 +154,7 @@ export function KivoraFinalWorld({ user, wallet, config, offers, ledger, withdra
             </div>
           </div>
 
-          {scene === 'deck' && <DeckScene user={user} wallet={wallet} config={config} recommended={recommended} dailyTarget={dailyTarget} completion={completion} onField={() => setScene('field')} onVault={() => setScene('vault')} />}
+          {scene === 'deck' && <DeckScene wallet={wallet} config={config} recommended={recommended} completion={completion} onField={() => setScene('field')} onVault={() => setScene('vault')} />}
           {scene === 'field' && <FieldScene offers={sortedOffers} selected={selected} query={query} setQuery={setQuery} setSelected={setSelected} onDeck={() => setScene('deck')} />}
           {scene === 'vault' && <VaultScene wallet={wallet} config={config} withdrawals={withdrawals} onSettlement={() => setScene('settlement')} />}
           {scene === 'chronicle' && <ChronicleScene ledger={ledger} />}
@@ -174,7 +174,7 @@ export function KivoraFinalWorld({ user, wallet, config, offers, ledger, withdra
   );
 }
 
-function DeckScene({ user, wallet, config, recommended, dailyTarget, completion, onField, onVault }: { user: User; wallet: Wallet; config: PlatformConfig; recommended?: EarnItem; dailyTarget: number; completion: number; onField: () => void; onVault: () => void }) {
+function DeckScene({ wallet, config, recommended, completion, onField, onVault }: { wallet: Wallet; config: PlatformConfig; recommended?: EarnItem; completion: number; onField: () => void; onVault: () => void }) {
   const usd = usdFromPoints(wallet.availablePoints, config.pointsPerUsdDisplay);
   return (
     <section className="kv5-scene kv5-deck">
@@ -183,7 +183,7 @@ function DeckScene({ user, wallet, config, recommended, dailyTarget, completion,
         <div className="kv5-engine-ring ring-a" />
         <div className="kv5-engine-ring ring-b" />
         <div className="kv5-engine-ring ring-c" />
-        <img className="kv5-engine-object" src="/kivora/identity/engine-environment.webp" alt="Kivora Engine" />
+        <img className="kv5-engine-core" src="/kivora/ui/kivora-core.svg" alt="" />
         <div className="kv5-engine-readout">
           <span>KIVORA ENGINE</span>
           <strong>{points(wallet.availablePoints)}</strong>
@@ -192,11 +192,6 @@ function DeckScene({ user, wallet, config, recommended, dailyTarget, completion,
       </div>
 
       <aside className="kv5-deck-console">
-        <div className="kv5-console-block">
-          <span className="kv5-console-kicker">OPERATOR</span>
-          <strong>{user.username}</strong>
-          <small>{user.role === 'admin' ? 'Operator access' : 'Explorer profile'}</small>
-        </div>
         <div className="kv5-console-block run-block">
           <div className="kv5-console-head"><span>DAILY RUN</span><b>{Math.min(3, Math.round(completion / 34))}/3</b></div>
           <div className="kv5-progress"><span style={{ width: `${completion}%` }}/></div>
@@ -212,12 +207,12 @@ function DeckScene({ user, wallet, config, recommended, dailyTarget, completion,
             </>
           ) : <small>El proveedor aún no está configurado. La estación está preparada.</small>}
         </div>
-        <div className="kv5-console-grid">
-          <div><span>PENDING</span><b>{points(wallet.pendingPoints)}</b></div>
-          <div><span>WITHDRAWN</span><b>{points(wallet.lifetimeWithdrawnPoints)}</b></div>
-          <div><span>DAILY POTENTIAL</span><b>{points(dailyTarget)}</b></div>
+        <div className="kv5-console-block vault-block">
+          <div className="kv5-console-head"><span>VAULT</span><WalletCards size={14}/></div>
+          <strong>{points(config.withdrawalMinPoints)} KP minimum</strong>
+          <small>USDT · TRC20 · settlement manual.</small>
+          <button className="kv5-command" onClick={onVault}>OPEN VAULT <ArrowUpRight size={14}/></button>
         </div>
-        <button className="kv5-secondary-command" onClick={onVault}><WalletCards size={15}/> OPEN VAULT <ArrowUpRight size={14}/></button>
       </aside>
 
       <div className="kv5-deck-footer">
@@ -272,7 +267,7 @@ function VaultScene({ wallet, config, withdrawals, onSettlement }: { wallet: Wal
   const usd = usdFromPoints(wallet.availablePoints, config.pointsPerUsdDisplay);
   return (
     <section className="kv5-scene kv5-vault">
-      <div className="kv5-vault-portal"><div className="kv5-vault-ring ring-a"/><div className="kv5-vault-ring ring-b"/><img className="kv5-vault-object" src="/kivora/identity/vault-environment.webp" alt="Kivora Vault"/><span>VAULT</span></div>
+      <div className="kv5-vault-portal"><div className="kv5-vault-ring ring-a"/><div className="kv5-vault-ring ring-b"/><div className="kv5-vault-marker" aria-hidden="true"/><span>VAULT</span></div>
       <div className="kv5-vault-readout">
         <span className="kv5-console-kicker">KIVORA VAULT</span>
         <h2>{points(wallet.availablePoints)} <small>KP</small></h2>
@@ -311,7 +306,7 @@ function ChronicleScene({ ledger }: { ledger: LedgerEntry[] }) {
 function SettlementScene({ wallet, config, destination, setDestination, onSubmit, busy, notice }: { wallet: Wallet; config: PlatformConfig; destination: string; setDestination: (v: string) => void; onSubmit: () => void; busy: boolean; notice: string }) {
   return (
     <section className="kv5-scene kv5-settlement">
-      <div className="kv5-terminal-core"><div className="kv5-terminal-ring"/><img className="kv5-terminal-environment" src="/kivora/identity/settlement-environment.webp" alt="Settlement Terminal"/><img className="kv5-terminal-beacon" src="/kivora/ui/settlement-beacon.svg" alt="" /><span>TRC20</span></div>
+      <div className="kv5-terminal-core"><div className="kv5-terminal-ring"/><img className="kv5-terminal-beacon" src="/kivora/ui/settlement-beacon.svg" alt="Settlement Beacon" /><span>TRC20</span></div>
       <div className="kv5-settlement-panel">
         <span className="kv5-console-kicker">SETTLEMENT TERMINAL</span>
         <h2>{points(config.withdrawalMinPoints)} KP <small>≈ ${usdFromPoints(config.withdrawalMinPoints, config.pointsPerUsdDisplay).toFixed(2)}</small></h2>
@@ -350,7 +345,10 @@ export function KivoraLanding({ onLogin, onRegister }: { onLogin: () => void; on
           </div>
           <div className="kv5-hero-scene">
             <div className="kv5-hero-ring ring-a"/><div className="kv5-hero-ring ring-b"/>
-            <div className="kv5-hero-engine"><img src="/kivora/identity/engine-environment.webp" alt="Kivora Engine"/></div>
+            <div className="kv5-hero-engine">
+              <div className="kv5-hero-environment" style={{ backgroundImage: 'url(/kivora/identity/engine-environment.webp)' }} aria-hidden="true" />
+              <img className="kv5-hero-core" src="/kivora/ui/kivora-core.svg" alt="" />
+            </div>
             <div className="kv5-hero-readout"><span>STATION STATUS</span><b>READY</b><small>5 spaces · 1 reward loop</small></div>
           </div>
         </section>
