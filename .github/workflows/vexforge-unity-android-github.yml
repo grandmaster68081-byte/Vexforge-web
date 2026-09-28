@@ -227,7 +227,7 @@ jobs:
           echo "Using Unity editor $version"
 
       - name: Restore inventory evidence for shard 0
-        if: ${{ inputs.mode == 'shard' && inputs.shard_index == '0' }}
+        if: ${{ (inputs.mode == 'shard' && inputs.shard_index == '0') || (inputs.mode == 'final' && inputs.inventory_artifact_id != '') }}
         uses: actions/download-artifact@v4
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -250,6 +250,27 @@ jobs:
           cp "$inventory" unity/Builds/ShaderShardWarmup/checkpoints/variants/inventory.tsv
           test -s unity/Builds/ShaderShardWarmup/checkpoints/variants/inventory.tsv
           echo "Inventory evidence restored for shard 0."
+
+      - name: Validate inventory source project
+        if: ${{ (inputs.mode == 'shard' && inputs.shard_index == '0') || (inputs.mode == 'final' && inputs.inventory_artifact_id != '') }}
+        shell: bash
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          inventory_sha="$(curl -fsSL \
+            -H "Authorization: Bearer $GITHUB_TOKEN" \
+            -H 'Accept: application/vnd.github+json' \
+            "https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/runs/${INVENTORY_RUN_ID}" | jq -r '.head_sha')"
+          test -n "$inventory_sha" && test "$inventory_sha" != null
+          current_unity_tree="$(git rev-parse 'HEAD:unity')"
+          inventory_unity_tree="$(git rev-parse "$inventory_sha:unity")"
+          test "$current_unity_tree" = "$inventory_unity_tree" || {
+            echo "Inventory was created from a different Unity project tree; refusing to mix shader manifests." >&2
+            exit 1
+          }
+          echo "inventory_source_commit=$inventory_sha" >> "$GITHUB_ENV"
+          echo "Inventory source commit has the same unity/ tree."
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
@@ -440,6 +461,18 @@ jobs:
             cp -R "$checkpoint_payload_dir/variants/." unity/Builds/ShaderShardWarmup/checkpoints/variants/
           fi
 
+          if [ "$VEXFORGE_MODE" = final ] && [ -n "$INVENTORY_ARTIFACT_ID" ]; then
+            inventory="$(find "$GITHUB_WORKSPACE/build-artifacts/inventory-download" \
+              -type f -path '*/variants/inventory.tsv' -print -quit)"
+            test -n "$inventory" || {
+              echo "Final inventory artifact does not contain variants/inventory.tsv." >&2
+              exit 1
+            }
+            mkdir -p unity/Builds/ShaderShardWarmup/checkpoints/variants
+            cp "$inventory" unity/Builds/ShaderShardWarmup/checkpoints/variants/inventory.tsv
+            echo "Current inventory evidence restored after checkpoint materialization."
+          fi
+
       - name: Merge independent shader checkpoints for final
         if: ${{ inputs.mode == 'final' && inputs.independent_checkpoint_sources != '' }}
         shell: bash
@@ -580,6 +613,105 @@ jobs:
           test "$merged" -gt 0
 
           echo "Merged $merged independent ShaderCache checkpoint(s); PlayerDataCache remains from the validated base checkpoint."
+
+      - name: Repair missing shard-0 manifest from current inventory
+        if: ${{ inputs.mode == 'final' && inputs.inventory_artifact_id != '' && inputs.inventory_run_id != '' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          variants_dir="unity/Builds/ShaderShardWarmup/checkpoints/variants"
+          shard_zero="$variants_dir/shard-000-of-$(printf '%03d' "$SHARD_COUNT").tsv"
+
+          if [ -s "$shard_zero" ]; then
+            echo "Shard-0 manifest already exists; no repair required."
+            exit 0
+          fi
+
+          for ((index = 1; index < SHARD_COUNT; index++)); do
+            manifest="$variants_dir/shard-$(printf '%03d' "$index")-of-$(printf '%03d' "$SHARD_COUNT").tsv"
+            test -s "$manifest" || {
+              echo "Cannot repair shard 0 because $manifest is missing." >&2
+              exit 1
+            }
+          done
+
+          inventory="$variants_dir/inventory.tsv"
+          test -s "$inventory"
+          mkdir -p "$variants_dir"
+
+          python3 - "$inventory" "$shard_zero" "$SHARD_COUNT" <<'PY'
+          import csv
+          import sys
+
+          inventory_path, output_path, shard_count_text = sys.argv[1:]
+          shard_count = int(shard_count_text)
+          range_start = 0
+          range_end = 10000 // shard_count
+          seen = set()
+          rows = []
+
+          with open(inventory_path, newline="", encoding="utf-8") as source:
+              reader = csv.reader(source, delimiter="\t")
+              header = next(reader)
+              if header[:1] != ["fingerprint"] or len(header) < 4:
+                  raise SystemExit("Invalid inventory header.")
+              for line_number, row in enumerate(reader, start=2):
+                  if len(row) < 4 or len(row[0]) != 64:
+                      raise SystemExit(f"Invalid inventory row at line {line_number}.")
+                  fingerprint = row[0].lower()
+                  if any(character not in "0123456789abcdef" for character in fingerprint):
+                      raise SystemExit(f"Invalid fingerprint at line {line_number}.")
+                  if fingerprint in seen:
+                      raise SystemExit(f"Duplicate inventory fingerprint: {fingerprint}")
+                  seen.add(fingerprint)
+                  digest_prefix = int(fingerprint[:8], 16)
+                  hash_bucket = digest_prefix % 10000
+                  if range_start <= hash_bucket < range_end:
+                      rows.append(
+                          (
+                              fingerprint,
+                              str(hash_bucket),
+                              row[2],
+                              row[3],
+                          )
+                      )
+
+          rows.sort()
+          with open(output_path, "w", newline="", encoding="utf-8") as destination:
+              destination.write(
+                  "fingerprint\tassigned_partition\tunity_version\tbuild_target\n"
+              )
+              for row in rows:
+                  destination.write("\t".join(row) + "\n")
+
+          if not rows:
+              raise SystemExit("Derived shard 0 manifest is empty.")
+          print(
+              f"Repaired shard 0 manifest with {len(rows)} fingerprints "
+              f"from {len(seen)} inventory entries."
+          )
+          PY
+
+          test -s "$shard_zero"
+          echo "Shard-0 manifest was deterministically reconstructed from current inventory."
+
+      - name: Validate checkpoint manifests before Unity
+        if: ${{ inputs.mode == 'final' || (inputs.mode == 'shard' && inputs.shard_index != '0') }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          variants_dir="unity/Builds/ShaderShardWarmup/checkpoints/variants"
+          if [ "$VEXFORGE_MODE" = final ]; then
+            last_required_index=$(( SHARD_COUNT - 1 ))
+          else
+            last_required_index=$(( SHARD_INDEX - 1 ))
+          fi
+          bash scripts/validate-vexforge-shard-manifests.sh \
+            "$variants_dir" \
+            "$SHARD_COUNT" \
+            "$last_required_index" \
+            build-artifacts/pre-unity-manifest-validation
+          echo "Checkpoint manifests are valid before Unity starts."
 
       - name: Run canonical Unity operation
         shell: bash
@@ -752,62 +884,11 @@ jobs:
         run: |
           set -euo pipefail
           variants_dir="unity/Builds/ShaderShardWarmup/checkpoints/variants"
-          inventory="$variants_dir/inventory.tsv"
-
-          test -s "$inventory" || {
-            echo "Complete coverage requires inventory.tsv." >&2
-            exit 1
-          }
-
-          shopt -s nullglob
-          shard_files=("$variants_dir"/shard-*.tsv)
-
-          test "${#shard_files[@]}" -eq "$SHARD_COUNT" || {
-            echo "Expected $SHARD_COUNT shard manifests, found ${#shard_files[@]}." >&2
-            exit 1
-          }
-
-          awk 'FNR > 1 {print $1}' "$inventory" | sort -u \
-            > build-artifacts/inventory-fingerprints.txt
-
-          awk 'FNR > 1 {print $1}' "${shard_files[@]}" | sort \
-            > build-artifacts/all-shard-fingerprints.txt
-
-          duplicate="$(uniq -d build-artifacts/all-shard-fingerprints.txt | head -n 1 || true)"
-
-          test -z "$duplicate" || {
-            echo "Duplicate shader fingerprint across shard manifests: $duplicate" >&2
-            exit 1
-          }
-
-          comm -23 \
-            build-artifacts/inventory-fingerprints.txt \
-            build-artifacts/all-shard-fingerprints.txt \
-            > build-artifacts/shard-gaps.txt
-
-          comm -13 \
-            build-artifacts/inventory-fingerprints.txt \
-            build-artifacts/all-shard-fingerprints.txt \
-            > build-artifacts/shard-extras.txt
-
-          test ! -s build-artifacts/shard-gaps.txt || {
-            echo "Shard coverage has gaps." >&2
-            head -n 5 build-artifacts/shard-gaps.txt
-            exit 1
-          }
-
-          test ! -s build-artifacts/shard-extras.txt || {
-            echo "Shard coverage contains fingerprints outside inventory." >&2
-            head -n 5 build-artifacts/shard-extras.txt
-            exit 1
-          }
-
-          inventory_count="$(wc -l < build-artifacts/inventory-fingerprints.txt | tr -d ' ')"
-          shard_count="$(wc -l < build-artifacts/all-shard-fingerprints.txt | tr -d ' ')"
-
-          test "$inventory_count" -eq "$shard_count"
-
-          echo "Complete shard coverage PASS inventory=$inventory_count shards=$shard_count count=$SHARD_COUNT."
+          bash scripts/validate-vexforge-shard-manifests.sh \
+            "$variants_dir" \
+            "$SHARD_COUNT" \
+            "$(( SHARD_COUNT - 1 ))" \
+            build-artifacts/post-unity-manifest-validation
 
       - name: Create shader checkpoint
         if: ${{ inputs.mode == 'shard' }}
@@ -841,6 +922,13 @@ jobs:
             echo "Checkpoint missing DataBuildDirtyInfo.json." >&2
             exit 1
           }
+
+          variants_dir="unity/Builds/ShaderShardWarmup/checkpoints/variants"
+          bash scripts/validate-vexforge-shard-manifests.sh \
+            "$variants_dir" \
+            "$SHARD_COUNT" \
+            "$SHARD_INDEX" \
+            build-artifacts/checkpoint-manifest-validation
 
           cache_paths=()
 
