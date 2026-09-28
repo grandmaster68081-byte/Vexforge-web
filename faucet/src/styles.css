@@ -156,3 +156,27 @@ button,input{font:inherit}
 .kv5-scene,.kv5-landing-hero{box-shadow:0 34px 120px rgba(0,0,0,.38)}
 .kv5-environment:after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.08),rgba(0,0,0,.18) 48%,rgba(0,0,0,.52));pointer-events:none}
 .kv5-hero-engine img{object-fit:cover;border:1px solid rgba(103,244,255,.18);border-radius:24px;mix-blend-mode:screen;opacity:.92}
+
+/* Deck fidelity: keep the authenticated station in the same contained composition as the supplied preview. */
+.kv5-deck{display:block;padding:0;background:rgba(3,10,15,.25)}
+.kv5-deck-lens{display:none}
+.kv5-deck .kv5-engine-pedestal{position:absolute;inset:0 330px 0 0;min-height:0}
+.kv5-deck .kv5-engine-pedestal img{width:min(290px,60%);max-height:380px;object-fit:contain;border:0;border-radius:0;mix-blend-mode:normal;opacity:1}
+.kv5-deck .kv5-engine-readout{top:77%}
+.kv5-deck .kv5-deck-console{position:absolute;right:18px;top:18px;bottom:18px;width:min(340px,31%);padding:0;justify-content:center}
+.kv5-deck .operator-block{display:none}
+.kv5-deck .kv5-console-block{background:rgba(3,9,14,.72);backdrop-filter:blur(18px)}
+
+@media (max-width:900px){
+  .kv5-deck .kv5-engine-pedestal{inset:0 42% 0 0}
+  .kv5-deck .kv5-engine-pedestal img{width:62%;max-height:340px}
+  .kv5-deck .kv5-deck-console{right:10px;top:18px;bottom:18px;width:42%;padding:0}
+}
+
+@media (max-width:650px){
+  .kv5-deck .kv5-engine-pedestal{inset:0 0 42% 0}
+  .kv5-deck .kv5-engine-pedestal img{width:60vw;max-height:245px}
+  .kv5-deck .kv5-engine-readout{top:74%}
+  .kv5-deck .kv5-deck-console{left:10px;right:10px;top:auto;bottom:10px;width:auto;height:42%;justify-content:flex-end;overflow:auto}
+  .kv5-deck .kv5-deck-footer{display:none}
+}

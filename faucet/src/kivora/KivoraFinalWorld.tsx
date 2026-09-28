@@ -27,7 +27,7 @@ type Props = {
 type SceneDef = { label: string; caption: string; icon: LucideIcon; accent: string; environment: string };
 
 const sceneDefs: Record<Scene, SceneDef> = {
-  deck: { label: 'Command Deck', caption: 'La estación está despierta.', icon: Compass, accent: '#6cf4ff', environment: '/kivora/identity/hero-environment.webp' },
+  deck: { label: 'Command Deck', caption: 'La estación está despierta.', icon: Compass, accent: '#6cf4ff', environment: '/kivora/identity/engine-environment.webp' },
   field: { label: 'Opportunity Field', caption: 'Las señales están esperando.', icon: Crosshair, accent: '#a97cff', environment: '/kivora/identity/field-environment.webp' },
   vault: { label: 'Kivora Vault', caption: 'Tu valor, seguro y disponible.', icon: LockKeyhole, accent: '#ffbf62', environment: '/kivora/identity/vault-environment.webp' },
   chronicle: { label: 'Chronicle', caption: 'La memoria de tu trayectoria.', icon: History, accent: '#74ffca', environment: '/kivora/identity/chronicle-environment.webp' },
@@ -192,7 +192,7 @@ function DeckScene({ user, wallet, config, recommended, dailyTarget, completion,
       </div>
 
       <aside className="kv5-deck-console">
-        <div className="kv5-console-block">
+        <div className="kv5-console-block operator-block">
           <span className="kv5-console-kicker">OPERATOR</span>
           <strong>{user.username}</strong>
           <small>{user.role === 'admin' ? 'Operator access' : 'Explorer profile'}</small>
@@ -330,9 +330,10 @@ function SettlementScene({ wallet, config, destination, setDestination, onSubmit
 export function KivoraLanding({ onLogin, onRegister }: { onLogin: () => void; onRegister: () => void }) {
   const [space, setSpace] = useState<Scene>('deck');
   const spaces = (Object.keys(sceneDefs) as Scene[]);
+  const landingEnvironment = '/kivora/identity/hero-environment.webp';
   return (
     <div className="kv5-landing">
-      <div className="kv5-landing-bg" aria-hidden="true" />
+      <div className="kv5-landing-bg" style={{ backgroundImage: `url(${landingEnvironment})` }} aria-hidden="true" />
       <header className="kv5-landing-nav">
         <div className="kv5-brand"><img src="/kivora/ui/kivora-sigil.svg" alt=""/><span><b>KIVORA</b><small>PLAY · EARN · GROW</small></span></div>
         <nav><button onClick={() => setSpace('deck')}>Station</button><button onClick={() => setSpace('field')}>Opportunities</button><button onClick={() => setSpace('vault')}>Vault</button><button onClick={() => setSpace('chronicle')}>Chronicle</button></nav>
