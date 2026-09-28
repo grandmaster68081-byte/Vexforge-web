@@ -10,3 +10,4 @@
 - [GitHub Actions checkpoint storage](github-actions-checkpoint-storage.md) — retain only the live shader-chain head; exclude downloaded/uploaded payloads from evidence and retire consumed predecessors.
 - [Kivora migration sequencing](kivora-migration-sequencing.md) — every Supabase migration filename needs a unique, dependency-ordered timestamp.
 - [Kivora package constraints](kivora-package-constraints.md) — the supplied package needs an available Workers Types v5 line and lockfile-free npm install in CI.
+- [KIVORA visual overrides](kivora-visual-overrides.md) — keep scene-identity corrections in a dedicated override layer instead of editing the compressed legacy stylesheet.
