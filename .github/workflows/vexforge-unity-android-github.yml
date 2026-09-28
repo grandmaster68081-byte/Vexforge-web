@@ -936,7 +936,7 @@ jobs:
           if-no-files-found: warn
           retention-days: 7
 
-      -       - name: Upload APK for direct download
+      - name: Upload APK for direct download
         if: ${{ success() && (inputs.mode == 'shard' || inputs.mode == 'normal' || inputs.mode == 'final') }}
         uses: actions/upload-artifact@v4
         with:
