@@ -7,7 +7,6 @@ import { AdminPage } from './pages/AdminPage';
 import { LegalPage } from './pages/LegalPage';
 import { KivoraFinalWorld, KivoraLanding } from './kivora/KivoraFinalWorld';
 import './styles.css';
-import './kivora/visual-overrides.css';
 
 function path() { return window.location.pathname || '/'; }
 function go(next: string) { window.history.pushState({}, '', next); window.dispatchEvent(new PopStateEvent('popstate')); }
