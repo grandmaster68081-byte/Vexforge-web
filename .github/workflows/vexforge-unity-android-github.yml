@@ -65,6 +65,11 @@ on:
         required: false
         default: false
         type: boolean
+      independent_checkpoint_sources:
+        description: "Comma-separated run_id:artifact_id pairs whose independent shader checkpoints are merged before final"
+        required: false
+        default: ""
+        type: string
 
 permissions:
   actions: write
@@ -95,6 +100,7 @@ jobs:
       INVENTORY_RUN_ID: ${{ inputs.inventory_run_id }}
       INVENTORY_ARTIFACT_ID: ${{ inputs.inventory_artifact_id }}
       ALLOW_LEGACY_SHADER_CHECKPOINT: ${{ inputs.allow_legacy_shader_checkpoint }}
+      INDEPENDENT_CHECKPOINT_SOURCES: ${{ inputs.independent_checkpoint_sources }}
 
     steps:
       - name: Validate operation inputs
@@ -433,7 +439,147 @@ jobs:
             mkdir -p unity/Builds/ShaderShardWarmup/checkpoints/variants
             cp -R "$checkpoint_payload_dir/variants/." unity/Builds/ShaderShardWarmup/checkpoints/variants/
           fi
-          echo "Restored and verified ShaderCache plus PlayerDataCache; no other Library data was merged."
+
+      - name: Merge independent shader checkpoints for final
+        if: ${{ inputs.mode == 'final' && inputs.independent_checkpoint_sources != '' }}
+        shell: bash
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+
+          current_unity_tree="$(git rev-parse 'HEAD:unity')"
+          merge_root="$GITHUB_WORKSPACE/build-artifacts/independent-checkpoints"
+          mkdir -p "$merge_root"
+
+          IFS=',' read -r -a sources <<< "$INDEPENDENT_CHECKPOINT_SOURCES"
+          test "${#sources[@]}" -gt 0
+
+          merged=0
+          index=0
+
+          for source in "${sources[@]}"; do
+            source="${source//[[:space:]]/}"
+
+            [[ "$source" =~ ^[0-9]+:[0-9]+$ ]] || {
+              echo "Invalid independent checkpoint source '$source'; expected run_id:artifact_id." >&2
+              exit 1
+            }
+
+            run_id="${source%%:*}"
+            artifact_id="${source##*:}"
+            source_dir="$merge_root/$index"
+            mkdir -p "$source_dir"
+
+            artifact_meta="$source_dir/artifact.json"
+
+            artifact_status="$(curl -sS \
+              -o "$artifact_meta" \
+              -w '%{http_code}' \
+              -H "Authorization: Bearer $GITHUB_TOKEN" \
+              -H 'Accept: application/vnd.github+json' \
+              "https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/artifacts/${artifact_id}")"
+
+            test "$artifact_status" = 200 || {
+              echo "Could not inspect checkpoint artifact $artifact_id (HTTP $artifact_status)." >&2
+              exit 1
+            }
+
+            artifact_run_id="$(jq -r '.workflow_run.id // empty' "$artifact_meta")"
+
+            test "$artifact_run_id" = "$run_id" || {
+              echo "Artifact $artifact_id belongs to run $artifact_run_id, not requested run $run_id." >&2
+              exit 1
+            }
+
+            artifact_name="$(jq -r '.name // empty' "$artifact_meta")"
+
+            case "$artifact_name" in
+              vexforge-shader-checkpoint-*) ;;
+              *)
+                echo "Refusing non-checkpoint artifact '$artifact_name'." >&2
+                exit 1
+                ;;
+            esac
+
+            zip_path="$source_dir/artifact.zip"
+
+            download_status="$(curl -sS -L \
+              -o "$zip_path" \
+              -w '%{http_code}' \
+              -H "Authorization: Bearer $GITHUB_TOKEN" \
+              -H 'Accept: application/vnd.github+json' \
+              "https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/artifacts/${artifact_id}/zip")"
+
+            test "$download_status" = 200 || {
+              echo "Could not download checkpoint artifact $artifact_id (HTTP $download_status)." >&2
+              exit 1
+            }
+
+            unzip -q "$zip_path" -d "$source_dir/extracted"
+
+            archive="$(find "$source_dir/extracted" \
+              -type f \
+              -name 'unity-build-cache.tar' \
+              -print -quit)"
+
+            test -n "$archive" || {
+              echo "Checkpoint artifact $artifact_id has no unity-build-cache.tar." >&2
+              exit 1
+            }
+
+            payload_dir="$(dirname "$archive")"
+            cache_root="$source_dir/cache"
+
+            mkdir -p "$cache_root"
+            tar -xf "$archive" -C "$cache_root"
+
+            metadata="$payload_dir/checkpoint-metadata.txt"
+            manifest="$payload_dir/cache-manifest.sha256"
+
+            test -s "$metadata"
+            test -s "$manifest"
+
+            checkpoint_unity_tree="$(sed -n 's/^unity_tree_sha=//p' "$metadata")"
+
+            test "$checkpoint_unity_tree" = "$current_unity_tree" || {
+              echo "Checkpoint artifact $artifact_id was created from a different unity/ tree." >&2
+              exit 1
+            }
+
+            (
+              cd "$cache_root"
+              sha256sum -c "$manifest"
+            )
+
+            test -d "$cache_root/unity/Library/ShaderCache" || {
+              echo "Checkpoint artifact $artifact_id has no ShaderCache." >&2
+              exit 1
+            }
+
+            mkdir -p unity/Library/ShaderCache
+
+            cp -R -n \
+              "$cache_root/unity/Library/ShaderCache/." \
+              unity/Library/ShaderCache/
+
+            if [ -d "$payload_dir/variants" ]; then
+              mkdir -p unity/Builds/ShaderShardWarmup/checkpoints/variants
+
+              cp -R -n \
+                "$payload_dir/variants/." \
+                unity/Builds/ShaderShardWarmup/checkpoints/variants/
+            fi
+
+            merged=$((merged + 1))
+            index=$((index + 1))
+
+            echo "Merged independent checkpoint run=$run_id artifact=$artifact_id name=$artifact_name."
+          done
+
+          test "$merged" -gt 0
+
+          echo "Merged $merged independent ShaderCache checkpoint(s); PlayerDataCache remains from the validated base checkpoint."
 
       - name: Run canonical Unity operation
         shell: bash
@@ -476,7 +622,9 @@ jobs:
               export VEXFORGE_FULL_BUILD_FILTER=disabled
               ;;
           esac
+
           started_at=$(date +%s)
+
           set +e
           "$UNITY_EDITOR_PATH" \
             -batchmode \
@@ -489,13 +637,17 @@ jobs:
             -logFile "$editor_log"
           editor_status=$?
           set -e
+
           elapsed=$(( $(date +%s) - started_at ))
+
           echo "Unity Editor mode=$VEXFORGE_MODE exit code=$editor_status elapsed_seconds=$elapsed"
+
           if [ -f "$editor_log" ]; then
             echo '--- tail of unity-editor.log ---'
             tail -n 200 "$editor_log"
             echo '--- end tail of unity-editor.log ---'
           fi
+
           test "$editor_status" -eq 0
 
       - name: Validate unfiltered Android build
@@ -525,6 +677,7 @@ jobs:
             echo "range_end_bps=$RANGE_END_BPS"
             echo "shader_cache_directory=unity/Library/ShaderCache"
             echo "player_data_cache_directory=unity/Library/PlayerDataCache"
+
             if [ -d unity/Library/ShaderCache ]; then
               echo "shader_cache_files=$(find unity/Library/ShaderCache -type f | wc -l | tr -d ' ')"
               echo "shader_cache_bytes=$(du -sb unity/Library/ShaderCache | awk '{print $1}')"
@@ -532,6 +685,7 @@ jobs:
               echo "shader_cache_files=0"
               echo "shader_cache_bytes=0"
             fi
+
             if [ -d unity/Library/PlayerDataCache ]; then
               echo "player_data_cache_files=$(find unity/Library/PlayerDataCache -type f | wc -l | tr -d ' ')"
               echo "player_data_cache_bytes=$(du -sb unity/Library/PlayerDataCache | awk '{print $1}')"
@@ -539,8 +693,10 @@ jobs:
               echo "player_data_cache_files=0"
               echo "player_data_cache_bytes=0"
             fi
+
             echo "--- Unity log cache-related lines ---"
             log="$(find build-artifacts -maxdepth 1 -type f -name 'unity-*.log' -print -quit)"
+
             if [ -n "$log" ]; then
               grep -E -i 'shader.?cache|cache.?hit|cached' "$log" || true
             fi
@@ -597,35 +753,60 @@ jobs:
           set -euo pipefail
           variants_dir="unity/Builds/ShaderShardWarmup/checkpoints/variants"
           inventory="$variants_dir/inventory.tsv"
-          test -s "$inventory" || { echo "Complete coverage requires inventory.tsv." >&2; exit 1; }
+
+          test -s "$inventory" || {
+            echo "Complete coverage requires inventory.tsv." >&2
+            exit 1
+          }
+
           shopt -s nullglob
           shard_files=("$variants_dir"/shard-*.tsv)
+
           test "${#shard_files[@]}" -eq "$SHARD_COUNT" || {
             echo "Expected $SHARD_COUNT shard manifests, found ${#shard_files[@]}." >&2
             exit 1
           }
-          awk 'FNR > 1 {print $1}' "$inventory" | sort -u > build-artifacts/inventory-fingerprints.txt
-          awk 'FNR > 1 {print $1}' "${shard_files[@]}" | sort > build-artifacts/all-shard-fingerprints.txt
+
+          awk 'FNR > 1 {print $1}' "$inventory" | sort -u \
+            > build-artifacts/inventory-fingerprints.txt
+
+          awk 'FNR > 1 {print $1}' "${shard_files[@]}" | sort \
+            > build-artifacts/all-shard-fingerprints.txt
+
           duplicate="$(uniq -d build-artifacts/all-shard-fingerprints.txt | head -n 1 || true)"
+
           test -z "$duplicate" || {
             echo "Duplicate shader fingerprint across shard manifests: $duplicate" >&2
             exit 1
           }
-          comm -23 build-artifacts/inventory-fingerprints.txt build-artifacts/all-shard-fingerprints.txt > build-artifacts/shard-gaps.txt
-          comm -13 build-artifacts/inventory-fingerprints.txt build-artifacts/all-shard-fingerprints.txt > build-artifacts/shard-extras.txt
+
+          comm -23 \
+            build-artifacts/inventory-fingerprints.txt \
+            build-artifacts/all-shard-fingerprints.txt \
+            > build-artifacts/shard-gaps.txt
+
+          comm -13 \
+            build-artifacts/inventory-fingerprints.txt \
+            build-artifacts/all-shard-fingerprints.txt \
+            > build-artifacts/shard-extras.txt
+
           test ! -s build-artifacts/shard-gaps.txt || {
             echo "Shard coverage has gaps." >&2
             head -n 5 build-artifacts/shard-gaps.txt
             exit 1
           }
+
           test ! -s build-artifacts/shard-extras.txt || {
             echo "Shard coverage contains fingerprints outside inventory." >&2
             head -n 5 build-artifacts/shard-extras.txt
             exit 1
           }
+
           inventory_count="$(wc -l < build-artifacts/inventory-fingerprints.txt | tr -d ' ')"
           shard_count="$(wc -l < build-artifacts/all-shard-fingerprints.txt | tr -d ' ')"
+
           test "$inventory_count" -eq "$shard_count"
+
           echo "Complete shard coverage PASS inventory=$inventory_count shards=$shard_count count=$SHARD_COUNT."
 
       - name: Create shader checkpoint
@@ -633,48 +814,100 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+
           checkpoint_dir="build-artifacts/checkpoint-upload"
           rm -rf "$checkpoint_dir"
           mkdir -p "$checkpoint_dir"
+
           test -d unity/Library/ShaderCache || {
             echo "Unity did not produce Library/ShaderCache; refusing checkpoint." >&2
             exit 1
           }
+
           test -d unity/Library/PlayerDataCache || {
             echo "Unity did not produce Library/PlayerDataCache; refusing checkpoint." >&2
             exit 1
           }
+
           scripts_cache="$(find unity/Library/PlayerDataCache -type f -name 'ScriptsOnlyCache.yaml' -print -quit)"
           dirty_info="$(find unity/Library/PlayerDataCache -type f -name 'DataBuildDirtyInfo.json' -print -quit)"
-          test -n "$scripts_cache" || { echo "Checkpoint missing ScriptsOnlyCache.yaml." >&2; exit 1; }
-          test -n "$dirty_info" || { echo "Checkpoint missing DataBuildDirtyInfo.json." >&2; exit 1; }
-          tar -cf "$checkpoint_dir/unity-build-cache.tar" -C "$GITHUB_WORKSPACE" \
-            unity/Library/ShaderCache unity/Library/PlayerDataCache
+
+          test -n "$scripts_cache" || {
+            echo "Checkpoint missing ScriptsOnlyCache.yaml." >&2
+            exit 1
+          }
+
+          test -n "$dirty_info" || {
+            echo "Checkpoint missing DataBuildDirtyInfo.json." >&2
+            exit 1
+          }
+
+          cache_paths=()
+
+          for candidate in \
+            unity/Library/ShaderCache \
+            unity/Library/PlayerDataCache \
+            unity/Library/Artifacts \
+            unity/Library/Bee \
+            unity/Library/Il2cppBuildCache; do
+
+            if [ -d "$candidate" ]; then
+              cache_paths+=("$candidate")
+            fi
+          done
+
+          test "${#cache_paths[@]}" -ge 2
+
+          tar -cf "$checkpoint_dir/unity-build-cache.tar" \
+            -C "$GITHUB_WORKSPACE" \
+            "${cache_paths[@]}"
+
           : > "$checkpoint_dir/cache-manifest.sha256"
+
           while IFS= read -r -d '' cache_file; do
             sha256sum "$cache_file" >> "$checkpoint_dir/cache-manifest.sha256"
-          done < <(find unity/Library/ShaderCache unity/Library/PlayerDataCache -type f -print0 | sort -z)
-          echo "source_commit=$GITHUB_SHA" > "$checkpoint_dir/checkpoint-metadata.txt"
-          echo "unity_tree_sha=$(git rev-parse 'HEAD:unity')" >> "$checkpoint_dir/checkpoint-metadata.txt"
-          echo "shard_index=$SHARD_INDEX" >> "$checkpoint_dir/checkpoint-metadata.txt"
-          echo "shard_count=$SHARD_COUNT" >> "$checkpoint_dir/checkpoint-metadata.txt"
+          done < <(find "${cache_paths[@]}" -type f -print0 | sort -z)
+
+          echo "source_commit=$GITHUB_SHA" \
+            > "$checkpoint_dir/checkpoint-metadata.txt"
+
+          echo "unity_tree_sha=$(git rev-parse 'HEAD:unity')" \
+            >> "$checkpoint_dir/checkpoint-metadata.txt"
+
+          echo "shard_index=$SHARD_INDEX" \
+            >> "$checkpoint_dir/checkpoint-metadata.txt"
+
+          echo "shard_count=$SHARD_COUNT" \
+            >> "$checkpoint_dir/checkpoint-metadata.txt"
+
           if [ -d unity/Builds/ShaderShardWarmup/checkpoints/variants ]; then
-            cp -R unity/Builds/ShaderShardWarmup/checkpoints/variants "$checkpoint_dir/"
+            cp -R \
+              unity/Builds/ShaderShardWarmup/checkpoints/variants \
+              "$checkpoint_dir/"
           fi
+
           cp build-artifacts/shader-cache-observations.txt "$checkpoint_dir/"
-          find "$checkpoint_dir" -maxdepth 2 -type f -printf '%p %s bytes\n'
+
+          find "$checkpoint_dir" \
+            -maxdepth 2 \
+            -type f \
+            -printf '%p %s bytes\n'
 
       - name: Verify APK
         if: ${{ inputs.mode == 'normal' || inputs.mode == 'final' }}
         shell: bash
         run: |
           set -euo pipefail
+
           apk="$(find unity/Builds -maxdepth 1 -type f -name '*.apk' -print -quit)"
           test -n "$apk"
           test -s "$apk"
+
           size="$(stat -c%s "$apk")"
           sha="$(sha256sum "$apk" | awk '{print $1}')"
+
           test "$size" -gt 1000000
+
           {
             echo "product=VEXFORGE"
             echo "runtime=Unity"
@@ -686,7 +919,8 @@ jobs:
             echo "apk=$apk"
             echo "apk_size_bytes=$size"
             echo "apk_sha256=$sha"
-          } | tee build-artifacts/vexforge-build-info.txt >> "$GITHUB_STEP_SUMMARY"
+          } | tee build-artifacts/vexforge-build-info.txt \
+            >> "$GITHUB_STEP_SUMMARY"
 
       - name: Upload canonical evidence
         if: always()
@@ -704,73 +938,6 @@ jobs:
 
       - name: Upload APK for direct download
         if: ${{ success() && (inputs.mode == 'shard' || inputs.mode == 'normal' || inputs.mode == 'final') }}
-        uses: actions/upload-artifact@v4
-        with:
-          name: VEXFORGE-APK-${{ github.run_number }}-${{ inputs.mode }}
-          path: unity/Builds/**/*.apk
-          if-no-files-found: error
-          retention-days: 7
+        uses: actions/ **…**
 
-      - name: Upload shader checkpoint
-        if: ${{ inputs.mode == 'shard' && success() }}
-        uses: actions/upload-artifact@v4
-        with:
-          name: vexforge-shader-checkpoint-${{ github.sha }}-${{ inputs.range_start_bps }}-${{ inputs.range_end_bps }}
-          path: build-artifacts/checkpoint-upload/**
-          if-no-files-found: error
-          retention-days: 7
-
-      - name: Retire consumed shader checkpoint
-        if: ${{ success() && (inputs.mode == 'shard' || inputs.mode == 'final') && inputs.checkpoint_artifact_id != '' }}
-        shell: bash
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          set -euo pipefail
-          artifact_id="$CHECKPOINT_ARTIFACT_ID"
-          artifact_response="$(mktemp)"
-          artifact_status="$(curl -sS -o "$artifact_response" -w '%{http_code}' \
-            -H "Authorization: Bearer $GITHUB_TOKEN" \
-            -H 'Accept: application/vnd.github+json' \
-            "https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/artifacts/${artifact_id}")"
-          if [ "$artifact_status" = 404 ]; then
-            echo "Consumed shader checkpoint artifact $artifact_id is already retired."
-            exit 0
-          fi
-          test "$artifact_status" = 200 || {
-            echo "::warning::Could not inspect consumed shader checkpoint artifact $artifact_id (HTTP $artifact_status)."
-            exit 0
-          }
-          artifact_name="$(jq -r '.name // empty' "$artifact_response")"
-          rm -f "$artifact_response"
-          case "$artifact_name" in
-            vexforge-shader-checkpoint-*) ;;
-            *)
-              echo "::warning::Refusing to retire unexpected artifact '$artifact_name'."
-              exit 0
-              ;;
-          esac
-          delete_status="$(curl -sS -o /dev/null -w '%{http_code}' -X DELETE \
-            -H "Authorization: Bearer $GITHUB_TOKEN" \
-            -H 'Accept: application/vnd.github+json' \
-            "https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/artifacts/${artifact_id}")"
-          if [ "$delete_status" = 204 ] || [ "$delete_status" = 404 ]; then
-            echo "Retired consumed shader checkpoint artifact $artifact_id ($artifact_name)."
-          else
-            echo "::warning::Could not retire consumed shader checkpoint artifact $artifact_id (HTTP $delete_status)."
-          fi
-          echo "Checkpoint cleanup keeps only the current chain head; failed shards retain their predecessor for retry." >> "$GITHUB_STEP_SUMMARY"
-
-      - name: Publish APK release
-        if: ${{ inputs.mode == 'final' && success() }}
-        uses: softprops/action-gh-release@v2
-        with:
-          tag_name: vexforge-unity-github-${{ github.run_number }}
-          name: VEXFORGE Unity Android ${{ github.run_number }}
-          prerelease: true
-          body: |
-            VEXFORGE Unity Android build compiled directly on GitHub Actions.
-            Unity editor version is read from unity/ProjectSettings/ProjectVersion.txt.
-          files: |
-            unity/Builds/**/*.apk
-            build-artifacts/vexforge-build-info.txt
+_This response is too long to display in full._
