@@ -5,9 +5,9 @@ Execution contract: `mobile/docs/VEXFORGE_EXPO_REPLIT_CONTINUATION_ORDER_V5.md`
 
 ## Git
 
-- CURRENT SHA: `385127485e75f460f34425b58bbd8f1942b25b5c` before this checkpoint
+- CURRENT SHA: `397992b10761d67888fdb0cd0f826283617a1d14` before this checkpoint
   finalization commit
-- REMOTE MAIN SHA: `385127485e75f460f34425b58bbd8f1942b25b5c`
+- REMOTE MAIN SHA: `397992b10761d67888fdb0cd0f826283617a1d14`
 - BRANCH: `main`
 - WORKTREE CLEAN: yes after the milestone push
 
@@ -21,6 +21,12 @@ Execution contract: `mobile/docs/VEXFORGE_EXPO_REPLIT_CONTINUATION_ORDER_V5.md`
   Supabase client boundary, assets and verifiers.
 - Confirmed the referenced Supabase project is live and healthy.
 - Ran the existing mobile static verifier successfully.
+- Aligned the mobile dependency graph with Expo SDK 54 using the Expo
+  compatibility resolver without migrating SDK lines.
+- Added a reproducible mobile npm lockfile and the SDK-compatible `expo-asset`
+  peer.
+- Removed the unsupported `targetSdkVersion` config field and switched Expo
+  icon fields to a derived PNG with recorded provenance.
 
 ## Files changed
 
@@ -28,12 +34,17 @@ Execution contract: `mobile/docs/VEXFORGE_EXPO_REPLIT_CONTINUATION_ORDER_V5.md`
 - `mobile/docs/ACTIVE_EXPO_GAME_SCOPE.md`
 - `mobile/docs/REAL_EXPO_REPOSITORY_STATE.md`
 - `mobile/docs/SESSION_CHECKPOINT.md`
+- `mobile/docs/ASSET_PROVENANCE.md`
+- `mobile/assets/images/icon.png`
+- `mobile/package-lock.json`
 
 ## Assets
 
 - ASSETS GENERATED: none.
 - ASSETS VERIFIED: existing official/project-provided mobile asset tree was
   present in `origin/main`; no new art or audio was generated.
+- DERIVED ASSET: `vexforge-runtime-icon-png`, SHA-256
+  `59968f89076408b6cb488f2fa29c39e73231e61dc77c22c805102e3283fbaaba`.
 
 ## Validation
 
@@ -41,10 +52,11 @@ Execution contract: `mobile/docs/VEXFORGE_EXPO_REPLIT_CONTINUATION_ORDER_V5.md`
 - Local branch equals `origin/main` before this milestone: PASS.
 - Supabase Management API project check: PASS, HTTP 200,
   `ACTIVE_HEALTHY`.
+- Expo dependency resolver: PASS — dependencies up to date for SDK 54.
+- Expo Doctor: PASS — 18/18 checks.
+- Typecheck: PASS.
 - Mobile static verifier: PASS — 23 required files, 40 source files,
   75 runtime assets, zero old Expo references, secret scan clean.
-- Typecheck: NOT RUN.
-- Expo Doctor: NOT RUN.
 - BUILD STATUS: NOT RUN.
 - APK: NOT RUN.
 - AAB: NOT RUN.
