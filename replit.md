@@ -41,10 +41,11 @@ or production deployment until the user explicitly authorizes the build gate.
 
 ## Runtime stack
 
-- Expo SDK 54
+- Expo SDK 54.0.37
 - React Native 0.81.5
 - React 19.1.0
 - Expo Router 6.0.24
+- Expo Asset 12.0.13
 - Reanimated 4.1.1 + Worklets 0.5.1
 - Gesture Handler 2.28.0
 - React Native Skia 2.2.12

@@ -38,7 +38,7 @@ Authority: `mobile/docs/VEXFORGE_EXPO_REPLIT_CONTINUATION_ORDER_V5.md`
 ## Current release evidence
 
 - Package/app release: `1.10.0`.
-- Expo SDK: `54.0.27`.
+- Expo SDK: `54.0.37`.
 - React Native: `0.81.5`.
 - Supabase project: `rscuzqnfccqvltkdcdny`.
 - Live project status was checked through the Supabase Management API on

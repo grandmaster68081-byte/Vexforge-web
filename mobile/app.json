@@ -4,12 +4,12 @@
     "slug": "vexforge",
     "version": "1.10.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.jpg",
+    "icon": "./assets/images/icon.png",
     "scheme": "vexforge-android",
     "userInterfaceStyle": "dark",
     "newArchEnabled": true,
     "splash": {
-      "image": "./assets/images/icon.jpg",
+      "image": "./assets/images/icon.png",
       "resizeMode": "contain",
       "backgroundColor": "#05050D"
     },
@@ -20,13 +20,12 @@
       "package": "com.vexforge.android",
       "versionCode": 11,
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/icon.jpg",
+        "foregroundImage": "./assets/images/icon.png",
         "backgroundColor": "#05050D"
-      },
-      "targetSdkVersion": 36
+      }
     },
     "web": {
-      "favicon": "./assets/images/icon.jpg"
+      "favicon": "./assets/images/icon.png"
     },
     "plugins": [
       [
@@ -39,7 +38,9 @@
       "expo-web-browser",
       "expo-updates",
       "expo-audio",
-      "./plugins/withEmbeddedJsBundle.js"
+      "./plugins/withEmbeddedJsBundle.js",
+      "expo-secure-store",
+      "expo-asset"
     ],
     "experiments": {
       "typedRoutes": false,
