@@ -1,5 +1,17 @@
 # 25 — CONTINUITY CHANGELOG
 
+## 2026-09-30 — ROADMAP COMPETITIVO Y RUNTIME EXPO CONFIRMADO
+
+- **DECISIÓN:** Expo / React Native (`mobile/**`) es el único runtime activo del videojuego por instrucción explícita del propietario; Unity y demás clientes se preservan como legado.
+- **PLAN:** `docs/vexforge-canonical/30_TIER1_COMPETITIVE_GAME_ROADMAP.md` fija gates, riesgos, Definition of Done y próximo bloque G0.
+- **BASE:** `main` SHA `02e4cec401230184f7a0de07a12cbc369dd5674a` antes del commit documental.
+- **SUPABASE:** inspección read-only; proyecto `ACTIVE_HEALTHY`; score Tier 1 observado `38.30`, `tier1_ready=false`, 10 dimensiones debajo del mínimo. No hubo escrituras ni migrations.
+- **LÍMITES:** sin código de gameplay, build, APK, despliegue, dispatch de workflows ni mutaciones de Supabase. El plan no afirma Expo buildable ni QA física.
+- **NEXT:** iniciar sólo G0 después de revalidar el `main` más reciente, el pipeline Expo real, reglas canónicas y contratos vivos de batalla.
+
+---
+
+
 ## 2026-09-23 — CANONICAL UNITY INVENTORY GATE
 
 - BLOCK: `CANONICAL_UNITY_VARIANT_COUNT`

@@ -1,56 +1,41 @@
 # 00 — START HERE
 
-Una IA nueva debe leer en este orden:
+## Runtime vigente
 
-1. `VEXFORGE_CONTEXT.md`
-2. `docs/vexforge-canonical/UNITY_BUILD_OPERATIONS.md`
-3. `docs/vexforge-canonical/UNITY_INCREMENTAL_VARIANT_BATCHES.md` — selector y gates del workflow canónico
-4. este archivo
-5. `16_IMPLEMENTATION_STATUS.md`
-6. `17_CURRENT_BLOCK.md`
-7. `19_BLOCKERS.md`
-8. `20_KNOWN_UNKNOWNS.md`
-9. `21_CONTRADICTIONS.md`
-10. el documento de dominio relevante
-11. el código actual relevante
-12. Supabase live si la afirmación depende del backend
+Directiva explícita del propietario, 2026-09-30: Expo / React Native bajo `mobile/**` es el único runtime activo del juego. Unity y otras implementaciones son legado para trabajo nuevo. Preservar todos los archivos; no ejecutar builds de Unity ni reactivar otro runtime. La web pública existente queda intacta.
 
-## No asumir
+Los documentos que aún describen Unity como activo son registros de una decisión anterior. Si `main` o el propietario cambian de nuevo, inspeccionar evidencia y registrar una nueva decisión; no resolverlo por inferencia.
 
-- Que un documento histórico describe el cliente activo.
-- Que una ruta documentada existe en Android.
-- Que una RPC histórica sigue habilitada.
-- Que un asset visual está disponible porque aparece en una referencia.
-- Que un release corresponde al commit actual sin evidencia de workflow y artefacto.
-- Que una función live está activa solo porque aparece en una migration.
+## Orden de lectura de una IA nueva
+
+1. `VEXFORGE_CONTEXT.md` — directiva vigente y autoridad.
+2. `docs/vexforge-canonical/30_TIER1_COMPETITIVE_GAME_ROADMAP.md` — alcance, conclusión realista, gates y continuidad.
+3. `16_IMPLEMENTATION_STATUS.md` — advertencia de snapshot histórico y estados que falta revalidar.
+4. `17_CURRENT_BLOCK.md` — unidad activa; no confundir un plan con implementación.
+5. `19_BLOCKERS.md`, `20_KNOWN_UNKNOWNS.md` y `21_CONTRADICTIONS.md`.
+6. El documento de dominio relevante; `27_EXPO_GAME_RUNTIME.md` y otros documentos antiguos son referencia histórica hasta reconciliarlos con el código actual.
+7. Inspeccionar los archivos Expo relevantes en el `main` vigente.
+8. Consultar Supabase live de forma de sólo lectura para contratos implicados; leer definiciones, RLS, policies, grants y ownership antes de cambiar integración.
 
 ## Autoridad
 
-`03_CANONICAL_HIERARCHY.md` define la jerarquía. En resumen: Supabase live para backend/datos; código `main` para implementación; esta capa para continuidad; documentos antiguos como historial.
+Supabase live es la autoridad para backend/datos/reglas/resultados. El código actual de `main` es la evidencia de implementación. La directiva explícita más reciente del propietario fija Expo como runtime activo. Los documentos históricos ayudan a recuperar contexto, pero no reemplazan una verificación actual.
 
-## Inspección
+## No asumir
 
-```text
-cat VEXFORGE_CONTEXT.md
-find mobile/app mobile/components mobile/lib -type f
-npm run typecheck --prefix mobile
-node scripts/verify-mobile-battle.mjs
-node scripts/verify-mobile-visual-system.mjs
-```
+- Que Expo compila o funciona porque existe `mobile/**` o un README.
+- Que una RPC es segura o está operativa porque su nombre aparece en el catálogo.
+- Que una migración antigua coincide con el estado live.
+- Que una simulación local es PvP real o settlement competitivo.
+- Que una build CI prueba legibilidad, rendimiento, instalación o estabilidad física.
+- Que la puntuación Tier 1 interna prueba competitividad frente al mercado.
+- Que un documento que dice Unity activo sigue vigente después de la directiva de 2026-09-30.
 
-Los comandos anteriores son inspección/verificación del estado existente. No se debe instalar, compilar, desplegar o modificar nada sin la autorización del bloque activo.
+## Límites de ejecución
 
-## Registrar el siguiente bloque
+- La unidad de esta planificación no instaló, compiló, desplegó ni modificó Supabase.
+- El workflow visible de Unity no se despacha para este runtime.
+- No tocar economía, auth, RLS, datos, fees, rewards ni contratos sin auditoría y autorización específica.
+- No marcar una feature como completa por componentes, pantallas, imágenes o documentación; adjuntar comportamiento, prueba, resultado y bloqueo.
 
-Actualizar `17_CURRENT_BLOCK.md`, `16_IMPLEMENTATION_STATUS.md`, `18_DECISIONS.md`, `19_BLOCKERS.md`, `20_KNOWN_UNKNOWNS.md` y `25_CONTINUITY_CHANGELOG.md`. Si afecta Android, registrar commit → workflow → artefacto → QA.
-
-## Decisión actual de runtime
-
-Unity es el runtime Android principal de desarrollo y `unity/**` contiene la
-implementación Unity que debe continuarse. Expo / React Native permanece
-íntegro en `mobile/**` como respaldo, rollback y referencia funcional.
-Supabase conserva toda autoridad de datos y reglas.
-
-Unity está en `IMPLEMENTED_UNVERIFIED`: se continúa el código sin fabricar
-APK, sin afirmar instalación y sin convertir el bloqueo de build/licencia en
-un bloqueo del desarrollo.
+Al cerrar cada incremento funcional, actualizar `16_IMPLEMENTATION_STATUS.md`, `17_CURRENT_BLOCK.md`, `18_DECISIONS.md`, `19_BLOCKERS.md`, `20_KNOWN_UNKNOWNS.md`, `21_CONTRADICTIONS.md` y `25_CONTINUITY_CHANGELOG.md` según corresponda. Persistir cambios coherentes en `main`; verificar el SHA real antes de continuar una sesión nueva.

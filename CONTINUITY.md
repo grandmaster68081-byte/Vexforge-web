@@ -1,3 +1,14 @@
+## 2026-09-30 — DIRECTIVA EXPO Y PLAN REALISTA DE JUEGO COMPETITIVO
+
+- **DECISIÓN DEL PROPIETARIO:** Expo / React Native bajo `mobile/**` es el único runtime activo del videojuego. Unity y los demás clientes son legado para trabajo nuevo y se preservan; la web existente no se cambia.
+- **CONTINUIDAD:** `docs/vexforge-canonical/30_TIER1_COMPETITIVE_GAME_ROADMAP.md` es la planificación vigente; `VEXFORGE_CONTEXT.md`, `00_START_HERE.md`, estado/bloque y contradicciones remiten a ella.
+- **BASE INSPECCIONADA:** `main` SHA `02e4cec401230184f7a0de07a12cbc369dd5674a` antes del commit documental.
+- **SUPABASE LIVE:** proyecto saludable según Management API; score Tier 1 `38.30`, diez dimensiones bajo su mínimo y `tier1_ready=false`. Lectura solamente.
+- **RESULTADO DE ESTA UNIDAD:** actualización documental de runtime y ruta de trabajo; sin implementación gameplay, escrituras Supabase, builds, APK, QA física ni despliegue.
+- **NEXT:** G0 — reconciliar el código Expo actual, reglas y contratos de batalla; no dispatch de Unity.
+
+---
+
 ## 2026-09-26 — V5.6 WEB DEPLOY RECONCILIATION — LOCKFILE ALIGNED / CLOUDFLARE RETRY
 
 - **SOURCE:** `main` was reconciled at `3c2bc5fdb56a4fcfd5c981a321131f99f5579dac`; the V5.6 portal implementation and local platform art are present.

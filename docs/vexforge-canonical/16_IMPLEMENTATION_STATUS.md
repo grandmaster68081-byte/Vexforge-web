@@ -1,3 +1,9 @@
+# OVERRIDE VIGENTE — 2026-09-30
+
+El propietario confirmó que Expo / React Native bajo `mobile/**` es el único runtime activo para el juego; Unity y otros clientes quedan como legado preservado. Los inventarios y estados que siguen fueron escritos bajo una decisión anterior de Unity y deben leerse como snapshot histórico hasta revalidarlos. Este override no certifica una build Expo ni autoriza cambios de backend. Fuente vigente: `VEXFORGE_CONTEXT.md` y `docs/vexforge-canonical/30_TIER1_COMPETITIVE_GAME_ROADMAP.md`.
+
+---
+
 # 16 — IMPLEMENTATION STATUS
 
 | Área | Estado actual | Status | Evidence | Blocker / next |

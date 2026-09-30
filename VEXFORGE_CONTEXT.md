@@ -1,109 +1,41 @@
-VEXFORGE
-CANONICAL PROJECT CONTEXT
-READ THIS FIRST
+# VEXFORGE — CONTEXTO ACTUAL DEL PROYECTO
 
-## Identidad
+## Directiva vigente del propietario — 2026-09-30
 
-VEXFORGE es un juego digital TCG en desarrollo. El único runtime activo de
-producto Android es Unity bajo `unity/**`. La aplicación Unity Android (Expo/React Native is legacy)
-ubicada en `mobile/**` se conserva intacta únicamente como legado/historial,
-respaldo y referencia de contratos; no es un runtime activo. La web en
-`src/**` se conserva como código histórico, evidencia y fuente reutilizable,
-pero está congelada como cliente de producto.
+- **Único runtime activo para el videojuego:** Expo / React Native en `mobile/**`.
+- **Legado/fuera del trabajo nuevo del juego:** Unity (`unity/**`) y las demás implementaciones cliente. Se preservan; no se eliminan, se migran ni se modifican por esta decisión.
+- La web pública existente no se reconstruye ni se usa como runtime del juego; se deja intacta.
+- Esta directiva explícita sustituye las afirmaciones anteriores de `main` y de documentos canónicos que decían que Unity era el runtime activo. Las referencias antiguas se conservan como historia, no como instrucción actual.
+- Supabase live continúa siendo la autoridad de auth, reglas, cartas, estado, ownership, economía, resultados y settlement.
 
-## Estado de fuente
+## Base observada
 
-- Repositorio: `grandmaster68081-byte/Vexforge-web`
-- Rama: `main`
-- Commit base auditado: `201ee0330529c8e085afd1143cf066e18de3bc8a`
-- Snapshot: 2026-09-17
-- Android package: `com.vexforge.android`
-- App version: `1.0.1`
-- Android versionCode: `4`
-- Expo declarado: `~54.0.27`; lockfile observado: `54.0.37`
-- React Native: `0.81.5`
-- runtimeVersion: `1.0.0`
-- Último release Android verificable en continuidad: `vexforge-android-build-249`, workflow `35238357900`, publicado desde el commit `ded78720d1d3f97280d5702166d44e18415beb8f`; el APK contiene `assets/index.android.bundle`.
-- Esta persistencia documental no compila APK ni crea release.
+- Repositorio: `grandmaster68081-byte/Vexforge-web`; rama `main`.
+- SHA inspeccionado antes del plan: `02e4cec401230184f7a0de07a12cbc369dd5674a` (2026-09-30).
+- El árbol incluye Expo bajo `mobile/**` y Unity bajo `unity/**`. La selección de Expo es una decisión del propietario; su build/runtime actual no se verificó en esta unidad.
+- En el árbol inspeccionado figuraba un workflow manual de Unity; no se verificó un pipeline Expo/Android activo. No despachar el pipeline Unity.
+- La planificación vigente es `docs/vexforge-canonical/30_TIER1_COMPETITIVE_GAME_ROADMAP.md`.
 
-## Backend
+## Supabase y readiness
 
-Supabase project reference: `rscuzqnfccqvltkdcdny`. Supabase live es la autoridad para datos, RLS, policies, RPCs, functions, triggers, storage, auth y contratos backend vivos. La consulta de catálogo realizada para esta capa observó 318 tablas/vistas públicas, 345 rutinas y 275 policies; esa amplitud no implica que todo sea consumido por Android.
+El proyecto Supabase `rscuzqnfccqvltkdcdny` respondió `ACTIVE_HEALTHY` a una lectura de Management API. El snapshot live del 2026-09-30 reportó `vexforge_tier1_score = 38.30`, 10 dimensiones bajo el mínimo, score más bajo 0 y `tier1_ready = false`. Las fases 1 y 3 estaban `DONE`; la fase 7 `NOT_STARTED`; las fases restantes estaban incompletas. Ver detalle y límites de esa consulta en el roadmap.
 
-## Arquitectura actual
+Los objetos `battle_runs`, `battle_events`, `pvp_matches`, `player_deck` y rutinas de combate/deck existen en live, pero su nombre y estructura no demuestran que el flujo sea seguro o competitivo. Revalidar definiciones, políticas, grants, ownership, idempotencia y recuperación antes de integrar cambios.
 
-El código de `mobile/**` conserva referencias históricas de sesión, contratos y
-superficies anteriores. La ejecución activa, presentación y navegación del
-producto pertenecen a `unity/**`; `mobile/**` no debe recibir trabajo nuevo.
+## Reglas para continuar
 
-## Producto y reglas activas
+1. Releer este contexto, `docs/vexforge-canonical/00_START_HERE.md` y el roadmap antes de modificar código.
+2. Confirmar el SHA más reciente de `main`; no continuar desde una captura antigua.
+3. Trabajar sólo en `mobile/**` para el runtime de juego, salvo documentación de continuidad o integración backend aprobada.
+4. No declarar Expo listo para producción sin validar dependencias, configuración, build y recorrido en Android real.
+5. No inventar reglas, cartas, recompensas, RPCs ni datos. Supabase live gana sobre migraciones históricas para contratos actuales.
+6. Mantener Unity y los otros árboles legados intactos. No ejecutar sus builds.
+7. El plan no autoriza cambios de esquema/datos, build de producción ni lanzamiento. Todo incremento funcional debe persistirse en GitHub `main` con evidencia y estado honesto.
 
-- Unity activo para desarrollo Android; Unity Android (Expo/React Native is legacy) congelado como legado
-  histórico; web congelada.
-- Supabase live > copia documental para backend.
-- Código actual de `main` > documentación para implementación.
-- No inventar cartas, nombres, balances, rewards, reglas, assets ni resultados.
-- No duplicar lógica autoritativa de servidor en el cliente.
-- No usar sustituciones genéricas silenciosas.
-- No cambiar Supabase ni funcionalidad sin autorización específica.
-- No compilar APK, Android Player, Gradle, GameCI ni workflows de compilación
-  durante la reactivación Unity.
-
-## Estado de trabajo
-
-La capa canónica está documentada en `docs/vexforge-canonical/`. Unity ya tiene
-un proyecto de desarrollo, bootstrap, conexión Supabase, sesión, shell,
-Nexus/World y superficies iniciales para Archive, Forge, Arena, Missions,
-Treasury y Legado. La primera compilación, la licencia, la QA física y la
-reconciliación exhaustiva de todos los objetos live de Supabase siguen siendo
-`EVIDENCE_REQUIRED` o `BLOCKED`.
-
-## BUILD CONTROL PLANE
-
-- Canonical workflow: `.github/workflows/vexforge-unity-android-github.yml`.
-- Trigger: `workflow_dispatch` only; no automatic Android compilation is enabled.
-- Unity project root: `unity/`.
-- Unity editor version: always read from `unity/ProjectSettings/ProjectVersion.txt` (`6000.3.0f1` on the current tree).
-- Build entry point: `Vexforge.Editor.VexforgeGitHubBuild.BuildAndroid`.
-- Build path: GitHub Actions → Unity Editor → Unity Personal / Android Build Support → BuildPipeline → Gradle → IL2CPP → ARM64 → APK.
-- Supabase project reference: `rscuzqnfccqvltkdcdny`; Supabase remains the backend/data authority.
-
-Expo/React Native under `mobile/**` is preserved as legacy/reference only and
-must not be used as the active Android runtime. Unity Cloud Build / Build
-Automation is external reference infrastructure only and is not the active
-compilation method; do not spend quota, create targets, or dispatch Cloud
-builds. The direct GitHub workflow is the only authorized Android build path.
-
-The current state remains `IMPLEMENTED_UNVERIFIED`: no new build, APK, release,
-installation, or physical QA is claimed by this continuity update.
-
-## Siguiente bloque
-
-El bloque activo es `UNITY_RUNTIME_REACTIVATION`: continuar la implementación
-data-driven en Unity sin borrar `mobile/**`, sin duplicar autoridad del
-backend y sin ejecutar builds. Consultar
-`docs/vexforge-canonical/17_CURRENT_BLOCK.md` y
-`docs/vexforge-canonical/26_UNITY_ENGINE_MIGRATION.md`.
-
-## Mapa de lectura
+## Orden de lectura
 
 1. `docs/vexforge-canonical/00_START_HERE.md`
-2. `docs/vexforge-canonical/16_IMPLEMENTATION_STATUS.md`
-3. `docs/vexforge-canonical/17_CURRENT_BLOCK.md`
-4. `docs/vexforge-canonical/19_BLOCKERS.md`
-5. `docs/vexforge-canonical/20_KNOWN_UNKNOWNS.md`
-6. `docs/vexforge-canonical/21_CONTRADICTIONS.md`
-7. El documento de dominio enlazado antes de modificar cualquier área.
-
-## Decisión de runtime registrada el 2026-09-18
-
-Unity es el runtime Android principal de desarrollo y `unity/**` es la nueva
-superficie de juego. Unity Android (Expo/React Native is legacy) permanece intacto en `mobile/**` como
-legado histórico, respaldo, rollback y referencia de contratos. Unity no
-depende de Expo.
-
-Supabase mantiene toda autoridad de datos, reglas, autenticación y settlement.
-La web queda congelada como código no-producto. Unity presenta datos y
-resultados autorizados; no resuelve competitividad ni inventa economía,
-cartas, rewards o progreso. El estado Unity de este bloque es
-`IMPLEMENTED_UNVERIFIED`: no se declara APK ni QA física.
+2. `docs/vexforge-canonical/30_TIER1_COMPETITIVE_GAME_ROADMAP.md`
+3. `docs/vexforge-canonical/16_IMPLEMENTATION_STATUS.md`, `17_CURRENT_BLOCK.md`, `19_BLOCKERS.md`, `20_KNOWN_UNKNOWNS.md`, `21_CONTRADICTIONS.md`
+4. Documento de dominio y código Expo que corresponda al cambio
+5. Contratos Supabase live implicados

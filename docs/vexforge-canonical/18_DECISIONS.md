@@ -106,3 +106,12 @@
 - STATUS: ACTIVE / CONFIGURED_UNVERIFIED
 - RULES: mantener los modos dentro del workflow canónico; no crear otro workflow de build; no dispatch sin autorización explícita; no guardar credenciales en el repositorio.
 - SUPERSEDES: la afirmación anterior de Unity Cloud Build como infraestructura operativa activa.
+
+## 2026-09-30 — EXPO COMO ÚNICO RUNTIME ACTIVO (DIRECTIVA DEL PROPIETARIO)
+
+- **DECISIÓN:** Expo / React Native bajo `mobile/**` es el único runtime activo para trabajo nuevo del videojuego.
+- **LEGADO:** Unity (`unity/**`) y las demás implementaciones cliente quedan fuera del trabajo activo y se preservan intactas. La web existente no se reconstruye ni se modifica por esta decisión.
+- **AUTORIDAD:** esta directiva explícita resuelve la contradicción con los documentos anteriores de `main` que declaraban Unity activo.
+- **ESTADO:** decisión de runtime registrada; no prueba que Expo compile, que exista pipeline Expo Android vigente ni que haya QA física.
+- **BACKEND:** Supabase conserva autoridad. La inspección del 2026-09-30 fue de sólo lectura; sin cambios live.
+- **CONTINUIDAD:** usar `VEXFORGE_CONTEXT.md`, `00_START_HERE.md` y `30_TIER1_COMPETITIVE_GAME_ROADMAP.md`; revalidar el `main` vigente antes de implementar.

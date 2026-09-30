@@ -1,3 +1,11 @@
+# 21 — CONTRADICTIONS
+
+## Reconciliación vigente — 2026-09-30
+
+El propietario resolvió explícitamente el runtime activo: Expo / React Native en `mobile/**` es el único runtime de juego para trabajo nuevo. Unity y los demás clientes quedan como legado, preservados e intactos. Esta instrucción sustituye los estados históricos de Unity activo en `main`; no certifica que Expo compile ni autoriza a cambiar Supabase.
+
+El documento de lanzamiento v4 es material de requisitos, no autoridad para revertir esta selección. Ver `docs/vexforge-canonical/30_TIER1_COMPETITIVE_GAME_ROADMAP.md`. Los C-001–C-007 siguientes registran evidencia y decisiones anteriores a esta reconciliación; no son instrucciones de runtime vigentes cuando contradicen esta sección.
+
 ## CURRENT RECONCILIATION — 2026-09-25
 
 La documentación histórica que describe Expo/React Native o Unity Cloud Build\como runtime o método activo queda supersedida por el estado observable de
@@ -60,3 +68,11 @@ sincronización reales.
 STATUS: `RESUELTO POR FASE`: la Foundation operativa continúa en Unity;
 World, Cards, Deck, Battle y Missions se completan por bloques sin cambiar la
 autoridad de Supabase.
+
+## C-008 — Runtime Expo frente a decisión Unity histórica (resuelto por el propietario)
+
+- **FUENTE A:** documentos y código histórico de `main` que describen Unity como runtime activo.
+- **FUENTE B:** decisión explícita del propietario del 2026-09-30: Expo en `mobile/**` es el único runtime activo; lo demás queda como legado.
+- **EVIDENCIA:** ambos árboles existen en el SHA inspeccionado; la build/QA actual de Expo no se verificó en esta planificación.
+- **RESOLUCIÓN:** para trabajo nuevo manda la decisión reciente del propietario. Unity y otros clientes se preservan sin cambios; Expo no se declara listo hasta superar G0/G1.
+- **SIGUIENTE:** reconciliar sólo la documentación de entrada y verificar el camino Expo; no reabrir ni borrar el trabajo histórico de Unity.

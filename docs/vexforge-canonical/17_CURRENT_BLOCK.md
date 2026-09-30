@@ -1,49 +1,40 @@
 # 17 — CURRENT BLOCK
 
-## CURRENT ACTIVE BLOCK
+## Bloque activo
 
-`UNITY_CANONICAL_RUNTIME_AND_BUILD_CONTROL_PLANE`
+`EXPO_RUNTIME_REBASELINE_AND_TIER1_GAME_ROADMAP`
 
-### Objetivo
+### Directiva vigente
 
-Mantener Unity bajo `unity/**` como único runtime Android activo y establecer
-un solo método de compilación: GitHub Actions ejecutando el Unity Editor según
-`.github/workflows/vexforge-unity-android-github.yml`.
+El propietario confirmó el 2026-09-30 que Expo / React Native en `mobile/**` es el único runtime activo del juego. Unity y demás implementaciones son legado para trabajo nuevo; conservar sin borrar. Esta decisión prevalece sobre los documentos anteriores que declaraban Unity activo.
 
-### Estado
+### Objetivo de este bloque
 
-El proyecto Unity existe en `main`, la versión objetivo se lee de
-`unity/ProjectSettings/ProjectVersion.txt` y el workflow canónico contiene los
-modos normal, diagnóstico, baseline, inventory, shard y final. Supabase sigue
-siendo la autoridad de backend y datos. La configuración fue reconciliada sin
-iniciar una compilación.
+Dejar una ruta realista, verificable y continua hacia un TCG móvil competitivo y preparar el primer bloque de implementación: reconciliar el estado Expo del `main`, fijar reglas canónicas y auditar de forma read-only los contratos Supabase de combate. Este documento no afirma que el combate esté implementado o que el cliente Expo esté listo.
 
-### Gates
+### Estado verificado al 2026-09-30
 
-| Gate | Estado | Evidencia / bloqueo |
+| Gate | Estado | Evidencia / límite |
 |---|---|---|
-| Unity project scaffold | IMPLEMENTED_UNVERIFIED | `unity/**`; falta verificación independiente del Editor |
-| Unity version source | VERIFIED_IN_REPOSITORY | `ProjectVersion.txt` declara `6000.3.0f1` |
-| Canonical GitHub workflow | CONFIGURED_UNVERIFIED | workflow único, manual, sin dispatch en esta sesión |
-| Supabase authority | VERIFIED_READ_ONLY | Management API respondió proyecto activo/saludable; no hubo mutación |
-| Auth/session | PARTIALLY_IMPLEMENTED | requiere verificación del runtime Unity |
-| Nexus / World | IMPLEMENTED_UNVERIFIED | código existente; no se declara QA visual o física |
-| Cards / Collection | IMPLEMENTED_UNVERIFIED | contratos existentes; requiere verificación del Editor |
-| Deck / Formation | PARTIALLY_IMPLEMENTED | formación y contratos existentes |
-| Battle | PARTIALLY_IMPLEMENTED | presentación y RPC existentes; requiere verificación |
-| Missions / Economy / Profile | IMPLEMENTED_UNVERIFIED | superficies existentes; no se inventaron datos |
-| Expo / React Native legacy | PRESERVED | `mobile/**` conservado, sin pipeline activo |
-| Unity Cloud Build | REFERENCE_ONLY | no es método actual y no se utilizó |
-| First Unity build | BLOCKED_BY_AUTHORIZATION | explícitamente no iniciado en esta fase |
+| Expo como runtime elegido | OWNER_CONFIRMED | Directiva explícita; `mobile/**` existe en `main` |
+| Expo reproducible en el `main` actual | NO_VERIFICADO | En esta planificación no se instalaron deps ni se ejecutaron typecheck, Expo Doctor o build |
+| Pipeline oficial Expo Android | NO_VERIFICADO | En el snapshot se observó workflow manual de Unity; no se validó uno de Expo |
+| Unity | LEGACY_FOR_NEW_GAME_WORK | Código y workflow se preservan; no se despacha ni se modifica |
+| Supabase project | ACTIVE_HEALTHY_READ_ONLY | Management API; sin cambios de esquema, datos, auth, RLS, functions ni Storage |
+| Contratos de combate | OBJECTS_OBSERVED_SEMANTICS_UNVERIFIED | Tablas/rutinas existen; falta revisar cuerpo, RLS, grants, ownership y ejecución autenticada |
+| Tier 1 interno | NOT_READY | Live `weighted_score=38.30`, 10 dimensiones bajo mínimo, `tier1_ready=false` |
+| Runtime Android instalado / QA física | NO_VERIFICADO | Esta planificación no hizo build, instalación ni prueba en dispositivo |
 
-### No tocar
+### Próximo bloque de trabajo
 
-No borrar `mobile/**` ni alterar Supabase para compensar una carencia de Unity.
-No introducir claves privadas, service-role keys, licencias, `.ulf`, APK, AAB,
-Player, Gradle generado ni workflows de compilación paralelos.
+Leer `docs/vexforge-canonical/30_TIER1_COMPETITIVE_GAME_ROADMAP.md` y completar G0 antes de añadir pantallas o cambiar backend:
 
-### Condición de cierre
+1. Inspeccionar el `main` vigente, `mobile/**`, dependencias, configuración, scripts de verificación y todos los pipelines Android.
+2. Reconstruir la fuente de reglas y el recorrido de combate que el producto realmente pretende ofrecer; pedir al propietario sólo decisiones que no existan en fuentes canónicas.
+3. Auditar bodies/firmas/grants/RLS y ownership de cada contrato Supabase llamado por Expo para Battle/Deck/Missions; no inferir de nombres.
+4. Registrar los gaps concretos. Si el servidor no valida acciones competitivas, declarar PvP de producción bloqueado; no mover adjudicación al cliente.
+5. Proponer el primer vertical slice Expo y sus pruebas. No iniciar build Android de producción, compra, migración ni escritura de Supabase sin su gate de autorización.
 
-El estado no sube a `EDITOR_VERIFIED`, `BUILD_VERIFIED` o `DEVICE_VERIFIED`
-hasta contar con la evidencia correspondiente. Una futura compilación requiere
-autorización explícita del propietario y debe ejecutarse en el workflow canónico.
+### Gate de salida
+
+No avanzar a PvP/settlement de producción hasta demostrar un bucle real de inicio → acción validada → evento → resultado autorizado → persistencia → recuperación tras interrupción. Una práctica/IA local se identifica como simulación y no cuenta como partida competitiva.
