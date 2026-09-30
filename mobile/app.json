@@ -2,7 +2,7 @@
   "expo": {
     "name": "VEXFORGE",
     "slug": "vexforge",
-    "version": "1.0.1",
+    "version": "1.10.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.jpg",
     "scheme": "vexforge-android",
@@ -18,12 +18,12 @@
     },
     "android": {
       "package": "com.vexforge.android",
-      "versionCode": 4,
+      "versionCode": 11,
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/icon.jpg",
         "backgroundColor": "#05050D"
       },
-      "targetSdkVersion": 35
+      "targetSdkVersion": 36
     },
     "web": {
       "favicon": "./assets/images/icon.jpg"
@@ -38,13 +38,16 @@
       "expo-font",
       "expo-web-browser",
       "expo-updates",
-      "./plugins/withEmbeddedJsBundle"
+      "expo-audio",
+      "./plugins/withEmbeddedJsBundle.js"
     ],
     "experiments": {
-      "typedRoutes": true,
-      "reactCompiler": true
+      "typedRoutes": false,
+      "reactCompiler": false
     },
-    "runtimeVersion": "1.0.0",
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
     "updates": {
       "url": "https://rscuzqnfccqvltkdcdny.supabase.co/functions/v1/vexforge-updates",
       "enabled": true,
@@ -53,6 +56,9 @@
       "requestHeaders": {
         "expo-channel-name": "production"
       }
+    },
+    "extra": {
+      "supabaseUrl": "https://rscuzqnfccqvltkdcdny.supabase.co"
     }
   }
 }

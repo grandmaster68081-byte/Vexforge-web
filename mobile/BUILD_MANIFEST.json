@@ -1,0 +1,159 @@
+{
+  "product": "VEXFORGE",
+  "runtime": "Expo 54 mobile",
+  "release": "1.10.0",
+  "artAuthority": "This package is the implementation source. Replit must not regenerate, reinterpret, replace, or invent runtime art.",
+  "sceneRegistry": {
+    "nexus": {
+      "asset": "assets/vexforge/scenes/nexus.jpg",
+      "tiered": true,
+      "use": "startup, nexus portal, return-to-world"
+    },
+    "arena": {
+      "asset": "assets/vexforge/scenes/arena.jpg",
+      "tiered": true,
+      "use": "battlefield, boss entry, combat cinematic"
+    },
+    "archive": {
+      "asset": "assets/vexforge/scenes/archive.jpg",
+      "tiered": true,
+      "use": "card archive"
+    },
+    "forge": {
+      "asset": "assets/vexforge/scenes/forge.jpg",
+      "tiered": true,
+      "use": "deck/forge"
+    },
+    "founders": {
+      "asset": "assets/vexforge/scenes/founders.jpg",
+      "tiered": true,
+      "use": "legacy/founders"
+    },
+    "missions": {
+      "asset": "assets/vexforge/scenes/missions.jpg",
+      "tiered": true,
+      "use": "PVE mission hall"
+    },
+    "store": {
+      "asset": "assets/vexforge/scenes/store.jpg",
+      "tiered": true,
+      "use": "pack vault, store, pack opening ceremony"
+    },
+    "economy": {
+      "asset": "assets/vexforge/scenes/economy.jpg",
+      "tiered": true,
+      "use": "treasury/economy"
+    },
+    "world": {
+      "asset": "assets/vexforge/scenes/world.jpg",
+      "tiered": true,
+      "use": "world atlas"
+    },
+    "social": {
+      "asset": "assets/vexforge/scenes/social.jpg",
+      "tiered": true,
+      "use": "social/clan hall"
+    },
+    "meta": {
+      "asset": "assets/vexforge/scenes/meta.jpg",
+      "tiered": true,
+      "use": "runtime diagnostics"
+    },
+    "tutorial": {
+      "asset": "assets/vexforge/scenes/tutorial.jpg",
+      "tiered": true,
+      "use": "tutorial"
+    },
+    "events": {
+      "asset": "assets/vexforge/scenes/events.jpg",
+      "tiered": true,
+      "use": "live-ops/seasonal atlas surface"
+    }
+  },
+  "animationAuthority": [
+    "src/components/SceneCinematic.tsx",
+    "src/components/BattleCinematic.tsx",
+    "src/components/PackOpeningCeremony.tsx",
+    "src/render/WorldBackdrop.tsx",
+    "src/render/BattlefieldCanvas.tsx",
+    "src/render/BattleEffects.tsx"
+  ],
+  "audioAuthority": [
+    "assets/vexforge/attack.wav",
+    "assets/vexforge/impact.wav",
+    "assets/vexforge/shield.wav",
+    "assets/vexforge/reward.wav",
+    "assets/vexforge/fusion.wav",
+    "assets/vexforge/pack_reveal.wav"
+  ],
+  "qualityPolicy": {
+    "default": "HIGH",
+    "fallbacks": [
+      "MEDIUM",
+      "LOW"
+    ],
+    "sceneDerivatives": "every registered scene ships in all three tiers"
+  },
+  "validation": {
+    "static_verify": "PASS · 23 required files · 75 critical assets",
+    "verified_runtime_assets": 75,
+    "battle": "PASS · 2500 runs · 0 failures (1.10 final rerun)",
+    "interactive_battle": "PASS · 500 runs · 0 failures (1.10 final rerun)",
+    "economy": "PASS · 10000 runs · 0 failures (1.10 final rerun)",
+    "economy_policy": "PASS (executed in 1.9 audit)",
+    "semantic_engine_typecheck": "NOT VERIFIED_OFFLINE",
+    "full_project_typecheck": "NOT VERIFIED_OFFLINE · target environment gate",
+    "native_android_build": "NOT VERIFIED_OFFLINE · target EAS/Android gate",
+    "live_supabase_mutation": "NOT EXECUTED · target authenticated smoke-test gate",
+    "tier1_audit": "PASS · 1.10 final static hardening",
+    "release_audit": "PASS · 1.10 final release audit",
+    "content_closure": "PASS · 13 scene masters · 39 scene derivatives · 8 cinematics",
+    "dependency_lock": "NOT BUNDLED · target environment must resolve and retain lockfile"
+  },
+  "assembly": {
+    "step_1": "Replace target repository mobile/ contents with this package mobile/ contents exactly.",
+    "step_2": "Keep the repository Supabase/backend/contracts outside mobile/ unchanged.",
+    "step_3": "Set EXPO_PUBLIC_SUPABASE_ANON_KEY only in the target build environment.",
+    "step_4": "Run npm install (or the repository package manager) in the target environment.",
+    "step_5": "Run npm run verify, the audit scripts and npm run typecheck.",
+    "step_6": "Use the existing Expo/EAS preview APK and production AAB profiles; preview channel is internal and production channel is production.",
+    "step_7": "Smoke-test physical Android before launch."
+  },
+  "forbidden_assembler_changes": [
+    "runtime scene art",
+    "scene filenames",
+    "combat source-of-truth architecture",
+    "server RPC names/payloads",
+    "pack odds",
+    "wallet/ledger settlement",
+    "official card artwork URLs",
+    "tutorial sequence",
+    "quality tier registry"
+  ],
+  "backend_gates": [
+    "Boss reward/damage settlement requires the official server-side resolver; this client does not invent one.",
+    "Raid contribution through legacy direct-contribution RPC is blocked in this client until a verified Battle Run v6 settlement contract is present.",
+    "Live events/season data remain backend-authoritative.",
+    "Native Android/EAS build and live Supabase smoke tests are external release gates."
+  ],
+  "cinematicRegistry": {
+    "battle_defeat": "assets/vexforge/cinematics/battle_defeat.jpg",
+    "battle_intro": "assets/vexforge/cinematics/battle_intro.jpg",
+    "battle_victory": "assets/vexforge/cinematics/battle_victory.jpg",
+    "boss_phase": "assets/vexforge/cinematics/boss_phase.jpg",
+    "fusion": "assets/vexforge/cinematics/fusion.jpg",
+    "mission_complete": "assets/vexforge/cinematics/mission_complete.jpg",
+    "pack_reveal": "assets/vexforge/cinematics/pack_reveal.jpg",
+    "season_arrival": "assets/vexforge/cinematics/season_arrival.jpg"
+  },
+  "android_version_code": 11,
+  "tier1_hardening": true,
+  "runtime_version_policy": "appVersion",
+  "eas_channels": {
+    "development": "development",
+    "preview": "internal",
+    "production": "production"
+  },
+  "final_release_candidate": true,
+  "launch_gate": "DO NOT SHIP until external Android/EAS + authenticated Supabase gates pass."
+}

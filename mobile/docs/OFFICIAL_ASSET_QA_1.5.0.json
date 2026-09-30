@@ -1,0 +1,1035 @@
+{
+  "product": "VEXFORGE",
+  "artifact": "Official Expo mobile runtime asset manifest and QA",
+  "generated_at": "2026-09-29",
+  "runtime_version": "1.5.0",
+  "expo": "~54.0.27",
+  "react": "19.1.0",
+  "react_native": "0.81.5",
+  "expo_router": "~6.0.17",
+  "skia": "~2.2.12",
+  "expo_audio": "~1.1.1",
+  "android_package": "com.vexforge.android",
+  "android_target_sdk": 36,
+  "canvas": "1080x2340 portrait",
+  "official_web_surface": "https://vexforge-web.pages.dev",
+  "asset_count": 123,
+  "scene_master_count": 13,
+  "scene_tier_derivative_count": 39,
+  "registered_count": 48,
+  "canonical_count": 7,
+  "support_runtime_png_count": 9,
+  "runtime_audio_count": 6,
+  "quality_policy": {
+    "HIGH": "largest local derivative for release-quality devices",
+    "MEDIUM": "balanced derivative for thermals/memory",
+    "LOW": "fallback derivative for constrained devices"
+  },
+  "release_validation": {
+    "static_verify": "PASS",
+    "battle_audit": "PASS · 2500 runs · 0 failures",
+    "interactive_battle_audit": "PASS · 500 runs · 0 failures",
+    "economy_audit": "PASS · 10000 runs · 0 failures",
+    "economy_policy_audit": "PASS",
+    "semantic_project_typecheck": "NOT VERIFIED · dependencies absent from offline working container",
+    "native_android_build": "NOT VERIFIED · Android/EAS toolchain unavailable in working container",
+    "live_supabase_mutation": "NOT EXECUTED against production data"
+  },
+  "scope": {
+    "nexus": true,
+    "arena_pvp": true,
+    "interactive_training": true,
+    "archive": true,
+    "forge": true,
+    "missions": true,
+    "world_bosses": true,
+    "raids_entry_points": true,
+    "store_pack_ceremony": true,
+    "marketplace": true,
+    "economy_ui_and_client_contracts": true,
+    "social": true,
+    "tutorial_19_steps": true,
+    "startup_cinematic": true,
+    "combat_fx": true,
+    "boss_phase_runtime": true,
+    "events_visual_surface": true,
+    "runtime_error_boundary": true,
+    "boss_settlement_rpc": false
+  },
+  "external_gates": [
+    "Set EXPO_PUBLIC_SUPABASE_ANON_KEY in the target build environment.",
+    "Install dependencies in target environment and run npm run verify.",
+    "Run native EAS preview APK and test on physical Android hardware.",
+    "Run Supabase smoke tests with test account/data before public launch.",
+    "For real boss reward/damage settlement, use the official server-side resolver supplied by the backend contract; this client does not invent one."
+  ],
+  "official_art_policy": "All platform/environment/cinematic art required by this release is shipped locally. Card artwork remains server/catalog supplied and is never fabricated locally.",
+  "assets": [
+    {
+      "path": "assets/canonical/VF_ARCHIVE_SANCTUM_HERO.png",
+      "bytes": 4970459,
+      "sha256": "ad1471ab244a40c785c0588a0f3a7a157d64f6d536cad9ea9797380a039e9157",
+      "width": 1440,
+      "height": 2560,
+      "format": "PNG"
+    },
+    {
+      "path": "assets/canonical/VF_BATTLE_ARENA_CITADEL_A.png",
+      "bytes": 5039818,
+      "sha256": "3721fe08eeff5ea3f0f0409a11dc0c5c4fd0bc87323fad7cba1e1633b63b3853",
+      "width": 1440,
+      "height": 2560,
+      "format": "PNG"
+    },
+    {
+      "path": "assets/canonical/VF_FORGE_CHAMBER_HERO.png",
+      "bytes": 4921935,
+      "sha256": "b8efb99074510375247f3a830bd99e266b6f6c12306b96768e3f67c991d72868",
+      "width": 1440,
+      "height": 2560,
+      "format": "PNG"
+    },
+    {
+      "path": "assets/canonical/VF_MISSION_HALL_HERO.png",
+      "bytes": 4888522,
+      "sha256": "fe575f5f5934ea2ef6c6b16adcb1111f70d52e9c9530ed8f919e0f4c721ae77a",
+      "width": 1440,
+      "height": 2560,
+      "format": "PNG"
+    },
+    {
+      "path": "assets/canonical/VF_NEXUS_CITADEL_HERO.png",
+      "bytes": 4962391,
+      "sha256": "32be4edf85ce103dab113231dc23e3da563f21340339e064af180bde61850520",
+      "width": 1440,
+      "height": 2560,
+      "format": "PNG"
+    },
+    {
+      "path": "assets/canonical/VF_PACK_VAULT_HERO.png",
+      "bytes": 3675182,
+      "sha256": "3ef42797fa3cb64c99436e86636327256cef466d7cc4779d30ef5ff2e2c2970b",
+      "width": 1440,
+      "height": 2560,
+      "format": "PNG"
+    },
+    {
+      "path": "assets/canonical/VF_TREASURY_VAULT_HERO.png",
+      "bytes": 4916477,
+      "sha256": "9c4adde0dcfa6972369793a6d6e63e3db1eccd0566865121eeea0d9179f532c8",
+      "width": 1440,
+      "height": 2560,
+      "format": "PNG"
+    },
+    {
+      "path": "assets/content-packs/archive/high.jpg",
+      "bytes": 400293,
+      "sha256": "b54ad5fa3578b1ebacd2fc3565a72529e991037e2b35776f39cfcab346de22b6",
+      "width": 1080,
+      "height": 1680,
+      "format": "JPEG"
+    },
+    {
+      "path": "assets/content-packs/archive/low.jpg",
+      "bytes": 80765,
+      "sha256": "2eb354d42d6fae3b2aa6606906675a61862dbf6c11193cd0a4aa60b7f610b064",
+      "width": 480,
+      "height": 747,
+      "format": "JPEG"
+    },
+    {
+      "path": "assets/content-packs/archive/medium.jpg",
+      "bytes": 171791,
+      "sha256": "1bfa5eb7939ac7e9320a0e5e7eb0ed00915e55b7f741028d581920c5eac8751a",
+      "width": 720,
+      "height": 1120,
+      "format": "JPEG"
+    },
+    {
+      "path": "assets/content-packs/arena/high.jpg",
+      "bytes": 389031,
+      "sha256": "ba389f9d3164a6dfaa95fd21a9da2937635e69428eb0f16ff9ffa11e5fcdecb7",
+      "width": 1080,
+      "height": 1680,
+      "format": "JPEG"
+    },
+    {
+      "path": "assets/content-packs/arena/low.jpg",
+      "bytes": 76651,
+      "sha256": "27e076ab008ffb511af8bb15b102b337aa870ef5d1106a6c06d911ba92f84ab6",
+      "width": 480,
+      "height": 747,
+      "format": "JPEG"
+    },
+    {
+      "path": "assets/content-packs/arena/medium.jpg",
+      "bytes": 165899,
+      "sha256": "5756984a0b4e76b9b5b6106f1d764b9434b86c30c4f1d5c340a25993452f0cbd",
+      "width": 720,
+      "height": 1120,
+      "format": "JPEG"
+    },
+    {
+      "path": "assets/content-packs/economy/high.jpg",
+      "bytes": 376152,
+      "sha256": "a5813573d0eb3a5eb43d31f39e197eb6faba9a0c2a9048ed1cba62996fa426d8",
+      "width": 1080,
+      "height": 1680,
+      "format": "JPEG"
+    },
+    {
+      "path": "assets/content-packs/economy/low.jpg",
+      "bytes": 77978,
+      "sha256": "a45f03c7093663a58dc7a75843a39778a19a70d034367a5ee781dd87b91f2d36",
+      "width": 480,
+      "height": 747,
+      "format": "JPEG"
+    },
+    {
+      "path": "assets/content-packs/economy/medium.jpg",
+      "bytes": 162555,
+      "sha256": "ae1c4d94868676f853a0a1c27db61d4b9b0165cc8a8d4483e61f0f95d2de1476",
+      "width": 720,
+      "height": 1120,
+      "format": "JPEG"
+    },
+    {
+      "path": "assets/content-packs/events/high.jpg",
+      "bytes": 422102,
+      "sha256": "513ee4fb4cf367626c223f4a1130cc2e378b356eb0119b7b699803c12769b85f",
+      "width": 1080,
+      "height": 1680,
+      "format": "JPEG"
+    },
+    {
+      "path": "assets/content-packs/events/low.jpg",
+      "bytes": 89746,
+      "sha256": "d685ba2e8772b297065f375bf3673381fe2a0cb9679839b864e19a4ae9f049a2",
+      "width": 480,
+      "height": 747,
+      "format": "JPEG"
+    },
+    {
+      "path": "assets/content-packs/events/medium.jpg",
+      "bytes": 186976,
+      "sha256": "3691516a4bd61a9c934cb9ddb146af85a7f114b1df1484cc055bcf96333e1c18",
+      "width": 720,
+      "height": 1120,
+      "format": "JPEG"
+    },
+    {
+      "path": "assets/content-packs/forge/high.jpg",
+      "bytes": 475588,
+      "sha256": "98b664e50d5c75bc0873c0b664b732ed4d078eaabbd763db6aa60cc3ffd2d961",
+      "width": 1080,
+      "height": 1680,
+      "format": "JPEG"
+    },
+    {
+      "path": "assets/content-packs/forge/low.jpg",
+      "bytes": 97944,
+      "sha256": "6667c73e5602c1ce3e1a34a6fd1d49d3943a0ccbc4a3b6dae70bff3548c2751a",
+      "width": 480,
+      "height": 747,
+      "format": "JPEG"
+    },
+    {
+      "path": "assets/content-packs/forge/medium.jpg",
+      "bytes": 208238,
+      "sha256": "cd0a4a3c688e1c760a8a477f9355db9a296e6326401c32f1a4aea55d7d4f7ffe",
+      "width": 720,
+      "height": 1120,
+      "format": "JPEG"
+    },
+    {
+      "path": "assets/content-packs/founders/high.jpg",
+      "bytes": 361256,
+      "sha256": "09556b84a3063d1bd1efefb9f4d4fa89df3c86c34866837019f2fb4198f1ca32",
+      "width": 1080,
+      "height": 1680,
+      "format": "JPEG"
+    },
+    {
+      "path": "assets/content-packs/founders/low.jpg",
+      "bytes": 73582,
+      "sha256": "5367674d42c1dd6e4c6f936862fed43c880824c29ab4414d00a04040c1b79c4b",
+      "width": 480,
+      "height": 747,
+      "format": "JPEG"
+    },
+    {
+      "path": "assets/content-packs/founders/medium.jpg",
+      "bytes": 155828,
+      "sha256": "f535e1a02b1ea2dfa7e5ee94b55c33108771cf8f9d88cd97b6a94c06e8dfcb60",
+      "width": 720,
+      "height": 1120,
+      "format": "JPEG"
+    },
+    {
+      "path": "assets/content-packs/meta/high.jpg",
+      "bytes": 343016,
+      "sha256": "5d7813eac15abe29e26d457b1b4d092aaf650a82a5515028eb3d1d6c6ca635a9",
+      "width": 1080,
+      "height": 1680,
+      "format": "JPEG"
+    },
+    {
+      "path": "assets/content-packs/meta/low.jpg",
+      "bytes": 68134,
+      "sha256": "e5b87d6a464d50b7f6359b893087ce22e7cce2b2f7f4e81d9421a8db54f0b991",
+      "width": 480,
+      "height": 747,
+      "format": "JPEG"
+    },
+    {
+      "path": "assets/content-packs/meta/medium.jpg",
+      "bytes": 145721,
+      "sha256": "9bad006495380b77d70cc2681150ad34e16a330364f22170651e475af14aa0ff",
+      "width": 720,
+      "height": 1120,
+      "format": "JPEG"
+    },
+    {
+      "path": "assets/content-packs/missions/high.jpg",
+      "bytes": 439574,
+      "sha256": "9eca60a2213a76b4dc41e3c48c6d0de7fe234a9658c815e0cad600b378311daa",
+      "width": 1080,
+      "height": 1680,
+      "format": "JPEG"
+    },
+    {
+      "path": "assets/content-packs/missions/low.jpg",
+      "bytes": 92328,
+      "sha256": "80a292da78667200be15ca4e23d0d17a163559ea19b78d7b2bb5ee081d218632",
+      "width": 480,
+      "height": 747,
+      "format": "JPEG"
+    },
+    {
+      "path": "assets/content-packs/missions/medium.jpg",
+      "bytes": 193678,
+      "sha256": "fb475e16707d0d335a3f986678f9a578fff0ee361af5803a7102fd73f11323bf",
+      "width": 720,
+      "height": 1120,
+      "format": "JPEG"
+    },
+    {
+      "path": "assets/content-packs/nexus/high.jpg",
+      "bytes": 431134,
+      "sha256": "ca0d59fce7d9357f28e10ebecccbe5d71765f364c4b69be54a1dcbca10f895a9",
+      "width": 1080,
+      "height": 1680,
+      "format": "JPEG"
+    },
+    {
+      "path": "assets/content-packs/nexus/low.jpg",
+      "bytes": 83590,
+      "sha256": "335ae6d6c146809687e051a76e56b1ebf5c682567d67c3431ed292fa0f2cb9b9",
+      "width": 480,
+      "height": 747,
+      "format": "JPEG"
+    },
+    {
+      "path": "assets/content-packs/nexus/medium.jpg",
+      "bytes": 182614,
+      "sha256": "2ffcaf004f0fbbf9f19f4bad735e3e52487aa15ed3f7142cc6d32db5f4762d8e",
+      "width": 720,
+      "height": 1120,
+      "format": "JPEG"
+    },
+    {
+      "path": "assets/content-packs/social/high.jpg",
+      "bytes": 405557,
+      "sha256": "be49726616fc2d20f59198a74e9ba7899a0f46624c80cb7c1563cd07c2790194",
+      "width": 1080,
+      "height": 1680,
+      "format": "JPEG"
+    },
+    {
+      "path": "assets/content-packs/social/low.jpg",
+      "bytes": 84060,
+      "sha256": "eceeec03b13179e84c751e3df80b01324f011c184838e1538bf9affa615ef882",
+      "width": 480,
+      "height": 747,
+      "format": "JPEG"
+    },
+    {
+      "path": "assets/content-packs/social/medium.jpg",
+      "bytes": 177204,
+      "sha256": "22a5547c7e5a2177dcd3a35742e08f581c4c1bd20599f64a7381794170446176",
+      "width": 720,
+      "height": 1120,
+      "format": "JPEG"
+    },
+    {
+      "path": "assets/content-packs/store/high.jpg",
+      "bytes": 398799,
+      "sha256": "00684e9e23f70b6577f5f528b23c203e8733fa1cb7e04d4b294ccb66a4f05f8e",
+      "width": 1080,
+      "height": 1680,
+      "format": "JPEG"
+    },
+    {
+      "path": "assets/content-packs/store/low.jpg",
+      "bytes": 80004,
+      "sha256": "358e4a9ecad6caa59a92817f3f69b0634d511947c59435c6aa661742feb417c2",
+      "width": 480,
+      "height": 747,
+      "format": "JPEG"
+    },
+    {
+      "path": "assets/content-packs/store/medium.jpg",
+      "bytes": 170862,
+      "sha256": "dbca445997d3cc159f92b7078ca598766cf8e3733cf8e29adb5b679ff8fea5cb",
+      "width": 720,
+      "height": 1120,
+      "format": "JPEG"
+    },
+    {
+      "path": "assets/content-packs/tutorial/high.jpg",
+      "bytes": 380624,
+      "sha256": "db7801bc3a080727b994a19fc30ea55ed7210661f0084a1dc1f40fe38e5a117f",
+      "width": 1080,
+      "height": 1680,
+      "format": "JPEG"
+    },
+    {
+      "path": "assets/content-packs/tutorial/low.jpg",
+      "bytes": 76334,
+      "sha256": "50af495d49a31d7f025759935117826a173cadf92bc984204ea39f35f683ea19",
+      "width": 480,
+      "height": 747,
+      "format": "JPEG"
+    },
+    {
+      "path": "assets/content-packs/tutorial/medium.jpg",
+      "bytes": 164020,
+      "sha256": "abe4f717918498937b01aa1a2b2ca31496291fc9031133ad43d4978600a1a103",
+      "width": 720,
+      "height": 1120,
+      "format": "JPEG"
+    },
+    {
+      "path": "assets/content-packs/world/high.jpg",
+      "bytes": 404301,
+      "sha256": "2877ab3966fe769d95b6a7b0f6bf7833b32012152b7562b2485b15dac1e7b013",
+      "width": 1080,
+      "height": 1680,
+      "format": "JPEG"
+    },
+    {
+      "path": "assets/content-packs/world/low.jpg",
+      "bytes": 79998,
+      "sha256": "9618b88b5272485f92493728784f75cd3ea0ab7fc9690deb6c888f49992b0257",
+      "width": 480,
+      "height": 747,
+      "format": "JPEG"
+    },
+    {
+      "path": "assets/content-packs/world/medium.jpg",
+      "bytes": 171932,
+      "sha256": "dfba15f40e287b4753a4d1397181f8be7c80353414ce793cee2c8e40d8177d7e",
+      "width": 720,
+      "height": 1120,
+      "format": "JPEG"
+    },
+    {
+      "path": "assets/images/icon.jpg",
+      "bytes": 419595,
+      "sha256": "1124e9e3838242423dbcac3b1ccb170ae3e0f4684e343e12da5862c2c4d0b460",
+      "width": 1254,
+      "height": 1254,
+      "format": "JPEG"
+    },
+    {
+      "path": "assets/registered/backgrounds/IMG_20260606_040514_270.jpg",
+      "bytes": 129444,
+      "sha256": "f21300426112c41f64c8c2326fc999b8125def90645b5060a04b4cd3ea31de5a",
+      "width": 1280,
+      "height": 853,
+      "format": "JPEG"
+    },
+    {
+      "path": "assets/registered/backgrounds/IMG_20260606_040516_225.jpg",
+      "bytes": 129857,
+      "sha256": "622483d02db89a3aed57449c2e06bff3e4fa965242de13dcfbd5331152851d46",
+      "width": 1280,
+      "height": 853,
+      "format": "JPEG"
+    },
+    {
+      "path": "assets/registered/backgrounds/IMG_20260606_040517_340.jpg",
+      "bytes": 215174,
+      "sha256": "adcfecd9346c6b65c564e4e3edc06fa0fabbfdcd20d75aacd74c1938274918d4",
+      "width": 1280,
+      "height": 853,
+      "format": "JPEG"
+    },
+    {
+      "path": "assets/registered/backgrounds/IMG_20260606_040519_249.jpg",
+      "bytes": 230014,
+      "sha256": "ec72374fa76d91c8d081fb522c69136caac030ce013e66d07c6a029b8c680ae9",
+      "width": 1280,
+      "height": 853,
+      "format": "JPEG"
+    },
+    {
+      "path": "assets/registered/backgrounds/IMG_20260606_040520_946.jpg",
+      "bytes": 213346,
+      "sha256": "c04ddc1d938b7ee4bb9e8d6df40cc1dc90c80ebfc0da965be385db463348e0f0",
+      "width": 960,
+      "height": 1280,
+      "format": "JPEG"
+    },
+    {
+      "path": "assets/registered/backgrounds/IMG_20260606_040522_219.jpg",
+      "bytes": 118891,
+      "sha256": "7cd126ff2dad1ae0b910a8687c9096f7855340a28160bf9b33f317403cf1f84f",
+      "width": 1280,
+      "height": 853,
+      "format": "JPEG"
+    },
+    {
+      "path": "assets/registered/backgrounds/IMG_20260606_040524_580.jpg",
+      "bytes": 165967,
+      "sha256": "bd1879ed9103a3670578d5c286a82c7849b3cccc1921653741da91912199d470",
+      "width": 853,
+      "height": 1280,
+      "format": "JPEG"
+    },
+    {
+      "path": "assets/registered/backgrounds/IMG_20260606_040601_320.jpg",
+      "bytes": 307367,
+      "sha256": "9ca9f717abfde4bb9d661f8e92fece97e620437c64c9812c9f19a7b5b7368c1f",
+      "width": 1254,
+      "height": 1254,
+      "format": "JPEG"
+    },
+    {
+      "path": "assets/registered/boosts/IMG_20260606_040525_480.jpg",
+      "bytes": 156908,
+      "sha256": "846d368ecaf00dba27686ad6f1b9d65aab8cec9aa9ab409f7d7e3b42aeb2861f",
+      "width": 1024,
+      "height": 1280,
+      "format": "JPEG"
+    },
+    {
+      "path": "assets/registered/boosts/IMG_20260606_040527_020.jpg",
+      "bytes": 152757,
+      "sha256": "1c294dade41dccc0c6e6398870d8511e4d063166f90fb5ffa1836b5e7702a84e",
+      "width": 1024,
+      "height": 1280,
+      "format": "JPEG"
+    },
+    {
+      "path": "assets/registered/boosts/IMG_20260606_040529_139.jpg",
+      "bytes": 230039,
+      "sha256": "49fcf1607fcc71693f9567c77c5d5e54da783d8bca65525e272d6c28a81470b4",
+      "width": 1024,
+      "height": 1280,
+      "format": "JPEG"
+    },
+    {
+      "path": "assets/registered/boosts/IMG_20260606_040529_674.jpg",
+      "bytes": 180076,
+      "sha256": "88159238780d5ca44391936f12ffac95aee9561e11904599d5946f5666ef5171",
+      "width": 1024,
+      "height": 1280,
+      "format": "JPEG"
+    },
+    {
+      "path": "assets/registered/chests/IMG_20260606_040531_582.jpg",
+      "bytes": 194818,
+      "sha256": "b12e762a8fa6112c345868d7967e9eff35f27e3990c875035d9f9d840f7ea098",
+      "width": 1280,
+      "height": 853,
+      "format": "JPEG"
+    },
+    {
+      "path": "assets/registered/clans/IMG_20260619_113017.jpg",
+      "bytes": 66806,
+      "sha256": "52d9d5483720e70c0086292843f41d8bc8311320fa5f470f1ec561c80ef7e720",
+      "width": 720,
+      "height": 1384,
+      "format": "JPEG"
+    },
+    {
+      "path": "assets/registered/cover/lucid-origin_Crear_una_portada_principal_para_el_bot_oficial_de_Vexforge._Dise#U00f1o_-_castillo_-1.jpg",
+      "bytes": 288902,
+      "sha256": "7731453d01f9328ffef39580d7ec28b216728435272ece284d5e88497bfb7270",
+      "width": 1024,
+      "height": 1024,
+      "format": "JPEG"
+    },
+    {
+      "path": "assets/registered/events/IMG_20260619_113335.jpg",
+      "bytes": 53641,
+      "sha256": "a1681bc9e2e2364c7389ac3910dafca1b45d21691040498e12e757028192bdf8",
+      "width": 720,
+      "height": 1404,
+      "format": "JPEG"
+    },
+    {
+      "path": "assets/registered/founders/IMG_20260619_113831.jpg",
+      "bytes": 63229,
+      "sha256": "f52ad44cbcb33e0968e4fd0d8caefc73bb3418cf944e80570bf3bb39a0f070ac",
+      "width": 720,
+      "height": 1420,
+      "format": "JPEG"
+    },
+    {
+      "path": "assets/registered/frames/IMG_20260606_040532_520.jpg",
+      "bytes": 181959,
+      "sha256": "bf5c4e79f84fd46591d14e5d084e204901d9460e58259f77de045abc723ac198",
+      "width": 960,
+      "height": 1280,
+      "format": "JPEG"
+    },
+    {
+      "path": "assets/registered/frames/IMG_20260606_040534_461.jpg",
+      "bytes": 274990,
+      "sha256": "61ddbecb10aa92f6b1658fb2e2d628ffc27e1fe119d763d2ddea051529b073fa",
+      "width": 1024,
+      "height": 1280,
+      "format": "JPEG"
+    },
+    {
+      "path": "assets/registered/frames/IMG_20260606_040535_955.jpg",
+      "bytes": 234787,
+      "sha256": "c9dbc4a4d5b86fb4c22b410eeaf1424b093f316ad4c97471902d302ed73781ed",
+      "width": 904,
+      "height": 1280,
+      "format": "JPEG"
+    },
+    {
+      "path": "assets/registered/frames/IMG_20260606_040537_201.jpg",
+      "bytes": 182534,
+      "sha256": "7c388f64f92661f363550c684026cfb2b527b727ae970c7d507e7ea47f74f055",
+      "width": 897,
+      "height": 1280,
+      "format": "JPEG"
+    },
+    {
+      "path": "assets/registered/frames/IMG_20260606_040538_151.jpg",
+      "bytes": 112766,
+      "sha256": "7cb553ab7b7041d74ca293ca98107db4133a8435080ca5881163d3ce6b4b65de",
+      "width": 1024,
+      "height": 1280,
+      "format": "JPEG"
+    },
+    {
+      "path": "assets/registered/frames/IMG_20260606_040539_689.jpg",
+      "bytes": 149750,
+      "sha256": "7748785e9c0c6216846e077ced1243976dedb1796e63a5f387352ed0a48befde",
+      "width": 960,
+      "height": 1280,
+      "format": "JPEG"
+    },
+    {
+      "path": "assets/registered/icons/IMG_20260606_040505_192.jpg",
+      "bytes": 273499,
+      "sha256": "6f9055a262f73c253aa687be3134a4a192e237b0ebce832401bbb87f7344dc05",
+      "width": 1254,
+      "height": 1254,
+      "format": "JPEG"
+    },
+    {
+      "path": "assets/registered/icons/IMG_20260606_040506_475.jpg",
+      "bytes": 185304,
+      "sha256": "ca40aa5d502d025742e4f0ebf278fd84d6ce378e2bb9364a4c338849b7a2e11c",
+      "width": 1024,
+      "height": 1024,
+      "format": "JPEG"
+    },
+    {
+      "path": "assets/registered/icons/IMG_20260606_040508_371.jpg",
+      "bytes": 240874,
+      "sha256": "8bc990963225abc68107246bbd5beab7227429f3e02ec7f75674f4b4c881597e",
+      "width": 1254,
+      "height": 1254,
+      "format": "JPEG"
+    },
+    {
+      "path": "assets/registered/icons/IMG_20260619_114322.jpg",
+      "bytes": 25692,
+      "sha256": "fdb8ecc6f9961ef6ecb6f2f96a824e8da5c6c5e0208a2a03e71b1247c88d5d6e",
+      "width": 720,
+      "height": 1391,
+      "format": "JPEG"
+    },
+    {
+      "path": "assets/registered/icons/IMG_20260619_114717.jpg",
+      "bytes": 60294,
+      "sha256": "3366ee771d98b938e03d9220520bce972ccd64c9bd22ad7f211cb8883f5e9c83",
+      "width": 720,
+      "height": 1409,
+      "format": "JPEG"
+    },
+    {
+      "path": "assets/registered/icons/IMG_20260619_114852.jpg",
+      "bytes": 31465,
+      "sha256": "27ee01cd63e79d66d8b9eae93e41d77e9a60d184ba60a05866616b3b699858ce",
+      "width": 720,
+      "height": 1398,
+      "format": "JPEG"
+    },
+    {
+      "path": "assets/registered/icons/IMG_20260619_115309.jpg",
+      "bytes": 28993,
+      "sha256": "2666670f4f2fbc7b068b5657b4a10b8484f461eadeeedeead54a8239dca27e4f",
+      "width": 720,
+      "height": 1388,
+      "format": "JPEG"
+    },
+    {
+      "path": "assets/registered/lobby/IMG_20260619_110637.jpg",
+      "bytes": 97307,
+      "sha256": "bb74e4629fa2f95bce14c22bc23e1f2382952386a10afda1dc878e5cfb6b2384",
+      "width": 720,
+      "height": 1414,
+      "format": "JPEG"
+    },
+    {
+      "path": "assets/registered/logo/IMG_20260606_040509_906.jpg",
+      "bytes": 419595,
+      "sha256": "1124e9e3838242423dbcac3b1ccb170ae3e0f4684e343e12da5862c2c4d0b460",
+      "width": 1254,
+      "height": 1254,
+      "format": "JPEG"
+    },
+    {
+      "path": "assets/registered/logo/IMG_20260606_040542_755.jpg",
+      "bytes": 201387,
+      "sha256": "3db2f8da33cfdddb757db9bff15ff7dc06e2ca7703f7325d55390a12150a8210",
+      "width": 1254,
+      "height": 1254,
+      "format": "JPEG"
+    },
+    {
+      "path": "assets/registered/logo/IMG_20260606_040543_962.jpg",
+      "bytes": 323040,
+      "sha256": "0e35fa3d30a83227cb455e12fc51ec8cb8e27946c6d0b664df4304152d6f44d2",
+      "width": 1254,
+      "height": 1254,
+      "format": "JPEG"
+    },
+    {
+      "path": "assets/registered/logo/IMG_20260606_040544_619.jpg",
+      "bytes": 261765,
+      "sha256": "11836caf19d5cf98be4414e223052b05d26be260db5857d44569bd97e0215f2d",
+      "width": 1254,
+      "height": 1254,
+      "format": "JPEG"
+    },
+    {
+      "path": "assets/registered/logo/IMG_20260606_040546_258.jpg",
+      "bytes": 230585,
+      "sha256": "6afd2241ef32fdea7bc2e3d4782ac3206cf9312ae71770bc3979875184178e88",
+      "width": 1254,
+      "height": 1254,
+      "format": "JPEG"
+    },
+    {
+      "path": "assets/registered/market/IMG_20260619_112552.jpg",
+      "bytes": 87702,
+      "sha256": "c89650512bfe2c7ceb2ac939cad3721ff003b2b1384e63651f40fba5ee8768b9",
+      "width": 720,
+      "height": 1420,
+      "format": "JPEG"
+    },
+    {
+      "path": "assets/registered/misc/IMG_20260619_122016.jpg",
+      "bytes": 56343,
+      "sha256": "0a5ca60596e2ae8f4b30eec9e27d23c671960937af749c0588fb533673a20dc7",
+      "width": 720,
+      "height": 1381,
+      "format": "JPEG"
+    },
+    {
+      "path": "assets/registered/misc/IMG_20260619_122314.jpg",
+      "bytes": 34761,
+      "sha256": "c8cfb52b9327e2e817ce36e37b5e6cef60eae690d4878a5f8830f371bae5791a",
+      "width": 720,
+      "height": 1429,
+      "format": "JPEG"
+    },
+    {
+      "path": "assets/registered/progresi#U00f3n/IMG_20260619_120425.jpg",
+      "bytes": 40743,
+      "sha256": "561047101fabd000ff2cfb759a8e9da56d035b929c67078773cc876cbec736ac",
+      "width": 720,
+      "height": 1377,
+      "format": "JPEG"
+    },
+    {
+      "path": "assets/registered/progresi#U00f3n/IMG_20260619_120838.jpg",
+      "bytes": 39340,
+      "sha256": "0d684f8ff386fd16bc71f280d7796f9afbbbea24d4ecdef6ebc644f2e2874f86",
+      "width": 720,
+      "height": 1418,
+      "format": "JPEG"
+    },
+    {
+      "path": "assets/registered/progresi#U00f3n/IMG_20260619_121047.jpg",
+      "bytes": 59135,
+      "sha256": "65c12f80127e34af079b37be7ea8e15d0e8debb1f8a10c59052fdfaac9a9137e",
+      "width": 720,
+      "height": 1350,
+      "format": "JPEG"
+    },
+    {
+      "path": "assets/registered/rewards/IMG_20260619_111433.jpg",
+      "bytes": 49653,
+      "sha256": "721750ba624ff0450ee02519238845a5f5e6718823e2dcaccac1e16b4a099053",
+      "width": 720,
+      "height": 1412,
+      "format": "JPEG"
+    },
+    {
+      "path": "assets/registered/sessions/IMG_20260619_111025.jpg",
+      "bytes": 72337,
+      "sha256": "14a3935da9434d1c8df8849178195165f16373c23cac419febf96365ab88af46",
+      "width": 720,
+      "height": 1425,
+      "format": "JPEG"
+    },
+    {
+      "path": "assets/registered/tutorial/file_0000000027bc722fbfa4f5dbe844c248.png",
+      "bytes": 2423018,
+      "sha256": "36ee81541c3b8291e4a7d4fb353d152702a69c7214609e7cefbe852d6ceb4355",
+      "width": 1402,
+      "height": 1122,
+      "format": "PNG"
+    },
+    {
+      "path": "assets/registered/ui sistema/IMG_20260619_115844.jpg",
+      "bytes": 37795,
+      "sha256": "d13c784bd5df7b16a5888f8c44d6458099ef5c947fdd8cbd06afe142adf8bff4",
+      "width": 720,
+      "height": 1421,
+      "format": "JPEG"
+    },
+    {
+      "path": "assets/registered/ui sistema/IMG_20260619_120107.jpg",
+      "bytes": 31881,
+      "sha256": "5caa1616cadb55c8a4aeaedf06d0713d35b6aba0d118fa921370571648dfd249",
+      "width": 720,
+      "height": 1430,
+      "format": "JPEG"
+    },
+    {
+      "path": "assets/registered/wallet/IMG_20260619_112146.jpg",
+      "bytes": 60688,
+      "sha256": "0de1cfaf1ad60ae95c9b64082a09973fb179296cd9380e6cf889f5f1a3663be2",
+      "width": 720,
+      "height": 1397,
+      "format": "JPEG"
+    },
+    {
+      "path": "assets/vexforge/VF_BOSS_AURA.png",
+      "bytes": 23406,
+      "sha256": "b4d8e0ffe16c68c589f5b5b6ff9dd160f686aa431857886e0a9d89f93401cb2b",
+      "width": 900,
+      "height": 1200,
+      "format": "PNG"
+    },
+    {
+      "path": "assets/vexforge/VF_BOSS_SIGIL.png",
+      "bytes": 11612,
+      "sha256": "c8b9bef1bdaa502361ee66c0f25fa6481e487fea3930a2f083cd03167a09a898",
+      "width": 768,
+      "height": 1024,
+      "format": "PNG"
+    },
+    {
+      "path": "assets/vexforge/VF_CARD_BACK_CORE.png",
+      "bytes": 20449,
+      "sha256": "0022ecd3ec485ff05adc955636e8cdbb37687cc3a3e1cb10177b8e027dec95d0",
+      "width": 800,
+      "height": 1200,
+      "format": "PNG"
+    },
+    {
+      "path": "assets/vexforge/VF_CARD_FALLBACK_NEUTRAL.png",
+      "bytes": 23560,
+      "sha256": "a6d7d23ea15df745ea4c89d37eed61c410dea78329980f063af080a8a3e272c9",
+      "width": 800,
+      "height": 1200,
+      "format": "PNG"
+    },
+    {
+      "path": "assets/vexforge/VF_CARD_FRAME_EPIC.png",
+      "bytes": 7116,
+      "sha256": "05882bd10d3cedbcd71d7aff7a517492a58b9d233985a22a4310f6c71902cf16",
+      "width": 800,
+      "height": 1200,
+      "format": "PNG"
+    },
+    {
+      "path": "assets/vexforge/VF_CARD_FRAME_LEGENDARY.png",
+      "bytes": 10303,
+      "sha256": "fa8dd6ccb8d47499bf368d44e1892ce5436057f996cc2a9806c7d6c31c63fa7e",
+      "width": 800,
+      "height": 1200,
+      "format": "PNG"
+    },
+    {
+      "path": "assets/vexforge/VF_PACK_RELIC.png",
+      "bytes": 12575,
+      "sha256": "48b3b3b009722fee2ec514f4741d745f9673700552d2dd8a1992f5b86346d068",
+      "width": 900,
+      "height": 1200,
+      "format": "PNG"
+    },
+    {
+      "path": "assets/vexforge/VF_REWARD_SIGIL_COMMON.png",
+      "bytes": 23413,
+      "sha256": "a78a9318565ad3b727c9b5e1c6b6b0f9c18b7e05b0e330039990c6ff7a845f41",
+      "width": 900,
+      "height": 1200,
+      "format": "PNG"
+    },
+    {
+      "path": "assets/vexforge/VF_REWARD_SIGIL_PREMIUM.png",
+      "bytes": 23102,
+      "sha256": "351f798d5eb21bf5f85c9de89657978cb69eaa997a17b07a02c267e14e9d84e8",
+      "width": 900,
+      "height": 1200,
+      "format": "PNG"
+    },
+    {
+      "path": "assets/vexforge/attack.wav",
+      "bytes": 5336,
+      "sha256": "a0d2930c9bd75fd977c415e3b75f1edf1fd076c1239eb9dd58a6f2cfb73b2940"
+    },
+    {
+      "path": "assets/vexforge/fusion.wav",
+      "bytes": 28268,
+      "sha256": "a24c2061b73dca63390980537f75880edf7a098fa276ae4ee6adea4d5ce41ee2"
+    },
+    {
+      "path": "assets/vexforge/impact.wav",
+      "bytes": 11510,
+      "sha256": "7b5c04ecffd357fb84b1eb76c255838d34ea3a3f42ee8f7b0ded527ecadab446"
+    },
+    {
+      "path": "assets/vexforge/pack_reveal.wav",
+      "bytes": 26504,
+      "sha256": "8f481f25eb14e3ba3c68bef18b2a8e69370dca78ae090abb8c89b938e235b11e"
+    },
+    {
+      "path": "assets/vexforge/reward.wav",
+      "bytes": 16802,
+      "sha256": "5c24becc86a6008d46163185ba96dff04ba242a82faa95fb02bc9e7876d39071"
+    },
+    {
+      "path": "assets/vexforge/scenes/archive.jpg",
+      "bytes": 446153,
+      "sha256": "4420daa71891e58e8555a798b61aed384886848acf67f083b7ef8aa2a703b0ab",
+      "width": 1080,
+      "height": 1680,
+      "format": "JPEG"
+    },
+    {
+      "path": "assets/vexforge/scenes/arena.jpg",
+      "bytes": 430666,
+      "sha256": "1d7586106bb183a2339c86764499689270697f056c2ef21013db618c68216241",
+      "width": 1080,
+      "height": 1680,
+      "format": "JPEG"
+    },
+    {
+      "path": "assets/vexforge/scenes/economy.jpg",
+      "bytes": 417531,
+      "sha256": "fa7dd8109dd4b8b31cfae8563ffacb1ef4b397c7c322e9bff32d9b45332d28cc",
+      "width": 1080,
+      "height": 1680,
+      "format": "JPEG"
+    },
+    {
+      "path": "assets/vexforge/scenes/events.jpg",
+      "bytes": 475497,
+      "sha256": "9bf5bae3be8e3c0541b8e223d29e515310a6bb1d55a1f58e56809083d6742bf7",
+      "width": 1080,
+      "height": 1680,
+      "format": "JPEG"
+    },
+    {
+      "path": "assets/vexforge/scenes/forge.jpg",
+      "bytes": 540456,
+      "sha256": "1ef36931e02bfd62f394825d7b16e2624ceb33b8bad2b7f974e00c89c1deb5f4",
+      "width": 1080,
+      "height": 1680,
+      "format": "JPEG"
+    },
+    {
+      "path": "assets/vexforge/scenes/founders.jpg",
+      "bytes": 399463,
+      "sha256": "6bbb792624c705683f1d7eab2c9ade6e480101cf03a1aa62049c0b2915805a11",
+      "width": 1080,
+      "height": 1680,
+      "format": "JPEG"
+    },
+    {
+      "path": "assets/vexforge/scenes/meta.jpg",
+      "bytes": 378267,
+      "sha256": "d1a5a627f4c4dcb669467ee946c60379a824267796ba1cd70fe98262158eb958",
+      "width": 1080,
+      "height": 1680,
+      "format": "JPEG"
+    },
+    {
+      "path": "assets/vexforge/scenes/missions.jpg",
+      "bytes": 494828,
+      "sha256": "026a782633f57cea1d31eeaba0e88a3cb0ba3950773f2bae089d2ec9d5dba6ba",
+      "width": 1080,
+      "height": 1680,
+      "format": "JPEG"
+    },
+    {
+      "path": "assets/vexforge/scenes/nexus.jpg",
+      "bytes": 479839,
+      "sha256": "16d35696a8423a0a3ba352ad78fa9a499157cfe7035410cc18ea07ab6b343e42",
+      "width": 1080,
+      "height": 1680,
+      "format": "JPEG"
+    },
+    {
+      "path": "assets/vexforge/scenes/social.jpg",
+      "bytes": 452345,
+      "sha256": "044c4b8b84d860a17ac3ad3378ef6e361e00a1161298a43cc05ab6a2826366d2",
+      "width": 1080,
+      "height": 1680,
+      "format": "JPEG"
+    },
+    {
+      "path": "assets/vexforge/scenes/store.jpg",
+      "bytes": 445129,
+      "sha256": "1ee53b8ec87b05475223f21fd7bf07e6301bb339069082d2eaa7a8044643a41c",
+      "width": 1080,
+      "height": 1680,
+      "format": "JPEG"
+    },
+    {
+      "path": "assets/vexforge/scenes/tutorial.jpg",
+      "bytes": 421116,
+      "sha256": "eb99ec092adb0da5b1cee17e8294f614c5b9bc4cba35cf3885cf2762c8ec928d",
+      "width": 1080,
+      "height": 1680,
+      "format": "JPEG"
+    },
+    {
+      "path": "assets/vexforge/scenes/world.jpg",
+      "bytes": 448497,
+      "sha256": "9ffbb422b1941fd928ca91d78aa8ecbbae7fc4bf493360a109bced76e8ab5424",
+      "width": 1080,
+      "height": 1680,
+      "format": "JPEG"
+    },
+    {
+      "path": "assets/vexforge/shield.wav",
+      "bytes": 10628,
+      "sha256": "20cc1fa78a540865e01dfc16b4daddf5b5b7df6915d67636c7c881b639d98cf2"
+    }
+  ]
+}

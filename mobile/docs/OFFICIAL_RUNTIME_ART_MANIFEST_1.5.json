@@ -1,0 +1,98 @@
+{
+  "product": "VEXFORGE",
+  "runtime": "Expo 54 mobile",
+  "release": "1.5.0",
+  "artAuthority": "This package is the implementation source. Replit must not regenerate, reinterpret, replace, or invent runtime art.",
+  "platformArtPolicy": "All environment/cinematic/mobile art is local. Official card artwork remains server/catalog supplied because the card catalog is the ownership authority.",
+  "sceneRegistry": {
+    "nexus": {
+      "asset": "assets/vexforge/scenes/nexus.jpg",
+      "tiered": true,
+      "use": "startup, nexus portal, return-to-world"
+    },
+    "arena": {
+      "asset": "assets/vexforge/scenes/arena.jpg",
+      "tiered": true,
+      "use": "battlefield, boss entry, combat cinematic"
+    },
+    "archive": {
+      "asset": "assets/vexforge/scenes/archive.jpg",
+      "tiered": true,
+      "use": "card archive"
+    },
+    "forge": {
+      "asset": "assets/vexforge/scenes/forge.jpg",
+      "tiered": true,
+      "use": "deck/forge"
+    },
+    "founders": {
+      "asset": "assets/vexforge/scenes/founders.jpg",
+      "tiered": true,
+      "use": "legacy/founders"
+    },
+    "missions": {
+      "asset": "assets/vexforge/scenes/missions.jpg",
+      "tiered": true,
+      "use": "PVE mission hall"
+    },
+    "store": {
+      "asset": "assets/vexforge/scenes/store.jpg",
+      "tiered": true,
+      "use": "pack vault, store, pack opening ceremony"
+    },
+    "economy": {
+      "asset": "assets/vexforge/scenes/economy.jpg",
+      "tiered": true,
+      "use": "treasury/economy"
+    },
+    "world": {
+      "asset": "assets/vexforge/scenes/world.jpg",
+      "tiered": true,
+      "use": "world atlas"
+    },
+    "social": {
+      "asset": "assets/vexforge/scenes/social.jpg",
+      "tiered": true,
+      "use": "social/clan hall"
+    },
+    "meta": {
+      "asset": "assets/vexforge/scenes/meta.jpg",
+      "tiered": true,
+      "use": "runtime diagnostics"
+    },
+    "tutorial": {
+      "asset": "assets/vexforge/scenes/tutorial.jpg",
+      "tiered": true,
+      "use": "tutorial"
+    },
+    "events": {
+      "asset": "assets/vexforge/scenes/events.jpg",
+      "tiered": true,
+      "use": "live-ops/seasonal atlas surface"
+    }
+  },
+  "tieredSources": "assets/content-packs/<scene>/{high,medium,low}.jpg",
+  "animationAuthority": [
+    "src/components/SceneCinematic.tsx",
+    "src/components/PackOpeningCeremony.tsx",
+    "src/render/WorldBackdrop.tsx",
+    "src/render/BattlefieldCanvas.tsx",
+    "src/render/BattleEffects.tsx"
+  ],
+  "audioAuthority": [
+    "assets/vexforge/attack.wav",
+    "assets/vexforge/impact.wav",
+    "assets/vexforge/shield.wav",
+    "assets/vexforge/reward.wav",
+    "assets/vexforge/fusion.wav",
+    "assets/vexforge/pack_reveal.wav"
+  ],
+  "doNotGenerate": [
+    "official card artwork",
+    "replacement RPCs",
+    "local wallet settlement",
+    "local pack odds",
+    "local ownership state",
+    "backend event/season truth"
+  ]
+}

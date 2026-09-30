@@ -1,405 +1,47 @@
-import { useState } from 'react';
-import { ActivityIndicator, Image, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
-import { Ionicons } from '@/components/ForgeIcon';
-import { Redirect, useRouter } from 'expo-router';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { useColors } from '@/hooks/useColors';
-import { useGame } from '@/context/GameContext';
-import { ScreenShell } from '@/components/ScreenShell';
-import { OFFICIAL_ASSETS } from '@/constants/visual';
-import { advanceTutorialStep, skipTutorial, TUTORIAL_DONE_STEP, TUTORIAL_TOTAL_STEPS } from '@/lib/supabase';
-
-type TutorialRoute = '/collection' | '/battle' | '/deck' | '/store';
-type TutorialAccent = 'accent' | 'danger' | 'rarityEpic' | 'success' | 'primary';
-
-type TutorialStep = {
-  title: string;
-  subtitle: string;
-  description: string;
-  icon: keyof typeof Ionicons.glyphMap;
-  accent: TutorialAccent;
-  actionLabel: string;
-  route?: TutorialRoute;
-};
-
-const TUTORIAL_STEPS: TutorialStep[] = [
-  {
-    title: 'Bienvenido a VEXFORGE',
-    subtitle: 'El mundo de las cartas te espera, Forjador',
-    description: 'Explora un universo de cartas, facciones, misiones y batallas. Este recorrido guarda tu avance en tu cuenta para que puedas retomarlo cuando quieras.',
-    icon: 'compass-outline',
-    accent: 'accent',
-    actionLabel: 'COMENZAR TUTORIAL',
-  },
-  {
-    title: 'Tu colección de cartas',
-    subtitle: 'Conoce las cartas que ya tienes',
-    description: 'Tu colección se carga desde el compendio oficial. Abre una carta para revisar su arte, rareza, poder, habilidades y datos de propiedad.',
-    icon: 'layers-outline',
-    accent: 'danger',
-    actionLabel: 'VER MI COLECCIÓN',
-    route: '/collection',
-  },
-  {
-    title: 'Abre tu primera forja',
-    subtitle: 'Packs y fusión amplían tus posibilidades',
-    description: 'Entra en la cámara oficial de packs y forja. El servidor valida tu balance, tus cartas y cada resultado; el dispositivo nunca inventa recompensas.',
-    icon: 'cube-outline',
-    accent: 'rarityEpic',
-    actionLabel: 'ABRIR FORJA',
-    route: '/store',
-  },
-  {
-    title: 'Ejecuta misiones',
-    subtitle: 'La progresión nace de tus decisiones',
-    description: 'Las misiones conectan actividad, experiencia y recompensas. Consulta las superficies disponibles y continúa cuando estés listo para entrar en la arena.',
-    icon: 'shield-checkmark-outline',
-    accent: 'success',
-    actionLabel: 'CONTINUAR',
-  },
-  {
-    title: 'Tu primera batalla',
-    subtitle: 'Aprende en la arena oficial',
-    description: 'Abre la arena para ver los oponentes disponibles. Los resultados de combate se resuelven exclusivamente por Supabase; el dispositivo no simula victorias ni recompensas.',
-    icon: 'flash-outline',
-    accent: 'primary',
-    actionLabel: 'ABRIR ARENA',
-    route: '/battle',
-  },
-  {
-    title: 'Construye tu mazo',
-    subtitle: 'Diseña tu estrategia',
-    description: 'Elige cartas de tu propia colección, revisa los límites y guarda el mazo usando la validación autoritativa. El mazo persistido queda disponible para tus siguientes sesiones.',
-    icon: 'albums-outline',
-    accent: 'rarityEpic',
-    actionLabel: 'IR AL MAZO',
-    route: '/deck',
-  },
-  {
-    title: 'Forjador iniciado',
-    subtitle: 'El universo queda abierto para ti',
-    description: 'Ya conoces el compendio, la progresión, la arena y el mazo. Completa este paso para conservar tu avance y explorar VEXFORGE libremente.',
-    icon: 'trophy-outline',
-    accent: 'accent',
-    actionLabel: 'COMPLETAR TUTORIAL',
-  },
-];
-
-function LoadingState({ colors }: { colors: ReturnType<typeof useColors> }) {
-  return (
-    <View style={[styles.center, { backgroundColor: colors.background }]}>
-      <ActivityIndicator color={colors.primary} />
-      <Text style={[styles.loadingText, { color: colors.mutedForeground }]}>CARGANDO TUTORIAL OFICIAL</Text>
-    </View>
-  );
+import React,{useEffect,useState}from'react';
+import{Pressable,ScrollView,StyleSheet,Text,View}from'react-native';
+import{useRouter}from'expo-router';
+import{WorldBackdrop}from'../src/render/WorldBackdrop';
+import{RuntimeHeader}from'../src/app/RuntimeHeader';
+import{useGame}from'../src/app/GameProvider';
+import{COLORS,QUALITY_BUDGETS,SCENE_ACCENT,type SceneVariant}from'../src/core/constants';
+import{RuneButton,SectionTitle,StatSeal,StatusPill,WorldObject,WorldTitle}from'../src/render/Diegetic';
+import{BattlefieldCanvas}from'../src/render/BattlefieldCanvas';
+import{classifyBattleEvent}from'../src/engine/presentation';
+import{currentActor,dispatchPlayerAction,legalActions,legalTargets,startTacticalSession}from'../src/engine/tacticalInteractive';
+import type{TacticalActionType,TacticalSession}from'../src/engine/tacticalInteractive';
+import{TRAINING_CARDS,TRAINING_ENEMY,makeSeed}from'../src/engine/tacticalLabEngine';
+const STEPS=[
+ ['NEXUS','DESPERTAR','Tu punto de partida. Aprende la geografía del Nexus, la navegación principal y cómo regresar siempre al ciclo central.','/','nexus'],
+ ['CUENTA','IDENTIDAD Y SESIÓN','La cuenta abre tu estado real. Aprende acceso, persistencia de sesión y por qué el cliente nunca fabrica tu perfil.','/auth','nexus'],
+ ['ARCHIVO','LAS CARTAS SON EL MUNDO','Inspecciona artwork oficial, facción, rareza, estadísticas, sinergias, propiedad, progreso y lore.','/archive','archive'],
+ ['FORJA','CONSTRUIR FORMACIÓN','Aprende Champion, Vanguard, Sentinel y Reserve, validación de deck, selección y guardado.','/forge','forge'],
+ ['ARENA','INICIATIVA Y RONDAS','Comprende Velocidad, orden de turno, daño, críticos, HP, estados, energía y lectura del campo.','/arena','arena'],
+ ['ARENA','HABILIDADES Y RESPUESTA','Practica Ataque, Habilidad y Guardia. Aprende a seleccionar objetivos y leer consecuencias sin tocar el settlement real.','/arena','arena'],
+ ['PVE','AVANZAR EN EL MUNDO','Normal, Elite, Boss, Raid y Event. El PvE es una columna de progreso, no un menú aislado.','/missions','missions'],
+ ['MUNDO','BOSSES Y RAIDS','Explora encuentros únicos, fases, participación cooperativa, contribución y recompensas que llegan del servidor.','/world','world'],
+ ['ENERGÍA','RITMO DE PROGRESO','La energía limita el ritmo, se sincroniza con el servidor y conecta misiones, PvE y retorno al juego.','/missions','missions'],
+ ['ECONOMÍA','CIRCULACIÓN DE VALOR','VEX in-game, VEX tradeable, Gold y Energy. Aprende fuentes, sinks, locks, trazabilidad e idempotencia.','/economy','economy'],
+ ['MERCADO','OFERTAR Y ADQUIRIR','Los precios y fees vienen del servidor. Aprende a listar una carta, comprar, cancelar y leer el estado del listing.','/economy','economy'],
+ ['TESORERÍA','DEPÓSITOS Y RETIROS','Registra transacciones externas y solicitudes de retiro. La elegibilidad, acreditación y settlement siguen reglas server-side.','/economy','economy'],
+ ['TIENDA','PACKS Y REVELACIÓN','Aprende adquisición, órdenes, pago externo, apertura y ceremonia de cartas sin lanzar odds locales.','/store','store'],
+ ['FORJA DE CARTAS','FUSIÓN Y EVOLUCIÓN','Las cartas también son progresión. Aprende a consultar política y ejecutar operaciones autorizadas por servidor.','/store','forge'],
+ ['SOCIAL','EL META HUMANO','Amigos, solicitudes, búsquedas, chat global, privados, clan, presencia y contribución colectiva.','/social','social'],
+ ['TEMPORADA','RANKED Y LEGADO','Rangos, MMR, victorias, derrotas, pase de temporada y recompensas estructuran el ciclo competitivo.','/world','world'],
+ ['CÓDICE','LORE Y SIGNIFICADO','El lore conecta regiones, cartas, bosses, facciones y economía. Explora las entradas oficiales del mundo.','/world','world'],
+ ['LIVE OPS','UN MUNDO QUE CAMBIA','Eventos, rotaciones y temporadas mantienen el ecosistema vivo. El contenido dinámico se publica por el backend.','/world','events'],
+ ['DOMINIO','TU SIGUIENTE SESIÓN','Ya conoces el circuito completo. El dominio real aparece cuando conviertes conocimiento en decisiones, colección, combate y economía sostenible.','/','nexus'],
+] as const;
+export default function Tutorial(){
+ const router=useRouter();const{quality,tutorialStep,setTutorialStep}=useGame();const i=Math.min(tutorialStep,STEPS.length-1);const s=STEPS[i];const accent=SCENE_ACCENT[s[4] as SceneVariant]??COLORS.gold;const progress=Math.round(((i+1)/STEPS.length)*100);const open=()=>router.push(s[3] as never);
+ const[practice,setPractice]=useState<TacticalSession|null>(null);const[action,setAction]=useState<TacticalActionType>('attack');const[targetId,setTargetId]=useState<string|null>(null);
+ useEffect(()=>{if((i===4||i===5)&&!practice)setPractice(startTacticalSession(TRAINING_CARDS,TRAINING_ENEMY,makeSeed(`tutorial-drill-${i}`)));if(i!==4&&i!==5)setPractice(null)},[i,practice]);
+ const actor=practice?currentActor(practice):null;const targets=practice?legalTargets(practice,action):[];const actions=practice?legalActions(practice):[];const activeEvent=practice?.events[practice.events.length-1]??null;
+ const dispatch=(type:TacticalActionType)=>{if(!practice||!actor)return;const chosen=type==='guard'?actor.id:targetId??targets[0]?.id;if(!chosen&&type!=='guard')return;setPractice(dispatchPlayerAction(practice,{actorId:actor.id,type,targetId:chosen}));setTargetId(null)};
+ const next=async()=>{if(i===STEPS.length-1){await setTutorialStep(STEPS.length);router.back();return;}await setTutorialStep(i+1)};
+ const practiceUnits=practice?[...practice.player,...practice.enemy].map(u=>({id:u.id,hp:u.hpNow,max_hp:u.hp,side:u.side,card_id:u.name,status:u.alive?'alive':'defeated',statuses:u.statuses,energy:u.energy,max_energy:u.maxEnergy,role:u.role,faction:u.faction,rarity:u.rarity})):[];
+ return<View style={styles.root}><WorldBackdrop variant={s[4] as SceneVariant} tier={quality}/><RuntimeHeader/><ScrollView contentContainerStyle={styles.content}><WorldTitle kicker={`TUTORIAL VIVO · ${s[0]}`} title={s[1]} subtitle={s[2]}/><WorldObject accent={accent} style={styles.progress}><StatusPill label={`${progress}% · ${i+1}/${STEPS.length}`} accent={accent}/><View style={styles.track}><View style={[styles.fill,{width:`${progress}%`,backgroundColor:accent}]}/></View><Text style={styles.hint}>Ruta educativa, no jaula: el objetivo es que comprendas el sistema y puedas actuar dentro de él.</Text><RuneButton label="EXPLORAR ESTE SISTEMA" onPress={open} accent={accent}/></WorldObject>
+ {(i===4||i===5)?<><SectionTitle kicker="CAMPO DE PRÁCTICA" title="APRENDE HACIENDO" right={<StatusPill label="SIN SETTLEMENT" accent={COLORS.mint}/>} /><BattlefieldCanvas units={practiceUnits} activeEvent={activeEvent?{event_type:activeEvent.event_type,actor_id:activeEvent.actor_id,target_id:activeEvent.target_id,amount:activeEvent.amount,round:activeEvent.round,payload:activeEvent.payload}:null} activeKind={activeEvent?classifyBattleEvent(activeEvent):'neutral'} selectedTargetId={targetId} onSelectTarget={setTargetId} compact maxAnimatedUnits={QUALITY_BUDGETS[quality].maxAnimatedUnits}/><WorldObject accent={COLORS.arcaneBright} style={styles.drill}><View style={styles.seals}><StatSeal compact label="RONDA" value={practice?.round??0} accent={COLORS.goldBright}/><StatSeal compact label="ACTOR" value={actor?.name??'—'} accent={COLORS.arcaneBright}/><StatSeal compact label="ESTADO" value={practice?.ended?'CERRADO':'ACTIVO'} accent={practice?.ended?COLORS.mint:COLORS.crimson}/></View><Text style={styles.hint}>El ejercicio es un teatro visual local: enseña el vocabulario de acciones, estados y lectura del campo sin crear resultados, recompensas ni autoridad competitiva. En el paso 05 lee la iniciativa; en el 06 practica respuesta.</Text><View style={styles.controls}><RuneButton label="ATAQUE" disabled={!actions.includes('attack')} onPress={()=>setAction('attack')} accent={action==='attack'?COLORS.crimson:COLORS.steel}/><RuneButton label="HABILIDAD" disabled={!actions.includes('skill')} onPress={()=>setAction('skill')} accent={action==='skill'?COLORS.arcaneBright:COLORS.steel}/><RuneButton label="GUARDIA" disabled={!actions.includes('guard')} onPress={()=>setAction('guard')} accent={action==='guard'?COLORS.mint:COLORS.steel}/><RuneButton label="REINICIAR DRILL" onPress={()=>setPractice(startTacticalSession(TRAINING_CARDS,TRAINING_ENEMY,makeSeed(`tutorial-reset-${Date.now()}`)))} accent={COLORS.goldBright}/></View>{action!=='guard'&&targets.length?<View style={styles.targetGrid}>{targets.map(t=><Pressable key={t.id} onPress={()=>setTargetId(t.id)}><WorldObject accent={targetId===t.id?COLORS.goldBright:COLORS.steel} style={styles.target}><Text style={styles.stepT}>{t.name}</Text><Text style={styles.targetMeta}>{t.hpNow}/{t.hp} HP · {t.statuses.marked?'MARCADA':'ESTABLE'}</Text></WorldObject></Pressable>)}</View>:null}<RuneButton label="EJECUTAR ACCIÓN" disabled={!practice||practice.ended||(!targetId&&action!=='guard')} onPress={()=>dispatch(action)} accent={COLORS.goldBright}/></WorldObject></>:null}
+ <SectionTitle kicker="MAPA DEL CONOCIMIENTO" title="TODO EL ECOSISTEMA"/>{STEPS.map((x,n)=><WorldObject key={x[0]+x[1]} accent={n<=i?COLORS.mint:COLORS.steel} style={styles.step}><Text style={[styles.stepNo,{color:n<=i?COLORS.mint:COLORS.goldDim}]}>{String(n+1).padStart(2,'0')}</Text><View style={{flex:1}}><Text style={styles.stepK}>{x[0]}</Text><Text style={styles.stepT}>{x[1]}</Text></View><Text style={styles.mark}>{n<i?'✓':n===i?'◆':'○'}</Text></WorldObject>)}<View style={styles.controls}><RuneButton label={i>0?'ANTERIOR':'CERRAR'} onPress={()=>i>0?void setTutorialStep(i-1):router.back()} accent={COLORS.steel}/><RuneButton label={i===STEPS.length-1?'FINALIZAR':'SIGUIENTE'} onPress={()=>void next()} accent={COLORS.goldBright}/></View></ScrollView></View>
 }
-
-function ErrorState({
-  colors,
-  message,
-  onRetry,
-}: {
-  colors: ReturnType<typeof useColors>;
-  message: string;
-  onRetry: () => void;
-}) {
-  return (
-    <View style={[styles.center, { backgroundColor: colors.background, paddingHorizontal: 24 }]}>
-      <Ionicons name="alert-circle-outline" size={42} color={colors.danger} />
-      <Text style={[styles.errorTitle, { color: colors.foreground }]}>No se pudo cargar el tutorial</Text>
-      <Text style={[styles.errorBody, { color: colors.mutedForeground }]}>{message}</Text>
-      <Pressable
-        accessibilityRole="button"
-        accessibilityLabel="Reintentar cargar el tutorial"
-        testID="tutorial-retry"
-        onPress={onRetry}
-        style={[styles.secondaryButton, { borderColor: colors.primary }]}
-      >
-        <Text style={[styles.secondaryButtonText, { color: colors.primary }]}>REINTENTAR</Text>
-      </Pressable>
-    </View>
-  );
-}
-
-function ProgressPendingState({
-  colors,
-  insetsBottom,
-  onRetry,
-}: {
-  colors: ReturnType<typeof useColors>;
-  insetsBottom: number;
-  onRetry: () => void;
-}) {
-  return (
-    <ScreenShell surface="tutorial">
-      <ScrollView
-        style={[styles.screen, { backgroundColor: 'transparent' }]}
-        contentContainerStyle={[styles.completedContent, { paddingBottom: insetsBottom + 32 }]}
-      >
-        <View style={[styles.completedIcon, { backgroundColor: `${colors.primary}18`, borderColor: `${colors.primary}66` }]}>
-          <Ionicons name="sync-outline" size={42} color={colors.primary} />
-        </View>
-        <Text style={[styles.eyebrow, { color: colors.primary }]}>PROGRESO DE INICIACIÓN EN ESPERA</Text>
-        <Text style={[styles.completedTitle, { color: colors.foreground }]}>El Nexus todavía no confirma tu paso.</Text>
-        <Text style={[styles.completedBody, { color: colors.mutedForeground }]}>
-          La cuenta está conectada, pero Supabase aún no entregó el paso canónico del tutorial. No se mostrará un paso inventado.
-        </Text>
-        <Pressable
-          accessibilityRole="button"
-          accessibilityLabel="Reintentar sincronización del progreso del tutorial"
-          testID="tutorial-progress-retry"
-          onPress={onRetry}
-          style={[styles.primaryButton, { backgroundColor: colors.primary }]}
-        >
-          <Ionicons name="refresh-outline" size={17} color={colors.primaryForeground} />
-          <Text style={[styles.primaryButtonText, { color: colors.primaryForeground }]}>REINTENTAR SINCRONIZACIÓN</Text>
-        </Pressable>
-      </ScrollView>
-    </ScreenShell>
-  );
-}
-
-function CompletedState({
-  colors,
-  insetsBottom,
-  onReturn,
-}: {
-  colors: ReturnType<typeof useColors>;
-  insetsBottom: number;
-  onReturn: () => void;
-}) {
-  return (
-    <ScreenShell surface="tutorial">
-      <ScrollView
-      style={[styles.screen, { backgroundColor: 'transparent' }]}
-      contentContainerStyle={[styles.completedContent, { paddingBottom: insetsBottom + 32 }]}
-    >
-      <View style={[styles.completedIcon, { backgroundColor: `${colors.accent}18`, borderColor: `${colors.accent}66` }]}>
-        <Ionicons name="trophy-outline" size={42} color={colors.accent} />
-      </View>
-      <Text style={[styles.eyebrow, { color: colors.accent }]}>TUTORIAL COMPLETADO</Text>
-      <Text style={[styles.completedTitle, { color: colors.foreground }]}>Tu forja está despierta.</Text>
-      <Text style={[styles.completedBody, { color: colors.mutedForeground }]}>
-        El progreso quedó guardado en tu cuenta. Puedes volver a este recorrido cuando quieras o continuar desde cualquiera de las superficies disponibles.
-      </Text>
-      <Pressable
-        accessibilityRole="button"
-        accessibilityLabel="Volver a la Forja"
-        testID="tutorial-return-home"
-        onPress={onReturn}
-        style={[styles.primaryButton, { backgroundColor: colors.primary }]}
-      >
-        <Ionicons name="home-outline" size={17} color={colors.primaryForeground} />
-        <Text style={[styles.primaryButtonText, { color: colors.primaryForeground }]}>VOLVER A LA FORJA</Text>
-      </Pressable>
-      </ScrollView>
-    </ScreenShell>
-  );
-}
-
-export default function TutorialScreen() {
-  const colors = useColors();
-  const insets = useSafeAreaInsets();
-  const router = useRouter();
-  const { session, player, progress, syncState, syncError, authLoading, refresh } = useGame();
-  const [busy, setBusy] = useState(false);
-  const [arenaOpened, setArenaOpened] = useState(false);
-  const [actionError, setActionError] = useState<string | null>(null);
-
-  if (authLoading) return <LoadingState colors={colors} />;
-  if (!session) return <Redirect href="/auth" />;
-  if (!player || (syncState === 'loading' && !progress)) return <LoadingState colors={colors} />;
-  if (!progress) {
-    return <ErrorState colors={colors} message={syncError ?? 'No se recibió el progreso del jugador.'} onRetry={() => void refresh()} />;
-  }
-
-  const tutorialStep = progress.tutorial_step;
-  if (typeof tutorialStep !== 'number') {
-    return <ProgressPendingState colors={colors} insetsBottom={insets.bottom} onRetry={() => void refresh()} />;
-  }
-
-  const currentStep = tutorialStep;
-  if (currentStep >= TUTORIAL_DONE_STEP) {
-    return <CompletedState colors={colors} insetsBottom={insets.bottom} onReturn={() => router.replace('/(tabs)')} />;
-  }
-  if (currentStep < 0 || currentStep >= TUTORIAL_TOTAL_STEPS) {
-    return <ErrorState colors={colors} message={`El progreso del tutorial tiene un paso no reconocido: ${currentStep}.`} onRetry={() => void refresh()} />;
-  }
-
-  const step = TUTORIAL_STEPS[currentStep];
-  const isBattleStep = currentStep === 4;
-  const isLastStep = currentStep === TUTORIAL_TOTAL_STEPS - 1;
-  const accent = colors[step.accent];
-
-  const persistAndContinue = async () => {
-    if (busy) return;
-    setBusy(true);
-    setActionError(null);
-    try {
-      if (isLastStep) {
-        await skipTutorial(session, player.id);
-      } else {
-        await advanceTutorialStep(session, player.id, currentStep + 1);
-      }
-      await refresh();
-      if (isLastStep) router.replace('/(tabs)');
-      else if (step.route && !(isBattleStep && !arenaOpened)) router.push(step.route);
-    } catch (error) {
-      setActionError(error instanceof Error ? error.message : 'No se pudo guardar tu avance.');
-    } finally {
-      setBusy(false);
-    }
-  };
-
-  const handlePrimary = () => {
-    if (isBattleStep && !arenaOpened) {
-      setArenaOpened(true);
-      router.push('/battle');
-      return;
-    }
-    void persistAndContinue();
-  };
-
-  const handleSkip = async () => {
-    if (busy) return;
-    setBusy(true);
-    setActionError(null);
-    try {
-      await skipTutorial(session, player.id);
-      await refresh();
-      router.replace('/(tabs)');
-    } catch (error) {
-      setActionError(error instanceof Error ? error.message : 'No se pudo omitir el tutorial.');
-    } finally {
-      setBusy(false);
-    }
-  };
-
-  return (
-    <ScreenShell surface="tutorial">
-      <ScrollView
-      style={[styles.screen, { backgroundColor: 'transparent' }]}
-      contentContainerStyle={[styles.content, { paddingTop: insets.top + 18, paddingBottom: insets.bottom + 34 }]}
-      showsVerticalScrollIndicator={false}
-    >
-      <View style={styles.header}>
-        <View>
-          <Text style={[styles.eyebrow, { color: colors.primary }]}>VEXFORGE / INICIACIÓN</Text>
-          <Text style={[styles.headerTitle, { color: colors.foreground }]}>Tutorial de la Forja</Text>
-        </View>
-        <Pressable
-          accessibilityRole="button"
-          accessibilityLabel="Omitir tutorial"
-          accessibilityState={{ disabled: busy }}
-          testID="tutorial-skip"
-          disabled={busy}
-          onPress={() => void handleSkip()}
-          style={[styles.skipButton, { borderColor: colors.border, opacity: busy ? 0.5 : 1 }]}
-        >
-          <Text style={[styles.skipText, { color: colors.mutedForeground }]}>OMITIR</Text>
-        </Pressable>
-      </View>
-
-      <View style={styles.progressHeader}>
-        <Text style={[styles.stepCount, { color: colors.mutedForeground }]}>PASO {currentStep + 1} / {TUTORIAL_TOTAL_STEPS}</Text>
-        <Text style={[styles.stepCount, { color: accent }]}>{Math.round((currentStep / (TUTORIAL_TOTAL_STEPS - 1)) * 100)}%</Text>
-      </View>
-      <View style={[styles.progressTrack, { backgroundColor: colors.muted }]}>
-        <View style={[styles.progressFill, { backgroundColor: accent, width: `${Math.max(4, (currentStep / (TUTORIAL_TOTAL_STEPS - 1)) * 100)}%` }]} />
-      </View>
-
-      <View style={[styles.card, { backgroundColor: `${colors.panel}E8`, borderColor: `${accent}66` }]}>
-        {OFFICIAL_ASSETS.tutorialHero ? (
-          <Image source={{ uri: OFFICIAL_ASSETS.tutorialHero }} style={styles.heroArt} resizeMode="cover" accessibilityLabel="Arte oficial del tutorial de VEXFORGE" />
-        ) : (
-          <View style={styles.heroPlaceholder}>
-            <Ionicons name="image-outline" size={28} color={accent} />
-            <Text style={[styles.heroPlaceholderText, { color: colors.mutedForeground }]}>ARTE DEL TUTORIAL PENDIENTE</Text>
-          </View>
-        )}
-        <View style={[styles.iconFrame, { backgroundColor: `${accent}18`, borderColor: `${accent}66` }]}>
-          <Ionicons name={step.icon} size={44} color={accent} />
-        </View>
-        <Text style={[styles.stepLabel, { color: accent }]}>NEXUS // {String(currentStep + 1).padStart(2, '0')}</Text>
-        <Text style={[styles.title, { color: colors.foreground }]}>{step.title}</Text>
-        <Text style={[styles.subtitle, { color: accent }]}>{step.subtitle}</Text>
-        <Text style={[styles.description, { color: colors.mutedForeground }]}>{step.description}</Text>
-      </View>
-
-      {isBattleStep && arenaOpened ? (
-        <View style={[styles.returnHint, { backgroundColor: `${colors.success}12`, borderColor: `${colors.success}55` }]}>
-          <Ionicons name="checkmark-circle-outline" size={18} color={colors.success} />
-          <Text style={[styles.returnHintText, { color: colors.mutedForeground }]}>Arena abierta. Regresa aquí para continuar el tutorial.</Text>
-        </View>
-      ) : null}
-
-      {actionError ? (
-        <View style={[styles.actionError, { backgroundColor: `${colors.danger}12`, borderColor: `${colors.danger}55` }]}>
-          <Ionicons name="alert-circle-outline" size={18} color={colors.danger} />
-          <Text style={[styles.actionErrorText, { color: colors.danger }]}>{actionError}</Text>
-        </View>
-      ) : null}
-
-      <Pressable
-        accessibilityRole="button"
-        accessibilityLabel={isLastStep ? 'Completar tutorial' : isBattleStep && !arenaOpened ? 'Abrir arena' : step.actionLabel}
-        accessibilityState={{ disabled: busy }}
-        testID="tutorial-primary"
-        disabled={busy}
-        onPress={handlePrimary}
-        style={({ pressed }) => [styles.primaryButton, { backgroundColor: accent, opacity: busy ? 0.65 : pressed ? 0.78 : 1 }]}
-      >
-        {busy ? <ActivityIndicator color={colors.primaryForeground} /> : <Ionicons name={isLastStep ? 'checkmark-circle-outline' : isBattleStep && !arenaOpened ? 'flash-outline' : 'arrow-forward-outline'} size={17} color={colors.primaryForeground} />}
-        <Text style={[styles.primaryButtonText, { color: colors.primaryForeground }]}>{isBattleStep && arenaOpened ? 'CONTINUAR TUTORIAL' : step.actionLabel}</Text>
-      </Pressable>
-
-      <View style={styles.dots} accessibilityLabel={`Paso ${currentStep + 1} de ${TUTORIAL_TOTAL_STEPS}`}>
-        {TUTORIAL_STEPS.map((tutorialStep, index) => (
-          <View key={tutorialStep.title} style={[styles.dot, { backgroundColor: index <= currentStep ? accent : colors.border, width: index === currentStep ? 22 : 7 }]} />
-        ))}
-      </View>
-      </ScrollView>
-    </ScreenShell>
-  );
-}
-
-const styles = StyleSheet.create({
-  screen: { flex: 1 },
-  content: { paddingHorizontal: 20, gap: 16 },
-  center: { flex: 1, alignItems: 'center', justifyContent: 'center', gap: 14 },
-  loadingText: { fontSize: 10, fontWeight: '800', letterSpacing: 1.2 },
-  header: { flexDirection: 'row', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12 },
-  eyebrow: { fontSize: 10, fontWeight: '800', letterSpacing: 1.5 },
-  headerTitle: { fontSize: 27, fontWeight: '800', marginTop: 8 },
-  skipButton: { borderWidth: 1, borderRadius: 9, paddingHorizontal: 10, paddingVertical: 8 },
-  skipText: { fontSize: 9, fontWeight: '800', letterSpacing: 0.8 },
-  progressHeader: { flexDirection: 'row', justifyContent: 'space-between', marginTop: 9 },
-  stepCount: { fontSize: 10, fontWeight: '800', letterSpacing: 0.8 },
-  progressTrack: { height: 5, borderRadius: 4, overflow: 'hidden' },
-  progressFill: { height: '100%', borderRadius: 4 },
-  card: { borderWidth: 1, borderRadius: 22, paddingHorizontal: 22, paddingVertical: 28, alignItems: 'center', minHeight: 370, overflow: 'hidden' },
-  heroArt: { alignSelf: 'stretch', height: 112, marginTop: -28, marginBottom: 20, opacity: 0.72 },
-  heroPlaceholder: { alignSelf: 'stretch', height: 112, marginTop: -28, marginBottom: 20, alignItems: 'center', justifyContent: 'center', gap: 8 },
-  heroPlaceholderText: { fontSize: 10, fontWeight: '800', letterSpacing: 1.2 },
-  iconFrame: { width: 92, height: 92, borderRadius: 46, borderWidth: 1, alignItems: 'center', justifyContent: 'center', marginBottom: 20 },
-  stepLabel: { fontSize: 9, fontWeight: '800', letterSpacing: 1.4 },
-  title: { fontSize: 25, lineHeight: 31, fontWeight: '800', textAlign: 'center', marginTop: 12 },
-  subtitle: { fontSize: 13, lineHeight: 19, fontWeight: '700', textAlign: 'center', marginTop: 8 },
-  description: { fontSize: 14, lineHeight: 21, textAlign: 'center', marginTop: 18 },
-  returnHint: { flexDirection: 'row', alignItems: 'center', gap: 9, borderWidth: 1, borderRadius: 12, padding: 12 },
-  returnHintText: { flex: 1, fontSize: 12, lineHeight: 17 },
-  actionError: { flexDirection: 'row', alignItems: 'center', gap: 9, borderWidth: 1, borderRadius: 12, padding: 12 },
-  actionErrorText: { flex: 1, fontSize: 12, lineHeight: 17 },
-  primaryButton: { minHeight: 52, borderRadius: 13, paddingHorizontal: 18, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 9 },
-  primaryButtonText: { fontSize: 11, fontWeight: '800', letterSpacing: 0.8 },
-  secondaryButton: { minHeight: 46, borderWidth: 1, borderRadius: 11, paddingHorizontal: 17, alignItems: 'center', justifyContent: 'center', marginTop: 8 },
-  secondaryButtonText: { fontSize: 11, fontWeight: '800', letterSpacing: 0.8 },
-  dots: { flexDirection: 'row', justifyContent: 'center', alignItems: 'center', gap: 7, paddingVertical: 8 },
-  dot: { height: 7, borderRadius: 4 },
-  errorTitle: { fontSize: 20, fontWeight: '800', textAlign: 'center', marginTop: 5 },
-  errorBody: { fontSize: 13, lineHeight: 19, textAlign: 'center', marginTop: 2 },
-  completedContent: { flexGrow: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 24, gap: 14 },
-  completedIcon: { width: 92, height: 92, borderWidth: 1, borderRadius: 46, alignItems: 'center', justifyContent: 'center', marginBottom: 10 },
-  completedTitle: { fontSize: 29, lineHeight: 35, fontWeight: '800', textAlign: 'center' },
-  completedBody: { fontSize: 14, lineHeight: 21, textAlign: 'center', marginBottom: 10 },
-});
+const styles=StyleSheet.create({root:{flex:1},content:{padding:14,paddingBottom:130,gap:10},progress:{gap:8},track:{height:5,borderRadius:4,backgroundColor:'rgba(255,255,255,.09)',overflow:'hidden'},fill:{height:5,borderRadius:4},hint:{color:COLORS.ash,fontSize:7.5,lineHeight:12},drill:{gap:9},step:{flexDirection:'row',alignItems:'center',gap:10,paddingVertical:10},stepNo:{fontSize:14,fontWeight:'900',width:25,textAlign:'center'},stepK:{color:COLORS.goldDim,fontSize:5.5,fontWeight:'900',letterSpacing:1.4},stepT:{color:COLORS.white,fontFamily:'Cinzel_700Bold',fontSize:9.5,marginTop:2},mark:{color:COLORS.goldBright,fontSize:14},controls:{flexDirection:'row',gap:7,flexWrap:'wrap'},targetGrid:{gap:6,marginTop:2},target:{paddingVertical:9},targetMeta:{color:COLORS.ash,fontSize:6.5,marginTop:3}});
