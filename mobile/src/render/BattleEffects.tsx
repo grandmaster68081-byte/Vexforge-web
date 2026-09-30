@@ -53,7 +53,7 @@ export function BattleEffects({ event, kind, origin, target }: { event: BattleEv
           <LinearGradient start={vec(0, height * .45)} end={vec(width, height * .45)} colors={[`${tone}00`, `${tone}22`, `${tone}00`]} />
         </Rect>
         {origin && target && kind !== 'victory' && (
-          <Line x1={a.x} y1={a.y} x2={b.x} y2={b.y} color={tone} opacity={0.18} strokeWidth={kind === 'status' ? 2 : 3} />
+          <Line p1={vec(a.x, a.y)} p2={vec(b.x, b.y)} color={tone} opacity={0.18} strokeWidth={kind === 'status' ? 2 : 3} />
         )}
         {sparks.map((p, i) => <Circle key={i} cx={b.x + p.x} cy={b.y + p.y} r={p.r} color={tone} opacity={0.16 - i * 0.004} />)}
       </Canvas>

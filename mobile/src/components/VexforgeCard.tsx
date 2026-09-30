@@ -33,7 +33,7 @@ export function VexforgeCard({ card, width = 108, selected = false, compact = fa
   const image = useMemo(() => card?.image_url ? { uri: card.image_url } : CARD_FALLBACK, [card?.image_url]);
   const frame = r === 'legendary' || r === 'mythic' ? FRAME_LEGENDARY : r === 'epic' ? FRAME_EPIC : null;
   return <Pressable onPress={onPress} disabled={!onPress} onPressIn={() => { scale.value = withSpring(0.965, { damping: 16, stiffness: 250 }); }} onPressOut={() => { scale.value = withSpring(1, { damping: 16, stiffness: 250 }); }} style={{ width }}>
-    <Animated.View style={[styles.card,{width,height,borderColor:`${accent}88`,shadowColor:accent},selected&&styles.selected,hero&&styles.hero],style}>
+    <Animated.View style={[styles.card,{width,height,borderColor:`${accent}88`,shadowColor:accent},selected&&styles.selected,hero&&styles.hero,style]}>
       <VexforgeImage source={faceDown?CARD_BACK:image} resizeMode="cover" style={StyleSheet.absoluteFillObject}/>
       {!faceDown&&<Animated.View pointerEvents="none" style={[styles.aura,{borderColor:`${accent}55`},auraStyle]}/>}
       {!faceDown&&frame?<VexforgeImage source={frame} resizeMode="stretch" style={StyleSheet.absoluteFillObject}/>:null}
