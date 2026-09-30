@@ -10,19 +10,18 @@ author = "agent"
 
 [[workflows.workflow.tasks]]
 task = "workflow.run"
-args = "Start application"
+args = "Expo"
 
 [[workflows.workflow]]
-name = "Start application"
+name = "Expo"
 author = "agent"
+
+[workflows.workflow.metadata]
+outputType = "console"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
-args = "npm --prefix faucet run dev -- --port 5000"
-waitForPort = 5000
-
-[workflows.workflow.metadata]
-outputType = "webview"
+args = "npm --prefix mobile run dev -- --port 8000"
 
 [userenv]
 
@@ -31,3 +30,7 @@ EXPO_PUBLIC_SUPABASE_ANON_KEY = "sb_publishable_3eGRSpvxptO09eQQzpxysQ_Imq8zi58"
 EXPO_PUBLIC_SUPABASE_URL = "https://rscuzqnfccqvltkdcdny.supabase.co"
 VITE_SUPABASE_PUBLISHABLE_KEY = "sb_publishable_3eGRSpvxptO09eQQzpxysQ_Imq8zi58"
 VITE_SUPABASE_URL = "https://rscuzqnfccqvltkdcdny.supabase.co"
+
+[[ports]]
+localPort = 8000
+externalPort = 80
