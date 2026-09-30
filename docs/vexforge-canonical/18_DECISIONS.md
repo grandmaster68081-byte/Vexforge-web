@@ -114,13 +114,13 @@
 - **AUTORIDAD:** esta directiva explícita resuelve la contradicción con los documentos anteriores de `main` que declaraban Unity activo.
 - **ESTADO:** decisión de runtime registrada; no prueba que Expo compile, que exista pipeline Expo Android vigente ni que haya QA física.
 - **BACKEND:** Supabase conserva autoridad. La inspección del 2026-09-30 fue de sólo lectura; sin cambios live.
-- **CONTINUIDAD:** usar `VEXFORGE_CONTEXT.md`, `00_START_HERE.md` y `30_TIER1_COMPETITIVE_GAME_ROADMAP.md`; revalidar el `main` vigente antes de implementar.
+- **CONTINUIDAD:** usar `VEXFORGE_CONTEXT.md` y los documentos operativos de
+  `mobile/docs/`; revalidar `main` antes de implementar.
 
-## 2026-09-30 — UNITY 6 + URP COMO RUTA VISUAL BAJO PRESUPUESTO FREE
+## Estado de decisiones
 
-- **DECISIÓN TÉCNICA:** mantener el Android client Unity `6000.3.0f1` + URP `17.3.0`; no migrar el runtime a Unreal. Esta selección responde a la instrucción más reciente de elegir la mejor ruta visual dentro de Android, herramientas gratis y job CI máximo de 6 h.
-- **SUSTITUCIÓN:** para el trabajo visual, esta recomendación supersede la nota Expo-only del registro anterior. `mobile/**` permanece intacto como legado; no implica borrar ni migrar.
-- **EPIC:** aprovechar Fab sólo en listings gratuitos y licenciados compatibles con Unity; excluir `UE-Only`, recursos pagados y plugins con fees.
-- **CI:** el repositorio es público y usa runner estándar gratis, pero cada job tiene un límite de 6 h. El flujo actual tiene `normal/final` sin hard cap de variantes; no iniciar esas rutas hasta corregir el preflight.
-- **FUENTE:** `docs/vexforge-canonical/31_VISUAL_PRODUCTION_ROADMAP.md` y sus referencias oficiales.
-- **LÍMITES:** sólo documentación en esta decisión; no se cambió gameplay, Supabase ni workflow/build.
+La decisión Expo registrada arriba es la vigente. Las decisiones posteriores
+de este archivo que propusieron Unity como runtime o Fab como proveedor quedan
+retiradas y no autorizan compras, imports, builds ni trabajo en Unity. El
+registro se conserva como historial; la dirección operativa está en
+`VEXFORGE_CONTEXT.md` y `mobile/docs/ACTIVE_EXPO_GAME_SCOPE.md`.

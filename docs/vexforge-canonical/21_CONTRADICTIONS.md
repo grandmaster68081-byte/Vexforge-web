@@ -1,14 +1,20 @@
-# 21 — CONTRADICTIONS
+# 21 — CONTRADICTIONS (HISTORIAL)
 
-## Reconciliación vigente — 2026-09-30
+## Resolución vigente — Expo canónico
 
-La petición más reciente delegó seleccionar la mejor ruta para producir calidad visual Android gratis y con builds de menos de seis horas. La recomendación es Unity 6.3.0f1 + URP 17.3.0, que ya están en el repositorio y workflow; Fab se usa únicamente como fuente de assets gratuitos/licenciados compatibles. No se migra a Unreal ni se modifica Supabase. Esta decisión para el trabajo visual supersede la nota Expo-only anterior; `mobile/**` se conserva intacto.
+Expo / React Native en `mobile/**` es el único runtime activo del videojuego.
+Unity (`unity/**`) se conserva como legado, sin trabajo nuevo. La ruta
+Epic/Fab está retirada; no se encontraron assets importados de ese proveedor.
 
-La motivación y fuentes están en `docs/vexforge-canonical/31_VISUAL_PRODUCTION_ROADMAP.md`. El C-008 y la reconciliación Expo que siguen quedan como **historial**; C-009 registra la resolución vigente.
+Esta decisión sustituye las reconciliaciones Unity/Fab anteriores de este
+archivo y de `CONTINUITY.md`. Los registros históricos que siguen sirven para
+auditoría, no como instrucciones de runtime. La fuente operativa es
+`mobile/docs/ACTIVE_EXPO_GAME_SCOPE.md` y
+`mobile/docs/VEXFORGE_EXPO_REPLIT_CONTINUATION_ORDER_V5.md`.
 
 ## Historial de resoluciones anteriores (no vigente para este bloque)
 
-## Reconciliación vigente — 2026-09-30
+## Resolución histórica — 2026-09-30
 
 El propietario resolvió explícitamente el runtime activo: Expo / React Native en `mobile/**` es el único runtime de juego para trabajo nuevo. Unity y los demás clientes quedan como legado, preservados e intactos. Esta instrucción sustituye los estados históricos de Unity activo en `main`; no certifica que Expo compile ni autoriza a cambiar Supabase.
 

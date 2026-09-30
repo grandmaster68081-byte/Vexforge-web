@@ -1,17 +1,40 @@
-## 2026-09-30 — VEXFORGE VISUAL PRODUCTION ROUTE LOCKED
+## 2026-09-30 — AUTORIDAD ACTUAL: EXPO / UNITY LEGACY / FAB RETIRADO
 
-- **PLAN:** `docs/vexforge-canonical/31_VISUAL_PRODUCTION_ROADMAP.md` es la ruta para iniciar cada sesión visual.
-- **RUNTIME TARGET:** Unity 6.3.0f1 + URP 17.3.0 existente; no migración a Unreal. Fab sólo para recursos gratuitos compatibles/licenciados. Expo permanece intacto como legado.
-- **BASE AUDIT:** el escenario ya reacciona a eventos, pero está armado en parte con primitivas/fallbacks; existe workflow Android con timeout de 360 min, inventario cercano a 287k y `normal/final` sin límite de variantes.
-- **RESULTADO:** recomendación y plan documental; sin gameplay, assets, CI, Supabase ni builds modificados.
-- **NEXT:** V0: baseline visual y hard-cap/preflight de shader variants antes de producir más contenido.
+- **RUNTIME CANÓNICO:** Expo / React Native bajo `mobile/**` es el único
+  runtime activo del videojuego.
+- **UNITY:** `unity/**` se conserva como legado; no es destino de trabajo ni
+  build nuevo.
+- **EPIC/FAB:** la ruta de adquisición/importación está retirada. La auditoría
+  no encontró assets Epic/Fab ni IDs de listings.
+- **AUTORIDAD:** `mobile/docs/ACTIVE_EXPO_GAME_SCOPE.md`,
+  `mobile/docs/VEXFORGE_EXPO_REPLIT_CONTINUATION_ORDER_V5.md`,
+  `mobile/docs/REAL_EXPO_REPOSITORY_STATE.md` y
+  `mobile/docs/SESSION_CHECKPOINT.md`.
+- **DATOS:** no se borraron ni modificaron archivos Unity, productos Kivora,
+  migraciones o datos live de Supabase.
+- **NEXT:** seguir el hito indicado por `mobile/docs/SESSION_CHECKPOINT.md`.
 
 ---
 
-## 2026-09-30 — DIRECTIVA EXPO Y PLAN REALISTA DE JUEGO COMPETITIVO
+## HISTÓRICO — 2026-09-30 — VEXFORGE VISUAL PRODUCTION ROUTE LOCKED
+
+- **ESTADO:** este registro conserva una propuesta anterior, supersedida por la
+  autoridad Expo vigente al inicio del archivo.
+- **RUTA ANTERIOR:** Unity 6.3.0f1 + URP 17.3.0 y posible adquisición Fab; no es
+  una instrucción actual ni autoriza trabajo, compras o imports.
+- **BASE AUDIT:** el escenario ya reacciona a eventos, pero está armado en parte con primitivas/fallbacks; existe workflow Android con timeout de 360 min, inventario cercano a 287k y `normal/final` sin límite de variantes.
+- **RESULTADO:** recomendación y plan documental; sin gameplay, assets, CI, Supabase ni builds modificados.
+- **NEXT HISTÓRICO:** V0 de esa propuesta queda obsoleto; seguir el hito Expo
+  del checkpoint actual.
+
+---
+
+## HISTÓRICO — 2026-09-30 — DIRECTIVA EXPO Y PLAN REALISTA DE JUEGO COMPETITIVO
 
 - **DECISIÓN DEL PROPIETARIO:** Expo / React Native bajo `mobile/**` es el único runtime activo del videojuego. Unity y los demás clientes son legado para trabajo nuevo y se preservan; la web existente no se cambia.
-- **CONTINUIDAD:** `docs/vexforge-canonical/30_TIER1_COMPETITIVE_GAME_ROADMAP.md` es la planificación vigente; `VEXFORGE_CONTEXT.md`, `00_START_HERE.md`, estado/bloque y contradicciones remiten a ella.
+- **CONTINUIDAD EN ESE MOMENTO:** los documentos citados reflejaban la
+  autoridad de entonces; el roadmap 30 es ahora histórico y los documentos
+  actuales de `mobile/docs/` son la fuente operativa.
 - **BASE INSPECCIONADA:** `main` SHA `02e4cec401230184f7a0de07a12cbc369dd5674a` antes del commit documental.
 - **SUPABASE LIVE:** proyecto saludable según Management API; score Tier 1 `38.30`, diez dimensiones bajo su mínimo y `tier1_ready=false`. Lectura solamente.
 - **RESULTADO DE ESTA UNIDAD:** actualización documental de runtime y ruta de trabajo; sin implementación gameplay, escrituras Supabase, builds, APK, QA física ni despliegue.

@@ -3,6 +3,27 @@
 Date: 2026-09-30  
 Execution contract: `mobile/docs/VEXFORGE_EXPO_REPLIT_CONTINUATION_ORDER_V5.md`
 
+## Latest continuity correction — documentation only
+
+- **BASE:** official `main` was fetched and confirmed at
+  `1446cdd959add695c2405e5caa5a621a742e64ee` before this update.
+- **RUNTIME:** Expo / React Native in `mobile/**` is the only active game
+  runtime. Unity is preserved legacy and is not a target for new work.
+- **EPIC/FAB:** the old acquisition roadmap was retired. Repository audit found
+  no Fab payloads, vendor packages or listing identifiers. Card `epic` rarity
+  remains ordinary game data.
+- **ISOLATION:** Kivora (`faucet/**`, related assets and `*kivora*` migrations)
+  was identified as a separate product and left untouched. No Supabase data
+  was read or modified as part of this correction.
+- **CHANGES:** active repository entrypoints and status docs now point to the
+  Expo scope; Unity is explicitly marked legacy; historic contradictory
+  records remain labeled as history.
+- **VALIDATION:** `git diff --check` passed; runtime code, assets, workflows,
+  builds and deployments were not changed or run.
+- **NEXT:** follow the existing exact next milestone below: run the mobile
+  static verifier and dependency/compatibility audit, then create the smallest
+  compatible runtime core without changing the Supabase authority boundary.
+
 ## Git
 
 - CURRENT SHA: `397992b10761d67888fdb0cd0f826283617a1d14` before this checkpoint

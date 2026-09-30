@@ -1,6 +1,11 @@
 # 30 — ROADMAP COMPETITIVO HISTÓRICO
 
-> **Aviso de vigencia (2026-09-30):** este roadmap general conserva decisiones históricas, incluida la nota Expo-only. Para el trabajo visual Android vigente, esa nota queda supersedida por `docs/vexforge-canonical/31_VISUAL_PRODUCTION_ROADMAP.md`: Unity 6.3 + URP es el target existente elegido para arte/presentación; no se migra a Unreal. Use la hoja 31 como autoridad para alcance visual, Epic/Fab y el gate de variantes. El contenido general no visual de este documento es contexto, no una solicitud para rehacer sistemas ya implementados.
+> **Aviso de vigencia:** este roadmap conserva contexto histórico. Expo/React
+> Native en `mobile/**` es el único runtime activo; Unity es legado y la ruta
+> Epic/Fab fue retirada. No usar este documento para reactivar otro cliente.
+> Las autoridades actuales son `mobile/docs/ACTIVE_EXPO_GAME_SCOPE.md`,
+> `mobile/docs/VEXFORGE_EXPO_REPLIT_CONTINUATION_ORDER_V5.md` y
+> `mobile/docs/SESSION_CHECKPOINT.md`.
 
 ---
 

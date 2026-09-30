@@ -6,10 +6,9 @@
 - [GitHub REST large-file commits](github-rest-large-files.md) — stream base64 JSON for large blobs; passing file content as a jq argument exceeds the shell argument limit.
 - [Replit config Python side effect](replit-config-python-side-effect.md) — Python shell tooling can add python-base to `.replit`; validate and restore before publishing.
 - [Portable TypeScript verification](typescript-verification.md) — syntax checks must resolve project-local TypeScript before environment-specific global paths.
-- [Canonical runtime continuity](canonical-runtime-continuity.md) — when continuity documents lag, reconcile historical notes against current main and the canonical Unity workflow.
+- [Canonical runtime continuity](canonical-runtime-continuity.md) — Expo is the active game runtime; Unity is preserved legacy and Epic/Fab sourcing is retired.
 - [GitHub Actions checkpoint storage](github-actions-checkpoint-storage.md) — retain only the live shader-chain head; exclude downloaded/uploaded payloads from evidence and retire consumed predecessors.
 - [Kivora migration sequencing](kivora-migration-sequencing.md) — every Supabase migration filename needs a unique, dependency-ordered timestamp.
 - [Kivora package constraints](kivora-package-constraints.md) — the supplied package needs an available Workers Types v5 line and lockfile-free npm install in CI.
 - [KIVORA visual overrides](kivora-visual-overrides.md) — keep scene-identity corrections in a dedicated override layer instead of editing the compressed legacy stylesheet.
 - [Release dependency availability](release-dependency-availability.md) — verify pinned npm versions exist before treating a sealed release package as installable.
-- [VEXFORGE visual runtime](canonical-runtime-continuity.md) — Unity 6/URP plus verified free Fab assets fits the Android and six-hour CI constraints.

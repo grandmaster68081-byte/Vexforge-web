@@ -1,22 +1,44 @@
-# VEXFORGE OFFICIAL PORTAL — V5.6 ART-DIRECTED FINAL
+# VEXFORGE — repositorio principal
 
-This package is the visual/product implementation source for Replit.
+## Autoridad actual
 
-## Core decision
-The portal's visual identity is fully generated/controlled by the portal package. Supabase Storage is reserved for official VEXFORGE card artwork.
+El runtime canónico del videojuego es **Expo / React Native en `mobile/**`**.
+Usa estos documentos como autoridad operativa:
 
-## Start
-`npm install`
-`npm run dev`
+1. `mobile/docs/ACTIVE_EXPO_GAME_SCOPE.md`
+2. `mobile/docs/VEXFORGE_EXPO_REPLIT_CONTINUATION_ORDER_V5.md`
+3. `mobile/docs/REAL_EXPO_REPOSITORY_STATE.md`
+4. `mobile/docs/SESSION_CHECKPOINT.md`
 
-## Quality gate
-`npm run verify`
-`npm run typecheck`
-`npm run build`
-`npm run verify:build`
+El estado de Expo es el del código y la evidencia registrados allí; no implica
+que exista una build Android, APK/AAB o QA física verificada.
 
-## Art
-Read `docs/ART_GENERATION_BIBLE.md`. The three files under `public/art/references/` are quality-direction references. The files under `public/art/portal/` are temporary high-quality fallback plates and stable slot names for the bespoke final generated art.
+## Clasificación de los árboles
 
-## Do not do
-Do not restore V5.1–V5.4 non-card Supabase artwork, dark-black section stacks, generic dashboard panels, copied franchise imagery or fabricated public facts.
+- `mobile/**` — runtime activo de VEXFORGE.
+- `unity/**` — runtime Unity legado, conservado como referencia/rollback; no es
+  destino de trabajo nuevo.
+- `src/**` y `public/**` — portal web VEXFORGE histórico, fuera del runtime del
+  juego.
+- `faucet/**` — producto Kivora independiente, fuera del alcance de VEXFORGE.
+  Mantén su código, assets y migraciones separados; no los ejecutes como parte
+  de Expo ni los borres como parte de esta reorganización.
+- `supabase/migrations/*kivora*` — historial de migraciones Kivora; no aplicarlo
+  como migraciones VEXFORGE.
+
+No se encontró contenido importado de Epic/Fab ni identificadores de listings.
+La adquisición de Fab no forma parte de la ruta actual. La rareza de carta
+`epic` es terminología del juego y no contenido de Epic Games/Fab.
+
+## Ejecutar y verificar Expo
+
+Desde `mobile/`:
+
+- `npm install`
+- `npm run dev`
+- `npm run verify`
+- `npm run typecheck`
+- `npm run doctor`
+
+No iniciar EAS, APK/AAB, despliegues ni builds de producción sin autorización
+explícita del gate correspondiente.

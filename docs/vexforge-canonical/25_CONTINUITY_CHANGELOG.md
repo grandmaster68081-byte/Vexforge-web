@@ -1,13 +1,13 @@
 # 25 — CONTINUITY CHANGELOG
 
-## 2026-09-30 — RUTA DE PRODUCCIÓN VISUAL UNITY / URP / FREE CI
+## HISTÓRICO — PROPUESTA VISUAL UNITY/FAB RETIRADA (2026-09-30)
 
-- **RUTA:** hoja activa `docs/vexforge-canonical/31_VISUAL_PRODUCTION_ROADMAP.md`; Unity 6.3.0f1 + URP 17.3.0, sin port a Unreal; Epic/Fab se limita a assets free compatibles/licenciados.
-- **BASE:** `main` SHA `738295dded931f9f6a7f86627786385f7892655f` antes de este commit.
-- **MOTIVO:** código Unity ya tiene presentación por eventos, perfiles y pipeline Android; la escena aún compone elementos con primitivas y el build normal/final no limita variantes.
-- **CI:** repo público; runner estándar Actions gratis; hard cap seis horas por job. No iniciar build final hasta que preflight/stripping controle la ruta normal/final y el contador de ~287k.
-- **SCOPE:** visual solamente; no gameplay, balance ni Supabase. No se ejecutaron builds.
-- **NEXT:** V0 inventario visual + shader-budget antes de importar assets.
+- Esta propuesta fue supersedida por la decisión del propietario de mantener
+  Expo/React Native en `mobile/**` como único runtime activo.
+- Unity queda preservado como legado y la adquisición/importación de Fab se
+  retiró. La auditoría no encontró contenido Fab en el repositorio.
+- La hoja de trabajo de este registro ya no es una ruta activa; consultar
+  `mobile/docs/ACTIVE_EXPO_GAME_SCOPE.md`.
 
 ---
 

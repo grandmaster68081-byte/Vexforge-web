@@ -13,9 +13,10 @@ Authority: `mobile/docs/VEXFORGE_EXPO_REPLIT_CONTINUATION_ORDER_V5.md`
 - The 2.5D presentation, interaction, battlefield, pack, boss, tutorial and
   QA work defined by the active execution order.
 
-## Frozen
+## Legacy or out of scope
 
-- `unity/**`
+- `unity/**` — Unity game client retained as legacy/reference; read-only for
+  new work. Do not build on it or move new Expo content into it.
 - Web portal implementation under `src/**` and `public/**`.
 - Historical web and Unity implementations.
 - Prior Expo ZIP releases and their claims.
@@ -24,7 +25,8 @@ Authority: `mobile/docs/VEXFORGE_EXPO_REPLIT_CONTINUATION_ORDER_V5.md`
 
 ## Scope rules
 
-1. Do not modify, migrate, rebuild or use Unity as active Expo content.
+1. Treat Unity as legacy; do not modify, migrate, rebuild or use it as active
+   Expo content.
 2. Do not modify, replicate or use the web portal as a mobile design source.
 3. Do not create `game-v2`, `game2d`, `prototype` or another parallel engine.
 4. Reuse the current mobile navigation, Supabase client/repository, battle

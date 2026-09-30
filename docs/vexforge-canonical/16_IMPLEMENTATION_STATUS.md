@@ -1,35 +1,26 @@
-# OVERRIDE VIGENTE — RUTA VISUAL UNITY/URP (2026-09-30)
+# 16 — IMPLEMENTATION STATUS (EXPO CANÓNICO)
 
-La solicitud más reciente delega elegir la mejor ruta visual dentro del presupuesto Android/CI. La recomendación actual es Unity 6.3.0f1 + URP 17.3.0, que ya están presentes en el cliente y workflow. Expo queda como legado intacto; no se migra a Unreal. Fab se limita a assets gratuitos, licenciados y compatibles. Ver `docs/vexforge-canonical/31_VISUAL_PRODUCTION_ROADMAP.md`.
+> Actualizado para reflejar la dirección vigente. Los registros Unity que
+> permanecen en `CONTINUITY.md` y en la documentación histórica no son estado
+> actual ni instrucción para trabajo nuevo.
 
-La ruta normal/final de GitHub Actions continúa bloqueada hasta que el preflight aplique cap/stripping: inventario histórico ~287.000 variantes y job máximo 360 minutos. Este commit sólo actualiza contexto/plan: no cambia gameplay, Supabase ni CI.
+## Runtime y evidencia
 
----
+| Área | Estado observado | Evidencia | Pendiente |
+|---|---|---|---|
+| Runtime móvil | Expo / React Native activo, versión `1.10.0` | `mobile/package.json`, `mobile/app.json` | Continuar sobre las rutas existentes |
+| Plataforma | Expo SDK `54.0.37`, React Native `0.81.5`, React `19.1.0` | manifiestos de `mobile/` | Mantener compatibilidad del SDK |
+| Navegación | Expo Router con tabs y rutas de juego | `mobile/app/**` | Integración de runtime de juego |
+| Presentación de batalla | Director, replay, canvas, efectos y laboratorio táctico existentes | `mobile/src/engine/**`, `mobile/src/render/**` | Completar la superficie 2.5D y sus pruebas |
+| Autoridad de juego | Supabase/repositorio como límite para auth, combate y economía | `mobile/src/services/**` | Verificar contrato live antes de cambios de backend |
+| Runtime unificado `mobile/game/**` | No implementado | `mobile/docs/REAL_EXPO_REPOSITORY_STATE.md` | Crear el núcleo mínimo compatible |
+| Verificación | Verificador, typecheck y Expo Doctor disponibles | scripts de `mobile/package.json` | Ejecutar al iniciar el siguiente hito |
+| APK/AAB, EAS y QA física | No ejecutados en el checkpoint | `mobile/docs/SESSION_CHECKPOINT.md` | Requieren gate/autorización y evidencia |
+| Unity | Legado preservado, no canónico | `unity/LEGACY_STATUS.md` | No reactivar en trabajo Expo |
+| Epic/Fab | Ruta de adquisición/importación retirada; no se encontraron payloads | auditoría del repositorio | No aplica |
 
-# 16 — IMPLEMENTATION STATUS
+## Siguiente hito registrado
 
-| Área | Estado actual | Status | Evidence | Blocker / next |
-|---|---|---|---|---|
-| Android runtime/navigation | Unity bootstrap, world navigation y presentation stage existen | IMPLEMENTED_UNVERIFIED | `unity/Assets/Scripts/**` | Unity Editor y dispositivo |
-| Auth/session | cliente Unity y sesión en memoria existen | PARTIAL | `unity/Assets/Scripts/Session/**`, `Backend/**` | secure Android storage + QA |
-| Home/collection/deck/profile | Nexus world-first y superficies Unity existen | IMPLEMENTED_UNVERIFIED | `unity/Assets/Scripts/Presentation/**`, `UI/**` | editor/device |
-| Battle/formation | presentation and server-authoritative consumers | PARTIAL | `unity/Assets/Scripts/Presentation/**`, `Backend/**` | live contract + physical QA |
-| Missions/rewards/world | read surfaces and Nexus hotspots exist | IMPLEMENTED_UNVERIFIED | `unity/Assets/Scripts/**` | live/QA |
-| Economy/withdrawals | Unity read surface, backend authority preserved | EVIDENCE_REQUIRED | `unity/Assets/Scripts/UI/**`, live catalog | authenticated QA |
-| Visual system | world-first foundation, states and bounded resources | IMPLEMENTED_UNVERIFIED | `unity/Assets/Scripts/Presentation/**` | device readability/performance |
-| OTA | config/function/workflow presentes | EVIDENCE_REQUIRED | app.json, function, workflow | live publish/update evidence |
-| Latest APK | release 249 recorded | VERIFIED_FOR_RECORDED_GATES | `CONTINUITY.md` | does not prove current commit install |
-| Canonical continuity | this folder + context | IMPLEMENTED | current commit | keep updated per block |
-
-Estados permitidos usados aquí: `PLANNED`, `IMPLEMENTED`, `IMPLEMENTED_UNVERIFIED`, `VERIFIED`, `BLOCKED`, `EVIDENCE_REQUIRED`, `HISTORICAL`, `FROZEN`, `UNKNOWN`.
-
-## Runtime Android
-
-| Área | Estado actual | Status | Evidence | Blocker / next |
-|---|---|---|---|---|
-| Unity runtime | cliente Android canónico de desarrollo | IMPLEMENTED_UNVERIFIED | `unity/**`, `26_UNITY_ENGINE_MIGRATION.md` | editor, build gate y QA física |
-| Presentation Foundation | runtime, boot scene, render boundary y motion utilities existen | IMPLEMENTED_UNVERIFIED | `unity/Assets/Scripts/Presentation/**` | Unity Editor y QA física |
-| Unity Cloud Build infrastructure | proyecto y target Android externos existentes, documentados sin recreación | IMPLEMENTED | `docs/vexforge-canonical/UNITY_CLOUD_BUILD.md` | dashboard y hook externos |
-| R5 Cloud Editor execution | bridge Pre-Export preparado; ejecución externa aún no observada | EVIDENCE_REQUIRED | `unity/Assets/Editor/VexforgeR5CloudBuildGate.cs` | run manual del target existente |
-| Supabase authority | auth, datos y settlement permanecen en backend | ACTIVE | `unity/Assets/Scripts/Backend/**` | no cambiar contratos |
-| Expo/React Native legacy | legado, rollback y referencia histórica | PRESERVED | `mobile/**`, `mobile/app.json` | no eliminar ni mezclar runtimes |
+Consultar `mobile/docs/SESSION_CHECKPOINT.md`. La siguiente unidad es ejecutar
+las verificaciones móviles y auditoría de compatibilidad, y después crear el
+núcleo de runtime mínimo sin alterar la frontera de autoridad de Supabase.

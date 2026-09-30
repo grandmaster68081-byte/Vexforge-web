@@ -1,7 +1,8 @@
 # VEXFORGE — Expo Game Runtime
 
 This repository is currently being advanced as the VEXFORGE Expo/React Native
-game runtime. The active execution contract is
+game runtime. Expo under `mobile/**` is the only canonical active game runtime.
+The active execution contract is
 `mobile/docs/VEXFORGE_EXPO_REPLIT_CONTINUATION_ORDER_V5.md`.
 
 ## Active scope
@@ -17,15 +18,23 @@ game runtime. The active execution contract is
   and pushed to `origin/main`.
 - Responses to the user are in Spanish.
 
-Frozen for this work:
+Legacy or out of scope for this work:
 
-- `unity/**`
+- `unity/**` — preserved Unity legacy; read-only for new work.
 - `src/**` and `public/**` web portal code
 - historical web/Unity implementations
 - old Expo ZIP releases
 
-Do not use frozen areas as gameplay or design authorities, and do not build a
+Do not use these areas as gameplay or design authorities, and do not build a
 second runtime beside `mobile/**`.
+
+`faucet/**` is the separate Kivora product. Keep it and its migrations/assets
+isolated; do not include them in VEXFORGE work or delete them as part of this
+scope.
+
+No Epic/Fab asset payloads or listing identifiers were found in the repository.
+Epic/Fab sourcing is retired from the active direction. The game's `epic`
+card rarity is unrelated and must remain intact.
 
 ## Run & verify
 
@@ -61,8 +70,8 @@ or production deployment until the user explicitly authorizes the build gate.
 - `mobile/assets/` — official and project-provided mobile assets.
 - `mobile/scripts/` — mobile static verifiers and audits.
 - `mobile/docs/` — active scope, runtime contracts, audits and checkpoints.
-- `supabase/`, `backend/`, `src/`, `public/`, and `unity/` — historical or
-  frozen repository zones for this execution order.
+- `supabase/`, `backend/`, `src/`, `public/`, and `unity/` — historical,
+  legacy, or out-of-scope repository zones for this execution order.
 
 ## Architecture decisions
 
