@@ -1,74 +1,96 @@
-# VEXFORGE
+# VEXFORGE — Expo Game Runtime
 
-Juego de cartas coleccionables (TCG) web: 127 cartas únicas, 4 facciones, economía real con VEX, combate PvP turn-based, mercado P2P, misiones y clanes.
+This repository is currently being advanced as the VEXFORGE Expo/React Native
+game runtime. The active execution contract is
+`mobile/docs/VEXFORGE_EXPO_REPLIT_CONTINUATION_ORDER_V5.md`.
 
-**Producción pública:** https://vexforge-web.pages.dev
-**Protocolo activo:** `VEXFORGE_PROTOCOL_V2.md` — leer primero en cada sesión.
-**Continuidad activa:** `CONTINUITY.md` — leer después del protocolo.
+## Active scope
 
----
+- Work only on `mobile/**`, its current Supabase consumers, official mobile
+  card data/art, project-provided VEXFORGE assets, and the 2.5D game runtime.
+- The active scope authority is `mobile/docs/ACTIVE_EXPO_GAME_SCOPE.md`.
+- The repository state and evidence are recorded in
+  `mobile/docs/REAL_EXPO_REPOSITORY_STATE.md`.
+- The current session checkpoint is
+  `mobile/docs/SESSION_CHECKPOINT.md`.
+- The official branch is `main`; every completed milestone must be committed
+  and pushed to `origin/main`.
+- Responses to the user are in Spanish.
 
-## Run & Operate
+Frozen for this work:
 
-- **Unity project:** `/home/runner/workspace/Vexforge-web/unity/`
-- **Unity target:** `6000.3.0f1` (target declarado; falta validación con el editor exacto)
-- **Expo fallback:** `/home/runner/workspace/Vexforge-web/mobile/`
-- **Typecheck:** `cd /home/runner/workspace/Vexforge-web && npx tsc --noEmit -p tsconfig.app.json`
-- **ZIP descargable:** `/home/runner/workspace/vexforge-web.zip` → `GET /api/download/vexforge`
-- **API Server (este Replit):** `pnpm --filter @workspace/api-server run dev`
+- `unity/**`
+- `src/**` and `public/**` web portal code
+- historical web/Unity implementations
+- old Expo ZIP releases
 
----
+Do not use frozen areas as gameplay or design authorities, and do not build a
+second runtime beside `mobile/**`.
 
-## Stack
+## Run & verify
 
-- **Frontend:** React 18 + Vite 5 + TypeScript 5.5 + React Router 6 + Supabase JS 2.45
-- **Backend:** Supabase (PostgreSQL + Auth + Storage + RPCs)
-- **Hosting:** Cloudflare Pages (Wrangler 3)
-- **Arquitectura:** Domain-driven — `src/domains/<domain>/repository.ts` → `use<Domain>.ts` → `src/routes/<Name>Route.tsx`
+From `mobile/`:
 
----
+- `npm install` — install the pinned Expo runtime dependencies when needed.
+- `npm run verify` — run the repository's static mobile release verifier.
+- `npm run typecheck` — run the mobile TypeScript check.
+- `npm run doctor` — run Expo Doctor.
+
+Do not run EAS preview/production builds, APK/AAB generation, store deployment,
+or production deployment until the user explicitly authorizes the build gate.
+
+## Runtime stack
+
+- Expo SDK 54
+- React Native 0.81.5
+- React 19.1.0
+- Expo Router 6.0.24
+- Reanimated 4.1.1 + Worklets 0.5.1
+- Gesture Handler 2.28.0
+- React Native Skia 2.2.12
+- Supabase JS 2.58.0
 
 ## Where things live
 
-- **Fuente de verdad del frontend:** Supabase tabla `vexforge_frontend_source_files`
-- **Documentación operativa activa:** `VEXFORGE_PROTOCOL_V2.md` y `CONTINUITY.md`
-- **Arquitectura backend:** `backend/architecture/`, `backend/decisions/`, `backend/pending/`, `backend/blockers/` y `backend/handoff/`
-- **Supabase project:** `rscuzqnfccqvltkdcdny` — `https://rscuzqnfccqvltkdcdny.supabase.co`
-- **Assets de cartas:** Supabase Storage bucket `vexforge-assets/`
-
----
+- `mobile/app/` — Expo Router screens and navigation.
+- `mobile/src/engine/` — battle presentation and tactical runtime logic.
+- `mobile/src/render/` — battlefield, world, effects, audio and diegetic
+  presentation components.
+- `mobile/src/services/` — Supabase client and repository boundary.
+- `mobile/assets/` — official and project-provided mobile assets.
+- `mobile/scripts/` — mobile static verifiers and audits.
+- `mobile/docs/` — active scope, runtime contracts, audits and checkpoints.
+- `supabase/`, `backend/`, `src/`, `public/`, and `unity/` — historical or
+  frozen repository zones for this execution order.
 
 ## Architecture decisions
 
-- **Supabase como única fuente canónica:** Todo edit de frontend = UPDATE en `vexforge_frontend_source_files`. Nunca persistir solo en disco.
-- **RPCs para toda escritura de negocio:** `execute_mission`, `fuse_cards`, `start_pvp_match`, etc. No INSERT/UPDATE directo desde el cliente.
-- **Domain-driven frontend:** Cada dominio tiene su `repository.ts` + `use<Domain>.ts` + ruta asociada.
-- **TypeScript:** El build de Vite no ejecuta TypeScript; siempre validar con `npx tsc --noEmit -p tsconfig.app.json`.
-- **Runtime principal:** Unity bajo `unity/**`; Expo se conserva intacto como fallback.
-- **Portal público:** `src/**` y `public/**` contienen el portal editorial VEXFORGE Tier 1 Gold; no es un cliente web del juego.
-- **Autoridad de gameplay:** Unity envía intención a Supabase; el servidor devuelve eventos y settlement.
-- **Regla de build:** no generar APK, Player, Gradle, GameCI ni workflows de compilación durante esta fase.
+- Supabase remains authoritative for authentication, ownership, combat
+  settlement, rewards and economy; presentation must not calculate them.
+- The existing `arena.tsx`, `BattlefieldCanvas`, `BattleEffects`,
+  `battleDirector` and repository boundary are the foundation to extend.
+- Official card artwork is canonical and must not be repainted or silently
+  replaced by generated art.
+- A local laboratory or training presentation must be labelled as such and
+  cannot be promoted to competitive settlement.
+- Quality tiers may change presentation budgets only, never game rules.
+- Every bounded milestone receives targeted validation, a checkpoint update,
+  a commit and a push to `main`.
 
----
+## Supabase
 
-## Product
-
-TCG con 127 cartas únicas en 4 facciones, economía dual VEX, packs con pity system, combate PvP por turnos, mercado P2P, misiones, logros, clanes, World Bosses, Season Pass y fusión de cartas.
-
----
-
-## User preferences
-
-- Idioma de respuesta: español.
-- Leer el protocolo V2 y la continuidad activa al inicio de cada sesión.
-- Trabajar sólo sobre las fuentes oficiales indicadas por el protocolo.
-- Al cerrar una sesión, registrar estado, evidencia, bloqueos, deuda y siguiente acción verificable en `CONTINUITY.md`.
-- Al cerrar cada unidad completada, hacer push a main, desplegar y verificar el deploy público; si hay bloqueo, documentarlo sin simular evidencia.
-
----
+- Project: `rscuzqnfccqvltkdcdny`
+- URL: `https://rscuzqnfccqvltkdcdny.supabase.co`
+- Runtime code requires the public client configuration; PATs are never stored
+  in source files or runtime bundles.
 
 ## Gotchas
 
-- El proxy de Replit usa path-based routing: API server en `/api/*`.
-- `players_self` RLS sólo retorna la propia fila; para display names públicos usar las RPCs autorizadas.
-- No usar service_role para suplantar jugadores, fabricar QA o falsear resultados.
+- `mobile/README.md` contains historical 1.9.0 wording; the package and app
+  manifests at `1.10.0` are the current release evidence.
+- The current runtime has a deterministic local tactical lab and an
+  authoritative PvP path. Do not describe the lab as server settlement.
+- Do not infer live Supabase columns, constraints, functions or grants from
+  old migrations; inspect the live contract before changing economy or battle
+  consumers.
+- Do not reset, rebase, merge, cherry-pick or force-push the official branch.
