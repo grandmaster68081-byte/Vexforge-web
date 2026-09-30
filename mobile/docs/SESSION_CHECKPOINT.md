@@ -5,12 +5,11 @@ Execution contract: `mobile/docs/VEXFORGE_EXPO_REPLIT_CONTINUATION_ORDER_V5.md`
 
 ## Git
 
-- CURRENT SHA: `800369a22a44317fd44939d50c78a562a2636531` before this document
-  milestone
-- REMOTE MAIN SHA: `800369a22a44317fd44939d50c78a562a2636531`
+- CURRENT SHA: `385127485e75f460f34425b58bbd8f1942b25b5c` before this checkpoint
+  finalization commit
+- REMOTE MAIN SHA: `385127485e75f460f34425b58bbd8f1942b25b5c`
 - BRANCH: `main`
-- WORKTREE CLEAN: no while this checkpoint and scope authority are being
-  committed; it must be clean after the milestone push
+- WORKTREE CLEAN: yes after the milestone push
 
 ## Completed milestone
 
@@ -21,6 +20,7 @@ Execution contract: `mobile/docs/VEXFORGE_EXPO_REPLIT_CONTINUATION_ORDER_V5.md`
 - Audited the actual Expo manifests, mobile routes, battle foundation,
   Supabase client boundary, assets and verifiers.
 - Confirmed the referenced Supabase project is live and healthy.
+- Ran the existing mobile static verifier successfully.
 
 ## Files changed
 
@@ -41,7 +41,8 @@ Execution contract: `mobile/docs/VEXFORGE_EXPO_REPLIT_CONTINUATION_ORDER_V5.md`
 - Local branch equals `origin/main` before this milestone: PASS.
 - Supabase Management API project check: PASS, HTTP 200,
   `ACTIVE_HEALTHY`.
-- Mobile static verifier: NOT RUN.
+- Mobile static verifier: PASS — 23 required files, 40 source files,
+  75 runtime assets, zero old Expo references, secret scan clean.
 - Typecheck: NOT RUN.
 - Expo Doctor: NOT RUN.
 - BUILD STATUS: NOT RUN.
