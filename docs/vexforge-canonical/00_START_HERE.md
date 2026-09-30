@@ -1,41 +1,24 @@
 # 00 — START HERE
 
-## Runtime vigente
+## Dirección vigente
 
-Directiva explícita del propietario, 2026-09-30: Expo / React Native bajo `mobile/**` es el único runtime activo del juego. Unity y otras implementaciones son legado para trabajo nuevo. Preservar todos los archivos; no ejecutar builds de Unity ni reactivar otro runtime. La web pública existente queda intacta.
+**Trabajo visual de juego: Unity 6.3.0f1 + URP 17.3.0.** Esta es la ruta recomendada por el análisis más reciente del código, pipeline Android, soporte móvil actual de Unreal y el límite de seis horas. Expo queda como legado/historial; no migrar el runtime a Unreal. Fab se usa sólo para assets gratuitos compatibles/licenciados que se integren en Unity.
 
-Los documentos que aún describen Unity como activo son registros de una decisión anterior. Si `main` o el propietario cambian de nuevo, inspeccionar evidencia y registrar una nueva decisión; no resolverlo por inferencia.
+## Orden de lectura
 
-## Orden de lectura de una IA nueva
+1. `VEXFORGE_CONTEXT.md` — ruta y límites actuales.
+2. `docs/vexforge-canonical/31_VISUAL_PRODUCTION_ROADMAP.md` — ruta visual, texto para intro de sesión, gates, licencias y build-budget.
+3. `docs/vexforge-canonical/17_CURRENT_BLOCK.md` — bloque activo y evidencia.
+4. `docs/vexforge-canonical/16_IMPLEMENTATION_STATUS.md`, `18_DECISIONS.md`, `19_BLOCKERS.md`, `20_KNOWN_UNKNOWNS.md`, `21_CONTRADICTIONS.md`.
+5. Inventario existente: `docs/ART_DIRECTION.md`, `docs/ART_GENERATION_BIBLE.md`, `docs/VE-1-VISUAL-BIBLE.md`, `docs/vexforge-tier1/03_BATTLEFIELD_VISUAL_SYSTEM_V15.md`, `04_CINEMATOGRAPHY_VFX_AUDIO_V15.md`, `12_ASSET_PIPELINE_V15.md`, `16_VISUAL_CLOSURE_V15.md`, `VISUAL_QA_MATRIX.md`, `ART_ASSET_MANIFEST.json`.
+6. Lee sólo el código Unity correspondiente al gate visual activo. La ruta inicia en `VexforgeBattlefieldStage`, `BattlePresentationDirector`, `VexforgeTier1VisualFoundation`, `VexforgeCardArtResolver` y el validador.
+7. Antes de agregar shader/asset, lee el workflow y el gate de variantes; no compiles la ruta unbounded.
 
-1. `VEXFORGE_CONTEXT.md` — directiva vigente y autoridad.
-2. `docs/vexforge-canonical/30_TIER1_COMPETITIVE_GAME_ROADMAP.md` — alcance, conclusión realista, gates y continuidad.
-3. `16_IMPLEMENTATION_STATUS.md` — advertencia de snapshot histórico y estados que falta revalidar.
-4. `17_CURRENT_BLOCK.md` — unidad activa; no confundir un plan con implementación.
-5. `19_BLOCKERS.md`, `20_KNOWN_UNKNOWNS.md` y `21_CONTRADICTIONS.md`.
-6. El documento de dominio relevante; `27_EXPO_GAME_RUNTIME.md` y otros documentos antiguos son referencia histórica hasta reconciliarlos con el código actual.
-7. Inspeccionar los archivos Expo relevantes en el `main` vigente.
-8. Consultar Supabase live de forma de sólo lectura para contratos implicados; leer definiciones, RLS, policies, grants y ownership antes de cambiar integración.
+## Reglas de trabajo
 
-## Autoridad
-
-Supabase live es la autoridad para backend/datos/reglas/resultados. El código actual de `main` es la evidencia de implementación. La directiva explícita más reciente del propietario fija Expo como runtime activo. Los documentos históricos ayudan a recuperar contexto, pero no reemplazan una verificación actual.
-
-## No asumir
-
-- Que Expo compila o funciona porque existe `mobile/**` o un README.
-- Que una RPC es segura o está operativa porque su nombre aparece en el catálogo.
-- Que una migración antigua coincide con el estado live.
-- Que una simulación local es PvP real o settlement competitivo.
-- Que una build CI prueba legibilidad, rendimiento, instalación o estabilidad física.
-- Que la puntuación Tier 1 interna prueba competitividad frente al mercado.
-- Que un documento que dice Unity activo sigue vigente después de la directiva de 2026-09-30.
-
-## Límites de ejecución
-
-- La unidad de esta planificación no instaló, compiló, desplegó ni modificó Supabase.
-- El workflow visible de Unity no se despacha para este runtime.
-- No tocar economía, auth, RLS, datos, fees, rewards ni contratos sin auditoría y autorización específica.
-- No marcar una feature como completa por componentes, pantallas, imágenes o documentación; adjuntar comportamiento, prueba, resultado y bloqueo.
-
-Al cerrar cada incremento funcional, actualizar `16_IMPLEMENTATION_STATUS.md`, `17_CURRENT_BLOCK.md`, `18_DECISIONS.md`, `19_BLOCKERS.md`, `20_KNOWN_UNKNOWNS.md`, `21_CONTRADICTIONS.md` y `25_CONTINUITY_CHANGELOG.md` según corresponda. Persistir cambios coherentes en `main`; verificar el SHA real antes de continuar una sesión nueva.
+- El propietario define y valida lógica, estadísticas y balance. Este bloque sólo mejora cómo se ve y se siente el contenido existente.
+- No rediseñar reglas, eventos, API, Supabase ni mecánicas. Consumir eventos actuales y documentar dependencias ausentes.
+- No hacer engine migration. Unity existe y tiene pipeline; la ruta Unreal no cumple mejor los límites Android/CI.
+- Todo recurso debe tener procedencia/licencia. `Fab` no significa que todo sea gratis o se pueda usar fuera de Unreal; revisar cada listing. No copiar arte oficial de cartas al cliente.
+- No introducir assets, shaders ni plugins que eleven las variantes sin gate. No ejecutar `normal/final` hasta que el build de producción tenga hard cap.
+- Cambios coherentes a `main`, evidencia verificable y nada funcional sólo en local.

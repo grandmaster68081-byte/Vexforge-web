@@ -1,6 +1,8 @@
-# OVERRIDE VIGENTE — 2026-09-30
+# OVERRIDE VIGENTE — RUTA VISUAL UNITY/URP (2026-09-30)
 
-El propietario confirmó que Expo / React Native bajo `mobile/**` es el único runtime activo para el juego; Unity y otros clientes quedan como legado preservado. Los inventarios y estados que siguen fueron escritos bajo una decisión anterior de Unity y deben leerse como snapshot histórico hasta revalidarlos. Este override no certifica una build Expo ni autoriza cambios de backend. Fuente vigente: `VEXFORGE_CONTEXT.md` y `docs/vexforge-canonical/30_TIER1_COMPETITIVE_GAME_ROADMAP.md`.
+La solicitud más reciente delega elegir la mejor ruta visual dentro del presupuesto Android/CI. La recomendación actual es Unity 6.3.0f1 + URP 17.3.0, que ya están presentes en el cliente y workflow. Expo queda como legado intacto; no se migra a Unreal. Fab se limita a assets gratuitos, licenciados y compatibles. Ver `docs/vexforge-canonical/31_VISUAL_PRODUCTION_ROADMAP.md`.
+
+La ruta normal/final de GitHub Actions continúa bloqueada hasta que el preflight aplique cap/stripping: inventario histórico ~287.000 variantes y job máximo 360 minutos. Este commit sólo actualiza contexto/plan: no cambia gameplay, Supabase ni CI.
 
 ---
 

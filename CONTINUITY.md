@@ -1,3 +1,13 @@
+## 2026-09-30 — VEXFORGE VISUAL PRODUCTION ROUTE LOCKED
+
+- **PLAN:** `docs/vexforge-canonical/31_VISUAL_PRODUCTION_ROADMAP.md` es la ruta para iniciar cada sesión visual.
+- **RUNTIME TARGET:** Unity 6.3.0f1 + URP 17.3.0 existente; no migración a Unreal. Fab sólo para recursos gratuitos compatibles/licenciados. Expo permanece intacto como legado.
+- **BASE AUDIT:** el escenario ya reacciona a eventos, pero está armado en parte con primitivas/fallbacks; existe workflow Android con timeout de 360 min, inventario cercano a 287k y `normal/final` sin límite de variantes.
+- **RESULTADO:** recomendación y plan documental; sin gameplay, assets, CI, Supabase ni builds modificados.
+- **NEXT:** V0: baseline visual y hard-cap/preflight de shader variants antes de producir más contenido.
+
+---
+
 ## 2026-09-30 — DIRECTIVA EXPO Y PLAN REALISTA DE JUEGO COMPETITIVO
 
 - **DECISIÓN DEL PROPIETARIO:** Expo / React Native bajo `mobile/**` es el único runtime activo del videojuego. Unity y los demás clientes son legado para trabajo nuevo y se preservan; la web existente no se cambia.

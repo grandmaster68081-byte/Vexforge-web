@@ -1,4 +1,8 @@
-# 30 — VEXFORGE: ROADMAP REALISTA HACIA UN TCG COMPETITIVO
+# 30 — ROADMAP COMPETITIVO HISTÓRICO
+
+> **Aviso de vigencia (2026-09-30):** este roadmap general conserva decisiones históricas, incluida la nota Expo-only. Para el trabajo visual Android vigente, esa nota queda supersedida por `docs/vexforge-canonical/31_VISUAL_PRODUCTION_ROADMAP.md`: Unity 6.3 + URP es el target existente elegido para arte/presentación; no se migra a Unreal. Use la hoja 31 como autoridad para alcance visual, Epic/Fab y el gate de variantes. El contenido general no visual de este documento es contexto, no una solicitud para rehacer sistemas ya implementados.
+
+---
 
 - **Tipo:** plan estratégico y de ejecución; no es una declaración de trabajo terminado ni autorización para cambiar producción.
 - **Última revisión:** 2026-09-30.

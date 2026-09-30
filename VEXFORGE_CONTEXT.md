@@ -1,41 +1,27 @@
-# VEXFORGE — CONTEXTO ACTUAL DEL PROYECTO
+# VEXFORGE — CONTEXTO ACTUAL
 
-## Directiva vigente del propietario — 2026-09-30
+## Ruta de calidad visual elegida
 
-- **Único runtime activo para el videojuego:** Expo / React Native en `mobile/**`.
-- **Legado/fuera del trabajo nuevo del juego:** Unity (`unity/**`) y las demás implementaciones cliente. Se preservan; no se eliminan, se migran ni se modifican por esta decisión.
-- La web pública existente no se reconstruye ni se usa como runtime del juego; se deja intacta.
-- Esta directiva explícita sustituye las afirmaciones anteriores de `main` y de documentos canónicos que decían que Unity era el runtime activo. Las referencias antiguas se conservan como historia, no como instrucción actual.
-- Supabase live continúa siendo la autoridad de auth, reglas, cartas, estado, ownership, economía, resultados y settlement.
+A petición del propietario, se comparó el proyecto actual con Unreal/Fab y el límite gratuito Android/CI. La recomendación vigente para trabajo nuevo es **Unity 6.3.0f1 + URP 17.3.0**, el proyecto Android y pipeline ya presentes en `main`. Esto sustituye la nota Expo-only del commit anterior para el plan visual. `mobile/**` se conserva como legado/historial y no se modifica; tampoco se migra a Unreal.
 
-## Base observada
+**Epic/Fab se usa selectivamente para contenido gratuito y compatible con Unity**, no como cambio de engine. Para Android, Epic UE 5.8 documenta Nanite y Lumen GI/reflections no disponibles en sus perfiles mobile; el renderer de escritorio Android/Vulkan aparece experimental. La licencia de Unreal no cuesta bajo el umbral publicado, pero migrar el cliente y crear CI nuevo no resuelve el tiempo/presupuesto actual.
 
-- Repositorio: `grandmaster68081-byte/Vexforge-web`; rama `main`.
-- SHA inspeccionado antes del plan: `02e4cec401230184f7a0de07a12cbc369dd5674a` (2026-09-30).
-- El árbol incluye Expo bajo `mobile/**` y Unity bajo `unity/**`. La selección de Expo es una decisión del propietario; su build/runtime actual no se verificó en esta unidad.
-- En el árbol inspeccionado figuraba un workflow manual de Unity; no se verificó un pipeline Expo/Android activo. No despachar el pipeline Unity.
-- La planificación vigente es `docs/vexforge-canonical/30_TIER1_COMPETITIVE_GAME_ROADMAP.md`.
+## Ruta principal de sesión
 
-## Supabase y readiness
+1. Leer `docs/vexforge-canonical/00_START_HERE.md`.
+2. Leer `docs/vexforge-canonical/31_VISUAL_PRODUCTION_ROADMAP.md` antes de tocar escena, assets, animación, VFX o shaders.
+3. Leer las biblias/manifiestos/QA visual que esa hoja enlaza; reutilizar, no duplicar.
+4. Trabajar desde el `main` actual; comprobar SHA antes de continuar. Persistir incrementos en GitHub `main`.
 
-El proyecto Supabase `rscuzqnfccqvltkdcdny` respondió `ACTIVE_HEALTHY` a una lectura de Management API. El snapshot live del 2026-09-30 reportó `vexforge_tier1_score = 38.30`, 10 dimensiones bajo el mínimo, score más bajo 0 y `tier1_ready = false`. Las fases 1 y 3 estaban `DONE`; la fase 7 `NOT_STARTED`; las fases restantes estaban incompletas. Ver detalle y límites de esa consulta en el roadmap.
+## Hechos de implementación y límites
 
-Los objetos `battle_runs`, `battle_events`, `pvp_matches`, `player_deck` y rutinas de combate/deck existen en live, pero su nombre y estructura no demuestran que el flujo sea seguro o competitivo. Revalidar definiciones, políticas, grants, ownership, idempotencia y recuperación antes de integrar cambios.
+- `unity/ProjectSettings/ProjectVersion.txt`: Unity `6000.3.0f1`.
+- `unity/Packages/manifest.json`: URP `17.3.0`.
+- `VexforgeBattlefieldStage` tiene presentación dirigida por eventos, pero construye parte de la arena con cubos/cilindros/anillos y puede mostrar un fallback primitivo. El problema de prioridad es completar escena/arte/VFX, no rehacer lógica de juego.
+- Ya existen perfiles Mobile/Balanced/Cinematic, resolver/manifiestos de arte, `VexforgeTier1BuildValidator` y documentos visuales v15. Conservar sus contratos, especialmente la prohibición de copiar arte oficial de cartas al cliente.
+- El workflow Android usa `timeout-minutes: 360`, inventario histórico ~287.000 variantes, cap de shard 35.000, y deja `normal/final` sin límite. No lanzar esas rutas hasta que el preflight/stripping proteja también producción.
+- El repositorio es público; GitHub Actions estándar es gratis en repos públicos, pero cada job tiene máximo seis horas. Objetivo de build <4 h y límite duro <6 h, medidos en runner real.
 
-## Reglas para continuar
+## Límites permanentes de este bloque
 
-1. Releer este contexto, `docs/vexforge-canonical/00_START_HERE.md` y el roadmap antes de modificar código.
-2. Confirmar el SHA más reciente de `main`; no continuar desde una captura antigua.
-3. Trabajar sólo en `mobile/**` para el runtime de juego, salvo documentación de continuidad o integración backend aprobada.
-4. No declarar Expo listo para producción sin validar dependencias, configuración, build y recorrido en Android real.
-5. No inventar reglas, cartas, recompensas, RPCs ni datos. Supabase live gana sobre migraciones históricas para contratos actuales.
-6. Mantener Unity y los otros árboles legados intactos. No ejecutar sus builds.
-7. El plan no autoriza cambios de esquema/datos, build de producción ni lanzamiento. Todo incremento funcional debe persistirse en GitHub `main` con evidencia y estado honesto.
-
-## Orden de lectura
-
-1. `docs/vexforge-canonical/00_START_HERE.md`
-2. `docs/vexforge-canonical/30_TIER1_COMPETITIVE_GAME_ROADMAP.md`
-3. `docs/vexforge-canonical/16_IMPLEMENTATION_STATUS.md`, `17_CURRENT_BLOCK.md`, `19_BLOCKERS.md`, `20_KNOWN_UNKNOWNS.md`, `21_CONTRADICTIONS.md`
-4. Documento de dominio y código Expo que corresponda al cambio
-5. Contratos Supabase live implicados
+Trabajo visual únicamente: escenas, composición, arte, iluminación, animaciones, VFX, UI feedback y sonido asociado a eventos existentes. No rehacer balance, stats, clanes, guerras, dungeons, bosses, PvP/PvE, economía ni contratos Supabase. No usar assets/plugins pagados, contenido Fab sin licencia verificable, contenido UE-Only en Unity, ni repetir el inventario de 287k como prueba normal. No cambiar Supabase ni iniciar build de release sin su gate.

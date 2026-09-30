@@ -2,6 +2,14 @@
 
 ## Reconciliación vigente — 2026-09-30
 
+La petición más reciente delegó seleccionar la mejor ruta para producir calidad visual Android gratis y con builds de menos de seis horas. La recomendación es Unity 6.3.0f1 + URP 17.3.0, que ya están en el repositorio y workflow; Fab se usa únicamente como fuente de assets gratuitos/licenciados compatibles. No se migra a Unreal ni se modifica Supabase. Esta decisión para el trabajo visual supersede la nota Expo-only anterior; `mobile/**` se conserva intacto.
+
+La motivación y fuentes están en `docs/vexforge-canonical/31_VISUAL_PRODUCTION_ROADMAP.md`. El C-008 y la reconciliación Expo que siguen quedan como **historial**; C-009 registra la resolución vigente.
+
+## Historial de resoluciones anteriores (no vigente para este bloque)
+
+## Reconciliación vigente — 2026-09-30
+
 El propietario resolvió explícitamente el runtime activo: Expo / React Native en `mobile/**` es el único runtime de juego para trabajo nuevo. Unity y los demás clientes quedan como legado, preservados e intactos. Esta instrucción sustituye los estados históricos de Unity activo en `main`; no certifica que Expo compile ni autoriza a cambiar Supabase.
 
 El documento de lanzamiento v4 es material de requisitos, no autoridad para revertir esta selección. Ver `docs/vexforge-canonical/30_TIER1_COMPETITIVE_GAME_ROADMAP.md`. Los C-001–C-007 siguientes registran evidencia y decisiones anteriores a esta reconciliación; no son instrucciones de runtime vigentes cuando contradicen esta sección.
@@ -76,3 +84,11 @@ autoridad de Supabase.
 - **EVIDENCIA:** ambos árboles existen en el SHA inspeccionado; la build/QA actual de Expo no se verificó en esta planificación.
 - **RESOLUCIÓN:** para trabajo nuevo manda la decisión reciente del propietario. Unity y otros clientes se preservan sin cambios; Expo no se declara listo hasta superar G0/G1.
 - **SIGUIENTE:** reconciliar sólo la documentación de entrada y verificar el camino Expo; no reabrir ni borrar el trabajo histórico de Unity.
+
+## C-009 — Ruta visual Unity/URP frente a Expo-only o Unreal (decisión técnica delegada)
+
+- **SITUACIÓN:** documentos previos registraban Expo como runtime activo; el repositorio también contiene un cliente Unity Android con URP, evento de presentación, perfiles de calidad y workflow de seis horas.
+- **PETICIÓN MÁS RECIENTE:** elegir la mejor ruta visual en 2026, sin coste de herramientas/assets y dentro del límite GitHub Actions.
+- **RESOLUCIÓN:** Unity 6.3.0f1 + URP 17.3.0 permanece como target visual Android; Fab sólo para contenido compatible/licenciado. No portar a Unreal: Nanite/Lumen no están en la tabla mobile de UE 5.8 y no existe pipeline UE en el repo. Expo permanece preservado como legado.
+- **BUILD:** `normal/final` siguen bloqueados para producción mientras no tengan hard cap/preflight; inventario ~287k no es build aceptable.
+- **EVIDENCIA/DETALLE:** `docs/vexforge-canonical/31_VISUAL_PRODUCTION_ROADMAP.md`. No hubo cambios runtime, Supabase ni build en esta decisión.
