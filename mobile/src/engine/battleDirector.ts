@@ -1,5 +1,5 @@
 import type { BattleEvent } from '../types/api';
-import { classifyBattleEvent, type PresentationKind } from './presentation';
+import { classifyBattleEvent, type PresentationKind } from './presentation.ts';
 
 export interface BattleSequenceFrame {
   index: number;

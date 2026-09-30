@@ -3,7 +3,30 @@
 Date: 2026-09-30  
 Execution contract: `mobile/docs/VEXFORGE_EXPO_REPLIT_CONTINUATION_ORDER_V5.md`
 
-## Latest continuity correction — documentation only
+## Current milestone — unified runtime foundation
+
+- Official branch: `main`; base commit before this milestone: `e5399050`,
+  matching `origin/main`; the worktree was clean before editing.
+- Added the first `mobile/game/**` runtime core: 2.5D depth projection,
+  camera presets, per-actor motion mapping, event-driven presentation cues,
+  pack-opening cue timeline, and guarded world/battle/result flow state.
+- Added `scripts/verify-mobile-game-runtime.mjs` and the
+  `verify:game-runtime` script. It checks cue alignment, independent actor
+  motion, camera/depth projection, pack phases, and the PvP authority guard.
+- Validation: existing static verifier, runtime compatibility audit,
+  interactive audit (500 deterministic runs), typecheck, and the new runtime
+  verifier all pass. No build or deployment was run.
+- Live Supabase inspection was read-only. The mission start/settle RPCs accept
+  client outcome/result JSON; `resolve_battle_run` accepts `p_won` and a
+  caller-supplied snapshot; the client-callable boss attack accepts damage.
+  These are not treated as authoritative battle simulation by Expo. The
+  existing PvP resolver remains the verified authority boundary.
+- Supabase data and schema were not changed.
+- NEXT: integrate the runtime into Arena/BattlefieldCanvas, the world-to-PvP
+  result path, pack ceremony, tutorial, boss presentation and dev-only Game
+  Lab; then verify and push that bounded milestone before continuing.
+
+## Previous continuity checkpoint — documentation only
 
 - **BASE:** official `main` was fetched and confirmed at
   `1446cdd959add695c2405e5caa5a621a742e64ee` before this update.
@@ -84,15 +107,17 @@ Execution contract: `mobile/docs/VEXFORGE_EXPO_REPLIT_CONTINUATION_ORDER_V5.md`
 
 ## Remaining gaps
 
-- No completed unified `mobile/game/**` 2.5D runtime.
-- No required runtime integrity verifier.
-- Battle vertical slice, actor animation, camera, timeline, audio and VFX
-  acceptance evidence remain incomplete.
-- Pack opening, boss, tutorial and Game Lab acceptance evidence remain
-  incomplete.
+- The runtime foundation now exists, but `BattlefieldCanvas` and Arena do not
+  yet consume the shared 2.5D scene/timeline/camera cues.
+- The world-to-authoritative-PvP result path, synchronized audio/haptics,
+  pack timeline integration, boss presentation, tutorial integration and
+  development-only Game Lab remain to be completed.
+- No client-safe, server-simulated authoritative world-boss settlement has
+  been verified; do not submit locally calculated win/damage values as
+  settlement.
 
 ## Exact next milestone
 
-Run the mobile static verifier and dependency/compatibility audit, then create
-the smallest compatible runtime core without changing the Supabase authority
-boundary. Commit and push that bounded milestone to `main` before continuing.
+Integrate the runtime foundation into the mobile experience, verify the
+vertical slice and presentation surfaces, and push the bounded milestone to
+`main` before beginning any further implementation.

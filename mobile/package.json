@@ -9,6 +9,7 @@
     "android": "expo run:android",
     "typecheck": "tsc --noEmit",
     "verify": "node scripts/verify.mjs",
+    "verify:game-runtime": "node --experimental-strip-types scripts/verify-mobile-game-runtime.mjs",
     "audit:battle": "node --experimental-strip-types scripts/audit-battle.ts",
     "audit:economy": "node --experimental-strip-types scripts/audit-economy.ts",
     "audit:all": "npm run verify && npm run audit:tier1 && npm run audit:runtime && npm run audit:release && npm run audit:final && npm run audit:live-economy && npm run audit:battle && npm run audit:interactive && npm run audit:economy && npm run audit:economy-policy && npm run typecheck",
