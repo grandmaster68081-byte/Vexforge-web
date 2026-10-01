@@ -3,7 +3,20 @@
 Date: 2026-09-30  
 Execution contract: `mobile/docs/VEXFORGE_EXPO_REPLIT_CONTINUATION_ORDER_V5.md`
 
-## Current milestone — live battlefield runtime integration
+## Current milestone — actor rig, timeline tracks, and interactive QA
+
+- Official branch: `main`; implementation base `1139f532284a4a132ed43736bb8e0e42d5b5c319`, refreshed from `origin/main` and confirmed equal before final verification.
+- Added procedural, per-actor rig profiles for idle, anticipation, attack, hit, cast, guard, stagger, status, heal, defeat, victory, summon, phase, and reveal. The existing official card art remains the actor body; torso, arms, cloak, and weapon animate as separate parts.
+- Camera presets can focus the event actor or target. Runtime cues now carry actor, camera, VFX, audio, haptic, and HUD tracks with timing, targets, easing, completion, skip, and reduced-motion metadata.
+- `BattlefieldCanvas` exposes the six required scene layers and honors reduced-motion settings for camera, actors, flashes, and VFX. Game Lab can toggle layers, select battlefield targets for its local drill, and inspect individual timeline cues.
+- The development-only boss fixture is rendered as a battlefield actor for QA; it remains presentation/training only. PvP outcomes still require the existing server resolver.
+- No assets were generated. No Unity, Supabase production data/schema/RPC, portal, or Kivora files were changed.
+- Validation: `verify` passed (24 required files, 56 source files, 75 assets, secret scan clean); `verify:game-runtime` passed (16 check groups); `audit:battle` passed (2,500 runs); `audit:interactive` passed (500 runs); `audit:release` passed (8 cinematics); pure runtime TypeScript check passed; `git diff --check` passed.
+- Whole-app `typecheck` could not be completed because `mobile/node_modules` is absent (`expo/tsconfig.base` and app dependencies are unavailable). The Expo workflow was attempted and failed with `expo: not found`; no build, EAS build, or deployment was run.
+- Authenticated live PvP, a native device session, and server-owned boss combat remain unverified.
+- BUILD STATUS = NOT RUN.
+
+## Previous milestone — live battlefield runtime integration
 
 - Official branch: `main`; implementation base `d974caa85b3dc54c7715e79dc63bd1cccfbb9b87`, confirmed equal to `origin/main` before editing.
 - `BattlefieldCanvas` now consumes shared 2.5D actor projections, per-actor motion, camera cues, viewport-local VFX, synchronized audio and haptics. Arena replay and local drills use the same presentation runtime; the tutorial reuses that battlefield.
@@ -16,7 +29,7 @@ Execution contract: `mobile/docs/VEXFORGE_EXPO_REPLIT_CONTINUATION_ORDER_V5.md`
 - Authenticated live PvP was not exercised in this implementation; server authority remains enforced in the app code.
 - Kept the environment's `.replit` port-mapping update after confirming the running Expo server is reachable through the proxy.
 
-## Previous milestone — unified runtime foundation
+## Earlier milestone — unified runtime foundation
 
 - Official branch: `main`; base commit before this milestone: `e5399050`,
   matching `origin/main`; the worktree was clean before editing.
@@ -62,10 +75,25 @@ Execution contract: `mobile/docs/VEXFORGE_EXPO_REPLIT_CONTINUATION_ORDER_V5.md`
 
 ## Git
 
-- BASE SHA before the current milestone: `d974caa85b3dc54c7715e79dc63bd1cccfbb9b87`
-- RUNTIME INTEGRATION SHA: `1610b1a5b73ed4bce3fcd30a2d54d467297b3d9b`, verified equal to `origin/main` after push
+- BASE SHA before the current milestone: `1139f532284a4a132ed43736bb8e0e42d5b5c319`
+- RUNTIME MILESTONE SHA: to be recorded after the push is verified.
+- REMOTE `main` SHA before the milestone: `1139f532284a4a132ed43736bb8e0e42d5b5c319`
 - BRANCH: `main`
-- WORKTREE CLEAN: yes after checkpoint finalization commit and push
+- WORKTREE CLEAN: expected after the milestone and checkpoint pushes.
+
+## Files changed in the current milestone
+
+- `mobile/app/dev/game-lab.tsx`
+- `mobile/game/actors.ts`
+- `mobile/game/layers.ts`
+- `mobile/game/scene.ts`
+- `mobile/game/timeline.ts`
+- `mobile/game/types.ts`
+- `mobile/scripts/verify-mobile-game-runtime.mjs`
+- `mobile/src/render/BattleEffects.tsx`
+- `mobile/src/render/BattlefieldCanvas.tsx`
+- `mobile/docs/SESSION_CHECKPOINT.md`
+- `mobile/docs/REAL_EXPO_REPOSITORY_STATE.md`
 
 ## Completed milestone
 
@@ -124,15 +152,16 @@ Execution contract: `mobile/docs/VEXFORGE_EXPO_REPLIT_CONTINUATION_ORDER_V5.md`
 - World-boss combat remains a local presentation. No server-owned boss
   simulation/settlement path has been verified; never submit client-calculated
   damage, wins, rewards, or economy values as settlement.
-- Actors animate independently, but dedicated rigged/sprite animation clips
-  are not yet connected; current animation uses the existing card presentation
-  and motion cues.
-- Metro and proxy health were checked, but no native device session or EAS
-  build was run.
+- Actors now have separate procedural torso, arm, cloak, and weapon motion, but
+  dedicated rigged/sprite clips and separated character art are not connected.
+- Whole-app typecheck and the Expo workflow are blocked in this checkout because
+  `mobile/node_modules` is absent. No native device session or EAS build was run.
 
 ## Exact next milestone
 
-After this checkpoint is pushed, validate an authenticated PvP match through
-the existing server resolver and design a safe server-owned boss simulation
-path. Do not add client-authoritative outcomes or change Supabase RPC/schema
-without a separately scoped and approved backend change.
+After this checkpoint is pushed, restore the existing mobile dependency
+environment and rerun the whole-app typecheck and Expo workflow. Then validate
+an authenticated PvP match through the existing server resolver and design a
+safe server-owned boss simulation path. Do not add client-authoritative outcomes
+or change Supabase RPC/schema without a separately scoped and approved backend
+change.

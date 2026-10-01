@@ -12,6 +12,22 @@ Source repository: `https://github.com/grandmaster68081-byte/Vexforge-web.git`
 - The preceding commit imported the official remote tree into this persistent
   project and preserved the active execution order under `mobile/docs`.
 
+## Current implementation state on official `main`
+
+- `mobile/game/**` is the shared Expo runtime, with 2.5D scene projection,
+  per-actor state, camera presets, event timelines and presentation tracks.
+- `BattlefieldCanvas` renders the BACK, MID, PLAYFIELD, ACTORS, FRONT_FX and
+  HUD layers; actors use independent procedural torso, arm, cloak and weapon
+  motion over the existing project card art.
+- Event cameras can focus the acting or targeted unit. VFX, audio, haptics and
+  HUD acknowledgement are represented as synchronized timeline tracks.
+- Reduced-motion preferences disable camera and actor transitions, flashes,
+  and animated VFX while preserving static event feedback.
+- Development-only Game Lab exposes layer toggles, target selection for local
+  drills, cue inspection, pack presentation and a non-settling boss fixture.
+- PvP settlement remains restricted to the existing authoritative resolver.
+  The boss fixture and tactical drills do not grant rewards or persist results.
+
 ## Confirmed mobile foundation
 
 - `mobile/app.json` declares VEXFORGE `1.10.0`, Android package
@@ -34,17 +50,17 @@ Source repository: `https://github.com/grandmaster68081-byte/Vexforge-web.git`
 
 ## Known gaps at this checkpoint
 
-- There is no completed `mobile/game/**` unified 2.5D runtime module yet.
-- The active order's required `scripts/verify-mobile-game-runtime.mjs` does
-  not yet exist.
-- The Arena has a local deterministic tactical lab/PVE presentation and a
-  separate authoritative PvP resolver path; this is not yet the requested
-  complete world-to-battle vertical slice.
-- Existing effects and replay code need to be reconciled with the required
-  actor state machine, camera state system, data-driven timeline tracks,
-  audio director and reduced-motion/skip behavior.
-- Pack opening, boss presentation, tutorial play loop and QA inspection route
-  are not yet verified against the active 2.5D acceptance criteria.
+- No authenticated end-to-end PvP challenge has been run from the Expo app.
+- World-boss combat remains a local presentation; no server-owned boss
+  simulation or settlement path has been verified.
+- Actor motion is procedural and layered over card art; dedicated rigged or
+  sprite clips and separated character artwork remain unconnected.
+- Pack opening, boss presentation, tutorial play loop and Game Lab have
+  automated source/runtime checks, but still need a native-device acceptance
+  session.
+- In the current Replit checkout, `mobile/node_modules` is absent. The
+  whole-app TypeScript check cannot resolve Expo types and the Expo workflow
+  currently fails with `expo: not found`.
 - `mobile/README.md` retains historical 1.9.0 release wording; it is not used
   as current manifest evidence.
 
@@ -54,9 +70,12 @@ Source repository: `https://github.com/grandmaster68081-byte/Vexforge-web.git`
 - The remote mobile manifests, runtime candidates and verifiers were inspected.
 - Supabase Management API returned HTTP 200 and project status
   `ACTIVE_HEALTHY`.
-- Expo dependency resolver reported all packages up to date after alignment.
-- Expo Doctor passed all 18 checks after removing the unsupported
-  `targetSdkVersion`, fixing icon formats and deduplicating `expo-asset`.
-- Mobile typecheck passed.
-- The static mobile verifier passed.
+- At the earlier repository-alignment checkpoint, Expo dependency resolution,
+  Expo Doctor and the full mobile typecheck passed.
+- Current runtime milestone checks: mobile static verifier passed, game-runtime
+  acceptance checks passed, battle audit passed 2,500 runs, interactive audit
+  passed 500 runs, release audit passed, and standalone runtime TypeScript
+  checks passed.
+- Current full typecheck and Expo workflow could not run because mobile
+  dependencies are not installed in this checkout.
 - No EAS build, APK, AAB, store deployment or production deployment was run.

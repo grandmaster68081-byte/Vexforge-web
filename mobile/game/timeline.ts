@@ -3,7 +3,7 @@ import type { BattleUnitState } from '../src/types/api';
 import { battlePlaybackDelay, buildBattleSequence, type BattleSequenceFrame } from '../src/engine/battleDirector.ts';
 import type { PresentationKind } from '../src/engine/presentation';
 import { cameraForPresentation, actorMotionsForEvent } from './scene.ts';
-import type { RuntimeAudioCue, RuntimeCue, RuntimeHapticCue } from './types';
+import type { RuntimeAudioCue, RuntimeCue, RuntimeHapticCue, RuntimeTrackCue } from './types';
 
 function audioFor(kind: PresentationKind): RuntimeAudioCue {
   if (kind === 'attack') return 'attack';
@@ -36,6 +36,62 @@ function vfxFor(kind: PresentationKind): string {
   } satisfies Record<PresentationKind, string>)[kind];
 }
 
+function tracksForCue(cue: Omit<RuntimeCue, 'tracks'>): RuntimeTrackCue[] {
+  const shared = {
+    startMs: cue.atMs,
+    durationMs: cue.durationMs,
+    easing: 'ease-out' as const,
+    completion: 'hold' as const,
+    skipBehavior: 'finish' as const,
+    reducedMotionDurationMs: 0,
+  };
+  return [
+    {
+      ...shared,
+      id: `${cue.id}:actors`,
+      track: 'actor',
+      targetIds: Object.keys(cue.actorMotion),
+      value: cue.actorMotion,
+      easing: 'spring',
+    },
+    {
+      ...shared,
+      id: `${cue.id}:camera`,
+      track: 'camera',
+      targetIds: cue.camera.focusActorId ? [cue.camera.focusActorId] : [],
+      value: cue.camera.shot,
+    },
+    {
+      ...shared,
+      id: `${cue.id}:vfx`,
+      track: 'vfx',
+      targetIds: [cue.event.target_id ?? cue.event.actor_id ?? 'scene'],
+      value: cue.vfx,
+    },
+    {
+      ...shared,
+      id: `${cue.id}:audio`,
+      track: 'audio',
+      targetIds: [],
+      value: cue.audio,
+    },
+    {
+      ...shared,
+      id: `${cue.id}:haptic`,
+      track: 'haptic',
+      targetIds: [],
+      value: cue.haptic,
+    },
+    {
+      ...shared,
+      id: `${cue.id}:hud`,
+      track: 'hud',
+      targetIds: ['hud'],
+      value: cue.event.event_type,
+    },
+  ];
+}
+
 export function buildRuntimeTimeline(
   events: BattleEvent[] | null | undefined,
   units: BattleUnitState[] = [],
@@ -44,19 +100,20 @@ export function buildRuntimeTimeline(
   const frames: BattleSequenceFrame[] = buildBattleSequence(events);
   return frames.map((frame) => {
     const event = frame.event;
-    const cue: RuntimeCue = {
+    const cueWithoutTracks = {
       id: `battle:${frame.index}:${event.event_type}:${event.actor_id ?? 'scene'}:${event.target_id ?? 'none'}`,
       index: frame.index,
       atMs,
       durationMs: frame.durationMs,
       event,
       kind: frame.kind,
-      camera: cameraForPresentation(frame.kind),
+      camera: cameraForPresentation(frame.kind, event),
       vfx: vfxFor(frame.kind),
       audio: audioFor(frame.kind),
       haptic: hapticFor(frame.kind),
       actorMotion: actorMotionsForEvent(units, event, frame.kind),
     };
+    const cue: RuntimeCue = { ...cueWithoutTracks, tracks: tracksForCue(cueWithoutTracks) };
     atMs += frame.durationMs;
     return cue;
   });
@@ -85,4 +142,8 @@ export function activeRuntimeCue(cues: RuntimeCue[], elapsedMs: number): Runtime
 export function runtimePlaybackDelay(cue: RuntimeCue | undefined, speed: 0.75 | 1 | 1.5 | 2): number {
   if (!cue) return 0;
   return battlePlaybackDelay({ ...cue, interruptible: true, priority: 0 }, speed);
+}
+
+export function runtimeTrackDuration(track: RuntimeTrackCue, reduceMotion = false): number {
+  return reduceMotion ? track.reducedMotionDurationMs : track.durationMs;
 }

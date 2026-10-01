@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo } from 'react';
 import { StyleSheet, Text, View, useWindowDimensions } from 'react-native';
-import Animated, { Easing, useAnimatedStyle, useSharedValue, withSequence, withTiming } from 'react-native-reanimated';
+import Animated, { Easing, useAnimatedStyle, useReducedMotion, useSharedValue, withSequence, withTiming } from 'react-native-reanimated';
 import { Canvas, Circle, Line, LinearGradient, Rect, vec } from '@shopify/react-native-skia';
 import type { BattleEvent } from '../types/api';
 import type { PresentationKind } from '../engine/presentation';
@@ -12,6 +12,7 @@ export function BattleEffects({ event, kind, origin, target, cueId, viewport }: 
   const window = useWindowDimensions();
   const width = viewport?.width ?? window.width;
   const height = viewport?.height ?? window.height;
+  const prefersReducedMotion = useReducedMotion() === true;
   const burst = useSharedValue(0);
   const travel = useSharedValue(0);
   const amount = event?.amount;
@@ -21,9 +22,14 @@ export function BattleEffects({ event, kind, origin, target, cueId, viewport }: 
 
   const eventKey = cueId ?? event;
   useEffect(() => {
+    if (prefersReducedMotion) {
+      burst.value = 0;
+      travel.value = 0;
+      return;
+    }
     burst.value = withSequence(withTiming(1, { duration: 110 }), withTiming(0, { duration: 580, easing: Easing.out(Easing.quad) }));
     travel.value = withSequence(withTiming(1, { duration: 220, easing: Easing.out(Easing.cubic) }), withTiming(0, { duration: 420, easing: Easing.out(Easing.cubic) }));
-  }, [eventKey, kind, burst, travel]);
+  }, [eventKey, kind, burst, travel, prefersReducedMotion]);
 
   const ringStyle = useAnimatedStyle(() => ({ opacity: burst.value, transform: [{ scale: 0.30 + burst.value * 1.55 }] }));
   const projectileStyle = useAnimatedStyle(() => ({ opacity: travel.value, transform: [{ scaleX: .35 + travel.value * .9 }] }));

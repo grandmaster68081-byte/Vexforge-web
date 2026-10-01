@@ -15,8 +15,9 @@ import { PackOpeningCeremony } from '../../src/components/PackOpeningCeremony';
 import { SceneCinematic } from '../../src/components/SceneCinematic';
 import { RuneButton, SectionTitle, StatusPill, WorldObject, WorldTitle } from '../../src/render/Diegetic';
 import { buildSceneActors, cameraForPresentation } from '../../game/scene';
-import { buildRuntimeTimeline, runtimeCueForEvent } from '../../game/timeline';
+import { buildRuntimeTimeline } from '../../game/timeline';
 import { PACK_OPENING_TIMELINE } from '../../game/packTimeline';
+import { DEFAULT_SCENE_LAYER_VISIBILITY, SCENE_LAYER_IDS, SCENE_LAYER_LABELS, type SceneLayerVisibility } from '../../game/layers';
 import type { BattleEvent, BattleUnitState } from '../../src/types/api';
 import type { RuntimeCue } from '../../game/types';
 
@@ -80,13 +81,32 @@ export default function GameLab() {
   const [cueIndex, setCueIndex] = useState(0);
   const [showPack, setShowPack] = useState(false);
   const [showBoss, setShowBoss] = useState(false);
+  const [selectedTargetId, setSelectedTargetId] = useState<string | null>(null);
+  const [selectedCueId, setSelectedCueId] = useState<string | null>(null);
+  const [layerVisibility, setLayerVisibility] = useState<SceneLayerVisibility>(DEFAULT_SCENE_LAYER_VISIBILITY);
 
-  const units = useMemo(() => fixtureUnits(session), [session]);
+  const units = useMemo(() => {
+    const fixture = fixtureUnits(session);
+    if (kind !== 'boss') return fixture;
+    const bossIndex = fixture.findIndex(unit => !['player', 'you'].includes(String(unit.side ?? '').toLowerCase()));
+    if (bossIndex < 0) return fixture;
+    return fixture.map((unit, index) => index === bossIndex
+      ? { ...unit, card_id: BOSS_FIXTURE.name, faction: 'boss', role: BOSS_FIXTURE.tier }
+      : unit);
+  }, [session, kind]);
   const event = useMemo(() => makePreviewEvent(kind, units, session.round), [kind, units, session.round]);
-  const cue: RuntimeCue | null = useMemo(() => runtimeCueForEvent(event, cueIndex), [event, cueIndex]);
-  const actors = useMemo(() => buildSceneActors(units, event, kind), [units, event, kind]);
   const timeline = useMemo(() => buildRuntimeTimeline([...session.events, event], units), [session.events, event, units]);
-  const camera = cameraForPresentation(kind);
+  const cue: RuntimeCue | null = useMemo(() => {
+    if (selectedCueId) {
+      const selected = timeline.find(item => item.id === selectedCueId);
+      if (selected) return selected;
+    }
+    return timeline[timeline.length - 1] ?? null;
+  }, [timeline, selectedCueId, cueIndex]);
+  const displayedEvent = cue?.event ?? event;
+  const displayedKind = cue?.kind ?? kind;
+  const actors = useMemo(() => buildSceneActors(units, displayedEvent, displayedKind), [units, displayedEvent, displayedKind]);
+  const camera = cue?.camera ?? cameraForPresentation(displayedKind, displayedEvent);
   const actor = currentActor(session);
   const actions = legalActions(session);
   const targets = legalTargets(session, 'attack');
@@ -96,21 +116,27 @@ export default function GameLab() {
 
   const choosePresentation = (nextKind: PresentationKind) => {
     setKind(nextKind);
+    setSelectedCueId(null);
     setCueIndex(index => index + 1);
   };
 
   const runLocalAction = () => {
     if (!actor || actor.side !== 'player' || !actions.includes('attack') || !targets.length || session.ended) return;
+    const target = targets.find(candidate => candidate.id === selectedTargetId) ?? targets[0];
     setSession(current => dispatchPlayerAction(current, {
       actorId: actor.id,
       type: 'attack',
-      targetId: targets[0].id,
+      targetId: target.id,
     }));
+    setSelectedTargetId(null);
+    setSelectedCueId(null);
     setCueIndex(index => index + 1);
   };
 
   const resetSession = () => {
     setSession(startTacticalSession(TRAINING_CARDS, TRAINING_ENEMY, makeSeed(`vexforge-dev-game-lab-${Date.now()}`)));
+    setSelectedTargetId(null);
+    setSelectedCueId(null);
     setCueIndex(index => index + 1);
   };
 
@@ -137,17 +163,37 @@ export default function GameLab() {
         <SectionTitle kicker="SCENE · LAYERS · ACTORS" title="CAMPO 2.5D" right={<StatusPill label={`${actors.length} ACTORES`} accent={COLORS.arcaneBright} />} />
         <BattlefieldCanvas
           units={units}
-          activeEvent={event}
-          activeKind={kind}
+          activeEvent={displayedEvent}
+          activeKind={displayedKind}
           runtimeCue={cue}
           maxAnimatedUnits={QUALITY_BUDGETS[quality].maxAnimatedUnits}
+          selectedTargetId={selectedTargetId}
+          onSelectTarget={id => {
+            if (targets.some(target => target.id === id)) setSelectedTargetId(id);
+          }}
+          layerVisibility={layerVisibility}
         />
         <WorldObject accent={COLORS.arcaneBright} style={styles.inspect}>
           <Text style={styles.label}>CAPAS DE ESCENA</Text>
           <View style={styles.row}>
-            {['FONDO', 'ARENA', 'PROFUNDIDAD', 'ACTORES', 'HUD', 'VFX'].map(layer => (
-              <StatusPill key={layer} label={layer} accent={COLORS.arcaneBright} />
-            ))}
+            {SCENE_LAYER_IDS.map(layer => {
+              const enabled = layerVisibility[layer];
+              return (
+                <Pressable
+                  key={layer}
+                  accessibilityRole="checkbox"
+                  accessibilityLabel={`Capa ${SCENE_LAYER_LABELS[layer]}`}
+                  accessibilityState={{ checked: enabled }}
+                  testID={`game-lab-layer-${layer.toLowerCase()}`}
+                  onPress={() => setLayerVisibility(current => ({ ...current, [layer]: !current[layer] }))}
+                  style={[styles.layerChip, { borderColor: enabled ? `${COLORS.arcaneBright}88` : `${COLORS.steel}66` }]}
+                >
+                  <Text style={[styles.layerChipText, { color: enabled ? COLORS.parchment : COLORS.steel }]}>
+                    {enabled ? '● ' : '○ '}{SCENE_LAYER_LABELS[layer]}
+                  </Text>
+                </Pressable>
+              );
+            })}
           </View>
           <Text style={styles.label}>EVENTOS DE PRESENTACIÓN</Text>
           <View style={styles.row}>
@@ -155,12 +201,14 @@ export default function GameLab() {
               <RuneButton key={item.kind} label={item.label} onPress={() => choosePresentation(item.kind)} accent={kind === item.kind ? COLORS.goldBright : COLORS.steel} />
             ))}
           </View>
-          <Text style={styles.copy}>EVENTO {event.event_type} · CÁMARA {camera.shot.toUpperCase()} · {Math.round(camera.zoom * 100)}% · CUE {cue?.id ?? '—'}</Text>
+          <Text style={styles.copy}>EVENTO {displayedEvent.event_type} · CÁMARA {camera.shot.toUpperCase()} · {Math.round(camera.zoom * 100)}% · FOCO {camera.focusActorId ?? 'ESCENA'}</Text>
+          <Text style={styles.copy}>SELECCIÓN {selectedTargetId ?? 'NINGUNA'} · CUE {cue?.id ?? '—'}</Text>
+          <Text style={styles.copy}>TRACKS {cue?.tracks.map(track => track.track.toUpperCase()).join(' · ') ?? '—'}</Text>
         </WorldObject>
 
         <SectionTitle kicker="ACTOR STATE" title="MOTION INDEPENDIENTE" right={<StatusPill label={kind.toUpperCase()} accent={COLORS.goldBright} />} />
         {actors.map(sceneActor => (
-          <WorldObject key={sceneActor.id} accent={sceneActor.motion === 'attacking' || sceneActor.motion === 'casting' ? COLORS.crimson : sceneActor.side === 'player' ? COLORS.goldBright : COLORS.arcaneBright} style={styles.actorRow}>
+          <WorldObject key={sceneActor.id} accent={sceneActor.motion === 'attacking' || sceneActor.motion === 'casting' || sceneActor.motion === 'phase' ? COLORS.crimson : sceneActor.side === 'player' ? COLORS.goldBright : COLORS.arcaneBright} style={styles.actorRow}>
             <Text style={styles.actorName}>{sceneActor.unit.card_id ?? sceneActor.id}</Text>
             <Text style={styles.copy}>{sceneActor.side.toUpperCase()} · {sceneActor.motion.toUpperCase()} · DEPTH {sceneActor.position.depth.toFixed(2)}</Text>
           </WorldObject>
@@ -169,15 +217,27 @@ export default function GameLab() {
         <SectionTitle kicker="TIMELINE · VFX · AUDIO" title={`${timeline.length} CUES`} />
         <WorldObject accent={COLORS.goldBright} style={styles.inspect}>
           {timeline.slice(-8).map(item => (
-            <View key={item.id} style={styles.timelineRow}>
+            <Pressable
+              key={item.id}
+              accessibilityRole="button"
+              accessibilityLabel={`Inspeccionar evento ${item.event.event_type}`}
+              accessibilityState={{ selected: cue?.id === item.id }}
+              onPress={() => {
+                setSelectedCueId(item.id);
+                setKind(item.kind);
+                setCueIndex(index => index + 1);
+              }}
+              style={[styles.timelineRow, cue?.id === item.id && styles.timelineRowSelected]}
+            >
               <Text style={styles.timelineTime}>{(item.atMs / 1000).toFixed(2)}s</Text>
               <View style={{ flex: 1 }}>
                 <Text style={styles.actorName}>{item.event.event_type}</Text>
                 <Text style={styles.copy}>{item.kind.toUpperCase()} · {item.vfx} · AUDIO {item.audio.toUpperCase()} · HAPTIC {item.haptic.toUpperCase()}</Text>
+                <Text style={styles.copy}>{item.tracks.map(track => `${track.track}:${track.durationMs}ms`).join(' · ')}</Text>
               </View>
-            </View>
+            </Pressable>
           ))}
-          <Text style={styles.copy}>ACTOR {event.actor_id ?? '—'} → TARGET {event.target_id ?? '—'} · VFX {cue?.vfx ?? '—'} · AUDIO {cue?.audio ?? '—'}</Text>
+          <Text style={styles.copy}>ACTOR {displayedEvent.actor_id ?? '—'} → TARGET {displayedEvent.target_id ?? '—'} · VFX {cue?.vfx ?? '—'} · AUDIO {cue?.audio ?? '—'}</Text>
         </WorldObject>
 
         <SectionTitle kicker="LOCAL TRAINING SIMULATION" title="EVENTOS REALES DEL DRILL" right={<StatusPill label="NO ES PVP" accent={COLORS.mint} />} />
@@ -238,10 +298,13 @@ const styles = StyleSheet.create({
   status: { gap: 8 },
   inspect: { gap: 9 },
   row: { flexDirection: 'row', alignItems: 'center', gap: 7, flexWrap: 'wrap' },
+  layerChip: { borderWidth: 1, borderRadius: 10, paddingHorizontal: 8, paddingVertical: 5, backgroundColor: COLORS.void },
+  layerChipText: { fontSize: 6.5, fontWeight: '900', letterSpacing: .5 },
   label: { color: COLORS.goldDim, fontSize: 6, fontWeight: '900', letterSpacing: 1.4 },
   copy: { color: COLORS.parchment, fontSize: 7.5, lineHeight: 12 },
   actorRow: { gap: 3, paddingVertical: 9 },
   actorName: { color: COLORS.white, fontFamily: 'Cinzel_700Bold', fontSize: 9 },
   timelineRow: { flexDirection: 'row', alignItems: 'center', gap: 8, borderBottomWidth: 1, borderBottomColor: 'rgba(255,255,255,.06)', paddingVertical: 7 },
+  timelineRowSelected: { backgroundColor: `${COLORS.goldBright}14`, borderRadius: 7, paddingHorizontal: 5 },
   timelineTime: { minWidth: 34, color: COLORS.goldBright, fontSize: 7, fontWeight: '900' },
 });

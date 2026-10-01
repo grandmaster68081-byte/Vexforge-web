@@ -3,17 +3,24 @@ import type { PresentationKind } from '../src/engine/presentation';
 
 export type ActorMotion =
   | 'idle'
+  | 'anticipation'
   | 'attacking'
   | 'taking-hit'
   | 'casting'
   | 'guarding'
+  | 'staggered'
+  | 'status'
   | 'healing'
   | 'defeated'
+  | 'victory'
+  | 'summoning'
+  | 'phase'
   | 'revealing';
 
 export type CameraShot = 'wide' | 'focus' | 'impact' | 'boss' | 'victory' | 'defeat' | 'vault';
 export type RuntimeAudioCue = 'attack' | 'impact' | 'shield' | 'reward' | 'reveal' | 'fusion' | 'none';
 export type RuntimeHapticCue = 'selection' | 'impact' | 'success' | 'warning' | 'none';
+export type RuntimeTrackKind = 'actor' | 'camera' | 'vfx' | 'audio' | 'haptic' | 'hud';
 
 export interface ScenePoint {
   x: number;
@@ -25,6 +32,7 @@ export interface CameraState {
   shot: CameraShot;
   focusX: number;
   focusY: number;
+  focusActorId?: string;
   zoom: number;
   durationMs: number;
 }
@@ -56,6 +64,20 @@ export interface RuntimeCue {
   audio: RuntimeAudioCue;
   haptic: RuntimeHapticCue;
   actorMotion: Record<string, ActorMotion>;
+  tracks: RuntimeTrackCue[];
+}
+
+export interface RuntimeTrackCue {
+  id: string;
+  track: RuntimeTrackKind;
+  startMs: number;
+  durationMs: number;
+  targetIds: string[];
+  value: string | Record<string, ActorMotion>;
+  easing: 'linear' | 'ease-out' | 'spring';
+  completion: 'hold' | 'restore';
+  skipBehavior: 'finish' | 'cancel';
+  reducedMotionDurationMs: number;
 }
 
 export type GameFlowStage = 'world' | 'battle' | 'result';

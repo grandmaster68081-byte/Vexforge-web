@@ -12,23 +12,37 @@ export const WIDE_CAMERA: CameraState = {
   durationMs: 360,
 };
 
-export function cameraForPresentation(kind: PresentationKind): CameraState {
+function cameraTargetForEvent(kind: PresentationKind, event?: BattleEvent | null): string | undefined {
+  if (!event) return undefined;
+  if (kind === 'boss' || kind === 'victory') return event.actor_id ?? event.target_id ?? undefined;
+  return event.target_id ?? event.actor_id ?? undefined;
+}
+
+export function cameraForPresentation(kind: PresentationKind, event?: BattleEvent | null): CameraState {
+  let camera: CameraState;
   switch (kind) {
     case 'boss':
-      return { shot: 'boss', focusX: 0, focusY: -0.12, zoom: 1.12, durationMs: 680 };
+      camera = { shot: 'boss', focusX: 0, focusY: -0.12, zoom: 1.12, durationMs: 680 };
+      break;
     case 'attack':
     case 'cast':
-      return { shot: 'impact', focusX: 0, focusY: 0, zoom: 1.075, durationMs: 340 };
+      camera = { shot: 'impact', focusX: 0, focusY: 0, zoom: 1.075, durationMs: 340 };
+      break;
     case 'victory':
-      return { shot: 'victory', focusX: 0, focusY: 0, zoom: 1.035, durationMs: 520 };
+      camera = { shot: 'victory', focusX: 0, focusY: 0, zoom: 1.035, durationMs: 520 };
+      break;
     case 'defeat':
-      return { shot: 'defeat', focusX: 0, focusY: 0.04, zoom: 1.025, durationMs: 520 };
+      camera = { shot: 'defeat', focusX: 0, focusY: 0.04, zoom: 1.025, durationMs: 520 };
+      break;
     case 'guard':
     case 'heal':
-      return { shot: 'focus', focusX: 0, focusY: 0, zoom: 1.045, durationMs: 360 };
+      camera = { shot: 'focus', focusX: 0, focusY: 0, zoom: 1.045, durationMs: 360 };
+      break;
     default:
-      return WIDE_CAMERA;
+      camera = WIDE_CAMERA;
   }
+  const focusActorId = cameraTargetForEvent(kind, event);
+  return focusActorId ? { ...camera, focusActorId } : { ...camera };
 }
 
 export function projectScenePoint(
@@ -55,8 +69,12 @@ function motionForUnit(
   if (status === 'defeated' || status === 'dead' || Number(unit.hp ?? 1) <= 0) return 'defeated';
   if (!event) return 'idle';
   if (unit.id === event.actor_id) {
+    if (kind === 'boss') return 'phase';
+    if (kind === 'victory') return 'victory';
+    if (kind === 'defeat') return 'defeated';
+    if (kind === 'status') return 'status';
     if (kind === 'attack') return 'attacking';
-    if (kind === 'cast' || kind === 'boss') return 'casting';
+    if (kind === 'cast') return 'casting';
     if (kind === 'guard') return 'guarding';
     if (kind === 'heal') return 'healing';
   }
@@ -64,7 +82,9 @@ function motionForUnit(
     if (kind === 'heal') return 'healing';
     if (kind === 'guard') return 'guarding';
     if (kind === 'defeat') return 'defeated';
-    if (kind === 'attack' || kind === 'cast' || kind === 'status' || kind === 'boss') return 'taking-hit';
+    if (kind === 'boss') return 'staggered';
+    if (kind === 'status') return 'status';
+    if (kind === 'attack' || kind === 'cast') return 'taking-hit';
   }
   return 'idle';
 }
