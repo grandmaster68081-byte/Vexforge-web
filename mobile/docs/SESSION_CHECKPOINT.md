@@ -76,10 +76,10 @@ Execution contract: `mobile/docs/VEXFORGE_EXPO_REPLIT_CONTINUATION_ORDER_V5.md`
 ## Git
 
 - BASE SHA before the current milestone: `1139f532284a4a132ed43736bb8e0e42d5b5c319`
-- RUNTIME MILESTONE SHA: to be recorded after the push is verified.
-- REMOTE `main` SHA before the milestone: `1139f532284a4a132ed43736bb8e0e42d5b5c319`
+- RUNTIME MILESTONE SHA: `9457b1f60b12dfc18cd86cdb0e806cb731ff4f0f`, pushed and verified equal to `origin/main`.
+- REMOTE `main` SHA after the runtime milestone push: `9457b1f60b12dfc18cd86cdb0e806cb731ff4f0f`.
 - BRANCH: `main`
-- WORKTREE CLEAN: expected after the milestone and checkpoint pushes.
+- WORKTREE CLEAN: yes after the checkpoint finalization commit and push.
 
 ## Files changed in the current milestone
 

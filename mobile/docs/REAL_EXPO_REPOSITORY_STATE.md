@@ -14,6 +14,7 @@ Source repository: `https://github.com/grandmaster68081-byte/Vexforge-web.git`
 
 ## Current implementation state on official `main`
 
+- Runtime milestone code is on `main` at `9457b1f60b12dfc18cd86cdb0e806cb731ff4f0f`, verified against `origin/main` before checkpoint finalization.
 - `mobile/game/**` is the shared Expo runtime, with 2.5D scene projection,
   per-actor state, camera presets, event timelines and presentation tracks.
 - `BattlefieldCanvas` renders the BACK, MID, PLAYFIELD, ACTORS, FRONT_FX and
