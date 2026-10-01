@@ -81,11 +81,11 @@ Execution contract: `mobile/docs/VEXFORGE_EXPO_REPLIT_CONTINUATION_ORDER_V5.md`
 
 ## Git
 
-- BASE SHA before the current milestone: `bc2ac2f6`
-- RUNTIME MILESTONE SHA: `9457b1f60b12dfc18cd86cdb0e806cb731ff4f0f`, pushed and verified equal to `origin/main`.
-- REMOTE `main` SHA before the current milestone: `bc2ac2f6`.
+- IMPLEMENTATION BASE SHA: `bc2ac2f6`
+- PREVIOUS RUNTIME MILESTONE SHA: `9457b1f60b12dfc18cd86cdb0e806cb731ff4f0f`
+- GAME LAB TIMELINE IMPLEMENTATION SHA: `159bcf37a7f4cf20cd0aab83e1a0e1bb32d80c89`, pushed and verified on `origin/main`.
 - BRANCH: `main`
-- WORKTREE CLEAN: pending current milestone commit and push.
+- WORKTREE CLEAN: yes after checkpoint finalization commit and push.
 
 ## Files changed in the current milestone
 
