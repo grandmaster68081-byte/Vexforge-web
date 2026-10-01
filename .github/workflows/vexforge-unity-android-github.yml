@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 concurrency:
   group: vexforge-expo-android-${{ github.ref }}
@@ -23,6 +23,8 @@ jobs:
     steps:
       - name: Checkout main
         uses: actions/checkout@v4
+        with:
+          ref: main
 
       - name: Set up Node
         uses: actions/setup-node@v4
@@ -91,6 +93,7 @@ jobs:
         run: ./gradlew --no-daemon --stacktrace assembleDebug
 
       - name: Verify and describe the APK
+        id: apk
         working-directory: mobile
         shell: bash
         run: |
@@ -99,26 +102,65 @@ jobs:
           test -s "$apk"
           size="$(stat -c%s "$apk")"
           test "$size" -gt 1000000
-          mkdir -p build-artifacts
-          sha256sum "$apk" | awk '{print $1 "  app-debug.apk"}' > build-artifacts/SHA256SUMS.txt
+          version="$(node -p "require('./app.json').expo.version")"
+          package_name="$(node -p "require('./app.json').expo.android.package")"
+          asset_name="VEXFORGE-${version}-Android-${GITHUB_RUN_NUMBER}.apk"
+          asset_path="$RUNNER_TEMP/$asset_name"
+          sha256="$(sha256sum "$apk" | awk '{print $1}')"
+          cp "$apk" "$asset_path"
           {
-            echo "VEXFORGE Expo Android review build"
-            echo "Commit: $GITHUB_SHA"
-            echo "Branch: $GITHUB_REF_NAME"
-            echo "Version: $(node -p "require('./app.json').expo.version")"
-            echo "Package: $(node -p "require('./app.json').expo.android.package")"
-            echo "APK bytes: $size"
-            echo "SHA-256: $(awk '{print $1}' build-artifacts/SHA256SUMS.txt)"
-          } > build-artifacts/BUILD_INFO.txt
-          cat build-artifacts/BUILD_INFO.txt >> "$GITHUB_STEP_SUMMARY"
+            echo "version=$version"
+            echo "package=$package_name"
+            echo "asset_name=$asset_name"
+            echo "asset_path=$asset_path"
+            echo "sha256=$sha256"
+            echo "size=$size"
+            echo "release_tag=vexforge-android-${GITHUB_RUN_NUMBER}"
+          } >> "$GITHUB_OUTPUT"
+          {
+            echo "## VEXFORGE Android APK compiled"
+            echo "- Branch: \`main\`"
+            echo "- Commit: \`$GITHUB_SHA\`"
+            echo "- Version: \`$version\`"
+            echo "- Android package: \`$package_name\`"
+            echo "- APK size: $size bytes"
+            echo "- SHA-256: \`$sha256\`"
+            echo "- Delivery: direct GitHub Release download (no Actions artifact)"
+          } >> "$GITHUB_STEP_SUMMARY"
 
-      - name: Upload the APK for review
-        uses: actions/upload-artifact@v4
+      - name: Publish APK as a direct GitHub Release download
+        id: release
+        uses: softprops/action-gh-release@v2
         with:
-          name: VEXFORGE-APK-${{ github.run_number }}-review
-          path: |
-            mobile/android/app/build/outputs/apk/debug/app-debug.apk
-            mobile/build-artifacts/BUILD_INFO.txt
-            mobile/build-artifacts/SHA256SUMS.txt
-          if-no-files-found: error
-          retention-days: 7
+          token: ${{ secrets.GITHUB_TOKEN }}
+          tag_name: ${{ steps.apk.outputs.release_tag }}
+          name: VEXFORGE Android APK ${{ steps.apk.outputs.version }} (#${{ github.run_number }})
+          target_commitish: main
+          body: |
+            Installable Android review build compiled from `main`.
+
+            - Commit: `${{ github.sha }}`
+            - Version: `${{ steps.apk.outputs.version }}`
+            - Package: `${{ steps.apk.outputs.package }}`
+            - APK size: `${{ steps.apk.outputs.size }}` bytes
+            - SHA-256: `${{ steps.apk.outputs.sha256 }}`
+          files: ${{ steps.apk.outputs.asset_path }}
+          fail_on_unmatched_files: true
+          overwrite_files: true
+          draft: false
+          prerelease: true
+          make_latest: false
+
+      - name: Show the direct download URL
+        if: steps.release.outcome == 'success'
+        env:
+          APK_NAME: ${{ steps.apk.outputs.asset_name }}
+          RELEASE_TAG: ${{ steps.apk.outputs.release_tag }}
+        run: |
+          apk_url="https://github.com/${GITHUB_REPOSITORY}/releases/download/${RELEASE_TAG}/${APK_NAME}"
+          {
+            echo "## Direct APK download"
+            echo "[Download the APK]($apk_url)"
+            echo
+            echo "Release page: https://github.com/${GITHUB_REPOSITORY}/releases/tag/${RELEASE_TAG}"
+          } >> "$GITHUB_STEP_SUMMARY"
