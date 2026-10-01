@@ -63,9 +63,9 @@ Execution contract: `mobile/docs/VEXFORGE_EXPO_REPLIT_CONTINUATION_ORDER_V5.md`
 ## Git
 
 - BASE SHA before the current milestone: `d974caa85b3dc54c7715e79dc63bd1cccfbb9b87`
-- REMOTE MAIN SHA before the current milestone: `d974caa85b3dc54c7715e79dc63bd1cccfbb9b87`
+- RUNTIME INTEGRATION SHA: `1610b1a5b73ed4bce3fcd30a2d54d467297b3d9b`, verified equal to `origin/main` after push
 - BRANCH: `main`
-- WORKTREE CLEAN: verify after checkpoint finalization and push
+- WORKTREE CLEAN: yes after checkpoint finalization commit and push
 
 ## Completed milestone
 
