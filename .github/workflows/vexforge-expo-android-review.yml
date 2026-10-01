@@ -1,0 +1,85 @@
+name: VEXFORGE Expo Android review build
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build-android-review:
+    name: Validate and compile installable Android APK
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    env:
+      EXPO_PUBLIC_SUPABASE_URL: ${{ vars.EXPO_PUBLIC_SUPABASE_URL || 'https://rscuzqnfccqvltkdcdny.supabase.co' }}
+      EXPO_PUBLIC_SUPABASE_ANON_KEY: ${{ vars.EXPO_PUBLIC_SUPABASE_ANON_KEY || 'sb_publishable_3eGRSpvxptO09eQQzpxysQ_Imq8zi58' }}
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: mobile/package-lock.json
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Install the locked mobile dependencies
+        working-directory: mobile
+        run: npm ci --registry=https://registry.npmjs.org/
+
+      - name: Run the complete mobile/runtime audit suite
+        working-directory: mobile
+        run: npm run audit:all
+
+      - name: Check Expo compatibility
+        working-directory: mobile
+        run: npm run doctor
+
+      - name: Generate the Android native project
+        working-directory: mobile
+        run: npx expo prebuild --platform android --clean --no-install
+
+      - name: Compile the installable review APK
+        working-directory: mobile
+        run: ./android/gradlew --no-daemon --stacktrace assembleDebug
+
+      - name: Verify and describe the APK
+        working-directory: mobile
+        shell: bash
+        run: |
+          set -euo pipefail
+          apk="android/app/build/outputs/apk/debug/app-debug.apk"
+          test -s "$apk"
+          mkdir -p build-artifacts
+          sha256sum "$apk" | awk '{print $1 "  app-debug.apk"}' > build-artifacts/SHA256SUMS.txt
+          {
+            echo "VEXFORGE Expo Android review build"
+            echo "Commit: $GITHUB_SHA"
+            echo "Version: $(node -p "require('./app.json').expo.version")"
+            echo "Package: $(node -p "require('./app.json').expo.android.package")"
+            echo "APK bytes: $(wc -c < "$apk" | tr -d ' ')"
+            echo "SHA-256: $(awk '{print $1}' build-artifacts/SHA256SUMS.txt)"
+          } > build-artifacts/BUILD_INFO.txt
+          cat build-artifacts/BUILD_INFO.txt >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload the APK for review
+        uses: actions/upload-artifact@v4
+        with:
+          name: VEXFORGE-Expo-Android-Review-${{ github.run_number }}
+          path: |
+            mobile/android/app/build/outputs/apk/debug/app-debug.apk
+            mobile/build-artifacts/BUILD_INFO.txt
+            mobile/build-artifacts/SHA256SUMS.txt
+          if-no-files-found: error
+          retention-days: 7
