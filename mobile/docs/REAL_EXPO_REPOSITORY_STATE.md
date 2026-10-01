@@ -59,9 +59,10 @@ Source repository: `https://github.com/grandmaster68081-byte/Vexforge-web.git`
 - Pack opening, boss presentation, tutorial play loop and Game Lab have
   automated source/runtime checks, but still need a native-device acceptance
   session.
-- In the current Replit checkout, `mobile/node_modules` is absent. The
-  whole-app TypeScript check cannot resolve Expo types and the Expo workflow
-  currently fails with `expo: not found`.
+- In this Replit checkout, dependencies were restored with
+  `npm --prefix mobile ci --no-audit --no-fund` from the existing lockfile
+  (782 packages). Whole-app TypeScript checking now passes and the Expo
+  workflow starts successfully.
 - `mobile/README.md` retains historical 1.9.0 release wording; it is not used
   as current manifest evidence.
 
@@ -77,6 +78,8 @@ Source repository: `https://github.com/grandmaster68081-byte/Vexforge-web.git`
   acceptance checks passed, battle audit passed 2,500 runs, interactive audit
   passed 500 runs, release audit passed, and standalone runtime TypeScript
   checks passed.
-- Current full typecheck and Expo workflow could not run because mobile
-  dependencies are not installed in this checkout.
+- Current full typecheck passes. Expo Doctor passes 18/18 checks, and the Expo
+  workflow reaches Metro with Expo Go and web previews available.
+- The Game Lab runtime verifier now covers playback boundaries and its
+  play/pause/step/reset timeline controls; the full verifier passes 18 checks.
 - No EAS build, APK, AAB, store deployment or production deployment was run.

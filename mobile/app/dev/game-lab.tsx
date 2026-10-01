@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { WorldBackdrop } from '../../src/render/WorldBackdrop';
@@ -15,7 +15,7 @@ import { PackOpeningCeremony } from '../../src/components/PackOpeningCeremony';
 import { SceneCinematic } from '../../src/components/SceneCinematic';
 import { RuneButton, SectionTitle, StatusPill, WorldObject, WorldTitle } from '../../src/render/Diegetic';
 import { buildSceneActors, cameraForPresentation } from '../../game/scene';
-import { buildRuntimeTimeline } from '../../game/timeline';
+import { activeRuntimeCue, buildRuntimeTimeline } from '../../game/timeline';
 import { PACK_OPENING_TIMELINE } from '../../game/packTimeline';
 import { DEFAULT_SCENE_LAYER_VISIBILITY, SCENE_LAYER_IDS, SCENE_LAYER_LABELS, type SceneLayerVisibility } from '../../game/layers';
 import type { BattleEvent, BattleUnitState } from '../../src/types/api';
@@ -78,12 +78,15 @@ export default function GameLab() {
   const { quality } = useGame();
   const [session, setSession] = useState(() => startTacticalSession(TRAINING_CARDS, TRAINING_ENEMY, makeSeed('vexforge-dev-game-lab')));
   const [kind, setKind] = useState<PresentationKind>('attack');
-  const [cueIndex, setCueIndex] = useState(0);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [playheadMs, setPlayheadMs] = useState(0);
   const [showPack, setShowPack] = useState(false);
   const [showBoss, setShowBoss] = useState(false);
   const [selectedTargetId, setSelectedTargetId] = useState<string | null>(null);
   const [selectedCueId, setSelectedCueId] = useState<string | null>(null);
   const [layerVisibility, setLayerVisibility] = useState<SceneLayerVisibility>(DEFAULT_SCENE_LAYER_VISIBILITY);
+  const playbackStartedAt = useRef(0);
+  const playbackStartMs = useRef(0);
 
   const units = useMemo(() => {
     const fixture = fixtureUnits(session);
@@ -96,13 +99,29 @@ export default function GameLab() {
   }, [session, kind]);
   const event = useMemo(() => makePreviewEvent(kind, units, session.round), [kind, units, session.round]);
   const timeline = useMemo(() => buildRuntimeTimeline([...session.events, event], units), [session.events, event, units]);
+  const timelineDurationMs = timeline.length
+    ? timeline[timeline.length - 1].atMs + timeline[timeline.length - 1].durationMs
+    : 0;
+  const playbackCue = useMemo(() => activeRuntimeCue(timeline, playheadMs), [timeline, playheadMs]);
   const cue: RuntimeCue | null = useMemo(() => {
+    if (isPlaying && playbackCue) return playbackCue;
     if (selectedCueId) {
       const selected = timeline.find(item => item.id === selectedCueId);
       if (selected) return selected;
     }
     return timeline[timeline.length - 1] ?? null;
-  }, [timeline, selectedCueId, cueIndex]);
+  }, [timeline, selectedCueId, isPlaying, playbackCue]);
+
+  useEffect(() => {
+    if (!isPlaying) return;
+    const timer = setInterval(() => {
+      const elapsed = playbackStartMs.current + Date.now() - playbackStartedAt.current;
+      const next = Math.min(elapsed, timelineDurationMs);
+      setPlayheadMs(next);
+      if (next >= timelineDurationMs) setIsPlaying(false);
+    }, 32);
+    return () => clearInterval(timer);
+  }, [isPlaying, timelineDurationMs]);
   const displayedEvent = cue?.event ?? event;
   const displayedKind = cue?.kind ?? kind;
   const actors = useMemo(() => buildSceneActors(units, displayedEvent, displayedKind), [units, displayedEvent, displayedKind]);
@@ -115,14 +134,15 @@ export default function GameLab() {
   if (!__DEV__) return null;
 
   const choosePresentation = (nextKind: PresentationKind) => {
+    setIsPlaying(false);
     setKind(nextKind);
     setSelectedCueId(null);
-    setCueIndex(index => index + 1);
   };
 
   const runLocalAction = () => {
     if (!actor || actor.side !== 'player' || !actions.includes('attack') || !targets.length || session.ended) return;
     const target = targets.find(candidate => candidate.id === selectedTargetId) ?? targets[0];
+    setIsPlaying(false);
     setSession(current => dispatchPlayerAction(current, {
       actorId: actor.id,
       type: 'attack',
@@ -130,14 +150,41 @@ export default function GameLab() {
     }));
     setSelectedTargetId(null);
     setSelectedCueId(null);
-    setCueIndex(index => index + 1);
   };
 
   const resetSession = () => {
+    setIsPlaying(false);
     setSession(startTacticalSession(TRAINING_CARDS, TRAINING_ENEMY, makeSeed(`vexforge-dev-game-lab-${Date.now()}`)));
     setSelectedTargetId(null);
     setSelectedCueId(null);
-    setCueIndex(index => index + 1);
+    setPlayheadMs(0);
+  };
+
+  const startPlayback = () => {
+    if (!timeline.length) return;
+    const startAt = playheadMs >= timelineDurationMs ? 0 : playheadMs;
+    playbackStartMs.current = startAt;
+    playbackStartedAt.current = Date.now();
+    setSelectedCueId(null);
+    setPlayheadMs(startAt);
+    setIsPlaying(true);
+  };
+
+  const pausePlayback = () => {
+    const current = activeRuntimeCue(timeline, playheadMs);
+    setIsPlaying(false);
+    setSelectedCueId(current?.id ?? null);
+  };
+
+  const stepTimeline = () => {
+    if (!timeline.length) return;
+    const current = activeRuntimeCue(timeline, playheadMs);
+    const currentIndex = current ? timeline.findIndex(item => item.id === current.id) : -1;
+    const next = timeline[currentIndex + 1] ?? timeline[0];
+    setIsPlaying(false);
+    setPlayheadMs(next.atMs);
+    setSelectedCueId(next.id);
+    setKind(next.kind);
   };
 
   return (
@@ -216,6 +263,42 @@ export default function GameLab() {
 
         <SectionTitle kicker="TIMELINE · VFX · AUDIO" title={`${timeline.length} CUES`} />
         <WorldObject accent={COLORS.goldBright} style={styles.inspect}>
+          <View style={styles.row}>
+            <Pressable
+              accessibilityRole="button"
+              accessibilityLabel={isPlaying ? 'Pausar reproducción de timeline' : 'Reproducir timeline'}
+              testID="game-lab-timeline-play"
+              onPress={() => isPlaying ? pausePlayback() : startPlayback()}
+              style={[styles.layerChip, styles.timelineControl, { borderColor: isPlaying ? `${COLORS.crimson}99` : `${COLORS.mint}99` }]}
+            >
+              <Text style={[styles.layerChipText, { color: isPlaying ? COLORS.crimson : COLORS.mint }]}>
+                {isPlaying ? 'PAUSAR' : 'REPRODUCIR'}
+              </Text>
+            </Pressable>
+            <Pressable
+              accessibilityRole="button"
+              accessibilityLabel="Avanzar al siguiente cue"
+              testID="game-lab-timeline-next"
+              onPress={stepTimeline}
+              style={[styles.layerChip, styles.timelineControl, { borderColor: `${COLORS.goldBright}99` }]}
+            >
+              <Text style={[styles.layerChipText, { color: COLORS.goldBright }]}>SIGUIENTE CUE</Text>
+            </Pressable>
+            <Pressable
+              accessibilityRole="button"
+              accessibilityLabel="Reiniciar timeline"
+              testID="game-lab-timeline-reset"
+              onPress={() => {
+                setIsPlaying(false);
+                setSelectedCueId(timeline[0]?.id ?? null);
+                setPlayheadMs(0);
+              }}
+              style={[styles.layerChip, styles.timelineControl, { borderColor: `${COLORS.steel}99` }]}
+            >
+              <Text style={[styles.layerChipText, { color: COLORS.parchment }]}>REINICIAR</Text>
+            </Pressable>
+          </View>
+          <Text style={styles.copy}>PLAYHEAD {Math.round(playheadMs)} ms / {timelineDurationMs} ms · {cue?.event.event_type ?? 'SIN CUE'}</Text>
           {timeline.slice(-8).map(item => (
             <Pressable
               key={item.id}
@@ -223,9 +306,10 @@ export default function GameLab() {
               accessibilityLabel={`Inspeccionar evento ${item.event.event_type}`}
               accessibilityState={{ selected: cue?.id === item.id }}
               onPress={() => {
+                setIsPlaying(false);
                 setSelectedCueId(item.id);
+                setPlayheadMs(item.atMs);
                 setKind(item.kind);
-                setCueIndex(index => index + 1);
               }}
               style={[styles.timelineRow, cue?.id === item.id && styles.timelineRowSelected]}
             >
@@ -306,5 +390,6 @@ const styles = StyleSheet.create({
   actorName: { color: COLORS.white, fontFamily: 'Cinzel_700Bold', fontSize: 9 },
   timelineRow: { flexDirection: 'row', alignItems: 'center', gap: 8, borderBottomWidth: 1, borderBottomColor: 'rgba(255,255,255,.06)', paddingVertical: 7 },
   timelineRowSelected: { backgroundColor: `${COLORS.goldBright}14`, borderRadius: 7, paddingHorizontal: 5 },
+  timelineControl: { minHeight: 30, justifyContent: 'center' },
   timelineTime: { minWidth: 34, color: COLORS.goldBright, fontSize: 7, fontWeight: '900' },
 });

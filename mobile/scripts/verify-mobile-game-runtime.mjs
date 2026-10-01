@@ -32,7 +32,9 @@ assert.equal(timeline[0].tracks.find(track => track.track === 'actor')?.value['a
 assert.ok(timeline[0].tracks.every(track => track.startMs === timeline[0].atMs && track.skipBehavior === 'finish'), 'all tracks need a synchronized start and explicit skip behavior');
 assert.equal(runtimeTrackDuration(timeline[0].tracks[0], true), 0, 'reduced-motion track duration must be explicit');
 assert.notEqual(timeline[0].id, timeline[1].id, 'each cue must have a stable, unique identity');
+assert.equal(activeRuntimeCue(timeline, timeline[1].atMs - 1)?.id, timeline[0].id, 'playback must keep the current cue active until the next cue starts');
 assert.equal(activeRuntimeCue(timeline, timeline[1].atMs)?.id, timeline[1].id);
+assert.equal(activeRuntimeCue(timeline, timeline[timeline.length - 1].atMs)?.id, timeline[timeline.length - 1].id, 'playback must reach the final cue');
 assert.equal(cameraForPresentation('attack', sampleEvents[0]).focusActorId, 'boss-1', 'impact camera must follow the targeted actor');
 assert.equal(cameraForPresentation('boss', sampleEvents[1]).focusActorId, 'boss-1', 'boss camera must follow the acting boss');
 
@@ -103,9 +105,10 @@ assert.ok(tutorialSource.includes('BattlefieldCanvas'), 'tutorial drills must sh
 assert.ok(labSource.includes('if (!__DEV__) return null') && labSource.includes('PackOpeningCeremony') && labSource.includes('BossMonument'), 'Game Lab must remain development-only and inspect pack and boss presentation');
 assert.ok(labSource.includes('setLayerVisibility') && labSource.includes('game-lab-layer-') && labSource.includes('onSelectTarget'), 'Game Lab must expose accessible layer toggles and interactive target selection');
 assert.ok(labSource.includes('setSelectedCueId') && labSource.includes('item.tracks.map'), 'Game Lab must allow timeline cue inspection and show each cue track');
+assert.ok(labSource.includes('activeRuntimeCue') && labSource.includes('game-lab-timeline-play') && labSource.includes('game-lab-timeline-next') && labSource.includes('game-lab-timeline-reset'), 'Game Lab must play, pause, step, and restart synchronized timeline cues');
 assert.ok(headerSource.includes("'/dev/game-lab'") && headerSource.includes("'/arena?mode=pvp'"), 'development inspection and world-to-PvP entry points must be wired');
 
 console.log(JSON.stringify({
   ok: true,
-  checks: ['event timeline and tracks', 'cue synchronization', 'independent actor rig profiles', 'depth projection', 'actor-focused camera', 'reduced-motion policy', 'scene-layer visibility', 'interactive Game Lab targets and cues', 'world-to-result flow', 'authority boundary', 'pack opening timeline', 'live battlefield integration', 'synchronized VFX/audio/haptics', 'tutorial runtime reuse', 'boss presentation', 'dev-only Game Lab'],
+  checks: ['event timeline and tracks', 'cue synchronization', 'timeline playback boundaries', 'independent actor rig profiles', 'depth projection', 'actor-focused camera', 'reduced-motion policy', 'scene-layer visibility', 'interactive Game Lab targets and cues', 'playable Game Lab timeline controls', 'world-to-result flow', 'authority boundary', 'pack opening timeline', 'live battlefield integration', 'synchronized VFX/audio/haptics', 'tutorial runtime reuse', 'boss presentation', 'dev-only Game Lab'],
 }, null, 2));
