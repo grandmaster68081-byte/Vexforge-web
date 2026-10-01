@@ -87,8 +87,8 @@ jobs:
         run: npx expo prebuild --platform android --clean --no-install
 
       - name: Compile the installable review APK
-        working-directory: mobile
-        run: ./android/gradlew --no-daemon --stacktrace assembleDebug
+        working-directory: mobile/android
+        run: ./gradlew --no-daemon --stacktrace assembleDebug
 
       - name: Verify and describe the APK
         working-directory: mobile
