@@ -16,7 +16,7 @@ jobs:
   build-expo-android:
     name: Validate and compile installable Expo Android APK
     runs-on: ubuntu-latest
-    timeout-minutes: 60
+    timeout-minutes: 360
     env:
       EXPO_PUBLIC_SUPABASE_URL: ${{ vars.EXPO_PUBLIC_SUPABASE_URL || 'https://rscuzqnfccqvltkdcdny.supabase.co' }}
       EXPO_PUBLIC_SUPABASE_ANON_KEY: ${{ vars.EXPO_PUBLIC_SUPABASE_ANON_KEY || 'sb_publishable_3eGRSpvxptO09eQQzpxysQ_Imq8zi58' }}
@@ -29,7 +29,7 @@ jobs:
       - name: Set up Node
         uses: actions/setup-node@v4
         with:
-          node-version: '22'
+          node-version: "22"
           cache: npm
           cache-dependency-path: mobile/package-lock.json
 
@@ -37,12 +37,15 @@ jobs:
         uses: actions/setup-java@v4
         with:
           distribution: temurin
-          java-version: '17'
+          java-version: "17"
+
+      - name: Set up Gradle cache
+        uses: gradle/actions/setup-gradle@v4
 
       - name: Set up Android SDK
         uses: android-actions/setup-android@v3
         with:
-          packages: 'platform-tools platforms;android-36 build-tools;36.0.0'
+          packages: "platform-tools platforms;android-36 build-tools;36.0.0"
 
       - name: Install locked Expo dependencies from public npm
         working-directory: mobile
@@ -94,7 +97,10 @@ jobs:
 
       - name: Compile the self-contained installable review APK
         working-directory: mobile/android
-        run: ./gradlew --no-daemon --stacktrace assembleRelease
+        run: >-
+          ./gradlew --no-daemon --max-workers=2 --build-cache --stacktrace
+          -Dorg.gradle.jvmargs="-Xmx3g -XX:MaxMetaspaceSize=1g -Dfile.encoding=UTF-8"
+          assembleRelease
 
       - name: Verify and describe the APK
         id: apk
