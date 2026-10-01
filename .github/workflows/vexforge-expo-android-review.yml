@@ -38,7 +38,35 @@ jobs:
 
       - name: Install the locked mobile dependencies
         working-directory: mobile
-        run: npm ci --registry=https://registry.npmjs.org/
+        run: |
+          node <<'NODE'
+          const fs = require('node:fs');
+          const lockPath = 'package-lock.json';
+          const lock = JSON.parse(fs.readFileSync(lockPath, 'utf8'));
+          let rewritten = 0;
+
+          for (const entry of Object.values(lock.packages ?? {})) {
+            if (typeof entry.resolved !== 'string') continue;
+            const updated = entry.resolved.replace(
+              /^http:\/\/package-firewall\.replit\.internal\/npm\//,
+              'https://registry.npmjs.org/',
+            );
+            if (updated !== entry.resolved) {
+              entry.resolved = updated;
+              rewritten += 1;
+            }
+          }
+
+          const remainingInternalUrls = Object.values(lock.packages ?? {})
+            .filter((entry) => entry.resolved?.includes('package-firewall.replit.internal'));
+          if (remainingInternalUrls.length > 0) {
+            throw new Error(`Unsupported internal npm URLs remain: ${remainingInternalUrls.length}`);
+          }
+
+          fs.writeFileSync(lockPath, `${JSON.stringify(lock, null, 2)}\n`);
+          console.log(`Mapped ${rewritten} lockfile URLs to the public npm registry; versions and integrity hashes are unchanged.`);
+          NODE
+          npm ci --registry=https://registry.npmjs.org/
 
       - name: Run the complete mobile/runtime audit suite
         working-directory: mobile
