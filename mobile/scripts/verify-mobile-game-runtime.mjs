@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import { readFile } from 'node:fs/promises';
 import { activeRuntimeCue, buildRuntimeTimeline } from '../game/timeline.ts';
 import { PACK_OPENING_TIMELINE, packCardRevealCue } from '../game/packTimeline.ts';
 import { buildSceneActors, cameraForPresentation, projectScenePoint, WIDE_CAMERA } from '../game/scene.ts';
@@ -56,7 +57,31 @@ assert.equal(PACK_OPENING_TIMELINE.find((cue) => cue.stage === 'reveal')?.intera
 assert.equal(packCardRevealCue(2, 5).id, 'pack:card:2:of:5');
 assert.equal(packCardRevealCue(2, 5).haptic, 'impact');
 
+const [battlefieldSource, battleEffectsSource, arenaSource, worldSource, packSource, tutorialSource, labSource, headerSource] = await Promise.all([
+  readFile(new URL('../src/render/BattlefieldCanvas.tsx', import.meta.url), 'utf8'),
+  readFile(new URL('../src/render/BattleEffects.tsx', import.meta.url), 'utf8'),
+  readFile(new URL('../app/(tabs)/arena.tsx', import.meta.url), 'utf8'),
+  readFile(new URL('../app/world.tsx', import.meta.url), 'utf8'),
+  readFile(new URL('../src/components/PackOpeningCeremony.tsx', import.meta.url), 'utf8'),
+  readFile(new URL('../app/tutorial.tsx', import.meta.url), 'utf8'),
+  readFile(new URL('../app/dev/game-lab.tsx', import.meta.url), 'utf8'),
+  readFile(new URL('../src/app/RuntimeHeader.tsx', import.meta.url), 'utf8'),
+]);
+
+assert.ok(battlefieldSource.includes('buildSceneActors') && battlefieldSource.includes('projectScenePoint'), 'the live battlefield must render shared 2.5D actor projections');
+assert.ok(battlefieldSource.includes('cameraStyle') && battlefieldSource.includes('runtimeCueForEvent'), 'camera and event cues must be consumed by the live battlefield');
+assert.ok(battlefieldSource.includes('motionPart') && battlefieldSource.includes('AudioCues') && battlefieldSource.includes('haptic('), 'actor motion, audio and haptics must be wired to presentation cues');
+assert.ok(battleEffectsSource.includes('cueId') && battleEffectsSource.includes('viewport'), 'VFX must use stable cue identity and battlefield-local coordinates');
+assert.ok(arenaSource.includes('buildRuntimeTimeline') && arenaSource.includes('runtimeTimeline[replayCursor]'), 'PvP replay must use the shared runtime timeline');
+assert.ok(arenaSource.includes('finishGameBattle') && arenaSource.includes('isAuthoritativeResult') && arenaSource.includes('returnToWorld'), 'PvP result and return flow must pass the authority guard');
+assert.ok(arenaSource.includes("params.mode==='pvp'") && arenaSource.includes("router.push('/world')"), 'the world-to-PvP result path must be navigable in both directions');
+assert.ok(worldSource.includes('BossMonument') && worldSource.includes("pathname:'/arena'"), 'boss Atlas entries must continue to open the clearly non-settling presentation route');
+assert.ok(packSource.includes('packCueForStage') && packSource.includes('packCardRevealCue'), 'the live pack ceremony must consume the shared pack timeline');
+assert.ok(tutorialSource.includes('BattlefieldCanvas'), 'tutorial drills must share the runtime battlefield and presentation director');
+assert.ok(labSource.includes('if (!__DEV__) return null') && labSource.includes('PackOpeningCeremony') && labSource.includes('BossMonument'), 'Game Lab must remain development-only and inspect pack and boss presentation');
+assert.ok(headerSource.includes("'/dev/game-lab'") && headerSource.includes("'/arena?mode=pvp'"), 'development inspection and world-to-PvP entry points must be wired');
+
 console.log(JSON.stringify({
   ok: true,
-  checks: ['event timeline', 'cue synchronization', 'independent actors', 'depth projection', 'camera response', 'world-to-result flow', 'authority boundary', 'pack opening timeline'],
+  checks: ['event timeline', 'cue synchronization', 'independent actors', 'depth projection', 'camera response', 'world-to-result flow', 'authority boundary', 'pack opening timeline', 'live battlefield integration', 'synchronized VFX/audio/haptics', 'tutorial runtime reuse', 'boss presentation', 'dev-only Game Lab'],
 }, null, 2));

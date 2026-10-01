@@ -7,6 +7,7 @@ import { useAudioPlayer } from 'expo-audio';
 import { VexforgeCard } from './VexforgeCard';
 import { COLORS, SCENE_ART_TIER, CINEMATIC_ART } from '../core/constants';
 import { useGame } from '../app/GameProvider';
+import { packCardRevealCue, packCueForStage } from '../../game/packTimeline';
 
 const RELIC = require('../../assets/vexforge/VF_PACK_RELIC.png');
 const SIGIL = require('../../assets/vexforge/VF_REWARD_SIGIL_PREMIUM.png');
@@ -15,7 +16,7 @@ const REWARD_AUDIO = require('../../assets/vexforge/reward.wav');
 
 export function PackOpeningCeremony({ visible, packName, cards, onClose }: { visible: boolean; packName?: string; cards: any[]; onClose: () => void }) {
   const { width, height } = useWindowDimensions();
-  const { quality } = useGame();
+  const { quality, haptic } = useGame();
   const [stage, setStage] = useState<'awakening'|'binding'|'reveal'|'complete'>('awakening');
   const [index, setIndex] = useState(0);
   const [opened, setOpened] = useState(false);
@@ -38,24 +39,36 @@ export function PackOpeningCeremony({ visible, packName, cards, onClose }: { vis
     relicGlow.value = withSequence(withTiming(1, { duration: 680 }), withTiming(.68, { duration: 600 }));
     flash.value = withSequence(withTiming(.42, { duration: 120 }), withTiming(0, { duration: 650 }));
     fade.value = withDelay(240, withTiming(1, { duration: 520 }));
-    const t1 = setTimeout(() => setStage('binding'), 900);
+    const openingCue = packCueForStage('awakening');
+    if (openingCue.haptic !== 'none') void haptic(openingCue.haptic);
+    const t1 = setTimeout(() => setStage('binding'), openingCue.durationMs);
     return () => clearTimeout(t1);
-  }, [visible, camera, relicScale, relicGlow, cardY, cardScale, fade, flash]);
+  }, [visible, camera, relicScale, relicGlow, cardY, cardScale, fade, flash, haptic]);
+
+  useEffect(() => {
+    const cue = packCueForStage(stage);
+    camera.value = withTiming(cue.camera.zoom, { duration: cue.camera.durationMs, easing: Easing.out(Easing.cubic) });
+  }, [stage, camera]);
 
   useEffect(() => {
     if (stage !== 'binding') return;
-    try { void revealPlayer.seekTo(0); revealPlayer.play(); } catch { /* optional audio */ }
-    const t = setTimeout(() => setStage(cards.length ? 'reveal' : 'complete'), 1050);
+    const cue = packCueForStage('binding');
+    if (cue.haptic !== 'none') void haptic(cue.haptic);
+    if (cue.audio === 'reveal') { try { void revealPlayer.seekTo(0); revealPlayer.play(); } catch { /* optional audio */ } }
+    const t = setTimeout(() => setStage(cards.length ? 'reveal' : 'complete'), cue.durationMs);
     return () => clearTimeout(t);
-  }, [stage, cards.length, revealPlayer]);
+  }, [stage, cards.length, revealPlayer, haptic]);
 
   useEffect(() => {
     if (stage === 'complete') {
-      try { void rewardPlayer.seekTo(0); rewardPlayer.play(); } catch { /* optional audio */ }
+      const cue = packCueForStage('complete');
+      if (cue.haptic !== 'none') void haptic(cue.haptic);
+      if (cue.audio === 'reward') { try { void rewardPlayer.seekTo(0); rewardPlayer.play(); } catch { /* optional audio */ } }
     }
-  }, [stage, rewardPlayer]);
+  }, [stage, rewardPlayer, haptic]);
 
   const card = cards[index];
+  const stageCue = packCueForStage(stage);
   const cameraStyle = useAnimatedStyle(() => ({ transform: [{ scale: camera.value }] }));
   const relicStyle = useAnimatedStyle(() => ({ transform: [{ scale: relicScale.value }], opacity: .76 + relicGlow.value * .24, shadowOpacity: .22 + relicGlow.value * .45 }));
   const cardStyle = useAnimatedStyle(() => ({ opacity: fade.value, transform: [{ translateY: cardY.value }, { scale: cardScale.value }] }));
@@ -71,7 +84,10 @@ export function PackOpeningCeremony({ visible, packName, cards, onClose }: { vis
         : 'Una identidad aguarda detrás del sello. Cada revelación es irreversible.';
 
   const revealCurrent = () => {
-    if (stage !== 'reveal' || !card) return;
+    if (!stageCue.interactive || stage !== 'reveal' || !card) return;
+    const cue = packCardRevealCue(index, cards.length);
+    if (cue.haptic !== 'none') void haptic(cue.haptic);
+    if (cue.audio === 'reveal') { try { void revealPlayer.seekTo(0); revealPlayer.play(); } catch { /* optional audio */ } }
     setOpened(true);
     flash.value = withSequence(withTiming(.35, { duration: 80 }), withTiming(0, { duration: 320 }));
     cardY.value = withSequence(withTiming(-12, { duration: 150 }), withSpring(0, { damping: 12, stiffness: 160 }));
@@ -79,12 +95,14 @@ export function PackOpeningCeremony({ visible, packName, cards, onClose }: { vis
   };
 
   const next = () => {
-    if (!opened) return;
+    if (!stageCue.interactive || !opened) return;
     if (index >= cards.length - 1) { setStage('complete'); return; }
     setOpened(false); setIndex(i => i + 1);
     cardY.value = 62; cardScale.value = .86; fade.value = 0;
     fade.value = withDelay(70, withTiming(1, { duration: 280 }));
-    try { void revealPlayer.seekTo(0); revealPlayer.play(); } catch { /* optional audio */ }
+    const cue = packCardRevealCue(index + 1, cards.length);
+    if (cue.haptic !== 'none') void haptic(cue.haptic);
+    if (cue.audio === 'reveal') { try { void revealPlayer.seekTo(0); revealPlayer.play(); } catch { /* optional audio */ } }
   };
 
   const close = () => { setStage('complete'); onClose(); };
@@ -134,7 +152,7 @@ export function PackOpeningCeremony({ visible, packName, cards, onClose }: { vis
           ) : stage === 'complete' ? (
             <Pressable onPress={close} style={[styles.button, { borderColor: `${COLORS.mint}88`, backgroundColor: `${COLORS.mint}14` }]}><Text style={styles.buttonText}>VOLVER A LA CÁMARA</Text></Pressable>
           ) : (
-            <Text style={styles.phase}>FASE {stage === 'awakening' ? 'I' : 'II'} · SINCRONIZACIÓN DEL SELLO</Text>
+            <Text style={styles.phase}>FASE {stage === 'awakening' ? 'I' : 'II'} · {stageCue.actor.toUpperCase()} · {stageCue.vfx.toUpperCase()}</Text>
           )}
         </View>
       </View>

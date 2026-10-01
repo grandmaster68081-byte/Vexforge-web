@@ -14,6 +14,7 @@ const required = [
   'plugins/withEmbeddedJsBundle.js',
   'app/(tabs)/_layout.tsx',
   'app/(tabs)/arena.tsx',
+  'app/dev/game-lab.tsx',
   'package.json',
   'app.json',
   'eas.json',
@@ -118,6 +119,7 @@ function walk(dir) {
   }
 }
 walk(path.join(root, 'src'));
+walk(path.join(root, 'app'));
 
 const text = sourceTexts.join('\n');
 const bad = forbidden.filter((term) => text.includes(term));
@@ -127,7 +129,7 @@ const forbiddenSecrets = /(service_role|sb_secret|-----BEGIN (RSA|OPENSSH|EC|PRI
 if (forbiddenSecrets.test(text)) throw new Error('Potential secret material detected in runtime source.');
 
 
-const routeFiles = ['app/(tabs)/index.tsx','app/(tabs)/arena.tsx','app/(tabs)/archive.tsx','app/(tabs)/forge.tsx','app/(tabs)/legacy.tsx','app/auth.tsx','app/tutorial.tsx','app/missions.tsx','app/store.tsx','app/economy.tsx','app/world.tsx','app/social.tsx','app/meta.tsx'];
+const routeFiles = ['app/(tabs)/index.tsx','app/(tabs)/arena.tsx','app/(tabs)/archive.tsx','app/(tabs)/forge.tsx','app/(tabs)/legacy.tsx','app/auth.tsx','app/tutorial.tsx','app/missions.tsx','app/store.tsx','app/economy.tsx','app/world.tsx','app/social.tsx','app/meta.tsx','app/dev/game-lab.tsx'];
 const missingRoutes = routeFiles.filter((f)=>!fs.existsSync(path.join(root,f)));
 if (missingRoutes.length) throw new Error(`Missing product routes:
 ${missingRoutes.join('\n')}`);

@@ -3,7 +3,20 @@
 Date: 2026-09-30  
 Execution contract: `mobile/docs/VEXFORGE_EXPO_REPLIT_CONTINUATION_ORDER_V5.md`
 
-## Current milestone — unified runtime foundation
+## Current milestone — live battlefield runtime integration
+
+- Official branch: `main`; implementation base `d974caa85b3dc54c7715e79dc63bd1cccfbb9b87`, confirmed equal to `origin/main` before editing.
+- `BattlefieldCanvas` now consumes shared 2.5D actor projections, per-actor motion, camera cues, viewport-local VFX, synchronized audio and haptics. Arena replay and local drills use the same presentation runtime; the tutorial reuses that battlefield.
+- Arena now has a shared-header PvP entry from the world, server-result gating through `GameFlow` / `isAuthoritativeResult`, synchronized replay cues, and a return-to-world action. The client still does not calculate or settle competitive results.
+- `PackOpeningCeremony` consumes stage and card-reveal timeline cues for camera, timing, audio and haptics.
+- Added a development-only Game Lab route for actor/camera/event inspection, local tactical drills, pack ceremony and boss presentation. The route is guarded in development code and its entry is hidden outside development builds.
+- Boss scenes remain presentation-only. No client damage, rewards, economy settlement, Supabase data, schema or RPC changes were made.
+- Validation: `npm --prefix mobile run verify` passed (24 required files, 56 source files, 75 assets, secret scan clean); `verify:game-runtime`, typecheck, `audit:battle` (2,500 runs), `audit:interactive` (500 runs), `audit:release`, and `git diff --check` passed.
+- Expo workflow restarted successfully. `/status` returned `packager-status:running` from both localhost:8000 and the proxied development domain. No APK/AAB, EAS build, or deployment was run.
+- Authenticated live PvP was not exercised in this implementation; server authority remains enforced in the app code.
+- Kept the environment's `.replit` port-mapping update after confirming the running Expo server is reachable through the proxy.
+
+## Previous milestone — unified runtime foundation
 
 - Official branch: `main`; base commit before this milestone: `e5399050`,
   matching `origin/main`; the worktree was clean before editing.
@@ -22,9 +35,9 @@ Execution contract: `mobile/docs/VEXFORGE_EXPO_REPLIT_CONTINUATION_ORDER_V5.md`
   These are not treated as authoritative battle simulation by Expo. The
   existing PvP resolver remains the verified authority boundary.
 - Supabase data and schema were not changed.
-- NEXT: integrate the runtime into Arena/BattlefieldCanvas, the world-to-PvP
-  result path, pack ceremony, tutorial, boss presentation and dev-only Game
-  Lab; then verify and push that bounded milestone before continuing.
+- RESULT: the runtime was integrated into Arena/BattlefieldCanvas, the
+  world-to-PvP result path, pack ceremony, tutorial, boss presentation and
+  dev-only Game Lab in the milestone above.
 
 ## Previous continuity checkpoint — documentation only
 
@@ -49,11 +62,10 @@ Execution contract: `mobile/docs/VEXFORGE_EXPO_REPLIT_CONTINUATION_ORDER_V5.md`
 
 ## Git
 
-- CURRENT SHA: `397992b10761d67888fdb0cd0f826283617a1d14` before this checkpoint
-  finalization commit
-- REMOTE MAIN SHA: `397992b10761d67888fdb0cd0f826283617a1d14`
+- BASE SHA before the current milestone: `d974caa85b3dc54c7715e79dc63bd1cccfbb9b87`
+- REMOTE MAIN SHA before the current milestone: `d974caa85b3dc54c7715e79dc63bd1cccfbb9b87`
 - BRANCH: `main`
-- WORKTREE CLEAN: yes after the milestone push
+- WORKTREE CLEAN: verify after checkpoint finalization and push
 
 ## Completed milestone
 
@@ -107,17 +119,20 @@ Execution contract: `mobile/docs/VEXFORGE_EXPO_REPLIT_CONTINUATION_ORDER_V5.md`
 
 ## Remaining gaps
 
-- The runtime foundation now exists, but `BattlefieldCanvas` and Arena do not
-  yet consume the shared 2.5D scene/timeline/camera cues.
-- The world-to-authoritative-PvP result path, synchronized audio/haptics,
-  pack timeline integration, boss presentation, tutorial integration and
-  development-only Game Lab remain to be completed.
-- No client-safe, server-simulated authoritative world-boss settlement has
-  been verified; do not submit locally calculated win/damage values as
-  settlement.
+- No authenticated end-to-end PvP challenge has been run from the Expo app;
+  the client continues to accept results only from the existing server resolver.
+- World-boss combat remains a local presentation. No server-owned boss
+  simulation/settlement path has been verified; never submit client-calculated
+  damage, wins, rewards, or economy values as settlement.
+- Actors animate independently, but dedicated rigged/sprite animation clips
+  are not yet connected; current animation uses the existing card presentation
+  and motion cues.
+- Metro and proxy health were checked, but no native device session or EAS
+  build was run.
 
 ## Exact next milestone
 
-Integrate the runtime foundation into the mobile experience, verify the
-vertical slice and presentation surfaces, and push the bounded milestone to
-`main` before beginning any further implementation.
+After this checkpoint is pushed, validate an authenticated PvP match through
+the existing server resolver and design a safe server-owned boss simulation
+path. Do not add client-authoritative outcomes or change Supabase RPC/schema
+without a separately scoped and approved backend change.

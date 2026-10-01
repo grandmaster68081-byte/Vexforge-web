@@ -8,8 +8,10 @@ import { COLORS } from '../core/constants';
 
 export interface BattlePoint { x: number; y: number; }
 
-export function BattleEffects({ event, kind, origin, target }: { event: BattleEvent | null; kind: PresentationKind | null; origin?: BattlePoint | null; target?: BattlePoint | null }) {
-  const { width, height } = useWindowDimensions();
+export function BattleEffects({ event, kind, origin, target, cueId, viewport }: { event: BattleEvent | null; kind: PresentationKind | null; origin?: BattlePoint | null; target?: BattlePoint | null; cueId?: string; viewport?: { width: number; height: number } }) {
+  const window = useWindowDimensions();
+  const width = viewport?.width ?? window.width;
+  const height = viewport?.height ?? window.height;
   const burst = useSharedValue(0);
   const travel = useSharedValue(0);
   const amount = event?.amount;
@@ -17,10 +19,11 @@ export function BattleEffects({ event, kind, origin, target }: { event: BattleEv
   const statusName=String(payload.status??payload.status_type??'').toLowerCase();
   const tone = kind === 'heal' ? COLORS.mint : kind === 'guard' ? COLORS.arcaneBright : kind === 'boss' ? COLORS.crimson : kind === 'victory' ? COLORS.goldBright : kind === 'defeat' ? COLORS.crimson : kind === 'status' ? (statusName.includes('poison') ? '#77D98B' : statusName.includes('burn') ? '#F07A46' : statusName.includes('stun') ? '#D8C36A' : '#D5784E') : kind === 'cast' ? COLORS.arcaneBright : COLORS.crimson;
 
+  const eventKey = cueId ?? event;
   useEffect(() => {
     burst.value = withSequence(withTiming(1, { duration: 110 }), withTiming(0, { duration: 580, easing: Easing.out(Easing.quad) }));
     travel.value = withSequence(withTiming(1, { duration: 220, easing: Easing.out(Easing.cubic) }), withTiming(0, { duration: 420, easing: Easing.out(Easing.cubic) }));
-  }, [event, kind, burst, travel]);
+  }, [eventKey, kind, burst, travel]);
 
   const ringStyle = useAnimatedStyle(() => ({ opacity: burst.value, transform: [{ scale: 0.30 + burst.value * 1.55 }] }));
   const projectileStyle = useAnimatedStyle(() => ({ opacity: travel.value, transform: [{ scaleX: .35 + travel.value * .9 }] }));
