@@ -88,9 +88,13 @@ jobs:
         working-directory: mobile
         run: npx expo prebuild --platform android --clean --no-install
 
-      - name: Compile the installable review APK
+      - name: Verify generated Android project embeds JavaScript
+        working-directory: mobile
+        run: node scripts/verify.mjs
+
+      - name: Compile the self-contained installable review APK
         working-directory: mobile/android
-        run: ./gradlew --no-daemon --stacktrace assembleDebug
+        run: ./gradlew --no-daemon --stacktrace assembleRelease
 
       - name: Verify and describe the APK
         id: apk
@@ -98,8 +102,14 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          apk="android/app/build/outputs/apk/debug/app-debug.apk"
+          apk="android/app/build/outputs/apk/release/app-release.apk"
           test -s "$apk"
+          apk_entries="$RUNNER_TEMP/vexforge-apk-entries.txt"
+          jar tf "$apk" > "$apk_entries"
+          if ! grep -Fxq 'assets/index.android.bundle' "$apk_entries"; then
+            echo "::error::The APK does not contain assets/index.android.bundle and would require Metro."
+            exit 1
+          fi
           size="$(stat -c%s "$apk")"
           test "$size" -gt 1000000
           version="$(node -p "require('./app.json').expo.version")"
@@ -118,13 +128,14 @@ jobs:
             echo "release_tag=vexforge-android-${GITHUB_RUN_NUMBER}"
           } >> "$GITHUB_OUTPUT"
           {
-            echo "## VEXFORGE Android APK compiled"
+            echo "## Self-contained VEXFORGE Android APK compiled"
             echo "- Branch: \`main\`"
             echo "- Commit: \`$GITHUB_SHA\`"
             echo "- Version: \`$version\`"
             echo "- Android package: \`$package_name\`"
             echo "- APK size: $size bytes"
             echo "- SHA-256: \`$sha256\`"
+            echo "- Embedded JavaScript: verified (no Metro required)"
             echo "- Delivery: direct GitHub Release download (no Actions artifact)"
           } >> "$GITHUB_STEP_SUMMARY"
 
@@ -137,7 +148,7 @@ jobs:
           name: VEXFORGE Android APK ${{ steps.apk.outputs.version }} (#${{ github.run_number }})
           target_commitish: main
           body: |
-            Installable Android review build compiled from `main`.
+            Self-contained installable Android review build compiled from `main`; the JavaScript bundle is embedded, so Metro is not required.
 
             - Commit: `${{ github.sha }}`
             - Version: `${{ steps.apk.outputs.version }}`

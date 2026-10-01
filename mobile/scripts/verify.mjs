@@ -1,7 +1,9 @@
 import fs from 'node:fs';
+import { createRequire } from 'node:module';
 import path from 'node:path';
 
 const root = process.cwd();
+const require = createRequire(import.meta.url);
 
 function expoConfigVersionSafe(config) {
   const version = config?.expo?.version;
@@ -49,8 +51,42 @@ if (packageJson.main !== 'expo-router/entry') throw new Error('Expo Router entry
 if (packageJson.version !== expoConfigVersionSafe(appConfig)) throw new Error('Package/app version mismatch.');
 if (expoConfig.android?.package !== 'com.vexforge.android') throw new Error('Android package mismatch.');
 if (!Array.isArray(expoConfig.plugins) || !expoConfig.plugins.includes('./plugins/withEmbeddedJsBundle.js')) throw new Error('Embedded bundle plugin missing from app.json.');
-const embeddedPlugin = fs.readFileSync(path.join(root, 'plugins/withEmbeddedJsBundle.js'), 'utf8');
-if (!embeddedPlugin.includes('debuggableVariants = []')) throw new Error('Embedded bundle plugin no longer embeds JS in standalone variants.');
+const { ensureEmbeddedJsBundle } = require('../plugins/withEmbeddedJsBundle.js');
+if (typeof ensureEmbeddedJsBundle !== 'function') throw new Error('Embedded bundle plugin does not expose its Gradle validator.');
+for (const defaultSetting of [
+  '    // debuggableVariants = ["debug"]',
+  '    debuggableVariants = ["debug"]',
+]) {
+  const gradleFixture = [
+    'plugins {',
+    '}',
+    '',
+    'react {',
+    defaultSetting,
+    '    bundleCommand = "export:embed"',
+    '}',
+  ].join('\n');
+  const normalizedGradleFixture = ensureEmbeddedJsBundle(gradleFixture);
+  const activeBundleSettings = normalizedGradleFixture
+    .split(/\r?\n/)
+    .filter((line) => /^[ \t]*debuggableVariants\s*=/.test(line));
+  if (
+    activeBundleSettings.length !== 1 ||
+    !/^[ \t]*debuggableVariants\s*=\s*\[\s*\]\s*$/.test(activeBundleSettings[0])
+  ) {
+    throw new Error('Embedded bundle plugin did not replace the React Native default.');
+  }
+  if (ensureEmbeddedJsBundle(normalizedGradleFixture) !== normalizedGradleFixture) {
+    throw new Error('Embedded bundle Gradle configuration is not idempotent.');
+  }
+}
+const generatedGradlePath = path.join(root, 'android/app/build.gradle');
+if (fs.existsSync(generatedGradlePath)) {
+  const generatedGradle = fs.readFileSync(generatedGradlePath, 'utf8');
+  if (ensureEmbeddedJsBundle(generatedGradle) !== generatedGradle) {
+    throw new Error('Generated Android project is not configured to embed JavaScript in every variant.');
+  }
+}
 const eas = JSON.parse(fs.readFileSync(path.join(root, 'eas.json'), 'utf8'));
 if (eas.build?.preview?.android?.buildType !== 'apk') throw new Error('Preview build profile is not APK.');
 if (eas.build?.production?.android?.buildType !== 'app-bundle') throw new Error('Production build profile is not AAB.');
