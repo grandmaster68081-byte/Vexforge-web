@@ -87,6 +87,10 @@ jobs:
         working-directory: mobile
         run: npm run doctor
 
+      - name: Export Android bundle and verify all official runtime asset hashes
+        working-directory: mobile
+        run: npm run verify:android-export
+
       - name: Generate the Android native project
         working-directory: mobile
         run: npx expo prebuild --platform android --clean --no-install
@@ -110,12 +114,7 @@ jobs:
           set -euo pipefail
           apk="android/app/build/outputs/apk/release/app-release.apk"
           test -s "$apk"
-          apk_entries="$RUNNER_TEMP/vexforge-apk-entries.txt"
-          jar tf "$apk" > "$apk_entries"
-          if ! grep -Fxq 'assets/index.android.bundle' "$apk_entries"; then
-            echo "::error::The APK does not contain assets/index.android.bundle and would require Metro."
-            exit 1
-          fi
+          node scripts/verify-android-apk-assets.mjs "$apk"
           size="$(stat -c%s "$apk")"
           test "$size" -gt 1000000
           version="$(node -p "require('./app.json').expo.version")"
@@ -142,6 +141,7 @@ jobs:
             echo "- APK size: $size bytes"
             echo "- SHA-256: \`$sha256\`"
             echo "- Embedded JavaScript: verified (no Metro required)"
+            echo "- Official runtime assets: 75/75 SHA-256 matches verified inside the APK"
             echo "- Delivery: direct GitHub Release download (no Actions artifact)"
           } >> "$GITHUB_STEP_SUMMARY"
 

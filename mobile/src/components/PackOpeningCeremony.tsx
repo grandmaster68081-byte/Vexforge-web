@@ -11,6 +11,7 @@ import { packCardRevealCue, packCueForStage } from '../../game/packTimeline';
 
 const RELIC = require('../../assets/vexforge/VF_PACK_RELIC.png');
 const SIGIL = require('../../assets/vexforge/VF_REWARD_SIGIL_PREMIUM.png');
+const COMMON_SIGIL = require('../../assets/vexforge/VF_REWARD_SIGIL_COMMON.png');
 const REVEAL_AUDIO = require('../../assets/vexforge/pack_reveal.wav');
 const REWARD_AUDIO = require('../../assets/vexforge/reward.wav');
 
@@ -130,7 +131,7 @@ export function PackOpeningCeremony({ visible, packName, cards, onClose }: { vis
         </View>
 
         <Animated.View style={[styles.relicStage, relicStyle, { shadowColor: COLORS.goldBright }]}>
-          <VexforgeImage source={stage === 'complete' ? SIGIL : RELIC} resizeMode="contain" style={styles.relic} />
+          <VexforgeImage source={stage === 'complete' ? (String(card?.rarity ?? '').toLowerCase() === 'common' ? COMMON_SIGIL : SIGIL) : RELIC} resizeMode="contain" style={styles.relic} />
           {stage !== 'reveal' && stage !== 'complete' ? <Text style={styles.packName}>{packName ?? 'PACK'} · {stage.toUpperCase()}</Text> : null}
         </Animated.View>
 

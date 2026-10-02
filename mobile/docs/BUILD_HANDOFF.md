@@ -20,10 +20,34 @@ The project does not store service-role keys or private credentials.
 ```bash
 npm install
 npm run verify
-npm run audit:battle
-npm run audit:economy
+npm run verify:android-export
+npm run audit:all
+npm run verify:game-runtime
 npm run start
 ```
+
+## Expo Router route root
+
+The actual product routes live in `app/`. `src/app/` holds shared runtime
+components and is not a route directory. `app.json` pins Expo Router to
+`./app`; do not remove that setting unless the route tree is intentionally
+moved.
+
+## Android asset-integrity gates
+
+Before generating the native Android project, run `npm run verify:android-export`.
+It creates a temporary Android export, requires the embedded JavaScript bundle,
+and checks that all 75 critical asset SHA-256 values match both the official QA
+manifest and `SHA256SUMS.txt`.
+
+After building an APK, run:
+
+```bash
+node scripts/verify-android-apk-assets.mjs <path-to-apk>
+```
+
+This rejects APKs without `assets/index.android.bundle` or any of the 75
+official runtime asset hashes. The GitHub Android workflow runs both checks.
 
 ## OTA/runtime compatibility
 

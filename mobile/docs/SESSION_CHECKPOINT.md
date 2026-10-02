@@ -1,17 +1,37 @@
 # VEXFORGE Session Checkpoint
 
-Date: 2026-09-30  
+Date: 2026-10-02
 Execution contract: `mobile/docs/VEXFORGE_EXPO_REPLIT_CONTINUATION_ORDER_V5.md`
 
-## Current milestone — playable Game Lab timeline and restored Expo environment
+## Current milestone — full Expo routes and Android asset-integrity gates
 
-- Official branch: `main`; implementation base `bc2ac2f6`, fetched and confirmed equal to `origin/main` before editing.
-- Restored the locked mobile dependencies (782 packages), configured the existing public RLS-protected Supabase runtime values for Expo, and started the configured Expo workflow. The administrative Supabase PAT remains outside the app bundle.
-- Game Lab now plays, pauses, steps through, and resets its battle-event timeline. Playback consumes the same runtime cues as `BattlefieldCanvas`, so cue changes exercise actor motion, camera focus, VFX, audio, and haptics together. Added playhead and cue-boundary checks to the runtime verifier.
+- Official branch: `main`; implementation base `c9c2003`, matching `origin/main` before editing.
+- Explicitly set Expo Router's route root to `mobile/app`; `mobile/src/app` contains shared components, not product routes. The Android export now bundles the full screen tree.
+- Reconciled the 39 stale scene-derivative byte counts and SHA-256 records in official asset QA against the repository checksum list. No art or audio bytes changed.
+- Integrated the existing boss sigil and common-reward sigil into their respective screens so all 75 official runtime assets are referenced by the app.
+- Added a pre-build Android export check and a post-build APK check. Both compare the expected 75 SHA-256 values; the APK check also requires the embedded JavaScript bundle.
+- APK comparison: #66 (262,543,305 bytes) lacked the embedded JavaScript bundle and game JPGs; #70 (164,749,295 bytes) had the bundle and 60 JPGs but was missing the six WAV files. Its smaller size mainly reflected smaller native libraries, not proof of missing art. The six WAV omissions are confirmed; the nine support PNGs in #70 were not directly verified.
 - No Supabase data, schema, or RPC, Unity, portal, or Kivora files were changed. No assets were generated.
-- Validation: `verify` passed (24 required files, 56 source files, 75 assets, secret scan clean); `verify:game-runtime` passed (18 checks); whole-app `typecheck` passed; Expo Doctor passed (18/18); `audit:battle` passed (2,500 runs); `audit:interactive` passed (500 runs); `audit:release` passed (8 cinematics); `git diff --check` passed. Expo workflow is running and Metro reports Expo Go and web previews available.
-- No native-device session, authenticated live PvP, server-owned boss combat, EAS/native build, or deployment was run.
+- Validation: `audit:all` passed; `verify:game-runtime` passed (18 checks); Expo Doctor passed (18/18); Android export passed with an embedded Hermes bundle and 75/75 critical asset hashes; Expo development domain returned HTTP 200; `git diff --check` passed. Expo workflow is running.
+- No APK/AAB, EAS build, native-device session, authenticated live PvP, server-owned boss combat, or deployment was run.
 - BUILD STATUS = NOT RUN.
+
+## Files changed in the current milestone
+
+- `.github/workflows/vexforge-unity-android-github.yml`
+- `mobile/BUILD_MANIFEST.json`
+- `mobile/app.json`
+- `mobile/docs/BUILD_HANDOFF.md`
+- `mobile/docs/OFFICIAL_ASSET_QA_1.10.0.json`
+- `mobile/docs/REAL_EXPO_REPOSITORY_STATE.md`
+- `mobile/docs/SESSION_CHECKPOINT.md`
+- `mobile/package.json`
+- `mobile/scripts/critical-assets.mjs`
+- `mobile/scripts/verify-android-apk-assets.mjs`
+- `mobile/scripts/verify-android-export.mjs`
+- `mobile/scripts/verify.mjs`
+- `mobile/src/components/BossMonument.tsx`
+- `mobile/src/components/PackOpeningCeremony.tsx`
 
 ## Previous milestone — actor rig, timeline tracks, and interactive QA
 
@@ -81,13 +101,13 @@ Execution contract: `mobile/docs/VEXFORGE_EXPO_REPLIT_CONTINUATION_ORDER_V5.md`
 
 ## Git
 
-- IMPLEMENTATION BASE SHA: `bc2ac2f6`
+- IMPLEMENTATION BASE SHA: `c9c2003`
 - PREVIOUS RUNTIME MILESTONE SHA: `9457b1f60b12dfc18cd86cdb0e806cb731ff4f0f`
 - GAME LAB TIMELINE IMPLEMENTATION SHA: `159bcf37a7f4cf20cd0aab83e1a0e1bb32d80c89`, pushed and verified on `origin/main`.
 - BRANCH: `main`
-- WORKTREE CLEAN: yes after checkpoint finalization commit and push.
+- WORKTREE CLEAN: no; an unrelated `.replit` port-8080 mapping remains unstaged and was not changed by this milestone.
 
-## Files changed in the current milestone
+## Files changed in the previous Game Lab timeline milestone
 
 - `mobile/app/dev/game-lab.tsx`
 - `mobile/scripts/verify-mobile-game-runtime.mjs`

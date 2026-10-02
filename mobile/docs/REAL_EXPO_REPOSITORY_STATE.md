@@ -1,14 +1,14 @@
 # Real Expo Repository State
 
-Evidence date: 2026-09-30  
+Evidence date: 2026-10-02
 Source branch: `main`  
 Source repository: `https://github.com/grandmaster68081-byte/Vexforge-web.git`
 
 ## Git state at audit start
 
-- Local SHA: `800369a22a44317fd44939d50c78a562a2636531`
-- Remote `origin/main` SHA: `800369a22a44317fd44939d50c78a562a2636531`
-- Worktree: clean before this authority-document milestone.
+- Local SHA before this milestone: `c9c2003`
+- Remote `origin/main` SHA before this milestone: `c9c2003`
+- Worktree: contained an unrelated, unstaged `.replit` port-8080 mapping; it was preserved and not included in this milestone.
 - The preceding commit imported the official remote tree into this persistent
   project and preserved the active execution order under `mobile/docs`.
 
@@ -28,6 +28,21 @@ Source repository: `https://github.com/grandmaster68081-byte/Vexforge-web.git`
   drills, cue inspection, pack presentation and a non-settling boss fixture.
 - PvP settlement remains restricted to the existing authoritative resolver.
   The boss fixture and tactical drills do not grant rewards or persist results.
+- Expo Router is explicitly configured with `root: "./app"` because the actual
+  product screens are in `mobile/app/`, while `mobile/src/app/` contains shared
+  components. The Android export now bundles the product routes.
+- The existing boss sigil and common reward sigil are referenced by their
+  screens. All 75 critical runtime assets are checked against both the official
+  QA manifest and `mobile/SHA256SUMS.txt`.
+- The official QA manifest's byte counts and hashes for 39 scene derivatives
+  were stale. Those metadata fields now match the current files and repository
+  checksums; no runtime image/audio bytes were altered.
+- APK #66 (262,543,305 bytes) lacked its embedded JavaScript bundle and game
+  JPGs. APK #70 (164,749,295 bytes) contained the bundle and 60 JPGs but lacked
+  six WAV files. The nine support PNGs in #70 were not directly verified; its
+  smaller size was mostly explained by smaller native libraries.
+- CI runs an Android export/hash check before native generation and checks the
+  embedded bundle plus all 75 official asset hashes inside the APK afterward.
 
 ## Confirmed mobile foundation
 
@@ -82,4 +97,7 @@ Source repository: `https://github.com/grandmaster68081-byte/Vexforge-web.git`
   workflow reaches Metro with Expo Go and web previews available.
 - The Game Lab runtime verifier now covers playback boundaries and its
   play/pause/step/reset timeline controls; the full verifier passes 18 checks.
+- The full static audit passes; the Android export contains a Hermes bundle and
+  75/75 critical assets by SHA-256. The Expo development domain returns HTTP
+  200.
 - No EAS build, APK, AAB, store deployment or production deployment was run.

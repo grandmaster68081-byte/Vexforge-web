@@ -1,6 +1,7 @@
 import fs from 'node:fs';
 import { createRequire } from 'node:module';
 import path from 'node:path';
+import { getVerifiedCriticalAssetHashes } from './critical-assets.mjs';
 
 const root = process.cwd();
 const require = createRequire(import.meta.url);
@@ -51,6 +52,8 @@ if (packageJson.main !== 'expo-router/entry') throw new Error('Expo Router entry
 if (packageJson.version !== expoConfigVersionSafe(appConfig)) throw new Error('Package/app version mismatch.');
 if (expoConfig.android?.package !== 'com.vexforge.android') throw new Error('Android package mismatch.');
 if (!Array.isArray(expoConfig.plugins) || !expoConfig.plugins.includes('./plugins/withEmbeddedJsBundle.js')) throw new Error('Embedded bundle plugin missing from app.json.');
+const routerPlugin = expoConfig.plugins.find((plugin) => Array.isArray(plugin) && plugin[0] === 'expo-router');
+if (routerPlugin?.[1]?.root !== './app') throw new Error('Expo Router must use the complete product routes in ./app.');
 const { ensureEmbeddedJsBundle } = require('../plugins/withEmbeddedJsBundle.js');
 if (typeof ensureEmbeddedJsBundle !== 'function') throw new Error('Embedded bundle plugin does not expose its Gradle validator.');
 for (const defaultSetting of [
@@ -107,30 +110,10 @@ for (const key of [
   if (!deps[key]) throw new Error(`Missing dependency: ${key}`);
 }
 
-const supportAssets = [
-  'assets/vexforge/VF_CARD_BACK_CORE.png',
-  'assets/vexforge/VF_CARD_FALLBACK_NEUTRAL.png',
-  'assets/vexforge/VF_CARD_FRAME_EPIC.png',
-  'assets/vexforge/VF_CARD_FRAME_LEGENDARY.png',
-  'assets/vexforge/VF_BOSS_AURA.png',
-  'assets/vexforge/VF_BOSS_SIGIL.png',
-  'assets/vexforge/VF_PACK_RELIC.png',
-  'assets/vexforge/VF_REWARD_SIGIL_COMMON.png',
-  'assets/vexforge/VF_REWARD_SIGIL_PREMIUM.png',
-  'assets/vexforge/attack.wav',
-  'assets/vexforge/impact.wav',
-  'assets/vexforge/shield.wav',
-  'assets/vexforge/fusion.wav',
-  'assets/vexforge/pack_reveal.wav',
-  'assets/vexforge/reward.wav',
-];
-const sceneNames = ['nexus','arena','archive','forge','founders','missions','store','economy','world','social','meta','tutorial','events'];
-const sceneMasters = sceneNames.map((scene) => `assets/vexforge/scenes/${scene === 'founders' ? 'founders' : scene}.jpg`);
-const sceneTiers = sceneNames.flatMap((scene) => ['high','medium','low'].map((tier) => `assets/content-packs/${scene}/${tier}.jpg`));
-const cinematicNames = ['battle_intro','battle_victory','battle_defeat','boss_phase','pack_reveal','mission_complete','fusion','season_arrival'];
-const cinematicAssets = cinematicNames.map((name) => `assets/vexforge/cinematics/${name}.jpg`);
-const requiredAssets = [...supportAssets, ...sceneMasters, ...sceneTiers, ...cinematicAssets];
-const missingAssets = requiredAssets.filter((file) => !fs.existsSync(path.join(root, file)));
+const verifiedCriticalAssetHashes = getVerifiedCriticalAssetHashes(root);
+const missingAssets = verifiedCriticalAssetHashes
+  .filter(({ path: assetPath }) => !fs.existsSync(path.join(root, assetPath)))
+  .map(({ path: assetPath }) => assetPath);
 if (missingAssets.length) throw new Error(`Missing runtime assets:\n${missingAssets.join('\n')}`);
 const assetQa = JSON.parse(fs.readFileSync(path.join(root,'docs/OFFICIAL_ASSET_QA_1.10.0.json'),'utf8'));
 if (assetQa.runtime_version !== packageJson.version) throw new Error('Asset QA release mismatch.');
@@ -198,7 +181,7 @@ console.log(JSON.stringify({
   ok: true,
   requiredFiles: required.length,
   sourceFiles: sourceFiles.length,
-  verifiedAssets: requiredAssets.length,
+  verifiedAssets: verifiedCriticalAssetHashes.length,
   oldExpoReferences: 0,
   secretScan: 'clean',
 }, null, 2));

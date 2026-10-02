@@ -95,29 +95,31 @@
     "sceneDerivatives": "every registered scene ships in all three tiers"
   },
   "validation": {
-    "static_verify": "PASS · 23 required files · 75 critical assets",
+    "static_verify": "PASS · 24 required files · 56 source files · 75 critical asset hashes",
     "verified_runtime_assets": 75,
+    "android_export_asset_hashes": "PASS · embedded Hermes bundle · 75/75 official SHA-256 assets",
+    "apk_embedded_asset_hashes": "NOT RUN · no APK build was authorized for this milestone",
     "battle": "PASS · 2500 runs · 0 failures (1.10 final rerun)",
     "interactive_battle": "PASS · 500 runs · 0 failures (1.10 final rerun)",
     "economy": "PASS · 10000 runs · 0 failures (1.10 final rerun)",
-    "economy_policy": "PASS (executed in 1.9 audit)",
+    "economy_policy": "PASS · current audit",
     "semantic_engine_typecheck": "NOT VERIFIED_OFFLINE",
-    "full_project_typecheck": "NOT VERIFIED_OFFLINE · target environment gate",
-    "native_android_build": "NOT VERIFIED_OFFLINE · target EAS/Android gate",
+    "full_project_typecheck": "PASS · tsc --noEmit",
+    "native_android_build": "NOT RUN · no APK/AAB compilation was authorized for this milestone",
     "live_supabase_mutation": "NOT EXECUTED · target authenticated smoke-test gate",
     "tier1_audit": "PASS · 1.10 final static hardening",
     "release_audit": "PASS · 1.10 final release audit",
     "content_closure": "PASS · 13 scene masters · 39 scene derivatives · 8 cinematics",
-    "dependency_lock": "NOT BUNDLED · target environment must resolve and retain lockfile"
+    "dependency_lock": "PASS · mobile package-lock resolved (782 packages)"
   },
   "assembly": {
     "step_1": "Replace target repository mobile/ contents with this package mobile/ contents exactly.",
     "step_2": "Keep the repository Supabase/backend/contracts outside mobile/ unchanged.",
     "step_3": "Set EXPO_PUBLIC_SUPABASE_ANON_KEY only in the target build environment.",
     "step_4": "Run npm install (or the repository package manager) in the target environment.",
-    "step_5": "Run npm run verify, the audit scripts and npm run typecheck.",
-    "step_6": "Use the existing Expo/EAS preview APK and production AAB profiles; preview channel is internal and production channel is production.",
-    "step_7": "Smoke-test physical Android before launch."
+    "step_5": "Run npm run verify, npm run verify:android-export, npm run audit:all and npm run verify:game-runtime.",
+    "step_6": "Only after explicit build authorization, use the existing Expo/EAS preview APK and production AAB profiles; preview channel is internal and production channel is production.",
+    "step_7": "Run scripts/verify-android-apk-assets.mjs on the produced APK, then smoke-test physical Android before launch."
   },
   "forbidden_assembler_changes": [
     "runtime scene art",
