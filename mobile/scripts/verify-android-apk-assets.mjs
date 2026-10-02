@@ -44,6 +44,30 @@ try {
   const criticalAssets = getVerifiedCriticalAssetHashes(root);
   execFileSync('jar', ['xf', apkPath], { cwd: extractionDir, stdio: 'ignore' });
 
+  const criticalPngs = criticalAssets.filter(
+    ({ path: assetPath }) => assetPath.startsWith('assets/vexforge/') && assetPath.endsWith('.png'),
+  );
+  const missingRawPngs = criticalPngs
+    .filter(({ path: assetPath, sha256 }) => {
+      const rawAssetPath = path.join(
+        extractionDir,
+        'assets',
+        'vexforge-critical',
+        path.basename(assetPath),
+      );
+      return (
+        !fs.existsSync(rawAssetPath) ||
+        !fs.statSync(rawAssetPath).isFile() ||
+        sha256File(rawAssetPath) !== sha256
+      );
+    })
+    .map(({ path: assetPath }) => assetPath);
+  if (missingRawPngs.length) {
+    throw new Error(
+      `APK does not preserve ${missingRawPngs.length} of ${criticalPngs.length} official support PNGs under assets/vexforge-critical:\n${missingRawPngs.join('\n')}`,
+    );
+  }
+
   const packagedAssetHashes = new Set();
   for (const entry of entryNames) {
     if (entry.endsWith('/') || !(entry.startsWith('assets/') || entry.startsWith('res/'))) continue;

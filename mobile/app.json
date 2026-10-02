@@ -40,6 +40,7 @@
       "expo-updates",
       "expo-audio",
       "./plugins/withEmbeddedJsBundle.js",
+      "./plugins/withCriticalPngAssets.js",
       "expo-secure-store",
       "expo-asset"
     ],

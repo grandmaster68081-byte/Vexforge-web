@@ -3,35 +3,24 @@
 Date: 2026-10-02
 Execution contract: `mobile/docs/VEXFORGE_EXPO_REPLIT_CONTINUATION_ORDER_V5.md`
 
-## Current milestone — full Expo routes and Android asset-integrity gates
+## Current milestone — preserve official support PNG bytes in APKs
 
-- Official branch: `main`; implementation base `c9c2003`, matching `origin/main` before editing.
-- Explicitly set Expo Router's route root to `mobile/app`; `mobile/src/app` contains shared components, not product routes. The Android export now bundles the full screen tree.
-- Reconciled the 39 stale scene-derivative byte counts and SHA-256 records in official asset QA against the repository checksum list. No art or audio bytes changed.
-- Integrated the existing boss sigil and common-reward sigil into their respective screens so all 75 official runtime assets are referenced by the app.
-- Added a pre-build Android export check and a post-build APK check. Both compare the expected 75 SHA-256 values; the APK check also requires the embedded JavaScript bundle.
-- APK comparison: #66 (262,543,305 bytes) lacked the embedded JavaScript bundle and game JPGs; #70 (164,749,295 bytes) had the bundle and 60 JPGs but was missing the six WAV files. Its smaller size mainly reflected smaller native libraries, not proof of missing art. The six WAV omissions are confirmed; the nine support PNGs in #70 were not directly verified.
-- No Supabase data, schema, or RPC, Unity, portal, or Kivora files were changed. No assets were generated.
-- Validation: `audit:all` passed; `verify:game-runtime` passed (18 checks); Expo Doctor passed (18/18); Android export passed with an embedded Hermes bundle and 75/75 critical asset hashes; Expo development domain returned HTTP 200; `git diff --check` passed. Expo workflow is running.
-- No APK/AAB, EAS build, native-device session, authenticated live PvP, server-owned boss combat, or deployment was run.
-- BUILD STATUS = NOT RUN.
+- Official branch: `main`; implementation base `b46692f579d66ab95fab3a61f324c29395aebb43`, verified equal to `origin/main` before editing.
+- Android run 71 (`37055176365`, commit `b46692f`) passed Android export and Gradle APK compilation but failed final verification because the APK did not contain the exact official hashes for nine support PNGs. Release and direct-download steps were skipped.
+- The export verifier already checks all 75 original hashes. The APK verifier now separately requires exact-byte copies of the nine official support PNGs under `assets/vexforge-critical/`; the native config plugin stages them into Android's raw assets directory during `expo prebuild --clean`.
+- Existing React Native image imports remain unchanged. No game behavior, source art/audio, Supabase data/schema/RPC, Unity, web portal, or Kivora files were changed; no assets were generated.
+- Validation: Android prebuild staged 9/9 PNGs with matching official SHA-256 values; Android export produced the embedded Hermes bundle and passed all 75/75 hashes; `audit:all` passed, `verify:game-runtime` passed 18/18 checks, Expo workflow returned `packager-status:running`, and `git diff --check` passed.
+- The new official APK run is pending commit/push of this fix. APK compilation is explicitly authorized.
+- BUILD STATUS = NOT YET DISPATCHED; APK compilation is explicitly authorized for this fix.
 
 ## Files changed in the current milestone
 
-- `.github/workflows/vexforge-unity-android-github.yml`
-- `mobile/BUILD_MANIFEST.json`
 - `mobile/app.json`
 - `mobile/docs/BUILD_HANDOFF.md`
-- `mobile/docs/OFFICIAL_ASSET_QA_1.10.0.json`
 - `mobile/docs/REAL_EXPO_REPOSITORY_STATE.md`
 - `mobile/docs/SESSION_CHECKPOINT.md`
-- `mobile/package.json`
-- `mobile/scripts/critical-assets.mjs`
+- `mobile/plugins/withCriticalPngAssets.js`
 - `mobile/scripts/verify-android-apk-assets.mjs`
-- `mobile/scripts/verify-android-export.mjs`
-- `mobile/scripts/verify.mjs`
-- `mobile/src/components/BossMonument.tsx`
-- `mobile/src/components/PackOpeningCeremony.tsx`
 
 ## Previous milestone — actor rig, timeline tracks, and interactive QA
 

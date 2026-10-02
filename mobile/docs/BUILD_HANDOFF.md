@@ -47,7 +47,12 @@ node scripts/verify-android-apk-assets.mjs <path-to-apk>
 ```
 
 This rejects APKs without `assets/index.android.bundle` or any of the 75
-official runtime asset hashes. The GitHub Android workflow runs both checks.
+official runtime asset hashes. The nine official support PNGs must also retain
+their source bytes under `assets/vexforge-critical/`. The
+`withCriticalPngAssets` config plugin copies them into Android's raw assets
+directory during prebuild; keep this separate from React Native's normal image
+resources so Android resource processing cannot change the bytes checked by
+SHA-256. The GitHub Android workflow runs both checks.
 
 ## OTA/runtime compatibility
 

@@ -43,6 +43,19 @@ Source repository: `https://github.com/grandmaster68081-byte/Vexforge-web.git`
   smaller size was mostly explained by smaller native libraries.
 - CI runs an Android export/hash check before native generation and checks the
   embedded bundle plus all 75 official asset hashes inside the APK afterward.
+- Android run 71 (`37055176365`, commit `b46692f`) passed export and native APK
+  compilation but failed the final APK hash check: only the nine official
+  support PNG hashes were absent from the APK. The release and download steps
+  were skipped. The APK check compares exact source hashes, so it did not
+  distinguish omitted assets from PNGs transformed by native resource
+  processing.
+- The active fix preserves unmodified copies of those nine PNGs in Android's
+  raw assets directory during Expo prebuild. The APK verifier checks that
+  dedicated copy and continues checking all 75 official source hashes.
+- Local validation passed: Android prebuild staged 9/9 PNGs with exact official
+  hashes; Android export produced its embedded Hermes bundle and verified all
+  75/75 critical assets; `audit:all` and the 18-check game-runtime verifier
+  passed. The Expo workflow returned `packager-status:running`.
 
 ## Confirmed mobile foundation
 
@@ -100,4 +113,5 @@ Source repository: `https://github.com/grandmaster68081-byte/Vexforge-web.git`
 - The full static audit passes; the Android export contains a Hermes bundle and
   75/75 critical assets by SHA-256. The Expo development domain returns HTTP
   200.
-- No EAS build, APK, AAB, store deployment or production deployment was run.
+- A new official Android APK build was explicitly authorized after run 71; it
+  remains pending commit/push of the validated fix and workflow dispatch.
