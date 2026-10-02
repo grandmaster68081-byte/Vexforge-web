@@ -5,13 +5,14 @@ Execution contract: `mobile/docs/VEXFORGE_EXPO_REPLIT_CONTINUATION_ORDER_V5.md`
 
 ## Current milestone — preserve official support PNG bytes in APKs
 
-- Official branch: `main`; implementation base `b46692f579d66ab95fab3a61f324c29395aebb43`, verified equal to `origin/main` before editing.
+- Official branch: `main`; fix commit `5d758d3e481abe569a7671d25aa5a1c69c6c2f3f`, verified on `origin/main`.
 - Android run 71 (`37055176365`, commit `b46692f`) passed Android export and Gradle APK compilation but failed final verification because the APK did not contain the exact official hashes for nine support PNGs. Release and direct-download steps were skipped.
 - The export verifier already checks all 75 original hashes. The APK verifier now separately requires exact-byte copies of the nine official support PNGs under `assets/vexforge-critical/`; the native config plugin stages them into Android's raw assets directory during `expo prebuild --clean`.
 - Existing React Native image imports remain unchanged. No game behavior, source art/audio, Supabase data/schema/RPC, Unity, web portal, or Kivora files were changed; no assets were generated.
 - Validation: Android prebuild staged 9/9 PNGs with matching official SHA-256 values; Android export produced the embedded Hermes bundle and passed all 75/75 hashes; `audit:all` passed, `verify:game-runtime` passed 18/18 checks, Expo workflow returned `packager-status:running`, and `git diff --check` passed.
-- The new official APK run is pending commit/push of this fix. APK compilation is explicitly authorized.
-- BUILD STATUS = NOT YET DISPATCHED; APK compilation is explicitly authorized for this fix.
+- Official Android run 72 (`37058644987`) built commit `5d758d3e` and completed successfully. The APK hash verification, release publication, and direct-link step all passed; all 75 official runtime asset hashes were verified inside the APK.
+- Release tag: `vexforge-android-72`; APK size: 170,702,075 bytes; direct download: `https://github.com/grandmaster68081-byte/Vexforge-web/releases/download/vexforge-android-72/VEXFORGE-1.10.0-Android-72.apk` (HTTP 200).
+- BUILD STATUS = SUCCESS; APK compiled and published by official run 72.
 
 ## Files changed in the current milestone
 

@@ -56,6 +56,12 @@ Source repository: `https://github.com/grandmaster68081-byte/Vexforge-web.git`
   hashes; Android export produced its embedded Hermes bundle and verified all
   75/75 critical assets; `audit:all` and the 18-check game-runtime verifier
   passed. The Expo workflow returned `packager-status:running`.
+- Official Android run 72 (`37058644987`) built commit
+  `5d758d3e481abe569a7671d25aa5a1c69c6c2f3f` and completed successfully,
+  including the APK asset verification and release steps. The 170,702,075-byte
+  APK is published at:
+  `https://github.com/grandmaster68081-byte/Vexforge-web/releases/download/vexforge-android-72/VEXFORGE-1.10.0-Android-72.apk`
+  (HTTP 200).
 
 ## Confirmed mobile foundation
 
@@ -113,5 +119,5 @@ Source repository: `https://github.com/grandmaster68081-byte/Vexforge-web.git`
 - The full static audit passes; the Android export contains a Hermes bundle and
   75/75 critical assets by SHA-256. The Expo development domain returns HTTP
   200.
-- A new official Android APK build was explicitly authorized after run 71; it
-  remains pending commit/push of the validated fix and workflow dispatch.
+- No physical-device installation or playthrough has been performed; automated
+  runtime audits and the official APK build passed.
