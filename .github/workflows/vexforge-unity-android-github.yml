@@ -9,8 +9,8 @@ permissions:
   contents: write
 
 concurrency:
-  group: vexforge-expo-android-${{ github.ref }}
-  cancel-in-progress: true
+  group: vexforge-expo-android-main
+  cancel-in-progress: false
 
 jobs:
   build-expo-android:
@@ -77,11 +77,19 @@ jobs:
           fs.writeFileSync(lockPath, `${JSON.stringify(lock, null, 2)}\n`);
           console.log(`Mapped ${rewritten} lockfile URLs to the public npm registry; versions and integrity hashes are unchanged.`);
           NODE
-          npm ci --registry=https://registry.npmjs.org/
+          npm ci \
+            --registry=https://registry.npmjs.org/ \
+            --fetch-retries=5 \
+            --fetch-retry-mintimeout=20000 \
+            --fetch-retry-maxtimeout=120000
 
       - name: Run the complete mobile/runtime audit suite
         working-directory: mobile
         run: npm run audit:all
+
+      - name: Verify game runtime behavior
+        working-directory: mobile
+        run: npm run verify:game-runtime
 
       - name: Check Expo compatibility
         working-directory: mobile
