@@ -1,0 +1,29 @@
+{
+  "source_type": "zip_in_git_lfs",
+  "source_path": "attached_assets/VEXFORGE_MASTER_CONSOLIDATED_2026-10-03_v2.1_REPLIT_SAFE_1791112623806.zip",
+  "canonical_copy": "release/VEXFORGE_V21_EMBEDDED_SOURCE/VEXFORGE_MASTER_CONSOLIDATED_2026-10-03_v2.1_REPLIT_SAFE_1791112623806.zip",
+  "source_commit": "15d184b9a9944ff5980f8b987feaac9979106058",
+  "source_git_sha": "a98c7a1e8a2c81b5129cf9557ee471db970e8102",
+  "source_git_sha_kind": "Git blob object ID of the tracked Git LFS pointer",
+  "integration_commit": "ebd4726e549dc43146fac7f4e1c540bce9f26a20",
+  "verified_main_sha": "85bec0f398c60a010efd78fb0fdc85aacea11dfe",
+  "discovered_at": "2026-10-04",
+  "discovery_method": "Located the tracked LFS archive on main; verified its content hash and size, then compared the package's visual files and assets against the current mobile tree.",
+  "sha256": "9095e0bf33fd8f6dfc4ed85263be2a5269c031f5809b925d54cd86f14fb8ca82",
+  "size_bytes": 88770418,
+  "file_count": 522,
+  "zip_entry_count_including_directories": 602,
+  "integration_status": {
+    "installer": "passed",
+    "visual_files_identical_to_package": [
+      "mobile/src/render/VexforgeSceneStage.tsx",
+      "mobile/src/render/WorldBackdrop.tsx",
+      "mobile/src/components/SceneCinematic.tsx",
+      "mobile/src/components/BattleCinematic.tsx"
+    ],
+    "package_assets_verified": 167,
+    "installer_asset_matches": 159,
+    "installer_asset_additions": 0,
+    "preserved_current_main_difference": "mobile/src/components/PackOpeningCeremony.tsx differs from the package and remains unchanged."
+  }
+}

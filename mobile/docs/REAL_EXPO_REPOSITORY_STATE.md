@@ -1,10 +1,21 @@
 # Real Expo Repository State
 
-Evidence date: 2026-10-02
+Evidence date: 2026-10-04
 Source branch: `main`  
 Source repository: `https://github.com/grandmaster68081-byte/Vexforge-web.git`
 
-## Git state at audit start
+## Latest Project Editor verification — 2026-10-04
+
+- Baseline branch: `main`; `HEAD == origin/main == 85bec0f398c60a010efd78fb0fdc85aacea11dfe` before the documentation/source-custody update; the worktree was clean.
+- The v2.1 REPLIT-SAFE ZIP is tracked in Git LFS, with the verified canonical copy and source manifest under `release/`. Archive SHA-256: `9095e0bf33fd8f6dfc4ed85263be2a5269c031f5809b925d54cd86f14fb8ca82`.
+- The package installer passed its preflight. Its four visual files already matched current main byte-for-byte; it added no assets. Independent comparison verified all 167 package mobile assets exactly against `mobile/assets`.
+- The current-main `PackOpeningCeremony.tsx` was intentionally retained because it differs from the ZIP. Protected gameplay, authority, economy, package, router and Supabase paths were not changed.
+- Expo's shared public Supabase URL and publishable key match the repository's public example. No Supabase data/schema/RPC writes were made; the management PAT is not used by the mobile client.
+- `npm ci --no-audit --no-fund` installed 782 packages. `verify`, TypeScript, runtime verification, battle, interactive, economy, economy-policy, runtime-compatibility, tier-1, release and final audits all passed. `expo-doctor` passed 18/18.
+- The configured Expo workflow is running and Metro started on port 8000; `.replit` maps local port 8000 to external port 80. Android/APK/AAB build was not run. Authenticated device acceptance remains unverified.
+- The following dated audit sections record earlier historical checkpoints; this section is the latest Project Editor verification.
+
+## Git state at audit start (2026-10-02)
 
 - Local SHA before this milestone: `c9c2003`
 - Remote `origin/main` SHA before this milestone: `c9c2003`
@@ -12,7 +23,7 @@ Source repository: `https://github.com/grandmaster68081-byte/Vexforge-web.git`
 - The preceding commit imported the official remote tree into this persistent
   project and preserved the active execution order under `mobile/docs`.
 
-## Current implementation state on official `main`
+## Runtime implementation state established by the 2026-10-02 audit
 
 - Runtime milestone code is on `main` at `9457b1f60b12dfc18cd86cdb0e806cb731ff4f0f`, verified against `origin/main` before checkpoint finalization.
 - `mobile/game/**` is the shared Expo runtime, with 2.5D scene projection,

@@ -1,27 +1,32 @@
 # VEXFORGE Session Checkpoint
 
-Date: 2026-10-02
+Date: 2026-10-04
 Execution contract: `mobile/docs/VEXFORGE_EXPO_REPLIT_CONTINUATION_ORDER_V5.md`
 
-## Current milestone — preserve official support PNG bytes in APKs
+## Current milestone — v2.1 source custody and integration verification
 
-- Official branch: `main`; fix commit `5d758d3e481abe569a7671d25aa5a1c69c6c2f3f`, verified on `origin/main`.
-- Android run 71 (`37055176365`, commit `b46692f`) passed Android export and Gradle APK compilation but failed final verification because the APK did not contain the exact official hashes for nine support PNGs. Release and direct-download steps were skipped.
-- The export verifier already checks all 75 original hashes. The APK verifier now separately requires exact-byte copies of the nine official support PNGs under `assets/vexforge-critical/`; the native config plugin stages them into Android's raw assets directory during `expo prebuild --clean`.
-- Existing React Native image imports remain unchanged. No game behavior, source art/audio, Supabase data/schema/RPC, Unity, web portal, or Kivora files were changed; no assets were generated.
-- Validation: Android prebuild staged 9/9 PNGs with matching official SHA-256 values; Android export produced the embedded Hermes bundle and passed all 75/75 hashes; `audit:all` passed, `verify:game-runtime` passed 18/18 checks, Expo workflow returned `packager-status:running`, and `git diff --check` passed.
-- Official Android run 72 (`37058644987`) built commit `5d758d3e` and completed successfully. The APK hash verification, release publication, and direct-link step all passed; all 75 official runtime asset hashes were verified inside the APK.
-- Release tag: `vexforge-android-72`; APK size: 170,702,075 bytes; direct download: `https://github.com/grandmaster68081-byte/Vexforge-web/releases/download/vexforge-android-72/VEXFORGE-1.10.0-Android-72.apk` (HTTP 200).
-- BUILD STATUS = SUCCESS; APK compiled and published by official run 72.
+- Official branch: `main`; baseline `HEAD == origin/main == 85bec0f398c60a010efd78fb0fdc85aacea11dfe`, with a clean worktree before this milestone.
+- Source: the REPLIT-SAFE v2.1 ZIP was found in Git LFS at source commit `15d184b9a9944ff5980f8b987feaac9979106058`. Its Git LFS pointer blob is `a98c7a1e8a2c81b5129cf9557ee471db970e8102`; its SHA-256 is `9095e0bf33fd8f6dfc4ed85263be2a5269c031f5809b925d54cd86f14fb8ca82`, size 88,770,418 bytes, with 522 files.
+- Preserved the source ZIP at `release/VEXFORGE_V21_EMBEDDED_SOURCE/` and added `release/VEXFORGE_V21_SOURCE_MANIFEST.json`; the new ZIP path is covered by Git LFS.
+- The package installer passed its main/clean-tree preflight. All four visual integration files matched the package byte-for-byte; it found 159 matching assets and added none. A full archive comparison verified all 167 packaged mobile assets against `mobile/assets` with no missing or differing files.
+- `mobile/src/components/PackOpeningCeremony.tsx` differs from the package and remains the current-main version. No protected runtime, package, router, economy, authority, Supabase, schema, RPC, RLS, Unity, web-portal or Kivora files were changed.
+- Expo Supabase URL and publishable client key already exist in the shared environment and match the tracked public example. The management PAT was not used as a client key. No Supabase data, schema or RPC was changed.
+- Dependencies: `npm ci --no-audit --no-fund` passed (782 packages). Validation passed: `verify`, `typecheck`, `verify:game-runtime`, `audit:battle` (2,500 runs), `audit:interactive` (500 runs), `audit:economy` (10,000 runs), `audit:economy-policy`, `audit:runtime`, `audit:tier1`, `audit:release`, `audit:final`, and `npx expo-doctor` (18/18).
+- Expo workflow: running; Metro started on port 8000. The `.replit` proxy maps local port 8000 to external port 80. `git diff --check` passed. The authenticated device flow was not exercised.
+- Assets generated: none. Android/APK/AAB build: NOT RUN, as required for this phase.
+- Git at session start: branch `main`; baseline and remote SHA above. Final commit/push equality and clean-tree status are recorded in the handoff after push.
+- Remaining gaps: no authenticated end-to-end PvP acceptance on a signed-in device; native-device acceptance for pack/boss/tutorial/Game Lab remains separate.
+- Exact next milestone: wait for the next user instruction before device-acceptance work or any Android build.
+- BUILD STATUS = NOT RUN.
 
 ## Files changed in the current milestone
 
-- `mobile/app.json`
-- `mobile/docs/BUILD_HANDOFF.md`
+- `.gitattributes`
+- `.replit`
+- `release/VEXFORGE_V21_EMBEDDED_SOURCE/VEXFORGE_MASTER_CONSOLIDATED_2026-10-03_v2.1_REPLIT_SAFE_1791112623806.zip`
+- `release/VEXFORGE_V21_SOURCE_MANIFEST.json`
 - `mobile/docs/REAL_EXPO_REPOSITORY_STATE.md`
 - `mobile/docs/SESSION_CHECKPOINT.md`
-- `mobile/plugins/withCriticalPngAssets.js`
-- `mobile/scripts/verify-android-apk-assets.mjs`
 
 ## Previous milestone — actor rig, timeline tracks, and interactive QA
 
