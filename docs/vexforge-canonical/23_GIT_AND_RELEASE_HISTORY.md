@@ -1,6 +1,10 @@
 # 23 — GIT AND RELEASE HISTORY
 
-## Estado actual
+> HISTORICAL SNAPSHOT (2026-09-17). Branch, SHA, and release statements below
+> describe that audit date only; use the live Git state and current migration
+> documents for present status.
+
+## Estado en la auditoría (2026-09-17)
 
 - Branch: `main`
 - Commit actual: `f43159ecee63b610bb71c295238327ecea3feeb6`
@@ -22,4 +26,6 @@ No APK or deployment was produced by the canonical documentation commit.
 
 ## Unity migration history
 
-No existe todavía commit de proyecto Unity, build Unity, APK Unity, release Unity ni hash Unity. El release Android 249 pertenece al cliente Expo/React Native legado y no prueba Foundation Unity.
+En esa fecha todavía no existían commit de proyecto Unity, build Unity, APK,
+release Unity ni hash Unity. El release Android 249 pertenece al cliente
+Expo/React Native legado y no prueba Foundation Unity.

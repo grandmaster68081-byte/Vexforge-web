@@ -1,32 +1,36 @@
-# VEXFORGE — Expo Game Runtime
+# VEXFORGE — Unity Android Runtime
 
-This repository is currently being advanced as the VEXFORGE Expo/React Native
-game runtime. Expo under `mobile/**` is the only canonical active game runtime.
-The active execution contract is
-`mobile/docs/VEXFORGE_EXPO_REPLIT_CONTINUATION_ORDER_V5.md`.
+Unity under `unity/**` is the only active Android game runtime. The current
+migration order is `VEXFORGE_UNITY_MIGRATION_MASTER_V1`; operational context is
+in `VEXFORGE_CONTEXT.md` and `docs/vexforge-canonical/`.
 
 ## Active scope
 
-- Work only on `mobile/**`, its current Supabase consumers, official mobile
-  card data/art, project-provided VEXFORGE assets, and the 2.5D game runtime.
-- The active scope authority is `mobile/docs/ACTIVE_EXPO_GAME_SCOPE.md`.
-- The repository state and evidence are recorded in
-  `mobile/docs/REAL_EXPO_REPOSITORY_STATE.md`.
-- The current session checkpoint is
-  `mobile/docs/SESSION_CHECKPOINT.md`.
+- Work on `unity/**` as the target runtime; use `mobile/**` only as the
+  behavior reference until Unity parity and removal gates pass.
+- Do not port Expo Router, React Native, Metro, Skia, or gameplay JavaScript
+  into Unity. Reimplement only required behavior in C# and native Unity APIs.
+- Keep Supabase authoritative for identity, ownership, combat, settlement,
+  economy, progress, and rewards.
+- Keep the web portal (`src/**`, `public/**`) frozen; preserve `faucet/**` and
+  its Kivora assets/migrations as a separate product.
+- Do not delete `mobile/**` until all parity, verification, and removal gates
+  pass.
 - The official branch is `main`; every completed milestone must be committed
   and pushed to `origin/main`.
+- Before each milestone: `git fetch --prune origin`; confirm `main`, a clean
+  tree, and `HEAD == origin/main`. Commit and push each completed milestone
+  before beginning the next.
+- Never reset, rebase, merge, cherry-pick, or force-push the official branch.
 - Responses to the user are in Spanish.
 
-Legacy or out of scope for this work:
+Frozen or out of scope:
 
-- `unity/**` — preserved Unity legacy; read-only for new work.
-- `src/**` and `public/**` web portal code
-- historical web/Unity implementations
-- old Expo ZIP releases
-
-Do not use these areas as gameplay or design authorities, and do not build a
-second runtime beside `mobile/**`.
+- `src/**` and `public/**` web portal code.
+- `faucet/**`, Kivora migrations, and its assets.
+- Supabase live schema, RPC, RLS, authentication, and backend rules.
+- Old ZIPs and historical documentation except as evidence when referenced by
+  the migration inventory.
 
 `faucet/**` is the separate Kivora product. Keep it and its migrations/assets
 isolated; do not include them in VEXFORGE work or delete them as part of this
@@ -38,52 +42,56 @@ card rarity is unrelated and must remain intact.
 
 ## Run & verify
 
-From `mobile/`:
+Unity Editor/device validation is not available in this environment. Do not
+claim Unity compilation, Android behavior, or parity without corresponding
+evidence. No APK/AAB build is authorized or required during this migration.
 
-- `npm install` — install the pinned Expo runtime dependencies when needed.
+While Expo source remains, its checks may be used only as reference-source
+checks, not as proof of Unity parity:
+
+- `cd mobile && npm install` — install pinned reference-runtime dependencies
+  only when needed.
 - `npm run verify` — run the repository's static mobile release verifier.
 - `npm run typecheck` — run the mobile TypeScript check.
 - `npm run doctor` — run Expo Doctor.
 
-Do not run EAS preview/production builds, APK/AAB generation, store deployment,
-or production deployment until the user explicitly authorizes the build gate.
+Do not run EAS, APK/AAB generation, store deployment, or production deployment.
 
 ## Runtime stack
 
-- Expo SDK 54.0.37
-- React Native 0.81.5
-- React 19.1.0
-- Expo Router 6.0.24
-- Expo Asset 12.0.13
-- Reanimated 4.1.1 + Worklets 0.5.1
-- Gesture Handler 2.28.0
-- React Native Skia 2.2.12
-- Supabase JS 2.58.0
+- Unity Editor `6000.3.0f1`
+- Android package `com.vexforge.android`
+- C# / Unity runtime under `unity/**`
+- Expo SDK 54 / React Native 0.81.5 are legacy reference-source versions,
+  not the active game runtime.
 
 ## Where things live
 
-- `mobile/app/` — Expo Router screens and navigation.
-- `mobile/src/engine/` — battle presentation and tactical runtime logic.
-- `mobile/src/render/` — battlefield, world, effects, audio and diegetic
-  presentation components.
-- `mobile/src/services/` — Supabase client and repository boundary.
-- `mobile/assets/` — official and project-provided mobile assets.
-- `mobile/scripts/` — mobile static verifiers and audits.
-- `mobile/docs/` — active scope, runtime contracts, audits and checkpoints.
-- `supabase/`, `backend/`, `src/`, `public/`, and `unity/` — historical,
-  legacy, or out-of-scope repository zones for this execution order.
+- `unity/Assets/Scripts/Core/` — app bootstrap, state and navigation.
+- `unity/Assets/Scripts/Backend/` — Supabase client, contracts and repositories.
+- `unity/Assets/Scripts/Presentation/` and `Tier1/` — world, battle, tutorial,
+  audio and other runtime presentation.
+- `unity/Assets/` — Unity scenes and project assets.
+- `mobile/app/`, `mobile/src/`, `mobile/game/`, `mobile/assets/` — migration
+  reference until the removal gate passes.
+- `docs/vexforge-canonical/27_UNITY_EXPO_MIGRATION_INVENTORY.json` — tracked
+  file manifest and per-capability migration decisions.
+- `supabase/`, `backend/` — existing authority/contracts; do not change their
+  behavior for this client migration.
+- `src/`, `public/` — frozen web portal; `faucet/` — separate Kivora product.
 
 ## Architecture decisions
 
 - Supabase remains authoritative for authentication, ownership, combat
   settlement, rewards and economy; presentation must not calculate them.
-- The existing `arena.tsx`, `BattlefieldCanvas`, `BattleEffects`,
-  `battleDirector` and repository boundary are the foundation to extend.
+- Port required Expo behavior into Unity without carrying over the JavaScript
+  engine or duplicating the backend's authority.
 - Official card artwork is canonical and must not be repainted or silently
   replaced by generated art.
 - A local laboratory or training presentation must be labelled as such and
   cannot be promoted to competitive settlement.
-- Quality tiers may change presentation budgets only, never game rules.
+- Quality, animation, audio, haptics, and reduced-motion settings affect
+  presentation only, never game rules.
 - Every bounded milestone receives targeted validation, a checkpoint update,
   a commit and a push to `main`.
 
@@ -96,11 +104,13 @@ or production deployment until the user explicitly authorizes the build gate.
 
 ## Gotchas
 
-- `mobile/README.md` contains historical 1.9.0 wording; the package and app
-  manifests at `1.10.0` are the current release evidence.
-- The current runtime has a deterministic local tactical lab and an
-  authoritative PvP path. Do not describe the lab as server settlement.
+- `SecureSessionStore` contains Android Keystore/AES-GCM code, but Editor/device
+  behavior has not been verified.
+- Unity's pack-reveal component currently plays a visual sequence; it does not
+  by itself prove the Expo pack purchase/opening flow is at parity.
+- Expo's deterministic local tactical lab is not server settlement and must
+  not be ported as the competitive battle resolver.
 - Do not infer live Supabase columns, constraints, functions or grants from
   old migrations; inspect the live contract before changing economy or battle
   consumers.
-- Do not reset, rebase, merge, cherry-pick or force-push the official branch.
+- Never claim `mobile/**` is removable before every documented gate passes.

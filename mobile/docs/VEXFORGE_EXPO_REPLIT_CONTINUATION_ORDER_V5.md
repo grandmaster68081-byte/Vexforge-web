@@ -1,3 +1,8 @@
+> HISTORICAL / SUPERSEDED (2026-10-04). This prior Expo-only continuation
+> order is retained only as behavior/source evidence. Its Unity prohibitions
+> and runtime direction are superseded by `VEXFORGE_CONTEXT.md` and
+> `docs/vexforge-canonical/28_UNITY_EXPO_MIGRATION_GATES.md`.
+
 VEXFORGE — EXPO GAME RUNTIME
 REPLIT AUTONOMOUS CONTINUATION ORDER v5
 MAIN-PERSISTENT / 2.5D TCG-FIRST / NO-DASHBOARD / NO-UNITY / NO-WEB

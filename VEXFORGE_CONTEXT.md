@@ -2,31 +2,34 @@
 
 ## Dirección canónica
 
-**Expo / React Native bajo `mobile/**` es el único runtime activo del
-videojuego.** Unity (`unity/**`) queda como legado preservado y de solo lectura
-para trabajo nuevo. No crear otro runtime junto a Expo.
+**Unity bajo `unity/**` es el único runtime activo del videojuego Android.**
+Expo / React Native (`mobile/**`) es una referencia de comportamiento heredada
+durante la migración y solo se elimina después de superar las gates de paridad.
+No se incorpora un segundo runtime dentro de Unity.
 
 La autoridad para continuar es, en este orden:
 
-1. `mobile/docs/ACTIVE_EXPO_GAME_SCOPE.md`
-2. `mobile/docs/VEXFORGE_EXPO_REPLIT_CONTINUATION_ORDER_V5.md`
-3. `mobile/docs/REAL_EXPO_REPOSITORY_STATE.md`
-4. `mobile/docs/SESSION_CHECKPOINT.md`
-
-Los documentos de `docs/vexforge-canonical/` que describen Unity como activo
-son históricos y están supersedidos por esta dirección y los documentos de
-`mobile/docs/`. El historial se conserva; no es autorización para reactivar
-Unity.
+1. Supabase live para contratos, datos, permisos y autoridad backend.
+2. Código actual de `main` para comportamiento implementado.
+3. Este archivo y `docs/vexforge-canonical/` para dirección operativa.
+4. `docs/vexforge-canonical/27_UNITY_EXPO_MIGRATION_INVENTORY.json` para el
+   inventario y las decisiones por capacidad.
+5. Los documentos Expo/Unity históricos sirven como evidencia, no sustituyen
+   esta dirección.
 
 ## Límites de alcance
 
-- Trabajar en `mobile/**` y sus consumidores actuales de Supabase, contratos y
-  assets oficiales/proporcionados de VEXFORGE.
+- Trabajar en `unity/**` como destino; consultar `mobile/**` como fuente de
+  comportamiento mientras se completa la paridad.
+- No portar Expo Router, React Native, Metro, Skia ni gameplay JavaScript a
+  Unity. Traducir solo comportamientos necesarios a C# y sistemas nativos.
 - Supabase conserva autoridad sobre autenticación, ownership, combate,
   settlement, recompensas y economía. La presentación móvil no calcula esos
   resultados.
-- No cambiar el portal (`src/**`, `public/**`), Unity legado ni contratos live
-  de Supabase como parte del trabajo del runtime Expo.
+- No cambiar contratos live de Supabase para facilitar la migración. Mantener
+  `src/**` y `public/**` como portal congelado y no alterar `faucet/**`.
+- No borrar `mobile/**` hasta que todos los gates de paridad, verificación y
+  seguridad de eliminación pasen.
 - `faucet/**`, sus assets Kivora y las migraciones `*kivora*` son un producto y
   un historial separados; preservarlos y no mezclarlos con VEXFORGE.
 - No se encontraron assets, paquetes ni IDs importados de Epic/Fab. La ruta
@@ -35,17 +38,21 @@ Unity.
 
 ## Estado observado
 
-- El paquete móvil declara Expo SDK `54.0.37`, React Native `0.81.5` y versión
-  `1.10.0`.
-- La base existente incluye navegación Expo y sistemas de presentación de
-  batalla; el checkpoint identifica las brechas de runtime/QA que siguen
-  abiertas.
-- No afirmar que la app tiene build Android, APK/AAB o QA física verificada sin
-  evidencia nueva.
+- Unity declara el editor `6000.3.0f1` y el identificador Android
+  `com.vexforge.android`; la Foundation ya contiene autenticación, estado,
+  repositorio REST/RPC y presentación, pero sigue sin verificación en el Editor
+  y dispositivo.
+- `SecureSessionStore` implementa Android Keystore + AES/GCM en código; todavía
+  requiere validación en el Editor/dispositivo antes de declarar la sesión
+  verificada.
+- Expo contiene comportamiento de referencia adicional; el inventario separa
+  lo ya implementado en Unity de lo que aún debe portarse o verificarse.
+- No afirmar build Android, APK/AAB ni QA física sin evidencia nueva.
 
 ## Flujo
 
-Trabajar sobre la rama oficial `main`, comprobar su estado antes de continuar y
-persistir hitos completos en `origin/main`. Usar las verificaciones móviles
-documentadas en `replit.md`; no iniciar builds EAS/Android ni despliegues sin
-la autorización explícita del gate.
+Trabajar sobre `main`. Antes de cada hito, hacer `git fetch --prune origin`,
+confirmar rama `main`, árbol limpio y `HEAD == origin/main`; después de cerrar
+un hito, hacer commit y push antes del siguiente. No resetear, rebasar, mezclar,
+cherry-pick ni hacer force-push. No generar APK/AAB ni iniciar builds Android
+durante esta migración salvo autorización explícita de ese gate.

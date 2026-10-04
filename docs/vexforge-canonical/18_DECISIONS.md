@@ -1,5 +1,19 @@
 # 18 — DECISIONS
 
+## D-010 — Runtime Unity único (decisión vigente)
+
+- DATE: 2026-10-04
+- DECISION: Unity bajo `unity/**` es el único runtime Android activo; Expo bajo
+  `mobile/**` es referencia de comportamiento y se retira solo tras paridad.
+- SCOPE: runtime, implementación del cliente y documentación operativa.
+- WHY: instrucción más reciente del propietario y paquete de migración Unity
+  suministrado, organizado en 12 hitos.
+- EVIDENCE: `VEXFORGE_CONTEXT.md`, paquete de migración aportado por el usuario
+  y `27_UNITY_EXPO_MIGRATION_INVENTORY.json`.
+- STATUS: ACTIVE
+- SUPERSEDES: cualquier estado anterior que declaraba Expo runtime único o
+  Unity legado/read-only.
+
 ## D-001
 
 - DATE: 2026-09-17
@@ -107,9 +121,9 @@
 - RULES: mantener los modos dentro del workflow canónico; no crear otro workflow de build; no dispatch sin autorización explícita; no guardar credenciales en el repositorio.
 - SUPERSEDES: la afirmación anterior de Unity Cloud Build como infraestructura operativa activa.
 
-## 2026-09-30 — EXPO COMO ÚNICO RUNTIME ACTIVO (DIRECTIVA DEL PROPIETARIO)
+## HISTÓRICO / SUPERSEDIDO — 2026-09-30 — EXPO COMO ÚNICO RUNTIME ACTIVO
 
-- **DECISIÓN:** Expo / React Native bajo `mobile/**` es el único runtime activo para trabajo nuevo del videojuego.
+- **DECISIÓN EN ESA FECHA:** Expo / React Native bajo `mobile/**` era el único runtime activo para trabajo nuevo del videojuego.
 - **LEGADO:** Unity (`unity/**`) y las demás implementaciones cliente quedan fuera del trabajo activo y se preservan intactas. La web existente no se reconstruye ni se modifica por esta decisión.
 - **AUTORIDAD:** esta directiva explícita resuelve la contradicción con los documentos anteriores de `main` que declaraban Unity activo.
 - **ESTADO:** decisión de runtime registrada; no prueba que Expo compile, que exista pipeline Expo Android vigente ni que haya QA física.
@@ -117,10 +131,11 @@
 - **CONTINUIDAD:** usar `VEXFORGE_CONTEXT.md` y los documentos operativos de
   `mobile/docs/`; revalidar `main` antes de implementar.
 
-## Estado de decisiones
+## Estado de decisiones vigente
 
-La decisión Expo registrada arriba es la vigente. Las decisiones posteriores
-de este archivo que propusieron Unity como runtime o Fab como proveedor quedan
-retiradas y no autorizan compras, imports, builds ni trabajo en Unity. El
-registro se conserva como historial; la dirección operativa está en
-`VEXFORGE_CONTEXT.md` y `mobile/docs/ACTIVE_EXPO_GAME_SCOPE.md`.
+D-010, fechado 2026-10-04, establece Unity bajo `unity/**` como el único runtime
+Android activo. Expo bajo `mobile/**` permanece como referencia de comportamiento
+hasta superar todas las gates de paridad, seguridad y retirada. La dirección
+operativa está en `VEXFORGE_CONTEXT.md`, `replit.md` y
+`docs/vexforge-canonical/28_UNITY_EXPO_MIGRATION_GATES.md`. La retirada de
+Epic/Fab se mantiene vigente.

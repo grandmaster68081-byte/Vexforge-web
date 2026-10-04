@@ -1,5 +1,9 @@
 # VEXFORGE CURRENT STATE
 
+> HISTORICAL AUDIT SNAPSHOT (2026-09-23). The runtime directive recorded below
+> was superseded on 2026-10-04: Unity is the sole active Android runtime and
+> Expo is retained only as a migration reference. See `VEXFORGE_CONTEXT.md`.
+
 Audit entry point for continuity. All facts are tagged by source class.
 
 ## Identity

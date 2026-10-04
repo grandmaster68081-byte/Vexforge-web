@@ -1,6 +1,13 @@
-# VEXFORGE · Expo Game Runtime 1.9.0
+# VEXFORGE · Expo Game Runtime 1.9.0 (Historical Reference)
 
-This directory is the official implementation source for the VEXFORGE Expo mobile game runtime 1.9.0. It is assembled so the target Replit environment copies and builds it rather than inventing missing scenes, effects, gameplay presentation or economic behavior.
+> HISTORICAL / MIGRATION REFERENCE (2026-10-04). This directory is not the
+> active Android runtime. Expo behavior is retained for Unity parity work only.
+> Follow `../VEXFORGE_CONTEXT.md`; do not use these build instructions to
+> generate an APK/AAB during the Unity migration.
+
+This directory contains the Expo 1.9.0 reference implementation used to compare
+behavior during the Unity migration. It is not the active Android runtime and
+its build instructions below do not authorize APK/AAB generation.
 
 ## Release identity
 
@@ -65,7 +72,8 @@ Then test the APK on a physical Android device before production AAB.
 - Do not invent Supabase RPCs or payload contracts.
 - Do not move settlement, ownership, rewards, pack odds or wallet balances into local code.
 - Do not repaint or fabricate official card artwork.
-- Do not restore the discarded Unity runtime.
+- Unity was retired when this Expo release was documented; the current runtime
+  direction is Unity, as defined in `../VEXFORGE_CONTEXT.md`.
 - Do not use historical/superseded lore as live runtime data.
 - Do not turn the Arena into a dashboard.
 

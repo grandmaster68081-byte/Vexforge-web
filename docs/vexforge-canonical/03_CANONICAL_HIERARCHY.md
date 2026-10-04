@@ -4,7 +4,9 @@
 2. **Código actual de `main`**: entry points, rutas, componentes, cliente ejecutado, consumers, assets, build y comportamiento implementado.
 3. **`VEXFORGE_CONTEXT.md`**: punto de entrada persistente.
 4. **`docs/vexforge-canonical/**`**: mapa y reconciliación detallados.
-5. **Documentación histórica**: evidencia contextual; no autoridad si contradice evidencia actual.
+5. **`docs/vexforge-canonical/27_UNITY_EXPO_MIGRATION_INVENTORY.json`**:
+   decisiones por capacidad y rutas inspeccionadas para la migración.
+6. **Documentación histórica**: evidencia contextual; no autoridad si contradice evidencia actual.
 
 ## Resolución de la discrepancia web/Android
 
@@ -22,5 +24,6 @@ No se eliminan fuentes antiguas: se clasifican y se enlazan.
   existente.
 - Decisión de producto/runtime: Unity es el runtime Android activo y `unity/**`
   es la fuente canónica.
-- Expo / React Native en `mobile/**` es `LEGACY / HISTORICAL`; no se describe
-  como runtime activo ni se le añade trabajo nuevo.
+- Expo / React Native en `mobile/**` es la referencia heredada para paridad;
+  no se describe como runtime activo. Solo se elimina tras superar las gates
+  de paridad y seguridad de eliminación.

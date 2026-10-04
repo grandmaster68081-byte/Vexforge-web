@@ -1,24 +1,36 @@
 # 25 — CONTINUITY CHANGELOG
 
-## HISTÓRICO — PROPUESTA VISUAL UNITY/FAB RETIRADA (2026-09-30)
+## 2026-10-04 — UNITY COMO RUNTIME ÚNICO / HITO 01
 
-- Esta propuesta fue supersedida por la decisión del propietario de mantener
-  Expo/React Native en `mobile/**` como único runtime activo.
-- Unity queda preservado como legado y la adquisición/importación de Fab se
-  retiró. La auditoría no encontró contenido Fab en el repositorio.
-- La hoja de trabajo de este registro ya no es una ruta activa; consultar
-  `mobile/docs/ACTIVE_EXPO_GAME_SCOPE.md`.
+- **DECISIÓN:** Unity bajo `unity/**` es el único runtime Android activo; Expo
+  bajo `mobile/**` queda como referencia de comportamiento hasta superar las
+  gates de paridad y retirada.
+- **PROGRESO:** se registraron el inventario por capacidad y las gates de
+  verificación; Unity Editor y dispositivo siguen sin verificar.
+- **LÍMITES:** no borrar `mobile/**`, no modificar Supabase live y no generar
+  APK/AAB durante la migración. El hito debe quedar committed y pushed en `main`
+  antes de comenzar el siguiente.
 
 ---
 
-## 2026-09-30 — ROADMAP COMPETITIVO Y RUNTIME EXPO CONFIRMADO
+## HISTÓRICO — PROPUESTA VISUAL UNITY/FAB RETIRADA (2026-09-30)
 
-- **DECISIÓN:** Expo / React Native (`mobile/**`) es el único runtime activo del videojuego por instrucción explícita del propietario; Unity y demás clientes se preservan como legado.
+- La propuesta Unity/Fab fue retirada en esa fecha. Unity quedó reactivado como
+  runtime Android el 2026-10-04; la adquisición/importación de Fab sigue retirada.
+- La auditoría no encontró contenido Fab en el repositorio.
+- Este registro es histórico; consultar `VEXFORGE_CONTEXT.md` y las gates
+  actuales para la ruta operativa.
+
+---
+
+## HISTÓRICO / SUPERSEDIDO — 2026-09-30 — ROADMAP COMPETITIVO Y RUNTIME EXPO
+
+- **DECISIÓN EN ESA FECHA:** Expo / React Native (`mobile/**`) era el único runtime activo del videojuego; Unity y demás clientes se preservaban como legado.
 - **PLAN:** `docs/vexforge-canonical/30_TIER1_COMPETITIVE_GAME_ROADMAP.md` fija gates, riesgos, Definition of Done y próximo bloque G0.
 - **BASE:** `main` SHA `02e4cec401230184f7a0de07a12cbc369dd5674a` antes del commit documental.
 - **SUPABASE:** inspección read-only; proyecto `ACTIVE_HEALTHY`; score Tier 1 observado `38.30`, `tier1_ready=false`, 10 dimensiones debajo del mínimo. No hubo escrituras ni migrations.
 - **LÍMITES:** sin código de gameplay, build, APK, despliegue, dispatch de workflows ni mutaciones de Supabase. El plan no afirma Expo buildable ni QA física.
-- **NEXT:** iniciar sólo G0 después de revalidar el `main` más reciente, el pipeline Expo real, reglas canónicas y contratos vivos de batalla.
+- **NEXT HISTÓRICO:** G0 debía revalidar el `main`, el pipeline Expo, las reglas y los contratos de batalla. Esta ruta quedó supersedida por la migración a Unity.
 
 ---
 

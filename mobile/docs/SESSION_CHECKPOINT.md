@@ -1,5 +1,10 @@
 # VEXFORGE Session Checkpoint
 
+> HISTORICAL / SUPERSEDED (2026-10-04). This checkpoint records an Expo-only
+> milestone. It is not a continuation order; Expo is now the migration
+> reference, and Unity is the sole Android runtime. See `VEXFORGE_CONTEXT.md`
+> and `docs/vexforge-canonical/28_UNITY_EXPO_MIGRATION_GATES.md`.
+
 Date: 2026-10-04
 Execution contract: `mobile/docs/VEXFORGE_EXPO_REPLIT_CONTINUATION_ORDER_V5.md`
 

@@ -1,5 +1,9 @@
 # VEXFORGE 1.9 — Active Document Order
 
+> HISTORICAL / SUPERSEDED (2026-10-04). This order applied to the Expo 1.9
+> package; it is retained for behavior/source review, not current runtime work.
+> Follow `VEXFORGE_CONTEXT.md`.
+
 When documents in this package conflict, use this order:
 
 1. `BUILD_MANIFEST.json`

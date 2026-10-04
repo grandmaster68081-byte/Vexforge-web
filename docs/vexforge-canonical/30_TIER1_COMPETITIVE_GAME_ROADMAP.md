@@ -1,11 +1,10 @@
 # 30 — ROADMAP COMPETITIVO HISTÓRICO
 
-> **Aviso de vigencia:** este roadmap conserva contexto histórico. Expo/React
-> Native en `mobile/**` es el único runtime activo; Unity es legado y la ruta
-> Epic/Fab fue retirada. No usar este documento para reactivar otro cliente.
-> Las autoridades actuales son `mobile/docs/ACTIVE_EXPO_GAME_SCOPE.md`,
-> `mobile/docs/VEXFORGE_EXPO_REPLIT_CONTINUATION_ORDER_V5.md` y
-> `mobile/docs/SESSION_CHECKPOINT.md`.
+> **HISTÓRICO / SUPERSEDIDO (2026-10-04):** este roadmap conserva requisitos
+> competitivos y contexto, pero su selección Expo-only quedó supersedida.
+> Unity es ahora el único runtime Android; no seguir sus instrucciones de
+> runtime/alcance si contradicen `VEXFORGE_CONTEXT.md` o las gates actuales.
+> La retirada de Epic/Fab se mantiene vigente.
 
 ---
 

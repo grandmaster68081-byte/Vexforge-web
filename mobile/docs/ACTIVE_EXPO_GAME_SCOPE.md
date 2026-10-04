@@ -1,7 +1,12 @@
 # VEXFORGE Active Expo Game Scope
 
-Status: active  
-Authority: `mobile/docs/VEXFORGE_EXPO_REPLIT_CONTINUATION_ORDER_V5.md`
+> HISTORICAL / SUPERSEDED (2026-10-04). This file records the prior Expo-only
+> execution direction. It is retained as behavior/source evidence only.
+> Current runtime authority: `VEXFORGE_CONTEXT.md` and
+> `docs/vexforge-canonical/28_UNITY_EXPO_MIGRATION_GATES.md`.
+
+Status: HISTORICAL / SUPERSEDED
+Authority: none for current runtime work
 
 ## Active
 

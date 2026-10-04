@@ -7,7 +7,6 @@
 - [GitHub REST large-file commits](github-rest-large-files.md) — stream base64 JSON for large blobs; passing file content as a jq argument exceeds the shell argument limit.
 - [Replit config side effects](replit-config-side-effects.md) — Python tooling and Expo exports can add unrelated modules or port mappings; compare against tracked config before publishing.
 - [Portable TypeScript verification](typescript-verification.md) — syntax checks must resolve project-local TypeScript before environment-specific global paths.
-- [Canonical runtime continuity](canonical-runtime-continuity.md) — Expo is the active game runtime; Unity is preserved legacy and Epic/Fab sourcing is retired.
 - [GitHub Actions checkpoint storage](github-actions-checkpoint-storage.md) — retain only the live shader-chain head; exclude downloaded/uploaded payloads from evidence and retire consumed predecessors.
 - [Kivora migration sequencing](kivora-migration-sequencing.md) — every Supabase migration filename needs a unique, dependency-ordered timestamp.
 - [Kivora package constraints](kivora-package-constraints.md) — the supplied package needs an available Workers Types v5 line and lockfile-free npm install in CI.

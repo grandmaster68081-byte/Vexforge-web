@@ -1,20 +1,20 @@
 # 21 — CONTRADICTIONS (HISTORIAL)
 
-## Resolución vigente — Expo canónico
+## Resolución vigente — Unity canónico (2026-10-04)
 
-Expo / React Native en `mobile/**` es el único runtime activo del videojuego.
-Unity (`unity/**`) se conserva como legado, sin trabajo nuevo. La ruta
-Epic/Fab está retirada; no se encontraron assets importados de ese proveedor.
+Unity bajo `unity/**` es el único runtime Android activo. Expo / React Native
+en `mobile/**` queda como referencia de comportamiento hasta superar paridad y
+seguridad de eliminación. La autoridad de backend permanece en Supabase; el
+portal web sigue congelado y `faucet/**` queda separado.
 
-Esta decisión sustituye las reconciliaciones Unity/Fab anteriores de este
-archivo y de `CONTINUITY.md`. Los registros históricos que siguen sirven para
-auditoría, no como instrucciones de runtime. La fuente operativa es
-`mobile/docs/ACTIVE_EXPO_GAME_SCOPE.md` y
-`mobile/docs/VEXFORGE_EXPO_REPLIT_CONTINUATION_ORDER_V5.md`.
+Esta decisión supersede las instrucciones Expo-only anteriores de este
+archivo y de `mobile/docs/**`. La fuente operativa es `VEXFORGE_CONTEXT.md`,
+`replit.md`, `docs/vexforge-canonical/16_IMPLEMENTATION_STATUS.md` y las
+gates `28_UNITY_EXPO_MIGRATION_GATES.md`.
 
-## Historial de resoluciones anteriores (no vigente para este bloque)
+## Resoluciones históricas supersedidas (solo auditoría)
 
-## Resolución histórica — 2026-09-30
+## Resolución histórica supersedida — Expo canónico (2026-09-30)
 
 El propietario resolvió explícitamente el runtime activo: Expo / React Native en `mobile/**` es el único runtime de juego para trabajo nuevo. Unity y los demás clientes quedan como legado, preservados e intactos. Esta instrucción sustituye los estados históricos de Unity activo en `main`; no certifica que Expo compile ni autoriza a cambiar Supabase.
 

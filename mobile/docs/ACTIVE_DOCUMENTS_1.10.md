@@ -1,6 +1,10 @@
 # VEXFORGE — Active Runtime Documents 1.10
 
-This file is the runtime document order for the final Expo 1.10 package.
+> HISTORICAL / SUPERSEDED (2026-10-04). This document order applied to the
+> Expo 1.10 package and is retained as migration reference only. Current
+> runtime authority is `VEXFORGE_CONTEXT.md`.
+
+This file is the historical runtime document order for the Expo 1.10 package.
 
 ## Authority order
 

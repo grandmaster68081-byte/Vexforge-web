@@ -22,8 +22,13 @@ Los registros de `data/` son resúmenes derivados de evidencia observada. No sus
 
 ## Runtime decision
 
-Expo / React Native es el runtime Android activo. React Native es la capa de
-aplicación/UI; Reanimated + Worklets + Gesture Handler cubren movimiento e
-interacción; Skia queda reservada para una futura capa de rendering 2D/2.5D.
-Supabase conserva toda autoridad de datos y reglas. Unity es
-`RETIRED / HISTORICAL` y no forma parte del runtime ni del build activo.
+Unity Android bajo `unity/**` es el único runtime activo. Expo / React Native
+en `mobile/**` se conserva solo como referencia de comportamiento hasta superar
+las gates de paridad y eliminación; no es un segundo runtime ni puede borrarse
+antes de esas gates. Supabase conserva autoridad de datos y reglas. El portal
+web sigue congelado y `faucet/**` es un producto separado.
+
+El inventario machine-readable está en
+[`27_UNITY_EXPO_MIGRATION_INVENTORY.json`](27_UNITY_EXPO_MIGRATION_INVENTORY.json);
+las condiciones de validación y retirada están en
+[`28_UNITY_EXPO_MIGRATION_GATES.md`](28_UNITY_EXPO_MIGRATION_GATES.md).

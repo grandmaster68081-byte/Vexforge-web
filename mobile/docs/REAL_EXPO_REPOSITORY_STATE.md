@@ -1,5 +1,9 @@
 # Real Expo Repository State
 
+> HISTORICAL SOURCE SNAPSHOT (2026-10-04), not active runtime authority.
+> `mobile/**` is retained only as a behavior reference until Unity parity and
+> removal gates pass. Follow `VEXFORGE_CONTEXT.md` for current direction.
+
 Evidence date: 2026-10-04
 Source branch: `main`  
 Source repository: `https://github.com/grandmaster68081-byte/Vexforge-web.git`

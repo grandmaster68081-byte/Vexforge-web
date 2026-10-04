@@ -1,31 +1,32 @@
-# 17 — CURRENT BLOCK (EXPO CANÓNICO)
+# 17 — CURRENT BLOCK (UNITY CANÓNICO)
 
 ## Bloque activo
 
-Continuidad del runtime Expo/React Native en `mobile/**`. La fuente del próximo
-hito es `mobile/docs/SESSION_CHECKPOINT.md`; no existe un bloque Unity/Fab
-activo.
+Migración del cliente Android Expo heredado a Unity como runtime único. El
+Hito 01 reconcilia autoridad operativa e inventaría capacidades; el siguiente
+hito continúa sobre Unity con `mobile/**` solo como referencia de paridad.
 
 ## Estado del runtime
 
-- Expo SDK `54.0.37`; React Native `0.81.5`; paquete `1.10.0`.
-- Se mantienen navegación, consumidores Supabase, presentación de batalla,
-  replay y laboratorio táctico existentes.
-- El runtime 2.5D unificado y varias pruebas de aceptación siguen pendientes;
-  consultar `mobile/docs/REAL_EXPO_REPOSITORY_STATE.md`.
-- Unity es legado preservado. No iniciar sus builds ni workflows para este
-  bloque.
+- Unity Foundation tiene bootstrap, auth/sesión, repositorio, estado, UI y
+  presentación implementados en distinto grado; Editor y dispositivo no están
+  verificados.
+- El inventario de fuente y las decisiones por capacidad están en
+  `27_UNITY_EXPO_MIGRATION_INVENTORY.json`.
+- Replay, ceremonia de packs, UX completa, háptica, movimiento reducido y
+  varias superficies requieren port/paridad.
 - No se encontraron assets Epic/Fab importados; esa ruta se retiró.
-- No se escribieron datos de Supabase. Cualquier cambio de backend requiere
-  verificar el contrato live y autorización específica.
+- Supabase live no se modifica como parte del cliente. No se escribieron datos
+  de Supabase.
 
 ## Siguiente unidad
 
-1. Ejecutar el verificador móvil y la auditoría de dependencias/compatibilidad.
-2. Implementar el núcleo mínimo de runtime dentro de `mobile/**`.
-3. Preservar la frontera de autoridad de Supabase.
-4. Actualizar el checkpoint, verificar el cambio, y completar el hito en
-   `main`.
+1. El inventario y la reconciliación documental de Hito 01 deben quedar en
+   `main` mediante commit y push antes de iniciar otro hito.
+2. Antes del siguiente hito, hacer `git fetch --prune origin` y confirmar
+   `main`, árbol limpio y `HEAD == origin/main`.
+3. Portar solo capacidades verificables a Unity, reutilizando los contratos
+   existentes y preservando la autoridad de Supabase.
+4. Mantener `mobile/**` hasta superar todas las gates de paridad y eliminación.
 
-No generar APK/AAB, iniciar builds EAS/producción ni modificar datos live sin
-autorización explícita.
+No generar APK/AAB ni modificar datos live durante esta migración.

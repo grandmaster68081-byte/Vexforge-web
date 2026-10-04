@@ -1,31 +1,31 @@
-## 2026-09-30 — AUTORIDAD ACTUAL: EXPO / UNITY LEGACY / FAB RETIRADO
+## 2026-10-04 — AUTORIDAD ACTUAL: UNITY / PARIDAD EXPO / FAB RETIRADO
 
-- **RUNTIME CANÓNICO:** Expo / React Native bajo `mobile/**` es el único
-  runtime activo del videojuego.
-- **UNITY:** `unity/**` se conserva como legado; no es destino de trabajo ni
-  build nuevo.
+- **RUNTIME CANÓNICO:** Unity bajo `unity/**` es el único runtime Android activo.
+- **EXPO:** `mobile/**` queda como referencia de comportamiento hasta superar
+  paridad, seguridad y gates de retirada.
 - **EPIC/FAB:** la ruta de adquisición/importación está retirada. La auditoría
   no encontró assets Epic/Fab ni IDs de listings.
-- **AUTORIDAD:** `mobile/docs/ACTIVE_EXPO_GAME_SCOPE.md`,
-  `mobile/docs/VEXFORGE_EXPO_REPLIT_CONTINUATION_ORDER_V5.md`,
-  `mobile/docs/REAL_EXPO_REPOSITORY_STATE.md` y
-  `mobile/docs/SESSION_CHECKPOINT.md`.
+- **AUTORIDAD:** `VEXFORGE_CONTEXT.md`, `replit.md`,
+  `docs/vexforge-canonical/16_IMPLEMENTATION_STATUS.md` y
+  `docs/vexforge-canonical/28_UNITY_EXPO_MIGRATION_GATES.md`.
 - **DATOS:** no se borraron ni modificaron archivos Unity, productos Kivora,
   migraciones o datos live de Supabase.
-- **NEXT:** seguir el hito indicado por `mobile/docs/SESSION_CHECKPOINT.md`.
+- **HITO 01:** inventario registrado; Editor, dispositivo, paridad y seguridad
+  siguen sin verificar. `mobile/**` no se elimina; no generar APK/AAB.
+- **NEXT:** cerrar el hito documental en `main` antes de iniciar el siguiente.
 
 ---
 
 ## HISTÓRICO — 2026-09-30 — VEXFORGE VISUAL PRODUCTION ROUTE LOCKED
 
 - **ESTADO:** este registro conserva una propuesta anterior, supersedida por la
-  autoridad Expo vigente al inicio del archivo.
+  decisión Unity del 2026-10-04. La retirada de Epic/Fab sigue vigente.
 - **RUTA ANTERIOR:** Unity 6.3.0f1 + URP 17.3.0 y posible adquisición Fab; no es
   una instrucción actual ni autoriza trabajo, compras o imports.
 - **BASE AUDIT:** el escenario ya reacciona a eventos, pero está armado en parte con primitivas/fallbacks; existe workflow Android con timeout de 360 min, inventario cercano a 287k y `normal/final` sin límite de variantes.
 - **RESULTADO:** recomendación y plan documental; sin gameplay, assets, CI, Supabase ni builds modificados.
-- **NEXT HISTÓRICO:** V0 de esa propuesta queda obsoleto; seguir el hito Expo
-  del checkpoint actual.
+- **NEXT HISTÓRICO:** V0 de esa propuesta quedó obsoleto; no usar como guía del
+  runtime actual.
 
 ---
 
@@ -81,7 +81,7 @@
 
 ---
 
-## 2026-09-25 — CANONICAL ACCESS RECONCILIATION
+## HISTÓRICO — 2026-09-25 — CANONICAL ACCESS RECONCILIATION
 
 - **SOURCE:** `main` del repositorio `grandmaster68081-byte/Vexforge-web`; se sincronizó contra `origin/main` antes de inspeccionar o modificar.
 - **RUNTIME:** Unity Android en `unity/**` es el único runtime activo. Expo/React Native en `mobile/**` queda preservado como legado, respaldo y referencia; no se usa como runtime activo.

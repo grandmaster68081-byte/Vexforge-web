@@ -2,22 +2,27 @@
 
 ## Autoridad actual
 
-El runtime canónico del videojuego es **Expo / React Native en `mobile/**`**.
-Usa estos documentos como autoridad operativa:
+El único runtime Android activo del videojuego es **Unity en `unity/**`**.
+Expo / React Native en `mobile/**` se conserva como referencia de
+comportamiento hasta superar las gates de paridad y retirada. La autoridad
+operativa está en:
 
-1. `mobile/docs/ACTIVE_EXPO_GAME_SCOPE.md`
-2. `mobile/docs/VEXFORGE_EXPO_REPLIT_CONTINUATION_ORDER_V5.md`
-3. `mobile/docs/REAL_EXPO_REPOSITORY_STATE.md`
-4. `mobile/docs/SESSION_CHECKPOINT.md`
+1. `VEXFORGE_CONTEXT.md`
+2. `replit.md`
+3. `docs/vexforge-canonical/16_IMPLEMENTATION_STATUS.md`
+4. `docs/vexforge-canonical/17_CURRENT_BLOCK.md`
+5. `docs/vexforge-canonical/27_UNITY_EXPO_MIGRATION_INVENTORY.json`
+6. `docs/vexforge-canonical/28_UNITY_EXPO_MIGRATION_GATES.md`
 
-El estado de Expo es el del código y la evidencia registrados allí; no implica
-que exista una build Android, APK/AAB o QA física verificada.
+La implementación Unity sigue sin verificación en Editor y dispositivo. No se
+genera APK/AAB durante esta migración.
 
 ## Clasificación de los árboles
 
-- `mobile/**` — runtime activo de VEXFORGE.
-- `unity/**` — runtime Unity legado, conservado como referencia/rollback; no es
-  destino de trabajo nuevo.
+- `unity/**` — runtime Android activo de VEXFORGE, pendiente de verificación
+  en Editor y dispositivo.
+- `mobile/**` — referencia de comportamiento para paridad; no se elimina hasta
+  cerrar todas las gates de retirada.
 - `src/**` y `public/**` — portal web VEXFORGE histórico, fuera del runtime del
   juego.
 - `faucet/**` — producto Kivora independiente, fuera del alcance de VEXFORGE.
@@ -30,9 +35,10 @@ No se encontró contenido importado de Epic/Fab ni identificadores de listings.
 La adquisición de Fab no forma parte de la ruta actual. La rareza de carta
 `epic` es terminología del juego y no contenido de Epic Games/Fab.
 
-## Ejecutar y verificar Expo
+## Referencia Expo
 
-Desde `mobile/`:
+Desde `mobile/`, los siguientes comandos sólo verifican la referencia Expo; no
+demuestran paridad Unity:
 
 - `npm install`
 - `npm run dev`
@@ -40,5 +46,4 @@ Desde `mobile/`:
 - `npm run typecheck`
 - `npm run doctor`
 
-No iniciar EAS, APK/AAB, despliegues ni builds de producción sin autorización
-explícita del gate correspondiente.
+No generar APK/AAB ni iniciar despliegues durante esta migración.

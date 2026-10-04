@@ -1,5 +1,8 @@
 # VEXFORGE · FINAL RECONSTRUCTION STATUS
 
+> HISTORICAL SOURCE SNAPSHOT (2026-09-29). This describes the Expo runtime at
+> that time and is not current Unity parity or device-verification evidence.
+
 Date: 2026-09-29
 
 ## Product state

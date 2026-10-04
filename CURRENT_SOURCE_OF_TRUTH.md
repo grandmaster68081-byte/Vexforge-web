@@ -3,6 +3,14 @@
 ## Authority
 V5.6 is the sole current visual implementation authority in this package. All V5.1–V5.4 visual documents are historical context only.
 
+## Runtime authority and migration boundary
+
+- Unity Android under `unity/**` is the only active game runtime.
+- Expo / React Native under `mobile/**` is a legacy behavior reference until the Unity parity gates pass; delete it only after the documented removal gate passes.
+- The web portal under `src/**` and `public/**` is frozen and is not a game runtime.
+- Supabase live remains authoritative for authentication, ownership, combat, economy, progress, and rewards.
+- Never embed a second JavaScript runtime, React Native, Expo, Metro, or a WebView inside Unity.
+
 ## Non-negotiable visual source rule
 **Supabase Storage may be consumed by the public portal for official VEXFORGE card artwork only.**
 No platform hero, environment, faction background, footer art, media background, support art, news art, download art, mobile art or decorative image may be read from the current non-card Storage directories.
@@ -27,7 +35,7 @@ The portal is the visual front gate to VEXFORGE. It must feel like entering an o
 Official card records and official card image URLs remain canonical. Do not generate, repaint, alter or replace official VEXFORGE card artwork.
 
 ## Technical law
-Do not modify Supabase schema/RPC/auth contracts, public card filtering rules, player-state logic, existing routes, or unrelated backend/game logic.
+Do not modify Supabase schema/RPC/auth contracts, public card filtering rules, the frozen web portal, or unrelated products. Unity client behavior may be extended from Expo only through the existing backend contracts; never move authoritative state or rules into the client.
 
 ## Required final generation workflow
 1. Keep the supplied reference images inside `public/art/references/`.
