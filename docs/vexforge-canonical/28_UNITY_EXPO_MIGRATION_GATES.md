@@ -18,7 +18,7 @@
 | Gate | Status | Completion evidence |
 |---|---|---|
 | Authority reconciliation and source inventory | RECORDED | `VEXFORGE_CONTEXT.md`, `replit.md`, `16_IMPLEMENTATION_STATUS.md`, and `27_UNITY_EXPO_MIGRATION_INVENTORY.json`; commit and push the milestone before beginning another |
-| Auth/session parity and secure storage | OPEN | Email sign-up with confirmation handling, sign-in, restore, and remote/local sign-out are implemented in source; verify end-to-end and Android Keystore/AES-GCM lifecycle in Unity Editor/device; live project requires email confirmation and has external providers disabled |
+| Auth/session parity and secure storage | OPEN | Email sign-up with confirmation handling, sign-in, restored-session player-state refresh, and remote/local sign-out are implemented in source; verify end-to-end and Android Keystore/AES-GCM lifecycle in Unity Editor/device; live project requires email confirmation and has external providers disabled |
 | Navigation, tutorial, and player state | OPEN | Route-by-route matrix with entry, loading, empty, error, and return behavior |
 | Collection, card detail, deck, and formation | OPEN | Compare filters, ownership, validation, and mutation results against existing backend contracts |
 | Competitive battle and replay | OPEN | Prove results/events are server-derived; verify event ordering, replay/skip behavior, and no local settlement |

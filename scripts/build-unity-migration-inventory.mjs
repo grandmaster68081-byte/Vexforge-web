@@ -73,6 +73,7 @@ const capabilities = [
       { path: "mobile/src/app/GameProvider.tsx", behavior: "Expo observes session state and persists tutorial/quality preferences." },
       { path: "unity/Assets/Scripts/Backend/SupabaseAuthService.cs", behavior: "Unity implements email sign-in/sign-up, confirmation-required handling, refresh/restore, and remote sign-out with local cleanup." },
       { path: "unity/Assets/Scripts/Session/SessionService.cs", behavior: "Unity exposes generic player-facing auth feedback and an explicit email-confirmation state." },
+      { path: "unity/Assets/Scripts/Core/VexforgeApp.cs", behavior: "Unity refreshes the player snapshot after restoring a persisted session." },
       { path: "unity/Assets/Scripts/UI/GameShellController.cs", behavior: "Unity provides sign-in and account-creation actions." },
       { path: "unity/Assets/Scripts/Session/SecureSessionStore.cs", behavior: "Unity code uses Android Keystore-backed AES/GCM session storage; device behavior is unverified." },
     ],

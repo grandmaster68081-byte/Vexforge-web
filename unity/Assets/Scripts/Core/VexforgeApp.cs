@@ -79,7 +79,9 @@ namespace Vexforge.Core
                 return;
             }
 
-            await Session.RestoreAsync();
+            var restored = await Session.RestoreAsync();
+            if (restored)
+                await GameState.RefreshAsync();
             Navigation.Navigate(GameRoute.Nexus);
             IsInitialized = true;
             AppLogger.Info("Foundation inicializada; esperando sesión autenticada.");

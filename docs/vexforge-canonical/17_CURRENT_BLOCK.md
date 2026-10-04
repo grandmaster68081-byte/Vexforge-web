@@ -5,8 +5,9 @@
 Migración del cliente Android Expo heredado a Unity como runtime único. Los
 Hitos 01 y 02 ya están publicados. El Hito 03 añadió alta por email con estado
 de confirmación, mantuvo inicio/restauración y añadió invalidación remota al
-cierre de sesión. Su comportamiento sigue sin verificarse en Unity Editor o
-dispositivo. El siguiente es el Hito 04: colección, formación y tutorial.
+cierre de sesión. Restaurar una sesión también recarga el estado del jugador.
+Su comportamiento sigue sin verificarse en Unity Editor o dispositivo. El
+siguiente es el Hito 04: colección, formación y tutorial.
 
 ## Estado del runtime
 

@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-10-04T18:55:27.238Z",
-  "baselineCommit": "764a000b23d30a9df19600297c87704eaa148295",
+  "generatedAt": "2026-10-04T18:58:00.911Z",
+  "baselineCommit": "75fd645e564727b327219b4a2b629b1f83da5342",
   "classificationValues": [
     "KEEP_UNITY",
     "EXTEND_UNITY_WITH_EXPO_CAPABILITY",
@@ -1022,6 +1022,10 @@
         {
           "path": "unity/Assets/Scripts/Session/SessionService.cs",
           "behavior": "Unity exposes generic player-facing auth feedback and an explicit email-confirmation state."
+        },
+        {
+          "path": "unity/Assets/Scripts/Core/VexforgeApp.cs",
+          "behavior": "Unity refreshes the player snapshot after restoring a persisted session."
         },
         {
           "path": "unity/Assets/Scripts/UI/GameShellController.cs",
