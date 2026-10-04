@@ -1,84 +1,92 @@
-import { AnimatedVexforgeImage } from '../render/VexforgeImage';
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo, useRef } from 'react';
 import { Pressable, StyleSheet, Text, View, useWindowDimensions } from 'react-native';
 import Animated, { Easing, useAnimatedStyle, useReducedMotion, useSharedValue, withSequence, withTiming } from 'react-native-reanimated';
-import { Canvas, Circle, LinearGradient, Rect, vec } from '@shopify/react-native-skia';
+import { Canvas, Circle, Line, LinearGradient, Rect, vec } from '@shopify/react-native-skia';
 import type { BattleEvent } from '../types/api';
-import { CINEMATIC_ART, COLORS } from '../core/constants';
 import type { PresentationKind } from '../engine/presentation';
+import { COLORS } from '../core/constants';
+import { VexforgeImage } from '../render/VexforgeImage';
 
 const MAJOR: PresentationKind[] = ['boss', 'victory', 'defeat'];
-const META: Record<PresentationKind, { art: number; kicker: string; title: string; accent: string }> = {
-  boss: { art: CINEMATIC_ART.boss_phase, kicker: 'ATLAS · BOSS PHASE', title: 'LA ENTIDAD CAMBIA', accent: COLORS.crimson },
-  victory: { art: CINEMATIC_ART.battle_victory, kicker: 'CAMPO · RESULTADO', title: 'VICTORIA REGISTRADA', accent: COLORS.goldBright },
-  defeat: { art: CINEMATIC_ART.battle_defeat, kicker: 'CAMPO · RESULTADO', title: 'EL CAMPO RECUERDA', accent: COLORS.crimson },
-  attack: { art: CINEMATIC_ART.battle_intro, kicker: 'CAMPO', title: 'IMPACTO', accent: COLORS.crimson },
-  guard: { art: CINEMATIC_ART.battle_intro, kicker: 'CAMPO', title: 'DEFENSA', accent: COLORS.arcaneBright },
-  heal: { art: CINEMATIC_ART.battle_victory, kicker: 'CAMPO', title: 'RESTAURACIÓN', accent: COLORS.mint },
-  cast: { art: CINEMATIC_ART.battle_intro, kicker: 'CAMPO', title: 'HABILIDAD', accent: COLORS.arcaneBright },
-  status: { art: CINEMATIC_ART.battle_intro, kicker: 'CAMPO', title: 'ESTADO', accent: '#D5784E' },
-  neutral: { art: CINEMATIC_ART.battle_intro, kicker: 'CAMPO', title: 'EVENTO', accent: COLORS.gold },
-};
+const BOSS_AURA = require('../../assets/vexforge/VF_BOSS_AURA.png');
+const BOSS_SIGIL = require('../../assets/vexforge/VF_BOSS_SIGIL.png');
+const REWARD_SIGIL = require('../../assets/vexforge/VF_REWARD_SIGIL_PREMIUM.png');
 
 export function BattleCinematic({ event, kind, visible, onFinish }: { event: BattleEvent | null; kind: PresentationKind; visible: boolean; onFinish: () => void }) {
   const { width, height } = useWindowDimensions();
-  const reduced = useReducedMotion();
+  const reduced = useReducedMotion() === true;
   const opacity = useSharedValue(0);
-  const scale = useSharedValue(1.04);
-  const line = useSharedValue(0);
-  const meta = META[kind];
-  const amount = event?.amount;
+  const emblemScale = useSharedValue(.64);
+  const ring = useSharedValue(.60);
+  const sweep = useSharedValue(0);
+  const finishedRef = useRef(false);
+  const finishOnce = () => { if (finishedRef.current) return; finishedRef.current = true; onFinish(); };
+  const meta = useMemo(() => {
+    if (kind === 'boss') return { kicker: 'ENTIDAD · FASE', title: 'EL CAMPO CAMBIA', accent: COLORS.crimson, art: BOSS_SIGIL };
+    if (kind === 'victory') return { kicker: 'CAMPO · RESULTADO', title: 'VICTORIA', accent: COLORS.goldBright, art: REWARD_SIGIL };
+    return { kicker: 'CAMPO · RESULTADO', title: 'DERROTA', accent: COLORS.crimson, art: BOSS_SIGIL };
+  }, [kind]);
   const payload = event?.payload && typeof event.payload === 'object' ? event.payload as Record<string, unknown> : {};
-  const detail = useMemo(() => {
-    if (kind === 'boss') return payload.phase != null ? `FASE ${String(payload.phase)} · UMBRAL ALCANZADO` : 'EL RITMO DEL ENCUENTRO SE TRANSFORMA';
-    if (kind === 'victory') return 'La secuencia autoritativa ha llegado a su cierre.';
-    if (kind === 'defeat') return 'La secuencia autoritativa ha llegado a su cierre.';
-    return amount == null ? String(event?.event_type ?? '').replaceAll('_', ' ') : `${String(event?.event_type ?? '').replaceAll('_', ' ')} · ${amount}`;
-  }, [amount, event?.event_type, kind, payload.phase]);
+  const detail = kind === 'boss' && payload.phase != null ? `FASE ${String(payload.phase)} · UMBRAL ALCANZADO` : kind === 'boss' ? 'La entidad modifica el ritmo del encuentro.' : 'La secuencia de combate ha llegado a su resolución.';
 
   useEffect(() => {
     if (!visible || !MAJOR.includes(kind)) return;
-    const duration = reduced ? 520 : kind === 'boss' ? 1050 : 900;
-    opacity.value = withSequence(withTiming(1, { duration: reduced ? 90 : 180 }), withTiming(.98, { duration: Math.max(180, duration - 400) }), withTiming(0, { duration: reduced ? 100 : 260 }));
-    scale.value = withSequence(withTiming(1, { duration: reduced ? 120 : 360, easing: Easing.out(Easing.cubic) }), withTiming(1.02, { duration: Math.max(160, duration - 420) }));
-    line.value = withTiming(1, { duration: Math.max(260, duration - 240), easing: Easing.out(Easing.cubic) });
-    const timer = setTimeout(onFinish, duration);
+    finishedRef.current = false;
+    const duration = reduced ? 520 : kind === 'boss' ? 1180 : 940;
+    opacity.value = withSequence(withTiming(1, { duration: reduced ? 70 : 160 }), withTiming(.98, { duration: Math.max(180, duration-360) }), withTiming(0, { duration: reduced ? 90 : 220 }));
+    emblemScale.value = withSequence(withTiming(1.06, { duration: reduced ? 80 : 360, easing: Easing.out(Easing.cubic) }), withTiming(1, { duration: 220 }));
+    ring.value = reduced ? 1 : withSequence(withTiming(1.15, { duration: 700, easing: Easing.out(Easing.cubic) }), withTiming(.98, { duration: 300 }));
+    sweep.value = reduced ? 1 : withTiming(1, { duration: 750, easing: Easing.inOut(Easing.sin) });
+    const timer = setTimeout(finishOnce, duration);
     return () => clearTimeout(timer);
-  }, [visible, kind, reduced, onFinish, opacity, scale, line]);
+  }, [visible, kind, reduced, onFinish, opacity, emblemScale, ring, sweep]);
 
+  const shell = useAnimatedStyle(() => ({ opacity: opacity.value }));
+  const emblem = useAnimatedStyle(() => ({ transform: [{ scale: emblemScale.value }] }));
+  const ringStyle = useAnimatedStyle(() => ({ transform: [{ scale: ring.value }, { rotate: '-7deg' }] }));
+  const sweepStyle = useAnimatedStyle(() => ({ opacity: .05 + sweep.value*.10, transform: [{ translateX: sweep.value*width-width*.50 }] }));
   if (!visible || !MAJOR.includes(kind)) return null;
-  const shell = useAnimatedStyle(() => ({ opacity: opacity.value, transform: [{ scale: scale.value }] }));
-  const lineStyle = useAnimatedStyle(() => ({ transform: [{ scaleX: line.value }] }));
 
-  return <View style={styles.root} pointerEvents="auto">
-    <AnimatedVexforgeImage source={meta.art} resizeMode="cover" cacheMode="memory-disk" style={[StyleSheet.absoluteFillObject, shell]} />
-    <Canvas style={StyleSheet.absoluteFillObject} pointerEvents="none">
-      <Rect x={0} y={0} width={width} height={height}><LinearGradient start={vec(0, 0)} end={vec(0, height)} colors={['rgba(0,0,0,.08)', 'rgba(1,1,5,.42)', 'rgba(0,0,2,.90)']} /></Rect>
-      <Circle cx={width * .5} cy={height * .44} r={Math.min(width, height) * .31} color={meta.accent} opacity={.06} />
-      <Circle cx={width * .5} cy={height * .44} r={Math.min(width, height) * .23} color={meta.accent} opacity={.11} style="stroke" strokeWidth={1.4} />
-    </Canvas>
-    <Animated.View style={[styles.content, shell]}>
-      <Text style={[styles.kicker, { color: meta.accent }]}>{meta.kicker}</Text>
-      <Text style={styles.title}>{meta.title}</Text>
-      <Text style={styles.detail}>{detail}</Text>
-      <View style={styles.rule}><Animated.View style={[styles.ruleFill, { backgroundColor: meta.accent }, lineStyle]} /></View>
-      {amount != null ? <Text style={[styles.amount, { color: meta.accent }]}>{amount}</Text> : null}
-      <Text style={styles.event}>{String(event?.actor_id ?? 'VEXFORGE').slice(0, 24)} {event?.target_id ? `→ ${String(event.target_id).slice(0, 24)}` : ''}</Text>
+  return (
+    <Animated.View style={[styles.root, shell]} pointerEvents="auto">
+      {/* Transparent over the real battlefield: the battlefield itself remains visible. */}
+      <View style={styles.scrim} pointerEvents="none" />
+      <Animated.View style={[styles.energySweep, { backgroundColor: meta.accent }, sweepStyle]} pointerEvents="none" />
+      <Canvas style={StyleSheet.absoluteFillObject} pointerEvents="none">
+        <Rect x={0} y={0} width={width} height={height}>
+          <LinearGradient start={vec(0,0)} end={vec(0,height)} colors={['rgba(0,0,0,.03)','rgba(1,3,8,.10)','rgba(0,0,3,.28)']} />
+        </Rect>
+        <Circle cx={width*.50} cy={height*.43} r={Math.min(width,height)*.26} color={meta.accent} opacity={.035} />
+        <Circle cx={width*.50} cy={height*.43} r={Math.min(width,height)*.19} color={meta.accent} opacity={.08} style="stroke" strokeWidth={1.2} />
+        <Line p1={vec(width*.20,height*.43)} p2={vec(width*.80,height*.43)} color={meta.accent} opacity={.12} strokeWidth={1} />
+      </Canvas>
+      {kind === 'boss' ? <VexforgeImage source={BOSS_AURA} resizeMode="contain" cacheMode="memory-disk" style={styles.aura} /> : null}
+      <Animated.View style={[styles.ring, { borderColor: `${meta.accent}75`, shadowColor: meta.accent }, ringStyle]} pointerEvents="none">
+        <Animated.View style={[styles.emblem, { borderColor: `${meta.accent}8D`, shadowColor: meta.accent }, emblem]}>
+          <VexforgeImage source={meta.art} resizeMode="contain" cacheMode="memory-disk" style={styles.emblemArt} />
+        </Animated.View>
+      </Animated.View>
+      <View style={styles.textBlock} pointerEvents="none">
+        <Text style={[styles.kicker,{color:meta.accent}]}>{meta.kicker}</Text>
+        <Text style={styles.title}>{meta.title}</Text>
+        <Text style={styles.detail}>{detail}</Text>
+      </View>
+      <Pressable onPress={finishOnce} style={styles.skip}><Text style={styles.skipText}>CONTINUAR · ››</Text></Pressable>
     </Animated.View>
-    <Pressable style={styles.skip} onPress={onFinish}><Text style={styles.skipText}>CONTINUAR · ››</Text></Pressable>
-  </View>;
+  );
 }
-
-const styles = StyleSheet.create({
-  root: { ...StyleSheet.absoluteFillObject, zIndex: 500, backgroundColor: '#020207' },
-  content: { position: 'absolute', left: 22, right: 22, top: '33%', alignItems: 'center', paddingHorizontal: 18 },
-  kicker: { fontSize: 7, fontWeight: '900', letterSpacing: 2.4, textAlign: 'center' },
-  title: { color: COLORS.white, fontFamily: 'Cinzel_900Black', fontSize: 30, lineHeight: 35, textAlign: 'center', marginTop: 7, textShadowColor: 'rgba(0,0,0,.9)', textShadowOffset: { width: 0, height: 3 }, textShadowRadius: 16 },
-  detail: { color: COLORS.parchment, fontSize: 9, lineHeight: 14, textAlign: 'center', marginTop: 10, maxWidth: 380 },
-  rule: { width: '76%', height: 2, backgroundColor: 'rgba(255,255,255,.10)', marginTop: 16, overflow: 'hidden' },
-  ruleFill: { width: '100%', height: 2 },
-  amount: { fontSize: 28, fontWeight: '900', marginTop: 12, textShadowColor: 'rgba(0,0,0,.9)', textShadowOffset: { width: 0, height: 2 }, textShadowRadius: 12 },
-  event: { color: COLORS.ash, fontSize: 5.5, fontWeight: '900', letterSpacing: 1.2, marginTop: 12, textTransform: 'uppercase' },
-  skip: { position: 'absolute', right: 16, bottom: 28, minHeight: 38, paddingHorizontal: 12, justifyContent: 'center', borderWidth: 1, borderColor: 'rgba(255,255,255,.18)', borderRadius: 13, backgroundColor: 'rgba(0,0,0,.32)' },
-  skipText: { color: COLORS.white, fontSize: 6.5, fontWeight: '900', letterSpacing: 1 },
+const styles=StyleSheet.create({
+  root:{...StyleSheet.absoluteFillObject,zIndex:500,backgroundColor:'transparent'},
+  scrim:{...StyleSheet.absoluteFillObject,backgroundColor:'rgba(0,0,0,.16)'},
+  energySweep:{position:'absolute',top:'-12%',bottom:'-12%',width:'22%',transform:[{rotate:'-12deg'}]},
+  aura:{position:'absolute',width:330,height:330,left:'50%',top:'17%',marginLeft:-165,opacity:.23},
+  ring:{position:'absolute',left:'50%',top:'26%',width:198,height:198,marginLeft:-99,borderRadius:99,borderWidth:1.1,alignItems:'center',justifyContent:'center',shadowOpacity:.28,shadowRadius:30},
+  emblem:{width:100,height:100,borderRadius:50,borderWidth:1,backgroundColor:'rgba(0,0,0,.28)',alignItems:'center',justifyContent:'center',shadowOpacity:.44,shadowRadius:24},
+  emblemArt:{width:72,height:72},
+  textBlock:{position:'absolute',left:20,right:20,top:'47%',alignItems:'center'},
+  kicker:{fontSize:7,fontWeight:'900',letterSpacing:2.1},
+  title:{marginTop:5,color:COLORS.white,fontFamily:'Cinzel_900Black',fontSize:30,lineHeight:35,textAlign:'center',textShadowColor:'rgba(0,0,0,.95)',textShadowOffset:{width:0,height:3},textShadowRadius:16},
+  detail:{marginTop:8,color:COLORS.parchment,fontSize:9.2,lineHeight:14,textAlign:'center',maxWidth:350},
+  skip:{position:'absolute',right:16,bottom:26,minHeight:38,paddingHorizontal:12,justifyContent:'center',borderWidth:1,borderColor:'rgba(255,255,255,.18)',borderRadius:13,backgroundColor:'rgba(0,0,0,.30)'},
+  skipText:{color:COLORS.white,fontSize:6.5,fontWeight:'900',letterSpacing:1},
 });
