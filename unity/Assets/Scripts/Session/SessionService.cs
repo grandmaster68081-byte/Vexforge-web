@@ -10,6 +10,7 @@ namespace Vexforge.Session
         SignedOut,
         SigningIn,
         Authenticated,
+        AwaitingConfirmation,
         Error
     }
 
@@ -32,17 +33,68 @@ namespace Vexforge.Session
 
         public async Task<bool> SignInAsync(string email, string password)
         {
+            lastError = string.Empty;
             SetState(AuthState.SigningIn);
-            var ok = await auth.SignInAsync(email, password);
-            lastError = ok ? string.Empty : "No fue posible iniciar sesión con Supabase.";
+            var ok = false;
+            try
+            {
+                ok = await auth.SignInAsync(email, password);
+            }
+            catch (Exception exception)
+            {
+                AppLogger.Warning("Sign-in request failed: " + exception.GetType().Name);
+            }
+            lastError = ok ? string.Empty : "No fue posible iniciar sesión. Revisa tus datos e inténtalo de nuevo.";
             SetState(ok ? AuthState.Authenticated : AuthState.Error);
             return ok;
+        }
+
+        public async Task<AuthRegistrationOutcome> SignUpAsync(string email, string password)
+        {
+            lastError = string.Empty;
+            SetState(AuthState.SigningIn);
+
+            AuthRegistrationOutcome outcome;
+            try
+            {
+                outcome = await auth.SignUpAsync(email, password);
+            }
+            catch (Exception exception)
+            {
+                AppLogger.Warning("Sign-up request failed: " + exception.GetType().Name);
+                outcome = AuthRegistrationOutcome.Rejected;
+            }
+
+            if (outcome == AuthRegistrationOutcome.SignedIn)
+            {
+                SetState(AuthState.Authenticated);
+            }
+            else if (outcome == AuthRegistrationOutcome.ConfirmationRequired)
+            {
+                lastError = "Cuenta creada. Revisa tu correo para confirmar la dirección antes de iniciar sesión.";
+                SetState(AuthState.AwaitingConfirmation);
+            }
+            else
+            {
+                lastError = "No se pudo crear la cuenta. Verifica tus datos e inténtalo de nuevo.";
+                SetState(AuthState.Error);
+            }
+
+            return outcome;
         }
 
         public async Task<bool> RestoreAsync()
         {
             SetState(AuthState.SigningIn);
-            var ok = await auth.RestoreAsync();
+            var ok = false;
+            try
+            {
+                ok = await auth.RestoreAsync();
+            }
+            catch (Exception exception)
+            {
+                AppLogger.Warning("Session restore failed: " + exception.GetType().Name);
+            }
             lastError = string.Empty;
             SetState(ok ? AuthState.Authenticated : AuthState.SignedOut);
             return ok;
@@ -50,7 +102,7 @@ namespace Vexforge.Session
 
         public void SignOut()
         {
-            auth.SignOut();
+            _ = auth.SignOutAsync();
             lastError = string.Empty;
             SetState(AuthState.SignedOut);
         }

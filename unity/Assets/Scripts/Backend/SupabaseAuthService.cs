@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using UnityEngine;
 using Vexforge.Core;
@@ -5,6 +6,13 @@ using Vexforge.Session;
 
 namespace Vexforge.Backend
 {
+    public enum AuthRegistrationOutcome
+    {
+        SignedIn,
+        ConfirmationRequired,
+        Rejected
+    }
+
     public sealed class SessionSnapshot
     {
         public string accessToken;
@@ -34,6 +42,43 @@ namespace Vexforge.Backend
             return ApplyAuthResponse(response);
         }
 
+        public async Task<AuthRegistrationOutcome> SignUpAsync(string email, string password)
+        {
+            var response = await client.PostAsync(
+                "auth/v1/signup",
+                "{\"email\":" + SupabaseClient.Quote(email) + ",\"password\":" + SupabaseClient.Quote(password) + "}",
+                false);
+            if (!response.Ok)
+            {
+                AppLogger.Warning("Sign-up request failed with status " + response.StatusCode);
+                return AuthRegistrationOutcome.Rejected;
+            }
+
+            var payload = JsonUtility.FromJson<AuthResponse>(response.Body ?? string.Empty);
+            if (payload == null)
+            {
+                AppLogger.Warning("Sign-up response did not contain an account.");
+                return AuthRegistrationOutcome.Rejected;
+            }
+
+            var userId = payload.user != null && !string.IsNullOrWhiteSpace(payload.user.id)
+                ? payload.user.id
+                : !string.IsNullOrWhiteSpace(payload.user_id)
+                    ? payload.user_id
+                    : payload.id;
+
+            if (!string.IsNullOrWhiteSpace(payload.access_token))
+            {
+                return ApplyAuthPayload(payload)
+                    ? AuthRegistrationOutcome.SignedIn
+                    : AuthRegistrationOutcome.Rejected;
+            }
+
+            return !string.IsNullOrWhiteSpace(userId)
+                ? AuthRegistrationOutcome.ConfirmationRequired
+                : AuthRegistrationOutcome.Rejected;
+        }
+
         public async Task<bool> RestoreAsync()
         {
             var persisted = sessionStore.Load();
@@ -55,11 +100,33 @@ namespace Vexforge.Backend
             return ApplyAuthResponse(response);
         }
 
-        public void SignOut()
+        public async Task SignOutAsync()
         {
-            Current = null;
-            client.AccessToken = null;
-            sessionStore.Clear();
+            Task<SupabaseResponse> logoutTask = null;
+            try
+            {
+                if (Current != null && !string.IsNullOrWhiteSpace(Current.accessToken))
+                    logoutTask = client.PostAsync("auth/v1/logout", "{}", true);
+            }
+            catch (Exception exception)
+            {
+                AppLogger.Warning("Remote sign-out could not start: " + exception.GetType().Name);
+            }
+
+            ClearLocalSession();
+            if (logoutTask == null)
+                return;
+
+            try
+            {
+                var response = await logoutTask;
+                if (!response.Ok)
+                    AppLogger.Warning("Remote sign-out failed with status " + response.StatusCode);
+            }
+            catch (Exception exception)
+            {
+                AppLogger.Warning("Remote sign-out failed: " + exception.GetType().Name);
+            }
         }
 
         private bool ApplyAuthResponse(SupabaseResponse response)
@@ -70,8 +137,20 @@ namespace Vexforge.Backend
                 return false;
             }
 
-            var payload = JsonUtility.FromJson<AuthResponse>(response.Body);
-            if (payload == null || string.IsNullOrWhiteSpace(payload.access_token))
+            return ApplyAuthPayload(JsonUtility.FromJson<AuthResponse>(response.Body ?? string.Empty));
+        }
+
+        private bool ApplyAuthPayload(AuthResponse payload)
+        {
+            var userId = payload != null && payload.user != null && !string.IsNullOrWhiteSpace(payload.user.id)
+                ? payload.user.id
+                : payload != null && !string.IsNullOrWhiteSpace(payload.user_id)
+                    ? payload.user_id
+                    : payload == null ? null : payload.id;
+            if (payload == null ||
+                string.IsNullOrWhiteSpace(payload.access_token) ||
+                string.IsNullOrWhiteSpace(payload.refresh_token) ||
+                string.IsNullOrWhiteSpace(userId))
             {
                 AppLogger.Warning("Supabase auth response did not contain a session.");
                 return false;
@@ -81,12 +160,21 @@ namespace Vexforge.Backend
             {
                 accessToken = payload.access_token,
                 refreshToken = payload.refresh_token,
-                userId = payload.user != null ? payload.user.id : payload.user_id,
-                email = payload.user != null ? payload.user.email : string.Empty
+                userId = userId,
+                email = payload.user != null && !string.IsNullOrWhiteSpace(payload.user.email)
+                    ? payload.user.email
+                    : payload.email ?? string.Empty
             };
             client.AccessToken = Current.accessToken;
             sessionStore.Save(Current);
             return true;
+        }
+
+        private void ClearLocalSession()
+        {
+            Current = null;
+            client.AccessToken = null;
+            sessionStore.Clear();
         }
     }
 }

@@ -73,7 +73,7 @@ namespace Vexforge.Core
         {
             if (!RuntimeEnvironment.IsConfigured)
             {
-                InitializationError = "La configuración de Supabase no está disponible.";
+                InitializationError = "El servicio del juego no está disponible ahora.";
                 IsInitialized = true;
                 AppLogger.Warning(InitializationError);
                 return;
@@ -91,6 +91,14 @@ namespace Vexforge.Core
             if (!ok) return false;
             await GameState.RefreshAsync();
             return GameState.SyncState == SyncState.Connected;
+        }
+
+        public async Task<AuthRegistrationOutcome> SignUpAndSyncAsync(string email, string password)
+        {
+            var outcome = await Session.SignUpAsync(email, password);
+            if (outcome == AuthRegistrationOutcome.SignedIn)
+                await GameState.RefreshAsync();
+            return outcome;
         }
 
         public void SignOut()

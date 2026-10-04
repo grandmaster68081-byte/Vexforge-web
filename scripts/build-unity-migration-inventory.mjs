@@ -69,12 +69,14 @@ const capabilities = [
     id: "authentication-and-session",
     classification: "EXTEND_UNITY_WITH_EXPO_CAPABILITY",
     evidence: [
-      { path: "mobile/src/services/repository.ts", behavior: "Expo repository exposes sign-in, sign-up, and sign-out." },
+      { path: "mobile/src/services/repository.ts", behavior: "Expo repository exposes email sign-in, email sign-up, and sign-out; no reset or provider flow was found." },
       { path: "mobile/src/app/GameProvider.tsx", behavior: "Expo observes session state and persists tutorial/quality preferences." },
-      { path: "unity/Assets/Scripts/Backend/SupabaseAuthService.cs", behavior: "Unity implements password sign-in, refresh/restore, and sign-out." },
+      { path: "unity/Assets/Scripts/Backend/SupabaseAuthService.cs", behavior: "Unity implements email sign-in/sign-up, confirmation-required handling, refresh/restore, and remote sign-out with local cleanup." },
+      { path: "unity/Assets/Scripts/Session/SessionService.cs", behavior: "Unity exposes generic player-facing auth feedback and an explicit email-confirmation state." },
+      { path: "unity/Assets/Scripts/UI/GameShellController.cs", behavior: "Unity provides sign-in and account-creation actions." },
       { path: "unity/Assets/Scripts/Session/SecureSessionStore.cs", behavior: "Unity code uses Android Keystore-backed AES/GCM session storage; device behavior is unverified." },
     ],
-    decision: "Port only supported user-facing auth/session behavior; keep credentials in secure storage and verify on Android before declaring parity.",
+    decision: "Port only supported email auth/session behavior; the live project requires email confirmation and has no external provider enabled. Keep credentials in secure storage and verify on Android before declaring parity.",
   },
   {
     id: "player-state-and-settings",

@@ -16,7 +16,7 @@ se trata como una arquitectura equivalente a Unity.
 | Android identity | `com.vexforge.android`, version `0.1.0`, versionCode `4` |
 | Foundation | IMPLEMENTED_UNVERIFIED |
 | Supabase REST/RPC client | IMPLEMENTED_UNVERIFIED |
-| Auth/session | PARTIALLY_IMPLEMENTED; Android Keystore/AES-GCM secure storage exists in code but is unverified in Editor/device |
+| Auth/session | PARTIALLY_IMPLEMENTED; sign-in, restore, local/remote sign-out and email sign-up with confirmation handling exist in code; Android Keystore/AES-GCM storage remains unverified in Editor/device |
 | Nexus / World | IMPLEMENTED_UNVERIFIED; citadel geometry and diegetic portals |
 | Archive / Collection | IMPLEMENTED_UNVERIFIED; reusable world card view, bounded pool and official art resolver |
 | Forge / Deck | IMPLEMENTED_UNVERIFIED; physical slots, validation and save remain server RPCs |
@@ -70,8 +70,10 @@ compilación.
    No se persisten tokens en Git ni en PlayerPrefs.
 3. Los modelos anidados de algunas respuestas PostgREST deben validarse en
    Unity Editor con datos reales antes de cerrar Collection/Deck.
-4. Expo aporta semántica de replay, ceremonia de packs, estados de sesión,
-   movimiento reducido, audio, háptica y UX que aún debe verificarse y portarse.
+4. Expo aporta semántica de replay, ceremonia de packs, movimiento reducido,
+   audio, háptica y UX que aún debe verificarse y portarse. Su flujo auth
+   observado expone alta por email, pero no recuperación de contraseña ni
+   proveedores externos.
 5. Assets oficiales, audio, VFX y QA física requieren una etapa posterior y no
    se sustituyen con datos de producción inventados.
 6. `mobile/**` permanece hasta que las gates de paridad y eliminación pasen.

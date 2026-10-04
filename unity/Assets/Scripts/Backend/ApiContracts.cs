@@ -5,6 +5,8 @@ namespace Vexforge.Backend
     [Serializable]
     public sealed class AuthResponse
     {
+        public string id;
+        public string email;
         public string access_token;
         public string refresh_token;
         public int expires_in;

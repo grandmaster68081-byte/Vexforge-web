@@ -330,7 +330,7 @@ namespace Vexforge.UI
 
             var subtitle = UiFactory.Label(
                 panel.transform,
-                "Autenticación real · Supabase authority",
+                "Tu cuenta protege tu progreso",
                 17,
                 UiFactory.Muted,
                 TextAnchor.MiddleCenter);
@@ -357,17 +357,25 @@ namespace Vexforge.UI
                 Vector2.zero,
                 Vector2.zero);
 
-            var signIn = UiFactory.Button(panel.transform, "ENTRAR AL NEXUS", SignInClicked);
+            var signIn = UiFactory.Button(panel.transform, "ENTRAR", SignInClicked);
             UiFactory.Anchor(
                 signIn.GetComponent<RectTransform>(),
-                new Vector2(0.1f, 0.14f),
-                new Vector2(0.9f, 0.26f),
+                new Vector2(0.08f, 0.14f),
+                new Vector2(0.49f, 0.26f),
+                Vector2.zero,
+                Vector2.zero);
+
+            var signUp = UiFactory.Button(panel.transform, "CREAR CUENTA", SignUpClicked);
+            UiFactory.Anchor(
+                signUp.GetComponent<RectTransform>(),
+                new Vector2(0.51f, 0.14f),
+                new Vector2(0.92f, 0.26f),
                 Vector2.zero,
                 Vector2.zero);
 
             var message = app.InitializationError ??
                           app.Session.LastError ??
-                          "Inicia sesión para cargar datos reales del jugador.";
+                          "Inicia sesión o crea una cuenta para continuar.";
 
             var status = UiFactory.Label(
                 panel.transform,
@@ -675,6 +683,14 @@ namespace Vexforge.UI
         {
             if (emailInput == null || passwordInput == null) return;
             await app.SignInAndSyncAsync(
+                emailInput.text.Trim(),
+                passwordInput.text);
+        }
+
+        private async void SignUpClicked()
+        {
+            if (emailInput == null || passwordInput == null) return;
+            await app.SignUpAndSyncAsync(
                 emailInput.text.Trim(),
                 passwordInput.text);
         }
