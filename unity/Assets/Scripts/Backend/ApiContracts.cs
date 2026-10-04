@@ -45,6 +45,33 @@ namespace Vexforge.Backend
     }
 
     [Serializable]
+    public sealed class PlayerStats
+    {
+        public int pvp_wins;
+        public int missions_completed;
+        public int cards_owned;
+        public int market_sales;
+        public int boss_kills;
+        public int packs_opened;
+    }
+
+    [Serializable]
+    public sealed class PlayerRank
+    {
+        public bool ok;
+        public string player_id;
+        public int mmr;
+        public string tier;
+        public string tier_color;
+        public string tier_icon;
+        public int tier_min;
+        public int shields;
+        public int wins;
+        public int losses;
+        public string season_id;
+    }
+
+    [Serializable]
     public sealed class CardRecord
     {
         public string id;

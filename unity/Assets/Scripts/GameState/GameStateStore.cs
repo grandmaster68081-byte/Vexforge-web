@@ -30,6 +30,10 @@ namespace Vexforge.GameState
         public PlayerProfile Profile { get; private set; }
         public string PlayerId { get; private set; }
         public PlayerProgress Progress { get; private set; }
+        public PlayerStats Stats { get; private set; }
+        public PlayerRank Rank { get; private set; }
+        public string StatsError { get; private set; }
+        public string RankError { get; private set; }
         public CardRecord[] Catalog { get; private set; } = new CardRecord[0];
         public PlayerCardRecord[] Collection { get; private set; } = new PlayerCardRecord[0];
         public DeckSlot[] Deck { get; private set; } = new DeckSlot[0];
@@ -48,6 +52,10 @@ namespace Vexforge.GameState
 
             SetSync(SyncState.Loading);
             LastError = string.Empty;
+            Stats = null;
+            Rank = null;
+            StatsError = string.Empty;
+            RankError = string.Empty;
             try
             {
                 var playerId = await repository.GetCurrentPlayerIdAsync(session.Current.userId);
@@ -65,6 +73,25 @@ namespace Vexforge.GameState
                 Deck = await repository.GetDeckAsync(playerId);
                 Missions = await repository.GetMissionsAsync();
                 Wallet = await repository.GetWalletAsync(playerId);
+
+                try
+                {
+                    Stats = await repository.GetPlayerStatsAsync(playerId);
+                }
+                catch (Exception)
+                {
+                    StatsError = "Las estadísticas del jugador no están disponibles.";
+                }
+
+                try
+                {
+                    Rank = await repository.GetPlayerRankAsync(playerId);
+                }
+                catch (Exception)
+                {
+                    RankError = "El rango del jugador no está disponible.";
+                }
+
                 SetSync(SyncState.Connected);
             }
             catch (Exception exception)
@@ -79,6 +106,10 @@ namespace Vexforge.GameState
             Profile = null;
             PlayerId = null;
             Progress = null;
+            Stats = null;
+            Rank = null;
+            StatsError = string.Empty;
+            RankError = string.Empty;
             Catalog = new CardRecord[0];
             Collection = new PlayerCardRecord[0];
             Deck = new DeckSlot[0];

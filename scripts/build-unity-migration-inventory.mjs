@@ -81,10 +81,11 @@ const capabilities = [
     classification: "EXTEND_UNITY_WITH_EXPO_CAPABILITY",
     evidence: [
       { path: "mobile/src/app/GameProvider.tsx", behavior: "Expo persists quality and tutorial progress locally and tracks auth readiness." },
-      { path: "unity/Assets/Scripts/GameState/GameStateStore.cs", behavior: "Unity loads player-facing state from the repository." },
+      { path: "unity/Assets/Scripts/GameState/GameStateStore.cs", behavior: "Unity loads profile, progress, and player insight state through the existing store." },
+      { path: "unity/Assets/Scripts/Backend/VexforgeRepository.cs", behavior: "Unity reads player statistics and rank through the same existing read-only RPC contracts used by Expo." },
       { path: "unity/Assets/Scripts/Core/PersistentRuntimeState.cs", behavior: "Unity persists reduced-motion preference and last route." },
     ],
-    decision: "Match useful state continuity while keeping persistent player progress authoritative in Supabase.",
+    decision: "Match useful player-state reads while keeping persistent player progress and competitive rank authoritative in Supabase; keep device-local presentation preferences separate.",
   },
   {
     id: "catalog-collection-and-card-detail",

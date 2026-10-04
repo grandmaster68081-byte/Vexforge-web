@@ -32,6 +32,46 @@ namespace Vexforge.Backend
             return First<PlayerProgress>(response);
         }
 
+        public async Task<PlayerStats> GetPlayerStatsAsync(string playerId)
+        {
+            var response = await client.RpcAsync(
+                "get_player_stats",
+                "{\"p_player_id\":" + SupabaseClient.Quote(playerId) + "}");
+            return RequiredJson<PlayerStats>(
+                response,
+                "No se pudieron cargar las estadísticas del jugador.",
+                "pvp_wins",
+                "missions_completed",
+                "cards_owned",
+                "market_sales",
+                "boss_kills",
+                "packs_opened");
+        }
+
+        public async Task<PlayerRank> GetPlayerRankAsync(string playerId)
+        {
+            var response = await client.RpcAsync(
+                "get_player_rank",
+                "{\"p_player_id\":" + SupabaseClient.Quote(playerId) + "}");
+            var rank = RequiredJson<PlayerRank>(
+                response,
+                "No se pudo cargar el rango del jugador.",
+                "ok",
+                "player_id",
+                "mmr",
+                "tier",
+                "tier_color",
+                "tier_icon",
+                "tier_min",
+                "shields",
+                "wins",
+                "losses",
+                "season_id");
+            if (!rank.ok)
+                throw new InvalidOperationException("No se pudo cargar el rango del jugador.");
+            return rank;
+        }
+
         public async Task<CardRecord[]> GetCatalogAsync()
         {
             var response = await client.GetAsync("rest/v1/cards?select=id,code,name,faction,rarity,specialization,power,affinity,prestige,charge,lore,image_url,card_tier,card_domain,marketable,fusion_enabled&active=eq.true&order=name.asc&limit=1000");
@@ -151,6 +191,34 @@ namespace Vexforge.Backend
         {
             if (response == null || !response.Ok || string.IsNullOrWhiteSpace(response.Body)) return null;
             return JsonUtility.FromJson<T>(response.Body);
+        }
+
+        private static T RequiredJson<T>(
+            SupabaseResponse response,
+            string errorMessage,
+            params string[] requiredProperties) where T : class
+        {
+            if (response == null || !response.Ok || string.IsNullOrWhiteSpace(response.Body))
+                throw new InvalidOperationException(errorMessage);
+
+            try
+            {
+                for (var i = 0; i < requiredProperties.Length; i++)
+                {
+                    if (response.Body.IndexOf(
+                            "\"" + requiredProperties[i] + "\"",
+                            StringComparison.Ordinal) < 0)
+                        throw new InvalidOperationException();
+                }
+
+                var result = JsonUtility.FromJson<T>(response.Body);
+                if (result == null) throw new InvalidOperationException();
+                return result;
+            }
+            catch
+            {
+                throw new InvalidOperationException(errorMessage);
+            }
         }
 
         private static T First<T>(SupabaseResponse response) where T : class
