@@ -3,8 +3,8 @@ import { writeFileSync } from "node:fs";
 
 const outputPath = "docs/vexforge-canonical/27_UNITY_EXPO_MIGRATION_INVENTORY.json";
 const tracked = (pathspec) => {
-  const result = execFileSync("git", ["ls-files", "--", pathspec], { encoding: "utf8" });
-  return result.split(/\r?\n/).filter(Boolean).sort();
+  const result = execFileSync("git", ["ls-files", "-z", "--", pathspec], { encoding: "utf8" });
+  return result.split("\0").filter(Boolean).sort();
 };
 const trackedMobileFiles = tracked("mobile");
 const trackedWorkflowFiles = tracked(".github/workflows");
