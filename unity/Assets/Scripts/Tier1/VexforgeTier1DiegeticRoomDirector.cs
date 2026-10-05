@@ -17,13 +17,18 @@ namespace Vexforge.Tier1
         private RectTransform portalRow;
         private Button backButton;
         private Button packButton;
+        private Button economyButton;
         private VexforgeTier1PackRevealDirector packReveal;
+        private VexforgeTier1EconomyHub economyHub;
         private bool built;
 
         public void Initialize(VexforgeApp host, VexforgeTier1AssetRegistry registry)
         {
             if (built) return;
             app=host;assets=registry;Build();built=true;
+            economyHub=gameObject.GetComponent<VexforgeTier1EconomyHub>();
+            if(economyHub==null)economyHub=gameObject.AddComponent<VexforgeTier1EconomyHub>();
+            economyHub.Initialize(app);
         }
 
         public void Show(GameRoute route)
@@ -31,6 +36,7 @@ namespace Vexforge.Tier1
             if(!built)Build();
             canvas.gameObject.SetActive(true);
             ClearPortals();
+            if(route!=GameRoute.Economy&&economyHub!=null)economyHub.Hide();
             if (backButton != null) backButton.gameObject.SetActive(route != GameRoute.Nexus);
             if(route==GameRoute.Nexus)
             {
@@ -51,16 +57,20 @@ namespace Vexforge.Tier1
 
             var isEconomy=route==GameRoute.Economy;
             if(backButton!=null)
-                VexforgeTier1Ui.Anchor(
-                    backButton.GetComponent<RectTransform>(),
-                    isEconomy ? .05f : .25f,
-                    .035f,
-                    isEconomy ? .47f : .75f,
-                    .095f);
-            if(packButton!=null)packButton.gameObject.SetActive(isEconomy);
+                VexforgeTier1Ui.Anchor(backButton.GetComponent<RectTransform>(),.03f,.035f,.25f,.095f);
+            if(packButton!=null)
+            {
+                packButton.gameObject.SetActive(isEconomy);
+                VexforgeTier1Ui.Anchor(packButton.GetComponent<RectTransform>(),.67f,.035f,.97f,.095f);
+            }
+            if(economyButton!=null)
+            {
+                economyButton.gameObject.SetActive(isEconomy);
+                VexforgeTier1Ui.Anchor(economyButton.GetComponent<RectTransform>(),.29f,.035f,.64f,.095f);
+            }
         }
 
-        public void Hide(){if(canvas!=null)canvas.gameObject.SetActive(false);}
+        public void Hide(){if(canvas!=null)canvas.gameObject.SetActive(false);if(economyHub!=null)economyHub.Hide();}
         public void BindPackReveal(VexforgeTier1PackRevealDirector director){packReveal=director;}
 
         private void Build()
@@ -76,12 +86,15 @@ namespace Vexforge.Tier1
             body=VexforgeTier1Ui.Label(plaque.transform,"Body","",15,VexforgeTier1Ui.Text,TextAnchor.UpperLeft);VexforgeTier1Ui.Anchor(body.rectTransform,.07f,.14f,.93f,.66f);
             portalRow=new GameObject("NexusPortals",typeof(RectTransform)).GetComponent<RectTransform>();
             portalRow.SetParent(canvas.transform,false); VexforgeTier1Ui.Anchor(portalRow,.075f,.025f,.925f,.115f);
-            backButton=VexforgeTier1Ui.Button(canvas.transform,"Back","VOLVER AL NEXUS",()=>app.Navigation.Navigate(GameRoute.Nexus),new Color(.055f,.052f,.048f,.96f),14);
-            VexforgeTier1Ui.Anchor(backButton.GetComponent<RectTransform>(),.25f,.035f,.75f,.095f);
+            backButton=VexforgeTier1Ui.Button(canvas.transform,"Back","NEXUS",()=>app.Navigation.Navigate(GameRoute.Nexus),new Color(.055f,.052f,.048f,.96f),12);
+            VexforgeTier1Ui.Anchor(backButton.GetComponent<RectTransform>(),.03f,.035f,.25f,.095f);
             backButton.gameObject.SetActive(false);
             packButton=VexforgeTier1Ui.Button(canvas.transform,"PackVault","PACK VAULT",()=>{if(packReveal!=null)packReveal.ShowCatalog();},new Color(.13f,.09f,.045f,.98f),12);
-            VexforgeTier1Ui.Anchor(packButton.GetComponent<RectTransform>(),.53f,.035f,.95f,.095f);
+            VexforgeTier1Ui.Anchor(packButton.GetComponent<RectTransform>(),.67f,.035f,.97f,.095f);
             packButton.gameObject.SetActive(false);
+            economyButton=VexforgeTier1Ui.Button(canvas.transform,"EconomyHub","CARTERA · MERCADO",()=>{if(economyHub!=null)economyHub.OpenWallet();},new Color(.045f,.10f,.085f,.98f),10);
+            VexforgeTier1Ui.Anchor(economyButton.GetComponent<RectTransform>(),.29f,.035f,.64f,.095f);
+            economyButton.gameObject.SetActive(false);
             canvas.gameObject.SetActive(false);
         }
 
@@ -128,7 +141,16 @@ namespace Vexforge.Tier1
             if(state==null)return "IDENTIDAD NO DISPONIBLE.";
             var name=state.Profile==null?"VESSEL":(string.IsNullOrWhiteSpace(state.Profile.display_name)?"VESSEL":state.Profile.display_name);
             var level=state.Progress==null?"NO REPORTADO":state.Progress.level.ToString();
-            return name.ToUpperInvariant()+"\n\nNIVEL  "+level+"\n\nTu Hall reúne identidad, colección, formación y trayectoria competitiva. Los datos sensibles y económicos siguen siendo server-authoritative.";
+            var rank=state.Rank==null?"NO REPORTADO":(string.IsNullOrWhiteSpace(state.Rank.tier)?"NO REPORTADO":state.Rank.tier);
+            var stats=state.Stats;
+            return name.ToUpperInvariant()+"\n\nNIVEL  "+level+"  ·  RANGO  "+rank+
+                   "\nVICTORIAS PVP  "+(stats==null?"NO DISPONIBLE":stats.pvp_wins.ToString())+
+                   "  ·  MISIONES  "+(stats==null?"NO DISPONIBLE":stats.missions_completed.ToString())+
+                   "\nCARTAS  "+(stats==null?"NO DISPONIBLE":stats.cards_owned.ToString())+
+                   "  ·  VENTAS  "+(stats==null?"NO DISPONIBLE":stats.market_sales.ToString())+
+                   "  ·  JEFES  "+(stats==null?"NO DISPONIBLE":stats.boss_kills.ToString())+
+                   "  ·  PACKS  "+(stats==null?"NO DISPONIBLE":stats.packs_opened.ToString())+
+                   "\n\nLos valores proceden del estado y las estadísticas confirmadas por Supabase.";
         }
         private void SetHero(string key)
         {

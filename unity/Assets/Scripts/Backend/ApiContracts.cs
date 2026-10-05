@@ -163,6 +163,111 @@ namespace Vexforge.Backend
     }
 
     [Serializable]
+    public sealed class EconomyStatsRecord
+    {
+        public bool ok;
+        public int entry_count;
+        public decimal total_credited;
+        public decimal total_debited;
+        public decimal net_ingame;
+        public decimal net_tradeable;
+        public decimal largest_credit;
+        public EconomyEntryTypeStats[] by_type;
+    }
+
+    [Serializable]
+    public sealed class EconomyEntryTypeStats
+    {
+        public string entry_type;
+        public string currency;
+        public int count;
+        public decimal total_amount;
+    }
+
+    [Serializable]
+    public sealed class MarketCardProjection
+    {
+        public string name;
+        public string rarity;
+        public string image_url;
+    }
+
+    [Serializable]
+    public sealed class MarketPlayerCardProjection
+    {
+        public string card_id;
+        public MarketCardProjection cards;
+    }
+
+    [Serializable]
+    public sealed class MarketListingRecord
+    {
+        public string id;
+        public string player_id;
+        public string player_card_id;
+        public decimal price;
+        public decimal fee;
+        public string status;
+        public bool locked;
+        public MarketPlayerCardProjection player_cards;
+    }
+
+    [Serializable]
+    public sealed class TreasuryWalletRecord
+    {
+        public string chain;
+        public string token_symbol;
+        public string wallet_address;
+        public string token_standard;
+    }
+
+    [Serializable]
+    public sealed class EconomyDepositRecord
+    {
+        public string id;
+        public decimal amount_usdt;
+        public decimal vex_credited;
+        public string chain;
+        public string token_symbol;
+        public string tx_hash;
+        public string status;
+        public string created_at;
+    }
+
+    [Serializable]
+    public sealed class WithdrawalRequestRecord
+    {
+        public string id;
+        public string player_id;
+        public decimal tradeable_amount;
+        public decimal usdt_gross;
+        public decimal fee_usdt;
+        public decimal usdt_net;
+        public string status;
+        public string rejected_reason;
+        public string payout_tx_hash;
+        public string created_at;
+        public string processed_at;
+    }
+
+    [Serializable]
+    public sealed class EconomyActionResult
+    {
+        public bool ok;
+        public string reason;
+        public string status;
+        public string listing_id;
+        public string deposit_id;
+        public string request_id;
+        public decimal price;
+        public decimal fee;
+        public decimal tradeable_amount;
+        public decimal usdt_gross;
+        public decimal fee_usdt;
+        public decimal usdt_net;
+    }
+
+    [Serializable]
     public sealed class PackRecord
     {
         public string pack_key;

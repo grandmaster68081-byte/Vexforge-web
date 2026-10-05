@@ -1246,10 +1246,14 @@
         },
         {
           "path": "unity/Assets/Scripts/Backend/VexforgeRepository.cs",
-          "behavior": "Unity consumes existing player/economy contracts."
+          "behavior": "Unity now reads server wallet aggregates, active listings, treasury addresses, deposits and withdrawals, and invokes the existing listing, deposit and withdrawal RPCs."
+        },
+        {
+          "path": "unity/Assets/Scripts/Tier1/VexforgeTier1EconomyHub.cs",
+          "behavior": "Unity source now presents wallet, market, deposit and withdrawal tabs; results and financial decisions remain server-authoritative. Editor/device verification is pending."
         }
       ],
-      "decision": "Port only UI flows with current backend contracts; keep prices, eligibility, balances, and settlement authoritative server-side."
+      "decision": "Port only flows with current backend contracts; do not move prices, fees, eligibility, balances, or settlement to Unity, and do not present the Expo fixed-rate local audit as authoritative."
     },
     {
       "id": "social",
@@ -1265,7 +1269,7 @@
         },
         {
           "path": "unity/Assets/Scripts/UI/VexforgeSocialHub.cs",
-          "behavior": "Unity contains a social UI surface."
+          "behavior": "Unity contains a social UI surface; actions now report safe failures and preserve an unsent message when a send is rejected or unavailable."
         }
       ],
       "decision": "Compare each screen/action to its live contract and port only supported behavior."

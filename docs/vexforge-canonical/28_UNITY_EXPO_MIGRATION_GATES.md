@@ -23,7 +23,8 @@
 | Collection, card detail, deck, and formation | OPEN | Source adds collection search/ownership filters, card details, and an editable formation draft wired to existing validation/save RPCs; verify filters, ownership, and mutation results in Unity runtime |
 | Competitive battle and replay | OPEN | Unity now classifies and sequences the returned events, replays the last sequence without another battle request, and enables skipping only on interruptible frames; verify ordering, interruptions, result authority, and no local settlement in Unity runtime |
 | Pack opening and rewards | OPEN | Unity source now lists packs, uses the existing buy/open RPCs, retries paid orders, reveals returned cards, and refreshes ownership/wallet; verify this behavior in Editor/device without client-generated rewards |
-| Missions, world boss, raids, seasons, and social | OPEN | Unity source now provides a read-only active-boss atlas; verify it in Editor/device and confirm each additional action against an existing live contract |
+| Missions, world boss, raids, and seasons | OPEN | Unity source now provides a read-only active-boss atlas; verify it in Editor/device and confirm each additional action against an existing live contract |
+| Profile, wallet, market, deposits, withdrawals, social, and visible errors | OPEN | Hito 07 source now reads existing profile/economy contracts, calls current market/deposit/withdrawal RPCs, and preserves failed social-message drafts; verify loading, empty, rejected, accepted, refresh, and sign-out states in Editor/device |
 | Audio, haptics, quality, and reduced motion | OPEN | Existing battle clips and semantic haptic cues are mapped; reduced motion suppresses animated battle effects while keeping static feedback. Verify on Editor/device; presentation settings must not change rules |
 | Asset identity and provenance | OPEN | Reconcile official card/boss/world assets and manifest references; no generated replacement for canonical art |
 | Unity Editor validation | NOT_VERIFIED | Open the existing Unity project in the declared Editor version and record compile/play-mode evidence; do not create a new project |
@@ -82,3 +83,27 @@ Implemented in source, pending Unity Editor/device verification:
   compilation, interaction, ownership, and presentation are checked in the
   declared Unity Editor/device. No Supabase schema/data changes, Expo removal,
   or APK/AAB generation are part of this milestone.
+
+## Hito 07 — Profile, economy, social and error UX
+
+Implemented in source, pending Unity Editor/device verification:
+
+- The profile surfaces the existing server-loaded rank and player statistics.
+- A native economy hub exposes wallet balances and server aggregates, active
+  market listings and owned cards, treasury addresses, deposit history, and
+  withdrawal history. Listing, buying, deposit registration, and withdrawal
+  requests use the existing RPCs. The UI distinguishes pending requests from
+  settled balances and shows only values returned by the server.
+- Unity does not calculate transaction fees, market prices, balances,
+  eligibility, conversion, or settlement. Deposit registration only submits
+  the transaction details for review; it does not transfer funds or credit VEX.
+- Social action failures now reach a user-safe status, and an unsent message is
+  retained when the server rejects the send or the request fails.
+- The Expo economy page's local audit simulation is not ported: it assumes a
+  fixed fee rate and simulates client-side balances, so it is not evidence of
+  the live server's financial rules. Expo has no analytics/telemetry contract;
+  Unity adds no telemetry.
+- The profile/economy/social and error-UX gate remains OPEN until compilation,
+  interaction, accepted/rejected results, and lifecycle behavior are checked
+  in the declared Unity Editor/device. No Supabase schema/data changes, Expo
+  removal, or APK/AAB generation are part of this milestone.

@@ -98,9 +98,9 @@ namespace Vexforge.GameState
 
                 SetSync(SyncState.Connected);
             }
-            catch (Exception exception)
+            catch (Exception)
             {
-                LastError = exception.Message;
+                LastError = "No se pudo sincronizar tu cuenta. Revisa la conexión e inténtalo de nuevo.";
                 SetSync(SyncState.Error);
             }
         }

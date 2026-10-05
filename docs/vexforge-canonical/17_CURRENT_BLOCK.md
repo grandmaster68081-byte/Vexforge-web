@@ -3,12 +3,13 @@
 ## Bloque activo
 
 Migración del cliente Android Expo heredado a Unity como runtime único. Los
-Hitos 01–03 están publicados en `main`. Los Hitos 04–06 tienen implementación
-de fuente para colección/formación/tutorial, batalla/replay y paquetes/atlas.
-El Hito 06 usa los RPC existentes para comprar y abrir paquetes; el atlas
-consulta jefes activos y no inicia encuentros ni genera recompensas. Ninguno
-de esos cambios de fuente equivale a validación de runtime. Auth, sesión,
-colección/formación, combate/replay, packs, audio/háptica y atlas siguen
+Hitos 01–03 están publicados en `main`. Los Hitos 04–07 tienen implementación
+de fuente para colección/formación/tutorial, batalla/replay, paquetes/atlas y
+perfil/economía/social. Hito 07 usa lecturas y RPC existentes para mostrar
+cartera, mercado, depósitos, retiros y perfil; no traslada decisiones
+financieras al cliente ni añade telemetría. Ninguno de esos cambios de fuente
+equivale a validación de runtime. Auth, sesión, colección/formación,
+combate/replay, packs, atlas, economía, social y UX de errores siguen
 pendientes de verificación en Unity Editor/dispositivo. No se añadieron
 recuperación de contraseña ni proveedores externos porque no forman parte del
 flujo Expo/contrato live observado.
@@ -27,6 +28,10 @@ flujo Expo/contrato live observado.
   `27_UNITY_EXPO_MIGRATION_INVENTORY.json`.
 - Replay, ceremonia interactiva de packs y atlas de jefes tienen código Unity;
   su comportamiento de runtime no está verificado.
+- Hito 07 añade cartera, mercado, registro de depósitos, retiros, estadísticas
+  y rango al perfil, además de manejo seguro de fallos sociales. No se portó la
+  auditoría económica local de Expo porque supone una tasa fija no respaldada
+  por un contrato vigente; no se añadieron eventos de telemetría.
 - Unity no calcula propiedad, resultados de combate ni recompensas. El atlas
   presenta fichas del servidor; un encuentro de jefe permanece no disponible
   hasta verificar un contrato autorizado.
@@ -36,12 +41,11 @@ flujo Expo/contrato live observado.
 
 ## Siguiente unidad
 
-1. Validar Hitos 04–06 en Unity Editor/dispositivo: estados autenticado,
-   cargando, vacío y error; edición/validación/guardado de formación; replay y
-   omisión; compra/apertura/reintento de paquetes; navegación del atlas.
-2. Continuar con Hito 07 solo sobre acciones con contrato vigente; mantener
-   inaccesibles las operaciones de encuentro o recompensa que no se puedan
-   confirmar como server-authoritative.
+1. Validar Hitos 04–07 en Unity Editor/dispositivo: estados autenticado,
+   cargando, vacío y error; formación; replay y omisión; packs y atlas; economía
+   con resultados aceptados/rechazados; perfil y social.
+2. Mantener inaccesibles las operaciones de encuentro o recompensa que no se
+   puedan confirmar como server-authoritative.
 3. Antes de iniciar otra unidad de código, hacer `git fetch --prune origin` y
    confirmar `main`, árbol limpio y `HEAD == origin/main`.
 4. Mantener `mobile/**` y las gates abiertas hasta superar verificación de

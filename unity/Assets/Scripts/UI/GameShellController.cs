@@ -579,6 +579,8 @@ namespace Vexforge.UI
 
             var profile = app.GameState.Profile;
             var progress = app.GameState.Progress;
+            var stats = app.GameState.Stats;
+            var rank = app.GameState.Rank;
 
             Message(
                 profile == null
@@ -586,7 +588,14 @@ namespace Vexforge.UI
                     : "Nombre: " + ValueOr(profile.display_name, "NO REPORTADO") +
                       "\nRol: " + ValueOr(profile.role, "NO REPORTADO") +
                       "\nEstado: " + ValueOr(profile.status, "NO REPORTADO") +
-                      "\nNivel: " + (progress == null ? "NO REPORTADO" : progress.level.ToString()));
+                      "\nNivel: " + (progress == null ? "NO REPORTADO" : progress.level.ToString()) +
+                      " · Rango: " + (rank == null ? "NO REPORTADO" : ValueOr(rank.tier, "NO REPORTADO")) +
+                      "\nVictorias: " + (stats == null ? "NO DISPONIBLE" : stats.pvp_wins.ToString()) +
+                      " · Misiones: " + (stats == null ? "NO DISPONIBLE" : stats.missions_completed.ToString()) +
+                      "\nCartas: " + (stats == null ? "NO DISPONIBLE" : stats.cards_owned.ToString()) +
+                      " · Ventas: " + (stats == null ? "NO DISPONIBLE" : stats.market_sales.ToString()) +
+                      " · Jefes: " + (stats == null ? "NO DISPONIBLE" : stats.boss_kills.ToString()) +
+                      " · Packs: " + (stats == null ? "NO DISPONIBLE" : stats.packs_opened.ToString()));
 
             ActionButton(
                 "CERRAR SESIÓN",

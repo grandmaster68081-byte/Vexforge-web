@@ -254,7 +254,8 @@ namespace Vexforge.UI
             }
             catch (Exception ex)
             {
-                Debug.LogException(ex, this);
+                Debug.LogWarning("Social message refresh failed: " + ex.GetType().Name, this);
+                if (IsCurrent(generation)) SetStatus("MENSAJES NO DISPONIBLES");
             }
         }
 
@@ -728,7 +729,7 @@ namespace Vexforge.UI
             }
             catch (Exception ex)
             {
-                Debug.LogException(ex, this);
+                Debug.LogWarning("Social player search failed: " + ex.GetType().Name, this);
                 if (IsCurrent(generation)) SetStatus("BÚSQUEDA NO DISPONIBLE");
             }
         }
@@ -744,7 +745,7 @@ namespace Vexforge.UI
         private async Task SendFriendRequestAsync(string playerId)
         {
             var generation = lifecycleGeneration;
-            var result = await repository.SendFriendRequestAsync(playerId);
+            var result = await ExecuteSocialActionAsync(() => repository.SendFriendRequestAsync(playerId));
             if (!IsCurrent(generation)) return;
             SetStatus(result != null && result.ok ? "SOLICITUD ENVIADA" : SocialReason(result));
             if (result != null && result.ok) _ = RefreshActiveAsync(generation, true);
@@ -753,7 +754,7 @@ namespace Vexforge.UI
         private async Task CancelRequestAsync(string requestId)
         {
             var generation = lifecycleGeneration;
-            var result = await repository.CancelFriendRequestAsync(requestId);
+            var result = await ExecuteSocialActionAsync(() => repository.CancelFriendRequestAsync(requestId));
             if (!IsCurrent(generation)) return;
             SetStatus(result != null && result.ok ? "SOLICITUD CANCELADA" : SocialReason(result));
             _ = RefreshActiveAsync(generation, true);
@@ -762,7 +763,7 @@ namespace Vexforge.UI
         private async Task RespondRequestAsync(string requestId, bool accept)
         {
             var generation = lifecycleGeneration;
-            var result = await repository.RespondFriendRequestAsync(requestId, accept);
+            var result = await ExecuteSocialActionAsync(() => repository.RespondFriendRequestAsync(requestId, accept));
             if (!IsCurrent(generation)) return;
             SetStatus(result != null && result.ok ? (accept ? "ALIADO AÑADIDO" : "SOLICITUD RECHAZADA") : SocialReason(result));
             _ = RefreshActiveAsync(generation, true);
@@ -771,7 +772,7 @@ namespace Vexforge.UI
         private async Task RemoveFriendAsync(string friendId)
         {
             var generation = lifecycleGeneration;
-            var result = await repository.RemoveFriendAsync(friendId);
+            var result = await ExecuteSocialActionAsync(() => repository.RemoveFriendAsync(friendId));
             if (!IsCurrent(generation)) return;
             SetStatus(result != null && result.ok ? "VÍNCULO ELIMINADO" : SocialReason(result));
             _ = RefreshActiveAsync(generation, true);
@@ -781,7 +782,7 @@ namespace Vexforge.UI
         {
             if (string.IsNullOrWhiteSpace(playerId)) return;
             var generation = lifecycleGeneration;
-            var result = await repository.BlockPlayerAsync(playerId);
+            var result = await ExecuteSocialActionAsync(() => repository.BlockPlayerAsync(playerId));
             if (!IsCurrent(generation)) return;
             SetStatus(result != null && result.ok ? "GUERRERO BLOQUEADO" : SocialReason(result));
             if (result != null && result.ok && selectedFriendId == playerId)
@@ -796,7 +797,7 @@ namespace Vexforge.UI
         {
             if (string.IsNullOrWhiteSpace(scope) || string.IsNullOrWhiteSpace(messageId)) return;
             var generation = lifecycleGeneration;
-            var result = await repository.ReportMessageAsync(scope, messageId, "USER_REPORTED_MESSAGE");
+            var result = await ExecuteSocialActionAsync(() => repository.ReportMessageAsync(scope, messageId, "USER_REPORTED_MESSAGE"));
             if (!IsCurrent(generation)) return;
             SetStatus(result != null && result.ok ? "REPORTE ENVIADO" : SocialReason(result));
         }
@@ -835,22 +836,25 @@ namespace Vexforge.UI
             SocialActionResult result;
             if (global)
             {
-                result = await repository.SendGlobalMessageAsync(body);
+                result = await ExecuteSocialActionAsync(() => repository.SendGlobalMessageAsync(body));
             }
             else if (clan)
             {
-                result = await repository.SendClanMessageAsync(body);
+                result = await ExecuteSocialActionAsync(() => repository.SendClanMessageAsync(body));
             }
             else
             {
                 if (string.IsNullOrWhiteSpace(selectedConversationId)) return;
-                result = await repository.SendPrivateMessageAsync(selectedConversationId, body);
+                result = await ExecuteSocialActionAsync(() => repository.SendPrivateMessageAsync(selectedConversationId, body));
             }
             if (!IsCurrent(generation)) return;
             SetStatus(result != null && result.ok ? (global || clan ? "MENSAJE ENVIADO" : "SUSURRO ENVIADO") : SocialReason(result));
-            if (composerInput != null) composerInput.text = string.Empty;
-            if (EventSystem.current != null) EventSystem.current.SetSelectedGameObject(null);
-            _ = RefreshActiveAsync(generation, true);
+            if (result != null && result.ok)
+            {
+                if (composerInput != null) composerInput.text = string.Empty;
+                if (EventSystem.current != null) EventSystem.current.SetSelectedGameObject(null);
+                _ = RefreshActiveAsync(generation, true);
+            }
         }
 
         private async Task CreateClanAsync()
@@ -865,7 +869,7 @@ namespace Vexforge.UI
             }
 
             var generation = lifecycleGeneration;
-            var result = await repository.CreateClanAsync(name, description);
+            var result = await ExecuteSocialActionAsync(() => repository.CreateClanAsync(name, description));
             if (!IsCurrent(generation)) return;
             SetStatus(result != null && result.ok ? "CLAN CREADO" : SocialReason(result));
             if (result != null && result.ok)
@@ -879,7 +883,7 @@ namespace Vexforge.UI
         private async Task JoinClanAsync(string clanId)
         {
             var generation = lifecycleGeneration;
-            var result = await repository.JoinClanAsync(clanId);
+            var result = await ExecuteSocialActionAsync(() => repository.JoinClanAsync(clanId));
             if (!IsCurrent(generation)) return;
             SetStatus(result != null && result.ok ? "TE HAS UNIDO AL CLAN" : SocialReason(result));
             _ = RefreshActiveAsync(generation, true);
@@ -888,10 +892,23 @@ namespace Vexforge.UI
         private async Task LeaveClanAsync()
         {
             var generation = lifecycleGeneration;
-            var result = await repository.LeaveClanAsync();
+            var result = await ExecuteSocialActionAsync(() => repository.LeaveClanAsync());
             if (!IsCurrent(generation)) return;
             SetStatus(result != null && result.ok ? "HAS SALIDO DEL CLAN" : SocialReason(result));
             _ = RefreshActiveAsync(generation, true);
+        }
+
+        private async Task<SocialActionResult> ExecuteSocialActionAsync(Func<Task<SocialActionResult>> action)
+        {
+            try
+            {
+                return await action();
+            }
+            catch (Exception exception)
+            {
+                Debug.LogWarning("Social action failed: " + exception.GetType().Name, this);
+                return null;
+            }
         }
 
         private string SocialReason(SocialActionResult result)
@@ -915,7 +932,7 @@ namespace Vexforge.UI
                 case "INVALID_TARGET": return "OBJETIVO NO VÁLIDO";
                 case "REQUEST_NOT_FOUND": return "SOLICITUD NO ENCONTRADA";
                 case "AUTH_REQUIRED": return "SESIÓN NO DISPONIBLE";
-                default: return ValueOr(result.reason, "OPERACIÓN NO CONFIRMADA");
+                default: return "NO SE PUDO COMPLETAR LA ACCIÓN. INTÉNTALO DE NUEVO.";
             }
         }
 

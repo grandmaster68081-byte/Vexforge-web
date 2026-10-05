@@ -814,13 +814,22 @@ namespace Vexforge.UI
             AddRibbon("HALL  ·  TU IDENTIDAD EN VEXFORGE", 0.075f);
             var profile = app.GameState.Profile;
             var progress = app.GameState.Progress;
+            var stats = app.GameState.Stats;
+            var rank = app.GameState.Rank;
             AddInfo(
                 profile == null
                     ? "PERFIL NO REPORTADO."
                     : ValueOr(profile.display_name, "VESSEL") +
                       "\nROL  " + ValueOr(profile.role, "NO REPORTADO") +
                       "\nESTADO  " + ValueOr(profile.status, "NO REPORTADO") +
-                      "\nNIVEL  " + (progress == null ? "—" : progress.level.ToString()),
+                      "\nNIVEL  " + (progress == null ? "—" : progress.level.ToString()) +
+                      "  ·  RANGO  " + (rank == null ? "NO REPORTADO" : ValueOr(rank.tier, "NO REPORTADO")) +
+                      "\nPVP  " + (stats == null ? "—" : stats.pvp_wins.ToString()) +
+                      "  ·  MISIONES  " + (stats == null ? "—" : stats.missions_completed.ToString()) +
+                      "\nCARTAS  " + (stats == null ? "—" : stats.cards_owned.ToString()) +
+                      "  ·  VENTAS  " + (stats == null ? "—" : stats.market_sales.ToString()) +
+                      "  ·  JEFES  " + (stats == null ? "—" : stats.boss_kills.ToString()) +
+                      "  ·  PACKS  " + (stats == null ? "—" : stats.packs_opened.ToString()),
                 0.47f);
             AddAction("HALL DE ALIADOS", 0.30f, OpenSocialHub);
             AddAction("REPASAR TUTORIAL", 0.21f, OpenTutorialFromProfile);

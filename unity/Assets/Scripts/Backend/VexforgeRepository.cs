@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using System.Threading.Tasks;
 using UnityEngine;
 
@@ -162,7 +163,141 @@ namespace Vexforge.Backend
         public async Task<WalletRecord> GetWalletAsync(string playerId)
         {
             var response = await client.GetAsync("rest/v1/player_wallet?select=vex_ingame,vex_tradeable,reserved_ingame,reserved_tradeable&player_id=eq." + Uri.EscapeDataString(playerId) + "&limit=1");
+            EnsureOk(response, "No se pudo cargar la cartera.");
             return First<WalletRecord>(response);
+        }
+
+        public async Task<EconomyStatsRecord> GetEconomyStatsAsync()
+        {
+            var response = await client.RpcAsync("vexforge_get_my_economy_stats", "{}");
+            var result = RequiredJson<EconomyStatsRecord>(
+                response,
+                "No se pudo cargar el historial agregado de la cartera.",
+                "ok",
+                "entry_count",
+                "total_credited",
+                "total_debited",
+                "net_ingame",
+                "net_tradeable",
+                "largest_credit");
+            if (!result.ok)
+                throw new InvalidOperationException("No se pudo cargar el historial agregado de la cartera.");
+            return result;
+        }
+
+        public async Task<MarketListingRecord[]> GetMarketListingsAsync()
+        {
+            var response = await client.GetAsync(
+                "rest/v1/market_listings?select=id,player_id,player_card_id,price,fee,status,locked,player_cards(card_id,cards(name,rarity,image_url))" +
+                "&status=eq.active&order=created_at.desc&limit=80");
+            EnsureOk(response, "No se pudieron cargar las ofertas del mercado.");
+            return Array<MarketListingRecord>(response);
+        }
+
+        public async Task<TreasuryWalletRecord[]> GetTreasuryWalletsAsync()
+        {
+            var response = await client.GetAsync(
+                "rest/v1/vexforge_treasury?select=chain,token_symbol,wallet_address,token_standard" +
+                "&active=eq.true&purpose=eq.project_treasury&order=chain.asc");
+            EnsureOk(response, "No se pudieron cargar las direcciones de tesorería.");
+            return Array<TreasuryWalletRecord>(response);
+        }
+
+        public async Task<EconomyDepositRecord[]> GetMyDepositsAsync()
+        {
+            var response = await client.RpcAsync("vexforge_get_my_deposits", "{}");
+            EnsureOk(response, "No se pudo cargar el historial de depósitos.");
+            return Array<EconomyDepositRecord>(response);
+        }
+
+        public async Task<WithdrawalRequestRecord[]> GetWithdrawalRequestsAsync(string playerId)
+        {
+            var response = await client.GetAsync(
+                "rest/v1/vexforge_withdrawal_requests_official?select=id,player_id,tradeable_amount,usdt_gross,fee_usdt,usdt_net,status,rejected_reason,payout_tx_hash,created_at,processed_at" +
+                "&player_id=eq." + Uri.EscapeDataString(playerId) +
+                "&order=created_at.desc");
+            EnsureOk(response, "No se pudo cargar el historial de retiros.");
+            return Array<WithdrawalRequestRecord>(response);
+        }
+
+        public async Task<string> CreateMarketListingAsync(string playerId, string playerCardId, decimal price)
+        {
+            if (string.IsNullOrWhiteSpace(playerId) || string.IsNullOrWhiteSpace(playerCardId))
+                throw new ArgumentException("La carta no está disponible para listar.");
+            if (price <= 0m)
+                throw new ArgumentException("El precio debe ser mayor que cero.", nameof(price));
+
+            var json = "{\"p_player_id\":" + SupabaseClient.Quote(playerId) +
+                       ",\"p_player_card_id\":" + SupabaseClient.Quote(playerCardId) +
+                       ",\"p_price\":" + price.ToString(CultureInfo.InvariantCulture) +
+                       ",\"p_reference_id\":" + SupabaseClient.Quote("unity-listing-" + Guid.NewGuid().ToString("N")) +
+                       ",\"p_fee\":0,\"p_expires_at\":null,\"p_metadata\":{\"source\":\"unity\"}}";
+            var response = await client.RpcAsync("create_listing", json);
+            EnsureOk(response, "El servidor no pudo crear el listado.");
+
+            var listingId = ReadJsonString(response.Body);
+            if (string.IsNullOrWhiteSpace(listingId) || listingId == "null")
+                throw new InvalidOperationException("El servidor no confirmó el listado.");
+            return listingId;
+        }
+
+        public async Task<EconomyActionResult> BuyMarketListingAsync(string playerId, string listingId)
+        {
+            if (string.IsNullOrWhiteSpace(playerId) || string.IsNullOrWhiteSpace(listingId))
+                throw new ArgumentException("La oferta no está disponible.");
+
+            var json = "{\"p_buyer_id\":" + SupabaseClient.Quote(playerId) +
+                       ",\"p_listing_id\":" + SupabaseClient.Quote(listingId) +
+                       ",\"p_reference_id\":" + SupabaseClient.Quote("unity-buy-" + Guid.NewGuid().ToString("N")) +
+                       ",\"p_metadata\":{\"source\":\"unity\"}}";
+            var response = await client.RpcAsync("buy_listing", json);
+            var result = RequiredJson<EconomyActionResult>(
+                response,
+                "El servidor no confirmó la compra del listado.",
+                "ok");
+            return result;
+        }
+
+        public async Task<EconomyActionResult> SubmitDepositAsync(
+            decimal amountUsdt,
+            string chain,
+            string tokenSymbol,
+            string transactionHash,
+            string payerWalletAddress)
+        {
+            if (amountUsdt <= 0m ||
+                string.IsNullOrWhiteSpace(chain) ||
+                string.IsNullOrWhiteSpace(tokenSymbol) ||
+                string.IsNullOrWhiteSpace(transactionHash) ||
+                string.IsNullOrWhiteSpace(payerWalletAddress))
+                throw new ArgumentException("Completa los datos del depósito.");
+
+            var json = "{\"p_amount_usdt\":" + amountUsdt.ToString(CultureInfo.InvariantCulture) +
+                       ",\"p_chain\":" + SupabaseClient.Quote(chain.Trim()) +
+                       ",\"p_token_symbol\":" + SupabaseClient.Quote(tokenSymbol.Trim()) +
+                       ",\"p_tx_hash\":" + SupabaseClient.Quote(transactionHash.Trim()) +
+                       ",\"p_payer_wallet_address\":" + SupabaseClient.Quote(payerWalletAddress.Trim()) + "}";
+            var response = await client.RpcAsync("vexforge_submit_deposit", json);
+            return RequiredJson<EconomyActionResult>(
+                response,
+                "El servidor no confirmó el registro del depósito.",
+                "ok");
+        }
+
+        public async Task<EconomyActionResult> RequestWithdrawalAsync(string playerId, decimal tradeableAmount)
+        {
+            if (string.IsNullOrWhiteSpace(playerId))
+                throw new ArgumentException("La sesión no está sincronizada.");
+            if (tradeableAmount <= 0m)
+                throw new ArgumentException("La cantidad debe ser mayor que cero.", nameof(tradeableAmount));
+
+            var json = "{\"p_player_id\":" + SupabaseClient.Quote(playerId) +
+                       ",\"p_tradeable_amount\":" + tradeableAmount.ToString(CultureInfo.InvariantCulture) + "}";
+            var response = await client.RpcAsync("vexforge_request_withdrawal", json);
+            return RequiredJson<EconomyActionResult>(
+                response,
+                "El servidor no confirmó la solicitud de retiro.",
+                "ok");
         }
 
         public async Task<PackRecord[]> GetPackCatalogAsync()
@@ -260,6 +395,15 @@ namespace Vexforge.Backend
                 result += SupabaseClient.Quote(values[i]);
             }
             return result + "]";
+        }
+
+        private static string ReadJsonString(string value)
+        {
+            if (string.IsNullOrWhiteSpace(value)) return null;
+            var result = value.Trim();
+            if (result.Length >= 2 && result[0] == '"' && result[result.Length - 1] == '"')
+                result = result.Substring(1, result.Length - 2).Replace("\\\"", "\"").Replace("\\\\", "\\");
+            return result;
         }
 
         private static void EnsureOk(SupabaseResponse response, string errorMessage)
