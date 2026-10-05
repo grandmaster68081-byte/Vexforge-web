@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-10-05T13:13:08.000Z",
-  "baselineCommit": "dc112ad6afa72d1d7ad4d386a1dbd25097d6df25",
+  "generatedAt": "2026-10-05T16:50:12.135Z",
+  "baselineCommit": "1a86772c0d99a09c65b2f64abe4b9eee41cf7f7b",
   "classificationValues": [
     "KEEP_UNITY",
     "EXTEND_UNITY_WITH_EXPO_CAPABILITY",
@@ -661,6 +661,8 @@
         "unity/Assets/Scripts/Tier1/VexforgeTier1OperationJournal.cs.meta",
         "unity/Assets/Scripts/Tier1/VexforgeTier1PackRevealDirector.cs",
         "unity/Assets/Scripts/Tier1/VexforgeTier1PackRevealDirector.cs.meta",
+        "unity/Assets/Scripts/Tier1/VexforgeTier1PackRevealView.cs",
+        "unity/Assets/Scripts/Tier1/VexforgeTier1PackRevealView.cs.meta",
         "unity/Assets/Scripts/Tier1/VexforgeTier1QualityDirector.cs",
         "unity/Assets/Scripts/Tier1/VexforgeTier1QualityDirector.cs.meta",
         "unity/Assets/Scripts/Tier1/VexforgeTier1RoomOrnamentDirector.cs",
@@ -679,9 +681,11 @@
         "unity/Assets/Scripts/Tier1/VexforgeTier1VfxDirector.cs",
         "unity/Assets/Scripts/Tier1/VexforgeTier1VfxDirector.cs.meta",
         "unity/Assets/Scripts/Tier1/VexforgeTier1VisualFoundation.cs",
-        "unity/Assets/Scripts/Tier1/VexforgeTier1VisualFoundation.cs.meta"
+        "unity/Assets/Scripts/Tier1/VexforgeTier1VisualFoundation.cs.meta",
+        "unity/Assets/Scripts/Tier1/VexforgeTier1WorldAtlasDirector.cs",
+        "unity/Assets/Scripts/Tier1/VexforgeTier1WorldAtlasDirector.cs.meta"
       ],
-      "fileCount": 55
+      "fileCount": 59
     },
     {
       "id": "unity-scenes",
@@ -920,6 +924,8 @@
         "unity/Assets/Scripts/Session/SecureSessionStore.cs",
         "unity/Assets/Scripts/Session/SecureSessionStore.cs.meta",
         "unity/Assets/Scripts/Session/SessionService.cs",
+        "unity/Assets/Scripts/Tier1/VexforgeHapticsService.cs",
+        "unity/Assets/Scripts/Tier1/VexforgeHapticsService.cs.meta",
         "unity/Assets/Scripts/Tier1/VexforgeTier1AssetRegistry.cs",
         "unity/Assets/Scripts/Tier1/VexforgeTier1AssetRegistry.cs.meta",
         "unity/Assets/Scripts/Tier1/VexforgeTier1AudioDirector.cs",
@@ -954,6 +960,8 @@
         "unity/Assets/Scripts/Tier1/VexforgeTier1OperationJournal.cs.meta",
         "unity/Assets/Scripts/Tier1/VexforgeTier1PackRevealDirector.cs",
         "unity/Assets/Scripts/Tier1/VexforgeTier1PackRevealDirector.cs.meta",
+        "unity/Assets/Scripts/Tier1/VexforgeTier1PackRevealView.cs",
+        "unity/Assets/Scripts/Tier1/VexforgeTier1PackRevealView.cs.meta",
         "unity/Assets/Scripts/Tier1/VexforgeTier1QualityDirector.cs",
         "unity/Assets/Scripts/Tier1/VexforgeTier1QualityDirector.cs.meta",
         "unity/Assets/Scripts/Tier1/VexforgeTier1RoomOrnamentDirector.cs",
@@ -973,6 +981,8 @@
         "unity/Assets/Scripts/Tier1/VexforgeTier1VfxDirector.cs.meta",
         "unity/Assets/Scripts/Tier1/VexforgeTier1VisualFoundation.cs",
         "unity/Assets/Scripts/Tier1/VexforgeTier1VisualFoundation.cs.meta",
+        "unity/Assets/Scripts/Tier1/VexforgeTier1WorldAtlasDirector.cs",
+        "unity/Assets/Scripts/Tier1/VexforgeTier1WorldAtlasDirector.cs.meta",
         "unity/Assets/Scripts/UI/GameShellController.cs",
         "unity/Assets/Scripts/UI/UiFactory.cs",
         "unity/Assets/Scripts/UI/VexforgeAlphaHud.cs",
@@ -982,7 +992,7 @@
         "unity/Assets/Scripts/UI/VexforgeSocialHub.cs",
         "unity/Assets/Scripts/UI/VexforgeSocialHub.cs.meta"
       ],
-      "fileCount": 178
+      "fileCount": 184
     }
   ],
   "capabilities": [
@@ -1130,7 +1140,7 @@
         },
         {
           "path": "unity/Assets/Scripts/Presentation/BattlePresentationDirector.cs",
-        "behavior": "Unity mirrors Expo's ordered event-type rules, preserves authoritative event order, adds local duration/priority/interruptibility metadata, replays the last sequence in memory, and skips only interruptible frames."
+          "behavior": "Unity sequences the event presentation; replay controls/parity remain unverified."
         }
       ],
       "decision": "Port event semantics, pacing, replay controls, and skip behavior without porting battle rules."
@@ -1187,7 +1197,7 @@
         },
         {
           "path": "unity/Assets/Scripts/Tier1/VexforgeTier1AudioDirector.cs",
-        "behavior": "Unity maps shared presentation categories to available local clips at event start."
+          "behavior": "Unity maps a subset of battle event types to locally loaded clips."
         }
       ],
       "decision": "Port cue taxonomy and user settings where source behavior exists; audio must remain optional and never affect rules."
@@ -1203,10 +1213,6 @@
         {
           "path": "mobile/game/packTimeline.ts",
           "behavior": "Pack timeline stages declare semantic haptic cues."
-      },
-      {
-        "path": "unity/Assets/Scripts/Tier1/VexforgeHapticsService.cs",
-        "behavior": "Unity maps battle presentation categories to semantic cues and uses a generic vibration only on mobile platforms."
         }
       ],
       "decision": "Implement a native Unity haptic service only for the existing semantic cues; fail safely when unsupported."
@@ -1226,22 +1232,6 @@
         {
           "path": "unity/Assets/Scripts/Tier1/VexforgeTier1QualityDirector.cs",
           "behavior": "Unity selects presentation quality budgets."
-      },
-      {
-        "path": "unity/Assets/Scripts/Presentation/BattlePresentationDirector.cs",
-        "behavior": "Unity reads the persisted preference for each playback and passes it to the battlefield."
-      },
-      {
-        "path": "unity/Assets/Scripts/Presentation/VexforgeBattlefieldStage.cs",
-        "behavior": "Reduced motion removes animated event presentation and camera movement while retaining a static atmospheric cue."
-      },
-      {
-        "path": "unity/Assets/Scripts/Tier1/VexforgeTier1VfxDirector.cs",
-        "behavior": "Animated battle particles are suppressed when reduced motion is enabled."
-      },
-      {
-        "path": "unity/Assets/Scripts/Tier1/VexforgeTier1CardImmersionDirector.cs",
-        "behavior": "Animated card responses are suppressed when reduced motion is enabled."
         }
       ],
       "decision": "Connect reduced-motion state to Unity animation/camera/VFX and preserve the rule that quality changes presentation only."
