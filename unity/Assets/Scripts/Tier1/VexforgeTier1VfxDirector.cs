@@ -24,20 +24,25 @@ namespace Vexforge.Tier1
 
         public void Bind(BattlePresentationDirector canonical)
         {
-            if (director != null) director.EventPresented -= OnEvent;
+            if (director != null) director.EventStarted -= OnEvent;
             director = canonical;
-            if (director != null) director.EventPresented += OnEvent;
+            if (director != null) director.EventStarted += OnEvent;
         }
 
         private void OnEvent(BattleEvent evt)
         {
             if (evt == null || root == null || active >= MaxConcurrent) return;
-            var kind = (evt.event_type ?? string.Empty).ToUpperInvariant();
+            if (director != null && director.IsReducedMotion) return;
+            var kind = BattlePresentationPolicy.Classify(evt.event_type);
             var color = new Color(.72f,.26f,.10f,1f);
             var count = 12; var life = .34f;
-            if (kind.Contains("GUARD") || kind.Contains("SHIELD") || kind.Contains("VEIL")) { color = new Color(.17f,.52f,.82f,1f); count = 14; life = .40f; }
-            else if (kind.Contains("VICTORY")) { color = new Color(.85f,.62f,.18f,1f); count = 20; life = .72f; }
-            else if (kind.Contains("DEFEAT")) { color = new Color(.48f,.06f,.08f,1f); count = 20; life = .62f; }
+            if (kind == BattlePresentationKind.Boss) { color = new Color(.48f,.34f,.88f,1f); count = 18; life = .62f; }
+            else if (kind == BattlePresentationKind.Guard) { color = new Color(.17f,.52f,.82f,1f); count = 14; life = .40f; }
+            else if (kind == BattlePresentationKind.Heal) { color = new Color(.20f,.78f,.62f,1f); count = 14; life = .44f; }
+            else if (kind == BattlePresentationKind.Cast) { color = new Color(.26f,.48f,.95f,1f); count = 16; life = .46f; }
+            else if (kind == BattlePresentationKind.Status) { color = new Color(.64f,.28f,.78f,1f); count = 12; life = .38f; }
+            else if (kind == BattlePresentationKind.Victory) { color = new Color(.85f,.62f,.18f,1f); count = 20; life = .72f; }
+            else if (kind == BattlePresentationKind.Defeat) { color = new Color(.48f,.06f,.08f,1f); count = 20; life = .62f; }
             Emit(Vector3.up*.30f, color, count, life);
         }
 
@@ -60,6 +65,6 @@ namespace Vexforge.Tier1
             if (go != null) Destroy(go);
             active = Mathf.Max(0,active-1);
         }
-        private void OnDestroy(){if(director!=null)director.EventPresented-=OnEvent;if(particleMaterial!=null)Destroy(particleMaterial);}
+        private void OnDestroy(){if(director!=null)director.EventStarted-=OnEvent;if(particleMaterial!=null)Destroy(particleMaterial);}
     }
 }

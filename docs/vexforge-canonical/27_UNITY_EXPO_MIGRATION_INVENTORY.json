@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-10-04T19:25:32.194Z",
+  "generatedAt": "2026-10-05T13:13:08.000Z",
   "baselineCommit": "dc112ad6afa72d1d7ad4d386a1dbd25097d6df25",
   "classificationValues": [
     "KEEP_UNITY",
@@ -625,6 +625,8 @@
       "id": "unity-tier1",
       "path": "unity/Assets/Scripts/Tier1",
       "files": [
+        "unity/Assets/Scripts/Tier1/VexforgeHapticsService.cs",
+        "unity/Assets/Scripts/Tier1/VexforgeHapticsService.cs.meta",
         "unity/Assets/Scripts/Tier1/VexforgeTier1AssetRegistry.cs",
         "unity/Assets/Scripts/Tier1/VexforgeTier1AssetRegistry.cs.meta",
         "unity/Assets/Scripts/Tier1/VexforgeTier1AudioDirector.cs",
@@ -679,7 +681,7 @@
         "unity/Assets/Scripts/Tier1/VexforgeTier1VisualFoundation.cs",
         "unity/Assets/Scripts/Tier1/VexforgeTier1VisualFoundation.cs.meta"
       ],
-      "fileCount": 53
+      "fileCount": 55
     },
     {
       "id": "unity-scenes",
@@ -1128,7 +1130,7 @@
         },
         {
           "path": "unity/Assets/Scripts/Presentation/BattlePresentationDirector.cs",
-          "behavior": "Unity sequences the event presentation; replay controls/parity remain unverified."
+        "behavior": "Unity mirrors Expo's ordered event-type rules, preserves authoritative event order, adds local duration/priority/interruptibility metadata, replays the last sequence in memory, and skips only interruptible frames."
         }
       ],
       "decision": "Port event semantics, pacing, replay controls, and skip behavior without porting battle rules."
@@ -1185,7 +1187,7 @@
         },
         {
           "path": "unity/Assets/Scripts/Tier1/VexforgeTier1AudioDirector.cs",
-          "behavior": "Unity maps a subset of battle event types to locally loaded clips."
+        "behavior": "Unity maps shared presentation categories to available local clips at event start."
         }
       ],
       "decision": "Port cue taxonomy and user settings where source behavior exists; audio must remain optional and never affect rules."
@@ -1201,6 +1203,10 @@
         {
           "path": "mobile/game/packTimeline.ts",
           "behavior": "Pack timeline stages declare semantic haptic cues."
+      },
+      {
+        "path": "unity/Assets/Scripts/Tier1/VexforgeHapticsService.cs",
+        "behavior": "Unity maps battle presentation categories to semantic cues and uses a generic vibration only on mobile platforms."
         }
       ],
       "decision": "Implement a native Unity haptic service only for the existing semantic cues; fail safely when unsupported."
@@ -1220,6 +1226,22 @@
         {
           "path": "unity/Assets/Scripts/Tier1/VexforgeTier1QualityDirector.cs",
           "behavior": "Unity selects presentation quality budgets."
+      },
+      {
+        "path": "unity/Assets/Scripts/Presentation/BattlePresentationDirector.cs",
+        "behavior": "Unity reads the persisted preference for each playback and passes it to the battlefield."
+      },
+      {
+        "path": "unity/Assets/Scripts/Presentation/VexforgeBattlefieldStage.cs",
+        "behavior": "Reduced motion removes animated event presentation and camera movement while retaining a static atmospheric cue."
+      },
+      {
+        "path": "unity/Assets/Scripts/Tier1/VexforgeTier1VfxDirector.cs",
+        "behavior": "Animated battle particles are suppressed when reduced motion is enabled."
+      },
+      {
+        "path": "unity/Assets/Scripts/Tier1/VexforgeTier1CardImmersionDirector.cs",
+        "behavior": "Animated card responses are suppressed when reduced motion is enabled."
         }
       ],
       "decision": "Connect reduced-motion state to Unity animation/camera/VFX and preserve the rule that quality changes presentation only."

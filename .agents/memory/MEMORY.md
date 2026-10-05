@@ -1,3 +1,4 @@
+- [Patch retry safety](patch-retry-safety.md) — Inspect the diff after a failed multi-hunk patch; earlier hunks may already have applied.
 - [GitHub workflow dispatch](github-workflow-dispatch.md) — use the numeric workflow ID when filename-based dispatch returns 404 despite valid repository access.
 - [Android build environment](android-build-environment.md) — mobile CI must use the public npm registry; local prebuild is not an APK build without Java/Android SDK.
 - [Android build authorization](android-build-authorization.md) — require explicit user approval for each native Android compilation.

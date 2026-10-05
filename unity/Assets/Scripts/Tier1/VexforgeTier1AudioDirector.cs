@@ -20,21 +20,22 @@ namespace Vexforge.Tier1
 
         public void Bind(BattlePresentationDirector canonical)
         {
-            if (director != null) director.EventPresented -= OnEvent;
+            if (director != null) director.EventStarted -= OnEvent;
             director = canonical;
-            if (director != null) director.EventPresented += OnEvent;
+            if (director != null) director.EventStarted += OnEvent;
         }
 
         private void OnEvent(BattleEvent evt)
         {
             if (evt == null) return;
-            var kind=(evt.event_type??string.Empty).ToUpperInvariant();
-            if(kind.Contains("VICTORY")||kind.Contains("MATCH_END")) Play("victory",.8f);
-            else if(kind.Contains("DEFEAT")) Play("defeat",.8f);
-            else if(kind.Contains("GUARD")) Play("guard",.55f);
-            else if(kind.Contains("SHIELD")||kind.Contains("VEIL")) Play("shield",.55f);
-            else if(kind.Contains("ATTACK")||kind.Contains("STRIKE")||kind.Contains("DAMAGE")) Play("impact",.62f);
-            else if(kind.Contains("DEPLOY")||kind.Contains("SUMMON")||kind.Contains("PLAY")||kind.Contains("CAST")) Play("attack",.28f);
+            var kind = BattlePresentationPolicy.Classify(evt.event_type);
+            var cue = BattlePresentationPolicy.AudioCue(kind);
+            if (string.IsNullOrWhiteSpace(cue)) return;
+
+            var volume = kind == BattlePresentationKind.Victory
+                ? .8f
+                : kind == BattlePresentationKind.Attack ? .62f : .55f;
+            Play(cue, volume);
         }
 
         public void Play(string cue,float volume=1f)
@@ -44,6 +45,6 @@ namespace Vexforge.Tier1
             sfx.PlayOneShot(clip,Mathf.Clamp01(volume));
         }
         private AudioClip Get(string cue){if(string.IsNullOrWhiteSpace(cue))return null;AudioClip c;if(clips.TryGetValue(cue,out c))return c;c=Resources.Load<AudioClip>("VexforgeTier1/Audio/"+cue);clips[cue]=c;return c;}
-        private void OnDestroy(){if(director!=null)director.EventPresented-=OnEvent;}
+        private void OnDestroy(){if(director!=null)director.EventStarted-=OnEvent;}
     }
 }

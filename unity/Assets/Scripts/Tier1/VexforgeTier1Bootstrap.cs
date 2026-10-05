@@ -45,6 +45,7 @@ namespace Vexforge.Tier1
             gameObject.AddComponent<VexforgeTier1QualityDirector>().Initialize();
             gameObject.AddComponent<VexforgeTier1VisualFoundation>().Initialize();
             gameObject.AddComponent<VexforgeTier1AudioDirector>().Initialize();
+            gameObject.AddComponent<VexforgeHapticsService>();
             var cinematic=gameObject.AddComponent<VexforgeTier1CinematicDirector>();cinematic.Initialize(Camera.main);
             var vfx=gameObject.AddComponent<VexforgeTier1VfxDirector>();vfx.Initialize(transform);
             gameObject.AddComponent<VexforgeTier1LegacyHudSuppressor>().Initialize(app);
@@ -96,6 +97,7 @@ namespace Vexforge.Tier1
             var cinematic=GetComponent<VexforgeTier1CinematicDirector>();if(cinematic!=null)cinematic.Bind(director);
             var vfx=GetComponent<VexforgeTier1VfxDirector>();if(vfx!=null)vfx.Bind(director);
             var audio=GetComponent<VexforgeTier1AudioDirector>();if(audio!=null)audio.Bind(director);
+            var haptics=GetComponent<VexforgeHapticsService>();if(haptics!=null)haptics.Bind(director);
 
             var polish=gameObject.AddComponent<VexforgeTier1CanonicalBattlefieldPolish>();polish.Initialize(director,stage,assets);
             var encounter=gameObject.AddComponent<VexforgeTier1EncounterPresentationDirector>();encounter.Initialize(director,stage);

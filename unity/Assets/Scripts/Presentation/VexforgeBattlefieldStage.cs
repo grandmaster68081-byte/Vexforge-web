@@ -29,12 +29,15 @@ namespace Vexforge.Presentation
         private Func<string, CardRecord> cardLookup;
         private string localPlayerId;
         private bool initialized;
+        private bool reducedMotion;
         private Material boardMaterial;
         private Material accentMaterial;
         private Material hostileMaterial;
         private Material neutralMaterial;
         private Vector3 cameraHomePosition;
         private Quaternion cameraHomeRotation;
+        private float cameraHomeFieldOfView;
+        private float cameraHomeOrthographicSize;
         private Coroutine atmosphereReturn;
         private MaterialPropertyBlock pulseBlock;
 
@@ -56,6 +59,8 @@ namespace Vexforge.Presentation
             {
                 cameraHomePosition = targetCamera.transform.position;
                 cameraHomeRotation = targetCamera.transform.rotation;
+                cameraHomeFieldOfView = targetCamera.fieldOfView;
+                cameraHomeOrthographicSize = targetCamera.orthographicSize;
             }
 
             CreateMaterials();
@@ -67,6 +72,11 @@ namespace Vexforge.Presentation
         public void SetLocalPlayerId(string playerId)
         {
             localPlayerId = playerId;
+        }
+
+        public void SetReducedMotion(bool enabled)
+        {
+            reducedMotion = enabled;
         }
 
         public void SetVisible(bool visible)
@@ -90,6 +100,13 @@ namespace Vexforge.Presentation
 
         public IEnumerator PresentEvent(BattleEvent battleEvent)
         {
+            if (battleEvent == null)
+                yield break;
+            yield return PresentEvent(battleEvent, BattlePresentationPolicy.Classify(battleEvent.event_type));
+        }
+
+        public IEnumerator PresentEvent(BattleEvent battleEvent, BattlePresentationKind kind)
+        {
             if (!initialized || battleEvent == null)
                 yield break;
 
@@ -100,56 +117,79 @@ namespace Vexforge.Presentation
             var targetId = ReadString(battleEvent, "target_id", "targetId", "victim_id", "victimId");
             var cardId = ReadString(battleEvent, "card_id", "cardId", "source_card_id", "sourceCardId");
             var bossId = ReadString(battleEvent, "boss_id", "bossId", "encounter_id", "encounterId");
+            Color atmosphereColor;
+            float atmosphereIntensity;
+            ResolveAtmosphere(kind, out atmosphereColor, out atmosphereIntensity);
 
-            if (ContainsAny(type, "boss_start", "boss_spawn", "raid_start", "dungeon_start", "encounter_start", "phase_start"))
+            if (reducedMotion)
             {
-                yield return PresentBossArrival(bossId);
+                // Keep a quiet, static event cue while removing camera, actor, and flash motion.
+                SetAtmosphere(atmosphereColor, Mathf.Min(atmosphereIntensity, 3.0f));
+                yield return new WaitForSecondsRealtime(0.08f);
                 yield break;
             }
 
-            if (ContainsAny(type, "victory", "win", "match_end", "battle_end", "complete"))
+            SetAtmosphere(atmosphereColor, atmosphereIntensity);
+            var cameraShot = StartCoroutine(PresentCameraShot(kind));
+            switch (kind)
             {
-                SetAtmosphere(new Color(0.95f, 0.72f, 0.28f, 1f), 6.0f);
-                yield return PresentVictory(type);
-                yield break;
+                case BattlePresentationKind.Boss:
+                    yield return PresentBossArrival(bossId);
+                    break;
+                case BattlePresentationKind.Victory:
+                    yield return PresentVictory(type);
+                    break;
+                case BattlePresentationKind.Cast:
+                    yield return PresentCardEntry(cardId, actorId);
+                    break;
+                case BattlePresentationKind.Attack:
+                    yield return PresentImpact(actorId, targetId, true);
+                    break;
+                case BattlePresentationKind.Guard:
+                    yield return PresentShield(actorId);
+                    break;
+                case BattlePresentationKind.Heal:
+                    yield return PresentPulse(true);
+                    break;
+                case BattlePresentationKind.Defeat:
+                    yield return PresentDefeat(targetId, actorId);
+                    break;
+                case BattlePresentationKind.Status:
+                case BattlePresentationKind.Neutral:
+                default:
+                    yield return PresentNeutralEvent(type, actorId, targetId);
+                    break;
             }
+            if (cameraShot != null)
+                yield return cameraShot;
+        }
 
-            if (ContainsAny(type, "play", "cast", "summon", "deploy", "invoke"))
+        private static void ResolveAtmosphere(
+            BattlePresentationKind kind,
+            out Color color,
+            out float intensity)
+        {
+            switch (kind)
             {
-                SetAtmosphere(new Color(0.25f, 0.55f, 0.90f, 1f), 5.0f);
-                yield return PresentCardEntry(cardId, actorId);
-                yield break;
+                case BattlePresentationKind.Boss:
+                    color = new Color(0.35f, 0.28f, 0.82f, 1f); intensity = 5.5f; return;
+                case BattlePresentationKind.Victory:
+                    color = new Color(0.95f, 0.72f, 0.28f, 1f); intensity = 6.0f; return;
+                case BattlePresentationKind.Defeat:
+                    color = new Color(0.75f, 0.12f, 0.18f, 1f); intensity = 7.0f; return;
+                case BattlePresentationKind.Cast:
+                    color = new Color(0.25f, 0.55f, 0.90f, 1f); intensity = 5.0f; return;
+                case BattlePresentationKind.Attack:
+                    color = new Color(0.95f, 0.22f, 0.16f, 1f); intensity = 6.5f; return;
+                case BattlePresentationKind.Guard:
+                    color = new Color(0.92f, 0.67f, 0.28f, 1f); intensity = 5.5f; return;
+                case BattlePresentationKind.Heal:
+                    color = new Color(0.25f, 0.86f, 0.72f, 1f); intensity = 5.0f; return;
+                case BattlePresentationKind.Status:
+                    color = new Color(0.62f, 0.34f, 0.75f, 1f); intensity = 4.5f; return;
+                default:
+                    color = new Color(0.20f, 0.42f, 0.68f, 1f); intensity = 2.8f; return;
             }
-
-            if (ContainsAny(type, "attack", "strike", "hit", "damage", "deal_damage"))
-            {
-                SetAtmosphere(new Color(0.95f, 0.22f, 0.16f, 1f), 6.5f);
-                yield return PresentImpact(actorId, targetId, true);
-                yield break;
-            }
-
-            if (ContainsAny(type, "guard", "defend", "shield", "sentinel"))
-            {
-                SetAtmosphere(new Color(0.92f, 0.67f, 0.28f, 1f), 5.5f);
-                yield return PresentShield(actorId);
-                yield break;
-            }
-
-            if (ContainsAny(type, "heal", "restore", "regenerate"))
-            {
-                SetAtmosphere(new Color(0.25f, 0.86f, 0.72f, 1f), 5.0f);
-                yield return PresentPulse(true);
-                yield break;
-            }
-
-            if (ContainsAny(type, "death", "destroy", "remove", "defeat"))
-            {
-                SetAtmosphere(new Color(0.75f, 0.12f, 0.18f, 1f), 7.0f);
-                yield return PresentDefeat(targetId, actorId);
-                yield break;
-            }
-
-            yield return PresentNeutralEvent(type, actorId, targetId);
         }
 
         private void BuildArena()
@@ -503,7 +543,7 @@ namespace Vexforge.Presentation
 
         private IEnumerator CameraImpulse(float duration, float amplitude)
         {
-            if (targetCamera == null)
+            if (targetCamera == null || reducedMotion)
                 yield break;
 
             var startPosition = targetCamera.transform.position;
@@ -524,6 +564,52 @@ namespace Vexforge.Presentation
             }
             targetCamera.transform.position = startPosition;
             targetCamera.transform.rotation = startRotation;
+        }
+
+        private IEnumerator PresentCameraShot(BattlePresentationKind kind)
+        {
+            if (targetCamera == null || reducedMotion)
+                yield break;
+
+            var zoom = BattlePresentationPolicy.CameraZoom(kind);
+            if (zoom <= 1.001f)
+                yield break;
+
+            var duration = BattlePresentationPolicy.CameraDurationMs(kind) / 1000f;
+            var original = targetCamera.orthographic
+                ? targetCamera.orthographicSize
+                : targetCamera.fieldOfView;
+            var focused = original / zoom;
+            var elapsed = 0f;
+            var halfDuration = Mathf.Max(0.01f, duration * 0.5f);
+
+            while (elapsed < halfDuration)
+            {
+                elapsed += Time.unscaledDeltaTime;
+                var t = Mathf.SmoothStep(0f, 1f, Mathf.Clamp01(elapsed / halfDuration));
+                SetCameraLens(Mathf.Lerp(original, focused, t));
+                yield return null;
+            }
+
+            elapsed = 0f;
+            while (elapsed < halfDuration)
+            {
+                elapsed += Time.unscaledDeltaTime;
+                var t = Mathf.SmoothStep(0f, 1f, Mathf.Clamp01(elapsed / halfDuration));
+                SetCameraLens(Mathf.Lerp(focused, original, t));
+                yield return null;
+            }
+            SetCameraLens(original);
+        }
+
+        private void SetCameraLens(float value)
+        {
+            if (targetCamera == null)
+                return;
+            if (targetCamera.orthographic)
+                targetCamera.orthographicSize = Mathf.Max(0.01f, value);
+            else
+                targetCamera.fieldOfView = Mathf.Clamp(value, 1f, 179f);
         }
 
         private CardRecord ResolveCard(string cardId)
@@ -553,6 +639,8 @@ namespace Vexforge.Presentation
             {
                 targetCamera.transform.position = cameraHomePosition;
                 targetCamera.transform.rotation = cameraHomeRotation;
+                targetCamera.fieldOfView = cameraHomeFieldOfView;
+                targetCamera.orthographicSize = cameraHomeOrthographicSize;
             }
             if (atmosphereLight != null)
             {

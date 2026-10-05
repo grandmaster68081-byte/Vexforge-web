@@ -30,7 +30,7 @@ namespace Vexforge.Tier1
 
         private void OnEvent(BattleEvent evt)
         {
-            if (evt == null || cameraTarget == null) return;
+            if (evt == null || cameraTarget == null || (director != null && director.IsReducedMotion)) return;
             var kind = (evt.event_type ?? string.Empty).ToUpperInvariant();
             if (kind.Contains("BOSS") || kind.Contains("RAID")) FocusReveal(.42f);
             else if (kind.Contains("ATTACK") || kind.Contains("STRIKE") || kind.Contains("DAMAGE")) Impact(.045f, .12f);

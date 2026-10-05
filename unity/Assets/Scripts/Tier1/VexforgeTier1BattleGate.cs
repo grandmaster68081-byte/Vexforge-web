@@ -25,8 +25,10 @@ namespace Vexforge.Tier1
         private Button changeOpponentButton;
         private bool shown;
         private bool busy;
+        private bool replaying;
         private bool completionSubscribed;
         private BattleResult pendingResult;
+        private BattleResult lastCompletedResult;
         private string pendingOperation;
         private string selectedOpponentId;
         private string selectedOpponentName;
@@ -34,18 +36,25 @@ namespace Vexforge.Tier1
         private readonly VexforgeTier1StrategyDirector strategyDirector = new VexforgeTier1StrategyDirector();
 
         public event Action<BattleResult> BattleCompleted;
-        public bool IsBattleActive => busy || pendingResult != null || (canonicalBattle != null && canonicalBattle.State == PresentationState.Playing);
+        public bool IsBattleActive => busy || replaying || pendingResult != null || (canonicalBattle != null && canonicalBattle.State == PresentationState.Playing);
         public bool IsNavigationLocked => IsBattleActive;
 
         public void HandleSignedOut()
         {
             shown=false;
             busy=false;
+            replaying=false;
             pendingResult=null;
+            lastCompletedResult=null;
             pendingOperation=null;
             selectedOpponentId=null;
             selectedOpponentName=null;
             completionReported=false;
+            if (canonicalBattle != null)
+            {
+                canonicalBattle.StopAndHide();
+                canonicalBattle.ClearLastSequence();
+            }
             if(canvas!=null)canvas.gameObject.SetActive(false);
             if(resultHud!=null)resultHud.Hide();
         }
@@ -59,6 +68,10 @@ namespace Vexforge.Tier1
             resultHud = gameObject.GetComponent<VexforgeTier1BattleResultHud>();
             if (resultHud == null) resultHud = gameObject.AddComponent<VexforgeTier1BattleResultHud>();
             resultHud.Initialize(app);
+            resultHud.ReplayRequested -= HandleReplayRequested;
+            resultHud.ReplayRequested += HandleReplayRequested;
+            resultHud.SkipRequested -= HandleSkipRequested;
+            resultHud.SkipRequested += HandleSkipRequested;
             Build();
             SubscribeCompletion();
         }
@@ -79,7 +92,7 @@ namespace Vexforge.Tier1
 
             if (busy)
             {
-                SetStatus("OPERACIÓN DE BATALLA EN CURSO · NO SE DUPLICA LA PETICIÓN");
+                SetStatus("BATALLA EN CURSO");
                 return;
             }
 
@@ -98,7 +111,7 @@ namespace Vexforge.Tier1
                 selectedOpponentId = pendingOpponent;
                 selectedOpponentName = "RIVAL DEL NEXUS";
                 busy = true;
-                SetStatus("REANUDANDO DESAFÍO · REUTILIZANDO CLAVE AUTORIZADA");
+                SetStatus("REANUDANDO DESAFÍO ANTERIOR");
                 _ = ResumePendingAsync(pendingKey);
                 return;
             }
@@ -165,6 +178,7 @@ namespace Vexforge.Tier1
         {
             if (completionSubscribed || canonicalBattle == null) return;
             canonicalBattle.PresentationCompleted += HandlePresentationCompleted;
+            canonicalBattle.PlaybackPositionChanged += HandlePlaybackPositionChanged;
             completionSubscribed = true;
         }
 
@@ -172,6 +186,7 @@ namespace Vexforge.Tier1
         {
             if (!completionSubscribed || canonicalBattle == null) return;
             canonicalBattle.PresentationCompleted -= HandlePresentationCompleted;
+            canonicalBattle.PlaybackPositionChanged -= HandlePlaybackPositionChanged;
             completionSubscribed = false;
         }
 
@@ -183,7 +198,7 @@ namespace Vexforge.Tier1
             {
                 var rows = await app.Repository.GetPvpOpponentsAsync(8);
                 if (!shown) return;
-                if (rows == null || rows.Length == 0) { SetStatus("NO HAY RIVALES REPORTADOS POR EL SERVIDOR"); return; }
+                if (rows == null || rows.Length == 0) { SetStatus("NO HAY RIVALES DISPONIBLES"); return; }
                 Render(rows);
             }
             catch (Exception ex)
@@ -260,7 +275,7 @@ namespace Vexforge.Tier1
             if (app == null || app.Session == null || !app.Session.IsAuthenticated || canonicalBattle == null || !canonicalBattle.IsInitialized) return;
             busy = true;
             ClearList();
-            SetStatus("SELLANDO " + opponentName.ToUpperInvariant() + " · ESPERANDO AUTORIDAD DEL SERVIDOR");
+            SetStatus("SELLANDO " + opponentName.ToUpperInvariant() + " · ESPERANDO CONFIRMACIÓN");
             pendingOperation = "pvp_" + opponentId;
             var key = string.IsNullOrWhiteSpace(existingKey)
                 ? journal.GetOrCreate(app.GameState.PlayerId, pendingOperation, opponentId)
@@ -270,7 +285,7 @@ namespace Vexforge.Tier1
                 var result = await app.Repository.ResolveBattleAsync(app.GameState.PlayerId, opponentId, key);
                 if (result == null)
                 {
-                    SetStatus("RESULTADO NO REPORTADO · CLAVE PRESERVADA · REINTENTA SIN DUPLICAR");
+                    SetStatus("NO SE RECIBIÓ LA CONFIRMACIÓN · PUEDES VOLVER A INTENTAR");
                     busy = false;
                     return;
                 }
@@ -279,18 +294,22 @@ namespace Vexforge.Tier1
                     journal.Clear(app.GameState.PlayerId, pendingOperation);
                     pendingOperation = null;
                     busy = false;
-                    SetStatus(string.IsNullOrWhiteSpace(result.error) ? "BATALLA RECHAZADA POR EL SERVIDOR" : result.error);
+                    SetStatus("NO SE PUDO INICIAR LA BATALLA");
+                    if (!string.IsNullOrWhiteSpace(result.error))
+                        Debug.LogWarning("VEXFORGE battle was rejected: " + result.error);
                     return;
                 }
                 pendingResult = result;
                 completionReported = false;
                 canonicalBattle.SetLocalPlayerId(app.GameState.PlayerId);
                 HideGateOnly();
+                if (resultHud != null)
+                    resultHud.ShowPlayback(result.events == null ? 0 : result.events.Length);
                 canonicalBattle.Play(result.events ?? new BattleEvent[0]);
             }
             catch (Exception ex)
             {
-                SetStatus("BATALLA INTERRUMPIDA · CLAVE PRESERVADA PARA REINTENTO SEGURO");
+                SetStatus("LA BATALLA SE INTERRUMPIÓ · PUEDES VOLVER A INTENTAR");
                 Debug.LogWarning("VEXFORGE Tier1 battle: " + ex.Message);
                 busy = false;
             }
@@ -304,10 +323,20 @@ namespace Vexforge.Tier1
 
         private async void HandlePresentationCompleted()
         {
+            if (replaying)
+            {
+                replaying = false;
+                busy = false;
+                if (resultHud != null && lastCompletedResult != null &&
+                    app != null && app.Navigation != null && app.Navigation.CurrentRoute == GameRoute.Battle)
+                    resultHud.Show(lastCompletedResult);
+                return;
+            }
             if (pendingResult == null || completionReported) return;
             completionReported = true;
             var result = pendingResult;
             pendingResult = null;
+            lastCompletedResult = result;
             try { if (app != null) await app.GameState.RefreshAsync(); }
             catch (Exception ex) { Debug.LogWarning("VEXFORGE post-battle refresh: " + ex.Message); }
             if (!string.IsNullOrWhiteSpace(pendingOperation) && app != null && app.GameState != null)
@@ -321,6 +350,39 @@ namespace Vexforge.Tier1
             BattleCompleted?.Invoke(result);
         }
 
+        private void HandleReplayRequested(BattleResult requestedResult)
+        {
+            if (busy || requestedResult == null || lastCompletedResult == null ||
+                !ReferenceEquals(requestedResult, lastCompletedResult) ||
+                canonicalBattle == null || !canonicalBattle.IsInitialized ||
+                app == null || app.Session == null || !app.Session.IsAuthenticated || app.GameState == null)
+                return;
+
+            replaying = true;
+            busy = true;
+            canonicalBattle.SetLocalPlayerId(app.GameState.PlayerId);
+            if (resultHud != null)
+                resultHud.ShowPlayback(canonicalBattle.EventCount);
+            if (!canonicalBattle.ReplayLastSequence())
+            {
+                replaying = false;
+                busy = false;
+                if (resultHud != null) resultHud.Show(lastCompletedResult);
+            }
+        }
+
+        private void HandleSkipRequested()
+        {
+            if (canonicalBattle != null)
+                canonicalBattle.SkipToEnd();
+        }
+
+        private void HandlePlaybackPositionChanged(int index, int total)
+        {
+            if (resultHud != null && canonicalBattle != null)
+                resultHud.UpdatePlaybackPosition(index, total, canonicalBattle.CanSkipCurrentEvent);
+        }
+
         private void SetStatus(string value) { if (status != null) status.text = value ?? string.Empty; }
         private void ClearList() { if (list == null) return; for (var i = list.childCount - 1; i >= 0; i--) Destroy(list.GetChild(i).gameObject); }
         private void HideConfirmActions()
@@ -328,6 +390,14 @@ namespace Vexforge.Tier1
             if (confirmButton != null) confirmButton.gameObject.SetActive(false);
             if (changeOpponentButton != null) changeOpponentButton.gameObject.SetActive(false);
         }
-        private void OnDestroy() { UnsubscribeCompletion(); }
+        private void OnDestroy()
+        {
+            UnsubscribeCompletion();
+            if (resultHud != null)
+            {
+                resultHud.ReplayRequested -= HandleReplayRequested;
+                resultHud.SkipRequested -= HandleSkipRequested;
+            }
+        }
     }
 }

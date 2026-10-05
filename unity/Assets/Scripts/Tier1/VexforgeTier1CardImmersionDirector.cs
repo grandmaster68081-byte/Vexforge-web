@@ -27,7 +27,7 @@ namespace Vexforge.Tier1
 
         private void OnEventPresented(BattleEvent evt)
         {
-            if(evt==null||stage==null)return;
+            if(evt==null||stage==null||director==null||director.IsReducedMotion)return;
             var kind=(evt.event_type??string.Empty).ToUpperInvariant();
             if(!(kind.Contains("ATTACK")||kind.Contains("STRIKE")||kind.Contains("DAMAGE")||kind.Contains("GUARD")||kind.Contains("SHIELD")||kind.Contains("VEIL")||kind.Contains("DEPLOY")||kind.Contains("SUMMON")||kind.Contains("PLAY")||kind.Contains("CAST")))return;
             if(activeResponses>=2)return;

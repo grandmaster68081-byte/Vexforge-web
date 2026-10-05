@@ -43,6 +43,11 @@ namespace Vexforge.Tier1
             if (scanClock < .08f) return;
             scanClock = 0f;
             SuppressLegacyFallbacks();
+            if (director != null && director.IsReducedMotion)
+            {
+                ResetAmbient();
+                return;
+            }
             AnimateAmbient();
         }
 
@@ -187,7 +192,7 @@ namespace Vexforge.Tier1
 
         private void OnEventPresented(BattleEvent evt)
         {
-            if (evt == null) return;
+            if (evt == null || (director != null && director.IsReducedMotion)) return;
             var kind = (evt.event_type ?? string.Empty).ToUpperInvariant();
             if (kind.Contains("BOSS") || kind.Contains("RAID")) ToggleReplacement("BossManifestation", true, .70f);
             else if (kind.Contains("DEFEAT") || kind.Contains("VICTORY") || kind.Contains("MATCH_END")) ToggleReplacement("DefeatFlash", true, .34f);
@@ -216,6 +221,15 @@ namespace Vexforge.Tier1
             if (core != null) core.localScale = Vector3.one * (1f + Mathf.Sin(time * 1.4f) * .018f);
             var boss = root.Find("BossSanctum/BossHalo");
             if (boss != null) boss.localRotation = Quaternion.Euler(0f, time * 18f, 0f);
+        }
+
+        private void ResetAmbient()
+        {
+            if (root == null) return;
+            var core = root.Find("NexusCore");
+            if (core != null) core.localScale = Vector3.one;
+            var boss = root.Find("BossSanctum/BossHalo");
+            if (boss != null) boss.localRotation = Quaternion.identity;
         }
 
         private GameObject CreateDisc(string name, float radius, float thickness, Vector3 position)

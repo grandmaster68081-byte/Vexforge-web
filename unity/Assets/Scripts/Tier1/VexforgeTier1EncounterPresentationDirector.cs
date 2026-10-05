@@ -80,8 +80,11 @@ namespace Vexforge.Tier1
             else if(kind.Contains("BOSS"))SetMode(new Color(.62f,.08f,.09f,1f),1.18f);
             else if(kind.Contains("MISSION")||kind.Contains("EXPEDITION"))SetMode(new Color(.16f,.44f,.60f,1f),.96f);
             else if(kind.Contains("PVP")||kind.Contains("MATCH"))SetMode(new Color(.53f,.34f,.10f,1f),1f);
-            if(kind.Contains("DEFEAT"))StartCoroutine(Pulse(.68f));
-            if(kind.Contains("VICTORY"))StartCoroutine(Pulse(1.36f));
+            if(director==null||!director.IsReducedMotion)
+            {
+                if(kind.Contains("DEFEAT"))StartCoroutine(Pulse(.68f));
+                if(kind.Contains("VICTORY"))StartCoroutine(Pulse(1.36f));
+            }
         }
 
         private void SetMode(Color color,float scale)
@@ -108,7 +111,7 @@ namespace Vexforge.Tier1
 
         private void Update()
         {
-            if(manifestation==null)return;
+            if(manifestation==null||(director!=null&&director.IsReducedMotion))return;
             clock+=Time.unscaledDeltaTime;
             manifestation.transform.localRotation=Quaternion.Euler(0f,clock*11f,Mathf.Sin(clock*1.4f)*3f);
         }
