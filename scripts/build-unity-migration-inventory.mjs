@@ -96,18 +96,20 @@ const capabilities = [
     evidence: [
       { path: "mobile/src/services/repository.ts", behavior: "Expo reads the active card catalogue, player collection, and card detail data." },
       { path: "unity/Assets/Scripts/Backend/VexforgeRepository.cs", behavior: "Unity exposes catalogue/collection reads." },
-      { path: "unity/Assets/Scripts/Presentation/VexforgeVirtualizedCardGallery.cs", behavior: "Unity renders a virtualized card gallery." },
+      { path: "unity/Assets/Scripts/Presentation/VexforgeVirtualizedCardGallery.cs", behavior: "Unity source provides a virtualized gallery with collection search and ownership filters." },
+      { path: "unity/Assets/Scripts/Presentation/VexforgeCardInspectionStage.cs", behavior: "Unity source provides a card-inspection surface." },
     ],
-    decision: "Port collection filters, inspection, and useful empty/error states without replacing canonical card data or artwork.",
+    decision: "Collection search, ownership filtering, and card inspection exist in Unity source; validate interaction, loading, and error behavior in the Unity Editor/device without replacing canonical card data or artwork.",
   },
   {
     id: "deck-and-formation",
     classification: "REUSE_SHARED_BACKEND_CONTRACT",
     evidence: [
       { path: "mobile/src/services/repository.ts", behavior: "Expo validates and saves decks and stores match formations through RPCs." },
-      { path: "unity/Assets/Scripts/Backend/VexforgeRepository.cs", behavior: "Unity uses the existing deck/formation backend contracts." },
+      { path: "unity/Assets/Scripts/Backend/VexforgeRepository.cs", behavior: "Unity uses the existing deck/formation backend contracts for validation and save." },
+      { path: "unity/Assets/Scripts/Tier1/VexforgeTier1StrategyDirector.cs", behavior: "Unity source provides an editable formation draft and player-facing validation/confirmation flow." },
     ],
-    decision: "Reuse current Supabase contracts; port the interaction flow only, and do not duplicate validation authority.",
+    decision: "The formation interaction is implemented in Unity source; verify edits and server-returned validation/save results in the Unity Editor/device. Reuse current Supabase contracts and do not duplicate validation authority.",
   },
   {
     id: "competitive-battle-resolution",
@@ -125,9 +127,10 @@ const capabilities = [
     evidence: [
       { path: "mobile/src/engine/presentation.ts", behavior: "Expo classifies event types into presentation categories." },
       { path: "mobile/src/engine/replay.ts", behavior: "Expo constructs replay frames from authoritative result events." },
-      { path: "unity/Assets/Scripts/Presentation/BattlePresentationDirector.cs", behavior: "Unity sequences the event presentation; replay controls/parity remain unverified." },
+      { path: "unity/Assets/Scripts/Presentation/BattlePresentationDirector.cs", behavior: "Unity source classifies and sequences returned events, preserves server ordering, and replays the last resolved event sequence without another battle request." },
+      { path: "unity/Assets/Scripts/Tier1/VexforgeTier1BattleResultHud.cs", behavior: "Unity source exposes playback progress and only permits skips on interruptible presentation frames." },
     ],
-    decision: "Port event semantics, pacing, replay controls, and skip behavior without porting battle rules.",
+    decision: "Battle event sequencing, replay, and interruption behavior are implemented in Unity source; verify ordering and cancellation in the Editor/device. Never port combat resolution or settlement into the client.",
   },
   {
     id: "pack-purchase-and-opening",
@@ -135,9 +138,10 @@ const capabilities = [
     evidence: [
       { path: "mobile/src/services/repository.ts", behavior: "Expo buys/opens packs through RPCs and validates server-returned opened cards." },
       { path: "mobile/game/packTimeline.ts", behavior: "Expo defines staged, interactive reveal cues with audio and haptic intent." },
-      { path: "unity/Assets/Scripts/Tier1/VexforgeTier1PackRevealDirector.cs", behavior: "Unity currently displays a timed vault/relic sequence without card-by-card interaction." },
+      { path: "unity/Assets/Scripts/Tier1/VexforgeTier1PackRevealDirector.cs", behavior: "Unity source lists active packs, buys/opens through existing RPCs, supports retrying paid pending orders, and reveals only cards returned by the server." },
+      { path: "unity/Assets/Scripts/Tier1/VexforgeTier1PackRevealView.cs", behavior: "Unity source presents the native vault/reveal flow and refreshes collection ownership and wallet state from the repository." },
     ],
-    decision: "Connect the Unity ceremony to the authoritative order/open result, then port interaction and reveal semantics.",
+    decision: "The server-authoritative pack flow and native reveal are implemented in Unity source; verify ceremony timing, retries, ownership refresh, and presentation in the Editor/device. Do not calculate rewards locally.",
   },
   {
     id: "world-boss-and-tutorial",
@@ -145,19 +149,20 @@ const capabilities = [
     evidence: [
       { path: "mobile/app/world.tsx", behavior: "Expo exposes world/boss/raid surfaces backed by repository data." },
       { path: "mobile/app/tutorial.tsx", behavior: "Expo provides a tutorial route and persisted tutorial progression." },
-      { path: "unity/Assets/Scripts/Tier1/VexforgeTier1TutorialDirector.cs", behavior: "Unity tutorial is integrated with the authorized battle gate." },
-      { path: "unity/Assets/Scripts/Presentation/VexforgeBattlefieldStage.cs", behavior: "Unity presents structural boss arrival/event cues." },
+      { path: "unity/Assets/Scripts/Tier1/VexforgeTier1TutorialDirector.cs", behavior: "Unity source integrates tutorial progression with the authorized battle gate." },
+      { path: "unity/Assets/Scripts/Tier1/VexforgeTier1WorldAtlasDirector.cs", behavior: "Unity source lists active server-provided bosses in a read-only atlas; encounter actions remain unavailable." },
+      { path: "unity/Assets/Scripts/Presentation/VexforgeBattlefieldStage.cs", behavior: "Unity presents structural boss arrival/event cues without local combat or reward settlement." },
     ],
-    decision: "Port supported navigation and tutorial semantics; keep boss damage and rewards server-authoritative.",
+    decision: "Tutorial and read-only boss-atlas behavior exist in Unity source; verify navigation and lifecycle in the Editor/device. Keep unsupported encounters, boss damage, and rewards server-authoritative.",
   },
   {
     id: "audio-cues",
     classification: "EXTEND_UNITY_WITH_EXPO_CAPABILITY",
     evidence: [
       { path: "mobile/src/render/AudioCues.tsx", behavior: "Expo maps presentation categories to runtime audio cues." },
-      { path: "unity/Assets/Scripts/Tier1/VexforgeTier1AudioDirector.cs", behavior: "Unity maps a subset of battle event types to locally loaded clips." },
+      { path: "unity/Assets/Scripts/Tier1/VexforgeTier1AudioDirector.cs", behavior: "Unity source maps battle and pack presentation cues to available local clips." },
     ],
-    decision: "Port cue taxonomy and user settings where source behavior exists; audio must remain optional and never affect rules.",
+    decision: "The available cue mapping is implemented in Unity source; verify playback, mixing, and optional-audio behavior in the Editor/device. Audio must never affect game rules.",
   },
   {
     id: "haptics",
@@ -165,8 +170,9 @@ const capabilities = [
     evidence: [
       { path: "mobile/src/app/GameProvider.tsx", behavior: "Expo exposes selection, impact, success, and warning haptics." },
       { path: "mobile/game/packTimeline.ts", behavior: "Pack timeline stages declare semantic haptic cues." },
+      { path: "unity/Assets/Scripts/Tier1/VexforgeHapticsService.cs", behavior: "Unity source exposes semantic haptic cues and a generic mobile vibration fallback." },
     ],
-    decision: "Implement a native Unity haptic service only for the existing semantic cues; fail safely when unsupported.",
+    decision: "Semantic haptic cues are implemented in Unity source; verify platform support and physical device behavior, and fail safely when unsupported.",
   },
   {
     id: "reduced-motion-and-quality",
@@ -174,28 +180,31 @@ const capabilities = [
     evidence: [
       { path: "mobile/src/render/VexforgeSceneStage.tsx", behavior: "Expo rendering checks reduced-motion preference." },
       { path: "unity/Assets/Scripts/Core/PersistentRuntimeState.cs", behavior: "Unity persists a reduced-motion preference." },
+      { path: "unity/Assets/Scripts/Presentation/BattlePresentationDirector.cs", behavior: "Unity source suppresses battle camera movement under reduced motion while retaining static presentation feedback." },
+      { path: "unity/Assets/Scripts/Presentation/VexforgeBattlefieldStage.cs", behavior: "Unity source reduces animated battlefield, particle, card, and boss effects when reduced motion is enabled." },
       { path: "unity/Assets/Scripts/Tier1/VexforgeTier1QualityDirector.cs", behavior: "Unity selects presentation quality budgets." },
     ],
-    decision: "Connect reduced-motion state to Unity animation/camera/VFX and preserve the rule that quality changes presentation only.",
+    decision: "Reduced-motion and quality controls are connected in Unity source; verify each affected surface in the Editor/device. Presentation settings must not alter game rules.",
   },
   {
     id: "economy-market-and-rewards",
     classification: "REUSE_SHARED_BACKEND_CONTRACT",
     evidence: [
       { path: "mobile/src/services/repository.ts", behavior: "Expo wallet, shop, market, fusion, withdrawal, and reward mutations use Supabase RPCs." },
-      { path: "unity/Assets/Scripts/Backend/VexforgeRepository.cs", behavior: "Unity consumes existing player/economy contracts." },
+      { path: "unity/Assets/Scripts/Backend/VexforgeRepository.cs", behavior: "Unity consumes existing wallet, market, deposit, withdrawal, and reward contracts." },
+      { path: "unity/Assets/Scripts/Tier1/VexforgeTier1EconomyHub.cs", behavior: "Unity source presents wallet and transaction history, active market listings, and authorized listing/buy/deposit-registration/withdrawal-request flows using existing RPCs." },
     ],
-    decision: "Port only UI flows with current backend contracts; keep prices, eligibility, balances, and settlement authoritative server-side.",
+    decision: "Supported economy flows exist in Unity source; verify accepted/rejected actions and refresh behavior in the Editor/device. Keep prices, fees, eligibility, balances, and settlement authoritative server-side.",
   },
   {
     id: "social",
     classification: "EXTEND_UNITY_WITH_EXPO_CAPABILITY",
     evidence: [
       { path: "mobile/src/services/repository.ts", behavior: "Expo calls current friend, private/global chat, clan, and presence RPCs." },
-      { path: "unity/Assets/Scripts/Backend/VexforgeSocialRepository.cs", behavior: "Unity contains a social repository boundary." },
-      { path: "unity/Assets/Scripts/UI/VexforgeSocialHub.cs", behavior: "Unity contains a social UI surface." },
+      { path: "unity/Assets/Scripts/Backend/VexforgeSocialRepository.cs", behavior: "Unity source uses the existing social repository boundary for supported actions." },
+      { path: "unity/Assets/Scripts/UI/VexforgeSocialHub.cs", behavior: "Unity source provides a social hub and retains an unsent message draft when a send fails." },
     ],
-    decision: "Compare each screen/action to its live contract and port only supported behavior.",
+    decision: "Supported social consumers exist in Unity source; verify each action against current contracts and test rejection, refresh, and sign-out in the Editor/device. Do not add schema for unsupported consumers.",
   },
   {
     id: "telemetry",

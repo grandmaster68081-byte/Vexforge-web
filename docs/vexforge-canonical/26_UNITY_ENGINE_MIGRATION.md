@@ -70,10 +70,11 @@ compilación.
    No se persisten tokens en Git ni en PlayerPrefs.
 3. Los modelos anidados de algunas respuestas PostgREST deben validarse en
    Unity Editor con datos reales antes de cerrar Collection/Deck.
-4. Expo aporta semántica de replay, ceremonia de packs, movimiento reducido,
-   audio, háptica y UX que aún debe verificarse y portarse. Su flujo auth
-   observado expone alta por email, pero no recuperación de contraseña ni
-   proveedores externos.
+4. La semántica de replay, la apertura de packs, movimiento reducido, audio,
+   háptica y varias superficies de UX ya están implementadas en código Unity;
+   siguen pendientes de compilación y verificación de paridad en Editor/
+   dispositivo. El flujo Expo observado expone alta por email, pero no
+   recuperación de contraseña ni proveedores externos.
 5. Assets oficiales, audio, VFX y QA física requieren una etapa posterior y no
    se sustituyen con datos de producción inventados.
 6. `mobile/**` permanece hasta que las gates de paridad y eliminación pasen.
