@@ -22,8 +22,8 @@
 | Navigation, tutorial, and player state | OPEN | Tutorial replay and source navigation are implemented; verify route-by-route entry, loading, empty, error, return, and battle-completion behavior in Unity runtime |
 | Collection, card detail, deck, and formation | OPEN | Source adds collection search/ownership filters, card details, and an editable formation draft wired to existing validation/save RPCs; verify filters, ownership, and mutation results in Unity runtime |
 | Competitive battle and replay | OPEN | Unity now classifies and sequences the returned events, replays the last sequence without another battle request, and enables skipping only on interruptible frames; verify ordering, interruptions, result authority, and no local settlement in Unity runtime |
-| Pack opening and rewards | OPEN | Show the server-authorized order/open result, correct owned cards, and interaction parity without client-generated rewards |
-| Missions, world boss, raids, seasons, and social | OPEN | Verify every exposed action against an existing live contract; unsupported flows remain visibly unavailable |
+| Pack opening and rewards | OPEN | Unity source now lists packs, uses the existing buy/open RPCs, retries paid orders, reveals returned cards, and refreshes ownership/wallet; verify this behavior in Editor/device without client-generated rewards |
+| Missions, world boss, raids, seasons, and social | OPEN | Unity source now provides a read-only active-boss atlas; verify it in Editor/device and confirm each additional action against an existing live contract |
 | Audio, haptics, quality, and reduced motion | OPEN | Existing battle clips and semantic haptic cues are mapped; reduced motion suppresses animated battle effects while keeping static feedback. Verify on Editor/device; presentation settings must not change rules |
 | Asset identity and provenance | OPEN | Reconcile official card/boss/world assets and manifest references; no generated replacement for canonical art |
 | Unity Editor validation | NOT_VERIFIED | Open the existing Unity project in the declared Editor version and record compile/play-mode evidence; do not create a new project |
@@ -59,3 +59,26 @@ Implemented in source, pending runtime verification:
 - The competitive-battle and audio/haptics gates remain OPEN until Unity Editor
   compilation and device behavior are checked. No Supabase changes or Android
   package builds are part of this milestone.
+
+## Hito 06 — Pack, boss and world interactions
+
+Implemented in source, pending Unity Editor/device verification:
+
+- Treasury opens a native pack vault that reads the active catalog and paid
+  pending orders through the existing Supabase contracts. Buying calls
+  `vexforge_buy_pack_with_vex`; opening calls `vexforge_open_pack`. Unity displays
+  only returned cards, retries a paid order after an open failure, then reloads
+  collection ownership and wallet state from Supabase.
+- The seal, charge, rupture, and card-by-card reveal are presentation only.
+  Official card art is requested through the bounded canonical card-art
+  resolver; no local reward, rarity, ownership, or price calculation was added.
+- Nexus now opens a world atlas that lists active bosses from `world_bosses` and
+  presents the selected server record with the existing boss sigil/aura assets.
+  The encounter control remains unavailable: Unity does not simulate a boss
+  fight or settle rewards.
+- Only the existing `VF_PACK_VAULT_HERO`, `VF_PACK_RELIC`, `VF_BOSS_AURA`, and
+  `VF_BOSS_SIGIL` assets are used. Per-boss art identity remains unverified.
+- Pack, world/boss, asset-provenance, and runtime gates remain OPEN until
+  compilation, interaction, ownership, and presentation are checked in the
+  declared Unity Editor/device. No Supabase schema/data changes, Expo removal,
+  or APK/AAB generation are part of this milestone.

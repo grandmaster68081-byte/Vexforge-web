@@ -17,6 +17,8 @@ namespace Vexforge.Tier1
         private VexforgeTier1TutorialDirector tutorial;
         private VexforgeTier1RouteSurface surface;
         private BattlePresentationDirector canonicalBattle;
+        private VexforgeTier1PackRevealDirector packReveal;
+        private VexforgeTier1WorldAtlasDirector worldAtlas;
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
         private static void Install()
@@ -50,9 +52,13 @@ namespace Vexforge.Tier1
             var vfx=gameObject.AddComponent<VexforgeTier1VfxDirector>();vfx.Initialize(transform);
             gameObject.AddComponent<VexforgeTier1LegacyHudSuppressor>().Initialize(app);
             gameObject.AddComponent<VexforgeTier1NavigationRail>().Initialize(app);
+            packReveal=gameObject.AddComponent<VexforgeTier1PackRevealDirector>();packReveal.Initialize(app,assets);
+            worldAtlas=gameObject.AddComponent<VexforgeTier1WorldAtlasDirector>();worldAtlas.Initialize(app,assets);
             gate=gameObject.AddComponent<VexforgeTier1BattleGate>();gate.Initialize(app,null,assets);
             tutorial=gameObject.AddComponent<VexforgeTier1TutorialDirector>();tutorial.Initialize(app,assets);tutorial.BindBattleGate(gate);
             surface=gameObject.AddComponent<VexforgeTier1RouteSurface>();surface.Initialize(app,gate,tutorial,null,assets);
+            surface.BindPackReveal(packReveal);
+            surface.BindWorldAtlas(worldAtlas);
             gameObject.AddComponent<VexforgeTier1RoomOrnamentDirector>().Initialize(app,assets);
             app.Session.StateChanged+=OnAuth;
         }
@@ -102,7 +108,7 @@ namespace Vexforge.Tier1
             var polish=gameObject.AddComponent<VexforgeTier1CanonicalBattlefieldPolish>();polish.Initialize(director,stage,assets);
             var encounter=gameObject.AddComponent<VexforgeTier1EncounterPresentationDirector>();encounter.Initialize(director,stage);
             var cardImmersion=gameObject.AddComponent<VexforgeTier1CardImmersionDirector>();cardImmersion.Initialize(director,FindCanonicalArtResolver());
-            var packReveal=gameObject.AddComponent<VexforgeTier1PackRevealDirector>();packReveal.Initialize(assets);
+            if(packReveal!=null)packReveal.BindArtResolver(FindCanonicalArtResolver());
             if(app.Session.IsAuthenticated&&tutorial!=null)tutorial.TryStart();
         }
 

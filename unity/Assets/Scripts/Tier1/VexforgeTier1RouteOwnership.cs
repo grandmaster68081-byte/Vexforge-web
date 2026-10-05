@@ -16,6 +16,7 @@ namespace Vexforge.Tier1
                 case GameRoute.Battle:
                 case GameRoute.Missions:
                 case GameRoute.Economy:
+                case GameRoute.World:
                     return true;
                 default:
                     return false;

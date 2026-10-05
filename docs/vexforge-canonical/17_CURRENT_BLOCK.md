@@ -3,18 +3,15 @@
 ## Bloque activo
 
 Migración del cliente Android Expo heredado a Unity como runtime único. Los
-Hitos 01, 02 y 03 están publicados en `main`. El Hito 03 añadió alta por email
-con estado de confirmación, mantuvo inicio/restauración, añadió invalidación
-remota al cierre de sesión y recarga el estado del jugador al restaurar una
-sesión. El Hito 04 implementa búsqueda y filtros de colección por posesión,
-detalle de carta, edición de borrador de formación y un acceso para repetir el
-tutorial. La validación y el guardado del borrador llaman los RPC existentes y
-recargan el estado desde Supabase. Estos cambios de fuente todavía no están
-verificados en Unity Editor o dispositivo. Auth y almacenamiento seguro de los
-hitos anteriores tampoco están verificados. No se añadieron recuperación de
-contraseña ni proveedores externos porque no forman parte del flujo
-Expo/contrato live observado. El siguiente trabajo es validar estos flujos en
-Unity sin cerrar las gates hasta contar con evidencia de runtime.
+Hitos 01–03 están publicados en `main`. Los Hitos 04–06 tienen implementación
+de fuente para colección/formación/tutorial, batalla/replay y paquetes/atlas.
+El Hito 06 usa los RPC existentes para comprar y abrir paquetes; el atlas
+consulta jefes activos y no inicia encuentros ni genera recompensas. Ninguno
+de esos cambios de fuente equivale a validación de runtime. Auth, sesión,
+colección/formación, combate/replay, packs, audio/háptica y atlas siguen
+pendientes de verificación en Unity Editor/dispositivo. No se añadieron
+recuperación de contraseña ni proveedores externos porque no forman parte del
+flujo Expo/contrato live observado.
 
 ## Estado del runtime
 
@@ -28,23 +25,26 @@ Unity sin cerrar las gates hasta contar con evidencia de runtime.
   opcionales fallan, el error queda indicado sin bloquear la carga principal.
 - El inventario de fuente y las decisiones por capacidad están en
   `27_UNITY_EXPO_MIGRATION_INVENTORY.json`.
-- Replay, ceremonia de packs, UX completa, háptica, movimiento reducido y
-  varias superficies requieren port/paridad.
+- Replay, ceremonia interactiva de packs y atlas de jefes tienen código Unity;
+  su comportamiento de runtime no está verificado.
+- Unity no calcula propiedad, resultados de combate ni recompensas. El atlas
+  presenta fichas del servidor; un encuentro de jefe permanece no disponible
+  hasta verificar un contrato autorizado.
 - No se encontraron assets Epic/Fab importados; esa ruta se retiró.
 - Supabase live no se modifica como parte del cliente. No se escribieron datos
   de Supabase.
 
 ## Siguiente unidad
 
-1. Terminar el Hito 04 como cambio acotado en `main`; conservar abiertas las
-   gates de colección/formación, tutorial, Unity Editor y dispositivo hasta
-   verificar los flujos en runtime.
-2. La siguiente validación debe usar el Unity Editor declarado por el proyecto
-   y comprobar estados autenticado, cargando, vacío y error; verificar
-   edición/validación/guardado contra los RPC existentes y repetir el tutorial
-   sin resultados o recompensas locales.
+1. Validar Hitos 04–06 en Unity Editor/dispositivo: estados autenticado,
+   cargando, vacío y error; edición/validación/guardado de formación; replay y
+   omisión; compra/apertura/reintento de paquetes; navegación del atlas.
+2. Continuar con Hito 07 solo sobre acciones con contrato vigente; mantener
+   inaccesibles las operaciones de encuentro o recompensa que no se puedan
+   confirmar como server-authoritative.
 3. Antes de iniciar otra unidad de código, hacer `git fetch --prune origin` y
    confirmar `main`, árbol limpio y `HEAD == origin/main`.
-4. Mantener `mobile/**` hasta superar todas las gates de paridad y eliminación.
+4. Mantener `mobile/**` y las gates abiertas hasta superar verificación de
+   paridad, seguridad, Editor/dispositivo y eliminación.
 
 No generar APK/AAB ni modificar datos live durante esta migración.

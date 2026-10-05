@@ -31,14 +31,15 @@ namespace Vexforge.Tier1
             if (!initialized) return;
             route = nextRoute;
             Clear();
-            var show = route == GameRoute.Collection || route == GameRoute.Deck || route == GameRoute.Profile;
+            var show = route == GameRoute.Collection || route == GameRoute.Deck || route == GameRoute.Profile || route == GameRoute.World;
             canvas.gameObject.SetActive(show);
             if (!show) return;
             var panel = VexforgeTier1Ui.Panel(canvas.transform, "RuneBar", new Color(.008f,.010f,.014f,.72f));
             VexforgeTier1Ui.Anchor(panel.rectTransform, .055f,.035f,.945f,.12f);
             var back = VexforgeTier1Ui.Button(panel.transform, "Nexus", "NEXUS", () => app.Navigation.Navigate(GameRoute.Nexus), new Color(.045f,.043f,.039f,.94f), 12);
             VexforgeTier1Ui.Anchor(back.GetComponent<RectTransform>(), .03f,.18f,.22f,.82f);
-            var label = VexforgeTier1Ui.Label(panel.transform, "Route", route == GameRoute.Collection ? "ARCHIVE" : route == GameRoute.Deck ? "FORGE" : "HALL", 13, VexforgeTier1Ui.Gold, TextAnchor.MiddleCenter);
+            var routeLabel = route == GameRoute.Collection ? "ARCHIVE" : route == GameRoute.Deck ? "FORGE" : route == GameRoute.World ? "WORLD ATLAS" : "HALL";
+            var label = VexforgeTier1Ui.Label(panel.transform, "Route", routeLabel, 13, VexforgeTier1Ui.Gold, TextAnchor.MiddleCenter);
             VexforgeTier1Ui.Anchor(label.rectTransform, .24f,.18f,.58f,.82f);
             if (route == GameRoute.Deck)
             {

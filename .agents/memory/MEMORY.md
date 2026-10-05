@@ -16,3 +16,4 @@
 - [Expo workflow runtime](expo-workflow-runtime.md) — Metro should run as the console workflow without an HTTP port health check.
 - [Git LFS attachment recovery](git-lfs-attachment-recovery.md) — look for the historical LFS pointer and cache before asking to re-upload a missing large package.
 - [Vexforge access rule](vexforge-access-rule.md) — avoid connectors; use the project's configured PAT secrets for GitHub/Supabase operations.
+- [Vexforge milestone workflow](vexforge-migration-workflow.md) — keep Unity migration changes on verified, pushed `main`; preserve Supabase authority and Expo until release gates pass.

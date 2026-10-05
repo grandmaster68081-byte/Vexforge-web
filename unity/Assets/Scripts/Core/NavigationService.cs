@@ -6,7 +6,7 @@ namespace Vexforge.Core
     /// Canonical internal navigation routes.
     /// Product-facing labels such as ARCHIVE, FORGE and BATTLEFIELD remain presentation labels only.
     /// Numeric values are intentionally preserved from the previous enum layout so serialized values
-    /// remain stable: Boot=0, Nexus=1, Collection=2, Deck=3, Battle=4, Missions=5, Economy=6, Profile=7.
+    /// remain stable: Boot=0, Nexus=1, Collection=2, Deck=3, Battle=4, Missions=5, Economy=6, Profile=7, World=8.
     /// </summary>
     public enum GameRoute
     {
@@ -17,7 +17,8 @@ namespace Vexforge.Core
         Battle = 4,
         Missions = 5,
         Economy = 6,
-        Profile = 7
+        Profile = 7,
+        World = 8
     }
 
     public sealed class NavigationService

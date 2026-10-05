@@ -9,8 +9,8 @@ namespace Vexforge.Tier1
         private VexforgeApp app;
         private Canvas canvas;
         private Button[] buttons;
-        private readonly string[] labels = { "NEXUS", "BATALLA", "ARCHIVO", "FORJA", "PERFIL" };
-        private readonly GameRoute[] routes = { GameRoute.Nexus, GameRoute.Battle, GameRoute.Collection, GameRoute.Deck, GameRoute.Profile };
+        private readonly string[] labels = { "NEXUS", "BATALLA", "ARCHIVO", "FORJA", "ATLAS", "PERFIL" };
+        private readonly GameRoute[] routes = { GameRoute.Nexus, GameRoute.Battle, GameRoute.Collection, GameRoute.Deck, GameRoute.World, GameRoute.Profile };
         private bool battleLocked;
 
         public void Initialize(VexforgeApp host)
@@ -29,8 +29,8 @@ namespace Vexforge.Tier1
             canvas=VexforgeTier1Ui.MakeCanvas("VexforgeTier1NavigationRail",72,4.0f);
             var dock=VexforgeTier1Ui.Panel(canvas.transform,"RuneDock",new Color(.004f,.006f,.010f,.94f));
             VexforgeTier1Ui.Anchor(dock.rectTransform,.045f,.015f,.955f,.082f);
-            buttons=new Button[5];
-            for(var i=0;i<5;i++){var index=i;var button=VexforgeTier1Ui.Button(dock.transform,"Nav_"+i,labels[i],()=>Navigate(routes[index]),new Color(.055f,.050f,.046f,.94f),11);buttons[i]=button;VexforgeTier1Ui.Anchor(button.GetComponent<RectTransform>(),.012f+i*.198f,.12f,.188f+i*.198f,.88f);}
+            buttons=new Button[6];
+            for(var i=0;i<6;i++){var index=i;var button=VexforgeTier1Ui.Button(dock.transform,"Nav_"+i,labels[i],()=>Navigate(routes[index]),new Color(.055f,.050f,.046f,.94f),10);buttons[i]=button;VexforgeTier1Ui.Anchor(button.GetComponent<RectTransform>(),.008f+i*.165f,.12f,.158f+i*.165f,.88f);}
             canvas.gameObject.SetActive(false);
         }
         private void Navigate(GameRoute route){if(battleLocked)return;if(app!=null&&app.Navigation!=null)app.Navigation.Navigate(route);}
@@ -49,6 +49,6 @@ namespace Vexforge.Tier1
                 buttons[i].interactable=!battleLocked;
             }
         }
-        private static int Index(GameRoute route){switch(route){case GameRoute.Battle:return 1;case GameRoute.Collection:return 2;case GameRoute.Deck:return 3;case GameRoute.Profile:return 4;default:return 0;}}
+        private static int Index(GameRoute route){switch(route){case GameRoute.Battle:return 1;case GameRoute.Collection:return 2;case GameRoute.Deck:return 3;case GameRoute.World:return 4;case GameRoute.Profile:return 5;default:return 0;}}
     }
 }

@@ -163,6 +163,74 @@ namespace Vexforge.Backend
     }
 
     [Serializable]
+    public sealed class PackRecord
+    {
+        public string pack_key;
+        public string pack_name;
+        public float price_vex;
+        public float price_usdt;
+        public int card_count;
+        public string notes;
+    }
+
+    [Serializable]
+    public sealed class PackPurchaseResult
+    {
+        public bool ok;
+        public string order_id;
+        public string pack_key;
+        public float vex_spent;
+        public float balance_after;
+        public string reason;
+    }
+
+    [Serializable]
+    public sealed class PackOrderRecord
+    {
+        public string id;
+        public string pack_key;
+        public string status;
+        public string created_at;
+    }
+
+    [Serializable]
+    public sealed class PackOpenResult
+    {
+        public bool ok;
+        public OpenedCard[] cards;
+        public string pack_key;
+        public int card_count;
+        public string reason;
+    }
+
+    [Serializable]
+    public sealed class OpenedCard
+    {
+        public string id;
+        public string card_id;
+        public string code;
+        public string name;
+        public string rarity;
+        public string faction;
+        public int power;
+        public string image_url;
+    }
+
+    [Serializable]
+    public sealed class WorldBossRecord
+    {
+        public string id;
+        public string boss_code;
+        public string name;
+        public string region_id;
+        public int tier;
+        public int power_level;
+        public int hp;
+        public bool active;
+        public string image_url;
+    }
+
+    [Serializable]
     public sealed class BattleResult
     {
         public bool ok;

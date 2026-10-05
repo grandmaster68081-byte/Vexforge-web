@@ -39,6 +39,10 @@ namespace Vexforge.GameState
         public DeckSlot[] Deck { get; private set; } = new DeckSlot[0];
         public MissionRecord[] Missions { get; private set; } = new MissionRecord[0];
         public WalletRecord Wallet { get; private set; }
+        public WorldBossRecord[] WorldBosses { get; private set; } = new WorldBossRecord[0];
+        public string WorldBossesError { get; private set; }
+        public bool WorldBossesLoading { get; private set; }
+        public string PackSyncWarning { get; private set; }
         public string LastError { get; private set; }
 
         public async Task RefreshAsync()
@@ -101,6 +105,80 @@ namespace Vexforge.GameState
             }
         }
 
+        public Task<PackRecord[]> GetPackCatalogAsync()
+        {
+            EnsureAuthenticatedPlayer();
+            return repository.GetPackCatalogAsync();
+        }
+
+        public Task<PackOrderRecord[]> GetPendingPackOrdersAsync()
+        {
+            EnsureAuthenticatedPlayer();
+            return repository.GetPendingPackOrdersAsync(PlayerId);
+        }
+
+        public Task<PackPurchaseResult> BuyPackAsync(string packKey)
+        {
+            EnsureAuthenticatedPlayer();
+            return repository.BuyPackAsync(packKey);
+        }
+
+        public async Task<PackOpenResult> OpenPackAsync(string orderId)
+        {
+            EnsureAuthenticatedPlayer();
+            var playerId = PlayerId;
+            var result = await repository.OpenPackAsync(orderId);
+            if (result == null || !result.ok)
+                return result;
+
+            if (!session.IsAuthenticated || PlayerId != playerId)
+                throw new InvalidOperationException("La sesión cambió antes de actualizar la colección.");
+
+            PackSyncWarning = string.Empty;
+            try
+            {
+                Collection = await repository.GetCollectionAsync(playerId);
+            }
+            catch (Exception)
+            {
+                PackSyncWarning = "La apertura fue confirmada; la colección no se pudo actualizar ahora.";
+            }
+
+            try
+            {
+                Wallet = await repository.GetWalletAsync(playerId);
+            }
+            catch (Exception)
+            {
+                if (string.IsNullOrEmpty(PackSyncWarning))
+                    PackSyncWarning = "La apertura fue confirmada; el saldo no se pudo actualizar ahora.";
+            }
+            return result;
+        }
+
+        public async Task<WorldBossRecord[]> LoadActiveWorldBossesAsync()
+        {
+            EnsureAuthenticatedPlayer();
+            WorldBossesLoading = true;
+            WorldBossesError = string.Empty;
+            try
+            {
+                var bosses = await repository.GetActiveWorldBossesAsync();
+                WorldBosses = bosses ?? new WorldBossRecord[0];
+                return WorldBosses;
+            }
+            catch (Exception)
+            {
+                WorldBosses = new WorldBossRecord[0];
+                WorldBossesError = "El atlas no está disponible desde esta sesión.";
+                throw;
+            }
+            finally
+            {
+                WorldBossesLoading = false;
+            }
+        }
+
         public void Clear()
         {
             Profile = null;
@@ -115,8 +193,18 @@ namespace Vexforge.GameState
             Deck = new DeckSlot[0];
             Missions = new MissionRecord[0];
             Wallet = null;
+            WorldBosses = new WorldBossRecord[0];
+            WorldBossesError = string.Empty;
+            WorldBossesLoading = false;
+            PackSyncWarning = string.Empty;
             LastError = string.Empty;
             SetSync(SyncState.Idle);
+        }
+
+        private void EnsureAuthenticatedPlayer()
+        {
+            if (!session.IsAuthenticated || string.IsNullOrWhiteSpace(PlayerId))
+                throw new InvalidOperationException("Se requiere una sesión sincronizada para esta acción.");
         }
 
         private void SetSync(SyncState state)

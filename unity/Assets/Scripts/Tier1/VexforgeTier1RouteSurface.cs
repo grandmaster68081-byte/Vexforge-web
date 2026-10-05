@@ -16,6 +16,8 @@ namespace Vexforge.Tier1
         private VexforgeTier1DiegeticRoomDirector rooms;
         private VexforgeTier1LegacyRouteFrame legacyFrame;
         private BattlePresentationDirector canonicalBattle;
+        private VexforgeTier1PackRevealDirector packReveal;
+        private VexforgeTier1WorldAtlasDirector worldAtlas;
         private bool subscribed;
         private bool ready;
         private bool routeBounce;
@@ -50,6 +52,17 @@ namespace Vexforge.Tier1
             if(ready)Apply(app==null?GameRoute.Nexus:app.Navigation.CurrentRoute);
         }
 
+        public void BindPackReveal(VexforgeTier1PackRevealDirector director)
+        {
+            packReveal=director;
+            if(rooms!=null)rooms.BindPackReveal(director);
+        }
+
+        public void BindWorldAtlas(VexforgeTier1WorldAtlasDirector director)
+        {
+            worldAtlas=director;
+        }
+
         private IEnumerator WaitForBattleAndApply()
         {
             for(var i=0;i<600;i++)
@@ -73,6 +86,8 @@ namespace Vexforge.Tier1
             {
                 if(battleGate!=null)battleGate.HandleSignedOut();
                 if(rooms!=null)rooms.Hide();
+                if(packReveal!=null)packReveal.ResetSessionState();
+                if(worldAtlas!=null)worldAtlas.Hide();
                 if(chrome!=null)chrome.Render(GameRoute.Nexus);
                 if(navRail!=null)navRail.Hide();
                 if(legacyFrame!=null)legacyFrame.gameObject.SetActive(false);
@@ -90,6 +105,8 @@ namespace Vexforge.Tier1
             {
                 if(battleGate!=null)battleGate.Hide();
                 if(rooms!=null)rooms.Hide();
+                if(packReveal!=null)packReveal.Hide();
+                if(worldAtlas!=null)worldAtlas.Hide();
                 if(chrome!=null)chrome.Render(GameRoute.Nexus);
                 if(navRail!=null)navRail.Hide();
                 if(legacyFrame!=null)legacyFrame.gameObject.SetActive(false);
@@ -110,6 +127,8 @@ namespace Vexforge.Tier1
             navRail.SetBattleLocked(battleGate!=null&&battleGate.IsNavigationLocked);
             if(chrome!=null)chrome.Render(route);
             if(navRail!=null)navRail.Show(route);
+            if(route!=GameRoute.Economy&&packReveal!=null)packReveal.Hide();
+            if(route!=GameRoute.World&&worldAtlas!=null)worldAtlas.Hide();
             if(route==GameRoute.Battle)
             {
                 if(rooms!=null)rooms.Hide();
@@ -121,7 +140,12 @@ namespace Vexforge.Tier1
             {
                 if(battleGate!=null)battleGate.Hide();
                 if(canonicalBattle!=null)canonicalBattle.StopAndHide();
-                if(route==GameRoute.Nexus||route==GameRoute.Missions||route==GameRoute.Economy)
+                if(route==GameRoute.World)
+                {
+                    if(rooms!=null)rooms.Hide();
+                    if(worldAtlas!=null)worldAtlas.Show();
+                }
+                else if(route==GameRoute.Nexus||route==GameRoute.Missions||route==GameRoute.Economy)
                 {
                     if(rooms!=null)rooms.Show(route);
                 }

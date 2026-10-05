@@ -1,38 +1,382 @@
 using System.Collections;
 using UnityEngine;
-using UnityEngine.UI;
+using Vexforge.Backend;
+using Vexforge.Core;
+using Vexforge.Presentation;
 
 namespace Vexforge.Tier1
 {
     public sealed class VexforgeTier1PackRevealDirector : MonoBehaviour
     {
-        private Canvas canvas;
-        private Image background;
-        private RectTransform relic;
-        private Text status;
-        private float clock;
+        private enum ViewState
+        {
+            Catalog,
+            Opening,
+            Reveal,
+            Complete
+        }
+
+        private VexforgeApp app;
         private VexforgeTier1AssetRegistry assets;
+        private VexforgeCardArtResolver artResolver;
+        private VexforgeTextureLruCache.TextureLease cardArtLease;
+        private VexforgeTier1PackRevealView view;
+        private PackRecord[] packs = new PackRecord[0];
+        private PackOrderRecord[] pendingOrders = new PackOrderRecord[0];
+        private OpenedCard[] openedCards = new OpenedCard[0];
+        private string pendingOrderId;
+        private string pendingLoadWarning;
+        private int packPage;
+        private int pendingOrderIndex;
+        private int revealIndex = -1;
+        private int sessionGeneration;
+        private bool visible;
+        private bool busy;
+        private bool mutationInFlight;
+        private ViewState viewState;
         private Coroutine revealRoutine;
 
-        public void Initialize(VexforgeTier1AssetRegistry registry)
+        public void Initialize(VexforgeApp host, VexforgeTier1AssetRegistry registry)
         {
-            if(canvas!=null)return;
-            assets=registry;
-            canvas=VexforgeTier1Ui.MakeCanvas("VexforgeTier1PackReveal",84,3.4f);
-            var veil=VexforgeTier1Ui.Panel(canvas.transform,"Veil",new Color(.002f,.002f,.006f,.72f));VexforgeTier1Ui.Full(veil.rectTransform);
-            background=VexforgeTier1Ui.Panel(canvas.transform,"Vault",new Color(.006f,.008f,.013f,1f));VexforgeTier1Ui.Anchor(background.rectTransform,.04f,.07f,.96f,.93f);
-            var hero=assets==null?null:assets.LoadTexture("VF_PACK_VAULT_HERO","VF_NEXUS_CITADEL_HERO");
-            if(hero!=null){background.color=Color.white;background.sprite=Sprite.Create(hero,new Rect(0,0,hero.width,hero.height),new Vector2(.5f,.5f),100f);background.preserveAspect=false;}
-            var shade=VexforgeTier1Ui.Panel(background.transform,"Shade",new Color(.002f,.003f,.007f,.52f));VexforgeTier1Ui.Full(shade.rectTransform);
-            var title=VexforgeTier1Ui.Label(background.transform,"Title","PACK VAULT",30,VexforgeTier1Ui.Gold,TextAnchor.MiddleCenter);VexforgeTier1Ui.Anchor(title.rectTransform,.08f,.82f,.92f,.92f);
-            var relicGo=new GameObject("Relic",typeof(RectTransform),typeof(RawImage));relicGo.transform.SetParent(background.transform,false);relic=relicGo.GetComponent<RectTransform>();VexforgeTier1Ui.Anchor(relic,.22f,.24f,.78f,.78f);var raw=relicGo.GetComponent<RawImage>();raw.texture=assets==null?null:assets.LoadTexture("VF_PACK_RELIC");raw.color=Color.white;
-            status=VexforgeTier1Ui.Label(background.transform,"Status","ABRIENDO…",12,VexforgeTier1Ui.Muted,TextAnchor.MiddleCenter);VexforgeTier1Ui.Anchor(status.rectTransform,.15f,.14f,.85f,.20f);
-            canvas.gameObject.SetActive(false);
+            if (view != null) return;
+            app = host;
+            assets = registry;
+            view = gameObject.AddComponent<VexforgeTier1PackRevealView>();
+            view.Initialize(assets, Close);
         }
-        public void Show(){if(canvas==null)return;if(revealRoutine!=null)StopCoroutine(revealRoutine);canvas.gameObject.SetActive(true);clock=0f;revealRoutine=StartCoroutine(RevealRoutine());}
-        public void Hide(){if(revealRoutine!=null){StopCoroutine(revealRoutine);revealRoutine=null;}if(canvas!=null)canvas.gameObject.SetActive(false);}
-        private IEnumerator RevealRoutine(){status.text="SELLANDO EL VAULT…";yield return new WaitForSecondsRealtime(.55f);status.text="REVELANDO";yield return new WaitForSecondsRealtime(.72f);status.text="CONTENIDO AUTORIZADO POR EL SERVIDOR";revealRoutine=null;}
-        private void OnDestroy(){if(revealRoutine!=null)StopCoroutine(revealRoutine);if(background!=null&&background.sprite!=null)Destroy(background.sprite);}
-        private void Update(){if(canvas==null||!canvas.gameObject.activeSelf||relic==null)return;clock+=Time.unscaledDeltaTime;relic.localEulerAngles=new Vector3(0f,0f,Mathf.Sin(clock*1.4f)*2.4f);var s=1f+Mathf.Sin(clock*1.8f)*.025f;relic.localScale=Vector3.one*s;}
+
+        public void BindArtResolver(VexforgeCardArtResolver resolver)
+        {
+            artResolver = resolver;
+        }
+
+        public void ShowCatalog()
+        {
+            if (view == null || app == null || app.GameState == null) return;
+            visible = true;
+            view.Show();
+            if (busy)
+            {
+                view.ShowLoading("ESPERA A QUE TERMINE LA OPERACIÓN ACTUAL.");
+                view.SetCloseEnabled(!mutationInFlight);
+                return;
+            }
+
+            viewState = ViewState.Catalog;
+            LoadCatalogAsync();
+        }
+
+        public void Hide()
+        {
+            visible = false;
+            if (revealRoutine != null)
+            {
+                StopCoroutine(revealRoutine);
+                revealRoutine = null;
+            }
+            ReleaseCardArt();
+            if (view != null) view.Hide();
+        }
+
+        public void ResetSessionState()
+        {
+            sessionGeneration++;
+            pendingOrderId = null;
+            packs = new PackRecord[0];
+            pendingOrders = new PackOrderRecord[0];
+            openedCards = new OpenedCard[0];
+            pendingLoadWarning = string.Empty;
+            packPage = 0;
+            pendingOrderIndex = 0;
+            revealIndex = -1;
+            Hide();
+        }
+
+        private async void LoadCatalogAsync()
+        {
+            if (busy || !visible) return;
+            var generation = sessionGeneration;
+            busy = true;
+            var loadWarning = string.Empty;
+            view.ShowLoading("CONSULTANDO EL CATÁLOGO AUTORIZADO…");
+            view.SetCloseEnabled(true);
+
+            PackRecord[] loadedPacks;
+            try
+            {
+                loadedPacks = await app.GameState.GetPackCatalogAsync();
+            }
+            catch (System.Exception)
+            {
+                loadedPacks = new PackRecord[0];
+                loadWarning = "No se pudo cargar el catálogo.";
+            }
+
+            PackOrderRecord[] loadedOrders;
+            try
+            {
+                loadedOrders = await app.GameState.GetPendingPackOrdersAsync();
+            }
+            catch (System.Exception)
+            {
+                loadedOrders = new PackOrderRecord[0];
+                loadWarning = string.IsNullOrEmpty(loadWarning)
+                    ? "No se pudieron consultar las órdenes pendientes."
+                    : loadWarning + " Las órdenes pendientes tampoco se pudieron consultar.";
+            }
+
+            busy = false;
+            if (!IsCurrentSession(generation))
+            {
+                if (visible && app != null && app.Session != null && app.Session.IsAuthenticated)
+                    LoadCatalogAsync();
+                return;
+            }
+
+            packs = loadedPacks ?? new PackRecord[0];
+            pendingOrders = loadedOrders ?? new PackOrderRecord[0];
+            pendingLoadWarning = loadWarning;
+            packPage = Mathf.Clamp(packPage, 0, Mathf.Max(0, (packs.Length - 1) / 3));
+            pendingOrderIndex = Mathf.Clamp(pendingOrderIndex, 0, Mathf.Max(0, pendingOrders.Length - 1));
+            if (!visible || viewState != ViewState.Catalog) return;
+            RenderCatalog(pendingLoadWarning);
+        }
+
+        private void RenderCatalog(string message)
+        {
+            viewState = ViewState.Catalog;
+            view.ShowCatalog(
+                packs,
+                pendingOrders,
+                packPage,
+                pendingOrderIndex,
+                pendingOrderId,
+                message,
+                PurchasePack,
+                OpenPendingOrder,
+                RetryPendingOrder,
+                ChangePackPage,
+                ChangePendingOrder);
+            view.SetCloseEnabled(!mutationInFlight);
+        }
+
+        private async void PurchasePack(PackRecord pack)
+        {
+            if (busy || !visible || pack == null) return;
+            var generation = sessionGeneration;
+            busy = true;
+            mutationInFlight = true;
+            view.SetCloseEnabled(false);
+            view.ShowLoading("SOLICITANDO LA COMPRA AL SERVIDOR…");
+            try
+            {
+                var purchase = await app.GameState.BuyPackAsync(pack.pack_key);
+                if (!IsCurrentSession(generation)) return;
+                if (purchase == null || !purchase.ok || string.IsNullOrWhiteSpace(purchase.order_id))
+                    throw new System.InvalidOperationException("La compra no fue confirmada.");
+
+                pendingOrderId = purchase.order_id;
+                await OpenPendingOrderAsync(pendingOrderId, generation);
+            }
+            catch (System.Exception)
+            {
+                busy = false;
+                if (!IsCurrentSession(generation)) return;
+                if (visible)
+                    RenderCatalog(string.IsNullOrWhiteSpace(pendingOrderId)
+                        ? "LA COMPRA NO FUE CONFIRMADA."
+                        : "LA ORDEN SIGUE PENDIENTE; PUEDES REINTENTAR LA APERTURA.");
+            }
+            finally
+            {
+                busy = false;
+                mutationInFlight = false;
+                if (visible && viewState == ViewState.Catalog)
+                    view.SetCloseEnabled(true);
+            }
+        }
+
+        private void RetryPendingOrder()
+        {
+            if (string.IsNullOrWhiteSpace(pendingOrderId)) return;
+            OpenPendingOrder(pendingOrderId);
+        }
+
+        private async void OpenPendingOrder(string orderId)
+        {
+            if (busy || string.IsNullOrWhiteSpace(orderId)) return;
+            var generation = sessionGeneration;
+            pendingOrderId = orderId;
+            busy = true;
+            mutationInFlight = true;
+            view.SetCloseEnabled(false);
+            view.ShowLoading("VALIDANDO LA ORDEN CON EL SERVIDOR…");
+            try
+            {
+                await OpenPendingOrderAsync(orderId, generation);
+            }
+            catch (System.Exception)
+            {
+                busy = false;
+                if (!IsCurrentSession(generation)) return;
+                if (visible)
+                    RenderCatalog("LA ORDEN NO SE ABRIÓ. PUEDES REINTENTAR SIN COMPRAR OTRA VEZ.");
+            }
+            finally
+            {
+                busy = false;
+                mutationInFlight = false;
+                if (visible && viewState == ViewState.Catalog)
+                    view.SetCloseEnabled(true);
+            }
+        }
+
+        private async System.Threading.Tasks.Task OpenPendingOrderAsync(string orderId, int generation)
+        {
+            var result = await app.GameState.OpenPackAsync(orderId);
+            if (!IsCurrentSession(generation)) return;
+            if (result == null || !result.ok || result.cards == null)
+                throw new System.InvalidOperationException("La apertura no fue confirmada.");
+
+            openedCards = result.cards;
+            pendingOrderId = null;
+            revealIndex = -1;
+            if (!visible) return;
+
+            viewState = ViewState.Opening;
+            view.SetCloseEnabled(false);
+            view.ShowOpening("ORDEN CONFIRMADA · INICIANDO CEREMONIA");
+            if (revealRoutine != null) StopCoroutine(revealRoutine);
+            revealRoutine = StartCoroutine(RevealRoutine());
+        }
+
+        private IEnumerator RevealRoutine()
+        {
+            viewState = ViewState.Opening;
+            view.SetOpeningStatus("ACTIVANDO EL SELLO…");
+            yield return new WaitForSecondsRealtime(.45f);
+            view.SetOpeningStatus("CARGANDO ENERGÍA…");
+            yield return new WaitForSecondsRealtime(.65f);
+            view.SetOpeningStatus("RUPTURA DEL SELLO…");
+            yield return new WaitForSecondsRealtime(.35f);
+            revealRoutine = null;
+
+            if (openedCards == null || openedCards.Length == 0)
+            {
+                RenderComplete("EL SERVIDOR CONFIRMÓ LA APERTURA SIN CARTAS PARA MOSTRAR.");
+                yield break;
+            }
+
+            viewState = ViewState.Reveal;
+            ShowNextCard();
+        }
+
+        private void ShowNextCard()
+        {
+            if (!visible || viewState != ViewState.Reveal) return;
+            revealIndex++;
+            if (openedCards == null || revealIndex >= openedCards.Length)
+            {
+                RenderComplete("APERTURA COMPLETADA · " + (openedCards == null ? 0 : openedCards.Length) + " CARTAS CONFIRMADAS.");
+                return;
+            }
+
+            ReleaseCardArt();
+            var card = openedCards[revealIndex];
+            view.ShowCard(
+                card,
+                revealIndex,
+                openedCards.Length,
+                null,
+                app.GameState.PackSyncWarning,
+                ShowNextCard);
+            LoadCardArtAsync(card, revealIndex);
+        }
+
+        private async void LoadCardArtAsync(OpenedCard opened, int expectedIndex)
+        {
+            if (artResolver == null || opened == null) return;
+            var card = FindOwnedCard(opened);
+            if (card == null) return;
+
+            var lease = await artResolver.AcquireAsync(card);
+            if (lease == null) return;
+            if (!visible || viewState != ViewState.Reveal || revealIndex != expectedIndex)
+            {
+                lease.Dispose();
+                return;
+            }
+
+            ReleaseCardArt();
+            cardArtLease = lease;
+            view.SetCardTexture(lease.Texture);
+        }
+
+        private CardRecord FindOwnedCard(OpenedCard opened)
+        {
+            if (opened == null || app == null || app.GameState == null) return null;
+            var collection = app.GameState.Collection;
+            if (collection == null) return null;
+            var requestedId = !string.IsNullOrWhiteSpace(opened.card_id) ? opened.card_id : opened.id;
+            for (var i = 0; i < collection.Length; i++)
+            {
+                var row = collection[i];
+                if (row == null || row.card == null) continue;
+                if ((!string.IsNullOrWhiteSpace(requestedId) && row.card.id == requestedId) ||
+                    (!string.IsNullOrWhiteSpace(opened.code) && row.card.code == opened.code))
+                    return row.card;
+            }
+            return null;
+        }
+
+        private void RenderComplete(string message)
+        {
+            viewState = ViewState.Complete;
+            ReleaseCardArt();
+            view.ShowComplete(message, app.GameState.PackSyncWarning, Close);
+            view.SetCloseEnabled(true);
+        }
+
+        private void ChangePackPage(int delta)
+        {
+            var pageCount = (packs.Length + 2) / 3;
+            if (pageCount <= 1) return;
+            packPage = (packPage + delta + pageCount) % pageCount;
+            RenderCatalog(pendingLoadWarning);
+        }
+
+        private void ChangePendingOrder(int delta)
+        {
+            if (pendingOrders.Length <= 1) return;
+            pendingOrderIndex = (pendingOrderIndex + delta + pendingOrders.Length) % pendingOrders.Length;
+            RenderCatalog(pendingLoadWarning);
+        }
+
+        private void Close()
+        {
+            if (busy) return;
+            Hide();
+        }
+
+        private bool IsCurrentSession(int generation)
+        {
+            return generation == sessionGeneration &&
+                   app != null &&
+                   app.Session != null &&
+                   app.Session.IsAuthenticated;
+        }
+
+        private void ReleaseCardArt()
+        {
+            if (cardArtLease == null) return;
+            cardArtLease.Dispose();
+            cardArtLease = null;
+        }
+
+        private void OnDestroy()
+        {
+            if (revealRoutine != null) StopCoroutine(revealRoutine);
+            ReleaseCardArt();
+        }
     }
 }

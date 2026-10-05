@@ -16,6 +16,8 @@ namespace Vexforge.Tier1
         private Text body;
         private RectTransform portalRow;
         private Button backButton;
+        private Button packButton;
+        private VexforgeTier1PackRevealDirector packReveal;
         private bool built;
 
         public void Initialize(VexforgeApp host, VexforgeTier1AssetRegistry registry)
@@ -38,15 +40,28 @@ namespace Vexforge.Tier1
                 SetHero("VF_NEXUS_CITADEL_HERO");
                 BuildNexusPortals();
             }
+            else if(route==GameRoute.World)
+            {eyebrow.text="WORLD ATLAS";title.text="JEFES DEL MUNDO";body.text="Selecciona un registro activo para consultar su ficha.\n\nLos encuentros no disponibles no crean combates ni recompensas locales.";SetHero("VF_NEXUS_CITADEL_HERO");}
             else if(route==GameRoute.Missions)
             {eyebrow.text="MISSION HALL";title.text="EXPEDICIONES";body.text=BuildMissionReadout(app.GameState);SetHero("VF_MISSION_HALL_HERO");}
             else if(route==GameRoute.Economy)
             {eyebrow.text="TREASURY VAULT";title.text="TESORERÍA";body.text=BuildTreasuryReadout(app.GameState);SetHero("VF_TREASURY_VAULT_HERO");}
             else
             {eyebrow.text="PLAYER HALL";title.text="IDENTIDAD";body.text=BuildProfileReadout(app.GameState);SetHero("VF_NEXUS_CITADEL_HERO");}
+
+            var isEconomy=route==GameRoute.Economy;
+            if(backButton!=null)
+                VexforgeTier1Ui.Anchor(
+                    backButton.GetComponent<RectTransform>(),
+                    isEconomy ? .05f : .25f,
+                    .035f,
+                    isEconomy ? .47f : .75f,
+                    .095f);
+            if(packButton!=null)packButton.gameObject.SetActive(isEconomy);
         }
 
         public void Hide(){if(canvas!=null)canvas.gameObject.SetActive(false);}
+        public void BindPackReveal(VexforgeTier1PackRevealDirector director){packReveal=director;}
 
         private void Build()
         {
@@ -64,14 +79,18 @@ namespace Vexforge.Tier1
             backButton=VexforgeTier1Ui.Button(canvas.transform,"Back","VOLVER AL NEXUS",()=>app.Navigation.Navigate(GameRoute.Nexus),new Color(.055f,.052f,.048f,.96f),14);
             VexforgeTier1Ui.Anchor(backButton.GetComponent<RectTransform>(),.25f,.035f,.75f,.095f);
             backButton.gameObject.SetActive(false);
+            packButton=VexforgeTier1Ui.Button(canvas.transform,"PackVault","PACK VAULT",()=>{if(packReveal!=null)packReveal.ShowCatalog();},new Color(.13f,.09f,.045f,.98f),12);
+            VexforgeTier1Ui.Anchor(packButton.GetComponent<RectTransform>(),.53f,.035f,.95f,.095f);
+            packButton.gameObject.SetActive(false);
             canvas.gameObject.SetActive(false);
         }
 
         private void BuildNexusPortals()
         {
-            AddPortal("Expediciones",()=>app.Navigation.Navigate(GameRoute.Missions),0f,.31f);
-            AddPortal("Tesorería",()=>app.Navigation.Navigate(GameRoute.Economy),.34f,.65f);
-            AddPortal("Perfil",()=>app.Navigation.Navigate(GameRoute.Profile),.68f,1f);
+            AddPortal("Expediciones",()=>app.Navigation.Navigate(GameRoute.Missions),0f,.235f);
+            AddPortal("Tesorería",()=>app.Navigation.Navigate(GameRoute.Economy),.255f,.49f);
+            AddPortal("Atlas",()=>app.Navigation.Navigate(GameRoute.World),.51f,.745f);
+            AddPortal("Perfil",()=>app.Navigation.Navigate(GameRoute.Profile),.765f,1f);
         }
 
         private void AddPortal(string label,UnityEngine.Events.UnityAction action,float x1,float x2)

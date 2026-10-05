@@ -165,6 +165,81 @@ namespace Vexforge.Backend
             return First<WalletRecord>(response);
         }
 
+        public async Task<PackRecord[]> GetPackCatalogAsync()
+        {
+            var response = await client.GetAsync("rest/v1/vexforge_pack_catalog?select=pack_key,pack_name,price_vex,price_usdt,card_count,notes&active=eq.true&order=price_vex.asc&limit=100");
+            EnsureOk(response, "No se pudo cargar el catálogo de paquetes.");
+            return Array<PackRecord>(response);
+        }
+
+        public async Task<PackOrderRecord[]> GetPendingPackOrdersAsync(string playerId)
+        {
+            var response = await client.GetAsync(
+                "rest/v1/vexforge_pack_orders?select=id,pack_key,status,created_at&player_id=eq." +
+                Uri.EscapeDataString(playerId) +
+                "&status=eq.paid&order=created_at.desc&limit=50");
+            EnsureOk(response, "No se pudieron cargar los paquetes pendientes.");
+            return Array<PackOrderRecord>(response);
+        }
+
+        public async Task<PackPurchaseResult> BuyPackAsync(string packKey)
+        {
+            if (string.IsNullOrWhiteSpace(packKey))
+                throw new ArgumentException("El paquete no es válido.", nameof(packKey));
+
+            var response = await client.RpcAsync(
+                "vexforge_buy_pack_with_vex",
+                "{\"p_pack_key\":" + SupabaseClient.Quote(packKey.Trim()) + "}");
+            var result = RequiredJson<PackPurchaseResult>(
+                response,
+                "El servidor no confirmó la compra del paquete.",
+                "ok");
+            if (!result.ok)
+                return result;
+            if (string.IsNullOrWhiteSpace(result.order_id))
+                throw new InvalidOperationException("La compra no devolvió una orden válida.");
+            return result;
+        }
+
+        public async Task<PackOpenResult> OpenPackAsync(string orderId)
+        {
+            if (string.IsNullOrWhiteSpace(orderId))
+                throw new ArgumentException("La orden del paquete no es válida.", nameof(orderId));
+
+            var response = await client.RpcAsync(
+                "vexforge_open_pack",
+                "{\"p_order_id\":" + SupabaseClient.Quote(orderId.Trim()) + "}");
+            var result = RequiredJson<PackOpenResult>(
+                response,
+                "El servidor no confirmó la apertura del paquete.",
+                "ok",
+                "cards");
+            if (!result.ok)
+                return result;
+            if (result.cards == null)
+                throw new InvalidOperationException("La apertura no devolvió cartas verificables.");
+
+            for (var i = 0; i < result.cards.Length; i++)
+            {
+                var card = result.cards[i];
+                if (card == null ||
+                    (string.IsNullOrWhiteSpace(card.id) &&
+                     string.IsNullOrWhiteSpace(card.card_id) &&
+                     string.IsNullOrWhiteSpace(card.code)))
+                    throw new InvalidOperationException("La apertura devolvió una carta sin identidad.");
+            }
+
+            return result;
+        }
+
+        public async Task<WorldBossRecord[]> GetActiveWorldBossesAsync()
+        {
+            var response = await client.GetAsync(
+                "rest/v1/world_bosses?select=id,boss_code,name,region_id,tier,power_level,hp,active,image_url&active=eq.true&order=tier.asc&limit=50");
+            EnsureOk(response, "No se pudo cargar el atlas de jefes.");
+            return Array<WorldBossRecord>(response);
+        }
+
         private static CardRecord FindCard(CardRecord[] catalog, string id)
         {
             if (catalog == null) return null;
@@ -185,6 +260,12 @@ namespace Vexforge.Backend
                 result += SupabaseClient.Quote(values[i]);
             }
             return result + "]";
+        }
+
+        private static void EnsureOk(SupabaseResponse response, string errorMessage)
+        {
+            if (response == null || !response.Ok)
+                throw new InvalidOperationException(errorMessage);
         }
 
         private static T Json<T>(SupabaseResponse response) where T : class
