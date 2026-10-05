@@ -742,11 +742,23 @@ namespace Vexforge.UI
 
         private void HandleCardSelected(CardRecord card)
         {
-            if (cardInspection == null || card == null) return;
+            if (card == null) return;
+            if (alphaHud != null &&
+                app.Navigation.CurrentRoute == GameRoute.Deck &&
+                alphaHud.TryAddDeckCard(card))
+                return;
+            if (cardInspection == null) return;
             if (gallery != null) gallery.Hide();
             if (cardPool != null) cardPool.ReturnAll();
             inspectionRoute = app.Navigation.CurrentRoute;
-            cardInspection.Show(card, FindOwnership(card.id));
+            var ownership = FindOwnership(card.id);
+            cardInspection.Show(card, ownership);
+            if (alphaHud != null)
+                alphaHud.ShowCardDetails(card, ownership, () =>
+                {
+                    if (cardInspection != null)
+                        cardInspection.Hide();
+                });
         }
 
         private void HandleCardInspectionClosed()

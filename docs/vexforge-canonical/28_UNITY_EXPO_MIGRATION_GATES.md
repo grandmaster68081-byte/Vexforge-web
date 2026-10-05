@@ -19,8 +19,8 @@
 |---|---|---|
 | Authority reconciliation and source inventory | RECORDED | `VEXFORGE_CONTEXT.md`, `replit.md`, `16_IMPLEMENTATION_STATUS.md`, and `27_UNITY_EXPO_MIGRATION_INVENTORY.json`; commit and push the milestone before beginning another |
 | Auth/session parity and secure storage | OPEN | Email sign-up with confirmation handling, sign-in, restored-session player-state refresh, and remote/local sign-out are implemented in source; verify end-to-end and Android Keystore/AES-GCM lifecycle in Unity Editor/device; live project requires email confirmation and has external providers disabled |
-| Navigation, tutorial, and player state | OPEN | Route-by-route matrix with entry, loading, empty, error, and return behavior |
-| Collection, card detail, deck, and formation | OPEN | Compare filters, ownership, validation, and mutation results against existing backend contracts |
+| Navigation, tutorial, and player state | OPEN | Tutorial replay and source navigation are implemented; verify route-by-route entry, loading, empty, error, return, and battle-completion behavior in Unity runtime |
+| Collection, card detail, deck, and formation | OPEN | Source adds collection search/ownership filters, card details, and an editable formation draft wired to existing validation/save RPCs; verify filters, ownership, and mutation results in Unity runtime |
 | Competitive battle and replay | OPEN | Prove results/events are server-derived; verify event ordering, replay/skip behavior, and no local settlement |
 | Pack opening and rewards | OPEN | Show the server-authorized order/open result, correct owned cards, and interaction parity without client-generated rewards |
 | Missions, world boss, raids, seasons, and social | OPEN | Verify every exposed action against an existing live contract; unsupported flows remain visibly unavailable |

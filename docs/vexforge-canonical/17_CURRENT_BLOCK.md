@@ -6,11 +6,15 @@ Migración del cliente Android Expo heredado a Unity como runtime único. Los
 Hitos 01, 02 y 03 están publicados en `main`. El Hito 03 añadió alta por email
 con estado de confirmación, mantuvo inicio/restauración, añadió invalidación
 remota al cierre de sesión y recarga el estado del jugador al restaurar una
-sesión. Estos cambios están implementados en código, pero auth y almacenamiento
-seguro siguen sin verificarse en Unity Editor o dispositivo. No se añadieron
-recuperación de contraseña ni proveedores externos porque no forman parte del
-flujo Expo/contrato live observado. El siguiente es el Hito 04: colección,
-formación y tutorial.
+sesión. El Hito 04 implementa búsqueda y filtros de colección por posesión,
+detalle de carta, edición de borrador de formación y un acceso para repetir el
+tutorial. La validación y el guardado del borrador llaman los RPC existentes y
+recargan el estado desde Supabase. Estos cambios de fuente todavía no están
+verificados en Unity Editor o dispositivo. Auth y almacenamiento seguro de los
+hitos anteriores tampoco están verificados. No se añadieron recuperación de
+contraseña ni proveedores externos porque no forman parte del flujo
+Expo/contrato live observado. El siguiente trabajo es validar estos flujos en
+Unity sin cerrar las gates hasta contar con evidencia de runtime.
 
 ## Estado del runtime
 
@@ -32,14 +36,15 @@ formación y tutorial.
 
 ## Siguiente unidad
 
-1. Los cambios fuente de los Hitos 01, 02 y 03 ya están comprometidos y
-   publicados en `main`; auth/sesión conserva su gate de verificación de runtime
-   abierto y no se considera paridad verificada.
-2. Antes de iniciar el Hito 04, hacer `git fetch --prune origin` y confirmar
-   `main`, árbol limpio y `HEAD == origin/main`.
-3. Completar filtros, ownership y detalle de colección; edición de formación,
-   validación y guardado autoritativos; y tutorial guiado sobre sistemas reales,
-   sin crear resultados o recompensas locales.
+1. Terminar el Hito 04 como cambio acotado en `main`; conservar abiertas las
+   gates de colección/formación, tutorial, Unity Editor y dispositivo hasta
+   verificar los flujos en runtime.
+2. La siguiente validación debe usar el Unity Editor declarado por el proyecto
+   y comprobar estados autenticado, cargando, vacío y error; verificar
+   edición/validación/guardado contra los RPC existentes y repetir el tutorial
+   sin resultados o recompensas locales.
+3. Antes de iniciar otra unidad de código, hacer `git fetch --prune origin` y
+   confirmar `main`, árbol limpio y `HEAD == origin/main`.
 4. Mantener `mobile/**` hasta superar todas las gates de paridad y eliminación.
 
 No generar APK/AAB ni modificar datos live durante esta migración.

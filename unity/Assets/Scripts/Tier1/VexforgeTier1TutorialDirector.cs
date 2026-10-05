@@ -50,6 +50,18 @@ namespace Vexforge.Tier1
             Render();
         }
 
+        public void OpenFromStart()
+        {
+            if (app == null || app.Session == null || !app.Session.IsAuthenticated || canvas == null)
+                return;
+
+            step = 0;
+            tutorialBattleRequested = false;
+            active = true;
+            canvas.gameObject.SetActive(true);
+            Render();
+        }
+
         public void Hide()
         {
             active = false;
@@ -81,7 +93,7 @@ namespace Vexforge.Tier1
             switch (step)
             {
                 case 0: eyebrow.text="NEXUS"; title.text="ENTRA EN VEXFORGE"; body.text="Aprende el mundo mediante acciones reales: entra, prepara, desafía y vuelve con consecuencias autorizadas."; art="VF_NEXUS_CITADEL_HERO"; break;
-                case 1: eyebrow.text="ARCHIVE"; title.text="CONOCE TUS CARTAS"; body.text="Las 127 artes oficiales continúan en Supabase Storage. VEXFORGE añade marco, profundidad e iluminación sin sustituir la obra original."; art="VF_ARCHIVE_SANCTUM_HERO"; break;
+                case 1: eyebrow.text="ARCHIVE"; title.text="CONOCE TUS CARTAS"; body.text="Inspecciona el arte oficial, la rareza, facción, estadísticas, propiedad y lore que devuelve Supabase."; art="VF_ARCHIVE_SANCTUM_HERO"; break;
                 case 2: eyebrow.text="FORGE"; title.text="FORJA UNA FORMACIÓN"; body.text="Tu formación parte de cartas reales. Validar y sellar dependen de la autoridad de Supabase, no de una regla simulada en el cliente."; art="VF_FORGE_CHAMBER_HERO"; break;
                 case 3: eyebrow.text="STRATEGY"; title.text="PIENSA ANTES DEL DUELO"; body.text="Lee tu propia composición, afinidades y poder reportado. El cliente jamás inventa la mano, el mazo oculto o el counter del rival."; art="VF_BATTLE_SIGIL_ATLAS"; break;
                 case 4: eyebrow.text="BATTLE GATE"; title.text="ELIGE UN RIVAL REAL"; body.text="La Arena obtiene oponentes desde el servidor. Primero revisas el matchup; después sellas el desafío."; art="VF_BATTLE_ARENA_CITADEL_A"; break;
