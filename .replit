@@ -1,36 +1,10 @@
 modules = ["nodejs-24", "python-base-3.13"]
 
-[workflows]
-runButton = "Project"
-
-[[workflows.workflow]]
-name = "Project"
-mode = "parallel"
-author = "agent"
-
-[[workflows.workflow.tasks]]
-task = "workflow.run"
-args = "Expo"
-
-[[workflows.workflow]]
-name = "Expo"
-author = "agent"
-
-[workflows.workflow.metadata]
-outputType = "console"
-
-[[workflows.workflow.tasks]]
-task = "shell.exec"
-args = "npm --prefix mobile run dev -- --port 8000"
-
 [userenv]
 
 [userenv.shared]
-EXPO_PUBLIC_SUPABASE_ANON_KEY = "sb_publishable_3eGRSpvxptO09eQQzpxysQ_Imq8zi58"
-EXPO_PUBLIC_SUPABASE_URL = "https://rscuzqnfccqvltkdcdny.supabase.co"
 VITE_SUPABASE_PUBLISHABLE_KEY = "sb_publishable_3eGRSpvxptO09eQQzpxysQ_Imq8zi58"
 VITE_SUPABASE_URL = "https://rscuzqnfccqvltkdcdny.supabase.co"
 
-[[ports]]
-localPort = 8000
-externalPort = 80
+[nix]
+channel = "stable-25_05"
