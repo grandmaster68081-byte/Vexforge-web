@@ -1,0 +1,4693 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-10-05T22:08:04.820Z",
+  "baselineCommit": "edab1ddc798e748650cd10e0e560a8cdaa198f06",
+  "sourceScope": "mobile/assets",
+  "unityResourceRegistry": "unity/Assets/Resources/VexforgeTier1/VexforgeTier1AssetManifest.json",
+  "migrationRule": "KEEP only byte-identical assets already registered as Unity resources; otherwise DISCARD from Unity scope until a verified consumer/destination exists. PORT requires explicit evidence and is not inferred from filenames.",
+  "summary": {
+    "mobileFileCount": 168,
+    "mobileSourceBytes": 89512333,
+    "uniqueMobileHashes": 154,
+    "internalExactDuplicateGroups": [
+      {
+        "sha256": "1124e9e3838242423dbcac3b1ccb170ae3e0f4684e343e12da5862c2c4d0b460",
+        "files": [
+          "mobile/assets/images/icon.jpg",
+          "mobile/assets/registered/logo/IMG_20260606_040509_906.jpg"
+        ]
+      },
+      {
+        "sha256": "dceb3fe6681169cc5f018455e60f46ae93ab9f2b194111992decef54a1e7f13f",
+        "files": [
+          "mobile/assets/vexforge/scenes/archive.jpg",
+          "mobile/assets/vexforge/world/scene-archive.jpg"
+        ]
+      },
+      {
+        "sha256": "e9fc11ecc64deb8fc7c594782d5e77d430a6a01e40cfdd354d5463699f1077b9",
+        "files": [
+          "mobile/assets/vexforge/scenes/arena.jpg",
+          "mobile/assets/vexforge/world/scene-arena.jpg"
+        ]
+      },
+      {
+        "sha256": "4add0d4216a8874f4767f7613e356c0a064dbbfeb3f2ccf73758df9e056f4a42",
+        "files": [
+          "mobile/assets/vexforge/scenes/economy.jpg",
+          "mobile/assets/vexforge/world/scene-economy.jpg"
+        ]
+      },
+      {
+        "sha256": "69959e31e4af01ecac0996824645d2695e93585766049ec36e5f118b1b5d4bce",
+        "files": [
+          "mobile/assets/vexforge/scenes/events.jpg",
+          "mobile/assets/vexforge/world/scene-events.jpg"
+        ]
+      },
+      {
+        "sha256": "e54d38c9df609a0252e2e05ad4c9e5aec26324e93edce7834aff266b6ef37414",
+        "files": [
+          "mobile/assets/vexforge/scenes/forge.jpg",
+          "mobile/assets/vexforge/world/scene-forge.jpg"
+        ]
+      },
+      {
+        "sha256": "56eb55335095e6bff85cf425a05aac235098d4cc6473e2f5e3065eba6dc7edee",
+        "files": [
+          "mobile/assets/vexforge/scenes/founders.jpg",
+          "mobile/assets/vexforge/world/scene-founders.jpg"
+        ]
+      },
+      {
+        "sha256": "c50ba59e036747ce6c1bbd7e532dbe2d19be40eb8d4b81f6119ebc344b439270",
+        "files": [
+          "mobile/assets/vexforge/scenes/meta.jpg",
+          "mobile/assets/vexforge/world/scene-meta.jpg"
+        ]
+      },
+      {
+        "sha256": "37aa8756a2b26ed083d9672ba8a1c84ef79cb775f2a602a928119b4655a290f5",
+        "files": [
+          "mobile/assets/vexforge/scenes/missions.jpg",
+          "mobile/assets/vexforge/world/scene-missions.jpg"
+        ]
+      },
+      {
+        "sha256": "b1aa05b098d5a9e9ebd084a8707d6ef6748a73aaac1e904b76302111b61a4af8",
+        "files": [
+          "mobile/assets/vexforge/scenes/nexus.jpg",
+          "mobile/assets/vexforge/world/scene-nexus.jpg"
+        ]
+      },
+      {
+        "sha256": "eb6f515fa02fbe2e41be47f51ba3861b05c6f011b2e158381283a504698190c7",
+        "files": [
+          "mobile/assets/vexforge/scenes/social.jpg",
+          "mobile/assets/vexforge/world/scene-social.jpg"
+        ]
+      },
+      {
+        "sha256": "2b59c88b06b973c3ab4dbadc1cbbb8637d31af6d894c87c3c537bd26d09abf1a",
+        "files": [
+          "mobile/assets/vexforge/scenes/store.jpg",
+          "mobile/assets/vexforge/world/scene-store.jpg"
+        ]
+      },
+      {
+        "sha256": "a04388667e632e5d7a36d127b9ce7a6653f81511dee962d588205354ace8f926",
+        "files": [
+          "mobile/assets/vexforge/scenes/tutorial.jpg",
+          "mobile/assets/vexforge/world/scene-tutorial.jpg"
+        ]
+      },
+      {
+        "sha256": "3e2e39edb5834a832be0e51461e60b98316054d48f30f8b97fc70c5d37520692",
+        "files": [
+          "mobile/assets/vexforge/scenes/world.jpg",
+          "mobile/assets/vexforge/world/scene-world.jpg"
+        ]
+      }
+    ],
+    "filesExactlyReusableFromRegisteredUnityResources": 22,
+    "exactUnityReuseSourceBytes": 33629368,
+    "decisions": {
+      "KEEP": 22,
+      "PORT": 0,
+      "DISCARD": 146
+    },
+    "newFilesPortedToUnity": 0,
+    "unityPayloadBytesAdded": 0,
+    "theoreticalRgba8DecodedBytesIfEveryRasterWereLoaded": 869178544,
+    "actualUnityImportedBuildBytes": null,
+    "registeredUnityResourcesChecked": 32,
+    "physicalFilesDeletedFromMobile": 0
+  },
+  "estimates": {
+    "rgba8DecodedEstimateFormula": "width * height * 4; a raw pixel-memory upper-level estimate, not Unity runtime memory or GPU allocation evidence.",
+    "actualUnityBuildSize": "Not measured. No Unity import/build was run; platform compression, texture settings, and build stripping are unverified.",
+    "sourcePayload": "Exact tracked file byte size at the audited commit."
+  },
+  "sourcePreservation": "This manifest makes Unity import decisions only. No source files under mobile/assets are changed or deleted.",
+  "assets": [
+    {
+      "sourcePath": "mobile/assets/canonical/VF_ARCHIVE_SANCTUM_HERO.png",
+      "sha256": "ad1471ab244a40c785c0588a0f3a7a157d64f6d536cad9ea9797380a039e9157",
+      "sourceBytes": 4970459,
+      "mediaType": "png",
+      "dimensions": {
+        "width": 1440,
+        "height": 2560
+      },
+      "semanticRole": "Canonical VEXFORGE presentation image; checked against the Unity resource registry.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [],
+        "exactInUnityAssets": [
+          "unity/Assets/Resources/VexforgeTier1/Art/VF_ARCHIVE_SANCTUM_HERO.png"
+        ],
+        "exactInRegisteredUnityResources": [
+          "unity/Assets/Resources/VexforgeTier1/Art/VF_ARCHIVE_SANCTUM_HERO.png"
+        ]
+      },
+      "unityDestination": [
+        "unity/Assets/Resources/VexforgeTier1/Art/VF_ARCHIVE_SANCTUM_HERO.png"
+      ],
+      "decision": "KEEP",
+      "decisionReason": "Byte-identical to an asset already listed in the Unity Tier1 resource registry; reuse that destination and do not copy another payload.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 4970459,
+        "rgba8DecodedEstimateBytes": 14745600,
+        "wav": null,
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/canonical/VF_BATTLE_ARENA_CITADEL_A.png",
+      "sha256": "3721fe08eeff5ea3f0f0409a11dc0c5c4fd0bc87323fad7cba1e1633b63b3853",
+      "sourceBytes": 5039818,
+      "mediaType": "png",
+      "dimensions": {
+        "width": 1440,
+        "height": 2560
+      },
+      "semanticRole": "Canonical VEXFORGE presentation image; checked against the Unity resource registry.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [],
+        "exactInUnityAssets": [
+          "unity/Assets/Resources/VexforgeTier1/Art/VF_BATTLE_ARENA_CITADEL_A.png"
+        ],
+        "exactInRegisteredUnityResources": [
+          "unity/Assets/Resources/VexforgeTier1/Art/VF_BATTLE_ARENA_CITADEL_A.png"
+        ]
+      },
+      "unityDestination": [
+        "unity/Assets/Resources/VexforgeTier1/Art/VF_BATTLE_ARENA_CITADEL_A.png"
+      ],
+      "decision": "KEEP",
+      "decisionReason": "Byte-identical to an asset already listed in the Unity Tier1 resource registry; reuse that destination and do not copy another payload.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 5039818,
+        "rgba8DecodedEstimateBytes": 14745600,
+        "wav": null,
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/canonical/VF_FORGE_CHAMBER_HERO.png",
+      "sha256": "b8efb99074510375247f3a830bd99e266b6f6c12306b96768e3f67c991d72868",
+      "sourceBytes": 4921935,
+      "mediaType": "png",
+      "dimensions": {
+        "width": 1440,
+        "height": 2560
+      },
+      "semanticRole": "Canonical VEXFORGE presentation image; checked against the Unity resource registry.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [],
+        "exactInUnityAssets": [
+          "unity/Assets/Resources/VexforgeTier1/Art/VF_FORGE_CHAMBER_HERO.png"
+        ],
+        "exactInRegisteredUnityResources": [
+          "unity/Assets/Resources/VexforgeTier1/Art/VF_FORGE_CHAMBER_HERO.png"
+        ]
+      },
+      "unityDestination": [
+        "unity/Assets/Resources/VexforgeTier1/Art/VF_FORGE_CHAMBER_HERO.png"
+      ],
+      "decision": "KEEP",
+      "decisionReason": "Byte-identical to an asset already listed in the Unity Tier1 resource registry; reuse that destination and do not copy another payload.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 4921935,
+        "rgba8DecodedEstimateBytes": 14745600,
+        "wav": null,
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/canonical/VF_MISSION_HALL_HERO.png",
+      "sha256": "fe575f5f5934ea2ef6c6b16adcb1111f70d52e9c9530ed8f919e0f4c721ae77a",
+      "sourceBytes": 4888522,
+      "mediaType": "png",
+      "dimensions": {
+        "width": 1440,
+        "height": 2560
+      },
+      "semanticRole": "Canonical VEXFORGE presentation image; checked against the Unity resource registry.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [],
+        "exactInUnityAssets": [
+          "unity/Assets/Resources/VexforgeTier1/Art/VF_MISSION_HALL_HERO.png"
+        ],
+        "exactInRegisteredUnityResources": [
+          "unity/Assets/Resources/VexforgeTier1/Art/VF_MISSION_HALL_HERO.png"
+        ]
+      },
+      "unityDestination": [
+        "unity/Assets/Resources/VexforgeTier1/Art/VF_MISSION_HALL_HERO.png"
+      ],
+      "decision": "KEEP",
+      "decisionReason": "Byte-identical to an asset already listed in the Unity Tier1 resource registry; reuse that destination and do not copy another payload.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 4888522,
+        "rgba8DecodedEstimateBytes": 14745600,
+        "wav": null,
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/canonical/VF_NEXUS_CITADEL_HERO.png",
+      "sha256": "32be4edf85ce103dab113231dc23e3da563f21340339e064af180bde61850520",
+      "sourceBytes": 4962391,
+      "mediaType": "png",
+      "dimensions": {
+        "width": 1440,
+        "height": 2560
+      },
+      "semanticRole": "Canonical VEXFORGE presentation image; checked against the Unity resource registry.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [],
+        "exactInUnityAssets": [
+          "unity/Assets/Resources/VexforgeTier1/Art/VF_NEXUS_CITADEL_HERO.png"
+        ],
+        "exactInRegisteredUnityResources": [
+          "unity/Assets/Resources/VexforgeTier1/Art/VF_NEXUS_CITADEL_HERO.png"
+        ]
+      },
+      "unityDestination": [
+        "unity/Assets/Resources/VexforgeTier1/Art/VF_NEXUS_CITADEL_HERO.png"
+      ],
+      "decision": "KEEP",
+      "decisionReason": "Byte-identical to an asset already listed in the Unity Tier1 resource registry; reuse that destination and do not copy another payload.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 4962391,
+        "rgba8DecodedEstimateBytes": 14745600,
+        "wav": null,
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/canonical/VF_PACK_VAULT_HERO.png",
+      "sha256": "3ef42797fa3cb64c99436e86636327256cef466d7cc4779d30ef5ff2e2c2970b",
+      "sourceBytes": 3675182,
+      "mediaType": "png",
+      "dimensions": {
+        "width": 1440,
+        "height": 2560
+      },
+      "semanticRole": "Canonical VEXFORGE presentation image; checked against the Unity resource registry.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [],
+        "exactInUnityAssets": [
+          "unity/Assets/Resources/VexforgeTier1/Art/VF_PACK_VAULT_HERO.png"
+        ],
+        "exactInRegisteredUnityResources": [
+          "unity/Assets/Resources/VexforgeTier1/Art/VF_PACK_VAULT_HERO.png"
+        ]
+      },
+      "unityDestination": [
+        "unity/Assets/Resources/VexforgeTier1/Art/VF_PACK_VAULT_HERO.png"
+      ],
+      "decision": "KEEP",
+      "decisionReason": "Byte-identical to an asset already listed in the Unity Tier1 resource registry; reuse that destination and do not copy another payload.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 3675182,
+        "rgba8DecodedEstimateBytes": 14745600,
+        "wav": null,
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/canonical/VF_TREASURY_VAULT_HERO.png",
+      "sha256": "9c4adde0dcfa6972369793a6d6e63e3db1eccd0566865121eeea0d9179f532c8",
+      "sourceBytes": 4916477,
+      "mediaType": "png",
+      "dimensions": {
+        "width": 1440,
+        "height": 2560
+      },
+      "semanticRole": "Canonical VEXFORGE presentation image; checked against the Unity resource registry.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [],
+        "exactInUnityAssets": [
+          "unity/Assets/Resources/VexforgeTier1/Art/VF_TREASURY_VAULT_HERO.png"
+        ],
+        "exactInRegisteredUnityResources": [
+          "unity/Assets/Resources/VexforgeTier1/Art/VF_TREASURY_VAULT_HERO.png"
+        ]
+      },
+      "unityDestination": [
+        "unity/Assets/Resources/VexforgeTier1/Art/VF_TREASURY_VAULT_HERO.png"
+      ],
+      "decision": "KEEP",
+      "decisionReason": "Byte-identical to an asset already listed in the Unity Tier1 resource registry; reuse that destination and do not copy another payload.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 4916477,
+        "rgba8DecodedEstimateBytes": 14745600,
+        "wav": null,
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/content-packs/archive/high.jpg",
+      "sha256": "3b7dc565cb6ce295dc7ba35c0fd91ab802e1439b72a3162c93e2d8c3ee5d5524",
+      "sourceBytes": 731630,
+      "mediaType": "jpg",
+      "dimensions": {
+        "width": 1080,
+        "height": 1680
+      },
+      "semanticRole": "Expo content-prefetch tier image; no Unity resource-registry consumer is established.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [],
+        "exactInUnityAssets": [],
+        "exactInRegisteredUnityResources": []
+      },
+      "unityDestination": [],
+      "decision": "DISCARD",
+      "decisionReason": "No current Unity consumer or registered Unity destination was found; avoid bulk-copying Expo prefetch assets.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 731630,
+        "rgba8DecodedEstimateBytes": 7257600,
+        "wav": null,
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/content-packs/archive/low.jpg",
+      "sha256": "a6f16da69171f852d5c8ef3b7ef71c9a3ea914091afb66cff9a7063c70e67f42",
+      "sourceBytes": 141089,
+      "mediaType": "jpg",
+      "dimensions": {
+        "width": 480,
+        "height": 747
+      },
+      "semanticRole": "Expo content-prefetch tier image; no Unity resource-registry consumer is established.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [],
+        "exactInUnityAssets": [],
+        "exactInRegisteredUnityResources": []
+      },
+      "unityDestination": [],
+      "decision": "DISCARD",
+      "decisionReason": "No current Unity consumer or registered Unity destination was found; avoid bulk-copying Expo prefetch assets.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 141089,
+        "rgba8DecodedEstimateBytes": 1434240,
+        "wav": null,
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/content-packs/archive/medium.jpg",
+      "sha256": "406b5302ea8abbaad10dfe4980d4f292ca546b33055795d9c184c4104fa52a38",
+      "sourceBytes": 306840,
+      "mediaType": "jpg",
+      "dimensions": {
+        "width": 720,
+        "height": 1120
+      },
+      "semanticRole": "Expo content-prefetch tier image; no Unity resource-registry consumer is established.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [],
+        "exactInUnityAssets": [],
+        "exactInRegisteredUnityResources": []
+      },
+      "unityDestination": [],
+      "decision": "DISCARD",
+      "decisionReason": "No current Unity consumer or registered Unity destination was found; avoid bulk-copying Expo prefetch assets.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 306840,
+        "rgba8DecodedEstimateBytes": 3225600,
+        "wav": null,
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/content-packs/arena/high.jpg",
+      "sha256": "a0f6c86ad4ec1fa6867845f2a1642bcf30c4233f1c882d9bbcb2d50170372079",
+      "sourceBytes": 716050,
+      "mediaType": "jpg",
+      "dimensions": {
+        "width": 1080,
+        "height": 1680
+      },
+      "semanticRole": "Expo content-prefetch tier image; no Unity resource-registry consumer is established.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [],
+        "exactInUnityAssets": [],
+        "exactInRegisteredUnityResources": []
+      },
+      "unityDestination": [],
+      "decision": "DISCARD",
+      "decisionReason": "No current Unity consumer or registered Unity destination was found; avoid bulk-copying Expo prefetch assets.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 716050,
+        "rgba8DecodedEstimateBytes": 7257600,
+        "wav": null,
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/content-packs/arena/low.jpg",
+      "sha256": "8f9cee878e6325edd0ab5b1f3ddd354b89e589d2113b3fa593c8b3cffca3f978",
+      "sourceBytes": 122428,
+      "mediaType": "jpg",
+      "dimensions": {
+        "width": 480,
+        "height": 747
+      },
+      "semanticRole": "Expo content-prefetch tier image; no Unity resource-registry consumer is established.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [],
+        "exactInUnityAssets": [],
+        "exactInRegisteredUnityResources": []
+      },
+      "unityDestination": [],
+      "decision": "DISCARD",
+      "decisionReason": "No current Unity consumer or registered Unity destination was found; avoid bulk-copying Expo prefetch assets.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 122428,
+        "rgba8DecodedEstimateBytes": 1434240,
+        "wav": null,
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/content-packs/arena/medium.jpg",
+      "sha256": "8085f2635d92b533aa8b5164db94ad23deb65c2345411c753805ef56e17fdd70",
+      "sourceBytes": 279999,
+      "mediaType": "jpg",
+      "dimensions": {
+        "width": 720,
+        "height": 1120
+      },
+      "semanticRole": "Expo content-prefetch tier image; no Unity resource-registry consumer is established.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [],
+        "exactInUnityAssets": [],
+        "exactInRegisteredUnityResources": []
+      },
+      "unityDestination": [],
+      "decision": "DISCARD",
+      "decisionReason": "No current Unity consumer or registered Unity destination was found; avoid bulk-copying Expo prefetch assets.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 279999,
+        "rgba8DecodedEstimateBytes": 3225600,
+        "wav": null,
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/content-packs/economy/high.jpg",
+      "sha256": "86ae11bd3d5f1297f4eb23fc01d9dd697e604e4f298842cf1805eaddf07dec14",
+      "sourceBytes": 593100,
+      "mediaType": "jpg",
+      "dimensions": {
+        "width": 1080,
+        "height": 1680
+      },
+      "semanticRole": "Expo content-prefetch tier image; no Unity resource-registry consumer is established.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [],
+        "exactInUnityAssets": [],
+        "exactInRegisteredUnityResources": []
+      },
+      "unityDestination": [],
+      "decision": "DISCARD",
+      "decisionReason": "No current Unity consumer or registered Unity destination was found; avoid bulk-copying Expo prefetch assets.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 593100,
+        "rgba8DecodedEstimateBytes": 7257600,
+        "wav": null,
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/content-packs/economy/low.jpg",
+      "sha256": "fd18c239d7d26f612009d604d3ebef21f191ddd1e3bc7e2bf3804dad5d88403c",
+      "sourceBytes": 90924,
+      "mediaType": "jpg",
+      "dimensions": {
+        "width": 480,
+        "height": 747
+      },
+      "semanticRole": "Expo content-prefetch tier image; no Unity resource-registry consumer is established.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [],
+        "exactInUnityAssets": [],
+        "exactInRegisteredUnityResources": []
+      },
+      "unityDestination": [],
+      "decision": "DISCARD",
+      "decisionReason": "No current Unity consumer or registered Unity destination was found; avoid bulk-copying Expo prefetch assets.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 90924,
+        "rgba8DecodedEstimateBytes": 1434240,
+        "wav": null,
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/content-packs/economy/medium.jpg",
+      "sha256": "d6a2560a09031cc9d4e50e23516523d18f13a8b6e22c00523973dcf2da2fba84",
+      "sourceBytes": 216797,
+      "mediaType": "jpg",
+      "dimensions": {
+        "width": 720,
+        "height": 1120
+      },
+      "semanticRole": "Expo content-prefetch tier image; no Unity resource-registry consumer is established.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [],
+        "exactInUnityAssets": [],
+        "exactInRegisteredUnityResources": []
+      },
+      "unityDestination": [],
+      "decision": "DISCARD",
+      "decisionReason": "No current Unity consumer or registered Unity destination was found; avoid bulk-copying Expo prefetch assets.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 216797,
+        "rgba8DecodedEstimateBytes": 3225600,
+        "wav": null,
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/content-packs/events/high.jpg",
+      "sha256": "40e357de5aec8f6d268ad1c56402727d3ae39a89368f5a74b0206cdfb34fd2ae",
+      "sourceBytes": 622885,
+      "mediaType": "jpg",
+      "dimensions": {
+        "width": 1080,
+        "height": 1680
+      },
+      "semanticRole": "Expo content-prefetch tier image; no Unity resource-registry consumer is established.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [],
+        "exactInUnityAssets": [],
+        "exactInRegisteredUnityResources": []
+      },
+      "unityDestination": [],
+      "decision": "DISCARD",
+      "decisionReason": "No current Unity consumer or registered Unity destination was found; avoid bulk-copying Expo prefetch assets.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 622885,
+        "rgba8DecodedEstimateBytes": 7257600,
+        "wav": null,
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/content-packs/events/low.jpg",
+      "sha256": "567a73cde679b85b6512b5a4e4d638fce4fc4e4d2460610b4014cb1301f074d0",
+      "sourceBytes": 111359,
+      "mediaType": "jpg",
+      "dimensions": {
+        "width": 480,
+        "height": 747
+      },
+      "semanticRole": "Expo content-prefetch tier image; no Unity resource-registry consumer is established.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [],
+        "exactInUnityAssets": [],
+        "exactInRegisteredUnityResources": []
+      },
+      "unityDestination": [],
+      "decision": "DISCARD",
+      "decisionReason": "No current Unity consumer or registered Unity destination was found; avoid bulk-copying Expo prefetch assets.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 111359,
+        "rgba8DecodedEstimateBytes": 1434240,
+        "wav": null,
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/content-packs/events/medium.jpg",
+      "sha256": "de75d533f4cea241b9ad8c20e4a071b9d887f3b2a0c6f909855fecc821a635dc",
+      "sourceBytes": 249584,
+      "mediaType": "jpg",
+      "dimensions": {
+        "width": 720,
+        "height": 1120
+      },
+      "semanticRole": "Expo content-prefetch tier image; no Unity resource-registry consumer is established.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [],
+        "exactInUnityAssets": [],
+        "exactInRegisteredUnityResources": []
+      },
+      "unityDestination": [],
+      "decision": "DISCARD",
+      "decisionReason": "No current Unity consumer or registered Unity destination was found; avoid bulk-copying Expo prefetch assets.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 249584,
+        "rgba8DecodedEstimateBytes": 3225600,
+        "wav": null,
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/content-packs/forge/high.jpg",
+      "sha256": "8f57fa16e3dd1bca7de184a705dcad201002836ba0a587f3e0dca9e94a9136c9",
+      "sourceBytes": 877694,
+      "mediaType": "jpg",
+      "dimensions": {
+        "width": 1080,
+        "height": 1680
+      },
+      "semanticRole": "Expo content-prefetch tier image; no Unity resource-registry consumer is established.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [],
+        "exactInUnityAssets": [],
+        "exactInRegisteredUnityResources": []
+      },
+      "unityDestination": [],
+      "decision": "DISCARD",
+      "decisionReason": "No current Unity consumer or registered Unity destination was found; avoid bulk-copying Expo prefetch assets.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 877694,
+        "rgba8DecodedEstimateBytes": 7257600,
+        "wav": null,
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/content-packs/forge/low.jpg",
+      "sha256": "1837376fdcd749c5e7f98fa1df9feaf8d1605b3a19f8fc904255e0c187090213",
+      "sourceBytes": 152112,
+      "mediaType": "jpg",
+      "dimensions": {
+        "width": 480,
+        "height": 747
+      },
+      "semanticRole": "Expo content-prefetch tier image; no Unity resource-registry consumer is established.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [],
+        "exactInUnityAssets": [],
+        "exactInRegisteredUnityResources": []
+      },
+      "unityDestination": [],
+      "decision": "DISCARD",
+      "decisionReason": "No current Unity consumer or registered Unity destination was found; avoid bulk-copying Expo prefetch assets.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 152112,
+        "rgba8DecodedEstimateBytes": 1434240,
+        "wav": null,
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/content-packs/forge/medium.jpg",
+      "sha256": "28e7105a94009a871d98c0ba99fbdabd92ed2c7e047416dcb047c0beb97249ae",
+      "sourceBytes": 347666,
+      "mediaType": "jpg",
+      "dimensions": {
+        "width": 720,
+        "height": 1120
+      },
+      "semanticRole": "Expo content-prefetch tier image; no Unity resource-registry consumer is established.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [],
+        "exactInUnityAssets": [],
+        "exactInRegisteredUnityResources": []
+      },
+      "unityDestination": [],
+      "decision": "DISCARD",
+      "decisionReason": "No current Unity consumer or registered Unity destination was found; avoid bulk-copying Expo prefetch assets.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 347666,
+        "rgba8DecodedEstimateBytes": 3225600,
+        "wav": null,
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/content-packs/founders/high.jpg",
+      "sha256": "3a819ecaa777a2a0b747b106e21aa898b2f74907f6bb9b1fce73c54a0d5cba3c",
+      "sourceBytes": 659979,
+      "mediaType": "jpg",
+      "dimensions": {
+        "width": 1080,
+        "height": 1680
+      },
+      "semanticRole": "Expo content-prefetch tier image; no Unity resource-registry consumer is established.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [],
+        "exactInUnityAssets": [],
+        "exactInRegisteredUnityResources": []
+      },
+      "unityDestination": [],
+      "decision": "DISCARD",
+      "decisionReason": "No current Unity consumer or registered Unity destination was found; avoid bulk-copying Expo prefetch assets.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 659979,
+        "rgba8DecodedEstimateBytes": 7257600,
+        "wav": null,
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/content-packs/founders/low.jpg",
+      "sha256": "8bb99df02aeb4795e59cfb651eeb2bcb34ea9fe86cf73a0cf202f943c150b6a2",
+      "sourceBytes": 117977,
+      "mediaType": "jpg",
+      "dimensions": {
+        "width": 480,
+        "height": 747
+      },
+      "semanticRole": "Expo content-prefetch tier image; no Unity resource-registry consumer is established.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [],
+        "exactInUnityAssets": [],
+        "exactInRegisteredUnityResources": []
+      },
+      "unityDestination": [],
+      "decision": "DISCARD",
+      "decisionReason": "No current Unity consumer or registered Unity destination was found; avoid bulk-copying Expo prefetch assets.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 117977,
+        "rgba8DecodedEstimateBytes": 1434240,
+        "wav": null,
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/content-packs/founders/medium.jpg",
+      "sha256": "d2a25fe850ceca42bd1f307aeabef59517ca7bc31dba1104d2b05e73274b13e4",
+      "sourceBytes": 264265,
+      "mediaType": "jpg",
+      "dimensions": {
+        "width": 720,
+        "height": 1120
+      },
+      "semanticRole": "Expo content-prefetch tier image; no Unity resource-registry consumer is established.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [],
+        "exactInUnityAssets": [],
+        "exactInRegisteredUnityResources": []
+      },
+      "unityDestination": [],
+      "decision": "DISCARD",
+      "decisionReason": "No current Unity consumer or registered Unity destination was found; avoid bulk-copying Expo prefetch assets.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 264265,
+        "rgba8DecodedEstimateBytes": 3225600,
+        "wav": null,
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/content-packs/meta/high.jpg",
+      "sha256": "85f8d2e3f7c320f14b406c65830d0ff61f67d52ad53cab38aaf5f866fc525500",
+      "sourceBytes": 434192,
+      "mediaType": "jpg",
+      "dimensions": {
+        "width": 1080,
+        "height": 1680
+      },
+      "semanticRole": "Expo content-prefetch tier image; no Unity resource-registry consumer is established.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [],
+        "exactInUnityAssets": [],
+        "exactInRegisteredUnityResources": []
+      },
+      "unityDestination": [],
+      "decision": "DISCARD",
+      "decisionReason": "No current Unity consumer or registered Unity destination was found; avoid bulk-copying Expo prefetch assets.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 434192,
+        "rgba8DecodedEstimateBytes": 7257600,
+        "wav": null,
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/content-packs/meta/low.jpg",
+      "sha256": "c14b4f37d429e504021624abec11a5e7eba1d72386cf1922d8ba53b096cd8f54",
+      "sourceBytes": 66259,
+      "mediaType": "jpg",
+      "dimensions": {
+        "width": 480,
+        "height": 747
+      },
+      "semanticRole": "Expo content-prefetch tier image; no Unity resource-registry consumer is established.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [],
+        "exactInUnityAssets": [],
+        "exactInRegisteredUnityResources": []
+      },
+      "unityDestination": [],
+      "decision": "DISCARD",
+      "decisionReason": "No current Unity consumer or registered Unity destination was found; avoid bulk-copying Expo prefetch assets.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 66259,
+        "rgba8DecodedEstimateBytes": 1434240,
+        "wav": null,
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/content-packs/meta/medium.jpg",
+      "sha256": "2e1aa318510560eadaa7d4da29577ea04de21e47fd6c1020d216e7cbd47bf54d",
+      "sourceBytes": 157273,
+      "mediaType": "jpg",
+      "dimensions": {
+        "width": 720,
+        "height": 1120
+      },
+      "semanticRole": "Expo content-prefetch tier image; no Unity resource-registry consumer is established.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [],
+        "exactInUnityAssets": [],
+        "exactInRegisteredUnityResources": []
+      },
+      "unityDestination": [],
+      "decision": "DISCARD",
+      "decisionReason": "No current Unity consumer or registered Unity destination was found; avoid bulk-copying Expo prefetch assets.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 157273,
+        "rgba8DecodedEstimateBytes": 3225600,
+        "wav": null,
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/content-packs/missions/high.jpg",
+      "sha256": "2100b8e9f1686eed8833a4cff31ed702cbbf78231cc93fd51c1223a2afed71ef",
+      "sourceBytes": 599654,
+      "mediaType": "jpg",
+      "dimensions": {
+        "width": 1080,
+        "height": 1680
+      },
+      "semanticRole": "Expo content-prefetch tier image; no Unity resource-registry consumer is established.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [],
+        "exactInUnityAssets": [],
+        "exactInRegisteredUnityResources": []
+      },
+      "unityDestination": [],
+      "decision": "DISCARD",
+      "decisionReason": "No current Unity consumer or registered Unity destination was found; avoid bulk-copying Expo prefetch assets.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 599654,
+        "rgba8DecodedEstimateBytes": 7257600,
+        "wav": null,
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/content-packs/missions/low.jpg",
+      "sha256": "062defaa40dce6a0bc20118ce16ce97015d59d5cfaa94b3b7ec313b5d0eadbcf",
+      "sourceBytes": 106301,
+      "mediaType": "jpg",
+      "dimensions": {
+        "width": 480,
+        "height": 747
+      },
+      "semanticRole": "Expo content-prefetch tier image; no Unity resource-registry consumer is established.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [],
+        "exactInUnityAssets": [],
+        "exactInRegisteredUnityResources": []
+      },
+      "unityDestination": [],
+      "decision": "DISCARD",
+      "decisionReason": "No current Unity consumer or registered Unity destination was found; avoid bulk-copying Expo prefetch assets.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 106301,
+        "rgba8DecodedEstimateBytes": 1434240,
+        "wav": null,
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/content-packs/missions/medium.jpg",
+      "sha256": "2ec9ea70bb6983530196af52868801cb7ba60c46057deef716122fc4d3d87172",
+      "sourceBytes": 238635,
+      "mediaType": "jpg",
+      "dimensions": {
+        "width": 720,
+        "height": 1120
+      },
+      "semanticRole": "Expo content-prefetch tier image; no Unity resource-registry consumer is established.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [],
+        "exactInUnityAssets": [],
+        "exactInRegisteredUnityResources": []
+      },
+      "unityDestination": [],
+      "decision": "DISCARD",
+      "decisionReason": "No current Unity consumer or registered Unity destination was found; avoid bulk-copying Expo prefetch assets.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 238635,
+        "rgba8DecodedEstimateBytes": 3225600,
+        "wav": null,
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/content-packs/nexus/high.jpg",
+      "sha256": "a59db73e3fcf45974f4a09de5991c3337136021abd472e15da2601adecbc69fa",
+      "sourceBytes": 753045,
+      "mediaType": "jpg",
+      "dimensions": {
+        "width": 1080,
+        "height": 1680
+      },
+      "semanticRole": "Expo content-prefetch tier image; no Unity resource-registry consumer is established.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [],
+        "exactInUnityAssets": [],
+        "exactInRegisteredUnityResources": []
+      },
+      "unityDestination": [],
+      "decision": "DISCARD",
+      "decisionReason": "No current Unity consumer or registered Unity destination was found; avoid bulk-copying Expo prefetch assets.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 753045,
+        "rgba8DecodedEstimateBytes": 7257600,
+        "wav": null,
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/content-packs/nexus/low.jpg",
+      "sha256": "5ba93a39f43e0ec35dbb87dc8b17fa230b72f1de85c636a479f035456d0b95e1",
+      "sourceBytes": 127584,
+      "mediaType": "jpg",
+      "dimensions": {
+        "width": 480,
+        "height": 747
+      },
+      "semanticRole": "Expo content-prefetch tier image; no Unity resource-registry consumer is established.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [],
+        "exactInUnityAssets": [],
+        "exactInRegisteredUnityResources": []
+      },
+      "unityDestination": [],
+      "decision": "DISCARD",
+      "decisionReason": "No current Unity consumer or registered Unity destination was found; avoid bulk-copying Expo prefetch assets.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 127584,
+        "rgba8DecodedEstimateBytes": 1434240,
+        "wav": null,
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/content-packs/nexus/medium.jpg",
+      "sha256": "08aabac1988184c084d405f3498b370766c8e7262a60e126c3d0ea74301319a1",
+      "sourceBytes": 293473,
+      "mediaType": "jpg",
+      "dimensions": {
+        "width": 720,
+        "height": 1120
+      },
+      "semanticRole": "Expo content-prefetch tier image; no Unity resource-registry consumer is established.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [],
+        "exactInUnityAssets": [],
+        "exactInRegisteredUnityResources": []
+      },
+      "unityDestination": [],
+      "decision": "DISCARD",
+      "decisionReason": "No current Unity consumer or registered Unity destination was found; avoid bulk-copying Expo prefetch assets.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 293473,
+        "rgba8DecodedEstimateBytes": 3225600,
+        "wav": null,
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/content-packs/social/high.jpg",
+      "sha256": "0079683af2b905b26c02aefcaa933f257c5c44fc8df3207b35d446a472322280",
+      "sourceBytes": 681034,
+      "mediaType": "jpg",
+      "dimensions": {
+        "width": 1080,
+        "height": 1680
+      },
+      "semanticRole": "Expo content-prefetch tier image; no Unity resource-registry consumer is established.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [],
+        "exactInUnityAssets": [],
+        "exactInRegisteredUnityResources": []
+      },
+      "unityDestination": [],
+      "decision": "DISCARD",
+      "decisionReason": "No current Unity consumer or registered Unity destination was found; avoid bulk-copying Expo prefetch assets.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 681034,
+        "rgba8DecodedEstimateBytes": 7257600,
+        "wav": null,
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/content-packs/social/low.jpg",
+      "sha256": "d92cb4990ce251398a54c11c03fc794e36771784d65ba8332f63648a357eee98",
+      "sourceBytes": 118204,
+      "mediaType": "jpg",
+      "dimensions": {
+        "width": 480,
+        "height": 747
+      },
+      "semanticRole": "Expo content-prefetch tier image; no Unity resource-registry consumer is established.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [],
+        "exactInUnityAssets": [],
+        "exactInRegisteredUnityResources": []
+      },
+      "unityDestination": [],
+      "decision": "DISCARD",
+      "decisionReason": "No current Unity consumer or registered Unity destination was found; avoid bulk-copying Expo prefetch assets.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 118204,
+        "rgba8DecodedEstimateBytes": 1434240,
+        "wav": null,
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/content-packs/social/medium.jpg",
+      "sha256": "2e2b2f725bc84c561e1e0127623bfbcbc7fd9eb4db2dff7985984f1031b95486",
+      "sourceBytes": 269269,
+      "mediaType": "jpg",
+      "dimensions": {
+        "width": 720,
+        "height": 1120
+      },
+      "semanticRole": "Expo content-prefetch tier image; no Unity resource-registry consumer is established.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [],
+        "exactInUnityAssets": [],
+        "exactInRegisteredUnityResources": []
+      },
+      "unityDestination": [],
+      "decision": "DISCARD",
+      "decisionReason": "No current Unity consumer or registered Unity destination was found; avoid bulk-copying Expo prefetch assets.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 269269,
+        "rgba8DecodedEstimateBytes": 3225600,
+        "wav": null,
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/content-packs/store/high.jpg",
+      "sha256": "33b1eb3e3a6fc900547ac0ad291b384cefd2a4b25ac87cd720c8f7377e5c5aff",
+      "sourceBytes": 750887,
+      "mediaType": "jpg",
+      "dimensions": {
+        "width": 1080,
+        "height": 1680
+      },
+      "semanticRole": "Expo content-prefetch tier image; no Unity resource-registry consumer is established.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [],
+        "exactInUnityAssets": [],
+        "exactInRegisteredUnityResources": []
+      },
+      "unityDestination": [],
+      "decision": "DISCARD",
+      "decisionReason": "No current Unity consumer or registered Unity destination was found; avoid bulk-copying Expo prefetch assets.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 750887,
+        "rgba8DecodedEstimateBytes": 7257600,
+        "wav": null,
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/content-packs/store/low.jpg",
+      "sha256": "95c1df0735d0a2c774c8d0d065785f5dea31579765868cf22ae40dc3779e06dc",
+      "sourceBytes": 147020,
+      "mediaType": "jpg",
+      "dimensions": {
+        "width": 480,
+        "height": 747
+      },
+      "semanticRole": "Expo content-prefetch tier image; no Unity resource-registry consumer is established.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [],
+        "exactInUnityAssets": [],
+        "exactInRegisteredUnityResources": []
+      },
+      "unityDestination": [],
+      "decision": "DISCARD",
+      "decisionReason": "No current Unity consumer or registered Unity destination was found; avoid bulk-copying Expo prefetch assets.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 147020,
+        "rgba8DecodedEstimateBytes": 1434240,
+        "wav": null,
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/content-packs/store/medium.jpg",
+      "sha256": "e08d4f2b8d7d9d36f11e4eba5d137d00a0df3121e3b664cfd24c4c0e60bfaadb",
+      "sourceBytes": 315228,
+      "mediaType": "jpg",
+      "dimensions": {
+        "width": 720,
+        "height": 1120
+      },
+      "semanticRole": "Expo content-prefetch tier image; no Unity resource-registry consumer is established.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [],
+        "exactInUnityAssets": [],
+        "exactInRegisteredUnityResources": []
+      },
+      "unityDestination": [],
+      "decision": "DISCARD",
+      "decisionReason": "No current Unity consumer or registered Unity destination was found; avoid bulk-copying Expo prefetch assets.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 315228,
+        "rgba8DecodedEstimateBytes": 3225600,
+        "wav": null,
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/content-packs/tutorial/high.jpg",
+      "sha256": "01edd2060037ec99f6cc1221cdbdcbf348f02ec0d8b02878e14bdd450eb42210",
+      "sourceBytes": 425486,
+      "mediaType": "jpg",
+      "dimensions": {
+        "width": 1080,
+        "height": 1680
+      },
+      "semanticRole": "Expo content-prefetch tier image; no Unity resource-registry consumer is established.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [],
+        "exactInUnityAssets": [],
+        "exactInRegisteredUnityResources": []
+      },
+      "unityDestination": [],
+      "decision": "DISCARD",
+      "decisionReason": "No current Unity consumer or registered Unity destination was found; avoid bulk-copying Expo prefetch assets.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 425486,
+        "rgba8DecodedEstimateBytes": 7257600,
+        "wav": null,
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/content-packs/tutorial/low.jpg",
+      "sha256": "88b96ef4e6127213467c7b71f6856927909f0a96f9ab403d4f70e72c4c14d80a",
+      "sourceBytes": 115924,
+      "mediaType": "jpg",
+      "dimensions": {
+        "width": 480,
+        "height": 747
+      },
+      "semanticRole": "Expo content-prefetch tier image; no Unity resource-registry consumer is established.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [],
+        "exactInUnityAssets": [],
+        "exactInRegisteredUnityResources": []
+      },
+      "unityDestination": [],
+      "decision": "DISCARD",
+      "decisionReason": "No current Unity consumer or registered Unity destination was found; avoid bulk-copying Expo prefetch assets.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 115924,
+        "rgba8DecodedEstimateBytes": 1434240,
+        "wav": null,
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/content-packs/tutorial/medium.jpg",
+      "sha256": "97e0438cf85a0e97de93cf102c8100bd27e2f1accb098e25e8ff704a26c02f44",
+      "sourceBytes": 251493,
+      "mediaType": "jpg",
+      "dimensions": {
+        "width": 720,
+        "height": 1120
+      },
+      "semanticRole": "Expo content-prefetch tier image; no Unity resource-registry consumer is established.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [],
+        "exactInUnityAssets": [],
+        "exactInRegisteredUnityResources": []
+      },
+      "unityDestination": [],
+      "decision": "DISCARD",
+      "decisionReason": "No current Unity consumer or registered Unity destination was found; avoid bulk-copying Expo prefetch assets.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 251493,
+        "rgba8DecodedEstimateBytes": 3225600,
+        "wav": null,
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/content-packs/world/high.jpg",
+      "sha256": "c61bf5e0e775d1d6db4f2788f74a2e903ba09afb8168e69831420a6f270f8bc8",
+      "sourceBytes": 516885,
+      "mediaType": "jpg",
+      "dimensions": {
+        "width": 1080,
+        "height": 1680
+      },
+      "semanticRole": "Expo content-prefetch tier image; no Unity resource-registry consumer is established.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [],
+        "exactInUnityAssets": [],
+        "exactInRegisteredUnityResources": []
+      },
+      "unityDestination": [],
+      "decision": "DISCARD",
+      "decisionReason": "No current Unity consumer or registered Unity destination was found; avoid bulk-copying Expo prefetch assets.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 516885,
+        "rgba8DecodedEstimateBytes": 7257600,
+        "wav": null,
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/content-packs/world/low.jpg",
+      "sha256": "c1129f33fe7d0c9386772c3c2c3d19343bbdc7b27175639fcaa304c562a11ab7",
+      "sourceBytes": 90453,
+      "mediaType": "jpg",
+      "dimensions": {
+        "width": 480,
+        "height": 747
+      },
+      "semanticRole": "Expo content-prefetch tier image; no Unity resource-registry consumer is established.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [],
+        "exactInUnityAssets": [],
+        "exactInRegisteredUnityResources": []
+      },
+      "unityDestination": [],
+      "decision": "DISCARD",
+      "decisionReason": "No current Unity consumer or registered Unity destination was found; avoid bulk-copying Expo prefetch assets.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 90453,
+        "rgba8DecodedEstimateBytes": 1434240,
+        "wav": null,
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/content-packs/world/medium.jpg",
+      "sha256": "b6f719be9c957749f57b42ed53205d32a354b0a521dd75ec6d92561ac1d174f6",
+      "sourceBytes": 201104,
+      "mediaType": "jpg",
+      "dimensions": {
+        "width": 720,
+        "height": 1120
+      },
+      "semanticRole": "Expo content-prefetch tier image; no Unity resource-registry consumer is established.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [],
+        "exactInUnityAssets": [],
+        "exactInRegisteredUnityResources": []
+      },
+      "unityDestination": [],
+      "decision": "DISCARD",
+      "decisionReason": "No current Unity consumer or registered Unity destination was found; avoid bulk-copying Expo prefetch assets.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 201104,
+        "rgba8DecodedEstimateBytes": 3225600,
+        "wav": null,
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/images/icon.jpg",
+      "sha256": "1124e9e3838242423dbcac3b1ccb170ae3e0f4684e343e12da5862c2c4d0b460",
+      "sourceBytes": 419595,
+      "mediaType": "jpg",
+      "dimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "semanticRole": "Legacy mobile application icon or shell image.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [
+          "mobile/assets/registered/logo/IMG_20260606_040509_906.jpg"
+        ],
+        "exactInUnityAssets": [],
+        "exactInRegisteredUnityResources": []
+      },
+      "unityDestination": [],
+      "decision": "DISCARD",
+      "decisionReason": "Application-shell artwork is not a Unity gameplay asset.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 419595,
+        "rgba8DecodedEstimateBytes": 6290064,
+        "wav": null,
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/images/icon.png",
+      "sha256": "59968f89076408b6cb488f2fa29c39e73231e61dc77c22c805102e3283fbaaba",
+      "sourceBytes": 2914911,
+      "mediaType": "png",
+      "dimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "semanticRole": "Legacy mobile application icon or shell image.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [],
+        "exactInUnityAssets": [],
+        "exactInRegisteredUnityResources": []
+      },
+      "unityDestination": [],
+      "decision": "DISCARD",
+      "decisionReason": "Application-shell artwork is not a Unity gameplay asset.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 2914911,
+        "rgba8DecodedEstimateBytes": 6290064,
+        "wav": null,
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/registered/backgrounds/IMG_20260606_040514_270.jpg",
+      "sha256": "f21300426112c41f64c8c2326fc999b8125def90645b5060a04b4cd3ea31de5a",
+      "sourceBytes": 129444,
+      "mediaType": "jpg",
+      "dimensions": {
+        "width": 1280,
+        "height": 853
+      },
+      "semanticRole": "Legacy registered artwork (backgrounds); no Unity resource-registry consumer is established.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [],
+        "exactInUnityAssets": [],
+        "exactInRegisteredUnityResources": []
+      },
+      "unityDestination": [],
+      "decision": "DISCARD",
+      "decisionReason": "The legacy registered image has no current Unity resource-registry consumer; retain it only in the legacy source pending parity gates.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 129444,
+        "rgba8DecodedEstimateBytes": 4367360,
+        "wav": null,
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/registered/backgrounds/IMG_20260606_040516_225.jpg",
+      "sha256": "622483d02db89a3aed57449c2e06bff3e4fa965242de13dcfbd5331152851d46",
+      "sourceBytes": 129857,
+      "mediaType": "jpg",
+      "dimensions": {
+        "width": 1280,
+        "height": 853
+      },
+      "semanticRole": "Legacy registered artwork (backgrounds); no Unity resource-registry consumer is established.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [],
+        "exactInUnityAssets": [],
+        "exactInRegisteredUnityResources": []
+      },
+      "unityDestination": [],
+      "decision": "DISCARD",
+      "decisionReason": "The legacy registered image has no current Unity resource-registry consumer; retain it only in the legacy source pending parity gates.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 129857,
+        "rgba8DecodedEstimateBytes": 4367360,
+        "wav": null,
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/registered/backgrounds/IMG_20260606_040517_340.jpg",
+      "sha256": "adcfecd9346c6b65c564e4e3edc06fa0fabbfdcd20d75aacd74c1938274918d4",
+      "sourceBytes": 215174,
+      "mediaType": "jpg",
+      "dimensions": {
+        "width": 1280,
+        "height": 853
+      },
+      "semanticRole": "Legacy registered artwork (backgrounds); no Unity resource-registry consumer is established.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [],
+        "exactInUnityAssets": [],
+        "exactInRegisteredUnityResources": []
+      },
+      "unityDestination": [],
+      "decision": "DISCARD",
+      "decisionReason": "The legacy registered image has no current Unity resource-registry consumer; retain it only in the legacy source pending parity gates.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 215174,
+        "rgba8DecodedEstimateBytes": 4367360,
+        "wav": null,
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/registered/backgrounds/IMG_20260606_040519_249.jpg",
+      "sha256": "ec72374fa76d91c8d081fb522c69136caac030ce013e66d07c6a029b8c680ae9",
+      "sourceBytes": 230014,
+      "mediaType": "jpg",
+      "dimensions": {
+        "width": 1280,
+        "height": 853
+      },
+      "semanticRole": "Legacy registered artwork (backgrounds); no Unity resource-registry consumer is established.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [],
+        "exactInUnityAssets": [],
+        "exactInRegisteredUnityResources": []
+      },
+      "unityDestination": [],
+      "decision": "DISCARD",
+      "decisionReason": "The legacy registered image has no current Unity resource-registry consumer; retain it only in the legacy source pending parity gates.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 230014,
+        "rgba8DecodedEstimateBytes": 4367360,
+        "wav": null,
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/registered/backgrounds/IMG_20260606_040520_946.jpg",
+      "sha256": "c04ddc1d938b7ee4bb9e8d6df40cc1dc90c80ebfc0da965be385db463348e0f0",
+      "sourceBytes": 213346,
+      "mediaType": "jpg",
+      "dimensions": {
+        "width": 960,
+        "height": 1280
+      },
+      "semanticRole": "Legacy registered artwork (backgrounds); no Unity resource-registry consumer is established.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [],
+        "exactInUnityAssets": [],
+        "exactInRegisteredUnityResources": []
+      },
+      "unityDestination": [],
+      "decision": "DISCARD",
+      "decisionReason": "The legacy registered image has no current Unity resource-registry consumer; retain it only in the legacy source pending parity gates.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 213346,
+        "rgba8DecodedEstimateBytes": 4915200,
+        "wav": null,
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/registered/backgrounds/IMG_20260606_040522_219.jpg",
+      "sha256": "7cd126ff2dad1ae0b910a8687c9096f7855340a28160bf9b33f317403cf1f84f",
+      "sourceBytes": 118891,
+      "mediaType": "jpg",
+      "dimensions": {
+        "width": 1280,
+        "height": 853
+      },
+      "semanticRole": "Legacy registered artwork (backgrounds); no Unity resource-registry consumer is established.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [],
+        "exactInUnityAssets": [],
+        "exactInRegisteredUnityResources": []
+      },
+      "unityDestination": [],
+      "decision": "DISCARD",
+      "decisionReason": "The legacy registered image has no current Unity resource-registry consumer; retain it only in the legacy source pending parity gates.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 118891,
+        "rgba8DecodedEstimateBytes": 4367360,
+        "wav": null,
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/registered/backgrounds/IMG_20260606_040524_580.jpg",
+      "sha256": "bd1879ed9103a3670578d5c286a82c7849b3cccc1921653741da91912199d470",
+      "sourceBytes": 165967,
+      "mediaType": "jpg",
+      "dimensions": {
+        "width": 853,
+        "height": 1280
+      },
+      "semanticRole": "Legacy registered artwork (backgrounds); no Unity resource-registry consumer is established.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [],
+        "exactInUnityAssets": [],
+        "exactInRegisteredUnityResources": []
+      },
+      "unityDestination": [],
+      "decision": "DISCARD",
+      "decisionReason": "The legacy registered image has no current Unity resource-registry consumer; retain it only in the legacy source pending parity gates.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 165967,
+        "rgba8DecodedEstimateBytes": 4367360,
+        "wav": null,
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/registered/backgrounds/IMG_20260606_040601_320.jpg",
+      "sha256": "9ca9f717abfde4bb9d661f8e92fece97e620437c64c9812c9f19a7b5b7368c1f",
+      "sourceBytes": 307367,
+      "mediaType": "jpg",
+      "dimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "semanticRole": "Legacy registered artwork (backgrounds); no Unity resource-registry consumer is established.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [],
+        "exactInUnityAssets": [],
+        "exactInRegisteredUnityResources": []
+      },
+      "unityDestination": [],
+      "decision": "DISCARD",
+      "decisionReason": "The legacy registered image has no current Unity resource-registry consumer; retain it only in the legacy source pending parity gates.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 307367,
+        "rgba8DecodedEstimateBytes": 6290064,
+        "wav": null,
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/registered/boosts/IMG_20260606_040525_480.jpg",
+      "sha256": "846d368ecaf00dba27686ad6f1b9d65aab8cec9aa9ab409f7d7e3b42aeb2861f",
+      "sourceBytes": 156908,
+      "mediaType": "jpg",
+      "dimensions": {
+        "width": 1024,
+        "height": 1280
+      },
+      "semanticRole": "Legacy registered artwork (boosts); no Unity resource-registry consumer is established.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [],
+        "exactInUnityAssets": [],
+        "exactInRegisteredUnityResources": []
+      },
+      "unityDestination": [],
+      "decision": "DISCARD",
+      "decisionReason": "The legacy registered image has no current Unity resource-registry consumer; retain it only in the legacy source pending parity gates.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 156908,
+        "rgba8DecodedEstimateBytes": 5242880,
+        "wav": null,
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/registered/boosts/IMG_20260606_040527_020.jpg",
+      "sha256": "1c294dade41dccc0c6e6398870d8511e4d063166f90fb5ffa1836b5e7702a84e",
+      "sourceBytes": 152757,
+      "mediaType": "jpg",
+      "dimensions": {
+        "width": 1024,
+        "height": 1280
+      },
+      "semanticRole": "Legacy registered artwork (boosts); no Unity resource-registry consumer is established.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [],
+        "exactInUnityAssets": [],
+        "exactInRegisteredUnityResources": []
+      },
+      "unityDestination": [],
+      "decision": "DISCARD",
+      "decisionReason": "The legacy registered image has no current Unity resource-registry consumer; retain it only in the legacy source pending parity gates.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 152757,
+        "rgba8DecodedEstimateBytes": 5242880,
+        "wav": null,
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/registered/boosts/IMG_20260606_040529_139.jpg",
+      "sha256": "49fcf1607fcc71693f9567c77c5d5e54da783d8bca65525e272d6c28a81470b4",
+      "sourceBytes": 230039,
+      "mediaType": "jpg",
+      "dimensions": {
+        "width": 1024,
+        "height": 1280
+      },
+      "semanticRole": "Legacy registered artwork (boosts); no Unity resource-registry consumer is established.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [],
+        "exactInUnityAssets": [],
+        "exactInRegisteredUnityResources": []
+      },
+      "unityDestination": [],
+      "decision": "DISCARD",
+      "decisionReason": "The legacy registered image has no current Unity resource-registry consumer; retain it only in the legacy source pending parity gates.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 230039,
+        "rgba8DecodedEstimateBytes": 5242880,
+        "wav": null,
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/registered/boosts/IMG_20260606_040529_674.jpg",
+      "sha256": "88159238780d5ca44391936f12ffac95aee9561e11904599d5946f5666ef5171",
+      "sourceBytes": 180076,
+      "mediaType": "jpg",
+      "dimensions": {
+        "width": 1024,
+        "height": 1280
+      },
+      "semanticRole": "Legacy registered artwork (boosts); no Unity resource-registry consumer is established.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [],
+        "exactInUnityAssets": [],
+        "exactInRegisteredUnityResources": []
+      },
+      "unityDestination": [],
+      "decision": "DISCARD",
+      "decisionReason": "The legacy registered image has no current Unity resource-registry consumer; retain it only in the legacy source pending parity gates.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 180076,
+        "rgba8DecodedEstimateBytes": 5242880,
+        "wav": null,
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/registered/chests/IMG_20260606_040531_582.jpg",
+      "sha256": "b12e762a8fa6112c345868d7967e9eff35f27e3990c875035d9f9d840f7ea098",
+      "sourceBytes": 194818,
+      "mediaType": "jpg",
+      "dimensions": {
+        "width": 1280,
+        "height": 853
+      },
+      "semanticRole": "Legacy registered artwork (chests); no Unity resource-registry consumer is established.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [],
+        "exactInUnityAssets": [],
+        "exactInRegisteredUnityResources": []
+      },
+      "unityDestination": [],
+      "decision": "DISCARD",
+      "decisionReason": "The legacy registered image has no current Unity resource-registry consumer; retain it only in the legacy source pending parity gates.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 194818,
+        "rgba8DecodedEstimateBytes": 4367360,
+        "wav": null,
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/registered/clans/IMG_20260619_113017.jpg",
+      "sha256": "52d9d5483720e70c0086292843f41d8bc8311320fa5f470f1ec561c80ef7e720",
+      "sourceBytes": 66806,
+      "mediaType": "jpg",
+      "dimensions": {
+        "width": 720,
+        "height": 1384
+      },
+      "semanticRole": "Legacy registered artwork (clans); no Unity resource-registry consumer is established.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [],
+        "exactInUnityAssets": [],
+        "exactInRegisteredUnityResources": []
+      },
+      "unityDestination": [],
+      "decision": "DISCARD",
+      "decisionReason": "The legacy registered image has no current Unity resource-registry consumer; retain it only in the legacy source pending parity gates.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 66806,
+        "rgba8DecodedEstimateBytes": 3985920,
+        "wav": null,
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/registered/cover/lucid-origin_Crear_una_portada_principal_para_el_bot_oficial_de_Vexforge._Dise#U00f1o_-_castillo_-1.jpg",
+      "sha256": "7731453d01f9328ffef39580d7ec28b216728435272ece284d5e88497bfb7270",
+      "sourceBytes": 288902,
+      "mediaType": "jpg",
+      "dimensions": {
+        "width": 1024,
+        "height": 1024
+      },
+      "semanticRole": "Legacy registered artwork (cover); no Unity resource-registry consumer is established.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [],
+        "exactInUnityAssets": [],
+        "exactInRegisteredUnityResources": []
+      },
+      "unityDestination": [],
+      "decision": "DISCARD",
+      "decisionReason": "The legacy registered image has no current Unity resource-registry consumer; retain it only in the legacy source pending parity gates.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 288902,
+        "rgba8DecodedEstimateBytes": 4194304,
+        "wav": null,
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/registered/events/IMG_20260619_113335.jpg",
+      "sha256": "a1681bc9e2e2364c7389ac3910dafca1b45d21691040498e12e757028192bdf8",
+      "sourceBytes": 53641,
+      "mediaType": "jpg",
+      "dimensions": {
+        "width": 720,
+        "height": 1404
+      },
+      "semanticRole": "Legacy registered artwork (events); no Unity resource-registry consumer is established.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [],
+        "exactInUnityAssets": [],
+        "exactInRegisteredUnityResources": []
+      },
+      "unityDestination": [],
+      "decision": "DISCARD",
+      "decisionReason": "The legacy registered image has no current Unity resource-registry consumer; retain it only in the legacy source pending parity gates.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 53641,
+        "rgba8DecodedEstimateBytes": 4043520,
+        "wav": null,
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/registered/founders/IMG_20260619_113831.jpg",
+      "sha256": "f52ad44cbcb33e0968e4fd0d8caefc73bb3418cf944e80570bf3bb39a0f070ac",
+      "sourceBytes": 63229,
+      "mediaType": "jpg",
+      "dimensions": {
+        "width": 720,
+        "height": 1420
+      },
+      "semanticRole": "Legacy registered artwork (founders); no Unity resource-registry consumer is established.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [],
+        "exactInUnityAssets": [],
+        "exactInRegisteredUnityResources": []
+      },
+      "unityDestination": [],
+      "decision": "DISCARD",
+      "decisionReason": "The legacy registered image has no current Unity resource-registry consumer; retain it only in the legacy source pending parity gates.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 63229,
+        "rgba8DecodedEstimateBytes": 4089600,
+        "wav": null,
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/registered/frames/IMG_20260606_040532_520.jpg",
+      "sha256": "bf5c4e79f84fd46591d14e5d084e204901d9460e58259f77de045abc723ac198",
+      "sourceBytes": 181959,
+      "mediaType": "jpg",
+      "dimensions": {
+        "width": 960,
+        "height": 1280
+      },
+      "semanticRole": "Legacy registered artwork (frames); no Unity resource-registry consumer is established.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [],
+        "exactInUnityAssets": [],
+        "exactInRegisteredUnityResources": []
+      },
+      "unityDestination": [],
+      "decision": "DISCARD",
+      "decisionReason": "The legacy registered image has no current Unity resource-registry consumer; retain it only in the legacy source pending parity gates.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 181959,
+        "rgba8DecodedEstimateBytes": 4915200,
+        "wav": null,
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/registered/frames/IMG_20260606_040534_461.jpg",
+      "sha256": "61ddbecb10aa92f6b1658fb2e2d628ffc27e1fe119d763d2ddea051529b073fa",
+      "sourceBytes": 274990,
+      "mediaType": "jpg",
+      "dimensions": {
+        "width": 1024,
+        "height": 1280
+      },
+      "semanticRole": "Legacy registered artwork (frames); no Unity resource-registry consumer is established.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [],
+        "exactInUnityAssets": [],
+        "exactInRegisteredUnityResources": []
+      },
+      "unityDestination": [],
+      "decision": "DISCARD",
+      "decisionReason": "The legacy registered image has no current Unity resource-registry consumer; retain it only in the legacy source pending parity gates.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 274990,
+        "rgba8DecodedEstimateBytes": 5242880,
+        "wav": null,
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/registered/frames/IMG_20260606_040535_955.jpg",
+      "sha256": "c9dbc4a4d5b86fb4c22b410eeaf1424b093f316ad4c97471902d302ed73781ed",
+      "sourceBytes": 234787,
+      "mediaType": "jpg",
+      "dimensions": {
+        "width": 904,
+        "height": 1280
+      },
+      "semanticRole": "Legacy registered artwork (frames); no Unity resource-registry consumer is established.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [],
+        "exactInUnityAssets": [],
+        "exactInRegisteredUnityResources": []
+      },
+      "unityDestination": [],
+      "decision": "DISCARD",
+      "decisionReason": "The legacy registered image has no current Unity resource-registry consumer; retain it only in the legacy source pending parity gates.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 234787,
+        "rgba8DecodedEstimateBytes": 4628480,
+        "wav": null,
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/registered/frames/IMG_20260606_040537_201.jpg",
+      "sha256": "7c388f64f92661f363550c684026cfb2b527b727ae970c7d507e7ea47f74f055",
+      "sourceBytes": 182534,
+      "mediaType": "jpg",
+      "dimensions": {
+        "width": 897,
+        "height": 1280
+      },
+      "semanticRole": "Legacy registered artwork (frames); no Unity resource-registry consumer is established.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [],
+        "exactInUnityAssets": [],
+        "exactInRegisteredUnityResources": []
+      },
+      "unityDestination": [],
+      "decision": "DISCARD",
+      "decisionReason": "The legacy registered image has no current Unity resource-registry consumer; retain it only in the legacy source pending parity gates.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 182534,
+        "rgba8DecodedEstimateBytes": 4592640,
+        "wav": null,
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/registered/frames/IMG_20260606_040538_151.jpg",
+      "sha256": "7cb553ab7b7041d74ca293ca98107db4133a8435080ca5881163d3ce6b4b65de",
+      "sourceBytes": 112766,
+      "mediaType": "jpg",
+      "dimensions": {
+        "width": 1024,
+        "height": 1280
+      },
+      "semanticRole": "Legacy registered artwork (frames); no Unity resource-registry consumer is established.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [],
+        "exactInUnityAssets": [],
+        "exactInRegisteredUnityResources": []
+      },
+      "unityDestination": [],
+      "decision": "DISCARD",
+      "decisionReason": "The legacy registered image has no current Unity resource-registry consumer; retain it only in the legacy source pending parity gates.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 112766,
+        "rgba8DecodedEstimateBytes": 5242880,
+        "wav": null,
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/registered/frames/IMG_20260606_040539_689.jpg",
+      "sha256": "7748785e9c0c6216846e077ced1243976dedb1796e63a5f387352ed0a48befde",
+      "sourceBytes": 149750,
+      "mediaType": "jpg",
+      "dimensions": {
+        "width": 960,
+        "height": 1280
+      },
+      "semanticRole": "Legacy registered artwork (frames); no Unity resource-registry consumer is established.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [],
+        "exactInUnityAssets": [],
+        "exactInRegisteredUnityResources": []
+      },
+      "unityDestination": [],
+      "decision": "DISCARD",
+      "decisionReason": "The legacy registered image has no current Unity resource-registry consumer; retain it only in the legacy source pending parity gates.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 149750,
+        "rgba8DecodedEstimateBytes": 4915200,
+        "wav": null,
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/registered/icons/IMG_20260606_040505_192.jpg",
+      "sha256": "6f9055a262f73c253aa687be3134a4a192e237b0ebce832401bbb87f7344dc05",
+      "sourceBytes": 273499,
+      "mediaType": "jpg",
+      "dimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "semanticRole": "Legacy registered artwork (icons); no Unity resource-registry consumer is established.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [],
+        "exactInUnityAssets": [],
+        "exactInRegisteredUnityResources": []
+      },
+      "unityDestination": [],
+      "decision": "DISCARD",
+      "decisionReason": "The legacy registered image has no current Unity resource-registry consumer; retain it only in the legacy source pending parity gates.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 273499,
+        "rgba8DecodedEstimateBytes": 6290064,
+        "wav": null,
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/registered/icons/IMG_20260606_040506_475.jpg",
+      "sha256": "ca40aa5d502d025742e4f0ebf278fd84d6ce378e2bb9364a4c338849b7a2e11c",
+      "sourceBytes": 185304,
+      "mediaType": "jpg",
+      "dimensions": {
+        "width": 1024,
+        "height": 1024
+      },
+      "semanticRole": "Legacy registered artwork (icons); no Unity resource-registry consumer is established.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [],
+        "exactInUnityAssets": [],
+        "exactInRegisteredUnityResources": []
+      },
+      "unityDestination": [],
+      "decision": "DISCARD",
+      "decisionReason": "The legacy registered image has no current Unity resource-registry consumer; retain it only in the legacy source pending parity gates.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 185304,
+        "rgba8DecodedEstimateBytes": 4194304,
+        "wav": null,
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/registered/icons/IMG_20260606_040508_371.jpg",
+      "sha256": "8bc990963225abc68107246bbd5beab7227429f3e02ec7f75674f4b4c881597e",
+      "sourceBytes": 240874,
+      "mediaType": "jpg",
+      "dimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "semanticRole": "Legacy registered artwork (icons); no Unity resource-registry consumer is established.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [],
+        "exactInUnityAssets": [],
+        "exactInRegisteredUnityResources": []
+      },
+      "unityDestination": [],
+      "decision": "DISCARD",
+      "decisionReason": "The legacy registered image has no current Unity resource-registry consumer; retain it only in the legacy source pending parity gates.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 240874,
+        "rgba8DecodedEstimateBytes": 6290064,
+        "wav": null,
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/registered/icons/IMG_20260619_114322.jpg",
+      "sha256": "fdb8ecc6f9961ef6ecb6f2f96a824e8da5c6c5e0208a2a03e71b1247c88d5d6e",
+      "sourceBytes": 25692,
+      "mediaType": "jpg",
+      "dimensions": {
+        "width": 720,
+        "height": 1391
+      },
+      "semanticRole": "Legacy registered artwork (icons); no Unity resource-registry consumer is established.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [],
+        "exactInUnityAssets": [],
+        "exactInRegisteredUnityResources": []
+      },
+      "unityDestination": [],
+      "decision": "DISCARD",
+      "decisionReason": "The legacy registered image has no current Unity resource-registry consumer; retain it only in the legacy source pending parity gates.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 25692,
+        "rgba8DecodedEstimateBytes": 4006080,
+        "wav": null,
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/registered/icons/IMG_20260619_114717.jpg",
+      "sha256": "3366ee771d98b938e03d9220520bce972ccd64c9bd22ad7f211cb8883f5e9c83",
+      "sourceBytes": 60294,
+      "mediaType": "jpg",
+      "dimensions": {
+        "width": 720,
+        "height": 1409
+      },
+      "semanticRole": "Legacy registered artwork (icons); no Unity resource-registry consumer is established.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [],
+        "exactInUnityAssets": [],
+        "exactInRegisteredUnityResources": []
+      },
+      "unityDestination": [],
+      "decision": "DISCARD",
+      "decisionReason": "The legacy registered image has no current Unity resource-registry consumer; retain it only in the legacy source pending parity gates.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 60294,
+        "rgba8DecodedEstimateBytes": 4057920,
+        "wav": null,
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/registered/icons/IMG_20260619_114852.jpg",
+      "sha256": "27ee01cd63e79d66d8b9eae93e41d77e9a60d184ba60a05866616b3b699858ce",
+      "sourceBytes": 31465,
+      "mediaType": "jpg",
+      "dimensions": {
+        "width": 720,
+        "height": 1398
+      },
+      "semanticRole": "Legacy registered artwork (icons); no Unity resource-registry consumer is established.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [],
+        "exactInUnityAssets": [],
+        "exactInRegisteredUnityResources": []
+      },
+      "unityDestination": [],
+      "decision": "DISCARD",
+      "decisionReason": "The legacy registered image has no current Unity resource-registry consumer; retain it only in the legacy source pending parity gates.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 31465,
+        "rgba8DecodedEstimateBytes": 4026240,
+        "wav": null,
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/registered/icons/IMG_20260619_115309.jpg",
+      "sha256": "2666670f4f2fbc7b068b5657b4a10b8484f461eadeeedeead54a8239dca27e4f",
+      "sourceBytes": 28993,
+      "mediaType": "jpg",
+      "dimensions": {
+        "width": 720,
+        "height": 1388
+      },
+      "semanticRole": "Legacy registered artwork (icons); no Unity resource-registry consumer is established.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [],
+        "exactInUnityAssets": [],
+        "exactInRegisteredUnityResources": []
+      },
+      "unityDestination": [],
+      "decision": "DISCARD",
+      "decisionReason": "The legacy registered image has no current Unity resource-registry consumer; retain it only in the legacy source pending parity gates.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 28993,
+        "rgba8DecodedEstimateBytes": 3997440,
+        "wav": null,
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/registered/lobby/IMG_20260619_110637.jpg",
+      "sha256": "bb74e4629fa2f95bce14c22bc23e1f2382952386a10afda1dc878e5cfb6b2384",
+      "sourceBytes": 97307,
+      "mediaType": "jpg",
+      "dimensions": {
+        "width": 720,
+        "height": 1414
+      },
+      "semanticRole": "Legacy registered artwork (lobby); no Unity resource-registry consumer is established.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [],
+        "exactInUnityAssets": [],
+        "exactInRegisteredUnityResources": []
+      },
+      "unityDestination": [],
+      "decision": "DISCARD",
+      "decisionReason": "The legacy registered image has no current Unity resource-registry consumer; retain it only in the legacy source pending parity gates.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 97307,
+        "rgba8DecodedEstimateBytes": 4072320,
+        "wav": null,
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/registered/logo/IMG_20260606_040509_906.jpg",
+      "sha256": "1124e9e3838242423dbcac3b1ccb170ae3e0f4684e343e12da5862c2c4d0b460",
+      "sourceBytes": 419595,
+      "mediaType": "jpg",
+      "dimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "semanticRole": "Legacy registered artwork (logo); no Unity resource-registry consumer is established.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [
+          "mobile/assets/images/icon.jpg"
+        ],
+        "exactInUnityAssets": [],
+        "exactInRegisteredUnityResources": []
+      },
+      "unityDestination": [],
+      "decision": "DISCARD",
+      "decisionReason": "The legacy registered image has no current Unity resource-registry consumer; retain it only in the legacy source pending parity gates.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 419595,
+        "rgba8DecodedEstimateBytes": 6290064,
+        "wav": null,
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/registered/logo/IMG_20260606_040542_755.jpg",
+      "sha256": "3db2f8da33cfdddb757db9bff15ff7dc06e2ca7703f7325d55390a12150a8210",
+      "sourceBytes": 201387,
+      "mediaType": "jpg",
+      "dimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "semanticRole": "Legacy registered artwork (logo); no Unity resource-registry consumer is established.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [],
+        "exactInUnityAssets": [],
+        "exactInRegisteredUnityResources": []
+      },
+      "unityDestination": [],
+      "decision": "DISCARD",
+      "decisionReason": "The legacy registered image has no current Unity resource-registry consumer; retain it only in the legacy source pending parity gates.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 201387,
+        "rgba8DecodedEstimateBytes": 6290064,
+        "wav": null,
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/registered/logo/IMG_20260606_040543_962.jpg",
+      "sha256": "0e35fa3d30a83227cb455e12fc51ec8cb8e27946c6d0b664df4304152d6f44d2",
+      "sourceBytes": 323040,
+      "mediaType": "jpg",
+      "dimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "semanticRole": "Legacy registered artwork (logo); no Unity resource-registry consumer is established.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [],
+        "exactInUnityAssets": [],
+        "exactInRegisteredUnityResources": []
+      },
+      "unityDestination": [],
+      "decision": "DISCARD",
+      "decisionReason": "The legacy registered image has no current Unity resource-registry consumer; retain it only in the legacy source pending parity gates.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 323040,
+        "rgba8DecodedEstimateBytes": 6290064,
+        "wav": null,
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/registered/logo/IMG_20260606_040544_619.jpg",
+      "sha256": "11836caf19d5cf98be4414e223052b05d26be260db5857d44569bd97e0215f2d",
+      "sourceBytes": 261765,
+      "mediaType": "jpg",
+      "dimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "semanticRole": "Legacy registered artwork (logo); no Unity resource-registry consumer is established.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [],
+        "exactInUnityAssets": [],
+        "exactInRegisteredUnityResources": []
+      },
+      "unityDestination": [],
+      "decision": "DISCARD",
+      "decisionReason": "The legacy registered image has no current Unity resource-registry consumer; retain it only in the legacy source pending parity gates.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 261765,
+        "rgba8DecodedEstimateBytes": 6290064,
+        "wav": null,
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/registered/logo/IMG_20260606_040546_258.jpg",
+      "sha256": "6afd2241ef32fdea7bc2e3d4782ac3206cf9312ae71770bc3979875184178e88",
+      "sourceBytes": 230585,
+      "mediaType": "jpg",
+      "dimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "semanticRole": "Legacy registered artwork (logo); no Unity resource-registry consumer is established.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [],
+        "exactInUnityAssets": [],
+        "exactInRegisteredUnityResources": []
+      },
+      "unityDestination": [],
+      "decision": "DISCARD",
+      "decisionReason": "The legacy registered image has no current Unity resource-registry consumer; retain it only in the legacy source pending parity gates.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 230585,
+        "rgba8DecodedEstimateBytes": 6290064,
+        "wav": null,
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/registered/market/IMG_20260619_112552.jpg",
+      "sha256": "c89650512bfe2c7ceb2ac939cad3721ff003b2b1384e63651f40fba5ee8768b9",
+      "sourceBytes": 87702,
+      "mediaType": "jpg",
+      "dimensions": {
+        "width": 720,
+        "height": 1420
+      },
+      "semanticRole": "Legacy registered artwork (market); no Unity resource-registry consumer is established.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [],
+        "exactInUnityAssets": [],
+        "exactInRegisteredUnityResources": []
+      },
+      "unityDestination": [],
+      "decision": "DISCARD",
+      "decisionReason": "The legacy registered image has no current Unity resource-registry consumer; retain it only in the legacy source pending parity gates.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 87702,
+        "rgba8DecodedEstimateBytes": 4089600,
+        "wav": null,
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/registered/misc/IMG_20260619_122016.jpg",
+      "sha256": "0a5ca60596e2ae8f4b30eec9e27d23c671960937af749c0588fb533673a20dc7",
+      "sourceBytes": 56343,
+      "mediaType": "jpg",
+      "dimensions": {
+        "width": 720,
+        "height": 1381
+      },
+      "semanticRole": "Legacy registered artwork (misc); no Unity resource-registry consumer is established.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [],
+        "exactInUnityAssets": [],
+        "exactInRegisteredUnityResources": []
+      },
+      "unityDestination": [],
+      "decision": "DISCARD",
+      "decisionReason": "The legacy registered image has no current Unity resource-registry consumer; retain it only in the legacy source pending parity gates.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 56343,
+        "rgba8DecodedEstimateBytes": 3977280,
+        "wav": null,
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/registered/misc/IMG_20260619_122314.jpg",
+      "sha256": "c8cfb52b9327e2e817ce36e37b5e6cef60eae690d4878a5f8830f371bae5791a",
+      "sourceBytes": 34761,
+      "mediaType": "jpg",
+      "dimensions": {
+        "width": 720,
+        "height": 1429
+      },
+      "semanticRole": "Legacy registered artwork (misc); no Unity resource-registry consumer is established.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [],
+        "exactInUnityAssets": [],
+        "exactInRegisteredUnityResources": []
+      },
+      "unityDestination": [],
+      "decision": "DISCARD",
+      "decisionReason": "The legacy registered image has no current Unity resource-registry consumer; retain it only in the legacy source pending parity gates.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 34761,
+        "rgba8DecodedEstimateBytes": 4115520,
+        "wav": null,
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/registered/progresi#U00f3n/IMG_20260619_120425.jpg",
+      "sha256": "561047101fabd000ff2cfb759a8e9da56d035b929c67078773cc876cbec736ac",
+      "sourceBytes": 40743,
+      "mediaType": "jpg",
+      "dimensions": {
+        "width": 720,
+        "height": 1377
+      },
+      "semanticRole": "Legacy registered artwork (progresi#U00f3n); no Unity resource-registry consumer is established.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [],
+        "exactInUnityAssets": [],
+        "exactInRegisteredUnityResources": []
+      },
+      "unityDestination": [],
+      "decision": "DISCARD",
+      "decisionReason": "The legacy registered image has no current Unity resource-registry consumer; retain it only in the legacy source pending parity gates.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 40743,
+        "rgba8DecodedEstimateBytes": 3965760,
+        "wav": null,
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/registered/progresi#U00f3n/IMG_20260619_120838.jpg",
+      "sha256": "0d684f8ff386fd16bc71f280d7796f9afbbbea24d4ecdef6ebc644f2e2874f86",
+      "sourceBytes": 39340,
+      "mediaType": "jpg",
+      "dimensions": {
+        "width": 720,
+        "height": 1418
+      },
+      "semanticRole": "Legacy registered artwork (progresi#U00f3n); no Unity resource-registry consumer is established.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [],
+        "exactInUnityAssets": [],
+        "exactInRegisteredUnityResources": []
+      },
+      "unityDestination": [],
+      "decision": "DISCARD",
+      "decisionReason": "The legacy registered image has no current Unity resource-registry consumer; retain it only in the legacy source pending parity gates.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 39340,
+        "rgba8DecodedEstimateBytes": 4083840,
+        "wav": null,
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/registered/progresi#U00f3n/IMG_20260619_121047.jpg",
+      "sha256": "65c12f80127e34af079b37be7ea8e15d0e8debb1f8a10c59052fdfaac9a9137e",
+      "sourceBytes": 59135,
+      "mediaType": "jpg",
+      "dimensions": {
+        "width": 720,
+        "height": 1350
+      },
+      "semanticRole": "Legacy registered artwork (progresi#U00f3n); no Unity resource-registry consumer is established.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [],
+        "exactInUnityAssets": [],
+        "exactInRegisteredUnityResources": []
+      },
+      "unityDestination": [],
+      "decision": "DISCARD",
+      "decisionReason": "The legacy registered image has no current Unity resource-registry consumer; retain it only in the legacy source pending parity gates.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 59135,
+        "rgba8DecodedEstimateBytes": 3888000,
+        "wav": null,
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/registered/rewards/IMG_20260619_111433.jpg",
+      "sha256": "721750ba624ff0450ee02519238845a5f5e6718823e2dcaccac1e16b4a099053",
+      "sourceBytes": 49653,
+      "mediaType": "jpg",
+      "dimensions": {
+        "width": 720,
+        "height": 1412
+      },
+      "semanticRole": "Legacy registered artwork (rewards); no Unity resource-registry consumer is established.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [],
+        "exactInUnityAssets": [],
+        "exactInRegisteredUnityResources": []
+      },
+      "unityDestination": [],
+      "decision": "DISCARD",
+      "decisionReason": "The legacy registered image has no current Unity resource-registry consumer; retain it only in the legacy source pending parity gates.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 49653,
+        "rgba8DecodedEstimateBytes": 4066560,
+        "wav": null,
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/registered/sessions/IMG_20260619_111025.jpg",
+      "sha256": "14a3935da9434d1c8df8849178195165f16373c23cac419febf96365ab88af46",
+      "sourceBytes": 72337,
+      "mediaType": "jpg",
+      "dimensions": {
+        "width": 720,
+        "height": 1425
+      },
+      "semanticRole": "Legacy registered artwork (sessions); no Unity resource-registry consumer is established.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [],
+        "exactInUnityAssets": [],
+        "exactInRegisteredUnityResources": []
+      },
+      "unityDestination": [],
+      "decision": "DISCARD",
+      "decisionReason": "The legacy registered image has no current Unity resource-registry consumer; retain it only in the legacy source pending parity gates.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 72337,
+        "rgba8DecodedEstimateBytes": 4104000,
+        "wav": null,
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/registered/tutorial/file_0000000027bc722fbfa4f5dbe844c248.png",
+      "sha256": "36ee81541c3b8291e4a7d4fb353d152702a69c7214609e7cefbe852d6ceb4355",
+      "sourceBytes": 2423018,
+      "mediaType": "png",
+      "dimensions": {
+        "width": 1402,
+        "height": 1122
+      },
+      "semanticRole": "Legacy registered artwork (tutorial); no Unity resource-registry consumer is established.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [],
+        "exactInUnityAssets": [],
+        "exactInRegisteredUnityResources": []
+      },
+      "unityDestination": [],
+      "decision": "DISCARD",
+      "decisionReason": "The legacy registered image has no current Unity resource-registry consumer; retain it only in the legacy source pending parity gates.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 2423018,
+        "rgba8DecodedEstimateBytes": 6292176,
+        "wav": null,
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/registered/ui sistema/IMG_20260619_115844.jpg",
+      "sha256": "d13c784bd5df7b16a5888f8c44d6458099ef5c947fdd8cbd06afe142adf8bff4",
+      "sourceBytes": 37795,
+      "mediaType": "jpg",
+      "dimensions": {
+        "width": 720,
+        "height": 1421
+      },
+      "semanticRole": "Legacy registered artwork (ui sistema); no Unity resource-registry consumer is established.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [],
+        "exactInUnityAssets": [],
+        "exactInRegisteredUnityResources": []
+      },
+      "unityDestination": [],
+      "decision": "DISCARD",
+      "decisionReason": "The legacy registered image has no current Unity resource-registry consumer; retain it only in the legacy source pending parity gates.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 37795,
+        "rgba8DecodedEstimateBytes": 4092480,
+        "wav": null,
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/registered/ui sistema/IMG_20260619_120107.jpg",
+      "sha256": "5caa1616cadb55c8a4aeaedf06d0713d35b6aba0d118fa921370571648dfd249",
+      "sourceBytes": 31881,
+      "mediaType": "jpg",
+      "dimensions": {
+        "width": 720,
+        "height": 1430
+      },
+      "semanticRole": "Legacy registered artwork (ui sistema); no Unity resource-registry consumer is established.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [],
+        "exactInUnityAssets": [],
+        "exactInRegisteredUnityResources": []
+      },
+      "unityDestination": [],
+      "decision": "DISCARD",
+      "decisionReason": "The legacy registered image has no current Unity resource-registry consumer; retain it only in the legacy source pending parity gates.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 31881,
+        "rgba8DecodedEstimateBytes": 4118400,
+        "wav": null,
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/registered/wallet/IMG_20260619_112146.jpg",
+      "sha256": "0de1cfaf1ad60ae95c9b64082a09973fb179296cd9380e6cf889f5f1a3663be2",
+      "sourceBytes": 60688,
+      "mediaType": "jpg",
+      "dimensions": {
+        "width": 720,
+        "height": 1397
+      },
+      "semanticRole": "Legacy registered artwork (wallet); no Unity resource-registry consumer is established.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [],
+        "exactInUnityAssets": [],
+        "exactInRegisteredUnityResources": []
+      },
+      "unityDestination": [],
+      "decision": "DISCARD",
+      "decisionReason": "The legacy registered image has no current Unity resource-registry consumer; retain it only in the legacy source pending parity gates.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 60688,
+        "rgba8DecodedEstimateBytes": 4023360,
+        "wav": null,
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/vexforge/VF_BOSS_AURA.png",
+      "sha256": "b4d8e0ffe16c68c589f5b5b6ff9dd160f686aa431857886e0a9d89f93401cb2b",
+      "sourceBytes": 23406,
+      "mediaType": "png",
+      "dimensions": {
+        "width": 900,
+        "height": 1200
+      },
+      "semanticRole": "VEXFORGE presentation artwork; checked against the Unity resource registry.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [],
+        "exactInUnityAssets": [
+          "unity/Assets/Resources/VexforgeTier1/Art/VF_BOSS_AURA.png"
+        ],
+        "exactInRegisteredUnityResources": [
+          "unity/Assets/Resources/VexforgeTier1/Art/VF_BOSS_AURA.png"
+        ]
+      },
+      "unityDestination": [
+        "unity/Assets/Resources/VexforgeTier1/Art/VF_BOSS_AURA.png"
+      ],
+      "decision": "KEEP",
+      "decisionReason": "Byte-identical to an asset already listed in the Unity Tier1 resource registry; reuse that destination and do not copy another payload.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 23406,
+        "rgba8DecodedEstimateBytes": 4320000,
+        "wav": null,
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/vexforge/VF_BOSS_AURA.png.meta",
+      "sha256": "a92c335b3ce7c998a306c8fe1e66518b3ece3a09738eb663c6ea8fd7aad89b8a",
+      "sourceBytes": 453,
+      "mediaType": "unity-importer-metadata",
+      "dimensions": null,
+      "semanticRole": "Unity importer sidecar metadata present in the legacy mobile asset tree.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [],
+        "exactInUnityAssets": [],
+        "exactInRegisteredUnityResources": []
+      },
+      "unityDestination": [],
+      "decision": "DISCARD",
+      "decisionReason": "Importer metadata is not runtime content and must not be copied into the Unity project as a mobile asset.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 453,
+        "rgba8DecodedEstimateBytes": null,
+        "wav": null,
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/vexforge/VF_BOSS_SIGIL.png",
+      "sha256": "c8b9bef1bdaa502361ee66c0f25fa6481e487fea3930a2f083cd03167a09a898",
+      "sourceBytes": 11612,
+      "mediaType": "png",
+      "dimensions": {
+        "width": 768,
+        "height": 1024
+      },
+      "semanticRole": "VEXFORGE presentation artwork; checked against the Unity resource registry.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [],
+        "exactInUnityAssets": [
+          "unity/Assets/Resources/VexforgeTier1/Art/VF_BOSS_SIGIL.png"
+        ],
+        "exactInRegisteredUnityResources": [
+          "unity/Assets/Resources/VexforgeTier1/Art/VF_BOSS_SIGIL.png"
+        ]
+      },
+      "unityDestination": [
+        "unity/Assets/Resources/VexforgeTier1/Art/VF_BOSS_SIGIL.png"
+      ],
+      "decision": "KEEP",
+      "decisionReason": "Byte-identical to an asset already listed in the Unity Tier1 resource registry; reuse that destination and do not copy another payload.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 11612,
+        "rgba8DecodedEstimateBytes": 3145728,
+        "wav": null,
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/vexforge/VF_BOSS_SIGIL.png.meta",
+      "sha256": "4e833698d81d26205cec7f22ae45bfd1489d4f55afcc5f957a354da4f26568de",
+      "sourceBytes": 453,
+      "mediaType": "unity-importer-metadata",
+      "dimensions": null,
+      "semanticRole": "Unity importer sidecar metadata present in the legacy mobile asset tree.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [],
+        "exactInUnityAssets": [],
+        "exactInRegisteredUnityResources": []
+      },
+      "unityDestination": [],
+      "decision": "DISCARD",
+      "decisionReason": "Importer metadata is not runtime content and must not be copied into the Unity project as a mobile asset.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 453,
+        "rgba8DecodedEstimateBytes": null,
+        "wav": null,
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/vexforge/VF_CARD_BACK_CORE.png",
+      "sha256": "0022ecd3ec485ff05adc955636e8cdbb37687cc3a3e1cb10177b8e027dec95d0",
+      "sourceBytes": 20449,
+      "mediaType": "png",
+      "dimensions": {
+        "width": 800,
+        "height": 1200
+      },
+      "semanticRole": "VEXFORGE presentation artwork; checked against the Unity resource registry.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [],
+        "exactInUnityAssets": [
+          "unity/Assets/Resources/VexforgeTier1/Art/VF_CARD_BACK_CORE.png"
+        ],
+        "exactInRegisteredUnityResources": [
+          "unity/Assets/Resources/VexforgeTier1/Art/VF_CARD_BACK_CORE.png"
+        ]
+      },
+      "unityDestination": [
+        "unity/Assets/Resources/VexforgeTier1/Art/VF_CARD_BACK_CORE.png"
+      ],
+      "decision": "KEEP",
+      "decisionReason": "Byte-identical to an asset already listed in the Unity Tier1 resource registry; reuse that destination and do not copy another payload.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 20449,
+        "rgba8DecodedEstimateBytes": 3840000,
+        "wav": null,
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/vexforge/VF_CARD_BACK_CORE.png.meta",
+      "sha256": "b618e8b76c7022cff5b2144af606a89c7dadaf70ef2ff76d3ad0cc9a760c8a77",
+      "sourceBytes": 453,
+      "mediaType": "unity-importer-metadata",
+      "dimensions": null,
+      "semanticRole": "Unity importer sidecar metadata present in the legacy mobile asset tree.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [],
+        "exactInUnityAssets": [],
+        "exactInRegisteredUnityResources": []
+      },
+      "unityDestination": [],
+      "decision": "DISCARD",
+      "decisionReason": "Importer metadata is not runtime content and must not be copied into the Unity project as a mobile asset.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 453,
+        "rgba8DecodedEstimateBytes": null,
+        "wav": null,
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/vexforge/VF_CARD_FALLBACK_NEUTRAL.png",
+      "sha256": "a6d7d23ea15df745ea4c89d37eed61c410dea78329980f063af080a8a3e272c9",
+      "sourceBytes": 23560,
+      "mediaType": "png",
+      "dimensions": {
+        "width": 800,
+        "height": 1200
+      },
+      "semanticRole": "VEXFORGE presentation artwork; checked against the Unity resource registry.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [],
+        "exactInUnityAssets": [
+          "unity/Assets/Resources/VexforgeTier1/Art/VF_CARD_FALLBACK_NEUTRAL.png"
+        ],
+        "exactInRegisteredUnityResources": [
+          "unity/Assets/Resources/VexforgeTier1/Art/VF_CARD_FALLBACK_NEUTRAL.png"
+        ]
+      },
+      "unityDestination": [
+        "unity/Assets/Resources/VexforgeTier1/Art/VF_CARD_FALLBACK_NEUTRAL.png"
+      ],
+      "decision": "KEEP",
+      "decisionReason": "Byte-identical to an asset already listed in the Unity Tier1 resource registry; reuse that destination and do not copy another payload.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 23560,
+        "rgba8DecodedEstimateBytes": 3840000,
+        "wav": null,
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/vexforge/VF_CARD_FALLBACK_NEUTRAL.png.meta",
+      "sha256": "5d3370d633554627352ede8491eeab16caf70f7aca9801523369fc1d92db8680",
+      "sourceBytes": 453,
+      "mediaType": "unity-importer-metadata",
+      "dimensions": null,
+      "semanticRole": "Unity importer sidecar metadata present in the legacy mobile asset tree.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [],
+        "exactInUnityAssets": [],
+        "exactInRegisteredUnityResources": []
+      },
+      "unityDestination": [],
+      "decision": "DISCARD",
+      "decisionReason": "Importer metadata is not runtime content and must not be copied into the Unity project as a mobile asset.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 453,
+        "rgba8DecodedEstimateBytes": null,
+        "wav": null,
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/vexforge/VF_CARD_FRAME_EPIC.png",
+      "sha256": "05882bd10d3cedbcd71d7aff7a517492a58b9d233985a22a4310f6c71902cf16",
+      "sourceBytes": 7116,
+      "mediaType": "png",
+      "dimensions": {
+        "width": 800,
+        "height": 1200
+      },
+      "semanticRole": "VEXFORGE presentation artwork; checked against the Unity resource registry.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [],
+        "exactInUnityAssets": [
+          "unity/Assets/Resources/VexforgeTier1/Art/VF_CARD_FRAME_EPIC.png"
+        ],
+        "exactInRegisteredUnityResources": [
+          "unity/Assets/Resources/VexforgeTier1/Art/VF_CARD_FRAME_EPIC.png"
+        ]
+      },
+      "unityDestination": [
+        "unity/Assets/Resources/VexforgeTier1/Art/VF_CARD_FRAME_EPIC.png"
+      ],
+      "decision": "KEEP",
+      "decisionReason": "Byte-identical to an asset already listed in the Unity Tier1 resource registry; reuse that destination and do not copy another payload.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 7116,
+        "rgba8DecodedEstimateBytes": 3840000,
+        "wav": null,
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/vexforge/VF_CARD_FRAME_EPIC.png.meta",
+      "sha256": "e22cafec29dced316465e8851f9c6a9f926db4f1f3b1829386030415471f23af",
+      "sourceBytes": 453,
+      "mediaType": "unity-importer-metadata",
+      "dimensions": null,
+      "semanticRole": "Unity importer sidecar metadata present in the legacy mobile asset tree.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [],
+        "exactInUnityAssets": [],
+        "exactInRegisteredUnityResources": []
+      },
+      "unityDestination": [],
+      "decision": "DISCARD",
+      "decisionReason": "Importer metadata is not runtime content and must not be copied into the Unity project as a mobile asset.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 453,
+        "rgba8DecodedEstimateBytes": null,
+        "wav": null,
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/vexforge/VF_CARD_FRAME_LEGENDARY.png",
+      "sha256": "fa8dd6ccb8d47499bf368d44e1892ce5436057f996cc2a9806c7d6c31c63fa7e",
+      "sourceBytes": 10303,
+      "mediaType": "png",
+      "dimensions": {
+        "width": 800,
+        "height": 1200
+      },
+      "semanticRole": "VEXFORGE presentation artwork; checked against the Unity resource registry.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [],
+        "exactInUnityAssets": [
+          "unity/Assets/Resources/VexforgeTier1/Art/VF_CARD_FRAME_LEGENDARY.png"
+        ],
+        "exactInRegisteredUnityResources": [
+          "unity/Assets/Resources/VexforgeTier1/Art/VF_CARD_FRAME_LEGENDARY.png"
+        ]
+      },
+      "unityDestination": [
+        "unity/Assets/Resources/VexforgeTier1/Art/VF_CARD_FRAME_LEGENDARY.png"
+      ],
+      "decision": "KEEP",
+      "decisionReason": "Byte-identical to an asset already listed in the Unity Tier1 resource registry; reuse that destination and do not copy another payload.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 10303,
+        "rgba8DecodedEstimateBytes": 3840000,
+        "wav": null,
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/vexforge/VF_CARD_FRAME_LEGENDARY.png.meta",
+      "sha256": "a29cb7988a1aa36296f62682003ab8343155d92cd3ab6002a43acc03123f8093",
+      "sourceBytes": 453,
+      "mediaType": "unity-importer-metadata",
+      "dimensions": null,
+      "semanticRole": "Unity importer sidecar metadata present in the legacy mobile asset tree.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [],
+        "exactInUnityAssets": [],
+        "exactInRegisteredUnityResources": []
+      },
+      "unityDestination": [],
+      "decision": "DISCARD",
+      "decisionReason": "Importer metadata is not runtime content and must not be copied into the Unity project as a mobile asset.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 453,
+        "rgba8DecodedEstimateBytes": null,
+        "wav": null,
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/vexforge/VF_PACK_RELIC.png",
+      "sha256": "48b3b3b009722fee2ec514f4741d745f9673700552d2dd8a1992f5b86346d068",
+      "sourceBytes": 12575,
+      "mediaType": "png",
+      "dimensions": {
+        "width": 900,
+        "height": 1200
+      },
+      "semanticRole": "VEXFORGE presentation artwork; checked against the Unity resource registry.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [],
+        "exactInUnityAssets": [
+          "unity/Assets/Resources/VexforgeTier1/Art/VF_PACK_RELIC.png"
+        ],
+        "exactInRegisteredUnityResources": [
+          "unity/Assets/Resources/VexforgeTier1/Art/VF_PACK_RELIC.png"
+        ]
+      },
+      "unityDestination": [
+        "unity/Assets/Resources/VexforgeTier1/Art/VF_PACK_RELIC.png"
+      ],
+      "decision": "KEEP",
+      "decisionReason": "Byte-identical to an asset already listed in the Unity Tier1 resource registry; reuse that destination and do not copy another payload.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 12575,
+        "rgba8DecodedEstimateBytes": 4320000,
+        "wav": null,
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/vexforge/VF_PACK_RELIC.png.meta",
+      "sha256": "6988292f784f7c6c52f9231d101ecd1e79948638abff43b5bcba3deee9e2b9f5",
+      "sourceBytes": 453,
+      "mediaType": "unity-importer-metadata",
+      "dimensions": null,
+      "semanticRole": "Unity importer sidecar metadata present in the legacy mobile asset tree.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [],
+        "exactInUnityAssets": [],
+        "exactInRegisteredUnityResources": []
+      },
+      "unityDestination": [],
+      "decision": "DISCARD",
+      "decisionReason": "Importer metadata is not runtime content and must not be copied into the Unity project as a mobile asset.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 453,
+        "rgba8DecodedEstimateBytes": null,
+        "wav": null,
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/vexforge/VF_REWARD_SIGIL_COMMON.png",
+      "sha256": "a78a9318565ad3b727c9b5e1c6b6b0f9c18b7e05b0e330039990c6ff7a845f41",
+      "sourceBytes": 23413,
+      "mediaType": "png",
+      "dimensions": {
+        "width": 900,
+        "height": 1200
+      },
+      "semanticRole": "VEXFORGE presentation artwork; checked against the Unity resource registry.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [],
+        "exactInUnityAssets": [
+          "unity/Assets/Resources/VexforgeTier1/Art/VF_REWARD_SIGIL_COMMON.png"
+        ],
+        "exactInRegisteredUnityResources": [
+          "unity/Assets/Resources/VexforgeTier1/Art/VF_REWARD_SIGIL_COMMON.png"
+        ]
+      },
+      "unityDestination": [
+        "unity/Assets/Resources/VexforgeTier1/Art/VF_REWARD_SIGIL_COMMON.png"
+      ],
+      "decision": "KEEP",
+      "decisionReason": "Byte-identical to an asset already listed in the Unity Tier1 resource registry; reuse that destination and do not copy another payload.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 23413,
+        "rgba8DecodedEstimateBytes": 4320000,
+        "wav": null,
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/vexforge/VF_REWARD_SIGIL_COMMON.png.meta",
+      "sha256": "ccc5d34e50ffd0eaf55e3451c828f6b24a779ec4b37625bc40dc840880dcefb1",
+      "sourceBytes": 453,
+      "mediaType": "unity-importer-metadata",
+      "dimensions": null,
+      "semanticRole": "Unity importer sidecar metadata present in the legacy mobile asset tree.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [],
+        "exactInUnityAssets": [],
+        "exactInRegisteredUnityResources": []
+      },
+      "unityDestination": [],
+      "decision": "DISCARD",
+      "decisionReason": "Importer metadata is not runtime content and must not be copied into the Unity project as a mobile asset.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 453,
+        "rgba8DecodedEstimateBytes": null,
+        "wav": null,
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/vexforge/VF_REWARD_SIGIL_PREMIUM.png",
+      "sha256": "351f798d5eb21bf5f85c9de89657978cb69eaa997a17b07a02c267e14e9d84e8",
+      "sourceBytes": 23102,
+      "mediaType": "png",
+      "dimensions": {
+        "width": 900,
+        "height": 1200
+      },
+      "semanticRole": "VEXFORGE presentation artwork; checked against the Unity resource registry.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [],
+        "exactInUnityAssets": [
+          "unity/Assets/Resources/VexforgeTier1/Art/VF_REWARD_SIGIL_PREMIUM.png"
+        ],
+        "exactInRegisteredUnityResources": [
+          "unity/Assets/Resources/VexforgeTier1/Art/VF_REWARD_SIGIL_PREMIUM.png"
+        ]
+      },
+      "unityDestination": [
+        "unity/Assets/Resources/VexforgeTier1/Art/VF_REWARD_SIGIL_PREMIUM.png"
+      ],
+      "decision": "KEEP",
+      "decisionReason": "Byte-identical to an asset already listed in the Unity Tier1 resource registry; reuse that destination and do not copy another payload.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 23102,
+        "rgba8DecodedEstimateBytes": 4320000,
+        "wav": null,
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/vexforge/VF_REWARD_SIGIL_PREMIUM.png.meta",
+      "sha256": "b4c13bfea57039d1c57e1f0a6b28d35f4bf4367aa0b7eba2b2a95b353eaee402",
+      "sourceBytes": 453,
+      "mediaType": "unity-importer-metadata",
+      "dimensions": null,
+      "semanticRole": "Unity importer sidecar metadata present in the legacy mobile asset tree.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [],
+        "exactInUnityAssets": [],
+        "exactInRegisteredUnityResources": []
+      },
+      "unityDestination": [],
+      "decision": "DISCARD",
+      "decisionReason": "Importer metadata is not runtime content and must not be copied into the Unity project as a mobile asset.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 453,
+        "rgba8DecodedEstimateBytes": null,
+        "wav": null,
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/vexforge/attack.wav",
+      "sha256": "a0d2930c9bd75fd977c415e3b75f1edf1fd076c1239eb9dd58a6f2cfb73b2940",
+      "sourceBytes": 5336,
+      "mediaType": "wav",
+      "dimensions": null,
+      "semanticRole": "VEXFORGE presentation audio cue; checked against the Unity resource registry.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [],
+        "exactInUnityAssets": [
+          "unity/Assets/Resources/VexforgeTier1/Audio/attack.wav"
+        ],
+        "exactInRegisteredUnityResources": [
+          "unity/Assets/Resources/VexforgeTier1/Audio/attack.wav"
+        ]
+      },
+      "unityDestination": [
+        "unity/Assets/Resources/VexforgeTier1/Audio/attack.wav"
+      ],
+      "decision": "KEEP",
+      "decisionReason": "Byte-identical to an asset already listed in the Unity Tier1 resource registry; reuse that destination and do not copy another payload.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 5336,
+        "rgba8DecodedEstimateBytes": null,
+        "wav": {
+          "formatCode": 1,
+          "channels": 1,
+          "sampleRate": 22050,
+          "bitsPerSample": 16,
+          "dataBytes": 5292,
+          "durationSeconds": 0.12,
+          "decodedPcmEstimateBytes": 5292
+        },
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/vexforge/cinematics/battle_defeat.jpg",
+      "sha256": "c3c94dce9a390e1766ef2484a81233b8af8dae53826d0a47c775f78ab2608dd8",
+      "sourceBytes": 715378,
+      "mediaType": "jpg",
+      "dimensions": {
+        "width": 1080,
+        "height": 1680
+      },
+      "semanticRole": "Legacy cinematic still; no Unity resource-registry consumer is established.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [],
+        "exactInUnityAssets": [],
+        "exactInRegisteredUnityResources": []
+      },
+      "unityDestination": [],
+      "decision": "DISCARD",
+      "decisionReason": "No current Unity resource-registry consumer or approved final-art destination was found.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 715378,
+        "rgba8DecodedEstimateBytes": 7257600,
+        "wav": null,
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/vexforge/cinematics/battle_intro.jpg",
+      "sha256": "0afccea6b42b9dd4e50df20a6032d278bf1b72b73442f05896b78d11478928d4",
+      "sourceBytes": 726281,
+      "mediaType": "jpg",
+      "dimensions": {
+        "width": 1080,
+        "height": 1680
+      },
+      "semanticRole": "Legacy cinematic still; no Unity resource-registry consumer is established.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [],
+        "exactInUnityAssets": [],
+        "exactInRegisteredUnityResources": []
+      },
+      "unityDestination": [],
+      "decision": "DISCARD",
+      "decisionReason": "No current Unity resource-registry consumer or approved final-art destination was found.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 726281,
+        "rgba8DecodedEstimateBytes": 7257600,
+        "wav": null,
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/vexforge/cinematics/battle_victory.jpg",
+      "sha256": "b07e2f17186ce3239d944f604f9b29a654a687b95f81dd9b4d7f25dbfa0dbc11",
+      "sourceBytes": 718949,
+      "mediaType": "jpg",
+      "dimensions": {
+        "width": 1080,
+        "height": 1680
+      },
+      "semanticRole": "Legacy cinematic still; no Unity resource-registry consumer is established.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [],
+        "exactInUnityAssets": [],
+        "exactInRegisteredUnityResources": []
+      },
+      "unityDestination": [],
+      "decision": "DISCARD",
+      "decisionReason": "No current Unity resource-registry consumer or approved final-art destination was found.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 718949,
+        "rgba8DecodedEstimateBytes": 7257600,
+        "wav": null,
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/vexforge/cinematics/boss_phase.jpg",
+      "sha256": "3a722b027ed38ba48cccf284b23215aa1efc765a83b9626168bb4f0cec6f5a53",
+      "sourceBytes": 746412,
+      "mediaType": "jpg",
+      "dimensions": {
+        "width": 1080,
+        "height": 1680
+      },
+      "semanticRole": "Legacy cinematic still; no Unity resource-registry consumer is established.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [],
+        "exactInUnityAssets": [],
+        "exactInRegisteredUnityResources": []
+      },
+      "unityDestination": [],
+      "decision": "DISCARD",
+      "decisionReason": "No current Unity resource-registry consumer or approved final-art destination was found.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 746412,
+        "rgba8DecodedEstimateBytes": 7257600,
+        "wav": null,
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/vexforge/cinematics/fusion.jpg",
+      "sha256": "d796b448daa149938b68ea1b30461063d5757d1831c2b704ba0717f2b0087266",
+      "sourceBytes": 899203,
+      "mediaType": "jpg",
+      "dimensions": {
+        "width": 1080,
+        "height": 1680
+      },
+      "semanticRole": "Legacy cinematic still; no Unity resource-registry consumer is established.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [],
+        "exactInUnityAssets": [],
+        "exactInRegisteredUnityResources": []
+      },
+      "unityDestination": [],
+      "decision": "DISCARD",
+      "decisionReason": "No current Unity resource-registry consumer or approved final-art destination was found.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 899203,
+        "rgba8DecodedEstimateBytes": 7257600,
+        "wav": null,
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/vexforge/cinematics/mission_complete.jpg",
+      "sha256": "52df4eaca07517c3f9a8b9721e4d940331719f6890ff3882575979aa5bd9a39e",
+      "sourceBytes": 604267,
+      "mediaType": "jpg",
+      "dimensions": {
+        "width": 1080,
+        "height": 1680
+      },
+      "semanticRole": "Legacy cinematic still; no Unity resource-registry consumer is established.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [],
+        "exactInUnityAssets": [],
+        "exactInRegisteredUnityResources": []
+      },
+      "unityDestination": [],
+      "decision": "DISCARD",
+      "decisionReason": "No current Unity resource-registry consumer or approved final-art destination was found.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 604267,
+        "rgba8DecodedEstimateBytes": 7257600,
+        "wav": null,
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/vexforge/cinematics/pack_reveal.jpg",
+      "sha256": "c59c4d234fed7af89da84a87be439133b4dc232f267a5776b1365613e6d18f79",
+      "sourceBytes": 765650,
+      "mediaType": "jpg",
+      "dimensions": {
+        "width": 1080,
+        "height": 1680
+      },
+      "semanticRole": "Legacy cinematic still; no Unity resource-registry consumer is established.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [],
+        "exactInUnityAssets": [],
+        "exactInRegisteredUnityResources": []
+      },
+      "unityDestination": [],
+      "decision": "DISCARD",
+      "decisionReason": "No current Unity resource-registry consumer or approved final-art destination was found.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 765650,
+        "rgba8DecodedEstimateBytes": 7257600,
+        "wav": null,
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/vexforge/cinematics/season_arrival.jpg",
+      "sha256": "1101d8d4c1e8cb19ae2a94456885cb973896f6459772ac850f60a0f847bea779",
+      "sourceBytes": 631175,
+      "mediaType": "jpg",
+      "dimensions": {
+        "width": 1080,
+        "height": 1680
+      },
+      "semanticRole": "Legacy cinematic still; no Unity resource-registry consumer is established.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [],
+        "exactInUnityAssets": [],
+        "exactInRegisteredUnityResources": []
+      },
+      "unityDestination": [],
+      "decision": "DISCARD",
+      "decisionReason": "No current Unity resource-registry consumer or approved final-art destination was found.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 631175,
+        "rgba8DecodedEstimateBytes": 7257600,
+        "wav": null,
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/vexforge/fusion.wav",
+      "sha256": "a24c2061b73dca63390980537f75880edf7a098fa276ae4ee6adea4d5ce41ee2",
+      "sourceBytes": 28268,
+      "mediaType": "wav",
+      "dimensions": null,
+      "semanticRole": "VEXFORGE presentation audio cue; checked against the Unity resource registry.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [],
+        "exactInUnityAssets": [
+          "unity/Assets/Resources/VexforgeTier1/Audio/fusion.wav"
+        ],
+        "exactInRegisteredUnityResources": [
+          "unity/Assets/Resources/VexforgeTier1/Audio/fusion.wav"
+        ]
+      },
+      "unityDestination": [
+        "unity/Assets/Resources/VexforgeTier1/Audio/fusion.wav"
+      ],
+      "decision": "KEEP",
+      "decisionReason": "Byte-identical to an asset already listed in the Unity Tier1 resource registry; reuse that destination and do not copy another payload.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 28268,
+        "rgba8DecodedEstimateBytes": null,
+        "wav": {
+          "formatCode": 1,
+          "channels": 1,
+          "sampleRate": 22050,
+          "bitsPerSample": 16,
+          "dataBytes": 28224,
+          "durationSeconds": 0.64,
+          "decodedPcmEstimateBytes": 28224
+        },
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/vexforge/impact.wav",
+      "sha256": "7b5c04ecffd357fb84b1eb76c255838d34ea3a3f42ee8f7b0ded527ecadab446",
+      "sourceBytes": 11510,
+      "mediaType": "wav",
+      "dimensions": null,
+      "semanticRole": "VEXFORGE presentation audio cue; checked against the Unity resource registry.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [],
+        "exactInUnityAssets": [
+          "unity/Assets/Resources/VexforgeTier1/Audio/impact.wav"
+        ],
+        "exactInRegisteredUnityResources": [
+          "unity/Assets/Resources/VexforgeTier1/Audio/impact.wav"
+        ]
+      },
+      "unityDestination": [
+        "unity/Assets/Resources/VexforgeTier1/Audio/impact.wav"
+      ],
+      "decision": "KEEP",
+      "decisionReason": "Byte-identical to an asset already listed in the Unity Tier1 resource registry; reuse that destination and do not copy another payload.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 11510,
+        "rgba8DecodedEstimateBytes": null,
+        "wav": {
+          "formatCode": 1,
+          "channels": 1,
+          "sampleRate": 22050,
+          "bitsPerSample": 16,
+          "dataBytes": 11466,
+          "durationSeconds": 0.26,
+          "decodedPcmEstimateBytes": 11466
+        },
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/vexforge/pack_reveal.wav",
+      "sha256": "8f481f25eb14e3ba3c68bef18b2a8e69370dca78ae090abb8c89b938e235b11e",
+      "sourceBytes": 26504,
+      "mediaType": "wav",
+      "dimensions": null,
+      "semanticRole": "VEXFORGE presentation audio cue; checked against the Unity resource registry.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [],
+        "exactInUnityAssets": [
+          "unity/Assets/Resources/VexforgeTier1/Audio/pack_reveal.wav"
+        ],
+        "exactInRegisteredUnityResources": [
+          "unity/Assets/Resources/VexforgeTier1/Audio/pack_reveal.wav"
+        ]
+      },
+      "unityDestination": [
+        "unity/Assets/Resources/VexforgeTier1/Audio/pack_reveal.wav"
+      ],
+      "decision": "KEEP",
+      "decisionReason": "Byte-identical to an asset already listed in the Unity Tier1 resource registry; reuse that destination and do not copy another payload.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 26504,
+        "rgba8DecodedEstimateBytes": null,
+        "wav": {
+          "formatCode": 1,
+          "channels": 1,
+          "sampleRate": 22050,
+          "bitsPerSample": 16,
+          "dataBytes": 26460,
+          "durationSeconds": 0.6,
+          "decodedPcmEstimateBytes": 26460
+        },
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/vexforge/reward.wav",
+      "sha256": "5c24becc86a6008d46163185ba96dff04ba242a82faa95fb02bc9e7876d39071",
+      "sourceBytes": 16802,
+      "mediaType": "wav",
+      "dimensions": null,
+      "semanticRole": "VEXFORGE presentation audio cue; checked against the Unity resource registry.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [],
+        "exactInUnityAssets": [
+          "unity/Assets/Resources/VexforgeTier1/Audio/reward.wav"
+        ],
+        "exactInRegisteredUnityResources": [
+          "unity/Assets/Resources/VexforgeTier1/Audio/reward.wav"
+        ]
+      },
+      "unityDestination": [
+        "unity/Assets/Resources/VexforgeTier1/Audio/reward.wav"
+      ],
+      "decision": "KEEP",
+      "decisionReason": "Byte-identical to an asset already listed in the Unity Tier1 resource registry; reuse that destination and do not copy another payload.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 16802,
+        "rgba8DecodedEstimateBytes": null,
+        "wav": {
+          "formatCode": 1,
+          "channels": 1,
+          "sampleRate": 22050,
+          "bitsPerSample": 16,
+          "dataBytes": 16758,
+          "durationSeconds": 0.38,
+          "decodedPcmEstimateBytes": 16758
+        },
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/vexforge/scenes/archive.jpg",
+      "sha256": "dceb3fe6681169cc5f018455e60f46ae93ab9f2b194111992decef54a1e7f13f",
+      "sourceBytes": 729601,
+      "mediaType": "jpg",
+      "dimensions": {
+        "width": 1080,
+        "height": 1680
+      },
+      "semanticRole": "Legacy Expo scene image; no Unity resource-registry consumer is established.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [
+          "mobile/assets/vexforge/world/scene-archive.jpg"
+        ],
+        "exactInUnityAssets": [],
+        "exactInRegisteredUnityResources": []
+      },
+      "unityDestination": [],
+      "decision": "DISCARD",
+      "decisionReason": "Unity has its own registered presentation assets; this Expo-specific image has no current Unity consumer.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 729601,
+        "rgba8DecodedEstimateBytes": 7257600,
+        "wav": null,
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/vexforge/scenes/arena.jpg",
+      "sha256": "e9fc11ecc64deb8fc7c594782d5e77d430a6a01e40cfdd354d5463699f1077b9",
+      "sourceBytes": 713184,
+      "mediaType": "jpg",
+      "dimensions": {
+        "width": 1080,
+        "height": 1680
+      },
+      "semanticRole": "Legacy Expo scene image; no Unity resource-registry consumer is established.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [
+          "mobile/assets/vexforge/world/scene-arena.jpg"
+        ],
+        "exactInUnityAssets": [],
+        "exactInRegisteredUnityResources": []
+      },
+      "unityDestination": [],
+      "decision": "DISCARD",
+      "decisionReason": "Unity has its own registered presentation assets; this Expo-specific image has no current Unity consumer.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 713184,
+        "rgba8DecodedEstimateBytes": 7257600,
+        "wav": null,
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/vexforge/scenes/economy.jpg",
+      "sha256": "4add0d4216a8874f4767f7613e356c0a064dbbfeb3f2ccf73758df9e056f4a42",
+      "sourceBytes": 587608,
+      "mediaType": "jpg",
+      "dimensions": {
+        "width": 1080,
+        "height": 1680
+      },
+      "semanticRole": "Legacy Expo scene image; no Unity resource-registry consumer is established.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [
+          "mobile/assets/vexforge/world/scene-economy.jpg"
+        ],
+        "exactInUnityAssets": [],
+        "exactInRegisteredUnityResources": []
+      },
+      "unityDestination": [],
+      "decision": "DISCARD",
+      "decisionReason": "Unity has its own registered presentation assets; this Expo-specific image has no current Unity consumer.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 587608,
+        "rgba8DecodedEstimateBytes": 7257600,
+        "wav": null,
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/vexforge/scenes/events.jpg",
+      "sha256": "69959e31e4af01ecac0996824645d2695e93585766049ec36e5f118b1b5d4bce",
+      "sourceBytes": 621824,
+      "mediaType": "jpg",
+      "dimensions": {
+        "width": 1080,
+        "height": 1680
+      },
+      "semanticRole": "Legacy Expo scene image; no Unity resource-registry consumer is established.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [
+          "mobile/assets/vexforge/world/scene-events.jpg"
+        ],
+        "exactInUnityAssets": [],
+        "exactInRegisteredUnityResources": []
+      },
+      "unityDestination": [],
+      "decision": "DISCARD",
+      "decisionReason": "Unity has its own registered presentation assets; this Expo-specific image has no current Unity consumer.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 621824,
+        "rgba8DecodedEstimateBytes": 7257600,
+        "wav": null,
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/vexforge/scenes/forge.jpg",
+      "sha256": "e54d38c9df609a0252e2e05ad4c9e5aec26324e93edce7834aff266b6ef37414",
+      "sourceBytes": 876425,
+      "mediaType": "jpg",
+      "dimensions": {
+        "width": 1080,
+        "height": 1680
+      },
+      "semanticRole": "Legacy Expo scene image; no Unity resource-registry consumer is established.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [
+          "mobile/assets/vexforge/world/scene-forge.jpg"
+        ],
+        "exactInUnityAssets": [],
+        "exactInRegisteredUnityResources": []
+      },
+      "unityDestination": [],
+      "decision": "DISCARD",
+      "decisionReason": "Unity has its own registered presentation assets; this Expo-specific image has no current Unity consumer.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 876425,
+        "rgba8DecodedEstimateBytes": 7257600,
+        "wav": null,
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/vexforge/scenes/founders.jpg",
+      "sha256": "56eb55335095e6bff85cf425a05aac235098d4cc6473e2f5e3065eba6dc7edee",
+      "sourceBytes": 657577,
+      "mediaType": "jpg",
+      "dimensions": {
+        "width": 1080,
+        "height": 1680
+      },
+      "semanticRole": "Legacy Expo scene image; no Unity resource-registry consumer is established.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [
+          "mobile/assets/vexforge/world/scene-founders.jpg"
+        ],
+        "exactInUnityAssets": [],
+        "exactInRegisteredUnityResources": []
+      },
+      "unityDestination": [],
+      "decision": "DISCARD",
+      "decisionReason": "Unity has its own registered presentation assets; this Expo-specific image has no current Unity consumer.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 657577,
+        "rgba8DecodedEstimateBytes": 7257600,
+        "wav": null,
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/vexforge/scenes/meta.jpg",
+      "sha256": "c50ba59e036747ce6c1bbd7e532dbe2d19be40eb8d4b81f6119ebc344b439270",
+      "sourceBytes": 430198,
+      "mediaType": "jpg",
+      "dimensions": {
+        "width": 1080,
+        "height": 1680
+      },
+      "semanticRole": "Legacy Expo scene image; no Unity resource-registry consumer is established.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [
+          "mobile/assets/vexforge/world/scene-meta.jpg"
+        ],
+        "exactInUnityAssets": [],
+        "exactInRegisteredUnityResources": []
+      },
+      "unityDestination": [],
+      "decision": "DISCARD",
+      "decisionReason": "Unity has its own registered presentation assets; this Expo-specific image has no current Unity consumer.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 430198,
+        "rgba8DecodedEstimateBytes": 7257600,
+        "wav": null,
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/vexforge/scenes/missions.jpg",
+      "sha256": "37aa8756a2b26ed083d9672ba8a1c84ef79cb775f2a602a928119b4655a290f5",
+      "sourceBytes": 596707,
+      "mediaType": "jpg",
+      "dimensions": {
+        "width": 1080,
+        "height": 1680
+      },
+      "semanticRole": "Legacy Expo scene image; no Unity resource-registry consumer is established.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [
+          "mobile/assets/vexforge/world/scene-missions.jpg"
+        ],
+        "exactInUnityAssets": [],
+        "exactInRegisteredUnityResources": []
+      },
+      "unityDestination": [],
+      "decision": "DISCARD",
+      "decisionReason": "Unity has its own registered presentation assets; this Expo-specific image has no current Unity consumer.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 596707,
+        "rgba8DecodedEstimateBytes": 7257600,
+        "wav": null,
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/vexforge/scenes/nexus.jpg",
+      "sha256": "b1aa05b098d5a9e9ebd084a8707d6ef6748a73aaac1e904b76302111b61a4af8",
+      "sourceBytes": 750394,
+      "mediaType": "jpg",
+      "dimensions": {
+        "width": 1080,
+        "height": 1680
+      },
+      "semanticRole": "Legacy Expo scene image; no Unity resource-registry consumer is established.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [
+          "mobile/assets/vexforge/world/scene-nexus.jpg"
+        ],
+        "exactInUnityAssets": [],
+        "exactInRegisteredUnityResources": []
+      },
+      "unityDestination": [],
+      "decision": "DISCARD",
+      "decisionReason": "Unity has its own registered presentation assets; this Expo-specific image has no current Unity consumer.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 750394,
+        "rgba8DecodedEstimateBytes": 7257600,
+        "wav": null,
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/vexforge/scenes/social.jpg",
+      "sha256": "eb6f515fa02fbe2e41be47f51ba3861b05c6f011b2e158381283a504698190c7",
+      "sourceBytes": 678054,
+      "mediaType": "jpg",
+      "dimensions": {
+        "width": 1080,
+        "height": 1680
+      },
+      "semanticRole": "Legacy Expo scene image; no Unity resource-registry consumer is established.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [
+          "mobile/assets/vexforge/world/scene-social.jpg"
+        ],
+        "exactInUnityAssets": [],
+        "exactInRegisteredUnityResources": []
+      },
+      "unityDestination": [],
+      "decision": "DISCARD",
+      "decisionReason": "Unity has its own registered presentation assets; this Expo-specific image has no current Unity consumer.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 678054,
+        "rgba8DecodedEstimateBytes": 7257600,
+        "wav": null,
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/vexforge/scenes/store.jpg",
+      "sha256": "2b59c88b06b973c3ab4dbadc1cbbb8637d31af6d894c87c3c537bd26d09abf1a",
+      "sourceBytes": 749559,
+      "mediaType": "jpg",
+      "dimensions": {
+        "width": 1080,
+        "height": 1680
+      },
+      "semanticRole": "Legacy Expo scene image; no Unity resource-registry consumer is established.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [
+          "mobile/assets/vexforge/world/scene-store.jpg"
+        ],
+        "exactInUnityAssets": [],
+        "exactInRegisteredUnityResources": []
+      },
+      "unityDestination": [],
+      "decision": "DISCARD",
+      "decisionReason": "Unity has its own registered presentation assets; this Expo-specific image has no current Unity consumer.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 749559,
+        "rgba8DecodedEstimateBytes": 7257600,
+        "wav": null,
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/vexforge/scenes/tutorial.jpg",
+      "sha256": "a04388667e632e5d7a36d127b9ce7a6653f81511dee962d588205354ace8f926",
+      "sourceBytes": 609548,
+      "mediaType": "jpg",
+      "dimensions": {
+        "width": 1080,
+        "height": 1680
+      },
+      "semanticRole": "Legacy Expo scene image; no Unity resource-registry consumer is established.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [
+          "mobile/assets/vexforge/world/scene-tutorial.jpg"
+        ],
+        "exactInUnityAssets": [],
+        "exactInRegisteredUnityResources": []
+      },
+      "unityDestination": [],
+      "decision": "DISCARD",
+      "decisionReason": "Unity has its own registered presentation assets; this Expo-specific image has no current Unity consumer.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 609548,
+        "rgba8DecodedEstimateBytes": 7257600,
+        "wav": null,
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/vexforge/scenes/world.jpg",
+      "sha256": "3e2e39edb5834a832be0e51461e60b98316054d48f30f8b97fc70c5d37520692",
+      "sourceBytes": 512899,
+      "mediaType": "jpg",
+      "dimensions": {
+        "width": 1080,
+        "height": 1680
+      },
+      "semanticRole": "Legacy Expo scene image; no Unity resource-registry consumer is established.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [
+          "mobile/assets/vexforge/world/scene-world.jpg"
+        ],
+        "exactInUnityAssets": [],
+        "exactInRegisteredUnityResources": []
+      },
+      "unityDestination": [],
+      "decision": "DISCARD",
+      "decisionReason": "Unity has its own registered presentation assets; this Expo-specific image has no current Unity consumer.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 512899,
+        "rgba8DecodedEstimateBytes": 7257600,
+        "wav": null,
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/vexforge/shield.wav",
+      "sha256": "20cc1fa78a540865e01dfc16b4daddf5b5b7df6915d67636c7c881b639d98cf2",
+      "sourceBytes": 10628,
+      "mediaType": "wav",
+      "dimensions": null,
+      "semanticRole": "VEXFORGE presentation audio cue; checked against the Unity resource registry.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [],
+        "exactInUnityAssets": [
+          "unity/Assets/Resources/VexforgeTier1/Audio/shield.wav"
+        ],
+        "exactInRegisteredUnityResources": [
+          "unity/Assets/Resources/VexforgeTier1/Audio/shield.wav"
+        ]
+      },
+      "unityDestination": [
+        "unity/Assets/Resources/VexforgeTier1/Audio/shield.wav"
+      ],
+      "decision": "KEEP",
+      "decisionReason": "Byte-identical to an asset already listed in the Unity Tier1 resource registry; reuse that destination and do not copy another payload.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 10628,
+        "rgba8DecodedEstimateBytes": null,
+        "wav": {
+          "formatCode": 1,
+          "channels": 1,
+          "sampleRate": 22050,
+          "bitsPerSample": 16,
+          "dataBytes": 10584,
+          "durationSeconds": 0.24,
+          "decodedPcmEstimateBytes": 10584
+        },
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/vexforge/world/VF_WORLD_ARCHIVE.jpg",
+      "sha256": "f097bf927977482b7103fb72d8add5571427084cea3671446286cdf08d64edc3",
+      "sourceBytes": 507854,
+      "mediaType": "jpg",
+      "dimensions": {
+        "width": 941,
+        "height": 1672
+      },
+      "semanticRole": "Legacy Expo world image; no Unity resource-registry consumer is established.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [],
+        "exactInUnityAssets": [],
+        "exactInRegisteredUnityResources": []
+      },
+      "unityDestination": [],
+      "decision": "DISCARD",
+      "decisionReason": "Unity has its own registered presentation assets; this Expo-specific image has no current Unity consumer.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 507854,
+        "rgba8DecodedEstimateBytes": 6293408,
+        "wav": null,
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/vexforge/world/VF_WORLD_ARENA.jpg",
+      "sha256": "e2afbea259e3b1393e1d0d403632bec52cb78282541ee98e6110ec969eb639e3",
+      "sourceBytes": 514823,
+      "mediaType": "jpg",
+      "dimensions": {
+        "width": 941,
+        "height": 1672
+      },
+      "semanticRole": "Legacy Expo world image; no Unity resource-registry consumer is established.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [],
+        "exactInUnityAssets": [],
+        "exactInRegisteredUnityResources": []
+      },
+      "unityDestination": [],
+      "decision": "DISCARD",
+      "decisionReason": "Unity has its own registered presentation assets; this Expo-specific image has no current Unity consumer.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 514823,
+        "rgba8DecodedEstimateBytes": 6293408,
+        "wav": null,
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/vexforge/world/VF_WORLD_AUTH.jpg",
+      "sha256": "cff0793fd6f27b5da774edcd706a2a000d6ec0a0ebc43f689aea75d14243421c",
+      "sourceBytes": 424164,
+      "mediaType": "jpg",
+      "dimensions": {
+        "width": 941,
+        "height": 1672
+      },
+      "semanticRole": "Legacy Expo world image; no Unity resource-registry consumer is established.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [],
+        "exactInUnityAssets": [],
+        "exactInRegisteredUnityResources": []
+      },
+      "unityDestination": [],
+      "decision": "DISCARD",
+      "decisionReason": "Unity has its own registered presentation assets; this Expo-specific image has no current Unity consumer.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 424164,
+        "rgba8DecodedEstimateBytes": 6293408,
+        "wav": null,
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/vexforge/world/VF_WORLD_ECONOMY.jpg",
+      "sha256": "f04fa7880fa9e62c4cfa43bdfbf19e0927c86be17c4ffdf304be5a9591137afb",
+      "sourceBytes": 491371,
+      "mediaType": "jpg",
+      "dimensions": {
+        "width": 941,
+        "height": 1672
+      },
+      "semanticRole": "Legacy Expo world image; no Unity resource-registry consumer is established.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [],
+        "exactInUnityAssets": [],
+        "exactInRegisteredUnityResources": []
+      },
+      "unityDestination": [],
+      "decision": "DISCARD",
+      "decisionReason": "Unity has its own registered presentation assets; this Expo-specific image has no current Unity consumer.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 491371,
+        "rgba8DecodedEstimateBytes": 6293408,
+        "wav": null,
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/vexforge/world/VF_WORLD_FORGE.jpg",
+      "sha256": "da6981fc2373cff02cea5327131642f1589f6a8013607bd73a78aca6bf8e7b85",
+      "sourceBytes": 511730,
+      "mediaType": "jpg",
+      "dimensions": {
+        "width": 941,
+        "height": 1672
+      },
+      "semanticRole": "Legacy Expo world image; no Unity resource-registry consumer is established.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [],
+        "exactInUnityAssets": [],
+        "exactInRegisteredUnityResources": []
+      },
+      "unityDestination": [],
+      "decision": "DISCARD",
+      "decisionReason": "Unity has its own registered presentation assets; this Expo-specific image has no current Unity consumer.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 511730,
+        "rgba8DecodedEstimateBytes": 6293408,
+        "wav": null,
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/vexforge/world/VF_WORLD_LEGACY.jpg",
+      "sha256": "a857c5ddacbd97e728f36080cdfbb907bb13b3c50cd004f1158237ec1d90dfcc",
+      "sourceBytes": 521537,
+      "mediaType": "jpg",
+      "dimensions": {
+        "width": 941,
+        "height": 1672
+      },
+      "semanticRole": "Legacy Expo world image; no Unity resource-registry consumer is established.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [],
+        "exactInUnityAssets": [],
+        "exactInRegisteredUnityResources": []
+      },
+      "unityDestination": [],
+      "decision": "DISCARD",
+      "decisionReason": "Unity has its own registered presentation assets; this Expo-specific image has no current Unity consumer.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 521537,
+        "rgba8DecodedEstimateBytes": 6293408,
+        "wav": null,
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/vexforge/world/VF_WORLD_MASTER.jpg",
+      "sha256": "44317df67e801a420fea5fb2b76c6c5f72d06bd31462ea93fb1a4766c74c19ec",
+      "sourceBytes": 557081,
+      "mediaType": "jpg",
+      "dimensions": {
+        "width": 941,
+        "height": 1672
+      },
+      "semanticRole": "Legacy Expo world image; no Unity resource-registry consumer is established.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [],
+        "exactInUnityAssets": [],
+        "exactInRegisteredUnityResources": []
+      },
+      "unityDestination": [],
+      "decision": "DISCARD",
+      "decisionReason": "Unity has its own registered presentation assets; this Expo-specific image has no current Unity consumer.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 557081,
+        "rgba8DecodedEstimateBytes": 6293408,
+        "wav": null,
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/vexforge/world/VF_WORLD_META.jpg",
+      "sha256": "1eb4fa7180751166f274c2ef3a4e45b3ae6edf5283d61e7bfeda5241be5b68b5",
+      "sourceBytes": 417956,
+      "mediaType": "jpg",
+      "dimensions": {
+        "width": 941,
+        "height": 1672
+      },
+      "semanticRole": "Legacy Expo world image; no Unity resource-registry consumer is established.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [],
+        "exactInUnityAssets": [],
+        "exactInRegisteredUnityResources": []
+      },
+      "unityDestination": [],
+      "decision": "DISCARD",
+      "decisionReason": "Unity has its own registered presentation assets; this Expo-specific image has no current Unity consumer.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 417956,
+        "rgba8DecodedEstimateBytes": 6293408,
+        "wav": null,
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/vexforge/world/VF_WORLD_MISSIONS.jpg",
+      "sha256": "e6e90f3e5af344118c763fcd1c6aefa0dba3fcdd89f3b3880e185fa2716ebb88",
+      "sourceBytes": 513439,
+      "mediaType": "jpg",
+      "dimensions": {
+        "width": 941,
+        "height": 1672
+      },
+      "semanticRole": "Legacy Expo world image; no Unity resource-registry consumer is established.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [],
+        "exactInUnityAssets": [],
+        "exactInRegisteredUnityResources": []
+      },
+      "unityDestination": [],
+      "decision": "DISCARD",
+      "decisionReason": "Unity has its own registered presentation assets; this Expo-specific image has no current Unity consumer.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 513439,
+        "rgba8DecodedEstimateBytes": 6293408,
+        "wav": null,
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/vexforge/world/VF_WORLD_NEXUS.jpg",
+      "sha256": "4fbed61534a0ae1dde22969e44ce5a73631f17e4354c4fdb84cc7f3bbbf794fc",
+      "sourceBytes": 517011,
+      "mediaType": "jpg",
+      "dimensions": {
+        "width": 941,
+        "height": 1672
+      },
+      "semanticRole": "Legacy Expo world image; no Unity resource-registry consumer is established.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [],
+        "exactInUnityAssets": [],
+        "exactInRegisteredUnityResources": []
+      },
+      "unityDestination": [],
+      "decision": "DISCARD",
+      "decisionReason": "Unity has its own registered presentation assets; this Expo-specific image has no current Unity consumer.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 517011,
+        "rgba8DecodedEstimateBytes": 6293408,
+        "wav": null,
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/vexforge/world/VF_WORLD_SOCIAL.jpg",
+      "sha256": "600130778b3151dd524001e0201a25c3f78daf12f613c5d6dbbd4961103c0d99",
+      "sourceBytes": 502775,
+      "mediaType": "jpg",
+      "dimensions": {
+        "width": 941,
+        "height": 1672
+      },
+      "semanticRole": "Legacy Expo world image; no Unity resource-registry consumer is established.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [],
+        "exactInUnityAssets": [],
+        "exactInRegisteredUnityResources": []
+      },
+      "unityDestination": [],
+      "decision": "DISCARD",
+      "decisionReason": "Unity has its own registered presentation assets; this Expo-specific image has no current Unity consumer.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 502775,
+        "rgba8DecodedEstimateBytes": 6293408,
+        "wav": null,
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/vexforge/world/VF_WORLD_STORE.jpg",
+      "sha256": "653eb6edf7a8805157996e303657b5b65c5e9b8ba4593a393cc19cf2b83bf5d3",
+      "sourceBytes": 529289,
+      "mediaType": "jpg",
+      "dimensions": {
+        "width": 941,
+        "height": 1672
+      },
+      "semanticRole": "Legacy Expo world image; no Unity resource-registry consumer is established.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [],
+        "exactInUnityAssets": [],
+        "exactInRegisteredUnityResources": []
+      },
+      "unityDestination": [],
+      "decision": "DISCARD",
+      "decisionReason": "Unity has its own registered presentation assets; this Expo-specific image has no current Unity consumer.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 529289,
+        "rgba8DecodedEstimateBytes": 6293408,
+        "wav": null,
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/vexforge/world/VF_WORLD_TUTORIAL.jpg",
+      "sha256": "5442ec31cba88782bb85228e01bfd4968b8d6778fd4933ac734a0c6537a9d466",
+      "sourceBytes": 512832,
+      "mediaType": "jpg",
+      "dimensions": {
+        "width": 941,
+        "height": 1672
+      },
+      "semanticRole": "Legacy Expo world image; no Unity resource-registry consumer is established.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [],
+        "exactInUnityAssets": [],
+        "exactInRegisteredUnityResources": []
+      },
+      "unityDestination": [],
+      "decision": "DISCARD",
+      "decisionReason": "Unity has its own registered presentation assets; this Expo-specific image has no current Unity consumer.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 512832,
+        "rgba8DecodedEstimateBytes": 6293408,
+        "wav": null,
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/vexforge/world/VF_WORLD_WORLD.jpg",
+      "sha256": "834b1d603a83c990f065703391084d82f0050838a12361554a8ecaea24681c4c",
+      "sourceBytes": 519050,
+      "mediaType": "jpg",
+      "dimensions": {
+        "width": 941,
+        "height": 1672
+      },
+      "semanticRole": "Legacy Expo world image; no Unity resource-registry consumer is established.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [],
+        "exactInUnityAssets": [],
+        "exactInRegisteredUnityResources": []
+      },
+      "unityDestination": [],
+      "decision": "DISCARD",
+      "decisionReason": "Unity has its own registered presentation assets; this Expo-specific image has no current Unity consumer.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 519050,
+        "rgba8DecodedEstimateBytes": 6293408,
+        "wav": null,
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/vexforge/world/scene-archive.jpg",
+      "sha256": "dceb3fe6681169cc5f018455e60f46ae93ab9f2b194111992decef54a1e7f13f",
+      "sourceBytes": 729601,
+      "mediaType": "jpg",
+      "dimensions": {
+        "width": 1080,
+        "height": 1680
+      },
+      "semanticRole": "Legacy Expo world image; no Unity resource-registry consumer is established.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [
+          "mobile/assets/vexforge/scenes/archive.jpg"
+        ],
+        "exactInUnityAssets": [],
+        "exactInRegisteredUnityResources": []
+      },
+      "unityDestination": [],
+      "decision": "DISCARD",
+      "decisionReason": "Unity has its own registered presentation assets; this Expo-specific image has no current Unity consumer.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 729601,
+        "rgba8DecodedEstimateBytes": 7257600,
+        "wav": null,
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/vexforge/world/scene-arena.jpg",
+      "sha256": "e9fc11ecc64deb8fc7c594782d5e77d430a6a01e40cfdd354d5463699f1077b9",
+      "sourceBytes": 713184,
+      "mediaType": "jpg",
+      "dimensions": {
+        "width": 1080,
+        "height": 1680
+      },
+      "semanticRole": "Legacy Expo world image; no Unity resource-registry consumer is established.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [
+          "mobile/assets/vexforge/scenes/arena.jpg"
+        ],
+        "exactInUnityAssets": [],
+        "exactInRegisteredUnityResources": []
+      },
+      "unityDestination": [],
+      "decision": "DISCARD",
+      "decisionReason": "Unity has its own registered presentation assets; this Expo-specific image has no current Unity consumer.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 713184,
+        "rgba8DecodedEstimateBytes": 7257600,
+        "wav": null,
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/vexforge/world/scene-economy.jpg",
+      "sha256": "4add0d4216a8874f4767f7613e356c0a064dbbfeb3f2ccf73758df9e056f4a42",
+      "sourceBytes": 587608,
+      "mediaType": "jpg",
+      "dimensions": {
+        "width": 1080,
+        "height": 1680
+      },
+      "semanticRole": "Legacy Expo world image; no Unity resource-registry consumer is established.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [
+          "mobile/assets/vexforge/scenes/economy.jpg"
+        ],
+        "exactInUnityAssets": [],
+        "exactInRegisteredUnityResources": []
+      },
+      "unityDestination": [],
+      "decision": "DISCARD",
+      "decisionReason": "Unity has its own registered presentation assets; this Expo-specific image has no current Unity consumer.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 587608,
+        "rgba8DecodedEstimateBytes": 7257600,
+        "wav": null,
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/vexforge/world/scene-events.jpg",
+      "sha256": "69959e31e4af01ecac0996824645d2695e93585766049ec36e5f118b1b5d4bce",
+      "sourceBytes": 621824,
+      "mediaType": "jpg",
+      "dimensions": {
+        "width": 1080,
+        "height": 1680
+      },
+      "semanticRole": "Legacy Expo world image; no Unity resource-registry consumer is established.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [
+          "mobile/assets/vexforge/scenes/events.jpg"
+        ],
+        "exactInUnityAssets": [],
+        "exactInRegisteredUnityResources": []
+      },
+      "unityDestination": [],
+      "decision": "DISCARD",
+      "decisionReason": "Unity has its own registered presentation assets; this Expo-specific image has no current Unity consumer.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 621824,
+        "rgba8DecodedEstimateBytes": 7257600,
+        "wav": null,
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/vexforge/world/scene-forge.jpg",
+      "sha256": "e54d38c9df609a0252e2e05ad4c9e5aec26324e93edce7834aff266b6ef37414",
+      "sourceBytes": 876425,
+      "mediaType": "jpg",
+      "dimensions": {
+        "width": 1080,
+        "height": 1680
+      },
+      "semanticRole": "Legacy Expo world image; no Unity resource-registry consumer is established.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [
+          "mobile/assets/vexforge/scenes/forge.jpg"
+        ],
+        "exactInUnityAssets": [],
+        "exactInRegisteredUnityResources": []
+      },
+      "unityDestination": [],
+      "decision": "DISCARD",
+      "decisionReason": "Unity has its own registered presentation assets; this Expo-specific image has no current Unity consumer.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 876425,
+        "rgba8DecodedEstimateBytes": 7257600,
+        "wav": null,
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/vexforge/world/scene-founders.jpg",
+      "sha256": "56eb55335095e6bff85cf425a05aac235098d4cc6473e2f5e3065eba6dc7edee",
+      "sourceBytes": 657577,
+      "mediaType": "jpg",
+      "dimensions": {
+        "width": 1080,
+        "height": 1680
+      },
+      "semanticRole": "Legacy Expo world image; no Unity resource-registry consumer is established.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [
+          "mobile/assets/vexforge/scenes/founders.jpg"
+        ],
+        "exactInUnityAssets": [],
+        "exactInRegisteredUnityResources": []
+      },
+      "unityDestination": [],
+      "decision": "DISCARD",
+      "decisionReason": "Unity has its own registered presentation assets; this Expo-specific image has no current Unity consumer.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 657577,
+        "rgba8DecodedEstimateBytes": 7257600,
+        "wav": null,
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/vexforge/world/scene-meta.jpg",
+      "sha256": "c50ba59e036747ce6c1bbd7e532dbe2d19be40eb8d4b81f6119ebc344b439270",
+      "sourceBytes": 430198,
+      "mediaType": "jpg",
+      "dimensions": {
+        "width": 1080,
+        "height": 1680
+      },
+      "semanticRole": "Legacy Expo world image; no Unity resource-registry consumer is established.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [
+          "mobile/assets/vexforge/scenes/meta.jpg"
+        ],
+        "exactInUnityAssets": [],
+        "exactInRegisteredUnityResources": []
+      },
+      "unityDestination": [],
+      "decision": "DISCARD",
+      "decisionReason": "Unity has its own registered presentation assets; this Expo-specific image has no current Unity consumer.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 430198,
+        "rgba8DecodedEstimateBytes": 7257600,
+        "wav": null,
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/vexforge/world/scene-missions.jpg",
+      "sha256": "37aa8756a2b26ed083d9672ba8a1c84ef79cb775f2a602a928119b4655a290f5",
+      "sourceBytes": 596707,
+      "mediaType": "jpg",
+      "dimensions": {
+        "width": 1080,
+        "height": 1680
+      },
+      "semanticRole": "Legacy Expo world image; no Unity resource-registry consumer is established.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [
+          "mobile/assets/vexforge/scenes/missions.jpg"
+        ],
+        "exactInUnityAssets": [],
+        "exactInRegisteredUnityResources": []
+      },
+      "unityDestination": [],
+      "decision": "DISCARD",
+      "decisionReason": "Unity has its own registered presentation assets; this Expo-specific image has no current Unity consumer.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 596707,
+        "rgba8DecodedEstimateBytes": 7257600,
+        "wav": null,
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/vexforge/world/scene-nexus.jpg",
+      "sha256": "b1aa05b098d5a9e9ebd084a8707d6ef6748a73aaac1e904b76302111b61a4af8",
+      "sourceBytes": 750394,
+      "mediaType": "jpg",
+      "dimensions": {
+        "width": 1080,
+        "height": 1680
+      },
+      "semanticRole": "Legacy Expo world image; no Unity resource-registry consumer is established.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [
+          "mobile/assets/vexforge/scenes/nexus.jpg"
+        ],
+        "exactInUnityAssets": [],
+        "exactInRegisteredUnityResources": []
+      },
+      "unityDestination": [],
+      "decision": "DISCARD",
+      "decisionReason": "Unity has its own registered presentation assets; this Expo-specific image has no current Unity consumer.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 750394,
+        "rgba8DecodedEstimateBytes": 7257600,
+        "wav": null,
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/vexforge/world/scene-social.jpg",
+      "sha256": "eb6f515fa02fbe2e41be47f51ba3861b05c6f011b2e158381283a504698190c7",
+      "sourceBytes": 678054,
+      "mediaType": "jpg",
+      "dimensions": {
+        "width": 1080,
+        "height": 1680
+      },
+      "semanticRole": "Legacy Expo world image; no Unity resource-registry consumer is established.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [
+          "mobile/assets/vexforge/scenes/social.jpg"
+        ],
+        "exactInUnityAssets": [],
+        "exactInRegisteredUnityResources": []
+      },
+      "unityDestination": [],
+      "decision": "DISCARD",
+      "decisionReason": "Unity has its own registered presentation assets; this Expo-specific image has no current Unity consumer.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 678054,
+        "rgba8DecodedEstimateBytes": 7257600,
+        "wav": null,
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/vexforge/world/scene-store.jpg",
+      "sha256": "2b59c88b06b973c3ab4dbadc1cbbb8637d31af6d894c87c3c537bd26d09abf1a",
+      "sourceBytes": 749559,
+      "mediaType": "jpg",
+      "dimensions": {
+        "width": 1080,
+        "height": 1680
+      },
+      "semanticRole": "Legacy Expo world image; no Unity resource-registry consumer is established.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [
+          "mobile/assets/vexforge/scenes/store.jpg"
+        ],
+        "exactInUnityAssets": [],
+        "exactInRegisteredUnityResources": []
+      },
+      "unityDestination": [],
+      "decision": "DISCARD",
+      "decisionReason": "Unity has its own registered presentation assets; this Expo-specific image has no current Unity consumer.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 749559,
+        "rgba8DecodedEstimateBytes": 7257600,
+        "wav": null,
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/vexforge/world/scene-tutorial.jpg",
+      "sha256": "a04388667e632e5d7a36d127b9ce7a6653f81511dee962d588205354ace8f926",
+      "sourceBytes": 609548,
+      "mediaType": "jpg",
+      "dimensions": {
+        "width": 1080,
+        "height": 1680
+      },
+      "semanticRole": "Legacy Expo world image; no Unity resource-registry consumer is established.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [
+          "mobile/assets/vexforge/scenes/tutorial.jpg"
+        ],
+        "exactInUnityAssets": [],
+        "exactInRegisteredUnityResources": []
+      },
+      "unityDestination": [],
+      "decision": "DISCARD",
+      "decisionReason": "Unity has its own registered presentation assets; this Expo-specific image has no current Unity consumer.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 609548,
+        "rgba8DecodedEstimateBytes": 7257600,
+        "wav": null,
+        "actualUnityImportedBuildBytes": null
+      }
+    },
+    {
+      "sourcePath": "mobile/assets/vexforge/world/scene-world.jpg",
+      "sha256": "3e2e39edb5834a832be0e51461e60b98316054d48f30f8b97fc70c5d37520692",
+      "sourceBytes": 512899,
+      "mediaType": "jpg",
+      "dimensions": {
+        "width": 1080,
+        "height": 1680
+      },
+      "semanticRole": "Legacy Expo world image; no Unity resource-registry consumer is established.",
+      "duplicateCandidates": {
+        "exactWithinMobileAssets": [
+          "mobile/assets/vexforge/scenes/world.jpg"
+        ],
+        "exactInUnityAssets": [],
+        "exactInRegisteredUnityResources": []
+      },
+      "unityDestination": [],
+      "decision": "DISCARD",
+      "decisionReason": "Unity has its own registered presentation assets; this Expo-specific image has no current Unity consumer.",
+      "sourceRetention": "Keep the mobile source unchanged until every parity and removal gate passes.",
+      "costEstimate": {
+        "compressedSourceBytes": 512899,
+        "rgba8DecodedEstimateBytes": 7257600,
+        "wav": null,
+        "actualUnityImportedBuildBytes": null
+      }
+    }
+  ]
+}
