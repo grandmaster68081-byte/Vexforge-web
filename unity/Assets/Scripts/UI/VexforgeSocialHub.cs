@@ -641,7 +641,7 @@ namespace Vexforge.UI
                 UiFactory.Anchor(clanDescriptionInput.GetComponent<RectTransform>(), new Vector2(0.04f, 0.30f), new Vector2(0.96f, 0.38f), Vector2.zero, Vector2.zero);
                 var create = UiFactory.Button(contentRoot, "CREAR CLAN", () => _ = CreateClanAsync());
                 UiFactory.Anchor(create.GetComponent<RectTransform>(), new Vector2(0.28f, 0.21f), new Vector2(0.72f, 0.285f), Vector2.zero, Vector2.zero);
-                var note = UiFactory.Label(contentRoot, "EL SERVIDOR DECIDE NOMBRE, PERMISOS Y PERTENENCIA", 9, UiFactory.Muted, TextAnchor.MiddleCenter);
+                var note = UiFactory.Label(contentRoot, "EL NOMBRE, LOS PERMISOS Y LA PERTENENCIA SIGUEN LAS REGLAS DEL CLAN", 9, UiFactory.Muted, TextAnchor.MiddleCenter);
                 UiFactory.Anchor(note.rectTransform, new Vector2(0.08f, 0.13f), new Vector2(0.92f, 0.18f), Vector2.zero, Vector2.zero);
                 return;
             }

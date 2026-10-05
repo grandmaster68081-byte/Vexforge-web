@@ -93,12 +93,12 @@ namespace Vexforge.Tier1
             switch (step)
             {
                 case 0: eyebrow.text="NEXUS"; title.text="ENTRA EN VEXFORGE"; body.text="Aprende el mundo mediante acciones reales: entra, prepara, desafía y vuelve con consecuencias autorizadas."; art="VF_NEXUS_CITADEL_HERO"; break;
-                case 1: eyebrow.text="ARCHIVE"; title.text="CONOCE TUS CARTAS"; body.text="Inspecciona el arte oficial, la rareza, facción, estadísticas, propiedad y lore que devuelve Supabase."; art="VF_ARCHIVE_SANCTUM_HERO"; break;
-                case 2: eyebrow.text="FORGE"; title.text="FORJA UNA FORMACIÓN"; body.text="Tu formación parte de cartas reales. Validar y sellar dependen de la autoridad de Supabase, no de una regla simulada en el cliente."; art="VF_FORGE_CHAMBER_HERO"; break;
-                case 3: eyebrow.text="STRATEGY"; title.text="PIENSA ANTES DEL DUELO"; body.text="Lee tu propia composición, afinidades y poder reportado. El cliente jamás inventa la mano, el mazo oculto o el counter del rival."; art="VF_BATTLE_SIGIL_ATLAS"; break;
-                case 4: eyebrow.text="BATTLE GATE"; title.text="ELIGE UN RIVAL REAL"; body.text="La Arena obtiene oponentes desde el servidor. Primero revisas el matchup; después sellas el desafío."; art="VF_BATTLE_ARENA_CITADEL_A"; break;
-                case 5: eyebrow.text="BATTLEFIELD"; title.text="AHORA JUEGA"; body.text="Este paso abandona el tutorial para llevarte al mismo Battlefield del juego. El tutorial sólo avanza cuando esa batalla autorizada termina."; art="VF_BATTLE_ARENA_CITADEL_A"; break;
-                case 6: eyebrow.text="LOOP"; title.text="BATALLA → PROGRESO"; body.text="El resultado vuelve al GameState después de la presentación. Esa sincronización alimenta tus siguientes decisiones."; art="VF_MISSION_HALL_HERO"; break;
+                case 1: eyebrow.text="ARCHIVE"; title.text="CONOCE TUS CARTAS"; body.text="Inspecciona el arte oficial, la rareza, facción, estadísticas, propiedad y lore de tus cartas."; art="VF_ARCHIVE_SANCTUM_HERO"; break;
+                case 2: eyebrow.text="FORGE"; title.text="FORJA UNA FORMACIÓN"; body.text="Tu formación parte de cartas reales. La validación y el sellado comprueban que cumpla las reglas del juego."; art="VF_FORGE_CHAMBER_HERO"; break;
+                case 3: eyebrow.text="STRATEGY"; title.text="PIENSA ANTES DEL DUELO"; body.text="Lee tu composición, afinidades y poder conocido. La mano y el mazo ocultos del rival nunca se muestran antes del duelo."; art="VF_BATTLE_SIGIL_ATLAS"; break;
+                case 4: eyebrow.text="BATTLE GATE"; title.text="ELIGE UN RIVAL REAL"; body.text="La Arena te presenta un rival disponible. Revisa la estrategia y después sella el desafío."; art="VF_BATTLE_ARENA_CITADEL_A"; break;
+                case 5: eyebrow.text="BATTLEFIELD"; title.text="AHORA JUEGA"; body.text="Este paso te lleva al campo de batalla. El tutorial sólo avanza cuando termina ese duelo."; art="VF_BATTLE_ARENA_CITADEL_A"; break;
+                case 6: eyebrow.text="LOOP"; title.text="BATALLA → PROGRESO"; body.text="El resultado actualiza tu progreso después de la presentación y prepara tus siguientes decisiones."; art="VF_MISSION_HALL_HERO"; break;
                 default: eyebrow.text="RITE COMPLETE"; title.text="TU CAMINO COMIENZA"; body.text="Ya conoces el lenguaje de VEXFORGE. El Nexus conduce al mundo; el Battlefield sigue siendo el centro del juego."; art="VF_NEXUS_CITADEL_HERO"; break;
             }
             SetHero(art);

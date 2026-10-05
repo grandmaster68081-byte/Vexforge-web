@@ -72,9 +72,13 @@ namespace Vexforge.Tier1
             {
                 var result = await app.Repository.ValidateDeckAsync(ResolveIds());
                 if (version != requestVersion || route != GameRoute.Deck) return;
-                SetStatus(result == null ? "VALIDACIÓN NO REPORTADA" : result.valid ? "DECK VALIDADO POR SUPABASE" : string.Join("\n", result.errors ?? new string[0]));
+                SetStatus(result == null
+                    ? "NO SE PUDO VALIDAR LA FORMACIÓN."
+                    : result.valid
+                        ? "FORMACIÓN VALIDADA"
+                        : "LA FORMACIÓN NO PASÓ LA VALIDACIÓN.");
             }
-            catch (Exception ex) { SetStatus("VALIDACIÓN INTERRUMPIDA · " + ex.GetType().Name); }
+            catch (Exception) { SetStatus("NO SE PUDO VALIDAR LA FORMACIÓN. INTÉNTALO DE NUEVO."); }
             finally { requestInFlight = false; }
         }
 
@@ -87,10 +91,14 @@ namespace Vexforge.Tier1
             {
                 var result = await app.Repository.SaveDeckAsync(ResolveIds());
                 if (version != requestVersion || route != GameRoute.Deck) return;
-                SetStatus(result == null ? "SELLADO NO REPORTADO" : result.ok ? "DECK SELLADO" : (result.reason ?? "OPERACIÓN NO CONFIRMADA"));
+                SetStatus(result == null
+                    ? "NO SE PUDO CONFIRMAR EL GUARDADO."
+                    : result.ok
+                        ? "FORMACIÓN GUARDADA"
+                        : "NO SE PUDO GUARDAR LA FORMACIÓN.");
                 await app.GameState.RefreshAsync();
             }
-            catch (Exception ex) { SetStatus("SELLADO INTERRUMPIDO · " + ex.GetType().Name); }
+            catch (Exception) { SetStatus("NO SE PUDO GUARDAR LA FORMACIÓN. INTÉNTALO DE NUEVO."); }
             finally { requestInFlight = false; }
         }
 

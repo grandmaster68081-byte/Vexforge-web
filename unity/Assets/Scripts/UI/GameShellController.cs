@@ -438,7 +438,7 @@ namespace Vexforge.UI
 
             if (app.GameState.SyncState != SyncState.Connected)
             {
-                Message("El Nexus espera una sincronización válida de Supabase.\nNo se muestran datos inventados.");
+                Message("No se pudo cargar la partida.\nInténtalo de nuevo más tarde.");
                 return;
             }
 
@@ -454,7 +454,7 @@ namespace Vexforge.UI
 
         private void BuildCollection()
         {
-            Title("ARCHIVE", "Santuario de cartas · catálogo y ownership desde Supabase");
+            Title("ARCHIVE", "Santuario de cartas · catálogo y colección");
             AddReturnRune();
 
             var catalog = app.GameState.Catalog ?? new CardRecord[0];
@@ -475,7 +475,7 @@ namespace Vexforge.UI
 
         private void BuildDeck()
         {
-            Title("FORGE", "Mesa de forja · slots recibidos y persistidos por Supabase");
+            Title("FORGE", "Mesa de forja · formación guardada en tu cuenta");
             AddReturnRune();
 
             var deckSlots = app.GameState.Deck ?? new DeckSlot[0];
@@ -491,8 +491,8 @@ namespace Vexforge.UI
 
             MessageAt(
                 deckSlots.Length == 0
-                    ? "FORJA VACÍA · SIN SLOTS REPORTADOS"
-                    : "La mesa muestra todos los slots reportados por Supabase.",
+                    ? "FORJA VACÍA · AÑADE CARTAS PARA EMPEZAR"
+                    : "La mesa muestra todos los espacios de tu formación.",
                 0.02f);
 
             var ids = new string[deckSlots.Length];
@@ -513,7 +513,7 @@ namespace Vexforge.UI
 
         private void BuildMissions()
         {
-            Title("MISSIONS", "Cámara de contratos · actividad publicada por Supabase");
+            Title("MISSIONS", "Cámara de contratos · actividad del mundo");
             AddReturnRune();
 
             var missions = app.GameState.Missions ?? new MissionRecord[0];
@@ -556,7 +556,7 @@ namespace Vexforge.UI
 
         private void BuildEconomy()
         {
-            Title("TREASURY", "Balances de solo lectura · autoridad Supabase");
+            Title("TREASURY", "Saldos y movimientos de tu cuenta");
 
             AddReturnRune();
 
@@ -706,28 +706,43 @@ namespace Vexforge.UI
 
         private async void ValidateDeck(string[] ids)
         {
-            var result = await app.Repository.ValidateDeckAsync(ids);
-
-            MessageAt(
-                result == null
-                    ? "EL BACKEND NO DEVOLVIÓ VALIDACIÓN."
-                    : result.valid
-                        ? "DECK VÁLIDO"
-                        : string.Join("\n", result.errors ?? new string[0]),
-                0.30f);
+            try
+            {
+                var result = await app.Repository.ValidateDeckAsync(ids);
+                MessageAt(
+                    result == null
+                        ? "NO SE PUDO VALIDAR LA FORMACIÓN."
+                        : result.valid
+                            ? "FORMACIÓN VÁLIDA"
+                            : "LA FORMACIÓN NO PASÓ LA VALIDACIÓN.",
+                    0.30f);
+            }
+            catch (System.Exception ex)
+            {
+                Debug.LogException(ex);
+                MessageAt("NO SE PUDO VALIDAR LA FORMACIÓN. INTÉNTALO DE NUEVO.", 0.30f);
+            }
         }
 
         private async void SaveDeck(string[] ids)
         {
-            var result = await app.Repository.SaveDeckAsync(ids);
-
-            MessageAt(
-                result == null
-                    ? "EL BACKEND NO DEVOLVIÓ CONFIRMACIÓN."
-                    : result.ok
-                        ? "DECK GUARDADO"
-                        : ValueOr(result.reason, "OPERACIÓN NO CONFIRMADA"),
-                0.30f);
+            try
+            {
+                var result = await app.Repository.SaveDeckAsync(ids);
+                MessageAt(
+                    result == null
+                        ? "NO SE PUDO CONFIRMAR EL GUARDADO."
+                        : result.ok
+                            ? "FORMACIÓN GUARDADA"
+                            : "NO SE PUDO GUARDAR LA FORMACIÓN.",
+                    0.30f);
+                if (result != null && result.ok) await app.GameState.RefreshAsync();
+            }
+            catch (System.Exception ex)
+            {
+                Debug.LogException(ex);
+                MessageAt("NO SE PUDO GUARDAR LA FORMACIÓN. INTÉNTALO DE NUEVO.", 0.30f);
+            }
         }
 
         [System.Obsolete("Legacy battle entry disabled. VexforgeTier1BattleGate owns Battle entry.")]

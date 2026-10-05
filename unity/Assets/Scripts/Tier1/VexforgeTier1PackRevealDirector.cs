@@ -167,7 +167,7 @@ namespace Vexforge.Tier1
             busy = true;
             mutationInFlight = true;
             view.SetCloseEnabled(false);
-            view.ShowLoading("SOLICITANDO LA COMPRA AL SERVIDOR…");
+            view.ShowLoading("PROCESANDO LA COMPRA DEL PAQUETE…");
             try
             {
                 var purchase = await app.GameState.BuyPackAsync(pack.pack_key);
@@ -210,7 +210,7 @@ namespace Vexforge.Tier1
             busy = true;
             mutationInFlight = true;
             view.SetCloseEnabled(false);
-            view.ShowLoading("VALIDANDO LA ORDEN CON EL SERVIDOR…");
+            view.ShowLoading("CONFIRMANDO EL PAQUETE…");
             try
             {
                 await OpenPendingOrderAsync(orderId, generation);
@@ -263,7 +263,7 @@ namespace Vexforge.Tier1
 
             if (openedCards == null || openedCards.Length == 0)
             {
-                RenderComplete("EL SERVIDOR CONFIRMÓ LA APERTURA SIN CARTAS PARA MOSTRAR.");
+                RenderComplete("LA APERTURA SE CONFIRMÓ, PERO NO HAY CARTAS PARA MOSTRAR.");
                 yield break;
             }
 

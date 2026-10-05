@@ -218,7 +218,7 @@ namespace Vexforge.Tier1
             relic.gameObject.SetActive(true);
             cardArt.gameObject.SetActive(false);
             detail.gameObject.SetActive(true);
-            detail.text = "EL CONTENIDO SE MOSTRARÁ DESPUÉS DE LA CONFIRMACIÓN DEL SERVIDOR.";
+            detail.text = "EL CONTENIDO SE MOSTRARÁ DESPUÉS DE CONFIRMAR LA APERTURA.";
             SetStatus(message);
         }
 

@@ -128,13 +128,13 @@ namespace Vexforge.Tier1
         private string BuildMissionReadout(GameStateStore state)
         {
             var count=state==null||state.Missions==null?0:state.Missions.Length;
-            return "Los contratos son expediciones vivas del mundo.\n\n"+count+" ACTIVIDADES REPORTADAS\n\nENERGÍA Y RECOMPENSAS: ESTADO DEL SERVIDOR\n\nCuando el runtime canónico publique un encounter, la entrada debe desembocar en el mismo Battlefield, no en una pantalla administrativa.";
+            return "Los contratos son expediciones vivas del mundo.\n\n"+count+" ACTIVIDADES DISPONIBLES\n\nENERGÍA Y RECOMPENSAS: ESTADO CONFIRMADO\n\nCuando haya un enfrentamiento disponible, su entrada llevará al campo de batalla y no a una pantalla de gestión.";
         }
         private string BuildTreasuryReadout(GameStateStore state)
         {
             var w=state==null?null:state.Wallet;
             if(w==null)return "LA CARTERA NO ESTÁ REPORTADA POR LA SESIÓN ACTUAL.";
-            return "VEX IN-GAME  "+w.vex_ingame+"\nVEX TRADEABLE  "+w.vex_tradeable+"\nRESERVADO IN-GAME  "+w.reserved_ingame+"\nRESERVADO TRADEABLE  "+w.reserved_tradeable+"\n\nLa superficie sólo presenta datos autorizados. Unity no calcula emisión, precios, retiros, comisiones ni recompensas.";
+            return "VEX IN-GAME  "+w.vex_ingame+"\nVEX TRADEABLE  "+w.vex_tradeable+"\nRESERVADO IN-GAME  "+w.reserved_ingame+"\nRESERVADO TRADEABLE  "+w.reserved_tradeable+"\n\nEsta vista muestra datos confirmados y no calcula emisiones, precios, retiros, comisiones ni recompensas.";
         }
         private string BuildProfileReadout(GameStateStore state)
         {
@@ -150,7 +150,7 @@ namespace Vexforge.Tier1
                    "  ·  VENTAS  "+(stats==null?"NO DISPONIBLE":stats.market_sales.ToString())+
                    "  ·  JEFES  "+(stats==null?"NO DISPONIBLE":stats.boss_kills.ToString())+
                    "  ·  PACKS  "+(stats==null?"NO DISPONIBLE":stats.packs_opened.ToString())+
-                   "\n\nLos valores proceden del estado y las estadísticas confirmadas por Supabase.";
+                   "\n\nLos valores proceden de tus estadísticas confirmadas.";
         }
         private void SetHero(string key)
         {

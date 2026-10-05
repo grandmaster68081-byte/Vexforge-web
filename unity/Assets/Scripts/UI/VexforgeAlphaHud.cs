@@ -318,7 +318,7 @@ namespace Vexforge.UI
             }
 
             AddDraftPanel();
-            AddAction("VALIDAR BORRADOR EN SUPABASE", 0.245f, ValidateDeck);
+            AddAction("VALIDAR FORMACIÓN", 0.245f, ValidateDeck);
             AddAction("GUARDAR FORMACIÓN", 0.155f, SaveDeck);
         }
 
@@ -328,12 +328,12 @@ namespace Vexforge.UI
                 return surface + " · ESTADO NO DISPONIBLE.";
 
             if (app.GameState.SyncState == SyncState.Loading)
-                return surface + " · SINCRONIZANDO CON SUPABASE.";
+                return surface + " · SINCRONIZANDO TU PARTIDA.";
             if (app.GameState.SyncState == SyncState.Error)
                 return surface + " · " + ValueOr(app.GameState.LastError, "NO SE PUDO CARGAR EL ESTADO.");
             if (app.GameState.SyncState == SyncState.Unavailable)
                 return surface + " · SE REQUIERE UNA SESIÓN AUTENTICADA.";
-            return surface + " · DATOS AUTORITATIVOS NO DISPONIBLES.";
+            return surface + " · LOS DATOS DE TU PARTIDA NO ESTÁN DISPONIBLES.";
         }
 
         private CardRecord[] FilterCollectionCards()
@@ -478,7 +478,7 @@ namespace Vexforge.UI
             var heading = UiFactory.Label(
                 deckDraftPanel,
                 "FORMACIÓN BORRADOR  ·  " + deckDraftIds.Count + " / " + MaxFormationSlots +
-                "  ·  VALIDA Y GUARDA CON SUPABASE",
+                "  ·  CONFIRMA Y GUARDA TU FORMACIÓN",
                 12,
                 UiFactory.Gold,
                 TextAnchor.MiddleCenter);
@@ -672,7 +672,7 @@ namespace Vexforge.UI
             var ownership = FindOwnership(card.id);
             if (ownership == null || ownership.quantity <= 0)
             {
-                AddTransientMessage("EL SERVIDOR NO REPORTA ESTA CARTA COMO POSEÍDA.");
+                AddTransientMessage("ESA CARTA NO ESTÁ EN TU COLECCIÓN.");
                 return true;
             }
             if (deckDraftIds.Count >= MaxFormationSlots)
@@ -916,19 +916,17 @@ namespace Vexforge.UI
                 var result = await app.Repository.ValidateDeckAsync(ids);
                 if (!IsCurrentRequest(version, route)) return;
                 var message = result == null
-                    ? "VALIDACIÓN NO REPORTADA"
+                    ? "NO SE PUDO VALIDAR LA FORMACIÓN."
                     : result.valid
-                        ? "FORMACIÓN VALIDADA POR EL SERVIDOR"
-                        : result.errors == null || result.errors.Length == 0
-                            ? "EL BORRADOR NO PASÓ LA VALIDACIÓN DEL SERVIDOR."
-                            : string.Join("\n", result.errors);
+                        ? "FORMACIÓN VALIDADA"
+                        : "LA FORMACIÓN NO PASÓ LA VALIDACIÓN. AJÚSTALA E INTÉNTALO DE NUEVO.";
                 AddTransientMessage(message);
             }
             catch (Exception ex)
             {
                 Debug.LogException(ex, this);
                 if (IsCurrentRequest(version, route))
-                    AddTransientMessage("VALIDACIÓN INTERRUMPIDA · " + ex.GetType().Name);
+                    AddTransientMessage("NO SE PUDO VALIDAR LA FORMACIÓN. INTÉNTALO DE NUEVO.");
             }
             finally
             {
@@ -950,15 +948,12 @@ namespace Vexforge.UI
                 if (!IsCurrentRequest(version, route)) return;
                 if (validation == null)
                 {
-                    AddTransientMessage("EL SERVIDOR NO DEVOLVIÓ LA VALIDACIÓN.");
+                    AddTransientMessage("NO SE PUDO VALIDAR LA FORMACIÓN.");
                     return;
                 }
                 if (!validation.valid)
                 {
-                    AddTransientMessage(
-                        validation.errors == null || validation.errors.Length == 0
-                            ? "EL BORRADOR NO PASÓ LA VALIDACIÓN DEL SERVIDOR."
-                            : string.Join("\n", validation.errors));
+                    AddTransientMessage("LA FORMACIÓN NO PASÓ LA VALIDACIÓN. AJÚSTALA E INTÉNTALO DE NUEVO.");
                     return;
                 }
 
@@ -966,12 +961,12 @@ namespace Vexforge.UI
                 if (!IsCurrentRequest(version, route)) return;
                 if (result == null)
                 {
-                    AddTransientMessage("EL SERVIDOR NO DEVOLVIÓ CONFIRMACIÓN.");
+                    AddTransientMessage("NO SE PUDO CONFIRMAR EL GUARDADO.");
                     return;
                 }
                 if (!result.ok)
                 {
-                    AddTransientMessage(ValueOr(result.reason, "EL SERVIDOR NO CONFIRMÓ EL GUARDADO."));
+                    AddTransientMessage("NO SE PUDO GUARDAR LA FORMACIÓN. REVÍSALA E INTÉNTALO DE NUEVO.");
                     return;
                 }
 
@@ -1010,7 +1005,7 @@ namespace Vexforge.UI
             {
                 Debug.LogException(ex, this);
                 if (IsCurrentRequest(version, route))
-                    AddTransientMessage("SELLADO INTERRUMPIDO · " + ex.GetType().Name);
+                    AddTransientMessage("NO SE PUDO GUARDAR LA FORMACIÓN. INTÉNTALO DE NUEVO.");
             }
             finally
             {
@@ -1054,7 +1049,7 @@ namespace Vexforge.UI
             {
                 Debug.LogException(ex, this);
                 if (IsCurrentRequest(version, route))
-                    AddTransientMessage("SINCRONIZACIÓN POST-COMBATE INTERRUMPIDA · " + ex.GetType().Name);
+                    AddTransientMessage("NO SE PUDO ACTUALIZAR LA PARTIDA TRAS LA BATALLA.");
             }
         }
 

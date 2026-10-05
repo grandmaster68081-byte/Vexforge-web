@@ -169,11 +169,11 @@ namespace Vexforge.Tier1
             {
                 sigil.gameObject.SetActive(false);
                 details.gameObject.SetActive(false);
-                status.text = "SIN JEFES ACTIVOS REPORTADOS.";
+                status.text = "NO HAY JEFES ACTIVOS.";
                 var empty = VexforgeTier1Ui.Label(
                     content,
                     "Empty",
-                    "EL ATLAS MUESTRA SOLAMENTE REGISTROS ACTIVOS RECIBIDOS DEL SERVIDOR.",
+                    "EL ATLAS MUESTRA LOS JEFES ACTIVOS DISPONIBLES.",
                     14,
                     VexforgeTier1Ui.Muted,
                     TextAnchor.MiddleCenter);
@@ -282,7 +282,7 @@ namespace Vexforge.Tier1
             if (boss.tier > 0) lines += "\nNIVEL · " + boss.tier;
             if (boss.power_level > 0) lines += "\nPODER REPORTADO · " + boss.power_level;
             if (boss.hp > 0) lines += "\nSALUD REPORTADA · " + boss.hp;
-            lines += "\n\nLa ficha usa datos activos del servidor. No inicia combates ni calcula resultados o recompensas en Unity.";
+            lines += "\n\nEsta ficha muestra información vigente. No inicia combates ni calcula resultados o recompensas.";
             details.text = lines;
         }
 

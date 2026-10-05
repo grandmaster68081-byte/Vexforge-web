@@ -252,7 +252,7 @@ namespace Vexforge.Tier1
 
         private void BuildWalletTab()
         {
-            AddSection("SALDOS REPORTADOS POR SUPABASE");
+            AddSection("SALDOS DE TU CUENTA");
             if (wallet == null)
             {
                 AddMessage("La cartera todavía no está disponible para esta sesión.");
@@ -267,7 +267,7 @@ namespace Vexforge.Tier1
                     118f);
             }
 
-            AddSection("HISTORIAL AGREGADO DEL SERVIDOR");
+            AddSection("RESUMEN DE MOVIMIENTOS");
             if (economyStats == null || !economyStats.ok)
             {
                 AddMessage("El historial agregado no está disponible.");
@@ -287,7 +287,7 @@ namespace Vexforge.Tier1
             AddSection("ACTIVIDAD POR TIPO");
             if (economyStats == null || economyStats.by_type == null || economyStats.by_type.Length == 0)
             {
-                AddMessage("El servidor no reportó movimientos agrupados.");
+                AddMessage("No hay movimientos agrupados disponibles.");
             }
             else
             {
@@ -305,7 +305,7 @@ namespace Vexforge.Tier1
             }
 
             AddMessage(
-                "Precios, fees, elegibilidad y liquidación los determina el servidor. Unity solo presenta el estado recibido.",
+                "Los precios, cargos, disponibilidad y liquidación se confirman antes de procesar cada operación.",
                 72f);
         }
 
@@ -328,7 +328,7 @@ namespace Vexforge.Tier1
 
             AddSection("LISTAR UNA CARTA");
             AddMessage(
-                "Indica el precio solicitado en VEX in-game. El fee definitivo y la disponibilidad se validan en Supabase.",
+                "Indica el precio solicitado en VEX in-game. El cargo final y la disponibilidad se confirman antes de listar.",
                 60f);
             priceInput = AddInput("Precio solicitado · VEX", string.Empty, true);
 
@@ -352,7 +352,7 @@ namespace Vexforge.Tier1
         {
             AddSection("REGISTRAR UN DEPÓSITO EXTERNO");
             AddMessage(
-                "Envía los fondos fuera de Unity. Este formulario solo registra el hash para revisión; no inicia una transferencia ni acredita saldo.",
+                "Usa tu wallet externa para enviar los fondos. Este formulario registra el hash para revisión; no inicia una transferencia ni acredita saldo.",
                 78f);
 
             if (treasuryWallets != null)
@@ -388,7 +388,7 @@ namespace Vexforge.Tier1
         {
             AddSection("SOLICITAR RETIRO");
             AddMessage(
-                "Solo se solicita VEX tradeable. Elegibilidad, conversión, fees y monto neto los calcula el servidor; la solicitud no equivale a un pago procesado.",
+                "Solo se solicita VEX tradeable. La revisión confirma si procede, los cargos y el monto neto. La solicitud no equivale a un pago procesado.",
                 90f);
             AddMessage(
                 "VEX TRADEABLE DISPONIBLE  " +
@@ -500,7 +500,7 @@ namespace Vexforge.Tier1
         private void AddDepositHistory(EconomyDepositRecord deposit)
         {
             AddMessage(
-                FormatAmount(deposit.amount_usdt) + " USDT  ·  VEX REPORTADOS POR EL SERVIDOR  " +
+                FormatAmount(deposit.amount_usdt) + " USDT  ·  VEX ACREDITADOS  " +
                 FormatAmount(deposit.vex_credited) +
                 "\n" + ValueOr(deposit.chain, "RED") + " / " + ValueOr(deposit.token_symbol, "TOKEN") +
                 "\nESTADO  " + ValueOr(deposit.status, "NO REPORTADO").ToUpperInvariant() +
@@ -588,7 +588,7 @@ namespace Vexforge.Tier1
         {
             if (listing == null) return;
             AskConfirmation(
-                "¿Comprar " + cardName + " por " + FormatAmount(listing.price) + " VEX in-game?\n\nEl servidor confirma el resultado y aplica sus reglas.",
+                "¿Comprar " + cardName + " por " + FormatAmount(listing.price) + " VEX in-game?\n\nEl resultado se confirmará al completar la compra.",
                 () => _ = BuyListingAsync(listing));
         }
 
@@ -601,7 +601,7 @@ namespace Vexforge.Tier1
                 return;
             }
             AskConfirmation(
-                "¿Listar " + cardName + " por " + FormatAmount(price) + " VEX in-game?\n\nLa carta quedará sujeta al estado y las reglas de Supabase.",
+                "¿Listar " + cardName + " por " + FormatAmount(price) + " VEX in-game?\n\nLa publicación queda sujeta a las reglas del juego.",
                 () => _ = CreateListingAsync(card, price));
         }
 
@@ -613,7 +613,7 @@ namespace Vexforge.Tier1
                 return;
             }
             AskConfirmation(
-                "¿Enviar una solicitud por " + FormatAmount(amount) + " VEX tradeable?\n\nNo es un pago procesado. El servidor determina elegibilidad, fee y monto neto.",
+                "¿Enviar una solicitud por " + FormatAmount(amount) + " VEX tradeable?\n\nNo es un pago procesado. La revisión confirma si procede, el cargo y el monto neto.",
                 () => _ = RequestWithdrawalAsync(amount));
         }
 
@@ -660,7 +660,7 @@ namespace Vexforge.Tier1
 
             actionInFlight = true;
             var rerenderAfterAction = false;
-            SetStatus("ENVIANDO EL REGISTRO AL SERVIDOR…", false);
+            SetStatus("REGISTRANDO EL DEPÓSITO…", false);
             var generation = lifecycleGeneration;
             try
             {
@@ -678,7 +678,7 @@ namespace Vexforge.Tier1
                 }
 
                 statusMessage = "DEPÓSITO REGISTRADO · " + ValueOr(result.status, "PENDIENTE").ToUpperInvariant() +
-                                ". LA ACREDITACIÓN NO SE CONFIRMA EN UNITY.";
+                                ". LA ACREDITACIÓN SE CONFIRMA POR SEPARADO.";
                 statusIsError = false;
                 rerenderAfterAction = true;
                 await LoadSnapshotAsync(generation, true);
@@ -713,11 +713,11 @@ namespace Vexforge.Tier1
                 if (!IsCurrent(generation)) return;
                 if (result == null || !result.ok)
                 {
-                    SetStatus("EL SERVIDOR NO CONFIRMÓ LA COMPRA. RECARGA EL MERCADO.", true);
+                    SetStatus("NO SE PUDO CONFIRMAR LA COMPRA. RECARGA EL MERCADO.", true);
                     return;
                 }
 
-                statusMessage = "COMPRA CONFIRMADA POR EL SERVIDOR · " +
+                statusMessage = "COMPRA CONFIRMADA · " +
                                 FormatAmount(result.price) + " VEX.";
                 statusIsError = false;
                 rerenderAfterAction = true;
@@ -745,13 +745,13 @@ namespace Vexforge.Tier1
             if (actionInFlight || card == null || app == null || app.GameState == null) return;
             actionInFlight = true;
             var rerenderAfterAction = false;
-            SetStatus("SOLICITANDO EL LISTADO AL SERVIDOR…", false);
+            SetStatus("CREANDO PUBLICACIÓN…", false);
             var generation = lifecycleGeneration;
             try
             {
-                var listingId = await repository.CreateMarketListingAsync(app.GameState.PlayerId, card.id, price);
+                await repository.CreateMarketListingAsync(app.GameState.PlayerId, card.id, price);
                 if (!IsCurrent(generation)) return;
-                statusMessage = "LISTADO CREADO POR EL SERVIDOR · " + ShortId(listingId) + ".";
+                statusMessage = "PUBLICACIÓN CREADA.";
                 statusIsError = false;
                 rerenderAfterAction = true;
                 await LoadSnapshotAsync(generation, true);
@@ -778,7 +778,7 @@ namespace Vexforge.Tier1
             if (actionInFlight || app == null || app.GameState == null) return;
             actionInFlight = true;
             var rerenderAfterAction = false;
-            SetStatus("SOLICITANDO RETIRO AL SERVIDOR…", false);
+            SetStatus("ENVIANDO SOLICITUD DE RETIRO…", false);
             var generation = lifecycleGeneration;
             try
             {
@@ -786,13 +786,13 @@ namespace Vexforge.Tier1
                 if (!IsCurrent(generation)) return;
                 if (result == null || !result.ok)
                 {
-                    SetStatus("EL SERVIDOR NO ACEPTÓ LA SOLICITUD DE RETIRO.", true);
+                    SetStatus("NO SE PUDO ENVIAR LA SOLICITUD DE RETIRO.", true);
                     return;
                 }
 
                 statusMessage = "SOLICITUD ENVIADA · " + ValueOr(result.status, "PENDIENTE DE REVISIÓN").ToUpperInvariant();
                 if (result.usdt_net > 0m)
-                    statusMessage += " · NETO REPORTADO POR EL SERVIDOR: " + FormatAmount(result.usdt_net) + " USDT.";
+                    statusMessage += " · MONTO NETO SOLICITADO: " + FormatAmount(result.usdt_net) + " USDT.";
                 statusIsError = false;
                 rerenderAfterAction = true;
                 await LoadSnapshotAsync(generation, true);
@@ -936,11 +936,11 @@ namespace Vexforge.Tier1
             {
                 var normalized = reason.ToLowerInvariant();
                 if (normalized.Contains("mínimo") || normalized.Contains("minimo") || normalized.Contains("minimum"))
-                    return "EL MONTO ESTÁ POR DEBAJO DEL MÍNIMO VIGENTE DEL SERVIDOR.";
+                    return "EL MONTO ESTÁ POR DEBAJO DEL MÍNIMO PERMITIDO.";
                 if (normalized.Contains("hash") && (normalized.Contains("registrado") || normalized.Contains("already")))
                     return "ESE HASH DE TRANSACCIÓN YA ESTÁ REGISTRADO.";
             }
-            return "EL SERVIDOR NO ACEPTÓ EL REGISTRO. REVISA LOS DATOS DEL DEPÓSITO.";
+            return "NO SE PUDO REGISTRAR EL DEPÓSITO. REVISA LOS DATOS E INTÉNTALO DE NUEVO.";
         }
 
         private static string ValueOr(string value, string fallback)

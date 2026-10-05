@@ -69,7 +69,7 @@ PlayerSettings:
     Windows Store Apps: 1
     XboxOne: 1
     Android: 1
-  activeInputHandler: 2
+  activeInputHandler: 1
   AndroidApplicationEntry: 0
   AndroidGamepadSupportLevel: 0
   AndroidIsGamepadEnabled: 0

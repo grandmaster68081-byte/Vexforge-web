@@ -65,7 +65,7 @@ namespace Vexforge.GameState
                 var playerId = await repository.GetCurrentPlayerIdAsync(session.Current.userId);
                 if (string.IsNullOrWhiteSpace(playerId))
                 {
-                    LastError = "Supabase no devolvió un jugador para la sesión autenticada.";
+                    LastError = "No se pudo cargar el estado de esta cuenta. Cierra sesión e inténtalo de nuevo.";
                     SetSync(SyncState.Error);
                     return;
                 }

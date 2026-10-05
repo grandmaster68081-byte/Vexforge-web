@@ -14,7 +14,7 @@ namespace Vexforge.Tier1
             var shape=factions.Count<=1?"MONO-FACCIÓN":factions.Count==2?"HÍBRIDA":"DIVERSA";
             var avg=totalPower/nonEmpty;
             var name=string.IsNullOrWhiteSpace(opponentName)?"RIVAL DEL NEXUS":opponentName.ToUpperInvariant();
-            return name+"\nMMR "+(opponentMmr>0?opponentMmr.ToString():"REPORTADO")+" · DECK "+(opponentDeckSize>0?opponentDeckSize.ToString():"REPORTADO")+"\n\nTU FORMACIÓN · "+shape+" · PODER MEDIO "+avg+"\n\nLECTURA DE COUNTER · NO REPORTADA\nLa composición oculta del rival nunca se infiere ni se fabrica en el cliente.";
+            return name+"\nMMR "+(opponentMmr>0?opponentMmr.ToString():"—")+" · DECK "+(opponentDeckSize>0?opponentDeckSize.ToString():"—")+"\n\nTU FORMACIÓN · "+shape+" · PODER MEDIO "+avg+"\n\nLECTURA DEL RIVAL · NO DISPONIBLE\nLa formación oculta del rival no se muestra antes del duelo.";
         }
 
         public string BuildPostMatchInsight(BattleResult result)
