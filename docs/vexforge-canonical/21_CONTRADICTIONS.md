@@ -2,13 +2,15 @@
 
 ## Resolución vigente — Unity canónico (2026-10-04)
 
-Unity bajo `unity/**` es el único runtime Android activo. Expo / React Native
-en `mobile/**` queda como referencia de comportamiento hasta superar paridad y
-seguridad de eliminación. La autoridad de backend permanece en Supabase; el
+**Estado vigente al 2026-10-05:** Unity bajo `unity/**` es el único runtime
+Android activo. Expo / React Native en `mobile/**` fue retirado en Hito 10 por
+instrucción explícita del usuario mientras las gates seguían abiertas. La
+retirada no demuestra paridad ni seguridad; el inventario conservado es
+histórico. La autoridad de backend permanece en Supabase; el
 portal web sigue congelado y `faucet/**` queda separado.
 
-Esta decisión supersede las instrucciones Expo-only anteriores de este
-archivo y de `mobile/docs/**`. La fuente operativa es `VEXFORGE_CONTEXT.md`,
+Este estado supersede las decisiones históricas posteriores que describían
+Expo como runtime activo. La fuente operativa es `VEXFORGE_CONTEXT.md`,
 `replit.md`, `docs/vexforge-canonical/16_IMPLEMENTATION_STATUS.md` y las
 gates `28_UNITY_EXPO_MIGRATION_GATES.md`.
 

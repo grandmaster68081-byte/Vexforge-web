@@ -25,7 +25,9 @@ Actualizar current block, implementation status, decisions, blockers, unknowns, 
 
 - No crear un proyecto Unity paralelo ni copiar una Foundation histórica.
 - Continuar el único paquete operativo existente en `unity/**`.
-- Mantener `mobile/**` intacto como rollback.
+- No restaurar `mobile/**`/Expo, retirado en Hito 10 por instrucción explícita
+  del usuario. Mantener abiertas las gates de runtime que aún no tengan
+  evidencia Unity Editor/dispositivo.
 - No mover autoridad backend ni crear Firebase/PlayFab/Photon u otra base de datos.
 - Mantener el estado `IMPLEMENTED_UNVERIFIED` hasta que compile, tenga APK,
   instalación, Auth/sesión/datos reales, QA y rollback. Eso no detiene el

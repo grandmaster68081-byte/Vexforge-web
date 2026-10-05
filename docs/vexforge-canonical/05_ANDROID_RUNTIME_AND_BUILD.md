@@ -3,31 +3,20 @@
 ## Estado canónico
 
 Unity bajo `unity/**` es el único runtime Android activo de VEXFORGE. Expo /
-React Native bajo `mobile/**` se conserva como legado, respaldo y referencia
-histórica; no recibe trabajo nuevo ni compila el producto activo.
+React Native bajo `mobile/**` fue retirado en Hito 10; los snapshots restantes
+son evidencia histórica y no compilan un runtime.
 
-La compilación Android canónica es manual y vive únicamente en:
-
-`.github/workflows/vexforge-unity-android-github.yml`
-
-No se crean workflows alternos para GameCI, CLI directo, fallback, pruebas de
-shaders, builds Expo o variantes Android paralelas. `verify.yml` es un CI de
-verificación de código, no un pipeline de compilación Android.
+No hay workflow de compilación Android configurado actualmente. El único
+workflow con nombre Unity fue inspeccionado, resultó ser una compilación Expo y
+se retiró en Hito 10. El usuario dejó la configuración de un workflow dedicado
+a Unity para una etapa posterior. `verify.yml` es un CI de verificación de
+código, no un pipeline de compilación Android.
 
 ## Cadena canónica
 
-```text
-workflow_dispatch
-→ GitHub Actions
-→ Unity Editor leído desde ProjectVersion.txt
-→ Unity Personal / Android Build Support
-→ VexforgeGitHubBuild.BuildAndroid
-→ BuildPipeline
-→ Gradle
-→ IL2CPP
-→ ARM64
-→ APK
-```
+No existe actualmente una cadena de build Unity operativa. La futura
+configuración debe apuntar a `unity/` y verificarse por separado; esta
+migración no crea ni ejecuta ese workflow.
 
 La raíz Unity es `unity/`; nunca `/` ni `mobile/`. La versión se obtiene de
 `unity/ProjectSettings/ProjectVersion.txt`; en el árbol actual es `6000.3.0f1`.
@@ -36,11 +25,7 @@ Los paquetes se leen de `unity/Packages/manifest.json` y
 
 ## Control de ejecución
 
-- El workflow canónico se activa solo con `workflow_dispatch`.
-- Los modos permitidos viven dentro de ese workflow: `normal`, `diagnostic`,
-  `baseline`, `inventory`, `shard` y `final`.
-- Los shards, checkpoints, límites de variantes y diagnóstico son modos del
-  mismo workflow, no workflows separados.
+- No hay workflow Android activo.
 - No se inicia un build sin autorización explícita del propietario.
 - No se declara `EDITOR_VERIFIED`, `BUILD_VERIFIED` o `DEVICE_VERIFIED` sin
   evidencia real correspondiente.
@@ -61,5 +46,6 @@ migración del runtime no sustituye Supabase ni crea una autoridad local.
 
 ## Estado actual
 
-La configuración canónica quedó establecida en `main` sin lanzar compilación,
-crear APK, publicar release, modificar Supabase ni usar Unity Cloud Build.
+La workflow Expo anterior se retiró de `main` sin lanzar compilación, crear
+APK, publicar release, modificar Supabase ni activar Unity Cloud Build. La
+configuración futura del workflow Unity sigue pendiente.

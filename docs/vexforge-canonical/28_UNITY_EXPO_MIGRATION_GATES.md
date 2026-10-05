@@ -1,17 +1,19 @@
-# 28 — UNITY / EXPO MIGRATION GATES
+# 28 — UNITY MIGRATION GATES (POST-RETIREMENT)
 
 ## Invariants
 
 - Unity in `unity/**` is the only Android game runtime.
-- Expo in `mobile/**` remains an implementation reference until all retirement
-  gates pass.
+- Expo / React Native source under `mobile/**` was removed in Hito 10 on
+  2026-10-05 at commit `77d31b5d` by explicit user direction while gates
+  remained open. Retained Expo inventories are historical snapshots only.
 - Supabase remains authoritative. This client migration does not alter live
   schema, RPCs, RLS, auth settings, data, or backend rules.
 - The web portal and Kivora faucet are outside the migration scope.
 - Do not generate an APK or AAB during this migration. An APK/AAB is neither a
   required artifact for this migration nor evidence of parity.
-- Do not delete `mobile/**` while any parity, security, Editor, or device gate
-  remains open.
+- This user-directed early retirement is an exception to the recorded gate
+  order; it is not evidence that parity, security, Editor, or device gates
+  passed.
 
 ## Gate status
 
@@ -28,11 +30,11 @@
 | Audio, haptics, quality, and reduced motion | OPEN | Existing battle clips and semantic haptic cues are mapped; reduced motion suppresses animated battle effects while keeping static feedback. Verify on Editor/device; presentation settings must not change rules |
 | Asset identity and provenance | OPEN | Static per-file hashes, dimensions, byte sizes, duplicate candidates, Unity destinations, and import decisions are recorded in `30_EXPO_UNITY_ASSET_MIGRATION_MANIFEST.json`; visual identity and official provenance still require review, with no generated replacement for canonical art |
 | Player-facing copy and error hygiene | STATIC_REVIEWED | Runtime C# string literals were scanned; player messages no longer expose backend names, raw validation details, or exception types. Runtime rendering remains unverified |
-| Canonical Android workflow parity | BLOCKED_MISMATCH | The canonical docs name `.github/workflows/vexforge-unity-android-github.yml` as the Unity build path, but the checked-in workflow currently runs Expo prebuild and builds from `mobile/`; no workflow was dispatched |
-| Unity Editor validation | NOT_VERIFIED | No Unity Editor is available in this environment. Open the existing project in `6000.3.0f1` and record compile/play-mode evidence; do not create a new project |
-| Android device validation | NOT_VERIFIED | No device is available in this environment. Record input, lifecycle, safe-area, session, audio/haptics, and recovery behavior when the no-build gate is separately cleared |
-| Security and retirement review | BLOCKED | Verify no secrets, Expo-only runtime dependencies, or client-authority violations remain; reconcile the Unity/Expo workflow mismatch and review references/data preservation |
-| Delete `mobile/**` | BLOCKED_UNTIL_ALL_GATES_PASS | Only after every applicable gate above is closed, all capabilities are classified, and the removal review passes |
+| Dedicated Unity Android workflow | DEFERRED_BY_USER | The previous `.github/workflows/vexforge-unity-android-github.yml` was inspected and found to build Expo; Hito 10 removed it. The user deferred configuring a Unity-only workflow to a later step |
+| Unity Editor validation | NOT_VERIFIED | Open the existing project in `6000.3.0f1` and record compile/play-mode evidence; do not create a new project |
+| Android device validation | NOT_VERIFIED | Record input, lifecycle, safe-area, session, audio/haptics, and recovery behavior when separately authorized |
+| Security and retirement review | OPEN | Fresh scan: dependency audit reports 3 high, 14 moderate, and 2 low advisories (including React Router and Vite 6.1.0); SAST reports one medium weak-hash finding under separate `faucet/**`; HoundDog reports 0. No unrelated portal/faucet fixes were made. Full Unity client-authority review and Editor/device evidence remain open |
+| Delete `mobile/**` | REMOVED_BY_USER_DIRECTION_WITH_GATES_OPEN | `mobile/**` was deleted in commit `77d31b5d` before all gates passed. This is a recorded exception, not a gate pass |
 | APK/AAB generation | NOT_RUN_AND_PROHIBITED_FOR_THIS_MIGRATION | No APK/AAB is produced as part of these migration steps |
 
 ## Milestone handling
@@ -154,20 +156,42 @@ The available static review is recorded, but Hito 09 is **not complete**:
 - The declared Editor remains `6000.3.0f1`, the Android application identity is
   `com.vexforge.android`, and the Unity build entry source requests IL2CPP and
   ARM64. Those settings have not been exercised by Unity.
-- The workflow mismatch blocks the Android build-path gate: the canonical
-  documents describe the named workflow as Unity, while the actual workflow
-  file is titled “Build VEXFORGE Expo Android on GitHub,” runs
-  `npx expo prebuild`, and builds from `mobile/android`. It was not edited or
-  dispatched; Hito 10 and the workflow-retirement decision remain gated.
+- The workflow mismatch blocked the Android build-path gate: the file named as
+  Unity workflow actually ran Expo prebuild and built from `mobile/android`.
+  Hito 10 later removed that file at the user's request. No workflow was
+  dispatched, and no Unity workflow has been configured.
 - `npm run verify`, `git diff --check`, and the static Unity source/config
   checks passed. The portal verification does not compile Unity C#.
 - Unity Editor/Unity Hub and C# compilers are unavailable here, and no Android
   device is attached. Unity compilation, Play Mode, authentication/session
   lifecycle, device input, audio/haptics, and recovery behavior therefore
   remain **NOT_VERIFIED**.
-- No Supabase contract/data, Expo source, or `mobile/**` file was changed or
-  deleted. No workflow was run and no APK/AAB was generated.
+- During Hito 09, no Supabase contract/data, Expo source, or `mobile/**` file
+  was changed. Hito 10 later removed Expo source by user direction. No workflow
+  was run and no APK/AAB was generated.
 
-**Exit status:** Hito 09 remains blocked. Do not begin Hito 10 or delete
-`mobile/**` until the workflow mismatch is reconciled and the applicable
-Unity Editor/device gates have evidence.
+**Exit status:** Hito 09 remains incomplete. Hito 10 was executed as an
+explicitly authorized exception while parity/security/Editor/device gates were
+open. Do not describe the retirement as verification. The user deferred Unity
+Editor/device closure and a dedicated Unity workflow to a later step.
+
+## Hito 10 — Expo runtime retirement
+
+Completed and pushed as `77d31b5d`:
+
+- Removed all tracked files under `mobile/**`, the Expo Android workflow that
+  had been mislabeled as Unity, Expo-only runtime verifiers, and the Replit
+  Expo workflow/environment entries.
+- Retained the inventory and asset-manifest JSON as pre-retirement snapshots.
+- Root React/Vite portal dependencies, Unity source, Supabase contracts,
+  backend code, and Kivora/faucet files were preserved.
+- No Unity workflow was created, no APK/AAB was built, and no Supabase data or
+  schema was changed.
+- The user authorized this removal before gates passed. All open status rows
+  above remain open.
+
+## Hito 11 — operational documentation
+
+Current runtime, workflow, source-snapshot, and gate status are documented in
+the canonical entry points. Unity Editor/device verification and a dedicated
+Unity workflow remain deferred; do not claim either as completed.

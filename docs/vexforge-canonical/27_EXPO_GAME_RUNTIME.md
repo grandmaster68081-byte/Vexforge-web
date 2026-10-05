@@ -1,12 +1,15 @@
-> STATUS: LEGACY REFERENCE ONLY — DO NOT USE AS ACTIVE RUNTIME OR ARCHITECTURAL SOURCE.
+> STATUS: HISTORICAL SNAPSHOT — EXPO SOURCE WAS REMOVED IN HITO 10 ON 2026-10-05.
+> DO NOT USE AS ACTIVE RUNTIME OR ARCHITECTURAL SOURCE. Open Unity gates remain
+> listed in `28_UNITY_EXPO_MIGRATION_GATES.md`.
 
 # 27 — EXPO / REACT NATIVE LEGACY RECORD
 
 ## Estado
 
-`mobile/**` permanece intacto como legado histórico y material de respaldo. No
-se eliminan sus pantallas, componentes, dependencias, workflows ni contratos.
-Unity no depende de Expo para ejecutar gameplay.
+Este documento describe el árbol `mobile/**` inspeccionado antes de Hito 10.
+Ese árbol, sus dependencias y su workflow Expo fueron retirados en el commit
+`77d31b5d` por instrucción explícita del usuario. Este documento no contiene
+código ejecutable ni prueba paridad de Unity.
 
 La implementación histórica Expo sigue siendo una referencia útil para contratos de
 Supabase, estados de sesión y nombres de RPC, pero no es el runtime principal

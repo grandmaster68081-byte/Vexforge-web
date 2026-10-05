@@ -3,8 +3,10 @@
 ## Dirección canónica
 
 **Unity bajo `unity/**` es el único runtime activo del videojuego Android.**
-Expo / React Native (`mobile/**`) es una referencia de comportamiento heredada
-durante la migración y solo se elimina después de superar las gates de paridad.
+Expo / React Native (`mobile/**`) se retiró en el hito 10 el 2026-10-05
+(`77d31b5d`) por instrucción explícita del usuario mientras las gates de
+paridad seguían abiertas. El inventario y el manifiesto de assets son snapshots
+históricos, no runtime ni fuente ejecutable. La retirada no cierra las gates.
 No se incorpora un segundo runtime dentro de Unity.
 
 La autoridad para continuar es, en este orden:
@@ -14,13 +16,13 @@ La autoridad para continuar es, en este orden:
 3. Este archivo y `docs/vexforge-canonical/` para dirección operativa.
 4. `docs/vexforge-canonical/27_UNITY_EXPO_MIGRATION_INVENTORY.json` para el
    inventario y las decisiones por capacidad.
-5. Los documentos Expo/Unity históricos sirven como evidencia, no sustituyen
-   esta dirección.
+5. Los documentos e inventarios históricos Expo/Unity sirven como evidencia
+   limitada al estado previo a la retirada, no como código fuente activo.
 
 ## Límites de alcance
 
-- Trabajar en `unity/**` como destino; consultar `mobile/**` como fuente de
-  comportamiento mientras se completa la paridad.
+- Trabajar en `unity/**` como único runtime. Usar los inventarios históricos
+  para consultar el comportamiento previo; `mobile/**` ya no existe.
 - No portar Expo Router, React Native, Metro, Skia ni gameplay JavaScript a
   Unity. Traducir solo comportamientos necesarios a C# y sistemas nativos.
 - Supabase conserva autoridad sobre autenticación, ownership, combate,
@@ -28,8 +30,8 @@ La autoridad para continuar es, en este orden:
   resultados.
 - No cambiar contratos live de Supabase para facilitar la migración. Mantener
   `src/**` y `public/**` como portal congelado y no alterar `faucet/**`.
-- No borrar `mobile/**` hasta que todos los gates de paridad, verificación y
-  seguridad de eliminación pasen.
+- No restaurar `mobile/**` ni presentar su retirada como aprobación de paridad,
+  seguridad o runtime; esas gates siguen abiertas hasta tener evidencia.
 - `faucet/**`, sus assets Kivora y las migraciones `*kivora*` son un producto y
   un historial separados; preservarlos y no mezclarlos con VEXFORGE.
 - No se encontraron assets, paquetes ni IDs importados de Epic/Fab. La ruta
@@ -45,8 +47,11 @@ La autoridad para continuar es, en este orden:
 - `SecureSessionStore` implementa Android Keystore + AES/GCM en código; todavía
   requiere validación en el Editor/dispositivo antes de declarar la sesión
   verificada.
-- Expo contiene comportamiento de referencia adicional; el inventario separa
-  lo ya implementado en Unity de lo que aún debe portarse o verificarse.
+- El inventario previo a la retirada separa capacidades implementadas en
+  Unity de las que aún requieren verificación; su código Expo ya no está en el
+  repositorio.
+- El workflow Android que construía Expo fue retirado. Aún no hay un workflow
+  dedicado a Unity; el usuario dejó esa configuración para una etapa posterior.
 - No afirmar build Android, APK/AAB ni QA física sin evidencia nueva.
 
 ## Flujo

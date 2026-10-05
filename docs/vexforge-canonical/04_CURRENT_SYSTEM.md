@@ -1,7 +1,8 @@
 # 04 — CURRENT SYSTEM
 
-> El mapa Expo de esta página es referencia histórica de comportamiento, no el
-> runtime Android activo. Unity está activo; ver `26_UNITY_ENGINE_MIGRATION.md`
+> El mapa Expo de esta página describe el runtime previo a Hito 10; el árbol
+> `mobile/**` ya fue retirado y este documento es evidencia histórica, no código
+> ejecutable. Unity está activo; ver `26_UNITY_ENGINE_MIGRATION.md`
 > y el inventario de migración para su estado y límites.
 
 ```text
@@ -42,15 +43,17 @@ Supabase REST/RPC/Auth/Storage
 
 - ACTIVE: `unity/**`, Unity Android runtime, Supabase client/contracts, scenes
   and presentation.
-- PARITY REFERENCE: `mobile/**`, Expo Router, Supabase client and mobile assets.
+- HISTORICAL PARITY SNAPSHOT: `mobile/**`, Expo Router, Supabase client and
+  mobile assets as recorded before the 2026-10-05 retirement.
 - LEGACY/HISTORICAL: `src/**`, parte de `backend/**` y documentación que trata la web como cliente oficial.
 - UNKNOWN: cualquier objeto live no conectado explícitamente a un consumidor
   del runtime.
 
 ## Estado del runtime
 
-El mapa anterior describe la arquitectura Expo que se usa para comparar
-comportamientos. Unity bajo `unity/**` es el único runtime Android activo; su
-implementación está en distintos grados y no se declara compilada ni verificada
-en dispositivo. Supabase conserva la autoridad de sesión y datos. Expo no se
-elimina hasta superar las gates de paridad y retirada.
+El mapa anterior describe la arquitectura Expo antes de la retirada. Unity bajo
+`unity/**` es el único runtime Android activo; su implementación está en
+distintos grados y no se declara compilada ni verificada en dispositivo.
+Supabase conserva la autoridad de sesión y datos. `mobile/**` se retiró en
+Hito 10 antes de cerrar las gates; el estado de cada gate permanece en el
+documento 28.

@@ -3,9 +3,10 @@
 ## Decisión activa
 
 Unity es el único runtime activo de producto Android para VEXFORGE. Expo /
-React Native (`mobile/**`) se conserva completo como legado histórico, respaldo
-y referencia de comportamiento; no se elimina, no recibe trabajo nuevo y no
-se trata como una arquitectura equivalente a Unity.
+React Native (`mobile/**`) se retiró en Hito 10 el 2026-10-05 por instrucción
+explícita del usuario mientras las gates seguían abiertas. Los inventarios y
+documentos retenidos son evidencia histórica, no respaldo ejecutable; la
+retirada no equivale a paridad verificada.
 
 ## Estado de implementación
 
@@ -22,7 +23,7 @@ se trata como una arquitectura equivalente a Unity.
 | Forge / Deck | IMPLEMENTED_UNVERIFIED; physical slots, validation and save remain server RPCs |
 | Arena / Battle | PARTIALLY_IMPLEMENTED; battlefield surface and server-authoritative resolve |
 | Missions / Economy / Profile | IMPLEMENTED_UNVERIFIED read surfaces |
-| Expo / React Native legacy | PRESERVED |
+| Expo / React Native source | RETIRED_BY_USER_DIRECTION_WITH_GATES_OPEN |
 | APK / Android Player | NOT RUN; no APK/AAB build is required for this migration without a separate authorized build gate |
 
 ## Autoridad
@@ -77,4 +78,6 @@ compilación.
    recuperación de contraseña ni proveedores externos.
 5. Assets oficiales, audio, VFX y QA física requieren una etapa posterior y no
    se sustituyen con datos de producción inventados.
-6. `mobile/**` permanece hasta que las gates de paridad y eliminación pasen.
+6. `mobile/**` ya no está en el repositorio. La validación de paridad,
+   seguridad, Editor y dispositivo sigue abierta; no marcarla como superada
+   por la retirada.

@@ -17,7 +17,7 @@
 | Movimiento reducido | Preferencia persistida controla movimientos de cámara/escena, partículas y pulsos de cartas/boss; conserva una señal atmosférica estática | `PersistentRuntimeState.cs`, `BattlePresentationDirector.cs`, `VexforgeBattlefieldStage.cs` | Verificar cada superficie en Unity Editor/dispositivo |
 | Social/economía | Unity conserva contratos/repositorio y algunas superficies; Supabase sigue siendo autoridad | `VexforgeSocialRepository.cs`, `VexforgeSocialHub.cs`, `VexforgeRepository.cs` | Portar solo consumidores con contrato vigente; no mover reglas al cliente |
 | Portal web / faucet | Portal congelado; faucet Kivora es producto separado | `src/**`, `public/**`, `faucet/**` | Sin cambios como parte de la migración |
-| Verificación | No hay evidencia de Unity Editor, dispositivo ni build Android ejecutados aquí | `28_UNITY_EXPO_MIGRATION_GATES.md` | Completar gates de paridad y seguridad antes de retirar Expo |
+| Verificación | Unity Editor, dispositivo y workflow Android Unity no verificados | `28_UNITY_EXPO_MIGRATION_GATES.md` | Cerrar paridad, seguridad, Editor y dispositivo; la retirada de Expo fue una excepción solicitada y no cerró estas gates |
 
 La matriz completa de capacidades, rutas inspeccionadas y clasificación está en
 `27_UNITY_EXPO_MIGRATION_INVENTORY.json`. Los estados de código no equivalen a
@@ -25,8 +25,9 @@ verificación de runtime.
 
 ## Orden de migración
 
-Seguir los 12 hitos del paquete Unity suministrado por el usuario: reconciliar
-autoridad e inventariar, portar capacidades por orden, verificar paridad y
-seguridad de eliminación, eliminar `mobile/**` solo entonces, y finalizar la
-documentación. Cada hito completo debe quedar en un commit y push a `main`
-antes de iniciar el siguiente.
+Los hitos 01–08 tienen evidencia de implementación de fuente. El Hito 10 retiró
+`mobile/**` por instrucción explícita del usuario antes de cerrar las gates; el
+Hito 11 actualiza esta documentación. Eso no marca como completas la paridad,
+la revisión de seguridad ni la validación Unity Editor/dispositivo. No hay un
+workflow Android Unity configurado; el usuario dejó esa tarea para una etapa
+posterior. Cada unidad completada debe quedar en un commit y push a `main`.

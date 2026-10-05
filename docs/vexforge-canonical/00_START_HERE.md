@@ -6,8 +6,9 @@
 ## Dirección vigente
 
 **Unity en `unity/**` es el único runtime Android activo de VEXFORGE.** Expo /
-React Native en `mobile/**` queda como referencia de comportamiento hasta que
-pasen todas las gates de paridad y retirada. Supabase mantiene la autoridad
+React Native en `mobile/**` se retiró el 2026-10-05 en Hito 10 (`77d31b5d`) por
+instrucción explícita del usuario mientras las gates seguían abiertas. La
+retirada no equivale a paridad verificada. Supabase mantiene la autoridad
 backend. El portal web queda congelado y `faucet/**` es un producto separado.
 La ruta Epic/Fab sigue retirada; la rareza de cartas `epic` no tiene relación
 con ese proveedor.
@@ -23,14 +24,16 @@ con ese proveedor.
 5. `docs/vexforge-canonical/28_UNITY_EXPO_MIGRATION_GATES.md` — criterios de
    paridad, verificación y retirada.
 6. `CURRENT_SOURCE_OF_TRUTH.md` — autoridad visual V5.6 y fronteras.
-7. `mobile/docs/**` — evidencia Expo histórica, no autoridad de runtime.
+7. `docs/history/EXPO_RUNTIME_ARCHIVE_INDEX.md` — registros Expo históricos, no
+   autoridad de runtime.
 
 ## Límites
 
 - Mantener la autoridad de Supabase para combate, ownership, recompensas,
   progreso y economía; Unity no calcula settlement.
 - Preservar el portal web congelado, Kivora y el historial de migraciones.
-- No eliminar `mobile/**` hasta cerrar cada gate de paridad y retirada.
+- No restaurar Expo ni marcar sus gates cerradas por el hecho de haber retirado
+  `mobile/**`; validar Unity en una etapa posterior.
 - No copiar el arte oficial de cartas al cliente ni sustituirlo sin aprobación.
 - No generar APK/AAB ni alterar Supabase live durante esta migración.
 - Antes de cada hito: confirmar `main`, árbol limpio y `HEAD == origin/main`;

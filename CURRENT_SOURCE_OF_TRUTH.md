@@ -6,7 +6,9 @@ V5.6 is the sole current visual implementation authority in this package. All V5
 ## Runtime authority and migration boundary
 
 - Unity Android under `unity/**` is the only active game runtime.
-- Expo / React Native under `mobile/**` is a legacy behavior reference until the Unity parity gates pass; delete it only after the documented removal gate passes.
+- Expo / React Native under `mobile/**` was removed in Hito 10 on 2026-10-05
+  at `77d31b5d` by explicit user direction while parity gates remained open.
+  The retained inventory and asset manifest are historical snapshots only.
 - The web portal under `src/**` and `public/**` is frozen and is not a game runtime.
 - Supabase live remains authoritative for authentication, ownership, combat, economy, progress, and rewards.
 - Never embed a second JavaScript runtime, React Native, Expo, Metro, or a WebView inside Unity.
@@ -35,7 +37,10 @@ The portal is the visual front gate to VEXFORGE. It must feel like entering an o
 Official card records and official card image URLs remain canonical. Do not generate, repaint, alter or replace official VEXFORGE card artwork.
 
 ## Technical law
-Do not modify Supabase schema/RPC/auth contracts, public card filtering rules, the frozen web portal, or unrelated products. Unity client behavior may be extended from Expo only through the existing backend contracts; never move authoritative state or rules into the client.
+Do not modify Supabase schema/RPC/auth contracts, public card filtering rules,
+the frozen web portal, or unrelated products. Implement required Unity behavior
+from retained historical migration evidence only through existing backend
+contracts; never move authoritative state or rules into the client.
 
 ## Required final generation workflow
 1. Keep the supplied reference images inside `public/art/references/`.

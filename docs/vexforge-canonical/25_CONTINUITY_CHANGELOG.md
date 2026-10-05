@@ -2,9 +2,14 @@
 
 ## 2026-10-04 — UNITY COMO RUNTIME ÚNICO / HITO 01
 
-- **DECISIÓN:** Unity bajo `unity/**` es el único runtime Android activo; Expo
-  bajo `mobile/**` queda como referencia de comportamiento hasta superar las
-  gates de paridad y retirada.
+- **ACTUALIZACIÓN 2026-10-05 — HITO 10/11:** por instrucción explícita del
+  usuario, se retiró `mobile/**` y su workflow Expo en el commit `77d31b5d`
+  mientras las gates de paridad, seguridad, Editor y dispositivo seguían
+  abiertas. No hay workflow Unity dedicado configurado; el usuario difirió esa
+  configuración a una etapa posterior. Esta retirada no certifica paridad.
+- **DECISIÓN HISTÓRICA:** Unity bajo `unity/**` es el único runtime Android
+  activo; Expo bajo `mobile/**` quedó como referencia hasta resolver las gates.
+  Las líneas siguientes conservan el estado registrado antes del Hito 10.
 - **PROGRESO:** se registraron el inventario por capacidad y las gates de
   verificación; Unity Editor y dispositivo siguen sin verificar.
 - **LÍMITES:** no borrar `mobile/**`, no modificar Supabase live y no generar

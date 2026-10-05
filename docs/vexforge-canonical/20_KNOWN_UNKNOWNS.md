@@ -28,10 +28,12 @@
   settlement, cartas, balances, rewards o resultados locales.
 
 - `VERIFICADO_EN_CODIGO_NO_EN_APK`: package Android `com.vexforge.android`,
-  versión `1.0.1`, versionCode `4`, Expo `~54.0.27`, React Native `0.81.5`.
+  versión `1.0.1`, versionCode `4`.
+- `HISTÓRICO_PREVIO_A_HITO_10`: Expo `~54.0.27` y React Native `0.81.5` eran
+  versiones declaradas por el cliente eliminado; no son dependencias actuales.
 - `NO_VERIFICADO`: APK Android real del commit actual y su instalación física.
 - `NO_VERIFICADO`: comprobación del artifact release, package, versión,
   versionCode y SHA-256 del build de esta Foundation.
-- `VERIFICADO_EN_REPOSITORIO`: ubicación de la Foundation
-  `mobile/game/**`; Skia queda fuera de esta etapa.
+- `HISTÓRICO_PREVIO_A_HITO_10`: la Foundation Expo estaba en
+  `mobile/game/**`; el árbol fue retirado. Skia queda fuera de esta etapa.
 - `NO_VERIFICADO`: cobertura física de la transición BootScene → Game Shell.

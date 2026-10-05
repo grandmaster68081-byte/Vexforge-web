@@ -1,6 +1,9 @@
 {
   "schemaVersion": 1,
   "generatedAt": "2026-10-05T22:08:04.820Z",
+  "snapshotStatus": "HISTORICAL_PRE_HITO_10_RETIREMENT",
+  "retirementCommit": "77d31b5d",
+  "statusNote": "Asset counts and paths below describe the repository at generatedAt. The mobile tree was removed afterward by explicit user direction; these values are not current file counts.",
   "baselineCommit": "edab1ddc798e748650cd10e0e560a8cdaa198f06",
   "sourceScope": "mobile/assets",
   "unityResourceRegistry": "unity/Assets/Resources/VexforgeTier1/VexforgeTier1AssetManifest.json",
@@ -128,7 +131,7 @@
     "actualUnityBuildSize": "Not measured. No Unity import/build was run; platform compression, texture settings, and build stripping are unverified.",
     "sourcePayload": "Exact tracked file byte size at the audited commit."
   },
-  "sourcePreservation": "This manifest makes Unity import decisions only. No source files under mobile/assets are changed or deleted.",
+  "sourcePreservation": "At manifest capture, no source files under mobile/assets were changed or deleted. The tree was later removed by user-authorized Hito 10 (commit 77d31b5d); this manifest is a historical snapshot.",
   "assets": [
     {
       "sourcePath": "mobile/assets/canonical/VF_ARCHIVE_SANCTUM_HERO.png",

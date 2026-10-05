@@ -6,16 +6,18 @@ in `VEXFORGE_CONTEXT.md` and `docs/vexforge-canonical/`.
 
 ## Active scope
 
-- Work on `unity/**` as the target runtime; use `mobile/**` only as the
-  behavior reference until Unity parity and removal gates pass.
+- Work on `unity/**` as the only active game runtime.
+- Expo/React Native source under `mobile/**` was removed in Hito 10 on
+  2026-10-05 at `77d31b5d` by explicit user direction while parity gates were
+  still open. Do not restore it or treat its removal as proof of parity.
+- Use the retained migration inventory and historical records only as
+  pre-retirement evidence; Unity Editor/device verification remains open.
 - Do not port Expo Router, React Native, Metro, Skia, or gameplay JavaScript
   into Unity. Reimplement only required behavior in C# and native Unity APIs.
 - Keep Supabase authoritative for identity, ownership, combat, settlement,
   economy, progress, and rewards.
 - Keep the web portal (`src/**`, `public/**`) frozen; preserve `faucet/**` and
   its Kivora assets/migrations as a separate product.
-- Do not delete `mobile/**` until all parity, verification, and removal gates
-  pass.
 - The official branch is `main`; every completed milestone must be committed
   and pushed to `origin/main`.
 - Before each milestone: `git fetch --prune origin`; confirm `main`, a clean
@@ -46,24 +48,19 @@ Unity Editor/device validation is not available in this environment. Do not
 claim Unity compilation, Android behavior, or parity without corresponding
 evidence. No APK/AAB build is authorized or required during this migration.
 
-While Expo source remains, its checks may be used only as reference-source
-checks, not as proof of Unity parity:
-
-- `cd mobile && npm install` — install pinned reference-runtime dependencies
-  only when needed.
-- `npm run verify` — run the repository's static mobile release verifier.
-- `npm run typecheck` — run the mobile TypeScript check.
-- `npm run doctor` — run Expo Doctor.
-
-Do not run EAS, APK/AAB generation, store deployment, or production deployment.
+The root `npm run verify`, `npm run typecheck`, and `npm run build` commands
+apply to the frozen web portal, not to Unity. The Expo project and its checks
+are retired. No Unity Android workflow is currently configured; the user has
+deferred creating a dedicated Unity workflow to a later step. Do not generate
+APK/AAB files during this migration.
 
 ## Runtime stack
 
 - Unity Editor `6000.3.0f1`
 - Android package `com.vexforge.android`
 - C# / Unity runtime under `unity/**`
-- Expo SDK 54 / React Native 0.81.5 are legacy reference-source versions,
-  not the active game runtime.
+- Expo/React Native runtime source has been retired; only historical migration
+  records remain.
 
 ## Where things live
 
@@ -72,10 +69,11 @@ Do not run EAS, APK/AAB generation, store deployment, or production deployment.
 - `unity/Assets/Scripts/Presentation/` and `Tier1/` — world, battle, tutorial,
   audio and other runtime presentation.
 - `unity/Assets/` — Unity scenes and project assets.
-- `mobile/app/`, `mobile/src/`, `mobile/game/`, `mobile/assets/` — migration
-  reference until the removal gate passes.
 - `docs/vexforge-canonical/27_UNITY_EXPO_MIGRATION_INVENTORY.json` — tracked
-  file manifest and per-capability migration decisions.
+  pre-retirement source snapshot and per-capability migration decisions.
+- `docs/vexforge-canonical/30_EXPO_UNITY_ASSET_MIGRATION_MANIFEST.json` —
+  pre-retirement asset provenance snapshot; its file counts describe that
+  snapshot, not the current tree.
 - `supabase/`, `backend/` — existing authority/contracts; do not change their
   behavior for this client migration.
 - `src/`, `public/` — frozen web portal; `faucet/` — separate Kivora product.
@@ -84,8 +82,9 @@ Do not run EAS, APK/AAB generation, store deployment, or production deployment.
 
 - Supabase remains authoritative for authentication, ownership, combat
   settlement, rewards and economy; presentation must not calculate them.
-- Port required Expo behavior into Unity without carrying over the JavaScript
-  engine or duplicating the backend's authority.
+- Implement Unity behavior from the retained migration evidence and existing
+  backend contracts; do not reintroduce the Expo JavaScript runtime or duplicate
+  the backend's authority.
 - Official card artwork is canonical and must not be repainted or silently
   replaced by generated art.
 - A local laboratory or training presentation must be labelled as such and
@@ -106,11 +105,13 @@ Do not run EAS, APK/AAB generation, store deployment, or production deployment.
 
 - `SecureSessionStore` contains Android Keystore/AES-GCM code, but Editor/device
   behavior has not been verified.
-- Unity's pack-reveal component currently plays a visual sequence; it does not
-  by itself prove the Expo pack purchase/opening flow is at parity.
-- Expo's deterministic local tactical lab is not server settlement and must
-  not be ported as the competitive battle resolver.
+- Unity source implementation alone does not prove runtime parity; the open
+  Editor/device checks remain required evidence.
+- The historical Expo tactical lab was not ported as the competitive battle
+  resolver; Supabase remains authoritative for combat settlement.
 - Do not infer live Supabase columns, constraints, functions or grants from
   old migrations; inspect the live contract before changing economy or battle
   consumers.
-- Never claim `mobile/**` is removable before every documented gate passes.
+- The user authorized retiring `mobile/**` before the documented gates passed.
+  Keep those gates marked open until real evidence closes them; the deletion is
+  not a parity or security pass.

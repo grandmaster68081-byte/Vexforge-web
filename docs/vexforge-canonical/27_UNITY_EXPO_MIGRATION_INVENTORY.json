@@ -1,6 +1,9 @@
 {
   "schemaVersion": 1,
   "generatedAt": "2026-10-05T22:36:43.170Z",
+  "snapshotStatus": "HISTORICAL_PRE_HITO_10_RETIREMENT",
+  "retirementCommit": "77d31b5d",
+  "statusNote": "Capability paths and gate values below describe the repository at generatedAt. Expo source was removed afterward by explicit user direction while Unity parity, security, Editor, and device gates remained open.",
   "baselineCommit": "f5bf3fd68fd230d28c24c7afc8bdc7804019345b",
   "classificationValues": [
     "KEEP_UNITY",

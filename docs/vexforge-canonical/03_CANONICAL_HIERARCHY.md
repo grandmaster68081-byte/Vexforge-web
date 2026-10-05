@@ -24,6 +24,7 @@ No se eliminan fuentes antiguas: se clasifican y se enlazan.
   existente.
 - Decisión de producto/runtime: Unity es el runtime Android activo y `unity/**`
   es la fuente canónica.
-- Expo / React Native en `mobile/**` es la referencia heredada para paridad;
-  no se describe como runtime activo. Solo se elimina tras superar las gates
-  de paridad y seguridad de eliminación.
+- Expo / React Native en `mobile/**` se retiró por instrucción explícita del
+  usuario el 2026-10-05 mientras las gates seguían abiertas. La excepción está
+  registrada en `28_UNITY_EXPO_MIGRATION_GATES.md`; no implica que las gates
+  estén superadas.

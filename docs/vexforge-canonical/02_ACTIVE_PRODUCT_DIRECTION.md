@@ -27,9 +27,9 @@ La dirección aprobada es un TCG digital premium con identidad propia VEXFORGE, 
 - Backend: Supabase existente, sin sustitución.
 - Cliente canónico: Unity en `unity/**`.
 - Web: congelada/no activa.
-- Expo/React Native: referencia de comportamiento heredada en `mobile/**`
-  durante la migración; no es el runtime activo ni se conserva como segundo
-  runtime tras superar las gates de paridad.
+- Expo/React Native: el árbol `mobile/**` se retiró el 2026-10-05 por
+  instrucción explícita del usuario mientras quedaban gates abiertas. Los
+  inventarios retenidos son snapshots históricos; no hay runtime Expo activo.
 
 La Foundation actual agrega la frontera `GameRuntime` sin destruir los
 componentes funcionales existentes. El APK standalone, artifact, metadatos y
