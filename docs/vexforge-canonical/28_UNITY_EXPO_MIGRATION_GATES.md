@@ -33,7 +33,7 @@
 | Dedicated Unity Android workflow | DEFERRED_BY_USER | The previous `.github/workflows/vexforge-unity-android-github.yml` was inspected and found to build Expo; Hito 10 removed it. The user deferred configuring a Unity-only workflow to a later step |
 | Unity Editor validation | NOT_VERIFIED | Open the existing project in `6000.3.0f1` and record compile/play-mode evidence; do not create a new project |
 | Android device validation | NOT_VERIFIED | Record input, lifecycle, safe-area, session, audio/haptics, and recovery behavior when separately authorized |
-| Security and retirement review | OPEN | Fresh scan: dependency audit reports 3 high, 14 moderate, and 2 low advisories (including React Router and Vite 6.1.0); SAST reports one medium weak-hash finding under separate `faucet/**`; HoundDog reports 0. No unrelated portal/faucet fixes were made. Full Unity client-authority review and Editor/device evidence remain open |
+| Security and retirement review | OPEN | Fresh scan on 2026-10-05: dependency audit reports 5 high, 14 moderate, and 2 low advisories in the frozen web portal dependency tree; SAST reports one medium weak-hash finding under separate `faucet/**`; HoundDog reports 0. No unrelated portal/faucet fixes were made. Full Unity client-authority review and Editor/device evidence remain open |
 | Delete `mobile/**` | REMOVED_BY_USER_DIRECTION_WITH_GATES_OPEN | `mobile/**` was deleted in commit `77d31b5d` before all gates passed. This is a recorded exception, not a gate pass |
 | APK/AAB generation | NOT_RUN_AND_PROHIBITED_FOR_THIS_MIGRATION | No APK/AAB is produced as part of these migration steps |
 

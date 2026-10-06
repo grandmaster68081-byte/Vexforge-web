@@ -3,8 +3,8 @@ name: GitHub workflow dispatch
 description: Repository-specific behavior for dispatching the canonical GitHub Actions workflow.
 ---
 
-For VEXFORGE, dispatch the canonical Unity workflow through the numeric GitHub Actions workflow ID observed from the repository API when filename-based dispatch returns HTTP 404. The same authenticated API access can still read the workflow by ID and list runs.
+For VEXFORGE, inspect the live GitHub Actions workflow list and workflow source on current `main` before dispatch. Do not reuse a numeric workflow ID merely because it appears in historical logs: an ID can survive a filename/name change and point to Expo rather than Unity. The Unity-only workflow is currently deferred and must be configured before a current Editor run can be dispatched.
 
-**Why:** The repository accepted authenticated API reads and a valid workflow filename, but the filename dispatch endpoint returned 404; the numeric workflow endpoint accepted the dispatch.
+**Why:** Repository history shows the former Unity workflow path was converted to Expo and later removed. Its last successful Unity-labeled run performed shader inventory on an earlier source revision; it did not build an Android package or validate the current Unity source.
 
-**How to apply:** Resolve the active workflow ID from the canonical run or workflow list, preserve the canonical workflow path and inputs, and never create a parallel workflow to work around dispatch routing.
+**How to apply:** List current workflows, inspect the workflow file at the target revision, and confirm the run's operation/input before dispatch. Only use the active Unity-only workflow after it exists and the relevant validation or build is authorized.

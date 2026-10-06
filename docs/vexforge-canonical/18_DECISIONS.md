@@ -117,9 +117,19 @@
 - SCOPE: `unity/**`, `.github/workflows/vexforge-unity-android-github.yml` y continuidad operativa.
 - WHY: la instrucción canónica exige una sola fuente de build, sin cuota Cloud, sin workflows paralelos y sin compilación automática.
 - EVIDENCE: workflow `workflow_dispatch` único, Unity `6000.3.0f1` en `ProjectVersion.txt`, Supabase Management API saludable y último run existente consultado sin lanzar uno nuevo.
-- STATUS: ACTIVE / CONFIGURED_UNVERIFIED
-- RULES: mantener los modos dentro del workflow canónico; no crear otro workflow de build; no dispatch sin autorización explícita; no guardar credenciales en el repositorio.
+- STATUS: HISTÓRICO / SUPERSEDED BY D-011
+- RULES: These rules described the then-configured workflow. The path was converted to Expo on 2026-10-01 and later removed; do not apply its historical ID or modes to current `main`.
 - SUPERSEDES: la afirmación anterior de Unity Cloud Build como infraestructura operativa activa.
+
+## D-011
+
+- DATE: 2026-10-05
+- DECISION: Unity remains the only active Android game runtime and Expo remains retired by explicit user direction, but the migration gates are still open and no Unity Android workflow is configured. Configure the Unity-only workflow only in the later workflow milestone.
+- SCOPE: `unity/**`, `.github/workflows/`, migration validation, and workflow continuity.
+- WHY: current `main` contains only the general verification and Kivora workflows. The historical Unity-labeled run performed shader inventory on an earlier source revision; it did not validate current Unity behavior or produce an Android package. The user prohibited APK/AAB output during migration.
+- EVIDENCE: `.github/workflows/`, `replit.md`, `05_ANDROID_RUNTIME_AND_BUILD.md`, `28_UNITY_EXPO_MIGRATION_GATES.md`, and the historical run logs.
+- STATUS: ACTIVE / WORKFLOW_DEFERRED
+- RULES: do not dispatch a historical workflow, use Unity Cloud Build, or generate APK/AAB during migration; keep Editor/device and parity gates open until real evidence closes them.
 
 ## HISTÓRICO / SUPERSEDIDO — 2026-09-30 — EXPO COMO ÚNICO RUNTIME ACTIVO
 
@@ -133,9 +143,10 @@
 
 ## Estado de decisiones vigente
 
-D-010, fechado 2026-10-04, establece Unity bajo `unity/**` como el único runtime
-Android activo. Expo bajo `mobile/**` permanece como referencia de comportamiento
-hasta superar todas las gates de paridad, seguridad y retirada. La dirección
-operativa está en `VEXFORGE_CONTEXT.md`, `replit.md` y
+D-011, fechado 2026-10-05, establece Unity bajo `unity/**` como el runtime Android
+activo, registra la retirada de Expo por dirección explícita del usuario sin
+marcar como aprobadas las gates abiertas, y deja la configuración del workflow
+Unity para una etapa posterior. La dirección operativa está en
+`VEXFORGE_CONTEXT.md`, `replit.md` y
 `docs/vexforge-canonical/28_UNITY_EXPO_MIGRATION_GATES.md`. La retirada de
 Epic/Fab se mantiene vigente.

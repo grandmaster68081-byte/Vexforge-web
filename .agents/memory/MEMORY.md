@@ -1,5 +1,5 @@
 - [Patch retry safety](patch-retry-safety.md) — Inspect the diff after a failed multi-hunk patch; earlier hunks may already have applied.
-- [GitHub workflow dispatch](github-workflow-dispatch.md) — use the numeric workflow ID when filename-based dispatch returns 404 despite valid repository access.
+- [GitHub workflow dispatch](github-workflow-dispatch.md) — verify the live workflow and source before dispatch; historical IDs can represent a different runtime.
 - [Android build environment](android-build-environment.md) — mobile CI must use the public npm registry; local prebuild is not an APK build without Java/Android SDK.
 - [Android build authorization](android-build-authorization.md) — require explicit user approval for each native Android compilation.
 - [GitHub transport authentication](github-transport.md) — use temporary GIT_ASKPASS for HTTPS pushes when the valid workspace PAT is rejected by default credential handling.
@@ -16,4 +16,4 @@
 - [Expo workflow runtime](expo-workflow-runtime.md) — Metro should run as the console workflow without an HTTP port health check.
 - [Git LFS attachment recovery](git-lfs-attachment-recovery.md) — look for the historical LFS pointer and cache before asking to re-upload a missing large package.
 - [Vexforge access rule](vexforge-access-rule.md) — avoid connectors; use the project's configured PAT secrets for GitHub/Supabase operations.
-- [Vexforge milestone workflow](vexforge-migration-workflow.md) — keep Unity migration changes on verified, pushed `main`; preserve Supabase authority and Expo until release gates pass.
+- [Vexforge milestone workflow](vexforge-migration-workflow.md) — keep changes on verified, pushed `main`; preserve Supabase authority and do not mistake retired Expo for passed gates.

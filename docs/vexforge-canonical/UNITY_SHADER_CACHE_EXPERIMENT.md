@@ -1,6 +1,10 @@
 # VEXFORGE — Sequential shader cache experiment
 
-Status: EXPERIMENTAL — not a production build path
+Status: ARCHIVED EXPERIMENT — DO NOT RESUME OR DISPATCH
+
+This proposal depends on a historical Unity build path and is not part of the
+current migration. Current instructions prohibit Unity Cloud Build and APK/AAB
+generation; the dedicated Unity workflow is deferred.
 
 ## Purpose
 
@@ -13,8 +17,9 @@ Unity an opportunity to populate compatible shader compilation results.
 
 ## Safety rules
 
-- Use the existing Unity project, organization, Build Automation target, and
-  GitHub repository. Do not create replacements.
+- The organization and Build Automation target references in this experiment
+  have not been reconciled for current `main`. Do not access Unity Cloud or
+  dispatch a build based on this proposal.
 - Use the Unity version declared in `unity/ProjectSettings/ProjectVersion.txt`.
 - Keep the same commit, package lock, Android target, scripting backend, and
   graphics configuration for every shard.
