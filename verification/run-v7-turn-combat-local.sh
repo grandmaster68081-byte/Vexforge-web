@@ -21,5 +21,7 @@ PSQL=(psql -h "$TMP" -p "$PORT" -U "$(id -un)" -d postgres -v ON_ERROR_STOP=1)
 "${PSQL[@]}" -f "$ROOT/verification/v7-turn-combat-fixture.sql"
 "${PSQL[@]}" -f "$ROOT/supabase/migrations/20261006220000_vexforge_universal_turn_combat_v7.sql"
 "${PSQL[@]}" -f "$ROOT/verification/v7-turn-combat-test.sql"
+"${PSQL[@]}" -f "$ROOT/supabase/migrations/20261006230000_vexforge_turn_combat_v7_pvp_rooms.sql"
+"${PSQL[@]}" -f "$ROOT/verification/v7-pvp-turn-combat-test.sql"
 
-printf 'V7 local PostgreSQL verification passed. No remote database was used.\n'
+printf 'V7 local PostgreSQL training and PvP verification passed. No remote database was used.\n'

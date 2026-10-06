@@ -56,7 +56,9 @@ INSERT INTO public.players(id, auth_user_id)
 VALUES ('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa',
         '11111111-1111-4111-8111-111111111111'),
        ('bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb',
-        '22222222-2222-4222-8222-222222222222');
+        '22222222-2222-4222-8222-222222222222'),
+       ('cccccccc-cccc-4ccc-8ccc-cccccccccccc',
+        '33333333-3333-4333-8333-333333333333');
 
 INSERT INTO public.cards(id, name, faction, rarity, power, affinity, prestige, charge, synergy_json)
 VALUES
@@ -70,4 +72,8 @@ VALUES
   ('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa', 0, '10000000-0000-4000-8000-000000000001', true),
   ('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa', 1, '10000000-0000-4000-8000-000000000002', false),
   ('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa', 2, '10000000-0000-4000-8000-000000000003', false),
-  ('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa', 3, '10000000-0000-4000-8000-000000000004', false);
+  ('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa', 3, '10000000-0000-4000-8000-000000000004', false),
+  ('bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb', 0, '10000000-0000-4000-8000-000000000001', true),
+  ('bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb', 1, '10000000-0000-4000-8000-000000000002', false),
+  ('bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb', 2, '10000000-0000-4000-8000-000000000003', false),
+  ('bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb', 3, '10000000-0000-4000-8000-000000000004', false);
