@@ -28,7 +28,7 @@
 | Missions, world boss, raids, and seasons | OPEN | Unity source now provides a read-only active-boss atlas; verify it in Editor/device and confirm each additional action against an existing live contract |
 | Profile, wallet, market, deposits, withdrawals, social, and visible errors | OPEN | Hito 07 source now reads existing profile/economy contracts, calls current market/deposit/withdrawal RPCs, and preserves failed social-message drafts; verify loading, empty, rejected, accepted, refresh, and sign-out states in Editor/device |
 | Audio, haptics, quality, and reduced motion | OPEN | Existing battle clips and semantic haptic cues are mapped; reduced motion suppresses animated battle effects while keeping static feedback. Verify on Editor/device; presentation settings must not change rules |
-| Asset identity and provenance | OPEN | Static per-file hashes, dimensions, byte sizes, duplicate candidates, Unity destinations, and import decisions are recorded in `30_EXPO_UNITY_ASSET_MIGRATION_MANIFEST.json`; visual identity and official provenance still require review, with no generated replacement for canonical art |
+| Asset identity and provenance | OPEN | Static per-file hashes, dimensions, byte sizes, duplicate candidates, Unity destinations, and import decisions are recorded in `30_EXPO_UNITY_ASSET_MIGRATION_MANIFEST.json`. The historical runtime manifest lists only generic boss aura/sigil support art and an unmapped boss-phase cinematic; no verified per-boss art mapping was found. The historical boss-lore list is marked superseded and cannot establish that mapping. Visual identity and official provenance remain open; do not invent or silently replace canonical art |
 | Player-facing copy and error hygiene | STATIC_REVIEWED | Runtime C# string literals were scanned; player messages no longer expose backend names, raw validation details, or exception types. Runtime rendering remains unverified |
 | Dedicated Unity Android workflow | DEFERRED_BY_USER | The previous `.github/workflows/vexforge-unity-android-github.yml` was inspected and found to build Expo; Hito 10 removed it. The user deferred configuring a Unity-only workflow to a later step |
 | Unity Editor validation | NOT_VERIFIED | Open the existing project in `6000.3.0f1` and record compile/play-mode evidence; do not create a new project |
@@ -83,6 +83,13 @@ Implemented in source, pending Unity Editor/device verification:
   fight or settle rewards.
 - Only the existing `VF_PACK_VAULT_HERO`, `VF_PACK_RELIC`, `VF_BOSS_AURA`, and
   `VF_BOSS_SIGIL` assets are used. Per-boss art identity remains unverified.
+- The historical 1.8 runtime asset manifest contains generic `VF_BOSS_AURA` and
+  `VF_BOSS_SIGIL` support files plus one `boss_phase.jpg` cinematic. The asset
+  migration inventory classifies that cinematic as `DISCARD` for Unity because
+  no Unity resource consumer or approved final-art destination is established.
+  The only historical “Primeros Bosses Canónicos” lore list is marked
+  superseded and does not provide an authoritative art mapping. No art was
+  imported or created from this review.
 - Pack, world/boss, asset-provenance, and runtime gates remain OPEN until
   compilation, interaction, ownership, and presentation are checked in the
   declared Unity Editor/device. No Supabase schema/data changes, Expo removal,
