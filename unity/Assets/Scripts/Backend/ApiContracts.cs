@@ -398,6 +398,184 @@ namespace Vexforge.Backend
     }
 
     [Serializable]
+    public sealed class VexforgeTurnCombatResponse
+    {
+        public bool ok;
+        public bool idempotent;
+        public bool is_my_turn;
+        public bool rewards_granted;
+        public string error;
+        public string session_id;
+        public string mode;
+        public string ruleset_version;
+        public string profile;
+        public string status;
+        public string phase;
+        public string current_actor_side;
+        public string you_are_side;
+        public string winner_side;
+        public int round;
+        public int turn_index;
+        public long event_seq;
+        public string state_hash;
+        public VexforgeTurnCombatBoard board;
+        public VexforgeTurnCombatAction[] legal_actions;
+        public VexforgeTurnCombatEvent[] events;
+        public VexforgeTurnCombatOutcome outcome;
+    }
+
+    [Serializable]
+    public sealed class VexforgeTurnCombatBoard
+    {
+        public VexforgeTurnCombatUnit[] a;
+        public VexforgeTurnCombatUnit[] b;
+    }
+
+    [Serializable]
+    public sealed class VexforgeTurnCombatUnit
+    {
+        public string unit_id;
+        public string card_id;
+        public int slot_number;
+        public string side;
+        public string name;
+        public string faction;
+        public string rarity;
+        public string image_url;
+        public string slot;
+        public bool is_champion;
+        public bool in_reserve;
+        public bool alive;
+        public bool hidden;
+        public bool guard;
+        public bool lifesteal;
+        public bool shielded;
+        public int hp;
+        public int max_hp;
+        public int atk;
+        public int def;
+        public int spd;
+        public int power;
+        public string[] keywords;
+        public VexforgeTurnCombatStatBreakdown stat_breakdown;
+    }
+
+    [Serializable]
+    public sealed class VexforgeTurnCombatStatBreakdown
+    {
+        public VexforgeTurnCombatBaseStats base_stats;
+        public VexforgeTurnCombatFormationStats formation;
+        public VexforgeTurnCombatEffectStats effects;
+        public VexforgeTurnCombatEffectiveStats effective;
+    }
+
+    [Serializable]
+    public sealed class VexforgeTurnCombatBaseStats
+    {
+        public int hp;
+        public int atk;
+        public int def;
+        public int spd;
+        public int power;
+    }
+
+    [Serializable]
+    public sealed class VexforgeTurnCombatFormationStats
+    {
+        public int reserve_count;
+        public int reserve_hp;
+        public int reserve_atk;
+        public int reserve_def;
+        public int same_faction_percent;
+    }
+
+    [Serializable]
+    public sealed class VexforgeTurnCombatEffectStats
+    {
+        public int guard_def;
+        public int surge_speed;
+        public bool guard_active;
+        public bool drain;
+        public bool veil;
+    }
+
+    [Serializable]
+    public sealed class VexforgeTurnCombatEffectiveStats
+    {
+        public int hp;
+        public int max_hp;
+        public int atk;
+        public int def;
+        public int spd;
+    }
+
+    [Serializable]
+    public sealed class VexforgeTurnCombatAction
+    {
+        public string action_id;
+        public string kind;
+        public string unit_id;
+        public string target_id;
+        public string source_unit_id;
+        public string target_unit_id;
+    }
+
+    [Serializable]
+    public sealed class VexforgeTurnCombatEvent
+    {
+        public long event_seq;
+        public string actor_side;
+        public string event_type;
+        public string state_hash;
+        public VexforgeTurnCombatEventPayload event_payload;
+        public VexforgeTurnCombatEventState state;
+    }
+
+    [Serializable]
+    public sealed class VexforgeTurnCombatEventPayload
+    {
+        public string kind;
+        public string attacker_id;
+        public string target_id;
+        public string deployed_unit_id;
+        public string replaced_unit_id;
+        public string reserve_activated;
+        public string response;
+        public string response_side;
+        public string completion_reason;
+        public string winner_side;
+        public string slot;
+        public int damage;
+        public int healing;
+        public int round;
+        public int active_hp_a;
+        public int active_hp_b;
+        public bool critical;
+        public bool shield_blocked;
+        public bool target_defeated;
+    }
+
+    [Serializable]
+    public sealed class VexforgeTurnCombatEventState
+    {
+        public string status;
+        public string phase;
+        public int round;
+        public int turn_index;
+        public string current_actor_side;
+        public string winner_side;
+        public VexforgeTurnCombatBoard board;
+    }
+
+    [Serializable]
+    public sealed class VexforgeTurnCombatOutcome
+    {
+        public string winner_side;
+        public string completion_reason;
+        public bool rewards_granted;
+    }
+
+    [Serializable]
     public sealed class ApiError
     {
         public string message;

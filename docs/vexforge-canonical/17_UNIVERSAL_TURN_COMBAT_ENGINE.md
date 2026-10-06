@@ -1,6 +1,6 @@
 # 17 — MOTOR UNIVERSAL DE COMBATE POR TURNOS
 
-**Estado:** dirección de diseño para V1; todavía no es una regla activa ni una migración aplicada. El motor V6 queda intacto hasta que el reemplazo tenga pruebas y autorización de activación.
+**Estado: PARCIAL.** El repositorio contiene el almacenamiento/ruleset V7 aditivo, RPC transaccionales y una ruta Unity de entrenamiento espejo sin recompensas, probados con una base PostgreSQL local aislada. La migración no se aplicó a Supabase live. V6 sigue siendo la ruta activa. PvP V7, misiones y jefes todavía no están conectados al nuevo core; Unity Editor/dispositivo no están disponibles para compilar o verificar la experiencia.
 
 ## Objetivo
 
@@ -90,9 +90,9 @@ Las proyecciones por jugador nunca revelan mano, mazo u otra información privad
 ## Implementación por hitos
 
 1. Congelar los contratos de estado/acción/evento, los fixtures de reglas V6 y el catálogo de efectos.
-2. Añadir almacenamiento y RPC transaccionales V7 de forma aditiva; mantener V6 disponible y no aplicar migraciones a producción durante esta etapa.
-3. Integrar una pelea PvE vertical en Unity, con una acción por turno y replay del event log.
-4. Conectar PvP al mismo `submit_action`; demostrar paridad PvP/PvE antes de habilitar matchmaking.
-5. Migrar jefes y misiones al mismo núcleo; separar settlement por perfil y activar gradualmente tras QA y autorización.
+2. **Fuente implementada; activación live pendiente.** Almacenamiento y RPC transaccionales V7 son aditivos y mantienen V6 intacto. La migración y las pruebas se ejecutan sólo en una base PostgreSQL temporal durante esta etapa.
+3. **Vertical espejo implementada en fuente.** Unity solicita el estado y las acciones legales al servidor, envía intents con secuencia/idempotencia y muestra replay de snapshots; no calcula daño ni otorga recompensas. Requiere aplicar la migración en un entorno aprobado y compilar/verificar Unity antes de considerarla lista para usuarios.
+4. **Pendiente:** conectar PvP al mismo `submit_action` y demostrar paridad antes de habilitar matchmaking.
+5. **Pendiente:** conectar jefes y misiones al mismo núcleo; mantener separado el settlement por perfil y activar gradualmente tras QA y autorización.
 
-**Límite de esta especificación:** el commit sólo fija dirección y contrato. No activa reglas nuevas, no cambia datos/RPC/RLS live, no genera build de Unity y no declara el motor implementado.
+**Límites de esta entrega parcial:** no activa reglas nuevas ni cambia datos/RPC/RLS live; no crea build de Unity ni declara completo el motor universal. No se inventó un deck enemigo: el primer PvE usa la formación propia como espejo y no entrega recompensas.

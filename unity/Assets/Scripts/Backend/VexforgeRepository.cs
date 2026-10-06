@@ -138,6 +138,56 @@ namespace Vexforge.Backend
             return Json<BattleResult>(response);
         }
 
+        public async Task<VexforgeTurnCombatResponse> StartTurnCombatTrainingAsync(string idempotencyKey)
+        {
+            var json = "{\"p_idempotency_key\":" + SupabaseClient.Quote(idempotencyKey) + "}";
+            var response = await client.RpcAsync("vexforge_turn_v7_start_training", json);
+            return RequiredJson<VexforgeTurnCombatResponse>(
+                response, "El servidor V7 no confirmó el inicio del entrenamiento.", "ok");
+        }
+
+        public async Task<VexforgeTurnCombatResponse> GetTurnCombatStateAsync(string sessionId)
+        {
+            if (string.IsNullOrWhiteSpace(sessionId))
+                throw new ArgumentException("La sesión de combate no es válida.", nameof(sessionId));
+            var response = await client.RpcAsync(
+                "vexforge_turn_v7_get_state",
+                "{\"p_session_id\":" + SupabaseClient.Quote(sessionId) + "}");
+            return RequiredJson<VexforgeTurnCombatResponse>(
+                response, "El servidor no devolvió el estado V7.", "ok");
+        }
+
+        public async Task<VexforgeTurnCombatResponse> GetTurnCombatLegalActionsAsync(string sessionId)
+        {
+            if (string.IsNullOrWhiteSpace(sessionId))
+                throw new ArgumentException("La sesión de combate no es válida.", nameof(sessionId));
+            var response = await client.RpcAsync(
+                "vexforge_turn_v7_legal_actions",
+                "{\"p_session_id\":" + SupabaseClient.Quote(sessionId) + "}");
+            return RequiredJson<VexforgeTurnCombatResponse>(
+                response, "El servidor no devolvió las acciones legales V7.", "ok");
+        }
+
+        public async Task<VexforgeTurnCombatResponse> SubmitTurnCombatActionAsync(
+            string sessionId,
+            long expectedEventSeq,
+            string idempotencyKey,
+            VexforgeTurnCombatAction action)
+        {
+            if (string.IsNullOrWhiteSpace(sessionId))
+                throw new ArgumentException("La sesión de combate no es válida.", nameof(sessionId));
+            if (action == null || string.IsNullOrWhiteSpace(action.action_id))
+                throw new ArgumentException("La acción V7 no fue emitida por el servidor.", nameof(action));
+
+            var json = "{\"p_session_id\":" + SupabaseClient.Quote(sessionId) +
+                       ",\"p_expected_event_seq\":" + expectedEventSeq.ToString(CultureInfo.InvariantCulture) +
+                       ",\"p_idempotency_key\":" + SupabaseClient.Quote(idempotencyKey) +
+                       ",\"p_action\":" + TurnCombatActionJson(action) + "}";
+            var response = await client.RpcAsync("vexforge_turn_v7_submit_action", json);
+            return RequiredJson<VexforgeTurnCombatResponse>(
+                response, "El servidor no confirmó la acción V7.", "ok");
+        }
+
         public async Task<FormationWriteResult> StoreFormationAsync(string matchId, FormationSnapshot formation)
         {
             var json = "{\"p_match_id\":" + SupabaseClient.Quote(matchId) +
@@ -456,6 +506,35 @@ namespace Vexforge.Backend
         {
             if (response == null || !response.Ok) return new T[0];
             return JsonArrayUtility.FromJson<T>(response.Body);
+        }
+
+        private static string TurnCombatActionJson(VexforgeTurnCombatAction action)
+        {
+            var json = "{\"action_id\":" + SupabaseClient.Quote(action.action_id) +
+                       ",\"kind\":" + SupabaseClient.Quote(action.kind);
+            switch (action.kind)
+            {
+                case "attack":
+                    if (string.IsNullOrWhiteSpace(action.unit_id) || string.IsNullOrWhiteSpace(action.target_id))
+                        throw new ArgumentException("La acción de ataque está incompleta.", nameof(action));
+                    json += ",\"unit_id\":" + SupabaseClient.Quote(action.unit_id) +
+                            ",\"target_id\":" + SupabaseClient.Quote(action.target_id);
+                    break;
+                case "move":
+                case "replace":
+                    if (string.IsNullOrWhiteSpace(action.source_unit_id) ||
+                        string.IsNullOrWhiteSpace(action.target_unit_id))
+                        throw new ArgumentException("La acción de formación está incompleta.", nameof(action));
+                    json += ",\"source_unit_id\":" + SupabaseClient.Quote(action.source_unit_id) +
+                            ",\"target_unit_id\":" + SupabaseClient.Quote(action.target_unit_id);
+                    break;
+                case "pass_priority":
+                case "end_turn":
+                    break;
+                default:
+                    throw new ArgumentException("La acción V7 no pertenece al catálogo cerrado.", nameof(action));
+            }
+            return json + "}";
         }
 
         [Serializable]

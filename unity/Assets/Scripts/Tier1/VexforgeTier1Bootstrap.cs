@@ -14,6 +14,7 @@ namespace Vexforge.Tier1
         private static void ResetInstallationState() { installed = false; }
         private VexforgeTier1AssetRegistry assets;
         private VexforgeTier1BattleGate gate;
+        private VexforgeTier1TurnCombatGate turnCombatGate;
         private VexforgeTier1TutorialDirector tutorial;
         private VexforgeTier1RouteSurface surface;
         private BattlePresentationDirector canonicalBattle;
@@ -55,6 +56,8 @@ namespace Vexforge.Tier1
             packReveal=gameObject.AddComponent<VexforgeTier1PackRevealDirector>();packReveal.Initialize(app,assets);
             worldAtlas=gameObject.AddComponent<VexforgeTier1WorldAtlasDirector>();worldAtlas.Initialize(app,assets);
             gate=gameObject.AddComponent<VexforgeTier1BattleGate>();gate.Initialize(app,null,assets);
+            turnCombatGate=gameObject.AddComponent<VexforgeTier1TurnCombatGate>();turnCombatGate.Initialize(app,gate);
+            gate.BindTurnCombatGate(turnCombatGate);
             tutorial=gameObject.AddComponent<VexforgeTier1TutorialDirector>();tutorial.Initialize(app,assets);tutorial.BindBattleGate(gate);
             surface=gameObject.AddComponent<VexforgeTier1RouteSurface>();surface.Initialize(app,gate,tutorial,null,assets);
             surface.BindPackReveal(packReveal);
@@ -127,6 +130,8 @@ namespace Vexforge.Tier1
         {
             if(state==Vexforge.Session.AuthState.Authenticated)
                 if(tutorial!=null)tutorial.TryStart();
+            if(state!=Vexforge.Session.AuthState.Authenticated&&turnCombatGate!=null)
+                turnCombatGate.HandleSignedOut();
         }
 
         private void OnDestroy()

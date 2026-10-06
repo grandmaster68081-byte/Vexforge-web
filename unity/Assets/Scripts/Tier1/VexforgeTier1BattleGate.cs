@@ -23,6 +23,8 @@ namespace Vexforge.Tier1
         private Text strategy;
         private Button confirmButton;
         private Button changeOpponentButton;
+        private Button trainingButton;
+        private VexforgeTier1TurnCombatGate turnCombatGate;
         private bool shown;
         private bool busy;
         private bool replaying;
@@ -81,6 +83,11 @@ namespace Vexforge.Tier1
             UnsubscribeCompletion();
             canonicalBattle = director;
             SubscribeCompletion();
+        }
+
+        public void BindTurnCombatGate(VexforgeTier1TurnCombatGate turnGate)
+        {
+            turnCombatGate = turnGate;
         }
 
         public void Show()
@@ -166,12 +173,28 @@ namespace Vexforge.Tier1
             list.SetParent(plaque.transform, false);
             VexforgeTier1Ui.Anchor(list, .07f,.23f,.93f,.63f);
 
+            trainingButton = VexforgeTier1Ui.Button(
+                plaque.transform,
+                "MirrorTrainingV7",
+                "ENTRENAMIENTO ESPEJO V7 · SIN RECOMPENSAS",
+                OpenTurnCombatTraining,
+                new Color(.045f,.055f,.064f,.97f),
+                12);
+            VexforgeTier1Ui.Anchor(trainingButton.GetComponent<RectTransform>(), .10f,.155f,.90f,.215f);
+
             confirmButton = VexforgeTier1Ui.Button(plaque.transform, "Confirm", "SELLAR DESAFÍO", ConfirmSelectedOpponent, new Color(.075f,.055f,.040f,.97f), 13);
             VexforgeTier1Ui.Anchor(confirmButton.GetComponent<RectTransform>(), .09f,.075f,.56f,.145f);
             changeOpponentButton = VexforgeTier1Ui.Button(plaque.transform, "Change", "CAMBIAR RIVAL", CancelSelection, new Color(.045f,.050f,.056f,.97f), 13);
             VexforgeTier1Ui.Anchor(changeOpponentButton.GetComponent<RectTransform>(), .60f,.075f,.91f,.145f);
             HideConfirmActions();
             canvas.gameObject.SetActive(false);
+        }
+
+        private void OpenTurnCombatTraining()
+        {
+            if (busy || turnCombatGate == null) return;
+            Hide();
+            turnCombatGate.Open();
         }
 
         private void SubscribeCompletion()

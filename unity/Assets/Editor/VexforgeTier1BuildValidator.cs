@@ -31,6 +31,7 @@ namespace Vexforge.Tier1.Editor
             CheckFile(projectRoot, "Assets/Scripts/Tier1/VexforgeTier1Bootstrap.cs", errors);
             CheckFile(projectRoot, "Assets/Scripts/Tier1/VexforgeTier1RouteSurface.cs", errors);
             CheckFile(projectRoot, "Assets/Scripts/Tier1/VexforgeTier1BattleGate.cs", errors);
+            CheckFile(projectRoot, "Assets/Scripts/Tier1/VexforgeTier1TurnCombatGate.cs", errors);
             CheckFile(projectRoot, "Assets/Scripts/Tier1/VexforgeTier1CanonicalBattlefieldPolish.cs", errors);
             CheckFile(projectRoot, "Assets/Scripts/Tier1/VexforgeTier1TutorialDirector.cs", errors);
             CheckFile(projectRoot, "Assets/Resources/VexforgeTier1/VexforgeProductionConfig.json", errors);
@@ -86,6 +87,10 @@ namespace Vexforge.Tier1.Editor
                 Require(repo, "GetPvpOpponentsAsync", "centralized opponent discovery", errors);
                 Require(repo, "get_pvp_opponents", "authoritative opponent RPC", errors);
                 Require(repo, "vexforge_battle_resolve", "authoritative battle RPC", errors);
+                Require(repo, "vexforge_turn_v7_start_training", "V7 training start RPC", errors);
+                Require(repo, "vexforge_turn_v7_get_state", "V7 state RPC", errors);
+                Require(repo, "vexforge_turn_v7_legal_actions", "V7 legal actions RPC", errors);
+                Require(repo, "vexforge_turn_v7_submit_action", "V7 authoritative action RPC", errors);
             }
 
             var gatePath = Path.Combine(projectRoot, "Assets/Scripts/Tier1/VexforgeTier1BattleGate.cs");
@@ -98,9 +103,29 @@ namespace Vexforge.Tier1.Editor
                 Require(gate, "GetOrCreate", "persistent operation journal", errors);
             }
 
+            var turnGatePath = Path.Combine(projectRoot, "Assets/Scripts/Tier1/VexforgeTier1TurnCombatGate.cs");
+            if (File.Exists(turnGatePath))
+            {
+                var turnGate = File.ReadAllText(turnGatePath);
+                Forbidden(turnGate, "RpcAsync(", "direct backend access from V7 turn-combat UI", errors);
+                Require(turnGate, "SubmitTurnCombatActionAsync", "V7 intent submission through repository", errors);
+                Require(turnGate, "legal_actions", "server-provided legal action rendering", errors);
+                Require(turnGate, "SNAPSHOT CONFIRMADO", "event-state replay from confirmed snapshots", errors);
+            }
+
+            var bootstrapPath = Path.Combine(projectRoot, "Assets/Scripts/Tier1/VexforgeTier1Bootstrap.cs");
+            if (File.Exists(bootstrapPath))
+            {
+                var bootstrap = File.ReadAllText(bootstrapPath);
+                Require(bootstrap, "VexforgeTier1TurnCombatGate", "V7 training gate registration", errors);
+                Require(bootstrap, "BindTurnCombatGate", "V7 training route binding", errors);
+            }
+
             foreach (var cs in Directory.GetFiles(Path.Combine(projectRoot, "Assets/Scripts"), "*.cs", SearchOption.AllDirectories))
             {
                 var text = File.ReadAllText(cs);
+                if (!cs.EndsWith("VexforgeRepository.cs"))
+                    Forbidden(text, "RpcAsync(\"vexforge_turn_v7_", "V7 RPC outside repository", errors);
                 if (!cs.EndsWith("VexforgeRepository.cs"))
                     Forbidden(text, "RpcAsync(\"vexforge_battle_resolve\"", "battle resolve RPC outside repository", errors);
             }
