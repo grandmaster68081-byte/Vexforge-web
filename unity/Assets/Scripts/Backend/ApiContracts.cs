@@ -403,6 +403,7 @@ namespace Vexforge.Backend
         public bool ok;
         public bool idempotent;
         public bool is_my_turn;
+        public bool awaiting_opponent;
         public bool rewards_granted;
         public string error;
         public string session_id;
@@ -422,6 +423,24 @@ namespace Vexforge.Backend
         public VexforgeTurnCombatAction[] legal_actions;
         public VexforgeTurnCombatEvent[] events;
         public VexforgeTurnCombatOutcome outcome;
+    }
+
+    [Serializable]
+    public sealed class VexforgeTurnCombatPvpRoomsResponse
+    {
+        public bool ok;
+        public string error;
+        public int count;
+        public VexforgeTurnCombatPvpRoom[] rooms;
+    }
+
+    [Serializable]
+    public sealed class VexforgeTurnCombatPvpRoom
+    {
+        public string session_id;
+        public string created_at;
+        public string ruleset_version;
+        public bool rewards_granted;
     }
 
     [Serializable]

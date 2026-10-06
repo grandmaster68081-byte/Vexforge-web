@@ -146,6 +146,44 @@ namespace Vexforge.Backend
                 response, "El servidor V7 no confirmó el inicio del entrenamiento.", "ok");
         }
 
+        public async Task<VexforgeTurnCombatResponse> CreateTurnCombatPvpRoomAsync(string idempotencyKey)
+        {
+            if (string.IsNullOrWhiteSpace(idempotencyKey))
+                throw new ArgumentException("La clave de creación PvP no es válida.", nameof(idempotencyKey));
+            var json = "{\"p_idempotency_key\":" + SupabaseClient.Quote(idempotencyKey) + "}";
+            var response = await client.RpcAsync("vexforge_turn_v7_create_pvp_room", json);
+            return RequiredJson<VexforgeTurnCombatResponse>(
+                response, "El servidor V7 no confirmó la creación de la sala PvP.", "ok");
+        }
+
+        public async Task<VexforgeTurnCombatPvpRoomsResponse> DiscoverTurnCombatPvpRoomsAsync(int limit)
+        {
+            var safeLimit = Math.Max(1, Math.Min(limit, 32));
+            var json = "{\"p_limit\":" + safeLimit.ToString(CultureInfo.InvariantCulture) + "}";
+            var response = await client.RpcAsync("vexforge_turn_v7_discover_pvp_rooms", json);
+            if (response == null || !response.Ok || string.IsNullOrWhiteSpace(response.Body))
+                throw new InvalidOperationException("El servidor no devolvió las salas PvP V7.");
+            var result = Json<VexforgeTurnCombatPvpRoomsResponse>(response);
+            if (result == null || (result.ok && result.rooms == null))
+                throw new InvalidOperationException("La respuesta de salas PvP V7 no es válida.");
+            return result;
+        }
+
+        public async Task<VexforgeTurnCombatResponse> JoinTurnCombatPvpRoomAsync(
+            string sessionId,
+            string idempotencyKey)
+        {
+            if (string.IsNullOrWhiteSpace(sessionId))
+                throw new ArgumentException("La sala PvP no es válida.", nameof(sessionId));
+            if (string.IsNullOrWhiteSpace(idempotencyKey))
+                throw new ArgumentException("La clave para unirse a PvP no es válida.", nameof(idempotencyKey));
+            var json = "{\"p_session_id\":" + SupabaseClient.Quote(sessionId) +
+                       ",\"p_idempotency_key\":" + SupabaseClient.Quote(idempotencyKey) + "}";
+            var response = await client.RpcAsync("vexforge_turn_v7_join_pvp_room", json);
+            return RequiredJson<VexforgeTurnCombatResponse>(
+                response, "El servidor V7 no confirmó la unión a la sala PvP.", "ok");
+        }
+
         public async Task<VexforgeTurnCombatResponse> GetTurnCombatStateAsync(string sessionId)
         {
             if (string.IsNullOrWhiteSpace(sessionId))

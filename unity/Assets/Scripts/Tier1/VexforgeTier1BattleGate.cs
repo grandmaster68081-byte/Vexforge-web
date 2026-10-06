@@ -24,6 +24,7 @@ namespace Vexforge.Tier1
         private Button confirmButton;
         private Button changeOpponentButton;
         private Button trainingButton;
+        private Button pvpButton;
         private VexforgeTier1TurnCombatGate turnCombatGate;
         private bool shown;
         private bool busy;
@@ -164,7 +165,15 @@ namespace Vexforge.Tier1
             var plaque = VexforgeTier1Ui.Panel(canvas.transform, "GatePlaque", new Color(.012f,.014f,.020f,.90f));
             VexforgeTier1Ui.Anchor(plaque.rectTransform, .05f,.10f,.95f,.88f);
             var title = VexforgeTier1Ui.Label(plaque.transform, "Title", "BATTLE GATE", 31, VexforgeTier1Ui.Gold, TextAnchor.MiddleCenter);
-            VexforgeTier1Ui.Anchor(title.rectTransform, .07f,.88f,.93f,.96f);
+            VexforgeTier1Ui.Anchor(title.rectTransform, .07f,.88f,.67f,.96f);
+            pvpButton = VexforgeTier1Ui.Button(
+                plaque.transform,
+                "PvpRoomsV7",
+                "SALAS PvP",
+                OpenTurnCombatPvp,
+                new Color(.035f,.050f,.052f,.97f),
+                12);
+            VexforgeTier1Ui.Anchor(pvpButton.GetComponent<RectTransform>(), .70f,.89f,.93f,.955f);
             status = VexforgeTier1Ui.Label(plaque.transform, "Status", string.Empty, 12, VexforgeTier1Ui.Muted, TextAnchor.MiddleCenter);
             VexforgeTier1Ui.Anchor(status.rectTransform, .07f,.82f,.93f,.88f);
             strategy = VexforgeTier1Ui.Label(plaque.transform, "Strategy", "SELECCIONA UN RIVAL PARA LEER TU FORMACIÓN.", 13, VexforgeTier1Ui.Text, TextAnchor.UpperLeft);
@@ -195,6 +204,13 @@ namespace Vexforge.Tier1
             if (busy || turnCombatGate == null) return;
             Hide();
             turnCombatGate.Open();
+        }
+
+        private void OpenTurnCombatPvp()
+        {
+            if (busy || turnCombatGate == null) return;
+            Hide();
+            turnCombatGate.OpenPvp();
         }
 
         private void SubscribeCompletion()

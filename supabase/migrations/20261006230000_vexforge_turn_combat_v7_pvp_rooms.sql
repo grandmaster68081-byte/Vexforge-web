@@ -65,7 +65,9 @@ BEGIN
    WHERE player_a_id = v_player_id
      AND start_idempotency_key = v_key;
   IF FOUND THEN
-    IF v_existing.mode <> 'pvp' THEN
+    IF v_existing.mode <> 'pvp'
+       OR v_existing.profile <> 'pvp_no_rewards_v1'
+       OR v_existing.ruleset_version <> 'vexforge_turn_v7_pvp_1' THEN
       RETURN jsonb_build_object('ok', false, 'error', 'idempotency_key_reused');
     END IF;
     RETURN public._vexforge_turn_v7_project(
@@ -201,6 +203,8 @@ BEGIN
         FROM public.vexforge_turn_sessions_v7 AS s
        WHERE s.mode = 'pvp'
          AND s.controller_b = 'human'
+         AND s.profile = 'pvp_no_rewards_v1'
+         AND s.ruleset_version = 'vexforge_turn_v7_pvp_1'
          AND s.status = 'active'
          AND s.player_b_id IS NULL
          AND s.player_a_id <> v_player_id
@@ -262,7 +266,9 @@ BEGIN
     RETURN jsonb_build_object('ok', false, 'error', 'session_not_found');
   END IF;
 
-  IF v_session.mode <> 'pvp' OR v_session.controller_b <> 'human' THEN
+  IF v_session.mode <> 'pvp' OR v_session.controller_b <> 'human'
+     OR v_session.profile <> 'pvp_no_rewards_v1'
+     OR v_session.ruleset_version <> 'vexforge_turn_v7_pvp_1' THEN
     RETURN jsonb_build_object('ok', false, 'error', 'room_not_joinable');
   END IF;
   IF v_player_id = v_session.player_a_id THEN

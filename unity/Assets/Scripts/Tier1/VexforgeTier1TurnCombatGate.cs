@@ -8,7 +8,7 @@ using Vexforge.Core;
 
 namespace Vexforge.Tier1
 {
-    public sealed class VexforgeTier1TurnCombatGate : MonoBehaviour
+    public sealed partial class VexforgeTier1TurnCombatGate : MonoBehaviour
     {
         private const string PreferencePrefix = "vexforge.tier1.v7.";
         private VexforgeApp app;
@@ -36,6 +36,12 @@ namespace Vexforge.Tier1
         public void Open()
         {
             if (canvas == null) Build();
+            if (busy)
+            {
+                canvas.gameObject.SetActive(true);
+                return;
+            }
+            pvpMode = false;
             if (app == null || app.Session == null || !app.Session.IsAuthenticated ||
                 app.GameState == null || string.IsNullOrWhiteSpace(app.GameState.PlayerId))
             {
@@ -45,13 +51,16 @@ namespace Vexforge.Tier1
             }
 
             canvas.gameObject.SetActive(true);
-            if (busy) return;
+            current = null;
+            sessionId = null;
+            replayIndex = -1;
             _ = ResumeOrStartAsync();
         }
 
         public void HandleSignedOut()
         {
             busy = false;
+            pvpMode = false;
             current = null;
             sessionId = null;
             replayIndex = -1;
@@ -283,6 +292,7 @@ namespace Vexforge.Tier1
         {
             if (response == null) return;
             current = response;
+            var isPvp = response.mode == "pvp";
             replayIndex = -1;
             retryRequired = false;
             canvas.gameObject.SetActive(true);
@@ -291,47 +301,96 @@ namespace Vexforge.Tier1
                     response.events != null && response.events.Length > 0
                         ? "REPLAY · EVENTOS CONFIRMADOS"
                         : "ACTUALIZAR ESTADO";
+            if (isPvp &&
+                (response.rewards_granted || response.profile != "pvp_no_rewards_v1" ||
+                 response.ruleset_version != "vexforge_turn_v7_pvp_1"))
+            {
+                SetStatus("CONTRATO PvP NO ADMITIDO · PERFIL O RECOMPENSAS INVÁLIDOS");
+                board.text = "NO SE ENVIARON MÁS ACCIONES.";
+                eventLog.text = RenderEvents(response.events);
+                ClearActionList();
+                AddActionButton("SESIÓN PvP BLOQUEADA", null,
+                    new Color(.055f,.025f,.025f,.97f), 0);
+                return;
+            }
             if (response.status == "completed")
             {
                 var winner = response.outcome == null ? null : response.outcome.winner_side;
-                SetStatus(winner == "a"
-                    ? "ENTRENAMIENTO COMPLETADO · VICTORIA CONFIRMADA"
-                    : "ENTRENAMIENTO COMPLETADO · RESULTADO CONFIRMADO");
+                SetStatus(isPvp
+                    ? (winner == response.you_are_side
+                        ? "PvP CERRADO · VICTORIA CONFIRMADA · SIN RECOMPENSAS"
+                        : "PvP CERRADO · RESULTADO CONFIRMADO · SIN RECOMPENSAS")
+                    : (winner == "a"
+                        ? "ENTRENAMIENTO COMPLETADO · VICTORIA CONFIRMADA"
+                        : "ENTRENAMIENTO COMPLETADO · RESULTADO CONFIRMADO"));
+            }
+            else if (response.awaiting_opponent)
+            {
+                SetStatus("SALA PvP ABIERTA · ESPERANDO RIVAL · SIN RECOMPENSAS");
             }
             else if (response.phase == "response")
             {
                 SetStatus(response.is_my_turn
                     ? "VENTANA DE RESPUESTA · ACCIÓN LEGAL DEL SERVIDOR"
-                    : "ESPERANDO RESPUESTA DEL MOTOR");
+                    : (isPvp
+                        ? "ESPERANDO RESPUESTA DEL RIVAL"
+                        : "ESPERANDO RESPUESTA DEL MOTOR"));
             }
             else
             {
                 SetStatus(response.is_my_turn
                     ? "TU TURNO · RONDA " + response.round + " · EVENTO " + response.event_seq
-                    : "ESPERANDO AL OTRO LADO · EVENTO " + response.event_seq);
+                    : (isPvp
+                        ? "ESPERANDO TURNO DEL RIVAL · EVENTO " + response.event_seq
+                        : "ESPERANDO AL OTRO LADO · EVENTO " + response.event_seq));
             }
 
             board.text = RenderBoard(response.board, response.you_are_side);
+            if (response.awaiting_opponent)
+                board.text += "\nID DE SALA: " + response.session_id;
             eventLog.text = RenderEvents(response.events);
             ClearActionList();
 
             if (response.status == "completed")
             {
+                if (isPvp)
+                {
+                    AddActionButton(
+                        "VOLVER A SALAS PvP",
+                        ReturnToPvpLobby,
+                        new Color(.045f,.050f,.056f,.97f),
+                        0);
+                }
+                else
+                {
+                    AddActionButton(
+                        "INICIAR OTRO ENTRENAMIENTO · SIN RECOMPENSAS",
+                        () =>
+                        {
+                            if (app != null && app.GameState != null)
+                                _ = StartNewTrainingAsync(app.GameState.PlayerId);
+                        },
+                        new Color(.075f,.055f,.040f,.97f),
+                        0);
+                }
+                return;
+            }
+            if (response.awaiting_opponent)
+            {
                 AddActionButton(
-                    "INICIAR OTRO ENTRENAMIENTO · SIN RECOMPENSAS",
-                    () =>
-                    {
-                        if (app != null && app.GameState != null)
-                            _ = StartNewTrainingAsync(app.GameState.PlayerId);
-                    },
-                    new Color(.075f,.055f,.040f,.97f),
+                    "ACTUALIZAR ESTADO DE LA SALA",
+                    () => { _ = RefreshStateAsync(); },
+                    new Color(.045f,.050f,.056f,.97f),
                     0);
                 return;
             }
             if (!response.is_my_turn)
             {
-                AddActionButton("ESPERANDO CONFIRMACIÓN DEL SERVIDOR", null,
-                    new Color(.035f,.040f,.048f,.96f), 0);
+                AddActionButton(
+                    isPvp ? "ACTUALIZAR ESTADO PvP" : "ESPERANDO CONFIRMACIÓN DEL SERVIDOR",
+                    isPvp ? (Action)(() => { _ = RefreshStateAsync(); }) : null,
+                    new Color(.035f,.040f,.048f,.96f),
+                    0);
                 return;
             }
 
@@ -340,6 +399,10 @@ namespace Vexforge.Tier1
             {
                 AddActionButton("EL SERVIDOR NO REPORTÓ ACCIONES LEGALES", null,
                     new Color(.035f,.040f,.048f,.96f), 0);
+                if (isPvp)
+                    AddActionButton("ACTUALIZAR ESTADO PvP",
+                        () => { _ = RefreshStateAsync(); },
+                        new Color(.045f,.050f,.056f,.97f), 1);
                 return;
             }
             for (var i = 0; i < actions.Length; i++)
@@ -353,6 +416,11 @@ namespace Vexforge.Tier1
                         : new Color(.045f,.050f,.056f,.97f),
                     i);
             }
+            if (isPvp)
+                AddActionButton("ACTUALIZAR ESTADO PvP",
+                    () => { _ = RefreshStateAsync(); },
+                    new Color(.045f,.050f,.056f,.97f),
+                    actions.Length);
         }
 
         private static string RenderBoard(VexforgeTurnCombatBoard value, string ownerSide)
@@ -521,13 +589,21 @@ namespace Vexforge.Tier1
         {
             if (retryRequired)
             {
-                if (string.IsNullOrWhiteSpace(sessionId)) Open();
+                if (string.IsNullOrWhiteSpace(sessionId))
+                {
+                    if (pvpMode) _ = DiscoverPvpRoomsAsync();
+                    else Open();
+                }
                 else _ = RefreshStateAsync();
                 return;
             }
             if (current == null || current.events == null || current.events.Length == 0)
             {
-                if (string.IsNullOrWhiteSpace(sessionId)) Open();
+                if (string.IsNullOrWhiteSpace(sessionId))
+                {
+                    if (pvpMode) _ = DiscoverPvpRoomsAsync();
+                    else Open();
+                }
                 else _ = RefreshStateAsync();
                 return;
             }
@@ -551,9 +627,19 @@ namespace Vexforge.Tier1
         {
             retryRequired = true;
             if (error == "active_deck_required")
-                SetStatus("CONFIGURA UN DECK ACTIVO ANTES DE INICIAR EL ENTRENAMIENTO.");
+                SetStatus(pvpMode
+                    ? "CONFIGURA UN DECK ACTIVO ANTES DE UNIRTE A PvP."
+                    : "CONFIGURA UN DECK ACTIVO ANTES DE INICIAR EL ENTRENAMIENTO.");
             else if (error == "authentication_required")
-                SetStatus("INICIA SESIÓN PARA ABRIR EL ENTRENAMIENTO.");
+                SetStatus(pvpMode
+                    ? "INICIA SESIÓN PARA ABRIR LAS SALAS PvP."
+                    : "INICIA SESIÓN PARA ABRIR EL ENTRENAMIENTO.");
+            else if (error == "room_not_joinable" || error == "session_not_found")
+                SetStatus("LA SALA YA NO ESTÁ DISPONIBLE · ACTUALIZA LA LISTA PvP.");
+            else if (error == "not_a_participant")
+                SetStatus("ESTA SESIÓN SÓLO ESTÁ DISPONIBLE PARA SUS PARTICIPANTES.");
+            else if (error == "unsupported_profile")
+                SetStatus("EL PERFIL DE COMBATE PvP NO ESTÁ HABILITADO EN ESTA RUTA.");
             else
                 SetStatus("V7 NO ESTÁ DISPONIBLE EN EL SERVIDOR · NO SE SIMULÓ LOCALMENTE.");
             if (replayButton != null)

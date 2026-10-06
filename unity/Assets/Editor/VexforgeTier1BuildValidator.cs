@@ -88,6 +88,9 @@ namespace Vexforge.Tier1.Editor
                 Require(repo, "get_pvp_opponents", "authoritative opponent RPC", errors);
                 Require(repo, "vexforge_battle_resolve", "authoritative battle RPC", errors);
                 Require(repo, "vexforge_turn_v7_start_training", "V7 training start RPC", errors);
+                Require(repo, "vexforge_turn_v7_create_pvp_room", "V7 PvP room creation RPC", errors);
+                Require(repo, "vexforge_turn_v7_discover_pvp_rooms", "V7 PvP room discovery RPC", errors);
+                Require(repo, "vexforge_turn_v7_join_pvp_room", "V7 PvP room join RPC", errors);
                 Require(repo, "vexforge_turn_v7_get_state", "V7 state RPC", errors);
                 Require(repo, "vexforge_turn_v7_legal_actions", "V7 legal actions RPC", errors);
                 Require(repo, "vexforge_turn_v7_submit_action", "V7 authoritative action RPC", errors);
@@ -99,18 +102,27 @@ namespace Vexforge.Tier1.Editor
                 var gate = File.ReadAllText(gatePath);
                 Forbidden(gate, "RpcAsync(\"get_pvp_opponents\"", "direct backend access from Tier-1 BattleGate", errors);
                 Require(gate, "GetPvpOpponentsAsync", "repository-based opponent discovery", errors);
+                Require(gate, "OpenTurnCombatPvp", "V7 PvP route from the battle gate", errors);
                 Require(gate, "PresentationCompleted", "presentation completion gate", errors);
                 Require(gate, "GetOrCreate", "persistent operation journal", errors);
             }
 
             var turnGatePath = Path.Combine(projectRoot, "Assets/Scripts/Tier1/VexforgeTier1TurnCombatGate.cs");
+            var pvpGatePath = Path.Combine(projectRoot, "Assets/Scripts/Tier1/VexforgeTier1TurnCombatGate.Pvp.cs");
             if (File.Exists(turnGatePath))
             {
                 var turnGate = File.ReadAllText(turnGatePath);
-                Forbidden(turnGate, "RpcAsync(", "direct backend access from V7 turn-combat UI", errors);
-                Require(turnGate, "SubmitTurnCombatActionAsync", "V7 intent submission through repository", errors);
-                Require(turnGate, "legal_actions", "server-provided legal action rendering", errors);
-                Require(turnGate, "SNAPSHOT CONFIRMADO", "event-state replay from confirmed snapshots", errors);
+                var pvpGate = File.Exists(pvpGatePath) ? File.ReadAllText(pvpGatePath) : string.Empty;
+                var v7Gate = turnGate + "\n" + pvpGate;
+                Forbidden(v7Gate, "RpcAsync(", "direct backend access from V7 turn-combat UI", errors);
+                Require(v7Gate, "SubmitTurnCombatActionAsync", "V7 intent submission through repository", errors);
+                Require(v7Gate, "CreateTurnCombatPvpRoomAsync", "V7 PvP room creation through repository", errors);
+                Require(v7Gate, "DiscoverTurnCombatPvpRoomsAsync", "V7 PvP room discovery through repository", errors);
+                Require(v7Gate, "JoinTurnCombatPvpRoomAsync", "V7 PvP room join through repository", errors);
+                Require(v7Gate, "OpenPvp", "V7 PvP entry point", errors);
+                Require(v7Gate, "awaiting_opponent", "V7 PvP waiting-room state", errors);
+                Require(v7Gate, "legal_actions", "server-provided legal action rendering", errors);
+                Require(v7Gate, "SNAPSHOT CONFIRMADO", "event-state replay from confirmed snapshots", errors);
             }
 
             var bootstrapPath = Path.Combine(projectRoot, "Assets/Scripts/Tier1/VexforgeTier1Bootstrap.cs");
