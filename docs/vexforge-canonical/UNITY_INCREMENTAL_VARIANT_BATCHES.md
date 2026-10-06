@@ -1,17 +1,14 @@
 # VEXFORGE — Incremental variant batch continuity
 
-Status: ARCHIVED HISTORICAL REFERENCE — NOT CONFIGURED OR DISPATCHABLE ON CURRENT `main`
+Status: MANUAL WORKFLOW RESTORED — NOT DISPATCHED
 
-This document describes an earlier shader-cache workflow. Its Unity-named
-workflow path was converted to Expo and later removed. The modes, checkpoint
-instructions, and final APK procedure below are not current operating
-instructions. Do not dispatch the old workflow, reuse its checkpoints, or
-generate an APK/AAB from this document. Any future Unity workflow must be
-designed and verified in its own authorized milestone.
+This document describes the restored manual shader-cache workflow and its
+checkpoint chain. No workflow run or APK/AAB build has been started. Dispatch
+and artifact generation still require explicit authorization.
 
 ## Historical workflow configuration
 
-The previous workflow was recorded as:
+The active workflow is:
 
 - `.github/workflows/vexforge-unity-android-github.yml`
 - Workflow name: `Build VEXFORGE Unity Android on GitHub`
@@ -19,7 +16,8 @@ The previous workflow was recorded as:
 - Project path: `unity/`
 - Build entry point: `Vexforge.Editor.VexforgeGitHubBuild.BuildAndroid`
 
-That historical workflow is no longer present on `main`.
+The workflow is present on `main` and is triggered only through
+`workflow_dispatch`.
 
 ## Required execution order
 

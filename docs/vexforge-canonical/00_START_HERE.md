@@ -1,17 +1,13 @@
 # 00 — START HERE (AUTORIDAD ACTUAL: UNITY)
 
-> Esta dirección de runtime supersede las instrucciones Expo-only anteriores.
-> La retirada de Epic/Fab sigue vigente; no adquirir ni importar esos assets.
-
 ## Dirección vigente
 
-**Unity en `unity/**` es el único runtime Android activo de VEXFORGE.** Expo /
-React Native en `mobile/**` se retiró el 2026-10-05 en Hito 10 (`77d31b5d`) por
-instrucción explícita del usuario mientras las gates seguían abiertas. La
-retirada no equivale a paridad verificada. Supabase mantiene la autoridad
-backend. El portal web queda congelado y `faucet/**` es un producto separado.
-La ruta Epic/Fab sigue retirada; la rareza de cartas `epic` no tiene relación
-con ese proveedor.
+Unity en `unity/**` es el runtime Android del videojuego. El portal oficial está
+en `src/**` y `public/**`. Supabase live conserva la autoridad de backend.
+
+El workflow manual de Unity está en
+`.github/workflows/vexforge-unity-android-github.yml`. Usa 12 shards y un límite
+de 35.000 variantes por shard; no se ha despachado.
 
 ## Orden de lectura
 
@@ -19,22 +15,17 @@ con ese proveedor.
 2. `replit.md` — alcance operativo y reglas de cada hito.
 3. `docs/vexforge-canonical/16_IMPLEMENTATION_STATUS.md` y
    `17_CURRENT_BLOCK.md` — estado observado y bloque actual.
-4. `docs/vexforge-canonical/27_UNITY_EXPO_MIGRATION_INVENTORY.json` — archivos
-   inventariados y clasificación por capacidad.
-5. `docs/vexforge-canonical/28_UNITY_EXPO_MIGRATION_GATES.md` — criterios de
-   paridad, verificación y retirada.
-6. `CURRENT_SOURCE_OF_TRUTH.md` — autoridad visual V5.6 y fronteras.
-7. `docs/history/EXPO_RUNTIME_ARCHIVE_INDEX.md` — registros Expo históricos, no
-   autoridad de runtime.
+4. `docs/vexforge-canonical/05_ANDROID_RUNTIME_AND_BUILD.md` — control de
+   compilación y estado del workflow.
+5. `docs/vexforge-canonical/UNITY_BUILD_OPERATIONS.md` y
+   `UNITY_INCREMENTAL_VARIANT_BATCHES.md` — operación manual por shards.
 
 ## Límites
 
-- Mantener la autoridad de Supabase para combate, ownership, recompensas,
-  progreso y economía; Unity no calcula settlement.
-- Preservar el portal web congelado, Kivora y el historial de migraciones.
-- No restaurar Expo ni marcar sus gates cerradas por el hecho de haber retirado
-  `mobile/**`; validar Unity en una etapa posterior.
-- No copiar el arte oficial de cartas al cliente ni sustituirlo sin aprobación.
-- No generar APK/AAB ni alterar Supabase live durante esta migración.
+- Mantener Supabase como autoridad para combate, propiedad, recompensas,
+  progreso y economía.
+- Mantener el portal web y el código Unity sin cambios durante la limpieza.
+- No copiar ni sustituir el arte oficial de cartas sin aprobación.
+- No generar APK/AAB ni alterar Supabase live sin autorización explícita.
 - Antes de cada hito: confirmar `main`, árbol limpio y `HEAD == origin/main`;
   cerrar con commit y push antes de iniciar el siguiente.

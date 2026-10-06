@@ -1,13 +1,13 @@
 # VEXFORGE — Canonical Unity Android build operations
 
-Status: DEFERRED — NO ACTIVE UNITY BUILD WORKFLOW
+Status: RESTORED — MANUAL ONLY — NOT DISPATCHED
 
-Current `main` has no Unity Android workflow. The old workflow path was changed
-to build Expo on 2026-10-01 and was removed on 2026-10-05. This file records
-constraints for the later Unity workflow milestone; it is not an executable
-workflow description. Current workflow status is recorded in
-`28_UNITY_EXPO_MIGRATION_GATES.md` and `05_ANDROID_RUNTIME_AND_BUILD.md`.
-This document contains no credential values and no local build instructions.
+Current `main` contains the manual GitHub Actions workflow
+`.github/workflows/vexforge-unity-android-github.yml`. It was restored from
+repository history and has not been dispatched. Its shard mode partitions the
+inventory into 12 shards and caps each shard at 35,000 variants. `normal` and
+`final` use unfiltered builds without that cap. This document contains no
+credential values or local build instructions.
 
 ## 1. Canonical ownership
 
@@ -17,18 +17,17 @@ This document contains no credential values and no local build instructions.
 | Branch | `main` |
 | Unity root | `unity/` |
 | Editor version | `unity/ProjectSettings/ProjectVersion.txt` |
-| Workflow | None configured on current `main` |
-| Entry point | None currently invoked |
+| Workflow | `.github/workflows/vexforge-unity-android-github.yml` |
+| Entry point | Manual `workflow_dispatch` only |
 | Platform | Android target: Gradle, IL2CPP, ARM64; not verified |
 | Trigger | Not configured |
 
-When configured in the later workflow milestone, one Unity-only workflow must
-be the sole approved Android compilation path. Do not reactivate the historical
-Expo workflow, create a parallel Unity pipeline, or use Unity Cloud Build.
+This is the sole configured Android compilation workflow. Do not create a
+parallel pipeline or use Unity Cloud Build.
 
 ## 2. Editor and project contract
 
-The future workflow must check out `main`, read the Unity version from
+The workflow checks out `main`, reads the Unity version from
 `ProjectVersion.txt`, install that Editor with the required modules, and invoke
 it with `-projectPath` set to `unity/`. It must not hardcode a different Editor
 version or treat the repository root or retired `mobile/` as the Unity project.
@@ -40,9 +39,8 @@ release gates pass.
 
 ## 3. Manual execution boundary
 
-No Unity workflow is currently available to dispatch. Do not dispatch a
-historical workflow ID or use the retired workflow path. No automatic Android
-build is enabled. The owner must explicitly authorize any Android package build.
+The workflow is available for manual dispatch. Do not dispatch it or start an
+Android package build without explicit authorization.
 
 The current migration performs no APK/AAB build; Editor and device gates remain
 open.
@@ -50,9 +48,9 @@ open.
 ## 4. Secret boundary
 
 Replit control-plane secrets must never be placed in source, GitHub workflow
-YAML, artifacts, logs or commits. If/when a workflow is configured, Unity
-activation must use only the existing GitHub Actions secrets. Replit API and
-Unity Cloud credentials are separate and must not be copied into GitHub Actions.
+YAML, artifacts, logs or commits. Unity activation uses only GitHub Actions
+secrets. Replit API and Unity Cloud credentials are separate and must not be
+copied into GitHub Actions.
 
 ## 5. Supabase and external services
 

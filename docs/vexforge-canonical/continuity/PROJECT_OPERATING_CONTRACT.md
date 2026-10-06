@@ -12,7 +12,7 @@ All entries below are `HUMAN_DIRECTIVE` copied into this continuity record. They
 ## Runtime and authority
 
 - Unity is the active canonical Android runtime.
-- Expo / React Native is legacy/reference and must not be reactivated as Android runtime.
+- Unity is the only Android game runtime.
 - Supabase/backend is authoritative for rules, results, persistence, economy, progression, settlement, rewards and validation.
 - Unity owns presentation, input, animation, VFX, audio, timeline, camera, navigation, representation, playback and replay.
 - Unity must not become a second source of truth.

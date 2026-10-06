@@ -1,8 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 520">
-<defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#68f4ff"/><stop offset=".55" stop-color="#ffcf63"/><stop offset="1" stop-color="#fff"/></linearGradient></defs>
-<rect x="22" y="22" width="376" height="476" rx="34" fill="#0a1018" stroke="url(#g)" stroke-width="3"/>
-<path d="M90 146h240v210H90z" fill="#111d29" stroke="#214a62" stroke-width="2"/>
-<circle cx="210" cy="238" r="74" fill="#ffcf63" opacity=".12"/><circle cx="210" cy="238" r="42" fill="#ffcf63" opacity=".24"/><circle cx="210" cy="238" r="18" fill="#fff"/>
-<text x="55" y="404" fill="#8ba8bf" font-family="Arial" font-size="16" letter-spacing="4">SETTLEMENT BEACON</text>
-<text x="55" y="438" fill="#fff" font-family="Arial" font-size="22" font-weight="700">USDT • TRC20</text>
-</svg>

@@ -15,5 +15,5 @@ Para la dirección y el alcance actuales, consultar:
 
 - `VEXFORGE_CONTEXT.md`
 - `replit.md`
-- `docs/vexforge-canonical/27_UNITY_EXPO_MIGRATION_INVENTORY.json`
-- `docs/vexforge-canonical/28_UNITY_EXPO_MIGRATION_GATES.md`
+- `docs/vexforge-canonical/16_IMPLEMENTATION_STATUS.md`
+- `docs/vexforge-canonical/UNITY_BUILD_OPERATIONS.md`

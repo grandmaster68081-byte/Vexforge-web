@@ -8,8 +8,8 @@
 - **AUTORIDAD:** `VEXFORGE_CONTEXT.md`, `replit.md`,
   `docs/vexforge-canonical/16_IMPLEMENTATION_STATUS.md` y
   `docs/vexforge-canonical/28_UNITY_EXPO_MIGRATION_GATES.md`.
-- **DATOS:** no se borraron ni modificaron archivos Unity, productos Kivora,
-  migraciones o datos live de Supabase.
+- **DATOS:** no se borraron ni modificaron archivos Unity, productos
+  independientes, migraciones o datos live de Supabase en esa sesión.
 - **HITOS 01–03:** reconciliación/inventario, estado compartido y auth/sesión
   están comprometidos y publicados en `main`. Alta con confirmación, restauración
   con recarga del jugador y cierre de sesión remoto/local están implementados;

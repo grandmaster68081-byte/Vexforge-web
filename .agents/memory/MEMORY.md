@@ -1,19 +1,14 @@
 - [Patch retry safety](patch-retry-safety.md) — Inspect the diff after a failed multi-hunk patch; earlier hunks may already have applied.
 - [GitHub workflow dispatch](github-workflow-dispatch.md) — verify the live workflow and source before dispatch; historical IDs can represent a different runtime.
-- [Android build environment](android-build-environment.md) — mobile CI must use the public npm registry; local prebuild is not an APK build without Java/Android SDK.
 - [Android build authorization](android-build-authorization.md) — require explicit user approval for each native Android compilation.
 - [GitHub transport authentication](github-transport.md) — use temporary GIT_ASKPASS for HTTPS pushes when the valid workspace PAT is rejected by default credential handling.
 - [GitHub Actions runner tooling](github-actions-runner.md) — canonical workflow checks must use tools guaranteed on hosted runners or install dependencies explicitly.
 - [Reference data zones](reference-data-zones.md) — fixed Android PNGs stay intact; real data belongs only in proportional overlays matching each functional zone.
 - [GitHub REST large-file commits](github-rest-large-files.md) — stream base64 JSON for large blobs; passing file content as a jq argument exceeds the shell argument limit.
-- [Replit config side effects](replit-config-side-effects.md) — Python tooling and Expo exports can add unrelated modules or port mappings; compare against tracked config before publishing.
+- [Replit config side effects](replit-config-side-effects.md) — tooling and framework exports can add unrelated modules or port mappings; compare against tracked config before publishing.
 - [Portable TypeScript verification](typescript-verification.md) — syntax checks must resolve project-local TypeScript before environment-specific global paths.
 - [GitHub Actions checkpoint storage](github-actions-checkpoint-storage.md) — retain only the live shader-chain head; exclude downloaded/uploaded payloads from evidence and retire consumed predecessors.
-- [Kivora migration sequencing](kivora-migration-sequencing.md) — every Supabase migration filename needs a unique, dependency-ordered timestamp.
-- [Kivora package constraints](kivora-package-constraints.md) — the supplied package needs an available Workers Types v5 line and lockfile-free npm install in CI.
-- [KIVORA visual overrides](kivora-visual-overrides.md) — keep scene-identity corrections in a dedicated override layer instead of editing the compressed legacy stylesheet.
 - [Release dependency availability](release-dependency-availability.md) — verify pinned npm versions exist before treating a sealed release package as installable.
-- [Expo workflow runtime](expo-workflow-runtime.md) — Metro should run as the console workflow without an HTTP port health check.
 - [Git LFS attachment recovery](git-lfs-attachment-recovery.md) — look for the historical LFS pointer and cache before asking to re-upload a missing large package.
 - [Vexforge access rule](vexforge-access-rule.md) — avoid connectors; use the project's configured PAT secrets for GitHub/Supabase operations.
-- [Vexforge milestone workflow](vexforge-migration-workflow.md) — keep changes on verified, pushed `main`; preserve Supabase authority and do not mistake retired Expo for passed gates.
+- [Vexforge milestone workflow](vexforge-migration-workflow.md) — keep changes on verified, pushed `main`; preserve Supabase authority and the manual Unity build boundary.

@@ -14,13 +14,7 @@
     "version": "1.0.1",
     "versionCode": 4,
     "runtime": "unity_android",
-    "unity_editor": "6000.3.0f1",
-    "legacy_expo": {
-      "expo": "~54.0.27",
-      "expo_lockfile": "54.0.37",
-      "reactNative": "0.81.5",
-      "runtimeVersion": "1.0.0"
-    }
+      "unity_editor": "6000.3.0f1"
   },
   "current_block": "UNITY_CANONICAL_RUNTIME_CLOSURE_R5",
   "overall_status": "UNITY_IMPLEMENTED_UNVERIFIED",

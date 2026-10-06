@@ -1,15 +1,10 @@
-# Unity — legacy preservado
+# VEXFORGE — Unity Android Runtime
 
-`unity/**` contiene una implementación histórica de VEXFORGE y se conserva
-intacta para referencia y recuperación.
+`unity/**` contiene el runtime Android del juego y se conserva intacto durante
+la limpieza del repositorio.
 
-- No es el runtime canónico ni el destino de trabajo nuevo.
-- No añadir gameplay, contenido Expo, dependencias ni assets nuevos aquí.
-- No iniciar builds ni workflows Unity para avanzar el runtime móvil.
-- No borrar ni mover este árbol como parte de su clasificación como legado.
-- Las menciones históricas de Epic/Fab no autorizan imports; la ruta de
-  adquisición/importación fue retirada.
-
-La única autoridad actual para el juego está en
-`mobile/docs/ACTIVE_EXPO_GAME_SCOPE.md` y
-`mobile/docs/VEXFORGE_EXPO_REPLIT_CONTINUATION_ORDER_V5.md`.
+- Unity es el runtime canónico del juego.
+- No modificar el código Unity como parte de la limpieza.
+- El workflow manual está en `.github/workflows/vexforge-unity-android-github.yml`.
+- El modo `shard` usa 12 particiones y limita cada shard a 35.000 variantes.
+- No iniciar builds ni despachar workflows sin autorización explícita.

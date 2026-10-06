@@ -23,12 +23,12 @@
     {
       "id": "D-005",
       "status": "ACTIVE",
-      "decision": "Unity 6.3 LTS + URP + C# is the sole Android runtime; Expo is a parity reference until removal gates pass"
+      "decision": "Unity 6.3 LTS + URP + C# is the sole Android runtime"
     },
     {
       "id": "D-006",
       "status": "SUPERSEDED_HISTORICAL",
-      "decision": "Expo / React Native was the active Android runtime; superseded by the Unity migration direction dated 2026-10-04"
+      "decision": "A previous Android client direction was superseded by the Unity runtime decision dated 2026-10-04"
     }
   ]
 }

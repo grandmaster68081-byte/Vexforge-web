@@ -2,19 +2,10 @@
 
 ## Bloque activo
 
-Estado posterior a la retirada de Expo. Los Hitos 01–03 están publicados en
-`main`. Los Hitos 04–07 tienen implementación de fuente para
-colección/formación/tutorial, batalla/replay, paquetes/atlas y
-perfil/economía/social. Hito 07 usa lecturas y RPC existentes para mostrar
-cartera, mercado, depósitos, retiros y perfil; no traslada decisiones
-financieras al cliente ni añade telemetría. Ninguno de esos cambios de fuente
-equivale a validación de runtime. Auth, sesión, colección/formación,
-combate/replay, packs, atlas, economía, social y UX de errores siguen
-pendientes de verificación en Unity Editor/dispositivo. No se añadieron
-recuperación de contraseña ni proveedores externos porque no forman parte del
-flujo observado antes de retirar Expo ni del contrato live observado. Hito 10
-retiró `mobile/**` por instrucción explícita del usuario antes de cerrar las
-gates; Hito 11 actualiza la documentación. La retirada no completa paridad.
+La implementación Unity de los Hitos 01–07 sigue pendiente de verificación en
+Unity Editor y dispositivo. El workflow manual de GitHub Actions fue restaurado
+con 12 shards y un límite de 35.000 variantes por shard; no se ha ejecutado.
+Esta limpieza no valida runtime, no genera APK/AAB y no modifica Supabase live.
 
 ## Estado del runtime
 
@@ -22,19 +13,16 @@ gates; Hito 11 actualiza la documentación. La retirada no completa paridad.
   presentación implementados en distinto grado; Editor y dispositivo no están
   verificados.
 - Supabase live observada permite alta por email y requiere confirmación. La
-  inspección previa a la retirada no encontró recuperación de contraseña y los
+  inspección previa no encontró recuperación de contraseña y los
   proveedores externos estaban deshabilitados; no se añadieron rutas de
   autenticación no respaldadas.
 - El estado central de Unity ahora expone estadísticas y rango. Si esas lecturas
   opcionales fallan, el error queda indicado sin bloquear la carga principal.
-- El inventario de fuente y las decisiones por capacidad están en
-  `27_UNITY_EXPO_MIGRATION_INVENTORY.json`.
 - Replay, ceremonia interactiva de packs y atlas de jefes tienen código Unity;
   su comportamiento de runtime no está verificado.
 - Hito 07 añade cartera, mercado, registro de depósitos, retiros, estadísticas
-  y rango al perfil, además de manejo seguro de fallos sociales. No se portó la
-  auditoría económica local de Expo porque supone una tasa fija no respaldada
-  por un contrato vigente; no se añadieron eventos de telemetría.
+  y rango al perfil, además de manejo seguro de fallos sociales; no se añadieron
+  eventos de telemetría.
 - Unity no calcula propiedad, resultados de combate ni recompensas. El atlas
   presenta fichas del servidor; un encuentro de jefe permanece no disponible
   hasta verificar un contrato autorizado.
@@ -51,7 +39,7 @@ gates; Hito 11 actualiza la documentación. La retirada no completa paridad.
    puedan confirmar como server-authoritative.
 3. Antes de iniciar otra unidad de código, hacer `git fetch --prune origin` y
    confirmar `main`, árbol limpio y `HEAD == origin/main`.
-4. Mantener abiertas las gates de paridad, seguridad y Editor/dispositivo. No
-   restaurar Expo ni tomar su retirada como evidencia de que esas gates pasaron.
+4. Mantener abiertas las verificaciones de seguridad, Editor y dispositivo
+   hasta que exista evidencia.
 
 No generar APK/AAB ni modificar datos live durante esta migración.

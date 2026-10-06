@@ -8,7 +8,7 @@
 4. Leer `17_CURRENT_BLOCK.md`.
 5. Leer `19_BLOCKERS.md`.
 6. Leer `20_KNOWN_UNKNOWNS.md`.
-7. Leer `21_CONTRADICTIONS.md`.
+7. Leer `UNITY_BUILD_OPERATIONS.md`.
 8. Inspeccionar el código actual relevante.
 9. Consultar Supabase live si la afirmación depende del backend.
 10. Confirmar que el bloque activo ya autoriza implementar sobre Unity actual.
@@ -25,9 +25,8 @@ Actualizar current block, implementation status, decisions, blockers, unknowns, 
 
 - No crear un proyecto Unity paralelo ni copiar una Foundation histórica.
 - Continuar el único paquete operativo existente en `unity/**`.
-- No restaurar `mobile/**`/Expo, retirado en Hito 10 por instrucción explícita
-  del usuario. Mantener abiertas las gates de runtime que aún no tengan
-  evidencia Unity Editor/dispositivo.
+- No añadir un segundo runtime. Mantener abiertas las verificaciones de Unity
+  Editor/dispositivo hasta que exista evidencia.
 - No mover autoridad backend ni crear Firebase/PlayFab/Photon u otra base de datos.
 - Mantener el estado `IMPLEMENTED_UNVERIFIED` hasta que compile, tenga APK,
   instalación, Auth/sesión/datos reales, QA y rollback. Eso no detiene el

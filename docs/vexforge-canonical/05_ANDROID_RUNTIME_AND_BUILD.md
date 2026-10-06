@@ -2,21 +2,15 @@
 
 ## Estado canónico
 
-Unity bajo `unity/**` es el único runtime Android activo de VEXFORGE. Expo /
-React Native bajo `mobile/**` fue retirado en Hito 10; los snapshots restantes
-son evidencia histórica y no compilan un runtime.
-
-No hay workflow de compilación Android configurado actualmente. El único
-workflow con nombre Unity fue inspeccionado, resultó ser una compilación Expo y
-se retiró en Hito 10. El usuario dejó la configuración de un workflow dedicado
-a Unity para una etapa posterior. `verify.yml` es un CI de verificación de
-código, no un pipeline de compilación Android.
+Unity bajo `unity/**` es el runtime Android de VEXFORGE.
+`.github/workflows/vexforge-unity-android-github.yml` está restaurado como
+workflow manual (`workflow_dispatch`). `verify.yml` verifica código y no compila
+Android.
 
 ## Cadena canónica
 
-No existe actualmente una cadena de build Unity operativa. La futura
-configuración debe apuntar a `unity/` y verificarse por separado; esta
-migración no crea ni ejecuta ese workflow.
+La cadena manual de build Unity apunta a `unity/`. Su restauración no la ejecuta.
+No se ha iniciado una compilación ni se ha generado un APK/AAB.
 
 La raíz Unity es `unity/`; nunca `/` ni `mobile/`. La versión se obtiene de
 `unity/ProjectSettings/ProjectVersion.txt`; en el árbol actual es `6000.3.0f1`.
@@ -25,7 +19,9 @@ Los paquetes se leen de `unity/Packages/manifest.json` y
 
 ## Control de ejecución
 
-- No hay workflow Android activo.
+- El workflow Unity solo puede iniciarse manualmente.
+- El modo `shard` usa 12 particiones y un máximo de 35.000 variantes por shard.
+- Los modos `normal` y `final` son sin filtro y no tienen límite de variantes.
 - No se inicia un build sin autorización explícita del propietario.
 - No se declara `EDITOR_VERIFIED`, `BUILD_VERIFIED` o `DEVICE_VERIFIED` sin
   evidencia real correspondiente.
@@ -46,6 +42,5 @@ migración del runtime no sustituye Supabase ni crea una autoridad local.
 
 ## Estado actual
 
-La workflow Expo anterior se retiró de `main` sin lanzar compilación, crear
-APK, publicar release, modificar Supabase ni activar Unity Cloud Build. La
-configuración futura del workflow Unity sigue pendiente.
+El workflow manual Unity se restauró desde el historial del repositorio. No se
+despachó, no creó APK ni release y no modificó Supabase live.

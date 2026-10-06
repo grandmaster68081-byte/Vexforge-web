@@ -16,7 +16,6 @@
   "current_task_build": "UNITY_CANONICAL_RUNTIME_CLOSURE_R5",
   "target_runtime": "Unity Android",
   "current_runtime": "Unity Android",
-  "legacy_runtime": "Expo / React Native",
   "unity_build": "BLOCKED_NO_BUILD_GATE",
   "migration_status": "UNITY_IMPLEMENTED_UNVERIFIED"
 }

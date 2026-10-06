@@ -22,13 +22,11 @@ Los registros de `data/` son resúmenes derivados de evidencia observada. No sus
 
 ## Runtime decision
 
-Unity Android bajo `unity/**` es el único runtime activo. Expo / React Native
-en `mobile/**` se conserva solo como referencia de comportamiento hasta superar
-las gates de paridad y eliminación; no es un segundo runtime ni puede borrarse
-antes de esas gates. Supabase conserva autoridad de datos y reglas. El portal
-web sigue congelado y `faucet/**` es un producto separado.
+Unity Android bajo `unity/**` es el runtime activo. El workflow manual de
+GitHub Actions usa 12 shards y limita cada shard a 35.000 variantes; aún no se
+ha ejecutado. Supabase conserva autoridad de datos y reglas. El portal oficial
+está en `src/**` y `public/**`.
 
-El inventario machine-readable está en
-[`27_UNITY_EXPO_MIGRATION_INVENTORY.json`](27_UNITY_EXPO_MIGRATION_INVENTORY.json);
-las condiciones de validación y retirada están en
-[`28_UNITY_EXPO_MIGRATION_GATES.md`](28_UNITY_EXPO_MIGRATION_GATES.md).
+El estado de implementación está en
+[`16_IMPLEMENTATION_STATUS.md`](16_IMPLEMENTATION_STATUS.md); las reglas de
+compilación están en [`UNITY_BUILD_OPERATIONS.md`](UNITY_BUILD_OPERATIONS.md).
