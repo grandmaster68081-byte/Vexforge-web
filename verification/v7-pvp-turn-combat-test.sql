@@ -97,6 +97,15 @@ BEGIN
 
   PERFORM set_config('request.jwt.claim.sub', '11111111-1111-4111-8111-111111111111', false);
   v_a_state := public.vexforge_turn_v7_get_state(v_session_id);
+  IF EXISTS (
+    SELECT 1 FROM jsonb_array_elements(v_a_state#>'{board,a}') AS units(unit)
+     WHERE unit->>'synergy_rules_version' <> 'card_synergy_rules_v1'
+  ) OR EXISTS (
+    SELECT 1 FROM jsonb_array_elements(v_a_state#>'{board,b}') AS units(unit)
+     WHERE unit->>'synergy_rules_version' <> 'card_synergy_rules_v1'
+  ) THEN
+    RAISE EXCEPTION 'PvP teams did not snapshot official card synergies';
+  END IF;
   IF COALESCE((v_a_state->>'is_my_turn')::boolean, false) IS NOT TRUE
      OR COALESCE((v_a_state->>'awaiting_opponent')::boolean, true)
      OR v_a_state->>'current_actor_side' <> 'a' THEN

@@ -16,6 +16,9 @@ const bootstrap = read('unity/Assets/Scripts/Tier1/VexforgeTier1Bootstrap.cs');
 const validator = read('unity/Assets/Editor/VexforgeTier1BuildValidator.cs');
 const missionUi = read('unity/Assets/Scripts/UI/GameShellController.cs');
 const worldAtlas = read('unity/Assets/Scripts/Tier1/VexforgeTier1WorldAtlasDirector.cs');
+const synergyMigration = read('supabase/migrations/20261007140000_vexforge_turn_v7_official_card_synergies.sql');
+const synergyTests = read('verification/v7-card-synergy-test.sql');
+const localTestRunner = read('verification/run-v7-turn-combat-local.sh');
 
 for (const rpc of [
   'vexforge_turn_v7_start_training',
@@ -37,6 +40,19 @@ assert(contracts.includes('VexforgeTurnCombatResponse'), 'V7 response model is m
 assert(contracts.includes('VexforgeTurnCombatPvpRoomsResponse'), 'V7 PvP room response model is missing');
 assert(contracts.includes('awaiting_opponent'), 'V7 PvP waiting-room state is missing');
 assert(contracts.includes('VexforgeTurnCombatEventState'), 'Replay snapshot model is missing');
+assert(contracts.includes('VexforgeTurnCombatCardSynergy'), 'Official card-synergy response model is missing');
+assert(synergyMigration.includes('public.card_synergy_rules') &&
+  synergyMigration.includes('card_synergy_rules_v1'),
+  'V7 does not snapshot the official Supabase card-synergy rules');
+assert(synergyMigration.includes('power_pct') && synergyMigration.includes('partner_card_id'),
+  'V7 official card-pair effects are not calculated from their registered partner and modifier');
+assert(synergyTests.includes('Fixture Reserve Pair') &&
+  synergyTests.includes('synergy did not update when its reserve partner entered the board'),
+  'Official card-synergy activation and reserve deployment are not tested');
+assert(localTestRunner.includes('v7-card-synergy-test.sql'),
+  'The isolated PostgreSQL runner omits official card-synergy tests');
+assert(turnGate.includes('SINERGIA OFICIAL'),
+  'Unity does not display the server-confirmed official card synergy');
 assert(turnGateSource.includes('SubmitTurnCombatActionAsync'), 'Unity does not submit actions through the repository');
 assert(turnGateSource.includes('CreateTurnCombatPvpRoomAsync'), 'Unity does not create PvP rooms through the repository');
 assert(turnGateSource.includes('DiscoverTurnCombatPvpRoomsAsync'), 'Unity does not discover PvP rooms through the repository');

@@ -20,11 +20,13 @@ pg_ctl -D "$TMP/data" -l "$TMP/postgres.log" \
 PSQL=(psql -h "$TMP" -p "$PORT" -U "$(id -un)" -d postgres -v ON_ERROR_STOP=1)
 "${PSQL[@]}" -f "$ROOT/verification/v7-turn-combat-fixture.sql"
 "${PSQL[@]}" -f "$ROOT/supabase/migrations/20261006220000_vexforge_universal_turn_combat_v7.sql"
-"${PSQL[@]}" -f "$ROOT/verification/v7-turn-combat-test.sql"
 "${PSQL[@]}" -f "$ROOT/supabase/migrations/20261006230000_vexforge_turn_combat_v7_pvp_rooms.sql"
-"${PSQL[@]}" -f "$ROOT/verification/v7-pvp-turn-combat-test.sql"
 "${PSQL[@]}" -f "$ROOT/verification/v7-pve-settlement-contracts.sql"
 "${PSQL[@]}" -f "$ROOT/supabase/migrations/20261007010000_vexforge_turn_combat_v7_mission_boss.sql"
+"${PSQL[@]}" -f "$ROOT/supabase/migrations/20261007140000_vexforge_turn_v7_official_card_synergies.sql"
+"${PSQL[@]}" -f "$ROOT/verification/v7-turn-combat-test.sql"
+"${PSQL[@]}" -f "$ROOT/verification/v7-pvp-turn-combat-test.sql"
 "${PSQL[@]}" -f "$ROOT/verification/v7-pve-turn-combat-test.sql"
+"${PSQL[@]}" -f "$ROOT/verification/v7-card-synergy-test.sql"
 
-printf 'V7 local PostgreSQL training, PvP, mission, and boss verification passed. No remote database was used.\n'
+printf 'V7 local PostgreSQL training, PvP, mission, boss, and official card-synergy verification passed. No remote database was used.\n'

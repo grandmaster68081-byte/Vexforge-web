@@ -643,6 +643,16 @@ namespace Vexforge.Tier1
                     .Append(" · VEL ").Append(unit.spd);
                 if (!unit.alive) builder.Append(" · CAÍDA");
                 builder.AppendLine();
+                var cardSynergy = unit.stat_breakdown != null
+                    ? unit.stat_breakdown.card_synergy
+                    : null;
+                if (cardSynergy != null && cardSynergy.active_rule_count > 0)
+                {
+                    builder.Append("    SINERGIA OFICIAL +")
+                        .Append(Mathf.RoundToInt(cardSynergy.power_pct * 100f))
+                        .Append("% PODER (+").Append(cardSynergy.power_bonus).Append(") · ")
+                        .AppendLine(String.Join(", ", cardSynergy.active_names ?? Array.Empty<string>()));
+                }
                 if (unit.is_champion && unit.stat_breakdown != null)
                 {
                     var breakdown = unit.stat_breakdown;

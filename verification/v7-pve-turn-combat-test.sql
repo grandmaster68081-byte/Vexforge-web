@@ -70,6 +70,15 @@ BEGIN
     RAISE EXCEPTION 'Mission session did not bind the active deck and canonical run: %', v_state;
   END IF;
   IF EXISTS (
+    SELECT 1 FROM jsonb_array_elements(v_state#>'{teams,a}') AS units(unit)
+     WHERE unit->>'synergy_rules_version' <> 'card_synergy_rules_v1'
+  ) OR EXISTS (
+    SELECT 1 FROM jsonb_array_elements(v_state#>'{teams,b}') AS units(unit)
+     WHERE unit->>'synergy_rules_version' <> 'card_synergy_rules_v1'
+  ) THEN
+    RAISE EXCEPTION 'Mission teams did not snapshot official card synergies';
+  END IF;
+  IF EXISTS (
     SELECT 1
       FROM jsonb_array_elements(v_state#>'{teams,b}') AS units(unit)
      WHERE NOT EXISTS (
@@ -217,6 +226,15 @@ BEGIN
      OR (SELECT mode FROM public.battle_runs WHERE id = v_battle_run_id) <> 'boss'
      OR jsonb_array_length(v_state#>'{teams,b}') <> 3 THEN
     RAISE EXCEPTION 'Boss session did not create its authoritative battle run and profile';
+  END IF;
+  IF EXISTS (
+    SELECT 1 FROM jsonb_array_elements(v_state#>'{teams,a}') AS units(unit)
+     WHERE unit->>'synergy_rules_version' <> 'card_synergy_rules_v1'
+  ) OR EXISTS (
+    SELECT 1 FROM jsonb_array_elements(v_state#>'{teams,b}') AS units(unit)
+     WHERE unit->>'synergy_rules_version' <> 'card_synergy_rules_v1'
+  ) THEN
+    RAISE EXCEPTION 'Boss teams did not snapshot official card synergies';
   END IF;
 
   v_state := v_state || jsonb_build_object(

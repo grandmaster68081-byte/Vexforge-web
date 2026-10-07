@@ -484,8 +484,19 @@ namespace Vexforge.Backend
     {
         public VexforgeTurnCombatBaseStats base_stats;
         public VexforgeTurnCombatFormationStats formation;
+        public VexforgeTurnCombatCardSynergy card_synergy;
         public VexforgeTurnCombatEffectStats effects;
         public VexforgeTurnCombatEffectiveStats effective;
+    }
+
+    [Serializable]
+    public sealed class VexforgeTurnCombatCardSynergy
+    {
+        public string rules_version;
+        public int active_rule_count;
+        public float power_pct;
+        public int power_bonus;
+        public string[] active_names;
     }
 
     [Serializable]
@@ -526,6 +537,7 @@ namespace Vexforge.Backend
         public int atk;
         public int def;
         public int spd;
+        public int power;
     }
 
     [Serializable]
