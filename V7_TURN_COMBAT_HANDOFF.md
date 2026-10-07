@@ -15,6 +15,7 @@ The V7 work is **partial**:
 - Existing V6 tables, RPCs, settlement, and route remain unchanged.
 - Mission, boss, and raid session adapters remain unimplemented.
 - The migration has **not** been applied to the live Supabase project. V6 remains the live route.
+- A read-only live audit on 2026-10-07 confirmed the V6 resolver exists, while the V7 tables, functions, and migration records are absent. The live catalog has 24 active missions without enemy-combat configuration and 15 active bosses without an enemy roster or combat phases.
 - No Unity Editor/device compile or Unity Cloud build has been performed.
 
 The canonical design/status document is `docs/vexforge-canonical/17_UNIVERSAL_TURN_COMBAT_ENGINE.md`.
@@ -60,7 +61,7 @@ The isolated PostgreSQL suite covers V6 base-stat formulas and Guard targeting, 
 
 ## Next work
 
-1. Connect mission and boss profiles only where canonical enemy formations and current settlement policies are available. Reuse the same action kernel; keep settlement separate and do not synthesize missing content or rewards.
+1. Keep mission and boss adapters blocked until a canonical enemy roster/formation, AI behavior, and settlement contract are available or explicitly approved as new design. The live mission `rules_json`/`requirements_json` do not define combat; live boss records provide `hp`/`power_level` and limited metadata only. The existing V6 world-boss flow uses shared HP and damage contributions, so those values alone do not define a V7 duel. Reuse the same action kernel; keep settlement separate and do not synthesize missing content or rewards.
 2. Obtain approval before applying migrations to any shared/live Supabase environment. Then compile and verify in Unity Editor/device; do not substitute a Unity Cloud build without approval.
 
 ## Replit Git boundary
