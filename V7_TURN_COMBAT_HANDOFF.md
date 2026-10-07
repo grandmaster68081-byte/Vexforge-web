@@ -4,7 +4,7 @@ Use this note to continue the V7 combat work without repeating the initial repos
 
 ## Current status
 
-The screen recording documented the design discussion and acceptance boundaries; it did not show an existing V7 engine implementation. Before this work, the repository had the V7 design document, while Unity still used the automatic V6 battle-resolution RPC.
+The screen recording documented the design discussion and acceptance boundaries; it did not show an existing V7 engine implementation. The repository now contains the V7 core, mirror training, PvP rooms, and additive mission/boss server adapters. The current Unity client still uses the automatic V6 battle-resolution route for its legacy combat flow.
 
 The V7 work is **partial**:
 
@@ -13,9 +13,10 @@ The V7 work is **partial**:
 - V7 now has an additive no-reward PvP room lifecycle: authenticated room discovery, participant-only session access, server-loaded joining formation, alternating human turns, and idempotent create/join/action handling.
 - Unity has additive mirror-training and PvP room routes that render server state/legal actions, submit intents with sequence and idempotency keys, and replay event snapshots.
 - Existing V6 tables, RPCs, settlement, and route remain unchanged.
-- Mission, boss, and raid session adapters remain unimplemented.
+- An additive server migration adds mission and boss profiles on the same V7 action kernel. Mission runs settle through the existing mission contract; winning boss runs record server-confirmed damage through the existing world-boss contract. The migration selects only active official cards for the opposing formation and does not create card records.
+- Unity client entry points currently cover mirror training and PvP only. There are no Unity start-RPC paths or user-facing mission/boss V7 launch flows yet.
 - The migration has **not** been applied to the live Supabase project. V6 remains the live route.
-- A read-only live audit on 2026-10-07 confirmed the V6 resolver exists, while the V7 tables, functions, and migration records are absent. The live catalog has 24 active missions without enemy-combat configuration and 15 active bosses without an enemy roster or combat phases.
+- A read-only live audit on 2026-10-07 confirmed the V6 resolver remains active and the V7 tables, functions, and migration records are absent. Live counts: 127 active cards, 20 synergy rules, 49 active missions (24 `production_ready`), 15 active bosses, and 5 regions. These are inventory counts, not proof of a canonical boss roster or combat profile.
 - No Unity Editor/device compile or Unity Cloud build has been performed.
 
 The canonical design/status document is `docs/vexforge-canonical/17_UNIVERSAL_TURN_COMBAT_ENGINE.md`.
@@ -24,16 +25,19 @@ The canonical design/status document is `docs/vexforge-canonical/17_UNIVERSAL_TU
 
 - `supabase/migrations/20261006220000_vexforge_universal_turn_combat_v7.sql`
 - `supabase/migrations/20261006230000_vexforge_turn_combat_v7_pvp_rooms.sql`
+- `supabase/migrations/20261007010000_vexforge_turn_combat_v7_mission_boss.sql`
 - `verification/v7-turn-combat-fixture.sql`
 - `verification/v7-turn-combat-test.sql`
 - `verification/v7-pvp-turn-combat-test.sql`
+- `verification/v7-pve-turn-combat-test.sql`
+- `verification/v7-pve-settlement-contracts.sql`
 - `verification/run-v7-turn-combat-local.sh`
 - Unity contracts/repository, Bootstrap and BattleGate wiring, and `VexforgeTier1TurnCombatGate` for mirror training and PvP rooms
 - `verification/verify-v7-unity-contract.mjs`
 - Unity Editor build-validator checks for the centralized V7 PvP room RPCs
 - Updated V7 design/status document
 
-The V7 PvP database milestone and Unity source wiring are complete. The Unity changes have static contract verification only; no Unity Editor/device compile or live migration was performed. Start from official `main`; do not reset or overwrite it.
+The V7 core, PvP, and mission/boss server adapters are present and pass isolated PostgreSQL tests. Unity source wiring is complete only for mirror training and PvP; mission/boss launch flows remain a client gap. No Unity Editor/device compile or live migration was performed. Start from official `main`; do not reset or overwrite it.
 
 ## Verified checks
 
@@ -61,8 +65,8 @@ The isolated PostgreSQL suite covers V6 base-stat formulas and Guard targeting, 
 
 ## Next work
 
-1. Keep mission and boss adapters blocked until a canonical enemy roster/formation, AI behavior, and settlement contract are available or explicitly approved as new design. The live mission `rules_json`/`requirements_json` do not define combat; live boss records provide `hp`/`power_level` and limited metadata only. The existing V6 world-boss flow uses shared HP and damage contributions, so those values alone do not define a V7 duel. Reuse the same action kernel; keep settlement separate and do not synthesize missing content or rewards.
-2. Obtain approval before applying migrations to any shared/live Supabase environment. Then compile and verify in Unity Editor/device; do not substitute a Unity Cloud build without approval.
+1. Keep the new server adapters staged until Unity mission/boss entry points and result handling are implemented and verified. The adapters deterministically select active official cards using the existing region and difficulty/tier data; they are not a canonical authored boss roster. Do not invent card records or change settlement semantics.
+2. Obtain explicit approval before applying migrations to any shared/live Supabase environment. Then compile and verify in Unity Editor/device; do not substitute a Unity Cloud build without approval.
 
 ## Replit Git boundary
 
