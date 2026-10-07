@@ -146,6 +146,42 @@ namespace Vexforge.Backend
                 response, "El servidor V7 no confirmó el inicio del entrenamiento.", "ok");
         }
 
+        public async Task<VexforgeTurnCombatResponse> StartTurnCombatMissionAsync(
+            string missionId,
+            string idempotencyKey)
+        {
+            if (!Guid.TryParse(missionId, out _))
+                throw new ArgumentException("La misión no es válida.", nameof(missionId));
+            if (string.IsNullOrWhiteSpace(idempotencyKey))
+                throw new ArgumentException("La clave de inicio de misión no es válida.", nameof(idempotencyKey));
+
+            var json = "{\"p_mission_id\":" + SupabaseClient.Quote(missionId) +
+                       ",\"p_idempotency_key\":" + SupabaseClient.Quote(idempotencyKey) + "}";
+            const string functionName = "vexforge_turn_v7_start_mission";
+            var response = await client.RpcAsync(functionName, json);
+            ThrowIfRpcUnavailable(response, functionName);
+            return RequiredJson<VexforgeTurnCombatResponse>(
+                response, "El servidor V7 no confirmó el inicio de la misión.", "ok");
+        }
+
+        public async Task<VexforgeTurnCombatResponse> StartTurnCombatBossAsync(
+            string worldBossId,
+            string idempotencyKey)
+        {
+            if (!Guid.TryParse(worldBossId, out _))
+                throw new ArgumentException("El jefe no es válido.", nameof(worldBossId));
+            if (string.IsNullOrWhiteSpace(idempotencyKey))
+                throw new ArgumentException("La clave de inicio de jefe no es válida.", nameof(idempotencyKey));
+
+            var json = "{\"p_world_boss_id\":" + SupabaseClient.Quote(worldBossId) +
+                       ",\"p_idempotency_key\":" + SupabaseClient.Quote(idempotencyKey) + "}";
+            const string functionName = "vexforge_turn_v7_start_boss";
+            var response = await client.RpcAsync(functionName, json);
+            ThrowIfRpcUnavailable(response, functionName);
+            return RequiredJson<VexforgeTurnCombatResponse>(
+                response, "El servidor V7 no confirmó el inicio del combate de jefe.", "ok");
+        }
+
         public async Task<VexforgeTurnCombatResponse> CreateTurnCombatPvpRoomAsync(string idempotencyKey)
         {
             if (string.IsNullOrWhiteSpace(idempotencyKey))
@@ -532,6 +568,15 @@ namespace Vexforge.Backend
             {
                 throw new InvalidOperationException(errorMessage);
             }
+        }
+
+        private static void ThrowIfRpcUnavailable(SupabaseResponse response, string functionName)
+        {
+            if (response == null || response.Ok) return;
+            var body = response.Body ?? string.Empty;
+            if (response.StatusCode == 404 ||
+                body.IndexOf("PGRST202", StringComparison.OrdinalIgnoreCase) >= 0)
+                throw new InvalidOperationException("V7_RPC_NOT_INSTALLED:" + functionName);
         }
 
         private static T First<T>(SupabaseResponse response) where T : class

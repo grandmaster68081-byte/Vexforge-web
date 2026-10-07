@@ -524,34 +524,100 @@ namespace Vexforge.UI
                 return;
             }
 
+            var viewportObject = new GameObject(
+                "MissionListViewport",
+                typeof(RectTransform),
+                typeof(Image),
+                typeof(Mask),
+                typeof(ScrollRect));
+            viewportObject.transform.SetParent(content, false);
+            UiFactory.Anchor(
+                viewportObject.GetComponent<RectTransform>(),
+                new Vector2(0.08f, 0.14f),
+                new Vector2(0.92f, 0.80f),
+                Vector2.zero,
+                Vector2.zero);
+            viewportObject.GetComponent<Image>().color = new Color(.025f, .029f, .037f, .94f);
+            var mask = viewportObject.GetComponent<Mask>();
+            mask.showMaskGraphic = false;
+            var scroll = viewportObject.GetComponent<ScrollRect>();
+            scroll.horizontal = false;
+            scroll.vertical = true;
+            scroll.movementType = ScrollRect.MovementType.Clamped;
+            scroll.viewport = viewportObject.GetComponent<RectTransform>();
+
+            var listObject = new GameObject("MissionList", typeof(RectTransform));
+            listObject.transform.SetParent(viewportObject.transform, false);
+            var list = listObject.GetComponent<RectTransform>();
+            list.anchorMin = new Vector2(0f, 1f);
+            list.anchorMax = new Vector2(1f, 1f);
+            list.pivot = new Vector2(.5f, 1f);
+            list.anchoredPosition = Vector2.zero;
+            list.sizeDelta = new Vector2(0f, missions.Length * 104f + 12f);
+            scroll.content = list;
+
+            var visibleIndex = 0;
             for (var i = 0; i < missions.Length; i++)
             {
                 var mission = missions[i];
+                if (mission == null) continue;
 
                 var contract = UiFactory.PanelObject(
-                    content,
+                    list,
                     "Contract_" + i,
                     UiFactory.PanelGlass);
 
-                UiFactory.Anchor(
-                    contract.GetComponent<RectTransform>(),
-                    new Vector2(0.08f, 0.54f - i * 0.09f),
-                    new Vector2(0.92f, 0.61f - i * 0.09f),
-                    Vector2.zero,
-                    Vector2.zero);
+                var contractRect = contract.GetComponent<RectTransform>();
+                contractRect.anchorMin = new Vector2(0f, 1f);
+                contractRect.anchorMax = new Vector2(1f, 1f);
+                contractRect.pivot = new Vector2(.5f, 1f);
+                contractRect.anchoredPosition = new Vector2(0f, -8f - visibleIndex * 104f);
+                contractRect.sizeDelta = new Vector2(-12f, 94f);
 
                 var text = UiFactory.Label(
                     contract.transform,
-                    ValueOr(mission == null ? null : mission.name, "CONTRATO NO REPORTADO") +
+                    ValueOr(mission.name, "CONTRATO NO REPORTADO") +
                     "  ·  " +
-                    ValueOr(mission == null ? null : mission.difficulty, "DIFICULTAD NO REPORTADA") +
+                    ValueOr(mission.difficulty, "DIFICULTAD NO REPORTADA") +
                     "\nXP REPORTADO: " +
-                    (mission == null ? "NO REPORTADO" : mission.reward_xp.ToString()),
+                    mission.reward_xp.ToString() +
+                    "   ·   ENERGÍA " + mission.energy_cost,
                     14,
-                    UiFactory.Text);
+                    UiFactory.Text,
+                    TextAnchor.MiddleLeft);
 
-                UiFactory.Stretch(text.rectTransform, 12f, 4f, 12f, 4f);
+                UiFactory.Anchor(
+                    text.rectTransform,
+                    new Vector2(.035f, .08f),
+                    new Vector2(.67f, .92f),
+                    Vector2.zero,
+                    Vector2.zero);
+
+                var canStart = Guid.TryParse(mission.id, out _);
+                var start = UiFactory.Button(
+                    contract.transform,
+                    canStart ? "INICIAR" : "ID INVÁLIDO",
+                    canStart ? (UnityAction)(() => OpenMissionCombat(mission.id)) : null);
+                UiFactory.Anchor(
+                    start.GetComponent<RectTransform>(),
+                    new Vector2(.70f, .18f),
+                    new Vector2(.97f, .82f),
+                    Vector2.zero,
+                    Vector2.zero);
+                start.interactable = canStart;
+                visibleIndex++;
             }
+        }
+
+        private void OpenMissionCombat(string missionId)
+        {
+            var gate = FindFirstObjectByType<VexforgeTier1TurnCombatGate>(FindObjectsInactive.Include);
+            if (gate == null)
+            {
+                Debug.LogError("VEXFORGE V7 mission entry is unavailable; no local combat fallback was created.");
+                return;
+            }
+            gate.OpenMission(missionId);
         }
 
         private void BuildEconomy()

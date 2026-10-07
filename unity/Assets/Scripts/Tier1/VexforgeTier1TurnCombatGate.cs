@@ -14,17 +14,21 @@ namespace Vexforge.Tier1
         private VexforgeApp app;
         private VexforgeTier1BattleGate battleGate;
         private Canvas canvas;
+        private Text titleLabel;
         private Text status;
         private Text board;
         private Text eventLog;
         private RectTransform actionContent;
         private ScrollRect actionScroll;
+        private Button backButton;
         private Button replayButton;
         private VexforgeTurnCombatResponse current;
         private bool busy;
         private bool retryRequired;
         private int replayIndex = -1;
         private string sessionId;
+        private string encounterMode = "training";
+        private string encounterTargetId;
 
         public void Initialize(VexforgeApp host, VexforgeTier1BattleGate legacyGate)
         {
@@ -35,6 +39,21 @@ namespace Vexforge.Tier1
 
         public void Open()
         {
+            OpenEncounter("training", null);
+        }
+
+        public void OpenMission(string missionId)
+        {
+            OpenEncounter("mission", missionId);
+        }
+
+        public void OpenBoss(string worldBossId)
+        {
+            OpenEncounter("boss", worldBossId);
+        }
+
+        private void OpenEncounter(string mode, string targetId)
+        {
             if (canvas == null) Build();
             if (busy)
             {
@@ -42,14 +61,56 @@ namespace Vexforge.Tier1
                 return;
             }
             pvpMode = false;
+            encounterMode = mode;
+            encounterTargetId = targetId;
+            SetEncounterChrome();
+            current = null;
+            sessionId = null;
+            replayIndex = -1;
+            retryRequired = false;
+            if ((mode == "mission" || mode == "boss") && !Guid.TryParse(targetId, out _))
+            {
+                ShowMessage(mode == "mission"
+                    ? "NO SE PUEDE INICIAR: EL ID DE MISIÓN NO ES VÁLIDO."
+                    : "NO SE PUEDE INICIAR: EL ID DEL JEFE NO ES VÁLIDO.");
+                return;
+            }
             if (app == null || app.Session == null || !app.Session.IsAuthenticated ||
                 app.GameState == null || string.IsNullOrWhiteSpace(app.GameState.PlayerId))
             {
-                ShowMessage("INICIA SESIÓN PARA ABRIR EL ENTRENAMIENTO.");
+                ShowMessage(mode == "mission"
+                    ? "INICIA SESIÓN PARA INICIAR EL COMBATE DE MISIÓN V7."
+                    : mode == "boss"
+                        ? "INICIA SESIÓN PARA INICIAR EL COMBATE DE JEFE V7."
+                        : "INICIA SESIÓN PARA ABRIR EL ENTRENAMIENTO.");
                 canvas.gameObject.SetActive(true);
                 return;
             }
 
+            OpenCurrentEncounter();
+        }
+
+        private void OpenCurrentEncounter()
+        {
+            if (canvas == null) Build();
+            if (busy)
+            {
+                canvas.gameObject.SetActive(true);
+                return;
+            }
+            pvpMode = false;
+            SetEncounterChrome();
+            if (app == null || app.Repository == null)
+            {
+                ShowMessage("SERVICIO DE COMBATE V7 NO DISPONIBLE · NO SE SIMULÓ LOCALMENTE.");
+                return;
+            }
+            if (app == null || app.Session == null || !app.Session.IsAuthenticated ||
+                app.GameState == null || string.IsNullOrWhiteSpace(app.GameState.PlayerId))
+            {
+                ShowMessage("INICIA SESIÓN PARA CONTINUAR EL COMBATE V7.");
+                return;
+            }
             canvas.gameObject.SetActive(true);
             current = null;
             sessionId = null;
@@ -64,6 +125,8 @@ namespace Vexforge.Tier1
             current = null;
             sessionId = null;
             replayIndex = -1;
+            encounterMode = "training";
+            encounterTargetId = null;
             if (canvas != null) canvas.gameObject.SetActive(false);
         }
 
@@ -79,10 +142,10 @@ namespace Vexforge.Tier1
                 canvas.transform, "CombatPlaque", new Color(.012f,.014f,.020f,.97f));
             VexforgeTier1Ui.Anchor(plaque.rectTransform, .035f,.025f,.965f,.975f);
 
-            var title = VexforgeTier1Ui.Label(
+            titleLabel = VexforgeTier1Ui.Label(
                 plaque.transform, "Title", "V7 · ENTRENAMIENTO ESPEJO", 25,
                 VexforgeTier1Ui.Gold, TextAnchor.MiddleCenter);
-            VexforgeTier1Ui.Anchor(title.rectTransform, .055f,.91f,.945f,.975f);
+            VexforgeTier1Ui.Anchor(titleLabel.rectTransform, .055f,.91f,.945f,.975f);
 
             status = VexforgeTier1Ui.Label(
                 plaque.transform, "Status", "ESTADO AUTORITATIVO DEL SERVIDOR", 13,
@@ -122,10 +185,10 @@ namespace Vexforge.Tier1
             actionContent.sizeDelta = new Vector2(0f, 0f);
             actionScroll.content = actionContent;
 
-            var back = VexforgeTier1Ui.Button(
+            backButton = VexforgeTier1Ui.Button(
                 plaque.transform, "Back", "VOLVER A BATALLA",
                 Close, new Color(.045f,.050f,.056f,.97f), 12);
-            VexforgeTier1Ui.Anchor(back.GetComponent<RectTransform>(), .075f,.035f,.47f,.095f);
+            VexforgeTier1Ui.Anchor(backButton.GetComponent<RectTransform>(), .075f,.035f,.47f,.095f);
             replayButton = VexforgeTier1Ui.Button(
                 plaque.transform, "ReplayOrRetry", "REPLAY / REINTENTAR",
                 ReplayOrRetry, new Color(.075f,.055f,.040f,.97f), 12);
@@ -139,7 +202,7 @@ namespace Vexforge.Tier1
             busy = true;
             SetStatus("CARGANDO ESTADO V7 CONFIRMADO…");
             var playerId = app.GameState.PlayerId;
-            var sessionPreference = PreferenceKey(playerId, "session");
+            var sessionPreference = SessionPreferenceName(playerId);
             sessionId = PlayerPrefs.GetString(sessionPreference, string.Empty);
 
             if (!string.IsNullOrWhiteSpace(sessionId))
@@ -149,6 +212,12 @@ namespace Vexforge.Tier1
                     var restored = await app.Repository.GetTurnCombatStateAsync(sessionId);
                     if (restored != null && restored.ok)
                     {
+                        if (!IsExpectedEncounterProfile(restored))
+                        {
+                            ShowBackendError("unsupported_profile");
+                            busy = false;
+                            return;
+                        }
                         current = restored;
                         Render(restored);
                         busy = false;
@@ -177,28 +246,34 @@ namespace Vexforge.Tier1
             }
 
             busy = false;
-            await StartNewTrainingAsync(playerId);
+            await StartNewEncounterAsync(playerId);
         }
 
-        private async Task StartNewTrainingAsync(string playerId)
+        private async Task StartNewEncounterAsync(string playerId)
         {
             if (busy || app == null || app.Repository == null || string.IsNullOrWhiteSpace(playerId)) return;
             busy = true;
-            SetStatus("CREANDO ENTRENAMIENTO ESPEJO · SIN PREMIOS…");
-            var keyName = PreferenceKey(playerId, "start");
+            SetStatus(StartStatus());
+            var keyName = StartPreferenceName(playerId);
             var idempotencyKey = GetOrCreateKey(keyName);
             try
             {
-                var result = await app.Repository.StartTurnCombatTrainingAsync(idempotencyKey);
+                var result = await StartSelectedEncounterAsync(idempotencyKey);
                 if (result == null || !result.ok || string.IsNullOrWhiteSpace(result.session_id))
                 {
                     ShowBackendError(result == null ? null : result.error);
                     busy = false;
                     return;
                 }
+                if (!IsExpectedEncounterProfile(result))
+                {
+                    ShowBackendError("unsupported_profile");
+                    busy = false;
+                    return;
+                }
 
                 sessionId = result.session_id;
-                PlayerPrefs.SetString(PreferenceKey(playerId, "session"), sessionId);
+                PlayerPrefs.SetString(SessionPreferenceName(playerId), sessionId);
                 PlayerPrefs.DeleteKey(keyName);
                 PlayerPrefs.Save();
                 current = result;
@@ -207,13 +282,111 @@ namespace Vexforge.Tier1
             }
             catch (Exception ex)
             {
-                Debug.LogWarning("VEXFORGE V7 training start failed: " + ex.Message);
-                ShowBackendError(null);
+                Debug.LogWarning("VEXFORGE V7 " + encounterMode + " start failed: " + ex.Message);
+                ShowStartException(ex);
             }
             finally
             {
                 busy = false;
             }
+        }
+
+        private Task<VexforgeTurnCombatResponse> StartSelectedEncounterAsync(string idempotencyKey)
+        {
+            if (encounterMode == "mission")
+                return app.Repository.StartTurnCombatMissionAsync(encounterTargetId, idempotencyKey);
+            if (encounterMode == "boss")
+                return app.Repository.StartTurnCombatBossAsync(encounterTargetId, idempotencyKey);
+            return app.Repository.StartTurnCombatTrainingAsync(idempotencyKey);
+        }
+
+        private bool IsExpectedEncounterProfile(VexforgeTurnCombatResponse response)
+        {
+            if (response == null) return false;
+            if (pvpMode)
+                return response.mode == "pvp" &&
+                       response.profile == "pvp_no_rewards_v1" &&
+                       response.ruleset_version == "vexforge_turn_v7_pvp_1" &&
+                       !response.rewards_granted;
+            if (encounterMode == "mission")
+                return response.mode == "mission" &&
+                       response.profile == "mission_card_profile_v1" &&
+                       response.ruleset_version == "vexforge_turn_v7_mission_1";
+            if (encounterMode == "boss")
+                return response.mode == "boss" &&
+                       response.profile == "boss_card_profile_v1" &&
+                       response.ruleset_version == "vexforge_turn_v7_boss_1";
+            return response.mode == "training_mirror" &&
+                   response.profile == "training_mirror_v1" &&
+                   response.ruleset_version == "vexforge_turn_v7_mirror_1" &&
+                   !response.rewards_granted;
+        }
+
+        private string SessionPreferenceName(string playerId)
+        {
+            return encounterMode == "training"
+                ? PreferenceKey(playerId, "session")
+                : PreferenceKey(playerId, encounterMode + "." + encounterTargetId + ".session");
+        }
+
+        private string StartPreferenceName(string playerId)
+        {
+            return encounterMode == "training"
+                ? PreferenceKey(playerId, "start")
+                : PreferenceKey(playerId, encounterMode + "." + encounterTargetId + ".start");
+        }
+
+        private string StartStatus()
+        {
+            if (encounterMode == "mission") return "CREANDO COMBATE DE MISIÓN V7…";
+            if (encounterMode == "boss") return "CREANDO COMBATE DE JEFE V7…";
+            return "CREANDO ENTRENAMIENTO ESPEJO · SIN PREMIOS…";
+        }
+
+        private void SetEncounterChrome()
+        {
+            if (titleLabel != null)
+            {
+                titleLabel.text = encounterMode == "mission"
+                    ? "V7 · COMBATE DE MISIÓN"
+                    : encounterMode == "boss"
+                        ? "V7 · COMBATE DE JEFE"
+                        : encounterMode == "pvp"
+                            ? "V7 · SALAS PvP"
+                            : "V7 · ENTRENAMIENTO ESPEJO";
+            }
+            if (backButton != null)
+            {
+                backButton.GetComponentInChildren<Text>().text =
+                    encounterMode == "mission"
+                        ? "VOLVER A MISIONES"
+                        : encounterMode == "boss"
+                            ? "VOLVER AL ATLAS"
+                            : "VOLVER A BATALLA";
+            }
+        }
+
+        private void ShowStartException(Exception exception)
+        {
+            var message = exception == null ? string.Empty : exception.Message ?? string.Empty;
+            var expectedRpc = encounterMode == "mission"
+                ? "vexforge_turn_v7_start_mission"
+                : encounterMode == "boss"
+                    ? "vexforge_turn_v7_start_boss"
+                    : string.Empty;
+            if (!string.IsNullOrEmpty(expectedRpc) &&
+                (message.IndexOf(expectedRpc, StringComparison.OrdinalIgnoreCase) >= 0 ||
+                 message.IndexOf("PGRST202", StringComparison.OrdinalIgnoreCase) >= 0))
+            {
+                retryRequired = true;
+                SetStatus("EL RPC V7 DE " +
+                          (encounterMode == "mission" ? "MISIÓN" : "JEFE") +
+                          " NO ESTÁ INSTALADO EN SUPABASE LIVE. NO SE INICIÓ NI SE SIMULÓ EL COMBATE.");
+                if (replayButton != null)
+                    replayButton.GetComponentInChildren<Text>().text = "REINTENTAR CON EL SERVIDOR";
+                return;
+            }
+            ShowBackendError(null);
         }
 
         private async void SubmitAction(VexforgeTurnCombatAction action)
@@ -293,6 +466,19 @@ namespace Vexforge.Tier1
             if (response == null) return;
             current = response;
             var isPvp = response.mode == "pvp";
+            var isMission = response.mode == "mission";
+            var isBoss = response.mode == "boss";
+            if (!IsExpectedEncounterProfile(response))
+            {
+                SetStatus("PERFIL V7 NO ADMITIDO · NO SE ENVIARÁN MÁS ACCIONES.");
+                board.text = "SESIÓN BLOQUEADA HASTA CONFIRMAR EL PERFIL DEL SERVIDOR.";
+                eventLog.text = RenderEvents(response.events);
+                ClearActionList();
+                AddActionButton("SESIÓN V7 BLOQUEADA", null,
+                    new Color(.055f,.025f,.025f,.97f), 0);
+                return;
+            }
+            SetEncounterChrome();
             replayIndex = -1;
             retryRequired = false;
             canvas.gameObject.SetActive(true);
@@ -301,28 +487,27 @@ namespace Vexforge.Tier1
                     response.events != null && response.events.Length > 0
                         ? "REPLAY · EVENTOS CONFIRMADOS"
                         : "ACTUALIZAR ESTADO";
-            if (isPvp &&
-                (response.rewards_granted || response.profile != "pvp_no_rewards_v1" ||
-                 response.ruleset_version != "vexforge_turn_v7_pvp_1"))
-            {
-                SetStatus("CONTRATO PvP NO ADMITIDO · PERFIL O RECOMPENSAS INVÁLIDOS");
-                board.text = "NO SE ENVIARON MÁS ACCIONES.";
-                eventLog.text = RenderEvents(response.events);
-                ClearActionList();
-                AddActionButton("SESIÓN PvP BLOQUEADA", null,
-                    new Color(.055f,.025f,.025f,.97f), 0);
-                return;
-            }
             if (response.status == "completed")
             {
                 var winner = response.outcome == null ? null : response.outcome.winner_side;
+                var won = winner == response.you_are_side;
                 SetStatus(isPvp
-                    ? (winner == response.you_are_side
+                    ? (won
                         ? "PvP CERRADO · VICTORIA CONFIRMADA · SIN RECOMPENSAS"
                         : "PvP CERRADO · RESULTADO CONFIRMADO · SIN RECOMPENSAS")
-                    : (winner == "a"
-                        ? "ENTRENAMIENTO COMPLETADO · VICTORIA CONFIRMADA"
-                        : "ENTRENAMIENTO COMPLETADO · RESULTADO CONFIRMADO"));
+                    : isMission
+                        ? (won
+                            ? "MISIÓN CUMPLIDA · RESULTADO CONFIRMADO" +
+                              (response.rewards_granted ? " · RECOMPENSAS APLICADAS" : " · SIN RECOMPENSAS")
+                            : "MISIÓN FALLIDA · RESULTADO CONFIRMADO · SIN RECOMPENSAS")
+                        : isBoss
+                            ? (won
+                                ? "ENCUENTRO DE JEFE · VICTORIA CONFIRMADA" +
+                                  (response.rewards_granted ? " · CONTRIBUCIÓN REGISTRADA" : string.Empty)
+                                : "COMBATE DE JEFE CERRADO · DERROTA CONFIRMADA · SIN RECOMPENSAS")
+                            : (won
+                                ? "ENTRENAMIENTO COMPLETADO · VICTORIA CONFIRMADA"
+                                : "ENTRENAMIENTO COMPLETADO · RESULTADO CONFIRMADO"));
             }
             else if (response.awaiting_opponent)
             {
@@ -361,14 +546,14 @@ namespace Vexforge.Tier1
                         new Color(.045f,.050f,.056f,.97f),
                         0);
                 }
-                else
+                else if (!isMission && !isBoss)
                 {
                     AddActionButton(
                         "INICIAR OTRO ENTRENAMIENTO · SIN RECOMPENSAS",
                         () =>
                         {
                             if (app != null && app.GameState != null)
-                                _ = StartNewTrainingAsync(app.GameState.PlayerId);
+                                _ = StartNewEncounterAsync(app.GameState.PlayerId);
                         },
                         new Color(.075f,.055f,.040f,.97f),
                         0);
@@ -500,7 +685,7 @@ namespace Vexforge.Tier1
             var payload = item.event_payload;
             switch (item.event_type)
             {
-                case "session_started": return "ENTRENAMIENTO ESPEJO INICIADO · SIN PREMIOS";
+                case "session_started": return "SESIÓN V7 INICIADA · PERFIL CONFIRMADO POR EL SERVIDOR";
                 case "attack_declared":
                     return "ATAQUE DECLARADO POR " + SideLabel(item.actor_side);
                 case "attack_resolved":
@@ -592,7 +777,7 @@ namespace Vexforge.Tier1
                 if (string.IsNullOrWhiteSpace(sessionId))
                 {
                     if (pvpMode) _ = DiscoverPvpRoomsAsync();
-                    else Open();
+                    else OpenCurrentEncounter();
                 }
                 else _ = RefreshStateAsync();
                 return;
@@ -602,7 +787,7 @@ namespace Vexforge.Tier1
                 if (string.IsNullOrWhiteSpace(sessionId))
                 {
                     if (pvpMode) _ = DiscoverPvpRoomsAsync();
-                    else Open();
+                    else OpenCurrentEncounter();
                 }
                 else _ = RefreshStateAsync();
                 return;
@@ -618,7 +803,21 @@ namespace Vexforge.Tier1
 
         private void Close()
         {
+            var playerId = app == null || app.GameState == null ? null : app.GameState.PlayerId;
+            if ((encounterMode == "mission" || encounterMode == "boss") &&
+                current != null && current.status == "completed" &&
+                !string.IsNullOrWhiteSpace(playerId))
+            {
+                PlayerPrefs.DeleteKey(SessionPreferenceName(playerId));
+                PlayerPrefs.Save();
+            }
             if (canvas != null) canvas.gameObject.SetActive(false);
+            if ((encounterMode == "mission" || encounterMode == "boss") &&
+                app != null && app.Navigation != null)
+            {
+                app.Navigation.Navigate(encounterMode == "mission" ? GameRoute.Missions : GameRoute.World);
+                return;
+            }
             if (battleGate != null && app != null && app.Session != null && app.Session.IsAuthenticated)
                 battleGate.Show();
         }
@@ -629,17 +828,49 @@ namespace Vexforge.Tier1
             if (error == "active_deck_required")
                 SetStatus(pvpMode
                     ? "CONFIGURA UN DECK ACTIVO ANTES DE UNIRTE A PvP."
-                    : "CONFIGURA UN DECK ACTIVO ANTES DE INICIAR EL ENTRENAMIENTO.");
+                    : encounterMode == "mission"
+                        ? "CONFIGURA UN DECK ACTIVO ANTES DE INICIAR LA MISIÓN."
+                        : encounterMode == "boss"
+                            ? "CONFIGURA UN DECK ACTIVO ANTES DE INICIAR EL COMBATE DE JEFE."
+                            : "CONFIGURA UN DECK ACTIVO ANTES DE INICIAR EL ENTRENAMIENTO.");
             else if (error == "authentication_required")
                 SetStatus(pvpMode
                     ? "INICIA SESIÓN PARA ABRIR LAS SALAS PvP."
-                    : "INICIA SESIÓN PARA ABRIR EL ENTRENAMIENTO.");
-            else if (error == "room_not_joinable" || error == "session_not_found")
+                    : encounterMode == "mission"
+                        ? "INICIA SESIÓN PARA INICIAR LA MISIÓN."
+                        : encounterMode == "boss"
+                            ? "INICIA SESIÓN PARA INICIAR EL COMBATE DE JEFE."
+                            : "INICIA SESIÓN PARA ABRIR EL ENTRENAMIENTO.");
+            else if (error == "room_not_joinable")
                 SetStatus("LA SALA YA NO ESTÁ DISPONIBLE · ACTUALIZA LA LISTA PvP.");
+            else if (error == "session_not_found")
+                SetStatus(pvpMode
+                    ? "LA SALA PvP YA NO ESTÁ DISPONIBLE · ACTUALIZA LA LISTA."
+                    : "LA SESIÓN YA NO ESTÁ DISPONIBLE · VUELVE A INICIAR EL ENCUENTRO.");
             else if (error == "not_a_participant")
                 SetStatus("ESTA SESIÓN SÓLO ESTÁ DISPONIBLE PARA SUS PARTICIPANTES.");
             else if (error == "unsupported_profile")
-                SetStatus("EL PERFIL DE COMBATE PvP NO ESTÁ HABILITADO EN ESTA RUTA.");
+                SetStatus(pvpMode
+                    ? "EL PERFIL PvP O SU CONTRATO DE RECOMPENSAS NO ESTÁ ADMITIDO."
+                    : encounterMode == "mission"
+                        ? "EL PERFIL V7 DE MISIÓN NO COINCIDE CON EL CONTRATO ADMITIDO."
+                        : encounterMode == "boss"
+                            ? "EL PERFIL V7 DE JEFE NO COINCIDE CON EL CONTRATO ADMITIDO."
+                            : "EL PERFIL V7 DE ENTRENAMIENTO NO ESTÁ ADMITIDO.");
+            else if (error == "insufficient_energy")
+                SetStatus("ENERGÍA INSUFICIENTE · NO SE INICIÓ LA MISIÓN.");
+            else if (error == "mission_not_eligible" || error == "mission_not_found")
+                SetStatus("ESTA MISIÓN NO ESTÁ DISPONIBLE PARA COMBATE V7.");
+            else if (error == "world_boss_not_available")
+                SetStatus("ESTE JEFE NO ESTÁ DISPONIBLE PARA COMBATE V7.");
+            else if (error == "official_card_profile_unavailable")
+                SetStatus("EL SERVIDOR NO PUDO PREPARAR UN PERFIL CON CARTAS OFICIALES ACTIVAS.");
+            else if (error == "idempotency_key_reused" || error == "battle_run_idempotency_conflict")
+                SetStatus("LA CLAVE DE SESIÓN YA ESTÁ ASOCIADA A OTRO COMBATE · NO SE CREÓ OTRO ENCUENTRO.");
+            else if (error == "invalid_request" || error == "player_not_found")
+                SetStatus("EL SERVIDOR NO PUDO VALIDAR AL JUGADOR O EL ENCUENTRO.");
+            else if (encounterMode == "mission" || encounterMode == "boss")
+                SetStatus("COMBATE V7 NO DISPONIBLE · EL SERVIDOR NO CONFIRMÓ EL ENCUENTRO; NO SE SIMULÓ LOCALMENTE.");
             else
                 SetStatus("V7 NO ESTÁ DISPONIBLE EN EL SERVIDOR · NO SE SIMULÓ LOCALMENTE.");
             if (replayButton != null)

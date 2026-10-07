@@ -18,6 +18,9 @@ namespace Vexforge.Tier1
                 return;
             }
             pvpMode = true;
+            encounterMode = "pvp";
+            encounterTargetId = null;
+            SetEncounterChrome();
             if (app == null || app.Session == null || !app.Session.IsAuthenticated ||
                 app.GameState == null || string.IsNullOrWhiteSpace(app.GameState.PlayerId))
             {

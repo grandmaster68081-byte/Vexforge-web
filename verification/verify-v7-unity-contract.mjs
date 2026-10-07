@@ -14,9 +14,13 @@ const turnGateSource = turnGate + '\n' + pvpGate;
 const battleGate = read('unity/Assets/Scripts/Tier1/VexforgeTier1BattleGate.cs');
 const bootstrap = read('unity/Assets/Scripts/Tier1/VexforgeTier1Bootstrap.cs');
 const validator = read('unity/Assets/Editor/VexforgeTier1BuildValidator.cs');
+const missionUi = read('unity/Assets/Scripts/UI/GameShellController.cs');
+const worldAtlas = read('unity/Assets/Scripts/Tier1/VexforgeTier1WorldAtlasDirector.cs');
 
 for (const rpc of [
   'vexforge_turn_v7_start_training',
+  'vexforge_turn_v7_start_mission',
+  'vexforge_turn_v7_start_boss',
   'vexforge_turn_v7_create_pvp_room',
   'vexforge_turn_v7_discover_pvp_rooms',
   'vexforge_turn_v7_join_pvp_room',
@@ -28,6 +32,7 @@ for (const rpc of [
 }
 assert(repository.includes('vexforge_battle_resolve'), 'Legacy V6 RPC path was removed');
 assert(repository.includes('TurnCombatActionJson'), 'Legal action serialization boundary is missing');
+assert(repository.includes('V7_RPC_NOT_INSTALLED'), 'Missing live V7 start RPCs are not identified safely');
 assert(contracts.includes('VexforgeTurnCombatResponse'), 'V7 response model is missing');
 assert(contracts.includes('VexforgeTurnCombatPvpRoomsResponse'), 'V7 PvP room response model is missing');
 assert(contracts.includes('awaiting_opponent'), 'V7 PvP waiting-room state is missing');
@@ -39,6 +44,22 @@ assert(turnGateSource.includes('JoinTurnCombatPvpRoomAsync'), 'Unity does not jo
 assert(turnGateSource.includes('OpenPvp'), 'The V7 gate does not expose the PvP flow');
 assert(turnGateSource.includes('SNAPSHOT CONFIRMADO'), 'Unity replay does not use confirmed event snapshots');
 assert(turnGateSource.includes('response.legal_actions'), 'Unity does not render server legal actions');
+assert(turnGate.includes('OpenMission(string missionId)'), 'The V7 gate does not expose mission combat');
+assert(turnGate.includes('OpenBoss(string worldBossId)'), 'The V7 gate does not expose boss combat');
+assert(turnGate.includes('mission_card_profile_v1') && turnGate.includes('boss_card_profile_v1'),
+  'Mission/boss responses are not checked against their server profiles');
+assert(turnGate.includes('training_mirror_v1') && turnGate.includes('pvp_no_rewards_v1'),
+  'Existing training/PvP profile validation was not preserved');
+assert(turnGate.includes('MISIÓN CUMPLIDA') && turnGate.includes('ENCUENTRO DE JEFE · VICTORIA CONFIRMADA'),
+  'Mission/boss results are not rendered by their own mode');
+assert(turnGate.includes('NO SE INICIÓ NI SE SIMULÓ EL COMBATE'),
+  'Missing mission/boss RPCs do not fail explicitly without a local fallback');
+assert(missionUi.includes('gate.OpenMission(missionId)') &&
+  missionUi.includes('MissionListViewport') && missionUi.includes('Guid.TryParse(mission.id'),
+  'The mission list does not expose a scrollable V7 combat entry');
+assert(worldAtlas.includes('gate.OpenBoss(worldBossId)') &&
+  worldAtlas.includes('INICIAR COMBATE V7') && worldAtlas.includes('Guid.TryParse(selectedBoss.id'),
+  'The World Atlas does not expose the V7 boss combat entry');
 assert(battleGate.includes('OpenTurnCombatTraining'), 'Battle route does not open V7 training');
 assert(battleGate.includes('OpenTurnCombatPvp'), 'Battle route does not open V7 PvP');
 assert(bootstrap.includes('BindTurnCombatGate'), 'Bootstrap does not bind the V7 gate');

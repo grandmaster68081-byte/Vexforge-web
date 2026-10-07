@@ -14,7 +14,7 @@ The V7 work is **partial**:
 - Unity has additive mirror-training and PvP room routes that render server state/legal actions, submit intents with sequence and idempotency keys, and replay event snapshots.
 - Existing V6 tables, RPCs, settlement, and route remain unchanged.
 - An additive server migration adds mission and boss profiles on the same V7 action kernel. Mission runs settle through the existing mission contract; winning boss runs record server-confirmed damage through the existing world-boss contract. The migration selects only active official cards for the opposing formation and does not create card records.
-- Unity client entry points currently cover mirror training and PvP only. There are no Unity start-RPC paths or user-facing mission/boss V7 launch flows yet.
+- Unity exposes V7 mission starts from the scrollable mission list and boss starts from the Atlas. The client validates mission/boss response profiles, preserves per-encounter idempotency/session state, and renders mode-specific outcomes. Missing live RPCs fail explicitly without local combat or settlement.
 - The migration has **not** been applied to the live Supabase project. V6 remains the live route.
 - A read-only live audit on 2026-10-07 confirmed the V6 resolver remains active and the V7 tables, functions, and migration records are absent. Live counts: 127 active cards, 20 synergy rules, 49 active missions (24 `production_ready`), 15 active bosses, and 5 regions. These are inventory counts, not proof of a canonical boss roster or combat profile.
 - No Unity Editor/device compile or Unity Cloud build has been performed.
@@ -37,7 +37,7 @@ The canonical design/status document is `docs/vexforge-canonical/17_UNIVERSAL_TU
 - Unity Editor build-validator checks for the centralized V7 PvP room RPCs
 - Updated V7 design/status document
 
-The V7 core, PvP, and mission/boss server adapters are present and pass isolated PostgreSQL tests. Unity source wiring is complete only for mirror training and PvP; mission/boss launch flows remain a client gap. No Unity Editor/device compile or live migration was performed. Start from official `main`; do not reset or overwrite it.
+The V7 core, PvP, and mission/boss server adapters are present and pass isolated PostgreSQL tests. Unity source now includes entry points and result handling for all four modes, with static contract verification only. No Unity Editor/device compile or live migration was performed. Start from official `main`; do not reset or overwrite it.
 
 ## Verified checks
 
@@ -65,8 +65,8 @@ The isolated PostgreSQL suite covers V6 base-stat formulas and Guard targeting, 
 
 ## Next work
 
-1. Keep the new server adapters staged until Unity mission/boss entry points and result handling are implemented and verified. The adapters deterministically select active official cards using the existing region and difficulty/tier data; they are not a canonical authored boss roster. Do not invent card records or change settlement semantics.
-2. Obtain explicit approval before applying migrations to any shared/live Supabase environment. Then compile and verify in Unity Editor/device; do not substitute a Unity Cloud build without approval.
+1. Compile and verify the Unity client in an approved Editor/device environment. Confirm mission eligibility, energy/cooldown handling, boss contribution settlement, and that an unavailable V7 RPC fails without changing V6 behavior.
+2. The adapters deterministically select active official cards using existing region and difficulty/tier data; they are not a canonical authored boss roster. Do not invent card records or change settlement semantics. Obtain explicit approval before applying migrations to any shared/live Supabase environment.
 
 ## Replit Git boundary
 

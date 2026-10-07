@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 using Vexforge.Backend;
@@ -201,15 +202,19 @@ namespace Vexforge.Tier1
                     11);
                 VexforgeTier1Ui.Anchor(backToList.GetComponent<RectTransform>(), .08f, .15f, .34f, .22f);
 
-                var encounterUnavailable = VexforgeTier1Ui.Button(
+                var selectedBoss = bosses[selectedIndex];
+                var bossCanStart = selectedBoss != null && Guid.TryParse(selectedBoss.id, out _);
+                var startEncounter = VexforgeTier1Ui.Button(
                     content,
-                    "EncounterUnavailable",
-                    "ENCUENTRO NO DISPONIBLE",
-                    null,
-                    new Color(.055f, .050f, .046f, .72f),
+                    "StartBossCombat",
+                    bossCanStart ? "INICIAR COMBATE V7" : "JEFE NO DISPONIBLE",
+                    bossCanStart
+                        ? (UnityEngine.Events.UnityAction)(() => StartBossCombat(selectedBoss.id))
+                        : null,
+                    new Color(.075f, .055f, .040f, .96f),
                     11);
-                VexforgeTier1Ui.Anchor(encounterUnavailable.GetComponent<RectTransform>(), .52f, .15f, .92f, .22f);
-                encounterUnavailable.interactable = false;
+                VexforgeTier1Ui.Anchor(startEncounter.GetComponent<RectTransform>(), .52f, .15f, .92f, .22f);
+                startEncounter.interactable = bossCanStart;
                 return;
             }
 
@@ -282,8 +287,21 @@ namespace Vexforge.Tier1
             if (boss.tier > 0) lines += "\nNIVEL · " + boss.tier;
             if (boss.power_level > 0) lines += "\nPODER REPORTADO · " + boss.power_level;
             if (boss.hp > 0) lines += "\nSALUD REPORTADA · " + boss.hp;
-            lines += "\n\nEsta ficha muestra información vigente. No inicia combates ni calcula resultados o recompensas.";
+            lines += "\n\nEl servidor V7 confirma el resultado y las recompensas. Esta ficha no calcula daño ni recompensas.";
             details.text = lines;
+        }
+
+        private void StartBossCombat(string worldBossId)
+        {
+            if (!visible || string.IsNullOrWhiteSpace(worldBossId)) return;
+            var gate = FindFirstObjectByType<VexforgeTier1TurnCombatGate>(FindObjectsInactive.Include);
+            if (gate == null)
+            {
+                status.text = "EL INICIO V7 NO ESTÁ DISPONIBLE · NO SE CREÓ UN COMBATE LOCAL.";
+                return;
+            }
+            Hide();
+            gate.OpenBoss(worldBossId);
         }
 
         private void AddRetry()
