@@ -5,7 +5,8 @@
 La implementación Unity de los Hitos 01–07 sigue pendiente de verificación en
 Unity Editor y dispositivo. El workflow manual de GitHub Actions fue restaurado
 con 12 shards y un límite de 35.000 variantes por shard; no se ha ejecutado.
-Esta limpieza no valida runtime, no genera APK/AAB y no modifica Supabase live.
+Las cuatro migraciones V7 están aplicadas en Supabase live desde el 2026-10-08.
+No se ha compilado Unity, generado APK/AAB ni validado gameplay en dispositivo.
 
 ## Estado del runtime
 
@@ -24,11 +25,13 @@ Esta limpieza no valida runtime, no genera APK/AAB y no modifica Supabase live.
   y rango al perfil, además de manejo seguro de fallos sociales; no se añadieron
   eventos de telemetría.
 - Unity no calcula propiedad, resultados de combate ni recompensas. El atlas
-  presenta fichas del servidor; un encuentro de jefe permanece no disponible
-  hasta verificar un contrato autorizado.
+  presenta fichas del servidor; los RPC V7 de misión/jefe y su settlement
+  canónico están instalados, pero todavía no se han probado desde Unity.
 - No se encontraron assets Epic/Fab importados; esa ruta se retiró.
-- Supabase live no se modifica como parte del cliente. No se escribieron datos
-  de Supabase.
+- Las tablas de sesión, eventos e idempotencia V7 tienen RLS activo, privilegios
+  directos revocados y siguen vacías. La migración no creó sesiones ni alteró
+  filas de jugadores/economía; las llamadas PvE sí usan los contratos live de
+  energía y settlement existentes.
 
 ## Siguiente unidad
 
@@ -42,4 +45,6 @@ Esta limpieza no valida runtime, no genera APK/AAB y no modifica Supabase live.
 4. Mantener abiertas las verificaciones de seguridad, Editor y dispositivo
    hasta que exista evidencia.
 
-No generar APK/AAB ni modificar datos live durante esta migración.
+No generar APK/AAB ni afirmar QA de runtime/dispositivo sin evidencia. V7 ya está
+instalado en Supabase live; toda futura modificación de datos o esquema live
+requiere la autorización y verificación correspondientes.
