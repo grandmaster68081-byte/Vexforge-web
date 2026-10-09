@@ -1,0 +1,78 @@
+name: Prime Vexforge Unity Android toolchain cache
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: vexforge-unity-toolchain-cache-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  prime-unity-toolchain:
+    name: Install and cache Unity Editor plus Android modules
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Read Unity editor version
+        id: unity-version
+        shell: bash
+        run: |
+          set -euo pipefail
+          version="$(sed -n 's/^m_EditorVersion: //p' unity/ProjectSettings/ProjectVersion.txt)"
+          test -n "$version"
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          echo "Toolchain cache target: Unity $version with Android Build Support"
+
+      - name: Restore or prepare Unity Editor and Android modules
+        id: unity-toolchain-cache
+        uses: actions/cache@v4
+        with:
+          # Deliberately exclude license files and Unity user/configuration state.
+          path: ${{ runner.temp }}/unity-home/Unity/Hub/Editor/${{ steps.unity-version.outputs.version }}
+          key: vexforge-unity-toolchain-${{ runner.os }}-${{ runner.arch }}-ubuntu-24.04-${{ steps.unity-version.outputs.version }}-android-v1
+
+      - name: Install Unity Editor and Android Build Support on cache miss
+        if: steps.unity-toolchain-cache.outputs.cache-hit != 'true'
+        shell: bash
+        env:
+          UNITY_VERSION: ${{ steps.unity-version.outputs.version }}
+          UNITY_CLI_HOME: ${{ runner.temp }}/unity-cli
+        run: |
+          set -euo pipefail
+          export HOME="$RUNNER_TEMP/unity-home"
+          export XDG_CONFIG_HOME="$RUNNER_TEMP/unity-config"
+          export XDG_RUNTIME_DIR="$RUNNER_TEMP/unity-runtime"
+          mkdir -p "$HOME" "$XDG_CONFIG_HOME" "$XDG_RUNTIME_DIR" "$UNITY_CLI_HOME"
+          curl -fsSL https://unity.com/install.sh | UNITY_CLI_CHANNEL=beta UNITY_CLI_HOME="$UNITY_CLI_HOME" bash
+          export PATH="$UNITY_CLI_HOME/bin:$PATH"
+          unity --version
+          unity install "$UNITY_VERSION" -m android --cm --accept-eula
+
+      - name: Verify toolchain cache contents and report size
+        shell: bash
+        env:
+          UNITY_VERSION: ${{ steps.unity-version.outputs.version }}
+        run: |
+          set -euo pipefail
+          editor_root="$RUNNER_TEMP/unity-home/Unity/Hub/Editor/$UNITY_VERSION"
+          editor="$editor_root/Editor/Unity"
+          android_root="$editor_root/Editor/Data/PlaybackEngines/AndroidPlayer"
+          test -x "$editor" || { echo "Unity Editor is missing or not executable." >&2; exit 1; }
+          for module in SDK NDK OpenJDK; do
+            test -d "$android_root/$module" || {
+              echo "Unity Android installation is incomplete; missing module: $module" >&2
+              exit 1
+            }
+          done
+          echo "Verified Unity $UNITY_VERSION and Android SDK, NDK, and OpenJDK."
+          echo "This workflow only installs and caches the toolchain; it does not open the Unity project or build a player."
+          du -sh "$editor_root"
+          du -sb "$editor_root"
