@@ -107,11 +107,25 @@ El workflow experimental es
   informe, y se conserva durante 7 días. No se crea un GitHub Release ni se
   publica el APK en una tienda.
 
-Antes de cada nueva compilación, obtener autorización explícita para esa
-ejecución. La autorización para el primer build no es permiso permanente y no
-autoriza el workflow del juego oficial. Si falla un build, inspeccionar el run
-y corregir el problema; no volver a despacharlo ni ejecutar el workflow oficial
-sin autorización.
+## Autorización de la migración incremental
+
+La regla general es obtener autorización explícita antes de cada compilación
+Android. Para esta migración concreta, el usuario autorizó continuar sin pedir
+una orden nueva por cada etapa, condicionada a que el build baseline actualmente
+en curso termine correctamente, valide y suba el APK.
+
+Una vez cumplida esa condición, continuar de forma secuencial: elegir e integrar
+una pieza, revisar el diff, hacer commit/push a `main`, despachar manualmente un
+solo build completo, verificar APK e informe, y avanzar únicamente después de
+un run correcto. No lanzar builds en paralelo ni automatizar el disparador.
+Esta autorización termina al completar la migración o si un build falla, falta el
+APK/artefacto, aparece un riesgo no resuelto o la siguiente pieza requiere una
+decisión de alcance. En esos casos, detenerse e informar; no reintentar un build
+fallido sin nueva autorización.
+
+La autorización es solo para el workflow experimental del bootstrap. No autoriza
+el workflow oficial del juego, cambios live de Supabase, Unity Cloud Build,
+publicaciones/releases ni pruebas en dispositivos.
 
 ## Caché
 

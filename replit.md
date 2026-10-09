@@ -28,8 +28,11 @@ it. The current game migration order is
   `.github/workflows/vexforge-unity-bootstrap-android.yml` builds only
   `unity-bootstrap/**`, manually, on `main`. Each accepted content slice is
   cumulative and followed by a complete APK build. It does not replace or
-  authorize the official game workflow. Follow its dedicated operations guide
-  and require explicit authorization for each APK run.
+  authorize the official game workflow. The user has conditionally authorized
+  this migration to continue sequentially without a new prompt for each APK,
+  only after the current baseline run succeeds and each later run succeeds in
+  turn. Stop after any failure; do not retry without fresh authorization.
+  Follow its dedicated operations guide.
 - Keep the official branch on `main`; before milestones, fetch and confirm a
   clean tree with `HEAD == origin/main`. Commit and push completed work.
 - Never reset, rebase, merge, cherry-pick, or force-push the official branch.
@@ -41,8 +44,8 @@ Out of scope unless requested:
 - Supabase live schema, RPC, RLS, authentication, data, and backend rules.
 - Official game builds, APK/AAB releases, and Unity Cloud Build unless directly
   requested.
-- Bootstrap APK/AAB builds unless the user explicitly authorizes that specific
-  run.
+- Bootstrap APK/AAB builds outside the current, success-conditioned migration
+  authorization.
 
 No Epic/Fab asset payloads or listing identifiers were found in the repository.
 Epic/Fab sourcing is retired from the active direction. The game's `epic`
@@ -53,9 +56,9 @@ card rarity is unrelated and must remain intact.
 Unity Editor/device validation is not available in this environment. Do not
 claim Unity compilation, Android behavior, or parity without corresponding
 evidence. The official game workflow remains manual and has not been dispatched.
-Bootstrap builds use their separate manual workflow and still require explicit
-authorization per run. A successful bootstrap APK build is not device
-verification or gameplay parity.
+Bootstrap builds use their separate manual workflow. The active migration may
+continue after a successful APK without asking again; stop and report on failure.
+A successful bootstrap APK build is not device verification or gameplay parity.
 
 The root `npm run verify`, `npm run typecheck`, and `npm run build` commands
 apply to the web portal, not to Unity.

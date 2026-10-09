@@ -57,6 +57,11 @@ La autoridad para continuar es, en este orden:
   produjo APK ni guardó caché. Se corrigió la propagación del directorio de
   licencia al Editor y se añadió salida del log de Unity; no afirmar que el
   método funciona hasta que un run posterior verifique y suba el APK.
+- El usuario autorizó continuar esta migración secuencial sin pedir una orden
+  nueva por cada APK si el build baseline actual termina correctamente y valida
+  y sube el artefacto. Si cualquier etapa falla, detenerse; no reintentar sin
+  nueva autorización. Esta autorización no alcanza al workflow oficial ni a
+  cambios live de Supabase.
 - El modo `shard` divide el inventario en 12 y limita cada shard a 35.000
   variantes. Los modos `normal` y `final` no aplican ese límite.
 - No afirmar build Android, APK/AAB ni QA física sin evidencia nueva.
@@ -67,6 +72,8 @@ Trabajar sobre `main`. Antes de cada hito, hacer `git fetch --prune origin`,
 confirmar rama `main`, árbol limpio y `HEAD == origin/main`; después de cerrar
 un hito, hacer commit y push antes del siguiente. No resetear, rebasar, mezclar,
 cherry-pick ni hacer force-push. No iniciar builds Android sin autorización
-explícita para esa ejecución. La autorización de un build del bootstrap no
-autoriza el workflow del juego oficial, ni al revés. No usar conectores. El flujo
-del bootstrap no modifica ni consulta Supabase.
+explícita para esa ejecución, excepto la autorización activa y condicionada de
+esta migración bootstrap: continuar un paso por vez solo después de un APK
+verificado, deteniéndose ante cualquier fallo. No autoriza el workflow del juego
+oficial, ni cambios live de Supabase. No usar conectores. El flujo del bootstrap
+no modifica ni consulta Supabase.
