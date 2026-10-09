@@ -48,3 +48,14 @@ unity/Logs/
 unity/MemoryCaptures/
 unity/.vs/
 unity/*.userprefs
+
+# Isolated Unity bootstrap project generated files
+unity-bootstrap/Library/
+unity-bootstrap/Temp/
+unity-bootstrap/Obj/
+unity-bootstrap/Builds/
+unity-bootstrap/UserSettings/
+unity-bootstrap/Logs/
+unity-bootstrap/MemoryCaptures/
+unity-bootstrap/.vs/
+unity-bootstrap/*.userprefs

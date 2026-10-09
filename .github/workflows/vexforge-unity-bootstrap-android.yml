@@ -1,0 +1,249 @@
+name: Build VEXFORGE Unity Bootstrap Android
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: vexforge-unity-bootstrap-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  build-bootstrap-android:
+    name: Build isolated Unity bootstrap APK
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+    if: github.ref == 'refs/heads/main'
+
+    steps:
+      - name: Checkout only the bootstrap project and reference version
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          sparse-checkout: |
+            unity-bootstrap
+            unity/ProjectSettings
+          sparse-checkout-cone-mode: true
+
+      - name: Verify project boundary and Unity version
+        id: unity-version
+        shell: bash
+        run: |
+          set -euo pipefail
+          bootstrap_version="$(sed -n 's/^m_EditorVersion: //p' unity-bootstrap/ProjectSettings/ProjectVersion.txt)"
+          reference_version="$(sed -n 's/^m_EditorVersion: //p' unity/ProjectSettings/ProjectVersion.txt)"
+          test -n "$bootstrap_version"
+          test "$bootstrap_version" = "$reference_version" || {
+            echo "Bootstrap Unity version differs from the official project." >&2
+            exit 1
+          }
+          test -f unity-bootstrap/Assets/Editor/VexforgeBootstrapBuild.cs
+          test ! -d unity/Assets
+          echo "version=$bootstrap_version" >> "$GITHUB_OUTPUT"
+          echo "Unity $bootstrap_version; only unity-bootstrap is available to the build."
+
+      - name: Verify Unity activation inputs
+        id: activation-preflight
+        shell: bash
+        env:
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+        run: |
+          set -euo pipefail
+          if [ -n "${UNITY_LICENSE:-}" ]; then
+            echo "A Unity ULF license secret is available; online activation will be skipped."
+            echo "mode=ulf" >> "$GITHUB_OUTPUT"
+          else
+            test -n "$UNITY_EMAIL" || {
+              echo "Missing GitHub Actions secret: UNITY_EMAIL" >&2
+              exit 1
+            }
+            test -n "$UNITY_PASSWORD" || {
+              echo "Missing GitHub Actions secret: UNITY_PASSWORD" >&2
+              exit 1
+            }
+            echo "Unity online activation inputs are present; values are not printed."
+            echo "mode=email-password" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Install Unity Hub for licensing client
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo install -d /etc/apt/keyrings
+          curl -fsSL https://hub.unity3d.com/linux/keys/public \
+            | sudo gpg --dearmor --yes -o /etc/apt/keyrings/unityhub.gpg
+          echo "deb [arch=amd64 signed-by=/etc/apt/keyrings/unityhub.gpg] https://hub.unity3d.com/linux/repos/deb stable main" \
+            | sudo tee /etc/apt/sources.list.d/unityhub.list
+          sudo apt-get update
+          sudo apt-get install -y unityhub
+          test -x /usr/lib/unityhub/unityhub
+
+      - name: Install pinned Unity Editor and Android modules
+        shell: bash
+        env:
+          UNITY_VERSION: ${{ steps.unity-version.outputs.version }}
+          UNITY_CLI_HOME: ${{ runner.temp }}/unity-cli
+        run: |
+          set -euo pipefail
+          export HOME="$RUNNER_TEMP/unity-home"
+          export XDG_CONFIG_HOME="$RUNNER_TEMP/unity-config"
+          export XDG_RUNTIME_DIR="$RUNNER_TEMP/unity-runtime"
+          mkdir -p "$HOME" "$XDG_CONFIG_HOME" "$XDG_RUNTIME_DIR" "$UNITY_CLI_HOME"
+          curl -fsSL https://unity.com/install.sh \
+            | UNITY_CLI_CHANNEL=beta UNITY_CLI_HOME="$UNITY_CLI_HOME" bash
+          export PATH="$UNITY_CLI_HOME/bin:$PATH"
+          unity --version
+          unity install "$UNITY_VERSION" -m android --cm --accept-eula
+          editor="$(find "$HOME/Unity/Hub/Editor" -type f -path "*/Editor/Unity" -print -quit)"
+          test -x "$editor"
+          android_root="$(dirname "$editor")/Data/PlaybackEngines/AndroidPlayer"
+          for module in SDK NDK OpenJDK; do
+            test -d "$android_root/$module" || {
+              echo "Unity Android installation is incomplete; missing $module." >&2
+              exit 1
+            }
+          done
+          echo "UNITY_EDITOR_PATH=$editor" >> "$GITHUB_ENV"
+
+      - name: Prepare isolated Unity license directory
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/unity-home" "$RUNNER_TEMP/vexforge-bootstrap-license"
+
+      - name: Normalize Unity ID email
+        if: steps.activation-preflight.outputs.mode == 'email-password'
+        shell: bash
+        env:
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+        run: |
+          set -euo pipefail
+          email="$(printf '%s' "$UNITY_EMAIL" | tr -d '\r\n')"
+          email="${email#\"}"
+          email="${email%\"}"
+          email="${email#\'}"
+          email="${email%\'}"
+          if [[ "$email" != *@*.* || "$email" == *[[:space:]]* ]]; then
+            echo "UNITY_EMAIL must be a Unity ID email address, without quotes or spaces." >&2
+            exit 1
+          fi
+          echo "::add-mask::$email"
+          printf 'UNITY_EMAIL_CLEAN=%s\n' "$email" >> "$GITHUB_ENV"
+
+      - name: Materialize stored Unity license
+        if: steps.activation-preflight.outputs.mode == 'ulf'
+        shell: bash
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+          HOME: ${{ runner.temp }}/unity-home
+          UNITY_COMMON_DIR: ${{ runner.temp }}/vexforge-bootstrap-license
+        run: |
+          set -euo pipefail
+          printf '%s' "$UNITY_LICENSE" > "$RUNNER_TEMP/vexforge-bootstrap-license/Unity_lic.ulf"
+          test -s "$RUNNER_TEMP/vexforge-bootstrap-license/Unity_lic.ulf"
+          echo "Stored Unity license materialized without printing its value."
+
+      - name: Activate Unity license
+        if: steps.activation-preflight.outputs.mode == 'email-password'
+        uses: buildalon/activate-unity-license@v2
+        env:
+          HOME: ${{ runner.temp }}/unity-home
+          UNITY_HUB_PATH: /usr/lib/unityhub/unityhub
+          UNITY_COMMON_DIR: ${{ runner.temp }}/vexforge-bootstrap-license
+        with:
+          license: personal
+          username: ${{ env.UNITY_EMAIL_CLEAN }}
+          password: ${{ secrets.UNITY_PASSWORD }}
+          license-version: 6.x
+
+      - name: Restore bootstrap project Library cache
+        id: restore-bootstrap-library
+        uses: actions/cache/restore@v4
+        with:
+          path: unity-bootstrap/Library
+          key: vexforge-bootstrap-library-${{ runner.os }}-${{ runner.arch }}-${{ steps.unity-version.outputs.version }}-${{ hashFiles('unity-bootstrap/Packages/manifest.json', 'unity-bootstrap/Packages/packages-lock.json', 'unity-bootstrap/ProjectSettings/ProjectSettings.asset') }}-${{ github.run_id }}-${{ github.run_attempt }}
+          restore-keys: |
+            vexforge-bootstrap-library-${{ runner.os }}-${{ runner.arch }}-${{ steps.unity-version.outputs.version }}-
+
+      - name: Record cache restore state
+        shell: bash
+        env:
+          CACHE_HIT: ${{ steps.restore-bootstrap-library.outputs.cache-hit }}
+        run: |
+          set -euo pipefail
+          if [ "$CACHE_HIT" = true ]; then
+            echo "Unity project Library cache restored." | tee -a "$GITHUB_STEP_SUMMARY"
+          else
+            echo "No compatible Unity project Library cache was available; this run will warm one after the APK succeeds." \
+              | tee -a "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Build the bootstrap APK
+        shell: bash
+        env:
+          UNITY_VERSION: ${{ steps.unity-version.outputs.version }}
+        run: |
+          set -euo pipefail
+          mkdir -p build-artifacts
+          "$UNITY_EDITOR_PATH" \
+            -batchmode \
+            -nographics \
+            -quit \
+            -accept-apiupdate \
+            -projectPath "$GITHUB_WORKSPACE/unity-bootstrap" \
+            -buildTarget Android \
+            -executeMethod Vexforge.Bootstrap.Editor.VexforgeBootstrapBuild.BuildAndroid \
+            -logFile "$GITHUB_WORKSPACE/build-artifacts/unity-bootstrap.log"
+
+      - name: Verify APK and write build report
+        id: verify-apk
+        shell: bash
+        run: |
+          set -euo pipefail
+          apk="unity-bootstrap/Builds/Vexforge-bootstrap.apk"
+          test -s "$apk"
+          size="$(stat -c%s "$apk")"
+          test "$size" -gt 1000000 || {
+            echo "The generated APK is unexpectedly small ($size bytes)." >&2
+            exit 1
+          }
+          sha="$(sha256sum "$apk" | awk '{print $1}')"
+          {
+            echo "project=unity-bootstrap"
+            echo "runtime=Unity"
+            echo "editor=$(sed -n 's/^m_EditorVersion: //p' unity-bootstrap/ProjectSettings/ProjectVersion.txt)"
+            echo "application_id=com.vexforge.bootstrap"
+            echo "platform=Android"
+            echo "scripting=IL2CPP"
+            echo "architecture=ARM64"
+            echo "branch=${GITHUB_REF_NAME}"
+            echo "commit=${GITHUB_SHA}"
+            echo "run_id=${GITHUB_RUN_ID}"
+            echo "apk=$apk"
+            echo "apk_size_bytes=$size"
+            echo "apk_sha256=$sha"
+          } | tee build-artifacts/vexforge-bootstrap-build-info.txt \
+            >> "$GITHUB_STEP_SUMMARY"
+          echo "APK verification passed: $size bytes."
+
+      - name: Upload bootstrap APK
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: VEXFORGE-Unity-Bootstrap-APK-${{ github.run_number }}
+          path: |
+            unity-bootstrap/Builds/Vexforge-bootstrap.apk
+            build-artifacts/vexforge-bootstrap-build-info.txt
+          if-no-files-found: error
+          retention-days: 7
+
+      - name: Save bootstrap project Library cache
+        if: success() && steps.verify-apk.outcome == 'success'
+        uses: actions/cache/save@v4
+        with:
+          path: unity-bootstrap/Library
+          key: vexforge-bootstrap-library-${{ runner.os }}-${{ runner.arch }}-${{ steps.unity-version.outputs.version }}-${{ hashFiles('unity-bootstrap/Packages/manifest.json', 'unity-bootstrap/Packages/packages-lock.json', 'unity-bootstrap/ProjectSettings/ProjectSettings.asset') }}-${{ github.run_id }}-${{ github.run_attempt }}

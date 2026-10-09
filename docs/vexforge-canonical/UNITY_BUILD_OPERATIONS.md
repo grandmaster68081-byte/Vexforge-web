@@ -22,8 +22,11 @@ credential values or local build instructions.
 | Platform | Android target: Gradle, IL2CPP, ARM64; not verified |
 | Trigger | Not configured |
 
-This is the sole configured Android compilation workflow. Do not create a
-parallel pipeline or use Unity Cloud Build.
+This remains the only canonical Android compilation workflow for the official
+game under `unity/`. The isolated bootstrap workflow
+`.github/workflows/vexforge-unity-bootstrap-android.yml` is a separate,
+manual-only baseline for `unity-bootstrap/`; it must never compile or replace
+the official game. Do not use Unity Cloud Build.
 
 ## 2. Editor and project contract
 
