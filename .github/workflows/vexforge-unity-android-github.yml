@@ -83,7 +83,7 @@ concurrency:
 
 jobs:
   build-unity-android:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
     timeout-minutes: 360
     env:
       UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
@@ -226,14 +226,6 @@ jobs:
           echo "version=$version" >> "$GITHUB_OUTPUT"
           echo "Using Unity editor $version"
 
-      - name: Restore pinned Unity Editor and Android toolchain cache
-        id: unity-toolchain-cache
-        uses: actions/cache@v4
-        with:
-          # Keep license/configuration state outside this toolchain-only cache.
-          path: ${{ runner.temp }}/unity-home/Unity/Hub/Editor/${{ steps.unity-version.outputs.version }}
-          key: vexforge-unity-toolchain-${{ runner.os }}-${{ runner.arch }}-ubuntu-24.04-${{ steps.unity-version.outputs.version }}-android-v1
-
       - name: Restore inventory evidence for shard 0
         if: ${{ (inputs.mode == 'shard' && inputs.shard_index == '0') || (inputs.mode == 'final' && inputs.inventory_artifact_id != '') }}
         uses: actions/download-artifact@v4
@@ -301,7 +293,6 @@ jobs:
         env:
           UNITY_VERSION: ${{ steps.unity-version.outputs.version }}
           UNITY_CLI_HOME: ${{ runner.temp }}/unity-cli
-          UNITY_TOOLCHAIN_CACHE_HIT: ${{ steps.unity-toolchain-cache.outputs.cache-hit }}
         run: |
           set -euo pipefail
           export HOME="$RUNNER_TEMP/unity-home"
@@ -311,29 +302,8 @@ jobs:
           curl -fsSL https://unity.com/install.sh | UNITY_CLI_CHANNEL=beta UNITY_CLI_HOME="$UNITY_CLI_HOME" bash
           export PATH="$UNITY_CLI_HOME/bin:$PATH"
           unity --version
-          editor="$HOME/Unity/Hub/Editor/$UNITY_VERSION/Editor/Unity"
-          if [ "$UNITY_TOOLCHAIN_CACHE_HIT" = true ]; then
-            android_root="$HOME/Unity/Hub/Editor/$UNITY_VERSION/Editor/Data/PlaybackEngines/AndroidPlayer"
-            test -x "$editor" || { echo "Cached Unity Editor is missing or not executable." >&2; exit 1; }
-            for module in SDK NDK OpenJDK; do
-              test -d "$android_root/$module" || {
-                echo "Cached Android module is missing: $module" >&2
-                exit 1
-              }
-            done
-            echo "Restored the pinned Unity Editor and Android modules from Actions cache."
-          else
-            unity install "$UNITY_VERSION" -m android --cm --accept-eula
-            test -x "$editor" || { echo "Unity Editor installation did not create the expected executable." >&2; exit 1; }
-            android_root="$HOME/Unity/Hub/Editor/$UNITY_VERSION/Editor/Data/PlaybackEngines/AndroidPlayer"
-            for module in SDK NDK OpenJDK; do
-              test -d "$android_root/$module" || {
-                echo "Unity Android installation is incomplete; missing module: $module" >&2
-                exit 1
-              }
-            done
-            echo "Installed the pinned Unity Editor and Android modules; Actions cache will be saved after a successful job."
-          fi
+          unity install "$UNITY_VERSION" -m android --cm --accept-eula
+          editor="$(find "$HOME/Unity/Hub/Editor" -type f -path "*/Editor/Unity" -print -quit 2>/dev/null || true)"
           test -x "$editor"
           echo "UNITY_EDITOR_PATH=$editor" >> "$GITHUB_ENV"
           echo "Unity Editor installed at $editor"
