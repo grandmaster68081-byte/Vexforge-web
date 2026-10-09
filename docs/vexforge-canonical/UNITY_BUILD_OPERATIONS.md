@@ -1,7 +1,8 @@
 # VEXFORGE — Canonical Unity Android build operations
 
-Status: RESTORED — MANUAL ONLY — NOT DISPATCHED
+Status: OFFICIAL FULL-GAME PIPELINE — MANUAL ONLY — NOT DISPATCHED
 
+This document applies only to the official full-game project in `unity/`.
 Current `main` contains the manual GitHub Actions workflow
 `.github/workflows/vexforge-unity-android-github.yml`. It was restored from
 repository history and has not been dispatched. Its shard mode partitions the
@@ -20,13 +21,15 @@ credential values or local build instructions.
 | Workflow | `.github/workflows/vexforge-unity-android-github.yml` |
 | Entry point | Manual `workflow_dispatch` only |
 | Platform | Android target: Gradle, IL2CPP, ARM64; not verified |
-| Trigger | Not configured |
+| Trigger | `workflow_dispatch` only; no automatic trigger |
 
 This remains the only canonical Android compilation workflow for the official
 game under `unity/`. The isolated bootstrap workflow
 `.github/workflows/vexforge-unity-bootstrap-android.yml` is a separate,
 manual-only baseline for `unity-bootstrap/`; it must never compile or replace
-the official game. Do not use Unity Cloud Build.
+the official game. Its workflow, cache, authorization and verification rules are
+in [`UNITY_BOOTSTRAP_WORKFLOW.md`](UNITY_BOOTSTRAP_WORKFLOW.md). Do not use
+Unity Cloud Build.
 
 ## 2. Editor and project contract
 
@@ -45,8 +48,9 @@ release gates pass.
 The workflow is available for manual dispatch. Do not dispatch it or start an
 Android package build without explicit authorization.
 
-The current migration performs no APK/AAB build; Editor and device gates remain
-open.
+This authorization boundary applies to the official game workflow only. The
+experimental bootstrap workflow has its own separate authorization boundary.
+Editor, package and device gates for the official game remain open.
 
 ## 4. Secret boundary
 

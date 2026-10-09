@@ -19,6 +19,8 @@ El workflow manual `.github/workflows/vexforge-unity-bootstrap-android.yml`
 compila únicamente `unity-bootstrap/**`. Su caché cubre solo la carpeta
 `unity-bootstrap/Library/`; no reutiliza la instalación de Unity ni la licencia.
 No sustituye, modifica ni ejecuta el workflow del juego oficial.
+El proceso experimental completo y sus límites están descritos en
+`docs/vexforge-canonical/UNITY_BOOTSTRAP_WORKFLOW.md`.
 
 ## Documentación
 

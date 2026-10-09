@@ -2,9 +2,11 @@
 
 ## Dirección canónica
 
-**Unity bajo `unity/**` es el runtime Android del videojuego.** El portal oficial
-está en `src/**` y `public/**`. Mantener ambos árboles sin cambios durante las
-tareas de limpieza del repositorio.
+**Unity bajo `unity/**` sigue siendo el runtime Android oficial del videojuego.**
+Existe además `unity-bootstrap/**`, un proyecto experimental de build, mínimo y
+aislado; no es un segundo runtime de gameplay. El portal oficial está en `src/**`
+y `public/**`. Mantener esos árboles y `unity/**` sin cambios durante tareas de
+limpieza o trabajo en el bootstrap.
 
 La autoridad para continuar es, en este orden:
 
@@ -17,6 +19,9 @@ La autoridad para continuar es, en este orden:
 ## Límites de alcance
 
 - Unity es el runtime del juego; no añadir un runtime cliente paralelo.
+- `unity-bootstrap/**` es la única excepción de build experimental: no sustituye
+  el juego oficial, no contiene su gameplay al inicio y solo se amplía por etapas
+  cuando el usuario lo solicita.
 - Supabase conserva autoridad sobre autenticación, ownership, combate,
   settlement, recompensas y economía. La presentación móvil no calcula esos
   resultados.
@@ -37,6 +42,14 @@ La autoridad para continuar es, en este orden:
   verificada.
 - El workflow manual de Unity está restaurado en
   `.github/workflows/vexforge-unity-android-github.yml`; no se ha ejecutado.
+- El workflow experimental
+  `.github/workflows/vexforge-unity-bootstrap-android.yml` construye solo
+  `unity-bootstrap/**`, manualmente en `main`, con ID Android
+  `com.vexforge.bootstrap`. Su guía operativa está en
+  `docs/vexforge-canonical/UNITY_BOOTSTRAP_WORKFLOW.md`.
+- La caché permitida para ese método es únicamente
+  `unity-bootstrap/Library/`, guardada tras validar el APK. No cachear la
+  instalación de Unity, Unity Hub, licencias, credenciales ni `unity/Library/`.
 - El modo `shard` divide el inventario en 12 y limita cada shard a 35.000
   variantes. Los modos `normal` y `final` no aplican ese límite.
 - No afirmar build Android, APK/AAB ni QA física sin evidencia nueva.
@@ -47,4 +60,6 @@ Trabajar sobre `main`. Antes de cada hito, hacer `git fetch --prune origin`,
 confirmar rama `main`, árbol limpio y `HEAD == origin/main`; después de cerrar
 un hito, hacer commit y push antes del siguiente. No resetear, rebasar, mezclar,
 cherry-pick ni hacer force-push. No iniciar builds Android sin autorización
-explícita.
+explícita para esa ejecución. La autorización de un build del bootstrap no
+autoriza el workflow del juego oficial, ni al revés. No usar conectores. El flujo
+del bootstrap no modifica ni consulta Supabase.

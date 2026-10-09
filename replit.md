@@ -1,8 +1,12 @@
 # VEXFORGE — Unity Android Runtime
 
-Unity under `unity/**` is the only active Android game runtime. The current
-migration order is `VEXFORGE_UNITY_MIGRATION_MASTER_V1`; operational context is
-in `VEXFORGE_CONTEXT.md` and `docs/vexforge-canonical/`.
+Unity under `unity/**` remains the official Android game runtime. The separate
+`unity-bootstrap/**` project is an experimental, build-only baseline, not a
+second gameplay runtime. Read
+`docs/vexforge-canonical/UNITY_BOOTSTRAP_WORKFLOW.md` before changing or building
+it. The current game migration order is
+`VEXFORGE_UNITY_MIGRATION_MASTER_V1`; operational context is in
+`VEXFORGE_CONTEXT.md` and `docs/vexforge-canonical/`.
 
 ## Active scope
 
@@ -17,6 +21,11 @@ in `VEXFORGE_CONTEXT.md` and `docs/vexforge-canonical/`.
   partitions and a 35,000-variant cap per shard. `normal` and `final` are
   unfiltered and have no variant cap. Do not dispatch or build without separate
   authorization.
+- The experimental workflow
+  `.github/workflows/vexforge-unity-bootstrap-android.yml` builds only
+  `unity-bootstrap/**`, manually, on `main`. It does not replace or authorize
+  the official game workflow. Follow its dedicated operations guide and require
+  explicit authorization for each APK run.
 - Keep the official branch on `main`; before milestones, fetch and confirm a
   clean tree with `HEAD == origin/main`. Commit and push completed work.
 - Never reset, rebase, merge, cherry-pick, or force-push the official branch.
@@ -26,7 +35,10 @@ Out of scope unless requested:
 
 - Changes to `src/**`, `public/**`, or `unity/**` during repository cleanup.
 - Supabase live schema, RPC, RLS, authentication, data, and backend rules.
-- Unity builds, APK/AAB generation, releases, and Unity Cloud Build.
+- Official game builds, APK/AAB releases, and Unity Cloud Build unless directly
+  requested.
+- Bootstrap APK/AAB builds unless the user explicitly authorizes that specific
+  run.
 
 No Epic/Fab asset payloads or listing identifiers were found in the repository.
 Epic/Fab sourcing is retired from the active direction. The game's `epic`
@@ -36,8 +48,10 @@ card rarity is unrelated and must remain intact.
 
 Unity Editor/device validation is not available in this environment. Do not
 claim Unity compilation, Android behavior, or parity without corresponding
-evidence. The workflow is manual and has not been dispatched. Do not generate
-APK/AAB files without separate authorization.
+evidence. The official game workflow remains manual and has not been dispatched.
+Bootstrap builds use their separate manual workflow and still require explicit
+authorization per run. A successful bootstrap APK build is not device
+verification or gameplay parity.
 
 The root `npm run verify`, `npm run typecheck`, and `npm run build` commands
 apply to the web portal, not to Unity.
@@ -47,6 +61,8 @@ apply to the web portal, not to Unity.
 - Unity Editor `6000.3.0f1`
 - Android package `com.vexforge.android`
 - C# / Unity runtime under `unity/**`
+- Experimental bootstrap package `com.vexforge.bootstrap` under
+  `unity-bootstrap/**`; not a gameplay runtime.
 
 ## Where things live
 
@@ -56,6 +72,8 @@ apply to the web portal, not to Unity.
   audio and other runtime presentation.
 - `unity/Assets/` — Unity scenes and project assets.
 - `docs/vexforge-canonical/UNITY_BUILD_OPERATIONS.md` — manual build boundaries.
+- `docs/vexforge-canonical/UNITY_BOOTSTRAP_WORKFLOW.md` — isolated project,
+  incremental content, manual APK, cache, secret and verification rules.
 - `docs/vexforge-canonical/UNITY_INCREMENTAL_VARIANT_BATCHES.md` — shard and
   checkpoint operations.
 - `supabase/`, `backend/` — existing authority/contracts; do not change their
