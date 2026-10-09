@@ -1,8 +1,11 @@
 # VEXFORGE — Unity Android Runtime
 
-Unity under `unity/**` remains the official Android game runtime. The separate
-`unity-bootstrap/**` project is an experimental, build-only baseline, not a
-second gameplay runtime. Read
+Unity under `unity/**` remains the untouched source of truth for the official
+Android game. The separate `unity-bootstrap/**` project is the experimental,
+incremental destination; the goal is to add all required original code, scenes,
+assets and dependencies over multiple authorized APK builds until the complete
+game is represented there. It is not permission to change the official source.
+Read
 `docs/vexforge-canonical/UNITY_BOOTSTRAP_WORKFLOW.md` before changing or building
 it. The current game migration order is
 `VEXFORGE_UNITY_MIGRATION_MASTER_V1`; operational context is in
@@ -23,9 +26,10 @@ it. The current game migration order is
   authorization.
 - The experimental workflow
   `.github/workflows/vexforge-unity-bootstrap-android.yml` builds only
-  `unity-bootstrap/**`, manually, on `main`. It does not replace or authorize
-  the official game workflow. Follow its dedicated operations guide and require
-  explicit authorization for each APK run.
+  `unity-bootstrap/**`, manually, on `main`. Each accepted content slice is
+  cumulative and followed by a complete APK build. It does not replace or
+  authorize the official game workflow. Follow its dedicated operations guide
+  and require explicit authorization for each APK run.
 - Keep the official branch on `main`; before milestones, fetch and confirm a
   clean tree with `HEAD == origin/main`. Commit and push completed work.
 - Never reset, rebase, merge, cherry-pick, or force-push the official branch.

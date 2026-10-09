@@ -3,10 +3,13 @@
 ## Dirección canónica
 
 **Unity bajo `unity/**` sigue siendo el runtime Android oficial del videojuego.**
-Existe además `unity-bootstrap/**`, un proyecto experimental de build, mínimo y
-aislado; no es un segundo runtime de gameplay. El portal oficial está en `src/**`
-y `public/**`. Mantener esos árboles y `unity/**` sin cambios durante tareas de
-limpieza o trabajo en el bootstrap.
+Existe además `unity-bootstrap/**`, un proyecto experimental, mínimo y aislado
+que se ampliará en incrementos acumulativos hasta incluir el juego completo
+según el código oficial. Cada APK compila el estado completo acumulado. No es
+permiso para modificar `unity/**`, que sigue siendo la fuente de referencia, ni
+para reemplazar el juego oficial. El portal oficial está en `src/**` y `public/**`.
+Mantener esos árboles y `unity/**` sin cambios durante tareas de limpieza o
+trabajo en el bootstrap.
 
 La autoridad para continuar es, en este orden:
 
@@ -19,9 +22,9 @@ La autoridad para continuar es, en este orden:
 ## Límites de alcance
 
 - Unity es el runtime del juego; no añadir un runtime cliente paralelo.
-- `unity-bootstrap/**` es la única excepción de build experimental: no sustituye
-  el juego oficial, no contiene su gameplay al inicio y solo se amplía por etapas
-  cuando el usuario lo solicita.
+- `unity-bootstrap/**` es la única excepción de build experimental: empieza
+  vacío y solo se amplía con copias parciales, acumulativas y autorizadas del
+  código oficial hasta completar el juego. No sustituye el juego oficial.
 - Supabase conserva autoridad sobre autenticación, ownership, combate,
   settlement, recompensas y economía. La presentación móvil no calcula esos
   resultados.
@@ -50,6 +53,10 @@ La autoridad para continuar es, en este orden:
 - La caché permitida para ese método es únicamente
   `unity-bootstrap/Library/`, guardada tras validar el APK. No cachear la
   instalación de Unity, Unity Hub, licencias, credenciales ni `unity/Library/`.
+- El primer intento autorizado del bootstrap falló durante `BuildAndroid`: no
+  produjo APK ni guardó caché. Se corrigió la propagación del directorio de
+  licencia al Editor y se añadió salida del log de Unity; no afirmar que el
+  método funciona hasta que un run posterior verifique y suba el APK.
 - El modo `shard` divide el inventario en 12 y limita cada shard a 35.000
   variantes. Los modos `normal` y `final` no aplican ese límite.
 - No afirmar build Android, APK/AAB ni QA física sin evidencia nueva.

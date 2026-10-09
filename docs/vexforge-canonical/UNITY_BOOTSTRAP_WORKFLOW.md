@@ -2,9 +2,12 @@
 
 ## Propósito y estado
 
-Este documento describe el método separado que se está probando para construir
-una base Android pequeña y ampliarla por etapas. No sustituye la compilación del
-juego oficial ni autoriza una compilación por sí solo.
+Este documento describe el método separado que se está probando para llevar
+gradualmente todo el juego Unity oficial a una APK completa en un proyecto
+hermano. La meta final es que el APK contenga el videojuego completo tal como lo
+define el código oficial, no solo una demo ni una base vacía. El proyecto
+experimental no sustituye ni modifica el original, y este documento no autoriza
+una compilación por sí solo.
 
 El repositorio oficial es `grandmaster68081-byte/Vexforge-web`, rama `main`.
 El proyecto de referencia sigue en `unity/`; el proyecto experimental está en
@@ -15,7 +18,7 @@ El proyecto de referencia sigue en `unity/`; el proyecto experimental está en
 | Proyecto | Uso | Identificador Android |
 | --- | --- | --- |
 | `unity/` | Juego oficial existente; conservarlo intacto durante este método. | `com.vexforge.android` |
-| `unity-bootstrap/` | Base experimental mínima; aquí se añade contenido por etapas. | `com.vexforge.bootstrap` |
+| `unity-bootstrap/` | Proyecto experimental acumulativo; se amplía por etapas hasta contener el juego completo. | `com.vexforge.bootstrap` |
 
 - La versión de Unity del bootstrap debe coincidir con
   `unity/ProjectSettings/ProjectVersion.txt`. Actualmente es `6000.3.0f1`.
@@ -36,22 +39,43 @@ El proyecto de referencia sigue en `unity/`; el proyecto experimental está en
 
 ## Incorporación gradual de contenido
 
-Cuando se autorice ampliar el prototipo:
+La migración es acumulativa: cada etapa agrega una parte del juego oficial y
+conserva todas las partes incorporadas en etapas anteriores. Cada APK debe ser
+una compilación completa del estado acumulado, no una APK parcial ni un shard.
 
-1. Elegir una pieza pequeña y coherente del juego original.
-2. Copiar al bootstrap solo los scripts, assets y dependencias que esa pieza
-   requiera. Conservar los `.meta` y GUID asociados a los archivos copiados.
-3. No copiar el proyecto completo ni reemplazar la carpeta `unity-bootstrap/`
-   por `unity/`.
+Cuando se autorice ampliar el proyecto:
+
+1. Inspeccionar el código y dependencias actuales en `unity/`; elegir una pieza
+   pequeña, coherente y necesaria para acercar el bootstrap al juego completo.
+2. Copiar al bootstrap solo los scripts, assets, escenas, configuraciones y
+   dependencias que esa pieza requiera. Conservar los `.meta` y GUID asociados.
+3. Integrar la pieza sin eliminar lo ya incorporado. No copiar el proyecto
+   completo ni reemplazar la carpeta `unity-bootstrap/` por `unity/`.
 4. Actualizar dependencias del bootstrap únicamente cuando la pieza las
    necesite; revisar el manifest y lockfile juntos.
 5. Comprobar que `unity/`, el portal, el backend y Supabase no cambiaron.
-6. Compilar el bootstrap mediante su workflow manual y verificar el resultado
-   antes de continuar con otra pieza.
+6. Compilar una APK completa del estado acumulado mediante su workflow manual,
+   validar el resultado y registrar los paths fuente/destino, dependencias,
+   revisión, run, artefacto, estado de caché y pruebas pendientes.
+7. Solo después de revisar ese resultado, seleccionar la siguiente pieza. Repetir
+   hasta cubrir código, escenas, assets y sistemas necesarios para el juego
+   completo.
+
+Mantener la identidad `com.vexforge.bootstrap` para que la APK experimental no
+reemplace ni actualice por accidente la app oficial. La identidad diferente no
+es permiso para cambiar reglas, contenido o comportamiento del juego. No afirmar
+paridad completa hasta comparar el contenido acumulado con todo el alcance de
+`unity/` y cerrar las pruebas correspondientes.
 
 Una compilación Android correcta no demuestra que el APK se haya instalado o
 probado en un dispositivo. No marcarlo como probado en dispositivo sin esa
 prueba independiente.
+
+El primer intento autorizado falló durante `BuildAndroid`, antes de verificar o
+subir un APK, y no guardó caché. Se comprobó que a la fase del Editor le faltaba
+el directorio aislado de licencia usado por la activación; el workflow ya lo
+propaga y conserva el diagnóstico del Editor. No afirmar que el método funciona
+hasta que un run posterior valide y suba el APK.
 
 ## Workflow y ejecución
 
@@ -68,6 +92,10 @@ El workflow experimental es
   versión.
 - Instala el Editor fijado y módulos Android; no restaura ni guarda una
   instalación de Unity o Unity Hub.
+- La fase del Editor reutiliza el `HOME` y el `UNITY_COMMON_DIR` aislados de la
+  activación de licencia. Si Unity falla, el run imprime las últimas 200 líneas
+  del log con stack traces completos; revisar ese diagnóstico antes de proponer
+  otra corrección.
 - El punto de entrada es
   `Vexforge.Bootstrap.Editor.VexforgeBootstrapBuild.BuildAndroid`.
   Construye `unity-bootstrap/Builds/Vexforge-bootstrap.apk` como Android,

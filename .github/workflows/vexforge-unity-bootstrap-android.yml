@@ -186,9 +186,15 @@ jobs:
         shell: bash
         env:
           UNITY_VERSION: ${{ steps.unity-version.outputs.version }}
+          HOME: ${{ runner.temp }}/unity-home
+          UNITY_COMMON_DIR: ${{ runner.temp }}/vexforge-bootstrap-license
         run: |
           set -euo pipefail
           mkdir -p build-artifacts
+          test -x "$UNITY_EDITOR_PATH"
+          editor_log="$GITHUB_WORKSPACE/build-artifacts/unity-bootstrap.log"
+
+          set +e
           "$UNITY_EDITOR_PATH" \
             -batchmode \
             -nographics \
@@ -197,7 +203,21 @@ jobs:
             -projectPath "$GITHUB_WORKSPACE/unity-bootstrap" \
             -buildTarget Android \
             -executeMethod Vexforge.Bootstrap.Editor.VexforgeBootstrapBuild.BuildAndroid \
-            -logFile "$GITHUB_WORKSPACE/build-artifacts/unity-bootstrap.log"
+            -stackTraceLogType Full \
+            -logFile "$editor_log"
+          editor_status=$?
+          set -e
+
+          echo "Unity Editor exit code=$editor_status"
+          if [ -f "$editor_log" ]; then
+            echo '--- tail of unity-bootstrap.log ---'
+            tail -n 200 "$editor_log"
+            echo '--- end tail of unity-bootstrap.log ---'
+          else
+            echo "Unity Editor log was not created: $editor_log" >&2
+          fi
+
+          test "$editor_status" -eq 0
 
       - name: Verify APK and write build report
         id: verify-apk
