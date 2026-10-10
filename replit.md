@@ -11,6 +11,13 @@ it. The current game migration order is
 `VEXFORGE_UNITY_MIGRATION_MASTER_V1`; operational context is in
 `VEXFORGE_CONTEXT.md` and `docs/vexforge-canonical/`.
 
+## Integrations and credentials
+
+- Do not use Replit connectors for this project. Access GitHub or Supabase APIs
+  directly only when needed, using credentials stored as Replit Secrets.
+- Never request or share credentials in chat. Request Unity Cloud, Hub, or Editor
+  credentials as secrets only if a specific authorized workflow requires them.
+
 ## Current Bootstrap migration checkpoint (2026-10-10)
 
 - Stage 3 preparation began from clean `main` at
@@ -123,11 +130,18 @@ it. The current game migration order is
   Unity reported warnings=0, errors=1 and `BuildReport.totalSize` 721,256,066;
   keep the counter for review. Runs #14–#16 used the same source SHA; #16 is
   verification of Stage 10, not a new content stage.
-- Stage 11 is prepared for the next manual build: production configuration,
-  its canonical `.meta`, and the Editor build validator (3/197 files, 1.5228%).
-  All 18 validator paths are present. Bootstrap now has 151/197 canonical
-  tracked paths; 46 remain (44 under `Assets/` and two project-root files).
-  Preserve `unity/**` unchanged.
+- Stage 11 passed in Bootstrap run #17 on
+  `c5d5b81011cc2647533c0684055fb980bc19cec0`. Artifact
+  `VEXFORGE-Unity-Bootstrap-APK-17` (ID `11679358725`) contains a
+  45,827,437-byte APK whose SHA-256
+  `0101f9b9af7960c6a74b5b4e538015a5f9baaba1e57dfe260fb79c040cc727b0`
+  matches the report; APK ZIP/CRC and Android/Unity/ARM64 IL2CPP structure checks
+  pass. Unity reported warnings=0/errors=1 with `BuildResult.Succeeded`; record
+  the counter for later review under the existing non-blocking rule.
+- Stage 12 is prepared with 19 canonical `.meta`/GUID files for scripts already
+  present in Bootstrap (19/197, 9.6447%). After this slice, the cumulative
+  inventory will be 170/197, with 27 tracked files remaining. Preserve
+  `unity/**` unchanged.
 
 ## Active scope
 

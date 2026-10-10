@@ -1,5 +1,23 @@
 # 25 — CONTINUITY CHANGELOG
 
+## 2026-10-10 — Bootstrap Stage 11 verified; Stage 12 prepared
+
+- Bootstrap run #17 passed on commit
+  `c5d5b81011cc2647533c0684055fb980bc19cec0`. The downloaded 45,827,437-byte
+  APK SHA-256 `0101f9b9af7960c6a74b5b4e538015a5f9baaba1e57dfe260fb79c040cc727b0`
+  matches the build report. APK ZIP/CRC, Android manifest, Unity data, and
+  ARM64 IL2CPP checks passed. Unity reported `BuildResult.Succeeded`,
+  warnings=0/errors=1; the counter remains recorded for review.
+- The run restored a compatible Unity Library cache from run #16 and saved a
+  new cache. Stage 11's production configuration and build validator are now
+  verified.
+- Stage 12 prepares 19 original script `.meta`/GUID files for already-migrated
+  backend, presentation, session, and Tier1 scripts. All GUIDs are unique and
+  unreferenced by serialized assets in the current Bootstrap inventory. This is
+  19/197 files (9.6447%), within the per-stage cap; the planned cumulative
+  inventory is 170/197. No C# source, gameplay, scene, Resource, or live
+  Supabase data/configuration is changed.
+
 ## 2026-10-10 — Bootstrap migration Stage 10 verified; Stage 11 prepared
 
 - Stage 10's canonical Nexus, pack, and reward textures were validated in

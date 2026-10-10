@@ -12,22 +12,21 @@ game.
 - Unity Editor: `6000.3.0f1`, matched to `unity/ProjectSettings/ProjectVersion.txt`.
 - Android application ID: `com.vexforge.bootstrap`, distinct from the official
   `com.vexforge.android`.
-- Stages 1–10 have passed. The full 76-file canonical C# source set is present;
-  the cumulative content inventory after Stage 10 was 148/197 files. Stage 10
-  added five Nexus, pack, and reward textures with their original `.meta` files.
+- Stages 1–11 have passed. The full 76-file canonical C# source set is present;
+  Stage 11 brought the cumulative content inventory to 151/197 files.
 - Stage 10 was revalidated in Bootstrap run #16 on
-  `022632a9a588412994b7f45854e3dd4116cda30c`. Artifact
-  `VEXFORGE-Unity-Bootstrap-APK-16` (ID `11679136405`, 45,167,480 bytes) and its
-  APK passed ZIP/CRC and structure checks. The 45,826,451-byte APK SHA-256 is
-  `4dc519b8746a8512f128facdfe242609347335433aae87fd7c0c74f4f5da361c`.
-  Unity reported 0 warnings and 1 error; `BuildReport.totalSize` was 721,256,066
-  bytes. Keep that counter for review; the workflow and artifacts passed.
-- Stage 11 is prepared with the production configuration JSON, its canonical
-  `.meta`, and the Editor build validator. Its 18 required project paths are
-  already present. This adds 3/197 files (1.5228%) for 151/197 cumulative files.
-  There are 46 tracked files remaining: 44 under `Assets/` and the two canonical
-  project-root files. The next build must use a new commit containing this slice;
-  runs on the unchanged Stage 10 SHA do not count as migration progress.
+  `c5d5b81011cc2647533c0684055fb980bc19cec0`. Run #17 succeeded and produced
+  `VEXFORGE-Unity-Bootstrap-APK-17` (ID `11679358725`). Its 45,827,437-byte APK
+  SHA-256 is `0101f9b9af7960c6a74b5b4e538015a5f9baaba1e57dfe260fb79c040cc727b0`;
+  the downloaded APK hash matches the report and APK ZIP/structure checks pass.
+  Unity reported 0 warnings and 1 error with `BuildResult.Succeeded`; record the
+  counter for review under the existing non-blocking rule.
+- Stage 11 restored the production configuration JSON, its canonical `.meta`,
+  and the Editor build validator (3/197 files, 1.5228%). All 18 validator paths
+  are present. Stage 12 is prepared with canonical `.meta`/GUID files for 19
+  already-migrated scripts (19/197, 9.6447%), bringing the planned cumulative
+  inventory to 170/197. After Stage 12, 27 tracked files remain; keep
+  `unity/**` unchanged.
 - The successful historical APK #2 was a workflow smoke test using an empty
   generated scene. It proves neither migrated game content nor a cache restore.
 - Stage 5 restored `Assets/Scenes/VexforgeBootstrap.unity` from the canonical
