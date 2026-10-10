@@ -311,14 +311,31 @@ están validados. El run #13 restauró 1.891.051.220 bytes desde la clave
 compatible del run #12 (sin coincidencia exacta) y guardó una nueva caché de
 2.003.837.946 bytes.
 
-La etapa 10 preparada agrupa cinco recursos canónicos: patrón Nexus, artefacto
-Pack Relic, portada Pack Vault Hero y sigilos de recompensa común y premium.
-Están declarados en el catálogo Tier1; los directores de pack/recompensas ya
-migrados solicitan los recursos correspondientes. Se conservan PNG y `.meta`
-originales, GUID, ajustes de importación y claves de `Resources`; el lote suma
-10/197 archivos (5,0761 %), bajo el límite de 19. Depende de las etapas 3, 7 y
-9. El siguiente run manual Bootstrap debe compilar este lote acumulado en
-`main`; su resultado y artefacto se validan antes de elegir otra tanda.
+La etapa 10 pasó en el run manual Bootstrap #16 (`38075555551`, commit
+`022632a9a588412994b7f45854e3dd4116cda30c`). El artefacto
+`VEXFORGE-Unity-Bootstrap-APK-16` (ID `11679136405`, 45.167.480 bytes) y su APK
+descargado pasan integridad ZIP/CRC; el APK mide 45.826.451 bytes y su SHA-256
+`4dc519b8746a8512f128facdfe242609347335433aae87fd7c0c74f4f5da361c` coincide
+con el informe. Contiene AndroidManifest, datos Unity y `libil2cpp.so` ARM64.
+`BuildReport.totalSize` fue 721.256.066 bytes; Unity registró 0 warnings y
+1 error. Se conserva el contador para revisión acumulada; no bloquea porque el
+workflow, el artefacto y el APK pasaron sus validaciones. El run #16 restauró
+2.010.451.690 bytes desde la clave compatible del run #15 y guardó
+2.010.275.530 bytes.
+
+Las ejecuciones #14, #15 y #16 compilaron el mismo commit de la etapa 10; las
+repeticiones no añaden contenido ni cuentan como etapas nuevas. La siguiente
+compilación debe usar un SHA nuevo que incluya el siguiente lote.
+
+La etapa 11 preparada agrupa tres archivos: `VexforgeProductionConfig.json`,
+su `.meta` canónico y `VexforgeTier1BuildValidator.cs`. El validador revisa 18
+rutas ya presentes, incluido el nuevo archivo de configuración; es una acción
+del menú Editor y no un hook automático de build. Se preservan los hashes
+canónicos; el lote suma 3/197 archivos (1,5228 %) y depende de las etapas 3 y 7.
+No modifica Supabase live. El siguiente run manual Bootstrap debe compilar esta
+tanda acumulada en `main`, sobre un commit distinto al run #16. Tras preparar
+esta tanda, 151/197 rutas canónicas están en Bootstrap y quedan 46: 44 bajo
+`Assets/` y los dos archivos canónicos de la raíz del proyecto Unity.
 
 Tras validar cada APK acumulada, elegir otro lote cerrado de dependencias desde
 el inventario canónico restante sin fijar por adelantado el número de etapas.

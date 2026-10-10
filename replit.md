@@ -115,10 +115,19 @@ it. The current game migration order is
   errors=1 and `BuildReport.totalSize` 714,070,552; keep the counter for review,
   per the existing non-blocking rule. Run #13 restored 1,891,051,220 bytes from
   the compatible run #12 cache and saved 2,003,837,946 bytes.
-- Stage 10 is prepared for the next manual build: five canonical Nexus pattern,
-  pack, and reward textures with their `.meta` files (10/197 files, 5.0761%).
-  The catalog and requesting pack/reward directors are already present. Preserve
-  the canonical `unity/**` source unchanged.
+- Stage 10 passed in Bootstrap run #16 on
+  `022632a9a588412994b7f45854e3dd4116cda30c`. Its downloaded 45,826,451-byte
+  APK SHA-256 `4dc519b8746a8512f128facdfe242609347335433aae87fd7c0c74f4f5da361c`
+  matches the report; artifact `VEXFORGE-Unity-Bootstrap-APK-16` (ID
+  `11679136405`, 45,167,480 bytes) and APK passed ZIP/CRC and structure checks.
+  Unity reported warnings=0, errors=1 and `BuildReport.totalSize` 721,256,066;
+  keep the counter for review. Runs #14–#16 used the same source SHA; #16 is
+  verification of Stage 10, not a new content stage.
+- Stage 11 is prepared for the next manual build: production configuration,
+  its canonical `.meta`, and the Editor build validator (3/197 files, 1.5228%).
+  All 18 validator paths are present. Bootstrap now has 151/197 canonical
+  tracked paths; 46 remain (44 under `Assets/` and two project-root files).
+  Preserve `unity/**` unchanged.
 
 ## Active scope
 
@@ -143,9 +152,12 @@ it. The current game migration order is
   full-project content in dependency-closed batches capped at 10% of the
   complete tracked Unity inventory, with no fixed number of batches.
   The builder requires a real scene and does not generate placeholders. It does
-  not replace or authorize the official game workflow. The user has conditionally
-  authorized this migration to continue sequentially without a new prompt for
-  each APK, only after the current baseline workflow and APK validations succeed.
+   not replace or authorize the official game workflow. The user has authorized
+   successive, newly selected content batches to continue without a per-APK prompt
+   until the canonical inventory is migrated, only after the prior workflow and APK
+   validations succeed. Each next dispatch must include a new dependency-closed
+   content slice and a new source SHA; an unchanged-SHA rebuild does not advance
+   the migration.
   Record Unity BuildReport counters for later review; per the user's instruction
   they do not alone block a successful workflow with a valid APK/artifact. Stop
   after an actual workflow or artifact validation failure; do not retry without

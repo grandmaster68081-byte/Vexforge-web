@@ -1517,7 +1517,7 @@
     {
       "number": 10,
       "name": "Tier1 Nexus pattern, pack, and reward art resources",
-      "status": "prepared_for_build",
+      "status": "verified_build_success",
       "new_file_count": 10,
       "share_percent": 5.0761,
       "assets": [
@@ -1577,11 +1577,82 @@
         7,
         9
       ],
-      "note": "This dependency-closed batch adds five canonical Nexus, pack, and reward textures already represented in the Tier1 resource catalog. The pack/reward textures are requested by the migrated pack-reveal and room-ornament directors; the Nexus pattern completes the declared world-art entry. Each PNG keeps its exact source .meta, GUID, import settings, and Resources key. This is 10/197 files (5.0761%), below the 19-file cap; the production configuration and other remaining assets stay for later batches.",
+      "note": "This dependency-closed batch adds five canonical Nexus, pack, and reward textures already represented in the Tier1 resource catalog. The pack/reward textures are requested by the migrated pack-reveal and room-ornament directors; the Nexus pattern completes the declared world-art entry. Each PNG keeps its exact source .meta, GUID, import settings, and Resources key. This is 10/197 files (5.0761%), below the 19-file cap. Runs #14 through #16 used the same source commit; the latest complete verification is recorded below, and the unchanged-commit reruns do not count as new migration stages.",
+      "build": {
+        "workflow_run_id": 38075555551,
+        "workflow_run_number": 16,
+        "workflow_url": "https://github.com/grandmaster68081-byte/Vexforge-web/actions/runs/38075555551",
+        "commit": "022632a9a588412994b7f45854e3dd4116cda30c",
+        "branch": "main",
+        "result": "success",
+        "unity_editor": "6000.3.0f1",
+        "application_id": "com.vexforge.bootstrap",
+        "platform": "Android",
+        "scripting": "IL2CPP",
+        "architecture": "ARM64",
+        "warnings": 0,
+        "errors": 1,
+        "unity_build_report_total_size_bytes": 721256066,
+        "artifact_name": "VEXFORGE-Unity-Bootstrap-APK-16",
+        "artifact_id": 11679136405,
+        "artifact_size_bytes": 45167480,
+        "artifact_zip_sha256": "24ce095f39c8665fc51e4ea5321d043e292c591177f8bc6d2001ee18905dc221",
+        "apk_size_bytes": 45826451,
+        "apk_sha256": "4dc519b8746a8512f128facdfe242609347335433aae87fd7c0c74f4f5da361c",
+        "downloaded_apk_hash_matches_report": true,
+        "artifact_zip_crc_valid": true,
+        "apk_zip_crc_valid": true,
+        "android_manifest_present": true,
+        "unity_data_present": true,
+        "arm64_il2cpp_library_present": true,
+        "validation_note": "This validates Stage 10 content on the unchanged source commit; the duplicate run is not a new content stage.",
+        "cache_restore": {
+          "result": "success_restore_key",
+          "exact_key_hit": false,
+          "restored_bytes": 2010451690,
+          "matched_key": "vexforge-bootstrap-library-Linux-X64-6000.3.0f1-22048c0b62353d6879ce598ecac6fb6135a25aafb2890a20419425feaf2fcabc-38074038634-1"
+        },
+        "cache_save": {
+          "result": "success",
+          "saved_bytes": 2010275530,
+          "saved_key": "vexforge-bootstrap-library-Linux-X64-6000.3.0f1-44fd48ae5b7be2c16b7e0aeca7bd60efed56daeb75ac8f094d35c9fc634e8cef-38075555551-1"
+        }
+      }
+    },
+    {
+      "number": 11,
+      "name": "Production configuration and canonical build validator",
+      "status": "prepared_for_build",
+      "new_file_count": 3,
+      "share_percent": 1.5228,
+      "assets": [
+        {
+          "source": "unity/Assets/Resources/VexforgeTier1/VexforgeProductionConfig.json",
+          "destination": "unity-bootstrap/Assets/Resources/VexforgeTier1/VexforgeProductionConfig.json",
+          "source_sha256": "297ae7f78620a207d2818f30ef475b0b6c767068f9692e4ebea0dc4a1728caaf",
+          "destination_sha256": "297ae7f78620a207d2818f30ef475b0b6c767068f9692e4ebea0dc4a1728caaf",
+          "kind": "resource_configuration",
+          "source_meta": "unity/Assets/Resources/VexforgeTier1/VexforgeProductionConfig.json.meta",
+          "meta_sha256": "a1059fe2cc45f9290aaf14547f9a97f7c749bf699e91ed7028a08e8becdf0c32",
+          "resource_key": "VexforgeTier1/VexforgeProductionConfig"
+        },
+        {
+          "source": "unity/Assets/Editor/VexforgeTier1BuildValidator.cs",
+          "destination": "unity-bootstrap/Assets/Editor/VexforgeTier1BuildValidator.cs",
+          "source_sha256": "3d6a0ad8dd56a2d261c780277d205df04db4428e337763ffe586c62c8babba64",
+          "destination_sha256": "3d6a0ad8dd56a2d261c780277d205df04db4428e337763ffe586c62c8babba64",
+          "kind": "editor_validation_tool"
+        }
+      ],
+      "depends_on_stages": [
+        3,
+        7
+      ],
+      "note": "This dependency-closed batch adds the canonical production Resources configuration with its upstream .meta/GUID and the Editor menu validator that checks it. All 18 project paths checked by the validator are present in Bootstrap. The validator is not an automatic build hook. This is 3/197 canonical files (1.5228%); no live Supabase state is changed.",
       "build": null
     }
   ],
-  "next_stage": "Stage 9 passed in manual Bootstrap run #13 with a validated Android/IL2CPP/ARM64 APK and uploaded artifact. Stage 10 is prepared for the next single manual cumulative Bootstrap build on main: five Nexus pattern, pack, and reward textures plus their canonical .meta files (10/197 files, 5.0761%), dependent on stages 3, 7, and 9. Confirm the APK and artifact before choosing another dependency-closed batch, capped at 19 files.",
+  "next_stage": "Stage 10 passed in manual Bootstrap run #16 on commit 022632a9a588412994b7f45854e3dd4116cda30c; the downloaded artifact and APK passed hash, ZIP, and structure checks. Stage 11 is prepared for the next single manual cumulative Bootstrap build on a new committed source SHA: production configuration, its canonical .meta, and the build validator (3/197 files, 1.5228%), dependent on stages 3 and 7. Bootstrap now contains 151/197 canonical paths; 46 remain (44 under Assets and two Unity project-root files). Do not count a same-SHA rerun as migration progress. Validate the APK and artifact before choosing the following dependency-closed batch, capped at 19 files.",
   "known_architecture_boundary": "The official code contains a reciprocal App/HUD cycle involving 31 files and 7,066 lines (41.6%). The user-directed stage 3 imports the full pinned runtime C# inventory together, so it does not split that source cycle. Stage 5 restores the app component in the official bootstrap scene; stage 6 adds the canonical audio cue set. Visual resources, remaining scenes, runtime behavior, and full-content parity still require later stages and separate verification. Any temporary compile seam must be recorded and removed before parity is claimed.",
   "scene_policy": "Stage 5 restores the canonical VexforgeBootstrap scene content and its already-matched scene metadata; the Bootstrap copy adds one final LF, and its VexforgeApp script GUID resolves through stage 4. unity/ remains the untouched source of truth. The restored scene is not device or gameplay verification."
 }

@@ -1,5 +1,21 @@
 # 25 — CONTINUITY CHANGELOG
 
+## 2026-10-10 — Bootstrap migration Stage 10 verified; Stage 11 prepared
+
+- Stage 10's canonical Nexus, pack, and reward textures were validated in
+  Bootstrap run #16 on `022632a9a588412994b7f45854e3dd4116cda30c`. The APK and
+  uploaded artifact passed hash, ZIP/CRC, Android manifest, Unity data, and
+  ARM64 IL2CPP checks. Unity reported 0 warnings and 1 BuildReport error; the
+  counter remains recorded for review.
+- Runs #14–#16 used the same source commit. The repeated runs did not migrate
+  new content; future runs must compile a newly committed dependency-closed
+  slice rather than repeat an unchanged SHA.
+- Stage 11 prepares the canonical production config and `.meta`, plus the
+  Editor build validator. This adds 3/197 files and depends on existing stages
+  3 and 7. Bootstrap now contains 151/197 canonical paths; 46 remain, including
+  44 Assets files and two project-root files. `unity/**`, the web portal, and
+  live Supabase remain unchanged.
+
 ## 2026-10-04 — UNITY COMO RUNTIME ÚNICO / HITO 01
 
 - **ACTUALIZACIÓN 2026-10-05 — HITO 10/11:** por instrucción explícita del
