@@ -11,6 +11,33 @@ it. The current game migration order is
 `VEXFORGE_UNITY_MIGRATION_MASTER_V1`; operational context is in
 `VEXFORGE_CONTEXT.md` and `docs/vexforge-canonical/`.
 
+## Current Bootstrap migration checkpoint (2026-10-10)
+
+- The latest repository baseline reviewed for this handoff is `main` at
+  `e62b9dc` (`Prevent placeholder scenes in bootstrap builds`).
+- Bootstrap APK #2 is only a pipeline smoke test. It used an empty generated
+  scene, so it contains no migrated official game content and is not migration
+  progress. Its build report and hash are documented in
+  `docs/vexforge-canonical/UNITY_BOOTSTRAP_WORKFLOW.md`.
+- `unity-bootstrap/` currently has project settings, package manifests, and a
+  build entry point, but no copied official scene or gameplay. The builder now
+  fails if the real Vexforge scene is missing; it cannot silently create a
+  placeholder.
+- Its automated check only verifies that the configured scene file exists; it
+  cannot prove official provenance or dependency completeness. Review both
+  against `unity/` before accepting a slice.
+- Next, inspect the official Unity startup scene and its dependency closure in
+  `unity/**`, then choose and copy the smallest coherent, genuine game slice.
+  `VexforgeApp` is not a standalone trivial file: it wires backend, session,
+  game state, navigation, and `GameShellController`. Verify dependencies from
+  source; never substitute invented content.
+- The current conditional authorization for sequential Bootstrap builds is
+  recorded below and in the workflow guide. The next APK must contain the first
+  accepted official slice; do not dispatch a build before that content is
+  committed and the guide's preflight is satisfied.
+- Supabase's project status was checked read-only as `ACTIVE_HEALTHY`; this
+  handoff made no Supabase changes. Unity Cloud Build is not part of this path.
+
 ## Active scope
 
 - Unity under `unity/**` is the Android game runtime.

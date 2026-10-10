@@ -37,6 +37,10 @@ El proyecto de referencia sigue en `unity/`; el proyecto experimental está en
   APK de migración se requiere una escena real del juego oficial, copiada con su
   `.meta`/GUID y su cierre de dependencias a `unity-bootstrap/`. La ausencia de
   escena detiene el build antes de compilar.
+- La comprobación automatizada solo verifica que exista el archivo de escena
+  configurado; no puede certificar su procedencia oficial ni que el cierre de
+  dependencias esté completo. Revisar el origen y el diff contra `unity/` es
+  obligatorio antes de aceptar o compilar una porción.
 - La APK #2 descrita abajo fue una prueba técnica histórica del workflow; su
   escena predeterminada generada no cuenta como contenido migrado ni como primer
   hito del videojuego.

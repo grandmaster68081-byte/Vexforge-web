@@ -1,5 +1,20 @@
 # 24 — AI WORK PROTOCOL
 
+## Scope routing: official runtime vs. Bootstrap migration
+
+This protocol's Unity implementation rules describe work on the official
+runtime in `unity/**`. The separately authorized, cumulative migration in
+`unity-bootstrap/**` has its own operational contract:
+`replit.md` and `UNITY_BOOTSTRAP_WORKFLOW.md`. When the requested task is
+specifically that Bootstrap migration, do not apply this protocol's older
+"no parallel Unity project" wording to cancel the isolated destination. Keep
+`unity/**` as the untouched source, copy only authentic dependency-complete
+slices, and follow the Bootstrap guide's build authorization and evidence gates.
+
+The official runtime's `16_IMPLEMENTATION_STATUS.md` and `17_CURRENT_BLOCK.md`
+remain useful for source behavior and dependency analysis, but they do not
+authorize changing `unity/**`, dispatching its workflow, or writing to Supabase.
+
 ## Antes de modificar
 
 1. Leer `VEXFORGE_CONTEXT.md`.

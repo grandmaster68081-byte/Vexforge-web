@@ -1,4 +1,8 @@
-# VEXFORGE V5.6 — EXECUTION ORDER
+# ARCHIVED — VEXFORGE V5.6 WEB PORTAL EXECUTION ORDER
+
+> Historical art-production checklist for the V5.6 portal only. Do not use it
+> for the active Unity Bootstrap migration. Follow `replit.md` and
+> `docs/vexforge-canonical/UNITY_BOOTSTRAP_WORKFLOW.md` instead.
 
 1. Read `CURRENT_SOURCE_OF_TRUTH.md`.
 2. Read `VEXFORGE_V5_6_VISUAL_FINAL.md`.

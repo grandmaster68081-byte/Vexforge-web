@@ -1,5 +1,10 @@
 # 17 — CURRENT BLOCK (UNITY CANÓNICO)
 
+> Este documento registra el trabajo/verificación del runtime oficial `unity/**`.
+> No representa el bloque activo de migración incremental del Bootstrap. Para
+> este último, la autoridad es `replit.md` junto con
+> `UNITY_BOOTSTRAP_WORKFLOW.md`.
+
 ## Bloque activo
 
 La implementación Unity de los Hitos 01–07 sigue pendiente de verificación en

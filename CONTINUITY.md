@@ -1,4 +1,36 @@
-## 2026-10-04 — AUTORIDAD ACTUAL: UNITY / PARIDAD EXPO / FAB RETIRADO
+## 2026-10-10 — ESTADO ACTUAL: HANDOFF DE UNITY BOOTSTRAP
+
+- **REPOSITORIO:** `main` revisado en `e62b9dc` (`Prevent placeholder scenes in
+  bootstrap builds`) antes de este cambio documental.
+- **MÉTODO ACTIVO:** migración acumulativa del juego Unity oficial a
+  `unity-bootstrap/**`, en porciones pequeñas y auténticas. Mantener
+  `unity/**` intacto como fuente de verdad y conservar la identidad
+  `com.vexforge.bootstrap`.
+- **APK #2:** prueba técnica del workflow; usó una escena vacía y no contiene
+  juego oficial migrado. Su informe y SHA-256 están en
+  `docs/vexforge-canonical/UNITY_BOOTSTRAP_WORKFLOW.md`. La caché se guardó,
+  pero aún no se ha demostrado una restauración exitosa.
+- **ESTADO BOOTSTRAP:** tiene ajustes, paquetes y el punto de entrada del build;
+  todavía no tiene una escena ni contenido oficial copiado. El builder actual
+  falla si falta el archivo de escena; ya no genera una escena de relleno. Ese
+  guard no valida procedencia ni dependencias, que deben revisarse contra
+  `unity/**`.
+- **SIGUIENTE PASO:** inspeccionar la escena oficial de inicio y su cierre de
+  dependencias, seleccionar la porción genuina más pequeña que pueda compilarse
+  completa y copiarla con sus `.meta`/GUID a `unity-bootstrap/`. No inventar
+  contenido, no copiar el proyecto entero y no modificar `unity/**`.
+- **AUTORIZACIÓN:** seguir únicamente la autorización condicional de builds
+  secuenciales descrita en `replit.md` y
+  `docs/vexforge-canonical/UNITY_BOOTSTRAP_WORKFLOW.md`; detenerse ante cualquier
+  fallo. No despachar el workflow del juego oficial ni Unity Cloud Build.
+- **SUPABASE:** la consulta de Management API de solo lectura del 2026-10-10
+  devolvió `ACTIVE_HEALTHY`. Esta revisión no modificó esquema, datos, Auth,
+  RLS, RPCs, funciones, Storage ni configuración live.
+- **RUTA DE LECTURA:** `replit.md` y `UNITY_BOOTSTRAP_WORKFLOW.md` gobiernan esta
+  migración. Los handoffs V5.6 del portal y el bloque de implementación Unity
+  oficial son referencias de alcance distinto, no la siguiente tarea Bootstrap.
+
+## HISTÓRICO — 2026-10-04 — AUTORIDAD DEL RUNTIME UNITY / PARIDAD EXPO / FAB RETIRADO
 
 - **RUNTIME CANÓNICO:** Unity bajo `unity/**` es el único runtime Android activo.
 - **EXPO:** `mobile/**` queda como referencia de comportamiento hasta superar

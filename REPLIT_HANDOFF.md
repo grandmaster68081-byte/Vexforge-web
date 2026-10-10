@@ -1,4 +1,8 @@
-# VEXFORGE V5.6 — REPLIT HANDOFF
+# ARCHIVED — VEXFORGE V5.6 WEB PORTAL REPLIT HANDOFF
+
+> Historical visual handoff for the V5.6 portal package only. It is not the
+> active Unity migration instruction. Current scope and operations are in
+> `replit.md` and `docs/vexforge-canonical/UNITY_BOOTSTRAP_WORKFLOW.md`.
 
 This ZIP is the complete visual handoff for the VEXFORGE Official Portal.
 

@@ -1,4 +1,10 @@
-# VEXFORGE V5.6 — CURRENT SOURCE OF TRUTH
+# VEXFORGE V5.6 — HISTORICAL WEB PORTAL VISUAL SOURCE
+
+> Scope notice (2026-10-10): this document governs only the V5.6 web-portal
+> visual package. It is not the project-wide or active Unity migration
+> authority. Current operations are defined by `replit.md` and
+> `docs/vexforge-canonical/UNITY_BOOTSTRAP_WORKFLOW.md`. The official portal is
+> frozen during the Bootstrap migration.
 
 ## Authority
 V5.6 is the sole current visual implementation authority in this package. All V5.1–V5.4 visual documents are historical context only.

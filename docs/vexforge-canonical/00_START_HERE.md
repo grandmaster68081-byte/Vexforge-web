@@ -1,5 +1,21 @@
 # 00 — START HERE (AUTORIDAD ACTUAL: UNITY)
 
+## Enrutamiento de alcance (2026-10-10)
+
+El trabajo activo de migración incremental usa `unity-bootstrap/`, separado del
+runtime oficial. Para esa tarea, leer primero `replit.md`,
+`UNITY_BOOTSTRAP_WORKFLOW.md` y `unity-bootstrap/README.md`. El documento
+`17_CURRENT_BLOCK.md` y `16_IMPLEMENTATION_STATUS.md` describen el runtime
+oficial bajo `unity/**`; no son la cola de trabajo del Bootstrap. El protocolo
+de IA y el bloque actual deben interpretarse según esta separación.
+
+El run #2 del Bootstrap fue una prueba del workflow con una escena vacía, no un
+hito de contenido. El builder actual bloquea la compilación si no existe una
+escena. La comprobación solo valida que exista el archivo; no prueba que sea
+oficial ni que tenga todas sus dependencias. La siguiente tarea es inspeccionar
+la escena oficial de inicio y su cierre de dependencias para incorporar una
+porción pequeña, auténtica y compilable.
+
 ## Dirección vigente
 
 Unity en `unity/**` es el runtime Android del videojuego. El portal oficial está
@@ -26,6 +42,9 @@ de 35.000 variantes por shard; no se ha despachado.
   progreso y economía.
 - Mantener el portal web y el código Unity sin cambios durante la limpieza.
 - No copiar ni sustituir el arte oficial de cartas sin aprobación.
-- No generar APK/AAB ni alterar Supabase live sin autorización explícita.
+- No generar APK/AAB del juego oficial ni alterar Supabase live sin autorización
+  explícita. Para la autorización condicional ya concedida al Bootstrap, seguir
+  exclusivamente `UNITY_BOOTSTRAP_WORKFLOW.md`; no extenderla al workflow
+  oficial.
 - Antes de cada hito: confirmar `main`, árbol limpio y `HEAD == origin/main`;
   cerrar con commit y push antes de iniciar el siguiente.

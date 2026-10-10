@@ -1,27 +1,47 @@
 # VEXFORGE Unity Bootstrap
 
-This is an isolated, intentionally empty Android Unity project used to establish
-a small, repeatable build baseline before game content is copied into it.
+This is the isolated, cumulative destination for migrating the official Unity
+game into complete Android APKs in small, dependency-complete steps. It is not a
+second source of truth and must never replace or modify the official game.
 
-## Boundary
+## Current state (2026-10-10)
 
-- Unity Editor version: `6000.3.0f1`, checked against `unity/ProjectSettings/ProjectVersion.txt`.
-- Android build settings: Gradle, IL2CPP, ARM64, matching the official Unity build path.
-- Android application ID: `com.vexforge.bootstrap`, kept separate from the official game.
-- No game code, scenes, art, or other assets are copied from `unity/`.
-- The build script creates a default empty Unity scene only when the bootstrap scene does not exist.
-- Supabase is not part of this build pipeline; live Supabase schema and data are untouched.
+- Unity Editor: `6000.3.0f1`, matched to `unity/ProjectSettings/ProjectVersion.txt`.
+- Android application ID: `com.vexforge.bootstrap`, distinct from the official
+  `com.vexforge.android`.
+- This folder currently contains Unity project settings, package manifests, and
+  the build entry point; it has no migrated official scene or gameplay content.
+- The successful historical APK #2 was a workflow smoke test using an empty
+  generated scene. It proves neither migrated game content nor a cache restore.
+- The current builder requires `Assets/Scenes/VexforgeBootstrap.unity` to exist
+  and fails before building if it is missing. It never creates a default or
+  placeholder scene. The code check only verifies that the file exists; it
+  cannot prove the scene came from the official project or that its dependency
+  closure is complete. Verify provenance and dependencies against `unity/`
+  before accepting or building a slice.
+
+## Migration rules
+
+- Keep `unity/**` unchanged; inspect it as the canonical source.
+- Choose one small, coherent official scene/code/assets slice with its full
+  dependency closure. Copy original `.meta` files and preserve GUIDs. Do not
+  invent gameplay, data, scenes, art, or replacement assets.
+- Retain every previously accepted slice in `unity-bootstrap/`; each APK is a
+  full build of the accumulated project, not a shard or partial package.
+- Keep the package ID, Unity version, and settings boundary described in
+  `docs/vexforge-canonical/UNITY_BOOTSTRAP_WORKFLOW.md`.
+- Supabase is not part of this build pipeline. Do not modify live schema, data,
+  authentication, policies, RPCs, or configuration.
 
 ## Build and cache
 
-Run `.github/workflows/vexforge-unity-bootstrap-android.yml` manually from GitHub
-Actions. It builds only this folder and uploads the APK and a build report.
+The workflow `.github/workflows/vexforge-unity-bootstrap-android.yml` is
+manual-only and builds this folder. It uploads the APK and report. Its only
+cache is `unity-bootstrap/Library/`, saved after successful APK verification;
+the Unity Editor, Hub state, licenses, and credentials are never cached.
 
-The workflow restores and saves only this project's `Library/` directory, and
-saves a new cache only after APK verification succeeds. Cache keys are isolated
-from the official game's workflow. The Unity Editor installation, Unity Hub
-state, license files, and credentials are never cached or committed. The
-workflow has no push, pull-request, schedule, or other automatic trigger.
-
-Future content should be added here in small, deliberate steps. Keep the
-official `unity/` project intact and use it only as a reference.
+The documented conditional authorization permits sequential Bootstrap builds
+only after the previous APK passes all required checks. Stop on any failure;
+do not retry without fresh authorization. Do not dispatch the official Unity
+workflow or Unity Cloud Build. Follow the canonical workflow guide for the
+preflight, commit/push, build, APK hash, artifact, and cache evidence sequence.
