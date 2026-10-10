@@ -25,16 +25,23 @@ it. The current game migration order is
   restore-key (1,821,722,229 bytes) and saved a new cache (1,829,028,455
   bytes). Its old summary misreported a restore-key hit as no cache because it
   checked only exact `cache-hit`; the workflow now reports `cache-matched-key`.
-- Stage 2 is prepared as five exact official scripts, 1,165 lines (6.8578%),
+- Stage 2 passed in run #4: five official scripts, 1,165 lines (6.8578%),
   bringing the cumulative C# count to 2,260/16,988 (13.3035%). Its only C#
   dependency outside the slice is `Backend/ApiContracts.cs` from stage 1.
-  UGUI is already in the bootstrap package manifest. Tier1 resource assets and
-  the pack-reveal director are intentionally not included in this compile-only
-  slice, so it is not a functional pack reveal.
+  UGUI is already in the bootstrap package manifest. The artifact is 26,772,411
+  bytes with SHA-256
+  `8a77ab7e4e54bb70569e03d91e9ba3b42ce5c239f2430f96645ad4883bb4f89b`;
+  the downloaded APK matches its report and passes ZIP integrity checks.
+- Run #4 restored the run #3 cache through a compatible restore-key
+  (1,829,028,455 bytes) and saved a new cache (1,831,499,299 bytes). Its Unity
+  `BuildReport.summary.totalSize` log value is 621,713,303 bytes; the packaged
+  APK size is independently verified as 26,772,411 bytes.
+- Tier1 resource assets and the pack-reveal director are intentionally not
+  included in this compile-only slice, so it is not a functional pack reveal.
 - The bootstrap scene still omits `VexforgeApp`; `unity/**` remains untouched.
-  The next authorized build is only the manual Bootstrap workflow after this
-  slice is committed and pushed. Verify the APK, report, and actual cache restore
-  before any later stage. Stop after any failure; do not retry without fresh
+  Stage 2 is committed and verified; no stage 3 has been selected or built in
+  this checkpoint. Any later stage must remain cumulative and pass the same
+  artifact/hash/cache checks. Stop after any failure; do not retry without fresh
   authorization.
 - Supabase's project status was checked read-only as `ACTIVE_HEALTHY`; this
   handoff made no Supabase changes. Unity Cloud Build is not part of this path.
@@ -56,12 +63,13 @@ it. The current game migration order is
   `.github/workflows/vexforge-unity-bootstrap-android.yml` builds only
   `unity-bootstrap/**`, manually, on `main`. Each accepted content slice is
   cumulative and followed by a complete APK build. Run #2 was only a workflow
-  smoke test; run #3 is the first successful official content slice. The
-  builder requires a real scene and does not generate placeholders. It does not
-  replace or authorize the official game workflow. The user has conditionally authorized
-  this migration to continue sequentially without a new prompt for each APK,
-  only after the current baseline run succeeds and each later run succeeds in
-  turn. Stop after any failure; do not retry without fresh authorization.
+  smoke test; runs #3 and #4 validate the first two official content slices.
+  The builder requires a real scene and does not generate placeholders. It does
+  not replace or authorize the official game workflow. The user has conditionally
+  authorized this migration to continue sequentially without a new prompt for
+  each APK, only after the current baseline run succeeds and each later run
+  succeeds in turn. Stop after any failure; do not retry without fresh
+  authorization.
   Follow its dedicated operations guide.
 - Keep the official branch on `main`; before milestones, fetch and confirm a
   clean tree with `HEAD == origin/main`. Commit and push completed work.

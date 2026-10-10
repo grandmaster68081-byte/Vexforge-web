@@ -126,20 +126,27 @@ contenido. No repetir esa salida como hito de migración.
 
 `unity-bootstrap/MIGRATION_MANIFEST.json` es el registro operativo exacto:
 fija el commit fuente, el denominador de líneas C#, los hashes, los archivos
-incorporados y el siguiente corte previsto. La primera porción, Autenticación/
-Sesión, ya pasó en el run #3: 8 archivos, 1.095 líneas (6,4457 %), Unity
-6000.3.0f1, IL2CPP/ARM64, cero warnings y cero errores. El APK de 26.697.451
-bytes tiene SHA-256
-`4c61a45f9da457302db858053a0062d3788f2b6f52b7b3f94ec5380de4f031ff`; el hash
-del artefacto descargado coincide con el informe.
+incorporados y el siguiente corte previsto. La porción 1, Autenticación/Sesión,
+pasó en el run #3: 8 archivos, 1.095 líneas (6,4457 %), Unity 6000.3.0f1,
+IL2CPP/ARM64, cero warnings y cero errores. El APK de 26.697.451 bytes tiene
+SHA-256 `4c61a45f9da457302db858053a0062d3788f2b6f52b7b3f94ec5380de4f031ff`;
+el hash del artefacto descargado coincide con el informe.
 
-La porción 2 preparada añade cinco scripts oficiales (1.165 líneas, 6,8578 %);
-el acumulado será 2.260/16.988 líneas (13,3035 %). Sus dependencias externas
+La porción 2 pasó en el run #4: cinco scripts oficiales, 1.165 líneas
+(6,8578 %); el acumulado es 2.260/16.988 líneas (13,3035 %). Sus dependencias
 son `Backend/ApiContracts.cs` de la etapa 1 y UGUI, ya presente en el manifiesto
-de paquetes. Este corte solo valida compilación: no incorpora aún los recursos
+de paquetes. El APK de 26.772.411 bytes tiene SHA-256
+`8a77ab7e4e54bb70569e03d91e9ba3b42ce5c239f2430f96645ad4883bb4f89b`; el
+artefacto descargado coincide con el informe y pasa la validación ZIP. El run
+terminó con cero warnings y cero errores de Unity.
+
+Este corte solo valida compilación: no incorpora aún los recursos
 `Resources/VexforgeTier1/**` ni `VexforgeTier1PackRevealDirector`, por lo que no
 habilita el pack reveal en runtime. `VexforgeApp` sigue desconectado y
-`unity/**` permanece intacto.
+`unity/**` permanece intacto. No se ha seleccionado ni compilado una etapa 3.
+El valor `BuildReport.summary.totalSize` de Unity (621.713.303 bytes) es distinto
+del tamaño real del APK empaquetado, informado por el paso de verificación y
+confirmado con el artefacto descargado.
 
 ## Workflow y ejecución
 
@@ -177,8 +184,7 @@ La regla general es obtener autorización explícita antes de cada compilación
 Android. Para esta migración concreta, el usuario autorizó continuar sin pedir
 una orden nueva por cada etapa, condicionada a que cada APK acumulada anterior
 termine correctamente, se valide y se suba. El run #2 cumplió como prueba
-técnica inicial; el run #3 validó la primera porción oficial. La siguiente
-ejecución puede validar la porción 2 solo después de publicarla en `main`.
+técnica inicial; los runs #3 y #4 validaron las porciones oficiales 1 y 2.
 
 Una vez cumplida esa condición, continuar de forma secuencial: elegir e integrar
 una pieza, revisar el diff, hacer commit/push a `main`, despachar manualmente un
@@ -206,6 +212,9 @@ La caché de este método es exclusivamente `unity-bootstrap/Library/`.
 - Guardar una nueva caché solo después de validar la APK acumulada completa.
 - Run #3 restauró 1.821.722.229 bytes desde la clave compatible del run #2,
   luego guardó una caché de 1.829.028.455 bytes.
+- Run #4 restauró 1.829.028.455 bytes desde la clave compatible del run #3,
+  luego guardó una caché de 1.831.499.299 bytes. El resumen del run #4
+  distinguió correctamente la coincidencia compatible de una coincidencia exacta.
 - `cache-hit=false` solo significa que no hubo coincidencia exacta; no significa
   que no se haya restaurado nada. El run #3 confirmó en los logs un
   `Cache hit for restore-key`, aunque el resumen antiguo lo llamó “sin caché”.

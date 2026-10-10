@@ -216,7 +216,7 @@
     {
       "number": 2,
       "name": "Card art resolver and pack reveal view foundations",
-      "status": "prepared_pending_build",
+      "status": "verified_build_success",
       "new_runtime_csharp_files": 5,
       "new_runtime_csharp_lines": 1165,
       "share_percent": 6.8578,
@@ -291,7 +291,33 @@
         "Backend/ApiContracts.cs"
       ],
       "note": "Official C# only; this slice is for compile validation and does not yet include the Resources/VexforgeTier1 manifest/art or VexforgeTier1PackRevealDirector needed for a functional pack reveal. UnityEngine.UI is present in the bootstrap package manifest.",
-      "build": null
+      "build": {
+        "workflow_run_id": 38029751414,
+        "workflow_run_number": 4,
+        "commit": "a03acac3cfdf6b27e8cdfd6b29e82e654b5230a6",
+        "workflow_url": "https://github.com/grandmaster68081-byte/Vexforge-web/actions/runs/38029751414",
+        "result": "success",
+        "unity_editor": "6000.3.0f1",
+        "warnings": 0,
+        "errors": 0,
+        "artifact_name": "VEXFORGE-Unity-Bootstrap-APK-4",
+        "artifact_id": 11662240103,
+        "apk_size_bytes": 26772411,
+        "apk_sha256": "8a77ab7e4e54bb70569e03d91e9ba3b42ce5c239f2430f96645ad4883bb4f89b",
+        "downloaded_artifact_hash_matched_report": true,
+        "unity_build_report_total_size_bytes": 621713303,
+        "build_report_size_note": "Unity BuildReport.summary.totalSize is separate from the packaged APK file size; the artifact report and downloaded APK both report 26772411 bytes.",
+        "cache_restore": {
+          "result": "restored_from_restore_key",
+          "restored_bytes": 1829028455,
+          "matched_key": "vexforge-bootstrap-library-Linux-X64-6000.3.0f1-21df865d7844a4b6eed8b4dbf50bdfcbe915984651d1d969c135b19a29557d03-38027819127-1"
+        },
+        "cache_save": {
+          "result": "success",
+          "saved_bytes": 1831499299,
+          "saved_key": "vexforge-bootstrap-library-Linux-X64-6000.3.0f1-f9a3ca660cfdff0f8c0abb8456a35b1c2aef910850e2215ce4f486f74928f21f-38029751414-1"
+        }
+      }
     }
   ],
   "next_stage": null,
