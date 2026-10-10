@@ -162,8 +162,16 @@ de caché del run #4 (1.831.499.209 bytes), confirmó que ese error ya no aparec
 y falló después con `CS0234` en
 `VexforgeR5ProjectSetup.cs(45,13)`: no existe `Vexforge.Editor` en el namespace
 `Vexforge`. No se generó ni subió APK y no se guardó otra caché. La etapa 3
-sigue sin validar; no repetir un build ni empezar los lotes de contenido sin
-nueva autorización.
+sigue sin validar.
+
+El CS0234 se debió a que el proyecto aislado no contenía
+`VexforgeShaderStrippingSettings`, aunque `VexforgeR5ProjectSetup` lo invoca.
+La clase canónica vive en `unity/Assets/Editor`, fuera del conjunto de scripts
+runtime que ya se había copiado. Se añadió el contenido canónico y el GUID de su
+`.meta` a `unity-bootstrap/Assets/Editor`; el flujo ahora valida su namespace, clase y
+método en el preflight antes de instalar Unity. El usuario autorizó un único
+nuevo build manual tras esta reparación; una nueva falla requiere otra
+autorización.
 
 La caché anterior pertenece a `unity-bootstrap/Library` y a GitHub Actions
 `actions/cache`. No es la caché del antiguo flujo de shards: ese workflow

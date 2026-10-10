@@ -362,7 +362,7 @@
     {
       "number": 3,
       "name": "All remaining official C# runtime scripts",
-      "status": "build_failed_pending_new_authorization",
+      "status": "repair_prepared_authorized_manual_build",
       "new_runtime_csharp_files": 63,
       "new_runtime_csharp_lines": 14728,
       "share_percent": 86.6965,
@@ -812,12 +812,26 @@
           "kind": "runtime_script"
         }
       ],
+      "editor_support_files": [
+        {
+          "source": "unity/Assets/Editor/VexforgeShaderStrippingSettings.cs",
+          "destination": "unity-bootstrap/Assets/Editor/VexforgeShaderStrippingSettings.cs",
+          "source_sha256": "2c288b810cddbabd972127db8f69f5f22db8440877c21ec92f40db8116427a21",
+          "destination_sha256": "774b4e54e5becbc223675ce2cc64047f6aecf4f20ff310f50db45161fb332fc5",
+          "meta_source": "unity/Assets/Editor/VexforgeShaderStrippingSettings.cs.meta",
+          "meta_destination": "unity-bootstrap/Assets/Editor/VexforgeShaderStrippingSettings.cs.meta",
+          "meta_source_sha256": "1d90b10387b7b70141be7431e7133a5ae7971758cae43188c9c94b71d25e421c",
+          "meta_destination_sha256": "4fb3c42239f2a2325d338098a2096f642cb4384ab29407f3e7a7ab133c383f6c",
+          "meta_guid": "8409e86160aea25a22cd80c7ef5443e1",
+          "kind": "editor_support"
+        }
+      ],
       "assets": [],
       "depends_on_stages": [
         1,
         2
       ],
-      "note": "User-directed code-completion batch: all 76 canonical Assets/Scripts/**/*.cs files are present. One Bootstrap-only namespace import fix is recorded on VexforgeTier1EconomyHub.cs; all other source bytes match unity/. This stage adds no scenes, Resources, new source .meta files or other excluded Unity content. The Bootstrap VexforgeApp component remains disconnected in the staged scene; build success proves compile/package viability only, not gameplay or content parity.",
+      "note": "User-directed code-completion batch: all 76 canonical Assets/Scripts/**/*.cs files are present. The only runtime copy divergence is the recorded Bootstrap-only Vexforge.Core import. This stage also copies the canonical Editor-only VexforgeShaderStrippingSettings helper and its .meta because VexforgeR5ProjectSetup calls it and the Android build hook depends on it; this helper is excluded from the runtime-script quota. No scenes, Resources or other Unity content are added. The Bootstrap VexforgeApp component remains disconnected; build success proves compile/package viability only, not gameplay or content parity.",
       "build": {
         "previous_attempt": {
           "workflow_run_id": 38033151519,
@@ -860,7 +874,7 @@
           "artifact_uploaded": false,
           "cache_saved": false
         },
-        "fix": "Added using Vexforge.Core to the Bootstrap copy of VexforgeTier1EconomyHub.cs; that run-5 error no longer appears. Run 6 then failed on CS0234 in VexforgeR5ProjectSetup.cs. Require new user authorization before another manual build."
+        "fix": "Added using Vexforge.Core to the Bootstrap copy of VexforgeTier1EconomyHub.cs; that run-5 error no longer appears. Run 6's CS0234 was caused by the missing canonical VexforgeShaderStrippingSettings editor helper. The helper content and metadata GUID are now copied into the isolated Bootstrap project; the workflow checks for the helper before Unity setup. The user authorized one new manual build."
       }
     }
   ],

@@ -51,10 +51,12 @@ it. The current game migration order is
   the copied runtime script set to 76/76 and 16,988/16,988 lines. Run #5's two
   CS0246 errors for `VexforgeApp` were fixed by importing `Vexforge.Core` in the
   Bootstrap copy only. Run #6 restored the run #4 Library cache successfully,
-  then failed with CS0234 in `VexforgeR5ProjectSetup.cs(45,13)` because
-  `Vexforge.Editor` was not found. No APK or new cache was produced; `unity/**`
-  remains unchanged. Stop after this failure and require new authorization
-  before another manual build or later content batches. This stage
+  then failed with CS0234 in `VexforgeR5ProjectSetup.cs(45,13)` because its
+  `Vexforge.Editor.VexforgeShaderStrippingSettings` dependency was absent from
+  Bootstrap. The canonical editor-only helper and its `.meta` GUID are now
+  copied to `unity-bootstrap/Assets/Editor`; a preflight checks the file/class/method
+  before Unity setup. The user authorized one new manual build after this repair.
+  No change is made under `unity/**`. This stage
   intentionally adds no new scenes, Resources, source `.meta` files or other
   excluded Unity project content. Passing the compile test will not prove game
   runtime, scene, resource or full-content parity.

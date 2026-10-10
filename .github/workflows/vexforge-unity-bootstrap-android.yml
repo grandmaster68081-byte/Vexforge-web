@@ -40,9 +40,17 @@ jobs:
             exit 1
           }
           test -f unity-bootstrap/Assets/Editor/VexforgeBootstrapBuild.cs
+          shader_support="unity-bootstrap/Assets/Editor/VexforgeShaderStrippingSettings.cs"
+          test -f "$shader_support" || {
+            echo "Missing Bootstrap editor support: $shader_support" >&2
+            exit 1
+          }
+          grep -Fq 'namespace Vexforge.Editor' "$shader_support"
+          grep -Fq 'public static class VexforgeShaderStrippingSettings' "$shader_support"
+          grep -Fq 'public static void ApplyForAndroid()' "$shader_support"
           test ! -d unity/Assets
           echo "version=$bootstrap_version" >> "$GITHUB_OUTPUT"
-          echo "Unity $bootstrap_version; only unity-bootstrap is available to the build."
+          echo "Unity $bootstrap_version; Bootstrap editor support is present; canonical Assets are not available to the build."
 
       - name: Verify Unity activation inputs
         id: activation-preflight
