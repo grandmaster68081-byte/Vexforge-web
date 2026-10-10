@@ -257,9 +257,22 @@ La etapa 7 seleccionada agrupa el catálogo canónico de recursos con el
 reverso de la carta, el fallback neutral y los seis marcos de rareza que consume
 el sistema de cartas. El catálogo y cada textura conservan su `.meta` original,
 GUID e importación; el lote completo es de 18/197 archivos (9,1371 %), por
-debajo del límite de 19. El run #10 y su APK se verificaron antes de preparar
-esta etapa. Integrar únicamente estos archivos en `unity-bootstrap/`, registrar
-sus hashes y compilar un único APK Bootstrap manual en `main`.
+debajo del límite de 19.
+
+La etapa 7 pasó en Bootstrap run #11, commit
+`68c311c748a863da4ee7796b982432cb55284b35`. El APK Android/IL2CPP/ARM64 de
+`com.vexforge.bootstrap` mide 28.030.111 bytes; su SHA-256
+`a78a2cffe5ddbefd5906c5f5d010c448e0dafd2869d0ddc574d6907aa5899703`
+coincide con el informe del build descargado. El ZIP del artefacto y el APK
+superaron las comprobaciones de integridad; se verificaron AndroidManifest,
+datos Unity y la biblioteca IL2CPP ARM64. Se subió
+`VEXFORGE-Unity-Bootstrap-APK-11` (ID `11675301237`, 27.386.511 bytes).
+
+Run #11 restauró 1.863.972.123 bytes desde la clave compatible del run #10
+(sin coincidencia exacta) y guardó una caché nueva.
+`BuildReport.totalSize` fue 651.686.250 bytes. Unity registró 0 warnings y
+1 error aunque terminó con `BuildResult.Succeeded`; se conserva el contador
+para revisión y no se declara como cero errores.
 
 Tras validar cada APK acumulada, elegir otro lote cerrado de dependencias desde
 el inventario canónico restante sin fijar por adelantado el número de etapas.

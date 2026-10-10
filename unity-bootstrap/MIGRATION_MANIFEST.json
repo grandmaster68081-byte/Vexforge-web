@@ -1175,7 +1175,46 @@
     {
       "number": 7,
       "name": "Tier1 core card presentation resources",
-      "status": "prepared_for_build",
+      "status": "verified_build_success",
+      "build": {
+        "workflow_run_id": 38065092660,
+        "workflow_run_number": 11,
+        "commit": "68c311c748a863da4ee7796b982432cb55284b35",
+        "workflow_url": "https://github.com/grandmaster68081-byte/Vexforge-web/actions/runs/38065092660",
+        "result": "success",
+        "unity_editor": "6000.3.0f1",
+        "application_id": "com.vexforge.bootstrap",
+        "platform": "Android",
+        "scripting": "IL2CPP",
+        "architecture": "ARM64",
+        "warnings": 0,
+        "errors": 1,
+        "unity_build_report_total_size_bytes": 651686250,
+        "build_report_anomaly": "The BuildReport records errors=1 although Unity reports BuildResult.Succeeded and GitHub Actions, APK validation, and artifact upload succeeded. Record the counter for later review; per the user's direction it is non-blocking by itself and does not mean zero errors.",
+        "artifact_name": "VEXFORGE-Unity-Bootstrap-APK-11",
+        "artifact_id": 11675301237,
+        "artifact_size_bytes": 27386511,
+        "apk_size_bytes": 28030111,
+        "apk_sha256": "a78a2cffe5ddbefd5906c5f5d010c448e0dafd2869d0ddc574d6907aa5899703",
+        "downloaded_artifact_hash_matched_report": true,
+        "apk_validation": {
+          "outer_artifact_zip_valid": true,
+          "apk_zip_crc_valid": true,
+          "android_manifest_present": true,
+          "unity_data_present": true,
+          "arm64_il2cpp_library_present": true
+        },
+        "cache_restore": {
+          "result": "restored_from_restore_key",
+          "restored_bytes": 1863972123,
+          "matched_key": "vexforge-bootstrap-library-Linux-X64-6000.3.0f1-b5228a5f94297ca834099556a15801510cc518fb2f57996a903295a412f691e1-38062606007-1",
+          "exact_key_hit": false
+        },
+        "cache_save": {
+          "result": "success",
+          "saved_key": "vexforge-bootstrap-library-Linux-X64-6000.3.0f1-312fc8225f5a39d9f5feddf214b0b0e778e0e839c09ac3266a9bae6a2be11ff8-38065092660-1"
+        }
+      },
       "new_file_count": 18,
       "share_percent": 9.1371,
       "assets": [
@@ -1276,7 +1315,7 @@
       "note": "This dependency-closed set adds the canonical resource catalog used by VexforgeTier1AssetRegistry plus the core card back, neutral fallback, and all six rarity frame textures. The catalog and every PNG retain their canonical .meta sidecars, GUIDs, and import settings; the resource keys match the catalog. This is 18/197 (9.1371%) of the pinned full-content inventory, within the 19-file cap. Other visual assets remain for later batches."
     }
   ],
-  "next_stage": "Stage 7 is prepared for the next manual Bootstrap build: the core card resource catalog, card back, neutral fallback, and six rarity frames. Do not start it until the previous run #10 artifact/hash checks are complete; after validation, choose the next dependency-closed batch from the remaining canonical inventory, capped at 19 files.",
+  "next_stage": "Stage 7's cumulative APK and artifact passed validation in Bootstrap run #11. Select the next dependency-closed batch from the remaining canonical inventory only after reviewing its references; cap each batch at 19 canonical files and do not preselect a fixed number of batches.",
   "known_architecture_boundary": "The official code contains a reciprocal App/HUD cycle involving 31 files and 7,066 lines (41.6%). The user-directed stage 3 imports the full pinned runtime C# inventory together, so it does not split that source cycle. Stage 5 restores the app component in the official bootstrap scene; stage 6 adds the canonical audio cue set. Visual resources, remaining scenes, runtime behavior, and full-content parity still require later stages and separate verification. Any temporary compile seam must be recorded and removed before parity is claimed.",
   "scene_policy": "Stage 5 restores the canonical VexforgeBootstrap scene content and its already-matched scene metadata; the Bootstrap copy adds one final LF, and its VexforgeApp script GUID resolves through stage 4. unity/ remains the untouched source of truth. The restored scene is not device or gameplay verification."
 }
