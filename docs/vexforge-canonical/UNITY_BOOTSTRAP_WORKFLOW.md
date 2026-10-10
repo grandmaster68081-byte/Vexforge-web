@@ -297,12 +297,28 @@ Run #12 restauró 1.864.932.017 bytes desde la clave compatible del run #11
 1 error aunque terminó con `BuildResult.Succeeded`; se conserva el contador
 para revisión y no se declara como cero errores.
 
-La etapa 9 preparada agrupa cinco fondos canónicos de rutas: Nexus Citadel,
-Archive Sanctum, Forge Chamber, Mission Hall y Treasury Vault. Sus claves están
-en el catálogo, y los directores de tutorial y salas las solicitan. Se
-conservan los cinco `.meta` originales, GUID, importación y claves de
-`Resources`; el lote suma 10/197 archivos (5,0761 %), bajo el límite de 19. El
-siguiente run manual Bootstrap debe compilar este lote acumulado en `main`.
+La etapa 9 pasó en el run manual Bootstrap #13 (`38070287927`, commit
+`fd6226f63865318d77136ed289fe329f3b967a83`). Unity 6000.3.0f1 produjo Android
+IL2CPP/ARM64 con `com.vexforge.bootstrap`. El artefacto
+`VEXFORGE-Unity-Bootstrap-APK-13` (ID `11676937099`, 44.385.181 bytes) y su APK
+descargado pasan integridad ZIP/CRC; el APK mide 45.028.601 bytes y su SHA-256
+`b634043078a8f596846415839512386690619b6df055b9b68eaa4d83c35d2107` coincide
+con el informe. Contiene AndroidManifest, datos Unity y `libil2cpp.so` ARM64.
+`BuildReport.totalSize` fue 714.070.552 bytes; Unity registró 0 warnings y
+1 error. Se registra el error para revisión acumulada, sin declararlo cero; por
+la regla del usuario ese contador no bloquea cuando workflow, APK y artefacto
+están validados. El run #13 restauró 1.891.051.220 bytes desde la clave
+compatible del run #12 (sin coincidencia exacta) y guardó una nueva caché de
+2.003.837.946 bytes.
+
+La etapa 10 preparada agrupa cinco recursos canónicos: patrón Nexus, artefacto
+Pack Relic, portada Pack Vault Hero y sigilos de recompensa común y premium.
+Están declarados en el catálogo Tier1; los directores de pack/recompensas ya
+migrados solicitan los recursos correspondientes. Se conservan PNG y `.meta`
+originales, GUID, ajustes de importación y claves de `Resources`; el lote suma
+10/197 archivos (5,0761 %), bajo el límite de 19. Depende de las etapas 3, 7 y
+9. El siguiente run manual Bootstrap debe compilar este lote acumulado en
+`main`; su resultado y artefacto se validan antes de elegir otra tanda.
 
 Tras validar cada APK acumulada, elegir otro lote cerrado de dependencias desde
 el inventario canónico restante sin fijar por adelantado el número de etapas.

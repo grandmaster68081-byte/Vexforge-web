@@ -1412,7 +1412,7 @@
     {
       "number": 9,
       "name": "Tier1 hub and route hero resources",
-      "status": "prepared_for_build",
+      "status": "verified_build_success",
       "new_file_count": 10,
       "share_percent": 5.0761,
       "assets": [
@@ -1471,10 +1471,117 @@
         3,
         7
       ],
-      "note": "This dependency-closed batch adds the five canonical hub/route hero textures referenced by the tutorial and room directors. Their resource catalog, registry, and neutral fallback are already present from stages 3 and 7. Each PNG keeps its source .meta, GUID, import settings, and Resources key. The batch is 10/197 files (5.0761%), below the 19-file cap; pack, reward, and world-pattern art remain for later batches."
+      "note": "This dependency-closed batch adds the five canonical hub/route hero textures referenced by the tutorial and room directors. Their resource catalog, registry, and neutral fallback are already present from stages 3 and 7. Each PNG keeps its source .meta, GUID, import settings, and Resources key. The batch is 10/197 files (5.0761%), below the 19-file cap; pack, reward, and world-pattern art remain for later batches.",
+      "build": {
+        "workflow_run_id": 38070287927,
+        "workflow_run_number": 13,
+        "commit": "fd6226f63865318d77136ed289fe329f3b967a83",
+        "workflow_url": "https://github.com/grandmaster68081-byte/Vexforge-web/actions/runs/38070287927",
+        "result": "success",
+        "unity_editor": "6000.3.0f1",
+        "application_id": "com.vexforge.bootstrap",
+        "platform": "Android",
+        "scripting": "IL2CPP",
+        "architecture": "ARM64",
+        "warnings": 0,
+        "errors": 1,
+        "unity_build_report_total_size_bytes": 714070552,
+        "build_report_anomaly": "The BuildReport records errors=1 although Unity reports Succeeded and the GitHub workflow, APK validation, and artifact upload all passed. Record the counter for later review; per the user's direction it is non-blocking by itself and is not described as zero errors.",
+        "artifact_name": "VEXFORGE-Unity-Bootstrap-APK-13",
+        "artifact_id": 11676937099,
+        "artifact_size_bytes": 44385181,
+        "artifact_zip_sha256": "71570cec295facfee6f017f2fd6c7c161236d858860913d7082b9923a12b0ee9",
+        "apk_size_bytes": 45028601,
+        "apk_sha256": "b634043078a8f596846415839512386690619b6df055b9b68eaa4d83c35d2107",
+        "downloaded_artifact_hash_matched_report": true,
+        "apk_validation": {
+          "outer_artifact_zip_valid": true,
+          "apk_zip_crc_valid": true,
+          "android_manifest_present": true,
+          "unity_data_present": true,
+          "arm64_il2cpp_library_present": true
+        },
+        "cache_restore": {
+          "result": "restored_from_restore_key",
+          "restored_bytes": 1891051220,
+          "matched_key": "vexforge-bootstrap-library-Linux-X64-6000.3.0f1-76ceeca307038f881f9fa332c2e27a7102d41664763bd9480db0695b5a24b679-38067100569-1",
+          "exact_key_hit": false
+        },
+        "cache_save": {
+          "result": "success",
+          "saved_bytes": 2003837946,
+          "saved_key": "vexforge-bootstrap-library-Linux-X64-6000.3.0f1-1cbe18f3b4719692b0ff36cb5aafc5c23e0cb4e558b1b40d67147d6cfea5533f-38070287927-1"
+        }
+      }
+    },
+    {
+      "number": 10,
+      "name": "Tier1 Nexus pattern, pack, and reward art resources",
+      "status": "prepared_for_build",
+      "new_file_count": 10,
+      "share_percent": 5.0761,
+      "assets": [
+        {
+          "source": "unity/Assets/Resources/VexforgeTier1/Art/VF_NEXUS_OBSIDIAN_PATTERN.png",
+          "destination": "unity-bootstrap/Assets/Resources/VexforgeTier1/Art/VF_NEXUS_OBSIDIAN_PATTERN.png",
+          "source_sha256": "f073d3ceb293221cabf015e9f9e16c4dbe4572c6384a8a4d984156a45b96eec0",
+          "destination_sha256": "f073d3ceb293221cabf015e9f9e16c4dbe4572c6384a8a4d984156a45b96eec0",
+          "kind": "resource_texture",
+          "source_meta": "unity/Assets/Resources/VexforgeTier1/Art/VF_NEXUS_OBSIDIAN_PATTERN.png.meta",
+          "meta_sha256": "0d7b19220d7df974696d3e624e86206241d92d522e3b816f71e58c7d33c7cd20",
+          "resource_key": "VexforgeTier1/Art/VF_NEXUS_OBSIDIAN_PATTERN"
+        },
+        {
+          "source": "unity/Assets/Resources/VexforgeTier1/Art/VF_PACK_RELIC.png",
+          "destination": "unity-bootstrap/Assets/Resources/VexforgeTier1/Art/VF_PACK_RELIC.png",
+          "source_sha256": "48b3b3b009722fee2ec514f4741d745f9673700552d2dd8a1992f5b86346d068",
+          "destination_sha256": "48b3b3b009722fee2ec514f4741d745f9673700552d2dd8a1992f5b86346d068",
+          "kind": "resource_texture",
+          "source_meta": "unity/Assets/Resources/VexforgeTier1/Art/VF_PACK_RELIC.png.meta",
+          "meta_sha256": "6988292f784f7c6c52f9231d101ecd1e79948638abff43b5bcba3deee9e2b9f5",
+          "resource_key": "VexforgeTier1/Art/VF_PACK_RELIC"
+        },
+        {
+          "source": "unity/Assets/Resources/VexforgeTier1/Art/VF_PACK_VAULT_HERO.png",
+          "destination": "unity-bootstrap/Assets/Resources/VexforgeTier1/Art/VF_PACK_VAULT_HERO.png",
+          "source_sha256": "3ef42797fa3cb64c99436e86636327256cef466d7cc4779d30ef5ff2e2c2970b",
+          "destination_sha256": "3ef42797fa3cb64c99436e86636327256cef466d7cc4779d30ef5ff2e2c2970b",
+          "kind": "resource_texture",
+          "source_meta": "unity/Assets/Resources/VexforgeTier1/Art/VF_PACK_VAULT_HERO.png.meta",
+          "meta_sha256": "afe6b7900ed08d6533d8d1acddc2875aa2fca590c2b26bf464417ccd99fb5e4d",
+          "resource_key": "VexforgeTier1/Art/VF_PACK_VAULT_HERO"
+        },
+        {
+          "source": "unity/Assets/Resources/VexforgeTier1/Art/VF_REWARD_SIGIL_COMMON.png",
+          "destination": "unity-bootstrap/Assets/Resources/VexforgeTier1/Art/VF_REWARD_SIGIL_COMMON.png",
+          "source_sha256": "a78a9318565ad3b727c9b5e1c6b6b0f9c18b7e05b0e330039990c6ff7a845f41",
+          "destination_sha256": "a78a9318565ad3b727c9b5e1c6b6b0f9c18b7e05b0e330039990c6ff7a845f41",
+          "kind": "resource_texture",
+          "source_meta": "unity/Assets/Resources/VexforgeTier1/Art/VF_REWARD_SIGIL_COMMON.png.meta",
+          "meta_sha256": "ccc5d34e50ffd0eaf55e3451c828f6b24a779ec4b37625bc40dc840880dcefb1",
+          "resource_key": "VexforgeTier1/Art/VF_REWARD_SIGIL_COMMON"
+        },
+        {
+          "source": "unity/Assets/Resources/VexforgeTier1/Art/VF_REWARD_SIGIL_PREMIUM.png",
+          "destination": "unity-bootstrap/Assets/Resources/VexforgeTier1/Art/VF_REWARD_SIGIL_PREMIUM.png",
+          "source_sha256": "351f798d5eb21bf5f85c9de89657978cb69eaa997a17b07a02c267e14e9d84e8",
+          "destination_sha256": "351f798d5eb21bf5f85c9de89657978cb69eaa997a17b07a02c267e14e9d84e8",
+          "kind": "resource_texture",
+          "source_meta": "unity/Assets/Resources/VexforgeTier1/Art/VF_REWARD_SIGIL_PREMIUM.png.meta",
+          "meta_sha256": "b4c13bfea57039d1c57e1f0a6b28d35f4bf4367aa0b7eba2b2a95b353eaee402",
+          "resource_key": "VexforgeTier1/Art/VF_REWARD_SIGIL_PREMIUM"
+        }
+      ],
+      "depends_on_stages": [
+        3,
+        7,
+        9
+      ],
+      "note": "This dependency-closed batch adds five canonical Nexus, pack, and reward textures already represented in the Tier1 resource catalog. The pack/reward textures are requested by the migrated pack-reveal and room-ornament directors; the Nexus pattern completes the declared world-art entry. Each PNG keeps its exact source .meta, GUID, import settings, and Resources key. This is 10/197 files (5.0761%), below the 19-file cap; the production configuration and other remaining assets stay for later batches.",
+      "build": null
     }
   ],
-  "next_stage": "Stage 8 passed in manual Bootstrap run #12 with a validated Android/IL2CPP/ARM64 APK and uploaded artifact. Stage 9 is prepared for the next single manual cumulative Bootstrap build on main: five route hero textures and their canonical .meta files (10/197 files, 5.0761%). Confirm the APK and artifact before choosing another dependency-closed batch, capped at 19 files.",
+  "next_stage": "Stage 9 passed in manual Bootstrap run #13 with a validated Android/IL2CPP/ARM64 APK and uploaded artifact. Stage 10 is prepared for the next single manual cumulative Bootstrap build on main: five Nexus pattern, pack, and reward textures plus their canonical .meta files (10/197 files, 5.0761%), dependent on stages 3, 7, and 9. Confirm the APK and artifact before choosing another dependency-closed batch, capped at 19 files.",
   "known_architecture_boundary": "The official code contains a reciprocal App/HUD cycle involving 31 files and 7,066 lines (41.6%). The user-directed stage 3 imports the full pinned runtime C# inventory together, so it does not split that source cycle. Stage 5 restores the app component in the official bootstrap scene; stage 6 adds the canonical audio cue set. Visual resources, remaining scenes, runtime behavior, and full-content parity still require later stages and separate verification. Any temporary compile seam must be recorded and removed before parity is claimed.",
   "scene_policy": "Stage 5 restores the canonical VexforgeBootstrap scene content and its already-matched scene metadata; the Bootstrap copy adds one final LF, and its VexforgeApp script GUID resolves through stage 4. unity/ remains the untouched source of truth. The restored scene is not device or gameplay verification."
 }

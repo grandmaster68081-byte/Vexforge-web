@@ -105,10 +105,20 @@ it. The current game migration order is
   keep the counters for review, per the existing non-blocking rule. Run #12
   restored 1,864,932,017 bytes from the compatible run #11 cache and saved
   1,891,051,220 bytes.
-- Stage 9 is prepared for the next manual build: five canonical route hero
-  textures and their `.meta` files (10/197 files, 5.0761%). The asset catalog,
-  registry, and requesting route/tutorial directors are already present.
-  Preserve the canonical `unity/**` source unchanged.
+- Stage 9 passed in Bootstrap run #13 on
+  `fd6226f63865318d77136ed289fe329f3b967a83`. Its downloaded 45,028,601-byte
+  Android/IL2CPP/ARM64 APK SHA-256
+  `b634043078a8f596846415839512386690619b6df055b9b68eaa4d83c35d2107`
+  matches the report; artifact `VEXFORGE-Unity-Bootstrap-APK-13` (ID
+  `11676937099`, 44,385,181 bytes) and APK passed integrity checks, with Android
+  manifest, Unity data, and ARM64 IL2CPP present. Unity reported warnings=0,
+  errors=1 and `BuildReport.totalSize` 714,070,552; keep the counter for review,
+  per the existing non-blocking rule. Run #13 restored 1,891,051,220 bytes from
+  the compatible run #12 cache and saved 2,003,837,946 bytes.
+- Stage 10 is prepared for the next manual build: five canonical Nexus pattern,
+  pack, and reward textures with their `.meta` files (10/197 files, 5.0761%).
+  The catalog and requesting pack/reward directors are already present. Preserve
+  the canonical `unity/**` source unchanged.
 
 ## Active scope
 
