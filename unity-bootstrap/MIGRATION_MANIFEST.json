@@ -362,7 +362,7 @@
     {
       "number": 3,
       "name": "All remaining official C# runtime scripts",
-      "status": "repair_prepared_authorized_manual_build",
+      "status": "verified_build_success",
       "new_runtime_csharp_files": 63,
       "new_runtime_csharp_lines": 14728,
       "share_percent": 86.6965,
@@ -874,11 +874,66 @@
           "artifact_uploaded": false,
           "cache_saved": false
         },
-        "fix": "Added using Vexforge.Core to the Bootstrap copy of VexforgeTier1EconomyHub.cs; that run-5 error no longer appears. Run 6's CS0234 was caused by the missing canonical VexforgeShaderStrippingSettings editor helper. The helper content and metadata GUID are now copied into the isolated Bootstrap project; the workflow checks for the helper before Unity setup. The user authorized one new manual build."
+        "fix": "Added using Vexforge.Core to the Bootstrap copy of VexforgeTier1EconomyHub.cs; that run-5 error no longer appears. Run 6's CS0234 was caused by the missing canonical VexforgeShaderStrippingSettings editor helper. The helper content and metadata GUID are now copied into the isolated Bootstrap project; the workflow checks for the helper before Unity setup. Run 7 validated the repaired stage.",
+        "latest_success": {
+          "workflow_run_id": 38036352949,
+          "workflow_run_number": 7,
+          "commit": "5e9deb8da0585265bd4ab2d01a5f602e5dc1e9ae",
+          "workflow_url": "https://github.com/grandmaster68081-byte/Vexforge-web/actions/runs/38036352949",
+          "result": "success",
+          "unity_editor": "6000.3.0f1",
+          "warnings": 2,
+          "errors": 1,
+          "unity_build_report_total_size_bytes": 640116360,
+          "build_report_anomaly": "Unity BuildReport records errors=1 despite Build Finished, Result: Success and a successful workflow/artifact validation. No compiler diagnostic explaining the count was found in the archived job output; leave this unresolved and do not represent the run as zero-error.",
+          "artifact_name": "VEXFORGE-Unity-Bootstrap-APK-7",
+          "artifact_id": 11664422494,
+          "apk_size_bytes": 27905659,
+          "apk_sha256": "250973b103a01f61de2746bfb47f6707335df8314972031a3677932ed9a25174",
+          "downloaded_artifact_hash_matched_report": true,
+          "apk_validation": {
+            "outer_artifact_zip_valid": true,
+            "apk_zip_crc_valid": true,
+            "android_manifest_present": true,
+            "unity_data_present": true,
+            "arm64_il2cpp_library_present": true
+          },
+          "cache_restore": {
+            "result": "restored_from_restore_key",
+            "restored_bytes": 1831499209,
+            "matched_key": "vexforge-bootstrap-library-Linux-X64-6000.3.0f1-f9a3ca660cfdff0f8c0abb8456a35b1c2aef910850e2215ce4f486f74928f21f-38029751414-1",
+            "exact_key_hit": false
+          },
+          "cache_save": {
+            "result": "success",
+            "saved_key": "vexforge-bootstrap-library-Linux-X64-6000.3.0f1-e6deedcaa8fc1cc3ab9daa8680b431ee7f4d14941ac980f592770f30f027cd0a-38036352949-1"
+          }
+        }
       }
+    },
+    {
+      "number": 4,
+      "name": "VexforgeApp scene script GUID metadata",
+      "status": "prepared_for_manual_build",
+      "new_file_count": 1,
+      "share_percent": 0.5076,
+      "source_files": [
+        {
+          "source": "unity/Assets/Scripts/Core/VexforgeApp.cs.meta",
+          "destination": "unity-bootstrap/Assets/Scripts/Core/VexforgeApp.cs.meta",
+          "source_sha256": "04b531c595141c4d32d2713b03506bc23a90a238cf117f925ab46e0c8a89688d",
+          "destination_sha256": "04b531c595141c4d32d2713b03506bc23a90a238cf117f925ab46e0c8a89688d",
+          "kind": "canonical_script_meta",
+          "guid": "8b9c9082e1c94958b4dfd0d37aaf3cd1"
+        }
+      ],
+      "depends_on_stages": [
+        3
+      ],
+      "note": "This is the only canonical script GUID referenced by the official VexforgeBootstrap scene. Its C# source is already present in stage 3. Add the exact upstream metadata now; keep the scene and all other content out of this dependency-closed one-file batch."
     }
   ],
-  "next_stage": "Only after stage 3's APK passes, select dependency-closed batches of no more than 10% of full_content_inventory. Do not preselect a fixed number of batches.",
+  "next_stage": "Stage 4 contains the canonical VexforgeApp.cs.meta file (1 of 197 full-content files, 0.5076%) and is prepared for one manual Bootstrap APK build. After its APK is validated, continue selecting dependency-closed batches of no more than 19 files; do not preselect a fixed number of batches.",
   "known_architecture_boundary": "The official code contains a reciprocal App/HUD cycle involving 31 files and 7,066 lines (41.6%). The user-directed stage 3 now imports the full pinned runtime C# inventory together, so it does not split that source cycle. Keep the staged scene disconnected until the later scene/content pass restores its canonical component references. Any temporary compile seam must be recorded and removed before parity is claimed.",
   "scene_policy": "The bootstrap copy keeps the official VexforgeBootstrap scene GUID/settings but intentionally omits its VexforgeApp component during this code-only pass. Restore the exact official scene and metadata only as part of the later bounded full-content migration. unity/ remains untouched."
 }

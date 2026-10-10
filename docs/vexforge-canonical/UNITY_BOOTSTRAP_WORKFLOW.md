@@ -169,9 +169,34 @@ El CS0234 se debió a que el proyecto aislado no contenía
 La clase canónica vive en `unity/Assets/Editor`, fuera del conjunto de scripts
 runtime que ya se había copiado. Se añadió el contenido canónico y el GUID de su
 `.meta` a `unity-bootstrap/Assets/Editor`; el flujo ahora valida su namespace, clase y
-método en el preflight antes de instalar Unity. El usuario autorizó un único
-nuevo build manual tras esta reparación; una nueva falla requiere otra
-autorización.
+método en el preflight antes de instalar Unity. El usuario autorizó un nuevo
+build manual tras esta reparación; el run #7 cumplió la autorización. Después
+autorizó preparar y compilar la primera tanda de contenido descrita abajo.
+
+Run #7 (`38036352949`, commit `5e9deb8`) pasó el 10 de octubre de 2026 con Unity
+`6000.3.0f1`, Android, IL2CPP/ARM64 y `com.vexforge.bootstrap`. Se descargó el
+artefacto `VEXFORGE-Unity-Bootstrap-APK-7` (ID `11664422494`): el APK mide
+27.905.659 bytes y su SHA-256
+`250973b103a01f61de2746bfb47f6707335df8314972031a3677932ed9a25174` coincide
+con el informe. El ZIP del artefacto y el APK pasan CRC; contiene AndroidManifest,
+datos Unity y la biblioteca IL2CPP ARM64. Restauró una caché compatible del run
+#4 y guardó una nueva para el run #7.
+
+El workflow terminó correctamente, pero el BuildReport de Unity registró 2
+warnings y 1 error aunque indica `Build Finished, Result: Success`; el log
+archivado no mostró un diagnóstico de compilador que explique el contador.
+Se registra como anomalía sin resolver, no como un build con cero errores. El
+BuildReport.totalSize de 640.116.360 bytes es distinto del APK empaquetado.
+El stage 3 está verificado técnicamente, pero el APK sigue siendo solo una
+compilación aislada: no acredita gameplay, pruebas en dispositivo ni paridad
+final.
+
+La primera tanda de contenido preparada es únicamente
+`VexforgeApp.cs.meta` (1 de 197 archivos de inventario, 0,5076 %). Su GUID es la
+única referencia `m_Script` de la escena oficial `VexforgeBootstrap`; el script
+ya se migró en el stage 3. La escena y los demás recursos continúan excluidos
+hasta sus tandas con dependencias completas. Ante un build fallido, APK/artefacto
+ausente o riesgo sin resolver, detenerse antes de lanzar otro.
 
 La caché anterior pertenece a `unity-bootstrap/Library` y a GitHub Actions
 `actions/cache`. No es la caché del antiguo flujo de shards: ese workflow
@@ -249,7 +274,7 @@ La caché de este método es exclusivamente `unity-bootstrap/Library/`.
 - Run #3 restauró 1.821.722.229 bytes desde la clave compatible del run #2,
   luego guardó una caché de 1.829.028.455 bytes.
 - Run #4 restauró 1.829.028.455 bytes desde la clave compatible del run #3,
-  luego guardó una caché de 1.831.499.299 bytes. El resumen del run #4
+  luego guardó una caché de 1.831.499.209 bytes. El resumen del run #4
   distinguió correctamente la coincidencia compatible de una coincidencia exacta.
 - `cache-hit=false` solo significa que no hubo coincidencia exacta; no significa
   que no se haya restaurado nada. El run #3 confirmó en los logs un

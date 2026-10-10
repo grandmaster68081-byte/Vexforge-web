@@ -12,9 +12,15 @@ game.
 - Unity Editor: `6000.3.0f1`, matched to `unity/ProjectSettings/ProjectVersion.txt`.
 - Android application ID: `com.vexforge.bootstrap`, distinct from the official
   `com.vexforge.android`.
-- Stages 1 and 2 passed. Stage 3 now contains all 76 canonical
+- Stages 1 and 2 passed. Stage 3 contains all 76 canonical
   `Assets/Scripts/**/*.cs` files (16,988 lines); its 63 newly copied scripts are
-  hash-identical to the official source. The stage 3 APK build is still pending.
+  hash-identical to the official source. APK run #7 passed workflow, artifact,
+  hash, and structural checks. Unity reported 2 warnings and 1 error in its
+  BuildReport despite `Result: Success`; the unexplained error count is recorded
+  and must not be described as a zero-error build.
+- Stage 4 is the exact upstream `VexforgeApp.cs.meta` file. It restores the only
+  script GUID referenced by the official bootstrap scene; the scene remains
+  deferred. This one-file batch is prepared for the next manual APK build.
 - The existing Bootstrap scene is a documented, modified copy of the official
   scene. It intentionally omits the `VexforgeApp` component. This code-only pass
   does not restore the canonical scene or migrate the remaining resources,
@@ -34,7 +40,7 @@ game.
 - Preserve the verified stages 1 and 2. Stage 3 is the user-directed one-time
   completion of all remaining canonical C# source, taking the code inventory to
   100%; it is intentionally larger than the historical 5–7% code slices.
-- Only after stage 3 passes, migrate the remaining canonical Unity project files
+- After stage 3 passes, migrate the remaining canonical Unity project files
   in dependency-closed batches capped at 10% of the complete tracked `unity/`
   inventory. The manifest defines the auditable file-count denominator and
   current cap; do not preselect a fixed number of batches.
