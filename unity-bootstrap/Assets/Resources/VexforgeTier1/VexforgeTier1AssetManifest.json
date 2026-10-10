@@ -1,0 +1,302 @@
+{
+  "schema_version": "3.0",
+  "product": "VEXFORGE",
+  "layer": "Tier1ProductionClosureV15",
+  "canonical_source": "Supabase official card artwork + canonical Unity Presentation runtime",
+  "official_card_art_source": {
+    "known_count": 127,
+    "bucket": "vexforge-assets",
+    "prefix": "cards",
+    "host": "rscuzqnfccqvltkdcdny.supabase.co",
+    "resolver": "VexforgeCardArtResolver",
+    "local_card_art_copy_forbidden": true,
+    "replacement_artwork_for_official_127": false
+  },
+  "assets": [
+    {
+      "asset_id": "VF_ARCHIVE_SANCTUM_HERO",
+      "fallback": "explicit_runtime_fallback",
+      "domain": "visual",
+      "resources_key": "VexforgeTier1/Art/VF_ARCHIVE_SANCTUM_HERO",
+      "fallback_id": "VF_CARD_FALLBACK_NEUTRAL",
+      "quality": "production",
+      "identity_critical": true
+    },
+    {
+      "asset_id": "VF_BATTLE_ARENA_CITADEL_A",
+      "fallback": "explicit_runtime_fallback",
+      "domain": "visual",
+      "resources_key": "VexforgeTier1/Art/VF_BATTLE_ARENA_CITADEL_A",
+      "fallback_id": "VF_CARD_FALLBACK_NEUTRAL",
+      "quality": "production",
+      "identity_critical": true
+    },
+    {
+      "asset_id": "VF_BOSS_AURA",
+      "fallback": "explicit_runtime_fallback",
+      "domain": "visual",
+      "resources_key": "VexforgeTier1/Art/VF_BOSS_AURA",
+      "fallback_id": "VF_CARD_FALLBACK_NEUTRAL",
+      "quality": "production",
+      "identity_critical": true
+    },
+    {
+      "asset_id": "VF_CARD_BACK_CORE",
+      "fallback": "explicit_runtime_fallback",
+      "domain": "visual",
+      "resources_key": "VexforgeTier1/Art/VF_CARD_BACK_CORE",
+      "fallback_id": "VF_CARD_FALLBACK_NEUTRAL",
+      "quality": "production",
+      "identity_critical": true
+    },
+    {
+      "asset_id": "VF_CARD_FALLBACK_NEUTRAL",
+      "fallback": "explicit_runtime_fallback",
+      "domain": "visual",
+      "resources_key": "VexforgeTier1/Art/VF_CARD_FALLBACK_NEUTRAL",
+      "fallback_id": "VF_CARD_FALLBACK_NEUTRAL",
+      "quality": "production",
+      "identity_critical": true
+    },
+    {
+      "asset_id": "VF_CARD_FRAME_COMMON",
+      "fallback": "explicit_runtime_fallback",
+      "domain": "visual",
+      "resources_key": "VexforgeTier1/Art/VF_CARD_FRAME_COMMON",
+      "fallback_id": "VF_CARD_FALLBACK_NEUTRAL",
+      "quality": "production",
+      "identity_critical": true
+    },
+    {
+      "asset_id": "VF_CARD_FRAME_EPIC",
+      "fallback": "explicit_runtime_fallback",
+      "domain": "visual",
+      "resources_key": "VexforgeTier1/Art/VF_CARD_FRAME_EPIC",
+      "fallback_id": "VF_CARD_FALLBACK_NEUTRAL",
+      "quality": "production",
+      "identity_critical": true
+    },
+    {
+      "asset_id": "VF_CARD_FRAME_LEGENDARY",
+      "fallback": "explicit_runtime_fallback",
+      "domain": "visual",
+      "resources_key": "VexforgeTier1/Art/VF_CARD_FRAME_LEGENDARY",
+      "fallback_id": "VF_CARD_FALLBACK_NEUTRAL",
+      "quality": "production",
+      "identity_critical": true
+    },
+    {
+      "asset_id": "VF_CARD_FRAME_MYTHIC",
+      "fallback": "explicit_runtime_fallback",
+      "domain": "visual",
+      "resources_key": "VexforgeTier1/Art/VF_CARD_FRAME_MYTHIC",
+      "fallback_id": "VF_CARD_FALLBACK_NEUTRAL",
+      "quality": "production",
+      "identity_critical": true
+    },
+    {
+      "asset_id": "VF_CARD_FRAME_RARE",
+      "fallback": "explicit_runtime_fallback",
+      "domain": "visual",
+      "resources_key": "VexforgeTier1/Art/VF_CARD_FRAME_RARE",
+      "fallback_id": "VF_CARD_FALLBACK_NEUTRAL",
+      "quality": "production",
+      "identity_critical": true
+    },
+    {
+      "asset_id": "VF_CARD_FRAME_UNCOMMON",
+      "fallback": "explicit_runtime_fallback",
+      "domain": "visual",
+      "resources_key": "VexforgeTier1/Art/VF_CARD_FRAME_UNCOMMON",
+      "fallback_id": "VF_CARD_FALLBACK_NEUTRAL",
+      "quality": "production",
+      "identity_critical": true
+    },
+    {
+      "asset_id": "VF_FORGE_CHAMBER_HERO",
+      "fallback": "explicit_runtime_fallback",
+      "domain": "visual",
+      "resources_key": "VexforgeTier1/Art/VF_FORGE_CHAMBER_HERO",
+      "fallback_id": "VF_CARD_FALLBACK_NEUTRAL",
+      "quality": "production",
+      "identity_critical": true
+    },
+    {
+      "asset_id": "VF_MISSION_HALL_HERO",
+      "fallback": "explicit_runtime_fallback",
+      "domain": "visual",
+      "resources_key": "VexforgeTier1/Art/VF_MISSION_HALL_HERO",
+      "fallback_id": "VF_CARD_FALLBACK_NEUTRAL",
+      "quality": "production",
+      "identity_critical": true
+    },
+    {
+      "asset_id": "VF_NEXUS_CITADEL_HERO",
+      "fallback": "explicit_runtime_fallback",
+      "domain": "visual",
+      "resources_key": "VexforgeTier1/Art/VF_NEXUS_CITADEL_HERO",
+      "fallback_id": "VF_CARD_FALLBACK_NEUTRAL",
+      "quality": "production",
+      "identity_critical": true
+    },
+    {
+      "asset_id": "VF_PACK_RELIC",
+      "fallback": "explicit_runtime_fallback",
+      "domain": "visual",
+      "resources_key": "VexforgeTier1/Art/VF_PACK_RELIC",
+      "fallback_id": "VF_CARD_FALLBACK_NEUTRAL",
+      "quality": "production",
+      "identity_critical": true
+    },
+    {
+      "asset_id": "VF_PACK_VAULT_HERO",
+      "fallback": "explicit_runtime_fallback",
+      "domain": "visual",
+      "resources_key": "VexforgeTier1/Art/VF_PACK_VAULT_HERO",
+      "fallback_id": "VF_CARD_FALLBACK_NEUTRAL",
+      "quality": "production",
+      "identity_critical": true
+    },
+    {
+      "asset_id": "VF_REWARD_SIGIL_COMMON",
+      "fallback": "explicit_runtime_fallback",
+      "domain": "visual",
+      "resources_key": "VexforgeTier1/Art/VF_REWARD_SIGIL_COMMON",
+      "fallback_id": "VF_CARD_FALLBACK_NEUTRAL",
+      "quality": "production",
+      "identity_critical": true
+    },
+    {
+      "asset_id": "VF_REWARD_SIGIL_PREMIUM",
+      "fallback": "explicit_runtime_fallback",
+      "domain": "visual",
+      "resources_key": "VexforgeTier1/Art/VF_REWARD_SIGIL_PREMIUM",
+      "fallback_id": "VF_CARD_FALLBACK_NEUTRAL",
+      "quality": "production",
+      "identity_critical": true
+    },
+    {
+      "asset_id": "VF_TREASURY_VAULT_HERO",
+      "fallback": "explicit_runtime_fallback",
+      "domain": "visual",
+      "resources_key": "VexforgeTier1/Art/VF_TREASURY_VAULT_HERO",
+      "fallback_id": "VF_CARD_FALLBACK_NEUTRAL",
+      "quality": "production",
+      "identity_critical": true
+    },
+    {
+      "asset_id": "attack",
+      "fallback": "silence",
+      "domain": "audio",
+      "resources_key": "VexforgeTier1/Audio/attack",
+      "fallback_id": "VF_CARD_FALLBACK_NEUTRAL",
+      "quality": "production",
+      "identity_critical": false
+    },
+    {
+      "asset_id": "battle_intro",
+      "fallback": "silence",
+      "domain": "audio",
+      "resources_key": "VexforgeTier1/Audio/battle_intro",
+      "fallback_id": "VF_CARD_FALLBACK_NEUTRAL",
+      "quality": "production",
+      "identity_critical": false
+    },
+    {
+      "asset_id": "defeat",
+      "fallback": "silence",
+      "domain": "audio",
+      "resources_key": "VexforgeTier1/Audio/defeat",
+      "fallback_id": "VF_CARD_FALLBACK_NEUTRAL",
+      "quality": "production",
+      "identity_critical": false
+    },
+    {
+      "asset_id": "fusion",
+      "fallback": "silence",
+      "domain": "audio",
+      "resources_key": "VexforgeTier1/Audio/fusion",
+      "fallback_id": "VF_CARD_FALLBACK_NEUTRAL",
+      "quality": "production",
+      "identity_critical": false
+    },
+    {
+      "asset_id": "guard",
+      "fallback": "silence",
+      "domain": "audio",
+      "resources_key": "VexforgeTier1/Audio/guard",
+      "fallback_id": "VF_CARD_FALLBACK_NEUTRAL",
+      "quality": "production",
+      "identity_critical": false
+    },
+    {
+      "asset_id": "impact",
+      "fallback": "silence",
+      "domain": "audio",
+      "resources_key": "VexforgeTier1/Audio/impact",
+      "fallback_id": "VF_CARD_FALLBACK_NEUTRAL",
+      "quality": "production",
+      "identity_critical": false
+    },
+    {
+      "asset_id": "pack_reveal",
+      "fallback": "silence",
+      "domain": "audio",
+      "resources_key": "VexforgeTier1/Audio/pack_reveal",
+      "fallback_id": "VF_CARD_FALLBACK_NEUTRAL",
+      "quality": "production",
+      "identity_critical": false
+    },
+    {
+      "asset_id": "reward",
+      "fallback": "silence",
+      "domain": "audio",
+      "resources_key": "VexforgeTier1/Audio/reward",
+      "fallback_id": "VF_CARD_FALLBACK_NEUTRAL",
+      "quality": "production",
+      "identity_critical": false
+    },
+    {
+      "asset_id": "shield",
+      "fallback": "silence",
+      "domain": "audio",
+      "resources_key": "VexforgeTier1/Audio/shield",
+      "fallback_id": "VF_CARD_FALLBACK_NEUTRAL",
+      "quality": "production",
+      "identity_critical": false
+    },
+    {
+      "asset_id": "victory",
+      "fallback": "silence",
+      "domain": "audio",
+      "resources_key": "VexforgeTier1/Audio/victory",
+      "fallback_id": "VF_CARD_FALLBACK_NEUTRAL",
+      "quality": "production",
+      "identity_critical": false
+    },
+    {
+      "asset_id": "VF_BATTLE_SIGIL_ATLAS",
+      "domain": "battle_environment",
+      "resources_key": "VexforgeTier1/Art/VF_BATTLE_SIGIL_ATLAS",
+      "fallback_id": "VF_CARD_FALLBACK_NEUTRAL",
+      "quality": "production",
+      "identity_critical": true
+    },
+    {
+      "asset_id": "VF_NEXUS_OBSIDIAN_PATTERN",
+      "domain": "world_material",
+      "resources_key": "VexforgeTier1/Art/VF_NEXUS_OBSIDIAN_PATTERN",
+      "fallback_id": "VF_CARD_FALLBACK_NEUTRAL",
+      "quality": "production",
+      "identity_critical": true
+    },
+    {
+      "asset_id": "VF_BOSS_SIGIL",
+      "domain": "battle_boss",
+      "resources_key": "VexforgeTier1/Art/VF_BOSS_SIGIL",
+      "fallback_id": "VF_CARD_FALLBACK_NEUTRAL",
+      "quality": "production",
+      "identity_critical": true
+    }
+  ]
+}

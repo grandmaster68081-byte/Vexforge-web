@@ -253,9 +253,18 @@ error aunque completó con `BuildResult.Succeeded`; se anota para revisión y no
 se declara como cero errores. El workflow de verificación del repositorio
 también pasó (run #637).
 
-Tras validar esta APK acumulada, elegir otro lote cerrado de dependencias sin
-fijar por adelantado el número de etapas. Detenerse si el workflow falla, falta
-el APK/artefacto, hay corrupción o no coincide el hash.
+La etapa 7 seleccionada agrupa el catálogo canónico de recursos con el
+reverso de la carta, el fallback neutral y los seis marcos de rareza que consume
+el sistema de cartas. El catálogo y cada textura conservan su `.meta` original,
+GUID e importación; el lote completo es de 18/197 archivos (9,1371 %), por
+debajo del límite de 19. El run #10 y su APK se verificaron antes de preparar
+esta etapa. Integrar únicamente estos archivos en `unity-bootstrap/`, registrar
+sus hashes y compilar un único APK Bootstrap manual en `main`.
+
+Tras validar cada APK acumulada, elegir otro lote cerrado de dependencias desde
+el inventario canónico restante sin fijar por adelantado el número de etapas.
+Detenerse si el workflow falla, falta el APK/artefacto, hay corrupción o no
+coincide el hash.
 
 La caché anterior pertenece a `unity-bootstrap/Library` y a GitHub Actions
 `actions/cache`. No es la caché del antiguo flujo de shards: ese workflow

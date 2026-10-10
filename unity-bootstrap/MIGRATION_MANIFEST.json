@@ -1171,9 +1171,112 @@
           "saved_key": "vexforge-bootstrap-library-Linux-X64-6000.3.0f1-b5228a5f94297ca834099556a15801510cc518fb2f57996a903295a412f691e1-38062606007-1"
         }
       }
+    },
+    {
+      "number": 7,
+      "name": "Tier1 core card presentation resources",
+      "status": "prepared_for_build",
+      "new_file_count": 18,
+      "share_percent": 9.1371,
+      "assets": [
+        {
+          "source": "unity/Assets/Resources/VexforgeTier1/VexforgeTier1AssetManifest.json",
+          "destination": "unity-bootstrap/Assets/Resources/VexforgeTier1/VexforgeTier1AssetManifest.json",
+          "source_sha256": "c7198d4c2b92469587f2897968bb2f2eb38b2a2538c3e8a1cdc933735ac115a6",
+          "destination_sha256": "c7198d4c2b92469587f2897968bb2f2eb38b2a2538c3e8a1cdc933735ac115a6",
+          "kind": "resource_catalog",
+          "source_meta": "unity/Assets/Resources/VexforgeTier1/VexforgeTier1AssetManifest.json.meta",
+          "meta_sha256": "82102edae7f681ca036d04cf13630a73d728374a553de7b8a9f6634bd585d23f",
+          "resource_key": "VexforgeTier1/VexforgeTier1AssetManifest"
+        },
+        {
+          "source": "unity/Assets/Resources/VexforgeTier1/Art/VF_CARD_BACK_CORE.png",
+          "destination": "unity-bootstrap/Assets/Resources/VexforgeTier1/Art/VF_CARD_BACK_CORE.png",
+          "source_sha256": "0022ecd3ec485ff05adc955636e8cdbb37687cc3a3e1cb10177b8e027dec95d0",
+          "destination_sha256": "0022ecd3ec485ff05adc955636e8cdbb37687cc3a3e1cb10177b8e027dec95d0",
+          "kind": "resource_texture",
+          "source_meta": "unity/Assets/Resources/VexforgeTier1/Art/VF_CARD_BACK_CORE.png.meta",
+          "meta_sha256": "b618e8b76c7022cff5b2144af606a89c7dadaf70ef2ff76d3ad0cc9a760c8a77",
+          "resource_key": "VexforgeTier1/Art/VF_CARD_BACK_CORE"
+        },
+        {
+          "source": "unity/Assets/Resources/VexforgeTier1/Art/VF_CARD_FALLBACK_NEUTRAL.png",
+          "destination": "unity-bootstrap/Assets/Resources/VexforgeTier1/Art/VF_CARD_FALLBACK_NEUTRAL.png",
+          "source_sha256": "a6d7d23ea15df745ea4c89d37eed61c410dea78329980f063af080a8a3e272c9",
+          "destination_sha256": "a6d7d23ea15df745ea4c89d37eed61c410dea78329980f063af080a8a3e272c9",
+          "kind": "resource_texture",
+          "source_meta": "unity/Assets/Resources/VexforgeTier1/Art/VF_CARD_FALLBACK_NEUTRAL.png.meta",
+          "meta_sha256": "5d3370d633554627352ede8491eeab16caf70f7aca9801523369fc1d92db8680",
+          "resource_key": "VexforgeTier1/Art/VF_CARD_FALLBACK_NEUTRAL"
+        },
+        {
+          "source": "unity/Assets/Resources/VexforgeTier1/Art/VF_CARD_FRAME_COMMON.png",
+          "destination": "unity-bootstrap/Assets/Resources/VexforgeTier1/Art/VF_CARD_FRAME_COMMON.png",
+          "source_sha256": "9138a4c50a74a271d811bfd58f960840693dd91a052cc8f0646cc9a5a32f4848",
+          "destination_sha256": "9138a4c50a74a271d811bfd58f960840693dd91a052cc8f0646cc9a5a32f4848",
+          "kind": "resource_texture",
+          "source_meta": "unity/Assets/Resources/VexforgeTier1/Art/VF_CARD_FRAME_COMMON.png.meta",
+          "meta_sha256": "e1e47c3a1a0fdc9a2c12681046bf9650ebeaa26e916afbadd6b39849cc88d228",
+          "resource_key": "VexforgeTier1/Art/VF_CARD_FRAME_COMMON"
+        },
+        {
+          "source": "unity/Assets/Resources/VexforgeTier1/Art/VF_CARD_FRAME_UNCOMMON.png",
+          "destination": "unity-bootstrap/Assets/Resources/VexforgeTier1/Art/VF_CARD_FRAME_UNCOMMON.png",
+          "source_sha256": "6b6e12d7e93a88537c91efc1e24283f319e9522f51e1cd5f4364e17369aba383",
+          "destination_sha256": "6b6e12d7e93a88537c91efc1e24283f319e9522f51e1cd5f4364e17369aba383",
+          "kind": "resource_texture",
+          "source_meta": "unity/Assets/Resources/VexforgeTier1/Art/VF_CARD_FRAME_UNCOMMON.png.meta",
+          "meta_sha256": "a6f6afdb28221d91772414bb244e1f253f915a7df5e4e758e4b61da771f0e8bf",
+          "resource_key": "VexforgeTier1/Art/VF_CARD_FRAME_UNCOMMON"
+        },
+        {
+          "source": "unity/Assets/Resources/VexforgeTier1/Art/VF_CARD_FRAME_RARE.png",
+          "destination": "unity-bootstrap/Assets/Resources/VexforgeTier1/Art/VF_CARD_FRAME_RARE.png",
+          "source_sha256": "cc7b145b33cbcf7fcd01469e18add532a0d5844b93b618798b343dd3571fb391",
+          "destination_sha256": "cc7b145b33cbcf7fcd01469e18add532a0d5844b93b618798b343dd3571fb391",
+          "kind": "resource_texture",
+          "source_meta": "unity/Assets/Resources/VexforgeTier1/Art/VF_CARD_FRAME_RARE.png.meta",
+          "meta_sha256": "02c50b9f1be2c972874e26da3e5215bb3bb6f8f053f689001fde535459006b26",
+          "resource_key": "VexforgeTier1/Art/VF_CARD_FRAME_RARE"
+        },
+        {
+          "source": "unity/Assets/Resources/VexforgeTier1/Art/VF_CARD_FRAME_EPIC.png",
+          "destination": "unity-bootstrap/Assets/Resources/VexforgeTier1/Art/VF_CARD_FRAME_EPIC.png",
+          "source_sha256": "05882bd10d3cedbcd71d7aff7a517492a58b9d233985a22a4310f6c71902cf16",
+          "destination_sha256": "05882bd10d3cedbcd71d7aff7a517492a58b9d233985a22a4310f6c71902cf16",
+          "kind": "resource_texture",
+          "source_meta": "unity/Assets/Resources/VexforgeTier1/Art/VF_CARD_FRAME_EPIC.png.meta",
+          "meta_sha256": "e22cafec29dced316465e8851f9c6a9f926db4f1f3b1829386030415471f23af",
+          "resource_key": "VexforgeTier1/Art/VF_CARD_FRAME_EPIC"
+        },
+        {
+          "source": "unity/Assets/Resources/VexforgeTier1/Art/VF_CARD_FRAME_LEGENDARY.png",
+          "destination": "unity-bootstrap/Assets/Resources/VexforgeTier1/Art/VF_CARD_FRAME_LEGENDARY.png",
+          "source_sha256": "fa8dd6ccb8d47499bf368d44e1892ce5436057f996cc2a9806c7d6c31c63fa7e",
+          "destination_sha256": "fa8dd6ccb8d47499bf368d44e1892ce5436057f996cc2a9806c7d6c31c63fa7e",
+          "kind": "resource_texture",
+          "source_meta": "unity/Assets/Resources/VexforgeTier1/Art/VF_CARD_FRAME_LEGENDARY.png.meta",
+          "meta_sha256": "a29cb7988a1aa36296f62682003ab8343155d92cd3ab6002a43acc03123f8093",
+          "resource_key": "VexforgeTier1/Art/VF_CARD_FRAME_LEGENDARY"
+        },
+        {
+          "source": "unity/Assets/Resources/VexforgeTier1/Art/VF_CARD_FRAME_MYTHIC.png",
+          "destination": "unity-bootstrap/Assets/Resources/VexforgeTier1/Art/VF_CARD_FRAME_MYTHIC.png",
+          "source_sha256": "7f72f54fb5c8fe47f3bb780cbaeba66bfc9630d08d2003398f16eb9e7fa523f3",
+          "destination_sha256": "7f72f54fb5c8fe47f3bb780cbaeba66bfc9630d08d2003398f16eb9e7fa523f3",
+          "kind": "resource_texture",
+          "source_meta": "unity/Assets/Resources/VexforgeTier1/Art/VF_CARD_FRAME_MYTHIC.png.meta",
+          "meta_sha256": "cc35750b11888916cfc6d59662b22f214faa8c82f96191828c3a12bbed441d04",
+          "resource_key": "VexforgeTier1/Art/VF_CARD_FRAME_MYTHIC"
+        }
+      ],
+      "depends_on_stages": [
+        3
+      ],
+      "note": "This dependency-closed set adds the canonical resource catalog used by VexforgeTier1AssetRegistry plus the core card back, neutral fallback, and all six rarity frame textures. The catalog and every PNG retain their canonical .meta sidecars, GUIDs, and import settings; the resource keys match the catalog. This is 18/197 (9.1371%) of the pinned full-content inventory, within the 19-file cap. Other visual assets remain for later batches."
     }
   ],
-  "next_stage": "Stage 6's cumulative APK and artifact passed validation in run #10. Select the next dependency-closed batch from the remaining canonical inventory only after reviewing its references; cap each batch at 19 canonical files and do not preselect a fixed number of batches.",
+  "next_stage": "Stage 7 is prepared for the next manual Bootstrap build: the core card resource catalog, card back, neutral fallback, and six rarity frames. Do not start it until the previous run #10 artifact/hash checks are complete; after validation, choose the next dependency-closed batch from the remaining canonical inventory, capped at 19 files.",
   "known_architecture_boundary": "The official code contains a reciprocal App/HUD cycle involving 31 files and 7,066 lines (41.6%). The user-directed stage 3 imports the full pinned runtime C# inventory together, so it does not split that source cycle. Stage 5 restores the app component in the official bootstrap scene; stage 6 adds the canonical audio cue set. Visual resources, remaining scenes, runtime behavior, and full-content parity still require later stages and separate verification. Any temporary compile seam must be recorded and removed before parity is claimed.",
   "scene_policy": "Stage 5 restores the canonical VexforgeBootstrap scene content and its already-matched scene metadata; the Bootstrap copy adds one final LF, and its VexforgeApp script GUID resolves through stage 4. unity/ remains the untouched source of truth. The restored scene is not device or gameplay verification."
 }
