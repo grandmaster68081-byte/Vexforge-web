@@ -153,9 +153,15 @@ terminó con cero warnings y cero errores de Unity.
 
 Este corte solo valida compilación: no incorpora aún los recursos
 `Resources/VexforgeTier1/**`, por lo que no habilita el pack reveal en runtime.
-`VexforgeApp` sigue desconectado y `unity/**` permanece intacto. El código
-completo de la etapa 3 ya está copiado y registrado en el manifiesto; su APK aún
-no tiene resultado. No empezar el inventario por lotes hasta que esa APK pase.
+`VexforgeApp` sigue desconectado de la escena y `unity/**` permanece intacto.
+El run #5 (run ID `38033151519`, commit `f1a5438`) llegó a compilar el proyecto,
+pero falló con dos `CS0246` en `VexforgeTier1EconomyHub.cs`: el tipo
+`VexforgeApp` está declarado en `Vexforge.Core` y esa copia no importaba el
+namespace. Unity, la licencia, los módulos Android y la restauración compatible
+de caché sí finalizaron correctamente; no se generó ni subió APK y no se guardó
+una caché nueva. La copia Bootstrap ahora importa `Vexforge.Core`; el manifiesto
+registra su hash distinto del archivo oficial. La etapa 3 sigue sin validar y no
+se empieza el inventario por lotes hasta que un APK pase.
 El valor `BuildReport.summary.totalSize` de Unity (621.713.303 bytes) es distinto
 del tamaño real del APK empaquetado, informado por el paso de verificación y
 confirmado con el artefacto descargado.

@@ -40,10 +40,14 @@ it. The current game migration order is
   included in this compile-only slice, so it is not a functional pack reveal.
 - The bootstrap scene still omits `VexforgeApp`; `unity/**` remains untouched.
   Stage 3 now contains the other 63 canonical C# scripts (14,728 lines), bringing
-  the copied runtime script set to 76/76 and 16,988/16,988 lines. Every added
-  source hash matches `unity/`; the stage is not yet committed or compiled. It
+  the copied runtime script set to 76/76 and 16,988/16,988 lines. Run #5 reached
+  Unity compilation and failed with two CS0246 errors because the Bootstrap
+  `VexforgeTier1EconomyHub` copy did not import `Vexforge.Core` for `VexforgeApp`.
+  The Bootstrap-only fix is prepared and recorded in the manifest; `unity/**`
+  remains unchanged. No APK or new cache was produced. Stage 3 still needs a
+  newly authorized manual build before any later content batches. This stage
   intentionally adds no new scenes, Resources, source `.meta` files or other
-  excluded Unity project content. Passing this compile test will not prove game
+  excluded Unity project content. Passing the compile test will not prove game
   runtime, scene, resource or full-content parity.
 - After stage 3 passes, migrate the remaining canonical Unity project content
   in dependency-closed batches of no more than 10% of the full tracked `unity/`

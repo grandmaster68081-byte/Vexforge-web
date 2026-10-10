@@ -362,7 +362,7 @@
     {
       "number": 3,
       "name": "All remaining official C# runtime scripts",
-      "status": "prepared_pending_build",
+      "status": "fix_prepared_pending_new_build_authorization",
       "new_runtime_csharp_files": 63,
       "new_runtime_csharp_lines": 14728,
       "share_percent": 86.6965,
@@ -632,8 +632,9 @@
           "source": "unity/Assets/Scripts/Tier1/VexforgeTier1EconomyHub.cs",
           "destination": "unity-bootstrap/Assets/Scripts/Tier1/VexforgeTier1EconomyHub.cs",
           "source_sha256": "bf76b5f2017cd744353e114851fcae18a737b1db374b901c478559a150ebb69c",
-          "destination_sha256": "bf76b5f2017cd744353e114851fcae18a737b1db374b901c478559a150ebb69c",
-          "kind": "runtime_script"
+          "destination_sha256": "7867b9cfa77800305afde58747cadef22fc984cda09125ed28abe079f8eee61d",
+          "kind": "runtime_script",
+          "destination_patch": "Bootstrap-only compile fix: import Vexforge.Core so VexforgeApp resolves; unity/ remains unchanged."
         },
         {
           "source": "unity/Assets/Scripts/Tier1/VexforgeTier1EncounterPresentationDirector.cs",
@@ -816,8 +817,30 @@
         1,
         2
       ],
-      "note": "User-directed code-completion batch: every canonical Assets/Scripts/**/*.cs file is now present with identical bytes. This stage intentionally adds no scenes, Resources, new source .meta files or other excluded Unity content. The Bootstrap VexforgeApp component remains disconnected in the staged scene; build success proves compile/package viability only, not gameplay or content parity.",
-      "build": null
+      "note": "User-directed code-completion batch: all 76 canonical Assets/Scripts/**/*.cs files are present. One Bootstrap-only namespace import fix is recorded on VexforgeTier1EconomyHub.cs; all other source bytes match unity/. This stage adds no scenes, Resources, new source .meta files or other excluded Unity content. The Bootstrap VexforgeApp component remains disconnected in the staged scene; build success proves compile/package viability only, not gameplay or content parity.",
+      "build": {
+        "last_attempt": {
+          "workflow_run_id": 38033151519,
+          "workflow_run_number": 5,
+          "commit": "f1a5438ee75f5c50c0997ad2ff4eb73faa683d51",
+          "workflow_url": "https://github.com/grandmaster68081-byte/Vexforge-web/actions/runs/38033151519",
+          "result": "failure",
+          "failed_step": "Build the bootstrap APK",
+          "unity_editor": "6000.3.0f1",
+          "compiler_errors": [
+            "Assets/Scripts/Tier1/VexforgeTier1EconomyHub.cs(59,32): CS0246 VexforgeApp could not be found.",
+            "Assets/Scripts/Tier1/VexforgeTier1EconomyHub.cs(26,17): CS0246 VexforgeApp could not be found."
+          ],
+          "cache_restore": {
+            "result": "restored_from_restore_key",
+            "matched_key": "vexforge-bootstrap-library-Linux-X64-6000.3.0f1-f9a3ca660cfdff0f8c0abb8456a35b1c2aef910850e2215ce4f486f74928f21f-38029751414-1"
+          },
+          "apk_generated": false,
+          "artifact_uploaded": false,
+          "cache_saved": false
+        },
+        "fix": "Added using Vexforge.Core to the Bootstrap copy of VexforgeTier1EconomyHub.cs. The next manual build requires fresh user authorization because run 5 failed."
+      }
     }
   ],
   "next_stage": "Only after stage 3's APK passes, select dependency-closed batches of no more than 10% of full_content_inventory. Do not preselect a fixed number of batches.",
