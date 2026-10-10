@@ -1313,9 +1313,63 @@
         3
       ],
       "note": "This dependency-closed set adds the canonical resource catalog used by VexforgeTier1AssetRegistry plus the core card back, neutral fallback, and all six rarity frame textures. The catalog and every PNG retain their canonical .meta sidecars, GUIDs, and import settings; the resource keys match the catalog. This is 18/197 (9.1371%) of the pinned full-content inventory, within the 19-file cap. Other visual assets remain for later batches."
+    },
+    {
+      "number": 8,
+      "name": "Tier1 battle and boss visual resources",
+      "status": "prepared_for_build",
+      "new_file_count": 8,
+      "share_percent": 4.0609,
+      "assets": [
+        {
+          "source": "unity/Assets/Resources/VexforgeTier1/Art/VF_BATTLE_ARENA_CITADEL_A.png",
+          "destination": "unity-bootstrap/Assets/Resources/VexforgeTier1/Art/VF_BATTLE_ARENA_CITADEL_A.png",
+          "source_sha256": "3721fe08eeff5ea3f0f0409a11dc0c5c4fd0bc87323fad7cba1e1633b63b3853",
+          "destination_sha256": "3721fe08eeff5ea3f0f0409a11dc0c5c4fd0bc87323fad7cba1e1633b63b3853",
+          "kind": "resource_texture",
+          "source_meta": "unity/Assets/Resources/VexforgeTier1/Art/VF_BATTLE_ARENA_CITADEL_A.png.meta",
+          "meta_sha256": "cd2369e9d33ba1a10aa373c44da30c8d6934d2fb76f416baafb006180414c9a2",
+          "resource_key": "VexforgeTier1/Art/VF_BATTLE_ARENA_CITADEL_A"
+        },
+        {
+          "source": "unity/Assets/Resources/VexforgeTier1/Art/VF_BATTLE_SIGIL_ATLAS.png",
+          "destination": "unity-bootstrap/Assets/Resources/VexforgeTier1/Art/VF_BATTLE_SIGIL_ATLAS.png",
+          "source_sha256": "b854e22fde9f541c68d6a497aced8bb7f2bbbcd51c57bc20965dd3275ae44690",
+          "destination_sha256": "b854e22fde9f541c68d6a497aced8bb7f2bbbcd51c57bc20965dd3275ae44690",
+          "kind": "resource_texture",
+          "source_meta": "unity/Assets/Resources/VexforgeTier1/Art/VF_BATTLE_SIGIL_ATLAS.png.meta",
+          "meta_sha256": "2fa506ff8370e16d8027f7e4c9673286aaea4ccbe5365087c1f43119989821e4",
+          "resource_key": "VexforgeTier1/Art/VF_BATTLE_SIGIL_ATLAS"
+        },
+        {
+          "source": "unity/Assets/Resources/VexforgeTier1/Art/VF_BOSS_AURA.png",
+          "destination": "unity-bootstrap/Assets/Resources/VexforgeTier1/Art/VF_BOSS_AURA.png",
+          "source_sha256": "b4d8e0ffe16c68c589f5b5b6ff9dd160f686aa431857886e0a9d89f93401cb2b",
+          "destination_sha256": "b4d8e0ffe16c68c589f5b5b6ff9dd160f686aa431857886e0a9d89f93401cb2b",
+          "kind": "resource_texture",
+          "source_meta": "unity/Assets/Resources/VexforgeTier1/Art/VF_BOSS_AURA.png.meta",
+          "meta_sha256": "a92c335b3ce7c998a306c8fe1e66518b3ece3a09738eb663c6ea8fd7aad89b8a",
+          "resource_key": "VexforgeTier1/Art/VF_BOSS_AURA"
+        },
+        {
+          "source": "unity/Assets/Resources/VexforgeTier1/Art/VF_BOSS_SIGIL.png",
+          "destination": "unity-bootstrap/Assets/Resources/VexforgeTier1/Art/VF_BOSS_SIGIL.png",
+          "source_sha256": "c8b9bef1bdaa502361ee66c0f25fa6481e487fea3930a2f083cd03167a09a898",
+          "destination_sha256": "c8b9bef1bdaa502361ee66c0f25fa6481e487fea3930a2f083cd03167a09a898",
+          "kind": "resource_texture",
+          "source_meta": "unity/Assets/Resources/VexforgeTier1/Art/VF_BOSS_SIGIL.png.meta",
+          "meta_sha256": "4e833698d81d26205cec7f22ae45bfd1489d4f55afcc5f957a354da4f26568de",
+          "resource_key": "VexforgeTier1/Art/VF_BOSS_SIGIL"
+        }
+      ],
+      "depends_on_stages": [
+        3,
+        7
+      ],
+      "note": "This dependency-closed batch groups four canonical combat visuals: the battle arena, battle sigil atlas, boss aura, and boss sigil. Their catalog/registry and neutral fallback are already present from stages 3 and 7. Each PNG keeps its canonical .meta, GUID, import settings, and Resources key. The batch is 8/197 files (4.0609%), under the 19-file cap; hub, pack, reward, and world-background art remain for later batches."
     }
   ],
-  "next_stage": "Stage 7's cumulative APK and artifact passed validation in Bootstrap run #11. Select the next dependency-closed batch from the remaining canonical inventory only after reviewing its references; cap each batch at 19 canonical files and do not preselect a fixed number of batches.",
+  "next_stage": "Stage 8 is prepared for the next manual cumulative Bootstrap build after stage 7 run #11 passed artifact/hash verification. It contains the battle arena and battle/boss visuals. After validating its APK, review remaining references and choose the next dependency-closed batch, capped at 19 files.",
   "known_architecture_boundary": "The official code contains a reciprocal App/HUD cycle involving 31 files and 7,066 lines (41.6%). The user-directed stage 3 imports the full pinned runtime C# inventory together, so it does not split that source cycle. Stage 5 restores the app component in the official bootstrap scene; stage 6 adds the canonical audio cue set. Visual resources, remaining scenes, runtime behavior, and full-content parity still require later stages and separate verification. Any temporary compile seam must be recorded and removed before parity is claimed.",
   "scene_policy": "Stage 5 restores the canonical VexforgeBootstrap scene content and its already-matched scene metadata; the Bootstrap copy adds one final LF, and its VexforgeApp script GUID resolves through stage 4. unity/ remains the untouched source of truth. The restored scene is not device or gameplay verification."
 }

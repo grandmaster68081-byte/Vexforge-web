@@ -274,6 +274,13 @@ Run #11 restauró 1.863.972.123 bytes desde la clave compatible del run #10
 1 error aunque terminó con `BuildResult.Succeeded`; se conserva el contador
 para revisión y no se declara como cero errores.
 
+La etapa 8 preparada agrupa cuatro recursos canónicos de combate: arena,
+atlas de sigilos, aura y sigilo de jefe. Su catálogo, registro de carga y
+fallback neutral ya están presentes en etapas anteriores. Se conservan los
+cuatro `.meta` originales, GUID, importación y claves de `Resources`; el lote
+suma 8/197 archivos (4,0609 %), por debajo del límite de 19. El siguiente run
+manual Bootstrap debe compilar este lote acumulado en `main`.
+
 Tras validar cada APK acumulada, elegir otro lote cerrado de dependencias desde
 el inventario canónico restante sin fijar por adelantado el número de etapas.
 Detenerse si el workflow falla, falta el APK/artefacto, hay corrupción o no
