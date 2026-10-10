@@ -27,7 +27,11 @@ it. The current game migration order is
 - The experimental workflow
   `.github/workflows/vexforge-unity-bootstrap-android.yml` builds only
   `unity-bootstrap/**`, manually, on `main`. Each accepted content slice is
-  cumulative and followed by a complete APK build. It does not replace or
+  cumulative and followed by a complete APK build. The successful run #2 was
+  only a workflow smoke test: its builder generated an empty default scene, so
+  it contains no migrated game content and is not a migration milestone. The
+  builder now requires a real scene; future APKs must contain official Vexforge
+  content rather than generated placeholders. It does not replace or
   authorize the official game workflow. The user has conditionally authorized
   this migration to continue sequentially without a new prompt for each APK,
   only after the current baseline run succeeds and each later run succeeds in

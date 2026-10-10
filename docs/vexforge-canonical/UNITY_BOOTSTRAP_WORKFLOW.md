@@ -33,9 +33,13 @@ El proyecto de referencia sigue en `unity/`; el proyecto experimental está en
   Gradle, IL2CPP y ARM64.
 - El bootstrap no debe referenciar archivos mediante rutas dentro de `unity/`,
   usar enlaces a sus assets ni compilar el árbol original.
-- El primer estado es deliberadamente mínimo: el script crea una escena nueva
-  con los objetos predeterminados de Unity si todavía no existe. No copia
-  escenas, gameplay, arte ni datos del juego oficial.
+- El builder no crea escenas predeterminadas ni contenido de relleno. Para una
+  APK de migración se requiere una escena real del juego oficial, copiada con su
+  `.meta`/GUID y su cierre de dependencias a `unity-bootstrap/`. La ausencia de
+  escena detiene el build antes de compilar.
+- La APK #2 descrita abajo fue una prueba técnica histórica del workflow; su
+  escena predeterminada generada no cuenta como contenido migrado ni como primer
+  hito del videojuego.
 
 ## Incorporación gradual de contenido
 
@@ -43,23 +47,31 @@ La migración es acumulativa: cada etapa agrega una parte del juego oficial y
 conserva todas las partes incorporadas en etapas anteriores. Cada APK debe ser
 una compilación completa del estado acumulado, no una APK parcial ni un shard.
 
-Cuando se autorice ampliar el proyecto:
+Secuencia para cada ampliación autorizada:
 
-1. Inspeccionar el código y dependencias actuales en `unity/`; elegir una pieza
-   pequeña, coherente y necesaria para acercar el bootstrap al juego completo.
-2. Copiar al bootstrap solo los scripts, assets, escenas, configuraciones y
-   dependencias que esa pieza requiera. Conservar los `.meta` y GUID asociados.
-3. Integrar la pieza sin eliminar lo ya incorporado. No copiar el proyecto
-   completo ni reemplazar la carpeta `unity-bootstrap/` por `unity/`.
-4. Actualizar dependencias del bootstrap únicamente cuando la pieza las
-   necesite; revisar el manifest y lockfile juntos.
-5. Comprobar que `unity/`, el portal, el backend y Supabase no cambiaron.
-6. Compilar una APK completa del estado acumulado mediante su workflow manual,
-   validar el resultado y registrar los paths fuente/destino, dependencias,
-   revisión, run, artefacto, estado de caché y pruebas pendientes.
-7. Solo después de revisar ese resultado, seleccionar la siguiente pieza. Repetir
-   hasta cubrir código, escenas, assets y sistemas necesarios para el juego
-   completo.
+1. Revisar la última APK completa y su informe; comprobar que el SHA-256 del APK
+   descargado coincide con el informe, y registrar el run, commit, tamaño,
+   application ID y estado real de la caché. No llamar “reutilizada” a una caché
+   hasta que un run posterior muestre un hit de restauración.
+2. Inspeccionar el código y las dependencias oficiales en `unity/`; elegir una
+   pieza pequeña, coherente y con un cierre de compilación comprobable.
+3. Copiar solo su código, escenas, assets, configuraciones y dependencias
+   oficiales necesarias a `unity-bootstrap/`. Conservar los `.meta` y GUID.
+   No inventar gameplay, datos, escenas de relleno ni sustitutos aleatorios.
+4. Mantener la pieza y todas las anteriores. No copiar el proyecto entero ni
+   reemplazar `unity-bootstrap/` por `unity/`; mantener independientes sus
+   rutas, identidad y settings de instalación.
+5. Revisar dependencias del bootstrap, actualizar manifest y lockfile juntos
+   cuando sea necesario, y comprobar que `unity/`, el portal, backend y
+   Supabase no cambiaron.
+6. Revisar el diff, hacer commit/push a `main` y despachar un solo build manual
+   del APK completo que contiene todo el estado acumulado, no un shard ni una
+   APK parcial.
+7. Verificar resultado, informe y artefacto; comparar el SHA-256 del APK
+   descargado con el informe, y registrar si la caché anterior se restauró y si
+   la nueva caché se guardó. No continuar tras ningún fallo.
+8. Solo después de validar el hito elegir la siguiente pieza oficial y repetir
+   hasta cubrir el juego completo.
 
 Mantener la identidad `com.vexforge.bootstrap` para que la APK experimental no
 reemplace ni actualice por accidente la app oficial. La identidad diferente no
@@ -74,8 +86,23 @@ prueba independiente.
 El primer intento autorizado falló durante `BuildAndroid`, antes de verificar o
 subir un APK, y no guardó caché. Se comprobó que a la fase del Editor le faltaba
 el directorio aislado de licencia usado por la activación; el workflow ya lo
-propaga y conserva el diagnóstico del Editor. No afirmar que el método funciona
-hasta que un run posterior valide y suba el APK.
+propaga y conserva el diagnóstico del Editor.
+
+El run #2 (`37904329210`, commit
+`301979e500697c8b087b2fc384095bbcfd8003e1`) terminó correctamente el
+2026-10-09. Su informe declara Unity `6000.3.0f1`, Android,
+`com.vexforge.bootstrap`, IL2CPP/ARM64, APK de 26,293,265 bytes y SHA-256
+`c2163741bb6bd547e1a8b960acf4929dacfa922593bd88f1a29e08c2403697e8`; se
+descargó el artefacto y el hash calculado coincidió. El artefacto se subió
+correctamente. Ese run guardó la primera caché de `unity-bootstrap/Library`,
+pero no tuvo una caché previa exitosa que pudiera reutilizar. Aún no hay un run
+posterior que pruebe la restauración de esa caché.
+
+El APK #2 fue generado antes de migrar contenido del juego: el builder creó una
+escena de Unity con objetos predeterminados porque faltaba la escena del
+bootstrap. Por lo tanto acredita el funcionamiento técnico de esa compilación,
+pero no acredita una porción del juego oficial ni el método incremental de
+contenido. No repetir esa salida como hito de migración.
 
 ## Workflow y ejecución
 
@@ -111,8 +138,10 @@ El workflow experimental es
 
 La regla general es obtener autorización explícita antes de cada compilación
 Android. Para esta migración concreta, el usuario autorizó continuar sin pedir
-una orden nueva por cada etapa, condicionada a que el build baseline actualmente
-en curso termine correctamente, valide y suba el APK.
+una orden nueva por cada etapa, condicionada a que cada APK acumulada anterior
+termine correctamente, se valide y se suba. El run #2 cumplió como prueba
+técnica inicial; la siguiente etapa debe migrar contenido oficial real y
+comprobar la restauración de la caché guardada.
 
 Una vez cumplida esa condición, continuar de forma secuencial: elegir e integrar
 una pieza, revisar el diff, hacer commit/push a `main`, despachar manualmente un
@@ -137,9 +166,9 @@ La caché de este método es exclusivamente `unity-bootstrap/Library/`.
   `vexforge-bootstrap-library-<OS>-<ARCH>-<UNITY_VERSION>-<hash(manifest, lock, ProjectSettings)>-<run_id>-<attempt>`;
   el prefijo hasta `<UNITY_VERSION>-` permite recuperar una caché compatible
   anterior del mismo bootstrap.
-- Guardar una nueva caché solo después de que el APK pase su validación.
-- El primer build normalmente no tendrá una caché previa: la prepara para una
-  ejecución futura autorizada.
+- Guardar una nueva caché solo después de validar la APK acumulada completa.
+- El run #2 guardó la primera caché exitosa. En la siguiente ejecución registrar
+  el resultado del paso de restauración; no afirmar reutilización si fue miss.
 - No cachear `unity/Library/`, la instalación del Editor, el estado de Unity
   Hub, directorios `HOME`, licencias, tokens, credenciales ni otros directorios
   del runner.
@@ -170,11 +199,15 @@ Registrar solo lo que el run demuestra:
 
 1. **Workflow reconocido**: GitHub muestra el workflow manual.
 2. **Build iniciado**: existe un run en la revisión esperada.
-3. **APK verificado**: el run terminó correctamente y pasó existencia, tamaño y
-   SHA-256.
+3. **APK verificado**: el run terminó correctamente; tamaño y SHA-256 del APK
+   descargado coinciden con el informe.
 4. **Artefacto subido**: el APK y el informe aparecen en los artefactos del run.
-5. **Caché guardada**: el paso de `actions/cache/save` terminó correctamente.
-6. **Probado en dispositivo**: solo después de instalar y ejecutar el APK en un
+5. **Fuente oficial migrada**: la APK acumulada se construyó desde una escena y
+   una porción de código/assets oficiales identificadas; una escena predeterminada
+   vacía no cuenta.
+6. **Caché reutilizada/guardada**: informar por separado el resultado de
+   restauración y el resultado de `actions/cache/save`.
+7. **Probado en dispositivo**: solo después de instalar y ejecutar el APK en un
    dispositivo o emulador Android.
 
 El workflow de referencia para el juego oficial está documentado en

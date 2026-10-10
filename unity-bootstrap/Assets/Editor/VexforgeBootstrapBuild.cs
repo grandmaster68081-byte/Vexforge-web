@@ -3,8 +3,6 @@ using System;
 using System.IO;
 using UnityEditor;
 using UnityEditor.Build.Reporting;
-using UnityEditor.SceneManagement;
-using UnityEngine.SceneManagement;
 
 namespace Vexforge.Bootstrap.Editor
 {
@@ -17,19 +15,14 @@ namespace Vexforge.Bootstrap.Editor
         {
             var projectRoot = Directory.GetParent(UnityEngine.Application.dataPath).FullName;
             var sceneFile = Path.Combine(projectRoot, ScenePath.Replace('/', Path.DirectorySeparatorChar));
-            Directory.CreateDirectory(Path.GetDirectoryName(sceneFile));
 
             if (!File.Exists(sceneFile))
             {
-                var emptyScene = EditorSceneManager.NewScene(
-                    NewSceneSetup.DefaultGameObjects,
-                    NewSceneMode.Single);
-
-                if (!EditorSceneManager.SaveScene(emptyScene, sceneFile))
-                {
-                    throw new InvalidOperationException(
-                        $"Could not save the bootstrap scene at {ScenePath}.");
-                }
+                throw new FileNotFoundException(
+                    "The bootstrap must contain a real Vexforge scene before an APK can be built. " +
+                    "Copy an official scene and its .meta file from unity/Assets, along with its " +
+                    "required source dependencies. The builder will not generate a placeholder scene.",
+                    sceneFile);
             }
 
             AssetDatabase.Refresh();
