@@ -8,3 +8,7 @@ VITE_SUPABASE_URL = "https://rscuzqnfccqvltkdcdny.supabase.co"
 
 [nix]
 channel = "stable-25_05"
+
+[[ports]]
+localPort = 8080
+externalPort = 80
