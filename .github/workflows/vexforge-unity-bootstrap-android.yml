@@ -173,10 +173,15 @@ jobs:
         shell: bash
         env:
           CACHE_HIT: ${{ steps.restore-bootstrap-library.outputs.cache-hit }}
+          CACHE_MATCHED_KEY: ${{ steps.restore-bootstrap-library.outputs.cache-matched-key }}
         run: |
           set -euo pipefail
           if [ "$CACHE_HIT" = true ]; then
-            echo "Unity project Library cache restored." | tee -a "$GITHUB_STEP_SUMMARY"
+            echo "Unity project Library cache restored with an exact key match: $CACHE_MATCHED_KEY" \
+              | tee -a "$GITHUB_STEP_SUMMARY"
+          elif [ -n "$CACHE_MATCHED_KEY" ]; then
+            echo "Unity project Library cache restored with a compatible restore-key match: $CACHE_MATCHED_KEY" \
+              | tee -a "$GITHUB_STEP_SUMMARY"
           else
             echo "No compatible Unity project Library cache was available; this run will warm one after the APK succeeds." \
               | tee -a "$GITHUB_STEP_SUMMARY"

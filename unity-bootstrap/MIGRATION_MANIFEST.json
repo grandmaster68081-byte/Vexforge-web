@@ -28,7 +28,7 @@
     {
       "number": 1,
       "name": "Supabase auth/session contracts and client",
-      "status": "prepared_pending_build",
+      "status": "verified_build_success",
       "new_runtime_csharp_files": 8,
       "new_runtime_csharp_lines": 1095,
       "share_percent": 6.4457,
@@ -187,46 +187,114 @@
           "destination_sha256": "7b7cf6bf40a49fc2f05dbf541163faa3d87a2d357ca0f627ab3f3370a34c59b4"
         }
       ],
+      "build": {
+        "workflow_run_id": 38027819127,
+        "workflow_run_number": 3,
+        "commit": "5eab5044e8d055b96458c64f2e5e1d5865873f2b",
+        "workflow_url": "https://github.com/grandmaster68081-byte/Vexforge-web/actions/runs/38027819127",
+        "result": "success",
+        "unity_editor": "6000.3.0f1",
+        "warnings": 0,
+        "errors": 0,
+        "artifact_name": "VEXFORGE-Unity-Bootstrap-APK-3",
+        "apk_size_bytes": 26697451,
+        "apk_sha256": "4c61a45f9da457302db858053a0062d3788f2b6f52b7b3f94ec5380de4f031ff",
+        "downloaded_artifact_hash_matched_report": true,
+        "cache_restore": {
+          "result": "restored_from_restore_key",
+          "restored_bytes": 1821722229,
+          "matched_key": "vexforge-bootstrap-library-Linux-X64-6000.3.0f1-a52f6bfeb54a54d0b70acbfee56c9fa0c8f7518b2e119b0b64f26d55c72aac36-37904329210-1",
+          "workflow_summary_misreported_exact_key_miss_as_no_cache": true
+        },
+        "cache_save": {
+          "result": "success",
+          "saved_bytes": 1829028455,
+          "saved_key": "vexforge-bootstrap-library-Linux-X64-6000.3.0f1-21df865d7844a4b6eed8b4dbf50bdfcbe915984651d1d969c135b19a29557d03-38027819127-1"
+        }
+      }
+    },
+    {
+      "number": 2,
+      "name": "Card art resolver and pack reveal view foundations",
+      "status": "prepared_pending_build",
+      "new_runtime_csharp_files": 5,
+      "new_runtime_csharp_lines": 1165,
+      "share_percent": 6.8578,
+      "cumulative_runtime_csharp_lines": 2260,
+      "cumulative_share_percent": 13.3035,
+      "source_files": [
+        {
+          "source": "unity/Assets/Scripts/Presentation/VexforgeCardArtResolver.cs",
+          "destination": "unity-bootstrap/Assets/Scripts/Presentation/VexforgeCardArtResolver.cs",
+          "source_sha256": "e4d3fde29be5322fa17c248a4ba1de92300141b63959e27da1567374f8eddbb1",
+          "destination_sha256": "e4d3fde29be5322fa17c248a4ba1de92300141b63959e27da1567374f8eddbb1",
+          "kind": "runtime_script",
+          "source_meta": null,
+          "generated_stable_meta_guid": "2f0f7861452a8e229dc00c776d59ae1d",
+          "meta_sha256": "0ca87df6738d8cdfb6b89f43fa75f40cbc210459fdfd806123f681f3424cc5cb"
+        },
+        {
+          "source": "unity/Assets/Scripts/Presentation/VexforgeTextureLruCache.cs",
+          "destination": "unity-bootstrap/Assets/Scripts/Presentation/VexforgeTextureLruCache.cs",
+          "source_sha256": "6fe3d43a7277a90cb338409ef5d52eddba1b69593a2fdb926e7b178f6f1631e4",
+          "destination_sha256": "6fe3d43a7277a90cb338409ef5d52eddba1b69593a2fdb926e7b178f6f1631e4",
+          "kind": "runtime_script",
+          "source_meta": null,
+          "generated_stable_meta_guid": "2774e3dd3d4232d5b59353202cd90c7f",
+          "meta_sha256": "d42a69788f38dfe68887ac39fa2b529955d82b8f760cd775654403d4b2ae0554"
+        },
+        {
+          "source": "unity/Assets/Scripts/Tier1/VexforgeTier1AssetRegistry.cs",
+          "destination": "unity-bootstrap/Assets/Scripts/Tier1/VexforgeTier1AssetRegistry.cs",
+          "source_sha256": "4013d08b057c4c95f7c0b7cfa9ce4f43026e4342e6808c7f4111315de87ebb1b",
+          "destination_sha256": "4013d08b057c4c95f7c0b7cfa9ce4f43026e4342e6808c7f4111315de87ebb1b",
+          "kind": "runtime_script",
+          "source_meta": "unity/Assets/Scripts/Tier1/VexforgeTier1AssetRegistry.cs.meta",
+          "meta_sha256": "cb982c949fd663b969ec37bfcbb1953aaf640252f8c3fec062265be2a70d8e20"
+        },
+        {
+          "source": "unity/Assets/Scripts/Tier1/VexforgeTier1PackRevealView.cs",
+          "destination": "unity-bootstrap/Assets/Scripts/Tier1/VexforgeTier1PackRevealView.cs",
+          "source_sha256": "b317589a975266562a8294bd6c29e5a6ade4a695761708d13cc8d7d168287dc5",
+          "destination_sha256": "b317589a975266562a8294bd6c29e5a6ade4a695761708d13cc8d7d168287dc5",
+          "kind": "runtime_script",
+          "source_meta": "unity/Assets/Scripts/Tier1/VexforgeTier1PackRevealView.cs.meta",
+          "meta_sha256": "435716697fa18b85536831dbc64d0e6544858b61054248766dea50e02ccfa7fa"
+        },
+        {
+          "source": "unity/Assets/Scripts/Tier1/VexforgeTier1Ui.cs",
+          "destination": "unity-bootstrap/Assets/Scripts/Tier1/VexforgeTier1Ui.cs",
+          "source_sha256": "2dc8c7cbc50de95df017046ed5fc981c2ba07ac899e1b657301f843687f9b9fb",
+          "destination_sha256": "2dc8c7cbc50de95df017046ed5fc981c2ba07ac899e1b657301f843687f9b9fb",
+          "kind": "runtime_script",
+          "source_meta": "unity/Assets/Scripts/Tier1/VexforgeTier1Ui.cs.meta",
+          "meta_sha256": "84015cc97d0a65dff1d632153bbb063b57be66d0f5b40c940bb199e84800c6c6"
+        }
+      ],
+      "assets": [
+        {
+          "source": null,
+          "destination": "unity-bootstrap/Assets/Scripts/Presentation.meta",
+          "kind": "generated_stable_folder_meta",
+          "guid": "bfcfaea80901ebdb65e4978d76589fdb",
+          "destination_sha256": "b0e94259567a83104c6ecb1011dad9ea7ecc754379383825b66e9fcf43a23e12"
+        },
+        {
+          "source": null,
+          "destination": "unity-bootstrap/Assets/Scripts/Tier1.meta",
+          "kind": "generated_stable_folder_meta",
+          "guid": "93aada573c6445c41104698ffad74942",
+          "destination_sha256": "b419a41972965ac973a310c9dba5219b5e934a6e2f51f5281d78d97d856b3d6e"
+        }
+      ],
+      "depends_on_stage_1": [
+        "Backend/ApiContracts.cs"
+      ],
+      "note": "Official C# only; this slice is for compile validation and does not yet include the Resources/VexforgeTier1 manifest/art or VexforgeTier1PackRevealDirector needed for a functional pack reveal. UnityEngine.UI is present in the bootstrap package manifest.",
       "build": null
     }
   ],
-  "next_stage": {
-    "number": 2,
-    "name": "Card art resolver and pack reveal view foundations",
-    "new_runtime_csharp_lines": 1165,
-    "share_percent": 6.8578,
-    "source_files": [
-      {
-        "source": "unity/Assets/Scripts/Presentation/VexforgeCardArtResolver.cs",
-        "lines": 269,
-        "sha256": "e4d3fde29be5322fa17c248a4ba1de92300141b63959e27da1567374f8eddbb1"
-      },
-      {
-        "source": "unity/Assets/Scripts/Presentation/VexforgeTextureLruCache.cs",
-        "lines": 280,
-        "sha256": "6fe3d43a7277a90cb338409ef5d52eddba1b69593a2fdb926e7b178f6f1631e4"
-      },
-      {
-        "source": "unity/Assets/Scripts/Tier1/VexforgeTier1AssetRegistry.cs",
-        "lines": 80,
-        "sha256": "4013d08b057c4c95f7c0b7cfa9ce4f43026e4342e6808c7f4111315de87ebb1b"
-      },
-      {
-        "source": "unity/Assets/Scripts/Tier1/VexforgeTier1PackRevealView.cs",
-        "lines": 462,
-        "sha256": "b317589a975266562a8294bd6c29e5a6ade4a695761708d13cc8d7d168287dc5"
-      },
-      {
-        "source": "unity/Assets/Scripts/Tier1/VexforgeTier1Ui.cs",
-        "lines": 74,
-        "sha256": "2dc8c7cbc50de95df017046ed5fc981c2ba07ac899e1b657301f843687f9b9fb"
-      }
-    ],
-    "depends_on_stage_1": [
-      "Backend/ApiContracts.cs"
-    ],
-    "note": "Copy these official sources into unity-bootstrap/Assets/Scripts without replacing stage 1. The combined source set is dependency-closed."
-  },
+  "next_stage": null,
   "known_architecture_boundary": "Static source dependency analysis found a reciprocal App/HUD cycle involving 31 files and 7,066 lines (41.6%). Do not import it as one oversized stage. Keep VexforgeApp disconnected from the staged scene while absent; design and record small compile seams before staging that cycle. Temporary compile-only seams must be separately tracked and removed/replaced with canonical source before the final build.",
   "scene_policy": "The bootstrap copy keeps the official VexforgeBootstrap scene GUID/settings but temporarily omits its VexforgeApp component while App is not compiled. unity/ remains untouched. Restore the exact official scene when VexforgeApp and its dependencies are added."
 }

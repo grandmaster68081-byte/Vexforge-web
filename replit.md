@@ -13,28 +13,29 @@ it. The current game migration order is
 
 ## Current Bootstrap migration checkpoint (2026-10-10)
 
-- The latest repository baseline reviewed for this handoff is `main` at
-  `e62b9dc` (`Prevent placeholder scenes in bootstrap builds`).
-- Bootstrap APK #2 is only a pipeline smoke test. It used an empty generated
-  scene, so it contains no migrated official game content and is not migration
-  progress. Its build report and hash are documented in
-  `docs/vexforge-canonical/UNITY_BOOTSTRAP_WORKFLOW.md`.
-- `unity-bootstrap/` currently has project settings, package manifests, and a
-  build entry point, but no copied official scene or gameplay. The builder now
-  fails if the real Vexforge scene is missing; it cannot silently create a
-  placeholder.
-- Its automated check only verifies that the configured scene file exists; it
-  cannot prove official provenance or dependency completeness. Review both
-  against `unity/` before accepting a slice.
-- Next, inspect the official Unity startup scene and its dependency closure in
-  `unity/**`, then choose and copy the smallest coherent, genuine game slice.
-  `VexforgeApp` is not a standalone trivial file: it wires backend, session,
-  game state, navigation, and `GameShellController`. Verify dependencies from
-  source; never substitute invented content.
-- The current conditional authorization for sequential Bootstrap builds is
-  recorded below and in the workflow guide. The next APK must contain the first
-  accepted official slice; do not dispatch a build before that content is
-  committed and the guide's preflight is satisfied.
+- Before preparing this slice, `main` was clean and matched `origin/main` at
+  `5eab5044e8d055b96458c64f2e5e1d5865873f2b`.
+- Bootstrap APK #2 remains only a pipeline smoke test and is not migration
+  progress. APK #3 is the first verified official content slice: 8 auth/session
+  scripts, 1,095 lines (6.4457%), zero Unity warnings/errors, 26,697,451-byte
+  APK, SHA-256
+  `4c61a45f9da457302db858053a0062d3788f2b6f52b7b3f94ec5380de4f031ff`.
+  The downloaded artifact hash matches its build report.
+- Run #3 restored the prior `unity-bootstrap/Library` using a compatible
+  restore-key (1,821,722,229 bytes) and saved a new cache (1,829,028,455
+  bytes). Its old summary misreported a restore-key hit as no cache because it
+  checked only exact `cache-hit`; the workflow now reports `cache-matched-key`.
+- Stage 2 is prepared as five exact official scripts, 1,165 lines (6.8578%),
+  bringing the cumulative C# count to 2,260/16,988 (13.3035%). Its only C#
+  dependency outside the slice is `Backend/ApiContracts.cs` from stage 1.
+  UGUI is already in the bootstrap package manifest. Tier1 resource assets and
+  the pack-reveal director are intentionally not included in this compile-only
+  slice, so it is not a functional pack reveal.
+- The bootstrap scene still omits `VexforgeApp`; `unity/**` remains untouched.
+  The next authorized build is only the manual Bootstrap workflow after this
+  slice is committed and pushed. Verify the APK, report, and actual cache restore
+  before any later stage. Stop after any failure; do not retry without fresh
+  authorization.
 - Supabase's project status was checked read-only as `ACTIVE_HEALTHY`; this
   handoff made no Supabase changes. Unity Cloud Build is not part of this path.
 
@@ -54,12 +55,10 @@ it. The current game migration order is
 - The experimental workflow
   `.github/workflows/vexforge-unity-bootstrap-android.yml` builds only
   `unity-bootstrap/**`, manually, on `main`. Each accepted content slice is
-  cumulative and followed by a complete APK build. The successful run #2 was
-  only a workflow smoke test: its builder generated an empty default scene, so
-  it contains no migrated game content and is not a migration milestone. The
-  builder now requires a real scene; future APKs must contain official Vexforge
-  content rather than generated placeholders. It does not replace or
-  authorize the official game workflow. The user has conditionally authorized
+  cumulative and followed by a complete APK build. Run #2 was only a workflow
+  smoke test; run #3 is the first successful official content slice. The
+  builder requires a real scene and does not generate placeholders. It does not
+  replace or authorize the official game workflow. The user has conditionally authorized
   this migration to continue sequentially without a new prompt for each APK,
   only after the current baseline run succeeds and each later run succeeds in
   turn. Stop after any failure; do not retry without fresh authorization.

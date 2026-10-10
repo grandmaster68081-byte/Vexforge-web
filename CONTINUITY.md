@@ -1,11 +1,13 @@
 ## 2026-10-10 — ESTADO ACTUAL: HANDOFF DE UNITY BOOTSTRAP
 
-- **REPOSITORIO:** preflight en `main`, SHA `d8f92bb042acc9c81fca55eca5eb5a14301c655d`; remoto y base coinciden.
-- **MÉTODO ACTIVO:** cada APK completo añade exactamente 5–7 % de las líneas C# del inventario canónico fijado en `unity-bootstrap/MIGRATION_MANIFEST.json`. Las APK intermedias pueden no ser jugables; Unity debe compilar el código y generar el APK sin errores.
-- **PORCIÓN 1 PREPARADA:** autenticación/sesión Supabase, 8 archivos C#, 1.095 líneas de 16.988 (6,4457 %). El manifiesto registra paths, hashes, GUIDs estables y la próxima porción prevista de 1.165 líneas (6,8578 %).
-- **ESCENA:** la copia Bootstrap conserva el GUID/ajustes oficiales, pero temporalmente omite el componente `VexforgeApp`, aún no integrado. `unity/**` sigue intacto; la escena canónica se restaurará al incorporar `VexforgeApp` y su cierre.
+- **PREFLIGHT:** `main` estaba limpio y coincidía con `origin/main` en `5eab5044e8d055b96458c64f2e5e1d5865873f2b` antes de preparar esta porción.
+- **MÉTODO ACTIVO:** cada APK completo añade 5–7 % de las líneas C# del inventario canónico fijado en `unity-bootstrap/MIGRATION_MANIFEST.json`. Las APK intermedias pueden no ser jugables; cada etapa debe compilar y pasar la validación de APK.
+- **PORCIÓN 1 VALIDADA:** autenticación/sesión Supabase, 8 archivos C#, 1.095 líneas de 16.988 (6,4457 %). Run #3 terminó con éxito en Unity 6000.3.0f1, cero warnings/errores; APK de 26.697.451 bytes, SHA-256 `4c61a45f9da457302db858053a0062d3788f2b6f52b7b3f94ec5380de4f031ff`. El artefacto descargado coincide con el informe.
+- **CACHÉ:** run #3 restauró 1.821.722.229 bytes desde el restore-key del run #2 y guardó una nueva caché de 1.829.028.455 bytes. El resumen anterior confundía `cache-hit=false` (sin coincidencia exacta) con ausencia de restauración; el workflow ahora registra `cache-matched-key`.
+- **PORCIÓN 2 PREPARADA:** cinco scripts oficiales, 1.165 líneas (6,8578 %); acumulado 2.260 de 16.988 líneas (13,3035 %). Depende de `Backend/ApiContracts.cs`, ya integrada, y `UnityEngine.UI`, disponible en el bootstrap. Las imágenes/manifest de `Resources/VexforgeTier1` y el director de pack reveal quedan fuera de esta porción de compilación.
+- **ESCENA:** la copia Bootstrap conserva el GUID/ajustes oficiales, pero temporalmente omite `VexforgeApp`, aún no integrado. `unity/**` sigue intacto; la escena canónica se restaurará al incorporar `VexforgeApp` y su cierre.
 - **APK #2:** prueba técnica anterior; no contiene C# oficial del juego. APK de 26.293.265 bytes, SHA-256 `c2163741bb6bd547e1a8b960acf4929dacfa922593bd88f1a29e08c2403697e8`. La caché se guardó, pero esa ejecución no pudo demostrar una restauración previa.
-- **ESTADO DE BUILD:** la porción 1 está preparada, pero todavía no se ha enviado al repositorio ni compilado. Después del push, ejecutar solo el workflow manual Bootstrap; registrar ID de ejecución, resultado, APK/SHA-256 y resultado real de restauración de caché en el manifiesto. Detenerse ante cualquier fallo.
+- **ESTADO DE BUILD:** después de publicar la porción 2 y el arreglo del informe de caché, ejecutar un solo workflow manual Bootstrap y validar APK/informe/caché. Detenerse ante cualquier fallo.
 - **LÍMITE DE DEPENDENCIAS:** el análisis detectó un ciclo App/UI de 31 archivos y 7.066 líneas; no incorporarlo como un bloque grande. Mantener `VexforgeApp` desconectado y diseñar cortes/puentes compilables que sigan respetando el límite de 5–7 %.
 - **AUTORIZACIÓN:** seguir únicamente la autorización condicional de builds
   secuenciales descrita en `replit.md` y
