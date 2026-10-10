@@ -342,6 +342,40 @@ el inventario canónico restante sin fijar por adelantado el número de etapas.
 Detenerse si el workflow falla, falta el APK/artefacto, hay corrupción o no
 coincide el hash.
 
+## Estado actualizado — 2026-10-10 — Etapas 13 y 14
+
+La etapa 13 pasó en Bootstrap run #19 (`38081004065`) sobre el commit
+`045127b73cf1c772e0867bed9346aa05178161cc`. Unity 6000.3.0f1 terminó con
+`BuildResult.Succeeded`, 0 warnings y 1 error en el `BuildReport`; ese contador
+se conserva para revisión y no bloquea por sí solo. El APK Android/IL2CPP/ARM64
+de `com.vexforge.bootstrap` mide 45.827.441 bytes y su SHA-256
+`fec30a5f4e8264e4630a41d9b29934fad00f4bca7d4e39a00aebf58203915a9a` coincide
+con el informe. El artefacto `VEXFORGE-Unity-Bootstrap-APK-19` (ID
+`11680224893`, 45.168.148 bytes; SHA-256 del ZIP
+`1a1d2e868ef8503d29f7f67f8615369c1ad075713206c8689041a247c09c8082`) y el APK
+superaron integridad; AndroidManifest, datos Unity y bibliotecas IL2CPP ARM64
+están presentes. Se restauraron 2.010.423.176 bytes desde una clave compatible
+del run #18 (sin coincidencia exacta) y se guardaron 2.010.449.557 bytes.
+
+La etapa 14 prepara las últimas ocho rutas del inventario (8/197, 4,0609 %).
+Tras copiarlas, las 197 rutas canónicas están representadas en Bootstrap y los
+81 scripts C# oficiales coinciden byte por byte; Bootstrap conserva, además,
+un entry point de build propio. También se alinearon por bytes la escena real,
+su lista de escenas, los manifiestos de paquetes y la versión de Unity. Solo
+`ProjectSettings/ProjectSettings.asset` conserva diferencias intencionales
+para el nombre, ID Android/metroPackageName y version code del Bootstrap.
+
+La única modificación aprobada dentro de `unity/**` es añadir el mismo
+`using Vexforge.Core;` a `VexforgeTier1EconomyHub.cs` que ya permitía compilar
+Bootstrap. No se cambió otro archivo oficial. `VexforgeR5CloudBuildGate` es un
+callback local de prebuild: ejecuta `EnsureAll()` dentro del checkout Bootstrap
+y puede crear/actualizar recursos técnicos URP, materiales, recursos de
+presentación y la capa `VexforgeHotspot`. No llama a Unity Cloud, no modifica
+Supabase y no se ejecuta contra el proyecto oficial. La próxima acción es un
+único build APK completo del workflow manual Bootstrap en un SHA nuevo; detenerse
+ante cualquier fallo real de workflow, artefacto o hash. Ni 197/197 rutas ni un
+APK exitoso demuestran instalación, jugabilidad o equivalencia en dispositivo.
+
 La caché anterior pertenece a `unity-bootstrap/Library` y a GitHub Actions
 `actions/cache`. No es la caché del antiguo flujo de shards: ese workflow
 transportaba checkpoints como artefactos de 7 días desde `unity/Library`.

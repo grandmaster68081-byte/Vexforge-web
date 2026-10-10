@@ -138,14 +138,36 @@ it. The current game migration order is
   matches the report; APK ZIP/CRC and Android/Unity/ARM64 IL2CPP structure checks
   pass. Unity reported warnings=0/errors=1 with `BuildResult.Succeeded`; record
   the counter for later review under the existing non-blocking rule.
-- Stage 13 is prepared with 19 canonical `.meta`/GUID files for additional
-  Tier1 and UI scripts already present in Bootstrap (19/197, 9.6447%). After
-  this slice, the cumulative inventory will be 189/197, with eight tracked
-  canonical paths remaining. Preserve `unity/**` unchanged.
+- Stage 13 passed in Bootstrap run #19 on
+  `045127b73cf1c772e0867bed9346aa05178161cc`. Artifact
+  `VEXFORGE-Unity-Bootstrap-APK-19` (ID `11680224893`, 45,168,148 bytes)
+  contains a 45,827,441-byte APK with SHA-256
+  `fec30a5f4e8264e4630a41d9b29934fad00f4bca7d4e39a00aebf58203915a9a`,
+  matching the report. APK and artifact ZIP integrity and Android manifest,
+  Unity data, and ARM64 IL2CPP structure checks pass. Unity reported
+  warnings=0/errors=1 with `BuildResult.Succeeded`; record the counter under the
+  existing non-blocking rule. The run restored a compatible cache (2,010,423,176
+  bytes) and saved a new cache (2,010,449,557 bytes).
+- Stage 14 copies the final 8 canonical paths (8/197, 4.0609%) into Bootstrap.
+  All 197 canonical paths are now present, and all 81 official C# files match
+  byte-for-byte; Bootstrap retains one additional build-only editor entry point.
+  Its scene and scene list, package files, and Unity version now match the source.
+  Only `ProjectSettings.asset` intentionally differs to retain the Bootstrap
+  name, app ID, and version code. The user-authorized `using Vexforge.Core`
+  import is now identical in official Unity and Bootstrap; no other file under
+  `unity/**` was changed. Stage 14 still needs its new-SHA manual Bootstrap APK
+  build and artifact validation.
 
 ## Active scope
 
 - Unity under `unity/**` is the Android game runtime.
+- The sole approved source edit to official `unity/**` in this migration is the
+  mirrored `using Vexforge.Core` import in
+  `Assets/Scripts/Tier1/VexforgeTier1EconomyHub.cs`. Do not alter other official
+  Unity files in this batch. The user's eventual goal is to keep the complete
+  Bootstrap project after parity and then retire the official copy; no deletion
+  is authorized now. Require complete validation and explicit confirmation at
+  that future destructive step.
 - The official web portal is under `src/**` and `public/**`; leave it unchanged
   unless the user directly requests portal work.
 - Supabase remains authoritative for identity, ownership, combat, settlement,

@@ -3,5 +3,10 @@
 --- !u!1045 &1
 EditorBuildSettings:
   serializedVersion: 2
-  m_Scenes: []
+  m_ObjectHideFlags: 0
+  m_Scenes:
+  - serializedVersion: 2
+    enabled: 1
+    path: Assets/Scenes/VexforgeBootstrap.unity
+    guid: 0de34cdd96fc4b98b1238c4e0a1f8ed3
   m_configObjects: {}

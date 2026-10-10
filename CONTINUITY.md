@@ -1,4 +1,31 @@
-## 2026-10-10 — ESTADO ACTUAL: HANDOFF DE UNITY BOOTSTRAP
+## 2026-10-10 — CONTINUIDAD ACTUALIZADA — BOOTSTRAP, ETAPA 14
+
+- **ORIGEN:** `main` sigue `origin/main` del repositorio Vexforge en el SHA
+  `045127b73cf1c772e0867bed9346aa05178161cc`. El scaffold inicial quedó
+  conservado en la rama local `replit-scaffold-backup`; su ajuste automático
+  `.replit` se preservó en un stash local.
+- **ETAPA 13:** run manual Bootstrap #19 pasó; APK de 45.827.441 bytes,
+  SHA-256 `fec30a5f4e8264e4630a41d9b29934fad00f4bca7d4e39a00aebf58203915a9a`,
+  hash igual al informe, ZIP íntegro y AndroidManifest/datos Unity/IL2CPP ARM64
+  verificados. Unity registró 0 warnings y 1 error; registrar, no bloquear por
+  sí solo. Se restauró una caché compatible y se guardó una nueva.
+- **ETAPA 14 PREPARADA:** últimas 8/197 rutas añadidas; 197/197 rutas canónicas
+  están presentes y los 81 C# oficiales coinciden byte por byte. Se sincronizó
+  la escena/lista, paquetes y versión de Unity. Solo `ProjectSettings.asset`
+  conserva diferencias de identidad específicas del Bootstrap.
+- **EXCEPCIÓN OFICIAL:** el usuario autorizó igualar `using Vexforge.Core;` en
+  `unity/` y `unity-bootstrap/`; ningún otro archivo oficial se cambió. El
+  callback R5 de prebuild puede materializar recursos en el checkout Bootstrap,
+  pero no llama a Unity Cloud ni modifica Supabase.
+- **SIGUIENTE PASO:** commit/push de la etapa 14 a `main`; un único build manual
+  completo del workflow Bootstrap en SHA nuevo; validar APK/informe/hash y
+  detenerse ante cualquier fallo. No eliminar `unity/**`: la intención futura
+  del usuario es conservar Bootstrap tras verificar la paridad, pero la retirada
+  oficial no corresponde a esta etapa y requiere confirmación al llegar ese punto.
+- **SUPABASE:** sigue `ACTIVE_HEALTHY`; esta tarea no cambió datos, Auth, RLS,
+  RPCs, funciones ni configuración.
+
+## HISTÓRICO — 2026-10-10 — HANDOFF INICIAL DE UNITY BOOTSTRAP
 
 - **PREFLIGHT:** `main` estaba limpio y coincidía con `origin/main` en `5eab5044e8d055b96458c64f2e5e1d5865873f2b` antes de preparar esta porción.
 - **MÉTODO ACTIVO:** cada APK completo añade 5–7 % de las líneas C# del inventario canónico fijado en `unity-bootstrap/MIGRATION_MANIFEST.json`. Las APK intermedias pueden no ser jugables; cada etapa debe compilar y pasar la validación de APK.

@@ -13,13 +13,13 @@
     "source_root": "unity/",
     "source_commit": "d4616089f1582c9994544b205a396d56b1c4e95b",
     "file_count": 197,
-    "tracked_bytes": 35920194,
+    "tracked_bytes": 35920215,
     "counting_rule": "Count every tracked regular file under the canonical Unity project once, including source and metadata, scenes, Resources, other Assets, Packages and ProjectSettings. Exclude generated Unity folders and repository files outside unity/.",
     "deferred_batch_measure": "For the post-code content phase, count distinct canonical tracked files against this complete 197-file denominator; every file is indivisible and counts once. The cap is floor(10% * 197) = 19 files per batch. Keep dependencies and .meta pairs together; bytes are reported for context, not used as the percentage denominator. Re-inventory and recalculate if the official Unity source commit changes.",
     "categories": {
       "scripts_and_metadata": {
         "file_count": 121,
-        "tracked_bytes": 688248
+        "tracked_bytes": 688269
       },
       "scenes_and_metadata": {
         "file_count": 2,
@@ -631,10 +631,10 @@
         {
           "source": "unity/Assets/Scripts/Tier1/VexforgeTier1EconomyHub.cs",
           "destination": "unity-bootstrap/Assets/Scripts/Tier1/VexforgeTier1EconomyHub.cs",
-          "source_sha256": "bf76b5f2017cd744353e114851fcae18a737b1db374b901c478559a150ebb69c",
+          "source_sha256": "7867b9cfa77800305afde58747cadef22fc984cda09125ed28abe079f8eee61d",
           "destination_sha256": "7867b9cfa77800305afde58747cadef22fc984cda09125ed28abe079f8eee61d",
           "kind": "runtime_script",
-          "destination_patch": "Bootstrap-only compile fix: import Vexforge.Core so VexforgeApp resolves; unity/ remains unchanged."
+          "destination_patch": "Approved parity correction: the previously Bootstrap-only using Vexforge.Core import is now identical in unity/ and unity-bootstrap/. This one-line namespace import resolves VexforgeApp and changes no runtime behavior."
         },
         {
           "source": "unity/Assets/Scripts/Tier1/VexforgeTier1EncounterPresentationDirector.cs",
@@ -1895,7 +1895,7 @@
     {
       "number": 13,
       "name": "Remaining Tier1 and initial UI script GUID metadata",
-      "status": "prepared_for_build",
+      "status": "verified_build_success",
       "new_file_count": 19,
       "share_percent": 9.6447,
       "assets": [
@@ -2056,10 +2056,124 @@
         3
       ],
       "note": "This dependency-closed slice restores canonical Unity GUID metadata for 18 additional Tier1 scripts and the first UI script whose C# sources are already present in Bootstrap. All GUIDs are unique and unreferenced by serialized Bootstrap assets in the current inventory. No C# source or runtime behavior changes. This is 19/197 files (9.6447%), within the 19-file cap.",
+      "build": {
+        "workflow_run_id": 38081004065,
+        "workflow_run_number": 19,
+        "workflow_url": "https://github.com/grandmaster68081-byte/Vexforge-web/actions/runs/38081004065",
+        "commit": "045127b73cf1c772e0867bed9346aa05178161cc",
+        "branch": "main",
+        "result": "success",
+        "unity_editor": "6000.3.0f1",
+        "application_id": "com.vexforge.bootstrap",
+        "platform": "Android",
+        "scripting": "IL2CPP",
+        "architecture": "ARM64",
+        "warnings": 0,
+        "errors": 1,
+        "unity_build_report_total_size_bytes": 721258788,
+        "artifact_name": "VEXFORGE-Unity-Bootstrap-APK-19",
+        "artifact_id": 11680224893,
+        "artifact_size_bytes": 45168148,
+        "artifact_zip_sha256": "1a1d2e868ef8503d29f7f67f8615369c1ad075713206c8689041a247c09c8082",
+        "apk_size_bytes": 45827441,
+        "apk_sha256": "fec30a5f4e8264e4630a41d9b29934fad00f4bca7d4e39a00aebf58203915a9a",
+        "downloaded_apk_hash_matches_report": true,
+        "artifact_zip_crc_valid": true,
+        "apk_zip_crc_valid": true,
+        "android_manifest_present": true,
+        "unity_data_present": true,
+        "arm64_il2cpp_library_present": true,
+        "validation_note": "Stage 13 passed in a full Bootstrap APK. The artifact ZIP and APK passed integrity checks; the downloaded APK hash matches the report and Android/Unity/ARM64 IL2CPP structure is present. Unity BuildResult was Succeeded with 0 warnings and 1 BuildReport error; record the counter, but it does not alone block the next stage under the existing project instruction.",
+        "cache_restore": {
+          "result": "success_restore_key",
+          "exact_key_hit": false,
+          "restored_bytes": 2010423176,
+          "matched_key": "vexforge-bootstrap-library-Linux-X64-6000.3.0f1-9d1f354f1e410cea210bb27ab8292904483422cb15b20c4c1efba172bf23793e-38079672475-1"
+        },
+        "cache_save": {
+          "result": "success",
+          "saved_key": "vexforge-bootstrap-library-Linux-X64-6000.3.0f1-5521b287f37d2135b6402c5e103bdabe81ab434983aa650c1446febb09aec5fc-38081004065-1",
+          "saved_bytes": 2010449557
+        }
+      }
+    },
+    {
+      "number": 14,
+      "name": "Final canonical project paths and Unity source parity",
+      "status": "prepared_for_build",
+      "new_file_count": 8,
+      "share_percent": 4.0609,
+      "assets": [
+        {
+          "source": "unity/.gitignore",
+          "destination": "unity-bootstrap/.gitignore",
+          "source_sha256": "cf979b66c6c536a20f3e22ae9cadf6b9aa19ed6c0e14037582f1efd5681b295a",
+          "destination_sha256": "cf979b66c6c536a20f3e22ae9cadf6b9aa19ed6c0e14037582f1efd5681b295a",
+          "kind": "project_file"
+        },
+        {
+          "source": "unity/Assets/Editor/VexforgeGitHubBuild.cs",
+          "destination": "unity-bootstrap/Assets/Editor/VexforgeGitHubBuild.cs",
+          "source_sha256": "3a325a2fc90df1815441326bdd9a44e5f4bf7f5004105768d10af901cfcd60f2",
+          "destination_sha256": "3a325a2fc90df1815441326bdd9a44e5f4bf7f5004105768d10af901cfcd60f2",
+          "kind": "editor_script"
+        },
+        {
+          "source": "unity/Assets/Editor/VexforgeR5CloudBuildGate.cs",
+          "destination": "unity-bootstrap/Assets/Editor/VexforgeR5CloudBuildGate.cs",
+          "source_sha256": "f8f81ef2a1c2f24895581ef1c17f43c79448c9a641c7150752addd77c0d796a6",
+          "destination_sha256": "f8f81ef2a1c2f24895581ef1c17f43c79448c9a641c7150752addd77c0d796a6",
+          "kind": "editor_script"
+        },
+        {
+          "source": "unity/Assets/Editor/VexforgeR5CloudBuildGate.cs.meta",
+          "destination": "unity-bootstrap/Assets/Editor/VexforgeR5CloudBuildGate.cs.meta",
+          "source_sha256": "0a2e92cb8d8aae3d761cfa488804df2d137aaf19c319184415da96bf34aa9a57",
+          "destination_sha256": "0a2e92cb8d8aae3d761cfa488804df2d137aaf19c319184415da96bf34aa9a57",
+          "kind": "meta",
+          "guid": "d3f8f3ec17b14f2c8a5c7d9e6b1a4f20"
+        },
+        {
+          "source": "unity/Assets/Editor/VexforgeShaderShardBuild.cs",
+          "destination": "unity-bootstrap/Assets/Editor/VexforgeShaderShardBuild.cs",
+          "source_sha256": "fffcd405639df97355c8c281d72612dbe3b3d4bf7a12d199c7dd7f0165c4cce3",
+          "destination_sha256": "fffcd405639df97355c8c281d72612dbe3b3d4bf7a12d199c7dd7f0165c4cce3",
+          "kind": "editor_script"
+        },
+        {
+          "source": "unity/Assets/Scripts/UI/VexforgeGlobalChatDock.cs.meta",
+          "destination": "unity-bootstrap/Assets/Scripts/UI/VexforgeGlobalChatDock.cs.meta",
+          "source_sha256": "ba12ccb5088fa20d04472504257854b1eee9850f5ada766fbdc53fa9c4a246a2",
+          "destination_sha256": "ba12ccb5088fa20d04472504257854b1eee9850f5ada766fbdc53fa9c4a246a2",
+          "kind": "meta",
+          "guid": "d4742b78ca0e794ee25d4c1bcc8d3835"
+        },
+        {
+          "source": "unity/Assets/Scripts/UI/VexforgeSocialHub.cs.meta",
+          "destination": "unity-bootstrap/Assets/Scripts/UI/VexforgeSocialHub.cs.meta",
+          "source_sha256": "2a24a2685a924d5d99f4b53e7f566f2e9a0bb73200c02e0ce63e29df497dd25b",
+          "destination_sha256": "2a24a2685a924d5d99f4b53e7f566f2e9a0bb73200c02e0ce63e29df497dd25b",
+          "kind": "meta",
+          "guid": "84f676fd6d62e084f350095f4e9b99d9"
+        },
+        {
+          "source": "unity/LEGACY_STATUS.md",
+          "destination": "unity-bootstrap/LEGACY_STATUS.md",
+          "source_sha256": "68fbea4b6643890f65234d2c4e8f963476a314e3974dc3ef2ddf88e8a6403cee",
+          "destination_sha256": "68fbea4b6643890f65234d2c4e8f963476a314e3974dc3ef2ddf88e8a6403cee",
+          "kind": "project_document"
+        }
+      ],
+      "depends_on_stages": [
+        3,
+        5,
+        13
+      ],
+      "note": "Stage 14 adds the last 8/197 canonical paths (4.0609%), closing path coverage at 197/197. All 81 official C# files now match Bootstrap byte-for-byte; Bootstrap has one additional project-specific VexforgeBootstrapBuild.cs entry point. The real Bootstrap scene and EditorBuildSettings list, package manifests/lock, and Unity version file are byte-aligned. The only remaining byte difference among the 197 paired canonical paths is ProjectSettings.asset, which intentionally preserves the Bootstrap product name, Android identifier/metroPackageName, and version code. The user-authorized using Vexforge.Core import is mirrored in both copies; no other official Unity source was changed. The R5 build-preprocess callback runs only inside the Bootstrap GitHub Actions checkout and may materialize/adjust URP, materials, presentation resources, and the VexforgeHotspot layer through EnsureAll; it does not invoke Unity Cloud or modify Supabase. This stage is path/content preparation only until the next complete APK build passes; it is not device/gameplay verification.",
       "build": null
     }
   ],
-  "next_stage": "Stage 12 passed in manual Bootstrap run #18 on commit 9250fdcec1f7a61396a345d7ea67d5060ee13d58; the downloaded APK hash, ZIP integrity, Android manifest, Unity data, and ARM64 IL2CPP structure were verified. Stage 13 is prepared as a new 19-file dependency-closed batch restoring additional Tier1 and UI script .meta/GUID files. Bootstrap will contain 189/197 canonical paths after this batch; 8 remain. Dispatch one full Bootstrap APK build from a new commit SHA, validate the artifact and APK, then finish the remaining tracked paths within the 19-file cap.",
-  "known_architecture_boundary": "The official code contains a reciprocal App/HUD cycle involving 31 files and 7,066 lines (41.6%). The user-directed stage 3 imports the full pinned runtime C# inventory together, so it does not split that source cycle. Stage 5 restores the app component in the official bootstrap scene; stage 6 adds the canonical audio cue set. Visual resources, remaining scenes, runtime behavior, and full-content parity still require later stages and separate verification. Any temporary compile seam must be recorded and removed before parity is claimed.",
-  "scene_policy": "Stage 5 restores the canonical VexforgeBootstrap scene content and its already-matched scene metadata; the Bootstrap copy adds one final LF, and its VexforgeApp script GUID resolves through stage 4. unity/ remains the untouched source of truth. The restored scene is not device or gameplay verification."
+  "next_stage": "Stage 13 passed in manual Bootstrap run #19 on commit 045127b73cf1c772e0867bed9346aa05178161cc; the downloaded 45,827,441-byte APK SHA-256 fec30a5f4e8264e4630a41d9b29934fad00f4bca7d4e39a00aebf58203915a9a matches its report, and artifact/APK ZIP integrity plus Android manifest, Unity data, and ARM64 IL2CPP structure are verified. Stage 14 now contains the final 8/197 canonical paths, making all 197 paths present in Bootstrap; all 81 official C# files match byte-for-byte. The only canonical paired-file difference is the intentional Bootstrap PlayerSettings identity. Commit/push this stage to main, run one full manual Bootstrap APK build, validate artifact/hash, and stop on any actual workflow or artifact failure.",
+  "known_architecture_boundary": "The official code contains a reciprocal App/HUD cycle involving 31 files and 7,066 lines (41.6%). Stage 3 imports the complete pinned runtime C# source set together. Stage 14 now supplies all 197 canonical Unity paths and makes all 81 official C# files byte-identical in Bootstrap, with one Bootstrap-only build entry point. APK success still does not prove device launch, gameplay behavior, backend integration, or a safe deletion of the official project; preserve the distinct Bootstrap package identity and verify those separately.",
+  "scene_policy": "The canonical VexforgeBootstrap scene and .meta are byte-identical in both projects, and both EditorBuildSettings files name that real scene with GUID 0de34cdd96fc4b98b1238c4e0a1f8ed3. The Bootstrap builder also explicitly selects this scene. Scene/path parity does not prove gameplay or device verification."
 }

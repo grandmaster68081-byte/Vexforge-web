@@ -4,16 +4,18 @@ This is the isolated, cumulative destination for migrating the official Unity
 game into complete Android APKs. The authorized plan first completes the entire
 canonical C# source set in one code-only pass; after that succeeds, the deferred
 full-project content is migrated in bounded, dependency-complete batches. This
-is not a second source of truth and must never replace or modify the official
-game.
+is not a second source of truth and must not replace the official game. The user
+approved one narrowly scoped import normalization in the official source so its
+81 C# files can match Bootstrap exactly; no other official Unity file may be
+changed in this migration.
 
 ## Current state (2026-10-10)
 
 - Unity Editor: `6000.3.0f1`, matched to `unity/ProjectSettings/ProjectVersion.txt`.
 - Android application ID: `com.vexforge.bootstrap`, distinct from the official
   `com.vexforge.android`.
-- Stages 1–12 have passed. The full 76-file canonical C# source set is present;
-  Stage 12 brought the cumulative content inventory to 170/197 files.
+- Stages 1–13 have passed. The full 76-file runtime C# set and all 81 official
+  C# files are present; the latter now match the Bootstrap copies byte-for-byte.
 - Stage 11 passed in Bootstrap run #17 on
   `c5d5b81011cc2647533c0684055fb980bc19cec0`. It produced
   `VEXFORGE-Unity-Bootstrap-APK-17` (ID `11679358725`). Its 45,827,437-byte APK
@@ -30,10 +32,23 @@ game.
   checks pass. Unity reported 0 warnings and 1 error with
   `BuildResult.Succeeded`; record the counter under the existing non-blocking
   rule.
-- Stage 13 is prepared with canonical `.meta`/GUID files for 19 more scripts
-  already in Bootstrap (19/197, 9.6447%), bringing the planned cumulative
-  inventory to 189/197. Eight canonical paths remain after Stage 13; keep
-  `unity/**` unchanged.
+- Stage 13 passed in Bootstrap run #19 on
+  `045127b73cf1c772e0867bed9346aa05178161cc`. Artifact
+  `VEXFORGE-Unity-Bootstrap-APK-19` (ID `11680224893`, 45,168,148 bytes)
+  contains a 45,827,441-byte APK with SHA-256
+  `fec30a5f4e8264e4630a41d9b29934fad00f4bca7d4e39a00aebf58203915a9a`;
+  the downloaded hash matches the report. Artifact/APK ZIP integrity and
+  Android/Unity/ARM64 IL2CPP structure checks pass. Unity reported 0 warnings
+  and 1 error with `BuildResult.Succeeded`; the counter remains recorded under
+  the non-blocking rule. It restored a compatible cache of 2,010,423,176 bytes
+  and saved a new cache of 2,010,449,557 bytes.
+- Stage 14 adds the final 8/197 canonical paths (4.0609%), bringing Bootstrap
+  path coverage to 197/197. All 81 official C# files now match byte-for-byte;
+  Bootstrap has one extra project-specific build entry point. The real scene,
+  scene list, packages, and Unity version are aligned. Only
+  `ProjectSettings.asset` intentionally differs for the Bootstrap product name,
+  package ID, and version code. The new stage still requires its manual full APK
+  build and artifact/hash validation.
 - The successful historical APK #2 was a workflow smoke test using an empty
   generated scene. It proves neither migrated game content nor a cache restore.
 - Stage 5 restored `Assets/Scenes/VexforgeBootstrap.unity` from the canonical
@@ -43,7 +58,9 @@ game.
 
 ## Migration rules
 
-- Keep `unity/**` unchanged; inspect it as the canonical source.
+- Keep `unity/**` as canonical. Its only approved change here is the mirrored
+  `using Vexforge.Core` import in `VexforgeTier1EconomyHub.cs`; make no other
+  official Unity source edits.
 - Preserve the verified stages 1 and 2. Stage 3 is the user-directed one-time
   completion of all remaining canonical C# source, taking the code inventory to
   100%; it is intentionally larger than the historical 5–7% code slices.
@@ -66,6 +83,9 @@ game.
   `docs/vexforge-canonical/UNITY_BOOTSTRAP_WORKFLOW.md`.
 - Supabase is not part of this build pipeline. Do not modify live schema, data,
   authentication, policies, RPCs, or configuration.
+- The user's eventual goal is to retain Bootstrap after complete parity and
+  retire the official Unity copy. Do not delete `unity/**` in this stage; that
+  destructive action requires completed verification and explicit confirmation.
 
 ## Build and cache
 
