@@ -914,7 +914,7 @@
     {
       "number": 4,
       "name": "VexforgeApp scene script GUID metadata",
-      "status": "prepared_for_manual_build",
+      "status": "verified_build_success",
       "new_file_count": 1,
       "share_percent": 0.5076,
       "source_files": [
@@ -930,10 +930,71 @@
       "depends_on_stages": [
         3
       ],
-      "note": "This is the only canonical script GUID referenced by the official VexforgeBootstrap scene. Its C# source is already present in stage 3. Add the exact upstream metadata now; keep the scene and all other content out of this dependency-closed one-file batch."
+      "note": "This is the only canonical script GUID referenced by the official VexforgeBootstrap scene. Its C# source is already present in stage 3. The metadata was built and validated in run 8.",
+      "build": {
+        "workflow_run_id": 38042840117,
+        "workflow_run_number": 8,
+        "commit": "d1950905ac78468d57012ef2809325757774f434",
+        "workflow_url": "https://github.com/grandmaster68081-byte/Vexforge-web/actions/runs/38042840117",
+        "result": "success",
+        "unity_editor": "6000.3.0f1",
+        "application_id": "com.vexforge.bootstrap",
+        "platform": "Android",
+        "scripting": "IL2CPP",
+        "architecture": "ARM64",
+        "warnings": 0,
+        "errors": 1,
+        "unity_build_report_total_size_bytes": 640014532,
+        "build_report_anomaly": "The BuildReport records errors=1 although Unity reports BuildResult.Succeeded and GitHub Actions, APK validation, and artifact upload succeeded. Per the user's direction, record this counter for later review; it is non-blocking by itself and does not mean zero errors.",
+        "artifact_name": "VEXFORGE-Unity-Bootstrap-APK-8",
+        "artifact_id": 11666741339,
+        "artifact_size_bytes": 27293553,
+        "apk_size_bytes": 27905651,
+        "apk_sha256": "3fa3193f3a6be2423764ee02f7452a312a5233fb8983e0fadeaad718e3cf0b3b",
+        "downloaded_artifact_hash_matched_report": true,
+        "apk_validation": {
+          "outer_artifact_zip_valid": true,
+          "apk_zip_crc_valid": true,
+          "android_manifest_present": true,
+          "unity_data_present": true,
+          "arm64_il2cpp_library_present": true
+        },
+        "cache_restore": {
+          "result": "restored_from_restore_key",
+          "restored_bytes": 1863822113,
+          "matched_key": "vexforge-bootstrap-library-Linux-X64-6000.3.0f1-e6deedcaa8fc1cc3ab9daa8680b431ee7f4d14941ac980f592770f30f027cd0a-38036352949-1",
+          "exact_key_hit": false
+        },
+        "cache_save": {
+          "result": "success",
+          "saved_key": "vexforge-bootstrap-library-Linux-X64-6000.3.0f1-e0737e0f94e1033ac5cbaf696e869b8abfe9acd4b68fcce0c550cc8a9afbc0af-38042840117-1"
+        }
+      }
+    },
+    {
+      "number": 5,
+      "name": "Restore the canonical VexforgeBootstrap scene",
+      "status": "prepared_for_manual_build",
+      "new_file_count": 1,
+      "share_percent": 0.5076,
+      "source_files": [
+        {
+          "source": "unity/Assets/Scenes/VexforgeBootstrap.unity",
+          "destination": "unity-bootstrap/Assets/Scenes/VexforgeBootstrap.unity",
+          "source_sha256": "17cbaf382df6820aa47c9e33b0c762a480c0f1f28909fcd85c54f34d443b013e",
+          "destination_sha256": "3d26cae5fb14cc513b3d26e79775a017f9a1d3397b1e660694f1ca38482134bc",
+          "kind": "canonical_scene",
+          "transformation": "The serialized scene content matches the source; the Bootstrap copy adds one final LF."
+        }
+      ],
+      "depends_on_stages": [
+        3,
+        4
+      ],
+      "note": "The official scene contains one MonoBehaviour script GUID, VexforgeApp, resolved by stage 4. All canonical C# is present from stage 3, and the scene .meta already matches unity/. This one-file scene batch adds no other asset or scene dependencies; its only byte-level difference is a final LF."
     }
   ],
-  "next_stage": "Stage 4 contains the canonical VexforgeApp.cs.meta file (1 of 197 full-content files, 0.5076%) and is prepared for one manual Bootstrap APK build. After its APK is validated, continue selecting dependency-closed batches of no more than 19 files; do not preselect a fixed number of batches.",
-  "known_architecture_boundary": "The official code contains a reciprocal App/HUD cycle involving 31 files and 7,066 lines (41.6%). The user-directed stage 3 now imports the full pinned runtime C# inventory together, so it does not split that source cycle. Keep the staged scene disconnected until the later scene/content pass restores its canonical component references. Any temporary compile seam must be recorded and removed before parity is claimed.",
-  "scene_policy": "The bootstrap copy keeps the official VexforgeBootstrap scene GUID/settings but intentionally omits its VexforgeApp component during this code-only pass. Restore the exact official scene and metadata only as part of the later bounded full-content migration. unity/ remains untouched."
+  "next_stage": "Stage 5 restores the exact canonical VexforgeBootstrap scene (one new file; 0.5076% of the 197-file full-content inventory). Its only script GUID is resolved by stage 4. After the cumulative APK and artifact pass validation, continue selecting dependency-closed batches of no more than 19 files; do not preselect a fixed number of batches.",
+  "known_architecture_boundary": "The official code contains a reciprocal App/HUD cycle involving 31 files and 7,066 lines (41.6%). The user-directed stage 3 imports the full pinned runtime C# inventory together, so it does not split that source cycle. Stage 5 restores the app component in the official bootstrap scene; runtime behavior, resources, remaining scenes, and full-content parity still require later stages and separate verification. Any temporary compile seam must be recorded and removed before parity is claimed.",
+  "scene_policy": "Stage 5 restores the canonical VexforgeBootstrap scene content and its already-matched scene metadata; the Bootstrap copy adds one final LF, and its VexforgeApp script GUID resolves through stage 4. unity/ remains the untouched source of truth. The restored scene is not device or gameplay verification."
 }

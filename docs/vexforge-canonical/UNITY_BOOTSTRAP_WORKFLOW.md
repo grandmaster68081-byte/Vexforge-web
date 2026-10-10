@@ -191,12 +191,37 @@ El stage 3 está verificado técnicamente, pero el APK sigue siendo solo una
 compilación aislada: no acredita gameplay, pruebas en dispositivo ni paridad
 final.
 
-La primera tanda de contenido preparada es únicamente
-`VexforgeApp.cs.meta` (1 de 197 archivos de inventario, 0,5076 %). Su GUID es la
-única referencia `m_Script` de la escena oficial `VexforgeBootstrap`; el script
-ya se migró en el stage 3. La escena y los demás recursos continúan excluidos
-hasta sus tandas con dependencias completas. Ante un build fallido, APK/artefacto
-ausente o riesgo sin resolver, detenerse antes de lanzar otro.
+La etapa 4 preparó únicamente `VexforgeApp.cs.meta` (1 de 197 archivos de
+inventario, 0,5076 %). Su GUID es la única referencia `m_Script` de la escena
+oficial `VexforgeBootstrap`; el script ya se migró en el stage 3.
+
+Run #8 (`38042840117`, commit `d195090`) terminó correctamente el 10 de octubre
+de 2026 con Unity `6000.3.0f1`, Android, IL2CPP/ARM64 y
+`com.vexforge.bootstrap`. El artefacto `VEXFORGE-Unity-Bootstrap-APK-8` (ID
+`11666741339`) se descargó y validó: ZIP externo y APK pasan integridad; incluye
+AndroidManifest, datos Unity y `libil2cpp.so` ARM64. El APK mide 27.905.651
+bytes y su SHA-256
+`3fa3193f3a6be2423764ee02f7452a312a5233fb8983e0fadeaad718e3cf0b3b` coincide
+con el informe. El workflow restauró 1.863.822.113 bytes desde la caché
+compatible del run #7 (sin coincidencia exacta) y guardó una caché nueva.
+`BuildReport.totalSize` fue 640.014.532 bytes; no es el tamaño empaquetado del
+APK.
+
+El BuildReport registró 0 warnings y 1 error aunque Unity informó
+`BuildResult.Succeeded` y el workflow, APK y artefacto pasaron sus validaciones.
+Por instrucción del usuario del 10 de octubre de 2026, el contador se registra
+para recogerlo al final y no bloquea por sí solo el siguiente corte cuando el
+run y el artefacto son correctos. No se declara como cero errores.
+
+La etapa 5 restaura el contenido canónico de
+`unity/Assets/Scenes/VexforgeBootstrap.unity` en el bootstrap (1 archivo nuevo,
+0,5076 %). La única diferencia de bytes es un LF final añadido por el editor.
+La escena contiene una referencia de script, resuelta por el `.meta` de
+`VexforgeApp` de la etapa 4; sus demás referencias son objetos locales/built-in
+y el `.meta` de la escena ya coincide con la fuente. Recursos y demás escenas
+siguen excluidos. Tras validar esta APK, elegir otro lote dependency-closed de
+hasta 19 archivos. Detenerse si el workflow falla, falta el APK/artefacto, hay
+corrupción o no coincide el hash.
 
 La caché anterior pertenece a `unity-bootstrap/Library` y a GitHub Actions
 `actions/cache`. No es la caché del antiguo flujo de shards: ese workflow
@@ -251,10 +276,12 @@ Una vez cumplida esa condición, continuar de forma secuencial: elegir e integra
 una pieza, revisar el diff, hacer commit/push a `main`, despachar manualmente un
 solo build completo, verificar APK e informe, y avanzar únicamente después de
 un run correcto. No lanzar builds en paralelo ni automatizar el disparador.
-Esta autorización termina al completar la migración o si un build falla, falta el
-APK/artefacto, aparece un riesgo no resuelto o la siguiente pieza requiere una
-decisión de alcance. En esos casos, detenerse e informar; no reintentar un build
-fallido sin nueva autorización.
+Esta autorización termina al completar la migración o si un workflow falla,
+falta el APK/artefacto, el APK está corrupto, el hash no coincide o la siguiente
+pieza requiere una decisión de alcance. Por la instrucción del usuario del 10 de
+octubre de 2026, BuildReport warnings/errors se registran para revisión
+acumulada y no bloquean por sí solos si el workflow y la validación del APK
+terminan correctamente. No reintentar un build fallido sin nueva autorización.
 
 La autorización es solo para el workflow experimental del bootstrap. No autoriza
 el workflow oficial del juego, cambios live de Supabase, Unity Cloud Build,

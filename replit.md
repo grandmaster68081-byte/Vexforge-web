@@ -13,7 +13,7 @@ it. The current game migration order is
 
 ## Current Bootstrap migration checkpoint (2026-10-10)
 
-- Before preparing this slice, `main` was clean and matched `origin/main` at
+- Stage 3 preparation began from clean `main` at
   `d4616089f1582c9994544b205a396d56b1c4e95b`.
 - Bootstrap APK #2 remains only a pipeline smoke test and is not migration
   progress. APK #3 is the first verified official content slice: 8 auth/session
@@ -46,7 +46,9 @@ it. The current game migration order is
   was cancelled after 21,098 seconds.
 - Tier1 resource assets and the pack-reveal director are intentionally not
   included in this compile-only slice, so it is not a functional pack reveal.
-- The bootstrap scene still omits `VexforgeApp`; `unity/**` remains untouched.
+- `unity/**` remains untouched. Stage 4 adds the canonical
+  `VexforgeApp.cs.meta`, and Stage 5 restores the original bootstrap scene that
+  resolves through that GUID.
   Stage 3 now contains the other 63 canonical C# scripts (14,728 lines), bringing
   the copied runtime script set to 76/76 and 16,988/16,988 lines. Run #5's two
   CS0246 errors for `VexforgeApp` were fixed by importing `Vexforge.Core` in the
@@ -60,11 +62,22 @@ it. The current game migration order is
   intentionally adds no new scenes, Resources, source `.meta` files or other
   excluded Unity project content. Passing the compile test will not prove game
   runtime, scene, resource or full-content parity.
-- After stage 3 passes, migrate the remaining canonical Unity project content
-  in dependency-closed batches of no more than 10% of the full tracked `unity/`
-  inventory (197 files / 35,920,194 bytes at `d4616089`). Do not set a fixed
-  number of batches. Continue checking exact source hashes and full APK/cache
-  evidence after each successful stage.
+- Stage 4 passed in Bootstrap run #8 (`d195090`): one canonical VexforgeApp
+  script `.meta` file, 0.5076% of the full content inventory. Its APK is
+  27,905,651 bytes with SHA-256
+  `3fa3193f3a6be2423764ee02f7452a312a5233fb8983e0fadeaad718e3cf0b3b`; the
+  downloaded APK hash matches and both artifact and APK ZIP integrity checks
+  pass. It restored 1,863,822,113 bytes from the compatible run #7 cache and
+  saved a new cache. Unity reported warnings=0/errors=1; the user directs that
+  BuildReport counters be recorded and collected for later review, not used
+  alone to block a successful workflow with a validated APK.
+- Stage 5 now restores only the canonical `VexforgeBootstrap.unity` scene
+  content (one file, 0.5076%; the Bootstrap copy adds one final LF). Its sole
+  script GUID is the VexforgeApp metadata from stage 4; its scene `.meta`
+  already matches the source. After its
+  cumulative APK passes, migrate other canonical content in dependency-closed
+  batches of no more than 19 files (10% of the 197-file inventory). Do not set
+  a fixed number of batches; verify hashes and APK/cache evidence at each step.
 - Supabase's project status was checked read-only as `ACTIVE_HEALTHY`; this
   handoff made no Supabase changes. Unity Cloud Build is not part of this path.
 
@@ -85,18 +98,18 @@ it. The current game migration order is
   `.github/workflows/vexforge-unity-bootstrap-android.yml` builds only
   `unity-bootstrap/**`, manually, on `main`. Each accepted content slice is
   cumulative and followed by a complete APK build. Run #2 was only a workflow
-  smoke test; runs #3 and #4 validate the first two official content slices.
-  The current authorized stage 3 adds all remaining canonical C# scripts at
-  once, while still excluding the not-yet-migrated scenes/resources/metadata.
-  Only after its APK succeeds do the remaining full-project files move in
-  batches capped at 10% of the complete tracked Unity inventory, with no fixed
-  number of batches.
+  smoke test; runs #3–#7 validated the code slices, and run #8 validated stage
+  4 metadata. Stage 5 restores the canonical bootstrap scene. Keep later
+  full-project content in dependency-closed batches capped at 10% of the
+  complete tracked Unity inventory, with no fixed number of batches.
   The builder requires a real scene and does not generate placeholders. It does
   not replace or authorize the official game workflow. The user has conditionally
   authorized this migration to continue sequentially without a new prompt for
-  each APK, only after the current baseline run succeeds and each later run
-  succeeds in turn. Stop after any failure; do not retry without fresh
-  authorization.
+  each APK, only after the current baseline workflow and APK validations succeed.
+  Record Unity BuildReport counters for later review; per the user's instruction
+  they do not alone block a successful workflow with a valid APK/artifact. Stop
+  after an actual workflow or artifact validation failure; do not retry without
+  fresh authorization.
   Follow its dedicated operations guide.
 - Keep the official branch on `main`; before milestones, fetch and confirm a
   clean tree with `HEAD == origin/main`. Commit and push completed work.
