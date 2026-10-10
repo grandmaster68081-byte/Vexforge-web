@@ -213,15 +213,33 @@ Por instrucción del usuario del 10 de octubre de 2026, el contador se registra
 para recogerlo al final y no bloquea por sí solo el siguiente corte cuando el
 run y el artefacto son correctos. No se declara como cero errores.
 
-La etapa 5 restaura el contenido canónico de
+La etapa 5 restauró el contenido canónico de
 `unity/Assets/Scenes/VexforgeBootstrap.unity` en el bootstrap (1 archivo nuevo,
 0,5076 %). La única diferencia de bytes es un LF final añadido por el editor.
 La escena contiene una referencia de script, resuelta por el `.meta` de
 `VexforgeApp` de la etapa 4; sus demás referencias son objetos locales/built-in
-y el `.meta` de la escena ya coincide con la fuente. Recursos y demás escenas
-siguen excluidos. Tras validar esta APK, elegir otro lote dependency-closed de
-hasta 19 archivos. Detenerse si el workflow falla, falta el APK/artefacto, hay
-corrupción o no coincide el hash.
+y el `.meta` de la escena ya coincide con la fuente.
+
+La etapa 5 pasó en Bootstrap run #9, commit `a2dd2c367d6aed5153d09d602198bde597c9d69a`.
+El APK Android/IL2CPP/ARM64 para `com.vexforge.bootstrap` mide 27.905.771 bytes;
+su SHA-256 `b1a033c1651f0d33554df5e029de380ebf71ede26f09740f5f0913463035dbe9`
+coincide con el informe descargado. El ZIP del artefacto y el APK superan las
+comprobaciones de integridad. El artefacto `VEXFORGE-Unity-Bootstrap-APK-9`
+(ID `11672384247`, 27.293.915 bytes) se subió correctamente.
+
+El run #9 restauró 1.863.686.866 bytes desde una clave compatible del run #8
+(sin coincidencia exacta) y guardó una caché nueva. `BuildReport.totalSize` fue
+640.014.896 bytes. Unity registró 0 warnings y 1 error pese a completar con
+`BuildResult.Succeeded`; se anota para revisión y no se declara como cero errores.
+
+La etapa 6 prepara los diez WAV originales de
+`unity/Assets/Resources/VexforgeTier1/Audio/`. Son todos los cues que el
+`VexforgeTier1AudioDirector` busca mediante `Resources.Load` y sus claves de
+ruta; los WAV no tienen `.meta` canónicos. El lote suma 10/197 archivos (5,0761
+%), mantiene las rutas y bytes originales y queda dentro del máximo de 19.
+Después de validar su APK acumulada, elegir otro lote cerrado de dependencias
+sin fijar por adelantado el número de etapas. Detenerse si el workflow falla,
+falta el APK/artefacto, hay corrupción o no coincide el hash.
 
 La caché anterior pertenece a `unity-bootstrap/Library` y a GitHub Actions
 `actions/cache`. No es la caché del antiguo flujo de shards: ese workflow

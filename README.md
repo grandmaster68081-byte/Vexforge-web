@@ -5,7 +5,7 @@
 - `src/**` y `public/**`: portal web oficial. Mantener sin cambios durante este
   trabajo.
 - `unity/**`: runtime Android del juego; conservar el código intacto.
-- `unity-bootstrap/**`: proyecto hermano, aislado y acumulativo para migrar el juego Android oficial en porciones pequeñas. Aún no contiene una escena ni contenido oficial migrado.
+- `unity-bootstrap/**`: proyecto hermano, aislado y acumulativo para migrar el juego Android oficial en porciones pequeñas. El run #9 validó la escena canónica de inicio; la siguiente etapa añade el conjunto de audio Tier1. No representa aún el contenido visual ni la paridad completa.
 - `supabase/**` y `backend/**`: contratos y funciones existentes. Supabase live
   sigue siendo la autoridad; no aplicar migraciones ni cambiar datos/configuración
   en vivo.
@@ -22,10 +22,11 @@ No sustituye, modifica ni ejecuta el workflow del juego oficial.
 El proceso experimental completo y sus límites están descritos en
 `docs/vexforge-canonical/UNITY_BOOTSTRAP_WORKFLOW.md`.
 La APK #2 fue una prueba técnica del workflow con una escena vacía y no cuenta
-como hito de migración. El builder actual se detiene si falta una escena oficial;
-no genera escenas ni contenido de relleno. Ese guard solo comprueba la presencia
-del archivo: el origen oficial y el cierre de dependencias deben revisarse contra
-`unity/**` antes de aceptar una porción.
+como hito de migración. El run #9 validó el scene bootstrap canónico y su APK.
+El builder actual se detiene si falta una escena oficial; no genera escenas ni
+contenido de relleno. Ese guard solo comprueba la presencia del archivo: el
+origen oficial y el cierre de dependencias deben revisarse contra `unity/**`
+antes de aceptar una porción.
 
 ## Documentación
 

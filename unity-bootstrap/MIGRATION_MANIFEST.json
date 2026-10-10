@@ -974,7 +974,7 @@
     {
       "number": 5,
       "name": "Restore the canonical VexforgeBootstrap scene",
-      "status": "prepared_for_manual_build",
+      "status": "verified_build_success",
       "new_file_count": 1,
       "share_percent": 0.5076,
       "source_files": [
@@ -991,10 +991,151 @@
         3,
         4
       ],
-      "note": "The official scene contains one MonoBehaviour script GUID, VexforgeApp, resolved by stage 4. All canonical C# is present from stage 3, and the scene .meta already matches unity/. This one-file scene batch adds no other asset or scene dependencies; its only byte-level difference is a final LF."
+      "note": "The official scene contains one MonoBehaviour script GUID, VexforgeApp, resolved by stage 4. All canonical C# is present from stage 3, and the scene .meta already matches unity/. This one-file scene batch adds no other asset or scene dependencies; its only byte-level difference is a final LF.",
+      "build": {
+        "workflow_run_id": 38059142520,
+        "workflow_run_number": 9,
+        "commit": "a2dd2c367d6aed5153d09d602198bde597c9d69a",
+        "workflow_url": "https://github.com/grandmaster68081-byte/Vexforge-web/actions/runs/38059142520",
+        "result": "success",
+        "unity_editor": "6000.3.0f1",
+        "application_id": "com.vexforge.bootstrap",
+        "platform": "Android",
+        "scripting": "IL2CPP",
+        "architecture": "ARM64",
+        "warnings": 0,
+        "errors": 1,
+        "unity_build_report_total_size_bytes": 640014896,
+        "build_report_anomaly": "The BuildReport records errors=1 although Unity reports BuildResult.Succeeded and GitHub Actions, APK validation, and artifact upload succeeded. Record the counter for later review; per the user's direction it is non-blocking by itself and does not mean zero errors.",
+        "artifact_name": "VEXFORGE-Unity-Bootstrap-APK-9",
+        "artifact_id": 11672384247,
+        "artifact_size_bytes": 27293915,
+        "apk_size_bytes": 27905771,
+        "apk_sha256": "b1a033c1651f0d33554df5e029de380ebf71ede26f09740f5f0913463035dbe9",
+        "downloaded_artifact_hash_matched_report": true,
+        "apk_validation": {
+          "outer_artifact_zip_valid": true,
+          "apk_zip_crc_valid": true,
+          "unity_data_present": true,
+          "arm64_il2cpp_library_present": true
+        },
+        "cache_restore": {
+          "result": "restored_from_restore_key",
+          "restored_bytes": 1863686866,
+          "matched_key": "vexforge-bootstrap-library-Linux-X64-6000.3.0f1-e0737e0f94e1033ac5cbaf696e869b8abfe9acd4b68fcce0c550cc8a9afbc0af-38042840117-1",
+          "exact_key_hit": false
+        },
+        "cache_save": {
+          "result": "success",
+          "saved_key": "vexforge-bootstrap-library-Linux-X64-6000.3.0f1-aa848fc67303da624a827acf01777c7517f6c3b284fb5f06877a674258f445a2-38059142520-1"
+        }
+      }
+    },
+    {
+      "number": 6,
+      "name": "Tier1 canonical audio resource set",
+      "status": "prepared_for_manual_build",
+      "new_file_count": 10,
+      "share_percent": 5.0761,
+      "assets": [
+        {
+          "source": "unity/Assets/Resources/VexforgeTier1/Audio/attack.wav",
+          "destination": "unity-bootstrap/Assets/Resources/VexforgeTier1/Audio/attack.wav",
+          "source_sha256": "a0d2930c9bd75fd977c415e3b75f1edf1fd076c1239eb9dd58a6f2cfb73b2940",
+          "destination_sha256": "a0d2930c9bd75fd977c415e3b75f1edf1fd076c1239eb9dd58a6f2cfb73b2940",
+          "kind": "resource_audio",
+          "source_meta": null,
+          "resource_key": "VexforgeTier1/Audio/attack"
+        },
+        {
+          "source": "unity/Assets/Resources/VexforgeTier1/Audio/battle_intro.wav",
+          "destination": "unity-bootstrap/Assets/Resources/VexforgeTier1/Audio/battle_intro.wav",
+          "source_sha256": "60a97dd0f18aaf769e6badc32e9df43104ff08b1fc5e36e1a498a360ef853562",
+          "destination_sha256": "60a97dd0f18aaf769e6badc32e9df43104ff08b1fc5e36e1a498a360ef853562",
+          "kind": "resource_audio",
+          "source_meta": null,
+          "resource_key": "VexforgeTier1/Audio/battle_intro"
+        },
+        {
+          "source": "unity/Assets/Resources/VexforgeTier1/Audio/defeat.wav",
+          "destination": "unity-bootstrap/Assets/Resources/VexforgeTier1/Audio/defeat.wav",
+          "source_sha256": "23050a6424c508c98cd67dec8be40b77ca04215f9c99ea23349ea0464f415786",
+          "destination_sha256": "23050a6424c508c98cd67dec8be40b77ca04215f9c99ea23349ea0464f415786",
+          "kind": "resource_audio",
+          "source_meta": null,
+          "resource_key": "VexforgeTier1/Audio/defeat"
+        },
+        {
+          "source": "unity/Assets/Resources/VexforgeTier1/Audio/fusion.wav",
+          "destination": "unity-bootstrap/Assets/Resources/VexforgeTier1/Audio/fusion.wav",
+          "source_sha256": "a24c2061b73dca63390980537f75880edf7a098fa276ae4ee6adea4d5ce41ee2",
+          "destination_sha256": "a24c2061b73dca63390980537f75880edf7a098fa276ae4ee6adea4d5ce41ee2",
+          "kind": "resource_audio",
+          "source_meta": null,
+          "resource_key": "VexforgeTier1/Audio/fusion"
+        },
+        {
+          "source": "unity/Assets/Resources/VexforgeTier1/Audio/guard.wav",
+          "destination": "unity-bootstrap/Assets/Resources/VexforgeTier1/Audio/guard.wav",
+          "source_sha256": "3faf533078a523927962dec0cc95e641b07aeee1aab9ca9dd8eec716eab35a1e",
+          "destination_sha256": "3faf533078a523927962dec0cc95e641b07aeee1aab9ca9dd8eec716eab35a1e",
+          "kind": "resource_audio",
+          "source_meta": null,
+          "resource_key": "VexforgeTier1/Audio/guard"
+        },
+        {
+          "source": "unity/Assets/Resources/VexforgeTier1/Audio/impact.wav",
+          "destination": "unity-bootstrap/Assets/Resources/VexforgeTier1/Audio/impact.wav",
+          "source_sha256": "7b5c04ecffd357fb84b1eb76c255838d34ea3a3f42ee8f7b0ded527ecadab446",
+          "destination_sha256": "7b5c04ecffd357fb84b1eb76c255838d34ea3a3f42ee8f7b0ded527ecadab446",
+          "kind": "resource_audio",
+          "source_meta": null,
+          "resource_key": "VexforgeTier1/Audio/impact"
+        },
+        {
+          "source": "unity/Assets/Resources/VexforgeTier1/Audio/pack_reveal.wav",
+          "destination": "unity-bootstrap/Assets/Resources/VexforgeTier1/Audio/pack_reveal.wav",
+          "source_sha256": "8f481f25eb14e3ba3c68bef18b2a8e69370dca78ae090abb8c89b938e235b11e",
+          "destination_sha256": "8f481f25eb14e3ba3c68bef18b2a8e69370dca78ae090abb8c89b938e235b11e",
+          "kind": "resource_audio",
+          "source_meta": null,
+          "resource_key": "VexforgeTier1/Audio/pack_reveal"
+        },
+        {
+          "source": "unity/Assets/Resources/VexforgeTier1/Audio/reward.wav",
+          "destination": "unity-bootstrap/Assets/Resources/VexforgeTier1/Audio/reward.wav",
+          "source_sha256": "5c24becc86a6008d46163185ba96dff04ba242a82faa95fb02bc9e7876d39071",
+          "destination_sha256": "5c24becc86a6008d46163185ba96dff04ba242a82faa95fb02bc9e7876d39071",
+          "kind": "resource_audio",
+          "source_meta": null,
+          "resource_key": "VexforgeTier1/Audio/reward"
+        },
+        {
+          "source": "unity/Assets/Resources/VexforgeTier1/Audio/shield.wav",
+          "destination": "unity-bootstrap/Assets/Resources/VexforgeTier1/Audio/shield.wav",
+          "source_sha256": "20cc1fa78a540865e01dfc16b4daddf5b5b7df6915d67636c7c881b639d98cf2",
+          "destination_sha256": "20cc1fa78a540865e01dfc16b4daddf5b5b7df6915d67636c7c881b639d98cf2",
+          "kind": "resource_audio",
+          "source_meta": null,
+          "resource_key": "VexforgeTier1/Audio/shield"
+        },
+        {
+          "source": "unity/Assets/Resources/VexforgeTier1/Audio/victory.wav",
+          "destination": "unity-bootstrap/Assets/Resources/VexforgeTier1/Audio/victory.wav",
+          "source_sha256": "bd58677608a49c2f9e18252b86d1b8fd90653d607813c2e95557ea2ef1b5c51c",
+          "destination_sha256": "bd58677608a49c2f9e18252b86d1b8fd90653d607813c2e95557ea2ef1b5c51c",
+          "kind": "resource_audio",
+          "source_meta": null,
+          "resource_key": "VexforgeTier1/Audio/victory"
+        }
+      ],
+      "depends_on_stages": [
+        3
+      ],
+      "note": "This dependency-closed group contains every WAV cue loaded by VexforgeTier1AudioDirector through Resources.Load. The 10 original files have no canonical .meta sidecars; preserve their bytes and path-based resource keys. It represents 10/197 (5.0761%) of the pinned full-content inventory, below the 19-file cap."
     }
   ],
-  "next_stage": "Stage 5 restores the exact canonical VexforgeBootstrap scene (one new file; 0.5076% of the 197-file full-content inventory). Its only script GUID is resolved by stage 4. After the cumulative APK and artifact pass validation, continue selecting dependency-closed batches of no more than 19 files; do not preselect a fixed number of batches.",
-  "known_architecture_boundary": "The official code contains a reciprocal App/HUD cycle involving 31 files and 7,066 lines (41.6%). The user-directed stage 3 imports the full pinned runtime C# inventory together, so it does not split that source cycle. Stage 5 restores the app component in the official bootstrap scene; runtime behavior, resources, remaining scenes, and full-content parity still require later stages and separate verification. Any temporary compile seam must be recorded and removed before parity is claimed.",
+  "next_stage": "Stage 6 adds the complete set of 10 canonical Tier1 audio WAV resources (5.0761% of the 197-file inventory), all loaded by existing Resources paths. After the cumulative APK and artifact pass validation, continue selecting dependency-closed batches of no more than 19 canonical files; do not preselect a fixed number of batches.",
+  "known_architecture_boundary": "The official code contains a reciprocal App/HUD cycle involving 31 files and 7,066 lines (41.6%). The user-directed stage 3 imports the full pinned runtime C# inventory together, so it does not split that source cycle. Stage 5 restores the app component in the official bootstrap scene; stage 6 adds the canonical audio cue set. Visual resources, remaining scenes, runtime behavior, and full-content parity still require later stages and separate verification. Any temporary compile seam must be recorded and removed before parity is claimed.",
   "scene_policy": "Stage 5 restores the canonical VexforgeBootstrap scene content and its already-matched scene metadata; the Bootstrap copy adds one final LF, and its VexforgeApp script GUID resolves through stage 4. unity/ remains the untouched source of truth. The restored scene is not device or gameplay verification."
 }

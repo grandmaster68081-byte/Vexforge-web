@@ -71,13 +71,20 @@ it. The current game migration order is
   saved a new cache. Unity reported warnings=0/errors=1; the user directs that
   BuildReport counters be recorded and collected for later review, not used
   alone to block a successful workflow with a validated APK.
-- Stage 5 now restores only the canonical `VexforgeBootstrap.unity` scene
-  content (one file, 0.5076%; the Bootstrap copy adds one final LF). Its sole
-  script GUID is the VexforgeApp metadata from stage 4; its scene `.meta`
-  already matches the source. After its
-  cumulative APK passes, migrate other canonical content in dependency-closed
-  batches of no more than 19 files (10% of the 197-file inventory). Do not set
-  a fixed number of batches; verify hashes and APK/cache evidence at each step.
+- Stage 5 passed in Bootstrap run #9 (`a2dd2c3`): the canonical
+  `VexforgeBootstrap.unity` scene (one file, 0.5076%; the Bootstrap copy adds
+  one final LF). Its sole script GUID resolves through stage 4 and its scene
+  `.meta` matches the source. The downloaded 27,905,771-byte APK SHA-256
+  `b1a033c1651f0d33554df5e029de380ebf71ede26f09740f5f0913463035dbe9` matches
+  the report; outer artifact and APK ZIP integrity checks pass. It restored
+  1,863,686,866 bytes from the compatible run #8 cache and saved a new cache.
+  Unity reported warnings=0/errors=1 with `BuildReport.totalSize` 640,014,896;
+  record for later review and do not treat the counter alone as a failed build.
+- Stage 6 prepares all ten canonical Tier1 audio cues under
+  `Resources/VexforgeTier1/Audio` (10/197 files, 5.0761%). The existing audio
+  director loads these by resource path; the source WAVs have no `.meta`
+  sidecars. Verify source/destination hashes and keep later content batches
+  dependency-closed at no more than 19 canonical files each.
 - Supabase's project status was checked read-only as `ACTIVE_HEALTHY`; this
   handoff made no Supabase changes. Unity Cloud Build is not part of this path.
 
@@ -98,8 +105,9 @@ it. The current game migration order is
   `.github/workflows/vexforge-unity-bootstrap-android.yml` builds only
   `unity-bootstrap/**`, manually, on `main`. Each accepted content slice is
   cumulative and followed by a complete APK build. Run #2 was only a workflow
-  smoke test; runs #3–#7 validated the code slices, and run #8 validated stage
-  4 metadata. Stage 5 restores the canonical bootstrap scene. Keep later
+   smoke test; runs #3–#7 validated the code slices, run #8 validated stage 4
+   metadata and run #9 validated the canonical bootstrap scene (stage 5).
+   Stage 6 adds all canonical audio cues. Keep later
   full-project content in dependency-closed batches capped at 10% of the
   complete tracked Unity inventory, with no fixed number of batches.
   The builder requires a real scene and does not generate placeholders. It does
