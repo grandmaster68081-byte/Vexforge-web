@@ -14,7 +14,7 @@ it. The current game migration order is
 ## Current Bootstrap migration checkpoint (2026-10-10)
 
 - Before preparing this slice, `main` was clean and matched `origin/main` at
-  `5eab5044e8d055b96458c64f2e5e1d5865873f2b`.
+  `d4616089f1582c9994544b205a396d56b1c4e95b`.
 - Bootstrap APK #2 remains only a pipeline smoke test and is not migration
   progress. APK #3 is the first verified official content slice: 8 auth/session
   scripts, 1,095 lines (6.4457%), zero Unity warnings/errors, 26,697,451-byte
@@ -39,10 +39,17 @@ it. The current game migration order is
 - Tier1 resource assets and the pack-reveal director are intentionally not
   included in this compile-only slice, so it is not a functional pack reveal.
 - The bootstrap scene still omits `VexforgeApp`; `unity/**` remains untouched.
-  Stage 2 is committed and verified; no stage 3 has been selected or built in
-  this checkpoint. Any later stage must remain cumulative and pass the same
-  artifact/hash/cache checks. Stop after any failure; do not retry without fresh
-  authorization.
+  Stage 3 now contains the other 63 canonical C# scripts (14,728 lines), bringing
+  the copied runtime script set to 76/76 and 16,988/16,988 lines. Every added
+  source hash matches `unity/`; the stage is not yet committed or compiled. It
+  intentionally adds no new scenes, Resources, source `.meta` files or other
+  excluded Unity project content. Passing this compile test will not prove game
+  runtime, scene, resource or full-content parity.
+- After stage 3 passes, migrate the remaining canonical Unity project content
+  in dependency-closed batches of no more than 10% of the full tracked `unity/`
+  inventory (197 files / 35,920,194 bytes at `d4616089`). Do not set a fixed
+  number of batches. Continue checking exact source hashes and full APK/cache
+  evidence after each successful stage.
 - Supabase's project status was checked read-only as `ACTIVE_HEALTHY`; this
   handoff made no Supabase changes. Unity Cloud Build is not part of this path.
 
@@ -64,6 +71,11 @@ it. The current game migration order is
   `unity-bootstrap/**`, manually, on `main`. Each accepted content slice is
   cumulative and followed by a complete APK build. Run #2 was only a workflow
   smoke test; runs #3 and #4 validate the first two official content slices.
+  The current authorized stage 3 adds all remaining canonical C# scripts at
+  once, while still excluding the not-yet-migrated scenes/resources/metadata.
+  Only after its APK succeeds do the remaining full-project files move in
+  batches capped at 10% of the complete tracked Unity inventory, with no fixed
+  number of batches.
   The builder requires a real scene and does not generate placeholders. It does
   not replace or authorize the official game workflow. The user has conditionally
   authorized this migration to continue sequentially without a new prompt for
@@ -149,6 +161,10 @@ apply to the web portal, not to Unity.
 
 ## Gotchas
 
+- The user explicitly said not to remove VexforgeSPP. That name is absent from
+  the current official Unity tree and repository history; do not treat its
+  absence as permission to delete or replace it if its canonical source is
+  supplied or found later.
 - `SecureSessionStore` contains Android Keystore/AES-GCM code, but Editor/device
   behavior has not been verified.
 - Unity source implementation alone does not prove runtime parity; the open

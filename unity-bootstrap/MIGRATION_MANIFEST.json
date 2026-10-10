@@ -7,13 +7,53 @@
     "files": "unity/Assets/Scripts/**/*.cs",
     "file_count": 76,
     "line_count": 16988,
-    "method": "Count canonical runtime C# source lines at the pinned source commit; exclude .meta, scenes, resources and build helpers."
+    "method": "Historical denominator for stages 1 and 2 and the all-code completion batch; excludes .meta, scenes, resources and build helpers."
   },
-  "per_build_target_percent": [
+  "full_content_inventory": {
+    "source_root": "unity/",
+    "source_commit": "d4616089f1582c9994544b205a396d56b1c4e95b",
+    "file_count": 197,
+    "tracked_bytes": 35920194,
+    "counting_rule": "Count every tracked regular file under the canonical Unity project once, including source and metadata, scenes, Resources, other Assets, Packages and ProjectSettings. Exclude generated Unity folders and repository files outside unity/.",
+    "deferred_batch_measure": "For the post-code content phase, count distinct canonical tracked files against this complete 197-file denominator; every file is indivisible and counts once. The cap is floor(10% * 197) = 19 files per batch. Keep dependencies and .meta pairs together; bytes are reported for context, not used as the percentage denominator. Re-inventory and recalculate if the official Unity source commit changes.",
+    "categories": {
+      "scripts_and_metadata": {
+        "file_count": 121,
+        "tracked_bytes": 688248
+      },
+      "scenes_and_metadata": {
+        "file_count": 2,
+        "tracked_bytes": 2093
+      },
+      "resources_and_metadata": {
+        "file_count": 60,
+        "tracked_bytes": 35169820
+      },
+      "other_assets": {
+        "file_count": 7,
+        "tracked_bytes": 51337
+      },
+      "packages": {
+        "file_count": 2,
+        "tracked_bytes": 4508
+      },
+      "project_settings": {
+        "file_count": 3,
+        "tracked_bytes": 3589
+      },
+      "other_project_files": {
+        "file_count": 2,
+        "tracked_bytes": 599
+      }
+    }
+  },
+  "historical_per_build_target_percent": [
     5.0,
     7.0
   ],
-  "cumulative_full_apk_policy": "Every stage builds a complete Android APK from the accumulated unity-bootstrap project. Each stage adds 5–7% of canonical runtime C# lines. Intermediate runtime behavior and scenes may be incomplete; Unity script compilation and APK build must succeed. Retain previous slices and stable metadata.",
+  "code_completion_batch_percent": 100.0,
+  "remaining_full_content_batch_cap_percent": 10.0,
+  "cumulative_full_apk_policy": "Every stage builds a complete Android APK from the accumulated unity-bootstrap project. Preserve stages 1 and 2, then add all remaining canonical runtime C# scripts in one code-completion batch to reach 100% of the pinned 16,988-line code inventory. Keep scenes, Resources, new source .meta files and other excluded Unity project content out of that batch. Only after its APK passes, migrate the remaining full Unity project content in dependency-closed batches of no more than 10% of the complete tracked-content inventory. Do not prescribe a fixed number of batches. A successful APK is not runtime or content parity.",
   "baseline": {
     "workflow_run_id": 37904329210,
     "workflow_run_number": 2,
@@ -318,9 +358,469 @@
           "saved_key": "vexforge-bootstrap-library-Linux-X64-6000.3.0f1-f9a3ca660cfdff0f8c0abb8456a35b1c2aef910850e2215ce4f486f74928f21f-38029751414-1"
         }
       }
+    },
+    {
+      "number": 3,
+      "name": "All remaining official C# runtime scripts",
+      "status": "prepared_pending_build",
+      "new_runtime_csharp_files": 63,
+      "new_runtime_csharp_lines": 14728,
+      "share_percent": 86.6965,
+      "cumulative_runtime_csharp_lines": 16988,
+      "cumulative_share_percent": 100.0,
+      "source_files": [
+        {
+          "source": "unity/Assets/Scripts/Backend/JsonArrayUtility.cs",
+          "destination": "unity-bootstrap/Assets/Scripts/Backend/JsonArrayUtility.cs",
+          "source_sha256": "42aac60280890aaa1e2c0e015802426048caecf22f5f641170423170778f80fd",
+          "destination_sha256": "42aac60280890aaa1e2c0e015802426048caecf22f5f641170423170778f80fd",
+          "kind": "runtime_script"
+        },
+        {
+          "source": "unity/Assets/Scripts/Backend/PvpOpponentRecord.cs",
+          "destination": "unity-bootstrap/Assets/Scripts/Backend/PvpOpponentRecord.cs",
+          "source_sha256": "75f1f0234cfc3dc0444c3c674d2dbbaae691c866d218c9596188a2ce5f8f530d",
+          "destination_sha256": "75f1f0234cfc3dc0444c3c674d2dbbaae691c866d218c9596188a2ce5f8f530d",
+          "kind": "runtime_script"
+        },
+        {
+          "source": "unity/Assets/Scripts/Backend/VexforgeRepository.cs",
+          "destination": "unity-bootstrap/Assets/Scripts/Backend/VexforgeRepository.cs",
+          "source_sha256": "9602d56d74a2c7c05b7972a6a0f85dbeec54821bacad3dfc52ce7b6bd404dc58",
+          "destination_sha256": "9602d56d74a2c7c05b7972a6a0f85dbeec54821bacad3dfc52ce7b6bd404dc58",
+          "kind": "runtime_script"
+        },
+        {
+          "source": "unity/Assets/Scripts/Backend/VexforgeSocialRepository.cs",
+          "destination": "unity-bootstrap/Assets/Scripts/Backend/VexforgeSocialRepository.cs",
+          "source_sha256": "ef1bc99a42a93cb45ee41ec851718c7e6bdc30ea4681b878b8789613c1ea3c5b",
+          "destination_sha256": "ef1bc99a42a93cb45ee41ec851718c7e6bdc30ea4681b878b8789613c1ea3c5b",
+          "kind": "runtime_script"
+        },
+        {
+          "source": "unity/Assets/Scripts/Core/NavigationService.cs",
+          "destination": "unity-bootstrap/Assets/Scripts/Core/NavigationService.cs",
+          "source_sha256": "013bec0cacea353a74e97be57364d5cbd911446fc92af563e6da3a1bff6aa14a",
+          "destination_sha256": "013bec0cacea353a74e97be57364d5cbd911446fc92af563e6da3a1bff6aa14a",
+          "kind": "runtime_script"
+        },
+        {
+          "source": "unity/Assets/Scripts/Core/PersistentRuntimeState.cs",
+          "destination": "unity-bootstrap/Assets/Scripts/Core/PersistentRuntimeState.cs",
+          "source_sha256": "e850ff3bd81a639c65dc655e37bcefd7d88d9572114d18e692fc725057558c43",
+          "destination_sha256": "e850ff3bd81a639c65dc655e37bcefd7d88d9572114d18e692fc725057558c43",
+          "kind": "runtime_script"
+        },
+        {
+          "source": "unity/Assets/Scripts/Core/ServiceRegistry.cs",
+          "destination": "unity-bootstrap/Assets/Scripts/Core/ServiceRegistry.cs",
+          "source_sha256": "b92dd09dfa9ed76672f83133e779f2dc2e44dbd710af94343b9768ef845212c2",
+          "destination_sha256": "b92dd09dfa9ed76672f83133e779f2dc2e44dbd710af94343b9768ef845212c2",
+          "kind": "runtime_script"
+        },
+        {
+          "source": "unity/Assets/Scripts/Core/VexforgeApp.cs",
+          "destination": "unity-bootstrap/Assets/Scripts/Core/VexforgeApp.cs",
+          "source_sha256": "922b38a4563f513e6fcc2a2464ab17c300c1d440fdabde06fbeaabc414c409c6",
+          "destination_sha256": "922b38a4563f513e6fcc2a2464ab17c300c1d440fdabde06fbeaabc414c409c6",
+          "kind": "runtime_script"
+        },
+        {
+          "source": "unity/Assets/Scripts/GameState/GameStateStore.cs",
+          "destination": "unity-bootstrap/Assets/Scripts/GameState/GameStateStore.cs",
+          "source_sha256": "375c8dbe544fbe31e13a699ea63fa9bcdf0980925a35bfafb7be0699ca9dd84b",
+          "destination_sha256": "375c8dbe544fbe31e13a699ea63fa9bcdf0980925a35bfafb7be0699ca9dd84b",
+          "kind": "runtime_script"
+        },
+        {
+          "source": "unity/Assets/Scripts/Presentation/BattlePresentationDirector.cs",
+          "destination": "unity-bootstrap/Assets/Scripts/Presentation/BattlePresentationDirector.cs",
+          "source_sha256": "91175678e6114c0922eb2875b6935ad3f14b5c96f6f1fea841afd79989e90891",
+          "destination_sha256": "91175678e6114c0922eb2875b6935ad3f14b5c96f6f1fea841afd79989e90891",
+          "kind": "runtime_script"
+        },
+        {
+          "source": "unity/Assets/Scripts/Presentation/Editor/VexforgeR5FoundationGate.cs",
+          "destination": "unity-bootstrap/Assets/Scripts/Presentation/Editor/VexforgeR5FoundationGate.cs",
+          "source_sha256": "59d3ac140f75b68ae3a1e027b116e36cedaef0591d60cfa649943d3ad3e42cc7",
+          "destination_sha256": "59d3ac140f75b68ae3a1e027b116e36cedaef0591d60cfa649943d3ad3e42cc7",
+          "kind": "runtime_script"
+        },
+        {
+          "source": "unity/Assets/Scripts/Presentation/Editor/VexforgeR5ProjectSetup.cs",
+          "destination": "unity-bootstrap/Assets/Scripts/Presentation/Editor/VexforgeR5ProjectSetup.cs",
+          "source_sha256": "1b9b0eb1cc2889a9f5bc3e2fbd7fd1125f4ad64204f43c8b28c27770769e4f13",
+          "destination_sha256": "1b9b0eb1cc2889a9f5bc3e2fbd7fd1125f4ad64204f43c8b28c27770769e4f13",
+          "kind": "runtime_script"
+        },
+        {
+          "source": "unity/Assets/Scripts/Presentation/NexusDevelopmentFallback.cs",
+          "destination": "unity-bootstrap/Assets/Scripts/Presentation/NexusDevelopmentFallback.cs",
+          "source_sha256": "c454358e3482f27e350d36ab1d902f62601548cb87a6141ef419ea2b47e425bf",
+          "destination_sha256": "c454358e3482f27e350d36ab1d902f62601548cb87a6141ef419ea2b47e425bf",
+          "kind": "runtime_script"
+        },
+        {
+          "source": "unity/Assets/Scripts/Presentation/NexusPresentationRoot.cs",
+          "destination": "unity-bootstrap/Assets/Scripts/Presentation/NexusPresentationRoot.cs",
+          "source_sha256": "58fc7a93a5babeecccd16a33dfeb96140aa9627227f352f545245958a7bb5b7f",
+          "destination_sha256": "58fc7a93a5babeecccd16a33dfeb96140aa9627227f352f545245958a7bb5b7f",
+          "kind": "runtime_script"
+        },
+        {
+          "source": "unity/Assets/Scripts/Presentation/SceneTransitionDirector.cs",
+          "destination": "unity-bootstrap/Assets/Scripts/Presentation/SceneTransitionDirector.cs",
+          "source_sha256": "f3a5b8e01a1e9cbcd7bd72bcffe9eee62a322fbfc7d7f11238f29a2a0e1f3c01",
+          "destination_sha256": "f3a5b8e01a1e9cbcd7bd72bcffe9eee62a322fbfc7d7f11238f29a2a0e1f3c01",
+          "kind": "runtime_script"
+        },
+        {
+          "source": "unity/Assets/Scripts/Presentation/VexforgeAlphaWorldDirector.cs",
+          "destination": "unity-bootstrap/Assets/Scripts/Presentation/VexforgeAlphaWorldDirector.cs",
+          "source_sha256": "d3ceee5ed8d5bd261eb27a3790e73c36e92d8529da650b099b00c83536da5a75",
+          "destination_sha256": "d3ceee5ed8d5bd261eb27a3790e73c36e92d8529da650b099b00c83536da5a75",
+          "kind": "runtime_script"
+        },
+        {
+          "source": "unity/Assets/Scripts/Presentation/VexforgeBattlefieldStage.cs",
+          "destination": "unity-bootstrap/Assets/Scripts/Presentation/VexforgeBattlefieldStage.cs",
+          "source_sha256": "3c19a03f6efc1062d47247da6727d756de30d339a17c08a9a16afdf864466c94",
+          "destination_sha256": "3c19a03f6efc1062d47247da6727d756de30d339a17c08a9a16afdf864466c94",
+          "kind": "runtime_script"
+        },
+        {
+          "source": "unity/Assets/Scripts/Presentation/VexforgeCardInspectionStage.cs",
+          "destination": "unity-bootstrap/Assets/Scripts/Presentation/VexforgeCardInspectionStage.cs",
+          "source_sha256": "ab2084e0b57727a0362c01bbee38180d09e9dc3350cf145f6fe1cfd0d868dc90",
+          "destination_sha256": "ab2084e0b57727a0362c01bbee38180d09e9dc3350cf145f6fe1cfd0d868dc90",
+          "kind": "runtime_script"
+        },
+        {
+          "source": "unity/Assets/Scripts/Presentation/VexforgeCardPool.cs",
+          "destination": "unity-bootstrap/Assets/Scripts/Presentation/VexforgeCardPool.cs",
+          "source_sha256": "14bf8c576726b045df4ea84de39d2b8baa936c1df1a2a85089d65cc8ef208ce2",
+          "destination_sha256": "14bf8c576726b045df4ea84de39d2b8baa936c1df1a2a85089d65cc8ef208ce2",
+          "kind": "runtime_script"
+        },
+        {
+          "source": "unity/Assets/Scripts/Presentation/VexforgeCardView.cs",
+          "destination": "unity-bootstrap/Assets/Scripts/Presentation/VexforgeCardView.cs",
+          "source_sha256": "24be42965ef9efbd5ae825703a134c3624b6588e0e348cb01214e6a9aec90406",
+          "destination_sha256": "24be42965ef9efbd5ae825703a134c3624b6588e0e348cb01214e6a9aec90406",
+          "kind": "runtime_script"
+        },
+        {
+          "source": "unity/Assets/Scripts/Presentation/VexforgeDiegeticInputRouter.cs",
+          "destination": "unity-bootstrap/Assets/Scripts/Presentation/VexforgeDiegeticInputRouter.cs",
+          "source_sha256": "bb3e5d09b36da2aad05902c814be7a93b6db24a616812c7aa331dc2002968668",
+          "destination_sha256": "bb3e5d09b36da2aad05902c814be7a93b6db24a616812c7aa331dc2002968668",
+          "kind": "runtime_script"
+        },
+        {
+          "source": "unity/Assets/Scripts/Presentation/VexforgeNexusStage.cs",
+          "destination": "unity-bootstrap/Assets/Scripts/Presentation/VexforgeNexusStage.cs",
+          "source_sha256": "61869b8120fb48c0d81f2040172b633155ddb0fb85ec129abd9f97c4030fc6be",
+          "destination_sha256": "61869b8120fb48c0d81f2040172b633155ddb0fb85ec129abd9f97c4030fc6be",
+          "kind": "runtime_script"
+        },
+        {
+          "source": "unity/Assets/Scripts/Presentation/VexforgePortalPulse.cs",
+          "destination": "unity-bootstrap/Assets/Scripts/Presentation/VexforgePortalPulse.cs",
+          "source_sha256": "d190a32e0e7e8e75df095a292cf469688f61efe3adb77400fc439da90cba1cc7",
+          "destination_sha256": "d190a32e0e7e8e75df095a292cf469688f61efe3adb77400fc439da90cba1cc7",
+          "kind": "runtime_script"
+        },
+        {
+          "source": "unity/Assets/Scripts/Presentation/VexforgePresentationResources.cs",
+          "destination": "unity-bootstrap/Assets/Scripts/Presentation/VexforgePresentationResources.cs",
+          "source_sha256": "6f62e551173d480e2abca7cc36b70bd3208c499ef91713ed8c59886151ea06c2",
+          "destination_sha256": "6f62e551173d480e2abca7cc36b70bd3208c499ef91713ed8c59886151ea06c2",
+          "kind": "runtime_script"
+        },
+        {
+          "source": "unity/Assets/Scripts/Presentation/VexforgeRenderBootstrap.cs",
+          "destination": "unity-bootstrap/Assets/Scripts/Presentation/VexforgeRenderBootstrap.cs",
+          "source_sha256": "b7b39091f26ad37a1dcca77f5145fd89307314db86d8c19aa52ee42976e84a7e",
+          "destination_sha256": "b7b39091f26ad37a1dcca77f5145fd89307314db86d8c19aa52ee42976e84a7e",
+          "kind": "runtime_script"
+        },
+        {
+          "source": "unity/Assets/Scripts/Presentation/VexforgeVirtualizedCardGallery.cs",
+          "destination": "unity-bootstrap/Assets/Scripts/Presentation/VexforgeVirtualizedCardGallery.cs",
+          "source_sha256": "0c4729016c9ed8cbb7dfa887189d2044d8eacf7d3cc5f4c2a258d54a64448ecd",
+          "destination_sha256": "0c4729016c9ed8cbb7dfa887189d2044d8eacf7d3cc5f4c2a258d54a64448ecd",
+          "kind": "runtime_script"
+        },
+        {
+          "source": "unity/Assets/Scripts/Presentation/VexforgeWorldHotspot.cs",
+          "destination": "unity-bootstrap/Assets/Scripts/Presentation/VexforgeWorldHotspot.cs",
+          "source_sha256": "273578c9ff6c39c8dea8656979dc0ac7de8f216c546ec9b7ae620adf60cd552c",
+          "destination_sha256": "273578c9ff6c39c8dea8656979dc0ac7de8f216c546ec9b7ae620adf60cd552c",
+          "kind": "runtime_script"
+        },
+        {
+          "source": "unity/Assets/Scripts/Session/SecureSessionStore.cs",
+          "destination": "unity-bootstrap/Assets/Scripts/Session/SecureSessionStore.cs",
+          "source_sha256": "20a0c2471e4aecd23f1d9a2a31b2888babe0fa7c952384aaef143c117d710b28",
+          "destination_sha256": "20a0c2471e4aecd23f1d9a2a31b2888babe0fa7c952384aaef143c117d710b28",
+          "kind": "runtime_script"
+        },
+        {
+          "source": "unity/Assets/Scripts/Tier1/VexforgeHapticsService.cs",
+          "destination": "unity-bootstrap/Assets/Scripts/Tier1/VexforgeHapticsService.cs",
+          "source_sha256": "d558df8b0555eb3d6b48be6c7b65a096ecb8550fe82d4047dd85ac8cbdee11a5",
+          "destination_sha256": "d558df8b0555eb3d6b48be6c7b65a096ecb8550fe82d4047dd85ac8cbdee11a5",
+          "kind": "runtime_script"
+        },
+        {
+          "source": "unity/Assets/Scripts/Tier1/VexforgeTier1AudioDirector.cs",
+          "destination": "unity-bootstrap/Assets/Scripts/Tier1/VexforgeTier1AudioDirector.cs",
+          "source_sha256": "666726647698159df0fd6e6d26e260126e511537a6251a457ba4c0542901142a",
+          "destination_sha256": "666726647698159df0fd6e6d26e260126e511537a6251a457ba4c0542901142a",
+          "kind": "runtime_script"
+        },
+        {
+          "source": "unity/Assets/Scripts/Tier1/VexforgeTier1BattleGate.cs",
+          "destination": "unity-bootstrap/Assets/Scripts/Tier1/VexforgeTier1BattleGate.cs",
+          "source_sha256": "a458e2d8b521479f48ede3851b61dce018bb93d17bae588f5edd535ad791d3b5",
+          "destination_sha256": "a458e2d8b521479f48ede3851b61dce018bb93d17bae588f5edd535ad791d3b5",
+          "kind": "runtime_script"
+        },
+        {
+          "source": "unity/Assets/Scripts/Tier1/VexforgeTier1BattleResultHud.cs",
+          "destination": "unity-bootstrap/Assets/Scripts/Tier1/VexforgeTier1BattleResultHud.cs",
+          "source_sha256": "34a6619f08f4fdba4a565dddc454351841db46269ea7ed13861a95c73ac96066",
+          "destination_sha256": "34a6619f08f4fdba4a565dddc454351841db46269ea7ed13861a95c73ac96066",
+          "kind": "runtime_script"
+        },
+        {
+          "source": "unity/Assets/Scripts/Tier1/VexforgeTier1Bootstrap.cs",
+          "destination": "unity-bootstrap/Assets/Scripts/Tier1/VexforgeTier1Bootstrap.cs",
+          "source_sha256": "4e8c1bf9ea66c81eba5fdfa74b1afca5ada091548e38a06f7149984354e77dd3",
+          "destination_sha256": "4e8c1bf9ea66c81eba5fdfa74b1afca5ada091548e38a06f7149984354e77dd3",
+          "kind": "runtime_script"
+        },
+        {
+          "source": "unity/Assets/Scripts/Tier1/VexforgeTier1CanonicalBattlefieldPolish.cs",
+          "destination": "unity-bootstrap/Assets/Scripts/Tier1/VexforgeTier1CanonicalBattlefieldPolish.cs",
+          "source_sha256": "f3d0fd01bb2874dd973fa945f4ca7d4016eafb8c8dc4525e2121db67bcd7c5a9",
+          "destination_sha256": "f3d0fd01bb2874dd973fa945f4ca7d4016eafb8c8dc4525e2121db67bcd7c5a9",
+          "kind": "runtime_script"
+        },
+        {
+          "source": "unity/Assets/Scripts/Tier1/VexforgeTier1CardImmersionDirector.cs",
+          "destination": "unity-bootstrap/Assets/Scripts/Tier1/VexforgeTier1CardImmersionDirector.cs",
+          "source_sha256": "1d4d4c44c0558a80879c425cf2da7f74a1324e1ce28e91cb47f585ae1b723294",
+          "destination_sha256": "1d4d4c44c0558a80879c425cf2da7f74a1324e1ce28e91cb47f585ae1b723294",
+          "kind": "runtime_script"
+        },
+        {
+          "source": "unity/Assets/Scripts/Tier1/VexforgeTier1CinematicDirector.cs",
+          "destination": "unity-bootstrap/Assets/Scripts/Tier1/VexforgeTier1CinematicDirector.cs",
+          "source_sha256": "7b00cbc3c8e30cd507deb14f7a7f1dfe2ad18d642cf2d6cdab0fdefa8b92345b",
+          "destination_sha256": "7b00cbc3c8e30cd507deb14f7a7f1dfe2ad18d642cf2d6cdab0fdefa8b92345b",
+          "kind": "runtime_script"
+        },
+        {
+          "source": "unity/Assets/Scripts/Tier1/VexforgeTier1DiegeticRoomDirector.cs",
+          "destination": "unity-bootstrap/Assets/Scripts/Tier1/VexforgeTier1DiegeticRoomDirector.cs",
+          "source_sha256": "d1fc6d496e5ccfe5bac42b68036c026f9946b6acbe8f406f2ae07f67b3c14119",
+          "destination_sha256": "d1fc6d496e5ccfe5bac42b68036c026f9946b6acbe8f406f2ae07f67b3c14119",
+          "kind": "runtime_script"
+        },
+        {
+          "source": "unity/Assets/Scripts/Tier1/VexforgeTier1EconomyHub.cs",
+          "destination": "unity-bootstrap/Assets/Scripts/Tier1/VexforgeTier1EconomyHub.cs",
+          "source_sha256": "bf76b5f2017cd744353e114851fcae18a737b1db374b901c478559a150ebb69c",
+          "destination_sha256": "bf76b5f2017cd744353e114851fcae18a737b1db374b901c478559a150ebb69c",
+          "kind": "runtime_script"
+        },
+        {
+          "source": "unity/Assets/Scripts/Tier1/VexforgeTier1EncounterPresentationDirector.cs",
+          "destination": "unity-bootstrap/Assets/Scripts/Tier1/VexforgeTier1EncounterPresentationDirector.cs",
+          "source_sha256": "5ab6891d5a893ad5f53b971419ec985b5e122c68a020bde1b2fd21fc515ee8ea",
+          "destination_sha256": "5ab6891d5a893ad5f53b971419ec985b5e122c68a020bde1b2fd21fc515ee8ea",
+          "kind": "runtime_script"
+        },
+        {
+          "source": "unity/Assets/Scripts/Tier1/VexforgeTier1EncounterProfile.cs",
+          "destination": "unity-bootstrap/Assets/Scripts/Tier1/VexforgeTier1EncounterProfile.cs",
+          "source_sha256": "7f9dda545728e34c534333a58163a2d8f3cc730833f7bd6a07cea69149623278",
+          "destination_sha256": "7f9dda545728e34c534333a58163a2d8f3cc730833f7bd6a07cea69149623278",
+          "kind": "runtime_script"
+        },
+        {
+          "source": "unity/Assets/Scripts/Tier1/VexforgeTier1IdentityScope.cs",
+          "destination": "unity-bootstrap/Assets/Scripts/Tier1/VexforgeTier1IdentityScope.cs",
+          "source_sha256": "4f771b8bbc716b3aba86e50bc41dabf7bc0af67939acd56d3f966b5ead9badd3",
+          "destination_sha256": "4f771b8bbc716b3aba86e50bc41dabf7bc0af67939acd56d3f966b5ead9badd3",
+          "kind": "runtime_script"
+        },
+        {
+          "source": "unity/Assets/Scripts/Tier1/VexforgeTier1LegacyHudSuppressor.cs",
+          "destination": "unity-bootstrap/Assets/Scripts/Tier1/VexforgeTier1LegacyHudSuppressor.cs",
+          "source_sha256": "878f97a31c0e7a0ffaa2512de510355a10991ce53063c8e05b9b7c9ef69348ba",
+          "destination_sha256": "878f97a31c0e7a0ffaa2512de510355a10991ce53063c8e05b9b7c9ef69348ba",
+          "kind": "runtime_script"
+        },
+        {
+          "source": "unity/Assets/Scripts/Tier1/VexforgeTier1LegacyRouteFrame.cs",
+          "destination": "unity-bootstrap/Assets/Scripts/Tier1/VexforgeTier1LegacyRouteFrame.cs",
+          "source_sha256": "66c5a164e5204d42ae34e66a1fd0a6a0a8ec8bd662ebe508ed437b21337d3b1c",
+          "destination_sha256": "66c5a164e5204d42ae34e66a1fd0a6a0a8ec8bd662ebe508ed437b21337d3b1c",
+          "kind": "runtime_script"
+        },
+        {
+          "source": "unity/Assets/Scripts/Tier1/VexforgeTier1NavigationRail.cs",
+          "destination": "unity-bootstrap/Assets/Scripts/Tier1/VexforgeTier1NavigationRail.cs",
+          "source_sha256": "788645b1626b6f1893dc8bf681755736a971706832c2168116a9e1970308cf06",
+          "destination_sha256": "788645b1626b6f1893dc8bf681755736a971706832c2168116a9e1970308cf06",
+          "kind": "runtime_script"
+        },
+        {
+          "source": "unity/Assets/Scripts/Tier1/VexforgeTier1OperationJournal.cs",
+          "destination": "unity-bootstrap/Assets/Scripts/Tier1/VexforgeTier1OperationJournal.cs",
+          "source_sha256": "473576e52441384017d10039803f820365d0a7b2ef61ebff6c1c3c82ddb6f361",
+          "destination_sha256": "473576e52441384017d10039803f820365d0a7b2ef61ebff6c1c3c82ddb6f361",
+          "kind": "runtime_script"
+        },
+        {
+          "source": "unity/Assets/Scripts/Tier1/VexforgeTier1PackRevealDirector.cs",
+          "destination": "unity-bootstrap/Assets/Scripts/Tier1/VexforgeTier1PackRevealDirector.cs",
+          "source_sha256": "29326d33e7d289c869beae927c901b89c0741d4a5ae1b3ebbb4cf3a6fafa2ef7",
+          "destination_sha256": "29326d33e7d289c869beae927c901b89c0741d4a5ae1b3ebbb4cf3a6fafa2ef7",
+          "kind": "runtime_script"
+        },
+        {
+          "source": "unity/Assets/Scripts/Tier1/VexforgeTier1QualityDirector.cs",
+          "destination": "unity-bootstrap/Assets/Scripts/Tier1/VexforgeTier1QualityDirector.cs",
+          "source_sha256": "3cd6800004b68f12d182c5e692ec7999fab7c12599c79d7bf192eeb25b8649c6",
+          "destination_sha256": "3cd6800004b68f12d182c5e692ec7999fab7c12599c79d7bf192eeb25b8649c6",
+          "kind": "runtime_script"
+        },
+        {
+          "source": "unity/Assets/Scripts/Tier1/VexforgeTier1RoomOrnamentDirector.cs",
+          "destination": "unity-bootstrap/Assets/Scripts/Tier1/VexforgeTier1RoomOrnamentDirector.cs",
+          "source_sha256": "f5ecf663dfa7bb83b6742e5b4be1d8e9b491d901ca388e231cdc989f88ceb474",
+          "destination_sha256": "f5ecf663dfa7bb83b6742e5b4be1d8e9b491d901ca388e231cdc989f88ceb474",
+          "kind": "runtime_script"
+        },
+        {
+          "source": "unity/Assets/Scripts/Tier1/VexforgeTier1RouteChrome.cs",
+          "destination": "unity-bootstrap/Assets/Scripts/Tier1/VexforgeTier1RouteChrome.cs",
+          "source_sha256": "81d74128f3c32087820f8141f23aa097be22cfb784a7084e885f777b69d91683",
+          "destination_sha256": "81d74128f3c32087820f8141f23aa097be22cfb784a7084e885f777b69d91683",
+          "kind": "runtime_script"
+        },
+        {
+          "source": "unity/Assets/Scripts/Tier1/VexforgeTier1RouteOwnership.cs",
+          "destination": "unity-bootstrap/Assets/Scripts/Tier1/VexforgeTier1RouteOwnership.cs",
+          "source_sha256": "40f5054bba6c1dc6ef16f7d20354aa8b37b5739d027f1080a5df1f5c2c4a4611",
+          "destination_sha256": "40f5054bba6c1dc6ef16f7d20354aa8b37b5739d027f1080a5df1f5c2c4a4611",
+          "kind": "runtime_script"
+        },
+        {
+          "source": "unity/Assets/Scripts/Tier1/VexforgeTier1RouteSurface.cs",
+          "destination": "unity-bootstrap/Assets/Scripts/Tier1/VexforgeTier1RouteSurface.cs",
+          "source_sha256": "7ae665c062e88d4a8822c60d4c60184fb763e024520b407ebb2849fc273de3ad",
+          "destination_sha256": "7ae665c062e88d4a8822c60d4c60184fb763e024520b407ebb2849fc273de3ad",
+          "kind": "runtime_script"
+        },
+        {
+          "source": "unity/Assets/Scripts/Tier1/VexforgeTier1StrategyDirector.cs",
+          "destination": "unity-bootstrap/Assets/Scripts/Tier1/VexforgeTier1StrategyDirector.cs",
+          "source_sha256": "36ca6ded2e9c880ae51d465b016263b6e21f4a7828771cf54eacf0247eb1c4a5",
+          "destination_sha256": "36ca6ded2e9c880ae51d465b016263b6e21f4a7828771cf54eacf0247eb1c4a5",
+          "kind": "runtime_script"
+        },
+        {
+          "source": "unity/Assets/Scripts/Tier1/VexforgeTier1TurnCombatGate.Pvp.cs",
+          "destination": "unity-bootstrap/Assets/Scripts/Tier1/VexforgeTier1TurnCombatGate.Pvp.cs",
+          "source_sha256": "8eeb4f2c75cf2bbe2f18ca7e00c23b79af4758989aa6f24ce8f200b241186175",
+          "destination_sha256": "8eeb4f2c75cf2bbe2f18ca7e00c23b79af4758989aa6f24ce8f200b241186175",
+          "kind": "runtime_script"
+        },
+        {
+          "source": "unity/Assets/Scripts/Tier1/VexforgeTier1TurnCombatGate.cs",
+          "destination": "unity-bootstrap/Assets/Scripts/Tier1/VexforgeTier1TurnCombatGate.cs",
+          "source_sha256": "d2df06c801775902655ac02c20bb6138dea2a9246a1ced2a9b987b37ac20127e",
+          "destination_sha256": "d2df06c801775902655ac02c20bb6138dea2a9246a1ced2a9b987b37ac20127e",
+          "kind": "runtime_script"
+        },
+        {
+          "source": "unity/Assets/Scripts/Tier1/VexforgeTier1TutorialDirector.cs",
+          "destination": "unity-bootstrap/Assets/Scripts/Tier1/VexforgeTier1TutorialDirector.cs",
+          "source_sha256": "4a0b25fb3b7821eb13143b5637704d3dd4f376f7b826f34f9767c4f3692c1e3c",
+          "destination_sha256": "4a0b25fb3b7821eb13143b5637704d3dd4f376f7b826f34f9767c4f3692c1e3c",
+          "kind": "runtime_script"
+        },
+        {
+          "source": "unity/Assets/Scripts/Tier1/VexforgeTier1VfxDirector.cs",
+          "destination": "unity-bootstrap/Assets/Scripts/Tier1/VexforgeTier1VfxDirector.cs",
+          "source_sha256": "c18d5cab2e5a3c26f584af8da420eb902e91fc373ff4828e5eff6a05bc4f57e5",
+          "destination_sha256": "c18d5cab2e5a3c26f584af8da420eb902e91fc373ff4828e5eff6a05bc4f57e5",
+          "kind": "runtime_script"
+        },
+        {
+          "source": "unity/Assets/Scripts/Tier1/VexforgeTier1VisualFoundation.cs",
+          "destination": "unity-bootstrap/Assets/Scripts/Tier1/VexforgeTier1VisualFoundation.cs",
+          "source_sha256": "813dfe9ddf1c63232dd183a85d0edfa8fc92b84f151d256627db06f5029a8d3d",
+          "destination_sha256": "813dfe9ddf1c63232dd183a85d0edfa8fc92b84f151d256627db06f5029a8d3d",
+          "kind": "runtime_script"
+        },
+        {
+          "source": "unity/Assets/Scripts/Tier1/VexforgeTier1WorldAtlasDirector.cs",
+          "destination": "unity-bootstrap/Assets/Scripts/Tier1/VexforgeTier1WorldAtlasDirector.cs",
+          "source_sha256": "471787cb8df55daa4ae649c9b571b8dcc3e2dd251646b6f04abddcc1d20bf0ef",
+          "destination_sha256": "471787cb8df55daa4ae649c9b571b8dcc3e2dd251646b6f04abddcc1d20bf0ef",
+          "kind": "runtime_script"
+        },
+        {
+          "source": "unity/Assets/Scripts/UI/GameShellController.cs",
+          "destination": "unity-bootstrap/Assets/Scripts/UI/GameShellController.cs",
+          "source_sha256": "2eec50bedc8945fbdefde46fd4e15cf42d1a35e01ca2be93769d44a512a16015",
+          "destination_sha256": "2eec50bedc8945fbdefde46fd4e15cf42d1a35e01ca2be93769d44a512a16015",
+          "kind": "runtime_script"
+        },
+        {
+          "source": "unity/Assets/Scripts/UI/UiFactory.cs",
+          "destination": "unity-bootstrap/Assets/Scripts/UI/UiFactory.cs",
+          "source_sha256": "239524596daec40eeb1c3906d4684c78b94fea5c26f7e0153f103d7fd7bf8613",
+          "destination_sha256": "239524596daec40eeb1c3906d4684c78b94fea5c26f7e0153f103d7fd7bf8613",
+          "kind": "runtime_script"
+        },
+        {
+          "source": "unity/Assets/Scripts/UI/VexforgeAlphaHud.cs",
+          "destination": "unity-bootstrap/Assets/Scripts/UI/VexforgeAlphaHud.cs",
+          "source_sha256": "483f337d5507ea8ef715c12d736c214c62bb8faeefc55fa40f99ecde9acfb73a",
+          "destination_sha256": "483f337d5507ea8ef715c12d736c214c62bb8faeefc55fa40f99ecde9acfb73a",
+          "kind": "runtime_script"
+        },
+        {
+          "source": "unity/Assets/Scripts/UI/VexforgeGlobalChatDock.cs",
+          "destination": "unity-bootstrap/Assets/Scripts/UI/VexforgeGlobalChatDock.cs",
+          "source_sha256": "824ee65fc5127dfe03df6685d8d60a728c5b7a36a6f0d34d4cac24be23a74080",
+          "destination_sha256": "824ee65fc5127dfe03df6685d8d60a728c5b7a36a6f0d34d4cac24be23a74080",
+          "kind": "runtime_script"
+        },
+        {
+          "source": "unity/Assets/Scripts/UI/VexforgeSocialHub.cs",
+          "destination": "unity-bootstrap/Assets/Scripts/UI/VexforgeSocialHub.cs",
+          "source_sha256": "1d401214f9e938ac565dc9779a389681634da275e4f292189142612190a9357f",
+          "destination_sha256": "1d401214f9e938ac565dc9779a389681634da275e4f292189142612190a9357f",
+          "kind": "runtime_script"
+        }
+      ],
+      "assets": [],
+      "depends_on_stages": [
+        1,
+        2
+      ],
+      "note": "User-directed code-completion batch: every canonical Assets/Scripts/**/*.cs file is now present with identical bytes. This stage intentionally adds no scenes, Resources, new source .meta files or other excluded Unity content. The Bootstrap VexforgeApp component remains disconnected in the staged scene; build success proves compile/package viability only, not gameplay or content parity.",
+      "build": null
     }
   ],
-  "next_stage": null,
-  "known_architecture_boundary": "Static source dependency analysis found a reciprocal App/HUD cycle involving 31 files and 7,066 lines (41.6%). Do not import it as one oversized stage. Keep VexforgeApp disconnected from the staged scene while absent; design and record small compile seams before staging that cycle. Temporary compile-only seams must be separately tracked and removed/replaced with canonical source before the final build.",
-  "scene_policy": "The bootstrap copy keeps the official VexforgeBootstrap scene GUID/settings but temporarily omits its VexforgeApp component while App is not compiled. unity/ remains untouched. Restore the exact official scene when VexforgeApp and its dependencies are added."
+  "next_stage": "Only after stage 3's APK passes, select dependency-closed batches of no more than 10% of full_content_inventory. Do not preselect a fixed number of batches.",
+  "known_architecture_boundary": "The official code contains a reciprocal App/HUD cycle involving 31 files and 7,066 lines (41.6%). The user-directed stage 3 now imports the full pinned runtime C# inventory together, so it does not split that source cycle. Keep the staged scene disconnected until the later scene/content pass restores its canonical component references. Any temporary compile seam must be recorded and removed before parity is claimed.",
+  "scene_policy": "The bootstrap copy keeps the official VexforgeBootstrap scene GUID/settings but intentionally omits its VexforgeApp component during this code-only pass. Restore the exact official scene and metadata only as part of the later bounded full-content migration. unity/ remains untouched."
 }

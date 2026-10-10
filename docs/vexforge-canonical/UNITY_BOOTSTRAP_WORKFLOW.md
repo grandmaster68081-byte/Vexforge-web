@@ -2,14 +2,14 @@
 
 ## Propósito y estado
 
-Este documento describe el método separado que se está probando para llevar
-gradualmente todo el juego Unity oficial a APK completas en un proyecto
-hermano. Cada ejecución incorpora entre 5 % y 7 % de las líneas C# canónicas
-(medidas contra el inventario de código fijado en el manifiesto) y compila el
-APK completo del estado acumulado. Las APK intermedias pueden tener escenas o
-comportamientos incompletos; la compilación de Unity y la generación del APK sí
-deben terminar correctamente. La meta final es integrar y verificar el juego
-completo. El proyecto experimental no modifica el original.
+Este documento describe el método separado para llevar todo el juego Unity
+oficial a APK completas en un proyecto hermano, sin modificar el original. Las
+etapas 1 y 2 conservaron sus cortes históricos de 5–7 % del código C#. La etapa
+3 agrega de una vez todo el código C# canónico restante para validar el cierre
+de compilación. Solo si pasa esa prueba se migra el resto del contenido oficial
+en lotes de como máximo 10 % del inventario completo de `unity/`, sin fijar de
+antemano el número de lotes. Cada ejecución compila el APK completo acumulado;
+una APK intermedia puede tener escenas o comportamiento incompletos.
 
 El repositorio oficial es `grandmaster68081-byte/Vexforge-web`, rama `main`.
 El proyecto de referencia sigue en `unity/`; el proyecto experimental está en
@@ -43,7 +43,8 @@ El proyecto de referencia sigue en `unity/`; el proyecto experimental está en
 - La comprobación automatizada solo verifica que exista el archivo de escena
   configurado; no certifica procedencia, porcentaje, compatibilidad ni cierre
   de dependencias. El manifiesto registra los archivos fuente, hashes, cambios
-  temporales de escena y porción porcentual de cada etapa.
+  temporales de escena, denominador completo del proyecto y alcance de cada
+  etapa.
 - La APK #2 descrita abajo fue una prueba técnica histórica del workflow; su
   escena predeterminada generada no cuenta como contenido migrado ni como primer
   hito del videojuego.
@@ -54,42 +55,52 @@ La migración es acumulativa: cada etapa agrega una parte del juego oficial y
 conserva todas las partes incorporadas en etapas anteriores. Cada APK debe ser
 una compilación completa del estado acumulado, no una APK parcial ni un shard.
 
-Secuencia para cada ampliación autorizada:
+Secuencia de la etapa 3 autorizada y de las etapas posteriores:
 
 1. Revisar la última APK completa y su informe; comprobar que el SHA-256 del APK
    descargado coincide con el informe, y registrar el run, commit, tamaño,
    application ID y estado real de la caché. No llamar “reutilizada” a una caché
    hasta que un run posterior muestre un hit de restauración.
-2. Medir el código C# oficial y seleccionar una porción nueva de 5–7 % del
-   total fijado en `unity-bootstrap/MIGRATION_MANIFEST.json`. Resolver sus
-   dependencias con etapas previas o dentro de la misma porción; no importar un
-   cierre mayor que el límite por conveniencia.
-3. Copiar las fuentes oficiales seleccionadas a `unity-bootstrap/`, conservar
-   `.meta`/GUID existentes y registrar los GUID estables creados solo cuando la
-   fuente no tuviera metadata. Las escenas intermedias pueden quedar
-   intencionalmente desconectadas mientras falte código; no inventar gameplay,
-   datos ni assets sustitutos.
-4. Mantener la pieza y todas las anteriores. No copiar el proyecto entero ni
+2. En la etapa 3, conservar intactas las dos porciones validadas y copiar todas
+   las fuentes `unity/Assets/Scripts/**/*.cs` que faltan a sus rutas equivalentes
+   dentro de `unity-bootstrap/`. Esto completa 76/76 scripts y 16.988/16.988
+   líneas; el manifiesto enumera cada ruta y sus hashes. Esta etapa no copia
+   escenas, Resources, nuevos `.meta` ni otros archivos excluidos.
+3. Compilar el APK completo acumulado. Si falla, detenerse y conservar el
+   diagnóstico; no reintentar sin autorización nueva.
+4. Solo si el APK de la etapa 3 pasa, usar el inventario canónico completo que
+   fija el manifiesto para organizar el resto del contenido. La unidad
+   porcentual es cada archivo rastreado de `unity/`, incluido su `.meta` cuando
+   exista; a la fecha del inventario son 197 archivos y el máximo operativo es
+   19 archivos por lote (floor de 10 %). Mantener juntas las dependencias y las
+   parejas `.meta`; no fijar por adelantado cuántos lotes habrá. Si cambia el
+   commit oficial antes de continuar, rehacer el inventario y los porcentajes.
+5. Copiar los archivos canónicos seleccionados a `unity-bootstrap/`, conservar
+   los `.meta`/GUID originales y registrar hashes. Crear GUID estables solo
+   cuando la fuente no tuviera metadata. No inventar gameplay, datos ni assets
+   sustitutos.
+6. Mantener la pieza y todas las anteriores. No copiar el proyecto entero ni
    reemplazar `unity-bootstrap/` por `unity/`; mantener independientes sus
    rutas, identidad y settings de instalación.
-5. Revisar dependencias del bootstrap, actualizar manifest y lockfile juntos
+7. Revisar dependencias del bootstrap, actualizar manifest y lockfile juntos
    cuando sea necesario, y comprobar que `unity/`, el portal, backend y
    Supabase no cambiaron.
-6. Revisar el diff, hacer commit/push a `main` y despachar un solo build manual
+8. Revisar el diff, hacer commit/push a `main` y despachar un solo build manual
    del APK completo que contiene todo el estado acumulado, no un shard ni una
    APK parcial.
-7. Verificar resultado, informe y artefacto; comparar el SHA-256 del APK
+9. Verificar resultado, informe y artefacto; comparar el SHA-256 del APK
    descargado con el informe, y registrar si la caché anterior se restauró y si
    la nueva caché se guardó. No continuar tras ningún fallo.
-8. Solo después de validar el hito elegir la siguiente pieza oficial y repetir
+10. Solo después de validar el hito elegir el siguiente lote oficial y repetir
    hasta cubrir el juego completo.
 
 Una APK completa significa que Unity compiló el APK Android completo a partir
 del estado Bootstrap acumulado; no significa que esa APK intermedia sea
-jugable. No permitir errores de compilación C# como sustituto de un corte
-pequeño. Si una familia de código tiene referencias circulares, dividirla con
-límites de compilación temporales y registrados; quitar esos límites y restaurar
-el código/escena canónicos antes de afirmar paridad final.
+jugable ni que pruebe paridad de contenido. La etapa 3 es la excepción
+deliberada que incorpora todo el código de una vez; el límite de 10 % aplica a
+los lotes posteriores del inventario completo. Si una familia de código requiere
+un límite de compilación temporal, registrarlo y quitarlo antes de afirmar
+paridad final.
 
 Mantener la identidad `com.vexforge.bootstrap` para que la APK experimental no
 reemplace ni actualice por accidente la app oficial. La identidad diferente no
@@ -141,9 +152,10 @@ artefacto descargado coincide con el informe y pasa la validación ZIP. El run
 terminó con cero warnings y cero errores de Unity.
 
 Este corte solo valida compilación: no incorpora aún los recursos
-`Resources/VexforgeTier1/**` ni `VexforgeTier1PackRevealDirector`, por lo que no
-habilita el pack reveal en runtime. `VexforgeApp` sigue desconectado y
-`unity/**` permanece intacto. No se ha seleccionado ni compilado una etapa 3.
+`Resources/VexforgeTier1/**`, por lo que no habilita el pack reveal en runtime.
+`VexforgeApp` sigue desconectado y `unity/**` permanece intacto. El código
+completo de la etapa 3 ya está copiado y registrado en el manifiesto; su APK aún
+no tiene resultado. No empezar el inventario por lotes hasta que esa APK pase.
 El valor `BuildReport.summary.totalSize` de Unity (621.713.303 bytes) es distinto
 del tamaño real del APK empaquetado, informado por el paso de verificación y
 confirmado con el artefacto descargado.

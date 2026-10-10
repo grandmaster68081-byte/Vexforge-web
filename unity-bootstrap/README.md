@@ -1,16 +1,24 @@
 # VEXFORGE Unity Bootstrap
 
 This is the isolated, cumulative destination for migrating the official Unity
-game into complete Android APKs in small, dependency-complete steps. It is not a
-second source of truth and must never replace or modify the official game.
+game into complete Android APKs. The authorized plan first completes the entire
+canonical C# source set in one code-only pass; after that succeeds, the deferred
+full-project content is migrated in bounded, dependency-complete batches. This
+is not a second source of truth and must never replace or modify the official
+game.
 
 ## Current state (2026-10-10)
 
 - Unity Editor: `6000.3.0f1`, matched to `unity/ProjectSettings/ProjectVersion.txt`.
 - Android application ID: `com.vexforge.bootstrap`, distinct from the official
   `com.vexforge.android`.
-- This folder currently contains Unity project settings, package manifests, and
-  the build entry point; it has no migrated official scene or gameplay content.
+- Stages 1 and 2 passed. Stage 3 now contains all 76 canonical
+  `Assets/Scripts/**/*.cs` files (16,988 lines); its 63 newly copied scripts are
+  hash-identical to the official source. The stage 3 APK build is still pending.
+- The existing Bootstrap scene is a documented, modified copy of the official
+  scene. It intentionally omits the `VexforgeApp` component. This code-only pass
+  does not restore the canonical scene or migrate the remaining resources,
+  metadata, or other Unity files.
 - The successful historical APK #2 was a workflow smoke test using an empty
   generated scene. It proves neither migrated game content nor a cache restore.
 - The current builder requires `Assets/Scenes/VexforgeBootstrap.unity` to exist
@@ -23,10 +31,17 @@ second source of truth and must never replace or modify the official game.
 ## Migration rules
 
 - Keep `unity/**` unchanged; inspect it as the canonical source.
-- Add exactly 5–7% of the pinned official C# line inventory per stage. Resolve
-  dependencies using prior stages or within the current slice, and record each
-  canonical path and hash in `MIGRATION_MANIFEST.json`. Preserve upstream `.meta`
-  files/GUIDs; assign stable metadata only where the official source has none.
+- Preserve the verified stages 1 and 2. Stage 3 is the user-directed one-time
+  completion of all remaining canonical C# source, taking the code inventory to
+  100%; it is intentionally larger than the historical 5–7% code slices.
+- Only after stage 3 passes, migrate the remaining canonical Unity project files
+  in dependency-closed batches capped at 10% of the complete tracked `unity/`
+  inventory. The manifest defines the auditable file-count denominator and
+  current cap; do not preselect a fixed number of batches.
+- Record every canonical path and source/destination hash in
+  `MIGRATION_MANIFEST.json`. Preserve upstream `.meta` files/GUIDs when those
+  files enter a later content batch; do not add new `.meta`, scenes or Resources
+  to the stage 3 code-only pass.
 - Intermediate APKs are full Android builds of the accumulated project, but
   their scenes/runtime behavior may be incomplete. The Unity compile and APK
   build must still succeed. Temporary scene disconnects or compile seams must
@@ -50,5 +65,6 @@ The documented conditional authorization permits sequential Bootstrap builds
 only after the previous APK passes all required checks. Stop on any failure;
 do not retry without fresh authorization. Do not dispatch the official Unity
 workflow or Unity Cloud Build. Follow the canonical workflow guide and
-`MIGRATION_MANIFEST.json` for the preflight, exact 5–7% source slice,
-commit/push, full APK build, artifact/hash, and cache evidence sequence.
+`MIGRATION_MANIFEST.json` for the current all-code preflight, commit/push, full
+APK build, artifact/hash, and cache evidence sequence. Later non-code batches
+must remain within the 10% complete-project cap.

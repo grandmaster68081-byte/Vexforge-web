@@ -1,0 +1,936 @@
+using System;
+using System.Threading.Tasks;
+using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.Events;
+using UnityEngine.UI;
+using UnityEngine.InputSystem.UI;
+using Vexforge.Backend;
+using Vexforge.Core;
+using Vexforge.GameState;
+using Vexforge.Presentation;
+using Vexforge.Session;
+using Vexforge.Tier1;
+
+namespace Vexforge.UI
+{
+    /// <summary>
+    /// Canonical Unity shell. Canvas is restricted to contextual UI; world presentation owns
+    /// Nexus and card presentation. Backend remains authoritative.
+    /// </summary>
+    public sealed class GameShellController : MonoBehaviour
+    {
+        private VexforgeApp app;
+
+        private Canvas canvas;
+        private RectTransform content;
+        private InputField emailInput;
+        private InputField passwordInput;
+
+        private BattlePresentationDirector battleDirector;
+
+        private GameObject presentationHost;
+        private VexforgeNexusStage nexusStage;
+        private VexforgeTextureLruCache textureCache;
+        private VexforgeCardArtResolver artResolver;
+        private VexforgeCardPool cardPool;
+        private VexforgeVirtualizedCardGallery gallery;
+        private VexforgeAlphaWorldDirector alphaWorld;
+        private VexforgeAlphaHud alphaHud;
+        private VexforgeCardInspectionStage cardInspection;
+        private GameRoute inspectionRoute;
+        private VexforgeDiegeticInputRouter alphaInput;
+        private Camera presentationCamera;
+        private GameObject signInRoot;
+
+        private bool built;
+        private bool battlePresentationInitialized;
+        private bool subscribed;
+
+        internal VexforgeCardArtResolver CanonicalArtResolver => artResolver;
+        internal BattlePresentationDirector CanonicalBattlePresentation => battleDirector;
+
+        private async void Start()
+        {
+            app = VexforgeApp.Instance;
+            if (app == null) return;
+
+            await app.InitializeAsync();
+            if (this == null || app == null) return;
+
+            BuildPresentation();
+            BuildBattlePresentationHost();
+            InitializeBattlePresentation();
+            BuildCanvas();
+            alphaHud = GetComponent<VexforgeAlphaHud>();
+            if (alphaHud == null)
+                alphaHud = gameObject.AddComponent<VexforgeAlphaHud>();
+            alphaHud.Initialize(app, canvas, gallery, battleDirector, alphaWorld);
+            Subscribe();
+
+            Render();
+        }
+
+        private void BuildBattlePresentationHost()
+        {
+            if (battleDirector != null) return;
+
+            // Reuse the canonical director already attached to the shell when present.
+            // This prevents startup races from creating two competing presentation authorities.
+            var existingDirector = GetComponent<BattlePresentationDirector>();
+            if (existingDirector != null)
+            {
+                battleDirector = existingDirector;
+                var existingStage = battleDirector.GetComponentInChildren<VexforgeBattlefieldStage>(true);
+                if (existingStage == null)
+                {
+                    var existingBattlefieldObject = new GameObject("BattlefieldStage");
+                    existingBattlefieldObject.transform.SetParent(battleDirector.transform, false);
+                    existingBattlefieldObject.AddComponent<VexforgeBattlefieldStage>();
+                }
+                return;
+            }
+
+            var host = new GameObject("BattlePresentationHost");
+            host.transform.SetParent(presentationHost.transform, false);
+            battleDirector = host.AddComponent<BattlePresentationDirector>();
+            var battlefieldObject = new GameObject("BattlefieldStage");
+            battlefieldObject.transform.SetParent(host.transform, false);
+            battlefieldObject.AddComponent<VexforgeBattlefieldStage>();
+        }
+
+        private void InitializeBattlePresentation()
+        {
+            if (battlePresentationInitialized || battleDirector == null || presentationCamera == null)
+                return;
+
+            battleDirector.Initialize(presentationCamera, artResolver, FindCard, app.GameState.PlayerId);
+            var battlefield = battleDirector.GetComponentInChildren<VexforgeBattlefieldStage>(true);
+            if (battlefield == null)
+                throw new InvalidOperationException("VEXFORGE requires a BattlefieldStage under BattlePresentationHost.");
+            alphaWorld.BindBattlefield(battlefield);
+            battlePresentationInitialized = true;
+        }
+
+        private void BuildPresentation()
+        {
+            if (presentationHost != null) return;
+
+            presentationHost = new GameObject("VexforgePresentationRuntime");
+            presentationHost.transform.SetParent(transform, false);
+
+            nexusStage = presentationHost.AddComponent<VexforgeNexusStage>();
+            nexusStage.Initialize(app);
+            nexusStage.SetNexusVisible(false);
+
+            var cardWorldRootObject = new GameObject("WorldCardPresentation");
+            cardWorldRootObject.transform.SetParent(presentationHost.transform, false);
+
+            presentationCamera = Camera.main;
+            if (presentationCamera == null)
+            {
+                throw new InvalidOperationException("VEXFORGE requires a MainCamera from NexusPresentationRoot.");
+            }
+
+            cardWorldRootObject.transform.position = new Vector3(0f, 3.15f, 5.4f);
+            cardWorldRootObject.transform.rotation = presentationCamera.transform.rotation;
+
+            textureCache = new VexforgeTextureLruCache(32L * 1024L * 1024L);
+            artResolver = new VexforgeCardArtResolver(textureCache, 3, 20, 8L * 1024L * 1024L, 4096);
+
+            cardPool = new VexforgeCardPool(
+                cardWorldRootObject.transform,
+                () => VexforgeCardView.CreateRuntime(cardWorldRootObject.transform),
+                24,
+                12);
+
+            var galleryObject = new GameObject("WorldCardGallery");
+            galleryObject.transform.SetParent(presentationHost.transform, false);
+            galleryObject.transform.position = new Vector3(0f, 3.15f, 5.4f);
+            galleryObject.transform.rotation = presentationCamera.transform.rotation;
+
+            alphaInput = presentationHost.AddComponent<VexforgeDiegeticInputRouter>();
+            alphaInput.Initialize(presentationCamera);
+
+            gallery = galleryObject.AddComponent<VexforgeVirtualizedCardGallery>();
+            gallery.Initialize(
+                presentationCamera,
+                cardPool,
+                artResolver,
+                alphaInput);
+
+            galleryObject.SetActive(false);
+
+            alphaWorld = presentationHost.AddComponent<VexforgeAlphaWorldDirector>();
+            alphaWorld.Initialize(app.Navigation, presentationCamera);
+            alphaWorld.BindGalleryRoot(galleryObject.transform);
+
+            var cardInspectionObject = new GameObject("CardInspectionStage");
+            cardInspectionObject.transform.SetParent(presentationHost.transform, false);
+            cardInspection = cardInspectionObject.AddComponent<VexforgeCardInspectionStage>();
+            cardInspection.Initialize(presentationCamera, alphaInput, artResolver);
+            cardInspection.Closed += HandleCardInspectionClosed;
+            gallery.CardSelected += HandleCardSelected;
+
+            built = true;
+        }
+
+        private void BuildCanvas()
+        {
+            if (canvas != null) return;
+
+            var mainCamera = Camera.main;
+            if (mainCamera == null)
+            {
+                throw new InvalidOperationException("VEXFORGE cannot create UI without MainCamera.");
+            }
+
+            EnsureEventSystem();
+
+            var canvasObject = new GameObject(
+                "VexforgeCanvas",
+                typeof(RectTransform),
+                typeof(Canvas),
+                typeof(CanvasScaler),
+                typeof(GraphicRaycaster));
+
+            canvasObject.transform.SetParent(transform, false);
+
+            canvas = canvasObject.GetComponent<Canvas>();
+            canvas.renderMode = RenderMode.ScreenSpaceCamera;
+            canvas.worldCamera = mainCamera;
+            canvas.planeDistance = 5f;
+
+            var scaler = canvasObject.GetComponent<CanvasScaler>();
+            scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
+            scaler.referenceResolution = new Vector2(1080f, 1920f);
+            scaler.matchWidthOrHeight = 0.45f;
+        }
+
+        private void EnsureEventSystem()
+        {
+            var eventSystem = EventSystem.current;
+
+            if (eventSystem == null)
+            {
+                var eventSystemObject = new GameObject(
+                    "VexforgeEventSystem",
+                    typeof(EventSystem),
+                    typeof(InputSystemUIInputModule));
+                eventSystem = eventSystemObject.GetComponent<EventSystem>();
+                eventSystemObject.transform.SetParent(transform, false);
+                return;
+            }
+
+            var legacyModule = eventSystem.GetComponent<StandaloneInputModule>();
+            if (legacyModule != null)
+            {
+                legacyModule.enabled = false;
+            }
+
+            if (eventSystem.GetComponent<InputSystemUIInputModule>() == null)
+            {
+                eventSystem.gameObject.AddComponent<InputSystemUIInputModule>();
+            }
+        }
+
+        private void Subscribe()
+        {
+            if (subscribed) return;
+
+            app.Session.StateChanged += HandleSessionChanged;
+            app.GameState.SyncStateChanged += HandleSyncChanged;
+            app.Navigation.RouteChanged += HandleRouteChanged;
+            subscribed = true;
+        }
+
+        private void Unsubscribe()
+        {
+            if (!subscribed || app == null) return;
+
+            app.Session.StateChanged -= HandleSessionChanged;
+            app.GameState.SyncStateChanged -= HandleSyncChanged;
+            app.Navigation.RouteChanged -= HandleRouteChanged;
+            subscribed = false;
+        }
+
+        private void HandleSessionChanged(AuthState _)
+        {
+            Render();
+        }
+
+        private void HandleSyncChanged(SyncState _)
+        {
+            Render();
+        }
+
+        private void HandleRouteChanged(GameRoute _)
+        {
+            if (cardInspection != null && cardInspection.IsVisible)
+                cardInspection.Hide(false);
+            Render();
+        }
+
+        private void Render()
+        {
+            if (!built || app == null || canvas == null) return;
+
+            if (!app.Session.IsAuthenticated)
+            {
+                HideWorldPresentation();
+                if (alphaHud != null)
+                    alphaHud.HideForSignedOut();
+                ClearCanvas();
+                RenderSignIn();
+                return;
+            }
+
+            PrepareWorldPresentation();
+            ClearCanvas();
+            RenderShell();
+        }
+
+        private void PrepareWorldPresentation()
+        {
+            nexusStage.SetNexusVisible(false);
+            if (alphaWorld != null)
+                alphaWorld.SetVisible(true);
+        }
+
+        private void HideWorldPresentation()
+        {
+            if (battleDirector != null) battleDirector.StopAndHide();
+            if (cardInspection != null && cardInspection.IsVisible) cardInspection.Hide(false);
+            if (nexusStage != null) nexusStage.SetNexusVisible(false);
+            if (alphaWorld != null) alphaWorld.SetVisible(false);
+            if (gallery != null) gallery.Hide();
+            if (cardPool != null) cardPool.ReturnAll();
+        }
+
+        private void RenderSignIn()
+        {
+            var panel = UiFactory.PanelObject(canvas.transform, "NexusSeal", UiFactory.PanelGlass);
+            signInRoot = panel;
+            UiFactory.Anchor(panel.GetComponent<RectTransform>(),
+                new Vector2(0.1f, 0.27f),
+                new Vector2(0.9f, 0.75f),
+                Vector2.zero,
+                Vector2.zero);
+
+            var outline = panel.AddComponent<Outline>();
+            outline.effectColor = UiFactory.GoldDim;
+            outline.effectDistance = new Vector2(2f, 2f);
+
+            var title = UiFactory.Label(panel.transform, "NEXUS SEAL", 42, UiFactory.Gold, TextAnchor.MiddleCenter);
+            UiFactory.Anchor(title.rectTransform,
+                new Vector2(0.05f, 0.72f),
+                new Vector2(0.95f, 0.9f),
+                Vector2.zero,
+                Vector2.zero);
+
+            var subtitle = UiFactory.Label(
+                panel.transform,
+                "Tu cuenta protege tu progreso",
+                17,
+                UiFactory.Muted,
+                TextAnchor.MiddleCenter);
+
+            UiFactory.Anchor(subtitle.rectTransform,
+                new Vector2(0.08f, 0.64f),
+                new Vector2(0.92f, 0.72f),
+                Vector2.zero,
+                Vector2.zero);
+
+            emailInput = UiFactory.Input(panel.transform, "Email", false);
+            UiFactory.Anchor(
+                emailInput.GetComponent<RectTransform>(),
+                new Vector2(0.1f, 0.46f),
+                new Vector2(0.9f, 0.57f),
+                Vector2.zero,
+                Vector2.zero);
+
+            passwordInput = UiFactory.Input(panel.transform, "Contraseña", true);
+            UiFactory.Anchor(
+                passwordInput.GetComponent<RectTransform>(),
+                new Vector2(0.1f, 0.31f),
+                new Vector2(0.9f, 0.42f),
+                Vector2.zero,
+                Vector2.zero);
+
+            var signIn = UiFactory.Button(panel.transform, "ENTRAR", SignInClicked);
+            UiFactory.Anchor(
+                signIn.GetComponent<RectTransform>(),
+                new Vector2(0.08f, 0.14f),
+                new Vector2(0.49f, 0.26f),
+                Vector2.zero,
+                Vector2.zero);
+
+            var signUp = UiFactory.Button(panel.transform, "CREAR CUENTA", SignUpClicked);
+            UiFactory.Anchor(
+                signUp.GetComponent<RectTransform>(),
+                new Vector2(0.51f, 0.14f),
+                new Vector2(0.92f, 0.26f),
+                Vector2.zero,
+                Vector2.zero);
+
+            var message = app.InitializationError ??
+                          app.Session.LastError ??
+                          "Inicia sesión o crea una cuenta para continuar.";
+
+            var status = UiFactory.Label(
+                panel.transform,
+                message,
+                14,
+                UiFactory.Muted,
+                TextAnchor.MiddleCenter);
+
+            UiFactory.Anchor(
+                status.rectTransform,
+                new Vector2(0.08f, 0.02f),
+                new Vector2(0.92f, 0.11f),
+                Vector2.zero,
+                Vector2.zero);
+        }
+
+        private void RenderShell()
+        {
+            if (alphaHud == null) return;
+            alphaHud.RenderRoute(app.Navigation.CurrentRoute);
+        }
+
+        private void RenderRoute()
+        {
+            switch (app.Navigation.CurrentRoute)
+            {
+                case GameRoute.Collection:
+                    BuildCollection();
+                    break;
+
+                case GameRoute.Deck:
+                    BuildDeck();
+                    break;
+
+                case GameRoute.Battle:
+                    BuildBattle();
+                    break;
+
+                case GameRoute.Missions:
+                    BuildMissions();
+                    break;
+
+                case GameRoute.Economy:
+                    BuildEconomy();
+                    break;
+
+                case GameRoute.Profile:
+                    BuildProfile();
+                    break;
+
+                default:
+                    BuildNexus();
+                    break;
+            }
+        }
+
+        private void BuildNexus()
+        {
+            Title("THE NEXUS", "Citadel hub · entra en un dominio del mundo");
+
+            if (app.GameState.SyncState != SyncState.Connected)
+            {
+                Message("No se pudo cargar la partida.\nInténtalo de nuevo más tarde.");
+                return;
+            }
+
+            var progress = app.GameState.Progress;
+            var profile = app.GameState.Profile;
+
+            Message(
+                "Sello: " + (profile == null ? "NO REPORTADO" : ValueOr(profile.display_name, "NO REPORTADO")) +
+                "\nNivel: " + (progress == null ? "NO REPORTADO" : progress.level.ToString()) +
+                "\nEnergía: " + (progress == null ? "NO REPORTADA" : progress.energy + " / " + progress.max_energy) +
+                "\nLos dominios se recorren mediante objetos del Nexus.");
+        }
+
+        private void BuildCollection()
+        {
+            Title("ARCHIVE", "Santuario de cartas · catálogo y colección");
+            AddReturnRune();
+
+            var catalog = app.GameState.Catalog ?? new CardRecord[0];
+            gallery.SetData(catalog, app.GameState.Collection);
+            gallery.Show();
+
+            if (catalog.Length == 0)
+            {
+                MessageAt("SIN CONTENIDO DISPONIBLE", 0.16f);
+                return;
+            }
+
+            MessageAt(
+                "CATÁLOGO " + catalog.Length +
+                " · arrastra para recorrer el archivo completo",
+                0.02f);
+        }
+
+        private void BuildDeck()
+        {
+            Title("FORGE", "Mesa de forja · formación guardada en tu cuenta");
+            AddReturnRune();
+
+            var deckSlots = app.GameState.Deck ?? new DeckSlot[0];
+            var deckCards = new CardRecord[deckSlots.Length];
+
+            for (var i = 0; i < deckSlots.Length; i++)
+            {
+                deckCards[i] = FindCard(deckSlots[i].card_id);
+            }
+
+            gallery.SetData(deckCards, app.GameState.Collection);
+            gallery.Show();
+
+            MessageAt(
+                deckSlots.Length == 0
+                    ? "FORJA VACÍA · AÑADE CARTAS PARA EMPEZAR"
+                    : "La mesa muestra todos los espacios de tu formación.",
+                0.02f);
+
+            var ids = new string[deckSlots.Length];
+            for (var i = 0; i < deckSlots.Length; i++)
+            {
+                ids[i] = deckSlots[i].card_id;
+            }
+
+            ActionButton("VALIDAR EN EL ALTAR", GameRoute.Deck, 0.08f, () => ValidateDeck(ids));
+            ActionButton("SELLAR DECK", GameRoute.Deck, 0.0f, () => SaveDeck(ids));
+        }
+
+        private void BuildBattle()
+        {
+            var gate = FindFirstObjectByType<VexforgeTier1BattleGate>(FindObjectsInactive.Include);
+            if (gate != null) gate.Show();
+        }
+
+        private void BuildMissions()
+        {
+            Title("MISSIONS", "Cámara de contratos · actividad del mundo");
+            AddReturnRune();
+
+            var missions = app.GameState.Missions ?? new MissionRecord[0];
+
+            if (missions.Length == 0)
+            {
+                MessageAt("SIN CONTENIDO DISPONIBLE", 0.55f);
+                return;
+            }
+
+            var viewportObject = new GameObject(
+                "MissionListViewport",
+                typeof(RectTransform),
+                typeof(Image),
+                typeof(Mask),
+                typeof(ScrollRect));
+            viewportObject.transform.SetParent(content, false);
+            UiFactory.Anchor(
+                viewportObject.GetComponent<RectTransform>(),
+                new Vector2(0.08f, 0.14f),
+                new Vector2(0.92f, 0.80f),
+                Vector2.zero,
+                Vector2.zero);
+            viewportObject.GetComponent<Image>().color = new Color(.025f, .029f, .037f, .94f);
+            var mask = viewportObject.GetComponent<Mask>();
+            mask.showMaskGraphic = false;
+            var scroll = viewportObject.GetComponent<ScrollRect>();
+            scroll.horizontal = false;
+            scroll.vertical = true;
+            scroll.movementType = ScrollRect.MovementType.Clamped;
+            scroll.viewport = viewportObject.GetComponent<RectTransform>();
+
+            var listObject = new GameObject("MissionList", typeof(RectTransform));
+            listObject.transform.SetParent(viewportObject.transform, false);
+            var list = listObject.GetComponent<RectTransform>();
+            list.anchorMin = new Vector2(0f, 1f);
+            list.anchorMax = new Vector2(1f, 1f);
+            list.pivot = new Vector2(.5f, 1f);
+            list.anchoredPosition = Vector2.zero;
+            list.sizeDelta = new Vector2(0f, missions.Length * 104f + 12f);
+            scroll.content = list;
+
+            var visibleIndex = 0;
+            for (var i = 0; i < missions.Length; i++)
+            {
+                var mission = missions[i];
+                if (mission == null) continue;
+
+                var contract = UiFactory.PanelObject(
+                    list,
+                    "Contract_" + i,
+                    UiFactory.PanelGlass);
+
+                var contractRect = contract.GetComponent<RectTransform>();
+                contractRect.anchorMin = new Vector2(0f, 1f);
+                contractRect.anchorMax = new Vector2(1f, 1f);
+                contractRect.pivot = new Vector2(.5f, 1f);
+                contractRect.anchoredPosition = new Vector2(0f, -8f - visibleIndex * 104f);
+                contractRect.sizeDelta = new Vector2(-12f, 94f);
+
+                var text = UiFactory.Label(
+                    contract.transform,
+                    ValueOr(mission.name, "CONTRATO NO REPORTADO") +
+                    "  ·  " +
+                    ValueOr(mission.difficulty, "DIFICULTAD NO REPORTADA") +
+                    "\nXP REPORTADO: " +
+                    mission.reward_xp.ToString() +
+                    "   ·   ENERGÍA " + mission.energy_cost,
+                    14,
+                    UiFactory.Text,
+                    TextAnchor.MiddleLeft);
+
+                UiFactory.Anchor(
+                    text.rectTransform,
+                    new Vector2(.035f, .08f),
+                    new Vector2(.67f, .92f),
+                    Vector2.zero,
+                    Vector2.zero);
+
+                var canStart = Guid.TryParse(mission.id, out _);
+                var start = UiFactory.Button(
+                    contract.transform,
+                    canStart ? "INICIAR" : "ID INVÁLIDO",
+                    canStart ? (UnityAction)(() => OpenMissionCombat(mission.id)) : null);
+                UiFactory.Anchor(
+                    start.GetComponent<RectTransform>(),
+                    new Vector2(.70f, .18f),
+                    new Vector2(.97f, .82f),
+                    Vector2.zero,
+                    Vector2.zero);
+                start.interactable = canStart;
+                visibleIndex++;
+            }
+        }
+
+        private void OpenMissionCombat(string missionId)
+        {
+            var gate = FindFirstObjectByType<VexforgeTier1TurnCombatGate>(FindObjectsInactive.Include);
+            if (gate == null)
+            {
+                Debug.LogError("VEXFORGE V7 mission entry is unavailable; no local combat fallback was created.");
+                return;
+            }
+            gate.OpenMission(missionId);
+        }
+
+        private void BuildEconomy()
+        {
+            Title("TREASURY", "Saldos y movimientos de tu cuenta");
+
+            AddReturnRune();
+
+            var wallet = app.GameState.Wallet;
+
+            Message(
+                wallet == null
+                    ? "La cartera no está disponible desde la sesión actual."
+                    : "VEX in-game: " + wallet.vex_ingame +
+                      "\nVEX tradeable: " + wallet.vex_tradeable +
+                      "\nReservado in-game: " + wallet.reserved_ingame +
+                      "\nReservado tradeable: " + wallet.reserved_tradeable);
+        }
+
+        private void BuildProfile()
+        {
+            Title("PROFILE", "Identidad, estadísticas y progreso autorizados");
+
+            AddReturnRune();
+
+            var profile = app.GameState.Profile;
+            var progress = app.GameState.Progress;
+            var stats = app.GameState.Stats;
+            var rank = app.GameState.Rank;
+
+            Message(
+                profile == null
+                    ? "El perfil no está disponible."
+                    : "Nombre: " + ValueOr(profile.display_name, "NO REPORTADO") +
+                      "\nRol: " + ValueOr(profile.role, "NO REPORTADO") +
+                      "\nEstado: " + ValueOr(profile.status, "NO REPORTADO") +
+                      "\nNivel: " + (progress == null ? "NO REPORTADO" : progress.level.ToString()) +
+                      " · Rango: " + (rank == null ? "NO REPORTADO" : ValueOr(rank.tier, "NO REPORTADO")) +
+                      "\nVictorias: " + (stats == null ? "NO DISPONIBLE" : stats.pvp_wins.ToString()) +
+                      " · Misiones: " + (stats == null ? "NO DISPONIBLE" : stats.missions_completed.ToString()) +
+                      "\nCartas: " + (stats == null ? "NO DISPONIBLE" : stats.cards_owned.ToString()) +
+                      " · Ventas: " + (stats == null ? "NO DISPONIBLE" : stats.market_sales.ToString()) +
+                      " · Jefes: " + (stats == null ? "NO DISPONIBLE" : stats.boss_kills.ToString()) +
+                      " · Packs: " + (stats == null ? "NO DISPONIBLE" : stats.packs_opened.ToString()));
+
+            ActionButton(
+                "CERRAR SESIÓN",
+                GameRoute.Profile,
+                0.20f,
+                () => app.SignOut());
+        }
+
+        private void AddReturnRune()
+        {
+            var button = UiFactory.Button(
+                content,
+                "VOLVER AL NEXUS",
+                () => app.Navigation.Navigate(GameRoute.Nexus));
+
+            UiFactory.Anchor(
+                button.GetComponent<RectTransform>(),
+                new Vector2(0.68f, 0.89f),
+                new Vector2(0.98f, 0.98f),
+                Vector2.zero,
+                Vector2.zero);
+        }
+
+        private void ActionButton(
+            string text,
+            GameRoute route,
+            float y,
+            UnityAction onClick = null)
+        {
+            var button = UiFactory.Button(
+                content,
+                text,
+                onClick ?? (() => app.Navigation.Navigate(route)));
+
+            UiFactory.Anchor(
+                button.GetComponent<RectTransform>(),
+                new Vector2(0.08f, y),
+                new Vector2(0.92f, y + 0.1f),
+                Vector2.zero,
+                Vector2.zero);
+        }
+
+        private void Title(string title, string subtitle)
+        {
+            var heading = UiFactory.Label(
+                content,
+                title,
+                30,
+                UiFactory.Gold);
+
+            UiFactory.Anchor(
+                heading.rectTransform,
+                new Vector2(0.04f, 0.87f),
+                new Vector2(0.96f, 0.98f),
+                Vector2.zero,
+                Vector2.zero);
+
+            var sub = UiFactory.Label(
+                content,
+                subtitle,
+                14,
+                UiFactory.Muted);
+
+            UiFactory.Anchor(
+                sub.rectTransform,
+                new Vector2(0.04f, 0.79f),
+                new Vector2(0.96f, 0.87f),
+                Vector2.zero,
+                Vector2.zero);
+        }
+
+        private void Message(string text)
+        {
+            MessageAt(text, 0.68f);
+        }
+
+        private void MessageAt(string text, float y)
+        {
+            var message = UiFactory.Label(
+                content,
+                text,
+                16,
+                UiFactory.Text);
+
+            UiFactory.Anchor(
+                message.rectTransform,
+                new Vector2(0.06f, y),
+                new Vector2(0.94f, y + 0.08f),
+                Vector2.zero,
+                Vector2.zero);
+        }
+
+        private async void SignInClicked()
+        {
+            if (emailInput == null || passwordInput == null) return;
+            await app.SignInAndSyncAsync(
+                emailInput.text.Trim(),
+                passwordInput.text);
+        }
+
+        private async void SignUpClicked()
+        {
+            if (emailInput == null || passwordInput == null) return;
+            await app.SignUpAndSyncAsync(
+                emailInput.text.Trim(),
+                passwordInput.text);
+        }
+
+        private async void ValidateDeck(string[] ids)
+        {
+            try
+            {
+                var result = await app.Repository.ValidateDeckAsync(ids);
+                MessageAt(
+                    result == null
+                        ? "NO SE PUDO VALIDAR LA FORMACIÓN."
+                        : result.valid
+                            ? "FORMACIÓN VÁLIDA"
+                            : "LA FORMACIÓN NO PASÓ LA VALIDACIÓN.",
+                    0.30f);
+            }
+            catch (System.Exception ex)
+            {
+                Debug.LogException(ex);
+                MessageAt("NO SE PUDO VALIDAR LA FORMACIÓN. INTÉNTALO DE NUEVO.", 0.30f);
+            }
+        }
+
+        private async void SaveDeck(string[] ids)
+        {
+            try
+            {
+                var result = await app.Repository.SaveDeckAsync(ids);
+                MessageAt(
+                    result == null
+                        ? "NO SE PUDO CONFIRMAR EL GUARDADO."
+                        : result.ok
+                            ? "FORMACIÓN GUARDADA"
+                            : "NO SE PUDO GUARDAR LA FORMACIÓN.",
+                    0.30f);
+                if (result != null && result.ok) await app.GameState.RefreshAsync();
+            }
+            catch (System.Exception ex)
+            {
+                Debug.LogException(ex);
+                MessageAt("NO SE PUDO GUARDAR LA FORMACIÓN. INTÉNTALO DE NUEVO.", 0.30f);
+            }
+        }
+
+        [System.Obsolete("Legacy battle entry disabled. VexforgeTier1BattleGate owns Battle entry.")]
+        private void ResolveBattle(string opponentId)
+        {
+            var gate = FindFirstObjectByType<VexforgeTier1BattleGate>(FindObjectsInactive.Include);
+            if (gate != null) gate.Show();
+        }
+
+        private void PresentBattleEvent(BattleEvent battleEvent)
+        {
+            if (battleEvent == null || content == null) return;
+
+            var eventText =
+                ValueOr(battleEvent.event_type, "EVENTO NO REPORTADO") +
+                " · " +
+                ValueOr(battleEvent.actor_id, "ACTOR NO REPORTADO");
+
+            MessageAt(eventText, 0.34f);
+        }
+
+        private void HandleCardSelected(CardRecord card)
+        {
+            if (card == null) return;
+            if (alphaHud != null &&
+                app.Navigation.CurrentRoute == GameRoute.Deck &&
+                alphaHud.TryAddDeckCard(card))
+                return;
+            if (cardInspection == null) return;
+            if (gallery != null) gallery.Hide();
+            if (cardPool != null) cardPool.ReturnAll();
+            inspectionRoute = app.Navigation.CurrentRoute;
+            var ownership = FindOwnership(card.id);
+            cardInspection.Show(card, ownership);
+            if (alphaHud != null)
+                alphaHud.ShowCardDetails(card, ownership, () =>
+                {
+                    if (cardInspection != null)
+                        cardInspection.Hide();
+                });
+        }
+
+        private void HandleCardInspectionClosed()
+        {
+            if (app == null || !app.Session.IsAuthenticated || alphaHud == null) return;
+            var route = app.Navigation.CurrentRoute;
+            if (route == inspectionRoute && (route == GameRoute.Collection || route == GameRoute.Deck))
+                alphaHud.RenderRoute(route);
+        }
+
+        private PlayerCardRecord FindOwnership(string cardId)
+        {
+            if (string.IsNullOrWhiteSpace(cardId) || app.GameState.Collection == null)
+                return null;
+            for (var i = 0; i < app.GameState.Collection.Length; i++)
+            {
+                var owned = app.GameState.Collection[i];
+                if (owned != null && owned.card_id == cardId)
+                    return owned;
+            }
+            return null;
+        }
+
+        private CardRecord FindCard(string cardId)
+        {
+            if (string.IsNullOrWhiteSpace(cardId) ||
+                app.GameState.Catalog == null)
+            {
+                return null;
+            }
+
+            for (var i = 0; i < app.GameState.Catalog.Length; i++)
+            {
+                var card = app.GameState.Catalog[i];
+                if (card != null && card.id == cardId)
+                {
+                    return card;
+                }
+            }
+
+            return null;
+        }
+
+        private static string ValueOr(string value, string fallback)
+        {
+            return string.IsNullOrWhiteSpace(value) ? fallback : value;
+        }
+
+        private void ClearCanvas()
+        {
+            if (content != null)
+                Destroy(content.gameObject);
+            if (signInRoot != null)
+                Destroy(signInRoot);
+
+            content = null;
+            signInRoot = null;
+            emailInput = null;
+            passwordInput = null;
+        }
+
+        private void OnDestroy()
+        {
+            Unsubscribe();
+
+            if (battleDirector != null)
+            {
+                battleDirector.EventPresented -= PresentBattleEvent;
+            }
+
+            if (gallery != null)
+            {
+                gallery.CardSelected -= HandleCardSelected;
+                gallery.Hide();
+            }
+            if (cardInspection != null)
+            {
+                cardInspection.Closed -= HandleCardInspectionClosed;
+                cardInspection.Hide(false);
+            }
+            if (artResolver != null) artResolver.Dispose();
+            if (textureCache != null) textureCache.Dispose();
+        }
+    }
+}
