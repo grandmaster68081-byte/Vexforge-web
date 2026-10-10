@@ -274,12 +274,35 @@ Run #11 restauró 1.863.972.123 bytes desde la clave compatible del run #10
 1 error aunque terminó con `BuildResult.Succeeded`; se conserva el contador
 para revisión y no se declara como cero errores.
 
-La etapa 8 preparada agrupa cuatro recursos canónicos de combate: arena,
-atlas de sigilos, aura y sigilo de jefe. Su catálogo, registro de carga y
-fallback neutral ya están presentes en etapas anteriores. Se conservan los
-cuatro `.meta` originales, GUID, importación y claves de `Resources`; el lote
-suma 8/197 archivos (4,0609 %), por debajo del límite de 19. El siguiente run
-manual Bootstrap debe compilar este lote acumulado en `main`.
+La etapa 8 agrupó cuatro recursos canónicos de combate: arena, atlas de sigilos,
+aura y sigilo de jefe. Su catálogo, registro de carga y fallback neutral ya
+estaban presentes en etapas anteriores. Se conservaron los cuatro `.meta`
+originales, GUID, importación y claves de `Resources`; el lote fue de 8/197
+archivos (4,0609 %), por debajo del límite de 19.
+
+La etapa 8 pasó en Bootstrap run #12, commit
+`67da68ed10822218383bd75a0d3334a07c4d9f21`. El APK Android/IL2CPP/ARM64 de
+`com.vexforge.bootstrap` mide 31.252.903 bytes; su SHA-256
+`c498b81fd1a4e8f3556462763a7f620656bae53be10431db460ffb60786cb7fc`
+coincide con el informe descargado. El ZIP del artefacto y el APK superaron las
+comprobaciones de integridad; se verificaron AndroidManifest, datos Unity y la
+biblioteca IL2CPP ARM64. Se subió
+`VEXFORGE-Unity-Bootstrap-APK-12` (ID `11675681802`, 30.604.997 bytes); su
+SHA-256 descargado es
+`6dd1c9d8b06d462fdcf45f3c7b21a2cf0a8c2e643bfb722609ea2aa303b1ccf3`.
+
+Run #12 restauró 1.864.932.017 bytes desde la clave compatible del run #11
+(sin coincidencia exacta) y guardó una caché nueva de 1.891.051.220 bytes.
+`BuildReport.totalSize` fue 664.903.458 bytes. Unity registró 2 warnings y
+1 error aunque terminó con `BuildResult.Succeeded`; se conserva el contador
+para revisión y no se declara como cero errores.
+
+La etapa 9 preparada agrupa cinco fondos canónicos de rutas: Nexus Citadel,
+Archive Sanctum, Forge Chamber, Mission Hall y Treasury Vault. Sus claves están
+en el catálogo, y los directores de tutorial y salas las solicitan. Se
+conservan los cinco `.meta` originales, GUID, importación y claves de
+`Resources`; el lote suma 10/197 archivos (5,0761 %), bajo el límite de 19. El
+siguiente run manual Bootstrap debe compilar este lote acumulado en `main`.
 
 Tras validar cada APK acumulada, elegir otro lote cerrado de dependencias desde
 el inventario canónico restante sin fijar por adelantado el número de etapas.

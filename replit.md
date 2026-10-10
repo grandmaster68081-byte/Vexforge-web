@@ -95,6 +95,20 @@ it. The current game migration order is
   dependency-closed and capped at 19 canonical files.
 - Supabase's project status was checked read-only as `ACTIVE_HEALTHY`; this
   handoff made no Supabase changes. Unity Cloud Build is not part of this path.
+- Stage 8 passed in Bootstrap run #12 on
+  `67da68ed10822218383bd75a0d3334a07c4d9f21`. Its downloaded 31,252,903-byte
+  Android/IL2CPP/ARM64 APK SHA-256
+  `c498b81fd1a4e8f3556462763a7f620656bae53be10431db460ffb60786cb7fc`
+  matches the build report; artifact `VEXFORGE-Unity-Bootstrap-APK-12`
+  (ID `11675681802`, 30,604,997 bytes) and APK passed integrity checks.
+  Unity reported warnings=2/errors=1 with `BuildReport.totalSize` 664,903,458;
+  keep the counters for review, per the existing non-blocking rule. Run #12
+  restored 1,864,932,017 bytes from the compatible run #11 cache and saved
+  1,891,051,220 bytes.
+- Stage 9 is prepared for the next manual build: five canonical route hero
+  textures and their `.meta` files (10/197 files, 5.0761%). The asset catalog,
+  registry, and requesting route/tutorial directors are already present.
+  Preserve the canonical `unity/**` source unchanged.
 
 ## Active scope
 

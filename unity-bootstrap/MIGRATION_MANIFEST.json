@@ -1317,9 +1317,50 @@
     {
       "number": 8,
       "name": "Tier1 battle and boss visual resources",
-      "status": "prepared_for_build",
+      "status": "verified_build_success",
       "new_file_count": 8,
       "share_percent": 4.0609,
+      "build": {
+        "workflow_run_id": 38067100569,
+        "workflow_run_number": 12,
+        "commit": "67da68ed10822218383bd75a0d3334a07c4d9f21",
+        "workflow_url": "https://github.com/grandmaster68081-byte/Vexforge-web/actions/runs/38067100569",
+        "result": "success",
+        "unity_editor": "6000.3.0f1",
+        "application_id": "com.vexforge.bootstrap",
+        "platform": "Android",
+        "scripting": "IL2CPP",
+        "architecture": "ARM64",
+        "warnings": 2,
+        "errors": 1,
+        "unity_build_report_total_size_bytes": 664903458,
+        "build_report_anomaly": "The BuildReport records warnings=2 and errors=1 although Unity reports BuildResult.Succeeded and GitHub Actions, APK validation, and artifact upload succeeded. Record the counters for later review; per the user's direction they are non-blocking by themselves and do not mean zero errors.",
+        "artifact_name": "VEXFORGE-Unity-Bootstrap-APK-12",
+        "artifact_id": 11675681802,
+        "artifact_size_bytes": 30604997,
+        "artifact_zip_sha256": "6dd1c9d8b06d462fdcf45f3c7b21a2cf0a8c2e643bfb722609ea2aa303b1ccf3",
+        "apk_size_bytes": 31252903,
+        "apk_sha256": "c498b81fd1a4e8f3556462763a7f620656bae53be10431db460ffb60786cb7fc",
+        "downloaded_artifact_hash_matched_report": true,
+        "apk_validation": {
+          "outer_artifact_zip_valid": true,
+          "apk_zip_crc_valid": true,
+          "android_manifest_present": true,
+          "unity_data_present": true,
+          "arm64_il2cpp_library_present": true
+        },
+        "cache_restore": {
+          "result": "restored_from_restore_key",
+          "restored_bytes": 1864932017,
+          "matched_key": "vexforge-bootstrap-library-Linux-X64-6000.3.0f1-312fc8225f5a39d9f5feddf214b0b0e778e0e839c09ac3266a9bae6a2be11ff8-38065092660-1",
+          "exact_key_hit": false
+        },
+        "cache_save": {
+          "result": "success",
+          "saved_bytes": 1891051220,
+          "saved_key": "vexforge-bootstrap-library-Linux-X64-6000.3.0f1-76ceeca307038f881f9fa332c2e27a7102d41664763bd9480db0695b5a24b679-38067100569-1"
+        }
+      },
       "assets": [
         {
           "source": "unity/Assets/Resources/VexforgeTier1/Art/VF_BATTLE_ARENA_CITADEL_A.png",
@@ -1366,10 +1407,74 @@
         3,
         7
       ],
-      "note": "This dependency-closed batch groups four canonical combat visuals: the battle arena, battle sigil atlas, boss aura, and boss sigil. Their catalog/registry and neutral fallback are already present from stages 3 and 7. Each PNG keeps its canonical .meta, GUID, import settings, and Resources key. The batch is 8/197 files (4.0609%), under the 19-file cap; hub, pack, reward, and world-background art remain for later batches."
+      "note": "This dependency-closed batch groups four canonical combat visuals: the battle arena, battle sigil atlas, boss aura, and boss sigil. Their catalog/registry and neutral fallback are already present from stages 3 and 7. Each PNG keeps its canonical .meta, GUID, import settings, and Resources key. The batch is 8/197 files (4.0609%), under the 19-file cap; remaining route, pack, reward, and world-pattern art is handled in later batches."
+    },
+    {
+      "number": 9,
+      "name": "Tier1 hub and route hero resources",
+      "status": "prepared_for_build",
+      "new_file_count": 10,
+      "share_percent": 5.0761,
+      "assets": [
+        {
+          "source": "unity/Assets/Resources/VexforgeTier1/Art/VF_NEXUS_CITADEL_HERO.png",
+          "destination": "unity-bootstrap/Assets/Resources/VexforgeTier1/Art/VF_NEXUS_CITADEL_HERO.png",
+          "source_sha256": "32be4edf85ce103dab113231dc23e3da563f21340339e064af180bde61850520",
+          "destination_sha256": "32be4edf85ce103dab113231dc23e3da563f21340339e064af180bde61850520",
+          "kind": "resource_texture",
+          "source_meta": "unity/Assets/Resources/VexforgeTier1/Art/VF_NEXUS_CITADEL_HERO.png.meta",
+          "meta_sha256": "cddef636b1a63cdf470a741f83b816c8baf66138eb460e204579cfeed3c85176",
+          "resource_key": "VexforgeTier1/Art/VF_NEXUS_CITADEL_HERO"
+        },
+        {
+          "source": "unity/Assets/Resources/VexforgeTier1/Art/VF_ARCHIVE_SANCTUM_HERO.png",
+          "destination": "unity-bootstrap/Assets/Resources/VexforgeTier1/Art/VF_ARCHIVE_SANCTUM_HERO.png",
+          "source_sha256": "ad1471ab244a40c785c0588a0f3a7a157d64f6d536cad9ea9797380a039e9157",
+          "destination_sha256": "ad1471ab244a40c785c0588a0f3a7a157d64f6d536cad9ea9797380a039e9157",
+          "kind": "resource_texture",
+          "source_meta": "unity/Assets/Resources/VexforgeTier1/Art/VF_ARCHIVE_SANCTUM_HERO.png.meta",
+          "meta_sha256": "f6b237bc9f832cbfa4219ffa5a749efcdcf5d1f400edade28e5d8a43264d9faf",
+          "resource_key": "VexforgeTier1/Art/VF_ARCHIVE_SANCTUM_HERO"
+        },
+        {
+          "source": "unity/Assets/Resources/VexforgeTier1/Art/VF_FORGE_CHAMBER_HERO.png",
+          "destination": "unity-bootstrap/Assets/Resources/VexforgeTier1/Art/VF_FORGE_CHAMBER_HERO.png",
+          "source_sha256": "b8efb99074510375247f3a830bd99e266b6f6c12306b96768e3f67c991d72868",
+          "destination_sha256": "b8efb99074510375247f3a830bd99e266b6f6c12306b96768e3f67c991d72868",
+          "kind": "resource_texture",
+          "source_meta": "unity/Assets/Resources/VexforgeTier1/Art/VF_FORGE_CHAMBER_HERO.png.meta",
+          "meta_sha256": "2775afa92b3555a73d5741e228484d882c4fb4f03de6fb97889f048e8806e6dc",
+          "resource_key": "VexforgeTier1/Art/VF_FORGE_CHAMBER_HERO"
+        },
+        {
+          "source": "unity/Assets/Resources/VexforgeTier1/Art/VF_MISSION_HALL_HERO.png",
+          "destination": "unity-bootstrap/Assets/Resources/VexforgeTier1/Art/VF_MISSION_HALL_HERO.png",
+          "source_sha256": "fe575f5f5934ea2ef6c6b16adcb1111f70d52e9c9530ed8f919e0f4c721ae77a",
+          "destination_sha256": "fe575f5f5934ea2ef6c6b16adcb1111f70d52e9c9530ed8f919e0f4c721ae77a",
+          "kind": "resource_texture",
+          "source_meta": "unity/Assets/Resources/VexforgeTier1/Art/VF_MISSION_HALL_HERO.png.meta",
+          "meta_sha256": "f12e0078ff5c334f18cae17231d5cd51fc6bb947508a19a8531c7eda4703d828",
+          "resource_key": "VexforgeTier1/Art/VF_MISSION_HALL_HERO"
+        },
+        {
+          "source": "unity/Assets/Resources/VexforgeTier1/Art/VF_TREASURY_VAULT_HERO.png",
+          "destination": "unity-bootstrap/Assets/Resources/VexforgeTier1/Art/VF_TREASURY_VAULT_HERO.png",
+          "source_sha256": "9c4adde0dcfa6972369793a6d6e63e3db1eccd0566865121eeea0d9179f532c8",
+          "destination_sha256": "9c4adde0dcfa6972369793a6d6e63e3db1eccd0566865121eeea0d9179f532c8",
+          "kind": "resource_texture",
+          "source_meta": "unity/Assets/Resources/VexforgeTier1/Art/VF_TREASURY_VAULT_HERO.png.meta",
+          "meta_sha256": "792785ea5a06c151f5393edc2099c4316feab2fd3b1450ef5b10643a30a6b52b",
+          "resource_key": "VexforgeTier1/Art/VF_TREASURY_VAULT_HERO"
+        }
+      ],
+      "depends_on_stages": [
+        3,
+        7
+      ],
+      "note": "This dependency-closed batch adds the five canonical hub/route hero textures referenced by the tutorial and room directors. Their resource catalog, registry, and neutral fallback are already present from stages 3 and 7. Each PNG keeps its source .meta, GUID, import settings, and Resources key. The batch is 10/197 files (5.0761%), below the 19-file cap; pack, reward, and world-pattern art remain for later batches."
     }
   ],
-  "next_stage": "Stage 8 is prepared for the next manual cumulative Bootstrap build after stage 7 run #11 passed artifact/hash verification. It contains the battle arena and battle/boss visuals. After validating its APK, review remaining references and choose the next dependency-closed batch, capped at 19 files.",
+  "next_stage": "Stage 8 passed in manual Bootstrap run #12 with a validated Android/IL2CPP/ARM64 APK and uploaded artifact. Stage 9 is prepared for the next single manual cumulative Bootstrap build on main: five route hero textures and their canonical .meta files (10/197 files, 5.0761%). Confirm the APK and artifact before choosing another dependency-closed batch, capped at 19 files.",
   "known_architecture_boundary": "The official code contains a reciprocal App/HUD cycle involving 31 files and 7,066 lines (41.6%). The user-directed stage 3 imports the full pinned runtime C# inventory together, so it does not split that source cycle. Stage 5 restores the app component in the official bootstrap scene; stage 6 adds the canonical audio cue set. Visual resources, remaining scenes, runtime behavior, and full-content parity still require later stages and separate verification. Any temporary compile seam must be recorded and removed before parity is claimed.",
   "scene_policy": "Stage 5 restores the canonical VexforgeBootstrap scene content and its already-matched scene metadata; the Bootstrap copy adds one final LF, and its VexforgeApp script GUID resolves through stage 4. unity/ remains the untouched source of truth. The restored scene is not device or gameplay verification."
 }
