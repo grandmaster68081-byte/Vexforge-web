@@ -1034,7 +1034,7 @@
     {
       "number": 6,
       "name": "Tier1 canonical audio resource set",
-      "status": "prepared_for_manual_build",
+      "status": "verified_build_success",
       "new_file_count": 10,
       "share_percent": 5.0761,
       "assets": [
@@ -1132,10 +1132,48 @@
       "depends_on_stages": [
         3
       ],
-      "note": "This dependency-closed group contains every WAV cue loaded by VexforgeTier1AudioDirector through Resources.Load. The 10 original files have no canonical .meta sidecars; preserve their bytes and path-based resource keys. It represents 10/197 (5.0761%) of the pinned full-content inventory, below the 19-file cap."
+      "note": "This dependency-closed group contains every WAV cue loaded by VexforgeTier1AudioDirector through Resources.Load. The 10 original files have no canonical .meta sidecars; preserve their bytes and path-based resource keys. It represents 10/197 (5.0761%) of the pinned full-content inventory, below the 19-file cap.",
+      "build": {
+        "workflow_run_id": 38062606007,
+        "workflow_run_number": 10,
+        "commit": "d3a9c4af20b03403f2f3abba5c08eb0d671c7d6f",
+        "workflow_url": "https://github.com/grandmaster68081-byte/Vexforge-web/actions/runs/38062606007",
+        "result": "success",
+        "unity_editor": "6000.3.0f1",
+        "application_id": "com.vexforge.bootstrap",
+        "platform": "Android",
+        "scripting": "IL2CPP",
+        "architecture": "ARM64",
+        "warnings": 0,
+        "errors": 1,
+        "unity_build_report_total_size_bytes": 640044480,
+        "build_report_anomaly": "The BuildReport records errors=1 although Unity reports BuildResult.Succeeded and GitHub Actions, APK validation, and artifact upload succeeded. Record the counter for later review; per the user's direction it is non-blocking by itself and does not mean zero errors.",
+        "artifact_name": "VEXFORGE-Unity-Bootstrap-APK-10",
+        "artifact_id": 11674220109,
+        "artifact_size_bytes": 27304880,
+        "apk_size_bytes": 27921453,
+        "apk_sha256": "3d7d1a70461a3e14ca3cbcee7696abda324ba708208cd897105ab4a6bed0e3bb",
+        "downloaded_artifact_hash_matched_report": true,
+        "apk_validation": {
+          "outer_artifact_zip_valid": true,
+          "apk_zip_crc_valid": true,
+          "unity_data_present": true,
+          "arm64_il2cpp_library_present": true
+        },
+        "cache_restore": {
+          "result": "restored_from_restore_key",
+          "restored_bytes": 1863920952,
+          "matched_key": "vexforge-bootstrap-library-Linux-X64-6000.3.0f1-aa848fc67303da624a827acf01777c7517f6c3b284fb5f06877a674258f445a2-38059142520-1",
+          "exact_key_hit": false
+        },
+        "cache_save": {
+          "result": "success",
+          "saved_key": "vexforge-bootstrap-library-Linux-X64-6000.3.0f1-b5228a5f94297ca834099556a15801510cc518fb2f57996a903295a412f691e1-38062606007-1"
+        }
+      }
     }
   ],
-  "next_stage": "Stage 6 adds the complete set of 10 canonical Tier1 audio WAV resources (5.0761% of the 197-file inventory), all loaded by existing Resources paths. After the cumulative APK and artifact pass validation, continue selecting dependency-closed batches of no more than 19 canonical files; do not preselect a fixed number of batches.",
+  "next_stage": "Stage 6's cumulative APK and artifact passed validation in run #10. Select the next dependency-closed batch from the remaining canonical inventory only after reviewing its references; cap each batch at 19 canonical files and do not preselect a fixed number of batches.",
   "known_architecture_boundary": "The official code contains a reciprocal App/HUD cycle involving 31 files and 7,066 lines (41.6%). The user-directed stage 3 imports the full pinned runtime C# inventory together, so it does not split that source cycle. Stage 5 restores the app component in the official bootstrap scene; stage 6 adds the canonical audio cue set. Visual resources, remaining scenes, runtime behavior, and full-content parity still require later stages and separate verification. Any temporary compile seam must be recorded and removed before parity is claimed.",
   "scene_policy": "Stage 5 restores the canonical VexforgeBootstrap scene content and its already-matched scene metadata; the Bootstrap copy adds one final LF, and its VexforgeApp script GUID resolves through stage 4. unity/ remains the untouched source of truth. The restored scene is not device or gameplay verification."
 }

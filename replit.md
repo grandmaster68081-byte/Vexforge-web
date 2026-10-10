@@ -80,11 +80,19 @@ it. The current game migration order is
   1,863,686,866 bytes from the compatible run #8 cache and saved a new cache.
   Unity reported warnings=0/errors=1 with `BuildReport.totalSize` 640,014,896;
   record for later review and do not treat the counter alone as a failed build.
-- Stage 6 prepares all ten canonical Tier1 audio cues under
-  `Resources/VexforgeTier1/Audio` (10/197 files, 5.0761%). The existing audio
-  director loads these by resource path; the source WAVs have no `.meta`
-  sidecars. Verify source/destination hashes and keep later content batches
-  dependency-closed at no more than 19 canonical files each.
+- Stage 6 passed in Bootstrap run #10 (`d3a9c4a`): the ten original Tier1 audio
+  WAVs under `Resources/VexforgeTier1/Audio` (10/197 files, 5.0761%). The
+  existing audio director loads these by resource path; all source/destination
+  hashes match. The 27,921,453-byte APK SHA-256
+  `3d7d1a70461a3e14ca3cbcee7696abda324ba708208cd897105ab4a6bed0e3bb` matches
+  the downloaded build info; the artifact and APK ZIPs pass integrity checks,
+  with ARM64 IL2CPP and Unity data present. Artifact
+  `VEXFORGE-Unity-Bootstrap-APK-10` (ID `11674220109`, 27,304,880 bytes) was
+  uploaded. It restored 1,863,920,952 bytes from the compatible run #9 cache and
+  saved a new cache. Unity reported warnings=0/errors=1 with
+  `BuildReport.totalSize` 640,044,480; keep the counter for later review.
+  Repository verify run #637 also passed for this commit. Later batches remain
+  dependency-closed and capped at 19 canonical files.
 - Supabase's project status was checked read-only as `ACTIVE_HEALTHY`; this
   handoff made no Supabase changes. Unity Cloud Build is not part of this path.
 
@@ -106,8 +114,8 @@ it. The current game migration order is
   `unity-bootstrap/**`, manually, on `main`. Each accepted content slice is
   cumulative and followed by a complete APK build. Run #2 was only a workflow
    smoke test; runs #3–#7 validated the code slices, run #8 validated stage 4
-   metadata and run #9 validated the canonical bootstrap scene (stage 5).
-   Stage 6 adds all canonical audio cues. Keep later
+   metadata, run #9 validated the canonical bootstrap scene (stage 5), and run
+   #10 validated all canonical audio cues (stage 6). Keep later
   full-project content in dependency-closed batches capped at 10% of the
   complete tracked Unity inventory, with no fixed number of batches.
   The builder requires a real scene and does not generate placeholders. It does

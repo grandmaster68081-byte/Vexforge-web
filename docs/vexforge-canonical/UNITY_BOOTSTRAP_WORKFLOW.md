@@ -232,14 +232,30 @@ El run #9 restauró 1.863.686.866 bytes desde una clave compatible del run #8
 640.014.896 bytes. Unity registró 0 warnings y 1 error pese a completar con
 `BuildResult.Succeeded`; se anota para revisión y no se declara como cero errores.
 
-La etapa 6 prepara los diez WAV originales de
+La etapa 6 incorporó los diez WAV originales de
 `unity/Assets/Resources/VexforgeTier1/Audio/`. Son todos los cues que el
 `VexforgeTier1AudioDirector` busca mediante `Resources.Load` y sus claves de
 ruta; los WAV no tienen `.meta` canónicos. El lote suma 10/197 archivos (5,0761
 %), mantiene las rutas y bytes originales y queda dentro del máximo de 19.
-Después de validar su APK acumulada, elegir otro lote cerrado de dependencias
-sin fijar por adelantado el número de etapas. Detenerse si el workflow falla,
-falta el APK/artefacto, hay corrupción o no coincide el hash.
+
+La etapa 6 pasó en Bootstrap run #10, commit `d3a9c4af20b03403f2f3abba5c08eb0d671c7d6f`.
+El APK Android/IL2CPP/ARM64 de `com.vexforge.bootstrap` mide 27.921.453 bytes;
+el SHA-256 `3d7d1a70461a3e14ca3cbcee7696abda324ba708208cd897105ab4a6bed0e3bb`
+del APK descargado coincide con el informe. El ZIP del artefacto y el APK
+superan las comprobaciones de integridad, y se verificaron los datos Unity y la
+biblioteca IL2CPP ARM64. El artefacto `VEXFORGE-Unity-Bootstrap-APK-10` (ID
+`11674220109`, 27.304.880 bytes) se subió correctamente.
+
+El run #10 restauró 1.863.920.952 bytes desde la clave compatible guardada por
+el run #9 (sin coincidencia exacta) y guardó una caché nueva.
+`BuildReport.totalSize` fue 640.044.480 bytes. Unity registró 0 warnings y 1
+error aunque completó con `BuildResult.Succeeded`; se anota para revisión y no
+se declara como cero errores. El workflow de verificación del repositorio
+también pasó (run #637).
+
+Tras validar esta APK acumulada, elegir otro lote cerrado de dependencias sin
+fijar por adelantado el número de etapas. Detenerse si el workflow falla, falta
+el APK/artefacto, hay corrupción o no coincide el hash.
 
 La caché anterior pertenece a `unity-bootstrap/Library` y a GitHub Actions
 `actions/cache`. No es la caché del antiguo flujo de shards: ese workflow
