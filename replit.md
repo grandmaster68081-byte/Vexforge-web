@@ -33,19 +33,28 @@ it. The current game migration order is
   `8a77ab7e4e54bb70569e03d91e9ba3b42ce5c239f2430f96645ad4883bb4f89b`;
   the downloaded APK matches its report and passes ZIP integrity checks.
 - Run #4 restored the run #3 cache through a compatible restore-key
-  (1,829,028,455 bytes) and saved a new cache (1,831,499,299 bytes). Its Unity
+  (1,829,028,455 bytes) and saved a new cache (1,831,499,209 bytes). Its Unity
   `BuildReport.summary.totalSize` log value is 621,713,303 bytes; the packaged
   APK size is independently verified as 26,772,411 bytes.
+- These GitHub Actions caches are snapshots of `unity-bootstrap/Library`, not
+  Unity Cloud data or the older shader-shard checkpoints. Run #2 began with no
+  compatible cache and saved 1,821,722,229 bytes; runs #3 and #4 restored the
+  previous successful snapshot and saved 1,829,028,455 and 1,831,499,209 bytes.
+  Runs #5 and #6 both restored the run #4 key. The old shard workflow instead
+  used 7-day checkpoint artifacts under `unity/Library`; run #57 restored the
+  run #56 checkpoint (2,521,775,127 bytes) and verified it, but its full build
+  was cancelled after 21,098 seconds.
 - Tier1 resource assets and the pack-reveal director are intentionally not
   included in this compile-only slice, so it is not a functional pack reveal.
 - The bootstrap scene still omits `VexforgeApp`; `unity/**` remains untouched.
   Stage 3 now contains the other 63 canonical C# scripts (14,728 lines), bringing
-  the copied runtime script set to 76/76 and 16,988/16,988 lines. Run #5 reached
-  Unity compilation and failed with two CS0246 errors because the Bootstrap
-  `VexforgeTier1EconomyHub` copy did not import `Vexforge.Core` for `VexforgeApp`.
-  The Bootstrap-only fix is prepared and recorded in the manifest; `unity/**`
-  remains unchanged. No APK or new cache was produced. Stage 3 still needs a
-  newly authorized manual build before any later content batches. This stage
+  the copied runtime script set to 76/76 and 16,988/16,988 lines. Run #5's two
+  CS0246 errors for `VexforgeApp` were fixed by importing `Vexforge.Core` in the
+  Bootstrap copy only. Run #6 restored the run #4 Library cache successfully,
+  then failed with CS0234 in `VexforgeR5ProjectSetup.cs(45,13)` because
+  `Vexforge.Editor` was not found. No APK or new cache was produced; `unity/**`
+  remains unchanged. Stop after this failure and require new authorization
+  before another manual build or later content batches. This stage
   intentionally adds no new scenes, Resources, source `.meta` files or other
   excluded Unity project content. Passing the compile test will not prove game
   runtime, scene, resource or full-content parity.

@@ -43,8 +43,12 @@ La autoridad para continuar es, en este orden:
 - `SecureSessionStore` implementa Android Keystore + AES/GCM en código; todavía
   requiere validación en el Editor/dispositivo antes de declarar la sesión
   verificada.
-- El workflow manual de Unity está restaurado en
-  `.github/workflows/vexforge-unity-android-github.yml`; no se ha ejecutado.
+- El workflow canónico `.github/workflows/vexforge-unity-android-github.yml`
+  tiene historial de ejecución, incluidos los shards 56/57. Ese flujo mueve
+  checkpoints de `unity/Library` como artefactos de 7 días; no es la caché
+  `actions/cache` que usa el Bootstrap para `unity-bootstrap/Library`. El run 57
+  restauró el checkpoint del run 56 con SHA-256 validado, pero el build final
+  se canceló tras 21.098 s. Ver `docs/VEXFORGE_RUN_57_FINAL_ANALYSIS.md`.
 - El workflow experimental
   `.github/workflows/vexforge-unity-bootstrap-android.yml` construye solo
   `unity-bootstrap/**`, manualmente en `main`, con ID Android

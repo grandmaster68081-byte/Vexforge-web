@@ -354,7 +354,7 @@
         },
         "cache_save": {
           "result": "success",
-          "saved_bytes": 1831499299,
+          "saved_bytes": 1831499209,
           "saved_key": "vexforge-bootstrap-library-Linux-X64-6000.3.0f1-f9a3ca660cfdff0f8c0abb8456a35b1c2aef910850e2215ce4f486f74928f21f-38029751414-1"
         }
       }
@@ -362,7 +362,7 @@
     {
       "number": 3,
       "name": "All remaining official C# runtime scripts",
-      "status": "fix_prepared_pending_new_build_authorization",
+      "status": "build_failed_pending_new_authorization",
       "new_runtime_csharp_files": 63,
       "new_runtime_csharp_lines": 14728,
       "share_percent": 86.6965,
@@ -819,7 +819,7 @@
       ],
       "note": "User-directed code-completion batch: all 76 canonical Assets/Scripts/**/*.cs files are present. One Bootstrap-only namespace import fix is recorded on VexforgeTier1EconomyHub.cs; all other source bytes match unity/. This stage adds no scenes, Resources, new source .meta files or other excluded Unity content. The Bootstrap VexforgeApp component remains disconnected in the staged scene; build success proves compile/package viability only, not gameplay or content parity.",
       "build": {
-        "last_attempt": {
+        "previous_attempt": {
           "workflow_run_id": 38033151519,
           "workflow_run_number": 5,
           "commit": "f1a5438ee75f5c50c0997ad2ff4eb73faa683d51",
@@ -833,13 +833,34 @@
           ],
           "cache_restore": {
             "result": "restored_from_restore_key",
-            "matched_key": "vexforge-bootstrap-library-Linux-X64-6000.3.0f1-f9a3ca660cfdff0f8c0abb8456a35b1c2aef910850e2215ce4f486f74928f21f-38029751414-1"
+            "matched_key": "vexforge-bootstrap-library-Linux-X64-6000.3.0f1-f9a3ca660cfdff0f8c0abb8456a35b1c2aef910850e2215ce4f486f74928f21f-38029751414-1",
+            "bytes": 1831499209
           },
           "apk_generated": false,
           "artifact_uploaded": false,
           "cache_saved": false
         },
-        "fix": "Added using Vexforge.Core to the Bootstrap copy of VexforgeTier1EconomyHub.cs. The next manual build requires fresh user authorization because run 5 failed."
+        "last_attempt": {
+          "workflow_run_id": 38034392675,
+          "workflow_run_number": 6,
+          "commit": "433f6e77b400fc5c2014c908a3a1a3b183f69349",
+          "workflow_url": "https://github.com/grandmaster68081-byte/Vexforge-web/actions/runs/38034392675",
+          "result": "failure",
+          "failed_step": "Build the bootstrap APK",
+          "unity_editor": "6000.3.0f1",
+          "compiler_errors": [
+            "Assets/Scripts/Presentation/Editor/VexforgeR5ProjectSetup.cs(45,13): CS0234 The type or namespace name 'Editor' does not exist in the namespace 'Vexforge'."
+          ],
+          "cache_restore": {
+            "result": "restored_from_restore_key",
+            "matched_key": "vexforge-bootstrap-library-Linux-X64-6000.3.0f1-f9a3ca660cfdff0f8c0abb8456a35b1c2aef910850e2215ce4f486f74928f21f-38029751414-1",
+            "bytes": 1831499209
+          },
+          "apk_generated": false,
+          "artifact_uploaded": false,
+          "cache_saved": false
+        },
+        "fix": "Added using Vexforge.Core to the Bootstrap copy of VexforgeTier1EconomyHub.cs; that run-5 error no longer appears. Run 6 then failed on CS0234 in VexforgeR5ProjectSetup.cs. Require new user authorization before another manual build."
       }
     }
   ],

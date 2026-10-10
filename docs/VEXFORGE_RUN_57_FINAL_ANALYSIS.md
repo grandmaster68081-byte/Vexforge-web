@@ -16,9 +16,21 @@ Referencia: https://github.com/grandmaster68081-byte/Vexforge-web/actions/runs/3
 
 ## Comparación con el shard anterior
 
-El run 56 (ID 36357166233) completó correctamente. Su operación canónica tardó 15.022 s (4 h 10 min), creó y subió un checkpoint de shader de aproximadamente 2,5 GB y pasó la evidencia de reutilización de caché.
+El run 56 (ID `36357166233`) completó correctamente en modo `shard` para el
+rango 9166–10000. Su operación canónica tardó 15.022 s (4 h 10 min) y registró
+`ShaderCache` de 7.747.006.008 bytes y `PlayerDataCache` de 472.814.214 bytes.
+Subió el checkpoint de artefacto `10950033326` con un tamaño comprimido de
+2.521.775.127 bytes y pasó la validación de reutilización.
 
 Referencia: https://github.com/grandmaster68081-byte/Vexforge-web/actions/runs/36357166233
+
+El run 57 consumió explícitamente ese run y ese artefacto. El log confirma la
+descarga, la comprobación SHA-256 de los archivos del manifiesto y la
+materialización del checkpoint. No fue un fallo de descarga/restauración: la
+operación completa de Unity continuó 21.098 s y se canceló cerca del límite de
+seis horas, antes de verificar/subir un APK válido. Los artefactos de checkpoint
+se conservaban 7 días; los de estos runs ya expiraron y no aparecen en la lista
+actual de artefactos.
 
 ## Diagnóstico técnico
 

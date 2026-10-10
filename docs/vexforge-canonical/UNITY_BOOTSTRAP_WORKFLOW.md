@@ -154,14 +154,24 @@ terminó con cero warnings y cero errores de Unity.
 Este corte solo valida compilación: no incorpora aún los recursos
 `Resources/VexforgeTier1/**`, por lo que no habilita el pack reveal en runtime.
 `VexforgeApp` sigue desconectado de la escena y `unity/**` permanece intacto.
-El run #5 (run ID `38033151519`, commit `f1a5438`) llegó a compilar el proyecto,
-pero falló con dos `CS0246` en `VexforgeTier1EconomyHub.cs`: el tipo
-`VexforgeApp` está declarado en `Vexforge.Core` y esa copia no importaba el
-namespace. Unity, la licencia, los módulos Android y la restauración compatible
-de caché sí finalizaron correctamente; no se generó ni subió APK y no se guardó
-una caché nueva. La copia Bootstrap ahora importa `Vexforge.Core`; el manifiesto
-registra su hash distinto del archivo oficial. La etapa 3 sigue sin validar y no
-se empieza el inventario por lotes hasta que un APK pase.
+El run #5 (ID `38033151519`, commit `f1a5438`) falló con dos `CS0246` en
+`VexforgeTier1EconomyHub.cs`: esa copia no importaba `Vexforge.Core`. Se añadió
+el `using` solo a Bootstrap; el código oficial bajo `unity/**` no se modificó.
+El run #6 (ID `38034392675`, commit `433f6e7`) restauró correctamente la entrada
+de caché del run #4 (1.831.499.209 bytes), confirmó que ese error ya no aparece
+y falló después con `CS0234` en
+`VexforgeR5ProjectSetup.cs(45,13)`: no existe `Vexforge.Editor` en el namespace
+`Vexforge`. No se generó ni subió APK y no se guardó otra caché. La etapa 3
+sigue sin validar; no repetir un build ni empezar los lotes de contenido sin
+nueva autorización.
+
+La caché anterior pertenece a `unity-bootstrap/Library` y a GitHub Actions
+`actions/cache`. No es la caché del antiguo flujo de shards: ese workflow
+transportaba checkpoints como artefactos de 7 días desde `unity/Library`.
+Run #57 descargó el artefacto exacto creado por run #56 (2.521.775.127 bytes),
+verificó su SHA-256 y lo materializó; el build final aun así se canceló tras
+21.098 segundos. Restauración íntegra y compilación final completada son
+resultados distintos.
 El valor `BuildReport.summary.totalSize` de Unity (621.713.303 bytes) es distinto
 del tamaño real del APK empaquetado, informado por el paso de verificación y
 confirmado con el artefacto descargado.
